@@ -349,36 +349,25 @@ void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int 
 	}
 }
 
-void UrlFileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
+LPCTSTR UrlGetName(LPCTSTR szFile)
 {
-	LPCTSTR		szBeg;
+	LPCTSTR		szBeg, szBeg2;
 
 	szBeg = _tcsrchr(szFile, '/');
-	if (szBeg)
-	{
-		_tcscpy_safe(szBuff, nBuffLen, szBeg + 1);
-	}
-	else
-	{
-		_tcscpy_safe(szBuff, nBuffLen, szFile);
-	}
-}
-
-LPCTSTR UrlFileGetName(LPCTSTR szFile)
-{
-	LPCTSTR		szBeg;
-
-	szBeg = _tcsrchr(szFile, '/');
+	szBeg2 = _tcsrchr(szFile, '\\');
+	if (szBeg2 > szBeg)
+		szBeg = szBeg2;
 	if (szBeg)
 		return szBeg + 1;
 	else
 		return szFile;
 }
 
-void UrlGetTitle(LPCTSTR szFile, tstring &strFileTitle)
+tstring UrlGetTitle(LPCTSTR szFile)
 {
 	LPCTSTR		szBeg, szBeg2, szEnd;
 	int			nLen;
+	tstring		strFileTitle;
 
 	szEnd = _tcsrchr(szFile, '.');
 
@@ -397,25 +386,9 @@ void UrlGetTitle(LPCTSTR szFile, tstring &strFileTitle)
 	else
 		nLen = szEnd - szBeg;
 
-	strFileTitle.resize(0);
 	strFileTitle.append(szBeg, nLen);
-}
 
-// Retrieve the file name.
-// File name format: path/name
-void FileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
-{
-	LPCTSTR		szBeg;
-
-	szBeg = _tcsrchr(szFile, DIR_SLASH);
-	if (szBeg)
-	{
-		_tcscpy_safe(szBuff, nBuffLen, szBeg + 1);
-	}
-	else
-	{
-		_tcscpy_safe(szBuff, nBuffLen, szFile);
-	}
+	return strFileTitle;
 }
 
 LPCTSTR FileGetName(LPCTSTR szFile)
@@ -507,27 +480,6 @@ void FileGetPath(LPCTSTR szFile, tstring &strPath)
 	strPath.resize(0);
 	if (ilen >= 0)
 		strPath.append(szFile, ilen + 1);
-}
-
-// Retrieve the file extention.
-// File name format: path/title/.ext
-void FileGetExt(LPCTSTR szFile, LPTSTR szExt, int nLenExtMax)
-{
-	LPCTSTR		szBeg;
-
-	szBeg = _tcsrchr(szFile, '.');
-	if (szBeg == NULL)
-		szExt[0] = '\0';
-	else
-	{
-		LPCTSTR		szTemp;
-
-		szTemp = _tcsrchr(szFile, DIR_SLASH);
-		if (szTemp == NULL || szTemp < szBeg)
-			_tcscpy_safe(szExt, nLenExtMax, szBeg);
-		else
-			szExt[0] = '\0';
-	}
 }
 
 LPCTSTR FileGetExt(LPCTSTR szFile)

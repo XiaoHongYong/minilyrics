@@ -138,7 +138,6 @@ void CLyricsOutPluginMgr::Quit()
 void CLyricsOutPluginMgr::GetLoadedPlugins(vector<tstring> &vPlugins)
 {
 	V_PLUGINS::iterator		it, itEnd;
-	TCHAR		szFileName[MAX_PATH];
 	tstring		str;
 
 	itEnd = m_vPlugins.end();
@@ -147,7 +146,6 @@ void CLyricsOutPluginMgr::GetLoadedPlugins(vector<tstring> &vPlugins)
 		Plugins		&plugin = *it;
 		if (plugin.bInitOK)
 		{
-			FileGetName(szFileName, CountOf(szFileName), plugin.strPluginFile.c_str());
 			if (plugin.bInitOK)
 			{
 				str = plugin.plyricsOut->GetDescription();
@@ -157,7 +155,7 @@ void CLyricsOutPluginMgr::GetLoadedPlugins(vector<tstring> &vPlugins)
 				str = _T("Failed to load.");
 			}
 			str += _T(" (");
-			str += szFileName;
+			str += FileGetName(plugin.strPluginFile.c_str());
 			str += _T(")");
 			vPlugins.push_back(str);
 		}

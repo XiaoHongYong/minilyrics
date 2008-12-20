@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b"
+				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;FPM_DEFAULT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -114,6 +114,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -188,6 +189,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -259,7 +261,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b"
+				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FPM_DEFAULT"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -333,7 +335,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b"
+				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;FPM_DEFAULT;_CPPUNIT_TEST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

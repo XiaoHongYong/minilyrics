@@ -49,6 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="../SDK/Agg/include,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -146,6 +147,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="../SDK/Agg/include,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -242,7 +244,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../SDK/Agg/include"
+				AdditionalIncludeDirectories="../SDK/Agg/include,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;UNICODE;_MPLAYER;SKIN_EDITOR"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -340,7 +342,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../SDK/Agg/include"
+				AdditionalIncludeDirectories="../SDK/Agg/include,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;UNICODE;SKIN_EDITOR;_MPLAYER;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -435,7 +437,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../SDK/Agg/include"
+				AdditionalIncludeDirectories="../SDK/Agg/include,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;UNICODE;SKIN_EDITOR;_MPLAYER;_CPPUNIT_TEST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

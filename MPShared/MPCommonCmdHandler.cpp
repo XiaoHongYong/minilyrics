@@ -493,7 +493,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	case IDC_BR_ALBUM_ART:
 		{
 			tstring				strAlbumArtFileName;
-			TCHAR				szBuff[MAX_PATH];
 
 			FileGetPath(g_Player.GetSrcMedia(), strAlbumArtFileName);
 			if (!IsDirExist(strAlbumArtFileName.c_str()))
@@ -510,8 +509,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			if (dlg.DoModal(m_pSkinWnd) != IDOK)
 				break;
 
-			FileGetExt(dlg.GetOpenFile(), szBuff, CountOf(szBuff));
-			strAlbumArtFileName += szBuff;
+			strAlbumArtFileName += FileGetExt(dlg.GetOpenFile());
 
 			if (_tcsicmp(strAlbumArtFileName.c_str(), dlg.GetOpenFile()) == 0)
 				break;
@@ -1312,7 +1310,7 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 
 		FileGetPath(szDir, CountOf(szDir), szFile);
 		FileGetTitle(szName, CountOf(szName), szFile);
-		FileGetExt(szFile, szExt, CountOf(szExt));
+		_tcscpy_safe(szExt, CountOf(szExt), FileGetExt(szFile));
 
 		DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
 		if (DownSaveDir == DOWN_SAVE_IN_SONG_DIR)
@@ -1348,11 +1346,8 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 
 	if (dlg.DoModal(pWndParent) == IDOK)
 	{
-		TCHAR		szExt[10];
-
 		_tcscpy_safe(szFile, CountOf(szFile), dlg.GetSaveFile());
-		FileGetExt(szFile, szExt, CountOf(szExt));
-		if (IsEmptyString(szExt))
+		if (IsEmptyString(FileGetExt(szFile)))
 		{
 			// Set file extend name as the user selected.
 			FileSetExt(szFile, CountOf(szFile), dlg.GetSelectedExt());

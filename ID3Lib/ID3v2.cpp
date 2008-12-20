@@ -171,11 +171,9 @@ bool ID3v2Pictures::ITEM::PicExtToMime(LPCSTR szPicExt)
 
 bool ID3v2Pictures::ITEM::SetImageFile(LPCTSTR szImage)
 {
-	TCHAR		szExt[64];
 	stringex	strExt;
 
-	FileGetExt(szImage, szExt, CountOf(szExt));
-	ConvertStr(szExt, -1, strExt);
+	ConvertStr(FileGetExt(szImage), -1, strExt);
 	if (!PicExtToMime(strExt.c_str()))
 		return false;
 

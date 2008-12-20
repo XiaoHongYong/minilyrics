@@ -43,10 +43,10 @@ void DirStringFormat(tstring &strDir);
 
 void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int nRelatedPathLen);
 
-void UrlFileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
-LPCTSTR UrlFileGetName(LPCTSTR szFile);
+LPCTSTR UrlGetName(LPCTSTR szFile);
 
-void FileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
+tstring UrlGetTitle(LPCTSTR szFile);
+
 LPCTSTR FileGetName(LPCTSTR szFile);
 
 void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
@@ -57,7 +57,6 @@ void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile);
 
 void FileSetExt(tstring &strFile, LPCTSTR szExt);
 void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt);
-void FileGetExt(LPCTSTR szFile, LPTSTR szExt, int nLenExtMax);
 LPCTSTR FileGetExt(LPCTSTR szFile);
 
 BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt);

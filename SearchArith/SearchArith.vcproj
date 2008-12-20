@@ -43,6 +43,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -114,6 +115,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;UNICODE;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -188,6 +190,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -259,7 +262,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./"
+				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -331,6 +334,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;_CPPUNIT_TEST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

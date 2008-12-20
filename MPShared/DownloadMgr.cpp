@@ -21,7 +21,7 @@
 void GetNotExistFileName(const TCHAR *szFileName, TCHAR *szFileNew, int nMaxLen)
 {
 	TCHAR	szBeforeExt[MAX_PATH];
-	TCHAR	szExt[MAX_PATH];
+	LPCTSTR	szExt;
 	int		i = 1;
 
 	if (!IsFileExist(szFileName))
@@ -30,7 +30,7 @@ void GetNotExistFileName(const TCHAR *szFileName, TCHAR *szFileNew, int nMaxLen)
 		return;
 	}
 
-	FileGetExt(szFileName, szExt, MAX_PATH);
+	szExt = FileGetExt(szFileName);
 
 	_tcsncpysz_safe(szBeforeExt, MAX_PATH, szFileName, _tcslen(szFileName) - _tcslen(szExt));
 
@@ -450,13 +450,10 @@ void CDownloadTask::SetSavePath(LPCTSTR szSavePath)
 	assert(szSavePath);
 	assert(_tcslen(szSavePath));
 
-	TCHAR	szFileName[MAX_PATH];
-
 	m_dwMask |= DTASK_SAVEPATH;
-	FileGetName(szFileName, CountOf(szFileName), m_strSaveFile.c_str());
 
 	m_strSaveFile = szSavePath;
-	m_strSaveFile += szFileName;
+	m_strSaveFile += FileGetName(m_strSaveFile.c_str());
 }
 
 // COMMENT:
@@ -499,7 +496,7 @@ void CDownloadTask::SetSaveFileName(LPCTSTR szFileName)
 //		取得要保存的文件名, 不包含路径
 void CDownloadTask::GetSaveFileName(LPTSTR szFileName, int nLenMax) const
 {
-	FileGetName(szFileName, nLenMax, m_strSaveFile.c_str());
+	_tcscpy_safe(szFileName, nLenMax, FileGetName(m_strSaveFile.c_str()));
 }
 
 // COMMENT:
@@ -561,10 +558,9 @@ void CDownloadTask::OnDownOKSaveFile(LPCVOID lpData, int nLen)
 		if (!SaveDataAsFile(m_strSaveFile.c_str(), lpData, nLen))
 		{
 			// save in the default directory of MiniLyrics.
-			FileGetName(szPath, CountOf(szPath), m_strSaveFile.c_str());
 			m_strSaveFile = m_pDownMgr->GetDefSavePath();
 			DirStringFormat(m_strSaveFile);
-			m_strSaveFile += szPath;
+			m_strSaveFile += FileGetName(m_strSaveFile.c_str());
 
 			FileGetPath(szPath, CountOf(szPath), m_strSaveFile.c_str());
 			CreateDirectoryAll(szPath);

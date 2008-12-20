@@ -201,7 +201,7 @@ void AnalysisLyricsFileName(TCHAR szTitle[]/* out */, TCHAR szArtist[]/* out */,
 	// 将FullTitle中的[buffering ...]替换掉
 	_tcscpy_safe(szFileTilte, CountOf(szFileTilte), szFileName);
 
-	FileGetExt(szFileTilte, szExt, 32);
+	_tcscpy(szExt, FileGetExt(szFileTilte));
 
 	//
 	// 将FullTitle中的.mp3, .ra, .rm ....等替换掉
@@ -874,15 +874,13 @@ V_LRCSEARCHRESULT::iterator V_LRCSEARCHRESULT::GetTheBestMatchLyrics(BOOL bCheck
 
 void V_LRCSEARCHRESULT::UpdateLyricsName()
 {
-	TCHAR		szName[MAX_PATH];
 	for (iterator it = begin(); it != end(); it++)
 	{
 		LrcSearchResult		&result = *it;
 
 		if (result.strLyricsName.empty())
 		{
-			FileGetName(szName, CountOf(szName), result.strUrl.c_str());
-			result.strLyricsName = szName;
+			result.strLyricsName = FileGetName(result.strUrl.c_str());
 		}
 	}
 }
