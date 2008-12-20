@@ -1,0 +1,41 @@
+HKCR
+{
+    NoRemove CLSID
+    {
+        ForceRemove {4580AB54-3C2F-4970-9A77-8628FA182F03} = s 'PluginWMPVis Class'
+        {
+            InprocServer32 = s '%MODULE%'
+            {
+                val ThreadingModel = s 'Apartment'
+            }
+            'TypeLib' = s '{BF2B774E-9B4E-4d92-B08B-65A29908A569}'
+        }
+    }
+}
+HKEY_LOCAL_MACHINE
+{
+    NoRemove SOFTWARE
+    {
+        NoRemove Microsoft
+        {
+            NoRemove MediaPlayer
+            {
+                NoRemove Objects
+                {
+                    NoRemove Effects
+                    {
+                        ForceRemove PluginWMPVis
+                        {
+                            Properties
+                            {
+                                val classid = s '{4580AB54-3C2F-4970-9A77-8628FA182F03}'
+                                val name = s 'res://PluginWMPVis.dll/RT_STRING/#101'
+                                val description = s 'res://PluginWMPVis.dll/RT_STRING/#105'
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

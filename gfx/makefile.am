@@ -1,0 +1,10 @@
+SUBDIRS = gtk2
+
+noinst_LIBRARIES = libgfx.a
+
+libgfx_a_SOURCES = 
+
+INCLUDES = -I$(top_srcdir)/base
+
+libgfx_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`
+

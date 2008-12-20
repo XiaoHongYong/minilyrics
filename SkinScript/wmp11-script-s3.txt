@@ -1,0 +1,88 @@
+
+CPlayer		g_player;
+
+class CCmdHandler
+{
+	void OnCommand(CSkinWnd wnd, string strCmd)
+	{
+		if (strcmp(strCmd, "cmd_play") == 0)
+		{
+			player.play();
+		}
+		else if (strcmp(strcmd, "cmd_pause") == 0)
+		{
+			player.pause();
+		}
+	}
+
+	void OnRelease()
+	{
+		delete this;
+	}
+
+};
+
+class CPlayerEventHandler
+{
+	void OnStateChanged(int nState)
+	{
+	}
+
+	void OnSeek(int nPos)
+	{
+	}
+
+	void OnCurrentMediaChanged()
+	{
+	}
+
+	void OnSettingChanged(string settingName, int nValue)
+	{
+	}
+
+	void OnRelease()
+	{
+		delete this;
+	}
+
+};
+
+class CSkinSysEventHandler
+{
+	void OnInit()
+	{
+		g_player = GetPlayer
+		RegisterPlayerEventHandler(new CPlayerEventHandler);
+	}
+
+	void OnQuit()
+	{
+	}
+
+	void OnSkinWndCreate(CSkinWnd wnd, string strWndName)
+	{
+		if (strcmp(strWndName, "shade") == 0)
+		{
+			wnd.RegisterCmdHandler(new cmdHandler);
+		}
+	}
+
+	void OnSkinWndClose(CSkinWnd wnd, string strWndName)
+	{
+	}
+
+	void OnRelease()
+	{
+		delete this;
+	}
+
+};
+
+int main()
+{
+	SetReportError(1);
+
+	RegisterSkinSysHandler(new CSkinSysEventHandler, "CSkinSysEventHandler");
+
+	return 1;
+}

@@ -1,0 +1,98 @@
+#ifndef _FILE_API_INC_
+#define _FILE_API_INC_
+
+DECLAR_CPPUNIT_TEST_REG(FileAPI)
+
+bool filetruncate(FILE *fp, int nLen);
+
+bool IsFileExist(LPCTSTR szFileName);
+bool IsDirExist(LPCTSTR szDir);
+
+bool GetFileLength(LPCTSTR szFileName, uint64 &nLength);
+
+#ifndef _WINCE_
+DWORD GetFileLength(LPCSTR szFileName);
+#endif
+DWORD GetFileLength(LPCWSTR szFileName);
+
+#ifdef _WIN32
+BOOL
+SetFileTime(
+    LPCTSTR szFile,
+    CONST FILETIME *lpCreationTime,
+    CONST FILETIME *lpLastAccessTime,
+    CONST FILETIME *lpLastWriteTime
+    );
+#endif
+
+BOOL CreateDirectoryAll(LPCTSTR szDir);
+
+DWORD CanWriteInDir(LPCTSTR szDir);
+
+BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath);
+
+typedef void (*FUNProcessFile)(LPCTSTR szFileName, LPCTSTR szDir, LPVOID lpUserData);
+
+BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData);
+
+void DirStringFormat(WCHAR *szDir);
+
+void DirStringFormat(char *szDir);
+
+void DirStringFormat(tstring &strDir);
+
+void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int nRelatedPathLen);
+
+void UrlFileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
+LPCTSTR UrlFileGetName(LPCTSTR szFile);
+
+void FileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
+LPCTSTR FileGetName(LPCTSTR szFile);
+
+void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
+void FileGetTitle(LPCTSTR szFile, tstring &strFileTitle);
+
+void FileGetPath(LPCTSTR szFile, tstring &strPath);
+void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile);
+
+void FileSetExt(tstring &strFile, LPCTSTR szExt);
+void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt);
+void FileGetExt(LPCTSTR szFile, LPTSTR szExt, int nLenExtMax);
+LPCTSTR FileGetExt(LPCTSTR szFile);
+
+BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt);
+
+void FileNameFilterInvalidChars(LPTSTR szFile);
+BOOL FileNameIsIncInvalidChars(LPCTSTR szFile);
+void FileNameFilterInvalidChars(LPCTSTR szFile, LPTSTR szNewFile, int nSizeMax);
+void FilePathFilterInvalidChars(LPTSTR szFile);
+
+#ifndef WIN32
+bool DeleteFile(LPCTSTR lpFileName);
+bool CreateDirectory(LPCSTR lpPathName);
+#endif
+
+class CMLFileFind
+{
+public:
+	CMLFileFind();
+	virtual ~CMLFileFind();
+
+	bool OpenDir(LPCTSTR szDir, LPCTSTR szFilter = NULL);
+
+	void Close();
+
+	bool FindNext();
+
+	LPCTSTR GetCurName();
+
+	bool IsCurDir();
+
+protected:
+	HANDLE				hFileFind;
+	WIN32_FIND_DATA		FindData;
+	bool				bFirst;
+
+};
+
+#endif // _FILE_API_INC_

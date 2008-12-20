@@ -1,0 +1,5 @@
+Theme file 2.20
+Theme name, English font name, height, weight, italic, Other language font name, line spacing, highlight color, lowlight color, background color, edited line background color, tag color, outlined color ...
+Blue,Verdana,35,700,0,,0,#0000FF,#8080FF,#9CBACE,#94A6AD,#0000A0,#000000,#000000,1,2,2,#0000A0,#0080FF,#0000FF,#0000A0,#0000FF,C:\pt.bmp,2,#00FFFF,#80FFFF,#00C6C6,#008080,#00FFFF,,
+Red,Verdana,35,700,0,,0,#0000FF,#8080FF,#9CBACE,#94A6AD,#0000A0,#000000,#000000,1,2,2,#FF0000,#FFFF80,#FF2D2D,#AE0000,#FF0000,C:\pt.bmp,2,#0000FF,#6F6FFF,#0000FF,#0000AA,#1A1AFF,,
+Golden,Verdana,35,700,0,,0,#FFFF21,#F5783A,#9CBACE,#94A6AD,#0000A0,#000000,#000000,1,2,2,#FFF900,#FFFFA4,#FFFF00,#FE6001,#FFFF00,C:\WINDOWS\Zapotec.bmp,2,#FF8040,#912F00,#FF8040,#973100,#FF8040,,

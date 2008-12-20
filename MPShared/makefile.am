@@ -1,0 +1,35 @@
+noinst_LIBRARIES = libminilyrics6.a
+
+libminilyrics6_a_SOURCES = AdManage.cpp AutoProcessEmbeddedLyrics.cpp CharsetEncoding.cpp ColorThemesDlg.cpp\
+	ColorThemesFile.cpp DlgAbout.cpp DlgBatchProcessEmbeddedLyrics.cpp DlgCopySongLyrics.cpp\
+	DlgEmbeddedLyricsLoad.cpp DlgEmbeddedLyricsRemove.cpp DlgEmbeddedLyricsSave.cpp DlgLyricsAssociate.cpp\
+	DlgRateLyrics.cpp DlgSelFileEncoding.cpp DlgSelMbcsEncoding.cpp \
+	DownloadMgr.cpp ErrorResolveDlg.cpp EventsDispatcher.cpp Helper.cpp \
+	HttpDownImp2.cpp INetTestDlg.cpp\
+	LoginDlg.cpp LrcUploadDB.cpp LrcUploadDlg.cpp LyrEditExBase.cpp\
+	LyricsDownloadMgr.cpp LyricsDownSelDlg.cpp LyricShowAgentObj.cpp LyricShowHorzScrollObj.cpp\
+	LyricShowMultiRowObj.cpp LyricShowObj.cpp LyricShowPreviewObj.cpp LyricShowSingleRowObj.cpp\
+	LyricShowTextEditObj.cpp LyricShowTwoRowObj.cpp LyricShowTxtObj.cpp LyricShowVobSub.cpp\
+	MLCmd.cpp MlVersion.cpp MPCommonCmdHandler.cpp\
+	MPlayerApp.cpp MPMsgWnd.cpp MPSkinFactory.cpp\
+	MPSkinInfoTextCtrl.cpp MPSkinMainWnd.cpp MPSkinTimeCtrl.cpp\
+	MPSkinWnd.cpp OnlineSearch.cpp\
+	Player.cpp \
+	PlayList.cpp PreferenceDlg.cpp PreferencePageBase.cpp PreferencePages.cpp\
+	PreferPageDownload.cpp PreferPageHotkey.cpp PreferPageLyrDisplay.cpp\
+	PreferPageLyrOutput.cpp RegistrationDlg.cpp SavePrompt.cpp \
+	SkinBarFrame.cpp SkinBarFrameClientArea.cpp SkinContainerBar.cpp \
+	SkinListCtrl.cpp SkinLPArea.cpp SkinMenu.cpp SkinPicText.cpp\
+	SkinRateCtrl.cpp SkinSeekCtrl.cpp SkinStaticText.cpp SkinTabCtrl.cpp\
+	SkinTextButton.cpp SkinToolBar.cpp SkinTreeCtrl.cpp SkinTxtLink.cpp\
+	StdAfx.cpp TagInfoDlg.cpp VersionUpdate.cpp WaitingDlg.cpp \
+	../sqlite_cpp/Sqlite3.cpp \
+	CECommandBar.cpp DlgChooseColor.cpp DlgChooseFont.cpp HelperGtk2.cpp \
+		HotkeyCtrlEx.cpp MiniLyrics.cpp LyrEditEx.cpp LyricsMenu.cpp LyricsOutPluginMgr.cpp \
+		MainMenu.cpp MPHotkey.cpp MPlayerAppGtk2.cpp MPSkinMainWndGtk2.cpp PlayerSmoothTimer.cpp 
+
+
+INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/Widget -I$(top_srcdir)/Skin \
+	-I$(top_srcdir)/gfx -I$(top_srcdir)/MLLib
+
+libminilyrics6_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`

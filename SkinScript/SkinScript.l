@@ -1,0 +1,203 @@
+%{
+
+/*\"[^"]*\"	printf( "String: %s\n", yytext );
+*/
+#include "stdafx.h"
+#include <stdio.h>
+#include <math.h>
+#include "SkinScript.h"
+#define YYSTYPE		SS_TREE_NODE*
+#include "SkinScript.tab.h"
+
+#ifdef _DEBUG
+#define	INC_LINENO()	g_srcLineNo++
+#define	IF_INC_LINENO(c)	if (c == '\n') g_srcLineNo++
+#else
+#define	INC_LINENO()
+#define	IF_INC_LINENO(c)	
+#endif
+
+
+%}
+
+DIGIT		[0-9]
+ID			[a-zA-Z_][a-zA-Z0-9_]*
+
+%%
+
+[+-]?[0-9]+	{
+				yylval = newVarIDNode(g_srcLineNo, yytext);
+				return TK_NUMBER;
+            }
+
+new			{ return TK_NEW; }
+delete		{ return TK_DELETE; }
+ref			{ return TK_REFERENCE; }
+if			{ return TK_IF; }
+else		{ return TK_ELSE; }
+while		{ return TK_WHILE; }
+do			{ return TK_DO; }
+function	{ return TK_FUNCTION; }
+class		{ return TK_CLASS; }
+return		{
+				yylval = newStmtNode(SK_RETURN, NULL, NULL);
+				yylval->nLineNo = g_srcLineNo;
+				return TK_RETURN;
+			}
+
+"&&"		{ return TK_BOOL_AND; }
+"||"		{ return TK_BOOL_OR; }
+
+"<="		{ return TK_LT_EQ; }
+">="		{ return TK_GT_EQ; }
+"<"			{ return TK_LITTLE; }
+">"			{ return TK_GREATER; }
+"=="		{ return TK_EQUAL; }
+"!="		{ return TK_NOT_EQUAL; }
+
+"("			{ return TK_L_PARENTHESIS; }
+")"			{ return TK_R_PARENTHESIS; }
+":"			{ return TK_COLON; }
+";"			{ return TK_SEMICOLON; }
+"{"			{ return TK_L_BRACE; }
+"}"			{ return TK_R_BRACE; }
+","			{ return TK_COMMA; }
+"."			{ return TK_DOT; }
+"="			{ return TK_ASSIGN; }
+
+"++"		{ return TK_OP_INC; }
+"--"		{ return TK_OP_DEC; }
+"+"			{ return TK_PLUS; }
+"-"			{ return TK_MINUS; }
+"*"			{ return TK_MULT; }
+"/"			{ return TK_DIV; }
+
+
+[A-Za-z_]+[A-Za-z_0-9]* 	{
+							 	yylval = newVarIDNode(g_srcLineNo, yytext);
+								return TK_ID;
+							}
+
+
+\"			{
+				/* string */
+				char	c;
+				// char	str[265];
+				string	str;
+				int		nLen = 0;
+				bool	done = false;
+				do
+				{
+					c = yyinput();
+					// str[nLen++] = c;
+					str += c;
+
+					while (c != '\\' && c != '\"' && c != EOF && c != '\n')
+					{
+						c = yyinput();
+						// str[nLen++] = c;
+						str += c;
+					}
+
+					if (c == '\\')
+					{
+						c = yyinput();
+						// str[nLen++] = c;
+						str += c;
+					}
+					else
+						break;
+				}
+				while (c != EOF && c != '\n');
+
+				if (c != '\"')
+					return TK_ERROR;
+
+				str.resize(str.size() - 1);
+				// str[nLen - 1] = '\0';
+
+				// printf("An String: %s\n", str);
+				yylval = newVarIDNode(g_srcLineNo, str.c_str());
+				return TK_C_STRING;
+			}
+
+[ \t]+		{	/* eat up whitespace */ }
+
+\n			{ INC_LINENO(); }
+
+"//"		{
+				/* eat cpp comment */
+				char	c;
+				c = yyinput();
+				while (c != '\n' && c != EOF)
+					c = yyinput();
+				IF_INC_LINENO(c);
+			}
+
+"/*"        {
+				/* eat c comment */
+				int c;
+
+				for ( ; ; )
+                {
+					while ( (c = yyinput()) != '*' &&
+							c != EOF )
+					{
+						/* eat up text of comment */
+						IF_INC_LINENO(c);
+					}
+
+					if ( c == '*' )
+					{
+						while ( (c = yyinput()) == '*' )
+						{
+							IF_INC_LINENO(c);
+						}
+						if ( c == '/' )
+							break;    /* found the end */
+					}
+
+					if ( c == EOF )
+					{
+						printf( "EOF in comment" );
+						break;
+					}
+				}
+            }
+
+.           {
+				printf( "Unrecognized character: %s\n", yytext );
+				return TK_ERROR;
+			}
+
+%%
+
+int yywrap(void)
+{
+	return 1;
+}
+
+/*
+int yyparse();
+
+extern SS_TREE_NODE *		_syntaxTree;
+
+void main(int  argc, char **argv )
+{
+    ++argv, --argc;
+    if ( argc > 0 )
+	{
+            yyin = fopen( argv[0], "r" );
+			if (!yyin)
+				printf("Can't open file: %s", argv[0]);
+	}
+    else
+            yyin = stdin;
+
+    // yylex();
+	yyparse();
+
+	int		nIndent = 0;
+	PrintSyntaxTree(_syntaxTree, nIndent);
+}
+*/

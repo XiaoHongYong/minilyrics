@@ -1,0 +1,106 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: MfcExLib - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\DOCUME~1\xiao\LOCALS~1\Temp\RSP395.tmp" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /Fp"Debug/MfcExLib.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"I:\MiniLyric\UnicodeNew\MfcExLib\LogWnd.cpp"
+]
+Creating command line "cl.exe @C:\DOCUME~1\xiao\LOCALS~1\Temp\RSP395.tmp" 
+Creating command line "link.exe -lib /nologo /out:"Debug\MfcExLib.lib"  .\Debug\LogWnd.obj .\Debug\ST_SplitterWnd.obj .\Debug\StdAfx.obj "
+<h3>Output Window</h3>
+Compiling...
+LogWnd.cpp
+i:\minilyric\unicodenew\utils\simplexml.h(27) : error C2143: syntax error : missing ';' before '<'
+i:\minilyric\unicodenew\utils\simplexml.h(27) : error C2059: syntax error : '<'
+i:\minilyric\unicodenew\utils\simplexml.h(27) : error C2238: unexpected token(s) preceding ';'
+i:\minilyric\unicodenew\utils\simplexml.h(38) : error C2146: syntax error : missing ';' before identifier 'listChild'
+i:\minilyric\unicodenew\utils\simplexml.h(38) : error C2501: 'LIST_CHILD' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexml.h(38) : error C2501: 'listChild' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexml.h(43) : error C2143: syntax error : missing ';' before '<'
+i:\minilyric\unicodenew\utils\simplexml.h(43) : error C2501: 'vector' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexml.h(43) : error C2059: syntax error : '<'
+i:\minilyric\unicodenew\utils\simplexml.h(43) : error C2238: unexpected token(s) preceding ';'
+i:\minilyric\unicodenew\utils\simplexml.h(57) : error C2061: syntax error : identifier 'vector'
+i:\minilyric\unicodenew\utils\simplexml.h(83) : error C2146: syntax error : missing ';' before identifier 'strVersion'
+i:\minilyric\unicodenew\utils\simplexml.h(83) : error C2501: 'string' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexml.h(83) : error C2501: 'strVersion' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexml.h(84) : error C2146: syntax error : missing ';' before identifier 'strEncoding'
+i:\minilyric\unicodenew\utils\simplexml.h(84) : error C2501: 'string' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexml.h(84) : error C2501: 'strEncoding' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexml.h(85) : error C2146: syntax error : missing ';' before identifier 'strStandalone'
+i:\minilyric\unicodenew\utils\simplexml.h(85) : error C2501: 'string' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexml.h(85) : error C2501: 'strStandalone' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\simplexmlparser.h(54) : error C2143: syntax error : missing ';' before '<'
+        i:\minilyric\unicodenew\utils\simplexmlparser.h(107) : see reference to class template instantiation 'CSimpleXMLParserObj<TCHARDEF>' being compiled
+i:\minilyric\unicodenew\utils\simplexmlparser.h(54) : error C2059: syntax error : '<'
+        i:\minilyric\unicodenew\utils\simplexmlparser.h(107) : see reference to class template instantiation 'CSimpleXMLParserObj<TCHARDEF>' being compiled
+i:\minilyric\unicodenew\utils\simplexmlparser.h(54) : error C2238: unexpected token(s) preceding ';'
+        i:\minilyric\unicodenew\utils\simplexmlparser.h(107) : see reference to class template instantiation 'CSimpleXMLParserObj<TCHARDEF>' being compiled
+i:\minilyric\unicodenew\utils\simplexmlparser.h(74) : error C2061: syntax error : identifier '_CSimpStr'
+        i:\minilyric\unicodenew\utils\simplexmlparser.h(107) : see reference to class template instantiation 'CSimpleXMLParserObj<TCHARDEF>' being compiled
+i:\minilyric\unicodenew\utils\xmlwrite.h(34) : error C2143: syntax error : missing ';' before '&'
+i:\minilyric\unicodenew\utils\xmlwrite.h(34) : error C2501: 'CCharBuffer' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\xmlwrite.h(34) : error C2501: 'GetBuffer' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\xmlwrite.h(34) : warning C4183: 'GetBuffer': member function definition looks like a ctor, but name does not match enclosing class
+i:\minilyric\unicodenew\utils\xmlwrite.h(48) : error C2146: syntax error : missing ';' before identifier 'm_strEncodings'
+i:\minilyric\unicodenew\utils\xmlwrite.h(48) : error C2501: 'tstring' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\xmlwrite.h(48) : error C2501: 'm_strEncodings' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\xmlwrite.h(49) : error C2143: syntax error : missing ';' before '<'
+i:\minilyric\unicodenew\utils\xmlwrite.h(49) : error C2501: 'vector' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\xmlwrite.h(49) : error C2059: syntax error : '<'
+i:\minilyric\unicodenew\utils\xmlwrite.h(49) : error C2238: unexpected token(s) preceding ';'
+i:\minilyric\unicodenew\utils\xmlwrite.h(50) : error C2143: syntax error : missing ';' before '<'
+i:\minilyric\unicodenew\utils\xmlwrite.h(50) : error C2501: 'CSimpStr_t' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\xmlwrite.h(50) : error C2059: syntax error : '<'
+i:\minilyric\unicodenew\utils\xmlwrite.h(50) : error C2238: unexpected token(s) preceding ';'
+i:\minilyric\unicodenew\utils\xmlwrite.h(51) : error C2146: syntax error : missing ';' before identifier 'm_strTemp'
+i:\minilyric\unicodenew\utils\xmlwrite.h(51) : error C2501: 'CSimpStr' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\xmlwrite.h(51) : error C2501: 'm_strTemp' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\uuencode.h(12) : error C2061: syntax error : identifier 'CSimpCharStr'
+i:\minilyric\unicodenew\utils\uuencode.h(14) : error C2061: syntax error : identifier 'CSimpCharStr'
+i:\minilyric\unicodenew\utils\uuencode.h(16) : error C2061: syntax error : identifier 'CSimpCharStr'
+i:\minilyric\unicodenew\utils\log.h(106) : error C2146: syntax error : missing ';' before identifier 'm_mutex'
+i:\minilyric\unicodenew\utils\log.h(106) : error C2501: 'Mutex' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\log.h(106) : error C2501: 'm_mutex' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\profile.h(45) : error C2143: syntax error : missing ';' before '<'
+i:\minilyric\unicodenew\utils\profile.h(45) : error C2059: syntax error : '<'
+i:\minilyric\unicodenew\utils\profile.h(45) : error C2238: unexpected token(s) preceding ';'
+i:\minilyric\unicodenew\utils\profile.h(46) : error C2059: syntax error : '<'
+i:\minilyric\unicodenew\utils\profile.h(46) : error C2238: unexpected token(s) preceding ';'
+i:\minilyric\unicodenew\utils\profile.h(49) : error C2146: syntax error : missing ';' before identifier 'm_mapAppName2Keys'
+i:\minilyric\unicodenew\utils\profile.h(49) : error C2501: 'APPNAME_MAP' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\profile.h(49) : error C2501: 'm_mapAppName2Keys' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\profile.h(50) : error C2146: syntax error : missing ';' before identifier 'm_strDefAppName'
+i:\minilyric\unicodenew\utils\profile.h(50) : error C2501: 'tstring' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\profile.h(50) : error C2501: 'm_strDefAppName' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\profile.h(53) : error C2653: 'STRING_MAP' : is not a class or namespace name
+i:\minilyric\unicodenew\utils\profile.h(53) : error C2061: syntax error : identifier 'iterator'
+i:\minilyric\unicodenew\utils\stringdb.h(21) : error C2504: 'CFileIndex1' : base class undefined
+i:\minilyric\unicodenew\utils\stringdb.h(21) : error C2143: syntax error : missing ',' before '<'
+i:\minilyric\unicodenew\utils\stringdb.h(21) : error C2059: syntax error : '<'
+i:\minilyric\unicodenew\utils\stringdb.h(30) : error C2146: syntax error : missing ';' before identifier 'AddOrGetPos'
+i:\minilyric\unicodenew\utils\stringdb.h(30) : error C2501: 'DB_POS' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\stringdb.h(32) : error C2061: syntax error : identifier 'DB_POS'
+i:\minilyric\unicodenew\utils\stringdb.h(50) : error C2504: 'CFileIndex1' : base class undefined
+i:\minilyric\unicodenew\utils\stringdb.h(50) : error C2143: syntax error : missing ',' before '<'
+i:\minilyric\unicodenew\utils\stringdb.h(50) : error C2059: syntax error : '<'
+i:\minilyric\unicodenew\utils\stringdb.h(58) : error C2146: syntax error : missing ';' before identifier 'AddOrGetPos'
+i:\minilyric\unicodenew\utils\stringdb.h(58) : error C2501: 'DB_POS' : missing storage-class or type specifiers
+i:\minilyric\unicodenew\utils\stringdb.h(60) : error C2061: syntax error : identifier 'DB_POS'
+i:\minilyric\unicodenew\utils\win32\msjexhnd.h(73) : error C2146: syntax error : missing ';' before identifier '_strReport'
+i:\minilyric\unicodenew\utils\win32\msjexhnd.h(73) : error C2501: '_strReport' : missing storage-class or type specifiers
+Error executing cl.exe.
+
+
+
+<h3>Results</h3>
+MfcExLib.lib - 74 error(s), 1 warning(s)
+</pre>
+</body>
+</html>

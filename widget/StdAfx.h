@@ -1,0 +1,14 @@
+// stdafx.h : include file for standard system include files,
+// or project specific include files that are used frequently, but
+// are changed infrequently
+//
+#ifndef _WIDGET_INC_
+#define _WIDGET_INC_
+
+#include "../base/mlstdafx.h"
+#include "../base/base.h"
+#include "../Utils/Utils.h"
+#include "../OurMFClib/OurMFClib.h"
+#include "../gfx/gfx.h"
+
+#endif // _WIDGET_INC_

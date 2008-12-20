@@ -1,0 +1,8 @@
+noinst_LIBRARIES = lib_skin_gtk2.a
+
+lib_skin_gtk2_a_SOURCES = SkinVScrollBarOSStyle.cpp SkinRgn.cpp ImgList.cpp
+
+INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/Widget -I$(top_srcdir)/Skin \
+	-I$(top_srcdir)/gfx
+
+lib_skin_gtk2_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`

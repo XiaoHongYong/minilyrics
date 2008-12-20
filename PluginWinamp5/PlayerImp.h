@@ -1,0 +1,87 @@
+#pragma once
+
+extern class CPlayerImp		g_Player;
+
+#define LRC_TITLE_MAX_LEN		256
+
+class CPlayerImp : public IPlayer
+{
+public:
+	CPlayerImp();
+	virtual ~CPlayerImp();
+
+public:
+	void OnSongChanged(LPCTSTR szFullTitle);
+	void OnPlayTimeChanged(DWORD dwTimeCur);
+
+	// Init and destroy.
+	BOOL Init();
+	void Quit();
+
+	// Player Info
+	int GetPlayerName(char * lpszBuffer, int nBufSize);
+
+	// Get player skin path
+	int GetCurSkinPath(char * lpszBuffer, int nBufSize);
+
+	HWND GetMainWnd();
+
+	// get player state and song info
+	DWORD GetPlayerState();
+
+	int GetFullTitle(char * lpszBuffer, int nBufSize);
+	int GetTitle(char * lpszBuffer, int nBufSize);
+	int GetArtist(char * lpszBuffer, int nBufSize);
+	int GetAlbum(char * lpszBuffer, int nBufSize);
+	int GetSourceMedia(char * lpszSourceMedia, int nBufSize);
+
+	DWORD GetMediaLength();
+
+	DWORD GetPlayPos();
+	int HasVideo();
+
+	// control player
+	BOOL Play();
+	BOOL Pause();
+	BOOL PlayPause();
+	BOOL Stop();
+	BOOL Prev();
+	BOOL Next();
+	BOOL SeekTo(int nMsPos);
+
+	virtual int IsFeatureSupported(PlayerFeature feature)
+	{
+		if (feature == PF_MinimizeRestoreWithPlayer)
+			return PR_OK;
+		else
+			return IPlayer::IsFeatureSupported(feature);
+	}
+
+	virtual HWND GetAttachedParentWnd(RECT *prc);
+	virtual void OnNotifySkinLoaded();
+	virtual void OnNotifyDetachedFromParentWnd();
+	virtual int GetEmbeddedSkinName(TCHAR * lpszBuffer, int nBufSize);
+
+	virtual int GetSkinThemeColor(SKIN_CLR_NAME scn, COLORREF *clrValue);
+
+	virtual void SetTimeUpdateFreq(int nFreq);
+
+	BOOL IsWinamp5();
+
+	int GetProperty(const char *szProperty, TCHAR *szValue, int nLen);
+
+public:
+	DWORD			m_dwPlayerVer;
+	HWND			m_hwndPluginParent;
+
+	TCHAR			m_szFullTitle[LRC_TITLE_MAX_LEN];
+	DWORD			m_dwPos;
+
+	TCHAR			m_szPlayerName[64];
+
+	bool			m_bWorking;
+	bool			m_bShoutcast;
+	DWORD			m_dwShoutcastTitleChangedPos;
+	PLAYER_STATE	m_state;
+
+};

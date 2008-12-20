@@ -1,0 +1,239 @@
+// PreferencePageBase.cpp: implementation of the CPreferencePageBase class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "PreferencePageBase.h"
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+CPreferencePageBase::CPreferencePageBase(UINT nIDTemplate, LPCTSTR szCaption) : CBaseDialog(nIDTemplate), m_strCaption(szCaption)
+{
+	m_pParentPage = NULL;
+	m_PageID = PAGE_UNKNOWN;
+}
+
+CPreferencePageBase::~CPreferencePageBase()
+{
+
+}
+
+BOOL CPreferencePageBase::OnInitDialog()
+{
+	if (!CBaseDialog::OnInitDialog())
+		return FALSE;
+
+	m_wndHelper.Init(this);
+
+	return TRUE;
+}
+
+void CPreferencePageBase::AddOptBool(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, bool bDefValue, int nIDCtrl)
+{
+	OptBool	opt;
+	opt.eventType = evtType;
+	opt.strSection = szSection;
+	opt.strSettingName = szSettingName;
+	opt.nDefaultValue = bDefValue;
+	opt.nCtrl = nIDCtrl;
+
+	m_vOptBool.push_back(opt);
+}
+
+void CPreferencePageBase::AddOptBoolStr(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, LPCTSTR szDefValue, int nIDCtrl)
+{
+	OptBoolStr	opt;
+	opt.eventType = evtType;
+	opt.strSection = szSection;
+	opt.strSettingName = szSettingName;
+	opt.strDefaultValue = szDefValue;
+	opt.nCtrl = nIDCtrl;
+
+	m_vOptBoolStr.push_back(opt);
+}
+
+void CPreferencePageBase::InitCheckButtons()
+{
+	{
+		//
+		// Check Radio Str Buttons
+		//
+		VOptRadioStr::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptRadioStr.end();
+		for (it = m_vOptRadioStr.begin(); it != itEnd; ++it)
+		{
+			OptRadioStr		&opt = *it;
+
+			strValue = g_Profile.GetProfileString(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.strDefaultValue.c_str());
+			if (strValue.empty())
+				strValue = opt.strDefaultValue;
+			for (int i = 0; i < (int)opt.vValues.size(); i++)
+			{
+				if (_tcsicmp(opt.vValues[i].c_str(), strValue.c_str()) == 0)
+				{
+					CheckButton(opt.vCtrls[i], true);
+					break;
+				}
+			}
+		}
+	}
+
+	{
+		//
+		// Check Radio Int Buttons
+		//
+		VOptRadioInt::iterator	it, itEnd;
+		int		nValue;
+		itEnd = m_vOptRadioInt.end();
+		for (it = m_vOptRadioInt.begin(); it != itEnd; ++it)
+		{
+			OptRadioInt		&opt = *it;
+
+			nValue = g_Profile.GetProfileInt(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.nDefaultValue);
+			for (int i = 0; i < (int)opt.vValues.size(); i++)
+			{
+				if (opt.vValues[i] == nValue)
+				{
+					CheckButton(opt.vCtrls[i], true);
+					break;
+				}
+			}
+		}
+	}
+
+	{
+		//
+		// Init Check BoolStr Buttons
+		//
+		VOptBoolStr::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptBoolStr.end();
+		for (it = m_vOptBoolStr.begin(); it != itEnd; ++it)
+		{
+			OptBoolStr		&opt = *it;
+
+			strValue = g_Profile.GetProfileString(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.strDefaultValue.c_str());
+			if (IsTRUE(strValue.c_str()))
+				CheckButton(opt.nCtrl, true);
+			else
+				CheckButton(opt.nCtrl, false);
+		}
+	}
+
+	{
+		//
+		// Init Check Bool Buttons
+		//
+		VOptBool::iterator	it, itEnd;
+		itEnd = m_vOptBool.end();
+		for (it = m_vOptBool.begin(); it != itEnd; ++it)
+		{
+			OptBool		&opt = *it;
+			bool		bValue;
+
+			bValue = g_Profile.GetProfileBool(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.nDefaultValue);
+			if (bValue)
+				CheckButton(opt.nCtrl, true);
+			else
+				CheckButton(opt.nCtrl, false);
+		}
+	}
+}
+
+void CPreferencePageBase::OnSize(int cx, int cy)
+{
+	m_wndHelper.OnResize();
+
+	CBaseDialog::OnSize(cx, cy);
+}
+
+bool CPreferencePageBase::ProcessCommand(UINT uID)
+{
+	{
+		//
+		// Process Radio Buttons Command
+		//
+		VOptRadioStr::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptRadioStr.end();
+		for (it = m_vOptRadioStr.begin(); it != itEnd; ++it)
+		{
+			OptRadioStr		&opt = *it;
+
+			for (int i = 0; i < (int)opt.vCtrls.size(); i++)
+			{
+				if (opt.vCtrls[i] == uID)
+				{
+					CMPlayerSettings::SetSettings(opt.eventType, opt.strSection.c_str(),
+						opt.strSettingName.c_str(), opt.vValues[i].c_str(), opt.eventType != ET_INVALID);
+					return true;
+				}
+			}
+		}
+	}
+
+	{
+		//
+		// Process Radio int Buttons Command
+		//
+		VOptRadioInt::iterator	it, itEnd;
+		itEnd = m_vOptRadioInt.end();
+		for (it = m_vOptRadioInt.begin(); it != itEnd; ++it)
+		{
+			OptRadioInt		&opt = *it;
+
+			for (int i = 0; i < (int)opt.vCtrls.size(); i++)
+			{
+				if (opt.vCtrls[i] == uID)
+				{
+					CMPlayerSettings::SetSettings(opt.eventType, opt.strSection.c_str(),
+						opt.strSettingName.c_str(), opt.vValues[i], opt.eventType != ET_INVALID);
+					return true;
+				}
+			}
+		}
+	}
+
+	{
+		// Bool str
+		VOptBoolStr::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptBoolStr.end();
+		for (it = m_vOptBoolStr.begin(); it != itEnd; ++it)
+		{
+			OptBoolStr		&opt = *it;
+			if (opt.nCtrl == uID)
+			{
+				bool	bValue;
+				bValue = IsButtonChecked(opt.nCtrl);
+				CMPlayerSettings::SetSettings(opt.eventType, opt.strSection.c_str(),
+					opt.strSettingName.c_str(), BOOLTOSTR(bValue), opt.eventType != ET_INVALID);
+				return true;
+			}
+		}
+	}
+
+	{
+		// Bool
+		VOptBool::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptBool.end();
+		for (it = m_vOptBool.begin(); it != itEnd; ++it)
+		{
+			OptBool		&opt = *it;
+			if (opt.nCtrl == uID)
+			{
+				bool	bValue;
+				bValue = IsButtonChecked(opt.nCtrl);
+				CMPlayerSettings::SetSettings(opt.eventType, opt.strSection.c_str(),
+					opt.strSettingName.c_str(), bValue, opt.eventType != ET_INVALID);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}

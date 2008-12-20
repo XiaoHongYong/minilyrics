@@ -1,0 +1,1298 @@
+// SkinFactory.cpp: implementation of the CSkinFactory class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "MLSkin.h"
+#include "SkinFactory.h"
+#include "SkinWndResizeObj.h"
+#include "SkinFadeArea.h"
+#include "SkinDecorativeContainer.h"
+
+#define _SZ_SKINWND				_T("skinwnd")
+#define _SZ_MENUS				_T("Menus")
+#define _SZ_DYNMICCTRLS			_T("DynControls")
+#define _SZ_DYNMICCMDS			_T("DynCmds")
+#define _SZ_CONTROLDEF			_T("controldef")
+#define _SZ_SKIN_FILE_NAME		_T("ZikiPlayer.xml")
+#define _SZ_ADJUST_HUE			_T("AdjustHue")
+
+#define MENU_ID_CUSTOM_BASE		46000
+
+/*
+   <DynControls>
+     <VScrollBar width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp"/>
+     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
+     <Toolbar name="normal" image="toolbar-small.bmp" enablehover="TRUE" height="18" units_x="18" blank_x="216" blank_cx="18" seperator_x="216" seperator_cx="10">
+	 </Toolbar>
+   </DynControls>
+*/
+
+void InsertNodeAbove(SXNode *pNodeParent, LPCTSTR szNodeAbove, SXNode *pNodeChild)
+{
+	SXNode::iterator	it, itEnd;
+
+	itEnd = pNodeParent->listChildren.end();
+	for (it = pNodeParent->listChildren.begin(); it != itEnd; ++it)
+	{
+		SXNode		*pNode = *it;
+
+		if (_tcsicmp(pNode->strName.c_str(), szNodeAbove) == 0)
+		{
+			pNodeParent->listChildren.insert(it, pNodeChild);
+			return;
+		}
+	}
+
+	pNodeParent->listChildren.push_back(pNodeChild);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+// Class CSkinFileXML
+CSkinFileXML::CSkinFileXML()
+{
+}
+
+CSkinFileXML::~CSkinFileXML()
+{
+}
+
+int CSkinFileXML::Load(LPCTSTR szFile)
+{
+	m_strFile = szFile;
+
+	if (!m_xml.ParseFile(szFile))
+		return ERR_PARSE_XML;
+
+	if (_tcsicmp(m_xml.m_pRoot->strName.c_str(), _T("skin")) == 0)
+		return ERR_OK;
+	else
+		return ERR_BAD_FILE_FORMAT;
+}
+
+int CSkinFileXML::Save(LPCTSTR szFile)
+{
+	CXMLWriter	xml;
+
+	m_xml.m_pRoot->ToXML(xml);
+
+	if (xml.SaveAsFile(szFile))
+		return ERR_OK;
+	else
+		return ERR_WRITE_FILE;
+}
+
+void CSkinFileXML::Close()
+{
+	m_xml.Free();
+	m_strFile.resize(0);
+}
+
+int CSkinFileXML::GetSkinWndNode(LPCTSTR szSkinWndName, SXNode::iterator *itWnd)
+{
+	SXNode		*pNodeRoot;
+	pNodeRoot = m_xml.m_pRoot;
+	SXNode::iterator	it, itEnd;
+
+	itEnd = pNodeRoot->listChildren.end();
+	for (it = pNodeRoot->listChildren.begin(); it != itEnd; ++it)
+	{
+		SXNode		*pNode = *it;
+		if (_tcsicmp(pNode->strName.c_str(), _SZ_SKINWND) == 0)
+		{
+			LPCTSTR	szName = pNode->GetProperty(SZ_PN_NAME);
+			if (szName && _tcsicmp(szName, szSkinWndName) == 0)
+			{
+				*itWnd = it;
+				return ERR_OK;
+			}
+		}
+	}
+
+	return ERR_NOT_FOUND;
+}
+
+SXNode *CSkinFileXML::GetSkinWndNode(LPCTSTR szSkinWndName)
+{
+	SXNode::iterator	itWnd;
+	int		nRet;
+
+	nRet = GetSkinWndNode(szSkinWndName, &itWnd);
+	if (nRet == ERR_OK)
+		return *itWnd;
+
+	return NULL;
+}
+
+int CSkinFileXML::NewSkinWndNode(LPCTSTR szSkinWndName)
+{
+	SXNode::iterator	itWnd;
+	int		nRet;
+	SXNode	*pWndNode;
+
+	nRet = GetSkinWndNode(szSkinWndName, &itWnd);
+	if (nRet == ERR_OK)
+		return ERR_EXIST;
+
+	pWndNode = new SXNode;
+	pWndNode->strName = _T("skinwnd");
+	pWndNode->SetProperty(SZ_PN_NAME, szSkinWndName);
+	m_xml.m_pRoot->listChildren.push_back(pWndNode);
+
+	return ERR_OK;
+}
+
+int CSkinFileXML::SetSkinWndNode(LPCTSTR szSkinWndName, SXNode *pWndNode)
+{
+	SXNode::iterator	itWnd;
+	int		nRet;
+
+	nRet = GetSkinWndNode(szSkinWndName, &itWnd);
+	if (nRet == ERR_OK)
+	{
+		SXNode *pNode = *itWnd;
+		delete pNode;
+		*itWnd = pWndNode;
+		return ERR_OK;
+	}
+
+	ASSERT(0 && _T("Not fond skin wnd node"));
+
+	return nRet;
+}
+
+int CSkinFileXML::RemoveSkinWnd(LPCTSTR szSkinWndName)
+{
+	SXNode::iterator	itWnd;
+	int		nRet;
+
+	nRet = GetSkinWndNode(szSkinWndName, &itWnd);
+	if (nRet == ERR_OK)
+		m_xml.m_pRoot->listChildren.erase(itWnd);
+
+	return nRet;
+}
+
+int CSkinFileXML::ChangeSkinWndName(LPCTSTR szNameOld, LPCTSTR szNameNew)
+{
+	SXNode::iterator	itWnd;
+	int		nRet;
+
+	if (_tcsicmp(szNameNew, szNameOld) == 0)
+		return ERR_OK;
+
+	if (!CanUseSkinWndName(szNameNew))
+		return ERR_EXIST;
+
+	nRet = GetSkinWndNode(szNameOld, &itWnd);
+	if (nRet == ERR_OK)
+	{
+		SXNode	*pNode;
+		pNode = *itWnd;
+		pNode->SetProperty(SZ_PN_NAME, szNameNew);
+	}
+
+	return nRet;
+}
+
+bool CSkinFileXML::CanUseSkinWndName(LPCTSTR szName)
+{
+	SXNode::iterator	itWnd;
+	int		nRet;
+
+	nRet = GetSkinWndNode(szName, &itWnd);
+	if (nRet == ERR_NOT_FOUND)
+		return true;
+
+	return false;
+}
+
+SXNode *CSkinFileXML::GetMenusNode()
+{
+	return m_xml.m_pRoot->GetChild(_SZ_MENUS);
+}
+
+int CSkinFileXML::SetMenusNode(SXNode *pNode)
+{
+	return SetNode(_SZ_MENUS, pNode);
+}
+
+SXNode *CSkinFileXML::GetDynamicCtrlsNode()
+{
+	return m_xml.m_pRoot->GetChild(_SZ_DYNMICCTRLS);
+}
+
+int CSkinFileXML::SetDynamicCtrlsNode(SXNode *pNode)
+{
+	return SetNode(_SZ_DYNMICCTRLS, pNode);
+}
+
+SXNode *CSkinFileXML::GetDynamicCmdsNode()
+{
+	return m_xml.m_pRoot->GetChild(_SZ_DYNMICCMDS);
+}
+
+int CSkinFileXML::SetDynamicCmdsNode(SXNode *pNode)
+{
+	return SetNode(_SZ_DYNMICCMDS, pNode);
+}
+
+SXNode *CSkinFileXML::GetAdjustHueNode()
+{
+	return m_xml.m_pRoot->GetChild(_SZ_ADJUST_HUE);
+}
+
+int CSkinFileXML::SetAdjustHueNode(SXNode *pNode)
+{
+	return SetNode(_SZ_ADJUST_HUE, pNode);
+}
+
+LPCTSTR CSkinFileXML::GetSkinProperty(LPCTSTR szProperty)
+{
+	return m_xml.m_pRoot->GetProperty(szProperty);
+}
+
+int CSkinFileXML::GetMainSkinWnd(tstring &strSkinWndName, LPCTSTR szSkinWndNameDef)
+{
+	LPCTSTR		szMainWnds, szDefMainWnd;
+
+	szDefMainWnd = m_xml.m_pRoot->GetProperty(_T("defmainwnd"));
+	szMainWnds = m_xml.m_pRoot->GetProperty(_T("mainwnds"));
+
+	strSkinWndName.resize(0);
+
+	//
+	// Is szSkinWndName exists in "mainwnds"?
+	//
+	if (szSkinWndNameDef == NULL || IsEmptyString(szSkinWndNameDef))
+	{
+		if (szDefMainWnd && !IsEmptyString(szDefMainWnd))
+		{
+			strSkinWndName = szDefMainWnd;
+			return ERR_OK;
+		}
+	}
+	else if (szMainWnds)
+	{
+		vector<tstring>		vWnds;
+		StrBreak(szMainWnds, ',', vWnds);
+		for (int i = 0; i < (int)vWnds.size(); i++)
+		{
+			TrimStr(vWnds[i]);
+			if (_tcsicmp(szSkinWndNameDef, vWnds[i].c_str()) == 0)
+			{
+				strSkinWndName = vWnds[i];
+				return ERR_OK;
+			}
+		}
+	}
+
+	//
+	// Use defined "defmainwnd"
+	//
+	if (szDefMainWnd && !IsEmptyString(szDefMainWnd))
+	{
+		strSkinWndName = szDefMainWnd;
+		return ERR_OK;
+	}
+
+	vector<tstring>		vWnds;
+	if (szMainWnds)
+		StrBreak(szMainWnds, ',', vWnds);
+	if (vWnds.size())
+	{
+		TrimStr(vWnds[0]);
+		strSkinWndName = vWnds[0];
+		return ERR_OK;
+	}
+	else
+	{
+		ERRLOG1(_T("No mainwnds is defined: %s"), m_strFile.c_str());
+		return ERR_NOT_FOUND;
+	}
+}
+
+void CSkinFileXML::EnumSkinWnd(vector<tstring> &vSkinWnd)
+{
+	SXNode		*pNodeRoot;
+	pNodeRoot = m_xml.m_pRoot;
+
+	for (SXNode::iterator it = pNodeRoot->listChildren.begin(); 
+		it != pNodeRoot->listChildren.end(); ++it)
+	{
+		SXNode		*pNode = *it;
+
+		if (_tcsicmp(pNode->strName.c_str(), _SZ_SKINWND) == 0)
+		{
+			LPCTSTR	szName = pNode->GetProperty(SZ_PN_NAME);
+			if (szName)
+				vSkinWnd.push_back(szName);
+		}
+	}
+}
+
+int CSkinFileXML::SetNode(LPCTSTR szName, SXNode *pNode)
+{
+	SXNode		*pNodeOld;
+	SXNode		*pNodeRoot;
+
+	pNodeRoot = m_xml.m_pRoot;
+	for (SXNode::iterator it = pNodeRoot->listChildren.begin(); 
+		it != pNodeRoot->listChildren.end(); ++it)
+	{
+		pNodeOld = *it;
+		if (_tcsicmp(pNodeOld->strName.c_str(), szName) == 0)
+		{
+			delete pNodeOld;
+			*it = pNode;
+			return ERR_OK;
+		}
+	}
+
+	InsertNodeAbove(pNodeRoot, szName, pNode);
+
+	return ERR_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// class CDynamicCtrls
+CDynamicCtrls::CDynamicCtrls()
+{
+	m_pNode = NULL;
+}
+
+CDynamicCtrls::~CDynamicCtrls()
+{
+	Free();
+}
+
+int CDynamicCtrls::FromXML(SXNode *pNode)
+{
+	Free();
+
+	m_pNode = DupSXNode(pNode);
+
+	return ERR_OK;
+}
+
+void CDynamicCtrls::Free()
+{
+	if (m_pNode)
+	{
+		delete m_pNode;
+		m_pNode = NULL;
+	}
+}
+
+CUIObject *CDynamicCtrls::CreateControl(CSkinContainer *pContainer, LPCTSTR szClassName, LPCTSTR szNameToCheck, int nIDAssign, LPCTSTR szLeft, LPCTSTR szTop, LPCTSTR szWidth, LPCTSTR szHeight)
+{
+	CUIObject			*pObj = NULL;
+	SXNode::iterator	it, itEnd;
+
+	if (!m_pNode)
+		return NULL;
+
+	itEnd = m_pNode->listChildren.end();
+	for (it = m_pNode->listChildren.begin(); it != itEnd; ++it)
+	{
+		SXNode		*pNode = *it;
+
+		// OK, found the contorl
+		if (_tcsicmp(pNode->strName.c_str(), szClassName) == 0)
+		{
+			if (szNameToCheck && !IsEmptyString(szNameToCheck))
+			{
+				if (_tcsicmp(pNode->GetPropertySafe(SZ_PN_NAME), szNameToCheck) != 0)
+					continue;
+			}
+		}
+		else
+			continue;
+
+		// Create the control
+		pObj = pContainer->m_pSkin->GetSkinFactory()->CreateUIObject(pContainer->m_pSkin, pNode->strName.c_str());
+		assert(pObj);
+		if (pObj)
+		{
+			if (nIDAssign == SKIN_UIOBJ_ID_UNDEFINE)
+				nIDAssign = pContainer->m_pSkin->AllocUIObjID();
+			pObj->m_nId =  nIDAssign;
+
+			// 创建成功，首先设置它的属性
+			pObj->FromXML(pContainer, pNode);
+
+			//
+			// 先使用参数来设置高度和宽度
+			if (szWidth && !IsEmptyString(szWidth))
+				pObj->SetProperty(SZ_PN_WIDTH, szWidth);
+			if (szHeight && !IsEmptyString(szHeight))
+				pObj->SetProperty(SZ_PN_HEIGHT, szHeight);
+			if (szLeft && !IsEmptyString(szLeft))
+				pObj->SetProperty(SZ_PN_LEFT, szLeft);
+			if (szLeft && !IsEmptyString(szTop))
+				pObj->SetProperty(SZ_PN_TOP, szTop);
+
+			// 添加到数组中
+			pContainer->AddUIObject(pObj);
+			break;
+		}
+	}
+
+	return pObj;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// CDynamicCmds class
+
+int CDynamicCmds::FromXML(SXNode *pNodeDynCmds)
+{
+	m_listDynCmd.clear();
+
+	ASSERT(_tcsicmp(pNodeDynCmds->strName.c_str(), _SZ_DYNMICCMDS) == 0);
+	for (SXNode::iterator it = pNodeDynCmds->listChildren.begin(); 
+		it != pNodeDynCmds->listChildren.end(); ++it)
+	{
+		SXNode		*pNode = *it;
+
+		if (_tcsicmp(pNode->strName.c_str(), _T("cmd")) == 0)
+		{
+			DynamicCmd		cmd;
+			cmd.strCmdId = pNode->GetPropertySafe(SZ_PN_ID);
+			cmd.strFunction = pNode->GetPropertySafe(_T("func"));
+			cmd.strParam = pNode->GetPropertySafe(_T("param"));
+			m_listDynCmd.push_back(cmd);
+		}
+	}
+
+	return ERR_OK;
+
+}
+
+SXNode *CDynamicCmds::ToXML()
+{
+	SXNode		*pNode;
+	SXNode		*pNodeRoot;
+	
+	pNodeRoot = new SXNode;
+	pNodeRoot->strName = _SZ_DYNMICCMDS;
+
+	LIST_DYNCMD::iterator	it, itEnd;
+	itEnd = m_listDynCmd.end();
+	for (it = m_listDynCmd.begin(); it != itEnd; ++it)
+	{
+		DynamicCmd	&dc = *it;
+
+		pNode = new SXNode;
+		pNode->strName = _T("cmd");
+		pNode->AddProperty(SZ_PN_ID, dc.strCmdId.c_str());
+		pNode->AddProperty(_T("func"), dc.strFunction.c_str());
+		pNode->AddProperty(_T("param"), dc.strParam.c_str());
+		pNodeRoot->listChildren.push_back(pNode);
+	}
+
+	return pNodeRoot;
+}
+
+void CDynamicCmds::Free()
+{
+	m_listDynCmd.clear();
+}
+
+bool CDynamicCmds::GetCmd(LPCTSTR szCmdId, DynamicCmd &cmd)
+{
+	LIST_DYNCMD::iterator	it, itEnd;
+
+	itEnd = m_listDynCmd.end();
+	for (it = m_listDynCmd.begin(); it != itEnd; ++it)
+	{
+		DynamicCmd	&dc = *it;
+		if (_tcsicmp(dc.strCmdId.c_str(), szCmdId) == 0)
+		{
+			cmd = dc;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void CDynamicCmds::EnumAllCmds(V_Str &vstrCmds)
+{
+	LIST_DYNCMD::iterator	it, itEnd;
+
+	itEnd = m_listDynCmd.end();
+	for (it = m_listDynCmd.begin(); it != itEnd; ++it)
+	{
+		DynamicCmd	&dc = *it;
+		vstrCmds.push_back(dc.strCmdId);
+	}	
+}
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+CSkinFactory::CSkinFactory()
+{
+	m_strMainSkinWndClassName = _SZ_SKINWND_CLASS_NAME;
+	m_IdMap = NULL;
+	m_strSkinFileName = _SZ_SKIN_FILE_NAME;
+	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
+	m_nNextMenuId = MENU_ID_CUSTOM_BASE;
+}
+
+CSkinFactory::~CSkinFactory()
+{
+
+}
+
+
+void CSkinFactory::SetStringIDMap(STRING_ID_MAP StringIdMap[])
+{
+	assert(StringIdMap);
+
+	m_IdMap = StringIdMap;
+}
+
+// COMMENT:
+//		根据控件 ID 字符串来取得对应的控件 ID 数值
+//		改进方法: 对所有的ID字符串值进行排序,然后使用二分法进行搜索
+int CSkinFactory::GetIDByName(LPCTSTR szId)
+{
+	assert(szId);
+	assert(m_IdMap);
+	if (!m_IdMap)
+		return SKIN_UIOBJ_ID_UNDEFINE;
+
+	if (IsEmptyString(szId))
+		return SKIN_UIOBJ_ID_UNDEFINE;
+
+	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	{
+		if (_tcsicmp(szId, m_IdMap[i].szId) == 0)
+		{
+			return m_IdMap[i].nId;
+		}
+	}
+
+	MAP_STRID::iterator it = m_mapCmdStrId.find(szId);
+	if (it != m_mapCmdStrId.end())
+	{
+		return (*it).second;
+	}
+
+	m_nCustomCmdIDNext++;
+
+	// DBGLOG2(_T("Allocated customized CmdID value: %s, %d"), szId, m_nCustomCmdIDNext);
+	m_mapCmdStrId[szId] = m_nCustomCmdIDNext;
+
+	return m_nCustomCmdIDNext;
+}
+
+// COMMENT:
+//		根据控件 ID 字符串来取得对应的控件 ID 数值
+//		改进方法: 对所有的ID字符串值进行排序,然后使用二分法进行搜索
+const STRING_ID_MAP *CSkinFactory::GetIDByNameEx(LPCTSTR szId)
+{
+	assert(szId);
+	assert(m_IdMap);
+	if (!m_IdMap)
+		return NULL;
+
+	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	{
+		if (_tcsicmp(szId, m_IdMap[i].szId) == 0)
+		{
+			return m_IdMap + i;
+		}
+	}
+
+	static STRING_ID_MAP	customAllocID;
+	customAllocID.szId = NULL;
+	customAllocID.szToolTip = NULL;
+
+	MAP_STRID::iterator it = m_mapCmdStrId.find(szId);
+	if (it != m_mapCmdStrId.end())
+	{
+		customAllocID.nId = (*it).second;
+		return &customAllocID;
+	}
+
+	m_nCustomCmdIDNext++;
+
+	// DBGLOG2(_T("Allocated custom CmdID value: %s, %d"), szId, m_nCustomCmdIDNext);
+	m_mapCmdStrId[szId] = m_nCustomCmdIDNext;
+	customAllocID.nId = m_nCustomCmdIDNext;
+
+	return &customAllocID;
+}
+
+// COMMENT:
+//		根据控件 ID 字符串来取得对应的控件 ID 数值
+//		改进方法: 对所有的ID字符串值进行排序,然后使用二分法进行搜索
+int CSkinFactory::GetMenuIDByCmdName(LPCTSTR szMenuCmdName)
+{
+	MAP_STRID::iterator it = m_mapMenuStrId.find(szMenuCmdName);
+	if (it != m_mapMenuStrId.end())
+	{
+		return (*it).second;
+	}
+
+	m_nNextMenuId++;
+	DBGLOG2(_T("Allocated custom menu id value: %s, %d"), szMenuCmdName, m_nNextMenuId);
+	return m_nNextMenuId;
+}
+
+int CSkinFactory::OpenSkin(LPCTSTR szSkinName)
+{
+	tstring		strSkinDir;
+
+	strSkinDir = GetSkinRootDir();
+
+	strSkinDir += szSkinName;
+
+	return OpenSkinEx(szSkinName, strSkinDir.c_str(), _T(""));
+}
+
+int CSkinFactory::OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir)
+{
+	TCHAR		szSkinFile[MAX_PATH];
+
+	Close();
+
+	m_strSkinName = szSkinName;
+
+	m_resourceMgr.SetResourceDir1(szSkinDir);
+
+	m_resourceMgr.SetResourceDir2(szExtraDir);
+
+	m_resourceMgr.SetResourceDir3(GetSkinRootDir());
+
+	if (!m_resourceMgr.GetResourcePathName(szSkinFile, CountOf(szSkinFile), m_strSkinFileName.c_str()))
+	{
+		ERRLOG2(_T("Can't find skin file in dir: %s, %s"), szSkinDir, szExtraDir);
+		return ERR_OPEN_FILE;
+	}
+
+	return OpenSkinFile(szSkinFile);
+}
+
+int CSkinFactory::ChangeSkin(LPCTSTR szSkinName)
+{
+	tstring		strSkinDir;
+
+	strSkinDir = GetSkinRootDir();
+
+	strSkinDir += szSkinName;
+
+	return ChangeSkinEx(szSkinName, strSkinDir.c_str(), _T(""));
+}
+
+int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir)
+{
+	int		nRet;
+
+	nRet = OpenSkinEx(szSkinName, szSkinDir, szExtraDir);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	int		hue = g_Profile.GetProfileInt(szSkinName, _T("Hue"), 0);
+	if (hue < 0)
+		hue = 0;
+	else if (hue > 360)
+		hue = 360;
+	m_resourceMgr.AdjustHue((float)hue, 0.5, 0.5);
+
+	// change the skins of existed windows.
+	tstring		strSkinWndDef;
+	tstring		strSkinWndName;
+
+	strSkinWndDef = g_Profile.GetProfileString(szSkinName, _T("DefaultSkinWnd"), _T(""));
+	nRet = m_skinFile.GetMainSkinWnd(strSkinWndName, strSkinWndDef.c_str());
+	if (nRet != ERR_OK)
+	{
+		ERRLOG1(_T("Can't get main window name: %s"), m_skinFile.GetFileName());
+		return nRet;
+	}
+
+	if (m_listSkinWnds.empty())
+	{
+		nRet = CreateMainSkinWnd(_T("MiniLyrics"), strSkinWndName.c_str(), strSkinWndName.c_str());
+		if (nRet != ERR_OK)
+			return nRet;
+	}
+	else
+	{
+		CSkin *pSkin = m_listSkinWnds.front();
+		nRet = pSkin->OpenSkin(strSkinWndName.c_str());
+		if (nRet != ERR_OK)
+			return nRet;
+	}
+
+	LIST_SKINWNDS		listToBeDestroyed;
+
+	LIST_SKINWNDS::iterator	it, itEnd;
+	int			n = 1, nReloaded = 1;
+	for (it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
+	{
+		if (n > nReloaded)
+		{
+			CSkin	*pSkinWnd = *it;
+			nRet = pSkinWnd->OpenDefaultSkin();
+			if (nRet != ERR_OK)
+			{
+				listToBeDestroyed.push_back(pSkinWnd);
+				m_listSkinWnds.erase(it);
+				it = m_listSkinWnds.begin();
+			}
+			else
+				nReloaded++;
+		}
+		n++;
+	}
+
+	for (it = listToBeDestroyed.begin(); it != listToBeDestroyed.end(); ++it)
+	{
+		CSkin	*pSkinWnd = *it;
+		pSkinWnd->Destroy();
+		// delete pSkinWnd;
+	}
+
+	return ERR_OK;
+}
+
+void CSkinFactory::GetWndDragAutoCloseTo(vector<CBaseWnd *> &vWnd)
+{
+	LIST_SKINWNDS::iterator	it, itEnd;
+	itEnd = m_listSkinWnds.end();
+	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+	{
+		CSkin	*pSkinWnd = *it;
+		vWnd.push_back(pSkinWnd);
+	}
+}
+
+void CSkinFactory::GetWndDragTrackMove(vector<CBaseWnd *> &vWnd)
+{
+	LIST_SKINWNDS::iterator	it, itEnd;
+	itEnd = m_listSkinWnds.end();
+	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+	{
+		CSkin	*pSkinWnd = *it;
+		vWnd.push_back(pSkinWnd);
+	}
+}
+
+int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
+{
+	int				nRet;
+	SXNode			*pNode;
+
+	nRet = m_skinFile.Load(szSkinFile);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	LPCTSTR szExtraResouceFolder = m_skinFile.GetSkinProperty(_T("ExtraResouceFolder"));
+	if (szExtraResouceFolder && !IsEmptyString(szExtraResouceFolder))
+	{
+		tstring		strExtraDirAbs;
+		strExtraDirAbs = GetSkinRootDir();
+		if (*szExtraResouceFolder == '\\' || *szExtraResouceFolder == '/')
+			strExtraDirAbs += szExtraResouceFolder + 1;
+		else
+			strExtraDirAbs += szExtraResouceFolder;
+#ifdef _WIN32
+		strrep(strExtraDirAbs, _T("/"), _T(SZ_DIR_SLASH));
+#else
+		strrep(strExtraDirAbs, _T("\\"), _T(SZ_DIR_SLASH));
+#endif
+		m_resourceMgr.SetResourceDir2(strExtraDirAbs.c_str());
+	}
+
+	pNode = m_skinFile.GetDynamicCtrlsNode();
+	if (pNode)
+		m_dynamicCtrls.FromXML(pNode);
+
+	pNode = m_skinFile.GetDynamicCmdsNode();
+	if (pNode)
+		m_dynamicCmds.FromXML(pNode);
+
+	// 
+	pNode = m_skinFile.GetAdjustHueNode();
+	if (pNode)
+		m_resourceMgr.AdjustHueInfoFromXML(pNode);
+
+	return ERR_OK;
+}
+
+int CSkinFactory::SaveSkinFile(LPCTSTR szFile)
+{
+/*
+	CXMLWriter		xmlStream;
+
+	xmlStream.pushCategory(_T("skin"));
+	ToXML(xmlStream);
+	xmlStream.popCategory();
+
+	if (xmlStream.SaveAsFile(szFile))
+		return ERR_OK;
+
+*/
+	return ERR_FAILED;
+}
+
+void CSkinFactory::Close()
+{
+	m_dynamicCtrls.Free();
+	m_dynamicCmds.Free();
+	m_skinFile.Close();
+
+	LIST_SKINWNDS::iterator	it, itEnd;
+
+	itEnd = m_listSkinWnds.end();
+	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+	{
+		CSkin	*pSkin = *it;
+		// PostMessage(pSkin->GetHandle(), WM_CLOSE, 0, 0);
+		pSkin->CloseSkin();
+		// delete pSkin;
+	}
+
+	m_resourceMgr.OnClose();
+
+	m_mapCmdStrId.clear();
+	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
+
+	m_mapMenuStrId.clear();
+	m_nNextMenuId = MENU_ID_CUSTOM_BASE;
+}
+
+CSkin *CSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
+{
+	return new CSkin;
+}
+
+CSkin *CSkinFactory::FindSkinWnd(LPCTSTR szSkinWndName)
+{
+	LIST_SKINWNDS::iterator	it, itEnd;
+	itEnd = m_listSkinWnds.end();
+	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+	{
+		CSkin	*pSkinWnd = *it;
+		if (_tcsicmp(szSkinWndName, pSkinWnd->GetSkinWndName()) == 0)
+		{
+			return pSkinWnd;
+		}
+	}
+
+	return NULL;
+}
+
+int CSkinFactory::ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin)
+{
+	CSkin	*pSkinWnd = FindSkinWnd(szSkinWndName);
+	if (pSkinWnd)
+	{
+		if (pSkinWnd->IsVisible())
+			pSkinWnd->ShowWindow(SW_SHOW);
+		if (pSkinWnd->IsIconic())
+			pSkinWnd->ShowWindow(SW_RESTORE);
+		pSkinWnd->SetForeground();
+		if (ppSkin)
+			*ppSkin = pSkinWnd;
+		return ERR_OK;
+	}
+
+	return CreateSkinWnd(bMainWnd, szClassName, szCaption, szSkinWndName, ppSkin);
+}
+
+int CSkinFactory::OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin)
+{
+	CSkin	*pSkinWnd = FindSkinWnd(szSkinWndName);
+	if (pSkinWnd)
+	{
+		pSkinWnd->Destroy();
+		return ERR_OK;
+	}
+
+	return CreateSkinWnd(bMainWnd, szClassName, szCaption, szSkinWndName, ppSkin);
+}
+
+int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin)
+{
+	int		nRet;
+	CSkin	*pSkin;
+
+	SXNode			*pNode;
+
+	// If the skinwnd doesn't exist, return ERR_NOT_FOUND
+	pNode = GetSkinWndNode(szSkinWndName);
+	if (!pNode)
+		return ERR_NOT_FOUND;
+
+	if (ppSkin)
+		*ppSkin = NULL;
+
+	pSkin = NewSkinWnd(szSkinWndName, bMainWnd);
+	ASSERT(pSkin);
+	pSkin->SetFreeOnDestory(true);
+	nRet = pSkin->Create(szClassName, szCaption, this, szSkinWndName);
+	if (nRet == ERR_OK)
+	{
+		if (ppSkin)
+			*ppSkin = pSkin;
+		m_listSkinWnds.push_back(pSkin);
+#ifdef _WIN32
+		if (!bMainWnd)
+			ShowAsToolWindow(pSkin->GetHandle());
+#endif
+	}
+	else
+		delete pSkin;
+
+	return nRet;
+}
+
+int CSkinFactory::CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndNameDef, CSkin **ppSkin)
+{
+	int			nRet;
+	tstring		strSkinWndName;
+	CSkin		*pSkinWnd;
+
+	if (ppSkin)
+		*ppSkin = NULL;
+
+	nRet = m_skinFile.GetMainSkinWnd(strSkinWndName, szSkinWndNameDef);
+	if (nRet != ERR_OK)
+	{
+		ERRLOG1(_T("Can't get main window name: %s"), m_skinFile.GetFileName());
+		return nRet;
+	}
+
+	nRet = CreateSkinWnd(true, szClassName, szCaption, strSkinWndName.c_str(), &pSkinWnd);
+	if (nRet == ERR_OK)
+	{
+		pSkinWnd->SetMainAppWnd(true);
+		if (ppSkin)
+			*ppSkin = pSkinWnd;
+	}
+
+	return nRet;
+}
+
+void CSkinFactory::OnSkinWndDestory(CSkin *pSkinWnd)
+{
+	LIST_SKINWNDS::iterator	it, itEnd;
+
+	itEnd = m_listSkinWnds.end();
+	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+	{
+		CSkin	*pSkin = *it;
+		if (pSkin == pSkinWnd)
+		{
+			m_listSkinWnds.erase(it);
+			return;
+		}
+	}
+}
+
+void CSkinFactory::OnMainSkinWndDestory(CSkin *pSkinWnd)
+{
+#ifdef _WIN32
+	PostQuitMessage(0);
+#endif
+}
+
+// methods for skin window
+SXNode *CSkinFactory::GetSkinWndNode(LPCTSTR szSkinWndName)
+{
+	return m_skinFile.GetSkinWndNode(szSkinWndName);
+}
+
+CUIObject *CSkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
+{
+	CUIObject *pObj = NULL;
+
+	if (_tcsicmp(szClassName, CSkinButton::ClassName()) == 0)
+	{
+		pObj = new CSkinButton;
+	}
+	if (_tcsicmp(szClassName, CSkinActiveButton::ClassName()) == 0 ||
+		_tcsicmp(szClassName, _T("FocusButton")) == 0
+		)
+	{
+		pObj = new CSkinActiveButton;
+	}
+	else if (_tcsicmp(szClassName, CSkinImage::ClassName()) == 0)
+	{
+		pObj = new CSkinImage;
+	}
+	else if (_tcsicmp(szClassName, CSkinNStatusImage::ClassName()) == 0)
+	{
+		pObj = new CSkinNStatusImage;
+	}
+	else if (_tcsicmp(szClassName, CSkinActiveImage::ClassName()) == 0 || 
+		_tcsicmp(szClassName, _T("FocusImage")) == 0)
+	{
+		pObj = new CSkinActiveImage;
+	}
+	else if (_tcsicmp(szClassName, CSkinXScaleImage::ClassName()) == 0 ||
+		_tcsicmp(szClassName, _T("XScaleImage")) == 0)
+	{
+		pObj = new CSkinXScaleImage;
+	}
+	else if (_tcsicmp(szClassName, CSkinYScaleImage::ClassName()) == 0 ||
+		_tcsicmp(szClassName, _T("YScaleImage")) == 0)
+	{
+		pObj = new CSkinYScaleImage;
+	}
+	else if (_tcsicmp(szClassName, CSkinVScrollBar::ClassName()) == 0)
+	{
+		pObj = new CSkinVScrollBar;
+	}
+	else if (_tcsicmp(szClassName, CSkinVScrollBarOSStyle::ClassName()) == 0)
+	{
+		pObj = new CSkinVScrollBarOSStyle;
+	}
+	else if (_tcsicmp(szClassName, CSkinHScrollBarOSStyle::ClassName()) == 0)
+	{
+		pObj = new CSkinHScrollBarOSStyle;
+	}
+	else if (_tcsicmp(szClassName, CSkinCaption::ClassName()) == 0)
+	{
+		pObj = new CSkinCaption;
+	}
+	else if (_tcsicmp(szClassName, CSkinNStatusButton::ClassName()) == 0)
+		pObj = new CSkinNStatusButton;
+	else if (_tcsicmp(szClassName, CSkinContainer::ClassName()) == 0)
+		pObj = new CSkinContainer;
+	else if (_tcsicmp(szClassName, CSkinDecorativeContainer::ClassName()) == 0)
+		pObj = new CSkinDecorativeContainer;
+	else if (_tcsicmp(szClassName, CSkinWndResizeObj::ClassName()) == 0)
+		pObj = new CSkinWndResizeObj;
+	else if (_tcsicmp(szClassName, CSkinSquare::ClassName()) == 0)
+		pObj = new CSkinSquare;
+	else if (_tcsicmp(szClassName, CSkinFadeArea::ClassName()) == 0)
+		pObj = new CSkinFadeArea;
+
+	if (pObj)
+	{
+		pObj->m_pSkin = pSkin;
+		pObj->m_pContainer = pSkin->GetRootContainer();
+	}
+
+	return pObj;
+}
+
+
+CUIObject *CSkinFactory::CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, LPCTSTR szNameToCheck, int nIDAssign, LPCTSTR szLeft, LPCTSTR szTop, LPCTSTR szWidth, LPCTSTR szHeight)
+{
+	return m_dynamicCtrls.CreateControl(pContainer, szClassName, szNameToCheck, nIDAssign, szLeft, szTop, szWidth, szHeight);
+}
+
+void CSkinFactory::SetSkinsRootDir(LPCTSTR szSkinsRootDir)
+{
+	m_strSkinRootDir = szSkinsRootDir;
+	if (!m_strSkinRootDir.empty())
+	{
+		DirStringFormat(m_strSkinRootDir);
+		g_Profile.WriteProfileString(_T("SkinRootDir"), m_strSkinRootDir.c_str());
+	}
+}
+
+LPCTSTR CSkinFactory::GetSkinRootDir()
+{
+	if (m_strSkinRootDir.empty())
+	{
+		m_strSkinRootDir = g_Profile.GetProfileString(_T("SkinRootDir"), _T(""));
+		if (!m_strSkinRootDir.empty())
+		{
+			DirStringFormat(m_strSkinRootDir);
+			if (IsDirExist(m_strSkinRootDir.c_str()))
+				return m_strSkinRootDir.c_str();
+		}
+
+		m_strSkinRootDir = GetWorkingFolder();
+		m_strSkinRootDir += _T("skins");
+		m_strSkinRootDir += _T(SZ_DIR_SLASH);
+	}
+
+	return m_strSkinRootDir.c_str();
+}
+
+void CSkinFactory::SetSkinFileName(LPCTSTR szSkinFileName)
+{
+	m_strSkinFileName = szSkinFileName;
+}
+
+// 枚举 skin
+// COMMENT:
+//		查找Skin目录下的第一个Skin
+// RETURN:
+//		The handle of find skin
+//		INVALID_HANDLE_VALUE - 没有找到
+bool CSkinFactory::FindFirstSkin(tstring &strSkin)
+{
+	CMLFileFind		find;
+	tstring			strFile;
+
+	if (!find.OpenDir(GetSkinRootDir()))
+		return false;
+
+	while (find.FindNext())
+	{
+		if (find.IsCurDir())
+		{
+			strFile = GetSkinRootDir();
+			strFile += find.GetCurName();
+			strFile += _T(SZ_DIR_SLASH);
+			strFile += m_strSkinFileName;
+
+			if (IsFileExist(strFile.c_str()))
+			{
+				strSkin = find.GetCurName();
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+bool CSkinFactory::EnumAllSkins(vector<tstring> &vSkins)
+{
+	CMLFileFind		find;
+	tstring			strFile;
+
+	if (!find.OpenDir(GetSkinRootDir()))
+		return false;
+
+	while (find.FindNext())
+	{
+		if (find.IsCurDir())
+		{
+			strFile = GetSkinRootDir();
+			strFile += find.GetCurName();
+			strFile += _T(SZ_DIR_SLASH);
+			strFile += m_strSkinFileName;
+
+			if (IsFileExist(strFile.c_str()))
+				vSkins.push_back(find.GetCurName());
+		}
+	}
+
+	// sort(vSkins.begin(), vSkins.end());
+
+	return true;
+}
+
+CSkin *CSkinFactory::GetMainWnd()
+{
+	if (!m_listSkinWnds.empty())
+		return m_listSkinWnds.front();
+	else
+		return NULL;
+}
+
+int CSkinFactory::OnDynamicCmd(LPCTSTR szDynCmd, CSkin *pSkinWnd, CUIObject *pUIObj)
+{
+	V_Str		vCmds;
+	int			nRet = ERR_NOT_FOUND;
+
+	StrBreak(szDynCmd, ',', vCmds);
+
+	for (int i = 0; i < (int)vCmds.size(); i++)
+	{
+		CDynamicCmds::DynamicCmd	cmd;
+		TrimStr(vCmds[i]);
+		if (m_dynamicCmds.GetCmd(vCmds[i].c_str(), cmd))
+		{
+			nRet = ExeDynamicCmd(cmd, pSkinWnd, pUIObj);
+		}
+		else
+			nRet = ERR_NOT_FOUND;
+	}
+
+	return nRet;
+}
+
+int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkin *pSkinWnd, CUIObject *pUIObj)
+{
+	if (cmd.strFunction == _T("change_skin_wnd"))
+		return pSkinWnd->OpenSkin(cmd.strParam.c_str());
+	else if (cmd.strFunction == _T("create_skin_wnd"))
+		return ActiveOrCreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());
+	else if (cmd.strFunction == _T("openclose_skin_wnd"))
+	{
+		CSkin	*pSkinWnd = FindSkinWnd(cmd.strParam.c_str());
+		if (pSkinWnd)
+		{
+			if (pSkinWnd->IsIconic())
+				pSkinWnd->ActivateWindow();
+			else
+				pSkinWnd->Destroy();
+			return ERR_OK;
+		}
+		return CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());
+	}
+	else if (cmd.strFunction == _T("is_skin_wnd_visible"))
+	{
+		CSkin	*pSkinWnd = FindSkinWnd(cmd.strParam.c_str());
+		if (pSkinWnd)
+			return ERR_OK;
+		else
+			return ERR_FALSE;
+	}
+//	else if (cmd.strFunction == _T("open_skin_wnd"))
+//		return ActiveOrCreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());
+
+	return ERR_NOT_FOUND;
+}
+
+void CSkinFactory::AdjustHue(float hue, float saturation, float luminance)
+{
+	LIST_SKINWNDS::iterator	it, itEnd;
+
+	// reload the resource which is set to adjust hue
+	m_resourceMgr.AdjustHue(hue, saturation, luminance);
+
+	// Notify each child ctrl of this message.
+	itEnd = m_listSkinWnds.end();
+	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+	{
+		CSkin	*pSkin = *it;
+		pSkin->OnAdjustHue(hue, saturation, luminance);
+		pSkin->InvalidateRect();
+	}
+}
+
+void CSkinFactory::GetAdjustedHueResult(MLColor &clr)
+{
+	if (m_resourceMgr.CanAdjustHue())
+	{
+		float		H, S, L;
+		COLORREF	c;
+
+		m_resourceMgr.GetAdjustHueParam(H, S, L);
+		if (H != 0)
+		{
+			c = clr.get();
+			AdjustColorHue(c, H);
+			clr.set(c);
+		}
+	}
+}
+
+void CSkinFactory::GetAdjustedHueResult(COLORREF &clr)
+{
+	if (m_resourceMgr.CanAdjustHue())
+	{
+		float		H, S, L;
+
+		m_resourceMgr.GetAdjustHueParam(H, S, L);
+		if (H != 0)
+			AdjustColorHue(clr, H);
+	}
+}

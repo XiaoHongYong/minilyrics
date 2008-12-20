@@ -1,0 +1,18 @@
+
+class CA
+{
+	int		m_a1;
+};
+
+class CB
+{
+	int		m_a2;
+};
+
+void f()
+{
+	CB		b = new CB;
+
+	b.m_a1;
+}
+

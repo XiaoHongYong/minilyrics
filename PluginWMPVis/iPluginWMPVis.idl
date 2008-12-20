@@ -1,0 +1,40 @@
+// iPluginWMPVis.idl : IDL source for PluginWMPVis.dll
+// Copyright (c) Microsoft Corporation. All rights reserved.
+
+// This file will be processed by the MIDL tool to
+// produce the type library (iPluginWMPVis.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+	[
+		object,
+		uuid(0FF6894E-FD51-47c0-AE87-12E6213CD819),
+		dual,
+		helpstring("IPluginWMPVis Interface"),
+		pointer_default(unique)
+	]
+	interface IPluginWMPVis : IDispatch
+	{
+		[propget, id(1), helpstring("property foregroundColor")] HRESULT foregroundColor([out, retval] BSTR *pVal);
+		[propput, id(1), helpstring("property foregroundColor")] HRESULT foregroundColor([in] BSTR newVal);
+	};
+
+[
+	uuid(BF2B774E-9B4E-4d92-B08B-65A29908A569),
+	version(1.0),
+	helpstring("PluginWMPVis 1.0 Type Library")
+]
+library PLUGINWMPVISLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(4580AB54-3C2F-4970-9A77-8628FA182F03),
+		helpstring("PluginWMPVis Class")
+	]
+	coclass PluginWMPVis
+	{
+		[default] interface IPluginWMPVis;
+	};
+};

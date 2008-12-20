@@ -1,0 +1,42 @@
+// PluginMJ.idl : IDL source for PluginMJ.dll
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (PluginMJ.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+#include "olectl.h"
+	
+
+	[
+		object,
+		uuid(B342AE30-F5A2-4c0e-964A-E3A68266DCD9),
+		dual,
+		helpstring("IPluginMJCtrl Interface"),
+		pointer_default(unique)
+	]
+	interface IPluginMJCtrl : IDispatch
+	{
+		[id(1), helpstring("method Init")] HRESULT Init([in] LPDISPATCH pDisp);
+	};
+
+[
+	uuid(08C9816D-BA11-4761-8D0B-19EC298FDEE5),
+	version(1.0),
+	helpstring("PluginMJ 1.0 Type Library")
+]
+library PluginMJLib
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	[
+		uuid(116AB140-DEBE-457a-A326-828BA138923A),
+		helpstring("Crintsoft MiniLyrics")
+	]
+	coclass PluginMJCtrl
+	{
+		[default] interface IPluginMJCtrl;
+	};
+};

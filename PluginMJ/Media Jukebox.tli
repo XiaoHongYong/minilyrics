@@ -1,0 +1,640 @@
+// Created by Microsoft (R) C/C++ Compiler Version 12.00.9782.0 (dc8e4352).
+//
+// Media Jukebox.tli
+//
+// Wrapper implementations for Win32 type library Media Jukebox.tlb
+// compiler-generated file created 08/07/08 at 23:42:30 - DO NOT EDIT!
+
+#pragma once
+
+//
+// dispinterface IMJPlaybackAutomation wrapper method implementations
+//
+
+inline HRESULT IMJPlaybackAutomation::Pause ( ) {
+    return _com_dispatch_method(this, 0x8, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IMJPlaybackAutomation::Stop ( ) {
+    return _com_dispatch_method(this, 0x9, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IMJPlaybackAutomation::Next ( ) {
+    return _com_dispatch_method(this, 0xa, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IMJPlaybackAutomation::Previous ( ) {
+    return _com_dispatch_method(this, 0xb, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IMJPlaybackAutomation::FastForward ( ) {
+    return _com_dispatch_method(this, 0xc, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline HRESULT IMJPlaybackAutomation::Rewind ( ) {
+    return _com_dispatch_method(this, 0xd, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline VARIANT_BOOL IMJPlaybackAutomation::IsBuffering ( ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_method(this, 0xe, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline HRESULT IMJPlaybackAutomation::Play ( ) {
+    return _com_dispatch_method(this, 0xf, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline enum MJPlaybackStates IMJPlaybackAutomation::GetState ( ) {
+    enum MJPlaybackStates _result;
+    _com_dispatch_propget(this, 0x1, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJPlaybackAutomation::PutState ( enum MJPlaybackStates _val ) {
+    _com_dispatch_propput(this, 0x1, VT_I4, _val);
+}
+
+inline long IMJPlaybackAutomation::GetBitrate ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x2, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJPlaybackAutomation::PutBitrate ( long _val ) {
+    _com_dispatch_propput(this, 0x2, VT_I4, _val);
+}
+
+inline long IMJPlaybackAutomation::GetPosition ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x3, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJPlaybackAutomation::PutPosition ( long _val ) {
+    _com_dispatch_propput(this, 0x3, VT_I4, _val);
+}
+
+inline long IMJPlaybackAutomation::GetDuration ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x4, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJPlaybackAutomation::PutDuration ( long _val ) {
+    _com_dispatch_propput(this, 0x4, VT_I4, _val);
+}
+
+inline long IMJPlaybackAutomation::GetChannels ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x5, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJPlaybackAutomation::PutChannels ( long _val ) {
+    _com_dispatch_propput(this, 0x5, VT_I4, _val);
+}
+
+inline long IMJPlaybackAutomation::GetSamplerate ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x6, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJPlaybackAutomation::PutSamplerate ( long _val ) {
+    _com_dispatch_propput(this, 0x6, VT_I4, _val);
+}
+
+inline long IMJPlaybackAutomation::GetBitspersample ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x7, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJPlaybackAutomation::PutBitspersample ( long _val ) {
+    _com_dispatch_propput(this, 0x7, VT_I4, _val);
+}
+
+//
+// dispinterface IMJFilesAutomation wrapper method implementations
+//
+
+inline long IMJFilesAutomation::GetNumberFiles ( ) {
+    long _result;
+    _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline IMJFileAutomationPtr IMJFilesAutomation::GetFile ( long nFile ) {
+    struct IMJFileAutomation * _result;
+    _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0003", nFile);
+    return IMJFileAutomationPtr(_result, false);
+}
+
+//
+// dispinterface IMJFileAutomation wrapper method implementations
+//
+
+inline IMJPlaylistsAutomationPtr IMJFileAutomation::GetPlaylists ( ) {
+    struct IMJPlaylistsAutomation * _result;
+    _com_dispatch_method(this, 0x16, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return IMJPlaylistsAutomationPtr(_result, false);
+}
+
+inline _bstr_t IMJFileAutomation::GetImageFile ( enum MJImageFileFlags nImageFileFlag ) {
+    BSTR _result;
+    _com_dispatch_method(this, 0x17, DISPATCH_METHOD, VT_BSTR, (void*)&_result, 
+        L"\x0003", nImageFileFlag);
+    return _bstr_t(_result, false);
+}
+
+inline VARIANT_BOOL IMJFileAutomation::SetImageFile ( _bstr_t strImageFile, enum MJImageFileFlags nImageFileFlag ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_method(this, 0x18, DISPATCH_METHOD, VT_BOOL, (void*)&_result, 
+        L"\x0008\x0003", (BSTR)strImageFile, nImageFileFlag);
+    return _result;
+}
+
+inline _bstr_t IMJFileAutomation::GetFormatedFileSize ( ) {
+    BSTR _result;
+    _com_dispatch_method(this, 0x19, DISPATCH_METHOD, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t IMJFileAutomation::GetFormatedFileDate ( ) {
+    BSTR _result;
+    _com_dispatch_method(this, 0x1a, DISPATCH_METHOD, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t IMJFileAutomation::GetFormatedDuration ( ) {
+    BSTR _result;
+    _com_dispatch_method(this, 0x1b, DISPATCH_METHOD, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t IMJFileAutomation::GetFormatedLastPlayed ( ) {
+    BSTR _result;
+    _com_dispatch_method(this, 0x1c, DISPATCH_METHOD, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline _bstr_t IMJFileAutomation::GetFilename ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x1, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutFilename ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x1, VT_BSTR, (BSTR)_val);
+}
+
+inline _bstr_t IMJFileAutomation::GetArtist ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x2, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutArtist ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x2, VT_BSTR, (BSTR)_val);
+}
+
+inline _bstr_t IMJFileAutomation::GetAlbum ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x3, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutAlbum ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x3, VT_BSTR, (BSTR)_val);
+}
+
+inline _bstr_t IMJFileAutomation::GetName ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x4, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutName ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x4, VT_BSTR, (BSTR)_val);
+}
+
+inline long IMJFileAutomation::GetFilesize ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x5, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutFilesize ( long _val ) {
+    _com_dispatch_propput(this, 0x5, VT_I4, _val);
+}
+
+inline long IMJFileAutomation::GetDuration ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x6, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutDuration ( long _val ) {
+    _com_dispatch_propput(this, 0x6, VT_I4, _val);
+}
+
+inline _bstr_t IMJFileAutomation::GetGenre ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x7, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutGenre ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x7, VT_BSTR, (BSTR)_val);
+}
+
+inline long IMJFileAutomation::GetYear ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x8, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutYear ( long _val ) {
+    _com_dispatch_propput(this, 0x8, VT_I4, _val);
+}
+
+inline _bstr_t IMJFileAutomation::GetComment ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x9, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutComment ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x9, VT_BSTR, (BSTR)_val);
+}
+
+inline long IMJFileAutomation::GetBitrate ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0xa, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutBitrate ( long _val ) {
+    _com_dispatch_propput(this, 0xa, VT_I4, _val);
+}
+
+inline long IMJFileAutomation::GetTracknumber ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0xb, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutTracknumber ( long _val ) {
+    _com_dispatch_propput(this, 0xb, VT_I4, _val);
+}
+
+inline long IMJFileAutomation::GetFiledate ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0xc, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutFiledate ( long _val ) {
+    _com_dispatch_propput(this, 0xc, VT_I4, _val);
+}
+
+inline _bstr_t IMJFileAutomation::GetCustom1 ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0xd, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutCustom1 ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0xd, VT_BSTR, (BSTR)_val);
+}
+
+inline _bstr_t IMJFileAutomation::GetCustom2 ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0xe, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutCustom2 ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0xe, VT_BSTR, (BSTR)_val);
+}
+
+inline _bstr_t IMJFileAutomation::GetCustom3 ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0xf, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutCustom3 ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0xf, VT_BSTR, (BSTR)_val);
+}
+
+inline long IMJFileAutomation::GetPlayCounter ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x10, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutPlayCounter ( long _val ) {
+    _com_dispatch_propput(this, 0x10, VT_I4, _val);
+}
+
+inline long IMJFileAutomation::GetLastPlayed ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x11, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutLastPlayed ( long _val ) {
+    _com_dispatch_propput(this, 0x11, VT_I4, _val);
+}
+
+inline long IMJFileAutomation::GetRating ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x12, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJFileAutomation::PutRating ( long _val ) {
+    _com_dispatch_propput(this, 0x12, VT_I4, _val);
+}
+
+inline _bstr_t IMJFileAutomation::GetFiletype ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x13, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutFiletype ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x13, VT_BSTR, (BSTR)_val);
+}
+
+inline _bstr_t IMJFileAutomation::GetLyrics ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x14, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutLyrics ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x14, VT_BSTR, (BSTR)_val);
+}
+
+inline _bstr_t IMJFileAutomation::GetNotes ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x15, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJFileAutomation::PutNotes ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x15, VT_BSTR, (BSTR)_val);
+}
+
+//
+// dispinterface IMJPlaylistsAutomation wrapper method implementations
+//
+
+inline long IMJPlaylistsAutomation::GetNumberPlaylists ( ) {
+    long _result;
+    _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline IMJPlaylistAutomationPtr IMJPlaylistsAutomation::GetPlaylist ( long nPlaylist ) {
+    struct IMJPlaylistAutomation * _result;
+    _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0003", nPlaylist);
+    return IMJPlaylistAutomationPtr(_result, false);
+}
+
+//
+// dispinterface IMJPlaylistAutomation wrapper method implementations
+//
+
+inline IMJFilesAutomationPtr IMJPlaylistAutomation::GetFiles ( ) {
+    struct IMJFilesAutomation * _result;
+    _com_dispatch_method(this, 0x3, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return IMJFilesAutomationPtr(_result, false);
+}
+
+inline _bstr_t IMJPlaylistAutomation::GetName ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x1, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJPlaylistAutomation::PutName ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x1, VT_BSTR, (BSTR)_val);
+}
+
+inline _bstr_t IMJPlaylistAutomation::GetPath ( ) {
+    BSTR _result;
+    _com_dispatch_propget(this, 0x2, VT_BSTR, (void*)&_result);
+    return _bstr_t(_result, false);
+}
+
+inline void IMJPlaylistAutomation::PutPath ( _bstr_t _val ) {
+    _com_dispatch_propput(this, 0x2, VT_BSTR, (BSTR)_val);
+}
+
+//
+// dispinterface IMJSchemeAutomation wrapper method implementations
+//
+
+inline _bstr_t IMJSchemeAutomation::GetName ( ) {
+    BSTR _result;
+    _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_BSTR, (void*)&_result, NULL);
+    return _bstr_t(_result, false);
+}
+
+inline long IMJSchemeAutomation::GetNumberSchemes ( ) {
+    long _result;
+    _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline IMJSchemeAutomationPtr IMJSchemeAutomation::GetScheme ( long nScheme ) {
+    struct IMJSchemeAutomation * _result;
+    _com_dispatch_method(this, 0x3, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0003", nScheme);
+    return IMJSchemeAutomationPtr(_result, false);
+}
+
+inline IMJFilesAutomationPtr IMJSchemeAutomation::GetFiles ( ) {
+    struct IMJFilesAutomation * _result;
+    _com_dispatch_method(this, 0x4, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return IMJFilesAutomationPtr(_result, false);
+}
+
+inline _bstr_t IMJSchemeAutomation::GetSchemeName ( long nScheme ) {
+    BSTR _result;
+    _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_BSTR, (void*)&_result, 
+        L"\x0003", nScheme);
+    return _bstr_t(_result, false);
+}
+
+//
+// dispinterface IMJCurPlaylistAutomation wrapper method implementations
+//
+
+inline long IMJCurPlaylistAutomation::GetNumberFiles ( ) {
+    long _result;
+    _com_dispatch_method(this, 0x4, DISPATCH_METHOD, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline IMJFileAutomationPtr IMJCurPlaylistAutomation::GetFile ( long nFile ) {
+    struct IMJFileAutomation * _result;
+    _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0003", nFile);
+    return IMJFileAutomationPtr(_result, false);
+}
+
+inline HRESULT IMJCurPlaylistAutomation::RemoveAllFiles ( ) {
+    return _com_dispatch_method(this, 0x6, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
+}
+
+inline VARIANT_BOOL IMJCurPlaylistAutomation::RemoveFile ( long nFile ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_method(this, 0x7, DISPATCH_METHOD, VT_BOOL, (void*)&_result, 
+        L"\x0003", nFile);
+    return _result;
+}
+
+inline VARIANT_BOOL IMJCurPlaylistAutomation::AddFile ( _bstr_t strFilename, long nPosition ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_method(this, 0x8, DISPATCH_METHOD, VT_BOOL, (void*)&_result, 
+        L"\x0008\x0003", (BSTR)strFilename, nPosition);
+    return _result;
+}
+
+inline VARIANT_BOOL IMJCurPlaylistAutomation::MoveFile ( long nFileOld, long nFileNew ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_method(this, 0x9, DISPATCH_METHOD, VT_BOOL, (void*)&_result, 
+        L"\x0003\x0003", nFileOld, nFileNew);
+    return _result;
+}
+
+inline VARIANT_BOOL IMJCurPlaylistAutomation::ReShuffleFiles ( ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_method(this, 0xa, DISPATCH_METHOD, VT_BOOL, (void*)&_result, NULL);
+    return _result;
+}
+
+inline long IMJCurPlaylistAutomation::GetNextFile ( ) {
+    long _result;
+    _com_dispatch_method(this, 0xb, DISPATCH_METHOD, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline long IMJCurPlaylistAutomation::GetPreviousFile ( ) {
+    long _result;
+    _com_dispatch_method(this, 0xc, DISPATCH_METHOD, VT_I4, (void*)&_result, NULL);
+    return _result;
+}
+
+inline long IMJCurPlaylistAutomation::GetPosition ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x1, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJCurPlaylistAutomation::PutPosition ( long _val ) {
+    _com_dispatch_propput(this, 0x1, VT_I4, _val);
+}
+
+inline VARIANT_BOOL IMJCurPlaylistAutomation::GetShuffle ( ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_propget(this, 0x2, VT_BOOL, (void*)&_result);
+    return _result;
+}
+
+inline void IMJCurPlaylistAutomation::PutShuffle ( VARIANT_BOOL _val ) {
+    _com_dispatch_propput(this, 0x2, VT_BOOL, _val);
+}
+
+inline VARIANT_BOOL IMJCurPlaylistAutomation::GetContinuous ( ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_propget(this, 0x3, VT_BOOL, (void*)&_result);
+    return _result;
+}
+
+inline void IMJCurPlaylistAutomation::PutContinuous ( VARIANT_BOOL _val ) {
+    _com_dispatch_propput(this, 0x3, VT_BOOL, _val);
+}
+
+//
+// dispinterface IMJMixerAutomation wrapper method implementations
+//
+
+inline long IMJMixerAutomation::GetVolume ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x1, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJMixerAutomation::PutVolume ( long _val ) {
+    _com_dispatch_propput(this, 0x1, VT_I4, _val);
+}
+
+inline long IMJMixerAutomation::GetBalance ( ) {
+    long _result;
+    _com_dispatch_propget(this, 0x2, VT_I4, (void*)&_result);
+    return _result;
+}
+
+inline void IMJMixerAutomation::PutBalance ( long _val ) {
+    _com_dispatch_propput(this, 0x2, VT_I4, _val);
+}
+
+inline VARIANT_BOOL IMJMixerAutomation::GetMute ( ) {
+    VARIANT_BOOL _result;
+    _com_dispatch_propget(this, 0x3, VT_BOOL, (void*)&_result);
+    return _result;
+}
+
+inline void IMJMixerAutomation::PutMute ( VARIANT_BOOL _val ) {
+    _com_dispatch_propput(this, 0x3, VT_BOOL, _val);
+}
+
+//
+// dispinterface IMJAutomation wrapper method implementations
+//
+
+inline IMJPlaybackAutomationPtr IMJAutomation::GetPlayback ( ) {
+    struct IMJPlaybackAutomation * _result;
+    _com_dispatch_method(this, 0x1, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return IMJPlaybackAutomationPtr(_result, false);
+}
+
+inline IMJFilesAutomationPtr IMJAutomation::Search ( _bstr_t String ) {
+    struct IMJFilesAutomation * _result;
+    _com_dispatch_method(this, 0x2, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0008", (BSTR)String);
+    return IMJFilesAutomationPtr(_result, false);
+}
+
+inline IMJCurPlaylistAutomationPtr IMJAutomation::GetCurPlaylist ( ) {
+    struct IMJCurPlaylistAutomation * _result;
+    _com_dispatch_method(this, 0x3, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return IMJCurPlaylistAutomationPtr(_result, false);
+}
+
+inline IMJPlaylistsAutomationPtr IMJAutomation::GetPlaylists ( ) {
+    struct IMJPlaylistsAutomation * _result;
+    _com_dispatch_method(this, 0x4, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return IMJPlaylistsAutomationPtr(_result, false);
+}
+
+inline IMJSchemeAutomationPtr IMJAutomation::GetViewScheme ( _bstr_t Path ) {
+    struct IMJSchemeAutomation * _result;
+    _com_dispatch_method(this, 0x5, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, 
+        L"\x0008", (BSTR)Path);
+    return IMJSchemeAutomationPtr(_result, false);
+}
+
+inline IMJMixerAutomationPtr IMJAutomation::GetMJMixer ( ) {
+    struct IMJMixerAutomation * _result;
+    _com_dispatch_method(this, 0x6, DISPATCH_METHOD, VT_DISPATCH, (void*)&_result, NULL);
+    return IMJMixerAutomationPtr(_result, false);
+}

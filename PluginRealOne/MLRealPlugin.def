@@ -1,0 +1,9 @@
+; MLRealPlugin.def : Declares the module parameters.
+
+; LIBRARY      "MLRealPlugin.DLL"
+
+EXPORTS
+	RMACreateInstance
+	
+	
+	

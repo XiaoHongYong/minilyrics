@@ -1,0 +1,91 @@
+// MPSkinNumInfoCtrl.cpp: implementation of the CMPSkinMediaNumInfoCtrl class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "Player.h"
+#include "EventsDispatcher.h"
+#include "MPSkinMediaNumInfoCtrl.h"
+
+//////////////////////////////////////////////////////////////////////
+// Construction/Destruction
+//////////////////////////////////////////////////////////////////////
+
+UIOBJECT_CLASS_NAME_IMP(CMPSkinMediaNumInfoCtrl, _T("NumInfo"))
+
+CMPSkinMediaNumInfoCtrl::CMPSkinMediaNumInfoCtrl()
+{
+	m_infoType = IT_BITRATE;
+}
+
+CMPSkinMediaNumInfoCtrl::~CMPSkinMediaNumInfoCtrl()
+{
+	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+}
+
+void CMPSkinMediaNumInfoCtrl::OnCreate()
+{
+	CSkinPicText::OnCreate();
+
+	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+
+	UpdateShowTrackInfo();
+}
+
+void CMPSkinMediaNumInfoCtrl::OnEvent(const IEvent *pEvent)
+{
+	if (pEvent->eventType == ET_PLAYER_CUR_MEDIA_CHANGED || pEvent->eventType == ET_PLAYER_CUR_MEDIA_INFO_CHANGED)
+	{
+		UpdateShowTrackInfo();
+		Invalidate();
+	}
+}
+
+BOOL CMPSkinMediaNumInfoCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
+{
+	if (CSkinPicText::SetProperty(szProperty, szValue))
+		return TRUE;
+
+	if (_tcsicmp(szProperty, _T("InfoType")) == 0)
+	{
+		if (_tcsicmp(szValue, _T("kbps")) == 0)
+			m_infoType = IT_BITRATE;
+		else
+			m_infoType = IT_SAMPLERATE;
+	}
+	else
+		return FALSE;
+
+	return TRUE;
+}
+
+void CMPSkinMediaNumInfoCtrl::EnumProperties(CUIObjProperties &listProperties)
+{
+
+}
+
+void CMPSkinMediaNumInfoCtrl::UpdateShowTrackInfo()
+{
+	CMPAutoPtr<IMedia>			pMedia;
+	int			nValue = 0;
+	TCHAR		szText[64];
+
+	if (g_Player.m_spPlayer->GetCurrentMedia(&pMedia) != ERR_OK)
+	{
+		SetText(_T(""));
+		return;
+	}
+
+	if (m_infoType == IT_BITRATE)
+	{
+		pMedia->GetAttribute(MA_BITRATE, &nValue);
+		nValue /= 1000;
+	}
+	else
+		pMedia->GetAttribute(MA_SAMPLE_RATE, &nValue);
+
+	_stprintf(szText, _T("%d"), nValue);
+	SetText(szText);
+}

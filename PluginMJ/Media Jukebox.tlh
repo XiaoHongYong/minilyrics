@@ -1,0 +1,485 @@
+// Created by Microsoft (R) C/C++ Compiler Version 12.00.9782.0 (dc8e4352).
+//
+// Media Jukebox.tlh
+//
+// C++ source equivalent of Win32 type library Media Jukebox.tlb
+// compiler-generated file created 08/07/08 at 23:42:30 - DO NOT EDIT!
+
+#pragma once
+#pragma pack(push, 8)
+
+#include <comdef.h>
+
+//
+// Forward references and typedefs
+//
+
+struct __declspec(uuid("64057145-18d3-494a-aa34-303985b834d8"))
+/* dispinterface */ IMJPlaybackAutomation;
+struct __declspec(uuid("75dafbe4-c6c4-42f1-931b-1b6733dee8e9"))
+/* dispinterface */ IMJFilesAutomation;
+struct __declspec(uuid("4b6603ed-f6d4-4cfc-bde8-0ed676e5d814"))
+/* dispinterface */ IMJFileAutomation;
+struct __declspec(uuid("d1007ee5-8dbd-408b-a991-12f752b9713f"))
+/* dispinterface */ IMJPlaylistsAutomation;
+struct __declspec(uuid("019514d4-0444-488a-9446-c4ec179d8149"))
+/* dispinterface */ IMJPlaylistAutomation;
+struct /* coclass */ MJPlaybackAutomation;
+struct /* coclass */ MJPlaylistAutomation;
+struct /* coclass */ MJSchemeAutomation;
+struct __declspec(uuid("9d25ac36-459c-4901-9347-69a6aa3a7b5a"))
+/* dispinterface */ IMJSchemeAutomation;
+struct /* coclass */ MJPlaylistsAutomation;
+struct /* coclass */ MJFileAutomation;
+struct /* coclass */ MJFilesAutomation;
+struct __declspec(uuid("8beaa4cf-cc11-4fdd-8f53-c997424b1885"))
+/* dispinterface */ IMJCurPlaylistAutomation;
+struct /* coclass */ MJCurPlaylistAutomation;
+struct __declspec(uuid("190d8bca-0030-4a94-9664-4011b4bc96e5"))
+/* dispinterface */ IMJMixerAutomation;
+struct /* coclass */ MJMixerAutomation;
+struct __declspec(uuid("bf9ea151-b5fe-4a06-a6b3-3687d6609037"))
+/* dispinterface */ IMJAutomation;
+struct /* coclass */ MJAutomation;
+
+//
+// Smart pointer typedef declarations
+//
+
+_COM_SMARTPTR_TYPEDEF(IMJPlaybackAutomation, __uuidof(IDispatch));
+_COM_SMARTPTR_TYPEDEF(IMJFilesAutomation, __uuidof(IDispatch));
+_COM_SMARTPTR_TYPEDEF(IMJFileAutomation, __uuidof(IDispatch));
+_COM_SMARTPTR_TYPEDEF(IMJPlaylistsAutomation, __uuidof(IDispatch));
+_COM_SMARTPTR_TYPEDEF(IMJPlaylistAutomation, __uuidof(IDispatch));
+_COM_SMARTPTR_TYPEDEF(IMJSchemeAutomation, __uuidof(IDispatch));
+_COM_SMARTPTR_TYPEDEF(IMJCurPlaylistAutomation, __uuidof(IDispatch));
+_COM_SMARTPTR_TYPEDEF(IMJMixerAutomation, __uuidof(IDispatch));
+_COM_SMARTPTR_TYPEDEF(IMJAutomation, __uuidof(IDispatch));
+
+//
+// Type library items
+//
+
+enum MJPlaybackStates
+{
+    PLAYSTATE_STOPPED = 0,
+    PLAYSTATE_PAUSED = 1,
+    PLAYSTATE_PLAYING = 2,
+    PLAYSTATE_WAITING = 3
+};
+
+enum MJImageFileFlags
+{
+    IMAGEFILE_DISPLAY = 0,
+    IMAGEFILE_IN_DATABASE = 1,
+    IMAGEFILE_IN_FILE = 2
+};
+
+struct __declspec(uuid("64057145-18d3-494a-aa34-303985b834d8"))
+IMJPlaybackAutomation : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetState,put=PutState))
+    enum MJPlaybackStates State;
+    __declspec(property(get=GetBitrate,put=PutBitrate))
+    long Bitrate;
+    __declspec(property(get=GetPosition,put=PutPosition))
+    long Position;
+    __declspec(property(get=GetDuration,put=PutDuration))
+    long Duration;
+    __declspec(property(get=GetChannels,put=PutChannels))
+    long Channels;
+    __declspec(property(get=GetSamplerate,put=PutSamplerate))
+    long Samplerate;
+    __declspec(property(get=GetBitspersample,put=PutBitspersample))
+    long Bitspersample;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    HRESULT Pause ( );
+    HRESULT Stop ( );
+    HRESULT Next ( );
+    HRESULT Previous ( );
+    HRESULT FastForward ( );
+    HRESULT Rewind ( );
+    VARIANT_BOOL IsBuffering ( );
+    HRESULT Play ( );
+
+    // Properties:
+    enum MJPlaybackStates GetState ( );
+    void PutState ( enum MJPlaybackStates _val );
+    long GetBitrate ( );
+    void PutBitrate ( long _val );
+    long GetPosition ( );
+    void PutPosition ( long _val );
+    long GetDuration ( );
+    void PutDuration ( long _val );
+    long GetChannels ( );
+    void PutChannels ( long _val );
+    long GetSamplerate ( );
+    void PutSamplerate ( long _val );
+    long GetBitspersample ( );
+    void PutBitspersample ( long _val );
+};
+
+struct __declspec(uuid("75dafbe4-c6c4-42f1-931b-1b6733dee8e9"))
+IMJFilesAutomation : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    long GetNumberFiles ( );
+    IMJFileAutomationPtr GetFile (
+        long nFile );
+};
+
+struct __declspec(uuid("4b6603ed-f6d4-4cfc-bde8-0ed676e5d814"))
+IMJFileAutomation : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetFilename,put=PutFilename))
+    _bstr_t Filename;
+    __declspec(property(get=GetArtist,put=PutArtist))
+    _bstr_t Artist;
+    __declspec(property(get=GetAlbum,put=PutAlbum))
+    _bstr_t Album;
+    __declspec(property(get=GetName,put=PutName))
+    _bstr_t Name;
+    __declspec(property(get=GetFilesize,put=PutFilesize))
+    long Filesize;
+    __declspec(property(get=GetDuration,put=PutDuration))
+    long Duration;
+    __declspec(property(get=GetGenre,put=PutGenre))
+    _bstr_t Genre;
+    __declspec(property(get=GetYear,put=PutYear))
+    long Year;
+    __declspec(property(get=GetComment,put=PutComment))
+    _bstr_t Comment;
+    __declspec(property(get=GetBitrate,put=PutBitrate))
+    long Bitrate;
+    __declspec(property(get=GetTracknumber,put=PutTracknumber))
+    long Tracknumber;
+    __declspec(property(get=GetFiledate,put=PutFiledate))
+    long Filedate;
+    __declspec(property(get=GetCustom1,put=PutCustom1))
+    _bstr_t Custom1;
+    __declspec(property(get=GetCustom2,put=PutCustom2))
+    _bstr_t Custom2;
+    __declspec(property(get=GetCustom3,put=PutCustom3))
+    _bstr_t Custom3;
+    __declspec(property(get=GetPlayCounter,put=PutPlayCounter))
+    long PlayCounter;
+    __declspec(property(get=GetLastPlayed,put=PutLastPlayed))
+    long LastPlayed;
+    __declspec(property(get=GetRating,put=PutRating))
+    long Rating;
+    __declspec(property(get=GetFiletype,put=PutFiletype))
+    _bstr_t Filetype;
+    __declspec(property(get=GetLyrics,put=PutLyrics))
+    _bstr_t Lyrics;
+    __declspec(property(get=GetNotes,put=PutNotes))
+    _bstr_t Notes;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    IMJPlaylistsAutomationPtr GetPlaylists ( );
+    _bstr_t GetImageFile (
+        enum MJImageFileFlags nImageFileFlag );
+    VARIANT_BOOL SetImageFile (
+        _bstr_t strImageFile,
+        enum MJImageFileFlags nImageFileFlag );
+    _bstr_t GetFormatedFileSize ( );
+    _bstr_t GetFormatedFileDate ( );
+    _bstr_t GetFormatedDuration ( );
+    _bstr_t GetFormatedLastPlayed ( );
+
+    // Properties:
+    _bstr_t GetFilename ( );
+    void PutFilename ( _bstr_t _val );
+    _bstr_t GetArtist ( );
+    void PutArtist ( _bstr_t _val );
+    _bstr_t GetAlbum ( );
+    void PutAlbum ( _bstr_t _val );
+    _bstr_t GetName ( );
+    void PutName ( _bstr_t _val );
+    long GetFilesize ( );
+    void PutFilesize ( long _val );
+    long GetDuration ( );
+    void PutDuration ( long _val );
+    _bstr_t GetGenre ( );
+    void PutGenre ( _bstr_t _val );
+    long GetYear ( );
+    void PutYear ( long _val );
+    _bstr_t GetComment ( );
+    void PutComment ( _bstr_t _val );
+    long GetBitrate ( );
+    void PutBitrate ( long _val );
+    long GetTracknumber ( );
+    void PutTracknumber ( long _val );
+    long GetFiledate ( );
+    void PutFiledate ( long _val );
+    _bstr_t GetCustom1 ( );
+    void PutCustom1 ( _bstr_t _val );
+    _bstr_t GetCustom2 ( );
+    void PutCustom2 ( _bstr_t _val );
+    _bstr_t GetCustom3 ( );
+    void PutCustom3 ( _bstr_t _val );
+    long GetPlayCounter ( );
+    void PutPlayCounter ( long _val );
+    long GetLastPlayed ( );
+    void PutLastPlayed ( long _val );
+    long GetRating ( );
+    void PutRating ( long _val );
+    _bstr_t GetFiletype ( );
+    void PutFiletype ( _bstr_t _val );
+    _bstr_t GetLyrics ( );
+    void PutLyrics ( _bstr_t _val );
+    _bstr_t GetNotes ( );
+    void PutNotes ( _bstr_t _val );
+};
+
+struct __declspec(uuid("d1007ee5-8dbd-408b-a991-12f752b9713f"))
+IMJPlaylistsAutomation : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    long GetNumberPlaylists ( );
+    IMJPlaylistAutomationPtr GetPlaylist (
+        long nPlaylist );
+};
+
+struct __declspec(uuid("019514d4-0444-488a-9446-c4ec179d8149"))
+IMJPlaylistAutomation : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetName,put=PutName))
+    _bstr_t Name;
+    __declspec(property(get=GetPath,put=PutPath))
+    _bstr_t Path;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    IMJFilesAutomationPtr GetFiles ( );
+
+    // Properties:
+    _bstr_t GetName ( );
+    void PutName ( _bstr_t _val );
+    _bstr_t GetPath ( );
+    void PutPath ( _bstr_t _val );
+};
+
+struct __declspec(uuid("df64237f-bc54-425a-96ee-4221a5dbcdf6"))
+MJPlaybackAutomation;
+    // [ default ] dispinterface IMJPlaybackAutomation
+
+struct __declspec(uuid("18efd425-7ea0-4eb8-ad51-4401e7aeb025"))
+MJPlaylistAutomation;
+    // [ default ] dispinterface IMJPlaylistAutomation
+
+struct __declspec(uuid("a20dc525-1396-468c-beee-c86f4c335b7b"))
+MJSchemeAutomation;
+    // [ default ] dispinterface IMJSchemeAutomation
+
+struct __declspec(uuid("9d25ac36-459c-4901-9347-69a6aa3a7b5a"))
+IMJSchemeAutomation : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    _bstr_t GetName ( );
+    long GetNumberSchemes ( );
+    IMJSchemeAutomationPtr GetScheme (
+        long nScheme );
+    IMJFilesAutomationPtr GetFiles ( );
+    _bstr_t GetSchemeName (
+        long nScheme );
+};
+
+struct __declspec(uuid("dd4711dd-1058-498b-ac6f-1c2ef58d69a8"))
+MJPlaylistsAutomation;
+    // [ default ] dispinterface IMJPlaylistsAutomation
+
+struct __declspec(uuid("29661654-c71b-417c-84c1-6b7e722ecfdd"))
+MJFileAutomation;
+    // [ default ] dispinterface IMJFileAutomation
+
+struct __declspec(uuid("6c56f0fd-0cbc-48a0-8039-b7407a07cfc0"))
+MJFilesAutomation;
+    // [ default ] dispinterface IMJFilesAutomation
+
+struct __declspec(uuid("8beaa4cf-cc11-4fdd-8f53-c997424b1885"))
+IMJCurPlaylistAutomation : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetPosition,put=PutPosition))
+    long Position;
+    __declspec(property(get=GetShuffle,put=PutShuffle))
+    VARIANT_BOOL Shuffle;
+    __declspec(property(get=GetContinuous,put=PutContinuous))
+    VARIANT_BOOL Continuous;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    long GetNumberFiles ( );
+    IMJFileAutomationPtr GetFile (
+        long nFile );
+    HRESULT RemoveAllFiles ( );
+    VARIANT_BOOL RemoveFile (
+        long nFile );
+    VARIANT_BOOL AddFile (
+        _bstr_t strFilename,
+        long nPosition );
+    VARIANT_BOOL MoveFile (
+        long nFileOld,
+        long nFileNew );
+    VARIANT_BOOL ReShuffleFiles ( );
+    long GetNextFile ( );
+    long GetPreviousFile ( );
+
+    // Properties:
+    long GetPosition ( );
+    void PutPosition ( long _val );
+    VARIANT_BOOL GetShuffle ( );
+    void PutShuffle ( VARIANT_BOOL _val );
+    VARIANT_BOOL GetContinuous ( );
+    void PutContinuous ( VARIANT_BOOL _val );
+};
+
+struct __declspec(uuid("53ffdf32-d0dc-4653-acc9-b098bb04fbb8"))
+MJCurPlaylistAutomation;
+    // [ default ] dispinterface IMJCurPlaylistAutomation
+
+struct __declspec(uuid("190d8bca-0030-4a94-9664-4011b4bc96e5"))
+IMJMixerAutomation : IDispatch
+{
+    //
+    // Property data
+    //
+
+    __declspec(property(get=GetVolume,put=PutVolume))
+    long Volume;
+    __declspec(property(get=GetBalance,put=PutBalance))
+    long Balance;
+    __declspec(property(get=GetMute,put=PutMute))
+    VARIANT_BOOL Mute;
+
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Properties:
+    long GetVolume ( );
+    void PutVolume ( long _val );
+    long GetBalance ( );
+    void PutBalance ( long _val );
+    VARIANT_BOOL GetMute ( );
+    void PutMute ( VARIANT_BOOL _val );
+};
+
+struct __declspec(uuid("1d757446-a6a8-47f7-a7ad-2dce5e73792e"))
+MJMixerAutomation;
+    // [ default ] dispinterface IMJMixerAutomation
+
+struct __declspec(uuid("bf9ea151-b5fe-4a06-a6b3-3687d6609037"))
+IMJAutomation : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    // Methods:
+    IMJPlaybackAutomationPtr GetPlayback ( );
+    IMJFilesAutomationPtr Search (
+        _bstr_t String );
+    IMJCurPlaylistAutomationPtr GetCurPlaylist ( );
+    IMJPlaylistsAutomationPtr GetPlaylists ( );
+    IMJSchemeAutomationPtr GetViewScheme (
+        _bstr_t Path );
+    IMJMixerAutomationPtr GetMJMixer ( );
+};
+
+struct __declspec(uuid("04e24975-007a-44c2-9c4c-92509f839edc"))
+MJAutomation;
+    // [ default ] dispinterface IMJAutomation
+
+//
+// Named GUID constants initializations
+//
+
+extern "C" const GUID __declspec(selectany) LIBID_MediaJukebox =
+    {0xba577a46,0x40f2,0x43d3,{0xb6,0x91,0xc9,0x78,0xf2,0x35,0x9b,0x17}};
+extern "C" const GUID __declspec(selectany) DIID_IMJPlaybackAutomation =
+    {0x64057145,0x18d3,0x494a,{0xaa,0x34,0x30,0x39,0x85,0xb8,0x34,0xd8}};
+extern "C" const GUID __declspec(selectany) DIID_IMJFilesAutomation =
+    {0x75dafbe4,0xc6c4,0x42f1,{0x93,0x1b,0x1b,0x67,0x33,0xde,0xe8,0xe9}};
+extern "C" const GUID __declspec(selectany) DIID_IMJFileAutomation =
+    {0x4b6603ed,0xf6d4,0x4cfc,{0xbd,0xe8,0x0e,0xd6,0x76,0xe5,0xd8,0x14}};
+extern "C" const GUID __declspec(selectany) DIID_IMJPlaylistsAutomation =
+    {0xd1007ee5,0x8dbd,0x408b,{0xa9,0x91,0x12,0xf7,0x52,0xb9,0x71,0x3f}};
+extern "C" const GUID __declspec(selectany) DIID_IMJPlaylistAutomation =
+    {0x019514d4,0x0444,0x488a,{0x94,0x46,0xc4,0xec,0x17,0x9d,0x81,0x49}};
+extern "C" const GUID __declspec(selectany) CLSID_MJPlaybackAutomation =
+    {0xdf64237f,0xbc54,0x425a,{0x96,0xee,0x42,0x21,0xa5,0xdb,0xcd,0xf6}};
+extern "C" const GUID __declspec(selectany) CLSID_MJPlaylistAutomation =
+    {0x18efd425,0x7ea0,0x4eb8,{0xad,0x51,0x44,0x01,0xe7,0xae,0xb0,0x25}};
+extern "C" const GUID __declspec(selectany) CLSID_MJSchemeAutomation =
+    {0xa20dc525,0x1396,0x468c,{0xbe,0xee,0xc8,0x6f,0x4c,0x33,0x5b,0x7b}};
+extern "C" const GUID __declspec(selectany) DIID_IMJSchemeAutomation =
+    {0x9d25ac36,0x459c,0x4901,{0x93,0x47,0x69,0xa6,0xaa,0x3a,0x7b,0x5a}};
+extern "C" const GUID __declspec(selectany) CLSID_MJPlaylistsAutomation =
+    {0xdd4711dd,0x1058,0x498b,{0xac,0x6f,0x1c,0x2e,0xf5,0x8d,0x69,0xa8}};
+extern "C" const GUID __declspec(selectany) CLSID_MJFileAutomation =
+    {0x29661654,0xc71b,0x417c,{0x84,0xc1,0x6b,0x7e,0x72,0x2e,0xcf,0xdd}};
+extern "C" const GUID __declspec(selectany) CLSID_MJFilesAutomation =
+    {0x6c56f0fd,0x0cbc,0x48a0,{0x80,0x39,0xb7,0x40,0x7a,0x07,0xcf,0xc0}};
+extern "C" const GUID __declspec(selectany) DIID_IMJCurPlaylistAutomation =
+    {0x8beaa4cf,0xcc11,0x4fdd,{0x8f,0x53,0xc9,0x97,0x42,0x4b,0x18,0x85}};
+extern "C" const GUID __declspec(selectany) CLSID_MJCurPlaylistAutomation =
+    {0x53ffdf32,0xd0dc,0x4653,{0xac,0xc9,0xb0,0x98,0xbb,0x04,0xfb,0xb8}};
+extern "C" const GUID __declspec(selectany) DIID_IMJMixerAutomation =
+    {0x190d8bca,0x0030,0x4a94,{0x96,0x64,0x40,0x11,0xb4,0xbc,0x96,0xe5}};
+extern "C" const GUID __declspec(selectany) CLSID_MJMixerAutomation =
+    {0x1d757446,0xa6a8,0x47f7,{0xa7,0xad,0x2d,0xce,0x5e,0x73,0x79,0x2e}};
+extern "C" const GUID __declspec(selectany) DIID_IMJAutomation =
+    {0xbf9ea151,0xb5fe,0x4a06,{0xa6,0xb3,0x36,0x87,0xd6,0x60,0x90,0x37}};
+extern "C" const GUID __declspec(selectany) CLSID_MJAutomation =
+    {0x04e24975,0x007a,0x44c2,{0x9c,0x4c,0x92,0x50,0x9f,0x83,0x9e,0xdc}};
+
+//
+// Wrapper method implementations
+//
+
+#include "Media Jukebox.tli"
+
+#pragma pack(pop)

@@ -1,0 +1,184 @@
+#include "stdafx.h"
+#include "safestr.h"
+
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource)
+{
+    char	*cp = strDestination;
+	char	*cpEnd = strDestination + nLenMax - 1;
+
+	for (; cp < cpEnd && *strSource; cp++, strSource++)
+	{
+		*cp = *strSource;
+	}
+
+	*cp = '\0';
+
+    return(strDestination);
+}
+
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+int	strncpy_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy)
+{
+	if (nToCopy >= nLenMax)
+		nToCopy = nLenMax - 1;
+
+	int		org = nToCopy;
+
+    while (nToCopy && (*strDestination++ = *strSource++))    /* copy string */
+            nToCopy--;
+
+	*strDestination = '\0';
+
+    return org - nToCopy;
+}
+
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+// 并且将结尾设置为以'\0'结束
+int	strncpysz_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy)
+{
+	if (nToCopy >= nLenMax)
+		nToCopy = nLenMax - 1;
+	else if (nToCopy < 0)
+		nToCopy = 0;
+
+	int		org = nToCopy;
+
+    while (nToCopy && (*strDestination++ = *strSource++))    /* copy string */
+            nToCopy--;
+
+	*strDestination = '\0';
+
+    return org - nToCopy;
+}
+
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+char *strcat_safe(char * dst, int Size, const char * src)
+{
+	char * cp = dst;
+	char * endcp = dst + Size - 1;
+
+	while( *cp )
+		cp++;                   /* find end of dst */
+
+	while((cp < endcp) && (*cp++ = *src++)) ;       /* Copy src to end of dst */
+
+	*cp = '\0';
+
+	return( dst );                  /* return dst */
+}
+
+//////////////////////////////////////////////////////////////////////////
+// UNICODE version
+
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+int	wcsncpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource, int nToCopy)
+{
+	if (nToCopy >= nLenMax)
+		nToCopy = nLenMax - 1;
+
+	int		org = nToCopy;
+
+    while (nToCopy && (*strDestination++ = *strSource++))    /* copy string */
+            nToCopy--;
+
+	*strDestination = '\0';
+
+    return org - nToCopy;
+}
+
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+// 并且将结尾设置为以'\0'结束
+int	wcsncpysz_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource, int nToCopy)
+{
+	if (nToCopy >= nLenMax)
+		nToCopy = nLenMax - 1;
+
+	int		org = nToCopy;
+
+    while (nToCopy && (*strDestination++ = *strSource++))    /* copy string */
+            nToCopy--;
+
+	*strDestination = '\0';
+
+    return org - nToCopy;
+}
+
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource)
+{
+    wchar_t	*cp = strDestination;
+	wchar_t	*cpEnd = strDestination + nLenMax - 1;
+
+	for (; cp < cpEnd && *strSource; cp++, strSource++)
+	{
+		*cp = *strSource;
+	}
+
+	*cp = '\0';
+
+    return(strDestination);
+}
+
+wchar_t *wcscat_safe(wchar_t * dst, int Size, const wchar_t * src)
+{
+	wchar_t * cp = dst;
+	wchar_t * endcp = dst + Size - 1;
+
+	while( *cp )
+		cp++;                   /* find end of dst */
+
+	while((cp < endcp) && (*cp++ = *src++)) ;       /* Copy src to end of dst */
+
+	*cp = '\0';
+
+	return( dst );                  /* return dst */
+}
+
+/*
+void SeparateWords(LPCTSTR szText, vector<string> &vWords, char chSeparator)
+{
+	tstringex		str;
+	LPCTSTR			szBeg;
+
+	while (*szText == chSeparator)
+		szText++;
+
+	szBeg = szText;
+
+	while (*szText != '\0')
+	{
+		szText = szBeg;
+		while (*szText != chSeparator && *szText != '\0')
+			szText++;
+
+		str.NCopy(szBeg, szText);
+		vWords.push_back(str.c_str());
+
+		szBeg = szText + 1;
+	}
+}
+
+void SeparateWords(LPCTSTR szText, vector<string> &vWords, LPCTSTR szSeparator)
+{
+	tstringex		str;
+	LPCTSTR			szBeg, szLastBeg;
+
+	szBeg = szText;
+	szLastBeg = szBeg;
+
+	szBeg = strstr(szBeg, szSeparator);
+
+	while (szBeg)
+	{
+		// copy szLastBeg ---> szBeg
+		str.NCopy(szLastBeg, szBeg);
+		vWords.push_back(str.c_str());
+
+		szLastBeg = szBeg + strlen(szSeparator);
+		szBeg = strstr(szLastBeg, szSeparator);
+	}
+
+	vWords.push_back(szLastBeg);
+}
+*/

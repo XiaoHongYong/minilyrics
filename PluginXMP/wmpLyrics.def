@@ -1,0 +1,7 @@
+; PluginXMP.def : Declares the module parameters.
+
+LIBRARY      "xmp-ml.dll"
+
+EXPORTS
+	XMPDSP_GetInterface2     PRIVATE
+	DllMain     PRIVATE

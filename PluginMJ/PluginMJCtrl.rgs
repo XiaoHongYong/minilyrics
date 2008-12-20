@@ -1,0 +1,34 @@
+HKCR
+{
+	PluginMJ.PluginMJCtrl.1 = s 'Crintsoft MiniLyrics'
+	{
+		CLSID = s '{116AB140-DEBE-457a-A326-828BA138923A}'
+	}
+	PluginMJ.PluginMJCtrl = s 'Crintsoft MiniLyrics'
+	{
+		CLSID = s '{116AB140-DEBE-457a-A326-828BA138923A}'
+		CurVer = s 'PluginMJ.PluginMJCtrl.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {116AB140-DEBE-457a-A326-828BA138923A} = s 'Crintsoft MiniLyrics'
+		{
+			ProgID = s 'PluginMJ.PluginMJCtrl.1'
+			VersionIndependentProgID = s 'PluginMJ.PluginMJCtrl'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			ForceRemove 'Control'
+			ForceRemove 'Insertable'
+			ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 102'
+			'MiscStatus' = s '0'
+			{
+			    '1' = s '131473'
+			}
+			'TypeLib' = s '{08C9816D-BA11-4761-8D0B-19EC298FDEE5}'
+			'Version' = s '1.0'
+		}
+	}
+}

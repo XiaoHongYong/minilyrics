@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginYme", "PluginYme.vcproj", "{DD3AD720-7525-4375-9448-E9332745693E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B494E656-8760-4D81-95BF-6A16464CE7F2} = {B494E656-8760-4D81-95BF-6A16464CE7F2}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginYmePS", "PluginYmePS.vcproj", "{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DD3AD720-7525-4375-9448-E9332745693E} = {DD3AD720-7525-4375-9448-E9332745693E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPluginLib", "..\MLPluginLib\MLPluginLib.vcproj", "{B494E656-8760-4D81-95BF-6A16464CE7F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+		Unicode Debug|Win32 = Unicode Debug|Win32
+		Unicode Release|Win32 = Unicode Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DD3AD720-7525-4375-9448-E9332745693E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DD3AD720-7525-4375-9448-E9332745693E}.Debug|Win32.Build.0 = Debug|Win32
+		{DD3AD720-7525-4375-9448-E9332745693E}.Release|Win32.ActiveCfg = Release|Win32
+		{DD3AD720-7525-4375-9448-E9332745693E}.Release|Win32.Build.0 = Release|Win32
+		{DD3AD720-7525-4375-9448-E9332745693E}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{DD3AD720-7525-4375-9448-E9332745693E}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{DD3AD720-7525-4375-9448-E9332745693E}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{DD3AD720-7525-4375-9448-E9332745693E}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+		{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}.Release|Win32.ActiveCfg = Release|Win32
+		{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{B494E656-8760-4D81-95BF-6A16464CE7F2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B494E656-8760-4D81-95BF-6A16464CE7F2}.Debug|Win32.Build.0 = Debug|Win32
+		{B494E656-8760-4D81-95BF-6A16464CE7F2}.Release|Win32.ActiveCfg = Release|Win32
+		{B494E656-8760-4D81-95BF-6A16464CE7F2}.Release|Win32.Build.0 = Release|Win32
+		{B494E656-8760-4D81-95BF-6A16464CE7F2}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{B494E656-8760-4D81-95BF-6A16464CE7F2}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{B494E656-8760-4D81-95BF-6A16464CE7F2}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{B494E656-8760-4D81-95BF-6A16464CE7F2}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

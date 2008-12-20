@@ -1,0 +1,8 @@
+noinst_LIBRARIES = libid3lib.a
+
+libid3lib_a_SOURCES = ID3Helper.cpp ID3v2Frame.cpp ID3v2FrameParser.cpp ID3v1.cpp ID3v2.cpp
+
+INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils 
+
+libid3lib_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`
+

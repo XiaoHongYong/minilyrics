@@ -1,0 +1,337 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 4, 2\r\n"
+    "#pragma code_page(936)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\WndCrack.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
+    "#include ""l.chs\\afxres.rc""          // Standard components\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\WRENCH.ICO"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 75
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "关于窗口修改器"
+FONT 9, "宋体"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "窗口修改器 0.6 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "版权所有 (C) 2003 - 2005",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
+    LTEXT           "http://www.minilyrics.com",IDC_STATIC,41,40,101,8
+    LTEXT           "showbrave@163.com",IDC_STATIC,40,54,69,8
+END
+
+IDD_WNDCRACK_DIALOG DIALOGEX 0, 0, 404, 311
+STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
+    WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "窗口修改器"
+FONT 9, "宋体"
+BEGIN
+    LTEXT           "拖动下面的图标，到一个窗口中，然后释放，来选择该窗口。",
+                    IDC_STATIC,157,7,237,8
+    LTEXT           "选择窗口：",IDC_STATIC,158,24,41,8
+    LTEXT           "Select Window Position",IDC_SELWND,207,17,22,20
+    LTEXT           "窗口句柄：",IDC_STATIC,157,63,41,8
+    EDITTEXT        IDC_HWND_CAPTURED,207,60,92,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "更新",IDC_UPDATE,348,59,50,14
+    LTEXT           "标题：",IDC_STATIC,157,80,25,8
+    EDITTEXT        IDC_HWND_CAPTION,207,77,188,14,ES_AUTOHSCROLL
+    LTEXT           "类名：",IDC_STATIC,157,99,25,8
+    EDITTEXT        IDC_HWND_CLASSNAME,207,95,188,14,ES_AUTOHSCROLL
+    GROUPBOX        "窗口位置（相对于屏幕）",IDC_STATIC,157,147,238,51
+    LTEXT           "X：",IDC_STATIC,163,162,13,8
+    EDITTEXT        IDC_HWND_X,180,159,56,14,ES_AUTOHSCROLL
+    LTEXT           "CX：",IDC_STATIC,297,165,17,8
+    EDITTEXT        IDC_HWND_CX,325,160,56,14,ES_AUTOHSCROLL
+    LTEXT           "Y:",IDC_STATIC,163,181,9,8
+    EDITTEXT        IDC_HWND_Y,180,179,56,14,ES_AUTOHSCROLL
+    LTEXT           "CY：",IDC_STATIC,297,181,17,8
+    EDITTEXT        IDC_HWND_CY,325,179,56,14,ES_AUTOHSCROLL
+    GROUPBOX        "修改窗口一般属性",IDC_STATIC,157,203,238,73
+    PUSHBUTTON      "显示/隐藏",IDC_SHOWWINDOW,167,216,50,14
+    PUSHBUTTON      "顶层/非顶层",IDC_TOPMOST,233,216,50,14
+    PUSHBUTTON      "关闭",IDC_CLOSEWND,299,216,50,14
+    PUSHBUTTON      "位置/大小",IDC_MOVEWINDOW,167,236,50,14
+    PUSHBUTTON      "标题",IDC_SET_WND_CAPTION,233,236,50,14
+    PUSHBUTTON      "透明窗口",IDC_SET_WND_OPAQUE,299,236,50,14
+    PUSHBUTTON      "最小化/恢复",IDC_MINIMIZE_WND,167,257,50,14
+    PUSHBUTTON      "允许/禁止",IDC_ENABLE_WND,233,257,50,14
+    CONTROL         "Tree1",IDC_TREE_WND,"SysTreeView32",TVS_HASBUTTONS | 
+                    TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | 
+                    WS_BORDER | WS_TABSTOP,7,30,140,246
+    PUSHBUTTON      "枚举窗口",IDC_ENUM,7,7,50,14
+    LTEXT           "Process ID:",IDC_STATIC,157,116,45,8
+    EDITTEXT        IDC_E_PROCESSID,208,113,188,14,ES_AUTOHSCROLL
+    LTEXT           "Ctrl ID",IDC_STATIC,157,133,29,8
+    EDITTEXT        IDC_E_CTRLID,208,131,188,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MASK_COLOR,207,42,58,14,ES_AUTOHSCROLL
+    LTEXT           "Color: ",IDC_STATIC,158,44,29,8
+    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | 
+                    WS_TABSTOP,356,42,42,14
+    EDITTEXT        IDC_MASK_COLOR2,269,42,80,14,ES_AUTOHSCROLL
+END
+
+IDD_MSG_DLG DIALOGEX 0, 0, 374, 253
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "WndCrack"
+FONT 9, "宋体", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "确定",IDOK,260,7,50,14
+    PUSHBUTTON      "取消",IDCANCEL,260,23,50,14
+    PUSHBUTTON      "发送消息(SEND)",IDC_SENDMSG,164,114,83,14
+    GROUPBOX        "Message",-1,164,102,203,88
+    LTEXT           "消息类型：",-1,165,135,41,8
+    LTEXT           "WPARAM:",-1,165,156,29,8
+    LTEXT           "LPARAM:",-1,164,172,29,8
+    EDITTEXT        IDC_MSGWPARAM,212,154,155,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_MSGLPARAM,212,172,155,14,ES_AUTOHSCROLL
+    COMBOBOX        IDC_MSGTYPE,227,134,140,87,CBS_DROPDOWNLIST | CBS_SORT | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "发送消息(POST)",IDC_POSTMSG,270,114,83,14
+END
+
+IDD_SET_LAYEREDWND_DLG DIALOGEX 0, 0, 205, 103
+STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_APPWINDOW
+CAPTION "设置窗口透明属性"
+FONT 9, "宋体", 0, 0, 0x1
+BEGIN
+    CONTROL         "使用透明设置",IDC_ENABLE_LAYERED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,9,11,64,10
+    EDITTEXT        IDC_MASK_COLOR,103,24,33,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_OPAQUE,103,43,33,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "修改",IDOK,32,82,50,14
+    PUSHBUTTON      "取消",IDCANCEL,110,82,50,14
+    LTEXT           "Static",IDC_SELWND,172,19,26,22
+    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | 
+                    WS_TABSTOP,141,23,27,14
+    CONTROL         "使用透明色：",IDC_C_TRANS_COLOR,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,25,26,64,10
+    CONTROL         "使用不透明度：",IDC_R_OPAQUE,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,25,45,72,10
+    CONTROL         "鼠标点击可透过窗口",IDC_C_CLICKTHROUGH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,25,64,125,10
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 0,4,0,1
+ PRODUCTVERSION 0,4,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "080404b0"
+        BEGIN
+            VALUE "Comments", "\0"
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "WndCrack Microsoft 基础类应用程序\0"
+            VALUE "FileVersion", "0, 4, 0, 1\0"
+            VALUE "InternalName", "WndCrack\0"
+            VALUE "LegalCopyright", "版权所有 (C) 2000\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "WndCrack.EXE\0"
+            VALUE "PrivateBuild", "\0"
+            VALUE "ProductName", "WndCrack 应用程序\0"
+            VALUE "ProductVersion", "0, 4, 0, 1\0"
+            VALUE "SpecialBuild", "\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x804, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 68
+    END
+
+    IDD_WNDCRACK_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 310
+    END
+
+    IDD_MSG_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 367
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 246
+    END
+
+    IDD_SET_LAYEREDWND_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 198
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 96
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_ABOUTBOX            "关于窗口修改器(&A)..."
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_DRAGBEFORE          ICON    DISCARDABLE     "res\\dragbefo.ico"
+IDI_DRAGAFTER           ICON    DISCARDABLE     "res\\dragafte.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_CURSORSELWND        CURSOR  DISCARDABLE     "res\\cur10.cur"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE 4, 2
+#pragma code_page(936)
+#endif //_WIN32
+#include "res\WndCrack.rc2"  // non-Microsoft Visual C++ edited resources
+#include "l.chs\afxres.rc"          // Standard components
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

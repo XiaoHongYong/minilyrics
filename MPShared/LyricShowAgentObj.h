@@ -1,0 +1,52 @@
+// LyricShowAgentObj.h: interface for the CLyricShowAgentObj class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_LYRICSHOWAGENTOBJ_H__6AE48563_CB64_44CF_8578_76C673DC1F4C__INCLUDED_)
+#define AFX_LYRICSHOWAGENTOBJ_H__6AE48563_CB64_44CF_8578_76C673DC1F4C__INCLUDED_
+
+#if _MSC_VER > 1000
+#pragma once
+#endif // _MSC_VER > 1000
+
+#include "LyricShowObj.h"
+#include "LyricShowMultiRowObj.h"
+#include "LyricShowTxtObj.h"
+#include "LyricShowTwoRowObj.h"
+#include "LyricShowHorzScrollObj.h"
+#include "LyricShowSingleRowObj.h"
+#include "LyricShowVobSub.h"
+
+class CLyricShowAgentObj : public CUIObject, IEventHandler  
+{
+	UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
+public:
+	CLyricShowAgentObj();
+	virtual ~CLyricShowAgentObj();
+	
+	virtual void OnCreate();
+
+	// IEventHandler
+	virtual void OnEvent(const IEvent *pEvent);
+
+	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+
+protected:
+	void ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle);
+
+	void LoadToolbar();
+
+	CUIObject		*m_pToolbar;
+	tstring			m_strTBHeight;
+	bool			m_bEnableToolbar;
+
+protected:
+	tstring			m_strLyrDisplayStylePropName;
+	tstring			m_strLyrDisplayStyle;
+	CUIObject		*m_pLyricsShow;
+	vector<tstring>	m_vProperties;
+	bool			m_bEnableStaticTextStyle;
+
+};
+
+#endif // !defined(AFX_LYRICSHOWAGENTOBJ_H__6AE48563_CB64_44CF_8578_76C673DC1F4C__INCLUDED_)

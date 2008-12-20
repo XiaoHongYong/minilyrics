@@ -1,0 +1,199 @@
+// variable type:
+//	int, string, skinwnd_t, skinctrl_t
+//
+/*
+int		i = 1 / 1 + 5 * 2;
+
+int		k = 12;
+
+int		l = 1;
+*/
+
+
+class CSkinSysEventHandler
+{
+	void OnInit()
+	{
+	}
+
+	void OnQuit()
+	{
+	}
+
+	void OnSkinWndCreate(string strWndName)
+	{
+		prints("OnSkinWndCreate");
+		prints(strWndName);
+	}
+
+	void OnSkinWndClose(string strWndName)
+	{
+		prints("OnSkinWndClose");
+		prints(strWndName);
+		if (strcmp(strWndName, "skinwndname") == 0)
+			prints("equal skinwndname");
+		else
+			prints("not equal skinwndname");
+	}
+
+	void OnRelease()
+	{
+		delete this;
+	}
+
+};
+
+void main()
+{
+
+	RegisterSkinSysHandler(new CSkinSysEventHandler, "CSkinSysEventHandler");
+
+}
+
+/*
+class shade_skinwnd
+{
+	void OnClose()
+	{
+		print(this.m_nVar);
+		this.m_nVar++;
+		print(this.m_nVar);
+	}
+
+	void OnLoad()
+	{
+		m_nVar = m_nVar++;
+		// m_nVar = 14;
+		OnClose();
+	}
+
+	void OnRelease()
+	{
+		m_str.assign("assign str");
+		prints(m_str.c_str());
+		prints("delete this");
+		delete this;
+	}
+
+	int			m_nVar = 1;
+	int			m_n1;
+	CString		m_str = new CString;
+
+};
+
+int f(int k)
+{
+//	print(k);
+}
+
+void main()
+{
+	f(0);
+	shade_skinwnd	wndShade;
+	wndShade = new shade_skinwnd;
+
+	wndShade.OnClose();
+
+	wndShade.OnLoad();
+
+	wndShade.OnRelease();
+
+	// delete wndShade;
+
+}
+*/
+
+/*
+function void xxprint(string str)
+{
+	prints(str);
+}
+
+function int h(ref int x)
+{
+	x++;
+	x--;
+	return x;
+}
+
+function void g(ref int x)
+{
+	x = h(x);
+	print(x);
+}
+
+function void funct()
+{
+	int y = 3;
+	y = h(y) + 1;
+	y++;
+}
+
+
+function void f(int y)
+{
+	while (y > 0)
+	{
+		g(y);
+	}
+}
+
+
+// Global variable
+// _curWnd, _skinFactory,
+
+int			xxgleg = 0;
+string		strxxgleg = "string\"";
+string		settings;
+
+function int testFun(int aa)
+{
+	if (xxgleg == 0)
+		return 11;
+	else
+	{
+		int			xxgleg = 0;
+		int			xxgleg2 = 0;
+	}
+	int		xxgleg = 21;
+	int			localparam;
+}
+
+function void testFun2(int param1)
+{
+	int			localparam3;
+}
+
+function void testFun3(int param5, string param2)
+{
+	int			localparam4;
+
+	if (localparam4 == 1)
+		int dd = 2;
+	if (localparam4 + xxgleg)
+		testFun(localparam4);
+	else
+		int bb = 1;
+
+	int		x = 0;
+}
+
+/*
+1. 操作数类型有：
+	1). int, char, struct(class), pointer
+	2). 
+
+2. 虚拟机内存管理：
+	1). 全局变量，局部变量，参数调用等都放在栈中。
+	2). 如何定位变量的地址（都在堆栈中寻址）:
+		a. 局部变量：函数堆栈起始地址 ＋ 变量地址偏移量（相对函数栈起始地址）
+		b. 全局变量：相对堆栈底部的偏移量
+3. 指令寻址方式，为了简化指令只有一种方式：
+	1). 堆栈寻址.
+	2). 
+
+1. 函数调用堆栈:
+	1). 局部变量声明时分配堆栈空间，根据此名字保存堆栈地址。
+
+
+*/

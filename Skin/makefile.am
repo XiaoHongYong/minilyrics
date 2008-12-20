@@ -1,0 +1,13 @@
+SUBDIRS = gtk2
+
+noinst_LIBRARIES = libskin.a
+
+libskin_a_SOURCES = Commander.cpp Formula.cpp Skin.cpp SkinButton.cpp SkinCaption.cpp \
+		SkinContainer.cpp SkinFactory.cpp SkinImage.cpp SkinNStatusButton.cpp SkinResMgr.cpp \
+		SkinVScrollBar.cpp SkinWndDrag.cpp SknImage.cpp SknScaleImage.cpp UIObject.cpp
+
+INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/Widget -I$(top_srcdir)/gfx
+
+libskin_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`
+
+

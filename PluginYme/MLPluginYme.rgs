@@ -1,0 +1,56 @@
+HKCR
+{
+	MiniLyrics.MLPluginYme.1 = s 'MLPluginYme Class'
+	{
+		CLSID = s '{6650AC82-5B87-4BEA-8105-53DD29EA398A}'
+	}
+	MiniLyrics.MLPluginYme = s 'MLPluginYme Class'
+	{
+		CLSID = s '{6650AC82-5B87-4BEA-8105-53DD29EA398A}'
+		CurVer = s 'MiniLyrics.MLPluginYme.1'
+	}
+	NoRemove CLSID
+	{
+		ForceRemove {6650AC82-5B87-4BEA-8105-53DD29EA398A} = s 'MLPluginYme Class'
+		{
+			ProgID = s 'MiniLyrics.MLPluginYme.1'
+			VersionIndependentProgID = s 'MiniLyrics.MLPluginYme'
+			ForceRemove 'Programmable'
+			InprocServer32 = s '%MODULE%'
+			{
+				val ThreadingModel = s 'Apartment'
+			}
+			val AppID = s '%APPID%'
+			ForceRemove 'Control'
+			ForceRemove 'ToolboxBitmap32' = s '%MODULE%, 102'
+			'MiscStatus' = s '0'
+			{
+			    '1' = s '%OLEMISC%'
+			}
+			'TypeLib' = s '{5E1D8BF5-9B21-47FC-B93F-C28EC9569D8F}'
+			'Version' = s '1.0'
+		}
+	}
+}
+
+HKLM
+{
+	NoRemove SOFTWARE
+	{
+		NoRemove Yahoo
+		{
+			NoRemove YMP
+			{
+				NoRemove Plugins
+				{
+					ForceRemove MiniLyrics.MLPluginYme
+					{
+						val Name = s 'MiniLyrics Plugin'
+						val Description = s 'The best synchronized lyrics viewer.'
+						val Enabled = d '1'
+					}
+				}
+			}
+		}
+	}
+}
