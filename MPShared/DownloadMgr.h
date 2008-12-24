@@ -9,76 +9,67 @@
 #if !defined(AFX_DOWNLOADMGR_H__4C8DE765_266C_11D6_B47A_00E04C008BA3__INCLUDED_)
 #define AFX_DOWNLOADMGR_H__4C8DE765_266C_11D6_B47A_00E04C008BA3__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
-
-class CDownloadMgr;
-
-
-//
-// CDownloadTask::m_dwMask 字段的值定义
-//
-#define DTASK_FILENAME				0x1		// 是否使用strFile字段,否则保存的文件名有strURL中获得
-#define DTASK_SAVEPATH				0x2		// 是否使用strSavePath字段, 否则使用缺省的保存路径
-#define DTASK_SAVE_TOBUFFER			0x4		// 保存到内存中,而不是保存到文件中
-
-//
-// CDownloadTask::m_dwState 任务状态
-//
-#define TASK_STATE_DELETED				0	// 该任务已经被删除, 在保存的文件中作为一个标记
-#define TASK_STATE_STOP					1	// 停止状态
-#define TASK_STATE_RUNNING				2	// 正在下载状态
-#define TASK_STATE_READY				3	// 准备下载状态
-//#define TASK_STATE_STOP_ERR_MAX_RETRY	4	// 停止: 最大重试数已经达到
-#define TASK_STATE_DOWNLOAD_OK			5	// 停止: 成功下载完毕
-#define TASK_STATE_STOP_ERROR			6	// 停止: 出现错误
-#define TASK_STATE_RUNNING_REDIRECT		7	// 停止: 重定向
-//#define TASK_STATE_STOP_EXIST_FILE		8	// 停止: 文件已经存在
-
-#define IsTaskStarted(dwState)	(dwState == TASK_STATE_RUNNING || \
-								dwState == TASK_STATE_RUNNING_REDIRECT || \
-								dwState == TASK_STATE_READY)
-
-
-class CDownloadMgr;
 
 // 下载任务的m_dwID的最初值
 #define DOWN_TASK_BASE_ID		0x80000000
 
 
-//
-// UserAgent, CDownloadTask::m_dwUserAgent
-//
-typedef enum DL_USER_AGENT
-{
-	USER_AGENT_CUSTOM		= 0,
-	USER_AGENT_IE5X			= 1,
-	USER_AGENT_NETSCAPE4X	= 2
-}DL_USER_AGENT;
-
-
-class CDownloadTask;
-
-//
-// 下载任务的实现的虚基类
-//
-class CDownloadImp
+class CDownloadMgr
 {
 public:
-	CDownloadImp(CDownloadTask *pTask)
+	CDownloadMgr();
+	virtual ~CDownloadMgr();
+
+public:
+	class Task
 	{
-		m_pTask = pTask;
-	}
-	virtual ~CDownloadImp()
-	{
-	}
-	virtual int Run() = 0;
-	virtual int Shutdown() = 0;
-	
+	public:
+		Task()
+		{
+			m_bReportErr = true;
+			m_bHideTask = false;
+			m_dwID = 0;
+			m_dwDownOkID = 0;
+			m_errResult = 0;
+			m_nHttpRetCode = 0;
+		}
+
+		tstring			m_strSaveFile;
+
+		tstring			m_strURL;
+		tstring			m_strReferUrl;		// Referer: http://
+		uint32			m_dwID;
+		MLRESULT		m_errResult;
+		int				m_nHttpRetCode;
+		bool			m_bReportErr;
+		bool			m_bHideTask;
+		DWORD			m_dwDownOkID;
+
+	};
+
+	typedef	list<Task>		LIST_TASK;
+
+public:
+	int AddTask(LPCTSTR szURL, LPCTSTR szFile, DWORD dwDownOkID, bool bReportErr = true, bool bHideTask = false);
+
+	bool IsTaskExist(LPCTSTR szURL);
+
+	virtual void OnEndDownload(Task *pTask);
+
 protected:
-	CDownloadTask		*m_pTask;
+	int RunHttpTask(Task *pTask);
+
+protected:
+	Mutex					m_mutexAccess;
+	LIST_TASK				m_listTasks;
+	uint32					m_dwTaskIDNext;
+	int						m_nRetryCount;
+	Event					m_eventShutDown;
+
 };
+
+
 
 //
 // 下载任务的基本信息
@@ -168,77 +159,11 @@ public:
 	int AddTask(const CDownloadTask &Task, DWORD *pdwTaskID);
 
 public:
-	void SetUserAgent(DL_USER_AGENT dwUserAgent = USER_AGENT_CUSTOM, LPCTSTR szAgentCustom = NULL);
-	LPCTSTR GetUserAgent();
-
-	int StartTask(CDownloadTask *pTask);
-
-	int RemoveDownloadTaskByID(DWORD dwID);
-
-	BOOL GetDownloadTaskByID(DWORD dwID, CDownloadTask &task);
-	CDownloadTask * GetDownloadTaskByID(DWORD dwID);
-	vector<CDownloadTask *> &GetDownTaskQueue();
-
 	void SetMaxRetryCount(int nCount);
 	int GetMaxRetryCount();
 
-	void SetDefSavePath(const TCHAR *szSavePath);
-	LPCTSTR GetDefSavePath() { return m_strDefSavePath.c_str(); }
-
-	virtual int Init();
-	virtual void Quit();
-
-	int IsTaskExist(const CDownloadTask &Task);
-
-	int IsURLExist(const TCHAR *szURL);
-	int GetRunningTaskCount();
-
 	CDownloadMgr();
 	virtual ~CDownloadMgr();
-
-	void EnterReadSection()
-	{
-		m_mutexAccess.Acquire();
-	}
-	void LeaveReadSection()
-	{
-		m_mutexAccess.Release();
-	}
-
-protected:
-	int RunTask(CDownloadTask *pTask);
-
-	void OnTaskQueueChanged();
-	int RemoveTask(CDownloadTask **ppTask);
-
-	void EnterWriteSection()
-	{
-		m_mutexAccess.Acquire();
-	}
-	void LeaveWriteSection()
-	{
-		m_mutexAccess.Release();
-	}
-
-protected:
-	//
-	// 下载通知回调函数
-	LPVOID					m_lpUserParam;
-
-	Mutex					m_mutexAccess;
-
-	tstring					m_strUserAgent;
-
-	vector<CDownloadTask *>	m_vDownloadTasks;	// 管理的所有任务
-
-	int				m_nMaxRunningTasks;		// 最大同时运行的任务数目
-
-	DWORD			m_dwTaskIDMax;			// 下载任务ID的最大值
-
-	int				m_nMaxRetryCount;		// 每一个任务的最大重试次数
-
-	tstring			m_strDefSavePath;
-
 
 };
 

@@ -12,6 +12,8 @@
 #include "HttpDownImp2.h"
 
 
+#define SZ_USER_AGENT_IE5 _T("Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)")
+
 // COMMENT:
 //		取得不存在的的文件名，如果存在则增加序号
 //		EXP:
@@ -44,55 +46,125 @@ void GetNotExistFileName(const TCHAR *szFileName, TCHAR *szFileNew, int nMaxLen)
 	}
 }
 
+//	COMMENT:
+//		在URL中取得服务器的名字
+//		URL的格式都是类似于:
+//		http_URL	   = "http:" "//" host [ ":" port ] [ abs_path ]
+//		http://127.0.0.1/README.TXT
+BOOL AnalysisHttpUrl(const TCHAR szURL[], TCHAR szHostBuff[], int nHostBuff, int &nOutPort, TCHAR szAbsPath[], int nAbsPath)
+{
+	assert(szURL);
+	assert(szHostBuff);
+	assert(szAbsPath);
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+	const TCHAR	*szHostBeg, *szHostEnd1, *szHostEnd2;
+	const TCHAR	*szAbsPathBeg = NULL;
+	int 	nLen;
+	const TCHAR		*szHttp = _T("HTTP://");
+
+	if (_tcsnicmp(szURL, szHttp, _tcslen(szHttp)) != 0)
+		return FALSE;
+
+	// 找到主机名开始的位置
+	szHostBeg = szURL + _tcslen(szHttp);
+
+	// 找到下一个 / 开始的位置
+	szAbsPathBeg = szHostEnd1 = _tcschr(szHostBeg, '/');
+
+	if (szHostEnd1 == NULL) // 如果没有 / 则
+		nLen = _tcslen(szURL) - int(szURL - szHostBeg);
+	else
+		nLen = szHostEnd1 - szHostBeg;
+
+
+	// 取得端口号
+	//	LPSERVENT lpServEnt;
+	//	lpServEnt = getservbyname("http", "tcp");
+	//	if (lpServEnt == NULL)
+	nOutPort = __HTTP_PORT;
+	//	else
+	//		nOutPort = ntohs(lpServEnt->s_port);
+
+	// 找到下一个 : 开始的位置
+	szHostEnd2 = _tcschr(szHostBeg, ':');
+	if (szHostEnd2) // 如果有 : 则
+	{
+		if (nLen > szHostEnd2 - szHostBeg)
+		{
+			nLen = szHostEnd2 - szHostBeg;		// 长度
+			nOutPort = _ttoi(szHostEnd2 + 1);	// 端口号
+		}
+	}
+
+	// 复制服务器名
+	_tcsncpy(szHostBuff, szHostBeg, nLen);
+	szHostBuff[nLen] = '\0';
+
+	// 服务器上的路径
+	if (szAbsPathBeg == NULL)
+		szAbsPath[0] = '\0';
+	else
+		_tcscpy_safe(szAbsPath, nAbsPath, szAbsPathBeg);
+
+	return TRUE;
+}
+
+////////////////////////////////////////////////////////////////////////////
 
 CDownloadMgr::CDownloadMgr()
 {
-	m_nMaxRunningTasks = 5;
-	m_nMaxRetryCount = 2;
-
-	m_strDefSavePath = _T("C:\\temp\\");
-
-	m_dwTaskIDMax = DOWN_TASK_BASE_ID;
-
-	m_lpUserParam = NULL;
-
-	// 设置缺省的UserAgent
-	SetUserAgent(USER_AGENT_IE5X);
+	m_dwTaskIDNext = DOWN_TASK_BASE_ID;
+	m_nRetryCount = 2;
 }
+
 
 CDownloadMgr::~CDownloadMgr()
 {
-/*	assert(m_vDownloadTasks.size() == 0);
 
-	for (int i = m_vDownloadTasks.size() - 1; i >= 0; i--)
-	{
-		if (m_vDownloadTasks[i]->m_dwState != TASK_STATE_RUNNING)
-		{
-			delete m_vDownloadTasks[i];
-			m_vDownloadTasks.erase(m_vDownloadTasks.begin() + i);
-		}
-	}*/
 }
 
-/********************************************************************
-Function	:	OnEndDownload
-Description	:	下载结束的通知消息, 虚函数,由CDownloadMgr调用过来的
-Input		:
-	pDownloader	-	下载完成的对象
-Output		:
-	None
-Return		:
-	None
-*********************************************************************/
-void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
-{
-	assert(pTask);
-//	assert(pTask->m_dwState != TASK_STATE_RUNNING);
 
+int CDownloadMgr::AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD dwDownOkID, bool bReportErr, bool bHideTask)
+{
+	Task		task;
+
+	if (IsTaskExist(szURL))
+		return ERR_OK;
+
+	task.m_strURL = szURL;
+	task.m_strReferUrl = szRefUrl;
+	task.m_strSaveFile = szFile;
+	task.m_dwDownOkID = dwDownOkID;
+	task.m_bReportErr = bReportErr;
+	task.m_bHideTask = bHideTask;
+
+	m_mutexAccess.Acquire();
+	m_listTasks.push_back(task);
+	m_mutexAccess.Release();
+
+	return ERR_OK;
+}
+
+
+bool CDownloadMgr::IsTaskExist(LPCTSTR szURL)
+{
+	CMutexAutolock	lock(m_mutexAccess);
+
+	LIST_TASK::iterator	it;
+
+	for (it = m_listTasks.begin(); it != m_listTasks.end(); ++it)
+	{
+		Task	&t = *it;
+		if (_tcsicmp(t.m_strURL.c_str(), szURL) == 0)
+			return true;
+	}
+
+	return false;
+}
+
+
+void CDownloadMgr::OnEndDownload(Task *pTask)
+{
 	if (pTask->m_dwState == TASK_STATE_RUNNING_REDIRECT)
 	{
 		RunTask(pTask);
@@ -110,49 +182,165 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 		RemoveTask(&pTask);
 		OnTaskQueueChanged();
 	}
-	else
-		assert(0);
 }
 
-int CDownloadMgr::GetRunningTaskCount()
-{
-	int		nRunCount = 0;
 
-	EnterReadSection();
-	for (UINT i = 0; i < m_vDownloadTasks.size(); i++)
+int CDownloadMgr::RunHttpTask(Task *pTask)
+{
+	CHttpClient			httpClient;
+	BOOL				bUseProxy = false;
+	int					nProxyPort = 80;
+	TCHAR				szProxyServer[256];
+	LPCTSTR				szProxyPwd;
+
+	int					nHttpCode = 0;
+	CCharBuffer			buffRet;
+	int					nRet;
+	CDownloadTask		&Task = *pTask;
+	TCHAR				szHost[256];
+	TCHAR				szUri[512];
+	int					nPort;
+	int					iRetry;
+	stringex			strProxyServer, strProxyPwd;
+
+	bUseProxy = CMLProfile::InetGetProxy(szProxyServer, nProxyPort);
+	szProxyPwd = CMLProfile::InetGetBase64ProxyUserPass();
+
+	// LOG1(LOG_LVL_EVENT_IMP, _T("Enter lyrics download thread: %s"), pTask->m_strURL.c_str());
+	// LOG2(LOG_LVL_EVENT_IMP, _T("Proxy settings: %d, %s"), bUseProxy, szProxyPwd);
+
+	if (!AnalysisHttpUrl(pTask->m_strURL.c_str(), szHost, CountOf(szHost), nPort, szUri, CountOf(szUri)))
 	{
-		if (m_vDownloadTasks[i]->IsRunning())
-			nRunCount++;
+		CStrPrintf	str(_T("Invalid http url: %s"),pTask->m_strURL.c_str());
+		if (!pTask->m_bHideTask)
+			g_eventDispather.DispatchLongErrorText(str.c_str());
+		ERRLOG1(_T("%s"), str.c_str());
+		nRet = ERR_HTTP_BAD_REQUEST;
+		nHttpCode = 0;
+		goto RETURN_END;
 	}
-	LeaveReadSection();
 
-	return nRunCount;
-}
+	httpClient.SetUserAgent(SZ_USER_AGENT_IE5);
+	nRet = httpClient.Init(szHost, szUri, pTask->m_strReferUrl.c_str(), nPort);
 
-int CDownloadMgr::IsURLExist(const TCHAR *szURL)
-{
-	EnterReadSection();
-	for (UINT i = 0; i < m_vDownloadTasks.size(); i++)
+#ifdef _UNICODE
+	ConvertStr(szProxyServer, -1, strProxyServer);
+	ConvertStr(szProxyPwd, -1, strProxyPwd);
+	httpClient.SetProxy(bUseProxy, strProxyServer.c_str(), nProxyPort, strProxyPwd.c_str());
+#else
+	httpClient.SetProxy(bUseProxy, szProxyServer, nProxyPort, szProxyPwd);
+#endif
+
+	if (m_nRetryCount <= 0)
+		m_nRetryCount = 1;
+
+	for (iRetry = 1; iRetry <= m_nRetryCount; iRetry++)
 	{
-		// 对于某些HTTP服务器, 是要区分大小写的 
-		if (_tcscmp(m_vDownloadTasks[i]->m_strURL.c_str(), szURL) == 0)
+		nRet = httpClient.Connect();
+		if (nRet != ERR_OK)
 		{
-			LeaveReadSection();
-			return ERR_OK;
+			tstring		str;
+			str = TOLOCAL(_T("Download lyrics: connected to server FAILED."));
+			str += _T("\r\n");
+			str += TOLOCAL(_T("Error: "));
+			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
+			if (!pTask->m_bHideTask)
+				g_eventDispather.DispatchLongErrorText(str.c_str());
+			ERRLOG1(_T("%s"), str.c_str());
+			continue;
 		}
+
+		nRet = httpClient.SendRequest();
+		if (nRet != ERR_OK)
+		{
+			tstring		str;
+			str = _T("Download lyrics: sent data FAILED.\r\n");
+			str += TOLOCAL(_T("Error: "));
+			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
+			if (!pTask->m_bHideTask)
+				g_eventDispather.DispatchLongErrorText(str.c_str());
+			ERRLOG1(_T("%s"), str.c_str());
+			httpClient.Close();
+			continue;
+		}
+
+		nRet = httpClient.GetRespond(nHttpCode, buffRet);
+		if (nRet != ERR_OK)
+		{
+			tstring		str;
+			str = _T("Download lyrics: got response FAILED.\r\n");
+			str += TOLOCAL(_T("Error: "));
+			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
+			if (!pTask->m_bHideTask)
+				g_eventDispather.DispatchLongErrorText(str.c_str());
+			ERRLOG1(_T("%s"), str.c_str());
+			httpClient.Close();
+
+			if (iRetry < m_nRetryCount)
+			{
+				//
+				// 休息10秒钟吧
+				if (!pTask->m_bHideTask)
+					g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("Wait 10 seconds and retry.")));
+				if (pHttpDownImp->m_evtShutDown.Acquire(10 * 1000))
+					break;
+			}
+
+			continue;
+		}
+
+		if (nHttpCode != 200 && !Task.m_bHideTask)
+		{
+			tstringex	strBuff;
+
+			ConvertStr(buffRet.c_str(), buffRet.size(), strBuff);
+			FilterAllHTMLTags(strBuff.data());
+			strBuff.resize(_tcslen(strBuff.c_str()));
+
+			CStrPrintf	str(_T("Url: %s\r\nHttp %d error!\r\n%s"), Task.m_strURL.c_str(), nHttpCode, strBuff.c_str());
+			g_eventDispather.DispatchLongErrorText(str.c_str());
+			ERRLOG1(_T("%s"), str.c_str());
+		}
+
+		httpClient.Close();
+
+		break;
 	}
-	LeaveReadSection();
 
-	return ERR_FALSE;
+RETURN_END:
+
+	// LOG2(LOG_LVL_EVENT_IMP, _T("End of downloading, http Code: %d, error: %d"), nHttpCode, nRet);
+
+	Task.m_nHttpRetCode = nHttpCode;
+	Task.m_errResult = nRet;
+	if (nRet == ERR_OK && nHttpCode == 200)
+	{
+		Task.m_dwState = TASK_STATE_DOWNLOAD_OK;
+		Task.OnDownOKSaveFile(buffRet.data(), buffRet.size());
+	}
+	else
+	{
+		Task.m_dwState = TASK_STATE_STOP_ERROR;
+		DBGLOG3(_T("Downloaded Failed, Error: %d, httpcode: %d, %s"), nRet, nHttpCode, Task.m_strURL.c_str());
+	}
+
+	/////////////
+	// Debug code here, 因为在检查该任务是否退出时，这时该线程还没有退出，
+	// 所以只能通过这个方式来释放内存了。
+	//	if (Task.m_dwState != TASK_STATE_RUNNING_REDIRECT)
+	{
+		if (pTask->m_pDownloadImp)
+			delete pTask->m_pDownloadImp;
+		pTask->m_pDownloadImp = NULL;
+	}
+	// Debug code here
+	/////////////
+
+	pTask->m_pDownMgr->OnEndDownload(pTask);
 }
 
-int CDownloadMgr::RunTask(CDownloadTask *pTask)
-{
-	int		nRet;
-	nRet = pTask->Run();
 
-	return nRet;
-}
+//////////////////////////////////////////////////////////////////////////
 
 int CDownloadMgr::RemoveTask(CDownloadTask **ppTask)
 {
@@ -163,13 +351,13 @@ int CDownloadMgr::RemoveTask(CDownloadTask **ppTask)
 	}
 
 	EnterWriteSection();
-	for (UINT i = 0; i < m_vDownloadTasks.size(); i++)
+	for (UINT i = 0; i < m_listTasks.size(); i++)
 	{
-		if (m_vDownloadTasks[i]->m_dwID == (*ppTask)->m_dwID)
+		if (m_listTasks[i]->m_dwID == (*ppTask)->m_dwID)
 		{
-			assert(m_vDownloadTasks[i] == *ppTask);
+			assert(m_listTasks[i] == *ppTask);
 
-			m_vDownloadTasks.erase(m_vDownloadTasks.begin() + i);
+			m_listTasks.erase(m_listTasks.begin() + i);
 			LeaveWriteSection();
 
 			if ((*ppTask)->Shutdown() == ERR_OK)
@@ -236,7 +424,7 @@ int CDownloadMgr::AddTask(const CDownloadTask &Task, DWORD *pdwTaskID)
 
 	// 添加到队列中
 	EnterWriteSection();
-	m_vDownloadTasks.push_back(pTask);
+	m_listTasks.push_back(pTask);
 	LeaveWriteSection();
 
 	if (GetRunningTaskCount() < m_nMaxRunningTasks)
@@ -250,15 +438,15 @@ int CDownloadMgr::AddTask(const CDownloadTask &Task, DWORD *pdwTaskID)
 int CDownloadMgr::IsTaskExist(const CDownloadTask &Task)
 {
 	EnterReadSection();
-	for (UINT i = 0; i < m_vDownloadTasks.size(); i++)
+	for (UINT i = 0; i < m_listTasks.size(); i++)
 	{
 		// 对于某些HTTP服务器, 是要区分大小写的 
-		if (_tcscmp(m_vDownloadTasks[i]->m_strURL.c_str(), Task.m_strURL.c_str()) == 0)
+		if (_tcscmp(m_listTasks[i]->m_strURL.c_str(), Task.m_strURL.c_str()) == 0)
 		{
 			// 针对HTTP协议，需要检查POST 是否一致
 			if (Task.m_bHttpPost)
 			{
-				if (_tcscmp(m_vDownloadTasks[i]->m_strHttpPost.c_str(), Task.m_strHttpPost.c_str()) == 0)
+				if (_tcscmp(m_listTasks[i]->m_strHttpPost.c_str(), Task.m_strHttpPost.c_str()) == 0)
 				{
 					LeaveReadSection();
 					return ERR_OK;
@@ -266,7 +454,7 @@ int CDownloadMgr::IsTaskExist(const CDownloadTask &Task)
 			}
 			else
 			{
-				if (!m_vDownloadTasks[i]->m_bHttpPost)
+				if (!m_listTasks[i]->m_bHttpPost)
 				{
 					LeaveReadSection();
 					return ERR_OK;
@@ -283,7 +471,7 @@ int CDownloadMgr::Init()
 {
 //	CDownTasksFile		file;
 
-//	file.ReadTasks(m_vDownloadTasks);
+//	file.ReadTasks(m_listTasks);
 
 	// 设置缺省的UserAgent
 	// SetUserAgent(USER_AGENT_CUSTOM);
@@ -576,7 +764,7 @@ void CDownloadTask::OnDownOKSaveFile(LPCVOID lpData, int nLen)
 
 vector<CDownloadTask *> &CDownloadMgr::GetDownTaskQueue()
 {
-	return m_vDownloadTasks;
+	return m_listTasks;
 }
 
 // 
@@ -586,12 +774,12 @@ vector<CDownloadTask *> &CDownloadMgr::GetDownTaskQueue()
 CDownloadTask * CDownloadMgr::GetDownloadTaskByID(DWORD dwID)
 {
 	EnterReadSection();
-	for (UINT i = 0; i < m_vDownloadTasks.size(); i++)
+	for (UINT i = 0; i < m_listTasks.size(); i++)
 	{
-		if (m_vDownloadTasks[i]->m_dwID == dwID)
+		if (m_listTasks[i]->m_dwID == dwID)
 		{
 			LeaveReadSection();
-			return m_vDownloadTasks[i];
+			return m_listTasks[i];
 		}
 	}
 	LeaveReadSection();
@@ -605,11 +793,11 @@ CDownloadTask * CDownloadMgr::GetDownloadTaskByID(DWORD dwID)
 BOOL CDownloadMgr::GetDownloadTaskByID(DWORD dwID, CDownloadTask &task)
 {
 	EnterReadSection();
-	for (UINT i = 0; i < m_vDownloadTasks.size(); i++)
+	for (UINT i = 0; i < m_listTasks.size(); i++)
 	{
-		if (m_vDownloadTasks[i]->m_dwID == dwID)
+		if (m_listTasks[i]->m_dwID == dwID)
 		{
-			task = *m_vDownloadTasks[i];
+			task = *m_listTasks[i];
 			LeaveReadSection();
 			return TRUE;
 		}
@@ -622,17 +810,17 @@ BOOL CDownloadMgr::GetDownloadTaskByID(DWORD dwID, CDownloadTask &task)
 int CDownloadMgr::RemoveDownloadTaskByID(DWORD dwID)
 {
 	EnterWriteSection();
-	for (UINT i = 0; i < m_vDownloadTasks.size(); i++)
+	for (UINT i = 0; i < m_listTasks.size(); i++)
 	{
-		if (m_vDownloadTasks[i]->m_dwID == dwID)
+		if (m_listTasks[i]->m_dwID == dwID)
 		{
-			if (m_vDownloadTasks[i]->Shutdown() == ERR_OK)
+			if (m_listTasks[i]->Shutdown() == ERR_OK)
 			{
 				CDownloadTask	*pTask;
 
-				pTask = m_vDownloadTasks[i]; 
+				pTask = m_listTasks[i]; 
 
-				m_vDownloadTasks.erase(m_vDownloadTasks.begin() + i);
+				m_listTasks.erase(m_listTasks.begin() + i);
 				LeaveWriteSection();
 
 				delete pTask;
@@ -671,11 +859,11 @@ void CDownloadMgr::OnTaskQueueChanged()
 		// runTask
 
 		EnterReadSection();
-		for (UINT i = 0; i < m_vDownloadTasks.size(); i++)
+		for (UINT i = 0; i < m_listTasks.size(); i++)
 		{
-			if (m_vDownloadTasks[i]->m_dwState == TASK_STATE_READY)
+			if (m_listTasks[i]->m_dwState == TASK_STATE_READY)
 			{
-				if (RunTask(m_vDownloadTasks[i]) == ERR_OK)
+				if (RunTask(m_listTasks[i]) == ERR_OK)
 					nRunCount++;
 
 				if (nRunCount >= m_nMaxRunningTasks)
