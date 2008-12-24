@@ -12,6 +12,10 @@
 #include "SkinScript.h"
 #include "SSCompiler.h"
 
+//
+// Base class API
+//
+// SSMC: SkinScript Machine Class
 class CSSMClassAPIBase
 {
 public:
@@ -27,6 +31,10 @@ public:
 };
 typedef vector<CSSMClassAPIBase*>		V_SSMCLASSAPI;
 
+//
+// Base functions API
+//
+// SSMF: SkinScript Machine Function
 class CSSMFunctionAPIBase
 {
 public:

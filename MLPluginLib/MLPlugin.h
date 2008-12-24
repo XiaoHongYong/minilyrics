@@ -2,7 +2,7 @@
 #define _ML_PLUGIN_HEADER_
 
 #include <windows.h>
-#include "../Mlpluginlib/MiniLyricsPlugin.h"
+#include "MiniLyricsPlugin.h"
 #include "IPlayer.h"
 #include "assert.h"
 

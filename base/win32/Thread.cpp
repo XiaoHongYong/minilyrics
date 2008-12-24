@@ -24,8 +24,7 @@ CThread::~CThread()
 	}
 }
 
-bool CThread::Create(FUNThread function, void* lpData, 
-            bool detach)
+bool CThread::Create(FUNThread function, void* lpData)
 {
 	DWORD		dwThreadId;
 	m_funThead = function;
@@ -47,17 +46,20 @@ bool CThread::Create(FUNThread function, void* lpData,
 
 void CThread::Destroy()
 {
-	TerminateThread(m_hThread, 0);
+	if (m_hThread)
+		TerminateThread(m_hThread, 0);
 }
 
 void CThread::Suspend()
 {
-	SuspendThread(m_hThread);
+	if (m_hThread)
+		SuspendThread(m_hThread);
 }
 
 void CThread::Resume()
 {
-	ResumeThread(m_hThread);
+	if (m_hThread)
+		ResumeThread(m_hThread);
 }
 
 void CThread::Join()
@@ -68,11 +70,17 @@ void CThread::Join()
 
 uint32 CThread::GetPriority() const
 {
-	return GetThreadPriority(m_hThread);
+	if (m_hThread)
+		return GetThreadPriority(m_hThread);
+	else
+		return 0;
 }
 
 uint32 CThread::SetPriority(uint32 priority)
 {
+	if (!m_hThread)
+		return 0;
+
 	uint32	nOld;
 
 	nOld = GetThreadPriority(m_hThread);
@@ -88,6 +96,12 @@ DWORD WINAPI CThread::ThreadFunction(LPVOID lpParam)
 	pwin32Thread = (CThread *)lpParam;
 
 	pwin32Thread->m_funThead(pwin32Thread->m_lpData);
+
+	if (pwin32Thread->m_hThread)
+	{
+		CloseHandle(pwin32Thread->m_hThread);
+		pwin32Thread->m_hThread = NULL;
+	}
 
 	return 0;
 }

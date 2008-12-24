@@ -19,7 +19,7 @@ Skin script lanuage:
 	1). (C++)--  :)
 	2). Differences with C++
 		A). 无指针, 但是所有用户定义的class/struct 需要用new/delete 来构造和析构, 简化堆栈的构造
-		B). 无需函数
+		B). 无虚函数
 		C). 单继承
 
 
