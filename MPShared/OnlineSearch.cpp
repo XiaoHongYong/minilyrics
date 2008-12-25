@@ -65,7 +65,6 @@ void MLFileInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, MLFileInfoList &
 		item.strTitle = file.strTitle;
 		item.strAlbum = file.strAlbum;
 		item.strUploader = file.strUploader;
-		item.dwDownOkID = DOWNOKID_LRC;
 		item.fRate = file.fRate;
 		item.nRateCount = file.nRateCount;
 		item.nDownloads = file.nDownloads;

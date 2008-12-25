@@ -44,13 +44,6 @@ extern LicenseType	g_LicenseType;
 #define SZ_INVALID_RC		_T("Inva_d_Cod-e")
 
 
-const int	DOWNOKID_NONE						= 0;
-const int	DOWNOKID_CHECK_VERSION				= 1;
-const int	DOWNOKID_LRC						= 2;
-const int	DOWNOKID_CHECK_VERSION_MANUAL		= 3;
-const int	DOWNOKID_CHECK_AD					= 4;
-
-
 #define NONE_LYRCS	_T("")
 
 

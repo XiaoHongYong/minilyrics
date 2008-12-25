@@ -51,9 +51,11 @@ public:
 	int Init();
 	void Quit();
 
-	int AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD dwDownOkID, bool bReportErr = true, bool bHideTask = false);
+	int AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD dwDownOkID, DWORD *pdwTaskID, bool bReportErr = true, bool bHideTask = false);
 
 	bool IsTaskExist(LPCTSTR szURL);
+
+	void SetDefSavePath(LPCTSTR szDefSavePath) { m_strDefSavePath = szDefSavePath; }
 
 protected:
 	virtual void OnEndDownload(CDownloadTask *pTask);
@@ -75,6 +77,7 @@ protected:
 	Event					m_eventShutDown;
 	bool					m_bQuit;
 	tstring					m_strDefSavePath;
+	tstring					m_strUserAgent;
 
 };
 

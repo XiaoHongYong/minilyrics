@@ -197,9 +197,9 @@ CVersionUpdate::~CVersionUpdate()
 
 void CVersionUpdate::OnDownloadOK(CDownloadTask *pTask)
 {
-	if (pTask->GetDownOkID() == DOWNOKID_CHECK_VERSION)
+	if (pTask->m_dwDownOkID == DOWNOKID_CHECK_VERSION)
 		OnVersionInfoDownOK(pTask, false);
-	else if (pTask->GetDownOkID() == DOWNOKID_CHECK_VERSION_MANUAL)
+	else if (pTask->m_dwDownOkID == DOWNOKID_CHECK_VERSION_MANUAL)
 		OnVersionInfoDownOK(pTask, true);
 }
 
@@ -226,16 +226,16 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
 	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 
 	// 分析mlver.xml
-	if (!xml.ParseFile(pTask->GetSaveFile()))
+	if (!xml.ParseFile(pTask->m_strSaveFile.c_str()))
 	{
-		ERRLOG1(_T("parse xml FILE FAILED: %s"), pTask->GetSaveFile());
+		ERRLOG1(_T("parse xml FILE FAILED: %s"), pTask->m_strSaveFile.c_str());
 		return;
 	}
 
 	CVersionInfo		verInfo;
 	if (verInfo.FromXML(xml.m_pRoot) != ERR_OK)
 	{
-		ERRLOG1(_T("xml file data error: %s"), pTask->GetSaveFile());
+		ERRLOG1(_T("xml file data error: %s"), pTask->m_strSaveFile.c_str());
 		return;
 	}
 
@@ -297,9 +297,6 @@ void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr)
 	if (abs(GetCurDaysFrom2000() - GetDaysFrom2000(wMonth, wDay, wYear)) <= 7)
 		return;
 
-	//
-	// 将检查更新时间写入配置文件中
-
 	_stprintf(szCheckVerTime, _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
 	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 	// g_Profile.WriteProfileString(_T("CheckVerTime"), szCheckVerTime);
@@ -316,22 +313,7 @@ void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr)
 		}
 	}
 
-	// 添加到下载任务中
-	CDownloadTask			Task;
-#ifdef _DEBUG
-	Task.m_strURL = _T("http://localhost/mlver.xml");
-#else
-	Task.m_strURL = GetStrName(SN_HTTP_ML_VER);
-#endif
-
-	Task.SetSavePath(GetAppDataDir());
-	Task.m_dwMask = DTASK_SAVEPATH;
-	Task.m_bHideTask = TRUE;
-	Task.SetDownOkID(DOWNOKID_CHECK_VERSION);
-
-	if (pMgr->AddTask(Task, NULL))
-	{
-	}
+	pMgr->AddTask(GetStrName(SN_HTTP_ML_VER), NULL, szVerFile, DOWNOKID_CHECK_VERSION, NULL, false, true);
 }
 
 void CVersionUpdate::CheckNewVersionManual(CLyricsDownloadMgr *pMgr)
@@ -351,20 +333,5 @@ void CVersionUpdate::CheckNewVersionManual(CLyricsDownloadMgr *pMgr)
 		}
 	}
 
-	// 添加到下载任务中
-	CDownloadTask			Task;
-#ifdef _DEBUG
-	Task.m_strURL = _T("http://localhost/mlver.xml");
-#else
-	Task.m_strURL = GetStrName(SN_HTTP_ML_VER);
-#endif
-
-	Task.SetSavePath(GetAppDataDir());
-	Task.m_dwMask = DTASK_SAVEPATH;
-	Task.m_bHideTask = TRUE;
-	Task.SetDownOkID(DOWNOKID_CHECK_VERSION_MANUAL);
-
-	if (pMgr->AddTask(Task, NULL))
-	{
-	}
+	pMgr->AddTask(GetStrName(SN_HTTP_ML_VER), NULL, szVerFile, DOWNOKID_CHECK_VERSION_MANUAL, NULL, false, true);
 }

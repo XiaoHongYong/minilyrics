@@ -56,7 +56,6 @@ struct LrcSearchResult
 	tstring	strTitle;
 	tstring	strAlbum;
 	tstring	strUploader;
-	DWORD	dwDownOkID;
 	float	nMatchValue;
 	float	fRate;					// rate info of lyrics
 	int		nRateCount;				// 
@@ -64,7 +63,6 @@ struct LrcSearchResult
 
 	LrcSearchResult()
 	{
-		dwDownOkID = 0;
 		nMatchValue = 0;
 		fRate = 0.0;
 		nRateCount = 0;

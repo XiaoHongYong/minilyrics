@@ -12,9 +12,6 @@
 #include "../MLProtocol/HttpClient.h"
 
 
-// 下载任务的m_dwID的最初值
-#define DOWN_TASK_BASE_ID		0x80000000
-
 #define SZ_USER_AGENT_IE5 _T("Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)")
 
 // COMMENT:
@@ -116,9 +113,10 @@ BOOL AnalysisHttpUrl(const TCHAR szURL[], TCHAR szHostBuff[], int nHostBuff, int
 
 CDownloadMgr::CDownloadMgr() : m_eventShutDown(true, false)
 {
-	m_dwTaskIDNext = DOWN_TASK_BASE_ID;
+	m_dwTaskIDNext = 0;
 	m_nRetryCount = 2;
 	m_bQuit = false;
+	m_strUserAgent = SZ_USER_AGENT_IE5;
 }
 
 
@@ -142,23 +140,39 @@ void CDownloadMgr::Quit()
 	m_bQuit = true;
 
 	m_eventShutDown.Set();
+	m_threadDownload.Join();
+
+	m_mutexAccess.Acquire();
+	for (LIST_TASK::iterator it = m_listTasks.begin(); it != m_listTasks.end(); ++it)
+	{
+		CDownloadTask	*pTask = *it;
+		delete pTask;
+	}
+	m_listTasks.clear();
+	m_mutexAccess.Release();
 }
 
 
-int CDownloadMgr::AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD dwDownOkID, bool bReportErr, bool bHideTask)
+int CDownloadMgr::AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD dwDownOkID, DWORD *pdwTaskID, bool bReportErr, bool bHideTask)
 {
 	CDownloadTask		*pTask;
 
 	if (IsTaskExist(szURL))
-		return ERR_OK;
+		return ERR_EXIST;
 
 	pTask = new CDownloadTask;
 	pTask->m_strURL = szURL;
-	pTask->m_strReferUrl = szRefUrl;
+	if (szRefUrl)
+		pTask->m_strReferUrl = szRefUrl;
 	pTask->m_strSaveFile = szFile;
 	pTask->m_dwDownOkID = dwDownOkID;
 	pTask->m_bReportErr = bReportErr;
 	pTask->m_bHideTask = bHideTask;
+	if (pdwTaskID)
+	{
+		pTask->m_dwID = ++m_dwTaskIDNext;
+		*pdwTaskID = m_dwTaskIDNext;
+	}
 
 	m_mutexAccess.Acquire();
 	m_listTasks.push_back(pTask);
@@ -200,15 +214,8 @@ bool CDownloadMgr::IsTaskExist(LPCTSTR szURL)
 
 void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 {
-	if (pTask->m_bReportErr)
-	{
-		CEventDownloadEnd	*pEvent = new CEventDownloadEnd;
-		pEvent->eventType = ET_DOWNLOAD_END;
-		pEvent->pTask = pTask;
-		pEvent->downloadType = CEventDownloadEnd::DT_DL_LRC_FAILED;
-		g_eventDispather.DispatchSyncEventByNoUIThread(pEvent);
-	}
 }
+
 
 void CDownloadMgr::DownloadThreadProc(LPVOID lpParam)
 {
@@ -218,6 +225,7 @@ void CDownloadMgr::DownloadThreadProc(LPVOID lpParam)
 
 	pThis->DownloadThread();
 }
+
 
 void CDownloadMgr::DownloadThread()
 {
@@ -266,6 +274,7 @@ void CDownloadMgr::DownloadThread()
 	}
 }
 
+
 int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 {
 	CHttpClient			httpClient;
@@ -300,7 +309,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		goto RETURN_END;
 	}
 
-	httpClient.SetUserAgent(SZ_USER_AGENT_IE5);
+	httpClient.SetUserAgent(m_strUserAgent.c_str());
 	nRet = httpClient.Init(szHost, szUri, pTask->m_strReferUrl.c_str(), nPort);
 
 #ifdef _UNICODE
@@ -365,7 +374,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			if (iRetry < m_nRetryCount)
 			{
 				//
-				// 休息10秒钟吧
+				// Wait for 10 sec to try again
 				if (!pTask->m_bHideTask)
 					g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("Wait 10 seconds and retry.")));
 
@@ -398,9 +407,6 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	}
 
 RETURN_END:
-
-	// LOG2(LOG_LVL_EVENT_IMP, _T("End of downloading, http Code: %d, error: %d"), nHttpCode, nRet);
-
 	pTask->m_nHttpRetCode = nHttpCode;
 	pTask->m_errResult = nRet;
 	if (nRet == ERR_OK && nHttpCode == 200)

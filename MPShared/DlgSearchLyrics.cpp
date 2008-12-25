@@ -467,11 +467,10 @@ void CDlgSearchLyrics::OnOK()
 		m_resultList.GetItemText(nPos, COL_FILENAME, szFileName, CountOf(szFileName));
 
 		int		nError;
-		TCHAR	szOldDownloadFile[MAX_PATH];
 
 		nError = g_LyricsDownloader.AddLyricsDownloadTask(m_szAssociateKeyword, 
 			m_vSearchResult.GetByOrder(nPos)->strUrl.c_str(), 
-			szFileName, DOWNOKID_LRC, szOldDownloadFile, true);
+			szFileName);
 		if (nError != ERR_OK)
 		{
 			TCHAR	szMsg[256];
