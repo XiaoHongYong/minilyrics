@@ -14,38 +14,6 @@
 
 #define SZ_USER_AGENT_IE5 _T("Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)")
 
-// COMMENT:
-//		取得不存在的的文件名，如果存在则增加序号
-//		EXP:
-//			Test.txt	->     Test(1).txt     -> Test(2).txt
-//			Test		->     Test(1)         -> Test(2)
-//			C:\a.dir\b  ->     C:\a.dir\b(1)   -> C:\a.dir\b(2)
-void GetNotExistFileName(const TCHAR *szFileName, TCHAR *szFileNew, int nMaxLen)
-{
-	TCHAR	szBeforeExt[MAX_PATH];
-	LPCTSTR	szExt;
-	int		i = 1;
-
-	if (!IsFileExist(szFileName))
-	{
-		_tcscpy(szFileNew, szFileName);
-		return;
-	}
-
-	szExt = FileGetExt(szFileName);
-
-	_tcsncpysz_safe(szBeforeExt, MAX_PATH, szFileName, _tcslen(szFileName) - _tcslen(szExt));
-
-	while (1)
-	{
-		_stprintf(szFileNew, _T("%s(%d)%s"), szBeforeExt, i, szExt);
-		i++;
-		
-		if (!IsFileExist(szFileNew))
-			break;
-	}
-}
-
 //	COMMENT:
 //		在URL中取得服务器的名字
 //		URL的格式都是类似于:
@@ -76,14 +44,7 @@ BOOL AnalysisHttpUrl(const TCHAR szURL[], TCHAR szHostBuff[], int nHostBuff, int
 	else
 		nLen = szHostEnd1 - szHostBeg;
 
-
-	// 取得端口号
-	//	LPSERVENT lpServEnt;
-	//	lpServEnt = getservbyname("http", "tcp");
-	//	if (lpServEnt == NULL)
 	nOutPort = __HTTP_PORT;
-	//	else
-	//		nOutPort = ntohs(lpServEnt->s_port);
 
 	// 找到下一个 : 开始的位置
 	szHostEnd2 = _tcschr(szHostBeg, ':');

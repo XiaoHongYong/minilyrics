@@ -7,41 +7,6 @@
 #include "Helper.h"
 #include <time.h>
 
-// COMMENT:
-//		根据链接（URL）取得对应的文件名
-// INPUT:
-//		szURL		-	URL
-//		nLenMax		-	szFileName 的最大长度
-// OUTPUT:
-//		szFileNmae	-	文件名
-void GetFileNameFromURL(const TCHAR *szURL, TCHAR *szFileName, int nLenMax)
-{
-	LPCTSTR		szBeg;
-
-	assert(_tcsnicmp(szURL, _T("http://"), 7) == 0 || 
-		_tcsnicmp(szURL, _T("ftp://"), 6) == 0);
-
-	szBeg = _tcsrchr(szURL, '/');
-	if (szBeg == NULL)
-	{
-		// Invalid URL format
-		_tcscpy_safe(szFileName, nLenMax, _T("index.htm"));
-		return;
-	}
-
-	if (*(szBeg-1) == '/')
-	{
-		// Invalid URL format
-		_tcscpy_safe(szFileName, nLenMax, _T("index.htm"));
-		return;
-	}
-
-	_tcscpy_safe(szFileName, nLenMax, szBeg + 1);
-
-	if (_tcslen(szFileName) == 0)
-		_tcscpy_safe(szFileName, nLenMax, _T("index.htm"));
-}
-
 LPCTSTR HttpErrorCodeToStr(int nCode)
 {
 	switch (nCode)

@@ -23,8 +23,6 @@ void MLHtmlHelper(CBaseWnd *pWnd, LPCTSTR szFile);
 
 bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText);
 
-void GetFileNameFromURL(const TCHAR *szURL, TCHAR *szFileName, int nLenMax);
-
 void LogToEdit(CWidgetEditBox *editCtrl, LPCTSTR szText, BOOL bNewLine);
 
 LPCTSTR HttpErrorCodeToStr(int nCode);
