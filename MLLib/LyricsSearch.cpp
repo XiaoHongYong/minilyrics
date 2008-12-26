@@ -47,20 +47,20 @@ void ListSupportedEmbeddedFormat(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyricsF
 	if (bAddSylt)
 	{
 		result.strUrl = SZ_SONG_ID3V2_SYLT;
-		result.strLyricsName = SZ_SONG_ID3V2_SYLT_DESC;
+		result.strSaveFileName = SZ_SONG_ID3V2_SYLT_DESC;
 		result.nMatchValue = -1;
 		vLyricsFormat.AddResult(result);
 	}
 
 	result.strUrl = SZ_SONG_LYRICS3V2;
-	result.strLyricsName = SZ_SONG_LYRICS3V2_DESC;
+	result.strSaveFileName = SZ_SONG_LYRICS3V2_DESC;
 	result.nMatchValue = -1;
 	vLyricsFormat.AddResult(result);
 
 	if (bAddUslt)
 	{
 		result.strUrl = SZ_SONG_ID3V2_USLT;
-		result.strLyricsName = SZ_SONG_ID3V2_USLT_DESC;
+		result.strSaveFileName = SZ_SONG_ID3V2_USLT_DESC;
 		result.nMatchValue = -1;
 		vLyricsFormat.AddResult(result);
 	}
@@ -131,13 +131,11 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 
 		ConvertStr(plyrics->m_szLanguage, -1, str);
 
-		_tcscpy(szLyricsFile, SZ_SONG_ID3V2_SYLT);
-		_tcscat(szLyricsFile, str.c_str());
-		result.strUrl = szLyricsFile;
+		result.strUrl = SZ_SONG_ID3V2_SYLT;
+		result.strUrl += str;
 
-		_tcscpy(szLyricsFile, TOLOCAL(SZ_SONG_ID3V2_SYLT_DESC));
-		_tcscat(szLyricsFile, str.c_str());
-		result.strLyricsName = szLyricsFile;
+		result.strSaveFileName = TOLOCAL(SZ_SONG_ID3V2_SYLT_DESC);
+		result.strSaveFileName += str;
 		result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
 
 		vLyrics.push_back(result);
@@ -151,13 +149,11 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 
 			ConvertStr(plyrics->m_szLanguage, -1, str);
 
-			_tcscpy(szLyricsFile, SZ_SONG_ID3V2_USLT);
-			_tcscat(szLyricsFile, str.c_str());
-			result.strUrl = szLyricsFile;
+			result.strUrl = SZ_SONG_ID3V2_USLT;
+			result.strUrl += str;
 
-			_tcscpy(szLyricsFile, TOLOCAL(SZ_SONG_ID3V2_USLT_DESC));
-			_tcscat(szLyricsFile, str.c_str());
-			result.strLyricsName = szLyricsFile;
+			result.strSaveFileName = TOLOCAL(SZ_SONG_ID3V2_USLT_DESC);
+			result.strSaveFileName += str;
 			result.nMatchValue = MATCH_VALUE_OK + 2;
 
 			vLyrics.push_back(result);
@@ -878,9 +874,9 @@ void V_LRCSEARCHRESULT::UpdateLyricsName()
 	{
 		LrcSearchResult		&result = *it;
 
-		if (result.strLyricsName.empty())
+		if (result.strSaveFileName.empty())
 		{
-			result.strLyricsName = FileGetName(result.strUrl.c_str());
+			result.strSaveFileName = FileGetName(result.strUrl.c_str());
 		}
 	}
 }

@@ -58,7 +58,7 @@ void MLFileInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, MLFileInfoList &
 		TCHAR	szLyricsName[MAX_PATH];
 
 		_stprintf(szLyricsName, _T("%s - %s"), file.strArtist.c_str(), file.strTitle.c_str());
-		item.strLyricsName = szLyricsName;
+		item.strSaveFileName = szLyricsName;
 		item.strUrl = file.strLink;
 		item.strSaveFileName = file.strFileName;
 		item.strArtist = file.strArtist;
@@ -72,11 +72,11 @@ void MLFileInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, MLFileInfoList &
 			item.nMatchValue = 2;
 		else
 			item.nMatchValue = (float)CalLyricsMatchValue(MLGetFileType(item.strSaveFileName.c_str()), item.strTitle.c_str(), item.strArtist.c_str(), szTitle, bIgnoreTitleNumb, szArtist, bIgnoreArtistNumb);
-		// DBGLOG2(_T("file: %s, value: %d"), item.strLyricsName.c_str(), item.nMatchValue);
+		// DBGLOG2(_T("file: %s, value: %d"), item.strSaveFileName.c_str(), item.nMatchValue);
 		if (g_bEngEdition)
 		{
 			// Sort English result before other language.
-			if (IsAnsiStr(item.strLyricsName.c_str()))
+			if (IsAnsiStr(item.strSaveFileName.c_str()))
 			{
 				item.nMatchValue++;
 			}

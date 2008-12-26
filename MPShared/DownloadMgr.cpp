@@ -117,6 +117,7 @@ void CDownloadMgr::Quit()
 int CDownloadMgr::AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD dwDownOkID, DWORD *pdwTaskID, bool bReportErr, bool bHideTask)
 {
 	CDownloadTask		*pTask;
+	int					nRet = ERR_OK;
 
 	if (IsTaskExist(szURL))
 		return ERR_EXIST;
@@ -141,11 +142,14 @@ int CDownloadMgr::AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD
 	if (!m_threadDownload.IsRunning())
 	{
 		if (!m_threadDownload.Create(DownloadThreadProc, this))
+		{
 			ERRLOG0(_T("FAILED to create downloading thread."));
+			nRet = ERR_CREATE_THREAD;
+		}
 	}
 	m_mutexAccess.Release();
 
-	return ERR_OK;
+	return nRet;
 }
 
 

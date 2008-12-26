@@ -49,7 +49,6 @@ struct LrcSearchResult
 //	TCHAR	szLyricsName[128];			// ¸è´ÊÃû
 //	TCHAR	szURL[256];
 //	TCHAR	szSaveFileName[MAX_PATH];
-	tstring	strLyricsName;				// ¸è´ÊÃû
 	tstring	strUrl;
 	tstring	strSaveFileName;
 	tstring	strArtist;

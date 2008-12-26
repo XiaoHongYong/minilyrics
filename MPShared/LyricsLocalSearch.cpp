@@ -484,7 +484,7 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESU
 			{
 				LrcSearchResult		result;
 				result.strUrl = SZ_SONG_LYRICS3V2;
-				result.strLyricsName = TOLOCAL(SZ_SONG_LYRICS3V2_DESC);
+				result.strSaveFileName = TOLOCAL(SZ_SONG_LYRICS3V2_DESC);
 				result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
 				vLyrics.AddResult(result);
 			}

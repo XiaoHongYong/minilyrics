@@ -29,35 +29,40 @@ public:
 
 	void OnSize(int cx, int cy);
 
-	void OnOnlineSearch();
+protected:
+	void OnSearch();
+
 	void OnOK();
 	void UpdateSearchResultToListCtrl();
 
+	void SearchOnline();
+	void SearchLocal();
+
 protected:
-	CMLWndHelper	m_wndHelper;
-	CWidgetListCtrl	m_resultList;
+	CMLWndHelper		m_wndHelper;
+	CWidgetListCtrl		m_resultList;
 
-	V_LRCSEARCHRESULT m_vSearchResult;
-	CWidgetComboBox	m_cbTitle;
-	CWidgetComboBox	m_cbArtist;
+	V_LRCSEARCHRESULT	m_vSearchResult;
+	CWidgetComboBox		m_cbTitle;
+	CWidgetComboBox		m_cbArtist;
 
-	tstring			m_strArtistLastSearch, m_strTitleLastSearch;
-	int				m_nCurPage, m_nPageCount;
+	tstring				m_strArtistLastSearch, m_strTitleLastSearch;
+	int					m_nCurPage, m_nPageCount;
 
 	// cache returned result.
 	vector<V_LRCSEARCHRESULT>	m_vCachePages;
 
-	TCHAR			m_szAssociateKeyword[MAX_PATH];				// ¸èÇúÎÄ¼þÃû
-	CCECommandBar	m_cmdBar;
+	TCHAR				m_szAssociateKeyword[MAX_PATH];
+	CCECommandBar		m_cmdBar;
 
 #ifdef _WIN32
-	CImgList		m_imgList;
+	CImgList			m_imgList;
 #endif
 
 #ifdef _WIN32_DESKTOP
-	CAdItem			m_ad;
-	CImgUrlCtrl		m_picture;
-	CHtmlWnd		m_wndWeb;
+	CAdItem				m_ad;
+	CImgUrlCtrl			m_picture;
+	CHtmlWnd			m_wndWeb;
 #endif
 
 };

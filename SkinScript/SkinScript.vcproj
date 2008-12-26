@@ -484,6 +484,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SSCompiler.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SSMachine.cpp"
+				>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -539,6 +547,14 @@
 			>
 			<File
 				RelativePath="SkinScript.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SSCompiler.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SSMachine.h"
 				>
 			</File>
 			<File
