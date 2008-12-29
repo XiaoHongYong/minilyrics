@@ -20,6 +20,7 @@ CThread::~CThread()
 {
 	if(m_hThread)
 	{
+		ASSERT(!IsRunning());
 		CloseHandle(m_hThread);
 	}
 }
@@ -29,6 +30,12 @@ bool CThread::Create(FUNThread function, void* lpData)
 	DWORD		dwThreadId;
 	m_funThead = function;
 	m_lpData = lpData;
+
+	if (m_hThread)
+	{
+		ASSERT(!IsRunning());
+		CloseHandle(m_hThread);
+	}
 
 	m_hThread = ::CreateThread(NULL,
 									0,
@@ -90,18 +97,23 @@ uint32 CThread::SetPriority(uint32 priority)
 	return nOld;
 }
 
+bool CThread::IsRunning()
+{
+	if (m_hThread)
+	{
+		if (WaitForSingleObject(m_hThread, 0) == WAIT_TIMEOUT)
+			return true;
+	}
+
+	return false;
+}
+
 DWORD WINAPI CThread::ThreadFunction(LPVOID lpParam)
 {
 	CThread	*pwin32Thread;
 	pwin32Thread = (CThread *)lpParam;
 
 	pwin32Thread->m_funThead(pwin32Thread->m_lpData);
-
-	if (pwin32Thread->m_hThread)
-	{
-		CloseHandle(pwin32Thread->m_hThread);
-		pwin32Thread->m_hThread = NULL;
-	}
 
 	return 0;
 }

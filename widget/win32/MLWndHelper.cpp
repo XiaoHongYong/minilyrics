@@ -28,14 +28,24 @@ CMLWndHelper::~CMLWndHelper()
 
 void CMLWndHelper::Add(int nChildID, BOOL bAlignRight, BOOL bAlignBottom, BOOL bSizeXFix, BOOL bSizeYFix, int nChildIDRelation)
 {
-	Add(GetDlgItem(m_pWndParent->GetHandle(), nChildID),
+	HWND		hChild = GetDlgItem(m_pWndParent->GetHandle(), nChildID);
+
+	if (!hChild)
+		return;
+
+	Add(hChild,
 		bAlignRight, bAlignBottom, bSizeXFix, bSizeYFix, 
 		nChildIDRelation == 0 ? NULL : GetDlgItem(m_pWndParent->GetHandle(), nChildIDRelation));
 }
 
 void CMLWndHelper::AddAlignCenter(int nChildID, bool bAlignVert)
 {
-	AddAlignCenter(GetDlgItem(m_pWndParent->GetHandle(), nChildID), bAlignVert);
+	HWND		hChild = GetDlgItem(m_pWndParent->GetHandle(), nChildID);
+
+	if (!hChild)
+		return;
+
+	AddAlignCenter(hChild, bAlignVert);
 }
 
 void CMLWndHelper::AddAlignRight(int nChildID, bool bSizeXFixed)

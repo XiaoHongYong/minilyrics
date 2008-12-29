@@ -118,7 +118,7 @@ public:
 
 	virtual MLRESULT DetectPlugins();
 
-	virtual MLRESULT OnInternalDecoderRegister(IMediaDecode *pDecoder) { return ERR_OK; }
+	virtual MLRESULT OnInternalDecoderRegister(IMediaDecode *pDecoder) { if (m_pluginMgr) return m_pluginMgr->OnInternalDecoderRegister(pDecoder); else return ERR_OK; }
 
 	virtual MLRESULT NewInput(LPCXSTR szMediaUrl, IMediaInput **ppInput);
 	virtual MLRESULT NewDecoder(IMediaInput *pInput, IMediaDecode **ppDecoder);

@@ -61,7 +61,7 @@ public:
 	BOOL IsAssociatedLyrics(LPCTSTR szAssociateFileKeyword);
 	BOOL IsAssociatedWithNoneLyrics(LPCTSTR szAssociateKeyword);
 	BOOL IsAssociatedLyrics(LPCTSTR szSongFile, LPCTSTR szFullTitle);
-	void AssociateLyrics(LPCTSTR szAssociateFileKeyword, LPCTSTR szLyricFile);
+	bool AssociateLyrics(LPCTSTR szAssociateFileKeyword, LPCTSTR szLyricFile);
 	BOOL CancelAssociate(LPCTSTR szAssociateFileKeyword);
 	bool IsLyricsExist(LPCTSTR szLyricSource);
 

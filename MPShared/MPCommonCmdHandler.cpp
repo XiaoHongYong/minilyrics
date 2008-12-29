@@ -15,7 +15,7 @@
 #include "CharsetEncoding.h"
 #include "SkinSeekCtrl.h"
 #include "SkinRateCtrl.h"
-
+#include "DlgSearchLyrics.h"
 #include "LyricsDownSelDlg.h"
 #include "DlgSelFileEncoding.h"
 #include "DlgSelMbcsEncoding.h"
@@ -26,7 +26,6 @@
 #include "DlgEmbeddedLyricsLoad.h"
 #include "DlgEmbeddedLyricsSave.h"
 #include "DlgEmbeddedLyricsRemove.h"
-#include "DlgLyricsAssociate.h"
 #include "LrcUploadDlg.h"
 #include "LoginDlg.h"
 #include "VersionUpdate.h"
@@ -122,6 +121,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		OnSongOpenDirCmd(m_pSkinWnd, false);
 		break;
 #endif
+	case IDC_OPEN_LYRICS:
 	case IDC_DOWNLOAD_CURRENT_LYRICS:
 		//
 		// ∏Ë¥ œ¬‘ÿ
@@ -130,15 +130,12 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			if (!g_bInModalDlLrcSelDlg)
 			{
 				g_bInModalDlLrcSelDlg = TRUE;
-				CLyricsDownSelDlg		LyricsDownSelDlg;
+				CDlgSearchLyrics		LyricsDownSelDlg;
 
 				LyricsDownSelDlg.DoModal(m_pSkinWnd);
 				g_bInModalDlLrcSelDlg = FALSE;
 			}
 		}
-		break;
-	case IDC_OPEN_LYRICS:
-		OnCustomCommand(CMD_OPEN_LRC);
 		break;
 	case IDC_SAVE_LYRICS:
 		OnCustomCommand(CMD_SAVE_LRC);
@@ -738,19 +735,9 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 		}
 		break;
 	case CMD_OPEN_LRC:
-		{
-/*			TCHAR			szLyric[MAX_PATH]=_T("");
-			TCHAR			szAssociateKeyWord[MAX_PATH];
-
-			g_mpApp.GetAssociateFileKeyword(szAssociateKeyWord, MAX_PATH);
-
-			CFileOpenDlg	dlg(TOLOCAL(_T("Open Lyrics files")), szLyric, SZ_SUPPORTED_FILE_TYPE, 1);
-
-			if (dlg.DoModal(m_pSkinWnd) == IDOK)
-			{
-				g_LyricSearch.AssociateLyrics(szAssociateKeyWord, dlg.GetOpenFile());
-				g_mpApp.ResearchLyrics();
-			}*/
+		OnCommand(IDC_DOWNLOAD_CURRENT_LYRICS);
+		break;
+/*		{
 			// open lyrics
 			CDlgLyricsAssociate		LyricsAssociateDlg;
 			int						n;
@@ -763,7 +750,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 				g_mpApp.ResearchLyrics();
 			}
 		}
-		break;
+		break;*/
 	case CMD_SAVE_LRC:
 		{
 			int			nRet;

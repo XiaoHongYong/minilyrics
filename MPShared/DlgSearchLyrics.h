@@ -38,6 +38,8 @@ protected:
 	void SearchOnline();
 	void SearchLocal();
 
+	LrcSearchResult *GetCurSel();
+
 protected:
 	CMLWndHelper		m_wndHelper;
 	CWidgetListCtrl		m_resultList;
@@ -53,7 +55,11 @@ protected:
 	vector<V_LRCSEARCHRESULT>	m_vCachePages;
 
 	TCHAR				m_szAssociateKeyword[MAX_PATH];
+	tstring				m_strSongFile, m_strArtist, m_strTitle;
+
 	CCECommandBar		m_cmdBar;
+
+	CMLMenu				m_menu;
 
 #ifdef _WIN32
 	CImgList			m_imgList;

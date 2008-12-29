@@ -121,7 +121,6 @@ bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcS
 void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics)
 {
 	tstringex			str;
-	TCHAR				szLyricsFile[MAX_PATH];
 	LrcSearchResult		result;
 
 	for (ID3v2LyricsInfo::LIST_SYNCHLYRICS::iterator it = lyricsInfo.m_synchLyrics.begin();

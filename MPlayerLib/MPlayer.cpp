@@ -303,7 +303,7 @@ MLRESULT CMOAgent::SetVolume(int nVolume, int nBanlance)
 MLRESULT CMPluginManagerAgent::DetectPlugins()
 {
 	if (m_pluginMgr)
-		return m_pluginMgr->DetectPlugins();
+		m_pluginMgr->DetectPlugins();
 
 	//
 	// Register internal plugins
@@ -352,7 +352,7 @@ MLRESULT CMPluginManagerAgent::DetectPlugins()
 	}
 #endif // _WIN32_WCE
 
-	return ERR_FALSE;
+	return ERR_OK;
 }
 
 

@@ -27,7 +27,7 @@ public:
     uint32 GetPriority() const;
     uint32 SetPriority(uint32 priority);
 
-	bool IsRunning() { return m_hThread != NULL; }
+	bool IsRunning();
 
 protected:
 	FUNThread		m_funThead;

@@ -647,19 +647,34 @@ void CLyricsLocalSearch::GetAssociateFileKeyword(LPCTSTR szSongFile, LPCTSTR szF
 
 // COMMENT:
 //		使歌词szLyricFile 和歌曲szSongFile 相关连
-void CLyricsLocalSearch::AssociateLyrics(LPCTSTR szAssociateFileKeyword, LPCTSTR szLyricFile)
+bool CLyricsLocalSearch::AssociateLyrics(LPCTSTR szAssociateFileKeyword, LPCTSTR szLyricFile)
 {
 	assert(szAssociateFileKeyword);
 
 	if (IsEmptyString(szAssociateFileKeyword))
-		return;
+		return false;
+
+	SONG_LYRIC_MAP::iterator		it;
+	tstring		strKey = ToAssociateKeyword(szAssociateFileKeyword);
 
 	m_mutex.Acquire();
-	m_mapLyricsAssociate[ToAssociateKeyword(szAssociateFileKeyword)] = szLyricFile;
+	// Is already associated and same?
+	it = m_mapLyricsAssociate.find(strKey);
+	if (it != m_mapLyricsAssociate.end())
+	{
+		if (_tcscmp((*it).second.c_str(), szLyricFile) == 0)
+		{
+			m_mutex.Release();
+			return false;
+		}
+	}
+	m_mapLyricsAssociate[strKey] = szLyricFile;
 	m_mutex.Release();
 
 	// save??
 	SaveLyricsAssociation();
+
+	return true;
 }
 
 // COMMENT:

@@ -222,6 +222,8 @@ CMDLibmad::CMDLibmad()
 
 CMDLibmad::~CMDLibmad()
 {
+	m_threadDecode.Join();
+
 	if (m_pPlayer)
 	{
 		m_pPlayer->Release();
