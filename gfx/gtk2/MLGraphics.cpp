@@ -511,7 +511,7 @@ bool CMLGraphics::GetClipBoundBox(CRect &rc)
 	return true;
 }
 
-bool CMLGraphics::SetClipBoundBox(CRect &rc)
+bool CMLGraphics::SetClipBoundBox(const CRect &rc)
 {
 	GdkRectangle	grc;
 

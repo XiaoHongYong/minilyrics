@@ -21,7 +21,9 @@ public:
 	CSkinDecorativeContainer();
 	virtual ~CSkinDecorativeContainer();
 
-	void InvalidateUIObject(CUIObject *pObj);
+	virtual void InvalidateUIObject(CUIObject *pObj);
+
+	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect);
 
 };
 

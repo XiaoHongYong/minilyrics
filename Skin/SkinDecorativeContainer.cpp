@@ -29,3 +29,42 @@ void CSkinDecorativeContainer::InvalidateUIObject(CUIObject *pObj)
 	else
 		m_pSkin->InvalidateUIObject(this);
 }
+
+void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
+{
+	ASSERT(lpRect);
+
+	CRawGraph		*pGraphMem = NULL;
+
+	// Check for UIObject overlay, and redraw them?
+	for (V_UIOBJECT::iterator it = m_vUIObjs.begin(); it != m_vUIObjs.end(); ++it)
+	{
+		CUIObject		*pObj = *it;
+		CRect			rc;
+
+		if (pObj->IsVisible() && rc.IntersectRect(&pObj->m_rcObj, lpRect))
+		{
+//			if (pObj->IsTransparent() && m_bPaintBg)
+//			{
+//				// redraw background ?
+//				RedrawBackground(pObj->m_rcObj);
+//			}
+			if (!pGraphMem)
+			{
+				pGraphMem = m_pSkin->GetMemGraphics();
+				pGraphMem->SetClipBoundBox(*lpRect);
+			}
+
+			pObj->Draw(pGraphMem);
+			if (pObj->IsUpdateTranslucencyWithSkin())
+				m_pSkin->GetMemGraphics()->MultiplyAlpha((byte)(m_pSkin->m_nTranslucencyAlphaDynamic), &pObj->m_rcObj);
+		}
+	}
+
+	if (pGraphMem)
+	{
+		pGraphMem->RecoverClipBox();
+	}
+
+	m_pSkin->UpdateMemGraphicsToScreen(lpRect);
+}

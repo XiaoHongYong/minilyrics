@@ -224,6 +224,8 @@ public:
 
 	virtual BOOL InvalidateRect(const RECT* lpRect = NULL, BOOL bErase = FALSE);
 
+	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect);
+
 	BOOL UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph);
 
 	void OnTimerDynamicAlphaChange();

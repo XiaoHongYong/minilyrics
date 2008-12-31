@@ -702,7 +702,7 @@ bool CGdiplusGraphics::GetClipBoundBox(CRect &rc)
 	return TRUE;
 }
 
-bool CGdiplusGraphics::SetClipBoundBox(CRect &rc)
+bool CGdiplusGraphics::SetClipBoundBox(const CRect &rc)
 {
 	if (!bInitOK)
 		return FALSE;

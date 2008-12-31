@@ -48,8 +48,9 @@ public:
 	CUIObject *RemoveUIObjectById(int nId);
 
 	bool AddUIObject(CUIObject *pObj);
+	bool InsertUIObjectAt(CUIObject *pObjWhere, CUIObject *pObj);
 	bool AddUIObjectToFront(CUIObject *pObj);
-
+	
 	void RecalculateSizePos();
 	void RecalculateUIObjSizePos(CUIObject *pObj);
 
@@ -64,6 +65,8 @@ public:
 	CUIObjectIterator ChildEnd() { CUIObjectIterator it(this); it.End(); return it; }
 
 	virtual void InvalidateUIObject(CUIObject *pObj);
+
+	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect);
 
 	int GetChildrenCount() { return m_vUIObjs.size(); }
 	CUIObject *GetChildByIndex(int nIndex)

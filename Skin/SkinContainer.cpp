@@ -529,6 +529,30 @@ bool CSkinContainer::AddUIObject(CUIObject *pObj)
 	return TRUE;
 }
 
+bool CSkinContainer::InsertUIObjectAt(CUIObject *pObjWhere, CUIObject *pObj)
+{
+	assert(pObj);
+	if (pObj == NULL)
+		return FALSE;
+
+	V_UIOBJECT::iterator	it;
+
+	pObj->m_nAutoUniID = m_pSkin->AllocAutoUniID();
+	for (it = m_vUIObjs.begin(); it != m_vUIObjs.end(); ++it)
+	{
+		if (*it == pObjWhere)
+		{
+			break;
+		}
+	}
+	m_vUIObjs.insert(it, pObj);
+
+	RecalculateUIObjSizePos(pObj);
+	m_pSkin->OnAddUIObj(pObj);
+
+	return TRUE;
+}
+
 bool CSkinContainer::AddUIObjectToFront(CUIObject *pObj)
 {
 	assert(pObj);
@@ -583,6 +607,10 @@ void CSkinContainer::InvalidateUIObject(CUIObject *pObj)
 		m_pSkin->InvalidateUIObject(pObj);
 }
 
+void CSkinContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
+{
+	m_pSkin->UpdateMemGraphicsToScreen(lpRect);
+}
 
 CUIObject *CSkinContainer::GetChildByID(int nID)
 {

@@ -483,7 +483,7 @@ bool CGdiGraphics::GetClipBoundBox(CRect &rc)
 	return nRet != ERROR && nRet != NULLREGION;
 }
 
-bool CGdiGraphics::SetClipBoundBox(CRect &rc)
+bool CGdiGraphics::SetClipBoundBox(const CRect &rc)
 {
 	HRGN		hRgn;
 

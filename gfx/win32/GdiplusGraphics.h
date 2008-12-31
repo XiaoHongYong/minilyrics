@@ -104,7 +104,7 @@ public:
 	virtual void SetBgColor(const MLColor &color);
 
 	virtual bool GetClipBoundBox(CRect &rc);
-	virtual bool SetClipBoundBox(CRect &rc);
+	virtual bool SetClipBoundBox(const CRect &rc);
 
 	virtual void RecoverClipBox();
 

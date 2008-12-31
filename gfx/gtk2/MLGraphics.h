@@ -57,7 +57,7 @@ public:
 	virtual void SetPen(CMLPen &pen);
 
 	virtual bool GetClipBoundBox(CRect &rc);
-	virtual bool SetClipBoundBox(CRect &rc);
+	virtual bool SetClipBoundBox(const CRect &rc);
 
 	virtual void RecoverClipBox();
 

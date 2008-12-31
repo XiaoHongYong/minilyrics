@@ -187,7 +187,7 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle)
 	m_pLyricsShow->SetProperties(m_vProperties);
 
 	m_pLyricsShow->m_pContainer = m_pContainer;
-	m_pContainer->AddUIObject(m_pLyricsShow);
+	m_pContainer->InsertUIObjectAt(this, m_pLyricsShow);
 	m_pContainer->RecalculateUIObjSizePos(m_pLyricsShow);
 }
 

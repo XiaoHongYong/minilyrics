@@ -1718,6 +1718,15 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 
 	pmemGraphics = m_pSkin->GetMemGraphics();
 
+	pmemGraphics->SetFont(&m_font);
+
+	m_font.EnableGdiplusAntialias(CMLGraphicsFactory::GetGraphicsType() == MGT_GDIPLUS);
+
+	FastDraw(pmemGraphics, &rcUpdate);
+
+	if (!rcUpdate.IsRectEmpty())
+		m_pContainer->UpdateMemGraphicsToScreen(&rcUpdate);
+/*
 #ifdef _WIN32_DESKTOP
 	if (m_pSkin->GetEnableTranslucencyLayered())
 	{
@@ -1747,7 +1756,7 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 			rcUpdate.left, rcUpdate.top);
 
 		m_pSkin->ReleaseGraphics(pGraphics);
-	}
+	}*/
 }
 
 //
