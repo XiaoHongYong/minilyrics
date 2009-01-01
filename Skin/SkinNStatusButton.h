@@ -41,6 +41,7 @@ protected:
 	{
 		tstring			strBkFile, strSelFile, strHoverFile, strDisabledFile;
 		CSFImage		imgBk, imgSel, imgHover, imgDisabled;
+		tstring			strDynCmd;
 	};
 
 	typedef vector<BtStatImg *>		V_BTSTATIMG;

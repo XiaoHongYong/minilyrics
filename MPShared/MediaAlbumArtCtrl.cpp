@@ -165,7 +165,7 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 	{
 		// fill left and right
 		h = rc.Height();
-		if (!m_bTransparent)
+		if (!m_bUseSkinBg)
 		{
 			pGraph->FillRect(rc.left, rc.top, (rc.Width() - w) / 2, h, &m_brBg);
 			pGraph->FillRect(rc.right - (rc.Width() - w) / 2, rc.top, (rc.Width() - w) / 2, h, &m_brBg);
@@ -176,7 +176,7 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 		// fill top and bottom
 		h = m_img.m_cy * rc.Width() / m_img.m_cx;
 		w = rc.Width();
-		if (!m_bTransparent)
+		if (!m_bUseSkinBg)
 		{
 			pGraph->FillRect(rc.left, rc.top, w, (rc.Height() - h) / 2, &m_brBg);
 			pGraph->FillRect(rc.left, rc.bottom - (rc.Height() - h) / 2, w, (rc.Height() - h) / 2, &m_brBg);

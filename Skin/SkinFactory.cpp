@@ -8,6 +8,7 @@
 #include "SkinWndResizeObj.h"
 #include "SkinFadeArea.h"
 #include "SkinDecorativeContainer.h"
+#include "SkinMenuBar.h"
 
 #define _SZ_SKINWND				_T("skinwnd")
 #define _SZ_MENUS				_T("Menus")
@@ -1070,6 +1071,8 @@ CUIObject *CSkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinContainer;
 	else if (_tcsicmp(szClassName, CSkinDecorativeContainer::ClassName()) == 0)
 		pObj = new CSkinDecorativeContainer;
+	else if (_tcsicmp(szClassName, CSkinMenuBar::ClassName()) == 0)
+		pObj = new CSkinMenuBar;
 	else if (_tcsicmp(szClassName, CSkinWndResizeObj::ClassName()) == 0)
 		pObj = new CSkinWndResizeObj;
 	else if (_tcsicmp(szClassName, CSkinSquare::ClassName()) == 0)
@@ -1244,6 +1247,28 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkin *pSki
 			return ERR_OK;
 		else
 			return ERR_FALSE;
+	}
+	else if (cmd.strFunction == _T("show_hide_ctrl"))
+	{
+		V_Str		vStrParam;
+		CUIObject	*pObj;
+
+		StrBreak(cmd.strParam.c_str(), ',', vStrParam);
+		if (vStrParam.size() != 2)
+			return ERR_FALSE;
+		for (int i = 0; i < (int)vStrParam.size(); i++)
+			TrimStr(vStrParam[i]);
+
+		// show first
+		pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
+		if (pObj)
+			pObj->SetVisible(true);
+
+		// hide second
+		pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[1].c_str()));
+		if (pObj)
+			pObj->SetVisible(false);
+		pSkinWnd->InvalidateRect();
 	}
 //	else if (cmd.strFunction == _T("open_skin_wnd"))
 //		return ActiveOrCreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());

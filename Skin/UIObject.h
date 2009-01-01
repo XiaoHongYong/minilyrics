@@ -217,9 +217,10 @@ public:
 	inline bool IsEnable() { return m_bEnable; }
 	inline void SetEnable(bool bEnable) { m_bEnable = bEnable; } 
 
-	inline bool IsTransparent() { return m_bTransparent; }
-	inline void SetTransparent(bool bTransparent) { m_bTransparent = bTransparent; }
+	inline bool IsUseSkinBg() { return m_bUseSkinBg; }
+	inline void SetUseSkinBg(bool bUseSkinBg) { m_bUseSkinBg = bUseSkinBg; }
 
+	// Keep translucency with skin, when skin window changes its translucency.
 	virtual bool IsUpdateTranslucencyWithSkin() { return m_bTranslucencyWithSkin; }
 
 	void SetFocus();
@@ -279,7 +280,7 @@ public:
 	bool		m_bEnable;		// Is control being enabled?
 	bool		m_bVisible;
 	bool		m_bHideIfWndInactive;
-	bool		m_bTransparent;	// Invalidate call will update background, if m_bTransparent is true
+	bool		m_bUseSkinBg;	// Invalidate call will update background, if m_bUseSkinBg is true
 
 	bool		m_bTranslucencyWithSkin;	// Set the alpha of UIObject to the skin, if this flag is set.
 

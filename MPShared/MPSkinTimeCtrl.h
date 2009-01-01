@@ -50,6 +50,20 @@ public:
 	}
 
 protected:
+	void FormatTime(TCHAR szTime[], int nCount, int nTimeSec)
+	{
+		int			nHour, nMinute, nSec;
+
+		nSec = nTimeSec % 60;
+		nMinute = nTimeSec / 60;
+		nHour = nMinute / 60;
+		nMinute = nMinute % 60;
+		if (nHour > 0)
+			_sntprintf(szTime, nCount, _T("%02d:%02d:%02d"), nHour, nMinute, nSec);
+		else
+			_sntprintf(szTime, nCount, _T("%02d:%02d"), nMinute, nSec);
+	}
+
 	void ResetTimeText()
 	{
 		int		nTime = g_Player.GetPlayPos() + 500;
@@ -62,17 +76,9 @@ protected:
 			m_nTimeOld = nTime;
 
 			TCHAR		szTime[64];
-			int			nHour, nMinute, nSec;
 			tstring		strText;
 
-			nSec = nTime % 60;
-			nMinute = nTime / 60;
-			nHour = nMinute / 60;
-			nMinute = nMinute % 60;
-			if (nHour > 0)
-				_stprintf(szTime, _T("%02d:%02d:%02d"), nHour, nMinute, nSec);
-			else
-				_stprintf(szTime, _T("%02d:%02d"), nMinute, nSec);
+			FormatTime(szTime, CountOf(szTime), nTime);
 
 			if (m_bShowElapsedTime)
 				strText.resize(0);

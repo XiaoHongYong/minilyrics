@@ -86,16 +86,6 @@ void CSkinButton::EnumProperties(CUIObjProperties &listProperties)
 		listProperties.AddPropImage(_T("ImageCheckFocus"), _T("ImageCheckFocusRect"), statImg->strHoverFile.c_str(), statImg->imgHover, !statImg->strHoverFile.empty());
 		listProperties.AddPropImage(_T("ImageDisable"), _T("ImageDisableRect"), statImg->strDisabledFile.c_str(), statImg->imgDisabled, !statImg->strDisabledFile.empty());
 	}
-
-	CUIObjProperty		property;
-
-	property.vOptions.push_back(_T(""));
-	m_pSkin->GetSkinFactory()->EnumAllDynamicCmds(property.vOptions);
-	property.strName = _T("DynCmd");
-	property.strValue = m_strDynCmd;
-	property.valueType = CUIObjProperty::VT_COMB_STR;
-	property.bToXmlAttrib = !m_strDynCmd.empty();
-	listProperties.push_back(property);
 }
 
 void CSkinButton::SetCheck(bool bCheck)

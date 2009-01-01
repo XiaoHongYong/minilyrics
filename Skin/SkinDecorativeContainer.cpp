@@ -44,7 +44,7 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 
 		if (pObj->IsVisible() && rc.IntersectRect(&pObj->m_rcObj, lpRect))
 		{
-//			if (pObj->IsTransparent() && m_bPaintBg)
+//			if (pObj->IsUseSkinBg() && m_bPaintBg)
 //			{
 //				// redraw background ?
 //				RedrawBackground(pObj->m_rcObj);

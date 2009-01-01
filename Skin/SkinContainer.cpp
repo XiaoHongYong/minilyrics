@@ -609,7 +609,10 @@ void CSkinContainer::InvalidateUIObject(CUIObject *pObj)
 
 void CSkinContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 {
-	m_pSkin->UpdateMemGraphicsToScreen(lpRect);
+	if (m_pContainer)
+		m_pContainer->UpdateMemGraphicsToScreen(lpRect);
+	else
+		m_pSkin->UpdateMemGraphicsToScreen(lpRect);
 }
 
 CUIObject *CSkinContainer::GetChildByID(int nID)

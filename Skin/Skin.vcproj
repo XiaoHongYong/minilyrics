@@ -791,6 +791,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinMenuBar.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SkinNStatusButton.cpp"
 				>
 				<FileConfiguration
@@ -1293,6 +1297,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinImage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinMenuBar.h"
 				>
 			</File>
 			<File

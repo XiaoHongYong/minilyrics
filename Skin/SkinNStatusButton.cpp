@@ -76,8 +76,11 @@ void CSkinNStatusButton::OnTimer(int nId)
 			if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
 				m_pSkin->OnCustomCommand(m_nId);
 
-			if (!m_strDynCmd.empty())
-				m_pSkin->GetSkinFactory()->OnDynamicCmd(m_strDynCmd.c_str(), m_pSkin, this);
+			if (m_nCurStatus >= 0 && m_nCurStatus < m_vBtStatImg.size())
+			{
+				if (!m_vBtStatImg[m_nCurStatus]->strDynCmd.empty())
+					m_pSkin->GetSkinFactory()->OnDynamicCmd(m_vBtStatImg[m_nCurStatus]->strDynCmd.c_str(), m_pSkin, this);
+			}
 		}
 
 		if (m_bContinuousBegin)
@@ -121,8 +124,8 @@ bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 	if (m_bContinuousCmd)
 		m_pSkin->UnregisterTimerObject(this);
 
-	if (!m_strDynCmd.empty())
-		m_pSkin->GetSkinFactory()->OnDynamicCmd(m_strDynCmd.c_str(), m_pSkin, this);
+	if (!m_vBtStatImg[m_nCurStatus]->strDynCmd.empty())
+		m_pSkin->GetSkinFactory()->OnDynamicCmd(m_vBtStatImg[m_nCurStatus]->strDynCmd.c_str(), m_pSkin, this);
 
 	return true;
 }
@@ -282,6 +285,10 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			if (!GetRectValue(szValue, btimg->imgDisabled))
 				goto PARSE_VALUE_FAILED;
 		}
+		else if (_tcsicmp(szPropertyNew, _T("DynCmd")) == 0)
+		{
+			btimg->strDynCmd = szValue;
+		}
 		else
 			return FALSE;
 	}
@@ -291,7 +298,9 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (_tcsicmp(szProperty, _T("DynCmd")) == 0)
 	{
-		m_strDynCmd = szValue;
+		if (m_vBtStatImg.size() == 0)
+			m_vBtStatImg.push_back(new BtStatImg);
+		m_vBtStatImg[0]->strDynCmd = szValue;
 	}
 	else if (IsPropertyName(szProperty, _T("BlendPixMode")))
 	{
@@ -335,19 +344,19 @@ void CSkinNStatusButton::EnumProperties(CUIObjProperties &listProperties)
 		strName = strPrefix + _T("ImageDisabled");
 		strNameRect = strPrefix + _T("ImageDisabledRect");
 		listProperties.AddPropImage(strName.c_str(), strNameRect.c_str(), btimg->strDisabledFile.c_str(), btimg->imgDisabled, !btimg->strDisabledFile.empty());
+
+		CUIObjProperty		property;
+
+		property.vOptions.push_back(_T(""));
+		m_pSkin->GetSkinFactory()->EnumAllDynamicCmds(property.vOptions);
+		property.strName = strPrefix + _T("DynCmd");
+		property.strValue = m_strDynCmd;
+		property.valueType = CUIObjProperty::VT_COMB_STR;
+		property.bToXmlAttrib = !m_strDynCmd.empty();
+		listProperties.push_back(property);
 	}
 
 	listProperties.AddPropBoolStr(_T("Continuous"), m_bContinuousCmd, m_bContinuousCmd);
-
-	CUIObjProperty		property;
-
-	property.vOptions.push_back(_T(""));
-	m_pSkin->GetSkinFactory()->EnumAllDynamicCmds(property.vOptions);
-	property.strName = _T("DynCmd");
-	property.strValue = m_strDynCmd;
-	property.valueType = CUIObjProperty::VT_COMB_STR;
-	property.bToXmlAttrib = !m_strDynCmd.empty();
-	listProperties.push_back(property);
 
 	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_ALPHA_BLEND);
 }
