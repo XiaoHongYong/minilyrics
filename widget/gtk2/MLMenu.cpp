@@ -140,7 +140,7 @@ void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText)
 
 bool CMLMenu::LoadPopupMenu(int nID, int nSubMenu)
 {
-	DBGLOG2(_T("LOadPopupMenu: %d, %d"), nID, nSubMenu);
+	DBGLOG2(_T("LoadPopupMenu: %d, %d"), nID, nSubMenu);
 
 	Destroy();
 

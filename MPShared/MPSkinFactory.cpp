@@ -308,6 +308,11 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkin *pWnd, LPCTSTR szMenu)
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 1);
 	}
 #ifdef _MPLAYER
+	else if (_tcsicmp(szMenu, _T("MainWndMenu")) == 0)
+	{
+		pSkinMenu = new CSkinMenu();
+		pSkinMenu->LoadMenu(IDM_MAIN_WND);
+	}
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
 		pSkinMenu = new CSkinMenu();

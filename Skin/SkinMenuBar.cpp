@@ -6,6 +6,7 @@
 #include "MLSkin.h"
 #include "SkinMenuBar.h"
 
+#define SPACE_SUBMENUS		(m_rcObj.Height() / 2)
 
 UIOBJECT_CLASS_NAME_IMP(CSkinMenuBar, _T("MenuBar"))
 
@@ -13,8 +14,19 @@ CSkinMenuBar::CSkinMenuBar()
 {
 	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON;
 
+	m_bLBtDown = false;
+	m_bHover = false;
+
+	m_nSelSubMenu = -1;
+
+	m_bOutlinedHover = false;
+	m_bOutlinedPressed = false;
+
+	m_clrHover.set(0);
+	m_clrPressed.set(0);
+
 	// m_bpm = BPM_ALPHA_BLEND;
-	SubMenu		item;
+/*	SubMenu		item;
 
 	item.strText = _T("File");
 	m_vSubMenus.push_back(item);
@@ -26,10 +38,9 @@ CSkinMenuBar::CSkinMenuBar()
 	m_vSubMenus.push_back(item);
 
 	item.strText = _T("Tool");
-	m_vSubMenus.push_back(item);
+	m_vSubMenus.push_back(item);*/
 
-	m_bOutlinedHover = false;
-	m_bOutlinedPressed = false;
+	m_pMenu = NULL;
 }
 
 
@@ -44,6 +55,22 @@ void CSkinMenuBar::OnCreate()
 	CUIObject::OnCreate();
 
 	m_font.OnCreate(m_pSkin);
+
+	ASSERT(m_pMenu);
+	if (m_pMenu)
+	{
+		m_pMenu->SetModeless(true);
+
+		for (int i = 0; i < 255; i++)
+		{
+			SubMenu		item;
+
+			if (m_pMenu->GetMenuItemInfo(i, item.strText, item.nID, item.bHasSubMenu, true))
+			{
+				m_vSubMenus.push_back(item);
+			}
+		}
+	}
 }
 
 
@@ -51,7 +78,7 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 {
 	int			x = 0;
 	int			y = 0;
-	int			nSpaceSubMenus = m_rcObj.Height() / 2;
+	int			nSpaceSubMenus = SPACE_SUBMENUS;
 	CRect		rcItem;
 
 	if (m_font.IsGood())
@@ -76,6 +103,13 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 
 		rcItem.left = x;
 		rcItem.right = x + item.nWidth;
+
+// 		if (i % 2 == 0)
+// 		{
+// 			CMLBrush	br;
+// 			br.CreateSolidBrush(MLColor(0));
+// 			pGraph->FillRect(rcItem.left, rcItem.top, rcItem.Width(), rcItem.Height(), &br);
+// 		}
 
 		if (i == m_nSelSubMenu && m_bLBtDown)
 		{
@@ -132,9 +166,11 @@ bool CSkinMenuBar::OnLButtonDown(UINT nFlags, CPoint point)
 
 	Invalidate();
 
-	// TODO:
 	// Popup sel menu item
-	// m_menu.TrackPopupMenu(m_nSelSubMenu);
+	if (m_vSubMenus[m_nSelSubMenu].bHasSubMenu)
+		TrackPopupMenu();
+	else
+		m_pSkin->OnCommand(m_vSubMenus[m_nSelSubMenu].nID, 0);
 
 	return true;
 }
@@ -191,9 +227,9 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 
 			Invalidate();
 
-			// TODO:
 			// Popup sel menu item
-			// m_menu.TrackPopupMenu(m_nSelSubMenu);
+			if (m_nSelSubMenu != -1 && m_vSubMenus[m_nSelSubMenu].bHasSubMenu)
+				TrackPopupMenu();
 		}
 		else if (!m_bLBtDown && !m_bHover)
 		{
@@ -222,6 +258,8 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 				Invalidate();
 
 				// Popup new menu
+				if (m_nSelSubMenu != -1 && m_vSubMenus[m_nSelSubMenu].bHasSubMenu)
+					TrackPopupMenu();
 			}
 		}
 	}
@@ -260,7 +298,12 @@ BOOL CSkinMenuBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (CUIObject::SetProperty(szProperty, szValue))
 		return TRUE;
 
-	if (m_font.SetProperty(szProperty, szValue))
+	if (IsPropertyName(szProperty, _T("Menu")))
+	{
+		m_strMenu = szValue;
+		m_pSkin->GetSkinFactory()->LoadMenu(m_pSkin, &m_pMenu, szValue);
+	}
+	else if (m_font.SetProperty(szProperty, szValue))
 		return TRUE;
 	else if (IsPropertyName(szProperty, _T("TextColorHover")))
 		GetColorValue(m_clrHover, szValue);
@@ -307,4 +350,36 @@ int CSkinMenuBar::HitTestSubMenu(const POINT point)
 	}
 
 	return -1;
+}
+
+int CSkinMenuBar::GetItemX(int n)
+{
+	int			x = m_rcObj.left;
+
+	if (n >= m_vSubMenus.size())
+		n = m_vSubMenus.size() - 1;
+	for (int i = 0; i < n; i++)
+	{
+		x += m_vSubMenus[i].nWidth;
+		if (x > m_rcObj.right)
+			return x;
+	}
+
+	return x;
+}
+
+void CSkinMenuBar::TrackPopupMenu()
+{
+	if (m_nSelSubMenu == -1)
+		return;
+
+	CPoint	pt;
+
+	pt.x = GetItemX(m_nSelSubMenu);
+	pt.y = m_rcObj.bottom;
+
+	m_pSkin->ClientToScreen(pt);
+
+	if (m_pMenu)
+		m_pMenu->TrackPopupSubMenu(pt.x, pt.y, m_nSelSubMenu, m_pSkin);
 }

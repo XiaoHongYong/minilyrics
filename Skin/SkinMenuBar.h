@@ -30,12 +30,17 @@ public:
 
 protected:
 	int HitTestSubMenu(const POINT point);
+	int GetItemX(int n);
+
+	void TrackPopupMenu();
 
 protected:
 	struct SubMenu
 	{
 		tstring			strText;
 		int				nWidth;
+		bool			bHasSubMenu;
+		UINT			nID;		// If bHasSubMenu is false, this memember is available.
 	};
 	typedef vector<SubMenu>		VecSubMenus;
 
@@ -46,7 +51,9 @@ protected:
 	MLColor				m_clrHover, m_clrOutlinedHover, m_clrPressed, m_clrOutlinedPressed;
 	bool				m_bOutlinedHover, m_bOutlinedPressed;
 
-	CSkinMenu			m_menu;
+	tstring				m_strMenu;
+
+	CMLMenu				*m_pMenu;
 
 	bool				m_bHover;
 	bool				m_bLBtDown;
