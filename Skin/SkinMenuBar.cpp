@@ -21,24 +21,10 @@ CSkinMenuBar::CSkinMenuBar()
 
 	m_bOutlinedHover = false;
 	m_bOutlinedPressed = false;
+	m_bMenuPopup = false;
 
 	m_clrHover.set(0);
 	m_clrPressed.set(0);
-
-	// m_bpm = BPM_ALPHA_BLEND;
-/*	SubMenu		item;
-
-	item.strText = _T("File");
-	m_vSubMenus.push_back(item);
-
-	item.strText = _T("Edit");
-	m_vSubMenus.push_back(item);
-
-	item.strText = _T("View");
-	m_vSubMenus.push_back(item);
-
-	item.strText = _T("Tool");
-	m_vSubMenus.push_back(item);*/
 
 	m_pMenu = NULL;
 }
@@ -46,7 +32,8 @@ CSkinMenuBar::CSkinMenuBar()
 
 CSkinMenuBar::~CSkinMenuBar()
 {
-
+	if (m_pMenu)
+		delete m_pMenu;
 }
 
 
@@ -159,16 +146,16 @@ bool CSkinMenuBar::OnLButtonDown(UINT nFlags, CPoint point)
 	if (m_bHover)
 		m_bHover = false;
 	else
-	{
-		// 捕捉鼠标输入
 		m_pSkin->SetCaptureMouse(this);
-	}
 
 	Invalidate();
 
 	// Popup sel menu item
 	if (m_vSubMenus[m_nSelSubMenu].bHasSubMenu)
+	{
+		m_bMenuPopup = true;
 		TrackPopupMenu();
+	}
 	else
 		m_pSkin->OnCommand(m_vSubMenus[m_nSelSubMenu].nID, 0);
 
@@ -178,8 +165,7 @@ bool CSkinMenuBar::OnLButtonDown(UINT nFlags, CPoint point)
 
 bool CSkinMenuBar::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	// 释放鼠标输入
-	m_pSkin->ReleaseCaptureMouse(this);
+	// m_pSkin->ReleaseCaptureMouse(this);
 
 	if (!m_bLBtDown)
 		return true;
@@ -206,11 +192,22 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 	int			nSelSubMenuNew;
 
 	nSelSubMenuNew = HitTestSubMenu(point);
-	if (nSelSubMenuNew == -1 && !m_bLBtDown && !m_bHover)
+	if (nSelSubMenuNew == -1 && !m_bLBtDown && !m_bHover && !m_bMenuPopup)
 		return false;
 
 	if (IsPtIn(point))
 	{
+		if (m_bMenuPopup)
+		{
+			if (nSelSubMenuNew != m_nSelSubMenu && nSelSubMenuNew != -1)
+			{
+				m_nSelSubMenu = nSelSubMenuNew;
+				if (m_nSelSubMenu != -1 && m_vSubMenus[m_nSelSubMenu].bHasSubMenu)
+					TrackPopupMenu();
+			}
+			return true;
+		}
+
 		if (!m_bLBtDown && (nFlags & MK_LBUTTON))
 		{
 			m_bLBtDown = TRUE;
@@ -218,10 +215,7 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 			if (m_bHover)
 				m_bHover = false;
 			else
-			{
-				// 捕捉鼠标输入
 				m_pSkin->SetCaptureMouse(this);
-			}
 
 			m_nSelSubMenu = nSelSubMenuNew;
 
@@ -235,7 +229,6 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			m_bHover = true;
 
-			// 捕捉鼠标输入
 			m_pSkin->SetCaptureMouse(this);
 
 			m_nSelSubMenu = nSelSubMenuNew;
@@ -269,7 +262,6 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			m_bLBtDown = FALSE;
 
-			// 释放鼠标输入
 			m_pSkin->ReleaseCaptureMouse(this);
 
 			m_nSelSubMenu = nSelSubMenuNew;
@@ -280,7 +272,6 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			m_bHover = false;
 
-			// 释放鼠标输入
 			m_pSkin->ReleaseCaptureMouse(this);
 
 			m_nSelSubMenu = nSelSubMenuNew;
@@ -352,6 +343,7 @@ int CSkinMenuBar::HitTestSubMenu(const POINT point)
 	return -1;
 }
 
+
 int CSkinMenuBar::GetItemX(int n)
 {
 	int			x = m_rcObj.left;
@@ -367,6 +359,7 @@ int CSkinMenuBar::GetItemX(int n)
 
 	return x;
 }
+
 
 void CSkinMenuBar::TrackPopupMenu()
 {

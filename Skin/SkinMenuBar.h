@@ -57,6 +57,7 @@ protected:
 
 	bool				m_bHover;
 	bool				m_bLBtDown;
+	bool				m_bMenuPopup;
 
 	VecSubMenus			m_vSubMenus;
 	int					m_nSelSubMenu;
