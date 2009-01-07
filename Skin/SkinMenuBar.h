@@ -25,6 +25,8 @@ public:
 
 	bool OnMouseMove(UINT nFlags, CPoint point);
 
+	void OnKeyDown(UINT nChar, UINT nFlags);
+
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 	void EnumProperties(CUIObjProperties &listProperties);
 
@@ -33,6 +35,8 @@ protected:
 	int GetItemX(int n);
 
 	void TrackPopupMenu();
+
+	void ExitTrackingMenuMode();
 
 protected:
 	struct SubMenu

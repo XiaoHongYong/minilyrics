@@ -6,13 +6,110 @@
 #include "MLSkin.h"
 #include "SkinMenuBar.h"
 
+#if (WINVER < 0x0500)
+
+#define MNS_NOCHECK         0x80000000
+#define MNS_MODELESS        0x40000000
+#define MNS_DRAGDROP        0x20000000
+#define MNS_AUTODISMISS     0x10000000
+#define MNS_NOTIFYBYPOS     0x08000000
+#define MNS_CHECKORBMP      0x04000000
+
+#define MIM_MAXHEIGHT               0x00000001
+#define MIM_BACKGROUND              0x00000002
+#define MIM_HELPID                  0x00000004
+#define MIM_MENUDATA                0x00000008
+#define MIM_STYLE                   0x00000010
+#define MIM_APPLYTOSUBMENUS         0x80000000
+
+typedef struct tagMENUINFO
+{
+	DWORD   cbSize;
+	DWORD   fMask;
+	DWORD   dwStyle;
+	UINT    cyMax;
+	HBRUSH  hbrBack;
+	DWORD   dwContextHelpID;
+	ULONG_PTR dwMenuData;
+}   MENUINFO, FAR *LPMENUINFO;
+typedef MENUINFO CONST FAR *LPCMENUINFO;
+
+WINUSERAPI
+BOOL
+WINAPI
+GetMenuInfo(
+			__in HMENU,
+			__inout LPMENUINFO);
+
+WINUSERAPI
+BOOL
+WINAPI
+SetMenuInfo(
+			__in HMENU,
+			__in LPCMENUINFO);
+
+WINUSERAPI
+BOOL
+WINAPI
+EndMenu(
+		VOID);
+
+#endif // WINVER < 0x0500
+
+void SetMenuModeless(HMENU hMenu)
+{
+	MENUINFO	info;
+
+	memset(&info, 0, sizeof(info));
+	info.cbSize = sizeof(info);
+	info.fMask = MIM_STYLE | MIM_APPLYTOSUBMENUS;
+	info.dwStyle = MNS_MODELESS;
+
+	typedef BOOL (WINAPI *FuncSetMenuInfo)(
+		__in HMENU,
+		__in LPCMENUINFO);
+
+	HMODULE			hDll = LoadLibrary(_T("user32.dll"));
+	FuncSetMenuInfo	f;
+
+	f = (FuncSetMenuInfo)GetProcAddress(hDll, "SetMenuInfo");
+	if (f)
+		f(hMenu, &info);
+
+	FreeLibrary(hDll);
+}
+
+void _EndMenu()
+{
+	typedef BOOL
+		(WINAPI *
+		FuncEndMenu)(
+		VOID);
+
+	HMODULE			hDll = LoadLibrary(_T("user32.dll"));
+	FuncEndMenu	f;
+
+	f = (FuncEndMenu)GetProcAddress(hDll, "EndMenu");
+	if (f)
+		f();
+
+	FreeLibrary(hDll);
+
+	MSG stMsg = { 0 };
+	while (PeekMessage(&stMsg, NULL, 0, 0, PM_REMOVE ))
+	{
+		TranslateMessage(&stMsg);
+		DispatchMessage(&stMsg);
+	}
+}
+
 #define SPACE_SUBMENUS		(m_rcObj.Height() / 2)
 
 UIOBJECT_CLASS_NAME_IMP(CSkinMenuBar, _T("MenuBar"))
 
 CSkinMenuBar::CSkinMenuBar()
 {
-	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON;
+	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON | UO_MSG_WANT_ALL_KEYS;
 
 	m_bLBtDown = false;
 	m_bHover = false;
@@ -191,6 +288,8 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 {
 	int			nSelSubMenuNew;
 
+	DBGLOG2(_T("Mouse Move: %d, %d"), point.x, point.y);
+
 	nSelSubMenuNew = HitTestSubMenu(point);
 	if (nSelSubMenuNew == -1 && !m_bLBtDown && !m_bHover && !m_bMenuPopup)
 		return false;
@@ -281,6 +380,38 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 	}
 
 	return true;
+}
+
+
+void CSkinMenuBar::OnKeyDown(UINT nChar, UINT nFlags)
+{
+	switch (nChar)
+	{
+	case VK_LEFT:
+		if (m_nSelSubMenu > 0)
+		{
+			m_nSelSubMenu--;
+			if (m_nSelSubMenu >= 0 && m_nSelSubMenu < m_vSubMenus.size())
+			{
+				ExitTrackingMenuMode();
+
+				TrackPopupMenu();
+			}
+		}
+		break;
+	case VK_RIGHT:
+		if (m_nSelSubMenu > 0)
+		{
+			m_nSelSubMenu++;
+			if (m_nSelSubMenu >= 0 && m_nSelSubMenu < m_vSubMenus.size())
+			{
+				ExitTrackingMenuMode();
+
+				TrackPopupMenu();
+			}
+		}
+		break;
+	}
 }
 
 
@@ -375,4 +506,25 @@ void CSkinMenuBar::TrackPopupMenu()
 
 	if (m_pMenu)
 		m_pMenu->TrackPopupSubMenu(pt.x, pt.y, m_nSelSubMenu, m_pSkin);
+}
+
+void CSkinMenuBar::ExitTrackingMenuMode()
+{
+	// if (::GetFocus() == m_pSkin->GetHandle())
+	// ::SetFocus(m_pSkin->GetHandle());
+
+	_EndMenu();
+/*
+	// ::ReleaseCapture();
+	SendMessage(m_pSkin->GetHandle(), WM_CANCELMODE, 0 , 0);
+	SendMessage(m_pSkin->GetHandle(), WM_CANCELMODE, 0 , 0);
+
+	m_pSkin->SetCaptureMouse(this);
+
+	MSG stMsg = { 0 };
+	while (PeekMessage(&stMsg, NULL, 0, 0, PM_REMOVE ))
+	{
+		TranslateMessage(&stMsg);
+		DispatchMessage(&stMsg);
+	}*/
 }
