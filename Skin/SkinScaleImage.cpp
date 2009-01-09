@@ -20,7 +20,7 @@ CSkinXScaleImage::CSkinXScaleImage()
 {
 	m_nScaleXStart = 0;
 	m_nScaleXEnd = 0;
-	m_bpm = BPM_ALPHA_BLEND;
+	m_bpm = BPM_BLEND;
 }
 
 CSkinXScaleImage::~CSkinXScaleImage()
@@ -115,7 +115,7 @@ void CSkinXScaleImage::EnumProperties(CUIObjProperties &listProperties)
 	vExtra.push_back(szBuff);
 
 	listProperties.AddPropImageEx(SZ_PN_IMAGE, SZ_PN_IMAGERECT, m_strBmpBkFile.c_str(), m_imgBk, vExtra);
-	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_ALPHA_BLEND);
+	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -131,7 +131,7 @@ CSkinYScaleImage::CSkinYScaleImage()
 {
 	m_nScaleYStart = 0;
 	m_nScaleYEnd = 0;
-	m_bpm = BPM_ALPHA_BLEND;
+	m_bpm = BPM_BLEND;
 }
 
 CSkinYScaleImage::~CSkinYScaleImage()
@@ -229,5 +229,5 @@ void CSkinYScaleImage::EnumProperties(CUIObjProperties &listProperties)
 	vExtra.push_back(szBuff);
 
 	listProperties.AddPropImageEx(SZ_PN_IMAGE, SZ_PN_IMAGERECT, m_strBmpBkFile.c_str(), m_imgBk, vExtra);
-	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_ALPHA_BLEND);
+	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }

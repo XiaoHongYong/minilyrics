@@ -24,6 +24,36 @@ enum PIX_FORMAT
 	PF_PALLETE2,
 };
 
+typedef uint32		BlendPixMode;
+
+enum _BlendPixMode
+{
+	// Target Channel
+	BPM_CHANNEL_RGB		= 1,
+	BPM_CHANNEL_ALPHA	= 1 << 1,
+
+	// Operation
+	BPM_OP_COPY			= 1 << 8,
+	BPM_OP_BLEND		= 1 << 9,		// Multiply alpha
+	BPM_OP_XOR			= 1 << 10,
+
+	//
+	// Combined Channel and operaton:
+	//
+
+	BPM_COPY			= BPM_CHANNEL_RGB | BPM_CHANNEL_ALPHA | BPM_OP_COPY,
+	BPM_BLEND			= BPM_CHANNEL_RGB | BPM_CHANNEL_ALPHA | BPM_OP_BLEND,
+
+	BPM_BLEND_RGB		= BPM_CHANNEL_RGB | BPM_OP_BLEND,
+	BPM_BLEND_ALPHA		= BPM_CHANNEL_ALPHA | BPM_OP_BLEND,
+	BPM_COPY_ALPHA		= BPM_CHANNEL_ALPHA | BPM_OP_BLEND,
+	BPM_COPY_RGB		= BPM_CHANNEL_RGB | BPM_OP_BLEND,
+
+	BPM_XOR_RGB			= BPM_CHANNEL_RGB | BPM_OP_XOR,
+
+	BPM_BILINEAR		= 1 << 17,		// available option for stretch blt
+};
+
 class RAW_IMAGE_DATA
 {
 public:
@@ -111,7 +141,11 @@ PRAW_IMAGE_DATA ConvertTo24BppRawImage(PRAW_IMAGE_DATA src);
 
 void FreeRawImage(PRAW_IMAGE_DATA pRawImage);
 
-void RIDBgr24Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b);
+void RawImageBGR24Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b);
+
+void RawImageBGRA32Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b, uint8 a);
+
+void RawImageSet(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b, uint8 a);
 
 void AdjustImageHue(PRAW_IMAGE_DATA pImage, float hueOffset);
 

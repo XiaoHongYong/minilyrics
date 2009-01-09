@@ -144,7 +144,7 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 
 	if (IsMaskImageUsed())
 	{
-		m_img.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 0, 0, BPM_ALPHA_BLEND);
+		m_img.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 0, 0, BPM_BLEND);
 		return;
 	}
 
@@ -183,7 +183,7 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 		}
 	}
 
-	m_img.Blt(pGraph, rc.left + (rc.Width() - w) / 2, rc.top + (rc.Height() - h) / 2, BPM_ALPHA_BLEND);
+	m_img.Blt(pGraph, rc.left + (rc.Width() - w) / 2, rc.top + (rc.Height() - h) / 2, BPM_BLEND);
 }
 
 BOOL CMediaAlbumArtCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -309,7 +309,7 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 
 	clrBg.set(0);
 	clrBg.setAlpha(0);
-	ClearRawImage(pImg, clrBg);
+	RawImageSet(pImg, clrBg.r(), clrBg.g(), clrBg.b(), clrBg.getAlpha());
 	m_img.Attach(pImg);
 
 	//
@@ -323,20 +323,20 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 		int		hBottom = pImgSizedAlbumArt->height - hTop;
 
 		// blt top mask
-		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, w, hTop, 0, 0, BPM_ALPHA_MASK);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, w, hTop, 0, 0, BPM_BLEND_ALPHA);
 
 		// blt top to frame
-		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, w, hTop, 0, 0, BPM_ALPHA_BLEND);
+		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, w, hTop, 0, 0, BPM_BLEND);
 
 		// blt top to Image
 		imgAaFrame.Blt(&m_img, 0, m_img.height() / 2 - (hTop + m_rcFrameMaskPos.top), m_img.width(), hTop + m_rcFrameMaskPos.top, 0, 0, BPM_COPY);
 
 
 		// blt bottom mask
-		m_frmMask.Blt(&imgSizedAlbumArt, 0, hTop, w, hBottom, 0, m_frmMask.height() - hBottom, BPM_ALPHA_MASK);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, hTop, w, hBottom, 0, m_frmMask.height() - hBottom, BPM_BLEND_ALPHA);
 
 		// blt bottom to frame
-		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.bottom - hBottom, w, hBottom, 0, hTop, BPM_ALPHA_BLEND);
+		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.bottom - hBottom, w, hBottom, 0, hTop, BPM_BLEND);
 
 		// blt bottom to Image
 		imgAaFrame.Blt(&m_img, 0, m_img.height() / 2, m_img.width(), hBottom + (m_img.height() - m_rcFrameMaskPos.bottom), 0, m_rcFrameMaskPos.bottom - hBottom, BPM_COPY);
@@ -347,20 +347,20 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 		int		wRight = pImgSizedAlbumArt->width - wLeft;
 
 		// blt left mask
-		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, wLeft, h, 0, 0, BPM_ALPHA_MASK);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, wLeft, h, 0, 0, BPM_BLEND_ALPHA);
 
 		// blt left to frame
-		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, wLeft, h, 0, 0, BPM_ALPHA_BLEND);
+		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, wLeft, h, 0, 0, BPM_BLEND);
 
 		// blt left to Image
 		imgAaFrame.Blt(&m_img, m_img.width() / 2 - (wLeft + m_rcFrameMaskPos.left), 0, wLeft + m_rcFrameMaskPos.left, m_img.height(), 0, 0, BPM_COPY);
 
 
 		// blt right mask
-		m_frmMask.Blt(&imgSizedAlbumArt, wLeft, 0, wRight, h, m_frmMask.width() - wRight, 0, BPM_ALPHA_MASK);
+		m_frmMask.Blt(&imgSizedAlbumArt, wLeft, 0, wRight, h, m_frmMask.width() - wRight, 0, BPM_BLEND_ALPHA);
 
 		// blt right to frame
-		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.right - wRight, m_rcFrameMaskPos.top, wRight, h, wLeft, 0, BPM_ALPHA_BLEND);
+		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.right - wRight, m_rcFrameMaskPos.top, wRight, h, wLeft, 0, BPM_BLEND);
 
 		// blt right to Image
 		imgAaFrame.Blt(&m_img, m_img.width() / 2, 0, wRight + (m_img.width() - m_rcFrameMaskPos.right), m_img.height(), m_rcFrameMaskPos.right - wRight, 0, BPM_COPY);

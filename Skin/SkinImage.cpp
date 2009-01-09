@@ -15,7 +15,7 @@ CSkinNStatusImage::CSkinNStatusImage()
 {
 	m_BltMode = BLT_COPY;
 	m_nCurStatus = 0;
-	m_bpm = BPM_ALPHA_BLEND;
+	m_bpm = BPM_BLEND;
 }
 
 CSkinNStatusImage::~CSkinNStatusImage()
@@ -32,7 +32,7 @@ void CSkinNStatusImage::Draw(CRawGraph *pGraph)
 
 	StatImg		*si = m_vStImages[m_nCurStatus];
 
-	if (m_bpm == BPM_ALPHA_MASK)
+	if (m_bpm == BPM_BLEND_ALPHA)
 		m_pSkin->RedrawBackground(&m_rcObj);
 
 	if (m_BltMode == BLT_STRETCH)
@@ -48,7 +48,7 @@ void CSkinNStatusImage::Draw(CRawGraph *pGraph)
 	else
 	{
 		if (m_imgMask.IsValid())
-			si->img.Blt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+			si->img.MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
 		else
 			si->img.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
 	}
@@ -115,7 +115,7 @@ void CSkinNStatusImage::EnumProperties(CUIObjProperties &listProperties)
 	}
 
 	listProperties.AddPropBltMode(_T("BltMode"), m_BltMode);
-	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_ALPHA_BLEND);
+	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }
 
 void CSkinNStatusImage::SetMaxStat(int nMaxStat)

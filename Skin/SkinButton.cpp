@@ -143,7 +143,7 @@ void CSkinActiveButton::Draw(CRawGraph *pGraph)
 		if (m_pSkin->IsWndActive())
 		{
 			if (m_imgMask.IsValid())
-				btimg->imgHover.Blt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+				btimg->imgHover.MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
 			else
 				btimg->imgHover.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
 			return;

@@ -311,7 +311,8 @@ void FreeRawImage(PRAW_IMAGE_DATA pRawImage)
 	delete pRawImage;
 }
 
-void RIDBgr24Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b)
+
+void RawImageBGR24Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b)
 {
 	uint8		*pRow, *p;
 
@@ -329,6 +330,37 @@ void RIDBgr24Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b)
 		}
 		pRow += pRawImage->stride;
 	}
+}
+
+void RawImageBGRA32Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b, uint8 a)
+{
+	ASSERT(pRawImage->pixFormat == PF_RGBA32);
+
+	uint8		*pRow, *p;
+
+	pRow = pRawImage->RowPtr(0);
+
+	for (int y = 0; y < pRawImage->height; y++)
+	{
+		p = pRow;
+		for (int x = 0; x < pRawImage->width; x++)
+		{
+			p[0] = b;
+			p[1] = g;
+			p[2] = r;
+			p[3] = a;
+			p += 4;
+		}
+		pRow += pRawImage->stride;
+	}
+}
+
+void RawImageSet(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b, uint8 a)
+{
+	if (pRawImage->pixFormat == PF_RGB24)
+		RawImageBGR24Set(pRawImage, r, g, b);
+	else
+		RawImageBGRA32Set(pRawImage, r, g, b, a);
 }
 
 //////////////////////////////////////////////////////////////////////////

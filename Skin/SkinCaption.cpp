@@ -15,7 +15,7 @@ UIOBJECT_CLASS_NAME_IMP(CSkinCaption, _T("CaptionImage"))
 CSkinCaption::CSkinCaption()
 {
 	m_bEnableMaximize = false;
-	m_bpm = BPM_ALPHA_BLEND;
+	m_bpm = BPM_BLEND;
 }
 
 CSkinCaption::~CSkinCaption()
@@ -202,5 +202,5 @@ void CSkinCaption::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropImage(_T("ImageFocus"), _T("ImageFocusRect"), m_strBmpFocusFile.c_str(), m_imgFocus, !m_strBmpFocusFile.empty());
 
-	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_ALPHA_BLEND);
+	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }

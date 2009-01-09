@@ -8,6 +8,55 @@
 #include "UIObject.h"
 #include "../MPShared/SkinMenu.h"
 
+class CSkinMenuBar;
+
+class CMenuBarMsgHandler : public CBaseWnd
+{
+public:
+	enum
+	{
+		WM_MB_TRACKMENU		= WM_USER + 1,
+	};
+
+	CMenuBarMsgHandler()
+	{
+		m_pMenuBar = NULL;
+	}
+
+	void PostTrackPopupMenu();
+
+	bool TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *pWnd);
+
+	bool IsMenuPopuped() { return m_bMenuPopup; }
+
+
+	void OnKeyDown(UINT nChar, UINT nFlags);
+
+	void OnMouseMove(UINT nFlags, CPoint point);
+
+	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
+
+protected:
+	//
+	// Hook messages while menu is popup.
+	//
+	static LRESULT CALLBACK MessageHookProc(int code, WPARAM wParam, LPARAM lParam);
+	static void ProcessHookMessage(UINT message, WPARAM wParam, LPARAM lParam);
+
+	static HHOOK		ms_hMsgHook;
+	static bool			ms_bPrimaryMenu;
+	static bool			ms_bSubMenuItem;
+	static HWND			ms_hWndMsgReceiver;
+	static HMENU		ms_hMenuPopup;
+
+public:
+	CSkinMenuBar		*m_pMenuBar;
+
+protected:
+	bool				m_bMenuPopup;
+
+};
+
 class CSkinMenuBar : public CUIObject  
 {
 UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
@@ -36,7 +85,7 @@ protected:
 
 	void TrackPopupMenu();
 
-	void ExitTrackingMenuMode();
+	friend class CMenuBarMsgHandler;
 
 protected:
 	struct SubMenu
@@ -57,14 +106,15 @@ protected:
 
 	tstring				m_strMenu;
 
-	CMLMenu				*m_pMenu;
-
 	bool				m_bHover;
 	bool				m_bLBtDown;
-	bool				m_bMenuPopup;
 
 	VecSubMenus			m_vSubMenus;
 	int					m_nSelSubMenu;
+
+	CMLMenu				*m_pMenu;
+
+	CMenuBarMsgHandler		m_wndMsgReceiver;
 
 };
 

@@ -543,15 +543,15 @@ void CSkinTabHeader::DrawTabButton(CRawGraph *pGraph, Button &bt, CRect &rcButto
 		nYPosTabButton = TIP_INACTIVE * m_nTabHeight;
 
 	// Draw left border
-	m_img.Blt(pGraph, x, y, m_nButtonBorderSize, m_nTabHeight, 0, nYPosTabButton, BPM_ALPHA_BLEND);
+	m_img.Blt(pGraph, x, y, m_nButtonBorderSize, m_nTabHeight, 0, nYPosTabButton, BPM_BLEND);
 
 	// Draw button face
 	m_img.ExtendXBlt(pGraph, x + m_nButtonBorderSize, y, bt.nWidth - m_nButtonBorderSize, m_nTabHeight, 
-		m_nButtonBorderSize, nYPosTabButton, m_nButtonFaceSize, m_nTabHeight, BPM_ALPHA_BLEND);
+		m_nButtonBorderSize, nYPosTabButton, m_nButtonFaceSize, m_nTabHeight, BPM_BLEND);
 
 	// Draw Right border
 	m_img.Blt(pGraph, rcButton.right, y, m_nButtonBorderSize, m_nTabHeight, 
-		m_nButtonFaceSize + m_nButtonBorderSize, nYPosTabButton, BPM_ALPHA_BLEND);
+		m_nButtonFaceSize + m_nButtonBorderSize, nYPosTabButton, BPM_BLEND);
 
 	// Draw Text
 	if (!bt.strText.empty())

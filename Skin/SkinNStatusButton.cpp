@@ -23,7 +23,7 @@ CSkinNStatusButton::CSkinNStatusButton()
 	m_bEnableHover = false;
 
 	m_bContinuousCmd = false;
-	m_bpm = BPM_ALPHA_BLEND;
+	m_bpm = BPM_BLEND;
 }
 
 CSkinNStatusButton::~CSkinNStatusButton()
@@ -220,7 +220,7 @@ void CSkinNStatusButton::Draw(CRawGraph *pGraph)
 		return;
 
 	if (m_imgMask.IsValid())
-		pImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+		pImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
 	else
 		pImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
 }
@@ -358,7 +358,7 @@ void CSkinNStatusButton::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropBoolStr(_T("Continuous"), m_bContinuousCmd, m_bContinuousCmd);
 
-	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_ALPHA_BLEND);
+	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }
 
 int CSkinNStatusButton::GetStatus()
