@@ -21,6 +21,7 @@ public:
 	CMenuBarMsgHandler()
 	{
 		m_pMenuBar = NULL;
+		m_bMenuPopup = false;
 	}
 
 	void PostTrackPopupMenu();
@@ -76,6 +77,9 @@ public:
 
 	void OnKeyDown(UINT nChar, UINT nFlags);
 
+	void OnSetFocus();
+	void OnKillFocus();
+
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 	void EnumProperties(CUIObjProperties &listProperties);
 
@@ -102,19 +106,21 @@ protected:
 	// BlendPixMode	m_bpm;
 	CSkinFontProperty	m_font;
 	MLColor				m_clrHover, m_clrOutlinedHover, m_clrPressed, m_clrOutlinedPressed;
+	MLColor				m_clrBgPressed;
 	bool				m_bOutlinedHover, m_bOutlinedPressed;
 
 	tstring				m_strMenu;
 
 	bool				m_bHover;
 	bool				m_bLBtDown;
+	POINT				m_ptLast;
 
 	VecSubMenus			m_vSubMenus;
 	int					m_nSelSubMenu;
 
 	CMLMenu				*m_pMenu;
 
-	CMenuBarMsgHandler		m_wndMsgReceiver;
+	CMenuBarMsgHandler	m_wndMsgReceiver;
 
 };
 

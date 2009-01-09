@@ -187,6 +187,7 @@ public:
 
 	virtual void OnSize(int cx, int cy);
 	virtual void OnSetFocus();
+	virtual void OnKillFocus();
 
 	virtual void OnTimer (UINT nIDEvent);
 

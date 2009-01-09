@@ -43,6 +43,7 @@ public:
 	{
 		return GetBValue(m_clr);
 	}
+	int a() const { return m_alpha; }
 
 	COLORREF get() const { return m_clr; }
 

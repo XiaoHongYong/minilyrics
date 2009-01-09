@@ -14,8 +14,6 @@ HMENU	CMenuBarMsgHandler::ms_hMenuPopup = NULL;
 
 void CMenuBarMsgHandler::PostTrackPopupMenu()
 {
-	DBGLOG0(_T("PostTrackPopupMenu"));
-
 	// Exit popup menu first
 	SendMessage(m_pMenuBar->m_pSkin->GetHandle(), WM_CANCELMODE, 0 , 0);
 
@@ -38,16 +36,20 @@ bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *
 		ms_hWndMsgReceiver = m_hWnd;
 		ms_hMenuPopup = hMenu;
 		ms_hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, MessageHookProc, 0, ::GetCurrentThreadId());
-		DBGLOG0(_T("Hook Begin"));
 	}
 
+	m_bMenuPopup = true;
+	m_pMenuBar->Invalidate();
+
 	::TrackPopupMenuEx(hMenu, TPM_LEFTALIGN, x, y, pWnd->GetHandle(), NULL);
+
+	m_bMenuPopup = false;
+	m_pMenuBar->Invalidate();
 
 	if (ms_hMsgHook)
 	{
 		// Uninstall message hook
 		::UnhookWindowsHookEx(ms_hMsgHook);
-		DBGLOG0(_T("UnHook End"));
 		ms_hMsgHook = 0;
 		ms_hMenuPopup = NULL;
 		ms_hWndMsgReceiver = NULL;
@@ -108,7 +110,6 @@ void CMenuBarMsgHandler::ProcessHookMessage(UINT message, WPARAM wParam, LPARAM 
 			UINT	wFlags = HIWORD(wParam);
 			ms_bPrimaryMenu = (ms_hMenuPopup == hMenu);
 			ms_bSubMenuItem = (wFlags & MF_POPUP ) != 0;
-			DBGLOG2(_T("PrimaryMenu: %d, SubMenuItem: %d"), ms_bPrimaryMenu, ms_bSubMenuItem);
 		}
 		break;
 	case WM_INITMENUPOPUP:
@@ -117,7 +118,6 @@ void CMenuBarMsgHandler::ProcessHookMessage(UINT message, WPARAM wParam, LPARAM 
 			int		nIndex = LOWORD(lParam);
 			ms_bPrimaryMenu = (ms_hMenuPopup == hMenu);
 			ms_bSubMenuItem = (::GetSubMenu(hMenu, nIndex) != 0);
-			DBGLOG2(_T("PrimaryMenu: %d, SubMenuItem: %d"), ms_bPrimaryMenu, ms_bSubMenuItem);
 		}
 		break;
 	case WM_MOUSEMOVE:
@@ -176,6 +176,8 @@ CSkinMenuBar::CSkinMenuBar()
 
 	m_clrHover.set(0);
 	m_clrPressed.set(0);
+	m_clrBgPressed.set(0);
+	m_clrBgPressed.setAlpha(128);
 
 	m_pMenu = NULL;
 }
@@ -244,19 +246,12 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 		rcItem.left = x;
 		rcItem.right = x + item.nWidth;
 
-//		pGraph->FillRect()
-// 		if (i % 2 == 0)
-// 		{
-// 			CMLBrush	br;
-// 			br.CreateSolidBrush(MLColor(0));
-// 			pGraph->FillRect(rcItem.left, rcItem.top, rcItem.Width(), rcItem.Height(), &br);
-// 		}
-
-		if (i == m_nSelSubMenu && m_bLBtDown)
+		if (i == m_nSelSubMenu && (m_bLBtDown || m_wndMsgReceiver.IsMenuPopuped()))
 		{
 			clrText = m_clrPressed;
 			clrOutlined = m_clrOutlinedPressed;
 			bOutlined = m_bOutlinedPressed;
+			pGraph->FillRect(&rcItem, m_clrBgPressed, BPM_OP_BLEND | BPM_CHANNEL_RGB);
 		}
 		else if (i == m_nSelSubMenu && m_bHover)
 		{
@@ -344,6 +339,11 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 {
 	int			nSelSubMenuNew;
 
+	// Filter repeated mouse message when set message hook.
+	if (point == m_ptLast)
+		return true;
+	m_ptLast = point;
+
 	nSelSubMenuNew = HitTestSubMenu(point);
 	if (nSelSubMenuNew == -1 && !m_bLBtDown && !m_bHover && !m_wndMsgReceiver.IsMenuPopuped())
 		return false;
@@ -355,30 +355,14 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 			if (nSelSubMenuNew != m_nSelSubMenu && nSelSubMenuNew != -1)
 			{
 				m_nSelSubMenu = nSelSubMenuNew;
+				Invalidate();
 				if (m_nSelSubMenu != -1 && m_vSubMenus[m_nSelSubMenu].bHasSubMenu)
 					m_wndMsgReceiver.PostTrackPopupMenu();
 			}
 			return true;
 		}
 
-		if (!m_bLBtDown && (nFlags & MK_LBUTTON))
-		{
-			m_bLBtDown = TRUE;
-
-			if (m_bHover)
-				m_bHover = false;
-			else
-				m_pSkin->SetCaptureMouse(this);
-
-			m_nSelSubMenu = nSelSubMenuNew;
-
-			Invalidate();
-
-			// Popup sel menu item
-			if (m_nSelSubMenu != -1 && m_vSubMenus[m_nSelSubMenu].bHasSubMenu)
-				m_wndMsgReceiver.PostTrackPopupMenu();
-		}
-		else if (!m_bLBtDown && !m_bHover)
+		if (!m_bLBtDown && !m_bHover)
 		{
 			m_bHover = true;
 
@@ -388,44 +372,20 @@ bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 
 			Invalidate();
 		}
-		else if (m_bHover)
+		else if (m_bHover || m_bLBtDown)
 		{
 			if (m_nSelSubMenu != nSelSubMenuNew)
 			{
 				m_nSelSubMenu = nSelSubMenuNew;
 				Invalidate();
-			}
-		}
-		else if (m_bLBtDown)
-		{
-			if (m_nSelSubMenu != nSelSubMenuNew)
-			{
-				m_nSelSubMenu = nSelSubMenuNew;
-				Invalidate();
-
-				// Popup new menu
-				if (m_nSelSubMenu != -1 && m_vSubMenus[m_nSelSubMenu].bHasSubMenu)
-					m_wndMsgReceiver.PostTrackPopupMenu();
 			}
 		}
 	}
 	else
 	{
-		if (m_bLBtDown)
-		{
-			m_bLBtDown = FALSE;
-
-			m_pSkin->ReleaseCaptureMouse(this);
-
-			m_nSelSubMenu = nSelSubMenuNew;
-
-			Invalidate();
-		}
-		else if (m_bHover)
+		if (m_bHover)
 		{
 			m_bHover = false;
-
-			m_pSkin->ReleaseCaptureMouse(this);
 
 			m_nSelSubMenu = nSelSubMenuNew;
 
@@ -446,7 +406,6 @@ void CSkinMenuBar::OnKeyDown(UINT nChar, UINT nFlags)
 	{
 	case VK_LEFT:
 		{
-			DBGLOG0(_T("VK_LEFT"));
 			if (m_nSelSubMenu > 0)
 				m_nSelSubMenu--;
 			else
@@ -454,13 +413,14 @@ void CSkinMenuBar::OnKeyDown(UINT nChar, UINT nFlags)
 
 			if (m_nSelSubMenu >= 0 && m_nSelSubMenu < m_vSubMenus.size())
 			{
-				m_wndMsgReceiver.PostTrackPopupMenu();
+				Invalidate();
+				if (m_wndMsgReceiver.IsMenuPopuped())
+					m_wndMsgReceiver.PostTrackPopupMenu();
 			}
 		}
 		break;
 	case VK_RIGHT:
 		{
-			DBGLOG0(_T("VK_RIGHT"));
 			if (m_nSelSubMenu >= m_vSubMenus.size() - 1)
 				m_nSelSubMenu = 0;
 			else
@@ -468,10 +428,30 @@ void CSkinMenuBar::OnKeyDown(UINT nChar, UINT nFlags)
 
 			if (m_nSelSubMenu >= 0 && m_nSelSubMenu < m_vSubMenus.size())
 			{
-				m_wndMsgReceiver.PostTrackPopupMenu();
+				Invalidate();
+				if (m_wndMsgReceiver.IsMenuPopuped())
+					m_wndMsgReceiver.PostTrackPopupMenu();
 			}
 		}
 		break;
+	}
+}
+
+
+void CSkinMenuBar::OnSetFocus()
+{
+	// DBGLOG0(_T("OnSetFocus"));
+}
+
+
+void CSkinMenuBar::OnKillFocus()
+{
+	// DBGLOG0(_T("OnKillFocus"));
+
+	if (m_bLBtDown)
+	{
+		m_bLBtDown = false;
+		Invalidate();
 	}
 }
 
@@ -568,5 +548,6 @@ void CSkinMenuBar::TrackPopupMenu()
 
 	m_pSkin->ClientToScreen(pt);
 
+	m_bLBtDown = false;
 	m_wndMsgReceiver.TrackPopupSubMenu(pt.x, pt.y, m_pMenu->GetSubMenu(m_nSelSubMenu), m_pSkin);
 }
