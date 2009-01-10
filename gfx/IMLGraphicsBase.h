@@ -27,6 +27,12 @@ class CMLFont;
 #endif
 #endif
 
+#define DT_PREFIX_TEXT      0x02000000
+// input string:   "A&bc&&d"
+// DT_PREFIX_TEXT: "Abc&d"
+//                   -
+// normal:         "A&bc&&d"
+
 enum MLGRAPHICS_TYPE
 {
 	MGT_UNKNOWN,

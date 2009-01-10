@@ -20,7 +20,7 @@ void CMenuBarMsgHandler::PostTrackPopupMenu()
 	PostMessage(m_hWnd, WM_MB_TRACKMENU, 0, 0);
 }
 
-bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *pWnd)
+bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
 	ASSERT(pWnd);
 	ASSERT(hMenu);
@@ -38,10 +38,18 @@ bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *
 		ms_hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, MessageHookProc, 0, ::GetCurrentThreadId());
 	}
 
+	TPMPARAMS		tpmParam;
+
+	if (prcNotOverlap)
+	{
+		tpmParam.cbSize = sizeof(tpmParam);
+		tpmParam.rcExclude = *prcNotOverlap;
+	}
+
 	m_bMenuPopup = true;
 	m_pMenuBar->Invalidate();
 
-	::TrackPopupMenuEx(hMenu, TPM_LEFTALIGN, x, y, pWnd->GetHandle(), NULL);
+	::TrackPopupMenuEx(hMenu, TPM_LEFTALIGN, x, y, pWnd->GetHandle(), prcNotOverlap ? &tpmParam : NULL);
 
 	m_bMenuPopup = false;
 	m_pMenuBar->Invalidate();
@@ -164,7 +172,7 @@ CSkinMenuBar::CSkinMenuBar()
 {
 	m_wndMsgReceiver.m_pMenuBar = this;
 
-	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON | UO_MSG_WANT_ALL_KEYS;
+	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON | UO_MSG_WANT_MENU_KEY;
 
 	m_bLBtDown = false;
 	m_bHover = false;
@@ -209,6 +217,7 @@ void CSkinMenuBar::OnCreate()
 
 			if (m_pMenu->GetMenuItemInfo(i, item.strText, item.nID, item.bHasSubMenu, true))
 			{
+				item.chMenuKey = GetMenuKey(item.strText.c_str());
 				m_vSubMenus.push_back(item);
 			}
 		}
@@ -268,12 +277,12 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 
 		if (bOutlined)
 			pGraph->DrawTextOutlined(item.strText.c_str(), item.strText.size(), 
-				&rcItem, clrText, clrOutlined, DT_VCENTER | DT_CENTER);
+				&rcItem, clrText, clrOutlined, DT_VCENTER | DT_CENTER | DT_PREFIX_TEXT);
 		else
 		{
 			pGraph->SetTextColor(clrText);
 			pGraph->DrawText(item.strText.c_str(), item.strText.size(), 
-			&rcItem, DT_VCENTER | DT_CENTER);
+			&rcItem, DT_VCENTER | DT_CENTER | DT_PREFIX_TEXT);
 		}
 
 		x += m_vSubMenus[i].nWidth;
@@ -438,6 +447,22 @@ void CSkinMenuBar::OnKeyDown(UINT nChar, UINT nFlags)
 }
 
 
+bool CSkinMenuBar::OnMenuKey(UINT nChar, UINT nFlags)
+{
+	for (int i = 0; i < (int)m_vSubMenus.size(); i++)
+	{
+		if (m_vSubMenus[i].chMenuKey == nChar)
+		{
+			m_nSelSubMenu = i;
+			m_wndMsgReceiver.PostTrackPopupMenu();
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
 void CSkinMenuBar::OnSetFocus()
 {
 	// DBGLOG0(_T("OnSetFocus"));
@@ -482,6 +507,10 @@ BOOL CSkinMenuBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		GetColorValue(m_clrOutlinedPressed, szValue);
 		m_bOutlinedPressed = true;
 	}
+	else if (IsPropertyName(szProperty, _T("BgColorPressed")))
+		GetColorValue(m_clrBgPressed, szValue);
+	else if (IsPropertyName(szProperty, _T("BgPressedAlpha")))
+		m_clrBgPressed.setAlpha(_ttoi(szValue));
 	else
 		return FALSE;
 
@@ -542,12 +571,18 @@ void CSkinMenuBar::TrackPopupMenu()
 		m_pSkin->SetCaptureMouse(this);
 
 	CPoint	pt;
+	CRect	rc;
 
 	pt.x = GetItemX(m_nSelSubMenu);
 	pt.y = m_rcObj.bottom;
 
+	rc = m_rcObj;
+	rc.left = pt.x;
+	rc.right = rc.left + m_vSubMenus[m_nSelSubMenu].nWidth;
+	m_pSkin->ClientToScreen(rc);
+
 	m_pSkin->ClientToScreen(pt);
 
 	m_bLBtDown = false;
-	m_wndMsgReceiver.TrackPopupSubMenu(pt.x, pt.y, m_pMenu->GetSubMenu(m_nSelSubMenu), m_pSkin);
+	m_wndMsgReceiver.TrackPopupSubMenu(pt.x, pt.y, m_pMenu->GetSubMenu(m_nSelSubMenu), m_pSkin, &rc);
 }

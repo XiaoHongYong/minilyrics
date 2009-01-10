@@ -43,6 +43,7 @@ UINT GetColorValue(LPCSTR szColor, UINT nDefault);
 UINT GetColorValue(LPCWSTR szColor, UINT nDefault);
 void GetColorValue(MLColor &clr, LPCTSTR szColor);
 
+int GetMenuKey(LPCTSTR szText);
 
 //
 // Base interface of UIObject Notification data

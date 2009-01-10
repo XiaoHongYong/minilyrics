@@ -253,6 +253,24 @@ void CSkinContainer::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 }
 
 
+bool CSkinContainer::OnMenuKey(UINT nChar, UINT nFlags)
+{
+	for (int i = m_vUIObjs.size() - 1; i >= 0; i--)
+	{
+		CUIObject	*pObj = m_vUIObjs[i];
+		assert(pObj);
+
+		if (pObj->WantMsgMenuKey() && pObj->IsVisible())
+		{
+			if (pObj->OnMenuKey(nChar, nFlags))
+				return true;
+		}
+	}
+
+	return false;
+}
+
+
 void CSkinContainer::OnSize(int cx, int cy)
 {
 	RecalculateSizePos();

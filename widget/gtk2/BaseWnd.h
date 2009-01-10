@@ -199,11 +199,11 @@ public:
 	bool SetCapture();
 	void ReleaseCapture();
 
-	void ScreenToClient(CRect &rc);
-	void ClientToScreen(CRect &rc);
+	void ScreenToClient(RECT &rc);
+	void ClientToScreen(RECT &rc);
 
-	void ScreenToClient(CPoint &pt);
-	void ClientToScreen(CPoint &pt);
+	void ScreenToClient(POINT &pt);
+	void ClientToScreen(POINT &pt);
 
 	bool GetWindowRect(RECT* lpRect);
 	bool GetClientRect(RECT* lpRect);

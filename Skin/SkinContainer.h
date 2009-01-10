@@ -27,6 +27,8 @@ public:
 	virtual bool OnRButtonDown(UINT nFlags, CPoint point);
 	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 
+	virtual bool OnMenuKey(UINT nChar, UINT nFlags);
+
 	virtual void OnSize(int cx, int cy);
 
 	void Draw(CRawGraph *pGraph);

@@ -234,7 +234,7 @@ BOOL CBaseWnd::ShowWindow(int nCmdShow)
 	return true;
 }
 
-void CBaseWnd::ScreenToClient(CRect &rc)
+void CBaseWnd::ScreenToClient(RECT &rc)
 {
 	RECT	rcScr;
 
@@ -246,7 +246,7 @@ void CBaseWnd::ScreenToClient(CRect &rc)
 	rc.bottom -= rcScr.top;
 }
 
-void CBaseWnd::ClientToScreen(CRect &rc)
+void CBaseWnd::ClientToScreen(RECT &rc)
 {
 	RECT	rcScr;
 
@@ -258,7 +258,7 @@ void CBaseWnd::ClientToScreen(CRect &rc)
 	rc.bottom += rcScr.top;
 }
 
-void CBaseWnd::ScreenToClient(CPoint &pt)
+void CBaseWnd::ScreenToClient(POINT &pt)
 {
 	RECT	rcScr;
 
@@ -268,7 +268,7 @@ void CBaseWnd::ScreenToClient(CPoint &pt)
 	pt.y -= rcScr.top;
 }
 
-void CBaseWnd::ClientToScreen(CPoint &pt)
+void CBaseWnd::ClientToScreen(POINT &pt)
 {
 	RECT	rcScr;
 

@@ -112,6 +112,7 @@ enum
 	UO_MSG_WANT_KEY			= 1 << 3,
 	UO_MSG_WANT_ALL_KEYS	= 1 << 4,
 	UO_MSG_WANT_MOUSEWHEEL	= 1 << 5,
+	UO_MSG_WANT_MENU_KEY	= 1 << 6,
 	UO_MSG_WANT_ALL			= 0xFFFFFFFF
 };
 
@@ -181,6 +182,7 @@ public:
 	virtual void OnCreate();
 	virtual void OnKeyUp(UINT nChar, UINT nFlags) { }
 	virtual void OnKeyDown(UINT nChar, UINT nFlags) { }
+	virtual bool OnMenuKey(UINT nChar, UINT nFlags) { return false; }
 	virtual void OnChar(UINT nChar) { }
 	virtual bool OnRButtonUp(UINT nFlags, CPoint point) { return true; }
 	virtual bool OnRButtonDown(UINT nFlags, CPoint point) { return true; }
@@ -209,6 +211,7 @@ public:
 	inline bool WantMsgRButton()	{ return (m_nMsgWant & UO_MSG_WANT_RBUTTON) != 0; }
 	inline bool WantMsgKey()	{ return (m_nMsgWant & (UO_MSG_WANT_KEY | UO_MSG_WANT_ALL_KEYS)) != 0; }
 	inline bool WantMsgAllKeys()	{ return (m_nMsgWant & UO_MSG_WANT_ALL_KEYS) != 0; }
+	inline bool WantMsgMenuKey()	{ return (m_nMsgWant & UO_MSG_WANT_MENU_KEY) != 0; }
 
 	bool IsVisible();
 	void SetVisible(bool bVisible);

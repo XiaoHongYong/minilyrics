@@ -26,7 +26,7 @@ public:
 
 	void PostTrackPopupMenu();
 
-	bool TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *pWnd);
+	bool TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *pWnd, RECT *prcNotOverlap);
 
 	bool IsMenuPopuped() { return m_bMenuPopup; }
 
@@ -77,6 +77,8 @@ public:
 
 	void OnKeyDown(UINT nChar, UINT nFlags);
 
+	bool OnMenuKey(UINT nChar, UINT nFlags);
+
 	void OnSetFocus();
 	void OnKillFocus();
 
@@ -97,6 +99,7 @@ protected:
 		tstring			strText;
 		int				nWidth;
 		bool			bHasSubMenu;
+		int				chMenuKey;
 		UINT			nID;		// If bHasSubMenu is false, this memember is available.
 	};
 	typedef vector<SubMenu>		VecSubMenus;
