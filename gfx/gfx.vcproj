@@ -1303,6 +1303,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\ImageBuffBlt.h"
+				>
+			</File>
+			<File
 				RelativePath="win32\ImageFile.h"
 				>
 			</File>
