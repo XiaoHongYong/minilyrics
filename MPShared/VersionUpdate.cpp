@@ -11,10 +11,11 @@
 #include <time.h>
 #endif
 
-#define LYRICS_URL_PACK_UNKNOWN			0
-#define LYRICS_URL_PACK_SENDTODOWNLOAD	1
-#define LYRICS_URL_PACK_UPDATED			2
-#define LYRICS_URL_PACK_UPDATE_FAILED	3
+#ifdef _MPLAYER
+#define SOFTWARE_INFO		_T("zikiplayerinfo")
+#else
+#define SOFTWARE_INFO		_T("minilyricsinfo")
+#endif
 
 CVersionInfo::CVersionInfo()
 {
@@ -29,36 +30,17 @@ CVersionInfo::CVersionInfo()
 // mlver.xml文件的格式
 
 //<?xml version="1.0" encoding="gb2312"?>
-//<minilyricsinfo>
+//<SOFTWARE_INFO>
 //  <curversion version="1.3" upgradedate="2002-9-12" obsoletever="1.4.3" TrDays="30">
 //    <feature>
 //    </feature>
 //  </curversion>
-//</minilyricsinfo>
-
-//  <ad usedefault="1" upgradedate="2002-9-12">
-//    <img width="128" height="20" url="http://www.minilyrics.com/ad/2002-9-12/11.gif" link="http://www.minilyrics.com/bbs/" />
-//  </ad>
-//
-//BOOL VersionFromStr(LPCTSTR szVersion, int &nVerMajor, int &nVerMinor, int &nVerBuild)
-//{
-//	int		nRet;
-//	nRet = _stscanf(szVersion, "%d.%d.%d", &nVerMajor, &nVerMinor, &nVerBuild);
-//	if (nRet == 2)
-//		nVerBuild = 0;
-//	else if (nRet <= 1)
-//		return FALSE;
-//
-//	return TRUE;
-//}
+//</SOFTWARE_INFO>
 
 int CVersionInfo::FromXML(SXNode *pNodeVer)
 {
-	if (_tcscmp(pNodeVer->strName.c_str(), _T("minilyricsinfo")) != 0)
-	{
-		// 非 minilyricsinfo 文件
+	if (_tcscmp(pNodeVer->strName.c_str(), SOFTWARE_INFO) != 0)
 		return ERR_FALSE;
-	}
 
 	SXNode		*pNode;
 
@@ -255,7 +237,7 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
  			COnlineMsgWnd		*pWnd = NULL;
  			{
  				pWnd = new COnlineMsgWnd;
- 				pWnd->Create(CStrPrintf(_T("%s - %s"), TOLOCAL(_T("MiniLyrics")), TOLOCAL(_T("New version notice"))).c_str(),
+ 				pWnd->Create(CStrPrintf(_T("%s - %s"), TOLOCAL(SZ_APP_NAME), TOLOCAL(_T("New version notice"))).c_str(),
 					verInfo.nPageWidth, verInfo.nPageHeight, verInfo.strNewVerDlPage.c_str());
  				pWnd->ShowWindow(SW_SHOW);
  			}

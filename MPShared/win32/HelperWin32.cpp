@@ -58,7 +58,7 @@ void MLHtmlHelper(CBaseWnd *pWnd, LPCTSTR szFile)
 	if (!HtmlHelpOur(GetDesktopWindow(), szHelp, HH_DISPLAY_TOPIC, NULL))
 	{
 		GetWorkingFolder(szHelp);
-		_tcscat(szHelp, _T("MiniLyrics.chm"));
+		_tcscat(szHelp, _T("help.chm"));
 		ShellExecute(pWnd->GetHandle(), _T("open"), szHelp, NULL, NULL, SW_SHOWMAXIMIZED);
 	}
 }

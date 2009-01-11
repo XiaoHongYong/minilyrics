@@ -555,10 +555,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 		break;
 #endif
 	case CMD_EDIT_HELP:
-		MLHtmlHelper(m_pSkinWnd, _T("MiniLyrics.chm::/how-to-editlyrics.htm"));
+		MLHtmlHelper(m_pSkinWnd, _T("help.chm::/how-to-editlyrics.htm"));
 		break;
 	case CMD_HELP:
-		MLHtmlHelper(m_pSkinWnd, _T("MiniLyrics.chm::/getstarted.htm#downlyrics"));
+		MLHtmlHelper(m_pSkinWnd, _T("help.chm::/getstarted.htm#downlyrics"));
 		break;
 	case CMD_PAUSE:
 		if (g_Player.GetPlayerState() == PS_PLAYING)

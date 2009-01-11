@@ -10,6 +10,11 @@
 
 class CSkinMenuBar;
 
+//
+// Win32 only, responsible for Hooking mouse and keyboard message, 
+// then forward to CSkinMenuBar, CSkinMenuBar will decide when to popup 
+// the next or prev sub menu.
+//
 class CMenuBarMsgHandler : public CBaseWnd
 {
 public:
@@ -71,7 +76,6 @@ public:
 
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
-	bool OnLButtonDblClk(UINT nFlags, CPoint point);
 
 	bool OnMouseMove(UINT nFlags, CPoint point);
 
@@ -99,14 +103,11 @@ protected:
 		tstring			strText;
 		int				nWidth;
 		bool			bHasSubMenu;
-		int				chMenuKey;
-		UINT			nID;		// If bHasSubMenu is false, this memember is available.
+		int				chMenuKey;	// Menu Key: Alt + VK_X to popup associated menu.
+		UINT			nID;		// If bHasSubMenu is false, this memember will be available.
 	};
 	typedef vector<SubMenu>		VecSubMenus;
 
-	// CSFImage		m_imgNormal, m_imgHover, m_imgSel;
-	// tstring			m_strImgNormal, m_strImgHover, m_strImgSel;
-	// BlendPixMode	m_bpm;
 	CSkinFontProperty	m_font;
 	MLColor				m_clrHover, m_clrOutlinedHover, m_clrPressed, m_clrOutlinedPressed;
 	MLColor				m_clrBgPressed;

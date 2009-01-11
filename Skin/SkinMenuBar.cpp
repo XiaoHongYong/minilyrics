@@ -7,9 +7,9 @@
 #include "SkinMenuBar.h"
 
 HHOOK	CMenuBarMsgHandler::ms_hMsgHook = NULL;
-bool		CMenuBarMsgHandler::ms_bPrimaryMenu = true;
-bool		CMenuBarMsgHandler::ms_bSubMenuItem = false;
-HWND		CMenuBarMsgHandler::ms_hWndMsgReceiver = 0;
+bool	CMenuBarMsgHandler::ms_bPrimaryMenu = true;
+bool	CMenuBarMsgHandler::ms_bSubMenuItem = false;
+HWND	CMenuBarMsgHandler::ms_hWndMsgReceiver = 0;
 HMENU	CMenuBarMsgHandler::ms_hMenuPopup = NULL;
 
 void CMenuBarMsgHandler::PostTrackPopupMenu()
@@ -335,15 +335,6 @@ bool CSkinMenuBar::OnLButtonUp(UINT nFlags, CPoint point)
 }
 
 
-bool CSkinMenuBar::OnLButtonDblClk(UINT nFlags, CPoint point)
-{
-	if (HitTestSubMenu(point) == -1)
-		return false;
-
-	return true;
-}
-
-
 bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
 {
 	int			nSelSubMenuNew;
@@ -454,7 +445,10 @@ bool CSkinMenuBar::OnMenuKey(UINT nChar, UINT nFlags)
 		if (m_vSubMenus[i].chMenuKey == nChar)
 		{
 			m_nSelSubMenu = i;
-			m_wndMsgReceiver.PostTrackPopupMenu();
+			if (m_vSubMenus[i].bHasSubMenu)
+				m_wndMsgReceiver.PostTrackPopupMenu();
+			else
+				m_pSkin->OnCommand(m_vSubMenus[m_nSelSubMenu].nID, 0);
 			return true;
 		}
 	}
@@ -571,7 +565,7 @@ void CSkinMenuBar::TrackPopupMenu()
 		m_pSkin->SetCaptureMouse(this);
 
 	CPoint	pt;
-	CRect	rc;
+	CRect	rc, rcMonitor;
 
 	pt.x = GetItemX(m_nSelSubMenu);
 	pt.y = m_rcObj.bottom;
@@ -582,6 +576,13 @@ void CSkinMenuBar::TrackPopupMenu()
 	m_pSkin->ClientToScreen(rc);
 
 	m_pSkin->ClientToScreen(pt);
+
+	GetMonitorRestrictRect(rc, rcMonitor);
+	if (rc.left < rcMonitor.left)
+	{
+		rc.right = rcMonitor.left + rc.Width();
+		pt.x = rc.left = rcMonitor.left;
+	}
 
 	m_bLBtDown = false;
 	m_wndMsgReceiver.TrackPopupSubMenu(pt.x, pt.y, m_pMenu->GetSubMenu(m_nSelSubMenu), m_pSkin, &rc);
