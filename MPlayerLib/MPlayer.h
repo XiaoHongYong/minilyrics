@@ -263,7 +263,7 @@ protected:
 	PLAYER_STATE		m_state;
 	static CMPlayer		*m_spPlayer;
 
-	CMPluginManagerAgent m_pluginMgr;
+	CMPluginManagerAgent m_pluginMgrAgent;
 
 	Mutex				m_mutexDSP;
 	CMPAutoPtr<IDSP>	m_pDsp;

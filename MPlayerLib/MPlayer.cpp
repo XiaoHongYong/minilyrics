@@ -587,11 +587,11 @@ LPCXSTR CMPlayer::MediaAttributeName(MediaAttribute mediaAttri)
 
 MLRESULT CMPlayer::SetPluginManager(IMPluginManager *pPluginMgr)
 {
-	if (m_pluginMgr.m_pluginMgr)
-		m_pluginMgr.m_pluginMgr.Release();
+	if (m_pluginMgrAgent.m_pluginMgr)
+		m_pluginMgrAgent.m_pluginMgr.Release();
 
-	m_pluginMgr.m_pluginMgr = pPluginMgr;
-	m_pluginMgr.DetectPlugins();
+	m_pluginMgrAgent.m_pluginMgr = pPluginMgr;
+	m_pluginMgrAgent.DetectPlugins();
 
 	//
 	// Set DSP
@@ -599,7 +599,7 @@ MLRESULT CMPlayer::SetPluginManager(IMPluginManager *pPluginMgr)
 	m_mutexDSP.Acquire();
 	if (m_pDsp)
 		m_pDsp.Release();
-	if (m_pluginMgr.GetActiveDSP(&m_pDsp) == ERR_OK)
+	if (m_pluginMgrAgent.GetActiveDSP(&m_pDsp) == ERR_OK)
 		m_pDsp->Init(this);
 	m_mutexDSP.Release();
 
@@ -623,7 +623,7 @@ MLRESULT CMPlayer::SetPluginManager(IMPluginManager *pPluginMgr)
 
 	// Register new vis
 	CVector		vVis;
-	m_pluginMgr.GetActiveVis(&vVis);
+	m_pluginMgrAgent.GetActiveVis(&vVis);
 	for (int i = 0; i < vVis.size(); i++)
 	{
 		IVis	*pVis = (IVis*)vVis.at(i);
@@ -1202,7 +1202,7 @@ MLRESULT CMPlayer::MakeOutputReadyForDecode()
 
 	if (!m_pMOAgent->m_pMediaOutput)
 	{
-		nRet = m_pluginMgr.NewOutput(&(m_pMOAgent->m_pMediaOutput));
+		nRet = m_pluginMgrAgent.NewOutput(&(m_pMOAgent->m_pMediaOutput));
 		if (nRet != ERR_OK)
 			return nRet;
 
@@ -1228,11 +1228,11 @@ MLRESULT CMPlayer::LoadMediaTagInfo(IMedia *pMedia, bool bForceReload)
 	CMPAutoPtr<IMediaDecode>	pDecode;
 	CMPAutoPtr<IMediaInput>		pInput;
 
-	nRet = m_pluginMgr.NewInput(str.c_str(), &pInput);
+	nRet = m_pluginMgrAgent.NewInput(str.c_str(), &pInput);
 	if (nRet != ERR_OK)
 		return nRet;
 
-	nRet = m_pluginMgr.NewDecoder(pInput, &pDecode);
+	nRet = m_pluginMgrAgent.NewDecoder(pInput, &pDecode);
 	if (nRet != ERR_OK)
 		return nRet;
 
