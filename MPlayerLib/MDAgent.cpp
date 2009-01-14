@@ -166,11 +166,11 @@ MLRESULT CMDAgent::DoDecode(IMedia *pMedia)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	nRet = m_pPlayer->m_pluginMgr.NewInput(strMedia.c_str(), &pInput);
+	nRet = m_pPlayer->m_pluginMgrAgent.NewInput(strMedia.c_str(), &pInput);
 	if (nRet != ERR_OK)
 		return nRet;
 
-	nRet = m_pPlayer->m_pluginMgr.NewDecoder(pInput, &pDecoder);
+	nRet = m_pPlayer->m_pluginMgrAgent.NewDecoder(pInput, &pDecoder);
 	if (nRet != ERR_OK)
 		return nRet;
 
