@@ -35,7 +35,7 @@ public:
 
 	bool IsEmpty() { return m_strClassName.empty(); }
 
-	CUIObject *FromClipboard(CSkin *pSkin)
+	CUIObject *FromClipboard(CSkinWnd *pSkin)
 	{
 		CUIObject	*pObj;
 		V_Str		vStr;

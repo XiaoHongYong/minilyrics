@@ -312,7 +312,7 @@ const MLColor &CSkinFontProperty::GetColorOutlined()
 }
 
 
-void CSkinFontProperty::OnCreate(CSkin *pSkin)
+void CSkinFontProperty::OnCreate(CSkinWnd *pSkin)
 {
 	m_pSkin = pSkin;
 

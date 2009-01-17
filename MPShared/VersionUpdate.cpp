@@ -232,7 +232,7 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
 	if (verCur < verInfo.verNew)
 	{
 #ifdef _WIN32_DESKTOP
-		if (!g_bEngEdition)
+		if (!g_bEngEdition && g_LicenseType != LT_REGISTERED)
 		{
  			COnlineMsgWnd		*pWnd = NULL;
  			{

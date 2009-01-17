@@ -31,7 +31,7 @@ int CMPFloatingLyrWnd::Create()
 	m_rcReal.right = m_rcReal.left + g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("wnd_width"), m_rcReal.Width());
 	m_rcReal.bottom = m_rcReal.top + g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("wnd_height"), m_rcReal.Height());
 
-	CSkin::Create(_T("FloatingLyr"), _T("Floating Lyrics"), g_mpApp.GetSkinFactory(), SZ_SECT_FLOATING_LYR);
+	CSkinWnd::Create(_T("FloatingLyr"), _T("Floating Lyrics"), g_mpApp.GetSkinFactory(), SZ_SECT_FLOATING_LYR);
 
 	m_cursor.LoadCursorFromRes(IDC_MLHAND);
 

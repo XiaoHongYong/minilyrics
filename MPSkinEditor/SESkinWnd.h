@@ -25,7 +25,7 @@ interface ISESkinNotify
 	virtual void TrackPopupMenu(HMENU hMenu, int x, int y) = 0;
 };
 
-class CSESkinWnd : public CSkin  
+class CSESkinWnd : public CSkinWnd  
 {
 public:
 	CSESkinWnd();

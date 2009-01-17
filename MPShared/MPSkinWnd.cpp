@@ -568,7 +568,7 @@ CMPSkinWnd::~CMPSkinWnd()
 
 void CMPSkinWnd::OnActivate(bool bActived)
 {
-	CSkin::OnActivate(bActived);
+	CSkinWnd::OnActivate(bActived);
 
 	if (bActived && !IsIconic())
 		g_mpApp.GetSkinFactory()->OnSkinWndActivate(this);
@@ -576,7 +576,7 @@ void CMPSkinWnd::OnActivate(bool bActived)
 
 bool CMPSkinWnd::OnCreate()
 {
-	if (!CSkin::OnCreate())
+	if (!CSkinWnd::OnCreate())
 		return false;
 
 #ifdef _WIN32_DESKTOP
@@ -595,7 +595,7 @@ void CMPSkinWnd::OnDestroy()
 	if (m_bMainAppWnd)
 		g_mpApp.GetSkinFactory()->SaveOpenedSkinWndNames();
 
-	CSkin::OnDestroy();
+	CSkinWnd::OnDestroy();
 }
 
 void CMPSkinWnd::OnEvent(const IEvent *pEvent)
@@ -721,7 +721,7 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 	}
 #endif
 
-	CSkin::OnCommand(uID, nNotifyCode);
+	CSkinWnd::OnCommand(uID, nNotifyCode);
 
 	LIST_SKINCMDHANDLER::iterator	it, itEnd;
 
@@ -789,12 +789,12 @@ void CMPSkinWnd::OnUIObjNotify(IUIObjNotify *pNotify)
 
 void CMPSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 {
-	CSkin::OnKeyDown(nChar, nFlags);
+	CSkinWnd::OnKeyDown(nChar, nFlags);
 }
 
 void CMPSkinWnd::OnSizeModeChanged(WndSizeMode sizeMode)
 {
-	CSkin::OnSizeModeChanged(sizeMode);
+	CSkinWnd::OnSizeModeChanged(sizeMode);
 
 	// fix the bug auto width with lyrics when the windows is Minimized.
 	if (sizeMode == WndSizeMode_Normal)
@@ -866,7 +866,7 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 
 void CMPSkinWnd::OnSkinLoaded()
 {
-	CSkin::OnSkinLoaded();
+	CSkinWnd::OnSkinLoaded();
 
 	// load new skin command handler
 	vector<tstring>		vHandler;
@@ -974,7 +974,7 @@ void CMPSkinWnd::OnLoadWndSizePos()
 
 void CMPSkinWnd::OnAddUIObj(CUIObject *pObj)
 {
-	CSkin::OnAddUIObj(pObj);
+	CSkinWnd::OnAddUIObj(pObj);
 
 	int			nID = pObj->GetID();
 	if (nID == CMD_PLAYPAUSE)
@@ -1120,7 +1120,7 @@ void CMPSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 		}
 	}
 
-	CSkin::OnRemoveUIObj(pObj);
+	CSkinWnd::OnRemoveUIObj(pObj);
 }
 
 BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -1138,7 +1138,7 @@ BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_strLyrDisplayStylePropName = szValue;
 	}
-	else if (CSkin::SetProperty(szProperty, szValue))
+	else if (CSkinWnd::SetProperty(szProperty, szValue))
 	{
 		if (m_bSkinOpened && IsPropertyName(szProperty, _T("BgColor")))
 		{
@@ -1161,7 +1161,7 @@ void CMPSkinWnd::CloseSkin()
 		SaveWndPos();
 	}
 
-	CSkin::CloseSkin();
+	CSkinWnd::CloseSkin();
 
 	LIST_SKINCMDHANDLER::iterator	it, itEnd;
 
@@ -1511,5 +1511,5 @@ LRESULT CMPSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	return CSkin::WndProc(message, wParam, lParam);
+	return CSkinWnd::WndProc(message, wParam, lParam);
 }

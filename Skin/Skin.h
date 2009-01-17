@@ -1,6 +1,6 @@
 /********************************************************************
 	Created  :	2001/07/06
-	FileName :	Skin.h
+	FileName :	SkinWnd.h
 	Author   :	xhy
 	
 	Purpose  :	
@@ -11,7 +11,7 @@
 
 #pragma once
 
-class CSkin;
+class CSkinWnd;
 class CSkinFactory;
 class CSkinContainer;
 
@@ -84,15 +84,15 @@ public:
 	virtual bool GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked) = 0;
 };
 
-class CSkin :
+class CSkinWnd :
 	public CCommander,
 	public CBaseWnd,
 	public ISkinWndDragHost,
 	public IUICheckStatus
 {
 public:
-	CSkin();
-	virtual ~CSkin();
+	CSkinWnd();
+	virtual ~CSkinWnd();
 
 public:
 	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName);
@@ -350,7 +350,7 @@ protected:
 	bool			m_bWindowsAppearance;
 
  	// skin region
-	bool			m_bUseRgn;		// Skin窗口是否使用region
+	bool			m_bUseRgn;		// SkinWnd 是否使用region
 	tstring			m_strRgn;		// 使用的rgn文件名
 	CSkinRgn		m_rgnSkin;		// 当使用region时，它代表窗口的区域
 	CRect			m_rcBoundBox;	// 当使用region时，它是区域m_rgnWnd的边框

@@ -92,7 +92,7 @@ void CSESkinFactory::Quit()
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkin = *it;
+		CSkinWnd	*pSkin = *it;
 		if (!strOpenedSkinWnds.empty())
 			strOpenedSkinWnds += _T(",");
 		strOpenedSkinWnds += pSkin->GetSkinWndName();
@@ -103,7 +103,7 @@ void CSESkinFactory::Quit()
 	Close();
 }
 
-CUIObject *CSESkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
+CUIObject *CSESkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 {
 	CUIObject		*pObj = NULL;
 	CSESkinWnd		*pSESkinWnd;
@@ -215,7 +215,7 @@ CUIObject *CSESkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
 }
 /*
 
-CUIObject *CSESkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
+CUIObject *CSESkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 {
 	CUIObject		*pObj;
 	CUIEditObject	*pObjEdit = NULL;
@@ -287,7 +287,7 @@ CUIObject *CSESkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
 }
 */
 
-CSkin *CSESkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
+CSkinWnd *CSESkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
 {
 	return new CSESkinWnd();
 }
@@ -319,7 +319,7 @@ void CSESkinFactory::OnLanguageChanged()
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pWnd = *it;
+		CSkinWnd	*pWnd = *it;
 		pWnd->OnLanguageChanged();
 	}
 }

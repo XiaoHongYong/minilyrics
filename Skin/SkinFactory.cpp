@@ -726,7 +726,7 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	}
 	else
 	{
-		CSkin *pSkin = m_listSkinWnds.front();
+		CSkinWnd *pSkin = m_listSkinWnds.front();
 		nRet = pSkin->OpenSkin(strSkinWndName.c_str());
 		if (nRet != ERR_OK)
 			return nRet;
@@ -740,7 +740,7 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	{
 		if (n > nReloaded)
 		{
-			CSkin	*pSkinWnd = *it;
+			CSkinWnd	*pSkinWnd = *it;
 			nRet = pSkinWnd->OpenDefaultSkin();
 			if (nRet != ERR_OK)
 			{
@@ -756,7 +756,7 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 
 	for (it = listToBeDestroyed.begin(); it != listToBeDestroyed.end(); ++it)
 	{
-		CSkin	*pSkinWnd = *it;
+		CSkinWnd	*pSkinWnd = *it;
 		pSkinWnd->Destroy();
 		// delete pSkinWnd;
 	}
@@ -770,7 +770,7 @@ void CSkinFactory::GetWndDragAutoCloseTo(vector<CBaseWnd *> &vWnd)
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkinWnd = *it;
+		CSkinWnd	*pSkinWnd = *it;
 		vWnd.push_back(pSkinWnd);
 	}
 }
@@ -781,7 +781,7 @@ void CSkinFactory::GetWndDragTrackMove(vector<CBaseWnd *> &vWnd)
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkinWnd = *it;
+		CSkinWnd	*pSkinWnd = *it;
 		vWnd.push_back(pSkinWnd);
 	}
 }
@@ -855,7 +855,7 @@ void CSkinFactory::Close()
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkin = *it;
+		CSkinWnd	*pSkin = *it;
 		// PostMessage(pSkin->GetHandle(), WM_CLOSE, 0, 0);
 		pSkin->CloseSkin();
 		// delete pSkin;
@@ -870,18 +870,18 @@ void CSkinFactory::Close()
 	m_nNextMenuId = MENU_ID_CUSTOM_BASE;
 }
 
-CSkin *CSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
+CSkinWnd *CSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
 {
-	return new CSkin;
+	return new CSkinWnd;
 }
 
-CSkin *CSkinFactory::FindSkinWnd(LPCTSTR szSkinWndName)
+CSkinWnd *CSkinFactory::FindSkinWnd(LPCTSTR szSkinWndName)
 {
 	LIST_SKINWNDS::iterator	it, itEnd;
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkinWnd = *it;
+		CSkinWnd	*pSkinWnd = *it;
 		if (_tcsicmp(szSkinWndName, pSkinWnd->GetSkinWndName()) == 0)
 		{
 			return pSkinWnd;
@@ -891,9 +891,9 @@ CSkin *CSkinFactory::FindSkinWnd(LPCTSTR szSkinWndName)
 	return NULL;
 }
 
-int CSkinFactory::ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin)
+int CSkinFactory::ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin)
 {
-	CSkin	*pSkinWnd = FindSkinWnd(szSkinWndName);
+	CSkinWnd	*pSkinWnd = FindSkinWnd(szSkinWndName);
 	if (pSkinWnd)
 	{
 		if (pSkinWnd->IsVisible())
@@ -909,9 +909,9 @@ int CSkinFactory::ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCT
 	return CreateSkinWnd(bMainWnd, szClassName, szCaption, szSkinWndName, ppSkin);
 }
 
-int CSkinFactory::OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin)
+int CSkinFactory::OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin)
 {
-	CSkin	*pSkinWnd = FindSkinWnd(szSkinWndName);
+	CSkinWnd	*pSkinWnd = FindSkinWnd(szSkinWndName);
 	if (pSkinWnd)
 	{
 		pSkinWnd->Destroy();
@@ -921,10 +921,10 @@ int CSkinFactory::OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR
 	return CreateSkinWnd(bMainWnd, szClassName, szCaption, szSkinWndName, ppSkin);
 }
 
-int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin)
+int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin)
 {
 	int		nRet;
-	CSkin	*pSkin;
+	CSkinWnd	*pSkin;
 
 	SXNode			*pNode;
 
@@ -956,11 +956,11 @@ int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCa
 	return nRet;
 }
 
-int CSkinFactory::CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndNameDef, CSkin **ppSkin)
+int CSkinFactory::CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndNameDef, CSkinWnd **ppSkin)
 {
 	int			nRet;
 	tstring		strSkinWndName;
-	CSkin		*pSkinWnd;
+	CSkinWnd		*pSkinWnd;
 
 	if (ppSkin)
 		*ppSkin = NULL;
@@ -983,14 +983,14 @@ int CSkinFactory::CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCT
 	return nRet;
 }
 
-void CSkinFactory::OnSkinWndDestory(CSkin *pSkinWnd)
+void CSkinFactory::OnSkinWndDestory(CSkinWnd *pSkinWnd)
 {
 	LIST_SKINWNDS::iterator	it, itEnd;
 
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkin = *it;
+		CSkinWnd	*pSkin = *it;
 		if (pSkin == pSkinWnd)
 		{
 			m_listSkinWnds.erase(it);
@@ -999,7 +999,7 @@ void CSkinFactory::OnSkinWndDestory(CSkin *pSkinWnd)
 	}
 }
 
-void CSkinFactory::OnMainSkinWndDestory(CSkin *pSkinWnd)
+void CSkinFactory::OnMainSkinWndDestory(CSkinWnd *pSkinWnd)
 {
 #ifdef _WIN32
 	PostQuitMessage(0);
@@ -1012,7 +1012,7 @@ SXNode *CSkinFactory::GetSkinWndNode(LPCTSTR szSkinWndName)
 	return m_skinFile.GetSkinWndNode(szSkinWndName);
 }
 
-CUIObject *CSkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
+CUIObject *CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 {
 	CUIObject *pObj = NULL;
 
@@ -1191,7 +1191,7 @@ bool CSkinFactory::EnumAllSkins(vector<tstring> &vSkins)
 	return true;
 }
 
-CSkin *CSkinFactory::GetMainWnd()
+CSkinWnd *CSkinFactory::GetMainWnd()
 {
 	if (!m_listSkinWnds.empty())
 		return m_listSkinWnds.front();
@@ -1199,7 +1199,7 @@ CSkin *CSkinFactory::GetMainWnd()
 		return NULL;
 }
 
-int CSkinFactory::OnDynamicCmd(LPCTSTR szDynCmd, CSkin *pSkinWnd, CUIObject *pUIObj)
+int CSkinFactory::OnDynamicCmd(LPCTSTR szDynCmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj)
 {
 	V_Str		vCmds;
 	int			nRet = ERR_NOT_FOUND;
@@ -1221,7 +1221,7 @@ int CSkinFactory::OnDynamicCmd(LPCTSTR szDynCmd, CSkin *pSkinWnd, CUIObject *pUI
 	return nRet;
 }
 
-int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkin *pSkinWnd, CUIObject *pUIObj)
+int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj)
 {
 	if (cmd.strFunction == _T("change_skin_wnd"))
 		return pSkinWnd->OpenSkin(cmd.strParam.c_str());
@@ -1229,7 +1229,7 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkin *pSki
 		return ActiveOrCreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());
 	else if (cmd.strFunction == _T("openclose_skin_wnd"))
 	{
-		CSkin	*pSkinWnd = FindSkinWnd(cmd.strParam.c_str());
+		CSkinWnd	*pSkinWnd = FindSkinWnd(cmd.strParam.c_str());
 		if (pSkinWnd)
 		{
 			if (pSkinWnd->IsIconic())
@@ -1242,7 +1242,7 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkin *pSki
 	}
 	else if (cmd.strFunction == _T("is_skin_wnd_visible"))
 	{
-		CSkin	*pSkinWnd = FindSkinWnd(cmd.strParam.c_str());
+		CSkinWnd	*pSkinWnd = FindSkinWnd(cmd.strParam.c_str());
 		if (pSkinWnd)
 			return ERR_OK;
 		else
@@ -1287,7 +1287,7 @@ void CSkinFactory::AdjustHue(float hue, float saturation, float luminance)
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkin = *it;
+		CSkinWnd	*pSkin = *it;
 		pSkin->OnAdjustHue(hue, saturation, luminance);
 		pSkin->InvalidateRect();
 	}

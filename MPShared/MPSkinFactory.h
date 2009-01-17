@@ -27,19 +27,19 @@ public:
 
 	virtual void Quit();
 
-	virtual CUIObject * CreateUIObject(CSkin *pSkin, LPCTSTR szClassName);
+	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
 
-	virtual CSkin *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
+	virtual CSkinWnd *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
 
-	virtual bool LoadMenu(CSkin *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu);
+	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu);
 
-	virtual CSkinMenu *LoadPresetMenu(CSkin *pWnd, LPCTSTR szMenu);
+	virtual CSkinMenu *LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu);
 
 	virtual void OnLanguageChanged();
 
-	virtual void OnSkinWndActivate(CSkin *pWnd);
+	virtual void OnSkinWndActivate(CSkinWnd *pWnd);
 
-	virtual void OnMainSkinWndDestory(CSkin *pSkinWnd);
+	virtual void OnMainSkinWndDestory(CSkinWnd *pSkinWnd);
 
 	virtual void SaveOpenedSkinWndNames();
 
@@ -77,7 +77,7 @@ protected:
 #endif
 
 protected:
-	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkin *pSkinWnd, CUIObject *pUIObj);
+	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj);
 
 	SXNode *GetMenuOfMenus(SXNode *pNodeMenus, LPCTSTR szMenuName);
 

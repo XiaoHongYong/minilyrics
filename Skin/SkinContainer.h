@@ -90,7 +90,7 @@ protected:
 	virtual bool HasXMLChild();
 	virtual void OnToXMLChild(CXMLWriter &xmlStream);
 
-	friend class CSkin;
+	friend class CSkinWnd;
 	friend class CUIObjectIterator;
 
 protected:

@@ -5,7 +5,7 @@
 #if !defined(AFX_SKINFACTORY_H__A24C811F_2487_4750_8378_C7876023C863__INCLUDED_)
 #define AFX_SKINFACTORY_H__A24C811F_2487_4750_8378_C7876023C863__INCLUDED_
 
-class CSkin;
+class CSkinWnd;
 class CMLMenu;
 
 #include "SkinResMgr.h"
@@ -151,24 +151,24 @@ public:
 	virtual int SaveSkinFile(LPCTSTR szFile);
 	virtual void Close();
 
-	CSkin *FindSkinWnd(LPCTSTR szSkinWndName);
+	CSkinWnd *FindSkinWnd(LPCTSTR szSkinWndName);
 
-	virtual int ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin = NULL);
-	virtual int OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin = NULL);
-	virtual int CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkin **ppSkin = NULL);
-	virtual int CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndNameDef, CSkin **ppSkin = NULL);
+	virtual int ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
+	virtual int OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
+	virtual int CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
+	virtual int CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndNameDef, CSkinWnd **ppSkin = NULL);
 
-	virtual void OnSkinWndDestory(CSkin *pSkinWnd);
+	virtual void OnSkinWndDestory(CSkinWnd *pSkinWnd);
 
-	virtual void OnMainSkinWndDestory(CSkin *pSkinWnd);
+	virtual void OnMainSkinWndDestory(CSkinWnd *pSkinWnd);
 
-	virtual CSkin *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
+	virtual CSkinWnd *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
 
 	// methods for skin window
 	SXNode *GetSkinWndNode(LPCTSTR szSkinWndName);
 
 	// create new uiobject by class name
-	virtual CUIObject * CreateUIObject(CSkin *pSkin, LPCTSTR szClassName);
+	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
 
 	// 
 	virtual CUIObject *CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, LPCTSTR szNameToCheck = NULL, int nIDAssign = SKIN_UIOBJ_ID_UNDEFINE, LPCTSTR szLeft = NULL, LPCTSTR szTop = NULL, LPCTSTR szWidth = NULL, LPCTSTR szHeight = NULL);
@@ -189,16 +189,16 @@ public:
 	// resource manage APIs
 	CSkinResMgr *GetResourceMgr() { return &m_resourceMgr; }
 
-	CSkin *GetMainWnd();
+	CSkinWnd *GetMainWnd();
 
 	CSkinFileXML *GetSkinFile() { return &m_skinFile; }
 
 	LPCTSTR GetSkinName() const { return m_strSkinName.c_str(); }
 
 	// resource
-	virtual bool LoadMenu(CSkin *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu) { *ppMenu = NULL; return false; };
+	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu) { *ppMenu = NULL; return false; };
 
-	virtual int OnDynamicCmd(LPCTSTR szDynCmd, CSkin *pSkinWnd, CUIObject *pUIObj);
+	virtual int OnDynamicCmd(LPCTSTR szDynCmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj);
 
 	void EnumAllDynamicCmds(V_Str &vstrCmds) { m_dynamicCmds.EnumAllCmds(vstrCmds); }
 
@@ -215,7 +215,7 @@ public:
 protected:
 	virtual int OpenSkinFile(LPCTSTR szSkinFile);
 
-	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkin *pSkinWnd, CUIObject *pUIObj);
+	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj);
 
 protected:
 	tstring						m_strSkinRootDir;
@@ -247,7 +247,7 @@ protected:
 	MAP_STRID					m_mapMenuStrId;
 	int							m_nNextMenuId;
 
-	typedef	list<CSkin*>		LIST_SKINWNDS;
+	typedef	list<CSkinWnd*>		LIST_SKINWNDS;
 
 	LIST_SKINWNDS				m_listSkinWnds;
 	Mutex						m_mutex;

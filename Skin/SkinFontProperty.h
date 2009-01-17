@@ -69,7 +69,7 @@ public:
 
 	CMLFont & GetMLFont() { return m_font; }
 
-	void OnCreate(CSkin *pSkin);
+	void OnCreate(CSkinWnd *pSkin);
 
 	void OnSkinFontChanged();
 
@@ -79,7 +79,7 @@ protected:
 	inline bool IsPropertySet(uint32 fontProperty) { return IsFlagSet(m_nFlagProperties, fontProperty); }
 
 protected:
-	CSkin			*m_pSkin;
+	CSkinWnd			*m_pSkin;
 	CRawBmpFont		*m_pRawFont;
 	CMLFont			m_font;
 

@@ -22,7 +22,7 @@ public:
 typedef map<CUIObject *, IEventHandlerEx *>		MAP_EVENT_HANDLER;
 
 
-class CMPSkinWnd : public CSkin, public IEventHandler
+class CMPSkinWnd : public CSkinWnd, public IEventHandler
 {
 public:
 	CMPSkinWnd();

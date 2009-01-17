@@ -138,7 +138,7 @@ void CMPSkinFactory::Quit()
 	itEnd = listSkinWnds.end();
 	for (it = listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkin = *it;
+		CSkinWnd	*pSkin = *it;
 		pSkin->Destroy();
 	}
 	m_listSkinWnds.clear();
@@ -152,7 +152,7 @@ void CMPSkinFactory::SaveOpenedSkinWndNames()
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pSkin = *it;
+		CSkinWnd	*pSkin = *it;
 		if (!strOpenedSkinWnds.empty())
 			strOpenedSkinWnds += _T(",");
 		strOpenedSkinWnds += pSkin->GetSkinWndName();
@@ -161,7 +161,7 @@ void CMPSkinFactory::SaveOpenedSkinWndNames()
 	g_Profile.WriteProfileString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
 }
 
-CUIObject *CMPSkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
+CUIObject *CMPSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 {
 	CUIObject		*pObj;
 
@@ -250,7 +250,7 @@ CUIObject *CMPSkinFactory::CreateUIObject(CSkin *pSkin, LPCTSTR szClassName)
 	return pObj;
 }
 
-CSkin *CMPSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
+CSkinWnd *CMPSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
 {
 	if (bMainWnd)
 		return new CMPSkinMainWnd;
@@ -277,7 +277,7 @@ SXNode *CMPSkinFactory::GetMenuOfMenus(SXNode *pNodeMenus, LPCTSTR szMenuName)
 	return NULL;
 }
 
-CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkin *pWnd, LPCTSTR szMenu)
+CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 {
 	CSkinMenu		*pSkinMenu = NULL;
 
@@ -345,7 +345,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkin *pWnd, LPCTSTR szMenu)
 	return pSkinMenu;
 }
 
-bool CMPSkinFactory::LoadMenu(CSkin *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu)
+bool CMPSkinFactory::LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu)
 {
 	CSkinMenu	*pSkinMenu = NULL;
 	SXNode		*pNodeMenus = NULL, *pNode = NULL;
@@ -392,7 +392,7 @@ void CMPSkinFactory::OnLanguageChanged()
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pWnd = *it;
+		CSkinWnd	*pWnd = *it;
 		pWnd->OnLanguageChanged();
 	}
 }
@@ -400,7 +400,7 @@ void CMPSkinFactory::OnLanguageChanged()
 //
 // Bring all the skin windows to the top
 //
-void CMPSkinFactory::OnSkinWndActivate(CSkin *pWndActive)
+void CMPSkinFactory::OnSkinWndActivate(CSkinWnd *pWndActive)
 {
 #ifdef _WIN32
 	LIST_SKINWNDS::iterator	it, itEnd;
@@ -456,7 +456,7 @@ void CMPSkinFactory::OnSkinWndActivate(CSkin *pWndActive)
 }
 
 
-void CMPSkinFactory::OnMainSkinWndDestory(CSkin *pSkinWnd)
+void CMPSkinFactory::OnMainSkinWndDestory(CSkinWnd *pSkinWnd)
 {
 // #ifdef _MPLAYER
 // 	CSkinFactory::OnMainSkinWndDestory(pSkinWnd);
@@ -471,7 +471,7 @@ void CMPSkinFactory::TopmostAll(bool bTopmost)
 
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pWnd = *it;
+		CSkinWnd	*pWnd = *it;
 		if (!pWnd->IsIndividualProperties())
 			pWnd->SetTopmost(bTopmost);
 	}
@@ -484,7 +484,7 @@ void CMPSkinFactory::MinizeAll(bool bSilently)
 
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pWnd = *it;
+		CSkinWnd	*pWnd = *it;
 		if (pWnd->IsToolWindow())
 			pWnd->ShowWindow(SW_HIDE);
 		else
@@ -499,7 +499,7 @@ void CMPSkinFactory::RestoreAll()
 
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pWnd = *it;
+		CSkinWnd	*pWnd = *it;
 
 		if (pWnd->IsIconic())
 			pWnd->ShowWindow(SW_RESTORE);
@@ -536,7 +536,7 @@ void CMPSkinFactory::BeforeTrackMoveWith(CBaseWnd *pWndChain[], int nCount, CBas
 
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pWnd = *it;
+		CSkinWnd	*pWnd = *it;
 		pWnd->m_WndDrag.BeforeTrackMoveWith(pWndChain, nCount, pWndToTrack);
 	}
 }
@@ -548,7 +548,7 @@ void CMPSkinFactory::TrackMoveWith(CBaseWnd *pWnd, int x, int y)
 
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pWnd = *it;
+		CSkinWnd	*pWnd = *it;
 		pWnd->m_WndDrag.TrackMoveWith(pWnd, x, y);
 	}
 }
@@ -623,7 +623,7 @@ void CMPSkinFactory::AllUpdateTransparent()
 	itEnd = m_listSkinWnds.end();
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
-		CSkin	*pWnd = *it;
+		CSkinWnd	*pWnd = *it;
 		if (!pWnd->IsIndividualProperties())
 			pWnd->SetTransparent(byAlpha, bTransparentClr, pWnd->GetBgColor().get(), m_bClickThrough);
 	}
@@ -631,7 +631,7 @@ void CMPSkinFactory::AllUpdateTransparent()
 
 #endif
 
-int CMPSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkin *pSkinWnd, CUIObject *pUIObj)
+int CMPSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj)
 {
 	if (cmd.strFunction == _T("openclose_framebar_bar"))
 	{

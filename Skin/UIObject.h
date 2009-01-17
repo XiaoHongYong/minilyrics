@@ -172,7 +172,7 @@ public:
 	virtual BOOL SetPropertyInt(LPCTSTR szProperty, int nValue);
 	virtual void SetProperties(vector<tstring> &vProperties);
 
-	// when CSkin's size is changed, call every CUIObject's RecalclulatePos to change pos
+	// when CSkinWnd's size is changed, call every CUIObject's RecalclulatePos to change pos
 	virtual BOOL ReCalculatePos(FORMULA_VAR vars[]);
 	virtual void Invalidate();
 
@@ -268,10 +268,10 @@ public:
 
 	CRect		m_rcObj;
 
-	CSkin		*m_pSkin;
+	CSkinWnd		*m_pSkin;
 	CSkinContainer	*m_pContainer;
 
-	// auto allocated uni-ID by CSkin.
+	// auto allocated uni-ID by CSkinWnd.
 	int			m_nAutoUniID;
 
 	int			m_nId;
@@ -295,7 +295,7 @@ protected:
 
 	tstring		m_strTooltip;
 	BOOL		m_bTempTooltip;
-friend class CSkin;
+friend class CSkinWnd;
 
 };
 

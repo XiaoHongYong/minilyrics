@@ -67,7 +67,7 @@ void CSESkinWnd::NewSkin(LPCTSTR szSkinWndName)
 
 int CSESkinWnd::OpenSkin(LPCTSTR szSkinWndName)
 {
-	return CSkin::OpenSkin(szSkinWndName);
+	return CSkinWnd::OpenSkin(szSkinWndName);
 }
 
 int CSESkinWnd::CopyFrom(LPCTSTR szSkinWndName, CSESkinWnd *pSkinWndSrc)
@@ -113,7 +113,7 @@ int CSESkinWnd::CopyFrom(LPCTSTR szSkinWndName, CSESkinWnd *pSkinWndSrc)
 //		1)	设置子控件的焦点
 void CSESkinWnd::OnSkinLoaded()
 {
-	CSkin::OnSkinLoaded();
+	CSkinWnd::OnSkinLoaded();
 
 	::MoveWindow(m_hWnd, 5, 5, int(m_rcReal.Width()), int(m_rcReal.Height()), true);
 // 
@@ -280,7 +280,7 @@ void CSESkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 		}
 	}
 
-	CSkin::OnKeyDown(nChar, nFlags);
+	CSkinWnd::OnKeyDown(nChar, nFlags);
 
 	if (pObjFocus != GetFocusUIObj())
 	{
@@ -295,7 +295,7 @@ void CSESkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 
 	pObjFocus = GetFocusUIObj();
 
-	CSkin::OnLButtonDown(nFlags, point);
+	CSkinWnd::OnLButtonDown(nFlags, point);
 
 	pObjFocusNew = GetFocusUIObj();
 
@@ -324,7 +324,7 @@ void CSESkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CSESkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 {
-	CSkin::OnMouseMove(nFlags, point);
+	CSkinWnd::OnMouseMove(nFlags, point);
 
 	g_seUIAdapter.SetMousePointerInfo(int(point.x / m_dbScale), int(point.y / m_dbScale));
 }
@@ -339,7 +339,7 @@ void CSESkinWnd::OnPaint(IMLGraphicsBase *pGraph)
 	if (m_brBg.IsValid())
 		pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), &m_brBg);
 
-	CSkin::OnPaint(pGraph);
+	CSkinWnd::OnPaint(pGraph);
 }
 
 void CSESkinWnd::OnContexMenu(int xPos, int yPos)
@@ -357,7 +357,7 @@ void CSESkinWnd::OnRButtonUp(UINT nFlags, CPoint point)
 
 LRESULT CSESkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	return CSkin::WndProc(message, wParam, lParam);
+	return CSkinWnd::WndProc(message, wParam, lParam);
 }
 
 BOOL CSESkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -389,7 +389,7 @@ BOOL CSESkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		return TRUE;
 	}
 
-	bRet = CSkin::SetProperty(szProperty, szValue);
+	bRet = CSkinWnd::SetProperty(szProperty, szValue);
 
 	if (_tcsicmp(szProperty, SZ_PN_WIDTH) == 0 ||
 		_tcsicmp(szProperty, SZ_PN_HEIGHT) == 0)
@@ -421,7 +421,7 @@ BOOL CSESkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 void CSESkinWnd::EnumProperties(CUIObjProperties &listProperties)
 {
-	CSkin::EnumProperties(listProperties);
+	CSkinWnd::EnumProperties(listProperties);
 
 	listProperties.DelProp(_T("EnableTransparentFeature"));
 	listProperties.DelProp(_T("EnableTranslucency"));

@@ -661,7 +661,7 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 
 bool CLyricShowTextEditObj::OnRButtonUp(UINT nFlags, CPoint point)
 {
-	ClientToScreen(&point);
+	m_pSkin->ClientToScreen(point);
 	OnContexMenu(point.x, point.y);
 
 	return true;

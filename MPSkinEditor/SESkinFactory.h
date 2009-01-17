@@ -19,9 +19,9 @@ public:
 
 	virtual void Quit();
 
-	virtual CUIObject * CreateUIObject(CSkin *pSkin, LPCTSTR szClassName);
+	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
 
-	virtual CSkin *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
+	virtual CSkinWnd *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
 
 	virtual bool LoadMenu(CMenu **ppMenu, LPCTSTR szMenu);
 
