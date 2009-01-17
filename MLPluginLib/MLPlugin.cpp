@@ -109,6 +109,22 @@ char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource)
 	return(strDestination);
 }
 
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+char *strcat_safe(char * dst, int Size, const char * src)
+{
+	char * cp = dst;
+	char * endcp = dst + Size - 1;
+
+	while( *cp )
+		cp++;                   /* find end of dst */
+
+	while((cp < endcp) && (*cp++ = *src++)) ;       /* Copy src to end of dst */
+
+	*cp = '\0';
+
+	return( dst );                  /* return dst */
+}
+
 
 wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource)
 {
@@ -143,6 +159,90 @@ WCHAR * __cdecl wcscat_safe (
 
         return( dst );                  /* return dst */
 
+}
+
+string UrlGetTitle(LPCSTR szFile)
+{
+	LPCSTR		szBeg, szBeg2, szEnd;
+	int			nLen;
+	string		strFileTitle;
+
+	szEnd = strrchr(szFile, '.');
+
+	szBeg = strrchr(szFile, '/');
+	szBeg2 = strrchr(szFile, '\\');
+	if (szBeg2 > szBeg)
+		szBeg = szBeg2;
+
+	if (szBeg == NULL)
+		szBeg = szFile;
+	else
+		szBeg++;
+
+	if (szEnd == NULL || szBeg > szEnd)
+		nLen = szFile - szBeg + strlen(szFile);
+	else
+		nLen = szEnd - szBeg;
+
+	strFileTitle.append(szBeg, nLen);
+
+	return strFileTitle;
+}
+
+wstring UrlGetTitle(LPCWSTR szFile)
+{
+	LPCWSTR		szBeg, szBeg2, szEnd;
+	int			nLen;
+	wstring		strFileTitle;
+
+	szEnd = wcsrchr(szFile, '.');
+
+	szBeg = wcsrchr(szFile, '/');
+	szBeg2 = wcsrchr(szFile, '\\');
+	if (szBeg2 > szBeg)
+		szBeg = szBeg2;
+
+	if (szBeg == NULL)
+		szBeg = szFile;
+	else
+		szBeg++;
+
+	if (szEnd == NULL || szBeg > szEnd)
+		nLen = szFile - szBeg + wcslen(szFile);
+	else
+		nLen = szEnd - szBeg;
+
+	strFileTitle.append(szBeg, nLen);
+
+	return strFileTitle;
+}
+
+void FormatFullTitle(LPCSTR szArtist, LPCSTR szTitle, LPCSTR szUri, string &strFullTitle)
+{
+	strFullTitle.resize(0);
+	if (!IsEmptyString(szArtist))
+	{
+		strFullTitle = szArtist;
+		strFullTitle += " - ";
+	}
+
+	strFullTitle += szTitle;
+	if (strFullTitle.empty())
+		strFullTitle = UrlGetTitle(szUri);
+}
+
+void FormatFullTitle(LPCWSTR szArtist, LPCWSTR szTitle, LPCWSTR szUri, wstring &strFullTitle)
+{
+	strFullTitle.resize(0);
+	if (!IsEmptyString(szArtist))
+	{
+		strFullTitle = szArtist;
+		strFullTitle += L" - ";
+	}
+
+	strFullTitle += szTitle;
+	if (strFullTitle.empty())
+		strFullTitle = UrlGetTitle(szUri);
 }
 
 bool IsFileExist(LPCSTR szFileName)
@@ -201,8 +301,6 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 	strcat(szPluginIni, "MLPlugin.ini");
 
 	bNoPrompt = GetPrivateProfileIntA("MiniLyrics", "NoPrompt", FALSE, szPluginIni);
-	if (bNoPrompt)
-		bNoPrompt = RegGetProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, "NoPrompt", FALSE);
 
 	GetPrivateProfileStringA("MiniLyrics", "WorkingFolder", "", g_szWorkingFolder, MAX_PATH, szPluginIni);
 	if (g_szWorkingFolder[0] == '\0')
@@ -281,11 +379,12 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 INIT_FAILED:
 	if (!bNoPrompt)
 	{
-		MessageBoxA(g_hwndPlayer, szMsg, "MiniLyrics", MB_OK);
-		// Make sure NoPrompt write sucessfully.
-		if (!WritePrivateProfileInt("MiniLyrics", "NoPrompt", TRUE, szPluginIni) || 
-			!GetPrivateProfileIntA("MiniLyrics", "NoPrompt", FALSE, szPluginIni))
-			RegWriteProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, "NoPrompt", TRUE);
+		if (WritePrivateProfileInt("MiniLyrics", "NoPrompt", TRUE, szPluginIni) &&
+			GetPrivateProfileIntA("MiniLyrics", "NoPrompt", FALSE, szPluginIni))
+		{
+			// Make sure NoPrompt write sucessfully, then prompt this message.
+			MessageBoxA(g_hwndPlayer, szMsg, "MiniLyrics", MB_OK);
+		}
 	}
 	return FALSE;
 }

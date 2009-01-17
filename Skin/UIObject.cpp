@@ -27,7 +27,7 @@ BLT_MODE BltModeFromStr(LPCTSTR szBltMode)
 ID_TO_STRING	__idszBlendPixMode[] = 
 {
 	{ BPM_BLEND, _T("alpha_blend") },
-	{ BPM_BLEND_ALPHA, _T("alpha_mask") },
+	{ BPM_MULTIPLY, _T("alpha_mask") },
 	{ BPM_COPY, _T("copy") },
 	{ 0, NULL }
 };

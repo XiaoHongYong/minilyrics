@@ -323,7 +323,7 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 		int		hBottom = pImgSizedAlbumArt->height - hTop;
 
 		// blt top mask
-		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, w, hTop, 0, 0, BPM_BLEND_ALPHA);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, w, hTop, 0, 0, BPM_MULTIPLY);
 
 		// blt top to frame
 		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, w, hTop, 0, 0, BPM_BLEND);
@@ -333,7 +333,7 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 
 
 		// blt bottom mask
-		m_frmMask.Blt(&imgSizedAlbumArt, 0, hTop, w, hBottom, 0, m_frmMask.height() - hBottom, BPM_BLEND_ALPHA);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, hTop, w, hBottom, 0, m_frmMask.height() - hBottom, BPM_MULTIPLY);
 
 		// blt bottom to frame
 		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.bottom - hBottom, w, hBottom, 0, hTop, BPM_BLEND);
@@ -347,7 +347,7 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 		int		wRight = pImgSizedAlbumArt->width - wLeft;
 
 		// blt left mask
-		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, wLeft, h, 0, 0, BPM_BLEND_ALPHA);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, wLeft, h, 0, 0, BPM_MULTIPLY);
 
 		// blt left to frame
 		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, wLeft, h, 0, 0, BPM_BLEND);
@@ -357,7 +357,7 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 
 
 		// blt right mask
-		m_frmMask.Blt(&imgSizedAlbumArt, wLeft, 0, wRight, h, m_frmMask.width() - wRight, 0, BPM_BLEND_ALPHA);
+		m_frmMask.Blt(&imgSizedAlbumArt, wLeft, 0, wRight, h, m_frmMask.width() - wRight, 0, BPM_MULTIPLY);
 
 		// blt right to frame
 		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.right - wRight, m_rcFrameMaskPos.top, wRight, h, wLeft, 0, BPM_BLEND);

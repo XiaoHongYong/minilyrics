@@ -5,6 +5,9 @@
 #include "MiniLyricsPlugin.h"
 #include "IPlayer.h"
 #include "assert.h"
+#include <string>
+
+using namespace std;
 
 extern HINSTANCE		g_hInstance;
 extern HMODULE			g_hModMiniLyrics;
@@ -16,7 +19,7 @@ extern bool				g_bIsUcs2Prefer;
 extern char				g_szWorkingFolder[];
 
 #define EmptyStr(str)	(str[0] = '\0')
-#define CountOf(arr)		(sizeof(arr) / sizeof(arr[0]))
+#define CountOf(arr)	(sizeof(arr) / sizeof(arr[0]))
 
 #define IsEmptyString(str)	(str[0] == '\0')
 
@@ -36,6 +39,8 @@ BOOL WritePrivateProfileInt(
 							);
 
 char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource);
+char *strcat_safe(char * dst, int Size, const char * src);
+
 wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource);
 WCHAR * __cdecl wcscat_safe (
         WCHAR * dst,
@@ -43,6 +48,18 @@ WCHAR * __cdecl wcscat_safe (
         const WCHAR * src
         );
 
+
+#ifdef _UNICODE
+#define _tcscpy_safe		wcscpy_safe
+#define _tcscat_safe		wcscat_safe
+#else
+#define _tcscpy_safe		strcpy_safe
+#define _tcscat_safe		strcat_safe
+#endif
+
+void FormatFullTitle(LPCSTR szArtist, LPCSTR szTitle, LPCSTR szUri, string &strFullTitle);
+
+void FormatFullTitle(LPCWSTR szArtist, LPCWSTR szTitle, LPCWSTR szUri, wstring &strFullTitle);
 
 long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2);
 

@@ -149,6 +149,7 @@ CDlgSearchLyrics::CDlgSearchLyrics() : CBaseDialog(IDD_LRC_SEARCH)
 	if (!IsRegistered() && !g_bEngEdition)
 		m_nIDTemplate = IDD_LRC_SEARCH;
 #endif
+	m_bAutoSearchLocal = true;
 }
 
 CDlgSearchLyrics::~CDlgSearchLyrics()
@@ -202,6 +203,10 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			GetDlgItemText(IDC_CB_TITLE, szTitle, CountOf(szTitle));
 			_stprintf(szKeyword, _T("%s %s"), szArtist, szTitle);
 			SetDlgItemText(IDC_E_KEYWORD, szKeyword);
+
+			// Research local lyrics file?
+			KillTimer(TIMER_ID_RESEARCH);
+			SetTimer(TIMER_ID_RESEARCH, DURATION_AUTO_SEARCH);
 		}
 		break;
 #endif
@@ -212,7 +217,7 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			m_nCurPage++;
 
 			if (m_nCurPage < (int)m_vCachePages.size())
-				m_vSearchResult = m_vCachePages[m_nCurPage];
+				m_vResultsInet = m_vCachePages[m_nCurPage];
 			else
 				SearchOnline();
 
@@ -231,7 +236,7 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			m_nCurPage--;
 
 			ASSERT(m_nCurPage < (int)m_vCachePages.size());
-			m_vSearchResult = m_vCachePages[m_nCurPage];
+			m_vResultsInet = m_vCachePages[m_nCurPage];
 
 			UpdateSearchResultToListCtrl();
 
@@ -254,18 +259,6 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 		break;
 	case IDC_SEARCH:
 		{
-			TCHAR		szArtist[256];
-			TCHAR		szTitle[256];
-
-			GetDlgItemText(IDC_CB_ARTIST, szArtist, CountOf(szArtist));
-			GetDlgItemText(IDC_CB_TITLE, szTitle, CountOf(szTitle));
-			m_strArtistLastSearch = szArtist;
-			m_strTitleLastSearch = szTitle;
-			m_nCurPage = 0;
-			m_nPageCount = 1;
-
-			m_vCachePages.clear();
-
 			OnSearch();
 		}
 		break;
@@ -274,22 +267,25 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 		g_Profile.WriteProfileInt(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), 
 			!IsButtonChecked(IDC_NO_PROMPT));
 		break;
-	case IDC_MORECMD:
+	case IDC_MORE:
 		{
 			CRect		rc;
-
 			bool		bEnable = false;
 
 			LrcSearchResult	*pSel;
 
 			pSel = GetCurSel();
 			if (pSel)
+			{
 				bEnable = GetLrcSourceType(pSel->strUrl.c_str()) == LST_FILE;
+				if (IsHttpUrl(pSel->strUrl.c_str()))
+					bEnable = false;
+			}
 
 			m_menu.EnableItem(IDC_EDIT_LYRICS, bEnable);
 			m_menu.EnableItem(IDC_DEL_FILE, bEnable);
 			m_menu.EnableItem(IDC_RENAME, bEnable);
-			GetDlgItemRect(IDC_MORECMD, &rc);
+			GetDlgItemRect(IDC_MORE, &rc);
 			m_menu.TrackPopupMenu(rc.left, rc.top, this);
 		}
 		break;
@@ -534,7 +530,7 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	m_resultList.SetExtendedStyle(LVS_EX_FULLROWSELECT);
 
 	LPCTSTR		szHead[] = {_T("File Name"), _T("Rating"), _T("Downloads"), _T("Uploader"), _T("Artist"), _T("Title"), _T("Album"), NULL};
-	int			arrWidth[] = {300,        80,              40,              150,        150,      150,    150,     200,   0};
+	int			arrWidth[] = {300,        110,              68,              150,        150,      150,    150,     200,   0};
 	int			i;
 	for (i = 0; szHead[i] != NULL; i++)
 		m_resultList.InsertColumn(i, TOLOCAL(szHead[i]), LVCFMT_LEFT, arrWidth[i]);
@@ -599,22 +595,14 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	EnableDlgItem(IDC_NEXT_PAGE, false);
 	EnableDlgItem(IDC_PREV_PAGE, false);
 
-	{
-		CLyricsResultSortCmp	cmpFun;
-		V_LRCSEARCHRESULT		vResult;
-
-		g_OnlineSearch.SearchCacheForCur(&vResult);
-		sort_insert(m_vSearchResult, vResult.begin(), vResult.end(), cmpFun);
-	}
+	g_OnlineSearch.SearchCacheForCur(&m_vResultsInet);
+	m_vResultsInet.Sort();
 
 	SearchLocal();
 
-	if (m_vSearchResult.size())
-	{
-		UpdateSearchResultToListCtrl();
-
+	UpdateSearchResultToListCtrl();
+	if (m_resultList.GetItemCount())
 		m_resultList.SetItemSelectionState(0, TRUE);
-	}
 
 	return TRUE;
 }
@@ -644,9 +632,59 @@ void CDlgSearchLyrics::OnSize(int cx, int cy)
 	InvalidateRect(NULL, TRUE);
 }
 
+void CDlgSearchLyrics::OnTimer(UINT nIDEvent)
+{
+	if (nIDEvent != TIMER_ID_RESEARCH)
+		return;
+
+	KillTimer(TIMER_ID_RESEARCH);
+
+	TCHAR		szArtist[256];
+	TCHAR		szTitle[256];
+
+	GetDlgItemText(IDC_CB_ARTIST, szArtist, CountOf(szArtist));
+	GetDlgItemText(IDC_CB_TITLE, szTitle, CountOf(szTitle));
+
+	// Not changed?
+	if (_tcsicmp(szArtist, m_strArtist.c_str()) == 0 && _tcsicmp(szTitle, m_strTitle.c_str()) == 0
+		|| IsEmptyString(szArtist) && IsEmptyString(szTitle))
+		return;
+
+	m_strArtist = szArtist;
+	m_strTitle = szTitle;
+
+	if (m_bAutoSearchLocal)
+		SearchLocal();
+
+/*	{
+		// Search online search result.
+		m_strArtistLastSearch = szArtist;
+		m_strTitleLastSearch = szTitle;
+		m_nCurPage = 0;
+		m_nPageCount = 1;
+
+		g_OnlineSearch.SearchCacheForCur()
+		g_OnlineSearch.SearchCacheForCur(&m_vResultsInet);
+		m_vResultsInet.Sort();
+
+		m_vCachePages.clear();
+	}*/
+
+	UpdateSearchResultToListCtrl();
+}
+
 void CDlgSearchLyrics::OnSearch()
 {
-	m_vSearchResult.clear();
+	GetDlgItemText(IDC_CB_ARTIST, m_strArtist);
+	GetDlgItemText(IDC_CB_TITLE, m_strTitle);
+
+	m_strArtistLastSearch = m_strArtist;
+	m_strTitleLastSearch = m_strTitle;
+
+	m_nCurPage = 0;
+	m_nPageCount = 1;
+
+	m_vCachePages.clear();
 
 	SearchOnline();
 
@@ -695,80 +733,96 @@ void CDlgSearchLyrics::OnOK()
 
 void CDlgSearchLyrics::UpdateSearchResultToListCtrl()
 {
-	int		nItem;
-	TCHAR	szTemp[MAX_PATH];
-
 	m_resultList.DeleteAllItems();
-	for (V_LRCSEARCHRESULT::iterator it = m_vSearchResult.begin(); it != m_vSearchResult.end(); it++)
+
+	for (V_LRCSEARCHRESULT::iterator it = m_vResultsLocal.begin(); it != m_vResultsLocal.end(); it++)
 	{
-		LrcSearchResult	&Item = *it;
+		AppendItemInResultsList(*it, false);
+	}
 
-		int				nImg;
-		MLFileType		fileType;
-		LRC_SOURCE_TYPE	lrcSrcType;
-		tstring			strName;
-		bool			bLocalFile = true;
-
-		lrcSrcType = GetLrcSourceType(Item.strUrl.c_str());
-
-		fileType = MLGetFileType(Item.strSaveFileName.c_str());
-		if (fileType == FT_LYRICS_LRC)		nImg = 1;
-		else if (fileType == FT_LYRICS_TXT)	nImg = 0;
-		else								nImg = 2;
-
-		strName = Item.strSaveFileName;
-
-		if (!IsHttpUrl(Item.strUrl.c_str()))
-		{
-			// local file...
-			if (lrcSrcType == LST_ID3V2_SYLT)
-				nImg = 1;
-			else if (lrcSrcType == LST_FILE)
-			{
-				bLocalFile = true;
-				strName = tstring(_T("file://")) + Item.strSaveFileName;
-			}
-		}
-
-		nItem = m_resultList.InsertItem(m_resultList.GetItemCount(), strName.c_str(), nImg);
-
-		if (Item.fRate != 0.0)
-		{
-			_stprintf(szTemp, _T("%.1f/5 (%d %s)"), Item.fRate, Item.nRateCount, TOLOCAL(_T("Votes")));
-		}
-		else if (bLocalFile)
-		{
-			FileGetPath(szTemp, CountOf(szTemp), Item.strUrl.c_str());
-		}
-		else
-			_tcscpy(szTemp, _T("-"));
-		m_resultList.SetItemText(nItem, COL_RATING, szTemp);
-
-		_itot(Item.nDownloads, szTemp, 10);
-		m_resultList.SetItemText(nItem, COL_DOWNLOADS, szTemp);
-
-		m_resultList.SetItemText(nItem, COL_UPLOADER, Item.strUploader.c_str());
-		m_resultList.SetItemText(nItem, COL_ARTIST, Item.strArtist.c_str());
-		m_resultList.SetItemText(nItem, COL_TITLE, Item.strTitle.c_str());
-		m_resultList.SetItemText(nItem, COL_ALBUM, Item.strAlbum.c_str());
-		m_resultList.SetItemText(nItem, COL_URL, Item.strUrl.c_str());
+	for (V_LRCSEARCHRESULT::iterator it = m_vResultsInet.begin(); it != m_vResultsInet.end(); it++)
+	{
+		AppendItemInResultsList(*it, true);
 	}
 }
 
+void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInetFile)
+{
+	int				nItem;
+	TCHAR			szTemp[MAX_PATH];
+	int				nImg;
+	MLFileType		fileType;
+	LRC_SOURCE_TYPE	lrcSrcType;
+	tstring			strName;
+	bool			bLocalFile = true;
+
+	lrcSrcType = GetLrcSourceType(Item.strUrl.c_str());
+
+	fileType = MLGetFileType(Item.strSaveFileName.c_str());
+	if (fileType == FT_LYRICS_LRC)		nImg = IMG_L_LRC;
+	else if (fileType == FT_LYRICS_TXT)	nImg = IMG_L_TXT;
+	else								nImg = IMG_L_UNKNOWN;
+
+	strName = Item.strSaveFileName;
+
+	if (!bInetFile)
+	{
+		// local file...
+		if (lrcSrcType == LST_ID3V2_SYLT)
+			nImg = IMG_L_LRC;
+		else if (lrcSrcType == LST_ID3V2_USLT)
+			nImg = IMG_L_TXT;
+		else if (lrcSrcType == LST_NONE)
+			nImg = IMG_NONE;
+		else if (lrcSrcType == LST_FILE)
+		{
+			bLocalFile = true;
+			strName = tstring(_T("file://")) + Item.strSaveFileName;
+		}
+	}
+	else
+		nImg += IMG_OFFSET_INET;
+
+	nItem = m_resultList.InsertItem(m_resultList.GetItemCount(), strName.c_str(), nImg);
+
+	if (Item.fRate != 0.0)
+	{
+		_stprintf(szTemp, _T("%.1f/5 (%d %s)"), Item.fRate, Item.nRateCount, TOLOCAL(_T("Votes")));
+	}
+	else if (bLocalFile)
+	{
+		FileGetPath(szTemp, CountOf(szTemp), Item.strUrl.c_str());
+	}
+	else
+		_tcscpy(szTemp, _T("-"));
+	m_resultList.SetItemText(nItem, COL_RATING, szTemp);
+
+	if (bInetFile)
+	{
+		_itot(Item.nDownloads, szTemp, 10);
+		m_resultList.SetItemText(nItem, COL_DOWNLOADS, szTemp);
+	}
+
+	m_resultList.SetItemText(nItem, COL_UPLOADER, Item.strUploader.c_str());
+	m_resultList.SetItemText(nItem, COL_ARTIST, Item.strArtist.c_str());
+	m_resultList.SetItemText(nItem, COL_TITLE, Item.strTitle.c_str());
+	m_resultList.SetItemText(nItem, COL_ALBUM, Item.strAlbum.c_str());
+	m_resultList.SetItemText(nItem, COL_URL, Item.strUrl.c_str());
+}
+
+
 void CDlgSearchLyrics::SearchLocal()
 {
+	m_vResultsLocal.clear();
+
 	tstring			strFullTitle;
-	TCHAR			szArtist[256];
-	TCHAR			szTitle[256];
 	TCHAR			szLyricsFile[MAX_PATH];
-	V_LRCSEARCHRESULT	vResult;
+	uint32			nTimeStart = GetTickCount();
+	const int		nAcceptableCostTime = 500;
 
-	GetDlgItemText(IDC_CB_ARTIST, szArtist, CountOf(szArtist));
-	GetDlgItemText(IDC_CB_TITLE, szTitle, CountOf(szTitle));
-
-	strFullTitle = szArtist;
+	strFullTitle = m_strArtist;
 	strFullTitle += _T(" - ");
-	strFullTitle += szTitle;
+	strFullTitle += m_strTitle;
 
 	{
 		//
@@ -778,10 +832,10 @@ void CDlgSearchLyrics::SearchLocal()
 		result.strUrl = NONE_LYRCS;
 		result.strSaveFileName = TOLOCAL(_T("No suitable lyrics for the song file"));
 		result.nMatchValue = MATCH_VALUE_WITH_LRC - 5;
-		vResult.AddResult(result);
+		m_vResultsLocal.AddResult(result);
 	}
 
-	g_LyricSearch.SearchAllMatchLyrics(m_strSongFile.c_str(), strFullTitle.c_str(), vResult);
+	g_LyricSearch.SearchAllMatchLyrics(m_strSongFile.c_str(), strFullTitle.c_str(), m_vResultsLocal);
 
 	//
 	// Set best match lyrics
@@ -789,7 +843,7 @@ void CDlgSearchLyrics::SearchLocal()
 	if (g_LyricSearch.GetBestMatchLyrics(m_strSongFile.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), szLyricsFile))
 	{
 		LrcSearchResult	*pResult;
-		pResult = vResult.SearchByUrl(szLyricsFile);
+		pResult = m_vResultsLocal.SearchByUrl(szLyricsFile);
 		if (pResult)
 		{
 			pResult->nMatchValue = MATCH_VALUE_MAX;
@@ -799,19 +853,21 @@ void CDlgSearchLyrics::SearchLocal()
 			LrcSearchResult		result;
 			result.strUrl = szLyricsFile;
 			result.nMatchValue = MATCH_VALUE_MAX;
-			vResult.AddResult(result);
+			m_vResultsLocal.AddResult(result);
 		}
 	}
 
-	vResult.Sort();
+	m_vResultsLocal.Sort();
 
-	vResult.UpdateLyricsName();
+	m_vResultsLocal.UpdateLyricsName();
 
-	m_vSearchResult.insert(m_vSearchResult.begin(), vResult.begin(), vResult.end());
+	m_bAutoSearchLocal = (GetTickCount() - nTimeStart <= nAcceptableCostTime);
 }
 
 void CDlgSearchLyrics::SearchOnline()
 {
+	m_vResultsInet.clear();
+
 	if (m_strArtistLastSearch.empty() && m_strTitleLastSearch.empty())
 		return;
 
@@ -820,13 +876,13 @@ void CDlgSearchLyrics::SearchOnline()
 
 	CWaitingDlg		dlg;
 	CSearchWorkObj	searchObj;
-	V_LRCSEARCHRESULT	vResult;
+	// V_LRCSEARCHRESULT	vResult;
 
 	m_resultList.DeleteAllItems();
 
-	searchObj.m_strTitle = m_strTitleLastSearch;
 	searchObj.m_strArtist = m_strArtistLastSearch;
-	searchObj.m_pvSearchResult = &vResult;
+	searchObj.m_strTitle = m_strTitleLastSearch;
+	searchObj.m_pvSearchResult = &m_vResultsInet;
 	searchObj.m_nCurPage = m_nCurPage;
 
 	// LOG0(LOG_LVL_EVENT_IMP, _T("Begin Online search."));
@@ -859,16 +915,24 @@ void CDlgSearchLyrics::SearchOnline()
 
 	// only one page
 	// if (m_strTitleLastSearch.empty())
-	{
+/*	{
 		// search by artist, sort the result by abc order.
 		CLyricsResultSortCmp	cmpFun;
 
-		sort_insert(m_vSearchResult, vResult.begin(), vResult.end(), cmpFun);
-	}
+		sort_insert(m_vResultsInet, vResult.begin(), vResult.end(), cmpFun);
+	}*/
+	m_vResultsInet.Sort();
 
 	if (m_nPageCount > 1)
 	{
-		m_vCachePages.push_back(vResult);
+		m_vCachePages.push_back(m_vResultsInet);
+		ShowDlgItem(IDC_PREV_PAGE, SW_SHOW);
+		ShowDlgItem(IDC_NEXT_PAGE, SW_SHOW);
+	}
+	else
+	{
+		ShowDlgItem(IDC_PREV_PAGE, SW_HIDE);
+		ShowDlgItem(IDC_NEXT_PAGE, SW_HIDE);
 	}
 }
 
@@ -877,9 +941,18 @@ LrcSearchResult *CDlgSearchLyrics::GetCurSel()
 	int		nPos;
 
 	nPos = m_resultList.GetNextSelectedItem(-1);
-	if (nPos == -1)
+	if (nPos < 0)
 		return NULL;
 
-	ASSERT(nPos < (int)m_vSearchResult.size());
-	return m_vSearchResult.GetByOrder(nPos);
+	if (nPos < (int)m_vResultsLocal.size())
+		return m_vResultsLocal.GetByOrder(nPos);
+
+	nPos -= m_vResultsLocal.size();
+	if (nPos < (int)m_vResultsInet.size())
+		return m_vResultsInet.GetByOrder(nPos);
+	else
+	{
+		ASSERT(0 && "Invalid order");
+		return NULL;
+	}
 }

@@ -77,6 +77,9 @@ static FLAC__StreamDecoderWriteStatus WriteCallback(const FLAC__SeekableStreamDe
 	CMDFlac *pMDFlac = (CMDFlac*)client_data;
 	int				nSize = frame->header.blocksize * pMDFlac->m_nBytesPerSample;
 	IFBuffer		*pBuf = pMDFlac->m_pMemAllocator->AllocFBuffer(nSize);
+	ASSERT(pBuf);
+	if (!pBuf)
+		return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
 	int16			*pBuffer = (int16*)pBuf->data();
 	int				nSamples = frame->header.blocksize;
 	int				i;

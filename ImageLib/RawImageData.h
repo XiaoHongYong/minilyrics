@@ -34,8 +34,9 @@ enum _BlendPixMode
 
 	// Operation
 	BPM_OP_COPY			= 1 << 8,
-	BPM_OP_BLEND		= 1 << 9,		// Multiply alpha
+	BPM_OP_BLEND		= 1 << 9,
 	BPM_OP_XOR			= 1 << 10,
+	BPM_OP_MULTIPLY		= 1 << 11,
 
 	//
 	// Combined Channel and operaton:
@@ -43,6 +44,7 @@ enum _BlendPixMode
 
 	BPM_COPY			= BPM_CHANNEL_RGB | BPM_CHANNEL_ALPHA | BPM_OP_COPY,
 	BPM_BLEND			= BPM_CHANNEL_RGB | BPM_CHANNEL_ALPHA | BPM_OP_BLEND,
+	BPM_MULTIPLY			= BPM_CHANNEL_RGB | BPM_CHANNEL_ALPHA | BPM_OP_MULTIPLY,
 
 	BPM_BLEND_RGB		= BPM_CHANNEL_RGB | BPM_OP_BLEND,
 	BPM_BLEND_ALPHA		= BPM_CHANNEL_ALPHA | BPM_OP_BLEND,

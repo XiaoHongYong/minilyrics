@@ -57,6 +57,8 @@ CMDFlac::CMDFlac()
 	m_bSeekFlag = false;
 	m_state = PS_STOPED;
 
+	m_nBytesPerSample = 0;
+
 	m_pFlacDecoder = FLAC__seekable_stream_decoder_new();
 }
 
@@ -124,6 +126,8 @@ MLRESULT CMDFlac::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *p
 		AudioInfoFromStreamInfo(m_audioInfo, &(streaminfo->data.stream_info));
 
 		ratioCompress = m_audioInfo.nBitRate * 1000000 / (streaminfo->data.stream_info.sample_rate*streaminfo->data.stream_info.channels*streaminfo->data.stream_info.bits_per_sample);
+
+		m_nBytesPerSample = m_audioInfo.nBps;
 
 		pMedia->SetAttribute(MA_FILESIZE, m_audioInfo.nMediaFileSize);
 		pMedia->SetAttribute(MA_DURATION, m_audioInfo.nMediaLength);
