@@ -276,7 +276,7 @@ DWORD CPlayerImp::GetMediaLength()
 
 	vlc_object_yield(p_input);
 
-	int64_t		nLength;
+	int64_t		nLength = 0;
 
 	input_Control(p_input, INPUT_GET_LENGTH, &nLength);
 
@@ -305,7 +305,7 @@ DWORD CPlayerImp::GetPlayPos()
 
 	vlc_object_yield(p_input);
 
-	int64_t		nPos;
+	int64_t		nPos = 0;
 
 	input_Control(p_input, INPUT_GET_TIME, &nPos);
 
@@ -319,6 +319,38 @@ DWORD CPlayerImp::GetPlayPos()
 void CPlayerImp::OnSongChanged()
 {
 	g_MLService.OnFullTitleChangedW(m_strFullTitle.c_str());
+}
+
+
+int CPlayerImp::HasVideo()
+{
+	if (!m_p_intf)
+		return 0;
+
+	input_thread_t *p_input;
+	playlist_t *p_playlist = pl_Yield(m_p_intf);
+
+	p_input = p_playlist->p_input;
+
+	if (!p_input || p_input->b_dead)
+	{
+		pl_Release(m_p_intf);
+		return 0;
+	}
+
+	vlc_object_yield(p_input);
+
+	double	dbFps;
+
+	int ret = input_Control(p_input, INPUT_GET_VIDEO_FPS, &dbFps);
+
+	vlc_object_release(p_input);
+	pl_Release(m_p_intf);
+
+	if (ret == VLC_SUCCESS && dbFps > 0.0)
+		return PR_OK;
+
+	return PR_UNIMPLEMENTED;
 }
 
 // control player

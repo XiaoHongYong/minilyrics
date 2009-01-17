@@ -365,6 +365,8 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 		// blt right to Image
 		imgAaFrame.Blt(&m_img, m_img.width() / 2, 0, wRight + (m_img.width() - m_rcFrameMaskPos.right), m_img.height(), m_rcFrameMaskPos.right - wRight, 0, BPM_COPY);
 	}
+
+	FreeRawImage(pImgSrc);
 }
 
 void CMediaAlbumArtCtrl::ResizeAlbumArt()

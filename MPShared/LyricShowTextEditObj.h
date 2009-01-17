@@ -49,6 +49,8 @@ public:
 
 	virtual BOOL OnCommand(DWORD dwCmdID, LPARAM lParam);
 
+	virtual bool OnRButtonUp(UINT nFlags, CPoint point);
+
 	virtual void OnKeyDown(UINT nChar, UINT nFlags);
 
 	virtual void OnContexMenu(int xPos, int yPos);

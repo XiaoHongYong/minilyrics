@@ -35,6 +35,8 @@ public:
 
 	DWORD GetPlayPos();
 
+	virtual int HasVideo();
+
 	// control player
 	BOOL Play();
 	BOOL Pause();

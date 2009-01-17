@@ -38,12 +38,6 @@ bool CMPSkinMainWndBase::OnCreate()
 
 	SetTimer(TIMER_SHOW_REG, 500);
 
-#ifndef _WIN32_WCE
-	// Restore iconic status
-	if (g_Profile.GetProfileBool(_T("Minimized"), false))
-		ShowWindow(SW_SHOWMINNOACTIVE);
-#endif
-
 	return true;
 }
 

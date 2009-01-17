@@ -160,6 +160,8 @@ UIOBJECT_CLASS_NAME_IMP(CLyricShowTextEditObj, _T("LyricShowTextEdit"));
 
 CLyricShowTextEditObj::CLyricShowTextEditObj()
 {
+	m_nMsgWant |= UO_MSG_WANT_RBUTTON;
+
 	m_bDiscardLyrChangeEvent = false;
 	m_nHeightSbCorner = 0;
 	m_nWidthSbConer = 0;
@@ -657,6 +659,13 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 	}
 }
 
+bool CLyricShowTextEditObj::OnRButtonUp(UINT nFlags, CPoint point)
+{
+	ClientToScreen(&point);
+	OnContexMenu(point.x, point.y);
+
+	return true;
+}
 
 void CLyricShowTextEditObj::OnKeyDown(UINT nChar, UINT nFlags)
 {

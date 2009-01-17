@@ -1259,6 +1259,9 @@ void CLyricShowObj::OnKeyDown(UINT nChar, UINT nFlags)
 		m_pMLData->SetOffsetTime(m_pMLData->GetOffsetTime() + SET_SPEED_SPAN);
 		g_eventDispather.DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 		break;
+	case 'D':
+		m_pSkin->OnCustomCommand(CMD_SEARCH_LYRICS);
+		break;
 	case 'Z':
 		g_Player.Prev();
 		break;
