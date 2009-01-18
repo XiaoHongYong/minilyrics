@@ -26,67 +26,6 @@ int ReadMetaData(intf_thread_t *p_this);
 CPlayerImp		g_Player;
 int				g_UpdateTimeSpan = 50;
 
-
-#define MXS(c,x,s)			(((c) - (x)) <<  (s))
-#define M80S(c,s)			MXS(c,0x80,s)
-#define UTF8_1_to_UCS2(in)	((WCHAR) (in)[0])
-#define UTF8_2_to_UCS2(in)	((WCHAR) (MXS((in)[0],0xC0, 6) | M80S((in)[1], 0)))
-#define UTF8_3_to_UCS2(in)	((WCHAR) (MXS((in)[0],0xE0,12) | M80S((in)[1], 6) | M80S((in)[2], 0)))
-
-int UTF8ToUCS2(unsigned char* text, size_t length, WCHAR *ucs2, int ubuflen)
-{
-	// MultiByteToWideChar(CP_UTF8, 0, text, length, ucs2, ubuflen);
-	unsigned char* p = text;
-	unsigned char* last = text + length;
-	int		ul;
-	for(p = text, ul = 0; (p < last) && (ul < ubuflen) ;)
-	{
-		if ((*p) < 0x80)
-		{	
-			ucs2[ul++] = UTF8_1_to_UCS2(p);
-			p += 1;
-		}
-		else if ((*p) < 0xc0)
-		{	
-			assert((*p));	// Invalid UTF8 First Byte
-			ucs2[ul++] = '?';
-			p += 1;
-		}
-		else if ((*p) < 0xe0)
-		{
-			ucs2[ul++] = UTF8_2_to_UCS2(p);
-			p += 2;
-		}
-		else if ((*p) < 0xf0)
-		{
-			ucs2[ul++] = UTF8_3_to_UCS2(p);
-			p += 3;
-		}
-		else if ((*p) < 0xf8)
-		{
-			ucs2[ul++] = '?';
-			p += 4;
-		}
-		else if ((*p) < 0xfc)
-		{
-			ucs2[ul++] = '?';
-			p += 5;
-		}
-		else if ((*p) < 0xfe)
-		{
-			ucs2[ul++] = '?';
-			p += 6;
-		}
-		else
-		{
-			assert((*p));	// Invalid UTF8 First Byte
-			ucs2[ul++] = '?';
-			p += 1;
-		}
-	}
-	return ul;
-}
-
 ///////////////////////////////////////////////////////////////////////////////
 // create window to get playback pos of foobar timely.
 LPCTSTR	szGetPosWndClass = _T("GetPosWnd");
@@ -223,14 +162,6 @@ HWND CPlayerImp::GetMainWnd()
 	return g_hwndPlayer;
 }
 
-// 返回歌曲的信息，格式为：artist - title		作者 － 歌曲名
-int CPlayerImp::GetFullTitleW(WCHAR * lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_strFullTitle.c_str());
-
-	return 1;
-}
-
 int CPlayerImp::GetArtistW(WCHAR * lpszBuffer, int nBufSize)
 {
 	wcscpy_safe(lpszBuffer, nBufSize, m_strArtist.c_str());
@@ -314,13 +245,6 @@ DWORD CPlayerImp::GetPlayPos()
 
 	return nPos / 1000;
 }
-
-// 返回歌曲的信息，格式为：artist - title		作者 － 歌曲名
-void CPlayerImp::OnSongChanged()
-{
-	g_MLService.OnFullTitleChangedW(m_strFullTitle.c_str());
-}
-
 
 int CPlayerImp::HasVideo()
 {
@@ -553,7 +477,7 @@ void CPlayerImp::MediaChangedCheck()
 	wchar_t		wszTemp[260];
 
 	EmptyStr(wszTemp);
-	UTF8ToUCS2((BYTE *)p_item->psz_uri, strlen((char *)p_item->psz_uri) + 1, wszTemp, CountOf(wszTemp));
+	UTF8ToUCS2(p_item->psz_uri, -1, wszTemp, CountOf(wszTemp));
 	m_strSrcMedia = wszTemp;
 
 	m_strArtist.resize(0);
@@ -563,14 +487,14 @@ void CPlayerImp::MediaChangedCheck()
 	psz_artist = input_item_GetArtist(p_item);
 	if (psz_artist)
 	{
-		UTF8ToUCS2((BYTE *)psz_artist, strlen((char *)psz_artist) + 1, wszTemp, CountOf(wszTemp));
+		UTF8ToUCS2(psz_artist, -1, wszTemp, CountOf(wszTemp));
 		m_strArtist = wszTemp;
 	}
 
 	psz_album = input_item_GetAlbum(p_item);
 	if (psz_album)
 	{
-		UTF8ToUCS2((BYTE *)psz_album, strlen((char *)psz_album) + 1, wszTemp, CountOf(wszTemp));
+		UTF8ToUCS2(psz_album, -1, wszTemp, CountOf(wszTemp));
 		m_strAlbum = wszTemp;
 	}
 
@@ -579,13 +503,15 @@ void CPlayerImp::MediaChangedCheck()
 		psz_title = input_item_GetName(p_item);
 	if (psz_title)
 	{
-		UTF8ToUCS2((BYTE *)psz_title, strlen((char *)psz_title) + 1, wszTemp, CountOf(wszTemp));
+		UTF8ToUCS2(psz_title, -1, wszTemp, CountOf(wszTemp));
 		m_strTitle = wszTemp;
 	}
 
-	FormatFullTitle(m_strArtist.c_str(), m_strTitle.c_str(), m_strSrcMedia.c_str(), m_strFullTitle);
+	wstring		strFullTitle;
 
-	OnSongChanged();
+	FormatFullTitle(m_strArtist.c_str(), m_strTitle.c_str(), m_strSrcMedia.c_str(), strFullTitle);
+
+	g_MLService.OnFullTitleChangedW(strFullTitle.c_str());
 
 	vlc_object_release(p_input);
 }
@@ -619,8 +545,6 @@ void Run(intf_thread_t *p_intf);
 #define MODULE_NAME  "MiniLyrics"
 #define MODULE_STRING  "MiniLyrics"
 #define MODULE_NAME_IS_  "MiniLyrics"
-
-int UTF8ToUCS2(unsigned char* text, int length, WCHAR *ucs2, int ubuflen);
 
 vlc_module_begin();
 set_category(CAT_INTERFACE);
@@ -773,9 +697,8 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 		g_Player.m_strArtist.resize(0);
 		g_Player.m_strAlbum.resize(0);
 		g_Player.m_strTitle.resize(0);
-		g_Player.m_strFullTitle.resize(0);
 		g_Player.m_strSrcMedia.resize(0);
-		g_Player.OnSongChanged();
+		g_MLService.OnFullTitleChangedW(L"");
 		return VLC_SUCCESS;
 	}
 

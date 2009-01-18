@@ -16,158 +16,9 @@
 	</ToolFiles>
 	<Configurations>
 		<Configuration
-			Name="MFC Debug|Win32"
-			OutputDirectory=".\MLPluginLib___Win32_MFC_Debug"
-			IntermediateDirectory=".\MLPluginLib___Win32_MFC_Debug"
-			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
-			UseOfMFC="1"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
-				MinimalRebuild="true"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\MLPluginLib___Win32_MFC_Debug/MLPluginLib.pch"
-				AssemblerListingLocation=".\MLPluginLib___Win32_MFC_Debug/"
-				ObjectFile=".\MLPluginLib___Win32_MFC_Debug/"
-				ProgramDataBaseFileName=".\MLPluginLib___Win32_MFC_Debug/"
-				WarningLevel="3"
-				SuppressStartupBanner="true"
-				DebugInformationFormat="4"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="2052"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile=".\MLPluginLib___Win32_MFC_Debug\MLPluginLib.lib"
-				SuppressStartupBanner="true"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile=".\MLPluginLib___Win32_MFC_Debug/MLPluginLib.bsc"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
-			Name="MFC Release|Win32"
-			OutputDirectory=".\MLPluginLib___Win32_MFC_Release"
-			IntermediateDirectory=".\MLPluginLib___Win32_MFC_Release"
-			ConfigurationType="4"
-			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
-			UseOfMFC="1"
-			ATLMinimizesCRunTimeLibraryUsage="false"
-			CharacterSet="2"
-			>
-			<Tool
-				Name="VCPreBuildEventTool"
-			/>
-			<Tool
-				Name="VCCustomBuildTool"
-			/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"
-			/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
-				Name="VCMIDLTool"
-			/>
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
-				StringPooling="true"
-				RuntimeLibrary="0"
-				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\MLPluginLib___Win32_MFC_Release/MLPluginLib.pch"
-				AssemblerListingLocation=".\MLPluginLib___Win32_MFC_Release/"
-				ObjectFile=".\MLPluginLib___Win32_MFC_Release/"
-				ProgramDataBaseFileName=".\MLPluginLib___Win32_MFC_Release/"
-				WarningLevel="3"
-				SuppressStartupBanner="true"
-				DebugInformationFormat="3"
-			/>
-			<Tool
-				Name="VCManagedResourceCompilerTool"
-			/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="NDEBUG"
-				Culture="2052"
-			/>
-			<Tool
-				Name="VCPreLinkEventTool"
-			/>
-			<Tool
-				Name="VCLibrarianTool"
-				OutputFile=".\MLPluginLib___Win32_MFC_Release\MLPluginLib.lib"
-				SuppressStartupBanner="true"
-			/>
-			<Tool
-				Name="VCALinkTool"
-			/>
-			<Tool
-				Name="VCXDCMakeTool"
-			/>
-			<Tool
-				Name="VCBscMakeTool"
-				SuppressStartupBanner="true"
-				OutputFile=".\MLPluginLib___Win32_MFC_Release/MLPluginLib.bsc"
-			/>
-			<Tool
-				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCPostBuildEventTool"
-			/>
-		</Configuration>
-		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\../../Output/MLPluginLib/Release"
-			IntermediateDirectory=".\../../Output/MLPluginLib/Release"
+			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -241,8 +92,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\../../Output/MLPluginLib/Debug"
-			IntermediateDirectory=".\../../Output/MLPluginLib/Debug"
+			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -324,22 +175,6 @@
 			<File
 				RelativePath="MLPlugin.cpp"
 				>
-				<FileConfiguration
-					Name="MFC Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="MFC Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="Release|Win32"
 					>

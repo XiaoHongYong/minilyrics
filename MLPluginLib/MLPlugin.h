@@ -16,12 +16,12 @@ extern class CMLService	g_MLService;
 extern PlayerServiceEntry g_PlayerEntry;
 extern bool				g_bIsUcs2Prefer;
 
-extern char				g_szWorkingFolder[];
-
 #define EmptyStr(str)	(str[0] = '\0')
 #define CountOf(arr)	(sizeof(arr) / sizeof(arr[0]))
 
 #define IsEmptyString(str)	(str[0] == '\0')
+
+int UTF8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen);
 
 BOOL GetProgramPath(char szPath[], HINSTANCE hInstance/* = NULL*/);
 

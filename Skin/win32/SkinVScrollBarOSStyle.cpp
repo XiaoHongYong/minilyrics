@@ -11,7 +11,6 @@
 CSkinScrollBarOSStyleBase::CSkinScrollBarOSStyleBase()
 {
 	m_pScrollNotify = NULL;
-	m_formWidth.SetFormula(CStrPrintf(_T("%d"), GetSystemMetrics(SM_CXVSCROLL)).c_str());
 }
 
 CSkinScrollBarOSStyleBase::~CSkinScrollBarOSStyleBase()
@@ -60,6 +59,11 @@ void CSkinScrollBarOSStyleBase::OnHScroll(UINT nSBCode, int nPos, IScrollBar *pS
 
 UIOBJECT_CLASS_NAME_IMP(CSkinVScrollBarOSStyle, _T("VScrollBarOSStyle"))
 
+CSkinVScrollBarOSStyle::CSkinVScrollBarOSStyle()
+{
+	m_formWidth.SetFormula(CStrPrintf(_T("%d"), GetSystemMetrics(SM_CXVSCROLL)).c_str());
+}
+
 void CSkinVScrollBarOSStyle::OnCreate()
 {
 	m_scrollbar.Create(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), true, m_pSkin, m_nId);
@@ -69,6 +73,11 @@ void CSkinVScrollBarOSStyle::OnCreate()
 }
 
 UIOBJECT_CLASS_NAME_IMP(CSkinHScrollBarOSStyle, _T("HScrollBarOSStyle"))
+
+CSkinHScrollBarOSStyle::CSkinHScrollBarOSStyle()
+{
+	m_formHeight.SetFormula(CStrPrintf(_T("%d"), GetSystemMetrics(SM_CYHSCROLL)).c_str());
+}
 
 void CSkinHScrollBarOSStyle::OnCreate()
 {

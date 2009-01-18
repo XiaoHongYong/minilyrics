@@ -536,53 +536,6 @@
 				>
 			</File>
 			<File
-				RelativePath="Skin.cpp"
-				>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="SkinButton.cpp"
 				>
 				<FileConfiguration
@@ -1081,6 +1034,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SkinWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SkinWndDrag.cpp"
 				>
 				<FileConfiguration
@@ -1260,10 +1217,6 @@
 				>
 			</File>
 			<File
-				RelativePath="Skin.h"
-				>
-			</File>
-			<File
 				RelativePath="SkinButton.h"
 				>
 			</File>
@@ -1333,6 +1286,10 @@
 			</File>
 			<File
 				RelativePath="SkinVScrollBarOSStyle.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinWnd.h"
 				>
 			</File>
 			<File

@@ -59,6 +59,8 @@ class CSkinVScrollBarOSStyle : public CSkinScrollBarOSStyleBase
 {
 UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
 public:
+	CSkinVScrollBarOSStyle();
+
 	virtual void OnCreate();
 
 };
@@ -67,6 +69,8 @@ class CSkinHScrollBarOSStyle : public CSkinScrollBarOSStyleBase
 {
 UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
 public:
+	CSkinHScrollBarOSStyle();
+
 	virtual void OnCreate();
 
 };

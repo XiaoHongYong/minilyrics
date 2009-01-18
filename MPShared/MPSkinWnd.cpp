@@ -1178,6 +1178,8 @@ void CMPSkinWnd::CloseSkin()
 
 	m_bEnableVolumeSwitch = false;
 	m_bUseVolumeSeek = false;
+
+	m_strLyrDisplayStylePropName.resize(0);
 }
 
 // IUICheckStatus interface

@@ -19,7 +19,7 @@ bool IsHttpUrl(LPCTSTR szUrl)
 
 	return _tcsnicmp(szUrl, SZ_HTTP_HEADER, _tcslen(SZ_HTTP_HEADER)) == 0;
 }
-
+/*
 struct CLyricsResultSortCmp
 {
 public:
@@ -47,7 +47,7 @@ inline void sort_insert(_Cont &_Container, _It _First, _It _Last, _Pr _Pred)
 		if (it == _Container.end())
 			_Container.push_back(*_First);
 	}
-}
+}*/
 
 //////////////////////////////////////////////////////////////////////
 // CRenameDlg
@@ -768,7 +768,7 @@ void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInet
 	if (!bInetFile)
 	{
 		// local file...
-		if (lrcSrcType == LST_ID3V2_SYLT)
+		if (lrcSrcType == LST_ID3V2_SYLT || lrcSrcType == LST_LYRICS3V2)
 			nImg = IMG_L_LRC;
 		else if (lrcSrcType == LST_ID3V2_USLT)
 			nImg = IMG_L_TXT;

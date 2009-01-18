@@ -2,8 +2,6 @@
 
 extern class CPlayerImp		g_Player;
 
-#define LRC_TITLE_MAX_LEN		256
-
 class CPlayerImp : public IPlayer
 {
 public:
@@ -11,8 +9,6 @@ public:
 	virtual ~CPlayerImp();
 
 public:
-	void OnSongChanged();
-
 	// Init and destroy.
 	BOOL Init();
 	void Quit();
@@ -25,7 +21,6 @@ public:
 	// get player state and song info
 	DWORD GetPlayerState();
 
-	int GetFullTitleW(WCHAR * lpszBuffer, int nBufSize);
 	int GetArtistW(WCHAR * lpszBuffer, int nBufSize);
 	int GetAlbumW(WCHAR * lpszBuffer, int nBufSize);
 	int GetTitleW(WCHAR * lpszBuffer, int nBufSize);
@@ -59,7 +54,7 @@ public:
 	void MediaChangedCheck();
 
 public:
-	wstring			m_strArtist, m_strAlbum, m_strTitle, m_strFullTitle, m_strSrcMedia;
+	wstring			m_strArtist, m_strAlbum, m_strTitle, m_strSrcMedia;
 
 	PLAYER_STATE	m_stat;
 

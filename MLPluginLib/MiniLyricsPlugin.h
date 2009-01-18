@@ -137,7 +137,7 @@ enum PlayerIFCommand
 	cmdGetMediaLength	= 11,	// param1, long * length, ms
 	cmdGetSourceMedia	= 12,	// param1, char *buffer, param2, buffer length
 	cmdGetArtist		= 13,	// param1, char *buffer, param2, buffer length
-	cmdGetFullTitle		= 14,	// param1, char *buffer, param2, buffer length
+	// cmdGetFullTitle		= 14,	// param1, char *buffer, param2, buffer length
 	cmdGetTitle			= 15,	// param1, char *buffer, param2, buffer length
 	cmdGetAlbum			= 16,	// param1, char *buffer, param2, buffer length
 	cmdGetPlayerState	= 17,	// return player state,1-stop, 2-play, 3-pause
@@ -183,7 +183,7 @@ enum PlayerIFCommand
 	// return : player support encoding: if return 1, ucs2, 0: ansi
 
 	cmdGetSourceMediaW	= 62,	// param1, const WCHAR *buffer, param2, buffer length
-	cmdGetFullTitleW	= 64,	// param1, const WCHAR *buffer, param2, buffer length
+	// cmdGetFullTitleW	= 64,	// param1, const WCHAR *buffer, param2, buffer length
 	cmdGetArtistW		= 65,	// param1, char *buffer, param2, buffer length
 	cmdGetTitleW		= 66,	// param1, char *buffer, param2, buffer length
 	cmdGetAlbumW		= 67,	// param1, char *buffer, param2, buffer length

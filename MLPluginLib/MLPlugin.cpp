@@ -10,7 +10,70 @@ bool			g_bIsUcs2Prefer = false;
 
 IPlayer			*g_pPlayer = NULL;
 
-char			g_szWorkingFolder[MAX_PATH];
+#define MXS(c,x,s)			(((c) - (x)) <<  (s))
+#define M80S(c,s)			MXS(c,0x80,s)
+#define UTF8_1_to_UCS2(in)	((WCHAR) (in)[0])
+#define UTF8_2_to_UCS2(in)	((WCHAR) (MXS((in)[0],0xC0, 6) | M80S((in)[1], 0)))
+#define UTF8_3_to_UCS2(in)	((WCHAR) (MXS((in)[0],0xE0,12) | M80S((in)[1], 6) | M80S((in)[2], 0)))
+
+int UTF8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen)
+{
+	if (length == -1)
+		length = strlen(text) + 1;
+
+	// MultiByteToWideChar(CP_UTF8, 0, text, length, ucs2, ubuflen);
+	unsigned char* p = (unsigned char*)text;
+	unsigned char* last = (unsigned char*)text + length;
+	int		ul;
+	for(p = (unsigned char*)text, ul = 0; (p < last) && (ul < ubuflen) ;)
+	{
+		if ((*p) < 0x80)
+		{	
+			ucs2[ul++] = UTF8_1_to_UCS2(p);
+			p += 1;
+		}
+		else if ((*p) < 0xc0)
+		{	
+			assert((*p));	// Invalid UTF8 First Byte
+			ucs2[ul++] = '?';
+			p += 1;
+		}
+		else if ((*p) < 0xe0)
+		{
+			ucs2[ul++] = UTF8_2_to_UCS2(p);
+			p += 2;
+		}
+		else if ((*p) < 0xf0)
+		{
+			ucs2[ul++] = UTF8_3_to_UCS2(p);
+			p += 3;
+		}
+		else if ((*p) < 0xf8)
+		{
+			ucs2[ul++] = '?';
+			p += 4;
+		}
+		else if ((*p) < 0xfc)
+		{
+			ucs2[ul++] = '?';
+			p += 5;
+		}
+		else if ((*p) < 0xfe)
+		{
+			ucs2[ul++] = '?';
+			p += 6;
+		}
+		else
+		{
+			assert((*p));	// Invalid UTF8 First Byte
+			ucs2[ul++] = '?';
+			p += 1;
+		}
+	}
+	if (ul < ubuflen)
+		ucs2[ul] = 0;
+	return ul;
+}
 
 // PURPOSE   : Get full task save file name by task name.
 //
@@ -288,6 +351,9 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 	char	szPluginIni[MAX_PATH];
 	BOOL	bNoPrompt;
 	char	szMsg[256];
+	char	szWorkingFolder[MAX_PATH];
+
+
 	FUNMiniLyricsInitEntryPoint	funMLInitEntryPoint;
 
 	g_hInstance = hInst;
@@ -302,15 +368,15 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 
 	bNoPrompt = GetPrivateProfileIntA("MiniLyrics", "NoPrompt", FALSE, szPluginIni);
 
-	GetPrivateProfileStringA("MiniLyrics", "WorkingFolder", "", g_szWorkingFolder, MAX_PATH, szPluginIni);
-	if (g_szWorkingFolder[0] == '\0')
-		GetProgramPath(g_szWorkingFolder, g_hInstance);
-	DirStringFormat(g_szWorkingFolder);
+	GetPrivateProfileStringA("MiniLyrics", "WorkingFolder", "", szWorkingFolder, MAX_PATH, szPluginIni);
+	if (szWorkingFolder[0] == '\0')
+		GetProgramPath(szWorkingFolder, g_hInstance);
+	DirStringFormat(szWorkingFolder);
 
 	//
 	if (!IsWin2kOrLater())
 	{
-		strcpy(szMiniLyricsDll, g_szWorkingFolder);
+		strcpy(szMiniLyricsDll, szWorkingFolder);
 		strcat(szMiniLyricsDll, "UnicoWs.dll");
 		if (!IsFileExist(szMiniLyricsDll))
 		{
@@ -326,7 +392,7 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 		}
 	}
 
-	strcpy(szMiniLyricsDll, g_szWorkingFolder);
+	strcpy(szMiniLyricsDll, szWorkingFolder);
 	strcat(szMiniLyricsDll, "MiniLyrics.dll");
 	if (!IsFileExist(szMiniLyricsDll))
 	{
@@ -422,8 +488,6 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 		return g_pPlayer->GetMediaLength();
 	case cmdGetSourceMedia:	// param1, const char *buffer, param2, buffer length
 		return g_pPlayer->GetSourceMedia((char *)Param1, Param2);
-	case cmdGetFullTitle:		// param1, const char *buffer, param2, buffer length
-		return g_pPlayer->GetFullTitle((char *)Param1, Param2);
 	case cmdGetArtist:
 		return g_pPlayer->GetArtist((char *)Param1, Param2);
 	case cmdGetTitle:
@@ -477,8 +541,6 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 		return g_pPlayer->IsUcs2Support();
 	case cmdGetSourceMediaW:
 		return g_pPlayer->GetSourceMediaW((WCHAR *)Param1, Param2);
-	case cmdGetFullTitleW:
-		return g_pPlayer->GetFullTitleW((WCHAR *)Param1, Param2);
 	case cmdGetArtistW:
 		return g_pPlayer->GetArtistW((WCHAR *)Param1, Param2);
 	case cmdGetTitleW:

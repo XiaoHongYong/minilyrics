@@ -136,6 +136,8 @@ BOOL CWidgetScrollBar::Create(int x, int y, int nWidth, int nHeight, bool bVert,
 	BOOL		bRet;
 	DWORD		dwStyle = WS_CHILD;
 
+	ASSERT(m_hWnd != NULL);
+
 	dwStyle |= bVert ? SBS_VERT : SBS_HORZ;
 	bRet = CBaseWnd::CreateEx(_T("SCROLLBAR"), NULL, x, y, nWidth, nHeight, pWndParent, dwStyle, nID);
 	if (!bRet)
@@ -155,7 +157,10 @@ void CWidgetScrollBar::SetScrollInfo(int nMin, int nMax, int nPage, int nPos, in
 
 int CWidgetScrollBar::SetScrollPos(int nPos, bool bRedraw)
 {
-	return m_sbHandler.SetScrollPos(nPos, bRedraw);
+	if (m_sbHandler.IsEnabled())
+		return m_sbHandler.SetScrollPos(nPos, bRedraw);
+	else
+		return nPos;
 }
 
 int CWidgetScrollBar::GetScrollPos() const

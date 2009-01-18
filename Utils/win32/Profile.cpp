@@ -870,7 +870,7 @@ BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, L
 		AddKeys(szAppName, strKeyNameEncrypt.c_str(), szValue);
 	}
 	else
-		(*itKey).second = szValue;
+		(*itKey).second = strValueEncrypt;
 
 	return dwRet;
 }
