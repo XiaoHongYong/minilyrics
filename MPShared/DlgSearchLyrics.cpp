@@ -441,8 +441,8 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 		int		cx, cy;
 
 		GetWindowRect(&rc);
-		cx = g_Profile.GetProfileInt(_T("LrcDownSelDlg_width"), rc.Width());
-		cy = g_Profile.GetProfileInt(_T("LrcDownSelDlg_height"), rc.Height());
+		cx = g_Profile.GetProfileInt(_T("DlgSearchLyr_width"), rc.Width());
+		cy = g_Profile.GetProfileInt(_T("DlgSearchLyr_height"), rc.Height());
 		if (cx <= 450)
 			cx = 450;
 		if (cy <= 300)
@@ -529,15 +529,15 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	m_resultList.Attach(this, IDC_RESULT_LIST);
 	m_resultList.SetExtendedStyle(LVS_EX_FULLROWSELECT);
 
-	LPCTSTR		szHead[] = {_T("File Name"), _T("Rating"), _T("Downloads"), _T("Uploader"), _T("Artist"), _T("Title"), _T("Album"), NULL};
-	int			arrWidth[] = {300,        110,              68,              150,        150,      150,    150,     200,   0};
+	LPCTSTR		szHead[] = {_T("Artist"), _T("Title"), _T("Rating"), _T("Downloads"), _T("From"), _T("Album"), _T("File Name"), NULL};
+	int			arrWidth[] = {130,        160,         90,           68,              150,       150,         150,	            0};
 	int			i;
 	for (i = 0; szHead[i] != NULL; i++)
 		m_resultList.InsertColumn(i, TOLOCAL(szHead[i]), LVCFMT_LEFT, arrWidth[i]);
 	if (g_Profile.GetProfileInt(_T("ShowLink"), false))
 		m_resultList.InsertColumn(i, _T("URL"), LVCFMT_LEFT, 200);
 
-	m_resultList.LoadColumnWidth(_T("LrcDownSelDlg_Files"));
+	m_resultList.LoadColumnWidth(_T("DlgSearchLyr"));
 
 #ifdef _WIN32
 	// ´´½¨ImageList
@@ -614,12 +614,12 @@ void CDlgSearchLyrics::OnDestroy()
 
 	wndPlacement.length = sizeof(wndPlacement);
 	GetWindowPlacement(m_hWnd, &wndPlacement);
-	g_Profile.WriteProfileInt(_T("LrcDownSelDlg_width"), CRect(wndPlacement.rcNormalPosition).Width());
-	g_Profile.WriteProfileInt(_T("LrcDownSelDlg_height"), CRect(wndPlacement.rcNormalPosition).Height());
+	g_Profile.WriteProfileInt(_T("DlgSearchLyr_width"), CRect(wndPlacement.rcNormalPosition).Width());
+	g_Profile.WriteProfileInt(_T("DlgSearchLyr_height"), CRect(wndPlacement.rcNormalPosition).Height());
 #endif
 	m_cmdBar.Destroy();
 
-	m_resultList.SaveColumnWidth(_T("LrcDownSelDlg_Files"));
+	m_resultList.SaveColumnWidth(_T("DlgSearchLyr"));
 
 	CBaseDialog::OnDestroy();
 
@@ -822,7 +822,7 @@ void UpdateLyrResultArtistTitle(V_LRCSEARCHRESULT &vResultsLocal)
 
 		if (result.strArtist.empty() && result.strTitle.empty())
 		{
-			AnalysisLyricsFileNameEx(szAr, szTi, result.strUrl.c_str());
+			AnalysisLyricsFileNameEx(szAr, szTi, result.strSaveFileName.c_str());
 			result.strArtist = szAr;
 			result.strTitle = szTi;
 		}
