@@ -343,7 +343,7 @@ CUIObject::CUIObject()
 	m_rcObj.SetRect(0, 0, 50, 30);
 
 //	m_strText[0] = '\0';
-	m_bTempTooltip = FALSE;
+	m_bTempTooltip = false;
 
 	m_bEnable = true;
 	m_bVisible = true;
@@ -351,6 +351,8 @@ CUIObject::CUIObject()
 	m_bUseSkinBg = false;
 
 	m_bTranslucencyWithSkin = false;
+
+	m_bCreated = false;
 }
 
 CUIObject::~CUIObject()

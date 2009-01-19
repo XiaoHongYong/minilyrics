@@ -294,8 +294,13 @@ protected:
 	static LPCTSTR		ms_szClassName;
 
 	tstring		m_strTooltip;
-	BOOL		m_bTempTooltip;
+	bool		m_bTempTooltip;
+
+private:
+	bool		m_bCreated;
+
 friend class CSkinWnd;
+friend class CSkinContainer;
 
 };
 

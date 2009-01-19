@@ -2016,7 +2016,11 @@ void CSkinWnd::OnAddUIObj(CUIObject *pObj)
 	// Only skin is opened, OnCreate will be called.
 	if (m_bSkinOpened)
 	{
-		pObj->OnCreate();
+		if (!pObj->m_bCreated)
+		{
+			pObj->m_bCreated = true;
+			pObj->OnCreate();
+		}
 
 		if (m_itFocusUIObject.Get() == NULL && pObj->WantMsgKey()
 			&& pObj->IsVisible() && pObj->IsParentVisible())
@@ -2250,12 +2254,12 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 
 	}
 
+	m_bSkinOpened = true;
+
 	//
 	// Call OnCreate of Every Child.
 	//
 	m_rootConainter.DispatchOnCreateMsg();
-
-	m_bSkinOpened = true;
 
 	// 
 	UpdateSkinProperty();

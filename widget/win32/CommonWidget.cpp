@@ -136,7 +136,7 @@ BOOL CWidgetScrollBar::Create(int x, int y, int nWidth, int nHeight, bool bVert,
 	BOOL		bRet;
 	DWORD		dwStyle = WS_CHILD;
 
-	ASSERT(m_hWnd != NULL);
+	ASSERT(m_hWnd == NULL);
 
 	dwStyle |= bVert ? SBS_VERT : SBS_HORZ;
 	bRet = CBaseWnd::CreateEx(_T("SCROLLBAR"), NULL, x, y, nWidth, nHeight, pWndParent, dwStyle, nID);

@@ -58,8 +58,11 @@ void CSkinContainer::DispatchOnCreateMsg()
 			CSkinContainer	*pContainer = pObj->GetContainerIf();
 			pContainer->DispatchOnCreateMsg();
 		}
-		else
+		else if (!pObj->m_bCreated)
+		{
+			pObj->m_bCreated = true;
 			pObj->OnCreate();
+		}
 	}
 
 	OnCreate();

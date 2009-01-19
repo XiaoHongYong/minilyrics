@@ -28,7 +28,7 @@ bool GetTimeTagOfLine(LPCTSTR szLine, tstring &strTimeTag)
 	// ignore minute
 	if (*szPtr == '-')
 		szPtr++;
-	for (i = 0; i < 3 && isdigit(*szPtr); i++)
+	for (i = 0; i < 3 && IsDigit(*szPtr); i++)
 		szPtr++;
 
 	// :
@@ -39,7 +39,7 @@ bool GetTimeTagOfLine(LPCTSTR szLine, tstring &strTimeTag)
 	// ignore sec
 	if (*szPtr == '-')
 		szPtr++;
-	for (i = 0; i < 3 && isdigit(*szPtr); i++)
+	for (i = 0; i < 3 && IsDigit(*szPtr); i++)
 		szPtr++;
 
 	if (*szPtr == ']')
@@ -55,7 +55,7 @@ bool GetTimeTagOfLine(LPCTSTR szLine, tstring &strTimeTag)
 		// ignore ms
 		if (*szPtr == '-')
 			szPtr++;
-		for (i = 0; i < 3 && isdigit(*szPtr); i++)
+		for (i = 0; i < 3 && IsDigit(*szPtr); i++)
 			szPtr++;
 
 		if (*szPtr == ']')
@@ -118,10 +118,10 @@ int GetTimeTagValue(const TCHAR *szTag, int nLen)
 		while (_IsCharBlank(*szTag))
 			szTag ++;
 
-		if (isdigit(szTag[1]))
+		if (IsDigit(szTag[1]))
 		{
 			// .000 or // .00
-			if (isdigit(szTag[2]))
+			if (IsDigit(szTag[2]))
 				nTime += _xtoi(szTag);
 			else
 				nTime += _xtoi(szTag) * 10;
