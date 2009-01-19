@@ -763,8 +763,6 @@ void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInet
 	else if (fileType == FT_LYRICS_TXT)	nImg = IMG_L_TXT;
 	else								nImg = IMG_L_UNKNOWN;
 
-	strName = Item.strSaveFileName;
-
 	if (!bInetFile)
 	{
 		// local file...
@@ -777,21 +775,17 @@ void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInet
 		else if (lrcSrcType == LST_FILE)
 		{
 			bLocalFile = true;
-			strName = tstring(_T("file://")) + Item.strSaveFileName;
 		}
 	}
 	else
 		nImg += IMG_OFFSET_INET;
 
-	nItem = m_resultList.InsertItem(m_resultList.GetItemCount(), strName.c_str(), nImg);
+	nItem = m_resultList.InsertItem(m_resultList.GetItemCount(), Item.strArtist.c_str(), nImg);
+	m_resultList.SetItemText(nItem, COL_TITLE, Item.strTitle.c_str());
 
 	if (Item.fRate != 0.0)
 	{
 		_stprintf(szTemp, _T("%.1f/5 (%d %s)"), Item.fRate, Item.nRateCount, TOLOCAL(_T("Votes")));
-	}
-	else if (bLocalFile)
-	{
-		FileGetPath(szTemp, CountOf(szTemp), Item.strUrl.c_str());
 	}
 	else
 		_tcscpy(szTemp, _T("-"));
@@ -803,11 +797,36 @@ void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInet
 		m_resultList.SetItemText(nItem, COL_DOWNLOADS, szTemp);
 	}
 
-	m_resultList.SetItemText(nItem, COL_UPLOADER, Item.strUploader.c_str());
-	m_resultList.SetItemText(nItem, COL_ARTIST, Item.strArtist.c_str());
-	m_resultList.SetItemText(nItem, COL_TITLE, Item.strTitle.c_str());
+	if (bLocalFile)
+	{
+		FileGetPath(szTemp, CountOf(szTemp), Item.strUrl.c_str());
+		m_resultList.SetItemText(nItem, COL_FROM, szTemp);
+	}
+	else
+		m_resultList.SetItemText(nItem, COL_FROM, Item.strUploader.c_str());
+
 	m_resultList.SetItemText(nItem, COL_ALBUM, Item.strAlbum.c_str());
+	m_resultList.SetItemText(nItem, COL_FILENAME, Item.strSaveFileName.c_str());
 	m_resultList.SetItemText(nItem, COL_URL, Item.strUrl.c_str());
+}
+
+
+void UpdateLyrResultArtistTitle(V_LRCSEARCHRESULT &vResultsLocal)
+{
+	V_LRCSEARCHRESULT::iterator	it;
+	TCHAR		szAr[256], szTi[256];
+
+	for (it = vResultsLocal.begin(); it != vResultsLocal.end(); ++it)
+	{
+		LrcSearchResult		&result = *it;
+
+		if (result.strArtist.empty() && result.strTitle.empty())
+		{
+			AnalysisLyricsFileNameEx(szAr, szTi, result.strUrl.c_str());
+			result.strArtist = szAr;
+			result.strTitle = szTi;
+		}
+	}
 }
 
 
@@ -861,8 +880,11 @@ void CDlgSearchLyrics::SearchLocal()
 
 	m_vResultsLocal.UpdateLyricsName();
 
+	UpdateLyrResultArtistTitle(m_vResultsLocal);
+
 	m_bAutoSearchLocal = (GetTickCount() - nTimeStart <= nAcceptableCostTime);
 }
+
 
 void CDlgSearchLyrics::SearchOnline()
 {
