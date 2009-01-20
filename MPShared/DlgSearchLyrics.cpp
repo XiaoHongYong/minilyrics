@@ -172,7 +172,6 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 {
 	CBaseDialog::OnCommand(uID, nNotifyCode);
 
-	// from menu or accelerator
 	switch (uID)
 	{
 #ifdef _WIN32_DESKTOP
@@ -263,9 +262,9 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 		}
 		break;
 	case IDC_NO_PROMPT:
-		// 如果存在多首匹配的歌词，则提示用户来选择
+		// Don't prompt this dialog automatically.
 		g_Profile.WriteProfileInt(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), 
-			!IsButtonChecked(IDC_NO_PROMPT));
+			!g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 		break;
 	case IDC_MORE:
 		{
@@ -285,6 +284,8 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			m_menu.EnableItem(IDC_EDIT_LYRICS, bEnable);
 			m_menu.EnableItem(IDC_DEL_FILE, bEnable);
 			m_menu.EnableItem(IDC_RENAME, bEnable);
+			m_menu.CheckItem(IDC_NO_PROMPT,
+				g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 			GetDlgItemRect(IDC_MORE, &rc);
 			m_menu.TrackPopupMenu(rc.left, rc.top, this);
 		}
@@ -592,8 +593,7 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	m_menu.LoadPopupMenu(IDR_MENU_OPEN_LRC_DLG, 0);
 	g_LangTool.ToLocalMenu(&m_menu);
 
-	EnableDlgItem(IDC_NEXT_PAGE, false);
-	EnableDlgItem(IDC_PREV_PAGE, false);
+	HidePreNextButtons(true);
 
 	g_OnlineSearch.SearchCacheForCur(&m_vResultsInet);
 	m_vResultsInet.Sort();
@@ -601,8 +601,6 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	SearchLocal();
 
 	UpdateSearchResultToListCtrl();
-	if (m_resultList.GetItemCount())
-		m_resultList.SetItemSelectionState(0, TRUE);
 
 	return TRUE;
 }
@@ -629,6 +627,7 @@ void CDlgSearchLyrics::OnDestroy()
 void CDlgSearchLyrics::OnSize(int cx, int cy)
 {
 	m_wndHelper.OnResize();
+	HidePreNextButtons(m_nPageCount <= 1);
 	InvalidateRect(NULL, TRUE);
 }
 
@@ -693,9 +692,6 @@ void CDlgSearchLyrics::OnSearch()
 	UpdateSearchResultToListCtrl();
 
 	m_resultList.SetItemSelectionState(0, TRUE);
-
-	EnableDlgItem(IDC_NEXT_PAGE, m_nCurPage < m_nPageCount - 1);
-	EnableDlgItem(IDC_PREV_PAGE, m_nCurPage > 0);
 }
 
 void CDlgSearchLyrics::OnOK()
@@ -744,6 +740,10 @@ void CDlgSearchLyrics::UpdateSearchResultToListCtrl()
 	{
 		AppendItemInResultsList(*it, true);
 	}
+
+	if (m_resultList.GetItemCount()
+		&& !g_LyricSearch.IsAssociatedWithNoneLyrics(m_szAssociateKeyword))
+		m_resultList.SetItemSelectionState(0, TRUE);
 }
 
 void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInetFile)
@@ -754,7 +754,7 @@ void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInet
 	MLFileType		fileType;
 	LRC_SOURCE_TYPE	lrcSrcType;
 	tstring			strName;
-	bool			bLocalFile = true;
+	bool			bLocalFile = false;
 
 	lrcSrcType = GetLrcSourceType(Item.strUrl.c_str());
 
@@ -843,7 +843,7 @@ void CDlgSearchLyrics::SearchLocal()
 	strFullTitle += _T(" - ");
 	strFullTitle += m_strTitle;
 
-	{
+/*	{
 		//
 		// Add "No suitable lyrics"
 		//
@@ -852,14 +852,15 @@ void CDlgSearchLyrics::SearchLocal()
 		result.strSaveFileName = TOLOCAL(_T("No suitable lyrics for the song file"));
 		result.nMatchValue = MATCH_VALUE_WITH_LRC - 5;
 		m_vResultsLocal.AddResult(result);
-	}
+	}*/
 
 	g_LyricSearch.SearchAllMatchLyrics(m_strSongFile.c_str(), strFullTitle.c_str(), m_vResultsLocal);
 
 	//
 	// Set best match lyrics
 	//
-	if (g_LyricSearch.GetBestMatchLyrics(m_strSongFile.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), szLyricsFile))
+	if (g_LyricSearch.GetBestMatchLyrics(m_strSongFile.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), szLyricsFile)
+		&& !g_LyricSearch.IsAssociatedWithNoneLyrics(m_szAssociateKeyword))
 	{
 		LrcSearchResult	*pResult;
 		pResult = m_vResultsLocal.SearchByUrl(szLyricsFile);
@@ -935,27 +936,20 @@ void CDlgSearchLyrics::SearchOnline()
 	m_nCurPage = searchObj.m_nCurPage;
 	m_nPageCount = searchObj.m_nPageCount;
 
-	// only one page
-	// if (m_strTitleLastSearch.empty())
-/*	{
-		// search by artist, sort the result by abc order.
-		CLyricsResultSortCmp	cmpFun;
-
-		sort_insert(m_vResultsInet, vResult.begin(), vResult.end(), cmpFun);
-	}*/
 	m_vResultsInet.Sort();
 
 	if (m_nPageCount > 1)
 	{
 		m_vCachePages.push_back(m_vResultsInet);
-		ShowDlgItem(IDC_PREV_PAGE, SW_SHOW);
-		ShowDlgItem(IDC_NEXT_PAGE, SW_SHOW);
+		HidePreNextButtons(false);
 	}
 	else
 	{
-		ShowDlgItem(IDC_PREV_PAGE, SW_HIDE);
-		ShowDlgItem(IDC_NEXT_PAGE, SW_HIDE);
+		HidePreNextButtons(true);
 	}
+
+	EnableDlgItem(IDC_NEXT_PAGE, m_nCurPage < m_nPageCount - 1);
+	EnableDlgItem(IDC_PREV_PAGE, m_nCurPage > 0);
 }
 
 LrcSearchResult *CDlgSearchLyrics::GetCurSel()
@@ -977,4 +971,24 @@ LrcSearchResult *CDlgSearchLyrics::GetCurSel()
 		ASSERT(0 && "Invalid order");
 		return NULL;
 	}
+}
+
+void CDlgSearchLyrics::HidePreNextButtons(bool bHide)
+{
+	CRect		rcBt, rcResultList;
+
+	if (GetDlgItemRect(IDC_NEXT_PAGE, &rcBt)
+		&& GetDlgItemRect(IDC_RESULT_LIST, &rcResultList))
+	{
+		if (bHide)
+			rcResultList.bottom = rcBt.bottom;
+		else
+			rcResultList.bottom = rcBt.top - 2;
+
+		ScreenToClient(rcResultList);
+		m_resultList.MoveWindow(rcResultList.left, rcResultList.top, rcResultList.Width(), rcResultList.Height());
+	}
+
+	ShowDlgItem(IDC_PREV_PAGE, bHide ? SW_HIDE : SW_SHOW);
+	ShowDlgItem(IDC_NEXT_PAGE, bHide ? SW_HIDE : SW_SHOW);
 }

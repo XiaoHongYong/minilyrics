@@ -16,7 +16,6 @@
 #include "SkinSeekCtrl.h"
 #include "SkinRateCtrl.h"
 #include "DlgSearchLyrics.h"
-#include "LyricsDownSelDlg.h"
 #include "DlgSelFileEncoding.h"
 #include "DlgSelMbcsEncoding.h"
 #include "../widget/win32/FileOpenDlg.h"

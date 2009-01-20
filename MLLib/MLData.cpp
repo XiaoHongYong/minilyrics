@@ -2751,7 +2751,7 @@ PML_ROW CMLData::CopyMLRow(PML_ROW pRowSrc)
 		pFrag->nBegTime = pFragSrc->nBegTime;
 		pFrag->nEndTime = pFragSrc->nEndTime;
 		pFrag->nDrawWidth = pFragSrc->nDrawWidth;
-		_tcscpy(pFrag->szLyric, pFragSrc->szLyric);
+		_tcscpy_safe(pFrag->szLyric, pFragSrc->nLen + 1, pFragSrc->szLyric);
 		pFrag->nLen = pFragSrc->nLen;
 		pFrag->dwAttrib = pFragSrc->dwAttrib;
 

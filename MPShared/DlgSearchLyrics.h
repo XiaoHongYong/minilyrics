@@ -64,6 +64,8 @@ protected:
 
 	LrcSearchResult *GetCurSel();
 
+	void HidePreNextButtons(bool bHide);
+
 protected:
 	CMLWndHelper		m_wndHelper;
 	CWidgetListCtrl		m_resultList;
