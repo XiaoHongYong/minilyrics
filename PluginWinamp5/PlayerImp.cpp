@@ -9,25 +9,6 @@
 #include "frontend.h"
 #include <PROCESS.H>
 
-char * __cdecl strcat_safe(
-        char * dst,
-		int	Size,
-        const char * src
-        )
-{
-        char * cp = dst;
-		char * endcp = dst + Size - 1;
-
-        while( *cp )
-                cp++;                   /* find end of dst */
-
-        while((cp < endcp) && (*cp++ = *src++)) ;       /* Copy src to end of dst */
-
-		*cp = '\0';
-
-        return( dst );                  /* return dst */
-}
-
 bool WAGetSourceMedia(char * lpszBuffer, int nBufSize)
 {
 	int			nLen;
@@ -1200,7 +1181,7 @@ int CPlayerImp::HasVideo()
 		if (SendMessage(g_hwndPlayer, WM_WA_IPC, 0, IPC_IS_PLAYING_VIDEO) > 1)
 			return PR_OK;
 		else
-			return PR_FAILED;
+			return PR_UNIMPLEMENTED;
 	}
 	else
 		return PR_UNIMPLEMENTED;

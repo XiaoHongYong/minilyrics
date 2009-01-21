@@ -486,7 +486,10 @@ void CMPSkinFactory::MinizeAll(bool bSilently)
 	{
 		CSkinWnd	*pWnd = *it;
 		if (pWnd->IsToolWindow())
+		{
+			pWnd->ShowWindow(SW_SHOWMINNOACTIVE);
 			pWnd->ShowWindow(SW_HIDE);
+		}
 		else
 			pWnd->ShowWindow(bSilently ? SW_SHOWMINNOACTIVE : SW_MINIMIZE);
 	}
