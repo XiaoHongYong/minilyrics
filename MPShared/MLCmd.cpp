@@ -9,16 +9,13 @@
 // ID 的字符串与数值的映射表
 STRING_ID_MAP g_StringIdMap[] = 
 {
-	{ _T("ID_NONE"), CMD_NONE, NULL },		// 不需要ID值 , NULL },
 	{ _T("ID_WND_TITLE"), CMD_WND_TITLE, NULL },
 	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, _T("Minimize") },
 	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, _T("Maximize") },
 	{ _T("ID_TOPMOST"), CMD_TOPMOST, _T("Toggle always on top") },
 	{ _T("ID_CLOSE"), CMD_CLOSE, _T("Close") },
 	{ _T("ID_QUIT"), CMD_QUIT, _T("Quit") },
-	{ _T("ID_LYRICSSHOWOBJ"), ID_LYRICSSHOWOBJ, NULL },
 	{ _T("ID_WORK_AREA"), ID_WORK_AREA, NULL },
-	{ _T("ID_VSCROLLBAR"), ID_VSCROLLBAR, NULL },
 	{ _T("ID_TOOLBAR"), ID_TOOLBAR, NULL },
 	{ _T("ID_RATE_LYR"), CMD_RATE_LYR, _T("Rate this lyrics") },
 	{ _T("ID_MENU"), CMD_MENU, _T("Menu") },
@@ -31,6 +28,10 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_FORWARD"), CMD_FORWARD, _T("Forward") },
 	{ _T("ID_J_PREV_LINE"), CMD_J_PREV_LINE, _T("Jump to previous line of lyrics") },
 	{ _T("ID_J_NEXT_LINE"), CMD_J_NEXT_LINE, _T("Jump to next line of lyrics") },
+
+	{ _T("ID_FONT_SIZE_INC"), CMD_FONT_SIZE_INC, _T("Increase font size") },
+	{ _T("ID_FONT_SIZE_DEC"), CMD_FONT_SIZE_DEC, _T("Decrease font size") },
+
 	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, _T("Synchronize the current line(Ctrl+F7)") },
 	{ _T("ID_DEL_TAG"), CMD_DEL_TAG, _T("Remove Timestamp of the current line") },
 	{ _T("ID_INSERTTAG_DOWN"), CMD_INSERTTAG_DOWN, _T("Synchronize the current line and move down one line(F7)") },
@@ -43,8 +44,6 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_AUTO_FILL_LYR_INFO"), CMD_AUTO_FILL_LYR_INFO, _T("Auto fill artist, album and title info") },
 	{ _T("ID_EDIT_TAG"), CMD_EDIT_TAG, _T("Lyrics Information") },
 	{ _T("ID_MENU_LYR_EDIT"), CMD_MENU_LYR_EDIT, _T("More...") },
-	{ _T("ID_EDIT_VIEW_ALIGH_HORZ"), CMD_EDIT_VIEW_ALIGH_HORZ, _T("Align lyrics editor horizontally") },
-	{ _T("ID_EDIT_VIEW_ALIGH_VERT"), CMD_EDIT_VIEW_ALIGH_VERT, _T("Align lyrics editor vertically") },
 
 	{ _T("ID_EDIT_UNDO"), CMD_EDIT_UNDO, _T("Undo (Ctrl+Z)") },
 	{ _T("ID_EDIT_REDO"), CMD_EDIT_REDO, _T("Redo (Ctrl+Y)") },
@@ -124,7 +123,6 @@ STRING_ID_MAP g_StringIdMap[] =
 
 	{ _T("CMD_TOGGLE_MP"), CMD_TOGGLE_MP, _T("Bring to front/Hide MiniLyrics") },
 	{ _T("CMD_PREFERENCES"), CMD_PREFERENCES, _T("Preferences") },
-	{ _T("CMD_FLOATING_LYRICS"), CMD_FLOATING_LYRICS, _T("Floating Lyrics") },
 	{ NULL, 0, NULL },
 };
 
@@ -149,16 +147,27 @@ MLCmdAccKey		g_mlCmdAccKey[] =
 	{ CMD_TOGGLE_SCREEEN, 0, 0, 0, 0 },
 	{ CMD_SHUFFLE, 0, 0, 0, 0 },
 	{ CMD_LOOP, 0, 0, 0, 0 },
-	{ CMD_UNDEFINE, 0, 0, 0, 0 },
 };
 
 int				g_mlCmdAccKeyCount = CountOf(g_mlCmdAccKey) - 1;
 
 #else
 
-LPCTSTR MPCMDIDToStr(STRING_ID_MAP idStr[], int nCmd)
+ML_CUSTOM_COMMAND MPCMDStrToID(LPCTSTR szID)
 {
-	STRING_ID_MAP		*p = idStr;
+	STRING_ID_MAP		*p = g_StringIdMap;
+	for (; p->szId != NULL; p++)
+	{
+		if (_tcsicmp(p->szId, szID) == 0)
+			return (ML_CUSTOM_COMMAND)p->nId;
+	}
+
+	return (ML_CUSTOM_COMMAND)SKIN_UIOBJ_ID_UNDEFINE;
+}
+
+LPCTSTR MPCMDIDToStr(int nCmd)
+{
+	STRING_ID_MAP		*p = g_StringIdMap;
 	for (; p->szId != NULL; p++)
 	{
 		if (p->nId == nCmd)
@@ -168,9 +177,9 @@ LPCTSTR MPCMDIDToStr(STRING_ID_MAP idStr[], int nCmd)
 	return NULL;
 }
 
-LPCTSTR MPCMDIDToToolTip(STRING_ID_MAP idStr[], int nCmd)
+LPCTSTR MPCMDIDToToolTip(int nCmd)
 {
-	STRING_ID_MAP		*p = idStr;
+	STRING_ID_MAP		*p = g_StringIdMap;
 	for (; p->szId != NULL; p++)
 	{
 		if (p->nId == nCmd)

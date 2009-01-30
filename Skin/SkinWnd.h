@@ -311,6 +311,24 @@ protected:
 
 	friend class CSkinContainer;
 
+protected:
+	//
+	// Hide UIObject, if mouse is inactive in 3 seconds.
+	//
+	uint32			m_nTimeLatestMouseMsg;
+	bool			m_bMouseInactive;
+
+	void OnMouseActiveMsg();
+	void OnTimerMouseInactive();
+
+public:
+	//
+	// Public method for Hide UIObject, if mouse is inactive.
+	//
+	bool			m_bHasUIObjHideOnMouseInactive;
+
+	bool IsMouseInactive() { return m_bMouseInactive; }
+
 public:
 	CSkinWndDrag	m_WndDrag;
 	CSkinWndResizer	m_wndResizer;
@@ -370,17 +388,9 @@ protected:
 	// draw buffer
 	CRawGraph		*m_pmemGraph;
 
-	// All the children UIObject
-	typedef vector<CUIObject *>		V_UIOBJECT;
-	V_UIOBJECT		m_vUIObjs;
-
-	CUIObjectIterator	m_itFocusUIObject;
-
-	// only one ui object can capture the mouse at any time
-	CUIObject		*m_pUIObjCapMouse;
-
 	//
 	// Timer IDs
+	//
 	typedef struct TIMER_OBJECT
 	{
 		CUIObject	*pObj;
@@ -392,8 +402,14 @@ protected:
 	typedef map<int, TIMER_OBJECT>	MAP_TIMER_OBJS;
 	MAP_TIMER_OBJS	m_mapTimerObjs;
 
+
 	// root skin uiobject container
 	CSkinContainer	m_rootConainter;
+
+	CUIObjectIterator	m_itFocusUIObject;
+
+	// only one ui object can capture the mouse at any time
+	CUIObject		*m_pUIObjCapMouse;
 
 	// auto allocated uni-ID
 	int				m_nNextAuoUniID;
@@ -403,7 +419,7 @@ protected:
 	bool			m_bIgnoreNextOnCharMsg;
 
 	//
-	// IUIObjNotifyHandler list
+	// UIObject notification handler : Register, Unregister and dispatch
 	//
 	struct UIObjNotifyHandlerInfo
 	{

@@ -60,7 +60,7 @@ CMediaAlbumArtCtrl::CMediaAlbumArtCtrl()
 
 	m_clrBg.set(RGB(0, 0, 0));
 	m_brBg.CreateSolidBrush(m_clrBg);
-	m_rcImageMaskPos.SetRect(0, 0, 0, 0);
+	m_rcFrameMaskPos.SetRect(0, 0, 0, 0);
 }
 
 CMediaAlbumArtCtrl::~CMediaAlbumArtCtrl()
@@ -110,7 +110,7 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 
 	if (IsMaskImageUsed())
 	{
-		m_img.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 0, 0, BPM_ALPHA_BLEND);
+		m_img.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 0, 0, BPM_BLEND);
 		return;
 	}
 
@@ -131,7 +131,7 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 	{
 		// fill left and right
 		h = rc.Height();
-		if (!m_bTransparent)
+		if (!m_bUseSkinBg)
 		{
 			pGraph->FillRect(rc.left, rc.top, (rc.Width() - w) / 2, h, &m_brBg);
 			pGraph->FillRect(rc.right - (rc.Width() - w) / 2, rc.top, (rc.Width() - w) / 2, h, &m_brBg);
@@ -142,14 +142,14 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 		// fill top and bottom
 		h = m_img.m_cy * rc.Width() / m_img.m_cx;
 		w = rc.Width();
-		if (!m_bTransparent)
+		if (!m_bUseSkinBg)
 		{
 			pGraph->FillRect(rc.left, rc.top, w, (rc.Height() - h) / 2, &m_brBg);
 			pGraph->FillRect(rc.left, rc.bottom - (rc.Height() - h) / 2, w, (rc.Height() - h) / 2, &m_brBg);
 		}
 	}
 
-	m_img.Blt(pGraph, rc.left + (rc.Width() - w) / 2, rc.top + (rc.Height() - h) / 2, BPM_ALPHA_BLEND);
+	m_img.Blt(pGraph, rc.left + (rc.Width() - w) / 2, rc.top + (rc.Height() - h) / 2, BPM_BLEND);
 }
 
 BOOL CMediaAlbumArtCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -162,16 +162,16 @@ BOOL CMediaAlbumArtCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_strImgFile = szValue;
 		m_img.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 	}
-	if (_tcsicmp(szProperty, _T("ImageMask")) == 0)
+	else if (_tcsicmp(szProperty, _T("FrameMask")) == 0)
 	{
-		m_strImgMask = szValue;
-		m_imgMask.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
+		m_strFrmMask = szValue;
+		m_frmMask.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 	}
-	if (_tcsicmp(szProperty, _T("ImageMaskRectPos")) == 0)
+	else if (_tcsicmp(szProperty, _T("FrameMaskRectPos")) == 0)
 	{
-		GetRectValue(szValue, m_rcImageMaskPos.left, m_rcImageMaskPos.top, m_rcImageMaskPos.right, m_rcImageMaskPos.bottom);
-		m_rcImageMaskPos.right += m_rcImageMaskPos.left;
-		m_rcImageMaskPos.bottom += m_rcImageMaskPos.top;
+		GetRectValue(szValue, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, m_rcFrameMaskPos.right, m_rcFrameMaskPos.bottom);
+		m_rcFrameMaskPos.right += m_rcFrameMaskPos.left;
+		m_rcFrameMaskPos.bottom += m_rcFrameMaskPos.top;
 	}
 	else if (_tcsicmp(szProperty, _T("BgColor")) == 0)
 	{
@@ -234,7 +234,7 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 	CSFImage	imgAaFrame;
 
 	// Create a scale sized image for album art
-	pImgSizedAlbumArt = CreateScaleImage(pImgSrc, m_rcImageMaskPos.Width(), m_rcImageMaskPos.Height());
+	pImgSizedAlbumArt = CreateScaleImage(pImgSrc, m_rcFrameMaskPos.Width(), m_rcFrameMaskPos.Height());
 	if (pImgSizedAlbumArt)
 		pImgSizedAlbumArt = ConvertTo32BppRawImage(pImgSizedAlbumArt);
 	if (!pImgSizedAlbumArt)
@@ -263,37 +263,37 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 
 	clrBg.set(0);
 	clrBg.setAlpha(0);
-	ClearRawImage(pImg, clrBg);
+	RawImageSet(pImg, clrBg.r(), clrBg.g(), clrBg.b(), clrBg.getAlpha());
 	m_img.Attach(pImg);
 
 	//
 	// Album Art --> Add mask --> Blt to Frame
 	//
-	w = m_rcImageMaskPos.Width();
-	h = m_rcImageMaskPos.Height();
+	w = m_rcFrameMaskPos.Width();
+	h = m_rcFrameMaskPos.Height();
 	if (w == pImgSizedAlbumArt->width)
 	{
 		int		hTop = pImgSizedAlbumArt->height / 2;
 		int		hBottom = pImgSizedAlbumArt->height - hTop;
 
 		// blt top mask
-		m_imgMask.Blt(&imgSizedAlbumArt, 0, 0, w, hTop, 0, 0, BPM_ALPHA_MASK);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, w, hTop, 0, 0, BPM_MULTIPLY);
 
 		// blt top to frame
-		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcImageMaskPos.left, m_rcImageMaskPos.top, w, hTop, 0, 0, BPM_ALPHA_BLEND);
+		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, w, hTop, 0, 0, BPM_BLEND);
 
 		// blt top to Image
-		imgAaFrame.Blt(&m_img, 0, m_img.height() / 2 - (hTop + m_rcImageMaskPos.top), m_img.width(), hTop + m_rcImageMaskPos.top, 0, 0, BPM_COPY);
+		imgAaFrame.Blt(&m_img, 0, m_img.height() / 2 - (hTop + m_rcFrameMaskPos.top), m_img.width(), hTop + m_rcFrameMaskPos.top, 0, 0, BPM_COPY);
 
 
 		// blt bottom mask
-		m_imgMask.Blt(&imgSizedAlbumArt, 0, hTop, w, hBottom, 0, m_imgMask.height() - hBottom, BPM_ALPHA_MASK);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, hTop, w, hBottom, 0, m_frmMask.height() - hBottom, BPM_MULTIPLY);
 
 		// blt bottom to frame
-		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcImageMaskPos.left, m_rcImageMaskPos.bottom - hBottom, w, hBottom, 0, hTop, BPM_ALPHA_BLEND);
+		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.bottom - hBottom, w, hBottom, 0, hTop, BPM_BLEND);
 
 		// blt bottom to Image
-		imgAaFrame.Blt(&m_img, 0, m_img.height() / 2, m_img.width(), hBottom + (m_img.height() - m_rcImageMaskPos.bottom), 0, m_rcImageMaskPos.bottom - hBottom, BPM_COPY);
+		imgAaFrame.Blt(&m_img, 0, m_img.height() / 2, m_img.width(), hBottom + (m_img.height() - m_rcFrameMaskPos.bottom), 0, m_rcFrameMaskPos.bottom - hBottom, BPM_COPY);
 	}
 	else
 	{
@@ -301,24 +301,26 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 		int		wRight = pImgSizedAlbumArt->width - wLeft;
 
 		// blt left mask
-		m_imgMask.Blt(&imgSizedAlbumArt, 0, 0, wLeft, h, 0, 0, BPM_ALPHA_MASK);
+		m_frmMask.Blt(&imgSizedAlbumArt, 0, 0, wLeft, h, 0, 0, BPM_MULTIPLY);
 
 		// blt left to frame
-		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcImageMaskPos.left, m_rcImageMaskPos.top, wLeft, h, 0, 0, BPM_ALPHA_BLEND);
+		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, wLeft, h, 0, 0, BPM_BLEND);
 
 		// blt left to Image
-		imgAaFrame.Blt(&m_img, m_img.width() / 2 - (wLeft + m_rcImageMaskPos.left), 0, wLeft + m_rcImageMaskPos.left, m_img.height(), 0, 0, BPM_COPY);
+		imgAaFrame.Blt(&m_img, m_img.width() / 2 - (wLeft + m_rcFrameMaskPos.left), 0, wLeft + m_rcFrameMaskPos.left, m_img.height(), 0, 0, BPM_COPY);
 
 
 		// blt right mask
-		m_imgMask.Blt(&imgSizedAlbumArt, wLeft, 0, wRight, h, m_imgMask.width() - wRight, 0, BPM_ALPHA_MASK);
+		m_frmMask.Blt(&imgSizedAlbumArt, wLeft, 0, wRight, h, m_frmMask.width() - wRight, 0, BPM_MULTIPLY);
 
 		// blt right to frame
-		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcImageMaskPos.right - wRight, m_rcImageMaskPos.top, wRight, h, wLeft, 0, BPM_ALPHA_BLEND);
+		imgSizedAlbumArt.Blt(&imgAaFrame, m_rcFrameMaskPos.right - wRight, m_rcFrameMaskPos.top, wRight, h, wLeft, 0, BPM_BLEND);
 
 		// blt right to Image
-		imgAaFrame.Blt(&m_img, m_img.width() / 2, 0, wRight + (m_img.width() - m_rcImageMaskPos.right), m_img.height(), m_rcImageMaskPos.right - wRight, 0, BPM_COPY);
+		imgAaFrame.Blt(&m_img, m_img.width() / 2, 0, wRight + (m_img.width() - m_rcFrameMaskPos.right), m_img.height(), m_rcFrameMaskPos.right - wRight, 0, BPM_COPY);
 	}
+
+	FreeRawImage(pImgSrc);
 }
 
 void CMediaAlbumArtCtrl::ResizeAlbumArt()

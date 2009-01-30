@@ -22,7 +22,6 @@ MenuItemCheck _menuItemsCheck[] =
 	{ IDC_CLICK_THROUGH, NULL, NULL, _T("1"), NULL, },
 	{ IDC_SETTOPMOST, NULL, NULL, _T("1"), NULL, },
 	{ IDC_LDO_KARAOKE, NULL, NULL, _T("1"), NULL, },
-	{ IDC_FLOATING_LYRICS, NULL, NULL, _T("1"), NULL, },
 	{ IDC_CLICK_THROUGH_FLOATING_LYR, SZ_SECT_FLOATING_LYR, _T("ClickThrough"), _T("1"), NULL, },
 };
 

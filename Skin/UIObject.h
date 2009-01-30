@@ -283,6 +283,7 @@ public:
 	bool		m_bEnable;		// Is control being enabled?
 	bool		m_bVisible;
 	bool		m_bHideIfWndInactive;
+	bool		m_bHideIfMouseInactive;
 	bool		m_bUseSkinBg;	// Invalidate call will update background, if m_bUseSkinBg is true
 
 	bool		m_bTranslucencyWithSkin;	// Set the alpha of UIObject to the skin, if this flag is set.

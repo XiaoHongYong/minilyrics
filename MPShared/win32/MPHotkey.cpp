@@ -28,7 +28,6 @@ MLCmdAccKey		g_mlCmdAccKey[] =
 	{ CMD_TOGGLE_SCREEEN, 0, 0, 0, 0 },
 	{ CMD_SHUFFLE, 0, 0, 0, 0 },
 	{ CMD_LOOP, 0, 0, 0, 0 },
-	{ CMD_UNDEFINE, 0, 0, 0, 0 },
 };
 
 int				g_mlCmdAccKeyCount = CountOf(g_mlCmdAccKey) - 1;*/
@@ -36,7 +35,7 @@ int				g_mlCmdAccKeyCount = CountOf(g_mlCmdAccKey) - 1;*/
 
 int				g_hcPlayback[] = { CMD_PLAY, CMD_PLAYPAUSE, CMD_STOP, CMD_PREVIOUS, CMD_NEXT, CMD_FORWARD, CMD_BACKWARD, 0 };
 int				g_hcGeneral[] = { CMD_QUIT, 0 };
-int				g_hcUI[] = { CMD_TOGGLE_MP, CMD_FLOATING_LYRICS, CMD_PREFERENCES, CMD_TOPMOST, 0 };
+int				g_hcUI[] = { CMD_TOGGLE_MP, CMD_PREFERENCES, CMD_TOPMOST, 0 };
 int				g_hcLyrics[] = { CMD_SEARCH_LYRICS, CMD_BACKWARD_LYRICS, CMD_FORWARD_LYRICS, 0 };
 
 MPHotKeySection		g_vHotkeySections[] = 
@@ -54,13 +53,10 @@ CMPHotkey::CmdAccKey			g_vDefAccKey[] =
 	{ CMD_FORWARD_LYRICS, VK_DOWN, MOD_CONTROL | MOD_SHIFT, 0 },
 	{ CMD_TOPMOST, 'T', MOD_CONTROL | MOD_SHIFT, 0 },
 	{ CMD_TOGGLE_MP, 'M', MOD_CONTROL | MOD_ALT, 0 },
-	{ CMD_FLOATING_LYRICS, 'F', MOD_CONTROL | MOD_ALT, 0 },
 };
 
-#define SZ_HOTKEY_FILE_HEADER	"HotkeysV1.0"
+#define SZ_HOTKEY_FILE_HEADER	_T("HotkeysV1.0")
 #define SZ_HOTKEY_FILENAME		_T("hotkeys.cfg")
-
-LPCTSTR MPCMDIDToStr(STRING_ID_MAP idStr[], int nCmd);
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -217,102 +213,81 @@ int CMPHotkey::LoadSettings()
 {
 	// every line is a hotkey settings.
 	// cmd, keycode, modifiers
-	FILE		*fp;
 	tstring		strFile;
-	char		szBuff[512];
-	tstringex	strCmd;
+	CCSVFile	file;
+	tstring		str;
 
 	m_vAccKey.clear();
 
 	strFile = GetAppDataDir();
 	strFile += SZ_HOTKEY_FILENAME;
 
-	fp = _tfopen(strFile.c_str(), _T("rb"));
-	if (!fp)
+	if (!file.Open(strFile.c_str(), CCSVFile::OM_READ))
 		return ERR_OPEN_FILE;
 
-	if (!fgets(szBuff, CountOf(szBuff), fp))
-	{
-		fclose(fp);
-		return ERR_READ_FILE;
-	}
-
-	if (strncmp(szBuff, SZ_HOTKEY_FILE_HEADER, strlen(SZ_HOTKEY_FILE_HEADER)) != 0)
-	{
-		fclose(fp);
+	// File header correct?
+	if (!file.ReadLine() || !file.ReadFieldString(str))
 		return ERR_BAD_FILE_FORMAT;
-	}
+	if (_tcscmp(str.c_str(), SZ_HOTKEY_FILE_HEADER) != 0)
+		return ERR_BAD_FILE_FORMAT;
 
-	while (fgets(szBuff, CountOf(szBuff), fp))
+	while (file.ReadLine())
 	{
 		CmdAccKey	cmdKey;
 
-		char	*p = szBuff;
-		char	*pEnd;
+		if (!file.ReadFieldString(str))
+			continue;
 
 		// Cmd
-		pEnd = strchr(p, ',');
-		if (!pEnd)
+		cmdKey.cmd = MPCMDStrToID(str.c_str());
+		if (cmdKey.cmd == SKIN_UIOBJ_ID_UNDEFINE)
 			continue;
-		*pEnd = '\0';
-		ConvertStr(p, -1, strCmd);
-		cmdKey.cmd = (ML_CUSTOM_COMMAND)g_mpApp.GetSkinFactory()->GetIDByName(strCmd.c_str());
 
 		// keycode
-		p = pEnd + 1;
-		pEnd = strchr(p, ',');
-		if (!pEnd)
+		int		nValue;
+		if (!file.ReadFieldInt(nValue))
 			continue;
-		*pEnd = '\0';
-		cmdKey.button = (uint16)atoi(p);
-		if (cmdKey.button == 0)
-			continue;
+		cmdKey.button = (uint16)nValue;
 
 		// modifier
-		p = pEnd + 1;
-		cmdKey.fsModifiers = (uint16)atoi(p);
+		if (!file.ReadFieldInt(nValue))
+			continue;
+		cmdKey.fsModifiers = (uint16)nValue;
 
 		cmdKey.idHotKey = 0;
 		m_vAccKey.push_back(cmdKey);
 	}
-	fclose(fp);
 
 	return ERR_OK;
 }
 
 int CMPHotkey::SaveSettings()
 {
-	FILE		*fp;
 	tstring		strFile;
-	char		szBuff[512];
-	stringex strCmd;
+	CCSVFile	file;
 
 	strFile = GetAppDataDir();
 	strFile += SZ_HOTKEY_FILENAME;
 
-	fp = _tfopen(strFile.c_str(), _T("wb"));
-	if (!fp)
+	if (!file.Open(strFile.c_str(), CCSVFile::OM_WRITE))
 		return ERR_OPEN_FILE;
 
-	fwrite(SZ_HOTKEY_FILE_HEADER, 1, strlen(SZ_HOTKEY_FILE_HEADER), fp);
-	fwrite("\n", 1, 1, fp);
+	file.WriteFieldString(SZ_HOTKEY_FILE_HEADER);
+	file.WriteLine();
 
 	for (int i = 0; i < (int)m_vAccKey.size(); i++)
 	{
 		CmdAccKey	&cmdKey = m_vAccKey[i];
-		int			nLen;
-		LPCTSTR		szID = MPCMDIDToStr(g_StringIdMap, cmdKey.cmd);
+		LPCTSTR		szID = MPCMDIDToStr(cmdKey.cmd);
 
 		if (!szID)
 			continue;
 
-		ConvertStr(szID, -1, strCmd);
-		sprintf(szBuff, "%s,%d,%d\n", strCmd.c_str(), cmdKey.button, cmdKey.fsModifiers);
-		nLen = strlen(szBuff);
-		if (fwrite(szBuff, 1, nLen, fp) != nLen)
-			break;
+		file.WriteFieldString(szID);
+		file.WriteFieldInt(cmdKey.button);
+		file.WriteFieldInt(cmdKey.fsModifiers);
+		file.WriteLine();
 	}
-	fclose(fp);
 
 	return ERR_OK;
 }

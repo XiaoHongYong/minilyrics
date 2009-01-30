@@ -73,8 +73,6 @@ public:
 	int GetChildrenCount() { return m_vUIObjs.size(); }
 	CUIObject *GetChildByIndex(int nIndex)
 		{ if (nIndex >= 0 && nIndex < (int)m_vUIObjs.size()) return m_vUIObjs[nIndex]; else return NULL; }
-	CUIObject *GetChildByID(int nID);
-	CUIObject *GetChildByName(LPCTSTR szName);
 
 	virtual bool IsContainer() const { return true; }
 	virtual CSkinContainer *GetContainerIf() { return this; }

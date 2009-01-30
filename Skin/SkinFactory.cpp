@@ -562,34 +562,13 @@ void CSkinFactory::SetStringIDMap(STRING_ID_MAP StringIdMap[])
 //		改进方法: 对所有的ID字符串值进行排序,然后使用二分法进行搜索
 int CSkinFactory::GetIDByName(LPCTSTR szId)
 {
-	assert(szId);
-	assert(m_IdMap);
-	if (!m_IdMap)
+	const STRING_ID_MAP	*pID;
+
+	pID = GetIDByNameEx(szId);
+	if (!pID)
 		return SKIN_UIOBJ_ID_UNDEFINE;
 
-	if (IsEmptyString(szId))
-		return SKIN_UIOBJ_ID_UNDEFINE;
-
-	for (int i = 0; m_IdMap[i].szId != 0; i++)
-	{
-		if (_tcsicmp(szId, m_IdMap[i].szId) == 0)
-		{
-			return m_IdMap[i].nId;
-		}
-	}
-
-	MAP_STRID::iterator it = m_mapCmdStrId.find(szId);
-	if (it != m_mapCmdStrId.end())
-	{
-		return (*it).second;
-	}
-
-	m_nCustomCmdIDNext++;
-
-	// DBGLOG2(_T("Allocated customized CmdID value: %s, %d"), szId, m_nCustomCmdIDNext);
-	m_mapCmdStrId[szId] = m_nCustomCmdIDNext;
-
-	return m_nCustomCmdIDNext;
+	return pID->nId;
 }
 
 // COMMENT:
@@ -611,7 +590,7 @@ const STRING_ID_MAP *CSkinFactory::GetIDByNameEx(LPCTSTR szId)
 	}
 
 	static STRING_ID_MAP	customAllocID;
-	customAllocID.szId = NULL;
+	customAllocID.szId = szId;
 	customAllocID.szToolTip = NULL;
 
 	MAP_STRID::iterator it = m_mapCmdStrId.find(szId);
@@ -710,7 +689,7 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	tstring		strSkinWndDef;
 	tstring		strSkinWndName;
 
-	strSkinWndDef = g_Profile.GetProfileString(szSkinName, _T("DefaultSkinWnd"), _T(""));
+	// strSkinWndDef = g_Profile.GetProfileString(szSkinName, _T("DefaultSkinWnd"), _T(""));
 	nRet = m_skinFile.GetMainSkinWnd(strSkinWndName, strSkinWndDef.c_str());
 	if (nRet != ERR_OK)
 	{

@@ -636,30 +636,6 @@ void CSkinContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 		m_pSkin->UpdateMemGraphicsToScreen(lpRect);
 }
 
-CUIObject *CSkinContainer::GetChildByID(int nID)
-{
-	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
-	{
-		CUIObject	*pObj = m_vUIObjs[i];
-		if (pObj->m_nId == nID)
-			return pObj;
-	}
-
-	return NULL;
-}
-
-CUIObject *CSkinContainer::GetChildByName(LPCTSTR szName)
-{
-	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
-	{
-		CUIObject	*pObj = m_vUIObjs[i];
-		if (_tcsicmp(pObj->m_strName.c_str(), szName) == 0)
-			return pObj;
-	}
-
-	return NULL;
-}
-
 bool CSkinContainer::HasXMLChild()
 {
 	return !m_vUIObjs.empty();

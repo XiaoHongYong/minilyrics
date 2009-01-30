@@ -21,7 +21,7 @@ public:
 	CPreferenceDlg();
 	virtual ~CPreferenceDlg();
 
-	BOOL Create(CBaseWnd *pWndParent, PreferPageID idToactivate = PAGE_SETUP);
+	BOOL Create(CBaseWnd *pWndParent, PreferPageID idToactivate = PAGE_SETUP, bool bFloatingLyrMode = false);
 
 public:
 	BOOL OnInitDialog();
@@ -36,14 +36,12 @@ protected:
 
 	CLangTreeCtrlHelper		m_LangTreeCtrlHelper;
 	CWidgetTreeCtrl			m_treePf;
+	bool					m_bFloatingLyrMode;
 
 	typedef vector<CPreferencePageBase *>		V_PFPAGE;
 
 	V_PFPAGE				m_vPreferencePages;
 
 };
-
-// Ñ¡Ïî´°¿Ú
-extern CPreferenceDlg			g_wndPreference;
 
 #endif // !defined(AFX_PREFERENCEDLG_H__C764EAD4_A895_4986_9757_463182BE40A4__INCLUDED_)

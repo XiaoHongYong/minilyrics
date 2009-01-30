@@ -67,8 +67,6 @@ public:
 	void ZoomIn();
 	void ZoomOut();
 
-	void EnumAllUIObj(vector<tstring> &vObj);
-
 	void SetNotify(ISESkinNotify *pNotify) { m_pNotify = pNotify; }
 	ISESkinNotify *GetNotify() { return m_pNotify; }
 

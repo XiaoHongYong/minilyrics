@@ -38,8 +38,15 @@ CPreferenceDlg::~CPreferenceDlg()
 // INPUT:
 //		bSmall	-	是否隐藏选项树
 //		dwTemplateId	-	创建后的缺省选项页
-BOOL CPreferenceDlg::Create(CBaseWnd *pWndParent, PreferPageID idToactivate)
+BOOL CPreferenceDlg::Create(CBaseWnd *pWndParent, PreferPageID idToactivate, bool bFloatingLyrMode)
 {
+	if (IsValid() && bFloatingLyrMode != m_bFloatingLyrMode)
+	{
+		Destroy();
+	}
+
+	m_bFloatingLyrMode = bFloatingLyrMode;
+
 	if (IsValid())
 	{
 		// let's show old
@@ -105,7 +112,6 @@ void CPreferenceDlg::OnDestroy()
 	m_vPreferencePages.clear();
 
 	m_LangTreeCtrlHelper.Destroy();
-	m_LangDlgHelper.Destroy();
 
 	CBaseDialog::OnDestroy();
 }
@@ -222,31 +228,17 @@ void CPreferenceDlg::ConstructPreferencePages()
 	m_vPreferencePages.push_back(pPageParent);
 
 	// lyrics display
-	pPage = new CPreferPageLyrDispStyle();
+	pPage = new CPreferPageLyrDispStyle(m_bFloatingLyrMode);
 	pPage->SetParentPage(pPageParent);
 	m_vPreferencePages.push_back(pPage);
 
 	// Color theme
-	pPage = new CPreferPageLyrClrTheme;
+	pPage = new CPreferPageLyrClrTheme(m_bFloatingLyrMode);
 	pPage->SetParentPage(pPageParent);
 	m_vPreferencePages.push_back(pPage);
 
 	// Background picture
 	pPage = new CPreferPageDispBgPic;
-	pPage->SetParentPage(pPageParent);
-	m_vPreferencePages.push_back(pPage);
-
-	// floating lyrics
-	pPageParent = new CPreferPageFloatingLyr;
-	m_vPreferencePages.push_back(pPageParent);
-
-	// floating lyrics style
-	pPage = new CPreferPageLyrDispStyle(true);
-	pPage->SetParentPage(pPageParent);
-	m_vPreferencePages.push_back(pPage);
-
-	// Color theme
-	pPage = new CPreferPageLyrClrTheme(true);
 	pPage->SetParentPage(pPageParent);
 	m_vPreferencePages.push_back(pPage);
 

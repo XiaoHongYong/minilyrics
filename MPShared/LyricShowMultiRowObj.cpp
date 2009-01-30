@@ -28,7 +28,6 @@ CLyricShowMultiRowObj::CLyricShowMultiRowObj()
 	m_nDarkenTopArea = float(1.5);
 	m_nDarkenBottomArea = float(1.5);
 
-	m_nMaxShowLines = 0;
 	m_bOnlyDisplayCurLineLyr = true;
 }
 
@@ -50,8 +49,6 @@ void CLyricShowMultiRowObj::OnCreate()
 
 	if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
 		m_bOnlyDisplayCurLineLyr = g_Profile.GetProfileBool(SZ_SECT_LYR_DISPLAY, _T("DispCurLineLyr"), true);
-	else
-		m_nMaxShowLines = g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("MaxShowLines"), m_nMaxShowLines);
 }
 
 void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
@@ -157,15 +154,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 	// 显示当前播放行前的歌词
 	nRow = nRowCur - 1;
-	if (m_nMaxShowLines != 0)
-	{
-		// get end display line
-		nRowEnd = nRow - (m_nMaxShowLines - 1) / 2;
-		if (nRowEnd < 0)
-			nRowEnd = 0;
-	}
-	else
-		nRowEnd = 0;
+	nRowEnd = 0;
 	for (h = y - nRowHeight; h + nRowHeight > m_rcObj.top && nRow >= nRowEnd; h -= nRowHeight)
 	{
 		pRow = m_lyrLines[nRow];
@@ -178,15 +167,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 	// 显示此行之后的歌词行
 	nRow = nRowCur + 1;
-	if (m_nMaxShowLines != 0)
-	{
-		// get end display line
-		nRowEnd = nRow + m_nMaxShowLines / 2;
-		if (nRowEnd > (int)m_lyrLines.size())
-			nRowEnd = m_lyrLines.size();
-	}
-	else
-		nRowEnd = m_lyrLines.size();
+	nRowEnd = m_lyrLines.size();
 	for (h = y + nRowHeight; h < m_rcObj.bottom && nRow < nRowEnd; h += nRowHeight)
 	{
 		pRow = m_lyrLines[nRow];
@@ -206,7 +187,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		rc.SetRect(m_rcObj.left, m_rcObj.top, m_rcObj.right, m_rcObj.top + m_nFontHeight);
 		if (rc.bottom > m_rcObj.bottom)
 			rc.bottom = m_rcObj.bottom;
-		if (m_bFadeOutBorder)
+		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 			pGraphics->VertAlphaFadeOut(&rc, true);
 		else
 			pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), true);
@@ -215,7 +196,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		rc.top = m_rcObj.bottom - m_nFontHeight;
 		if (rc.top < m_rcObj.top)
 			rc.top = m_rcObj.top;
-		if (m_bFadeOutBorder)
+		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 			pGraphics->VertAlphaFadeOut(&rc, false);
 		else
 			pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), false);
@@ -226,7 +207,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 bool CLyricShowMultiRowObj::FastestDrawFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow)
 {
 	int			nPlayPos = m_pMLData->GetPlayElapsedTime();
-	int			nRowHeight = GetLineHeight();
+	int			nRowHeight = GetLineHeight() + CRawBmpFont::OUTLINED_BORDER;
 	int			nAlpha;
 
 	if (nPlayPos >= pLyricRow->nBegTime - 1000 || nPlayPos <= pLyricRow->nBegTime + 1000)
@@ -275,7 +256,7 @@ bool CLyricShowMultiRowObj::FastestDrawFadeInOut(CRawGraph *pGraphics, CRect *pr
 
 bool CLyricShowMultiRowObj::FastestDrawNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow)
 {
-	int			nRowHeight = GetLineHeight();
+	int			nRowHeight = GetLineHeight() + CRawBmpFont::OUTLINED_BORDER;
 
 	//
 	// DO_NORMAL
@@ -315,15 +296,7 @@ bool CLyricShowMultiRowObj::FastestDrawNormal(CRawGraph *pGraphics, CRect *prcUp
 
 bool CLyricShowMultiRowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 {
-	if (IsPropertyName(szProperty, _T("MaxShowLines")))
-	{
-		m_nMaxShowLines = _ttoi(szValue);
-
-		// auto height...
-		if (m_nMaxShowLines != 0)
-			AutoHeightSkinAccordLyrics(m_nMaxShowLines - 1);
-	}
-	else if (IsPropertyName(szProperty, _T("DispCurLineLyr")))
+	if (IsPropertyName(szProperty, _T("DispCurLineLyr")))
 	{
 		m_bOnlyDisplayCurLineLyr = IsTRUE(szValue);
 	}
@@ -331,16 +304,6 @@ bool CLyricShowMultiRowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szV
 		return CLyricShowObj::OnLyrDisplaySettings(szProperty, szValue);
 
 	return true;
-}
-
-BOOL CLyricShowMultiRowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
-{
-	if (IsPropertyName(szProperty, _T("MaxShowLines")))
-		m_nMaxShowLines = _ttoi(szValue);
-	else
-		return CLyricShowObj::SetProperty(szProperty, szValue);
-
-	return TRUE;
 }
 
 void CLyricShowMultiRowObj::OnLyrDrawContextChanged()
@@ -351,6 +314,7 @@ void CLyricShowMultiRowObj::OnLyrDrawContextChanged()
 
 	AutoWidthSkinAccordLyrics();
 
-	if (m_nMaxShowLines != 0)
-		AutoHeightSkinAccordLyrics(m_nMaxShowLines - 1);
+	if (m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS
+		&& m_LyricsDisplayOpt == DO_FADEOUT_BG)
+		AutoHeightSkinAccordLyrics(3);
 }

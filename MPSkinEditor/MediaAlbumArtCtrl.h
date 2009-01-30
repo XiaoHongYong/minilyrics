@@ -38,7 +38,7 @@ protected:
 
 	void ResizeAlbumArt();
 
-	bool IsMaskImageUsed() { return m_imgMask.IsValid(); }
+	bool IsMaskImageUsed() { return m_frmMask.IsValid(); }
 
 	tstring				m_strImgFile;
 	CSFImage			m_img;
@@ -46,10 +46,10 @@ protected:
 	// no album art mask image
 	CSFImage			m_imgOrg;	// Save original album art for resize.
 
-	// album art mask image
-	tstring				m_strImgMask;
-	CSFImage			m_imgMask;
-	CRect				m_rcImageMaskPos;
+	// album art frame mask image
+	tstring				m_strFrmMask;
+	CSFImage			m_frmMask;
+	CRect				m_rcFrameMaskPos;
 
 	MLColor				m_clrBg;
 	CMLBrush			m_brBg;

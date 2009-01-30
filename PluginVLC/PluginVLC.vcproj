@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="G:\Program Files\VideoLAN\VLC\plugins\libML4VLC_plugin.dll"
+				OutputFile="G:\Program Files\VideoLAN\VLC\plugins\libminilyrics_plugin.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"

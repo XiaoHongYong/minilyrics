@@ -348,6 +348,7 @@ CUIObject::CUIObject()
 	m_bEnable = true;
 	m_bVisible = true;
 	m_bHideIfWndInactive = false;
+	m_bHideIfMouseInactive = false;
 	m_bUseSkinBg = false;
 
 	m_bTranslucencyWithSkin = false;
@@ -451,6 +452,8 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bVisible = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("HideIfWndInactive")) == 0)
 		m_bHideIfWndInactive = IsTRUE(szValue);
+	else if (_tcsicmp(szProperty, _T("HideIfMouseInactive")) == 0)
+		m_bHideIfMouseInactive = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("UseSkinBg")) == 0)
 		m_bUseSkinBg = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("TranslucencyWithSkin")) == 0)
@@ -525,7 +528,8 @@ void CUIObject::OnSize(int cx, int cy)
 
 bool CUIObject::IsVisible()
 {
-	return m_bVisible && (!m_bHideIfWndInactive || m_pSkin->IsWndActive());
+	return m_bVisible && (!m_bHideIfWndInactive || m_pSkin->IsWndActive())
+		&& (!m_bHideIfMouseInactive || !m_pSkin->IsMouseInactive());
 }
 
 

@@ -24,6 +24,9 @@ const TCHAR SZ_WINAMP2_DEFSKIN_DIR[] = _T("");
 
 #define TIMER_ID_BEG_ALLOC		120
 #define TIMER_ID_DYNAMIC_TRANS	118
+#define TIMER_ID_MOUSE_INACTIVE	119
+
+#define TIMER_SPAN_MOUSE_INACTIVE	(3 * 1000)
 
 #define TIMER_SPAN_DYNAMIC_TRANS	30
 #define COUNT_DYNAMIC_TRANS			(1500 / 100)
@@ -189,12 +192,18 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 
 	m_bIgnoreNextOnCharMsg = false;
 
+	m_nTimeLatestMouseMsg = 0;
+	m_bMouseInactive = false;
+	m_bHasUIObjHideOnMouseInactive = false;
+
 #ifdef _WIN32_DESKTOP
 	m_bTranslucencyLayered = false;
 	m_nAlpha = 255;
 	m_nTranslucencyAlphaOnActive = -1;
 	m_nTranslucencyAlphaOnHover = -1;
 	m_nTranslucencyAlpha = -1;
+	m_nTranslucencyAlphaDynamic = 255.0f;
+	m_nTranslucencyAlphaDynamicStep = 1.0f;
 	m_bClickThrough = false;
 	m_bEnableTransparentFeature = true;
 #endif
@@ -265,6 +274,8 @@ void CSkinWnd::CloseSkin()
 	m_nTranslucencyAlphaOnActive = -1;
 	m_nTranslucencyAlphaOnHover = -1;
 	m_nTranslucencyAlpha = -1;
+	m_nTranslucencyAlphaDynamic = 255.0f;
+	m_nTranslucencyAlphaDynamicStep = 1.0f;
 	m_bClickThrough = false;
 	m_bEnableTransparentFeature = true;
 #endif
@@ -327,6 +338,10 @@ void CSkinWnd::CloseSkin()
 	}
 
 	m_bIndividualProperties = false;
+
+	m_nTimeLatestMouseMsg = 0;
+	m_bMouseInactive = false;
+	m_bHasUIObjHideOnMouseInactive = false;
 }
 
 CUIObject *CSkinWnd::GetUIObjectByClassName(LPCTSTR szClassName)
@@ -341,6 +356,9 @@ CUIObject * CSkinWnd::GetUIObjectById(int nId, LPCTSTR szClassName)
 
 void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 {
+	if (m_bHasUIObjHideOnMouseInactive)
+		OnMouseActiveMsg();
+
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
@@ -405,6 +423,9 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 
 void CSkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 {
+	if (m_bHasUIObjHideOnMouseInactive)
+		OnMouseActiveMsg();
+
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
@@ -442,6 +463,9 @@ void CSkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CSkinWnd::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
+	if (m_bHasUIObjHideOnMouseInactive)
+		OnMouseActiveMsg();
+
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
@@ -2013,6 +2037,9 @@ void CSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 
 void CSkinWnd::OnAddUIObj(CUIObject *pObj)
 {
+	if (!m_bHasUIObjHideOnMouseInactive && pObj->m_bHideIfMouseInactive)
+		m_bHasUIObjHideOnMouseInactive = true;
+
 	// Only skin is opened, OnCreate will be called.
 	if (m_bSkinOpened)
 	{
@@ -2116,6 +2143,12 @@ void CSkinWnd::OnTimer (UINT nIDEvent)
 		return;
 	}
 #endif // #ifdef _WIN32_DESKTOP
+
+	if (nIDEvent == TIMER_ID_MOUSE_INACTIVE)
+	{
+		OnTimerMouseInactive();
+		return;
+	}
 
 	ASSERT(nIDEvent >= TIMER_ID_BEG_ALLOC);
 
@@ -2296,4 +2329,29 @@ void CSkinWnd::OnSwitchChildFocus(CUIObject *pUIObjFocusOld, CUIObject *pUIObjFo
 		if (pUIObjFocusNew)
 			pUIObjFocusNew->OnSetFocus();
 	}
+}
+
+
+void CSkinWnd::OnMouseActiveMsg()
+{
+	ASSERT(m_bHasUIObjHideOnMouseInactive);
+	m_nTimeLatestMouseMsg = GetTickCount();
+
+	KillTimer(TIMER_ID_MOUSE_INACTIVE);
+	SetTimer(TIMER_ID_MOUSE_INACTIVE, TIMER_SPAN_MOUSE_INACTIVE);
+
+	if (m_bMouseInactive)
+	{
+		m_bMouseInactive = false;
+		InvalidateRect();
+	}
+}
+
+
+void CSkinWnd::OnTimerMouseInactive()
+{
+	m_bMouseInactive = true;
+	KillTimer(TIMER_ID_MOUSE_INACTIVE);
+
+	InvalidateRect();
 }

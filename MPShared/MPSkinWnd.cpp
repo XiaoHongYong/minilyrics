@@ -15,6 +15,7 @@
 #include "SkinListCtrl.h"
 #include "SkinSeekCtrl.h"
 #include "SkinRateCtrl.h"
+#include "SkinToolBar.h"
 #include "LyricShowObj.h"
 #include "LyricShowTextEditObj.h"
 #include "LyricShowAgentObj.h"
@@ -322,6 +323,47 @@ public:
 
 protected:
 	CSkinNStatusButton		*m_pButtn;
+
+};
+
+class CPlayerPlayPauseToolbarHandler : public IEventHandlerEx
+{
+public:
+	virtual void OnEvent(const IEvent *pEvent)
+	{
+		if (pEvent->eventType == ET_PLAYER_STATUS_CHANGED)
+		{
+			bool		bCheck;
+
+			bCheck = g_Player.GetPlayerState() == PS_PLAYING;
+			if (m_pToolbar->IsCheck(CMD_PLAYPAUSE) != bCheck)
+			{
+				m_pToolbar->SetCheck(CMD_PLAYPAUSE, bCheck);
+			}
+		}
+	}
+
+	void Register(CSkinToolbar *pToolbar)
+	{
+		bool		bCheck;
+
+		bCheck = g_Player.GetPlayerState() == PS_PLAYING;
+
+		m_pToolbar = pToolbar;
+		if (m_pToolbar->IsCheck(CMD_PLAYPAUSE) != bCheck)
+		{
+			m_pToolbar->SetCheck(CMD_PLAYPAUSE, bCheck);
+		}
+		g_eventDispather.RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+	}
+
+	void Unregister()
+	{
+		g_eventDispather.UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+	}
+
+protected:
+	CSkinToolbar		*m_pToolbar;
 
 };
 
@@ -799,18 +841,13 @@ void CMPSkinWnd::OnSizeModeChanged(WndSizeMode sizeMode)
 	// fix the bug auto width with lyrics when the windows is Minimized.
 	if (sizeMode == WndSizeMode_Normal)
 	{
-		V_UIOBJECT::iterator	it, itEnd;
-		itEnd = m_vUIObjs.end();
-		for (it = m_vUIObjs.begin(); it != itEnd; ++it)
+		CUIObject		*pObj = GetUIObjectByClassName(CLyricShowObj::ClassName());
+		if (pObj && !pObj->IsKindOf(CLyricShowTextEditObj::ClassName()))
 		{
-			CUIObject		*pObj = *it;
-			if (pObj->IsKindOf(CLyricShowObj::ClassName()) && !pObj->IsKindOf(CLyricShowTextEditObj::ClassName()))
-			{
-				CLyricShowObj	*pLyrObj = (CLyricShowObj*)pObj;
-				IEvent	evt;
-				evt.eventType = ET_LYRICS_CHANGED;
-				pLyrObj->OnEvent(&evt);
-			}
+			CLyricShowObj	*pLyrObj = (CLyricShowObj*)pObj;
+			IEvent	evt;
+			evt.eventType = ET_LYRICS_CHANGED;
+			pLyrObj->OnEvent(&evt);
 		}
 
 		CSkinNStatusButton *pMaximizeBt = (CSkinNStatusButton *)GetUIObjectById(CMD_MAXIMIZE, CSkinNStatusButton::ClassName());
@@ -1059,65 +1096,33 @@ void CMPSkinWnd::OnAddUIObj(CUIObject *pObj)
 		}
 	}
 #endif
+	else
+	{
+		if (pObj->IsKindOf(CSkinToolbar::ClassName()))
+		{
+			CSkinToolbar	*pToolBar = (CSkinToolbar*)pObj;
+
+			if (pToolBar->IsButtonExist(CMD_PLAYPAUSE))
+			{
+				CPlayerPlayPauseToolbarHandler *pHandler;
+				pHandler = new CPlayerPlayPauseToolbarHandler;
+				pHandler->Register(pToolBar);
+				m_mapEventHandlers[pObj] = pHandler;
+			}
+		}
+	}
 }
 
 void CMPSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 {
-	bool		bUnregisterHandler = false;
-
-	int			nID = pObj->GetID();
-	if (nID == CMD_PLAYPAUSE)
+	MAP_EVENT_HANDLER::iterator	it;
+	it = m_mapEventHandlers.find(pObj);
+	if (it != m_mapEventHandlers.end())
 	{
-		if (pObj->IsKindOf(CSkinNStatusButton::ClassName()))
-			bUnregisterHandler = true;
-	}
-	else if (nID == CMD_SEEK)
-	{
-		if (pObj->IsKindOf(CSkinSeekCtrl::ClassName()))
-			bUnregisterHandler = true;
-	}
-	else if (nID == CMD_VOLUME)
-	{
-		if (pObj->IsKindOf(CSkinSeekCtrl::ClassName()))
-			bUnregisterHandler = true;
-	}
-	else if (nID == CMD_SHUFFLE)
-	{
-		if (pObj->IsKindOf(CSkinNStatusButton::ClassName()))
-			bUnregisterHandler = true;
-	}
-	else if (nID == CMD_LOOP)
-	{
-		if (pObj->IsKindOf(CSkinNStatusButton::ClassName()))
-			bUnregisterHandler = true;
-	}
-	else if (nID == CMD_RATE)
-	{
-		if (pObj->IsKindOf(CSkinRateCtrl::ClassName()))
-			bUnregisterHandler = true;
-	}
-	else if (nID == ID_PLAYLIST)
-	{
-		if (pObj->IsKindOf(CSkinListCtrl::ClassName()))
-			bUnregisterHandler = true;
-	}
-	else if (nID == ID_STEREO_STAT)
-	{
-		if (pObj->IsKindOf(CSkinNStatusImage::ClassName()))
-			bUnregisterHandler = true;
-	}
-
-	if (bUnregisterHandler)
-	{
-		MAP_EVENT_HANDLER::iterator	it;
-		it = m_mapEventHandlers.find(pObj);
-		if (it != m_mapEventHandlers.end())
-		{
-			IEventHandlerEx		*pHandler = (*it).second;
-			pHandler->Unregister();
-			m_mapEventHandlers.erase(it);
-			delete pHandler;
-		}
+		IEventHandlerEx		*pHandler = (*it).second;
+		pHandler->Unregister();
+		m_mapEventHandlers.erase(it);
+		delete pHandler;
 	}
 
 	CSkinWnd::OnRemoveUIObj(pObj);

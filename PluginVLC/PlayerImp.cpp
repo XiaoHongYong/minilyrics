@@ -556,6 +556,8 @@ set_capability("interface", 0);
 set_callbacks(Open, Close);
 vlc_module_end();
 
+static DWORD	g_dwMLThreadID = 0;
+HANDLE			g_hEventOK2Quit = NULL;
 
 int  Open(vlc_object_t * p_this)
 {
@@ -573,10 +575,11 @@ int  Open(vlc_object_t * p_this)
 
 	p_intf->pf_run = Run;
 
+	g_hEventOK2Quit = CreateEvent(NULL, false, false, NULL);
+
 	return VLC_SUCCESS;
 }
 
-static DWORD	g_dwMLThreadID = 0;
 
 void Close(vlc_object_t * p_this)
 {
@@ -598,7 +601,8 @@ void Close(vlc_object_t * p_this)
 	pl_Release(p_this);
 
 	PostThreadMessage(g_dwMLThreadID, WM_QUIT, 0, 0);
-	// g_MLService.Quit();
+	WaitForSingleObject(g_hEventOK2Quit, INFINITE);
+	CloseHandle(g_hEventOK2Quit);
 
 	/* Destroy structure */
 	free(p_intf->p_sys);
@@ -631,10 +635,14 @@ void Run(intf_thread_t *p_intf)
 		if (!vlc_object_alive(p_intf))
 		{
 			vlc_object_unlock(p_intf);
-			return;
+			break;
 		}
 		vlc_object_unlock(p_intf);
 	}
+
+	g_MLService.Quit();
+
+	SetEvent(g_hEventOK2Quit);
 }
 
 /*****************************************************************************

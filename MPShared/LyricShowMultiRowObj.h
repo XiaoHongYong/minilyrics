@@ -28,8 +28,6 @@ public:
 
 	void Invalidate();
 
-	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
-
 protected:
 	bool FastestDrawFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow);
 	bool FastestDrawNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow);
@@ -45,7 +43,6 @@ public:
 	int				m_nCurRowOld;		// 上一次显示的当前行歌词
 	int				m_nAlphaOld;		// Old alpha value
 
-	int				m_nMaxShowLines;
 	bool			m_bOnlyDisplayCurLineLyr;
 
 };

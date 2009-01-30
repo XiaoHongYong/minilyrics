@@ -354,7 +354,6 @@ public:
 	protected:
 #ifdef _WIN32_DESKTOP
 	bool				m_bThickOutline;
-	bool				m_bFadeOutBorder;
 #endif
 
 	// Used to load and save current settings in profile

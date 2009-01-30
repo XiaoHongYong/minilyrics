@@ -13,9 +13,7 @@
 // MiniLyrics 的命令定义:
 enum ML_CUSTOM_COMMAND
 {
-	CMD_UNDEFINE	= 0,
-
-	CMD_NONE,
+	CMD_UNDEFINE	= SKIN_UIOBJ_ID_UNDEFINE,
 
 	///////////////
 	// 控件的命令ID
@@ -25,15 +23,11 @@ enum ML_CUSTOM_COMMAND
 	CMD_MINIMIZE,
 	CMD_MAXIMIZE,
 	CMD_TOPMOST,
-	ID_LYRICSSHOWOBJ,
 	ID_WORK_AREA,
 	ID_WORK_AREA_DIVIDE_IMG,
 	CMD_RATE_LYR,
 	CMD_MENU,
 
-	ID_VSCROLLBAR,
-	ID_TB_SELFEDIT,
-	ID_TB_NORMAL,
 	ID_TOOLBAR,
 
 	CMD_OPEN_MEDIA,
@@ -45,6 +39,10 @@ enum ML_CUSTOM_COMMAND
 	CMD_FORWARD,
 	CMD_J_PREV_LINE,			// Jump to previous line of lyrics
 	CMD_J_NEXT_LINE,			// Jump to next line of lyrics
+
+	// Lyrics display options
+	CMD_FONT_SIZE_INC,
+	CMD_FONT_SIZE_DEC,
 
 	// lyrics editor command
 	CMD_JUMP,
@@ -63,8 +61,7 @@ enum ML_CUSTOM_COMMAND
 	CMD_SAVE_LRC_AS,
 	CMD_EDIT_HELP,
 	CMD_MENU_LYR_EDIT,
-	CMD_EDIT_VIEW_ALIGH_HORZ,
-	CMD_EDIT_VIEW_ALIGH_VERT,
+
 	// lyrics text edit command
 	CMD_EDIT_UNDO,
 	CMD_EDIT_REDO,
@@ -91,6 +88,7 @@ enum ML_CUSTOM_COMMAND
 	CMD_PREVIOUS,
 	CMD_NEXT,
 
+	// Player control command/ID
 	CMD_SEEK,
 	CMD_VOL_INC,
 	CMD_VOL_DEC,
@@ -149,8 +147,6 @@ enum ML_CUSTOM_COMMAND
 	// other cmd
 	CMD_TOGGLE_MP,
 	CMD_PREFERENCES,
-
-	CMD_FLOATING_LYRICS,
 };
 
 // ID 的字符串与数值的映射表
@@ -174,5 +170,11 @@ extern MLCmdAccKey		g_mlCmdAccKey[];
 extern int				g_mlCmdAccKeyCount;
 
 #endif
+
+LPCTSTR MPCMDIDToStr(int nCmd);
+
+ML_CUSTOM_COMMAND MPCMDStrToID(LPCTSTR szID);
+
+LPCTSTR MPCMDIDToToolTip(int nCmd);
 
 #endif // !defined(AFX_MLCMD_H__0F4EFB09_839A_4E3C_A964_F096D1441949__INCLUDED_)

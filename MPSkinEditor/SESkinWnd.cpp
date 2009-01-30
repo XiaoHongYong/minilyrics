@@ -81,23 +81,8 @@ int CSESkinWnd::CopyFrom(LPCTSTR szSkinWndName, CSESkinWnd *pSkinWndSrc)
 	// copy properties
 	pSkinWndSrc->EnumProperties(properties);
 	properties.ToUIObjProperties(vStr);
-	for (i = 0; i < vStr.size(); i += 2)
+	for (i = 0; i < (int)vStr.size(); i += 2)
 		SetProperty(vStr[i].c_str(), vStr[i + 1].c_str());
-
-	// copy uiobject
-	for (i = 0; i < pSkinWndSrc->m_vUIObjs.size(); i++)
-	{
-		CUIObject		*pObj = pSkinWndSrc->m_vUIObjs[i];
-		CUIObject		*pObjDup;
-		pObjDup = g_skinFactory.CreateUIObject(this, pObj->GetClassName());
-		properties.clear();
-		vStr.clear();
-		pObj->EnumProperties(properties);
-		properties.ToUIObjProperties(vStr);
-		pObjDup->SetProperties(vStr);
-
-		m_rootConainter.AddUIObject(pObjDup);
-	}
 
 	m_strSkinWndName = szSkinWndName;
 
@@ -450,17 +435,5 @@ void CSESkinWnd::ZoomOut()
 		m_dbScale -= 1.0;
 		::MoveWindow(m_hWnd, 5, 5, int(m_rcBoundBox.Width() * m_dbScale), int(m_rcBoundBox.Height() * m_dbScale), true);
 		InvalidateRect();
-	}
-}
-
-void CSESkinWnd::EnumAllUIObj(vector<tstring> &vObj)
-{
-	V_UIOBJECT::iterator	it, itEnd;
-
-	itEnd = m_vUIObjs.end();
-	for (it = m_vUIObjs.begin(); it != itEnd; ++it)
-	{
-		vObj.push_back((*it)->m_strName);
-		vObj.push_back((*it)->GetClassName());
 	}
 }

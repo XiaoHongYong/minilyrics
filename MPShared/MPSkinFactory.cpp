@@ -48,7 +48,6 @@
 #endif
 
 #ifdef _WIN32
-#include "win32/MPFloatingLyrWnd.h"
 #include "win32/MainMenu.h"
 #include "win32/LyricsMenu.h"
 #endif
@@ -434,14 +433,6 @@ void CMPSkinFactory::OnSkinWndActivate(CSkinWnd *pWndActive)
 					hWndPrev = hWndNext;
 				}
 				break;
-			}
-		}
-		if (hWndNext == g_wndFloatingLyr.GetHandle())
-		{
-			if (!IsTopmostWindow(hWndNext) && !::IsIconic(hWndNext))
-			{
-				vToBring.push_back(hWndNext);
-				hWndPrev = hWndNext;
 			}
 		}
 		hWndNext = GetWindow(hWndNext, GW_HWNDNEXT);

@@ -468,7 +468,6 @@ CLyricShowObj::CLyricShowObj()
 
 #ifdef _WIN32_DESKTOP
 	m_bThickOutline = false;
-	m_bFadeOutBorder = false;
 #endif
 
 	m_etDispSettings = ET_LYRICS_DISPLAY_SETTINGS;
@@ -1081,6 +1080,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		rcText.SetRect(x, y, x + nKaraokePos, y + GetFontHeight());
 		if (IsBlendingLyrText())
 		{
+			rcText.right += CRawBmpFont::OUTLINED_BORDER;
 			if (m_tobHilight.obm == OBM_COLOR)
 				m_font.UseColorOverlay();
 			else
@@ -2141,10 +2141,6 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bThickOutline = IsTRUE(szValue);
 		m_font.SetThickOutline(m_bThickOutline);
 	}
-	else if (IsPropertyName(szProperty, _T("FadeOutBorder")))
-	{
-		m_bFadeOutBorder = IsTRUE(szValue);
-	}
 #endif
 	else if (_tcsicmp(szProperty, _T("UseBgImage")) == 0)
 	{
@@ -2198,6 +2194,7 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		// 创建English 歌词的字体
 		FontPropertyValueFromStr(szValue, nHeight, nWeight, byItalic, strFaceName, strFaceNameOthers);
 		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nHeight, nWeight, Tobool(byItalic));
+		m_nFontHeight = m_font.GetHeight();
 
 		if (IsBlendingLyrText())
 		{
@@ -2207,7 +2204,6 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			}
 		}
 
-		m_nFontHeight = m_font.GetHeight();
 		OnLyrDrawContextChanged();
 	}
 	else if (IsPropertyName(szProperty, _T("BlendingLyrText")))
@@ -2588,10 +2584,11 @@ void CLyricShowObj::LoadAllSettings()
 	ProfileGetColorValue(m_clrFg, m_strSectName.c_str(), _T("FgColor"));
 	ProfileGetColorValue(m_clrFgLow, m_strSectName.c_str(), _T("FgLowColor"));
 
+	SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
+
 	// Floating lyrics won't use Bgcolor and TagColor
 	if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
 	{
-		SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
 		ProfileGetColorValue(m_clrTag, m_strSectName.c_str(), _T("TagColor"));
 		ProfileGetColorValue(m_clrFocusLineBg, m_strSectName.c_str(), _T("FocusLineBgColor"));
 	}
@@ -2661,9 +2658,9 @@ void CLyricShowObj::AdjustHue(float hue)
 		// Load orginal settings.
 		ProfileGetColorValue(m_clrFg, m_strSectName.c_str(), _T("FgColor"));
 		ProfileGetColorValue(m_clrFgLow, m_strSectName.c_str(), _T("FgLowColor"));
+		SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
 		if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
 		{
-			SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
 			ProfileGetColorValue(m_clrTag, m_strSectName.c_str(), _T("TagColor"));
 			ProfileGetColorValue(m_clrFocusLineBg, m_strSectName.c_str(), _T("FocusLineBgColor"));
 		}
