@@ -63,9 +63,7 @@
 
 CMPSkinFactory::CMPSkinFactory()
 {
-#ifndef _MPLAYER
-	m_strMainSkinWndClassName = _T("MiniLyrics");
-#endif
+	m_strMainSkinWndClassName = SZ_APP_NAME;
 }
 
 CMPSkinFactory::~CMPSkinFactory()
@@ -100,7 +98,7 @@ int CMPSkinFactory::LoadDefaultSkin()
 	}
 
 	strSkinWnd = g_Profile.GetProfileString(strSkin.c_str(), _T("DefaultSkinWnd"), _T(""));
-	nRet = CreateMainSkinWnd(_T("MiniLyrics"), strSkinWnd.c_str(), strSkinWnd.c_str());
+	nRet = CreateMainSkinWnd(SZ_APP_NAME, strSkinWnd.c_str(), strSkinWnd.c_str());
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -128,8 +126,6 @@ void CMPSkinFactory::Quit()
 {
 	SaveOpenedSkinWndNames();
 
-	Close();
-
 	LIST_SKINWNDS::iterator	it, itEnd;
 	LIST_SKINWNDS	listSkinWnds;
 	listSkinWnds = m_listSkinWnds;
@@ -141,6 +137,8 @@ void CMPSkinFactory::Quit()
 		pSkin->Destroy();
 	}
 	m_listSkinWnds.clear();
+
+	Close();
 }
 
 void CMPSkinFactory::SaveOpenedSkinWndNames()
@@ -515,7 +513,7 @@ int CMPSkinFactory::OpenSimpliestSkin()
 	if (nRet != ERR_OK)
 		return nRet;
 
-	nRet = CreateMainSkinWnd(_T("MiniLyrics"), _T(""), _T(""));
+	nRet = CreateMainSkinWnd(SZ_APP_NAME, _T(""), _T(""));
 	if (nRet != ERR_OK)
 		return nRet;
 

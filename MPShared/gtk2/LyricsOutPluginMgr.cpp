@@ -109,7 +109,7 @@ void CLyricsOutPluginMgr::UninstPlugin(int nPluginIdx, CBaseWnd *pWndParent)
 		int		nRet;
 		tstring	str = TOLOCAL(_T("Are you sure you want to permanently uninstall this plug-in?"));
 		str += _T("\n");
-		str += TOLOCAL(_T("MiniLyrics will uninstall it at next restart."));
+		str += TOLOCAL(_T("$Product$ will uninstall it at next restart."));
 		nRet = pWndParent->MessageOut(str.c_str(), MB_YESNO);
 		if (nRet == IDYES)
 			g_Profile.WriteProfileString(_T("UninstLyrOutPluginFile"), plugin.strPluginFile.c_str());

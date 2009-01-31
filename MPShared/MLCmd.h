@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 ///////////////////////////////////////////////////////////////////////////////
-// MiniLyrics µƒ√¸¡Ó∂®“Â:
+// Command ID of UIObject in SkinWnd:
 enum ML_CUSTOM_COMMAND
 {
 	CMD_UNDEFINE	= SKIN_UIOBJ_ID_UNDEFINE,
@@ -155,7 +155,7 @@ extern STRING_ID_MAP g_StringIdMap[];
 #ifdef _WIN32_WCE
 
 //
-// MiniLyrics Command Accerlate key for wce
+// Command Accerlate key for wce
 //
 struct MLCmdAccKey
 {

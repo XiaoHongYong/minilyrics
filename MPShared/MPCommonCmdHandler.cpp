@@ -755,7 +755,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 							_T(""), str.c_str(), g_LyricData.GetLyricsSourceType());
 						}
 					}
-					m_pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics, MiniLyrics will auto try again later."))).c_str());
+					m_pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics, $Product$ will auto try again later."))).c_str());
 				}
 			}
 		}
@@ -826,9 +826,17 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 				byItalic, strFaceNameLatin9, strFaceNameOthers);
 
 			if (nID == CMD_FONT_SIZE_INC)
+			{
 				nHeight++;
+				if (nHeight >= 96 * 2)	// 96 is the max font size in font choosing dialog.
+					break;
+			}
 			else
+			{
 				nHeight--;
+				if (nHeight < 8)		// 8 is a reasonable smallest font size.
+					break;
+			}
 
 			// now save to profile
 			ProfileWriteLyricsFont(m_etDispSettings, m_strSectName.c_str(), nHeight, nWeight,

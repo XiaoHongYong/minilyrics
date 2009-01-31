@@ -119,7 +119,7 @@ public:
 	// 2) if song file is in same driver with lyrics file, "x:" will be removed, but 
 	//    the "x:" in lyrics file should be kept.
 	// 3) if song file do not have driver info,  but lyrics file doesn't exists there, 
-	//    Check whether lyrics is in the MiniLyrics program driver.
+	//    Check whether lyrics is in the $Product$ program driver.
 	// 4) "Lyrics" folder should be verified dynamically.
 	//
 	SONG_LYRIC_MAP			m_mapLyricsAssociate;

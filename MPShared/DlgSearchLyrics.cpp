@@ -912,7 +912,7 @@ void CDlgSearchLyrics::SearchOnline()
 
 	if (dlg.ShowWaitingDlg(this, &searchObj, 
 		TOLOCAL(_T("Searching Lyrics")), 
-		TOLOCAL(_T("MiniLyrics is searching lyrics now, it may take a few seconds."))) != IDOK)
+		TOLOCAL(_T("$Product$ is searching lyrics now, it may take a few seconds."))) != IDOK)
 		return;
 
 	if (searchObj.m_strMsg.size())

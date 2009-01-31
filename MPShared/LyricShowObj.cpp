@@ -13,7 +13,7 @@ key/********************************************************************
 #include "DlgRateLyrics.h"
 #endif
 
-// 每次调整MiniLyrics的速度的基本单位
+// 每次调整歌词的速度的基本单位
 const int SET_SPEED_SPAN		= 500;
 
 
@@ -1453,7 +1453,16 @@ bool CLyricShowObj::OnLButtonDown(UINT nFlags, CPoint point)
 
 	return false;
 }
-#endif
+
+void CLyricShowObj::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
+{
+	if (nMkeys == MK_CONTROL)
+	{
+		m_pSkin->OnCustomCommand(nWheelDistance > 0 ? CMD_FONT_SIZE_INC : CMD_FONT_SIZE_DEC);
+	}
+}
+
+#endif	// _WIN32_WCE
 
 void CLyricShowObj::OnLyricsChanged()
 {

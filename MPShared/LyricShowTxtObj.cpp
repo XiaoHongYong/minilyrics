@@ -268,6 +268,8 @@ void CLyricShowTxtObj::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 {
 	if (m_pObjScrollBar)
 		m_pObjScrollBar->OnMouseWheel(nWheelDistance, nMkeys, pt);
+	else
+		CLyricShowObj::OnMouseWheel(nWheelDistance, nMkeys, pt);
 }
 
 void CLyricShowTxtObj::OnCreate()

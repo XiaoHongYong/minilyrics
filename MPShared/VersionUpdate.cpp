@@ -253,7 +253,7 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
 		}
 	}
 	else if (bManualCheck && g_mpApp.GetMainWnd())
-		g_mpApp.GetMainWnd()->MessageOut(TOLOCAL(_T("Your MiniLyrics is up to date.")));
+		g_mpApp.GetMainWnd()->MessageOut(TOLOCAL(_T("Your $Product$ is up to date.")));
 }
 
 void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr)

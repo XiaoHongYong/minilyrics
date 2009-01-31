@@ -403,7 +403,7 @@ int CDownloadMgr::SaveDownloadedFile(CDownloadTask *pTask, LPVOID lpData, int nS
 
 		if (!SaveDataAsFile(pTask->m_strSaveFile.c_str(), lpData, nSize))
 		{
-			// save in the default directory of MiniLyrics.
+			// save in the default directory
 			pTask->m_strSaveFile = m_strDefSavePath;
 			DirStringFormat(pTask->m_strSaveFile);
 			pTask->m_strSaveFile += FileGetName(pTask->m_strSaveFile.c_str());

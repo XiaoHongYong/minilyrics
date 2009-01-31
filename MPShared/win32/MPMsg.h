@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 //
-// MiniLyrics command line handler.
+// Command line handler.
 //
 // Copy data
 enum MSG_WM_CPDATA
