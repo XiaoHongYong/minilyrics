@@ -508,7 +508,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 {
 	switch (nID)
 	{
-#ifndef _WIN32_WCE
+#ifdef _WIN32_DESKTOP
 	case CMD_MINIMIZE:
 		m_pSkinWnd->ShowWindow(SW_SHOWMINIMIZED);
 		break;
@@ -520,16 +520,20 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 		break;
 	case CMD_TOGGLE_MP:
 		{
-/*			if (IsIconic() || ::GetForegroundWindow() != m_hWnd)
-				Activate();
+			if (m_pSkinWnd->IsIconic() || ::GetForegroundWindow() != m_pSkinWnd->GetHandle())
+				m_pSkinWnd->ActivateWindow();
 			else
-				Minimize(true);*/
+			{
+				m_pSkinWnd->ShowWindow(SW_MINIMIZE);
+				if (m_pSkinWnd->IsToolWindow())
+					m_pSkinWnd->ShowWindow(SW_HIDE);
+			}
 		}
 		break;
 	case CMD_PREFERENCES:
 		g_wndPreference.Create(m_pSkinWnd, PAGE_SETUP, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
-#endif
+#endif // _WIN32_DESKTOP
 	case CMD_EDIT_HELP:
 		MLHtmlHelper(m_pSkinWnd, _T("help.chm::/how-to-editlyrics.htm"));
 		break;
