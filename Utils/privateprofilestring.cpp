@@ -4,10 +4,6 @@
 
 DWORD GetPrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpDefault, LPTSTR lpReturnedString, DWORD nSize, LPCTSTR lpFileName)
 {
-// 	_tcscpy_safe(lpReturnedString, nSize, lpDefault);
-// 
-// 	return _tcslen(lpReturnedString);
-// 
 	FILE		*fp;
 	TCHAR		szBuff[1024];
 	int			nAppName;
