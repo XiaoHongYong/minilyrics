@@ -14,6 +14,7 @@
 #include "VISDemo.h"
 #include "DspDemo.h"
 #include "MORaw.h"
+#include "dsp_supereq.h"
 
 #define SIZE_INC (1024 * 4) 
 
@@ -436,17 +437,24 @@ MLRESULT CMPluginManagerAgent::NewOutput(IMediaOutput **ppOutput)
 
 MLRESULT CMPluginManagerAgent::GetActiveDSP(IDSP **ppDSP)
 {
+	MLRESULT mlRes = ERR_NOT_SUPPORT;
 	if (m_pluginMgr)
-		return m_pluginMgr->GetActiveDSP(ppDSP);
-	else
+		mlRes = m_pluginMgr->GetActiveDSP(ppDSP);
+	
+	if (mlRes == ERR_NOT_SUPPORT)
 	{
-		*ppDSP = new CDspDemo;
-		(*ppDSP)->AddRef();
-
+		*ppDSP = CDspSuperEQ::GetInstance();
 		return ERR_OK;
+
+		//*ppDSP = new CDspDemo;
+		//(*ppDSP)->AddRef();
+
 		// return ERR_FALSE;
 	}
+
+	return mlRes;
 }
+
 
 MLRESULT CMPluginManagerAgent::GetActiveVis(IVector *pvVis)
 {
