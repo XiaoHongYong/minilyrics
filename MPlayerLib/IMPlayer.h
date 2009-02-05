@@ -100,11 +100,19 @@ enum MPInterfaceType
 
 };
 
+enum
+{
+	EQ_BANDS_COUNT			= 18,
+	EQ_dB_MIN				= 0,
+	EQ_dB_DEF				= 47,
+	EQ_dB_MAX				= 96,
+};
+
 struct EQualizer
 {
 	BOOL	bEnable;
-	int		nPreamp;		//set value 64 to 0 (default 31)
-	int		vData[10];		//set value 64 to 0 (default 31)
+	int		nPreamp;				//set value EQ_dB_MAX to EQ_dB_MIN (default EQ_dB_DEF)
+	int		vData[EQ_BANDS_COUNT];	//set value EQ_dB_MAX to EQ_dB_MIN (default EQ_dB_DEF)
 };
 
 // XStr maybe UNICODE, ANSI or Utf8 str, for different platform.
