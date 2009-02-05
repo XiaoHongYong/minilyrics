@@ -175,7 +175,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\MPlayerLib\dsp_supereq.h"
+				RelativePath=".\dsp_supereq.h"
 				>
 			</File>
 			<File

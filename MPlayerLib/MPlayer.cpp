@@ -14,7 +14,7 @@
 #include "VISDemo.h"
 #include "DspDemo.h"
 #include "MORaw.h"
-#include "dsp_supereq.h"
+#include "../MPlayer-Plugins/Dsp_SuperEQ/dsp_supereq.h"
 
 #define SIZE_INC (1024 * 4) 
 
