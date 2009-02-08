@@ -22,7 +22,7 @@ CSkinTabHeader::CSkinTabHeader()
 
 CSkinTabHeader::~CSkinTabHeader()
 {
-
+	g_Profile.WriteProfileInt((tstring(_T("TabActiveBt_")) + m_strName).c_str(), m_nActiveButton);
 }
 
 
@@ -116,6 +116,10 @@ void CSkinTabHeader::OnCreate()
 	CUIObject::OnCreate();
 
 	m_font.OnCreate(m_pSkin);
+
+	m_nActiveButton = g_Profile.GetProfileInt((tstring(_T("TabActiveBt_")) + m_strName).c_str(), m_nActiveButton);
+	if (m_nActiveButton < 0 || m_nActiveButton >= m_vButtons.size())
+		m_nActiveButton = 0;
 
 	//
 	// Hide/show all controls associated with TabHeader.
@@ -508,6 +512,10 @@ void CSkinTabHeader::DrawTabButton(CRawGraph *pGraph, Button &bt, CRect &rcButto
 	int				x = rcButton.left;
 	int				y = rcButton.top;
 
+	ASSERT(m_img.IsValid());
+	if (!m_img.IsValid())
+		return;
+
 	// Draw active button bg
 	if (bActiveTabButton)
 	{
@@ -556,9 +564,11 @@ void CSkinTabHeader::DrawTabButton(CRawGraph *pGraph, Button &bt, CRect &rcButto
 	// Draw Text
 	if (!bt.strText.empty())
 	{
+		CRect	rcText = rcButton;
+		rcText.left += m_nButtonBorderSize;
 		if (m_font.IsOutlined())
-			pGraph->DrawTextOutlined(bt.strText.c_str(), bt.strText.size(), &rcButton, m_font.GetTextColor(), m_font.GetColorOutlined(), DT_CENTER | DT_VCENTER);
+			pGraph->DrawTextOutlined(bt.strText.c_str(), bt.strText.size(), &rcText, m_font.GetTextColor(), m_font.GetColorOutlined(), DT_CENTER | DT_VCENTER);
 		else
-			pGraph->DrawText(bt.strText.c_str(), bt.strText.size(), &rcButton, DT_CENTER | DT_VCENTER);
+			pGraph->DrawText(bt.strText.c_str(), bt.strText.size(), &rcText, DT_CENTER | DT_VCENTER);
 	}
 }

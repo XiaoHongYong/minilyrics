@@ -877,7 +877,18 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 
 	pObj->Draw(m_pmemGraph);
 	if (pObj->IsUpdateTranslucencyWithSkin())
-		m_pmemGraph->MultiplyAlpha((byte)(m_nTranslucencyAlphaDynamic), &pObj->m_rcObj);
+	{
+		MLColor		clrAlpha;
+		clrAlpha.setAlpha(m_nTranslucencyAlphaDynamic);
+		if (pObj->m_imgMask.IsValid())
+		{
+			CRect	rcMask;
+			rcMask.SetRect(pObj->m_imgMask.m_x, pObj->m_imgMask.m_y, pObj->m_imgMask.m_x + pObj->m_imgMask.m_cx, pObj->m_imgMask.m_y + pObj->m_imgMask.m_cy);
+			m_pmemGraph->FillRect(&pObj->m_rcObj, pObj->m_imgMask.GetHandle(), &rcMask, clrAlpha, BPM_MULTIPLY);
+		}
+		else
+			m_pmemGraph->FillRect(&pObj->m_rcObj, clrAlpha, BPM_MULTIPLY);
+	}
 
 	m_pmemGraph->RecoverClipBox();
 

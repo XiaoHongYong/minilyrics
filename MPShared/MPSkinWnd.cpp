@@ -786,6 +786,11 @@ void CMPSkinWnd::OnCustomCommand(int nId)
 	case CMD_TOPMOST:
 		OnCommand(IDC_SETTOPMOST, 0);
 		return;
+#ifdef _WIN32_DESKTOP
+	case CMD_CLICK_THROUGH:
+		OnCommand(IDC_CLICK_THROUGH, 0);
+		return;
+#endif
 // 	case :
 // 		OnCommand(, 0);
 // 		return;

@@ -336,7 +336,18 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 			pObj->Draw(pGraph);
 
 			if (pObj->IsUpdateTranslucencyWithSkin())
-				pGraph->MultiplyAlpha((byte)(m_pSkin->m_nTranslucencyAlphaDynamic), &pObj->m_rcObj);
+			{
+				MLColor		clrAlpha;
+				clrAlpha.setAlpha(m_pSkin->m_nTranslucencyAlphaDynamic);
+				if (pObj->m_imgMask.IsValid())
+				{
+					CRect	rcMask;
+					rcMask.SetRect(pObj->m_imgMask.m_x, pObj->m_imgMask.m_y, pObj->m_imgMask.m_x + pObj->m_imgMask.m_cx, pObj->m_imgMask.m_y + pObj->m_imgMask.m_cy);
+					pGraph->FillRect(&pObj->m_rcObj, pObj->m_imgMask.GetHandle(), &rcMask, clrAlpha, BPM_MULTIPLY);
+				}
+				else
+					pGraph->FillRect(&pObj->m_rcObj, clrAlpha, BPM_MULTIPLY);
+			}
 		}
 	}
 }

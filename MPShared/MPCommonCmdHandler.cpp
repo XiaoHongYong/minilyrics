@@ -847,6 +847,21 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 				byItalic, NULL, NULL);
 		}
 		break;
+	case CMD_CLR_PREV_HUE:
+	case CMD_CLR_NEXT_HUE:
+		{
+			float hue = (float)(g_Profile.GetProfileInt(m_strSectName.c_str(), _T("Hue"), 0));
+
+			if (nID == CMD_CLR_NEXT_HUE)
+				hue += 30;
+			else
+				hue -= 30;
+			if (hue >= 360)   hue -= 360;
+			else if (hue < 0) hue += 360;
+
+			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("Hue"), (int)hue);
+		}
+		break;
 
 	case CMD_SEARCH_LYRICS:
 		OnCommand(IDC_DOWNLOAD_CURRENT_LYRICS);

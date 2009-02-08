@@ -558,7 +558,7 @@ void CUIObject::SetVisible(bool bVisible)
 	else
 	{
 		// Will focus UIObject be hide by this call?
-		if (!pObjFocus->IsVisible() || !pObjFocus->IsParentVisible())
+		if (!pObjFocus || !pObjFocus->IsVisible() || !pObjFocus->IsParentVisible())
 		{
 			// Change focus UIObject.
 			m_pSkin->FocusNextUIObject();

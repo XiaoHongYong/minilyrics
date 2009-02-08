@@ -13,6 +13,7 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, _T("Minimize") },
 	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, _T("Maximize") },
 	{ _T("ID_TOPMOST"), CMD_TOPMOST, _T("Toggle always on top") },
+	{ _T("ID_CLICK_THROUGH"), CMD_CLICK_THROUGH, _T("Transparent with mouse click through") },
 	{ _T("ID_CLOSE"), CMD_CLOSE, _T("Close") },
 	{ _T("ID_QUIT"), CMD_QUIT, _T("Quit") },
 	{ _T("ID_WORK_AREA"), ID_WORK_AREA, NULL },
@@ -31,6 +32,8 @@ STRING_ID_MAP g_StringIdMap[] =
 
 	{ _T("ID_FONT_SIZE_INC"), CMD_FONT_SIZE_INC, _T("Increase font size") },
 	{ _T("ID_FONT_SIZE_DEC"), CMD_FONT_SIZE_DEC, _T("Decrease font size") },
+	{ _T("ID_CLR_PREV_HUE"), CMD_CLR_PREV_HUE, _T("Previous Color") },
+	{ _T("ID_CLR_NEXT_HUE"), CMD_CLR_NEXT_HUE, _T("Next Color") },
 
 	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, _T("Synchronize the current line(Ctrl+F7)") },
 	{ _T("ID_DEL_TAG"), CMD_DEL_TAG, _T("Remove Timestamp of the current line") },
