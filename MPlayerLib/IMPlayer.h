@@ -103,9 +103,9 @@ enum MPInterfaceType
 enum
 {
 	EQ_BANDS_COUNT			= 18,
-	EQ_dB_MIN				= 0,
-	EQ_dB_DEF				= 47,
-	EQ_dB_MAX				= 96,
+	EQ_dB_MIN				= -20,
+	EQ_dB_DEF				= 0,
+	EQ_dB_MAX				= 20,
 };
 
 struct EQualizer
