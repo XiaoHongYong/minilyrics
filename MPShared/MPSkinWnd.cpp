@@ -623,7 +623,6 @@ bool CMPSkinWnd::OnCreate()
 
 #ifdef _WIN32_DESKTOP
 	::SendMessage(m_hWnd, WM_SETICON, ICON_BIG, (WPARAM)LoadIcon(GetAppInstance(), MAKEINTRESOURCE(IDI_MPLAYER)));
-	::SendMessage(m_hWnd, WM_SETICON, ICON_SMALL, (WPARAM)LoadIcon(GetAppInstance(), MAKEINTRESOURCE(IDI_MPLAYER)));
 
 	// 允许拖放歌词文件
 	DragAcceptFiles(m_hWnd, TRUE);

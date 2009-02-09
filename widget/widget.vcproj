@@ -1181,6 +1181,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\win32\SplashScreenWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -1754,6 +1758,10 @@
 			</File>
 			<File
 				RelativePath="win32\SkinToolTip.h"
+				>
+			</File>
+			<File
+				RelativePath=".\win32\SplashScreenWnd.h"
 				>
 			</File>
 			<File
