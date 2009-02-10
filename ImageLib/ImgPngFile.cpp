@@ -65,7 +65,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromPngFile(IILIO *io)
     png_uint_32         ulChannels;
     png_uint_32         ulRowBytes;
     png_byte			**ppbRowPointers = NULL;
-    int                 i;
+    unsigned long       i;
 	unsigned long		nWidth, nHeight;
 	PRAW_IMAGE_DATA		imgData = NULL;
 	png_bytep			pRow;

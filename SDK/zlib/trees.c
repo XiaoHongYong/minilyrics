@@ -39,6 +39,7 @@
 #  include <ctype.h>
 #endif
 
+#pragma warning(disable:4267)
 /* ===========================================================================
  * Constants
  */

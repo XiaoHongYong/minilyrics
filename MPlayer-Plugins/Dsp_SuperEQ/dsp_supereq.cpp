@@ -3,13 +3,13 @@
 #include <math.h>
 
 extern void equ_init(int wb);
-extern void equ_makeTable(float *lbc,float *rbc,paramlist *,float fs);
+extern void equ_makeTable(double *lbc,double *rbc, paramlist *, double fs);
 extern void equ_quit(void);
 extern int equ_modifySamples(char *buf,int nsamples,int nch,int bps);
 extern void equ_clearbuf(int,int);
 
-float	lbands[18] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
-float	rbands[18] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
+double	lbands[18] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
+double	rbands[18] = {1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0};
 paramlist	paramroot;
 
 // The range of lslpos, rslpos is [-20, 20](dB).

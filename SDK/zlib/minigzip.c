@@ -18,6 +18,7 @@
 #include <stdio.h>
 #include "zlib.h"
 
+#pragma warning(disable:4996)
 #ifdef STDC
 #  include <string.h>
 #  include <stdlib.h>

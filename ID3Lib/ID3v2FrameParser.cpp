@@ -582,7 +582,7 @@ int CID3v2FrameParserComment::Parse(const CID3v2Frame *pFrame)
 		return ERR_INVALID_ID3V2_FRAME;
 
 	const char *data = pFrame->m_frameData.c_str();
-	int		nPos = 0;
+	size_t		nPos = 0;
 
 	m_EncodingType = (ID3v2EncType)data[0];
 
@@ -660,7 +660,7 @@ int CID3v2FrameParserPic::Parse(CID3v2 *pid3v2, const CID3v2Frame *pFrame, ID3v2
 		return ERR_INVALID_ID3V2_FRAME;
 
 	const char *data = pFrame->m_frameData.c_str();
-	int		nPos = 0;
+	size_t		nPos = 0;
 
 	picture->frameUID = pFrame->m_framehdr.frameUID;
 
@@ -749,7 +749,7 @@ int CID3v2FrameParserUserDefinedUrl::Parse(const CID3v2Frame *pFrame)
 		return ERR_INVALID_ID3V2_FRAME;
 
 	const char *data = pFrame->m_frameData.c_str();
-	int		nPos = 0;
+	size_t		nPos = 0;
 
 	m_textDesc.m_EncodingType = (ID3v2EncType)data[0];
 

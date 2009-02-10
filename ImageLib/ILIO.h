@@ -72,7 +72,7 @@ public:
 protected:
 	uint8		*m_buf;
 	uint32		m_nLength;
-	int			m_nPos;
+	size_t			m_nPos;
 
 };
 

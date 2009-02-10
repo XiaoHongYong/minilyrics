@@ -3545,5 +3545,7 @@ png_infop info_ptr, png_uint_32 *res_x, png_uint_32 *res_y, int *unit_type));
 #endif
 
 #endif /* PNG_VERSION_INFO_ONLY */
+#pragma warning(disable:4267)
+
 /* do not put anything past this line */
 #endif /* PNG_H */

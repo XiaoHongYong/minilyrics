@@ -166,7 +166,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../SDK/zlib"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -230,7 +230,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalIncludeDirectories="../../SDK/zlib"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
 				RuntimeLibrary="0"
 				UsePrecompiledHeader="0"
 				AssemblerListingLocation="$(IntDir)\"
@@ -358,10 +358,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\example.c"
-				>
-			</File>
-			<File
 				RelativePath=".\gzio.c"
 				>
 			</File>
@@ -379,10 +375,6 @@
 			</File>
 			<File
 				RelativePath=".\inftrees.c"
-				>
-			</File>
-			<File
-				RelativePath=".\minigzip.c"
 				>
 			</File>
 			<File

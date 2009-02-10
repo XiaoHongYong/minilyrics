@@ -150,12 +150,12 @@ bool ID3v2Pictures::ITEM::PicExtToMime(LPCSTR szPicExt)
 		szPicExt++;
 
 	m_strMimeType = MIME_IMAGE;
-	if (stricmp(szPicExt, "jpg") == 0 || stricmp(szPicExt, "jpeg") == 0)
+	if (_stricmp(szPicExt, "jpg") == 0 || _stricmp(szPicExt, "jpeg") == 0)
 		m_strMimeType += "jpeg";
-	else if (stricmp(szPicExt, "tif") == 0)
+	else if (_stricmp(szPicExt, "tif") == 0)
 		m_strMimeType += "tiff";
-	else if (stricmp(szPicExt, "png") == 0 || stricmp(szPicExt, "gif") == 0
-		 || stricmp(szPicExt, "bmp") == 0)
+	else if (_stricmp(szPicExt, "png") == 0 || _stricmp(szPicExt, "gif") == 0
+		 || _stricmp(szPicExt, "bmp") == 0)
 	{
 		m_strMimeType += szPicExt;
 		LowerString((LPSTR)m_strMimeType.c_str());
@@ -193,7 +193,7 @@ ID3v2Pictures::ITEM *ID3v2Pictures::AppendNewPic()
 
 bool ID3v2Pictures::IsModified()
 {
-	for (int i = 0; i < m_vItems.size(); i++)
+	for (size_t i = 0; i < m_vItems.size(); i++)
 	{
 		if (m_vItems[i]->action != IFA_NONE)
 			return true;
@@ -677,7 +677,7 @@ int CID3v2::ReadFrame(CID3v2Frame *pFrame)
 
 	buffData.clear();
 	buffData.reserve(frame.nLen);
-	if (buffData.capacity() < frame.nLen)
+	if (buffData.capacity() < (size_t)frame.nLen)
 		return ERR_OUTOF_BUFF;
 	if (fread(buffData.data(), 1, frame.nLen, m_fp) != frame.nLen)
 		return ERR_READ_FILE;
