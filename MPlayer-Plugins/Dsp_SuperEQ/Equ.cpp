@@ -4,7 +4,9 @@
 #include <assert.h>
 #include "paramlist.hpp"
 
-typedef float REAL;
+#pragma warning(disable:4244)
+
+typedef double REAL;
 void rfft(int n,int isign,REAL x[]);
 
 #define M 15
@@ -316,7 +318,7 @@ int equ_modifySamples(char *buf,int nsamples,int nch,int bps)
   REAL *ires;
   int amax =  (1 << (bps-1))-1;
   int amin = -(1 << (bps-1));
-  static float hm1 = 0, hm2 = 0;
+  static double hm1 = 0, hm2 = 0;
 
   if (chg_ires) {
 	  cur_ires = chg_ires;
@@ -335,7 +337,7 @@ int equ_modifySamples(char *buf,int nsamples,int nch,int bps)
 		for(i=0;i<(winlen-nbufsamples)*nch;i++)
 			{
 				inbuf[nbufsamples*nch+i] = ((unsigned char *)buf)[i+p*nch] - 0x80;
-				float s = outbuf[nbufsamples*nch+i];
+				double s = outbuf[nbufsamples*nch+i];
 				if (dither) {
 					float u;
 					s -= hm1;

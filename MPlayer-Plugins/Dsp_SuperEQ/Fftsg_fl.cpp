@@ -1,6 +1,6 @@
 #include <stdlib.h>
 
-typedef float REAL;
+typedef double REAL;
 
 /*
 Fast Fourier/Cosine/Sine Transform
@@ -2656,7 +2656,7 @@ void rfft(int n,int isign,REAL x[])
     return;
   }
 
-  newipsize = 2+sqrt((float)n/2);
+  newipsize = 2 + (int)sqrt((float)n/2);
   if (newipsize > ipsize) {
     ipsize = newipsize;
     ip = (int *)realloc(ip,sizeof(int)*ipsize);

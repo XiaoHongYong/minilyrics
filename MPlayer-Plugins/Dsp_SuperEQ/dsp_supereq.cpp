@@ -19,13 +19,13 @@ int lslpos[19],rslpos[19],last_lslpos[19],last_rslpos[19];
 void SetBandsFromSlpos()
 {
 	int i;
-	float lpreamp = pow(10,lslpos[0]/20.0);
-	float rpreamp = pow(10,rslpos[0]/20.0);
+	float lpreamp = pow(10.0f, lslpos[0]/20.0f);
+	float rpreamp = pow(10.0f, rslpos[0]/20.0f);
 
 	for(i=0;i<18;i++)
 	{
-		lbands[i] = lpreamp * pow(10,lslpos[i+1]/20.0);
-		rbands[i] = rpreamp * pow(10,rslpos[i+1]/20.0);
+		lbands[i] = lpreamp * pow(10.0f,lslpos[i+1]/20.0f);
+		rbands[i] = rpreamp * pow(10.0f,rslpos[i+1]/20.0f);
 	}
 
 	equ_makeTable(lbands,rbands,&paramroot, 0);
