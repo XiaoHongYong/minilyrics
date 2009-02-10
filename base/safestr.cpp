@@ -135,6 +135,16 @@ wchar_t *wcscat_safe(wchar_t * dst, int Size, const wchar_t * src)
 	return( dst );                  /* return dst */
 }
 
+
+#ifndef _WIN32
+int vsnprintf_s(char * _DstBuf, size_t _DstSize, size_t _MaxCount, const char * _Format, va_list _ArgList)
+{
+	int	n = vsnprintf(_DstBuf, _MaxCount, _Format, _ArgList);
+	if (n == _MaxCount)
+		_DstBuf[_MaxCount - 1] = 0;
+}
+#endif
+
 /*
 void SeparateWords(LPCTSTR szText, vector<string> &vWords, char chSeparator)
 {

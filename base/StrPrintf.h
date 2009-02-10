@@ -29,6 +29,8 @@ public:
 
 	void printf(LPCTSTR szFormat, ...);
 
+	void vprintf(LPCTSTR szFormat, va_list args);
+
 	LPCTSTR c_str() { if (m_szBuffer) return m_szBuffer; else return _T(""); }
 	size_t size() { return m_nSize; }
 

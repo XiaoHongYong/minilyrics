@@ -25,4 +25,11 @@ wchar_t * __cdecl wcscat_safe(wchar_t * dst, int Size, const wchar_t * src);
 #define _tcscat_safe		strcat_safe
 #endif
 
+#ifndef _WIN32
+#define _vsntprintf vsnprintf_s
+
+int vsnprintf_s(char * _DstBuf, size_t _DstSize, size_t _MaxCount, const char * _Format, va_list _ArgList);
+
+#endif
+
 #endif // _SAFE_STRING_H_

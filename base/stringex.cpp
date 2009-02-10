@@ -793,100 +793,56 @@ int FilterAllHTMLTags(LPTSTR szText)
 			}
 		}
 
-		if (_tcsnicmp(szBeg, _T("<BR>"), 4) == 0)
+		static LPCTSTR		szToNewLine[] = 
 		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("<BR>"));
+			_T("<BR>"), _T("<br/>"), _T("</P>"), _T("</div>"), _T("</h1>"), _T("</h2>"), _T("</h3>"), _T("</li>"),
+			_T("</TR>"), _T("<br >"),
+		};
+		bool	bReplaced = false;
+
+		for (i = 0; i < CountOf(szToNewLine); i++)
+		{
+			int		n = _tcslen(szToNewLine[i]);
+			if (_tcsnicmp(szBeg, szToNewLine[i], n) == 0)
+			{
+				_tcscpy_safe(szCopyPos, 4, _T("\r\n"));
+				szCopyPos += 2;	// _tcslen("\r\n");
+				szBeg += n;
+				bReplaced = true;
+				break;
+			}
 		}
-		else if (_tcsnicmp(szBeg, _T("<br/>"), 4) == 0)
+
+		if (!bReplaced)
 		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("<br/>"));
+			LPCTSTR		szIgnoreTags[] = 
+			{
+				_T("<style>"), _T("</style>"), 
+				_T("<head>"), _T("</head>"), 
+				_T("<title>"), _T("</title>"), 
+				_T("<noscript>"), _T("</noscript>"), 
+				_T("<script"), _T("</script>"), 
+				_T("<!--"), _T("-->"), 
+			};
+
+			for (i = 0; i < CountOf(szIgnoreTags); i += 2)
+			{
+				int		n = _tcslen(szIgnoreTags[i]);
+				if (_tcsnicmp(szBeg, szIgnoreTags[i], n) == 0)
+				{
+					szBeg = stristr(szBeg, szIgnoreTags[i + 1]);
+					if (szBeg)
+						szBeg += _tcslen(szIgnoreTags[i + 1]);
+					else
+						szBeg = szEnd;
+					bReplaced = true;
+					break;
+				}
+			}
 		}
-		else if (_tcsnicmp(szBeg, _T("</P>"), 4) == 0)
+
+		if (bReplaced)
 		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("</P>"));
-		}
-		else if (_tcsnicmp(szBeg, _T("</div>"), 6) == 0)
-		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("</div>"));
-		}
-		else if (_tcsnicmp(szBeg, _T("</h1>"), 5) == 0)
-		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("</h1>"));
-		}
-		else if (_tcsnicmp(szBeg, _T("</h2>"), 5) == 0)
-		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("</h2>"));
-		}
-		else if (_tcsnicmp(szBeg, _T("</h3>"), 5) == 0)
-		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("</h3>"));
-		}
-		else if (_tcsnicmp(szBeg, _T("<br "), 4) == 0)
-		{
-			szBeg += 4;
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg = _tcschr(szBeg, '>');
-			if (szBeg)
-				szBeg++;
-			else
-				szBeg = szEnd;
-		}
-		else if (_tcsnicmp(szBeg, _T("</li>"), 5) == 0)
-		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("</li>"));
-		}
-		else if (_tcsnicmp(szBeg, _T("</TR>"), 4) == 0)
-		{
-			_tcscpy(szCopyPos, _T("\r\n"));
-			szCopyPos += 2;
-			szBeg += _tcslen(_T("</TR>"));
-		}
-// 		else if (_tcsnicmp(szBeg, _T("</td>"), 4) == 0)
-// 		{
-// 			_tcscpy(szCopyPos, _T("\r\n"));
-// 			szCopyPos += 2;
-// 			szBeg += _tcslen(_T("</td>"));
-// 		}
-		else if (_tcsnicmp(szBeg, _T("<style>"), 7) == 0)
-		{
-			szBeg = stristr(szBeg, _T("</style>"));
-			if (szBeg)
-				szBeg += _tcslen(_T("</style>"));
-			else
-				szBeg = szEnd;
-		}
-		else if (_tcsnicmp(szBeg, _T("<head>"), 6) == 0)
-		{
-			szBeg = stristr(szBeg, _T("</head>"));
-			if (szBeg)
-				szBeg += _tcslen(_T("</head>"));
-			else
-				szBeg = szEnd;
-		}
-		else if (_tcsnicmp(szBeg, _T("<title>"), 7) == 0)
-		{
-			szBeg = stristr(szBeg, _T("</title>"));
-			if (szBeg)
-				szBeg += _tcslen(_T("</title>"));
-			else
-				szBeg = szEnd;
 		}
 		else if (_tcsnicmp(szBeg, _T("<pre "), 5) == 0)
 		{
@@ -905,59 +861,8 @@ int FilterAllHTMLTags(LPTSTR szText)
 			else
 				szBeg = szEnd;
 		}
-		else if (_tcsnicmp(szBeg, _T("<noscript>"), 10) == 0)
-		{
-			szBeg = stristr(szBeg, _T("</noscript>"));
-			if (szBeg)
-				szBeg += _tcslen(_T("</noscript>"));
-			else
-				szBeg = szEnd;
-		}
-		else if (_tcsnicmp(szBeg, _T("<script"), 7) == 0)
-		{
-			szBeg = stristr(szBeg, _T("</script>"));
-			if (szBeg)
-				szBeg += _tcslen(_T("</script>"));
-			else
-				szBeg = szEnd;
-// 			while (*szBeg)
-// 			{
-// 				if (_tcsncmp(szBeg, _T("<!--"), 4) == 0)
-// 				{
-// 					szBeg = _tcsstr(szBeg, _T("-->"));
-// 					if (szBeg)
-// 						szBeg += _tcslen(_T("-->"));
-// 					else
-// 						szBeg = szEnd;
-// 				}
-// 				else if (_tcsnicmp(szBeg, _T("</script>"), 9) == 0)
-// 				{
-// 					szBeg += _tcslen(_T("</script>"));
-// 					break;
-// 				}
-// 				else
-// 					szBeg++;
-// 			}
-		}
-		else if (_tcsnicmp(szBeg, _T("<!--"), 4) == 0)
-		{
-			szBeg = _tcsstr(szBeg, _T("-->"));
-			if (szBeg)
-				szBeg += _tcslen(_T("-->"));
-			else
-				szBeg = szEnd;
-		}
-// 		else if (_tcsncmp(szBeg, _T("</"), 2) == 0)
-// 		{
-// 			szBeg = _tcschr(szBeg, '>');
-// 			if (szBeg)
-// 				szBeg += 1;
-// 			else
-// 				szBeg = szEnd;
-// 		}
 		else
 		{
-			// ¹ýÂËTAGÄÚµÄ¶¬¶¬
 			while (*szBeg != '>' && szBeg < szEnd)
 				szBeg++;
 			if (*szBeg == '>')
@@ -1129,19 +1034,19 @@ void UriEscape(const char *szLocal, string &strInet)
 	{
 		if (BYTE(szLocal[i]) > 127)
 		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
+			sprintf_s(szTemp, CountOf(szTemp), "%%%2X", (BYTE)szLocal[i]);
 			strInet += szTemp;
 			i++;
 			if (i < nLen)
 			{
-				sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
+				sprintf_s(szTemp, CountOf(szTemp), "%%%2X", (BYTE)szLocal[i]);
 				strInet += szTemp;
 				i++;
 			}
 		}
 		else if (szLocal[i] == '%' && (!IsHexChar(szLocal[i + 1]) || !IsHexChar(szLocal[i + 2])))
 		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
+			sprintf_s(szTemp, CountOf(szTemp), "%%%2X", (BYTE)szLocal[i]);
 			strInet += szTemp;
 			i++;
 		}
@@ -1149,7 +1054,7 @@ void UriEscape(const char *szLocal, string &strInet)
 			szLocal[i] == '#' ||
 			szLocal[i] == '<' || szLocal[i] == '>')
 		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
+			sprintf_s(szTemp, CountOf(szTemp), "%%%2X", (BYTE)szLocal[i]);
 			strInet += szTemp;
 			i++;
 		}
@@ -1160,100 +1065,14 @@ void UriEscape(const char *szLocal, string &strInet)
 		}
 	}
 }
-/*
-
-void UriEscape(const char *szLocal, string &strInet)
-{
-	int		i = 0, k = 0;
-	char	szTemp[256];
-	int		nLen;
-
-	strInet.erase();
-	nLen = strlen(szLocal);
-
-	while (i < nLen)
-	{
-		if (BYTE(szLocal[i]) > 127)
-		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
-			strInet += szTemp;
-			i++;
-			if (i < nLen)
-			{
-				sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
-				strInet += szTemp;
-				i++;
-			}
-		}
-		else if (szLocal[i] == '%' && (!IsHexChar(szLocal[i + 1]) || !IsHexChar(szLocal[i + 2])))
-		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
-			strInet += szTemp;
-			i++;
-		}
-		else if (szLocal[i] == ' ' || szLocal[i] == '\"' ||
-			szLocal[i] == '#' ||
-			szLocal[i] == '<' || szLocal[i] == '>')
-		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
-			strInet += szTemp;
-			i++;
-		}
-		else
-		{
-			strInet += szLocal[i];
-			i++;
-		}
-	}
-}
-*/
 
 void UriEscape(const char *szLocal, char *szInet, int nLenMax)
 {
-	int		i = 0, k = 0;
-	char	szTemp[256];
-	int		nLen;
+	string		strTemp;
 
-	szInet[0] = '\0';
-	nLen = strlen(szLocal);
+	UriEscape(szLocal, strTemp);
 
-	while (i < nLen)
-	{
-		if (BYTE(szLocal[i]) > 127)
-		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
-			strcat(szInet, szTemp);
-			i++;
-			if (i < nLen)
-			{
-				sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
-				strcat(szInet, szTemp);
-				i++;
-			}
-		}
-		else if (szLocal[i] == '%' && (!IsHexChar(szLocal[i + 1]) || !IsHexChar(szLocal[i + 2])))
-		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
-			strcat(szInet, szTemp);
-			i++;
-		}
-		else if (szLocal[i] == ' ' || szLocal[i] == '\"' ||
-			szLocal[i] == '#' || 
-			szLocal[i] == '<' || szLocal[i] == '>')
-		{
-			sprintf(szTemp, "%%%2X", (BYTE)szLocal[i]);
-			strcat(szInet, szTemp);
-			i++;
-		}
-		else
-		{
-			int n;
-			n = strlen(szInet);
-			szInet[n] = szLocal[i];
-			szInet[n + 1] = '\0';
-			i++;
-		}
-	}
+	strcpy_safe(szInet, nLenMax, strTemp.c_str());
 }
 
 void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax)
@@ -1283,29 +1102,6 @@ void UriEscape(const WCHAR *szLocal, wstring &strInet)
 
 	strInet = strOutW.c_str();
 }
-
-/*
-
-void ToXMLContent(const char *szContent, tstring &str)
-{
-	while (*szContent != '\0')
-	{
-		unsigned int c = *szContent;
-
-		switch (c) {
-		case '<': str += "&lt;"; break;
-		case '>': str += "&gt;"; break;
-		case '&': str += "&amp;"; break;
-		case '\"': str += "&quot;"; break;
-		case '\'': str += "&apos;"; break;
-		default:
-			str += c;
-			break;
-		}
-		szContent++;
-	}
-}
-*/
 
 BOOL IsUnicodeStr(LPCVOID lpData)
 {

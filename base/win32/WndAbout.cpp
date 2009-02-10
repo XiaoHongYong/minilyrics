@@ -5,6 +5,7 @@
 #include <tchar.h>
 #include <Shlobj.h>
 #include "WndAbout.h"
+#include "safestr.h"
 
 //////////////////////////////////////////////////
 // functions
@@ -212,7 +213,7 @@ BOOL BrowserForFolder(HWND hWnd, LPCTSTR szTitle, LPTSTR szPath, LPCTSTR szRootF
 				MAX_PATH
 			);
 #else
-			_tcscpy(olePath, szRootFoler);
+			_tcscpy_safe(olePath, CountOf(olePath), szRootFoler);
 #endif
 
 			// Convert the path to ITEMIDLIST

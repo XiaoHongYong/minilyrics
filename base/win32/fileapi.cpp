@@ -226,10 +226,10 @@ BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 	WIN32_FIND_DATA		FindData;
 	TCHAR				szSearch[MAX_PATH];
 
-	_tcscpy(szSearch, szBaseDir);
+	_tcscpy_safe(szSearch, CountOf(szSearch), szBaseDir);
 	DirStringFormat(szSearch);
 
-	_tcscat(szSearch, _T("*.*"));
+	_tcscat_safe(szSearch, CountOf(szSearch), _T("*.*"));
 
 	hFileFind = FindFirstFile(szSearch, &FindData);
 	if (hFileFind == INVALID_HANDLE_VALUE)
