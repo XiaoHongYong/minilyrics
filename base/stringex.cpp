@@ -722,7 +722,7 @@ int FilterAllHTMLTags(LPTSTR szText)
 					if (_tcsnicmp(szBeg, szEscape[i], len) == 0)
 					{
 						szBeg += len;
-						_tcsncpy(szCopyPos, szEscape[i + 1], 1);
+						*szCopyPos = szEscape[i + 1][0];
 						szCopyPos++;
 						break;
 					}
@@ -1805,12 +1805,13 @@ void _itostr(int value, tstring &str, int base)
 {
 	TCHAR		szBuff[32];
 
-	_itot(value, szBuff, base);
+	_itot_s(value, szBuff, CountOf(szBuff), base);
 	str = szBuff;
 }
 
+
 #ifndef _WIN32
-char* itoa(int value, char* result, int base)
+char* itoa_s(int value, char* result, int base)
 {
 	return _itox(value, result, base);
 }
@@ -1819,14 +1820,14 @@ char* itoa(int value, char* result, int base)
 
 void ColorToStr(COLORREF clr, char szStr[])
 {
-	sprintf(szStr, "#%02X%02X%02X", clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);
+	sprintf_s(szStr, 9, "#%02X%02X%02X", clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);
 }
 
 
 #ifdef _WIN32
 void ColorToStr(COLORREF clr, WCHAR szStr[])
 {
-	wsprintfW(szStr, L"#%02X%02X%02X", clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);
+	swprintf_s(szStr, 9, L"#%02X%02X%02X", clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);
 }
 #endif
 

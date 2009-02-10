@@ -52,7 +52,7 @@ BOOL WritePrivateProfileInt(
 {
 	TCHAR	szBuffer[16];
 
-	_stprintf(szBuffer, _T("%d"), nValue);
+	_itot_s(nValue, szBuffer, CountOf(szBuffer), 10);
 	return WritePrivateProfileString(lpAppName, lpKeyName, szBuffer, lpFileName);
 }
 
@@ -69,7 +69,7 @@ DWORD RegGetProfileString(HKEY hRoot, LPCTSTR szItem, LPCTSTR szKeyName, LPCTSTR
 		DWORD		dwType = REG_SZ;
 		if (RegQueryValueEx(hKey, szKeyName, NULL, &dwType, (BYTE *)szReturnedString, &nSizeRet) != ERROR_SUCCESS)
 		{
-			_tcscpy(szReturnedString, szDefault);
+			_tcscpy_safe(szReturnedString,nSize, szDefault);
 		}
 		else
 		{
@@ -81,8 +81,8 @@ DWORD RegGetProfileString(HKEY hRoot, LPCTSTR szItem, LPCTSTR szKeyName, LPCTSTR
 			{
 				if (dwType == REG_DWORD)
 				{
-					_stprintf(szReturnedString, _T("%d"), 
-						RegGetProfileInt(hRoot, szItem, szKeyName, _ttoi(szDefault)));
+					_itot_s(RegGetProfileInt(hRoot, szItem, szKeyName, _ttoi(szDefault)),
+						szReturnedString, nSize, 10);
 				}
 				else
 					ASSERT(0);
@@ -91,7 +91,7 @@ DWORD RegGetProfileString(HKEY hRoot, LPCTSTR szItem, LPCTSTR szKeyName, LPCTSTR
 		RegCloseKey(hKey);
 	}
 	else
-		_tcscpy(szReturnedString, szDefault);
+		_tcscpy_safe(szReturnedString, nSize, szDefault);
 
 	return _tcslen(szReturnedString);
 }
@@ -587,7 +587,7 @@ void CProfile::SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, int nD
 	else
 	{
 		TCHAR	szDefault[64];
-		_stprintf(szDefault, _T("%d"), nDefault);
+		_itot_s(nDefault, szDefault, CountOf(szDefault), 10);
 
 		SetKeyDefaultIfNotExist(szAppName, szKeyName, szDefault);
 	}
@@ -624,7 +624,7 @@ DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR s
 	}
 	else
 	{
-		_tcscpy(szReturnedString, (*itKey).second.c_str());
+		_tcscpy_safe(szReturnedString, nSize, (*itKey).second.c_str());
 
 		return (*itKey).second.size();
 	}
@@ -719,7 +719,7 @@ UINT CProfile::GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
 
 	TCHAR	szValue[64];
 	TCHAR	szDefault[64];
-	_stprintf(szDefault, _T("%d"), nDefault);
+	_itot_s(nDefault, szDefault, CountOf(szDefault), 10);
 
 	GetProfileString(szAppName, szKeyName, szDefault, szValue, 64);
 
