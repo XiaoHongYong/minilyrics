@@ -141,7 +141,7 @@ void CUIObjProperties::AddPropImage(LPCTSTR szName, LPCTSTR szRectName, LPCTSTR 
 	CUIObjProperty		property;
 	TCHAR				szRect[256];
 
-	_stprintf(szRect, _T("%d,%d,%d,%d"), 
+	_stprintf_s(szRect, CountOf(szRect), _T("%d,%d,%d,%d"), 
 		image.m_x, image.m_y,
 		image.m_cx, image.m_cy);
 
@@ -162,7 +162,7 @@ void CUIObjProperties::AddPropImageEx(LPCTSTR szName, LPCTSTR szRectName, LPCTST
 	CUIObjProperty		property;
 	TCHAR				szRect[256];
 
-	_stprintf(szRect, _T("%d,%d,%d,%d"), 
+	_stprintf_s(szRect, CountOf(szRect), _T("%d,%d,%d,%d"), 
 		image.m_x, image.m_y,
 		image.m_cx, image.m_cy);
 
@@ -487,7 +487,7 @@ BOOL CUIObject::SetPropertyInt(LPCTSTR szProperty, int nValue)
 {
 	TCHAR		szBuffer[64];
 
-	_itot(nValue, szBuffer, 10);
+	_itot_s(nValue, szBuffer, CountOf(szBuffer), 10);
 	return SetProperty(szProperty, szBuffer);
 }
 

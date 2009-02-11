@@ -175,7 +175,7 @@ void CLog::LogDumpStr(BYTE byLevel, LPCTSTR szFile, int nLine, LPCSTR szStr, int
 	char		*szMsgAssii = new char[nStrLen + 1];
 	assert(szMsgAssii);
 
-	strncpy(szMsgAssii, szStr, nStrLen);
+	strncpy_safe(szMsgAssii, nStrLen + 1, szStr, nStrLen);
 	szMsgAssii[nStrLen] = '\0';
 #if defined(_WIN32) && !defined(_WINCE_)
 	USES_CONVERSION;
@@ -223,7 +223,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	__try
 #endif
 	{
-		nLen = _stprintf(szBuffer, _T("|T%d-%d %d:%d:%d|F%s|L%d|E%d|M"), 
+		nLen = _stprintf_s(szBuffer, CountOf(szBuffer), _T("|T%d-%d %d:%d:%d|F%s|L%d|E%d|M"), 
 #ifdef _WINCE_
 			time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond,
 #else
@@ -234,7 +234,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 		// 格式化日志
 		va_start(args, szFormat);
 		szMsg = szBuffer + nLen;
-		nBuf = _vsntprintf(szMsg, CountOf(szBuffer) - nLen, szFormat, args);
+		nBuf = _vsntprintf_s(szMsg, CountOf(szBuffer) - nLen, CountOf(szBuffer) - nLen, szFormat, args);
 		va_end(args);
 
 		// was there an error? was the expanded string too long?
@@ -341,7 +341,7 @@ void CLog::LogOut(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, ...
 	__try
 #endif
 	{
-		nLen = _stprintf(szBuffer, _T("|T%d-%d %d:%d:%d|F%s|L%d|E%d|M"),
+		nLen = _stprintf_s(szBuffer, CountOf(szBuffer), _T("|T%d-%d %d:%d:%d|F%s|L%d|E%d|M"),
 #ifdef _WINCE_
 			time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond,
 #else
@@ -352,7 +352,7 @@ void CLog::LogOut(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, ...
 		// 格式化日志
 		va_start(args, szFormat);
 		szMsg = szBuffer + nLen;
-		nBuf = _vsntprintf(szMsg, CountOf(szBuffer) - nLen, szFormat, args);
+		nBuf = _vsntprintf_s(szMsg, CountOf(szBuffer) - nLen, CountOf(szBuffer) - nLen, szFormat, args);
 		va_end(args);
 
 		// was there an error? was the expanded string too long?
@@ -444,7 +444,7 @@ void CLog::Init(LPCTSTR szLogFileName, BOOL bAlwaysLogToFile)
 		(szLogFileName[0] == DIR_SLASH))
 	{
 		// 如果已经是全路径，则不管
-		_tcscpy(m_szLogFile, szLogFileName);
+		_tcscpy_safe(m_szLogFile, CountOf(m_szLogFile), szLogFileName);
 	}
 	else
 	{
@@ -508,7 +508,7 @@ BOOL CLog::OpenLogFile()
 	if (IsEmptyString(m_szLogFile))
 	{
 		GetWorkingFolder(m_szLogFile);
-		_tcscat(m_szLogFile, _T("log.txt"));
+		_tcscat_safe(m_szLogFile, CountOf(m_szLogFile), _T("log.txt"));
 	}
 
 	uint64		nFileLength;

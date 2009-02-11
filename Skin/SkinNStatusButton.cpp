@@ -76,7 +76,7 @@ void CSkinNStatusButton::OnTimer(int nId)
 			if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
 				m_pSkin->OnCustomCommand(m_nId);
 
-			if (m_nCurStatus >= 0 && m_nCurStatus < m_vBtStatImg.size())
+			if (m_nCurStatus >= 0 && m_nCurStatus < (int)m_vBtStatImg.size())
 			{
 				if (!m_vBtStatImg[m_nCurStatus]->strDynCmd.empty())
 					m_pSkin->GetSkinFactory()->OnDynamicCmd(m_vBtStatImg[m_nCurStatus]->strDynCmd.c_str(), m_pSkin, this);

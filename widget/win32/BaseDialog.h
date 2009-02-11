@@ -37,7 +37,9 @@ public:
 	// for win32 only
 	virtual BOOL DoModalIndirect(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, CBaseWnd *pWndParent, DWORD dwStyle = WS_CAPTION | DS_SETFONT | DS_MODALFRAME | WS_SYSMENU | WS_VISIBLE, LPCTSTR szFont = _T("MS Sans Serif"), int nFontSize = 8);
 	virtual BOOL CreateIndirect(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, CBaseWnd *pWndParent, DWORD dwStyle = WS_CAPTION | DS_SETFONT | DS_MODALFRAME | WS_SYSMENU | WS_VISIBLE, LPCTSTR szFont = _T("MS Sans Serif"), int nFontSize = 8);
-	LPVOID		m_pTemplate; //
+	DLGTEMPLATE		*m_pTemplate;
+
+	DLGTEMPLATE *NewTemplate(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, DWORD dwStyle, LPCTSTR szFont, int nFontSize);
 
 public:
 	CBaseDialog(UINT nIDTemplate);

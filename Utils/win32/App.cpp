@@ -34,7 +34,7 @@ void GetWorkingFolder(LPTSTR szWorkingFolder)
 		GetWorkingFolder();
 	}
 
-	_tcscpy(szWorkingFolder, g_szWorkingFolder);
+	_tcscpy_safe(szWorkingFolder, MAX_PATH, g_szWorkingFolder);
 }
 
 LPCTSTR GetWorkingFolder()

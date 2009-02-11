@@ -20,7 +20,7 @@ CBaseDialog::CBaseDialog(UINT nIDTemplate)
 CBaseDialog::~CBaseDialog()
 {
 	if (m_pTemplate)
-		free(m_pTemplate);
+		delete[] (char *)m_pTemplate;
 }
 
 LRESULT CBaseDialog::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
@@ -187,14 +187,13 @@ BOOL CBaseDialog::Create(UINT nIDTemplate, CBaseWnd *pWndParent)
 	return m_hWnd != NULL;
 }
 
-BOOL CBaseDialog::DoModalIndirect(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, CBaseWnd *pWndParent, DWORD dwStyle, LPCTSTR szFont, int nFontSize)
+DLGTEMPLATE *CBaseDialog::NewTemplate(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, DWORD dwStyle, LPCTSTR szFont, int nFontSize)
 {
-	int				nRet;
-	HGLOBAL			hData = GlobalAlloc(GMEM_FIXED, sizeof(DLGTEMPLATE) + 1000);
-	DLGTEMPLATE		*dlgTpl = (DLGTEMPLATE*)GlobalLock(hData);
+	const int		nBuffLen = 1000;
+	DLGTEMPLATE		*dlgTpl = (DLGTEMPLATE*)new char[sizeof(DLGTEMPLATE) + nBuffLen];
 	WORD			*p;
 
-	memset(dlgTpl, 0, 1000);
+	memset(dlgTpl, 0, nBuffLen + sizeof(DLGTEMPLATE));
 
 	if (szFont)
 		dwStyle |= DS_SETFONT;
@@ -215,67 +214,44 @@ BOOL CBaseDialog::DoModalIndirect(LPCTSTR szCaption, int x, int y, int nWidth, i
 	*p++ = 0;		/* Class */
 
 	/* copy the title of the dialog */
-	_tcscpy((TCHAR *)p, szCaption);
+	_tcscpy_safe((TCHAR *)p, nBuffLen, szCaption);
 	p += _tcslen(szCaption) + 1;
 
 	if (szFont)
 	{
 		/* Font information because of DS_SETFONT */
-		*p++ = 8;		/* point size */
+		*p++ = nFontSize;		/* point size */
 		/* Face name */
-		LPCTSTR	szFont = _T("MS Sans Serif");
 		_tcscpy((TCHAR *)p, szFont);
 		p += _tcslen(szFont) + 1;
 	}
 
+	return dlgTpl;
+}
+
+BOOL CBaseDialog::DoModalIndirect(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, CBaseWnd *pWndParent, DWORD dwStyle, LPCTSTR szFont, int nFontSize)
+{
+	int				nRet;
+	DLGTEMPLATE		*dlgTpl = NewTemplate(szCaption, x, y, nWidth, nHeight, dwStyle, szFont, nFontSize);
+	if (!dlgTpl)
+		return FALSE;
+
 	nRet = (int)DialogBoxIndirectParam(GetAppInstance(), dlgTpl, pWndParent ? pWndParent->GetHandle() : NULL, (DLGPROC)BaseWndProc, (LPARAM)this);
 
-	GlobalUnlock(dlgTpl);
-	GlobalFree(hData);
+	delete[] (char *)dlgTpl;
 
 	return nRet;
 }
 
 BOOL CBaseDialog::CreateIndirect(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, CBaseWnd *pWndParent, DWORD dwStyle, LPCTSTR szFont, int nFontSize)
 {
+	if (m_pTemplate)
+		delete[] (char *)m_pTemplate;
+	m_pTemplate = NewTemplate(szCaption, x, y, nWidth, nHeight, dwStyle, szFont, nFontSize);
 	if (!m_pTemplate)
-		m_pTemplate = new char[1024];
+		return FALSE;
 
-	DLGTEMPLATE		*dlgTpl = (DLGTEMPLATE*)m_pTemplate;
-	WORD			*p;
-
-	if (szFont)
-		dwStyle |= DS_SETFONT;
-	else
-		dwStyle &= ~DS_SETFONT;
-
-	p = (WORD *)dlgTpl;
-	*p++ = LOWORD (dwStyle);
-	*p++ = HIWORD (dwStyle);
-	*p++ = 0;		/* LOWORD (lExtendedStyle) */
-	*p++ = 0;		/* HIWORD (lExtendedStyle) */
-	*p++ = 0;		/* NumberOfItems */
-	*p++ = x;		/* x  (dummy value) */
-	*p++ = y;		/* y  (dummy value) */
-	*p++ = nWidth;	/* cx (dummy value) */
-	*p++ = nHeight;	/* cy (dummy value) */
-	*p++ = 0;		/* Menu */
-	*p++ = 0;		/* Class */
-
-	/* copy the title of the dialog */
-	_tcscpy((TCHAR *)p, szCaption);
-	p += _tcslen(szCaption) + 1;
-
-	if (szFont)
-	{
-		/* Font information because of DS_SETFONT */
-		*p++ = 8;		/* point size */
-		/* Face name */
-		_tcscpy((TCHAR *)p, szFont);
-		p += _tcslen(szFont) + 1;
-	}
-
-	m_hWnd = CreateDialogIndirectParam(GetAppInstance(), dlgTpl, pWndParent ? pWndParent->GetHandle() : NULL, (DLGPROC)BaseWndProc, (LPARAM)this);
+	m_hWnd = CreateDialogIndirectParam(GetAppInstance(), m_pTemplate, pWndParent ? pWndParent->GetHandle() : NULL, (DLGPROC)BaseWndProc, (LPARAM)this);
 
 	return m_hWnd != NULL;
 }

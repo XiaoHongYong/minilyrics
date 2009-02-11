@@ -59,7 +59,7 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 			if (pObj->IsUpdateTranslucencyWithSkin())
 			{
 				MLColor		clrAlpha;
-				clrAlpha.setAlpha(m_pSkin->m_nTranslucencyAlphaDynamic);
+				clrAlpha.setAlpha((byte)m_pSkin->m_nTranslucencyAlphaDynamic);
 				if (pObj->m_imgMask.IsValid())
 				{
 					CRect	rcMask;

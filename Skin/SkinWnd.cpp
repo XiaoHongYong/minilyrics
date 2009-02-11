@@ -879,7 +879,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	if (pObj->IsUpdateTranslucencyWithSkin())
 	{
 		MLColor		clrAlpha;
-		clrAlpha.setAlpha(m_nTranslucencyAlphaDynamic);
+		clrAlpha.setAlpha((byte)m_nTranslucencyAlphaDynamic);
 		if (pObj->m_imgMask.IsValid())
 		{
 			CRect	rcMask;

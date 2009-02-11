@@ -27,8 +27,21 @@ wchar_t * __cdecl wcscat_safe(wchar_t * dst, int Size, const wchar_t * src);
 
 #ifndef _WIN32
 #define _vsntprintf vsnprintf_s
+#define _stprintf_s sprintf_s
 
-int vsnprintf_s(char * _DstBuf, size_t _DstSize, size_t _MaxCount, const char * _Format, va_list _ArgList);
+int vsnprintf_s(char *buffer, size_t buffSize, size_t count, const char *format, va_list argptr);
+
+inline int sprintf_s(char *string, size_t sizeInBytes, const char *format, ...)
+{
+	va_list arglist;
+	va_start(arglist, format);
+	return vsprintf_s(string, sizeInBytes, format, arglist);
+}
+
+inline char *_itoa(int value, char *string, size_t stringLen, int radix)
+{
+	return _itox_s(value, string, stringLen, radix);
+}
 
 #endif
 

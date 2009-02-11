@@ -137,11 +137,11 @@ wchar_t *wcscat_safe(wchar_t * dst, int Size, const wchar_t * src)
 
 
 #ifndef _WIN32
-int vsnprintf_s(char * _DstBuf, size_t _DstSize, size_t _MaxCount, const char * _Format, va_list _ArgList)
+int vsnprintf_s(char *buffer, size_t buffSize, size_t count, const char *format, va_list argptr);
 {
-	int	n = vsnprintf(_DstBuf, _MaxCount, _Format, _ArgList);
-	if (n == _MaxCount)
-		_DstBuf[_MaxCount - 1] = 0;
+	int	n = vsnprintf(buffer, buffSize, format, argptr);
+	if (n == count)
+		buffer[count - 1] = 0;
 }
 #endif
 

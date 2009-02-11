@@ -239,7 +239,7 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 	rcItem.bottom = m_rcObj.bottom;
 	x = m_rcObj.left;
 
-	for (int i = 0; i < m_vSubMenus.size(); i++)
+	for (int i = 0; i < (int)m_vSubMenus.size(); i++)
 	{
 		SubMenu		&item = m_vSubMenus[i];
 		MLColor		clrText, clrOutlined;
@@ -411,7 +411,7 @@ void CSkinMenuBar::OnKeyDown(UINT nChar, UINT nFlags)
 			else
 				m_nSelSubMenu = m_vSubMenus.size() - 1;
 
-			if (m_nSelSubMenu >= 0 && m_nSelSubMenu < m_vSubMenus.size())
+			if (m_nSelSubMenu >= 0 && m_nSelSubMenu < (int)m_vSubMenus.size())
 			{
 				Invalidate();
 				if (m_wndMsgReceiver.IsMenuPopuped())
@@ -421,12 +421,12 @@ void CSkinMenuBar::OnKeyDown(UINT nChar, UINT nFlags)
 		break;
 	case VK_RIGHT:
 		{
-			if (m_nSelSubMenu >= m_vSubMenus.size() - 1)
+			if (m_nSelSubMenu >= (int)m_vSubMenus.size() - 1)
 				m_nSelSubMenu = 0;
 			else
 				m_nSelSubMenu++;
 
-			if (m_nSelSubMenu >= 0 && m_nSelSubMenu < m_vSubMenus.size())
+			if (m_nSelSubMenu >= 0 && m_nSelSubMenu < (int)m_vSubMenus.size())
 			{
 				Invalidate();
 				if (m_wndMsgReceiver.IsMenuPopuped())
@@ -525,7 +525,7 @@ int CSkinMenuBar::HitTestSubMenu(const POINT point)
 	if (point.x < m_rcObj.left)
 		return -1;
 
-	for (int i = 0; i < m_vSubMenus.size(); i++)
+	for (int i = 0; i < (int)m_vSubMenus.size(); i++)
 	{
 		x += m_vSubMenus[i].nWidth;
 		if (x > m_rcObj.right)
@@ -543,7 +543,7 @@ int CSkinMenuBar::GetItemX(int n)
 {
 	int			x = m_rcObj.left;
 
-	if (n >= m_vSubMenus.size())
+	if (n >= (int)m_vSubMenus.size())
 		n = m_vSubMenus.size() - 1;
 	for (int i = 0; i < n; i++)
 	{

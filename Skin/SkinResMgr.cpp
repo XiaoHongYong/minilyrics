@@ -240,18 +240,18 @@ BOOL CSkinResMgr::GetResourcePathName(LPTSTR szPathName, int nSizePathName, LPCT
 	//
 	// 资源的搜索顺序：szDir1, szDir2, szDir3, 最后为 szBmp
 	_tcscpy_safe(szPathName, nSizePathName, m_szResDir1);
-	_tcscat(szPathName, szResName);
+	_tcscat_safe(szPathName, nSizePathName, szResName);
 	if (!IsFileExist(szPathName))
 	{
 		_tcscpy_safe(szPathName, nSizePathName, m_szResDir2);
-		_tcscat(szPathName, szResName);
+		_tcscat_safe(szPathName, nSizePathName, szResName);
 		if (!IsFileExist(szPathName))
 		{
 			_tcscpy_safe(szPathName, nSizePathName, szResName);
 			if (!IsFileExist(szPathName))
 			{
 				_tcscpy_safe(szPathName, nSizePathName, m_szResDir3);
-				_tcscat(szPathName, szResName);
+				_tcscat_safe(szPathName, nSizePathName, szResName);
 				if (!IsFileExist(szPathName))
 				{
 					ERRLOG1(_T("Resource File: %s does NOT exist!"), szResName);

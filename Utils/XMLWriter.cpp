@@ -75,7 +75,7 @@ void CXMLWriter::WriteStartElement(LPCTSTR szElement)
 	if (m_wp == WP_ELEMENT_HEAD)
 		m_strBuff += ">\r\n";
 
-	for (int i = 0; i < m_vElementStack.size(); i++)
+	for (int i = 0; i < (int)m_vElementStack.size(); i++)
 		m_strBuff += m_strIndent.c_str();
 
 	m_wp = WP_ELEMENT_HEAD;
@@ -108,7 +108,7 @@ void CXMLWriter::WriteAttribute(LPCTSTR szAttr, int nValue)
 	m_strBuff += "=\"";
 
 	char	szBuff[64];
-	sprintf(szBuff, "%d", nValue);
+	_itoa_s(nValue, szBuff, CountOf(szBuff), 10);
 	m_strBuff += szBuff;
 
 	m_strBuff += "\"";
@@ -147,7 +147,7 @@ void CXMLWriter::WriteString(LPCTSTR szString)
 
 void CXMLWriter::WriteElementString(LPCTSTR szElement, LPCTSTR szString)
 {
-	for (int i = 0; i < m_vElementStack.size(); i++)
+	for (int i = 0; i < (int)m_vElementStack.size(); i++)
 		m_strBuff += m_strIndent.c_str();
 
 	m_strBuff += "<";
@@ -163,7 +163,7 @@ void CXMLWriter::WriteElementString(LPCTSTR szElement, LPCTSTR szString)
 
 void CXMLWriter::WriteElementInt(LPCTSTR szElement, int nValue)
 {
-	for (int i = 0; i < m_vElementStack.size(); i++)
+	for (int i = 0; i < (int)m_vElementStack.size(); i++)
 		m_strBuff += m_strIndent.c_str();
 
 	m_strBuff += "<";
@@ -171,7 +171,7 @@ void CXMLWriter::WriteElementInt(LPCTSTR szElement, int nValue)
 	m_strBuff += ">";
 
 	char	szBuff[64];
-	sprintf(szBuff, "%d", nValue);
+	_itoa_s(nValue, szBuff, CountOf(szBuff), 10);
 	m_strBuff += szBuff;
 
 	m_strBuff += "</";
@@ -181,7 +181,7 @@ void CXMLWriter::WriteElementInt(LPCTSTR szElement, int nValue)
 
 void CXMLWriter::WriteComment(LPCTSTR szComment)
 {
-	for (int i = 0; i < m_vElementStack.size() + 1; i++)
+	for (int i = 0; i < (int)m_vElementStack.size() + 1; i++)
 		m_strBuff += m_strIndent.c_str();
 
 	m_strBuff += "<!-- ";
@@ -203,7 +203,7 @@ void CXMLWriter::WriteDirect(LPCTSTR szBuff)
 {
 #ifdef _UNICODE
 	int		n = _tcslen(szBuff);
-	if (m_strBuff.capacity() - m_strBuff.size() <= n * 3)
+	if ((int)(m_strBuff.capacity() - m_strBuff.size()) <= n * 3)
 		m_strBuff.reserve(m_strBuff.size() + n * 3 + 1);
 	ConvertStr2(szBuff, n, m_strBuff.data() + m_strBuff.size(), n * 3, m_nEncodingID);
 	m_strBuff.resize(m_strBuff.size() + strlen(m_strBuff.data() + m_strBuff.size()));

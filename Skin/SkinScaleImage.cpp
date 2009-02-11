@@ -106,11 +106,11 @@ void CSkinXScaleImage::EnumProperties(CUIObjProperties &listProperties)
 	vector<tstring>		vExtra;
 	TCHAR				szBuff[64];
 
-	_itot(m_nScaleXStart, szBuff, 10);
+	_itot_s(m_nScaleXStart, szBuff, CountOf(szBuff), 10);
 	vExtra.push_back(_T("StretchStartX"));
 	vExtra.push_back(szBuff);
 
-	_itot(m_nScaleXEnd, szBuff, 10);
+	_itot_s(m_nScaleXEnd, szBuff, CountOf(szBuff), 10);
 	vExtra.push_back(_T("StretchEndX"));
 	vExtra.push_back(szBuff);
 
@@ -220,11 +220,11 @@ void CSkinYScaleImage::EnumProperties(CUIObjProperties &listProperties)
 	vector<tstring>		vExtra;
 	TCHAR				szBuff[64];
 
-	_itot(m_nScaleYStart, szBuff, 10);
+	_itot_s(m_nScaleYStart, szBuff, CountOf(szBuff), 10);
 	vExtra.push_back(_T("StretchStartY"));
 	vExtra.push_back(szBuff);
 
-	_itot(m_nScaleYEnd, szBuff, 10);
+	_itot_s(m_nScaleYEnd, szBuff, CountOf(szBuff), 10);
 	vExtra.push_back(_T("StretchEndY"));
 	vExtra.push_back(szBuff);
 

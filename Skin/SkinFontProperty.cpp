@@ -62,7 +62,7 @@ void FontPropertyValueToStr(tstring &strValue, int nHeight, int nWeight, BYTE by
 	strValue += szFaceNameLatin9;
 	strValue += SZ_FEILD_SEP;
 
-	_itot(nHeight, szBuff, 10);
+	_itot_s(nHeight, szBuff, CountOf(szBuff), 10);
 	strValue += szBuff; strValue += SZ_FEILD_SEP;
 
 	if (nWeight >= FW_BOLD)
@@ -72,7 +72,7 @@ void FontPropertyValueToStr(tstring &strValue, int nHeight, int nWeight, BYTE by
 	else
 		strValue += _T("normal, ");
 
-	_itot(byItalic, szBuff, 10);
+	_itot_s(byItalic, szBuff, CountOf(szBuff), 10);
 	strValue += szBuff; strValue += SZ_FEILD_SEP;
 
 	strValue += _T("0, ");

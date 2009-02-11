@@ -182,19 +182,19 @@ void CSkinCaption::EnumProperties(CUIObjProperties &listProperties)
 	vector<tstring>		vExtra;
 	TCHAR				szBuff[64];
 
-	_itot(m_nCutPos1, szBuff, 10);
+	_itot_s(m_nCutPos1, szBuff, CountOf(szBuff), 10);
 	vExtra.push_back(_T("StretchStartX"));
 	vExtra.push_back(szBuff);
 
-	_itot(m_nCutPos2, szBuff, 10);
+	_itot_s(m_nCutPos2, szBuff, CountOf(szBuff), 10);
 	vExtra.push_back(_T("StretchEndX"));
 	vExtra.push_back(szBuff);
 
-	_itot(m_nCutPos3, szBuff, 10);
+	_itot_s(m_nCutPos3, szBuff, CountOf(szBuff), 10);
 	vExtra.push_back(_T("StretchStartX2"));
 	vExtra.push_back(szBuff);
 
-	_itot(m_nCutPos4, szBuff, 10);
+	_itot_s(m_nCutPos4, szBuff, CountOf(szBuff), 10);
 	vExtra.push_back(_T("StretchEndX2"));
 	vExtra.push_back(szBuff);
 

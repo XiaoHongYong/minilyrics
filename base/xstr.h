@@ -157,12 +157,13 @@ int _xtoi(const TCHARDEF *str)
 }
 
 template<class TCHARDEF>
-TCHARDEF* _itox(int value, TCHARDEF *result, int base)
+TCHARDEF* _itox_s(int value, TCHARDEF *result, size_t buffSize, int base)
 {
 	// check that the base if valid
 	if (base < 2 || base > 16) { *result = 0; return result; }
 
 	TCHARDEF *out = result;
+	TCHARDEF *end = result + buffSize - 1;
 	int quotient = value;
 
 	do
@@ -171,10 +172,10 @@ TCHARDEF* _itox(int value, TCHARDEF *result, int base)
 		++out;
 		quotient /= base;
 	}
-	while (quotient);
+	while (quotient && out < end);
 
 	// Only apply negative sign for base 10
-	if ( value < 0 && base == 10)
+	if (value < 0 && base == 10 && out < end)
 		*out++ = '-';
 
 	std::reverse(result, out);

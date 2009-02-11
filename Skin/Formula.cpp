@@ -475,7 +475,7 @@ void CFormula::SimpleOptimize()
 		m_strFormula.erase(m_strFormula.begin() + (int)(szOtherEnd - szBeg), m_strFormula.end());
 		if (m_strFormula.size() == 0)
 		{
-			_itot(nResult, szResult, 10);
+			_itot_s(nResult, szResult, CountOf(szResult), 10);
 			m_strFormula = szResult;
 		}
 		else
@@ -483,9 +483,9 @@ void CFormula::SimpleOptimize()
 			if (nResult != 0)
 			{
 				if (nResult > 0)
-					_stprintf(szResult, _T("+%d"), nResult);
+					_stprintf_s(szResult, CountOf(szResult), _T("+%d"), nResult);
 				else
-					_itot(nResult, szResult, 10);
+					_itot_s(nResult, szResult, CountOf(szResult), 10);
 				m_strFormula += szResult;
 			}
 		}
