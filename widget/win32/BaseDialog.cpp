@@ -190,10 +190,11 @@ BOOL CBaseDialog::Create(UINT nIDTemplate, CBaseWnd *pWndParent)
 DLGTEMPLATE *CBaseDialog::NewTemplate(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, DWORD dwStyle, LPCTSTR szFont, int nFontSize)
 {
 	const int		nBuffLen = 1000;
-	DLGTEMPLATE		*dlgTpl = (DLGTEMPLATE*)new char[sizeof(DLGTEMPLATE) + nBuffLen];
+	DLGTEMPLATE		*dlgTpl = (DLGTEMPLATE*)new char[nBuffLen];
 	WORD			*p;
+	byte			*pEnd = (byte*)dlgTpl + nBuffLen;
 
-	memset(dlgTpl, 0, nBuffLen + sizeof(DLGTEMPLATE));
+	memset(dlgTpl, 0, nBuffLen);
 
 	if (szFont)
 		dwStyle |= DS_SETFONT;
@@ -214,7 +215,7 @@ DLGTEMPLATE *CBaseDialog::NewTemplate(LPCTSTR szCaption, int x, int y, int nWidt
 	*p++ = 0;		/* Class */
 
 	/* copy the title of the dialog */
-	_tcscpy_safe((TCHAR *)p, nBuffLen, szCaption);
+	_tcscpy_safe((TCHAR *)p, int(pEnd - (byte*)p), szCaption);
 	p += _tcslen(szCaption) + 1;
 
 	if (szFont)
@@ -222,7 +223,7 @@ DLGTEMPLATE *CBaseDialog::NewTemplate(LPCTSTR szCaption, int x, int y, int nWidt
 		/* Font information because of DS_SETFONT */
 		*p++ = nFontSize;		/* point size */
 		/* Face name */
-		_tcscpy((TCHAR *)p, szFont);
+		_tcscpy_safe((TCHAR *)p, int(pEnd - (byte*)p), szFont);
 		p += _tcslen(szFont) + 1;
 	}
 

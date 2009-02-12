@@ -109,8 +109,6 @@ bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcS
 
 void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics);
 
-void AnalysisLyricsFileName(TCHAR szTitle[]/* out */, TCHAR szArtist[]/* out */, TCHAR szSepr[], TCHAR szExt[], LPCTSTR szFileName);
-
 void StrIgnoreCompare(LPCTSTR &szDest, LPCTSTR &szTemplate, BOOL bIgnoreNumb);
 int StrIgnoreCompare(LPCTSTR szStr1, LPCTSTR szStr2);
 

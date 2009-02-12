@@ -61,7 +61,7 @@ void ByteToHexStr(char *szStr, BYTE byValue)
 {
 	char	szTemp[10];
 
-	sprintf(szTemp, "%02X", byValue);
+	sprintf_s(szTemp, CountOf(szTemp), "%02X", byValue);
 
 	szStr[0] = szTemp[0];
 	szStr[1] = szTemp[1];
@@ -171,15 +171,7 @@ UINT String2HexUINT(char buff[])
 
 static int HexStrToByte(const char *str)
 {
-	char	szTemp[10];
-	szTemp[0] = str[0];
-	szTemp[1] = str[1];
-	szTemp[2] = '\0';
-
-	int		n;
-
-	sscanf(szTemp, "%X", &n);
-	return n;
+	return HexToInt(str[0]) * 16 + HexToInt(str[1]);
 }
 //
 //static BOOL VerifyDate(const char *szRegCode)
@@ -206,13 +198,13 @@ BOOL VerifyRegCode1(const char *szName, const char *szRegCode)
 	if (strlen(szName) < 3)
 		return FALSE;
 
-	strcpy(szNameNew, szName);
+	strcpy_safe(szNameNew, CountOf(szNameNew), szName);
 	_strupr(szNameNew);
 
 	memset(szCodeTemp, 0, sizeof(szCodeTemp));
-	strcpy(szCodeTemp, szRegCode);
+	strcpy_safe(szCodeTemp, CountOf(szCodeTemp), szRegCode);
 
-	strncpy(szVersion, szCodeTemp, 2);
+	strncpy_safe(szVersion, CountOf(szVersion), szCodeTemp, 2);
 	szVersion[2] = '\0';
 
 	// 计算版本号: 0 - 1
@@ -256,7 +248,7 @@ BOOL VerifyRegCode1(const char *szName, const char *szRegCode)
 	}
 
 	// 校验码部分: 10 - 15
-	strcat(szNameNew, &szCodeTemp[6]);
+	strcat_safe(szNameNew, CountOf(szNameNew), &szCodeTemp[6]);
 
 	for (i = 10; i <= 14; i++)
 	{
@@ -408,7 +400,7 @@ BOOL MLVerifyRegCode(const char *szName, const char *szRegCode)
 
 	//
 	// 将szRegCode复制到g_szMLRegCode中，并且去掉 '-'
-	strcpy(g_szMLRegCode, szRegCode);
+	strcpy_safe(g_szMLRegCode, CountOf(g_szMLRegCode), szRegCode);
 	strdel(g_szMLRegCode, '-');
 /*	const char	*szPos;
 	char	*szPos2;
@@ -427,7 +419,7 @@ BOOL MLVerifyRegCode(const char *szName, const char *szRegCode)
 
 	//
 	// 复制注册名
-	strcpy(g_szMLRegName, szName);
+	strcpy_safe(g_szMLRegName, CountOf(g_szMLRegName), szName);
 
 	nLen = (int)strlen(g_szMLRegCode);
 	if (nLen == 16)
@@ -474,7 +466,7 @@ BOOL SimpleVerifyRegCode2()
 
 	//
 	// 复制g_szMLRegNameNew
-	strcpy(g_szMLRegNameNew, g_szMLRegName);
+	strcpy_safe(g_szMLRegNameNew, CountOf(g_szMLRegNameNew), g_szMLRegName);
 	_strupr(g_szMLRegNameNew);
 	strncat(g_szMLRegNameNew, g_szMLRegCode, 8);
 

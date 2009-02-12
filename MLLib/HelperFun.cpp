@@ -89,7 +89,7 @@ int CompareVersion(LPCTSTR szVer1, int nMajor, int nMinor, int nBuild)
 	_tcscpy_safe(szStdVer1, 32, szVer1);
 	TrimStr(szStdVer1);
 
-	_stprintf(szStdVer2, _T("%d.%d.%d"), nMajor, nMinor, nBuild);
+	_stprintf_s(szStdVer2, CountOf(szStdVer1), _T("%d.%d.%d"), nMajor, nMinor, nBuild);
 
 	return _tcsicmp(szStdVer1, szStdVer2);
 }
@@ -99,7 +99,7 @@ int GoDie()
 	char		*p;
 	p = "";
 
-	strcpy(p, "xeta");
+	strcpy_safe(p, 100, "xeta");
 
 	int			*p1 = (int *)1;
 	*p1 = 100;
@@ -116,23 +116,6 @@ int GoDie()
 //		szString[i] = szString[i] ^ 0xB5;
 //	}
 //}
-
-
-// COMMENT:
-//		判断两个日期是否相等，日期的格式为：yy-mm-dd
-BOOL IsDateEqual(LPCTSTR szDate1, LPCTSTR szDate2)
-{
-	int		nYear1, nMonth1, nDay1;
-	int		nYear2, nMonth2, nDay2;
-
-	if (_stscanf(szDate1, _T("%d-%d-%d"), &nYear1, &nMonth1, &nDay1) != 3)
-		return FALSE;
-	if (_stscanf(szDate2, _T("%d-%d-%d"), &nYear2, &nMonth2, &nDay2) != 3)
-		return FALSE;
-
-	return nYear1 == nYear2 && nMonth1 == nMonth2 && nDay1 == nDay2;
-}
-
 
 //////////////////////////////////////////////////////////////////////////
 //

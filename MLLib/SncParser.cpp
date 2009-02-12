@@ -84,7 +84,7 @@ BOOL CSncParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
 			nMin = nMs / (1000 * 60);
 			// _stprintf(szBuff, _T("¢â%04d%02d%02d¢Ð\r\n"), nMin, nSec, n10Ms);
 			strBuff.reserve(100);
-			nLen = _stprintf(strBuff.data(), _T("¢â%04d%02d%02d¢Ð\r\n"), nMin, nSec, n10Ms);
+			nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("¢â%04d%02d%02d¢Ð\r\n"), nMin, nSec, n10Ms);
 			strBuff.setSize(nLen);
 
 			int			nCount;

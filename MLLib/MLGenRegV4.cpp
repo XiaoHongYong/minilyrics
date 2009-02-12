@@ -118,7 +118,7 @@ BOOL SimpleVerifyRegCodeV4()
 
 	//
 	// ¸´ÖÆg_szMLRegNameNew
-	strcpy(g_szMLRegNameNew, g_szMLRegName);
+	strcpy_safe(g_szMLRegNameNew, CountOf(g_szMLRegNameNew), g_szMLRegName);
 	_strupr(g_szMLRegNameNew);
 
 	strncat(g_szMLRegNameNew, g_szMLRegCode, ML_APPAND_NAME_LEN);

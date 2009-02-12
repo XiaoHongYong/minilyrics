@@ -379,7 +379,7 @@ int MLFileInfo::ToXML(CXMLWriter &xmlFile)
 	if (fRate != 0.0)
 	{
 		TCHAR		szTemp[64];
-		_stprintf(szTemp, _T("%.1f"), fRate);
+		_stprintf_s(szTemp, CountOf(szTemp), _T("%.1f"), fRate);
 		xmlFile.WriteAttribute(_T("rate"), szTemp);
 	}
 	if (nRateCount != 0)
@@ -1238,10 +1238,10 @@ int CMsgProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, int nMaxBuf
 //			szMsgHeader = (char *)m_buffMsgHeader.GetBuffer();
 
 			pszMsg = pMsgBuff->data();
-			strncpy(szMsgType, pszMsg, ML_MSG_XML_LEN);
+			strncpy_safe(szMsgType, CountOf(szMsgType), pszMsg, ML_MSG_XML_LEN);
 			szMsgType[ML_MSG_XML_LEN] = '\0';
 
-			strncpy(szMsgDataLen, pszMsg + ML_MSG_XML_LEN, ML_MSG_XML_DATA_LEN);
+			strncpy_safe(szMsgDataLen, CountOf(szMsgDataLen), pszMsg + ML_MSG_XML_LEN, ML_MSG_XML_DATA_LEN);
 			szMsgDataLen[ML_MSG_XML_DATA_LEN] = '\0';
 
 			char	*pTemp = szMsgDataLen;
@@ -1319,9 +1319,9 @@ int CMsgProtocol::WriteMsg(char *szMsgType, CCharBuffer *pMsgBuff)
 	int		nRet;
 
 	// %3s%6d
-	sprintf(szFormat, "%%%ds%%%dd", ML_MSG_XML_LEN, ML_MSG_XML_DATA_LEN);
+	sprintf_s(szFormat, CountOf(szFormat), "%%%ds%%%dd", ML_MSG_XML_LEN, ML_MSG_XML_DATA_LEN);
 
-	sprintf(szHeader, szFormat, szMsgType, pMsgBuff->size());
+	sprintf_s(szHeader, CountOf(szHeader), szFormat, szMsgType, pMsgBuff->size());
 
 	nRet = m_pNetFile->Write(szHeader, ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN, &nWrite);
 	if (nRet != ERR_OK)

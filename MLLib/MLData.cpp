@@ -310,7 +310,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 		if (nRet == ERR_OK)
 			nRet = OpenLyricsInSongOfLyrics3v2(strLyrics.c_str(), strLyrics.size(), bForceUseEncoding, nForceEncodingID);
 
-		for (int i = 0; i < m_arrLyricsRows.size(); i++)
+		for (int i = 0; i < (int)m_arrLyricsRows.size(); i++)
 		{
 			tstring		str;
 			LyricsRowToText(m_arrLyricsRows[i], str);
@@ -901,7 +901,7 @@ int CMLData::UpdateTagToID3v2DescTxt()
 		szAlbum = m_lyrProperties.m_strAlbum.c_str();
 	if (m_lyrProperties.m_nTimeOffset != m_lyrPropertiesOrg.m_nTimeOffset)
 	{
-		_stprintf(szOffsetTimeBuff, _T("%d"), m_lyrProperties.m_nTimeOffset); 
+		_itot_s(m_lyrProperties.m_nTimeOffset, szOffsetTimeBuff, CountOf(szOffsetTimeBuff), 10);
 		szOffsetTime = szOffsetTimeBuff;
 	}
 	if (_tcscmp(m_lyrProperties.GetEncoding(), m_lyrPropertiesOrg.GetEncoding()) != 0)
@@ -942,7 +942,7 @@ BOOL CMLData::SaveTag()
 		szBy = m_lyrProperties.m_strBy.c_str();
 	if (m_lyrProperties.m_nTimeOffset != m_lyrPropertiesOrg.m_nTimeOffset)
 	{
-		_stprintf(szOffsetTimeBuff, _T("%d"), m_lyrProperties.m_nTimeOffset); 
+		_itot_s(m_lyrProperties.m_nTimeOffset, szOffsetTimeBuff, CountOf(szOffsetTimeBuff), 10);
 		szOffsetTime = szOffsetTimeBuff;
 	}
 	if (_tcscmp(m_lyrProperties.GetEncoding(), m_lyrPropertiesOrg.GetEncoding()) != 0)
@@ -2642,7 +2642,7 @@ PLYRIC_FRAG CMLData::NewLyricFrag(int nBegTime, int nEndTime,
 	pFrag->nBegTime = nBegTime;
 	pFrag->nEndTime = nEndTime;
 	pFrag->nDrawWidth = 0;
-	_tcscpy(pFrag->szLyric, str.c_str());
+	_tcscpy_safe(pFrag->szLyric, str.size() + 1, str.c_str());
 	pFrag->nLen = str.size();
 	pFrag->dwAttrib = dwStyle;
 	if (bTempBegTime)
@@ -2666,7 +2666,7 @@ PLYRIC_FRAG CMLData::NewLyricFrag(int nBegTime, int nEndTime,
 	pFrag->nBegTime = nBegTime;
 	pFrag->nEndTime = nEndTime;
 	pFrag->nDrawWidth = 0;
-	_tcscpy(pFrag->szLyric, str.c_str());
+	_tcscpy_safe(pFrag->szLyric, str.size() + 1, str.c_str());
 	pFrag->nLen = str.size();
 	pFrag->dwAttrib = dwStyle;
 	if (bTempBegTime)
@@ -2738,8 +2738,9 @@ PML_ROW CMLData::CopyMLRow(PML_ROW pRowSrc)
 
 	if (pRowSrc->szContent)
 	{
-		pRow->szContent = new TCHAR[_tcslen(pRowSrc->szContent) + 1];
-		_tcscpy(pRow->szContent, pRowSrc->szContent);
+		int		n = _tcslen(pRowSrc->szContent) + 1;
+		pRow->szContent = new TCHAR[n];
+		_tcscpy_safe(pRow->szContent, n, pRowSrc->szContent);
 	}
 
 	for (int i = 0; i < (int)pRowSrc->vFrags.size(); i++)

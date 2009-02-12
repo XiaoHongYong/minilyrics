@@ -74,7 +74,7 @@ BOOL CMLProfile::InetGetProxy(TCHAR szServer[], int &nPort)
 		nPort = g_Profile.GetProfileInt(_T("ProxyPort"), __HTTP_PORT);
 		if (nPort <= 0)
 			nPort = __HTTP_PORT;
-		_tcscpy(szServer, g_Profile.GetProfileString(_T("ProxyServer"), _T("")));
+		_tcscpy_safe(szServer, MAX_PATH, g_Profile.GetProfileString(_T("ProxyServer"), _T("")));
 		if (IsEmptyString(szServer))
 		{
 			//

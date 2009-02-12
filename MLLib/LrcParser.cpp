@@ -1267,8 +1267,7 @@ BOOL CLrcParser::ToString(tstring &str, BOOL bIncTags)
 		// 保存时间偏移值
 		if (m_pMLData->GetOffsetTime() != 0)
 		{
-			// 时间补偿值未被保存
-			_stprintf(szBuff, _T("[offset:%d]\r\n"), m_pMLData->GetOffsetTime());
+			_stprintf_s(szBuff, CountOf(szBuff), _T("[offset:%d]\r\n"), m_pMLData->GetOffsetTime());
 			str += szBuff;
 		}
 
@@ -1276,27 +1275,27 @@ BOOL CLrcParser::ToString(tstring &str, BOOL bIncTags)
 		// 保存其他属性: 作者、标题等……
 		if (m_pMLData->Properties().m_strArtist.size())
 		{
-			_stprintf(szBuff, _T("[ar:%s]\r\n"), m_pMLData->Properties().m_strArtist.c_str());
+			_stprintf_s(szBuff, CountOf(szBuff), _T("[ar:%s]\r\n"), m_pMLData->Properties().m_strArtist.c_str());
 			str += szBuff;
 		}
 		if (m_pMLData->Properties().m_strTitle.size())
 		{
-			_stprintf(szBuff, _T("[ti:%s]\r\n"), m_pMLData->Properties().m_strTitle.c_str());
+			_stprintf_s(szBuff, CountOf(szBuff), _T("[ti:%s]\r\n"), m_pMLData->Properties().m_strTitle.c_str());
 			str += szBuff;
 		}
 		if (m_pMLData->Properties().m_strAlbum.size())
 		{
-			_stprintf(szBuff, _T("[al:%s]\r\n"), m_pMLData->Properties().m_strAlbum.c_str());
+			_stprintf_s(szBuff, CountOf(szBuff), _T("[al:%s]\r\n"), m_pMLData->Properties().m_strAlbum.c_str());
 			str += szBuff;
 		}
 		if (m_pMLData->Properties().m_strBy.size())
 		{
-			_stprintf(szBuff, _T("[by:%s]\r\n"), m_pMLData->Properties().m_strBy.c_str());
+			_stprintf_s(szBuff, CountOf(szBuff), _T("[by:%s]\r\n"), m_pMLData->Properties().m_strBy.c_str());
 			str += szBuff;
 		}
 		if (!IsEmptyString(m_pMLData->GetEncoding()))
 		{
-			_stprintf(szBuff, _T("[Encoding:%s]\r\n"), m_pMLData->GetEncoding());
+			_stprintf_s(szBuff, CountOf(szBuff), _T("[Encoding:%s]\r\n"), m_pMLData->GetEncoding());
 			str += szBuff;
 		}
 	}
@@ -1351,7 +1350,7 @@ BOOL CLrcParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
 
 				// _stprintf(szBuff, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
 				strBuff.reserve(100);
-				nLen = _stprintf(strBuff.data(), _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
+				nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
 				strBuff.setSize(nLen);
 			}
 
@@ -1381,7 +1380,7 @@ BOOL CLrcParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
 						nMs = (pFrag->nBegTime / 10) % 100;
 						nSec = (pFrag->nBegTime / 1000) % 60;
 						nMin = pFrag->nBegTime / (1000 * 60);
-						_stprintf(szTime, _T("<%02d:%02d.%02d>"), nMin, nSec, nMs);
+						_stprintf_s(szTime, CountOf(szTime), _T("<%02d:%02d.%02d>"), nMin, nSec, nMs);
 						strBuff += szTime;
 					}
 				}

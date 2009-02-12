@@ -26,23 +26,23 @@ void SetId3v1(char *szId3v1, const char *szTitle, const char *szArtist, const ch
 
 	szPtr = szId3v1 + ID3_V1_LEN_ID;
 	if (szTitle)
-		strncpy(szPtr, szTitle, ID3_V1_LEN_TITLE);
+		strcpy_safe(szPtr, ID3_V1_LEN_TITLE, szTitle);
 
 	szPtr += ID3_V1_LEN_TITLE;
 	if (szArtist)
-		strncpy(szPtr, szArtist, ID3_V1_LEN_ARTIST);
+		strcpy_safe(szPtr, ID3_V1_LEN_ARTIST, szArtist);
 
 	szPtr += ID3_V1_LEN_ARTIST;
 	if (szAlbum)
-		strncpy(szPtr, szAlbum, ID3_V1_LEN_ALBUM);
+		strcpy_safe(szPtr, ID3_V1_LEN_ALBUM, szAlbum);
 
 	szPtr += ID3_V1_LEN_ALBUM;
 	if (szYear)
-		strncpy(szPtr, szYear, ID3_V1_LEN_YEAR);
+		strcpy_safe(szPtr, ID3_V1_LEN_YEAR, szYear);
 
 	szPtr += ID3_V1_LEN_YEAR;
 	if (szComment)
-		strncpy(szPtr, szComment, ID3_V1_LEN_COMMENT);
+		strcpy_safe(szPtr, ID3_V1_LEN_COMMENT, szComment);
 
 	szPtr += ID3_V1_LEN_COMMENT;
 	*szPtr = (char)byTrack;
@@ -296,7 +296,7 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 
 	if (nLen == -1)
 		nLen = strlen(szLyrics);
-	sprintf(szTemp, "%05d", nLen);
+	sprintf_s(szTemp, CountOf(szTemp), "%05d", nLen);
 	if (fwrite(szTemp, 1, 5, fp) != 5)
 		ERR_GOTO_FAILED(ERR_WRITE_FILE);
 	nLyricsTagLen += 5;
@@ -305,7 +305,7 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 		ERR_GOTO_FAILED(ERR_WRITE_FILE);
 	nLyricsTagLen += nLen;
 
-	sprintf(szTemp, "%06d", nLyricsTagLen);
+	sprintf_s(szTemp, CountOf(szTemp), "%06d", nLyricsTagLen);
 	if (fwrite(szTemp, 1, 6, fp) != 6)
 		ERR_GOTO_FAILED(ERR_WRITE_FILE);
 

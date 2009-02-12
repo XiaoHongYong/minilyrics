@@ -18,7 +18,7 @@ BOOL CWidgetListCtrl::LoadColumnWidth(LPCTSTR szKeyName)
 		TCHAR		szValue[256];
 		int			nCx;
 
-		_stprintf(szKey, _T("%s_%d"), szKeyName, i);
+		_stprintf_s(szKey, CountOf(szKey), _T("%s_%d"), szKeyName, i);
 		g_Profile.GetProfileString(szKey, _T(""), szValue, 256);
 		if (IsEmptyString(szValue))
 			break;
@@ -41,7 +41,7 @@ BOOL CWidgetListCtrl::SaveColumnWidth(LPCTSTR szKeyName)
 		LVCOLUMN	Column;
 
 		Column.mask = LVCF_WIDTH;
-		_stprintf(szKey, _T("%s_%d"), szKeyName, i);
+		_stprintf_s(szKey, CountOf(szKey), _T("%s_%d"), szKeyName, i);
 		if (!::SendMessage(m_hWnd, LVM_GETCOLUMN, i, (LPARAM)&Column))
 			break;
 

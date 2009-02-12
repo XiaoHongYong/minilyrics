@@ -264,13 +264,13 @@ public:
 
 	void SetContentType(const char *szContentType)
 	{
-		strcpy(m_szContentType, szContentType);
+		strcpy_safe(m_szContentType, CountOf(m_szContentType), szContentType);
 		m_dwAvailProp |= RP_CONTENT_TYPE;
 	}
 
 	void SetDate(const char *szDate)
 	{
-		strcpy(m_szDate, szDate);
+		strcpy_safe(m_szDate, CountOf(m_szDate), szDate);
 		m_dwAvailProp |= RP_DATE;
 	}
 

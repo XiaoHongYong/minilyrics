@@ -277,35 +277,34 @@ void CHttpRequestProtocol::SetProxyBase64Pass(BOOL bEnableProxy, const char * sz
 
 int CHttpRequestProtocol::WriteHead()
 {
-	LPSTR		szBuff;
-	int			nSize = 1024;
 	int			nLen = 0;
 	char		szUrlNew[512];
 	char		szTemp[256];
 
-	m_buffHead.reserve(nSize);
-	szBuff = m_buffHead.data();
 	if (m_bUseProxy)
 	{
 		if (m_nHostPort != __HTTP_PORT)
-			sprintf(szUrlNew, "http://%s:%d", m_szHost, m_nHostPort);
+			sprintf_s(szUrlNew, CountOf(szUrlNew), "http://%s:%d", m_szHost, m_nHostPort);
 		else
-			sprintf(szUrlNew, "http://%s", m_szHost);
+			sprintf_s(szUrlNew, CountOf(szUrlNew), "http://%s", m_szHost);
 		if (m_strUrl[0] != '/')
-			strcat(szUrlNew, "/");
-		strcat(szUrlNew, m_strUrl.c_str());
+			strcat_safe(szUrlNew, CountOf(szUrlNew), "/");
+		strcat_safe(szUrlNew, CountOf(szUrlNew), m_strUrl.c_str());
 	}
 	else
-		strcpy(szUrlNew, m_strUrl.c_str());
+		strcpy_safe(szUrlNew, CountOf(szUrlNew), m_strUrl.c_str());
 
+	// "GET %s HTTP/%s\r\n"
 	if (m_RequestType == RQ_GET)
-		nLen = sprintf(szBuff, "GET %s HTTP/%s\r\n", szUrlNew, m_httpVer == HTTP_V_1_1 ? "1.1" : "1.0");
-	else if (m_RequestType == RQ_POST)
-		nLen = sprintf(szBuff, "POST %s HTTP/%s\r\n", szUrlNew, m_httpVer == HTTP_V_1_1 ? "1.1" : "1.0");
+		m_buffHead = "GET ";
+	else
+		m_buffHead = "POST ";
 	else
 		ASSERT(0);
-	m_buffHead.setSize(nLen);
-	nSize += nLen;
+	m_buffHead += szUrlNew;
+	m_buffHead += " HTTP/";
+	m_buffHead += m_httpVer == HTTP_V_1_1 ? "1.1" : "1.0";
+	m_buffHead += "\r\n";
 
 	if (m_dwAvailProp & RP_HOST)
 	{
@@ -1278,12 +1277,12 @@ void CHttpReturnProtocol::SetRange(DWORD dwStart, DWORD dwEnd)
 
 void CHttpReturnProtocol::SetServer(const char * szServer)
 {
-	strcpy(m_szServer, szServer);
+	strcpy_safe(m_szServer, CountOf(m_szServer), szServer);
 }
 
 void CHttpReturnProtocol::SetConnection(const char * szConnection)
 {
-	strcpy(m_szConnection, szConnection);
+	strcpy_safe(m_szConnection, CountOf(m_szConnection), szConnection);
 }
 
 const char * CHttpReturnProtocol::GetPropValue(RET_PROPERTY retProperty)

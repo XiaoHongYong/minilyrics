@@ -69,7 +69,7 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding)
 				nSec %= 60;
 				nHour = nMinute / 60;
 				nMinute %= 60;
-				_stprintf(szTime, _T("%d\n%02d:%02d:%02d,%03d --> "), i, nHour, nMinute, nSec, nMs);
+				_stprintf_s(szTime, CountOf(szTime), _T("%d\n%02d:%02d:%02d,%03d --> "), i, nHour, nMinute, nSec, nMs);
 				strData += szTime;
 
 				nMs = pRow->nEndTime % 1000;
@@ -78,7 +78,7 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding)
 				nSec %= 60;
 				nHour = nMinute / 60;
 				nMinute %= 60;
-				_stprintf(szTime, _T("%02d:%02d:%02d,%03d\n"), nHour, nMinute, nSec, nMs);
+				_stprintf_s(szTime, CountOf(szTime), _T("%02d:%02d:%02d,%03d\n"), nHour, nMinute, nSec, nMs);
 				strData += szTime;
 
 				strData += strBuff;

@@ -15,8 +15,6 @@ int UTF8ToMultibyte(unsigned char* text, char *szOut, int nOutBuffLen);
 // 将字符串进行异或操作
 void XorString(char *szString, int nLen);
 
-//		判断两个日期是否相等，日期的格式为：yy-mm-dd
-BOOL IsDateEqual(LPCTSTR szDate1, LPCTSTR szDate2);
 /*
 
 #define CountOf(arr)		(sizeof(arr) / sizeof(arr[0]))
