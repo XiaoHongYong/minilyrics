@@ -41,20 +41,10 @@ public:
 		: nVerMajor(_nVerMajor), nVerMinor(_nVerMinor), nVerBuild(_nVerBuild)
 	{
 	}
-	BOOL From(LPCTSTR szVersion)
-	{
-		int		nRet;
-		nRet = _stscanf(szVersion, _T("%d.%d.%d"), &nVerMajor, &nVerMinor, &nVerBuild);
-		if (nRet == 2)
-			nVerBuild = 0;
-		else if (nRet <= 1)
-			return FALSE;
-
-		return TRUE;
-	}
+	BOOL From(LPCTSTR szVersion);
 	void To(TCHAR szVersion[])
 	{
-		_stprintf(szVersion, _T("%d.%d.%d"), nVerMajor, nVerMinor, nVerBuild);
+		_stprintf_s(szVersion, 32, _T("%d.%d.%d"), nVerMajor, nVerMinor, nVerBuild);
 	}
 
 	bool operator==(CVersion &ver2)

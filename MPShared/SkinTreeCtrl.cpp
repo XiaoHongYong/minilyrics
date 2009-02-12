@@ -811,7 +811,7 @@ void CSkinTreeCtrl::OnCreate()
 	TCHAR		szTemp[MAX_PATH];
 
 	// set left
-	_stprintf(szTemp, _T("%s+%s-%s"), m_formLeft.GetFormula(), m_formWidth.GetFormula(),
+	_stprintf_s(szTemp, CountOf(szTemp), _T("%s+%s-%s"), m_formLeft.GetFormula(), m_formWidth.GetFormula(),
 		m_pObjScrollBar->m_formWidth.GetFormula());
 	m_pObjScrollBar->SetProperty(SZ_PN_LEFT, szTemp);
 
@@ -819,7 +819,7 @@ void CSkinTreeCtrl::OnCreate()
 	m_pObjScrollBar->SetProperty(SZ_PN_TOP, m_formTop.GetFormula());
 
 	// width of this
-	_stprintf(szTemp, _T("%s-%s"), m_formWidth.GetFormula(), m_pObjScrollBar->m_formWidth.GetFormula());
+	_stprintf_s(szTemp, CountOf(szTemp), _T("%s-%s"), m_formWidth.GetFormula(), m_pObjScrollBar->m_formWidth.GetFormula());
 	m_formWidth.SetFormula(szTemp);
 
 	// height.

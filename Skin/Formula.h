@@ -50,6 +50,7 @@ public:
 public:
 	BOOL CalCualteValue(FORMULA_VAR var[], int &nRetValue);
 	void SetFormula(LPCTSTR szExp);
+	void SetFormula(int nConstValue);
 
 	void SimpleOptimize();
 

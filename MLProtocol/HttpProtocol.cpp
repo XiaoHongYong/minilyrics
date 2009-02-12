@@ -299,8 +299,6 @@ int CHttpRequestProtocol::WriteHead()
 		m_buffHead = "GET ";
 	else
 		m_buffHead = "POST ";
-	else
-		ASSERT(0);
 	m_buffHead += szUrlNew;
 	m_buffHead += " HTTP/";
 	m_buffHead += m_httpVer == HTTP_V_1_1 ? "1.1" : "1.0";
@@ -329,7 +327,7 @@ int CHttpRequestProtocol::WriteHead()
 
 	if (m_dwAvailProp & RP_CONTENT_LENGTH)
 	{
-		sprintf(szTemp, "%d", m_dwContentLen);
+		sprintf_s(szTemp, CountOf(szTemp), "%d", m_dwContentLen);
 		m_buffHead += "Content-Length: ";
 		m_buffHead += szTemp;
 		m_buffHead += "\r\n";
@@ -360,9 +358,9 @@ int CHttpRequestProtocol::WriteHead()
 	if (m_dwAvailProp & RP_RANGE)
 	{
 		if (m_dwRangeEnd > m_dwRangeBeg)
-			nLen = sprintf(szTemp, "Range: bytes=%d-%d\r\n", m_dwRangeBeg, m_dwRangeEnd);
+			nLen = sprintf_s(szTemp, CountOf(szTemp), "Range: bytes=%d-%d\r\n", m_dwRangeBeg, m_dwRangeEnd);
 		else if (m_dwRangeEnd == 0)
-			nLen = sprintf(szTemp, "Range: bytes=%d-\r\n", m_dwRangeBeg);
+			nLen = sprintf_s(szTemp, CountOf(szTemp), "Range: bytes=%d-\r\n", m_dwRangeBeg);
 		m_buffHead += szTemp;
 	}
 
@@ -785,7 +783,7 @@ int CHttpReturnProtocol::WriteHead()
 
 	if (m_dwAvailProp & RP_CONTENT_LENGTH)
 	{
-		sprintf(szTemp, "%d", m_dwContentLen);
+		sprintf_s(szTemp, CountOf(szTemp), "%d", m_dwContentLen);
 		m_buffHead += "Content-Length: ";
 		m_buffHead += szTemp;
 		m_buffHead += "\r\n";
@@ -801,9 +799,9 @@ int CHttpReturnProtocol::WriteHead()
 	if (m_dwAvailProp & RP_CONTENT_RANGE)
 	{
 		if (m_dwRangeEnd > m_dwRangeBeg)
-			sprintf(szTemp, "Range: bytes=%d-%d\r\n", m_dwRangeBeg, m_dwRangeEnd);
+			sprintf_s(szTemp, CountOf(szTemp), "Range: bytes=%d-%d\r\n", m_dwRangeBeg, m_dwRangeEnd);
 		else if (m_dwRangeEnd == 0)
-			sprintf(szTemp, "Range: bytes=%d-\r\n", m_dwRangeBeg);
+			sprintf_s(szTemp, CountOf(szTemp), "Range: bytes=%d-\r\n", m_dwRangeBeg);
 		m_buffHead += szTemp;
 	}
 

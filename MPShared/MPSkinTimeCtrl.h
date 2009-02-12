@@ -59,9 +59,9 @@ protected:
 		nHour = nMinute / 60;
 		nMinute = nMinute % 60;
 		if (nHour > 0)
-			_sntprintf(szTime, nCount, _T("%02d:%02d:%02d"), nHour, nMinute, nSec);
+			_stprintf_s(szTime, nCount, _T("%02d:%02d:%02d"), nHour, nMinute, nSec);
 		else
-			_sntprintf(szTime, nCount, _T("%02d:%02d"), nMinute, nSec);
+			_stprintf_s(szTime, nCount, _T("%02d:%02d"), nMinute, nSec);
 	}
 
 	void ResetTimeText()

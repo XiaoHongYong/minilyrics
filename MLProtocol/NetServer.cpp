@@ -528,7 +528,7 @@ void CNetServer::Stop()
 {
 	int		i;
 
-	for (i = 0; i < m_vServerPort.size(); i++)
+	for (i = 0; i < (int)m_vServerPort.size(); i++)
 	{
 		ServicePort		*pService = m_vServerPort[i];
 

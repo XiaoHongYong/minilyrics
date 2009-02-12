@@ -57,7 +57,7 @@ void MLFileInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, MLFileInfoList &
 		LrcSearchResult		item;
 		TCHAR	szLyricsName[MAX_PATH];
 
-		_stprintf(szLyricsName, _T("%s - %s"), file.strArtist.c_str(), file.strTitle.c_str());
+		_stprintf_s(szLyricsName, CountOf(szLyricsName), _T("%s - %s"), file.strArtist.c_str(), file.strTitle.c_str());
 		item.strSaveFileName = szLyricsName;
 		item.strUrl = file.strLink;
 		item.strSaveFileName = file.strFileName;
@@ -499,25 +499,14 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 {
 	// LOG0(LOG_LVL_EVENT_IMP, _T("Enter auto search proc"));
 
-	//
-	// 对于一些模糊的字符串进行过滤
-	TCHAR		szArtistNew[MAX_PATH];
-	TCHAR		sztitleNew[MAX_PATH];
-
-	_tcscpy(szArtistNew, szArtist);
-	_tcscpy(sztitleNew, szTitle);
-
-	TrimStr(szArtistNew);
-	TrimStr(sztitleNew);
-
 	// 歌词为空, 小于3个字符
-	if (!IsTextWidthExceed(sztitleNew, 3))
+	if (!IsTextWidthExceed(szTitle, 3))
 	{
 		// LOG1(LOG_LVL_EVENT_IMP, _T("Title is : %s, quit."), sztitleNew);
 		return FALSE;
 	}
 
-	if (IsTitleExcludedFromAutoSearch(sztitleNew))
+	if (IsTitleExcludedFromAutoSearch(szTitle))
 	{
 		// LOG1(LOG_LVL_EVENT_IMP, _T("Title is : %s, quit."), sztitleNew);
 		return FALSE;

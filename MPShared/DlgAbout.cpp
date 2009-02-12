@@ -48,13 +48,13 @@ BOOL CDlgAbout::OnInitDialog()
 	if (g_LicenseType == LT_REGISTERED)
 	{
 		g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""), szName, sizeof(szName));
-		_tcscpy(szRegCode, TOLOCAL(_T("Registered")));
+		_tcscpy_safe(szRegCode, CountOf(szRegCode), TOLOCAL(_T("Registered")));
 		ShowDlgItem(IDC_UN_REG, SW_HIDE);
 	}
 	else
 	{
-		_tcscpy(szName, TOLOCAL(_T("Unregistered")));
-		_tcscpy(szRegCode, TOLOCAL(_T("Unregistered")));
+		_tcscpy_safe(szName, CountOf(szName), TOLOCAL(_T("Unregistered")));
+		_tcscpy_safe(szRegCode, CountOf(szRegCode), TOLOCAL(_T("Unregistered")));
 		ShowDlgItem(IDC_UN_REG, SW_SHOW);
 		ShowDlgItem(IDC_S_LICENSE_TO, SW_HIDE);
 		ShowDlgItem(IDC_S_REGCODE, SW_HIDE);
@@ -98,7 +98,7 @@ void CDlgAbout::OnCommand(UINT uID, UINT nNotifyCode)
 			if (IDOK == dlg.DoModal(this))
 			{
 				g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""), szName, sizeof(szName));
-				_tcscpy(szRegCode, TOLOCAL(_T("Registered")));
+				_tcscpy_safe(szRegCode, CountOf(szRegCode), TOLOCAL(_T("Registered")));
 
 				SetDlgItemText(IDC_NAME, szName);
 				SetDlgItemText(IDC_REGISTRATION_CODE, szRegCode);

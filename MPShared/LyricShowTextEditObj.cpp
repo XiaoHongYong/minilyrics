@@ -151,7 +151,7 @@ void FormtLrcTimeTag(int nTime, TCHAR szBuff[])
 	nSec = (nTime / 1000) % 60;
 	nMin = nTime / (1000 * 60);
 
-	_stprintf(szBuff, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
+	_stprintf_s(szBuff, 32, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
 }
 
 //////////////////////////////////////////////////////////////////////

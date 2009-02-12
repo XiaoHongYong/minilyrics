@@ -19,9 +19,9 @@ BOOL MLCrashCallback(LPCTSTR szRpt, HMODULE hCrashMod, LPVOID lpUserData)
 
 	TCHAR	szMLModue[256];
 #ifndef _MPLAYER
-	_stprintf(szMLModue, _T("Version: \"%s\", MiniLyrics HINST= 0x%X, Plugin HINST= 0x%X"), SZ_ML_VERSION, (long)GetAppInstance(), (long)g_Player.GetPlayerPlugInstance());
+	_stprintf_s(szMLModue, CountOf(szMLModue), _T("Version: \"%s\", MiniLyrics HINST= 0x%X, Plugin HINST= 0x%X"), SZ_ML_VERSION, (long)GetAppInstance(), (long)g_Player.GetPlayerPlugInstance());
 #else
-	_stprintf(szMLModue, _T("Version: \"%s\", ZikiPlayer HINST= 0x%X"), SZ_ML_VERSION, (long)GetAppInstance());
+	_stprintf_s(szMLModue, CountOf(szMLModue), _T("Version: \"%s\", ZikiPlayer HINST= 0x%X"), SZ_ML_VERSION, (long)GetAppInstance());
 #endif
 	// LOG1(LOG_LVL_ERROR, "%s", szMLModue);
 
@@ -42,7 +42,7 @@ BOOL MLCrashCallback(LPCTSTR szRpt, HMODULE hCrashMod, LPVOID lpUserData)
 		// 异常发生在我们的代码之间
 		TCHAR	szRptFile[MAX_PATH];
 
-		_stprintf(szRptFile, _T("%sMLCrashRpt.txt"), GetAppDataDir());
+		_stprintf_s(szRptFile, CountOf(szRptFile), _T("%sMLCrashRpt.txt"), GetAppDataDir());
 		FILE	*fp;
 
 		fp = _tfopen(szRptFile, _T("a+"));

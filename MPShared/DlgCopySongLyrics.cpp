@@ -61,8 +61,8 @@ void CDlgCopySongLyrics::OnOK()
 	g_Profile.WriteProfileInt(_T("CSL_renamelyrics"), bRenameLyrics);
 
 	// ¸´ÖÆMP3ÎÄ¼þ
-	_tcscpy(szTargetFile, szTargetDir);
-	_tcscat(szTargetFile, FileGetName(m_strSong.c_str()));
+	_tcscpy_safe(szTargetFile, CountOf(szTargetFile), szTargetDir);
+	_tcscat_safe(szTargetFile, CountOf(szTargetFile), FileGetName(m_strSong.c_str()));
 	if (!SHCopyFile(m_strSong.c_str(), szTargetFile, this))
 	{
 		// MessageOut(CWin32Error().Description());
@@ -89,7 +89,7 @@ void CDlgCopySongLyrics::OnOK()
 		}
 		else
 		{
-			_tcscpy(szTargetFile, szTargetDir);
+			_tcscpy_safe(szTargetFile, CountOf(szTargetFile), szTargetDir);
 			if (bRenameLyrics)
 			{
 				_tcscpy_safe(szFileName, MAX_PATH, FileGetName(m_strSong.c_str()));
@@ -99,7 +99,7 @@ void CDlgCopySongLyrics::OnOK()
 			{
 				_tcscpy_safe(szFileName, MAX_PATH, FileGetName(m_strLyrics.c_str()));
 			}
-			_tcscat(szTargetFile, szFileName);
+			_tcscat_safe(szTargetFile, CountOf(szTargetFile), szFileName);
 			SHCopyFile(m_strLyrics.c_str(), szTargetFile, this);
 		}
 	}

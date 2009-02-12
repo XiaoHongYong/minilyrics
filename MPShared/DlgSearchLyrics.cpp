@@ -182,8 +182,8 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 				TCHAR		szUrl[512], szInet[512];
 				TCHAR		szKeyword[256];
 				GetDlgItemText(IDC_E_KEYWORD, szKeyword, 256);
-				_tcscpy(szUrl, m_ad.strUrl.c_str());
-				_tcscat(szUrl, szKeyword);
+				_tcscpy_safe(szUrl, CountOf(szUrl), m_ad.strUrl.c_str());
+				_tcscat_safe(szUrl, CountOf(szUrl), szKeyword);
 				UriEscape(szUrl, szInet, 512);
 				OpenUrl(this, szInet);
 			}
@@ -200,7 +200,7 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			TCHAR		szKeyword[256];
 			GetDlgItemText(IDC_CB_ARTIST, szArtist, CountOf(szArtist));
 			GetDlgItemText(IDC_CB_TITLE, szTitle, CountOf(szTitle));
-			_stprintf(szKeyword, _T("%s %s"), szArtist, szTitle);
+			_stprintf_s(szKeyword, CountOf(szKeyword), _T("%s %s"), szArtist, szTitle);
 			SetDlgItemText(IDC_E_KEYWORD, szKeyword);
 
 			// Research local lyrics file?
@@ -311,8 +311,8 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			if (dlg.DoModal(this) == IDOK)
 			{
 				FileGetPath(szFileNew, CountOf(szFileNew), pSel->strUrl.c_str());
-				_tcscat(szFileNew, dlg.m_strName.c_str());
-				_tcscat(szFileNew, FileGetExt(pSel->strUrl.c_str()));
+				_tcscat_safe(szFileNew, CountOf(szFileNew), dlg.m_strName.c_str());
+				_tcscat_safe(szFileNew, CountOf(szFileNew), FileGetExt(pSel->strUrl.c_str()));
 				if (!MoveFile(pSel->strUrl.c_str(), szFileNew))
 				{
 					MessageOut(TOLOCAL(_T("Rename File FAILED.")));
@@ -785,15 +785,15 @@ void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInet
 
 	if (Item.fRate != 0.0)
 	{
-		_stprintf(szTemp, _T("%.1f/5 (%d %s)"), Item.fRate, Item.nRateCount, TOLOCAL(_T("Votes")));
+		_stprintf_s(szTemp, CountOf(szTemp), _T("%.1f/5 (%d %s)"), Item.fRate, Item.nRateCount, TOLOCAL(_T("Votes")));
 	}
 	else
-		_tcscpy(szTemp, _T("-"));
+		_tcscpy_safe(szTemp, CountOf(szTemp), _T("-"));
 	m_resultList.SetItemText(nItem, COL_RATING, szTemp);
 
 	if (bInetFile)
 	{
-		_itot(Item.nDownloads, szTemp, 10);
+		_itot_s(Item.nDownloads, szTemp, CountOf(szTemp), 10);
 		m_resultList.SetItemText(nItem, COL_DOWNLOADS, szTemp);
 	}
 

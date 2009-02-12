@@ -150,7 +150,7 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNum
 	CMLFileFind			finder;
 	LrcSearchResult		LrcResult;
 
-	_tcscpy(szFindDir, szDir);
+	_tcscpy_safe(szFindDir, CountOf(szFindDir), szDir);
 	DirStringFormat(szFindDir);
 
 	if (!finder.OpenDir(szFindDir))
@@ -167,9 +167,9 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNum
 				// search in sub directory
 				TCHAR	szSubDir[MAX_PATH];
 
-				_tcscpy(szSubDir, szDir);
-				_tcscat(szSubDir, finder.GetCurName());
-				_tcscat(szSubDir, _T(SZ_DIR_SLASH));
+				_tcscpy_safe(szSubDir, CountOf(szSubDir), szDir);
+				_tcscat_safe(szSubDir, CountOf(szSubDir), finder.GetCurName());
+				_tcscat_safe(szSubDir, CountOf(szSubDir), _T(SZ_DIR_SLASH));
 
 				SearchMatchLyricsInDir(szSubDir, szTitle, bTitleIgnoreNumb, szArtist, 
 					bArtIgnoreNumb, pvLyrics, bIncludeSub);
@@ -183,8 +183,8 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNum
 				LrcResult.nMatchValue = (float)CalLyricsMatchValue(finder.GetCurName(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
 				if (LrcResult.nMatchValue > MATCH_VALUE_MIN)
 				{
-					_tcscpy(szFileName, szDir);
-					_tcscat(szFileName, finder.GetCurName());
+					_tcscpy_safe(szFileName, CountOf(szFileName), szDir);
+					_tcscat_safe(szFileName, CountOf(szFileName), finder.GetCurName());
 					LrcResult.strUrl = szFileName;
 					pvLyrics->AddResult(LrcResult);
 				}
@@ -216,7 +216,7 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNum
 	if (IsEmptyString(szTitle))
 		return;
 
-	_tcscpy(szFindDir, szDir);
+	_tcscpy_safe(szFindDir, CountOf(szFindDir), szDir);
 	DirStringFormat(szFindDir);
 
 	if (!finder.OpenDir(szFindDir))
@@ -233,9 +233,9 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNum
 				// search in sub directory
 				TCHAR	szSubDir[MAX_PATH];
 
-				_tcscpy(szSubDir, szDir);
-				_tcscat(szSubDir, finder.GetCurName());
-				_tcscat(szSubDir, _T(SZ_DIR_SLASH));
+				_tcscpy_safe(szSubDir, CountOf(szSubDir), szDir);
+				_tcscat_safe(szSubDir, CountOf(szSubDir), finder.GetCurName());
+				_tcscat_safe(szSubDir, CountOf(szSubDir), _T(SZ_DIR_SLASH));
 
 				SearchMatchLyricsInDir(szSubDir, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, LrcResult, bIncludeSub);
 				if (LrcResult.nMatchValue == MATCH_VALUE_MAX)
@@ -250,8 +250,8 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNum
 				nMatchValue = CalLyricsMatchValue(finder.GetCurName(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
 				if (nMatchValue > LrcResult.nMatchValue)
 				{
-					_tcscpy(szFileName, szDir);
-					_tcscat(szFileName, finder.GetCurName());
+					_tcscpy_safe(szFileName, CountOf(szFileName), szDir);
+					_tcscat_safe(szFileName, CountOf(szFileName), finder.GetCurName());
 					LrcResult.strUrl = szFileName;
 					LrcResult.nMatchValue = (float)nMatchValue;
 					if (LrcResult.nMatchValue == MATCH_VALUE_MAX)
@@ -283,13 +283,13 @@ void CLyricsLocalSearch::LoadLyricFolderCfg()
 		SearchFolder	LyricsFolder;
 		
 		// get folder name
-		_stprintf(szKeyName, _T("%s%d"), SZ_FOLDER_PREFIX, i);
+		_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), SZ_FOLDER_PREFIX, i);
 		LyricsFolder.strFolder = CMLProfile::GetDir(SZ_SECT_SEARCH_FOLDER, szKeyName, _T(""));
 		if (LyricsFolder.strFolder.empty())
 			break;
 
 		// get 'includesub' value
-		_stprintf(szKeyName, _T("%s%d"), _T("IncluedSub"), i);
+		_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), _T("IncluedSub"), i);
 		LyricsFolder.bIncludeSub = g_Profile.GetProfileInt(SZ_SECT_SEARCH_FOLDER, szKeyName, 0);
 
 		m_vLyricsFolders.push_back(LyricsFolder);
@@ -308,15 +308,15 @@ void CLyricsLocalSearch::SaveLyricFolderCfg()
 		SearchFolder	&LyricsFolder = m_vLyricsFolders[i];
 
 		// SAVE folder settings
-		_stprintf(szKeyName, _T("%s%d"), SZ_FOLDER_PREFIX, i);
+		_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), SZ_FOLDER_PREFIX, i);
 		CMLProfile::WriteDir(SZ_SECT_SEARCH_FOLDER, szKeyName, LyricsFolder.strFolder.c_str());
 
-		_stprintf(szKeyName, _T("%s%d"), _T("IncluedSub"), i);
+		_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), _T("IncluedSub"), i);
 		g_Profile.WriteProfileInt(SZ_SECT_SEARCH_FOLDER, szKeyName, LyricsFolder.bIncludeSub);
 	}
 
 	// Set end positions.
-	_stprintf(szKeyName, _T("%s%d"), SZ_FOLDER_PREFIX, m_vLyricsFolders.size());
+	_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), SZ_FOLDER_PREFIX, m_vLyricsFolders.size());
 	g_Profile.WriteProfileString(SZ_SECT_SEARCH_FOLDER, szKeyName, _T(""));
 }
 
@@ -397,7 +397,7 @@ BOOL CLyricsLocalSearch::SearchLyrics(LPCTSTR szSongFile, LPCTSTR szTitle, BOOL 
 		//
 		// 同目录下面的lrc文件
 		//
-		_tcscpy(szLyricFile, szSongFile);
+		_tcscpy_safe(szLyricFile, CountOf(szLyricFile), szSongFile);
 		FileSetExt(szLyricFile, CountOf(szLyricFile), _T(".lrc"));
 		if (IsFileExist(szLyricFile))
 		{
@@ -410,7 +410,7 @@ BOOL CLyricsLocalSearch::SearchLyrics(LPCTSTR szSongFile, LPCTSTR szTitle, BOOL 
 		//
 		// 同目录下面的txt文件
 		//
-		_tcscpy(szLyricFile, szSongFile);
+		_tcscpy_safe(szLyricFile, CountOf(szLyricFile), szSongFile);
 		FileSetExt(szLyricFile, CountOf(szLyricFile), _T(".txt"));
 		if (IsFileExist(szLyricFile))
 		{
@@ -793,7 +793,7 @@ void CLyricsLocalSearch::LoadLyricsAssociationOld()
 
 	GetWorkingFolder(szFile);
 
-	_tcscat(szFile, _T("MiniLyrics.S2L"));
+	_tcscat_safe(szFile, CountOf(szFile), _T("MiniLyrics.S2L"));
 
 	fp = _tfopen(szFile, _T("rb"));
 	if (fp == NULL)
@@ -840,7 +840,7 @@ void CLyricsLocalSearch::LoadLyricsAssociationV2()
 
 	GetAppDataDir(szFile);
 
-	_tcscat(szFile, _T("MLLyrics.S2L"));
+	_tcscat_safe(szFile, CountOf(szFile), _T("MLLyrics.S2L"));
 
 	fp = _tfopen(szFile, _T("rb"));
 	if (fp == NULL)
@@ -888,7 +888,7 @@ void CLyricsLocalSearch::LoadLyricsAssociation()
 
 	GetAppDataDir(szFile);
 
-	_tcscat(szFile, _T("MLyrics.S2L"));
+	_tcscat_safe(szFile, CountOf(szFile), _T("MLyrics.S2L"));
 
 	fp = _tfopen(szFile, _T("rb"));
 	if (fp == NULL)
@@ -967,7 +967,7 @@ void CLyricsLocalSearch::SaveLyricsAssociation()
 
 	GetAppDataDir(szFile);
 
-	_tcscat(szFile, _T("MLyrics.S2L"));
+	_tcscat_safe(szFile, CountOf(szFile), _T("MLyrics.S2L"));
 
 	fp = _tfopen(szFile, _T("wb"));
 	if (fp == NULL)
@@ -1068,16 +1068,16 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 		LrcSearchResult		&result = *it;
 		if (result.nMatchValue >= MATCH_VALUE_EMBEDDED_LRC)
 		{
-			_tcscpy(szLyricFile, result.strUrl.c_str());
+			_tcscpy_safe(szLyricFile, MAX_PATH, result.strUrl.c_str());
 			return TRUE;
 		}
-		_tcscpy(szEmbeddedLyrics, result.strUrl.c_str());
+		_tcscpy_safe(szEmbeddedLyrics, CountOf(szEmbeddedLyrics), result.strUrl.c_str());
 	}
 
 	//
 	// 同目录下的lrc歌词
 	//
-	_tcscpy(szLyricFile, szSongFile);
+	_tcscpy_safe(szLyricFile, MAX_PATH, szSongFile);
 	FileSetExt(szLyricFile, MAX_PATH, _T(".lrc"));
 	if (IsFileExist(szLyricFile))
 		return TRUE;
@@ -1085,7 +1085,7 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 	//
 	// 同目录下的srt字幕
 	//
-	_tcscpy(szLyricFile, szSongFile);
+	_tcscpy_safe(szLyricFile, MAX_PATH, szSongFile);
 	FileSetExt(szLyricFile, MAX_PATH, _T(".srt"));
 	if (IsFileExist(szLyricFile))
 		return TRUE;
@@ -1109,7 +1109,7 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 			// 自动选择的最优歌词，匹配值必须大于 MATCH_VALUE_OK
 			if ((*itBest).nMatchValue >= MATCH_VALUE_OK)
 			{
-				_tcscpy(szLyricFile, (*itBest).strUrl.c_str());
+				_tcscpy_safe(szLyricFile, MAX_PATH, (*itBest).strUrl.c_str());
 				return TRUE;
 			}
 		}
@@ -1139,7 +1139,7 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 				// 自动选择的最优歌词，匹配值必须大于 MATCH_VALUE_OK
 				if ((*itBest).nMatchValue >= MATCH_VALUE_OK)
 				{
-					_tcscpy(szLyricFile, (*itBest).strUrl.c_str());
+					_tcscpy_safe(szLyricFile, MAX_PATH, (*itBest).strUrl.c_str());
 					return TRUE;
 				}
 			}
@@ -1149,12 +1149,12 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 	// embedded text lyrics?
 	if (!IsEmptyString(szEmbeddedLyrics))
 	{
-		_tcscpy(szLyricFile, szEmbeddedLyrics);
+		_tcscpy_safe(szLyricFile, MAX_PATH, szEmbeddedLyrics);
 		return true;
 	}
 
 	// same name text lyrics in folder
-	_tcscpy(szLyricFile, szSongFile);
+	_tcscpy_safe(szLyricFile, MAX_PATH, szSongFile);
 	FileSetExt(szLyricFile, MAX_PATH, _T(".txt"));
 	if (IsFileExist(szLyricFile))
 		return TRUE;
@@ -1168,14 +1168,14 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 			// 自动选择的最优歌词，匹配值必须大于 MATCH_VALUE_OK
 			if (result.nMatchValue >= MATCH_VALUE_OK)
 			{
-				_tcscpy(szLyricFile, result.strUrl.c_str());
+				_tcscpy_safe(szLyricFile, MAX_PATH, result.strUrl.c_str());
 				return TRUE;
 			}
 
 			// Artist = "", Min match value >= MATCH_VALUE_MIN_DL
 			if (IsEmptyString(szArtist) && result.nMatchValue > MATCH_VALUE_MIN_DL)
 			{
-				_tcscpy(szLyricFile, result.strUrl.c_str());
+				_tcscpy_safe(szLyricFile, MAX_PATH, result.strUrl.c_str());
 				return TRUE;
 			}
 		}

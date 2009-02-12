@@ -29,8 +29,8 @@ void FormatFloatStr(double value, int nPrecision, tstring & out)
     TCHAR szBuf[64];
     TCHAR szFormat[64];
 
-	_sntprintf(szFormat, CountOf(szFormat), _T("%%.%df"), nPrecision);
-    _sntprintf(szBuf, CountOf(szBuf), szFormat, value);
+	_stprintf_s(szFormat, CountOf(szFormat), _T("%%.%df"), nPrecision);
+    _stprintf_s(szBuf, CountOf(szBuf), szFormat, value);
 
     // Remove '0' from end. Remove decimal point if the digit after it is 0.
 	TrimStrRight(szBuf, _T("0"));

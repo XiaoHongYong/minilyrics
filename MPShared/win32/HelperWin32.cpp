@@ -53,12 +53,12 @@ void MLHtmlHelper(CBaseWnd *pWnd, LPCTSTR szFile)
 	TCHAR		szHelp[MAX_PATH];
 
 	GetWorkingFolder(szHelp);
-	_tcscat(szHelp, szFile);
+	_tcscat_safe(szHelp, CountOf(szHelp), szFile);
 
 	if (!HtmlHelpOur(GetDesktopWindow(), szHelp, HH_DISPLAY_TOPIC, NULL))
 	{
 		GetWorkingFolder(szHelp);
-		_tcscat(szHelp, _T("help.chm"));
+		_tcscat_safe(szHelp, CountOf(szHelp), _T("help.chm"));
 		ShellExecute(pWnd->GetHandle(), _T("open"), szHelp, NULL, NULL, SW_SHOWMAXIMIZED);
 	}
 }
@@ -158,7 +158,7 @@ int MessageOut(LPCTSTR lpText, LPCTSTR szSaveDefault,CBaseWnd *pWnd/* = NULL*/, 
 	{
 		// no prompt
 		TCHAR		szKey[256];
-		_stprintf(szKey, _T("%sValue"), szSaveDefault);
+		_stprintf_s(szKey, CountOf(szKey), _T("%sValue"), szSaveDefault);
 		return g_Profile.GetProfileInt(szKey, IDOK);
 	}
 
@@ -290,9 +290,9 @@ void DeleteAllFiles(LPCTSTR szDir, BOOL bIncSubDir, BOOL bDelReadOnlyFile)
 	WIN32_FIND_DATA		FindData;
 	TCHAR				szFileName[MAX_PATH];
 
-	_tcscpy(szFileName, szDir);
+	_tcscpy_safe(szFileName, CountOf(szFileName), szDir);
 	DirStringFormat(szFileName);
-	_tcscat(szFileName, _T("*.*"));
+	_tcscat_safe(szFileName, CountOf(szFileName), _T("*.*"));
 
 	hFileFind = FindFirstFile(szFileName, &FindData);
 	if (hFileFind == INVALID_HANDLE_VALUE)
@@ -308,10 +308,10 @@ void DeleteAllFiles(LPCTSTR szDir, BOOL bIncSubDir, BOOL bDelReadOnlyFile)
 			// search in sub directory
 			TCHAR	szSubDir[MAX_PATH];
 
-			_tcscpy(szSubDir, szDir);
+			_tcscpy_safe(szSubDir, CountOf(szSubDir), szDir);
 			DirStringFormat(szSubDir);
-			_tcscat(szSubDir, FindData.cFileName);
-			_tcscat(szSubDir, _T(SZ_DIR_SLASH));
+			_tcscat_safe(szSubDir, CountOf(szSubDir), FindData.cFileName);
+			_tcscat_safe(szSubDir, CountOf(szSubDir), _T(SZ_DIR_SLASH));
 
 			DeleteAllFiles(szSubDir, bIncSubDir, bDelReadOnlyFile);
 			RemoveDirectory(szSubDir);
@@ -319,9 +319,9 @@ void DeleteAllFiles(LPCTSTR szDir, BOOL bIncSubDir, BOOL bDelReadOnlyFile)
 		else if (!IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY))
 		{
 			TCHAR				szFile[MAX_PATH];
-			_tcscpy(szFile, szDir);
+			_tcscpy_safe(szFile, CountOf(szFile), szDir);
 			DirStringFormat(szFile);
-			_tcscat(szFile, FindData.cFileName);
+			_tcscat_safe(szFile, CountOf(szFile), FindData.cFileName);
 			if (!DeleteFile(szFile) && bDelReadOnlyFile)
 			{
 				SetFileNoReadOnly(szFile);
@@ -381,12 +381,12 @@ bool LoadProxySvrFromIE(bool &bUseProxy, tstring &strSvr, int &nPort)
 				szBeg += 5;
 				szEnd = _tcschr(szBeg, ';');
 				if (szEnd)
-					_tcsncpysz_safe(szHttp, CountOf(szBuff), szBeg, (int)(szEnd - szBeg));
+					_tcsncpysz_safe(szHttp, CountOf(szHttp), szBeg, (int)(szEnd - szBeg));
 				else
-					_tcscpy(szHttp, szBeg);
+					_tcscpy_safe(szHttp, CountOf(szHttp), szBeg);
 			}
 			else
-				_tcscpy(szHttp, szBuff);
+				_tcscpy_safe(szHttp, CountOf(szHttp), szBuff);
 
 			AnalysisProxySetting(szHttp, szServer, CountOf(szServer), nPort);
 			strSvr = szServer;

@@ -58,7 +58,7 @@ BOOL AnalysisHttpUrl(const TCHAR szURL[], TCHAR szHostBuff[], int nHostBuff, int
 	}
 
 	// 复制服务器名
-	_tcsncpy(szHostBuff, szHostBeg, nLen);
+	_tcsncpy_safe(szHostBuff, nHostBuff, szHostBeg, nLen);
 	szHostBuff[nLen] = '\0';
 
 	// 服务器上的路径

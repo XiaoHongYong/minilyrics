@@ -14,7 +14,7 @@ void ShowErrorDlg(CBaseWnd *pWnd, int nError)
 	tstring		strResolve;
 	TCHAR		szErrorId[256];
 
-	_stprintf(szErrorId, _T("%s %d,  "), TOLOCAL(_T("Error Code:")), nError);
+	_stprintf_s(szErrorId, CountOf(szErrorId), _T("%s %d,  "), TOLOCAL(_T("Error Code:")), nError);
 	strError = szErrorId;
 	strError += ERROR2STR_LOCAL(nError);
 	switch (nError)

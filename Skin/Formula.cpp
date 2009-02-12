@@ -42,6 +42,11 @@ void CFormula::SetFormula(LPCTSTR szForm)
 	SimpleOptimize();
 }
 
+void CFormula::SetFormula(int nConstValue)
+{
+	_itostr(nConstValue, m_strFormula, 10);
+}
+
 BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 {
 	BOOL	bRet = FALSE;

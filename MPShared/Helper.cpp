@@ -103,9 +103,9 @@ void FormatPlayTime(TCHAR szBuf[], int nmsTime)
 	nMinute %= 60;
 
 	if (nHour > 0)
-		_stprintf(szBuf, _T("%d:%02d:%02d"), nHour, nMinute, nSec);
+		_stprintf_s(szBuf, 32, _T("%d:%02d:%02d"), nHour, nMinute, nSec);
 	else
-		_stprintf(szBuf, _T("%02d:%02d"), nMinute, nSec);
+		_stprintf_s(szBuf, 32, _T("%02d:%02d"), nMinute, nSec);
 }
 
 void FillRectBorder(IMLGraphicsBase *pGraph, CRect &rc, int nBorderSize, CMLBrush &br)
@@ -123,7 +123,7 @@ void GetAppNameLong(TCHAR szName[], int nLen)
 #else
 	TCHAR		szPlayer[128];
 	g_Player.GetPlayerName(szPlayer, CountOf(szPlayer));
-	_sntprintf(szName, nLen, _T("%s for %s"), SZ_APP_NAME, szPlayer);
+	_stprintf_s(szName, nLen, _T("%s for %s"), SZ_APP_NAME, szPlayer);
 #endif
 }
 

@@ -320,7 +320,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			TCHAR		szTempTxtFile[MAX_PATH];
 
 			GetAppDataDir(szTempTxtFile);
-			_tcscat(szTempTxtFile, _T("TempTxtLyrics.txt"));
+			_tcscat_safe(szTempTxtFile, CountOf(szTempTxtFile), _T("TempTxtLyrics.txt"));
 			g_LyricData.SaveToTextFile(szTempTxtFile, true);
 
 			// 用记事本打开
@@ -984,7 +984,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 
 			EmptyStr(szMD5);
 			if (g_mpApp.IsCachedMd5Lyrics())
-				_tcscpy(szMD5, g_mpApp.m_strMd5Lyrics.c_str());
+				_tcscpy_safe(szMD5, CountOf(szMD5), g_mpApp.m_strMd5Lyrics.c_str());
 			else
 				g_LyricData.GetLyricsFileServerMark(szMD5);
 			strUrl = GetStrName(SN_HTTP_RATE_LRC);
@@ -1350,7 +1350,7 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 	else
 		nFileExtIndex = 1;
 
-	_tcscpy(szWndTitle, TOLOCAL(_T("Save As")));
+	_tcscpy_safe(szWndTitle, CountOf(szWndTitle), TOLOCAL(_T("Save As")));
 	CFileSaveDlg		dlg(szWndTitle, szFile,
 		_T("All supported files (*.lrc; *.txt; *.snc)\0*.lrc;*.txt;*.snc\0LRC Lyrics File (*.lrc)\0*.lrc\0Text File (*.txt)\0*.txt\0Snc File (*.snc)\0*.snc\0\0"),
 		nFileExtIndex);

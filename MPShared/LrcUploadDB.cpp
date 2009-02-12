@@ -54,7 +54,7 @@ int CLrcUploadDB::Init()
 
 	// ´ò¿ª
 	GetAppDataDir(szFile);
-	_tcscat(szFile, _T("dbLyrUpload.db"));
+	_tcscat_safe(szFile, CountOf(szFile), _T("dbLyrUpload.db"));
 
 	if (GetFileLength(szFile) >= 1024 * 100)
 		DeleteFile(szFile);

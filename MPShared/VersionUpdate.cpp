@@ -17,6 +17,18 @@
 #define SOFTWARE_INFO		_T("minilyricsinfo")
 #endif
 
+BOOL CVersion::From(LPCTSTR szVersion)
+{
+	int		nRet;
+	nRet = _stscanf(szVersion, _T("%d.%d.%d"), &nVerMajor, &nVerMinor, &nVerBuild);
+	if (nRet == 2)
+		nVerBuild = 0;
+	else if (nRet <= 1)
+		return FALSE;
+
+	return TRUE;
+}
+
 CVersionInfo::CVersionInfo()
 {
 	nTrialDays = 0;
@@ -204,7 +216,7 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
 
 	//
 	// 将检查更新时间写入配置文件中
-	_stprintf(szCheckVerTime, _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
+	_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
 	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 
 	// 分析mlver.xml
@@ -279,13 +291,13 @@ void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr)
 	if (abs(GetCurDaysFrom2000() - GetDaysFrom2000(wMonth, wDay, wYear)) <= 7)
 		return;
 
-	_stprintf(szCheckVerTime, _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
+	_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
 	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 	// g_Profile.WriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 
 	// 首先删除上次下载的文件
-	_tcscpy(szVerFile, GetAppDataDir());
-	_tcscat(szVerFile, _T("mlver.xml"));
+	_tcscpy_safe(szVerFile, CountOf(szVerFile), GetAppDataDir());
+	_tcscat_safe(szVerFile, CountOf(szVerFile), _T("mlver.xml"));
 	if (IsFileExist(szVerFile))
 	{
 		SetFileNoReadOnly(szVerFile);
@@ -304,8 +316,8 @@ void CVersionUpdate::CheckNewVersionManual(CLyricsDownloadMgr *pMgr)
 	TCHAR		szVerFile[MAX_PATH];
 
 	// 首先删除上次下载的文件
-	_tcscpy(szVerFile, GetAppDataDir());
-	_tcscat(szVerFile, _T("mlver.xml"));
+	_tcscpy_safe(szVerFile, CountOf(szVerFile), GetAppDataDir());
+	_tcscat_safe(szVerFile, CountOf(szVerFile), _T("mlver.xml"));
 	if (IsFileExist(szVerFile))
 	{
 		SetFileNoReadOnly(szVerFile);
