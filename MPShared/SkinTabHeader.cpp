@@ -118,7 +118,7 @@ void CSkinTabHeader::OnCreate()
 	m_font.OnCreate(m_pSkin);
 
 	m_nActiveButton = g_Profile.GetProfileInt((tstring(_T("TabActiveBt_")) + m_strName).c_str(), m_nActiveButton);
-	if (m_nActiveButton < 0 || m_nActiveButton >= m_vButtons.size())
+	if (m_nActiveButton < 0 || m_nActiveButton >= (int)m_vButtons.size())
 		m_nActiveButton = 0;
 
 	//

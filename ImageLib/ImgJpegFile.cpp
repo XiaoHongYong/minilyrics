@@ -17,7 +17,7 @@ typedef ima_error_mgr *ima_error_ptr;
 
 void SetGrayPalette(RGBQUAD *pal, int nClrUsed)
 {
-	for (DWORD ni = 0; ni < nClrUsed; ni++)
+	for (int ni = 0; ni < nClrUsed; ni++)
 		pal[ni].rgbBlue=pal[ni].rgbGreen = pal[ni].rgbRed = 
 			(BYTE)(ni * (255 / (nClrUsed - 1)));
 }
@@ -191,7 +191,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromJpgFile(IILIO *io)
 	//<DP> Step 7A: Swap red and blue components */ 
 	if ((cinfo.num_components==3)&&(cinfo.quantize_colors==FALSE)){
 		BYTE *r,*b,t,*r0;
-		long x,y;
+		JDIMENSION x,y;
 		// r0=GetBits();
 		r0 = imgData->RowPtr(0);
 		for(y=0;y<cinfo.image_height;y++){

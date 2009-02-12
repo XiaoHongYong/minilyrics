@@ -10,7 +10,7 @@
 
 void LC_ITEMEX::Draw(CSkinListCtrl *pListCtrl, int nRow, int nClrNameDefault, CRect &rcItem, CRawGraph *pGraph)
 {
-	int			nPos = 0, nLen, i = 0;
+	tstring::size_type			nPos = 0, nLen, i = 0;
 	CRect		rc = rcItem;
 	SIZE		size;
 	int			nClrName;

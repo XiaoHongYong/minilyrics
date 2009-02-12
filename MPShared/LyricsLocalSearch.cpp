@@ -1001,7 +1001,7 @@ void CLyricsLocalSearch::SaveLyricsAssociation()
 #endif
 
 		// len
-		itoa(strUtf8.size(), szTemp, 10);
+		sprintf_s(szTemp, CountOf(szTemp), "%d", strUtf8.size());
 		str += szTemp; str += ",";
 
 		// file
@@ -1018,7 +1018,7 @@ void CLyricsLocalSearch::SaveLyricsAssociation()
 #endif
 
 		// len
-		itoa(strUtf8.size(), szTemp, 10);
+		sprintf_s(szTemp, CountOf(szTemp), "%d", strUtf8.size());
 		str += szTemp; str += ",";
 
 		// file

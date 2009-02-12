@@ -297,7 +297,7 @@ void FieldWriteInt(string &strField, int n)
 {
 	char			szBuff[64];
 
-	itoa(n, szBuff, 10);
+	sprintf_s(szBuff, CountOf(szBuff), "%d", n);
 	strField += szBuff; strField += SZ_THEME_FEILD_SEP;
 }
 
