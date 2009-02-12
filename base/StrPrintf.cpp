@@ -14,6 +14,7 @@ CStrPrintf::CStrPrintf(LPCTSTR szFormat, ...)
 {
 	m_nSize = 0;
 	m_nCapacity = 256;
+	m_pszBuffer = NULL;
 
 	va_list		args;
 
@@ -42,15 +43,15 @@ void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
 	__try
 #endif
 	{
-		if (!m_szBuffer)
+		if (!m_pszBuffer)
 		{
 			m_nCapacity = 256;
-			m_szBuffer = new TCHAR[m_nCapacity];
+			m_pszBuffer = new TCHAR[m_nCapacity];
 		}
 
 		while (1)
 		{
-			m_nSize = _vsntprintf_s(m_szBuffer, m_nCapacity, m_nCapacity, szFormat, args);
+			m_nSize = _vsntprintf_s(m_pszBuffer, m_nCapacity, m_nCapacity, szFormat, args);
 
 			// was there an error? was the expanded string too long?
 			if (m_nSize < 0)
@@ -58,9 +59,9 @@ void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
 				if (m_nCapacity >= 100 * 1024)
 					break;
 
-				delete[] m_szBuffer;
+				delete[] m_pszBuffer;
 				m_nCapacity *= 2;
-				m_szBuffer = new TCHAR[m_nCapacity];
+				m_pszBuffer = new TCHAR[m_nCapacity];
 			}
 			else
 				break;
@@ -68,16 +69,16 @@ void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
 
 		if (m_nSize < 0)
 		{
-			_tcscpy_safe(m_szBuffer, m_nCapacity, _T("Insufficient buffer space."));
-			m_nSize = _tcslen(m_szBuffer);
+			_tcscpy_safe(m_pszBuffer, m_nCapacity, _T("Insufficient buffer space."));
+			m_nSize = _tcslen(m_pszBuffer);
 		}
 	}
 #ifdef _WIN32
 	__except(EXCEPTION_EXECUTE_HANDLER)
 	{
 		// 有异常发生！
-		_tcscpy_safe(m_szBuffer, m_nCapacity, _T("CStrPrintf, Exception catched."));
-		m_nSize = _tcslen(m_szBuffer);
+		_tcscpy_safe(m_pszBuffer, m_nCapacity, _T("CStrPrintf, Exception catched."));
+		m_nSize = _tcslen(m_pszBuffer);
 	}
 #endif
 }

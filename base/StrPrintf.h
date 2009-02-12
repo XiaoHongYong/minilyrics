@@ -18,24 +18,24 @@ public:
 	{
 		m_nSize = 0;
 		m_nCapacity = 0;
-		m_szBuffer = NULL;
+		m_pszBuffer = NULL;
 	}
 
 	~CStrPrintf()
 	{
-		if (m_szBuffer)
-			delete[] m_szBuffer;
+		if (m_pszBuffer)
+			delete[] m_pszBuffer;
 	}
 
 	void printf(LPCTSTR szFormat, ...);
 
 	void vprintf(LPCTSTR szFormat, va_list args);
 
-	LPCTSTR c_str() { if (m_szBuffer) return m_szBuffer; else return _T(""); }
+	LPCTSTR c_str() { if (m_pszBuffer) return m_pszBuffer; else return _T(""); }
 	size_t size() { return m_nSize; }
 
 protected:
-	LPTSTR		m_szBuffer;
+	LPTSTR		m_pszBuffer;
 	int			m_nSize;
 	int			m_nCapacity;
 
