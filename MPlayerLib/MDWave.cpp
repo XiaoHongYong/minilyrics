@@ -267,7 +267,7 @@ void CMDWave::DecodeThreadProc()
 	while (!m_bKillThread)
 	{
 		bytes = blk_size;
-		if (m_audioInfo.length - m_audioInfo.position < bytes)
+		if (int(m_audioInfo.length - m_audioInfo.position) < bytes)
 			bytes = m_audioInfo.length - m_audioInfo.position;
 		if (bytes > 0)
 		{

@@ -95,7 +95,7 @@ MLRESULT CMedia::SetInfoUpdatedToMediaLib(bool bUpdated)
 void Long2XStr(long nValue, IXStr *str)
 {
 	str->reserve(32);
-	_stprintf(str->data(), _T("%d"), nValue);
+	_stprintf_s(str->data(), str->capacity(), _T("%d"), nValue);
 	str->resize(_tcslen(str->c_str()));
 }
 
@@ -106,7 +106,7 @@ void MPTime2XStr(CMPTime &date, IXStr *str)
 	if (date.GetMPTM(&tm))
 	{
 		str->reserve(200);
-		_stprintf(str->data(), _T("%04d-%02d-%02d %02d:%02d:%02d"), 
+		_stprintf_s(str->data(), str->capacity(), _T("%04d-%02d-%02d %02d:%02d:%02d"), 
 			tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday,
 			tm.tm_hour, tm.tm_min, tm.tm_sec);
 		str->resize(_tcslen(str->c_str()));

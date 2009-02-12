@@ -61,7 +61,7 @@ UIOBJECT_CLASS_NAME_IMP(CSkinVScrollBarOSStyle, _T("VScrollBarOSStyle"))
 
 CSkinVScrollBarOSStyle::CSkinVScrollBarOSStyle()
 {
-	m_formWidth.SetFormula(CStrPrintf(_T("%d"), GetSystemMetrics(SM_CXVSCROLL)).c_str());
+	m_formWidth.SetFormula(GetSystemMetrics(SM_CXVSCROLL));
 }
 
 void CSkinVScrollBarOSStyle::OnCreate()
@@ -76,7 +76,7 @@ UIOBJECT_CLASS_NAME_IMP(CSkinHScrollBarOSStyle, _T("HScrollBarOSStyle"))
 
 CSkinHScrollBarOSStyle::CSkinHScrollBarOSStyle()
 {
-	m_formHeight.SetFormula(CStrPrintf(_T("%d"), GetSystemMetrics(SM_CYHSCROLL)).c_str());
+	m_formHeight.SetFormula(GetSystemMetrics(SM_CYHSCROLL));
 }
 
 void CSkinHScrollBarOSStyle::OnCreate()

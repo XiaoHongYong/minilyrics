@@ -207,7 +207,7 @@ void AppendQeuryStatment(MediaLibOrderBy orderBy, int nTopN, string &strSql)
 	if (nTopN != -1)
 	{
 		char	szBuff[64];
-		itoa(nTopN, szBuff, 10);
+		_itoa_s(nTopN, szBuff, CountOf(szBuff), 10);
 		strSql += " limit";
 		strSql += szBuff;
 	}
@@ -633,7 +633,7 @@ MLRESULT CMediaLibrary::SetDeleted(IMedia **pMedia)
 	char		szSql[256];
 	int			nRet;
 
-	sprintf(szSql, "update medialib set file_deleted=1 where id=%d", (*pMedia)->GetID());
+	sprintf_s(szSql, CountOf(szSql), "update medialib set file_deleted=1 where id=%d", (*pMedia)->GetID());
 
 	nRet = ExecuteSQL(szSql);
 	if (nRet == ERR_OK)
@@ -832,7 +832,7 @@ MLRESULT CMediaLibrary::GetRecentPlayed(uint32 nCount, IPlaylist **ppPlaylist)
 	char				szQuery[256];
 	int					nRet;
 
-	sprintf(szQuery, "select * from medialib where file_deleted=0 order by time_played desc limit %d", nCount);
+	sprintf_s(szQuery, CountOf(szQuery), "select * from medialib where file_deleted=0 order by time_played desc limit %d", nCount);
 
 	nRet = query.Query(this, szQuery);
 	*ppPlaylist = query.m_pPlaylist;
@@ -846,7 +846,7 @@ MLRESULT CMediaLibrary::GetTopPlayed(uint32 nCount, IPlaylist **ppPlaylist)
 	char				szQuery[256];
 	int					nRet;
 
-	sprintf(szQuery, "select * from medialib where file_deleted=0 order by times_played desc limit %d", nCount);
+	sprintf_s(szQuery, CountOf(szQuery), "select * from medialib where file_deleted=0 order by times_played desc limit %d", nCount);
 
 	nRet = query.Query(this, szQuery);
 	*ppPlaylist = query.m_pPlaylist;
@@ -860,7 +860,7 @@ MLRESULT CMediaLibrary::GetTopRating(uint32 nCount, IPlaylist **ppPlaylist)
 	char				szQuery[256];
 	int					nRet;
 
-	sprintf(szQuery, "select * from medialib where file_deleted=0 order by rating desc limit %d", nCount);
+	sprintf_s(szQuery, CountOf(szQuery), "select * from medialib where file_deleted=0 order by rating desc limit %d", nCount);
 
 	nRet = query.Query(this, szQuery);
 	*ppPlaylist = query.m_pPlaylist;
@@ -874,7 +874,7 @@ MLRESULT CMediaLibrary::GetRecentAdded(uint32 nCount, IPlaylist **ppPlaylist)
 	char				szQuery[256];
 	int					nRet;
 
-	sprintf(szQuery, "select * from medialib where file_deleted=0 order by time_added desc limit %d", nCount);
+	sprintf_s(szQuery, CountOf(szQuery), "select * from medialib where file_deleted=0 order by time_added desc limit %d", nCount);
 
 	nRet = query.Query(this, szQuery);
 	*ppPlaylist = query.m_pPlaylist;
@@ -899,7 +899,7 @@ MLRESULT CMediaLibrary::GetRecentPlayed(int nDayAgoBegin, int nDayAgoEnd, IPlayl
 	dateBegin -= CMPTimeSpan(nDayAgoBegin - 1, 0, 0, 0);
 	dateEnd -= CMPTimeSpan(nDayAgoEnd - 1, 0, 0, 0);
 
-	sprintf(szQuery, "select * from medialib where time_played between %d and %d and file_deleted=0 order by time_played", dateBegin.m_time, dateEnd.m_time);
+	sprintf_s(szQuery, CountOf(szQuery), "select * from medialib where time_played between %d and %d and file_deleted=0 order by time_played", dateBegin.m_time, dateEnd.m_time);
 
 	nRet = query.Query(this, szQuery);
 	*ppPlaylist = query.m_pPlaylist;
@@ -940,7 +940,7 @@ MLRESULT CMediaLibrary::Rate(IMedia *pMedia, uint32 nRating)
 
 	CMutexAutolock	autolock(m_mutexDataAccess);
 
-	sprintf(szSql, "update medialib set is_user_rating=%d, rating=%d where id=%d", 
+	sprintf_s(szSql, CountOf(szSql), "update medialib set is_user_rating=%d, rating=%d where id=%d", 
 		bIsUserRating, nRating, pMedia->GetID());
 
 	pMedia->SetAttribute(MA_RATING, nRating / 100);
@@ -963,7 +963,7 @@ MLRESULT CMediaLibrary::UpdatePlayedTime(IMedia *pMedia)
 	CMutexAutolock	autolock(m_mutexDataAccess);
 
 	pMedia->GetAttribute(MA_TIME_PLAYED, &nValue);
-	sprintf(szSql, "update medialib set time_played=%d where id=%d", nValue, pMedia->GetID());
+	sprintf_s(szSql, CountOf(szSql), "update medialib set time_played=%d where id=%d", nValue, pMedia->GetID());
 
 	return ExecuteSQL(szSql);
 }
@@ -987,11 +987,11 @@ MLRESULT CMediaLibrary::MarkPlayFinished(IMedia *pMedia)
 	pMedia->SetAttribute(MA_TIMES_PLAYED, nTimesPlayed + 1);
 	pMedia->GetAttribute(MA_IS_USER_RATING, &bIsUserRating);
 	if (bIsUserRating)
-		sprintf(szSql, "update medialib set times_played=times_played+1 where id=%d", pMedia->GetID());
+		sprintf_s(szSql, CountOf(szSql), "update medialib set times_played=times_played+1 where id=%d", pMedia->GetID());
 	else
 	{
 		int		nRating = GetAutoRating(pMedia);
-		sprintf(szSql, "update medialib set times_played=times_played+1, rating=%d where id=%d",
+		sprintf_s(szSql, CountOf(szSql), "update medialib set times_played=times_played+1, rating=%d where id=%d",
 			nRating, pMedia->GetID());
 		pMedia->SetAttribute(MA_RATING, nRating / 100);
 	}
@@ -1022,11 +1022,11 @@ MLRESULT CMediaLibrary::MarkPlaySkipped(IMedia *pMedia)
 	pMedia->SetAttribute(MA_TIMES_PLAY_SKIPPED, nTimesPlaySkipped + 1);
 	pMedia->GetAttribute(MA_IS_USER_RATING, &bIsUserRating);
 	if (bIsUserRating)
-		sprintf(szSql, "update medialib set times_play_skipped=times_play_skipped+1 where id=%d", pMedia->GetID());
+		sprintf_s(szSql, CountOf(szSql), "update medialib set times_play_skipped=times_play_skipped+1 where id=%d", pMedia->GetID());
 	else
 	{
 		int		nRating = GetAutoRating(pMedia);
-		sprintf(szSql, "update medialib set times_play_skipped=times_play_skipped+1, rating=%d where id=%d", 
+		sprintf_s(szSql, CountOf(szSql), "update medialib set times_play_skipped=times_play_skipped+1, rating=%d where id=%d", 
 			nRating, pMedia->GetID());
 		pMedia->SetAttribute(MA_RATING, nRating / 100);
 	}
@@ -1061,7 +1061,7 @@ int CMediaLibrary::Init(CMPlayer *pPlayer)
 		// new version table created, insert version numb.
 		char		szSql[MAX_PATH];
 
-		sprintf(szSql, SQL_INSERT_VER_NUMB, MEDIA_LIB_VER_CUR);
+		sprintf_s(szSql, CountOf(szSql), SQL_INSERT_VER_NUMB, MEDIA_LIB_VER_CUR);
 		m_nInitResult = m_db.Exec(szSql);
 		if (m_nInitResult != ERR_OK)
 			return m_nInitResult;
@@ -1297,7 +1297,7 @@ MLRESULT CMediaLibrary::UndeleteMedia(long nMediaID)
 {
 	char		szSql[256];
 
-	sprintf(szSql, "update medialib set file_deleted=0 where id=%d", nMediaID);
+	sprintf_s(szSql, CountOf(szSql), "update medialib set file_deleted=0 where id=%d", nMediaID);
 
 	return ExecuteSQL(szSql);
 }

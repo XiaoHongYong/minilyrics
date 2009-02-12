@@ -126,7 +126,7 @@ void CDspDemo::ProcessPitch(IFBuffer *pBuf, int nBps, int nChannels, int nSample
 		pitch = 100000 / pitch;
 		n = (nSamples * pitch) / 1000;
 		dindex=(nSamples<<14)/n;
-		if (m_buffPitch.capacity() < rlen) 
+		if ((int)m_buffPitch.capacity() < rlen) 
 			m_buffPitch.reserve(rlen);
 		if (nBps == 16 && nChannels == 2)
 		{

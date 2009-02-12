@@ -632,7 +632,7 @@ MLRESULT CMPlayer::SetPluginManager(IMPluginManager *pPluginMgr)
 	// Register new vis
 	CVector		vVis;
 	m_pluginMgrAgent.GetActiveVis(&vVis);
-	for (int i = 0; i < vVis.size(); i++)
+	for (int i = 0; i < (int)vVis.size(); i++)
 	{
 		IVis	*pVis = (IVis*)vVis.at(i);
 
