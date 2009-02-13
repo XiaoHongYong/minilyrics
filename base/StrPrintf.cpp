@@ -19,10 +19,8 @@ CStrPrintf::CStrPrintf(LPCTSTR szFormat, ...)
 	va_list		args;
 
 	va_start(args, szFormat);
-	va_end(args);
-
 	vprintf(szFormat, args);
-
+	va_end(args);
 }
 
 void CStrPrintf::printf(LPCTSTR szFormat, ...)
@@ -30,9 +28,8 @@ void CStrPrintf::printf(LPCTSTR szFormat, ...)
 	va_list		args;
 
 	va_start(args, szFormat);
-	va_end(args);
-
 	vprintf(szFormat, args);
+	va_end(args);
 }
 
 void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
