@@ -126,6 +126,7 @@ STRING_ID_MAP g_StringIdMap[] =
 
 	{ _T("CMD_TOGGLE_MP"), CMD_TOGGLE_MP, _T("Bring to front/Hide $Product$") },
 	{ _T("CMD_PREFERENCES"), CMD_PREFERENCES, _T("Preferences") },
+	{ _T("CMD_FLOATING_LYRICS"), CMD_FLOATING_LYRICS, _T("Floating Lyrics") },
 	{ NULL, 0, NULL },
 };
 

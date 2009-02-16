@@ -145,10 +145,6 @@ public:
 
 CDlgSearchLyrics::CDlgSearchLyrics() : CBaseDialog(IDD_LRC_SEARCH)
 {
-#ifdef _WIN32_DESKTOP
-	if (!IsRegistered() && !g_bEngEdition)
-		m_nIDTemplate = IDD_LRC_SEARCH;
-#endif
 	m_bAutoSearchLocal = true;
 }
 
@@ -175,34 +171,9 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 	switch (uID)
 	{
 #ifdef _WIN32_DESKTOP
-	case IDC_WEB_SEARCH:
-		{
-			if (m_ad.adType == CAdItem::ADT_SEARCH)
-			{
-				TCHAR		szUrl[512], szInet[512];
-				TCHAR		szKeyword[256];
-				GetDlgItemText(IDC_E_KEYWORD, szKeyword, 256);
-				_tcscpy_safe(szUrl, CountOf(szUrl), m_ad.strUrl.c_str());
-				_tcscat_safe(szUrl, CountOf(szUrl), szKeyword);
-				UriEscape(szUrl, szInet, 512);
-				OpenUrl(this, szInet);
-			}
-			else
-			{
-				OpenUrl(this, m_ad.strLink.c_str());
-			}
-		}
-		break;
 	case IDC_CB_ARTIST:
 	case IDC_CB_TITLE:
 		{
-			TCHAR		szArtist[256], szTitle[256];
-			TCHAR		szKeyword[256];
-			GetDlgItemText(IDC_CB_ARTIST, szArtist, CountOf(szArtist));
-			GetDlgItemText(IDC_CB_TITLE, szTitle, CountOf(szTitle));
-			_stprintf_s(szKeyword, CountOf(szKeyword), _T("%s %s"), szArtist, szTitle);
-			SetDlgItemText(IDC_E_KEYWORD, szKeyword);
-
 			// Research local lyrics file?
 			KillTimer(TIMER_ID_RESEARCH);
 			SetTimer(TIMER_ID_RESEARCH, DURATION_AUTO_SEARCH);
@@ -427,13 +398,6 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	g_mpApp.GetAssociateFileKeyword(m_szAssociateKeyword, CountOf(m_szAssociateKeyword));
 
 #ifdef _WIN32_DESKTOP
-// 	if (m_nIDTemplate == IDD_LRC_DOWNLOAD)
-// 	{
-// 		m_wndHelper.Add(IDC_E_KEYWORD, TRUE, FALSE, FALSE, TRUE);
-// 		m_wndHelper.Add(IDC_S_AD, TRUE, FALSE, FALSE, TRUE);
-// 		m_wndHelper.Add(IDC_WEB_SEARCH, TRUE, FALSE, TRUE, TRUE);
-// 	}
-
 	{
 		//
 		// 记住上次保存的窗口大小
@@ -459,70 +423,7 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 
 		MoveWindow(rc.left, rc.top, cx, cy, FALSE);
 	}
-
-	if (!g_bEngEdition && !IsRegistered() && g_AdManage.GetCurAd(ADB_SEARCHWND, m_ad))
-	{
-		HDC			hdc;
-
-		if (m_ad.adType == CAdItem::ADT_SEARCH)
-		{
-			// 搜索引擎广告
-			ShowDlgItem(IDC_S_AD, SW_SHOW);
-			ShowDlgItem(IDC_S_KEYWORD, SW_SHOW);
-			ShowDlgItem(IDC_E_KEYWORD, SW_SHOW);
-			ShowDlgItem(IDC_WEB_SEARCH, SW_SHOW);
-			if (m_ad.strContent.c_str())
-				SetDlgItemText(IDC_WEB_SEARCH, m_ad.strContent.c_str());
-		}
-		else if (m_ad.adType == CAdItem::ADT_WEB || m_ad.adType == CAdItem::ADT_WEBSTR)
-		{
-			CRect		rcClient;
-			int			xMargin;
-
-			GetClientRect(&rcClient);
-			xMargin = (rcClient.Width() - m_ad.nWidth - 2) / 2;
-			if (m_wndWeb.Create(CRect(xMargin, 10, rcClient.right - xMargin, 10 + m_ad.nHeight + 4), this))
-			{
-				if (m_ad.adType == CAdItem::ADT_WEB)
-				{
-					tstring		str, strUrl;
-
-					ParseMLTextMacro(m_ad.strUrl.c_str(), str);
-					UriEscape(str.c_str(), strUrl);
-					m_wndWeb.DisplayHTMLPage(strUrl.c_str());
-				}
-				else if (m_ad.adType == CAdItem::ADT_WEBSTR)
-					m_wndWeb.DisplayHTMLStr(m_ad.strContent.c_str());
-			}
-		}
-		else if (m_ad.adType == CAdItem::ADT_IMG)
-		{
-			m_picture.Create(_T(""), 0, 0, 300, 100, this, WS_CHILD);
-			m_picture.ShowWindow(SW_SHOW);
-
-			hdc = GetDC(m_hWnd);
-			m_picture.SetUrl(m_ad.strLink.c_str());
-			if (m_picture.Load(m_ad.strImgFile.c_str(), hdc))
-			{
-				m_picture.AutoResize();
-				m_picture.BeginDraw();
-			}
-			ReleaseDC(m_hWnd, hdc);
-			// m_picture.Load(MAKEINTRESOURCE(IDR_GIF1), _T("GIF"));
-
-			CRect		rcClient, rc;
-			int			nOffset;
-			::GetWindowRect(m_picture.GetHandle(), &rc);
-			GetClientRect(&rcClient);
-			rc.bottom = rc.Height() + 10;
-			rc.top = 10;
-			nOffset = (rcClient.Width() - rc.Width()) / 2;
-			rc.right = rc.Width() + nOffset;
-			rc.left = nOffset;
-			m_picture.MoveWindow(rc.left, rc.top, rc.Width(), rc.Height(), TRUE);
-		}
-	}
-#endif
+#endif // _WIN32_DESKTOP
 
 	m_cbTitle.Attach(this, IDC_CB_TITLE);
 	m_cbArtist.Attach(this, IDC_CB_ARTIST);

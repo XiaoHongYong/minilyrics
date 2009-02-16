@@ -28,9 +28,10 @@ public:
 
 	BOOL GetResourcePathName(LPTSTR szPathName, int nSizePathName, LPCTSTR szResName) const;
 
-	void SetResourceDir3(LPCTSTR szResDir3);
-	void SetResourceDir2(LPCTSTR szResDir2);
-	void SetResourceDir1(LPCTSTR szResDir1);
+	void ClearRessourceDir() { m_vResSearchDirs.clear(); }
+
+	// nPos = -1, append at tail
+	void AddRessourceDir(LPCTSTR szResDir, int nPos = -1);
 
 	void FreeBitmap(PRAW_IMAGE_DATA hBmp);
 	void AddBitmapReference(PRAW_IMAGE_DATA hBmp);
@@ -61,9 +62,7 @@ protected:
 	// files whose hue and saturation can adjusted.
 	V_Str							m_vAdjustHueOfImages;
 
-	TCHAR							m_szResDir1[MAX_PATH];	// 资源的第一个搜索目录
-	TCHAR							m_szResDir2[MAX_PATH];	// 资源的第二个搜索目录
-	TCHAR							m_szResDir3[MAX_PATH];	// 资源的第三个搜索目录
+	V_Str							m_vResSearchDirs;
 
 	bool							m_bAdjustHue;
 

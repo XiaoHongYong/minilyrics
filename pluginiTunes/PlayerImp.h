@@ -57,14 +57,6 @@ public:
 	BOOL Next();
 	BOOL SeekTo(int nMsPos);
 
-	virtual int IsFeatureSupported(PlayerFeature feature)
-	{
-		if (feature == PF_MinimizeRestoreWithPlayer)
-			return 1;
-		else
-			return IPlayer::IsFeatureSupported(feature);
-	}
-
 	virtual HWND GetAttachedParentWnd(RECT *prc);
 	virtual void OnNotifySkinLoaded();
 	virtual void OnNotifyDetachedFromParentWnd();

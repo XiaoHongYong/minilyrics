@@ -150,6 +150,8 @@ enum ML_CUSTOM_COMMAND
 	// other cmd
 	CMD_TOGGLE_MP,
 	CMD_PREFERENCES,
+
+	CMD_FLOATING_LYRICS,
 };
 
 // ID 的字符串与数值的映射表

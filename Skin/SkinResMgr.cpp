@@ -17,9 +17,6 @@
 
 CSkinResMgr::CSkinResMgr()
 {
-	EmptyStr(m_szResDir1);
-	EmptyStr(m_szResDir2);
-	EmptyStr(m_szResDir3);
 	m_hue = 0.0;
 	m_saturation = 0.0;
 	m_luminance = 0.0;
@@ -205,63 +202,48 @@ void CSkinResMgr::AddBitmapReference(PRAW_IMAGE_DATA hBmp)
 	ERRLOG1(_T("Add reference, but Not Found Bitmap Object:%d"), (int)hBmp);
 }
 
-void CSkinResMgr::SetResourceDir1(LPCTSTR szResDir1)
+void CSkinResMgr::AddRessourceDir(LPCTSTR szResDir, int nPos)
 {
-	_tcscpy_safe(m_szResDir1, CountOf(m_szResDir1), szResDir1);
-	if (!IsEmptyString(m_szResDir1))
-		DirStringFormat(m_szResDir1);
-}
+	if (IsEmptyString(szResDir))
+		return;
 
-void CSkinResMgr::SetResourceDir2(LPCTSTR szResDir2)
-{
-	_tcscpy_safe(m_szResDir2, CountOf(m_szResDir2), szResDir2);
-	if (!IsEmptyString(m_szResDir2))
-		DirStringFormat(m_szResDir2);
-}
+	tstring		strDir = szResDir;
+	DirStringFormat(strDir);
 
-void CSkinResMgr::SetResourceDir3(LPCTSTR szResDir3)
-{
-	_tcscpy_safe(m_szResDir3, CountOf(m_szResDir3), szResDir3);
-	if (!IsEmptyString(m_szResDir3))
-		DirStringFormat(m_szResDir3);
+	for (uint i = 0; i < m_vResSearchDirs.size(); i++)
+	{
+		if (_tcsicmp(strDir.c_str(), m_vResSearchDirs[i].c_str()) == 0)
+			return;
+	}
+
+	if (nPos < 0 || nPos >= m_vResSearchDirs.size())
+		m_vResSearchDirs.push_back(strDir);
+	else
+		m_vResSearchDirs.insert(m_vResSearchDirs.begin() + nPos, strDir);
 }
 
 void CSkinResMgr::EnumFiles(LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath)
 {
-	EnumFilesInDir(m_szResDir1, szFilter, vFiles, bEnumFullPath);
-	EnumFilesInDir(m_szResDir2, szFilter, vFiles, bEnumFullPath);
-	EnumFilesInDir(m_szResDir3, szFilter, vFiles, bEnumFullPath);
+	for (uint i = 0; i < m_vResSearchDirs.size(); i++)
+	{
+		EnumFilesInDir(m_vResSearchDirs[i].c_str(), szFilter, vFiles, bEnumFullPath);
+	}
 }
 
 BOOL CSkinResMgr::GetResourcePathName(LPTSTR szPathName, int nSizePathName, LPCTSTR szResName) const
 {
 	EmptyStr(szPathName);
 
-	//
-	// 资源的搜索顺序：szDir1, szDir2, szDir3, 最后为 szBmp
-	_tcscpy_safe(szPathName, nSizePathName, m_szResDir1);
-	_tcscat_safe(szPathName, nSizePathName, szResName);
-	if (!IsFileExist(szPathName))
+	for (uint i = 0; i < m_vResSearchDirs.size(); i++)
 	{
-		_tcscpy_safe(szPathName, nSizePathName, m_szResDir2);
+		_tcscpy_safe(szPathName, nSizePathName, m_vResSearchDirs[i].c_str());
 		_tcscat_safe(szPathName, nSizePathName, szResName);
-		if (!IsFileExist(szPathName))
-		{
-			_tcscpy_safe(szPathName, nSizePathName, szResName);
-			if (!IsFileExist(szPathName))
-			{
-				_tcscpy_safe(szPathName, nSizePathName, m_szResDir3);
-				_tcscat_safe(szPathName, nSizePathName, szResName);
-				if (!IsFileExist(szPathName))
-				{
-					ERRLOG1(_T("Resource File: %s does NOT exist!"), szResName);
-					return FALSE;
-				}
-			}
-		}
+		if (IsFileExist(szPathName))
+			return TRUE;
 	}
 
-	return TRUE;
+	ERRLOG1(_T("Resource File: %s does NOT exist!"), szResName);
+	return FALSE;
 }
 
 void CSkinResMgr::AdjustHueInfoFromXML(SXNode *pNodeAdjustHue)

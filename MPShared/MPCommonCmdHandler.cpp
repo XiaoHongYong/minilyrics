@@ -41,6 +41,10 @@
 #include "MPHelper.h"
 #endif
 
+#ifdef _WIN32_DESKTOP
+#include "win32/MPFloatingLyrWnd.h"
+#endif
+
 bool		g_bInModalDlLrcSelDlg;
 
 const int SET_SPEED_SPAN = 500;
@@ -254,6 +258,19 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 
 			CMPlayerSettings::SetPlayerUISettings(_T("Antialias"), bAntialias);
 		}
+		break;
+	case IDC_FLOATING_LYRICS:
+		{
+			g_Profile.WriteProfileInt(_T("FloatingLyr"), !g_wndFloatingLyr.IsValid());
+			if (!g_wndFloatingLyr.IsValid())
+				g_wndFloatingLyr.Create();
+			else
+				g_wndFloatingLyr.Destroy();
+		}
+		break;
+	case IDC_CLICK_THROUGH_FLOATING_LYR:
+		if (g_wndFloatingLyr.IsValid())
+			g_wndFloatingLyr.OnCommand(IDC_CLICK_THROUGH, 0);
 		break;
 #endif
 	case IDC_ML_HELP:
@@ -532,6 +549,9 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 		break;
 	case CMD_PREFERENCES:
 		g_wndPreference.Create(m_pSkinWnd, PAGE_SETUP, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		break;
+	case CMD_FLOATING_LYRICS:
+		OnCommand(IDC_FLOATING_LYRICS);
 		break;
 #endif // _WIN32_DESKTOP
 	case CMD_EDIT_HELP:
@@ -1034,6 +1054,9 @@ bool CMPCommonCmdHandler::GetChecked(UINT nID, bool &bChecked)
 	{
 	case IDC_LDO_KARAOKE:
 		bChecked = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("Karaoke"), false);
+		break;
+	case IDC_FLOATING_LYRICS:
+		bChecked = g_wndFloatingLyr.IsValid();
 		break;
 	default:
 		return false;

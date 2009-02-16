@@ -644,11 +644,10 @@ int CSkinFactory::OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 
 	m_strSkinName = szSkinName;
 
-	m_resourceMgr.SetResourceDir1(szSkinDir);
-
-	m_resourceMgr.SetResourceDir2(szExtraDir);
-
-	m_resourceMgr.SetResourceDir3(GetSkinRootDir());
+	m_resourceMgr.ClearRessourceDir();
+	m_resourceMgr.AddRessourceDir(szSkinDir);
+	m_resourceMgr.AddRessourceDir(szExtraDir);
+	m_resourceMgr.AddRessourceDir(GetSkinRootDir());
 
 	if (!m_resourceMgr.GetResourcePathName(szSkinFile, CountOf(szSkinFile), m_strSkinFileName.c_str()))
 	{
@@ -774,21 +773,32 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 	if (nRet != ERR_OK)
 		return nRet;
 
+	// Extra resource folder can be muliple folder, seperated with ','.
 	LPCTSTR szExtraResouceFolder = m_skinFile.GetSkinProperty(_T("ExtraResouceFolder"));
 	if (szExtraResouceFolder && !IsEmptyString(szExtraResouceFolder))
 	{
-		tstring		strExtraDirAbs;
-		strExtraDirAbs = GetSkinRootDir();
-		if (*szExtraResouceFolder == '\\' || *szExtraResouceFolder == '/')
-			strExtraDirAbs += szExtraResouceFolder + 1;
-		else
-			strExtraDirAbs += szExtraResouceFolder;
+		V_Str		vExtraResDirs;
+
+		StrBreak(szExtraResouceFolder, ',', vExtraResDirs);
+
+		for (uint i = 0; i < vExtraResDirs.size(); ++i)
+		{
+			TrimStr(vExtraResDirs[i]);
+			if (vExtraResDirs[i].empty())
+				continue;
 #ifdef _WIN32
-		strrep(strExtraDirAbs, _T("/"), _T(SZ_DIR_SLASH));
+			strrep(vExtraResDirs[i], _T("/"), _T(SZ_DIR_SLASH));
 #else
-		strrep(strExtraDirAbs, _T("\\"), _T(SZ_DIR_SLASH));
+			strrep(vExtraResDirs[i], _T("\\"), _T(SZ_DIR_SLASH));
 #endif
-		m_resourceMgr.SetResourceDir2(strExtraDirAbs.c_str());
+			tstring		strExtraDirAbs;
+			strExtraDirAbs = GetSkinRootDir();
+			if (vExtraResDirs[i][0] == DIR_SLASH)
+				strExtraDirAbs += vExtraResDirs[i].c_str() + 1;
+			else
+				strExtraDirAbs += vExtraResDirs[i];
+			m_resourceMgr.AddRessourceDir(strExtraDirAbs.c_str(), 1);
+		}
 	}
 
 	pNode = m_skinFile.GetDynamicCtrlsNode();
