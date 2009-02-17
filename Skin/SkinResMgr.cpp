@@ -42,8 +42,6 @@ CSkinResMgr::~CSkinResMgr()
 
 void CSkinResMgr::OnClose()
 {
-	ASSERT(m_mapBitmap.size() == 0);
-
 	m_vAdjustHueOfImages.clear();
 	m_bAdjustHue = false;
 	m_hue = 0;

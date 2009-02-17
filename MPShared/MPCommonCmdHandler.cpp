@@ -41,7 +41,7 @@
 #include "MPHelper.h"
 #endif
 
-#ifdef _WIN32_DESKTOP
+#if defined(_WIN32_DESKTOP)
 #include "win32/MPFloatingLyrWnd.h"
 #endif
 
@@ -272,7 +272,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		if (g_wndFloatingLyr.IsValid())
 			g_wndFloatingLyr.OnCommand(IDC_CLICK_THROUGH, 0);
 		break;
-#endif
+#endif // _WIN32_DESKTOP
 	case IDC_ML_HELP:
 		// œ‘ æ∞Ô÷˙
 		OnCustomCommand(CMD_HELP);
@@ -1055,9 +1055,11 @@ bool CMPCommonCmdHandler::GetChecked(UINT nID, bool &bChecked)
 	case IDC_LDO_KARAOKE:
 		bChecked = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("Karaoke"), false);
 		break;
+#if defined(_WIN32_DESKTOP)
 	case IDC_FLOATING_LYRICS:
 		bChecked = g_wndFloatingLyr.IsValid();
 		break;
+#endif
 	default:
 		return false;
 	}
