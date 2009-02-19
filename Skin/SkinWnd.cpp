@@ -1745,7 +1745,7 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) & ~WS_EX_TRANSPARENT);
 	}
 
-	if (dwFlags != 0)
+	if (dwFlags != 0 || m_bClickThrough)
 		::SetLayeredWindow(m_hWnd, clrTrans, nAlpha, dwFlags);
 	else
 		::UnSetLayeredWindow(m_hWnd);

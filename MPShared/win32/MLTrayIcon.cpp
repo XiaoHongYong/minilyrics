@@ -225,6 +225,19 @@ void CMLTrayIcon::OnMyNotifyIcon(WPARAM wParam, LPARAM lParam)
 #else
 			ActivateWindow(g_mpApp.GetMainWnd()->GetHandle());
 #endif
+
+			// Show cancel transparent with mouse click menu.
+			if (g_mpApp.GetMainWnd()->m_bClickThrough)
+			{
+				CMLMenu		menu;
+				if (menu.LoadPopupMenu(IDM_MOUSE_CLICK_THROUGH, 0))
+				{
+					POINT pt;
+					GetCursorPos(&pt);
+					menu.CheckItem(IDC_CLICK_THROUGH, true);
+					menu.TrackPopupMenu(pt.x, pt.y, g_mpApp.GetMainWnd());
+				}
+			}
 		}
 	}
 	else

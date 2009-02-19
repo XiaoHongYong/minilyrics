@@ -610,7 +610,7 @@ void CLyricShowTextEditObj::OnSaveLyrics()
 	g_LyricData.Properties().clear();
 	g_LyricData.SetEncoding(nEncodingID);
 	g_LyricData.FromString(strEdit.c_str(), strEdit.size() * sizeof(TCHAR),
-		&fileEncoding, FT_LYRICS_LRC, TRUE, bUnicode);
+		&fileEncoding, FT_LYRICS_LRC, TRUE, bUnicode, TRUE);
 };
 
 void CLyricShowTextEditObj::OnLyricsChanged()

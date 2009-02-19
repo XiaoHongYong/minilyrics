@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="plugin_common_static"
-	ProjectGUID="{4cefbc88-c215-11db-8314-0800200c9a66}"
+	ProjectGUID="{4CEFBC88-C215-11DB-8314-0800200C9A66}"
 	RootNamespace="plugin_common_static"
 	Keyword="Win32Proj"
 	>

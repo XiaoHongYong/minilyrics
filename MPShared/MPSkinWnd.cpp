@@ -594,9 +594,6 @@ CMPSkinWnd::CMPSkinWnd()
 	m_bUseVolumeSeek = false;
 
 	m_bTopmost = false;
-#ifdef _WIN32_DESKTOP
-	m_bClickThrough = false;
-#endif
 
 	m_rcReal.top = m_rcReal.left = 0;
 	m_rcReal.right = 400;
@@ -686,14 +683,14 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 			}
 		}
 		return;
-	case IDC_USE_TRANSPT_BK_COLOR:
-		g_Profile.WriteProfileInt(GetCfgSectName(), _T("TransparentBkColor"), 
-			!g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE));
-		if (m_bIndividualProperties)
-			LoadTransparentSettings();
-		else
-			g_mpApp.GetSkinFactory()->AllUpdateTransparent();
-		return;
+// 	case IDC_USE_TRANSPT_BK_COLOR:
+// 		g_Profile.WriteProfileInt(GetCfgSectName(), _T("TransparentBkColor"), 
+// 			!g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE));
+// 		if (m_bIndividualProperties)
+// 			LoadTransparentSettings();
+// 		else
+// 			g_mpApp.GetSkinFactory()->AllUpdateTransparent();
+// 		return;
 	case IDC_SET_OPAQUE_100:
 	case IDC_SET_OPAQUE_90:
 	case IDC_SET_OPAQUE_80:
@@ -926,9 +923,6 @@ void CMPSkinWnd::OnSkinLoaded()
 
 	SetTopmost(m_bTopmost);
 
-	// 
-	// 更新是否使用背景色作为透明色
-	// 
 	LoadTransparentSettings();
 #endif
 
@@ -1151,8 +1145,8 @@ BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		if (m_bSkinOpened && IsPropertyName(szProperty, _T("BgColor")))
 		{
-			if (g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE))
-				LoadTransparentSettings();
+// 			if (g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE))
+// 				LoadTransparentSettings();
 		}
 		return true;
 	}
@@ -1207,9 +1201,9 @@ bool CMPSkinWnd::GetChecked(UINT nID, bool &bChecked)
 		else
 			bChecked = g_mpApp.GetSkinFactory()->GetClickThrough();
 		break;
-	case IDC_USE_TRANSPT_BK_COLOR:
-		bChecked = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
-		break;
+// 	case IDC_USE_TRANSPT_BK_COLOR:
+// 		bChecked = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
+// 		break;
 	default:
 		{
 			LIST_SKINCMDHANDLER::iterator	it, itEnd;
@@ -1390,7 +1384,10 @@ void CMPSkinWnd::LoadTransparentSettings()
 		byAlpha = nOpaque * 255 / 100;
 	}
 
-	bTransparentClr = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
+	// bTransparentClr = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
+
+	if (!m_bIndividualProperties && g_mpApp.GetSkinFactory()->GetClickThrough())
+		m_bClickThrough = true;
 
 	SetTransparent(byAlpha, bTransparentClr, m_clrBg.get(), m_bClickThrough);
 }

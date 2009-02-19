@@ -608,7 +608,7 @@ void CMPSkinFactory::AllUpdateTransparent()
 		byAlpha = nOpaque * 255 / 100;
 	}
 
-	bTransparentClr = g_Profile.GetProfileBool(SZ_SECT_UI, _T("TransparentBkColor"), FALSE);
+	// bTransparentClr = g_Profile.GetProfileBool(SZ_SECT_UI, _T("TransparentBkColor"), FALSE);
 
 	LIST_SKINWNDS::iterator	it, itEnd;
 
@@ -621,7 +621,28 @@ void CMPSkinFactory::AllUpdateTransparent()
 	}
 }
 
-#endif
+void CMPSkinFactory::SetClickThrough(bool bClickThrough)
+{
+	m_bClickThrough = bClickThrough;
+
+	// Save ClickThrough options
+	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("ClickThrough"), m_bClickThrough);
+
+	if (m_bClickThrough)
+	{
+		// Show MiniLyrics system tray icon.
+		int			nShowPos;
+
+		nShowPos = g_Profile.GetProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_SYSTRAY);
+		if (nShowPos == SHOW_ICON_ON_NONE || nShowPos == SHOW_ICON_ON_TASKBAR)
+		{
+			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_BAR_TRAY);
+			g_mpApp.GetMainWnd()->GetTrayIcon().UpdateShowIconPos();
+		}
+	}
+}
+
+#endif // _WIN32_DESKTOP
 
 int CMPSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj)
 {

@@ -68,7 +68,7 @@ public:
 #endif
 #ifdef _WIN32_DESKTOP
 	void AllUpdateTransparent();
-	void SetClickThrough(bool bClickThrough) { m_bClickThrough = bClickThrough; }
+	void SetClickThrough(bool bClickThrough);
 	bool GetClickThrough() const { return m_bClickThrough; }
 
 protected:

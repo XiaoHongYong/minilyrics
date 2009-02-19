@@ -78,8 +78,6 @@ public:
 
 	void SetClickThrough(bool bClickThrough) { m_bClickThrough = bClickThrough; }
 	bool GetClickThrough() const { return m_bClickThrough; }
-
-	bool				m_bClickThrough;
 #endif
 
 	void AddCmdHandler(LPCTSTR szName);

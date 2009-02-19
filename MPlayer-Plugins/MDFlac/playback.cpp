@@ -20,6 +20,10 @@
 #include "../../base/base.h"
 
 #include "playback.h"
+extern "C"
+{
+#include "../flac/src/plugin_common/dither.h"
+};
 #include "MDFlac.h"
 
 void AudioInfoFromStreamInfo(AUDIO_INFO &audioInfo, const FLAC__StreamMetadata_StreamInfo *streaminfo);
@@ -77,7 +81,7 @@ static FLAC__bool EofCallback(const FLAC__StreamDecoder *, void *client_data)
 
 static FLAC__StreamDecoderWriteStatus WriteCallback(const FLAC__StreamDecoder *decoder, const FLAC__Frame *frame, const FLAC__int32 *const buffer[], void *client_data)
 {
-	CMDFlac *pMDFlac = (CMDFlac*)client_data;
+	CMDFlac			*pMDFlac = (CMDFlac*)client_data;
 	int				nSize = frame->header.blocksize * pMDFlac->m_nBytesPerSample;
 	IFBuffer		*pBuf = pMDFlac->m_pMemAllocator->AllocFBuffer(nSize);
 	ASSERT(pBuf);
@@ -85,11 +89,20 @@ static FLAC__StreamDecoderWriteStatus WriteCallback(const FLAC__StreamDecoder *d
 		return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
 	int16			*pBuffer = (int16*)pBuf->data();
 	int				nSamples = frame->header.blocksize;
-	int				i;
 
 	if (pMDFlac->m_bKillThread)
 		return FLAC__STREAM_DECODER_WRITE_STATUS_ABORT;
 
+	nSize = FLAC__plugin_common__pack_pcm_signed_little_endian(
+		(FLAC__byte*)pBuf->data(),
+		buffer,
+		nSamples,
+		frame->header.channels,
+		frame->header.bits_per_sample,
+		frame->header.bits_per_sample
+		);
+
+/*	int				i;
 	if (frame->header.channels == 1)
 	{
 		for (i = 0; i < nSamples; i++) 
@@ -101,8 +114,13 @@ static FLAC__StreamDecoderWriteStatus WriteCallback(const FLAC__StreamDecoder *d
 		unsigned c;
 		for (i = 0; i < nSamples; i++)
 			for (c = 0; c < frame->header.channels; c++)
-				*(pBuffer++) = (int16)buffer[c][i];
-	}
+			{
+				*(pBuffer++) = ((buffer[c][i] >> 8) | ((buffer[c][i] & 0xFF) << 8));
+				// data[1] = (FLAC__byte)(sample >> 8);
+				// data[0] = (FLAC__byte)sample;
+				// *(pBuffer++) = (int16)buffer[c][i];
+			}
+	}*/
 	pBuf->resize(nSize);
 
 	if (!pMDFlac->OutputWrite(pBuf, frame->header.bits_per_sample,

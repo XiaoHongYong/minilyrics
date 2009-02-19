@@ -2356,6 +2356,8 @@ int CMLData::FilterContents(void)
 			{
 				if (szBeg[m] == '\t')
 				{
+					szBeg[pos] = ' ';
+					pos++;
 				}
 				else if (szBeg[m] == '&')
 				{
@@ -2407,6 +2409,7 @@ int CMLData::FilterContents(void)
 				}
 			}
 			szBeg[pos] = '\0';
+			m_arrLyricsRows[i]->vFrags[k]->nLen = pos;
 		}
 	}
 
