@@ -80,7 +80,7 @@ public:
 
 	CThread			m_threadDecode;
 
-	FLAC__SeekableStreamDecoder *m_pFlacDecoder;
+	FLAC__StreamDecoder *m_pFlacDecoder;
 
 	// Buffer for flac decoder
 	int				m_nBytesPerSample;

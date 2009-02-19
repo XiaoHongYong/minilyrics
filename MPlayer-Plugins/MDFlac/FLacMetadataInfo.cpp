@@ -33,33 +33,36 @@ struct FlacStreanInfoAndTag
 };
 
 // libFLAC callbacks
-static FLAC__SeekableStreamDecoderReadStatus MetadataInfo_ReadCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__byte buffer[], unsigned *bytes, void *client_data)
+static FLAC__StreamDecoderReadStatus MetadataInfo_ReadCallback(const FLAC__StreamDecoder *decoder, FLAC__byte buffer[], unsigned *bytes, void *client_data)
 {
 	IMediaInput		*pInput = ((FlacStreanInfoAndTag *)client_data)->m_pInput;
 
 	*bytes = pInput->Read(buffer, *bytes);
-	return FLAC__SEEKABLE_STREAM_DECODER_READ_STATUS_OK;
+	if (*bytes == 0)
+		return FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM;
+	else
+		return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
 }
 
-static FLAC__SeekableStreamDecoderSeekStatus MetadataInfo_SeekCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__uint64 absolute_byte_offset, void *client_data)
+static FLAC__StreamDecoderSeekStatus MetadataInfo_SeekCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 absolute_byte_offset, void *client_data)
 {
 	IMediaInput		*pInput = ((FlacStreanInfoAndTag *)client_data)->m_pInput;
 
 	if (pInput->Seek(absolute_byte_offset, SEEK_SET) == ERR_OK)
-		return FLAC__SEEKABLE_STREAM_DECODER_SEEK_STATUS_OK;
+		return FLAC__STREAM_DECODER_SEEK_STATUS_OK;
 	else
-		return FLAC__SEEKABLE_STREAM_DECODER_SEEK_STATUS_ERROR;
+		return FLAC__STREAM_DECODER_SEEK_STATUS_ERROR;
 }
 
-static FLAC__SeekableStreamDecoderTellStatus MetadataInfo_TellCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__uint64 *absolute_byte_offset, void *client_data)
+static FLAC__StreamDecoderTellStatus MetadataInfo_TellCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 *absolute_byte_offset, void *client_data)
 {
 	IMediaInput		*pInput = ((FlacStreanInfoAndTag *)client_data)->m_pInput;
 
 	*absolute_byte_offset = pInput->GetPos();
-	return FLAC__SEEKABLE_STREAM_DECODER_TELL_STATUS_OK;
+	return FLAC__STREAM_DECODER_TELL_STATUS_OK;
 }
 
-static FLAC__SeekableStreamDecoderLengthStatus MetadataInfo_LengthCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__uint64 *stream_length, void *client_data)
+static FLAC__StreamDecoderLengthStatus MetadataInfo_LengthCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 *stream_length, void *client_data)
 {
 	IMediaInput		*pInput = ((FlacStreanInfoAndTag *)client_data)->m_pInput;
 	uint32			nSize;
@@ -67,25 +70,25 @@ static FLAC__SeekableStreamDecoderLengthStatus MetadataInfo_LengthCallback(const
 	if (pInput->GetSize(nSize) == ERR_OK)
 	{
 		*stream_length = nSize;
-		return FLAC__SEEKABLE_STREAM_DECODER_LENGTH_STATUS_OK;
+		return FLAC__STREAM_DECODER_LENGTH_STATUS_OK;
 	}
 	else
-		return FLAC__SEEKABLE_STREAM_DECODER_LENGTH_STATUS_ERROR;
+		return FLAC__STREAM_DECODER_LENGTH_STATUS_ERROR;
 }
 
-static FLAC__bool MetadataInfo_EofCallback(const FLAC__SeekableStreamDecoder *decoder, void *client_data)
+static FLAC__bool MetadataInfo_EofCallback(const FLAC__StreamDecoder *, void *client_data)
 {
 	IMediaInput		*pInput = ((FlacStreanInfoAndTag *)client_data)->m_pInput;
 
 	return pInput->IsEOF();
 }
 
-static FLAC__StreamDecoderWriteStatus MetadataInfo_WriteCallback(const FLAC__SeekableStreamDecoder *decoder, const FLAC__Frame *frame, const FLAC__int32 *const buffer[], void *client_data)
+static FLAC__StreamDecoderWriteStatus MetadataInfo_WriteCallback(const FLAC__StreamDecoder *decoder, const FLAC__Frame *frame, const FLAC__int32 *const buffer[], void *client_data)
 {
 	return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
 }
 
-static void MetadataInfo_MetadataCallback(const FLAC__SeekableStreamDecoder *decoder, const FLAC__StreamMetadata *metadata, void *client_data)
+static void MetadataInfo_MetadataCallback(const FLAC__StreamDecoder *decoder, const FLAC__StreamMetadata *metadata, void *client_data)
 {
 	FlacStreanInfoAndTag *pInfo = (FlacStreanInfoAndTag*)client_data;
 	// AUDIO_INFO	&m_audioInfo = pInfo->m_audioInfo;
@@ -157,49 +160,44 @@ static void MetadataInfo_MetadataCallback(const FLAC__SeekableStreamDecoder *dec
 // 	}
 }
 
-static void MetadataInfo_ErrorCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__StreamDecoderErrorStatus status, void *client_data)
+static void MetadataInfo_ErrorCallback(const FLAC__StreamDecoder *decoder, FLAC__StreamDecoderErrorStatus status, void *client_data)
 {
 }
 
 int MetadataInfo_get_streaminfo_and_tags(IMediaInput *pInput, FLAC__StreamMetadata **streaminfo, FLAC__StreamMetadata **tags)
 {
-	FLAC__SeekableStreamDecoder		*m_pFlacDecoder;
-	FLAC__SeekableStreamDecoderState state;
+	FLAC__StreamDecoder		*m_pFlacDecoder;
+	FLAC__StreamDecoderInitStatus state;
 	FlacStreanInfoAndTag		infoAndTags;
 
-	m_pFlacDecoder = FLAC__seekable_stream_decoder_new();
+	m_pFlacDecoder = FLAC__stream_decoder_new();
 	if (!m_pFlacDecoder)
 		return ERR_DECODER_INNER_ERROR;
 
 	infoAndTags.m_pInput = pInput;
 
-	FLAC__seekable_stream_decoder_set_client_data(m_pFlacDecoder, &infoAndTags);
-	FLAC__seekable_stream_decoder_set_read_callback(m_pFlacDecoder, MetadataInfo_ReadCallback);
-	FLAC__seekable_stream_decoder_set_seek_callback(m_pFlacDecoder, MetadataInfo_SeekCallback);
-	FLAC__seekable_stream_decoder_set_length_callback(m_pFlacDecoder, MetadataInfo_LengthCallback);
-	FLAC__seekable_stream_decoder_set_tell_callback(m_pFlacDecoder, MetadataInfo_TellCallback);
-	FLAC__seekable_stream_decoder_set_eof_callback(m_pFlacDecoder, MetadataInfo_EofCallback);
-	FLAC__seekable_stream_decoder_set_write_callback(m_pFlacDecoder, MetadataInfo_WriteCallback);
-	FLAC__seekable_stream_decoder_set_metadata_callback(m_pFlacDecoder, MetadataInfo_MetadataCallback);
-	FLAC__seekable_stream_decoder_set_error_callback(m_pFlacDecoder, MetadataInfo_ErrorCallback);
-	FLAC__seekable_stream_decoder_set_metadata_respond_all(m_pFlacDecoder);
+	FLAC__stream_decoder_set_md5_checking(m_pFlacDecoder, false);
 
-	state = FLAC__seekable_stream_decoder_init(m_pFlacDecoder);
-	if (state != FLAC__FILE_DECODER_OK)
+	state = FLAC__stream_decoder_init_stream(m_pFlacDecoder,
+		MetadataInfo_ReadCallback, MetadataInfo_SeekCallback, 
+		MetadataInfo_TellCallback, MetadataInfo_LengthCallback, 
+		MetadataInfo_EofCallback, MetadataInfo_WriteCallback, 
+		MetadataInfo_MetadataCallback, MetadataInfo_ErrorCallback, &infoAndTags);
+	if (state != FLAC__STREAM_DECODER_INIT_STATUS_OK)
 	{
-		FLAC__seekable_stream_decoder_finish(m_pFlacDecoder);
-		FLAC__seekable_stream_decoder_delete(m_pFlacDecoder);
+		FLAC__stream_decoder_finish(m_pFlacDecoder);
+		FLAC__stream_decoder_delete(m_pFlacDecoder);
 		return ERR_PLAYER_INVALID_FILE;
 	}
 
-	if (!FLAC__seekable_stream_decoder_process_until_end_of_metadata(m_pFlacDecoder))
+	if (!FLAC__stream_decoder_process_until_end_of_metadata(m_pFlacDecoder))
 	{
 		if (infoAndTags.pStreamInfo)
 			FLAC__metadata_object_delete(infoAndTags.pStreamInfo);
 		if (infoAndTags.pTags)
 			FLAC__metadata_object_delete(infoAndTags.pTags);
-		FLAC__seekable_stream_decoder_finish(m_pFlacDecoder);
-		FLAC__seekable_stream_decoder_delete(m_pFlacDecoder);
+		FLAC__stream_decoder_finish(m_pFlacDecoder);
+		FLAC__stream_decoder_delete(m_pFlacDecoder);
 		return ERR_PLAYER_INVALID_FILE;
 	}
 
@@ -211,8 +209,8 @@ int MetadataInfo_get_streaminfo_and_tags(IMediaInput *pInput, FLAC__StreamMetada
 		*tags = infoAndTags.pTags;
 	}
 
-	FLAC__seekable_stream_decoder_finish(m_pFlacDecoder);
-	FLAC__seekable_stream_decoder_delete(m_pFlacDecoder);
+	FLAC__stream_decoder_finish(m_pFlacDecoder);
+	FLAC__stream_decoder_delete(m_pFlacDecoder);
 
 	return ERR_OK;
 }

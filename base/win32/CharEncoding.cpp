@@ -76,7 +76,7 @@ inline void TStringToUCS2(const TCHAR *str, int nLen, wstring &strOut)
 #elif defined(UTF8)
 	UTF8ToUCS2(str, nLen, strOut);
 #else
-	MBCSToUtf8(str, nLen, strOut);
+	MBCSToUCS2(str, nLen, strOut);
 #endif
 }
 

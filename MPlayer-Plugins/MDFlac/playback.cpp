@@ -25,33 +25,36 @@
 void AudioInfoFromStreamInfo(AUDIO_INFO &audioInfo, const FLAC__StreamMetadata_StreamInfo *streaminfo);
 
 // libFLAC callbacks
-static FLAC__SeekableStreamDecoderReadStatus ReadCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__byte buffer[], unsigned *bytes, void *client_data)
+static FLAC__StreamDecoderReadStatus ReadCallback(const FLAC__StreamDecoder *decoder, FLAC__byte buffer[], unsigned *bytes, void *client_data)
 {
 	IMediaInput		*pInput = ((CMDFlac *)client_data)->m_pInput;
 
 	*bytes = pInput->Read(buffer, *bytes);
-	return FLAC__SEEKABLE_STREAM_DECODER_READ_STATUS_OK;
+	if (*bytes == 0)
+		return FLAC__STREAM_DECODER_READ_STATUS_END_OF_STREAM;
+	else
+		return FLAC__STREAM_DECODER_READ_STATUS_CONTINUE;
 }
 
-static FLAC__SeekableStreamDecoderSeekStatus SeekCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__uint64 absolute_byte_offset, void *client_data)
+static FLAC__StreamDecoderSeekStatus SeekCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 absolute_byte_offset, void *client_data)
 {
 	IMediaInput		*pInput = ((CMDFlac *)client_data)->m_pInput;
 
 	if (pInput->Seek(absolute_byte_offset, SEEK_SET) == ERR_OK)
-		return FLAC__SEEKABLE_STREAM_DECODER_SEEK_STATUS_OK;
+		return FLAC__STREAM_DECODER_SEEK_STATUS_OK;
 	else
-		return FLAC__SEEKABLE_STREAM_DECODER_SEEK_STATUS_ERROR;
+		return FLAC__STREAM_DECODER_SEEK_STATUS_ERROR;
 }
 
-static FLAC__SeekableStreamDecoderTellStatus TellCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__uint64 *absolute_byte_offset, void *client_data)
+static FLAC__StreamDecoderTellStatus TellCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 *absolute_byte_offset, void *client_data)
 {
 	IMediaInput		*pInput = ((CMDFlac *)client_data)->m_pInput;
 
 	*absolute_byte_offset = pInput->GetPos();
-	return FLAC__SEEKABLE_STREAM_DECODER_TELL_STATUS_OK;
+	return FLAC__STREAM_DECODER_TELL_STATUS_OK;
 }
 
-static FLAC__SeekableStreamDecoderLengthStatus LengthCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__uint64 *stream_length, void *client_data)
+static FLAC__StreamDecoderLengthStatus LengthCallback(const FLAC__StreamDecoder *decoder, FLAC__uint64 *stream_length, void *client_data)
 {
 	IMediaInput		*pInput = ((CMDFlac *)client_data)->m_pInput;
 	uint32			nSize;
@@ -59,20 +62,20 @@ static FLAC__SeekableStreamDecoderLengthStatus LengthCallback(const FLAC__Seekab
 	if (pInput->GetSize(nSize) == ERR_OK)
 	{
 		*stream_length = nSize;
-		return FLAC__SEEKABLE_STREAM_DECODER_LENGTH_STATUS_OK;
+		return FLAC__STREAM_DECODER_LENGTH_STATUS_OK;
 	}
 	else
-		return FLAC__SEEKABLE_STREAM_DECODER_LENGTH_STATUS_ERROR;
+		return FLAC__STREAM_DECODER_LENGTH_STATUS_ERROR;
 }
 
-static FLAC__bool EofCallback(const FLAC__SeekableStreamDecoder *decoder, void *client_data)
+static FLAC__bool EofCallback(const FLAC__StreamDecoder *, void *client_data)
 {
 	IMediaInput		*pInput = ((CMDFlac *)client_data)->m_pInput;
 
 	return pInput->IsEOF();
 }
 
-static FLAC__StreamDecoderWriteStatus WriteCallback(const FLAC__SeekableStreamDecoder *decoder, const FLAC__Frame *frame, const FLAC__int32 *const buffer[], void *client_data)
+static FLAC__StreamDecoderWriteStatus WriteCallback(const FLAC__StreamDecoder *decoder, const FLAC__Frame *frame, const FLAC__int32 *const buffer[], void *client_data)
 {
 	CMDFlac *pMDFlac = (CMDFlac*)client_data;
 	int				nSize = frame->header.blocksize * pMDFlac->m_nBytesPerSample;
@@ -109,7 +112,7 @@ static FLAC__StreamDecoderWriteStatus WriteCallback(const FLAC__SeekableStreamDe
 	return FLAC__STREAM_DECODER_WRITE_STATUS_CONTINUE;
 }
 
-static void MetadataCallback(const FLAC__SeekableStreamDecoder *decoder, const FLAC__StreamMetadata *metadata, void *client_data)
+static void MetadataCallback(const FLAC__StreamDecoder *decoder, const FLAC__StreamMetadata *metadata, void *client_data)
 {
 	CMDFlac *pMDFlac = (CMDFlac*)client_data;
 	AUDIO_INFO	&m_audioInfo = pMDFlac->m_audioInfo;
@@ -148,7 +151,7 @@ static void MetadataCallback(const FLAC__SeekableStreamDecoder *decoder, const F
 // 	}
 }
 
-static void ErrorCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__StreamDecoderErrorStatus status, void *client_data)
+static void ErrorCallback(const FLAC__StreamDecoder *decoder, FLAC__StreamDecoderErrorStatus status, void *client_data)
 {
 	CMDFlac *pMDFlac = (CMDFlac*)client_data;
 
@@ -156,33 +159,52 @@ static void ErrorCallback(const FLAC__SeekableStreamDecoder *decoder, FLAC__Stre
 		pMDFlac->m_bKillThread = true;
 }
 
-int FP_Init(CMDFlac *pMDFlac)
+int FLAC_plugin__decoder_init(CMDFlac *pMDFlac)
 {
-	FLAC__SeekableStreamDecoderState state;
+	FLAC__StreamDecoderInitStatus init_status;
 
-	FLAC__seekable_stream_decoder_set_client_data(pMDFlac->m_pFlacDecoder, pMDFlac);
-	FLAC__seekable_stream_decoder_set_read_callback(pMDFlac->m_pFlacDecoder, ReadCallback);
-	FLAC__seekable_stream_decoder_set_seek_callback(pMDFlac->m_pFlacDecoder, SeekCallback);
-	FLAC__seekable_stream_decoder_set_length_callback(pMDFlac->m_pFlacDecoder, LengthCallback);
-	FLAC__seekable_stream_decoder_set_tell_callback(pMDFlac->m_pFlacDecoder, TellCallback);
-	FLAC__seekable_stream_decoder_set_eof_callback(pMDFlac->m_pFlacDecoder, EofCallback);
-	FLAC__seekable_stream_decoder_set_write_callback(pMDFlac->m_pFlacDecoder, WriteCallback);
-	FLAC__seekable_stream_decoder_set_metadata_callback(pMDFlac->m_pFlacDecoder, MetadataCallback);
-	FLAC__seekable_stream_decoder_set_error_callback(pMDFlac->m_pFlacDecoder, ErrorCallback);
-	FLAC__seekable_stream_decoder_set_metadata_respond_all(pMDFlac->m_pFlacDecoder);
+	FLAC__ASSERT(pMDFlac->m_pFlacDecoder);
+	FLAC__stream_decoder_finish(pMDFlac->m_pFlacDecoder);
+	/* init pMDFlac->m_pFlacDecoder */
+	FLAC__stream_decoder_set_md5_checking(pMDFlac->m_pFlacDecoder, false);
+	FLAC__stream_decoder_set_metadata_ignore_all(pMDFlac->m_pFlacDecoder);
+	FLAC__stream_decoder_set_metadata_respond(pMDFlac->m_pFlacDecoder, FLAC__METADATA_TYPE_STREAMINFO);
+	FLAC__stream_decoder_set_metadata_respond(pMDFlac->m_pFlacDecoder, FLAC__METADATA_TYPE_VORBIS_COMMENT);
 
-	state = FLAC__seekable_stream_decoder_init(pMDFlac->m_pFlacDecoder);
-	if (state != FLAC__FILE_DECODER_OK)
+//	FLAC__stream_decoder_set_metadata_respond_all(pMDFlac->m_pFlacDecoder);
+// 	FLAC__stream_decoder_set_metadata_ignore_all(pMDFlac->m_pFlacDecoder);
+// 	FLAC__stream_decoder_set_metadata_respond(pMDFlac->m_pFlacDecoder, FLAC__METADATA_TYPE_STREAMINFO);
+// 	FLAC__stream_decoder_set_metadata_respond(pMDFlac->m_pFlacDecoder, FLAC__METADATA_TYPE_VORBIS_COMMENT);
+	init_status = FLAC__stream_decoder_init_stream(pMDFlac->m_pFlacDecoder,
+		ReadCallback, SeekCallback, TellCallback, LengthCallback, 
+		EofCallback, WriteCallback, MetadataCallback, ErrorCallback, pMDFlac);
+
+	if (init_status != FLAC__STREAM_DECODER_INIT_STATUS_OK)
 	{
-		FLAC__seekable_stream_decoder_finish(pMDFlac->m_pFlacDecoder);
+		// FLAC_plugin__show_error("Error while initializing decoder (%s [%s]).", FLAC__StreamDecoderInitStatusString[init_status], FLAC__stream_decoder_get_resolved_state_string(decoder));
+		FLAC__stream_decoder_finish(pMDFlac->m_pFlacDecoder);
 		return ERR_PLAYER_INVALID_FILE;
 	}
+	/* process */
 
-	if (!FLAC__seekable_stream_decoder_process_until_end_of_metadata(pMDFlac->m_pFlacDecoder))
+	if (!FLAC__stream_decoder_process_until_end_of_metadata(pMDFlac->m_pFlacDecoder))
 	{
-		FLAC__seekable_stream_decoder_finish(pMDFlac->m_pFlacDecoder);
+		// FLAC_plugin__show_error("Error while processing metadata (%s).", FLAC__stream_decoder_get_resolved_state_string(pMDFlac->m_pFlacDecoder));
+		FLAC__stream_decoder_finish(pMDFlac->m_pFlacDecoder);
 		return ERR_PLAYER_INVALID_FILE;
 	}
+	/* check results */
+	if (pMDFlac->m_bKillThread)
+		return ERR_PLAYER_INVALID_FILE;
+
+	/* init replaygain */
+	/*stream_data->output_bits_per_sample = stream_data->has_replaygain && cfg.replaygain.enable ?
+		cfg.resolution.replaygain.bps_out :
+	cfg.resolution.normal.dither_24_to_16 ? min(stream_data->bits_per_sample, 16) : stream_data->bits_per_sample;
+
+	if (stream_data->has_replaygain && cfg.replaygain.enable && cfg.resolution.replaygain.dither)
+		FLAC__replaygain_synthesis__init_dither_context(&stream_data->dither_context, stream_data->bits_per_sample, cfg.resolution.replaygain.noise_shaping);
+	*/
 
 	return ERR_OK;
 }
@@ -192,81 +214,11 @@ int FP_Init(CMDFlac *pMDFlac)
  *  decode
  */
 
-void FP_seek(CMDFlac *pMDFlac)
+void FLAC_plugin__seek(CMDFlac *pMDFlac)
 {
 	AUDIO_INFO	&m_audioInfo = pMDFlac->m_audioInfo;
 	FLAC__uint64 target_sample =
 		(FLAC__uint64)m_audioInfo.nTotalSamples * pMDFlac->m_nSeekPos / m_audioInfo.nMediaLength;
 
-	FLAC__seekable_stream_decoder_seek_absolute(pMDFlac->m_pFlacDecoder, target_sample);
+	FLAC__stream_decoder_seek_absolute(pMDFlac->m_pFlacDecoder, target_sample);
 }
-
-// int FP_Decode(CMDFlac *pMDFlac, IFBuffer *pBuf)
-// {
-// 	AUDIO_INFO	&m_audioInfo = pMDFlac->m_audioInfo;
-// 
-// 	/* fill reservoir */
-// 	while (pMDFlac->m_BufferFilled < SAMPLES_PER_WRITE)
-// 	{
-// 		if (FLAC__seekable_stream_decoder_get_state(pMDFlac->m_pFlacDecoder) == FLAC__FILE_DECODER_END_OF_FILE)
-// 		{
-// 			break;
-// 		}
-// 		else if (!FLAC__seekable_stream_decoder_process_single(pMDFlac->m_pFlacDecoder))
-// 		{
-// //			FLAC_plugin__show_error("Error while processing frame (%s).", FLAC__FileDecoderStateString[FLAC__file_decoder_get_state(decoder)]);
-// 			break;
-// 		}
-// // 		if (!FLAC__seekable_stream_decoder_get_decode_position(decoder, &decode_position))
-// // 			decode_position = 0;
-// 	}
-// 
-// 	/* output samples */
-// 	if (pMDFlac->m_BufferFilled > 0)
-// 	{
-// 		const unsigned n = min(wide_samples_in_reservoir_, SAMPLES_PER_WRITE);
-// 		const unsigned channels = m_audioInfo.nChannels;
-// 		unsigned i;
-// 		int bytes;
-// 
-// 		// if (cfg.replaygain.enable && m_audioInfo.has_replaygain)
-// // 		if (m_audioInfo.has_replaygain && cfg.replaygain.enable && cfg.resolution.replaygain.dither)
-// // 		{
-// // 			bytes = FLAC__replaygain_synthesis__apply_gain(
-// // 				sample_buffer,
-// // 				true, /* little_endian_data_out */
-// // 				m_audioInfo.nBpsOutput == 8, /* unsigned_data_out */
-// // 				reservoir__,
-// // 				n,
-// // 				channels,
-// // 				m_audioInfo.nBps,
-// // 				m_audioInfo.nBpsOutput,
-// // 				m_audioInfo.replay_scale,
-// // 				cfg.replaygain.hard_limit,
-// // 				cfg.resolution.replaygain.dither,
-// // 				&m_audioInfo.dither_context
-// // 			);
-// // 		}
-// // 		else
-// 		{
-// 			bytes = FLAC__plugin_common__pack_pcm_signed_little_endian(
-// 				sample_buffer,
-// 				reservoir__,
-// 				n,
-// 				channels,
-// 				m_audioInfo.nBps,
-// 				m_audioInfo.nBpsOutput
-// 			);
-// 		}
-// 
-// 		wide_samples_in_reservoir_ -= n;
-// 		for (i = 0; i < channels; i++)
-// 			memmove(&reservoir_[i][0], &reservoir_[i][n], sizeof(reservoir_[0][0]) * wide_samples_in_reservoir_);
-// 
-// 		return bytes;
-// 	}
-// 	else
-// 	{
-// 		return 0;
-// 	}
-// }

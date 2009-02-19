@@ -59,7 +59,7 @@ CMDFlac::CMDFlac()
 
 	m_nBytesPerSample = 0;
 
-	m_pFlacDecoder = FLAC__seekable_stream_decoder_new();
+	m_pFlacDecoder = FLAC__stream_decoder_new();
 }
 
 CMDFlac::~CMDFlac()
@@ -69,7 +69,11 @@ CMDFlac::~CMDFlac()
 		m_pPlayer->Release();
 		m_pPlayer = NULL;
 	}
-	FLAC__seekable_stream_decoder_delete(m_pFlacDecoder);
+	if (m_pFlacDecoder)
+	{
+		FLAC__stream_decoder_finish(m_pFlacDecoder);
+		FLAC__stream_decoder_delete(m_pFlacDecoder);
+	}
 }
 
 OBJ_REFERENCE_IMP(CMDFlac)
@@ -125,7 +129,7 @@ MLRESULT CMDFlac::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *p
 	{
 		AudioInfoFromStreamInfo(m_audioInfo, &(streaminfo->data.stream_info));
 
-		ratioCompress = m_audioInfo.nBitRate * 1000000 / (streaminfo->data.stream_info.sample_rate*streaminfo->data.stream_info.channels*streaminfo->data.stream_info.bits_per_sample);
+		ratioCompress = (float)(m_audioInfo.nBitRate * 1000000 / (streaminfo->data.stream_info.sample_rate*streaminfo->data.stream_info.channels*streaminfo->data.stream_info.bits_per_sample));
 
 		m_nBytesPerSample = m_audioInfo.nBps;
 
@@ -191,14 +195,14 @@ MLRESULT CMDFlac::Play(IMPlayer *pPlayer, IMediaInput *pInput)
 	ASSERT(m_pFlacDecoder != 0);
 
 	/* init decoder */
-	nRet = FP_Init(this);
+	nRet = FLAC_plugin__decoder_init(this);
 	if (nRet != ERR_OK)
 		goto R_FAILED;
 
 	nRet = m_pOutput->Open(m_audioInfo.nSampleRate, m_audioInfo.nChannels, m_audioInfo.nBps);
 	if (nRet != ERR_OK)
 	{
-		FLAC__seekable_stream_decoder_finish(m_pFlacDecoder);
+		FLAC__stream_decoder_finish(m_pFlacDecoder);
 		goto R_FAILED;
 	}
 
@@ -323,25 +327,25 @@ void CMDFlac::DecodeThreadProc()
 		// seek needed
 		if (m_bSeekFlag)
 		{
-			FP_seek(this);
+			FLAC_plugin__seek(this);
 			m_bSeekFlag = false;
 			m_pOutput->Flush();
 		}
 		else
 		{
 			// decode
-			if (FLAC__seekable_stream_decoder_get_state(m_pFlacDecoder) == FLAC__SEEKABLE_STREAM_DECODER_END_OF_STREAM)
+			if (FLAC__stream_decoder_get_state(m_pFlacDecoder) == FLAC__STREAM_DECODER_END_OF_STREAM)
 			{
 				break;
 			}
-			else if (!FLAC__seekable_stream_decoder_process_single(m_pFlacDecoder))
+			else if (!FLAC__stream_decoder_process_single(m_pFlacDecoder))
 			{
 				break;
 			}
 		}
 	}
 
-	FLAC__seekable_stream_decoder_finish(m_pFlacDecoder);
+	FLAC__stream_decoder_finish(m_pFlacDecoder);
 
 	while (!m_bKillThread && m_pOutput->IsPlaying())
 	{

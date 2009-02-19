@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="MDFlac"
 	ProjectGUID="{6BA5EC73-01D7-4DA0-937E-D67A03F0395B}"
+	RootNamespace="MDFlac"
 	>
 	<Platforms>
 		<Platform
@@ -50,7 +51,7 @@
 				InlineFunctionExpansion="1"
 				EnableIntrinsicFunctions="true"
 				FavorSizeOrSpeed="2"
-				AdditionalIncludeDirectories="..\flac-1.1.2\include,..\flac-1.1.2\src"
+				AdditionalIncludeDirectories="..\flac\include,..\flac\src"
 				PreprocessorDefinitions="NDEBUG;VERSION=\&quot;1.1.2\&quot;;MDFlac_EXPORTS;FLAC__NO_DLL;WIN32;_WINDOWS;UNICODE;_USRDLL;TAGZ_UNICODE"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -143,7 +144,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\flac-1.1.2\include,..\flac-1.1.2\src"
+				AdditionalIncludeDirectories="..\flac\include,..\flac\src"
 				PreprocessorDefinitions="_DEBUG;REAL_STDIO;VERSION=\&quot;1.1.2\&quot;;MDFlac_EXPORTS;FLAC__NO_DLL;WIN32;_WINDOWS;UNICODE;_USRDLL;TAGZ_UNICODE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
