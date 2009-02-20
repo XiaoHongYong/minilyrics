@@ -155,7 +155,8 @@ void WrapWords(IMLGraphicsBase *pGraph, int nWidthMax, LPCTSTR szText, vector<ts
 				break;
 			}
 
-			if ((*szPtr) > 255 || !(isalpha(*szPtr) || IsDigit(*szPtr) || *szPtr == '_' || *szPtr == '-'))
+			if ((*szPtr) > 255 || !(IsAlpha(*szPtr) || IsDigit(*szPtr) 
+				|| *szPtr == '\'' || *szPtr == '\"' || *szPtr == '_' || *szPtr == '-'))
 				szLastBreak = szPtr;
 			szPtr++;
 		}
