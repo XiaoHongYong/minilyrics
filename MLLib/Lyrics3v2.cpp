@@ -185,6 +185,36 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 	int			nOffset = 0;
 	char		szId3v1Tag[_ID3_V1_LEN + 1];
 	int			nErr = ERR_OK;
+	stringex	strAnsyLyr;
+
+	FILE_ENCODING fe = GetStrEncodingType(szLyrics);
+	if (fe == FE_UCS2)
+	{
+		ConvertStr((LPCWSTR)(szLyrics + 2), (nLen - 2) / sizeof(wchar_t), strAnsyLyr);
+
+		// Only when converted ansi lyrics is same with org one, we shall convert it.
+		wstringex	strUcs2;
+		ConvertStr(strAnsyLyr.c_str(), strAnsyLyr.size(), strUcs2);
+		if (wcsncmp((LPCWSTR)(szLyrics + 2), strUcs2.c_str(), strUcs2.size()) == 0)
+		{
+			szLyrics = strAnsyLyr.c_str();
+			nLen = strAnsyLyr.size();
+		}
+	}
+	else if (fe == FE_UTF8)
+	{
+		Utf8ToMbcs(szLyrics + 3, nLen - 3, strAnsyLyr);
+
+		// Only when converted ansi lyrics is same with org one, we shall convert it.
+		stringex	strUtf8;
+		MbcsToUtf8(strAnsyLyr.c_str(), strAnsyLyr.size(), strUtf8);
+		if (strncmp(szLyrics + 3, strUtf8.c_str(), strUtf8.size()) == 0)
+		{
+			szLyrics = strAnsyLyr.c_str();
+			nLen = strAnsyLyr.size();
+		}
+	}
+
 
 	fp = _tfopen(szMp3File, _T("r+b"));
 	if (!fp)

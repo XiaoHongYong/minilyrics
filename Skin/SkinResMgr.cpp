@@ -214,7 +214,7 @@ void CSkinResMgr::AddRessourceDir(LPCTSTR szResDir, int nPos)
 			return;
 	}
 
-	if (nPos < 0 || nPos >= m_vResSearchDirs.size())
+	if (nPos < 0 || nPos >= (int)m_vResSearchDirs.size())
 		m_vResSearchDirs.push_back(strDir);
 	else
 		m_vResSearchDirs.insert(m_vResSearchDirs.begin() + nPos, strDir);
