@@ -352,6 +352,7 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 					strFile = pSel->strUrl;
 			}
 
+			static const TCHAR *SZ_SUPPORTED_FILE_TYPE		 = _T("All supported files (*.lrc; *.txt; *.srt)\0*.lrc;*.txt;*.srt\0Lyric File (*.lrc)\0*.LRC\0Text File (*.txt)\0*.txt\0Vob Subtitle File(*.srt)\0*.srt\0\0");
 			CFileOpenDlg	dlg(TOLOCAL(_T("Open Lyrics file")), strFile.c_str(), SZ_SUPPORTED_FILE_TYPE, 1);
 
 			if (dlg.DoModal(this) == IDOK)
