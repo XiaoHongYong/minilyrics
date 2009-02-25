@@ -10,11 +10,4 @@
 #include "CSVFile.h"
 #include "UndoMgr.h"
 
-#ifdef _LINUX_GTK2
-#endif
-
-#if defined(WIN32) && !defined(_WINCE_)
-#include "win32\MSJExHnd.h"
-#endif
-
 #endif	// _ML_UTILS_H
