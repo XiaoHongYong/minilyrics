@@ -21,7 +21,7 @@ bool CMiniDumperNotify::OnBeginDump(HMODULE hCrashMod, TCHAR szDumpFileToSave[],
 #endif
 
 	GetWorkingFolder(szDumpFileToSave);
-	_tcscpy_safe(szDumpFileToSave, nLen, SZ_APP_NAME _T("_crash.dmp"));
+	_tcscat_safe(szDumpFileToSave, nLen, SZ_APP_NAME _T("_crash.dmp"));
 
 	return true;
 }

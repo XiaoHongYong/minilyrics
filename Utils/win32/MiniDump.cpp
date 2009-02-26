@@ -54,6 +54,8 @@ LONG CMiniDumper::TopLevelFilter(struct _EXCEPTION_POINTERS *pExceptionInfo)
 	if (!GetModuleByAddress(pExceptionInfo->ExceptionRecord->ExceptionAddress, szFaultingModule, CountOf(szFaultingModule), hFaultModule))
 		return EXCEPTION_CONTINUE_SEARCH;
 
+	ERRLOG1(_T("Got crash: %s"), szFaultingModule);
+
 	// Get MiniDumpWrite function ptr
 	MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
 	if (!pDump)
@@ -120,8 +122,8 @@ BOOL CMiniDumper::GetModuleByAddress(PVOID addr, LPTSTR szModule, int nLen, HMOD
 	if (!GetModuleFileName((HMODULE)hMod, szModule, nLen))
 		return FALSE;
 
-	hMod = (DWORD)GetModuleHandle(szModule);
-	if (!hMod)
+	hModule = GetModuleHandle(szModule);
+	if (!hModule)
 		return FALSE;
 
 	return TRUE;
