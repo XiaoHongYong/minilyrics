@@ -1,0 +1,988 @@
+
+;--------------------------------
+;Include Modern UI
+
+  !include "MUI.nsh"
+
+  !define TEMP1 $R0 ;Temp variable
+
+;--------------------------------
+;General
+
+  ;Name and file
+  Name "MiniLyrics 6.4.212"
+  BrandingText "MiniLyrics"
+  VIAddVersionKey "ProductName" "MiniLyrics"
+  VIAddVersionKey "CompanyName" "Crintsoft"
+  VIAddVersionKey "LegalCopyright" "Crintsoft"
+  VIAddVersionKey "FileDescription" "Automatic lyrics display for your favorite songs."
+  VIAddVersionKey "FileVersion" "6.4.212"
+  VIProductVersion "6.4.212.0"
+
+  OutFile "MiniLyrics6.exe"
+
+  XPStyle on
+
+  ;Default installation folder
+  InstallDir "$PROGRAMFILES\Minilyrics"
+  
+  ;Get installation folder from registry if available
+  InstallDirRegKey HKCU "Software\MiniLyrics" ""
+
+;--------------------------------
+;Interface Settings
+
+  !define MUI_ABORTWARNING
+
+;--------------------------------
+;Language Selection Dialog Settings
+
+  ;Remember the installer language
+  !define MUI_LANGDLL_REGISTRY_ROOT "HKCU" 
+  !define MUI_LANGDLL_REGISTRY_KEY "Software\MiniLyrics" 
+  !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
+
+;--------------------------------
+;Pages
+
+  !insertmacro MUI_PAGE_LICENSE "license.txt"
+  Page custom SetCustom
+  Page custom CustomCreateShortCuts
+  !insertmacro MUI_PAGE_COMPONENTS
+  !insertmacro MUI_PAGE_DIRECTORY
+  !insertmacro MUI_PAGE_INSTFILES
+
+  !insertmacro MUI_UNPAGE_CONFIRM
+  !insertmacro MUI_UNPAGE_INSTFILES
+
+;--------------------------------
+;Languages
+
+  !insertmacro MUI_LANGUAGE "English"
+
+;--------------------------------
+;Reserve Files
+  
+  ;If you are using solid compression, files that are required before
+  ;the actual installation should be stored first in the data block,
+  ;because this will make your installer start faster.
+  
+  !insertmacro MUI_RESERVEFILE_LANGDLL
+
+  ReserveFile "Installopt.dll"
+  ReserveFile "InstOpt.ini"
+
+;--------------------------------
+;Language Strings
+
+  ;Descriptions
+  LangString MINILYRICS_CHOOSE_PLAYERS ${LANG_ENGLISH} ": Choose the player you want MiniLyrics to support"
+
+  LangString base.FinishedInstMsg ${LANG_ENGLISH} "To run MiniLyrics, please launch your favorite media player, MiniLyrics will start automatically."
+
+  LangString DESC_SecBasic ${LANG_ENGLISH} "Basic installation for running MiniLyrics"
+
+  LangString DESC_SecSkins ${LANG_ENGLISH} "Multiple selectable Skin support"
+
+  LangString DESC_SecUninst ${LANG_ENGLISH} "Create uninstallation program"
+
+  LangString DESC_SecShortcut ${LANG_ENGLISH} "Create shortcut group menu"
+
+  LangString DESC_SecAvs ${LANG_ENGLISH} "Avs Support for winamp2 and winamp5"
+  
+  LangString SecShortcut.MLDir ${LANG_ENGLISH} "MiniLyrics"
+  
+  LangString SecShortcut.MLStart ${LANG_ENGLISH} "Restart MiniLyrics"
+  
+  LangString SecShortcut.MLUninst ${LANG_ENGLISH} "Uninstall MiniLyrics"
+  
+  LangString SecShortcut.MLReadme ${LANG_ENGLISH} "Readme"
+  
+  LangString SecShortcut.MLHelp ${LANG_ENGLISH} "MiniLyrics Help"
+  
+  LangString SecShortcut.MLSetupStr ${LANG_ENGLISH} "Setup MiniLyrics"
+
+  LangString un.MLStart ${LANG_ENGLISH} "Restart MiniLyrics"
+  
+  LangString un.MLDir ${LANG_ENGLISH} "MiniLyrics"
+  
+  LangString un.MsgUnstMLRuning ${LANG_ENGLISH} "MiniLyrics is Running, please close the player, and running uninstall program again!"
+  
+  LangString un.MsgRemovelAll ${LANG_ENGLISH} "Remove All files in your MiniLyrics directory(Including some setting files)?"
+ ;--------------------------------
+
+;--------------------------------
+;多个安装类型选择
+;!ifndef NOINSTTYPES ; only if not defined
+InstType "Full"
+InstType "Base"
+;!endif
+
+;--------------------------------
+;Installer Sections
+
+Section "Base" SecBasic
+SectionIn 1 2
+  SetShellVarContext All
+
+  ; remove all skin files.
+  Delete "$INSTDIR\Skins\Fantasy\*.*"
+  Delete "$INSTDIR\Skins\Fantasy (Transparent)\*.*"
+  Delete "$INSTDIR\Skins\iTunes Mode\*.*"
+  Delete "$INSTDIR\Skins\Aimp2\*.*"
+  Delete "$INSTDIR\Skins\Modern\*.*"
+  Delete "$INSTDIR\Skins\base\*.*"
+  Delete "$INSTDIR\Skins\Plain\*.*"
+  Delete "$INSTDIR\Skins\Have Nothing On\*.*"
+  Delete "$INSTDIR\Skins\Windows\*.*"
+  Delete "$INSTDIR\Skins\WindowsXP\*.*"
+  Delete "$INSTDIR\Skins\WindowsXP2\*.*"
+  Delete "$INSTDIR\Skins\TCPort\*.*"
+  Delete "$INSTDIR\Skins\TCPort2\*.*"
+  Delete "$INSTDIR\Skins\iTunes6\*.*"
+  Delete "$INSTDIR\Skins\iTunes_5\*.*"
+  Delete "$INSTDIR\Skins\Quintessential Player\*.*"
+  Delete "$INSTDIR\Skins\RealPlayer\*.*"
+  Delete "$INSTDIR\Skins\WMP10\*.*"
+  Delete "$INSTDIR\Skins\WMP11\*.*"
+  Delete "$INSTDIR\Skins\*.*"
+  Delete "$INSTDIR\ml-gen-embedded-skin\*.*"
+  Delete "$INSTDIR\ml-winamp2-skin\*.*"
+  Delete "$INSTDIR\ml-winamp5-skin\*.*"
+
+  RMDir "$INSTDIR\Skins\Fantasy"
+  RMDir "$INSTDIR\Skins\Fantasy (Transparent)"
+  RMDir "$INSTDIR\Skins\iTunes Mode"
+  RMDir "$INSTDIR\Skins\Aimp2"
+  RMDir "$INSTDIR\Skins\Modern"
+  RMDir "$INSTDIR\Skins\base"
+  RMDir "$INSTDIR\Skins\Plain"
+  RMDir "$INSTDIR\Skins\Fantasy"
+  RMDir "$INSTDIR\Skins\Fantasy (Transparent)"
+  RMDir "$INSTDIR\Skins\Have Nothing On"
+  RMDir "$INSTDIR\Skins\Windows"
+  RMDir "$INSTDIR\Skins\WindowsXP"
+  RMDir "$INSTDIR\Skins\WindowsXP2"
+  RMDir "$INSTDIR\Skins\TCPort"
+  RMDir "$INSTDIR\Skins\TCPort2"
+  RMDir "$INSTDIR\Skins\Quintessential Player"
+  RMDir "$INSTDIR\Skins\RealPlayer"
+  RMDir "$INSTDIR\Skins\WMP10"
+  RMDir "$INSTDIR\Skins\WMP11"
+  RMDir "$INSTDIR\Skins\iTunes6"
+  RMDir "$INSTDIR\Skins\iTunes_5"
+  RMDir "$INSTDIR\ml-winamp2-skin"
+  RMDir "$INSTDIR\ml-winamp5-skin"
+
+  ; File to extract
+  SetOutPath $INSTDIR
+  File Share\*.*
+
+  SetOutPath $INSTDIR\lang
+  File Share\lang\*.*
+
+  SetOutPath $INSTDIR\Skins\Modern
+  File Share\Skins\Modern\*.*
+
+  SetOutPath $INSTDIR\Skins\Fantasy
+  File Share\Skins\Fantasy\*.*
+
+  SetOutPath $INSTDIR\Skins
+  File Share\Skins\*.*
+
+  SetOutPath $INSTDIR\ml-gen-embedded-skin
+  File Share\ml-gen-embedded-skin\*.*
+
+;  SetOutPath $INSTDIR\ad
+;  File Share\ad\*.*
+
+  ; Write settings in Install.ini
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "PerUserSettings"
+  WriteINIStr $INSTDIR\Install.ini "INSTALL" "PerUserSettings" ${TEMP1}
+
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
+  WriteINIStr $INSTDIR\Install.ini "INSTALL" "ShortcutOnDesktop" ${TEMP1}
+
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnQuickLanuch"
+  WriteINIStr $INSTDIR\Install.ini "INSTALL" "ShortcutOnQuickLanuch" ${TEMP1}
+
+  WriteRegStr HKCU "Software\Minilyrics" "Installer Language" $LANGUAGE
+
+  ;winamp5
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5"
+  IntCmp ${TEMP1} 0 J_Winamp5End J_Winamp5End
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstWinamp5" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5Path"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstWinamp5Path" ${TEMP1}
+    
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+
+    SetOutPath ${TEMP1}Plugins
+    File forWa2\gen_MiniLyrics.dll
+
+    SetOutPath $INSTDIR\ml-winamp2-skin
+    File forWa2\ml-winamp2-skin\*.*
+
+  J_Winamp5End:
+
+
+  ; foobar2000
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstFoobar"
+  IntCmp ${TEMP1} 0 J_FoobarEnd J_FoobarEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstFoobar" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstFoobarPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstFoobarPath" ${TEMP1}
+
+    WriteINIStr "${TEMP1}components\MLPlugin.ini" "MiniLyrics" "WorkingFolder" $INSTDIR
+
+    SetOutPath "${TEMP1}components\"
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "FoobarVer"
+    ;80
+    StrCmp ${TEMP1} "Foobar 0.8" 0 J_Foobar80
+      File "Foobar 0.8\foo_ui_minilyrics.dll"
+      GOTO J_FoobarEnd
+      J_Foobar80:
+    ;90
+    StrCmp ${TEMP1} "Foobar 0.9" 0 J_Foobar90
+      File "Foobar 0.9\foo_ui_minilyrics.dll"
+      GOTO J_FoobarEnd
+      J_Foobar90:
+    ;others
+    File "Foobar 0.9\foo_ui_minilyrics.dll"
+  J_FoobarEnd:
+
+
+  ; realone player
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstRealOne"
+  IntCmp ${TEMP1} 0 J_RealOneEnd J_RealOneEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstRealOne" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstRealOnePath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstRealOnePath" ${TEMP1}
+
+    SetOutPath ${TEMP1}
+    File forRealOne\PluginRealone.dll
+    
+    WriteINIStr ${TEMP1}MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_RealOneEnd:
+
+
+  ; qcd player
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstQCD"
+  IntCmp ${TEMP1} 0 J_QCDEnd J_QCDEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQCD" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstQCDPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQCDPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}Plugins
+    File forQCD\QCDMinilyrics.dll
+
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_QCDEnd:
+
+
+  ; Quintessential Media Player
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstQMP"
+  IntCmp ${TEMP1} 0 J_QMPEnd J_QMPEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQMP" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstQMPPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQMPPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}Plugins
+    File forQCD\QCDMinilyrics.dll
+
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_QMPEnd:
+
+
+  ; iTunes
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstiTunes"
+  IntCmp ${TEMP1} 0 J_iTunesEnd J_iTunesEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstiTunes" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstiTunesPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstiTunesPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}Plug-ins
+    File foriTunes\iTunesMinilyrics.dll
+    
+    WriteINIStr ${TEMP1}Plug-ins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_iTunesEnd:
+
+
+  ; musicmatch jukebox
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMM"
+  IntCmp ${TEMP1} 0 J_MMEnd J_MMEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMM" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMMPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMMPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}Plugins\Visual_wa
+    File forMM\MMMinilyrics.dll
+    
+    WriteINIStr ${TEMP1}Plugins\Visual_wa\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_MMEnd:
+
+  ; MediaMonkey
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMediaMonkey"
+  IntCmp ${TEMP1} 0 J_MediaMonkeyEnd J_MediaMonkeyEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMediaMonkey" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMediaMonkeyPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMediaMonkeyPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}Plugins
+    File forWa2\gen_MiniLyrics.dll
+    
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "MediaMonkey"
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_MediaMonkeyEnd:
+
+  ; AIMP
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstAIMP"
+  IntCmp ${TEMP1} 0 J_AIMPEnd J_AIMPEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstAIMP" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstAIMPPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstAIMPPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}Plugins
+    File forWa2\gen_MiniLyrics.dll
+    
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "AIMP2"
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_AIMPEnd:
+
+  ; KMPlayer
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstKMPlayer"
+  IntCmp ${TEMP1} 0 J_KMPlayerEnd J_KMPlayerEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstKMPlayer" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstKMPlayerPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstKMPlayerPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}Plugins
+    File forWa2\gen_MiniLyrics.dll
+    
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "KMPlayer"
+    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_KMPlayerEnd:
+
+  ; BSPlayer
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstBSPlayer"
+  IntCmp ${TEMP1} 0 J_BSPlayerEnd J_BSPlayerEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstBSPlayer" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstBSPlayerPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstBSPlayerPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}plugins
+    File forBsp\MLPluginBsp.dll
+
+    WriteINIStr ${TEMP1}plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_BSPlayerEnd:
+
+  ; widnows media player
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWMPlayer"
+  IntCmp ${TEMP1} 0 J_WMPEnd J_WMPEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstWMPlayer" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File forwmp\WMPLyrics.dll
+    File forwmp\PluginWMPVis.dll
+
+    ; register dll
+    RegDll $INSTDIR\WMPLyrics.dll
+    RegDll $INSTDIR\PluginWMPVis.dll
+  J_WMPEnd:
+
+
+  ; Yahoo! Music Engine
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstYME"
+  IntCmp ${TEMP1} 0 J_YMEEnd J_YMEEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstYME" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File forYME\PluginYme.dll
+
+    ; register dll
+    RegDll $INSTDIR\PluginYme.dll
+  J_YMEEnd:
+
+  ; Media JukeBox
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMJ"
+  IntCmp ${TEMP1} 0 J_MJEnd J_MJEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMJ" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File forMJ\PluginMJ.dll
+
+    ; register dll
+    RegDll $INSTDIR\PluginMJ.dll
+  J_MJEnd:
+
+  ; JetAudio
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstJA"
+  IntCmp ${TEMP1} 0 J_JAEnd J_JAEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstJA" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File forJetaudio\PluginJetaudio.exe
+  J_JAEnd:
+
+  ; XMPlay
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstXM"
+  IntCmp ${TEMP1} 0 J_XMEnd J_XMEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstXM" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstXMPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstXMPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}
+    File forxmp\xmp-ml.dll
+
+    WriteINIStr ${TEMP1}MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_XMEnd:
+
+  ; AlbumPlayer
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstAP"
+  IntCmp ${TEMP1} 0 J_APEnd J_APEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstAP" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File forap\PluginAP.exe
+  J_APEnd:
+
+  ; VLC Media Player
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstVLC"
+  IntCmp ${TEMP1} 0 J_VLCEnd J_VLCEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstVLC" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstVLCPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstVLCPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}plugins
+    File forVLC\libminilyrics_plugin.dll
+
+    WriteINIStr ${TEMP1}plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_VLCEnd:
+
+  ; HMM
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstHMM"
+  IntCmp ${TEMP1} 0 J_HMMEnd J_HMMEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstHMM" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File forHMM\PluginHMM.exe
+  J_HMMEnd:
+
+  ; Shortcuts of desktop and quick lanuch
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
+  IntCmp ${TEMP1} 0 J_ShortcutsDtEnd J_ShortcutsDtEnd
+    StrCpy $R1 $(SecShortcut.MLStart)
+    CreateShortCut "$DESKTOP\$R1.lnk" "$INSTDIR\MLStart.exe"
+    CreateShortCut "$QUICKLAUNCH\$R1.lnk" "$INSTDIR\MLStart.exe"
+
+    IfFileExists "$INSTDIR\PluginJetaudio.exe" 0 J_JADesktopEnd
+      CreateShortCut "$DESKTOP\MiniLyrics for JetAudio.lnk" "$INSTDIR\PluginJetaudio.exe"
+      CreateShortCut "$QUICKLAUNCH\MiniLyrics for JetAudio.lnk" "$INSTDIR\PluginJetaudio.exe"
+    J_JADesktopEnd:
+
+    IfFileExists "$INSTDIR\PluginAP.exe" 0 J_APDesktopEnd
+      CreateShortCut "$DESKTOP\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe"
+      CreateShortCut "$QUICKLAUNCH\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe"
+    J_APDesktopEnd:
+
+    IfFileExists "$INSTDIR\PluginHMM.exe" 0 J_HMMDesktopEnd
+      CreateShortCut "$DESKTOP\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
+      CreateShortCut "$QUICKLAUNCH\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
+    J_HMMDesktopEnd:
+
+  J_ShortcutsDtEnd:
+
+SectionEnd
+
+;--------------------------------
+; Skins 的安装
+Section "Skins" SecSkins
+SectionIn 1
+  SetOutPath $INSTDIR\Skins\Aimp2
+  File Share\Skins\Aimp2\*.*
+
+;  SetOutPath $INSTDIR\Skins\base
+;  File Share\Skins\base\*.*
+
+  SetOutPath $INSTDIR\Skins\Plain
+  File Share\Skins\Plain\*.*
+
+  SetOutPath $INSTDIR\Skins\Fantasy
+  File Share\Skins\Fantasy\*.*
+
+;  SetOutPath "$INSTDIR\Skins\iTunes6"
+;  File "Share\Skins\iTunes6\*.*"
+
+  SetOutPath "$INSTDIR\Skins\iTunes Mode"
+  File "Share\Skins\iTunes Mode\*.*"
+
+  SetOutPath $INSTDIR\Skins\Modern
+  File Share\Skins\Modern\*.*
+
+  SetOutPath "$INSTDIR\Skins\Quintessential Player"
+  File "Share\Skins\Quintessential Player\*.*"
+
+  SetOutPath "$INSTDIR\Skins\RealPlayer"
+  File "Share\Skins\RealPlayer\*.*"
+
+  SetOutPath $INSTDIR\Skins\TCPort
+  File Share\Skins\TCPort\*.*
+
+  SetOutPath "$INSTDIR\Skins\WMP10"
+  File "Share\Skins\WMP10\*.*"
+
+  SetOutPath "$INSTDIR\Skins\WMP11"
+  File "Share\Skins\WMP11\*.*"
+
+  SetOutPath $INSTDIR\Skins\Windows
+  File Share\Skins\Windows\*.*
+SectionEnd
+
+Section "Start Menu Shortcuts" SecShortcut
+SectionIn 1
+  StrCpy $R0 $(SecShortcut.MLDir)
+  CreateDirectory "$SMPROGRAMS\$R0"
+  StrCpy $R1 $(SecShortcut.MLSetupStr)
+  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\MLSetup.exe"
+  StrCpy $R1 $(SecShortcut.MLStart)
+  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\MLStart.exe"
+  StrCpy $R1 $(SecShortcut.MLUninst)
+  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\uninst-ml.exe"
+  StrCpy $R1 $(SecShortcut.MLReadme)
+  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\readme-minilyrics.txt"
+  StrCpy $R1 $(SecShortcut.MLHelp)
+  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\minilyrics.chm"
+
+  IfFileExists "$INSTDIR\PluginJetaudio.exe" 0 J_JASEnd
+	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for JetAudio.lnk" "$INSTDIR\PluginJetaudio.exe"
+  J_JASEnd:
+
+  IfFileExists "$INSTDIR\PluginHMM.exe" 0 J_HMMSEnd
+	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
+  J_HMMSEnd:
+
+  IfFileExists "$INSTDIR\PluginAP.exe" 0 J_APSEnd
+	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe" "" "$INSTDIR\PluginAP.exe" 0
+  J_APSEnd:
+
+;  CreateShortCut "$SMPROGRAMS\MiniLyrics\Uninstall MiniLyrics.lnk" "$INSTDIR\uninst-ml.exe"
+;  CreateShortCut "$SMPROGRAMS\MiniLyrics\readme.lnk" "$INSTDIR\readme-minilyrics.txt"
+;  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics help.lnk" "$INSTDIR\MiniLyrics.chm"
+SectionEnd
+
+Section "Avs Support for Winamp" SecAvs
+SectionIn 1
+
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5"
+  IntCmp ${TEMP1} 0 J_Winamp5End J_Winamp5End
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5Path"
+    SetOutPath ${TEMP1}Plugins\avs\Minilyrics
+    File Share\avs\Minilyrics\*.*
+    SetOutPath ${TEMP1}Plugins\avs
+    File Share\avs\WvsLyrics.ape
+  J_Winamp5End:
+SectionEnd
+
+Section "Create Uninstallation" SecUninst
+SectionIn 1
+  ; Write the installation path into the registry
+  ; WriteRegStr HKLM SOFTWARE\MiniLyrics "ForWa2InstallDir" "$INSTDIR"
+  ; Write the uninstall keys for Windows
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "Minilyrics(remove only)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "UninstallString" '"$INSTDIR\uninst-ml.exe"'
+  WriteUninstaller "$INSTDIR\uninst-ml.exe"
+SectionEnd
+
+;--------------------------------
+;Uninstaller Functions
+
+;--------------------------------
+;Uninstaller Section
+Section "Uninstall"
+  ; 卸载迷你歌词
+
+  SetShellVarContext All
+
+  FindWindow $R0 "MiniLyrics" "" 0
+  StrCmp $R0 "0" +3
+    MessageBox MB_OK|MB_ICONEXCLAMATION $(un.MsgUnstMLRuning)
+    Abort
+
+  DeleteRegKey HKLM "SOFTWARE\MiniLyrics\MiniLyrics"
+  DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics"
+
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWinamp2Path"
+  StrCmp ${TEMP1} "" J_WINAMP2_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+    Delete "${TEMP1}Plugins\avs\Minilyrics\*.*"
+    Delete "${TEMP1}Plugins\avs\WvsLyrics.ape"
+    RMDir "${TEMP1}Plugins\avs\Minilyrics"
+  J_WINAMP2_UE:
+
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWinamp5Path"
+  StrCmp ${TEMP1} "" J_WINAMP5_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+    Delete "${TEMP1}Plugins\avs\Minilyrics\*.*"
+    Delete "${TEMP1}Plugins\avs\WvsLyrics.ape"
+    RMDir "${TEMP1}Plugins\avs\Minilyrics"
+  J_WINAMP5_UE:
+  
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstFoobarPath"
+  StrCmp ${TEMP1} "" J_FOOBAR_UE
+    Delete /REBOOTOK ${TEMP1}components\foo_ui_minilyrics.dll
+    Delete ${TEMP1}components\MLPlugin.ini
+  J_FOOBAR_UE:
+  
+  ; realone player
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstRealOnePath"
+  StrCmp ${TEMP1} "" J_RealOne_UE
+    Delete /REBOOTOK ${TEMP1}PluginRealone.dll
+    Delete ${TEMP1}MLPlugin.ini
+  J_RealOne_UE:
+  
+  ; qcd player
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstQCDPath"
+  StrCmp ${TEMP1} "" J_QCD_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\QCDMinilyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+  J_QCD_UE:
+  
+  ; qmplayer
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstQMPPath"
+  StrCmp ${TEMP1} "" J_QMP_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\QMPMinilyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+  J_QMP_UE:
+
+  ; iTunes
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstiTunesPath"
+  StrCmp ${TEMP1} "" J_iTunes_UE
+    Delete /REBOOTOK ${TEMP1}iTunesMinilyrics.dll
+    Delete ${TEMP1}MLPlugin.ini
+  J_iTunes_UE:
+  
+  ; musicmatch jukebox
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstMMPath"
+  StrCmp ${TEMP1} "" J_MM_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\Visual_wa\MMMinilyrics.dll
+    Delete ${TEMP1}Plugins\Visual_wa\MLPlugin.ini
+  J_MM_UE:
+
+  ; MediaMonkey
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstMediaMonkeyPath"
+  StrCmp ${TEMP1} "" J_MediaMonkey_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+  J_MediaMonkey_UE:
+
+  ; AIMP
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstAIMPPath"
+  StrCmp ${TEMP1} "" J_AIMP_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+  J_AIMP_UE:
+
+  ; KMPlayer
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstKMPlayerPath"
+  StrCmp ${TEMP1} "" J_KMPlayer_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+  J_KMPlayer_UE:
+
+  ; BSPlayer
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstBSPlayerPath"
+  StrCmp ${TEMP1} "" J_BSPlayer_UE
+    Delete /REBOOTOK ${TEMP1}plugins\MLPluginBsp.dll
+    Delete ${TEMP1}plugins\MLPlugin.ini
+  J_BSPlayer_UE:
+
+  ; XMPlay
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstXMPath"
+  StrCmp ${TEMP1} "" J_XM_UE
+    Delete /REBOOTOK ${TEMP1}xmp-ml.dll
+    Delete ${TEMP1}MLPlugin.ini
+  J_XM_UE:
+
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWMPlayer"
+  IntCmp ${TEMP1} 0 J_WMP_UE J_WMP_UE
+    UnRegDll $INSTDIR\WMPLyrics.dll
+    Delete /REBOOTOK "$INSTDIR\WMPLyrics.dll"
+    UnRegDll $INSTDIR\PluginWMPVis.dll
+    Delete /REBOOTOK "$INSTDIR\PluginWMPVis.dll"
+  J_WMP_UE:
+
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstYME"
+  IntCmp ${TEMP1} 0 J_YME_UE J_YME_UE
+    UnRegDll $INSTDIR\PluginYme.dll
+    Delete /REBOOTOK "$INSTDIR\PluginYme.dll"
+  J_YME_UE:
+
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstMJ"
+  IntCmp ${TEMP1} 0 J_MJ_UE J_MJ_UE
+    UnRegDll $INSTDIR\PluginMJ.dll
+    Delete /REBOOTOK "$INSTDIR\PluginMJ.dll"
+  J_MJ_UE:
+
+  ; VLC Media Player
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstVLCPath"
+  StrCmp ${TEMP1} "" J_VLC_UE
+    Delete /REBOOTOK ${TEMP1}plugins\libminilyrics_plugin.dll
+    Delete ${TEMP1}plugins\MLPlugin.ini
+  J_VLC_UE:
+
+  MessageBox MB_YESNO|MB_ICONQUESTION $(un.MsgRemovelAll) IDYES RemoveAllFiles
+
+  Delete /REBOOTOK $APPDATA\Minilyrics\ad.dat
+  Delete /REBOOTOK $APPDATA\Minilyrics\*.db
+  Delete /REBOOTOK $APPDATA\Minilyrics\log.txt_3.txt
+  Delete /REBOOTOK $APPDATA\Minilyrics\log_3.txt
+  Delete /REBOOTOK $APPDATA\Minilyrics\log.txt
+
+  Delete "$INSTDIR\readme-MiniLyrics.txt"
+  Delete /REBOOTOK $INSTDIR\minilyrics.dll
+  Delete $INSTDIR\unicows.dll
+  Delete $INSTDIR\MLPlugin.ini
+  Delete $INSTDIR\minilyrics.chm
+  Delete $INSTDIR\MLSetup.exe
+  Delete $INSTDIR\MLStart.exe
+  Delete $INSTDIR\mlver.xml
+  Delete $INSTDIR\mlverchs.xml
+  Delete $INSTDIR\config.ini
+  Delete $INSTDIR\ad.dat
+  Delete $INSTDIR\URLHisty.bin
+  Delete $INSTDIR\RegGuide.txt
+  Delete $INSTDIR\RegGuidechs.txt
+  Delete $INSTDIR\log.txt
+  Delete $INSTDIR\TempTxtLyrics.txt
+  Delete $INSTDIR\FontColor.the
+  Delete $INSTDIR\FloatingLyr.the
+  Delete $INSTDIR\Install.ini
+  Delete $INSTDIR\mlverchs.xml
+  Delete $INSTDIR\mlver.xml
+  Delete $INSTDIR\log.txt_3.txt
+  Delete $INSTDIR\log_3.txt
+  Delete $INSTDIR\db*.db
+  Delete $INSTDIR\PluginJetaudio.exe
+  Delete $INSTDIR\PluginHMM.exe
+  Delete $INSTDIR\PluginAP.exe
+
+  ; MUST REMOVE UNINSTALLER, too
+  Delete $INSTDIR\uninst-ml.exe
+  goto EndRemoveAllFiles
+
+  RemoveAllFiles:
+  SetShellVarContext current
+  Delete /REBOOTOK "$APPDATA\Minilyrics\*.*"
+  RMDir /REBOOTOK "$APPDATA\Minilyrics"
+  Delete "$INSTDIR\*.*"
+  SetShellVarContext all
+  EndRemoveAllFiles:
+
+  Delete $INSTDIR\lang\*.*
+  RMDir $INSTDIR\lang
+  Delete "$INSTDIR\Skins\Fantasy\*.*"
+  Delete "$INSTDIR\Skins\Fantasy (Transparent)\*.*"
+  Delete "$INSTDIR\Skins\iTunes Mode\*.*"
+  Delete "$INSTDIR\Skins\Aimp2\*.*"
+  Delete "$INSTDIR\Skins\Modern\*.*"
+  Delete "$INSTDIR\Skins\base\*.*"
+  Delete "$INSTDIR\Skins\Plain\*.*"
+  Delete "$INSTDIR\Skins\Have Nothing On\*.*"
+  Delete "$INSTDIR\Skins\Windows\*.*"
+  Delete "$INSTDIR\Skins\WindowsXP\*.*"
+  Delete "$INSTDIR\Skins\WindowsXP2\*.*"
+  Delete "$INSTDIR\Skins\TCPort\*.*"
+  Delete "$INSTDIR\Skins\TCPort2\*.*"
+  Delete "$INSTDIR\Skins\iTunes6\*.*"
+  Delete "$INSTDIR\Skins\iTunes_5\*.*"
+  Delete "$INSTDIR\Skins\Quintessential Player\*.*"
+  Delete "$INSTDIR\Skins\RealPlayer\*.*"
+  Delete "$INSTDIR\Skins\WMP10\*.*"
+  Delete "$INSTDIR\Skins\WMP11\*.*"
+  Delete "$INSTDIR\Skins\*.*"
+  Delete "$INSTDIR\ml-gen-embedded-skin\*.*"
+  Delete "$INSTDIR\ml-winamp2-skin\*.*"
+  Delete "$INSTDIR\ml-winamp5-skin\*.*"
+  Delete "$INSTDIR\ad\*.*"
+
+  ; remove shortcuts, if any.
+  StrCpy $R0 $(un.MLDir)
+  Delete "$SMPROGRAMS\$R0\*.*"
+
+  StrCpy $R0 $(un.MLStart)
+  Delete "$DESKTOP\$R0.lnk"
+  Delete "$QUICKLAUNCH\$R0.lnk"
+  Delete "$DESKTOP\MiniLyrics for JetAudio.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for JetAudio.lnk"
+  Delete "$DESKTOP\MiniLyrics for AlbumPlayer.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for AlbumPlayer.lnk"
+  Delete "$DESKTOP\MiniLyrics for Helium Music Manager.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for Helium Music Manager.lnk"
+
+  ; remove directories used.
+;  RMDir "$SMPROGRAMS\迷你歌词"
+;  RMDir "$SMPROGRAMS\MiniLyrics"
+  StrCpy $R0 $(un.MLDir)
+  RMDir "$INSTDIR\Skins\Fantasy"
+  RMDir "$INSTDIR\Skins\Fantasy (Transparent)"
+  RMDir "$INSTDIR\Skins\iTunes Mode"
+  RMDir "$SMPROGRAMS\$R0"
+  RMDir "$INSTDIR\Skins\Aimp2"
+  RMDir "$INSTDIR\Skins\Modern"
+  RMDir "$INSTDIR\Skins\base"
+  RMDir "$INSTDIR\Skins\Plain"
+  RMDir "$INSTDIR\Skins\Fantasy"
+  RMDir "$INSTDIR\Skins\Fantasy (Transparent)"
+  RMDir "$INSTDIR\Skins\Have Nothing On"
+  RMDir "$INSTDIR\Skins\Windows"
+  RMDir "$INSTDIR\Skins\WindowsXP"
+  RMDir "$INSTDIR\Skins\WindowsXP2"
+  RMDir "$INSTDIR\Skins\TCPort"
+  RMDir "$INSTDIR\Skins\TCPort2"
+  RMDir "$INSTDIR\Skins\Quintessential Player"
+  RMDir "$INSTDIR\Skins\RealPlayer"
+  RMDir "$INSTDIR\Skins\WMP10"
+  RMDir "$INSTDIR\Skins\WMP11"
+  RMDir "$INSTDIR\Skins\iTunes6"
+  RMDir "$INSTDIR\Skins\iTunes_5"
+  RMDir "$INSTDIR\ml-winamp2-skin"
+  RMDir "$INSTDIR\ml-winamp5-skin"
+  RMDir "$INSTDIR\Skins"
+  RMDir "$INSTDIR\ml-gen-embedded-skin"
+  RMDir "$INSTDIR\ad"
+  RMDir "$INSTDIR"
+SectionEnd
+
+Function GetMinilyricsInstPath
+  Push $0
+  Push $1
+  Push $2
+  ReadRegStr $0 HKLM \
+     "Software\Microsoft\Windows\CurrentVersion\Uninstall\Minilyrics" \ 
+     "UninstallString"
+  StrCmp $0 "" fin
+
+    StrCpy $1 $0 1 0 ; get firstchar
+    StrCmp $1 '"' "" getparent 
+      ; if first char is ", let's remove "'s first.
+      StrCpy $0 $0 "" 1
+      StrCpy $1 0
+      rqloop:
+        StrCpy $2 $0 1 $1
+        StrCmp $2 '"' rqdone
+        StrCmp $2 "" rqdone
+        IntOp $1 $1 + 1
+        Goto rqloop
+      rqdone:
+      StrCpy $0 $0 $1
+    getparent:
+    ; the uninstall string goes to an EXE, let's get the directory.
+    StrCpy $1 -1
+    gploop:
+      StrCpy $2 $0 1 $1
+      StrCmp $2 "" gpexit
+      StrCmp $2 "\" gpexit
+      IntOp $1 $1 - 1
+      Goto gploop
+    gpexit:
+    StrCpy $0 $0 $1
+
+;    StrCmp $0 "" fin
+;    IfFileExists $0\winamp.exe fin
+;      StrCpy $0 ""
+  fin:
+  Pop $2
+  Pop $1
+  Exch $0
+FunctionEnd
+
+;--------------------------------
+;Installer Functions
+
+Function .onInit
+
+;  !insertmacro MUI_LANGDLL_DISPLAY
+
+  ;Extract InstallOptions files
+  InitPluginsDir
+  ;!insertmacro MUI_INSTALLOPTIONS_EXTRACT "Installopt.dll"
+  ;!insertmacro MUI_INSTALLOPTIONS_EXTRACT "instopt.ini"
+  File "/oname=$PLUGINSDIR\Installopt.dll" "Installopt.dll"
+  File "/oname=$PLUGINSDIR\instopt.ini" "instopt.ini"
+
+
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "LangId" $LANGUAGE
+
+  Call GetMinilyricsInstPath
+  Pop $0
+  StrCmp $0 "" J_skip
+  StrCpy $INSTDIR $0
+J_skip:
+
+FunctionEnd
+
+
+Function SetCustom
+
+  !insertmacro MUI_HEADER_TEXT "Select Players" "Please select players that you want MiniLyrics to support."
+
+  ;Display the InstallOptions dialog
+  
+	;Push ${TEMP1}
+	Push "$PLUGINSDIR\InstOpt.ini"
+    CallInstDLL "$PLUGINSDIR\Installopt.dll" dialog
+    Pop ${TEMP1}
+
+  Pop ${TEMP1}
+
+FunctionEnd
+
+Function CustomCreateShortCuts
+
+  !insertmacro MUI_HEADER_TEXT "Shortcuts and settings" "Create shortcuts and settings."
+
+  ;Display the InstallOptions dialog
+
+	;Push ${TEMP1}
+	Push "$PLUGINSDIR\InstOpt.ini"
+    CallInstDLL "$PLUGINSDIR\Installopt.dll" dialogShortcutsCfg
+    Pop ${TEMP1}
+
+  Pop ${TEMP1}
+
+FunctionEnd
+
+Function .onSelChange
+FunctionEnd
+
+Function .onVerifyInstDir
+FunctionEnd
+
+Function .onInstSuccess
+  ;MessageBox MB_OK "To run MiniLyrics, please launch your favorite media player, MiniLyrics will start automatically."
+  ;MessageBox MB_OK $(base.FinishedInstMsg)
+FunctionEnd
+
+;--------------------------------
+;Descriptions
+
+!insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecBasic} $(DESC_SecBasic)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecSkins} $(DESC_SecSkins)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecUninst} $(DESC_SecUninst)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecShortcut} $(DESC_SecShortcut)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecAvs} $(DESC_SecAvs)
+!insertmacro MUI_FUNCTION_DESCRIPTION_END
+
+;--------------------------------
+;Uninstaller Functions
+
+Function un.onInit
+
+  !insertmacro MUI_UNGETLANGUAGE
+  
+FunctionEnd
+
+ChangeUI all "${NSISDIR}\Contrib\UIs\modern-big.exe"
