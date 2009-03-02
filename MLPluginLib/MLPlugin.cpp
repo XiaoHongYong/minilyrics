@@ -364,7 +364,7 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 	g_PlayerEntry.funPlayerService = PlayerImpService;
 
 	GetProgramPath(szPluginIni, g_hInstance);
-	strcat(szPluginIni, "MLPlugin.ini");
+	strcat_safe(szPluginIni, CountOf(szPluginIni), "MLPlugin.ini");
 
 	bNoPrompt = GetPrivateProfileIntA("MiniLyrics", "NoPrompt", FALSE, szPluginIni);
 
@@ -376,11 +376,11 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 	//
 	if (!IsWin2kOrLater())
 	{
-		strcpy(szMiniLyricsDll, szWorkingFolder);
-		strcat(szMiniLyricsDll, "UnicoWs.dll");
+		strcpy_safe(szMiniLyricsDll, CountOf(szMiniLyricsDll), szWorkingFolder);
+		strcat_safe(szMiniLyricsDll, CountOf(szMiniLyricsDll), "UnicoWs.dll");
 		if (!IsFileExist(szMiniLyricsDll))
 		{
-			strcpy(szMsg, "Can't find UnicoWs.dll, Please reinstall MiniLyrics!");
+			strcpy_safe(szMsg, CountOf(szMsg), "Can't find UnicoWs.dll, Please reinstall MiniLyrics!");
 			goto INIT_FAILED;
 		}
 
@@ -392,8 +392,8 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 		}
 	}
 
-	strcpy(szMiniLyricsDll, szWorkingFolder);
-	strcat(szMiniLyricsDll, "MiniLyrics.dll");
+	strcpy_safe(szMiniLyricsDll, CountOf(szMiniLyricsDll), szWorkingFolder);
+	strcat_safe(szMiniLyricsDll, CountOf(szMiniLyricsDll), "MiniLyrics.dll");
 	if (!IsFileExist(szMiniLyricsDll))
 	{
 		// Is MiniLyrics in the same drive of Player?
@@ -401,10 +401,9 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 		if (!IsFileExist(szMiniLyricsDll))
 		{
 			// Is MiniLyrics in Plugin directory?
-			strcpy(szMiniLyricsDll, "MiniLyrics.dll");
-			if (!IsFileExist(szMiniLyricsDll))
+			if (!IsFileExist("MiniLyrics.dll"))
 			{
-				strcpy(szMsg, "Can't find MiniLyrics.dll, Please reinstall MiniLyrics!");
+				strcpy_safe(szMsg, CountOf(szMsg), "Can't find MiniLyrics.dll, Please reinstall MiniLyrics!");
 				goto INIT_FAILED;
 			}
 		}
@@ -432,7 +431,7 @@ BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlag
 	}
 	else
 	{
-		strcpy(szMsg, "Get Minilyrics.dll entry point FAILED!");
+		strcpy_safe(szMsg, CountOf(szMsg), "Get Minilyrics.dll entry point FAILED!");
 		goto INIT_FAILED;
 	}
 

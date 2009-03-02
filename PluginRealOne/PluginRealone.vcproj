@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="PluginRealone"
 	ProjectGUID="{F58C7E94-EAF5-4F2E-98EF-A808D7A44890}"
+	RootNamespace="PluginRealone"
 	>
 	<Platforms>
 		<Platform
@@ -52,7 +53,6 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\../output/PluginRealone/Debug/PluginRealone.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -76,7 +76,7 @@
 				ModuleDefinitionFile=".\MLRealPlugin.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\../output/PluginRealone/Debug/PluginRealone.pdb"
-				ImportLibrary=".\../output/PluginRealone/Debug/PluginRealone.lib"
+				ImportLibrary=""
 				TargetMachine="1"
 			/>
 			<Tool
@@ -146,7 +146,6 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\../output/PluginRealone/Release/PluginRealone.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -167,8 +166,7 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\MLRealPlugin.def"
-				ProgramDatabaseFile=".\../output/PluginRealone/Release/PluginRealone.pdb"
-				ImportLibrary=".\../output/PluginRealone/Release/PluginRealone.lib"
+				ImportLibrary=""
 				TargetMachine="1"
 			/>
 			<Tool

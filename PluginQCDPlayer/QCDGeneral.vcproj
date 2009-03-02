@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="QCDGeneral"
 	ProjectGUID="{C27C33E9-1706-49CB-8CD2-90962310596E}"
+	RootNamespace="QCDGeneral"
 	>
 	<Platforms>
 		<Platform
@@ -15,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\../../Output/QCDGeneral/Debug"
-			IntermediateDirectory=".\../../Output/QCDGeneral/Debug"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -52,9 +53,6 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				PrecompiledHeaderFile=".\../../Output/QCDGeneral/Debug/QCDGeneral.pch"
-				AssemblerListingLocation=".\../../Output/QCDGeneral/Debug/"
-				ObjectFile=".\../../Output/QCDGeneral/Debug/"
-				ProgramDataBaseFileName=".\../../Output/QCDGeneral/Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -75,8 +73,6 @@
 				OutputFile="C:\Program Files\Quintessential Player\Plugins/QCDMinilyrics.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\../../Output/QCDGeneral/Debug/QCDMinilyrics.pdb"
 				ImportLibrary=".\../../Output/QCDGeneral/Debug/QCDMinilyrics.lib"
 				TargetMachine="1"
 			/>
@@ -109,8 +105,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\../../Output/QCDGeneral/Release"
-			IntermediateDirectory=".\../../Output/QCDGeneral/Release"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -147,9 +143,6 @@
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				PrecompiledHeaderFile=".\../../Output/QCDGeneral/Release/QCDGeneral.pch"
-				AssemblerListingLocation=".\../../Output/QCDGeneral/Release/"
-				ObjectFile=".\../../Output/QCDGeneral/Release/"
-				ProgramDataBaseFileName=".\../../Output/QCDGeneral/Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>

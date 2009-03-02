@@ -24,6 +24,37 @@
 extern "C" {
 #endif
 
+#if (_MSC_VER >= 1300) && !(defined(MIDL_PASS) || defined(RC_INVOKED))
+#define POINTER_64 __ptr64
+#else
+#define POINTER_64
+#endif
+
+#if !defined(_W64)
+#if !defined(__midl) && (defined(_X86_) || defined(_M_IX86)) && _MSC_VER >= 1300
+#define _W64 __w64
+#else
+#define _W64
+#endif
+#endif
+
+#if defined(_WIN64)
+	typedef __int64 INT_PTR, *PINT_PTR;
+	typedef unsigned __int64 UINT_PTR, *PUINT_PTR;
+
+	typedef __int64 LONG_PTR, *PLONG_PTR;
+	typedef unsigned __int64 ULONG_PTR, *PULONG_PTR;
+
+#define __int3264   __int64
+
+#else
+	typedef _W64 long LONG_PTR, *PLONG_PTR;
+	typedef _W64 unsigned long ULONG_PTR, *PULONG_PTR;
+
+#define __int3264   __int32
+
+#endif
+
 /*
  * The following types were defined in pntypes.h and so are intentionally
  * not included in this file. They are left here for documentation purposes.
@@ -155,6 +186,9 @@ typedef __int64 INT64, *PINT64;
 typedef unsigned __int64 ULONG64, *PULONG64;
 typedef unsigned __int64 DWORD64, *PDWORD64;
 typedef unsigned __int64 UINT64, *PUINT64;
+
+typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
+typedef _W64 unsigned long HANDLE_PTR;
 
 #ifdef __cplusplus
 }

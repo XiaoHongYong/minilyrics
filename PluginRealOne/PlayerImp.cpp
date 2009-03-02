@@ -1,3 +1,10 @@
+
+#define STRICT
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0400
+#endif
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+
 #include "pntypes.h" 
 #include "pncom.h"     /* IUnknown */
 #include "rmaerror.h"  /* IRMAErrorMessages */

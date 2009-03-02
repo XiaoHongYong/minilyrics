@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="PluginWinamp5"
 	ProjectGUID="{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}"
+	RootNamespace="PluginWinamp5"
 	>
 	<Platforms>
 		<Platform
@@ -143,7 +144,6 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\../../output/PluginWinamp5/Release/PluginWinamp5.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="3"
@@ -165,11 +165,9 @@
 				OutputFile="..\bin\gen_MiniLyrics.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ProgramDatabaseFile=".\../../output/PluginWinamp5/Release/gen_MiniLyrics.pdb"
-				GenerateMapFile="true"
-				MapFileName="../bin/gen_MiniLyrics.map"
+				GenerateMapFile="false"
 				SubSystem="2"
-				ImportLibrary=".\../../output/PluginWinamp5/Release/gen_MiniLyrics.lib"
+				ImportLibrary=""
 				TargetMachine="1"
 			/>
 			<Tool

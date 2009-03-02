@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="PluginWMPVis"
 	ProjectGUID="{B60236E3-8E10-485F-9C6E-CC58B097E3DF}"
+	RootNamespace="PluginWMPVis"
 	Keyword="AtlProj"
 	>
 	<Platforms>
@@ -16,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\../../Output/PlugWMPVis/Debug"
-			IntermediateDirectory=".\../../Output/PlugWMPVis/Debug"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -55,12 +56,8 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../Output/PlugWMPVis/Debug/PluginWMPVis.pch"
-				AssemblerListingLocation=".\../../Output/PlugWMPVis/Debug/"
-				ObjectFile=".\../../Output/PlugWMPVis/Debug/"
-				ProgramDataBaseFileName=".\../../Output/PlugWMPVis/Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -118,8 +115,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\../../Output/PlugWMPVis/Release"
-			IntermediateDirectory=".\../../Output/PlugWMPVis/Release"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -158,12 +155,8 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../Output/PlugWMPVis/Release/PluginWMPVis.pch"
-				AssemblerListingLocation=".\../../Output/PlugWMPVis/Release/"
-				ObjectFile=".\../../Output/PlugWMPVis/Release/"
-				ProgramDataBaseFileName=".\../../Output/PlugWMPVis/Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -364,7 +357,8 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						PreprocessorDefinitions=""
-						UsePrecompiledHeader="1"
+						UsePrecompiledHeader="0"
+						PrecompiledHeaderThrough=""
 					/>
 				</FileConfiguration>
 				<FileConfiguration
@@ -373,7 +367,8 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						PreprocessorDefinitions=""
-						UsePrecompiledHeader="1"
+						UsePrecompiledHeader="0"
+						PrecompiledHeaderThrough=""
 					/>
 				</FileConfiguration>
 			</File>
