@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPluginLib", "..\MLPluginLib\MLPluginLib.vcproj", "{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginWinamp5", "PluginWinamp5.vcproj", "{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F} = {C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Debug|Win32.Build.0 = Debug|Win32
+		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Release|Win32.ActiveCfg = Release|Win32
+		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Release|Win32.Build.0 = Release|Win32
+		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Debug|Win32.Build.0 = Debug|Win32
+		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Release|Win32.ActiveCfg = Release|Win32
+		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

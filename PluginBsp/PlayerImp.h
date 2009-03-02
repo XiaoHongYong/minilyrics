@@ -32,9 +32,6 @@ public:
 
 	//	BOOL GetCurSong(LPTSTR szTitle, int nSizeTitle, LPTSTR szArtist, int nSizeArtist);
 	int GetFullTitle(char * lpszBuffer, int nBufSize);
-	int GetTitle(char * lpszBuffer, int nBufSize);
-	int GetArtist(char * lpszBuffer, int nBufSize);
-	int GetAlbum(char * lpszBuffer, int nBufSize);
 	int GetSourceMedia(char * lpszSourceMedia, int nBufSize);
 
 	DWORD GetMediaLength();
