@@ -2,6 +2,8 @@
 
 #pragma warning (disable: 4996)
 
+#define _WIN32_WINNT  0x0500
+
 #include <Windows.h>
 #include <vlc/libvlc_structures.h>
 #include <vlc/libvlc_events.h>

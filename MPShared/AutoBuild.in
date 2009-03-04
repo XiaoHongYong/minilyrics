@@ -4,7 +4,7 @@
 // Use SVN revision number as build number.
 // SubWCRev.exe . AutoBuild.in AutoBuild.h
 
-#define BUILD_NUM $WCREV$
+#define AUTO_BUILD_NUM $WCREV$
 
 
 #endif //__AUTOBUILD_H__

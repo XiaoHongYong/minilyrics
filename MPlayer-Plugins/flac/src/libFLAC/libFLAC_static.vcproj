@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="..\..\obj\debug\lib"
-			IntermediateDirectory="Debug_static"
+			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -62,7 +62,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\obj\debug\lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -82,8 +81,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="..\..\obj\release\lib"
-			IntermediateDirectory="Release_static"
+			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			>
 			<Tool
@@ -129,7 +128,6 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="..\..\obj\release\lib\$(ProjectName).lib"
 			/>
 			<Tool
 				Name="VCALinkTool"
@@ -157,11 +155,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\include\private\all.h"
+				RelativePath=".\include\protected\all.h"
 				>
 			</File>
 			<File
-				RelativePath=".\include\protected\all.h"
+				RelativePath=".\include\private\all.h"
 				>
 			</File>
 			<File

@@ -82,7 +82,7 @@ void CMPSkinMainWndBase::OnTimer(UINT nIDEvent)
 
 		//
 		// 检查是否过期
-		CVersion		verCur(ML_MAJOR_VERSION, ML_MINOR_VERSION, ML_BUILD_NUMBER);
+		CVersion		verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
 		CVersion		verObs;
 		verObs.From(g_Profile.GetProfileString(_T("ObsoleteVersion"), _T("1.0.0")));
 		if (verCur <= verObs)

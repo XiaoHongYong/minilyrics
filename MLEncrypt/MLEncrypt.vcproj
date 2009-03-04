@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="MLEncrypt"
 	ProjectGUID="{1CC6D8E8-2CE2-4843-A2FB-8D1E9DF33383}"
+	RootNamespace="MLEncrypt"
 	Keyword="MFCProj"
 	>
 	<Platforms>
@@ -16,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\../../output/MLEncrypt/Debug"
-			IntermediateDirectory=".\../../output/MLEncrypt/Debug"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="1"
@@ -55,9 +56,6 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile=".\../../output/MLEncrypt/Debug/MLEncrypt.pch"
-				AssemblerListingLocation=".\../../output/MLEncrypt/Debug/"
-				ObjectFile=".\../../output/MLEncrypt/Debug/"
-				ProgramDataBaseFileName=".\../../output/MLEncrypt/Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -112,8 +110,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="1"
@@ -152,9 +150,6 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile=".\Release/MLEncrypt.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -171,7 +166,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/MLEncrypt.exe"
+				OutputFile="../bin/MLEncrypt.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile=".\Release/MLEncrypt.pdb"
@@ -207,8 +202,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="1"
@@ -246,9 +241,6 @@
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
 				PrecompiledHeaderFile=".\../../output/MLEncrypt/Debug/MLEncrypt.pch"
-				AssemblerListingLocation=".\../../output/MLEncrypt/Debug/"
-				ObjectFile=".\../../output/MLEncrypt/Debug/"
-				ProgramDataBaseFileName=".\../../output/MLEncrypt/Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"

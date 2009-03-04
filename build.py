@@ -39,18 +39,34 @@ def GetFeildIntValueInFile(fileName, fieldPattern):
 	if m is None:
 		ErrExit(r"Can't find pattern " + fieldName + " in file: " + fileName)
 	return int(m.groups()[0])
+	
+def VersionStr(*args):
+	listStr = []
+	for i in args:
+		listStr.append(str(i))
+	return ".".join(listStr)
 
 
 # Update SVN build number
 ExecuteOnErrQuit("SubWCRev.exe . MPShared\\AutoBuild.in MPShared\\AutoBuild.h")
 
 # Read Version info and build number
-MLMajorVer = GetFeildIntValueInFile("MPShared\\MLVersion.cpp", r"ML_MAJOR_VERSION\s*=\s*(\d+)")
-MLMinorVer = GetFeildIntValueInFile("MPShared\\MLVersion.cpp", "ML_MINOR_VERSION\s*=\s*(\d+)")
-BuildNum = GetFeildIntValueInFile("MPShared\\AutoBuild.h", "#define\s*BUILD_NUM\s*(\d+)")
+MLMajorVer = GetFeildIntValueInFile("MPShared\\MLVersion.cpp", r"#define\s*ML_MAJOR_VERSION\s*(\d+)")
+MLMinorVer = GetFeildIntValueInFile("MPShared\\MLVersion.cpp", "#define\s*ML_MINOR_VERSION\s*(\d+)")
+ZPMajorVer = GetFeildIntValueInFile("MPShared\\MLVersion.cpp", r"#define\s*ZP_MAJOR_VERSION\s*(\d+)")
+ZPMinorVer = GetFeildIntValueInFile("MPShared\\MLVersion.cpp", "#define\s*ZP_MINOR_VERSION\s*(\d+)")
+
+BuildNum = GetFeildIntValueInFile("MPShared\\AutoBuild.h", "#define\s*AUTO_BUILD_NUM\s*(\d+)")
 
 PackReleaseDir = "..\\Release\\" + str(BuildNum) + "\\"
+if not os.access("..\\Release\\", 0):
+	os.mkdir("..\\Release\\")
+if not os.access(PackReleaseDir, 0):
+	os.mkdir(PackReleaseDir)
+
 print(r"Release dir: " + PackReleaseDir)
+print(r"MiniLyrics Version: " + VersionStr(MLMajorVer, MLMinorVer, BuildNum))
+print(r"ZikiPlayer Version: " + VersionStr(ZPMajorVer, ZPMinorVer, BuildNum))
 
 #
 # Build solution
@@ -76,47 +92,56 @@ if TargetML == 0 and TargetZP == 0:
 # Build MiniLyrics
 if TargetML:
 	MLSolutions = [
-		[ " ZikiPlayer.sln", "Unicode Release|Win32", " /project MiniLyrics6" ],
-		[ " PluginAP\\PluginAP.sln", "Release|Win32", "" ],
-		[ " PluginBsp\\PluginBsp.sln", "Release|Win32", "" ],
-		[ " PluginHMM\\PluginHMM.sln", "Release|Win32", "" ],
-		[ " pluginiTunes\\pluginiTunes.sln", "Release|Win32", "" ],
-		[ " PluginJetaudio\\PluginJetaudio.sln", "Release|Win32", "" ],
-		[ " PluginMJ\\PluginMJ.sln", "Release|Win32", "" ],
-		[ " PluginQCDPlayer\\PluginQCDPlayer.sln", "Release|Win32", "" ],
-		[ " PluginRealOne\\PluginRealOne.sln", "Release|Win32", "" ],
-		[ " PluginVLC\\PluginVLC.sln", "Release|Win32", "" ],
-		[ " PluginWinamp5\\PluginWinamp5.sln", "Release|Win32", "" ],
-		[ " PluginWMP\\PluginWMP.sln", "Release|Win32", "" ],
-		[ " PluginWMPVis\\PluginWMPVis.sln", "Release|Win32", "" ],
-		[ " PluginXMP\\PluginXMP.sln", "Release|Win32", "" ],
-		[ " PluginYme\\PluginYme.sln", "Release|Win32", "" ],
-		[ " MLInstallOptions\\io.sln", "Release|Win32", "" ]
+		[ " ZikiPlayer.sln", "\"Unicode Release|Win32\" /project MiniLyrics6" ],
+		[ " PluginAP\\PluginAP.sln", "\"Release|Win32\"" ],
+		[ " PluginBsp\\PluginBsp.sln", "\"Release|Win32\"" ],
+		[ " PluginHMM\\PluginHMM.sln", "\"Release|Win32\"" ],
+		[ " pluginiTunes\\pluginiTunes.sln", "\"Release|Win32\"" ],
+		[ " PluginJetaudio\\PluginJetaudio.sln", "\"Release|Win32\"" ],
+		[ " PluginMJ\\PluginMJ.sln", "\"Release|Win32\"" ],
+		[ " PluginQCDPlayer\\QCDGeneral.sln", "\"Release|Win32\"" ],
+		[ " PluginRealOne\\PluginRealOne.sln", "\"Release|Win32\"" ],
+		[ " PluginVLC\\PluginVLC.sln", "\"Release|Win32\"" ],
+		[ " PluginWinamp5\\PluginWinamp5.sln", "\"Release|Win32\"" ],
+		[ " PluginWMP\\PluginWMP.sln", "\"Release|Win32\"" ],
+		[ " PluginWMPVis\\PluginWMPVis.sln", "\"Release|Win32\"" ],
+		[ " PluginXMP\\PluginXMP.sln", "\"Release|Win32\"" ],
+		[ " MLEncrypt\\MLEncrypt.sln", "\"Release|Win32\"" ],
+		#[ " PluginYme\\PluginYme.sln", "\"Release|Win32\"" ],
+		#[ " MLInstallOptions\\io.sln", "\"Release|Win32\"" ]
 	]
 
 	for solution in MLSolutions:
-		cmd = DevEnvExe + solution[0] + " " + BuildAction + " \"" + solution[1] + "\"" + solution[2]
+		cmd = DevEnvExe + solution[0] + " " + BuildAction + " " + solution[1]
 		#ExecuteOnErrQuit(cmd)
 
 
 # Build ZikiPlayer
 if TargetZP:
 	ZPSolutions = [
-		[ " ZikiPlayer.sln", "Unicode Release|Win32", " /project MPlayer" ],
+		[ " ZikiPlayer.sln", "\"Unicode Release|Win32\" /project MPlayer" ],
+		[ " MPlayer-Plugins\\MDAPE\\MDAPE.sln", "\"Release|Win32\"" ],
+		[ " MPlayer-Plugins\\MDFlac\\MDFlac.sln", "\"Release|Win32\"" ],
+		[ " MPlayer-Plugins\\MDMP4\\MDMP4.sln", "\"Release|Win32\"" ],
+		[ " MPlayer-Plugins\\MDVorbis\\MDVorbis.sln", "\"Release|Win32\"" ],
+		[ " MPlayer-Plugins\\MDWMA2\\MDWMA.sln", "\"Release|Win32\"" ]
 	]
 
 	for solution in ZPSolutions:
-		cmd = DevEnvExe + solution[0] + " " + BuildAction + " \"" + solution[1] + "\"" + solution[2]
+		cmd = DevEnvExe + solution[0] + " " + BuildAction + " " + solution[1]
+		print(cmd)
 		#ExecuteOnErrQuit(cmd)
-
 
 
 
 #
 # Create installation pack
 #
-shutil.copy("bin\\MiniLyrics.dll", "Install_ML\\Share\\MiniLyrics.dll")
 
+#call mlencrypt to set private encrypt signature.
+#ExecuteOnErrQuit(r"bin\MLEncrypt.exe MiniLyrics.dll search.crintsoft.com www.minilyrics.com")
+
+shutil.copy("bin\MiniLyrics.dll", "Install_ML\Share\MiniLyrics.dll")
 
 #
 # Copy Zipped source code and .pdb, installation pack to a Release dir.
@@ -147,9 +172,9 @@ print(ZipPluginCmd)
 
 
 try:
-	shutil.copy("bin\\MiniLyrics.pdb", PackReleaseDir)
-	shutil.copy("Inst-ML\\MiniLyrics.exe", PackReleaseDir)
-	shutil.move("src.7z", PackReleaseDir)
-	shutil.move("MPlayer-Plugins.7z", PackReleaseDir)
+	#shutil.copy(r"bin\MiniLyrics.pdb", PackReleaseDir)
+	shutil.copy(r"Install-ML\MiniLyrics.exe", PackReleaseDir)
+	shutil.move(r"src.7z", PackReleaseDir)
+	shutil.move(r"MPlayer-Plugins.7z", PackReleaseDir)
 except (IOError, os.error) as why:
 	ErrExit(str(why))

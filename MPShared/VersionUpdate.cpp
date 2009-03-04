@@ -206,7 +206,7 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
 	TCHAR		szCheckVerTime[256];
 	CSimpleXML	xml;
 	TCHAR		szTemp[MAX_PATH];
-	CVersion	verCur(ML_MAJOR_VERSION, ML_MINOR_VERSION, ML_BUILD_NUMBER);
+	CVersion	verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
 	time_t		lTime;
 	tm			*curtime;
 
