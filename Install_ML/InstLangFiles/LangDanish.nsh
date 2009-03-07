@@ -1,0 +1,17 @@
+
+  LangString DESC_SecBasic ${LANG_DANISH} "Basic installation for running MiniLyrics"
+  LangString DESC_SecSkins ${LANG_DANISH} "Multiple selectable Skin support"
+  LangString DESC_SecUninst ${LANG_DANISH} "Create uninstallation program"
+  LangString DESC_SecShortcut ${LANG_DANISH} "Create start menu"
+  LangString DESC_SecAvs ${LANG_DANISH} "Avs Support for winamp2 and winamp5"
+  LangString SecShortcut.MLDir ${LANG_DANISH} "MiniLyrics"
+  LangString SecShortcut.MLStart ${LANG_DANISH} "Restart MiniLyrics"
+  LangString SecShortcut.MLUninst ${LANG_DANISH} "Uninstall MiniLyrics"
+  LangString SecShortcut.MLReadme ${LANG_DANISH} "Readme"
+  LangString SecShortcut.MLHelp ${LANG_DANISH} "MiniLyrics Help"
+  LangString SecShortcut.MLSetupStr ${LANG_DANISH} "Setup MiniLyrics"
+  
+  LangString un.MLStart ${LANG_DANISH} "Restart MiniLyrics"
+  LangString un.MLDir ${LANG_DANISH} "MiniLyrics"
+  LangString un.MsgUnstMLRuning ${LANG_DANISH} "MiniLyrics is Running, please close your player, and running uninstall program again."
+  LangString un.MsgRemovelAll ${LANG_DANISH} "Remove All files in your MiniLyrics directory(Including some setting files)?"

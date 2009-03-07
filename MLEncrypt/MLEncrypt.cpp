@@ -1,77 +1,47 @@
-// MLEncrypt.cpp : Defines the class behaviors for the application.
-//
-
-#include "stdafx.h"
-#include "MLEncrypt.h"
-#include "MLEncryptDlg.h"
+#include "../base/mlstdafx.h"
+#include "../base/base.h"
 #include "../Utils/Utils.h"
 
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#undef THIS_FILE
-static char THIS_FILE[] = __FILE__;
-#endif
+#include "../MLLib/MLEncrypt.h"
 
-/////////////////////////////////////////////////////////////////////////////
-// CMLEncryptApp
 
-BEGIN_MESSAGE_MAP(CMLEncryptApp, CWinApp)
-	//{{AFX_MSG_MAP(CMLEncryptApp)
-		// NOTE - the ClassWizard will add and remove mapping macros here.
-		//    DO NOT EDIT what you see in these blocks of generated code!
-	//}}AFX_MSG
-	ON_COMMAND(ID_HELP, CWinApp::OnHelp)
-END_MESSAGE_MAP()
-
-/////////////////////////////////////////////////////////////////////////////
-// CMLEncryptApp construction
-
-CMLEncryptApp::CMLEncryptApp()
+int _tmain(int argc, _TCHAR* argv[])
 {
-	// TODO: add construction code here,
-	// Place all significant initialization in InitInstance
-}
+	stringex	strData;
 
-/////////////////////////////////////////////////////////////////////////////
-// The one and only CMLEncryptApp object
-
-CMLEncryptApp theApp;
-
-/////////////////////////////////////////////////////////////////////////////
-// CMLEncryptApp initialization
-
-BOOL CMLEncryptApp::InitInstance()
-{
-	AfxEnableControlContainer();
-
-	// Standard initialization
-	// If you are not using these features and wish to reduce the size
-	//  of your final executable, you should remove from the following
-	//  the specific initialization routines you do not need.
-
-	InitBaseFrameWork(AfxGetInstanceHandle(), _T("MLEncrypt"), _T("MLEncrypt.ini"), _T("MLEncrypt"));
-
-#ifdef _AFXDLL
-	Enable3dControls();			// Call this when using MFC in a shared DLL
-#else
-	Enable3dControlsStatic();	// Call this when linking to MFC statically
-#endif
-
-	CMLEncryptDlg dlg;
-	m_pMainWnd = &dlg;
-	int nResponse = dlg.DoModal();
-	if (nResponse == IDOK)
+	if (argc != 4)
 	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with OK
-	}
-	else if (nResponse == IDCANCEL)
-	{
-		// TODO: Place code here to handle when the dialog is
-		//  dismissed with Cancel
+		_tprintf(_T("Usage: %s MiniLyrics.dll search.crintsoft.com www.minilyrics.com\n"), argv[0]);
+		return 1;
 	}
 
-	// Since the dialog has been closed, return FALSE so that we exit the
-	//  application, rather than start the application's message pump.
-	return FALSE;
+	TCHAR		szFile[MAX_PATH];
+	tstring		strMsg;
+
+	GetModulePath(szFile, NULL);
+	_tcscat_safe(szFile, MAX_PATH, argv[1]);
+
+	stringex	strOrg1, strOrg2;
+
+	ConvertStr(argv[2], -1, strOrg1);
+	ConvertStr(argv[3], -1, strOrg2);
+
+	// encrypt
+	MLEncriptV2(szFile, strOrg1.c_str(), strOrg2.c_str(), strData, strMsg);
+
+	string			str1, str2;
+	MLDecriptV2(szFile, str1, str2);
+
+	// try to decrypt data.
+	if (strcmp(str1.c_str(), strOrg1.c_str()) == 0 &&
+		strcmp(str2.c_str(), strOrg2.c_str()) == 0)
+	{
+		_tprintf(_T("file: %s was encrypted sucessfully.\n"), argv[0]);
+		return 0;
+	}
+
+	_tprintf(strMsg.c_str());
+	_tprintf(_T("\n"));
+
+	return 1;
 }
