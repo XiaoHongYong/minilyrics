@@ -253,10 +253,10 @@ SectionIn 1 2
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
 
     SetOutPath ${TEMP1}Plugins
-    File forWa2\gen_MiniLyrics.dll
+    File ..\bin\gen_MiniLyrics.dll
 
     SetOutPath $INSTDIR\ml-winamp2-skin
-    File forWa2\ml-winamp2-skin\*.*
+    File Share\ml-winamp2-skin\*.*
 
   J_Winamp5End:
 
@@ -295,7 +295,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstRealOnePath" ${TEMP1}
 
     SetOutPath ${TEMP1}
-    File forRealOne\PluginRealone.dll
+    File ..\bin\PluginRealone.dll
     
     WriteINIStr ${TEMP1}MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_RealOneEnd:
@@ -309,7 +309,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQCDPath" ${TEMP1}
 
     SetOutPath ${TEMP1}Plugins
-    File forQCD\QCDMinilyrics.dll
+    File ..\bin\QCDMinilyrics.dll
 
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_QCDEnd:
@@ -323,7 +323,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQMPPath" ${TEMP1}
 
     SetOutPath ${TEMP1}Plugins
-    File forQCD\QCDMinilyrics.dll
+    File ..\bin\QCDMinilyrics.dll
 
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_QMPEnd:
@@ -337,24 +337,10 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstiTunesPath" ${TEMP1}
 
     SetOutPath ${TEMP1}Plug-ins
-    File foriTunes\iTunesMinilyrics.dll
+    File ..\bin\iTunesMinilyrics.dll
     
     WriteINIStr ${TEMP1}Plug-ins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_iTunesEnd:
-
-
-  ; musicmatch jukebox
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMM"
-  IntCmp ${TEMP1} 0 J_MMEnd J_MMEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMM" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMMPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMMPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}Plugins\Visual_wa
-    File forMM\MMMinilyrics.dll
-    
-    WriteINIStr ${TEMP1}Plugins\Visual_wa\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_MMEnd:
 
   ; MediaMonkey
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMediaMonkey"
@@ -364,7 +350,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMediaMonkeyPath" ${TEMP1}
 
     SetOutPath ${TEMP1}Plugins
-    File forWa2\gen_MiniLyrics.dll
+    File ..\bin\gen_MiniLyrics.dll
     
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "MediaMonkey"
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
@@ -378,7 +364,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstAIMPPath" ${TEMP1}
 
     SetOutPath ${TEMP1}Plugins
-    File forWa2\gen_MiniLyrics.dll
+    File ..\bin\gen_MiniLyrics.dll
     
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "AIMP2"
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
@@ -392,7 +378,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstKMPlayerPath" ${TEMP1}
 
     SetOutPath ${TEMP1}Plugins
-    File forWa2\gen_MiniLyrics.dll
+    File ..\bin\gen_MiniLyrics.dll
     
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "KMPlayer"
     WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
@@ -406,7 +392,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstBSPlayerPath" ${TEMP1}
 
     SetOutPath ${TEMP1}plugins
-    File forBsp\MLPluginBsp.dll
+    File ..\bin\MLPluginBsp.dll
 
     WriteINIStr ${TEMP1}plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_BSPlayerEnd:
@@ -417,8 +403,8 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstWMPlayer" ${TEMP1}
 
     SetOutPath $INSTDIR
-    File forwmp\WMPLyrics.dll
-    File forwmp\PluginWMPVis.dll
+    File ..\bin\WMPLyrics.dll
+    File ..\bin\PluginWMPVis.dll
 
     ; register dll
     RegDll $INSTDIR\WMPLyrics.dll
@@ -432,7 +418,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstYME" ${TEMP1}
 
     SetOutPath $INSTDIR
-    File forYME\PluginYme.dll
+    File foryme\PluginYme.dll
 
     ; register dll
     RegDll $INSTDIR\PluginYme.dll
@@ -444,7 +430,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMJ" ${TEMP1}
 
     SetOutPath $INSTDIR
-    File forMJ\PluginMJ.dll
+    File ..\bin\PluginMJ.dll
 
     ; register dll
     RegDll $INSTDIR\PluginMJ.dll
@@ -456,7 +442,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstJA" ${TEMP1}
 
     SetOutPath $INSTDIR
-    File forJetaudio\PluginJetaudio.exe
+    File ..\bin\PluginJetaudio.exe
   J_JAEnd:
 
   ; XMPlay
@@ -467,7 +453,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstXMPath" ${TEMP1}
 
     SetOutPath ${TEMP1}
-    File forxmp\xmp-ml.dll
+    File ..\bin\xmp-ml.dll
 
     WriteINIStr ${TEMP1}MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_XMEnd:
@@ -478,7 +464,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstAP" ${TEMP1}
 
     SetOutPath $INSTDIR
-    File forap\PluginAP.exe
+    File ..\bin\PluginAP.exe
   J_APEnd:
 
   ; VLC Media Player
@@ -489,7 +475,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstVLCPath" ${TEMP1}
 
     SetOutPath ${TEMP1}plugins
-    File forVLC\libminilyrics_plugin.dll
+    File ..\bin\libminilyrics_plugin.dll
 
     WriteINIStr ${TEMP1}plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_VLCEnd:
@@ -500,7 +486,7 @@ SectionIn 1 2
     WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstHMM" ${TEMP1}
 
     SetOutPath $INSTDIR
-    File forHMM\PluginHMM.exe
+    File ..\bin\PluginHMM.exe
   J_HMMEnd:
 
   ; Shortcuts of desktop and quick lanuch
@@ -697,13 +683,6 @@ Section "Uninstall"
     Delete /REBOOTOK ${TEMP1}iTunesMinilyrics.dll
     Delete ${TEMP1}MLPlugin.ini
   J_iTunes_UE:
-  
-  ; musicmatch jukebox
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstMMPath"
-  StrCmp ${TEMP1} "" J_MM_UE
-    Delete /REBOOTOK ${TEMP1}Plugins\Visual_wa\MMMinilyrics.dll
-    Delete ${TEMP1}Plugins\Visual_wa\MLPlugin.ini
-  J_MM_UE:
 
   ; MediaMonkey
   ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstMediaMonkeyPath"
