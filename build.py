@@ -108,7 +108,7 @@ if TargetML:
 		[ " PluginXMP\\PluginXMP.sln", "\"Release|Win32\"" ],
 		[ " MLEncrypt\\MLEncrypt.sln", "\"Release|Win32\"" ],
 		#[ " PluginYme\\PluginYme.sln", "\"Release|Win32\"" ],
-		#[ " MLInstallOptions\\io.sln", "\"Release|Win32\"" ]
+		[ " MLInstallOptions\\MLInstallOptions.sln", "\"Release|Win32\"" ]
 	]
 
 	for solution in MLSolutions:
@@ -139,8 +139,9 @@ if TargetZP:
 #
 
 #call mlencrypt to set private encrypt signature.
-ExecuteOnErrQuit(r"bin\MLEncrypt.exe MiniLyrics.dll search.crintsoft.com www.minilyrics.com")
+#ExecuteOnErrQuit(r"bin\MLEncrypt.exe MiniLyrics.dll search.crintsoft.com www.minilyrics.com")
 
+shutil.copy("bin\Installopt.dll", "Install_ML\Installopt.dll")
 shutil.copy("bin\MiniLyrics.dll", "Install_ML\Share\MiniLyrics.dll")
 
 # Create MLVersion.nsh

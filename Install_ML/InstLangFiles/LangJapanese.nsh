@@ -10,7 +10,22 @@
   LangString SecShortcut.MLReadme ${LANG_JAPANESE} "Readme"
   LangString SecShortcut.MLHelp ${LANG_JAPANESE} "MiniLyrics Help"
   LangString SecShortcut.MLSetupStr ${LANG_JAPANESE} "Setup MiniLyrics"
-  
+
+  LangString LS_ShortcutsSettings ${LANG_JAPANESE} "Shortcuts and settings"
+  LangString LS_ShortcutsSettingsDesc ${LANG_JAPANESE} "Create shortcuts and personal settings."
+
+  LangString LS_SelectPlayer ${LANG_JAPANESE} "Select Supporting Players"
+  LangString LS_SelectPlayerDesc ${LANG_JAPANESE} "Please select players that you want MiniLyrics to support."
+
+  LangString LS_PersonalSetting ${LANG_JAPANESE} "Save MiniLyrics settings in each user's personal folder"
+  LangString LS_ShortcutOnDesktop ${LANG_JAPANESE} "Create shortcut on desktop"
+  LangString LS_ShortcutOnQuickLannch ${LANG_JAPANESE} "Create shortcut on quick launch bar"
+  LangString LS_Support ${LANG_JAPANESE} "Support %s"
+  LangString LS_SelInstPath ${LANG_JAPANESE} "Please select %s's installation path"
+  LangString LS_SelInstPathWarning ${LANG_JAPANESE} "Please Choose the correct installation path of %s"
+  LangString LS_SelAtLeast1Player ${LANG_JAPANESE} "Please choose at least one player that you want MiniLyrics to support."
+  LangString LS_MorePlayerNextPage ${LANG_JAPANESE} "More players are listed in next page."
+
   LangString un.MLStart ${LANG_JAPANESE} "Restart MiniLyrics"
   LangString un.MLDir ${LANG_JAPANESE} "MiniLyrics"
   LangString un.MsgUnstMLRuning ${LANG_JAPANESE} "MiniLyrics is Running, please close your player, and running uninstall program again."

@@ -10,7 +10,22 @@
   LangString SecShortcut.MLReadme ${LANG_TRADCHINESE} "Readme"
   LangString SecShortcut.MLHelp ${LANG_TRADCHINESE} "MiniLyrics Help"
   LangString SecShortcut.MLSetupStr ${LANG_TRADCHINESE} "Setup MiniLyrics"
-  
+
+  LangString LS_ShortcutsSettings ${LANG_TRADCHINESE} "Shortcuts and settings"
+  LangString LS_ShortcutsSettingsDesc ${LANG_TRADCHINESE} "Create shortcuts and personal settings."
+
+  LangString LS_SelectPlayer ${LANG_TRADCHINESE} "Select Supporting Players"
+  LangString LS_SelectPlayerDesc ${LANG_TRADCHINESE} "Please select players that you want MiniLyrics to support."
+
+  LangString LS_PersonalSetting ${LANG_TRADCHINESE} "Save MiniLyrics settings in each user's personal folder"
+  LangString LS_ShortcutOnDesktop ${LANG_TRADCHINESE} "Create shortcut on desktop"
+  LangString LS_ShortcutOnQuickLannch ${LANG_TRADCHINESE} "Create shortcut on quick launch bar"
+  LangString LS_Support ${LANG_TRADCHINESE} "Support %s"
+  LangString LS_SelInstPath ${LANG_TRADCHINESE} "Please select %s's installation path"
+  LangString LS_SelInstPathWarning ${LANG_TRADCHINESE} "Please Choose the correct installation path of %s"
+  LangString LS_SelAtLeast1Player ${LANG_TRADCHINESE} "Please choose at least one player that you want MiniLyrics to support."
+  LangString LS_MorePlayerNextPage ${LANG_TRADCHINESE} "More players are listed in next page."
+
   LangString un.MLStart ${LANG_TRADCHINESE} "Restart MiniLyrics"
   LangString un.MLDir ${LANG_TRADCHINESE} "MiniLyrics"
   LangString un.MsgUnstMLRuning ${LANG_TRADCHINESE} "MiniLyrics is Running, please close your player, and running uninstall program again."

@@ -108,8 +108,21 @@
   LangString SecShortcut.MLReadme ${LANG_ENGLISH} "Readme"
   LangString SecShortcut.MLHelp ${LANG_ENGLISH} "MiniLyrics Help"
   LangString SecShortcut.MLSetupStr ${LANG_ENGLISH} "Setup MiniLyrics"
+
+  LangString LS_ShortcutsSettings ${LANG_ENGLISH} "Shortcuts and settings"
+  LangString LS_ShortcutsSettingsDesc ${LANG_ENGLISH} "Create shortcuts and personal settings."
+
   LangString LS_SelectPlayer ${LANG_ENGLISH} "Select Supporting Players"
   LangString LS_SelectPlayerDesc ${LANG_ENGLISH} "Please select players that you want MiniLyrics to support."
+
+  LangString LS_PersonalSetting ${LANG_ENGLISH} "Save MiniLyrics settings in each user's personal folder"
+  LangString LS_ShortcutOnDesktop ${LANG_ENGLISH} "Create shortcut on desktop"
+  LangString LS_ShortcutOnQuickLannch ${LANG_ENGLISH} "Create shortcut on quick launch bar"
+  LangString LS_Support ${LANG_ENGLISH} "Support %s"
+  LangString LS_SelInstPath ${LANG_ENGLISH} "Please select %s's installation path"
+  LangString LS_SelInstPathWarning ${LANG_ENGLISH} "Please Choose the correct installation path of %s"
+  LangString LS_SelAtLeast1Player ${LANG_ENGLISH} "Please choose at least one player that you want MiniLyrics to support."
+  LangString LS_MorePlayerNextPage ${LANG_ENGLISH} "More players are listed in next page."
 
   LangString un.MLStart ${LANG_ENGLISH} "Restart MiniLyrics"
   LangString un.MLDir ${LANG_ENGLISH} "MiniLyrics"
@@ -934,8 +947,14 @@ Function .onInit
   File "/oname=$PLUGINSDIR\Installopt.dll" "Installopt.dll"
   File "/oname=$PLUGINSDIR\instopt.ini" "instopt.ini"
 
-
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "LangId" $LANGUAGE
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Save MiniLyrics settings in each user's personal folder" $(LS_PersonalSetting)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Create shortcut on desktop" $(LS_ShortcutOnDesktop)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Create shortcut on quick launch bar" $(LS_ShortcutOnQuickLannch)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Support %s" $(LS_Support)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please select %s's installation path" $(LS_SelInstPath)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please Choose the correct installation path of %s" $(LS_SelInstPathWarning)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please choose at least one player that you want MiniLyrics to support." $(LS_SelAtLeast1Player)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "More players are listed in next page." $(LS_MorePlayerNextPage)
 
   Call GetMinilyricsInstPath
   Pop $0
@@ -963,7 +982,7 @@ FunctionEnd
 
 Function CustomCreateShortCuts
 
-  !insertmacro MUI_HEADER_TEXT "Shortcuts and settings" "Create shortcuts and settings."
+  !insertmacro MUI_HEADER_TEXT $(LS_ShortcutsSettings) $(LS_ShortcutsSettingsDesc)
 
   ;Display the InstallOptions dialog
 

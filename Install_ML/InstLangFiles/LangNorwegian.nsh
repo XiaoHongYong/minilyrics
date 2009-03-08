@@ -10,7 +10,22 @@
   LangString SecShortcut.MLReadme ${LANG_NORWEGIAN} "Readme"
   LangString SecShortcut.MLHelp ${LANG_NORWEGIAN} "MiniLyrics Help"
   LangString SecShortcut.MLSetupStr ${LANG_NORWEGIAN} "Setup MiniLyrics"
-  
+
+  LangString LS_ShortcutsSettings ${LANG_NORWEGIAN} "Shortcuts and settings"
+  LangString LS_ShortcutsSettingsDesc ${LANG_NORWEGIAN} "Create shortcuts and personal settings."
+
+  LangString LS_SelectPlayer ${LANG_NORWEGIAN} "Select Supporting Players"
+  LangString LS_SelectPlayerDesc ${LANG_NORWEGIAN} "Please select players that you want MiniLyrics to support."
+
+  LangString LS_PersonalSetting ${LANG_NORWEGIAN} "Save MiniLyrics settings in each user's personal folder"
+  LangString LS_ShortcutOnDesktop ${LANG_NORWEGIAN} "Create shortcut on desktop"
+  LangString LS_ShortcutOnQuickLannch ${LANG_NORWEGIAN} "Create shortcut on quick launch bar"
+  LangString LS_Support ${LANG_NORWEGIAN} "Support %s"
+  LangString LS_SelInstPath ${LANG_NORWEGIAN} "Please select %s's installation path"
+  LangString LS_SelInstPathWarning ${LANG_NORWEGIAN} "Please Choose the correct installation path of %s"
+  LangString LS_SelAtLeast1Player ${LANG_NORWEGIAN} "Please choose at least one player that you want MiniLyrics to support."
+  LangString LS_MorePlayerNextPage ${LANG_NORWEGIAN} "More players are listed in next page."
+
   LangString un.MLStart ${LANG_NORWEGIAN} "Restart MiniLyrics"
   LangString un.MLDir ${LANG_NORWEGIAN} "MiniLyrics"
   LangString un.MsgUnstMLRuning ${LANG_NORWEGIAN} "MiniLyrics is Running, please close your player, and running uninstall program again."
