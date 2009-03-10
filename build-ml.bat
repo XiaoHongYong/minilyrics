@@ -3,3 +3,4 @@ call "%VS80COMNTOOLS%\vsvars32.bat"
 
 c:\python30\python build.py MiniLyrics
 
+pause

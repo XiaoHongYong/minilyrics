@@ -155,11 +155,13 @@ if TargetZP:
 # Copy Zipped source code and .pdb, installation pack to a Release dir.
 #
 
-ZipExe = r'"C:\Program Files\7-Zip\7z.exe"'
+ZipExe = r"C:\Program Files\7-Zip\7z.exe"
 if not os.access(ZipExe, 0):
 	ZipExe = r"D:\Program Files\7-Zip\7z.exe"
 	if not os.access(ZipExe, 0):
 		ErrExit(r"Please install 7z at C:\Program Files\7-Zip\7z.exe.")
+
+ZipExe = '"' + ZipExe + '"'
 
 # Compress source code to src.7z
 ZipExcludeExt = [ "", "rar", "ncb", "svn", "aps", "opt", "plg", "user", "scc", 
@@ -184,7 +186,7 @@ print(ZipSrcCmd)
 # Compress ZikiPlayer plugin source code to MPlayer-Plugins.7z
 if TargetZP:
 	ZipIncludeExt = [ "", "cpp", "h", "vcproj", "sln", "c" ]
-	ZipOutFile = "MPlayer-Plugins.7z"
+	ZipOutFile = "ZikiPlayer-Plugins.7z"
 	ZipPluginCmd = ZipExe + " a -t7z " + ZipOutFile + " -r" + " MPlayer-Plugins\*.".join(ZipIncludeExt)
 	if os.access(ZipOutFile, 0):
 		os.remove(ZipOutFile)
@@ -203,6 +205,6 @@ if TargetML:
 	shutil.copy(r"Install_ML\Share\readme-MiniLyrics.txt", PackReleaseDir + "MiniLyrics-" + VersionStr(MLMajorVer, MLMinorVer, BuildNum) + ".txt")
 
 if TargetZP:
-	shutil.move(r"MPlayer-Plugins.7z", PackReleaseDir)
-	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"MPlayer-pdb.7z bin-player\ZikiPlayer.pdb")
-	#shutil.copy(r"Install_ML\Share\readme-MiniLyrics.txt", PackReleaseDir + "MiniLyrics-" + VersionStr(MLMajorVer, MLMinorVer, BuildNum) + ".txt")
+	shutil.move(r"ZikiPlayer-Plugins.7z", PackReleaseDir)
+	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"ZikiPlayer-pdb.7z bin-player\ZikiPlayer.pdb")
+	#shutil.copy(r"Install_ZP\Share\readme-ZikiPlayer.txt", PackReleaseDir + "MiniLyrics-" + VersionStr(MLMajorVer, MLMinorVer, BuildNum) + ".txt")
