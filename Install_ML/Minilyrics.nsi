@@ -29,9 +29,6 @@
 
   ;Default installation folder
   InstallDir "$PROGRAMFILES\Minilyrics"
-  
-  ;Get installation folder from registry if available
-  InstallDirRegKey HKCU "Software\MiniLyrics" ""
 
   ;Request application privileges for Windows Vista
   RequestExecutionLevel user
@@ -47,7 +44,7 @@
   ;Remember the installer language
   !define MUI_LANGDLL_REGISTRY_ROOT "HKCU" 
   !define MUI_LANGDLL_REGISTRY_KEY "Software\MiniLyrics" 
-  !define MUI_LANGDLL_REGISTRY_VALUENAME "Installer Language"
+  !define MUI_LANGDLL_REGISTRY_VALUENAME "InstallerLanguage"
 
 ;--------------------------------
 ;Pages
@@ -241,7 +238,7 @@ SectionIn 1 2
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnQuickLanuch"
   WriteINIStr $INSTDIR\Install.ini "INSTALL" "ShortcutOnQuickLanuch" ${TEMP1}
 
-  WriteRegStr HKCU "Software\Minilyrics" "Installer Language" $LANGUAGE
+  WriteRegStr HKCU MUI_LANGDLL_REGISTRY_KEY MUI_LANGDLL_REGISTRY_VALUENAME $LANGUAGE
 
   ;winamp5
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5"
@@ -629,7 +626,7 @@ Section "Uninstall"
     MessageBox MB_OK|MB_ICONEXCLAMATION $(un.MsgUnstMLRuning)
     Abort
 
-  DeleteRegKey HKLM "SOFTWARE\MiniLyrics\MiniLyrics"
+  DeleteRegKey HKLM "SOFTWARE\MiniLyrics"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics"
 
   ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWinamp2Path"

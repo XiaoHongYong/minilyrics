@@ -126,12 +126,6 @@ public:
 			m_funMLService(MLLog, (MLPARAM)szMessage, 0);
 	}
 
-	void OnFullTitleChanged(const char *szFullTitle)
-	{
-		if (m_funMLService)
-			m_funMLService(MLTitleChanged, (MLPARAM)szFullTitle, 0);
-	}
-
 	void OnPlayStateChanged(DWORD dwPlayState)
 	{
 		if (m_funMLService)
@@ -195,11 +189,6 @@ public:
 		if (m_funMLService)
 			m_funMLService(MLConfig, (MLPARAM)hWnd, 0);
 	}
-//
-//	DWORD GetCodePage()
-//	{
-//		return DWORD(m_funMLService(MLGetCodePage, 0, 0));
-//	}
 
 	MLSkinMode GetSkinMode()
 	{
@@ -221,12 +210,6 @@ public:
 			m_funMLService(MLSwitchToEmbeddedSkin, (MLPARAM)bEmbeddedSkin, 0);
 	}
 
-	void OnFullTitleChangedW(const WCHAR *szFullTitle)
-	{
-		if (m_funMLService)
-			m_funMLService(MLTitleChangedW, (MLPARAM)szFullTitle, 0);
-	}
-
 	void LogW(const WCHAR *szMessage)
 	{
 		if (m_funMLService)
@@ -238,6 +221,31 @@ public:
 		if (m_funMLService)
 			m_funMLService(MLDestroyNotifyWnd, 0, 0);
 	}
+
+	void OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle);
+
+	void OnMediaInfoChanged(MLMediaInfo *pMediaInfo)
+	{
+		if (m_funMLService)
+			m_funMLService(MLMediaInfoChanged, (MLPARAM)pMediaInfo, 0);
+	}
+
+
+	//
+	// The functions bellow are Deprecated, use OnMediaInfoChanged instead.
+	//
+/*
+	void OnFullTitleChanged(const char *szFullTitle)
+	{
+		if (m_funMLService)
+			m_funMLService(MLTitleChanged, (MLPARAM)szFullTitle, 0);
+	}
+
+	void OnFullTitleChangedW(const WCHAR *szFullTitle)
+	{
+		if (m_funMLService)
+			m_funMLService(MLTitleChangedW, (MLPARAM)szFullTitle, 0);
+	}*/
 
 public:
 	FUNMLService	m_funMLService;

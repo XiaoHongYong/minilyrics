@@ -737,20 +737,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 	case CMD_OPEN_LRC:
 		OnCommand(IDC_DOWNLOAD_CURRENT_LYRICS);
 		break;
-/*		{
-			// open lyrics
-			CDlgLyricsAssociate		LyricsAssociateDlg;
-			int						n;
-
-			LyricsAssociateDlg.SetInfo(g_Player.GetSrcMedia(), g_Player.GetFullTitle());
-
-			n = LyricsAssociateDlg.DoModal(g_mpApp.GetMainWnd());
-			if (n == IDOK)
-			{
-				g_mpApp.ResearchLyrics();
-			}
-		}
-		break;*/
 	case CMD_SAVE_LRC:
 		{
 			int			nRet;

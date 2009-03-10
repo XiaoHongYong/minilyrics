@@ -10,69 +10,26 @@ bool			g_bIsUcs2Prefer = false;
 
 IPlayer			*g_pPlayer = NULL;
 
-#define MXS(c,x,s)			(((c) - (x)) <<  (s))
-#define M80S(c,s)			MXS(c,0x80,s)
-#define UTF8_1_to_UCS2(in)	((WCHAR) (in)[0])
-#define UTF8_2_to_UCS2(in)	((WCHAR) (MXS((in)[0],0xC0, 6) | M80S((in)[1], 0)))
-#define UTF8_3_to_UCS2(in)	((WCHAR) (MXS((in)[0],0xE0,12) | M80S((in)[1], 6) | M80S((in)[2], 0)))
+int MBCSToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage)
+{
+	int		n;
+
+	n = MultiByteToWideChar(nCodePage, 0,
+		str, nLen, strOut, nOut);
+	if (n == 0 && nLen > 0 && GetLastError() == ERROR_INVALID_PARAMETER)
+	{
+		n = MultiByteToWideChar(CP_ACP, 0,
+			str, nLen, strOut, nOut);
+	}
+
+	strOut[n] = '\0';
+
+	return n;
+}
 
 int UTF8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen)
 {
-	if (length == -1)
-		length = strlen(text) + 1;
-
-	// MultiByteToWideChar(CP_UTF8, 0, text, length, ucs2, ubuflen);
-	unsigned char* p = (unsigned char*)text;
-	unsigned char* last = (unsigned char*)text + length;
-	int		ul;
-	for(p = (unsigned char*)text, ul = 0; (p < last) && (ul < ubuflen) ;)
-	{
-		if ((*p) < 0x80)
-		{	
-			ucs2[ul++] = UTF8_1_to_UCS2(p);
-			p += 1;
-		}
-		else if ((*p) < 0xc0)
-		{	
-			assert((*p));	// Invalid UTF8 First Byte
-			ucs2[ul++] = '?';
-			p += 1;
-		}
-		else if ((*p) < 0xe0)
-		{
-			ucs2[ul++] = UTF8_2_to_UCS2(p);
-			p += 2;
-		}
-		else if ((*p) < 0xf0)
-		{
-			ucs2[ul++] = UTF8_3_to_UCS2(p);
-			p += 3;
-		}
-		else if ((*p) < 0xf8)
-		{
-			ucs2[ul++] = '?';
-			p += 4;
-		}
-		else if ((*p) < 0xfc)
-		{
-			ucs2[ul++] = '?';
-			p += 5;
-		}
-		else if ((*p) < 0xfe)
-		{
-			ucs2[ul++] = '?';
-			p += 6;
-		}
-		else
-		{
-			assert((*p));	// Invalid UTF8 First Byte
-			ucs2[ul++] = '?';
-			p += 1;
-		}
-	}
-	if (ul < ubuflen)
-		ucs2[ul] = 0;
-	return ul;
+	return MBCSToUCS2(text, length, ucs2, ubuflen, CP_UTF8);
 }
 
 // PURPOSE   : Get full task save file name by task name.
@@ -485,14 +442,6 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 		return g_pPlayer->GetPlayPos();
 	case cmdGetMediaLength:	// param1, long * length, ms
 		return g_pPlayer->GetMediaLength();
-	case cmdGetSourceMedia:	// param1, const char *buffer, param2, buffer length
-		return g_pPlayer->GetSourceMedia((char *)Param1, Param2);
-	case cmdGetArtist:
-		return g_pPlayer->GetArtist((char *)Param1, Param2);
-	case cmdGetTitle:
-		return g_pPlayer->GetTitle((char *)Param1, Param2);
-	case cmdGetAlbum:
-		return g_pPlayer->GetAlbum((char *)Param1, Param2);
 	case cmdGetPlayerState:	// param1, long * player state,1-stop, 2-play, 3-pause
 		return g_pPlayer->GetPlayerState();
 	case cmdGetPlayerName:	// param1, const char *buffer, param2, buffer length
@@ -508,8 +457,6 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 	// for winamp2
 	case cmdGetCurSkinPath:	// param1, const char *buffer, param2, buffer length
 		return g_pPlayer->GetCurSkinPath((char *)Param1, Param2);
-	case cmdGetProxy:	// param1, const char *buffer, param2, buffer length
-		return g_pPlayer->GetProxy((char *)Param1, Param2);
 	case cmdGetMainWnd:
 		return (long)g_pPlayer->GetMainWnd();
 	case cmdHasVideo:
@@ -531,9 +478,23 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 	case cmdSetTimeUpdateFreq:
 		// set play time postion's update frequency
 		// 0: slow, 1 : normal: 2: fast
-		g_pPlayer->SetTimeUpdateFreq(Param1);
+		{
+			int			nPlayPosUpdateSpan = 50;
+			if (Param1 == 0)
+				nPlayPosUpdateSpan = 100;
+			else if (Param1 == 1)
+				nPlayPosUpdateSpan = 50;
+			else
+				nPlayPosUpdateSpan = 30;
+			g_pPlayer->OnPlayPosUpdateSpanChanged(nPlayPosUpdateSpan);
+		}
 		break;
-	// unicode supported messages
+
+	//
+	// The messages bellow are Deprecated, use MLMediaInfoChanged instead.
+	//
+
+	// UNICODE supported messages
 	case cmdSetUcs2:
 		if (Param1)
 			g_bIsUcs2Prefer = true;
@@ -546,8 +507,16 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 		return g_pPlayer->GetTitleW((WCHAR *)Param1, Param2);
 	case cmdGetAlbumW:
 		return g_pPlayer->GetAlbumW((WCHAR *)Param1, Param2);
+	case cmdGetSourceMedia:	// param1, const char *buffer, param2, buffer length
+		return g_pPlayer->GetSourceMedia((char *)Param1, Param2);
+	case cmdGetArtist:
+		return g_pPlayer->GetArtist((char *)Param1, Param2);
+	case cmdGetTitle:
+		return g_pPlayer->GetTitle((char *)Param1, Param2);
+	case cmdGetAlbum:
+		return g_pPlayer->GetAlbum((char *)Param1, Param2);
 	default:
-		// unknonw command
+		// unknown command
 		{
 			char	szMsg[256];
 			wsprintfA(szMsg, "Unprocessed player control message: %d", nCommand);
@@ -558,4 +527,27 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 	}
 
 	return 1;
+}
+
+void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle)
+{
+	MLMediaInfo		mediaInfo;
+	wchar_t			wszMediaUrl[MAX_PATH], wszArtist[MAX_PATH], wszAlbum[MAX_PATH], wszTitle[MAX_PATH];
+
+	EmptyStr(wszMediaUrl);
+	EmptyStr(wszArtist);
+	EmptyStr(wszAlbum);
+	EmptyStr(wszTitle);
+
+	mediaInfo.szMediaUrl = wszMediaUrl;
+	mediaInfo.szArtist = wszArtist;
+	mediaInfo.szAlbum = wszAlbum;
+	mediaInfo.szTitle = wszTitle;
+
+	MBCSToUCS2(szMediaUrl, -1, wszMediaUrl, CountOf(wszMediaUrl), CP_ACP);
+	MBCSToUCS2(szArtist, -1, wszArtist, CountOf(wszArtist), CP_ACP);
+	MBCSToUCS2(szAlbum, -1, wszAlbum, CountOf(wszAlbum), CP_ACP);
+	MBCSToUCS2(szTitle, -1, wszTitle, CountOf(wszTitle), CP_ACP);
+
+	OnMediaInfoChanged(&mediaInfo);
 }

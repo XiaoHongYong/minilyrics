@@ -11,7 +11,6 @@ public:
 	virtual ~CPlayerImp();
 
 public:
-	void OnSongChanged(LPCTSTR szFullTitle);
 	void OnPlayTimeChanged(DWORD dwTimeCur);
 
 	// Init and destroy.
@@ -28,12 +27,6 @@ public:
 
 	// get player state and song info
 	DWORD GetPlayerState();
-
-	int GetFullTitle(char * lpszBuffer, int nBufSize);
-	int GetTitle(char * lpszBuffer, int nBufSize);
-	int GetArtist(char * lpszBuffer, int nBufSize);
-	int GetAlbum(char * lpszBuffer, int nBufSize);
-	int GetSourceMedia(char * lpszSourceMedia, int nBufSize);
 
 	DWORD GetMediaLength();
 
@@ -64,11 +57,9 @@ public:
 
 	virtual int GetSkinThemeColor(SKIN_CLR_NAME scn, COLORREF *clrValue);
 
-	virtual void SetTimeUpdateFreq(int nFreq);
+	virtual void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
 
 	BOOL IsWinamp5();
-
-	int GetProperty(const char *szProperty, TCHAR *szValue, int nLen);
 
 public:
 	DWORD			m_dwPlayerVer;

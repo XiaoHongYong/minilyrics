@@ -460,11 +460,6 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	std::set<tstring>	setArTi;
 
 	setArTi.insert(strFileTitle.c_str());
-	setArTi.insert(g_Player.GetFullTitle());
-
-	AnalysisLyricsFileNameEx(szArtist, szTitle, g_Player.GetFullTitle());
-	setArTi.insert(szArtist);
-	setArTi.insert(szTitle);
 
 	AnalysisLyricsFileNameEx(szArtist, szTitle, strFileTitle.c_str());
 	setArTi.insert(szArtist);

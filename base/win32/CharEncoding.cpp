@@ -280,7 +280,7 @@ void ConvertStr(const char *str, int nLen, wstringex &strOut, int nEncodingIdx)
 
 	n = MultiByteToWideChar(__encodingCodepage[nEncodingIdx].nCodePage, 0,
 		str, nLen, strOut.data(), strOut.capacity());
-	if (n == 0 && nLen > 0 && GetLastError() == ERROR_INVALID_PARAMETER)
+	if (n == 0 && GetLastError() == ERROR_INVALID_PARAMETER)
 	{
 		n = MultiByteToWideChar(CP_ACP, 0,
 			str, nLen, strOut.data(), strOut.capacity());
@@ -346,7 +346,7 @@ void ConvertStr(const char *str, int nLen, wstring &strOut, int nEncodingIdx)
 
 	n = MultiByteToWideChar(__encodingCodepage[nEncodingIdx].nCodePage, 0,
 		str, nLen, (LPWSTR)strOut.c_str(), strOut.size());
-	if (n == 0 && nLen > 0 && GetLastError() == ERROR_INVALID_PARAMETER)
+	if (n == 0 && GetLastError() == ERROR_INVALID_PARAMETER)
 	{
 		n = MultiByteToWideChar(CP_ACP, 0,
 			str, nLen, (LPWSTR)strOut.c_str(), strOut.size());
@@ -365,7 +365,7 @@ void ConvertStr2(const char *str, int nLen, WCHAR *strOut, int nOut, int nEncodi
 
 	n = MultiByteToWideChar(__encodingCodepage[nEncodingIdx].nCodePage, 0,
 		str, nLen, strOut, nOut);
-	if (n == 0 && nLen > 0 && GetLastError() == ERROR_INVALID_PARAMETER)
+	if (n == 0 && GetLastError() == ERROR_INVALID_PARAMETER)
 	{
 		n = MultiByteToWideChar(CP_ACP, 0,
 			str, nLen, strOut, nOut);

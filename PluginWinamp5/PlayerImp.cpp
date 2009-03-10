@@ -53,6 +53,67 @@ bool IsShoutcastMedia(LPCTSTR szMedia)
 	return false;
 }
 
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+// 并且将结尾设置为以'\0'结束
+int	strncpysz_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy)
+{
+	if (nToCopy >= nLenMax)
+		nToCopy = nLenMax - 1;
+	else if (nToCopy < 0)
+		nToCopy = 0;
+
+	int		org = nToCopy;
+
+	while (nToCopy && (*strDestination++ = *strSource++))    /* copy string */
+		nToCopy--;
+
+	*strDestination = '\0';
+
+	return org - nToCopy;
+}
+
+BOOL AnalysisMediaTitle(LPCTSTR szFullTitleNew, TCHAR szArtist[]/* out */, TCHAR szTitle[]/* out */)
+{
+	LPCTSTR		szEndArtist;
+	LPCTSTR		szBegTitle;
+
+	// 作者和标题之间是以：' - ' or ' － ' or '-'为分隔
+	szEndArtist = szBegTitle = _tcsstr(szFullTitleNew, _T(" - "));
+	if (szBegTitle)
+		szBegTitle += 3;	// strlen(_T(" - "));
+	else
+	{
+		szEndArtist = szBegTitle = _tcsstr(szFullTitleNew, _T(" － "));
+		if (szBegTitle)
+			szBegTitle += 4;	// strlen(_T(" － "));
+		else
+		{
+			szEndArtist = szBegTitle = _tcschr(szFullTitleNew, '-');
+			if (szBegTitle)
+				szBegTitle++;	// -
+		}
+	}
+
+	//
+	// 处理作者……
+	if (szEndArtist == NULL)
+	{
+		//
+		// 认为 szFullTitle 都是 Title, Artist 为空
+		szBegTitle = szFullTitleNew;
+
+		szArtist[0] = '\0';
+	}
+	else
+	{
+		strncpysz_safe(szArtist, 256, szFullTitleNew, int(szEndArtist - szFullTitleNew));
+	}
+
+	_tcscpy_safe(szTitle, 256, szBegTitle);
+
+	return TRUE;
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 // create window to get playback pos timely.
 LPCTSTR	szGetPosWndClass = _T("GetPosWnd");
@@ -60,7 +121,6 @@ LPCTSTR szGetPosWndName = _T("GetPosWnd");
 HWND	g_hWndGetPos = NULL;
 const int	TIMER_GETPOS	= 1;
 const int	TIMER_CHECK_MEDIA	= 2;
-int			g_UpdateTimeSpan = 50;
 
 LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -112,43 +172,74 @@ BOOL GetPosWndCreate(HINSTANCE hInstance)
    return TRUE;
 }
 
-void GetMediaTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szMediaSrc)
+
+void OnMediaChanged(LPSTR szFile, LPCSTR szMediaTitle)
 {
-	assert(szMediaSrc);
+	extendedFileInfoStruct	info;
+	char			szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
+	int				nRet;
 
-	LPCTSTR		szBeg1, szBeg2;
+	info.filename = szFile;
+	info.retlen = MAX_PATH;
 
-	szBeg1 = strchr(szMediaSrc, '\\');
-	if (szBeg1 == NULL)
-		szBeg1 = szMediaSrc;
-	else
-		szBeg1++;
+	info.metadata = "artist";
+	info.ret = szArtist;
+	memset(szArtist, 0, sizeof(szArtist));
+	nRet = SendMessage(g_hwndPlayer, WM_WA_IPC, (WPARAM)&info, IPC_GET_EXTENDED_FILE_INFO);
 
-	szBeg2 = strchr(szMediaSrc, '/');
-	if (szBeg2 == NULL)
-		szBeg2 = szMediaSrc;
-	else
-		szBeg2++;
+	info.metadata = "title";
+	memset(szTitle, 0, sizeof(szTitle));
+	info.ret = szTitle;
+	nRet = SendMessage(g_hwndPlayer, WM_WA_IPC, (WPARAM)&info, IPC_GET_EXTENDED_FILE_INFO);
 
-	if (szBeg2 > szBeg1)
-		szBeg1 = szBeg2;
+	info.metadata = "album";
+	memset(szAlbum, 0, sizeof(szAlbum));
+	info.ret = szAlbum;
+	nRet = SendMessage(g_hwndPlayer, WM_WA_IPC, (WPARAM)&info, IPC_GET_EXTENDED_FILE_INFO);
 
-	lstrcpy(szBuff, szBeg1);
+	if (IsEmptyString(szArtist) && IsEmptyString(szTitle))
+	{
+		// Get artist and title from szMediaTitle
+		AnalysisMediaTitle(szMediaTitle, szArtist, szTitle);
+	}
+
+	g_MLService.OnMediaInfoChanged(IsEmptyString(szFile) ? szMediaTitle : szFile, szArtist, szAlbum, szTitle);
 }
 
+void RemovePlayingStatInfoInMediaTitle(LPSTR szMediaTitle)
+{
+	// remove [buff %xx] in media title
+	int	n = 0;
+	if (szMediaTitle[0] == '[')
+	{
+		n = 1;
+		while (szMediaTitle[n] != '\0' && szMediaTitle[n] !=']')
+			n++;
+		if (szMediaTitle[n] == ']')
+		{
+			n++;
+			while (szMediaTitle[n] == ' ')
+				n++;
+			int	nMoveSize = strlen(szMediaTitle + n);
+			memmove(szMediaTitle, szMediaTitle + n, nMoveSize);
+			szMediaTitle[nMoveSize] = '\0';
+		}
+	}
+}
 
 void CheckMediaUpdate()
 {
 	char			szFile[MAX_PATH] = _T("");
-	char			szTitle[MAX_PATH] = _T("");
+	char			szMediaTitle[MAX_PATH] = _T("");
 	static char		szFileLatest[MAX_PATH] = _T("");
-	static char		szTitleLatest[MAX_PATH] = _T("");
+	static char		szMediaTitleLatest[MAX_PATH] = _T("");
 	PLAYER_STATE	stateNew;
 
 	memset(szFile, 0, sizeof(szFile));
 	WAGetSourceMedia(szFile, CountOf(szFile));
-	memset(szTitle, 0, sizeof(szTitle));
-	WAGetPlayingSongTitle(g_hwndPlayer, szTitle);
+
+	memset(szMediaTitle, 0, sizeof(szMediaTitle));
+	WAGetPlayingSongTitle(g_hwndPlayer, szMediaTitle);
 
 	stateNew = (PLAYER_STATE)g_Player.GetPlayerState();
 	if (g_Player.m_state != stateNew)
@@ -157,99 +248,41 @@ void CheckMediaUpdate()
 		g_MLService.OnPlayStateChanged(stateNew);
 	}
 
-	if (lstrcmp(szFile, szFileLatest) != 0 || lstrcmp(szTitle, szTitleLatest) != 0)
+	if (IsShoutcastMedia(szFile))
 	{
-		lstrcpy(szFileLatest, szFile);
-		lstrcpy(szTitleLatest, szTitle);
-
-		g_Player.m_dwShoutcastTitleChangedPos = 0;
-
-		// file same, check whether it is an stream audio?
-		if (IsShoutcastMedia(szFile))
-			g_Player.m_bShoutcast = true;
-		else
-			g_Player.m_bShoutcast = false;
-
-		if (IsEmptyString(szFile) && IsEmptyString(szTitle))
-		{
-			g_Player.OnSongChanged("");
-			return;
-		}
-
-		extendedFileInfoStruct	info;
-		char			szArtist[MAX_PATH], szTitle[MAX_PATH], szFullTitle[MAX_PATH];
-		int				nRet;
-
-		info.filename = szFile;
-		info.retlen = MAX_PATH;
-
-		info.metadata = "artist";
-		info.ret = szArtist;
-		memset(szArtist, 0, sizeof(szArtist));
-		nRet = SendMessage(g_hwndPlayer, WM_WA_IPC, (WPARAM)&info, IPC_GET_EXTENDED_FILE_INFO);
-
-		info.metadata = "title";
-		memset(szTitle, 0, sizeof(szTitle));
-		info.ret = szTitle;
-		nRet = SendMessage(g_hwndPlayer, WM_WA_IPC, (WPARAM)&info, IPC_GET_EXTENDED_FILE_INFO);
-
-		if (!IsEmptyString(szArtist))
-		{
-			strcpy(szFullTitle, szArtist);
-			strcat(szFullTitle, " - ");
-		}
-		else
-			EmptyStr(szFullTitle);
-
-		strcat(szFullTitle, szTitle);
-		if (IsEmptyString(szFullTitle))
-		{
-			WAGetPlayingSongTitle(g_hwndPlayer, szFullTitle);
-			if (IsEmptyString(szFullTitle))
-				GetMediaTitle(szFullTitle, CountOf(szFullTitle), szFile);
-		}
-
-		g_Player.OnSongChanged(szFullTitle);
+		g_Player.m_bShoutcast = true;
+		// remove [buff %xx] in media title
+		RemovePlayingStatInfoInMediaTitle(szMediaTitle);
 	}
 	else
+		g_Player.m_bShoutcast = false;
+
+	if (lstrcmp(szFile, szFileLatest) == 0 && lstrcmp(szMediaTitle, szMediaTitleLatest) == 0)
+		return;
+
+	if (g_Player.m_bShoutcast)
 	{
-		// file same, check whether it is an stream audio?
-		if (g_Player.m_bShoutcast)
+		// It is a stream audio
+		if (lstrcmp(szFile, szFileLatest) == 0)
 		{
-			char			szFullTitle[MAX_PATH];
-
-			// check the title.
-			WAGetPlayingSongTitle(g_hwndPlayer, szFullTitle);
-
-			// remove [buff %xx]
-			int	n = 0;
-			if (szFullTitle[0] == '[')
-			{
-				n = 1;
-				while (szFullTitle[n] != '\0' && szFullTitle[n] !=']')
-					n++;
-				if (szFullTitle[n] == ']')
-				{
-					n++;
-					while (szFullTitle[n] == ' ')
-						n++;
-					int	nMoveSize = strlen(szFullTitle + n);
-					memmove(szFullTitle, szFullTitle + n, nMoveSize);
-					szFullTitle[nMoveSize] = '\0';
-				}
-			}
-
-			if (lstrcmp(szFullTitle, g_Player.m_szFullTitle) != 0)
-			{
-				
-				// Notify song changed...
-				g_Player.OnSongChanged(szFullTitle);
-				WAGetCurSongPos(g_hwndPlayer, g_Player.m_dwShoutcastTitleChangedPos);
-				// if (g_Player.m_dwShoutcastTitleChangedPos >= 1000)
-					g_Player.m_dwShoutcastTitleChangedPos += 2000;
-			}
+			// Stream audio title changed, recount down the playing time.
+			WAGetCurSongPos(g_hwndPlayer, g_Player.m_dwShoutcastTitleChangedPos);
+			g_Player.m_dwShoutcastTitleChangedPos += 2000;
 		}
+		else
+			g_Player.m_dwShoutcastTitleChangedPos = 0;
 	}
+
+	lstrcpy(szFileLatest, szFile);
+	lstrcpy(szMediaTitleLatest, szMediaTitle);
+
+	if (IsEmptyString(szFile) && IsEmptyString(szMediaTitle))
+	{
+		g_MLService.OnMediaInfoChanged(NULL);
+		return;
+	}
+
+	OnMediaChanged(szFile, szMediaTitle);
 }
 
 LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -257,7 +290,7 @@ LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 	switch (message) 
 	{
 	case WM_CREATE:
-		SetTimer(hWnd, TIMER_GETPOS, g_UpdateTimeSpan, NULL);
+		SetTimer(hWnd, TIMER_GETPOS, PLAYER_POS_UPDATE_SPAN, NULL);
 		SetTimer(hWnd, TIMER_CHECK_MEDIA, 500, NULL);
 		break;
 	case WM_TIMER:
@@ -304,19 +337,6 @@ LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 		return DefWindowProc(hWnd, message, wParam, lParam);
    }
    return 0;
-}
-
-void GetPosWndSetTimeUpdateFreq(int nFreq)
-{
-	if (nFreq == 0)
-		g_UpdateTimeSpan = 100;
-	else if (nFreq == 1)
-		g_UpdateTimeSpan = 50;
-	else
-		g_UpdateTimeSpan = 30;
-
-	KillTimer(g_hWndGetPos, TIMER_GETPOS);
-	SetTimer(g_hWndGetPos, TIMER_GETPOS, g_UpdateTimeSpan, NULL);
 }
 
 // End of GetPosWindow
@@ -913,27 +933,6 @@ BOOL CPlayerImp::IsWinamp5()
 	return m_dwPlayerVer >= 0x3000;
 }
 
-int CPlayerImp::GetProperty(const char *szProperty, TCHAR *szValue, int nLen)
-{
-	if (m_dwPlayerVer < 0x2900)
-		return PR_UNIMPLEMENTED;
-
-	extendedFileInfoStruct	info;
-	char			szFile[MAX_PATH];
-	int				nRet;
-
-	WAGetSourceMedia(szFile, CountOf(szFile));
-	info.filename = szFile;
-	info.retlen = MAX_PATH;
-
-	info.metadata = (char*)szProperty;
-	info.ret = szValue;
-	memset(szValue, 0, sizeof(TCHAR) * nLen);
-	nRet = SendMessage(g_hwndPlayer, WM_WA_IPC, (WPARAM)&info, IPC_GET_EXTENDED_FILE_INFO);
-
-	return PR_OK;
-}
-
 // Player Info
 int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
 {
@@ -993,41 +992,6 @@ HWND CPlayerImp::GetMainWnd()
 	return g_hwndPlayer;
 }
 
-// 返回歌曲的信息，格式为：artist - title		作者 － 歌曲名
-int CPlayerImp::GetFullTitle(char * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, m_szFullTitle);
-
-	return PR_OK;
-}
-
-int CPlayerImp::GetTitle(char * lpszBuffer, int nBufSize)
-{
-	return GetProperty("title", lpszBuffer, nBufSize);
-}
-
-int CPlayerImp::GetArtist(char * lpszBuffer, int nBufSize)
-{
-	return GetProperty("artist", lpszBuffer, nBufSize);
-}
-
-int CPlayerImp::GetAlbum(char * lpszBuffer, int nBufSize)
-{
-	return GetProperty("album", lpszBuffer, nBufSize);
-}
-
-// 返回歌曲的全文件名（如c:\\...., httP;//wwww......)
-int CPlayerImp::GetSourceMedia(char * lpszBuffer, int nBufSize)
-{
-	return WAGetSourceMedia(lpszBuffer, nBufSize);
-
-// 	if (m_bShoutcast)
-// 	{
-// 		strcat_safe(lpszBuffer, nBufSize, "/shoutcast/");
-// 		strcat_safe(lpszBuffer, nBufSize, m_szFullTitle);
-// 	}
-}
-
 // 歌曲的长度（单位ms）
 DWORD CPlayerImp::GetMediaLength()
 {
@@ -1047,13 +1011,6 @@ DWORD CPlayerImp::GetPlayPos()
 	WAGetCurSongPos(g_hwndPlayer, dwCurPos);
 
 	return dwCurPos - m_dwShoutcastTitleChangedPos;
-}
-
-// 返回歌曲的信息，格式为：artist - title		作者 － 歌曲名
-void CPlayerImp::OnSongChanged(LPCTSTR szFullTitle)
-{
-	strcpy_safe(m_szFullTitle, CountOf(m_szFullTitle), szFullTitle);
-	g_MLService.OnFullTitleChanged(szFullTitle);
 }
 
 // 歌曲播放位置改变了
@@ -1187,7 +1144,8 @@ int CPlayerImp::HasVideo()
 		return PR_UNIMPLEMENTED;
 }
 
-void CPlayerImp::SetTimeUpdateFreq(int nFreq)
+void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 {
-	GetPosWndSetTimeUpdateFreq(nFreq);
+	KillTimer(g_hWndGetPos, TIMER_GETPOS);
+	SetTimer(g_hWndGetPos, TIMER_GETPOS, nPlayPosUpdateSpan, NULL);
 }
