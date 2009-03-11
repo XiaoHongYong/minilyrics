@@ -545,9 +545,12 @@ void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR s
 	mediaInfo.szTitle = wszTitle;
 
 	MBCSToUCS2(szMediaUrl, -1, wszMediaUrl, CountOf(wszMediaUrl), CP_ACP);
-	MBCSToUCS2(szArtist, -1, wszArtist, CountOf(wszArtist), CP_ACP);
-	MBCSToUCS2(szAlbum, -1, wszAlbum, CountOf(wszAlbum), CP_ACP);
-	MBCSToUCS2(szTitle, -1, wszTitle, CountOf(wszTitle), CP_ACP);
+	if (szArtist)
+		MBCSToUCS2(szArtist, -1, wszArtist, CountOf(wszArtist), CP_ACP);
+	if (szAlbum)
+		MBCSToUCS2(szAlbum, -1, wszAlbum, CountOf(wszAlbum), CP_ACP);
+	if (szTitle)
+		MBCSToUCS2(szTitle, -1, wszTitle, CountOf(wszTitle), CP_ACP);
 
 	OnMediaInfoChanged(&mediaInfo);
 }

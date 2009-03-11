@@ -9,8 +9,6 @@ public:
 	virtual ~CPlayerImp();
 
 public:
-	void OnSongChanged();
-	void OnPlayTimeChanged(DWORD dwTimeCur);
 
 	// Init and destroy.
 	BOOL Init();
@@ -19,20 +17,10 @@ public:
 	// Player Info
 	int GetPlayerName(char * lpszBuffer, int nBufSize);
 
-	// Get player skin path
-	int GetCurSkinPath(char * lpszBuffer, int nBufSize);
-
-	// Get player's proxy setting.
-	int GetProxy(char * lpszBuffer, int nBufSize);
-
 	HWND GetMainWnd();
 
 	// get player state and song info
 	DWORD GetPlayerState();
-
-	//	BOOL GetCurSong(LPTSTR szTitle, int nSizeTitle, LPTSTR szArtist, int nSizeArtist);
-	int GetFullTitle(char * lpszBuffer, int nBufSize);
-	int GetSourceMedia(char * lpszSourceMedia, int nBufSize);
 
 	DWORD GetMediaLength();
 
@@ -48,12 +36,6 @@ public:
 	BOOL Next();
 	BOOL SeekTo(int nMsPos);
 
-	virtual void SetTimeUpdateFreq(int nFreq);
-
-public:
-	TCHAR			m_szFullTitle[MAX_PATH];
-	TCHAR			m_szMediaSrc[MAX_PATH];
-
-	bool			m_bWorking;
+	virtual void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
 
 };

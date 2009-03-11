@@ -2,8 +2,6 @@
 
 extern class CPlayerImp		g_Player;
 
-#define LRC_TITLE_MAX_LEN		256
-
 class CPlayerImp : public IPlayer
 {
 public:
@@ -11,8 +9,6 @@ public:
 	virtual ~CPlayerImp();
 
 public:
-	void OnPlayTimeChanged(DWORD dwTimeCur);
-
 	// Init and destroy.
 	BOOL Init();
 	void Quit();
@@ -65,13 +61,9 @@ public:
 	DWORD			m_dwPlayerVer;
 	HWND			m_hwndPluginParent;
 
-	TCHAR			m_szFullTitle[LRC_TITLE_MAX_LEN];
-	DWORD			m_dwPos;
-
 	TCHAR			m_szPlayerName[64];
 
 	bool			m_bWorking;
-	bool			m_bShoutcast;
 	DWORD			m_dwShoutcastTitleChangedPos;
 	PLAYER_STATE	m_state;
 

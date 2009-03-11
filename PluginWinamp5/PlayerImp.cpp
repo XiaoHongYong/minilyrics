@@ -1,6 +1,7 @@
 #include <tchar.h>
 #include "../MLPluginLib/mlplugin.h"
 #include "PlayerImp.h"
+#include "../MLPluginLib/PlayerInfoQueryBaseWnd.h"
 
 #define WA_DLG_IMPLEMENT
 #include "wa_dlg.h"
@@ -114,63 +115,10 @@ BOOL AnalysisMediaTitle(LPCTSTR szFullTitleNew, TCHAR szArtist[]/* out */, TCHAR
 	return TRUE;
 }
 
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // create window to get playback pos timely.
-LPCTSTR	szGetPosWndClass = _T("GetPosWnd");
-LPCTSTR szGetPosWndName = _T("GetPosWnd");
-HWND	g_hWndGetPos = NULL;
-const int	TIMER_GETPOS	= 1;
-const int	TIMER_CHECK_MEDIA	= 2;
-
-LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-BOOL GetPosWndRegisterClass(HINSTANCE hInstance)
-{
-	WNDCLASS wc;
-
-	if (GetClassInfo(hInstance, szGetPosWndClass, &wc))
-		return TRUE;
-
-	// regiszter pane class
-	wc.style = 0;
-	wc.lpfnWndProc = (WNDPROC)GetPosWndProc;
-	wc.cbClsExtra		= 0;
-	wc.cbWndExtra		= 0;
-	wc.hInstance		= hInstance;
-	wc.hIcon		= NULL;
-	wc.hCursor		= NULL;
-	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
-	wc.lpszMenuName	= NULL;
-	wc.lpszClassName	= szGetPosWndClass;
-
-	int r = RegisterClass(&wc);
-	if (r == 0)
-	{
-		int res = GetLastError();
-		if (res != ERROR_CLASS_ALREADY_EXISTS)
-		{
-			return FALSE;
-		}
-	}
-
-	return TRUE;
-}
-
-BOOL GetPosWndCreate(HINSTANCE hInstance)
-{
-   g_hWndGetPos = CreateWindow(szGetPosWndClass, szGetPosWndName, WS_OVERLAPPEDWINDOW,
-      0, 0, 100, 100, NULL, NULL, hInstance, NULL);
-
-   if (!g_hWndGetPos)
-   {
-      return FALSE;
-   }
-
-   ShowWindow(g_hWndGetPos, SW_MINIMIZE);
-   ShowWindow(g_hWndGetPos, SW_HIDE);
-
-   return TRUE;
-}
 
 
 void OnMediaChanged(LPSTR szFile, LPCSTR szMediaTitle)
@@ -234,6 +182,7 @@ void CheckMediaUpdate()
 	static char		szFileLatest[MAX_PATH] = _T("");
 	static char		szMediaTitleLatest[MAX_PATH] = _T("");
 	PLAYER_STATE	stateNew;
+	bool			bShoutcast;
 
 	memset(szFile, 0, sizeof(szFile));
 	WAGetSourceMedia(szFile, CountOf(szFile));
@@ -250,17 +199,17 @@ void CheckMediaUpdate()
 
 	if (IsShoutcastMedia(szFile))
 	{
-		g_Player.m_bShoutcast = true;
+		bShoutcast = true;
 		// remove [buff %xx] in media title
 		RemovePlayingStatInfoInMediaTitle(szMediaTitle);
 	}
 	else
-		g_Player.m_bShoutcast = false;
+		bShoutcast = false;
 
 	if (lstrcmp(szFile, szFileLatest) == 0 && lstrcmp(szMediaTitle, szMediaTitleLatest) == 0)
 		return;
 
-	if (g_Player.m_bShoutcast)
+	if (bShoutcast)
 	{
 		// It is a stream audio
 		if (lstrcmp(szFile, szFileLatest) == 0)
@@ -285,70 +234,52 @@ void CheckMediaUpdate()
 	OnMediaChanged(szFile, szMediaTitle);
 }
 
-LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
 {
-	switch (message) 
+public:
+	bool OnCreate()
 	{
-	case WM_CREATE:
-		SetTimer(hWnd, TIMER_GETPOS, PLAYER_POS_UPDATE_SPAN, NULL);
-		SetTimer(hWnd, TIMER_CHECK_MEDIA, 500, NULL);
-		break;
-	case WM_TIMER:
+		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
+		SetTimer(m_hWnd, TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO, NULL);
+		return true;
+	}
+
+	void OnDestroy()
+	{
+		KillTimer(m_hWnd, TIMER_GETPOS);
+		KillTimer(m_hWnd, TIMER_CHECK_MEDIA);
+	}
+
+	void OnTimer(int nTimerID)
+	{
+		if (nTimerID == TIMER_GETPOS)
 		{
-			if (wParam == TIMER_CHECK_MEDIA)
+			// update current play time.
+			DWORD			dwCurPos;
+			static DWORD	dwPosLast = 0;
+			if (WAGetCurSongPos(g_hwndPlayer, dwCurPos))
 			{
-				CheckMediaUpdate();
-			}
-			else if (wParam == TIMER_GETPOS)
-			{
-				// update current play time.
-				DWORD			dwCurPos;
-				static DWORD	dwPosLast = 0;
-				if (WAGetCurSongPos(g_hwndPlayer, dwCurPos))
+				dwCurPos -= g_Player.m_dwShoutcastTitleChangedPos;
+				if (dwCurPos < dwPosLast)
 				{
-					dwCurPos -= g_Player.m_dwShoutcastTitleChangedPos;
-					if (dwCurPos < dwPosLast)
-					{
-						// 如果上次的时间比现在的时间还大，则，可能切换了歌曲。
-						dwPosLast = dwCurPos;
-						CheckMediaUpdate();
-					}
+					// 如果上次的时间比现在的时间还大，则，可能切换了歌曲。
 					dwPosLast = dwCurPos;
-					g_Player.OnPlayTimeChanged(dwCurPos);
+					CheckMediaUpdate();
 				}
+				dwPosLast = dwCurPos;
+				g_MLService.OnPlayTimeChanged(dwCurPos);
 			}
 		}
-		break;
-	case WM_PAINT:
-		{
-			PAINTSTRUCT ps;
-			HDC hdc;
+		else if (nTimerID == TIMER_CHECK_MEDIA)
+			CheckMediaUpdate();
+	}
 
-			hdc = BeginPaint(hWnd, &ps);
-			EndPaint(hWnd, &ps);
-		}
-		break;
-	case WM_DESTROY:
-		KillTimer(hWnd, TIMER_GETPOS);
-		KillTimer(hWnd, TIMER_CHECK_MEDIA);
-		g_hWndGetPos = NULL;
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-   }
-   return 0;
-}
+};
 
-// End of GetPosWindow
 ////////////////////////////////////////////////////////////////////////////////////
 
-//
-// 有两种状态：	1、使用winamp的skin
-//				2、使用自己的skin
-//
-
-CPlayerImp		g_Player;
-
+CPlayerImp			g_Player;
+CPlayerInfoQueryWnd	g_wndInfoQuery;
 
 // function prototypes
 void config();
@@ -803,7 +734,6 @@ extern "C" {
 
 CPlayerImp::CPlayerImp()
 {
-	EmptyStr(m_szFullTitle);
 	m_dwPlayerVer = 0;
 	m_hwndPluginParent = NULL;
 	EmptyStr(m_szPlayerName);
@@ -1013,13 +943,6 @@ DWORD CPlayerImp::GetPlayPos()
 	return dwCurPos - m_dwShoutcastTitleChangedPos;
 }
 
-// 歌曲播放位置改变了
-void CPlayerImp::OnPlayTimeChanged(DWORD dwTimeCur)
-{
-	m_dwPos = dwTimeCur;
-	g_MLService.OnPlayTimeChanged(dwTimeCur);
-}
-
 // control player
 BOOL CPlayerImp::Play()
 {
@@ -1100,17 +1023,11 @@ BOOL CPlayerImp::Init()
 
 	m_state = (PLAYER_STATE)GetPlayerState();
 
-	//
-	// Create Window to get playback pos timely.
-	//
-	GetPosWndRegisterClass(g_hInstance);
-	GetPosWndCreate(g_hInstance);
+	g_wndInfoQuery.Create(g_hInstance);
 
 	return TRUE;
 }
 
-// COMMENT:
-//		关闭WINAMP 状态查询线程
 void CPlayerImp::Quit()
 {
 	// 恢复winamp窗口的窗口过程
@@ -1121,8 +1038,7 @@ void CPlayerImp::Quit()
 	}
 	m_bWorking = false;
 
-	if (g_hWndGetPos)
-		DestroyWindow(g_hWndGetPos);
+	g_wndInfoQuery.Destroy();
 
 	if (IsWindow(g_Player.m_hwndPluginParent))
 	{
@@ -1146,6 +1062,6 @@ int CPlayerImp::HasVideo()
 
 void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 {
-	KillTimer(g_hWndGetPos, TIMER_GETPOS);
-	SetTimer(g_hWndGetPos, TIMER_GETPOS, nPlayPosUpdateSpan, NULL);
+	KillTimer(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryBaseWnd::TIMER_GETPOS);
+	SetTimer(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryBaseWnd::TIMER_GETPOS, nPlayPosUpdateSpan, NULL);
 }
