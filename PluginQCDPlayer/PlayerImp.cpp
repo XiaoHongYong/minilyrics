@@ -102,14 +102,6 @@ PLUGIN_API BOOL GENERALDLL_ENTRY_POINT(QCDModInitGen *ModInit, QCDModInfo *ModIn
 	g_hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ThreadMiniLyrics, NULL, 0, &g_dwThreadId);
 	CloseHandle(g_hThread);
 	g_hThread = NULL;
-	// _beginthread(ThreadMiniLyrics, 0, NULL);
-
-	// char inifile[MAX_PATH];
-	// QCDCallbacks->Service(opGetPluginSettingsFile, inifile, MAX_PATH, 0);
-
-	//
-	// TODO: all your plugin initialization here
-	//
 
 	// return TRUE for successful initialization
 	return TRUE;
@@ -148,9 +140,7 @@ LRESULT CALLBACK HookQCDPWnd(
 	case WM_PN_PLAYLISTCHANGED:
 		// 保证当播放列表变空时清空 MiniLyrics 的歌词显示内容：
 		if(QCDCallbacks->Service(opGetNumTracks, NULL, 0, 0) == 0)
-		{
-			g_Player.OnSongChanged("", "");
-		}
+			g_MLService.OnMediaInfoChanged(NULL);
 		break;
 	case WM_PN_INFOCHANGED:
 		// DBGLOG0("WM_PN_INFOCHANGED");
@@ -158,13 +148,9 @@ LRESULT CALLBACK HookQCDPWnd(
 		// DBGLOG0("WM_PN_TRACKCHANGED");
 	case WM_PN_PLAYSTARTED:
 		{
-			// DBGLOG0("WM_PN_PLAYSTARTED");
-
-			char	szName[MAX_PATH] = "";
+			char	szArtist[MAX_PATH] = "", szAlbum[MAX_PATH] = "", szTitle[MAX_PATH] = "";
 			char	szSrcMedia[MAX_PATH] = "";
 			int		nRet;
-			char	*szPos;
-			int		nLen = MAX_PATH;
 
 			// QCDCallbacks->Service(opGetOutputTime, NULL, -1, 0);
 			nRet = QCDCallbacks->Service(opGetMediaType, NULL, -1, 0);
@@ -173,35 +159,18 @@ LRESULT CALLBACK HookQCDPWnd(
 			else
 				g_bCurMediaVideo = false;
 
-			nRet = QCDCallbacks->Service(opGetArtistName, szName, MAX_PATH, -1);
-			if (!nRet)
-			{
-				EmptyStr(szName);
-				szPos = szName;
-			}
-			else
-			{
-				// DBGLOG2("Artist: %s, ret: %d", szName, nRet);
-				if (!IsEmptyString(szName))
-					strcat(szName, " - ");
-				nLen = strlen(szName);
-				szPos = szName + nLen;
-				nLen = MAX_PATH - nLen;
-			}
+			nRet = QCDCallbacks->Service(opGetArtistName, szArtist, MAX_PATH, -1);
 
-			nRet = QCDCallbacks->Service(opGetTrackName, szPos, nLen, -1);
-			if (nRet)
-			{
-				// g_MLService.Log(szPos);
-				// DBGLOG2("TrackName: %s, ret: %d", szPos, nRet);
-			}
-			else
-				EmptyStr(szName);
+			nRet = QCDCallbacks->Service(opGetDiscName, szAlbum, MAX_PATH, -1);
+
+			nRet = QCDCallbacks->Service(opGetTrackName, szTitle, MAX_PATH, -1);
 
 			EmptyStr(szSrcMedia);
 			nRet = QCDCallbacks->Service(opGetTrackFile, szSrcMedia, CountOf(szSrcMedia), -1);
 
-			g_Player.OnSongChanged(szName, szSrcMedia);
+			DWORD	dwLength = QCDCallbacks->Service(opGetTrackLength, NULL, -1, 1);
+
+			g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, dwLength);
 		}
 		break;
 /*	case WM_PN_PLAYSTOPPED:
@@ -233,11 +202,7 @@ LRESULT CALLBACK HookQCDPWnd(
 
 CPlayerImp::CPlayerImp()
 {
-	EmptyStr(m_szFullTitle);
-	EmptyStr(m_szSrcMedia);
-
 	m_dwPos = 0;
-	m_funPlayerService = NULL;
 }
 
 CPlayerImp::~CPlayerImp()
@@ -258,67 +223,9 @@ DWORD CPlayerImp::GetPlayerState()
 	return QCDCallbacks->Service(opGetPlayerState, NULL, 0, 0);
 }
 
-int CPlayerImp::GetCurSkinPath(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-
-	return 1;
-}
-
-int CPlayerImp::GetProxy(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-
-	return 1;
-}
-
 HWND CPlayerImp::GetMainWnd()
 {
 	return g_hwndPlayer;
-}
-
-int CPlayerImp::GetFullTitle(char * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, m_szFullTitle);
-
-	return 1;
-}
-
-int CPlayerImp::GetTitle(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-
-	return 1;
-}
-
-int CPlayerImp::GetArtist(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-
-	return 1;
-}
-
-int CPlayerImp::GetAlbum(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-
-	return 0;
-}
-
-int CPlayerImp::GetSourceMedia(char * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, m_szSrcMedia);
-
-	return 1;
-}
-
-DWORD CPlayerImp::GetMediaLength()
-{
-	DWORD	dwLength;
-
-	dwLength = QCDCallbacks->Service(opGetTrackLength, NULL, -1, 1);
-
-	return dwLength;
 }
 
 DWORD CPlayerImp::GetPlayPos()
@@ -329,18 +236,6 @@ DWORD CPlayerImp::GetPlayPos()
 int CPlayerImp::HasVideo()
 {
 	return g_bCurMediaVideo;
-}
-
-void CPlayerImp::OnSongChanged(LPCTSTR szFullTitle, LPCTSTR szMediaSrc)
-{
-	if (strcmp(szFullTitle, m_szFullTitle) == 0
-		&& strcmp(szMediaSrc, m_szSrcMedia) == 0)
-		return;
-
-	strcpy_safe(m_szFullTitle, CountOf(m_szFullTitle), szFullTitle);
-	strcpy_safe(m_szSrcMedia, CountOf(m_szSrcMedia), szMediaSrc);
-
-	g_MLService.OnFullTitleChanged(szFullTitle);
 }
 
 void CPlayerImp::OnPlayTimeChanged(DWORD dwTimeCur)

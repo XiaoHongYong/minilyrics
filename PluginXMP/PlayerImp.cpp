@@ -1,74 +1,17 @@
 #include "../MLPluginLib/MLPlugin.h"
-#include <tchar.h>
 #include "PlayerImp.h"
-#include <process.H>
 #include "xmpdsp.h"
 #include <string>
 using namespace std;
 
+#define WM_WA_IPC WM_USER 
+#define SM_WINAMP_TIMEOUT 1000 
+#define IPC_GETOUTPUTTIME 105
+#define IPC_ISPLAYING 104
+
 CPlayerImp		g_Player;
-int				g_UpdateTimeSpan = 50;
-char			_szMediaPathName[512];
 DWORD			g_DdeInstID = 0;
 
-#define MXS(c,x,s)			(((c) - (x)) <<  (s))
-#define M80S(c,s)			MXS(c,0x80,s)
-#define UTF8_1_to_UCS2(in)	((WCHAR) (in)[0])
-#define UTF8_2_to_UCS2(in)	((WCHAR) (MXS((in)[0],0xC0, 6) | M80S((in)[1], 0)))
-#define UTF8_3_to_UCS2(in)	((WCHAR) (MXS((in)[0],0xE0,12) | M80S((in)[1], 6) | M80S((in)[2], 0) ))
-
-int UTF8ToUCS2(unsigned char* text, int length, WCHAR *ucs2, int ubuflen)
-{
-	unsigned char* p = text;
-	unsigned char* last = text + length;
-	int		ul;
-	for(p = text, ul = 0; (p < last) && (ul < ubuflen) ; )
-	{
-		if( (*p) < 0x80)
-		{	
-			ucs2[ul++] = UTF8_1_to_UCS2(p);
-			p += 1;
-		}
-		else if( (*p) < 0xc0 )
-		{	
-			assert( (*p) );	// Invalid UTF8 First Byte
-			ucs2[ul++] = '?';
-			p += 1;
-		}
-		else if( (*p) < 0xe0)
-		{
-			ucs2[ul++] = UTF8_2_to_UCS2(p);
-			p += 2;
-		}
-		else if( (*p) < 0xf0)
-		{
-			ucs2[ul++] = UTF8_3_to_UCS2(p);
-			p += 3;
-		}
-		else if( (*p) < 0xf8)
-		{
-			ucs2[ul++] = '?';
-			p += 4;
-		}
-		else if( (*p) < 0xfc)
-		{
-			ucs2[ul++] = '?';
-			p += 5;
-		}
-		else if( (*p) < 0xfe)
-		{
-			ucs2[ul++] = '?';
-			p += 6;
-		}
-		else
-		{
-			assert( (*p) );	// Invalid UTF8 First Byte
-			ucs2[ul++] = '?';
-			p += 1;
-		}
-	}
-	return ul;
-}
 
 char * __cdecl stristr (
         const char * str1,
@@ -125,7 +68,7 @@ static void WINAPI DSP_About(HWND win)
 	if (g_MLService.IsValid())
 		g_MLService.About(win);
 	else
-		MessageBox(win, "MiniLyrics for XMPlay, 2006 Crintsoft.", "MiniLyrics for XMPlay", MB_OK);
+		MessageBox(win, "MiniLyrics for XMPlay, 2009 Crintsoft.", "MiniLyrics for XMPlay", MB_OK);
 }
 
 static XMPDSP dsp={
@@ -523,48 +466,41 @@ static void WINAPI DSP_NewTrack(void *inst, const char *file)
 {
 	if (!file)
 	{
-		strcpy_safe(_szMediaPathName, CountOf(_szMediaPathName), "");
-		g_Player.OnSongChanged(L"");
+		g_MLService.OnMediaInfoChanged(NULL);
 		return;
 	}
 
-	if (strcmp(file, _szMediaPathName) != 0)
-	{
-		WCHAR		wFullTitle[MAX_PATH];
-		char		fullTitle[MAX_PATH];
-		char		artist[MAX_PATH];
-		char		title[MAX_PATH];
-		char		album[MAX_PATH];
+	char		artist[MAX_PATH];
+	char		title[MAX_PATH];
+	char		album[MAX_PATH];
 
-		EmptyStr(artist);
-		EmptyStr(title);
-		EmptyStr(album);
+	EmptyStr(artist);
+	EmptyStr(title);
+	EmptyStr(album);
 
-		strcpy_safe(_szMediaPathName, CountOf(_szMediaPathName), file);
+	XMP_GetTrackInfo(artist, title, album);
 
-		if (XMP_GetTrackInfo(artist, title, album))
-		{
-			if (!IsEmptyString(artist))
-			{
-				strcpy(fullTitle, artist);
-				strcat(fullTitle, " - ");
-			}
-			else
-				EmptyStr(fullTitle);
+	WCHAR		szMediaUrl[MAX_PATH], szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
 
-			strcat(fullTitle, title);
-		}
-		else
-			FileGetTitle(fullTitle, CountOf(fullTitle), _szMediaPathName);
+	UTF8ToUCS2(file, strlen(file) + 1, szMediaUrl, CountOf(szMediaUrl));
+	UTF8ToUCS2(artist, strlen(artist) + 1, szArtist, CountOf(szArtist));
+	UTF8ToUCS2(album, strlen(album) + 1, szAlbum, CountOf(szAlbum));
+	UTF8ToUCS2(title, strlen(title) + 1, szTitle, CountOf(szTitle));
 
-		UTF8ToUCS2((BYTE *)artist, strlen(artist) + 1, g_Player.m_szArtist, CountOf(g_Player.m_szArtist));
-		UTF8ToUCS2((BYTE *)album, strlen(album) + 1, g_Player.m_szAlbum, CountOf(g_Player.m_szAlbum));
-		UTF8ToUCS2((BYTE *)title, strlen(title) + 1, g_Player.m_szTitle, CountOf(g_Player.m_szTitle));
+	MLMediaInfo		mediaInfo;
+	mediaInfo.szMediaUrl = szMediaUrl;
+	mediaInfo.szArtist = szArtist;
+	mediaInfo.szAlbum = szAlbum;
+	mediaInfo.szTitle = szTitle;
 
-		UTF8ToUCS2((BYTE *)fullTitle, strlen(fullTitle) + 1, wFullTitle, CountOf(wFullTitle));
+	DWORD	dwLength = 0;
 
-		g_Player.OnSongChanged(wFullTitle);
-	}
+	SendMessageTimeout(g_hwndPlayer, WM_WA_IPC, 1, IPC_GETOUTPUTTIME,
+		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwLength);
+
+	mediaInfo.nMediaLength = dwLength * 1000;
+
+	g_MLService.OnMediaInfoChanged(&mediaInfo);
 }
 
 // set the sample format at start (or end if rate/chans=0) of playback
@@ -623,122 +559,30 @@ BOOL WINAPI DllMain(HANDLE hDLL, DWORD reason, LPVOID reserved)
 
 
 ///////////////////////////////////////////////////////////////////////////////
-// create window to get playback pos of foobar timely.
-LPCTSTR	szGetPosWndClass = _T("GetPosWnd");
-LPCTSTR szGetPosWndName = _T("GetPosWnd");
-HWND	g_hWndGetPos = NULL;
-const int	TIMER_GETPOS	= 0;
 
-LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
-BOOL GetPosWndRegisterClass(HINSTANCE hInstance)
+
+class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
 {
-	WNDCLASS wc;
-
-	if (GetClassInfo(hInstance, szGetPosWndClass, &wc))
-		return TRUE;
-
-	// regiszter pane class
-	wc.style = 0;
-	wc.lpfnWndProc = (WNDPROC)GetPosWndProc;
-	wc.cbClsExtra		= 0;
-	wc.cbWndExtra		= 0;
-	wc.hInstance		= hInstance;
-	wc.hIcon		= NULL;
-	wc.hCursor		= NULL;
-	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
-	wc.lpszMenuName	= NULL;
-	wc.lpszClassName	= szGetPosWndClass;
-
-	int r = RegisterClass(&wc);
-	if (r == 0)
+public:
+	void OnCreate()
 	{
-		int res = GetLastError();
-		if (res != ERROR_CLASS_ALREADY_EXISTS)
-		{
-			return FALSE;
-		}
+		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
 	}
 
-	return TRUE;
-}
-
-BOOL GetPosWndCreate(HINSTANCE hInstance)
-{
-   hInstance; // Store instance handle in our global variable
-
-   g_hWndGetPos = CreateWindow(szGetPosWndClass, szGetPosWndName, WS_OVERLAPPEDWINDOW,
-      0, 0, 100, 100, NULL, NULL, hInstance, NULL);
-
-   if (!g_hWndGetPos)
-   {
-      return FALSE;
-   }
-
-   ShowWindow(g_hWndGetPos, SW_MINIMIZE);
-   ShowWindow(g_hWndGetPos, SW_HIDE);
-
-   return TRUE;
-}
-
-LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	PAINTSTRUCT ps;
-	HDC hdc;
-
-	switch (message) 
+	void OnDestroy()
 	{
-	case WM_CREATE:
-		SetTimer(hWnd, TIMER_GETPOS, g_UpdateTimeSpan, NULL);
-		break;
-	case WM_TIMER:
-		g_Player.OnPlayTimeChanged(g_Player.GetPlayPos());
-		break;
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
-		break;
-	case WM_DESTROY:
-		KillTimer(hWnd, TIMER_GETPOS);
-		g_hWndGetPos = NULL;
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-   }
-   return 0;
-}
+		KillTimer(m_hWnd, TIMER_GETPOS);
+	}
 
-// End of GetPosWindow
-////////////////////////////////////////////////////////////////////////////////////
+	void OnTimer(int nTimerID)
+	{
+		g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
+	}
 
-void GetMediaTitle(LPSTR szBuff, int nBuffLen, LPCSTR szMediaSrc)
-{
-	assert(szMediaSrc);
+};
 
-	LPCSTR		szBeg1, szBeg2;
-
-	szBeg1 = strrchr(szMediaSrc, '\\');
-	if (szBeg1 == NULL)
-		szBeg1 = szMediaSrc;
-	else
-		szBeg1++;
-
-	szBeg2 = strrchr(szMediaSrc, '/');
-	if (szBeg2 == NULL)
-		szBeg2 = szMediaSrc;
-	else
-		szBeg2++;
-
-	if (szBeg2 > szBeg1)
-		szBeg1 = szBeg2;
-
-	strcpy_safe(szBuff, nBuffLen, szBeg1);
-}
-
-#define WM_WA_IPC WM_USER 
-#define SM_WINAMP_TIMEOUT 1000 
-#define IPC_GETOUTPUTTIME 105
-#define IPC_ISPLAYING 104
+CPlayerInfoQueryWnd	g_wndInfoQuery;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -746,10 +590,6 @@ void GetMediaTitle(LPSTR szBuff, int nBuffLen, LPCSTR szMediaSrc)
 
 CPlayerImp::CPlayerImp()
 {
-	EmptyStr(m_szArtist);
-	EmptyStr(m_szAlbum);
-	EmptyStr(m_szTitle);
-	EmptyStr(m_szFullTitle);
 }
 
 CPlayerImp::~CPlayerImp()
@@ -780,68 +620,9 @@ DWORD CPlayerImp::GetPlayerState()
 		return PS_STOPED;
 }
 
-int CPlayerImp::GetCurSkinPath(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-
-	return 1;
-}
-
-int CPlayerImp::GetProxy(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-	
-	return 1;
-}
-
 HWND CPlayerImp::GetMainWnd()
 {
 	return g_hwndPlayer;
-}
-
-// 返回歌曲的信息，格式为：artist - title		作者 － 歌曲名
-int CPlayerImp::GetFullTitleW(WCHAR * lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szFullTitle);
-
-	return 1;
-}
-
-int CPlayerImp::GetArtistW(WCHAR *lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szArtist);
-	return PR_OK;
-}
-
-int CPlayerImp::GetAlbumW(WCHAR *lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szAlbum);
-	return PR_OK;
-}
-
-int CPlayerImp::GetTitleW(WCHAR *lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szTitle);
-	return PR_OK;
-}
-
-// 返回歌曲的全文件名（如c:\\...., httP;//wwww......)
-int CPlayerImp::GetSourceMediaW(WCHAR * lpszSourceMedia, int nBufSize)
-{
-	UTF8ToUCS2((BYTE *)_szMediaPathName, strlen(_szMediaPathName) + 1, lpszSourceMedia, nBufSize);
-
-	return 1;
-}
-
-// 歌曲的长度（单位ms）
-DWORD CPlayerImp::GetMediaLength()
-{
-	DWORD	dwLength = 0;
-
-	SendMessageTimeout(g_hwndPlayer, WM_WA_IPC, 1, IPC_GETOUTPUTTIME,
-		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwLength);
-
-	return dwLength * 1000;
 }
 
 // 歌曲播放的位置（单位ms)
@@ -853,19 +634,6 @@ DWORD CPlayerImp::GetPlayPos()
 		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwCurPos);
 
 	return dwCurPos;
-}
-
-// 返回歌曲的信息，格式为：artist - title		作者 － 歌曲名
-void CPlayerImp::OnSongChanged(LPCWSTR szFullTitle)
-{
-	wcscpy_safe(m_szFullTitle, CountOf(m_szFullTitle), szFullTitle);
-	g_MLService.OnFullTitleChangedW(szFullTitle);
-}
-
-// 歌曲播放位置改变了
-void CPlayerImp::OnPlayTimeChanged(DWORD dwTimeCur)
-{
-	g_MLService.OnPlayTimeChanged(dwTimeCur);
 }
 
 // control player
@@ -935,24 +703,15 @@ BOOL CPlayerImp::Init()
 		return false;
 	}
 
-	//
-	// Create Window to get playback pos timely.
-	//
-	GetPosWndRegisterClass(g_hInstance);
-	GetPosWndCreate(g_hInstance);
-
 	g_MLService.AddWndCloseto(NULL, "XMPLAY-MAIN", NULL);
 	g_MLService.AddWndCloseto(NULL, "XMPLAY-PANEL", NULL);
 	g_MLService.AddWndCloseto(NULL, "XMPLAY-INFO", NULL);
 
-	if (!IsEmptyString(m_szFullTitle))
-		g_MLService.OnFullTitleChangedW(m_szFullTitle);
+	g_wndInfoQuery.Create(g_hInstance);
 
 	return TRUE;
 }
 
-// COMMENT:
-//		关闭WINAMP 状态查询线程
 void CPlayerImp::Quit()
 {
 	if (g_DdeInstID)
@@ -961,19 +720,10 @@ void CPlayerImp::Quit()
 		g_DdeInstID = 0;
 	}
 
-	if (g_hWndGetPos)
-		DestroyWindow(g_hWndGetPos);
+	g_wndInfoQuery.Destroy();
 }
 
-void CPlayerImp::SetTimeUpdateFreq(int nFreq)
+void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 {
-	if (nFreq == 0)
-		g_UpdateTimeSpan = 100;
-	else if (nFreq == 1)
-		g_UpdateTimeSpan = 50;
-	else
-		g_UpdateTimeSpan = 10;
-
-	KillTimer(g_hWndGetPos, TIMER_GETPOS);
-	SetTimer(g_hWndGetPos, TIMER_GETPOS, g_UpdateTimeSpan, NULL);
+	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
 }

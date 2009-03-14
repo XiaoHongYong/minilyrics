@@ -24,8 +24,6 @@ public:
 	// get player state and song info
 	DWORD GetPlayerState();
 
-	DWORD GetMediaLength();
-
 	DWORD GetPlayPos();
 	int HasVideo();
 

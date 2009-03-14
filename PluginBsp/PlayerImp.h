@@ -1,7 +1,5 @@
 #pragma once
 
-extern class CPlayerImp		g_Player;
-
 class CPlayerImp : public IPlayer
 {
 public:
@@ -9,7 +7,6 @@ public:
 	virtual ~CPlayerImp();
 
 public:
-
 	// Init and destroy.
 	BOOL Init();
 	void Quit();
@@ -21,8 +18,6 @@ public:
 
 	// get player state and song info
 	DWORD GetPlayerState();
-
-	DWORD GetMediaLength();
 
 	DWORD GetPlayPos();
 	int HasVideo();

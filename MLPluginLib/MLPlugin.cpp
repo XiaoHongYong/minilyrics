@@ -6,7 +6,6 @@ HMODULE			g_hModMiniLyrics = NULL;
 CMLService		g_MLService;
 HWND			g_hwndPlayer = NULL;
 PlayerServiceEntry g_PlayerEntry;
-bool			g_bIsUcs2Prefer = false;
 
 IPlayer			*g_pPlayer = NULL;
 
@@ -237,32 +236,18 @@ wstring UrlGetTitle(LPCWSTR szFile)
 	return strFileTitle;
 }
 
-void FormatFullTitle(LPCSTR szArtist, LPCSTR szTitle, LPCSTR szUri, string &strFullTitle)
+LPCSTR UrlGetName(LPCSTR szFile)
 {
-	strFullTitle.resize(0);
-	if (!IsEmptyString(szArtist))
-	{
-		strFullTitle = szArtist;
-		strFullTitle += " - ";
-	}
+	LPCSTR		szBeg, szBeg2;
 
-	strFullTitle += szTitle;
-	if (strFullTitle.empty())
-		strFullTitle = UrlGetTitle(szUri);
-}
-
-void FormatFullTitle(LPCWSTR szArtist, LPCWSTR szTitle, LPCWSTR szUri, wstring &strFullTitle)
-{
-	strFullTitle.resize(0);
-	if (!IsEmptyString(szArtist))
-	{
-		strFullTitle = szArtist;
-		strFullTitle += L" - ";
-	}
-
-	strFullTitle += szTitle;
-	if (strFullTitle.empty())
-		strFullTitle = UrlGetTitle(szUri);
+	szBeg = strrchr(szFile, '/');
+	szBeg2 = strrchr(szFile, '\\');
+	if (szBeg2 > szBeg)
+		szBeg = szBeg2;
+	if (szBeg)
+		return szBeg + 1;
+	else
+		return szFile;
 }
 
 bool IsFileExist(LPCSTR szFileName)
@@ -440,8 +425,6 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 		break;
 	case cmdGetPos:	// param1, long * pos, ms
 		return g_pPlayer->GetPlayPos();
-	case cmdGetMediaLength:	// param1, long * length, ms
-		return g_pPlayer->GetMediaLength();
 	case cmdGetPlayerState:	// param1, long * player state,1-stop, 2-play, 3-pause
 		return g_pPlayer->GetPlayerState();
 	case cmdGetPlayerName:	// param1, const char *buffer, param2, buffer length
@@ -489,32 +472,6 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 			g_pPlayer->OnPlayPosUpdateSpanChanged(nPlayPosUpdateSpan);
 		}
 		break;
-
-	//
-	// The messages bellow are Deprecated, use MLMediaInfoChanged instead.
-	//
-
-	// UNICODE supported messages
-	case cmdSetUcs2:
-		if (Param1)
-			g_bIsUcs2Prefer = true;
-		return g_pPlayer->IsUcs2Support();
-	case cmdGetSourceMediaW:
-		return g_pPlayer->GetSourceMediaW((WCHAR *)Param1, Param2);
-	case cmdGetArtistW:
-		return g_pPlayer->GetArtistW((WCHAR *)Param1, Param2);
-	case cmdGetTitleW:
-		return g_pPlayer->GetTitleW((WCHAR *)Param1, Param2);
-	case cmdGetAlbumW:
-		return g_pPlayer->GetAlbumW((WCHAR *)Param1, Param2);
-	case cmdGetSourceMedia:	// param1, const char *buffer, param2, buffer length
-		return g_pPlayer->GetSourceMedia((char *)Param1, Param2);
-	case cmdGetArtist:
-		return g_pPlayer->GetArtist((char *)Param1, Param2);
-	case cmdGetTitle:
-		return g_pPlayer->GetTitle((char *)Param1, Param2);
-	case cmdGetAlbum:
-		return g_pPlayer->GetAlbum((char *)Param1, Param2);
 	default:
 		// unknown command
 		{
@@ -529,7 +486,7 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 	return 1;
 }
 
-void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle)
+void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle, unsigned long nMediaLength)
 {
 	MLMediaInfo		mediaInfo;
 	wchar_t			wszMediaUrl[MAX_PATH], wszArtist[MAX_PATH], wszAlbum[MAX_PATH], wszTitle[MAX_PATH];
@@ -543,6 +500,7 @@ void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR s
 	mediaInfo.szArtist = wszArtist;
 	mediaInfo.szAlbum = wszAlbum;
 	mediaInfo.szTitle = wszTitle;
+	mediaInfo.nMediaLength = nMediaLength;
 
 	MBCSToUCS2(szMediaUrl, -1, wszMediaUrl, CountOf(wszMediaUrl), CP_ACP);
 	if (szArtist)

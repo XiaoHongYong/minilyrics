@@ -34,7 +34,12 @@ STDMETHODIMP
 CMLRMAClientAdviseSink::OnPosLength(UINT32	  ulPosition,
 					UINT32	  ulLength)
 {
-	g_Player.m_nMediaLength = ulLength;
+	if (g_Player.m_dwLength != ulLength)
+	{
+		g_Player.m_dwLength = ulLength;
+		if (g_MLService.IsValid())		
+			g_Player.OnMediaChanged();
+	}
 	return PNR_OK;
 }
 
@@ -67,7 +72,6 @@ STDMETHODIMP
 CMLRMAClientAdviseSink::OnPostSeek(ULONG32		    ulOldTime,
 				ULONG32		    ulNewTime)
 {
-	g_Player.m_dwPos = ulNewTime;
 	return PNR_OK;
 }
 
@@ -88,14 +92,8 @@ CMLRMAClientAdviseSink::OnPause(ULONG32		    ulTime)
 STDMETHODIMP
 CMLRMAClientAdviseSink::OnBegin(ULONG32 ulTime)
 {
-	char	szMedia[MAX_PATH];
-	g_Player.GetSourceMedia(szMedia, MAX_PATH);
-
-//	char	szTitle[MAX_PATH];
-//	FileGetTitle(szTitle, MAX_PATH, szMedia);
-//	g_Player.OnSongChanged(szTitle);
-	if (g_MLService.IsValid())
-		g_Player.OnSongChanged(g_Player.m_szFullTitle);
+	if (g_MLService.IsValid())		
+		g_Player.OnMediaChanged();
 
 	g_Player.m_bPlayerState = PS_PLAYING;
 	return PNR_OK;

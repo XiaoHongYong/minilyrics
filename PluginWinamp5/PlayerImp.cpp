@@ -39,15 +39,7 @@ bool WAGetSourceMedia(char * lpszBuffer, int nBufSize)
 bool IsShoutcastMedia(LPCTSTR szMedia)
 {
 	if (_tcsnicmp(szMedia, _T("http://"), 7) == 0)
-	{
-		LPCTSTR p = _tcsrchr(szMedia + 7, '.');
-		if (p)
-		{
-			if (_tcslen(p) <= 5)
-				return false;
-		}
 		return true;
-	}
 	else if (_tcsnicmp(szMedia, _T("uvox://"), 7) == 0)
 		return true;
 
@@ -151,7 +143,11 @@ void OnMediaChanged(LPSTR szFile, LPCSTR szMediaTitle)
 		AnalysisMediaTitle(szMediaTitle, szArtist, szTitle);
 	}
 
-	g_MLService.OnMediaInfoChanged(IsEmptyString(szFile) ? szMediaTitle : szFile, szArtist, szAlbum, szTitle);
+	DWORD	dwLength = 0;
+	if (WAGetCurSongLength(g_hwndPlayer, dwLength))
+		dwLength *= 1000;
+
+	g_MLService.OnMediaInfoChanged(IsEmptyString(szFile) ? szMediaTitle : szFile, szArtist, szAlbum, szTitle, dwLength);
 }
 
 void RemovePlayingStatInfoInMediaTitle(LPSTR szMediaTitle)
@@ -237,11 +233,10 @@ void CheckMediaUpdate()
 class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
 {
 public:
-	bool OnCreate()
+	void OnCreate()
 	{
 		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
 		SetTimer(m_hWnd, TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO, NULL);
-		return true;
 	}
 
 	void OnDestroy()
@@ -922,17 +917,6 @@ HWND CPlayerImp::GetMainWnd()
 	return g_hwndPlayer;
 }
 
-// 歌曲的长度（单位ms）
-DWORD CPlayerImp::GetMediaLength()
-{
-	DWORD	dwLength;
-
-	if (WAGetCurSongLength(g_hwndPlayer, dwLength))
-		return dwLength * 1000;
-	else
-		return 0;
-}
-
 // 歌曲播放的位置（单位ms)
 DWORD CPlayerImp::GetPlayPos()
 {
@@ -1062,6 +1046,5 @@ int CPlayerImp::HasVideo()
 
 void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 {
-	KillTimer(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryBaseWnd::TIMER_GETPOS);
-	SetTimer(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryBaseWnd::TIMER_GETPOS, nPlayPosUpdateSpan, NULL);
+	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
 }

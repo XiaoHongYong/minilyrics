@@ -23,15 +23,7 @@ LPCTSTR 		SZ_FOLDER_PREFIX = _T("LyricFolder");
 bool IsShoutcastMedia(LPCTSTR szMedia)
 {
 	if (_tcsnicmp(szMedia, _T("http://"), 7) == 0)
-	{
-		LPCTSTR p = _tcsrchr(szMedia + 7, '.');
-		if (p)
-		{
-			if (_tcslen(p) <= 5)
-				return false;
-		}
 		return true;
-	}
 	else if (_tcsnicmp(szMedia, _T("uvox://"), 7) == 0)
 		return true;
 

@@ -205,28 +205,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="ID3v1.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="MLRealPlugin.cpp"
 				>
 				<FileConfiguration
@@ -318,15 +296,15 @@
 					/>
 				</FileConfiguration>
 			</File>
+			<File
+				RelativePath=".\PlayerInfoQueryWnd.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
-			<File
-				RelativePath="ID3v1.h"
-				>
-			</File>
 			<File
 				RelativePath="MLRealPlugin.h"
 				>
@@ -341,6 +319,10 @@
 			</File>
 			<File
 				RelativePath="PlayerImp.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PlayerInfoQueryWnd.h"
 				>
 			</File>
 		</Filter>

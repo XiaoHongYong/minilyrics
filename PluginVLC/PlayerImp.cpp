@@ -26,113 +26,57 @@ int ReadMetaData(intf_thread_t *p_this);
 #include <tchar.h>
 
 CPlayerImp		g_Player;
-int				g_UpdateTimeSpan = 50;
 
-///////////////////////////////////////////////////////////////////////////////
-// create window to get playback pos of foobar timely.
-LPCTSTR	szGetPosWndClass = _T("GetPosWnd");
-LPCTSTR szGetPosWndName = _T("GetPosWnd");
-HWND	g_hWndGetPos = NULL;
-const int	TIMER_GETPOS	= 0;
 
-enum NotifyMessage
+class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
 {
-	WM_PLAYER_STAT_CHANGED			= WM_USER + 1,
-	WM_PLAYER_NOW_PLAYING_CHANGED,
-};
-
-void PostNotifyMsgToML(NotifyMessage msg)
-{
-	PostMessage(g_hWndGetPos, msg, 0, 0);
-}
-
-LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-BOOL GetPosWndRegisterClass(HINSTANCE hInstance)
-{
-	WNDCLASS wc;
-
-	if (GetClassInfo(hInstance, szGetPosWndClass, &wc))
-		return TRUE;
-
-	// regiszter pane class
-	wc.style = 0;
-	wc.lpfnWndProc = (WNDPROC)GetPosWndProc;
-	wc.cbClsExtra		= 0;
-	wc.cbWndExtra		= 0;
-	wc.hInstance		= hInstance;
-	wc.hIcon		= NULL;
-	wc.hCursor		= NULL;
-	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
-	wc.lpszMenuName	= NULL;
-	wc.lpszClassName	= szGetPosWndClass;
-
-	int r = RegisterClass(&wc);
-	if (r == 0)
+public:
+	enum NotifyMessage
 	{
-		int res = GetLastError();
-		if (res != ERROR_CLASS_ALREADY_EXISTS)
-		{
-			return FALSE;
-		}
+		WM_PLAYER_STAT_CHANGED			= WM_USER + 1,
+		WM_PLAYER_NOW_PLAYING_CHANGED,
+	};
+
+	void PostNotifyMsgToML(NotifyMessage msg)
+	{
+		PostMessage(m_hWnd, msg, 0, 0);
 	}
 
-	return TRUE;
-}
-
-BOOL GetPosWndCreate(HINSTANCE hInstance)
-{
-   hInstance; // Store instance handle in our global variable
-
-   g_hWndGetPos = CreateWindow(szGetPosWndClass, szGetPosWndName, WS_OVERLAPPEDWINDOW,
-      0, 0, 100, 100, NULL, NULL, hInstance, NULL);
-
-   if (!g_hWndGetPos)
-   {
-      return FALSE;
-   }
-
-   ShowWindow(g_hWndGetPos, SW_MINIMIZE);
-   ShowWindow(g_hWndGetPos, SW_HIDE);
-
-   return TRUE;
-}
-
-LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	PAINTSTRUCT ps;
-	HDC hdc;
-
-	switch (message) 
+	void OnCreate()
 	{
-	case WM_CREATE:
-		SetTimer(hWnd, TIMER_GETPOS, g_UpdateTimeSpan, NULL);
-		break;
-	case WM_TIMER:
-		g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
-		break;
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
-		break;
-	case WM_DESTROY:
-		KillTimer(hWnd, TIMER_GETPOS);
-		g_hWndGetPos = NULL;
-		break;
-	case WM_PLAYER_STAT_CHANGED:
-		g_MLService.OnPlayStateChanged(g_Player.m_stat);
-		break;
-	case WM_PLAYER_NOW_PLAYING_CHANGED:
-		g_Player.MediaChangedCheck();
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
-   }
-   return 0;
-}
+		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
+	}
 
-// End of GetPosWindow
-////////////////////////////////////////////////////////////////////////////////////
+	void OnDestroy()
+	{
+		KillTimer(m_hWnd, TIMER_GETPOS);
+	}
+
+	void OnTimer(int nTimerID)
+	{
+		if (nTimerID == TIMER_GETPOS)
+			g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
+	}
+
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_PLAYER_STAT_CHANGED:
+			g_MLService.OnPlayStateChanged(g_Player.m_stat);
+			break;
+		case WM_PLAYER_NOW_PLAYING_CHANGED:
+			g_Player.MediaChangedCheck();
+			break;
+		default:
+			return CPlayerInfoQueryBaseWnd::WndProc(uMsg, wParam, lParam);
+		}
+		return 1;
+	}
+
+};
+
+CPlayerInfoQueryWnd	g_wndInfoQuery;
 
 
 CPlayerImp::CPlayerImp()
@@ -162,61 +106,6 @@ DWORD CPlayerImp::GetPlayerState()
 HWND CPlayerImp::GetMainWnd()
 {
 	return g_hwndPlayer;
-}
-
-int CPlayerImp::GetArtistW(WCHAR * lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_strArtist.c_str());
-	return PR_OK;
-}
-
-int CPlayerImp::GetAlbumW(WCHAR * lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_strAlbum.c_str());
-	return PR_OK;
-}
-
-int CPlayerImp::GetTitleW(WCHAR * lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_strTitle.c_str());
-	return PR_OK;
-}
-
-// 返回歌曲的全文件名（如c:\\...., httP;//wwww......)
-int CPlayerImp::GetSourceMediaW(WCHAR * lpszSourceMedia, int nBufSize)
-{
-	wcscpy_safe(lpszSourceMedia, nBufSize, m_strSrcMedia.c_str());
-
-	return 1;
-}
-
-// 歌曲的长度（单位ms）
-DWORD CPlayerImp::GetMediaLength()
-{
-	if (!m_p_intf)
-		return 0;
-
-	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
-
-	p_input = p_playlist->p_input;
-
-	if (!p_input || p_input->b_dead)
-	{
-		pl_Release(p_playlist);
-		return 0;
-	}
-
-	vlc_object_yield(p_input);
-
-	int64_t		nLength = 0;
-
-	input_Control(p_input, INPUT_GET_LENGTH, &nLength);
-
-	vlc_object_release(p_input);
-	pl_Release(m_p_intf);
-
-	return nLength / 1000;
 }
 
 // 歌曲播放的位置（单位ms)
@@ -395,43 +284,25 @@ BOOL CPlayerImp::SeekTo(int nMsPos)
 
 BOOL CPlayerImp::Init()
 {
-	//
-	// Create Window to get playback pos timely.
-	//
-	GetPosWndRegisterClass(g_hInstance);
-	GetPosWndCreate(g_hInstance);
+	g_wndInfoQuery.Create(g_hInstance);
 
 	return TRUE;
 }
 
-// COMMENT:
-//		关闭WINAMP 状态查询线程
 void CPlayerImp::Quit()
 {
-	if (g_hWndGetPos)
-	{
-		DestroyWindow(g_hWndGetPos);
-		g_hWndGetPos = NULL;
-	}
+	g_wndInfoQuery.Destroy();
 }
 
-void CPlayerImp::SetTimeUpdateFreq(int nFreq)
+void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 {
-	if (nFreq == 0)
-		g_UpdateTimeSpan = 100;
-	else if (nFreq == 1)
-		g_UpdateTimeSpan = 50;
-	else
-		g_UpdateTimeSpan = 10;
-
-	KillTimer(g_hWndGetPos, TIMER_GETPOS);
-	SetTimer(g_hWndGetPos, TIMER_GETPOS, g_UpdateTimeSpan, NULL);
+	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
 }
 
 void CPlayerImp::NotifyPlayerStatChanged(PLAYER_STATE newStat)
 {
 	m_stat = newStat;
-	PostNotifyMsgToML(WM_PLAYER_STAT_CHANGED);
+	g_wndInfoQuery.PostNotifyMsgToML(CPlayerInfoQueryWnd::WM_PLAYER_STAT_CHANGED);
 }
 
 void CPlayerImp::MediaChangedCheck()
@@ -477,6 +348,8 @@ void CPlayerImp::MediaChangedCheck()
 	}
 
 	wchar_t		wszTemp[260];
+	wstring		m_strArtist, m_strAlbum, m_strTitle, m_strSrcMedia;
+
 
 	EmptyStr(wszTemp);
 	UTF8ToUCS2(p_item->psz_uri, -1, wszTemp, CountOf(wszTemp));
@@ -509,11 +382,18 @@ void CPlayerImp::MediaChangedCheck()
 		m_strTitle = wszTemp;
 	}
 
-	wstring		strFullTitle;
+	MLMediaInfo		mediaInfo;
+	int64_t		nLength = 0;
 
-	FormatFullTitle(m_strArtist.c_str(), m_strTitle.c_str(), m_strSrcMedia.c_str(), strFullTitle);
+	int	nRet = input_Control(p_input, INPUT_GET_LENGTH, &nLength);
 
-	g_MLService.OnFullTitleChangedW(strFullTitle.c_str());
+	mediaInfo.szMediaUrl = m_strSrcMedia.c_str();
+	mediaInfo.szArtist = m_strArtist.c_str();
+	mediaInfo.szAlbum = m_strAlbum.c_str();
+	mediaInfo.szTitle = m_strTitle.c_str();
+	mediaInfo.nMediaLength = GetMediaLength();
+
+	g_MLService.OnMediaInfoChanged(&mediaInfo);
 
 	vlc_object_release(p_input);
 }
@@ -661,7 +541,7 @@ static int PlayingChange(vlc_object_t *p_this, const char *psz_var,
 	if (!p_sys->bMetaDataRead && newval.i_int >= PLAYING_S)
 	{
 		p_sys->bMetaDataRead = true;
-		PostNotifyMsgToML(WM_PLAYER_NOW_PLAYING_CHANGED);
+		g_wndInfoQuery.PostNotifyMsgToML(CPlayerInfoQueryWnd::WM_PLAYER_NOW_PLAYING_CHANGED);
 	}
 
 	if (newval.i_int >= END_S)
@@ -704,11 +584,7 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 		/* Not playing anything ... */
 		vlc_object_release(p_input);
 
-		g_Player.m_strArtist.resize(0);
-		g_Player.m_strAlbum.resize(0);
-		g_Player.m_strTitle.resize(0);
-		g_Player.m_strSrcMedia.resize(0);
-		g_MLService.OnFullTitleChangedW(L"");
+		g_MLService.OnMediaInfoChanged(NULL);
 		return VLC_SUCCESS;
 	}
 
@@ -719,7 +595,7 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 	if (input_item_IsPreparsed(input_GetItem(p_input)))
 	{
 		p_sys->bMetaDataRead = true;
-		PostNotifyMsgToML(WM_PLAYER_NOW_PLAYING_CHANGED);
+		g_wndInfoQuery.PostNotifyMsgToML(CPlayerInfoQueryWnd::WM_PLAYER_NOW_PLAYING_CHANGED);
 	}
 
 	vlc_object_release(p_input);
@@ -738,3 +614,32 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	return TRUE;
 }
 
+
+// 歌曲的长度（单位ms）
+DWORD CPlayerImp::GetMediaLength()
+{
+	if (!m_p_intf)
+		return 0;
+
+	input_thread_t *p_input;
+	playlist_t *p_playlist = pl_Yield(m_p_intf);
+
+	p_input = p_playlist->p_input;
+
+	if (!p_input || p_input->b_dead)
+	{
+		pl_Release(m_p_intf);
+		return 0;
+	}
+
+	vlc_object_yield(p_input);
+
+	int64_t		nPos = 0;
+
+	input_Control(p_input, INPUT_GET_LENGTH, &nPos);
+
+	vlc_object_release(p_input);
+	pl_Release(m_p_intf);
+
+	return nPos / 1000;
+}

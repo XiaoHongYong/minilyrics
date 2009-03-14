@@ -6,6 +6,7 @@
 #include "IPlayer.h"
 #include "assert.h"
 #include <string>
+#include "PlayerInfoQueryBaseWnd.h"
 
 using namespace std;
 
@@ -14,7 +15,6 @@ extern HMODULE			g_hModMiniLyrics;
 extern HWND				g_hwndPlayer;
 extern class CMLService	g_MLService;
 extern PlayerServiceEntry g_PlayerEntry;
-extern bool				g_bIsUcs2Prefer;
 
 #define EmptyStr(str)	(str[0] = '\0')
 #define CountOf(arr)	(sizeof(arr) / sizeof(arr[0]))
@@ -24,6 +24,8 @@ extern bool				g_bIsUcs2Prefer;
 int UTF8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen);
 
 BOOL GetProgramPath(char szPath[], HINSTANCE hInstance/* = NULL*/);
+
+LPCSTR UrlGetName(LPCSTR szFile);
 
 bool IsFileExist(LPCSTR szFileName);
 
@@ -56,10 +58,6 @@ WCHAR * __cdecl wcscat_safe (
 #define _tcscpy_safe		strcpy_safe
 #define _tcscat_safe		strcat_safe
 #endif
-
-void FormatFullTitle(LPCSTR szArtist, LPCSTR szTitle, LPCSTR szUri, string &strFullTitle);
-
-void FormatFullTitle(LPCWSTR szArtist, LPCWSTR szTitle, LPCWSTR szUri, wstring &strFullTitle);
 
 long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2);
 
@@ -222,7 +220,7 @@ public:
 			m_funMLService(MLDestroyNotifyWnd, 0, 0);
 	}
 
-	void OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle);
+	void OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle, unsigned long nMediaLength);
 
 	void OnMediaInfoChanged(MLMediaInfo *pMediaInfo)
 	{

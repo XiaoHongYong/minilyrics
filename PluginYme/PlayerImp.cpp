@@ -2,96 +2,30 @@
 #include "PlayerImp.h"
 
 CPlayerImp		g_Player;
-int				g_UpdateTimeSpan = 50;
 
-///////////////////////////////////////////////////////////////////////////////
-// create window to get playback positon timely.
-LPCTSTR	szGetPosWndClass = _T("GetPosWnd");
-LPCTSTR szGetPosWndName = _T("GetPosWnd");
-HWND	g_hWndGetPos = NULL;
-const int	TIMER_GETPOS	= 1;
 
-LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-BOOL GetPosWndRegisterClass(HINSTANCE hInstance)
+class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
 {
-	WNDCLASS wc;
-
-	if (GetClassInfo(hInstance, szGetPosWndClass, &wc))
-		return TRUE;
-
-	// register pane class
-	wc.style = 0;
-	wc.lpfnWndProc = (WNDPROC)GetPosWndProc;
-	wc.cbClsExtra		= 0;
-	wc.cbWndExtra		= 0;
-	wc.hInstance		= hInstance;
-	wc.hIcon		= NULL;
-	wc.hCursor		= NULL;
-	wc.hbrBackground	= (HBRUSH)GetStockObject(NULL_BRUSH);
-	wc.lpszMenuName	= NULL;
-	wc.lpszClassName	= szGetPosWndClass;
-
-	int r = RegisterClass(&wc);
-	if (r == 0)
+public:
+	void OnCreate()
 	{
-		int res = GetLastError();
-		if (res != ERROR_CLASS_ALREADY_EXISTS)
-		{
-			return FALSE;
-		}
+		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
 	}
 
-	return TRUE;
-}
-
-BOOL GetPosWndCreate(HINSTANCE hInstance)
-{
-	hInstance; // Store instance handle in our global variable
-
-	g_hWndGetPos = CreateWindow(szGetPosWndClass, szGetPosWndName, WS_OVERLAPPEDWINDOW,
-		0, 0, 100, 100, NULL, NULL, hInstance, NULL);
-
-	if (!g_hWndGetPos)
+	void OnDestroy()
 	{
-		return FALSE;
+		KillTimer(m_hWnd, TIMER_GETPOS);
 	}
 
-	ShowWindow(g_hWndGetPos, SW_MINIMIZE);
-	ShowWindow(g_hWndGetPos, SW_HIDE);
-
-	return TRUE;
-}
-
-LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
-{
-	PAINTSTRUCT ps;
-	HDC hdc;
-
-	switch (message) 
+	void OnTimer(int nTimerID)
 	{
-	case WM_CREATE:
-		SetTimer(hWnd, TIMER_GETPOS, g_UpdateTimeSpan, NULL);
-		break;
-	case WM_TIMER:
-		g_Player.OnPlayTimeChanged(g_Player.GetPlayPos());
-		break;
-	case WM_PAINT:
-		hdc = BeginPaint(hWnd, &ps);
-		EndPaint(hWnd, &ps);
-		break;
-	case WM_DESTROY:
-		KillTimer(hWnd, TIMER_GETPOS);
-		g_hWndGetPos = NULL;
-		break;
-	default:
-		return DefWindowProc(hWnd, message, wParam, lParam);
+		g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
 	}
-	return 0;
-}
 
-// End of GetPosWindow
-////////////////////////////////////////////////////////////////////////////////////
+};
+
+CPlayerInfoQueryWnd	g_wndInfoQuery;
+
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -99,10 +33,6 @@ LRESULT CALLBACK GetPosWndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lP
 
 CPlayerImp::CPlayerImp()
 {
-	EmptyStr(m_szArtist);
-	EmptyStr(m_szAlbum);
-	EmptyStr(m_szTitle);
-	EmptyStr(m_szFullTitle);
 }
 
 CPlayerImp::~CPlayerImp()
@@ -140,63 +70,9 @@ DWORD CPlayerImp::GetPlayerState()
 	return playState;
 }
 
-int CPlayerImp::GetCurSkinPath(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-
-	return 1;
-}
-
-int CPlayerImp::GetProxy(char * lpszBuffer, int nBufSize)
-{
-	EmptyStr(lpszBuffer);
-
-	return 1;
-}
-
 HWND CPlayerImp::GetMainWnd()
 {
 	return g_hwndPlayer;
-}
-
-// 返回歌曲的信息，格式为：artist - title		作者 － 歌曲名
-int CPlayerImp::GetFullTitleW(WCHAR * lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szFullTitle);
-
-	return 1;
-}
-
-int CPlayerImp::GetArtistW(WCHAR *lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szArtist);
-	return PR_OK;
-}
-
-int CPlayerImp::GetAlbumW(WCHAR *lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szAlbum);
-	return PR_OK;
-}
-
-int CPlayerImp::GetTitleW(WCHAR *lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szTitle);
-	return PR_OK;
-}
-
-// 返回歌曲的全文件名（如c:\\...., httP://wwww......)
-int CPlayerImp::GetSourceMediaW(WCHAR * lpszBuffer, int nBufSize)
-{
-	wcscpy_safe(lpszBuffer, nBufSize, m_szSrcMedia);
-
-	return 1;
-}
-
-// 歌曲的长度（单位ms）
-DWORD CPlayerImp::GetMediaLength()
-{
-	return m_dwSongLength;
 }
 
 // 歌曲播放的位置（单位ms)
@@ -213,24 +89,6 @@ DWORD CPlayerImp::GetPlayPos()
 	}
 
 	return (DWORD)(dbTime);
-}
-
-// 返回歌曲的信息，格式为：artist - title		作者 － 歌曲名
-void CPlayerImp::OnSongChanged(LPCWSTR szFullTitle, LPCWSTR szSrcMedia)
-{
-	if (wcscmp(m_szSrcMedia, szSrcMedia) == 0 && wcscmp(m_szSrcMedia, szSrcMedia) == 0)
-		return;
-
-	wcscpy_safe(m_szFullTitle, CountOf(m_szFullTitle), szFullTitle);
-	wcscpy_safe(m_szSrcMedia, CountOf(m_szSrcMedia), szSrcMedia);
-
-	g_MLService.OnFullTitleChangedW(szFullTitle);
-}
-
-// 歌曲播放位置改变了
-void CPlayerImp::OnPlayTimeChanged(DWORD dwTimeCur)
-{
-	g_MLService.OnPlayTimeChanged(dwTimeCur);
 }
 
 // control player
@@ -354,21 +212,14 @@ BOOL CPlayerImp::Init()
 	g_hwndPlayer = FindWindowA("YMPFrame", NULL);
 	g_MLService.AddWndCloseto(NULL, "YMPFrame", NULL);
 
-	//
-	// Create Window to get playback positon timely.
-	//
-	GetPosWndRegisterClass(g_hInstance);
-	GetPosWndCreate(g_hInstance);
+	g_wndInfoQuery.Create(g_hInstance);
 
 	return TRUE;
 }
 
-// COMMENT:
-//		关闭WINAMP 状态查询线程
 void CPlayerImp::Quit()
 {
-	if (g_hWndGetPos)
-		DestroyWindow(g_hWndGetPos);
+	g_wndInfoQuery.Destroy();
 
 	// when you're done, call shutdown:
 	if (m_spRemote.GetInterfacePtr() != NULL)
@@ -378,16 +229,7 @@ void CPlayerImp::Quit()
 	}
 }
 
-
-void CPlayerImp::SetTimeUpdateFreq(int nFreq)
+void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 {
-	if (nFreq == 0)
-		g_UpdateTimeSpan = 100;
-	else if (nFreq == 1)
-		g_UpdateTimeSpan = 50;
-	else
-		g_UpdateTimeSpan = 10;
-
-	KillTimer(g_hWndGetPos, TIMER_GETPOS);
-	SetTimer(g_hWndGetPos, TIMER_GETPOS, g_UpdateTimeSpan, NULL);
+	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
 }

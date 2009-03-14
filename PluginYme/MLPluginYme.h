@@ -241,57 +241,50 @@ public:
 
 		if (indexToBePlayed < 0)
 		{
-			// guiDialog.currentlyPlayingTitle = "Nothing playing now...";
-			EmptyStr(g_Player.m_szArtist);
-			EmptyStr(g_Player.m_szAlbum);
-			EmptyStr(g_Player.m_szTitle);
-			g_Player.OnSongChanged(L"", L"");
-		}
-		else
-		{
-			// Get the currently playing object:
-			CComQIPtr< IRMPMediaObject > pMediaObject = RMPMediaObject;
-			CComQIPtr< IDispatch > pDisp;
-			CComQIPtr< IRMPMetadata > pMetadata;
-
-			if (pMediaObject.p == NULL)
-				return;
-
-			pMediaObject->get_Metadata(&pDisp);
-			pMetadata = pDisp;
-
-			if (pMetadata.p == NULL)
-				return;
-
-			_bstr_t		name;
-			WCHAR		szFullTitle[512];
-
-			// get length
-			pMetadata->GetPredefinedValue(METADATA_DURATION, name.GetAddress());
-			g_Player.m_dwSongLength = _wtoi((const WCHAR *)name);
-
-			// get title and artist
-			pMetadata->GetPredefinedValue(METADATA_ARTIST, name.GetAddress());
-			wcscpy_safe(g_Player.m_szArtist, CountOf(g_Player.m_szArtist), name);
-
-			pMetadata->GetPredefinedValue(METADATA_ALBUM, name.GetAddress());
-			wcscpy_safe(g_Player.m_szAlbum, CountOf(g_Player.m_szAlbum), name);
-
-			pMetadata->GetPredefinedValue(METADATA_TITLE, name.GetAddress());
-			wcscpy_safe(g_Player.m_szTitle, CountOf(g_Player.m_szTitle), name);
-
-			wcscpy(szFullTitle, g_Player.m_szArtist);
-			wcscat(szFullTitle, L" - ");
-
-			wcscat(szFullTitle, g_Player.m_szTitle);
-
-			// get media source
-			pMediaObject->get_Path(name.GetAddress());
-
-			g_Player.OnSongChanged(szFullTitle, (const WCHAR *)name);
+			g_MLService.OnMediaInfoChanged(NULL);
+			return;
 		}
 
-		return;
+		EmptyStr(g_Player.m_szArtist);
+		EmptyStr(g_Player.m_szAlbum);
+		EmptyStr(g_Player.m_szTitle);
+
+		// Get the currently playing object:
+		CComQIPtr< IRMPMediaObject > pMediaObject = RMPMediaObject;
+		CComQIPtr< IDispatch > pDisp;
+		CComQIPtr< IRMPMetadata > pMetadata;
+
+		if (pMediaObject.p == NULL)
+			return;
+
+		pMediaObject->get_Metadata(&pDisp);
+		pMetadata = pDisp;
+
+		if (pMetadata.p == NULL)
+			return;
+
+		_bstr_t		artist, title, album, length, url;
+		MLMediaInfo	mediaInfo;
+
+		// get length
+		pMetadata->GetPredefinedValue(METADATA_DURATION, length.GetAddress());
+		mediaInfo.nMediaLength = _wtoi((const WCHAR *)length);
+
+		// get title and artist
+		pMetadata->GetPredefinedValue(METADATA_ARTIST, artist.GetAddress());
+		mediaInfo.szArtist = artist;
+
+		pMetadata->GetPredefinedValue(METADATA_ALBUM, album.GetAddress());
+		mediaInfo.szAlbum = album;
+
+		pMetadata->GetPredefinedValue(METADATA_TITLE, title.GetAddress());
+		mediaInfo.szTitle = title;
+
+		// get media source
+		pMediaObject->get_Path(url.GetAddress());
+		mediaInfo.szMediaUrl = url;
+
+		g_MLService.OnMediaInfoChanged(&mediaInfo);
 	}
 
 	BEGIN_SINK_MAP(CMLPluginYme)

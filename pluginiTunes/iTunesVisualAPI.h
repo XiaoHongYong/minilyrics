@@ -1,7 +1,7 @@
 /*
 	File:		iTunesVisualAPI.h
 	
-	Copyright: 	© Copyright 2003 Apple Computer, Inc. All rights reserved.
+	Copyright: 	?Copyright 2003 Apple Computer, Inc. All rights reserved.
 	
 	Disclaimer:	IMPORTANT:  This Apple software is supplied to you by Apple Computer, Inc.
 				("Apple") in consideration of your agreement to the following terms, and your

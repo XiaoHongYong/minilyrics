@@ -5,7 +5,7 @@
 #define ML_IF_VERSION			0x10	// MiniLyrics's interface version 1.0
 #define ML_PLAYER_IF_VERSION	0x10	// player's interface version 1.0
 
-typedef long MLPARAM;
+typedef LRESULT MLPARAM;
 
 //
 // return value of plug-in messages.
@@ -63,10 +63,13 @@ enum MLStarupFlags
 
 struct MLMediaInfo
 {
+	MLMediaInfo() : szMediaUrl(NULL), szArtist(NULL), szAlbum(NULL), szTitle(NULL), nMediaLength(0) { }
+
 	LPCWSTR			szMediaUrl;
 	LPCWSTR			szArtist;
 	LPCWSTR			szTitle;
 	LPCWSTR			szAlbum;
+	unsigned long	nMediaLength;		// in ms, 0 means unknown
 };
 
 enum MLCommand

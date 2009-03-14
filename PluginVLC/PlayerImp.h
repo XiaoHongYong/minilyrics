@@ -1,7 +1,5 @@
 #pragma once
 
-extern class CPlayerImp		g_Player;
-
 class CPlayerImp : public IPlayer
 {
 public:
@@ -21,13 +19,6 @@ public:
 	// get player state and song info
 	DWORD GetPlayerState();
 
-	int GetArtistW(WCHAR * lpszBuffer, int nBufSize);
-	int GetAlbumW(WCHAR * lpszBuffer, int nBufSize);
-	int GetTitleW(WCHAR * lpszBuffer, int nBufSize);
-	int GetSourceMediaW(WCHAR * lpszSourceMedia, int nBufSize);
-
-	DWORD GetMediaLength();
-
 	DWORD GetPlayPos();
 
 	virtual int HasVideo();
@@ -41,21 +32,16 @@ public:
 	BOOL Next();
 	BOOL SeekTo(int nMsPos);
 
-	void SetTimeUpdateFreq(int nFreq);
-
-	virtual bool IsUcs2Support()
-	{
-		return true;
-	}
+	void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
 
 public:
 	void NotifyPlayerStatChanged(PLAYER_STATE newStat);
 
 	void MediaChangedCheck();
 
-public:
-	wstring			m_strArtist, m_strAlbum, m_strTitle, m_strSrcMedia;
+	DWORD GetMediaLength();
 
+public:
 	PLAYER_STATE	m_stat;
 
 	intf_thread_t	*m_p_intf;

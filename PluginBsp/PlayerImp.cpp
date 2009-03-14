@@ -5,17 +5,14 @@
 #include "bsp.h"
 #include "bspplg.h"
 
-#include <PROCESS.H>
-
-
+CPlayerImp			g_Player;
 
 class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
 {
 public:
-	bool OnCreate()
+	void OnCreate()
 	{
 		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
-		return true;
 	}
 
 	void OnDestroy()
@@ -35,9 +32,8 @@ public:
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CPlayerImp		g_Player;
 CPlayerInfoQueryWnd	g_wndInfoQuery;
-PpluginInfo		g_pInfo;
+PpluginInfo			g_pInfo;
 
 #define DBGMSG(param)		MessageBox(NULL, param, "Message", MB_OK);
 
@@ -113,13 +109,11 @@ int __stdcall CallbackProc(const DWORD cmdID,void * param1, void * param2)
 {
 	switch (cmdID) {
 		case EV_UNLOAD:
-			// DBGMSG("EV_UNLOAD");
 			g_MLService.Quit();
 			break;
 		case EV_BEFORE_FILE_OPEN:
 			break;
 		case EV_FILE_OPEN:
-			// loadSubtitles("");
 			break;
 		case EV_CONFIG:
 			g_MLService.Config((HWND)param1);
@@ -129,14 +123,17 @@ int __stdcall CallbackProc(const DWORD cmdID,void * param1, void * param2)
 			break;
 		case EV_LOAD_SUB:
 			break;
-			// return loadSubtitles((const char *)param1);
 		case EV_PLAY:
 			{
 				char		szMediaUrl[MAX_PATH];
+				DWORD		dwLength;
 
 				GetBSPPlayingMediaUrl(szMediaUrl, MAX_PATH);
 
-				g_MLService.OnMediaInfoChanged(szMediaUrl, NULL, NULL, NULL);
+				if (!SDMSG(WM_BSP_CMD, BSP_GetMovLen, 0, dwLength))
+					dwLength = 0;
+
+				g_MLService.OnMediaInfoChanged(szMediaUrl, NULL, NULL, NULL, dwLength);
 			}
 			break;
 /*		case EV_STOP:
@@ -163,7 +160,6 @@ extern "C" {
 		plgInfo->plgCallback = CallbackProc;
 
 		g_pInfo = plgInfo;
-		// g_pInfo->subRegisterExt("*.*");
 
 		if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
 			return TRUE;	// we must return 0!
@@ -228,17 +224,6 @@ DWORD CPlayerImp::GetPlayerState()
 HWND CPlayerImp::GetMainWnd()
 {
 	return g_hwndPlayer;
-}
-
-// 歌曲的长度（单位ms）
-DWORD CPlayerImp::GetMediaLength()
-{
-	DWORD	dwLength;
-
-	if (!SDMSG(WM_BSP_CMD, BSP_GetMovLen, 0, dwLength))
-		dwLength = 0;
-
-	return dwLength;
 }
 
 // 歌曲播放的位置（单位ms)
@@ -348,6 +333,5 @@ int CPlayerImp::HasVideo()
 
 void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 {
-	KillTimer(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryBaseWnd::TIMER_GETPOS);
-	SetTimer(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryBaseWnd::TIMER_GETPOS, nPlayPosUpdateSpan, NULL);
+	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
 }

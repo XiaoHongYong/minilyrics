@@ -95,7 +95,7 @@ void RegJRMediaPlugin(HKEY hKeyParent, LPCTSTR szReg)
 		char  strCompany[128] = {"Crintsoft.com"};
 		char  strVersion[10]  = {"1.0.0"};
 		char  strURL[128]     = {"http://www.crintsoft.com"};
-		char  strCopyright[255] = {"Copyright (c) 2006, Crintsoft.com"};
+		char  strCopyright[255] = {"Copyright (c) 2009, Crintsoft.com"};
 		LPWSTR strID; StringFromCLSID(CLSID_PluginMJCtrl, &strID);
 		
 		reg.SetValue(_bstr_t(strID), "CLSID");
