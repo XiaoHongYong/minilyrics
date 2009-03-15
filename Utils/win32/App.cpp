@@ -74,7 +74,7 @@ BOOL InitBaseFrameWork(HINSTANCE hInst, LPCTSTR szLogFile, LPCTSTR szProfileName
 	g_hInst = hInst;
 
 	g_Profile.Init(szProfileName, szDefAppName);
-	g_Log.Init(szLogFile, TRUE);
+	g_Log.Init(szLogFile);
 
 	return TRUE;
 }

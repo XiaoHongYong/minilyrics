@@ -5,6 +5,16 @@
 
 IMiniDumperNotify	*CMiniDumper::m_pDumpNotify = NULL;
 
+void null_invalid_parameter(
+						const wchar_t * expression,
+						const wchar_t * function, 
+						const wchar_t * file, 
+						int line,
+						uintptr_t pReserved
+						)
+{
+}
+
 CMiniDumper::CMiniDumper()
 {
 }
@@ -12,11 +22,13 @@ CMiniDumper::CMiniDumper()
 void CMiniDumper::Init(IMiniDumperNotify *pDumpNotify)
 {
 	if (m_pDumpNotify)
-	{
-		// already inited.
 		return;
-	}
 	m_pDumpNotify = pDumpNotify;
+
+#ifndef DEBUG
+	// Disable debug invalid parameter prompt
+	_set_invalid_parameter_handler((_invalid_parameter_handler)null_invalid_parameter);
+#endif
 
 	SetUnhandledExceptionFilter(TopLevelFilter);
 }

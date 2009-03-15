@@ -93,20 +93,18 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 	}
 	else if (pEvent->eventType == ET_LYRICS_CHANGED)
 	{
-
-		//
-		// 如果是文本歌词则使用文本查看模式
 		if (g_LyricData.GetLyrContentType() != LCT_TXT)
 		{
-			// use 
+			// Change to default lyrics display style
 			ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str());
+			m_pSkin->InvalidateRect();
 		}
-		else
+		else if (m_pLyricsShow && _tcscmp(CLyricShowMultiRowObj::ClassName(), m_pLyricsShow->GetClassName()) == 0)
 		{
-			// To static text style
+			// To static text style, if the original is MultiLine style.
 			ChangeLyricsDisplayStyle(CLyricShowTxtObj::ClassName());
+			m_pSkin->InvalidateRect();
 		}
-		m_pSkin->InvalidateRect();
 	}
 }
 

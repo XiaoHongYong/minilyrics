@@ -30,8 +30,6 @@ BOOL CDebugOutputWnd::Create()
 		m_edit.Create(_T(""), rc.left, rc.top, rc.Width(), rc.Height(), this);
 		m_edit.ShowWindow(SW_SHOW);
 	}
-
-	g_Log.SetTargetWnd(m_hWnd);
 /*
 	HRGN		hRgn;
 

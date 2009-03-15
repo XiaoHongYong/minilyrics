@@ -48,9 +48,6 @@ class CLog
 {
 protected:
 	FILE		*m_fpLog;
-	bool		m_bTryOpenAgain;
-	bool		m_bAlwaysLogToFile;
-	bool		m_bEnableLog;
 	TCHAR		m_szLogFile[MAX_PATH];
 
 	Mutex		m_mutex;
@@ -60,24 +57,14 @@ public:
 	virtual ~CLog();
 
 public:
-	void Init(LPCTSTR szLogFileName, BOOL bAlwaysLogToFile = FALSE);
+	void Init(LPCTSTR szLogFileName);
 	void Close();
-	void LogOut(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, ...);
 	void WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, ...);
 	void LogDumpStr(BYTE byLevel, LPCTSTR szFile, int nLine, LPCSTR szStr, int nStrLen);
 
 protected:
 	BOOL OpenLogFile();
 
-#if defined(_WIN32) && !defined(_WINCE_)
-public:
-	void SetTargetWnd(HWND hWnd);
-	void SetMessageOutWnd(HWND hWnd);
-
-protected:
-	HWND		m_hWndMessage;
-
-#endif
 };
 
 #endif // !defined(AFX_LOG_H__2003_02_09__INCLUDED_)

@@ -46,18 +46,6 @@ extern class CLog		g_Log;
 #define LOG3(byLevel, sz, p1, p2, p3)			\
 	g_Log.WriteLog(byLevel, _T(__FILE__), __LINE__, sz, p1, p2, p3)
 
-#define LOGOUT0(byLevel, szMessage)			\
-	g_Log.LogOut(byLevel, _T(__FILE__), __LINE__, szMessage)
-
-#define LOGOUT1(byLevel, sz, p1)			\
-	g_Log.LogOut(byLevel, _T(__FILE__), __LINE__, sz, p1)
-
-#define LOGOUT2(byLevel, sz, p1, p2)			\
-	g_Log.LogOut(byLevel, _T(__FILE__), __LINE__, sz, p1, p2)
-
-#define LOGOUT3(byLevel, sz, p1, p2, p3)			\
-	g_Log.LogOut(byLevel, _T(__FILE__), __LINE__, sz, p1, p2, p3)
-
 #define ERRLOG0(szMessage)			\
 	g_Log.WriteLog(LOG_LVL_ERROR, _T(__FILE__), __LINE__, szMessage)
 

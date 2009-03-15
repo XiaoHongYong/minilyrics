@@ -1502,7 +1502,7 @@ void CLyricShowObj::OnLyricsChanged()
 
 	// auto resize || !wraplines
 	if ((m_bEnableAutoResize && 
-		(m_bAlwaysAutoWidth || g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), true)))
+		(m_bAlwaysAutoWidth || g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)))
 		|| !ShouldWrapLines())
 		m_pMLData->CopyMLyrLines(m_lyrLines);
 	else
@@ -1608,7 +1608,7 @@ void CLyricShowObj::AutoWidthSkinAccordLyrics(BOOL bSingleRow/* = FALSE*/)
 	if (m_pSkin->m_wndResizer.IsFixedWidth())
 		return;
 
-	if (!m_bAlwaysAutoWidth && !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), true))
+	if (!m_bAlwaysAutoWidth && !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
 		return;
 
 	if (m_lyrLines.empty())

@@ -17,7 +17,7 @@
   LangString LS_SelectPlayer ${LANG_SIMPCHINESE} "选择支持的播放器"
   LangString LS_SelectPlayerDesc ${LANG_SIMPCHINESE} "请选择 MiniLyrics 要支持的播放器。"
 
-  LangString LS_PersonalSetting ${LANG_SIMPCHINESE} "将 MiniLyrics 的设置保存在私有文件夹中。"
+  LangString LS_PersonalSetting ${LANG_SIMPCHINESE} "将 MiniLyrics 的设置保存在每个用户的私人文件夹中。"
   LangString LS_ShortcutOnDesktop ${LANG_SIMPCHINESE} "在桌面创建快捷方式"
   LangString LS_ShortcutOnQuickLannch ${LANG_SIMPCHINESE} "在快速启动栏中创建快捷方式"
   LangString LS_Support ${LANG_SIMPCHINESE} "支持 %s"
