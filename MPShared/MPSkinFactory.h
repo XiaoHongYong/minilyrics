@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #ifdef _MPLAYER
-#define SZ_DEFSKIN		_T("WMP11")
+#define SZ_DEFSKIN		_T("ZikiPlayer")
 #else
 #define SZ_DEFSKIN		_T("Fantasy")
 #endif
