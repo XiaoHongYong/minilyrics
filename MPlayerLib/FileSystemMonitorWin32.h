@@ -15,12 +15,11 @@ Implement CFileSystemMonitor on Win32 Platform
 class CFileSystemMonitorWin32: public CFileSystemMonitor
 {
 public:
-    CFileSystemMonitorWin32():m_hWorkingThread(NULL), m_bDiskQueueIdle(TRUE), m_bMonitorOn(FALSE), m_count(0){};
+    CFileSystemMonitorWin32():m_hWorkingThread(NULL), m_bDiskQueueIdle(TRUE){};
     ~CFileSystemMonitorWin32(){};
 
 public:
 	virtual BOOL StartFullDiskSearch(void);
-	virtual BOOL TurnOnFileSystemMonitor(BOOL bTurnOn);
 
 protected:
     // Platform depend implementation may override below call back functions
@@ -36,15 +35,12 @@ protected:
 protected:
     void SearchFolder(const TCHAR* szStr, BOOL bRoot);
     static unsigned int __stdcall SeachWholeDisk(void * param);
-    static unsigned int __stdcall MonitorAFolder(void * param);
+    BOOL IsDiskIdle(const TCHAR* disk);
 
 protected:
     HANDLE		m_hWorkingThread;               // cbFullDiskSearchThread() thread
     BOOL        m_bDiskQueueIdle;
 
-    BOOL        m_bMonitorOn;                   // if the monitor is on
-    HANDLE      m_aHandle[MAX_DRIVER_SUPPORT];  // bounch of MonitorAFolder() thread
-    int         m_count;                        // count of thread created
 };
 
 
