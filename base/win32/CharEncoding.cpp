@@ -109,6 +109,9 @@ inline void TStringToMBCS(const TCHAR *str, int nLen, string &strOut)
 ENCODING_CODEPAGE	__encodingCodepage[] = 
 {
 	{ ED_SYSDEF, CP_ACP, DEFAULT_CHARSET, "", "", "systemdefault" },
+	{ ED_UNICODE, 0, DEFAULT_CHARSET, "unicode", "", "Unicode" },
+	{ ED_UTF8, CP_UTF8, DEFAULT_CHARSET, "utf-8", "", "Unicode (UTF-8)" },
+	{ ED_UNICODE_BIG_ENDIAN, 0, DEFAULT_CHARSET, "Unicode (Big-Endian)", "", "Unicode (Big-Endian)" },
 	{ ED_ARABIC, 1256, ARABIC_CHARSET, "windows-1256", "arabic", "Arabic" },
 	//	{ ED_BALTIC_ISO, 28594, DEFAULT_CHARSET, "iso-8859-4", "", "Baltic (ISO)" },
 	{ ED_BALTIC_WINDOWS, 1257, BALTIC_CHARSET, "windows-1257", "baltic", "Baltic (Windows)" },
@@ -127,8 +130,6 @@ ENCODING_CODEPAGE	__encodingCodepage[] =
 	{ ED_THAI, 874, THAI_CHARSET, "windows-874", "Thai", "Thai (Windows)" },
 	//	{ ED_TURKISH_ISO, 28599, DEFAULT_CHARSET, "iso-8859-9", 0, "Turkish (ISO)" },
 	{ ED_TURKISH_WINDOWS, 1254, TURKISH_CHARSET, "windows-1254", "turkish", "Turkish (Windows)" },
-	{ ED_UNICODE, 0, DEFAULT_CHARSET, "unicode", "", "Unicode" },
-	{ ED_UTF8, CP_UTF8, DEFAULT_CHARSET, "utf-8", "", "Unicode (UTF-8)" },
 	{ ED_VIETNAMESE, 1258, VIETNAMESE_CHARSET, "windows-1258", "vietnamese", "Vietnamese (Windows)" },
 	//	{ ED_WESTERN_EUROPEAN_ISO, 28591, DEFAULT_CHARSET, "iso-8859-1", "", "Western European (ISO)" },
 	{ ED_WESTERN_EUROPEAN_WINDOWS, 1252, DEFAULT_CHARSET, "Windows-1252", "", "Western European (Windows)" },

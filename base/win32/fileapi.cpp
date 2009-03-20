@@ -721,6 +721,15 @@ void FilePathFilterInvalidChars(LPTSTR szFile)
 //////////////////////////////////////////////////////////////////////////
 //
 
+inline bool IsCurOrParentDir(LPCTSTR szDir)
+{
+	if (_T('.') != szDir[0])
+		return false;
+	if ( (_T('\0') == szDir[1]) || ((_T('.') == szDir[1]) && (_T('\0') == szDir[2])))
+		return true;
+	return false;
+}
+
 CMLFileFind::CMLFileFind()
 {
 	hFileFind = INVALID_HANDLE_VALUE;
@@ -743,10 +752,23 @@ bool CMLFileFind::OpenDir(LPCTSTR szDir, LPCTSTR szFilter)
 	str += szFilter;
 
 	hFileFind = FindFirstFile(str.c_str(), &FindData);
+	if (hFileFind == INVALID_HANDLE_VALUE)
+		return false;
 
 	bFirst = true;
 
-	return (hFileFind != INVALID_HANDLE_VALUE);
+	// Remove _T(".") and _T("..") from result.
+	while (IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY)
+		&& IsCurOrParentDir(FindData.cFileName))
+	{
+		if (!FindNextFile(hFileFind, &FindData))
+		{
+			Close();
+			return false;
+		}
+	}
+
+	return true;
 }
 
 void CMLFileFind::Close()
@@ -766,17 +788,18 @@ bool CMLFileFind::FindNext()
 		return true;
 	}
 
-	return FindNextFile(hFileFind, &FindData) != 0;
-}
+	if (!FindNextFile(hFileFind, &FindData))
+		return false;
 
-LPCTSTR CMLFileFind::GetCurName()
-{
-	return FindData.cFileName;
-}
+	// Remove _T(".") and _T("..") from result.
+	while (IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY)
+		&& IsCurOrParentDir(FindData.cFileName))
+	{
+		if (!FindNextFile(hFileFind, &FindData))
+			return false;
+	}
 
-bool CMLFileFind::IsCurDir()
-{
-	return IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY);
+	return true;
 }
 
 #ifdef _CPPUNIT_TEST

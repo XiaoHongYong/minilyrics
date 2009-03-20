@@ -83,9 +83,11 @@ public:
 
 	bool FindNext();
 
-	LPCTSTR GetCurName();
+	LPCTSTR GetCurName()
+		{ return FindData.cFileName; }
 
-	bool IsCurDir();
+	bool IsCurDir()
+		{ return IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY); }
 
 protected:
 	HANDLE				hFileFind;
