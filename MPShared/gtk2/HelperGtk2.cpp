@@ -90,11 +90,6 @@ BOOL SetFileNoReadOnly(LPCTSTR szFile)
 	return FALSE;
 }
 
-void DeleteAllFiles(LPCTSTR szDir, BOOL bIncSubDir, BOOL bDelReadOnlyFile)
-{
-
-}
-
 bool LoadProxySvrFromIE(bool &bUseProxy, tstring &strSvr, int &nPort)
 {
 	return false;

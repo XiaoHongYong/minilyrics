@@ -347,3 +347,36 @@ void ProfileGetColorValue(MLColor &clr, LPCTSTR szSectName, LPCTSTR szKeyName)
 {
 	GetColorValue(clr, g_Profile.GetProfileString(szSectName, szKeyName, _T("")));
 }
+
+void DeleteAllFiles(LPCTSTR szDir, BOOL bIncSubDir, BOOL bDelReadOnlyFile)
+{
+	CMLFileFind			find;
+	tstring				strDir = szDir;
+
+	DirStringFormat(strDir);
+
+	if (!find.OpenDir(szDir))
+		return;
+
+	while (find.FindNext())
+	{
+		tstring		strFile;
+		strFile = strDir + find.GetCurName();
+		if (find.IsCurDir())
+		{
+			if (bIncSubDir)
+			{
+				DeleteAllFiles(strFile.c_str(), bIncSubDir, bDelReadOnlyFile);
+				RemoveDirectory(strFile.c_str());
+			}
+		}
+		else
+		{
+			if (!DeleteFile(strFile.c_str()) && bDelReadOnlyFile)
+			{
+				SetFileNoReadOnly(strFile.c_str());
+				DeleteFile(strFile.c_str());
+			}
+		}
+	}
+}

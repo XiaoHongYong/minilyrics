@@ -31,7 +31,7 @@
   InstallDir "$PROGRAMFILES\Minilyrics"
 
   ;Request application privileges for Windows Vista
-  RequestExecutionLevel user
+  RequestExecutionLevel highest
 
 ;--------------------------------
 ;Interface Settings
@@ -864,6 +864,8 @@ Section "Uninstall"
   RMDir "$INSTDIR\ml-gen-embedded-skin"
   RMDir "$INSTDIR\ad"
   RMDir "$INSTDIR"
+
+  DeleteRegKey HKCU MUI_LANGDLL_REGISTRY_KEY
 SectionEnd
 
 Function GetMinilyricsInstPath

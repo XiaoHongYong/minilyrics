@@ -152,9 +152,7 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNum
 	{
 		if (finder.IsCurDir())
 		{
-			if (bIncludeSub &&
-				(_tcscmp(finder.GetCurName(), _T(".")) != 0) && 
-				(_tcscmp(finder.GetCurName(), _T("..")) != 0))
+			if (bIncludeSub)
 			{
 				// search in sub directory
 				TCHAR	szSubDir[MAX_PATH];
@@ -218,9 +216,7 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNum
 	{
 		if (finder.IsCurDir())
 		{
-			if ((bIncludeSub) &&
-				(_tcscmp(finder.GetCurName(), _T(".")) != 0) && 
-				(_tcscmp(finder.GetCurName(), _T("..")) != 0))
+			if (bIncludeSub)
 			{
 				// search in sub directory
 				TCHAR	szSubDir[MAX_PATH];

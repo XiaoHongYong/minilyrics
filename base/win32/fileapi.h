@@ -35,11 +35,13 @@ typedef void (*FUNProcessFile)(LPCTSTR szFileName, LPCTSTR szDir, LPVOID lpUserD
 
 BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData);
 
-void DirStringFormat(WCHAR *szDir);
+void DirStringAddSlash(WCHAR *szDir);
 
-void DirStringFormat(char *szDir);
+void DirStringAddSlash(char *szDir);
 
-void DirStringFormat(tstring &strDir);
+void DirStringAddSlash(tstring &strDir);
+
+#define DirStringFormat		DirStringAddSlash
 
 void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int nRelatedPathLen);
 

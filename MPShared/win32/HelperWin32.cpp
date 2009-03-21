@@ -284,56 +284,6 @@ BOOL SetFileNoReadOnly(LPCTSTR szFile)
 		return FALSE;
 }
 
-void DeleteAllFiles(LPCTSTR szDir, BOOL bIncSubDir, BOOL bDelReadOnlyFile)
-{
-	HANDLE				hFileFind;
-	WIN32_FIND_DATA		FindData;
-	TCHAR				szFileName[MAX_PATH];
-
-	_tcscpy_safe(szFileName, CountOf(szFileName), szDir);
-	DirStringFormat(szFileName);
-	_tcscat_safe(szFileName, CountOf(szFileName), _T("*.*"));
-
-	hFileFind = FindFirstFile(szFileName, &FindData);
-	if (hFileFind == INVALID_HANDLE_VALUE)
-		return;
-
-	do
-	{
-		if (IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY) && 
-			(bIncSubDir) &&
-			(_tcscmp(FindData.cFileName, _T(".")) != 0) && 
-			(_tcscmp(FindData.cFileName, _T("..")) != 0))
-		{
-			// search in sub directory
-			TCHAR	szSubDir[MAX_PATH];
-
-			_tcscpy_safe(szSubDir, CountOf(szSubDir), szDir);
-			DirStringFormat(szSubDir);
-			_tcscat_safe(szSubDir, CountOf(szSubDir), FindData.cFileName);
-			_tcscat_safe(szSubDir, CountOf(szSubDir), _T(SZ_DIR_SLASH));
-
-			DeleteAllFiles(szSubDir, bIncSubDir, bDelReadOnlyFile);
-			RemoveDirectory(szSubDir);
-		}
-		else if (!IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY))
-		{
-			TCHAR				szFile[MAX_PATH];
-			_tcscpy_safe(szFile, CountOf(szFile), szDir);
-			DirStringFormat(szFile);
-			_tcscat_safe(szFile, CountOf(szFile), FindData.cFileName);
-			if (!DeleteFile(szFile) && bDelReadOnlyFile)
-			{
-				SetFileNoReadOnly(szFile);
-				DeleteFile(szFile);
-			}
-		}
-	}
-	while (FindNextFile(hFileFind, &FindData));
-
-	FindClose(hFileFind);
-}
-
 bool LoadProxySvrFromIE(bool &bUseProxy, tstring &strSvr, int &nPort)
 {
 	// 取得IE 的代理设置
