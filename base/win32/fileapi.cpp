@@ -186,7 +186,7 @@ BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles
 	tstring				strSearch;
 
 	strSearch = szBaseDir;
-	DirStringFormat(strSearch);
+	DirStringAddSlash(strSearch);
 
 	strSearch += szFilter;
 
@@ -203,7 +203,7 @@ BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles
 				tstring		strFile;
 
 				strFile = szBaseDir;
-				DirStringFormat(strFile);
+				DirStringAddSlash(strFile);
 				strFile += FindData.cFileName;
 
 				vFiles.push_back(strFile);
@@ -227,7 +227,7 @@ BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 	TCHAR				szSearch[MAX_PATH];
 
 	_tcscpy_safe(szSearch, CountOf(szSearch), szBaseDir);
-	DirStringFormat(szSearch);
+	DirStringAddSlash(szSearch);
 
 	_tcscat_safe(szSearch, CountOf(szSearch), _T("*.*"));
 
@@ -248,9 +248,9 @@ BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 			tstring		strSubDir;
 
 			strSubDir = szBaseDir;
-			DirStringFormat(strSubDir);
+			DirStringAddSlash(strSubDir);
 			strSubDir += FindData.cFileName;
-			DirStringFormat(strSubDir);
+			DirStringAddSlash(strSubDir);
 			ProcessFilesInfolder(strSubDir.c_str(), funProc, lpUserData);
 		}
 	}
@@ -263,7 +263,7 @@ BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 
 // COMMENT:
 //		将目录字符串格式化为末尾带DIR_SLASH的
-void DirStringFormat(WCHAR *szDir)
+void DirStringAddSlash(WCHAR *szDir)
 {
 	int		nLen;
 
@@ -277,7 +277,7 @@ void DirStringFormat(WCHAR *szDir)
 
 // COMMENT:
 //		将目录字符串格式化为末尾带DIR_SLASH的
-void DirStringFormat(char *szDir)
+void DirStringAddSlash(char *szDir)
 {
 	int		nLen;
 
@@ -291,7 +291,7 @@ void DirStringFormat(char *szDir)
 
 // COMMENT:
 //		将目录字符串格式化为末尾带DIR_SLASH的
-void DirStringFormat(tstring &strDir)
+void DirStringAddSlash(tstring &strDir)
 {
 	if (strDir.empty() || strDir[strDir.size() - 1] != DIR_SLASH)
 	{
@@ -748,7 +748,7 @@ bool CMLFileFind::OpenDir(LPCTSTR szDir, LPCTSTR szFilter)
 
 	tstring		str;
 	str = szDir;
-	DirStringFormat(str);
+	DirStringAddSlash(str);
 	str += szFilter;
 
 	hFileFind = FindFirstFile(str.c_str(), &FindData);
@@ -842,14 +842,14 @@ protected:
 		for (int i = 0; i < CountOf(SZ_DIR_CMP); i++)
 		{
 			_tcscpy(szDir, SZ_DIR_CMP[i]);
-			DirStringFormat(szDir);
+			DirStringAddSlash(szDir);
 			if (!(_tcscmp(szDir, SZ_DIR_CMP_OK[i]) == 0))
-				CPPUNIT_FAIL_T(CStrPrintf(_T("DirStringFormat, case: %d, %s"), i, SZ_DIR_CMP_OK[i]).c_str());
+				CPPUNIT_FAIL_T(CStrPrintf(_T("DirStringAddSlash, case: %d, %s"), i, SZ_DIR_CMP_OK[i]).c_str());
 
 			strDir = SZ_DIR_CMP[i];
-			DirStringFormat(strDir);
+			DirStringAddSlash(strDir);
 			if (!(_tcscmp(strDir.c_str(), SZ_DIR_CMP_OK[i]) == 0))
-				CPPUNIT_FAIL_T(CStrPrintf(_T("DirStringFormat(stl), case: %d, %s"), i, SZ_DIR_CMP_OK[i]).c_str());
+				CPPUNIT_FAIL_T(CStrPrintf(_T("DirStringAddSlash(stl), case: %d, %s"), i, SZ_DIR_CMP_OK[i]).c_str());
 		}
 	}
 
