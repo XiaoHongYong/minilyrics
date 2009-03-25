@@ -21,22 +21,14 @@ public:
 
 protected:
     // Platform depend implementation may override below call back functions
-	virtual BOOL cbIsFileIntereasted(const TCHAR* szFile){return FALSE;};
-	virtual void cbOnNewFile(const TCHAR* path, const TCHAR* file){};
-    virtual void cbOnEndOfFolder(const TCHAR* path){};
-    virtual void cbOnRemoveFile(const TCHAR* path, const TCHAR* file){};
+	virtual BOOL cbIsFileIntereasted(const TCHAR* szFile) { return FALSE; }
+	virtual void cbOnNewFile(const TCHAR* path, const TCHAR* file) { }
+    virtual void cbOnEndOfFolder(const TCHAR* path) { }
+    virtual void cbOnRemoveFile(const TCHAR* path, const TCHAR* file) { }
 
 private:
 
 };
 ///////////////////////////////////////////////////////////////////////////////
-
-
-#define SIZEOFARRAY(x) (sizeof(x)/sizeof((x)[0]))
-
-
-
-
-
 
 #endif //FILE_SYSTEM_MONITOR_H
