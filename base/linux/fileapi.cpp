@@ -419,9 +419,9 @@ void FileGetExt(LPCTSTR szFile, LPTSTR szExt, int nLenExtMax)
 {
 	LPCTSTR		szBeg;
 
-	szBeg = _tcsrchr(szFile, '.');
+	szBeg = _tcsrchr(szFile, _T('.'));
 	if (szBeg == NULL)
-		szExt[0] = '\0';
+		szExt[0] = _T('\0');
 	else
 	{
 		LPCTSTR		szTemp;
@@ -430,7 +430,7 @@ void FileGetExt(LPCTSTR szFile, LPTSTR szExt, int nLenExtMax)
 		if (szTemp == NULL || szTemp < szBeg)
 			_tcscpy_safe(szExt, nLenExtMax, szBeg);
 		else
-			szExt[0] = '\0';
+			szExt[0] = _T('\0');
 	}
 }
 
