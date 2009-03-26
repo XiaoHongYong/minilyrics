@@ -73,6 +73,14 @@ bool DeleteFile(LPCTSTR lpFileName);
 bool CreateDirectory(LPCSTR lpPathName);
 #endif
 
+
+#ifdef WIN32
+
+BOOL IsDiskIdle(const TCHAR* disk);
+void GetLogicalDrives(V_Str &vDrives);
+#endif
+
+
 class CMLFileFind
 {
 public:
