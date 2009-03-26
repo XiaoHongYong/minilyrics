@@ -528,6 +528,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\FullDiskSearch.cpp"
+				>
+			</File>
+			<File
 				RelativePath="MDAgent.cpp"
 				>
 				<FileConfiguration
@@ -1236,6 +1240,10 @@
 			</File>
 			<File
 				RelativePath="fft.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FullDiskSearch.h"
 				>
 			</File>
 			<File
