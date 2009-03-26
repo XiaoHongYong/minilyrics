@@ -802,6 +802,57 @@ bool CMLFileFind::FindNext()
 	return true;
 }
 
+#include "Winioctl.h"
+#include "base.h"
+
+void GetLogicalDrives(V_Str &vDrives)
+{
+#define MAX_DRIVER_SUPPORT  ('Z' - 'A' + 1)
+#define DRIVE_STR_BUF_SIZE	((3 + 1) * MAX_DRIVER_SUPPORT + 1)
+#define DRIVE_STR_STR_LEN	(3 * MAX_DRIVER_SUPPORT)
+
+	TCHAR aLogicDiskString[DRIVE_STR_BUF_SIZE] = { 0 };
+	DWORD len = GetLogicalDriveStrings(DRIVE_STR_STR_LEN, aLogicDiskString);
+
+	if (len > 0)
+		MultiStrToVStr(aLogicDiskString, vDrives);
+
+}
+
+// Check disk queue length 
+BOOL IsDiskIdle(const TCHAR* disk)
+{
+	HANDLE  hDevice;    // handle to the drive to be examined 
+	BOOL    bResult;    // results flag
+	DWORD   junk;       // discard results
+
+	hDevice = CreateFile(_T("\\\\.\\PhysicalDrive0"),  // drive to open
+		0,                // no access to the drive
+		FILE_SHARE_READ | // share mode
+		FILE_SHARE_WRITE, 
+		NULL,             // default security attributes
+		OPEN_EXISTING,    // disposition
+		0,                // file attributes
+		NULL);            // do not copy file attributes
+
+	if (INVALID_HANDLE_VALUE == hDevice)
+		return FALSE;
+
+	DISK_PERFORMANCE data;
+
+	bResult = DeviceIoControl(hDevice,  // device to be queried
+		IOCTL_DISK_PERFORMANCE,   // operation to perform
+		NULL, 0,  // no input buffer
+		&data, sizeof(data),   // output buffer
+		&junk,                 // # bytes returned
+		(LPOVERLAPPED) NULL);  // synchronous I/O
+
+	CloseHandle(hDevice);
+
+	return (0 == data.QueueDepth);
+}
+
+
 #ifdef _CPPUNIT_TEST
 
 //////////////////////////////////////////////////////////////////////////
