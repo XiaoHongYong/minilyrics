@@ -110,8 +110,8 @@ ENCODING_CODEPAGE	__encodingCodepage[] =
 {
 	{ ED_SYSDEF, CP_ACP, DEFAULT_CHARSET, "", "", "systemdefault" },
 	{ ED_UNICODE, 0, DEFAULT_CHARSET, "unicode", "", "Unicode" },
-	{ ED_UTF8, CP_UTF8, DEFAULT_CHARSET, "utf-8", "", "Unicode (UTF-8)" },
 	{ ED_UNICODE_BIG_ENDIAN, 0, DEFAULT_CHARSET, "Unicode (Big-Endian)", "", "Unicode (Big-Endian)" },
+	{ ED_UTF8, CP_UTF8, DEFAULT_CHARSET, "utf-8", "", "Unicode (UTF-8)" },
 	{ ED_ARABIC, 1256, ARABIC_CHARSET, "windows-1256", "arabic", "Arabic" },
 	//	{ ED_BALTIC_ISO, 28594, DEFAULT_CHARSET, "iso-8859-4", "", "Baltic (ISO)" },
 	{ ED_BALTIC_WINDOWS, 1257, BALTIC_CHARSET, "windows-1257", "baltic", "Baltic (Windows)" },
@@ -161,6 +161,8 @@ CHAR_ENCODING GetCharEncodingID(const wchar_t *szEncoding)
 		if (_xcsicmp(szEncoding, __encodingCodepage[i].szEncoding) == 0)
 			return __encodingCodepage[i].nEncodingId;
 		if (_xcsicmp(szEncoding, __encodingCodepage[i].szAlias) == 0)
+			return __encodingCodepage[i].nEncodingId;
+		if (_xcsicmp(szEncoding, __encodingCodepage[i].szDesc) == 0)
 			return __encodingCodepage[i].nEncodingId;
 	}
 

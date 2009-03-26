@@ -12,6 +12,9 @@
 enum CHAR_ENCODING
 {
 	ED_SYSDEF,					// 系统缺省的编码
+	ED_UNICODE,					// unicode,
+	ED_UNICODE_BIG_ENDIAN,		// unicode big-endian,
+	ED_UTF8,					// utf-8
 	ED_ARABIC,					// windows-1256
 	// ED_BALTIC_ISO,				// iso-8859-4
 	ED_BALTIC_WINDOWS,			// windows-1257
@@ -30,8 +33,6 @@ enum CHAR_ENCODING
 	ED_THAI,					// windows-874,
 	// ED_TURKISH_ISO,				// iso-8859-9
 	ED_TURKISH_WINDOWS,			// windows-1254,
-	ED_UNICODE,					// unicode,
-	ED_UTF8,					// utf-8
 	ED_VIETNAMESE,				// windows-1258
 	// ED_WESTERN_EUROPEAN_ISO,	// iso-8859-1
 	ED_WESTERN_EUROPEAN_WINDOWS,// Windows-1252,
