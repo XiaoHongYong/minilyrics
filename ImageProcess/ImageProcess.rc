@@ -1,0 +1,186 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#include "resource.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_IMAGEPROCESS        ICON    DISCARDABLE     "ImageProcess.ICO"
+IDI_SMALL               ICON    DISCARDABLE     "SMALL.ICO"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDC_IMAGEPROCESS MENU DISCARDABLE 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        MENUITEM "Open Image",                  IDC_OPEN
+        MENUITEM "E&xit",                       IDM_EXIT
+        MENUITEM "Capture Screen",              IDC_CAPTURE
+    END
+    POPUP "Filter"
+    BEGIN
+        MENUITEM "Blur",                        IDC_BLUR
+        MENUITEM "Blur2",                       IDC_BLUR2
+        MENUITEM "Blur3",                       IDC_BLUR3
+    END
+    POPUP "Test"
+    BEGIN
+        MENUITEM "Test1",                       IDC_TEST1
+        MENUITEM "Draw Text",                   IDC_DRAW_TEXT
+        MENUITEM "Create HLS Graph",            IDC_HLS
+        MENUITEM "Adjust Image Hue",            IDC_ADJUST_IMAGE_HUE
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About ...",                  IDM_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDC_IMAGEPROCESS ACCELERATORS MOVEABLE PURE 
+BEGIN
+    "?",            IDM_ABOUT,              ASCII,  ALT
+    "/",            IDM_ABOUT,              ASCII,  ALT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  22, 17, 230, 75
+STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "System"
+BEGIN
+    ICON            IDI_IMAGEPROCESS,IDC_MYICON,14,9,16,16
+    LTEXT           "ImageProcess Version 1.0",IDC_STATIC,49,10,119,8,
+                    SS_NOPREFIX
+    LTEXT           "Copyright (C) 2005",IDC_STATIC,49,20,119,8
+    DEFPUSHBUTTON   "OK",IDOK,195,6,30,11,WS_GROUP
+END
+
+IDD_ABOUTBOX1 DIALOG DISCARDABLE  22, 17, 230, 75
+STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "System"
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,20,64,30,11,WS_GROUP
+    LTEXT           "R:",IDC_STATIC,26,5,8,8
+    EDITTEXT        IDC_E_R,52,2,76,14,ES_AUTOHSCROLL
+    LTEXT           "G:",IDC_STATIC,25,26,8,8
+    EDITTEXT        IDC_E_G,51,23,76,14,ES_AUTOHSCROLL
+    LTEXT           "B:",IDC_STATIC,21,45,8,8
+    EDITTEXT        IDC_E_B,47,42,76,14,ES_AUTOHSCROLL
+END
+
+IDD_ADJUST_HUE DIALOG DISCARDABLE  22, 17, 230, 123
+STYLE DS_MODALFRAME | WS_CAPTION | WS_SYSMENU
+CAPTION "Adjust hue and saturation"
+FONT 8, "System"
+BEGIN
+    PUSHBUTTON      "OK",IDOK,33,98,50,14
+    LTEXT           "Hue: ",IDC_STATIC,25,17,18,8
+    CONTROL         "Slider1",IDC_HUE,"msctls_trackbar32",TBS_AUTOTICKS | 
+                    TBS_BOTH | WS_TABSTOP,69,6,133,24
+    LTEXT           "Saturation: ",IDC_STATIC,25,44,38,8
+    CONTROL         "Slider1",IDC_SATURATION,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_BOTH | WS_TABSTOP,69,38,133,19
+    LTEXT           "Luminance: ",IDC_STATIC,22,75,41,8
+    CONTROL         "Slider1",IDC_LUMINANCE,"msctls_trackbar32",
+                    TBS_AUTOTICKS | TBS_BOTH | WS_TABSTOP,68,73,133,22
+END
+
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""windows.h""\r\n"
+    "#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+    "#include ""resource.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDS_APP_TITLE           "ImageProcess"
+    IDS_HELLO               "Hello World!"
+    IDC_IMAGEPROCESS        "IMAGEPROCESS"
+END
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

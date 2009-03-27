@@ -291,6 +291,9 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 
 void CLog::Init(LPCTSTR szLogFileName)
 {
+	if (!szLogFileName)
+		return;
+
 	if ((szLogFileName[0] != '\0' && szLogFileName[1] == ':' && szLogFileName[2] == DIR_SLASH) ||
 		(szLogFileName[0] == DIR_SLASH))
 	{
