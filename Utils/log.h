@@ -49,6 +49,7 @@ class CLog
 protected:
 	FILE		*m_fpLog;
 	TCHAR		m_szLogFile[MAX_PATH];
+	TCHAR		m_szSrcRootDir[128];
 
 	Mutex		m_mutex;
 
@@ -59,6 +60,9 @@ public:
 public:
 	void Init(LPCTSTR szLogFileName);
 	void Close();
+
+	void SetSrcRootDir(LPCTSTR szSrcFile, int nCurFileDeep = 1);
+
 	void WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, ...);
 	void LogDumpStr(BYTE byLevel, LPCTSTR szFile, int nLine, LPCSTR szStr, int nStrLen);
 

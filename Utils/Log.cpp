@@ -112,8 +112,6 @@ E: lEvel  (Error)
 M: Message
 */
 
-// #define fwriteWT		fwrite
-
 size_t fwriteWT(TCHAR *szBuffer, size_t n, size_t nLen, FILE *fp)
 {
 	int		nLenWrite;
@@ -143,14 +141,28 @@ size_t fwriteWT(TCHAR *szBuffer, size_t n, size_t nLen, FILE *fp)
 //////////////////////////////////////////////////////////////////////
 
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
+static LPCTSTR IgnoreRootDir(LPCTSTR szFile, LPCTSTR szRootDir)
+{
+	LPCTSTR		szRet = szFile;
+
+	while (*szRet && *szRet == *szRootDir)
+	{
+		szRootDir++;
+		szRet++;
+	}
+
+	if (*szRootDir == '\0')
+		return szRet;
+	else
+		return szFile;
+}
+
 
 CLog::CLog()
 {
 	m_fpLog = NULL;
 	EmptyStr(m_szLogFile);
+	EmptyStr(m_szSrcRootDir);
 }
 
 CLog::~CLog()
@@ -186,6 +198,8 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 		return;
 #endif	// _DEBUG
 
+	szFile = IgnoreRootDir(szFile, m_szSrcRootDir);
+
 	va_list		args;
 
 	int			nBuf;
@@ -205,7 +219,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	ptm = localtime(&ltime);
 #endif
 
-#if defined(_WIN32) && !defined(_WINCE_)
+#if defined(_WIN32_DESKTOP)
 	__try
 #endif
 	{
@@ -227,7 +241,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 		if (nBuf < 0)
 			_tcscpy_safe(szMsg, CountOf(szBuffer) - nLen, _T("Insufficient log buffer space."));
 	}
-#if defined(_WIN32) && !defined(_WINCE_)
+#if defined(_WIN32_DESKTOP)
 	__except(EXCEPTION_EXECUTE_HANDLER)
 	{
 		// 有异常发生！
@@ -239,10 +253,6 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 
 #ifdef _DEBUG
 #ifndef _WIN32_WCE
-	// 调试版本则输出日志到日志窗口中
-/*	USES_CONVERSION;
-	LPCSTR	szMsgAssii = T2CA(szBuffer);
-	LogTrace((void *)szMsgAssii, nLen * sizeof(TCHAR));*/
 	LogTrace(szBuffer, nLen);
 #endif
 #endif
@@ -253,10 +263,6 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	{
 		if (ftell(m_fpLog) >= MAX_LOG_FILE_LEN)
 		{
-			//
-			// 设置这次开始写日志的位置
-			//
-			// fseek(m_fpLog, 0, SEEK_SET);
 			fclose(m_fpLog);
 			m_fpLog = NULL;
 			OpenLogFile();
@@ -279,8 +285,6 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 
 	if (m_fpLog)
 	{
-//		fwrite(szBuffer, 1, nLen - 1, m_fpLog);
-//		fwrite("\r\n", 1, 2, m_fpLog);
 		fwriteWT(szBuffer, sizeof(TCHAR), (nLen - 1), m_fpLog);
 		fwriteWT(SZ_RETURN, sizeof(TCHAR), _tcslen(SZ_RETURN), m_fpLog);
 		fflush(m_fpLog);
@@ -337,6 +341,27 @@ void CLog::Close()
 		fclose(m_fpLog);
 		m_fpLog = NULL;
 	}
+}
+
+void CLog::SetSrcRootDir(LPCTSTR szSrcFile, int nCurFileDeep)
+{
+	LPCTSTR		szDirEndPos = NULL;
+
+	szDirEndPos = szSrcFile + _tcslen(szSrcFile);
+
+	while (szDirEndPos > szSrcFile)
+	{
+		if (*szDirEndPos == DIR_SLASH)
+		{
+			if (nCurFileDeep > 0)
+				nCurFileDeep--;
+			else
+				break;
+		}
+		szDirEndPos--;
+	}
+
+	_tcsncpysz_safe(m_szSrcRootDir, CountOf(m_szSrcRootDir), szSrcFile, int(szDirEndPos - szSrcFile));
 }
 
 BOOL CLog::OpenLogFile()
