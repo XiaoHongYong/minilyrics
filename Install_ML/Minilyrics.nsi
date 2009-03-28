@@ -925,15 +925,6 @@ Function .onInit
   File "/oname=$PLUGINSDIR\Installopt.dll" "Installopt.dll"
   File "/oname=$PLUGINSDIR\instopt.ini" "instopt.ini"
 
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Save MiniLyrics settings in each user's personal folder" $(LS_PersonalSetting)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Create shortcut on desktop" $(LS_ShortcutOnDesktop)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Create shortcut on quick launch bar" $(LS_ShortcutOnQuickLannch)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Support %s" $(LS_Support)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please select %s's installation path" $(LS_SelInstPath)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please Choose the correct installation path of %s" $(LS_SelInstPathWarning)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please choose at least one player that you want MiniLyrics to support." $(LS_SelAtLeast1Player)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "More players are listed in next page." $(LS_MorePlayerNextPage)
-
   Call GetMinilyricsInstPath
   Pop $0
   StrCmp $0 "" J_skip
@@ -944,6 +935,15 @@ FunctionEnd
 
 
 Function SetCustom
+
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Save MiniLyrics settings in each user's personal folder" $(LS_PersonalSetting)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Create shortcut on desktop" $(LS_ShortcutOnDesktop)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Create shortcut on quick launch bar" $(LS_ShortcutOnQuickLannch)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Support %s" $(LS_Support)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please select %s's installation path" $(LS_SelInstPath)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please Choose the correct installation path of %s" $(LS_SelInstPathWarning)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please choose at least one player that you want MiniLyrics to support." $(LS_SelAtLeast1Player)
+  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "More players are listed in next page." $(LS_MorePlayerNextPage)
 
   !insertmacro MUI_HEADER_TEXT $(LS_SelectPlayer) $(LS_SelectPlayerDesc)
 
