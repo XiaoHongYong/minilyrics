@@ -53,6 +53,8 @@ public:
 	bool SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 	void EnumProperties(CUIObjProperties &listProperties);
 
+	void EnableGdiplusAntialias(bool bGdiplusAntialias);
+
 	LPCTSTR GetName();
 	LPCTSTR GetNameOthers();
 	int GetHeight();

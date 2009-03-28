@@ -235,6 +235,13 @@ void CSkinFontProperty::EnumProperties(CUIObjProperties &listProperties)
 }
 
 
+void CSkinFontProperty::EnableGdiplusAntialias(bool bGdiplusAntialias)
+{
+	if (m_pRawFont)
+		m_pRawFont->EnableGdiplusAntialias(bGdiplusAntialias);
+}
+
+
 LPCTSTR CSkinFontProperty::GetName()
 {
 	if (IsPropertySet(FP_NAME_LATIN9))

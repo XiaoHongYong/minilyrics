@@ -2238,14 +2238,8 @@ void CSkinWnd::DispatchUIObjNotify(IUIObjNotify *pNotify)
 
 CRawGraph *CSkinWnd::GetMemGraphics()
 {
-//	assert(m_pmemGraph);
-#ifdef _WIN32_DESKTOP
-	if (!m_pmemGraph || (CMLGraphicsFactory::GetGraphicsType() != m_pmemGraph->GetGraphicsType() && !GetEnableTranslucencyLayered()))
-		RecreateMemGraphics();
-#else
 	if (!m_pmemGraph)
 		RecreateMemGraphics();
-#endif
 
 	return m_pmemGraph;
 }
