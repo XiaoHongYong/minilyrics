@@ -340,10 +340,34 @@ void CMainWnd::OnPaint(IMLGraphicsBase *pGraph)
 
 	nOpacityPainting = m_memGraph.SetOpacityPainting(128);
 
-	if (m_rawImage2.IsValid() && m_rawImage3.IsValid())
-		m_rawImage2.MaskBlt(&m_memGraph, 0, 0, &m_rawImage3, BPM_BLEND);
+	//if (m_rawImage2.IsValid() && m_rawImage3.IsValid())
+	//	m_rawImage2.MaskBlt(&m_memGraph, 0, 0, &m_rawImage3, BPM_BLEND);
+	m_memGraph.SetOrigin(CPoint(0, 0));
+
+	m_memGraph.SetClipBoundBox(CRect(5, 5, 50, 100));
+
+	m_memGraph.SetOrigin(CPoint(5, 10));
+	m_rawImage2.Blt(&m_memGraph, 0, 0);
+
+	m_memGraph.SetOrigin(CPoint(15, 20));
+	m_rawImage2.Blt(&m_memGraph, 0, 0);
 
 	m_memGraph.SetOpacityPainting(nOpacityPainting);
+
+
+	m_memGraph.SetFont(&m_rawFont);
+
+	CRect	rcFill;
+
+	rcFill.SetRect(10, 20, 10 + 20, 20 + 10);
+
+	m_memGraph.SetOrigin(CPoint(0, 0));
+	m_memGraph.Clear(255, 0, 0, 255, &rcFill);
+	m_memGraph.TextOut(-110, 10, _T("Hello"), 5);
+
+	m_memGraph.SetOrigin(CPoint(15, 35));
+	m_memGraph.Clear(0, 255, 0, 255, &rcFill);
+	m_memGraph.TextOut(10, 10, _T("Hello2"), 6);
 
 	pGraph->DrawGraphics(&m_memGraph, 0, 0,  rc.Width(), rc.Height(), 0, 0);
 	// pGraph->DrawImage(&m_img, 0, 0,  m_img.m_cx, m_img.m_cy, 0, 0);
