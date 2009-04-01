@@ -51,7 +51,7 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 //			}
 			if (!pGraphMem)
 			{
-				pGraphMem = m_pSkin->GetMemGraphics();
+				pGraphMem = m_pContainer->GetMemGraph();
 				pGraphMem->SetClipBoundBox(*lpRect);
 			}
 
@@ -64,10 +64,10 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 				{
 					CRect	rcMask;
 					rcMask.SetRect(pObj->m_imgMask.m_x, pObj->m_imgMask.m_y, pObj->m_imgMask.m_x + pObj->m_imgMask.m_cx, pObj->m_imgMask.m_y + pObj->m_imgMask.m_cy);
-					m_pSkin->GetMemGraphics()->FillRect(&pObj->m_rcObj, pObj->m_imgMask.GetHandle(), &rcMask, clrAlpha, BPM_MULTIPLY);
+					m_pContainer->GetMemGraph()->FillRect(&pObj->m_rcObj, pObj->m_imgMask.GetHandle(), &rcMask, clrAlpha, BPM_MULTIPLY);
 				}
 				else
-					m_pSkin->GetMemGraphics()->FillRect(&pObj->m_rcObj, clrAlpha, BPM_MULTIPLY);
+					m_pContainer->GetMemGraph()->FillRect(&pObj->m_rcObj, clrAlpha, BPM_MULTIPLY);
 			}
 		}
 	}

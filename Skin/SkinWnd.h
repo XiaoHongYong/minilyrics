@@ -280,8 +280,6 @@ public:
 	void SetFreeOnDestory(bool bFreeOnDestory = true) { m_bFreeOnDestory = bFreeOnDestory; }
 
 public:
-	CRawGraph *GetMemGraphics();
-
 	void GetSkinRect(RECT &rc) { rc = m_rcBoundBox; }
 	void GetCursorClientPos(CPoint &pt);
 
@@ -302,6 +300,8 @@ public:
 
 protected:
 	virtual int FromXML(SXNode *pXmlNode);
+
+	CRawGraph *GetMemGraphics();
 
 	bool RecreateMemGraphics();
 

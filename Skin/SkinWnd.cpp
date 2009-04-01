@@ -748,6 +748,16 @@ void CSkinWnd::OnPaint(IMLGraphicsBase *pGraph)
 		pGraph->DrawGraphicsStretch(pMemGraph, 0, 0, m_rcReal.Width(), m_rcReal.Height(), 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height());
 }
 
+
+CRawGraph *CSkinWnd::GetMemGraphics()
+{
+	//	assert(m_pmemGraph);
+	if (!m_pmemGraph)
+		RecreateMemGraphics();
+
+	return m_pmemGraph;
+}
+
 bool CSkinWnd::RecreateMemGraphics()
 {
 	IMLGraphicsBase		*pGraph;
@@ -2235,14 +2245,6 @@ void CSkinWnd::DispatchUIObjNotify(IUIObjNotify *pNotify)
 	OnUIObjNotify(pNotify);
 }
 
-
-CRawGraph *CSkinWnd::GetMemGraphics()
-{
-	if (!m_pmemGraph)
-		RecreateMemGraphics();
-
-	return m_pmemGraph;
-}
 
 int CSkinWnd::FromXML(SXNode *pXmlNode)
 {

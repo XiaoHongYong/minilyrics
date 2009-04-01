@@ -323,6 +323,15 @@ void CSkinContainer::OnSkinFontChanged()
 }
 
 
+CRawGraph *CSkinContainer::GetMemGraph()
+{
+	if (m_pContainer)
+		return m_pContainer->GetMemGraph();
+	else
+		return m_pSkin->GetMemGraphics();
+}
+
+
 void CSkinContainer::Draw(CRawGraph *pGraph)
 {
 	int		nCount;

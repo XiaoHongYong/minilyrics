@@ -26,7 +26,7 @@ public:
 public:
 	virtual CRawGraph *EB_GetGraphics()
 	{
-		CRawGraph		*pGraph = m_pSkin->GetMemGraphics();
+		CRawGraph		*pGraph = m_pContainer->GetMemGraph();
 		m_font.EnableGdiplusAntialias(CMLGraphicsFactory::GetGraphicsType() == MGT_GDIPLUS);
 		pGraph->SetFont(&m_font);
 

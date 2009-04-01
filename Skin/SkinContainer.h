@@ -82,6 +82,8 @@ public:
 	virtual void OnAdjustHue(float hue, float saturation, float luminance);
 	virtual void OnSkinFontChanged();
 
+	virtual CRawGraph *GetMemGraph();
+
 	void DispatchOnCreateMsg();
 
 protected:

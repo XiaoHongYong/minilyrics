@@ -1549,7 +1549,7 @@ void CLyricShowObj::WrapLyricsLines()
 	{
 		CRawGraph		*pGraphics;
 
-		pGraphics = m_pSkin->GetMemGraphics();
+		pGraphics = m_pContainer->GetMemGraph();
 
 		pGraphics->SetFont(&m_font);
 
@@ -1622,7 +1622,7 @@ void CLyricShowObj::AutoWidthSkinAccordLyrics(BOOL bSingleRow/* = FALSE*/)
 
 	CRawGraph		*pGraphics;
 
-	pGraphics = m_pSkin->GetMemGraphics();
+	pGraphics = m_pContainer->GetMemGraph();
 
 	pGraphics->SetFont(&m_font);
 
@@ -1728,7 +1728,7 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 	if (m_pSkin->IsIconic() || !IsVisible() || !IsParentVisible())
 		return;
 
-	pmemGraphics = m_pSkin->GetMemGraphics();
+	pmemGraphics = m_pContainer->GetMemGraph();
 
 	pmemGraphics->SetFont(&m_font);
 
@@ -2040,7 +2040,7 @@ void CLyricShowObj::AddErrorInfo(LPCTSTR szInfo)
 {
 	CRawGraph		*pGraphics;
 
-	pGraphics = m_pSkin->GetMemGraphics();
+	pGraphics = m_pContainer->GetMemGraph();
 
 	pGraphics->SetFont(&m_font);
 

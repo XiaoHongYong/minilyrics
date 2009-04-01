@@ -207,7 +207,7 @@ void CLyricShowHorzScrollObj::CalculateAccelerate()
 
 	int				_ROW_INTERVAL;
 
-	pGraphics = m_pSkin->GetMemGraphics();
+	pGraphics = m_pContainer->GetMemGraph();
 	ASSERT(pGraphics);
 
 	pGraphics->SetFont(&m_font);
