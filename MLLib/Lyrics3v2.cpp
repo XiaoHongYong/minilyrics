@@ -249,7 +249,7 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 		{
 			// 从文件名中取得信息
 			TCHAR		szArtist[MAX_PATH], szTitle[MAX_PATH];
-			AnalysisLyricsFileNameEx(szArtist, szTitle, FileGetName(szMp3File));
+			AnalysisLyricsFileNameEx(szArtist, CountOf(szArtist), szTitle, CountOf(szTitle), FileGetName(szMp3File));
 
 			ConvertStr(szArtist, -1, strArtist, ED_SYSDEF);
 			ConvertStr(szTitle, -1, strTitle, ED_SYSDEF);

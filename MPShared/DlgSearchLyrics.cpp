@@ -461,7 +461,7 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 
 	setArTi.insert(strFileTitle.c_str());
 
-	AnalysisLyricsFileNameEx(szArtist, szTitle, strFileTitle.c_str());
+	AnalysisLyricsFileNameEx(szArtist, CountOf(szArtist), szTitle, CountOf(szTitle), strFileTitle.c_str());
 	setArTi.insert(szArtist);
 	setArTi.insert(szTitle);
 
@@ -517,8 +517,6 @@ void CDlgSearchLyrics::OnDestroy()
 	m_resultList.SaveColumnWidth(_T("DlgSearchLyr"));
 
 	CBaseDialog::OnDestroy();
-
-	m_LangDlgHelper.Destroy();
 }
 
 void CDlgSearchLyrics::OnSize(int cx, int cy)
@@ -719,7 +717,7 @@ void UpdateLyrResultArtistTitle(V_LRCSEARCHRESULT &vResultsLocal)
 
 		if (result.strArtist.empty() && result.strTitle.empty())
 		{
-			AnalysisLyricsFileNameEx(szAr, szTi, result.strSaveFileName.c_str());
+			AnalysisLyricsFileNameEx(szAr, CountOf(szAr), szTi, CountOf(szTi), result.strSaveFileName.c_str());
 			result.strArtist = szAr;
 			result.strTitle = szTi;
 		}

@@ -722,7 +722,7 @@ int CalLyricsMatchValue(LPCTSTR szFile, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, 
 	{
 		TCHAR			szTitleTarg[MAX_PATH], szArtTarg[MAX_PATH];
 
-		AnalysisLyricsFileNameEx(szArtTarg, szTitleTarg, szFile);
+		AnalysisLyricsFileNameEx(szArtTarg, CountOf(szArtTarg), szTitleTarg, CountOf(szTitleTarg), szFile);
 		nMatchType = GetLyricsMatchType(szTitleTarg, szArtTarg, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
 	}
 
