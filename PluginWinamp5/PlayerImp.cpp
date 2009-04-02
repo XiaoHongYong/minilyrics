@@ -120,7 +120,7 @@ void OnMediaChanged(LPSTR szFile, LPCSTR szMediaTitle)
 	int				nRet;
 
 	info.filename = szFile;
-	info.retlen = MAX_PATH;
+	info.retlen = MAX_PATH - 1;
 
 	info.metadata = "artist";
 	info.ret = szArtist;
