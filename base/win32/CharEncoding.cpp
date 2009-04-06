@@ -374,7 +374,8 @@ void ConvertStr2(const char *str, int nLen, WCHAR *strOut, int nOut, int nEncodi
 			str, nLen, strOut, nOut);
 	}
 
-	strOut[n] = '\0';
+	if (n < nOut)
+		strOut[n] = '\0';
 }
 
 void ConvertStr2(const char *str, int nLen, char *strOut, int nOut, int nEncodingIdx)
@@ -398,7 +399,8 @@ void ConvertStr2(const WCHAR *str, int nLen, char *strOut, int nOut, int nEncodi
 	n = WideCharToMultiByte(__encodingCodepage[nEncodingIdx].nCodePage, 0,
 		str, nLen, strOut, nOut, NULL, NULL);
 
-	strOut[n] = '\0';
+	if (n < nOut)
+		strOut[n] = '\0';
 }
 
 void UCS2ToUtf8(const WCHAR *str, int nLen, stringex &strOut)
