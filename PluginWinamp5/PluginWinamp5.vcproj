@@ -69,7 +69,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="C:\Program Files\Winamp\Plugins\gen_MiniLyrics.dll"
+				OutputFile="C:\Program Files\Winamp5\Plugins\gen_MiniLyrics.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
@@ -206,26 +206,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath="frontend.cpp"
-				>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="PlayerImp.cpp"
 				>
 				<FileConfiguration
@@ -252,10 +232,6 @@
 			>
 			<File
 				RelativePath="AggressiveOptimize.h"
-				>
-			</File>
-			<File
-				RelativePath="frontend.h"
 				>
 			</File>
 			<File
