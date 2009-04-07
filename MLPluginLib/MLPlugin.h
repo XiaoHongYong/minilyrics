@@ -59,6 +59,8 @@ WCHAR * __cdecl wcscat_safe (
 #define _tcscat_safe		strcat_safe
 #endif
 
+int MBCSToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage = CP_ACP);
+
 long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2);
 
 class CMLService

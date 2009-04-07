@@ -15,13 +15,14 @@ int MBCSToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage
 
 	n = MultiByteToWideChar(nCodePage, 0,
 		str, nLen, strOut, nOut);
-	if (n == 0 && nLen > 0 && GetLastError() == ERROR_INVALID_PARAMETER)
+	if (n == 0 && GetLastError() == ERROR_INVALID_PARAMETER)
 	{
 		n = MultiByteToWideChar(CP_ACP, 0,
 			str, nLen, strOut, nOut);
 	}
 
-	strOut[n] = '\0';
+	if (n < nOut)
+		strOut[n] = '\0';
 
 	return n;
 }
@@ -489,7 +490,7 @@ long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2)
 void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle, unsigned long nMediaLength)
 {
 	MLMediaInfo		mediaInfo;
-	wchar_t			wszMediaUrl[MAX_PATH], wszArtist[MAX_PATH], wszAlbum[MAX_PATH], wszTitle[MAX_PATH];
+	wchar_t			wszMediaUrl[512], wszArtist[512], wszAlbum[512], wszTitle[512];
 
 	EmptyStr(wszMediaUrl);
 	EmptyStr(wszArtist);
