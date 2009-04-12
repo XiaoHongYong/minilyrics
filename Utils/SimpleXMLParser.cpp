@@ -163,7 +163,7 @@ SimpleXMLParserError CSimpleXMLParser::ParseFile(LPCTSTR szFile, CSimpleXML &xml
 	CCharBuffer				str;
 	SimpleXMLParserError	Err;
 
-	if (!OpenFileToString(szFile, str))
+	if (!OpenFileToBuffer(szFile, str))
 		return SXPE_OPEN_FILE_FAILED;
 
 	Err = ParseData(str.data(), str.size(), xmlData);

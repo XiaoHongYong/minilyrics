@@ -242,7 +242,7 @@ BOOL WritePrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpS
 {
 	CCharBuffer		buff;
 
-	if (IsFileExist(lpFileName) && !OpenFileToString(lpFileName, buff))
+	if (IsFileExist(lpFileName) && !OpenFileToBuffer(lpFileName, buff))
 		return FALSE;
 
 	stringex	strAppName, strKeyname, strString;

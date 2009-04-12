@@ -91,9 +91,9 @@ void GetBackupFile(LPCTSTR szDir, tstring &strLatestBackup, tstring &strNextBack
 bool IsFileContentSame(LPCTSTR szFile1, LPCTSTR szFile2)
 {
 	CCharBuffer		buff1, buff2;
-	if (!OpenFileToString(szFile1, buff1))
+	if (!OpenFileToBuffer(szFile1, buff1))
 		return false;
-	if (!OpenFileToString(szFile2, buff2))
+	if (!OpenFileToBuffer(szFile2, buff2))
 		return false;
 
 	if (buff1.size() != buff2.size())

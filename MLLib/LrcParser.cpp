@@ -781,14 +781,15 @@ CLrcParser::~CLrcParser()
 
 int CLrcParser::Parse(bool bForceUseEncoding)
 {
-	int				nRet;
-	stringex 	lyric;
+	stringex 		lyric;
 
-	nRet = OpenFileToStringEx(m_pMLData->GetLyricsFileName(), lyric);
-	if (nRet == ERR_OK)
-		nRet = ParseString(bForceUseEncoding, lyric.c_str(), lyric.size(), TRUE);
+	if (!IsFileExist(m_pMLData->GetLyricsFileName()))
+		return ERR_FILE_NOT_EXIST;
 
-	return nRet;
+	if (!OpenFileToBuffer(m_pMLData->GetLyricsFileName(), lyric))
+		return ERR_READ_FILE;
+
+	return ParseString(bForceUseEncoding, lyric.c_str(), lyric.size(), TRUE);
 }
 
 //

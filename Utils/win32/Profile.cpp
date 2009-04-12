@@ -467,15 +467,12 @@ void CProfile::DoCache()
 	if (m_hKeyRoot)
 		return;
 
-	CCharBuffer	strAnsi;
 	tstringex	str;
 	LPCTSTR		szBeg, szEnd;
 	tstring		strAppName, strKey, strValue;
 
-	if (!OpenFileToString(m_strProfile.c_str(), strAnsi))
+	if (!OpenFileToTString(m_strProfile.c_str(), str))
 		return;
-
-	ConvertStr(strAnsi, strAnsi.size(), str);
 
 	//
 	// ≤È’“ AppName

@@ -312,7 +312,7 @@ BOOL IsEncryptedLyrics(LPCTSTR szFile)
 	CCharBuffer		str;
 	tstringex		strKey;
 
-	if (!OpenFileToString(szFile, str))
+	if (!OpenFileToBuffer(szFile, str))
 		return FALSE;
 
 	lrcTagReader.m_pstrKey = &strKey;
@@ -542,7 +542,7 @@ BOOL SaveLrcLyricsTag(LPCTSTR szFile, LPCTSTR szTitle, LPCTSTR szArtist, LPCTSTR
 	CCharBuffer		str;
 	int				nEncodingID = ED_SYSDEF;
 
-	if (!OpenFileToString(szFile, str))
+	if (!OpenFileToBuffer(szFile, str))
 		return FALSE;
 
 	if (szEncoding)
@@ -705,7 +705,7 @@ BOOL SaveTxtLyricsTag(LPCTSTR szFile, LPCTSTR szTitle, LPCTSTR szArtist, LPCTSTR
 	CCharBuffer		str;
 	int				nEncodingID = ED_SYSDEF;
 
-	if (!OpenFileToString(szFile, str))
+	if (!OpenFileToBuffer(szFile, str))
 		return FALSE;
 
 	if (szEncoding)
@@ -784,7 +784,7 @@ bool GetMLEncriptyData(stringex &strData)
 
 	GetModuleFileName(GetAppInstance(), szFile, CountOf(szFile));
 
-	if (!OpenFileToString(szFile, str))
+	if (!OpenFileToBuffer(szFile, str))
 		return false;
 
 	MD5Str(str.c_str() + 0x100, str.size() - 0x100, szMD5);

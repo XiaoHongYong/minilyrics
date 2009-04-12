@@ -228,7 +228,7 @@ BOOL WritePrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpS
 	// Unicode isn't being supported.
 	CCharBuffer		buff;
 
-	if (IsFileExist(lpFileName) && !OpenFileToString(lpFileName, buff))
+	if (IsFileExist(lpFileName) && !OpenFileToBuffer(lpFileName, buff))
 		return FALSE;
 
 	stringex	strAppName, strKeyname, strString;

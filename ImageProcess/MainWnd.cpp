@@ -606,7 +606,7 @@ void CMainWnd::OnOpenImage()
 
 	CCharBuffer	buff;
 
-	OpenFileToString(dlg.GetOpenFile(), buff);
+	OpenFileToBuffer(dlg.GetOpenFile(), buff);
 
 	m_rawImage.Attach(LoadRawImageDataFromMem(buff.c_str(), buff.size()));
 	// m_rawImage.Load(dlg.GetOpenFile());

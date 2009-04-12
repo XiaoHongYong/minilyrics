@@ -283,7 +283,7 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 			stringex	str;
 
 			if (!item.m_strLyricsFile.empty())
-				OpenFileToString(item.m_strLyricsFile.c_str(), str);
+				OpenFileToBuffer(item.m_strLyricsFile.c_str(), str);
 			else
 			{
 #ifdef UNICODE

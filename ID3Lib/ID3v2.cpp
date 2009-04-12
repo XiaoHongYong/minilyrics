@@ -177,7 +177,7 @@ bool ID3v2Pictures::ITEM::SetImageFile(LPCTSTR szImage)
 	if (!PicExtToMime(strExt.c_str()))
 		return false;
 
-	return Tobool(OpenFileToString(szImage, m_buffPic));
+	return Tobool(OpenFileToBuffer(szImage, m_buffPic));
 }
 
 ID3v2Pictures::ITEM *ID3v2Pictures::AppendNewPic()

@@ -112,16 +112,19 @@ void ConvertStrByFileEncoding(CCharBuffer &outData, LPCTSTR szText, int nLen, FI
 BOOL SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen);
 
 BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fileEncoding = FE_ANSI, int nCharEncodingID = ED_SYSDEF);
-BOOL OpenFileToString(LPCSTR szFile, CCharBuffer &str);
-int OpenFileToStringEx(LPCTSTR szFile, CCharBuffer &str);
-BOOL OpenFileToString(LPCTSTR szFile, LPTSTR szBuffer, int &nBuffLen);
+
 #ifdef WIN32
-BOOL OpenFileToString(LPCWSTR szFile, CCharBuffer &str);
+BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str);
 #endif
+
+BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str);
+
+BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding = ED_SYSDEF);
 
 void MultiStrToVStr(LPCTSTR szText, vector<tstring> &vStr);
 
-int StrBreak(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &vStrs);
+int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &vStrs);
+#define StrBreak	StrSplit
 
 #define ReadInt(szBeg, nValue)\
 {\

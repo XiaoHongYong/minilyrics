@@ -25,7 +25,7 @@ bool MLEncriptV2(LPCTSTR szFile, LPCSTR szData1, LPCSTR szData2, stringex &strDa
 	strncpy_safe(szOrgData, LEN_DATA1_MAX + 1, szData1, LEN_DATA1_MAX);
 	strncpy_safe(szOrgData + LEN_DATA1_MAX, LEN_DATA2_MAX + 1, szData2, LEN_DATA2_MAX);
 
-	if (!OpenFileToString(szFile, str))
+	if (!OpenFileToBuffer(szFile, str))
 	{
 		strErrMsg = _T("FAILED to Open file: ");
 		strErrMsg += szFile;
@@ -74,7 +74,7 @@ bool MLDecriptV2(LPCTSTR szFile, string &strData1, string &strData2)
 
 	memset(szOrgData, 0, sizeof(szOrgData));
 
-	if (!OpenFileToString(szFile, str))
+	if (!OpenFileToBuffer(szFile, str))
 		return false;
 
 	MD5Str(str.c_str() + 0x100, (int)str.size() - 0x100, szMD5);
@@ -103,7 +103,7 @@ memset(strOrgData, 0, sizeof(strOrgData));
 strncpy_safe(strOrgData, 16, m_strData1, 16);
 strncpy_safe(strOrgData + 16, 16, m_strData2, 16);
 
-if (!OpenFileToString(m_strFile, str))
+if (!OpenFileToBuffer(m_strFile, str))
 return;
 
 MD5Str(str.c_str() + 0x100, str.size() - 0x100, szMD5);

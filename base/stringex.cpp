@@ -1263,7 +1263,7 @@ BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fi
 }
 
 #ifdef WIN32
-BOOL OpenFileToString(LPCWSTR szFile, CCharBuffer &str)
+BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str)
 {
 	FILE	*fp;
 	int		nLen;
@@ -1310,7 +1310,7 @@ BOOL OpenFileToString(LPCWSTR szFile, CCharBuffer &str)
 }
 #endif
 
-BOOL OpenFileToString(LPCSTR szFile, CCharBuffer &str)
+BOOL OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str)
 {
 	FILE	*fp;
 	int		nLen;
@@ -1356,90 +1356,30 @@ BOOL OpenFileToString(LPCSTR szFile, CCharBuffer &str)
 	return TRUE;
 }
 
-int OpenFileToStringEx(LPCTSTR szFile, CCharBuffer &str)
+BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)
 {
-	FILE	*fp;
-	int		nLen;
-	char	*szBuffer;
+	CCharBuffer		buff;
+	FILE_ENCODING	fileEncoding;
 
-	str.clear();
+	if (!OpenFileToBuffer(szFile, buff))
+		return false;
 
-	fp = _tfopen(szFile, _T("rb"));
-	if (fp == NULL)
+	fileEncoding = GetStrEncodingType(buff.c_str());
+	if (fileEncoding == FE_ANSI)
+		ConvertStr(buff.c_str(), buff.size(), str, encoding);
+	else if (fileEncoding == FE_UTF8)
+		Utf8ToUCS2(buff.c_str() + 3, buff.size() - 3, str);
+	else
 	{
-		SetCustomErrorDesc(CWin32Error());
-		return ERR_CUSTOM_ERROR;
+		str.append((WCHAR *)buff.c_str() + 1, buff.size() / sizeof(WCHAR) - 1);
+		str += (WCHAR)'\0';
 	}
-
-	if (fseek(fp, 0, SEEK_END) != 0)
-	{
-		fclose(fp);
-		return ERR_SEEK_FILE;
-	}
-
-	nLen = ftell(fp);
-	if (nLen == 0)
-	{
-		fclose(fp);
-		return ERR_OK;
-	}
-
-	fseek(fp, 0, SEEK_SET);
-
-	str.reserve(nLen + 3);
-	szBuffer = str.data();
-	if (fread(szBuffer, 1, nLen, fp) != nLen)
-	{
-		fclose(fp);
-		return ERR_READ_FILE;
-	}
-
-	str.setSize(nLen);
-	// 确保如果读入的是unicode编码的文本也有以'\0'结尾的字符
-	szBuffer[nLen] = '\0';
-	szBuffer[nLen + 1] = '\0';
-	szBuffer[nLen + 2] = '\0';
-
-	fclose(fp);
-
-	return ERR_OK;
-}
-
-BOOL OpenFileToString(LPCTSTR szFile, LPTSTR szBuffer, int &nBuffLen)
-{
-	FILE	*fp;
-	int		nLen;
-
-	fp = _tfopen(szFile, _T("rb"));
-	if (fp == NULL)
-		return FALSE;
-
-	if (fseek(fp, 0, SEEK_END) != 0)
-	{
-		fclose(fp);
-		return FALSE;
-	}
-
-	nLen = ftell(fp);
-	if (nBuffLen > nLen)
-		nBuffLen = nLen;
-
-	fseek(fp, 0, SEEK_SET);
-
-	szBuffer[nBuffLen] = '\0';
-	if (fread(szBuffer, 1, nBuffLen, fp) != nBuffLen)
-	{
-		fclose(fp);
-		return FALSE;
-	}
-
-	fclose(fp);
 
 	return TRUE;
 }
 
 /*
-BOOL OpenFileToString(LPCTSTR szFile, CString &str)
+BOOL OpenFileToBuffer(LPCTSTR szFile, CString &str)
 {
 	FILE	*fp;
 	int		nLen;
@@ -1568,7 +1508,7 @@ void VStrToMultiStr(const vector<tstring> &vStr, tstring &strMulti)
 }
 */
 
-int StrBreak(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &vStrs)
+int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &vStrs)
 {
 	if (IsEmptyString(szStr))
 		return 0;
