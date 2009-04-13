@@ -21,7 +21,7 @@ public:
 	CPreferenceDlg();
 	virtual ~CPreferenceDlg();
 
-	BOOL Create(CBaseWnd *pWndParent, PreferPageID idToactivate = PAGE_SETUP, bool bFloatingLyrMode = false);
+	BOOL Create(CBaseWnd *pWndParent, PreferPageID idToactivate = PAGE_LOCALIZATION, bool bFloatingLyrMode = false);
 
 public:
 	BOOL OnInitDialog();
@@ -33,6 +33,8 @@ protected:
 	void SetCurPage(PreferPageID id);
 
 	void ConstructPreferencePages();
+
+	CPreferencePageBase *GetChild(CPreferencePageBase *pPageParent);
 
 	CLangTreeCtrlHelper		m_LangTreeCtrlHelper;
 	CWidgetTreeCtrl			m_treePf;

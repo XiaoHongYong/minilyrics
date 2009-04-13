@@ -2,7 +2,6 @@
 <skin defmainwnd="minilyrics" mainwnds="minilyrics" ExtraResouceFolder="Modern/">
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics..." DynCmd="dyncmd_openclose_floatinglyr" CanCheck="true" IsCheckedCmd="dyncmd_is_floatinglyr_visible"/>
       <Item Action="Append" Type="item" Name="Lyrics &amp;Bar..." DynCmd="dyncmd_openclose_lyrics_bar" CanCheck="true" IsCheckedCmd="dyncmd_is_lyrics_bar_visible" />
       <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." DynCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>

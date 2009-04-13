@@ -9,13 +9,19 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferenceDlg.h"
-#include "PreferencePages.h"
+#include "PreferPageSystem.h"
+#include "PreferPageUI.h"
+#include "PreferPageLyrics.h"
+#include "PreferPageTheme.h"
 #include "PreferPageLyrDisplay.h"
-#include "PreferPageDownload.h"
 #include "PreferPageLyrOutput.h"
 #include "PreferPageHotkey.h"
 #ifdef _WIN32_DESKTOP
 #include "win32/PreferPageTrayIconCtrl.h"
+#endif
+
+#ifdef _MPLAYER
+#include "win32/PreferPageAssociation.h"
 #endif
 
 // 选项窗口
@@ -33,11 +39,6 @@ CPreferenceDlg::~CPreferenceDlg()
 {
 }
 
-// COMMENT:
-//		创建Preference对话框
-// INPUT:
-//		bSmall	-	是否隐藏选项树
-//		dwTemplateId	-	创建后的缺省选项页
 BOOL CPreferenceDlg::Create(CBaseWnd *pWndParent, PreferPageID idToactivate, bool bFloatingLyrMode)
 {
 	if (IsValid() && bFloatingLyrMode != m_bFloatingLyrMode)
@@ -104,10 +105,9 @@ void CPreferenceDlg::OnDestroy()
 		CPreferencePageBase		*pPage = m_vPreferencePages[i];
 
 		if (pPage->GetHandle())
-		{
 			pPage->Destroy();
-			delete pPage;
-		}
+
+		delete pPage;
 	}
 	m_vPreferencePages.clear();
 
@@ -136,15 +136,26 @@ BOOL CPreferenceDlg::OnNotify(WIDGET_NOTIFY_INFO *info)
 			pPage = (CPreferencePageBase*)m_treePf.GetItemData(tvInfo->iter);
 			if (pPage)
 			{
-				if (!pPage->GetHandle())
-					pPage->Create(pPage->m_nIDTemplate, this);
+				if (pPage->m_nIDTemplate == 0)
+				{
+					// Show first child item
+					CPreferencePageBase *pChild = GetChild(pPage);
+					pPage = pChild;
+					if (pChild)
+						m_treePf.SetSelected(*(pChild->GetTreeItemIter()));
+				}
+				else
+				{
+					if (!pPage->GetHandle())
+						pPage->Create(pPage->m_nIDTemplate, this);
 
-				// move to correct position
-				ReplaceChildPos(IDC_POS_PAGE, pPage);
+					// move to correct position
+					ReplaceChildPos(IDC_POS_PAGE, pPage);
 
-				// show it.
-				pPage->ShowWindow(SW_SHOW);
-				pPage->SetFocus();
+					// show it.
+					pPage->ShowWindow(SW_SHOW);
+					pPage->SetFocus();
+				}
 			}
 		}
     }
@@ -196,78 +207,111 @@ void CPreferenceDlg::ConstructPreferencePages()
 	m_vPreferencePages.clear();
 
 	// Construct preference pages
-	//
-	// General Setup
-	//
+
 	CPreferencePageBase		*pPageParent, *pPage;
 
-	// setup
-	pPageParent = new CPreferPageSetup();
-	m_vPreferencePages.push_back(pPageParent);
+	{
+		//
+		// User interface pages
+		//
 
-	// internet
-	pPage = new CPreferPageInternet;
-	pPage->SetParentPage(pPageParent);
-	m_vPreferencePages.push_back(pPage);
+		// User interface root
+		pPageParent = new CPPageUI;
+		m_vPreferencePages.push_back(pPageParent);
 
-	// Options
-	pPage = new CPreferPageOptions;
-	pPage->SetParentPage(pPageParent);
-	m_vPreferencePages.push_back(pPage);
+		// Localization
+		pPage = new CPPageLocalization;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
 
-	// Global Hotkeys
-	pPageParent = new CPreferPageHotkey();
-	m_vPreferencePages.push_back(pPageParent);
+		// Skins
+		pPage = new CPreferPageSkin;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
 
-	// lyrics display settings
-	pPageParent = new CPreferPageLyrDispSettings();
-	m_vPreferencePages.push_back(pPageParent);
+		// HotKey
+		pPage = new CPreferPageHotkey;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
 
-	// General lyrics window
-	pPageParent = new CPreferPageGeneralLyrWindow();
-	m_vPreferencePages.push_back(pPageParent);
+		// Advanced Options
+		pPage = new CPPageUIAdvanced;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
+	}
 
-	// lyrics display
-	pPage = new CPreferPageLyrDispStyle(m_bFloatingLyrMode);
-	pPage->SetParentPage(pPageParent);
-	m_vPreferencePages.push_back(pPage);
+	{
+		//
+		// Theme pages
+		//
+		pPageParent = new CPreferencePageBase(0, _T("Themes"));
+		m_vPreferencePages.push_back(pPageParent);
 
-	// Color theme
-	pPage = new CPreferPageLyrClrTheme(m_bFloatingLyrMode);
-	pPage->SetParentPage(pPageParent);
-	m_vPreferencePages.push_back(pPage);
+		// Color theme
+		pPage = new CPreferPageLyrClrTheme(m_bFloatingLyrMode);
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
 
-	// Background picture
-	pPage = new CPreferPageDispBgPic;
-	pPage->SetParentPage(pPageParent);
-	m_vPreferencePages.push_back(pPage);
+		// lyrics display
+		pPage = new CPreferPageLyrDispStyle(m_bFloatingLyrMode);
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
 
-	// lyrics download
-	pPageParent = new CPreferPageLyricsDownload();
-	m_vPreferencePages.push_back(pPageParent);
+		// Background picture
+		pPage = new CPreferPageDispBgPic;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
+	}
 
-	// lyrics search
-	pPageParent = new CPreferPageSearchDir();
-	m_vPreferencePages.push_back(pPageParent);
+	{
+		//
+		// System pages
+		//
+		pPageParent = new CPreferencePageBase(0, _T("System"));
+		m_vPreferencePages.push_back(pPageParent);
 
-	// Lyrics Search Database
-//	pPage = new CPreferPageLocalLrcDb;
-//	pPage->SetParentPage(pPageParent);
-//	m_vPreferencePages.push_back(pPage);
-
-	//
-	// skin
-	//
-	pPageParent = new CPreferPageSkin();
-	m_vPreferencePages.push_back(pPageParent);
+#ifdef _MPLAYER
+		// File association
+		pPage = new CPreferPageAssociation;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
+#else
+#endif // _MPLAYER
 
 #ifdef _WIN32_DESKTOP
-	//
-	// TrayIcon controls
-	//
-	pPageParent = new CPreferPageTrayIconCtrl();
-	m_vPreferencePages.push_back(pPageParent);
+		//
+		// TrayIcon controls
+		//
+		pPage = new CPreferPageTrayIconCtrl();
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
 #endif
+
+		// internet
+		pPage = new CPreferPageInternet;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
+
+		// Startup
+		pPage = new CPPageStartup;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
+	}
+
+	{
+		//
+		// Lyrics
+		//
+
+		// lyrics
+		pPageParent = new CPreferPageLyrics();
+		m_vPreferencePages.push_back(pPageParent);
+
+		// lyrics download
+		pPage = new CPreferPageLyricsDownload;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
+	}
 
 	//
 	// Lyrics output plug-ins
@@ -275,10 +319,20 @@ void CPreferenceDlg::ConstructPreferencePages()
 	pPageParent = new CPreferPageLyrOutput();
 	m_vPreferencePages.push_back(pPageParent);
 
-//	pPageParent = new CPreferPageAssociation();
-//	m_vPreferencePages.push_back(pPageParent);
-
 // 	pPageParent = new CPreferPageScreen();
 // 	m_vPreferencePages.push_back(pPageParent);
 
+}
+
+CPreferencePageBase *CPreferenceDlg::GetChild(CPreferencePageBase *pPageParent)
+{
+	for (int i = 0; i + 1 < (int)m_vPreferencePages.size(); i++)
+	{
+		if (m_vPreferencePages[i] == pPageParent)
+		{
+			return m_vPreferencePages[i + 1];
+		}
+	}
+
+	return NULL;
 }

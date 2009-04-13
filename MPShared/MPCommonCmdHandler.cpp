@@ -16,12 +16,9 @@
 #include "SkinSeekCtrl.h"
 #include "SkinRateCtrl.h"
 #include "DlgSearchLyrics.h"
-#include "DlgSelFileEncoding.h"
-#include "DlgSelMbcsEncoding.h"
+#include "DlgSelEncoding.h"
 #include "../widget/win32/FileOpenDlg.h"
 #include "RegistrationDlg.h"
-#include "DlgSelFileEncoding.h"
-#include "DlgSelMbcsEncoding.h"
 #include "DlgEmbeddedLyricsLoad.h"
 #include "DlgEmbeddedLyricsSave.h"
 #include "DlgEmbeddedLyricsRemove.h"
@@ -141,6 +138,10 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		break;
 	case IDC_SAVE_LYRICS_AS:
 		OnCustomCommand(CMD_SAVE_LRC_AS);
+		break;
+	case IDC_ADVANCED_SAVE_LYR:
+		SaveAsLyricsFile(m_pSkinWnd,
+			LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), true);
 		break;
 	case IDC_FORWARD_LYRICS:
 		OnCustomCommand(CMD_FORWARD_LYRICS);
@@ -364,7 +365,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		// 调用外部的编辑器编辑歌词
 		if (g_LyricData.GetLyricsSourceType() != LST_FILE)
 		{
-			m_pSkinWnd->MessageOut(TOLOCAL(_T("Embedded lyrics can not be edited with outside editors.")));
+			m_pSkinWnd->MessageOut(TOLOCAL(_T("Embedded lyrics can not be edited with external editors.")));
 			break;
 		}
 
@@ -396,7 +397,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #endif
 	case IDC_OPTIONS:
 	case IDC_PREFERENCE:
-		g_wndPreference.Create(m_pSkinWnd, PAGE_SETUP, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		g_wndPreference.Create(m_pSkinWnd, PAGE_LOCALIZATION, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case IDC_ADJUST_HUE:
 		{
@@ -548,7 +549,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 		}
 		break;
 	case CMD_PREFERENCES:
-		g_wndPreference.Create(m_pSkinWnd, PAGE_SETUP, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		g_wndPreference.Create(m_pSkinWnd, PAGE_LOCALIZATION, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case CMD_FLOATING_LYRICS:
 		OnCommand(IDC_FLOATING_LYRICS);
@@ -749,7 +750,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 			if (g_LyricData.DoesChooseNewFileName())
 			{
 				SaveAsLyricsFile(m_pSkinWnd, 
-					LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()));
+					LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false);
 			}
 			else
 			{
@@ -778,7 +779,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 			g_eventDispather.DispatchSyncEvent(pEvent);
 
 			SaveAsLyricsFile(m_pSkinWnd,
-				LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()));
+				LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false);
 		}
 		break;
 	case CMD_FORWARD_LYRICS:
@@ -1179,9 +1180,7 @@ void CMPCommonCmdHandler::OnCommandOpenLyricsInMp3()
 
 void CMPCommonCmdHandler::OnCommandSaveLyricsToMp3()
 {
-	CDlgEmbeddedLyricsSave		dlg;
 	TCHAR			szSongFile[MAX_PATH];
-	CDlgSelFileEncoding	dlgFileEncoding;
 
 	g_Player.GetSourceMedia(szSongFile, MAX_PATH);
 
@@ -1197,35 +1196,32 @@ void CMPCommonCmdHandler::OnCommandSaveLyricsToMp3()
 		return;
 	}
 
+	CDlgEmbeddedLyricsSave		dlg;
+	tstring			strLyrics;
+	FILE_ENCODING	fileEncoding = FE_UCS2;
 
-	dlgFileEncoding.m_fileEncoding = g_LyricData.GetFileEncoding();
-	dlgFileEncoding.m_bHideUtf8 = true;
+	g_LyricData.ToString(strLyrics, FT_LYRICS_TXT, TRUE);
 
-	//
-	// 需要让用户选择保存的字符串的编码类型
-	if (dlgFileEncoding.DoModal(m_pSkinWnd) != IDOK)
-		return;
-
-#ifdef _UNICODE
-	// 只有在UNICODE模式下，选择保存为 ANSI 文件时，才有必要选择编码
-	if (dlgFileEncoding.m_fileEncoding == FE_ANSI)
+	if (IsAnsiStr(strLyrics.c_str()))
+		fileEncoding = FE_ANSI;
+	else
 	{
-		CDlgSelMbcsEncoding	dlgMbcsEncoding;
+		CDlgSelEncoding	dlgEncoding;
 
-		dlgMbcsEncoding.m_strEncoding = g_LyricData.GetEncoding();
-		g_LyricData.ToString(dlgMbcsEncoding.m_strLyrics, FT_LYRICS_TXT, TRUE);
+		dlgEncoding.m_bHideUtf8 = true;
 
-		if (!IsAnsiStr(dlgMbcsEncoding.m_strLyrics.c_str()))
-		{
-			if (dlgMbcsEncoding.DoModal(m_pSkinWnd) != IDOK)
-				return;
+		dlgEncoding.m_encoding = g_LyricData.GetEncodingIndex();
+		if (g_LyricData.GetFileEncoding() == FE_UCS2)
+			dlgEncoding.m_encoding = ED_UNICODE;
+		else if (g_LyricData.GetFileEncoding() == FE_UTF8)
+			dlgEncoding.m_encoding = ED_UTF8;
+		dlgEncoding.m_strLyrics = strLyrics;
 
-			g_LyricData.SetEncoding(dlgMbcsEncoding.m_strEncoding.c_str());
-		}
+		if (dlgEncoding.DoModal(m_pSkinWnd) != IDOK)
+			return;
 	}
-#endif
 
-	dlg.DoModal(m_pSkinWnd, szSongFile, dlgFileEncoding.m_fileEncoding, g_LyricData.GetEncodingIndex());
+	dlg.DoModal(m_pSkinWnd, szSongFile, g_LyricData.GetEncodingIndex());
 }
 
 void CMPCommonCmdHandler::OnCommandRemoveLyricsInMp3()
@@ -1254,12 +1250,12 @@ void CMPCommonCmdHandler::OnCommandRemoveLyricsInMp3()
 // RETURN:
 //		TRUE	-	保存成功，注意：如果没有歌词数据也返回TRUE；
 //		FALSE	-	用户选择取消，或者保存失败;
-BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefFileType)
+BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefFileType, bool bAdvancedSaveOpt)
 {
 	TCHAR			szFile[MAX_PATH] = _T("");
 	TCHAR			szTitle[MAX_PATH] = _T("");
 	tstring			strLyrics;
-	CDlgSelFileEncoding	dlgFileEncoding;
+	FILE_ENCODING	fileEncoding = FE_UCS2;
 
 	if (!g_LyricData.IsOK())
 	{
@@ -1267,32 +1263,36 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 		return TRUE;
 	}
 
-	dlgFileEncoding.m_fileEncoding = g_LyricData.GetFileEncoding();
-
 	g_LyricData.ToString(strLyrics, FT_LYRICS_TXT, TRUE);
 
-	//
-	// 当字符不是 ANSI 字符时，需要让用户选择保存的文件编码类型
-	if (!IsAnsiStr(strLyrics.c_str()))
+	if (bAdvancedSaveOpt)
 	{
-		if (dlgFileEncoding.DoModal(pWndParent) != IDOK)
+		CDlgSelEncoding	dlgEncoding;
+
+		dlgEncoding.m_encoding = g_LyricData.GetEncodingIndex();
+		if (g_LyricData.GetFileEncoding() == FE_UCS2)
+			dlgEncoding.m_encoding = ED_UNICODE;
+		else if (g_LyricData.GetFileEncoding() == FE_UTF8)
+			dlgEncoding.m_encoding = ED_UTF8;
+		dlgEncoding.m_strLyrics = strLyrics;
+
+		if (dlgEncoding.DoModal(pWndParent) != IDOK)
 			return FALSE;
 
-#ifdef _UNICODE
-		// 只有在UNICODE模式下，选择保存为 ANSI 文件时，才有必要选择编码
-		if (dlgFileEncoding.m_fileEncoding == FE_ANSI)
-		{
-			CDlgSelMbcsEncoding	dlgMbcsEncoding;
-
-			dlgMbcsEncoding.m_strEncoding = g_LyricData.GetEncoding();
-			g_LyricData.ToString(dlgMbcsEncoding.m_strLyrics, FT_LYRICS_TXT, TRUE);
-
-			if (dlgMbcsEncoding.DoModal(pWndParent) != IDOK)
-				return FALSE;
-
-			g_LyricData.SetEncoding(dlgMbcsEncoding.m_strEncoding.c_str());
-		}
-#endif
+		g_LyricData.SetEncoding(dlgEncoding.m_encoding);
+		if (dlgEncoding.m_encoding == ED_UNICODE)
+			fileEncoding = FE_UCS2;
+		else if (dlgEncoding.m_encoding == ED_UTF8)
+			fileEncoding = FE_UTF8;
+		else
+			fileEncoding = FE_ANSI;
+	}
+	else
+	{
+		if (IsAnsiStr(strLyrics.c_str()))
+			fileEncoding = FE_ANSI;
+		else
+			fileEncoding = FE_UCS2;
 	}
 
 	// 设置新的文件名
@@ -1381,7 +1381,7 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 			return FALSE;
 		}
 		bool	bUseNewFileName;
-		int		nRet = g_LyricData.SaveAsFile(szFile, dlgFileEncoding.m_fileEncoding, bUseNewFileName);
+		int		nRet = g_LyricData.SaveAsFile(szFile, fileEncoding, bUseNewFileName);
 		if (nRet != ERR_OK)
 		{
 			pWndParent->MessageOut(ERROR2STR_LOCAL(nRet));

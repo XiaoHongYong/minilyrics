@@ -2033,7 +2033,7 @@ void CLyricShowObj::OnTimer(int nId)
 
 bool CLyricShowObj::ShouldWrapLines()
 {
-	return m_bCanWrapLines && g_Profile.GetProfileBool(SZ_SECT_LYR_DISPLAY, _T("WrapLines"), true);
+	return m_bCanWrapLines;
 }
 
 void CLyricShowObj::AddErrorInfo(LPCTSTR szInfo)

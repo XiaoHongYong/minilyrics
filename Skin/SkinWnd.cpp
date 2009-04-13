@@ -300,11 +300,8 @@ void CSkinWnd::CloseSkin()
 	m_rootConainter.Destroy();
 
 #ifdef _WIN32_DESKTOP
-	if (m_bTranslucencyLayered)
-	{
-		m_bTranslucencyLayered = false;
-		::UnSetLayeredWindow(m_hWnd);
-	}
+	m_bTranslucencyLayered = false;
+	::UnSetLayeredWindow(m_hWnd);
 #endif
 
 	m_bSkinOpened = false;
@@ -1573,6 +1570,9 @@ void CSkinWnd::OnActivate(bool bActived)
 	}
 
 	InvalidateRect();
+
+	if (m_bClickThrough)
+		SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
 }
 
 void CSkinWnd::AddWndCloseto(CBaseWnd *pWnd, LPCTSTR szWndClass, LPCTSTR szWndName)
@@ -1746,7 +1746,7 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 		dwFlags |= LWA_COLORKEY;
 	}
 
-	if (bClickThrough)
+	if (bClickThrough && !m_bActived)
 	{
 		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) | WS_EX_TRANSPARENT);
 	}
@@ -1755,7 +1755,7 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) & ~WS_EX_TRANSPARENT);
 	}
 
-	if (dwFlags != 0 || m_bClickThrough)
+	if (dwFlags != 0 || (bClickThrough && !m_bActived))
 		::SetLayeredWindow(m_hWnd, clrTrans, nAlpha, dwFlags);
 	else
 		::UnSetLayeredWindow(m_hWnd);
@@ -1909,7 +1909,7 @@ BOOL CSkinWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
 	// ????WS_EX_LAYERED??
 	dwStyle = GetWindowLong(m_hWnd, GWL_EXSTYLE);
 	dwStyleNew = dwStyle | WS_EX_LAYERED;
-	if (m_bClickThrough)
+	if (m_bClickThrough && !m_bActived)
 		dwStyleNew |= WS_EX_TRANSPARENT;
 	else
 		dwStyleNew &= ~WS_EX_TRANSPARENT;
@@ -2012,8 +2012,8 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 
 		if (bKillTimer)
 		{
-			m_translucencyStatus = TS_NORMAL;
 			KillTimer(TIMER_ID_DYNAMIC_TRANS);
+			m_translucencyStatus = TS_NORMAL;
 		}
 
 		RecreateBrush();

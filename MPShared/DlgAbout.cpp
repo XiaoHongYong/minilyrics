@@ -74,7 +74,6 @@ BOOL CDlgAbout::OnInitDialog()
 
 void CDlgAbout::OnDestroy()
 {
-	m_LangDlgHelper.Destroy();
 	m_cmdBar.Destroy();
 
 	CBaseDialog::OnDestroy();
