@@ -167,16 +167,18 @@ BOOL AnalysisLyricsFileNameEx(TCHAR szArtist[]/* out */, int nLenArtist, TCHAR s
 		szBegTitle += 3;	// strlen(_T(" - "));
 	else
 	{
+/* 不再专门对中文分割做处理
 		szEndArtist = szBegTitle = _tcsstr(szFullTitleNew, _T(" － "));
 		if (szBegTitle)
-			szBegTitle += 4;	// strlen(_T(" － "));
+			szBegTitle += strlen(_T(" － "));
 		else
-		{
+*/		{
 			szEndArtist = szBegTitle = _tcschr(szFullTitleNew, '-');
 			if (szBegTitle)
 				szBegTitle++;	// -
 		}
 	}
+
 
 	//
 	// 处理作者……
