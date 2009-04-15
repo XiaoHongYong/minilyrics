@@ -477,6 +477,19 @@ SectionIn 1 2
     WriteINIStr ${TEMP1}plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_VLCEnd:
 
+  ; Silverjuke
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSJ"
+  IntCmp ${TEMP1} 0 J_SJEnd J_SJEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSJ" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSJPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSJPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}
+    File ..\bin\PluginSilverjuke.dll
+
+    WriteINIStr ${TEMP1}\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_SJEnd:
+
   ; HMM
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstHMM"
   IntCmp ${TEMP1} 0 J_HMMEnd J_HMMEnd
@@ -569,7 +582,7 @@ SectionIn 1
   StrCpy $R1 $(SecShortcut.MLReadme)
   CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\readme-minilyrics.txt"
   StrCpy $R1 $(SecShortcut.MLHelp)
-  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\minilyrics.chm"
+  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\help.chm"
 
   IfFileExists "$INSTDIR\PluginJetaudio.exe" 0 J_JASEnd
 	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for JetAudio.lnk" "$INSTDIR\PluginJetaudio.exe"
@@ -585,7 +598,7 @@ SectionIn 1
 
 ;  CreateShortCut "$SMPROGRAMS\MiniLyrics\Uninstall MiniLyrics.lnk" "$INSTDIR\uninst-ml.exe"
 ;  CreateShortCut "$SMPROGRAMS\MiniLyrics\readme.lnk" "$INSTDIR\readme-minilyrics.txt"
-;  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics help.lnk" "$INSTDIR\MiniLyrics.chm"
+;  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics help.lnk" "$INSTDIR\help.chm"
 SectionEnd
 
 Section "Avs Support for Winamp" SecAvs
@@ -755,7 +768,7 @@ Section "Uninstall"
   Delete /REBOOTOK $INSTDIR\minilyrics.dll
   Delete $INSTDIR\unicows.dll
   Delete $INSTDIR\MLPlugin.ini
-  Delete $INSTDIR\minilyrics.chm
+  Delete $INSTDIR\help.chm
   Delete $INSTDIR\MLSetup.exe
   Delete $INSTDIR\MLStart.exe
   Delete $INSTDIR\mlver.xml

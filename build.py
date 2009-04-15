@@ -102,6 +102,7 @@ if TargetML:
 		[ " PluginMJ\\PluginMJ.sln", "\"Release|Win32\"" ],
 		[ " PluginQCDPlayer\\QCDGeneral.sln", "\"Release|Win32\"" ],
 		[ " PluginRealOne\\PluginRealOne.sln", "\"Release|Win32\"" ],
+		[ " PluginSilverjuke\\PluginSilverjuke.sln", "\"Release|Win32\"" ],
 		[ " PluginVLC\\PluginVLC.sln", "\"Release|Win32\"" ],
 		[ " PluginWinamp5\\PluginWinamp5.sln", "\"Release|Win32\"" ],
 		[ " PluginWMP\\PluginWMP.sln", "\"Release|Win32\"" ],
