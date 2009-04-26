@@ -312,6 +312,8 @@ void CSkinWnd::CloseSkin()
 
 	m_brBg.Destroy();
 
+	m_listUnprocessedProperties.clear();
+
 	m_cursor.Destroy();
 
 	m_strCusor.resize(0);
@@ -1353,6 +1355,21 @@ void CSkinWnd::EnumProperties(CUIObjProperties &listProperties)
 #endif
 }
 
+bool CSkinWnd::GetUnprocessedProperty(LPCTSTR szProperty, tstring &strValue)
+{
+	for (SXNode::iterProperties it = m_listUnprocessedProperties.begin(); it != m_listUnprocessedProperties.end(); ++it)
+	{
+		SXNode::Property	&prop = *it;
+		if (_tcsicmp(szProperty, prop.strName.c_str()) == 0)
+		{
+			strValue = prop.strValue;
+			return true;
+		}
+	}
+
+	return false;
+}
+
 // 
 // BOOL CSkinWnd::AddUIObject(CUIObject *pObj)
 // {
@@ -2260,7 +2277,7 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 			SXNode::Property	&prop = *it;
 			if (!SetProperty(prop.strName.c_str(), prop.strValue.c_str()))
 			{
-				// ???????
+				m_listUnprocessedProperties.push_back(prop);
 				DBGLOG2(_T("Unknow Property: %s, %s"), prop.strName.c_str(), prop.strValue.c_str());
 			}
 		}

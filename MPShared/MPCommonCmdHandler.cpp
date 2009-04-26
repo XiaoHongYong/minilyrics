@@ -169,7 +169,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		break;
 
 	case IDC_LYR_DISPLAY_OPT:
-		g_wndPreference.Create(m_pSkinWnd, PAGE_LYR_THEME, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		g_wndPreference.Create(m_pSkinWnd, PAGE_LYR_DISPLAY, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case IDC_LOAD_SKIN_THEME:
 		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("ReloadSkinDefClrTheme"), TRUE);
@@ -397,7 +397,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #endif
 	case IDC_OPTIONS:
 	case IDC_PREFERENCE:
-		g_wndPreference.Create(m_pSkinWnd, PAGE_LOCALIZATION, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case IDC_ADJUST_HUE:
 		{
@@ -549,7 +549,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 		}
 		break;
 	case CMD_PREFERENCES:
-		g_wndPreference.Create(m_pSkinWnd, PAGE_LOCALIZATION, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case CMD_FLOATING_LYRICS:
 		OnCommand(IDC_FLOATING_LYRICS);

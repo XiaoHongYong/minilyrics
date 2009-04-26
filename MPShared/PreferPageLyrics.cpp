@@ -7,6 +7,7 @@
 
 CPreferPageLyrics::CPreferPageLyrics() : CPreferencePageBase(IDD_PAGE_LYR, _T("Lyrics"))
 {
+	m_PageID = PAGE_LYRICS;
 }
 
 CPreferPageLyrics::~CPreferPageLyrics()
@@ -154,7 +155,7 @@ void CPreferPageLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 		}
 		break;
 	default:
-		ProcessCommand(uID);
+		ProcessCommand(uID, nNotifyCode);
 		break;
 	}
 }
@@ -177,7 +178,7 @@ BOOL CPreferPageLyrics::IsDirAdded(TCHAR szDir[])
 //////////////////////////////////////////////////////////////////////////
 
 
-CPreferPageLyricsDownload::CPreferPageLyricsDownload() : CPreferencePageBase(IDD_PAGE_DOWNLOAD, _T("Lyrics Download"))
+CPreferPageLyricsDownload::CPreferPageLyricsDownload() : CPreferencePageBase(IDD_PAGE_LYR_DOWNLOAD, _T("Lyrics Download"))
 {
 	m_PageID = PAGE_LYR_DOWNLOAD;
 }
@@ -322,7 +323,7 @@ void CPreferPageLyricsDownload::OnCommand(UINT uID, UINT nNotifyCode)
 		}
 		break;
 	default:
-		ProcessCommand(uID);
+		ProcessCommand(uID, nNotifyCode);
 		break;
 	}
 }

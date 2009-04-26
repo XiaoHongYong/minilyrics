@@ -216,13 +216,20 @@ CSimpleXML::~CSimpleXML()
 	Free();
 }
 
-BOOL CSimpleXML::ParseFile(LPCTSTR szXmlFile)
+void CSimpleXML::New(LPCTSTR szRootName)
+{
+	m_pRoot = new SXNode;
+	m_pRoot->strName = szRootName;
+}
+
+BOOL CSimpleXML::ParseFile(LPCTSTR szXmlFile, bool bNoProlog)
 {
 	CSimpleXMLParser		parser;
 	SimpleXMLParserError	ret;
 
 	Free();
 
+	parser.m_bNoProlog = bNoProlog;
 	ret = parser.ParseFile(szXmlFile, *this);
 
 	if (ret != SXPE_OK)
@@ -234,13 +241,14 @@ BOOL CSimpleXML::ParseFile(LPCTSTR szXmlFile)
 	return TRUE;
 }
 
-BOOL CSimpleXML::ParseData(LPCVOID lpXmlData, size_t nLen)
+BOOL CSimpleXML::ParseData(LPCVOID lpXmlData, size_t nLen, bool bNoProlog)
 {
 	CSimpleXMLParser		parser;
 	SimpleXMLParserError	ret;
 
 	Free();
 
+	parser.m_bNoProlog = bNoProlog;
 	ret = parser.ParseData(lpXmlData, nLen, *this);
 
 	if (ret != SXPE_OK)
@@ -258,9 +266,10 @@ BOOL CSimpleXML::SaveFile(LPCTSTR szXmlFile)
 	if (!m_pRoot)
 		return false;
 
-	CXMLWriter		xmlStream(false);
+	CXMLWriter		xmlStream(m_strEncoding.empty());
 
-	xmlStream.WriteStartDocument(m_strEncoding.c_str());
+	if (!m_strEncoding.empty())
+		xmlStream.WriteStartDocument(m_strEncoding.c_str());
 
 	m_pRoot->ToXML(xmlStream);
 

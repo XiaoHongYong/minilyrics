@@ -1,4 +1,4 @@
-key/********************************************************************
+/********************************************************************
 	Created  :	2002Äê1ÔÂ3ÈÕ 16:21:56
 	FileName :	LyricShowObj.cpp
 	Author   :	xhy
@@ -171,18 +171,18 @@ struct LyrShowTOBFieldName
 
 LPCTSTR		_LyrShowTOBFieldNameHilight[] = 
 {
-	_T("LOBHilightColor"),
+	_T("FgColor"),
 	_T("HilightGradient1"), _T("HilightGradient2"), _T("HilightGradient3"),
 	_T("HilightAutoGradient"),
-	_T("LOBHilightBorder"),
+	_T("HilightBorderColor"),
 };
 
 LPCTSTR		_LyrShowTOBFieldNameLowlight[] = 
 {
-	_T("LOBLowlightColor"),
+	_T("FgLowColor"),
 	_T("LowlightGradient1"), _T("LowlightGradient2"), _T("LowlightGradient3"),
 	_T("LowlightAutoGradient"),
-	_T("LOBLowlightBorder"),
+	_T("LowlightBorderColor"),
 };
 
 void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverlayBlending &tob, int nGradientPatternHeight, bool bHilight)
@@ -199,7 +199,7 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 
 	ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_BORDER], szSectName, pFiledName[CLyricShowObj::TCI_BORDER]);
 
-	tob.obm = (OverlayBlendingMode)g_Profile.GetProfileInt(szSectName, bHilight ? _T("LOBHilight") : _T("LOBLowlight"),  OBM_COLOR);
+	tob.obm = (OverlayBlendingMode)g_Profile.GetProfileInt(szSectName, bHilight ? _T("HilightOBM") : _T("LowlightOBM"),  OBM_COLOR);
 	if (tob.obm == OBM_PATTERN)
 	{
 		tob.imgPattern.Destroy();
@@ -328,7 +328,7 @@ void ProfileWriteLyricsFont(EventType etColorTheme, LPCTSTR szSectName, int nHei
 	CMPlayerSettings::SetSettings(etColorTheme, szSectName, _T("Font"), strFont.c_str());
 }
 
-void ProfileWriteTOBToOld(bool bTobEnabled, 
+void ProfileWriteTOBToOld(bool bOutlineLyrText, 
 	 const CLyricShowObj::TextOverlayBlending &tobHilight, 
 	 const CLyricShowObj::TextOverlayBlending &tobLowlight)
 {
@@ -343,10 +343,10 @@ void ProfileWriteTOBToOld(bool bTobEnabled,
 		g_Profile.WriteProfileString(SZ_SECT_TOB_OLD, _LyrShowTOBFieldNameLowlight[i], str.c_str());
 	}
 
-	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("BlendingLyrText"), bTobEnabled);
+	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("OutlineLyrText"), bOutlineLyrText);
 
-	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("LOBHilight"), tobHilight.obm);
-	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("LOBLowlight"), tobLowlight.obm);
+	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("HilightOBM"), tobHilight.obm);
+	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("LowlightOBM"), tobLowlight.obm);
 }
 
 void ProfileWriteTOBCustomizedToCurrent()
@@ -365,19 +365,17 @@ void ProfileWriteTOBCustomizedToCurrent()
 			g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _LyrShowTOBFieldNameLowlight[i], strValue.c_str());
 	}
 
-	strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("BlendingLyrText"), _T(""));
+	strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("OutlineLyrText"), _T(""));
 	if (!strValue.empty())
-	{
-		g_Profile.WriteProfileInt(SZ_SECT_LYR_DISPLAY, _T("BlendingLyrText"), _ttoi(strValue.c_str()));
+		g_Profile.WriteProfileInt(SZ_SECT_LYR_DISPLAY, _T("OutlineLyrText"), _ttoi(strValue.c_str()));
 
-		strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("LOBHilight"), _T(""));
-		if (!strValue.empty())
-			g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _T("LOBHilight"), strValue.c_str());
+	strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("HilightOBM"), _T(""));
+	if (!strValue.empty())
+		g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _T("HilightOBM"), strValue.c_str());
 
-		strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("LOBLowlight"), _T(""));
-		if (!strValue.empty())
-			g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _T("LOBLowlight"), strValue.c_str());
-	}
+	strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("LowlightOBM"), _T(""));
+	if (!strValue.empty())
+		g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _T("LowlightOBM"), strValue.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -406,7 +404,6 @@ CLyricShowObj::CLyricShowObj()
 	m_strSectName = SZ_SECT_LYR_DISPLAY;
 
 	m_font.Create(_T(""), _T(""), 13, FW_NORMAL, 0, false);
-	m_font.SetThickOutline(false);
 
 	m_nFontHeight = m_font.GetHeight();
 
@@ -418,8 +415,6 @@ CLyricShowObj::CLyricShowObj()
 	m_hue = 0.0;
 
 	m_clrBg.set(RGB(79, 88, 110));
-	m_clrFg.set(RGB(236, 236, 236));
-	m_clrFgLow.set(RGB(131, 148, 158));
 	m_clrTag.set(RGB(255, 128, 64));
 	m_clrFocusLineBg.set(RGB(64, 71, 88));
 
@@ -431,17 +426,17 @@ CLyricShowObj::CLyricShowObj()
 	m_tobLowlight.clr[TCI_FILL].set(RGB(255, 255, 255));
 	m_tobLowlight.clr[TCI_BORDER].set(RGB(0, 0, 255));
 
-	m_skin_bTobEnabled = false;
+	m_skin_bOutlineLyrics = false;
 
 	m_nLineSpacing = 2;
 
-	m_bTobEnabled = false;
+	m_bOutlineLyrics = false;
+
 	m_bKaraoke = false;
-	m_lyrShadowMode = CRawBmpFont::SM_SHADOW;
 
 	m_bUseAlbumArtAsBg = false;
 	m_bUseBgImg = false;
-	m_bTobEnabledOnBgPic = true;
+	m_bOutlineLyricsOnBgPic = true;
 
 	m_bDarkenLyrBgOnImg = true;
 	m_nDarkenTopArea = float(1.25);
@@ -466,10 +461,6 @@ CLyricShowObj::CLyricShowObj()
 	m_nVertLineOffset = 0;
 #endif
 
-#ifdef _WIN32_DESKTOP
-	m_bThickOutline = false;
-#endif
-
 	m_etDispSettings = ET_LYRICS_DISPLAY_SETTINGS;
 	m_strSectName = SZ_SECT_LYR_DISPLAY;
 }
@@ -488,8 +479,6 @@ void CLyricShowObj::OnCreate()
 {
 	m_pMLData = &g_LyricData;
 
-	// ReloadThemeOfSkin(false);
-
 	LoadAllSettings();
 
 	if (m_bUseSkinStyle)
@@ -503,8 +492,6 @@ void CLyricShowObj::OnCreate()
 		}
 
 		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrBg);
-		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrFg);
-		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrFgLow);
 		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrTag);
 		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrFocusLineBg);
 	}
@@ -858,7 +845,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				pGraphics->SetTextAlpha(nAlpha);
 			}
 
-			if (IsBlendingLyrText())
+			if (m_bOutlineLyrics)
 			{
 				// Draw lyrics text outlined
 				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
@@ -930,7 +917,7 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 		else
 #endif*/
 		{
-			if (IsBlendingLyrText())
+			if (m_bOutlineLyrics)
 			{
 				// Draw lyrics text outlined
 				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
@@ -999,20 +986,20 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 			//
 			// Draw lyrics with hilight
 			//
-			if (IsBlendingLyrText())
-			{
-				if (m_tobHilight.obm == OBM_COLOR)
-					m_font.UseColorOverlay();
-				else
-					m_font.SetOverlayPattern(&m_tobHilight.imgPattern);
 
+			if (m_tobHilight.obm == OBM_COLOR)
+				m_font.UseColorOverlay();
+			else
+				m_font.SetOverlayPattern(&m_tobHilight.imgPattern);
+
+			if (m_bOutlineLyrics)
+			{
 				// Draw lyrics text outlined
 				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
 			}
 			else
 			{
-				pGraphics->SetTextColor(m_clrFg);
-
+				pGraphics->SetTextColor(GetHighlightColor());
 				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
 			}
 			x += pFrag->GetDrawWidth(pGraphics);;
@@ -1060,38 +1047,39 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		{
 			rcText.SetRect(x, y, x + nFragDrawWidth + 1000, y + GetFontHeight());
 
-			if (IsBlendingLyrText())
-			{
-				if (m_tobLowlight.obm == OBM_COLOR)
-					m_font.UseColorOverlay();
-				else
-					m_font.SetOverlayPattern(&m_tobLowlight.imgPattern);
+			if (m_tobLowlight.obm == OBM_COLOR)
+				m_font.UseColorOverlay();
+			else
+				m_font.SetOverlayPattern(&m_tobLowlight.imgPattern);
 
+			if (m_bOutlineLyrics)
+			{
 				pGraphics->DrawTextClipOutlined(pFrag->szLyric, pFrag->nLen, &rcText, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER], nKaraokePos);
 			}
 			else
 			{
-				pGraphics->SetTextColor(m_clrFgLow);
+				pGraphics->SetTextColor(GetLowlightColor());
 				pGraphics->DrawTextClip(pFrag->szLyric, pFrag->nLen, &rcText, nKaraokePos);
 			}
 		}
 
 		// Draw hilight part lyrics
 		rcText.SetRect(x, y, x + nKaraokePos, y + GetFontHeight());
-		if (IsBlendingLyrText())
+
+		if (m_tobHilight.obm == OBM_COLOR)
+			m_font.UseColorOverlay();
+		else
+			m_font.SetOverlayPattern(&m_tobHilight.imgPattern);
+
+		if (m_bOutlineLyrics)
 		{
 			rcText.right += CRawBmpFont::OUTLINED_BORDER;
-			if (m_tobHilight.obm == OBM_COLOR)
-				m_font.UseColorOverlay();
-			else
-				m_font.SetOverlayPattern(&m_tobHilight.imgPattern);
-
 			// Draw lyrics text outlined
 			pGraphics->DrawTextClipOutlined(pFrag->szLyric, pFrag->nLen, &rcText, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
 		}
 		else
 		{
-			pGraphics->SetTextColor(m_clrFg);
+			pGraphics->SetTextColor(GetHighlightColor());
 			pGraphics->DrawTextClip(pFrag->szLyric, pFrag->nLen, &rcText);
 		}
 
@@ -1106,14 +1094,14 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		pFrag = pLyricRow->vFrags[nCurPos];
 
 		// draw text border
-		if (IsBlendingLyrText())
+		if (m_bOutlineLyrics)
 		{
 			// Draw lyrics text outlined
 			pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER]);
 		}
 		else
 		{
-			pGraphics->SetTextColor(m_clrFgLow);
+			pGraphics->SetTextColor(GetLowlightColor());
 			pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
 		}
 		x += pFrag->GetDrawWidth(pGraphics);
@@ -1538,8 +1526,6 @@ void CLyricShowObj::OnAdjustHue(float hue, float saturation, float luminance)
 	}
 
 	ADJUST_HUE(m_skin_clrBg, m_clrBg);
-	ADJUST_HUE(m_skin_clrFg, m_clrFg);
-	ADJUST_HUE(m_skin_clrFgLow, m_clrFgLow);
 	ADJUST_HUE(m_skin_clrTag, m_clrTag);
 	ADJUST_HUE(m_skin_clrFocusLineBg, m_clrFocusLineBg);
 }
@@ -2116,18 +2102,6 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_skin_clrBg = m_clrBg;
 		m_skin_clrBg.m_bValid = true;
 	}
-	else if (IsPropertyName(szProperty, _T("FgColor")))
-	{
-		GetColorValue(m_clrFg, szValue);
-		m_skin_clrFg = m_clrFg;
-		m_skin_clrFg.m_bValid = true;
-	}
-	else if (IsPropertyName(szProperty, _T("FgLowColor")))
-	{
-		GetColorValue(m_clrFgLow, szValue);
-		m_skin_clrFgLow = m_clrFgLow;
-		m_skin_clrFgLow.m_bValid = true;
-	}
 	else if (IsPropertyName(szProperty, _T("TagColor")))
 	{
 		GetColorValue(m_clrTag, szValue);
@@ -2140,17 +2114,6 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_skin_clrFocusLineBg = m_clrFocusLineBg;
 		m_skin_clrFocusLineBg.m_bValid = true;
 	}
-#ifdef _WIN32_DESKTOP
-	else if (IsPropertyName(szProperty, _T("ShadowMode")))
-	{
-		SetLyrShadowMode(szValue);
-	}
-	else if (IsPropertyName(szProperty, _T("ThickOutline")))
-	{
-		m_bThickOutline = IsTRUE(szValue);
-		m_font.SetThickOutline(m_bThickOutline);
-	}
-#endif
 	else if (_tcsicmp(szProperty, _T("UseBgImage")) == 0)
 	{
 		m_bUseBgImg = IsTRUE(szValue);
@@ -2182,8 +2145,8 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (IsPropertyName(szProperty, _T("DarkenLyrBg")))
 		m_bDarkenLyrBgOnImg = IsTRUE(szValue);
-	else if (IsPropertyName(szProperty, _T("BlendingLyrTextOnBgPic")))
-		m_bTobEnabledOnBgPic = IsTRUE(szValue);
+	else if (IsPropertyName(szProperty, _T("OutlineLyrTextOnBgPic")))
+		m_bOutlineLyricsOnBgPic = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("SlideDelayTime")))
 	{
 		if (m_bUseBgImg)
@@ -2205,26 +2168,23 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nHeight, nWeight, Tobool(byItalic));
 		m_nFontHeight = m_font.GetHeight();
 
-		if (IsBlendingLyrText())
+		if (m_tobHilight.imgPattern.height() != GetPatternFontHeight())
 		{
-			if (m_tobHilight.imgPattern.height() != GetPatternFontHeight())
-			{
-				LoadLyrOverlaySettings();
-			}
+			LoadLyrOverlaySettings();
 		}
 
 		OnLyrDrawContextChanged();
 	}
-	else if (IsPropertyName(szProperty, _T("BlendingLyrText")))
+	else if (IsPropertyName(szProperty, _T("OutlineLyrText")))
 	{
-		m_bTobEnabled = IsTRUE(szValue);
-		m_skin_bTobEnabled = m_bTobEnabled;
+		m_bOutlineLyrics = IsTRUE(szValue);
+		m_skin_bOutlineLyrics = m_bOutlineLyrics;
 	}
-	else if (IsPropertyName(szProperty, _T("LOBHilight")))
+	else if (IsPropertyName(szProperty, _T("HilightOBM")))
 	{
 		m_skin_tobHilight.obm = (OverlayBlendingMode)StringToID(g_idsLOB, szValue, OBM_UNKNOWN);
 	}
-	else if (IsPropertyName(szProperty, _T("LOBLowlight")))
+	else if (IsPropertyName(szProperty, _T("LowlightOBM")))
 	{
 		m_skin_tobLowlight.obm = (OverlayBlendingMode)StringToID(g_idsLOB, szValue, OBM_UNKNOWN);
 	}
@@ -2293,14 +2253,6 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 		m_pSkin->InvalidateRect();
 		return true;
 	}
-	else if (IsPropertyName(szProperty, _T("FgColor")))
-	{
-		GetColorValue(m_clrFg, szValue);
-	}
-	else if (IsPropertyName(szProperty, _T("FgLowColor")))
-	{
-		GetColorValue(m_clrFgLow, szValue);
-	}
 	else if (IsPropertyName(szProperty, _T("TagColor")))
 	{
 		GetColorValue(m_clrTag, szValue);
@@ -2309,20 +2261,20 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		GetColorValue(m_clrFocusLineBg, szValue);
 	}
-	else if (IsPropertyName(szProperty, _T("BlendingLyrText")))
+	else if (IsPropertyName(szProperty, _T("OutlineLyrText")))
 	{
-		LoadLyrOverlaySettings();
+		m_bOutlineLyrics = IsTRUE(szValue);
 	}
 	//
 	// High light of lyrics overlay blending settings
 	//
-	else if (IsPropertyName(szProperty, _T("LOBHilight")))
+	else if (IsPropertyName(szProperty, _T("HilightOBM")))
 	{
 		LoadLOBHilightSettings();
 	}
 	else if (IsPropertyName(szProperty, _T("HilightPattern")))
 	{
-		if (IsBlendingLyrText())
+		if (m_tobHilight.obm == OBM_PATTERN)
 		{
 			PRAW_IMAGE_DATA		pImage = LoadRawImageDataFromFile(szValue);
 			if (pImage && pImage->bitCount != 24)
@@ -2335,13 +2287,13 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 	//
 	// Low light of lyrics overlay blending settings
 	//
-	else if (IsPropertyName(szProperty, _T("LOBLowlight")))
+	else if (IsPropertyName(szProperty, _T("LowlightOBM")))
 	{
 		LoadLOBLowlightSettings();
 	}
 	else if (IsPropertyName(szProperty, _T("LowlightPattern")))
 	{
-		if (IsBlendingLyrText())
+		if (m_tobLowlight.obm == OBM_PATTERN)
 		{
 			PRAW_IMAGE_DATA		pImage = LoadRawImageDataFromFile(szValue);
 			if (pImage && pImage->bitCount != 24)
@@ -2377,8 +2329,7 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 				break;
 			}
 		}
-		if (IsBlendingLyrText() &&
-			(i == TCI_AUTO_GRADIENT || i == TCI_GRADIENT1 || i == TCI_GRADIENT2 || i == TCI_GRADIENT3))
+		if ((i == TCI_AUTO_GRADIENT || i == TCI_GRADIENT1 || i == TCI_GRADIENT2 || i == TCI_GRADIENT3))
 			CreateLyrOverlayBlendingPattern(m_tobHilight, GetPatternFontHeight());
 		else if (i == TCI_COUNT)
 		{
@@ -2393,8 +2344,7 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 					break;
 				}
 			}
-			if (IsBlendingLyrText() &&
-				(i == TCI_AUTO_GRADIENT || i == TCI_GRADIENT1 || i == TCI_GRADIENT2 || i == TCI_GRADIENT3))
+			if ((i == TCI_AUTO_GRADIENT || i == TCI_GRADIENT1 || i == TCI_GRADIENT2 || i == TCI_GRADIENT3))
 				CreateLyrOverlayBlendingPattern(m_tobLowlight, GetPatternFontHeight());
 			else if (i == TCI_COUNT)
 			{
@@ -2428,9 +2378,9 @@ void CLyricShowObj::ReloadThemeOfSkin(bool bSavetoProfile)
 {
 	tstring			strColor;
 
-	if (bSavetoProfile && m_skin_bTobEnabled)
+	if (bSavetoProfile && m_skin_bOutlineLyrics)
 	{
-		ProfileWriteTOBToOld(m_bTobEnabled, m_tobHilight, m_tobLowlight);
+		ProfileWriteTOBToOld(m_bOutlineLyrics, m_tobHilight, m_tobLowlight);
 		g_Profile.WriteProfileInt(SZ_SECT_LYR_DISPLAY, _T("ReloadTOBFromOld"), true);
 	}
 
@@ -2453,50 +2403,35 @@ void CLyricShowObj::ReloadThemeOfSkin(bool bSavetoProfile)
 			g_Profile.WriteProfileString(m_strSectName.c_str(), _T("BgColor"), strColor.c_str());
 	}
 
-	SET_THEME_COLOR(_T("FgColor"), m_skin_clrFg, m_clrFg);
-	SET_THEME_COLOR(_T("FgLowColor"), m_skin_clrFgLow, m_clrFgLow);
 	SET_THEME_COLOR(_T("TagColor"), m_skin_clrTag, m_clrTag);
 	SET_THEME_COLOR(_T("FocusLineBgColor"), m_skin_clrFocusLineBg, m_clrFocusLineBg);
-	if (m_skin_bTobEnabled)
+
+	if (m_skin_bOutlineLyrics)
 	{
-		m_bTobEnabled = m_skin_bTobEnabled;
-
-		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("BlendingLyrText"), m_bTobEnabled);
-
-		TOBColorIndex	i;
-
-		for (i = TCI_START; i < TCI_COUNT; i = (TOBColorIndex)(i + 1))
-		{
-			SET_THEME_COLOR(_LyrShowTOBFieldNameHilight[i], m_skin_tobHilight.clr[i], m_tobHilight.clr[i]);
-			SET_THEME_COLOR(_LyrShowTOBFieldNameLowlight[i], m_skin_tobLowlight.clr[i], m_tobLowlight.clr[i]);
-		}
-
-		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("LOBHilight"), m_skin_tobHilight.obm);
-		m_tobHilight.obm = m_skin_tobHilight.obm;
-
-		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("LOBLowlight"), m_skin_tobLowlight.obm);
-		m_tobLowlight.obm = m_skin_tobLowlight.obm;
-
-		CreateLyrOverlayBlendingPattern(m_tobHilight, GetPatternFontHeight());
-		CreateLyrOverlayBlendingPattern(m_tobLowlight, GetPatternFontHeight());
+		m_bOutlineLyrics = m_skin_bOutlineLyrics;
+		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("OutlineLyrText"), m_bOutlineLyrics);
 	}
+
+	TOBColorIndex	i;
+
+	for (i = TCI_START; i < TCI_COUNT; i = (TOBColorIndex)(i + 1))
+	{
+		SET_THEME_COLOR(_LyrShowTOBFieldNameHilight[i], m_skin_tobHilight.clr[i], m_tobHilight.clr[i]);
+		SET_THEME_COLOR(_LyrShowTOBFieldNameLowlight[i], m_skin_tobLowlight.clr[i], m_tobLowlight.clr[i]);
+	}
+
+	g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("HilightOBM"), m_skin_tobHilight.obm);
+	m_tobHilight.obm = m_skin_tobHilight.obm;
+
+	g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("LowlightOBM"), m_skin_tobLowlight.obm);
+	m_tobLowlight.obm = m_skin_tobLowlight.obm;
+
+	CreateLyrOverlayBlendingPattern(m_tobHilight, GetPatternFontHeight());
+	CreateLyrOverlayBlendingPattern(m_tobLowlight, GetPatternFontHeight());
 
 	if (bSavetoProfile)
 	{
-//		else
-//			g_Profile.WriteProfileInt(SZ_SECT_LYR_DISPLAY, _T("BlendingLyrText"), false);
 	}
-}
-
-void CLyricShowObj::SetLyrShadowMode(LPCTSTR szValue)
-{
-	static ID_TO_STRING	_id2str[] = {
-		{ CRawBmpFont::SM_OUTLINE, _T("outline") },
-		{ CRawBmpFont::SM_SHADOW, _T("shadow") },
-		{ 0, NULL },
-	};
-	m_lyrShadowMode = (CRawBmpFont::ShadowMode)StringToID(_id2str, szValue, m_lyrShadowMode);
-	m_font.SetShadowMode(m_lyrShadowMode);
 }
 
 void CLyricShowObj::SetLyrAlign(LPCTSTR szValue)
@@ -2528,49 +2463,28 @@ void CLyricShowObj::SetBgColor(LPCTSTR szValue)
 
 	GetColorValue(m_clrBg, szValue);
 
-	if (m_brBg.IsValid())
-		m_brBg.Destroy();
-	m_brBg.CreateSolidBrush(m_clrBg);
-
 	if (m_pSkin)
 		m_pSkin->SetProperty(_T("BgColor"), szValue);
 }
 
 void CLyricShowObj::LoadLyrOverlaySettings()
 {
-	m_bTobEnabled = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("BlendingLyrText"), m_bTobEnabled);
-	if (IsBlendingLyrText())
-	{
-		SetLyrShadowMode(g_Profile.GetProfileString(m_strSectName.c_str(), _T("ShadowMode"), _T("")));
-		m_bThickOutline = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("ThickOutline"), m_bThickOutline);
-		m_font.SetThickOutline(m_bThickOutline);
+	m_bOutlineLyrics = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("OutlineLyrText"), m_bOutlineLyrics);
 
-		ProfileGetColorValue(m_tobHilight.clr[TCI_BORDER], m_strSectName.c_str(), _T("LOBHilightBorder"));
-		ProfileGetColorValue(m_tobLowlight.clr[TCI_BORDER], m_strSectName.c_str(), _T("LOBLowlightBorder"));
+	ProfileGetColorValue(m_tobHilight.clr[TCI_BORDER], m_strSectName.c_str(), _T("HilightBorderColor"));
+	ProfileGetColorValue(m_tobLowlight.clr[TCI_BORDER], m_strSectName.c_str(), _T("LowlightBorderColor"));
 
-		LoadLOBHilightSettings();
-		LoadLOBLowlightSettings();
-	}
-	else
-	{
-		m_tobHilight.obm = OBM_COLOR;
-		m_tobLowlight.obm = OBM_COLOR;
-	}
+	LoadLOBHilightSettings();
+	LoadLOBLowlightSettings();
 }
 
 void CLyricShowObj::LoadLOBHilightSettings()
 {
-	if (!IsBlendingLyrText())
-		return;
-
 	LoadLyrOverlayBlendingSettings(m_strSectName.c_str(), m_tobHilight, GetPatternFontHeight(), true);
 }
 
 void CLyricShowObj::LoadLOBLowlightSettings()
 {
-	if (!IsBlendingLyrText())
-		return;
-
 	LoadLyrOverlayBlendingSettings(m_strSectName.c_str(), m_tobLowlight, GetPatternFontHeight(), false);
 }
 
@@ -2589,9 +2503,6 @@ void CLyricShowObj::LoadAllSettings()
 		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nHeight, nWeight, byItalic);
 		m_nFontHeight = m_font.GetHeight();
 	}
-
-	ProfileGetColorValue(m_clrFg, m_strSectName.c_str(), _T("FgColor"));
-	ProfileGetColorValue(m_clrFgLow, m_strSectName.c_str(), _T("FgLowColor"));
 
 	SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
 
@@ -2630,7 +2541,7 @@ void CLyricShowObj::LoadAllSettings()
 	{
 		m_bUseAlbumArtAsBg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("UseAlbumArtAsBg"), false);
 		m_bUseBgImg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("UseBgImage"), false);
-		m_bTobEnabledOnBgPic = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("BlendingLyrTextOnBgPic"), true);
+		m_bOutlineLyricsOnBgPic = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("OutlineLyrTextOnBgPic"), true);
 		m_strBgPicFolder = CMLProfile::GetDir(m_strSectName.c_str(), _T("BgPicFolder"), _T(""));
 
 		m_bDarkenLyrBgOnImg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("DarkenLyrBg"), true);
@@ -2646,10 +2557,7 @@ void CLyricShowObj::LoadAllSettings()
 		if (m_bUseBgImg || m_bUseAlbumArtAsBg)
 			LoadNextBgImage();
 
-		if (!m_bTobEnabled && m_bTobEnabledOnBgPic)
-		{
-			LoadLyrOverlaySettings();
-		}
+		LoadLyrOverlaySettings();
 	}
 }
 
@@ -2664,9 +2572,7 @@ void CLyricShowObj::AdjustHue(float hue)
 {
 	if (m_hue != 0)
 	{
-		// Load orginal settings.
-		ProfileGetColorValue(m_clrFg, m_strSectName.c_str(), _T("FgColor"));
-		ProfileGetColorValue(m_clrFgLow, m_strSectName.c_str(), _T("FgLowColor"));
+		// Load original settings.
 		SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
 		if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
 		{
@@ -2683,14 +2589,9 @@ void CLyricShowObj::AdjustHue(float hue)
 		return;
 
 	// Adjust hue
-	AdjustColorHue(m_clrFg, hue);
-	AdjustColorHue(m_clrFgLow, hue);
 	AdjustColorHue(m_clrTag, hue);
 	AdjustColorHue(m_clrFocusLineBg, hue);
 	AdjustColorHue(m_clrBg, hue);
-	if (m_brBg.IsValid())
-		m_brBg.Destroy();
-	m_brBg.CreateSolidBrush(m_clrBg);
 
 	tstring		strColor;
 	ColorToStr(m_clrBg, strColor);

@@ -117,7 +117,7 @@ BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fi
 BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str);
 #endif
 
-BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str);
+BOOL OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str);
 
 BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding = ED_SYSDEF);
 

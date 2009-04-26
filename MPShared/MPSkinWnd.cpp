@@ -748,10 +748,12 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 			else
 				ASSERT(0);
 
-			if (m_strLyrDisplayStylePropName.empty())
-				CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_STYLE_CHANGED, SZ_SECT_LYR_DISPLAY, _T("LyrDisplayStyle"), strName.c_str());
-			else
-				CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_STYLE_CHANGED, SZ_SECT_LYR_DISPLAY, m_strLyrDisplayStylePropName.c_str(), strName.c_str());
+			tstring		strLyrDisplayStylePropName;
+			if (!GetUnprocessedProperty(_T("LyrDisplayStylePropName"), strLyrDisplayStylePropName))
+				strLyrDisplayStylePropName = _T("LyrDisplayStyle");
+
+			CMPlayerSettings::SetSettings(ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, 
+				strLyrDisplayStylePropName.c_str(), strName.c_str());
 		}
 		return;
 	default:
@@ -1137,10 +1139,6 @@ BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bEnableVolumeSwitch = IsTRUE(szValue);
 		m_bUseVolumeSeek = g_Profile.GetProfileBool(_T("UseVolumeSeek"), false);
 	}
-	else if (IsPropertyName(szProperty, _T("LyrDisplayStylePropName")))
-	{
-		m_strLyrDisplayStylePropName = szValue;
-	}
 	else if (CSkinWnd::SetProperty(szProperty, szValue))
 	{
 		if (m_bSkinOpened && IsPropertyName(szProperty, _T("BgColor")))
@@ -1181,8 +1179,6 @@ void CMPSkinWnd::CloseSkin()
 
 	m_bEnableVolumeSwitch = false;
 	m_bUseVolumeSeek = false;
-
-	m_strLyrDisplayStylePropName.resize(0);
 }
 
 // IUICheckStatus interface
@@ -1251,11 +1247,11 @@ bool CMPSkinWnd::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 	else if (vIDs[0] == IDC_LDS_MULTI_LINE)
 	{
 		tstring		strName;
+		tstring		strLyrDisplayStylePropName;
+		if (!GetUnprocessedProperty(_T("LyrDisplayStylePropName"), strLyrDisplayStylePropName))
+			strLyrDisplayStylePropName = _T("LyrDisplayStyle");
 
-		if (m_strLyrDisplayStylePropName.empty())
-			CMPlayerSettings::GetSettings(SZ_SECT_LYR_DISPLAY, _T("LyrDisplayStyle"), strName);
-		else
-			CMPlayerSettings::GetSettings(SZ_SECT_LYR_DISPLAY, m_strLyrDisplayStylePropName.c_str(), strName);
+		CMPlayerSettings::GetSettings(SZ_SECT_UI, strLyrDisplayStylePropName.c_str(), strName);
 
 		if (IsPropertyName(strName.c_str(), CLyricShowMultiRowObj::ClassName()))
 			nIDChecked = IDC_LDS_MULTI_LINE;

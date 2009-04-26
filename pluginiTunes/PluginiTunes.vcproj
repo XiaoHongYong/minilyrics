@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="PluginiTunes"
 	ProjectGUID="{47C5CAE5-BB85-4F34-91E3-BEFF1855F708}"
+	RootNamespace="PluginiTunes"
 	>
 	<Platforms>
 		<Platform
@@ -159,13 +160,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="G:\Program Files\iTunes\Plug-ins\iTunesMinilyrics.dll"
+				OutputFile="c:\Program Files\iTunes\Plug-ins\iTunesMinilyrics.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
-				GenerateDebugInformation="false"
+				GenerateManifest="false"
+				GenerateDebugInformation="true"
 				GenerateMapFile="false"
 				SubSystem="2"
-				ImportLibrary=".\../../output/PluginiTunes/Debug/iTunesMinilyrics.lib"
 				TargetMachine="1"
 			/>
 			<Tool

@@ -13,7 +13,6 @@
 #include "PreferPageUI.h"
 #include "PreferPageLyrics.h"
 #include "PreferPageTheme.h"
-#include "PreferPageLyrDisplay.h"
 #include "PreferPageLyrOutput.h"
 #include "PreferPageHotkey.h"
 #ifdef _WIN32_DESKTOP
@@ -229,11 +228,6 @@ void CPreferenceDlg::ConstructPreferencePages()
 		pPage->SetParentPage(pPageParent);
 		m_vPreferencePages.push_back(pPage);
 
-		// HotKey
-		pPage = new CPreferPageHotkey;
-		pPage->SetParentPage(pPageParent);
-		m_vPreferencePages.push_back(pPage);
-
 		// Advanced Options
 		pPage = new CPPageUIAdvanced;
 		pPage->SetParentPage(pPageParent);
@@ -244,16 +238,11 @@ void CPreferenceDlg::ConstructPreferencePages()
 		//
 		// Theme pages
 		//
-		pPageParent = new CPreferencePageBase(0, _T("Themes"));
+		pPageParent = new CPPageThemes;
 		m_vPreferencePages.push_back(pPageParent);
 
 		// Color theme
-		pPage = new CPreferPageLyrClrTheme(m_bFloatingLyrMode);
-		pPage->SetParentPage(pPageParent);
-		m_vPreferencePages.push_back(pPage);
-
-		// lyrics display
-		pPage = new CPreferPageLyrDispStyle(m_bFloatingLyrMode);
+		pPage = new CPPageLyrDisplay(m_bFloatingLyrMode);
 		pPage->SetParentPage(pPageParent);
 		m_vPreferencePages.push_back(pPage);
 
@@ -277,6 +266,11 @@ void CPreferenceDlg::ConstructPreferencePages()
 		m_vPreferencePages.push_back(pPage);
 #else
 #endif // _MPLAYER
+
+		// HotKey
+		pPage = new CPreferPageHotkey;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
 
 #ifdef _WIN32_DESKTOP
 		//
@@ -311,17 +305,12 @@ void CPreferenceDlg::ConstructPreferencePages()
 		pPage = new CPreferPageLyricsDownload;
 		pPage->SetParentPage(pPageParent);
 		m_vPreferencePages.push_back(pPage);
+
+		// lyrics download
+		pPage = new CPreferPageLyrOutput;
+		pPage->SetParentPage(pPageParent);
+		m_vPreferencePages.push_back(pPage);
 	}
-
-	//
-	// Lyrics output plug-ins
-	//
-	pPageParent = new CPreferPageLyrOutput();
-	m_vPreferencePages.push_back(pPageParent);
-
-// 	pPageParent = new CPreferPageScreen();
-// 	m_vPreferencePages.push_back(pPageParent);
-
 }
 
 CPreferencePageBase *CPreferenceDlg::GetChild(CPreferencePageBase *pPageParent)

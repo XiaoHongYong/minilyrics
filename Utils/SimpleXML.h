@@ -78,9 +78,11 @@ public:
 	// Can't be inherited.
 	~CSimpleXML();
 
-	BOOL ParseFile(LPCTSTR szXmlFile);
+	void New(LPCTSTR szRootName);
 
-	BOOL ParseData(LPCVOID lpXmlData, size_t nLen);
+	BOOL ParseFile(LPCTSTR szXmlFile, bool bNoProlog = false);
+
+	BOOL ParseData(LPCVOID lpXmlData, size_t nLen, bool bNoProlog = false);
 
 	BOOL SaveFile(LPCTSTR szXmlFile);
 

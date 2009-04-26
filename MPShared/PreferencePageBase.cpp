@@ -58,6 +58,36 @@ void CPreferencePageBase::InitCheckButtons()
 {
 	{
 		//
+		// Check Combo Str
+		//
+		VOptComboStr::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptComboStr.end();
+		for (it = m_vOptComboStr.begin(); it != itEnd; ++it)
+		{
+			OptComboStr		&opt = *it;
+			CWidgetComboBox	cbCtrl;
+			cbCtrl.Attach(this, opt.nIDWidgetCombo);
+
+			strValue = g_Profile.GetProfileString(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.strDefaultValue.c_str());
+			if (strValue.empty())
+				strValue = opt.strDefaultValue;
+			else
+				opt.strDefaultValue = strValue;
+			for (int i = 0; i < (int)opt.vValues.size(); i++)
+			{
+				if (_tcsicmp(opt.vValues[i].c_str(), strValue.c_str()) == 0)
+				{
+					cbCtrl.SetCurSel(i);
+					break;
+				}
+			}
+			cbCtrl.Detach();
+		}
+	}
+
+	{
+		//
 		// Check Radio Str Buttons
 		//
 		VOptRadioStr::iterator	it, itEnd;
@@ -150,8 +180,41 @@ void CPreferencePageBase::OnSize(int cx, int cy)
 	CBaseDialog::OnSize(cx, cy);
 }
 
-bool CPreferencePageBase::ProcessCommand(UINT uID)
+bool CPreferencePageBase::ProcessCommand(UINT uID, UINT nNotifyCode)
 {
+	{
+		//
+		// Process Combo Str select changed command
+		//
+		VOptComboStr::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptComboStr.end();
+		for (it = m_vOptComboStr.begin(); it != itEnd; ++it)
+		{
+			OptComboStr		&opt = *it;
+			if (opt.nIDWidgetCombo != uID || nNotifyCode != CBN_SELCHANGE)
+				continue;
+
+			CWidgetComboBox	cbCtrl;
+			int				nSel;
+			cbCtrl.Attach(this, opt.nIDWidgetCombo);
+			nSel = cbCtrl.GetCurSel();
+
+			if (nSel >= 0 && nSel < opt.vValues.size())
+			{
+				if (_tcsicmp(opt.vValues[nSel].c_str(), opt.strDefaultValue.c_str()) != 0)
+				{
+					// Value changed...
+					opt.strDefaultValue = opt.vValues[nSel];
+					CMPlayerSettings::SetSettings(opt.eventType, opt.strSection.c_str(),
+						opt.strSettingName.c_str(), opt.vValues[nSel].c_str(), opt.eventType != ET_INVALID);
+				}
+			}
+			cbCtrl.Detach();
+			return true;
+		}
+	}
+
 	{
 		//
 		// Process Radio Buttons Command
@@ -236,4 +299,13 @@ bool CPreferencePageBase::ProcessCommand(UINT uID)
 	}
 
 	return false;
+}
+
+void CPreferencePageBase::ClearOptions()
+{
+	m_vOptComboStr.clear();
+	m_vOptRadioStr.clear();
+	m_vOptRadioInt.clear();
+	m_vOptBoolStr.clear();
+	m_vOptBool.clear();
 }

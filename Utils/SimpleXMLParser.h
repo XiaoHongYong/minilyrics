@@ -66,6 +66,7 @@ public:
 	SimpleXMLParserError ParseFile(LPCTSTR szFile, CSimpleXML& xmlData);
 
 	int			nPos, nPosNext;
+	bool		m_bNoProlog;
 
 protected:
 	void IgnoreSpace(int nPos, int &nPosNext);

@@ -110,8 +110,6 @@ protected:
 
 	bool					m_bTopmost;	
 
-	tstring					m_strLyrDisplayStylePropName;
-
 };
 
 #endif // !defined(AFX_MPSKINWND_H__C466015C_6B75_4118_98E2_AEDA64F864DA__INCLUDED_)

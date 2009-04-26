@@ -260,6 +260,8 @@ public:
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 	virtual void EnumProperties(CUIObjProperties &listProperties);
 
+	bool GetUnprocessedProperty(LPCTSTR szProperty, tstring &strValue);
+
 	virtual void ToXML(CXMLWriter &xmlStream);
 
 	bool UpdateSkinProperty();
@@ -384,6 +386,9 @@ protected:
 
 	// Window properties
 	bool			m_bIndividualProperties;
+
+	// Unprocessed properties
+	SXNode::LIST_PROPERTIES	m_listUnprocessedProperties;
 
 	// draw buffer
 	CRawGraph		*m_pmemGraph;

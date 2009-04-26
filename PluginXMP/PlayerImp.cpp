@@ -386,14 +386,16 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 {
 	g_hwndPlayer = FindWindow("XMPLAY-MAIN", NULL);
 
-	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
-		return 0;	// we must return 0!
+	if (InitMiniLyricsPlugin(g_hInstance, &g_Player, ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS))
+	{
+		// now we can use other g_MLService functions.
+		char	szMsg[256];
 
-	// now we can use other g_MLService functions.
-	char	szMsg[256];
+		wsprintf(szMsg, "Start XMPlay plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
+		g_MLService.Log(szMsg);
+	}
 
-	wsprintf(szMsg, "Start XMPlay plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-	g_MLService.Log(szMsg);
+	// if Init failed, Don't return, because "Restart MiniLyrics" function need the message loop below.
 
 	MSG			msg;
 

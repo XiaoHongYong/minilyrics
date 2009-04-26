@@ -913,8 +913,8 @@ void CLyricShowTextEditObj::OnTimer(int nId)
 
 void CLyricShowTextEditObj::UpdateTextFontColor()
 {
-	SetSelColor(m_clrFg, m_clrFocusLineBg);
-	SetColorTheme(m_clrFg, m_clrFgLow, m_clrTag, m_clrFocusLineBg);
+	SetSelColor(GetHighlightColor(), m_clrFocusLineBg);
+	SetColorTheme(GetHighlightColor(), GetLowlightColor(), m_clrTag, m_clrFocusLineBg);
 }
 
 

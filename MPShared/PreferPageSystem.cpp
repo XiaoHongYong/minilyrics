@@ -153,7 +153,7 @@ void CPreferPageInternet::OnCommand(UINT uID, UINT nNotifyCode)
 		}
 		break;
 	default:
-		ProcessCommand(uID);
+		ProcessCommand(uID, nNotifyCode);
 		break;
 	}
 }
@@ -165,7 +165,7 @@ void CPreferPageInternet::OnCommand(UINT uID, UINT nNotifyCode)
 ID_TO_STRING		_id2strPlayer[] = { { IDC_WINAMP2, _T("Winamp2") }, { IDC_WINAMP5, _T("Winamp5") },
 { IDC_WMP, _T("Windows Media Player") }, { IDC_FOOBAR, _T("Foobar2000") }, 
 { IDC_REALONE, _T("RealPlayer") }, { IDC_QCD, _T("Quintessential Player") }, 
-{ IDC_ITUNES, _T("iTunes") }, { IDC_MM, _T("MusicMatch") },
+{ IDC_ITUNES, _T("iTunes") }, { IDC_SILVERJUKE, _T("Silverjuke") },
 { IDC_MEDIAMONKEY, _T("MediaMonkey") }, { IDC_KMPLAYER, _T("KMPlayer") }, 
 { IDC_JETAUDIO, _T("JetAudio") }, { IDC_YME, _T("Yahoo! Music Jukebox") }, 
 { IDC_BSPLAYER, _T("Bsplayer") }, { IDC_MEDIAJUKEBOX, _T("Media Jukebox") }, 
@@ -219,7 +219,7 @@ void CPPageStartup::OnCommand(UINT uID, UINT nNotifyCode)
 	}
 #endif // #ifndef _MPLAYER
 
-	ProcessCommand(uID);
+	ProcessCommand(uID, nNotifyCode);
 }
 
 void CPPageStartup::OnDestroy()

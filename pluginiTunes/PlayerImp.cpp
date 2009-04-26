@@ -13,15 +13,16 @@ DWORD			g_dwThreadID = 0;
 
 DWORD WINAPI ThreadML(LPVOID lpParam)
 {
-	// now we can use other g_MLService functions.
-	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player, ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS))
-		return 0;
+	if (InitMiniLyricsPlugin(g_hInstance, &g_Player, ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS))
+	{
+		// now we can use other g_MLService functions.
+		char	szMsg[256];
 
-	// now we can use other g_MLService functions.
-	char	szMsg[256];
+		wsprintf(szMsg, "Start iTunes Player plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
+		g_MLService.Log(szMsg);
+	}
 
-	wsprintf(szMsg, "Start iTunes Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-	g_MLService.Log(szMsg);
+	// if Init failed, Don't return, because "Restart MiniLyrics" function need the message loop below.
 
 	MSG			msg;
 
@@ -31,6 +32,9 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+
+	g_MLService.Log("g_MLService.Quit()");
+	MessageBox(NULL, "g_MLService.Quit()", "aBBBaa", MB_OK);
 
 	g_MLService.Quit();
 
@@ -383,6 +387,7 @@ BOOL CPlayerImp::Init()
 
 void CPlayerImp::Quit()
 {
+	MessageBox(NULL, "CPlayerImp::Quit()", "aBBBaa", MB_OK);
 	g_wndInfoQuery.Destroy();
 }
 
@@ -796,11 +801,14 @@ IMPEXP OSStatus MAIN (OSType message, PluginMessageInfo *messageInfo, void *refC
 			{
 				if (g_dwThreadID)
 				{
+					MessageBox(NULL, "kPluginCleanupMessage", "aBBBaa", MB_OK);
+
 					PostThreadMessage(g_dwThreadID, WM_QUIT, 0, 0);
 					WaitForSingleObject(g_hThread, INFINITE);
 					CloseHandle(g_hThread);
+					g_hThread = NULL;
+					g_dwThreadID = 0;
 				}
-				g_hThread = NULL;
 				status = noErr;
 			}
 			break;

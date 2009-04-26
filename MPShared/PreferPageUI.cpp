@@ -119,7 +119,7 @@ void CPPageUI::OnCommand(UINT uID, UINT nNotifyCode)
 		break;
 #endif
 	default:
-		ProcessCommand(uID);
+		ProcessCommand(uID, nNotifyCode);
 		break;
 	}
 }
@@ -316,7 +316,7 @@ void CPreferPageSkin::OnCommand(UINT uID, UINT nNotifyCode)
 		}
 		break;
 	default:
-		ProcessCommand(uID);
+		ProcessCommand(uID, nNotifyCode);
 		break;
 	}
 }
@@ -419,5 +419,5 @@ void CPPageUIAdvanced::OnCommand(UINT uID, UINT nNotifyCode)
 {
 	CPreferencePageBase::OnCommand(uID, nNotifyCode);
 
-	ProcessCommand(uID);
+	ProcessCommand(uID, nNotifyCode);
 }

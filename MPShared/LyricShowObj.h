@@ -102,6 +102,7 @@ public:
 	};
 
 	// TOB = Text Overlay Blending
+	// TCI = Text Color Index
 	enum TOBColorIndex
 	{
 		TCI_START					= 0,
@@ -151,8 +152,6 @@ public:
 	virtual void OnSaveLyrics() { };
 
 	virtual void SetAntialise(BOOL bAntialis);
-
-	CMLBrush *GetBkBrush() { return &m_brBg; }
 
 	void GetFadeInColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
 
@@ -209,20 +208,17 @@ protected:
 
 	void OnTimer(int nId);
 
-	int GetFontHeight() const { return m_nFontHeight + (IsBlendingLyrText() ? 2 : 0); }
+	int GetFontHeight() const { return m_nFontHeight + (m_bOutlineLyrics ? 2 : 0); }
 
 	int GetPatternFontHeight() const { return m_nFontHeight + CRawBmpFont::MARGIN_BITMAP; }
 
-	int GetLineHeight() const { return m_nFontHeight + (IsBlendingLyrText() ? 2 : 0) + m_nLineSpacing; }
+	int GetLineHeight() const { return m_nFontHeight + (m_bOutlineLyrics ? 2 : 0) + m_nLineSpacing; }
 
-	inline MLColor &GetHighlightColor() { return IsBlendingLyrText() ? m_tobHilight.clr[TCI_FILL] : m_clrFg; }
-	inline MLColor &GetLowlightColor() { return IsBlendingLyrText() ? m_tobLowlight.clr[TCI_FILL] : m_clrFgLow; }
-
-	bool IsBlendingLyrText() const { return m_bTobEnabled || (m_bTobEnabledOnBgPic && m_img.IsValid()); }
+	inline MLColor &GetHighlightColor() { return m_tobHilight.clr[TCI_FILL]; }
+	inline MLColor &GetLowlightColor() { return m_tobLowlight.clr[TCI_FILL]; }
 
 	virtual void ReloadThemeOfSkin(bool bSavetoProfile);
 
-	void SetLyrShadowMode(LPCTSTR szValue);
 	void SetLyrAlign(LPCTSTR szValue);
 	void SetLyrDrawOpt(LPCTSTR szValue);
 	void SetBgColor(LPCTSTR szValue);
@@ -251,17 +247,15 @@ protected:
 	// hue of lyrics
 	float					m_hue;
 
+	bool					m_bOutlineLyrics;
+
 	// basic colors
-	MLColor					m_clrFg;
-	MLColor					m_clrFgLow;
 	MLColor					m_clrBg;
-	CMLBrush				m_brBg;
 	MLColor					m_clrTag, m_clrFocusLineBg;
 
 	//
 	// blending lyrics options:
 	//
-	bool					m_bTobEnabled;
 	TextOverlayBlending		m_tobHilight;
 	TextOverlayBlending		m_tobLowlight;
 
@@ -272,7 +266,7 @@ protected:
 	// The following theme available?
 	MLColorEx				m_skin_clrFg, m_skin_clrFgLow, m_skin_clrBg;
 	MLColorEx				m_skin_clrTag, m_skin_clrFocusLineBg;
-	bool					m_skin_bTobEnabled;
+	bool					m_skin_bOutlineLyrics;
 	TextOverlayBlending		m_skin_tobHilight;
 	TextOverlayBlending		m_skin_tobLowlight;
 
@@ -288,14 +282,12 @@ protected:
 
 	bool					m_bKaraoke;
 
-	CRawBmpFont::ShadowMode	m_lyrShadowMode;
-
 	//
 	// Use back ground image?
 	//
 	bool					m_bUseAlbumArtAsBg;
 	bool					m_bUseBgImg;
-	bool					m_bTobEnabledOnBgPic;
+	bool					m_bOutlineLyricsOnBgPic;
 
 	CCurMediaAlbumArt		m_curAlbumArt;
 	tstring					m_strBgPicFolder;
@@ -352,11 +344,7 @@ public:
 	int GetLineVertAlignPos() { return m_rcObj.top + m_rcObj.Height() / 2; }
 #endif // _WIN32_WCE
 
-	protected:
-#ifdef _WIN32_DESKTOP
-	bool				m_bThickOutline;
-#endif
-
+protected:
 	// Used to load and save current settings in profile
 	tstring				m_strSectName;
 
@@ -376,7 +364,7 @@ public:
 
 void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::MLColorEx clrGradient[3]);
 
-void ProfileWriteTOBToOld(bool bTobEnabled, 
+void ProfileWriteTOBToOld(bool bOutlineLyrText, 
 						  const CLyricShowObj::TextOverlayBlending &tobHilight, 
 						  const CLyricShowObj::TextOverlayBlending &tobLowlight);
 

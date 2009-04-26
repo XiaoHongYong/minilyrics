@@ -144,7 +144,6 @@ MenuRadioGroup _menuRadioGroup[] =
 	{ SZ_SECT_PLAYER, _T("repeat"), _MenuRadioLoop, NULL, 0, 0 },
 #endif
 	{ NULL, NULL, _MenuRadioLyrAlign, NULL, 0, 0 },
-	// { SZ_SECT_LYR_DISPLAY, _T("LyrDisplayStyle"), _MenuRadioLyrDisplayStyle, NULL, 0, 0 },
 	{ NULL, NULL, _MenuRadioLyrDrawOpt, NULL, 0, 0 },
 	{ NULL, (LPCTSTR)GetCharEncodingCheckMenuID, _MenuRadioCharEncoding, NULL, 0, 0 },
 	{ NULL, NULL, _MenuRadioOpaque, NULL, 0, 0 },

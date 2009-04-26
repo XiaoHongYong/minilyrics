@@ -25,7 +25,6 @@ CLyricShowAgentObj::CLyricShowAgentObj()
 
 CLyricShowAgentObj::~CLyricShowAgentObj()
 {
-	g_eventDispather.UnregisterHanlder(ET_LYRICS_DISPLAY_STYLE_CHANGED, this);
 	g_eventDispather.UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_CHANGED, this);
 	if (m_pLyricsShow)
@@ -36,7 +35,9 @@ void CLyricShowAgentObj::OnCreate()
 {
 	CUIObject::OnCreate();
 
-	g_eventDispather.RegisterHanlder(ET_LYRICS_DISPLAY_STYLE_CHANGED, this);
+	if (!m_pSkin->GetUnprocessedProperty(_T("LyrDisplayStylePropName"), m_strLyrDisplayStylePropName))
+		m_strLyrDisplayStylePropName = _T("LyrDisplayStyle");
+
 	g_eventDispather.RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
 
@@ -44,7 +45,7 @@ void CLyricShowAgentObj::OnCreate()
 
 	if (m_bEnableToolbar && !g_Profile.GetProfileBool(_T("HideToolbar"), false))
 	{
-		// create toolbar
+		// create tool bar
 		LoadToolbar();
 	}
 
@@ -53,7 +54,7 @@ void CLyricShowAgentObj::OnCreate()
 
 void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 {
-	if (pEvent->eventType == ET_LYRICS_DISPLAY_STYLE_CHANGED)
+	if (pEvent->eventType == ET_UI_SETTINGS_CHANGED)
 	{
 		if (_tcsicmp(pEvent->strName.c_str(), m_strLyrDisplayStylePropName.c_str()) == 0)
 		{
@@ -61,10 +62,7 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 			ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str());
 			m_pSkin->InvalidateRect();
 		}
-	}
-	else if (pEvent->eventType == ET_UI_SETTINGS_CHANGED)
-	{
-		if (IsPropertyName(pEvent->strName.c_str(), _T("HideToolbar")))
+		else if (IsPropertyName(pEvent->strName.c_str(), _T("HideToolbar")))
 		{
 			bool		bHideToolbar;
 
@@ -119,8 +117,6 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (IsPropertyName(szProperty, _T("LyrDisplayStyle"))
 		|| IsPropertyName(szProperty, m_strLyrDisplayStylePropName.c_str()))
 		m_strLyrDisplayStyle = szValue;
-	else if (IsPropertyName(szProperty, _T("LyrDisplayStylePropName")))
-		m_strLyrDisplayStylePropName = szValue;
 	else if (IsPropertyName(szProperty, _T("EnableStaticTextStyle")))
 		m_bEnableStaticTextStyle = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("EnableToolbar")))

@@ -1365,15 +1365,28 @@ BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)
 		return false;
 
 	fileEncoding = GetStrEncodingType(buff.c_str());
+#ifdef _UNICODE
 	if (fileEncoding == FE_ANSI)
 		ConvertStr(buff.c_str(), buff.size(), str, encoding);
 	else if (fileEncoding == FE_UTF8)
 		Utf8ToUCS2(buff.c_str() + 3, buff.size() - 3, str);
 	else
 	{
+		str.clear();
 		str.append((WCHAR *)buff.c_str() + 1, buff.size() / sizeof(WCHAR) - 1);
 		str += (WCHAR)'\0';
 	}
+#else
+	// Assume using UTF-8 encoding
+	if (fileEncoding == FE_ANSI)
+		MbcsToUtf8(buff.c_str(), buff.size(), str, encoding);
+	else if (fileEncoding == FE_UTF8)
+		str = buff.c_str() + 3;
+	else
+	{
+		UCS2ToUtf8((WCHAR *)buff.c_str() + 1, buff.size() / sizeof(WCHAR) - 1, str);
+	}
+#endif
 
 	return TRUE;
 }

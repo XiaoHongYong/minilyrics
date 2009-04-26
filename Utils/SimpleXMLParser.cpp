@@ -79,6 +79,7 @@ CSimpleXMLParser::CSimpleXMLParser()
 	nPos = 0;
 	nPosNext = 0;
 	m_nEncodingID = ED_SYSDEF;
+	m_bNoProlog = false;
 }
 
 CSimpleXMLParser::~CSimpleXMLParser()
@@ -477,8 +478,18 @@ SimpleXMLParserError CSimpleXMLParser::ParseProlog(int nPos, int &nPosNext, CSim
 	if (ET_L_XML_DECL != ReadElemnt(ET_L_XML_DECL, strElement, nPos, nPosNext))
 	{
 		// 不是XML文件
+		if (m_bNoProlog)
+		{
+			// No prologue
+			nPosNext = 0;
+			m_nEncodingID = ED_UTF8;
+			return SXPE_OK;
+		}
+
 		return SXPE_NOT_XML_FORMAT;
 	}
+	m_bNoProlog = false;
+
 	nPos = nPosNext;
 
 	desireType = ET_SPACE;

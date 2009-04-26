@@ -14,25 +14,29 @@
 enum PreferPageID
 {
 	PAGE_UNKNOWN,
-	PAGE_OPTIONS,
-	PAGE_LYR_STYLE,
-	PAGE_LYR_THEME,
-	PAGE_LYR_BG,
-	PAGE_LYR_OUTPUT_PLUGINS,
-	PAGE_LYR_DOWNLOAD,
-	PAGE_TRAY_ICON,
-	PAGE_INET,
-	PAGE_ASSOCIATION,
-	PAGE_SCREEN,
 
 	// User interface
 	PAGE_UI_ROOT,
 	PAGE_LOCALIZATION,
 	PAGE_SKINS,
-	PAGE_HOTKEYS,
 	PAGE_UI_ADVANCED,
 
+	// Themes
+	PAGE_THEMES,
+	PAGE_LYR_DISPLAY,
+	PAGE_LYR_BG,
+
+	// System
+	PAGE_HOTKEYS,
+	PAGE_TRAY_ICON,
+	PAGE_INET,
+	PAGE_ASSOCIATION,
 	PAGE_STARTUP,
+
+	// Lyrics
+	PAGE_LYRICS,
+	PAGE_LYR_DOWNLOAD,
+	PAGE_LYR_OUTPUT_PLUGINS,
 };
 
 class CPreferencePageBase : public CBaseDialog  
@@ -105,7 +109,20 @@ public:
 	};
 	typedef	list<OptRadioInt>		VOptRadioInt;
 
+	struct OptComboStr: public OptBase
+	{
+		int				nIDWidgetCombo;
+		vector<tstring> vValues;
+
+		void AddItemValue(LPCTSTR szValue)
+		{
+			vValues.push_back(szValue);
+		}
+	};
+	typedef	list<OptComboStr>		VOptComboStr;
+
 	// helper functions for preference pages
+	void AddOptComboStr(OptComboStr &optComboStr) { m_vOptComboStr.push_back(optComboStr); }
 	void AddOptRadioStr(OptRadioStr &optRadioStr) { m_vOptRadioStr.push_back(optRadioStr); }
 	void AddOptRadioInt(OptRadioInt &optRadioInt) { m_vOptRadioInt.push_back(optRadioInt); }
 	void AddOptBool(OptBool &optBool) { m_vOptBool.push_back(optBool); }
@@ -115,13 +132,16 @@ public:
 
 	void InitCheckButtons();
 
-	bool ProcessCommand(UINT uID);
+	bool ProcessCommand(UINT uID, UINT nNotifyCode);
 
 protected:
+	VOptComboStr		m_vOptComboStr;
 	VOptRadioStr		m_vOptRadioStr;
 	VOptRadioInt		m_vOptRadioInt;
 	VOptBoolStr			m_vOptBoolStr;
 	VOptBool			m_vOptBool;
+
+	virtual void ClearOptions();
 
 public:
 	//
