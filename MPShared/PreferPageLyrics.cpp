@@ -22,7 +22,7 @@ BOOL CPreferPageLyrics::OnInitDialog()
 	CRect	rc;
 
 	m_listCtrl.GetWindowRect(&rc);
-	m_listCtrl.InsertColumn(0, _T("Lyrics search directory"), LVCFMT_LEFT, rc.Width() - 5);
+	m_listCtrl.InsertColumn(0, _T("Lyrics search folder"), LVCFMT_LEFT, rc.Width() - 5);
 
 	// Add initial search folders
 	for (int i = g_LyricSearch.GetSearchFolerCount() - 1; i >= 0; i--)

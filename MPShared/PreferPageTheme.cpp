@@ -325,7 +325,7 @@ void CPPageLyrDisplay::SetSettingType(SettingType settingType)
 		//
 		// Add lyrics display style options
 		//
-		LPCTSTR		vszItemName[] = { _T("Multiple lines scrolling"), _T("Double lines"), _T("Single line"),
+		LPCTSTR		vszItemName[] = { _T("Vertical scrolling"), _T("Double lines"), _T("Single line"),
 			_T("Horizontal scrolling"), _T("Static text"), _T("Movie subtitle") };
 
 		LPCTSTR		vszItemValues[] = { CLyricShowMultiRowObj::ClassName(), CLyricShowTwoRowObj::ClassName(), 
@@ -644,7 +644,7 @@ void CPPageLyrDisplay::OnPaint(IMLGraphicsBase *pGraph)
 //////////////////////////////////////////////////////////////////////////
 //
 CPreferPageDispBgPic::CPreferPageDispBgPic() : 
-CPreferencePageBase(IDD_PAGE_LYR_BG_PIC, _T("Lyrics Background picture"))
+CPreferencePageBase(IDD_PAGE_LYR_BG_PIC, _T("Lyrics Background Picture"))
 {
 	m_PageID = PAGE_LYR_BG;
 }
