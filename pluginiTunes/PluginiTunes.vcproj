@@ -160,7 +160,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="c:\Program Files\iTunes\Plug-ins\iTunesMinilyrics.dll"
+				OutputFile="e:\Program Files\iTunes\Plug-ins\iTunesMinilyrics.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateManifest="false"

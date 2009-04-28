@@ -33,9 +33,6 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 		DispatchMessage(&msg);
 	}
 
-	g_MLService.Log("g_MLService.Quit()");
-	MessageBox(NULL, "g_MLService.Quit()", "aBBBaa", MB_OK);
-
 	g_MLService.Quit();
 
 	return 0;
@@ -127,8 +124,6 @@ public:
 	{
 		KillTimer(m_hWnd, TIMER_GETPOS);
 		KillTimer(m_hWnd, TIMER_QUERYITUNES);
-
-		PostQuitMessage(0);
 	}
 
 	void OnTimer(int nTimerID)
@@ -387,8 +382,7 @@ BOOL CPlayerImp::Init()
 
 void CPlayerImp::Quit()
 {
-	MessageBox(NULL, "CPlayerImp::Quit()", "aBBBaa", MB_OK);
-	g_wndInfoQuery.Destroy();
+//	g_wndInfoQuery.Destroy();
 }
 
 int CPlayerImp::HasVideo()
@@ -801,8 +795,6 @@ IMPEXP OSStatus MAIN (OSType message, PluginMessageInfo *messageInfo, void *refC
 			{
 				if (g_dwThreadID)
 				{
-					MessageBox(NULL, "kPluginCleanupMessage", "aBBBaa", MB_OK);
-
 					PostThreadMessage(g_dwThreadID, WM_QUIT, 0, 0);
 					WaitForSingleObject(g_hThread, INFINITE);
 					CloseHandle(g_hThread);
