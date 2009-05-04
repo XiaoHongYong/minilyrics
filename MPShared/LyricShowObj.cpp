@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "LyricShowObj.h"
+#include "LyricShowAgentObj.h"
 #ifndef _MPLAYER
 #include "DlgRateLyrics.h"
 #endif
@@ -478,6 +479,18 @@ CLyricShowObj::~CLyricShowObj()
 void CLyricShowObj::OnCreate()
 {
 	m_pMLData = &g_LyricData;
+
+	{
+		// Is floating lyrics?
+		bool		bFloatingLyr = false;
+		tstring		strLyrStylePropName;
+		CLyricShowAgentObj::GetLyrDispStylePropName(m_pSkin, bFloatingLyr, strLyrStylePropName);
+		if (bFloatingLyr)
+		{
+			m_etDispSettings = ET_LYRICS_FLOATING_SETTINGS;
+			m_strSectName = SZ_SECT_FLOATING_LYR;
+		}
+	}
 
 	LoadAllSettings();
 
@@ -2196,14 +2209,6 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bAlwaysAutoWidth = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("EnableAdjustVertAlign")))
 		m_bEnableAdjustVertAlign = IsTRUE(szValue);
-	else if (IsPropertyName(szProperty, _T("FloatingLyr")))
-	{
-		if (IsTRUE(szValue))
-		{
-			m_etDispSettings = ET_LYRICS_FLOATING_SETTINGS;
-			m_strSectName = SZ_SECT_FLOATING_LYR;
-		}
-	}
 	else if (IsPropertyName(szProperty, _T("XMargin")))
 		m_nXMargin = _ttoi(szValue);
 	else
@@ -2378,12 +2383,6 @@ void CLyricShowObj::ReloadThemeOfSkin(bool bSavetoProfile)
 {
 	tstring			strColor;
 
-	if (bSavetoProfile && m_skin_bOutlineLyrics)
-	{
-		ProfileWriteTOBToOld(m_bOutlineLyrics, m_tobHilight, m_tobLowlight);
-		g_Profile.WriteProfileInt(SZ_SECT_LYR_DISPLAY, _T("ReloadTOBFromOld"), true);
-	}
-
 #define		SET_THEME_COLOR(szKeyName, skin_clr, clr)	\
 			if (skin_clr.m_bValid)\
 			{\
@@ -2420,11 +2419,17 @@ void CLyricShowObj::ReloadThemeOfSkin(bool bSavetoProfile)
 		SET_THEME_COLOR(_LyrShowTOBFieldNameLowlight[i], m_skin_tobLowlight.clr[i], m_tobLowlight.clr[i]);
 	}
 
-	g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("HilightOBM"), m_skin_tobHilight.obm);
-	m_tobHilight.obm = m_skin_tobHilight.obm;
+	if (m_skin_tobHilight.obm != OBM_UNKNOWN)
+	{
+		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("HilightOBM"), m_skin_tobHilight.obm);
+		m_tobHilight.obm = m_skin_tobHilight.obm;
+	}
 
-	g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("LowlightOBM"), m_skin_tobLowlight.obm);
-	m_tobLowlight.obm = m_skin_tobLowlight.obm;
+	if (m_skin_tobLowlight.obm != OBM_UNKNOWN)
+	{
+		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("LowlightOBM"), m_skin_tobLowlight.obm);
+		m_tobLowlight.obm = m_skin_tobLowlight.obm;
+	}
 
 	CreateLyrOverlayBlendingPattern(m_tobHilight, GetPatternFontHeight());
 	CreateLyrOverlayBlendingPattern(m_tobLowlight, GetPatternFontHeight());

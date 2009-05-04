@@ -127,7 +127,10 @@ BOOL CPreferenceDlg::OnNotify(WIDGET_NOTIFY_INFO *info)
 			// hide old page
 			pPage = (CPreferencePageBase*)m_treePf.GetItemData(tvInfo->iter);
 			if (pPage && pPage->IsValid())
+			{
+				pPage->OnHidePage();
 				pPage->ShowWindow(SW_HIDE);
+			}
 		}
 		else if (info->nCode == WN_TV_SELECTED)
 		{
@@ -147,6 +150,8 @@ BOOL CPreferenceDlg::OnNotify(WIDGET_NOTIFY_INFO *info)
 				{
 					if (!pPage->GetHandle())
 						pPage->Create(pPage->m_nIDTemplate, this);
+					else
+						pPage->OnShowPage();
 
 					// move to correct position
 					ReplaceChildPos(IDC_POS_PAGE, pPage);

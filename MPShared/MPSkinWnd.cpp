@@ -748,12 +748,7 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 			else
 				ASSERT(0);
 
-			tstring		strLyrDisplayStylePropName;
-			if (!GetUnprocessedProperty(_T("LyrDisplayStylePropName"), strLyrDisplayStylePropName))
-				strLyrDisplayStylePropName = _T("LyrDisplayStyle");
-
-			CMPlayerSettings::SetSettings(ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, 
-				strLyrDisplayStylePropName.c_str(), strName.c_str());
+			CLyricShowAgentObj::SetLyrDispStyleSettings(this, strName.c_str());
 		}
 		return;
 	default:
@@ -1247,11 +1242,8 @@ bool CMPSkinWnd::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 	else if (vIDs[0] == IDC_LDS_MULTI_LINE)
 	{
 		tstring		strName;
-		tstring		strLyrDisplayStylePropName;
-		if (!GetUnprocessedProperty(_T("LyrDisplayStylePropName"), strLyrDisplayStylePropName))
-			strLyrDisplayStylePropName = _T("LyrDisplayStyle");
 
-		CMPlayerSettings::GetSettings(SZ_SECT_UI, strLyrDisplayStylePropName.c_str(), strName);
+		CLyricShowAgentObj::GetLyrDispStyleSettings(this, strName);
 
 		if (IsPropertyName(strName.c_str(), CLyricShowMultiRowObj::ClassName()))
 			nIDChecked = IDC_LDS_MULTI_LINE;

@@ -21,6 +21,7 @@ CLyricShowAgentObj::CLyricShowAgentObj()
 	m_strLyrDisplayStylePropName = _T("LyrDisplayStyle");
 	m_bEnableToolbar = true;
 	m_pToolbar = NULL;
+	m_bFloatingLyr = false;
 }
 
 CLyricShowAgentObj::~CLyricShowAgentObj()
@@ -31,17 +32,58 @@ CLyricShowAgentObj::~CLyricShowAgentObj()
 		m_pSkin->RemoveUIObject(m_pLyricsShow, true);
 }
 
+void CLyricShowAgentObj::GetLyrDispStylePropName(CSkinWnd *pSkinWnd, bool &bFloatingLyr, tstring &strLyrStylePropName)
+{
+	bFloatingLyr = false;
+
+	if (!pSkinWnd->GetUnprocessedProperty(_T("LyrDisplayStylePropName"), strLyrStylePropName))
+		strLyrStylePropName = _T("LyrDisplayStyle");
+
+	if (_tcsicmp(_T("FloatingLyrDispStyle"), strLyrStylePropName.c_str()) == 0)
+	{
+		bFloatingLyr = true;
+		strLyrStylePropName = _T("LyrDisplayStyle");
+	}
+}
+
+void CLyricShowAgentObj::GetLyrDispStyleSettings(CSkinWnd *pSkinWnd, tstring &strLyrStyle)
+{
+	tstring			strLyrStylePropName;
+	bool			bFloatingLyr;
+
+	GetLyrDispStylePropName(pSkinWnd, bFloatingLyr, strLyrStylePropName);
+
+	strLyrStyle = g_Profile.GetProfileString(
+		bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY,
+		strLyrStylePropName.c_str(),
+		strLyrStyle.c_str());
+}
+
+void CLyricShowAgentObj::SetLyrDispStyleSettings(CSkinWnd *pSkinWnd, LPCTSTR szLyrStyle)
+{
+	tstring			strLyrStylePropName;
+	bool			bFloatingLyr;
+
+	GetLyrDispStylePropName(pSkinWnd, bFloatingLyr, strLyrStylePropName);
+
+	CMPlayerSettings::SetSettings(ET_UI_SETTINGS_CHANGED, 
+		bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY, 
+		strLyrStylePropName.c_str(), szLyrStyle);
+}
+
 void CLyricShowAgentObj::OnCreate()
 {
 	CUIObject::OnCreate();
 
-	if (!m_pSkin->GetUnprocessedProperty(_T("LyrDisplayStylePropName"), m_strLyrDisplayStylePropName))
-		m_strLyrDisplayStylePropName = _T("LyrDisplayStyle");
+	GetLyrDispStylePropName(m_pSkin, m_bFloatingLyr, m_strLyrDisplayStylePropName);
+
+	m_strLyrDisplayStyle = g_Profile.GetProfileString(
+		m_bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY,
+		m_strLyrDisplayStylePropName.c_str(),
+		m_strLyrDisplayStyle.c_str());
 
 	g_eventDispather.RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
-
-	m_strLyrDisplayStyle = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, m_strLyrDisplayStylePropName.c_str(), m_strLyrDisplayStyle.c_str());
 
 	if (m_bEnableToolbar && !g_Profile.GetProfileBool(_T("HideToolbar"), false))
 	{
@@ -58,7 +100,8 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 	{
 		if (_tcsicmp(pEvent->strName.c_str(), m_strLyrDisplayStylePropName.c_str()) == 0)
 		{
-			m_strLyrDisplayStyle = pEvent->strValue;
+			GetLyrDispStyleSettings(m_pSkin, m_strLyrDisplayStyle);
+			// m_strLyrDisplayStyle = pEvent->strValue;
 			ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str());
 			m_pSkin->InvalidateRect();
 		}

@@ -15,6 +15,8 @@ public:
 	}
 	virtual BOOL OnInitDialog()
 	{
+		CBaseDialog::OnInitDialog();
+
 		if (!m_strTitle.empty())
 			SetDlgItemText(IDC_INFO, m_strTitle.c_str());
 
@@ -285,6 +287,11 @@ BOOL CPPageLyrDisplay::OnInitDialog()
 	return TRUE;
 }
 
+void CPPageLyrDisplay::OnShowPage()
+{
+	SetSettingType(m_eventType == ET_LYRICS_FLOATING_SETTINGS ? ST_FLOATING_LYR : ST_NORMAL_LYR);
+}
+
 template<class _VOptx>
 void SetOptsEvent(_VOptx &vOptions, EventType eventTypeOldEqual, EventType eventType, tstring &strSectName)
 {
@@ -334,8 +341,9 @@ void CPPageLyrDisplay::SetSettingType(SettingType settingType)
 
 		OptComboStr		opt;
 		opt.nIDWidgetCombo = IDC_CB_LYR_STYLE;
-		opt.Set(ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, 
-			m_eventType == ET_LYRICS_FLOATING_SETTINGS ? _T("FloatingLyrDispStyle") : _T("LyrDisplayStyle"),
+		opt.Set(ET_UI_SETTINGS_CHANGED,
+			settingType == ST_FLOATING_LYR ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY, 
+			_T("LyrDisplayStyle"),
 			CLyricShowMultiRowObj::ClassName());
 
 		m_cbLyrStyle.ResetContent();

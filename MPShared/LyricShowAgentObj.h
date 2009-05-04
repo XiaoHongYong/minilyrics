@@ -31,6 +31,11 @@ public:
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 
+public:
+	static void GetLyrDispStylePropName(CSkinWnd *pSkinWnd, bool &bFloatingLyr, tstring &strLyrStylePropName);
+	static void GetLyrDispStyleSettings(CSkinWnd *pSkinWnd, tstring &strLyrStyle);
+	static void SetLyrDispStyleSettings(CSkinWnd *pSkinWnd, LPCTSTR szLyrStyle);
+
 protected:
 	void ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle);
 
@@ -41,6 +46,7 @@ protected:
 	bool			m_bEnableToolbar;
 
 protected:
+	bool			m_bFloatingLyr;
 	tstring			m_strLyrDisplayStylePropName;
 	tstring			m_strLyrDisplayStyle;
 	CUIObject		*m_pLyricsShow;

@@ -49,6 +49,9 @@ public:
 
 	void OnSize(int cx, int cy);
 
+	virtual void OnHidePage() { }
+	virtual void OnShowPage() { }
+
 public:
 	struct OptBase
 	{

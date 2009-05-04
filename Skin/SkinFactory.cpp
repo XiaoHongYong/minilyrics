@@ -713,23 +713,15 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	LIST_SKINWNDS		listToBeDestroyed;
 
 	LIST_SKINWNDS::iterator	it, itEnd;
-	int			n = 1, nReloaded = 1;
 	for (it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
 	{
-		if (n > nReloaded)
+		CSkinWnd	*pSkinWnd = *it;
+		nRet = pSkinWnd->OpenDefaultSkin();
+		if (nRet != ERR_OK)
 		{
-			CSkinWnd	*pSkinWnd = *it;
-			nRet = pSkinWnd->OpenDefaultSkin();
-			if (nRet != ERR_OK)
-			{
-				listToBeDestroyed.push_back(pSkinWnd);
-				m_listSkinWnds.erase(it);
-				it = m_listSkinWnds.begin();
-			}
-			else
-				nReloaded++;
+			listToBeDestroyed.push_back(pSkinWnd);
+			it = m_listSkinWnds.erase(it);
 		}
-		n++;
 	}
 
 	for (it = listToBeDestroyed.begin(); it != listToBeDestroyed.end(); ++it)

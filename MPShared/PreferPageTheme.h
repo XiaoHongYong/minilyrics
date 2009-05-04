@@ -40,6 +40,8 @@ public:
 	BOOL OnInitDialog();
 	void OnCommand(UINT uID, UINT nNotifyCode);
 
+	void OnShowPage();
+
 protected:
 	enum SettingType
 	{

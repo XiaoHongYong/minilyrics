@@ -158,8 +158,7 @@ if TargetZP:
 	#
 
 	shutil.copy(r"bin-player\ZikiPlayer.exe", r"Install_ZP\Share\ZikiPlayer.exe")
-	shutil.copy(r"Install_ML\Share\FontColor.the", r"Install_ZP\Share\FontColor.the")
-	shutil.copy(r"Install_ML\Share\FloatingLyr.the", r"Install_ZP\Share\FloatingLyr.the")
+	shutil.copy(r"Install_ML\Share\Themes.xml", r"Install_ZP\Share\Themes.xml")
 	shutil.copy(r"Install_ML\Share\unicows.dll", r"Install_ZP\Share\unicows.dll")
 
 	# Create ZPVersion.nsh

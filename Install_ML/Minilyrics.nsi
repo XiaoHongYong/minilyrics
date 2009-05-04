@@ -550,11 +550,11 @@ SectionIn 1
   SetOutPath $INSTDIR\Skins\Modern
   File Share\Skins\Modern\*.*
 
-  SetOutPath "$INSTDIR\Skins\Quintessential Player"
-  File "Share\Skins\Quintessential Player\*.*"
+;  SetOutPath "$INSTDIR\Skins\Quintessential Player"
+;  File "Share\Skins\Quintessential Player\*.*"
 
-  SetOutPath "$INSTDIR\Skins\RealPlayer"
-  File "Share\Skins\RealPlayer\*.*"
+;  SetOutPath "$INSTDIR\Skins\RealPlayer"
+;  File "Share\Skins\RealPlayer\*.*"
 
   SetOutPath $INSTDIR\Skins\TCPort
   File Share\Skins\TCPort\*.*
@@ -780,6 +780,8 @@ Section "Uninstall"
   Delete $INSTDIR\RegGuidechs.txt
   Delete $INSTDIR\log.txt
   Delete $INSTDIR\TempTxtLyrics.txt
+  Delete $INSTDIR\Theme.xml
+  Delete $INSTDIR\ThemeCust.xml
   Delete $INSTDIR\FontColor.the
   Delete $INSTDIR\FloatingLyr.the
   Delete $INSTDIR\Install.ini

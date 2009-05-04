@@ -284,15 +284,18 @@ void CPreferPageSkin::OnTimer(UINT nIDEvent)
 
 		m_listSkin.GetText(nIndex, szSkin);
 
-#if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
+#ifndef _MPLAYER
 		if (_tcsicmp(szSkin, m_strEmbeddedSkinName.c_str()) == 0)
 		{
 			// 嵌入到player 中的skin
-			g_mpApp.SwitchToEmbeddedSkinMode(true);
+			g_mpApp.SwitchToEmbeddedSkinMode();
 		}
 		else
 #endif
 		{
+#ifndef _MPLAYER
+			g_mpApp.EndEmbeddedSkin();
+#endif
 			g_mpApp.ChangeSkin(szSkin, true);
 		}
 		g_wndPreference.ActivateWindow();

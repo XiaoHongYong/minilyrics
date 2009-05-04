@@ -117,6 +117,8 @@ public:
 
 	struct TextOverlayBlending
 	{
+		TextOverlayBlending() : obm(OBM_UNKNOWN) { }
+
 		OverlayBlendingMode		obm;				// Overlay blending mode
 		MLColorEx				clr[TCI_COUNT];		// Colors, Accessed by TOBColorIndex
 		CRawImage				imgPattern;
