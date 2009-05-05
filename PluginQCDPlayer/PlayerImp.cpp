@@ -33,19 +33,20 @@ BOOL WINAPI DllMain(HINSTANCE hInst, DWORD fdwReason, LPVOID pRes)
 
 void ShutDown(int flags) 
 {
-	//
-	// TODO : Cleanup
-	//
-	g_MLService.Quit();
+	if (g_hThread)
+	{
+		PostThreadMessage(g_dwThreadId, WM_QUIT, 0, 0);
+		if (WaitForSingleObject(g_hThread, 4000) == WAIT_TIMEOUT)
+			TerminateThread(g_hThread, 0);
+		CloseHandle(g_hThread);
+		g_hThread = NULL;
+	}
 }
 
 //-----------------------------------------------------------------------------
 
 void Configure(int flags)
 {
-	//
-	// TODO : Show your "configuration" dialog.
-	//
 	g_MLService.Config(g_hwndPlayer);
 }
 
@@ -53,9 +54,6 @@ void Configure(int flags)
 
 void About(int flags)
 {
-	//
-	// TODO : Show your "about" dialog.
-	//
 	g_MLService.About(g_hwndPlayer);
 }
 //-------------------------------------------------------------------------
@@ -65,14 +63,14 @@ DWORD WINAPI ThreadMiniLyrics(
 						LPVOID lpParameter
 						)
 {
-	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
-		return 0;
+	if (InitMiniLyricsPlugin(g_hInstance, &g_Player))
+	{
+		// now we can use other g_MLService functions.
+		char	szMsg[256];
 
-	// now we can use other g_MLService functions.
-	char	szMsg[256];
-
-	wsprintf(szMsg, "Start QCD Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-	g_MLService.Log(szMsg);
+		wsprintf(szMsg, "Start QCD Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
+		g_MLService.Log(szMsg);
+	}
 
 	MSG msg;
 
@@ -82,6 +80,9 @@ DWORD WINAPI ThreadMiniLyrics(
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 	}
+
+	g_MLService.Quit();
+
 	return 0;
 }
 
@@ -100,8 +101,6 @@ PLUGIN_API BOOL GENERALDLL_ENTRY_POINT(QCDModInitGen *ModInit, QCDModInfo *ModIn
 
 
 	g_hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)ThreadMiniLyrics, NULL, 0, &g_dwThreadId);
-	CloseHandle(g_hThread);
-	g_hThread = NULL;
 
 	// return TRUE for successful initialization
 	return TRUE;
@@ -147,31 +146,7 @@ LRESULT CALLBACK HookQCDPWnd(
 	case WM_PN_TRACKCHANGED:
 		// DBGLOG0("WM_PN_TRACKCHANGED");
 	case WM_PN_PLAYSTARTED:
-		{
-			char	szArtist[MAX_PATH] = "", szAlbum[MAX_PATH] = "", szTitle[MAX_PATH] = "";
-			char	szSrcMedia[MAX_PATH] = "";
-			int		nRet;
-
-			// QCDCallbacks->Service(opGetOutputTime, NULL, -1, 0);
-			nRet = QCDCallbacks->Service(opGetMediaType, NULL, -1, 0);
-			if (nRet == DIGITAL_VIDEOFILE_MEDIA)
-				g_bCurMediaVideo = true;
-			else
-				g_bCurMediaVideo = false;
-
-			nRet = QCDCallbacks->Service(opGetArtistName, szArtist, MAX_PATH, -1);
-
-			nRet = QCDCallbacks->Service(opGetDiscName, szAlbum, MAX_PATH, -1);
-
-			nRet = QCDCallbacks->Service(opGetTrackName, szTitle, MAX_PATH, -1);
-
-			EmptyStr(szSrcMedia);
-			nRet = QCDCallbacks->Service(opGetTrackFile, szSrcMedia, CountOf(szSrcMedia), -1);
-
-			DWORD	dwLength = QCDCallbacks->Service(opGetTrackLength, NULL, -1, 1);
-
-			g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, dwLength);
-		}
+		g_Player.UpdateMediaInfo();
 		break;
 /*	case WM_PN_PLAYSTOPPED:
 		// DBGLOG0("WM_PN_PLAYSTOPPED");
@@ -294,14 +269,14 @@ BOOL CPlayerImp::SeekTo(int nMsPos)
 
 BOOL CPlayerImp::Init()
 {
-	// DBGLOG0("CPlayerImp::Init()");
-
 	g_MLService.AddWndCloseto(NULL, "ExtPlayerCanvas", NULL);
 	g_MLService.AddWndCloseto(NULL, "PlayerCanvas", NULL);
 
 	// Hook Main Window
  	if (pOrigProc == NULL)
  		pOrigProc = (WNDPROC)SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)HookQCDPWnd);
+
+	UpdateMediaInfo();
 
 	return TRUE;
 }
@@ -313,11 +288,31 @@ void CPlayerImp::Quit()
 		SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)pOrigProc);
 		pOrigProc = NULL;
 	}
+}
 
-	// 发送消息，释放迷你歌词窗口的相关资源（如：删除托盘栏上的图标）
-	if (g_MLService.GetMainWindow())
-	{
-		ShowWindow(g_MLService.GetMainWindow(), SW_HIDE);
-		SendMessage(g_MLService.GetMainWindow(), WM_DESTROY, 0, 0);
-	}
+void CPlayerImp::UpdateMediaInfo()
+{
+	char	szArtist[MAX_PATH] = "", szAlbum[MAX_PATH] = "", szTitle[MAX_PATH] = "";
+	char	szSrcMedia[MAX_PATH] = "";
+	int		nRet;
+
+	// QCDCallbacks->Service(opGetOutputTime, NULL, -1, 0);
+	nRet = QCDCallbacks->Service(opGetMediaType, NULL, -1, 0);
+	if (nRet == DIGITAL_VIDEOFILE_MEDIA)
+		g_bCurMediaVideo = true;
+	else
+		g_bCurMediaVideo = false;
+
+	nRet = QCDCallbacks->Service(opGetArtistName, szArtist, MAX_PATH, -1);
+
+	nRet = QCDCallbacks->Service(opGetDiscName, szAlbum, MAX_PATH, -1);
+
+	nRet = QCDCallbacks->Service(opGetTrackName, szTitle, MAX_PATH, -1);
+
+	EmptyStr(szSrcMedia);
+	nRet = QCDCallbacks->Service(opGetTrackFile, szSrcMedia, CountOf(szSrcMedia), -1);
+
+	DWORD	dwLength = QCDCallbacks->Service(opGetTrackLength, NULL, -1, 1);
+
+	g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, dwLength);
 }

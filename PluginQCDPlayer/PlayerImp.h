@@ -35,6 +35,8 @@ public:
 
 	void OnPlayTimeChanged(DWORD dwTimeCur);
 
+	void UpdateMediaInfo();
+
 protected:
 	DWORD			m_dwPos;
 

@@ -282,7 +282,6 @@ public:
 	void SetFreeOnDestory(bool bFreeOnDestory = true) { m_bFreeOnDestory = bFreeOnDestory; }
 
 public:
-	void GetSkinRect(RECT &rc) { rc = m_rcBoundBox; }
 	void GetCursorClientPos(CPoint &pt);
 
 	void AddWndCloseto(CBaseWnd *pWnd, LPCTSTR szWndClass, LPCTSTR szWndName);

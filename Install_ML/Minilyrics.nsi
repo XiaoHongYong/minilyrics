@@ -213,6 +213,9 @@ SectionIn 1 2
   SetOutPath $INSTDIR\lang
   File Share\lang\*.*
 
+  SetOutPath $INSTDIR\Patterns
+  File Share\Patterns\*.*
+
   SetOutPath $INSTDIR\Skins\Modern
   File Share\Skins\Modern\*.*
 
@@ -729,6 +732,20 @@ Section "Uninstall"
     Delete ${TEMP1}MLPlugin.ini
   J_XM_UE:
 
+  ; Silverjuke
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstSJ"
+  StrCmp ${TEMP1} "" J_SJ_UE
+    Delete /REBOOTOK ${TEMP1}PluginSilverjuke.dll
+    Delete ${TEMP1}MLPlugin.ini
+  J_SJ_UE:
+
+  ; VLC Media Player
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstVLCPath"
+  StrCmp ${TEMP1} "" J_VLC_UE
+    Delete /REBOOTOK ${TEMP1}plugins\libminilyrics_plugin.dll
+    Delete ${TEMP1}plugins\MLPlugin.ini
+  J_VLC_UE:
+
   ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWMPlayer"
   IntCmp ${TEMP1} 0 J_WMP_UE J_WMP_UE
     UnRegDll $INSTDIR\WMPLyrics.dll
@@ -748,13 +765,6 @@ Section "Uninstall"
     UnRegDll $INSTDIR\PluginMJ.dll
     Delete /REBOOTOK "$INSTDIR\PluginMJ.dll"
   J_MJ_UE:
-
-  ; VLC Media Player
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstVLCPath"
-  StrCmp ${TEMP1} "" J_VLC_UE
-    Delete /REBOOTOK ${TEMP1}plugins\libminilyrics_plugin.dll
-    Delete ${TEMP1}plugins\MLPlugin.ini
-  J_VLC_UE:
 
   MessageBox MB_YESNO|MB_ICONQUESTION $(un.MsgRemovelAll) IDYES RemoveAllFiles
 
@@ -828,6 +838,7 @@ Section "Uninstall"
   Delete "$INSTDIR\Skins\WMP10\*.*"
   Delete "$INSTDIR\Skins\WMP11\*.*"
   Delete "$INSTDIR\Skins\*.*"
+  Delete "$INSTDIR\Patterns\*.*"
   Delete "$INSTDIR\ml-gen-embedded-skin\*.*"
   Delete "$INSTDIR\ml-winamp2-skin\*.*"
   Delete "$INSTDIR\ml-winamp5-skin\*.*"
@@ -876,6 +887,7 @@ Section "Uninstall"
   RMDir "$INSTDIR\ml-winamp2-skin"
   RMDir "$INSTDIR\ml-winamp5-skin"
   RMDir "$INSTDIR\Skins"
+  RMDir "$INSTDIR\Patterns"
   RMDir "$INSTDIR\ml-gen-embedded-skin"
   RMDir "$INSTDIR\ad"
   RMDir "$INSTDIR"

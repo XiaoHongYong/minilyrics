@@ -186,6 +186,17 @@ LPCTSTR		_LyrShowTOBFieldNameLowlight[] =
 	_T("LowlightBorderColor"),
 };
 
+PRAW_IMAGE_DATA LoadRawImageDataPatternFile(LPCTSTR szFile)
+{
+	tstring		strFile = GetWorkingFolder();
+	strFile += _T("Patterns\\");
+	strFile += szFile;
+	if (IsFileExist(strFile.c_str()))
+		return LoadRawImageDataFromFile(strFile.c_str());
+	else
+		return LoadRawImageDataFromFile(szFile);
+}
+
 void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverlayBlending &tob, int nGradientPatternHeight, bool bHilight)
 {
 	ASSERT(CountOf(_LyrShowTOBFieldNameLowlight) == CLyricShowObj::TCI_COUNT);
@@ -208,7 +219,7 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 		tob.strPatternFile = g_Profile.GetProfileString(szSectName, bHilight ? _T("HilightPattern") : _T("LowlightPattern"), _T(""));
 		if (!tob.strPatternFile.empty())
 		{
-			PRAW_IMAGE_DATA		pImage = LoadRawImageDataFromFile(tob.strPatternFile.c_str());
+			PRAW_IMAGE_DATA		pImage = LoadRawImageDataPatternFile(tob.strPatternFile.c_str());
 			if (pImage && pImage->bitCount != 24)
 				pImage = ConvertTo24BppRawImage(pImage);
 
@@ -1579,7 +1590,7 @@ void CLyricShowObj::AutoHeightSkinAccordLyrics(int nLines)
 	int			nHeightOthers = 0;
 	int			nBottomOld;
 
-	m_pSkin->GetSkinRect(rc);
+	m_pSkin->GetWindowRect(rc);
 	nHeightOthers = rc.Height() - m_rcObj.Height();
 	nBottomOld = rc.bottom;
 
@@ -2281,7 +2292,7 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		if (m_tobHilight.obm == OBM_PATTERN)
 		{
-			PRAW_IMAGE_DATA		pImage = LoadRawImageDataFromFile(szValue);
+			PRAW_IMAGE_DATA		pImage = LoadRawImageDataPatternFile(szValue);
 			if (pImage && pImage->bitCount != 24)
 				pImage = ConvertTo24BppRawImage(pImage);
 

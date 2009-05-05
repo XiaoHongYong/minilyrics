@@ -18,12 +18,14 @@ LPCTSTR		__vLyrClrProperties[] = {
 	_T("HilightGradient1"), _T("HilightGradient2"), _T("HilightGradient3"),
 	_T("HilightAutoGradient"),
 	_T("HilightBorderColor"),
+	_T("HilightPattern"),
 
 	_T("LowlightOBM"),
 	_T("FgLowColor"),
 	_T("LowlightGradient1"), _T("LowlightGradient2"), _T("LowlightGradient3"),
 	_T("LowlightAutoGradient"),
 	_T("LowlightBorderColor"),
+	_T("LowlightPattern"),
 };
 
 LPCTSTR		__LyrFontProperties[] = {

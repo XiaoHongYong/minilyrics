@@ -978,7 +978,7 @@ void CMPSkinWnd::OnLoadWndSizePos()
 	if (rcNew.Height() < m_wndResizer.GetMinCy())
 		rcNew.bottom = rcNew.top + m_wndResizer.GetMinCy();
 
-	if (rcNew.Width() != m_rcReal.Width() || rcNew.Height() != m_rcReal.Height())
+	if (!rcNew.EqualRect(&m_rcReal))
 		MoveWindowSafely(rcNew.left, rcNew.top, rcNew.Width(), rcNew.Height(), true);
 
 /*	if (!m_wndResizer.IsFixedWidth() && !m_wndResizer.IsFixedHeight())
