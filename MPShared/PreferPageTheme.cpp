@@ -185,7 +185,7 @@ void CPPageThemes::UpdateThemesList()
 
 	strCurTheme = g_Profile.GetProfileString(_T("CurTheme"), _T(""));
 
-	for (int i = 0; i < vThemes.size(); i++)
+	for (int i = 0; i < (int)vThemes.size(); i++)
 	{
 		m_listThemes.InsertItem(i, vThemes[i].c_str());
 		if (nSel != -1 && _tcscmp(strCurTheme.c_str(), vThemes[i].c_str()))

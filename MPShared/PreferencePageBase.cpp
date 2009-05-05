@@ -200,7 +200,7 @@ bool CPreferencePageBase::ProcessCommand(UINT uID, UINT nNotifyCode)
 			cbCtrl.Attach(this, opt.nIDWidgetCombo);
 			nSel = cbCtrl.GetCurSel();
 
-			if (nSel >= 0 && nSel < opt.vValues.size())
+			if (nSel >= 0 && nSel < (int)opt.vValues.size())
 			{
 				if (_tcsicmp(opt.vValues[nSel].c_str(), opt.strDefaultValue.c_str()) != 0)
 				{
