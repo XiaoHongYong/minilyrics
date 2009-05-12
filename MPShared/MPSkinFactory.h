@@ -41,8 +41,6 @@ public:
 
 	virtual void OnMainSkinWndDestory(CSkinWnd *pSkinWnd);
 
-	virtual void SaveOpenedSkinWndNames();
-
 	void TopmostAll(bool bTopmost);
 	void MinizeAll(bool bSilently = false);
 	void RestoreAll();

@@ -31,7 +31,6 @@ public:
 	void OnActivate(bool bActived);
 
 	virtual bool OnCreate();
-	virtual void OnDestroy();
 
 	// IEventHandler
 	virtual void OnEvent(const IEvent *pEvent);

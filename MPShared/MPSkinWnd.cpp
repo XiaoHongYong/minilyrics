@@ -628,14 +628,6 @@ bool CMPSkinWnd::OnCreate()
 	return true;
 }
 
-void CMPSkinWnd::OnDestroy()
-{
-	if (m_bMainAppWnd)
-		g_mpApp.GetSkinFactory()->SaveOpenedSkinWndNames();
-
-	CSkinWnd::OnDestroy();
-}
-
 void CMPSkinWnd::OnEvent(const IEvent *pEvent)
 {
 }

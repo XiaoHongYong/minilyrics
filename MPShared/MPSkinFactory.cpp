@@ -74,10 +74,7 @@ CMPSkinFactory::~CMPSkinFactory()
 int CMPSkinFactory::LoadDefaultSkin()
 {
 	int			nRet;
-	tstring		strSkin, strSkinWnd;
-	tstring		strOpenedSkinWnds;
-	vector<tstring>	vSkinWnds;
-	UINT		i;
+	tstring		strSkin;
 
 	strSkin = g_Profile.GetProfileString(_T("DefaultSkin"), _T(""));
 	if (strSkin.empty())
@@ -86,45 +83,12 @@ int CMPSkinFactory::LoadDefaultSkin()
 		g_Profile.WriteProfileString(_T("DefaultSkin"), strSkin.c_str());
 	}
 
-	nRet = OpenSkin(strSkin.c_str());
-	if (nRet != ERR_OK)
-	{
-		// try to Open default skin
-		strSkin = SZ_DEFSKIN;
-		g_Profile.WriteProfileString(_T("DefaultSkin"), strSkin.c_str());
-		nRet = OpenSkin(strSkin.c_str());
-		if (nRet != ERR_OK)
-			return nRet;
-	}
-
-	strSkinWnd = g_Profile.GetProfileString(strSkin.c_str(), _T("DefaultSkinWnd"), _T(""));
-	nRet = CreateMainSkinWnd(SZ_APP_NAME, strSkinWnd.c_str(), strSkinWnd.c_str());
-	if (nRet != ERR_OK)
-		return nRet;
-
-	strOpenedSkinWnds = g_Profile.GetProfileString(_T("LatestOpenedSkinWnds"), _T(""));
-	StrBreak(strOpenedSkinWnds.c_str(), ',', vSkinWnds);
-	for (i = 0; i < vSkinWnds.size(); i++)
-	{
-		if (_tcsicmp(vSkinWnds[i].c_str(), GetMainWnd()->GetSkinWndName()) == 0)
-		{
-			vSkinWnds.erase(vSkinWnds.begin() + i);
-			i--;
-			continue;
-		}
-	}
-
-	for (i = 0; i < vSkinWnds.size(); i++)
-	{
-		CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, vSkinWnds[i].c_str(), vSkinWnds[i].c_str());
-	}
-
-	return nRet;
+	return ChangeSkin(strSkin.c_str());
 }
 
 void CMPSkinFactory::Quit()
 {
-	SaveOpenedSkinWndNames();
+	Close();
 
 	LIST_SKINWNDS::iterator	it, itEnd;
 	LIST_SKINWNDS	listSkinWnds;
@@ -137,25 +101,6 @@ void CMPSkinFactory::Quit()
 		pSkin->Destroy();
 	}
 	m_listSkinWnds.clear();
-
-	Close();
-}
-
-void CMPSkinFactory::SaveOpenedSkinWndNames()
-{
-	LIST_SKINWNDS::iterator	it, itEnd;
-	tstring		strOpenedSkinWnds;
-
-	itEnd = m_listSkinWnds.end();
-	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
-	{
-		CSkinWnd	*pSkin = *it;
-		if (!strOpenedSkinWnds.empty())
-			strOpenedSkinWnds += _T(",");
-		strOpenedSkinWnds += pSkin->GetSkinWndName();
-	}
-
-	g_Profile.WriteProfileString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
 }
 
 CUIObject *CMPSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)

@@ -123,7 +123,8 @@ BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding = 
 
 void MultiStrToVStr(LPCTSTR szText, vector<tstring> &vStr);
 
-int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &vStrs);
+int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr);
+int StrSplit(LPCTSTR szStr, TCHAR chSeperator, SetTStrNCase &containerStr);
 #define StrBreak	StrSplit
 
 #define ReadInt(szBeg, nValue)\

@@ -45,7 +45,8 @@ void CMPSkinMainWndBase::OnDestroy()
 {
 	g_eventDispather.UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 
-	g_Profile.WriteProfileString(m_pSkinFactory->GetSkinName(), _T("DefaultSkinWnd"), GetSkinWndName());
+	if (IsMainAppWnd() && m_strSkinWndName.size())
+		g_Profile.WriteProfileString(_T("DefaultSkinWnd"), GetSkinWndName());
 	m_hotKey.Quit();
 
 #ifndef _WIN32_WCE

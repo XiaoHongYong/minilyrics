@@ -687,8 +687,14 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	// change the skins of existed windows.
 	tstring		strSkinWndDef;
 	tstring		strSkinWndName;
+	tstring		strOpenedSkinWnds;
+	SetTStrNCase	setOpenedSkinWnds;
 
-	// strSkinWndDef = g_Profile.GetProfileString(szSkinName, _T("DefaultSkinWnd"), _T(""));
+	strOpenedSkinWnds = g_Profile.GetProfileString(_T("LatestOpenedSkinWnds"), _T(""));
+	strSkinWndDef = g_Profile.GetProfileString(_T("DefaultSkinWnd"), _T(""));
+
+	StrSplit(strOpenedSkinWnds.c_str(), ',', setOpenedSkinWnds);
+
 	nRet = m_skinFile.GetMainSkinWnd(strSkinWndName, strSkinWndDef.c_str());
 	if (nRet != ERR_OK)
 	{
@@ -696,6 +702,14 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 		return nRet;
 	}
 
+	{
+		// Remove main window from other windows.
+		SetTStrNCase::iterator it = setOpenedSkinWnds.find(strSkinWndName.c_str());
+		if (it != setOpenedSkinWnds.end())
+			setOpenedSkinWnds.erase(it);
+	}
+
+	// Create or Open Main Window
 	if (m_listSkinWnds.empty())
 	{
 		nRet = CreateMainSkinWnd(_T("MiniLyrics"), strSkinWndName.c_str(), strSkinWndName.c_str());
@@ -710,24 +724,34 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 			return nRet;
 	}
 
-	LIST_SKINWNDS		listToBeDestroyed;
+	LIST_SKINWNDS		listToBeProcessed;
 
-	LIST_SKINWNDS::iterator	it, itEnd;
-	for (it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
+	// Destroy other skin windows.
+	if (!m_listSkinWnds.empty())
+		listToBeProcessed.insert(listToBeProcessed.begin(), ++(m_listSkinWnds.begin()), m_listSkinWnds.end());
+
+	// Open other skin windows.
+	LIST_SKINWNDS::iterator	it;
+	SetTStrNCase::iterator itSet;
+	for (it = listToBeProcessed.begin(), itSet = setOpenedSkinWnds.begin();
+		it != listToBeProcessed.end() && itSet != setOpenedSkinWnds.end(); ++it, ++itSet)
 	{
 		CSkinWnd	*pSkinWnd = *it;
-		nRet = pSkinWnd->OpenDefaultSkin();
-		if (nRet != ERR_OK)
-		{
-			listToBeDestroyed.push_back(pSkinWnd);
-			it = m_listSkinWnds.erase(it);
-		}
+		pSkinWnd->OpenSkin((*itSet).c_str());
 	}
 
-	for (it = listToBeDestroyed.begin(); it != listToBeDestroyed.end(); ++it)
+	// Destroy other skin window
+	for (; it != listToBeProcessed.end(); ++it)
 	{
 		CSkinWnd	*pSkinWnd = *it;
 		pSkinWnd->Destroy();
+		// delete pSkinWnd;
+	}
+
+	// Create other skin windows.
+	for (; itSet != setOpenedSkinWnds.end(); ++itSet)
+	{
+		nRet = CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str());
 		// delete pSkinWnd;
 	}
 
@@ -831,16 +855,33 @@ void CSkinFactory::Close()
 	m_dynamicCmds.Free();
 	m_skinFile.Close();
 
-	LIST_SKINWNDS::iterator	it, itEnd;
+	LIST_SKINWNDS::iterator	it;
 
-	itEnd = m_listSkinWnds.end();
-	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+	// Save opened window name, and close it.
+	tstring		strOpenedSkinWnds;
+	bool		bSave = false;
+	for (it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
 	{
 		CSkinWnd	*pSkin = *it;
+
+		if (pSkin->IsMainAppWnd())
+		{
+			bSave = true;
+			g_Profile.WriteProfileString(_T("DefaultSkinWnd"), pSkin->GetSkinWndName());
+		}
+		else
+		{
+			if (!strOpenedSkinWnds.empty())
+				strOpenedSkinWnds += _T(",");
+			strOpenedSkinWnds += pSkin->GetSkinWndName();
+		}
+
 		// PostMessage(pSkin->GetHandle(), WM_CLOSE, 0, 0);
 		pSkin->CloseSkin();
 		// delete pSkin;
 	}
+	if (bSave || strOpenedSkinWnds.size())
+		g_Profile.WriteProfileString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
 
 	m_resourceMgr.OnClose();
 

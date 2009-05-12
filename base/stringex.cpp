@@ -1521,10 +1521,31 @@ void VStrToMultiStr(const vector<tstring> &vStr, tstring &strMulti)
 }
 */
 
-int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &vStrs)
+class _SetInsert
+{
+public:
+	void add(tstring &strVal)
+	{
+		m_setStr->insert(strVal);
+	}
+	SetTStrNCase	*m_setStr;
+};
+
+class _VectorInsert
+{
+public:
+	void add(tstring &strVal)
+	{
+		m_vecStr->push_back(strVal);
+	}
+	vector<tstring>	*m_vecStr;
+};
+
+template<class _VectorInsert>
+void _StrSplit(LPCTSTR szStr, TCHAR chSeperator, _VectorInsert &containerStr)
 {
 	if (IsEmptyString(szStr))
-		return 0;
+		return;
 
 	LPCTSTR		szPos, szPrev;
 
@@ -1542,12 +1563,28 @@ int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &vStrs)
 		else
 			strTemp = szPrev;
 
-		vStrs.push_back(strTemp);
+		containerStr.add(strTemp);
 
 		szPrev = szPos;
 	}
+}
 
-	return vStrs.size();
+int StrSplit(LPCTSTR szStr, TCHAR chSeperator, SetTStrNCase &containerStr)
+{
+	_SetInsert	set;
+	set.m_setStr = &containerStr;
+	_StrSplit(szStr, chSeperator, set);
+
+	return containerStr.size();
+}
+
+int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr)
+{
+	_VectorInsert vec;
+	vec.m_vecStr = &containerStr;
+	_StrSplit(szStr, chSeperator, vec);
+
+	return containerStr.size();
 }
 
 void _itostr(int value, tstring &str, int base)
@@ -1593,6 +1630,7 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestReadInt_t);
 	CPPUNIT_TEST(TestReadColorValue_t);
 	CPPUNIT_TEST(TestTrimStrRight);
+	CPPUNIT_TEST(TestStrSplit);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -1665,6 +1703,33 @@ protected:
 
 		p = ReadColorValue_t(_T("576C910"), clr);
 		CPPUNIT_ASSERT(*p == '0' && clr == RGB(0x57, 0x6c, 0x91));
+	}
+
+	void TestStrSplit()
+	{
+		V_Str		vStr;
+		SetTStrNCase setStr;
+		LPCTSTR		szInput = _T("a,ab,a10,,A,");
+		LPCTSTR		strResult[] = { _T("a"), _T("ab"), _T("a10"), _T(""), _T("A"), _T("") };
+
+		StrSplit(szInput, ',', vStr);
+		StrSplit(szInput, ',', setStr);
+
+		CPPUNIT_ASSERT(vStr.size() == CountOf(strResult));
+
+		for (int i = 0; i < vStr.size(); i++)
+		{
+			if (_tcscmp(vStr[i].c_str(), strResult[i]) != 0)
+				CPPUNIT_FAIL_T(CStrPrintf(_T("StrSplit Test, case: %d, %s, %s"), i, vStr[i].c_str(), strResult[i]).c_str());
+		}
+
+		CPPUNIT_ASSERT(setStr.size() - 2 == CountOf(strResult));
+
+		for (int i = 0; i < vStr.size(); i++)
+		{
+			if (setStr.find(strResult[i]) == setStr.end())
+				CPPUNIT_FAIL_T(CStrPrintf(_T("StrSplit(Set) Test, case(Can't find): %d, %s"), i, strResult[i]).c_str());
+		}
 	}
 
 };
