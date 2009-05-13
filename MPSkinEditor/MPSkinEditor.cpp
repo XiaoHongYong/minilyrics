@@ -226,10 +226,8 @@ void CMPSkinEditorApp::OnOpenSkin()
 		pChild = pFrame->MDIGetActive();
 	}
 	g_skinPrj.Close();
-	
 
-	nRet = g_skinFactory.OpenSkin(dlg.m_strSelSkin.c_str());
-	// nRet = g_skinFactory.OpenSkin(strSkinFile.c_str());
+	nRet = g_skinFactory.OpenSkinEx(dlg.m_strSelSkin.c_str());
 	if (nRet != ERR_OK)
 	{
 		AfxMessageBox(Error2Str(nRet));

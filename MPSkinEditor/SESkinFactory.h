@@ -15,8 +15,6 @@ public:
 	CSESkinFactory();
 	virtual ~CSESkinFactory();
 
-	virtual int OpenSkin(LPCTSTR szSkin);
-
 	virtual void Quit();
 
 	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);

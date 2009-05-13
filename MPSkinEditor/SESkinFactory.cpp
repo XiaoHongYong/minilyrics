@@ -49,41 +49,6 @@ CSESkinFactory::~CSESkinFactory()
 
 }
 
-int CSESkinFactory::OpenSkin(LPCTSTR szSkin)
-{
-	int			nRet;
-	tstring		strSkin, strSkinWnd;
-	tstring		strOpenedSkinWnds;
-	vector<tstring>	vSkinWnds;
-
-	nRet = CSkinFactory::OpenSkin(szSkin);
-	if (nRet != ERR_OK)
-		return nRet;
-/*
-	strSkinWnd = g_Profile.GetProfileString(szSkin, _T("DefaultSkinWnd"), _T(""));
-	nRet = CreateMainSkinWnd(_T("MiniLyrics"), _T("MiniLyrics"), strSkinWnd.c_str());
-	if (nRet != ERR_OK)
-		return nRet;
-
-	strOpenedSkinWnds = g_Profile.GetProfileString(_T("LatestOpenedSkinWnds"), _T(""));
-	StrBreak(strOpenedSkinWnds.c_str(), ',', vSkinWnds);
-	for (i = 0; i < vSkinWnds.size(); i++)
-	{
-		if (_tcsicmp(vSkinWnds[i].c_str(), GetMainWnd()->GetSkinWndName()) == 0)
-		{
-			vSkinWnds.erase(vSkinWnds.begin() + i);
-			break;
-		}
-	}
-
-	for (i = 0; i < vSkinWnds.size(); i++)
-	{
-		CreateSkinWnd(false, _T("CMPSkin"), _T("CMPSkin"), vSkinWnds[i].c_str());
-	}*/
-
-	return nRet;
-}
-
 void CSESkinFactory::Quit()
 {
 	LIST_SKINWNDS::iterator	it, itEnd;

@@ -73,7 +73,6 @@ CMPSkinFactory::~CMPSkinFactory()
 
 int CMPSkinFactory::LoadDefaultSkin()
 {
-	int			nRet;
 	tstring		strSkin;
 
 	strSkin = g_Profile.GetProfileString(_T("DefaultSkin"), _T(""));
@@ -83,7 +82,7 @@ int CMPSkinFactory::LoadDefaultSkin()
 		g_Profile.WriteProfileString(_T("DefaultSkin"), strSkin.c_str());
 	}
 
-	return ChangeSkin(strSkin.c_str());
+	return ChangeSkinEx(strSkin.c_str());
 }
 
 void CMPSkinFactory::Quit()

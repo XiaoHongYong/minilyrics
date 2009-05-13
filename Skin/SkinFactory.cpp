@@ -625,28 +625,29 @@ int CSkinFactory::GetMenuIDByCmdName(LPCTSTR szMenuCmdName)
 	return m_nNextMenuId;
 }
 
-int CSkinFactory::OpenSkin(LPCTSTR szSkinName)
-{
-	tstring		strSkinDir;
-
-	strSkinDir = GetSkinRootDir();
-
-	strSkinDir += szSkinName;
-
-	return OpenSkinEx(szSkinName, strSkinDir.c_str(), _T(""));
-}
-
 int CSkinFactory::OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir)
 {
 	TCHAR		szSkinFile[MAX_PATH];
+	tstring		strSkinDir;
+
+	ASSERT(szSkinDir && szExtraDir);
 
 	Close();
+
+	// If szSkinDir is NULL, set to default position: %SkinRoot%\\szSkinName.
+	if (szSkinDir == NULL || IsEmptyString(szSkinDir))
+	{
+		strSkinDir = GetSkinRootDir();
+		strSkinDir += szSkinName;
+		szSkinDir = strSkinDir.c_str();
+	}
 
 	m_strSkinName = szSkinName;
 
 	m_resourceMgr.ClearRessourceDir();
 	m_resourceMgr.AddRessourceDir(szSkinDir);
-	m_resourceMgr.AddRessourceDir(szExtraDir);
+	if (szExtraDir && !IsEmptyString(szExtraDir))
+		m_resourceMgr.AddRessourceDir(szExtraDir);
 	m_resourceMgr.AddRessourceDir(GetSkinRootDir());
 
 	if (!m_resourceMgr.GetResourcePathName(szSkinFile, CountOf(szSkinFile), m_strSkinFileName.c_str()))
@@ -656,17 +657,6 @@ int CSkinFactory::OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	}
 
 	return OpenSkinFile(szSkinFile);
-}
-
-int CSkinFactory::ChangeSkin(LPCTSTR szSkinName)
-{
-	tstring		strSkinDir;
-
-	strSkinDir = GetSkinRootDir();
-
-	strSkinDir += szSkinName;
-
-	return ChangeSkinEx(szSkinName, strSkinDir.c_str(), _T(""));
 }
 
 int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir)

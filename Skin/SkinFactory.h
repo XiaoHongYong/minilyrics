@@ -142,11 +142,9 @@ public:
 
 	int GetMenuIDByCmdName(LPCTSTR szMenuCmdName);
 
-	virtual int OpenSkin(LPCTSTR szSkinName);
-	virtual int OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir);
+	virtual int OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
 
-	virtual int ChangeSkin(LPCTSTR szSkinName);
-	virtual int ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir);
+	virtual int ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
 
 	virtual int SaveSkinFile(LPCTSTR szFile);
 	virtual void Close();
