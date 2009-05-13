@@ -278,7 +278,7 @@ int CSkinFileXML::GetMainSkinWnd(tstring &strSkinWndName, LPCTSTR szSkinWndNameD
 	else if (szMainWnds)
 	{
 		vector<tstring>		vWnds;
-		StrBreak(szMainWnds, ',', vWnds);
+		StrSplit(szMainWnds, ',', vWnds);
 		for (int i = 0; i < (int)vWnds.size(); i++)
 		{
 			TrimStr(vWnds[i]);
