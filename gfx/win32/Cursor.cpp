@@ -10,6 +10,7 @@ HCURSOR LoadCursorFromFile(LPCTSTR szFile)
 
 CCursor::CCursor(void)
 {
+	m_cursor = NULL;
 }
 
 CCursor::~CCursor(void)

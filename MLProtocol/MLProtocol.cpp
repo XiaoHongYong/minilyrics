@@ -1097,6 +1097,7 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 //////////////////////////////////////////////////////////////////////////
 CMsgProtocol::CMsgProtocol()
 {
+	m_pNetFile = NULL;
 }
 
 CMsgProtocol::~CMsgProtocol()
@@ -1342,7 +1343,7 @@ int CMsgProtocol::WriteMsg(char *szMsgType, CCharBuffer *pMsgBuff)
 
 CMLProtocol::CMLProtocol()
 {
-
+	m_bUseProxy = false;
 }
 
 CMLProtocol::~CMLProtocol()

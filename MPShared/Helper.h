@@ -39,6 +39,8 @@ void DeleteAllFiles(LPCTSTR szDir, BOOL bIncSubDir, BOOL bDelReadOnlyFile);
 
 bool LoadProxySvrFromIE(bool &bUseProxy, tstring &strSvr, int &nPort);
 
+bool LoadProxySvrFromFireFox(bool &bUseProxy, tstring &strSvr, int &nPort);
+
 void ParseMLTextMacro(LPCTSTR szText, tstring &str);
 
 void GetNotepadEditor(tstring &strEditor);

@@ -335,8 +335,8 @@ CUIObject::CUIObject()
 	m_pContainer = NULL;
 
 //	m_nType = 0;
-	
 	m_nId = SKIN_UIOBJ_ID_UNDEFINE;
+	m_nAutoUniID = 0;
 	
 	m_nMsgWant = 0;
 

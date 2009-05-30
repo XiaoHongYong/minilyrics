@@ -79,8 +79,6 @@ void CMPSkinMainWndBase::OnTimer(UINT nIDEvent)
 		if (g_Player.HasVideo())
 			return;
 
-		ShowRegisterNotice(this, false);
-
 		//
 		// 检查是否过期
 		CVersion		verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
@@ -88,6 +86,8 @@ void CMPSkinMainWndBase::OnTimer(UINT nIDEvent)
 		verObs.From(g_Profile.GetProfileString(_T("ObsoleteVersion"), _T("1.0.0")));
 		if (verCur <= verObs)
 			ShowVersionExpiredDlg(this);
+
+		ShowRegisterNotice(this, false);
 	}
 	else
 		CMPSkinWnd::OnTimer(nIDEvent);

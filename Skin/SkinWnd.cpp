@@ -206,6 +206,10 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_nTranslucencyAlphaDynamicStep = 1.0f;
 	m_bClickThrough = false;
 	m_bEnableTransparentFeature = true;
+
+	m_bOnMouseHover = false;
+	m_dwLastSetHoverAlphaTime = 0;
+	m_translucencyStatus = TS_NORMAL;
 #endif
 }
 

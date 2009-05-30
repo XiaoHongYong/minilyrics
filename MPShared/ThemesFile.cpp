@@ -180,7 +180,8 @@ void CThemesXML::EnumAllThemes(vector<tstring> &vThemes)
 	{
 		SXNode		*pNode = *it;
 		LPCTSTR		szName = pNode->GetProperty(SZ_NAME);
-		vThemes.push_back(szName);
+		if (szName)
+			vThemes.push_back(szName);
 	}
 }
 
@@ -191,7 +192,7 @@ SXNode::iterator CThemesXML::GetTheme(LPCTSTR szThemeName)
 	for (SXNode::iterator it = m_pRoot->listChildren.begin(); it != m_pRoot->listChildren.end(); ++it)
 	{
 		SXNode		*pNode = *it;
-		if (_tcsicmp(pNode->GetProperty(SZ_NAME), szThemeName) == 0)
+		if (_tcsicmp(pNode->GetPropertySafe(SZ_NAME), szThemeName) == 0)
 			return it;
 	}
 
@@ -268,7 +269,8 @@ bool CThemesFile::Open()
 
 	strFile = GetWorkingFolder();
 	strFile += SZ_THEMES_FILE;
-	m_xmlThemes.ParseFile(strFile.c_str());
+	if (!m_xmlThemes.ParseFile(strFile.c_str()))
+		return false;
 
 	strFile = GetWorkingFolder();
 	strFile += SZ_CUST_THEMES_FILE;

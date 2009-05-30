@@ -18,6 +18,15 @@ CSkinTabHeader::CSkinTabHeader()
 	m_bLBtDown = FALSE;
 	m_nActiveButton = 0;
 	m_nHoverButton = -1;
+
+	m_nButtonFaceSize = 0;
+	m_nButtonBorderSize = 0;
+	m_nTabHeight = 0;
+
+	m_nActiveButtonIncSize = 0;
+
+	m_bEnableHover = false;
+	m_bHover = false;
 }
 
 CSkinTabHeader::~CSkinTabHeader()
@@ -32,6 +41,9 @@ CSkinTabHeader::Button::Button()
 	nAutoUniID = SKIN_UIOBJ_ID_UNDEFINE;
 	nIDAssociatedObj = SKIN_UIOBJ_ID_UNDEFINE;
 	bTempToolTip = true;
+	nImageStartPos = 0;
+	nImageWidth = 0;
+	nWidth = 0;
 }
 
 

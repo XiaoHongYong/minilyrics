@@ -22,6 +22,7 @@ CSkinNStatusButton::CSkinNStatusButton()
 	m_bHover = false;
 	m_bEnableHover = false;
 
+	m_bContinuousBegin = false;
 	m_bContinuousCmd = false;
 	m_bpm = BPM_BLEND;
 }

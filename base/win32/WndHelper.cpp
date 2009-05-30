@@ -17,7 +17,7 @@ static char THIS_FILE[]=__FILE__;
 
 CWndHelper::CWndHelper()
 {
-
+	m_hWndParent = NULL;
 }
 
 CWndHelper::~CWndHelper()

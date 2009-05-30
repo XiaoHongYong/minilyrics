@@ -296,7 +296,6 @@ protected:
 	V_Str					m_vPicFiles;
 	int						m_nNextPic;
 	int						m_nNextPicInFolder;
-	int						m_nSlideShowDelayTime;
 	CSFImage				m_img;
 	BgImagePos				m_bgImgPos;
 	bool					m_bDarkenLyrBgOnImg;

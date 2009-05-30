@@ -74,8 +74,9 @@ int CMPFloatingLyrWnd::OpenDefaultSkin()
 	//
 	// Load floating lyrics window xml file.
 	//
-	g_mpApp.GetSkinFactory()->GetResourceMgr()->GetResourcePathName(
-		szFloatingLyrXML, CountOf(szFloatingLyrXML), _T("floatinglyr.xml"));
+	if (!g_mpApp.GetSkinFactory()->GetResourceMgr()->GetResourcePathName(
+		szFloatingLyrXML, CountOf(szFloatingLyrXML), _T("floatinglyr.xml")))
+		return ERR_NOT_FOUND;
 
 	if (xml.ParseFile(szFloatingLyrXML))
 	{

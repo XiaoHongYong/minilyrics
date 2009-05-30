@@ -134,7 +134,7 @@ int CLyrics3v2::ReadLyrcsInfo(LPCTSTR szMp3File, stringex &strLyrics)
 
 		if (fread(szTemp, 1, 5, fp) != 5)
 			ERR_GOTO_FAILED(ERR_READ_FILE);
-		szTemp[5] = '\0';
+		szTemp[6] = '\0';
 
 		nField = atoi(szTemp);
 		i -= nField + 3 + 5;

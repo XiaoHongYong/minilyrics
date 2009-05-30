@@ -286,6 +286,9 @@ CMLData::CMLData()
 	m_bHasLyrics = FALSE;
 
 	m_lrcSourceType = LST_FILE;
+
+	m_nMediaLength = 0;
+	m_nTimeElapsed = 0;
 }
 
 CMLData::~CMLData()

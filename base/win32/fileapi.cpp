@@ -733,6 +733,8 @@ inline bool IsCurOrParentDir(LPCTSTR szDir)
 CMLFileFind::CMLFileFind()
 {
 	hFileFind = INVALID_HANDLE_VALUE;
+	bFirst = false;
+	memset(&FindData, 0, sizeof(FindData));
 }
 
 CMLFileFind::~CMLFileFind()

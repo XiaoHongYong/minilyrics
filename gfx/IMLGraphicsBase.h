@@ -52,6 +52,7 @@ public:
 		m_GraphicsType = MGT_UNKNOWN;
 		m_bResolveTextEncoding = true;
 		m_textAlpha = 255;
+		m_hdc = NULL;
 	}
 	virtual ~IMLGraphicsBase()
 	{

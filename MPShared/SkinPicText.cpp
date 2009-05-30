@@ -20,6 +20,7 @@ CSkinPicText::CSkinPicText()
 	m_strImgChars = SZ_PIC_TEXT;
 	m_nSpaceCharPos = 0;
 	m_dwAlignTextFlags = 0;
+	m_nCharWidth = 0;
 }
 
 CSkinPicText::~CSkinPicText()

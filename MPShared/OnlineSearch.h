@@ -88,6 +88,7 @@ public:
 		COnlineSearchThreadParam()
 		{
 			EmptyStr(szAssociateKeyword);
+			pOnlineSearch = NULL;
 		}
 	};
 

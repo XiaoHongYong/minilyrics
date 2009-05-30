@@ -18,7 +18,7 @@ static char THIS_FILE[]=__FILE__;
 
 CMLWndHelper::CMLWndHelper()
 {
-
+	m_pWndParent = NULL;
 }
 
 CMLWndHelper::~CMLWndHelper()

@@ -146,6 +146,9 @@ public:
 CDlgSearchLyrics::CDlgSearchLyrics() : CBaseDialog(IDD_LRC_SEARCH)
 {
 	m_bAutoSearchLocal = true;
+	m_nCurPage = 0;
+	m_nPageCount = 0;
+	EmptyStr(m_szAssociateKeyword);
 }
 
 CDlgSearchLyrics::~CDlgSearchLyrics()

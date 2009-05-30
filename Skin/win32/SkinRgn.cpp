@@ -105,7 +105,7 @@ BOOL CSkinRgn::StretchRgn(double dbScaleRadio, int nWidth, int nHeight)
 
 	m_rgn = ::ExtCreateRegion(NULL, m_nRgnDataSize, (RGNDATA *)(lpRgnData));
 
-	delete lpRgnData;
+	delete[] lpRgnData;
 
 	return true;
 }
@@ -242,7 +242,7 @@ bool CSkinRgn::LoadRgn(LPCTSTR szFile)
 	if (nRet == ERROR || nRet == NULLREGION)
 	{
 		// if get region data failed, delete the object
-		delete m_lpRgnDataOrg;
+		delete[] m_lpRgnDataOrg;
 
 		m_lpRgnDataOrg = NULL;
 		m_nRgnDataSize = 0;

@@ -188,6 +188,7 @@ CSkinMenuBar::CSkinMenuBar()
 	m_clrBgPressed.setAlpha(128);
 
 	m_pMenu = NULL;
+	m_ptLast.x = m_ptLast.y = 0;
 }
 
 

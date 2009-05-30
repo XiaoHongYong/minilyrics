@@ -13,8 +13,10 @@
 
 #ifdef _MPLAYER
 #define SOFTWARE_INFO		_T("zikiplayerinfo")
+#define VER_FILE			_T("zpver.xml")
 #else
 #define SOFTWARE_INFO		_T("minilyricsinfo")
+#define VER_FILE			_T("mlver.xml")
 #endif
 
 BOOL CVersion::From(LPCTSTR szVersion)
@@ -38,8 +40,8 @@ CVersionInfo::CVersionInfo()
 }
 
 //////////////////////////////////////////////////////////////////////////
-// 从服务器取得/mlver.xml的版本控制信息，根据此文件进行更新
-// mlver.xml文件的格式
+// 从服务器取得VER_FILE的版本控制信息，根据此文件进行更新
+// VER_FILE文件的格式
 
 //<?xml version="1.0" encoding="gb2312"?>
 //<SOFTWARE_INFO>
@@ -198,7 +200,7 @@ void CVersionUpdate::OnDownloadOK(CDownloadTask *pTask)
 }
 
 //
-// mlver.xml 文件的格式参考前面的定义
+// VER_FILE 文件的格式参考前面的定义
 void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck)
 {
 	assert(pTask);
@@ -219,7 +221,7 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
 	_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
 	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 
-	// 分析mlver.xml
+	// 分析VER_FILE
 	if (!xml.ParseFile(pTask->m_strSaveFile.c_str()))
 	{
 		ERRLOG1(_T("parse xml FILE FAILED: %s"), pTask->m_strSaveFile.c_str());
@@ -297,7 +299,7 @@ void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr)
 
 	// 首先删除上次下载的文件
 	_tcscpy_safe(szVerFile, CountOf(szVerFile), GetAppDataDir());
-	_tcscat_safe(szVerFile, CountOf(szVerFile), _T("mlver.xml"));
+	_tcscat_safe(szVerFile, CountOf(szVerFile), VER_FILE);
 	if (IsFileExist(szVerFile))
 	{
 		SetFileNoReadOnly(szVerFile);
@@ -317,7 +319,7 @@ void CVersionUpdate::CheckNewVersionManual(CLyricsDownloadMgr *pMgr)
 
 	// 首先删除上次下载的文件
 	_tcscpy_safe(szVerFile, CountOf(szVerFile), GetAppDataDir());
-	_tcscat_safe(szVerFile, CountOf(szVerFile), _T("mlver.xml"));
+	_tcscat_safe(szVerFile, CountOf(szVerFile), VER_FILE);
 	if (IsFileExist(szVerFile))
 	{
 		SetFileNoReadOnly(szVerFile);

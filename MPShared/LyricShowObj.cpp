@@ -475,6 +475,9 @@ CLyricShowObj::CLyricShowObj()
 
 	m_etDispSettings = ET_LYRICS_DISPLAY_SETTINGS;
 	m_strSectName = SZ_SECT_LYR_DISPLAY;
+
+	m_nLeftAdjust = 0;
+	m_nLeftOrg = 0;
 }
 
 CLyricShowObj::~CLyricShowObj()

@@ -12,6 +12,9 @@
 CHttpClient::CHttpClient()
 {
 	m_strUserAgent = "User-Agent: Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)";
+	m_bUseProxy = false;
+	m_nHostPort = 80;
+	m_nServerPort = 80;
 }
 
 CHttpClient::~CHttpClient()

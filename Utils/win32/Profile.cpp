@@ -233,6 +233,9 @@ CProfile::CProfile()
 {
 	for (int i = 0; i < RET_STR_MAX; i++)
 		m_szRetString[i] = NULL;
+
+	m_hKeyRoot = NULL;
+	m_nCurRetStr = 0;
 }
 
 CProfile::~CProfile()

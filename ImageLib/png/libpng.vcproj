@@ -386,10 +386,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\pngtest.c"
-				>
-			</File>
-			<File
 				RelativePath=".\pngtrans.c"
 				>
 			</File>

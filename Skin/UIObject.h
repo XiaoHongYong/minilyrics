@@ -41,7 +41,7 @@ void AlignTextToStr(DWORD dwAlignTextFlags, tstring &str);
 class CUIObjProperty
 {
 public:
-	CUIObjProperty() { bToXmlAttrib = true; }
+	CUIObjProperty() { bToXmlAttrib = true; valueType = VT_INT; }
 	enum VALUE_TYPE
 	{
 		VT_INT,				// 整型数值

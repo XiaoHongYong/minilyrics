@@ -65,6 +65,7 @@ CMPHotkey::CmdAccKey			g_vDefAccKey[] =
 CMPHotkey::CMPHotkey()
 {
 	m_bEnabled = false;
+	m_hWnd = NULL;
 }
 
 CMPHotkey::~CMPHotkey()

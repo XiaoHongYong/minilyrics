@@ -21,7 +21,10 @@ public:
 		ULONG (PASCAL *SendMail)(ULONG, ULONG_PTR, MapiMessage*, FLAGS, ULONG);
 		(FARPROC&)SendMail = GetProcAddress(hMAPI, "MAPISendMail");
 		if (!SendMail)
+		{
+			FreeLibrary(hMAPI);
 			return false;
+		}
 
 		char szFileName[_MAX_PATH] = { 0 };
 		char szPath[_MAX_PATH] = { 0 };
@@ -61,6 +64,8 @@ public:
 		message.nRecipCount = 1;
 
 		int nError = SendMail(0, (ULONG_PTR)hWndParent, &message, MAPI_LOGON_UI|MAPI_DIALOG, 0);
+
+		FreeLibrary(hMAPI);
 
 		if (nError != SUCCESS_SUCCESS && nError != MAPI_USER_ABORT && nError != MAPI_E_LOGIN_FAILURE)
 			return false;

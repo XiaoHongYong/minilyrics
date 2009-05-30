@@ -40,6 +40,12 @@ void FormatHotkeyText(tstring &strText, UINT nVirtKey, UINT fsModifiers)
 
 CHotkeyCtrlEx::CHotkeyCtrlEx()
 {
+	m_pWndProcOrg = NULL;
+	m_bShiftDown = m_bAltDown = m_bCtrlDown = m_bWinDown = false;
+	m_bCharDown = false;
+	m_nChar = 0;
+	m_nHotVk = 0;
+	m_nfsModifiers = 0;
 }
 
 CHotkeyCtrlEx::~CHotkeyCtrlEx()

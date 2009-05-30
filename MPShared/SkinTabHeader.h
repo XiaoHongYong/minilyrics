@@ -79,7 +79,6 @@ protected:
 	int					m_nButtonFaceSize;
 	int					m_nButtonBorderSize;
 	int					m_nTabHeight;
-	bool				m_bHorzAlign;
 
 	int					m_nActiveButtonIncSize;
 

@@ -16,6 +16,7 @@ CSkinCaption::CSkinCaption()
 {
 	m_bEnableMaximize = false;
 	m_bpm = BPM_BLEND;
+	m_nCutPos1 = m_nCutPos2 = m_nCutPos3 = m_nCutPos4 = 0;
 }
 
 CSkinCaption::~CSkinCaption()

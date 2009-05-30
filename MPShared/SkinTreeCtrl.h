@@ -12,7 +12,7 @@
 class CSkinTreeCtrlEventNotify : public IUIObjNotify
 {
 public:
-	CSkinTreeCtrlEventNotify (CUIObject *pObject) : IUIObjNotify(pObject) { }
+	CSkinTreeCtrlEventNotify (CUIObject *pObject) : IUIObjNotify(pObject) { cmd = C_CLICK; }
 	enum Command
 	{
 		C_CLICK,
@@ -231,8 +231,6 @@ protected:
 	int						m_nLineHeight;
 	int						m_nXMargin;
 	int						m_nLineIndent;
-
-	int						m_nFirstVisibleRow;
 
 };
 

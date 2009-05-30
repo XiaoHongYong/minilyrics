@@ -271,7 +271,7 @@ protected:
 class CSkinDroplistCtrlEventNotify : public IUIObjNotify
 {
 public:
-	CSkinDroplistCtrlEventNotify(CUIObject *pObject) : IUIObjNotify(pObject) { }
+	CSkinDroplistCtrlEventNotify(CUIObject *pObject) : IUIObjNotify(pObject) { cmd = C_SEL_CHANGED; }
 	enum Command
 	{
 		C_SEL_CHANGED,

@@ -188,7 +188,7 @@ void CPPageThemes::UpdateThemesList()
 	for (int i = 0; i < (int)vThemes.size(); i++)
 	{
 		m_listThemes.InsertItem(i, vThemes[i].c_str());
-		if (nSel != -1 && _tcscmp(strCurTheme.c_str(), vThemes[i].c_str()))
+		if (nSel == -1 && _tcscmp(strCurTheme.c_str(), vThemes[i].c_str()))
 			nSel = i;
 	}
 
@@ -210,6 +210,7 @@ CPPageLyrDisplay::CPPageLyrDisplay(bool bFloatingLyrics)
 	m_PageID = PAGE_LYR_DISPLAY;
 
 	m_nColorSetCount = CS_SIZE;
+	m_SelColorType = CS_NONE;
 }
 
 CPPageLyrDisplay::~CPPageLyrDisplay()

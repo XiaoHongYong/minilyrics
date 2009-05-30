@@ -233,6 +233,7 @@ bool CClientCom::IsValid()
 // CSvrSessionBase
 CSvrSessionBase::CSvrSessionBase()
 {
+	m_pServer = NULL;
 }
 
 CSvrSessionBase::~CSvrSessionBase()
@@ -283,6 +284,7 @@ void CSvrSessionBase::ThreadWorker(LPVOID lpParam)
 //
 CNetFile::CNetFile()
 {
+	m_s = 0;
 }
 
 CNetFile::~CNetFile()
@@ -339,6 +341,7 @@ CNetServer::CNetServer() : m_JobSemaphore(0),
 	m_ExitEvent(TRUE, FALSE)
 {
 	m_bPaused = FALSE;
+	m_nWorkThreadCount = 0;
 }
 
 CNetServer::~CNetServer()

@@ -71,6 +71,7 @@ ID3v2UnsynchLyrics::ID3v2UnsynchLyrics()
 	frameUID = -1;
 	action = IFA_NONE;
 	strcpy(m_szLanguage, "XXX");
+	m_encodingType = IET_ANSI;
 }
 
 bool ID3v2LyricsInfo::IsUnsyncLyricsModified()
@@ -220,6 +221,13 @@ CID3v2::CID3v2()
 {
 	m_bCreateNew = false;
 	m_fp = NULL;
+	memset(&m_id3v2Header, 0, sizeof(m_id3v2Header));
+	memset(&m_id3v2Footer, 0, sizeof(m_id3v2Footer));
+	m_nId3v2BegPos = 0;
+	m_nHeaderTotalLen = 0;
+	m_nExtendedHeaderLen = 0;
+	m_bModify = false;
+	frameUID = 0;
 }
 
 CID3v2::~CID3v2()

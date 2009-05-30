@@ -64,6 +64,10 @@
 CMPSkinFactory::CMPSkinFactory()
 {
 	m_strMainSkinWndClassName = SZ_APP_NAME;
+
+#ifdef _WIN32_DESKTOP
+	m_bClickThrough = false;
+#endif
 }
 
 CMPSkinFactory::~CMPSkinFactory()

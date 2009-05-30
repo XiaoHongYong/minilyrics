@@ -772,6 +772,7 @@ bool CLrcParserObj::IsTagStringMatch(const TCHAR *szDest, const char *szTagName,
 
 CLrcParser::CLrcParser(CMLData *pMLData) : CLyricsParser(pMLData)
 {
+	m_lyrContentType = LCT_LRC;
 }
 
 CLrcParser::~CLrcParser()

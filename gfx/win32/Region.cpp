@@ -84,7 +84,7 @@ bool CRegion::LoadFromFile(LPCTSTR szFile)
 	}
 EXIT_OUT:
 	if (lpsBuff)
-		delete lpsBuff;
+		delete[] lpsBuff;
 
 	if (hFile != INVALID_HANDLE_VALUE)
 		CloseHandle(hFile);
@@ -162,7 +162,7 @@ bool CRegion::LoadTxtRgnFile(LPCTSTR szFile)
 
 	m_rgn = ExtCreateRegion(NULL, nSize, prgnData);
 
-	delete prgnData;
+	delete[] prgnData;
 
 	fclose(fp);
 	return true;

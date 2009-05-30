@@ -32,6 +32,7 @@ CPreferenceDlg			g_wndPreference;
 
 CPreferenceDlg::CPreferenceDlg() : CBaseDialog(IDD_PREFERENCE)
 {
+	m_bFloatingLyrMode = false;
 }
 
 CPreferenceDlg::~CPreferenceDlg()

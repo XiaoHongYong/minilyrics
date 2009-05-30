@@ -17,7 +17,12 @@ CLyricsOutPluginMgr		g_lyrOutPlguinMgr;
 
 CLyricsOutPluginMgr::CLyricsOutPluginMgr()
 {
-
+	m_bActive = false;
+	m_bHalfOfCurLine = 0;
+	m_dwNotifyFlag = 0;
+	m_nCLBegTime = m_nCLHalftime = m_nCLendtime = 0;
+	m_nNLBegTime = m_nNLEndtime = 0;
+	m_nCurLine = 0;
 }
 
 CLyricsOutPluginMgr::~CLyricsOutPluginMgr()

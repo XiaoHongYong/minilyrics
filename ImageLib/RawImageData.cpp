@@ -860,8 +860,13 @@ void HLSTest()
 RAW_IMAGE_DATA::RAW_IMAGE_DATA()
 {
 	buff = NULL;
-	pallete = NULL;
+	width = height = 0;
+	stride = 0;
+	bitCount = 0;
+	pixFormat = PF_UNKNOWN;
+
 	nClrUsed = 0;
+	pallete = NULL;
 }
 
 void RAW_IMAGE_DATA::Attach(uint8 *buf, int nWidth, int nHeight, int nBitCount)
