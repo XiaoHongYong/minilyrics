@@ -493,6 +493,20 @@ SectionIn 1 2
     WriteINIStr ${TEMP1}\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
   J_SJEnd:
 
+  ; Songbird
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSB"
+  IntCmp ${TEMP1} 0 J_SBEnd J_SBEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSB" ${TEMP1}
+    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSBPath"
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSBPath" ${TEMP1}
+
+    SetOutPath ${TEMP1}components
+    File forSongbird\sbMLSongbird.dll
+    File forSongbird\sbMLSongbird.xpt
+
+    WriteINIStr ${TEMP1}components\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
+  J_SBEnd:
+
   ; HMM
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstHMM"
   IntCmp ${TEMP1} 0 J_HMMEnd J_HMMEnd
@@ -738,6 +752,14 @@ Section "Uninstall"
     Delete /REBOOTOK ${TEMP1}PluginSilverjuke.dll
     Delete ${TEMP1}MLPlugin.ini
   J_SJ_UE:
+
+  ; SBPlay
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstSBPath"
+  StrCmp ${TEMP1} "" J_SB_UE
+    Delete /REBOOTOK ${TEMP1}components\sbMLSongbird.dll
+    Delete /REBOOTOK ${TEMP1}components\sbMLSongbird.xpt
+    Delete ${TEMP1}components\MLPlugin.ini
+  J_SB_UE:
 
   ; VLC Media Player
   ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstVLCPath"

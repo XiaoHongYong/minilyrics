@@ -19,10 +19,11 @@
 /*
 
 static HWND _hDebugWnd;
+#include <tchar.h>
 
 #define SENDDEBUGMESSAGE	19771212
-#define	DEBUGCLASSNAME		"Debug Tracer Class"
-#define	DEBUGWNDNAME		"Debug Tracer"
+#define	DEBUGCLASSNAME		_T("Debug Tracer Class")
+#define	DEBUGWNDNAME		_T("Debug Tracer")
 
 void LogTrace(LPVOID lpData, int nSize)
 {
@@ -33,10 +34,10 @@ void LogTrace(LPVOID lpData, int nSize)
 	data.cbData = nSize;
 
 	if (_hDebugWnd == NULL)
-		_hDebugWnd = FindWindow(DEBUGCLASSNAME, DEBUGWNDNAME);
+	_hDebugWnd = FindWindow(DEBUGCLASSNAME, DEBUGWNDNAME);
 
 	if (_hDebugWnd)
-		::SendMessage(_hDebugWnd, WM_COPYDATA, NULL, (LPARAM)&data);
+	::SendMessage(_hDebugWnd, WM_COPYDATA, NULL, (LPARAM)&data);
 }
 
 
@@ -46,11 +47,15 @@ void DBGLOG0(LPCTSTR szData)
 	SYSTEMTIME	LocalTime;
 	int		nLen;
 	GetLocalTime(&LocalTime);
-	nLen = wsprintf(szBuffer, "|T%d-%d %d:%d:%d|M%s", LocalTime.wMonth, LocalTime.wDay,
-			LocalTime.wHour, LocalTime.wMinute, LocalTime.wSecond, szData);
+	nLen = wsprintf(szBuffer, _T("|T%d-%d %d:%d:%d|M%s"), LocalTime.wMonth, LocalTime.wDay,
+	LocalTime.wHour, LocalTime.wMinute, LocalTime.wSecond, szData);
 
-	LogTrace((LPVOID)szBuffer, nLen);
+	char		szBuff[1024];
+	WideCharToMultiByte(CP_ACP, 0, szBuffer, nLen, szBuff, CountOf(szBuff), 0, NULL);
+
+	LogTrace((LPVOID)szBuff, strlen(szBuff));
 }
+
 	DBGLOG0("|MCWinamp2Player::Quit()");
 */
 
