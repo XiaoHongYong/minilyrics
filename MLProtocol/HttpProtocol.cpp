@@ -1104,7 +1104,8 @@ int CHttpReturnProtocol::WriteData(LPVOID pData, int nLen)
 }
 
 #define SZ_CONTENT_DISP_FILENAME	"Content-Disposition: attachment;filename="
-#define SZ_TRANSF_ENC_CHUNKED		"Transfer-Encoding: chunked"
+#define SZ_TRANSF_ENC_CHUNKED		"chunked"
+#define SZ_TRANSF_ENCODING			"Transfer-Encoding:"
 
 int CHttpReturnProtocol::ParseHead()
 {
@@ -1163,77 +1164,70 @@ int CHttpReturnProtocol::ParseHead()
 			return ERR_HTTP_BAD_FORMAT;
 		if (strncmp(szPos, "Server: ", 8) == 0)
 		{
-			szPos += 8;
 			strncpysz_safe(m_szServer, CountOf(m_szServer), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_SERVER;
 		}
 		else if (strncmp(szPos, "Connection: ", 12) == 0)
 		{
-			szPos += 12;
 			strncpysz_safe(m_szConnection, CountOf(m_szConnection), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_CONNECTION;
 		}
 		else if (strncmp(szPos, "Date: ", 6) == 0)
 		{
-			szPos += 6;
 			strncpysz_safe(m_szDate, CountOf(m_szDate), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_DATE;
 		}
 		else if (strncmp(szPos, "Location: ", 10) == 0)
 		{
-			szPos += 10;
 			strncpysz_safe(m_szLocation, CountOf(m_szLocation), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_LOCATION;
 		}
 		else if (strncmp(szPos, "Content-Type: ", 14) == 0)
 		{
-			szPos += 14;
 			strncpysz_safe(m_szContentType, CountOf(m_szContentType), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_CONTENT_TYPE;
 		}
 		else if (strncmp(szPos, "Last-Modified: ", 15) == 0)
 		{
-			szPos += 15;
 			strncpysz_safe(m_szLastModified, CountOf(m_szLastModified), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_LAST_MODIFIED;
 		}
 		else if (strncmp(szPos, "ETag: ", 6) == 0)
 		{
-			szPos += 6;
 			strncpysz_safe(m_szEtag, CountOf(m_szEtag), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_ETAG;
 		}
 		else if (strncmp(szPos, "Content-Length: ", 16) == 0)
 		{
-			szPos += 16;
 			m_dwContentLen = (DWORD)atoi(szPos);
 			m_dwAvailProp |= RP_CONNECTION;
 		}
 		else if (strncmp(szPos, "Content-Range: ", 15) == 0)
 		{
-			szPos += 15;
 			// strncpysz_safe(m_szConnection, CountOf(m_szContentRange), szPos, size_t(szEnd - szPos));
 			ERRLOG0(_T("Content-Range: Not parsed"));
 			m_dwAvailProp |= RP_CONNECTION;
 		}
 		else if (strncmp(szPos, "Set-Cookie: ", 12) == 0)
 		{
-			szPos += 12;
 			m_strCookie = "";
 			m_strCookie.append(szPos, szEnd);
 			m_dwAvailProp |= RP_SET_COOKIE;
 		}
 		else if (strncmp(szPos, "Cache-control: ", 15) == 0)
 		{
-			szPos += 15;
 			strncpysz_safe(m_szCacheControl, CountOf(m_szCacheControl), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_CACHE_CONTROL;
 		}
-		else if (strncmp(szPos, SZ_TRANSF_ENC_CHUNKED, strlen(SZ_TRANSF_ENC_CHUNKED)) == 0)
+		else if (strncmp(szPos, SZ_TRANSF_ENCODING, strlen(SZ_TRANSF_ENCODING)) == 0)
 		{
-			szPos += strlen(SZ_TRANSF_ENC_CHUNKED);
-			m_bTransfEncChunked = TRUE;
-			m_dwAvailProp |= RP_CACHE_CONTROL;
+			szPos += strlen(SZ_TRANSF_ENCODING);
+			while (*szPos == ' ')
+				szPos++;
+			if (strncmp(szPos, SZ_TRANSF_ENC_CHUNKED, strlen(SZ_TRANSF_ENC_CHUNKED)) == 0)
+				m_bTransfEncChunked = TRUE;
+			else
+				ERRLOG0(_T("!!! Unsupported transfer encoding."));
 		}
 		else if (strncmp(szPos, SZ_CONTENT_DISP_FILENAME, strlen(SZ_CONTENT_DISP_FILENAME)) == 0)
 		{
