@@ -1,0 +1,13 @@
+%%artist%% - %%title%% Lyrics %%e-n%%
+
+%%e-x%%
+
+::Home >> %%val-artist%% - %%val-title%% Lyrics 
+
+%%e-x%%
+
+Visitors: %%e-line%%
+
+%%lyrics%%
+
+The hottest songs from %%e-eof%%

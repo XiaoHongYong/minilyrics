@@ -1,0 +1,10 @@
+%%e-x%%
+   Lyrics Home : %%artist%% Lyrics : %%title%%   
+%%val-artist%% - %%val-title%% Lyrics 
+ %%e-x%%
+Current Rating: %%e-x%% votes)
+
+%%lyrics%% 
+ 
+Viewed 73,212 times 
+Are these lyrics wrong? Correct them. 

@@ -1,0 +1,12 @@
+%%e-space%%
+%%title%% %%e-n%%
+%%e-space%%
+%%artist%% %%e-n%%
+
+%%lyrics%% 
+
+%%OptBeg<<Thks to %%e-eof%% %%OptEnd>>
+
+View the music video 
+#|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z 
+ %%e-eof%%

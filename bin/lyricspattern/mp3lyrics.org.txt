@@ -1,0 +1,15 @@
+%%artist%% Mp3 Lyrics!
+%%e-x%%
+
+[ %%val-artist%% Lyrics ]
+%%e-x%%
+It's quick and easy, 3 steps. 
+%%title%%
+
+(center text)
+
+%%lyrics%%
+
+Mp3Lyrics.org site navigation links
+ 
+%%e-eof%%

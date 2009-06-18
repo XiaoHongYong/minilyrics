@@ -11,6 +11,24 @@
 
 #define SZ_RETURN		"\r\n"
 
+#define CONST_STRLEN(str)	(CountOf(str) - 1)
+
+#define SZ_HH_SERVER		"Server: "
+#define SZ_HH_CONNECTION	"Connection: "
+#define SZ_HH_DATE			"Date: "
+#define SZ_HH_LOCATION		"Location: "
+#define SZ_HH_CONTENT_TYPE	"Content-Type: "
+#define SZ_HH_LAST_MODIFIED	"Last-Modified: "
+#define SZ_HH_ETAG			"ETag: "
+#define SZ_HH_CONTENT_LENGTH	"Content-Length: "
+#define SZ_HH_CONTENT_RANGE	"Content-Range: "
+#define SZ_HH_SET_COOKIE	"Set-Cookie: "
+#define SZ_HH_CACHE_CONTROL	"Cache-control: "
+
+#define SZ_HH_CONTENT_DISP_FILENAME	"Content-Disposition: attachment;filename="
+#define SZ_TRANSF_ENC_CHUNKED		"chunked"
+#define SZ_HH_TRANSF_ENCODING			"Transfer-Encoding:"
+
 #define READ_BLOCK_SIZE		2048
 
 LPCSTR	_szStdMonth[12] = 
@@ -328,7 +346,7 @@ int CHttpRequestProtocol::WriteHead()
 	if (m_dwAvailProp & RP_CONTENT_LENGTH)
 	{
 		sprintf_s(szTemp, CountOf(szTemp), "%d", m_dwContentLen);
-		m_buffHead += "Content-Length: ";
+		m_buffHead += SZ_HH_CONTENT_LENGTH;
 		m_buffHead += szTemp;
 		m_buffHead += "\r\n";
 	}
@@ -350,7 +368,7 @@ int CHttpRequestProtocol::WriteHead()
 
 	if (m_dwAvailProp & RP_CONTENT_TYPE)
 	{
-		m_buffHead += "Content-Type: ";
+		m_buffHead += SZ_HH_CONTENT_TYPE;
 		m_buffHead += m_szContentType;
 		m_buffHead += "\r\n";
 	}
@@ -366,7 +384,7 @@ int CHttpRequestProtocol::WriteHead()
 
 	if (m_dwAvailProp & RP_CONNECTION)
 	{
-		m_buffHead += "Connection: ";
+		m_buffHead += SZ_HH_CONNECTION;
 		m_buffHead += m_szConnection;
 		m_buffHead += "\r\n";
 	}
@@ -380,7 +398,7 @@ int CHttpRequestProtocol::WriteHead()
 
 	if (m_dwAvailProp & RP_CACHE_CONTROL)
 	{
-		m_buffHead += "Cache-Control: ";
+		m_buffHead += SZ_HH_CACHE_CONTROL;
 		m_buffHead += m_szCacheControl;
 		m_buffHead += "\r\n";
 	}
@@ -541,7 +559,7 @@ int CHttpRequestProtocol::ParseHead()
 			// strncpysz_safe(m_szHost, CountOf(m_szHost), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_RANGE;
 		}
-		else if (strncmp(szPos, "Content-Length: ", 16) == 0)
+		else if (strncmp(szPos, SZ_HH_CONTENT_LENGTH, 16) == 0)
 		{
 			szPos += 16;
 			m_dwContentLen = atoi(szPos);
@@ -553,13 +571,13 @@ int CHttpRequestProtocol::ParseHead()
 			strncpysz_safe(m_szUserAgent, CountOf(m_szUserAgent), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_USER_AGENT;
 		}
-		else if (strncmp(szPos, "Cache-Control: ", 15) == 0)
+		else if (strncmp(szPos, SZ_HH_CACHE_CONTROL, 15) == 0)
 		{
 			szPos += 15;
 			strncpysz_safe(m_szCacheControl, CountOf(m_szCacheControl), szPos, size_t(szEnd - szPos));
 			m_dwAvailProp |= RP_CACHE_CONTROL;
 		}
-		else if (strncmp(szPos, "Connection: ", 12) == 0)
+		else if (strncmp(szPos, SZ_HH_CONNECTION, 12) == 0)
 		{
 			szPos += 12;
 			strncpysz_safe(m_szConnection, CountOf(m_szConnection), szPos, size_t(szEnd - szPos));
@@ -754,21 +772,21 @@ int CHttpReturnProtocol::WriteHead()
 
 	if (m_dwAvailProp & RP_SERVER)
 	{
-		m_buffHead += "Server: ";
+		m_buffHead += SZ_HH_SERVER;
 		m_buffHead += m_szServer;
 		m_buffHead += "\r\n";
 	}
 
 	if (m_dwAvailProp & RP_DATE)
 	{
-		m_buffHead += "Date: ";
+		m_buffHead += SZ_HH_DATE;
 		m_buffHead += m_szDate;
 		m_buffHead += "\r\n";
 	}
 
 	if (m_dwAvailProp & RP_LOCATION)
 	{
-		m_buffHead += "Location: ";
+		m_buffHead += SZ_HH_LOCATION;
 		m_buffHead += m_szLocation;
 		m_buffHead += "\r\n";
 	}
@@ -784,14 +802,14 @@ int CHttpReturnProtocol::WriteHead()
 	if (m_dwAvailProp & RP_CONTENT_LENGTH)
 	{
 		sprintf_s(szTemp, CountOf(szTemp), "%d", m_dwContentLen);
-		m_buffHead += "Content-Length: ";
+		m_buffHead += SZ_HH_CONTENT_LENGTH;
 		m_buffHead += szTemp;
 		m_buffHead += "\r\n";
 	}
 
 	if (m_dwAvailProp & RP_CONTENT_TYPE)
 	{
-		m_buffHead += "Content-Type: ";
+		m_buffHead += SZ_HH_CONTENT_TYPE;
 		m_buffHead += m_szContentType;
 		m_buffHead += "\r\n";
 	}
@@ -807,51 +825,42 @@ int CHttpReturnProtocol::WriteHead()
 
 	if (m_dwAvailProp & RP_LAST_MODIFIED)
 	{
-		m_buffHead += "Last-Modified: ";
+		m_buffHead += SZ_HH_LAST_MODIFIED;
 		m_buffHead += m_szLastModified;
 		m_buffHead += "\r\n";
 	}
 
 	if (m_dwAvailProp & RP_ETAG)
 	{
-		m_buffHead += "ETag: ";
+		m_buffHead += SZ_HH_ETAG;
 		m_buffHead += m_szEtag;
 		m_buffHead += "\r\n";
 	}
 
 	if (m_dwAvailProp & RP_SET_COOKIE)
 	{
-		m_buffHead += "Set-Cookie: ";
+		m_buffHead += SZ_HH_SET_COOKIE;
 		m_buffHead += m_strCookie.c_str();
 		m_buffHead += "\r\n";
-//		m_buffHead += "Set-Cookie: ";
-//		m_buffHead += "username=10";
-//		m_buffHead += "\r\n";
-//		m_buffHead += "Set-Cookie: ";
-//		m_buffHead += "Value1=va2";
-//		m_buffHead += "\r\n";
-//		m_buffHead += "Set-Cookie: ";
-//		m_buffHead += "Value3=va352";
-//		m_buffHead += "\r\n";
 	}
 
 	if (m_dwAvailProp & RP_CONTENT_DISP_FILE)
 	{
-		m_buffHead += "Content-Disposition: attachment;filename=: ";
+		m_buffHead += SZ_HH_CONTENT_DISP_FILENAME;
 		m_buffHead += m_szContentFileName;
 		m_buffHead += "\r\n";
 	}
 
 	if (m_dwAvailProp & RP_CACHE_CONTROL)
 	{
-		m_buffHead += "Cache-control: ";
+		m_buffHead += SZ_HH_CACHE_CONTROL;
 		m_buffHead += m_szCacheControl;
 		m_buffHead += "\r\n";
 	}
 
 	if (m_dwAvailProp & RP_CONNECTION)
 	{
-		m_buffHead += "Connection: ";
+		m_buffHead += SZ_HH_CONNECTION;
 		m_buffHead += m_szConnection;
 		m_buffHead += "\r\n";
 //		m_buffHead += "X-Powered-By: ";
@@ -1103,10 +1112,6 @@ int CHttpReturnProtocol::WriteData(LPVOID pData, int nLen)
 	return m_pNetFile->Write((const char *)pData, nLen, NULL);
 }
 
-#define SZ_CONTENT_DISP_FILENAME	"Content-Disposition: attachment;filename="
-#define SZ_TRANSF_ENC_CHUNKED		"chunked"
-#define SZ_TRANSF_ENCODING			"Transfer-Encoding:"
-
 int CHttpReturnProtocol::ParseHead()
 {
 	LPCSTR		szHead;
@@ -1150,6 +1155,14 @@ int CHttpReturnProtocol::ParseHead()
 	else
 		return ERR_HTTP_BAD_HTTP_PRO_TYPE;
 
+#define IF_PROCESS_STR_FIELD(name, szValue, rpProperty)						\
+	if (strncmp(szPos, name, CONST_STRLEN(name)) == 0)						\
+	{																		\
+		szPos += CONST_STRLEN(name);										\
+		strncpysz_safe(szValue, CountOf(szValue), szPos, size_t(szEnd - szPos));\
+		m_dwAvailProp |= rpProperty;											\
+	}
+
 	//
 	// 
 	szPos = szEnd + 2;
@@ -1162,79 +1175,46 @@ int CHttpReturnProtocol::ParseHead()
 			szEnd = strchr(szPos, '\n');
 		if (!szEnd)
 			return ERR_HTTP_BAD_FORMAT;
-		if (strncmp(szPos, "Server: ", 8) == 0)
+
+		IF_PROCESS_STR_FIELD(SZ_HH_SERVER, m_szServer, RP_SERVER)
+		else IF_PROCESS_STR_FIELD(SZ_HH_CONNECTION, m_szConnection, RP_CONNECTION)
+		else IF_PROCESS_STR_FIELD(SZ_HH_DATE, m_szDate, RP_DATE)
+		else IF_PROCESS_STR_FIELD(SZ_HH_LOCATION, m_szLocation, RP_LOCATION)
+		else IF_PROCESS_STR_FIELD(SZ_HH_CONTENT_TYPE, m_szContentType, RP_CONTENT_TYPE)
+		else IF_PROCESS_STR_FIELD(SZ_HH_LAST_MODIFIED, m_szLastModified, RP_LAST_MODIFIED)
+		else IF_PROCESS_STR_FIELD(SZ_HH_ETAG, m_szEtag, RP_ETAG)
+		else IF_PROCESS_STR_FIELD(SZ_HH_CACHE_CONTROL, m_szCacheControl, RP_CACHE_CONTROL)
+		else IF_PROCESS_STR_FIELD(SZ_HH_CONTENT_DISP_FILENAME, m_szContentFileName, RP_CONTENT_DISP_FILE)
+		else if (strncmp(szPos, SZ_HH_SET_COOKIE, CONST_STRLEN(SZ_HH_SET_COOKIE)) == 0)
 		{
-			strncpysz_safe(m_szServer, CountOf(m_szServer), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_SERVER;
-		}
-		else if (strncmp(szPos, "Connection: ", 12) == 0)
-		{
-			strncpysz_safe(m_szConnection, CountOf(m_szConnection), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_CONNECTION;
-		}
-		else if (strncmp(szPos, "Date: ", 6) == 0)
-		{
-			strncpysz_safe(m_szDate, CountOf(m_szDate), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_DATE;
-		}
-		else if (strncmp(szPos, "Location: ", 10) == 0)
-		{
-			strncpysz_safe(m_szLocation, CountOf(m_szLocation), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_LOCATION;
-		}
-		else if (strncmp(szPos, "Content-Type: ", 14) == 0)
-		{
-			strncpysz_safe(m_szContentType, CountOf(m_szContentType), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_CONTENT_TYPE;
-		}
-		else if (strncmp(szPos, "Last-Modified: ", 15) == 0)
-		{
-			strncpysz_safe(m_szLastModified, CountOf(m_szLastModified), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_LAST_MODIFIED;
-		}
-		else if (strncmp(szPos, "ETag: ", 6) == 0)
-		{
-			strncpysz_safe(m_szEtag, CountOf(m_szEtag), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_ETAG;
-		}
-		else if (strncmp(szPos, "Content-Length: ", 16) == 0)
-		{
-			m_dwContentLen = (DWORD)atoi(szPos);
-			m_dwAvailProp |= RP_CONNECTION;
-		}
-		else if (strncmp(szPos, "Content-Range: ", 15) == 0)
-		{
-			// strncpysz_safe(m_szConnection, CountOf(m_szContentRange), szPos, size_t(szEnd - szPos));
-			ERRLOG0(_T("Content-Range: Not parsed"));
-			m_dwAvailProp |= RP_CONNECTION;
-		}
-		else if (strncmp(szPos, "Set-Cookie: ", 12) == 0)
-		{
+			szPos += CONST_STRLEN(SZ_HH_SET_COOKIE);
 			m_strCookie = "";
 			m_strCookie.append(szPos, szEnd);
 			m_dwAvailProp |= RP_SET_COOKIE;
 		}
-		else if (strncmp(szPos, "Cache-control: ", 15) == 0)
+		else if (strncmp(szPos, SZ_HH_TRANSF_ENCODING, CONST_STRLEN(SZ_HH_TRANSF_ENCODING)) == 0)
 		{
-			strncpysz_safe(m_szCacheControl, CountOf(m_szCacheControl), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_CACHE_CONTROL;
-		}
-		else if (strncmp(szPos, SZ_TRANSF_ENCODING, strlen(SZ_TRANSF_ENCODING)) == 0)
-		{
-			szPos += strlen(SZ_TRANSF_ENCODING);
+			szPos += CONST_STRLEN(SZ_HH_TRANSF_ENCODING);
 			while (*szPos == ' ')
 				szPos++;
-			if (strncmp(szPos, SZ_TRANSF_ENC_CHUNKED, strlen(SZ_TRANSF_ENC_CHUNKED)) == 0)
+			if (strncmp(szPos, SZ_TRANSF_ENC_CHUNKED, CONST_STRLEN(SZ_TRANSF_ENC_CHUNKED)) == 0)
 				m_bTransfEncChunked = TRUE;
 			else
 				ERRLOG0(_T("!!! Unsupported transfer encoding."));
 		}
-		else if (strncmp(szPos, SZ_CONTENT_DISP_FILENAME, strlen(SZ_CONTENT_DISP_FILENAME)) == 0)
+		else if (strncmp(szPos, SZ_HH_CONTENT_LENGTH, CONST_STRLEN(SZ_HH_CONTENT_LENGTH)) == 0)
 		{
-			szPos += strlen(SZ_CONTENT_DISP_FILENAME);
-			strncpysz_safe(m_szCacheControl, CountOf(m_szCacheControl), szPos, size_t(szEnd - szPos));
-			m_dwAvailProp |= RP_CONTENT_DISP_FILE;
+			szPos += CONST_STRLEN(SZ_HH_CONTENT_LENGTH);
+			m_dwContentLen = (DWORD)atoi(szPos);
+			m_dwAvailProp |= RP_CONTENT_LENGTH;
 		}
+		// 		else if (strncmp(szPos, SZ_HH_CONTENT_RANGE, 15) == 0)
+		// 		{
+		// 			szPos += 15;
+		// 			// strncpysz_safe(m_szConnection, CountOf(m_szContentRange), szPos, size_t(szEnd - szPos));
+		// 			ERRLOG0(_T("Content-Range: Not parsed"));
+		// 			// m_dwAvailProp |= ;
+		// 		}
 		else
 		{
 			// char		szName[128];

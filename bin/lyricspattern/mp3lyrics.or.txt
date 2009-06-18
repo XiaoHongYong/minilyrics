@@ -1,0 +1,18 @@
+ Mp3 Lyrics (home) &raquo; %%e-x%% Lyrics&raquo; %%artist%% Lyrics&raquo; %%title%% Lyrics search lyrics
+
+%%e-x%%
+
+It's quick and easy, 3 steps. 
+
+%%e-x%%
+
+&rarr;
+Tip %%e-x%%
+
+%%val-artist%% %%val-title%% Lyrics :
+
+%%lyrics%%
+
+Lyrics: %%val-title%%, %%val-artist%% [end]
+
+%%e-eof%%

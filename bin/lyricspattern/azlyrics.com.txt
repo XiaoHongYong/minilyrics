@@ -1,0 +1,18 @@
+%%artist%% LYRICS
+
+ Send "%%title%%" Ringtone to your Cell  %%e-n%%
+
+"%%val-title%%"
+
+%%lyrics%%
+
+[ www.azlyrics.com ]
+
+%%e-eof%%
+
+
+
+
+
+
+

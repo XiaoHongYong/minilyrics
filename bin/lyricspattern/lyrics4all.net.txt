@@ -1,0 +1,12 @@
+%%artist%% - %%title%% lyrics
+
+%%e-x%%
+
+Top lyrics A Z lyrics Popular lyrics 
+
+%%val-artist%% - %%val-title%% %%e-n%%
+
+%%lyrics%%
+
+ Lyric info 
+%%e-eof%%

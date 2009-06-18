@@ -1,0 +1,14 @@
+%%e-x%%
+
+band namesong nametext in song
+
+Song Lyrics &raquo; %%e-x%% &raquo; %%artist%% Lyrics&raquo; %%title%% Lyrics %%e-n%%
+
+%%e-x%%
+
+Please read our terms of service before continuing...
+%%val-title%% lyrics
+
+%%lyrics%%
+
+ Send "%%val-title%%" Ringtone to your Cell Phone! %%e-eof%%

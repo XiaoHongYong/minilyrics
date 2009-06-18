@@ -1,0 +1,10 @@
+%%title%% lyrics // %%artist%% lyrics 
+%%e-x%%
+
+Artist - %%val-artist%%
+Album - %%album%%
+Lyrics - %%val-title%%
+
+%%lyrics%%
+
+Back to list of %%e-x%%

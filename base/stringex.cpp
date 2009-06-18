@@ -740,13 +740,9 @@ int FilterAllHTMLTags(LPTSTR szText)
 							while (isdigit(*szBeg))
 								szBeg++;
 							if (*szBeg == ';')
-							{
 								szBeg++;
-								*szCopyPos = (TCHAR)n;
-								szCopyPos++;
-							}
-							else
-								szBeg = szTemp;
+							*szCopyPos = (TCHAR)n;
+							szCopyPos++;
 						}
 					}
 

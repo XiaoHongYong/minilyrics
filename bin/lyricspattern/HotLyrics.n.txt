@@ -1,0 +1,13 @@
+ Home | What's New | Lyrics Search | Archives | Submit | Guestbook | Bookmark | Links | Email  
+Web HotLyrics.net 
+
+%%e-x%%
+
+HotLyrics.net >%%artist%% - %%title%% %%e-n%%
+
+%%val-artist%% - %%val-title%%
+
+%%lyrics%%
+
+Please fill in the fields below and click SUBMIT to send it to your friend. %%e-eof%%
+

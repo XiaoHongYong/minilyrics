@@ -1,0 +1,13 @@
+%%e-x%%
+
+HotLyrics.net >%%e-x%% >%%artist%% >%%title%% Lyrics 
+
+%%e-x%%
+
+%%val-artist%% - %%val-title%%
+
+%%lyrics%%
+
+More %%val-artist%%'s lyrics
+
+%%e-eof%%

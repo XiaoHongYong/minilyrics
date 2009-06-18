@@ -1,0 +1,13 @@
+%%e-x%% Lyrics%%e-n%%
+
+  Lyrics - %%artist%% Lyrics - %%title%% Lyrics %%e-n%%
+
+%%e-x%%
+
+" Ringtones to Cell 
+
+%%lyrics%%
+
+ Send "%%val-title%%" Ringtones to Cell 
+
+%%e-eof%%

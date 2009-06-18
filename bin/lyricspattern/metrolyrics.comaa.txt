@@ -1,0 +1,15 @@
+%%e-x%%
+Artist: %%OptBeg<<More%%OptEnd>> %%artist%% %%OptBeg<<Lyrics%%OptEnd>>
+%%OptBeg<<Album:  %%album%% Album %%OptEnd>>
+Song Title: %%title%% Submit Corrections
+ 
+%%e-x%%
+
+Download %%val-title%% now! 
+
+%%lyrics%%
+
+%%OptBeg<<Submitted by %%e-x%% %%OptEnd>>
+
+Free %%val-artist%% Music Downloads
+%%e-x%%

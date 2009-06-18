@@ -1,0 +1,9 @@
+ %%e-x%%
+Artist:%%artist%%
+Song:%%title%%
+Album:%%album%% %%e-n%%
+
+%%lyrics%%
+
+Lyric info 
+%%e-eof%%

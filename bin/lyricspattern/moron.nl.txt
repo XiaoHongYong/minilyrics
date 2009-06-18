@@ -1,0 +1,15 @@
+%%e-x%%
+ Artist: %%artist%%
+Album: %%album%%
+Song: %%title%%
+Country: 
+
+%%e-x%%
+
+ onfocus="this.select();"> %%val-title%% lyrics
+
+%%lyrics%%
+
+E-mail this song!
+
+%%e-eof%%

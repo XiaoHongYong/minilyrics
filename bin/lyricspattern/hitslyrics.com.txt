@@ -1,0 +1,10 @@
+%%e-x%%
+Artist: %%artist%%
+Song: %%title%%
+Album: %%album%%
+[B u y "%%e-x%% " CD]
+
+%%lyrics%%
+
+Album: %%val-album%%
+%%e-eof%%

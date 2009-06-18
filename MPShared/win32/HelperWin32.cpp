@@ -350,6 +350,109 @@ bool LoadProxySvrFromIE(bool &bUseProxy, tstring &strSvr, int &nPort)
 	return bRet;
 }
 
+
+static bool FindStringValue(LPCTSTR szBuff, LPCTSTR szName, LPCTSTR szEndTag, tstring &strValue)
+{
+	LPCTSTR		szBeg, szEnd;
+
+	strValue.resize(0);
+
+	szBeg = _tcsstr(szBuff, szName);
+	if (!szBeg)
+		return false;
+
+	szBeg += _tcslen(szName);
+
+	szEnd = _tcsstr(szBeg, szEndTag);
+	if (!szEnd)
+		return false;
+
+	strValue.append(szBeg, szEnd);
+
+	return true;
+}
+
+bool LoadProxySvrFromFireFox(bool &bUseProxy, tstring &strSvr, int &nPort)
+{
+	TCHAR		szFireFoxDir[MAX_PATH];
+
+	if (!SUCCEEDED(SHGetSpecialFolderPath(NULL, szFireFoxDir, CSIDL_APPDATA, FALSE)))
+		return false;
+
+	DirStringAddSlash(szFireFoxDir);
+	_tcscat_safe(szFireFoxDir, CountOf(szFireFoxDir), _T("Mozilla\\Firefox\\"));
+	// C:\Documents and Settings\username\Application Data\Mozilla\Firefox
+
+	tstring		strProfileFile, strProfilePath;
+	CProfile	profile;
+
+	strProfileFile = szFireFoxDir;
+	strProfileFile += _T("profiles.ini");
+	if (!IsFileExist(strProfileFile.c_str()))
+		return false;
+
+	profile.Init(strProfileFile.c_str());
+
+	{
+		//
+		// Get current profile path.
+		//
+
+		int		nDefault = 0;
+		// Get current profile folder.
+		for (int i = 0; i < 10; i++)
+		{
+			if (1 == profile.GetProfileInt(CStrPrintf(_T("Profile%d"), i).c_str(), _T("Default"), 0))
+			{
+				// Find the default profile.
+				nDefault = i;
+				break;
+			}
+		}
+
+		tstring		strPath = profile.GetProfileString(CStrPrintf(_T("Profile%d"), nDefault).c_str(), _T("Path"), _T(""));
+		if (strPath.empty())
+			return false;
+
+		if (strPath.size() > 2 && strPath[1] == ':')
+			strProfilePath = strPath;
+		else
+		{
+			strProfilePath = szFireFoxDir;
+			strProfilePath += strPath;
+		}
+		DirStringAddSlash(strProfilePath);
+	}
+
+	// Get proxy settings.
+	tstring		strPrefJSFile;
+	tstringex	strPrefJS;
+
+	strPrefJSFile = strProfilePath;
+	strPrefJSFile += _T("prefs.js");
+
+	if (!OpenFileToTString(strPrefJSFile.c_str(), strPrefJS))
+		return false;
+
+	tstring		strProxy, strPort, strType;
+
+	// user_pref("network.proxy.http", "192.168.1.112");
+	// user_pref("network.proxy.http_port", 80);
+	// user_pref("network.proxy.type", 1);
+	FindStringValue(strPrefJS.c_str(), _T("user_pref(\"network.proxy.http\", \""), _T("\");"), strSvr);
+	FindStringValue(strPrefJS.c_str(), _T("user_pref(\"network.proxy.http_port\", "), _T(");"), strPort);
+	FindStringValue(strPrefJS.c_str(), _T("user_pref(\"network.proxy.type\", "), _T(");"), strType);
+
+	if (_ttoi(strType.c_str()) == 1)
+	{
+		nPort = _ttoi(strPort.c_str());
+		return true;
+	}
+
+	return false;
+}
+
+
 #ifdef _WIN32_WCE
 void GetNotepadEditor(tstring &strEditor)
 {

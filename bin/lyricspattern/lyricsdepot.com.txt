@@ -1,0 +1,13 @@
+Lyrics Depot
+
+Lyrics &raquo; %%artist%% Lyrics &raquo; %%title%% LyricsFind Song Lyrics: 
+
+%%e-x%%
+
+Artist: %%val-artist%%
+Album: %%album%% %%e-n%%
+
+%%lyrics%%
+
+Comments/Interpretations
+%%e-eof%%

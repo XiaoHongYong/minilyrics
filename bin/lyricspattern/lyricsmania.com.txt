@@ -1,0 +1,18 @@
+%%title%% Lyrics
+
+%%e-x%%
+
+Browse by band :0-9 A B C D E F G H I J K L M N O P Q R S T U V W X Y Z | ALL 
+
+%%e-x%% Artist: %%artist%% lyrics
+Album: %%album%%
+Year: %%e-x%%
+Title: %%val-title%%
+
+%%e-x%%
+
+Lyrics to %%val-title%% :
+
+%%lyrics%%
+
+[ %%val-title%% Lyrics on %%e-eof%%

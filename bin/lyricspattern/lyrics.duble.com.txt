@@ -1,0 +1,13 @@
+%%e-x%%
+
+lyrics
+All %%album%%album lyrics %%e-x%%
+
+ Lyrics >%%artist%% lyrics >%%val-artist%% %%title%% lyrics %%e-n%%
+%%val-artist%% %%val-title%% lyrics
+
+%%lyrics%%
+
+%%val-artist%% %%val-title%% lyrics
+
+%%e-eof%%

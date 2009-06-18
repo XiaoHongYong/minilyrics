@@ -1,0 +1,13 @@
+%%e-x%%
+
+you are at: lyrics home> %%artist%% Lyrics >%%title%% Lyrics %%e-n%%
+
+%%e-x%%
+
+Send "%%val-title%%" Ringtone to your Cell
+
+%%lyrics%%
+
+Send "%%val-title%%" Ringtone to your Cell
+
+%%e-eof%%

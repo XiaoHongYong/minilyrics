@@ -1,0 +1,10 @@
+ Home
+ Skip to navigation
+ %%title%% Lyrics &Video
+%%artist%% See albums and popular songs
+
+%%lyrics%%
+
+Part of These Albums %%e-line%%
+ %%album%% %%e-n%%
+%%e-eof%%

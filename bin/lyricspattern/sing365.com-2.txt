@@ -1,0 +1,12 @@
+%%e-x%%
+Home - %%artist%%  Lyrics - %%title%% Lyrics
+%%e-x%% Print the Lyrics
+
+%%OptBeg<<Send %%e-x%%  ringtone to your cell phone%%OptEnd>>
+
+
+%%lyrics%%
+
+%%OptBeg<<--------------------------------------------------------------------------------%%e-eof%% %%OptEnd>>
+
+If you find some error in %%e-eof%%

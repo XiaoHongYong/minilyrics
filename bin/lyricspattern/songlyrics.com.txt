@@ -1,0 +1,18 @@
+%%e-x%%
+
+ Lyrics &raquo; Artist - %%e-x%% &raquo; %%artist%% lyrics &raquo; %%album%% Lyrics &raquo; %%title%% Lyrics  %%e-n%%
+Song details
+
+ Title:%%val-title%% 
+Artist:%%val-artist%% 
+Album:%%val-album%%
+
+%%e-x%% 
+ 
+ArialCourier NewTahomaVerdana SmallestSmallNormalLargeLargest 
+
+%%lyrics%%
+
+%%val-title%% Lyrics @ LyricsMode.com
+
+%%e-eof%%

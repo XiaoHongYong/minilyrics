@@ -1,0 +1,14 @@
+%%e-x%%
+
+Artist: %%artist%%
+Song: %%title%%
+Album: %%album%%  [Buy this CD]
+
+%%lyrics%%
+
+
+Related %%val-artist%%
+
+%%e-eof%%
+
+ 

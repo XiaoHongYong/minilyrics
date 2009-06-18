@@ -1,0 +1,6 @@
+%%e-x%%
+<span id="lyrics">
+%%lyrics%%
+</span>
+
+%%e-eof%%

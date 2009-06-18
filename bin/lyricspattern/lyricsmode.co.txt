@@ -1,0 +1,7 @@
+%%artist%% - %%title%% lyrics
+
+%%e-x%%
+
+ Lyrics  Artists : %%e-x%%  %%val-artist%% lyrics  %%val-title%% lyrics
+
+%%e-eof%%

@@ -1,0 +1,8 @@
+
+Printed from Lyrics4all.net - Read it, sing it... Love it!
+
+Artist: %%artist%%
+Song: %%title%%
+Album: %%album%% %%e-n%%
+
+%%lyrics%%

@@ -1,0 +1,18 @@
+%%e-x%% lyrics
+
+%%artist%% lyrics %%e-n%%
+ 
+%%val-artist%% %%title%% lyrics %%e-n%%
+ 
+ 
+ 
+ 
+%%val-artist%% %%val-title%% lyrics %%val-artist%% %%val-title%% lyrics 
+ 
+ 
+%%lyrics%%
+ 
+ 
+ 
+%%val-artist%% %%val-title%% lyrics %%e-eof%%
+ 

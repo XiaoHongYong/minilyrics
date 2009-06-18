@@ -1,0 +1,15 @@
+Preferences
+%%artist%% - %%title%% Lyrics
+
+%%e-x%%
+ 
+Browse
+0-9 A  B  C  D  E  F  G  H  I  J  K  L  M  N  O  P  Q  R  S  T  U  V  W  X  Y  Z  
+%%val-artist%% Lyrics
+"%%val-artist%% %%val-title%% lyrics"
+
+%%lyrics%%
+
+Search :
+
+%%e-eof%%  
