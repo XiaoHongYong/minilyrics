@@ -1,0 +1,13 @@
+ %%e-x%%
+
+uuLyrics &raquo; %%artist%% &raquo; %%album%% &raquo; %%title%% %%e-n%%
+ 
+%%val-title%% Lyrics
+
+ song performed by %%album%% in the album 
+
+%%lyrics%%
+
+This %%val-artist%% lyrics are copyright 
+
+%%e-eof%%
