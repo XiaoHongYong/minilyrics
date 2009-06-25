@@ -2,7 +2,7 @@ SUBDIRS = linux
 
 noinst_LIBRARIES = libbase.a
 
-libbase_a_SOURCES = digest.cpp Error.cpp FileIndexBase.cpp FileIndexEx.cpp idstring.cpp md5.cpp \
+libbase_a_SOURCES = digest.cpp Error.cpp idstring.cpp md5.cpp \
 		misc.cpp safestr.cpp stringex.cpp StrPrintf.cpp
 
 libbase_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`

@@ -259,7 +259,7 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			m_menu.EnableItem(IDC_DEL_FILE, bEnable);
 			m_menu.EnableItem(IDC_RENAME, bEnable);
 			m_menu.CheckItem(IDC_NO_PROMPT,
-				g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
+				!g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 			GetDlgItemRect(IDC_MORE, &rc);
 			m_menu.TrackPopupMenu(rc.left, rc.top, this);
 		}

@@ -19,8 +19,7 @@ CThread::~CThread()
 {
 }
 
-bool CThread::Create(FUNThread function, void* lpData, 
-            bool detach)
+bool CThread::Create(FUNThread function, void* lpData)
 {
 	m_funThead = function;
 	m_lpData = lpData;

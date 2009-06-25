@@ -18,15 +18,16 @@ public:
 	CThread();
 	virtual ~CThread();
 
-    virtual bool Create(FUNThread function, void* lpData, 
-                        bool detach = false);
-    virtual void Destroy();
-    virtual void Suspend();
-    virtual void Resume();
-    virtual void Join();
+    bool Create(FUNThread function, void* lpData);
+    void Destroy();
+    void Suspend();
+    void Resume();
+    void Join();
 
-    virtual uint32 GetPriority() const;
-    virtual uint32 SetPriority(uint32 priority);
+    uint32 GetPriority() const;
+    uint32 SetPriority(uint32 priority);
+
+	bool IsRunning();
 
 protected:
 	FUNThread		m_funThead;

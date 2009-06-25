@@ -1,6 +1,8 @@
 #ifndef _FILE_API_INC_
 #define _FILE_API_INC_
 
+DECLAR_CPPUNIT_TEST_REG(FileAPI)
+
 #ifndef INVALID_FILE_SIZE
 #define INVALID_FILE_SIZE ((DWORD)0xFFFFFFFF) 
 #endif
@@ -12,11 +14,12 @@ bool IsDirExist(LPCTSTR szDir);
 
 bool GetFileLength(LPCTSTR szFileName, uint64 &nLength);
 
+#ifndef _WINCE_
 DWORD GetFileLength(LPCSTR szFileName);
-
-#ifdef _WIN32
+#endif
 DWORD GetFileLength(LPCWSTR szFileName);
 
+#ifdef _WIN32
 BOOL
 SetFileTime(
     LPCTSTR szFile,
@@ -28,36 +31,39 @@ SetFileTime(
 
 BOOL CreateDirectoryAll(LPCTSTR szDir);
 
+DWORD CanWriteInDir(LPCTSTR szDir);
+
 BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath);
 
 typedef void (*FUNProcessFile)(LPCTSTR szFileName, LPCTSTR szDir, LPVOID lpUserData);
 
 BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData);
 
-void DirStringFormat(WCHAR *szDir);
+void DirStringAddSlash(WCHAR *szDir);
 
-void DirStringFormat(char *szDir);
+void DirStringAddSlash(char *szDir);
 
-void DirStringFormat(tstring &strDir);
+void DirStringAddSlash(tstring &strDir);
 
-void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedDir);
+#define DirStringFormat		DirStringAddSlash
 
-void UrlFileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
+void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int nRelatedPathLen);
 
-void FileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
+LPCTSTR UrlGetName(LPCTSTR szFile);
+
+tstring UrlGetTitle(LPCTSTR szFile);
+
+LPCTSTR FileGetName(LPCTSTR szFile);
 
 void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
-
-// without ext
-void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile);
+void FileGetTitle(LPCTSTR szFile, tstring &strFileTitle);
 
 void FileGetPath(LPCTSTR szFile, tstring &strPath);
+void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile);
 
+void FileSetExt(tstring &strFile, LPCTSTR szExt);
+void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt);
 LPCTSTR FileGetExt(LPCTSTR szFile);
-void FileGetExt(LPCTSTR szFile, LPTSTR szExt, int nLenExtMax);
-// Set file ext
-// "d:\mp3\test.mp3 +++ .wav -----> d:\mp3\test.wav"
-void FileSetExt(LPTSTR szFile, LPCTSTR szExt);
 
 BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt);
 
@@ -69,8 +75,15 @@ void FilePathFilterInvalidChars(LPTSTR szFile);
 #ifndef WIN32
 bool DeleteFile(LPCTSTR lpFileName);
 bool CreateDirectory(LPCSTR lpPathName);
-bool MoveFile(const char *oldname, const char *newname);
 #endif
+
+
+#ifdef WIN32
+
+BOOL IsDiskIdle(const TCHAR* disk);
+void GetLogicalDrives(V_Str &vDrives);
+#endif
+
 
 class CMLFileFind
 {

@@ -26,7 +26,7 @@ wchar_t * __cdecl wcscat_safe(wchar_t * dst, int Size, const wchar_t * src);
 #endif
 
 #ifndef _WIN32
-#define _vsntprintf vsnprintf_s
+#define vsnprintf_s _vsntprintf
 #define _stprintf_s sprintf_s
 
 int vsnprintf_s(char *buffer, size_t buffSize, size_t count, const char *format, va_list argptr);

@@ -2,6 +2,7 @@
 #include "safestr.h"
 #include "fileapi.h"
 
+IMPLEMENT_CPPUNIT_TEST_REG(FileAPI)
 
 bool filetruncate(FILE *fp, int nLen)
 {
@@ -38,10 +39,6 @@ bool IsDirExist(LPCTSTR szDir)
 	return true;
 }
 
-// COMMENT:
-//		取得文件的大小
-// RETURN:
-//		INVALID_FILE_SIZE	-	无效的大小，文件可能无效
 bool GetFileLength(LPCTSTR szFileName, uint64 &nLength)
 {
 	struct stat		filestat;
@@ -127,9 +124,9 @@ BOOL CreateDirectoryAll(LPCTSTR szDir)
 	TCHAR	szTemp[512];
 	TCHAR	*szBeg;
 
-	_tcscpy(szTemp, szDir);
+	_tcscpy_safe(szTemp, CountOf(szTemp), szDir);
 
-	szBeg = _tcschr(szTemp, '/');
+	szBeg = _tcschr(szTemp, DIR_SLASH);
 	while (szBeg != NULL)
 	{
 		*szBeg = '\0';
@@ -140,8 +137,8 @@ BOOL CreateDirectoryAll(LPCTSTR szDir)
 				return FALSE;
 		}
 
-		*szBeg = '/';
-		szBeg = _tcschr(szBeg + 1, '/');
+		*szBeg = DIR_SLASH;
+		szBeg = _tcschr(szBeg + 1, DIR_SLASH);
 	}
 
 	if (!IsDirExist(szDir))
@@ -173,13 +170,13 @@ BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles
 		{
 			if (bEnumFullPath)
 			{
-				TCHAR	szFile[MAX_PATH];
+				tstring		strFile;
 
-				_tcscpy(szFile, szBaseDir);
-				DirStringFormat(szFile);
-				_tcscat(szFile, find.GetCurName());
+				strFile = szBaseDir;
+				DirStringAddSlash(strFile);
+				strFile += FindData.cFileName;
 
-				vFiles.push_back(szFile);
+				vFiles.push_back(strFile);
 			}
 			else
 				vFiles.push_back(find.GetCurName());
@@ -227,7 +224,7 @@ BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 
 // COMMENT:
 //		将目录字符串格式化为末尾带'/'的
-void DirStringFormat(WCHAR *szDir)
+void DirStringAddSlash(WCHAR *szDir)
 {
 	int		nLen;
 
@@ -244,7 +241,7 @@ void DirStringFormat(WCHAR *szDir)
 
 // COMMENT:
 //		将目录字符串格式化为末尾带'/'的
-void DirStringFormat(char *szDir)
+void DirStringAddSlash(char *szDir)
 {
 	int		nLen;
 
@@ -261,7 +258,7 @@ void DirStringFormat(char *szDir)
 
 // COMMENT:
 //		将目录字符串格式化为末尾带'/'的
-void DirStringFormat(string &strDir)
+void DirStringAddSlash(tstring &strDir)
 {
 	if (!strDir.empty())
 	{
@@ -270,54 +267,107 @@ void DirStringFormat(string &strDir)
 	}
 }
 
-void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedDir)
+// Dir: /temp/a/b/c		
+// Basedir: /temp/a
+// Return related dir: b/c
+void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int nRelatedPathLen)
 {
-	int		nBaseLen = _tcslen(szBaseDir);
-	if (_tcsnicmp(szBaseDir, szDir, nBaseLen) == 0)
+	LPCTSTR		pDir = szDir, pBaseDir = szBaseDir;
+	LPCTSTR		pLatestSame = pDir;
+
+#ifdef _WIN32
+	// win32, dir name is case insensitive
+	int		f,l;
+	while (*pDir)
 	{
-		if (szDir[nBaseLen] == DIR_SLASH)
-			nBaseLen++;
-		_tcscpy(szRelatedDir, szDir + nBaseLen);
+		if ( ((f = (*(pDir))) >= 'A') && (f <= 'Z') )
+			f -= ('A' - 'a');
+		if ( ((l = (*(pBaseDir))) >= 'A') && (l <= 'Z') )
+			l -= ('A' - 'a');
+		if (f != l)
+			break;
+		if (f == DIR_SLASH)
+			pLatestSame = pDir;
+		pDir++, pBaseDir++;
+	}
+#else
+	while (*pDir == *pBaseDir && *pDir != '\0')
+	{
+		pDir++;
+		pBaseDir++;
+		if (*pDir == DIR_SLASH)
+			pLatestSame = pDir;
+	}
+#endif
+
+	if (*pBaseDir == '\0')
+	{
+		if (*pDir == DIR_SLASH)
+			pDir++;
+		_tcscpy_safe(szRelatedPath, nRelatedPathLen, pDir);
 	}
 	else
 	{
-		assert(0 && "GetRelatedPath()");
-		_tcscpy(szRelatedDir, szDir);
+		ASSERT(0 && _T("Not implemented yet."));
+		_tcscpy_safe(szRelatedPath, nRelatedPathLen, szDir);
+// 		if (*pDir == '\0')
+// 		{
+// 			_tcsinc
+// 		}
 	}
 }
 
-// format string pathname ---> filename
-// "c:\windows\command.com" ----> "command.com"
-void FileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
+LPCTSTR UrlGetName(LPCTSTR szFile)
+{
+	LPCTSTR		szBeg, szBeg2;
+
+	szBeg = _tcsrchr(szFile, '/');
+	szBeg2 = _tcsrchr(szFile, '\\');
+	if (szBeg2 > szBeg)
+		szBeg = szBeg2;
+	if (szBeg)
+		return szBeg + 1;
+	else
+		return szFile;
+}
+
+tstring UrlGetTitle(LPCTSTR szFile)
+{
+	LPCTSTR		szBeg, szBeg2, szEnd;
+	int			nLen;
+	tstring		strFileTitle;
+
+	szEnd = _tcsrchr(szFile, '.');
+
+	szBeg = _tcsrchr(szFile, '/');
+	szBeg2 = _tcsrchr(szFile, '\\');
+	if (szBeg2 > szBeg)
+		szBeg = szBeg2;
+
+	if (szBeg == NULL)
+		szBeg = szFile;
+	else
+		szBeg++;
+
+	if (szEnd == NULL || szBeg > szEnd)
+		nLen = szFile - szBeg + _tcslen(szFile);
+	else
+		nLen = szEnd - szBeg;
+
+	strFileTitle.append(szBeg, nLen);
+
+	return strFileTitle;
+}
+
+LPCTSTR FileGetName(LPCTSTR szFile)
 {
 	LPCTSTR		szBeg;
 
 	szBeg = _tcsrchr(szFile, DIR_SLASH);
 	if (szBeg)
-	{
-		_tcscpy_safe(szBuff, nBuffLen, szBeg + 1);
-	}
+		return szBeg + 1;
 	else
-	{
-		_tcscpy_safe(szBuff, nBuffLen, szFile);
-	}
-}
-
-// format string pathname ---> filename
-// "http://www.minilyrics.com/windows/command.com" ----> "command.com"
-void UrlFileGetName(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
-{
-	LPCTSTR		szBeg;
-
-	szBeg = _tcsrchr(szFile, '/');
-	if (szBeg)
-	{
-		_tcscpy_safe(szBuff, nBuffLen, szBeg + 1);
-	}
-	else
-	{
-		_tcscpy_safe(szBuff, nBuffLen, szFile);
-	}
+		return szFile;
 }
 
 // format string pathname ---> filename
@@ -343,48 +393,32 @@ void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
 	_tcsncpy_safe(szBuff, nBuffLen, szBeg, nLen);
 	szBuff[nLen] = '\0';
 }
-/*   Old function
-void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
+
+
+void FileGetTitle(LPCTSTR szFile, tstring &strFileTitle)
 {
-	int i = 0;
-	int ilen = _tcslen(szFile);
+	LPCTSTR		szBeg, szEnd;
+	int			nLen;
 
-	ilen --;
-	while (ilen >= 0)
-	{
-		if (szFile[ilen --] == '.')
-			break;
-	}
+	szEnd = _tcsrchr(szFile, '.');
 
-	i = 0;
-	while (ilen >= 0)
-	{
-		if (szFile[ilen] != DIR_SLASH)
-		{
-			szBuff[i] = szFile[ilen];
-			ilen --;
-			i ++;
-		}
-		else
-			break;
-	}
+	szBeg = _tcsrchr(szFile, DIR_SLASH);
+	if (szBeg == NULL)
+		szBeg = szFile;
+	else
+		szBeg++;
 
-	szBuff[i] = '\0';
+	if (szEnd == NULL || szBeg > szEnd)
+		nLen = szFile - szBeg + _tcslen(szFile);
+	else
+		nLen = szEnd - szBeg;
 
-	ilen = i - 1;
-	int imid = i / 2;
-	TCHAR	chTemp;
-	for (i = 0; i < imid; i++)
-	{
-		chTemp = szBuff[ilen - i];
-		szBuff[ilen - i] = szBuff[i];
-		szBuff[i] = chTemp;
-	}
-}*/
+	strFileTitle.resize(0);
+	strFileTitle.append(szBeg, nLen);
+}
 
-// GetPath Only
-// "d:\mp3\test.mp3 -----> d:\mp3\"
-void FileGetPath(LPTSTR szBuff, LPCTSTR szFile)
+
+void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile)
 {
 	int ilen = _tcslen(szFile);
 	ilen --;
@@ -396,54 +430,52 @@ void FileGetPath(LPTSTR szBuff, LPCTSTR szFile)
 	}
 
 	if (ilen >= 0)
-		_tcsncpy(szBuff, szFile, ilen + 1);
+		_tcsncpy_safe(szBuff, nBufLen, szFile, ilen + 1);
 	szBuff[ilen + 1] = '\0';
 }
 
-// GetPath Only
-// "d:\mp3\test.mp3 -----> d:\mp3\"
-void FileGetPath(LPTSTR szBuff)
+void FileGetPath(LPCTSTR szFile, tstring &strPath)
 {
-	LPTSTR sz;
-	sz = szBuff + _tcslen(szBuff);
-	while (sz >= szBuff && *sz != DIR_SLASH) sz --;
-	sz ++;
-	*sz = 0;
+	int ilen = _tcslen(szFile);
+	ilen --;
+	while (ilen >= 0)
+	{
+		if (szFile[ilen] == DIR_SLASH)
+			break;
+		ilen--;
+	}
+
+	strPath.resize(0);
+	if (ilen >= 0)
+		strPath.append(szFile, ilen + 1);
 }
 
-// 取得文件名的扩展名
-// "d:\mp3\test.mp3 ----> .mp3"
-// "d:\mp3\test ----> "
-// "d:\mp.3\test ----> "
-void FileGetExt(LPCTSTR szFile, LPTSTR szExt, int nLenExtMax)
+LPCTSTR FileGetExt(LPCTSTR szFile)
 {
 	LPCTSTR		szBeg;
 
-	szBeg = _tcsrchr(szFile, _T('.'));
+	szBeg = _tcsrchr(szFile, '.');
 	if (szBeg == NULL)
-		szExt[0] = _T('\0');
+		return _T("");
 	else
 	{
 		LPCTSTR		szTemp;
 
 		szTemp = _tcsrchr(szFile, DIR_SLASH);
 		if (szTemp == NULL || szTemp < szBeg)
-			_tcscpy_safe(szExt, nLenExtMax, szBeg);
+			return szBeg;
 		else
-			szExt[0] = _T('\0');
+			return _T("");
 	}
 }
 
-// COMMENT:
-//		设置文件的扩展名
-//		"d:\mp3\test.mp3 +++ .wav -----> d:\mp3\test.wav"
-//		"d:\mp3\test     .wav   -----> d:\mp3\test.wav
-//		"d:\mp3\test.mp3\test.mp3     .wav   -----> d:\mp3\test.mp3\test.wav
-//		test        ---->   test.wav
+// Set the file extention.
+// File name format: path/title/.ext
 void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt)
 {
-	int len;
+	int		len;
 	len = _tcslen(szFile);
+
 	len --;
 	while (len >= 0)
 	{
@@ -452,12 +484,35 @@ void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt)
 		len --;
 	}
 
-	if (len > 0)
+	if (len >= 0)
 	{
 		if (szFile[len] == '.')
 			szFile[len] = 0;
 	}
-	_tcscat(szFile, szExt);
+
+	_tcscat_safe(szFile, nFileBufLen, szExt);
+}
+
+void FileSetExt(tstring &strFile, LPCTSTR szExt)
+{
+	LPCTSTR		szFile = strFile.c_str();
+	int			len = strFile.size();
+
+	len --;
+	while (len >= 0)
+	{
+		if (szFile[len] == DIR_SLASH || szFile[len] == '.')
+			break;
+		len --;
+	}
+
+	if (len >= 0)
+	{
+		if (szFile[len] == '.')
+			strFile.resize(len);
+	}
+
+	strFile += szExt;
 }
 
 // 判断文件的扩展名是否匹配
@@ -479,6 +534,19 @@ BOOL FileNameIsIncInvalidChars(LPCTSTR szFile)
 	LPCTSTR		szBeg;
 
 	szBeg = szFile;
+
+#ifdef _WIN32_DESKTOP
+	// 忽略c:\\之类的字符
+	if (IsCharAlpha(*szBeg))
+	{
+		szBeg++;
+		if (*szBeg == ':')
+		{
+			if (*(szBeg + 1) == DIR_SLASH)
+				szBeg += 2;
+		}
+	}
+#endif // _WIN32_DESKTOP
 
 	while (*szBeg)
 	{
@@ -504,6 +572,29 @@ void FileNameFilterInvalidChars(LPCTSTR szFile, LPTSTR szNewFile, int nSizeMax)
 	szEnd = szFile + nSizeMax - 1;
 	szNew = szNewFile;
 
+#ifdef _WIN32_DESKTOP
+	// 忽略c:\\之类的字符
+	if (IsCharAlpha(*szBeg))
+	{
+		*szNew = *szBeg;
+		szBeg++;
+		szNew++;
+		if (*szBeg == ':')
+		{
+			if (*(szBeg + 1) == DIR_SLASH)
+			{
+				*szNew = *szBeg;
+				szBeg++;
+				szNew++;
+
+				*szNew = *szBeg;
+				szBeg++;
+				szNew++;
+			}
+		}
+	}
+#endif // _WIN32_DESKTOP
+
 	while (*szBeg && szBeg < szEnd)
 	{
 		LPCTSTR		szInv;
@@ -528,6 +619,19 @@ void FileNameFilterInvalidChars(LPTSTR szFile)
 
 	szBeg = szFile;
 
+#ifdef _WIN32_DESKTOP
+	// 忽略c:\\之类的字符
+	if (IsCharAlpha(*szBeg))
+	{
+		szBeg++;
+		if (*szBeg == ':')
+		{
+			if (*(szBeg + 1) == DIR_SLASH)
+				szBeg += 2;
+		}
+	}
+#endif // _WIN32_DESKTOP
+
 	while (*szBeg)
 	{
 		LPCTSTR		szInv;
@@ -542,12 +646,25 @@ void FileNameFilterInvalidChars(LPTSTR szFile)
 	}
 }
 
-const TCHAR	_SZ_FILE_PATH_INVALID_CHARS[] = _T("/:*?\"<>|");
+const TCHAR	_SZ_FILE_PATH_INVALID_CHARS[] = _T(":*?\"<>|")_T(SZ_DIR_SLASH);
 void FilePathFilterInvalidChars(LPTSTR szFile)
 {
 	LPTSTR		szBeg;
 
 	szBeg = szFile;
+
+#ifdef _WIN32_DESKTOP
+	// 忽略c:\\之类的字符
+	if (IsCharAlpha(*szBeg))
+	{
+		szBeg++;
+		if (*szBeg == ':')
+		{
+			if (*(szBeg + 1) == DIR_SLASH)
+				szBeg += 2;
+		}
+	}
+#endif // _WIN32_DESKTOP
 
 	while (*szBeg)
 	{
@@ -644,3 +761,117 @@ bool CMLFileFind::GetCurStat()
 
 	return m_bStatValid;
 }
+
+#ifdef _CPPUNIT_TEST
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+class CTestCaseFileAPI : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseFileAPI);
+	CPPUNIT_TEST(TestFileNameStr);
+	CPPUNIT_TEST(TestGetRelatedDir);
+	CPPUNIT_TEST(TestFileSetExt);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+
+public:
+	void setUp()
+	{
+	}
+	void tearDown() 
+	{
+	}
+
+protected:
+	void TestFileNameStr()
+	{
+#ifdef _WIN32
+		LPCTSTR		SZ_DIR_CMP[] =  { _T("c:\\folder"), _T("c:\\folder\\"), _T("") };
+		LPCTSTR		SZ_DIR_CMP_OK[] = { _T("c:\\folder\\"), _T("c:\\folder\\"), _T("\\") };
+#else
+		LPCTSTR		SZ_DIR_CMP[] = { _T("/tmp/folder"), _T("/tmp/folder/"), _T("") };
+		LPCTSTR		SZ_DIR_CMP_OK[] = { _T("/tmp/folder/"), _T("/tmp/folder/"), _T("") };
+#endif
+		TCHAR		szDir[MAX_PATH];
+		tstring		strDir;
+
+		ASSERT(CountOf(SZ_DIR_CMP) == CountOf(SZ_DIR_CMP_OK));
+		for (int i = 0; i < CountOf(SZ_DIR_CMP); i++)
+		{
+			_tcscpy(szDir, SZ_DIR_CMP[i]);
+			DirStringAddSlash(szDir);
+			if (!(_tcscmp(szDir, SZ_DIR_CMP_OK[i]) == 0))
+				CPPUNIT_FAIL_T(CStrPrintf(_T("DirStringAddSlash, case: %d, %s"), i, SZ_DIR_CMP_OK[i]).c_str());
+
+			strDir = SZ_DIR_CMP[i];
+			DirStringAddSlash(strDir);
+			if (!(_tcscmp(strDir.c_str(), SZ_DIR_CMP_OK[i]) == 0))
+				CPPUNIT_FAIL_T(CStrPrintf(_T("DirStringAddSlash(stl), case: %d, %s"), i, SZ_DIR_CMP_OK[i]).c_str());
+		}
+	}
+
+	void TestGetRelatedDir()
+	{
+// #ifdef _WIN32
+// 		LPCTSTR		SZ_DIR[] =  { _T("c:\\a\\b\\c"), _T("c:\\a\\b\\c"), _T("c:\\a\\b\\c"), _T("c:\\a\\b\\c"), _T("c:\\a\\b\\c") };
+// 		LPCTSTR		SZ_DIR_BASE[] =  { _T("c:\\a"), _T("c:\\a\\"), _T(""), _T("c:\\a\\b\\c\\d"), _T("c:\\a\\b\\e") };
+// 		LPCTSTR		SZ_DIR_RELATED[] = { _T("b\\c"), _T("b\\c"), _T("c:\\a\\b\\c"), _T("..\\"), _T("..\\c") };
+// #else
+// 		LPCTSTR		SZ_DIR[] =  { _T("/a/b/c"), _T("/a/b/c"), _T("/a/b/c"), _T("/a/b/c"), _T("/a/b/c") };
+// 		LPCTSTR		SZ_DIR_BASE[] =  { _T("/a"), _T("/a/"), _T(""), _T("/a/b/c/d"), _T("/a/b/e") };
+// 		LPCTSTR		SZ_DIR_RELATED[] = { _T("b/c"), _T("b/c"), _T("/a/b/c"), _T("../"), _T("../c") };
+// #endif
+// 		TCHAR		szDirRelated[MAX_PATH];
+// 
+// 		ASSERT(CountOf(SZ_DIR) == CountOf(SZ_DIR_BASE));
+// 		ASSERT(CountOf(SZ_DIR) == CountOf(SZ_DIR_RELATED));
+// 		for (int i = 0; i < CountOf(SZ_DIR_RELATED); i++)
+// 		{
+// 			GetRelatedPath(SZ_DIR[i], SZ_DIR_BASE[i], szDirRelated, CountOf(szDirRelated));
+// 			if (!(_tcscmp(szDirRelated, SZ_DIR_RELATED[i]) == 0))
+// 				CPPUNIT_FAIL_T(CStrPrintf(_T("GetRelatedDir, case: %d, %s"), i, szDirRelated).c_str());
+// 		}
+	}
+
+	void TestFileSetExt()
+	{
+		LPCTSTR		SZ_EXT = _T(".ext");
+#ifdef _WIN32
+		LPCTSTR		SZ_FILE[] =  { _T("c:\\file.txt"), _T("c:\\file.txt3"), _T(""), _T("c:\\file.t\\xt3") };
+		LPCTSTR		SZ_FILE_OK[] = { _T("c:\\file.ext"), _T("c:\\file.ext"), _T(".ext"), _T("c:\\file.t\\xt3.ext") };
+#else
+		LPCTSTR		SZ_FILE[] =  { _T("/file.txt"), _T("/file.txt3"), _T(""), _T("/file.t/xt3") };
+		LPCTSTR		SZ_FILE_OK[] = { _T("/file.ext"), _T("/file.ext"), _T(".ext"), _T("/file.t/xt3.ext") };
+#endif
+		LPCTSTR		SZ_EXT_OK[] = { _T(".txt"), _T(".txt3"), _T(""), _T("") };
+
+		TCHAR		szFile[MAX_PATH];
+		tstring		strFile;
+
+		ASSERT(CountOf(SZ_FILE) == CountOf(SZ_FILE_OK));
+		for (int i = 0; i < CountOf(SZ_FILE); i++)
+		{
+			_tcscpy(szFile, SZ_FILE[i]);
+			FileSetExt(szFile, CountOf(szFile), SZ_EXT);
+			if (!(_tcscmp(szFile, SZ_FILE_OK[i]) == 0))
+				CPPUNIT_FAIL_T(CStrPrintf(_T("FileSetExt, case: %d, %s"), i, SZ_FILE_OK[i]).c_str());
+
+			strFile = SZ_FILE[i];
+			FileSetExt(strFile, SZ_EXT);
+			if (!(_tcscmp(strFile.c_str(), SZ_FILE_OK[i]) == 0))
+				CPPUNIT_FAIL_T(CStrPrintf(_T("FileSetExt(stl), case: %d, %s"), i, SZ_FILE_OK[i]).c_str());
+
+			if (!(_tcscmp(FileGetExt(SZ_FILE[i]), SZ_EXT_OK[i]) == 0))
+				CPPUNIT_FAIL_T(CStrPrintf(_T("FileGetExt, case: %d, %s"), i, SZ_EXT_OK[i]).c_str());
+		}
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseFileAPI);
+
+
+#endif // _CPPUNIT_TEST

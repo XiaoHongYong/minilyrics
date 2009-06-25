@@ -181,22 +181,14 @@ DWORD CanWriteInDir(LPCTSTR szDir)
 
 BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath)
 {
-	HANDLE				hFileFind;
-	WIN32_FIND_DATA		FindData;
-	tstring				strSearch;
+	CMLFileFind			find;
 
-	strSearch = szBaseDir;
-	DirStringAddSlash(strSearch);
-
-	strSearch += szFilter;
-
-	hFileFind = FindFirstFile(strSearch.c_str(), &FindData);
-	if (hFileFind == INVALID_HANDLE_VALUE)
+	if (!find.OpenDir(szBaseDir, szFilter))
 		return FALSE;
 
-	do
+	while (find.FindNext())
 	{
-		if (!IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY))
+		if (!find.IsCurDir())
 		{
 			if (bEnumFullPath)
 			{
@@ -204,17 +196,14 @@ BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles
 
 				strFile = szBaseDir;
 				DirStringAddSlash(strFile);
-				strFile += FindData.cFileName;
+				strFile += find.GetCurName();
 
 				vFiles.push_back(strFile);
 			}
 			else
-				vFiles.push_back(FindData.cFileName);
+				vFiles.push_back(find.GetCurName());
 		}
 	}
-	while (FindNextFile(hFileFind, &FindData));
-
-	FindClose(hFileFind);
 
 	return TRUE;
 }
@@ -268,10 +257,13 @@ void DirStringAddSlash(WCHAR *szDir)
 	int		nLen;
 
 	nLen = wcslen(szDir);
-	if (nLen == 0 || szDir[nLen - 1] != DIR_SLASH)
+	if (nLen > 0)
 	{
-		szDir[nLen] = DIR_SLASH;
-		szDir[nLen + 1] = '\0';
+		if (szDir[nLen - 1] != DIR_SLASH)
+		{
+			szDir[nLen] = DIR_SLASH;
+			szDir[nLen + 1] = '\0';
+		}
 	}
 }
 
@@ -282,10 +274,13 @@ void DirStringAddSlash(char *szDir)
 	int		nLen;
 
 	nLen = strlen(szDir);
-	if (nLen == 0 || szDir[nLen - 1] != DIR_SLASH)
+	if (nLen > 0)
 	{
-		szDir[nLen] = DIR_SLASH;
-		szDir[nLen + 1] = '\0';
+		if (szDir[nLen - 1] != DIR_SLASH)
+		{
+			szDir[nLen] = DIR_SLASH;
+			szDir[nLen + 1] = '\0';
+		}
 	}
 }
 
@@ -293,9 +288,10 @@ void DirStringAddSlash(char *szDir)
 //		将目录字符串格式化为末尾带DIR_SLASH的
 void DirStringAddSlash(tstring &strDir)
 {
-	if (strDir.empty() || strDir[strDir.size() - 1] != DIR_SLASH)
+	if (!strDir.empty())
 	{
-		strDir += DIR_SLASH;
+		if (strDir[strDir.size() - 1] != DIR_SLASH)
+			strDir += DIR_SLASH;
 	}
 }
 
@@ -567,6 +563,7 @@ BOOL FileNameIsIncInvalidChars(LPCTSTR szFile)
 
 	szBeg = szFile;
 
+#ifdef _WIN32_DESKTOP
 	// 忽略c:\\之类的字符
 	if (IsCharAlpha(*szBeg))
 	{
@@ -577,6 +574,7 @@ BOOL FileNameIsIncInvalidChars(LPCTSTR szFile)
 				szBeg += 2;
 		}
 	}
+#endif // _WIN32_DESKTOP
 
 	while (*szBeg)
 	{
@@ -602,6 +600,7 @@ void FileNameFilterInvalidChars(LPCTSTR szFile, LPTSTR szNewFile, int nSizeMax)
 	szEnd = szFile + nSizeMax - 1;
 	szNew = szNewFile;
 
+#ifdef _WIN32_DESKTOP
 	// 忽略c:\\之类的字符
 	if (IsCharAlpha(*szBeg))
 	{
@@ -622,6 +621,7 @@ void FileNameFilterInvalidChars(LPCTSTR szFile, LPTSTR szNewFile, int nSizeMax)
 			}
 		}
 	}
+#endif // _WIN32_DESKTOP
 
 	while (*szBeg && szBeg < szEnd)
 	{
@@ -647,6 +647,7 @@ void FileNameFilterInvalidChars(LPTSTR szFile)
 
 	szBeg = szFile;
 
+#ifdef _WIN32_DESKTOP
 	// 忽略c:\\之类的字符
 	if (IsCharAlpha(*szBeg))
 	{
@@ -657,6 +658,7 @@ void FileNameFilterInvalidChars(LPTSTR szFile)
 				szBeg += 2;
 		}
 	}
+#endif // _WIN32_DESKTOP
 
 	while (*szBeg)
 	{
@@ -679,6 +681,7 @@ void FilePathFilterInvalidChars(LPTSTR szFile)
 
 	szBeg = szFile;
 
+#ifdef _WIN32_DESKTOP
 	// 忽略c:\\之类的字符
 	if (IsCharAlpha(*szBeg))
 	{
@@ -689,6 +692,7 @@ void FilePathFilterInvalidChars(LPTSTR szFile)
 				szBeg += 2;
 		}
 	}
+#endif // _WIN32_DESKTOP
 
 	while (*szBeg)
 	{

@@ -3,6 +3,10 @@
 
 DECLAR_CPPUNIT_TEST_REG(FileAPI)
 
+#ifndef INVALID_FILE_SIZE
+#define INVALID_FILE_SIZE ((DWORD)0xFFFFFFFF) 
+#endif
+
 bool filetruncate(FILE *fp, int nLen);
 
 bool IsFileExist(LPCTSTR szFileName);
