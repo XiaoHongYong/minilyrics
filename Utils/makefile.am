@@ -2,8 +2,8 @@ SUBDIRS = linux
 
 noinst_LIBRARIES = libutils.a
 
-libutils_a_SOURCES = HtmlWrite.cpp Log.cpp SimpleXML.cpp SimpleXMLParser.cpp \
-			StringDB.cpp UUEncode.cpp xmlWrite.cpp XMLWriter.cpp
+libutils_a_SOURCES = CSVFile.cpp HtmlWrite.cpp Log.cpp SimpleXML.cpp SimpleXMLParser.cpp \
+			UndoMgr.cpp UUEncode.cpp XMLWriter.cpp
 
 INCLUDES = -I$(top_srcdir)/base
 

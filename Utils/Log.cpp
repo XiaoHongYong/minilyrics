@@ -14,7 +14,7 @@
 #include <time.h>
 
 #include "log.h"
-#include "app.h"
+#include "App.h"
 
 /*
 
@@ -105,7 +105,7 @@ void LogTrace(LPVOID lpData, int nSize)
 #ifdef _LINUX
 void LogTrace(LPVOID lpData, int nSize)
 {
-	g_print("%s\n", lpData);
+	g_print("%s\n", (const char*)lpData);
 }
 #endif
 /*
@@ -117,7 +117,7 @@ E: lEvel  (Error)
 M: Message
 */
 
-size_t fwriteWT(TCHAR *szBuffer, size_t n, size_t nLen, FILE *fp)
+size_t fwriteWT(const TCHAR *szBuffer, size_t n, size_t nLen, FILE *fp)
 {
 	int		nLenWrite;
 #if defined(_WIN32)
@@ -209,7 +209,6 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 
 	int			nBuf;
 	TCHAR		szBuffer[MAX_MSG_LEN] = _T("");
-	TCHAR		*szMsg = _T("");
 	int			nLen = 0;
 
 #ifdef _WIN32_WCE
@@ -237,6 +236,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 			szFile, nLine, byLevel);
 
 		// 格式化日志
+		TCHAR		*szMsg = NULL;
 		va_start(args, szFormat);
 		szMsg = szBuffer + nLen;
 		nBuf = _vstprintf_s(szMsg, CountOf(szBuffer) - nLen, szFormat, args);

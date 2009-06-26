@@ -62,6 +62,7 @@ typedef struct _ENCODING_CODEPAGE
 #endif
 }ENCODING_CODEPAGE;
 
+
 CHAR_ENCODING GetCharEncodingID(const char *szEncoding);
 CHAR_ENCODING GetCharEncodingID(const wchar_t *szEncoding);
 

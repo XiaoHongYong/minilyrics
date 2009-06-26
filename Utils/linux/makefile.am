@@ -2,6 +2,6 @@ noinst_LIBRARIES = lib_utils_linux.a
 
 lib_utils_linux_a_SOURCES = Profile.cpp App.cpp
 
-INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils
+INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/Utils/linux
 
 lib_utils_linux_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`

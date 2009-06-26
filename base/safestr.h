@@ -2,6 +2,8 @@
 #ifndef _SAFE_STRING_H_
 #define _SAFE_STRING_H_
 
+#include "xstr.h"
+
 // 安全的字符串拷贝，如果超出长度范围，则进行截断
 char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource);
 int	strncpy_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy);
@@ -26,22 +28,31 @@ wchar_t * __cdecl wcscat_safe(wchar_t * dst, int Size, const wchar_t * src);
 #endif
 
 #ifndef _WIN32
-#define vsnprintf_s _vsntprintf
+#define vsnprintf_s vsnprintf
+#define _vsntprintf vsnprintf
+#define _vstprintf_s vsnprintf
 #define _stprintf_s sprintf_s
-
-int vsnprintf_s(char *buffer, size_t buffSize, size_t count, const char *format, va_list argptr);
+#define _stprintf_s sprintf_s
+#define _itoa_s	_itot_s
 
 inline int sprintf_s(char *string, size_t sizeInBytes, const char *format, ...)
 {
 	va_list arglist;
 	va_start(arglist, format);
-	return vsprintf_s(string, sizeInBytes, format, arglist);
+	return vsnprintf(string, sizeInBytes, format, arglist);
 }
 
 inline char *_itoa(int value, char *string, size_t stringLen, int radix)
 {
 	return _itox_s(value, string, stringLen, radix);
 }
+
+inline int _itot_s(int value, TCHAR *buffer, size_t sizeInCharacters, int radix)
+{
+	_itox_s(value, buffer, sizeInCharacters, radix);
+	return 0;
+}
+
 
 #endif
 

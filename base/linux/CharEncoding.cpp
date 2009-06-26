@@ -7,11 +7,8 @@
 #include "stringex_t.h"
 #include "CharEncoding.h"
 #include "stringex.h"
-#include "safestr.h"
 #include "xstr.h"
-
-namespace CharEncoding
-{
+#include "safestr.h"
 
 #ifndef WIN32
 
@@ -232,15 +229,6 @@ void EnumMBCSEncodingsName(vector<tstring> &vEncodingNames)
 
 ENCODING_CODEPAGE &GetSysDefaultCharEncoding()
 {
-	UINT		nCodePage;
-
-	nCodePage = GetACP();
-	for (int i = 0; i < __MaxEncodings; i++)
-	{
-		if (nCodePage == __encodingCodepage[i].nCodePage)
-			return __encodingCodepage[i];
-	}
-
 	return __encodingCodepage[0];
 }
 
@@ -331,10 +319,7 @@ int ConvertWideCharToMultiByte(int nEncodingID, const WCHAR *lpWideStr, int nSiz
 	outBytesLeft = nSizeMultibyte;
 	n = iconv(code, (char **)&lpWideStr, (size_t*)&nSizeWideChar, (char **)(&lpByteStr), (size_t*)&outBytesLeft);
 	if (n == -1)
-	{
-		DBGLOG1(_T("FAILED to convert unicode str to mbcs: %s"), lpWideStr);
 		n = 0;
-	}
 	else
 		n = nSizeMultibyte - outBytesLeft;
 
@@ -606,4 +591,3 @@ bool IsAnsiStr(const char *szStr)
 	return true;
 }
 
-}

@@ -58,7 +58,7 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 
 	g_Profile.Init(szProfileName, szDefAppName);
 
-	g_Log.Init(szLogFile, TRUE);
+	g_Log.Init(szLogFile);
 
 	return TRUE;
 }

@@ -135,16 +135,6 @@ wchar_t *wcscat_safe(wchar_t * dst, int Size, const wchar_t * src)
 	return( dst );                  /* return dst */
 }
 
-
-#ifndef _WIN32
-int vsnprintf_s(char *buffer, size_t buffSize, size_t count, const char *format, va_list argptr);
-{
-	int	n = vsnprintf(buffer, buffSize, format, argptr);
-	if (n == count)
-		buffer[count - 1] = 0;
-}
-#endif
-
 /*
 void SeparateWords(LPCTSTR szText, vector<string> &vWords, char chSeparator)
 {

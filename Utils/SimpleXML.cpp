@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "SimpleXML.h"
-#include "simplexmlParser.h"
+#include "SimpleXMLParser.h"
 #include "XMLWriter.h"
 #include "App.h"
 

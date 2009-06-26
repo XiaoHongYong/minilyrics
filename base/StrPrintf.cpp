@@ -44,7 +44,7 @@ void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
 
 	while (1)
 	{
-		m_nSize = _vstprintf_s(m_pszBuffer, m_nCapacity, szFormat, args);
+		m_nSize = _vsntprintf(m_pszBuffer, m_nCapacity, szFormat, args);
 
 		// was there an error? was the expanded string too long?
 		if (m_nSize < 0)

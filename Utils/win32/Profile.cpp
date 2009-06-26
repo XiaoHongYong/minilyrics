@@ -739,9 +739,9 @@ BOOL CProfile::WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
 		return RegWriteProfileInt(m_hKeyRoot, strSubKey.c_str(), szKeyName, nValue);
 	}
 
-	TCHAR		szValue[MAX_PATH];
-	
-	wsprintf(szValue, _T("%d"), nValue);
+	TCHAR		szValue[64];
+
+	_itot_s(nValue, szValue, CountOf(szValue), 10);
 
 	return WriteProfileString(szAppName, szKeyName, szValue);
 }

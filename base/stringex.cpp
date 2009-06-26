@@ -4,6 +4,7 @@
 #include "CharEncoding.h"
 #include "stringex.h"
 #include "safestr.h"
+#include "xstr.h"
 
 #ifdef _UNICODE
 typedef	wchar_t	UTCHAR;
@@ -1200,14 +1201,15 @@ BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fi
 		byTag[0] = 0xFF;
 		byTag[1] = 0xFE;
 
-		fwrite(byTag, 1, 2, fp);
-
-#ifdef _UNICODE
-		if (fwrite(szText, sizeof(TCHAR), nLen, fp) != nLen)
+		if (fwrite(byTag, 1, 2, fp) != 2)
 		{
 			fclose(fp);
 			return FALSE;
 		}
+
+#ifdef _UNICODE
+		if (fwrite(szText, sizeof(TCHAR), nLen, fp) != nLen)
+			bRet = false;
 #else
 		wstringex	strW;
 		ConvertStr(szText, nLen, strW, nCharEncodingID);
@@ -1223,7 +1225,11 @@ BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fi
 		byTag[1] = 0xBB;
 		byTag[2] = 0xBF;
 
-		fwrite(byTag, 1, 3, fp);
+		if (fwrite(byTag, 1, 3, fp) != 3)
+		{
+			fclose(fp);
+			return FALSE;
+		}
 
 #ifdef _UNICODE
 		stringex	str;
@@ -1590,15 +1596,6 @@ void _itostr(int value, tstring &str, int base)
 	_itot_s(value, szBuff, CountOf(szBuff), base);
 	str = szBuff;
 }
-
-
-#ifndef _WIN32
-char* itoa_s(int value, char* result, int base)
-{
-	return _itox(value, result, base);
-}
-#endif
-
 
 void ColorToStr(COLORREF clr, char szStr[])
 {

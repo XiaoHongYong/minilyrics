@@ -8,11 +8,10 @@
 
 #include "../stdafx.h"
 #include "Profile.h"
-#include "uuencode.h"
-#include "app.h"
-#include <stdio.h>
+#include "UUEncode.h"
+#include "App.h"
 
-#include "PrivateProfileString.cpp"
+#include "privateprofilestring.cpp"
 
 /*
 Test Encrypt ....
@@ -49,7 +48,7 @@ BOOL WritePrivateProfileInt(
 {
 	TCHAR	szBuffer[16];
 
-	_stprintf(szBuffer, _T("%d"), nValue);
+	_itot_s(nValue, szBuffer, CountOf(szBuffer), 10);
 	return WritePrivateProfileString(lpAppName, lpKeyName, szBuffer, lpFileName);
 }
 
@@ -174,9 +173,9 @@ CProfile::~CProfile()
 // 区分大小写，将szAppName, szKey添加到缓存中
 void CProfile::AddKeys(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
-	LIST_KEYS				mapStr;
 	LIST_APPSECT::iterator	itApp;
-	APP_SECT				*appSec;
+	APP_SECT				*appSec = NULL;
+	tstring					strKeyNameLower;
 
 	// find AppName
 	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
@@ -185,23 +184,27 @@ void CProfile::AddKeys(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 		if (_tcsicmp(appSec->strAppName.c_str(), szAppName) == 0)
 			break;
 	}
-	if (itApp == m_listAppSect.end())
+	if (appSec == NULL || itApp == m_listAppSect.end())
 	{
 		// append new app secton
 		appSec = new APP_SECT;
 		appSec->strAppName = szAppName;
 		m_listAppSect.push_back(appSec);
 	}
-	else
-		appSec = *itApp;
 
-	appSec->listKeysUsed.push_back(KEY(szKeyName, szValue));
+	strKeyNameLower = szKeyName;
+	LowerString((LPTSTR)strKeyNameLower.c_str());
+	appSec->mapKeys[strKeyNameLower] = szValue;
 }
 
-bool CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKeyName, LIST_KEYS::iterator &it)
+bool CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKeyName, MAP_STRING::iterator &it)
 {
 	LIST_APPSECT::iterator	itApp;
-	APP_SECT				*appSec;
+	APP_SECT				*appSec = NULL;
+	tstring					strKeyNameLower;
+
+	strKeyNameLower = szKeyName;
+	LowerString((LPTSTR)strKeyNameLower.c_str());
 
 	// 查找AppName
 	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
@@ -210,21 +213,48 @@ bool CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKeyName, LIST_KEYS::iterator 
 		if (_tcsicmp(appSec->strAppName.c_str(), szAppName) == 0)
 			break;
 	}
-	if (itApp == m_listAppSect.end())
+	if (appSec == NULL || itApp == m_listAppSect.end())
 		return false;
 
 	//
-	// 不区分大小写，查找KeyName
-	for (it = appSec->listKeysUsed.begin(); it != appSec->listKeysUsed.end(); it++)
-	{
-		KEY	&key = *it;
-		if (_tcsicmp(key.strKeyName.c_str(), szKeyName) == 0)
-			break;
-	}
-	if (it == appSec->listKeysUsed.end())
+	// 查找KeyName
+	it = appSec->mapKeys.find(strKeyNameLower);
+	if (it == appSec->mapKeys.end())
 		return false;
 
 	return true;
+}
+
+void CProfile::SetKeyDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
+{
+	LIST_APPSECT::iterator	itApp;
+	APP_SECT				*appSec = NULL;
+	tstring					strKeyNameLower;
+	MAP_STRING::iterator	it;
+
+	strKeyNameLower = szKeyName;
+	LowerString((LPTSTR)strKeyNameLower.c_str());
+
+	// 查找AppName
+	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
+	{
+		appSec = *itApp;
+		if (_tcsicmp(appSec->strAppName.c_str(), szAppName) == 0)
+			break;
+	}
+	if (appSec == NULL || itApp == m_listAppSect.end())
+	{
+		// append new app secton
+		appSec = new APP_SECT;
+		appSec->strAppName = szAppName;
+		m_listAppSect.push_back(appSec);
+		appSec->mapKeys[strKeyNameLower] = szValue;
+		return;
+	}
+
+	it = appSec->mapKeys.find(strKeyNameLower);
+	if (it == appSec->mapKeys.end())
+		appSec->mapKeys[strKeyNameLower] = szValue;
 }
 
 void CProfile::Init(LPCTSTR szProfile, LPCTSTR szDefKey)
@@ -280,7 +310,7 @@ DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR s
 		return 0;
 	}
 
-	LIST_KEYS::iterator	itKey;
+	MAP_STRING::iterator	itKey;
 
 	if (!GetKey(szAppName, szKeyName, itKey))
 	{
@@ -290,9 +320,9 @@ DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR s
 	}
 	else
 	{
-		_tcscpy(szReturnedString, (*itKey).strValue.c_str());
+		_tcscpy_safe(szReturnedString, nSize, (*itKey).second.c_str());
 
-		return (*itKey).strValue.size();
+		return (*itKey).second.size();
 	}
 }
 
@@ -305,7 +335,7 @@ LPCTSTR CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR
 	if (szKeyName[0] == '\0')
 		return _T("");
 
-	LIST_KEYS::iterator	itKey;
+	MAP_STRING::iterator	itKey;
 
 	if (!GetKey(szAppName, szKeyName, itKey))
 	{
@@ -319,7 +349,7 @@ LPCTSTR CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR
 		}
 	}
 
-	return (*itKey).strValue.c_str();
+	return (*itKey).second.c_str();
 }
 
 BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
@@ -327,7 +357,7 @@ BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR 
 	assert(!m_strProfile.empty());
 
 	DWORD		dwRet;
-	LIST_KEYS::iterator	itKey;
+	MAP_STRING::iterator	itKey;
 
 	dwRet = WritePrivateProfileString(szAppName, szKeyName, szValue, m_strProfile.c_str());
 
@@ -336,7 +366,7 @@ BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR 
 		AddKeys(szAppName, szKeyName, szValue);
 	}
 	else
-		(*itKey).strValue = szValue;
+		(*itKey).second = szValue;
 
 	return dwRet;
 }
@@ -353,7 +383,7 @@ UINT CProfile::GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
 
 	TCHAR	szValue[64];
 	TCHAR	szDefault[64];
-	_stprintf(szDefault, _T("%d"), nDefault);
+	_itot_s(nDefault, szDefault, CountOf(szDefault), 10);
 
 	GetProfileString(szAppName, szKeyName, szDefault, szValue, 64);
 
@@ -364,9 +394,9 @@ BOOL CProfile::WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
 {
 	assert(!m_strProfile.empty());
 
-	TCHAR		szValue[MAX_PATH];
-	
-	_stprintf(szValue, _T("%d"), nValue);
+	TCHAR		szValue[64];
+
+	_itot_s(nValue, szValue, CountOf(szValue), 10);
 
 	return WriteProfileString(szAppName, szKeyName, szValue);
 }
@@ -382,17 +412,6 @@ LPCTSTR CProfile::GetDefAppName()
 	return m_strDefAppName.c_str();
 }
 
-template<class XCHAR>
-void charep(XCHAR *str, XCHAR Src, XCHAR Targ)
-{
-	while (*str)
-	{
-		if (*str == Src)
-			*str = Targ;
-		str++;
-	}
-}
-
 //
 // support encrypt keyname and value
 //
@@ -402,7 +421,7 @@ void EncryptStr(LPCTSTR szStr, tstringex &strOut)
 	stringex	strAnsi;
 	ConvertStr(szStr, -1, strAnsi);
 	encodeuu(strAnsi.c_str(), strAnsi.size(), strEncrypt, true, false);
-	charep(strEncrypt.data(), '=', '?');
+	_xcsrep(strEncrypt.data(), '=', '?');
 	ConvertStr(strEncrypt.c_str(), strEncrypt.size(), strOut);
 }
 
@@ -411,7 +430,7 @@ void DecryptStr(LPCTSTR szStr, tstringex &strOut)
 	stringex	strDecrypt;
 	stringex	strAnsi;
 	ConvertStr(szStr, -1, strAnsi);
-	charep(strAnsi.data(), '?', '=');
+	_xcsrep(strAnsi.data(), '?', '=');
 	decodebase64(strAnsi.c_str(), strAnsi.size(), strDecrypt);
 	ConvertStr(strDecrypt.c_str(), strDecrypt.size(), strOut);
 }
@@ -447,50 +466,22 @@ DWORD CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LP
 	tstringex	strKeyNameEncrypt, strValue;
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 
-	LIST_KEYS::iterator	itKey;
+	MAP_STRING::iterator	itKey;
 
 	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itKey))
 	{
 		EncryptStr(szDefault, strValue);
 		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, nSize, m_strProfile.c_str());
-		DecryptStr(szReturnedString, strValue);
-		AddKeys(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str());
-		_tcscpy_safe(szReturnedString, nSize, strValue.c_str());
+		AddKeys(szAppName, strKeyNameEncrypt.c_str(), szReturnedString);
 	}
 	else
 	{
-		_tcscpy_safe(szReturnedString, nSize, (*itKey).strValue.c_str());
+		_tcscpy_safe(szReturnedString, nSize, (*itKey).second.c_str());
 	}
+	DecryptStr(szReturnedString, strValue);
+	_tcscpy_safe(szReturnedString, nSize, strValue.c_str());
 
 	return _tcslen(szReturnedString);
-}
-
-LPCTSTR CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
-{
-	assert(!m_strProfile.empty());
-
-	DWORD		dwRet;
-
-	if (szKeyName[0] == '\0')
-		return _T("");
-
-	LIST_KEYS::iterator	itKey;
-
-	tstringex	strKeyNameEncrypt, strValue;
-	EncryptStr(szKeyName, strKeyNameEncrypt);
-
-	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itKey))
-	{
-		TCHAR	szReturnedString[1024];
-		EncryptStr(szDefault, strValue);
-		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, CountOf(szReturnedString), m_strProfile.c_str());
-		DecryptStr(szReturnedString, strValue);
-		AddKeys(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str());
-		if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itKey))
-			return _T("");
-	}
-
-	return (*itKey).strValue.c_str();
 }
 
 BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
@@ -498,7 +489,7 @@ BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, L
 	assert(!m_strProfile.empty());
 
 	DWORD		dwRet;
-	LIST_KEYS::iterator	itKey;
+	MAP_STRING::iterator	itKey;
 	tstringex	strKeyNameEncrypt, strValueEncrypt;
 
 	EncryptStr(szKeyName, strKeyNameEncrypt);
@@ -511,7 +502,7 @@ BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, L
 		AddKeys(szAppName, strKeyNameEncrypt.c_str(), szValue);
 	}
 	else
-		(*itKey).strValue = szValue;
+		(*itKey).second = strValueEncrypt;
 
 	return dwRet;
 }

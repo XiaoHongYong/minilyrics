@@ -174,7 +174,7 @@ BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles
 
 				strFile = szBaseDir;
 				DirStringAddSlash(strFile);
-				strFile += FindData.cFileName;
+				strFile += find.GetCurName();
 
 				vFiles.push_back(strFile);
 			}

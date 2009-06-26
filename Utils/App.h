@@ -10,7 +10,7 @@
 #ifndef _FRAME_WORK_2003_11_2_23_28INCLUDED_
 #define _FRAME_WORK_2003_11_2_23_28INCLUDED_
 
-#include "Log.h"
+#include "log.h"
 #include "LogAlias.h"
 
 //
