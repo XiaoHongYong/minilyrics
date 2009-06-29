@@ -41,6 +41,7 @@ typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
 typedef long BOOL;
+typedef long LONG;
 typedef unsigned int UINT;
 typedef unsigned int uint;
 
@@ -70,9 +71,6 @@ typedef BYTE		*LPBYTE;
 
 // #define TRUE		1
 // #define FALSE		0
-
-#define LOWORD(l) ((WORD)(l))
-#define HIWORD(l) ((WORD)(((DWORD)(l) >> 16) & 0xFFFF))
 
 #endif
 

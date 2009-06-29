@@ -416,7 +416,7 @@ inline void AdjustPixHue(byte *pix, float hueOffset)
 
     if (saturation == 0.0)
     {
-		pix[0] = pix[1] = pix[2] = unsigned char(luminance * 255.0);
+		pix[0] = pix[1] = pix[2] = (byte)(luminance * 255.0);
     }
     else
     {
@@ -479,7 +479,7 @@ inline void AdjustPixHue(byte *pix, float hueOffset, float saturationRatio, floa
 
     if (saturation == 0.0)
     {
-		pix[0] = pix[1] = pix[2] = unsigned char(luminance * 255.0);
+		pix[0] = pix[1] = pix[2] = (byte)(luminance * 255.0);
     }
     else
     {
@@ -620,7 +620,7 @@ COLORREF HLSToRGB(float hue, float saturation, float luminance)
 
     if (saturation == 0.0)
     {
-		unsigned char	c = unsigned char(luminance * 255.0);
+		unsigned char	c = (byte)(luminance * 255.0);
 		clr = RGB(c, c, c);
     }
     else

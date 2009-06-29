@@ -16,7 +16,7 @@ public:
 	virtual ~IILIO();
 
 	virtual uint32 Read(void *buf, uint32 nSize) = 0;
-	virtual uint32 Write(void *buf, uint32 nSize) { return nSize; }
+	virtual uint32 Write(const void *buf, uint32 nSize) { return nSize; }
 	// nOrigin: SEEK_SET, SEEK_CUR, SEEK_END
 	virtual bool Seek(int nOffset, int nOrigin) = 0;
 	virtual bool GetSize(uint32 &nSize) = 0;

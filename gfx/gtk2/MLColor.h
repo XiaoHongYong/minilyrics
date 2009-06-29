@@ -5,14 +5,6 @@
 #ifndef _MLCOLOR_INC_
 #define _MLCOLOR_INC_
 
-#ifndef RGB
-#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
-
-#define GetRValue(rgb)      ((BYTE)(rgb))
-#define GetGValue(rgb)      ((BYTE)(((WORD)(rgb)) >> 8))
-#define GetBValue(rgb)      ((BYTE)((rgb)>>16))
-#endif
-
 class MLColor
 {
 public:

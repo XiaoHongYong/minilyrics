@@ -14,6 +14,16 @@
 #include "agg_pixfmt_rgb.h"
 #include "agg_rasterizer_scanline_aa.h"
 
+#ifndef _WIN32
+typedef struct tagRGBQUAD {
+	BYTE    rgbBlue;
+	BYTE    rgbGreen;
+	BYTE    rgbRed;
+	BYTE    rgbReserved;
+} RGBQUAD;
+typedef RGBQUAD * LPRGBQUAD;
+#endif
+
 enum PIX_FORMAT
 {
 	PF_UNKNOWN		= -1,

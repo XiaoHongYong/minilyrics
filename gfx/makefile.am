@@ -1,10 +1,14 @@
-SUBDIRS = gtk2
+SUBDIRS = 
 
 noinst_LIBRARIES = libgfx.a
 
-libgfx_a_SOURCES = 
+libgfx_a_SOURCES = RawBmpFont.cpp RawImage.cpp RawImageUtils.cpp \
+	gtk2/Cursor.cpp        gtk2/ImageFile.cpp     gtk2/MemGraphics.cpp   gtk2/MLBrush.cpp \
+	gtk2/MLFont.cpp        gtk2/MLGraphics.cpp    gtk2/MLImage.cpp       gtk2/MLPen.cpp \
+	gtk2/Region.cpp
 
-INCLUDES = -I$(top_srcdir)/base
+INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/SDK/Agg/include \
+	-I$(top_srcdir)/ImageLib
 
 libgfx_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`
 

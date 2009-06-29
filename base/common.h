@@ -23,17 +23,22 @@ enum FILE_ENCODING
 
 #define Tobool(bValue)		((bValue) != 0)
 
-template<class int_t1, class int_t2>
-int_t1 inline max_fun(int_t1 a, int_t2 b)
+template<class int_t1, class int_t2, class int_t3>
+int_t3 inline max_fun(int_t1 a, int_t2 b)
 {
 	return (((a) > (b)) ? (a) : (b));
 }
 
-template<class int_t1, class int_t2>
-int_t1 inline min_fun(int_t1 a, int_t2 b)
+template<class int_t1, class int_t2, class int_t3>
+int_t3 inline min_fun(int_t1 a, int_t2 b)
 {
 	return (((a) < (b)) ? (a) : (b));
 }
+
+#ifndef min
+#define max(a,b)    (((a) > (b)) ? (a) : (b))
+#define min(a,b)    (((a) < (b)) ? (a) : (b))
+#endif
 
 #ifdef _WIN32
 #define DIR_SLASH		'\\'
@@ -50,5 +55,22 @@ int_t1 inline min_fun(int_t1 a, int_t2 b)
 #define CHAR_NULL		_T('\0')
 #define CHAR_COMMA		_T(',')
 #define CHAR_SEMICOLON	_T(';')
+
+#ifndef _WIN32
+#define MAKEWORD(a, b)      ((WORD)(((BYTE)((a) & 0xff)) | ((WORD)((BYTE)((b) & 0xff))) << 8))
+#define MAKELONG(a, b)      ((LONG)(((WORD)((a) & 0xffff)) | ((DWORD)((WORD)((b) & 0xffff))) << 16))
+#define LOWORD(l)           ((WORD)((l) & 0xffff))
+#define HIWORD(l)           ((WORD)((l) >> 16))
+#define LOBYTE(w)           ((BYTE)((w) & 0xff))
+#define HIBYTE(w)           ((BYTE)((w) >> 8))
+#endif
+
+#ifndef RGB
+#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+
+#define GetRValue(rgb)      ((BYTE)(rgb))
+#define GetGValue(rgb)      ((BYTE)(((WORD)(rgb)) >> 8))
+#define GetBValue(rgb)      ((BYTE)((rgb)>>16))
+#endif
 
 #endif // _ML_COMMON_INC_

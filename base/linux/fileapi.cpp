@@ -732,6 +732,14 @@ bool CMLFileFind::FindNext()
 	m_dirp = readdir(m_dp);
 	m_bStatValid = false;
 
+	while (m_dirp && m_dirp->d_name[0] == '.')
+	{
+		if (!(m_dirp->d_name[1] == '\0'
+			|| m_dirp->d_name[1] == '.' && m_dirp->d_name[2] == '\0'))
+			break;
+		m_dirp = readdir(m_dp);
+	}
+
 	return m_dirp != NULL;
 }
 

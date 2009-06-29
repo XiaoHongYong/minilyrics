@@ -238,8 +238,8 @@ void TransferFrom(PGIF_RAW_IMAGE_DATA dst, PGIF_RAW_IMAGE_DATA src)
 
 void GifMix(PGIF_RAW_IMAGE_DATA imgSrc, PGIF_RAW_IMAGE_DATA imgTarg, long lxOffset, long lyOffset)
 {
-	long lWide = min(imgTarg->width, imgSrc->width - lxOffset);
-	long lHeight = min(imgTarg->height, imgSrc->height - lyOffset);
+	long lWide = min((long)imgTarg->width, imgSrc->width - lxOffset);
+	long lHeight = min((long)imgTarg->height, imgSrc->height - lyOffset);
 
 	BYTE ibg2 = (BYTE)imgSrc->GetTransIndex();
 	BYTE i2;
@@ -805,14 +805,16 @@ bool CImgGifFile::EncodeRGB(IILIO *io)
 			if (m_imgData->IsTransparent())
 			{
 				tmp.SetTransIndex(0);
-				tmp.SetPaletteIndex(0, m_imgData->GetTransColor());
+				RGBQUAD	clr = m_imgData->GetTransColor();
+				tmp.SetPaletteIndex(0, clr);
 			}
 
 			BYTE i;
 			for (unsigned long j=0;j<h;j++){
 				for (unsigned long k=0;k<w;k++){
 					i=(BYTE)(1+k+cellw*j);
-					tmp.SetPaletteIndex(i, m_imgData->GetPixelColor(x+k,m_imgData->height-y-h+j));
+					RGBQUAD	clr = m_imgData->GetPixelColor(x+k,m_imgData->height-y-h+j);
+					tmp.SetPaletteIndex(i, clr);
 					tmp.SetPixelIndex(k,j,tmp.GetNearestIndex(tmp.GetPaletteColor(i)));
 				}
 			}
