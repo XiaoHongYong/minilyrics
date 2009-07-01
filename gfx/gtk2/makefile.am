@@ -1,7 +1,7 @@
 noinst_LIBRARIES = lib_gfx_gtk2.a
 
-lib_gfx_gtk2_a_SOURCES = Cursor.cpp MLBrush.cpp MLFont.cpp MLGraphics.cpp MLImage.cpp MLPen.cpp Region.cpp \
-	ImageFile.cpp MemGraphics.cpp
+lib_gfx_gtk2_a_SOURCES = Cursor.cpp MLBrush.cpp MLFont.cpp MLGraphics.cpp MLImage.cpp MLPen.cpp \
+	RawBmpFont.cpp	RawGraph.cpp	Region.cpp	ImageFile.cpp MemGraphics.cpp
 
 INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/gfx
 

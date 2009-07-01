@@ -22,6 +22,7 @@ class CRegion;
 #include "gtk2/MLImage.h"
 #include "gtk2/Region.h"
 #include "gtk2/MLGraphics.h"
+#include "gtk2/RawGraph.h"
 #include "gtk2/MemGraphics.h"
 
 #endif
