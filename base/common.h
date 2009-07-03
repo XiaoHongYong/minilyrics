@@ -23,14 +23,14 @@ enum FILE_ENCODING
 
 #define Tobool(bValue)		((bValue) != 0)
 
-template<class int_t1, class int_t2, class int_t3>
-int_t3 inline max_fun(int_t1 a, int_t2 b)
+template<class int_t1, class int_t2>
+int_t1 inline max_fun(int_t1 a, int_t2 b)
 {
 	return (((a) > (b)) ? (a) : (b));
 }
 
-template<class int_t1, class int_t2, class int_t3>
-int_t3 inline min_fun(int_t1 a, int_t2 b)
+template<class int_t1, class int_t2>
+int_t1 inline min_fun(int_t1 a, int_t2 b)
 {
 	return (((a) < (b)) ? (a) : (b));
 }

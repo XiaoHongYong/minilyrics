@@ -2,7 +2,7 @@ SUBDIRS =
 
 noinst_LIBRARIES = libgfx.a
 
-libgfx_a_SOURCES = RawImage.cpp RawImageUtils.cpp RawBmpFont.cpp         RawGraph.cpp	\
+libgfx_a_SOURCES = RawImage.cpp RawImageUtils.cpp gtk2/RawBmpFont.cpp    gtk2/RawGraph.cpp	\
 	gtk2/Cursor.cpp        gtk2/ImageFile.cpp     gtk2/MemGraphics.cpp   gtk2/MLBrush.cpp \
 	gtk2/MLFont.cpp        gtk2/MLGraphics.cpp    gtk2/MLImage.cpp       gtk2/MLPen.cpp \
 	gtk2/Region.cpp
