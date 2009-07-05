@@ -43,8 +43,12 @@ public:
 	{
 		return blue / 257;
 	}
+	int a() const { return m_alpha; }
 
 	COLORREF get() const { return RGB(red / 257, green / 257, blue / 257); }
+
+	void setAlpha(byte alpha) { m_alpha = alpha; }
+	byte getAlpha() const { return m_alpha; }
 
 	bool operator==(MLColor right) const
 	{
@@ -54,6 +58,7 @@ public:
 	uint16	red;
 	uint16	green;
 	uint16	blue;
+	byte	m_alpha;
 
 };
 
