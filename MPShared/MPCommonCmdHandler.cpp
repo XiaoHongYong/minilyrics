@@ -255,7 +255,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 					}
 				}
 			}
-			CMLGraphicsFactory::SetGraphicsType(bAntialias ? MGT_GDIPLUS : MGT_WIN32GDI);
+			GfxRaw::EnableAntialiasFont(bAntialias);
 
 			CMPlayerSettings::SetPlayerUISettings(_T("Antialias"), bAntialias);
 		}
