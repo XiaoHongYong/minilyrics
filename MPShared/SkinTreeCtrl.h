@@ -226,7 +226,6 @@ protected:
 
 	MLColor					m_clrBk, m_clrSelRowBk;
 	MLColor					m_clrSelText;
-	CMLBrush				m_brBk, m_brSelBk;
 	CSkinFontProperty		m_font;
 	int						m_nLineHeight;
 	int						m_nXMargin;

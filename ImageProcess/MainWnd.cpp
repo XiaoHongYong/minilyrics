@@ -301,7 +301,6 @@ bool CMainWnd::OnCreate()
 	m_rawImage3.Load(_T("c:\\2.png"));
 
 	m_rawFont.Create(_T("Tahoma"), _T("Tahoma"), 43, FW_NORMAL, false);
-	m_rawFont.InitSet(&m_memGraph);
 
 	m_font.Create(_T("Tahoma"), _T("Tahoma"), 13, FW_NORMAL, false);
 
@@ -344,7 +343,7 @@ void CMainWnd::OnPaint(IMLGraphicsBase *pGraph)
 	//	m_rawImage2.MaskBlt(&m_memGraph, 0, 0, &m_rawImage3, BPM_BLEND);
 	m_memGraph.SetOrigin(CPoint(0, 0));
 
-	m_memGraph.SetClipBoundBox(CRect(5, 5, 50, 100));
+	// m_memGraph.SetClipBoundBox(CRect(5, 5, 50, 100));
 
 	m_memGraph.SetOrigin(CPoint(5, 10));
 	m_rawImage2.Blt(&m_memGraph, 0, 0);
@@ -369,7 +368,7 @@ void CMainWnd::OnPaint(IMLGraphicsBase *pGraph)
 	m_memGraph.Clear(0, 255, 0, 255, &rcFill);
 	m_memGraph.TextOut(10, 10, _T("Hello2"), 6);
 
-	pGraph->DrawGraphics(&m_memGraph, 0, 0,  rc.Width(), rc.Height(), 0, 0);
+	m_memGraph.DrawToGraphics(pGraph, 0, 0,  rc.Width(), rc.Height(), 0, 0);
 	// pGraph->DrawImage(&m_img, 0, 0,  m_img.m_cx, m_img.m_cy, 0, 0);
 }
 

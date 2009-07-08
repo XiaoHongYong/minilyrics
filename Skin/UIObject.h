@@ -196,6 +196,8 @@ public:
 
 	virtual void Draw(CRawGraph *pGraph);
 
+	virtual void UpdateTranslucencyWithSkin(CRawGraph *pGraph);
+
 	virtual void OnKillFocus() { }
 	virtual void OnSetFocus() { }
 

@@ -381,7 +381,6 @@ protected:
 	MLColor			m_clrBg;		// background color
 	MLColor			m_clrBgOrg;
 	bool			m_bPaintBg;		// Should Paint background?
-	CMLBrush		m_brBg;
 
 	// Window properties
 	bool			m_bIndividualProperties;

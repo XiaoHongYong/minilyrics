@@ -1,0 +1,12 @@
+SUBDIRS = 
+
+noinst_LIBRARIES = libgfxraw.a
+
+libgfxraw_a_SOURCES = RawBmpFont.cpp      RawGraph.cpp        RawImage.cpp        RawImageUtils.cpp \
+	gtk2\RawGlyphBuilder.cpp   gtk2\RawGraphData.cpp
+
+INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/SDK/Agg/include \
+	-I$(top_srcdir)/ImageLib -I$(top_srcdir)/gfx
+
+libgfxraw_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`
+

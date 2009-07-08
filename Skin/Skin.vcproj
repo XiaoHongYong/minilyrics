@@ -438,6 +438,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\widget\EditHandler.cpp"
+				>
+			</File>
+			<File
 				RelativePath="Formula.cpp"
 				>
 				<FileConfiguration
@@ -940,6 +944,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SkinToggleCtrlContainer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SkinVScrollBar.cpp"
 				>
 				<FileConfiguration
@@ -1089,6 +1097,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\widget\win32\SplashScreenWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath="StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -1201,6 +1213,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\widget\EditHandler.h"
+				>
+			</File>
+			<File
 				RelativePath="Formula.h"
 				>
 			</File>
@@ -1277,15 +1293,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinToggleCtrlContainer.h"
+				>
+			</File>
+			<File
 				RelativePath="SkinVScrollBar.h"
 				>
 			</File>
 			<File
-				RelativePath="win32\SkinVScrollBarOSStyle.h"
+				RelativePath="SkinVScrollBarOSStyle.h"
 				>
 			</File>
 			<File
-				RelativePath="SkinVScrollBarOSStyle.h"
+				RelativePath="win32\SkinVScrollBarOSStyle.h"
 				>
 			</File>
 			<File
@@ -1298,6 +1318,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinWndResizeObj.h"
+				>
+			</File>
+			<File
+				RelativePath="..\widget\win32\SplashScreenWnd.h"
 				>
 			</File>
 			<File

@@ -314,8 +314,6 @@ void CSkinWnd::CloseSkin()
 	m_clrBgOrg.setAlpha(255);
 	m_clrFg.set(255, 255, 255);
 
-	m_brBg.Destroy();
-
 	m_listUnprocessedProperties.clear();
 
 	m_cursor.Destroy();
@@ -406,7 +404,7 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 	//
 	// Change translucency on hover?
 	//
-	if (m_bTranslucencyLayered&& m_brBg.IsValid() 
+	if (m_bTranslucencyLayered && m_bPaintBg
 		&& m_nTranslucencyAlpha != m_nTranslucencyAlphaOnHover
 		&& m_translucencyStatus == TS_NORMAL
 		&& !m_bActived)
@@ -736,9 +734,9 @@ void CSkinWnd::OnPaint(IMLGraphicsBase *pGraph)
 
 	pMemGraph = GetMemGraphics();
 
-	if (m_bPaintBg && m_brBg.IsValid())
+	if (m_bPaintBg)
 	{
-		pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), &m_brBg);
+		pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
 	}
 
 	// draw every ui objects on back buffer one by one
@@ -746,9 +744,9 @@ void CSkinWnd::OnPaint(IMLGraphicsBase *pGraph)
 
 	// from buffer to screen dc
 	if (m_dbScale == 1.0)
-		pGraph->DrawGraphics(pMemGraph, 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), 0, 0);
+		pMemGraph->DrawToGraphics(pGraph, 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), 0, 0);
 	else
-		pGraph->DrawGraphicsStretch(pMemGraph, 0, 0, m_rcReal.Width(), m_rcReal.Height(), 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height());
+		pMemGraph->DrawToGraphicsStretch(pGraph, 0, 0, m_rcReal.Width(), m_rcReal.Height(), 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height());
 }
 
 
@@ -813,10 +811,10 @@ bool CSkinWnd::RecreateMemGraphics()
 	m_pmemGraph = pGraphMem;
 #endif
 
-	m_pmemGraph->SetBkMode(true);
-
-	if (m_brBg.IsValid())
-		m_pmemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), &m_brBg);
+	if (m_bPaintBg)
+	{
+		m_pmemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
+	}
 
 	ReleaseGraphics(pGraph);
 
@@ -831,9 +829,6 @@ void CSkinWnd::RecreateBrush()
 		m_clrBg.setAlpha((byte)m_nTranslucencyAlphaDynamic);
 		PreMultiplyColor(m_clrBg, (byte)m_nTranslucencyAlphaDynamic);
 	}
-	if (m_brBg.IsValid())
-		m_brBg.Destroy();
-	m_brBg.CreateSolidBrush(m_clrBg);
 }
 
 void CSkinWnd::OnWindowSizeChanged()
@@ -889,19 +884,8 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
 
 	pObj->Draw(m_pmemGraph);
-	if (pObj->IsUpdateTranslucencyWithSkin())
-	{
-		MLColor		clrAlpha;
-		clrAlpha.setAlpha((byte)m_nTranslucencyAlphaDynamic);
-		if (pObj->m_imgMask.IsValid())
-		{
-			CRect	rcMask;
-			rcMask.SetRect(pObj->m_imgMask.m_x, pObj->m_imgMask.m_y, pObj->m_imgMask.m_x + pObj->m_imgMask.m_cx, pObj->m_imgMask.m_y + pObj->m_imgMask.m_cy);
-			m_pmemGraph->FillRect(&pObj->m_rcObj, pObj->m_imgMask.GetHandle(), &rcMask, clrAlpha, BPM_MULTIPLY);
-		}
-		else
-			m_pmemGraph->FillRect(&pObj->m_rcObj, clrAlpha, BPM_MULTIPLY);
-	}
+
+	pObj->UpdateTranslucencyWithSkin(m_pmemGraph);
 
 	m_pmemGraph->RecoverClipBox();
 
@@ -919,14 +903,14 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 
 	if (m_dbScale == 1.0)
 	{
-		pGraphics->DrawGraphics(m_pmemGraph,
+		m_pmemGraph->DrawToGraphics(pGraphics,
 			pObj->m_rcObj.left, pObj->m_rcObj.top, 
 			pObj->m_rcObj.Width(), pObj->m_rcObj.Height(),
 			pObj->m_rcObj.left, pObj->m_rcObj.top);
 	}
 	else
 	{
-		pGraphics->DrawGraphicsStretch(m_pmemGraph,
+		m_pmemGraph->DrawToGraphicsStretch(pGraphics,
 			(int)(pObj->m_rcObj.left * m_dbScale), (int)(pObj->m_rcObj.top * m_dbScale), 
 			(int)((pObj->m_rcObj.Width() + 1) * m_dbScale), (int)((pObj->m_rcObj.Height() + 1) * m_dbScale),
 			pObj->m_rcObj.left, pObj->m_rcObj.top, pObj->m_rcObj.Width(), pObj->m_rcObj.Height());
@@ -957,7 +941,7 @@ void CSkinWnd::RedrawBackground(RECT *prc)
 	else
 		rc = m_rcBoundBox;
 
-	m_pmemGraph->FillRect(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, &m_brBg);
+	m_pmemGraph->FillRect(&rc, m_clrBg);
 }
 
 void CSkinWnd::SetMainAppWnd(bool bMainAppWnd)
@@ -1214,7 +1198,7 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	else if (_tcsicmp(szProperty, _T("PaintBg")) == 0)
 	{
 		m_bPaintBg = IsTRUE(szValue);
-		if (m_bPaintBg && !m_brBg.IsValid())
+		if (m_bPaintBg)
 			RecreateBrush();
 	}
 	else if (_tcsicmp(szProperty, _T("BgColor")) == 0 || _tcsicmp(szProperty, _T("BkColor")) == 0
@@ -1576,7 +1560,7 @@ void CSkinWnd::OnActivate(bool bActived)
 {
 	m_bActived = bActived;
 
-	if (m_bTranslucencyLayered && m_brBg.IsValid() 
+	if (m_bTranslucencyLayered && m_bPaintBg 
 		&& m_nTranslucencyAlpha != m_nTranslucencyAlphaOnActive)
 	{
 		if (m_translucencyStatus == TS_ON_HOVER)
@@ -1805,9 +1789,9 @@ BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 
 	pMemGraph = GetMemGraphics();
 
-	if (m_bPaintBg && m_brBg.IsValid())
+	if (m_bPaintBg)
 	{
-		pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), &m_brBg);
+		pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
 	}
 
 	// draw every ui objects on back buffer one by one
@@ -1828,7 +1812,7 @@ void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
 
 		pGraphics = GetGraphics();
 
-		pGraphics->DrawGraphics(m_pmemGraph, 
+		m_pmemGraph->DrawToGraphics(pGraphics, 
 			lpRect->left, lpRect->top, 
 			lpRect->right - lpRect->left, lpRect->bottom - lpRect->top,
 			lpRect->left, lpRect->top);

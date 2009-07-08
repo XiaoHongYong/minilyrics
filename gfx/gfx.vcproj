@@ -930,112 +930,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\win32\RawBmpFont.cpp"
-				>
-			</File>
-			<File
-				RelativePath="win32\RawGraph.cpp"
-				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="RawImage.cpp"
-				>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\RawImageUtils.cpp"
-				>
-			</File>
-			<File
 				RelativePath="win32\Region.cpp"
 				>
 				<FileConfiguration
@@ -1258,10 +1152,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\ImageBuffBlt.h"
-				>
-			</File>
-			<File
 				RelativePath="win32\ImageFile.h"
 				>
 			</File>
@@ -1303,22 +1193,6 @@
 			</File>
 			<File
 				RelativePath="win32\MLPen.h"
-				>
-			</File>
-			<File
-				RelativePath=".\win32\RawBmpFont.h"
-				>
-			</File>
-			<File
-				RelativePath="win32\RawGraph.h"
-				>
-			</File>
-			<File
-				RelativePath="RawImage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RawImageUtils.h"
 				>
 			</File>
 			<File

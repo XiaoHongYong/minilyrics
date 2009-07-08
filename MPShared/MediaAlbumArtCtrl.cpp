@@ -61,7 +61,6 @@ CMediaAlbumArtCtrl::CMediaAlbumArtCtrl()
 	m_nMsgWant = UO_MSG_WANT_LBUTTON;
 
 	m_clrBg.set(RGB(0, 0, 0));
-	m_brBg.CreateSolidBrush(m_clrBg);
 	m_nCurAlbumArt = 0;
 	m_rcFrameMaskPos.SetRect(0, 0, 0, 0);
 }
@@ -167,8 +166,8 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 		h = rc.Height();
 		if (!m_bUseSkinBg)
 		{
-			pGraph->FillRect(rc.left, rc.top, (rc.Width() - w) / 2, h, &m_brBg);
-			pGraph->FillRect(rc.right - (rc.Width() - w) / 2, rc.top, (rc.Width() - w) / 2, h, &m_brBg);
+			pGraph->FillRect(rc.left, rc.top, (rc.Width() - w) / 2, h, m_clrBg);
+			pGraph->FillRect(rc.right - (rc.Width() - w) / 2, rc.top, (rc.Width() - w) / 2, h, m_clrBg);
 		}
 	}
 	else
@@ -178,8 +177,8 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 		w = rc.Width();
 		if (!m_bUseSkinBg)
 		{
-			pGraph->FillRect(rc.left, rc.top, w, (rc.Height() - h) / 2, &m_brBg);
-			pGraph->FillRect(rc.left, rc.bottom - (rc.Height() - h) / 2, w, (rc.Height() - h) / 2, &m_brBg);
+			pGraph->FillRect(rc.left, rc.top, w, (rc.Height() - h) / 2, m_clrBg);
+			pGraph->FillRect(rc.left, rc.bottom - (rc.Height() - h) / 2, w, (rc.Height() - h) / 2, m_clrBg);
 		}
 	}
 
@@ -210,10 +209,6 @@ BOOL CMediaAlbumArtCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	else if (_tcsicmp(szProperty, _T("BgColor")) == 0)
 	{
 		GetColorValue(m_clrBg, szValue);
-
-		if (m_brBg.IsValid())
-			m_brBg.Destroy();
-		m_brBg.CreateSolidBrush(m_clrBg);
 	}
 	else
 		return FALSE;

@@ -15,6 +15,7 @@
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"
 #include "../gfx/gfx.h"
+#include "../GfxRaw/GfxRaw.h"
 #include "../widget/widget.h"
 
 // Local Header Files

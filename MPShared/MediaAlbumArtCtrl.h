@@ -57,7 +57,6 @@ protected:
 	CRect				m_rcFrameMaskPos;
 
 	MLColor				m_clrBg;
-	CMLBrush			m_brBg;
 
 };
 

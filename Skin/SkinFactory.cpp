@@ -8,6 +8,7 @@
 #include "SkinWndResizeObj.h"
 #include "SkinFadeArea.h"
 #include "SkinDecorativeContainer.h"
+#include "SkinToggleCtrlContainer.h"
 #include "SkinMenuBar.h"
 
 #define _SZ_SKINWND				_T("skinwnd")
@@ -1091,6 +1092,8 @@ CUIObject *CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinSquare;
 	else if (_tcsicmp(szClassName, CSkinFadeArea::ClassName()) == 0)
 		pObj = new CSkinFadeArea;
+	else if (_tcsicmp(szClassName, CSkinToggleCtrlContainer::ClassName()) == 0)
+		pObj = new CSkinToggleCtrlContainer;
 
 	if (pObj)
 	{
@@ -1281,6 +1284,21 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		if (pObj)
 			pObj->SetVisible(false);
 		pSkinWnd->InvalidateRect();
+	}
+	else if (cmd.strFunction == _T("set_property"))
+	{
+		V_Str		vStrParam;
+		CUIObject	*pObj;
+
+		StrBreak(cmd.strParam.c_str(), ',', vStrParam);
+		if (vStrParam.size() != 3)
+			return ERR_FALSE;
+		for (int i = 0; i < (int)vStrParam.size(); i++)
+			TrimStr(vStrParam[i]);
+
+		pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
+		if (pObj)
+			pObj->SetProperty(vStrParam[1].c_str(), vStrParam[2].c_str());
 	}
 //	else if (cmd.strFunction == _T("open_skin_wnd"))
 //		return ActiveOrCreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());

@@ -11,9 +11,7 @@
 
 #include "resource.h"
 #include "../ImageLib/RawImageData.h"
-#include "../gfx/win32/RawGraph.h"
-#include "../gfx/win32/RawGraph.h"
-#include "../gfx/RawImage.h"
+#include "../GfxRaw/GfxRaw.h"
 
 class CMainWnd : public CBaseWnd  
 {

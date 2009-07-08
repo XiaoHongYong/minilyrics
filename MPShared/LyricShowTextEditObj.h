@@ -27,7 +27,6 @@ public:
 	virtual CRawGraph *EB_GetGraphics()
 	{
 		CRawGraph		*pGraph = m_pContainer->GetMemGraph();
-		m_font.EnableGdiplusAntialias(CMLGraphicsFactory::GetGraphicsType() == MGT_GDIPLUS);
 		pGraph->SetFont(&m_font);
 
 		return pGraph;
@@ -35,7 +34,7 @@ public:
 
 	virtual int EB_GetFontHeight() { return m_font.GetHeight(); }
 
-	virtual void EB_SetFont(CMLFont &font) { m_font.CreateFrom(font); }
+	virtual void EB_SetFont(CMLFont &font) { m_font.Create(font); }
 
 	virtual MLColor & GetColor(int nColorName);
 

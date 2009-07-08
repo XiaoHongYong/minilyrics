@@ -377,6 +377,22 @@ void CUIObject::Draw(CRawGraph *pGraph)
 //	pGraph->Rectangle(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height());
 }
 
+void CUIObject::UpdateTranslucencyWithSkin(CRawGraph *pGraph)
+{
+	if (!IsUpdateTranslucencyWithSkin())
+		return;
+
+	MLColor		clrAlpha;
+	clrAlpha.setAlpha((byte)m_pSkin->m_nTranslucencyAlphaDynamic);
+	if (m_imgMask.IsValid())
+	{
+		CRect	rcMask;
+		rcMask.SetRect(m_imgMask.m_x, m_imgMask.m_y, m_imgMask.m_x + m_imgMask.m_cx, m_imgMask.m_y + m_imgMask.m_cy);
+		pGraph->FillRect(&m_rcObj, m_imgMask.GetHandle(), &rcMask, clrAlpha, BPM_MULTIPLY);
+	}
+	else
+		pGraph->FillRect(&m_rcObj, clrAlpha, BPM_MULTIPLY);
+}
 
 BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])
 {

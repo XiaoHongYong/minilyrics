@@ -62,4 +62,10 @@ public:
 
 };
 
+
+inline void PreMultiplyColor(MLColor &clr, byte alpha)
+{
+	clr.set(clr.r() * alpha / 255, clr.g() * alpha / 255, clr.b() * alpha / 255);
+}
+
 #endif // _MLCOLOR_INC_

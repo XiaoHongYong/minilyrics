@@ -568,7 +568,6 @@ void CLyricShowObj::Draw(CRawGraph *pGraph)
 #ifndef _WIN32_WCE
 	m_vads.clear();
 #endif
-	m_font.EnableGdiplusAntialias(CMLGraphicsFactory::GetGraphicsType() == MGT_GDIPLUS);
 
 	pGraph->SetFont(&m_font);
 
@@ -1100,7 +1099,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 
 		if (m_bOutlineLyrics)
 		{
-			rcText.right += CRawBmpFont::OUTLINED_BORDER;
+			rcText.right += GfxRaw::OUTLINED_BORDER;
 			// Draw lyrics text outlined
 			pGraphics->DrawTextClipOutlined(pFrag->szLyric, pFrag->nLen, &rcText, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
 		}
@@ -1745,8 +1744,6 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 
 	pmemGraphics->SetFont(&m_font);
 
-	m_font.EnableGdiplusAntialias(CMLGraphicsFactory::GetGraphicsType() == MGT_GDIPLUS);
-
 	FastDraw(pmemGraphics, &rcUpdate);
 
 	if (!rcUpdate.IsRectEmpty())
@@ -1756,8 +1753,6 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 	if (m_pSkin->GetEnableTranslucencyLayered())
 	{
 		pmemGraphics->SetFont(&m_font);
-
-		m_font.EnableGdiplusAntialias(CMLGraphicsFactory::GetGraphicsType() == MGT_GDIPLUS);
 
 		FastDraw(pmemGraphics, &rcUpdate);
 

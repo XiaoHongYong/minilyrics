@@ -1560,15 +1560,21 @@ void _StrSplit(LPCTSTR szStr, TCHAR chSeperator, _VectorInsert &containerStr)
 		{
 			strTemp.resize(0);
 			strTemp.append(szPrev, int(szPos - szPrev));
+			containerStr.add(strTemp);
 			szPos++;
 		}
 		else
+		{
 			strTemp = szPrev;
-
-		containerStr.add(strTemp);
+			containerStr.add(strTemp);
+			return;
+		}
 
 		szPrev = szPos;
 	}
+
+	strTemp = _T("");
+	containerStr.add(strTemp);
 }
 
 int StrSplit(LPCTSTR szStr, TCHAR chSeperator, SetTStrNCase &containerStr)

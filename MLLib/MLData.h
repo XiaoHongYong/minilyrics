@@ -64,7 +64,7 @@ typedef struct LYRIC_FRAG
 		nDrawWidth = 0;
 		nLen = 0;
 	}
-	int GetDrawWidth(IMLGraphicsBase* pGraphics);
+	int GetDrawWidth(CRawGraph* pGraphics);
 	bool IsAdFrag() { return (dwAttrib & LAS_AD_FRAG) == LAS_AD_FRAG; }
 	bool IsTempFrag() { return IsTempLyricsFrag(dwAttrib); }
 	bool IsTempBegTime() { return IsTempTimeBeg(dwAttrib); }
@@ -133,7 +133,7 @@ public:
 
 		return false;
 	}
-	int GetDrawWidth(IMLGraphicsBase* pGraphics)
+	int GetDrawWidth(CRawGraph* pGraphics)
 	{
 		int		n = 0;
 		for (vector<PLYRIC_FRAG>::iterator it = vFrags.begin(); it != vFrags.end(); it++)
@@ -312,7 +312,7 @@ public:
 
 	VLyrLines &GetRawLyrics();
 
-	bool WrapDisplayLyrics(CMLyrLines &lyrLines, IMLGraphicsBase *pGraph, int nWidthMax);
+	bool WrapDisplayLyrics(CMLyrLines &lyrLines, CRawGraph *pGraph, int nWidthMax);
 	void CopyMLyrLines(CMLyrLines &lyrLines);
 
 	void ClearTimeTagRromRow(int nRow);
@@ -360,7 +360,7 @@ public:
 	void AddRowByTime(PML_ROW pRow);
 
 	void AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle);
-	void AddErrorInfo(IMLGraphicsBase *pGraph, int nWidthMax, LPCTSTR szError);
+	void AddErrorInfo(CRawGraph *pGraph, int nWidthMax, LPCTSTR szError);
 	void RemoveErrrorInfo();
 
 	bool RemoveLyricsRow(int nRow);

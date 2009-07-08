@@ -51,7 +51,7 @@
 #include "gtk2/WidgetComboBox.h"
 #include "gtk2/FileFolderDlg.h"
 #include "gtk2/MLWndHelper.h"
-#include "gtk2/EditEx.h"
+// #include "gtk2/EditEx.h"
 #endif
 
 #include "WndDrag.h"

@@ -207,7 +207,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 bool CLyricShowMultiRowObj::FastestDrawFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow)
 {
 	int			nPlayPos = m_pMLData->GetPlayElapsedTime();
-	int			nRowHeight = GetLineHeight() + CRawBmpFont::OUTLINED_BORDER;
+	int			nRowHeight = GetLineHeight() + GfxRaw::OUTLINED_BORDER;
 	int			nAlpha;
 
 	if (nPlayPos >= pLyricRow->nBegTime - 1000 || nPlayPos <= pLyricRow->nBegTime + 1000)
@@ -256,7 +256,7 @@ bool CLyricShowMultiRowObj::FastestDrawFadeInOut(CRawGraph *pGraphics, CRect *pr
 
 bool CLyricShowMultiRowObj::FastestDrawNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow)
 {
-	int			nRowHeight = GetLineHeight() + CRawBmpFont::OUTLINED_BORDER;
+	int			nRowHeight = GetLineHeight() + GfxRaw::OUTLINED_BORDER;
 
 	//
 	// DO_NORMAL

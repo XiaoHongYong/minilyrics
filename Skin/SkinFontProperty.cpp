@@ -119,7 +119,7 @@ void CSkinFontProperty::Create(const CMLFont &font)
 {
 	Clear();
 
-	m_font.CreateFrom(font);
+	m_font.Create(font);
 	m_nFlagProperties |= FP_FONT;
 	m_bCustomized = true;
 }
@@ -235,13 +235,6 @@ void CSkinFontProperty::EnumProperties(CUIObjProperties &listProperties)
 }
 
 
-void CSkinFontProperty::EnableGdiplusAntialias(bool bGdiplusAntialias)
-{
-	if (m_pRawFont)
-		m_pRawFont->EnableGdiplusAntialias(bGdiplusAntialias);
-}
-
-
 LPCTSTR CSkinFontProperty::GetName()
 {
 	if (IsPropertySet(FP_NAME_LATIN9))
@@ -344,7 +337,7 @@ void CSkinFontProperty::OnSkinFontChanged()
 		m_pRawFont = new CRawBmpFont;
 	ASSERT(m_pRawFont);
 
-	if (!m_pRawFont->CreateFrom(m_font))
+	if (!m_pRawFont->Create(m_font))
 	{
 		delete m_pRawFont;
 		m_pRawFont = NULL;
@@ -409,7 +402,7 @@ CRawBmpFont *CSkinFontProperty::GetFont()
 			if (!m_pRawFont)
 				return NULL;
 
-			m_pRawFont->CreateFrom(m_font);
+			m_pRawFont->Create(m_font);
 		}
 
 		return m_pRawFont;

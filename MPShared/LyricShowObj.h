@@ -212,7 +212,7 @@ protected:
 
 	int GetFontHeight() const { return m_nFontHeight + (m_bOutlineLyrics ? 2 : 0); }
 
-	int GetPatternFontHeight() const { return m_nFontHeight + CRawBmpFont::MARGIN_BITMAP; }
+	int GetPatternFontHeight() const { return m_nFontHeight + GfxRaw::MARGIN_BITMAP; }
 
 	int GetLineHeight() const { return m_nFontHeight + (m_bOutlineLyrics ? 2 : 0) + m_nLineSpacing; }
 

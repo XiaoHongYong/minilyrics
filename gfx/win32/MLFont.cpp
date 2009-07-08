@@ -18,10 +18,6 @@ BYTE		g_byFontQuality = (GetOperationSystemType() >= OPS_WINXP) ? CLEARTYPE_QUAL
 
 CMLFont::CMLFont(void)
 {
-	m_nHeight = 0;
-	m_nWeight = FW_NORMAL;
-	m_nItalic = 0;
-	m_bUnderline = false;
 }
 
 CMLFont::~CMLFont(void)
@@ -30,31 +26,14 @@ CMLFont::~CMLFont(void)
 
 bool CMLFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHeight, int nWeight, int nItalic, bool bUnderline)
 {
-	ASSERT(g_byFontQuality == CLEARTYPE_QUALITY);
-	m_strNameLatin9 = szFaceNameLatin9;
-	if (!szFaceNameOthers || IsEmptyString(szFaceNameOthers))
-		m_strNameOthers = szFaceNameLatin9;
-	else
-		m_strNameOthers = szFaceNameOthers;
-	m_nHeight = nHeight;
-	m_nWeight = nWeight;
-	m_nItalic = nItalic;
-	m_bUnderline = bUnderline;
+	CFontInfo::Set(szFaceNameLatin9, szFaceNameOthers, nHeight, nWeight, nItalic, bUnderline);
 
 	return true;
 }
 
-bool CMLFont::CreateFrom(const CMLFont &font)
+bool CMLFont::Create(const CFontInfo &font)
 {
-	m_strNameLatin9 = font.GetName();
-	if (IsEmptyString(font.GetNameOthers()))
-		m_strNameOthers = font.GetName();
-	else
-		m_strNameOthers = font.GetNameOthers();
-	m_nHeight = font.GetHeight();
-	m_nWeight = font.GetWeight();
-	m_nItalic = font.GetItalic();
-	m_bUnderline = font.IsUnderline();
+	CFontInfo::Set(font);
 
 	return true;
 }

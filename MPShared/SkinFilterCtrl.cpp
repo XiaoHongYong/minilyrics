@@ -38,11 +38,11 @@ void CSkinFilterCtrl::EnumProperties(CUIObjProperties &listProperties)
 
 void CSkinFilterCtrl::Draw(CRawGraph *pGraph)
 {
-	const int PIX_R = CRawGraph::PIX_R;
-	const int PIX_G = CRawGraph::PIX_G;
-	const int PIX_B = CRawGraph::PIX_B;
-	const int PIX_A = CRawGraph::PIX_A;
-	const int PIX_SIZE = CRawGraph::PIX_SIZE;
+	const int PIX_R = GfxRaw::PIX_R;
+	const int PIX_G = GfxRaw::PIX_G;
+	const int PIX_B = GfxRaw::PIX_B;
+	const int PIX_A = GfxRaw::PIX_A;
+	const int PIX_SIZE = GfxRaw::PIX_SIZE;
 
 	CRect rcClip;
 	pGraph->GetClipBoundBox(rcClip);

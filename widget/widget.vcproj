@@ -638,59 +638,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="win32\EditEx.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\EditHandler.cpp"
-				>
-			</File>
-			<File
 				RelativePath="win32\FileOpenDlg.cpp"
 				>
 				<FileConfiguration
@@ -1179,10 +1126,6 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\win32\SplashScreenWnd.cpp"
-				>
 			</File>
 			<File
 				RelativePath="StdAfx.cpp"
@@ -1709,14 +1652,6 @@
 				>
 			</File>
 			<File
-				RelativePath="win32\EditEx.h"
-				>
-			</File>
-			<File
-				RelativePath=".\EditHandler.h"
-				>
-			</File>
-			<File
 				RelativePath="win32\FileOpenDlg.h"
 				>
 			</File>
@@ -1758,10 +1693,6 @@
 			</File>
 			<File
 				RelativePath="win32\SkinToolTip.h"
-				>
-			</File>
-			<File
-				RelativePath=".\win32\SplashScreenWnd.h"
 				>
 			</File>
 			<File

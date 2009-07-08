@@ -98,12 +98,7 @@ bool CMLFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHe
 {
 	tstring	strFontName;
 
-	m_strNameLatin9 = szFaceNameLatin9;
-	m_strNameOthers = szFaceNameOthers;
-	m_nHeight = nHeight;
-	m_nWeight = nWeight;
-	m_nItalic = nItalic;
-	m_bUnderline = bUnderline;
+	CFontInfo::Set(szFaceNameLatin9, szFaceNameOthers, nHeight, nWeight, nItalic, bUnderline);
 
 	FormatFontName(strFontName, szFaceNameLatin9, nHeight, nWeight, nItalic, bUnderline);
 
@@ -127,7 +122,7 @@ bool CMLFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHe
 	return m_pFont != NULL;
 }
 
-bool CMLFont::CreateFrom(const CMLFont &font)
+bool CMLFont::Create(const CFontInfo &font)
 {
 	return Create(font.GetName(), font.GetNameOthers(), font.GetHeight(), font.GetWeight(), font.GetItalic(), font.IsUnderline());
 }

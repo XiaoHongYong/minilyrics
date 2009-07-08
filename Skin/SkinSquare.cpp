@@ -15,7 +15,6 @@ UIOBJECT_CLASS_NAME_IMP(CSkinSquare, _T("Square"))
 CSkinSquare::CSkinSquare()
 {
 	m_clrBg.set(0);
-	m_brBg.CreateSolidBrush(m_clrBg);
 }
 
 CSkinSquare::~CSkinSquare()
@@ -25,7 +24,7 @@ CSkinSquare::~CSkinSquare()
 
 void CSkinSquare::Draw(CRawGraph *pGraph)
 {
-	pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), &m_brBg);
+	pGraph->FillRect(&m_rcObj, m_clrBg);
 }
 
 
@@ -37,8 +36,6 @@ BOOL CSkinSquare::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (IsPropertyName(szProperty, _T("BgColor")))
 	{
 		GetColorValue(m_clrBg, szValue);
-		m_brBg.Destroy();
-		m_brBg.CreateSolidBrush(m_clrBg);
 	}
 
 	return TRUE;

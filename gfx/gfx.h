@@ -11,6 +11,7 @@ class CRegion;
 
 
 #include "IMLGraphicsBase.h"
+#include "FontInfo.h"
 
 #ifdef _LINUX_GTK2
 
@@ -22,8 +23,6 @@ class CRegion;
 #include "gtk2/MLImage.h"
 #include "gtk2/Region.h"
 #include "gtk2/MLGraphics.h"
-#include "gtk2/RawGraph.h"
-#include "gtk2/MemGraphics.h"
 
 #endif
 
@@ -39,7 +38,6 @@ class CRegion;
 #include "win32/MLImage.h"
 #include "win32/Region.h"
 #include "win32/GdiGraphics.h"
-#include "win32/RawGraph.h"
 #ifndef _WINCE_
 #include "win32/GdiplusGraphics.h"
 #endif

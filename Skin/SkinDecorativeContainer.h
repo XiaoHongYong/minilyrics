@@ -16,7 +16,7 @@
 //
 class CSkinDecorativeContainer : public CSkinContainer  
 {
-UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
+UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
 	CSkinDecorativeContainer();
 	virtual ~CSkinDecorativeContainer();

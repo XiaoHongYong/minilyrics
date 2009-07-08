@@ -427,7 +427,7 @@ void CSkinTreeCtrl::Draw(CRawGraph *pGraph)
 	bool		bVScrollBarVisible = true;
 	CRect		rcNodeText;
 
-	pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), &m_brBk);
+	pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_clrBk);
 
 	if (!m_pTreeData)
 		return;
@@ -459,7 +459,7 @@ void CSkinTreeCtrl::Draw(CRawGraph *pGraph)
 		{
 			// draw background
 			x = m_rcObj.left;
-			pGraph->FillRect(x, y, m_rcObj.right - x, m_nLineHeight, &m_brSelBk);
+			pGraph->FillRect(x, y, m_rcObj.right - x, m_nLineHeight, m_clrSelRowBk);
 		}
 
 		// draw image
@@ -868,17 +868,11 @@ BOOL CSkinTreeCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		_tcsicmp(szProperty, _T("BkColor")) == 0)
 	{
 		GetColorValue(m_clrBk, szValue);
-		if (m_brBk.IsValid())
-			m_brBk.Destroy();
-		m_brBk.CreateSolidBrush(m_clrBk);
 	}
 	else if (_tcsicmp(szProperty, _T("SelBgColor")) == 0 || 
 		_tcsicmp(szProperty, _T("SelBkColor")) == 0)
 	{
 		GetColorValue(m_clrSelRowBk, szValue);
-		if (m_brSelBk.IsValid())
-			m_brSelBk.Destroy();
-		m_brSelBk.CreateSolidBrush(m_clrSelRowBk);
 	}
 	else if (_tcsicmp(szProperty, _T("SelTextColor")) == 0)
 	{
@@ -912,18 +906,12 @@ void CSkinTreeCtrl::EnumProperties(CUIObjProperties &listProperties)
 
 void CSkinTreeCtrl::SetBkColor(const MLColor &clrBk)
 {
-	if (m_brBk.IsValid())
-		m_brBk.Destroy();
 	m_clrBk = clrBk;
-	m_brBk.CreateSolidBrush(m_clrBk);
 }
 
 void CSkinTreeCtrl::SetSelRowBkColor(const MLColor &clrBk)
 {
-	if (m_brSelBk.IsValid())
-		m_brSelBk.Destroy();
 	m_clrSelRowBk = clrBk;
-	m_brSelBk.CreateSolidBrush(m_clrSelRowBk);
 }
 
 void CSkinTreeCtrl::SetFont(const CMLFont &font)

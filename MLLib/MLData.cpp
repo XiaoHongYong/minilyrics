@@ -37,7 +37,7 @@ MLFileType LyricsConentTypeToFileType(LYRICS_CONTENT_TYPE lyrContentType)
 		return FT_UNKNOWN;
 }
 
-int LYRIC_FRAG::GetDrawWidth(IMLGraphicsBase* pGraphics)
+int LYRIC_FRAG::GetDrawWidth(CRawGraph* pGraphics)
 {
 	SIZE			size;
 	if (nDrawWidth == 0)
@@ -118,7 +118,7 @@ void WrapText(LPCTSTR szText, vector<tstring> &vOutput, int nLineSize)
 #endif
 }
 
-void WrapWords(IMLGraphicsBase *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring> &vStr)
+void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring> &vStr)
 {
 #ifdef UNICODE
 	int			nCount;
@@ -2086,7 +2086,7 @@ void CMLData::RemoveErrrorInfo()
 	}
 }
 
-void CMLData::AddErrorInfo(IMLGraphicsBase *pGraph, int nWidthMax, LPCTSTR szError)
+void CMLData::AddErrorInfo(CRawGraph *pGraph, int nWidthMax, LPCTSTR szError)
 {
 	if (m_bHasLyrics)
 	{
@@ -2774,7 +2774,7 @@ VLyrLines &CMLData::GetRawLyrics()
 	return m_arrLyricsRows;
 }
 
-int GetMLRowDrawWidth(PML_ROW pRow, IMLGraphicsBase *pGraph)
+int GetMLRowDrawWidth(PML_ROW pRow, CRawGraph *pGraph)
 {
 	V_FRAG::iterator	it, itEnd;
 	int					w = 0;
@@ -2792,7 +2792,7 @@ int GetMLRowDrawWidth(PML_ROW pRow, IMLGraphicsBase *pGraph)
 	return w;
 }
 
-bool CMLData::WrapDisplayLyrics(CMLyrLines &lyrLines, IMLGraphicsBase *pGraph, int nWidthMax)
+bool CMLData::WrapDisplayLyrics(CMLyrLines &lyrLines, CRawGraph *pGraph, int nWidthMax)
 {
 	int		i;
 

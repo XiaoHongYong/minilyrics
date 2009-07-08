@@ -25,7 +25,6 @@ public:
 
 protected:
 	MLColor				m_clrBg;
-	CMLBrush			m_brBg;
 
 };
 

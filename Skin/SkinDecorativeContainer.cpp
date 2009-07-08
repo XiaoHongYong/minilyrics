@@ -30,6 +30,9 @@ void CSkinDecorativeContainer::InvalidateUIObject(CUIObject *pObj)
 		m_pSkin->InvalidateUIObject(this);
 }
 
+//
+// Redraw this whole container.
+//
 void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 {
 	ASSERT(lpRect);
@@ -56,19 +59,8 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 			}
 
 			pObj->Draw(pGraphMem);
-			if (pObj->IsUpdateTranslucencyWithSkin())
-			{
-				MLColor		clrAlpha;
-				clrAlpha.setAlpha((byte)m_pSkin->m_nTranslucencyAlphaDynamic);
-				if (pObj->m_imgMask.IsValid())
-				{
-					CRect	rcMask;
-					rcMask.SetRect(pObj->m_imgMask.m_x, pObj->m_imgMask.m_y, pObj->m_imgMask.m_x + pObj->m_imgMask.m_cx, pObj->m_imgMask.m_y + pObj->m_imgMask.m_cy);
-					m_pContainer->GetMemGraph()->FillRect(&pObj->m_rcObj, pObj->m_imgMask.GetHandle(), &rcMask, clrAlpha, BPM_MULTIPLY);
-				}
-				else
-					m_pContainer->GetMemGraph()->FillRect(&pObj->m_rcObj, clrAlpha, BPM_MULTIPLY);
-			}
+
+			pObj->UpdateTranslucencyWithSkin(pGraphMem);
 		}
 	}
 
