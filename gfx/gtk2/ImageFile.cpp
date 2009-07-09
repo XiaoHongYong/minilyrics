@@ -1,5 +1,5 @@
-#include "../stdafx.h"
-#include "../gfx.h"
+#include "StdAfx.h"
+#include "gfx.h"
 #include "MLGraphics.h"
 #include "ImageFile.h"
 

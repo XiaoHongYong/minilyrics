@@ -1,4 +1,4 @@
-#include "../stdAfx.h"
+#include "StdAfx.h"
 #include "gfx.h"
 #include "MLImage.h"
 

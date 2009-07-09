@@ -26,9 +26,10 @@ public:
 
 public:
 	// For win32 only
-	HDC GetHandle() const { return m_pGdkPixBuf; }
+	GdkPixbuf *GetHandle() const { return m_pGdkPixBuf; }
 
 protected:
+	RAW_IMAGE_DATA	m_imageData;
 	GdkPixbuf		*m_pGdkPixBuf;
 
 };

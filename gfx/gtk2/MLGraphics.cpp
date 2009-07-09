@@ -2,8 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../stdafx.h"
-#include "../gfx.h"
+#include "StdAfx.h"
+#include "gfx.h"
 #include "MLGraphics.h"
 
 inline guint pixel_from_rgb(GdkVisual *visual, guchar r, guchar b, guchar g)
@@ -685,7 +685,7 @@ GtkWidget *CGtkContextObj::GetGtkWindow()
 
 void CGtkContextObj::SetGtkWindow(GtkWidget *window)
 {
-	printf("SetGtkWindow: %d", window);
+	printf("SetGtkWindow: 0x%X", window);
 	if (!m_window)
 		m_window = window;
 }

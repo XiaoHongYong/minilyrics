@@ -5,17 +5,11 @@
 #define DEFAULT_CHARSET		1
 #endif
 
+#include "FontInfo.h"
+
 void FormatFontName(tstring &strFontName, LPCTSTR szFaceName, int nHeight, int nWeight, int nItalic, bool bUnderline);
 
 bool ScanFontName(LPCTSTR szFontName, tstring &strFaceName, int &nHeight, int &nWeight, int &nItalic, bool &bUnderline);
-
-// Font slant
-enum
-{
-	FS_NORMAL		= 0,
-	FS_OBLIQUE,
-	FS_ITALIC,
-};
 
 class CMLFont : public CFontInfo
 {

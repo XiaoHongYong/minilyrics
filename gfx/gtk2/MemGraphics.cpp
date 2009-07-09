@@ -1,5 +1,5 @@
-#include "../StdAfx.h"
-#include "../gfx.h"
+#include "StdAfx.h"
+#include "gfx.h"
 #include "MemGraphics.h"
 
 CMemGraphics::CMemGraphics(void)
