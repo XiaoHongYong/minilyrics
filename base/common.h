@@ -73,6 +73,19 @@ int_t1 inline min_fun(int_t1 a, int_t2 b)
 #define GetBValue(rgb)      ((BYTE)((rgb)>>16))
 #endif
 
+#ifndef _WIN32
+
+inline void InterlockedIncrement(long *nReference)
+{
+	(*nReference)++;
+}
+
+inline int InterlockedDecrement(long *nReference)
+{
+	return --(*nReference);
+}
+
+#endif
 
 #define OBJ_REFERENCE_DECL	\
 public:\

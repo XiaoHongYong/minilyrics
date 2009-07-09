@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <pango/pangocairo.h>
 #include "GfxRaw.h"
 #include "RawBmpFont.h"
 #include "RawGlyphBuilder.h"
@@ -19,55 +20,42 @@ CRawGlyphBuilder::CRawGlyphBuilder()
 
 CRawGlyphBuilder::~CRawGlyphBuilder()
 {
+	cairo_destroy(m_cr);
+	cairo_surface_destroy(m_surface);
 }
 
 void CRawGlyphBuilder::Init(const CFontInfo &font)
 {
-	if (m_pmemGraph && m_font.IsSame(font))
+	if (m_cr && m_font.IsSame(font))
 		return;
-
-	m_memGraph.Destroy();
 
 	m_font.Create(font);
 
-	CGdiGraphics	graphScreen;
-	HDC				hdcScreen;
+	cairo_status_t status;
 
-	hdcScreen = GetDC(NULL);
-	graphScreen.Create(hdcScreen);
+	m_surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
+		GetHeightBitmap() * 2, GetHeightBitmap());
+	m_cr = cairo_create(m_surface);
+
+	cairo_set_source_rgb(m_cr, 0, 0, 0);
+	cairo_paint(m_cr);
 
 	m_nWidthGraph = GetHeightBitmap() * 2;
-	m_nWidthBytesGraph = (m_nWidthGraph * 3 + 3) & ~ 3;
-
-	m_memGraph.Create(m_nWidthGraph, GetHeightBitmap(), &graphScreen, 24);
-	m_memGraph.SetBkMode(false);
-
-// 	if (m_bGdiplusAntialias)
-// 	{
-// 		CGdiplusGraphics	*pmemGraph;
-// 
-// 		pmemGraph = new CGdiplusGraphics;
-// 		pmemGraph->Create(m_memGraph.GetHandle());
-// 		m_pmemGraph = pmemGraph;
-// 	}
-// 	else
-	{
-		CGdiGraphics	*pmemGraph;
-
-		pmemGraph = new CGdiGraphics;
-		pmemGraph->Create(m_memGraph.GetHandle());
-		m_pmemGraph = pmemGraph;
-	}
-
-	m_pmemGraph->SetFont(&m_font);
-	m_pmemGraph->SetTextColor(MLColor(RGB(255, 255, 255)));
-	m_pmemGraph->SetBgColor(MLColor(RGB(0, 0, 0)));
-
-	ReleaseDC(NULL, hdcScreen);
 }
 
 Glyph *CRawGlyphBuilder::BuildGlyph(wchar_t nChar)
 {
+	PangoLayout *layout;
+	PangoFontDescription *desc;
+
+	/* Create a PangoLayout, set the font and text */
+	layout = pango_cairo_create_layout (m_cr);
+
+	pango_layout_set_text (layout, "Text", -1);
+	desc = pango_font_description_from_string (FONT);
+	pango_layout_set_font_description (layout, desc);
+	pango_font_description_free (desc);
+
 	TCHAR			szText[2];
 	SIZE			size;
 	int				nWidth;

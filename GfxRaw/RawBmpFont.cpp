@@ -291,7 +291,7 @@ bool CRawGlyphSet::Create(const CFontInfo &font)
 	return true;
 }
 
-GfxRaw::Glyph *CRawGlyphSet::GetGlyph(int nChar)
+GfxRaw::Glyph *CRawGlyphSet::GetGlyph(StringIterator::CharType ch)
 {
 	MAP_GLYPH::iterator		it;
 	GfxRaw::Glyph		*glyph = NULL;
@@ -320,14 +320,14 @@ GfxRaw::Glyph *CRawGlyphSet::GetGlyph(int nChar)
 		}
 	}
 
-	it = m_mapGlyph.find(nChar);
+	it = m_mapGlyph.find(ch);
 	if (it == m_mapGlyph.end())
 	{
-		glyph = m_rawGlyphBuilder.BuildGlyph(nChar);
+		glyph = m_rawGlyphBuilder.BuildGlyph(ch);
 		ASSERT(glyph);
 		if (!glyph)
 			return NULL;
-		m_mapGlyph[nChar] = glyph;
+		m_mapGlyph[ch] = glyph;
 	}
 	else
 	{
@@ -335,7 +335,7 @@ GfxRaw::Glyph *CRawGlyphSet::GetGlyph(int nChar)
 		if (glyph->bitmap == NULL)
 		{
 			// It must has been freed, renew one.
-			Glyph		*temp = m_rawGlyphBuilder.BuildGlyph(nChar);
+			Glyph		*temp = m_rawGlyphBuilder.BuildGlyph(ch);
 			ASSERT(temp);
 			if (!temp)
 				return NULL;
@@ -1020,12 +1020,13 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 	else
 		yyEnd = GetGlyphHeight();
 
-	for (int i = 0; i < nLen; i++)
+	StringIterator	strIterator(szText);
+	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
 		int			xxStart, xxEnd;
 		// byte		*p, *pRowGlyph, *graphData, *pRowGraph;
 		// int		xx, yy;
-		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph((unsigned short)szText[i]);
+		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
 
@@ -1138,7 +1139,6 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 	return OutlinedDrawText(pGraph, x, y, width, xLeftClipOffset, clrText, clrBorder, szText, nLen);
 }
 
-
 bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen)
 {
 	byte		textAlpha = pGraph->GetTextAlpha();
@@ -1175,12 +1175,13 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 			xPattern2 = (rcClip.left - x - OUTLINED_BORDER / 2) % m_imgPattern2->width();
 	}
 
-	for (int i = 0; i < nLen; i++)
+	StringIterator	strIterator(szText);
+	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
 		int			xxStart, xxEnd;
 		// int			xx, yy;
 		// byte		*p, *pRowGlyph, *graphData, *pRowGraph;
-		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph((unsigned short)szText[i]);
+		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
 
@@ -1306,11 +1307,11 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 {
 	int		w = 0;
 	GfxRaw::Glyph	*glyph;
-	int		i;
 
-	for (i = 0; i < nLen; i++)
+	StringIterator	strIterator(szText);
+	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
-		glyph = m_prawGlyphSet->GetGlyph((unsigned short)szText[i]);
+		glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
 
@@ -1319,22 +1320,22 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 			break;
 	}
 
-	if (i == nLen)
+	if (strIterator.GetPos() >= nLen)
 		return false;
 
 	tstring		str;
 	int			wMax;
-	nLen = i;
+	nLen = strIterator.GetPos();
 
-	glyph = m_prawGlyphSet->GetGlyph((unsigned short)'.');
+	glyph = m_prawGlyphSet->GetGlyph((int)'.');
 	if (!glyph)
 		return false;
 	wMax = nWidthMax - glyph->nWidth * 3;
 
 	w = 0;
-	for (i = 0; i < nLen; i++)
+	for (strIterator.SetPos(0); strIterator.GetPos() < nLen; ++strIterator)
 	{
-		glyph = m_prawGlyphSet->GetGlyph((unsigned short)szText[i]);
+		glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
 
@@ -1342,7 +1343,7 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 		if (w > wMax)
 			break;
 
-		str += szText[i];
+		str += glyph->ch;
 	}
 	str += _T("...");
 
@@ -1353,33 +1354,36 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 bool CRawBmpFont::ShouldDrawTextPrefix(LPCTSTR szText, int nLen, tstring &strPrfix, int &nXPrefix, int &nWidthPrefix)
 {
 	GfxRaw::Glyph	*glyph;
-	int		i;
 
 	nXPrefix = 0;
 	nWidthPrefix = 0;
 
-	for (i = 0; i < nLen; i++)
+	StringIterator	strIterator(szText);
+	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
-		glyph = m_prawGlyphSet->GetGlyph((unsigned short)szText[i]);
+		glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
 
-		if (szText[i] == '&')
+		if (glyph->ch == '&')
 		{
 			break;
 		}
 
 		nXPrefix += glyph->nWidth;
 	}
-	if (i >= nLen)
+	if (strIterator.GetPos() >= nLen)
 		return false;
 
 	strPrfix = szText;
-	strPrfix.erase(i, 1);
+	strPrfix.erase(strIterator.GetPos(), 1);
 
-	if (i < (int)strPrfix.size())
+	if (strIterator.GetPos() < (int)strPrfix.size())
 	{
-		glyph = m_prawGlyphSet->GetGlyph((unsigned short)strPrfix[i]);
+		StringIterator strIteratorNew(strPrfix.c_str());
+		strIteratorNew.SetPos(strIterator.GetPos());
+
+		glyph = m_prawGlyphSet->GetGlyph(strIteratorNew.CurChar());
 		if (glyph)
 			nWidthPrefix = glyph->nWidth;
 	}

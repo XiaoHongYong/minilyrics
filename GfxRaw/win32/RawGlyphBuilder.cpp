@@ -85,7 +85,7 @@ void CRawGlyphBuilder::Destroy()
 	m_font.Destroy();
 }
 
-Glyph *CRawGlyphBuilder::BuildGlyph(wchar_t nChar)
+Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 {
 	TCHAR			szText[2];
 	SIZE			size;
@@ -97,7 +97,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(wchar_t nChar)
 
 	ASSERT(m_pmemGraph);
 
-	szText[0] = nChar;
+	szText[0] = ch;
 	szText[1] = 0;
 
 	if (!m_pmemGraph->GetTextExtentPoint32(szText, 1, &size))
@@ -116,6 +116,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(wchar_t nChar)
 		return NULL;
 
 	Glyph		*glyph = new Glyph;
+	glyph->ch = ch;
 	glyph->nWidth = (int16)size.cx;
 	glyph->nWidthBitmap = nWidth;
 	glyph->bitmap = new byte[glyph->WidthBytes() * GetHeightBitmap()];

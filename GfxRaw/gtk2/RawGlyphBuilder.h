@@ -20,11 +20,11 @@ protected:
 	int GetHeightBitmap() { return m_font.GetHeight() + MARGIN_BITMAP * 2; }
 
 protected:
+	cairo_t					*m_cr;
+	cairo_surface_t			*m_surface;
+
 	CMLFont					m_font;
-	IMLGraphicsBase			*m_pmemGraph;
-	CRawGraph				m_memGraph;
 	int						m_nWidthGraph;
-	int						m_nWidthBytesGraph;
 
 };
 

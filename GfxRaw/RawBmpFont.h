@@ -8,6 +8,8 @@
 class CRawGraph;
 class CRawImage;
 
+#include "../base/StringIterator.h"
+
 namespace GfxRaw
 {
 
@@ -49,7 +51,6 @@ struct Glyph
 {
 	Glyph()
 	{
-		nChar = 0;
 		nWidth = nWidthBitmap = 0;
 		bitmap = NULL;
 		bitmapOutlined = NULL;
@@ -66,7 +67,7 @@ struct Glyph
 	int WidthBytes() const { return nWidthBitmap * G_PIX_SIZE; }
 	int WidthBytesOutlined() const { return (nWidthBitmap + OUTLINED_BORDER) * G_PIX_SIZE; }
 
-	int			nChar;
+	StringIterator::CharType	ch;
 	int16		nWidth;				// Width of char
 	int16		nWidthBitmap;		// Width of bitmap
 	byte		*bitmap;
@@ -96,7 +97,7 @@ public:
 
 	virtual bool Create(const CFontInfo &font);
 
-	Glyph *GetGlyph(int nChar);
+	Glyph *GetGlyph(StringIterator::CharType ch);
 
 	void ClearGlyph();
 
