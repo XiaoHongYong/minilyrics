@@ -4,10 +4,10 @@
 #include <gdk/gdkkeysyms.h>
 
 
-// #define VK_LBUTTON        0x01
-// #define VK_RBUTTON        0x02
-// #define VK_CANCEL         0x03
-// #define VK_MBUTTON        0x04    /* NOT contiguous with L & RBUTTON */
+#define VK_LBUTTON        0x01
+#define VK_RBUTTON        0x02
+#define VK_CANCEL         0x03
+#define VK_MBUTTON        0x04    /* NOT contiguous with L & RBUTTON */
 
 #define VK_BACK           GDK_BackSpace
 #define VK_TAB            GDK_Tab

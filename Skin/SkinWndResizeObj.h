@@ -1,6 +1,6 @@
 #pragma once
 
-#include "uiobject.h"
+#include "UIObject.h"
 
 class CSkinWndResizeObj :
 	public CUIObject

@@ -212,6 +212,8 @@ public:
 
 	virtual void OnAdjustHue(float hue, float saturation, float luminance);
 
+	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect);
+
 #ifdef _WIN32
 	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 #endif
@@ -225,8 +227,6 @@ public:
 	void EnableTranslucencyLayered(bool bTranslucencyLayered);
 
 	virtual BOOL InvalidateRect(const RECT* lpRect = NULL, BOOL bErase = FALSE);
-
-	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect);
 
 	BOOL UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph);
 

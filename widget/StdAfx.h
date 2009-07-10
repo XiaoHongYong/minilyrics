@@ -8,7 +8,6 @@
 #include "../base/mlstdafx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
-#include "../OurMFClib/OurMFClib.h"
 #include "../gfx/gfx.h"
 
 #endif // _WIDGET_INC_

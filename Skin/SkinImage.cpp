@@ -6,7 +6,7 @@
 	Purpose  :	SKIN 中的可伸缩图片控件类
 *********************************************************************/
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLSkin.h"
 
 UIOBJECT_CLASS_NAME_IMP(CSkinNStatusImage, _T("NStatusImage"))

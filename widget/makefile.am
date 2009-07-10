@@ -1,9 +1,14 @@
-SUBDIRS = gtk2
-
 noinst_LIBRARIES = libwidget.a
 
-libwidget_a_SOURCES = WndDrag.cpp
+libwidget_a_SOURCES = ResourceMgr.cpp  WndDrag.cpp \
+	gtk2/BaseDialog.cpp     gtk2/HyperLinkCtrl.cpp     gtk2/WidgetComboBox.cpp\
+	gtk2/BaseWnd.cpp        gtk2/LanguageTool.cpp      gtk2/WidgetCtrlBase.cpp\
+	gtk2/CommonWidget.cpp   gtk2/MLMenu.cpp            gtk2/WidgetListBox.cpp\
+	gtk2/desktop.cpp        gtk2/MLWndHelper.cpp       gtk2/WidgetListCtrl.cpp\
+	gtk2/ScrollBarHandler.cpp  gtk2/WidgetTreeCtrl.cpp\
+	gtk2/FileFolderDlg.cpp  gtk2/SkinToolTip.cpp       gtk2/WndResizer.cpp
 
-INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils
+
+INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/gfx 
 
 libwidget_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`

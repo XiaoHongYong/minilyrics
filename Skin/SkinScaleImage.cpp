@@ -6,7 +6,7 @@
 	Purpose  :	适合于界面中可以伸缩的 水平 或 垂直 的条
 *********************************************************************/
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLSkin.h"
 #include "SkinScaleImage.h"
 

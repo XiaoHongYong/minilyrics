@@ -1,12 +1,22 @@
-SUBDIRS = gtk2
-
 noinst_LIBRARIES = libskin.a
 
-libskin_a_SOURCES = Commander.cpp Formula.cpp Skin.cpp SkinButton.cpp SkinCaption.cpp \
-		SkinContainer.cpp SkinFactory.cpp SkinImage.cpp SkinNStatusButton.cpp SkinResMgr.cpp \
-		SkinVScrollBar.cpp SkinWndDrag.cpp SknImage.cpp SknScaleImage.cpp UIObject.cpp
+libskin_a_SOURCES = Commander.cpp                SkinFadeArea.cpp             SkinVScrollBar.cpp\
+	Formula.cpp                  SkinFontProperty.cpp         SkinWnd.cpp\
+	SFImage.cpp                  SkinImage.cpp                SkinWndDrag.cpp\
+	SkinButton.cpp               SkinMenuBar.cpp              SkinWndResizeObj.cpp\
+	SkinCaption.cpp              SkinNStatusButton.cpp        StdAfx.cpp\
+	SkinContainer.cpp            SkinResMgr.cpp               UIObject.cpp\
+	SkinDataObj.cpp              SkinScaleImage.cpp           UIObjectIterator.cpp\
+	SkinDecorativeContainer.cpp  SkinSquare.cpp\
+	SkinFactory.cpp              SkinToggleCtrlContainer.cpp\
+	gtk2/ImgList.cpp  gtk2/SkinRgn.cpp  gtk2/SkinVScrollBarOSStyle.cpp
 
-INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/Widget -I$(top_srcdir)/gfx
+INCLUDES = -I$(top_srcdir)/base \
+	-I$(top_srcdir)/Utils\
+	-I$(top_srcdir)/Widget\
+	-I$(top_srcdir)/gfx\
+	-I$(top_srcdir)/GfxRaw\
+	-I$(top_srcdir)/SDK/Agg/include
 
 libskin_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`
 

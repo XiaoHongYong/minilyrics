@@ -35,6 +35,11 @@ public:
 
 	void AppendItem(UINT nID, LPCTSTR szText);
 	void InsertItem(int nPos, UINT nID, LPCTSTR szText);
+	void RemoveItem(int nPos);
+
+	bool GetMenuItemText(UINT nItem, tstring &strText, bool bByPosition);
+
+	bool GetMenuItemInfo(UINT nItem, tstring &strText, UINT &nID, bool &bSubMenu, bool bByPosition);
 
 public:
 	bool LoadPopupMenu(int nID, int nSubMenu);

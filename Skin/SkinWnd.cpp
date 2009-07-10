@@ -6,7 +6,7 @@
 	Purpose  :	
 *********************************************************************/
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLSkin.h"
 #include "SkinWnd.h"
 #include "SkinButton.h"
@@ -801,10 +801,9 @@ bool CSkinWnd::RecreateMemGraphics()
 // 	}
 #endif
 #else
-	CMLGraphics		*pGraphMem = new CMLGraphics;
+	CRawGraph		*pGraphMem = new CRawGraph;
 
-	if (!pGraphMem->CreateMemDC(m_drawingArea->window, 
-		m_rcBoundBox.Width(), m_rcBoundBox.Height()))
+	if (!pGraphMem->Create(m_rcBoundBox.Width(), m_rcBoundBox.Height(), pGraph, 32))
 	{
 		ERRLOG0(_T("Create Mem DC FAILED!"));
 	}
@@ -824,11 +823,13 @@ bool CSkinWnd::RecreateMemGraphics()
 void CSkinWnd::RecreateBrush()
 {
 	m_clrBg = m_clrBgOrg;
+#ifdef _WIN32_DESKTOP
 	if (m_bTranslucencyLayered)
 	{
 		m_clrBg.setAlpha((byte)m_nTranslucencyAlphaDynamic);
 		PreMultiplyColor(m_clrBg, (byte)m_nTranslucencyAlphaDynamic);
 	}
+#endif
 }
 
 void CSkinWnd::OnWindowSizeChanged()
@@ -1016,8 +1017,8 @@ void CSkinWnd::OnMove(int x, int y)
 
 void CSkinWnd::OnSize(int cx, int cy)
 {
-	DWORD		dwStyle = GetWindowLong(m_hWnd, GWL_STYLE);
-	bool		bCaption = IsFlagSet(dwStyle, WS_CAPTION);
+	// DWORD		dwStyle = GetWindowLong(m_hWnd, GWL_STYLE);
+	// bool		bCaption = IsFlagSet(dwStyle, WS_CAPTION);
 	if (!IsIconic())
 	{
 		CRect		rc;
@@ -1560,6 +1561,7 @@ void CSkinWnd::OnActivate(bool bActived)
 {
 	m_bActived = bActived;
 
+#ifdef _WIN32_DESKTOP
 	if (m_bTranslucencyLayered && m_bPaintBg 
 		&& m_nTranslucencyAlpha != m_nTranslucencyAlphaOnActive)
 	{
@@ -1574,10 +1576,11 @@ void CSkinWnd::OnActivate(bool bActived)
 		SetTimer(TIMER_ID_DYNAMIC_TRANS, TIMER_SPAN_DYNAMIC_TRANS);
 	}
 
-	InvalidateRect();
-
 	if (m_bClickThrough)
 		SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
+#endif
+
+	InvalidateRect();
 }
 
 void CSkinWnd::AddWndCloseto(CBaseWnd *pWnd, LPCTSTR szWndClass, LPCTSTR szWndName)
@@ -1589,6 +1592,27 @@ void CSkinWnd::TrackMove(CBaseWnd *pWnd, int x, int y)
 {
 	m_WndDrag.TrackMoveWith(pWnd, x, y);
 //	m_WndDrag.TrackCheck();
+}
+
+void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
+{
+#ifdef _WIN32
+	if (GetEnableTranslucencyLayered())
+		UpdateLayeredWindowUsingMemGraph(m_pmemGraph);
+	else
+#endif
+	{
+		IMLGraphicsBase		*pGraphics;
+
+		pGraphics = GetGraphics();
+
+		m_pmemGraph->DrawToGraphics(pGraphics, 
+			lpRect->left, lpRect->top, 
+			lpRect->right - lpRect->left, lpRect->bottom - lpRect->top,
+			lpRect->left, lpRect->top);
+
+		ReleaseGraphics(pGraphics);
+	}
 }
 
 #ifdef _WIN32
@@ -1800,25 +1824,6 @@ BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 	UpdateLayeredWindowUsingMemGraph(pMemGraph);
 
 	return TRUE;
-}
-
-void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
-{
-	if (GetEnableTranslucencyLayered())
-		UpdateLayeredWindowUsingMemGraph(m_pmemGraph);
-	else
-	{
-		IMLGraphicsBase		*pGraphics;
-
-		pGraphics = GetGraphics();
-
-		m_pmemGraph->DrawToGraphics(pGraphics, 
-			lpRect->left, lpRect->top, 
-			lpRect->right - lpRect->left, lpRect->bottom - lpRect->top,
-			lpRect->left, lpRect->top);
-
-		ReleaseGraphics(pGraphics);
-	}
 }
 
 /*

@@ -1,4 +1,4 @@
-#include "../StdAfx.h"
+#include "StdAfx.h"
 #include "WidgetCtrlBase.h"
 
 BOOL CWidgetCtrlBase::Attach(CBaseWnd *pWndParent, int nCtrlID)

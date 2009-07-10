@@ -6,7 +6,7 @@
 	Purpose  :	管理资源文件，如位图等的打开和关闭等
 *********************************************************************/
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLSkin.h"
 #include "SkinResMgr.h"
 

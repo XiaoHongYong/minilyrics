@@ -10,6 +10,8 @@
 
 class CSkinMenuBar;
 
+#ifdef _WIN32
+
 //
 // Win32 only, responsible for Hooking mouse and keyboard message, 
 // then forward to CSkinMenuBar, CSkinMenuBar will decide when to popup 
@@ -62,6 +64,29 @@ protected:
 	bool				m_bMenuPopup;
 
 };
+
+#else // _WIN32
+
+class CMenuBarMsgHandler : public CBaseWnd
+{
+public:
+	CMenuBarMsgHandler()
+	{
+		m_pMenuBar = NULL;
+		m_bMenuPopup = false;
+	}
+
+	void PostTrackPopupMenu() { }
+
+	bool IsMenuPopuped() { return m_bMenuPopup; }
+
+public:
+	CSkinMenuBar		*m_pMenuBar;
+	bool				m_bMenuPopup;
+
+};
+
+#endif // _WIN32
 
 class CSkinMenuBar : public CUIObject  
 {

@@ -6,7 +6,7 @@
 	Purpose  :	
 *********************************************************************/
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLSkin.h"
 #include "UIObject.h"
 
@@ -379,6 +379,7 @@ void CUIObject::Draw(CRawGraph *pGraph)
 
 void CUIObject::UpdateTranslucencyWithSkin(CRawGraph *pGraph)
 {
+#ifdef _WIN32
 	if (!IsUpdateTranslucencyWithSkin())
 		return;
 
@@ -392,6 +393,7 @@ void CUIObject::UpdateTranslucencyWithSkin(CRawGraph *pGraph)
 	}
 	else
 		pGraph->FillRect(&m_rcObj, clrAlpha, BPM_MULTIPLY);
+#endif
 }
 
 BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])

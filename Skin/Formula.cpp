@@ -6,7 +6,7 @@
 	Purpose  :	
 *********************************************************************/
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "Formula.h"
 
 

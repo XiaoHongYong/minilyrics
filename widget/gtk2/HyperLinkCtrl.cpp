@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../stdafx.h"
+#include "StdAfx.h"
 #include "desktop.h"
 #include "BaseWnd.h"
 #include "WidgetCtrlBase.h"

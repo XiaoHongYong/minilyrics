@@ -14,7 +14,7 @@ public:
 
 	void Init(const CFontInfo &font);
 
-	Glyph *BuildGlyph(wchar_t nChar);
+	Glyph *BuildGlyph(StringIterator::CharType ch);
 
 protected:
 	int GetHeightBitmap() { return m_font.GetHeight() + MARGIN_BITMAP * 2; }

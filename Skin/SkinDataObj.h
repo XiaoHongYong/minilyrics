@@ -3,7 +3,7 @@
 
 #pragma once
 
-#include "uiobject.h"
+#include "UIObject.h"
 
 //
 // CSkinDataObj is a special UIObject, only do data processing, invisible, no drawing and no other UI message processing.

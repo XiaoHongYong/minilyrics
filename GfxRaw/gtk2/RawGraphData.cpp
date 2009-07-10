@@ -41,10 +41,13 @@ void CRawGraphData::Destroy()
 
 void CRawGraphData::DrawToGraphics(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc)
 {
-	BitBlt(pTarg->GetHandle(), xdest, ydest, width, height, GetHandle(), xsrc, ysrc, SRCCOPY);
+	CMLGraphics		*pGraph = (CMLGraphics *)pTarg;
+	gdk_pixbuf_render_to_drawable(m_pGdkPixBuf, pGraph->GetDrawable(), pGraph->GetGC(), xsrc, ysrc, xdest, ydest, width, height, GDK_RGB_DITHER_NORMAL, 0, 0);
 }
 
 void CRawGraphData::DrawToGraphicsStretch(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc, int widthsrc, int heightsrc)
 {
-	StretchBlt(pTarg->GetHandle(), xdest, ydest, width, height, GetHandle(), xsrc, ysrc, widthsrc, heightsrc, SRCCOPY);
+	CMLGraphics		*pGraph = (CMLGraphics *)pTarg;
+	gdk_pixbuf_render_to_drawable(m_pGdkPixBuf, pGraph->GetDrawable(), pGraph->GetGC(), xsrc, ysrc, xdest, ydest, width, height, GDK_RGB_DITHER_NORMAL, 0, 0);
+	// StretchBlt(pTarg->GetHandle(), xdest, ydest, width, height, GetHandle(), xsrc, ysrc, widthsrc, heightsrc, SRCCOPY);
 }

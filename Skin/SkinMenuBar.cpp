@@ -2,9 +2,11 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLSkin.h"
 #include "SkinMenuBar.h"
+
+#ifdef _WIN32
 
 HHOOK	CMenuBarMsgHandler::ms_hMsgHook = NULL;
 bool	CMenuBarMsgHandler::ms_bPrimaryMenu = true;
@@ -161,6 +163,8 @@ void CMenuBarMsgHandler::ProcessHookMessage(UINT message, WPARAM wParam, LPARAM 
 		break;
 	}
 }
+
+#endif // _WIN32
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -586,5 +590,7 @@ void CSkinMenuBar::TrackPopupMenu()
 	}
 
 	m_bLBtDown = false;
+#ifdef _WIN32
 	m_wndMsgReceiver.TrackPopupSubMenu(pt.x, pt.y, m_pMenu->GetSubMenu(m_nSelSubMenu), m_pSkin, &rc);
+#endif
 }

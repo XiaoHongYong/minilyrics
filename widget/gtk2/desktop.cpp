@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "StdAfx.h"
 #include "BaseWnd.h"
 #include "desktop.h"
 

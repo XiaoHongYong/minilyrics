@@ -2,9 +2,9 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../stdafx.h"
+#include "StdAfx.h"
 #include "BaseDialog.h"
-#include "../widget.h"
+#include "widget.h"
 #include "WinUserPart.h"
 
 bool CWidgetWin32Layout::Create(CBaseWnd *pWndParent, CDlgResource *pdlgRes)

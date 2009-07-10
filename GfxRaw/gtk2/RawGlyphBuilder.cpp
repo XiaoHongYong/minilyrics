@@ -15,7 +15,9 @@ inline byte RGBToGray(int r, int g, int b)
 
 CRawGlyphBuilder::CRawGlyphBuilder()
 {
-	m_pmemGraph = NULL;
+	m_cr = NULL;
+	m_surface = NULL;
+	m_nWidthGraph = 0;
 }
 
 CRawGlyphBuilder::~CRawGlyphBuilder()
@@ -37,55 +39,53 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 		GetHeightBitmap() * 2, GetHeightBitmap());
 	m_cr = cairo_create(m_surface);
 
-	cairo_set_source_rgb(m_cr, 0, 0, 0);
-	cairo_paint(m_cr);
-
 	m_nWidthGraph = GetHeightBitmap() * 2;
 }
 
-Glyph *CRawGlyphBuilder::BuildGlyph(wchar_t nChar)
+Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 {
 	PangoLayout *layout;
 	PangoFontDescription *desc;
+	int width, height;
 
-	/* Create a PangoLayout, set the font and text */
+	// Clear graph
+	cairo_set_source_rgb(m_cr, 0, 0, 0);
+	cairo_paint(m_cr);
+
+	// Create font
+	desc = pango_font_description_new();
+	pango_font_description_set_family(desc, m_font.GetName());
+	pango_font_description_set_size(desc, m_font.GetHeight());
+	pango_font_description_set_weight(desc, (PangoWeight)m_font.GetWeight());
+	pango_font_description_set_style(desc, (PangoStyle)m_font.GetWeight());
+
+	// Create a PangoLayout, set the font and text
 	layout = pango_cairo_create_layout (m_cr);
 
-	pango_layout_set_text (layout, "Text", -1);
-	desc = pango_font_description_from_string (FONT);
+	pango_layout_set_text (layout, ch, -1);
 	pango_layout_set_font_description (layout, desc);
 	pango_font_description_free (desc);
 
-	TCHAR			szText[2];
-	SIZE			size;
+	// Draw text
+	cairo_set_source_rgb (m_cr, 1.0, 1.0, 1.0);
+	pango_cairo_update_layout (m_cr, layout);
+	pango_layout_get_size (layout, &width, &height);
+	pango_cairo_show_layout (m_cr, layout);
+
+	g_object_unref (layout);
+
 	int				nWidth;
 	int				x, y;
 	byte			*pDst, *pRowDst, *pSrc, *pRowSrc;
 
-	agg::rendering_buffer	bufGraph(m_memGraph.GetBuff(), m_memGraph.Width(), m_memGraph.Height(), -m_nWidthBytesGraph);
+	assert(height == m_font.GetHeight());
 
-	ASSERT(m_pmemGraph);
+	agg::rendering_buffer	bufGraph(cairo_image_surface_get_data(m_surface), cairo_image_surface_get_width(m_surface), cairo_image_surface_get_height(m_surface), cairo_image_surface_get_stride(m_surface));
 
-	szText[0] = nChar;
-	szText[1] = 0;
-
-	if (!m_pmemGraph->GetTextExtentPoint32(szText, 1, &size))
-		return NULL;
-
-	nWidth = size.cx + MARGIN_BITMAP * 2;
-
-	pRowSrc = bufGraph.row_ptr(0);
-	for (y = 0; y < GetHeightBitmap(); y++)
-	{
-		memset(pRowSrc, 0, bufGraph.stride_abs());
-		pRowSrc += bufGraph.stride();
-	}
-
-	if (!m_pmemGraph->TextOut(MARGIN_BITMAP, MARGIN_BITMAP, szText, 1))
-		return NULL;
+	nWidth = width + MARGIN_BITMAP * 2;
 
 	Glyph		*glyph = new Glyph;
-	glyph->nWidth = (int16)size.cx;
+	glyph->nWidth = (int16)width;
 	glyph->nWidthBitmap = nWidth;
 	glyph->bitmap = new byte[glyph->WidthBytes() * GetHeightBitmap()];
 
@@ -111,20 +111,6 @@ Glyph *CRawGlyphBuilder::BuildGlyph(wchar_t nChar)
 		pRowSrc += bufGraph.stride();
 		pRowDst += glyph->WidthBytes();
 	}
-
-	//	memset(glyph->bitmap, 255, size.cx * GetHeightBitmap());
-
-	// 
-	// 	byte		*ptemp;
-	// 	ptemp = new byte[size.cx * GetHeightBitmap()];
-	// 
-	// 	memcpy(ptemp, glyph->bitmap, size.cx * GetHeightBitmap());
-	// 
-	// 	agg::rendering_buffer		rbufDest(glyph->bitmap, nWidth, GetHeightBitmap(), glyph->nWidth);
-	// 	agg::rendering_buffer		rbufSrc(ptemp, nWidth, GetHeightBitmap(), glyph->nWidth);
-	// 	// agg::rendering_buffer		rbufSrc(graphData, m_memGraph.Width(), GetHeightBitmap(), m_nWidthBytesGraph);
-	// 
-	// 	blur_text(100, 2, 3, rbufSrc, rbufDest, 1);
 
 	return glyph;
 }

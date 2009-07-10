@@ -1,4 +1,4 @@
-#include "../StdAfx.h"
+#include "StdAfx.h"
 #include "WidgetListBox.h"
 
 // void CWidgetListBox::Attach(CBaseDialogEx *pWndParent, int nID)

@@ -1,4 +1,4 @@
-#include "../StdAfx.h"
+#include "StdAfx.h"
 #include "WidgetListCtrl.h"
 
 CWidgetListCtrl::CWidgetListCtrl()

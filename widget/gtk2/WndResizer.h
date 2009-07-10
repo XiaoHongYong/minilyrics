@@ -12,6 +12,24 @@
 class CWndResizer
 {
 public:
+	enum ResizeDirection
+	{
+		RD_TOP				= 0x1,
+		RD_LEFT				= 0x1 << 1,
+		RD_RIGHT			= 0x1 << 2,
+		RD_BOTTOM			= 0x1 << 3,
+	};
+
+	struct ResizeArea
+	{
+		int			nID;
+		uint32		resizeDirection;
+		CRect		rcResizeArea;
+	};
+
+	typedef list<ResizeArea>		ListResizeArea;
+
+public:
 	CWndResizer();
 	virtual ~CWndResizer();
 
@@ -37,6 +55,13 @@ public:
 	void SetMinCx(int nMincx) { m_nMincx = nMincx; }
 	void SetMinCy(int nMincy) { m_nMincy = nMincy; }
 
+	// If nID == -1, just add it.
+	void SetResizeArea(int nIDArea, uint32 resizeDirection, RECT &rcResizeArea);
+
+	void RemoveResizeArea(int nIDArea);
+
+	void ClearResizeArea() { m_listResizeArea.clear(); }
+
 protected:
 	void EndSizing(UINT fwKeys, POINT &pt);
 	void OnSizing(UINT fwKeys, POINT &pt);
@@ -44,7 +69,11 @@ protected:
 
 	virtual void AutoCloseToWindows(int &nOffx, int &nOffy);
 
+	bool HitTestResizeArea(POINT &pt, ResizeArea &ra);
+
 protected:
+	ListResizeArea	m_listResizeArea;
+
 	bool			m_bFixedWidth, m_bFixedHeight;
 
 	bool			m_bResizing;		// 是否在拖动窗口

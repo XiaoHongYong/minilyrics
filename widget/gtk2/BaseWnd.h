@@ -67,6 +67,7 @@
 #define WS_MINIMIZEBOX      0x00020000L
 #define WS_MAXIMIZEBOX      0x00010000L
 
+#define WHEEL_DELTA			120
 
 typedef UINT WPARAM;
 typedef long LPARAM;

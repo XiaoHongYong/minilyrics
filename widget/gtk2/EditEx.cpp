@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../stdafx.h"
+#include "StdAfx.h"
 #include "BaseWnd.h"
 #include "EditEx.h"
 #include "desktop.h"

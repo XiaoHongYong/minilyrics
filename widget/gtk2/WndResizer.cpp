@@ -6,7 +6,7 @@
 	Purpose  :	调整窗口的大小
 *********************************************************************/
 
-#include "../stdafx.h"
+#include "StdAfx.h"
 #include "desktop.h"
 #include "WndResizer.h"
 

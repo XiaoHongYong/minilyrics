@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLSkin.h"
 #include "SkinFadeArea.h"
 
@@ -22,6 +22,7 @@ CSkinFadeArea::~CSkinFadeArea()
 
 void CSkinFadeArea::Draw(CRawGraph *pGraph)
 {
+#ifdef _WIN32
 	//
 	// Adjust the alpha of the eara that CSkinFadeArea covers.
 	//
@@ -32,4 +33,5 @@ void CSkinFadeArea::Draw(CRawGraph *pGraph)
 		return;
 
 	pGraph->MultiplyAlpha((byte)m_pSkin->m_nTranslucencyAlphaDynamic, &m_rcObj);
+#endif //  _WIN32
 }

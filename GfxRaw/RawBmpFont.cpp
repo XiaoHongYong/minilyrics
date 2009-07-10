@@ -1343,7 +1343,7 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 		if (w > wMax)
 			break;
 
-		str += glyph->ch;
+		str += (LPCTSTR)glyph->ch;
 	}
 	str += _T("...");
 
@@ -1365,7 +1365,7 @@ bool CRawBmpFont::ShouldDrawTextPrefix(LPCTSTR szText, int nLen, tstring &strPrf
 		if (!glyph)
 			continue;
 
-		if (glyph->ch == '&')
+		if (glyph->ch == StringIterator::CharType('&'))
 		{
 			break;
 		}
