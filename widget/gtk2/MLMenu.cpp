@@ -122,6 +122,10 @@ void CMLMenu::AppendItem(UINT nID, LPCTSTR szText)
     gtk_widget_show(menuItem);
 }
 
+void CMLMenu::AppendSeperator()
+{
+}
+
 void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText)
 {
 	GtkWidget			*menuItem;
@@ -136,6 +140,10 @@ void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText)
 		G_CALLBACK(GtkMenuItemClick), (gpointer)param);
 	gtk_menu_shell_insert(GTK_MENU_SHELL(m_menu), menuItem, nPos);
     gtk_widget_show(menuItem);
+}
+
+void CMLMenu::InsertSeperator(int nPos)
+{
 }
 
 bool CMLMenu::LoadPopupMenu(int nID, int nSubMenu)

@@ -8,7 +8,7 @@
 /*
  * Key State Masks for Keyboard/Mouse Messages
  */
-#define MK_LBUTTON          0x0001
+#define MK_LBUTTON          0x0001 
 #define MK_RBUTTON          0x0002
 #define MK_SHIFT            0x0004
 #define MK_CONTROL          0x0008
@@ -180,7 +180,7 @@ public:
 	virtual bool EnableDlgItem(int nIDItem, bool bEnable) { return false; }
 	virtual bool ShowDlgItem(int nIDItem, int nCmdShow) { return false; }
 	virtual CBaseWnd *GetDlgItem(int nIDItem) { return NULL; }
-	bool GetDlgItemRect(int nIDItem, RECT* lpRect) { lpRect->left = lpRect->top = lpRect->right = lpRect->bottom = 0; return false; }
+	virtual bool GetDlgItemRect(int nIDItem, RECT* lpRect) { lpRect->left = lpRect->top = lpRect->right = lpRect->bottom = 0; return false; }
 
 	bool EnableWindow(bool bEnable) { gtk_widget_set_sensitive(m_window, bEnable); }
 

@@ -46,95 +46,6 @@
 
 #define  DBGLOG1		printf
 
-
-//
-// Current string encoding is one of the following types:
-// 1) UNICODE: if UNICODE macro is defined
-// 2) UTF8:    if UTF8 macro is defined
-// 3) MBCS:    if the above two macros are not defined, and it is default.
-//
-
-void UCS2ToUTF8(const WCHAR *str, int nLen, stringex &strOut);
-void UCS2ToMBCS(const WCHAR *str, int nLen, stringex &strOut);
-void UTF8ToUCS2(const char *str, int nLen, wstringex &strOut);
-void UTF8ToMBCS(const char *str, int nLen, stringex &strOut, int nEncodingID = ED_SYSDEF);
-void MBCSToUTF8(const char *str, int nLen, stringex &strOut, int nEncodingID = ED_SYSDEF);
-void MBCSToUCS2(const char *str, int nLen, wstringex &strOut, int nEncodingID = ED_SYSDEF);
-
-void UCS2ToUTF8(const WCHAR *str, int nLen, string &strOut);
-void UCS2ToMBCS(const WCHAR *str, int nLen, string &strOut);
-void UTF8ToUCS2(const char *str, int nLen, wstring &strOut);
-void UTF8ToMBCS(const char *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
-void MBCSToUTF8(const char *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
-void MBCSToUCS2(const char *str, int nLen, wstring &strOut, int nEncodingID = ED_SYSDEF);
-
-inline void UCS2ToTString(const WCHAR *str, int nLen, tstring &strOut)
-{
-#ifdef UNICODE
-	strOut = str;
-#elif defined(UTF8)
-	UCS2ToUtf8(str, nLen, strOut);
-#else
-	UCS2ToMBCS(str, nLen, strOut);
-#endif
-}
-
-inline void UTF8ToTString(const char *str, int nLen, tstring &strOut)
-{
-#ifdef UNICODE
-	Utf8ToUCS2(str, nLen, strOut);
-#elif defined(UTF8)
-	strOut = str;
-#else
-	Utf8ToMbcs(str, nLen, strOut);
-#endif
-}
-
-inline void MBCSToTString(const char *str, int nLen, tstring &strOut)
-{
-#ifdef UNICODE
-	MBCSToUCS2(str, nLen, strOut);
-#elif defined(UTF8)
-	UCS2ToUtf8(str, nLen, strOut);
-#else
-	strOut = str;
-#endif
-}
-
-inline void TStringToUCS2(const TCHAR *str, int nLen, wstring &strOut)
-{
-#ifdef UNICODE
-	strOut = str;
-#elif defined(UTF8)
-	UTF8ToUCS2(str, nLen, strOut);
-#else
-	MBCSToUCS2(str, nLen, strOut);
-#endif
-}
-
-inline void TStringToUTF8(const TCHAR *str, int nLen, string &strOut)
-{
-#ifdef UNICODE
-	UCS2ToUtf8(str, nLen, strOut);
-#elif defined(UTF8)
-	strOut = str;
-#else
-	MBCSToUTF8(str, nLen, strOut);
-#endif
-}
-
-inline void TStringToMBCS(const TCHAR *str, int nLen, string &strOut)
-{
-#ifdef UNICODE
-	UCS2ToMBCS(str, nLen, strOut);
-#elif defined(UTF8)
-	UTF8ToMBCS(str, nLen, strOut);
-#else
-	strOut = str;
-#endif
-}
-
-
 //
 // ED_XXX 的定义和 __encodingCodepage 的索引顺序是一直的。
 // 即__encodingCodepage[ED_XXX].nEncodingId = ED_XXX
@@ -460,108 +371,76 @@ void UCS2ToUtf8(const WCHAR *str, int nLen, stringex &strOut)
 	ConvertStr(str, nLen, strOut, ED_UTF8); //GetEncodingID("utf-8"));
 }
 
+void UCS2ToMbcs(const WCHAR *str, int nLen, stringex &strOut, int nEncodingID)
+{
+	ConvertStr(str, nLen, strOut, nEncodingID); //GetEncodingIdx("utf-8"));
+}
+
 void Utf8ToUCS2(const char *str, int nLen, wstringex &strOut)
 {
 	ConvertStr(str, nLen, strOut, ED_UTF8); // GetEncodingID("utf-8"));
 }
 
-void MbcsToUtf8(const char *str, int nLen, stringex &strOut, int nEncodingID)
-{
-	int		n;
-	iconv_t	code;
-	char	*szOut;
-	size_t	nLenOut;
-
-	// utf-8 = mbcs 3/2 size
-	strOut.reserve(nLen + nLen / 2 + 1);
-
-	if (nEncodingID > __MaxEncodings || nEncodingID < 0)
-		nEncodingID = 0;
-
-	assert(nEncodingID == __encodingCodepage[nEncodingID].nEncodingId);
-
-	code = iconv_open(SZ_UTF8, __encodingCodepage[nEncodingID].szIConvCode);
-	if (code == (iconv_t)-1)
-	{
-		strOut.resize(0);
-		return;
-	}
-
-	szOut = strOut.data();
-	nLenOut = strOut.capacity();
-	n = iconv(code, (char **)&str, (size_t*)&nLen, (char **)(&szOut), (size_t*)&nLenOut);
-	if (n == -1)
-	{
-		DBGLOG1(_T("FAILED to convert str to utf-8: %s"), str);
-		n = 0;
-	}
-	strOut.resize(strOut.capacity() - nLenOut);
-
-	iconv_close(code);
-}
-
 void Utf8ToMbcs(const char *str, int nLen, stringex &strOut, int nEncodingID)
-{
-	int		n;
-	iconv_t	code;
-	char	*szOut;
-	size_t	nLenOut;
-
-	// utf-8 = mbcs 3/2 size
-	strOut.reserve(nLen + nLen / 2 + 1);
-
-	if (nEncodingID > __MaxEncodings || nEncodingID < 0)
-		nEncodingID = 0;
-
-	assert(nEncodingID == __encodingCodepage[nEncodingID].nEncodingId);
-
-	code = iconv_open(__encodingCodepage[nEncodingID].szIConvCode, SZ_UTF8);
-	if (code == (iconv_t)-1)
-	{
-		strOut.resize(0);
-		return;
-	}
-
-	szOut = strOut.data();
-	nLenOut = strOut.capacity();
-	n = iconv(code, (char **)&str, (size_t*)&nLen, (char **)(&szOut), (size_t*)&nLenOut);
-	if (n == -1)
-	{
-		DBGLOG1(_T("FAILED to convert str to utf-8: %s"), str);
-		n = 0;
-	}
-	strOut.resize(strOut.capacity() - nLenOut);
-
-	iconv_close(code);
-}
-
-//////////////////////////////////////////////////////////////////////////
-void UCS2ToUtf8(const WCHAR *str, int nLen, string &strOut)
-{
-	ConvertStr(str, nLen, strOut, ED_UTF8); //GetEncodingID("utf-8"));
-}
-
-void Utf8ToUCS2(const char *str, int nLen, wstring &strOut)
-{
-	ConvertStr(str, nLen, strOut, ED_UTF8); // GetEncodingID("utf-8"));
-}
-
-void MbcsToUtf8(const char *str, int nLen, string &strOut, int nEncodingIdx)
-{
-	wstringex		strW;
-
-	ConvertStr(str, nLen, strW, nEncodingIdx);
-
-	UCS2ToUtf8(strW.c_str(), strW.size(), strOut);
-}
-
-void Utf8ToMbcs(const char *str, int nLen, string &strOut, int nEncodingIdx)
 {
 	wstringex		strW;
 
 	Utf8ToUCS2(str, nLen, strW);
 
-	ConvertStr(strW.c_str(), strW.size(), strOut, nEncodingIdx);
+	ConvertStr(strW.c_str(), strW.size(), strOut, nEncodingID);
+}
+
+void MbcsToUtf8(const char *str, int nLen, stringex &strOut, int nEncodingID)
+{
+	wstringex		strW;
+
+	ConvertStr(str, nLen, strW, nEncodingID);
+
+	UCS2ToUtf8(strW.c_str(), strW.size(), strOut);
+}
+
+void MbcsToUCS2(const char *str, int nLen, wstringex &strOut, int nEncodingID)
+{
+	ConvertStr(str, nLen, strOut, nEncodingID);
+}
+
+//////////////////////////////////////////////////////////////////////////
+void UCS2ToUtf8(const WCHAR *str, int nLen, string &strOut)
+{
+	ConvertStr(str, nLen, strOut, ED_UTF8); //GetEncodingIdx("utf-8"));
+}
+
+void UCS2ToMbcs(const WCHAR *str, int nLen, string &strOut, int nEncodingID)
+{
+	ConvertStr(str, nLen, strOut, nEncodingID);
+}
+
+void Utf8ToUCS2(const char *str, int nLen, wstring &strOut)
+{
+	ConvertStr(str, nLen, strOut, ED_UTF8); // GetEncodingIdx("utf-8"));
+}
+
+void Utf8ToMbcs(const char *str, int nLen, string &strOut, int nEncodingID)
+{
+	wstringex		strW;
+
+	Utf8ToUCS2(str, nLen, strW);
+
+	ConvertStr(strW.c_str(), strW.size(), strOut, nEncodingID);
+}
+
+void MbcsToUtf8(const char *str, int nLen, string &strOut, int nEncodingID)
+{
+	wstringex		strW;
+
+	ConvertStr(str, nLen, strW, nEncodingID);
+
+	UCS2ToUtf8(strW.c_str(), strW.size(), strOut);
+}
+
+void MbcsToUCS2(const char *str, int nLen, string &strOut, int nEncodingID)
+{
+	ConvertStr(str, nLen, strOut, nEncodingID);
 }
 
 //

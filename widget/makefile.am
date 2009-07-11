@@ -9,6 +9,8 @@ libwidget_a_SOURCES = ResourceMgr.cpp  WndDrag.cpp \
 	gtk2/FileFolderDlg.cpp  gtk2/SkinToolTip.cpp       gtk2/WndResizer.cpp
 
 
-INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils -I$(top_srcdir)/gfx 
+INCLUDES = -I$(top_srcdir)/base \
+	-I$(top_srcdir)/Utils\
+	-I$(top_srcdir)/gfx
 
 libwidget_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`

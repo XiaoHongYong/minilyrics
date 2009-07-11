@@ -13,6 +13,7 @@ CThread::CThread()
 {
 	m_funThead = NULL;
 	m_lpData = NULL;
+	m_threadID = 0;
 }
 
 CThread::~CThread()
@@ -24,11 +25,12 @@ bool CThread::Create(FUNThread function, void* lpData)
 	m_funThead = function;
 	m_lpData = lpData;
 
-	return false;
+	return pthread_create(&m_threadID, NULL, ThreadFunction, (void *)this) == 0;
 }
 
 void CThread::Destroy()
 {
+
 }
 
 void CThread::Suspend()
@@ -41,6 +43,7 @@ void CThread::Resume()
 
 void CThread::Join()
 {
+	pthread_join(m_threadID, NULL);
 }
 
 uint32 CThread::GetPriority() const
@@ -51,4 +54,11 @@ uint32 CThread::GetPriority() const
 uint32 CThread::SetPriority(uint32 priority)
 {
 	return 0;
+}
+
+void *CThread::ThreadFunction(void *lpParam)
+{
+	CThread	*pThis = (CThread *)lpParam;
+
+	pThis->m_funThead(pThis->m_lpData);
 }

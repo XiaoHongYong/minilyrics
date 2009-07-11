@@ -438,12 +438,11 @@ void CPPageLyrDisplay::CreateLOBXlightBmp(bool bHilight)
 
 	if (tob.imgPattern.IsValid())
 	{
-		HBITMAP	hBmp;
-		hBmp = RawImageToHBitmap(tob.imgPattern);
+		CMLImage	*pImage = RawImageToMLImage(tob.imgPattern);
 		if (bHilight)
-			m_btLOBHilight.SetBmp(hBmp);
+			m_btLOBHilight.SetImage(pImage);
 		else
-			m_btLOBLowlight.SetBmp(hBmp);
+			m_btLOBLowlight.SetImage(pImage);
 	}
 }
 

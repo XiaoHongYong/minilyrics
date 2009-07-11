@@ -187,6 +187,7 @@ bool StatisticAnsiChar(const WCHAR *szStr)
 }
 */
 
+#ifdef _WIN32
 PRAW_IMAGE_DATA LoadRawImageDataFromHBitmap(HBITMAP hBmp)
 {
 	BITMAP		bitmap;
@@ -241,6 +242,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromHBitmap(HBITMAP hBmp)
 		return NULL;
 	}
 }
+#endif // #ifdef _WIN32
 
 //
 // Field Read and Write

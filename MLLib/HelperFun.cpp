@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "HelperFun.h"
 #ifdef WIN32
 #ifdef _WINCE_

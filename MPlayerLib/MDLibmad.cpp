@@ -548,7 +548,7 @@ DWORD CMDLibmad::DecodeThreadProc()
 }
 
 template<class T>
-T* TNew(T* pointer)
+T* TNew(T * pointer)
 {
 	T* p = new T;
 	return p;
@@ -792,7 +792,7 @@ int CMDLibmad::mad_decoder_run(struct mad_decoder *decoder)
 	int result;
 
 	// decoder->sync = ((sync*)malloc(sizeof(*decoder->sync));
-	decoder->sync = TNew(decoder->sync);
+	decoder->sync = new mad_decoder::mad_sync;
 	if (decoder->sync == 0)
 		return -1;
 
@@ -1026,7 +1026,7 @@ MLRESULT CMDLibmad::GetHeadInfo(IMediaInput *pInput)
 		   NULL,
 		   NULL, 0);
 
-	m_decoder.sync = TNew(m_decoder.sync);
+	m_decoder.sync = new mad_decoder::mad_sync;
 	if (m_decoder.sync)
 	{
 		result = run_get_header(&m_decoder);

@@ -23,6 +23,7 @@
 #include "win32/MLMenu.h"
 #include "win32/WndResizer.h"
 #include "win32/MLWndHelper.h"
+#include "win32/WidgetImageButton.h"
 // #include "win32/EditEx.h"
 
 #ifdef _WIN32_WCE
@@ -51,6 +52,7 @@
 #include "gtk2/WidgetComboBox.h"
 #include "gtk2/FileFolderDlg.h"
 #include "gtk2/MLWndHelper.h"
+#include "gtk2/WidgetImageButton.h"
 // #include "gtk2/EditEx.h"
 #endif
 

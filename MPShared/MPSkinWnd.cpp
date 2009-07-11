@@ -1480,6 +1480,7 @@ LPCTSTR CMPSkinWnd::GetCfgSectName()
 		return SZ_SECT_UI;
 }
 
+#ifdef _WIN32
 
 LRESULT CMPSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -1501,3 +1502,5 @@ LRESULT CMPSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 	return CSkinWnd::WndProc(message, wParam, lParam);
 }
+
+#endif

@@ -42,7 +42,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;../MPlayer-Plugins/libmad-0.15.1b&quot;;../SDK/cppunit/include;..\base"
+				AdditionalIncludeDirectories="&quot;../MPlayer-Plugins/libmad-0.15.1b&quot;;../SDK/cppunit/include;..\base;./"
 				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;FPM_DEFAULT"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -114,7 +114,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b,../SDK/cppunit/include"
+				AdditionalIncludeDirectories="&quot;../MPlayer-Plugins/libmad-0.15.1b&quot;;../SDK/cppunit/include;..\base;./"
 				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -189,7 +189,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="../MPlayer-Plugins/libmad-0.15.1b,../SDK/cppunit/include"
+				AdditionalIncludeDirectories="&quot;../MPlayer-Plugins/libmad-0.15.1b&quot;;../SDK/cppunit/include;..\base;./"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -261,7 +261,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories="&quot;../MPlayer-Plugins/libmad-0.15.1b&quot;;../SDK/cppunit/include;..\base"
+				AdditionalIncludeDirectories="&quot;../MPlayer-Plugins/libmad-0.15.1b&quot;;../SDK/cppunit/include;..\base;./"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;FPM_DEFAULT"
 				StringPooling="true"
 				RuntimeLibrary="0"
@@ -335,7 +335,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;../MPlayer-Plugins/libmad-0.15.1b&quot;;../SDK/cppunit/include;..\base"
+				AdditionalIncludeDirectories="&quot;../MPlayer-Plugins/libmad-0.15.1b&quot;;../SDK/cppunit/include;..\base;./"
 				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;FPM_DEFAULT;_CPPUNIT_TEST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -854,50 +854,8 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MOSoundCard.cpp"
+				RelativePath=".\win32\MOSoundCard.cpp"
 				>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="MPHelper.cpp"
@@ -1279,7 +1237,7 @@
 				>
 			</File>
 			<File
-				RelativePath="MOSoundCard.h"
+				RelativePath=".\win32\MOSoundCard.h"
 				>
 			</File>
 			<File

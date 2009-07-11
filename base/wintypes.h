@@ -287,7 +287,7 @@ public:
 //	void NormalizeRect();
 
 	// set this rectangle to intersection of two others
-//	BOOL IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2);
+	BOOL IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2);
 
 	// set this rectangle to bounding union of two others
 	// BOOL UnionRect(LPCRECT lpRect1, LPCRECT lpRect2);
@@ -319,6 +319,9 @@ public:
 //	CRect operator|(const RECT& rect2) const;
 //	CRect MulDiv(int nMultiplier, int nDivisor) const;
 };
+
+inline BOOL IsRectEmpty(LPCRECT lpRect)
+	{ return lpRect->left >= lpRect->right || lpRect->top >= lpRect->bottom; }
 
 inline CSize::CSize()
 	{  }
@@ -472,8 +475,21 @@ inline void CRect::OffsetRect(POINT point)
 	{ OffsetRect(point.x, point.y); }
 inline void CRect::OffsetRect(SIZE size)
 	{ OffsetRect(size.cx, size.cy); }
-//inline BOOL CRect::IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2)
-//	{ return ::IntersectRect(this, lpRect1, lpRect2);}
+inline BOOL CRect::IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2)
+	{
+		if (::IsRectEmpty(lpRect1) || ::IsRectEmpty(lpRect2) ||
+			(lpRect1->left >= lpRect2->right) || (lpRect2->left >= lpRect1->right) ||
+			(lpRect1->top >= lpRect2->bottom) || (lpRect2->top >= lpRect1->bottom))
+		{
+			SetRectEmpty();
+			return FALSE;
+		}
+		left   = max(lpRect1->left, lpRect2->left);
+		right  = min(lpRect1->right, lpRect2->right);
+		top    = max(lpRect1->top, lpRect2->top);
+		bottom = min(lpRect1->bottom, lpRect2->bottom);
+		return TRUE;
+	}
 //inline BOOL CRect::UnionRect(LPCRECT lpRect1, LPCRECT lpRect2)
 //	{ return ::UnionRect(this, lpRect1, lpRect2); }
 inline void CRect::operator=(const RECT& srcRect)

@@ -74,7 +74,10 @@ void FilePathFilterInvalidChars(LPTSTR szFile);
 
 #ifndef WIN32
 bool DeleteFile(LPCTSTR lpFileName);
+bool RemoveDirectory(LPCSTR lpPathName);
 bool CreateDirectory(LPCSTR lpPathName);
+bool MoveFile(const char *oldname, const char *newname);
+bool CopyFile(const char *oldname, const char *newname, BOOL bFailIfExists);
 #endif
 
 

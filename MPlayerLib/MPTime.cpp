@@ -162,11 +162,17 @@ void CMPTime::Set(int wYear, int wMonth, int wDay, int wHour, int wMinute, int w
 
 void CMPTime::GetCurrentTime()
 {
+#ifdef _WIN32
 	SYSTEMTIME	st;
 
 	GetSystemTime(&st);
 
 	Set(st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
+#else
+	time_t	t = time(&t);
+	tm	*tmCur = gmtime(&t);
+	Set(tmCur->tm_year + 1900, tmCur->tm_mon + 1, tmCur->tm_mday, tmCur->tm_hour, tmCur->tm_min, tmCur->tm_sec);
+#endif
 }
 
 bool CMPTime::GetMPTM(MPTM *ptm)

@@ -6,7 +6,7 @@
 	Purpose  :	
 *********************************************************************/
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLLib.h"
 #include "LyricsParser.h"
 #include "LrcParser.h"

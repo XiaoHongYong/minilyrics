@@ -53,9 +53,9 @@ void GetAppNameLong(TCHAR szName[], int nLen);
 
 uint32 GetSecCount();
 
+#ifdef _WIN32
 PRAW_IMAGE_DATA LoadRawImageDataFromHBitmap(HBITMAP hBmp);
-
-HBITMAP RawImageToHBitmap(CRawImage &image);
+#endif // #ifdef _WIN32
 
 //
 // Field Read and Write

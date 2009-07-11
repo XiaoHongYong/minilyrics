@@ -89,7 +89,9 @@ public:
 
 	LPCTSTR GetCfgSectName();
 
+#ifdef _WIN32
 	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
+#endif
 
 protected:
 	typedef list<ISkinCmdHandler *>	LIST_SKINCMDHANDLER;

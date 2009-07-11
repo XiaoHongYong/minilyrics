@@ -32,7 +32,9 @@
 #include "DlgCopySongLyrics.h"
 #include "MPMsgWnd.h"
 #include "DlgRateLyrics.h"
+#ifdef _WIN32
 #include "DlgAdjustHue.h"
+#endif
 
 #ifdef _MPLAYER
 #include "MPHelper.h"
@@ -399,6 +401,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	case IDC_PREFERENCE:
 		g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
+#ifdef _WIN32
 	case IDC_ADJUST_HUE:
 		{
 			if (!g_mpApp.GetSkinFactory()->GetResourceMgr()->CanAdjustHue())
@@ -417,6 +420,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			dlg.DoModal(m_pSkinWnd, m_etDispSettings, m_strSectName.c_str());
 		}
 		break;
+#endif
 	case IDC_ABOUT:
 		{
 			CDlgAbout		dlg;

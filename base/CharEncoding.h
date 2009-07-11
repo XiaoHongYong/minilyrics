@@ -92,17 +92,102 @@ void ConvertStr2(const WCHAR *str, int nLen, WCHAR *strOut, int nOut, int nEncod
 void ConvertStr2(const WCHAR *str, int nLen, char *strOut, int nOut, int nEncodingID = ED_SYSDEF);
 
 void UCS2ToUtf8(const WCHAR *str, int nLen, stringex &strOut);
+void UCS2ToMbcs(const WCHAR *str, int nLen, stringex &strOut, int nEncodingID = ED_SYSDEF);
 void Utf8ToUCS2(const char *str, int nLen, wstringex &strOut);
-void MbcsToUtf8(const char *str, int nLen, stringex &strOut, int nEncodingID = ED_SYSDEF);
 void Utf8ToMbcs(const char *str, int nLen, stringex &strOut, int nEncodingID = ED_SYSDEF);
+void MbcsToUtf8(const char *str, int nLen, stringex &strOut, int nEncodingID = ED_SYSDEF);
+void MbcsToUCS2(const char *str, int nLen, wstringex &strOut, int nEncodingID = ED_SYSDEF);
 
 void UCS2ToUtf8(const WCHAR *str, int nLen, string &strOut);
-void Utf8ToUCS2(const char *str, int nLen, wstring &strOut);
+void UCS2ToMbcs(const WCHAR *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
 void MbcsToUtf8(const char *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
+void MbcsToUCS2(const char *str, int nLen, wstring &strOut, int nEncodingID = ED_SYSDEF);
 void Utf8ToMbcs(const char *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
+void Utf8ToUCS2(const char *str, int nLen, wstring &strOut);
 
 // ÅÐ¶Ï×Ö·û´®ÖÐÊÇ·ñ°üº¬·ÇANSI±àÂëµÄ×Ö·û
 bool IsAnsiStr(const WCHAR *szStr);
 bool IsAnsiStr(const char *szStr);
+
+
+//
+// Current string encoding is one of the following types:
+// 1) UNICODE: if UNICODE macro is defined
+// 2) UTF8:    if UTF8 macro is defined
+// 3) MBCS:    if the above two macros are not defined, and it is default.
+//
+
+template<class _tstring>
+inline void UCS2ToTString(const WCHAR *str, int nLen, _tstring &strOut, int nEncodingID = ED_SYSDEF)
+{
+#ifdef UNICODE
+	strOut = str;
+#elif defined(UTF8)
+	UCS2ToUtf8(str, nLen, strOut);
+#else
+	Utf8ToMbcs(str, nLen, strOut, nEncodingID);
+#endif
+}
+
+template<class _tstring>
+inline void UTF8ToTString(const char *str, int nLen, _tstring &strOut, int nEncodingID = ED_SYSDEF)
+{
+#ifdef UNICODE
+	Utf8ToUCS2(str, nLen, strOut);
+#elif defined(UTF8)
+	strOut = str;
+#else
+	Utf8ToMbcs(str, nLen, strOut, nEncodingID);
+#endif
+}
+
+template<class _tstring>
+inline void MBCSToTString(const char *str, int nLen, _tstring &strOut, int nEncodingID = ED_SYSDEF)
+{
+#ifdef UNICODE
+	MbcsToUCS2(str, nLen, strOut, nEncodingID);
+#elif defined(UTF8)
+	UCS2ToUtf8(str, nLen, strOut);
+#else
+	strOut = str;
+#endif
+}
+
+template<class _wstring>
+inline void TStringToUCS2(const TCHAR *str, int nLen, _wstring &strOut, int nEncodingID = ED_SYSDEF)
+{
+#ifdef UNICODE
+	strOut = str;
+#elif defined(UTF8)
+	Utf8ToUCS2(str, nLen, strOut);
+#else
+	MbcsToUCS2(str, nLen, strOut, nEncodingID);
+#endif
+}
+
+template<class _string>
+inline void TStringToUTF8(const TCHAR *str, int nLen, _string &strOut, int nEncodingID = ED_SYSDEF)
+{
+#ifdef UNICODE
+	UCS2ToUtf8(str, nLen, strOut);
+#elif defined(UTF8)
+	strOut = str;
+#else
+	MbcsToUtf8(str, nLen, strOut, nEncodingID);
+#endif
+}
+
+template<class _string>
+inline void TStringToMBCS(const TCHAR *str, int nLen, _string &strOut, int nEncodingID = ED_SYSDEF)
+{
+#ifdef UNICODE
+	UCS2ToMbcs(str, nLen, strOut, nEncodingID);
+#elif defined(UTF8)
+	Utf8ToMbcs(str, nLen, strOut, nEncodingID);
+#else
+	strOut = str;
+#endif
+}
+
 
 #endif // !defined(AFX_CHARENCODING_H__69A9619B_C5CC_4C25_908F_FE7099D44717__INCLUDED_)

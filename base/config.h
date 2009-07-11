@@ -6,6 +6,7 @@
 // #define _MAC_OSX
 
 #ifdef _LINUX
+#define UTF8
 #ifndef _DEBUG
 #define _DEBUG
 #endif

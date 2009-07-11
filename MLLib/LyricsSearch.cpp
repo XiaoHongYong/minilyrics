@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "LyricsSearch.h"
 #include "MLData.h"
 #include "HelperFun.h"

@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLLib.h"
 #include "Lyrics3v2.h"
 #include "../ID3Lib/ID3v1.h"

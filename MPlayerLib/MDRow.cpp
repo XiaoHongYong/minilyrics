@@ -61,7 +61,7 @@ MLRESULT CMDRow::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pM
 	uint32		nFileSize;
 	pInput->GetSize(nFileSize);
 
-	m_nLengthMs = (uint32)((LONGLONG)nFileSize * 1000 / (SAMPLERATE * NCH * (BPS / 8)));
+	m_nLengthMs = (uint32)((int64)nFileSize * 1000 / (SAMPLERATE * NCH * (BPS / 8)));
 
 	pMedia->SetAttribute(MA_FILESIZE, nFileSize);
  	pMedia->SetAttribute(MA_DURATION, m_nLengthMs);
@@ -117,7 +117,7 @@ MLRESULT CMDRow::Play(IMPlayer *pPlayer, IMediaInput *pInput)
 
 	pInput->GetSize(nFileSize);
 
-	m_nLengthMs = (uint32)((LONGLONG)nFileSize * 1000 / (SAMPLERATE * NCH * (BPS / 8)));
+	m_nLengthMs = (uint32)((int64)nFileSize * 1000 / (SAMPLERATE * NCH * (BPS / 8)));
 
 	nRet = m_pOutput->Open(SAMPLERATE, NCH, BPS);
 	if (nRet != ERR_OK)

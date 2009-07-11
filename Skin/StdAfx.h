@@ -12,6 +12,7 @@
 #include "../base/mlstdafx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
+#include "../OurMFCLib/OurMFCLib.h"
 #include "../gfx/gfx.h"
 #include "../GfxRaw/GfxRaw.h"
 #include "../widget/widget.h"

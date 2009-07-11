@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLLib.h"
 #include "Register.h"
 #include "MLGenRegV4.h"

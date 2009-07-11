@@ -4,7 +4,6 @@
 #pragma once
 
 #include "PreferencePageBase.h"
-#include "WidgetImageButton.h"
 
 
 //

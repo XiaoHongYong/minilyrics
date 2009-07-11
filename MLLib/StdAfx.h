@@ -1,4 +1,4 @@
-// stdafx.h : include file for standard system include files,
+// StdAfx.h : include file for standard system include files,
 //  or project specific include files that are used frequently, but
 //      are changed infrequently
 //
@@ -10,7 +10,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "../base/mlstdafx.h"
+#include "../base/mlStdAfx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"

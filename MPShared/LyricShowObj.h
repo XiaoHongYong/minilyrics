@@ -86,7 +86,7 @@ public:
 		CLyricShowObj			*m_pObj;
 
 	};
-	friend CDispOptRecover;
+	friend class CDispOptRecover;
 
 	class MLColorEx : public MLColor
 	{

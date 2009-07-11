@@ -31,8 +31,12 @@ int GetOperationSystemType();
 bool IsWin9xSystem();
 
 #ifndef _WIN32
+
 // return system elapsed time in ms.
 uint32 GetTickCount();
+
+void Sleep(DWORD dwMilliseconds);
+
 #endif
 
 #ifdef WIN32

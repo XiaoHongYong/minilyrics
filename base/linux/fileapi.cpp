@@ -114,6 +114,12 @@ BOOL SetFileTime(LPCTSTR szFile, FILETIME *lpWriteTime)
 	return bRet;
 }
 */
+
+bool RemoveDirectory(LPCTSTR lpPathName)
+{
+	return rmdir(lpPathName) == 0;
+}
+
 bool CreateDirectory(LPCSTR lpPathName)
 {
 	return mkdir(lpPathName, 0) == 0;
@@ -148,6 +154,11 @@ BOOL CreateDirectoryAll(LPCTSTR szDir)
 	}
 
 	return TRUE;
+}
+
+bool CopyFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName, BOOL bFailIfExists)
+{
+	return false;
 }
 
 // COMMENT:

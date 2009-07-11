@@ -6,13 +6,21 @@
 #include "MPlayer.h"
 #include "MILocalFile.h"
 // #include "MDWave.h"
-#include "MOSoundCard.h"
+
+#ifdef _WIN32
+#include "win32/MOSoundCard.h"
+#endif
+
+#ifdef _LINUX
+#include "linux/MOSoundCard.h"
+#endif
+
 // #include "MOAnalysis.h"
 #include "MDRow.h"
 #include "MDWave.h"
 #include "MDLibmad.h"
-#include "VISDemo.h"
-#include "DspDemo.h"
+// #include "VISDemo.h"
+// #include "DspDemo.h"
 #include "MORaw.h"
 #include "../MPlayer-Plugins/Dsp_SuperEQ/dsp_supereq.h"
 
@@ -1617,7 +1625,7 @@ MLRESULT CMPlayer::StopVis()
 	{
 		VisDataPre	&temp = m_queVisDataPre.front();
 		temp.pBuf->Release();
-		m_queVisDataPre.pop();
+		m_queVisDataPre.pop_front();
 	}
 
 	m_nBufferedVisMs = 0;
@@ -1637,7 +1645,7 @@ void CMPlayer::CalcVisParam(VisParam &param)
 		return;
 	}
 	VisDataPre	temp = m_queVisDataPre.front();
-	m_queVisDataPre.pop();
+	m_queVisDataPre.pop_front();
 	m_mutexVisdataAccess.Release();
 
 	m_nBufferedVisMs -= temp.pBuf->size() / (temp.nBps / 8) / temp.nChannels / temp.nSampleRate;
@@ -1786,10 +1794,10 @@ void CMPlayer::AddVisData(IFBuffer *pBuf, int nBps, int nChannels, int nSampleRa
 		VisDataPre	&temp = m_queVisDataPre.front();
 		m_nBufferedVisMs -= temp.pBuf->size() / (temp.nBps / 8) / temp.nChannels / temp.nSampleRate;
 		temp.pBuf->Release();
-		m_queVisDataPre.pop();
+		m_queVisDataPre.pop_front();
 	}
 
 	m_nBufferedVisMs += pBuf->size() / (nBps / 8) / nChannels / nSampleRate;
 
-	m_queVisDataPre.push(data);
+	m_queVisDataPre.push_back(data);
 }

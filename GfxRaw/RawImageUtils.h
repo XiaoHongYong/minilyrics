@@ -3,10 +3,6 @@
 
 #pragma once
 
-#ifdef _WIN32
-
-HBITMAP RawImageToHBitmap(CRawImage &image);
-
-#endif	// _WIN32
+CMLImage *RawImageToMLImage(CRawImage &image);
 
 #endif // _RAW_IMAGE_UTILS__

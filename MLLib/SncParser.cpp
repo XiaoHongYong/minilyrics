@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLLib.h"
 #include "SncParser.h"
 #include "HelperFun.h"

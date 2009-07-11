@@ -918,7 +918,7 @@ struct mad_decoder {
     int out;
   } async;
 
-  struct {
+  struct mad_sync {
     struct mad_stream stream;
     struct mad_frame frame;
     struct mad_synth synth;

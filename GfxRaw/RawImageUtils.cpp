@@ -5,7 +5,7 @@
 
 #ifdef _WIN32
 
-HBITMAP RawImageToHBitmap(CRawImage &image)
+CMLImage *RawImageToMLImage(CRawImage &image)
 {
 	HBITMAP			hBmp = NULL;
 	PRAW_IMAGE_DATA	pRawImage = image.GetHandle();
@@ -61,8 +61,12 @@ HBITMAP RawImageToHBitmap(CRawImage &image)
 
 	::ReleaseDC(NULL, hdcDesktop);
 
+	CMLImage	*pImage;
 
-	return hBmp;
+	pImage = new CMLImage;
+	pImage->Attach(hBmp);
+
+	return pImage;
 
 	/*	HBITMAP		hBmp;
 	HDC			hdc;
@@ -101,3 +105,12 @@ HBITMAP RawImageToHBitmap(CRawImage &image)
 }
 
 #endif	// _WIN32
+
+#ifdef _LINUX_GTK2
+
+CMLImage *RawImageToMLImage(CRawImage &image)
+{
+	return NULL;
+}
+
+#endif

@@ -15,7 +15,6 @@
 #include "MPTime.h"
 #include "MediaLibrary.h"
 #include "MDAgent.h"
-#include <queue>
 
 interface IMediaInput;
 interface IMediaDecode;
@@ -311,7 +310,7 @@ protected:
 		int			nSampleRate;
 		int			nPlayingPos;
 	};
-	typedef queue<VisDataPre>		QueueVisDataPre;
+	typedef list<VisDataPre>		QueueVisDataPre;
 	QueueVisDataPre		m_queVisDataPre;
 	int					m_nBufferedVisMs;
 	int					m_nMODelay;

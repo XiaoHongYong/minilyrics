@@ -1427,6 +1427,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\win32\WidgetImageButton.cpp"
+				>
+			</File>
+			<File
 				RelativePath="win32\WidgetListBox.cpp"
 				>
 				<FileConfiguration
@@ -1725,6 +1729,10 @@
 			</File>
 			<File
 				RelativePath="widgetif.h"
+				>
+			</File>
+			<File
+				RelativePath=".\win32\WidgetImageButton.h"
 				>
 			</File>
 			<File

@@ -118,7 +118,7 @@ CREATE INDEX IF NOT EXISTS mli_times_played on medialib (times_played);"
 
 
 #define SQLITE3_BIND_UCS2(sqlstmt, strData)			\
-	UCS2ToUtf8(strData.c_str(), strData.size(), strUtf8);\
+	TStringToUTF8(strData.c_str(), strData.size(), strUtf8);\
 	nRet = sqlstmt.BindText(n, strUtf8.c_str(), strUtf8.size());\
 	if (nRet != ERR_OK)\
 		goto RET_FAILED;\
@@ -132,21 +132,6 @@ CMedia *NewMedia()
 	pMedia->AddRef();
 
 	return pMedia;
-}
-
-void Utf8ToUCS2(const char *str, int nLen, CXStr &strUCS2)
-{
-	int			nLenWC;
-
-	if (nLen == -1)
-		nLen = strlen(str);
-
-	strUCS2.reserve(nLen + 1);
-
-	nLenWC = MultiByteToWideChar(CP_UTF8, 0,
-		str, nLen, strUCS2.data(), strUCS2.capacity());
-
-	strUCS2.resize(nLenWC);
 }
 
 /*
@@ -349,7 +334,7 @@ MLRESULT CMediaLibrary::GetAlbumOfArtist(LPCXSTR szArtist, IVXStr **ppvAlbum)
 		return m_nInitResult;
 
 	stringex	strUtf8;
-	UCS2ToUtf8(szArtist, -1, strUtf8);
+	TStringToUTF8(szArtist, -1, strUtf8);
 	CMutexAutolock	autolock(m_mutexDataAccess);
 
 	CSqlite3Stmt	sqlQuery;
@@ -375,7 +360,7 @@ MLRESULT CMediaLibrary::GetAlbumOfArtist(LPCXSTR szArtist, IVXStr **ppvAlbum)
 		text = sqlQuery.ColumnText(0);
 		if (text)
 		{
-			Utf8ToUCS2(text, -1, strUCS2);
+			UTF8ToTString(text, -1, strUCS2);
 			pvStr->push_back(strUCS2.c_str());
 		}
 
@@ -415,7 +400,7 @@ MLRESULT CMediaLibrary::GetMediaByUrl(LPCXSTR szUrl, IMedia **ppMedia)
 	int			nRet;
 	stringex	strUtf8;
 
-	UCS2ToUtf8(szUrl, -1, strUtf8);
+	TStringToUTF8(szUrl, -1, strUtf8);
 
 	m_sqlQueryByUrl.BindStaticText(1, strUtf8.c_str());
 
@@ -504,7 +489,7 @@ MLRESULT CMediaLibrary::AddFast(LPCXSTR szMediaUrl, LPCXSTR szArtist, LPCXSTR sz
 	pMedia->m_nTimePlayed.GetCurrentTime();
 	pMedia->m_nTimeAdded.GetCurrentTime();
 
-	UCS2ToUtf8(szMediaUrl, -1, strUtf8);
+	TStringToUTF8(szMediaUrl, -1, strUtf8);
 	nRet = m_sqlAddFast.BindText(n++, strUtf8.c_str());
 	if (nRet != ERR_OK)
 		goto RET_FAILED;
@@ -688,8 +673,8 @@ MLRESULT CMediaLibrary::GetByAlbum(LPCXSTR szArtist, LPCXSTR szAlbum, IPlaylist 
 	stringex			strArUtf8, strAlUtf8;
 	string				strSql;
 
-	UCS2ToUtf8(szArtist, -1, strArUtf8);
-	UCS2ToUtf8(szAlbum, -1, strAlUtf8);
+	TStringToUTF8(szArtist, -1, strArUtf8);
+	TStringToUTF8(szAlbum, -1, strAlUtf8);
 
 	strrep(strArUtf8, "'", "''");
 	strrep(strAlUtf8, "'", "''");
@@ -1117,7 +1102,7 @@ MLRESULT CMediaLibrary::QueryPlaylist(LPCSTR szSQL, LPCXSTR szClause, IPlaylist 
 	if (nRet != ERR_OK)
 		return nRet;
 
-	UCS2ToUtf8(szClause, -1, strUtf8);
+	TStringToUTF8(szClause, -1, strUtf8);
 	nRet = sqlQuery.BindText(1, strUtf8.c_str());
 	if (nRet != ERR_OK)
 		return nRet;
@@ -1177,7 +1162,7 @@ MLRESULT CMediaLibrary::QueryVStr(LPCSTR szSql, IVXStr **ppvStr)
 		text = (const char *)sqlQuery.ColumnText(0);
 		if (text)
 		{
-			Utf8ToUCS2(text, -1, strUCS2);
+			UTF8ToTString(text, -1, strUCS2);
 			pvStr->push_back(strUCS2.c_str());
 		}
 
@@ -1206,7 +1191,7 @@ MLRESULT CMediaLibrary::ExecuteSQL(LPCSTR szSql)
 #define  MediaGetSqlite3ColumText(mediaAttri)	\
 	text = (const char *)sqlStmt->ColumnText(n++);	\
 	if (text)\
-		Utf8ToUCS2(text, -1, mediaAttri);\
+		UTF8ToTString(text, -1, mediaAttri);\
 	else\
 		mediaAttri.resize(0);
 
@@ -1259,7 +1244,7 @@ void CMediaLibrary::GetMediaCallback(CMedia *pMedia, int numCols, char **results
 
 #define FILED_GET_TEXT(feild)	\
 	if (results[n])\
-		Utf8ToUCS2(results[n], -1, feild);\
+		UTF8ToTString(results[n], -1, feild);\
 	else\
 		feild.resize(0);\
 	n++;
