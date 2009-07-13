@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "../stdafx.h"
+#include "StdAfx.h"
 #include "../MPlayerApp.h"
 #include "../MPSkinMainWnd.h"
 #include "MPSkinMainWndGtk2.h"

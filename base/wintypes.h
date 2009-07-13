@@ -61,6 +61,7 @@
 
 #define _ttoi       atoi
 #define _itot		itoa
+#define _tstof		atof
 
 #define _tcscat     strcat
 #define _tcscpy     strcpy
@@ -364,6 +365,8 @@ inline CPoint::CPoint()
 	{ }
 inline CPoint::CPoint(int initX, int initY)
 	{ x = initX; y = initY; }
+inline CPoint::CPoint(POINT initPt)
+	{ x = initPt.x; y = initPt.y; }
 inline CPoint::CPoint(SIZE initSize)
 	{ *(SIZE*)this = initSize; }
 inline CPoint::CPoint(DWORD dwPoint)

@@ -241,7 +241,9 @@ public:
 
 	void OnDestroy();
 
+#ifdef _WIN32
 	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
+#endif
 
 protected:
 	void Paint(IMLGraphicsBase *pGraph, bool bResize = false);

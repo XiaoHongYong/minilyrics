@@ -8,8 +8,6 @@
 class CRawGraph;
 class CRawImage;
 
-#include "../base/StringIterator.h"
-
 namespace GfxRaw
 {
 

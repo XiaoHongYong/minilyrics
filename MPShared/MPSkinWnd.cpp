@@ -1177,6 +1177,7 @@ bool CMPSkinWnd::GetChecked(UINT nID, bool &bChecked)
 		bChecked = IsTopmost();
 		// bChecked = g_Profile.GetProfileBool(GetCfgSectName(), _T("topmost"), true);
 		break;
+#ifdef _WIN32
 	case IDC_CLICK_THROUGH:
 		// bChecked = g_Profile.GetProfileBool(GetCfgSectName(), _T("ClickThrough"), false);
 		if (m_bIndividualProperties)
@@ -1184,6 +1185,7 @@ bool CMPSkinWnd::GetChecked(UINT nID, bool &bChecked)
 		else
 			bChecked = g_mpApp.GetSkinFactory()->GetClickThrough();
 		break;
+#endif
 // 	case IDC_USE_TRANSPT_BK_COLOR:
 // 		bChecked = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
 // 		break;
@@ -1366,10 +1368,12 @@ void CMPSkinWnd::LoadTransparentSettings()
 
 	// bTransparentClr = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
 
+#ifdef _WIN32
 	if (!m_bIndividualProperties && g_mpApp.GetSkinFactory()->GetClickThrough())
 		m_bClickThrough = true;
 
 	SetTransparent(byAlpha, bTransparentClr, m_clrBg.get(), m_bClickThrough);
+#endif
 }
 
 #endif

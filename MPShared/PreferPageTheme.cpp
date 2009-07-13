@@ -210,7 +210,9 @@ CPPageLyrDisplay::CPPageLyrDisplay(bool bFloatingLyrics)
 	m_PageID = PAGE_LYR_DISPLAY;
 
 	m_nColorSetCount = CS_SIZE;
+#ifdef _WIN32
 	m_SelColorType = CS_NONE;
+#endif
 }
 
 CPPageLyrDisplay::~CPPageLyrDisplay()
@@ -291,19 +293,6 @@ BOOL CPPageLyrDisplay::OnInitDialog()
 void CPPageLyrDisplay::OnShowPage()
 {
 	SetSettingType(m_eventType == ET_LYRICS_FLOATING_SETTINGS ? ST_FLOATING_LYR : ST_NORMAL_LYR);
-}
-
-template<class _VOptx>
-void SetOptsEvent(_VOptx &vOptions, EventType eventTypeOldEqual, EventType eventType, tstring &strSectName)
-{
-	for (_VOptx::iterator it = vOptions.begin(); it != vOptions.end(); ++it)
-	{
-		if ((*it).eventType == eventTypeOldEqual)
-		{
-			(*it).eventType = eventType;
-			(*it).strSection = strSectName;
-		}
-	}
 }
 
 void CPPageLyrDisplay::SetSettingType(SettingType settingType)

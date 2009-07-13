@@ -105,6 +105,7 @@ void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, PML
 		nAlphaNextLine = 255 - nAlphaCurLine;
 
 
+#ifdef _WIN32_DESKTOP
 	if (m_pSkin->GetEnableTranslucencyLayered() || m_img.IsValid())
 	{
 		// transparent window
@@ -121,6 +122,7 @@ void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, PML
 		pGraphics->SetTextAlpha(alphaOld);
 	}
 	else
+#endif
 	{
 		MLColor		clrTxt, clrTxtBorder;
 

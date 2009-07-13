@@ -3,6 +3,7 @@
 
 #include "BaseWnd.h"
 #include "WidgetCtrlBase.h"
+#include "ScrollBarHandler.h"
 
 class CWidgetLable : public CWidgetCtrlBase
 {

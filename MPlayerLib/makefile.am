@@ -1,13 +1,13 @@
 noinst_LIBRARIES = libmplayerlib.a
 
 libmplayerlib_a_SOURCES = audio.cpp                    DspDemo.cpp\
-		MDAgent.cpp\
+		fft.c                        MDAgent.cpp\
 		MDLibmad.cpp                 MDRow.cpp\
 		MDWave.cpp                   MediaLibrary.cpp\
 		MILocalFile.cpp              MORaw.cpp\
-		linux/MOSoundCard.cpp              MPHelper.cpp\
+		linux/MOSoundCard.cpp        MPTools.cpp\
 		MPlayer.cpp                  MPTime.cpp\
-		Playlist.cpp                 SqliteHelper.cpp
+		Playlist.cpp                 
 
 INCLUDES = -I$(top_srcdir)/base -I$(top_srcdir)/Utils
 

@@ -40,8 +40,10 @@
 #include "MPHelper.h"
 #endif
 
-#if defined(_WIN32_DESKTOP)
+#ifdef _WIN32_DESKTOP
 #include "win32/MPFloatingLyrWnd.h"
+#else
+#include "MPFloatingLyrWnd.h"
 #endif
 
 bool		g_bInModalDlLrcSelDlg;
@@ -107,7 +109,10 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
 	case IDC_OPENFILE:
-		OnSongOpenFileCmd(m_pSkinWnd, true);
+		{
+			SaveCurrentPlaylist();
+			OnSongOpenFileCmd(m_pSkinWnd, true);
+		}
 		break;
 	case IDC_OPENDIR:
 		OnSongOpenDirCmd(m_pSkinWnd, true);

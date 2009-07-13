@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include "MPlayer.h"
 #include "MediaLibrary.h"
-#include "SqliteHelper.h"
 
 #define MEDIA_LIB_VER_CUR		1
 

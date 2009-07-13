@@ -193,7 +193,7 @@ int ConvertMultiByteToWideChar(int nEncodingID, const char *lpByteStr, int nSize
 		return 0;
 	}
 
-	outBytesLeft = nSizeWideChar;
+	outBytesLeft = nSizeWideChar * sizeof(wchar_t);
 	n = iconv(code, (char **)&lpByteStr, (size_t*)&nSizeMultibyte, (char **)(&lpWideStr), (size_t*)&outBytesLeft);
 	if (n == -1)
 	{
@@ -201,7 +201,12 @@ int ConvertMultiByteToWideChar(int nEncodingID, const char *lpByteStr, int nSize
 		n = 0;
 	}
 	else
-		n = nSizeMultibyte - outBytesLeft / sizeof(WCHAR);
+	{
+		n = nSizeWideChar - outBytesLeft / sizeof(WCHAR);
+		ASSERT(n >= 0);
+		if (n < 0)
+			n = 0;
+	}
 
 	lpWideStr[n] = '\0';
 	iconv_close(code);
@@ -239,6 +244,83 @@ int ConvertWideCharToMultiByte(int nEncodingID, const WCHAR *lpWideStr, int nSiz
 	return n;
 }
 
+int ConvertMultiByteToUtf8(int nEncodingID, const char *lpByteStr, int nSizeMultibyte, char *lpUtf8Str, int nSizeUtf8)
+{
+	int		n;
+	iconv_t	code;
+	int		outBytesLeft;
+
+	if (nEncodingID > __MaxEncodings || nEncodingID < 0)
+		nEncodingID = 0;
+
+	assert(nEncodingID == __encodingCodepage[nEncodingID].nEncodingId);
+
+	code = iconv_open(__encodingCodepage[nEncodingID].szIConvCode, SZ_UTF8);
+	if (code == (iconv_t)-1)
+	{
+		lpUtf8Str[0] = '\0';
+		return 0;
+	}
+
+	outBytesLeft = nSizeUtf8;
+	n = iconv(code, (char **)&lpByteStr, (size_t*)&nSizeMultibyte, (char **)(&lpUtf8Str), (size_t*)&outBytesLeft);
+	if (n == -1)
+	{
+		DBGLOG1(_T("FAILED to convert str to unicode: %s"), lpByteStr);
+		n = 0;
+	}
+	else
+	{
+		n = nSizeUtf8 - outBytesLeft;
+		ASSERT(n >= 0);
+		if (n < 0)
+			n = 0;
+	}
+
+	lpUtf8Str[n] = '\0';
+	iconv_close(code);
+
+	return n;
+}
+
+int ConvertUtf8ToMultiByte(int nEncodingID, const char *lpUtf8Str, int nSizeUtf8, char *lpMbcsStr, int nSizeMultibyte)
+{
+	int		n;
+	iconv_t	code;
+	int		outBytesLeft;
+
+	if (nEncodingID > __MaxEncodings || nEncodingID < 0)
+		nEncodingID = 0;
+
+	assert(nEncodingID == __encodingCodepage[nEncodingID].nEncodingId);
+
+	code = iconv_open(SZ_UTF8, __encodingCodepage[nEncodingID].szIConvCode);
+	if (code == (iconv_t)-1)
+	{
+		lpMbcsStr[0] = '\0';
+		return 0;
+	}
+
+	outBytesLeft = nSizeMultibyte;
+	n = iconv(code, (char **)&lpUtf8Str, (size_t*)&nSizeUtf8, (char **)(&lpMbcsStr), (size_t*)&outBytesLeft);
+	if (n == -1)
+	{
+		DBGLOG1(_T("FAILED to convert str to unicode: %s"), lpUtf8Str);
+		n = 0;
+	}
+	else
+	{
+		n = nSizeMultibyte - outBytesLeft;
+		ASSERT(n >= 0);
+		if (n < 0)
+			n = 0;
+	}
+
+	lpMbcsStr[n] = '\0';
+	iconv_close(code);
+
+	return n;
+}
 
 void ConvertStr(const WCHAR *str, int nLen, stringex &strOut, int nEncodingID)
 {
@@ -383,20 +465,26 @@ void Utf8ToUCS2(const char *str, int nLen, wstringex &strOut)
 
 void Utf8ToMbcs(const char *str, int nLen, stringex &strOut, int nEncodingID)
 {
-	wstringex		strW;
+	if (nLen == -1)
+		nLen = strlen(str);
 
-	Utf8ToUCS2(str, nLen, strW);
+	strOut.reserve(nLen + 1);
 
-	ConvertStr(strW.c_str(), strW.size(), strOut, nEncodingID);
+	int n = ConvertUtf8ToMultiByte(nEncodingID, str, nLen, strOut.data(), strOut.capacity());
+
+	strOut.resize(n);
 }
 
 void MbcsToUtf8(const char *str, int nLen, stringex &strOut, int nEncodingID)
 {
-	wstringex		strW;
+	if (nLen == -1)
+		nLen = strlen(str);
 
-	ConvertStr(str, nLen, strW, nEncodingID);
+	strOut.reserve(nLen * 3 / 2 + 3);
 
-	UCS2ToUtf8(strW.c_str(), strW.size(), strOut);
+	int n = ConvertMultiByteToUtf8(nEncodingID, str, nLen, strOut.data(), strOut.capacity());
+
+	strOut.resize(n);
 }
 
 void MbcsToUCS2(const char *str, int nLen, wstringex &strOut, int nEncodingID)
@@ -422,20 +510,26 @@ void Utf8ToUCS2(const char *str, int nLen, wstring &strOut)
 
 void Utf8ToMbcs(const char *str, int nLen, string &strOut, int nEncodingID)
 {
-	wstringex		strW;
+	if (nLen == -1)
+		nLen = strlen(str);
 
-	Utf8ToUCS2(str, nLen, strW);
+	strOut.reserve(nLen + 1);
 
-	ConvertStr(strW.c_str(), strW.size(), strOut, nEncodingID);
+	int n = ConvertUtf8ToMultiByte(nEncodingID, str, nLen, (char *)strOut.c_str(), strOut.capacity());
+
+	strOut.resize(n);
 }
 
 void MbcsToUtf8(const char *str, int nLen, string &strOut, int nEncodingID)
 {
-	wstringex		strW;
+	if (nLen == -1)
+		nLen = strlen(str);
 
-	ConvertStr(str, nLen, strW, nEncodingID);
+	strOut.reserve(nLen * 3 / 2 + 3);
 
-	UCS2ToUtf8(strW.c_str(), strW.size(), strOut);
+	int n = ConvertMultiByteToUtf8(nEncodingID, str, nLen, (char *)strOut.c_str(), strOut.capacity());
+
+	strOut.resize(n);
 }
 
 void MbcsToUCS2(const char *str, int nLen, string &strOut, int nEncodingID)

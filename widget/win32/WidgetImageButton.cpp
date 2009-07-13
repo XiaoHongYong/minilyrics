@@ -14,6 +14,7 @@ CWidgetImageButton::CWidgetImageButton()
 {
 	m_pWndProcOrg = NULL;
 	m_nBmpCx = m_nBmpCy = 0;
+	m_pImage = NULL;
 }
 
 CWidgetImageButton::~CWidgetImageButton()

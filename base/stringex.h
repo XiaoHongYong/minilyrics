@@ -205,10 +205,6 @@ bool Scan4IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2, _int_t &n3, _int_t &n4)
 
 void _itostr(int value, tstring &str, int base);
 
-#ifndef _WIN32
-char* itoa(int value, char* result, int base);
-#endif
-
 template<class _TCHARPTR, class _int_t>
 _TCHARPTR ReadColorValue_t(_TCHARPTR szColor, _int_t &nClr)
 {

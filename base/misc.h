@@ -73,9 +73,15 @@ void GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict);
 
 void CenterWindowToMonitor(HWND hWnd);
 
-BOOL CopyTextToClipboard(LPCTSTR szText, HWND hWnd);
+bool CopyTextToClipboard(LPCTSTR szText);
 
-bool GetClipBoardText(wstringex &str, HWND hWnd);
+bool GetClipBoardText(tstringex &str);
+
+#else
+
+bool CopyTextToClipboard(LPCTSTR szText);
+
+bool GetClipBoardText(tstringex &str);
 
 #endif // WIN32
 

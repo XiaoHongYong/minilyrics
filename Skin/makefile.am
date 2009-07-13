@@ -9,6 +9,7 @@ libskin_a_SOURCES = Commander.cpp                SkinFadeArea.cpp             Sk
 	SkinDataObj.cpp              SkinScaleImage.cpp           UIObjectIterator.cpp\
 	SkinDecorativeContainer.cpp  SkinSquare.cpp\
 	SkinFactory.cpp              SkinToggleCtrlContainer.cpp\
+	EditHandler.cpp              gtk2/SplashScreenWnd.cpp\
 	gtk2/ImgList.cpp  gtk2/SkinRgn.cpp  gtk2/SkinVScrollBarOSStyle.cpp
 
 INCLUDES = -I$(top_srcdir)/base \

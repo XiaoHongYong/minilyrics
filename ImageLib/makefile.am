@@ -3,7 +3,7 @@ SUBDIRS =
 noinst_LIBRARIES = libImageLib.a
 
 libImageLib_a_SOURCES =  ImgBmpFile.cpp ImgGifFile.cpp ImgJpegFile.cpp ImgPngFile.cpp \
-	RawImageData.cpp \
+	RawImageData.cpp ILIO.cpp\
 	jpeg/jcapimin.c   jpeg/jcapistd.c   jpeg/jccoefct.c   jpeg/jccolor.c    jpeg/jcdctmgr.c   jpeg/jchuff.c \
 	jpeg/jcinit.c     jpeg/jcmainct.c   jpeg/jcmarker.c   jpeg/jcmaster.c   jpeg/jcomapi.c    jpeg/jcparam.c \
 	jpeg/jcphuff.c    jpeg/jcprepct.c   jpeg/jcsample.c   jpeg/jctrans.c    jpeg/jdapimin.c   jpeg/jdapistd.c \

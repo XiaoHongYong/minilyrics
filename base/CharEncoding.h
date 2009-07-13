@@ -147,7 +147,7 @@ inline void MBCSToTString(const char *str, int nLen, _tstring &strOut, int nEnco
 #ifdef UNICODE
 	MbcsToUCS2(str, nLen, strOut, nEncodingID);
 #elif defined(UTF8)
-	UCS2ToUtf8(str, nLen, strOut);
+	MbcsToUtf8(str, nLen, strOut);
 #else
 	strOut = str;
 #endif

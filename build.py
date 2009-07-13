@@ -91,6 +91,10 @@ if TargetML == 0 and TargetZP == 0:
 
 # Build MiniLyrics
 if TargetML:
+	# Create libvlccore.lib for PluginVLC
+	cmd = "lib /DEF:PluginVLC\\libvlccore.def /OUT:PluginVLC\\libvlccore.lib" 
+	ExecuteOnErrQuit(cmd)
+
 	MLSolutions = [
 		[ " ZikiPlayer.sln", "\"Unicode Release|Win32\" /project MiniLyrics6" ],
 		[ " PluginAP\\PluginAP.sln", "\"Release|Win32\"" ],
@@ -107,6 +111,7 @@ if TargetML:
 		[ " PluginWinamp5\\PluginWinamp5.sln", "\"Release|Win32\"" ],
 		[ " PluginWMP\\PluginWMP.sln", "\"Release|Win32\"" ],
 		[ " PluginWMPVis\\PluginWMPVis.sln", "\"Release|Win32\"" ],
+		[ " PluginVLC\\PluginVLC.sln", "\"Release|Win32\"" ],
 		[ " PluginXMP\\PluginXMP.sln", "\"Release|Win32\"" ],
 		[ " MLEncrypt\\MLEncrypt.sln", "\"Release|Win32\"" ],
 		#[ " PluginYme\\PluginYme.sln", "\"Release|Win32\"" ],

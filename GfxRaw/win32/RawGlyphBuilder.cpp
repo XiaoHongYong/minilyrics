@@ -87,7 +87,6 @@ void CRawGlyphBuilder::Destroy()
 
 Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 {
-	TCHAR			szText[2];
 	SIZE			size;
 	int				nWidth;
 	int				x, y;
@@ -97,10 +96,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 
 	ASSERT(m_pmemGraph);
 
-	szText[0] = ch;
-	szText[1] = 0;
-
-	if (!m_pmemGraph->GetTextExtentPoint32(szText, 1, &size))
+	if (!m_pmemGraph->GetTextExtentPoint32(ch, ch.size(), &size))
 		return NULL;
 
 	nWidth = size.cx + MARGIN_BITMAP * 2;
@@ -112,7 +108,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 		pRowSrc += bufGraph.stride();
 	}
 
-	if (!m_pmemGraph->TextOut(MARGIN_BITMAP, MARGIN_BITMAP, szText, 1))
+	if (!m_pmemGraph->TextOut(MARGIN_BITMAP, MARGIN_BITMAP, ch, ch.size()))
 		return NULL;
 
 	Glyph		*glyph = new Glyph;

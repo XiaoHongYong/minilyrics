@@ -26,7 +26,7 @@ public:
 public:
 	virtual CRawGraph *EB_GetGraphics()
 	{
-		CRawGraph		*pGraph = m_pContainer->GetMemGraph();
+		CRawGraph		*pGraph = GetParent()->GetMemGraph();
 		pGraph->SetFont(&m_font);
 
 		return pGraph;
@@ -40,7 +40,11 @@ public:
 
 	virtual byte GetBgAlpha()
 	{
+#ifdef _WIN32_DESKTOP
 		return byte(m_pSkin->m_nTranslucencyAlphaDynamic);
+#else
+		return 255;
+#endif
 	}
 
 	virtual void OnCreate();

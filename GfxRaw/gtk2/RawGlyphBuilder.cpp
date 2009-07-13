@@ -78,7 +78,9 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 	int				x, y;
 	byte			*pDst, *pRowDst, *pSrc, *pRowSrc;
 
-	assert(height == m_font.GetHeight());
+	DBGLOG3("glyph: %c, w: %d, h: %d", (LPCSTR)ch, width, height);
+	DBGLOG1("Font height: %d", m_font.GetHeight());
+	// assert(height == m_font.GetHeight());
 
 	agg::rendering_buffer	bufGraph(cairo_image_surface_get_data(m_surface), cairo_image_surface_get_width(m_surface), cairo_image_surface_get_height(m_surface), cairo_image_surface_get_stride(m_surface));
 

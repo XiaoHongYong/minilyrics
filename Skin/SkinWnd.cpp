@@ -196,7 +196,6 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_bMouseInactive = false;
 	m_bHasUIObjHideOnMouseInactive = false;
 
-#ifdef _WIN32_DESKTOP
 	m_bTranslucencyLayered = false;
 	m_nAlpha = 255;
 	m_nTranslucencyAlphaOnActive = -1;
@@ -210,7 +209,6 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_bOnMouseHover = false;
 	m_dwLastSetHoverAlphaTime = 0;
 	m_translucencyStatus = TS_NORMAL;
-#endif
 }
 
 CSkinWnd::~CSkinWnd()
@@ -274,6 +272,7 @@ void CSkinWnd::CloseSkin()
 		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED | SWP_NOOWNERZORDER | SWP_NOMOVE);
 		m_bWindowsAppearance = false;
 	}
+#endif
 	m_nAlpha = 255;
 	m_nTranslucencyAlphaOnActive = -1;
 	m_nTranslucencyAlphaOnHover = -1;
@@ -282,7 +281,6 @@ void CSkinWnd::CloseSkin()
 	m_nTranslucencyAlphaDynamicStep = 1.0f;
 	m_bClickThrough = false;
 	m_bEnableTransparentFeature = true;
-#endif
 
 	m_wndResizer.FixedHeight(false);
 	m_wndResizer.FixedWidth(false);
@@ -303,8 +301,8 @@ void CSkinWnd::CloseSkin()
 
 	m_rootConainter.Destroy();
 
-#ifdef _WIN32_DESKTOP
 	m_bTranslucencyLayered = false;
+#ifdef _WIN32_DESKTOP
 	::UnSetLayeredWindow(m_hWnd);
 #endif
 
@@ -1745,7 +1743,19 @@ LRESULT CSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 }
 #endif
 
+void CSkinWnd::EnableTranslucencyLayered(bool bTranslucencyLayered)
+{
+	if (m_pmemGraph)
+	{
+		delete m_pmemGraph;
+		m_pmemGraph = NULL;
+	}
+
+	m_bTranslucencyLayered = bTranslucencyLayered;
+}
+
 #ifdef _WIN32_DESKTOP
+
 void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTransparent, bool bClickThrough)
 {
 	// If it's child old, ignore this.
@@ -1788,17 +1798,6 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 		::SetLayeredWindow(m_hWnd, clrTrans, nAlpha, dwFlags);
 	else
 		::UnSetLayeredWindow(m_hWnd);
-}
-
-void CSkinWnd::EnableTranslucencyLayered(bool bTranslucencyLayered)
-{
-	if (m_pmemGraph)
-	{
-		delete m_pmemGraph;
-		m_pmemGraph = NULL;
-	}
-
-	m_bTranslucencyLayered = bTranslucencyLayered;
 }
 
 BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
@@ -1961,10 +1960,8 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 
 		GetCursorPos(&point);
 		m_bOnMouseHover = Tobool(m_rcBoundBox.PtInRect(point));
-#ifdef _WIN32
 		if (m_bOnMouseHover && m_hWnd != ::WindowFromPoint(point))
 			m_bOnMouseHover = false;
-#endif
 
 		// Calculate new dynamic alpha
 		if (m_bOnMouseHover)
@@ -2031,6 +2028,12 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 	}
 	else
 		ASSERT(0 && "Should not go here.");
+}
+
+#else
+
+void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTransparent, bool bClickThrough)
+{
 }
 
 #endif

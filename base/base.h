@@ -7,6 +7,9 @@
 
 ////////////////////////////////////////////////////////////
 //
+
+#include "StringIterator.h"
+
 #include "idstring.h"
 
 #include "Error.h"

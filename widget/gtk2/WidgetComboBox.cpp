@@ -52,6 +52,11 @@ BOOL CWidgetComboBox::Attach(CBaseWnd *pWndParent, int nCtrlID)
 	return m_window != NULL;
 }
 
+void CWidgetComboBox::Detach()
+{
+	m_window = NULL;
+}
+
 int CWidgetComboBox::GetCount() const
 {
 	return gtk_tree_model_iter_n_children(m_model, NULL);
@@ -78,6 +83,21 @@ int CWidgetComboBox::AddString(LPCTSTR szStr)
 	gtk_list_store_append(GTK_LIST_STORE(m_model), &iter);
 
 	gtk_list_store_set(GTK_LIST_STORE(m_model), &iter, COL_NAME, szStr, -1);
+
+	return IndexFromGtkTreeIter(iter);
+}
+
+int CWidgetComboBox::InsertString(int nIndex, LPCTSTR lpszString)
+{
+	ASSERT(m_model);
+	if (!m_model)
+		return -1;
+
+	GtkTreeIter		iter;
+
+	gtk_list_store_insert(GTK_LIST_STORE(m_model), &iter, nIndex);
+
+	gtk_list_store_set(GTK_LIST_STORE(m_model), &iter, COL_NAME, lpszString, -1);
 
 	return IndexFromGtkTreeIter(iter);
 }

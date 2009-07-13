@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "IMPlayer.h"
-#include "MPHelper.h"
+#include "MPTools.h"
 
 class CMPlayer;
 

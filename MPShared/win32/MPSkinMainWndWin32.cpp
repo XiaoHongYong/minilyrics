@@ -5,7 +5,11 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "MPSkinMainWnd.h"
+
+#ifdef _WIN32
 #include "MPMsg.h"
+#endif
+
 #ifdef _MPLAYER
 #include "MPHelper.h"
 #endif
@@ -28,7 +32,7 @@ CMPSkinMainWnd::~CMPSkinMainWnd()
 
 bool CMPSkinMainWnd::OnCreate()
 {
-#ifdef _MPLAYER
+#if defined(_MPLAYER) && defined(_WIN32)
 	LPCTSTR			szCmdLine;
 
 	// get command line

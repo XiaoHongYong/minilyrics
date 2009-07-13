@@ -18,20 +18,20 @@ class CMPSkinTimeCtrl : public _CSkinText
 public:
 	CMPSkinTimeCtrl()
 	{
-		m_nMsgWant = UO_MSG_WANT_LBUTTON;
+		_CSkinText::m_nMsgWant = UO_MSG_WANT_LBUTTON;
 		m_nTimeOld = -1;
 	}
 
 	virtual ~CMPSkinTimeCtrl()
 	{
-		m_pSkin->UnregisterTimerObject(this);
+		_CSkinText::m_pSkin->UnregisterTimerObject(this);
 	}
 
 	void OnCreate()
 	{
 		_CSkinText::OnCreate();
 
-		m_pSkin->RegisterTimerObject(this, 200);
+		_CSkinText::m_pSkin->RegisterTimerObject(this, 200);
 	}
 
 	bool OnLButtonUp(UINT nFlags, CPoint point)
@@ -86,9 +86,9 @@ protected:
 				strText = _T("-");
 
 			strText += szTime;
-			SetText(strText.c_str());
+			_CSkinText::SetText(strText.c_str());
 
-			Invalidate();
+			_CSkinText::Invalidate();
 		}
 	}
 

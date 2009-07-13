@@ -45,6 +45,7 @@ CWndResizer::CWndResizer()
     m_bResizingAutoCloseto = true;
 	
     m_pWnd = NULL;
+	m_ptOld.x = m_ptOld.y = 0;
 }
 
 CWndResizer::~CWndResizer()
@@ -112,6 +113,24 @@ void CWndResizer::BeginSize(UINT fwKeys, POINT &pt)
 
 	if (!m_bFixedWidth)
 	{
+		ResizeArea		ra;
+
+		if (HitTestResizeArea(pt, ra))
+		{
+			if (ra.resizeDirection & RD_LEFT)
+			{
+				m_bAtLeft = true;
+				m_bResizing = true;
+			}
+			else if (ra.resizeDirection & RD_RIGHT)
+			{
+				m_bAtRight = true;
+				m_bResizing = true;
+			}
+		}
+
+		if (!m_bResizing)
+		{
 		if (m_ptOld.x < m_rcResizing.left + SIZING_REGION)
 		{
 			// 在<左边>大小调整位置区
@@ -124,21 +143,41 @@ void CWndResizer::BeginSize(UINT fwKeys, POINT &pt)
 			m_bAtRight = true;
 			m_bResizing = true;
 		}
+		}
 	}
 
 	if (!m_bFixedHeight)
 	{
-		if (m_ptOld.y < m_rcResizing.top + SIZING_REGION)
+		ResizeArea		ra;
+
+		if (HitTestResizeArea(pt, ra))
 		{
-			// 在<上边>大小调整位置区
-			m_bAtTop = true;
-			m_bResizing = true;
+			if (ra.resizeDirection & RD_TOP)
+			{
+				m_bAtTop = true;
+				m_bResizing = true;
+			}
+			else if (ra.resizeDirection & RD_BOTTOM)
+			{
+				m_bAtBottom = true;
+				m_bResizing = true;
+			}
 		}
-		else if (m_ptOld.y > m_rcResizing.bottom - SIZING_REGION)
+
+		if (!m_bResizing)
 		{
-			// 在<下边>大小调整位置区
-			m_bAtBottom = true;
-			m_bResizing = true;
+			if (m_ptOld.y < m_rcResizing.top + SIZING_REGION)
+			{
+				// 在<上边>大小调整位置区
+				m_bAtTop = true;
+				m_bResizing = true;
+			}
+			else if (m_ptOld.y > m_rcResizing.bottom - SIZING_REGION)
+			{
+				// 在<下边>大小调整位置区
+				m_bAtBottom = true;
+				m_bResizing = true;
+			}
 		}
 	}
 
@@ -189,9 +228,6 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 	nOffx = pt.x - m_ptOld.x;	// x 偏移
 	nOffy = pt.y - m_ptOld.y;	// y 偏移
 
-	// 保存上一次鼠标的位置
-	m_ptOld = pt;
-
 	// 限制最小的宽度
 	if (m_bAtLeft)
 	{
@@ -228,6 +264,12 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 		m_rcResizing.bottom += nOffy;
 	}
 
+	// 保存上一次鼠标的位置
+	if (nOffx != 0)
+		m_ptOld.x = pt.x;
+	if (nOffy != 0)
+		m_ptOld.y = pt.y;
+
 	// 如果调整窗口时自动靠近则通过改变 nOffx, nOffy来调整
 	if (m_bResizingAutoCloseto)
 	{
@@ -257,6 +299,49 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 */
 
 	SetSizeCursor(fwKeys, pt);
+}
+
+void CWndResizer::SetResizeArea(int nIDArea, uint32 resizeDirection, RECT &rcResizeArea)
+{
+	ResizeArea	ra;
+	ListResizeArea::iterator	it;
+
+	if (nIDArea != -1)
+	{
+		for (it = m_listResizeArea.begin(); it != m_listResizeArea.end(); ++it)
+		{
+			ResizeArea	&t = *it;
+			if (t.nID == nIDArea)
+			{
+				t.resizeDirection = resizeDirection;
+				t.rcResizeArea = rcResizeArea;
+				return;
+			}
+		}
+	}
+
+	ra.nID = nIDArea;
+	ra.resizeDirection = resizeDirection;
+	ra.rcResizeArea = rcResizeArea;
+	m_listResizeArea.push_back(ra);
+}
+
+void CWndResizer::RemoveResizeArea(int nIDArea)
+{
+	ListResizeArea::iterator	it;
+
+	if (nIDArea != -1)
+	{
+		for (it = m_listResizeArea.begin(); it != m_listResizeArea.end(); ++it)
+		{
+			ResizeArea	&t = *it;
+			if (t.nID == nIDArea)
+			{
+				m_listResizeArea.erase(it);
+				return;
+			}
+		}
+	}
 }
 
 // 结束调整窗口大小
@@ -340,6 +425,16 @@ void CWndResizer::SetSizeCursor(UINT fwKeys, POINT pt)
 
 			if (!m_bFixedWidth)
 			{
+				ResizeArea		ra;
+
+				if (HitTestResizeArea(pt, ra))
+				{
+					if (ra.resizeDirection & RD_LEFT)
+						bAtLeft = true;
+					else if (ra.resizeDirection & RD_RIGHT)
+						bAtRight = true;
+				}
+
 				if (point.x < rc.left + SIZING_REGION)
 					bAtLeft = true;
 				else if (point.x > rc.right - SIZING_REGION)
@@ -348,6 +443,16 @@ void CWndResizer::SetSizeCursor(UINT fwKeys, POINT pt)
 
 			if (!m_bFixedHeight)
 			{
+				ResizeArea		ra;
+
+				if (HitTestResizeArea(pt, ra))
+				{
+					if (ra.resizeDirection & RD_TOP)
+						bAtTop = true;
+					else if (ra.resizeDirection & RD_BOTTOM)
+						bAtBottom = true;
+				}
+
 				if (point.y < rc.top + SIZING_REGION)
 					bAtTop = true;
 				else if (point.y > rc.bottom - SIZING_REGION)
@@ -370,4 +475,21 @@ void CWndResizer::AutoCloseToWindows(int &nOffx, int &nOffy)
 {
 	nOffx = 0;
 	nOffy = 0;
+}
+
+bool CWndResizer::HitTestResizeArea(POINT &pt, ResizeArea &ra)
+{
+	ListResizeArea::iterator	it;
+
+	for (it = m_listResizeArea.begin(); it != m_listResizeArea.end(); ++it)
+	{
+		ResizeArea		&t = *it;
+		if (t.rcResizeArea.PtInRect(pt))
+		{
+			ra = t;
+			return true;
+		}
+	}
+
+	return false;
 }

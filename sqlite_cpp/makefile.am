@@ -1,0 +1,13 @@
+noinst_LIBRARIES = libsqlitecpp.a
+
+libsqlitecpp_a_SOURCES = Sqlite3.cpp
+
+INCLUDES = -I$(top_srcdir)/widget\
+	-I$(top_srcdir)/base \
+	-I$(top_srcdir)/Utils\
+	-I$(top_srcdir)/gfx\
+	-I$(top_srcdir)/SDK/sqlite
+
+libsqlitecpp_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags --libs`
+
+

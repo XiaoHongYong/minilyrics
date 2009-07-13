@@ -3,160 +3,197 @@
 
 #pragma once
 
-class UCS2StringIterator
+class Ucs2CharType
 {
-public:
-	typedef wchar_t		CharType;
+protected:
+	wchar_t		szChar[2];
 
 public:
-	UCS2StringIterator(LPCTSTR szText)
+	Ucs2CharType(LPCTSTR str)
+	{
+		szChar[0] = str[0];
+		szChar[1] = 0;
+	}
+	Ucs2CharType(wchar_t ch)
+	{
+		szChar[0] = ch;
+		szChar[1] = 0;
+	}
+	Ucs2CharType() { szChar[0] = 0; }
+
+	void operator + (const char *str)
+	{
+		szChar[0] = str[0];
+		szChar[1] = 0;
+	}
+
+	bool operator == (Ucs2CharType ch)
+	{
+		return szChar[0] == ch.szChar[0];
+	}
+
+	bool operator != (Ucs2CharType ch)
+	{
+		return szChar[0] != ch.szChar[0];
+	}
+
+	int GetIntValue()
+	{
+		return szChar[0];
+	}
+
+	operator const wchar_t *()
+	{
+		return szChar;
+	}
+
+	int size() { return 1; }
+
+};
+
+class Utf8CharType
+{
+protected:
+	char		szChar[4];
+
+public:
+	Utf8CharType(LPCSTR str)
+	{
+		set(str);
+	}
+	Utf8CharType(char ch)
+	{
+		szChar[0] = ch;
+		szChar[1] = 0;
+	}
+	Utf8CharType() { szChar[0] = 0; }
+
+	void operator + (const char *str)
+	{
+		set(str);
+	}
+
+	bool operator == (Utf8CharType ch)
+	{
+		for (int i = 0; szChar[i] != 0; i++)
+		{
+			if (szChar[i] != ch.szChar[i])
+				return false;
+		}
+		return true;
+	}
+
+	bool operator != (Utf8CharType ch)
+	{
+		return !(*this == ch);
+	}
+
+	void set(const char *str)
+	{
+		unsigned char	firstChar = (unsigned char)(str[0]);
+		int				n;
+
+		if (firstChar < 0xc0)			n = 1;
+		else if (firstChar < 0xe0)		n = 2;
+		else if (firstChar < 0xf0)		n = 3;
+		else							n = 1;
+
+		for (int i = 0; i < n; i++)
+			szChar[i] = str[i];
+		szChar[n] = 0;
+	}
+
+	int GetIntValue()
+	{
+		int		nValue = 0;
+
+		for (int i = 0; szChar[i] != 0; i++)
+		{
+			nValue <<= 8;
+			nValue |= szChar[i];
+		}
+
+		return nValue;
+	}
+
+	operator const char *()
+	{
+		return szChar;
+	}
+
+	int size() { return strlen(szChar); }
+
+};
+
+template<class _CharType, class _char_t>
+class StringIterator_t
+{
+public:
+	typedef _CharType		CharType;
+
+	StringIterator_t(const _char_t *szText)
 	{
 		m_szText = szText;
 		m_nPos = 0;
+		m_ch = szText;
 	}
 
-	void Set(LPCTSTR szText) { m_szText = szText; m_nPos = 0; }
+	void operator = (const _char_t *szText)
+	{
+		m_szText = szText;
+		m_nPos = 0;
+		m_ch = szText;
+	}
 
 	// Is end of string
 	bool IsEOS() { return m_szText[m_nPos] == 0; }
 
-	CharType CurChar() { return m_szText[m_nPos]; }
+	const CharType &CurChar()
+	{
+		return m_ch;
+	}
 
 	void operator ++()
 	{
-		ASSERT(m_szText[m_nPos] != 0);
-		m_nPos++;
+		m_nPos += m_ch.size();
+		m_ch = m_szText + m_nPos;
 	}
 
 	int GetPos() { return m_nPos; }
 	void SetPos(int nPos) { m_nPos = nPos; }
 
 protected:
-	LPCTSTR			m_szText;
+	const _char_t * m_szText;
 	int				m_nPos;
+	CharType		m_ch;
 
 };
 
-
-class UTF8StringIterator
-{
-public:
-	class CharType
-	{
-	public:
-		char		szUtf8Char[4];
-
-	public:
-		CharType(int nChar)
-		{
-			szUtf8Char[0] = nChar;
-			szUtf8Char[1] = 0;
-		}
-		CharType() { }
-
-		bool operator == (CharType ch)
-		{
-			for (int i = 0; szUtf8Char[i] != 0; i++)
-			{
-				if (szUtf8Char[i] != ch.szUtf8Char[i])
-					return false;
-			}
-			return true;
-		}
-
-		operator int ()
-		{
-			int		nValue = 0;
-
-			for (int i = 0; szUtf8Char[i] != 0; i++)
-			{
-				nValue <<= 8;
-				nValue |= szUtf8Char[i];
-			}
-
-			return nValue;
-		}
-
-		operator const char *()
-		{
-			return szUtf8Char;
-		}
-
-	};
-
-public:
-	UTF8StringIterator(LPCSTR szText)
-	{
-		m_szText = szText;
-		m_nPos = 0;
-	}
-
-	void Set(LPCSTR szText) { m_szText = szText; m_nPos = 0; }
-
-	// Is end of string
-	bool IsEOS() { return m_szText[m_nPos] == 0; }
-
-	CharType CurChar() {
-		CharType		utf8Char;
-		unsigned char	firstChar = (unsigned char)(m_szText[m_nPos]);
-		int				n;
-
-		if (firstChar < 0xc0)
-			n = 1;
-		else if (firstChar < 0xe0)
-			n = 2;
-		else if (firstChar < 0xf0)
-			n = 3;
-		else
-			n = 1;
-
-		for (int i = 0; i < n; i++)
-			utf8Char.szUtf8Char[i] = m_szText[m_nPos + i];
-		utf8Char.szUtf8Char[n] = 0;
-
-		return utf8Char;
-	}
-
-	void operator ++()
-	{
-		ASSERT(m_szText[m_nPos] != 0);
-		unsigned char	firstChar = (unsigned char)(m_szText[m_nPos]);
-
-		if (firstChar < 0xc0)
-			m_nPos += 1;
-		else if (firstChar < 0xe0)
-			m_nPos += 2;
-		else if (firstChar < 0xf0)
-			m_nPos += 3;
-		else
-			m_nPos++;
-	}
-
-	int GetPos() { m_nPos; }
-	void SetPos(int nPos) { m_nPos = nPos; }
-
-protected:
-	LPCSTR			m_szText;
-	int				m_nPos;
-
-};
+typedef StringIterator_t<Ucs2CharType, wchar_t>		UCS2StringIterator;
+typedef StringIterator_t<Utf8CharType, char>		UTF8StringIterator;
 
 #ifdef UNICODE
 typedef UCS2StringIterator		StringIterator;
 #else
 typedef UTF8StringIterator		StringIterator;
 #endif
-// 
-// void Test()
-// {
-// 	LPCSTR		szText = "aaaaaaaaaabb";
-// 
-// 	StringIterator		strIterator(szText);
-// 
-// 	for (; !strIterator.IsEOS(); ++strIterator)
-// 	{
-// 		StringIterator::CharType	ch = strIterator.CurChar();
-// 	}
-// }
+
+/*
+void Test()
+{
+	LPCSTR		szText = "aaaaaaaaaabb";
+
+	UTF8StringIterator		strIterator(szText);
+
+	for (; !strIterator.IsEOS(); ++strIterator)
+	{
+		UTF8StringIterator::CharType	ch = strIterator.CurChar();
+
+		UTF8StringIterator::CharType	ch2;
+		if (ch != ch2)
+			ch2 = 'a';
+	}
+}
+*/
 
 #endif // _STRING_ITERATOR_H_

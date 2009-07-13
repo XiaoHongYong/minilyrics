@@ -65,12 +65,12 @@ void CWidgetWin32Layout::OnSizeAllocate(GtkAllocation *allocation)
 			width = (int)(item.width * fRadio + 0.5);
 			height = (int)(item.height * fRadio + 0.5);
 			ASSERT(width > 0 && height > 0);
-			if (item.widgetClass == CDlgResource::WC_COMB_BOX || 
-				item.widgetClass == CDlgResource::WC_BUTTON || 
-				item.widgetClass == CDlgResource::WC_COLOR_BUTTON || 
-				item.widgetClass == CDlgResource::WC_RADIO_BUTTON || 
-				item.widgetClass == CDlgResource::WC_CHECK_BOX || 
-				item.widgetClass == CDlgResource::WC_EDIT)
+			if (item.widgetClass == CDlgResource::WCR_COMB_BOX || 
+				item.widgetClass == CDlgResource::WCR_BUTTON || 
+				item.widgetClass == CDlgResource::WCR_COLOR_BUTTON || 
+				item.widgetClass == CDlgResource::WCR_RADIO_BUTTON || 
+				item.widgetClass == CDlgResource::WCR_CHECK_BOX || 
+				item.widgetClass == CDlgResource::WCR_EDIT)
 			{
 				gtk_widget_size_request(item.pWnd->GetHandle(), &requisition);
 				height = requisition.height;
@@ -120,7 +120,7 @@ bool CWidgetWin32Layout::ReplaceChildPos(int nIDChildSrcPos, CBaseWnd *pChildNew
 		return false;
 
 	CDlgResource::CWidgetItem	newItem = *item;
-	newItem.widgetClass = CDlgResource::WC_UNKNOWN;
+	newItem.widgetClass = CDlgResource::WCR_UNKNOWN;
 	newItem.nID = pChildNew->GetCtrlID();
 	newItem.pWnd = pChildNew;
 	newItem.strName.resize(0);
@@ -172,12 +172,12 @@ void CWidgetWin32Layout::ReAllocateItemSize(CDlgResource::CWidgetItem &item)
 		width = (int)(item.width * fRadio + 0.5);
 		height = (int)(item.height * fRadio + 0.5);
 		ASSERT(width > 0 && height > 0);
-		if (item.widgetClass == CDlgResource::WC_COMB_BOX || 
-			item.widgetClass == CDlgResource::WC_BUTTON || 
-			item.widgetClass == CDlgResource::WC_COLOR_BUTTON || 
-			item.widgetClass == CDlgResource::WC_RADIO_BUTTON || 
-			item.widgetClass == CDlgResource::WC_CHECK_BOX || 
-			item.widgetClass == CDlgResource::WC_EDIT)
+		if (item.widgetClass == CDlgResource::WCR_COMB_BOX || 
+			item.widgetClass == CDlgResource::WCR_BUTTON || 
+			item.widgetClass == CDlgResource::WCR_COLOR_BUTTON || 
+			item.widgetClass == CDlgResource::WCR_RADIO_BUTTON || 
+			item.widgetClass == CDlgResource::WCR_CHECK_BOX || 
+			item.widgetClass == CDlgResource::WCR_EDIT)
 		{
 			gtk_widget_size_request(item.pWnd->GetHandle(), &requisition);
 			height = requisition.height;
@@ -199,35 +199,35 @@ int CWidgetWin32Layout::CreateWidget(CDlgResource::CWidgetItem &item)
 
 	switch (item.widgetClass)
 	{
-	case CDlgResource::WC_LABEL:
+	case CDlgResource::WCR_LABEL:
 		{
 			CWidgetLable	*pWidget = new CWidgetLable;
 			bRet = pWidget->Create(item.strName.c_str(), m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_GROUP_BOX:
+	case CDlgResource::WCR_GROUP_BOX:
 		{
 			CWidgetFrame	*pWidget = new CWidgetFrame;
 			bRet = pWidget->Create(item.strName.c_str(), m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_BUTTON:
+	case CDlgResource::WCR_BUTTON:
 		{
 			CWidgetButton	*pWidget = new CWidgetButton;
 			bRet = pWidget->Create(item.strName.c_str(), m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_COLOR_BUTTON:
+	case CDlgResource::WCR_COLOR_BUTTON:
 		{
 			CWidgetColorButton	*pWidget = new CWidgetColorButton;
 			bRet = pWidget->Create(item.strName.c_str(), m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_RADIO_BUTTON:
+	case CDlgResource::WCR_RADIO_BUTTON:
 		{
 			CWidgetRadioButton	*pWidget = new CWidgetRadioButton;
 			CWidgetRadioButton	*pWidgetRadioStart = NULL;
@@ -241,7 +241,7 @@ int CWidgetWin32Layout::CreateWidget(CDlgResource::CWidgetItem &item)
 				for (it = m_dlgRes->begin(); it != itEnd; ++it)
 				{
 					CDlgResource::CWidgetItem	&i = *it;
-					if (i.widgetClass == CDlgResource::WC_RADIO_BUTTON && i.pWnd)
+					if (i.widgetClass == CDlgResource::WCR_RADIO_BUTTON && i.pWnd)
 					{
 						if (!pWidgetRadioStart)
 							pWidgetRadioStart = (CWidgetRadioButton*)i.pWnd;
@@ -258,42 +258,42 @@ int CWidgetWin32Layout::CreateWidget(CDlgResource::CWidgetItem &item)
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_CHECK_BOX:
+	case CDlgResource::WCR_CHECK_BOX:
 		{
 			CWidgetCheckButton	*pWidget = new CWidgetCheckButton;
 			bRet = pWidget->Create(item.strName.c_str(), m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_EDIT:
+	case CDlgResource::WCR_EDIT:
 		{
 			CWidgetEditBox	*pWidget = new CWidgetEditBox;
 			bRet = pWidget->Create(item.strName.c_str(), m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_COMB_BOX:
+	case CDlgResource::WCR_COMB_BOX:
 		{
 			CWidgetComboBox	*pWidget = new CWidgetComboBox;
 			bRet = pWidget->Create(m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_LISTBOX:
+	case CDlgResource::WCR_LISTBOX:
 		{
 			CWidgetListBox	*pWidget = new CWidgetListBox;
 			bRet = pWidget->Create(m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_LISTCTRL:
+	case CDlgResource::WCR_LISTCTRL:
 		{
 			CWidgetListCtrl	*pWidget = new CWidgetListCtrl;
 			bRet = pWidget->Create(m_pWndParent, item.nID);
 			item.pWnd = pWidget;
 		}
 		break;
-	case CDlgResource::WC_TREECTRL:
+	case CDlgResource::WCR_TREECTRL:
 		{
 			CWidgetTreeCtrl	*pWidget = new CWidgetTreeCtrl;
 			bRet = pWidget->Create(m_pWndParent, item.nID);
@@ -302,7 +302,7 @@ int CWidgetWin32Layout::CreateWidget(CDlgResource::CWidgetItem &item)
 		break;
 	default:
 		// ASSERT(0);
-		printf(_T("Unknown class type: %d, Name: %s, %d"), item.widgetClass, item.strName.c_str(), CDlgResource::WC_LABEL);
+		printf(_T("Unknown class type: %d, Name: %s, %d"), item.widgetClass, item.strName.c_str(), CDlgResource::WCR_LABEL);
 		break;
 	}
 

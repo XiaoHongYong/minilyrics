@@ -8,6 +8,8 @@
 
 #ifndef _WIN32
 
+#pragma pack(push)
+#pragma pack(1)
 typedef long LONG;
 
 typedef struct tagBITMAPFILEHEADER {
@@ -32,6 +34,8 @@ typedef struct tagBITMAPINFOHEADER{
 	DWORD      biClrUsed;
 	DWORD      biClrImportant;
 } BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
+
+#pragma pack(pop)
 
 #endif
 

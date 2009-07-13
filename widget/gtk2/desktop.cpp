@@ -16,6 +16,11 @@ bool IsKeyPressed(int nKey)
 	return false;
 }
 
+DWORD GetSysColor(int nIndex)
+{
+	return 0xFFFFFF;
+}
+
 namespace MLWidget
 {
 

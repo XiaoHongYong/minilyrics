@@ -320,14 +320,14 @@ GfxRaw::Glyph *CRawGlyphSet::GetGlyph(StringIterator::CharType ch)
 		}
 	}
 
-	it = m_mapGlyph.find(ch);
+	it = m_mapGlyph.find(ch.GetIntValue());
 	if (it == m_mapGlyph.end())
 	{
 		glyph = m_rawGlyphBuilder.BuildGlyph(ch);
 		ASSERT(glyph);
 		if (!glyph)
 			return NULL;
-		m_mapGlyph[ch] = glyph;
+		m_mapGlyph[ch.GetIntValue()] = glyph;
 	}
 	else
 	{

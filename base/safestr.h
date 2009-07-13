@@ -47,6 +47,11 @@ inline char *_itoa(int value, char *string, size_t stringLen, int radix)
 	return _itox_s(value, string, stringLen, radix);
 }
 
+inline char* itoa(int value, char* result, int base)
+{
+	return _itox_s(value, result, 16, base);
+}
+
 inline int _itot_s(int value, TCHAR *buffer, size_t sizeInCharacters, int radix)
 {
 	_itox_s(value, buffer, sizeInCharacters, radix);

@@ -218,19 +218,21 @@ public:
 	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 #endif
 
-#ifdef _WIN32_DESKTOP
+public:
 	//
-	// Win32 window alpha features
+	// window alpha and transparent features
 	//
 	void SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTransparent, bool bClickThrough);
 	bool GetEnableTranslucencyLayered() const { return m_bTranslucencyLayered; }
 	void EnableTranslucencyLayered(bool bTranslucencyLayered);
 
+#ifdef _WIN32_DESKTOP
 	virtual BOOL InvalidateRect(const RECT* lpRect = NULL, BOOL bErase = FALSE);
 
 	BOOL UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph);
 
 	void OnTimerDynamicAlphaChange();
+#endif
 
 	enum TranslucencyStatus
 	{
@@ -250,11 +252,10 @@ public:
 	bool				m_bOnMouseHover;
 	DWORD				m_dwLastSetHoverAlphaTime;			// Used to check when to stop hover alpha timer
 
-
 	int					m_nAlpha;
 	bool				m_bClickThrough;
 	bool				m_bEnableTransparentFeature;
-#endif
+
 
 public:
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);

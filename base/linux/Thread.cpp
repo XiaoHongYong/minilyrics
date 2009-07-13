@@ -43,7 +43,8 @@ void CThread::Resume()
 
 void CThread::Join()
 {
-	pthread_join(m_threadID, NULL);
+	if (m_threadID)
+		pthread_join(m_threadID, NULL);
 }
 
 uint32 CThread::GetPriority() const
@@ -54,6 +55,11 @@ uint32 CThread::GetPriority() const
 uint32 CThread::SetPriority(uint32 priority)
 {
 	return 0;
+}
+
+bool CThread::IsRunning()
+{
+	return false;
 }
 
 void *CThread::ThreadFunction(void *lpParam)

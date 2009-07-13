@@ -32,6 +32,11 @@ void CSkinNStatusImage::Draw(CRawGraph *pGraph)
 
 	StatImg		*si = m_vStImages[m_nCurStatus];
 
+	{
+		MLColor	clr(RGB(0, 255, 0));
+		pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), 100, clr);
+	}
+
 	if (m_bpm == BPM_BLEND_ALPHA)
 		m_pSkin->RedrawBackground(&m_rcObj);
 
@@ -52,6 +57,16 @@ void CSkinNStatusImage::Draw(CRawGraph *pGraph)
 		else
 			si->img.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
 	}
+
+	{
+		g_print("Fill rectangle...");
+		MLColor	clr(RGB(255, 255, 255));
+		CRect		rc;
+		// pGraph->FillRect(m_rcObj.left, m_rcObj.bottom - 150, m_rcObj.Width(), 100, clr);
+		pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height() - 1, clr);
+		// pGraph->FillRect(&m_rcObj, clr);
+	}
+
 }
 
 BOOL CSkinNStatusImage::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)

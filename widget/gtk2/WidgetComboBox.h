@@ -22,12 +22,15 @@ public:
 
 	BOOL Attach(CBaseWnd *pWndParent, int nCtrlID);
 
+	void Detach();
+
 	int GetCount() const;
 
 	virtual int GetCurSel();
 	void SetCurSel(int nIndex);
 
 	int AddString(LPCTSTR szStr);
+	int InsertString(int nIndex, LPCTSTR lpszString);
 	void SetItemData(int nIndex, UINT nItemData);
 	UINT GetItemData(int nIndex);
 	UINT GetItemText(int nIndex, tstring &str);

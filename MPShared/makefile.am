@@ -15,7 +15,7 @@ libmpshared_a_SOURCES = AdManage.cpp                        AutoProcessEmbeddedL
 	LyrEditHandler.cpp                  LyricsDownloadMgr.cpp\
 	LyricShowAgentObj.cpp               LyricShowHorzScrollObj.cpp\
 	LyricShowMultiRowObj.cpp            LyricShowObj.cpp\
-	LyricShowPreviewObj.cpp             LyricShowSingleRowObj.cpp\
+	LyricShowSingleRowObj.cpp\
 	LyricShowTextEditObj.cpp            LyricShowTwoRowObj.cpp\
 	LyricShowTxtObj.cpp                 LyricShowVobSub.cpp\
 	LyricsLocalSearch.cpp               MediaAlbumArtCtrl.cpp\
@@ -24,7 +24,7 @@ libmpshared_a_SOURCES = AdManage.cpp                        AutoProcessEmbeddedL
 	MPlayerApp.cpp                      MPMsgWnd.cpp\
 	MPSkinFactory.cpp                   MPSkinInfoTextCtrl.cpp\
 	MPSkinMainWnd.cpp                   MPSkinMediaNumInfoCtrl.cpp\
-	MPSkinMenu.cpp                      MPSkinTimeCtrl.cpp\
+	MPFloatingLyrWnd.cpp                MPSkinTimeCtrl.cpp\
 	MPSkinWnd.cpp                       ObjListCtrl.cpp\
 	OnlineSearch.cpp                    OperatingMiner.cpp\
 	PreferenceDlg.cpp                   PreferencePageBase.cpp\
@@ -44,7 +44,12 @@ libmpshared_a_SOURCES = AdManage.cpp                        AutoProcessEmbeddedL
 	SkinTreeCtrl.cpp                    SkinTxtLink.cpp\
 	StdAfx.cpp                          TagInfoDlg.cpp\
 	ThemesFile.cpp                      VersionUpdate.cpp\
-	WaitingDlg.cpp                      WidgetImageButton.cpp
+	WaitingDlg.cpp                      \
+	gtk2/CECommandBar.cpp         gtk2/DlgChooseColor.cpp       gtk2/DlgChooseFont.cpp\
+	gtk2/HelperGtk2.cpp           gtk2/HotkeyCtrlEx.cpp         \
+	gtk2/LyricsMenu.cpp           gtk2/LyricsOutPluginMgr.cpp   gtk2/MainMenu.cpp\
+	gtk2/MPHotkey.cpp             gtk2/MPlayerAppGtk2.cpp\
+	gtk2/MPSkinMainWndGtk2.cpp    gtk2/MPSkinMenu.cpp           gtk2/PlayerSmoothTimer.cpp	
 
 INCLUDES = -I$(top_srcdir)/MPShared \
 	-I$(top_srcdir)/base \
@@ -59,5 +64,10 @@ INCLUDES = -I$(top_srcdir)/MPShared \
 	-I$(top_srcdir)/MPlayer\
 	-I$(top_srcdir)/SDK/Agg/include
 
-libmpshared_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 `pkg-config gtk+-2.0 --cflags`
+LDADD = 	$(top_builddir)/base/libbase.a \
+	$(top_builddir)/Utils/linux/lib_utils_linux.a\
+	$(top_builddir)/Utils/libutils.a\
+	$(top_builddir)/widget/libwidget.a
+
+libmpshared_a_CPPFLAGS = -D_LINUX -D_LINUX_GTK2 -D_MPLAYER `pkg-config gtk+-2.0 --cflags`
 

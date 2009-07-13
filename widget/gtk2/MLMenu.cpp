@@ -17,8 +17,6 @@ static void PopupGtkMenuPositionFunc(GtkMenu *menu,
 	*push_in = true;
 }
 
-#define MAKELONG(a, b) ((long)(((WORD)(a)) | ((DWORD)((WORD)(b))) << 16)) 
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -124,6 +122,11 @@ void CMLMenu::AppendItem(UINT nID, LPCTSTR szText)
 
 void CMLMenu::AppendSeperator()
 {
+	GtkWidget			*menuItem;
+
+	menuItem = gtk_separator_menu_item_new();
+	gtk_menu_shell_append(GTK_MENU_SHELL(m_menu), menuItem);
+	gtk_widget_show(menuItem);
 }
 
 void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText)
@@ -144,6 +147,25 @@ void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText)
 
 void CMLMenu::InsertSeperator(int nPos)
 {
+	GtkWidget			*menuItem;
+
+	menuItem = gtk_separator_menu_item_new();
+	gtk_menu_shell_insert(GTK_MENU_SHELL(m_menu), menuItem, nPos);
+	gtk_widget_show(menuItem);
+}
+
+void CMLMenu::RemoveItem(int nPos)
+{
+}
+
+bool CMLMenu::GetMenuItemText(UINT nItem, tstring &strText, bool bByPosition)
+{
+	return false;
+}
+
+bool CMLMenu::GetMenuItemInfo(UINT nItem, tstring &strText, UINT &nID, bool &bSubMenu, bool bByPosition)
+{
+	return false;
 }
 
 bool CMLMenu::LoadPopupMenu(int nID, int nSubMenu)

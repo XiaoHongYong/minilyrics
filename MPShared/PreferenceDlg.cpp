@@ -20,7 +20,7 @@
 #endif
 
 #ifdef _MPLAYER
-#include "win32/PreferPageAssociation.h"
+#include "PreferPageAssociation.h"
 #endif
 
 // Ñ¡Ïî´°¿Ú

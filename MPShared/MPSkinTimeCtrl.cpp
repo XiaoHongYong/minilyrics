@@ -11,6 +11,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+template<>
 UIOBJECT_CLASS_NAME_IMP(CMPSkinTimeCtrl<CSkinPicText>, _T("PlayingTime"))
 
+template<>
 UIOBJECT_CLASS_NAME_IMP(CMPSkinTimeCtrl<CSkinStaticText>, _T("PlayingTimeText"))

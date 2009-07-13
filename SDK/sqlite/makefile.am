@@ -1,0 +1,8 @@
+noinst_LIBRARIES = libsqlite.a
+
+libsqlite_a_SOURCES = sqlite3.c
+
+INCLUDES = 
+libsqlite_a_CPPFLAGS = 
+
+

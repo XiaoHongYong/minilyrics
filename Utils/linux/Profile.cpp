@@ -298,6 +298,112 @@ void CProfile::Close()
 	m_listAppSect.clear();
 }
 
+
+void CProfile::DoCache()
+{
+	tstringex	str;
+	LPCTSTR		szBeg, szEnd;
+	tstring		strAppName, strKey, strValue;
+
+	if (!OpenFileToTString(m_strProfile.c_str(), str))
+		return;
+
+	//
+	// ≤È’“ AppName
+	szBeg = str.c_str();
+	while (*szBeg)
+	{
+		while (*szBeg == ' ' || *szBeg == '\t' || *szBeg == '\n')
+			szBeg++;
+
+		if (*szBeg != '[')
+		{
+			while (*szBeg && *szBeg != '\n')
+				szBeg++;
+			continue;
+		}
+		szBeg++;
+
+		while (*szBeg == ' ' || *szBeg == '\t')
+			szBeg++;
+
+		szEnd = szBeg;
+		while (*szEnd && *szEnd != ']' && *szEnd != '\n')
+			szEnd++;
+
+		if (*szEnd != ']')
+		{
+			while (*szBeg && *szBeg != '\n')
+				szBeg++;
+			continue;
+		}
+
+		// found appname now
+		strAppName = _T("");
+		strAppName.append(szBeg, szEnd);
+		TrimStr(strAppName);
+
+		szBeg = szEnd + 1;
+
+		while (*szBeg)
+		{
+			// get key and values
+			while (*szBeg == ' ' || *szBeg == '\t')
+				szBeg++;
+
+			while (*szBeg == '\r' || *szBeg == '\n')
+				szBeg++;
+
+			if (*szBeg == '[')
+				break;
+
+			szEnd = szBeg;
+			while (*szEnd && *szEnd != '=' && *szEnd != '\n')
+				szEnd++;
+
+			if (*szEnd != '=')
+			{
+				szBeg = szEnd;
+				while (*szBeg && *szBeg != '\n')
+					szBeg++;
+				continue;
+			}
+
+			// found key
+			strKey = _T("");
+			strKey.append(szBeg, szEnd);
+
+			szBeg = szEnd + 1;
+			while (*szEnd && *szEnd != '\n')
+				szEnd++;
+
+			while (*szEnd == '\r' || *szEnd == '\n')
+				szEnd--;
+			if (*szEnd)
+				szEnd++;
+			strValue = _T("");
+			strValue.append(szBeg, szEnd);
+
+			AddKeys(strAppName.c_str(), strKey.c_str(), strValue.c_str());
+
+			szBeg = szEnd;
+		}
+	}
+}
+
+void CProfile::SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
+{
+	SetKeyDefaultIfNotExist(szAppName, szKeyName, szDefault);
+}
+
+void CProfile::SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
+{
+	TCHAR	szDefault[64];
+	_itot_s(nDefault, szDefault, CountOf(szDefault), 10);
+
+	SetKeyDefaultIfNotExist(szAppName, szKeyName, szDefault);
+}
+
 DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
 {
 	assert(!m_strProfile.empty());

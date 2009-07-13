@@ -3,6 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "../SDK/sqlite/sqlite3.h"
+
 #include "Sqlite3.h"
 
 #ifdef _DEBUG

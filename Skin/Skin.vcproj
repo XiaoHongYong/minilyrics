@@ -438,7 +438,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\widget\EditHandler.cpp"
+				RelativePath=".\EditHandler.cpp"
 				>
 			</File>
 			<File
@@ -1097,7 +1097,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\widget\win32\SplashScreenWnd.cpp"
+				RelativePath=".\win32\SplashScreenWnd.cpp"
 				>
 			</File>
 			<File
@@ -1213,7 +1213,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\widget\EditHandler.h"
+				RelativePath=".\EditHandler.h"
 				>
 			</File>
 			<File
@@ -1321,7 +1321,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\widget\win32\SplashScreenWnd.h"
+				RelativePath=".\win32\SplashScreenWnd.h"
 				>
 			</File>
 			<File

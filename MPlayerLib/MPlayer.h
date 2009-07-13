@@ -11,7 +11,7 @@
 
 #include "IMPlayer.h"
 #include "Playlist.h"
-#include "MPHelper.h"
+#include "MPTools.h"
 #include "MPTime.h"
 #include "MediaLibrary.h"
 #include "MDAgent.h"

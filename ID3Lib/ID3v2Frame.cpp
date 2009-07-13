@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "ID3v2Frame.h"
-#include <bitset>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

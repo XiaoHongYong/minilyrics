@@ -451,13 +451,13 @@ MLRESULT CMPluginManagerAgent::GetActiveDSP(IDSP **ppDSP)
 	
 	if (mlRes == ERR_NOT_SUPPORT)
 	{
-		*ppDSP = CDspSuperEQ::GetInstance();
-		return ERR_OK;
+		// *ppDSP = CDspSuperEQ::GetInstance();
+		// return ERR_OK;
 
 		//*ppDSP = new CDspDemo;
 		//(*ppDSP)->AddRef();
 
-		// return ERR_FALSE;
+		return ERR_FALSE;
 	}
 
 	return mlRes;

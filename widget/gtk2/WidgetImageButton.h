@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include "WidgetCtrlBase.h"
+
 class CWidgetImageButton : public CWidgetCtrlBase
 {
 public:

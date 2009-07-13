@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "MPlayerApp.h"
+#include "BaseWnd.h"
 #include "WidgetImageButton.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -28,7 +28,7 @@ BOOL CWidgetImageButton::Attach(CBaseWnd *pWndParent, int nCtrlID)
 	return TRUE;
 }
 
-void CWidgetImageButton::SetImage(CMLImage *pImage);
+void CWidgetImageButton::SetImage(CMLImage *pImage)
 {
 	if (m_pImage)
 	{

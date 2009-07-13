@@ -683,6 +683,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			nAlpha = 255 - GetAlpha(pLyricRow);
 			if (nAlpha == 0)
 				return false;
+#ifdef _WIN32_DESKTOP
 			if (m_pSkin->GetEnableTranslucencyLayered() || m_img.IsValid()
 					|| m_tobHilight.obm != OBM_COLOR)
 			{
@@ -690,6 +691,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				lct = LCT_HIGH;
 				nAlpha = 255 - nAlpha;
 			}
+#endif
 		}
 		else if (linePos == LP_BELOW_CUR_LINE)
 		{
@@ -700,6 +702,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			nAlpha = GetAlpha(pLyricRow);
 			if (nAlpha == 0)
 				return false;
+#ifdef _WIN32_DESKTOP
 			if (m_pSkin->GetEnableTranslucencyLayered() || m_img.IsValid()
 					|| m_tobHilight.obm != OBM_COLOR)
 			{
@@ -709,6 +712,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				else
 					lct = LCT_LOW;
 			}
+#endif
 		}
 		else
 			lct = LCT_HIGH;
