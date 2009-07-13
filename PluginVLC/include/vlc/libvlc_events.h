@@ -44,7 +44,9 @@ extern "C" {
  * @{
  */
 
-typedef enum libvlc_event_type_t {
+enum libvlc_event_type_t {
+    /* Append new event types at the end.
+     * Do not remove, insert or re-order any entry. */
     libvlc_MediaMetaChanged,
     libvlc_MediaSubItemAdded,
     libvlc_MediaDurationChanged,
@@ -82,9 +84,12 @@ typedef enum libvlc_event_type_t {
     libvlc_MediaListPlayerStopped,
 
     libvlc_MediaDiscovererStarted,
-    libvlc_MediaDiscovererEnded
+    libvlc_MediaDiscovererEnded,
 
-} libvlc_event_type_t;
+    libvlc_MediaPlayerTitleChanged,
+    libvlc_MediaPlayerSnapshotTaken,
+    /* New event types HERE */
+};
 
 /**
  * An Event
@@ -93,7 +98,7 @@ typedef enum libvlc_event_type_t {
  * \param u Event dependent content
  */
 
-typedef struct libvlc_event_t
+struct libvlc_event_t
 {
     libvlc_event_type_t type;
     void * p_obj;
@@ -136,11 +141,15 @@ typedef struct libvlc_event_t
         } media_player_time_changed;
         struct
         {
-            libvlc_time_t new_seekable;
+            int new_title;
+        } media_player_title_changed;
+        struct
+        {
+            uint64_t new_seekable; /* FIXME: that's a boolean! */
         } media_player_seekable_changed;
         struct
         {
-            libvlc_time_t new_pausable;
+            uint64_t new_pausable; /* FIXME: that's a BOOL!!! */
         } media_player_pausable_changed;
 
         /* media list */
@@ -187,32 +196,15 @@ typedef struct libvlc_event_t
             int index;
         } media_list_view_will_delete_item;
 
-        /* media discoverer */
+        /* snapshot taken */
         struct
         {
-            void * unused;
-        } media_media_discoverer_started;
-        struct
-        {
-            void * unused;
-        } media_media_discoverer_ended;
+             char* psz_filename ;
+        } media_player_snapshot_taken ;
 
     } u;
-} libvlc_event_t;
+};
 
-/**
- * Event manager that belongs to a libvlc object, and from whom events can
- * be received.
- */
-
-typedef struct libvlc_event_manager_t libvlc_event_manager_t;
-
-/**
- * Callback function notification
- * \param p_event the event triggering the callback
- */
-
-typedef void ( *libvlc_callback_t )( const libvlc_event_t *, void * );
 
 /**@} */
 

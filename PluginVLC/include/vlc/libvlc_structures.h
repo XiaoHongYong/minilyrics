@@ -79,115 +79,9 @@ typedef int64_t libvlc_time_t;
  * @{
  */
 
-/* Meta Handling */
-/** defgroup libvlc_meta libvlc_meta
- * \ingroup libvlc_media
- * LibVLC Media Meta
- * @{
- */
-
-typedef enum libvlc_meta_t {
-    libvlc_meta_Title,
-    libvlc_meta_Artist,
-    libvlc_meta_Genre,
-    libvlc_meta_Copyright,
-    libvlc_meta_Album,
-    libvlc_meta_TrackNumber,
-    libvlc_meta_Description,
-    libvlc_meta_Rating,
-    libvlc_meta_Date,
-    libvlc_meta_Setting,
-    libvlc_meta_URL,
-    libvlc_meta_Language,
-    libvlc_meta_NowPlaying,
-    libvlc_meta_Publisher,
-    libvlc_meta_EncodedBy,
-    libvlc_meta_ArtworkURL,
-    libvlc_meta_TrackID
-} libvlc_meta_t;
 
 /**@} */
 
-typedef struct libvlc_media_t libvlc_media_t;
-
-/**@} */
-
-
-/*****************************************************************************
- * Media Instance
- *****************************************************************************/
-/** \defgroup libvlc_media_player libvlc_media_player
- * \ingroup libvlc
- * LibVLC Media Instance handling
- * @{
- */
-
-typedef struct libvlc_media_player_t libvlc_media_player_t;
-
-/**
- * Note the order of libvlc_state_t enum must match exactly the order of
- * @see mediacontrol_PlayerStatus and @see input_state_e enums.
- *
- * Expected states by web plugins are:
- * IDLE/CLOSE=0, OPENING=1, BUFFERING=2, PLAYING=3, PAUSED=4,
- * STOPPING=5, FORWARD=6, BACKWARD=7, ENDED=8, ERROR=9
- */
-typedef enum libvlc_state_t
-{
-    libvlc_NothingSpecial=0,
-    libvlc_Opening,
-    libvlc_Buffering,
-    libvlc_Playing,
-    libvlc_Paused,
-    libvlc_Stopped,
-    libvlc_Forward,
-    libvlc_Backward,
-    libvlc_Ended,
-    libvlc_Error
-} libvlc_state_t;
-
-/**@} */
-
-/*****************************************************************************
- * Media List
- *****************************************************************************/
-/** \defgroup libvlc_media_list libvlc_media_list
- * \ingroup libvlc
- * LibVLC Media List handling
- * @{
- */
-
-typedef struct libvlc_media_list_t libvlc_media_list_t;
-typedef struct libvlc_media_list_view_t libvlc_media_list_view_t;
-
-
-/*****************************************************************************
- * Media List Player
- *****************************************************************************/
-/** \defgroup libvlc_media_list_player libvlc_media_list_player
- * \ingroup libvlc_media_list
- * LibVLC Media List Player handling
- * @{
- */
-
-typedef struct libvlc_media_list_player_t libvlc_media_list_player_t;
-
-/**@} libvlc_media_list_player */
-
-/**@} libvlc_media_list */
-
-/*****************************************************************************
- * Media Library
- *****************************************************************************/
-/** \defgroup libvlc_media_library libvlc_media_library
- * \ingroup libvlc
- * LibVLC Media Library
- * @{
- */
-
-typedef struct libvlc_media_library_t libvlc_media_library_t;
-
-/**@} */
 
 /*****************************************************************************
  * Playlist
@@ -209,49 +103,6 @@ typedef struct libvlc_playlist_item_t
 
 /**@} */
 
-
-/*****************************************************************************
- * Video
- *****************************************************************************/
-/** \defgroup libvlc_video libvlc_video
- * \ingroup libvlc_media_player
- * LibVLC Video handling
- * @{
- */
- 
-/**
-* Downcast to this general type as placeholder for a platform specific one, such as:
-*  Drawable on X11,
-*  CGrafPort on MacOSX,
-*  HWND on win32
-*/
-typedef int libvlc_drawable_t;
-
-/**
-* Rectangle type for video geometry
-*/
-typedef struct libvlc_rectangle_t
-{
-    int top, left;
-    int bottom, right;
-}
-libvlc_rectangle_t;
-
-/**@} */
-
-
-/*****************************************************************************
- * Services/Media Discovery
- *****************************************************************************/
-/** \defgroup libvlc_media_discoverer libvlc_media_discoverer
- * \ingroup libvlc
- * LibVLC Media Discoverer
- * @{
- */
-
-typedef struct libvlc_media_discoverer_t libvlc_media_discoverer_t;
-
-/**@} */
 
 /*****************************************************************************
  * Message log handling

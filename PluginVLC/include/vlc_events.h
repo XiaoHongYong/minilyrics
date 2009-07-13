@@ -224,7 +224,7 @@ VLC_EXPORT(int, __vlc_event_manager_init, ( vlc_event_manager_t * p_em,
 /*
  * Destroy
  */
-//// VLC_EXPORT(void, vlc_event_manager_fini, ( vlc_event_manager_t * p_em ));
+VLC_EXPORT(void, vlc_event_manager_fini, ( vlc_event_manager_t * p_em ));
 
 /*
  * Tells a specific event manager that it will handle event_type object
@@ -235,8 +235,8 @@ VLC_EXPORT(int, vlc_event_manager_register_event_type,
 /*
  * Send an event to the listener attached to this p_em.
  */
-//// VLC_EXPORT(void, vlc_event_send, ( vlc_event_manager_t * p_em,
-//                                    vlc_event_t * p_event ));
+VLC_EXPORT(void, vlc_event_send, ( vlc_event_manager_t * p_em,
+                                   vlc_event_t * p_event ));
 
 /*
  * Add a callback for an event.

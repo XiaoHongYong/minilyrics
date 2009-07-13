@@ -5,8 +5,11 @@
 #define _WIN32_WINNT  0x0500
 
 #include <Windows.h>
+#include <vlc/libvlc.h>
 #include <vlc/libvlc_structures.h>
-#include <vlc/libvlc_events.h>
+#include <vlc/libvlc_media.h>
+#include <vlc/libvlc_media_player.h>
+// #include <vlc/libvlc_events.h>
 #include <vlc/mediacontrol.h>
 #include <vlc_common.h>
 
@@ -115,17 +118,15 @@ DWORD CPlayerImp::GetPlayPos()
 		return 0;
 
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold( m_p_intf );
 
-	p_input = p_playlist->p_input;
+	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
 	{
 		pl_Release(m_p_intf);
 		return 0;
 	}
-
-	vlc_object_yield(p_input);
 
 	int64_t		nPos = 0;
 
@@ -143,17 +144,15 @@ int CPlayerImp::HasVideo()
 		return 0;
 
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
-	p_input = p_playlist->p_input;
+	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
 	{
 		pl_Release(m_p_intf);
 		return 0;
 	}
-
-	vlc_object_yield(p_input);
 
 	double	dbFps;
 
@@ -174,7 +173,7 @@ BOOL CPlayerImp::Play()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
 	playlist_Play(p_playlist);
 
@@ -188,7 +187,7 @@ BOOL CPlayerImp::Pause()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
 	playlist_Pause(p_playlist);
 
@@ -202,7 +201,7 @@ BOOL CPlayerImp::PlayPause()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
 	if (m_stat != PS_PLAYING)
 		playlist_Play(p_playlist);
@@ -219,7 +218,7 @@ BOOL CPlayerImp::Stop()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
 	playlist_Stop(p_playlist);
 
@@ -233,7 +232,7 @@ BOOL CPlayerImp::Prev()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
 	playlist_Prev(p_playlist);
 
@@ -247,7 +246,7 @@ BOOL CPlayerImp::Next()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
 	playlist_Next(p_playlist);
 
@@ -262,17 +261,15 @@ BOOL CPlayerImp::SeekTo(int nMsPos)
 		return 0;
 
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
-	p_input = p_playlist->p_input;
+	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
 	{
 		pl_Release(m_p_intf);
 		return 0;
 	}
-
-	vlc_object_yield(p_input);
 
 	input_Control(p_input, INPUT_SET_TIME, nMsPos * 1000);
 
@@ -318,17 +315,15 @@ void CPlayerImp::MediaChangedCheck()
 
 	intf_sys_t          *p_sys = m_p_intf->p_sys;
 
-	p_playlist = pl_Yield(m_p_intf);
+	p_playlist = pl_Hold(m_p_intf);
 	PL_LOCK;
-	p_input = p_playlist->p_input;
+	p_input = playlist_CurrentInput(p_playlist);
 	if (!p_input)
 	{
 		PL_UNLOCK;
 		pl_Release(m_p_intf);
 		return;
 	}
-
-	vlc_object_yield(p_input);
 	PL_UNLOCK;
 	pl_Release(m_p_intf);
 
@@ -446,11 +441,12 @@ int  Open(vlc_object_t * p_this)
 	intf_thread_t *p_intf = (intf_thread_t *)p_this;
 	playlist_t *p_playlist;
 
-	MALLOC_ERR(p_intf->p_sys, intf_sys_t);
+	p_intf->p_sys = new (intf_sys_t);
 
-	p_playlist = pl_Yield(p_intf);
-	var_AddCallback(p_playlist, "item-change", ItemChange, p_intf);
-	var_AddCallback(p_playlist, "playlist-current", ItemChange, p_intf);
+	p_playlist = pl_Hold(p_intf);
+	PL_LOCK;
+	var_AddCallback(p_playlist, "item-current", ItemChange, p_intf);
+	PL_UNLOCK;
 	pl_Release(p_intf);
 
 	g_hwndPlayer = NULL;
@@ -466,28 +462,27 @@ int  Open(vlc_object_t * p_this)
 void Close(vlc_object_t * p_this)
 {
 	intf_thread_t *p_intf = (intf_thread_t *)p_this;
-	playlist_t *p_playlist = pl_Yield(p_this);
+	playlist_t *p_playlist = pl_Hold(p_this);
 	input_thread_t              *p_input;
 
-	var_DelCallback(p_playlist, "item-change", ItemChange, p_intf);
-	var_DelCallback(p_playlist, "playlist-current", ItemChange, p_intf);
+	var_DelCallback( p_playlist, "item-current", ItemChange, p_intf );
 
-	p_input = p_playlist->p_input;
-	if (p_input)
+	p_input = playlist_CurrentInput( p_playlist );
+	if ( p_input )
 	{
-		vlc_object_yield(p_input);
-		var_DelCallback(p_input, "state", PlayingChange, p_intf);
-		vlc_object_release(p_input);
+		var_DelCallback(p_input, "intf-event", PlayingChange, p_intf);
+
+		vlc_object_release( p_input );
 	}
 
-	pl_Release(p_this);
+	pl_Release( p_intf );
 
 	PostThreadMessage(g_dwMLThreadID, WM_QUIT, 0, 0);
 	WaitForSingleObject(g_hEventOK2Quit, INFINITE);
 	CloseHandle(g_hEventOK2Quit);
 
 	/* Destroy structure */
-	free(p_intf->p_sys);
+	delete p_intf->p_sys;
 }
 
 void Run(intf_thread_t *p_intf)
@@ -502,7 +497,7 @@ void Run(intf_thread_t *p_intf)
 	// now we can use other g_MLService functions.
 	char	szMsg[256];
 
-	wsprintfA(szMsg, "Start Foobar2000 plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
+	wsprintfA(szMsg, "Start VLC Media Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
 	g_MLService.Log(szMsg);
 
 	MSG			msg;
@@ -513,13 +508,10 @@ void Run(intf_thread_t *p_intf)
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
 
-		vlc_object_lock(p_intf);
 		if (!vlc_object_alive(p_intf))
 		{
-			vlc_object_unlock(p_intf);
 			break;
 		}
-		vlc_object_unlock(p_intf);
 	}
 
 	g_MLService.Quit();
@@ -569,15 +561,14 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 	(void)psz_var;    (void)oldval;    (void)newval;
 	intf_thread_t *p_intf = (intf_thread_t *)param;
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Yield(p_this);
+	playlist_t *p_playlist = pl_Hold(p_this);
 	intf_sys_t          *p_sys = p_intf->p_sys;
 
-	p_input = p_playlist->p_input;
+	p_input = playlist_CurrentInput(p_playlist);
 	pl_Release(p_this);
 
 	if (!p_input)
 		return VLC_SUCCESS;
-	vlc_object_yield(p_input);
 
 	if (p_input->b_dead || !input_GetItem(p_input)->psz_name)
 	{
@@ -588,7 +579,7 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 		return VLC_SUCCESS;
 	}
 
-	var_AddCallback(p_input, "state", PlayingChange, p_intf);
+	var_AddCallback(p_input, "intf-event", PlayingChange, p_intf);
 
 	p_sys->bMetaDataRead = false;
 	/* Playing something ... */
@@ -622,17 +613,15 @@ DWORD CPlayerImp::GetMediaLength()
 		return 0;
 
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Yield(m_p_intf);
+	playlist_t *p_playlist = pl_Hold(m_p_intf);
 
-	p_input = p_playlist->p_input;
+	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
 	{
 		pl_Release(m_p_intf);
 		return 0;
 	}
-
-	vlc_object_yield(p_input);
 
 	int64_t		nPos = 0;
 
