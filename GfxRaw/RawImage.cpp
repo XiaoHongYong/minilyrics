@@ -306,27 +306,13 @@ bool CRawImage::Blt(CRawGraph *pGraphics, int xDest, int yDest, int widthDest, i
 
 	pImageDst = pGraphics->GetRawBuff();
 
-	memset(m_hImage->buff, 0, m_hImage->GetBuffSize());
-
-	// 
-	g_print("DrawImageat: %d, %d, %d, %d\n", rcDst.left, rcDst.top, rcDst.Width(), rcDst.Height());
-	for (int i = rcDst.top; i < rcDst.bottom; i++)
-	{
-		memset(pImageDst->RowPtr(i), 0xFF, rcDst.Width() * 4);
-	}
-	// memset(pImageDst->PixPtr(rcDst.left, rcDst.top), 0, pImageDst->AbsStride() * m_hImage->height);
-
-	return true;
-
 	return BltRawImage(pImageDst, rcDst, m_hImage, xSrc, ySrc, bpm, pGraphics->GetOpacityPainting());
 }
-
 
 void CRawImage::MaskBlt(CRawGraph *pGraphics, int xDest, int yDest, CRawImage *pImgMask, BlendPixMode bpm)
 {
 	MaskBlt(pGraphics, xDest, yDest, m_cx, m_cy, m_x, m_y, pImgMask, bpm);
 }
-
 
 bool CRawImage::MaskBlt(CRawGraph *pGraphics, int xDest, int yDest, int widthDest, int heightDest, int xSrc, int ySrc, CRawImage *pImgMask, BlendPixMode bpm)
 {

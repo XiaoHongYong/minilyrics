@@ -16,7 +16,7 @@ bool CRawGraphData::Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCoun
 {
 	ASSERT(nBitCount == 32);
 
-	if (!m_imageData.Create(cx, cy, nBitCount))
+	if (!m_imageData.CreateReverse(cx, cy, nBitCount))
 		return false;
 
 	m_pGdkPixBuf = gdk_pixbuf_new_from_data(m_imageData.buff, 
