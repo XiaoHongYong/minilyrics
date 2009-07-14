@@ -12,11 +12,10 @@
 #include "LyricsParser.h"
 #include "LyricsSearch.h"
 #include "HelperFun.h"
-#include "LRCParser.h"
+#include "LrcParser.h"
 #include "TextFileParser.h"
 #include "SncParser.h"
-#include "assert.h"
-#include "srtparser.h"
+#include "SrtParser.h"
 #include <algorithm>
 #include "LyricsTagReader.h"
 

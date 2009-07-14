@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "ID3v2.h"
 #include <bitset>
 #include "ID3v2FrameParser.h"

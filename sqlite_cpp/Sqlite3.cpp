@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "../SDK/sqlite/sqlite3.h"
 
 #include "Sqlite3.h"

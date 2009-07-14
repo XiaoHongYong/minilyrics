@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "NetSDK.h"
 #include "NetServer.h"
 #include "HttpProtocol.h"

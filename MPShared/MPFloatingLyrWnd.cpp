@@ -1,7 +1,7 @@
 // MPFloatingLyrWnd.cpp: implementation of the CMPFloatingLyrWnd class.
 //
 //////////////////////////////////////////////////////////////////////
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "MPFloatingLyrWnd.h"
 
 CMPFloatingLyrWnd		g_wndFloatingLyr;

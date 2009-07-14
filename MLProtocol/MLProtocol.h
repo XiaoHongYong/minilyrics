@@ -10,7 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "NetServer.h"
-#include "httpProtocol.h"
+#include "HttpProtocol.h"
 #include "MLUtils.h"
 
 enum ML_PROTOCAL_ERROR

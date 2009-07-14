@@ -1,6 +1,6 @@
 #pragma once
 
-#include "skincontainer.h"
+#include "SkinContainer.h"
 
 //
 // This container will toggle sub UIObject with various effect, such as Fade in/Out

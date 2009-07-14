@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "HotkeyCtrlEx.h"
 
 bool IsExtendedKey(UINT nVk)

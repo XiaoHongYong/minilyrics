@@ -24,7 +24,10 @@ CSkinSquare::~CSkinSquare()
 
 void CSkinSquare::Draw(CRawGraph *pGraph)
 {
-	pGraph->FillRect(&m_rcObj, m_clrBg);
+	CRect rc;
+	rc = m_rcObj;
+	rc.bottom -= 1;
+	pGraph->FillRect(&rc, m_clrBg);
 }
 
 

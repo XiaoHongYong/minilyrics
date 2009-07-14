@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "StdAfx.h"
+#include "stdafx.h"
 #include "../MPlayerApp.h"
 #include "../Helper.h"
 #include "LyricsOutPluginMgr.h"

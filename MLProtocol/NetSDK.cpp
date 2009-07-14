@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "netsdk.h"
+#include "StdAfx.h"
+#include "NetSDK.h"
 
 NETLIB_API BOOL InitNetLib()
 {

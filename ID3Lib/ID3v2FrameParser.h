@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "id3v2.h"
+#include "ID3v2.h"
 
 class CID3v2FrameParserBase  
 {

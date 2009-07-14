@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "MLProtocol.h"
 
 #define SZ_ML_POST_URL		"/searchlyrics.htm"

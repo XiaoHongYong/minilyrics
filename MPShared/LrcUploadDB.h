@@ -5,7 +5,7 @@
 #if !defined(AFX_LRCUPLOADDB_H__FBA46183_DF30_40C3_AE73_8359343BC5B8__INCLUDED_)
 #define AFX_LRCUPLOADDB_H__FBA46183_DF30_40C3_AE73_8359343BC5B8__INCLUDED_
 
-#include "../sqlite_cpp/sqlite3.h"
+#include "../sqlite_cpp/Sqlite3.h"
 
 struct LrcUploadFileInfo
 {

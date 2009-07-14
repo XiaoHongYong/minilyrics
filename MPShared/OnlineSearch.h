@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "../sqlite_cpp/sqlite3.h"
+#include "../sqlite_cpp/Sqlite3.h"
 
 #define MSG_ONLINE_SEARCH_RESULT		(WM_USER + 6)
 

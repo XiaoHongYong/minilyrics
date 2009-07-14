@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "ID3v1.h"
 
 #define ID3_NR_OF_V1_GENRES 148
