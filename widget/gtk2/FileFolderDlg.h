@@ -21,33 +21,18 @@ public:
 
 	void GetOpenFile(vector<tstring> &vFiles);
 
-protected:
-	bool			m_bAllowMultiSel;
-	GtkWidget		*m_window;
-	char			*m_szFile;
-	tstring			m_strTitle, m_strInitFile;
-
-};
-
-
-class CFileSaveDlg
-{
-public:
-	CFileSaveDlg(LPCTSTR szTitle, LPCTSTR szFile, LPCTSTR szFilter, int nDefFileType);
-	virtual ~CFileSaveDlg(void);
-
-	int DoModal(CBaseWnd *pWndParent);
-
 	LPCTSTR GetSaveFile();
-
 	LPCTSTR GetSelectedExt();
 
 protected:
+	bool			m_bAllowMultiSel;
 	GtkWidget		*m_window;
-	char			*m_szFile;
 	tstring			m_strTitle, m_strInitFile;
+	V_Str			m_vSelectedFiles;
 
 };
+
+typedef CFileOpenDlg CFileSaveDlg;
 
 
 class CFolderDialog  

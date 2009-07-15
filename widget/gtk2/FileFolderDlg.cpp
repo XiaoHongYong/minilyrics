@@ -17,20 +17,18 @@ CFileOpenDlg::CFileOpenDlg(LPCTSTR szTitle, LPCTSTR szFile, LPCTSTR szFilter, in
 	m_strTitle = szTitle;
 	if (szFile)
 		m_strInitFile = szFile;
-	m_szFile = NULL;
+	m_window = NULL;
 }
 
 CFileOpenDlg::~CFileOpenDlg()
 {
-	if (m_szFile)
-		g_free(m_szFile);
-
-	gtk_widget_destroy(m_window);
 }
 
 int CFileOpenDlg::DoModal(CBaseWnd *pWndParent)
 {
 	int		nRet;
+
+	m_vSelectedFiles.clear();
 
 	m_window = gtk_file_chooser_dialog_new(m_strTitle.c_str(),
 		GTK_WINDOW(pWndParent->GetHandle()),
@@ -38,6 +36,8 @@ int CFileOpenDlg::DoModal(CBaseWnd *pWndParent)
 		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
 		GTK_STOCK_OPEN, GTK_RESPONSE_OK,
 		NULL);
+	if (!m_window)
+		return GTK_RESPONSE_CANCEL;
 
 	if (!m_strInitFile.empty())
 		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(m_window), m_strInitFile.c_str());
@@ -47,93 +47,57 @@ int CFileOpenDlg::DoModal(CBaseWnd *pWndParent)
 
 	nRet = gtk_dialog_run(GTK_DIALOG(m_window));
 
-	return nRet;
-}
-
-LPCTSTR CFileOpenDlg::GetOpenFile()
-{
-	if (!m_szFile)
-		m_szFile = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(m_window));
-
-	if (m_szFile)
-		return m_szFile;
-	else
-		return "";
-}
-
-void CFileOpenDlg::GetOpenFile(vector<tstring> &vFiles)
-{
+	// Save selected files in list.
 	if (m_bAllowMultiSel)
 	{
 		GSList*		listFiles;
-		
-		listFiles = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(m_window));
 
-		while (listFiles)
+		listFiles = gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(m_window));
+		GSList*		p = listFiles;
+		while (p)
 		{
-			vFiles.push_back((const char *)listFiles->data);
-			g_free((char *)listFiles->data);
-			g_slist_next(listFiles);
+			m_vSelectedFiles.push_back((const char *)p->data);
+			g_free(p->data);
+			p = p->next;
 		}
 		g_slist_free(listFiles);
 	}
 	else
 	{
-		if (!m_szFile)
-			m_szFile = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(m_window));
-		if (m_szFile)
-			vFiles.push_back(m_szFile);
+		char *szFile = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(m_window));
+		if (szFile)
+		{
+			m_vSelectedFiles.push_back(szFile);
+			g_free(szFile);
+		}
 	}
-}
-
-CFileSaveDlg::CFileSaveDlg(LPCTSTR szTitle, LPCTSTR szFile, LPCTSTR szFilter, int nDefFileType)
-{
-	m_strTitle = szTitle;
-	if (szFile)
-		m_strInitFile = szFile;
-}
-
-CFileSaveDlg::~CFileSaveDlg(void)
-{
-	if (m_szFile)
-		g_free(m_szFile);
-}
-
-int CFileSaveDlg::DoModal(CBaseWnd *pWndParent)
-{
-	int		nRet;
-
-	m_window = gtk_file_chooser_dialog_new(m_strTitle.c_str(),
-		GTK_WINDOW(pWndParent->GetHandle()),
-		GTK_FILE_CHOOSER_ACTION_SAVE,
-		GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-		GTK_STOCK_OPEN, GTK_RESPONSE_ACCEPT,
-		NULL);
-
-	if (!m_strInitFile.empty())
-		gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(m_window), m_strInitFile.c_str());
-
-	nRet = gtk_dialog_run(GTK_DIALOG(m_window));
 
 	gtk_widget_destroy(m_window);
 
 	return nRet;
 }
 
-LPCTSTR CFileSaveDlg::GetSaveFile()
+LPCTSTR CFileOpenDlg::GetOpenFile()
 {
-	if (!m_szFile)
-		m_szFile = gtk_file_chooser_get_filename(GTK_FILE_CHOOSER(m_window));
-
-	if (m_szFile)
-		return m_szFile;
+	if (m_vSelectedFiles.size())
+		return m_vSelectedFiles[0].c_str();
 	else
 		return "";
 }
 
-LPCTSTR CFileSaveDlg::GetSelectedExt()
+void CFileOpenDlg::GetOpenFile(vector<tstring> &vFiles)
 {
-	return 0;
+	vFiles = m_vSelectedFiles;
+}
+
+LPCTSTR CFileOpenDlg::GetSaveFile()
+{
+	return GetOpenFile();
+}
+
+LPCTSTR CFileOpenDlg::GetSelectedExt()
+{
+	return FileGetExt(GetOpenFile());
 }
 
 //////////////////////////////////////////////////////////////////////////
