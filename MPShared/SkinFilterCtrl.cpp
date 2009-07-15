@@ -21,7 +21,7 @@ BOOL CSkinFilterCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 	if (IsPropertyName(szProperty, _T("StartPercent")))
 	{
-		m_fStartPercent = (float)atof(szValue);
+		m_fStartPercent = (float)_tstof(szValue);
 		if (m_fStartPercent < 0.0001 || m_fStartPercent > 1.0)
 			m_fStartPercent = 1.0;
 		return true;

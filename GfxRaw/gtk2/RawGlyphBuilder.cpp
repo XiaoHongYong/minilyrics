@@ -36,7 +36,7 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 	cairo_status_t status;
 
 	m_surface = cairo_image_surface_create(CAIRO_FORMAT_RGB24,
-		GetHeightBitmap() * 2, GetHeightBitmap());
+		GetHeightBitmap() * 2, GetHeightBitmap() * 2);
 	m_cr = cairo_create(m_surface);
 
 	m_nWidthGraph = GetHeightBitmap() * 2;
@@ -52,12 +52,16 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 	cairo_set_source_rgb(m_cr, 0, 0, 0);
 	cairo_paint(m_cr);
 
+	// cairo_translate(m_cr, m_font.GetHeight(), m_font.GetHeight());
+
 	// Create font
-	desc = pango_font_description_new();
+	// desc = pango_font_description_new();
 	pango_font_description_set_family(desc, m_font.GetName());
 	pango_font_description_set_size(desc, m_font.GetHeight());
 	pango_font_description_set_weight(desc, (PangoWeight)m_font.GetWeight());
-	pango_font_description_set_style(desc, (PangoStyle)m_font.GetWeight());
+	pango_font_description_set_style(desc, (PangoStyle)m_font.GetItalic());
+//	#define FONT "Sans Bold 12"
+//	desc = pango_font_description_from_string (FONT);
 
 	// Create a PangoLayout, set the font and text
 	layout = pango_cairo_create_layout (m_cr);
@@ -68,11 +72,24 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 
 	// Draw text
 	cairo_set_source_rgb (m_cr, 1.0, 1.0, 1.0);
-	pango_cairo_update_layout (m_cr, layout);
+	// pango_cairo_update_layout (m_cr, layout);
 	pango_layout_get_size (layout, &width, &height);
 	pango_cairo_show_layout (m_cr, layout);
 
 	g_object_unref (layout);
+
+// 	cairo_status_t status;
+// 	CStrPrintf	strFile("Char%d.png", ch[0]);
+// 
+// 	status = cairo_surface_write_to_png (m_surface, strFile.c_str());
+// 	if (status != CAIRO_STATUS_SUCCESS)
+// 	{
+// 		g_printerr ("Could not save png to '%s'\n", strFile.c_str());
+// 	}
+
+
+	width /= PANGO_SCALE;
+	height /= PANGO_SCALE;
 
 	int				nWidth;
 	int				x, y;
@@ -80,6 +97,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 
 	DBGLOG3("glyph: %c, w: %d, h: %d", (LPCSTR)ch, width, height);
 	DBGLOG1("Font height: %d", m_font.GetHeight());
+	DBGLOG3("Format: %d, %d, %d", cairo_image_surface_get_format (m_surface), CAIRO_FORMAT_ARGB32, CAIRO_FORMAT_RGB24);
 	// assert(height == m_font.GetHeight());
 
 	agg::rendering_buffer	bufGraph(cairo_image_surface_get_data(m_surface), cairo_image_surface_get_width(m_surface), cairo_image_surface_get_height(m_surface), cairo_image_surface_get_stride(m_surface));
@@ -103,12 +121,12 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 			// 			pDst[G_G] = 255;
 			// 			pDst[G_B] = 255;
 			// 			pDst[G_A] = 255;
-			pDst[G_R] = pSrc[2];
+			pDst[G_R] = pSrc[0];
 			pDst[G_G] = pSrc[1];
-			pDst[G_B] = pSrc[0];
+			pDst[G_B] = pSrc[2];
 			pDst[G_A] = RGBToGray(pSrc[G_R], pSrc[G_G], pSrc[G_B]);
 			pDst += G_PIX_SIZE;
-			pSrc += 3;
+			pSrc += 4;
 		}
 		pRowSrc += bufGraph.stride();
 		pRowDst += glyph->WidthBytes();

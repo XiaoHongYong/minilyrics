@@ -214,6 +214,7 @@ public:
 		CRawGlyphSet	*pSet = new CRawGlyphSet;
 
 		pSet->Create(font);
+		pSet->AddRef();
 		m_listSet.push_back(pSet);
 
 		return pSet;
@@ -993,7 +994,8 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 	byte		textAlpha = pGraph->GetTextAlpha();
 	int			yyStart, yyEnd;
 	CRect		rcClip;
-	agg::rendering_buffer bufGraph(pGraph->GetBuff(), pGraph->Width(), pGraph->Height(), -pGraph->Width() * 4);
+	PRAW_IMAGE_DATA pGraphRaw = pGraph->GetRawBuff();
+	agg::rendering_buffer bufGraph(pGraphRaw->buff, pGraphRaw->width, pGraphRaw->height, pGraphRaw->stride);
 	int			xPattern1 = 0, xPattern2 = 0;
 
 	pGraph->GetMappedClipBoundRect(rcClip);
@@ -1149,7 +1151,8 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 
 	y -= OUTLINED_BORDER / 2;
 
-	agg::rendering_buffer bufGraph(pGraph->GetBuff(), pGraph->Width(), pGraph->Height(), -pGraph->Width() * 4);
+	PRAW_IMAGE_DATA pGraphRaw = pGraph->GetRawBuff();
+	agg::rendering_buffer bufGraph(pGraphRaw->buff, pGraphRaw->width, pGraphRaw->height, pGraphRaw->stride);
 	int			xPattern1 = 0, xPattern2 = 0;
 
 	pGraph->GetMappedClipBoundRect(rcClip);

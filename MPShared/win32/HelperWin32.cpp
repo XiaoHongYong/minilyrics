@@ -65,7 +65,7 @@ void MLHtmlHelper(CBaseWnd *pWnd, LPCTSTR szFile)
 
 bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText)
 {
-	return Tobool(CopyTextToClipboard(szText, pWnd->GetHandle()));
+	return Tobool(CopyTextToClipboard(szText));
 }
 
 class CMsgOutDlg : public CBaseDialog
