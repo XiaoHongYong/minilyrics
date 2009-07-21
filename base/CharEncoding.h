@@ -125,7 +125,7 @@ inline void UCS2ToTString(const WCHAR *str, int nLen, _tstring &strOut, int nEnc
 #elif defined(UTF8)
 	UCS2ToUtf8(str, nLen, strOut);
 #else
-	Utf8ToMbcs(str, nLen, strOut, nEncodingID);
+	UCS2ToMbcs(str, nLen, strOut, nEncodingID);
 #endif
 }
 

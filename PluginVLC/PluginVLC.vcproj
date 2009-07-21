@@ -137,6 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="libvlccore.lib"
 				OutputFile="../bin/libminilyrics_plugin.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
