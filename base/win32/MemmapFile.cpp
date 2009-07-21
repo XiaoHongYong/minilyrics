@@ -59,6 +59,7 @@ bool CMemmapFile::Open(LPCTSTR szFile, int nSizeMin, bool bMustExist)
 	if (!m_hFilemap)
 	{
 		CloseHandle(m_hFile);
+		m_hFile = NULL;
 		return false;
 	}
 
@@ -67,7 +68,9 @@ bool CMemmapFile::Open(LPCTSTR szFile, int nSizeMin, bool bMustExist)
 	if (!m_lpFile)
 	{
 		CloseHandle(m_hFile);
+		m_hFile = NULL;
 		CloseHandle(m_hFilemap);
+		m_hFilemap = NULL;
 		return false;
 	}
 
