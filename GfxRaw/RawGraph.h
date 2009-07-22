@@ -53,9 +53,6 @@ public:
 
 	virtual void Rectangle(int x, int y, int width, int height);
 
-	virtual void SetFgColor(const MLColor &color);
-	virtual void SetBgColor(const MLColor &color);
-
 	virtual void SetPen(CRawPen &pen);
 
 	virtual bool GetClipBoundBox(CRect &rc);
@@ -79,8 +76,6 @@ public:
 	{
 		m_clrText = color;
 	}
-
-	void DrawRect(int x, int y, int width, int height, const MLColor &clr);
 
 	byte GetTextAlpha() { return m_textAlpha; }
 	void SetTextAlpha(byte alpha) { m_textAlpha = alpha; }

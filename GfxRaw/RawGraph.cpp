@@ -24,6 +24,8 @@ CRawGraph::CRawGraph()
 {
 	m_rawBmpFont = NULL;
 
+	m_clrText.set(RGB(255, 255, 255));
+	m_textAlpha = 255;
 	m_nOpacityPainting = 255;
 	m_ptOrigin.x = m_ptOrigin.y = 0;
 
@@ -105,16 +107,6 @@ void CRawGraph::Rectangle(int x, int y, int width, int height)
 
 	agg::render_scanlines_aa_solid(ras, sl, rb, 
 		agg::rgba(m_pen.m_clrPen.r() / (double)255, m_pen.m_clrPen.g() / (double)255, m_pen.m_clrPen.b() / (double)255, m_pen.m_clrPen.a() / (double)255));
-}
-
-void CRawGraph::SetFgColor(const MLColor &color)
-{
-
-}
-
-void CRawGraph::SetBgColor(const MLColor &color)
-{
-
 }
 
 void CRawGraph::SetPen(CRawPen &pen)
@@ -215,46 +207,6 @@ bool CRawGraph::GetTextExtentPoint32(LPCTSTR szText, int nLen, LPSIZE pSize)
 		return m_rawBmpFont->GetTextExtentPoint32(szText, nLen, pSize);
 
 	return false;
-}
-
-void CRawGraph::DrawRect(int x, int y, int width, int height, const MLColor &clr)
-{
-	RECT	rc;
-	int		r, g, b, alpha;
-
-	rc.left = x;
-	rc.top = y;
-	rc.right = x + width;
-	rc.bottom = y + height;
-
-	r = clr.r();
-	g = clr.g();
-	b = clr.b();
-	alpha = clr.getAlpha();
-
-	ASSERT(m_imageData.bitCount == 32);
-
-	int			xMax, yMax;
-	byte		*p, *pEnd, *pRow;
-	int			nStrideModify;
-
-	ClipAndMapRect(&rc, x, y, xMax, yMax);
-	nStrideModify = (xMax - x) * PIX_SIZE;
-
-	// PIX_A is the offset of alpha channel
-	pRow = m_imageData.PixPtr(x, y);
-	for (; y < yMax; y++)
-	{
-		pEnd = pRow + nStrideModify;
-		for (p = pRow; p < pEnd; p += PIX_SIZE)
-		{
-			p[PIX_B] = (uint8)(((b - p[PIX_B]) * alpha + (p[PIX_B] << 8)) >> 8);
-			p[PIX_G] = (uint8)(((g - p[PIX_G]) * alpha + (p[PIX_G] << 8)) >> 8);
-			p[PIX_R] = (uint8)(((r - p[PIX_R]) * alpha + (p[PIX_R] << 8)) >> 8);
-			p[PIX_A] = (uint8)((alpha + p[PIX_A]) - ((alpha * p[PIX_A] + 0xFF) >> 8));
-		}
-		pRow += m_imageData.stride;
-	}
 }
 
 void CRawGraph::SetFont(CRawBmpFont *font)

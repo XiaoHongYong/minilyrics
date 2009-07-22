@@ -40,11 +40,7 @@ public:
 
 	virtual byte GetBgAlpha()
 	{
-#ifdef _WIN32_DESKTOP
 		return byte(m_pSkin->m_nTranslucencyAlphaDynamic);
-#else
-		return 255;
-#endif
 	}
 
 	virtual void OnCreate();

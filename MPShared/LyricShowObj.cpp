@@ -680,18 +680,15 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 		if (linePos == LP_ABOVE_CUR_LINE)
 		{
 			lct = LCT_HIGH_TO_BG;
-			nAlpha = 255 - GetAlpha(pLyricRow);
+			nAlpha = GetAlpha(pLyricRow);
 			if (nAlpha == 0)
 				return false;
-#ifdef _WIN32_DESKTOP
 			if (m_pSkin->GetEnableTranslucencyLayered() || m_img.IsValid()
 					|| m_tobHilight.obm != OBM_COLOR)
 			{
 				bSetTextAlpha = true;
 				lct = LCT_HIGH;
-				nAlpha = 255 - nAlpha;
 			}
-#endif
 		}
 		else if (linePos == LP_BELOW_CUR_LINE)
 		{
@@ -702,7 +699,6 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			nAlpha = GetAlpha(pLyricRow);
 			if (nAlpha == 0)
 				return false;
-#ifdef _WIN32_DESKTOP
 			if (m_pSkin->GetEnableTranslucencyLayered() || m_img.IsValid()
 					|| m_tobHilight.obm != OBM_COLOR)
 			{
@@ -712,7 +708,6 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				else
 					lct = LCT_LOW;
 			}
-#endif
 		}
 		else
 			lct = LCT_HIGH;
@@ -1209,7 +1204,7 @@ void CLyricShowObj::DarkenLyricsBg(CRawGraph *pGraphics, CRect &rc)
 	nFillBottom = min(rc.bottom, (long)nDarkenBottom);
 	nFillTop = max(rc.top, (long)nDarkenTop);
 	if (nFillBottom > nFillTop)
-		pGraphics->DrawRect(rc.left, nFillTop, rc.Width(), nFillBottom - nFillTop, m_clrDarken);
+		pGraphics->FillRect(rc.left, nFillTop, rc.Width(), nFillBottom - nFillTop, m_clrDarken);
 }
 
 void CLyricShowObj::SetAntialise(BOOL bAntialis)
