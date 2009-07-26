@@ -33,7 +33,7 @@ void CSkinDecorativeContainer::InvalidateUIObject(CUIObject *pObj)
 //
 // Redraw this whole container.
 //
-void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
+void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pObjCallUpdate)
 {
 	ASSERT(lpRect);
 
@@ -45,7 +45,8 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 		CUIObject		*pObj = *it;
 		CRect			rc;
 
-		if (pObj->IsVisible() && rc.IntersectRect(&pObj->m_rcObj, lpRect))
+		if (pObj != pObjCallUpdate && pObj->IsVisible()
+			&& rc.IntersectRect(&pObj->m_rcObj, lpRect))
 		{
 //			if (pObj->IsUseSkinBg() && m_bPaintBg)
 //			{
@@ -69,5 +70,8 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect)
 		pGraphMem->RecoverClipBox();
 	}
 
-	m_pSkin->UpdateMemGraphicsToScreen(lpRect);
+	if (m_pContainer)
+		m_pContainer->UpdateMemGraphicsToScreen(lpRect, this);
+	else
+		m_pSkin->UpdateMemGraphicsToScreen(lpRect);
 }

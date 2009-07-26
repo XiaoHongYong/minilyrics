@@ -23,7 +23,7 @@ CLyricShowMultiRowObj::CLyricShowMultiRowObj()
 
 	m_nCurRowOld = -1;
 
-	m_nAlphaOld = 0;
+	m_nPrevLineAlphaOld = m_nNextLineAlphaOld = 0;
 
 	m_nDarkenTopArea = float(1.5);
 	m_nDarkenBottomArea = float(1.5);
@@ -66,9 +66,9 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	if (prcUpdate)
 		*prcUpdate = m_rcObj;
 
-	int				y;
-	PML_ROW			pLyricRow;
-	int				nRowHeight;// center row height
+	int				y, yCurRow;
+	PML_ROW			pRowCur;
+	int				nRowHeight;
 	int				nDeltaTime;
 	int				nRowCur;
 	PML_ROW			pRow;
@@ -83,101 +83,94 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		return;
 	}
 
-	pLyricRow = m_lyrLines[nRowCur];
+	pRowCur = m_lyrLines[nRowCur];
 
 	// 行高
 	nRowHeight = GetLineHeight();
 
 	// 此行歌词的时间
-	nDeltaTime = pLyricRow->nEndTime - pLyricRow->nBegTime;
+	nDeltaTime = pRowCur->nEndTime - pRowCur->nBegTime;
 
 	// 计算此行歌词显示的座标 Y
 	if (nDeltaTime == 0 && m_nCurRowOld == nRowCur)
-		y = m_yDrawingOld;
+		yCurRow = m_yDrawingOld;
 	else
 	{
-		y = GetLineVertAlignPos();
-		if (m_pMLData->GetPlayElapsedTime() < pLyricRow->nBegTime || nDeltaTime == 0)
+		yCurRow = GetLineVertAlignPos();
+		if (m_pMLData->GetPlayElapsedTime() < pRowCur->nBegTime || nDeltaTime == 0)
 			;
-		else if (m_pMLData->GetPlayElapsedTime() > pLyricRow->nEndTime)
-			y += -nRowHeight;
+		else if (m_pMLData->GetPlayElapsedTime() > pRowCur->nEndTime)
+			yCurRow += -nRowHeight;
 		else
-			y += -nRowHeight + 
-				nRowHeight * (pLyricRow->nEndTime - m_pMLData->GetPlayElapsedTime()) / nDeltaTime;
+			yCurRow += -nRowHeight + 
+				nRowHeight * (pRowCur->nEndTime - m_pMLData->GetPlayElapsedTime()) / nDeltaTime;
 	}
 
-	if (prcUpdate && y == m_yDrawingOld && nRowCur == m_nCurRowOld)
+	CRect	rcClip;
+
+	rcClip.SetRect(m_rcObj.left + m_nXMargin, 
+		m_rcObj.top + m_nYMargin,
+		m_rcObj.right - m_nXMargin,
+		m_rcObj.bottom - m_nYMargin);
+
+	if (prcUpdate && yCurRow == m_yDrawingOld && nRowCur == m_nCurRowOld)
 	{
-		if (m_LyricsDisplayOpt == DO_FADEOUT_BG)
-		{
-			if (FastestDrawFadeInOut(pGraphics, prcUpdate, y, pLyricRow))
-				return;
-		}
-		else if (m_LyricsDisplayOpt == DO_FADEOUT_LOWCOLOR)
-		{
-			if (FastestDrawFadeInOut(pGraphics, prcUpdate, y, pLyricRow))
-				return;
-		}
+		*prcUpdate = rcClip;
+
+		if (m_LyricsDisplayOpt == DO_FADEOUT_BG || m_LyricsDisplayOpt == DO_FADEOUT_LOWCOLOR)
+			FastestDraw_GetUpdateRectOfFadeInOut(pGraphics, prcUpdate, yCurRow, nRowCur);
 		else
-		{
-			// DO_NORMAL
-			if (FastestDrawNormal(pGraphics, prcUpdate, y, pLyricRow))
-				return;
-		}
+			FastestDraw_GetUpdateRectOfNormal(pGraphics, prcUpdate, yCurRow);
+
+		rcClip = *prcUpdate;
+
+		if (rcClip.IsRectEmpty())
+			return;
+
+		// clear background
+		UpdateLyricDrawBufferBackground(pGraphics, rcClip);
+
+		pGraphics->SetClipBoundBox(rcClip);
 	}
 	else
 	{
 		// 保存这次的值
 		m_nCurRowOld = nRowCur;
-		m_yDrawingOld = y;
+		m_yDrawingOld = yCurRow;
+
+		// clear background
+		UpdateLyricDrawBufferBackground(pGraphics, m_rcObj);
+
+		pGraphics->SetClipBoundBox(rcClip);
 	}
 
-	// clear background
-	UpdateLyricDrawBufferBackground(pGraphics, m_rcObj);
-
-	CRect	rcClip;
-
-	rcClip.SetRect(m_rcObj.left + m_nXMargin, 
-						m_rcObj.top + m_nYMargin,
-						m_rcObj.right - m_nXMargin,
-						m_rcObj.bottom - m_nYMargin);
-	//
-	// 设置剪裁区域为该UIObject的大小
-	pGraphics->SetClipBoundBox(rcClip);
+	int nRow, nRowEnd;
 
 	// draw center row, the row lyric is current
-	// select Center font
-	int nRow, nRowEnd;
-	int h;
+	DrawCurrentRow(pGraphics, pRowCur, AUTO_CAL_X, yCurRow);
 
-	DrawCurrentRow(pGraphics, pLyricRow, AUTO_CAL_X, y);
-
-	// 显示当前播放行前的歌词
+	// Draw lyrics lines above current line
 	nRow = nRowCur - 1;
 	nRowEnd = 0;
-	for (h = y - nRowHeight; h + nRowHeight > m_rcObj.top && nRow >= nRowEnd; h -= nRowHeight)
+	for (y = yCurRow - nRowHeight; y + nRowHeight > rcClip.top && nRow >= nRowEnd; y -= nRowHeight)
 	{
 		pRow = m_lyrLines[nRow];
 
-		if (!DrawRow(pGraphics, pRow, AUTO_CAL_X, h, LP_ABOVE_CUR_LINE))
+		if (!DrawRow(pGraphics, pRow, AUTO_CAL_X, y, LP_ABOVE_CUR_LINE))
 			break;
-
 		nRow--;
 	}
 
-	// 显示此行之后的歌词行
+	// Draw lyrics lines below current line
 	nRow = nRowCur + 1;
 	nRowEnd = m_lyrLines.size();
-	for (h = y + nRowHeight; h < m_rcObj.bottom && nRow < nRowEnd; h += nRowHeight)
+	for (y = yCurRow + nRowHeight; y < rcClip.bottom && nRow < nRowEnd; y += nRowHeight)
 	{
 		pRow = m_lyrLines[nRow];
-		if (!DrawRow(pGraphics, pRow, AUTO_CAL_X, h, LP_BELOW_CUR_LINE))
+		if (!DrawRow(pGraphics, pRow, AUTO_CAL_X, y, LP_BELOW_CUR_LINE))
 			break;
 		nRow++;
 	}
-
-	// 恢复为原来的剪裁区域大小
-	pGraphics->RecoverClipBox();
 
 #ifdef _WIN32_DESKTOP
 	// if (/*m_pSkin->GetEnableTranslucencyLayered() && */m_LyricsDisplayOpt != DO_FADEOUT_BG)
@@ -202,96 +195,82 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 			pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), false);
 	}
 #endif
+
+	// 恢复为原来的剪裁区域大小
+	pGraphics->RecoverClipBox();
 }
 
-bool CLyricShowMultiRowObj::FastestDrawFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow)
+void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine)
 {
-	int			nPlayPos = m_pMLData->GetPlayElapsedTime();
-	int			nRowHeight = GetLineHeight() + GfxRaw::OUTLINED_BORDER;
+	int			nRowHeight = GetLineHeight();
 	int			nAlpha;
 
-	if (nPlayPos >= pLyricRow->nBegTime - 1000 || nPlayPos <= pLyricRow->nBegTime + 1000)
-		nAlpha = GetAlpha(pLyricRow);
-	else if (nPlayPos >= pLyricRow->nEndTime - 1000 || nPlayPos <= pLyricRow->nEndTime + 1000)
-		nAlpha = GetAlpha(pLyricRow);
-	else
-		nAlpha = 255;
+	ASSERT(nCurLine >= 0 && nCurLine < m_lyrLines.size());
 
-	if (m_nAlphaOld == nAlpha)
+	prcUpdate->SetRect(m_rcObj.left + m_nXMargin, 0, m_rcObj.right - m_nXMargin, 0);
+	prcUpdate->top = prcUpdate->bottom = y;
+
+	// Get current line update rect
+	if (IsKaraoke())
 	{
-		if (IsKaraoke())
-		{
-// 		}
-// 	}
-// 	if (nPlayPos - pLyricRow->nBegTime >= 1000 && pLyricRow->nEndTime - nPlayPos >= 1000)
-// 	{
-// 		if (m_bKaraoke)
-// 		{
-			prcUpdate->SetRect(m_rcObj.left + m_nXMargin, 
-								m_rcObj.top + m_nYMargin,
-								m_rcObj.right - m_nXMargin,
-								m_rcObj.bottom - m_nYMargin);
-
-			if (prcUpdate->top < y)
-				prcUpdate->top = y;
-			if (prcUpdate->bottom > y + nRowHeight)
-				prcUpdate->bottom = y + nRowHeight;
-
-			// clear background
-			UpdateLyricDrawBufferBackground(pGraphics, *prcUpdate);
-
-			pGraphics->SetClipBoundBox(*prcUpdate);
-
-			DrawCurrentRow(pGraphics, pLyricRow, AUTO_CAL_X, y);
-
-			pGraphics->RecoverClipBox();
-		}
-		else
-			prcUpdate->SetRect(0, 0, 0, 0);
-		return true;
+		prcUpdate->top = y;
+		prcUpdate->bottom = y + nRowHeight;
 	}
 
-	return false;
+	// Get previous line update rect
+	if (nCurLine > 0)
+	{
+		PML_ROW		pPrevLine;
+		pPrevLine = m_lyrLines[nCurLine - 1];
+
+		nAlpha = GetAlpha(pPrevLine);
+		if (m_nPrevLineAlphaOld != nAlpha)
+		{
+			m_nPrevLineAlphaOld = nAlpha;
+
+			// Redraw the whole line.
+			prcUpdate->top = y - nRowHeight;
+		}
+	}
+
+	// Get next line update rect
+	if (nCurLine < (int)m_lyrLines.size() - 1)
+	{
+		PML_ROW		pNextLine;
+		pNextLine = m_lyrLines[nCurLine + 1];
+
+		nAlpha = GetAlpha(pNextLine);
+		if (m_nNextLineAlphaOld != nAlpha)
+		{
+			m_nNextLineAlphaOld = nAlpha;
+
+			// Redraw the whole line.
+			if (prcUpdate->top == prcUpdate->bottom)
+				prcUpdate->top = y + nRowHeight;
+			prcUpdate->bottom = y + nRowHeight * 2;
+		}
+	}
+
+	if (prcUpdate->top < m_rcObj.top + m_nYMargin)
+		prcUpdate->top = m_rcObj.top + m_nYMargin;
+	if (prcUpdate->bottom < m_rcObj.bottom - m_nYMargin)
+		prcUpdate->bottom = m_rcObj.bottom - m_nYMargin;
 }
 
-bool CLyricShowMultiRowObj::FastestDrawNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow)
+void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y)
 {
-	int			nRowHeight = GetLineHeight() + GfxRaw::OUTLINED_BORDER;
-
-	//
-	// DO_NORMAL
-	//
 	if (!IsKaraoke())
 	{
 		prcUpdate->SetRect(0, 0, 0, 0);
-		return true;
+		return;
 	}
 
 	prcUpdate->top = y;
-	prcUpdate->bottom = y + nRowHeight;
+	prcUpdate->bottom = y + GetLineHeight();
 	if (prcUpdate->top < m_rcObj.top + m_nYMargin)
 		prcUpdate->top = m_rcObj.top + m_nYMargin;
 	if (prcUpdate->bottom > m_rcObj.bottom - m_nYMargin)
 		prcUpdate->bottom = m_rcObj.bottom - m_nYMargin;
-
-	prcUpdate->left = m_rcObj.left + m_nXMargin;
-	prcUpdate->right = m_rcObj.right - m_nXMargin;
-
-	// clear background
-	UpdateLyricDrawBufferBackground(pGraphics, *prcUpdate);
-
-	//
-	// 保存旧的剪裁区域, 并且设置剪裁区域为该UIObject的大小
-	pGraphics->SetClipBoundBox(*prcUpdate);
-	// pGraphics->SetFont(m_hfntLyric);
-
-	// 显示当前歌词行
-	DrawRowKaraoke(pGraphics, pLyricRow, AUTO_CAL_X, y);
-
-	// 恢复为原来的剪裁区域大小
-	pGraphics->RecoverClipBox();
-
-	return true;
 }
 
 bool CLyricShowMultiRowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)

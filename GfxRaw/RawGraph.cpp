@@ -142,8 +142,20 @@ void CRawGraph::RecoverClipBox()
 	if (!m_vClipOrg.empty())
 	{
 		m_rcClip = m_vClipOrg.back();
+
+		if (MapX(m_rcClip.left) < 0)
+			m_rcClip.left = RevertMapX(0);
+		if (MapY(m_rcClip.top) < 0)
+			m_rcClip.top = RevertMapY(0);
+		if (MapX(m_rcClip.right) > Width())
+			m_rcClip.right = RevertMapX(Width());
+		if (MapY(m_rcClip.bottom) > Height())
+			m_rcClip.bottom = RevertMapY(Height());
+
 		m_vClipOrg.pop_back();
 	}
+	else
+		ASSERT(0 && "m_vClipOrg.empty()");
 }
 
 bool CRawGraph::TextOut(int x, int y, LPCTSTR szText, int nLen)

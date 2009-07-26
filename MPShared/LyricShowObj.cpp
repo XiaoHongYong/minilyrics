@@ -1746,7 +1746,7 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 	FastDraw(pmemGraphics, &rcUpdate);
 
 	if (!rcUpdate.IsRectEmpty())
-		m_pContainer->UpdateMemGraphicsToScreen(&rcUpdate);
+		m_pContainer->UpdateMemGraphicsToScreen(&rcUpdate, this);
 /*
 #ifdef _WIN32_DESKTOP
 	if (m_pSkin->GetEnableTranslucencyLayered())

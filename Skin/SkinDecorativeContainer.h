@@ -23,7 +23,7 @@ public:
 
 	virtual void InvalidateUIObject(CUIObject *pObj);
 
-	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect);
+	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pObjCallUpdate);
 
 };
 

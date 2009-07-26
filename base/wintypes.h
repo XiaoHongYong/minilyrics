@@ -291,7 +291,7 @@ public:
 	BOOL IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2);
 
 	// set this rectangle to bounding union of two others
-	// BOOL UnionRect(LPCRECT lpRect1, LPCRECT lpRect2);
+	BOOL UnionRect(LPCRECT lpRect1, LPCRECT lpRect2);
 
 	// set this rectangle to minimum of two others
 //	BOOL SubtractRect(LPCRECT lpRectSrc1, LPCRECT lpRectSrc2);
@@ -493,8 +493,32 @@ inline BOOL CRect::IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2)
 		bottom = min(lpRect1->bottom, lpRect2->bottom);
 		return TRUE;
 	}
-//inline BOOL CRect::UnionRect(LPCRECT lpRect1, LPCRECT lpRect2)
-//	{ return ::UnionRect(this, lpRect1, lpRect2); }
+inline BOOL CRect::UnionRect(LPCRECT lpRect1, LPCRECT lpRect2)
+	{
+		if (::IsRectEmpty(lpRect1))
+		{
+			if (::IsRectEmpty(lpRect2))
+			{
+				SetRectEmpty();
+				return FALSE;
+			}
+			else
+				*this = *lpRect2;
+		}
+		else
+		{
+			if (::IsRectEmpty(lpRect2))
+				*this = *lpRect1;
+			else
+			{
+				left   = min(lpRect1->left, lpRect2->left);
+				right  = max(lpRect1->right, lpRect2->right);
+				top    = min(lpRect1->top, lpRect2->top);
+				bottom = max(lpRect1->bottom, lpRect2->bottom);
+			}
+		}
+		return TRUE;
+	}
 inline void CRect::operator=(const RECT& srcRect)
 	{ CopyRect(&srcRect); }
 inline BOOL CRect::operator==(const RECT& rect) const

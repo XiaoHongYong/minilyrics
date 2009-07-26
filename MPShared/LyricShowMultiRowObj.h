@@ -29,8 +29,8 @@ public:
 	void Invalidate();
 
 protected:
-	bool FastestDrawFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow);
-	bool FastestDrawNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y, PML_ROW pLyricRow);
+	void FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine);
+	void FastestDraw_GetUpdateRectOfNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y);
 
 	bool OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue);
 
@@ -41,7 +41,7 @@ public:
 	// 可以优化显示速度
 	int             m_yDrawingOld;		// 上一次歌词显示的位置
 	int				m_nCurRowOld;		// 上一次显示的当前行歌词
-	int				m_nAlphaOld;		// Old alpha value
+	int				m_nPrevLineAlphaOld, m_nNextLineAlphaOld;		// Old alpha value
 
 	bool			m_bOnlyDisplayCurLineLyr;
 
