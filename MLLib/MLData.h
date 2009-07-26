@@ -194,6 +194,7 @@ enum LRC_SOURCE_TYPE
 	LST_ID3V2_SYLT		= 0x1 << 3,
 	LST_ID3V2_USLT		= 0x1 << 4,
 	LST_LYRICS3V2		= 0x1 << 5,
+	LST_ID3V2_LYRICS	= 0x1 << 6,
 };
 
 LRC_SOURCE_TYPE GetLrcSourceType(LPCTSTR szLrcSource);
@@ -294,7 +295,7 @@ public:
 	int SaveToTextFile(LPCTSTR szFile, bool bSaveErrorInfo = false);
 // 	int SaveLyricsInSongOfID3v2USLT(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
 // 	int SaveLyricsInSongOfID3v2SYLT(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
-	int SaveLyricsInSongOfID3v2(FILE_ENCODING fileEncoding, bool bUslt, bool bSylt, CHAR_ENCODING nEncodingID);
+	int SaveLyricsInSongOfID3v2(FILE_ENCODING fileEncoding, bool bUslt, bool bSylt, bool bUserDefinedLyr, CHAR_ENCODING nEncodingID);
 	int SaveLyricsInSongOfLyrics3v2(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
 
 	BOOL ToString(tstring &str, MLFileType lrcFormat = FT_LYRICS_LRC, BOOL bIncTags = FALSE);

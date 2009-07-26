@@ -664,7 +664,7 @@ void CDlgSearchLyrics::AppendItemInResultsList(LrcSearchResult &Item, bool bInet
 	if (!bInetFile)
 	{
 		// local file...
-		if (lrcSrcType == LST_ID3V2_SYLT || lrcSrcType == LST_LYRICS3V2)
+		if (lrcSrcType == LST_ID3V2_SYLT || lrcSrcType == LST_ID3V2_LYRICS || lrcSrcType == LST_LYRICS3V2)
 			nImg = IMG_L_LRC;
 		else if (lrcSrcType == LST_ID3V2_USLT)
 			nImg = IMG_L_TXT;

@@ -166,6 +166,7 @@ enum ID3v2_2_GENERAL_ID
 	ID3V2_2_TITLE		= MakeUintFrameID3('T', 'T', '2'),		// TT2 : Title
 	ID3V2_2_TRACK		= MakeUintFrameID3('T', 'R', 'K'),		// TRK : Track
 	ID3V2_2_YEAR		= MakeUintFrameID3('T', 'R', 'D'),		// TRD : Year
+	ID3V2_2_USER_TEXT	= MakeUintFrameID3('T', 'X', 'X'),		// TXX : User defined text information frame
 	ID3V2_2_COMMENT		= MakeUintFrameID3('C', 'O', 'M'),		// COM : Comment
 	ID3V2_2_GENRE		= MakeUintFrameID3('T', 'C', 'O'),		// TCO : Genre
 	ID3V2_2_PICTURE		= MakeUintFrameID3('P', 'I', 'C'),		// PIC : pic
@@ -194,6 +195,7 @@ enum ID3v2_3_GENERAL_ID
 	ID3V2_3_TITLE		= MakeUintFrameID4('T', 'I', 'T', '2'),		// TIT2 : Title
 	ID3V2_3_TRACK		= MakeUintFrameID4('T', 'R', 'C', 'K'),		// TRCK : Track
 	ID3V2_3_YEAR		= MakeUintFrameID4('T', 'D', 'R', 'C'),		// TDRC : Year
+	ID3V2_3_USER_TEXT	= MakeUintFrameID4('T', 'X', 'X', 'X'),		// TXXX : User defined text information frame
 	ID3V2_3_COMMENT		= MakeUintFrameID4('C', 'O', 'M', 'M'),		// COMM : Comment
 	ID3V2_3_GENRE		= MakeUintFrameID4('T', 'C', 'O', 'N'),		// TCON : Genre
 	ID3V2_3_PICTURE		= MakeUintFrameID4('A', 'P', 'I', 'C'),		// APIC : pic
@@ -277,6 +279,24 @@ public:
 	void SetValue(LPCTSTR szValue);
 	void SetValueAndOptimizeEncoding(LPCTSTR szValue);
 	LPCTSTR GetValue();
+
+};
+
+class ID3v2TextUserDefined
+{
+public:
+	ID3v2TextUserDefined()
+	{
+		m_EncodingType = IET_ANSI;
+	}
+	ID3v2EncType	m_EncodingType;
+	stringex		m_strValueAnsi, m_strDescAnsi;
+	wstringex		m_strValueUCS2, m_strDescUCS2;
+
+	void SetValue(LPCTSTR szDescription, LPCTSTR szValue);
+	void SetValueAndOptimizeEncoding(LPCTSTR szDescription, LPCTSTR szValue);
+	LPCTSTR GetValue();
+	LPCTSTR GetDescription();
 
 };
 
@@ -404,6 +424,8 @@ struct ID3v2UnsynchLyrics
 	wstringex			m_strUcs2ContentDesc, m_strUcs2Lyrics;
 };
 
+#define SZ_ID3V2_LYR_USER_DEFINED		_T("LYRICS")
+
 class ID3v2LyricsInfo
 {
 public:
@@ -437,6 +459,9 @@ public:
 	typedef list<ID3v2UnsynchLyrics *>	LIST_UNSYNLYRICS;
 	LIST_SYNCHLYRICS		m_synchLyrics;
 	LIST_UNSYNLYRICS		m_unsynchLyrics;
+
+	ID3v2TextUserDefined	m_lyricsUserDefined;
+
 };
 
 class ID3v2Pictures
@@ -537,6 +562,9 @@ public:
 	virtual int SetTags(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szAlbum, LPCTSTR szComment, 
 		LPCTSTR szTrack, LPCTSTR szYear, LPCTSTR szGenre, LPCTSTR szComposer,
 		LPCTSTR szEncoded, LPCTSTR szUrl, LPCTSTR szCopyRight, LPCTSTR szOrigArtist, LPCTSTR szPublisher, LPCTSTR szBpm);
+
+	int UpdateUserDefinedTextFrameByDesc(ID3v2TextUserDefined &text);
+	int RemoveUserDefinedTextFrameByDesc(LPCTSTR szDesc);
 
 	int UpdateGeneralCommentFrame(LPCTSTR szText);
 	int RemoveGeneralCommentFrame();

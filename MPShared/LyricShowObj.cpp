@@ -298,14 +298,6 @@ bool ProfileGetLyricsFont(LPCTSTR szSectName, int &nHeight, int &nWeight, BYTE &
 #endif
 
 	return FontPropertyValueFromStr(strFont.c_str(), nHeight, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
-
-/*	nHeight = g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("FontHeight"), 13);
-	nWeight = g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("FontWeight"), FW_BOLD);
-	byItalic = g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("FontItalic"), FALSE);
-	if (szFaceNameLatin9)
-		g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("FontNameLatin"), _T("Verdana"), szFaceNameLatin9, nFaceNameSize);
-	if (szFaceNameOthers)
-		g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("FontNameOthers"), _T("Tahoma"), szFaceNameOthers, nFaceNameSize);*/
 }
 
 void ProfileWriteLyricsFont(EventType etColorTheme, LPCTSTR szSectName, int nHeight, int nWeight, BYTE byItalic, LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers)
@@ -338,56 +330,6 @@ void ProfileWriteLyricsFont(EventType etColorTheme, LPCTSTR szSectName, int nHei
 	FontPropertyValueToStr(strFont, nHeight, nWeight, byItalic, szFaceNameLatin9, szFaceNameOthers);
 
 	CMPlayerSettings::SetSettings(etColorTheme, szSectName, _T("Font"), strFont.c_str());
-}
-
-void ProfileWriteTOBToOld(bool bOutlineLyrText, 
-	 const CLyricShowObj::TextOverlayBlending &tobHilight, 
-	 const CLyricShowObj::TextOverlayBlending &tobLowlight)
-{
-	tstring					str;
-	static const LPCTSTR	SZ_SECT_TOB_OLD = _T("TOBOld");
-
-	for (int i = CLyricShowObj::TCI_START; i < CLyricShowObj::TCI_COUNT; i++)
-	{
-		ColorToStr((MLColor)tobHilight.clr[i], str);
-		g_Profile.WriteProfileString(SZ_SECT_TOB_OLD, _LyrShowTOBFieldNameHilight[i], str.c_str());
-		ColorToStr((MLColor)tobLowlight.clr[i], str);
-		g_Profile.WriteProfileString(SZ_SECT_TOB_OLD, _LyrShowTOBFieldNameLowlight[i], str.c_str());
-	}
-
-	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("OutlineLyrText"), bOutlineLyrText);
-
-	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("HilightOBM"), tobHilight.obm);
-	g_Profile.WriteProfileInt(SZ_SECT_TOB_OLD, _T("LowlightOBM"), tobLowlight.obm);
-}
-
-void ProfileWriteTOBCustomizedToCurrent()
-{
-	static const LPCTSTR	SZ_SECT_TOB_OLD = _T("TOBOld");
-	tstring		strValue;
-
-	for (int i = CLyricShowObj::TCI_START; i < CLyricShowObj::TCI_COUNT; i++)
-	{
-		strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _LyrShowTOBFieldNameHilight[i], _T(""));
-		if (!strValue.empty())
-			g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _LyrShowTOBFieldNameHilight[i], strValue.c_str());
-
-		strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _LyrShowTOBFieldNameLowlight[i], _T(""));
-		if (!strValue.empty())
-			g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _LyrShowTOBFieldNameLowlight[i], strValue.c_str());
-	}
-
-	strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("OutlineLyrText"), _T(""));
-	if (!strValue.empty())
-		g_Profile.WriteProfileInt(SZ_SECT_LYR_DISPLAY, _T("OutlineLyrText"), _ttoi(strValue.c_str()));
-
-	strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("HilightOBM"), _T(""));
-	if (!strValue.empty())
-		g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _T("HilightOBM"), strValue.c_str());
-
-	strValue = g_Profile.GetProfileString(SZ_SECT_TOB_OLD, _T("LowlightOBM"), _T(""));
-	if (!strValue.empty())
-		g_Profile.WriteProfileString(SZ_SECT_LYR_DISPLAY, _T("LowlightOBM"), strValue.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1479,41 +1421,12 @@ void CLyricShowObj::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 
 void CLyricShowObj::OnLyricsChanged()
 {
-/*
-#ifndef _UNICODE
-	tstring		str;
-
-	//
-	// 检查歌词的字符编码是否为ANSI？
-	//
-
-	g_LyricData.ToString(str, FT_LYRICS_TXT, TRUE);
-
-	//
-	// 非unicode模式需要根据歌词字符编码创建字体
-	//
-	if (_tcscmp(m_strEncoding.c_str(), g_LyricData.GetEncoding()) != 0)
-	{
-		m_strEncoding = g_LyricData.GetEncoding();
-
-		// 编码改变了，重新创建字体
-		ENCODING_CODEPAGE		&encdoing = GetCharEncodingByName(g_LyricData.GetEncoding());
-
-// 		if (m_font.GetCharset() != encdoing.nFontCharset)
-// 		{
-// 			m_font.Destroy();
-// 			m_font.Create(m_font.GetName(), font.GetNameOthers(), m_font.GetHeight(), m_font.GetWeight(), m_font.GetItalic(), m_font.GetCharset());
-// 		}
-	}
-#endif*/
-
-
 	if (m_bUseAlbumArtAsBg || m_bUseBgImg)
 	{
 		LoadNextBgImage();
 	}
 
-	// auto resize || !wraplines
+	// auto resize || !wrap lines
 	if ((m_bEnableAutoResize && 
 		(m_bAlwaysAutoWidth || g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)))
 		|| !ShouldWrapLines())
@@ -1610,23 +1523,17 @@ void CLyricShowObj::AutoWidthSkinAccordLyrics(BOOL bSingleRow/* = FALSE*/)
 	int			nWidthMax = 200;
 	int			nWPrev = 0;
 
-	if (!m_pMLData)
-		return;
-
-	if (!m_bEnableAutoResize)
-		return;
-
-	if (m_pSkin->m_wndResizer.IsFixedWidth())
-		return;
-
-	if (!m_bAlwaysAutoWidth && !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
+	if (!m_pMLData || !m_bEnableAutoResize || m_pSkin->m_wndResizer.IsFixedWidth())
 		return;
 
 	if (m_lyrLines.empty())
 		return;
 
+	if (!m_bAlwaysAutoWidth && !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
+		return;
+
 #ifdef _WIN32
-	// auto size feauture is disabled when the skin is embedded into other windw
+	// auto size feature is disabled when the skin is embedded into other window
 	if (::GetParent(m_pSkin->GetHandle()) != NULL)
 		return;
 #endif
@@ -1747,91 +1654,6 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 
 	if (!rcUpdate.IsRectEmpty())
 		m_pContainer->UpdateMemGraphicsToScreen(&rcUpdate, this);
-/*
-#ifdef _WIN32_DESKTOP
-	if (m_pSkin->GetEnableTranslucencyLayered())
-	{
-		pmemGraphics->SetFont(&m_font);
-
-		FastDraw(pmemGraphics, &rcUpdate);
-
-		if (!rcUpdate.IsRectEmpty())
-			m_pSkin->UpdateLayeredWindowUsingMemGraph(pmemGraphics);
-	}
-	else
-#endif
-	{
-		IMLGraphicsBase		*pGraphics;
-
-		pGraphics = m_pSkin->GetGraphics();
-
-		pmemGraphics->SetFont(&m_font);
-
-		FastDraw(pmemGraphics, &rcUpdate);
-
-		pGraphics->DrawGraphics(pmemGraphics, 
-			rcUpdate.left, rcUpdate.top, 
-			rcUpdate.Width(), rcUpdate.Height(),
-			rcUpdate.left, rcUpdate.top);
-
-		m_pSkin->ReleaseGraphics(pGraphics);
-	}*/
-}
-
-//
-// 取得此行歌词的Fade In color
-//
-void CLyricShowObj::GetFadeInColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
-{
-	int				nTime;
-
-	if (!pRow)
-		return;
-
-	nTime = pRow->nBegTime - m_pMLData->GetPlayElapsedTime();
-	if (nTime <= 1000 && nTime >= -1000)
-	{
-		int		nPart1;
-		if (nTime <= 0)
-			nTime = 1000 + nTime;
-		else
-			nTime = 1000 - nTime;
-
-		nPart1 = 1000 - nTime;
-		color.set((clrOut.r() * nPart1 + clrIn.r() * nTime) / 1000,
-			(clrOut.g() * nPart1 + clrIn.g() * nTime) / 1000,
-			(clrOut.b() * nPart1 + clrIn.b() * nTime) / 1000);
-	}
-	else
-		color = clrOut;
-}
-
-//
-// 取得此行歌词的Fade out color
-//
-void CLyricShowObj::GetFadeOutColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
-{
-	int				nTime;
-
-	if (!pRow)
-		return;
-
-	nTime = m_pMLData->GetPlayElapsedTime() - pRow->nEndTime;
-	if (nTime <= 1000 && nTime >= -1000)
-	{
-		int		nPart1;
-		if (nTime <= 0)
-			nTime = 1000 + nTime;
-		else
-			nTime = 1000 - nTime;
-
-		nPart1 = 1000 - nTime;
-		color.set((clrOut.r() * nPart1 + clrIn.r() * nTime) / 1000,
-			(clrOut.g() * nPart1 + clrIn.g() * nTime) / 1000,
-			(clrOut.b() * nPart1 + clrIn.b() * nTime) / 1000);
-	}
-	else
-		color = clrOut;
 }
 
 int CLyricShowObj::GetAlpha(PML_ROW pRow)
@@ -1857,56 +1679,6 @@ int CLyricShowObj::GetAlpha(PML_ROW pRow)
 			return (1000 - nTime) * 255 / 1000;
 		else
 			return 255;
-	}
-}
-
-//
-// 取得此行歌词的Fade out color
-//
-void CLyricShowObj::GetFadeOutColorEx(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
-{
-	int				nTime;
-
-	if (!pRow)
-		return;
-
-	if (pRow->nBegTime > m_pMLData->GetPlayElapsedTime())
-	{
-		nTime = pRow->nBegTime - m_pMLData->GetPlayElapsedTime();
-		if (nTime <= 1000 && nTime >= -1000)
-		{
-			int		nPart1;
-			if (nTime <= 0)
-				nTime = 1000 + nTime;
-			else
-				nTime = 1000 - nTime;
-
-			nPart1 = 1000 - nTime;
-			color.set((clrOut.r() * nPart1 + clrIn.r() * nTime) / 1000,
-				(clrOut.g() * nPart1 + clrIn.g() * nTime) / 1000,
-				(clrOut.b() * nPart1 + clrIn.b() * nTime) / 1000);
-		}
-		else
-			color = clrOut;
-	}
-	else
-	{
-		nTime = m_pMLData->GetPlayElapsedTime() - pRow->nEndTime;
-		if (nTime <= 1000 && nTime >= -1000)
-		{
-			int		nPart1;
-			if (nTime <= 0)
-				nTime = 1000 + nTime;
-			else
-				nTime = 1000 - nTime;
-
-			nPart1 = 1000 - nTime;
-			color.set((clrOut.r() * nPart1 + clrIn.r() * nTime) / 1000,
-				(clrOut.g() * nPart1 + clrIn.g() * nTime) / 1000,
-				(clrOut.b() * nPart1 + clrIn.b() * nTime) / 1000);
-		}
-		else
-			color = clrOut;
 	}
 }
 

@@ -158,6 +158,15 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 			vLyrics.push_back(result);
 		}
 	}
+
+	if ((lyricsInfo.m_lyricsUserDefined.m_strValueAnsi.size() || lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.size())
+		&& (lyricsInfo.m_lyricsUserDefined.m_strDescAnsi.size() || lyricsInfo.m_lyricsUserDefined.m_strDescUCS2.size()))
+	{
+		result.strUrl = SZ_SONG_ID3V2_LYRICS;
+		result.strSaveFileName = TOLOCAL(SZ_SONG_ID3V2_LYRICS_DESC);
+		result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC - 1;
+		vLyrics.push_back(result);
+	}
 }
 
 

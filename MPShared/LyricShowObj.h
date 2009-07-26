@@ -155,12 +155,6 @@ public:
 
 	virtual void SetAntialise(BOOL bAntialis);
 
-	void GetFadeInColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
-
-	void GetFadeOutColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
-
-	void GetFadeOutColorEx(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
-
 	int GetAlpha(PML_ROW pRow);
 
 	void SetLyricData(CMLData *pMLData);

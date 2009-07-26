@@ -249,7 +249,7 @@ int CID3v2FrameParserSynLyrics::ToFrameData(ID3v2SynchLyrics &synchLyrics, CID3v
 	buff += (char)synchLyrics.m_encodingType;
 
 	if (strlen(synchLyrics.m_szLanguage) != 3)
-		strcpy(synchLyrics.m_szLanguage, "XXX");
+		strcpy_safe(synchLyrics.m_szLanguage, CountOf(synchLyrics.m_szLanguage), "XXX");
 	buff += synchLyrics.m_szLanguage;
 
 	buff += (char)synchLyrics.m_encodingType;
@@ -478,6 +478,8 @@ bool CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(CID3v2Frame *pFrame, cons
 	return false;
 }
 
+//////////////////////////////////////////////////////////////////////////
+
 void ID3v2Text::SetValue(LPCTSTR szValue)
 {
 #ifdef _UNICODE
@@ -514,15 +516,69 @@ LPCTSTR ID3v2Text::GetValue()
 }
 
 //////////////////////////////////////////////////////////////////////////
+
+void ID3v2TextUserDefined::SetValue(LPCTSTR szDescription, LPCTSTR szValue)
+{
+#ifdef _UNICODE
+	if (m_EncodingType == IET_ANSI)
+	{
+		ConvertStr(szDescription, -1, m_strDescAnsi);
+		ConvertStr(szValue, -1, m_strValueAnsi);
+	}
+	else
+	{
+		m_strValueUCS2 = szDescription;
+		m_strDescUCS2 = szValue;
+	}
+#else
+	if (m_EncodingType == IET_ANSI)
+	{
+		m_strDescAnsi = szDescription;
+		m_strValueAnsi = szValue;
+	}
+	else
+	{
+		ConvertStr(szDescription, -1, m_strDescUCS2);
+		ConvertStr(szValue, -1, m_strValueUCS2);
+	}
+#endif
+}
+
+void ID3v2TextUserDefined::SetValueAndOptimizeEncoding(LPCTSTR szDescription, LPCTSTR szValue)
+{
+	if (m_EncodingType == IET_ANSI && !IsAnsiStr(szDescription) && !IsAnsiStr(szValue))
+		m_EncodingType = IET_UCS2LE_BOM;
+	SetValue(szDescription, szValue);
+}
+
+LPCTSTR ID3v2TextUserDefined::GetDescription()
+{
+#ifdef _UNICODE
+	if (m_EncodingType == IET_ANSI)
+		ConvertStr(m_strDescAnsi.c_str(), m_strDescAnsi.size(), m_strDescUCS2);
+	return m_strDescUCS2.c_str();
+#else
+	if (m_EncodingType != IET_ANSI)
+		ConvertStr(m_strDescUCS2.c_str(), m_strDescUCS2.size(), m_strDescAnsi);
+	return m_strDescAnsi.c_str();
+#endif
+}
+
+LPCTSTR ID3v2TextUserDefined::GetValue()
+{
+#ifdef _UNICODE
+	if (m_EncodingType == IET_ANSI)
+		ConvertStr(m_strValueAnsi.c_str(), m_strValueAnsi.size(), m_strValueUCS2);
+	return m_strValueUCS2.c_str();
+#else
+	if (m_EncodingType != IET_ANSI)
+		ConvertStr(m_strValueUCS2.c_str(), m_strValueUCS2.size(), m_strValueAnsi);
+	return m_strValueAnsi.c_str();
+#endif
+}
+
+//////////////////////////////////////////////////////////////////////////
 // CID3v2FrameParserText
-
-CID3v2FrameParserText::CID3v2FrameParserText()
-{
-}
-
-CID3v2FrameParserText::~CID3v2FrameParserText()
-{
-}
 
 int CID3v2FrameParserText::Parse(const CID3v2Frame *pFrame, ID3v2Text &text)
 {
@@ -538,10 +594,7 @@ int CID3v2FrameParserText::Parse(const CID3v2Frame *pFrame, ID3v2Text &text)
 	if (text.m_EncodingType == IET_ANSI)
 	{
 		// ISO-8859-1
-		text.m_strAnsi.reserve(len);
-		strncpy(text.m_strAnsi.data(), (const char *)(data + 1), len - 1);
-		text.m_strAnsi.data()[len - 1] = '\0';
-		text.m_strAnsi.resize(strlen(text.m_strAnsi.c_str()));
+		CopyAnsiStr(text.m_strAnsi, (const char *)(data + 1), len - 1);
 	}
 	else
 	{
@@ -570,6 +623,74 @@ int CID3v2FrameParserText::ToFrameData(ID3v2Text &text, CID3v2Frame *pFrame)
 	{
 		// unicode
 		AppendUcs2Str(buff, text.m_EncodingType, text.m_strUnicode.c_str(), text.m_strUnicode.size());
+	}
+
+	return ERR_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// CID3v2FrameParserTextUserDefined
+
+int CID3v2FrameParserTextUserDefined::Parse(const CID3v2Frame *pFrame, ID3v2TextUserDefined &text)
+{
+	const ID3v2FrameHdr &frameHdr = pFrame->m_framehdr;
+	const char *data = pFrame->m_frameData.c_str();
+	int		len = pFrame->m_frameData.size();
+	int		nBytesCopied;
+
+	if (len < 3)
+		return ERR_INVALID_ID3V2_FRAME;
+
+	text.m_EncodingType = (ID3v2EncType)data[0];
+
+	if (text.m_EncodingType == IET_ANSI)
+	{
+		// ISO-8859-1
+		data++;
+		len--;
+
+		nBytesCopied = CopyAnsiStr(text.m_strDescAnsi, data, len);
+		data += nBytesCopied;
+		len -= nBytesCopied;
+
+		if (len <= 0)
+			return ERR_INVALID_ID3V2_FRAME;
+
+		nBytesCopied = CopyAnsiStr(text.m_strValueAnsi, data, len);
+	}
+	else
+	{
+		// Unicode
+		data++;
+		len--;
+
+		nBytesCopied = CopyUcs2StrByBom(text.m_strDescUCS2, text.m_EncodingType, (const byte *)data, len);
+		data += nBytesCopied;
+		len -= nBytesCopied;
+
+		CopyUcs2StrByBom(text.m_strValueUCS2, text.m_EncodingType, (const byte *)data, len);
+	}
+
+	return ERR_OK;
+}
+
+int CID3v2FrameParserTextUserDefined::ToFrameData(ID3v2TextUserDefined &text, CID3v2Frame *pFrame)
+{
+	CCharBuffer &buff = pFrame->m_frameData;
+
+	buff.clear();
+	buff += (char)text.m_EncodingType;
+	if (text.m_EncodingType == IET_ANSI)
+	{
+		// ANSI
+		AppendAnsiStr(buff, text.m_strDescAnsi);
+		AppendAnsiStr(buff, text.m_strValueAnsi);
+	}
+	else
+	{
+		// UNICODE
+		AppendUcs2Str(buff, text.m_EncodingType, text.m_strDescUCS2.c_str(), text.m_strDescUCS2.size());
+		AppendUcs2Str(buff, text.m_EncodingType, text.m_strValueUCS2.c_str(), text.m_strValueUCS2.size());
 	}
 
 	return ERR_OK;

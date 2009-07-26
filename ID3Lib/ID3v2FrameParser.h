@@ -70,15 +70,26 @@ protected:
 class CID3v2FrameParserText : public CID3v2FrameParserBase
 {
 public:
-	CID3v2FrameParserText();
-	virtual ~CID3v2FrameParserText();
+	CID3v2FrameParserText() { }
+	virtual ~CID3v2FrameParserText() { }
 
 	virtual int Parse(const CID3v2Frame *pFrame, ID3v2Text &text);
 	virtual int ToFrameData(ID3v2Text &text, CID3v2Frame *pFrame);
 
-protected:
+};
 
-//	ID3v2SynchLyrics		m_Lyrics;
+// <Header for 'User defined text information frame', ID: "TXXX">
+// Text encoding     $xx
+// Description       <text string according to encoding> $00 (00)
+// Value             <text string according to encoding>
+class CID3v2FrameParserTextUserDefined : public CID3v2FrameParserBase
+{
+public:
+	CID3v2FrameParserTextUserDefined() { }
+	virtual ~CID3v2FrameParserTextUserDefined() { }
+
+	virtual int Parse(const CID3v2Frame *pFrame, ID3v2TextUserDefined &text);
+	virtual int ToFrameData(ID3v2TextUserDefined &text, CID3v2Frame *pFrame);
 
 };
 

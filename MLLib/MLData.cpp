@@ -54,15 +54,19 @@ LRC_SOURCE_TYPE GetLrcSourceType(LPCTSTR szLrcSource)
 	LPCTSTR		szTemp;
 	if (_tcsnicmp(szLrcSource, _T("song://"), SONG_HDR_LEN) == 0)
 	{
-		szTemp = _T("lyrics3v2");
+		szTemp = SZ_SONG_LYRICS3V2 + SONG_HDR_LEN;
 		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
 			return LST_LYRICS3V2;
 
-		szTemp = _T("id3v2/sylt/");
+		szTemp = SZ_SONG_ID3V2_LYRICS + SONG_HDR_LEN;
+		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
+			return LST_ID3V2_LYRICS;
+
+		szTemp = SZ_SONG_ID3V2_SYLT + SONG_HDR_LEN;
 		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
 			return LST_ID3V2_SYLT;
 
-		szTemp = _T("id3v2/uslt/");
+		szTemp = SZ_SONG_ID3V2_USLT + SONG_HDR_LEN;
 		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
 			return LST_ID3V2_USLT;
 
@@ -319,7 +323,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 			LyricsRowToText(m_arrLyricsRows[i], str);
 		}
 	}
-	else if (lrcSourceType == LST_ID3V2_SYLT || lrcSourceType == LST_ID3V2_USLT)
+	else if (lrcSourceType == LST_ID3V2_SYLT || lrcSourceType == LST_ID3V2_USLT || lrcSourceType == LST_ID3V2_LYRICS)
 	{
 		CID3v2IF		id3v2;
 
@@ -350,6 +354,37 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 					}
 					else
 						nRet = ERR_NOT_FOUND;
+				}
+				else if (lrcSourceType == LST_ID3V2_LYRICS)
+				{
+					Close();
+
+					if (lyricsInfo.m_lyricsUserDefined.m_strValueAnsi.empty()
+						&& lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.empty())
+					{
+						SetCustomErrorDesc(TOLOCAL(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics.")));
+						nRet = ERR_CUSTOM_ERROR;
+					}
+					else
+					{
+						m_lrcSourceType = LST_ID3V2_LYRICS;
+						m_LyricFileType = FT_LYRICS_LRC;
+
+						if (lyricsInfo.m_lyricsUserDefined.m_EncodingType == IET_ANSI)
+						{
+							nRet = FromString(lyricsInfo.m_lyricsUserDefined.m_strValueAnsi.c_str(),
+								lyricsInfo.m_lyricsUserDefined.m_strValueAnsi.size() + 1,
+								&m_fileEncoding, FT_LYRICS_LRC, TRUE, FALSE,
+								bForceUseEncoding, nForceEncodingID);
+						}
+						else
+						{
+							nRet = FromString(lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.c_str(),
+								(lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.size() + 1) * sizeof(wchar_t),
+								&m_fileEncoding, FT_LYRICS_LRC, TRUE, TRUE,
+								bForceUseEncoding, nForceEncodingID);
+						}
+					}
 				}
 			}
 			id3v2.Close();
@@ -658,11 +693,15 @@ int CMLData::Save()
 	}
 	else if (m_lrcSourceType == LST_ID3V2_SYLT)
 	{
-		return SaveLyricsInSongOfID3v2(m_fileEncoding, false, true, GetEncodingIndex());
+		return SaveLyricsInSongOfID3v2(m_fileEncoding, false, true, false, GetEncodingIndex());
 	}
 	else if (m_lrcSourceType == LST_ID3V2_USLT)
 	{
-		return SaveLyricsInSongOfID3v2(m_fileEncoding, true, false, GetEncodingIndex());
+		return SaveLyricsInSongOfID3v2(m_fileEncoding, true, false, false, GetEncodingIndex());
+	}
+	else if (m_lrcSourceType == LST_ID3V2_LYRICS)
+	{
+		return SaveLyricsInSongOfID3v2(m_fileEncoding, false, false, true, GetEncodingIndex());
 	}
 	else
 	{
@@ -736,47 +775,61 @@ int CMLData::Save()
 // 	return nRet;
 // }
 
-int CMLData::SaveLyricsInSongOfID3v2(FILE_ENCODING fileEncoding, bool bUslt, bool bSylt, CHAR_ENCODING nEncodingID)
+int CMLData::SaveLyricsInSongOfID3v2(FILE_ENCODING fileEncoding, bool bUslt, bool bSylt, bool bUserDefinedLyr, CHAR_ENCODING nEncodingID)
 {
 	CID3v2IF		id3v2;
 	int				nRet;
 
-	if (!bUslt && !bSylt)
+	if (!bUslt && !bSylt && !bUserDefinedLyr)
 		return ERR_OK;
 
 	nRet = id3v2.Open(m_strSongFile.c_str(), true, true);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	if (bUslt)
+	{
+		ID3v2UnsynchLyrics	lyrics;
+		ToID3v2UnsynchLyrics(lyrics, fileEncoding, nEncodingID);
+
+		nRet = id3v2.UpdateUnsynchLyricsFrame(&lyrics);
+		if (nRet != ERR_OK)
+			return nRet;
+	}
+
+	if (bSylt)
+	{
+		ID3v2SynchLyrics	lyrics;
+
+		ToID3v2SynchLyrics(lyrics, fileEncoding, nEncodingID);
+
+		nRet = id3v2.UpdateSynchLyricsFrame(&lyrics);
+		if (nRet != ERR_OK)
+			return nRet;
+	}
+
+	if (bUserDefinedLyr)
+	{
+		tstring		str;
+
+		ToString(str, FT_LYRICS_LRC, TRUE);
+
+		ID3v2TextUserDefined	lyrics;
+
+		lyrics.SetValueAndOptimizeEncoding(SZ_ID3V2_LYR_USER_DEFINED, str.c_str());
+		nRet = id3v2.UpdateUserDefinedTextFrameByDesc(lyrics);
+		if (nRet != ERR_OK)
+			return nRet;
+	}
+
+	nRet = id3v2.Save();
 	if (nRet == ERR_OK)
 	{
-		if (bUslt)
+		if ((bUslt && m_lrcSourceType == LST_ID3V2_USLT
+			&& m_lyrConentType == m_lyrConentTypeOrg) ||
+			(bSylt && m_lrcSourceType == LST_ID3V2_SYLT))
 		{
-			ID3v2UnsynchLyrics	lyrics;
-			ToID3v2UnsynchLyrics(lyrics, fileEncoding, nEncodingID);
-
-			nRet = id3v2.UpdateUnsynchLyricsFrame(&lyrics);
-			if (nRet != ERR_OK)
-				return nRet;
-		}
-
-		if (bSylt)
-		{
-			ID3v2SynchLyrics	lyrics;
-
-			ToID3v2SynchLyrics(lyrics, fileEncoding, nEncodingID);
-
-			nRet = id3v2.UpdateSynchLyricsFrame(&lyrics);
-			if (nRet != ERR_OK)
-				return nRet;
-		}
-
-		nRet = id3v2.Save();
-		if (nRet == ERR_OK)
-		{
-			if ((bUslt && m_lrcSourceType == LST_ID3V2_USLT
-				&& m_lyrConentType == m_lyrConentTypeOrg) ||
-				(bSylt && m_lrcSourceType == LST_ID3V2_SYLT))
-			{
-				ResetModificationFlag();
-			}
+			ResetModificationFlag();
 		}
 	}
 
@@ -1297,7 +1350,7 @@ int CMLData::GetLyricsFileServerMark(TCHAR szMd5[])
 
 		MD5Str(strLyrics.c_str(), strLyrics.size(), szMd5);
 	}
-	else if (lrcSourceType == LST_ID3V2_SYLT || lrcSourceType == LST_ID3V2_USLT)
+	else if (lrcSourceType == LST_ID3V2_SYLT || lrcSourceType == LST_ID3V2_USLT || lrcSourceType == LST_ID3V2_LYRICS)
 	{
 		return ERR_FAILED;
 	}

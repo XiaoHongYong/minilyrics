@@ -825,6 +825,19 @@ int CID3v2IF::GetLyrics(ID3v2LyricsInfo &id3v2Lyrics)
 			else
 				delete psynchLyrics;
 		}
+		else if (pFrame->m_framehdr.nFrameID == ID3V2_2_USER_TEXT
+			|| pFrame->m_framehdr.nFrameID == ID3V2_3_USER_TEXT)
+		{
+			ID3v2TextUserDefined	lyrics;
+			CID3v2FrameParserTextUserDefined parser;
+
+			nRet = parser.Parse(pFrame, lyrics);
+			if (nRet == ERR_OK 
+				&& _tcsicmp(SZ_ID3V2_LYR_USER_DEFINED, lyrics.GetDescription()) == 0)
+			{
+				id3v2Lyrics.m_lyricsUserDefined = lyrics;
+			}
+		}
 	}
 
 	return ERR_OK;
@@ -1238,9 +1251,86 @@ int CID3v2IF::SetTags(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szAlbum, LPCTST
 	return ERR_OK;
 }
 
-int CID3v2IF::UpdateGeneralCommentFrame(LPCTSTR szText)
+int CID3v2IF::UpdateUserDefinedTextFrameByDesc(ID3v2TextUserDefined &text)
 {
 	int					nRet;
+	CID3v2Frame			*pFrame;
+	FrameIterator		it;
+	UINT				nFrameID;
+	CID3v2FrameParserTextUserDefined	parser;
+
+	if (IsID3v2_2())
+		nFrameID = ID3V2_2_USER_TEXT;
+	else
+		nFrameID = ID3V2_3_USER_TEXT;
+
+	for (it = FrameBegin(); it != FrameEnd(); ++it)
+	{
+		pFrame = *it;
+		if (pFrame->m_framehdr.nFrameID == nFrameID)
+		{
+			ID3v2TextUserDefined	temp;
+			nRet = parser.Parse(pFrame, temp);
+			if (nRet == ERR_OK)
+			{
+				if (_tcscmp(text.GetDescription(), temp.GetDescription()) == 0)
+					break;
+			}
+		}
+	}
+
+	if (it == FrameEnd())
+	{
+		// not found, so add it.
+		pFrame = new CID3v2Frame;
+
+		pFrame->m_framehdr.nFrameID = nFrameID;
+		FrameAdd(pFrame);
+	}
+
+	// do update
+	pFrame->m_frameData.clear();
+	return parser.ToFrameData(text, pFrame);
+}
+
+int CID3v2IF::RemoveUserDefinedTextFrameByDesc(LPCTSTR szDesc)
+{
+	int					nRet;
+	CID3v2Frame			*pFrame;
+	FrameIterator		it;
+	UINT				nFrameID;
+	CID3v2FrameParserTextUserDefined	parser;
+
+	if (IsID3v2_2())
+		nFrameID = ID3V2_2_USER_TEXT;
+	else
+		nFrameID = ID3V2_3_USER_TEXT;
+
+	for (it = FrameBegin(); it != FrameEnd(); ++it)
+	{
+		pFrame = *it;
+
+		if (pFrame->m_framehdr.nFrameID == nFrameID)
+		{
+			ID3v2TextUserDefined	temp;
+			nRet = parser.Parse(pFrame, temp);
+			if (nRet == ERR_OK)
+			{
+				if (_tcscmp(szDesc, temp.GetDescription()) == 0)
+				{
+					// find it, and remove it.
+					FrameRemove(it);
+					return ERR_OK;
+				}
+			}
+		}
+	}
+
+	return ERR_NOT_FOUND;
+}
+
+int CID3v2IF::UpdateGeneralCommentFrame(LPCTSTR szText)
+{
 	CID3v2Frame			*pFrame;
 	FrameIterator		it;
 	UINT				nFrameID;
@@ -1252,26 +1342,7 @@ int CID3v2IF::UpdateGeneralCommentFrame(LPCTSTR szText)
 		nFrameID = ID3V2_3_COMMENT;
 
 	pFrame = FindFrame(nFrameID);
-	for (it = FrameBegin(); it != FrameEnd(); ++it)
-	{
-		pFrame = *it;
-
-		if (pFrame->m_framehdr.nFrameID == nFrameID)
-		{
-			nRet = parser.Parse(pFrame);
-			if (nRet == ERR_OK)
-			{
-				if (IsEmptyString(parser.m_szLanguage) && 
-					parser.m_strAnsiShortDesc.empty() &&
-					parser.m_strUcs2ShortDesc.empty())
-				{
-					break;
-				}
-			}
-		}
-	}
-
-	if (it == FrameEnd())
+	if (!pFrame)
 	{
 		// not found, so add it.
 		pFrame = new CID3v2Frame;
@@ -1289,8 +1360,7 @@ int CID3v2IF::UpdateGeneralCommentFrame(LPCTSTR szText)
 
 	// do update
 	pFrame->m_frameData.clear();
-	nRet = parser.ToFrame(pFrame);
-	return nRet;
+	return parser.ToFrame(pFrame);
 }
 
 // what is a general comment frame?
@@ -1491,13 +1561,7 @@ int CID3v2IF::UpdateTextFrame(UINT nFrameID, LPCTSTR szText)
 	CID3v2FrameParserText	parser;
 
 	pFrame = FindFrame(nFrameID);
-	if (pFrame)
-	{
-		nRet = parser.Parse(pFrame, text);
-		if (nRet != ERR_OK)
-			text.m_EncodingType = IET_ANSI;
-	}
-	else
+	if (!pFrame)
 	{
 		// not found, so add it.
 		pFrame = new CID3v2Frame;

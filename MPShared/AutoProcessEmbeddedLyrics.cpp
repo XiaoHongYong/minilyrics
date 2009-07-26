@@ -178,18 +178,19 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 	ASSERT(FileIsExtSame(item.m_strSongFile.c_str(), _T(".mp3")));
 
 	int				nRet;
-	bool			Id3v2Uslt, Id3v2Sylt, bLyrics3v2;
+	bool			Id3v2Uslt, Id3v2Sylt, bLyrics3v2, bId3v2LyricsUserDefined;
 
 	Id3v2Sylt = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_SYLT);
 	Id3v2Uslt = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_USLT);
 	bLyrics3v2 = IsFlagSet(item.m_uEmbeddedLyrType, LST_LYRICS3V2);
+	bId3v2LyricsUserDefined = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_LYRICS);
 
 	SetFileNoReadOnly(item.m_strSongFile.c_str());
 
 	if (item.m_bRemove)
 	{
 		// remove embedded lyrics
-		if (Id3v2Sylt || Id3v2Uslt)
+		if (Id3v2Sylt || Id3v2Uslt || bId3v2LyricsUserDefined)
 		{
 			CID3v2IF		id3v2;
 			int				i;
@@ -211,9 +212,12 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 					return nRet;
 			}
 
+			if (bId3v2LyricsUserDefined)
+				nRet = id3v2.RemoveUserDefinedTextFrameByDesc(SZ_ID3V2_LYR_USER_DEFINED);
+
 			nRet = id3v2.Save();
 			if (nRet != ERR_OK)
-					return nRet;
+				return nRet;
 			id3v2.Close();
 		}
 
@@ -229,7 +233,7 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 	else
 	{
 		// save embedded lyrics
-		if (Id3v2Sylt || Id3v2Uslt)
+		if (Id3v2Sylt || Id3v2Uslt || bId3v2LyricsUserDefined)
 		{
 			// save lyrics as id3v2 sylt and uslt
 			CMLData		lyricsData;
@@ -270,6 +274,7 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 					lyricsData.GetFileEncoding(),
 					Id3v2Uslt,
 					Id3v2Sylt,
+					bId3v2LyricsUserDefined,
 					lyricsData.GetEncodingIndex());
 				if (nRet != ERR_OK)
 					return nRet;
