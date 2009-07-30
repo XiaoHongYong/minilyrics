@@ -45,6 +45,8 @@ public:
 	void MinizeAll(bool bSilently = false);
 	void RestoreAll();
 
+	virtual int GetIDByNameEx(LPCTSTR szId, tstring &strToolTip);
+
 	int OpenSimpliestSkin();
 
 #ifndef _MPLAYER
@@ -75,7 +77,7 @@ protected:
 #endif
 
 protected:
-	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj);
+	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 
 	SXNode *GetMenuOfMenus(SXNode *pNodeMenus, LPCTSTR szMenuName);
 

@@ -6,12 +6,8 @@
 #include "MLCmd.h"
 #include "MPCommonCmdHandler.h"
 #include "MPlayerApp.h"
-#include "LyricShowMultiRowObj.h"
-#include "LyricShowTxtObj.h"
-#include "LyricShowTwoRowObj.h"
-#include "LyricShowHorzScrollObj.h"
-#include "LyricShowSingleRowObj.h"
-#include "LyricShowVobSub.h"
+#include "LyricShowAgentObj.h"
+#include "LyricShowTextEditObj.h"
 #include "CharsetEncoding.h"
 #include "SkinSeekCtrl.h"
 #include "SkinRateCtrl.h"
@@ -170,9 +166,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		{
 			OnCommandRemoveLyricsInMp3();
 		}
-		break;
-	case IDC_UPDATE_LYRICS:
-		g_mpApp.ResearchLyrics();
 		break;
 
 	case IDC_LYR_DISPLAY_OPT:
@@ -367,7 +360,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			verUpdate.CheckNewVersionManual(&g_LyricsDownloader);
 		}
 		break;
-	case IDC_EDIT_LYRICS:
+	case IDC_EXTERNAL_LYR_EDIT:
 		//
 		// 调用外部的编辑器编辑歌词
 		if (g_LyricData.GetLyricsSourceType() != LST_FILE)
@@ -531,7 +524,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	return true;
 }
 
-bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
+bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 {
 	switch (nID)
 	{
@@ -568,7 +561,13 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 		MLHtmlHelper(m_pSkinWnd, _T("help.chm::/how-to-editlyrics.htm"));
 		break;
 	case CMD_HELP:
-		MLHtmlHelper(m_pSkinWnd, _T("help.chm::/getstarted.htm#downlyrics"));
+		{
+			CUIObject	*pObjLyrEdit = m_pSkinWnd->GetUIObjectByClassName(CLyricShowTextEditObj::ClassName());
+			if (pObjLyrEdit && pObjLyrEdit->IsVisible())
+				MLHtmlHelper(m_pSkinWnd, _T("help.chm::/how-to-editlyrics.htm"));
+			else
+				MLHtmlHelper(m_pSkinWnd, _T("help.chm::/getstarted.htm#downlyrics"));
+		}
 		break;
 	case CMD_PAUSE:
 		if (g_Player.GetPlayerState() == PS_PLAYING)
@@ -1010,6 +1009,37 @@ bool CMPCommonCmdHandler::OnCustomCommand(UINT nID)
 			CDlgRateLyrics	dlg;
 			dlg.m_strLink = strUrl;
 			dlg.DoModal(m_pSkinWnd);
+		}
+		break;
+	case CMD_COPY_SONG_FILE_LYR:
+		OnCommand(IDC_COPYTO);
+		break;
+	case CMD_RELOAD_LYR:
+		g_mpApp.ResearchLyrics();
+		break;
+	case CMD_J_PREV_LINE:
+	case CMD_J_NEXT_LINE:
+		{
+			// Jump to next/previous line of lyrics.
+			VLyrLines	vLyrics = g_LyricData.GetRawLyrics();
+
+			int			nCurLine = g_LyricData.GetCurPlayLine(vLyrics);
+			if (nCurLine >= 0 && nCurLine < vLyrics.size())
+			{
+				if (nID == CMD_J_NEXT_LINE)
+				{
+					if (nCurLine == vLyrics.size() - 1)
+						return true;
+					nCurLine++;
+				}
+				else
+				{
+					if (nCurLine > 0)
+						nCurLine--;
+				}
+
+				g_Player.SeekTo(vLyrics[nCurLine]->nBegTime);
+			}
 		}
 		break;
 	default:

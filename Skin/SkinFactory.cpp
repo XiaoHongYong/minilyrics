@@ -452,6 +452,7 @@ int CDynamicCmds::FromXML(SXNode *pNodeDynCmds)
 {
 	m_listDynCmd.clear();
 
+	ASSERT(m_pSkinFactory);
 	ASSERT(_tcsicmp(pNodeDynCmds->strName.c_str(), _SZ_DYNMICCMDS) == 0);
 	for (SXNode::iterator it = pNodeDynCmds->listChildren.begin(); 
 		it != pNodeDynCmds->listChildren.end(); ++it)
@@ -461,7 +462,7 @@ int CDynamicCmds::FromXML(SXNode *pNodeDynCmds)
 		if (_tcsicmp(pNode->strName.c_str(), _T("cmd")) == 0)
 		{
 			DynamicCmd		cmd;
-			cmd.strCmdId = pNode->GetPropertySafe(SZ_PN_ID);
+			cmd.nID = m_pSkinFactory->GetIDByName(pNode->GetPropertySafe(SZ_PN_ID));
 			cmd.strFunction = pNode->GetPropertySafe(_T("func"));
 			cmd.strParam = pNode->GetPropertySafe(_T("param"));
 			m_listDynCmd.push_back(cmd);
@@ -474,6 +475,8 @@ int CDynamicCmds::FromXML(SXNode *pNodeDynCmds)
 
 SXNode *CDynamicCmds::ToXML()
 {
+	ASSERT(m_pSkinFactory);
+
 	SXNode		*pNode;
 	SXNode		*pNodeRoot;
 	
@@ -488,7 +491,7 @@ SXNode *CDynamicCmds::ToXML()
 
 		pNode = new SXNode;
 		pNode->strName = _T("cmd");
-		pNode->AddProperty(SZ_PN_ID, dc.strCmdId.c_str());
+		pNode->AddProperty(SZ_PN_ID, m_pSkinFactory->GetStringOfID(dc.nID).c_str());
 		pNode->AddProperty(_T("func"), dc.strFunction.c_str());
 		pNode->AddProperty(_T("param"), dc.strParam.c_str());
 		pNodeRoot->listChildren.push_back(pNode);
@@ -502,7 +505,7 @@ void CDynamicCmds::Free()
 	m_listDynCmd.clear();
 }
 
-bool CDynamicCmds::GetCmd(LPCTSTR szCmdId, DynamicCmd &cmd)
+bool CDynamicCmds::GetCmd(int nCmdID, DynamicCmd &cmd)
 {
 	LIST_DYNCMD::iterator	it, itEnd;
 
@@ -510,7 +513,7 @@ bool CDynamicCmds::GetCmd(LPCTSTR szCmdId, DynamicCmd &cmd)
 	for (it = m_listDynCmd.begin(); it != itEnd; ++it)
 	{
 		DynamicCmd	&dc = *it;
-		if (_tcsicmp(dc.strCmdId.c_str(), szCmdId) == 0)
+		if (dc.nID == nCmdID)
 		{
 			cmd = dc;
 			return true;
@@ -522,13 +525,15 @@ bool CDynamicCmds::GetCmd(LPCTSTR szCmdId, DynamicCmd &cmd)
 
 void CDynamicCmds::EnumAllCmds(V_Str &vstrCmds)
 {
+	ASSERT(m_pSkinFactory);
+
 	LIST_DYNCMD::iterator	it, itEnd;
 
 	itEnd = m_listDynCmd.end();
 	for (it = m_listDynCmd.begin(); it != itEnd; ++it)
 	{
 		DynamicCmd	&dc = *it;
-		vstrCmds.push_back(dc.strCmdId);
+		vstrCmds.push_back(m_pSkinFactory->GetStringOfID(dc.nID));
 	}	
 }
 
@@ -543,6 +548,7 @@ CSkinFactory::CSkinFactory()
 	m_strSkinFileName = _SZ_SKIN_FILE_NAME;
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
 	m_nNextMenuId = MENU_ID_CUSTOM_BASE;
+	m_dynamicCmds.Init(this);
 }
 
 CSkinFactory::~CSkinFactory()
@@ -563,51 +569,63 @@ void CSkinFactory::SetStringIDMap(STRING_ID_MAP StringIdMap[])
 //		改进方法: 对所有的ID字符串值进行排序,然后使用二分法进行搜索
 int CSkinFactory::GetIDByName(LPCTSTR szId)
 {
-	const STRING_ID_MAP	*pID;
+	tstring		strTemp;
 
-	pID = GetIDByNameEx(szId);
-	if (!pID)
-		return SKIN_UIOBJ_ID_UNDEFINE;
-
-	return pID->nId;
+	return GetIDByNameEx(szId, strTemp);
 }
 
-// COMMENT:
-//		根据控件 ID 字符串来取得对应的控件 ID 数值
-//		改进方法: 对所有的ID字符串值进行排序,然后使用二分法进行搜索
-const STRING_ID_MAP *CSkinFactory::GetIDByNameEx(LPCTSTR szId)
+int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 {
 	assert(szId);
 	assert(m_IdMap);
 	if (!m_IdMap)
-		return NULL;
+		return SKIN_UIOBJ_ID_UNDEFINE;
+
+	strToolTip.resize(0);
 
 	for (int i = 0; m_IdMap[i].szId != 0; i++)
 	{
 		if (_tcsicmp(szId, m_IdMap[i].szId) == 0)
 		{
-			return m_IdMap + i;
+			if (m_IdMap[i].szToolTip)
+				strToolTip = TOLOCAL(m_IdMap[i].szToolTip);
+
+			return m_IdMap[i].nId;
 		}
 	}
-
-	static STRING_ID_MAP	customAllocID;
-	customAllocID.szId = szId;
-	customAllocID.szToolTip = NULL;
 
 	MAP_STRID::iterator it = m_mapCmdStrId.find(szId);
 	if (it != m_mapCmdStrId.end())
 	{
-		customAllocID.nId = (*it).second;
-		return &customAllocID;
+		return (*it).second;
 	}
 
 	m_nCustomCmdIDNext++;
 
-	// DBGLOG2(_T("Allocated custom CmdID value: %s, %d"), szId, m_nCustomCmdIDNext);
 	m_mapCmdStrId[szId] = m_nCustomCmdIDNext;
-	customAllocID.nId = m_nCustomCmdIDNext;
+	return m_nCustomCmdIDNext;
+}
 
-	return &customAllocID;
+tstring CSkinFactory::GetStringOfID(int nID)
+{
+	assert(m_IdMap);
+	if (!m_IdMap)
+		return _T("");
+
+	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	{
+		if (nID == m_IdMap[i].nId)
+			return m_IdMap[i].szId;
+	}
+
+	MAP_STRID::iterator it;
+	for (it = m_mapCmdStrId.begin(); it != m_mapCmdStrId.end(); ++it)
+	{
+		if ((*it).second == nID)
+			return (*it).first;
+	}
+
+	return _T("");
 }
 
 // COMMENT:
@@ -623,6 +641,7 @@ int CSkinFactory::GetMenuIDByCmdName(LPCTSTR szMenuCmdName)
 
 	m_nNextMenuId++;
 	DBGLOG2(_T("Allocated custom menu id value: %s, %d"), szMenuCmdName, m_nNextMenuId);
+	m_mapMenuStrId[szMenuCmdName] = m_nNextMenuId;
 	return m_nNextMenuId;
 }
 
@@ -1214,6 +1233,21 @@ CSkinWnd *CSkinFactory::GetMainWnd()
 		return NULL;
 }
 
+int CSkinFactory::OnDynamicCmd(int nCmdID, CSkinWnd *pSkinWnd)
+{
+	int			nRet = ERR_NOT_FOUND;
+
+	CDynamicCmds::DynamicCmd	cmd;
+	if (m_dynamicCmds.GetCmd(nCmdID, cmd))
+	{
+		nRet = ExeDynamicCmd(cmd, pSkinWnd);
+	}
+	else
+		nRet = ERR_NOT_FOUND;
+
+	return nRet;
+}
+
 int CSkinFactory::OnDynamicCmd(LPCTSTR szDynCmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj)
 {
 	V_Str		vCmds;
@@ -1225,9 +1259,9 @@ int CSkinFactory::OnDynamicCmd(LPCTSTR szDynCmd, CSkinWnd *pSkinWnd, CUIObject *
 	{
 		CDynamicCmds::DynamicCmd	cmd;
 		TrimStr(vCmds[i]);
-		if (m_dynamicCmds.GetCmd(vCmds[i].c_str(), cmd))
+		if (m_dynamicCmds.GetCmd(GetIDByName(vCmds[i].c_str()), cmd))
 		{
-			nRet = ExeDynamicCmd(cmd, pSkinWnd, pUIObj);
+			nRet = ExeDynamicCmd(cmd, pSkinWnd);
 		}
 		else
 			nRet = ERR_NOT_FOUND;
@@ -1236,7 +1270,7 @@ int CSkinFactory::OnDynamicCmd(LPCTSTR szDynCmd, CSkinWnd *pSkinWnd, CUIObject *
 	return nRet;
 }
 
-int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj)
+int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd)
 {
 	if (cmd.strFunction == _T("change_skin_wnd"))
 		return pSkinWnd->OpenSkin(cmd.strParam.c_str());

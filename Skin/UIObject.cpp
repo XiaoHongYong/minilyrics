@@ -449,17 +449,11 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_formHeight.SetFormula(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_ID) == 0)
 	{
-		const STRING_ID_MAP		*pId;
-		m_strID = szValue;
-		pId = m_pSkin->GetSkinFactory()->GetIDByNameEx(szValue);
-		if (pId)
+		if (m_strTooltip.empty())
 		{
-			m_nId = pId->nId;
-			if (m_strTooltip.empty() && pId->szToolTip)
-			{
-				m_strTooltip = pId->szToolTip;
+			m_nId = m_pSkin->GetSkinFactory()->GetIDByNameEx(szValue, m_strTooltip);
+			if (!m_strTooltip.empty())
 				m_bTempTooltip = TRUE;
-			}
 		}
 		else
 			m_nId = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
@@ -631,7 +625,7 @@ void CUIObject::EnumProperties(CUIObjProperties &listProperties)
 {
 	listProperties.AddPropStr(SZ_PN_NAME, m_strName.c_str(), !m_strName.empty());
 
-	listProperties.AddPropID(SZ_PN_ID, m_strID.c_str(), !m_strID.empty() || m_nId != ID_UNDEFINE);
+	listProperties.AddPropID(SZ_PN_ID, m_pSkin->GetSkinFactory()->GetStringOfID(m_nId).c_str(), m_nId != SKIN_UIOBJ_ID_UNDEFINE);
 
 	listProperties.AddPropVar(SZ_PN_LEFT, m_formLeft);
 	listProperties.AddPropVar(SZ_PN_TOP, m_formTop);

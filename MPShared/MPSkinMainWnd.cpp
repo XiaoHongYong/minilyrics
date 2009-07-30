@@ -34,8 +34,6 @@ bool CMPSkinMainWndBase::OnCreate()
 
 	g_eventDispather.RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 
-	m_hotKey.Init(this);
-
 	SetTimer(TIMER_SHOW_REG, 500);
 
 	return true;
@@ -47,7 +45,6 @@ void CMPSkinMainWndBase::OnDestroy()
 
 	if (IsMainAppWnd() && m_strSkinWndName.size())
 		g_Profile.WriteProfileString(_T("DefaultSkinWnd"), GetSkinWndName());
-	m_hotKey.Quit();
 
 #ifndef _WIN32_WCE
 	// Save iconic status

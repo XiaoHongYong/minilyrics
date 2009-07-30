@@ -2063,6 +2063,16 @@ void CSkinWnd::OnLoadWndSizePos()
 		MoveWindow(rcNew);
 }
 
+bool CSkinWnd::OnCustomCommand(int nId)
+{
+	int		nRet = m_pSkinFactory->OnDynamicCmd(nId, this);
+	if (nRet == ERR_NOT_FOUND)
+		return false;
+
+	if (nRet != ERR_OK)
+		ERRLOG2(_T("Execute Dynamic Command failed: %s, %s"), m_pSkinFactory->GetStringOfID(nId).c_str(), (LPCTSTR)Error2Str(nRet));
+	return true;
+}
 
 void CSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 {

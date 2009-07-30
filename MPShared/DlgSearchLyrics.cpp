@@ -255,7 +255,7 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 					bEnable = false;
 			}
 
-			m_menu.EnableItem(IDC_EDIT_LYRICS, bEnable);
+			m_menu.EnableItem(IDC_EXTERNAL_LYR_EDIT, bEnable);
 			m_menu.EnableItem(IDC_DEL_FILE, bEnable);
 			m_menu.EnableItem(IDC_RENAME, bEnable);
 			m_menu.CheckItem(IDC_NO_PROMPT,
@@ -319,7 +319,7 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			}
 		}
 		break;
-	case IDC_EDIT_LYRICS:
+	case IDC_EXTERNAL_LYR_EDIT:
 		//
 		// Edit lyrics
 		//

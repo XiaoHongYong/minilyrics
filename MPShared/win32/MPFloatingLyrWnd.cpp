@@ -56,12 +56,12 @@ void CMPFloatingLyrWnd::OnCommand(UINT uID, UINT nNotifyCode)
 	CMPSkinWnd::OnCommand(uID, nNotifyCode);
 }
 
-void CMPFloatingLyrWnd::OnCustomCommand(int nId)
+bool CMPFloatingLyrWnd::OnCustomCommand(int nId)
 {
 	if (nId == CMD_CLOSE)
 		g_Profile.WriteProfileInt(_T("FloatingLyr"), false);
 
-	CMPSkinWnd::OnCustomCommand(nId);
+	return CMPSkinWnd::OnCustomCommand(nId);
 }
 
 int CMPFloatingLyrWnd::OpenDefaultSkin()

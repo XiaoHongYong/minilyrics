@@ -20,7 +20,6 @@ BOOL CSkinDataObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	if (IsPropertyName(szProperty, SZ_PN_ID))
 	{
-		m_strID = szValue;
 		m_nId = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
 	}
 	else if (IsPropertyName(szProperty, SZ_PN_NAME))
@@ -36,5 +35,5 @@ void CSkinDataObj::EnumProperties(CUIObjProperties &listProperties)
 {
 	listProperties.AddPropStr(SZ_PN_NAME, m_strName.c_str(), !m_strName.empty());
 
-	listProperties.AddPropID(SZ_PN_ID, m_strID.c_str(), !m_strID.empty());
+	listProperties.AddPropID(SZ_PN_ID, m_pSkin->GetSkinFactory()->GetStringOfID(m_nId).c_str(), m_nId != SKIN_UIOBJ_ID_UNDEFINE);
 }

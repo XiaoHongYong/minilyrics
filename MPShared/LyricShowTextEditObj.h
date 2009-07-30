@@ -51,8 +51,6 @@ public:
 
 	virtual bool OnRButtonUp(UINT nFlags, CPoint point);
 
-	virtual void OnKeyDown(UINT nChar, UINT nFlags);
-
 	virtual void OnContexMenu(int xPos, int yPos);
 
 	virtual void OnSaveLyrics();
@@ -74,8 +72,6 @@ public:
 	virtual void OnTimer(int nId);
 
 protected:
-	bool TranslateAccelerator(UINT nChar, UINT nFlags);
-
 	void UpdateTextFontColor();
 
 	virtual void ReloadThemeOfSkin(bool bSavetoProfile);

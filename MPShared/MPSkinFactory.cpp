@@ -449,6 +449,24 @@ void CMPSkinFactory::RestoreAll()
 	}
 }
 
+int CMPSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
+{
+	int		nID = CSkinFactory::GetIDByNameEx(szId, strToolTip);
+	if (nID == SKIN_UIOBJ_ID_UNDEFINE)
+		return nID;
+
+	tstring		strHotkey;
+
+	if (g_mpApp.GetHotkey().GetHotkeyText(nID, strHotkey))
+	{
+		strToolTip += _T(" (");
+		strToolTip += strHotkey;
+		strToolTip += _T(")");
+	}
+
+	return nID;
+}
+
 int CMPSkinFactory::OpenSimpliestSkin()
 {
 	int			nRet;
@@ -592,7 +610,7 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 
 #endif // _WIN32_DESKTOP
 
-int CMPSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj)
+int CMPSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd)
 {
 	if (cmd.strFunction == _T("openclose_framebar_bar"))
 	{
@@ -635,7 +653,7 @@ int CMPSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd 
 			return ERR_FALSE;
 	}
 	else
-		return CSkinFactory::ExeDynamicCmd(cmd, pSkinWnd, pUIObj);
+		return CSkinFactory::ExeDynamicCmd(cmd, pSkinWnd);
 
 	return ERR_OK;
 }

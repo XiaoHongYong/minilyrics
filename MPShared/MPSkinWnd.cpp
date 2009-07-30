@@ -764,24 +764,21 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 		return;
 }
 
-void CMPSkinWnd::OnCustomCommand(int nId)
+bool CMPSkinWnd::OnCustomCommand(int nId)
 {
+	if (CSkinWnd::OnCustomCommand(nId))
+		return true;
+
 	switch (nId)
 	{
 	case CMD_TOPMOST:
 		OnCommand(IDC_SETTOPMOST, 0);
-		return;
+		return true;
 #ifdef _WIN32_DESKTOP
 	case CMD_CLICK_THROUGH:
 		OnCommand(IDC_CLICK_THROUGH, 0);
-		return;
+		return true;
 #endif
-// 	case :
-// 		OnCommand(, 0);
-// 		return;
-// 	case :
-// 		OnCommand(, 0);
-// 		return;
 	}
 
 	LIST_SKINCMDHANDLER::iterator	it, itEnd;
@@ -791,7 +788,7 @@ void CMPSkinWnd::OnCustomCommand(int nId)
 	{
 		ISkinCmdHandler		*pHandler = *it;
 		if (pHandler->OnCustomCommand(nId))
-			return;
+			return true;
 	}
 
 	if (nId == CMD_VOL_SWITCH)
@@ -802,8 +799,11 @@ void CMPSkinWnd::OnCustomCommand(int nId)
 			g_Profile.WriteProfileInt(_T("UseVolumeSeek"), m_bUseVolumeSeek);
 			UpdateVolumeCtrl();
 			// SetInfoText(TOLOCAL(_T("Switch Volume Control")));
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void CMPSkinWnd::OnUIObjNotify(IUIObjNotify *pNotify)
@@ -821,6 +821,13 @@ void CMPSkinWnd::OnUIObjNotify(IUIObjNotify *pNotify)
 
 void CMPSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 {
+	CMPSkinMainWnd		*pMainWnd = g_mpApp.GetMainWnd();
+	if (pMainWnd)
+	{
+		if (g_mpApp.GetHotkey().OnKeyDown(this, nChar, nFlags))
+			return;
+	}
+
 	CSkinWnd::OnKeyDown(nChar, nFlags);
 }
 
@@ -1483,28 +1490,3 @@ LPCTSTR CMPSkinWnd::GetCfgSectName()
 	else
 		return SZ_SECT_UI;
 }
-
-#ifdef _WIN32
-
-LRESULT CMPSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
-{
-	switch (message)
-	{
-	case WM_KEYDOWN:
-		{
-			MSG		Msg;
-			Msg.lParam = lParam;
-			Msg.wParam = wParam;
-			Msg.message = message;
-			Msg.hwnd = m_hWnd;
-			Msg.time = 0;
-			if (g_mpApp.TranslateAccelerator(&Msg))
-				return 0;
-		}
-		break;
-	}
-
-	return CSkinWnd::WndProc(message, wParam, lParam);
-}
-
-#endif

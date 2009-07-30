@@ -39,7 +39,7 @@ public:
 
 	void OnCommand(UINT uID, UINT nNotifyCode);
 
-	void OnCustomCommand(int nId);
+	bool OnCustomCommand(int nId);
 
 	void OnUIObjNotify(IUIObjNotify *pNotify);
 
@@ -88,10 +88,6 @@ public:
 	CBaseWnd *GetParentOrSelf();
 
 	LPCTSTR GetCfgSectName();
-
-#ifdef _WIN32
-	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
-#endif
 
 protected:
 	typedef list<ISkinCmdHandler *>	LIST_SKINCMDHANDLER;

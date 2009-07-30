@@ -85,7 +85,6 @@ public:
 };
 
 class CSkinWnd :
-	public CCommander,
 	public CBaseWnd,
 	public ISkinWndDragHost,
 	public IUICheckStatus
@@ -202,6 +201,8 @@ public:
 
 	virtual BOOL MoveWindow(int X, int Y, int nWidth, int nHeight, BOOL bRepaint = TRUE);
 	virtual BOOL MoveWindow(RECT &rc, BOOL bRepaint = TRUE);
+
+	virtual bool OnCustomCommand(int nId);
 
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify) { }
 

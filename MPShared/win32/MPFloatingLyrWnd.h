@@ -21,7 +21,7 @@ public:
 
 	virtual void OnCommand(UINT uID, UINT nNotifyCode);
 
-	virtual void OnCustomCommand(int nId);
+	virtual bool OnCustomCommand(int nId);
 
 protected:
 	virtual int OpenDefaultSkin();

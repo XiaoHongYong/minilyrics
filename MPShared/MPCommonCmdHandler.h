@@ -19,7 +19,7 @@ public:
 
 	// if the command id is processed, return true.
 	virtual bool OnCommand(UINT nID);
-	virtual bool OnCustomCommand(UINT nID);
+	virtual bool OnCustomCommand(int nID);
 	virtual bool OnUIObjNotify(IUIObjNotify *pNotify);
 
 	virtual bool GetChecked(UINT nID, bool &bChecked);

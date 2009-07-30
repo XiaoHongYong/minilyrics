@@ -179,7 +179,7 @@ LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_HOTKEY:
 		// OnHotKey(int nId, UINT fuModifiers, UINT uVirtKey)
-		m_hotKey.OnHotKey((int)wParam, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam));
+		g_mpApp.GetHotkey().OnHotKey((int)wParam, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam));
 		return 0;
 #ifndef _MPLAYER
 	case WM_SYSCOMMAND:

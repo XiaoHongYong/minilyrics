@@ -277,7 +277,6 @@ public:
 	int			m_nAutoUniID;
 
 	int			m_nId;
-	tstring		m_strID;
 	tstring		m_strName;
 
 	int			m_nMsgWant;		// message mask is used to specify what messages ui objects want to process

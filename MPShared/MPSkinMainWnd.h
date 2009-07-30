@@ -11,21 +11,11 @@
 
 #include "MPSkinWnd.h"
 
-#ifdef _WIN32
-#include "win32/MPHotkey.h"
-#endif
-
-#ifdef _LINUX_GTK2
-#include "gtk2/MPHotkey.h"
-#endif
-
 class CMPSkinMainWndBase : public CMPSkinWnd
 {
 public:
 	CMPSkinMainWndBase();
 	virtual ~CMPSkinMainWndBase();
-
-	CMPHotkey &GetHotkey() { return m_hotKey; }
 
 	virtual bool OnCreate();
 	virtual void OnDestroy();
@@ -36,7 +26,6 @@ public:
 	void OnTimer(UINT nIDEvent);
 
 protected:
-	CMPHotkey		m_hotKey;
 
 };
 

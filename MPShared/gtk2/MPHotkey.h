@@ -18,15 +18,17 @@ struct MPHotKeySection
 
 extern MPHotKeySection	g_vHotkeySections[];
 
+int MenuIDToCmdID(int nMenuID);
+
 class CMPHotkey  
 {
 public:
 	struct CmdAccKey
 	{
 		int						cmd;
+		bool					bGlobal;
 		uint16					button;
 		uint16					fsModifiers;
-		// ATOM					idHotKey;
 		uint16					idHotKey;
 	};
 	typedef vector<CmdAccKey>		V_ACCKEY;
@@ -36,20 +38,28 @@ public:
 	CMPHotkey();
 	virtual ~CMPHotkey();
 
-	void Init(CBaseWnd *pWnd);
+	void Init();
+
+	void SetEventWnd(CBaseWnd *pWnd);
 
 	void Quit();
 
-	void Enable(bool bEnable);
+	void EnableGlobalHotkey(bool bEnable);
 
 	void RestoreDefaults();
 
 	void OnHotKey(int nId, UINT fuModifiers, UINT uVirtKey);
 
-	void Add(int cmd, int nKey, int fuModifiers);
-	bool Set(int nIndex, int cmd, int nKey, int fuModifiers);
+	// If this key was processed, return true.
+	bool OnKeyDown(CMPSkinWnd *pWnd, UINT nChar, UINT nFlags);
+
+	void Add(int cmd, bool bGlobal, int nKey, int fuModifiers);
+	bool Set(int nIndex, int cmd, bool bGlobal, int nKey, int fuModifiers);
 	bool Remove(int nIndex);
 	CmdAccKey *Get(int nIndex);
+	int GetByKey(int nKey, int nModifiers);
+
+	bool GetHotkeyText(int cmd, tstring &strKey);
 
 	iterator begin() { return m_vAccKey.begin(); }
 	iterator end() { return m_vAccKey.end(); }

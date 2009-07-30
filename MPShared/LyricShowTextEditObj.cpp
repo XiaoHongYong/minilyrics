@@ -667,14 +667,6 @@ bool CLyricShowTextEditObj::OnRButtonUp(UINT nFlags, CPoint point)
 	return true;
 }
 
-void CLyricShowTextEditObj::OnKeyDown(UINT nChar, UINT nFlags)
-{
-	if (TranslateAccelerator(nChar, nFlags))
-		return;
-
-	_BaseClass::OnKeyDown(nChar, nFlags);
-}
-
 void CLyricShowTextEditObj::OnContexMenu(int xPos, int yPos)
 {
 	CMLMenu	menu;
@@ -693,96 +685,6 @@ void CLyricShowTextEditObj::OnContexMenu(int xPos, int yPos)
 	menu.EnableItem(IDC_EDIT_REDO, bEnable);
 
 	menu.TrackPopupMenu(xPos, yPos, m_pSkin);
-}
-
-
-bool CLyricShowTextEditObj::TranslateAccelerator(UINT nChar, UINT nFlags)
-{
-	bool ctrl = IsKeyPressed(VK_CONTROL);
-	bool shift = IsKeyPressed(VK_SHIFT);
-
-	if (!ctrl && !shift)
-	{
-		switch (nChar)
-		{
-		case VK_F1:
-			m_pSkin->OnCustomCommand(CMD_EDIT_HELP);
-			break;
-		case VK_F4:
-			m_pSkin->OnCustomCommand(CMD_BACKWARD);
-			break;
-		case VK_F9:
-			m_pSkin->OnCustomCommand(CMD_JUMP);
-			break;
-		case VK_F11:
-			m_pSkin->OnCustomCommand(CMD_FORWARD_REMAIN_LINES);
-			break;
-		case VK_F12:
-			m_pSkin->OnCustomCommand(CMD_BACKWARD_REMAIN_LINES);
-			break;
-		case VK_F7:
-			m_pSkin->OnCustomCommand(CMD_INSERTTAG_DOWN);
-			break;
-		case VK_F8:
-			m_pSkin->OnCustomCommand(CMD_EDIT_TAG);
-			break;
-		default:
-			return false;
-		}
-		return true;
-	}
-
-	if (ctrl)
-	{
-		switch (nChar)
-		{
-//		case VK_F3:
-//			{
-//				m_pSkin->OnCustomCommand(CMD_STOP);
-//				bProcessed = TRUE;
-//			}
-//			break;
-		case VK_F4:
-			m_pSkin->OnCustomCommand(CMD_FORWARD);
-			break;
-		case VK_F7:
-			m_pSkin->OnCustomCommand(CMD_INSERTTAG);
-			break;
-		case 'N':
-			m_pSkin->OnCustomCommand(CMD_NEW_LRC);
-			break;
-		case 'O':
-			m_pSkin->OnCustomCommand(CMD_OPEN_LRC);
-			break;
-		case 'S':
-			m_pSkin->OnCustomCommand(CMD_SAVE_LRC);
-			break;
-		case VK_NEXT:
-			// Ç°½ø2Ãë
-			m_pSkin->OnCustomCommand(CMD_FORWARD);
-			break;
-		case VK_PRIOR:
-			// ºóÍË2Ãë
-			m_pSkin->OnCustomCommand(CMD_BACKWARD);
-			break;
-		case 'P':
-			g_Player.PlayPause();
-			break;
-		case VK_ADD:
-		case 187: // +
-			m_pSkin->OnCustomCommand(CMD_FORWARD_CUR_LINE);
-			break;
-		case VK_SUBTRACT:
-		case 189: // -
-			m_pSkin->OnCustomCommand(CMD_BACKWARD_CUR_LINE);
-			break;
-		default:
-			return false;
-		}
-		return true;
-	}
-
-	return false;
 }
 
 void CLyricShowTextEditObj::OnPlayTimeChangedUpdate()

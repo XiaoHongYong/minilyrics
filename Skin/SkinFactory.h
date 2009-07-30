@@ -7,6 +7,7 @@
 
 class CSkinWnd;
 class CMLMenu;
+class CSkinFactory;
 
 #include "SkinResMgr.h"
 #include "SkinWndDrag.h"
@@ -104,27 +105,30 @@ class CDynamicCmds
 public:
 	struct DynamicCmd
 	{
-		tstring		strCmdId;
+		int			nID;
 		tstring		strFunction;
 		tstring		strParam;
 	};
 	typedef list<DynamicCmd>		LIST_DYNCMD;
 
-	CDynamicCmds() { }
-	~CDynamicCmds() { Free(); }
+	CDynamicCmds() { m_pSkinFactory = NULL; }
+	virtual ~CDynamicCmds() { Free(); }
+
+	void Init(CSkinFactory *pSkinFactory) { m_pSkinFactory = pSkinFactory; }
 
 	int FromXML(SXNode *pNodeDynCmds);
 	SXNode *ToXML();
 
 	void Free();
 
-	bool GetCmd(LPCTSTR szCmdId, DynamicCmd &cmd);
+	bool GetCmd(int nCmdID, DynamicCmd &cmd);
 
 	void EnumAllCmds(V_Str &vstrCmds);
 
 	LIST_DYNCMD &GetDataList() { return m_listDynCmd; }
 
 protected:
+	CSkinFactory	*m_pSkinFactory;
 	LIST_DYNCMD		m_listDynCmd;
 
 };
@@ -137,8 +141,10 @@ public:
 
 	void SetStringIDMap(STRING_ID_MAP StringIdMap[]);
 
-	int GetIDByName(LPCTSTR szId);
-	const STRING_ID_MAP *GetIDByNameEx(LPCTSTR szId);
+	virtual int GetIDByName(LPCTSTR szId);
+	virtual int GetIDByNameEx(LPCTSTR szId, tstring &strToolTip);
+
+	tstring GetStringOfID(int nID);
 
 	int GetMenuIDByCmdName(LPCTSTR szMenuCmdName);
 
@@ -197,6 +203,7 @@ public:
 	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu) { *ppMenu = NULL; return false; };
 
 	virtual int OnDynamicCmd(LPCTSTR szDynCmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj);
+	virtual int OnDynamicCmd(int nCmdID, CSkinWnd *pSkinWnd);
 
 	void EnumAllDynamicCmds(V_Str &vstrCmds) { m_dynamicCmds.EnumAllCmds(vstrCmds); }
 
@@ -213,7 +220,7 @@ public:
 protected:
 	virtual int OpenSkinFile(LPCTSTR szSkinFile);
 
-	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj);
+	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 
 protected:
 	tstring						m_strSkinRootDir;

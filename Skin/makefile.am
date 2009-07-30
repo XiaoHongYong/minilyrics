@@ -1,6 +1,6 @@
 noinst_LIBRARIES = libskin.a
 
-libskin_a_SOURCES = Commander.cpp                SkinFadeArea.cpp             SkinVScrollBar.cpp\
+libskin_a_SOURCES =              SkinFadeArea.cpp             SkinVScrollBar.cpp\
 	Formula.cpp                  SkinFontProperty.cpp         SkinWnd.cpp\
 	SFImage.cpp                  SkinImage.cpp                SkinWndDrag.cpp\
 	SkinButton.cpp               SkinMenuBar.cpp              SkinWndResizeObj.cpp\

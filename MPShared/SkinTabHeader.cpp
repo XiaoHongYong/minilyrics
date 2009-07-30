@@ -66,17 +66,11 @@ void CSkinTabHeader::Button::FromXML(CSkinTabHeader *pTabHeader, SXNode *pNode)
 			strDynCmd = szValue;
 		else if (IsPropertyName(szProperty, SZ_PN_ID))
 		{
-			const STRING_ID_MAP		*pId;
-			strID = szValue;
-			pId = pTabHeader->m_pSkin->GetSkinFactory()->GetIDByNameEx(szValue);
-			if (pId)
+			if (strTooltip.empty())
 			{
-				nID = pId->nId;
-				if (strTooltip.empty() && pId->szToolTip)
-				{
-					strTooltip = pId->szToolTip;
-					bTempToolTip = true;
-				}
+				nID = pTabHeader->m_pSkin->GetSkinFactory()->GetIDByNameEx(szValue, strTooltip);
+				if (!strTooltip.empty())
+					bTempToolTip = TRUE;
 			}
 			else
 				nID = pTabHeader->m_pSkin->GetSkinFactory()->GetIDByName(szValue);
@@ -102,12 +96,12 @@ void CSkinTabHeader::Button::FromXML(CSkinTabHeader *pTabHeader, SXNode *pNode)
 }
 
 
-void CSkinTabHeader::Button::ToXML(CSkinTabHeader *pToolbar, CXMLWriter &xml)
+void CSkinTabHeader::Button::ToXML(CSkinTabHeader *pTabHeader, CXMLWriter &xml)
 {
 	xml.WriteStartElement(_T("button"));
 
-	if (!strID.empty())
-		xml.WriteAttribute(SZ_PN_ID, strID.c_str());
+	if (nID != SKIN_UIOBJ_ID_UNDEFINE)
+		xml.WriteAttribute(SZ_PN_ID, pTabHeader->m_pSkin->GetSkinFactory()->GetStringOfID(nID).c_str());
 
 	xml.WriteAttribute(_T("width"), nWidth);
 	if (!strDynCmd.empty())

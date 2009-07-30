@@ -35,10 +35,10 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_CLR_PREV_HUE"), CMD_CLR_PREV_HUE, _T("Previous Color") },
 	{ _T("ID_CLR_NEXT_HUE"), CMD_CLR_NEXT_HUE, _T("Next Color") },
 
-	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, _T("Synchronize the current line(Ctrl+F7)") },
+	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, _T("Synchronize the current line") },
 	{ _T("ID_DEL_TAG"), CMD_DEL_TAG, _T("Remove Timestamp of the current line") },
-	{ _T("ID_INSERTTAG_DOWN"), CMD_INSERTTAG_DOWN, _T("Synchronize the current line and move down one line(F7)") },
-	{ _T("ID_EDIT_HELP"), CMD_EDIT_HELP, _T("Editor help(F1)") },
+	{ _T("ID_INSERTTAG_DOWN"), CMD_INSERTTAG_DOWN, _T("Synchronize the current line and move down one line") },
+	{ _T("ID_EDIT_HELP"), CMD_EDIT_HELP, _T("Editor help") },
 	{ _T("ID_JUMP"), CMD_JUMP, _T("Jump to current line") },
 	{ _T("ID_FORWARD_REMAIN_LINES"), CMD_FORWARD_REMAIN_LINES, _T("Forward the remaining lyrics 0.2s") },
 	{ _T("ID_BACKWARD_REMAIN_LINES"), CMD_BACKWARD_REMAIN_LINES, _T("Backward the remaining lyrics 0.2s") },
@@ -47,6 +47,8 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_AUTO_FILL_LYR_INFO"), CMD_AUTO_FILL_LYR_INFO, _T("Auto fill artist, album and title info") },
 	{ _T("ID_EDIT_TAG"), CMD_EDIT_TAG, _T("Lyrics Information") },
 	{ _T("ID_MENU_LYR_EDIT"), CMD_MENU_LYR_EDIT, _T("More...") },
+	{ _T("ID_LYR_EDITOR"), CMD_LYR_EDITOR, _T("Lyrics Editor...") },
+	{ _T("ID_EXTERNAL_LYR_EDIT"), CMD_EXTERNAL_LYR_EDIT, _T("Edit with external lyrics editor...") },
 
 	{ _T("ID_EDIT_UNDO"), CMD_EDIT_UNDO, _T("Undo (Ctrl+Z)") },
 	{ _T("ID_EDIT_REDO"), CMD_EDIT_REDO, _T("Redo (Ctrl+Y)") },
@@ -62,6 +64,8 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_OPEN_LRC"), CMD_OPEN_LRC, _T("Open lyrics") },
 	{ _T("ID_SAVE_LRC"), CMD_SAVE_LRC, _T("Save lyrics") },
 	{ _T("ID_SAVE_LRC_AS"), CMD_SAVE_LRC_AS, _T("Save lyrics as") },
+	{ _T("ID_ADVANCED_SAVE_LYR"), CMD_ADVANCED_SAVE_LYR, _T("Advanced save lyrics options...") },
+	{ _T("ID_UPLOAD_LYR"), CMD_UPLOAD_LYR, _T("Upload Lyrics...") },
 
 	{ _T("ID_SEARCH_LYRICS"), CMD_SEARCH_LYRICS, _T("Search Lyrics") },
 	{ _T("ID_BACKWARD_LYRICS"), CMD_BACKWARD_LYRICS, _T("Lyrics Backward 0.5 Sec(Up)") },
@@ -126,6 +130,9 @@ STRING_ID_MAP g_StringIdMap[] =
 
 	{ _T("CMD_TOGGLE_MP"), CMD_TOGGLE_MP, _T("Bring to front/Hide $Product$") },
 	{ _T("CMD_PREFERENCES"), CMD_PREFERENCES, _T("Preferences") },
+	{ _T("CMD_COPY_SONG_FILE_LYR"), CMD_COPY_SONG_FILE_LYR, _T("Copy song and lyrics to ...") },
+	{ _T("CMD_RELOAD_LYR"), CMD_RELOAD_LYR, _T("Reload lyrics") },
+
 	{ _T("CMD_FLOATING_LYRICS"), CMD_FLOATING_LYRICS, _T("Floating Lyrics") },
 	{ NULL, 0, NULL },
 };

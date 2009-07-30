@@ -38,7 +38,7 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 	_tcscpy_safe(lgfont.lfFaceName, CountOf(lgfont.lfFaceName), szFontFaceName);
 
 	memset(&choosefont, 0, sizeof(choosefont));
-	choosefont.Flags = CF_INITTOLOGFONTSTRUCT | CF_TTONLY | CF_SCREENFONTS | CF_NOVERTFONTS;// | CF_EFFECTS;
+	choosefont.Flags = CF_INITTOLOGFONTSTRUCT | CF_SCALABLEONLY | CF_SCREENFONTS | CF_NOVERTFONTS;// | CF_EFFECTS;
 	choosefont.lpLogFont = &lgfont;
 	choosefont.hwndOwner = pWndParent->GetHandle();
 	choosefont.lStructSize = sizeof(choosefont);
