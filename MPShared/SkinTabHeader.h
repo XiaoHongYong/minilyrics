@@ -28,7 +28,6 @@ public:
 		tstring		strText;
 		tstring		strTooltip;
 		bool		bTempToolTip;
-		tstring		strDynCmd;
 		tstring		strIDAssociatedObj;
 
 		int			nWidth;

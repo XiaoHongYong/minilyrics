@@ -1615,6 +1615,8 @@ void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
 
 #ifdef _WIN32
 
+int CSkinWnd::ms_msgIDCustomCommand = RegisterWindowMessage(_T("SkinWndCustomMsgID"));
+
 LRESULT CSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 #ifdef _WIN32_DESKTOP
@@ -1674,6 +1676,12 @@ LRESULT CSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 // 		return 0;
 // 	}
 #endif
+
+	if (message == ms_msgIDCustomCommand)
+	{
+		OnCustomCommand(wParam);
+		return 0;
+	}
 
 	switch (message)
 	{
@@ -2072,6 +2080,15 @@ bool CSkinWnd::OnCustomCommand(int nId)
 	if (nRet != ERR_OK)
 		ERRLOG2(_T("Execute Dynamic Command failed: %s, %s"), m_pSkinFactory->GetStringOfID(nId).c_str(), (LPCTSTR)Error2Str(nRet));
 	return true;
+}
+
+void CSkinWnd::PostCustomCommandMsg(int nId)
+{
+#ifdef _WIN32
+	::PostMessage(m_hWnd, ms_msgIDCustomCommand, nId, 0);
+#else
+	OnCustomCommand(nId);
+#endif
 }
 
 void CSkinWnd::OnRemoveUIObj(CUIObject *pObj)

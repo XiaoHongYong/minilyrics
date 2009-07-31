@@ -73,28 +73,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 {
 	switch (nID)
 	{
-	case IDC_PREV:
-		g_Player.Prev();
-		break;
-	case IDC_PLAY:
-		g_Player.Play();
-		break;
-	case IDC_PAUSE:
-		g_Player.Pause();
-		break;
-	case IDC_PLAYPAUSE:
-		g_Player.PlayPause();
-		break;
-	case IDC_STOP:
-		g_Player.Stop();
-		break;
-	case IDC_NEXT:
-		g_Player.Next();
-		break;
 #ifdef _MPLAYER
-	case IDC_SHUFFLE:
-		g_Player.SetShuffle(!g_Player.IsShuffle());
-		break;
 	case IDC_REPEAT_OFF:
 		g_Player.SetLoop(MP_LOOP_OFF);
 		break;
@@ -104,54 +83,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	case IDC_REPEAT_TRACK:
 		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
-	case IDC_OPENFILE:
-		{
-			SaveCurrentPlaylist();
-			OnSongOpenFileCmd(m_pSkinWnd, true);
-		}
-		break;
-	case IDC_OPENDIR:
-		OnSongOpenDirCmd(m_pSkinWnd, true);
-		break;
-	case IDC_ADDFILE:
-		OnSongOpenFileCmd(m_pSkinWnd, false);
-		break;
-	case IDC_ADDDIR:
-		OnSongOpenDirCmd(m_pSkinWnd, false);
-		break;
 #endif
-	case IDC_OPEN_LYRICS:
-	case IDC_DOWNLOAD_CURRENT_LYRICS:
-		//
-		// ¸è´ÊÏÂÔØ
-		//
-		{
-			if (!g_bInModalDlLrcSelDlg)
-			{
-				g_bInModalDlLrcSelDlg = TRUE;
-				CDlgSearchLyrics		LyricsDownSelDlg;
-
-				LyricsDownSelDlg.DoModal(m_pSkinWnd);
-				g_bInModalDlLrcSelDlg = FALSE;
-			}
-		}
-		break;
-	case IDC_SAVE_LYRICS:
-		OnCustomCommand(CMD_SAVE_LRC);
-		break;
-	case IDC_SAVE_LYRICS_AS:
-		OnCustomCommand(CMD_SAVE_LRC_AS);
-		break;
-	case IDC_ADVANCED_SAVE_LYR:
-		SaveAsLyricsFile(m_pSkinWnd,
-			LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), true);
-		break;
-	case IDC_FORWARD_LYRICS:
-		OnCustomCommand(CMD_FORWARD_LYRICS);
-		break;
-	case IDC_BACKWARD_LYRICS:
-		OnCustomCommand(CMD_BACKWARD_LYRICS);
-		break;
 	case IDC_LOAD_LYRICS_FROM_MP3:
 		{
 			OnCommandOpenLyricsInMp3();
@@ -166,10 +98,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		{
 			OnCommandRemoveLyricsInMp3();
 		}
-		break;
-
-	case IDC_LYR_DISPLAY_OPT:
-		g_wndPreference.Create(m_pSkinWnd, PAGE_LYR_DISPLAY, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case IDC_LOAD_SKIN_THEME:
 		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("ReloadSkinDefClrTheme"), TRUE);
@@ -260,24 +188,11 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			CMPlayerSettings::SetPlayerUISettings(_T("Antialias"), bAntialias);
 		}
 		break;
-	case IDC_FLOATING_LYRICS:
-		{
-			g_Profile.WriteProfileInt(_T("FloatingLyr"), !g_wndFloatingLyr.IsValid());
-			if (!g_wndFloatingLyr.IsValid())
-				g_wndFloatingLyr.Create();
-			else
-				g_wndFloatingLyr.Destroy();
-		}
-		break;
 	case IDC_CLICK_THROUGH_FLOATING_LYR:
 		if (g_wndFloatingLyr.IsValid())
 			g_wndFloatingLyr.OnCommand(IDC_CLICK_THROUGH, 0);
 		break;
 #endif // _WIN32_DESKTOP
-	case IDC_ML_HELP:
-		// ÏÔÊ¾°ïÖú
-		OnCustomCommand(CMD_HELP);
-		break;
 	case IDC_WEBHOME:
 		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_DOMAIN));
 		break;
@@ -308,14 +223,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #endif
 		g_mpApp.GetSkinFactory()->MinizeAll();
 		break;
-	case IDC_UPLOAD_LYRICS:
-		{
-			// ÉÏ´«¸è´Ê
-			CLrcUploadDlg	dlg;
-
-			dlg.DoModal(m_pSkinWnd);
-		}
-		break;
 	case IDC_LOGIN:
 		{
 			CLoginDlg		dlg;
@@ -345,44 +252,11 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			Execute(m_pSkinWnd, szTempTxtFile, NULL);
 		}
 		break;
-	case IDC_COPYTO:
-		{
-			CDlgCopySongLyrics	dlg;
-
-			dlg.m_strSong = g_Player.GetSrcMedia();
-			dlg.m_strLyrics = g_LyricData.GetLyricsFileName();
-			dlg.DoModal(m_pSkinWnd);
-		}
-		break;
 	case IDC_CHECK_UPDATE:
 		{
 			CVersionUpdate	verUpdate;
 			verUpdate.CheckNewVersionManual(&g_LyricsDownloader);
 		}
-		break;
-	case IDC_EXTERNAL_LYR_EDIT:
-		//
-		// µ÷ÓÃÍâ²¿µÄ±à¼­Æ÷±à¼­¸è´Ê
-		if (g_LyricData.GetLyricsSourceType() != LST_FILE)
-		{
-			m_pSkinWnd->MessageOut(TOLOCAL(_T("Embedded lyrics can not be edited with external editors.")));
-			break;
-		}
-
-		if (g_LyricData.IsOK())
-		{
-			if (!g_mpApp.OnLyricsChangingSavePrompt())
-				break;
-
-			tstring		strEditor;
-			GetNotepadEditor(strEditor);
-			Execute(m_pSkinWnd, 
-				CMLProfile::GetDir(SZ_SECT_UI, _T("LyricsEditor"), strEditor.c_str()).c_str(),
-				g_LyricData.GetLyricsFileName());
-		}
-		break;
-	case IDC_RATE_LYRICS:
-		OnCustomCommand(CMD_RATE_LYR);
 		break;
 #ifdef _WIN32_WCE
 	case IDC_MEDIALIB:
@@ -395,10 +269,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		g_mpApp.GetSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Lyrics"), _T("lyrics"));
 		break;
 #endif
-	case IDC_OPTIONS:
-	case IDC_PREFERENCE:
-		g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
-		break;
 #ifdef _WIN32
 	case IDC_ADJUST_HUE:
 		{
@@ -425,13 +295,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			dlg.DoModal(m_pSkinWnd);
 		}
 		break;
-	case IDC_EXIT:
-		g_mpMsgWnd.PostQuitMPMessage();
-		break;
-	case IDC_EDIT_LRC_TAG:
-		OnCustomCommand(CMD_EDIT_TAG);
-		break;
-		
 	case IDC_EDIT_UNDO:
 		OnCustomCommand(CMD_EDIT_UNDO);
 		break;
@@ -449,42 +312,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		break;
 	case IDC_EDIT_DELETE:
 		OnCustomCommand(CMD_EDIT_DELETE);
-		break;
-	case IDC_AUTO_FILL_LYRICS_INFO:
-		OnCustomCommand(CMD_AUTO_FILL_LYR_INFO);
-		break;
-	case IDC_REMOVE_ALL_TAG:
-		OnCustomCommand(CMD_REMOVE_ALL_TAG);
-		break;
-	case IDC_REMOVE_BLANK_LINE:
-		OnCustomCommand(CMD_REMOVE_BLANK_LINE);
-		break;
-	case IDC_TRIM_SPACE:
-		OnCustomCommand(CMD_TRIM_WHITESPACE);
-		break;
-	case IDC_REMOVE_UNSYNC_LINE:
-		OnCustomCommand(CMD_REMOVE_UNSYNC_LINES);
-		break;
-	case IDC_CAPITALIZE_LEADING_LETTER:
-		OnCustomCommand(CMD_CAPITALIZE_LEADING_LETTER);
-		break;
-	case IDC_TO_LOWER_CASE:
-		OnCustomCommand(CMD_LYRICS_TO_LOWERCASE);
-		break;
-	case IDC_FORWARD_CUR_LINE:
-		OnCustomCommand(CMD_FORWARD_CUR_LINE);
-		break;
-	case IDC_BACKWARD_CUR_LINE:
-		OnCustomCommand(CMD_BACKWARD_CUR_LINE);
-		break;
-	case IDC_FORWARD_REMAIN_LINES:
-		OnCustomCommand(CMD_FORWARD_REMAIN_LINES);
-		break;
-	case IDC_BACKWARD_REMAIN_LINES:
-		OnCustomCommand(CMD_BACKWARD_REMAIN_LINES);
-		break;
-	case IDC_CLOSE:
-		OnCustomCommand(CMD_CLOSE);
 		break;
 	case IDC_BR_ALBUM_ART:
 		{
@@ -516,9 +343,18 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		}
 		break;
 	default:
-		if (OnCommandCharEncoding(nID))
-			break;
-		return false;
+		{
+			int		nCmdID = MenuIDToCmdID(nID);
+			if (nCmdID != CMD_UNDEFINE)
+			{
+				OnCustomCommand(nCmdID);
+				break;
+			}
+
+			if (OnCommandCharEncoding(nID))
+				break;
+			return false;
+		}
 	}
 
 	return true;
@@ -553,8 +389,17 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_PREFERENCES:
 		g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
+	case CMD_DISPLAY_OPT:
+		g_wndPreference.Create(m_pSkinWnd, PAGE_LYR_DISPLAY, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		break;
 	case CMD_FLOATING_LYRICS:
-		OnCommand(IDC_FLOATING_LYRICS);
+		{
+			g_Profile.WriteProfileInt(_T("FloatingLyr"), !g_wndFloatingLyr.IsValid());
+			if (!g_wndFloatingLyr.IsValid())
+				g_wndFloatingLyr.Create();
+			else
+				g_wndFloatingLyr.Destroy();
+		}
 		break;
 #endif // _WIN32_DESKTOP
 	case CMD_EDIT_HELP:
@@ -727,11 +572,17 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			CMPlayerSettings::SetPlayerUISettings(_T("WorkArea"), strWorkArea.c_str());
 		}
 		break;
+	case CMD_PL_OPEN_FILE:
+		OnSongOpenFileCmd(m_pSkinWnd, true);
+		break;
 	case CMD_PL_ADD_FILE:
-		OnCommand(IDC_ADDFILE);
+		OnSongOpenFileCmd(m_pSkinWnd, false);
+		break;
+	case CMD_PL_OPEN_DIR:
+		OnSongOpenDirCmd(m_pSkinWnd, true);
 		break;
 	case CMD_PL_ADD_DIR:
-		OnCommand(IDC_ADDDIR);
+		OnSongOpenDirCmd(m_pSkinWnd, false);
 		break;
 #endif
 
@@ -743,8 +594,21 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			g_mpApp.NewLyrics();
 		}
 		break;
+	case CMD_SEARCH_LYRICS:
 	case CMD_OPEN_LRC:
-		OnCommand(IDC_DOWNLOAD_CURRENT_LYRICS);
+		//
+		// ¸è´ÊÏÂÔØ
+		//
+		{
+			if (!g_bInModalDlLrcSelDlg)
+			{
+				g_bInModalDlLrcSelDlg = TRUE;
+				CDlgSearchLyrics		LyricsDownSelDlg;
+
+				LyricsDownSelDlg.DoModal(m_pSkinWnd);
+				g_bInModalDlLrcSelDlg = FALSE;
+			}
+		}
 		break;
 	case CMD_SAVE_LRC:
 		{
@@ -878,10 +742,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 
-	case CMD_SEARCH_LYRICS:
-		OnCommand(IDC_DOWNLOAD_CURRENT_LYRICS);
-		break;
-
 	case CMD_EDIT_TAG:
 		{
 			CTagInfoDlg		dlg;
@@ -1012,7 +872,13 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_COPY_SONG_FILE_LYR:
-		OnCommand(IDC_COPYTO);
+		{
+			CDlgCopySongLyrics	dlg;
+
+			dlg.m_strSong = g_Player.GetSrcMedia();
+			dlg.m_strLyrics = g_LyricData.GetLyricsFileName();
+			dlg.DoModal(m_pSkinWnd);
+		}
 		break;
 	case CMD_RELOAD_LYR:
 		g_mpApp.ResearchLyrics();
@@ -1040,6 +906,42 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 				g_Player.SeekTo(vLyrics[nCurLine]->nBegTime);
 			}
+		}
+		break;
+	case CMD_ADVANCED_SAVE_LYR:
+		SaveAsLyricsFile(m_pSkinWnd,
+			LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), true);
+		break;
+	case CMD_SAVE_LYR_IN_SONG_FILE:
+		OnCommand(IDC_SAVE_LYRICS_TO_MP3);
+		break;
+	case CMD_UPLOAD_LYR:
+		{
+			// ÉÏ´«¸è´Ê
+			CLrcUploadDlg	dlg;
+
+			dlg.DoModal(m_pSkinWnd);
+		}
+		break;
+	case CMD_EXTERNAL_LYR_EDIT:
+		//
+		// µ÷ÓÃÍâ²¿µÄ±à¼­Æ÷±à¼­¸è´Ê
+		if (g_LyricData.GetLyricsSourceType() != LST_FILE)
+		{
+			m_pSkinWnd->MessageOut(TOLOCAL(_T("Embedded lyrics can not be edited with external editors.")));
+			break;
+		}
+
+		if (g_LyricData.IsOK())
+		{
+			if (!g_mpApp.OnLyricsChangingSavePrompt())
+				break;
+
+			tstring		strEditor;
+			GetNotepadEditor(strEditor);
+			Execute(m_pSkinWnd, 
+				CMLProfile::GetDir(SZ_SECT_UI, _T("LyricsEditor"), strEditor.c_str()).c_str(),
+				g_LyricData.GetLyricsFileName());
 		}
 		break;
 	default:

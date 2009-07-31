@@ -146,8 +146,6 @@ public:
 
 	tstring GetStringOfID(int nID);
 
-	int GetMenuIDByCmdName(LPCTSTR szMenuCmdName);
-
 	virtual int OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
 
 	virtual int ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
@@ -202,10 +200,7 @@ public:
 	// resource
 	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu) { *ppMenu = NULL; return false; };
 
-	virtual int OnDynamicCmd(LPCTSTR szDynCmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj);
 	virtual int OnDynamicCmd(int nCmdID, CSkinWnd *pSkinWnd);
-
-	void EnumAllDynamicCmds(V_Str &vstrCmds) { m_dynamicCmds.EnumAllCmds(vstrCmds); }
 
 	// hue: 0~360,		saturation: 0~1.0,		luminance: 0~1.0
 	virtual void AdjustHue(float hue, float saturation = 0.5, float luminance = 0.5);
@@ -247,10 +242,6 @@ protected:
 	typedef map<tstring, int>	MAP_STRID;
 	MAP_STRID					m_mapCmdStrId;
 	int							m_nCustomCmdIDNext;
-
-	// WM_COMMAND, menu id and str
-	MAP_STRID					m_mapMenuStrId;
-	int							m_nNextMenuId;
 
 	typedef	list<CSkinWnd*>		LIST_SKINWNDS;
 

@@ -34,7 +34,7 @@ public:
 
 	virtual int EB_GetFontHeight() { return m_font.GetHeight(); }
 
-	virtual void EB_SetFont(CMLFont &font) { m_font.Create(font); }
+	virtual void EB_SetFont(CMLFont &font) { }
 
 	virtual MLColor & GetColor(int nColorName);
 

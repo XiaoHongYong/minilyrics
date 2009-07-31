@@ -75,12 +75,12 @@ void CSkinNStatusButton::OnTimer(int nId)
 		if (m_rcObj.PtInRect(pt))
 		{
 			if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
-				m_pSkin->OnCustomCommand(m_nId);
+				m_pSkin->PostCustomCommandMsg(m_nId);
 
 			if (m_nCurStatus >= 0 && m_nCurStatus < (int)m_vBtStatImg.size())
 			{
-				if (!m_vBtStatImg[m_nCurStatus]->strDynCmd.empty())
-					m_pSkin->GetSkinFactory()->OnDynamicCmd(m_vBtStatImg[m_nCurStatus]->strDynCmd.c_str(), m_pSkin, this);
+				if (m_vBtStatImg[m_nCurStatus]->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE)
+					m_pSkin->PostCustomCommandMsg(m_vBtStatImg[m_nCurStatus]->nIDCmd);
 			}
 		}
 
@@ -119,14 +119,14 @@ bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 
 	Invalidate();
 
-	if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
-		m_pSkin->OnCustomCommand(m_nId);
-
 	if (m_bContinuousCmd)
 		m_pSkin->UnregisterTimerObject(this);
 
-	if (!m_vBtStatImg[m_nCurStatus]->strDynCmd.empty())
-		m_pSkin->GetSkinFactory()->OnDynamicCmd(m_vBtStatImg[m_nCurStatus]->strDynCmd.c_str(), m_pSkin, this);
+	if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
+		m_pSkin->PostCustomCommandMsg(m_nId);
+
+	if (m_vBtStatImg[m_nCurStatus]->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE)
+		m_pSkin->PostCustomCommandMsg(m_vBtStatImg[m_nCurStatus]->nIDCmd);
 
 	return true;
 }
@@ -286,9 +286,9 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			if (!GetRectValue(szValue, btimg->imgDisabled))
 				goto PARSE_VALUE_FAILED;
 		}
-		else if (_tcsicmp(szPropertyNew, _T("DynCmd")) == 0)
+		else if (_tcsicmp(szPropertyNew, _T("IDCmd")) == 0)
 		{
-			btimg->strDynCmd = szValue;
+			btimg->nIDCmd = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
 		}
 		else
 			return FALSE;
@@ -297,11 +297,11 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_bContinuousCmd = IsTRUE(szValue);
 	}
-	else if (_tcsicmp(szProperty, _T("DynCmd")) == 0)
+	else if (_tcsicmp(szProperty, _T("IDCmd")) == 0)
 	{
 		if (m_vBtStatImg.size() == 0)
 			m_vBtStatImg.push_back(new BtStatImg);
-		m_vBtStatImg[0]->strDynCmd = szValue;
+		m_vBtStatImg[0]->nIDCmd = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
 	}
 	else if (IsPropertyName(szProperty, _T("BlendPixMode")))
 	{
@@ -346,15 +346,7 @@ void CSkinNStatusButton::EnumProperties(CUIObjProperties &listProperties)
 		strNameRect = strPrefix + _T("ImageDisabledRect");
 		listProperties.AddPropImage(strName.c_str(), strNameRect.c_str(), btimg->strDisabledFile.c_str(), btimg->imgDisabled, !btimg->strDisabledFile.empty());
 
-		CUIObjProperty		property;
-
-		property.vOptions.push_back(_T(""));
-		m_pSkin->GetSkinFactory()->EnumAllDynamicCmds(property.vOptions);
-		property.strName = strPrefix + _T("DynCmd");
-		property.strValue = m_strDynCmd;
-		property.valueType = CUIObjProperty::VT_COMB_STR;
-		property.bToXmlAttrib = !m_strDynCmd.empty();
-		listProperties.push_back(property);
+		listProperties.AddPropID(_T("IDCmd"), m_pSkin->GetSkinFactory()->GetStringOfID(btimg->nIDCmd).c_str(), btimg->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE);
 	}
 
 	listProperties.AddPropBoolStr(_T("Continuous"), m_bContinuousCmd, m_bContinuousCmd);

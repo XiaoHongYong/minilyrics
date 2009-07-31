@@ -49,6 +49,7 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_MENU_LYR_EDIT"), CMD_MENU_LYR_EDIT, _T("More...") },
 	{ _T("ID_LYR_EDITOR"), CMD_LYR_EDITOR, _T("Lyrics Editor...") },
 	{ _T("ID_EXTERNAL_LYR_EDIT"), CMD_EXTERNAL_LYR_EDIT, _T("Edit with external lyrics editor...") },
+	{ _T("ID_SAVE_LYR_IN_SONG_FILE"), CMD_SAVE_LYR_IN_SONG_FILE, _T("Save lyrics in MP3 file...") },
 
 	{ _T("ID_EDIT_UNDO"), CMD_EDIT_UNDO, _T("Undo (Ctrl+Z)") },
 	{ _T("ID_EDIT_REDO"), CMD_EDIT_REDO, _T("Redo (Ctrl+Y)") },

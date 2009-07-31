@@ -62,8 +62,6 @@ void CSkinTabHeader::Button::FromXML(CSkinTabHeader *pTabHeader, SXNode *pNode)
 
 		if (IsPropertyName(szProperty, _T("width")))
 			nWidth = _ttoi(szValue);
-		else if (IsPropertyName(szProperty, _T("DynCmd")))
-			strDynCmd = szValue;
 		else if (IsPropertyName(szProperty, SZ_PN_ID))
 		{
 			if (strTooltip.empty())
@@ -104,8 +102,6 @@ void CSkinTabHeader::Button::ToXML(CSkinTabHeader *pTabHeader, CXMLWriter &xml)
 		xml.WriteAttribute(SZ_PN_ID, pTabHeader->m_pSkin->GetSkinFactory()->GetStringOfID(nID).c_str());
 
 	xml.WriteAttribute(_T("width"), nWidth);
-	if (!strDynCmd.empty())
-		xml.WriteAttribute(_T("DynCmd"), strDynCmd.c_str());
 	if (!strTooltip.empty() && !bTempToolTip)
 		xml.WriteAttribute(_T("ToolTip"), strTooltip.c_str());
 	if (!strText.empty())
@@ -197,10 +193,7 @@ bool CSkinTabHeader::OnLButtonUp(UINT nFlags, CPoint point)
 		Button		&bt = m_vButtons[nNewCurButton];
 
 		if (bt.nID != SKIN_UIOBJ_ID_UNDEFINE)
-			m_pSkin->OnCustomCommand(bt.nID);
-
-		if (!bt.strDynCmd.empty())
-			m_pSkin->GetSkinFactory()->OnDynamicCmd(bt.strDynCmd.c_str(), m_pSkin, this);
+			m_pSkin->PostCustomCommandMsg(bt.nID);
 
 		// Hide old tab, show this tab.
 		if (m_nActiveButton >= 0 && m_nActiveButton < (int)m_vButtons.size())

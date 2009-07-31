@@ -203,6 +203,7 @@ public:
 	virtual BOOL MoveWindow(RECT &rc, BOOL bRepaint = TRUE);
 
 	virtual bool OnCustomCommand(int nId);
+	virtual void PostCustomCommandMsg(int nId);
 
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify) { }
 
@@ -216,6 +217,8 @@ public:
 	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect);
 
 #ifdef _WIN32
+	static int ms_msgIDCustomCommand;
+
 	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 #endif
 

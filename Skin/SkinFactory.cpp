@@ -19,7 +19,6 @@
 #define _SZ_SKIN_FILE_NAME		_T("ZikiPlayer.xml")
 #define _SZ_ADJUST_HUE			_T("AdjustHue")
 
-#define MENU_ID_CUSTOM_BASE		46000
 
 /*
    <DynControls>
@@ -547,7 +546,6 @@ CSkinFactory::CSkinFactory()
 	m_IdMap = NULL;
 	m_strSkinFileName = _SZ_SKIN_FILE_NAME;
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
-	m_nNextMenuId = MENU_ID_CUSTOM_BASE;
 	m_dynamicCmds.Init(this);
 }
 
@@ -626,23 +624,6 @@ tstring CSkinFactory::GetStringOfID(int nID)
 	}
 
 	return _T("");
-}
-
-// COMMENT:
-//		根据控件 ID 字符串来取得对应的控件 ID 数值
-//		改进方法: 对所有的ID字符串值进行排序,然后使用二分法进行搜索
-int CSkinFactory::GetMenuIDByCmdName(LPCTSTR szMenuCmdName)
-{
-	MAP_STRID::iterator it = m_mapMenuStrId.find(szMenuCmdName);
-	if (it != m_mapMenuStrId.end())
-	{
-		return (*it).second;
-	}
-
-	m_nNextMenuId++;
-	DBGLOG2(_T("Allocated custom menu id value: %s, %d"), szMenuCmdName, m_nNextMenuId);
-	m_mapMenuStrId[szMenuCmdName] = m_nNextMenuId;
-	return m_nNextMenuId;
 }
 
 int CSkinFactory::OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir)
@@ -897,9 +878,6 @@ void CSkinFactory::Close()
 
 	m_mapCmdStrId.clear();
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
-
-	m_mapMenuStrId.clear();
-	m_nNextMenuId = MENU_ID_CUSTOM_BASE;
 }
 
 CSkinWnd *CSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
@@ -1248,28 +1226,6 @@ int CSkinFactory::OnDynamicCmd(int nCmdID, CSkinWnd *pSkinWnd)
 	return nRet;
 }
 
-int CSkinFactory::OnDynamicCmd(LPCTSTR szDynCmd, CSkinWnd *pSkinWnd, CUIObject *pUIObj)
-{
-	V_Str		vCmds;
-	int			nRet = ERR_NOT_FOUND;
-
-	StrBreak(szDynCmd, ',', vCmds);
-
-	for (int i = 0; i < (int)vCmds.size(); i++)
-	{
-		CDynamicCmds::DynamicCmd	cmd;
-		TrimStr(vCmds[i]);
-		if (m_dynamicCmds.GetCmd(GetIDByName(vCmds[i].c_str()), cmd))
-		{
-			nRet = ExeDynamicCmd(cmd, pSkinWnd);
-		}
-		else
-			nRet = ERR_NOT_FOUND;
-	}
-
-	return nRet;
-}
-
 int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd)
 {
 	if (cmd.strFunction == _T("change_skin_wnd"))
@@ -1333,6 +1289,21 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
 		if (pObj)
 			pObj->SetProperty(vStrParam[1].c_str(), vStrParam[2].c_str());
+	}
+	else if (cmd.strFunction == _T("multi_cmd"))
+	{
+		V_Str		vStrParam;
+		int			nRet = ERR_NOT_FOUND;
+
+		StrBreak(cmd.strParam.c_str(), ',', vStrParam);
+		for (int i = 0; i < (int)vStrParam.size(); i++)
+		{
+			TrimStr(vStrParam[i]);
+			nRet = OnDynamicCmd(GetIDByName(vStrParam[i].c_str()), pSkinWnd);
+			if (nRet != ERR_OK)
+				ERRLOG2(_T("Execute subcommand failed: %s, %s"), vStrParam[i].c_str(), (LPCTSTR)Error2Str(nRet));
+		}
+		return nRet;
 	}
 //	else if (cmd.strFunction == _T("open_skin_wnd"))
 //		return ActiveOrCreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());

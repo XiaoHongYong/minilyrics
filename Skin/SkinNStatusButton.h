@@ -41,7 +41,7 @@ protected:
 	{
 		tstring			strBkFile, strSelFile, strHoverFile, strDisabledFile;
 		CSFImage		imgBk, imgSel, imgHover, imgDisabled;
-		tstring			strDynCmd;
+		int				nIDCmd;
 	};
 
 	typedef vector<BtStatImg *>		V_BTSTATIMG;
@@ -57,8 +57,6 @@ protected:
 	// Will the cmd be triggered continuous?
 	bool			m_bContinuousCmd;
 	bool			m_bContinuousBegin;
-
-	tstring			m_strDynCmd;
 
 	BlendPixMode	m_bpm;
 
