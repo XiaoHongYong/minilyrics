@@ -74,7 +74,10 @@ public:
 protected:
 	void UpdateTextFontColor();
 
+	void SyncTimeTag(bool bMoveToNextLine);
+
 	virtual void ReloadThemeOfSkin(bool bSavetoProfile);
+	void AdjustSyncTimeOfSelected(bool bIncreaseTime);
 
 	void OnFRCommand(IFindReplaceNotify::Command cmd);
 	void ShowFindDialog(bool bFind = true);

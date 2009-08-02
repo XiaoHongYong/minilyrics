@@ -73,7 +73,6 @@ CMPHotkey::CmdAccKey			g_vDefAccKey[] =
 	{ CMD_BACKWARD_REMAIN_LINES, false, VK_F12, 0, 0 },
 	{ CMD_INSERTTAG_DOWN, false, VK_F7, 0, 0 },
 	{ CMD_INSERTTAG, false, VK_F7, MOD_CONTROL, 0 },
-	{ CMD_EDIT_TAG, false, VK_F8, 0, 0 },
 	{ CMD_FORWARD_CUR_LINE, false, VK_ADD, MOD_CONTROL, 0 },
 	{ CMD_FORWARD_CUR_LINE, false, 187, MOD_CONTROL, 0 },
 	{ CMD_BACKWARD_CUR_LINE, false, VK_SUBTRACT, MOD_CONTROL, 0 },
@@ -82,8 +81,6 @@ CMPHotkey::CmdAccKey			g_vDefAccKey[] =
 	{ CMD_FORWARD, false, VK_NEXT, MOD_CONTROL, 0 },
 	{ CMD_BACKWARD, false, VK_PRIOR, MOD_CONTROL, 0 },
 	{ CMD_PLAYPAUSE, false, 'P', MOD_CONTROL, 0 },
-	{ CMD_PLAYPAUSE, false, VK_F3, 0, 0 },
-	{ CMD_STOP, false, VK_F3, MOD_CONTROL, 0 },
 
 	{ CMD_MINIMIZE, false, 'M', MOD_CONTROL, 0 },
 	{ CMD_TOPMOST, false, 'T', MOD_CONTROL, 0 },

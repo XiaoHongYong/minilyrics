@@ -72,6 +72,7 @@ public:
 
 	void BeginBatchAction();
 	void EndBatchAction();
+	bool IsInBatchAction() const { return m_pBatchUndoAction != NULL; }
 
 	virtual void AddAction(CUndoAction *pAction);
 

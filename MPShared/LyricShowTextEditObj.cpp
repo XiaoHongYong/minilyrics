@@ -258,64 +258,59 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 		break;
 	case CMD_DEL_TAG:
 		{
-			int		nLine, nCol;
 			tstring	strLine, strTimeTag;
 
-			GetCaret(nLine, nCol);
-			GetTextOfLine(nLine, strLine);
+			int		nBegSelRow, nEndSelRow;
 
-			if (!GetTimeTagOfLine(strLine.c_str(), strTimeTag))
-				return TRUE;
+			if (m_nBegSelRow != -1)
+			{
+				if (m_nBegSelRow <= m_nEndSelRow)
+				{
+					nBegSelRow = m_nBegSelRow;
+					nEndSelRow = m_nEndSelRow;
+				}
+				else
+				{
+					nBegSelRow = m_nEndSelRow;
+					nEndSelRow = m_nBegSelRow;
+				}
+			}
+			else
+			{
+				int		nLine, nCol;
 
-			SetSelOfLine(nLine, 0, strTimeTag.size());
-			RemoveSel();
+				GetCaret(nLine, nCol);
+				nBegSelRow = nEndSelRow = nLine;
+			}
+
+			CAutoBatchUndo		autoBatchUndo(this);
+
+			for (int i = nBegSelRow; i <= nEndSelRow; i++)
+			{
+				GetTextOfLine(i, strLine);
+
+				if (!GetTimeTagOfLine(strLine.c_str(), strTimeTag))
+					continue;
+
+				SetSelOfLine(i, 0, strTimeTag.size());
+				RemoveSel();
+			}
+
 			return TRUE;
 		}
 		break;
 	case CMD_INSERTTAG:
+		SyncTimeTag(false);
+		break;
 	case CMD_INSERTTAG_DOWN:
+		SyncTimeTag(true);
+		break;
 	case CMD_FORWARD_CUR_LINE:
+		AdjustSyncTimeOfSelected(true);
+		break;
 	case CMD_BACKWARD_CUR_LINE:
-		{
-			int		nLine, nCol;
-			tstring	strLine, strTimeTag;
-			TCHAR	szTimeTagNew[256];
-			int		nTime;
-
-			GetCaret(nLine, nCol);
-			GetTextOfLine(nLine, strLine);
-
-			if (!GetTimeTagOfLine(strLine.c_str(), strTimeTag) && 
-				(dwCmdID == CMD_FORWARD_CUR_LINE || dwCmdID == CMD_BACKWARD_CUR_LINE))
-				return TRUE;
-
-			if (dwCmdID == CMD_FORWARD_CUR_LINE || dwCmdID == CMD_BACKWARD_CUR_LINE)
-			{
-				nTime = GetTimeTagValue(strTimeTag.c_str(), strTimeTag.size());
-				if (dwCmdID == CMD_FORWARD_CUR_LINE)
-					nTime += 200;
-				else
-					nTime -= 200;
-			}
-			else
-			{
-				nTime = m_pMLData->GetPlayElapsedTime();
-			}
-			FormtLrcTimeTag(nTime, szTimeTagNew);
-
-			SetSelOfLine(nLine, 0, strTimeTag.size());
-			ReplaceSel(szTimeTagNew);
-
-			if (dwCmdID == CMD_INSERTTAG_DOWN)
-			{
-				SetCaret(nLine + 1, 0);
-				AutoVScrollDown(1);
-			}
-			else
-				SetCaret(nLine, nCol);
-
-			return TRUE;
-		}
+		AdjustSyncTimeOfSelected(false);
+		break;
 	case CMD_FORWARD_REMAIN_LINES:
 	case CMD_BACKWARD_REMAIN_LINES:
 		{
@@ -325,7 +320,9 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 			int		nTime;
 
 			GetCaret(nLine, nCol);
-			BeginBatchUndo();
+
+			CAutoBatchUndo		autoBatchUndo(this);
+
 			for (int i = nLine; GetTextOfLine(i, strLine); i++)
 			{
 				if (GetTimeTagOfLine(strLine.c_str(), strTimeTag))
@@ -342,7 +339,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					ReplaceSel(szTimeTagNew);
 				}
 			}
-			EndBatchUndo();
+
 			SetCaret(nLine, nCol);
 			return TRUE;
 		}
@@ -390,7 +387,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 
 			nLineCount = GetLineCount();
 
-			BeginBatchUndo();
+			CAutoBatchUndo		autoBatchUndo(this);
 			for (int i = 0; i < nLineCount; i++)
 			{
 				GetTextOfLine(i, strLine);
@@ -401,14 +398,13 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 				SetSelOfLine(i, 0, strTimeTag.size());
 				RemoveSel();
 			}
-			EndBatchUndo();
 		}
 		break;
 	case CMD_REMOVE_BLANK_LINE:
 		{
 			tstring	strLine;
 
-			BeginBatchUndo();
+			CAutoBatchUndo		autoBatchUndo(this);
 			for (int i = GetLineCount() - 1; i >= 0; i--)
 			{
 				GetTextOfLine(i, strLine);
@@ -425,7 +421,6 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					SetSel(i, 0, i + 1, 0);
 				RemoveSel();
 			}
-			EndBatchUndo();
 		}
 		break;
 	case CMD_TRIM_WHITESPACE:
@@ -436,7 +431,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 
 			nLineCount = GetLineCount();
 
-			BeginBatchUndo();
+			CAutoBatchUndo		autoBatchUndo(this);
 			for (int i = 0; i < nLineCount; i++)
 			{
 				GetTextOfLine(i, strLine);
@@ -479,7 +474,6 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					RemoveSel();
 				}
 			}
-			EndBatchUndo();
 		}
 		break;
 	case CMD_REMOVE_UNSYNC_LINES:
@@ -487,7 +481,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 			tstring	strLine, strTimeTag;
 			CLyrOneLine	*pLine;
 
-			BeginBatchUndo();
+			CAutoBatchUndo		autoBatchUndo(this);
 			for (int i = GetLineCount() - 1; i >= 0; i--)
 			{
 				GetTextOfLine(i, strLine);
@@ -502,7 +496,6 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					RemoveSel();
 				}
 			}
-			EndBatchUndo();
 		}
 		break;
 	case CMD_CAPITALIZE_LEADING_LETTER:
@@ -513,7 +506,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 
 			memset(szReplaceWith, 0, sizeof(szReplaceWith));
 
-			BeginBatchUndo();
+			CAutoBatchUndo		autoBatchUndo(this);
 			for (int i = GetLineCount() - 1; i >= 0; i--)
 			{
 				GetTextOfLine(i, strLine);
@@ -548,7 +541,6 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					}
 				}
 			}
-			EndBatchUndo();
 		}
 		break;
 	case CMD_LYRICS_TO_LOWERCASE:
@@ -556,7 +548,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 			tstring	strLine, strTimeTag;
 			CLyrOneLine	*pLine;
 
-			BeginBatchUndo();
+			CAutoBatchUndo		autoBatchUndo(this);
 			for (int i = GetLineCount() - 1; i >= 0; i--)
 			{
 				GetTextOfLine(i, strLine);
@@ -585,7 +577,6 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					}
 				}
 			}
-			EndBatchUndo();
 		}
 		break;
 	default:
@@ -759,13 +750,12 @@ void CLyricShowTextEditObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate)
 
 void CLyricShowTextEditObj::UpdateLyricsProperties()
 {
-	BeginBatchUndo();
+	CAutoBatchUndo		autoBatchUndo(this);
 	SetLyricsTagValue(CMLData::LP_TITLE, g_LyricData.Properties().m_strTitle.c_str());
 	SetLyricsTagValue(CMLData::LP_ARTIST, g_LyricData.Properties().m_strArtist.c_str());
 	SetLyricsTagValue(CMLData::LP_ALBUM, g_LyricData.Properties().m_strAlbum.c_str());
 	SetLyricsTagValue(CMLData::LP_BY, g_LyricData.Properties().m_strBy.c_str());
 	SetLyricsTagValue(CMLData::LP_OFFSET, CStrPrintf(_T("%d"), g_LyricData.Properties().m_nTimeOffset).c_str());
-	EndBatchUndo();
 }
 
 void CLyricShowTextEditObj::OnStatusChanged(IEditNotification::Status status, bool bVal)
@@ -819,6 +809,138 @@ void CLyricShowTextEditObj::UpdateTextFontColor()
 	SetColorTheme(GetHighlightColor(), GetLowlightColor(), m_clrTag, m_clrFocusLineBg);
 }
 
+void CLyricShowTextEditObj::SyncTimeTag(bool bMoveToNextLine)
+{
+	int		nBegLine, nEndLine, nCol;
+	int		nBegCol, nEndCol;
+	bool	bSelectedEmpty = true;
+	tstring	strLine, strTimeTag;
+	TCHAR	szTimeTagNew[256];
+	int		nTime;
+
+	if (m_nBegSelRow != -1)
+	{
+		SortSelectPos(nBegLine, nBegCol, nEndLine, nEndCol, bSelectedEmpty);
+	}
+	else
+	{
+		GetCaret(nBegLine, nCol);
+		nEndLine = nBegLine;
+	}
+
+	int		nTimeDuarationOffset = 0;
+	int		nLine;
+	CAutoBatchUndo	autoBatchUndo(this);
+	int		nPlayingPos = m_pMLData->GetPlayElapsedTime();
+	if (nPlayingPos < 0)
+		nPlayingPos = 0;
+
+	for (nLine = nBegLine; nLine <= nEndLine; nLine++)
+	{
+		if (!GetTextOfLine(nLine, strLine))
+			continue;
+
+		if (!GetTimeTagOfLine(strLine.c_str(), strTimeTag))
+		{
+			// This line wasn't synchronized yet,
+			if (nLine == nBegLine)
+			{
+				FormtLrcTimeTag(nPlayingPos, szTimeTagNew);
+
+				SetSelOfLine(nLine, 0, 0);
+				ReplaceSel(szTimeTagNew);
+				break;
+			}
+
+			continue;
+		}
+
+		// Adjust the time of this line.
+		nTime = GetTimeTagValue(strTimeTag.c_str(), strTimeTag.size());
+		if (nLine == nBegLine)
+		{
+			nTimeDuarationOffset = nTime - nPlayingPos;
+			nTime = m_pMLData->GetPlayElapsedTime();
+		}
+		else
+			nTime -= nTimeDuarationOffset;
+
+		// Set new time
+		FormtLrcTimeTag(nTime, szTimeTagNew);
+
+		SetSelOfLine(nLine, 0, strTimeTag.size());
+		ReplaceSel(szTimeTagNew);
+	}
+
+	if (!bSelectedEmpty)
+	{
+		SetSel(nBegLine, nBegCol, nEndLine, nEndCol);
+		return;
+	}
+
+	if (bMoveToNextLine && nBegLine == nEndLine)
+	{
+		SetCaret(nEndLine + 1, 0);
+		AutoVScrollDown(1);
+	}
+	else
+		SetCaret(nEndLine, nCol);
+}
+
+void CLyricShowTextEditObj::AdjustSyncTimeOfSelected(bool bIncreaseTime)
+{
+	int		nBegLine, nEndLine, nCol;
+	tstring	strLine, strTimeTag;
+	TCHAR	szTimeTagNew[256];
+	int		nTime;
+	int		nBegCol, nEndCol;
+	bool	bSelectedEmpty = true;
+
+	if (m_nBegSelRow != -1)
+	{
+		SortSelectPos(nBegLine, nBegCol, nEndLine, nEndCol, bSelectedEmpty);
+	}
+	else
+	{
+		GetCaret(nBegLine, nCol);
+		nEndLine = nBegLine;
+	}
+
+	int		nTimeDuarationOffset = 0;
+	int		nLine;
+	CAutoBatchUndo	autoBatchUndo(this);
+	int		nPlayingPos = m_pMLData->GetPlayElapsedTime();
+	if (nPlayingPos < 0)
+		nPlayingPos = 0;
+
+	for (nLine = nBegLine; nLine <= nEndLine; nLine++)
+	{
+		if (!GetTextOfLine(nLine, strLine))
+			continue;
+
+		if (!GetTimeTagOfLine(strLine.c_str(), strTimeTag))
+		{
+			// This line wasn't synchronized yet,
+			continue;
+		}
+
+		// Adjust the time of this line.
+		nTime = GetTimeTagValue(strTimeTag.c_str(), strTimeTag.size());
+		if (bIncreaseTime)
+			nTime += 200;
+		else
+			nTime -= 200;
+
+		// Set new time
+		FormtLrcTimeTag(nTime, szTimeTagNew);
+
+		SetSelOfLine(nLine, 0, strTimeTag.size());
+		ReplaceSel(szTimeTagNew);
+	}
+
+	if (!bSelectedEmpty)
+		SetSel(nBegLine, nBegCol, nEndLine, nEndCol);
+}
 
 void CLyricShowTextEditObj::ReloadThemeOfSkin(bool bSavetoProfile)
 {
@@ -861,10 +983,11 @@ void CLyricShowTextEditObj::OnFRCommand(IFindReplaceNotify::Command cmd)
 			// replace all
 			SetCaret(0, 0);
 			m_nBegSelCol = -1;
-			BeginBatchUndo();
+
+			CAutoBatchUndo		autoBatchUndo(this);
+
 			while (FindText(m_dlgFindReplace.m_strFindWhat.c_str(), dwFlags))
 				ReplaceSel(m_dlgFindReplace.m_strReplaceWith.c_str());
-			EndBatchUndo();
 		}
 		break;
 	case IFindReplaceNotify::C_CLOSE_DLG:
