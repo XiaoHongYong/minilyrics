@@ -2,19 +2,19 @@
 <skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr">
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" DynCmd="dyncmd_change_to_floatinglyr"/>
-      <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" DynCmd="dyncmd_change_to_bar"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." DynCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
+      <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" IDCmd="dyncmd_change_to_bar"/>
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
     <Menu Name="LyrBarMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" DynCmd="dyncmd_change_to_floatinglyr"/>
-      <Item Action="Append" Type="item" Name="&amp;Normal Mode" DynCmd="dyncmd_change_to_normal"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." DynCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
+      <Item Action="Append" Type="item" Name="&amp;Normal Mode" IDCmd="dyncmd_change_to_normal"/>
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
     <Menu Name="FloatingLyrMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" DynCmd="dyncmd_change_to_bar"/>
-      <Item Action="Append" Type="item" Name="&amp;Normal Mode" DynCmd="dyncmd_change_to_normal"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." DynCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" IDCmd="dyncmd_change_to_bar"/>
+      <Item Action="Append" Type="item" Name="&amp;Normal Mode" IDCmd="dyncmd_change_to_normal"/>
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
   </Menus>
   <DynCmds>
@@ -60,7 +60,7 @@
       </Toolbar>
       <Toolbar Left="w-46" Top="10" Width="46" Height="14" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14" blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10" MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
         <button ID="ID_MINIMIZE" Left="0" />
-        <button DynCmd="dyncmd_change_to_normal" Left="2"/>
+        <button ID="dyncmd_change_to_normal" Left="2"/>
         <button ID="ID_CLOSE" Left="1" />
       </Toolbar>
     </DecorativeContainer>
@@ -74,7 +74,7 @@
     <CaptionImage Left="0" Top="0" Width="w" Height="15" Name="Caption" Image="caption.bmp" ImageRect="27,15,295,15" ImageFocus="caption.bmp" ImageFocusRect="27,0,295,15" CutPos="60,135,200,275"/>
     <FocusButton Left="6" Top="3" Width="9" Height="9" ID="ID_MENU" Name="Menu" Image="caption.bmp" ImageRect="32,18,9,9" ImageSel="caption.bmp" ImageSelRect="0,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="32,3,9,9"/>
     <FocusButton Left="w - 31" Top="3" Width="9" Height="9" ID="ID_MINIMIZE" Name="Minimize" Image="caption.bmp" ImageRect="292,18,9,9" ImageSel="caption.bmp" ImageSelRect="9,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="292,3,9,9"/>
-    <FocusButton Left="w - 21" Top="3" Width="9" Height="9" ToolTip="Lyrics Bar" Name="Minimize" Image="caption.bmp" ImageRect="301,18,9,9" ImageSel="caption.bmp" ImageSelRect="9,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="301,3,9,9" DynCmd="dyncmd_change_to_bar"/>
+    <FocusButton Left="w - 21" Top="3" Width="9" Height="9" ID="dyncmd_change_to_bar" ToolTip="Lyrics Bar" Name="Minimize" Image="caption.bmp" ImageRect="301,18,9,9" ImageSel="caption.bmp" ImageSelRect="9,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="301,3,9,9"/>
     <FocusButton Left="w - 11" Top="3" Width="9" Height="9" ID="ID_QUIT" Name="Minimize" Image="caption.bmp" ImageRect="312,18,9,9" ImageSel="caption.bmp" ImageSelRect="18,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="312,3,9,9"/>
     <Image Left="0" Top="15" Width="5" Height="h - 15 - 4" Name="left frame" Image="xframe.bmp" ImageRect="0,15,5,98" BltMode="stretch"/>
     <Image Left="w - 5" Top="15" Width="5" Height="h - 15-4" Name="right frame" Image="xframe.bmp" ImageRect="5,15,5,98" BltMode="stretch"/>

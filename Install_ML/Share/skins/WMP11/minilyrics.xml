@@ -2,19 +2,19 @@
 <skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr">
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" DynCmd="dyncmd_change_to_floatinglyr"/>
-      <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" DynCmd="dyncmd_change_to_bar"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." DynCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
+      <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" IDCmd="dyncmd_change_to_bar"/>
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
     <Menu Name="LyrBarMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" DynCmd="dyncmd_change_to_floatinglyr"/>
-      <Item Action="Append" Type="item" Name="&amp;Normal Mode" DynCmd="dyncmd_change_to_normal"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." DynCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
+      <Item Action="Append" Type="item" Name="&amp;Normal Mode" IDCmd="dyncmd_change_to_normal"/>
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
     <Menu Name="FloatingLyrMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" DynCmd="dyncmd_change_to_bar"/>
-      <Item Action="Append" Type="item" Name="&amp;Normal Mode" DynCmd="dyncmd_change_to_normal"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." DynCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" IDCmd="dyncmd_change_to_bar"/>
+      <Item Action="Append" Type="item" Name="&amp;Normal Mode" IDCmd="dyncmd_change_to_normal"/>
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
   </Menus>
   <DynCmds>
@@ -45,7 +45,7 @@
   </DynControls>
   <skinwnd Name="floatinglyr" EnableTranslucency="true" TranslucencyAlpha="0" TranslucencyAlphaOnHover="100" TranslucencyAlphaOnActive="228" MinWidth="400" MinHeight="60" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="FloatingLyrMode" CmdHandler="ch_floating_lyr" LyrDisplayStylePropName="FloatingLyrDispStyle">
     <DecorativeContainer Name="Caption" Left="10" Top="0" Width="w-20" Height="h" >
-      <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAdjustVertAlign="FALSE" EnableStaticTextStyle="FALSE" AlwaysAutoWidth="FALSE" UseAlbumArtAsBg="FALSE" OutlineLyrText="TRUE"/>
+      <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAdjustVertAlign="FALSE" EnableStaticTextStyle="FALSE" LyrDisplayStylePropName="FloatingLyrDispStyle" FloatingLyr="1" AlwaysAutoWidth="FALSE" UseAlbumArtAsBg="FALSE" BlendingLyrText="TRUE" ThickOutline="TRUE"/>
       <Toolbar Left="50" Top="10" Width="200" Height="22" HideIfMouseInactive="TRUE" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="230" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
         <button ID="ID_PREVIOUS" Left="0" />
         <button ID="ID_PLAYPAUSE" Left="1" CanCheck="TRUE" checked_left="2"/>
@@ -60,7 +60,7 @@
       </Toolbar>
       <Toolbar Left="w-46" Top="10" Width="46" Height="14" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14" blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10" MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
         <button ID="ID_MINIMIZE" Left="0" />
-        <button DynCmd="dyncmd_change_to_normal" Left="2"/>
+        <button ID="dyncmd_change_to_normal" Left="2"/>
         <button ID="ID_CLOSE" Left="1" />
       </Toolbar>
     </DecorativeContainer>
@@ -82,7 +82,7 @@
     <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption.bmp" ImageRect="0,0,275,23" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" CutPos="85,125,130,172"/>
     <Button Left="7" Top="4" Width="16" Height="16" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,60,16,16" ImageSel="buttons.bmp" ImageSelRect="17,60,16,16"/>
     <Button Left="w-100" Top="0" Width="25" Height="19" ID="ID_MINIMIZE" Name="Minimize" Image="buttons.bmp" ImageRect="0,0,25,19" ImageSel="buttons.bmp" ImageSelRect="0,20,25,19" ImageFocus="buttons.bmp" ImageFocusRect="0,40,25,19"/>
-    <Button Left="w-75" Top="0" Width="25" Height="19" ToolTip="Lyrics Bar" Name="Minimize" Image="buttons.bmp" ImageRect="25,0,25,19" ImageSel="buttons.bmp" ImageSelRect="25,20,25,19" ImageFocus="buttons.bmp" ImageFocusRect="25,40,25,19" DynCmd="dyncmd_change_to_bar"/>
+    <Button Left="w-75" Top="0" Width="25" Height="19" ID="dyncmd_change_to_bar" ToolTip="Lyrics Bar" Name="Minimize" Image="buttons.bmp" ImageRect="25,0,25,19" ImageSel="buttons.bmp" ImageSelRect="25,20,25,19" ImageFocus="buttons.bmp" ImageFocusRect="25,40,25,19"/>
     <Button Left="w-50" Top="0" Width="43" Height="19" ID="ID_QUIT" Name="Quit" Image="buttons.bmp" ImageRect="50,0,43,19" ImageSel="buttons.bmp" ImageSelRect="50,20,43,19" ImageFocus="buttons.bmp" ImageFocusRect="50,40,43,19"/>
     <XScaleImage Left="0" Top="h-8" Width="w" Height="8" Name="bottom" Image="caption.bmp" ImageRect="0,24,275,8" ImageScaleXStart="10" ImageScaleXEnd="260"/>
     <Image Left="0" Top="23" Width="4" Height="h-31" Name="left frame" Image="caption.bmp" ImageRect="276,0,4,23" BltMode="stretch"/>
