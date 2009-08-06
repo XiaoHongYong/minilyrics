@@ -631,6 +631,8 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				bSetTextAlpha = true;
 				lct = LCT_HIGH;
 			}
+			else
+				nAlpha = 255 - nAlpha;
 		}
 		else if (linePos == LP_BELOW_CUR_LINE)
 		{

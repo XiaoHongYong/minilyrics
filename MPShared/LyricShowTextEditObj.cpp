@@ -519,7 +519,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					LPCTSTR	szPos = strLine.c_str() + strTimeTag.size();
 					while (*szPos == ' ' || *szPos == '\t')
 						szPos++;
-					if (islower(*szPos))
+					if ((unsigned)(*szPos) <= 255 && islower(*szPos))
 					{
 						szReplaceWith[0] = toupper(*szPos);
 						int		nPos = int(szPos - strLine.c_str());
@@ -532,7 +532,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					LPCTSTR	szPos = strLine.c_str();
 					while (*szPos == ' ' || *szPos == '\t')
 						szPos++;
-					if (islower(*szPos))
+					if ((unsigned)(*szPos) <= 255 && islower(*szPos))
 					{
 						szReplaceWith[0] = toupper(*szPos);
 						int		nPos = int(szPos - strLine.c_str());
@@ -807,6 +807,17 @@ void CLyricShowTextEditObj::UpdateTextFontColor()
 {
 	SetSelColor(GetHighlightColor(), m_clrFocusLineBg);
 	SetColorTheme(GetHighlightColor(), GetLowlightColor(), m_clrTag, m_clrFocusLineBg);
+
+	int			nHeight, nWeight;
+	BYTE		byItalic;
+	tstring		strFaceName, strFaceNameOthers;
+
+	ProfileGetLyricsFont(m_strSectName.c_str(), nHeight, nWeight, byItalic, strFaceName, strFaceNameOthers);
+
+	m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), 15, nWeight, byItalic);
+	m_nFontHeight = m_font.GetHeight();
+
+	OnFontChanged();
 }
 
 void CLyricShowTextEditObj::SyncTimeTag(bool bMoveToNextLine)

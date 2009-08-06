@@ -221,7 +221,7 @@ protected:
 	IScrollBar				*m_pScrollBar;
 	CUIObject				*m_pObjScrollBar;
 
-	CImgList				m_imageList;
+	CSFImgList				m_imageList;
 	tstring					m_strImageList;
 
 	MLColor					m_clrBk, m_clrSelRowBk;

@@ -883,8 +883,8 @@ BOOL CSkinTreeCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	else if (_tcsicmp(szProperty, _T("ImageList")) == 0)
 	{
 		m_strImageList = szValue;
-		m_imageList.Close();
-		m_imageList.LoadBitmap(m_pSkin->GetSkinFactory(), szValue, 16);
+		m_imageList.Destroy();
+		m_imageList.Load(m_pSkin->GetSkinFactory(), szValue, 16);
 	}
 	else
 		return FALSE;

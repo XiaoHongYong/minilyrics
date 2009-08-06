@@ -4,24 +4,24 @@
     <Menu Name="NormalMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
       <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" IDCmd="dyncmd_change_to_bar"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
     <Menu Name="LyrBarMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
       <Item Action="Append" Type="item" Name="&amp;Normal Mode" IDCmd="dyncmd_change_to_normal"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
     <Menu Name="FloatingLyrMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" IDCmd="dyncmd_change_to_bar"/>
       <Item Action="Append" Type="item" Name="&amp;Normal Mode" IDCmd="dyncmd_change_to_normal"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="dyncmd_openclose_lyr_editor" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
   </Menus>
   <DynCmds>
     <cmd ID="dyncmd_change_to_bar" func="change_skin_wnd" param="lyrbar"/>
     <cmd ID="dyncmd_change_to_floatinglyr" func="change_skin_wnd" param="floatinglyr"/>
     <cmd ID="dyncmd_change_to_normal" func="change_skin_wnd" param="minilyrics"/>
-    <cmd ID="dyncmd_openclose_lyr_editor" func="openclose_skin_wnd" param="lyreditor" />
+    <cmd ID="ID_LYR_EDITOR" func="openclose_skin_wnd" param="lyreditor" />
     <cmd ID="dyncmd_is_lyr_editor_visible" func="is_skin_wnd_visible" param="lyreditor" />
   </DynCmds>
   <DynControls>
