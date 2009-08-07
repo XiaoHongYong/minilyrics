@@ -23,9 +23,73 @@ public:
 	void ExtendXBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, int nImageX, int nImageY, int nImageCx, int nImageCy, BlendPixMode bpm = BPM_BLEND);
 	void ExtendYBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm = BPM_BLEND);
 	void TileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm = BPM_BLEND);
+	void TileMaskBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, CRawImage *pImageMask, BlendPixMode bpm = BPM_BLEND);
 	void TileBltEx(CRawGraph *pGraphics, int xOrg, int yOrg, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm = BPM_BLEND);
 
 protected:
+	template<class _DrawImageFun>
+	void TileBltT(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, _DrawImageFun &drawFunc)
+	{
+		assert(m_cy);
+		assert(m_cx);
+
+		if (m_cy == 0 || m_cx == 0)
+			return;
+
+		int			x, y;
+
+		//
+		// 先将Y方向的绘画了
+		// 1111 1111 1111 222
+		// 1111 1111 1111 222
+		// 3333 3333 3333 444
+		for (y = yDest; y + m_cy < yDest + nHeightDest; y += m_cy)
+		{
+			// 1111
+			for (x = xDest; x + m_cx <= xDest + nWidthDest; x += m_cx)
+			{
+				drawFunc(
+					x, y,
+					m_cx, m_cy,
+					m_x, m_y);
+			}
+
+			// 2222
+			if (x < xDest + nWidthDest)
+			{
+				drawFunc(
+					x, y,
+					xDest + nWidthDest - x, m_cy,
+					m_x, m_y);
+			}
+		}
+
+		if (y < yDest + nHeightDest)
+		{
+			int		nLeftCy;
+
+			nLeftCy = yDest + nHeightDest - y;
+
+			// 3333
+			for (x = xDest; x + m_cx <= xDest + nWidthDest; x += m_cx)
+			{
+				drawFunc(
+					x, y,
+					m_cx, nLeftCy,
+					m_x, m_y);
+			}
+
+			// 444
+			if (x < xDest + nWidthDest)
+			{
+				drawFunc(
+					x, y,
+					xDest + nWidthDest - x, nLeftCy,
+					m_x, m_y);
+			}
+		}
+	}
+
 	template<class _DrawImageFun>
 	void TileBltExT(CRawGraph *pGraphics, int xOrg, int yOrg, int xDest, int yDest, int nWidthDest, int nHeightDest, _DrawImageFun &drawFunc)
 	{
@@ -55,7 +119,7 @@ protected:
 			if (xSrc != 0)
 			{
 				nW = min(m_cx - xSrc, nWidthDest);
-				drawFunc(this,
+				drawFunc(
 					xDest, yDest,
 					nW, nLeftCy,
 					m_x + xSrc, m_y + ySrc);
@@ -69,7 +133,7 @@ protected:
 			{
 				for (x = nTileX; x + m_cx <= xDest + nWidthDest; x += m_cx)
 				{
-					drawFunc(this,
+					drawFunc(
 						x, yDest,
 						m_cx, nLeftCy,
 						m_x, m_y + ySrc);
@@ -78,7 +142,7 @@ protected:
 				// AAA
 				if (x < xDest + nWidthDest)
 				{
-					drawFunc(this,
+					drawFunc(
 						x, yDest,
 						xDest + nWidthDest - x, nLeftCy,
 						m_x, m_y + ySrc);
@@ -95,7 +159,7 @@ protected:
 			if (xSrc != 0)
 			{
 				nW = min(m_cx - xSrc, nWidthDest);
-				drawFunc(this,
+				drawFunc(
 					xDest, y,
 					nW, m_cy,
 					m_x + xSrc, m_y);
@@ -104,7 +168,7 @@ protected:
 			// 1111
 			for (x = nTileX; x + m_cx < xDest + nWidthDest; x += m_cx)
 			{
-				drawFunc(this,
+				drawFunc(
 					x, y,
 					m_cx, m_cy,
 					m_x, m_y);
@@ -113,7 +177,7 @@ protected:
 			// 222
 			if (x < xDest + nWidthDest)
 			{
-				drawFunc(this,
+				drawFunc(
 					x, y,
 					xDest + nWidthDest - x, m_cy,
 					m_x, m_y);
@@ -130,7 +194,7 @@ protected:
 			if (xSrc != 0)
 			{
 				nW = min(m_cx - xSrc, nWidthDest);
-				drawFunc(this,
+				drawFunc(
 					xDest, y,
 					nW, nLeftCy,
 					m_x + xSrc, m_y);
@@ -139,7 +203,7 @@ protected:
 			// 3333
 			for (x = nTileX; x + m_cx <= xDest + nWidthDest; x += m_cx)
 			{
-				drawFunc(this,
+				drawFunc(
 					x, y,
 					m_cx, nLeftCy,
 					m_x, m_y);
@@ -148,7 +212,7 @@ protected:
 			// 444
 			if (x < xDest + nWidthDest)
 			{
-				drawFunc(this,
+				drawFunc(
 					x, y,
 					xDest + nWidthDest - x, nLeftCy,
 					m_x, m_y);

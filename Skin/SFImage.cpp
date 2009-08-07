@@ -161,6 +161,57 @@ void CSFImage::ExtendYBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidth
 	}
 }
 
+class CDrawImageFun
+{
+public:
+	void operator()(int xdest, int ydest, int width, int height, int xsrc, int ysrc)
+	{
+		m_pImage->Blt(m_pGraph, xdest, ydest, width, height, xsrc, ysrc, m_bpm);
+	}
+public:
+	CRawImage		*m_pImage;
+	CRawGraph		*m_pGraph;
+	BlendPixMode	m_bpm;
+
+};
+
+void CSFImage::TileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
+{
+	CDrawImageFun	fun;
+
+	fun.m_pImage = this;
+	fun.m_pGraph = pGraphics;
+	fun.m_bpm = bpm;
+	TileBltT(pGraphics, xDest, yDest, nWidthDest, nHeightDest, fun);
+}
+
+class CDrawMaskImageFun
+{
+public:
+	void operator()(int xdest, int ydest, int width, int height, int xsrc, int ysrc)
+	{
+		m_pImage->MaskBlt(m_pGraph, xdest, ydest, width, height, xsrc, ysrc, m_pImageMask, m_bpm);
+	}
+public:
+	CRawImage		*m_pImage;
+	CRawGraph		*m_pGraph;
+	CRawImage		*m_pImageMask;
+	BlendPixMode	m_bpm;
+
+};
+
+void CSFImage::TileMaskBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, CRawImage *pImageMask, BlendPixMode bpm)
+{
+	CDrawMaskImageFun	fun;
+
+	fun.m_pImage = this;
+	fun.m_pGraph = pGraphics;
+	fun.m_pImageMask = pImageMask;
+	fun.m_bpm = bpm;
+	TileBltT(pGraphics, xDest, yDest, nWidthDest, nHeightDest, fun);
+}
+
+/*
 void CSFImage::TileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
 {
 	assert(m_cy);
@@ -222,6 +273,7 @@ void CSFImage::TileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDes
 		}
 	}
 }
+*/
 
 /*
 template<class _DrawImageFun>
@@ -354,23 +406,11 @@ void CSkinImage::TileBltExT(CRawGraph *pGraphics, int xOrg, int yOrg, int xDest,
 	}
 }*/
 
-class CDrawImageFun
-{
-public:
-	void operator()(CRawImage *pImage, int xdest, int ydest, int width, int height, int xsrc, int ysrc)
-	{
-		pImage->Blt(m_pGraph, xdest, ydest, width, height, xsrc, ysrc);
-	}
-public:
-	CRawGraph	*m_pGraph;
-	BlendPixMode	m_bpm;
-
-};
-
 void CSFImage::TileBltEx(CRawGraph *pGraphics, int xOrg, int yOrg, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
 {
 	CDrawImageFun	fun;
 
+	fun.m_pImage = this;
 	fun.m_pGraph = pGraphics;
 	fun.m_bpm = bpm;
 	TileBltExT(pGraphics, xOrg, yOrg, xDest, yDest, nWidthDest, nHeightDest, fun);

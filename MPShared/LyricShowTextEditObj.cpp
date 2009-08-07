@@ -7,6 +7,7 @@
 #include "MLCmd.h"
 #include "LyricShowTextEditObj.h"
 #include "SkinToolBar.h"
+#include "MPSkinMenu.h"
 
 #define TIMER_SPAN_LYR_PREVIEW_UPDATE	500
 
@@ -660,8 +661,8 @@ bool CLyricShowTextEditObj::OnRButtonUp(UINT nFlags, CPoint point)
 
 void CLyricShowTextEditObj::OnContexMenu(int xPos, int yPos)
 {
-	CMLMenu	menu;
-	bool	bEnable;
+	CMPSkinMenu	menu;
+	bool		bEnable;
 
 	menu.LoadPopupMenu(IDM_MENU, 2);
 
@@ -808,14 +809,18 @@ void CLyricShowTextEditObj::UpdateTextFontColor()
 	SetSelColor(GetHighlightColor(), m_clrFocusLineBg);
 	SetColorTheme(GetHighlightColor(), GetLowlightColor(), m_clrTag, m_clrFocusLineBg);
 
-	int			nHeight, nWeight;
-	BYTE		byItalic;
-	tstring		strFaceName, strFaceNameOthers;
+	const int nEditorFontMaxSize = 18;
+	if (m_font.GetHeight() > nEditorFontMaxSize)
+	{
+		int			nHeight, nWeight;
+		BYTE		byItalic;
+		tstring		strFaceName, strFaceNameOthers;
 
-	ProfileGetLyricsFont(m_strSectName.c_str(), nHeight, nWeight, byItalic, strFaceName, strFaceNameOthers);
+		ProfileGetLyricsFont(m_strSectName.c_str(), nHeight, nWeight, byItalic, strFaceName, strFaceNameOthers);
 
-	m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), 15, nWeight, byItalic);
-	m_nFontHeight = m_font.GetHeight();
+		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nEditorFontMaxSize, nWeight, byItalic);
+		m_nFontHeight = m_font.GetHeight();
+	}
 
 	OnFontChanged();
 }

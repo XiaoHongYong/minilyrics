@@ -42,8 +42,12 @@ void CSkinNStatusImage::Draw(CRawGraph *pGraph)
 	}
 	else if (m_BltMode == BLT_TILE)
 	{
-		si->img.TileBlt(pGraph, m_rcObj.left, m_rcObj.top,
-			m_rcObj.Width(), m_rcObj.Height(), m_bpm);
+		if (m_imgMask.IsValid())
+			si->img.TileMaskBlt(pGraph, m_rcObj.left, m_rcObj.top,
+			m_rcObj.Width(), m_rcObj.Height(), &m_imgMask, m_bpm);
+		else
+			si->img.TileBlt(pGraph, m_rcObj.left, m_rcObj.top,
+				m_rcObj.Width(), m_rcObj.Height(), m_bpm);
 	}
 	else
 	{
