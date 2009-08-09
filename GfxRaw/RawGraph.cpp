@@ -290,7 +290,7 @@ void CRawGraph::VertAlphaFadeOut(const RECT *lpRect, bool bTop)
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
-	fStep = (float)1 / (yMax - y);
+	fStep = (float)1 / (lpRect->bottom - lpRect->top);
 	if (bTop)
 	{
 		fStart = 0;
@@ -300,6 +300,8 @@ void CRawGraph::VertAlphaFadeOut(const RECT *lpRect, bool bTop)
 		fStep = -fStep;
 		fStart = 1;
 	}
+
+	fStart += fStep * (y - lpRect->top);
 
 	// PIX_SIZE is the pixel size(rgba).
 	pRow = m_imageData.PixPtr(x, y);
@@ -333,7 +335,7 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
-	fStep = (float)1 / (yMax - y);
+	fStep = (float)1 / (lpRect->bottom - lpRect->top);
 	if (bTop)
 	{
 		fStart = 0;
@@ -343,6 +345,8 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 		fStep = -fStep;
 		fStart = 1;
 	}
+
+	fStart += fStep * (y - lpRect->top);
 
 	pRow = m_imageData.PixPtr(x, y);
 	for (; y < yMax; y++)
@@ -374,7 +378,7 @@ void CRawGraph::HorzAlphaFadeOut(const RECT *lpRect, bool bLeft)
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
-	fStep = (float)1 / (xMax - x);
+	fStep = (float)1 / (lpRect->right - lpRect->left);
 	if (bLeft)
 	{
 		fStart = 0;
@@ -384,6 +388,8 @@ void CRawGraph::HorzAlphaFadeOut(const RECT *lpRect, bool bLeft)
 		fStep = -fStep;
 		fStart = 1;
 	}
+
+	fStart += fStep * (x - lpRect->left);
 
 	pRow = m_imageData.PixPtr(x, y);
 	for (; y < yMax; y++)
@@ -422,7 +428,7 @@ void CRawGraph::HorzFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bLeft
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
-	fStep = (float)1 / (xMax - x);
+	fStep = (float)1 / (lpRect->right - lpRect->left);
 	if (bLeft)
 	{
 		fStart = 0;
@@ -432,6 +438,8 @@ void CRawGraph::HorzFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bLeft
 		fStep = -fStep;
 		fStart = 1;
 	}
+
+	fStart += fStep * (x - lpRect->left);
 
 	pRow = m_imageData.PixPtr(x, y);
 	for (; y < yMax; y++)

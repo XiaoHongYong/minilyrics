@@ -107,8 +107,7 @@ FAILED:
 	return NULL;
 }
 
-/*
-BOOL CBmpFile::Save(LPCTSTR szFile)
+int SaveBmpFileFromRawImageData(PRAW_IMAGE_DATA pImageData, LPCTSTR szFile)
 {
 	BITMAPFILEHEADER	bmfh;
 	FILE				*fp;
@@ -116,8 +115,8 @@ BOOL CBmpFile::Save(LPCTSTR szFile)
 	fp = _tfopen(szFile, _T("wb"));
 	if (!fp)
 	{
-		ERRLOG1(_T("Can't Create file: %s"), szFile);
-		return FALSE;
+		ERRLOG1(_T("Can't create file: %s"), szFile);
+		return ERR_OPEN_FILE;
 	}
 
 	bmfh.bfSize = sizeof(bmfh);
@@ -130,20 +129,28 @@ BOOL CBmpFile::Save(LPCTSTR szFile)
 	if (fwrite(&bmfh, 1, sizeof(bmfh), fp) != sizeof(bmfh))
 		goto FAILED;
 
-	// Wirte BITMAPINFO
-	if (fwrite(m_lpImgData->GetBitMapInfo(), 1, m_lpImgData->GetBitMapInfoSize(), fp) != m_lpImgData->GetBitMapInfoSize())
+	BITMAPINFO	bmpInfo;
+	memset(&bmpInfo, 0, sizeof(bmpInfo));
+	bmpInfo.bmiHeader.biBitCount = pImageData->bitCount;
+	bmpInfo.bmiHeader.biHeight = pImageData->height;
+	bmpInfo.bmiHeader.biWidth = pImageData->width;
+	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	bmpInfo.bmiHeader.biPlanes = 1;
+	bmpInfo.bmiHeader.biSizeImage = pImageData->GetBuffSize();
+
+	// Write BITMAPINFO
+	if (fwrite(&bmpInfo, 1, bmpInfo.bmiHeader.biSize, fp) != bmpInfo.bmiHeader.biSize)
 		goto FAILED;
 
 	// Write Data
-	if (fwrite(m_lpImgData->GetImgData(), 1, m_lpImgData->GetImgDataSize(), fp) != m_lpImgData->GetImgDataSize())
+	if (fwrite(pImageData->buff, 1, pImageData->GetBuffSize(), fp) != pImageData->GetBuffSize())
 		goto FAILED;
 
 	fclose(fp);
 
-	return TRUE;
+	return ERR_OK;
 FAILED:
 	fclose(fp);
 
-	return FALSE;
+	return ERR_WRITE_FILE;
 }
-*/

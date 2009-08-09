@@ -33,9 +33,9 @@ public:
 	//
 	bool CreatePopupMenu();
 
-	void AppendItem(UINT nID, LPCTSTR szText);
+	virtual void AppendItem(UINT nID, LPCTSTR szText);
 	void AppendSeperator();
-	void InsertItem(int nPos, UINT nID, LPCTSTR szText);
+	virtual void InsertItem(int nPos, UINT nID, LPCTSTR szText);
 	void InsertSeperator(int nPos);
 	void RemoveItem(int nPos);
 

@@ -178,8 +178,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		CRect	rc;
 
 		rc.SetRect(m_rcObj.left, m_rcObj.top, m_rcObj.right, m_rcObj.top + m_nFontHeight);
-		if (rc.bottom > m_rcObj.bottom)
-			rc.bottom = m_rcObj.bottom;
 		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 			pGraphics->VertAlphaFadeOut(&rc, true);
 		else
@@ -187,8 +185,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 		rc.bottom = m_rcObj.bottom;
 		rc.top = m_rcObj.bottom - m_nFontHeight;
-		if (rc.top < m_rcObj.top)
-			rc.top = m_rcObj.top;
 		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 			pGraphics->VertAlphaFadeOut(&rc, false);
 		else
@@ -198,6 +194,16 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 	// 恢复为原来的剪裁区域大小
 	pGraphics->RecoverClipBox();
+
+	// if (g_bSave)
+// 	{
+// 		static int g_n = 0;
+// 		g_n++;
+// 		CStrPrintf	strFile(_T("C:\\a_%03d%d.bmp"), g_n, prcUpdate);
+// 
+// 		SaveBmpFileFromRawImageData(pGraphics->GetRawBuff(), strFile.c_str());
+// 		g_bSave = false;
+// 	}
 }
 
 void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine)
