@@ -401,33 +401,25 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	m_strTitle = g_Player.GetTitle();
 	g_mpApp.GetAssociateFileKeyword(m_szAssociateKeyword, CountOf(m_szAssociateKeyword));
 
-#ifdef _WIN32_DESKTOP
 	{
-		//
-		// 记住上次保存的窗口大小
-		//
-		CRect	rc, rcRestrict;
-		int		cx, cy;
+		CRect		rc;
 
-		GetWindowRect(&rc);
-		cx = g_Profile.GetProfileInt(_T("DlgSearchLyr_width"), rc.Width());
-		cy = g_Profile.GetProfileInt(_T("DlgSearchLyr_height"), rc.Height());
-		if (cx <= 450)
-			cx = 450;
-		if (cy <= 300)
-			cy = 300;
-		rc.right = rc.left + cx;
-		rc.bottom = rc.top + cy;
-		GetMonitorRestrictRect(rc, rcRestrict);
+		// Reload latest window position
+		if (Scan4IntX(g_Profile.GetProfileString(_T("SearchLyrDlgPos"), _T("")),
+			rc.left, rc.top, rc.right, rc.bottom))
+		{
+			// The right and bottom is the width and height of window.
+			rc.right += rc.left;
+			rc.bottom += rc.top;
+			if (rc.Width() <= 450)
+				rc.right = rc.left + 450;
+			if (rc.Height() <= 300)
+				rc.bottom = rc.top + 300;
 
-		if (cx > rcRestrict.Width() + 15)
-			cx = rcRestrict.Width();
-		if (cy > rcRestrict.Height() + 15)
-			cy = rcRestrict.Height();
-
-		MoveWindow(rc.left, rc.top, cx, cy, FALSE);
+			if (!IsWndOutOfScreen(&rc))
+				MoveWindow(rc.left, rc.top, rc.Width(), rc.Height());
+		}
 	}
-#endif // _WIN32_DESKTOP
 
 	m_cbTitle.Attach(this, IDC_CB_TITLE);
 	m_cbArtist.Attach(this, IDC_CB_ARTIST);
@@ -507,14 +499,15 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 
 void CDlgSearchLyrics::OnDestroy()
 {
-#ifdef _WIN32_DESKTOP
-	WINDOWPLACEMENT		wndPlacement;
+	CRect		rc;
 
-	wndPlacement.length = sizeof(wndPlacement);
-	GetWindowPlacement(m_hWnd, &wndPlacement);
-	g_Profile.WriteProfileInt(_T("DlgSearchLyr_width"), CRect(wndPlacement.rcNormalPosition).Width());
-	g_Profile.WriteProfileInt(_T("DlgSearchLyr_height"), CRect(wndPlacement.rcNormalPosition).Height());
-#endif
+	if (GetWindowRect(&rc))
+	{
+		// Save window position
+		g_Profile.WriteProfileString(_T("SearchLyrDlgPos"), 
+			CStrPrintf(_T("%d,%d,%d,%d"), rc.left, rc.top, rc.Width(), rc.Height()).c_str());
+	}
+
 	m_cmdBar.Destroy();
 
 	m_resultList.SaveColumnWidth(_T("DlgSearchLyr"));
