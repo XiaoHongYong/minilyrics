@@ -22,7 +22,9 @@ public:
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	void Draw(CRawGraph *pGraph);
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 	void SetRating(int nRating);
 	int GetRating() { return m_nRating; }

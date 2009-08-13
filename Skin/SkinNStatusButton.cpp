@@ -317,6 +317,7 @@ PARSE_VALUE_FAILED:
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinNStatusButton::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -353,6 +354,7 @@ void CSkinNStatusButton::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }
+#endif // _SKIN_EDITOR_
 
 int CSkinNStatusButton::GetStatus()
 {

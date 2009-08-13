@@ -119,6 +119,7 @@ BOOL CSkinPicText::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinPicText::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -130,6 +131,7 @@ void CSkinPicText::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropImageFile(_T("TextImage"), m_strImgText.c_str());
 	listProperties.AddPropStr(_T("ImageChars"), m_strImgChars.c_str());
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinPicText::SetText(LPCTSTR szText)
 {

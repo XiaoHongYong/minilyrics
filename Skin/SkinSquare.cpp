@@ -41,9 +41,11 @@ BOOL CSkinSquare::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinSquare::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
 
 	listProperties.AddPropColor(_T("BgColor"), m_clrBg, true);
 }
+#endif // _SKIN_EDITOR_

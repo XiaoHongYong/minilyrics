@@ -7,7 +7,7 @@ libskin_a_SOURCES =              SkinFadeArea.cpp             SkinVScrollBar.cpp
 	SkinCaption.cpp              SkinNStatusButton.cpp        StdAfx.cpp\
 	SkinContainer.cpp            SkinResMgr.cpp               UIObject.cpp\
 	SkinDataObj.cpp              SkinScaleImage.cpp           UIObjectIterator.cpp\
-	SkinDecorativeContainer.cpp  SkinSquare.cpp\
+	SkinDecorativeContainer.cpp  SkinSquare.cpp               SFImgList.cpp\
 	SkinFactory.cpp              SkinToggleCtrlContainer.cpp\
 	EditHandler.cpp              gtk2/SplashScreenWnd.cpp\
 	gtk2/ImgList.cpp  gtk2/SkinRgn.cpp  gtk2/SkinVScrollBarOSStyle.cpp

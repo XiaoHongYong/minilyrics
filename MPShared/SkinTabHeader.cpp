@@ -94,6 +94,7 @@ void CSkinTabHeader::Button::FromXML(CSkinTabHeader *pTabHeader, SXNode *pNode)
 }
 
 
+#ifdef _SKIN_EDITOR_
 void CSkinTabHeader::Button::ToXML(CSkinTabHeader *pTabHeader, CXMLWriter &xml)
 {
 	xml.WriteStartElement(_T("button"));
@@ -111,6 +112,7 @@ void CSkinTabHeader::Button::ToXML(CSkinTabHeader *pTabHeader, CXMLWriter &xml)
 
 	xml.WriteEndElement();
 }
+#endif // _SKIN_EDITOR_
 
 
 void CSkinTabHeader::OnCreate()
@@ -403,7 +405,7 @@ BOOL CSkinTabHeader::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
-
+#ifdef _SKIN_EDITOR_
 void CSkinTabHeader::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -415,6 +417,7 @@ void CSkinTabHeader::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropInt(_T("ActiveButton"), m_nActiveButton, m_nActiveButton != 0);
 	m_font.EnumProperties(listProperties);
 }
+#endif // _SKIN_EDITOR_
 
 
 int CSkinTabHeader::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
@@ -442,6 +445,7 @@ int CSkinTabHeader::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
 }
 
 
+#ifdef _SKIN_EDITOR_
 void CSkinTabHeader::OnToXMLChild(CXMLWriter &xmlStream)
 {
 	for (int i = 0; i < (int)m_vButtons.size(); i++)
@@ -451,6 +455,7 @@ void CSkinTabHeader::OnToXMLChild(CXMLWriter &xmlStream)
 		bt.ToXML(this, xmlStream);
 	}
 }
+#endif // _SKIN_EDITOR_
 
 
 void CSkinTabHeader::InvalidateButton(int nButton)

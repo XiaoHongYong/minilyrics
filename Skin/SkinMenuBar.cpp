@@ -517,10 +517,12 @@ BOOL CSkinMenuBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 }
 
 
+#ifdef _SKIN_EDITOR_
 void CSkinMenuBar::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
 }
+#endif // _SKIN_EDITOR_
 
 
 int CSkinMenuBar::HitTestSubMenu(const POINT point)

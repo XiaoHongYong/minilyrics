@@ -216,12 +216,14 @@ BOOL CMediaAlbumArtCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CMediaAlbumArtCtrl::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
 
 	listProperties.AddPropImageFile(SZ_PN_IMAGE, m_strImgFile.c_str(), true);
 }
+#endif // _SKIN_EDITOR_
 
 void CMediaAlbumArtCtrl::UpdateAlbumArt()
 {

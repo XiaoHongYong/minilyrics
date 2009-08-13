@@ -61,10 +61,12 @@ BOOL CMPSkinMediaNumInfoCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CMPSkinMediaNumInfoCtrl::EnumProperties(CUIObjProperties &listProperties)
 {
 
 }
+#endif // _SKIN_EDITOR_
 
 void CMPSkinMediaNumInfoCtrl::UpdateShowTrackInfo()
 {

@@ -134,7 +134,9 @@ public:
 	void Draw(CRawGraph *pGraph);
 
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 	CSkinVScrollBar();
 	virtual ~CSkinVScrollBar();
@@ -168,7 +170,9 @@ public:
 	void Draw(CRawGraph *pGraph);
 
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 	CSkinHScrollBar();
 	virtual ~CSkinHScrollBar();

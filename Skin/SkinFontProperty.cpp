@@ -223,6 +223,7 @@ bool CSkinFontProperty::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 }
 
 
+#ifdef _SKIN_EDITOR_
 void CSkinFontProperty::EnumProperties(CUIObjProperties &listProperties)
 {
 	listProperties.AddPropBoolStr(_T("CustomizedFont"), m_bCustomized, !m_bCustomized);
@@ -233,6 +234,7 @@ void CSkinFontProperty::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropInt(_T("FontItalic"), m_font.GetItalic(), IsFlagSet(m_nFlagProperties, FP_ITALIC));
 	listProperties.AddPropInt(_T("FontUnderLine"), m_font.IsUnderline(), IsFlagSet(m_nFlagProperties, FP_UNDERLINE));
 }
+#endif // _SKIN_EDITOR_
 
 
 LPCTSTR CSkinFontProperty::GetName()

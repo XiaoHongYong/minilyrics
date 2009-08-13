@@ -892,6 +892,7 @@ BOOL CSkinTreeCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinTreeCtrl::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -902,7 +903,7 @@ void CSkinTreeCtrl::EnumProperties(CUIObjProperties &listProperties)
 	m_font.EnumProperties(listProperties);
 	listProperties.AddPropImageFile(_T("ImageList"), m_strImageList.c_str());
 }
-
+#endif // _SKIN_EDITOR_
 
 void CSkinTreeCtrl::SetBkColor(const MLColor &clrBk)
 {

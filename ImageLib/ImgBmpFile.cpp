@@ -35,6 +35,11 @@ typedef struct tagBITMAPINFOHEADER{
 	DWORD      biClrImportant;
 } BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
 
+typedef struct tagBITMAPINFO {
+	BITMAPINFOHEADER    bmiHeader;
+	RGBQUAD             bmiColors[1];
+} BITMAPINFO, *LPBITMAPINFO, *PBITMAPINFO;
+
 #pragma pack(pop)
 
 #endif

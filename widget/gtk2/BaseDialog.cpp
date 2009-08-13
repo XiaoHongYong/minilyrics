@@ -338,11 +338,11 @@ int CBaseDialog::DoModal(CBaseWnd *pWndParent)
 	m_bModal = TRUE;
 
 	nRet = CResourceMgr::GetDialog(m_dlgRes, m_nIDTemplate);
-	printf("CResourceMgr::GetDialog: %d\n");
+	DBGLOG1("CResourceMgr::GetDialog: %d\n", m_nIDTemplate);
 	if (nRet != ERR_OK)
 		ERRLOG1(_T("Can't get dialog template by ID: %d"), m_nIDTemplate);
 
-	printf("CResourceMgr::GetDialog: %s\n", m_dlgRes.m_strCaption.c_str());
+	DBGLOG1("CResourceMgr::GetDialog: %s\n", m_dlgRes.m_strCaption.c_str());
 
 // 	if (!CBaseWnd::Create(m_dlgRes.m_strCaption.c_str(), 
 // 		m_dlgRes.m_x, m_dlgRes.m_y, m_dlgRes.m_width, m_dlgRes.m_height, pWndParent, WS_OVERLAPPED | WS_NOOWNERDRAW))

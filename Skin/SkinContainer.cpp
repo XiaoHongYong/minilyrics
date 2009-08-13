@@ -404,12 +404,14 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return true;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinContainer::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
 
 	listProperties.AddPropStr(_T("ContextMenu"), m_strContextMenu.c_str(), !m_strContextMenu.empty());
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinContainer::Destroy()
 {
@@ -644,6 +646,7 @@ void CSkinContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pO
 		m_pSkin->UpdateMemGraphicsToScreen(lpRect);
 }
 
+#ifdef _SKIN_EDITOR_
 bool CSkinContainer::HasXMLChild()
 {
 	return !m_vUIObjs.empty();
@@ -656,3 +659,4 @@ void CSkinContainer::OnToXMLChild(CXMLWriter &xmlStream)
 		m_vUIObjs[i]->ToXML(xmlStream);
 	}
 }
+#endif // _SKIN_EDITOR_

@@ -21,7 +21,9 @@ public:
 	bool OnLButtonDblClk(UINT nFlags, CPoint point);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 protected:
 	CSFImage		m_imgBk, m_imgFocus;

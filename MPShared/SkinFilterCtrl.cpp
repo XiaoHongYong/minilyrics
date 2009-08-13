@@ -30,10 +30,12 @@ BOOL CSkinFilterCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return false;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinFilterCtrl::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
 }
+#endif // _SKIN_EDITOR_
 
 
 void CSkinFilterCtrl::Draw(CRawGraph *pGraph)

@@ -77,7 +77,9 @@ int CSkinFileXML::Save(LPCTSTR szFile)
 {
 	CXMLWriter	xml;
 
+#ifdef _SKIN_EDITOR_
 	m_xml.m_pRoot->ToXML(xml);
+#endif // _SKIN_EDITOR_
 
 	if (xml.SaveAsFile(szFile))
 		return ERR_OK;
@@ -472,6 +474,7 @@ int CDynamicCmds::FromXML(SXNode *pNodeDynCmds)
 
 }
 
+#ifdef _SKIN_EDITOR_
 SXNode *CDynamicCmds::ToXML()
 {
 	ASSERT(m_pSkinFactory);
@@ -498,6 +501,7 @@ SXNode *CDynamicCmds::ToXML()
 
 	return pNodeRoot;
 }
+#endif // _SKIN_EDITOR_
 
 void CDynamicCmds::Free()
 {

@@ -621,6 +621,7 @@ bool CUIObject::IsPtIn(POINT pt)
 	return true;
 }
 
+#ifdef _SKIN_EDITOR_
 void CUIObject::EnumProperties(CUIObjProperties &listProperties)
 {
 	listProperties.AddPropStr(SZ_PN_NAME, m_strName.c_str(), !m_strName.empty());
@@ -641,6 +642,7 @@ void CUIObject::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropImage(_T("ImageMask"), _T("ImageMaskRect"), m_strMaskImage.c_str(), m_imgMask, !m_strMaskImage.empty());
 }
+#endif // _SKIN_EDITOR_
 
 int CUIObject::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
 {
@@ -669,6 +671,7 @@ int CUIObject::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
 	return ERR_OK;
 }
 
+#ifdef _SKIN_EDITOR_
 void CUIObject::ToXML(CXMLWriter &xmlStream)
 {
 	CUIObjProperties	properites;
@@ -687,6 +690,7 @@ void CUIObject::ToXML(CXMLWriter &xmlStream)
 
 	xmlStream.WriteEndElement();
 }
+#endif // _SKIN_EDITOR_
 
 UINT CUIObject::GetProfileInt(LPCTSTR szKeyName, int nDefault)
 {

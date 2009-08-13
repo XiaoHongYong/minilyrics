@@ -31,7 +31,9 @@ public:
 	void Draw(CRawGraph *pGraph);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 protected:
 	void UpdateAlbumArt();

@@ -792,6 +792,7 @@ BOOL CSkinVScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinVScrollBar::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -804,6 +805,7 @@ void CSkinVScrollBar::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropImageFile(SZ_PN_IMAGE, m_strBmpFile.c_str());
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinVScrollBar::OnScroll(UINT nSBCode)
 {
@@ -1096,6 +1098,7 @@ BOOL CSkinHScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinHScrollBar::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -1108,6 +1111,7 @@ void CSkinHScrollBar::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropImageFile(SZ_PN_IMAGE, m_strBmpFile.c_str());
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinHScrollBar::OnScroll(UINT nSBCode)
 {

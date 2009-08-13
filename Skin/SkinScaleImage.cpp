@@ -99,6 +99,7 @@ BOOL CSkinXScaleImage::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinXScaleImage::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -117,6 +118,7 @@ void CSkinXScaleImage::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropImageEx(SZ_PN_IMAGE, SZ_PN_IMAGERECT, m_strBmpBkFile.c_str(), m_imgBk, vExtra);
 	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }
+#endif // _SKIN_EDITOR_
 
 //////////////////////////////////////////////////////////////////////
 // CSkinYScaleImage
@@ -213,6 +215,7 @@ BOOL CSkinYScaleImage::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinYScaleImage::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -231,3 +234,4 @@ void CSkinYScaleImage::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropImageEx(SZ_PN_IMAGE, SZ_PN_IMAGERECT, m_strBmpBkFile.c_str(), m_imgBk, vExtra);
 	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }
+#endif // _SKIN_EDITOR_

@@ -100,6 +100,7 @@ BOOL CSkinNStatusImage::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinNStatusImage::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -121,6 +122,7 @@ void CSkinNStatusImage::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropBltMode(_T("BltMode"), m_BltMode);
 	listProperties.AddPropBlendPixMode(_T("BlendPixMode"), m_bpm, m_bpm != BPM_BLEND);
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinNStatusImage::SetMaxStat(int nMaxStat)
 {
@@ -184,6 +186,7 @@ BOOL CSkinImage::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinImage::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -201,6 +204,7 @@ void CSkinImage::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropBltMode(_T("BltMode"), m_BltMode);
 }
+#endif // _SKIN_EDITOR_
 
 ///////////////////////////////////////////////////////////////////////////////
 // class CSkinActiveImage
@@ -251,6 +255,7 @@ BOOL CSkinActiveImage::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinActiveImage::EnumProperties(CUIObjProperties &listProperties)
 {
 	CSkinImage::EnumProperties(listProperties);
@@ -266,3 +271,4 @@ void CSkinActiveImage::EnumProperties(CUIObjProperties &listProperties)
 		listProperties.AddPropImage(_T("ImageActive"), _T("ImageActiveRect"), _T(""), img);
 	}
 }
+#endif // _SKIN_EDITOR_

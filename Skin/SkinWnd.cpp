@@ -1297,6 +1297,7 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinWnd::EnumProperties(CUIObjProperties &listProperties)
 {
 	listProperties.AddPropStr(SZ_PN_NAME, m_strSkinWndName.c_str());
@@ -1341,6 +1342,7 @@ void CSkinWnd::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropInt(_T("TranslucencyAlphaOnHover"), m_nTranslucencyAlphaOnHover, m_nTranslucencyAlphaOnHover != 255);
 #endif
 }
+#endif // _SKIN_EDITOR_
 
 bool CSkinWnd::GetUnprocessedProperty(LPCTSTR szProperty, tstring &strValue)
 {
@@ -2349,6 +2351,7 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	return ERR_OK;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinWnd::ToXML(CXMLWriter &xmlStream)
 {
 	xmlStream.WriteStartElement(_SZ_SKINWND);
@@ -2365,6 +2368,7 @@ void CSkinWnd::ToXML(CXMLWriter &xmlStream)
 
 	xmlStream.WriteEndElement();
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinWnd::OnSwitchChildFocus(CUIObject *pUIObjFocusOld, CUIObject *pUIObjFocusNew)
 {

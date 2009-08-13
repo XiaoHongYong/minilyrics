@@ -20,7 +20,9 @@ public:
 	virtual ~CSkinButton();
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 	bool IsCheck();
 	void SetCheck(bool bCheck);

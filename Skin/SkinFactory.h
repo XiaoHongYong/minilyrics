@@ -117,7 +117,9 @@ public:
 	void Init(CSkinFactory *pSkinFactory) { m_pSkinFactory = pSkinFactory; }
 
 	int FromXML(SXNode *pNodeDynCmds);
+#ifdef _SKIN_EDITOR_
 	SXNode *ToXML();
+#endif // _SKIN_EDITOR_
 
 	void Free();
 

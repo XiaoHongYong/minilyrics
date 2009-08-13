@@ -235,10 +235,14 @@ public:
 
 	virtual bool IsPtIn(POINT pt);
 
+#ifdef _SKIN_EDITOR_
 	virtual void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 	virtual int FromXML(CSkinContainer *pContainer, SXNode *pXmlNode);
+#ifdef _SKIN_EDITOR_
 	virtual void ToXML(CXMLWriter &xmlStream);
+#endif // _SKIN_EDITOR_
 
 	virtual LPCTSTR GetClassName() { return ms_szClassName; }
 	virtual BOOL IsKindOf(LPCTSTR szClassName) { return _tcsicmp(szClassName, ms_szClassName) == 0; }
@@ -258,9 +262,11 @@ public:
 	virtual CSkinContainer *GetContainerIf() { return NULL; }
 
 protected:
+#ifdef _SKIN_EDITOR_
 	// 在导出到xml时，写完属性，写内容时调用
 	virtual bool HasXMLChild() { return false; }
 	virtual void OnToXMLChild(CXMLWriter &xmlStream) {}
+#endif // _SKIN_EDITOR_
 
 public:
 	CFormula	m_formTop;

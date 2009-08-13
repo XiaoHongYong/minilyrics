@@ -263,11 +263,15 @@ public:
 
 public:
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	virtual void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 	bool GetUnprocessedProperty(LPCTSTR szProperty, tstring &strValue);
 
+#ifdef _SKIN_EDITOR_
 	virtual void ToXML(CXMLWriter &xmlStream);
+#endif // _SKIN_EDITOR_
 
 	bool UpdateSkinProperty();
 

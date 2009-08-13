@@ -167,12 +167,14 @@ BOOL CSkinRateCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinRateCtrl::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
 
 	listProperties.AddPropImage(SZ_PN_IMAGE, SZ_PN_IMAGERECT, m_strBmpFile.c_str(), m_img);
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinRateCtrl::SetRating(int nRating)
 {

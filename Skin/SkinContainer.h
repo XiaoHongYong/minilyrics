@@ -36,7 +36,9 @@ public:
 	int FromXML(CSkinContainer *pContainer, SXNode *pXmlNode);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 public:
 	// functions for CSkinWnd
@@ -87,8 +89,10 @@ public:
 	void DispatchOnCreateMsg();
 
 protected:
+#ifdef _SKIN_EDITOR_
 	virtual bool HasXMLChild();
 	virtual void OnToXMLChild(CXMLWriter &xmlStream);
+#endif // _SKIN_EDITOR_
 
 	friend class CSkinWnd;
 	friend class CUIObjectIterator;

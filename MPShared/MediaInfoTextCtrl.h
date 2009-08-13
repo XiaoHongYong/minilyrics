@@ -25,7 +25,9 @@ public:
 	void OnTimer(int nId);
 
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 protected:
 	void UpdateShowTrackInfo();

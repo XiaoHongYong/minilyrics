@@ -890,7 +890,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			VLyrLines	vLyrics = g_LyricData.GetRawLyrics();
 
 			int			nCurLine = g_LyricData.GetCurPlayLine(vLyrics);
-			if (nCurLine >= 0 && nCurLine < vLyrics.size())
+			if (nCurLine >= 0 && nCurLine < (int)vLyrics.size())
 			{
 				if (nID == CMD_J_NEXT_LINE)
 				{

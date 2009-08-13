@@ -123,6 +123,7 @@ BOOL CMediaInfoTextCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return true;
 }
 
+#ifdef _SKIN_EDITOR_
 void CMediaInfoTextCtrl::EnumProperties(CUIObjProperties &listProperties)
 {
 	CSkinScrollText::EnumProperties(listProperties);
@@ -147,6 +148,7 @@ void CMediaInfoTextCtrl::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropInt(_T("SwitchTime"), m_nSwitchTime, true);
 	listProperties.AddPropBoolStr(_T("ShowTitle"), m_bShowTitle, !m_bShowTitle);
 }
+#endif // _SKIN_EDITOR_
 
 void CMediaInfoTextCtrl::UpdateShowTrackInfo()
 {

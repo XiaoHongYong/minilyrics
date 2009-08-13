@@ -36,6 +36,7 @@ BOOL CSkinWndResizeObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return false;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinWndResizeObj::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -46,6 +47,7 @@ void CSkinWndResizeObj::EnumProperties(CUIObjProperties &listProperties)
 	GetCombinationStrValue(__idszResizeDirection, m_nResizeDirection, str);
 	listProperties.AddPropStr(_T("Direction"), str.c_str());
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinWndResizeObj::OnSize(int cx, int cy)
 {

@@ -37,7 +37,9 @@ public:
 		Button();
 
 		void FromXML(CSkinTabHeader *pTabHeader, SXNode *pNode);
+#ifdef _SKIN_EDITOR_
 		void ToXML(CSkinTabHeader *pTabHeader, CXMLWriter &xml);
+#endif // _SKIN_EDITOR_
 
 	};
 
@@ -58,13 +60,17 @@ public:
 	BOOL ReCalculatePos(FORMULA_VAR vars[]);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+#ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
+#endif // _SKIN_EDITOR_
 
 	virtual int FromXML(CSkinContainer *pContainer, SXNode *pXmlNode);
 
+#ifdef _SKIN_EDITOR_
 	// Write Button in XML
 	virtual bool HasXMLChild() { return true; }
 	virtual void OnToXMLChild(CXMLWriter &xmlStream);
+#endif // _SKIN_EDITOR_
 
 protected:
 	int ButtonHitTest(POINT pt);

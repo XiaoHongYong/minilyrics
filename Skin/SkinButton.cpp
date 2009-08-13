@@ -59,6 +59,7 @@ BOOL CSkinButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+#ifdef _SKIN_EDITOR_
 void CSkinButton::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
@@ -87,6 +88,7 @@ void CSkinButton::EnumProperties(CUIObjProperties &listProperties)
 		listProperties.AddPropImage(_T("ImageDisable"), _T("ImageDisableRect"), statImg->strDisabledFile.c_str(), statImg->imgDisabled, !statImg->strDisabledFile.empty());
 	}
 }
+#endif // _SKIN_EDITOR_
 
 void CSkinButton::SetCheck(bool bCheck)
 {

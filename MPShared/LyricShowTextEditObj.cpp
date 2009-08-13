@@ -7,7 +7,14 @@
 #include "MLCmd.h"
 #include "LyricShowTextEditObj.h"
 #include "SkinToolBar.h"
-#include "MPSkinMenu.h"
+
+#ifdef _WIN32
+#include "win32/MPSkinMenu.h"
+#endif
+
+#ifdef _LINUX_GTK2
+#include "gtk2/MPSkinMenu.h"
+#endif
 
 #define TIMER_SPAN_LYR_PREVIEW_UPDATE	500
 
