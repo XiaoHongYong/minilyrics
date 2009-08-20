@@ -8,9 +8,10 @@
 
 #include "../stdafx.h"
 #include "Profile.h"
-#include "uuencode.h"
-#include "app.h"
-#include <stdio.h>
+#include "UUEncode.h"
+#include "App.h"
+
+#include "privateprofilestring.cpp"
 
 /*
 Test Encrypt ....
@@ -38,224 +39,6 @@ int TestEncryptProfile()
 
 int k = TestEncryptProfile();*/
 
-DWORD GetPrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpDefault, LPTSTR lpReturnedString, DWORD nSize, LPCTSTR lpFileName)
-{
-	FILE		*fp;
-	TCHAR		szBuff[1024];
-	int			nAppName;
-	int			nKeyName;
-	BOOL		bFoundAppName = FALSE;
-	int			n;
-
-	fp = _tfopen(lpFileName, _T("r"));
-	if (!fp)
-		goto R_FAILED;
-
-	nAppName = _tcslen(lpAppName);
-	nKeyName = _tcslen(lpKeyName);
-
-	//
-	// 查找 AppName
-	while (_fgetts(szBuff, CountOf(szBuff), fp))
-	{
-		LPCTSTR		szBeg = szBuff;
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (*szBeg != '[')
-			continue;
-		szBeg++;
-
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (_tcsnicmp(lpAppName, szBeg, nAppName) != 0)
-			continue;
-		szBeg += nAppName;
-
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (*szBeg != ']')
-			continue;
-		szBeg++;
-
-		bFoundAppName = TRUE;
-
-		break;
-	}
-
-	if (!bFoundAppName)
-		goto R_FAILED;
-
-	//
-	// 查找 KeyName
-	while (_fgetts(szBuff, CountOf(szBuff), fp))
-	{
-		LPCTSTR		szBeg = szBuff;
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (*szBeg == '[')
-			goto R_FAILED;
-
-		if (_tcsnicmp(lpKeyName, szBeg, nKeyName) != 0)
-			continue;
-		szBeg += nKeyName;
-
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (*szBeg != '=')
-			continue;
-		szBeg++;
-
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		_tcscpy_safe(lpReturnedString, nSize, szBeg);
-
-		n = _tcslen(lpReturnedString);
-
-		while (n > 0 && (lpReturnedString[n - 1] == '\r' || lpReturnedString[n - 1] == '\n'))
-			n--;
-
-		lpReturnedString[n] = '\0';
-
-		if (fp)
-			fclose(fp);
-
-		return n;
-	}
-
-R_FAILED:
-	if (fp)
-		fclose(fp);
-
-	_tcscpy_safe(lpReturnedString, nSize, lpDefault);
-
-	return _tcslen(lpReturnedString);
-}
-
-BOOL ReplacePrivateProfileStr(CCharBuffer	&buff, const char *lpAppName, const char *lpKeyName, const char *lpString)
-{
-	const char	*szBeg;
-	int			nAppName;
-	int			nKeyName;
-	BOOL		bFoundAppName = FALSE;
-	char	szBuff[512];
-
-	nAppName = strlen(lpAppName);
-	nKeyName = strlen(lpKeyName);
-
-	szBeg = buff.c_str();
-
-	for (szBeg = buff.c_str(); szBeg != NULL; szBeg = strchr(szBeg, '\n'))
-	{
-		while (*szBeg == '\r' || *szBeg == '\n')
-			szBeg++;
-
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (*szBeg != '[')
-			continue;
-		szBeg++;
-
-		if (_strnicmp(lpAppName, szBeg, nAppName) != 0)
-			continue;
-		szBeg += nAppName;
-
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (*szBeg != ']')
-			continue;
-		szBeg++;
-
-		bFoundAppName = TRUE;
-
-		break;
-	}
-
-	if (!bFoundAppName)
-	{
-		if (buff.size())
-		{
-			if (buff[int(buff.size() -1)] != '\n')
-			{
-				buff.append("\r\n", 2);
-			}
-		}
-		// Append at end.
-		sprintf(szBuff, "[%s]\r\n", lpAppName);
-		buff += szBuff;
-		sprintf(szBuff, "%s=%s\r\n", lpKeyName, lpString);
-		buff += szBuff;
-
-		return TRUE;
-	}
-
-	//
-	// 查找 KeyName
-	for (; szBeg != NULL; szBeg = strchr(szBeg, '\n'))
-	{
-		szBeg = strchr(szBeg, '\n');
-		while (*szBeg == '\r' || *szBeg == '\n')
-			szBeg++;
-
-		const char*		szInsert = szBeg;
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (*szBeg == '[')
-		{
-			sprintf(szBuff, "%s=%s\r\n", lpKeyName, lpString);
-			buff.insert(int(szInsert - buff.c_str()), szBuff, strlen(szBuff));
-			return TRUE;
-		}
-
-		if (_strnicmp(lpKeyName, szBeg, nKeyName) != 0)
-			continue;
-		szBeg += nKeyName;
-
-		while (*szBeg == ' ' || *szBeg == '\t')
-			szBeg++;
-
-		if (*szBeg != '=')
-			continue;
-		szBeg++;
-		szInsert = szBeg;
-
-		while (*szBeg && *szBeg != '\r' && *szBeg != '\n')
-			szBeg++;
-
-		buff.replace(int(szInsert - buff.c_str()), int(szBeg - szInsert), lpString, strlen(lpString));
-
-		return TRUE;
-	}
-
-	return TRUE;
-}
-
-BOOL WritePrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpString, LPCTSTR lpFileName)
-{
-	CCharBuffer		buff;
-
-	if (IsFileExist(lpFileName) && !OpenFileToBuffer(lpFileName, buff))
-		return FALSE;
-
-	stringex	strAppName, strKeyname, strString;
-
-	ConvertStr(lpAppName, -1, strAppName);
-	ConvertStr(lpKeyName, -1, strKeyname);
-	ConvertStr(lpString, -1, strString);
-
-	ReplacePrivateProfileStr(buff, strAppName.c_str(), strKeyname.c_str(), strString.c_str());
-
-	return SaveDataAsFile(lpFileName, buff.c_str(), buff.size());
-}
-
 BOOL WritePrivateProfileInt(
 							LPCTSTR lpAppName,  // section name
 							LPCTSTR lpKeyName,  // key name
@@ -265,7 +48,7 @@ BOOL WritePrivateProfileInt(
 {
 	TCHAR	szBuffer[16];
 
-	_stprintf(szBuffer, _T("%d"), nValue);
+	_itot_s(nValue, szBuffer, CountOf(szBuffer), 10);
 	return WritePrivateProfileString(lpAppName, lpKeyName, szBuffer, lpFileName);
 }
 
@@ -379,165 +162,104 @@ BOOL WritePrivateProfileInt(
 
 CProfile::CProfile()
 {
-	m_szProfile[0] = '\0';
 }
 
 CProfile::~CProfile()
 {
+	Close();
 }
 
-bool CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKeyName, STRING_MAP::iterator &it)
+//
+// 区分大小写，将szAppName, szKey添加到缓存中
+void CProfile::AddKeys(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
-	APPNAME_MAP::iterator	itApp;
+	LIST_APPSECT::iterator	itApp;
+	APP_SECT				*appSec = NULL;
+	tstring					strKeyNameLower;
 
-	itApp = m_mapAppName2Keys.find(szAppName);
-	if (itApp == m_mapAppName2Keys.end())
+	// find AppName
+	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
 	{
-		//
-		// 不区分大小写，查找AppName
-		for (itApp = m_mapAppName2Keys.begin(); itApp != m_mapAppName2Keys.end(); itApp++)
-		{
-			if (_tcsicmp((*itApp).first.c_str(), szAppName) == 0)
-				break;
-		}
-
-		if (itApp == m_mapAppName2Keys.end())
-			return false;
+		appSec = *itApp;
+		if (_tcsicmp(appSec->strAppName.c_str(), szAppName) == 0)
+			break;
+	}
+	if (appSec == NULL || itApp == m_listAppSect.end())
+	{
+		// append new app secton
+		appSec = new APP_SECT;
+		appSec->strAppName = szAppName;
+		m_listAppSect.push_back(appSec);
 	}
 
-	it = (*itApp).second.find(szKeyName);
-	if (it == (*itApp).second.end())
+	strKeyNameLower = szKeyName;
+	LowerString((LPTSTR)strKeyNameLower.c_str());
+	appSec->mapKeys[strKeyNameLower] = szValue;
+}
+
+bool CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKeyName, MAP_STRING::iterator &it)
+{
+	LIST_APPSECT::iterator	itApp;
+	APP_SECT				*appSec = NULL;
+	tstring					strKeyNameLower;
+
+	strKeyNameLower = szKeyName;
+	LowerString((LPTSTR)strKeyNameLower.c_str());
+
+	// 查找AppName
+	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
 	{
-		//
-		// 不区分大小写，查找KeyName
-		for (it = (*itApp).second.begin(); it != (*itApp).second.end(); it++)
-		{
-			if (_tcsicmp((*it).first.c_str(), szKeyName) == 0)
-				break;
-		}
-		if (it == (*itApp).second.end())
-			return false;
+		appSec = *itApp;
+		if (_tcsicmp(appSec->strAppName.c_str(), szAppName) == 0)
+			break;
 	}
+	if (appSec == NULL || itApp == m_listAppSect.end())
+		return false;
+
+	//
+	// 查找KeyName
+	it = appSec->mapKeys.find(strKeyNameLower);
+	if (it == appSec->mapKeys.end())
+		return false;
+
 	return true;
 }
 
-DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
+void CProfile::SetKeyDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
-	assert(m_szProfile[0] != '\0');
+	LIST_APPSECT::iterator	itApp;
+	APP_SECT				*appSec = NULL;
+	tstring					strKeyNameLower;
+	MAP_STRING::iterator	it;
 
-	DWORD		dwRet;
+	strKeyNameLower = szKeyName;
+	LowerString((LPTSTR)strKeyNameLower.c_str());
 
-	if (szKeyName[0] == '\0')
+	// 查找AppName
+	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
 	{
-		EmptyStr(szReturnedString);
-		return 0;
+		appSec = *itApp;
+		if (_tcsicmp(appSec->strAppName.c_str(), szAppName) == 0)
+			break;
+	}
+	if (appSec == NULL || itApp == m_listAppSect.end())
+	{
+		// append new app secton
+		appSec = new APP_SECT;
+		appSec->strAppName = szAppName;
+		m_listAppSect.push_back(appSec);
+		appSec->mapKeys[strKeyNameLower] = szValue;
+		return;
 	}
 
-	STRING_MAP::iterator	itStr;
-
-	if (!GetKey(szAppName, szKeyName, itStr))
-	{
-		dwRet = GetPrivateProfileString(szAppName, szKeyName, szDefault, szReturnedString, nSize, m_szProfile);
-		AddKeys(szAppName, szKeyName, szReturnedString);
-		return dwRet;
-	}
-	else
-	{
-		_tcscpy(szReturnedString, (*itStr).second.c_str());
-
-		return (*itStr).second.size();
-	}
-}
-
-LPCTSTR CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
-{
-	assert(m_szProfile[0] != '\0');
-
-	DWORD		dwRet;
-
-	if (szKeyName[0] == '\0')
-		return _T("");
-
-	STRING_MAP::iterator	itStr;
-
-	if (!GetKey(szAppName, szKeyName, itStr))
-	{
-		TCHAR	szReturnedString[1024];
-		dwRet = GetPrivateProfileString(szAppName, szKeyName, szDefault, szReturnedString, 1024, m_szProfile);
-		AddKeys(szAppName, szKeyName, szReturnedString);
-		if (!GetKey(szAppName, szKeyName, itStr))
-		{
-			assert(0 && "GetKey Can't be FAILED!");
-			return _T("");
-		}
-	}
-
-	return (*itStr).second.c_str();
-}
-
-BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
-{
-	assert(m_szProfile[0] != '\0');
-
-	DWORD		dwRet;
-	STRING_MAP::iterator	itStr;
-
-	dwRet = WritePrivateProfileString(szAppName, szKeyName, szValue, m_szProfile);
-
-	if (!GetKey(szAppName, szKeyName, itStr))
-	{
-		AddKeys(szAppName, szKeyName, szValue);
-	}
-	else
-		(*itStr).second = szValue;
-
-	return dwRet;
-}
-
-
-UINT CProfile::GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
-{
-	assert(m_szProfile[0] != '\0');
-
-	if (szKeyName[0] == '\0')
-	{
-		return nDefault;
-	}
-
-	TCHAR	szValue[64];
-	TCHAR	szDefault[64];
-	_stprintf(szDefault, _T("%d"), nDefault);
-
-	GetProfileString(szAppName, szKeyName, szDefault, szValue, 64);
-
-	return _ttoi(szValue);
-}
-
-BOOL CProfile::WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
-{
-	assert(m_szProfile[0] != '\0');
-
-	TCHAR		szValue[MAX_PATH];
-	
-	_stprintf(szValue, _T("%d"), nValue);
-
-	return WriteProfileString(szAppName, szKeyName, szValue);
-}
-
-
-LPCTSTR CProfile::GetProfileName()
-{
-	return m_szProfile;
-}
-
-LPCTSTR CProfile::GetDefAppName()
-{
-	return m_strDefAppName.c_str();
+	it = appSec->mapKeys.find(strKeyNameLower);
+	if (it == appSec->mapKeys.end())
+		appSec->mapKeys[strKeyNameLower] = szValue;
 }
 
 void CProfile::Init(LPCTSTR szProfile, LPCTSTR szDefKey)
 {
-	m_mapAppName2Keys.clear();
+	Close();
 
 	if (szDefKey == NULL)
 		m_strDefAppName = _T("");
@@ -550,47 +272,250 @@ void CProfile::Init(LPCTSTR szProfile, LPCTSTR szDefKey)
 			(szProfile[0] == DIR_SLASH))
 		{
 			// 如果已经是全路径，则不管
-			_tcscpy(m_szProfile, szProfile);
+			m_strProfile = szProfile;
 			return;
 		}
 	}
 
-	GetWorkingFolder(m_szProfile);
-	_tcscat(m_szProfile, szProfile);
+	m_strProfile = GetWorkingFolder();
+	m_strProfile += szProfile;
 }
 
 void CProfile::Close()
 {
-	m_mapAppName2Keys.clear();
 	m_strDefAppName = _T("");
-	m_szProfile[0] = '\0';
+	m_strProfile = _T("");
+
+	LIST_APPSECT::iterator	itApp;
+	APP_SECT				*appSec;
+
+	// 查找AppName
+	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
+	{
+		appSec = *itApp;
+		delete appSec;
+	}
+	m_listAppSect.clear();
 }
 
-//
-// 区分大小写，将szAppName, szKey添加到缓存中
-void CProfile::AddKeys(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
+
+void CProfile::DoCache()
 {
-	APPNAME_MAP::iterator	it;
-	STRING_MAP				mapStr;
+	tstringex	str;
+	LPCTSTR		szBeg, szEnd;
+	tstring		strAppName, strKey, strValue;
 
-	it = m_mapAppName2Keys.find(szAppName);
-	if (it == m_mapAppName2Keys.end())
+	if (!OpenFileToTString(m_strProfile.c_str(), str))
+		return;
+
+	//
+	// 查找 AppName
+	szBeg = str.c_str();
+	while (*szBeg)
 	{
-		m_mapAppName2Keys[szAppName] = mapStr;
-	}
+		while (*szBeg == ' ' || *szBeg == '\t' || *szBeg == '\n')
+			szBeg++;
 
-	m_mapAppName2Keys[szAppName][szKeyName] = szValue;
+		if (*szBeg != '[')
+		{
+			while (*szBeg && *szBeg != '\n')
+				szBeg++;
+			continue;
+		}
+		szBeg++;
+
+		while (*szBeg == ' ' || *szBeg == '\t')
+			szBeg++;
+
+		szEnd = szBeg;
+		while (*szEnd && *szEnd != ']' && *szEnd != '\n')
+			szEnd++;
+
+		if (*szEnd != ']')
+		{
+			while (*szBeg && *szBeg != '\n')
+				szBeg++;
+			continue;
+		}
+
+		// found appname now
+		strAppName = _T("");
+		strAppName.append(szBeg, szEnd);
+		TrimStr(strAppName);
+
+		szBeg = szEnd + 1;
+
+		while (*szBeg)
+		{
+			// get key and values
+			while (*szBeg == ' ' || *szBeg == '\t')
+				szBeg++;
+
+			while (*szBeg == '\r' || *szBeg == '\n')
+				szBeg++;
+
+			if (*szBeg == '[')
+				break;
+
+			szEnd = szBeg;
+			while (*szEnd && *szEnd != '=' && *szEnd != '\n')
+				szEnd++;
+
+			if (*szEnd != '=')
+			{
+				szBeg = szEnd;
+				while (*szBeg && *szBeg != '\n')
+					szBeg++;
+				continue;
+			}
+
+			// found key
+			strKey = _T("");
+			strKey.append(szBeg, szEnd);
+
+			szBeg = szEnd + 1;
+			while (*szEnd && *szEnd != '\n')
+				szEnd++;
+
+			while (*szEnd == '\r' || *szEnd == '\n')
+				szEnd--;
+			if (*szEnd)
+				szEnd++;
+			strValue = _T("");
+			strValue.append(szBeg, szEnd);
+
+			AddKeys(strAppName.c_str(), strKey.c_str(), strValue.c_str());
+
+			szBeg = szEnd;
+		}
+	}
 }
 
-template<class XCHAR>
-void charep(XCHAR *str, XCHAR Src, XCHAR Targ)
+void CProfile::SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
 {
-	while (*str)
+	SetKeyDefaultIfNotExist(szAppName, szKeyName, szDefault);
+}
+
+void CProfile::SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
+{
+	TCHAR	szDefault[64];
+	_itot_s(nDefault, szDefault, CountOf(szDefault), 10);
+
+	SetKeyDefaultIfNotExist(szAppName, szKeyName, szDefault);
+}
+
+DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
+{
+	assert(!m_strProfile.empty());
+
+	DWORD		dwRet;
+
+	if (szKeyName[0] == '\0')
 	{
-		if (*str == Src)
-			*str = Targ;
-		str++;
+		EmptyStr(szReturnedString);
+		return 0;
 	}
+
+	MAP_STRING::iterator	itKey;
+
+	if (!GetKey(szAppName, szKeyName, itKey))
+	{
+		dwRet = GetPrivateProfileString(szAppName, szKeyName, szDefault, szReturnedString, nSize, m_strProfile.c_str());
+		AddKeys(szAppName, szKeyName, szReturnedString);
+		return dwRet;
+	}
+	else
+	{
+		_tcscpy_safe(szReturnedString, nSize, (*itKey).second.c_str());
+
+		return (*itKey).second.size();
+	}
+}
+
+LPCTSTR CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
+{
+	assert(!m_strProfile.empty());
+
+	DWORD		dwRet;
+
+	if (szKeyName[0] == '\0')
+		return _T("");
+
+	MAP_STRING::iterator	itKey;
+
+	if (!GetKey(szAppName, szKeyName, itKey))
+	{
+		TCHAR	szReturnedString[1024];
+		dwRet = GetPrivateProfileString(szAppName, szKeyName, szDefault, szReturnedString, 1024, m_strProfile.c_str());
+		AddKeys(szAppName, szKeyName, szReturnedString);
+		if (!GetKey(szAppName, szKeyName, itKey))
+		{
+			assert(0 && "GetKey Can't be FAILED!");
+			return _T("");
+		}
+	}
+
+	return (*itKey).second.c_str();
+}
+
+BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
+{
+	assert(!m_strProfile.empty());
+
+	DWORD		dwRet;
+	MAP_STRING::iterator	itKey;
+
+	dwRet = WritePrivateProfileString(szAppName, szKeyName, szValue, m_strProfile.c_str());
+
+	if (!GetKey(szAppName, szKeyName, itKey))
+	{
+		AddKeys(szAppName, szKeyName, szValue);
+	}
+	else
+		(*itKey).second = szValue;
+
+	return dwRet;
+}
+
+
+UINT CProfile::GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
+{
+	assert(!m_strProfile.empty());
+
+	if (szKeyName[0] == '\0')
+	{
+		return nDefault;
+	}
+
+	TCHAR	szValue[64];
+	TCHAR	szDefault[64];
+	_itot_s(nDefault, szDefault, CountOf(szDefault), 10);
+
+	GetProfileString(szAppName, szKeyName, szDefault, szValue, 64);
+
+	return _ttoi(szValue);
+}
+
+BOOL CProfile::WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
+{
+	assert(!m_strProfile.empty());
+
+	TCHAR		szValue[64];
+
+	_itot_s(nValue, szValue, CountOf(szValue), 10);
+
+	return WriteProfileString(szAppName, szKeyName, szValue);
+}
+
+
+LPCTSTR CProfile::GetProfileName()
+{
+	return m_strProfile.c_str();
+}
+
+LPCTSTR CProfile::GetDefAppName()
+{
+	return m_strDefAppName.c_str();
 }
 
 //
@@ -602,7 +527,7 @@ void EncryptStr(LPCTSTR szStr, tstringex &strOut)
 	stringex	strAnsi;
 	ConvertStr(szStr, -1, strAnsi);
 	encodeuu(strAnsi.c_str(), strAnsi.size(), strEncrypt, true, false);
-	charep(strEncrypt.data(), '=', '?');
+	_xcsrep(strEncrypt.data(), '=', '?');
 	ConvertStr(strEncrypt.c_str(), strEncrypt.size(), strOut);
 }
 
@@ -611,7 +536,7 @@ void DecryptStr(LPCTSTR szStr, tstringex &strOut)
 	stringex	strDecrypt;
 	stringex	strAnsi;
 	ConvertStr(szStr, -1, strAnsi);
-	charep(strAnsi.data(), '?', '=');
+	_xcsrep(strAnsi.data(), '?', '=');
 	decodebase64(strAnsi.c_str(), strAnsi.size(), strDecrypt);
 	ConvertStr(strDecrypt.c_str(), strDecrypt.size(), strOut);
 }
@@ -634,7 +559,7 @@ void TestEnDecrypt()
 
 DWORD CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
 {
-	assert(m_szProfile[0] != '\0');
+	assert(!m_strProfile.empty());
 
 	DWORD		dwRet;
 
@@ -647,71 +572,43 @@ DWORD CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LP
 	tstringex	strKeyNameEncrypt, strValue;
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 
-	STRING_MAP::iterator	itStr;
+	MAP_STRING::iterator	itKey;
 
-	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itStr))
+	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itKey))
 	{
 		EncryptStr(szDefault, strValue);
-		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, nSize, m_szProfile);
-		DecryptStr(szReturnedString, strValue);
-		AddKeys(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str());
-		_tcscpy_safe(szReturnedString, nSize, strValue.c_str());
+		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, nSize, m_strProfile.c_str());
+		AddKeys(szAppName, strKeyNameEncrypt.c_str(), szReturnedString);
 	}
 	else
 	{
-		_tcscpy_safe(szReturnedString, nSize, (*itStr).second.c_str());
+		_tcscpy_safe(szReturnedString, nSize, (*itKey).second.c_str());
 	}
+	DecryptStr(szReturnedString, strValue);
+	_tcscpy_safe(szReturnedString, nSize, strValue.c_str());
 
 	return _tcslen(szReturnedString);
 }
 
-LPCTSTR CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
-{
-	assert(m_szProfile[0] != '\0');
-
-	DWORD		dwRet;
-
-	if (szKeyName[0] == '\0')
-		return _T("");
-
-	STRING_MAP::iterator	itStr;
-
-	tstringex	strKeyNameEncrypt, strValue;
-	EncryptStr(szKeyName, strKeyNameEncrypt);
-
-	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itStr))
-	{
-		TCHAR	szReturnedString[1024];
-		EncryptStr(szDefault, strValue);
-		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, CountOf(szReturnedString), m_szProfile);
-		DecryptStr(szReturnedString, strValue);
-		AddKeys(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str());
-		if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itStr))
-			return _T("");
-	}
-
-	return (*itStr).second.c_str();
-}
-
 BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
-	assert(m_szProfile[0] != '\0');
+	assert(!m_strProfile.empty());
 
 	DWORD		dwRet;
-	STRING_MAP::iterator	itStr;
+	MAP_STRING::iterator	itKey;
 	tstringex	strKeyNameEncrypt, strValueEncrypt;
 
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 	EncryptStr(szValue, strValueEncrypt);
 
-	dwRet = WritePrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValueEncrypt.c_str(), m_szProfile);
+	dwRet = WritePrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValueEncrypt.c_str(), m_strProfile.c_str());
 
-	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itStr))
+	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itKey))
 	{
 		AddKeys(szAppName, strKeyNameEncrypt.c_str(), szValue);
 	}
 	else
-		(*itStr).second = szValue;
+		(*itKey).second = strValueEncrypt;
 
 	return dwRet;
 }

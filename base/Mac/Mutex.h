@@ -26,4 +26,15 @@ private:
 
 };
 
+class CMutexAutolock
+{
+public:
+	CMutexAutolock(Mutex &mutex) : m_pMutex(&mutex) { m_pMutex->Acquire(); }
+	~CMutexAutolock() { if (m_pMutex) m_pMutex->Release(); }
+
+	void Unlock() { if (m_pMutex) { m_pMutex->Release(); m_pMutex = NULL; } }
+
+	Mutex		*m_pMutex;
+};
+
 #endif // !defined(AFX_MUTEX_H__F62F5D53_F816_4868_BCE8_9951B1E49EC5__INCLUDED_)
