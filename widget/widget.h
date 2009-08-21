@@ -4,7 +4,7 @@
 #include "widgetif.h"
 
 #ifdef WIN32
-#include "win32/LanguageTool.h"
+#include "win32/WidgetLocalization.h"
 #include "win32/desktop.h"
 #include "win32/BaseWnd.h"
 #include "win32/BaseDialog.h"
@@ -37,7 +37,7 @@
 #endif
 
 #ifdef _LINUX_GTK2
-#include "gtk2/LanguageTool.h"
+#include "gtk2/WidgetLocalization.h"
 #include "gtk2/BaseWnd.h"
 #include "gtk2/BaseDialog.h"
 #include "gtk2/desktop.h"

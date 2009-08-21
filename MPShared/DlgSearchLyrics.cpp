@@ -483,7 +483,7 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 	m_cmdBar.Create(this, -1);
 
 	m_menu.LoadPopupMenu(IDR_MENU_OPEN_LRC_DLG, 0);
-	g_LangTool.ToLocalMenu(&m_menu);
+	ToLocalMenu(&m_menu);
 
 	HidePreNextButtons(true);
 

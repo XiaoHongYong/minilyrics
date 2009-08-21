@@ -493,6 +493,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LocalizeTool.cpp"
+				>
+			</File>
+			<File
 				RelativePath="Log.cpp"
 				>
 				<FileConfiguration
@@ -863,6 +867,10 @@
 			</File>
 			<File
 				RelativePath="HtmlWrite.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LocalizeTool.h"
 				>
 			</File>
 			<File

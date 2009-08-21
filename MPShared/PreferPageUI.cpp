@@ -178,7 +178,7 @@ void CPPageLocalization::OnCommand(UINT uID, UINT nNotifyCode)
 			nCmd = _CMD_ID_LANGUANG_BEGIN;
 			m_vTransFiles.clear();
 
-			CLanguageTool::ListTransFiles(GetWorkingFolder(), m_vTransFiles);
+			CLanguageTool::ListTransFiles(NULL, m_vTransFiles);
 
 			// search for full match
 			for (CLanguageTool::V_TRANSFILEINFO::iterator it = m_vTransFiles.begin(); 

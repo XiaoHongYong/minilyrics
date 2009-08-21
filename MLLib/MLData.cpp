@@ -36,18 +36,6 @@ MLFileType LyricsConentTypeToFileType(LYRICS_CONTENT_TYPE lyrContentType)
 		return FT_UNKNOWN;
 }
 
-int LYRIC_FRAG::GetDrawWidth(CRawGraph* pGraphics)
-{
-	SIZE			size;
-	if (nDrawWidth == 0)
-	{
-		pGraphics->GetTextExtentPoint32(szLyric, nLen, &size);
-		nDrawWidth = (int16)size.cx;
-	}
-
-	return nDrawWidth;
-}
-
 LRC_SOURCE_TYPE GetLrcSourceType(LPCTSTR szLrcSource)
 {
 #define SONG_HDR_LEN		7
@@ -120,126 +108,6 @@ void WrapText(LPCTSTR szText, vector<tstring> &vOutput, int nLineSize)
 	vOutput.push_back(szText);
 #endif
 }
-
-void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring> &vStr)
-{
-#ifdef UNICODE
-	int			nCount;
-	LPCWSTR		szLineBeg, szPtr, szLastBreak;
-	tstringex	str;
-	SIZE		size;
-	int			nWidth;
-
-	szLineBeg = szText;
-
-	if (_tcslen(szText) <= 15)
-	{
-		vStr.push_back(szText);
-		return;
-	}
-
-	while (*szLineBeg)
-	{
-		szPtr = szLineBeg;
-		nCount = 0;
-		nWidth = 0;
-		szLastBreak = NULL;
-		while (*szPtr)
-		{
-			pGraph->GetTextExtentPoint32(szPtr, 1, &size);
-			nWidth += size.cx;
-			if (nWidth > nWidthMax && int(szPtr - szLineBeg) >= 15)
-			{
-				if (szLastBreak)
-				{
-					assert(szLastBreak <= szPtr);
-					szPtr = szLastBreak + 1;
-				}
-				break;
-			}
-
-			if ((*szPtr) > 255 || !(IsAlpha(*szPtr) || IsDigit(*szPtr) 
-				|| *szPtr == '\'' || *szPtr == '\"' || *szPtr == '_' || *szPtr == '-'))
-				szLastBreak = szPtr;
-			szPtr++;
-		}
-		if (szPtr == szLineBeg)
-			szPtr++;
-		str.clear();
-		str.append(szLineBeg, int(szPtr - szLineBeg));
-		if (str.size())
-		{
-			if (str.data()[str.size() - 1] == '\r')
-				str.resize(str.size() - 1);
-		}
-		vStr.push_back(str.c_str());
-
-		if (*szPtr == '\n')
-			szPtr++;
-		szLineBeg = szPtr;
-	}
-#else
-	vStr.push_back(szText);
-#endif
-}
-
-/*
-
-void WrapWords(IMLGraphicsBase *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring> &vStr)
-{
-	int			nCount;
-#ifdef UNICODE
-	LPCWSTR		szLineBeg, szPtr, szLastBreak;
-	szLineBeg = szText;
-	tstringex	str;
-	SIZE		size;
-	while (*szLineBeg)
-	{
-		szPtr = szLineBeg;
-		nCount = 0;
-		szLastBreak = NULL;
-		while (*szPtr)
-		{
-			szPtr++;
-
-			pGraph->GetTextExtentPoint32(szLineBeg, int(szPtr - szLineBeg), &size);
-			if (size.cx > nWidthMax)
-			{
-				szPtr--;
-				if (szLastBreak)
-				{
-					assert(szLastBreak <= szPtr);
-					if (szLastBreak < szPtr)
-						szPtr = szLastBreak + 1;
-					else
-						szPtr = szLastBreak;
-				}
-				break;
-			}
-
-			if ((*szPtr) > 255 || !(isalpha(*szPtr) || IsDigit(*szPtr) || *szPtr == '_' || *szPtr == '-'))
-				szLastBreak = szPtr;
-		}
-		if (szPtr == szLineBeg)
-			szPtr++;
-		str.clear();
-		str.append(szLineBeg, int(szPtr - szLineBeg));
-		if (str.size())
-		{
-			if (str.data()[str.size() - 1] == '\r')
-				str.resize(str.size() - 1);
-		}
-		vStr.push_back(str.c_str());
-
-		if (*szPtr == '\n')
-			szPtr++;
-		szLineBeg = szPtr;
-	}
-#else
-	vStr.push_back(szText);
-#endif
-}
-*/
 
 void LyricsProperties::SetEncoding(CHAR_ENCODING nEncodingID)
 {
@@ -362,7 +230,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 					if (lyricsInfo.m_lyricsUserDefined.m_strValueAnsi.empty()
 						&& lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.empty())
 					{
-						SetCustomErrorDesc(TOLOCAL(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics.")));
+						SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
 						nRet = ERR_CUSTOM_ERROR;
 					}
 					else
@@ -665,7 +533,7 @@ int CMLData::OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bForc
 
 	if (len == 0)
 	{
-		SetCustomErrorDesc(TOLOCAL(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics.")));
+		SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
 		return ERR_CUSTOM_ERROR;
 	}
 
@@ -2138,53 +2006,6 @@ void CMLData::RemoveErrrorInfo()
 	}
 }
 
-void CMLData::AddErrorInfo(CRawGraph *pGraph, int nWidthMax, LPCTSTR szError)
-{
-	if (m_bHasLyrics)
-	{
-		ERRLOG1(_T("Lyrics been here, don't show error: %s"), szError);
-		return;
-	}
-
-	PLYRIC_FRAG		pFrag;
-	PML_ROW			pRow;
-
-	vector<tstring>		vStr;
-	int					nPrevEnd;
-
-	if (m_arrLyricsRows.size())
-	{
-		PML_ROW pRow = m_arrLyricsRows.back();
-		nPrevEnd = pRow->nEndTime;
-	}
-	else
-		nPrevEnd = GetPlayElapsedTime();
-	if (nPrevEnd < 0)
-		nPrevEnd = 0;
-
-	WrapWords(pGraph, nWidthMax, szError, vStr);
-
-	for (int i = 0; i < (int)vStr.size(); i++)
-	{
-		int			nEndTime;
-
-		nEndTime = nPrevEnd + 8 * 1000;
-		pFrag = NewLyricFrag(nPrevEnd, nEndTime, vStr[i].c_str(), vStr[i].size(), TRUE, TRUE, LSA_SHOW_SIMPLE | LSA_TEMP_FRAG | LAS_ERROR_INFO);
-		nPrevEnd = nEndTime;
-
-		pRow = NewMLRow(pFrag->nBegTime, pFrag->nEndTime, (TCHAR *)NULL);
-		pRow->vFrags.push_back(pFrag);
-
-		AddRowByTime(pRow);
-
-		//
-		// Add to current display lyrics
-// 		PML_ROW		pRowDisp;
-// 		pRowDisp = CopyMLRow(pRow);
-// 		m_vDispLyrics.push_back(pRowDisp);
-	}
-}
-
 void CMLData::AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle)
 {
 	PLYRIC_FRAG		pFrag;
@@ -2206,7 +2027,7 @@ void CMLData::AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle)
 	{
 		nCount++;
 		g_Profile.WriteProfileInt(_T("SearchLyricsPrompt"), nCount);
-		vStr.push_back(TOLOCAL(_T("Please Click \"Search Lyrics\" button to get lyrics")));
+		vStr.push_back(_T("Please Click \"Search Lyrics\" button to get lyrics"));
 	}
 
 	nPrevEnd = 0;
@@ -2824,85 +2645,6 @@ PML_ROW CMLData::CopyMLRow(PML_ROW pRowSrc)
 VLyrLines &CMLData::GetRawLyrics()
 {
 	return m_arrLyricsRows;
-}
-
-int GetMLRowDrawWidth(PML_ROW pRow, CRawGraph *pGraph)
-{
-	V_FRAG::iterator	it, itEnd;
-	int					w = 0;
-	SIZE				size;
-
-	itEnd = pRow->vFrags.end();
-	for (it = pRow->vFrags.begin(); it != itEnd; it++)
-	{
-		PLYRIC_FRAG		pFrag = *it;
-
-		if (pGraph->GetTextExtentPoint32(pFrag->szLyric, pFrag->nLen, &size))
-			w += size.cx;
-	}
-
-	return w;
-}
-
-bool CMLData::WrapDisplayLyrics(CMLyrLines &lyrLines, CRawGraph *pGraph, int nWidthMax)
-{
-	int		i;
-
-	lyrLines.clear();
-
-	PML_ROW			pRow;
-	vector<tstring>	vStr;
-	for (i = 0; i < (int)m_arrLyricsRows.size(); i++)
-	{
-		PML_ROW		pRowSrc = m_arrLyricsRows[i];
-
-		if (pRowSrc->vFrags.size() > 1 || pRowSrc->vFrags.size() == 0
-			|| GetMLRowDrawWidth(pRowSrc, pGraph) <= nWidthMax)
-		{
-			// Not support vFrags > 1.
-			pRow = CopyMLRow(pRowSrc);
-			lyrLines.push_back(pRow);
-		}
-		else
-		{
-			// Wrap
-			PLYRIC_FRAG		pFragSrc, pFrag;
-			int				nLen, nTimeSpan, nBegTime, nEndTime;
-
-			pFragSrc = pRowSrc->vFrags[0];
-
-			vStr.clear();
-			WrapWords(pGraph, nWidthMax, pFragSrc->szLyric, vStr);
-
-			nLen = pFragSrc->nLen;
-			nTimeSpan = pRowSrc->nEndTime - pRowSrc->nBegTime;
-
-			// ASSERT(vStr.size() > 1);
-			nBegTime = pRowSrc->nBegTime;
-			for (int k = 0; k < (int)vStr.size(); k++)
-			{
-				if (nLen > 0)
-					nEndTime = nBegTime + (vStr[k].size() * nTimeSpan) / nLen;
-				else
-					nEndTime = nBegTime + nTimeSpan;
-				pRow = NewMLRow(nBegTime, 
-					nEndTime, 
-					pRowSrc->szContent, -1,
-					(ML_ROW_TYPE)pRowSrc->nRowType);
-
-				pFrag = NewLyricFrag(nBegTime, nEndTime, vStr[k].c_str(), vStr[k].size(), false, false, 0);
-				pFrag->dwAttrib = pFragSrc->dwAttrib;
-				pFrag->nDrawWidth = 0;
-				pRow->vFrags.push_back(pFrag);
-
-				lyrLines.push_back(pRow);
-
-				nBegTime = nEndTime;
-			}
-		}
-	}
-
-	return true;
 }
 
 void CMLData::CopyMLyrLines(CMLyrLines &lyrLines)

@@ -1,7 +1,7 @@
 #ifndef _ML_WINDOW_H_INC_
 #define _ML_WINDOW_H_INC_
 
-#include "LanguageTool.h"
+#include "WidgetLocalization.h"
 #include "../widgetif.h"
 
 #ifndef WIN32

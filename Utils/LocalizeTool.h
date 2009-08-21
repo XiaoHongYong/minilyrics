@@ -1,0 +1,82 @@
+// LocalizeTool.h: interface for the CLocalizeTool class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#if !defined(AFX_LOCALIZETOOL_H__9C311C26_12B8_4F14_AB80_0CD2040E45C5__INCLUDED_)
+#define AFX_LOCALIZETOOL_H__9C311C26_12B8_4F14_AB80_0CD2040E45C5__INCLUDED_
+
+class CLanguageFile
+{
+public:
+	bool Init(LPCTSTR szProfile);
+	void Close();
+	LPCTSTR GetTranslation(LPCTSTR szString);
+
+protected:
+	map<tstring, tstring>		m_mapString;
+
+};
+
+class CLanguageTool  
+{
+public:
+	CLanguageTool();
+	virtual ~CLanguageTool();
+
+public:
+	struct TransFileInfo
+	{
+		tstring		strFileName;
+		tstring		strLanguage;
+		tstring		strLanguageCode;
+		tstring		strLanguageCodeFull;
+	};
+
+	typedef vector<TransFileInfo>		V_TRANSFILEINFO;
+
+public:
+	void Close();
+
+	LPCTSTR ToLocalString(LPCTSTR szString);
+
+	void OnLanguageChanged();
+
+	bool IsEnglish();
+
+	static bool GetCurrentLanguageFile(tstring &strLanguageFile);
+
+	static bool ListTransFiles(LPCTSTR szDir, V_TRANSFILEINFO &vTransFiles);
+	static void SetTransFilePrefix(LPCTSTR szPrefix);
+	static TCHAR		m_szTransFilePrefix[16];
+
+	// Replace $ProductName$, $CompanyName$ to actual value.
+	void SetMacro(LPCTSTR szName, LPCTSTR szValue);
+
+	bool HasMacro() const { return !m_mapMacros.empty(); }
+
+protected:
+	LPCTSTR ReplaceMacroStr(LPCTSTR szString);
+
+protected:
+	bool		m_bInitialized;
+	bool		m_bEnglish;
+
+	CLanguageFile	m_LanguageFile;
+
+	enum { MAX_CACHED_STR = 5 };
+	tstring			m_vStrCached[MAX_CACHED_STR];
+	int				m_nCurStr;
+
+	typedef map<tstring, tstring>	map_string;
+
+	map_string		m_mapMacros;
+
+};
+
+extern CLanguageTool			g_LangTool;
+
+#define TOLOCAL(szString)	(g_LangTool.ToLocalString(szString))
+#define LOADLOCALMENU(ID)	(g_LangTool.LoadLocalMenu(ID))
+#define ERROR2STR_LOCAL(nError)	(g_LangTool.ToLocalString(Error2Str(nError)))
+
+#endif // !defined(AFX_LOCALIZETOOL_H__9C311C26_12B8_4F14_AB80_0CD2040E45C5__INCLUDED_)

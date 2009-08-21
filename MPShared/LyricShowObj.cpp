@@ -14,6 +14,220 @@
 #include "DlgRateLyrics.h"
 #endif
 
+
+int GetLyricFragDrawWidth(LYRIC_FRAG *pFrag, CRawGraph* pGraphics)
+{
+	ASSERT(pFrag);
+
+	if (pFrag->nDrawWidth == 0)
+	{
+		SIZE			size;
+		pGraphics->GetTextExtentPoint32(pFrag->szLyric, pFrag->nLen, &size);
+		pFrag->nDrawWidth = (int16)size.cx;
+	}
+
+	return pFrag->nDrawWidth;
+}
+
+int GetMLRowDrawWidth(PML_ROW pRow, CRawGraph *pGraph)
+{
+	V_FRAG::iterator	it, itEnd;
+	int					w = 0;
+	SIZE				size;
+
+	itEnd = pRow->vFrags.end();
+	for (it = pRow->vFrags.begin(); it != itEnd; it++)
+	{
+		PLYRIC_FRAG		pFrag = *it;
+
+		if (pGraph->GetTextExtentPoint32(pFrag->szLyric, pFrag->nLen, &size))
+			w += size.cx;
+	}
+
+	return w;
+}
+
+void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring> &vStr)
+{
+#ifdef UNICODE
+	int			nCount;
+	LPCWSTR		szLineBeg, szPtr, szLastBreak;
+	tstringex	str;
+	SIZE		size;
+	int			nWidth;
+
+	szLineBeg = szText;
+
+	if (_tcslen(szText) <= 15)
+	{
+		vStr.push_back(szText);
+		return;
+	}
+
+	while (*szLineBeg)
+	{
+		szPtr = szLineBeg;
+		nCount = 0;
+		nWidth = 0;
+		szLastBreak = NULL;
+		while (*szPtr)
+		{
+			pGraph->GetTextExtentPoint32(szPtr, 1, &size);
+			nWidth += size.cx;
+			if (nWidth > nWidthMax && int(szPtr - szLineBeg) >= 15)
+			{
+				if (szLastBreak)
+				{
+					assert(szLastBreak <= szPtr);
+					szPtr = szLastBreak + 1;
+				}
+				break;
+			}
+
+			if ((*szPtr) > 255 || !(IsAlpha(*szPtr) || IsDigit(*szPtr) 
+				|| *szPtr == '\'' || *szPtr == '\"' || *szPtr == '_' || *szPtr == '-'))
+				szLastBreak = szPtr;
+			szPtr++;
+		}
+		if (szPtr == szLineBeg)
+			szPtr++;
+		str.clear();
+		str.append(szLineBeg, int(szPtr - szLineBeg));
+		if (str.size())
+		{
+			if (str.data()[str.size() - 1] == '\r')
+				str.resize(str.size() - 1);
+		}
+		vStr.push_back(str.c_str());
+
+		if (*szPtr == '\n')
+			szPtr++;
+		szLineBeg = szPtr;
+	}
+#else
+	vStr.push_back(szText);
+#endif
+}
+
+/*
+
+void WrapWords(IMLGraphicsBase *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring> &vStr)
+{
+int			nCount;
+#ifdef UNICODE
+LPCWSTR		szLineBeg, szPtr, szLastBreak;
+szLineBeg = szText;
+tstringex	str;
+SIZE		size;
+while (*szLineBeg)
+{
+szPtr = szLineBeg;
+nCount = 0;
+szLastBreak = NULL;
+while (*szPtr)
+{
+szPtr++;
+
+pGraph->GetTextExtentPoint32(szLineBeg, int(szPtr - szLineBeg), &size);
+if (size.cx > nWidthMax)
+{
+szPtr--;
+if (szLastBreak)
+{
+assert(szLastBreak <= szPtr);
+if (szLastBreak < szPtr)
+szPtr = szLastBreak + 1;
+else
+szPtr = szLastBreak;
+}
+break;
+}
+
+if ((*szPtr) > 255 || !(isalpha(*szPtr) || IsDigit(*szPtr) || *szPtr == '_' || *szPtr == '-'))
+szLastBreak = szPtr;
+}
+if (szPtr == szLineBeg)
+szPtr++;
+str.clear();
+str.append(szLineBeg, int(szPtr - szLineBeg));
+if (str.size())
+{
+if (str.data()[str.size() - 1] == '\r')
+str.resize(str.size() - 1);
+}
+vStr.push_back(str.c_str());
+
+if (*szPtr == '\n')
+szPtr++;
+szLineBeg = szPtr;
+}
+#else
+vStr.push_back(szText);
+#endif
+}
+*/
+
+bool WrapDisplayLyrics(VLyrLines &lyrLinesSrc, CMLyrLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax)
+{
+	int		i;
+
+	lyrLinesOut.clear();
+
+	PML_ROW			pRow;
+	vector<tstring>	vStr;
+	for (i = 0; i < (int)lyrLinesSrc.size(); i++)
+	{
+		PML_ROW		pRowSrc = lyrLinesSrc[i];
+
+		if (pRowSrc->vFrags.size() > 1 || pRowSrc->vFrags.size() == 0
+			|| GetMLRowDrawWidth(pRowSrc, pGraph) <= nWidthMax)
+		{
+			// Not support vFrags > 1.
+			pRow = g_LyricData.CopyMLRow(pRowSrc);
+			lyrLinesOut.push_back(pRow);
+		}
+		else
+		{
+			// Wrap
+			PLYRIC_FRAG		pFragSrc, pFrag;
+			int				nLen, nTimeSpan, nBegTime, nEndTime;
+
+			pFragSrc = pRowSrc->vFrags[0];
+
+			vStr.clear();
+			WrapWords(pGraph, nWidthMax, pFragSrc->szLyric, vStr);
+
+			nLen = pFragSrc->nLen;
+			nTimeSpan = pRowSrc->nEndTime - pRowSrc->nBegTime;
+
+			// ASSERT(vStr.size() > 1);
+			nBegTime = pRowSrc->nBegTime;
+			for (int k = 0; k < (int)vStr.size(); k++)
+			{
+				if (nLen > 0)
+					nEndTime = nBegTime + (vStr[k].size() * nTimeSpan) / nLen;
+				else
+					nEndTime = nBegTime + nTimeSpan;
+				pRow = g_LyricData.NewMLRow(nBegTime, 
+					nEndTime, 
+					pRowSrc->szContent, -1,
+					(ML_ROW_TYPE)pRowSrc->nRowType);
+
+				pFrag = g_LyricData.NewLyricFrag(nBegTime, nEndTime, vStr[k].c_str(), vStr[k].size(), false, false, 0);
+				pFrag->dwAttrib = pFragSrc->dwAttrib;
+				pFrag->nDrawWidth = 0;
+				pRow->vFrags.push_back(pFrag);
+
+				lyrLinesOut.push_back(pRow);
+
+				nBegTime = nEndTime;
+			}
+		}
+	}
+
+	return true;
+}
+
 // 每次调整歌词的速度的基本单位
 const int SET_SPEED_SPAN		= 500;
 
@@ -796,11 +1010,11 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				pGraphics->SetFont(&font);
 
 				if (pLyricRow->szContent)
-					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, pFrag->GetDrawWidth(pGraphics), GetFontHeight());
+					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
 
 				pGraphics->SetTextColor(clrTxt);
 				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
-				x += pFrag->GetDrawWidth(pGraphics);
+				x += GetLyricFragDrawWidth(pFrag, pGraphics);
 
 				pGraphics->SetFont(pOldFont);
 			}
@@ -833,11 +1047,11 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			if (pFrag->IsAdFrag())
 			{
 				if (pLyricRow->szContent)
-					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, pFrag->GetDrawWidth(pGraphics), GetFontHeight());
+					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
 			}
 #endif
 
-			x += pFrag->GetDrawWidth(pGraphics);
+			x += GetLyricFragDrawWidth(pFrag, pGraphics);
 		}
 	}
 
@@ -874,11 +1088,11 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				pGraphics->SetFont(&font);
 
 				if (pLyricRow->szContent)
-					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, pFrag->GetDrawWidth(pGraphics), GetFontHeight());
+					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
 
 				pGraphics->SetTextColor(clrTxt);
 				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
-				x += pFrag->GetDrawWidth(pGraphics);
+				x += GetLyricFragDrawWidth(pFrag, pGraphics);
 
 				pGraphics->SetFont(pOldFont);
 			}
@@ -900,10 +1114,10 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			if (pFrag->IsAdFrag())
 			{
 				if (pLyricRow->szContent)
-					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, pFrag->GetDrawWidth(pGraphics), GetFontHeight());
+					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
 			}
 #endif
-			x += pFrag->GetDrawWidth(pGraphics);
+			x += GetLyricFragDrawWidth(pFrag, pGraphics);
 		}
 	}
 }
@@ -971,7 +1185,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 				pGraphics->SetTextColor(GetHighlightColor());
 				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
 			}
-			x += pFrag->GetDrawWidth(pGraphics);;
+			x += GetLyricFragDrawWidth(pFrag, pGraphics);;
 		}
 	}
 
@@ -987,7 +1201,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		pFrag = pLyricRow->vFrags[nCurPos];
 
 		// get width of the lyrics fragment
-		nFragDrawWidth = pFrag->GetDrawWidth(pGraphics);
+		nFragDrawWidth = GetLyricFragDrawWidth(pFrag, pGraphics);
 
 		if (pFrag->nBegTime < m_pMLData->GetPlayElapsedTime())
 		{
@@ -1073,7 +1287,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 			pGraphics->SetTextColor(GetLowlightColor());
 			pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
 		}
-		x += pFrag->GetDrawWidth(pGraphics);
+		x += GetLyricFragDrawWidth(pFrag, pGraphics);
 	}
 	// 5. ok
 }
@@ -1104,7 +1318,7 @@ int CLyricShowObj::GetLyricRowTextWidth(CRawGraph	*pGraphics, PML_ROW pLyricRow)
 	{
 		pFrag = pLyricRow->vFrags[i];
 
-		nTxtWidth += pFrag->GetDrawWidth(pGraphics);
+		nTxtWidth += GetLyricFragDrawWidth(pFrag, pGraphics);
 	}
 	
 	return nTxtWidth;
@@ -1479,7 +1693,7 @@ void CLyricShowObj::WrapLyricsLines()
 
 		pGraphics->SetFont(&m_font);
 
-		g_LyricData.WrapDisplayLyrics(m_lyrLines, pGraphics, m_rcObj.Width() - m_nXMargin * 2);
+		WrapDisplayLyrics(g_LyricData.GetRawLyrics(), m_lyrLines, pGraphics, m_rcObj.Width() - m_nXMargin * 2);
 	}
 }
 
@@ -1817,6 +2031,55 @@ bool CLyricShowObj::ShouldWrapLines()
 	return m_bCanWrapLines;
 }
 
+void AddErrorInfoInLyrics(CRawGraph *pGraph, int nWidthMax, LPCTSTR szError)
+{
+	if (g_LyricData.IsOK())
+	{
+		ERRLOG1(_T("Lyrics been here, don't show error: %s"), szError);
+		return;
+	}
+
+	PLYRIC_FRAG		pFrag;
+	PML_ROW			pRow;
+
+	vector<tstring>		vStr;
+	int					nPrevEnd;
+
+	VLyrLines		&rawLyrLines = g_LyricData.GetRawLyrics();
+
+	if (rawLyrLines.size())
+	{
+		PML_ROW pRow = rawLyrLines.back();
+		nPrevEnd = pRow->nEndTime;
+	}
+	else
+		nPrevEnd = g_LyricData.GetPlayElapsedTime();
+	if (nPrevEnd < 0)
+		nPrevEnd = 0;
+
+	WrapWords(pGraph, nWidthMax, szError, vStr);
+
+	for (int i = 0; i < (int)vStr.size(); i++)
+	{
+		int			nEndTime;
+
+		nEndTime = nPrevEnd + 8 * 1000;
+		pFrag = g_LyricData.NewLyricFrag(nPrevEnd, nEndTime, vStr[i].c_str(), vStr[i].size(), TRUE, TRUE, LSA_SHOW_SIMPLE | LSA_TEMP_FRAG | LAS_ERROR_INFO);
+		nPrevEnd = nEndTime;
+
+		pRow = g_LyricData.NewMLRow(pFrag->nBegTime, pFrag->nEndTime, (TCHAR *)NULL);
+		pRow->vFrags.push_back(pFrag);
+
+		g_LyricData.AddRowByTime(pRow);
+
+		//
+		// Add to current display lyrics
+		// 		PML_ROW		pRowDisp;
+		// 		pRowDisp = CopyMLRow(pRow);
+		// 		m_vDispLyrics.push_back(pRowDisp);
+	}
+}
+
 void CLyricShowObj::AddErrorInfo(LPCTSTR szInfo)
 {
 	CRawGraph		*pGraphics;
@@ -1825,7 +2088,7 @@ void CLyricShowObj::AddErrorInfo(LPCTSTR szInfo)
 
 	pGraphics->SetFont(&m_font);
 
-	g_LyricData.AddErrorInfo(pGraphics, m_rcObj.Width() - m_nXMargin * 2, szInfo);
+	AddErrorInfoInLyrics(pGraphics, m_rcObj.Width() - m_nXMargin * 2, szInfo);
 }
 
 void CLyricShowObj::OnSize(int cx, int cy)

@@ -2,7 +2,7 @@ noinst_LIBRARIES = libwidget.a
 
 libwidget_a_SOURCES = ResourceMgr.cpp  WndDrag.cpp \
 	gtk2/BaseDialog.cpp     gtk2/HyperLinkCtrl.cpp     gtk2/WidgetComboBox.cpp\
-	gtk2/BaseWnd.cpp        gtk2/LanguageTool.cpp      gtk2/WidgetCtrlBase.cpp\
+	gtk2/BaseWnd.cpp        gtk2/WidgetLocalization.cpp gtk2/WidgetCtrlBase.cpp\
 	gtk2/CommonWidget.cpp   gtk2/MLMenu.cpp            gtk2/WidgetListBox.cpp\
 	gtk2/desktop.cpp        gtk2/MLWndHelper.cpp       gtk2/WidgetListCtrl.cpp\
 	gtk2/ScrollBarHandler.cpp  gtk2/WidgetTreeCtrl.cpp gtk2/WidgetTabCtrl.cpp\

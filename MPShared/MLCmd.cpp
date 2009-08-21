@@ -18,7 +18,7 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_QUIT"), CMD_QUIT, _T("Quit") },
 	{ _T("ID_WORK_AREA"), ID_WORK_AREA, NULL },
 	{ _T("ID_TOOLBAR"), ID_TOOLBAR, NULL },
-	{ _T("ID_RATE_LYR"), CMD_RATE_LYR, _T("Rate this Lyrics") },
+	{ _T("ID_RATE_LYR"), CMD_RATE_LYR, _T("Rate these lyrics") },
 	{ _T("ID_MENU"), CMD_MENU, _T("Menu") },
 	{ _T("ID_OPEN_MEDIA"), CMD_OPEN_MEDIA, _T("Open") },
 	{ _T("ID_PLAY"), CMD_PLAY, _T("Play") },

@@ -9,5 +9,6 @@
 #include "App.h"
 #include "CSVFile.h"
 #include "UndoMgr.h"
+#include "LocalizeTool.h"
 
 #endif	// _ML_UTILS_H
