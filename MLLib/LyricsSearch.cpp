@@ -118,7 +118,7 @@ bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcS
 	return false;
 }
 
-void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics)
+void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable)
 {
 	tstringex			str;
 	LrcSearchResult		result;
@@ -127,6 +127,12 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 		it != lyricsInfo.m_synchLyrics.end(); it++)
 	{
 		ID3v2SynchLyrics	*plyrics = *it;
+
+		if (bOnlyListAvailable)
+		{
+			if (plyrics->m_vAnsiSynLyrics.size() < 1 && plyrics->m_vUcs2SynLyrics.size() < 1)
+				continue;
+		}
 
 		ConvertStr(plyrics->m_szLanguage, -1, str);
 
@@ -145,6 +151,12 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 			it != lyricsInfo.m_unsynchLyrics.end(); it++)
 		{
 			ID3v2UnsynchLyrics	*plyrics = *it;
+
+			if (bOnlyListAvailable)
+			{
+				if (plyrics->m_strAnsiLyrics.size() < MIN_EMBEDDED_LYR_SIZE && plyrics->m_strUcs2Lyrics.size() < MIN_EMBEDDED_LYR_SIZE)
+					continue;
+			}
 
 			ConvertStr(plyrics->m_szLanguage, -1, str);
 

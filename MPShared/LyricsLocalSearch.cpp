@@ -454,7 +454,7 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESU
 		nRet = id3v2.GetLyrics(lyrics);
 		if (nRet == ERR_OK)
 		{
-			ID3v2LyricsInfoToResult(lyrics, vLyrics);
+			ID3v2LyricsInfoToResult(lyrics, vLyrics, bOnlyListAvailable);
 		}
 		id3v2.Close();
 	}
@@ -468,7 +468,7 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESU
 
 		if (lyrics3v2.ReadLyrcsInfo(szSongFile, strLyrics) == ERR_OK)
 		{
-			if (!(bOnlyListAvailable && strLyrics.size() < 10))
+			if (!(bOnlyListAvailable && strLyrics.size() < MIN_EMBEDDED_LYR_SIZE))
 			{
 				LrcSearchResult		result;
 				result.strUrl = SZ_SONG_LYRICS3V2;

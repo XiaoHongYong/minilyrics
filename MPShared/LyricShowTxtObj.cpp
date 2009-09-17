@@ -172,16 +172,8 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 	int nRow;
 	int h;
 
-	// 将当前显示行的背景色设置为m_brCurRow;
-// 	if (!m_img.IsValid())
-// 	{
-// 		SIZE	size;
-// 		int		nTxtHeight = nRowHeight;
-// 
-// 		if (pGraphics->GetTextExtentPoint32(_T("T"), 1, &size))
-// 			nTxtHeight = size.cy;
-// 		pGraphics->FillRect(m_rcObj.left + m_nXMargin, y, m_rcObj.Width() - m_nXMargin * 2, nTxtHeight + 1, &m_brBg);
-// 	}
+	CDispOptRecover		dispOptRecover(this);
+	m_LyricsDisplayOpt = DO_NORMAL;
 
 	// 显示当前歌词行
 	// DrawRow(pGraphics, pLyricRow, AUTO_CAL_X, y, GetHighlightColor(), m_tobHilight.clrBorder);

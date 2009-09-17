@@ -25,6 +25,8 @@ enum LRC_MATCH_TYPE
 	LYRIC_MATCH_MAX_TYPE	= LYRIC_MATCH_ALL,
 };
 
+#define MIN_EMBEDDED_LYR_SIZE	10		// Minum file size of embedded lyrics
+
 #define MAX_FILE_NAME		MAX_PATH
 
 //
@@ -109,7 +111,7 @@ void ListSupportedEmbeddedFormat(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyricsF
 bool ID3v2LyricsInfoGetSynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2SynchLyrics *&plyrics);
 bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2UnsynchLyrics *&plyrics);
 
-void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics);
+void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable = false);
 
 void StrIgnoreCompare(LPCTSTR &szDest, LPCTSTR &szTemplate, BOOL bIgnoreNumb);
 int StrIgnoreCompare(LPCTSTR szStr1, LPCTSTR szStr2);
