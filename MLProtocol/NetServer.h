@@ -76,6 +76,7 @@ struct NetJob
 };
 
 class CNetServer;
+
 class CSvrSessionBase
 {
 public:
@@ -111,9 +112,6 @@ public:
 	};
 
 public:
-	virtual CSvrSessionBase *NewSession();
-	virtual void OnAcceptFailed(int nLastErr);
-
 	static void ThreadServerAccept(LPVOID lpParam);
 
 	// 创建服务器
@@ -124,11 +122,6 @@ public:
 	// 停止服务器
 	void Stop();
 
-	void Pause() { m_bPaused = TRUE; }
-	void Resume() { m_bPaused = FALSE; }
-
-	BOOL IsPaused() { return m_bPaused; }
-
 	// 添加一个任务到任务队列中
 	int AddJob(SOCKET s);
 	int AddJob(SOCKET *arrSock, int nCount);
@@ -137,13 +130,18 @@ public:
 	// 返回-1，表示接收到的任务线程需要退出
 	int RemoveJob();
 
-	int GetJobCount() { return m_listJob.size(); }
+	int GetJobCount() const { return m_listJob.size(); }
+
+	int GetWorkThreadCount() const { return m_nWorkThreadCount; }
 
 protected:
-	// 服务器socket
-	BOOL		m_bPaused;
+	virtual CSvrSessionBase *NewSession();
 
-	// accpet 线程
+	// If the server is busy, jobs will be removed.
+	virtual void OnBusyRemoveJob(SOCKET s);
+
+protected:
+	// accept 线程
 	vector<ServicePort *>	m_vServerPort;
 
 	// 任务队列
@@ -157,17 +155,9 @@ protected:
 
 	// 退出信号
 	Event				m_ExitEvent;
-	// HANDLE				m_hExitEvent;
 
 	// 处理接收的工作线程的数量
 	int					m_nWorkThreadCount;
-
-	// 处理线程指针
-//	FUNThreadWorkerProc	m_funThreadWorkerProc;
-
-	//HANDLE				m_h
-
-protected:
 	vector<CSvrSessionBase *>	m_vSessions;
 
 };

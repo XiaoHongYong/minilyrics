@@ -26,15 +26,9 @@ Semaphore::~Semaphore()
 
 bool Semaphore::Wait(int ms)
 {
-	if (ms > 0)
-	{
-		if (WaitForSingleObject(m_hSemaphore, ms) == WAIT_TIMEOUT)
-			return false;
+	if (WaitForSingleObject(m_hSemaphore, ms) == WAIT_TIMEOUT)
+		return false;
 
-		return true;
-	}
-	
-	WaitForSingleObject(m_hSemaphore, INFINITE);	
 	return true;
 }
 

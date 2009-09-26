@@ -280,6 +280,7 @@ void CSvrSessionBase::ThreadWorker(LPVOID lpParam)
 		closesocket(nSock);
 	}
 }
+
 //////////////////////////////////////////////////////////////////////////
 //
 CNetFile::CNetFile()
@@ -340,7 +341,6 @@ int CNetFile::Write(const char *szBuffer, int nLen, int *pnWrite)
 CNetServer::CNetServer() : m_JobSemaphore(0),
 	m_ExitEvent(TRUE, FALSE)
 {
-	m_bPaused = FALSE;
 	m_nWorkThreadCount = 0;
 }
 
@@ -476,19 +476,24 @@ int CNetServer::Create(int nPort, LPCTSTR szServerIP, int nWorkThreadCount)
 
 	//
 	// 设置工作线程参数
-	nRet = CreateSrvice(nPort, szServerIP);
-	if (nRet != ERR_OK)
-		return nRet;
+	if (nPort != -1)
+	{
+		nRet = CreateSrvice(nPort, szServerIP);
+		if (nRet != ERR_OK)
+			return nRet;
+	}
 
 	// 创建会话处理者:)
 	for (int i = 0; i < m_nWorkThreadCount; i++)
 	{
 		CSvrSessionBase	*pSession;
 		pSession = NewSession();
+		if (pSession)
+		{
+			pSession->Init(this);
 
-		pSession->Init(this);
-
-		m_vSessions.push_back(pSession);
+			m_vSessions.push_back(pSession);
+		}
 	}
 
 	return ERR_OK;
@@ -569,7 +574,6 @@ void CNetServer::Stop()
 	m_vServerPort.clear();
 }
 
-
 // 添加一个任务到任务队列中
 int CNetServer::AddJob(SOCKET s)
 {
@@ -577,17 +581,16 @@ int CNetServer::AddJob(SOCKET s)
 
 	g_nConnectedClients++;
 
-	if (m_listJob.size() > 100)
+	if ((int)m_listJob.size() > m_nWorkThreadCount)
 	{
 		ERRLOG1(_T("Too many jobs: %d, remove 50"), m_listJob.size());
 
-		for (int i = 0; i < 50; i++)
+		for (int i = 0; i < m_nWorkThreadCount; i++)
 		{
-			closesocket(m_listJob.front().nSocket);
+			OnBusyRemoveJob(m_listJob.front().nSocket);
+
 			m_listJob.erase(m_listJob.begin());
-			m_JobSemaphore.Wait(10);
 		}
-		g_nDiscardClients += 50;
 	}
 
 	NetJob		job;
@@ -664,6 +667,8 @@ int CNetServer::RemoveJob()
 	return nRet;
 }
 
-void CNetServer::OnAcceptFailed(int nLastErr)
+void CNetServer::OnBusyRemoveJob(SOCKET s)
 {
+	g_nDiscardClients++;
+	closesocket(s);
 }
