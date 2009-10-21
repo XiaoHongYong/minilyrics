@@ -46,7 +46,9 @@ BOOL CPreferPageInternet::OnInitDialog()
 	g_Profile.GetProfileString(_T("ProxyUser"), _T(""), szTemp, CountOf(szTemp));
 	SetDlgItemText(IDC_USER, szTemp);
 
-	g_Profile.GetProfileString(_T("ProxyPass"), _T(""), szTemp, CountOf(szTemp));
+	g_Profile.EncryptGetProfileString(_T("ProxyPassEnc"), _T(""), szTemp, CountOf(szTemp));
+	if (IsEmptyString(szTemp))
+		g_Profile.GetProfileString(_T("ProxyPass"), _T(""), szTemp, CountOf(szTemp));
 	SetDlgItemText(IDC_PASS, szTemp);
 
 	return TRUE;
@@ -69,7 +71,8 @@ void CPreferPageInternet::SaveProxyServerUserPwd()
 	g_Profile.WriteProfileString(_T("ProxyUser"), szUser);
 
 	GetDlgItemText(IDC_PASS, szPass, CountOf(szPass));
-	g_Profile.WriteProfileString(_T("ProxyPass"), szPass);
+	g_Profile.EncryptWriteProfileString(_T("ProxyPassEnc"), szPass);
+	g_Profile.WriteProfileString(_T("ProxyPass"), _T(""));
 
 	if (!IsEmptyString(szUser))
 	{

@@ -436,7 +436,7 @@ public:
 
 protected:
 	// Only lyrics lines are saved here, it's just a sub copy of m_arrFileRows.
-	vector<PML_ROW>			m_arrLyricsRows;
+	CMLyrLines				m_arrLyricsRows;
 
 protected:
 	// save id3v2 lyrics infomation for cache.

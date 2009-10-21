@@ -51,7 +51,7 @@ int CopyAnsiStr(string &str, const char *data, int nLen)
 {
 	int		nStrLen = 0;
 	const char *p = data;
-	while (*p && nStrLen <= nLen)
+	while (nStrLen < nLen && *p)
 		p++, nStrLen++;
 	str.append(data, nStrLen);
 	return nStrLen + 1;
@@ -62,7 +62,7 @@ int CopyAnsiStr(stringex &str, const char *data, int nLen)
 {
 	int		nStrLen = 0;
 	const char *p = data;
-	while (*p && nStrLen <= nLen)
+	while (nStrLen < nLen && *p)
 		p++, nStrLen++;
 	str.append(data, nStrLen);
 	return nStrLen + 1;

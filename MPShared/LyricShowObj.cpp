@@ -1646,7 +1646,10 @@ void CLyricShowObj::OnLyricsChanged()
 	if ((m_bEnableAutoResize && 
 		(m_bAlwaysAutoWidth || g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)))
 		|| !ShouldWrapLines())
+	{
 		m_pMLData->CopyMLyrLines(m_lyrLines);
+		ReverseLyricsForRightToLeftLanguage();
+	}
 	else
 		WrapLyricsLines();
 
@@ -1686,15 +1689,15 @@ void CLyricShowObj::OnAdjustHue(float hue, float saturation, float luminance)
 
 void CLyricShowObj::WrapLyricsLines()
 {
-	{
-		CRawGraph		*pGraphics;
+	CRawGraph		*pGraphics;
 
-		pGraphics = m_pContainer->GetMemGraph();
+	pGraphics = m_pContainer->GetMemGraph();
 
-		pGraphics->SetFont(&m_font);
+	pGraphics->SetFont(&m_font);
 
-		WrapDisplayLyrics(g_LyricData.GetRawLyrics(), m_lyrLines, pGraphics, m_rcObj.Width() - m_nXMargin * 2);
-	}
+	WrapDisplayLyrics(g_LyricData.GetRawLyrics(), m_lyrLines, pGraphics, m_rcObj.Width() - m_nXMargin * 2);
+
+	ReverseLyricsForRightToLeftLanguage();
 }
 
 // COMMENT:
@@ -2659,4 +2662,82 @@ void CLyricShowObj::AdjustHue(float hue)
 
 	if (m_tobLowlight.imgPattern.IsValid())
 		AdjustImageHue(m_tobLowlight.imgPattern.GetHandle(), hue);
+}
+
+void ReverseStringForRightToLeftLanguage(LPTSTR Chars)
+{
+	int Length = _tcslen(Chars);
+	int	i, j;
+
+	for (i = 0; i < Length; i++)
+	{
+		switch (Chars[i])
+		{
+		case ')':
+			Chars[i] = '(';
+			break;
+		case '(':
+			Chars[i] = ')';
+			break;
+		case '[':
+			Chars[i] = ']';
+			break;
+		case ']':
+			Chars[i] = '[';
+			break;
+		default:
+			break;
+		}
+	}
+
+	TCHAR	c;
+
+	for (i = 0, j = Length - 1; i < j; i++, j--)
+	{
+		if (i == 0 && (Chars[i] == '?' || Chars[i] == '!'))
+			j++;
+		else
+		{
+			c = Chars[i];
+			Chars[i] = Chars[j];
+			Chars[j] = c;
+		}
+	}
+
+	for (i = 0; i < Length;)
+	{
+		if (Chars[i] >= '0' && Chars[i] <= '9')
+		{
+			int j = i + 1;
+			while (j < Length && Chars[j] >= '0' && Chars[j] <= '9')
+				j++;
+			int k = j;
+			while (i < j)
+			{
+				c = Chars[i];
+				Chars[i] = Chars[j];
+				Chars[j] = c;
+				i++;
+				j--;
+			}
+			i = k + 1;
+		}
+		else
+			i++;
+	}
+}
+
+void CLyricShowObj::ReverseLyricsForRightToLeftLanguage()
+{
+	return;
+
+	for (int i = 0; i < (int)m_lyrLines.size(); i++)
+	{
+		PML_ROW		pRow = m_lyrLines[i];
+		for (int k = 0; k < (int)pRow->vFrags.size(); k++)
+		{
+			PLYRIC_FRAG	pFrag = pRow->vFrags[k];
+			ReverseStringForRightToLeftLanguage(pFrag->szLyric);
+		}
+	}
 }

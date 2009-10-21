@@ -230,6 +230,8 @@ protected:
 
 	void AdjustHue(float hue);
 
+	void ReverseLyricsForRightToLeftLanguage();
+
 protected:
 	// ±ß½ç
 	int						m_nXMargin, m_nYMargin;

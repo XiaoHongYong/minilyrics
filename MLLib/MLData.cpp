@@ -1135,7 +1135,7 @@ void CMLData::AddRowByTime(PML_ROW pRow)
 	if (pRow->nRowType == ML_ROW_LYRICS)
 	{
 		// ½«¸è´ÊÐÐ²åÈë m_arrLyricsRows
-		vector<PML_ROW>::iterator	itPos;
+		CMLyrLines::iterator	itPos;
 
 		int			i, nRowCount;
 

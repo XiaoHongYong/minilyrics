@@ -248,15 +248,20 @@ int CID3v2FrameParserSynLyrics::ToFrameData(ID3v2SynchLyrics &synchLyrics, CID3v
 
 	buff += (char)synchLyrics.m_encodingType;
 
+	//     Language             $xx xx xx
 	if (strlen(synchLyrics.m_szLanguage) != 3)
 		strcpy_safe(synchLyrics.m_szLanguage, CountOf(synchLyrics.m_szLanguage), "XXX");
 	buff += synchLyrics.m_szLanguage;
 
-	buff += (char)synchLyrics.m_encodingType;
+	//     Time stamp format    $xx
+	//	   $02  Absolute time, 32 bit sized, using milliseconds as unit
+	buff += (char)2;
 
+	//     Content type         $xx
 	ASSERT(synchLyrics.m_byContentType == CT_LYRICS);
 	buff += synchLyrics.m_byContentType;
 
+	//     Content descriptor   <textstring> $00 (00)
 	if (synchLyrics.m_encodingType == IET_ANSI)
 	{
 		// ISO-8859-1
@@ -586,7 +591,7 @@ int CID3v2FrameParserText::Parse(const CID3v2Frame *pFrame, ID3v2Text &text)
 	const char *data = pFrame->m_frameData.c_str();
 	int		len = pFrame->m_frameData.size();
 
-	if (len < 2)
+	if (len < 1)
 		return ERR_INVALID_ID3V2_FRAME;
 
 	text.m_EncodingType = (ID3v2EncType)data[0];
