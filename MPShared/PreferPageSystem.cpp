@@ -194,6 +194,8 @@ BOOL CPPageStartup::OnInitDialog()
 
 	AddOptBool(ET_NULL, SZ_SECT_UI, _T("CheckNewVer"), true, IDC_C_CHECK_NEW_VERSION);
 
+	InitCheckButtons();
+
 #ifndef _MPLAYER
 	for (int i = 0; _id2strPlayer[i].szId != NULL; i++)
 	{

@@ -160,7 +160,6 @@ public:
 	void SetLyricData(CMLData *pMLData);
 
 	bool ShouldWrapLines();
-	void AddErrorInfo(LPCTSTR szInfo);
 
 	bool IsKaraoke() { return m_bKaraoke || m_pMLData->IsKaraokeShowStyle(); }
 

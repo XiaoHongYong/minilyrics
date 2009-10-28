@@ -67,8 +67,8 @@ TCHAR * __cdecl stristrignore (
 						const TCHAR * str2
 						);
 
-void TrimStr(tstring &str);
-void TrimStr(LPTSTR pszString);
+void TrimStr(tstring &str, TCHAR ch = ' ');
+void TrimStr(LPTSTR pszString, TCHAR ch = ' ');
 void TrimStrRight(LPTSTR pszString, LPCTSTR pszChars = _T(" "));
 
 void UpperString(LPTSTR szString);

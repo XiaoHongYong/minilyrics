@@ -547,7 +547,7 @@ int CMLData::OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bForc
 
 int CMLData::Save()
 {
-	if (!IsOK())
+	if (!HasLyricsOpened())
 	{
 		return ERR_FALSE;
 	}
@@ -1113,7 +1113,7 @@ void CMLData::Close()
 	ClearLyrics();
 }
 
-BOOL CMLData::IsOK()
+BOOL CMLData::HasLyricsOpened()
 {
 	return m_bHasLyrics;
 }
@@ -1997,7 +1997,7 @@ void CMLData::RemoveErrrorInfo()
 		{
 			PLYRIC_FRAG		pFrag;
 			pFrag = pRow->vFrags[0];
-			if ((pFrag->dwAttrib & LAS_ERROR_INFO) == LAS_ERROR_INFO)
+			if ((pFrag->dwAttrib & LSA_ERROR_INFO) == LSA_ERROR_INFO)
 			{
 				RemoveLyricsRow(i);
 				i--;
@@ -2006,15 +2006,38 @@ void CMLData::RemoveErrrorInfo()
 	}
 }
 
-void CMLData::AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle)
+void CMLData::AddTextInLyrics(V_Str &vText, DWORD dwLyrFlagAttr)
 {
+	int				nPrevEnd;
 	PLYRIC_FRAG		pFrag;
 	PML_ROW			pRow;
 
+	if (m_arrLyricsRows.size())
+		nPrevEnd = m_arrLyricsRows.back()->nEndTime;
+	else
+		nPrevEnd = GetPlayElapsedTime();
+
+	for (int i = 0; i < (int)vText.size(); i++)
+	{
+		int		nEndTime;
+
+		nEndTime = nPrevEnd + 8 * 1000;
+		pFrag = NewLyricFrag(nPrevEnd, nEndTime, vText[i].c_str(), vText[i].size(), TRUE, TRUE, LSA_SHOW_SIMPLE | LSA_TEMP_FRAG);
+		pFrag->dwAttrib |= dwLyrFlagAttr;
+		nPrevEnd = nEndTime;
+
+		pRow = NewMLRow(pFrag->nBegTime, pFrag->nEndTime, (TCHAR *)NULL);
+		pRow->vFrags.push_back(pFrag);
+
+		AddRowByTime(pRow);
+	}
+}
+
+void CMLData::AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle)
+{
 	//
 	// Ìí¼Ó¸èÇúÃûµÈ¡­¡­
 	vector<tstring>		vStr;
-	int					nPrevEnd;
 	int					nCount;
 
 	vStr.push_back(szSongTitle);
@@ -2030,20 +2053,7 @@ void CMLData::AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle)
 		vStr.push_back(_T("Please Click \"Search Lyrics\" button to get lyrics"));
 	}
 
-	nPrevEnd = 0;
-	for (int i = 0; i < (int)vStr.size(); i++)
-	{
-		int		nEndTime;
-
-		nEndTime = nPrevEnd + 10 * 1000;
-		pFrag = NewLyricFrag(nPrevEnd, nEndTime, vStr[i].c_str(), vStr[i].size(), TRUE, TRUE, LSA_SHOW_SIMPLE | LSA_TEMP_FRAG);
-		nPrevEnd = nEndTime;
-
-		pRow = NewMLRow(pFrag->nBegTime, pFrag->nEndTime, (TCHAR *)NULL);
-		pRow->vFrags.push_back(pFrag);
-
-		AddRowByTime(pRow);
-	}
+	AddTextInLyrics(vStr);
 }
 
 void CMLData::AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink)
@@ -2068,7 +2078,7 @@ void CMLData::AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink)
 
 	// add ad at beginning of the lyrics
 	pRow = NewMLRow(nBegTime, -1, szLink, -1);
-	pFrag = NewLyricFrag(nBegTime, -1, szText, -1, TRUE, TRUE, LSA_SHOW_DEFAULT | LAS_AD_FRAG | LSA_TEMP_FRAG);
+	pFrag = NewLyricFrag(nBegTime, -1, szText, -1, TRUE, TRUE, LSA_SHOW_DEFAULT | LSA_AD_FRAG | LSA_TEMP_FRAG);
 	pRow->vFrags.push_back(pFrag);
 	AddRowByTime(pRow);
 
@@ -2080,7 +2090,7 @@ void CMLData::AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink)
 		if (nBegTime != -1)
 			nBegTime = pRow->nBegTime + 5 * 1000;
 		pRow = NewMLRow(nBegTime, -1, szLink, -1);
-		pFrag = NewLyricFrag(nBegTime, -1, szText, -1, TRUE, TRUE, LSA_SHOW_DEFAULT | LAS_AD_FRAG | LSA_TEMP_FRAG);
+		pFrag = NewLyricFrag(nBegTime, -1, szText, -1, TRUE, TRUE, LSA_SHOW_DEFAULT | LSA_AD_FRAG | LSA_TEMP_FRAG);
 		pRow->vFrags.push_back(pFrag);
 		AddRow(pRow);
 	}

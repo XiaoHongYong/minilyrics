@@ -35,8 +35,8 @@ typedef enum LYRIC_FRAG_ATTRIBUTE
 	// 第6位为临时歌词位：如插入的广告、注册提示等临时信息
 	LSA_TEMP_FRAG		= 0x1 << 5,
 	// 第7位为提示信息标志位
-	LAS_ERROR_INFO		= 0x1 << 6,
-	LAS_AD_FRAG			= 0x1 << 7,
+	LSA_ERROR_INFO		= 0x1 << 6,
+	LSA_AD_FRAG			= 0x1 << 7,
 }LYRIC_FRAG_ATTRIBUTE;
 
 #define GetShowStyle(dwAttrib)		(dwAttrib & 0x7)
@@ -64,7 +64,7 @@ typedef struct LYRIC_FRAG
 		nDrawWidth = 0;
 		nLen = 0;
 	}
-	bool IsAdFrag() { return (dwAttrib & LAS_AD_FRAG) == LAS_AD_FRAG; }
+	bool IsAdFrag() { return (dwAttrib & LSA_AD_FRAG) == LSA_AD_FRAG; }
 	bool IsTempFrag() { return IsTempLyricsFrag(dwAttrib); }
 	bool IsTempBegTime() { return IsTempTimeBeg(dwAttrib); }
 	// bool IsTempTimeBeg() { }
@@ -349,6 +349,7 @@ public:
 	void AddRow(PML_ROW pFileRow);
 	void AddRowByTime(PML_ROW pRow);
 
+	void AddTextInLyrics(V_Str &vText, DWORD dwLyrFlagAttr = LSA_SHOW_SIMPLE);
 	void AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle);
 	void RemoveErrrorInfo();
 
@@ -397,7 +398,7 @@ public:
 
 	int GetMediaLength() { return m_nMediaLength; }
 
-	BOOL IsOK();
+	BOOL HasLyricsOpened();
 	// bool IsEncodingModified();
 	BOOL IsModified();
 	BOOL IsContentModified();

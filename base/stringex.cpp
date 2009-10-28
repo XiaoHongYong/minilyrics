@@ -567,14 +567,14 @@ WCHAR * __cdecl strnstr(
 	return(NULL);
 }
 
-void TrimStr(tstring &str)
+void TrimStr(tstring &str, TCHAR ch)
 {
 	tstring::iterator	it;
 	int		i;
 
 	for (i = str.size() - 1; i >= 0; i--)
 	{
-		if (str[i] != ' ')
+		if (str[i] != ch)
 			break;
 	}
 	if (i != str.size() - 1)
@@ -582,7 +582,7 @@ void TrimStr(tstring &str)
 
 	for (it = str.begin(); it != str.end(); it++)
 	{
-		if (*it != ' ')
+		if (*it != ch)
 			break;
 	}
 	if (it != str.begin())
@@ -591,19 +591,19 @@ void TrimStr(tstring &str)
 
 //
 // 去掉字符串两端的空格
-void TrimStr(LPTSTR szString)
+void TrimStr(LPTSTR szString, TCHAR ch)
 {
 	int		nLen;
 	LPTSTR	szBeg;
 	szBeg = szString;
 
-	while (*szBeg == ' ')
+	while (*szBeg == ch)
 		szBeg++;
 
 	nLen = _tcslen(szBeg);
 	if (nLen > 0)
 	{
-		while (szBeg[nLen - 1] == ' ')
+		while (szBeg[nLen - 1] == ch)
 			nLen--;
 		szBeg[nLen] = '\0';
 	}

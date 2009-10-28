@@ -264,9 +264,10 @@ public:
 		m_szBuff[nLen] = '\0';
 	}
 
-	T & operator[](int n)
+	template<class index_t>
+	T & operator[](index_t n)
 	{
-		if (n >= (int)nLen || n < 0)
+		if (n >= nLen)
 		{
 			static	T	temp(0);
 			return temp;
@@ -274,7 +275,7 @@ public:
 
 		return (m_szBuff[n]);
 	}
-	
+
 	stringex_t<T> &operator = (const stringex_t<T> &obj)
 	{
 		if (nSizeMax < obj.nSizeMax)

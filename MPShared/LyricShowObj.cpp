@@ -717,6 +717,7 @@ void CLyricShowObj::OnEvent(const IEvent *pEvent)
 	}
 }
 
+
 // COMMENT:
 //		从右向左滚动歌词显示
 void CLyricShowObj::Draw(CRawGraph *pGraph)
@@ -2034,66 +2035,6 @@ bool CLyricShowObj::ShouldWrapLines()
 	return m_bCanWrapLines;
 }
 
-void AddErrorInfoInLyrics(CRawGraph *pGraph, int nWidthMax, LPCTSTR szError)
-{
-	if (g_LyricData.IsOK())
-	{
-		ERRLOG1(_T("Lyrics been here, don't show error: %s"), szError);
-		return;
-	}
-
-	PLYRIC_FRAG		pFrag;
-	PML_ROW			pRow;
-
-	vector<tstring>		vStr;
-	int					nPrevEnd;
-
-	VLyrLines		&rawLyrLines = g_LyricData.GetRawLyrics();
-
-	if (rawLyrLines.size())
-	{
-		PML_ROW pRow = rawLyrLines.back();
-		nPrevEnd = pRow->nEndTime;
-	}
-	else
-		nPrevEnd = g_LyricData.GetPlayElapsedTime();
-	if (nPrevEnd < 0)
-		nPrevEnd = 0;
-
-	WrapWords(pGraph, nWidthMax, szError, vStr);
-
-	for (int i = 0; i < (int)vStr.size(); i++)
-	{
-		int			nEndTime;
-
-		nEndTime = nPrevEnd + 8 * 1000;
-		pFrag = g_LyricData.NewLyricFrag(nPrevEnd, nEndTime, vStr[i].c_str(), vStr[i].size(), TRUE, TRUE, LSA_SHOW_SIMPLE | LSA_TEMP_FRAG | LAS_ERROR_INFO);
-		nPrevEnd = nEndTime;
-
-		pRow = g_LyricData.NewMLRow(pFrag->nBegTime, pFrag->nEndTime, (TCHAR *)NULL);
-		pRow->vFrags.push_back(pFrag);
-
-		g_LyricData.AddRowByTime(pRow);
-
-		//
-		// Add to current display lyrics
-		// 		PML_ROW		pRowDisp;
-		// 		pRowDisp = CopyMLRow(pRow);
-		// 		m_vDispLyrics.push_back(pRowDisp);
-	}
-}
-
-void CLyricShowObj::AddErrorInfo(LPCTSTR szInfo)
-{
-	CRawGraph		*pGraphics;
-
-	pGraphics = m_pContainer->GetMemGraph();
-
-	pGraphics->SetFont(&m_font);
-
-	AddErrorInfoInLyrics(pGraphics, m_rcObj.Width() - m_nXMargin * 2, szInfo);
-}
-
 void CLyricShowObj::OnSize(int cx, int cy)
 {
 	if (ShouldWrapLines())
@@ -2664,79 +2605,150 @@ void CLyricShowObj::AdjustHue(float hue)
 		AdjustImageHue(m_tobLowlight.imgPattern.GetHandle(), hue);
 }
 
-void ReverseStringForRightToLeftLanguage(LPTSTR Chars)
+/*
+void ReverseString(LPTSTR str, int n)
 {
-	int Length = _tcslen(Chars);
-	int	i, j;
-
-	for (i = 0; i < Length; i++)
+	for (int i = n / 2; i >= 0; i--)
 	{
-		switch (Chars[i])
-		{
-		case ')':
-			Chars[i] = '(';
-			break;
-		case '(':
-			Chars[i] = ')';
-			break;
-		case '[':
-			Chars[i] = ']';
-			break;
-		case ']':
-			Chars[i] = '[';
-			break;
-		default:
-			break;
-		}
+		wchar_t	c = str[n - 1 - i];
+		str[n - 1 - i] = str[i];
+		str[i] = c;
 	}
+}
 
-	TCHAR	c;
+void GetStrArab(LPCTSTR str, bool &bIsArabStr, int &nLen)
+{
+	nLen = 0;
+	if (*str == 0)
+		return;
 
-	for (i = 0, j = Length - 1; i < j; i++, j--)
+	// chars in range of 0x590-0x6ff are Hebrew & Arabic
+
+	bIsArabStr = (*str >= 0x590 && *str <= 0x6ff);
+	nLen++;
+	str++;
+
+	while (*str)
 	{
-		if (i == 0 && (Chars[i] == '?' || Chars[i] == '!'))
-			j++;
-		else
-		{
-			c = Chars[i];
-			Chars[i] = Chars[j];
-			Chars[j] = c;
-		}
+		if ((*str >= 0x590 && *str <= 0x6ff) != bIsArabStr)
+			break;
+		nLen++;
+		str++;
 	}
+}
 
-	for (i = 0; i < Length;)
+void ReverseStringForRightToLeftLanguage(LPTSTR szText)
+{
+	int		nLen;
+	bool	bArab;
+
+	while (*szText)
 	{
-		if (Chars[i] >= '0' && Chars[i] <= '9')
+		GetStrArab(szText, bArab, nLen);
+		if (bArab)
+			ReverseString(szText, nLen);
+		szText += nLen;
+	}
+}*/
+
+void ReverseString(LPTSTR str, int n)
+{
+
+	LPCTSTR parentheses = L"()[]{}";
+	LPCTSTR inverseParentheses = L")(][}{";
+	LPCTSTR parLoc;
+
+	for (int i = 0; i < n / 2; i++)
+	{
+
+		wchar_t c = str[n - 1 - i];
+		if (parLoc = wcsrchr(parentheses, str[i]))
+			str[i] = inverseParentheses[parLoc - parentheses];
+
+		str[n - 1 - i] = str[i];
+		if (parLoc = wcsrchr(parentheses, c))
+			c = inverseParentheses[parLoc - parentheses];
+
+		str[i] = c;
+	}
+}
+
+bool inline isStrArab(WCHAR c)
+{
+	return (c >= 0x590 && c <= 0x6ff);
+}
+
+void GetStrArab(LPCTSTR str, bool &bIsArabStr, int &nLen)
+{
+	nLen = 0;
+
+	if (*str == 0)
+		return;
+
+	bIsArabStr = isStrArab(*str);
+
+	nLen++;
+	str++;
+
+	while (*str)
+	{
+		if (isStrArab(*str) != bIsArabStr)
+			break;
+
+		nLen++;
+		str++;
+	}
+}
+
+void ReverseStringForRightToLeftLanguage(LPTSTR szText)
+{
+	int         nLen;
+	bool		bArab;
+	WCHAR		seps[4];
+	LPTSTR      tok, next_tok;
+
+	for (LPTSTR tmpText = szText; *tmpText; tmpText++)
+	{
+		if (isStrArab(*tmpText))
 		{
-			int j = i + 1;
-			while (j < Length && Chars[j] >= '0' && Chars[j] <= '9')
-				j++;
-			int k = j;
-			while (i < j)
+
+			// if Arab found reverse the whole line
+			ReverseString(szText, wcslen(szText));
+
+			// now reverse non-arab words back
+			swprintf(seps, 4, L" \t\n%c", 0x2028 /* ls */);
+
+			tmpText = szText;
+			tok = wcstok_s(tmpText, seps, &next_tok);
+
+			while (tok)
 			{
-				c = Chars[i];
-				Chars[i] = Chars[j];
-				Chars[j] = c;
-				i++;
-				j--;
+				GetStrArab(tok, bArab, nLen);
+
+				if (!bArab)
+					ReverseString(tok, nLen);
+
+				tok = wcstok_s(NULL, seps, &next_tok);
+
+				//if not eol return the space wcstok_s ommited
+				if (tok)
+					*(LPTSTR)(tok - 1) = L' ';
 			}
-			i = k + 1;
+
+			break;
 		}
-		else
-			i++;
 	}
 }
 
 void CLyricShowObj::ReverseLyricsForRightToLeftLanguage()
 {
-	return;
-
 	for (int i = 0; i < (int)m_lyrLines.size(); i++)
 	{
 		PML_ROW		pRow = m_lyrLines[i];
 		for (int k = 0; k < (int)pRow->vFrags.size(); k++)
 		{
 			PLYRIC_FRAG	pFrag = pRow->vFrags[k];
+
 			ReverseStringForRightToLeftLanguage(pFrag->szLyric);
 		}
 	}

@@ -849,7 +849,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_RATE_LYR:
 		{
-			if (!g_LyricData.IsOK())
+			if (!g_LyricData.HasLyricsOpened())
 			{
 				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
 				break;
@@ -932,7 +932,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			break;
 		}
 
-		if (g_LyricData.IsOK())
+		if (g_LyricData.HasLyricsOpened())
 		{
 			if (!g_mpApp.OnLyricsChangingSavePrompt())
 				break;
@@ -1045,7 +1045,7 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 	_CMDID_ENCODING		&cmdIdCharset = CmdIdToEncoding(nCmdId);
 	if (cmdIdCharset.nCmdId != -1)
 	{
-		if (!g_LyricData.IsOK())
+		if (!g_LyricData.HasLyricsOpened())
 			return true;
 
 		//
@@ -1131,7 +1131,7 @@ void CMPCommonCmdHandler::OnCommandSaveLyricsToMp3()
 		return;
 	}
 
-	if (!g_LyricData.IsOK())
+	if (!g_LyricData.HasLyricsOpened())
 	{
 		m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
 		return;
@@ -1198,7 +1198,7 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 	tstring			strLyrics;
 	FILE_ENCODING	fileEncoding = FE_UCS2;
 
-	if (!g_LyricData.IsOK())
+	if (!g_LyricData.HasLyricsOpened())
 	{
 		pWndParent->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
 		return TRUE;

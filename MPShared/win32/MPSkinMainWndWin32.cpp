@@ -111,7 +111,7 @@ void CMPSkinMainWnd::OnEvent(const IEvent *pEvent)
 			CMPSkinMainWndBase::OnEvent(pEvent);
 	}
 	else
-		CMPSkinWnd::OnEvent(pEvent);
+		CMPSkinMainWndBase::OnEvent(pEvent);
 }
 
 void CMPSkinMainWnd::OnCopyData(HWND hWnd, PCOPYDATASTRUCT pCopyData)
