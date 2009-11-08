@@ -97,7 +97,7 @@
         <HStretchImage Left="-2" Top="27" Width="w+2" Height="6" Name="TitleLine" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
         <MediaInfoText Name="Artist" Left="0" Top="33" Width="w" Height="16" UseSkinBg="TRUE" Font="Tahoma" FontHeight="13" FontBold="TRUE" Outlined="TRUE" OutlinedColor="#808080" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Artist" ShowTitle="false" PaintBg="false"/>
         <MediaInfoText Name="Album" Left="0" Top="58" Width="w" Height="16" UseSkinBg="TRUE" Font="Tahoma" FontHeight="13" FontBold="TRUE" Outlined="TRUE" OutlinedColor="#808080" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Album" ShowTitle="false" PaintBg="false" />
-        <Toolbar Left="0" Top="78" Width="196" Height="22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
+        <Toolbar Left="0" Top="78" Width="160" Height="22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
           <button ID="ID_PREVIOUS" Left="0" />
           <button ID="ID_PLAYPAUSE" Left="1" CanCheck="TRUE" checked_left="2"/>
           <button ID="ID_NEXT" Left="3" />

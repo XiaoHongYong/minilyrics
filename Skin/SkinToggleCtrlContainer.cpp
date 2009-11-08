@@ -18,15 +18,18 @@ CSkinToggleCtrlContainer::~CSkinToggleCtrlContainer(void)
 
 void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 {
-/*	if (m_nIDTimerAnimation)
+	if (m_nIDTimerAnimation)
 	{
 		if (!m_memGraph.IsValid())
 		{
-			m_memGraph.Create(m_rcObj.Width(), m_rcObj.Height(), pGraph);
+			IMLGraphicsBase *pTemp = m_pSkin->GetGraphics();
+			m_memGraph.Create(m_rcObj.Width(), m_rcObj.Height(), pTemp);
+			m_pSkin->ReleaseGraphics(pTemp);
 		}
-		m_memGraph.SetOrigin(CPoint(-m_rcObj.left, -m_rcObj.top));
+		//m_memGraph.SetOrigin(CPoint(-m_rcObj.left, -m_rcObj.top));
 		m_memGraph.SetClipBoundBox(m_rcObj);
-		m_memGraph.FillRect(&m_rcObj, MLColor(RGB(0, 0, 0)), BPM_COPY);
+		// m_memGraph.FillRect(&m_rcObj, MLColor(RGB(0, 0, 0)), BPM_COPY);
+		m_memGraph.FillRect(&m_rcObj, m_pSkin->GetBgColor(), BPM_COPY);
 
 		// Show child controls in animation
 		CUIObject	*pObj = GetUIObjectById(m_nActiveCtrl, NULL);
@@ -46,8 +49,13 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 
 			pObj->UpdateTranslucencyWithSkin(pGraph);
 
-			pGraph->DrawGraph(&m_memGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_rcObj.left, m_rcObj.top, BPM_BLEND);
-			//pObj->Draw(pGraph);
+			// pGraph->DrawGraph(&m_memGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_rcObj.left, m_rcObj.top, BPM_BLEND);
+			CRawImage	imgTemp;
+			imgTemp.Attach(m_memGraph.GetRawBuff());
+
+			imgTemp.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_rcObj.left, m_rcObj.top, BPM_BLEND_RGB);
+
+			imgTemp.Detach();
 
 			pGraph->SetOpacityPainting(nOpaque);
 		}
@@ -58,7 +66,7 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 
 		if (!m_memGraph.IsValid())
 			m_memGraph.Destroy();
-	}*/
+	}
 }
 
 BOOL CSkinToggleCtrlContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -72,6 +80,12 @@ BOOL CSkinToggleCtrlContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		if (GetUIObjectById(m_nToggleToCtrl, NULL))
 		{
 			m_nIDTimerAnimation = m_pSkin->RegisterTimerObject(this, 100);
+
+			// Hide all object
+			CUIObject *pObj = GetUIObjectById(m_nActiveCtrl, NULL);
+			if (pObj)
+				pObj->SetVisible(false);
+
 			m_nTimeBeginAni = GetTickCount();
 		}
 		else

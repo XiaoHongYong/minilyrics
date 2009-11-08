@@ -375,9 +375,9 @@ BOOL COnlineSearch::SearchCacheForCur(V_LRCSEARCHRESULT *pvResult, DWORD *pdwSea
 		m_dbSearchResult.Open();
 
 	if (m_dbSearchResult.IsOpened())
-		m_dbSearchResult.SearchCache(szKeyword, g_Player.GetArtist(), g_Player.GetTitle(), pvResult, pdwSearchTime);
+		return m_dbSearchResult.SearchCache(szKeyword, g_Player.GetArtist(), g_Player.GetTitle(), pvResult, pdwSearchTime);
 
-	return TRUE;
+	return FALSE;
 }
 
 void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)

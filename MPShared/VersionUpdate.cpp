@@ -221,6 +221,8 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
 	_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
 	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 
+	g_Profile.WriteProfileString(_T("ObsoleteVersion"), _T(""));
+
 	// ·ÖÎöVER_FILE
 	if (!xml.ParseFile(pTask->m_strSaveFile.c_str()))
 	{

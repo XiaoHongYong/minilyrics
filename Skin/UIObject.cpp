@@ -694,39 +694,36 @@ void CUIObject::ToXML(CXMLWriter &xmlStream)
 
 UINT CUIObject::GetProfileInt(LPCTSTR szKeyName, int nDefault)
 {
-	tstring		strKeyName;
-
-	strKeyName = m_pSkin->GetSkinWndName();
-	strKeyName += m_strName;
-	strKeyName += szKeyName;
-
 	return g_Profile.GetProfileInt(m_pSkin->GetSkinFactory()->GetSkinName(),
-		strKeyName.c_str(), 
+		GetProfileKeyName(szKeyName).c_str(), 
 		nDefault);
 }
 
-// UINT CUIObject::GetProfileString(LPCTSTR szKeyName, tstring &strValue, LPCTSTR szDefault)
-// {
-// 	tstring		strKeyName;
-// 
-// 	strKeyName = m_pSkin->GetSkinWndName();
-// 	strKeyName += m_strName;
-// 	strKeyName += szKeyName;
-// 
-// 	return g_Profile.GetProfileString(m_pSkin->GetSkinFactory()->GetSkinName(),
-// 		strKeyName.c_str(), 
-// 		strValue);
-// }
+tstring CUIObject::GetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault)
+{
+	tstring		strValue;
+
+	strValue = g_Profile.GetProfileString(m_pSkin->GetSkinFactory()->GetSkinName(),
+		GetProfileKeyName(szKeyName).c_str(),
+		szDefault);
+
+	return strValue;
+}
 
 void CUIObject::WriteProfileInt(LPCTSTR szKeyName, int nValue)
+{
+	g_Profile.WriteProfileInt(m_pSkin->GetSkinFactory()->GetSkinName(),
+		GetProfileKeyName(szKeyName).c_str(), 
+		nValue);
+}
+
+tstring CUIObject::GetProfileKeyName(LPCTSTR szSubKeyName)
 {
 	tstring		strKeyName;
 
 	strKeyName = m_pSkin->GetSkinWndName();
-	strKeyName += m_strName;
-	strKeyName += szKeyName;
+	strKeyName += m_pSkin->GetSkinFactory()->GetStringOfID(m_nId);
+	strKeyName += szSubKeyName;
 
-	g_Profile.WriteProfileInt(m_pSkin->GetSkinFactory()->GetSkinName(),
-		strKeyName.c_str(), 
-		nValue);
+	return strKeyName;
 }

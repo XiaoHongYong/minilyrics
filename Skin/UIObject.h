@@ -216,7 +216,7 @@ public:
 	inline bool WantMsgMenuKey()	{ return (m_nMsgWant & UO_MSG_WANT_MENU_KEY) != 0; }
 
 	bool IsVisible();
-	void SetVisible(bool bVisible);
+	virtual void SetVisible(bool bVisible);
 	bool IsParentVisible();
 
 	inline bool IsEnable() { return m_bEnable; }
@@ -251,8 +251,9 @@ public:
 	// profile api
 	UINT GetProfileInt(LPCTSTR szKeyName, int nDefault);
 	bool GetProfileBool(LPCTSTR szKeyName, bool bDefault) { return GetProfileInt(szKeyName, bDefault) != 0; }
-	// UINT GetProfileString(LPCTSTR szKeyName, tstring &strValue, LPCTSTR szDefault);
+	tstring GetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault);
 	void WriteProfileInt(LPCTSTR szKeyName, int nValue);
+	tstring GetProfileKeyName(LPCTSTR szSubKeyName);
 
 public:
 	//

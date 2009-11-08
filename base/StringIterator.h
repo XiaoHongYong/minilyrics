@@ -160,7 +160,7 @@ public:
 	}
 
 	int GetPos() { return m_nPos; }
-	void SetPos(int nPos) { m_nPos = nPos; }
+	void SetPos(int nPos) { m_nPos = nPos; m_ch = m_szText + m_nPos; }
 
 protected:
 	const _char_t * m_szText;

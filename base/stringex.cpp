@@ -1722,7 +1722,7 @@ protected:
 				CPPUNIT_FAIL_T(CStrPrintf(_T("StrSplit Test, case: %d, %s, %s"), i, vStr[i].c_str(), strResult[i]).c_str());
 		}
 
-		CPPUNIT_ASSERT(setStr.size() - 2 == CountOf(strResult));
+		CPPUNIT_ASSERT(setStr.size() + 2 == CountOf(strResult));
 
 		for (int i = 0; i < vStr.size(); i++)
 		{

@@ -33,7 +33,7 @@ public:
 
 	void PostTrackPopupMenu();
 
-	bool TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *pWnd, RECT *prcNotOverlap);
+	bool TrackPopupSubMenu(int x, int y, CMLMenu *pMenu, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap);
 
 	bool IsMenuPopuped() { return m_bMenuPopup; }
 

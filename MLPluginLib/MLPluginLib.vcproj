@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="8.00"
 	Name="MLPluginLib"
-	ProjectGUID="{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}"
+	ProjectGUID="{0721AD77-959D-402F-8157-F43F42826D24}"
 	RootNamespace="MLPluginLib"
 	Keyword="MFCProj"
 	>

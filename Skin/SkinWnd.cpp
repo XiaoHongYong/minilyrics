@@ -2348,6 +2348,21 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 
 	OnSkinLoaded();
 
+	tstring			strOnCreateCmd;
+	strOnCreateCmd = pXmlNode->GetPropertySafe(_T("OnCreateCommand"));
+
+	if (!strOnCreateCmd.empty())
+	{
+		V_Str		vStrParam;
+
+		StrSplit(strOnCreateCmd.c_str(), ',', vStrParam);
+		for (int i = 0; i < (int)vStrParam.size(); i++)
+		{
+			TrimStr(vStrParam[i]);
+			OnCustomCommand(m_pSkinFactory->GetIDByName(vStrParam[i].c_str()));
+		}
+	}
+
 	return ERR_OK;
 }
 

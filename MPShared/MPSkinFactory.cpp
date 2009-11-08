@@ -49,12 +49,10 @@
 
 #ifdef _WIN32
 #include "win32/MainMenu.h"
-#include "win32/LyricsMenu.h"
 #endif
 
 #ifdef _LINUX_GTK2
 #include "gtk2/MainMenu.h"
-#include "gtk2/LyricsMenu.h"
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -238,19 +236,18 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
 #endif
 	}
-	else if (_tcsicmp(szMenu, _T("FloatingLyrMenu")) == 0)
+	else if (_tcsicmp(szMenu, _T("FloatingLyrMenu")) == 0
+		|| _tcsicmp(szMenu, _T("LyricsMenu")) == 0)
 	{
-		CLyricsMenu	*pMenu = new CLyricsMenu(true);
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 1);
 	}
-	else if (_tcsicmp(szMenu, _T("LyricsMenu")) == 0)
+	else if (_tcsicmp(szMenu, _T("LyrEditorMenu")) == 0)
 	{
-		CLyricsMenu	*pMenu = new CLyricsMenu();
-		pSkinMenu = pMenu;
-		pMenu->AddUICheckStatusIf(pWnd);
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 1);
+		pSkinMenu = new CSkinMenu();
+		pSkinMenu->LoadMenu(IDM_LYR_EDITOR);
 	}
 #ifdef _MPLAYER
 	else if (_tcsicmp(szMenu, _T("MainWndMenu")) == 0)

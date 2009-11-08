@@ -303,7 +303,7 @@ int CSkinFileXML::GetMainSkinWnd(tstring &strSkinWndName, LPCTSTR szSkinWndNameD
 
 	vector<tstring>		vWnds;
 	if (szMainWnds)
-		StrBreak(szMainWnds, ',', vWnds);
+		StrSplit(szMainWnds, ',', vWnds);
 	if (vWnds.size())
 	{
 		TrimStr(vWnds[0]);
@@ -790,7 +790,7 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 	{
 		V_Str		vExtraResDirs;
 
-		StrBreak(szExtraResouceFolder, ',', vExtraResDirs);
+		StrSplit(szExtraResouceFolder, ',', vExtraResDirs);
 
 		for (uint i = 0; i < vExtraResDirs.size(); ++i)
 		{
@@ -1257,12 +1257,79 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		else
 			return ERR_FALSE;
 	}
+	else if (cmd.strFunction == _T("load_ctrl_visible_state"))
+	{
+		V_Str		vStrParam;
+		CUIObject	*pObj;
+
+		StrSplit(cmd.strParam.c_str(), ',', vStrParam);
+		if (vStrParam.size() > 2 || vStrParam.size() == 0)
+			return ERR_FALSE;
+		for (int i = 0; i < (int)vStrParam.size(); i++)
+		{
+			TrimStr(vStrParam[i]);
+
+			pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
+			if (pObj)
+			{
+				// Proceed only if visible state is set.
+				tstring strValue = pObj->GetProfileString(_T("VisibleState"), _T(""));
+				if (!strValue.empty())
+					pObj->SetVisible(IsTRUE(strValue.c_str()));
+			}
+		}
+
+		pSkinWnd->InvalidateRect();
+
+		return ERR_OK;
+	}
+	else if (cmd.strFunction == _T("save_ctrl_visible_state"))
+	{
+		V_Str		vStrParam;
+		CUIObject	*pObj;
+
+		StrSplit(cmd.strParam.c_str(), ',', vStrParam);
+		for (int i = 0; i < (int)vStrParam.size(); i++)
+		{
+			TrimStr(vStrParam[i]);
+
+			pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
+			if (pObj)
+				pObj->WriteProfileInt(_T("VisibleState"), pObj->IsVisible());
+		}
+
+		return ERR_OK;
+	}
+	else if (cmd.strFunction == _T("toggle_ctrl_visible"))
+	{
+		V_Str		vStrParam;
+		CUIObject	*pObj;
+
+		StrSplit(cmd.strParam.c_str(), ',', vStrParam);
+		for (int i = 0; i < (int)vStrParam.size(); i++)
+			TrimStr(vStrParam[i]);
+
+		pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
+		if (pObj)
+		{
+			bool	bVisible;
+			if (vStrParam.size() > 1)
+				bVisible = IsTRUE(vStrParam[1].c_str());
+			else
+				bVisible = !pObj->IsVisible();
+			pObj->SetVisible(bVisible);
+			pSkinWnd->InvalidateRect();
+			return ERR_OK;
+		}
+		else
+			return ERR_FALSE;
+	}
 	else if (cmd.strFunction == _T("show_hide_ctrl"))
 	{
 		V_Str		vStrParam;
 		CUIObject	*pObj;
 
-		StrBreak(cmd.strParam.c_str(), ',', vStrParam);
+		StrSplit(cmd.strParam.c_str(), ',', vStrParam);
 		if (vStrParam.size() != 2)
 			return ERR_FALSE;
 		for (int i = 0; i < (int)vStrParam.size(); i++)
@@ -1278,13 +1345,15 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		if (pObj)
 			pObj->SetVisible(false);
 		pSkinWnd->InvalidateRect();
+
+		return ERR_OK;
 	}
 	else if (cmd.strFunction == _T("set_property"))
 	{
 		V_Str		vStrParam;
 		CUIObject	*pObj;
 
-		StrBreak(cmd.strParam.c_str(), ',', vStrParam);
+		StrSplit(cmd.strParam.c_str(), ',', vStrParam);
 		if (vStrParam.size() != 3)
 			return ERR_FALSE;
 		for (int i = 0; i < (int)vStrParam.size(); i++)
@@ -1293,13 +1362,15 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
 		if (pObj)
 			pObj->SetProperty(vStrParam[1].c_str(), vStrParam[2].c_str());
+
+		return ERR_OK;
 	}
 	else if (cmd.strFunction == _T("multi_cmd"))
 	{
 		V_Str		vStrParam;
 		int			nRet = ERR_NOT_FOUND;
 
-		StrBreak(cmd.strParam.c_str(), ',', vStrParam);
+		StrSplit(cmd.strParam.c_str(), ',', vStrParam);
 		for (int i = 0; i < (int)vStrParam.size(); i++)
 		{
 			TrimStr(vStrParam[i]);

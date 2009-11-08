@@ -32,11 +32,7 @@ int UTF8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen)
 	return MBCSToUCS2(text, length, ucs2, ubuflen, CP_UTF8);
 }
 
-// PURPOSE   : Get full task save file name by task name.
-//
-// PARAMETER: 
-//      szPath is the path that returned: format is like : "c:\\antivirus\\"
-BOOL GetProgramPath(char szPath[], HINSTANCE hInstance/* = NULL*/)
+BOOL GetProgramPath(char szPath[], HINSTANCE hInstance)
 {
 	__try
 	{

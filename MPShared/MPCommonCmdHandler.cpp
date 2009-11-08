@@ -295,24 +295,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			dlg.DoModal(m_pSkinWnd);
 		}
 		break;
-	case IDC_EDIT_UNDO:
-		OnCustomCommand(CMD_EDIT_UNDO);
-		break;
-	case IDC_EDIT_REDO:
-		OnCustomCommand(CMD_EDIT_REDO);
-		break;
-	case IDC_EDIT_CUT:
-		OnCustomCommand(CMD_EDIT_CUT);
-		break;
-	case IDC_EDIT_COPY:
-		OnCustomCommand(CMD_EDIT_COPY);
-		break;
-	case IDC_EDIT_PASTE:
-		OnCustomCommand(CMD_EDIT_PASTE);
-		break;
-	case IDC_EDIT_DELETE:
-		OnCustomCommand(CMD_EDIT_DELETE);
-		break;
 	case IDC_BR_ALBUM_ART:
 		{
 			tstring				strAlbumArtFileName;

@@ -1326,7 +1326,6 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 	if (strIterator.GetPos() >= nLen)
 		return false;
 
-	tstring		str;
 	int			wMax;
 	nLen = strIterator.GetPos();
 
@@ -1346,9 +1345,9 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 		if (w > wMax)
 			break;
 
-		str += (LPCTSTR)glyph->ch;
+		strEllipsis += (LPCTSTR)glyph->ch;
 	}
-	str += _T("...");
+	strEllipsis += _T("...");
 
 	return true;
 }

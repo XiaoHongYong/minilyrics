@@ -22,8 +22,9 @@ void CMenuBarMsgHandler::PostTrackPopupMenu()
 	PostMessage(m_hWnd, WM_MB_TRACKMENU, 0, 0);
 }
 
-bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
+bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, CMLMenu *pMenu, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
+	HMENU	hMenu = pMenu->GetSubMenu(nSubMenu);
 	ASSERT(pWnd);
 	ASSERT(hMenu);
 	if (!hMenu)
@@ -51,7 +52,8 @@ bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, HMENU hMenu, CBaseWnd *
 	m_bMenuPopup = true;
 	m_pMenuBar->Invalidate();
 
-	::TrackPopupMenuEx(hMenu, TPM_LEFTALIGN, x, y, pWnd->GetHandle(), prcNotOverlap ? &tpmParam : NULL);
+	pMenu->TrackPopupSubMenu(x, y, nSubMenu, pWnd, prcNotOverlap ? &tpmParam : NULL);
+	// ::TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_VERTICAL, x, y, pWnd->GetHandle(), prcNotOverlap ? &tpmParam : NULL);
 
 	m_bMenuPopup = false;
 	m_pMenuBar->Invalidate();
@@ -168,7 +170,7 @@ void CMenuBarMsgHandler::ProcessHookMessage(UINT message, WPARAM wParam, LPARAM 
 
 //////////////////////////////////////////////////////////////////////////
 
-#define SPACE_SUBMENUS		(m_rcObj.Height() / 2)
+#define SPACE_SUBMENUS		(m_font.GetHeight() / 2)
 
 UIOBJECT_CLASS_NAME_IMP(CSkinMenuBar, _T("MenuBar"))
 
@@ -252,7 +254,7 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 		bool		bOutlined;
 
 		pGraph->GetTextExtentPoint32(item.strText.c_str(), item.strText.size(), &size);
-		item.nWidth = size.cx + nSpaceSubMenus * 2;
+		item.nWidth = size.cx + nSpaceSubMenus;
 
 		if (x + item.nWidth > m_rcObj.right)
 			break;
@@ -290,7 +292,7 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 			&rcItem, DT_VCENTER | DT_CENTER | DT_PREFIX_TEXT);
 		}
 
-		x += m_vSubMenus[i].nWidth;
+		x += item.nWidth;
 	}
 }
 
@@ -593,6 +595,6 @@ void CSkinMenuBar::TrackPopupMenu()
 
 	m_bLBtDown = false;
 #ifdef _WIN32
-	m_wndMsgReceiver.TrackPopupSubMenu(pt.x, pt.y, m_pMenu->GetSubMenu(m_nSelSubMenu), m_pSkin, &rc);
+	m_wndMsgReceiver.TrackPopupSubMenu(pt.x, pt.y, m_pMenu, m_nSelSubMenu, m_pSkin, &rc);
 #endif
 }
