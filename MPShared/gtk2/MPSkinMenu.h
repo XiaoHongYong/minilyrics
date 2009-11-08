@@ -18,7 +18,8 @@ public:
 	CMPSkinMenu();
 	virtual ~CMPSkinMenu();
 
-	virtual void TrackPopupMenu(int x, int y, CBaseWnd *pWnd);
+	virtual void TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap = NULL);
+	virtual void TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap = NULL);
 
 	virtual void OnLoadMenu();
 

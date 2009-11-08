@@ -41,18 +41,10 @@ bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, CMLMenu *pMenu, int nSu
 		ms_hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, MessageHookProc, 0, ::GetCurrentThreadId());
 	}
 
-	TPMPARAMS		tpmParam;
-
-	if (prcNotOverlap)
-	{
-		tpmParam.cbSize = sizeof(tpmParam);
-		tpmParam.rcExclude = *prcNotOverlap;
-	}
-
 	m_bMenuPopup = true;
 	m_pMenuBar->Invalidate();
 
-	pMenu->TrackPopupSubMenu(x, y, nSubMenu, pWnd, prcNotOverlap ? &tpmParam : NULL);
+	pMenu->TrackPopupSubMenu(x, y, nSubMenu, pWnd, prcNotOverlap);
 	// ::TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_VERTICAL, x, y, pWnd->GetHandle(), prcNotOverlap ? &tpmParam : NULL);
 
 	m_bMenuPopup = false;

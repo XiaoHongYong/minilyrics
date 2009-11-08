@@ -28,9 +28,13 @@ void CMPSkinMenu::OnLoadMenu()
 {
 }
 
-
-void CMPSkinMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd)
+void CMPSkinMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
 
 	CSkinMenu::TrackPopupMenu(x, y, pWnd);
+}
+
+void CMPSkinMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
+{
+	CSkinMenu::TrackPopupSubMenu(x, y, nSubMenu, pWnd, prcNotOverlap);
 }
