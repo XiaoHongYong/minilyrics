@@ -780,7 +780,7 @@
 				>
 				<Tool
 					Name="VCCustomBuildTool"
-					CommandLine="sdk\bin\bison.exe -d SkinScript.y&#x0D;&#x0A;del SkinScript.tab.cpp&#x0D;&#x0A;rename SkinScript.tab.c SkinScript.tab.cpp&#x0D;&#x0A;"
+					CommandLine="..\sdk\Flex_bison\bin\bison.exe -d SkinScript.y&#x0D;&#x0A;del SkinScript.tab.cpp&#x0D;&#x0A;rename SkinScript.tab.c SkinScript.tab.cpp&#x0D;&#x0A;"
 					Outputs="SkinScript.tab.cpp"
 				/>
 			</FileConfiguration>

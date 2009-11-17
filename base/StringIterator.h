@@ -121,7 +121,7 @@ public:
 		return szChar;
 	}
 
-	int size() { return strlen(szChar); }
+	size_t size() { return strlen(szChar); }
 
 };
 
