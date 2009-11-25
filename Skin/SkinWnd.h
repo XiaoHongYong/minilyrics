@@ -141,7 +141,7 @@ public:
 	// update draw of UIObject
 	virtual void InvalidateUIObject(CUIObject *pObj);
 
-	void RedrawBackground(RECT *prc);
+	void RedrawBackground(RECT *prc, bool bNoTranslucency = false);
 
 	CSkinFactory *GetSkinFactory() { return m_pSkinFactory; }
 
@@ -277,6 +277,8 @@ public:
 	bool UpdateSkinProperty();
 
 	bool IsWndActive();
+
+	bool IsBgImageUsed() { return m_imageBg.IsValid(); }
 
 	MLColor &GetFgColor() { return m_clrFg; }
 	MLColor &GetBgColor() { return m_clrBg; }

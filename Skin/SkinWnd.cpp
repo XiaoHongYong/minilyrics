@@ -13,8 +13,6 @@
 #include "SkinVScrollBar.h"
 #include "SkinCaption.h"
 
-CScaleImagePainter	m_bgImagePainter;
-
 #define _SZ_SKINWND			_T("skinwnd")
 
 /*
@@ -320,6 +318,9 @@ void CSkinWnd::CloseSkin()
 	m_strCusor.resize(0);
 	m_strRgn.resize(0);
 	m_strSkinWndName.resize(0);
+
+	m_imageBg.Destroy();
+	m_dwBgImgBlendPixMode = BPM_BLEND;
 
 	m_nWidth = 0;
 	m_nHeight = 0;
@@ -880,7 +881,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	if (pObj->IsUseSkinBg() && m_bPaintBg)
 	{
 		// redraw background ?
-		RedrawBackground(pObj->m_rcObj);
+		RedrawBackground(pObj->m_rcObj, pObj->IsUpdateTranslucencyWithSkin());
 	}
 
 	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
@@ -921,7 +922,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	ReleaseGraphics(pGraphics);
 }
 
-void CSkinWnd::RedrawBackground(RECT *prc)
+void CSkinWnd::RedrawBackground(RECT *prc, bool bNoTranslucency)
 {
 	if (!m_pmemGraph)
 		return;
@@ -956,18 +957,23 @@ void CSkinWnd::RedrawBackground(RECT *prc)
 
 	if (m_imageBg.IsValid())
 	{
+		int				nAlphaOld = 255;
 		CDrawImageFun	func;
 
 		func.m_bpm = m_dwBgImgBlendPixMode;
 		func.m_pGraph = m_pmemGraph;
 		func.m_pImage = &m_imageBg;
 
-		int	nAlphaOld = m_pmemGraph->GetOpacityPainting();
-		m_pmemGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
+		if (!bNoTranslucency)
+		{
+			nAlphaOld = m_pmemGraph->GetOpacityPainting();
+			m_pmemGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
+		}
 
 		m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), func);
 
-		m_pmemGraph->SetOpacityPainting(nAlphaOld);
+		if (!bNoTranslucency)
+			m_pmemGraph->SetOpacityPainting(nAlphaOld);
 	}
 	else
 		m_pmemGraph->FillRect(&rc, m_clrBg);

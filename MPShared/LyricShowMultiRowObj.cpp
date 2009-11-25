@@ -174,6 +174,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 #ifdef _WIN32_DESKTOP
 	// if (/*m_pSkin->GetEnableTranslucencyLayered() && */m_LyricsDisplayOpt != DO_FADEOUT_BG)
+	if (!m_pSkin->IsBgImageUsed())
 	{
 		CRect	rc;
 
