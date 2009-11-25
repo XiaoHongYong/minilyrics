@@ -357,9 +357,12 @@ class copy_rgb_opacity
 public:
 	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
 	{
-		dst[0] = (uint8)(((src[0] - dst[0]) * nOpacitySrc + (dst[0] << 8)) >> 8);
-		dst[1] = (uint8)(((src[1] - dst[1]) * nOpacitySrc + (dst[1] << 8)) >> 8);
-		dst[2] = (uint8)(((src[2] - dst[2]) * nOpacitySrc + (dst[2] << 8)) >> 8);
+		dst[0] = (uint8)(src[0] * nOpacitySrc >> 8);
+		dst[1] = (uint8)(src[1] * nOpacitySrc >> 8);
+		dst[2] = (uint8)(src[2] * nOpacitySrc >> 8);
+// 		dst[0] = (uint8)(((src[0] - dst[0]) * nOpacitySrc + (dst[0] << 8)) >> 8);
+// 		dst[1] = (uint8)(((src[1] - dst[1]) * nOpacitySrc + (dst[1] << 8)) >> 8);
+// 		dst[2] = (uint8)(((src[2] - dst[2]) * nOpacitySrc + (dst[2] << 8)) >> 8);
 	}
 };
 
@@ -369,9 +372,9 @@ class copy_alpha_opacity
 public:
 	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
 	{
-		uint8	alpha = uint8(src[3] * (255 - (255 - src[3]) * nOpacitySrc / 255) / 255);
-
-		dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
+		// uint8	alpha = uint8(src[3] * (255 - (255 - src[3]) * nOpacitySrc / 255) / 255);
+		// dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
+		dst[3] = uint8(src[3] * nOpacitySrc / 255);
 	}
 };
 

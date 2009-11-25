@@ -262,6 +262,7 @@ public:
 
 
 public:
+	virtual BOOL SetProperty(SXNode *pXmlNode);
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_
 	virtual void EnumProperties(CUIObjProperties &listProperties);
@@ -390,6 +391,11 @@ protected:
 	MLColor			m_clrBg;		// background color
 	MLColor			m_clrBgOrg;
 	bool			m_bPaintBg;		// Should Paint background?
+
+	// Background images
+	CScaleImagePainter	m_bgImagePainter;
+	CSFImage		m_imageBg;
+	DWORD			m_dwBgImgBlendPixMode;
 
 	// Window properties
 	bool			m_bIndividualProperties;

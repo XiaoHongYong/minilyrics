@@ -165,7 +165,8 @@ if TargetZP:
 	shutil.copy(r"bin-player\ZikiPlayer.exe", r"Install_ZP\Share\ZikiPlayer.exe")
 	shutil.copy(r"Install_ML\Share\Themes.xml", r"Install_ZP\Share\Themes.xml")
 	shutil.copy(r"Install_ML\Share\unicows.dll", r"Install_ZP\Share\unicows.dll")
-	#shutil.copytree(r"Install_ML\Share\Patterns", r"Install_ZP\Share\Patterns")
+	shutil.copytree(r"Install_ML\Share\Patterns", r"Install_ZP\Share\Patterns")
+	Execute(r"cmd /c xcopy /Y Install_ML\Share\Patterns\*.* Install_ZP\Share\Patterns\\")
 
 	# Create ZPVersion.nsh
 	f = open(r"Install_ZP\ZPVersion.nsh", "w")

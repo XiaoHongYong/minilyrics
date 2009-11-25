@@ -117,7 +117,7 @@ enum
 };
 
 #define GetTRUE(szValue)		(_tcsicmp(_T("TRUE"), szValue) == 0)
-#define IsTRUE(szValue)		(_tcsicmp(_T("TRUE"), szValue) == 0 || _tcsicmp(_T("1"), szValue) == 0)
+#define IsTRUE(szValue)			(_tcsicmp(_T("TRUE"), szValue) == 0 || _tcsicmp(_T("1"), szValue) == 0)
 #define GetFALSE(szValue)		(_tcsicmp(_T("FALSE"), szValue) == 0)
 #define BOOLTOSTR(bValue)		(bValue ? _T("TRUE") : _T("FALSE"))
 
@@ -131,6 +131,8 @@ enum
 #define SZ_PN_WIDTH			_T("Width")
 #define SZ_PN_HEIGHT		_T("Height")
 #define SZ_PN_TOOLTIP		_T("ToolTip")
+
+#define SZ_PN_PROPERTY		_T("Property")
 
 #define SZ_PN_IMAGE			_T("Image")
 #define SZ_PN_IMAGERECT		_T("ImageRect")

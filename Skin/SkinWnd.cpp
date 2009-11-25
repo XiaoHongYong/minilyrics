@@ -13,6 +13,7 @@
 #include "SkinVScrollBar.h"
 #include "SkinCaption.h"
 
+CScaleImagePainter	m_bgImagePainter;
 
 #define _SZ_SKINWND			_T("skinwnd")
 
@@ -734,7 +735,8 @@ void CSkinWnd::OnPaint(IMLGraphicsBase *pGraph)
 
 	if (m_bPaintBg)
 	{
-		pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
+		// pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
+		RedrawBackground(NULL);
 	}
 
 	// draw every ui objects on back buffer one by one
@@ -810,7 +812,8 @@ bool CSkinWnd::RecreateMemGraphics()
 
 	if (m_bPaintBg)
 	{
-		m_pmemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
+		// m_pmemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
+		RedrawBackground(NULL);
 	}
 
 	ReleaseGraphics(pGraph);
@@ -938,9 +941,38 @@ void CSkinWnd::RedrawBackground(RECT *prc)
 			rc.right = m_rcBoundBox.Width();
 	}
 	else
-		rc = m_rcBoundBox;
+	{
+		rc.left = rc.top = 0;
+		rc.right = m_rcBoundBox.Width();
+		rc.bottom = m_rcBoundBox.Height();
+	}
 
-	m_pmemGraph->FillRect(&rc, m_clrBg);
+	CRect	rcClip, rcNewClip;
+	m_pmemGraph->GetClipBoundBox(rcClip);
+
+	rcNewClip.IntersectRect(&rcClip, &rc);
+
+	m_pmemGraph->SetClipBoundBox(rcNewClip);
+
+	if (m_imageBg.IsValid())
+	{
+		CDrawImageFun	func;
+
+		func.m_bpm = m_dwBgImgBlendPixMode;
+		func.m_pGraph = m_pmemGraph;
+		func.m_pImage = &m_imageBg;
+
+		int	nAlphaOld = m_pmemGraph->GetOpacityPainting();
+		m_pmemGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
+
+		m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), func);
+
+		m_pmemGraph->SetOpacityPainting(nAlphaOld);
+	}
+	else
+		m_pmemGraph->FillRect(&rc, m_clrBg);
+
+	m_pmemGraph->RecoverClipBox();
 }
 
 void CSkinWnd::SetMainAppWnd(bool bMainAppWnd)
@@ -1111,6 +1143,57 @@ BOOL CSkinWnd::MoveWindow(int X, int Y, int nWidth, int nHeight, BOOL bRepaint/*
 BOOL CSkinWnd::MoveWindow(RECT &rc, BOOL bRepaint/* = TRUE*/)
 {
 	return MoveWindow(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, bRepaint);
+}
+
+// szValue format: %d,%d,%d,%d
+template<class TCHARDEF, class _int_t>
+bool Scan2IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2)
+{
+	szValue = ReadInt_t(szValue, n1);
+	if (*szValue != ',')
+		return false;
+	szValue++;
+	while (*szValue == ' ')
+		szValue++;
+
+	szValue = ReadInt_t(szValue, n2);
+
+	return true;
+}
+
+BOOL CSkinWnd::SetProperty(SXNode *pXmlNode)
+{
+	LPCTSTR		szName = pXmlNode->GetPropertySafe(SZ_PN_NAME);
+	LPCTSTR		szValue;
+	ASSERT(szName);
+	if (!szName)
+		return FALSE;
+
+	if (IsPropertyName(szName, _T("BgImage")))
+	{
+		// Set background image
+		m_imageBg.LoadFromSRM(m_pSkinFactory, pXmlNode->GetPropertySafe(SZ_PN_IMAGE));
+
+		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBg);
+
+		szValue = pXmlNode->GetPropertySafe(_T("HorzExtendPos"));
+		Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd);
+
+		szValue = pXmlNode->GetPropertySafe(_T("VertExtendPos"));
+		Scan2IntX(szValue, m_bgImagePainter.nSrcVertExtendStart, m_bgImagePainter.nSrcVertExtendEnd);
+
+		szValue = pXmlNode->GetPropertySafe(_T("BlendPixMode"));
+		m_dwBgImgBlendPixMode = BlendPixModeFromStr(szValue);
+
+		m_bgImagePainter.nSrcX = m_imageBg.m_x;
+		m_bgImagePainter.nSrcY = m_imageBg.m_y;
+		m_bgImagePainter.nSrcWidth = m_imageBg.m_cx;
+		m_bgImagePainter.nSrcHeight = m_imageBg.m_cy;
+
+		return TRUE;
+	}
+
+	return FALSE;
 }
 
 BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -1824,7 +1907,8 @@ BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 
 	if (m_bPaintBg)
 	{
-		pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
+		// pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
+		RedrawBackground(NULL);
 	}
 
 	// draw every ui objects on back buffer one by one
@@ -2311,7 +2395,7 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	// load window size of skin
 	OnLoadWndSizePos();
 
-	// ?????UIObjects
+	// Create UIObjects
 	{
 		SXNode::iterator	it, itEnd;
 
@@ -2321,15 +2405,18 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 			SXNode			*pNode = *it;
 			CUIObject		*pObj;
 
-			pObj = m_pSkinFactory->CreateUIObject(this, pNode->strName.c_str());
-			// assert(pObj);
+			if (IsPropertyName(pNode->strName.c_str(), SZ_PN_PROPERTY))
+			{
+				if (!SetProperty(pNode))
+					DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), pNode->GetPropertySafe(SZ_PN_NAME));
+				continue;
+			}
 
+			pObj = m_pSkinFactory->CreateUIObject(this, pNode->strName.c_str());
 			if (pObj)
 			{
-				// ????,????????
 				pObj->FromXML(&m_rootConainter, pNode);
 
-				// ??????
 				m_rootConainter.AddUIObject(pObj);
 			}
 		}
