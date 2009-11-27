@@ -155,6 +155,8 @@ public:
 	stmt_index newStmtAssign(int nLineNo, stmt_index siVarAddr, stmt_index siExpression);
 
 	stmt_index newStmtExpConstInt(int nLineNo, int nValue);
+	stmt_index newStmtExpConstBool(int nLineNo, bool bValue);
+	stmt_index newStmtExpNull(int nLineNo);
 	stmt_index newStmtExpConstString(int nLineNo, int nStrJObjIndex);
 	stmt_index newStmtExpNew(int nLineNo, TypeId typeId, int nMemberIndex, stmt_index siParameter);
 	stmt_index newStmtExpVar(int nLineNo, bool bStatic, TypeId typeId, int nAddress, stmt_index siParentVar);

@@ -28,11 +28,11 @@ void yyerror (char const *);
 %}
 
 %token	TK_IF		TK_ELSE		TK_WHILE	TK_DO		TK_FOR		TK_NEW
-%token	TK_RETURN	TK_SUPER	TK_NULL
+%token	TK_RETURN	TK_SUPER	TK_NULL		TK_TRUE		TK_FALSE
 %token	TK_EXTENDS	TK_PUBLIC	TK_PRIVATE	TK_NATIVE	TK_PROTECTED	TK_IMPLEMENTS
 %token	TK_PACKAGE	TK_IMPORT	TK_STATIC	TK_ABSTRACT	TK_CLASS	TK_INTERFACE
 %token	TK_ID
-%token	TK_NUMBER	TK_C_STRING
+%token	TK_NUMBER	TK_STRING
 %token	TK_L_PARENTHESIS		TK_R_PARENTHESIS		TK_COLON	TK_SEMICOLON 
 %token	TK_L_BRACE	TK_R_BRACE	TK_COMMA	TK_DOT		TK_ASSIGN
 %token	TK_OP_INC	TK_OP_DEC	TK_PLUS		TK_MINUS	TK_MULT		TK_DIV
@@ -232,8 +232,14 @@ do_while_stmt		:	TK_DO stmt_block TK_WHILE TK_L_PARENTHESIS expression TK_R_PARE
 
 expression			:	TK_NUMBER
 						{ $$ = newStnExprConstInt($1); }
-					|	TK_C_STRING
+					|	TK_STRING
 						{ $$ = newStnExprConstString($1); }
+					|	TK_TRUE
+						{ $$ = newStnExprConstBool(g_srcLineNo, true); }
+					|	TK_FALSE
+						{ $$ = newStnExprConstBool(g_srcLineNo, false); }
+					|	TK_NULL
+						{ $$ = newStnExprNull(g_srcLineNo); }
 					|	TK_NEW TK_ID TK_L_PARENTHESIS fun_call_param_list TK_R_PARENTHESIS
 						{ $$ = newStnExpNew($2, $4); }
 					|	TK_L_PARENTHESIS expression TK_R_PARENTHESIS
@@ -282,7 +288,7 @@ exp_fun_call		:	exp_var TK_L_PARENTHESIS fun_call_param_list TK_R_PARENTHESIS
 							ASSERT(pMethodName->nodeType == STreeNode::T_EXPRESSION &&
 								pMethodName->sExpression.type == E_VAR);
 							$$ = newStnExpFuncCall(pMethodName->nLineNo, pMethodName->sExpression.var.szVarName, pParentVar, $3);
-							delete pMethodName;
+							deleteStn(pMethodName);
 						}
 					;
 

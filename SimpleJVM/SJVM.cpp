@@ -480,8 +480,8 @@ CSJVM::CSJVM(void)
 	m_bFinishedInitSysModule = false;
 
 	int			nRet;
-	LPCSTR		vIDPredefined[] = { "", "void", "char", "boolean", "short", "int", "String" };
-	int			nIDPredefined[] = { TID_INVALID, TID_VOID, TID_CHAR, TID_BOOLEAN, TID_SHORT, TID_INT, TID_STRING };
+	LPCSTR		vIDPredefined[] = { "", "void", "char", "boolean", "short", "int", "__jobject", "String" };
+	int			nIDPredefined[] = { TID_INVALID, TID_VOID, TID_CHAR, TID_BOOLEAN, TID_SHORT, TID_INT, TID_NULL, TID_STRING };
 
 	ASSERT(TID_STRING + 1 == CountOf(vIDPredefined));
 
@@ -542,20 +542,17 @@ int CSJVM::Compile(LPCTSTR szFile)
 	PrintSyntaxTree(m_syntaxTree, nIndent);
 #endif
 
-#ifdef _DEBUG
-	Print();
-#endif
-
 	nRet = BuildCodeStmt();
 	if (nRet != ERR_OK)
 		return nRet;
 
+	m_syntaxTree = NULL;
+
+	g_memSyntax.FreeAll();
+
 #ifdef _DEBUG
 	Print();
 #endif
-
-	//	deleteSSNode(m_syntaxTree);
-	m_syntaxTree = NULL;
 
 	return ERR_OK;
 }
@@ -619,8 +616,9 @@ int CSJVM::CompileFiles(VecString &vFiles)
 		#endif
 	}
 
-	//	deleteSSNode(m_syntaxTree);
 	m_syntaxTree = NULL;
+
+	g_memSyntax.FreeAll();
 
 	return ERR_OK;
 }
@@ -1486,6 +1484,16 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 			exp.typeIdValExp = TID_INT;
 			return ERR_OK;
 		}
+	case E_CONST_BOOLEAN:
+		{
+			exp.typeIdValExp = TID_BOOLEAN;
+			return ERR_OK;
+		}
+	case E_CONST_NULL:
+		{
+			exp.typeIdValExp = TID_NULL;
+			return ERR_OK;
+		}
 	case E_CONST_STRING:
 		{
 			exp.typeIdValExp = TID_STRING;
@@ -1613,10 +1621,23 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 
 	exp.typeIdValExp = pExpLeft->sExpression.typeIdValExp;
 
+	if (exp.type == OP_EQUAL || exp.type == OP_NOT_EQUAL)
+	{
+		exp.typeIdValExp = TID_BOOLEAN;
+
+		// for ==, != operator, JObject, null can be used to compare.
+		if (CanCovertRightToLeftType(pExpLeft->sExpression.typeIdValExp, pExpRight->sExpression.typeIdValExp) == ERR_OK)
+			return ERR_OK;
+
+		FORMATLASTERROR(pTree->nLineNo, ERR_C_OP_TYPE_NOT_MATCH, "");
+		return ERR_C_OP_TYPE_NOT_MATCH;
+	}
+
+
 	// TID_STRING can use OP_PLUS, OP_EQUAL, OP_NOT_EQUAL
 	if (pExpLeft->sExpression.typeIdValExp == TID_STRING)
 	{
-		if (exp.type == OP_EQUAL || exp.type == OP_NOT_EQUAL || exp.type == OP_PLUS)
+		if (exp.type == OP_PLUS)
 		{
 			if (pExpRight->sExpression.typeIdValExp != TID_STRING)
 			{
@@ -1624,10 +1645,7 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 				return ERR_C_OP_TYPE_NOT_MATCH;
 			}
 
-			if (exp.type == OP_PLUS)
-				exp.typeIdValExp = TID_STRING;
-			else
-				exp.typeIdValExp = TID_BOOLEAN;
+			exp.typeIdValExp = TID_STRING;
 
 			return ERR_OK;
 		}
@@ -1638,8 +1656,8 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 
 	switch (exp.type)
 	{
-	case OP_EQUAL:		// ==
-	case OP_NOT_EQUAL:	// !=
+	// case OP_EQUAL:		// ==
+	// case OP_NOT_EQUAL:	// !=
 	case OP_LT_EQ:		// <=
 	case OP_GT_EQ:		// >=
 	case OP_LITTLE:		// <
@@ -1906,6 +1924,10 @@ int CSJVM::CanCovertRightToLeftType(TypeId typeIdLeft, TypeId typeIdRight)
 	if (m_classTable.IsSubClassOf(typeIdRight, typeIdLeft))
 		return ERR_OK;
 
+	if (typeIdRight == TID_NULL && !IsSimpleType(typeIdLeft)
+		|| typeIdLeft == TID_NULL && !IsSimpleType(typeIdRight))
+		return ERR_OK;
+
 	return ERR_C_CONVERT_VALUE;
 }
 
@@ -2103,6 +2125,16 @@ int CSJVM::BCS_Expression(STreeNode *pTree, stmt_index &siOut)
 	case E_CONST_INT:
 		{
 			siOut = m_stmtImage.newStmtExpConstInt(pTree->nLineNo, exp.nConstInt);
+			return ERR_OK;
+		}
+	case E_CONST_BOOLEAN:
+		{
+			siOut = m_stmtImage.newStmtExpConstBool(pTree->nLineNo, exp.bConstBool);
+			return ERR_OK;
+		}
+	case E_CONST_NULL:
+		{
+			siOut = m_stmtImage.newStmtExpNull(pTree->nLineNo);
 			return ERR_OK;
 		}
 	case E_CONST_STRING:
@@ -2503,7 +2535,10 @@ int CSJVM::Execute(stmt_index siEntry)
 			case ST_RETURN:
 				{
 					StmtReturn	&sReturn = ps->sRetrun;
-					m_valueMethodReturn = ExecuteExpression(sReturn.siExpression);
+					if (sReturn.siExpression != SI_INVALID)
+						m_valueMethodReturn = ExecuteExpression(sReturn.siExpression);
+					else
+						m_valueMethodReturn = 0;
 				}
 				break;
 			case ST_PUSH_STACK:
@@ -2551,7 +2586,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 
 	switch (expr.expType)
 	{
-	case E_CONST_INT:
+	case E_CONST:
 		return expr.nConstValue;
 	case E_CONST_STRING:
 		return expr.nConstValue;
@@ -2630,6 +2665,14 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 	{
 		CStrJObject	*pLeft, *pRight;
 		CJObject	*pJObj;
+
+		if (nLeftVal == JOBJ_NULL || nRightVal == JOBJ_NULL)
+		{
+			if (expr.expType == OP_EQUAL)
+				return nLeftVal == nRightVal;
+			else if (expr.expType == OP_NOT_EQUAL)
+				return nLeftVal != nRightVal;
+		}
 
 		pJObj = m_jobjMgr.Get(nLeftVal);
 		if (!pJObj || pJObj->m_typeId != TID_STRING)

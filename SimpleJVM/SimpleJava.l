@@ -58,6 +58,9 @@ return		{
 				yylval = newStnReturn(g_srcLineNo, NULL);
 				return TK_RETURN;
 			}
+true		{ return TK_TRUE; }
+false		{ return TK_FALSE; }
+null		{ return TK_NULL; }
 
 "&&"		{ return TK_BOOL_AND; }
 "||"		{ return TK_BOOL_OR; }
@@ -132,7 +135,7 @@ return		{
 
 				// printf("An String: %s\n", str);
 				yylval = newStnString(g_srcLineNo, str.c_str());
-				return TK_C_STRING;
+				return TK_STRING;
 			}
 
 [ \t\r]+		{	/* eat up whitespace */ }

@@ -1,24 +1,37 @@
 #include "StdAfx.h"
+#include "BatchMem.h"
 #include "SyntaxTree.h"
 
 #pragma warning (disable: 4996)
 
 int			g_srcLineNo = 1; // source line number for listing
 STreeNode	*_syntaxTree;
+CBatchMem	g_memSyntax;
+
+//
+// Using CBatchMem to manage small piece of memory, and free them togother.
+//
 
 static char *dupStr(const char *str)
 {
 	if (str == NULL)
 		return NULL;
 
-	char	*temp;
-	size_t		nLenMax;
-	nLenMax = strlen(str) + 1;
-	temp = new char[nLenMax];
+	return g_memSyntax.DupStr(str);
+}
 
-	strcpy(temp, str);
+static char *dupStnStr(const char *str)
+{
+	return (char *)str;
+}
 
-	return temp;
+STreeNode *NewSTreeNode(STreeNode::Type _t, int _nLineNo)
+{
+	STreeNode	*p = (STreeNode *)g_memSyntax.Alloc(sizeof(STreeNode));
+	p->nodeType = _t;
+	p->nLineNo = _nLineNo;
+	p->pNext = NULL;
+	return p;
 }
 
 STreeNode *AppendToSibling(STreeNode *pHead, STreeNode *pTail)
@@ -35,13 +48,13 @@ void SJType::operator=(STreeNode *pNodeID)
 {
 	ASSERT(pNodeID->nodeType == STreeNode::T_STRING);
 	nLineNo = pNodeID->nLineNo;
-	szTypeName = dupStr(pNodeID->szString);
+	szTypeName = dupStnStr(pNodeID->szString);
 	typeId = 0;
 }
 
 STreeNode *newStnString(int nLineNo, LPCSTR szString)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_STRING, nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_STRING, nLineNo);
 	pNode->szString = dupStr(szString);
 	return pNode;
 }
@@ -50,13 +63,13 @@ STreeNode *newStnVarDeclare(STreeNode *pVarType, STreeNode *pVarNameList, bool b
 {
 	ASSERT(pVarType->nodeType == STreeNode::T_STRING);
 
-	STreeNode	*pNode = new STreeNode(STreeNode::T_VAR_DECLAR, pVarType->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_VAR_DECLAR, pVarType->nLineNo);
 	StnVarDeclare &sVarDeclare = pNode->sVarDeclare;
 	sVarDeclare.bStatic = bStatic;
 	sVarDeclare.pVarList = pVarNameList;
 	sVarDeclare.type = pVarType;
 
-	delete pVarType;
+	deleteStn(pVarType);
 
 	return pNode;
 }
@@ -65,14 +78,14 @@ STreeNode *newStnVar(STreeNode *pVarIdString, STreeNode *pExp)
 {
 	ASSERT(pVarIdString->nodeType == STreeNode::T_STRING);
 
-	STreeNode	*pNode = new STreeNode(STreeNode::T_VAR, pVarIdString->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_VAR, pVarIdString->nLineNo);
 	StnVar		&sVar = pNode->sVar;
-	sVar.szVarName = dupStr(pVarIdString->szString);
+	sVar.szVarName = dupStnStr(pVarIdString->szString);
 	sVar.pExpAssign = pExp;
 	sVar.typeId = 0;
 	sVar.nAddress = -1;
 
-	delete pVarIdString;
+	deleteStn(pVarIdString);
 
 	return pNode;
 }
@@ -81,21 +94,21 @@ STreeNode *newStnClassDeclare(STreeNode *pClassNameString, STreeNode *pParentCla
 {
 	ASSERT(pClassNameString->nodeType == STreeNode::T_STRING);
 
-	STreeNode	*pNode = new STreeNode(STreeNode::T_CLASS, pClassNameString->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_CLASS, pClassNameString->nLineNo);
 	StnClass	&sClass = pNode->sClass;
-	sClass.szClassName = dupStr(pClassNameString->szString);
+	sClass.szClassName = dupStnStr(pClassNameString->szString);
 	sClass.pClassMember = pClassMember;
 	if (pParentClassString)
 	{
 		ASSERT(pParentClassString->nodeType == STreeNode::T_STRING);
 		sClass.typeParentClass = pParentClassString;
-		delete pParentClassString;
+		deleteStn(pParentClassString);
 	}
 	else
 		sClass.typeParentClass.szTypeName = NULL;
 	sClass.typeIdClass = 0;
 
-	delete pClassNameString;
+	deleteStn(pClassNameString);
 
 	return pNode;
 }
@@ -107,19 +120,19 @@ STreeNode *newStnMethodDeclareNode(STreeNode *pMethodNameString,
 {
 	ASSERT(pMethodNameString->nodeType == STreeNode::T_STRING);
 
-	STreeNode	*pNode = new STreeNode(STreeNode::T_MEMBER_METHOD, pMethodNameString->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_MEMBER_METHOD, pMethodNameString->nLineNo);
 	StnMemberMethod	&sMethod = pNode->sMemberMethod;
 	sMethod.bStatic = bStatic;
 	sMethod.pBody = pBody;
 	sMethod.pParameterList = pParameterList;
-	sMethod.szMethodName = dupStr(pMethodNameString->szString);
+	sMethod.szMethodName = dupStnStr(pMethodNameString->szString);
 	sMethod.pMethod = NULL;
 
 	if (pRetTypeString)
 	{
 		ASSERT(pRetTypeString->nodeType == STreeNode::T_STRING);
 		sMethod.typeRet = pRetTypeString;
-		delete pRetTypeString;
+		deleteStn(pRetTypeString);
 	}
 	else
 	{
@@ -127,14 +140,14 @@ STreeNode *newStnMethodDeclareNode(STreeNode *pMethodNameString,
 		sMethod.typeRet.szTypeName = NULL;
 	}
 
-	delete pMethodNameString;
+	deleteStn(pMethodNameString);
 
 	return pNode;
 }
 
 STreeNode *newStnAssign(STreeNode *pTargetVar, STreeNode *pExpression)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_ASSIGN, pTargetVar->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_ASSIGN, pTargetVar->nLineNo);
 	StnAssign	&sAssign = pNode->sAssign;
 
 	sAssign.pRightExp = pExpression;
@@ -145,7 +158,7 @@ STreeNode *newStnAssign(STreeNode *pTargetVar, STreeNode *pExpression)
 
 STreeNode *newStnIf(STreeNode *pCondition, STreeNode *pTrueBlock, STreeNode *pFalseBlock)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_IF, pCondition->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_IF, pCondition->nLineNo);
 	StnIf		&sIf = pNode->sIf;
 
 	sIf.pCondition = pCondition;
@@ -157,7 +170,7 @@ STreeNode *newStnIf(STreeNode *pCondition, STreeNode *pTrueBlock, STreeNode *pFa
 
 STreeNode *newStnFor(STreeNode *pInitalization, STreeNode *pTermination, STreeNode *pIncrement, STreeNode *pActionBlock)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_FOR, pInitalization->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_FOR, pInitalization->nLineNo);
 	StnFor		&sFor = pNode->sFor;
 
 	sFor.pInitalization = pInitalization;
@@ -170,7 +183,7 @@ STreeNode *newStnFor(STreeNode *pInitalization, STreeNode *pTermination, STreeNo
 
 STreeNode *newStnWhile(STreeNode *pCondition, STreeNode *pActionBlock)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_WHILE, pCondition->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_WHILE, pCondition->nLineNo);
 	StnWhile	&sWhile = pNode->sWhile;
 
 	sWhile.pCondition = pCondition;
@@ -181,7 +194,7 @@ STreeNode *newStnWhile(STreeNode *pCondition, STreeNode *pActionBlock)
 
 STreeNode *newStnDoWhile(STreeNode *pCondition, STreeNode *pActionBlock)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_DO_WHILE, pCondition->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_DO_WHILE, pCondition->nLineNo);
 	StnWhile	&sWhile = pNode->sWhile;
 
 	sWhile.pCondition = pCondition;
@@ -192,7 +205,7 @@ STreeNode *newStnDoWhile(STreeNode *pCondition, STreeNode *pActionBlock)
 
 STreeNode *newStnExpVar(int nLineNo, LPCSTR szVarName, STreeNode *pParentVar)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_EXPRESSION, nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, nLineNo);
 	StnExpression	&sExp = pNode->sExpression;
 	sExp.type = E_VAR;
 	sExp.var.szVarName = dupStr(szVarName);
@@ -209,7 +222,7 @@ STreeNode *newStnExpVar(STreeNode *pVarNameString, STreeNode *pParentVar)
 
 	STreeNode	*pNode = newStnExpVar(pVarNameString->nLineNo, pVarNameString->szString, pParentVar);
 
-	delete pVarNameString;
+	deleteStn(pVarNameString);
 
 	return pNode;
 }
@@ -218,12 +231,31 @@ STreeNode *newStnExprConstInt(STreeNode *pString)
 {
 	ASSERT(pString->nodeType == STreeNode::T_STRING);
 
-	STreeNode	*pNode = new STreeNode(STreeNode::T_EXPRESSION, pString->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, pString->nLineNo);
 	StnExpression	&sExp = pNode->sExpression;
 	sExp.type = E_CONST_INT;
 	sExp.nConstInt = atoi(pString->szString);
 
-	delete pString;
+	deleteStn(pString);
+
+	return pNode;
+}
+
+STreeNode *newStnExprConstBool(int nLineNo, bool bTrue)
+{
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, nLineNo);
+	StnExpression	&sExp = pNode->sExpression;
+	sExp.type = E_CONST_BOOLEAN;
+	sExp.bConstBool = bTrue;
+
+	return pNode;
+}
+
+STreeNode *newStnExprNull(int nLineNo)
+{
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, nLineNo);
+	StnExpression	&sExp = pNode->sExpression;
+	sExp.type = E_CONST_NULL;
 
 	return pNode;
 }
@@ -232,12 +264,12 @@ STreeNode *newStnExprConstString(STreeNode *pString)
 {
 	ASSERT(pString->nodeType == STreeNode::T_STRING);
 
-	STreeNode	*pNode = new STreeNode(STreeNode::T_EXPRESSION, pString->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, pString->nLineNo);
 	StnExpression	&sExp = pNode->sExpression;
 	sExp.type = E_CONST_STRING;
-	sExp.szConstString = dupStr(pString->szString);
+	sExp.szConstString = dupStnStr(pString->szString);
 
-	delete pString;
+	deleteStn(pString);
 
 	return pNode;
 }
@@ -246,20 +278,20 @@ STreeNode *newStnExpNew(STreeNode *pString, STreeNode *pParameterList)
 {
 	ASSERT(pString->nodeType == STreeNode::T_STRING);
 
-	STreeNode	*pNode = new STreeNode(STreeNode::T_EXPRESSION, pString->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, pString->nLineNo);
 	StnExpression	&sExp = pNode->sExpression;
 	sExp.type = E_NEW;
-	sExp.newObj.szNewType = dupStr(pString->szString);
+	sExp.newObj.szNewType = dupStnStr(pString->szString);
 	sExp.newObj.pParameter = pParameterList;
 
-	delete pString;
+	deleteStn(pString);
 
 	return pNode;
 }
 
 STreeNode *newStnExpOp(ExpressionType expType, STreeNode *pExpressionLeft, STreeNode *pExpressionRight)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_EXPRESSION, pExpressionLeft->nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, pExpressionLeft->nLineNo);
 	StnExpression	&sExp = pNode->sExpression;
 	sExp.type = expType;
 	sExp.opParameter.pExpressionLeft = pExpressionLeft;
@@ -270,7 +302,7 @@ STreeNode *newStnExpOp(ExpressionType expType, STreeNode *pExpressionLeft, STree
 
 STreeNode *newStnExpFuncCall(int nLineNo, LPSTR szMethodName, STreeNode *pVarToCall, STreeNode *pParameterList)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_EXPRESSION, nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, nLineNo);
 	StnExpression	&sExp = pNode->sExpression;
 	sExp.type = E_METHOD_CALL;
 	sExp.functionCall.szFuncName = dupStr(szMethodName);
@@ -282,7 +314,7 @@ STreeNode *newStnExpFuncCall(int nLineNo, LPSTR szMethodName, STreeNode *pVarToC
 
 STreeNode *newStnReturn(int nLineNo, STreeNode *pExpression)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_RETURN, nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_RETURN, nLineNo);
 	StnReturn	&sReturn = pNode->sReturn;
 
 	sReturn.pExpression = pExpression;
@@ -292,7 +324,7 @@ STreeNode *newStnReturn(int nLineNo, STreeNode *pExpression)
 
 STreeNode *newStnBlock(int nLineNo, STreeNode *pChildList)
 {
-	STreeNode	*pNode = new STreeNode(STreeNode::T_BLOCK, nLineNo);
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_BLOCK, nLineNo);
 	StnBlock	&sBlock = pNode->sBlock;
 
 	sBlock.pChildList = pChildList;
@@ -469,6 +501,16 @@ void PrintSyntaxTree(STreeNode *t, int &nIndent)
 				if (t->sExpression.type == E_CONST_INT)
 				{
 					printf("%d", t->sExpression.nConstInt);
+					return;
+				}
+				else if (t->sExpression.type == E_CONST_BOOLEAN)
+				{
+					printf("%s", t->sExpression.bConstBool ? "true" : "false");
+					return;
+				}
+				else if (t->sExpression.type == E_CONST_NULL)
+				{
+					printf("null");
 					return;
 				}
 				else if (t->sExpression.type == E_CONST_STRING)

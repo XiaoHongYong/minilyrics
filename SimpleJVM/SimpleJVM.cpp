@@ -73,14 +73,24 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	CSJVM		vm;
 
+	DWORD		dwBeg, dwEnd;
+
+	dwBeg = GetTickCount();
+
 	if (vm.Compile(argv[0]) != ERR_OK)
 		return 1;
+
+	dwEnd = GetTickCount();
+	printf("Compile cost: %d ms\n", dwEnd - dwBeg);
 
 	vm.RegisterNativeAPI("DebugLog", "print", SJVM_DebugLog_print_Int, TID_VOID, TID_INT, TID_INVALID);
 
 	vm.RegisterNativeAPI("DebugLog", "print", SJVM_DebugLog_printStr, TID_VOID, TID_STRING, TID_INVALID);
 
 	vm.Run();
+
+	dwEnd = GetTickCount();
+	printf("Execute cost: %d ms\n", dwEnd - dwBeg);
 
 	return 0;
 }

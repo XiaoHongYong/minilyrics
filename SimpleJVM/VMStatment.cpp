@@ -42,9 +42,33 @@ stmt_index CStmtImage::newStmtExpConstInt(int nLineNo, int nValue)
 	stmt_index		si;
 	Statement		*ps = newStmt(nLineNo, ST_EXPRESSION, si);
 
-	ps->sExpression.expType = E_CONST_INT;
+	ps->sExpression.expType = E_CONST;
 	ps->sExpression.nConstValue = nValue;
 	ps->sExpression.typeId = TID_INT;
+
+	return si;
+}
+
+stmt_index CStmtImage::newStmtExpConstBool(int nLineNo, bool bValue)
+{
+	stmt_index		si;
+	Statement		*ps = newStmt(nLineNo, ST_EXPRESSION, si);
+
+	ps->sExpression.expType = E_CONST;
+	ps->sExpression.nConstValue = bValue;
+	ps->sExpression.typeId = TID_BOOLEAN;
+
+	return si;
+}
+
+stmt_index CStmtImage::newStmtExpNull(int nLineNo)
+{
+	stmt_index		si;
+	Statement		*ps = newStmt(nLineNo, ST_EXPRESSION, si);
+
+	ps->sExpression.expType = E_CONST;
+	ps->sExpression.nConstValue = 0;
+	ps->sExpression.typeId = TID_NULL;
 
 	return si;
 }
@@ -54,7 +78,7 @@ stmt_index CStmtImage::newStmtExpConstString(int nLineNo, int nStrJObjIndex)
 	stmt_index		si;
 	Statement		*ps = newStmt(nLineNo, ST_EXPRESSION, si);
 
-	ps->sExpression.expType = E_CONST_STRING;
+	ps->sExpression.expType = E_CONST;
 	ps->sExpression.nConstValue = nStrJObjIndex;
 	ps->sExpression.typeId = TID_STRING;
 
@@ -396,10 +420,7 @@ void CStmtImage::PrintExpression(stmt_index siExpr)
 
 	switch (expr.expType)
 	{
-	case E_CONST_INT:
-		printf("%d", expr.nConstValue);
-		return;
-	case E_CONST_STRING:
+	case E_CONST:
 		printf("%d", expr.nConstValue);
 		return;
 	case E_NEW:

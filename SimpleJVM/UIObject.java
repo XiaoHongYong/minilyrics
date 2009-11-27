@@ -60,12 +60,16 @@ public class TestAA
 		int		i = 0;
 		int		k = 10;
 		
+		// DebugLog.print(child.m_str);
+		if (child.m_str == null)
+			return;
+		
 		child.m_str = "str";
 
 		for (int n = 0; n < 10; n++)
 		{
 			DebugLog.print(n);
-			child.m_str = child.m_str + "x ";
+			// child.m_str = child.m_str + "x ";
 			DebugLog.print(child.m_str);
 		}
 		

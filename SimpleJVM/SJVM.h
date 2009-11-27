@@ -52,10 +52,13 @@ enum TypeIdPredefined
 	TID_BOOLEAN,
 	TID_SHORT,
 	TID_INT,
+	TID_NULL,
 	TID_STRING,
 };
 
-inline bool IsSimpleType(TypeId typeId) { return typeId < TID_STRING; }
+inline bool IsSimpleType(TypeId typeId) { return typeId < TID_NULL; }
+
+#define JOBJ_NULL		0
 
 #define SZ_THIS		"this"
 #define	SZ_SUPER	"super"

@@ -1,10 +1,13 @@
 #pragma once
 
+#include "BatchMem.h"
+
 typedef uint16		TypeId;
 struct STreeNode;
 
 extern int			g_srcLineNo; // source line number for listing
 extern STreeNode	*_syntaxTree;
+extern CBatchMem	g_memSyntax;
 
 // Syntax tree node = Stn_
 
@@ -72,7 +75,10 @@ struct StnFor {
 };
 
 enum ExpressionType {
+	E_CONST,
 	E_CONST_INT,
+	E_CONST_BOOLEAN,
+	E_CONST_NULL,
 	E_CONST_STRING,
 	E_NEW,
 	E_VAR,
@@ -100,6 +106,7 @@ struct StnExpression {
 
 	union {
 		int					nConstInt;			// E_CONST_INT
+		bool				bConstBool;
 		LPSTR				szConstString;		// E_CONST_STRING
 		struct 
 		{
@@ -188,6 +195,8 @@ struct STreeNode
 
 STreeNode *AppendToSibling(STreeNode *pHead, STreeNode *pTail);
 
+inline void deleteStn(STreeNode *p) { }
+
 STreeNode *newStnString(int nLineNo, LPCSTR szString);
 
 STreeNode *newStnVarDeclare(STreeNode *pVarType, STreeNode *pVarNameList, bool bStatic);
@@ -215,6 +224,10 @@ STreeNode *newStnExpVar(STreeNode *pVarNameString, STreeNode *pParentVar);
 STreeNode *newStnExpVar(int nLineNo, LPCSTR szVarName, STreeNode *pParentVar);
 
 STreeNode *newStnExprConstInt(STreeNode *pString);
+
+STreeNode *newStnExprConstBool(int nLineNo, bool bTrue);
+
+STreeNode *newStnExprNull(int nLineNo);
 
 STreeNode *newStnExprConstString(STreeNode *pString);
 
