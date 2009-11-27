@@ -499,6 +499,7 @@ CSJVM::CSJVM(void)
 		pClass->AddMethod("");
 	}
 	*/
+	m_bsiInLoop = false;
 }
 
 CSJVM::~CSJVM(void)
@@ -527,6 +528,7 @@ int CSJVM::Compile(LPCTSTR szFile)
 	if (nRet != 0)
 		return ERR_C_PARSE;
 	m_syntaxTree = _syntaxTree;
+	m_bsiInLoop = false;
 
 	nRet = PreBuildSymbolInfo();
 	if (nRet != ERR_OK)
@@ -628,6 +630,7 @@ int CSJVM::Run()
 	//
 	// Prepare for environment for run Virtual machine
 	//
+	m_exeAction = EXE_GO_ON;
 
 	m_stack.Resize(0);
 	m_bp = 0;
@@ -1125,6 +1128,7 @@ int CSJVM::BSI_Tree(STreeNode *pTree)
 
 				// Check statement node
 				ASSERT(sFor.pActionNode);
+				CAutoLoopState loopState(m_bsiInLoop);
 				nRet = BSI_Tree(sFor.pActionNode);
 				if (nRet != ERR_OK)
 					return nRet;
@@ -1147,6 +1151,7 @@ int CSJVM::BSI_Tree(STreeNode *pTree)
 
 				// Check statement node
 				ASSERT(swhile.pActionNode);
+				CAutoLoopState loopState(m_bsiInLoop);
 				nRet = BSI_Tree(swhile.pActionNode);
 				if (nRet != ERR_OK)
 					return nRet;
@@ -1169,9 +1174,18 @@ int CSJVM::BSI_Tree(STreeNode *pTree)
 
 				// Check statement node
 				ASSERT(swhile.pActionNode);
+				CAutoLoopState loopState(m_bsiInLoop);
 				nRet = BSI_Tree(swhile.pActionNode);
 				if (nRet != ERR_OK)
 					return nRet;
+			}
+			break;
+		case STreeNode::T_BREAK:
+		case STreeNode::T_CONTINUE:
+			if (!m_bsiInLoop)
+			{
+				FORMATLASTERROR(pTree->nLineNo, ERR_C_BREAK_CONTINUE_MUST_IN_LOOP, "");
+				return ERR_C_BREAK_CONTINUE_MUST_IN_LOOP;
 			}
 			break;
 		case STreeNode::T_EXPRESSION:
@@ -2375,6 +2389,12 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 				*psiTail = m_stmtImage.newStmtWhile(pTree->nLineNo, siCondition, siActionStmt);
 			}
 			break;
+		case STreeNode::T_BREAK:
+			*psiTail = m_stmtImage.newStmtBreak(pTree->nLineNo);
+			break;
+		case STreeNode::T_CONTINUE:
+			*psiTail = m_stmtImage.newStmtContinue(pTree->nLineNo);
+			break;
 		case STreeNode::T_DO_WHILE:
 			{
 				StnWhile		&swhile = pTree->sWhile;
@@ -2497,6 +2517,20 @@ int CSJVM::Execute(stmt_index siEntry)
 					{
 						if (sFor.siStmt != SI_INVALID)
 							Execute(sFor.siStmt);
+
+						if (m_exeAction == EXE_GO_ON)
+							;// Do nothing, for speed up, put it on first check
+						else if (m_exeAction == EXE_LOOP_BREAK)
+						{
+							m_exeAction = EXE_GO_ON;
+							break;
+						}
+						else
+						{
+							ASSERT(m_exeAction == EXE_LOOP_CONTINUE);
+							m_exeAction = EXE_GO_ON;
+						}
+
 						if (sFor.siIncrement != SI_INVALID)
 							Execute(sFor.siIncrement);
 					}
@@ -2509,6 +2543,19 @@ int CSJVM::Execute(stmt_index siEntry)
 					{
 						if (sWhile.siStmt != SI_INVALID)
 							Execute(sWhile.siStmt);
+
+						if (m_exeAction == EXE_GO_ON)
+							;// Do nothing, for speed up, put it on first check
+						else if (m_exeAction == EXE_LOOP_BREAK)
+						{
+							m_exeAction = EXE_GO_ON;
+							break;
+						}
+						else
+						{
+							ASSERT(m_exeAction == EXE_LOOP_CONTINUE);
+							m_exeAction = EXE_GO_ON;
+						}
 					}
 				}
 				break;
@@ -2518,9 +2565,30 @@ int CSJVM::Execute(stmt_index siEntry)
 					do {
 						if (sWhile.siStmt != SI_INVALID)
 							Execute(sWhile.siStmt);
+
+						if (m_exeAction == EXE_GO_ON)
+							;// Do nothing, for speed up, put it on first check
+						else if (m_exeAction == EXE_LOOP_BREAK)
+						{
+							m_exeAction = EXE_GO_ON;
+							break;
+						}
+						else
+						{
+							ASSERT(m_exeAction == EXE_LOOP_CONTINUE);
+							m_exeAction = EXE_GO_ON;
+						}
 					}
 					while (ExecuteExpression(sWhile.siCondition));
 				}
+				break;
+			case ST_BREAK:
+				ASSERT(m_exeAction == EXE_GO_ON);
+				m_exeAction = EXE_LOOP_BREAK;
+				break;
+			case ST_CONTINUE:
+				ASSERT(m_exeAction == EXE_GO_ON);
+				m_exeAction = EXE_LOOP_CONTINUE;
 				break;
 			case ST_ASSIGN:
 				{
@@ -2539,6 +2607,9 @@ int CSJVM::Execute(stmt_index siEntry)
 						m_valueMethodReturn = ExecuteExpression(sReturn.siExpression);
 					else
 						m_valueMethodReturn = 0;
+
+					ASSERT(m_exeAction == EXE_GO_ON);
+					m_exeAction = EXE_FUNC_RETURN;
 				}
 				break;
 			case ST_PUSH_STACK:
@@ -2569,7 +2640,7 @@ int CSJVM::Execute(stmt_index siEntry)
 				return 0;
 		}
 
-		if (ps->siNextStmt == SI_INVALID)
+		if (ps->siNextStmt == SI_INVALID || m_exeAction != EXE_GO_ON)
 			break;
 		si = ps->siNextStmt;
 		ps = m_stmtImage.GetStmt(ps->siNextStmt);
@@ -2643,6 +2714,8 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 			// Call method
 			int		nRet;
 			nRet = CallMethod(expr.functionCall.typeIdSpecialfiedClass, nParentVarValue, expr.functionCall.nMemberIndex, stackParameter);
+
+			m_exeAction = EXE_GO_ON;
 
 			return nRet;
 		}
@@ -2951,7 +3024,7 @@ void FormatLastError(string &strOutput, int nLine, int nError, LPCSTR szStr, int
 	case ERR_C_REQUIRE_LOGICAL_CONDITION:	str = "Logical condition is required in (if, while, etc)"; break;
 	case ERR_C_METHOD_CALL_PARAMETER_COUNT:	str = "Class method parameter count is incorrect."; break;
 	case ERR_C_CLASS_TYPE_NOT_VAR:	str = "It's class type, not a variable."; break;
-	case ERR_C_CLASS_HIERARCHY_INCONSISTENT:	str = "The hierarchy of class is inconsitent."; break;
+	case ERR_C_CLASS_HIERARCHY_INCONSISTENT:	str = "The hierarchy of class is inconsistent."; break;
 	case ERR_C_OVERRIDE_METHOD_RET_DIFF:	str = "Override method must have same return value type."; break;
 	case ERR_C_DUMPLICATE_METHOD:	str = "Duplicated member method."; break;
 	case ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT:	str = "Constructor must be the first statement in a constructor."; break;
@@ -2959,6 +3032,7 @@ void FormatLastError(string &strOutput, int nLine, int nError, LPCSTR szStr, int
 	case ERR_C_CONSTRUCTOR_NO_RETRUN_VALUE:	str = "The constructor should NOT have return value."; break;
 	case ERR_C_RETRUN_TYPE_MISSING:	str = "Return type for the method is missing."; break;
 	case ERR_C_NO_THIS_SUPER_IN_STATIC_METHOD:	str = "Can NOT use super in a static method."; break;
+	case ERR_C_BREAK_CONTINUE_MUST_IN_LOOP:	str = "Break/continue statement must be in a loop."; break;
 
 	case ERR_R_UNDECLARED_FUNCTION:	str = "undeclared function"; break;
 	case ERR_R_FUNC_PARAM_COUNT:	str = "function parameter count not match"; break;

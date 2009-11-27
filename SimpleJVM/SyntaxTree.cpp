@@ -203,6 +203,16 @@ STreeNode *newStnDoWhile(STreeNode *pCondition, STreeNode *pActionBlock)
 	return pNode;
 }
 
+STreeNode *newStnBreak(int nLineNo)
+{
+	return NewSTreeNode(STreeNode::T_BREAK, nLineNo);
+}
+
+STreeNode *newStnContinue(int nLineNo)
+{
+	return NewSTreeNode(STreeNode::T_CONTINUE, nLineNo);
+}
+
 STreeNode *newStnExpVar(int nLineNo, LPCSTR szVarName, STreeNode *pParentVar)
 {
 	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, nLineNo);

@@ -12,6 +12,8 @@ enum StmtType
 	ST_FOR,
 	ST_WHILE,
 	ST_DO_WHILE,
+	ST_BREAK,
+	ST_CONTINUE,
 	ST_ASSIGN,
 	ST_RETURN,
 	ST_PUSH_STACK,
@@ -167,6 +169,8 @@ public:
 	stmt_index newStmtFor(int nLineNo, stmt_index siInitalization, stmt_index siTermination, stmt_index siIncrement, stmt_index siActionStmt);
 	stmt_index newStmtWhile(int nLineNo, stmt_index siCondition, stmt_index siActionStmt);
 	stmt_index newStmtDoWhile(int nLineNo, stmt_index siCondition, stmt_index siActionStmt);
+	stmt_index newStmtBreak(int nLineNo);
+	stmt_index newStmtContinue(int nLineNo);
 	stmt_index newStmtReturn(int nLineNo, stmt_index siExpression);
 	stmt_index newStmtBlock(int nLineNo, stmt_index &siChildBlock);
 

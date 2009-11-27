@@ -28,6 +28,7 @@ void yyerror (char const *);
 %}
 
 %token	TK_IF		TK_ELSE		TK_WHILE	TK_DO		TK_FOR		TK_NEW
+%token	TK_CONTINUE	TK_BREAK
 %token	TK_RETURN	TK_SUPER	TK_NULL		TK_TRUE		TK_FALSE
 %token	TK_EXTENDS	TK_PUBLIC	TK_PRIVATE	TK_NATIVE	TK_PROTECTED	TK_IMPLEMENTS
 %token	TK_PACKAGE	TK_IMPORT	TK_STATIC	TK_ABSTRACT	TK_CLASS	TK_INTERFACE
@@ -189,6 +190,8 @@ stmt				:	assign	{ $$ = $1; }
 					|	while_stmt	{ $$ = $1; }
 					|	for_stmt	{ $$ = $1; }
 					|	do_while_stmt	{ $$ = $1; }
+					|	TK_BREAK	{ $$ = newStnBreak(g_srcLineNo); }
+					|	TK_CONTINUE	{ $$ = newStnContinue(g_srcLineNo); }
 					|	TK_SEMICOLON	{ $$ = NULL; }
 					|	expression TK_SEMICOLON	{ $$ = $1; }
 					|	TK_RETURN expression TK_SEMICOLON { $$ = $1; $1->sReturn.pExpression = $2; }

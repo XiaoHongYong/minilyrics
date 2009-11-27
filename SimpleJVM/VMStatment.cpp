@@ -189,6 +189,20 @@ stmt_index CStmtImage::newStmtDoWhile(int nLineNo, stmt_index siCondition, stmt_
 	return si;
 }
 
+stmt_index CStmtImage::newStmtBreak(int nLineNo)
+{
+	stmt_index		si;
+	newStmt(nLineNo, ST_BREAK, si);
+	return si;
+}
+
+stmt_index CStmtImage::newStmtContinue(int nLineNo)
+{
+	stmt_index		si;
+	newStmt(nLineNo, ST_CONTINUE, si);
+	return si;
+}
+
 stmt_index CStmtImage::newStmtReturn(int nLineNo, stmt_index siExpression)
 {
 	stmt_index		si;
@@ -362,6 +376,12 @@ void CStmtImage::PrintStmtCodeTree(stmt_index si, int &nIndent)
 				PrintExpression(sWhile.siCondition);
 				printf(");\n");
 			}
+			break;
+		case ST_BREAK:
+			printf("break;");
+			break;
+		case ST_CONTINUE:
+			printf("continue;");
 			break;
 		case ST_ASSIGN:
 			{

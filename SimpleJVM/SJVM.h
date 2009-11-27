@@ -36,6 +36,7 @@ enum SIMPLE_JAVA_COMPILE_ERROR
 	ERR_C_CONSTRUCTOR_NO_RETRUN_VALUE,
 	ERR_C_RETRUN_TYPE_MISSING,
 	ERR_C_NO_THIS_SUPER_IN_STATIC_METHOD,
+	ERR_C_BREAK_CONTINUE_MUST_IN_LOOP,
 
 	ERR_R_UNDECLARED_FUNCTION,		// undeclared function
 	ERR_R_FUNC_PARAM_COUNT,			// incorrect function parameter count is passed
@@ -435,7 +436,29 @@ protected:
 	friend class CClassTable;
 #endif
 
+	class CAutoLoopState {
+	public:
+		CAutoLoopState(bool &bState) {
+			m_pState = &bState;
+			m_bOldState = bState;
+			bState = true;
+		}
+		~CAutoLoopState() { *m_pState = m_bOldState; }
+
+		bool		*m_pState;
+		bool		m_bOldState;
+
+	};
+
 protected:
+	enum EXE_ACTION
+	{
+		EXE_GO_ON,
+		EXE_LOOP_CONTINUE,
+		EXE_LOOP_BREAK,
+		EXE_FUNC_RETURN,
+	};
+
 	// All classes
 	CClassTable					m_classTable;
 
@@ -447,6 +470,8 @@ protected:
 	size_t						m_bp;		// base pointer of current function call.
 	int							m_valueMethodReturn;
 	VecInt						m_vStaticVars;
+
+	EXE_ACTION					m_exeAction;
 
 	// JObject manager
 	CObjectMgr					m_jobjMgr;
@@ -464,5 +489,6 @@ protected:
 	string						m_strLastErr;
 
 	MapStrIndex					m_mapStrings;
+	bool						m_bsiInLoop;
 
 };

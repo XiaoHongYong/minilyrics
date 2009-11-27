@@ -18,9 +18,7 @@ When Reset Virtual Machine:
 
 
 todo:
-	1) break
-	2) null
-	3) exception handling?
+	1) exception handling?
 
 */
 
@@ -41,7 +39,10 @@ public class base
 		m_nValue = n;
 	}
 	public base() { }
-	public void setStr(String str) { m_str = str; DebugLog.print("base::setStr");  }
+	public void setStr(String str) {
+		m_str = str;
+		DebugLog.print("base::setStr"); 
+	}
 }
 
 public class child extends base
@@ -61,10 +62,10 @@ public class TestAA
 		int		k = 10;
 		
 		// DebugLog.print(child.m_str);
-		if (child.m_str == null)
-			return;
 		
 		child.m_str = "str";
+		if (child.m_str == null)
+			return;
 
 		for (int n = 0; n < 10; n++)
 		{
@@ -79,7 +80,21 @@ public class TestAA
 		{
 			i++;
 			k--;
+			if (i == k)
+				break;
 			DebugLog.print("hello");
+			DebugLog.print(i);
+		}
+		
+		for (int nn = 0; nn < 2; nn++)
+		{
+			for (int jj = 0; jj < 10; jj++)
+			{
+				if (jj == 8)
+					continue;
+				DebugLog.print(jj);
+			}
+			break;
 		}
 		
 		base	b = new child();

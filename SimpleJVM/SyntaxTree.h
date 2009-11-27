@@ -161,6 +161,9 @@ struct STreeNode
 		T_FOR,
 		T_WHILE,
 		T_DO_WHILE,
+		T_BREAK,
+		T_CONTINUE,
+
 		T_EXPRESSION,
 
 		T_RETURN,
@@ -219,6 +222,10 @@ STreeNode *newStnFor(STreeNode *pInitalization, STreeNode *pTermination, STreeNo
 STreeNode *newStnWhile(STreeNode *pCondition, STreeNode *pActionBlock);
 
 STreeNode *newStnDoWhile(STreeNode *pCondition, STreeNode *pActionBlock);
+
+STreeNode *newStnBreak(int nLineNo);
+
+STreeNode *newStnContinue(int nLineNo);
 
 STreeNode *newStnExpVar(STreeNode *pVarNameString, STreeNode *pParentVar);
 STreeNode *newStnExpVar(int nLineNo, LPCSTR szVarName, STreeNode *pParentVar);
