@@ -302,6 +302,8 @@ void CSkinWnd::CloseSkin()
 
 	m_bTranslucencyLayered = false;
 #ifdef _WIN32_DESKTOP
+	KillTimer(TIMER_ID_DYNAMIC_TRANS);
+	m_translucencyStatus = TS_NORMAL;
 	::UnSetLayeredWindow(m_hWnd);
 #endif
 
@@ -718,6 +720,14 @@ bool CSkinWnd::UpdateSkinProperty()
 	}
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
+
+	if (m_bTranslucencyLayered)
+	{
+		if (m_bActived)
+			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlphaOnActive;
+		else
+			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlpha;
+	}
 
 	// init 
 	OnWindowSizeChanged();
@@ -1358,10 +1368,6 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			m_nTranslucencyAlphaOnActive = m_nTranslucencyAlpha;
 		if (m_nTranslucencyAlphaOnHover == -1)
 			m_nTranslucencyAlphaOnHover = m_nTranslucencyAlpha;
-		if (m_bActived)
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlphaOnActive;
-		else
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlpha;
 		RecreateBrush();
 	}
 	else if (IsPropertyName(szProperty, _T("TranslucencyAlphaOnActive")))
@@ -1369,15 +1375,15 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_nTranslucencyAlphaOnActive = _ttoi(szValue);
 		if (m_nTranslucencyAlpha == -1)
 			m_nTranslucencyAlpha = m_nTranslucencyAlphaOnActive;
-		if (m_bActived)
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlphaOnActive;
-		else
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlpha;
 		RecreateBrush();
 	}
 	else if (IsPropertyName(szProperty, _T("TranslucencyAlphaOnHover")))
 	{
 		m_nTranslucencyAlphaOnHover = _ttoi(szValue);
+	}
+	else if (IsPropertyName(szProperty, _T("BgImage.Image")))
+	{
+		m_imageBg.LoadFromSRM(m_pSkinFactory, szValue);
 	}
 #endif
 	else
@@ -1655,7 +1661,12 @@ void CSkinWnd::OnActivate(bool bActived)
 		&& m_nTranslucencyAlpha != m_nTranslucencyAlphaOnActive)
 	{
 		if (m_translucencyStatus == TS_ON_HOVER)
-			m_nTranslucencyAlphaDynamicStep = ((float)m_nTranslucencyAlphaOnActive - m_nTranslucencyAlphaOnHover) / COUNT_DYNAMIC_TRANS;
+		{
+			if (bActived)
+				m_nTranslucencyAlphaDynamicStep = ((float)m_nTranslucencyAlphaOnActive - m_nTranslucencyAlphaDynamic) / COUNT_DYNAMIC_TRANS;
+			else
+				m_nTranslucencyAlphaDynamicStep = ((float)m_nTranslucencyAlphaOnHover - m_nTranslucencyAlphaDynamic) / COUNT_DYNAMIC_TRANS;
+		}
 		else
 			m_nTranslucencyAlphaDynamicStep = ((float)m_nTranslucencyAlphaOnActive - m_nTranslucencyAlpha) / COUNT_DYNAMIC_TRANS;
 

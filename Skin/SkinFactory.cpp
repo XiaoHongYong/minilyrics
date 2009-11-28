@@ -1350,6 +1350,23 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 	}
 	else if (cmd.strFunction == _T("set_property"))
 	{
+		// p1: property name, p2: value
+		V_Str		vStrParam;
+
+		StrSplit(cmd.strParam.c_str(), ',', vStrParam);
+		if (vStrParam.size() != 2)
+			return ERR_FALSE;
+		for (int i = 0; i < (int)vStrParam.size(); i++)
+			TrimStr(vStrParam[i]);
+
+		pSkinWnd->SetProperty(vStrParam[0].c_str(), vStrParam[1].c_str());
+
+		pSkinWnd->InvalidateRect();
+
+		return ERR_OK;
+	}
+	else if (cmd.strFunction == _T("set_ctrl_property"))
+	{
 		V_Str		vStrParam;
 		CUIObject	*pObj;
 
