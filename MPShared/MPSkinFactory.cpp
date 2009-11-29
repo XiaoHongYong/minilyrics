@@ -233,7 +233,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		CMainMenu	*pMenu = new CMainMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		pSkinMenu->LoadPopupMenu(IDM_NEW_MENU, 2);
 #endif
 	}
 	else if (_tcsicmp(szMenu, _T("FloatingLyrMenu")) == 0
@@ -242,7 +242,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 1);
+		pSkinMenu->LoadPopupMenu(IDM_NEW_MENU, 1);
 	}
 	else if (_tcsicmp(szMenu, _T("LyrEditorMenu")) == 0)
 	{
@@ -258,7 +258,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
 		pSkinMenu = new CSkinMenu();
-		pSkinMenu->LoadPopupMenu(IDM_PLAYER_MENU, 0);
+		pSkinMenu->LoadPopupMenu(IDM_NEW_MENU, 0);
 	}
 	else if (_tcsicmp(szMenu, _T("MediaLibMenu")) == 0)
 	{
