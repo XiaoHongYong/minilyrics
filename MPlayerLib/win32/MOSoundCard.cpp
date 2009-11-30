@@ -564,7 +564,7 @@ void CMOSoundCard::FadeInSoundData(char *data, int nLen)
 		{
 			for (i = 0; i < nTo; i++)
 			{
-				buf[i] = (char)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
+				buf[i] = (short)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
 				m_nFadeDoneSamples ++;
 			}
 		}
@@ -572,9 +572,9 @@ void CMOSoundCard::FadeInSoundData(char *data, int nLen)
 		{
 			for (i = 0; i < nTo; i++)
 			{
-				buf[i] = (char)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
+				buf[i] = (short)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
 				i++;
-				buf[i] = (char)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
+				buf[i] = (short)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
 				m_nFadeDoneSamples++;
 			}
 		}
@@ -636,7 +636,7 @@ void CMOSoundCard::FadeOutSoundData(char *data, int nLen)
 		{
 			for (i = 0; i < nTo; i++)
 			{
-				buf[i] = (char)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
+				buf[i] = (short)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
 				m_nFadeDoneSamples --;
 			}
 			for (; i < n; i++)
@@ -646,9 +646,9 @@ void CMOSoundCard::FadeOutSoundData(char *data, int nLen)
 		{
 			for (i = 0; i < nTo; i++)
 			{
-				buf[i] = (char)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
+				buf[i] = (short)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
 				i++;
-				buf[i] = (char)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
+				buf[i] = (short)((DOUBLECONVT)buf[i] * m_nFadeDoneSamples / m_nFadeMaxSamples);
 				m_nFadeDoneSamples --;
 			}
 			for (; i < n; i++)

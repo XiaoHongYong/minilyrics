@@ -598,6 +598,10 @@ CMPSkinWnd::CMPSkinWnd()
 	m_rcReal.top = m_rcReal.left = 0;
 	m_rcReal.right = 400;
 	m_rcReal.bottom = 250;
+
+#ifdef _MPLAYER
+	m_autoSwitchToLyrShow.m_pSkinWnd = this;
+#endif
 }
 
 CMPSkinWnd::~CMPSkinWnd()
@@ -607,6 +611,10 @@ CMPSkinWnd::~CMPSkinWnd()
 
 void CMPSkinWnd::OnActivate(bool bActived)
 {
+#ifdef _MPLAYER
+	m_autoSwitchToLyrShow.OnActivate(bActived);
+#endif
+
 	CSkinWnd::OnActivate(bActived);
 
 	if (bActived && !IsIconic())
@@ -766,6 +774,8 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 
 bool CMPSkinWnd::OnCustomCommand(int nId)
 {
+	m_autoSwitchToLyrShow.OnCustomCmdNotify(nId);
+
 	if (CSkinWnd::OnCustomCommand(nId))
 		return true;
 
@@ -1122,6 +1132,29 @@ void CMPSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 	CSkinWnd::OnRemoveUIObj(pObj);
 }
 
+#ifdef _MPLAYER
+BOOL CMPSkinWnd::SetProperty(SXNode *pXmlNode)
+{
+	LPCTSTR		szName = pXmlNode->GetPropertySafe(SZ_PN_NAME);
+	ASSERT(szName);
+	if (!szName)
+		return FALSE;
+
+	if (IsPropertyName(szName, _T("LyrAutoSwitch")))
+	{
+		m_autoSwitchToLyrShow.m_bEnabled = true;
+		m_autoSwitchToLyrShow.m_nCmdShowLyr = m_pSkinFactory->GetIDByName(
+			pXmlNode->GetPropertySafe(_T("CmdSwithToLyrics")));
+		m_autoSwitchToLyrShow.m_nCmdShowPlaylist = m_pSkinFactory->GetIDByName(
+			pXmlNode->GetPropertySafe(_T("CmdSwithToPlaylist")));
+
+		return TRUE;
+	}
+
+	return CSkinWnd::SetProperty(pXmlNode);
+}
+#endif // #ifdef _MPLAYER
+
 BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	if (_tcsicmp(szProperty, _T("CmdHandler")) == 0)
@@ -1156,6 +1189,9 @@ void CMPSkinWnd::CloseSkin()
 		SaveWndPos();
 	}
 
+#ifdef _MPLAYER
+	m_autoSwitchToLyrShow.m_bEnabled = false;
+#endif
 	CSkinWnd::CloseSkin();
 
 	LIST_SKINCMDHANDLER::iterator	it, itEnd;

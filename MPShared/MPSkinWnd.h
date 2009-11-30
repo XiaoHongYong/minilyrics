@@ -5,9 +5,11 @@
 #if !defined(AFX_MPSKINWND_H__C466015C_6B75_4118_98E2_AEDA64F864DA__INCLUDED_)
 #define AFX_MPSKINWND_H__C466015C_6B75_4118_98E2_AEDA64F864DA__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+#ifdef _MPLAYER
+#include "LyrPlaylistAutoSwitch.h"
+#endif
 
 class ISkinCmdHandler;
 
@@ -60,6 +62,20 @@ public:
 
 	virtual void CloseSkin();
 
+#ifdef _MPLAYER
+	virtual BOOL SetProperty(SXNode *pXmlNode);
+	virtual void OnLButtonUp(UINT nFlags, CPoint point) { m_lyrAutoSwitch.OnMouseAction(); CSkinWnd::OnLButtonUp(nFlags, point); }
+	virtual void OnLButtonDown(UINT nFlags, CPoint point) { m_lyrAutoSwitch.OnMouseAction(); CSkinWnd::OnLButtonDown(nFlags, point); }
+	virtual void OnLButtonDblClk(UINT nFlags, CPoint point) { m_lyrAutoSwitch.OnMouseAction(); CSkinWnd::OnLButtonDblClk(nFlags, point); }
+	virtual void OnRButtonUp(UINT nFlags, CPoint point) { m_lyrAutoSwitch.OnMouseAction(); CSkinWnd::OnRButtonUp(nFlags, point); }
+	virtual void OnRButtonDown(UINT nFlags, CPoint point) { m_lyrAutoSwitch.OnMouseAction(); CSkinWnd::OnRButtonDown(nFlags, point); }
+	virtual void OnMouseMove(UINT nFlags, CPoint point) { m_lyrAutoSwitch.OnMouseAction(); CSkinWnd::OnMouseMove(nFlags, point); }
+	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt) { m_lyrAutoSwitch.OnMouseAction(); CSkinWnd::OnMouseWheel(nWheelDistance, nMkeys, pt); }
+
+	virtual void OnTimer (UINT nIDEvent) { if (m_lyrAutoSwitch.OnTimer(nIDEvent)) return; CSkinWnd::OnTimer(nIDEvent); }
+#endif // _MPLAYER
+
+
 public:
 	// IUICheckStatus interface
 	virtual bool GetChecked(UINT nID, bool &bChecked);
@@ -106,6 +122,10 @@ protected:
 	//
 
 	bool					m_bTopmost;	
+
+#ifdef _MPLAYER
+	CLyrPlaylistAutoSwitch	m_autoSwitchToLyrShow;
+#endif
 
 };
 
