@@ -51,7 +51,7 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUI
 //			if (pObj->IsUseSkinBg() && m_bPaintBg)
 //			{
 //				// redraw background ?
-//				RedrawBackground(pObj->m_rcObj);
+//				RedrawBackground(pGraphMem, pObj->m_rcObj);
 //			}
 			if (!pGraphMem)
 			{

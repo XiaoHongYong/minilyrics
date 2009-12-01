@@ -747,7 +747,7 @@ void CSkinWnd::OnPaint(IMLGraphicsBase *pGraph)
 	if (m_bPaintBg)
 	{
 		// pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
-		RedrawBackground(NULL);
+		RedrawBackground(pMemGraph, NULL);
 	}
 
 	// draw every ui objects on back buffer one by one
@@ -824,7 +824,7 @@ bool CSkinWnd::RecreateMemGraphics()
 	if (m_bPaintBg)
 	{
 		// m_pmemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
-		RedrawBackground(NULL);
+		RedrawBackground(m_pmemGraph, NULL);
 	}
 
 	ReleaseGraphics(pGraph);
@@ -891,7 +891,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	if (pObj->IsUseSkinBg() && m_bPaintBg)
 	{
 		// redraw background ?
-		RedrawBackground(pObj->m_rcObj, pObj->IsUpdateTranslucencyWithSkin());
+		RedrawBackground(m_pmemGraph, pObj->m_rcObj, pObj->IsUpdateTranslucencyWithSkin());
 	}
 
 	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
@@ -932,9 +932,9 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	ReleaseGraphics(pGraphics);
 }
 
-void CSkinWnd::RedrawBackground(RECT *prc, bool bNoTranslucency)
+void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucency)
 {
-	if (!m_pmemGraph)
+	if (!pGraph)
 		return;
 
 	RECT	rc;
@@ -959,11 +959,11 @@ void CSkinWnd::RedrawBackground(RECT *prc, bool bNoTranslucency)
 	}
 
 	CRect	rcClip, rcNewClip;
-	m_pmemGraph->GetClipBoundBox(rcClip);
+	pGraph->GetClipBoundBox(rcClip);
 
 	rcNewClip.IntersectRect(&rcClip, &rc);
 
-	m_pmemGraph->SetClipBoundBox(rcNewClip);
+	pGraph->SetClipBoundBox(rcNewClip);
 
 	if (m_imageBg.IsValid())
 	{
@@ -971,24 +971,27 @@ void CSkinWnd::RedrawBackground(RECT *prc, bool bNoTranslucency)
 		CDrawImageFun	func;
 
 		func.m_bpm = m_dwBgImgBlendPixMode;
-		func.m_pGraph = m_pmemGraph;
+		func.m_pGraph = pGraph;
 		func.m_pImage = &m_imageBg;
 
 		if (!bNoTranslucency)
 		{
-			nAlphaOld = m_pmemGraph->GetOpacityPainting();
-			m_pmemGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
+			nAlphaOld = pGraph->GetOpacityPainting();
+			pGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
 		}
+		if (m_nTranslucencyAlphaDynamic != 255)
+			pGraph->Clear(0, 0, 0, 0, &rc);
 
-		m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), func);
+		if (m_nTranslucencyAlphaDynamic != 0)
+			m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), func);
 
 		if (!bNoTranslucency)
-			m_pmemGraph->SetOpacityPainting(nAlphaOld);
+			pGraph->SetOpacityPainting(nAlphaOld);
 	}
 	else
-		m_pmemGraph->FillRect(&rc, m_clrBg);
+		pGraph->FillRect(&rc, m_clrBg);
 
-	m_pmemGraph->RecoverClipBox();
+	pGraph->RecoverClipBox();
 }
 
 void CSkinWnd::SetMainAppWnd(bool bMainAppWnd)
@@ -1925,7 +1928,7 @@ BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 	if (m_bPaintBg)
 	{
 		// pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
-		RedrawBackground(NULL);
+		RedrawBackground(pMemGraph, NULL);
 	}
 
 	// draw every ui objects on back buffer one by one

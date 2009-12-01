@@ -612,7 +612,8 @@ CMPSkinWnd::~CMPSkinWnd()
 void CMPSkinWnd::OnActivate(bool bActived)
 {
 #ifdef _MPLAYER
-	m_autoSwitchToLyrShow.OnActivate(bActived);
+	if (m_wndToolTip.IsWindow())
+		m_autoSwitchToLyrShow.OnActivate(bActived);
 #endif
 
 	CSkinWnd::OnActivate(bActived);

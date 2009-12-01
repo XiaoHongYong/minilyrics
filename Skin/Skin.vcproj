@@ -1258,11 +1258,11 @@
 				>
 			</File>
 			<File
-				RelativePath="win32\SkinVScrollBarOSStyle.h"
+				RelativePath="SkinVScrollBarOSStyle.h"
 				>
 			</File>
 			<File
-				RelativePath="SkinVScrollBarOSStyle.h"
+				RelativePath="win32\SkinVScrollBarOSStyle.h"
 				>
 			</File>
 			<File
@@ -1296,6 +1296,14 @@
 		</Filter>
 		<File
 			RelativePath="Readme.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\script\skin.java"
+			>
+		</File>
+		<File
+			RelativePath=".\script\skinwnd.java"
 			>
 		</File>
 	</Files>

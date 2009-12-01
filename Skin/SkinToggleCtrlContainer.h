@@ -17,6 +17,12 @@ public:
 		T_ANIMATION	= 1
 	};
 
+	CRawGraph *GetMemGraph();
+
+	void InvalidateUIObject(CUIObject *pObj);
+
+	void UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pObjCallUpdate);
+
 	void Draw(CRawGraph *pGraph);
 
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);

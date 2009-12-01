@@ -1336,7 +1336,7 @@ void CLyricShowObj::UpdateLyricDrawBufferBackground(CRawGraph *pGraphics, CRect 
 	}
 	else
 	{
-		m_pSkin->RedrawBackground(&rc);
+		m_pSkin->RedrawBackground(pGraphics, &rc);
 		// pGraphics->FillRect(rc.left, rc.top, rc.Width(), rc.Height(), &m_brBg);
 	}
 

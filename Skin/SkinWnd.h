@@ -141,7 +141,7 @@ public:
 	// update draw of UIObject
 	virtual void InvalidateUIObject(CUIObject *pObj);
 
-	void RedrawBackground(RECT *prc, bool bNoTranslucency = false);
+	void RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucency = false);
 
 	CSkinFactory *GetSkinFactory() { return m_pSkinFactory; }
 

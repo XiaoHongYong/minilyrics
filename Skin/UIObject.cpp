@@ -383,6 +383,14 @@ void CUIObject::UpdateTranslucencyWithSkin(CRawGraph *pGraph)
 	if (!IsUpdateTranslucencyWithSkin())
 		return;
 
+	if (m_pSkin->m_nTranslucencyAlphaDynamic == 255)
+		return;
+	if (m_pSkin->m_nTranslucencyAlphaDynamic == 0)
+	{
+		pGraph->Clear(0, 0, 0, 0, &m_rcObj);
+		return;
+	}
+
 	MLColor		clrAlpha;
 	clrAlpha.setAlpha((byte)m_pSkin->m_nTranslucencyAlphaDynamic);
 	if (m_imgMask.IsValid())

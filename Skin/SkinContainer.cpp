@@ -346,7 +346,7 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 				&& m_pSkin->m_nTranslucencyAlphaDynamic != m_pSkin->m_nTranslucencyAlphaOnActive)
 			{
 				// Redraw background
-				m_pSkin->RedrawBackground(&pObj->m_rcObj, true);
+				m_pSkin->RedrawBackground(pGraph, &pObj->m_rcObj, true);
 			}
 			pObj->Draw(pGraph);
 
