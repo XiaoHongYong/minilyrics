@@ -203,6 +203,7 @@ void mask_blt_buff_opacity(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, pixfmtMask &
 	}
 }
 
+#define BlendAlpha(a1, a2) ((uint8)(((a1) + (a2)) - (((a1) * (a2) + 0xFF) >> 8)))
 
 class blend_rgb
 {
@@ -210,9 +211,12 @@ public:
 	static inline void blend(uint8 *dst, uint8 *src)
 	{
 		uint8	alpha = src[3];
-		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
-		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
-		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
+// 		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
+// 		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
+// 		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
+		dst[0] = (uint8)(((dst[0] * (256 - alpha)) >> 8) + src[0]);
+		dst[1] = (uint8)(((dst[1] * (256 - alpha)) >> 8) + src[1]);
+		dst[2] = (uint8)(((dst[2] * (256 - alpha)) >> 8) + src[2]);
 	}
 };
 
@@ -223,7 +227,8 @@ public:
 	{
 		uint8	alpha = src[3];
 
-		dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
+		// dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
+		dst[3] = BlendAlpha(dst[3], src[3]);
 	}
 };
 
@@ -325,9 +330,12 @@ public:
 	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
 	{
 		uint8	alpha = uint8(src[3] * nOpacitySrc / 255);
-		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
-		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
-		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
+		dst[0] = (uint8)((dst[0] * (256 - alpha) + src[0] * nOpacitySrc) >> 8);
+		dst[1] = (uint8)((dst[1] * (256 - alpha) + src[1] * nOpacitySrc) >> 8);
+		dst[2] = (uint8)((dst[2] * (256 - alpha) + src[2] * nOpacitySrc) >> 8);
+// 		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
+// 		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
+// 		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
 	}
 };
 
@@ -336,10 +344,9 @@ class blend_alpha_opacity
 public:
 	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
 	{
-		//uint8	alpha = uint8(src[3] * nOpacitySrc / 255);
-		uint8	alpha = uint8(src[3] * (255 - (255 - src[3]) * nOpacitySrc / 255) / 255);
-
-		dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
+		uint8	alpha = uint8(src[3] * nOpacitySrc / 255);
+		// dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
+		dst[3] = BlendAlpha(dst[3], alpha);
 	}
 };
 
@@ -523,10 +530,14 @@ class mask_blend_rgb
 public:
 	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
 	{
-		uint8	alpha = mask[3];
-		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
-		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
-		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
+		uint8	alpha = uint8(src[3] * mask[3] / 255);
+		dst[0] = (uint8)((dst[0] * (256 - alpha) + src[0] * mask[3]) >> 8);
+		dst[1] = (uint8)((dst[1] * (256 - alpha) + src[1] * mask[3]) >> 8);
+		dst[2] = (uint8)((dst[2] * (256 - alpha) + src[2] * mask[3]) >> 8);
+//		uint8	alpha = mask[3];
+// 		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
+// 		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
+// 		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
 	}
 };
 
@@ -613,10 +624,15 @@ class mask_blend_rgb_opacity
 public:
 	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
 	{
-		uint8	alpha = uint8(mask[3] * nOpacitySrc / 255);
-		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
-		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
-		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
+		uint	m = uint8(mask[3] * nOpacitySrc / 255);
+		uint8	alpha = uint8(src[3] * m / 255);
+		dst[0] = (uint8)((dst[0] * (256 - alpha) + src[0] * m) >> 8);
+		dst[1] = (uint8)((dst[1] * (256 - alpha) + src[1] * m) >> 8);
+		dst[2] = (uint8)((dst[2] * (256 - alpha) + src[2] * m) >> 8);
+// 		uint8	alpha = uint8(mask[3] * nOpacitySrc / 255);
+// 		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
+// 		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
+// 		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
 	}
 };
 
@@ -626,9 +642,9 @@ class mask_blend_alpha_opacity
 public:
 	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
 	{
-		uint8	alpha = uint8(src[3] * (255 - (255 - src[3]) * nOpacitySrc / 255) / 255);
-		alpha = alpha * mask[3] / 255;
-		dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
+		uint	m = uint8(mask[3] * nOpacitySrc / 255);
+		uint8	alpha = uint8(src[3] * m / 255);
+		dst[3] = BlendAlpha(dst[3], alpha);
 	}
 };
 

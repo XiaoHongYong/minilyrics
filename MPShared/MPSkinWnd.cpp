@@ -775,7 +775,9 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 
 bool CMPSkinWnd::OnCustomCommand(int nId)
 {
+#ifdef _MPLAYER
 	m_autoSwitchToLyrShow.OnCustomCmdNotify(nId);
+#endif
 
 	if (CSkinWnd::OnCustomCommand(nId))
 		return true;
