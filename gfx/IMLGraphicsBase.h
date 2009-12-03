@@ -51,7 +51,6 @@ public:
 		m_font = NULL;
 		m_GraphicsType = MGT_UNKNOWN;
 		m_bResolveTextEncoding = true;
-		m_textAlpha = 255;
 
 #ifdef _WIN32
 		m_hdc = NULL;
@@ -66,9 +65,6 @@ public:
 	virtual void Rectangle(int x, int y, int width, int height) = 0;
 
 	virtual void FillRect(int x, int y, int width, int height, CMLBrush *pBrush) = 0;
-
-	byte GetTextAlpha() { return m_textAlpha; }
-	void SetTextAlpha(byte alpha) { m_textAlpha = alpha; }
 
 	virtual bool TextOut(int x, int y, LPCTSTR szText, int nLen) = 0;
 	virtual bool DrawTextClip(LPCTSTR szText, int nLen, LPRECT lpRect) = 0;
@@ -134,7 +130,6 @@ protected:
 	CMLFont			*m_font;
 	bool			m_bResolveTextEncoding;
 	MLGRAPHICS_TYPE	m_GraphicsType;
-	byte			m_textAlpha;
 
 };
 

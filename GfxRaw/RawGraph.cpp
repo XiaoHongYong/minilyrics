@@ -25,7 +25,6 @@ CRawGraph::CRawGraph()
 	m_rawBmpFont = NULL;
 
 	m_clrText.set(RGB(255, 255, 255));
-	m_textAlpha = 255;
 	m_nOpacityPainting = 255;
 	m_ptOrigin.x = m_ptOrigin.y = 0;
 

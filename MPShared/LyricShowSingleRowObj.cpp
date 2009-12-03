@@ -108,17 +108,17 @@ void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, PML
 	if (m_pSkin->GetEnableTranslucencyLayered() || m_img.IsValid())
 	{
 		// transparent window
-		byte		alphaOld = pGraphics->GetTextAlpha();
-		pGraphics->SetTextAlpha(nAlphaNextLine);
+		byte		alphaOld = pGraphics->GetOpacityPainting();
+		pGraphics->SetOpacityPainting(nAlphaNextLine);
 		DrawRow(pGraphics, pRowCur, AUTO_CAL_X, y, GetHighlightColor(), m_tobHilight.clr[TCI_BORDER]);
 
 		if (pRowNext)
 		{
-			pGraphics->SetTextAlpha(nAlphaCurLine);
+			pGraphics->SetOpacityPainting(nAlphaCurLine);
 
 			DrawRow(pGraphics, pRowNext, AUTO_CAL_X, y, GetHighlightColor(), m_tobHilight.clr[TCI_BORDER]);
 		}
-		pGraphics->SetTextAlpha(alphaOld);
+		pGraphics->SetOpacityPainting(alphaOld);
 	}
 	else
 	{

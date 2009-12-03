@@ -786,7 +786,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 	bool		bRet = true;
 	MLColor		clrTxt, clrTxtBorder;
 	int			nAlpha = 255, alphaOld;
-	bool		bSetTextAlpha = false;
+	bool		bSetOpacityPainting = false;
 	LYR_COLOR_TRANSFORM		lct;
 
 	if (pLyricRow == NULL)
@@ -843,7 +843,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			if (m_pSkin->GetEnableTranslucencyLayered() || m_img.IsValid()
 					|| m_tobHilight.obm != OBM_COLOR)
 			{
-				bSetTextAlpha = true;
+				bSetOpacityPainting = true;
 				lct = LCT_HIGH;
 			}
 			else
@@ -861,7 +861,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			if (m_pSkin->GetEnableTranslucencyLayered() || m_img.IsValid()
 					|| m_tobHilight.obm != OBM_COLOR)
 			{
-				bSetTextAlpha = true;
+				bSetOpacityPainting = true;
 				if (lct == LCT_BG_TO_HIGH)
 					lct = LCT_HIGH;
 				else
@@ -1023,10 +1023,10 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 		else
 #endif*/
 		{
-			if (bSetTextAlpha)
+			if (bSetOpacityPainting)
 			{
-				alphaOld = pGraphics->GetTextAlpha();
-				pGraphics->SetTextAlpha(nAlpha);
+				alphaOld = pGraphics->GetOpacityPainting();
+				pGraphics->SetOpacityPainting(nAlpha);
 			}
 
 			if (m_bOutlineLyrics)
@@ -1041,8 +1041,8 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
 			}
 
-			if (bSetTextAlpha)
-				pGraphics->SetTextAlpha(alphaOld);
+			if (bSetOpacityPainting)
+				pGraphics->SetOpacityPainting(alphaOld);
 
 #ifndef _WIN32_WCE
 			if (pFrag->IsAdFrag())

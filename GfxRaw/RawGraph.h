@@ -77,9 +77,6 @@ public:
 		m_clrText = color;
 	}
 
-	byte GetTextAlpha() { return m_textAlpha; }
-	void SetTextAlpha(byte alpha) { m_textAlpha = alpha; }
-
 public:
 	void SetFont(CRawBmpFont *font);
 
@@ -134,7 +131,6 @@ protected:
 
 protected:
 	MLColor			m_clrText;
-	BYTE			m_textAlpha;
 
 	CRawPen			m_pen;
 

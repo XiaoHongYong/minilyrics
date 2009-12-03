@@ -991,7 +991,7 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, LPCTSTR szText, int nLen)
 {
 	byte		r = clrText.r(), g = clrText.g(), b = clrText.b();
-	byte		textAlpha = pGraph->GetTextAlpha();
+	byte		textAlpha = pGraph->GetOpacityPainting();
 	int			yyStart, yyEnd;
 	CRect		rcClip;
 	PRAW_IMAGE_DATA pGraphRaw = pGraph->GetRawBuff();
@@ -1143,7 +1143,7 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 
 bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen)
 {
-	byte		textAlpha = pGraph->GetTextAlpha();
+	byte		textAlpha = pGraph->GetOpacityPainting();
 	int			yyStart, yyEnd;
 	int			nOFHeight = GetGlyphHeight() + OUTLINED_BORDER;
 	int			nOFWidth;	// OF = OutlinedFont
