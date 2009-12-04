@@ -842,6 +842,10 @@ void CMPSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 
 	CSkinWnd::OnKeyDown(nChar, nFlags);
+
+#ifdef _MPLAYER
+	m_autoSwitchToLyrShow.OnMouseAction();
+#endif
 }
 
 void CMPSkinWnd::OnSizeModeChanged(WndSizeMode sizeMode)

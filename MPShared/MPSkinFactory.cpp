@@ -48,11 +48,11 @@
 #endif
 
 #ifdef _WIN32
-#include "win32/MainMenu.h"
+#include "win32/MPSkinMenu.h"
 #endif
 
 #ifdef _LINUX_GTK2
-#include "gtk2/MainMenu.h"
+#include "gtk2/MPSkinMenu.h"
 #endif
 
 //////////////////////////////////////////////////////////////////////
@@ -230,14 +230,13 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		CWCEMainCmdBar *pMenu = new CWCEMainCmdBar;
 		pMenu->Create(pWnd, IDM_MENU);
 #else
-		CMainMenu	*pMenu = new CMainMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 2);
+		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
 #endif
 	}
-	else if (_tcsicmp(szMenu, _T("FloatingLyrMenu")) == 0
-		|| _tcsicmp(szMenu, _T("LyricsMenu")) == 0)
+	else if (_tcsicmp(szMenu, _T("LyricsMenu")) == 0)
 	{
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
@@ -252,13 +251,15 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 #ifdef _MPLAYER
 	else if (_tcsicmp(szMenu, _T("MainWndMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
+		pSkinMenu = pMenu;
+		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadMenu(IDM_MAIN_WND);
 	}
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
 		pSkinMenu = new CSkinMenu();
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		pSkinMenu->LoadPopupMenu(IDM_MENU, 2);
 	}
 	else if (_tcsicmp(szMenu, _T("MediaLibMenu")) == 0)
 	{
@@ -278,7 +279,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 #endif
 	else
 	{
-		CMainMenu	*pMenu = new CMainMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
