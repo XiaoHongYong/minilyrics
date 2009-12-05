@@ -672,7 +672,7 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	if (nRet != ERR_OK)
 		return nRet;
 
-	int		hue = g_Profile.GetProfileInt(szSkinName, _T("Hue"), 0);
+	float hue = (float)g_Profile.GetProfileInt(szSkinName, _T("Hue"), 0);
 	if (hue < 0)
 		hue = 0;
 	else if (hue > 360)
@@ -1422,29 +1422,23 @@ void CSkinFactory::AdjustHue(float hue, float saturation, float luminance)
 
 void CSkinFactory::GetAdjustedHueResult(MLColor &clr)
 {
-	if (m_resourceMgr.CanAdjustHue())
-	{
-		float		H, S, L;
-		COLORREF	c;
+	float		H, S, L;
+	COLORREF	c;
 
-		m_resourceMgr.GetAdjustHueParam(H, S, L);
-		if (H != 0)
-		{
-			c = clr.get();
-			AdjustColorHue(c, H);
-			clr.set(c);
-		}
+	m_resourceMgr.GetAdjustHueParam(H, S, L);
+	if (H != 0)
+	{
+		c = clr.get();
+		AdjustColorHue(c, H);
+		clr.set(c);
 	}
 }
 
 void CSkinFactory::GetAdjustedHueResult(COLORREF &clr)
 {
-	if (m_resourceMgr.CanAdjustHue())
-	{
-		float		H, S, L;
+	float		H, S, L;
 
-		m_resourceMgr.GetAdjustHueParam(H, S, L);
-		if (H != 0)
-			AdjustColorHue(clr, H);
-	}
+	m_resourceMgr.GetAdjustHueParam(H, S, L);
+	if (H != 0)
+		AdjustColorHue(clr, H);
 }

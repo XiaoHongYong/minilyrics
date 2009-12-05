@@ -2470,6 +2470,11 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 		}
 	}
 
+	float hue, saturation, luminance;
+	m_pSkinFactory->GetResourceMgr()->GetAdjustHueParam(hue, saturation, luminance);
+	if (hue != 0.0f)
+		OnAdjustHue(hue, saturation, luminance);
+
 	return ERR_OK;
 }
 

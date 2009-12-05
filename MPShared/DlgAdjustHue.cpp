@@ -43,7 +43,6 @@ int CWidgetTrackBar::GetPos()
 
 CDlgAdjustHue::CDlgAdjustHue() : CBaseDialog(IDD_ADJUST_HUE)
 {
-	m_bAdjustSkinHue = true;
 }
 
 CDlgAdjustHue::~CDlgAdjustHue()
@@ -97,16 +96,7 @@ BOOL CDlgAdjustHue::OnInitDialog()
 	m_tbHue.SetPageSize(40);
 	m_tbHue.SetTickFreq(0);
 
-	if (m_bAdjustSkinHue)
-	{
-		float	S, L;
-
-		g_mpApp.GetSkinFactory()->GetResourceMgr()->GetAdjustHueParam(m_hueOld, S, L);
-	}
-	else
-	{
-		m_hueOld = (float)(g_Profile.GetProfileInt(m_strSectName.c_str(), _T("Hue"), 0));
-	}
+	m_hueOld = (float)(g_Profile.GetProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), 0));
 	m_tbHue.SetPos((int)m_hueOld);
 
 // 	m_tbSaturation.Attach(this, IDC_SATURATION);
@@ -141,13 +131,6 @@ void CDlgAdjustHue::UpdateAdjustHue(float hue)
 {
 	// SetDlgItemInt(IDC_E_HUE, (int)m_hue, false);
 
-	if (m_bAdjustSkinHue)
-	{
-		g_Profile.WriteProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
-		g_mpApp.GetSkinFactory()->AdjustHue(hue);
-	}
-	else
-	{
-		CMPlayerSettings::SetSettings(m_eventType, m_strSectName.c_str(), _T("Hue"), (int)hue);
-	}
+	g_Profile.WriteProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
+	g_mpApp.GetSkinFactory()->AdjustHue(hue);
 }

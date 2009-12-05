@@ -272,20 +272,8 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #ifdef _WIN32
 	case IDC_ADJUST_HUE:
 		{
-			if (!g_mpApp.GetSkinFactory()->GetResourceMgr()->CanAdjustHue())
-			{
-				m_pSkinWnd->MessageOut(TOLOCAL(_T("Sorry, this skin doesn't support this feature.")));
-				break;
-			}
-
 			CDlgAdjustHue	dlg;
 			dlg.DoModal(m_pSkinWnd);
-		}
-		break;
-	case IDC_ADJUST_LYR_HUE:
-		{
-			CDlgAdjustHue	dlg;
-			dlg.DoModal(m_pSkinWnd, m_etDispSettings, m_strSectName.c_str());
 		}
 		break;
 #endif
@@ -711,7 +699,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_CLR_PREV_HUE:
 	case CMD_CLR_NEXT_HUE:
 		{
-			float hue = (float)(g_Profile.GetProfileInt(m_strSectName.c_str(), _T("Hue"), 0));
+			float hue = (float)(g_Profile.GetProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), 0));
 
 			if (nID == CMD_CLR_NEXT_HUE)
 				hue += 30;
@@ -720,7 +708,8 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			if (hue >= 360)   hue -= 360;
 			else if (hue < 0) hue += 360;
 
-			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("Hue"), (int)hue);
+			g_Profile.WriteProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
+			g_mpApp.GetSkinFactory()->AdjustHue(hue);
 		}
 		break;
 

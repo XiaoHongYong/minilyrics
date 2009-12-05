@@ -264,9 +264,6 @@ void CSkinResMgr::AdjustHueInfoFromXML(SXNode *pNodeAdjustHue)
 
 void CSkinResMgr::AdjustHue(float hue, float saturation, float luminance)
 {
-	if (!CanAdjustHue())
-		return;
-
 	if (hue == m_hue)
 		return;
 
@@ -297,27 +294,6 @@ void CSkinResMgr::AdjustHue(float hue, float saturation, float luminance)
 				AdjustImageHue(item.hHandle, hue);
 		}
 	}
-
-/*	if (bReloadFile)
-	{
-		
-	}
-	else
-	{
-		// adjust the hue of opened images
-		map<tstring, RES_COUNTER>::iterator	it;
-
-		if (hue == 0)
-			return;
-
-		for (it = m_mapBitmap.begin(); it != m_mapBitmap.end(); it++)
-		{
-			RES_COUNTER		&item = (*it).second;
-
-			if (ShouldHueOfImageBeAdjusted((*it).first.c_str()))
-				AdjustImageHue(item.hHandle, hueOffset);
-		}
-	}*/
 }
 
 void CSkinResMgr::GetAdjustHueParam(float &hue, float &saturation, float &luminance)
@@ -325,11 +301,6 @@ void CSkinResMgr::GetAdjustHueParam(float &hue, float &saturation, float &lumina
 	hue = m_hue;
 	saturation = m_saturation;
 	luminance = m_luminance;
-}
-
-bool CSkinResMgr::CanAdjustHue()
-{
-	return m_vAdjustHueOfImages.size() > 0;
 }
 
 #ifdef _DEBUG

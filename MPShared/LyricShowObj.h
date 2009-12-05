@@ -227,8 +227,6 @@ protected:
 
 	void LoadAllSettings();
 
-	void AdjustHue(float hue);
-
 	void ReverseLyricsForRightToLeftLanguage();
 
 protected:

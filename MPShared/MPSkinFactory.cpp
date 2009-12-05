@@ -55,6 +55,12 @@
 #include "gtk2/MPSkinMenu.h"
 #endif
 
+#ifdef _WIN32_DESKTOP
+#include "win32/MPFloatingLyrWnd.h"
+#else
+#include "MPFloatingLyrWnd.h"
+#endif
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -482,6 +488,14 @@ int CMPSkinFactory::OpenSimpliestSkin()
 		return nRet;
 
 	return ERR_OK;
+}
+
+void CMPSkinFactory::AdjustHue(float hue, float saturation, float luminance)
+{
+	CSkinFactory::AdjustHue(hue, saturation, luminance);
+
+	g_wndFloatingLyr.OnAdjustHue(hue, saturation, luminance);
+	g_wndFloatingLyr.InvalidateRect();
 }
 
 #ifndef _MPLAYER

@@ -664,21 +664,6 @@ void CLyricShowObj::OnCreate()
 
 	LoadAllSettings();
 
-	if (m_bUseSkinStyle)
-	{
-		int		i;
-
-		for (i = TCI_START; i < TCI_COUNT; i++)
-		{
-			m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_tobLowlight.clr[TOBColorIndex(i)]);
-			m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_tobHilight.clr[TOBColorIndex(i)]);
-		}
-
-		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrBg);
-		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrTag);
-		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrFocusLineBg);
-	}
-
 	g_eventDispather.RegisterHanlder(m_etDispSettings, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
@@ -1664,28 +1649,54 @@ void CLyricShowObj::OnLyrDrawContextChanged()
 	m_lyrLines.ClearDrawContextWidth();
 }
 
+void AdjustColorHue(MLColor &clr, float hueOffset)
+{
+	COLORREF	c = clr.get();
+	AdjustColorHue(c, hueOffset);
+	clr.set(c);
+}
+
 void CLyricShowObj::OnAdjustHue(float hue, float saturation, float luminance)
 {
-	if (!m_bUseSkinStyle)
+	if (m_hue != 0)
+	{
+		// Load original settings.
+		SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
+		if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
+		{
+			ProfileGetColorValue(m_clrTag, m_strSectName.c_str(), _T("TagColor"));
+			ProfileGetColorValue(m_clrFocusLineBg, m_strSectName.c_str(), _T("FocusLineBgColor"));
+		}
+
+		LoadLyrOverlaySettings();
+	}
+
+	m_hue = hue;
+
+	if (hue == 0)
 		return;
 
-#define ADJUST_HUE(clrOrg, clr)		\
-	if (clrOrg.m_bValid)\
-	{\
-		clr = clrOrg;\
-		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(clr);\
-	}
+	// Adjust hue
+	AdjustColorHue(m_clrTag, hue);
+	AdjustColorHue(m_clrFocusLineBg, hue);
+	AdjustColorHue(m_clrBg, hue);
 
+	tstring		strColor;
+	ColorToStr(m_clrBg, strColor);
+	if (m_pSkin)
+		m_pSkin->SetProperty(_T("BgColor"), strColor.c_str());
 
-	for (int i = TCI_START; i < TCI_COUNT; i++)
+	for (TOBColorIndex i = TCI_START; i < TCI_COUNT; i = (TOBColorIndex)(i + 1))
 	{
-		ADJUST_HUE(m_skin_tobLowlight.clr[TOBColorIndex(i)], m_tobLowlight.clr[TOBColorIndex(i)]);
-		ADJUST_HUE(m_skin_tobHilight.clr[TOBColorIndex(i)], m_tobHilight.clr[TOBColorIndex(i)]);
+		AdjustColorHue(m_tobHilight.clr[i], hue);
+		AdjustColorHue(m_tobLowlight.clr[i], hue);
 	}
 
-	ADJUST_HUE(m_skin_clrBg, m_clrBg);
-	ADJUST_HUE(m_skin_clrTag, m_clrTag);
-	ADJUST_HUE(m_skin_clrFocusLineBg, m_clrFocusLineBg);
+	if (m_tobHilight.imgPattern.IsValid())
+		AdjustImageHue(m_tobHilight.imgPattern.GetHandle(), hue);
+
+	if (m_tobLowlight.imgPattern.IsValid())
+		AdjustImageHue(m_tobLowlight.imgPattern.GetHandle(), hue);
 }
 
 void CLyricShowObj::WrapLyricsLines()
@@ -2235,13 +2246,7 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 	if (m_bUseSkinStyle)
 		return true;
 
-	if (IsPropertyName(szProperty, _T("Hue")))
-	{
-		AdjustHue(float(_ttoi(szValue)));
-		m_pSkin->InvalidateRect();
-		return true;
-	}
-	else if (IsPropertyName(szProperty, _T("BgColor")))
+	if (IsPropertyName(szProperty, _T("BgColor")))
 	{
 		SetBgColor(szValue);
 		m_pSkin->InvalidateRect();
@@ -2509,11 +2514,6 @@ void CLyricShowObj::LoadAllSettings()
 
 	LoadLyrOverlaySettings();
 
-	// adjust hue?
-	float	hue = (float)(g_Profile.GetProfileInt(m_strSectName.c_str(), _T("Hue"), 0));
-	if (hue != 0)
-		AdjustHue(hue);
-
 	SetLyrAlign(g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrAlign"), _T("")));
 
 	SetLyrDrawOpt(g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
@@ -2553,56 +2553,6 @@ void CLyricShowObj::LoadAllSettings()
 
 		LoadLyrOverlaySettings();
 	}
-}
-
-void AdjustColorHue(MLColor &clr, float hueOffset)
-{
-	COLORREF	c = clr.get();
-	AdjustColorHue(c, hueOffset);
-	clr.set(c);
-}
-
-void CLyricShowObj::AdjustHue(float hue)
-{
-	if (m_hue != 0)
-	{
-		// Load original settings.
-		SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
-		if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
-		{
-			ProfileGetColorValue(m_clrTag, m_strSectName.c_str(), _T("TagColor"));
-			ProfileGetColorValue(m_clrFocusLineBg, m_strSectName.c_str(), _T("FocusLineBgColor"));
-		}
-
-		LoadLyrOverlaySettings();
-	}
-
-	m_hue = hue;
-
-	if (hue == 0)
-		return;
-
-	// Adjust hue
-	AdjustColorHue(m_clrTag, hue);
-	AdjustColorHue(m_clrFocusLineBg, hue);
-	AdjustColorHue(m_clrBg, hue);
-
-	tstring		strColor;
-	ColorToStr(m_clrBg, strColor);
-	if (m_pSkin)
-		m_pSkin->SetProperty(_T("BgColor"), strColor.c_str());
-
-	for (TOBColorIndex i = TCI_START; i < TCI_COUNT; i = (TOBColorIndex)(i + 1))
-	{
-		AdjustColorHue(m_tobHilight.clr[i], hue);
-		AdjustColorHue(m_tobLowlight.clr[i], hue);
-	}
-
-	if (m_tobHilight.imgPattern.IsValid())
-		AdjustImageHue(m_tobHilight.imgPattern.GetHandle(), hue);
-
-	if (m_tobLowlight.imgPattern.IsValid())
-		AdjustImageHue(m_tobLowlight.imgPattern.GetHandle(), hue);
 }
 
 /*

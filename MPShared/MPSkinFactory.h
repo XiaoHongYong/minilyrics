@@ -49,6 +49,8 @@ public:
 
 	int OpenSimpliestSkin();
 
+	virtual void AdjustHue(float hue, float saturation = 0.5, float luminance = 0.5);
+
 #ifndef _MPLAYER
 	//
 	// Auto close to player window, and track to move with it.

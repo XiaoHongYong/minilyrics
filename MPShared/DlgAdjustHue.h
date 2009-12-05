@@ -31,20 +31,6 @@ public:
 	CDlgAdjustHue();
 	virtual ~CDlgAdjustHue();
 
-	int DoModal(CBaseWnd *pWndParent, EventType eventType, LPCTSTR szSectName)
-	{
-		m_bAdjustSkinHue = false;
-		m_eventType = eventType;
-		m_strSectName = szSectName;
-		return CBaseDialog::DoModal(pWndParent);
-	}
-
-	int DoModal(CBaseWnd *pWndParent)
-	{
-		m_bAdjustSkinHue = true;
-		return CBaseDialog::DoModal(pWndParent);
-	}
-
 	virtual void OnCancel();
 
 	void OnCommand(UINT uID, UINT nNotifyCode);
@@ -59,12 +45,6 @@ public:
 	float					m_hueOld;
 
 protected:
-	bool					m_bAdjustSkinHue;	// false: adjust lyrics hue
-
-	// used to adjust lyrics hue
-	EventType				m_eventType;
-	tstring					m_strSectName;
-
 	CWidgetTrackBar			m_tbHue;//, m_tbSaturation, m_tbLuminance;
 
 };
