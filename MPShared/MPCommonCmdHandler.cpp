@@ -272,8 +272,15 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #ifdef _WIN32
 	case IDC_ADJUST_HUE:
 		{
+			// Don't change translucency while adjusting hue
+			int			nTranslucencyOld = m_pSkinWnd->m_nTranslucencyAlpha;
+			m_pSkinWnd->m_nTranslucencyAlpha = m_pSkinWnd->m_nTranslucencyAlphaOnHover;
+
 			CDlgAdjustHue	dlg;
 			dlg.DoModal(m_pSkinWnd);
+
+			// Recover orginal translucency settings.
+			m_pSkinWnd->m_nTranslucencyAlpha = nTranslucencyOld;
 		}
 		break;
 #endif
