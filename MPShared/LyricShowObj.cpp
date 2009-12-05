@@ -595,6 +595,7 @@ CLyricShowObj::CLyricShowObj()
 	m_tobLowlight.clr[TCI_BORDER].set(RGB(0, 0, 255));
 
 	m_skin_bOutlineLyrics = false;
+	m_skin_fontHeight = m_skin_fontWeight = -1;
 
 	m_nLineSpacing = 2;
 
@@ -2188,6 +2189,17 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 		OnLyrDrawContextChanged();
 	}
+	else if (IsPropertyName(szProperty, _T("FontHeight")))
+	{
+		m_skin_fontHeight = _ttoi(szValue);
+	}
+	else if (IsPropertyName(szProperty, _T("FontBold")))
+	{
+		if (IsTRUE(szValue))
+			m_skin_fontWeight = FW_HEAVY;
+		else
+			m_skin_fontWeight = FW_NORMAL;
+	}
 	else if (IsPropertyName(szProperty, _T("OutlineLyrText")))
 	{
 		m_bOutlineLyrics = IsTRUE(szValue);
@@ -2395,6 +2407,9 @@ void CLyricShowObj::ReloadThemeOfSkin(bool bSavetoProfile)
 		if (bSavetoProfile)
 			g_Profile.WriteProfileString(m_strSectName.c_str(), _T("BgColor"), strColor.c_str());
 	}
+
+	if (m_skin_fontHeight != -1 || m_skin_fontWeight != -1)
+		ProfileWriteLyricsFont(m_etDispSettings, m_strSectName.c_str(), m_skin_fontHeight, m_skin_fontWeight, 0xFF, NULL, NULL);
 
 	SET_THEME_COLOR(_T("TagColor"), m_skin_clrTag, m_clrTag);
 	SET_THEME_COLOR(_T("FocusLineBgColor"), m_skin_clrFocusLineBg, m_clrFocusLineBg);

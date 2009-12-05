@@ -264,6 +264,7 @@ protected:
 	bool					m_skin_bOutlineLyrics;
 	TextOverlayBlending		m_skin_tobHilight;
 	TextOverlayBlending		m_skin_tobLowlight;
+	int						m_skin_fontHeight, m_skin_fontWeight;
 
 
 	// TRUE: NEVER load customized settings.

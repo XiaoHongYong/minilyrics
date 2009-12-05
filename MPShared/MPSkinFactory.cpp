@@ -264,7 +264,9 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 	}
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
+		pSkinMenu = pMenu;
+		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 2);
 	}
 	else if (_tcsicmp(szMenu, _T("MediaLibMenu")) == 0)
