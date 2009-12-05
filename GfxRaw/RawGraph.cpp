@@ -326,10 +326,10 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 	int			r, g, b, a;
 	int			nStrideModify;
 
-	r = clrBg.r();
-	g = clrBg.g();
-	b = clrBg.b();
 	a = clrBg.getAlpha();
+	r = clrBg.r() * a / 255;
+	g = clrBg.g() * a / 255;
+	b = clrBg.b() * a / 255;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 	nStrideModify = (xMax - x) * PIX_SIZE;
@@ -419,10 +419,10 @@ void CRawGraph::HorzFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bLeft
 	BYTE		r, g, b, a;
 	int			nStrideModify;
 
-	r = clrBg.r();
-	g = clrBg.g();
-	b = clrBg.b();
 	a = clrBg.getAlpha();
+	r = clrBg.r() * a / 255;
+	g = clrBg.g() * a / 255;
+	b = clrBg.b() * a / 255;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 	nStrideModify = (xMax - x) * PIX_SIZE;
@@ -547,9 +547,9 @@ void CRawGraph::FillRect(const RECT *lpRect, PRAW_IMAGE_DATA pImgMask, const REC
 	int			x, y, xMax, yMax;
 	uint8		srcPixel[4];
 
-	srcPixel[PIX_R] = clrFill.r();
-	srcPixel[PIX_G] = clrFill.g();
-	srcPixel[PIX_B] = clrFill.b();
+	srcPixel[PIX_R] = clrFill.r() * clrFill.getAlpha() / 255;
+	srcPixel[PIX_G] = clrFill.g() * clrFill.getAlpha() / 255;
+	srcPixel[PIX_B] = clrFill.b() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_A] = clrFill.getAlpha();
 
 	ASSERT(pImgMask);
@@ -647,9 +647,9 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 	int			x, y, xMax, yMax;
 	uint8		srcPixel[4];
 
-	srcPixel[PIX_R] = clrFill.r();
-	srcPixel[PIX_G] = clrFill.g();
-	srcPixel[PIX_B] = clrFill.b();
+	srcPixel[PIX_R] = clrFill.r() * clrFill.getAlpha() / 255;
+	srcPixel[PIX_G] = clrFill.g() * clrFill.getAlpha() / 255;
+	srcPixel[PIX_B] = clrFill.b() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_A] = clrFill.getAlpha();
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);

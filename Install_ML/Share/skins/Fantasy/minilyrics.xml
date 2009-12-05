@@ -22,6 +22,10 @@
     <cmd ID="dyncmd_is_lyr_editor_visible" func="is_skin_wnd_visible" param="lyreditor" />
     <cmd ID="dyncmd_openclose_albumart_bar" func="openclose_framebar_bar" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
     <cmd ID="dyncmd_is_albumart_bar_visible" func="is_framebar_bar_visible" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
+    <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
+    <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
+    <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
+    <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
   </DynCmds>
   <DynControls>
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
@@ -78,10 +82,10 @@
   <skinwnd Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="228" MinWidth="330" MinHeight="300" Width="330" Height="400" PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
     <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
     <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
-    <Image Name="BottomBorder" Left="20" Top="h-20" Width="w-20-20" Height="20" Image="frame.png" ImageRect="20, 55, 35, 20" ImageMask="frame-mask.png" ImageMaskRect="20, 55, 35, 20" BltMode="tile" BlendPixMode="copy"/>
+    <Image Name="BottomBorder" Left="20" Top="h-20+10" Width="w-20-20" Height="20-10" Image="frame.png" ImageRect="20, 65, 35, 10" BltMode="tile" BlendPixMode="copy"/>
     <Image Name="RightBottomCorner" Left="w-20" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="55, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 55, 20, 20" BlendPixMode="copy"/>
     <Image Name="TopRightCorner" Left="w-20" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="55, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 0, 20, 20" BlendPixMode="copy"/>
-    <Image Name="RightBorder" Left="w-20" Top="20" Width="20" Height="h-20-20" Image="frame.png" ImageRect="55, 20, 20, 35" ImageMask="frame-mask.png" ImageMaskRect="55, 20, 20, 35" BltMode="tile" BlendPixMode="copy"/>
+    <Image Name="RightBorder" Left="w-20+10" Top="20" Width="20-10" Height="h-20-20" Image="frame.png" ImageRect="65, 20, 10, 35" BltMode="tile" BlendPixMode="copy"/>
     <Toolbar Left="w-62-20" Top="8" Width="62" Height="14" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14" blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10" MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
       <button ID="ID_MINIMIZE" Left="0" />
       <button ID="dyncmd_change_to_bar" Left="4" ToolTip="Lyrics Bar Mode"/>
@@ -93,10 +97,10 @@
         <AlbumArt Name="AlbumArt" Left="0" Top="0" Width="108" Height="108" ID="ID_ALBUMART" UseSkinBg="TRUE" Image="AlbumArt.png" FrameMask="albumart-mask.png" FrameMaskRectPos="4,4,100,100" />
 	  </ContainerBar>
       <ContainerBar Name="MediaInfo" ID="CCMD_MEDIAINFO" Width="200" Height="108" MinWidth="108" MinHeight="108" FixedHeight="TRUE" Align="Top" PaintBg="FALSE" BgColor="#000000">
-        <MediaInfoText Name="Title" Left="0" Top="8" Width="w" Height="18" UseSkinBg="TRUE" Font="Tahoma" FontHeight="16" FontBold="TRUE" Outlined="TRUE" OutlinedColor="#808080" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Title" ShowTitle="false" PaintBg="false"/>
+        <MediaInfoText Name="Title" Left="0" Top="8" Width="w" Height="18" UseSkinBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Title" ShowTitle="false" PaintBg="false"/>
         <HStretchImage Left="-2" Top="27" Width="w+2" Height="6" Name="TitleLine" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
-        <MediaInfoText Name="Artist" Left="0" Top="33" Width="w" Height="16" UseSkinBg="TRUE" Font="Tahoma" FontHeight="13" FontBold="TRUE" Outlined="TRUE" OutlinedColor="#808080" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Artist" ShowTitle="false" PaintBg="false"/>
-        <MediaInfoText Name="Album" Left="0" Top="58" Width="w" Height="16" UseSkinBg="TRUE" Font="Tahoma" FontHeight="13" FontBold="TRUE" Outlined="TRUE" OutlinedColor="#808080" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Album" ShowTitle="false" PaintBg="false" />
+        <MediaInfoText Name="Artist" Left="0" Top="33" Width="w" Height="16" UseSkinBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Artist" ShowTitle="false" PaintBg="false"/>
+        <MediaInfoText Name="Album" Left="0" Top="58" Width="w" Height="16" UseSkinBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Album" ShowTitle="false" PaintBg="false" />
         <Toolbar Left="0" Top="78" Width="160" Height="22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
           <button ID="ID_PREVIOUS" Left="0" />
           <button ID="ID_PLAYPAUSE" Left="1" CanCheck="TRUE" checked_left="2"/>
@@ -113,13 +117,25 @@
     <WndResizer Name="Right" Left="w-20" Top="0" Width="20" Height="h-20" Direction="right"/>
     <WndResizer Name="RightBottom" Left="w-20" Top="h-20" Width="20" Height="20" Direction="right|bottom"/>
   </skinwnd>
-  <skinwnd Name="lyreditor" Region="Modern.tr2" MinWidth="275" MinHeight="250" Width="640" Height="450" BgColor="#4F586E" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
-    <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" EnableDblClick="true" Image="caption.bmp" ImageRect="0,24,275,23" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" CutPos="25,97,177,225"/>
-    <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,11,10" ImageSel="buttons.bmp" ImageSelRect="0,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="0,10,11,10"/>
-    <ActiveButton Left="w-41" Top="4" Width="11" Height="10" ID="ID_MINIMIZE" Name="Minimize" Image="buttons.bmp" ImageRect="11,0,11,10" ImageSel="buttons.bmp" ImageSelRect="11,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="11,10,11,10"/>
-    <ActiveButton Left="w-41+12" Top="4" Width="11" Height="10" ID="ID_MAXIMIZE" Name="maximize" Image="buttons.bmp" ImageRect="44,0,11,10" ImageSel="buttons.bmp" ImageSelRect="44,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="44,10,11,10" S1_Image="buttons.bmp" S1_ImageRect="55,0,11,10" S1_ImageSel="buttons.bmp" S1_ImageSelRect="55,20,11,10" S1_ImageFocus="buttons.bmp" S1_ImageFocusRect="55,10,11,10"/>
-    <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_CLOSE" Name="close" Image="buttons.bmp" ImageRect="33,0,11,10" ImageSel="buttons.bmp" ImageSelRect="33,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="33,10,11,10"/>
-    <Toolbar ID="ID_TOOLBAR" Left="6" Top="23" Width="w-12" Height="26" Image="lyr-tb.bmp" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22" seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3">
+  <skinwnd Name="lyreditor" Region="Modern.tr2" MinWidth="275" MinHeight="250" Width="640" Height="450" BgColor="#4F586E" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player" OnCreateCommand="dyncmd_load_toolbar_state">
+    <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="40">
+      <CaptionImage Left="0" Top="0" Width="w" Height="40" Name="Caption" EnableDblClick="true" Image="menu-caption.png" ImageRect="0,45,275,40" ImageFocus="menu-caption.png" ImageFocusRect="0,0,275,40" CutPos="25,90,183,225"/>
+      <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,11,10" ImageSel="buttons.bmp" ImageSelRect="0,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="0,10,11,10"/>
+      <ActiveButton Left="w-41" Top="4" Width="11" Height="10" ID="ID_MINIMIZE" Name="Minimize" Image="buttons.bmp" ImageRect="11,0,11,10" ImageSel="buttons.bmp" ImageSelRect="11,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="11,10,11,10"/>
+      <ActiveButton Left="w-41+12" Top="4" Width="11" Height="10" ID="ID_MAXIMIZE" Name="maximize" Image="buttons.bmp" ImageRect="44,0,11,10" ImageSel="buttons.bmp" ImageSelRect="44,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="44,10,11,10" S1_Image="buttons.bmp" S1_ImageRect="55,0,11,10" S1_ImageSel="buttons.bmp" S1_ImageSelRect="55,20,11,10" S1_ImageFocus="buttons.bmp" S1_ImageFocusRect="55,10,11,10"/>
+      <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_CLOSE" Name="close" Image="buttons.bmp" ImageRect="33,0,11,10" ImageSel="buttons.bmp" ImageSelRect="33,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="33,10,11,10"/>
+      <Text Left="w/2-38" Top="3" Width="80" Height="18" FontName="Verdana" FontHeight="12" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#FFFFFF" TextOutlined="false" LeftMargin="0" Text="LYRICS EDITOR" AlignText="AT_CENTER"/>
+      <MenuBar left="10" top="20" width="w-15-15" height="18" Name="Menu" Menu="LyrEditorMenu" FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF" TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF" TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+    </DecorativeContainer>
+    <HStretchImage Left="0" Top="40+26" Width="w" Height="5" Name="caption-border" Image="menu-caption.png" ImageRect="0,40,275,5" ImageScaleXStart="60" ImageScaleXEnd="250"/>
+    <Toolbar Left="6" Top="40" Width="22*4+10" Height="26" Image="lyr-tb.bmp" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22" seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3">
+      <button ID="ID_INSERTTAG_DOWN" Left="12" Width="2" />
+      <button ID="ID_INSERTTAG" Left="14" />
+      <button ID="dyncmd_toggle_toolbarex_visible" Left="23" ToolTip="Toggle Extended Toolbar Visible"/>
+    </Toolbar>
+    <Image Left="22*4+10+6" Top="40" Width="w-(22*4+10+6)-6" Height="26" Name="Toolbar Bg" Image="lyr-tb.bmp" ImageRect="858,0,22,26" BltMode="tile"/>
+    <Toolbar ID="ID_TOOLBAR" Left="22*4+10+6" Top="40" Width="w-(22*4+10+6)-6" Height="26" Image="lyr-tb.bmp" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22" seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3" Visible="false">
+      <seperator/>
       <button ID="ID_SEARCH_LYRICS" Left="20" />
       <button ID="ID_NEW_LRC" Left="0" />
       <button ID="ID_OPEN_LRC" Left="1" />
@@ -131,11 +147,6 @@
       <button ID="ID_BACKWARD" Left="9" />
       <button ID="ID_FORWARD" Left="10" />
       <button ID="ID_JUMP" Left="11" />
-      <seperator/>
-      <button ID="ID_INSERTTAG_DOWN" Left="12" Width="2" />
-      <button ID="ID_INSERTTAG" Left="14" />
-      <button ID="ID_DEL_TAG" Left="15" />
-      <button ID="ID_MENU_LYR_EDIT" Left="23" />
       <seperator/>
       <button ID="ID_EDIT_CUT" Left="26" disabled_Left="35" />
       <button ID="ID_EDIT_COPY" Left="27" disabled_Left="36" />
@@ -153,9 +164,9 @@
       <seperator/>
       <button ID="ID_EDIT_HELP" Left="24" />
     </Toolbar>
-    <LyricShowTextEdit Left="6" Top="26+23" Width="w-12" Height="(h-23-10-26)" BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD" FocusLineBgColor="#000000" TagColor="#FF8242" />
-	<VStretchImage Left="0" Top="23" Width="6" Height="h-23-10" Name="left frame" Image="caption.bmp" ImageRect="276,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
-	<VStretchImage Left="w-6" Top="23" Width="6" Height="h-23-10" Name="right frame" Image="caption.bmp" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
+    <LyricShowTextEdit Left="6" Top="26+45" Width="w-12" Height="(h-45-10-26)" BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD" FocusLineBgColor="#000000" TagColor="#FF8242" />
+	<VStretchImage Left="0" Top="40" Width="6" Height="h-40-10" Name="left frame" Image="caption.bmp" ImageRect="276,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
+	<VStretchImage Left="w-6" Top="40" Width="6" Height="h-40-10" Name="right frame" Image="caption.bmp" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
 	<HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.bmp" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
   </skinwnd>
 </skin>
