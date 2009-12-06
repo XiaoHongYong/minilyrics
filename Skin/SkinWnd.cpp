@@ -152,6 +152,7 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_bFreeOnDestory = false;
 
 	m_bSkinOpened = false;
+	m_bCanUpdateWnd = false;
 	m_bInEditorMode = false;
 
 	m_bWindowsAppearance = false;
@@ -307,6 +308,7 @@ void CSkinWnd::CloseSkin()
 	::UnSetLayeredWindow(m_hWnd);
 #endif
 
+	m_bCanUpdateWnd = false;
 	m_bSkinOpened = false;
 	m_bPaintBg = false;
 	m_clrBgOrg.set(0, 0, 0);
@@ -727,6 +729,7 @@ bool CSkinWnd::UpdateSkinProperty()
 			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlphaOnActive;
 		else
 			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlpha;
+		RecreateBrush();
 	}
 
 	// init 
@@ -879,7 +882,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 {
 	assert(pObj);
 
-	if (!m_bSkinOpened)
+	if (!m_bCanUpdateWnd)
 		return;
 
 	if (!pObj->IsVisible() || !pObj->IsParentVisible())
@@ -980,7 +983,11 @@ void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucen
 			pGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
 		}
 		if (m_nTranslucencyAlphaDynamic != 255)
-			pGraph->Clear(0, 0, 0, 0, &rc);
+		{
+			MLColor	clr(RGB(0, 0, 0));
+			clr.setAlpha(0);
+			pGraph->FillRect(&rc, clr);
+		}
 
 		if (m_nTranslucencyAlphaDynamic != 0)
 			m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), func);
@@ -1915,7 +1922,7 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 
 BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 {
-	if (!m_bSkinOpened)
+	if (!m_bCanUpdateWnd)
 		return FALSE;
 
 	if (!m_bTranslucencyLayered)
@@ -2474,6 +2481,10 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	m_pSkinFactory->GetResourceMgr()->GetAdjustHueParam(hue, saturation, luminance);
 	if (hue != 0.0f)
 		OnAdjustHue(hue, saturation, luminance);
+
+	m_bCanUpdateWnd = true;
+
+	InvalidateRect();
 
 	return ERR_OK;
 }

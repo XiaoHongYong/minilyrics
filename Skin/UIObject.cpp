@@ -387,7 +387,9 @@ void CUIObject::UpdateTranslucencyWithSkin(CRawGraph *pGraph)
 		return;
 	if (m_pSkin->m_nTranslucencyAlphaDynamic == 0)
 	{
-		pGraph->Clear(0, 0, 0, 0, &m_rcObj);
+		MLColor	clr(RGB(0, 0, 0));
+		clr.setAlpha(0);
+		pGraph->FillRect(&m_rcObj, clr);
 		return;
 	}
 

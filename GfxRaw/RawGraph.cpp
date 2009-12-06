@@ -458,33 +458,6 @@ void CRawGraph::HorzFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bLeft
 	}
 }
 
-
-void CRawGraph::Clear(byte r, byte g, byte b, byte alpha, const RECT *lpRect)
-{
-	ASSERT(m_imageData.bitCount == 32);
-
-	int			x, y, xMax, yMax;
-	byte		*p, *pEnd, *pRow;
-	int			nStrideModify;
-
-	ClipAndMapRect(lpRect, x, y, xMax, yMax);
-	nStrideModify = (xMax - x) * PIX_SIZE;
-
-	pRow = m_imageData.PixPtr(x, y);
-	for (; y < yMax; y++)
-	{
-		pEnd = pRow + nStrideModify;
-		for (p = pRow; p < pEnd; p += PIX_SIZE)
-		{
-			p[PIX_B] = b;
-			p[PIX_G] = g;
-			p[PIX_R] = r;
-			p[PIX_A] = alpha;
-		}
-		pRow += m_imageData.stride;
-	}
-}
-
 void CRawGraph::FillRectXOR(const RECT *lpRect, const MLColor &clrFill)
 {
 	ASSERT(m_imageData.bitCount == 32);

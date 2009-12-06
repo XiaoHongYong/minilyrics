@@ -251,7 +251,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 	}
 	else if (_tcsicmp(szMenu, _T("LyrEditorMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu();
+		pSkinMenu = new CLyrEditorMenu();
 		pSkinMenu->LoadMenu(IDM_LYR_EDITOR);
 	}
 #ifdef _MPLAYER

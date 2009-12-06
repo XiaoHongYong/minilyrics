@@ -37,7 +37,7 @@ STRING_ID_MAP g_StringIdMap[] =
 
 	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, _T("Synchronize the current line") },
 	{ _T("ID_DEL_TAG"), CMD_DEL_TAG, _T("Remove Timestamp of the current line") },
-	{ _T("ID_INSERTTAG_DOWN"), CMD_INSERTTAG_DOWN, _T("Synchronize the current line and move down one line") },
+	{ _T("ID_INSERTTAG_DOWN"), CMD_INSERTTAG_DOWN, _T("Synchronize the current line and move to next line") },
 	{ _T("ID_EDIT_HELP"), CMD_EDIT_HELP, _T("Editor help") },
 	{ _T("ID_JUMP"), CMD_JUMP, _T("Jump to current line") },
 	{ _T("ID_FORWARD_REMAIN_LINES"), CMD_FORWARD_REMAIN_LINES, _T("Forward the remaining lyrics 0.2s") },

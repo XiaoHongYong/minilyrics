@@ -89,8 +89,6 @@ public:
 	void HorzAlphaFadeOut(const RECT *lpRect, bool bLeft);
 	void HorzFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bLeft);
 
-	void Clear(byte r, byte g, byte b, byte alpha, const RECT *lpRect);
-
 	void FillRectXOR(const RECT *lpRect, const MLColor &clrFill);
 
 	void FillRect(const RECT *lpRect, PRAW_IMAGE_DATA pImgMask, const RECT *rcMask, const MLColor &clrFill, BlendPixMode bpm = BPM_COPY);

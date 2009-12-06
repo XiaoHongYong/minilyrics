@@ -354,6 +354,7 @@ protected:
 
 	// flag to indicate whether the skin was opened.
 	bool			m_bSkinOpened;
+	bool			m_bCanUpdateWnd;
 	bool			m_bInEditorMode;	// Is in skin editor mode?
 
 	CSkinFactory	*m_pSkinFactory;
