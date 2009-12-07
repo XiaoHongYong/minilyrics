@@ -280,15 +280,16 @@ void CSkinToggleCtrlContainer::OnTimer(int nId)
 			m_nIDTimerAnimation = 0;
 
 			// Hide old Object
-			CUIObject	*pObj = GetUIObjectById(m_nActiveCtrl, NULL);
-			if (pObj)
+			for (size_t i = 0; i < m_vUIObjs.size(); i++)
 			{
-				pObj->SetVisible(false);
-				m_nActiveCtrl = SKIN_UIOBJ_ID_UNDEFINE;
+				CUIObject	*pObj = m_vUIObjs[i];
+				if (pObj->m_nId != nId)
+					pObj->SetVisible(false);
 			}
+			m_nActiveCtrl = SKIN_UIOBJ_ID_UNDEFINE;
 
 			// Show new object
-			pObj = GetUIObjectById(m_nToggleToCtrl, NULL);
+			CUIObject	*pObj = GetUIObjectById(m_nToggleToCtrl, NULL);
 			if (pObj)
 			{
 				pObj->SetVisible(true);

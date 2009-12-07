@@ -783,7 +783,7 @@ MLRESULT CMPlayer::Prev()
 
 		ASSERT(m_vShuffleMedia.size() == m_currentPlaylist->GetCount());
 		m_nCurrentShuffleMedia--;
-		m_nCurrentMedia = m_vShuffleMedia[m_nCurrentShuffleMedia];
+		m_nCurrentMedia = m_vShuffleMedia[m_nCurrentShuffleMedia - 1];
 		// m_nCurrentMedia = rand() % m_currentPlaylist->GetCount();
 	}
 	else
