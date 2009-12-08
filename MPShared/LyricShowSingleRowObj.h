@@ -28,11 +28,13 @@ public:
 	void GetNextLineFadeInColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
 
 public:
-	void OnLyrDrawContextChanged();
 	static LPCTSTR ClassName() { return ms_szClassName; }
 	BOOL IsKindOf(LPCTSTR szClassName);
 	LPCTSTR GetClassName();
 	static LPCTSTR		ms_szClassName;
+
+protected:
+	virtual int GetAutoHeightLines() { return 1; }
 
 };
 

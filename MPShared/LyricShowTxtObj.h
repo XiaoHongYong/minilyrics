@@ -52,9 +52,10 @@ public:
 	BOOL IsKindOf(LPCTSTR szClassName);
 
 protected:
+	void OnLyrDrawContextChanged();
+
 	void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
 
-	void OnLyrDrawContextChanged();
 	void SetScrollInfo();
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);

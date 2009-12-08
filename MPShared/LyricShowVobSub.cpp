@@ -133,14 +133,3 @@ BOOL CLyricShowVobSub::IsKindOf(LPCTSTR szClassName)
 
 	return _tcsicmp(szClassName, ms_szClassName) == 0;
 }
-
-void CLyricShowVobSub::OnLyrDrawContextChanged()
-{
-	m_bCanWrapLines = true;
-
-	CLyricShowObj::OnLyrDrawContextChanged();
-
-	AutoWidthSkinAccordLyrics();
-
-	AutoHeightSkinAccordLyrics();
-}

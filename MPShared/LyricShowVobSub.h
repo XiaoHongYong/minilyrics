@@ -21,13 +21,14 @@ public:
 	//	void UpdateDraw(DWORD dwTimeElapsed);
 	void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
 
-	void OnLyrDrawContextChanged();
 	LPCTSTR GetClassName();
 	static LPCTSTR ClassName() { return ms_szClassName; }
 	BOOL IsKindOf(LPCTSTR szClassName);
 	static LPCTSTR		ms_szClassName;
 
 protected:
+	virtual int GetAutoHeightLines() { return 1; }
+
 	// 使用下面的变量记录了上一次歌词的显示位置，在新的一次显示时，
 	// 可以优化显示速度
 	int					m_nCurRowOld;		// 前一次显示的当前行

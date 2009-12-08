@@ -23,14 +23,14 @@ public:
 	int GetLyricRightRowAlignPos(CRawGraph *pGraphics, PML_ROW pLyricRow);
 	int GetLyricLeftRowAlignPos(CRawGraph *pGraphics, PML_ROW pLyricRow);
 
-	void OnLyrDrawContextChanged();
-
 	static LPCTSTR ClassName() { return ms_szClassName; }
 	BOOL IsKindOf(LPCTSTR szClassName);
 	LPCTSTR GetClassName();
 
 protected:
+	void OnLyrDrawContextChanged();
 	void CalculateAccelerate();
+	virtual int GetAutoHeightLines() { return 1; }
 
 public:
 	static LPCTSTR		ms_szClassName;

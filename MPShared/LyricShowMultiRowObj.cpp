@@ -174,7 +174,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 #ifdef _WIN32_DESKTOP
 	// if (/*m_pSkin->GetEnableTranslucencyLayered() && */m_LyricsDisplayOpt != DO_FADEOUT_BG)
-	if (!m_pSkin->IsBgImageUsed())
+	if (!m_pSkin->IsBgImageUsed() || m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 	{
 		CRect	rc;
 
@@ -290,17 +290,4 @@ bool CLyricShowMultiRowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szV
 		return CLyricShowObj::OnLyrDisplaySettings(szProperty, szValue);
 
 	return true;
-}
-
-void CLyricShowMultiRowObj::OnLyrDrawContextChanged()
-{
-	m_bCanWrapLines = true;
-
-	CLyricShowObj::OnLyrDrawContextChanged();
-
-	AutoWidthSkinAccordLyrics();
-
-	if (m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS
-		&& m_LyricsDisplayOpt == DO_FADEOUT_BG)
-		AutoHeightSkinAccordLyrics(3);
 }

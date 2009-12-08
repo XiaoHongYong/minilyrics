@@ -352,7 +352,7 @@ public:
 		m_pToolbar = pToolbar;
 		if (m_pToolbar->IsCheck(CMD_PLAYPAUSE) != bCheck)
 		{
-			m_pToolbar->SetCheck(CMD_PLAYPAUSE, bCheck);
+			m_pToolbar->SetCheck(CMD_PLAYPAUSE, bCheck, false);
 		}
 		g_eventDispather.RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 	}
@@ -360,6 +360,50 @@ public:
 	void Unregister()
 	{
 		g_eventDispather.UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+	}
+
+protected:
+	CSkinToolbar		*m_pToolbar;
+
+};
+
+class CPlayerShuffleRepeatToolbarHandler : public IEventHandlerEx
+{
+public:
+	virtual void OnEvent(const IEvent *pEvent)
+	{
+		if (pEvent->eventType == ET_PLAYER_SETTING_CHANGED)
+		{
+			CEventPlayerSettingChanged	*pSettingEvt = (CEventPlayerSettingChanged *)pEvent;
+			if (pSettingEvt->settingType == IMPEvent::MPS_SHUFFLE)
+			{
+				if (pSettingEvt->nValue != m_pToolbar->GetBtStatus(CMD_SHUFFLE))
+					m_pToolbar->SetBtStatus(CMD_SHUFFLE, g_Player.IsShuffle() ? 1 : 0, true);
+			}
+			else if (pSettingEvt->settingType == IMPEvent::MPS_LOOP)
+			{
+				if (pSettingEvt->nValue != m_pToolbar->GetBtStatus(CMD_LOOP))
+					m_pToolbar->SetBtStatus(CMD_LOOP, g_Player.GetLoop(), true);
+			}
+		}
+	}
+
+	void Register(CSkinToolbar *pToolbar)
+	{
+		m_pToolbar = pToolbar;
+
+		if (g_Player.IsShuffle() != Tobool(pToolbar->GetBtStatus(CMD_SHUFFLE)))
+			pToolbar->SetBtStatus(CMD_SHUFFLE, g_Player.IsShuffle() ? 1 : 0, false);
+
+		if (g_Player.GetLoop() != m_pToolbar->GetBtStatus(CMD_LOOP))
+			m_pToolbar->SetBtStatus(CMD_LOOP, g_Player.GetLoop(), false);
+
+		g_eventDispather.RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+	}
+
+	void Unregister()
+	{
+		g_eventDispather.UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 protected:
@@ -1117,6 +1161,14 @@ void CMPSkinWnd::OnAddUIObj(CUIObject *pObj)
 			{
 				CPlayerPlayPauseToolbarHandler *pHandler;
 				pHandler = new CPlayerPlayPauseToolbarHandler;
+				pHandler->Register(pToolBar);
+				m_mapEventHandlers[pObj] = pHandler;
+			}
+
+			if (pToolBar->IsButtonExist(CMD_SHUFFLE) || pToolBar->IsButtonExist(CMD_LOOP))
+			{
+				CPlayerShuffleRepeatToolbarHandler *pHandler;
+				pHandler = new CPlayerShuffleRepeatToolbarHandler;
 				pHandler->Register(pToolBar);
 				m_mapEventHandlers[pObj] = pHandler;
 			}

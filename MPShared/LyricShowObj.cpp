@@ -559,10 +559,9 @@ CLyricShowObj::CLyricShowObj()
 
 	m_pMLData = NULL;
 
-	m_bCanWrapLines = false;
+	m_bCanWrapLines = true;
 
 	m_bEnableAutoResize = true;
-	m_bAlwaysAutoWidth = false;
 
 	m_bUseSkinStyle = false;
 
@@ -679,7 +678,16 @@ void CLyricShowObj::OnCreate()
 	ColorToStr(m_clrBg, strColor);
 	m_pSkin->SetProperty(_T("BgColor"), strColor.c_str());
 
-	OnLyricsChanged();
+	if (m_bUseAlbumArtAsBg || m_bUseBgImg)
+		LoadNextBgImage();
+
+	// !auto resize || !wrap lines
+	if (!m_bEnableAutoResize || !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)
+		|| !m_bCanWrapLines)
+	{
+		m_pMLData->CopyMLyrLines(m_lyrLines);
+		ReverseLyricsForRightToLeftLanguage();
+	}
 }
 
 void CLyricShowObj::OnEvent(const IEvent *pEvent)
@@ -1629,10 +1637,9 @@ void CLyricShowObj::OnLyricsChanged()
 		LoadNextBgImage();
 	}
 
-	// auto resize || !wrap lines
-	if ((m_bEnableAutoResize && 
-		(m_bAlwaysAutoWidth || g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)))
-		|| !ShouldWrapLines())
+	// !auto resize || !wrap lines
+	if (!m_bEnableAutoResize || !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)
+		|| !m_bCanWrapLines)
 	{
 		m_pMLData->CopyMLyrLines(m_lyrLines);
 		ReverseLyricsForRightToLeftLanguage();
@@ -1648,6 +1655,17 @@ void CLyricShowObj::OnLyricsChanged()
 void CLyricShowObj::OnLyrDrawContextChanged()
 {
 	m_lyrLines.ClearDrawContextWidth();
+
+	if (m_bCanWrapLines)
+	{
+		if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
+			AutoWidthSkinAccordLyrics();
+		else
+			WrapLyricsLines();
+	}
+
+	// Auto height.
+	AutoHeightSkinAccordLyrics(GetAutoHeightLines());
 }
 
 void AdjustColorHue(MLColor &clr, float hueOffset)
@@ -1718,7 +1736,7 @@ void CLyricShowObj::WrapLyricsLines()
 void CLyricShowObj::AutoHeightSkinAccordLyrics(int nLines)
 {
 #ifndef _MPLAYER
-	if (!m_bEnableAutoResize)
+	if (!m_bEnableAutoResize || nLines <= 0)
 		return;
 
 #ifdef _WIN32
@@ -1761,7 +1779,7 @@ void CLyricShowObj::AutoWidthSkinAccordLyrics(BOOL bSingleRow/* = FALSE*/)
 	if (m_lyrLines.empty())
 		return;
 
-	if (!m_bAlwaysAutoWidth && !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
+	if (!g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
 		return;
 
 #ifdef _WIN32
@@ -2042,14 +2060,9 @@ void CLyricShowObj::OnTimer(int nId)
 	Invalidate();
 }
 
-bool CLyricShowObj::ShouldWrapLines()
-{
-	return m_bCanWrapLines;
-}
-
 void CLyricShowObj::OnSize(int cx, int cy)
 {
-	if (ShouldWrapLines())
+	if (m_bCanWrapLines)
 		WrapLyricsLines();
 }
 
@@ -2217,8 +2230,6 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bKaraoke = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("EnableAutoResize")) == 0)
 		m_bEnableAutoResize = IsTRUE(szValue);
-	else if (_tcsicmp(szProperty, _T("AlwaysAutoWidth")) == 0)
-		m_bAlwaysAutoWidth = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("EnableAdjustVertAlign")))
 		m_bEnableAdjustVertAlign = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("XMargin")))

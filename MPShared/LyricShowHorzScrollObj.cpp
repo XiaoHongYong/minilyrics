@@ -15,6 +15,8 @@ LPCTSTR CLyricShowHorzScrollObj::ms_szClassName = _T("LyricShowHorzScroll");
 
 CLyricShowHorzScrollObj::CLyricShowHorzScrollObj()
 {
+	m_bCanWrapLines = false;
+
 	m_nDarkenTopArea = float(0.65);
 	m_nDarkenBottomArea = float(0.65);
 
@@ -191,8 +193,6 @@ void CLyricShowHorzScrollObj::OnLyrDrawContextChanged()
 	CLyricShowObj::OnLyrDrawContextChanged();
 
 	CalculateAccelerate();
-
-	AutoHeightSkinAccordLyrics();
 }
 
 void CLyricShowHorzScrollObj::CalculateAccelerate()

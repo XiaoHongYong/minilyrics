@@ -159,8 +159,6 @@ public:
 
 	void SetLyricData(CMLData *pMLData);
 
-	bool ShouldWrapLines();
-
 	bool IsKaraoke() { return m_bKaraoke || m_pMLData->IsKaraokeShowStyle(); }
 
 	//
@@ -176,6 +174,7 @@ protected:
 	void OnSize(int cx, int cy);
 
 	virtual void OnLyrDrawContextChanged();
+	virtual int GetAutoHeightLines() { return 0; }
 
 	void OnAdjustHue(float hue, float saturation, float luminance);
 
@@ -302,7 +301,7 @@ protected:
 	// ÐÐ¼ä¾à			
 	int						m_nLineSpacing;
 
-	bool					m_bEnableAutoResize, m_bAlwaysAutoWidth;
+	bool					m_bEnableAutoResize;
 
 #ifndef _WIN32_WCE
 	//

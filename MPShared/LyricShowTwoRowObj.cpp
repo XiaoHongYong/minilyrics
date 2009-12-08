@@ -198,14 +198,3 @@ BOOL CLyricShowTwoRowObj::IsKindOf(LPCTSTR szClassName)
 
 	return _tcsicmp(szClassName, ms_szClassName) == 0;
 }
-
-void CLyricShowTwoRowObj::OnLyrDrawContextChanged()
-{
-	m_bCanWrapLines = true;
-
-	CLyricShowObj::OnLyrDrawContextChanged();
-
-	AutoWidthSkinAccordLyrics();
-
-	AutoHeightSkinAccordLyrics(2);
-}

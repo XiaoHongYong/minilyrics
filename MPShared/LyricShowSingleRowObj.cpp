@@ -222,14 +222,3 @@ BOOL CLyricShowSingleRowObj::IsKindOf(LPCTSTR szClassName)
 
 	return _tcsicmp(szClassName, ms_szClassName) == 0;
 }
-
-void CLyricShowSingleRowObj::OnLyrDrawContextChanged()
-{
-	m_bCanWrapLines = true;
-
-	CLyricShowObj::OnLyrDrawContextChanged();
-
-	AutoWidthSkinAccordLyrics(FALSE);
-
-	AutoHeightSkinAccordLyrics(1);
-}

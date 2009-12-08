@@ -210,11 +210,7 @@ void CLyricShowTxtObj::OnLyricsChanged()
 
 void CLyricShowTxtObj::OnLyrDrawContextChanged()
 {
-	m_bCanWrapLines = true;
-
 	CLyricShowObj::OnLyrDrawContextChanged();
-
-	AutoWidthSkinAccordLyrics();
 
 	SetScrollInfo();
 }
