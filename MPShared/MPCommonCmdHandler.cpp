@@ -534,21 +534,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			}
 		}
 		break;
-	case CMD_LP_SWITCH:
-		{
-			tstring		strWorkArea;
-			CMPlayerSettings::GetPlayerUISettings(_T("WorkArea"), strWorkArea);
-
-			if (_tcsicmp(strWorkArea.c_str(), _T("lyr")) == 0)
-				strWorkArea = _T("pl");
-			else if (_tcsicmp(strWorkArea.c_str(), _T("pl")) == 0)
-				strWorkArea = _T("lyr-pl");
-			else
-				strWorkArea = _T("lyr");
-
-			CMPlayerSettings::SetPlayerUISettings(_T("WorkArea"), strWorkArea.c_str());
-		}
-		break;
 	case CMD_PL_OPEN_FILE:
 		OnSongOpenFileCmd(m_pSkinWnd, true);
 		break;

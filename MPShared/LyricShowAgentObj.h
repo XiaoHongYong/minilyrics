@@ -37,7 +37,7 @@ public:
 	static void SetLyrDispStyleSettings(CSkinWnd *pSkinWnd, LPCTSTR szLyrStyle);
 
 protected:
-	void ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle);
+	void ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, bool bRedraw = true);
 
 	void LoadToolbar();
 

@@ -40,7 +40,6 @@
 #include "MPSkinVis.h"
 #include "MPlaylistCtrl.h"
 #include "MPSkinMediaNumInfoCtrl.h"
-#include "MPPPCWorkArea.h"
 #include "MPlaylistSearchObj.h"
 #ifdef _WIN32_WCE
 #include "win32/wce/WCEMainCmdBar.h"
@@ -175,8 +174,6 @@ CUIObject *CMPSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinTreeCtrl;
 	else if (_tcsicmp(szClassName, CMPSkinVis::ClassName()) == 0)
 		pObj = new CMPSkinVis;
-	else if (_tcsicmp(szClassName, CMPPPCWorkArea::ClassName()) == 0)
-		pObj = new CMPPPCWorkArea;
 	else if (_tcsicmp(szClassName, CSkinListCtrlEx::ClassName()) == 0)
 		pObj = new CSkinListCtrlEx;
 	else if (_tcsicmp(szClassName, CMPSkinMediaNumInfoCtrl::ClassName()) == 0)

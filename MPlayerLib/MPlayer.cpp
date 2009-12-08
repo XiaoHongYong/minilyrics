@@ -775,7 +775,7 @@ MLRESULT CMPlayer::Prev()
 
 	if (m_bShuffle)
 	{
-		if (m_nCurrentShuffleMedia <= 0)
+		if (m_nCurrentShuffleMedia <= 1)
 		{
 			// in shuffle mode, only can back to 0
 			return ERR_END_OF_PLAYLIST;

@@ -88,7 +88,6 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_SHUFFLE"), CMD_SHUFFLE, _T("Toggle Shuffle") },
 	{ _T("ID_LOOP"), CMD_LOOP, _T("Toggle Repeat") },
 	{ _T("ID_EQ"), CMD_EQ, _T("Equalizer") },
-	{ _T("ID_LP_SWITCH"), CMD_LP_SWITCH, _T("Show/Hide Lyrics/Playlist") },
 	{ _T("ID_RATE"), CMD_RATE, _T("Rate this song") },
 	{ _T("ID_TXT_TITLE"), CMD_TXT_TITLE, NULL },
 	{ _T("ID_TXT_POS"), CMD_TXT_POS, NULL },

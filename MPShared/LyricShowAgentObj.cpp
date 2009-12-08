@@ -91,7 +91,7 @@ void CLyricShowAgentObj::OnCreate()
 		LoadToolbar();
 	}
 
-	ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str());
+	ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str(), false);
 }
 
 void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
@@ -173,7 +173,7 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
-void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle)
+void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, bool bRedraw)
 {
 	if (m_pLyricsShow)
 	{
@@ -225,7 +225,9 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle)
 
 	m_pLyricsShow->m_pContainer = m_pContainer;
 	m_pContainer->InsertUIObjectAt(this, m_pLyricsShow);
-	m_pContainer->RecalculateUIObjSizePos(m_pLyricsShow);
+
+	if (bRedraw)
+		m_pContainer->RecalculateUIObjSizePos(m_pLyricsShow);
 }
 
 void CLyricShowAgentObj::LoadToolbar()

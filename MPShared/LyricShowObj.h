@@ -181,7 +181,7 @@ protected:
 	void WrapLyricsLines();
 
 	void AutoHeightSkinAccordLyrics(int nLines = 1);
-	void AutoWidthSkinAccordLyrics(BOOL bSingleRow = FALSE);
+	bool AutoWidthSkinAccordLyrics();
 	void UpdateLyricDrawBufferBackground(CRawGraph *pGraphics, CRect &rc);
 
 	void DarkenLyricsBg(CRawGraph *pGraphics, CRect &rc);

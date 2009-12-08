@@ -671,8 +671,6 @@ void CLyricShowObj::OnCreate()
 	if (m_bUseBgImg)
 		m_pSkin->RegisterTimerObject(this, g_Profile.GetProfileInt(_T("SlideDelayTime"), 10) * 1000);
 
-	m_pContainer->RecalculateUIObjSizePos(this);
-
 	tstring			strColor;
 
 	ColorToStr(m_clrBg, strColor);
@@ -1658,9 +1656,7 @@ void CLyricShowObj::OnLyrDrawContextChanged()
 
 	if (m_bCanWrapLines)
 	{
-		if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
-			AutoWidthSkinAccordLyrics();
-		else
+		if (!AutoWidthSkinAccordLyrics())
 			WrapLyricsLines();
 	}
 
@@ -1766,26 +1762,28 @@ void CLyricShowObj::AutoHeightSkinAccordLyrics(int nLines)
 
 // COMMENT:
 //		根据歌词的长度，自动调整窗口宽度可以匹配显示歌词
-void CLyricShowObj::AutoWidthSkinAccordLyrics(BOOL bSingleRow/* = FALSE*/)
+bool CLyricShowObj::AutoWidthSkinAccordLyrics()
 {
-#ifndef _WIN32_WCE
+#ifdef _WIN32_WCE
+	return false;
+#else
 	CRect		rc, rcOrg;
 	int			nWidthMax = 200;
 	int			nWPrev = 0;
 
 	if (!m_pMLData || !m_bEnableAutoResize || m_pSkin->m_wndResizer.IsFixedWidth())
-		return;
+		return false;
 
 	if (m_lyrLines.empty())
-		return;
+		return false;
 
 	if (!g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
-		return;
+		return false;
 
 #ifdef _WIN32
 	// auto size feature is disabled when the skin is embedded into other window
 	if (::GetParent(m_pSkin->GetHandle()) != NULL)
-		return;
+		return false;
 #endif
 
 	CRawGraph		*pGraphics;
@@ -1801,17 +1799,8 @@ void CLyricShowObj::AutoWidthSkinAccordLyrics(BOOL bSingleRow/* = FALSE*/)
 	for (int i = 0; i < (int)m_lyrLines.size(); i++)
 	{
 		int		w = GetLyricRowTextWidth(pGraphics, m_lyrLines[i]);
-		if (bSingleRow)
-		{
-			if (w + nWPrev > nWidthMax)
-				nWidthMax = w + nWPrev;
-			nWPrev = w;
-		}
-		else
-		{
-			if (w > nWidthMax)
-				nWidthMax = w;
-		}
+		if (w > nWidthMax)
+			nWidthMax = w;
 	}
 
 	nWidthMax += m_nXMargin * 2 + 8;
@@ -1837,10 +1826,7 @@ void CLyricShowObj::AutoWidthSkinAccordLyrics(BOOL bSingleRow/* = FALSE*/)
 			rc.left = m_nLeftOrg;
 		}
 
-		if (bSingleRow)
-			rc.right = rc.left + rc.Width() - m_rcObj.Width() + nWidthMax;
-		else
-			rc.right = rc.left + rc.Width() - m_rcObj.Width() + nWidthMax;
+		rc.right = rc.left + rc.Width() - m_rcObj.Width() + nWidthMax;
 
 		if (rc.Width() < m_pSkin->m_wndResizer.GetMinCx())
 			rc.right = rc.left + m_pSkin->m_wndResizer.GetMinCx();
@@ -1881,10 +1867,11 @@ void CLyricShowObj::AutoWidthSkinAccordLyrics(BOOL bSingleRow/* = FALSE*/)
 		// NOT changed
 		if (rc.Width() <= rcOrg.Width() + 4 && rc.Width() >= rcOrg.Width() - 50
 			&& rcOrg.left >= rcRestrict.left && rcOrg.right <= rcRestrict.right)
-			return;
+			return true;
 
 		m_pSkin->MoveWindow(rc.left, rc.top, rc.Width(), rc.Height(), TRUE);
 	}
+	return true;
 #endif // #ifndef _WIN32_WCE
 }
 

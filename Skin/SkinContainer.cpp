@@ -584,7 +584,8 @@ bool CSkinContainer::InsertUIObjectAt(CUIObject *pObjWhere, CUIObject *pObj)
 	}
 	m_vUIObjs.insert(it, pObj);
 
-	RecalculateUIObjSizePos(pObj);
+	if (m_bCreated)
+		RecalculateUIObjSizePos(pObj);
 	m_pSkin->OnAddUIObj(pObj);
 
 	return TRUE;
