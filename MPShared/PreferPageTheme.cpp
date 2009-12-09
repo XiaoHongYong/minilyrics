@@ -370,18 +370,17 @@ void CPPageLyrDisplay::SetSettingType(SettingType settingType)
 	{
 		// lyrics Fade out options
 		LPCTSTR		vszItemName[] = { _T("Normal"), _T("Fade in lyrics"), _T("Fade out background") };
-		LPCTSTR		vszItemValues[] = { _T("normal"), _T("fadein"), _T("fadeout") };
 
 		OptComboStr		opt;
 		opt.nIDWidgetCombo = IDC_CB_FADE_MODE;
-		opt.Set(m_eventType, m_strSectName.c_str(), _T("LyrDrawOpt"), _T("fadein"));
+		opt.Set(m_eventType, m_strSectName.c_str(), _T("LyrDrawOpt"), _T("fadeout"));
 
 		m_cbFadeMode.ResetContent();
-		ASSERT(CountOf(vszItemName) == CountOf(vszItemValues));
-		for (int i = 0; i < CountOf(vszItemValues); i++)
+		ASSERT(CountOf(vszItemName) == DO_MAX);
+		for (int i = 0; i < CountOf(vszItemName); i++)
 		{
 			m_cbFadeMode.InsertString(i, TOLOCAL(vszItemName[i]));
-			opt.AddItemValue(vszItemValues[i]);
+			opt.AddItemValue(g_idsLyrDisplayOpt[i].szId);
 		}
 		AddOptComboStr(opt);
 	}

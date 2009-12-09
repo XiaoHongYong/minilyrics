@@ -129,18 +129,19 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	case IDC_LDO_FADE_IN:
 	case IDC_LDO_FADEOUT_BG:
 		{
-			tstring		strDrawOptions;
+			DISPLAY_OPTIONS	displayOpt;
 
 			if (nID == IDC_LDO_NORMAL)
-				strDrawOptions = _T("normal");
+				displayOpt = DO_NORMAL;
 			else if (nID == IDC_LDO_FADE_IN)
-				strDrawOptions = _T("fadein");
+				displayOpt = DO_FADEOUT_LOWCOLOR;
 			else if (nID == IDC_LDO_FADEOUT_BG)
-				strDrawOptions = _T("fadeout");
+				displayOpt = DO_FADEOUT_BG;
 			else
 				return false;
 
-			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("LyrDrawOpt"), strDrawOptions.c_str());
+			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("LyrDrawOpt"), 
+				DisplayOptToStr(displayOpt));
 		}
 		break;
 	case IDC_ENABLE_BK_IMAGE:
@@ -966,15 +967,15 @@ bool CMPCommonCmdHandler::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 	case IDC_LDO_FADE_IN:
 	case IDC_LDO_FADEOUT_BG:
 		{
-			tstring		strDrawOptions;
+			DISPLAY_OPTIONS		displayOpt = DisplayOptFromStr(
+				g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
 
-			strDrawOptions = g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("fadein"));
-			if (_tcsicmp(strDrawOptions.c_str(), _T("normal")) == 0)
+			if (displayOpt == DO_NORMAL)
 				nIDChecked = IDC_LDO_NORMAL;
-			else if (_tcsicmp(strDrawOptions.c_str(), _T("fadeout")) == 0)
-				nIDChecked = IDC_LDO_FADEOUT_BG;
-			else
+			else if (displayOpt == DO_FADEOUT_LOWCOLOR)
 				nIDChecked = IDC_LDO_FADE_IN;
+			else
+				nIDChecked = IDC_LDO_FADEOUT_BG;
 		}
 		break;
 	case IDC_ALIGN_LYRICS_LEFT:

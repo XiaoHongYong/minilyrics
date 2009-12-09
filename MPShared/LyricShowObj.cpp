@@ -365,6 +365,23 @@ void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, MLColor clrSimp
 	CreateGradientFillImage24bpp(image, nHeight, clrGradient);
 }
 
+ID_TO_STRING g_idsLyrDisplayOpt[] = 
+{
+	{ DO_NORMAL,			_T("normal") },
+	{ DO_FADEOUT_LOWCOLOR,	_T("fadein") },
+	{ DO_FADEOUT_BG,		_T("fadeout") },
+};
+
+LPCTSTR DisplayOptToStr(DISPLAY_OPTIONS displayOpt)
+{
+	return IDToString(g_idsLyrDisplayOpt, displayOpt, g_idsLyrDisplayOpt[DO_FADEOUT_BG].szId);
+}
+
+DISPLAY_OPTIONS DisplayOptFromStr(LPCTSTR szDisplayOpt)
+{
+	return (DISPLAY_OPTIONS)StringToID(g_idsLyrDisplayOpt, szDisplayOpt, DO_FADEOUT_BG);
+}
+
 static ID_TO_STRING g_idsLOB[] = 
 {
 	DEFINE_IDT(OBM_COLOR),
@@ -595,6 +612,7 @@ CLyricShowObj::CLyricShowObj()
 
 	m_skin_bOutlineLyrics = false;
 	m_skin_fontHeight = m_skin_fontWeight = -1;
+	m_skin_do = DO_MAX;
 
 	m_nLineSpacing = 2;
 
@@ -2109,7 +2127,9 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	else if (_tcsicmp(szProperty, _T("LyrAlign")) == 0)
 		SetLyrAlign(szValue);
 	else if (_tcsicmp(szProperty, _T("LyrDrawOpt")) == 0)
-		SetLyrDrawOpt(szValue);
+	{
+		m_skin_do = m_LyricsDisplayOpt = DisplayOptFromStr(szValue);
+	}
 	else if (_tcsicmp(szProperty, _T("BgColor")) == 0)
 	{
 		SetBgColor(szValue);
@@ -2441,8 +2461,10 @@ void CLyricShowObj::ReloadThemeOfSkin(bool bSavetoProfile)
 	CreateLyrOverlayBlendingPattern(m_tobHilight, GetPatternFontHeight());
 	CreateLyrOverlayBlendingPattern(m_tobLowlight, GetPatternFontHeight());
 
-	if (bSavetoProfile)
+	if (m_skin_do != DO_MAX)
 	{
+		m_LyricsDisplayOpt = m_skin_do;
+		g_Profile.WriteProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), DisplayOptToStr(m_skin_do));
 	}
 }
 
@@ -2455,17 +2477,6 @@ void CLyricShowObj::SetLyrAlign(LPCTSTR szValue)
 		{ 0, NULL },
 	};
 	m_nAlignment = (LyrAlignment)StringToID(_id2strLyrAlign, szValue, LA_CENTER);
-}
-
-void CLyricShowObj::SetLyrDrawOpt(LPCTSTR szValue)
-{
-	static ID_TO_STRING	_id2strLyrAlign[] = {
-		{ DO_NORMAL, _T("normal") },
-		{ DO_FADEOUT_LOWCOLOR, _T("fadein") },
-		{ DO_FADEOUT_BG, _T("fadeout") },
-		{ 0, NULL },
-	};
-	m_LyricsDisplayOpt = (DISPLAY_OPTIONS)StringToID(_id2strLyrAlign, szValue, DO_FADEOUT_LOWCOLOR);
 }
 
 void CLyricShowObj::SetBgColor(LPCTSTR szValue)
@@ -2529,7 +2540,7 @@ void CLyricShowObj::LoadAllSettings()
 
 	SetLyrAlign(g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrAlign"), _T("")));
 
-	SetLyrDrawOpt(g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
+	m_LyricsDisplayOpt = DisplayOptFromStr(g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
 
 	m_nLineSpacing = CMPlayerSettings::GetSettings(m_strSectName.c_str(), _T("LineSpacing"), 2);
 	m_bKaraoke = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("Karaoke"), m_bKaraoke);

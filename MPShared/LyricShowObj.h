@@ -37,6 +37,12 @@ enum OverlayBlendingMode
 	OBM_PATTERN,			// picture pattern
 };
 
+extern ID_TO_STRING g_idsLyrDisplayOpt[];
+
+LPCTSTR DisplayOptToStr(DISPLAY_OPTIONS displayOpt);
+
+DISPLAY_OPTIONS DisplayOptFromStr(LPCTSTR szDisplayOpt);
+
 #define AUTO_CAL_X				0xFFFFFF
 
 bool ProfileGetLyricsFont(LPCTSTR szSectName, int &nHeight, int &nWeight, BYTE &byItalic, tstring &strFaceNameLatin9, tstring &strFaceNameOthers);
@@ -214,7 +220,6 @@ protected:
 	virtual void ReloadThemeOfSkin(bool bSavetoProfile);
 
 	void SetLyrAlign(LPCTSTR szValue);
-	void SetLyrDrawOpt(LPCTSTR szValue);
 	void SetBgColor(LPCTSTR szValue);
 
 	void LoadBgImageSettings();
@@ -264,6 +269,7 @@ protected:
 	TextOverlayBlending		m_skin_tobHilight;
 	TextOverlayBlending		m_skin_tobLowlight;
 	int						m_skin_fontHeight, m_skin_fontWeight;
+	DISPLAY_OPTIONS			m_skin_do;
 
 
 	// TRUE: NEVER load customized settings.

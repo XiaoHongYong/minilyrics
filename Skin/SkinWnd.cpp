@@ -347,6 +347,8 @@ void CSkinWnd::CloseSkin()
 	m_nTimeLatestMouseMsg = 0;
 	m_bMouseInactive = false;
 	m_bHasUIObjHideOnMouseInactive = false;
+
+	m_vUIObjNotifyHandlers.clear();
 }
 
 CUIObject *CSkinWnd::GetUIObjectByClassName(LPCTSTR szClassName)
