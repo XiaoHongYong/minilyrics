@@ -398,7 +398,6 @@ protected:
 	// Background images
 	CScaleImagePainter	m_bgImagePainter;
 	CSFImage		m_imageBg;
-	DWORD			m_dwBgImgBlendPixMode;
 
 	// Window properties
 	bool			m_bIndividualProperties;

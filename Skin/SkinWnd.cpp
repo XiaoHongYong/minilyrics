@@ -324,7 +324,6 @@ void CSkinWnd::CloseSkin()
 	m_strSkinWndName.resize(0);
 
 	m_imageBg.Destroy();
-	m_dwBgImgBlendPixMode = BPM_BLEND;
 
 	m_nWidth = 0;
 	m_nHeight = 0;
@@ -975,7 +974,7 @@ void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucen
 		int				nAlphaOld = 255;
 		CDrawImageFun	func;
 
-		func.m_bpm = m_dwBgImgBlendPixMode;
+		func.m_bpm = BPM_COPY;
 		func.m_pGraph = pGraph;
 		func.m_pImage = &m_imageBg;
 
@@ -1209,9 +1208,6 @@ BOOL CSkinWnd::SetProperty(SXNode *pXmlNode)
 
 		szValue = pXmlNode->GetPropertySafe(_T("VertExtendPos"));
 		Scan2IntX(szValue, m_bgImagePainter.nSrcVertExtendStart, m_bgImagePainter.nSrcVertExtendEnd);
-
-		szValue = pXmlNode->GetPropertySafe(_T("BlendPixMode"));
-		m_dwBgImgBlendPixMode = BlendPixModeFromStr(szValue);
 
 		m_bgImagePainter.nSrcX = m_imageBg.m_x;
 		m_bgImagePainter.nSrcY = m_imageBg.m_y;
