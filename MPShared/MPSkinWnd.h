@@ -7,9 +7,7 @@
 
 #pragma once
 
-#ifdef _MPLAYER
 #include "LyrPlaylistAutoSwitch.h"
-#endif
 
 class ISkinCmdHandler;
 
@@ -62,8 +60,8 @@ public:
 
 	virtual void CloseSkin();
 
-#ifdef _MPLAYER
 	virtual BOOL SetProperty(SXNode *pXmlNode);
+#ifdef _MPLAYER
 	virtual void OnLButtonUp(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonUp(nFlags, point); }
 	// virtual void OnLButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonDown(nFlags, point); }
 	virtual void OnLButtonDblClk(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonDblClk(nFlags, point); }
@@ -71,9 +69,9 @@ public:
 	virtual void OnRButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnRButtonDown(nFlags, point); }
 	virtual void OnMouseMove(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnMouseMove(nFlags, point); }
 	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnMouseWheel(nWheelDistance, nMkeys, pt); }
+#endif // _MPLAYER
 
 	virtual void OnTimer (UINT nIDEvent) { if (m_autoSwitchToLyrShow.OnTimer(nIDEvent)) return; CSkinWnd::OnTimer(nIDEvent); }
-#endif // _MPLAYER
 
 
 public:
@@ -123,9 +121,7 @@ protected:
 
 	bool					m_bTopmost;	
 
-#ifdef _MPLAYER
 	CLyrPlaylistAutoSwitch	m_autoSwitchToLyrShow;
-#endif
 
 };
 

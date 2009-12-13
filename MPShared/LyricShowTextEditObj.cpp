@@ -200,6 +200,8 @@ void CLyricShowTextEditObj::OnCreate()
 
 	_BaseClass::OnCreate();
 
+	OnLyricsChanged();
+
 	g_eventDispather.RegisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_EDITOR_RELOAD_TAG, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_EDITOR_CMD, this);
@@ -616,8 +618,6 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 {
 	if (m_bDiscardLyrChangeEvent)
 		return;
-
-	CLyricShowObj::OnLyricsChanged();
 
 	tstring		str, strTags, strValue;
 	g_LyricData.ToString(str, FT_LYRICS_LRC, false);

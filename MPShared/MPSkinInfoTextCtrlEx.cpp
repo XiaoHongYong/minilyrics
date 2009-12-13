@@ -25,6 +25,7 @@ void CMPSkinInfoTextCtrlEx::OnCreate()
 	g_eventDispather.RegisterHanlder(ET_UI_LONG_ERROR_TEXT, this);
 
 	// Do not proceed these messages.
+	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_CHANGED, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
 	if (m_bUseBgImg)
@@ -37,39 +38,54 @@ void CMPSkinInfoTextCtrlEx::Draw(CRawGraph *pGraph)
 
 	int		nLineHeight = GetLineHeight();
 	int		y = (m_rcObj.top + m_rcObj.bottom) / 2 - m_vText.size() * nLineHeight / 2;
+	int		x;
+
+	if (m_vText.size() > 1)
+		x = m_rcObj.left + m_nXMargin;
+	else
+		x = AUTO_CAL_X;
+
+
+	CRect	rcClip;
+
+	rcClip.SetRect(m_rcObj.left + m_nXMargin, 
+		m_rcObj.top + m_nYMargin,
+		m_rcObj.right - m_nXMargin,
+		m_rcObj.bottom - m_nYMargin);
+
+	pGraph->SetClipBoundBox(rcClip);
 
 	for (int i = 0; i < m_vText.size(); i++)
 	{
-		DrawRow(pGraph, m_vText[i], AUTO_CAL_X, y, LP_CUR_LINE);
+		DrawRow(pGraph, m_vText[i], x, y, LP_CUR_LINE);
 		y += nLineHeight;
 	}
+
+	pGraph->RecoverClipBox();
 }
 
 void CMPSkinInfoTextCtrlEx::OnEvent(const IEvent *pEvent)
 {
-	if (pEvent->eventType == ET_PLAYER_CUR_MEDIA_CHANGED)
+	if (pEvent->eventType == ET_UI_INFO_TEXT)
 	{
-		AppendInfoText(tstring(TOLOCAL(_T("Artist: "))) + g_Player.GetArtist());
-		AppendInfoText(tstring(TOLOCAL(_T("Album: "))) + g_Player.GetAlbum());
-		AppendInfoText(tstring(TOLOCAL(_T("Title: "))) + g_Player.GetTitle());
-		Invalidate();
-	}
-	else if (pEvent->eventType == ET_UI_INFO_TEXT)
-	{
-		m_vText.clear();
+		m_vUnWrapedText.clear();
 		AppendInfoText(pEvent->strValue);
+		WrapInfoText();
 		Invalidate();
 	}
 	else if (pEvent->eventType == ET_UI_LONG_ERROR_TEXT)
 	{
 		V_Str		vStr;
 
-		m_vText.clear();
+		m_vUnWrapedText.clear();
 		StrSplit(pEvent->strValue.c_str(), '\n', vStr);
-
 		for (size_t i = 0; i < vStr.size(); i++)
+		{
+			TrimStr(vStr[i], '\r');
 			AppendInfoText(vStr[i]);
+		}
 
+		WrapInfoText();
 		Invalidate();
 	}
 	else
@@ -89,6 +105,8 @@ void CMPSkinInfoTextCtrlEx::OnPlayTimeChangedUpdate()
 void CMPSkinInfoTextCtrlEx::OnSize(int cx, int cy)
 {
 	CUIObject::OnSize(cx, cy);
+
+	WrapInfoText();
 }
 
 void CMPSkinInfoTextCtrlEx::AppendInfoText(const tstring &str)
@@ -111,7 +129,7 @@ void CMPSkinInfoTextCtrlEx::AppendInfoText(const tstring &str)
 	pRow->szContent = NULL;
 	pRow->vFrags.push_back(pFrag);
 
-	m_vText.push_back(pRow);
+	m_vUnWrapedText.push_back(pRow);
 }
 
 bool WrapDisplayLyrics(VLyrLines &lyrLinesSrc, CMLyrLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax);
@@ -124,5 +142,6 @@ void CMPSkinInfoTextCtrlEx::WrapInfoText()
 
 	pGraphics->SetFont(&m_font);
 
-	WrapDisplayLyrics(m_vUnWrapedText, m_vText, pGraphics, m_rcObj.Width() - m_nXMargin * 2);
+	m_vText.clear();
+	WrapDisplayLyrics(m_vUnWrapedText, m_vText, pGraphics, m_rcObj.Width() - m_nXMargin * 4);
 }

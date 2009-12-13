@@ -643,9 +643,7 @@ CMPSkinWnd::CMPSkinWnd()
 	m_rcReal.right = 400;
 	m_rcReal.bottom = 250;
 
-#ifdef _MPLAYER
 	m_autoSwitchToLyrShow.m_pSkinWnd = this;
-#endif
 }
 
 CMPSkinWnd::~CMPSkinWnd()
@@ -683,9 +681,7 @@ bool CMPSkinWnd::OnCreate()
 
 void CMPSkinWnd::OnEvent(const IEvent *pEvent)
 {
-#ifdef _MPLAYER
 	m_autoSwitchToLyrShow.OnEvent(pEvent);
-#endif
 }
 
 void CMPSkinWnd::OnContexMenu(int xPos, int yPos)
@@ -822,9 +818,7 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 
 bool CMPSkinWnd::OnCustomCommand(int nId)
 {
-#ifdef _MPLAYER
 	m_autoSwitchToLyrShow.OnCustomCmdNotify(nId);
-#endif
 
 	if (CSkinWnd::OnCustomCommand(nId))
 		return true;
@@ -964,9 +958,7 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 
 void CMPSkinWnd::OnSkinLoaded()
 {
-#ifdef _MPLAYER
 	m_autoSwitchToLyrShow.OnCreate(this);
-#endif
 
 	CSkinWnd::OnSkinLoaded();
 
@@ -1198,7 +1190,6 @@ void CMPSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 	CSkinWnd::OnRemoveUIObj(pObj);
 }
 
-#ifdef _MPLAYER
 BOOL CMPSkinWnd::SetProperty(SXNode *pXmlNode)
 {
 	LPCTSTR		szName = pXmlNode->GetPropertySafe(SZ_PN_NAME);
@@ -1221,7 +1212,6 @@ BOOL CMPSkinWnd::SetProperty(SXNode *pXmlNode)
 
 	return CSkinWnd::SetProperty(pXmlNode);
 }
-#endif // #ifdef _MPLAYER
 
 BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
@@ -1256,9 +1246,7 @@ void CMPSkinWnd::CloseSkin()
 		// the skin was opened before, so save latest settings.
 		SaveWndPos();
 
-#ifdef _MPLAYER
 		m_autoSwitchToLyrShow.OnClose();
-#endif
 	}
 
 	CSkinWnd::CloseSkin();

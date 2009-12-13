@@ -16,7 +16,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 
 	{ ERR_REG_EMAIL_EXIST, _T("The email already exists.") },
 	{ ERR_REG_USER_EXIST, _T("The user already exists.") },	// 用户已经存在, 无法申请
-	{ ERR_UPLOAD_EXIST, _T("The content uploaded already exists.") },	// 上传的内容已经存在
+	{ ERR_UPLOAD_EXIST, _T("The uploaded lyrics have existed already.") },	// 上传的内容已经存在
 	{ ERR_USER_NOT_EXIST, _T("User name doesn't exist.") },	// 用户不存在
 	{ ERR_BAD_USERPWD, _T("Wrong user name or password.") },		// 用户名或者密码错误
 	{ ERR_BAD_CLIENT_VER, _T("Invliad client version.") },	// 客户端版本不正确, 无法登陆
@@ -28,10 +28,10 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_CMD_PARAM, _T("Invalid message command parameter.") },
 	{ ERR_UPLOAD_FILETYPE, _T("The file type can not be uploaded.") },	// 上传的文件类型错误
 	{ ERR_BAD_BASE64CONTENT, _T("Incorrect base64 encoded content.") },
-	{ ERR_BAD_FILE_CONTENT, _T("The file content is incorrect or contains forbidden words.") },
-	{ ERR_REG_USER_NAME_SHORT, _T("The username must contains at least 3 characters.") },
+	{ ERR_BAD_FILE_CONTENT, _T("The file format is incorrect or contains spam information.") },
+	{ ERR_REG_USER_NAME_SHORT, _T("The username must contain at least 3 characters.") },
 	{ ERR_NOT_AUTHORIZED, _T("Unauthorized action.") },
-	{ ERR_NOT_LOGIN, _T("Not logined, please login first!") },
+	{ ERR_NOT_LOGIN, _T("Not signed in, please sign in.") },
 	{ ERR_UPDATE_LRC_INFO_SHOULD_SAME, _T("The newly updated and old lyrics must have the same title and artist info.") },
 
 	{ 0, NULL}

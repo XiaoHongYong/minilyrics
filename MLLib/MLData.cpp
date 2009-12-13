@@ -2042,17 +2042,6 @@ void CMLData::AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle)
 
 	vStr.push_back(szSongTitle);
 
-	//
-	// 仅仅在前30次显示提示用户搜索歌词的信息
-	//
-	nCount = g_Profile.GetProfileInt(_T("SearchLyricsPrompt"), 0);
-	if (nCount <= 30)
-	{
-		nCount++;
-		g_Profile.WriteProfileInt(_T("SearchLyricsPrompt"), nCount);
-		vStr.push_back(_T("Please Click \"Search Lyrics\" button to get lyrics"));
-	}
-
 	AddTextInLyrics(vStr);
 }
 

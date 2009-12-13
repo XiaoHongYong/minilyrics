@@ -74,7 +74,7 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 		{
 			pGraph->GetTextExtentPoint32(szPtr, 1, &size);
 			nWidth += size.cx;
-			if (nWidth > nWidthMax && int(szPtr - szLineBeg) >= 15)
+			if (nWidth > nWidthMax && int(szPtr - szLineBeg) >= 10)
 			{
 				if (szLastBreak)
 				{
@@ -1653,10 +1653,10 @@ void CLyricShowObj::OnLyricsChanged()
 		LoadNextBgImage();
 	}
 
-	// !auto resize || !wrap lines
-	if (!m_bEnableAutoResize || !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)
+	if ((m_bEnableAutoResize && g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
 		|| !m_bCanWrapLines)
 	{
+		// auto resize || !wrap lines
 		m_pMLData->CopyMLyrLines(m_lyrLines);
 		ReverseLyricsForRightToLeftLanguage();
 	}

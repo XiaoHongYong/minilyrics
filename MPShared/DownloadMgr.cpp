@@ -294,13 +294,12 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		if (nRet != ERR_OK)
 		{
 			tstring		str;
-			str = TOLOCAL(_T("Download lyrics: connected to server FAILED."));
+			str = TOLOCAL(_T("Failed to download lyrics with error:"));
 			str += _T("\r\n");
-			str += TOLOCAL(_T("Error: "));
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (!pTask->m_bHideTask)
 				g_eventDispather.DispatchLongErrorText(str.c_str());
-			ERRLOG1(_T("%s"), str.c_str());
+			DBGLOG1(_T("%s"), str.c_str());
 			continue;
 		}
 
@@ -311,12 +310,12 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		if (nRet != ERR_OK)
 		{
 			tstring		str;
-			str = _T("Download lyrics: sent data FAILED.\r\n");
-			str += TOLOCAL(_T("Error: "));
+			str = TOLOCAL(_T("Failed to download lyrics with error:"));
+			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (!pTask->m_bHideTask)
 				g_eventDispather.DispatchLongErrorText(str.c_str());
-			ERRLOG1(_T("%s"), str.c_str());
+			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
 			continue;
 		}
@@ -328,12 +327,12 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		if (nRet != ERR_OK)
 		{
 			tstring		str;
-			str = _T("Download lyrics: got response FAILED.\r\n");
-			str += TOLOCAL(_T("Error: "));
+			str = TOLOCAL(_T("Failed to download lyrics with error:"));
+			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (!pTask->m_bHideTask)
 				g_eventDispather.DispatchLongErrorText(str.c_str());
-			ERRLOG1(_T("%s"), str.c_str());
+			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
 
 			if (iRetry < m_nRetryCount)

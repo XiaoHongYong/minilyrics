@@ -397,9 +397,8 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	if (nRet != ERR_OK)
 	{
 		tstring		str;
-		str += TOLOCAL(_T("Search lyrics FAILED."));
-		str += _T("\r\n");
-		str += TOLOCAL(_T("Connection Error: "));
+		str += TOLOCAL(_T("Faied to search lyrics with error:"));
+		str += _T(" ");
 		str += LPCTSTR(ERROR2STR_LOCAL(nRet));
 		g_eventDispather.DispatchLongErrorText(str.c_str());
 
@@ -440,11 +439,9 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	}
 	else
 	{
-		// CStrPrintf	str(_T("Auto search Lyrics: %s - %s FAILED!\r\nSearch Error: %s"), pSearchParam->strArtist.c_str(),
-		//	pSearchParam->strTitle.c_str(), (LPCTSTR)ERROR2STR_LOCAL(nRet));
 		tstring			str;
-		str = TOLOCAL(_T("Search lyrics FAILED."));
-		str += TOLOCAL(_T("Error: "));
+		str += TOLOCAL(_T("Faied to search lyrics with error:"));
+		str += _T(" ");
 		str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 		g_eventDispather.DispatchLongErrorText(str.c_str());
 	}
@@ -524,12 +521,10 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 		{
 			// ....todo 添加上次搜索时间的介绍, 优化离线歌词搜索库和在下歌词搜索缓存
 			tstring			str;
-			CStrPrintf		str2(TOLOCAL(_T("The last search for the lyrics was %d days ago.")), abs((int)dwLatestSearchTime - GetCurDaysFrom2000()));
-			str = TOLOCAL(_T("The last search returned no results."));
-			str += _T("\r\n");
-			str += str2.c_str();
-			str += _T("\r\n");
-			str += TOLOCAL(_T("Auto search canceled this time."));
+			CStrPrintf		str2(TOLOCAL(_T("Searched lyrics %d days ago, no results returned.")), abs((int)dwLatestSearchTime - GetCurDaysFrom2000()));
+			str = str2.c_str();
+			str += _T(" ");
+			str += TOLOCAL(_T("Auto search canceled."));
 			g_eventDispather.DispatchLongErrorText(str.c_str());
 			return FALSE;
 		}
@@ -564,7 +559,8 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	dwLastSearch = GetSecCount();
 
 	tstring			str;
-	str = TOLOCAL(_T("Auto search lyrics: "));
+	str = TOLOCAL(_T("Searching lyrics:"));
+	str += _T(" ");
 	str += g_Player.GetFullTitle();
 	g_eventDispather.DispatchLongErrorText(str.c_str());
 
