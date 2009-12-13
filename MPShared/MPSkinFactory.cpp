@@ -33,6 +33,7 @@
 #include "MediaAlbumArtCtrl.h"
 #include "MPMsgWnd.h"
 #include "SkinFilterCtrl.h"
+#include "MPSkinInfoTextCtrlEx.h"
 
 #ifdef _MPLAYER
 #include "SkinDroplistCtrl.h"
@@ -163,6 +164,8 @@ CUIObject *CMPSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CMPSkinTimeCtrl<CSkinStaticText>;
 	else if (_tcsicmp(szClassName, CMPSkinInfoTextCtrl::ClassName()) == 0)
 		pObj = new CMPSkinInfoTextCtrl;
+	else if (_tcsicmp(szClassName, CMPSkinInfoTextCtrlEx::ClassName()) == 0)
+		pObj = new CMPSkinInfoTextCtrlEx;
 	else if (_tcsicmp(szClassName, CSkinTabHeader::ClassName()) == 0)
 		pObj = new CSkinTabHeader;
 	else if (_tcsicmp(szClassName, CSkinFilterCtrl::ClassName()) == 0)

@@ -683,6 +683,9 @@ bool CMPSkinWnd::OnCreate()
 
 void CMPSkinWnd::OnEvent(const IEvent *pEvent)
 {
+#ifdef _MPLAYER
+	m_autoSwitchToLyrShow.OnEvent(pEvent);
+#endif
 }
 
 void CMPSkinWnd::OnContexMenu(int xPos, int yPos)
@@ -888,7 +891,7 @@ void CMPSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 	CSkinWnd::OnKeyDown(nChar, nFlags);
 
 #ifdef _MPLAYER
-	m_autoSwitchToLyrShow.OnMouseAction();
+	m_autoSwitchToLyrShow.OnUserAction();
 #endif
 }
 
@@ -951,7 +954,7 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 			FormatPlayTime(szPos, nPos);
 			FormatPlayTime(szLength, nMediaLength);
 			g_eventDispather.DispatchInfoText(CStrPrintf(_T("%s %s/%s (%d%%)"), TOLOCAL(_T("Seek")),
-				szPos, szLength, nPercent).c_str());
+				szPos, szLength, nPercent).c_str(), _T("seek"));
 		}
 
 		// seek lyrics too...
@@ -961,6 +964,10 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 
 void CMPSkinWnd::OnSkinLoaded()
 {
+#ifdef _MPLAYER
+	m_autoSwitchToLyrShow.OnCreate(this);
+#endif
+
 	CSkinWnd::OnSkinLoaded();
 
 	// load new skin command handler
@@ -1206,6 +1213,8 @@ BOOL CMPSkinWnd::SetProperty(SXNode *pXmlNode)
 			pXmlNode->GetPropertySafe(_T("CmdSwithToLyrics")));
 		m_autoSwitchToLyrShow.m_nCmdShowPlaylist = m_pSkinFactory->GetIDByName(
 			pXmlNode->GetPropertySafe(_T("CmdSwithToPlaylist")));
+		m_autoSwitchToLyrShow.m_nCmdShowInfoText = m_pSkinFactory->GetIDByName(
+			pXmlNode->GetPropertySafe(_T("CmdSwithToInfoText")));
 
 		return TRUE;
 	}
@@ -1246,11 +1255,12 @@ void CMPSkinWnd::CloseSkin()
 	{
 		// the skin was opened before, so save latest settings.
 		SaveWndPos();
-	}
 
 #ifdef _MPLAYER
-	m_autoSwitchToLyrShow.m_bEnabled = false;
+		m_autoSwitchToLyrShow.OnClose();
 #endif
+	}
+
 	CSkinWnd::CloseSkin();
 
 	LIST_SKINCMDHANDLER::iterator	it, itEnd;

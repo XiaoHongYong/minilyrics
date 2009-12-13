@@ -64,13 +64,13 @@ public:
 
 #ifdef _MPLAYER
 	virtual BOOL SetProperty(SXNode *pXmlNode);
-	virtual void OnLButtonUp(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnMouseAction(); CSkinWnd::OnLButtonUp(nFlags, point); }
-	// virtual void OnLButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnMouseAction(); CSkinWnd::OnLButtonDown(nFlags, point); }
-	virtual void OnLButtonDblClk(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnMouseAction(); CSkinWnd::OnLButtonDblClk(nFlags, point); }
-	virtual void OnRButtonUp(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnMouseAction(); CSkinWnd::OnRButtonUp(nFlags, point); }
-	virtual void OnRButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnMouseAction(); CSkinWnd::OnRButtonDown(nFlags, point); }
-	virtual void OnMouseMove(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnMouseAction(); CSkinWnd::OnMouseMove(nFlags, point); }
-	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt) { m_autoSwitchToLyrShow.OnMouseAction(); CSkinWnd::OnMouseWheel(nWheelDistance, nMkeys, pt); }
+	virtual void OnLButtonUp(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonUp(nFlags, point); }
+	// virtual void OnLButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonDown(nFlags, point); }
+	virtual void OnLButtonDblClk(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonDblClk(nFlags, point); }
+	virtual void OnRButtonUp(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnRButtonUp(nFlags, point); }
+	virtual void OnRButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnRButtonDown(nFlags, point); }
+	virtual void OnMouseMove(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnMouseMove(nFlags, point); }
+	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnMouseWheel(nWheelDistance, nMkeys, pt); }
 
 	virtual void OnTimer (UINT nIDEvent) { if (m_autoSwitchToLyrShow.OnTimer(nIDEvent)) return; CSkinWnd::OnTimer(nIDEvent); }
 #endif // _MPLAYER

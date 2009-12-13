@@ -580,7 +580,7 @@ int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 {
 	assert(szId);
 	assert(m_IdMap);
-	if (!m_IdMap)
+	if (!m_IdMap || IsEmptyString(szId))
 		return SKIN_UIOBJ_ID_UNDEFINE;
 
 	strToolTip.resize(0);
