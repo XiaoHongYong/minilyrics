@@ -57,6 +57,12 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	if (m_pMLData == NULL)
 		return;
 
+	if (!m_pMLData->HasLyricsOpened())
+	{
+		FastDrawMediaInfo(pGraphics, prcUpdate);
+		return;
+	}
+
 	pGraphics->SetFont(&m_font);
 
 	CDispOptRecover		dispOptRecover(this);
@@ -205,6 +211,46 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 // 		SaveBmpFileFromRawImageData(pGraphics->GetRawBuff(), strFile.c_str());
 // 		g_bSave = false;
 // 	}
+}
+
+void CLyricShowMultiRowObj::FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdate)
+{
+	if (prcUpdate)
+	{
+		prcUpdate->left = prcUpdate->top = prcUpdate->right = prcUpdate->bottom = 0;
+		return;
+	}
+
+	pGraph->SetFont(&m_font);
+
+	int		nLineHeight = GetLineHeight();
+	int		y = (m_rcObj.top + m_rcObj.bottom) / 2 - m_lyrLines.size() * nLineHeight / 2;
+	int		x;
+
+	if (m_lyrLines.size() > 1)
+		x = m_rcObj.left + m_nXMargin;
+	else
+		x = AUTO_CAL_X;
+
+	if (y < m_rcObj.top + m_nYMargin)
+		y = m_rcObj.top + m_nYMargin;
+
+	CRect	rcClip;
+
+	rcClip.SetRect(m_rcObj.left + m_nXMargin, 
+		m_rcObj.top + m_nYMargin,
+		m_rcObj.right - m_nXMargin,
+		m_rcObj.bottom - m_nYMargin);
+
+	pGraph->SetClipBoundBox(rcClip);
+
+	for (int i = 0; i < m_lyrLines.size(); i++)
+	{
+		DrawRow(pGraph, m_lyrLines[i], x, y, LP_CUR_LINE);
+		y += nLineHeight;
+	}
+
+	pGraph->RecoverClipBox();
 }
 
 void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine)

@@ -45,6 +45,8 @@ void CMPSkinInfoTextCtrlEx::Draw(CRawGraph *pGraph)
 	else
 		x = AUTO_CAL_X;
 
+	if (y < m_rcObj.top + m_nYMargin)
+		y = m_rcObj.top + m_nYMargin;
 
 	CRect	rcClip;
 
