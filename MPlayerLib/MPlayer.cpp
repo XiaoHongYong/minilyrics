@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "MPlayer.h"
 #include "MILocalFile.h"
+#include "../MLLib/HelperFun.h"
 // #include "MDWave.h"
 
 #ifdef _WIN32
@@ -1252,7 +1253,28 @@ MLRESULT CMPlayer::LoadMediaTagInfo(IMedia *pMedia, bool bForceReload)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	return pDecode->GetMediaInfo(this, pInput, pMedia);
+	nRet = pDecode->GetMediaInfo(this, pInput, pMedia);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	CXStr	artist, title;
+
+	pMedia->GetArtist(&artist);
+	pMedia->GetArtist(&title);
+
+	// Get artist, title from song file name.
+	if (artist.size() == 0 && title.size() == 0)
+	{
+		TCHAR		szArtist[MAX_PATH];
+		TCHAR		szTitle[MAX_PATH];
+		if (AnalysisLyricsFileNameEx(szArtist, CountOf(szArtist), szTitle, CountOf(szTitle), FileGetName(str.c_str())))
+		{
+			pMedia->SetAttribute(MA_ARTIST, szArtist);
+			pMedia->SetAttribute(MA_TITLE, szTitle);
+		}
+	}
+
+	return ERR_OK;
 }
 
 // Vis:

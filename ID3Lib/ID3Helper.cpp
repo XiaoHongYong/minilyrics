@@ -49,6 +49,8 @@ void AppendUcs2Str(CCharBuffer &buff, ID3v2EncType encType, LPCWSTR str, int nLe
 // return the size of bytes used from buffer data
 int CopyAnsiStr(string &str, const char *data, int nLen)
 {
+	str.resize(0);
+
 	int		nStrLen = 0;
 	const char *p = data;
 	while (nStrLen < nLen && *p)
@@ -60,6 +62,8 @@ int CopyAnsiStr(string &str, const char *data, int nLen)
 // return the size of bytes used from buffer data
 int CopyAnsiStr(stringex &str, const char *data, int nLen)
 {
+	str.resize(0);
+
 	int		nStrLen = 0;
 	const char *p = data;
 	while (nStrLen < nLen && *p)
