@@ -34,6 +34,8 @@ public:
 	void SetStatus(int nStatus);
 
 protected:
+	void FadeInDrawBt(CRawGraph *pGraph, CSFImage *pImage, int nAlpha);
+
 	void SetMaxStat(int nMaxStat);
 	void Destroy();
 
@@ -57,8 +59,13 @@ protected:
 	bool			m_bLBtDown;
 
 	// Will the cmd be triggered continuous?
+	int				m_nTimerIdContinuous;
 	bool			m_bContinuousCmd;
 	bool			m_bContinuousBegin;
+
+	bool			m_bFadein;
+	DWORD			m_dwBeginFadeinTime;
+	CSFImage		*m_pLastImage;
 
 	BlendPixMode	m_bpm;
 

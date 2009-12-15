@@ -6,6 +6,8 @@
 #include "MLSkin.h"
 #include "SkinNStatusButton.h"
 
+#define FADE_BUTTON_TIME_OUT		300
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -25,6 +27,11 @@ CSkinNStatusButton::CSkinNStatusButton()
 	m_bContinuousBegin = false;
 	m_bContinuousCmd = false;
 	m_bpm = BPM_BLEND;
+	m_nTimerIdContinuous = 0;
+
+	m_bFadein = true;
+	m_dwBeginFadeinTime = 0;
+	m_pLastImage = NULL;
 }
 
 CSkinNStatusButton::~CSkinNStatusButton()
@@ -52,19 +59,37 @@ bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 		m_pSkin->SetCaptureMouse(this);
 	}
 
-	Invalidate();
+	if (m_bFadein)
+	{
+		m_pSkin->RegisterTimerObject(this, 50);
+		m_dwBeginFadeinTime = GetTickCount();
 
-	if (m_bContinuousCmd)
+		m_pLastImage = NULL;
+// 		if (m_bEnableHover)
+// 			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgHover);
+		if (!m_pLastImage || !m_pLastImage->IsValid())
+			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
+	}
+	else if (m_bContinuousCmd)
 	{
 		m_bContinuousBegin = true;
-		m_pSkin->RegisterTimerObject(this, 500);
+		m_nTimerIdContinuous = m_pSkin->RegisterTimerObject(this, 500);
 	}
+
+	Invalidate();
 
 	return true;
 }
 
 void CSkinNStatusButton::OnTimer(int nId)
 {
+	if (m_dwBeginFadeinTime != 0)
+	{
+		// In fade in, just redraw
+		Invalidate();
+		return;
+	}
+
 	if (IsKeyPressed(VK_LBUTTON))
 	{
 		CPoint	pt;
@@ -87,12 +112,15 @@ void CSkinNStatusButton::OnTimer(int nId)
 		if (m_bContinuousBegin)
 		{
 			m_pSkin->UnregisterTimerObject(this);
-			m_pSkin->RegisterTimerObject(this, 100);
+			m_nTimerIdContinuous = m_pSkin->RegisterTimerObject(this, 100);
 			m_bContinuousBegin = false;
 		}
 	}
 	else
+	{
 		m_pSkin->UnregisterTimerObject(this);
+		m_nTimerIdContinuous = 0;
+	}
 }
 
 bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
@@ -108,6 +136,23 @@ bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 
 	m_bLBtDown = FALSE;
 
+	if (m_bContinuousCmd)
+	{
+		m_pSkin->UnregisterTimerObject(this);
+		m_nTimerIdContinuous = 0;
+	}
+
+	if (m_bFadein)
+	{
+		m_pSkin->RegisterTimerObject(this, 50);
+		m_dwBeginFadeinTime = GetTickCount();
+
+		m_pLastImage = NULL;
+		m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgSel);
+		if (!m_pLastImage->IsValid())
+			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
+	}
+
 	// ×ª»»°´Å¥µÄ×´Ì¬
 	if (m_nCurStatus >= 0 && m_nCurStatus < (int)m_vBtStatImg.size() - 1)
 		m_nCurStatus++;
@@ -118,9 +163,6 @@ bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 		m_bEnableHover = m_vBtStatImg[m_nCurStatus]->imgHover.IsValid();
 
 	Invalidate();
-
-	if (m_bContinuousCmd)
-		m_pSkin->UnregisterTimerObject(this);
 
 	if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
 		m_pSkin->PostCustomCommandMsg(m_nId);
@@ -220,11 +262,55 @@ void CSkinNStatusButton::Draw(CRawGraph *pGraph)
 	if (!pImage)
 		return;
 
+
+	if (m_dwBeginFadeinTime != 0)
+	{
+		DWORD		dwTimeCur = GetTickCount();
+
+		if (dwTimeCur - m_dwBeginFadeinTime >= FADE_BUTTON_TIME_OUT)
+		{
+			m_dwBeginFadeinTime = 0;
+			m_pSkin->UnregisterTimerObject(this);
+		}
+		else
+		{
+			int			nAlpha = (dwTimeCur - m_dwBeginFadeinTime) * 255 / FADE_BUTTON_TIME_OUT;
+			FadeInDrawBt(pGraph, pImage, nAlpha);
+			return;
+		}
+	}
+
 	if (m_imgMask.IsValid())
 		pImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
 	else
 		pImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
 }
+
+void CSkinNStatusButton::FadeInDrawBt(CRawGraph *pGraph, CSFImage *pImage, int nAlpha)
+{
+	DBGLOG1(L"FadeInDrawBt: %d", nAlpha);
+
+	ASSERT(m_pLastImage && m_bFadein);
+
+	int		nAlphaOld = pGraph->GetOpacityPainting();
+
+	pGraph->SetOpacityPainting((255 - nAlpha) * nAlphaOld / 255);
+
+	if (m_imgMask.IsValid())
+		m_pLastImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+	else
+		m_pLastImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
+
+	pGraph->SetOpacityPainting(nAlpha * nAlphaOld / 255);
+
+	if (m_imgMask.IsValid())
+		pImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+	else
+		pImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
+
+	pGraph->SetOpacityPainting(nAlphaOld);
+}
+
 
 BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
@@ -306,6 +392,10 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	else if (IsPropertyName(szProperty, _T("BlendPixMode")))
 	{
 		m_bpm = BlendPixModeFromStr(szValue);
+	}
+	else if (IsPropertyName(szProperty, _T("Fadein")))
+	{
+		m_bFadein = IsTRUE(szValue);
 	}
 	else
 		return FALSE;
