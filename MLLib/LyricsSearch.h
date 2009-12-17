@@ -91,6 +91,7 @@ public:
 	LrcSearchResult *SearchByUrl(LPCTSTR szUrl);
 
 	LrcSearchResult *GetByOrder(int n);
+	void DeleteByOrder(int n);
 
 };
 

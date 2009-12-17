@@ -1392,6 +1392,37 @@ MLRESULT CMPlayer::DoNext(bool bLoop)
 	return ERR_OK;
 }
 
+static bool IsBasicMediaInfoSame(IMedia *pMedia1, IMedia *pMedia2)
+{
+	static MediaAttribute		vStrAttrCheck[] = { MA_ARTIST, MA_ALBUM, MA_TITLE, MA_GENRE, MA_COMMENT };
+	static MediaAttribute		vIntAttrCheck[] = { MA_TRACK_NUMB, MA_YEAR, MA_BITRATE, MA_DURATION, MA_FILESIZE };
+
+	int i;
+	CXStr		str1, str2;
+
+	for (i = 0; i < CountOf(vStrAttrCheck); i++)
+	{
+		str1.clear();
+		str2.clear();
+		pMedia1->GetAttribute(vStrAttrCheck[i], &str1);
+		pMedia2->GetAttribute(vStrAttrCheck[i], &str2);
+		if (_tcscmp(str1.c_str(), str2.c_str()) != 0)
+			return false;
+	}
+
+	int		n1, n2;
+	for (i = 0; i < CountOf(vIntAttrCheck); i++)
+	{
+		n1 = n2 = 0;
+		pMedia1->GetAttribute(vIntAttrCheck[i], &n1);
+		pMedia2->GetAttribute(vIntAttrCheck[i], &n2);
+		if (n1 != n2)
+			return false;
+	}
+
+	return true;
+}
+
 void CMPlayer::CurrentMediaChanged()
 {
 	list<IMPEvent *>::iterator	it, itEnd;
@@ -1426,6 +1457,18 @@ void CMPlayer::CurrentMediaChanged()
 		if (nRet == ERR_OK)
 		{
 			nRet = LoadMediaTagInfo(m_pCurrentMedia, false);
+			if (nRet == ERR_OK)
+			{
+				// Update media info to media library, if changed.
+				CMPAutoPtr<IMedia>	mediaOld;
+				CXStr		url;
+				m_pCurrentMedia->GetSourceUrl(&url);
+				if (m_pMediaLib->GetMediaByUrl(url.c_str(), &mediaOld) == ERR_OK
+					&& !IsBasicMediaInfoSame(mediaOld, m_pCurrentMedia))
+				{
+					m_pMediaLib->UpdateMediaInfo(m_pCurrentMedia);
+				}
+			}
 		}
 	}
 

@@ -844,3 +844,13 @@ LrcSearchResult *V_LRCSEARCHRESULT::GetByOrder(int n)
 	return NULL;
 }
 
+void V_LRCSEARCHRESULT::DeleteByOrder(int n)
+{
+	for (iterator it = begin(); it != end(); it++, n--)
+	{
+		if (n == 0)
+		{
+			erase(it);
+		}
+	}
+}
