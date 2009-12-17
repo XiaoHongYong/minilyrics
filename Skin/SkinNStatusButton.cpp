@@ -288,8 +288,6 @@ void CSkinNStatusButton::Draw(CRawGraph *pGraph)
 
 void CSkinNStatusButton::FadeInDrawBt(CRawGraph *pGraph, CSFImage *pImage, int nAlpha)
 {
-	DBGLOG1(L"FadeInDrawBt: %d", nAlpha);
-
 	ASSERT(m_pLastImage && m_bFadein);
 
 	int		nAlphaOld = pGraph->GetOpacityPainting();

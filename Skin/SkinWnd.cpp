@@ -28,7 +28,7 @@ const TCHAR SZ_WINAMP2_DEFSKIN_DIR[] = _T("");
 #define TIMER_SPAN_MOUSE_INACTIVE	(3 * 1000)
 
 #define TIMER_SPAN_DYNAMIC_TRANS	30
-#define COUNT_DYNAMIC_TRANS			(1500 / 100)
+#define TIME_OUT_TRANS_FADEIN		1500
 
 BOOL IsWndOutOfScreen(const CRect &rc)
 {
@@ -201,13 +201,13 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_nTranslucencyAlphaOnActive = -1;
 	m_nTranslucencyAlphaOnHover = -1;
 	m_nTranslucencyAlpha = -1;
-	m_nTranslucencyAlphaDynamic = 255.0f;
-	m_nTranslucencyAlphaDynamicStep = 1.0f;
+	m_nTranslucencyAlphaDynamic = 255;
+	m_dwTransFadeinBegTime = 0;
+	m_nTransAlphaBeg = 0;
 	m_bClickThrough = false;
 	m_bEnableTransparentFeature = true;
 
 	m_bOnMouseHover = false;
-	m_dwLastSetHoverAlphaTime = 0;
 	m_translucencyStatus = TS_NORMAL;
 }
 
@@ -277,8 +277,9 @@ void CSkinWnd::CloseSkin()
 	m_nTranslucencyAlphaOnActive = -1;
 	m_nTranslucencyAlphaOnHover = -1;
 	m_nTranslucencyAlpha = -1;
-	m_nTranslucencyAlphaDynamic = 255.0f;
-	m_nTranslucencyAlphaDynamicStep = 1.0f;
+	m_nTranslucencyAlphaDynamic = 255;
+	m_dwTransFadeinBegTime = 0;
+	m_nTransAlphaBeg = 0;
 	m_bClickThrough = false;
 	m_bEnableTransparentFeature = true;
 
@@ -410,19 +411,14 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 	// Change translucency on hover?
 	//
 	if (m_bTranslucencyLayered && m_bPaintBg
-		&& m_nTranslucencyAlpha != m_nTranslucencyAlphaOnHover
 		&& m_translucencyStatus == TS_NORMAL
 		&& !m_bActived)
 	{
 		m_translucencyStatus = TS_ON_HOVER;
 
 		m_bOnMouseHover = Tobool(m_rcBoundBox.PtInRect(point));
-		m_dwLastSetHoverAlphaTime = 0;
 
-		m_nTranslucencyAlphaDynamicStep = ((float)m_nTranslucencyAlphaOnHover - m_nTranslucencyAlpha) / COUNT_DYNAMIC_TRANS;
-
-		KillTimer(TIMER_ID_DYNAMIC_TRANS);
-		SetTimer(TIMER_ID_DYNAMIC_TRANS, TIMER_SPAN_DYNAMIC_TRANS);
+		StartTranslucencyFade();
 	}
 #endif	// _WIN32_DESKTOP
 }
@@ -727,9 +723,9 @@ bool CSkinWnd::UpdateSkinProperty()
 	if (m_bTranslucencyLayered)
 	{
 		if (m_bActived)
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlphaOnActive;
+			m_nTranslucencyAlphaDynamic = m_nTranslucencyAlphaOnActive;
 		else
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlpha;
+			m_nTranslucencyAlphaDynamic = m_nTranslucencyAlpha;
 		RecreateBrush();
 	}
 
@@ -1376,6 +1372,8 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			m_nTranslucencyAlphaOnActive = m_nTranslucencyAlpha;
 		if (m_nTranslucencyAlphaOnHover == -1)
 			m_nTranslucencyAlphaOnHover = m_nTranslucencyAlpha;
+		if (m_bSkinOpened)
+			StartTranslucencyFade();
 		RecreateBrush();
 	}
 	else if (IsPropertyName(szProperty, _T("TranslucencyAlphaOnActive")))
@@ -1383,6 +1381,8 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_nTranslucencyAlphaOnActive = _ttoi(szValue);
 		if (m_nTranslucencyAlpha == -1)
 			m_nTranslucencyAlpha = m_nTranslucencyAlphaOnActive;
+		if (m_bSkinOpened)
+			StartTranslucencyFade();
 		RecreateBrush();
 	}
 	else if (IsPropertyName(szProperty, _T("TranslucencyAlphaOnHover")))
@@ -1665,24 +1665,12 @@ void CSkinWnd::OnActivate(bool bActived)
 	m_bActived = bActived;
 
 #ifdef _WIN32_DESKTOP
-	if (m_bTranslucencyLayered && m_bPaintBg 
-		&& m_nTranslucencyAlpha != m_nTranslucencyAlphaOnActive)
-	{
-		if (m_translucencyStatus == TS_ON_HOVER)
-		{
-			if (bActived)
-				m_nTranslucencyAlphaDynamicStep = ((float)m_nTranslucencyAlphaOnActive - m_nTranslucencyAlphaDynamic) / COUNT_DYNAMIC_TRANS;
-			else
-				m_nTranslucencyAlphaDynamicStep = ((float)m_nTranslucencyAlphaOnHover - m_nTranslucencyAlphaDynamic) / COUNT_DYNAMIC_TRANS;
-		}
-		else
-			m_nTranslucencyAlphaDynamicStep = ((float)m_nTranslucencyAlphaOnActive - m_nTranslucencyAlpha) / COUNT_DYNAMIC_TRANS;
+	StartTranslucencyFade();
 
+	if (bActived)
 		m_translucencyStatus = TS_ON_ACTIVE;
-
-		KillTimer(TIMER_ID_DYNAMIC_TRANS);
-		SetTimer(TIMER_ID_DYNAMIC_TRANS, TIMER_SPAN_DYNAMIC_TRANS);
-	}
+	else
+		m_translucencyStatus = TS_NORMAL;
 
 	if (m_bClickThrough)
 		SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
@@ -2065,9 +2053,22 @@ BOOL CSkinWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
 	return bRet;
 }
 
+void CSkinWnd::StartTranslucencyFade()
+{
+	if (m_bTranslucencyLayered && m_bPaintBg)
+	{
+		m_dwTransFadeinBegTime = GetTickCount();
+		m_nTransAlphaBeg = m_nTranslucencyAlphaDynamic;
+
+		KillTimer(TIMER_ID_DYNAMIC_TRANS);
+		SetTimer(TIMER_ID_DYNAMIC_TRANS, TIMER_SPAN_DYNAMIC_TRANS);
+	}
+}
 
 void CSkinWnd::OnTimerDynamicAlphaChange()
 {
+	int			nTargetAlpha;
+
 	if (m_translucencyStatus == TS_ON_HOVER)
 	{
 		//
@@ -2076,77 +2077,44 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 
 		POINT		point;
 		bool		bAlphaAdjusted = false;
+		bool		bOnMouseHover;
 
 		GetCursorPos(&point);
-		m_bOnMouseHover = Tobool(m_rcBoundBox.PtInRect(point));
-		if (m_bOnMouseHover && m_hWnd != ::WindowFromPoint(point))
-			m_bOnMouseHover = false;
+		bOnMouseHover = Tobool(m_rcBoundBox.PtInRect(point));
+		if (m_bOnMouseHover != bOnMouseHover)
+		{
+			m_bOnMouseHover = bOnMouseHover;
+			m_dwTransFadeinBegTime = GetTickCount();
+			m_nTransAlphaBeg = m_nTranslucencyAlphaDynamic;
+		}
 
-		// Calculate new dynamic alpha
 		if (m_bOnMouseHover)
-			m_nTranslucencyAlphaDynamic += m_nTranslucencyAlphaDynamicStep;
+			nTargetAlpha = m_nTranslucencyAlphaOnHover;
 		else
-			m_nTranslucencyAlphaDynamic -= m_nTranslucencyAlphaDynamicStep;
-
-		// Does it reach to the boundary?
-		if (m_nTranslucencyAlphaDynamic > m_nTranslucencyAlphaOnHover)
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlphaOnHover;
-		else if (m_nTranslucencyAlphaDynamic < m_nTranslucencyAlpha)
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlpha;
-		else
-		{
-			m_dwLastSetHoverAlphaTime = 0;
-			bAlphaAdjusted = true;
-		}
-
-		if (!bAlphaAdjusted)
-		{
-			if (m_dwLastSetHoverAlphaTime == 0)
-				m_dwLastSetHoverAlphaTime = GetTickCount();
-			else if (GetTickCount() - m_dwLastSetHoverAlphaTime > 1000 * 2)
-			{
-				// Kill this timer after a period of time
-				KillTimer(TIMER_ID_DYNAMIC_TRANS);
-				m_translucencyStatus = TS_NORMAL;
-			}
-		}
-		else
-		{
-			RecreateBrush();
-			InvalidateRect();
-		}
-		return;
+			nTargetAlpha = m_nTranslucencyAlpha;
 	}
-	else if (m_translucencyStatus == TS_ON_ACTIVE)
+	else if (IsWndActive())
+		nTargetAlpha = m_nTranslucencyAlphaOnActive;
+	else
+		nTargetAlpha = m_nTranslucencyAlpha;
+
+	DWORD		dwTimeCur = GetTickCount();
+	if (dwTimeCur - m_dwTransFadeinBegTime > TIME_OUT_TRANS_FADEIN)
 	{
-		//
-		// Adjust translucency alpha on activate/deactivate.
-		//
-		bool			bKillTimer = true;
-
-		if (m_bActived)
-			m_nTranslucencyAlphaDynamic += m_nTranslucencyAlphaDynamicStep;
-		else
-			m_nTranslucencyAlphaDynamic -= m_nTranslucencyAlphaDynamicStep;
-
-		if (m_nTranslucencyAlphaDynamic > m_nTranslucencyAlphaOnActive)
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlphaOnActive;
-		else if (m_nTranslucencyAlphaDynamic < m_nTranslucencyAlpha)
-			m_nTranslucencyAlphaDynamic = (float)m_nTranslucencyAlpha;
-		else
-			bKillTimer = false;
-
-		if (bKillTimer)
-		{
-			KillTimer(TIMER_ID_DYNAMIC_TRANS);
+		KillTimer(TIMER_ID_DYNAMIC_TRANS);
+		if (m_translucencyStatus == TS_ON_HOVER)
 			m_translucencyStatus = TS_NORMAL;
-		}
-
-		RecreateBrush();
-		InvalidateRect();
+		m_nTranslucencyAlphaDynamic = nTargetAlpha;
 	}
 	else
-		ASSERT(0 && "Should not go here.");
+	{
+		float		fRadio = ((float)(dwTimeCur - m_dwTransFadeinBegTime)) / TIME_OUT_TRANS_FADEIN;
+		m_nTranslucencyAlphaDynamic = m_nTransAlphaBeg + int((nTargetAlpha - m_nTransAlphaBeg) * fRadio);
+	}
+	ASSERT(m_nTranslucencyAlphaDynamic >= 0 && m_nTranslucencyAlphaDynamic <= 255);
+
+	RecreateBrush();
+	InvalidateRect();
 }
 
 #else

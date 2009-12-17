@@ -235,6 +235,8 @@ public:
 
 	BOOL UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph);
 
+	void StartTranslucencyFade();
+
 	void OnTimerDynamicAlphaChange();
 #endif
 
@@ -247,14 +249,14 @@ public:
 
 	bool				m_bTranslucencyLayered;				// Is following alpha setting enabled?
 	int					m_nTranslucencyAlpha;				// Alpha on inactivate
-	float				m_nTranslucencyAlphaDynamic;		// Current alpha value
-	float				m_nTranslucencyAlphaDynamicStep;
+	int					m_nTranslucencyAlphaDynamic;		// Current alpha value
+	DWORD				m_dwTransFadeinBegTime;				// Begin time of fade in/out translucency
+	int					m_nTransAlphaBeg;					// The alpha value of begin fade in/out.
 	int					m_nTranslucencyAlphaOnActive;		// Alpha on activate
 	int					m_nTranslucencyAlphaOnHover;		// Alpha on mouse hover
 
 	TranslucencyStatus	m_translucencyStatus;
 	bool				m_bOnMouseHover;
-	DWORD				m_dwLastSetHoverAlphaTime;			// Used to check when to stop hover alpha timer
 
 	int					m_nAlpha;
 	bool				m_bClickThrough;
