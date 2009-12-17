@@ -315,7 +315,9 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			SHDeleteFile(pSel->strUrl.c_str(), this);
 			if (!IsFileExist(pSel->strUrl.c_str()))
 			{
-				m_resultList.DeleteItem(m_resultList.GetNextSelectedItem(-1));
+				int		nSel = m_resultList.GetNextSelectedItem(-1);
+				m_vResultsLocal.DeleteByOrder(nSel);
+				m_resultList.DeleteItem(nSel);
 			}
 		}
 		break;

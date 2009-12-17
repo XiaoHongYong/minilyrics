@@ -519,6 +519,14 @@ public:
 		else if (pEvent->eventType == ET_PLAYER_CUR_MEDIA_CHANGED)
 		{
 			m_plistCtrl->SetPlayingNow(g_Player.GetCurrentMediaIndex());
+			CMPAutoPtr<IMedia>	media;
+			tstring				strTitle;
+			if (g_Player.m_spPlayer->GetCurrentMedia(&media) == ERR_OK)
+			{
+				g_Player.FormatMediaTitle(media, strTitle);
+				m_plistCtrl->SetItemText(g_Player.GetCurrentMediaIndex(), 0, strTitle.c_str());
+			}
+
 			m_plistCtrl->Invalidate();
 		}
 	}
