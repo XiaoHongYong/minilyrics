@@ -17,7 +17,7 @@
 struct GetHeadInfoParam
 {
 	IMediaInput		*m_pInput;
-	MPEG_AUDIO_INFO	m_audioInfo;
+	CMDLibmad		*m_pMDLibMad;
 	CCharBuffer		m_bufInput;
 };
 
@@ -81,8 +81,19 @@ static enum mad_flow decode_input_read(void *data, struct mad_stream *stream)
 	{
 		// do seek.
 		uint32 lSeekTo;
-		double	msPerFrame = (double)pmdMad->m_audioInfo.nSamplesPerFrame / pmdMad->m_audioInfo.header.samplerate * 1000;
-		lSeekTo = (int)((double)pmdMad->m_nSeekPos / msPerFrame * pmdMad->m_audioInfo.nFrameSize) + pmdMad->m_audioInfo.nFirstFramePos;
+
+		if (pmdMad->m_pnToc)
+		{
+			if (pmdMad->m_bXingTable)
+				lSeekTo = pmdMad->SeekXingTable(pmdMad->m_nSeekPos);
+			else
+				lSeekTo = pmdMad->SeekVbriTable(pmdMad->m_nSeekPos);
+		}
+		else
+		{
+			double	msPerFrame = (double)pmdMad->m_audioInfo.nSamplesPerFrame / pmdMad->m_audioInfo.header.samplerate * 1000;
+			lSeekTo = (int)((double)pmdMad->m_nSeekPos / msPerFrame * pmdMad->m_audioInfo.nFrameSize) + pmdMad->m_audioInfo.nFirstFramePos;
+		}
 		ASSERT(lSeekTo <= pmdMad->m_audioInfo.nMediaFileSize);
 		m_pInput->Seek(lSeekTo, SEEK_SET);
 		m_bufInput.clear();
@@ -218,6 +229,11 @@ CMDLibmad::CMDLibmad()
 	m_bSeekFlag = false;
 	m_state = PS_STOPED;
 	m_bufInput.reserve(INPUT_BUFF_SIZE);
+
+	m_pnToc = NULL;
+	m_nTableSize = 0;
+	m_bXingTable = false;
+	m_nFileSizeOrg = 0;
 }
 
 CMDLibmad::~CMDLibmad()
@@ -229,6 +245,9 @@ CMDLibmad::~CMDLibmad()
 		m_pPlayer->Release();
 		m_pPlayer = NULL;
 	}
+
+	if (m_pnToc)
+		delete[] m_pnToc;
 }
 
 OBJ_REFERENCE_IMP(CMDLibmad)
@@ -368,10 +387,6 @@ MLRESULT CMDLibmad::Play(IMPlayer *pPlayer, IMediaInput *pInput)
 
 	m_pInput = pInput;
 	m_pInput->AddRef();
-
-	nRet = GetHeadInfo(m_pInput);
-	if (nRet != ERR_OK)
-		goto R_FAILED;
 
 	nRet = m_pPlayer->QueryInterface(MPIT_OUTPUT, (LPVOID *)&m_pOutput);
 	if (nRet != ERR_OK)
@@ -564,23 +579,62 @@ T* TNew(T * pointer)
 #define FRAMES_AND_BYTES (FRAMES_FLAG | BYTES_FLAG)
 #define MAX_XING_HEADER_LEN			(32 + 4 * 6 + 100)
 
-static int ExtractI4(unsigned char const*buf)
+class CBigEndianBuffReader
 {
-    int x;
-    // big endian extract
+public:
+	class COutOfRangeException {
+	public:
+		COutOfRangeException() {}
+	};
 
-    x = buf[0];
-    x <<= 8;
-    x |= buf[1];
-    x <<= 8;
-    x |= buf[2];
-    x <<= 8;
-    x |= buf[3];
+	CBigEndianBuffReader(const byte *buf, int nLen) : m_buf(buf)
+	{
+		m_bufEndPos = m_buf + nLen;
+	}
 
-    return x;
-}
+	int ExtractI1()
+	{
+		if (m_buf + 1 > m_bufEndPos)
+			throw COutOfRangeException();
 
-MLRESULT GetXingOrVbriHeaderInfo(unsigned char const *frameBuff, struct mad_header *header, int &nFrameCount)
+		m_buf++;
+
+		return m_buf[0];
+	}
+
+	int ExtractIx(int nBytes)
+	{
+		if (m_buf + nBytes > m_bufEndPos)
+			throw COutOfRangeException();
+
+		int x = m_buf[0];
+		// big endian extract
+
+		for (int i = 1; i < nBytes; i++)
+		{
+			x <<= 8;
+			x |= m_buf[i];
+		}
+
+		m_buf += nBytes;
+
+		return x;
+	}
+
+	void Advance(int nBytes)
+	{
+		m_buf += nBytes;
+		if (m_buf > m_bufEndPos)
+			throw COutOfRangeException();
+	}
+
+protected:
+	const byte		*m_buf, *m_bufEndPos;
+
+};
+
+
+bool CMDLibmad::GetVbrInfo(mad_header *header, unsigned char const *frameBuff, int nBuffLen)
 {
 	int					nOffset;
 	unsigned char const *buff;
@@ -589,42 +643,192 @@ MLRESULT GetXingOrVbriHeaderInfo(unsigned char const *frameBuff, struct mad_head
 		nOffset = header->mode == MAD_MODE_SINGLE_CHANNEL ? 9 : 17;
 	else
 		nOffset = header->mode == MAD_MODE_SINGLE_CHANNEL ? 17 : 32;
+	nOffset += 4;
 
-	nFrameCount = -1;
-	buff = frameBuff + nOffset + 4;
-	if (buff[0] == 'X' && buff[1] == 'i' && buff[2] == 'n' && buff[3] == 'g')
+	m_audioInfo.nFrameCount = -1;
+	buff = frameBuff + nOffset;
+	if (m_pnToc)
 	{
-		// xing header
+		delete[] m_pnToc;
+		m_pnToc = NULL;
+	}
+
+	if ((buff[0] == 'X' && buff[1] == 'i' && buff[2] == 'n' && buff[3] == 'g')
+		|| (buff[0] == 'I' && buff[1] == 'n' && buff[2] == 'f' && buff[3] == 'o'))
+	{
+		/* XING VBR-Header
+
+		size	description
+		4		'Xing' or 'Info'
+		4		flags (indicates which fields are used)
+		4		frames (optional)
+		4		bytes (optional)
+		100	toc (optional)
+		4		a VBR quality indicator: 0=best 100=worst (optional)
+
+		*/
 		int		nHeadFlags;
+		DWORD	dwQuality;
+		CBigEndianBuffReader	bufReader(buff + 4, nBuffLen - nOffset - 4);
 
-		buff += 4;
+		m_bXingTable = true;
 
-		nHeadFlags = ExtractI4(buff);
-		buff += 4;
-
-		if (nHeadFlags & FRAMES_FLAG)
+		try
 		{
-			nFrameCount = ExtractI4(buff);
-			buff += 4;
+			nHeadFlags = bufReader.ExtractIx(4);
+
+			if (nHeadFlags & FRAMES_FLAG)
+				m_audioInfo.nFrameCount = bufReader.ExtractIx(4);
+
+			if (nHeadFlags & BYTES_FLAG)
+				m_nFileSizeOrg = bufReader.ExtractIx(4);
+			else
+				m_pInput->GetSize(m_nFileSizeOrg);
+
+			if (nHeadFlags & TOC_FLAG)
+			{
+				m_nTableSize = 100;
+				m_pnToc = new int[m_nTableSize];
+				if (m_pnToc)
+				{
+					for(int i = 0; i < m_nTableSize; i++)
+						m_pnToc[i] = bufReader.ExtractI1();
+				}
+			}
+
+			if (nHeadFlags & VBR_SCALE_FLAG)
+				dwQuality = bufReader.ExtractIx(4);
 		}
-// 		if (nHeadFlags & BYTES_FLAG)
-// 		{
-// 			nBytes = ExtractI4(buff);
-// 			buff += 4;
-// 		}
+		catch(CBigEndianBuffReader::COutOfRangeException &)
+		{
+			return false;
+		}
 	}
 	else if (buff[0] == 'V' && buff[1] == 'B' && buff[2] == 'R' && buff[3] == 'I')
 	{
 		// VBRI header
-		buff += 10;
+		/* FhG VBRI Header
 
-		nFrameCount = ExtractI4(buff);
+		size	description
+		4		'VBRI' (ID)
+		2		version
+		2		delay
+		2		quality
+		4		# bytes
+		4		# frames
+		2		table size (for TOC)
+		2		table scale (for TOC)
+		2		size of table entry (max. size = 4 byte (must be stored in an integer))
+		2		frames per table entry
+
+		??		dynamic table consisting out of frames with size 1-4
+		whole length in table size! (for TOC)
+
+		*/
+
+		CBigEndianBuffReader	bufReader(buff + 4, nBuffLen - nOffset - 4);
+
+		// extract all fields from header (all mandatory)
+		DWORD	dwVersion, dwQuality, dwTableScale, dwBytesPerEntry;
+		float	fDelay;
+
+		m_bXingTable = false;
+
+		try
+		{
+			dwVersion = bufReader.ExtractIx(2);
+			fDelay = (float)bufReader.ExtractIx(2);
+			dwQuality = bufReader.ExtractIx(2);
+			m_nFileSizeOrg = bufReader.ExtractIx(4);
+			m_audioInfo.nFrameCount = bufReader.ExtractIx(4);
+			m_nTableSize = bufReader.ExtractIx(2);
+			dwTableScale = bufReader.ExtractIx(2);
+			dwBytesPerEntry = bufReader.ExtractIx(2);
+			m_nFramesPerEntry = bufReader.ExtractIx(2);
+
+			// extract TOC  (for more accurate seeking)
+			m_pnToc = new int[m_nTableSize];
+			if (m_pnToc)
+			{
+				for (unsigned int i = 0 ; i < m_nTableSize; i++)
+				{
+					m_pnToc[i] = bufReader.ExtractIx(dwBytesPerEntry);
+				}
+			}
+		}
+		catch(CBigEndianBuffReader::COutOfRangeException &)
+		{
+			return false;
+		}
 	}
 
-	if (nFrameCount <= 0)
-		return ERR_NOT_FOUND;
+	if (m_audioInfo.nFrameCount <= 0)
+		return false;
 
-	return ERR_OK;
+	return true;
+}
+
+uint32 CMDLibmad::SeekXingTable(uint32 nSeekToMs)
+{
+	float	fPercent;
+
+	fPercent = nSeekToMs * 100 / (float)m_audioInfo.nMediaLength - 1;
+
+	// interpolate in TOC to get file seek point in bytes
+	int a;
+	float fa, fb, fx;
+
+	a = (int)fPercent;
+	if (a >= 100)
+		return m_audioInfo.nMediaFileSize;
+	else if (a <= 0)
+		return m_audioInfo.nFirstFramePos;
+
+	fa = (float)m_pnToc[a];
+
+	if (a < 99) 
+	{
+		fb = (float)m_pnToc[a+1];
+	}
+	else 
+	{
+		fb = 256.0f;
+	}
+
+	fx = fa + (fb-fa)*(fPercent-a);
+
+	return (int)((1.0f/256.0f)*fx* (m_nFileSizeOrg)) + m_audioInfo.nMediaFileSize - m_nFileSizeOrg;
+}
+
+uint32 CMDLibmad::SeekVbriTable(uint32 nSeekToMs)
+{
+	unsigned int i=0,  fraction = 0;
+	DWORD dwSeekPoint = 0;
+
+	float fLengthMS;
+	float fLengthMSPerTOCEntry;
+	float fAccumulatedTimeMS = 0.0f ;
+
+	fLengthMS = (float)m_audioInfo.nMediaLength;
+	fLengthMSPerTOCEntry = fLengthMS / (float)m_nTableSize;
+
+	if (nSeekToMs > fLengthMS) 
+		nSeekToMs = (int)fLengthMS; 
+
+	while (fAccumulatedTimeMS <= nSeekToMs)
+	{
+		dwSeekPoint += m_pnToc[i++];
+		fAccumulatedTimeMS += fLengthMSPerTOCEntry;
+	}
+
+	// Searched too far; correct result
+	fraction = ( (int)((((fAccumulatedTimeMS - nSeekToMs) / fLengthMSPerTOCEntry) 
+		+ (1.0f/(2.0f*(float)m_nFramesPerEntry))) * (float)m_nFramesPerEntry));
+
+	dwSeekPoint -= (DWORD)((float)m_pnToc[i-1] * (float)(fraction) 
+		/ (float)m_nFramesPerEntry);
+
+	return dwSeekPoint + m_audioInfo.nMediaFileSize - m_nFileSizeOrg;
 }
 
 int run_get_header(struct mad_decoder *decoder)
@@ -640,7 +844,7 @@ int run_get_header(struct mad_decoder *decoder)
 
 	stringex		buffXingHeader;
 	GetHeadInfoParam	*pmdMad = (GetHeadInfoParam *)decoder->cb_data;
-	MPEG_AUDIO_INFO		&audioInfo = pmdMad->m_audioInfo;
+	MPEG_AUDIO_INFO		&audioInfo = pmdMad->m_pMDLibMad->m_audioInfo;
 	struct mad_header	&header_prev = audioInfo.header;
 	memset(&header_prev, 0, sizeof(header_prev));
 
@@ -703,12 +907,16 @@ int run_get_header(struct mad_decoder *decoder)
 			if (nFrameCheced == 0)
 			{
 				// copy xing and vbri header
-				int		n = int(stream->bufend - stream->this_frame);
-				if (n > MAX_XING_HEADER_LEN)
-					n = MAX_XING_HEADER_LEN;
-				buffXingHeader.append((const char *)stream->this_frame, n);
+				if (pmdMad->m_pMDLibMad->GetVbrInfo(header, stream->this_frame, int(stream->bufend - stream->this_frame)))
+				{
+					audioInfo.bVbr = true;
+				}
+				else
+					audioInfo.bVbr = false;
+
 				ASSERT((LPCSTR)stream->this_frame - pmdMad->m_bufInput.c_str() >= 0);
-				audioInfo.nFirstFramePos = pmdMad->m_pInput->GetPos() + (int)((LPCSTR)stream->this_frame - pmdMad->m_bufInput.c_str()) - pmdMad->m_bufInput.size();
+				audioInfo.nFirstFramePos = pmdMad->m_pInput->GetPos() + 
+					(int)((LPCSTR)stream->this_frame - pmdMad->m_bufInput.c_str()) - pmdMad->m_bufInput.size();
 			}
 
 			nFrameCheced++;
@@ -745,24 +953,19 @@ int run_get_header(struct mad_decoder *decoder)
 				}
 
 				pmdMad->m_pInput->GetSize(audioInfo.nMediaFileSize);
-				if (GetXingOrVbriHeaderInfo((unsigned char const *)buffXingHeader.c_str(),
-					header, audioInfo.nFrameCount) == ERR_OK)
+
+				if (audioInfo.bVbr && audioInfo.nFrameCount > 0)
 				{
-					if (audioInfo.nFrameCount > 0)
-					{
-						audioInfo.bVbr = true;
-						audioInfo.nMediaLength = (int)((double)audioInfo.nSamplesPerFrame * audioInfo.nFrameCount * 1000 / header->samplerate);
-						ASSERT(audioInfo.nMediaLength > 0);
-						if (audioInfo.nMediaLength <= 0)
-							audioInfo.nMediaLength = 1;
-						audioInfo.nFrameSize = (audioInfo.nMediaFileSize - audioInfo.nFirstFramePos) / audioInfo.nFrameCount;
-						audioInfo.nBitRate = (int)(((double)audioInfo.nMediaFileSize - audioInfo.nFirstFramePos) * 8 * 1000 / audioInfo.nMediaLength);
-						goto done;
-					}
+					audioInfo.nMediaLength = (int)((double)audioInfo.nSamplesPerFrame * audioInfo.nFrameCount * 1000 / header->samplerate);
+					ASSERT(audioInfo.nMediaLength > 0);
+					if (audioInfo.nMediaLength <= 0)
+						audioInfo.nMediaLength = 1;
+					audioInfo.nFrameSize = (audioInfo.nMediaFileSize - audioInfo.nFirstFramePos) / audioInfo.nFrameCount;
+					audioInfo.nBitRate = (int)(((double)audioInfo.nMediaFileSize - audioInfo.nFirstFramePos) * 8 * 1000 / audioInfo.nMediaLength);
+					goto done;
 				}
 				else
 				{
-					audioInfo.bVbr = false;
 					audioInfo.nFrameCount = (audioInfo.nMediaFileSize - audioInfo.nFirstFramePos) / audioInfo.nFrameSize;
 					audioInfo.nMediaLength = int((double)audioInfo.nSamplesPerFrame * audioInfo.nFrameCount * 1000 / header->samplerate);
 					audioInfo.nBitRate = audioInfo.header.bitrate;
@@ -839,7 +1042,7 @@ int CMDLibmad::run_sync(struct mad_decoder *decoder)
 	mad_synth_init(synth);
 
 	mad_stream_options(stream, decoder->options);
-	
+
 	do {
 		switch (decoder->input_func(decoder->cb_data, stream)) {
 		case MAD_FLOW_STOP:
@@ -1017,8 +1220,10 @@ MLRESULT CMDLibmad::GetHeadInfo(IMediaInput *pInput)
 	int					result = -1;
 	GetHeadInfoParam	param;
 	param.m_pInput = pInput;
+	param.m_pMDLibMad = this;
 	param.m_bufInput.reserve(INPUT_BUFF_SIZE);
-	memset(&param.m_audioInfo, 0, sizeof(param.m_audioInfo));
+
+	memset(&m_audioInfo, 0, sizeof(m_audioInfo));
 
 	mad_decoder_init(&m_decoder, &param,
 		   GetHeadInfo_decode_input_read,
@@ -1033,9 +1238,6 @@ MLRESULT CMDLibmad::GetHeadInfo(IMediaInput *pInput)
 
 		delete m_decoder.sync;
 		m_decoder.sync = 0;
-
-		m_audioInfo = param.m_audioInfo;
-
 	}
 
 	mad_decoder_finish(&m_decoder);

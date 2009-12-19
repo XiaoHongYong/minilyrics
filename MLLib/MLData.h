@@ -350,20 +350,14 @@ public:
 	void AddRowByTime(PML_ROW pRow);
 
 	void AddTextInLyrics(V_Str &vText, DWORD dwLyrFlagAttr = LSA_SHOW_SIMPLE);
-	void AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle);
-	void RemoveErrrorInfo();
 
 	bool RemoveLyricsRow(int nRow);
-
-	void HideLyricsInfoTag();
 
 	void AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink);
 
 	int FilterContents(void);
 
 	BOOL LyricsRowToText(PML_ROW pRow, tstring &strLyricsRow);
-
-	int GetFragTime(int nRow, int nFrag, BOOL bBegOfFrag = TRUE);
 
 public:
 	LPCTSTR GetLyricsFileName();

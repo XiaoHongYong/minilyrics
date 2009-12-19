@@ -244,7 +244,7 @@ void CLyricShowMultiRowObj::FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdat
 
 	pGraph->SetClipBoundBox(rcClip);
 
-	for (int i = 0; i < m_lyrLines.size(); i++)
+	for (size_t i = 0; i < m_lyrLines.size(); i++)
 	{
 		DrawRow(pGraph, m_lyrLines[i], x, y, LP_CUR_LINE);
 		y += nLineHeight;

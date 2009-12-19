@@ -7,7 +7,7 @@
   LangString SecShortcut.MLDir ${LANG_ITALIAN} "MiniLyrics"
   LangString SecShortcut.MLStart ${LANG_ITALIAN} "Riavvia MiniLyrics"
   LangString SecShortcut.MLUninst ${LANG_ITALIAN} "Disinstalla MiniLyrics"
-  LangString SecShortcut.MLReadme ${LANG_ITALIAN} "Leggimie"
+  LangString SecShortcut.MLReadme ${LANG_ITALIAN} "Leggimi"
   LangString SecShortcut.MLHelp ${LANG_ITALIAN} "Guida di MiniLyrics"
   LangString SecShortcut.MLSetupStr ${LANG_ITALIAN} "Impostazioni di MiniLyrics"
 
@@ -15,7 +15,7 @@
   LangString LS_ShortcutsSettingsDesc ${LANG_ITALIAN} "Crea collegamenti e impostazioni personalizzate."
 
   LangString LS_SelectPlayer ${LANG_ITALIAN} "Selezionate i riproduttori supportati"
-  LangString LS_SelectPlayerDesc ${LANG_ITALIAN} "Selezionate i produttori che volete che supportino MiniLyrics."
+  LangString LS_SelectPlayerDesc ${LANG_ITALIAN} "Selezionate i riproduttori che volete che supportino MiniLyrics."
 
   LangString LS_PersonalSetting ${LANG_ITALIAN} "Salva le impostazioni di MiniLyrics in ogni cartella personale degli utenti"
   LangString LS_ShortcutOnDesktop ${LANG_ITALIAN} "Crea un collegamento sul desktop"
@@ -29,4 +29,4 @@
   LangString un.MLStart ${LANG_ITALIAN} "Riavvia MiniLyrics"
   LangString un.MLDir ${LANG_ITALIAN} "MiniLyrics"
   LangString un.MsgUnstMLRuning ${LANG_ITALIAN} "MiniLyrics è in esecuzione, chiudete il riproduttore, e riavviate di nuovo il programma di disinstallazione."
-  LangString un.MsgRemovelAll ${LANG_ITALIAN} "Rimuovere tutti i file nella cartella di MiniLyrics(Inclusi alcuni file delle impostazioni)?"
+  LangString un.MsgRemovelAll ${LANG_ITALIAN} "Rimuovere tutti i file nella cartella di MiniLyrics (Inclusi alcuni file delle impostazioni)?"

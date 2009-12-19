@@ -1954,58 +1954,6 @@ bool CMLData::RemoveLyricsRow(int nRow)
 	return true;
 }
 
-//
-// Do not display the artist, album and title info of lyrics.
-//
-void CMLData::HideLyricsInfoTag()
-{
-	LPCTSTR		szTag[] = { _T("artist: "), _T("title: "), _T("album: "), _T("by: ") };
-	int			nLen[CountOf(szTag)];
-	int			i;
-
-	for (i = 0; i < CountOf(szTag); i++)
-		nLen[i] = _tcslen(szTag[i]);
-
-	for (i = 0; i < (int)m_arrLyricsRows.size() && i <= 3; i++)
-	{
-		PML_ROW		pRow = m_arrLyricsRows[i];
-		if (pRow->vFrags.size() == 1)
-		{
-			for (int k = 0; k < CountOf(szTag); k++)
-			{
-				if (_tcsnicmp(pRow->vFrags[0]->szLyric, szTag[k], nLen[k]) == 0)
-				{
-					// it's a tag, remove this line.
-					m_arrLyricsRows.erase(m_arrLyricsRows.begin() + i);
-					i--;
-					break;
-				}
-			}
-		}
-	}
-}
-
-void CMLData::RemoveErrrorInfo()
-{
-	int		i;
-
-	for (i = 0; i < (int)m_arrLyricsRows.size(); i++)
-	{
-		PML_ROW		pRow;
-		pRow = m_arrLyricsRows[i];
-		if (pRow->vFrags.size())
-		{
-			PLYRIC_FRAG		pFrag;
-			pFrag = pRow->vFrags[0];
-			if ((pFrag->dwAttrib & LSA_ERROR_INFO) == LSA_ERROR_INFO)
-			{
-				RemoveLyricsRow(i);
-				i--;
-			}
-		}
-	}
-}
-
 void CMLData::AddTextInLyrics(V_Str &vText, DWORD dwLyrFlagAttr)
 {
 	int				nPrevEnd;
@@ -2031,18 +1979,6 @@ void CMLData::AddTextInLyrics(V_Str &vText, DWORD dwLyrFlagAttr)
 
 		AddRowByTime(pRow);
 	}
-}
-
-void CMLData::AddSongInfo(LPCTSTR szSongFile, LPCTSTR szSongTitle)
-{
-	//
-	// 添加歌曲名等……
-	vector<tstring>		vStr;
-	int					nCount;
-
-	vStr.push_back(szSongTitle);
-
-	AddTextInLyrics(vStr);
 }
 
 void CMLData::AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink)
@@ -2085,45 +2021,6 @@ void CMLData::AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink)
 	}
 
 	CheckLyricsRowTime();
-}
-
-// COMMENT:
-//		nFrag:	-1	该行歌词的结尾
-int CMLData::GetFragTime(int nRow, int nFrag, BOOL bBegOfFrag)
-{
-	PML_ROW		pRow = NULL;
-	PLYRIC_FRAG		pFrag;
-	int			dwTime = 0;
-	int			dwLength = 0;
-
-	pRow = GetLyricsRow(nRow);
-	if (pRow)
-	{
-		if (nFrag < 0 || (unsigned int)nFrag >= pRow->vFrags.size())
-			nFrag = pRow->vFrags.size();
-
-		pFrag = pRow->vFrags[nFrag];
-
-		assert(pFrag);
-		if (pFrag)
-		{
-			if (bBegOfFrag)
-				dwTime = pFrag->nBegTime;
-			else
-				dwTime = pFrag->nEndTime;
-		}
-
-		dwTime -= GetOffsetTime();
-		if (dwTime < 0)
-			dwTime = 0;
-		else
-		{
-			dwLength = GetMediaLength();
-			if (dwTime > dwLength)
-				dwTime = dwLength;
-		}
-	}
-	return dwTime;
 }
 
 BOOL CMLData::LyricsRowToText(PML_ROW pRow, tstring &strLyricsRow)

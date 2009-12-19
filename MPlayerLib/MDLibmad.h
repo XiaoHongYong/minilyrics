@@ -95,6 +95,18 @@ public:
 	mad_decoder 	m_decoder;
 	audio_stats		m_audioStats;
 
+	// Xing or Info Vbri seek table
+	bool			m_bXingTable;
+	uint32			m_nFileSizeOrg;
+	int				m_nTableSize;
+	int				*m_pnToc;	// 100 percent
+	int				m_nFramesPerEntry;
+
+	bool GetVbrInfo(mad_header *header, unsigned char const *frameBuff, int nBuffLen);
+
+	uint32 SeekXingTable(uint32 nSeekToMs);
+	uint32 SeekVbriTable(uint32 nSeekToMs);
+
 };
 
 #endif // !defined(AFX_MDLIBMAD_H__27C13E01_9EDD_4EFC_A2D2_7DD21F6F4DF3__INCLUDED_)
