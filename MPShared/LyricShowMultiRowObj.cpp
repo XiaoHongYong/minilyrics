@@ -221,6 +221,8 @@ void CLyricShowMultiRowObj::FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdat
 		return;
 	}
 
+	UpdateLyricDrawBufferBackground(pGraph, m_rcObj);
+
 	pGraph->SetFont(&m_font);
 
 	int		nLineHeight = GetLineHeight();

@@ -15,6 +15,8 @@ CMPSkinInfoTextCtrlEx::CMPSkinInfoTextCtrlEx()
 
 CMPSkinInfoTextCtrlEx::~CMPSkinInfoTextCtrlEx()
 {
+	g_eventDispather.UnregisterHanlder(ET_UI_INFO_TEXT, this);
+	g_eventDispather.UnregisterHanlder(ET_UI_LONG_ERROR_TEXT, this);
 }
 
 void CMPSkinInfoTextCtrlEx::OnCreate()
