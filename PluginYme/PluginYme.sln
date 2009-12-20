@@ -2,13 +2,16 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginYme", "PluginYme.vcproj", "{DD3AD720-7525-4375-9448-E9332745693E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0721AD77-959D-402F-8157-F43F42826D24} = {0721AD77-959D-402F-8157-F43F42826D24}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginYmePS", "PluginYmePS.vcproj", "{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{DD3AD720-7525-4375-9448-E9332745693E} = {DD3AD720-7525-4375-9448-E9332745693E}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPluginLib", "..\MLPluginLib\MLPluginLib.vcproj", "{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPluginLib", "..\MLPluginLib\MLPluginLib.vcproj", "{0721AD77-959D-402F-8157-F43F42826D24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,14 +33,14 @@ Global
 		{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}.Release|Win32.ActiveCfg = Release|Win32
 		{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
 		{FC6150A6-185D-4DAD-A7FD-FE38496B06B2}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Debug|Win32.Build.0 = Debug|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Release|Win32.ActiveCfg = Release|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Release|Win32.Build.0 = Release|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Debug|Win32.Build.0 = Debug|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Release|Win32.ActiveCfg = Release|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Release|Win32.Build.0 = Release|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Unicode Debug|Win32.ActiveCfg = Unicode Debug|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

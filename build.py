@@ -113,6 +113,7 @@ if TargetML:
 		[ " PluginWMPVis\\PluginWMPVis.sln", "\"Release|Win32\"" ],
 		[ " PluginVLC\\PluginVLC.sln", "\"Release|Win32\"" ],
 		[ " PluginXMP\\PluginXMP.sln", "\"Release|Win32\"" ],
+		[ " PluginZune\\PluginZune.sln", "\"Release|Win32\"" ],
 		[ " MLEncrypt\\MLEncrypt.sln", "\"Release|Win32\"" ],
 		#[ " PluginYme\\PluginYme.sln", "\"Release|Win32\"" ],
 		[ " MLInstallOptions\\MLInstallOptions.sln", "\"Release|Win32\"" ]

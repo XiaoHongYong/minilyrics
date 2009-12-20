@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPluginLib", "..\MLPluginLib\MLPluginLib.vcproj", "{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPluginLib", "..\MLPluginLib\MLPluginLib.vcproj", "{0721AD77-959D-402F-8157-F43F42826D24}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginiTunes", "PluginiTunes.vcproj", "{47C5CAE5-BB85-4F34-91E3-BEFF1855F708}"
 	ProjectSection(ProjectDependencies) = postProject
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F} = {C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}
+		{0721AD77-959D-402F-8157-F43F42826D24} = {0721AD77-959D-402F-8157-F43F42826D24}
 	EndProjectSection
 EndProject
 Global
@@ -14,10 +14,10 @@ Global
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Debug|Win32.ActiveCfg = Debug|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Debug|Win32.Build.0 = Debug|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Release|Win32.ActiveCfg = Release|Win32
-		{C36F70C7-D2FD-47CD-A896-7DA7F0E8554F}.Release|Win32.Build.0 = Release|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Debug|Win32.Build.0 = Debug|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Release|Win32.ActiveCfg = Release|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Release|Win32.Build.0 = Release|Win32
 		{47C5CAE5-BB85-4F34-91E3-BEFF1855F708}.Debug|Win32.ActiveCfg = Debug|Win32
 		{47C5CAE5-BB85-4F34-91E3-BEFF1855F708}.Debug|Win32.Build.0 = Debug|Win32
 		{47C5CAE5-BB85-4F34-91E3-BEFF1855F708}.Release|Win32.ActiveCfg = Release|Win32

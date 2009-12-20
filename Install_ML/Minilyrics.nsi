@@ -516,6 +516,15 @@ SectionIn 1 2
     File ..\bin\PluginHMM.exe
   J_HMMEnd:
 
+  ; Zune
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstZUNE"
+  IntCmp ${TEMP1} 0 J_ZUNEEnd J_ZUNEEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstZUNE" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File ..\bin\PluginZune.exe
+  J_ZUNEEnd:
+
   ; Shortcuts of desktop and quick lanuch
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
   IntCmp ${TEMP1} 0 J_ShortcutsDtEnd J_ShortcutsDtEnd
@@ -537,6 +546,11 @@ SectionIn 1 2
       CreateShortCut "$DESKTOP\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
       CreateShortCut "$QUICKLAUNCH\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
     J_HMMDesktopEnd:
+
+    IfFileExists "$INSTDIR\PluginZune.exe" 0 J_ZUNEDesktopEnd
+      CreateShortCut "$DESKTOP\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
+      CreateShortCut "$QUICKLAUNCH\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
+    J_ZUNEDesktopEnd:
 
   J_ShortcutsDtEnd:
 
@@ -608,6 +622,10 @@ SectionIn 1
   IfFileExists "$INSTDIR\PluginHMM.exe" 0 J_HMMSEnd
 	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
   J_HMMSEnd:
+
+  IfFileExists "$INSTDIR\PluginZune.exe" 0 J_ZUNESEnd
+	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
+  J_ZUNESEnd:
 
   IfFileExists "$INSTDIR\PluginAP.exe" 0 J_APSEnd
 	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe" "" "$INSTDIR\PluginAP.exe" 0
@@ -824,6 +842,7 @@ Section "Uninstall"
   Delete $INSTDIR\db*.db
   Delete $INSTDIR\PluginJetaudio.exe
   Delete $INSTDIR\PluginHMM.exe
+  Delete $INSTDIR\PluginZune.exe
   Delete $INSTDIR\PluginAP.exe
 
   ; MUST REMOVE UNINSTALLER, too
@@ -879,6 +898,7 @@ Section "Uninstall"
   Delete "$QUICKLAUNCH\MiniLyrics for AlbumPlayer.lnk"
   Delete "$DESKTOP\MiniLyrics for Helium Music Manager.lnk"
   Delete "$QUICKLAUNCH\MiniLyrics for Helium Music Manager.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for Zune software.lnk"
 
   ; remove directories used.
 ;  RMDir "$SMPROGRAMS\√‘ƒ„∏Ë¥ "

@@ -34,13 +34,13 @@
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
   </DynControls>
   <skinwnd Name="floatinglyr" EnableTranslucency="true" TranslucencyAlpha="0" TranslucencyAlphaOnHover="100" TranslucencyAlphaOnActive="228" MinWidth="400" MinHeight="60" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="FloatingLyrMode" CmdHandler="ch_floating_lyr" LyrDisplayStylePropName="FloatingLyrDispStyle">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAdjustVertAlign="FALSE" EnableStaticTextStyle="FALSE" LyrDisplayStylePropName="FloatingLyrDispStyle" FloatingLyr="1" AlwaysAutoWidth="FALSE" UseAlbumArtAsBg="FALSE" BlendingLyrText="TRUE" ThickOutline="TRUE"/>
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAdjustVertAlign="FALSE" EnableStaticTextStyle="FALSE" LyrDisplayStylePropName="FloatingLyrDispStyle" FloatingLyr="1" UseAlbumArtAsBg="FALSE" BlendingLyrText="TRUE" ThickOutline="TRUE"/>
   </skinwnd>
   <skinwnd Name="lyrbar" MinWidth="275" MinHeight="15" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common,ch_player" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" BgColor="#4F586E" FgColor="#ECECEC" FgLowColor="#83949E" FocusLineBgColor="#404758" TagColor="#FF8080" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
   </skinwnd>
   <skinwnd Name="minilyrics" MinWidth="275" MinHeight="15" Width="330" Height="400" PaintBg="FALSE" BgColor="#667280" FgColor="#282828" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" BgColor="#667280" FgColor="#171717" FgLowColor="#4B535C" FocusLineBgColor="#8A94AA" TagColor="#FFFFFF" LOBHilightColor="#000000" LOBHilightBorder="#292F34" LOBLowlightColor="#3B3B3B" LOBLowlightBorder="#8A94AA" OutlineLyrText="TRUE" EnableAutoResize="TRUE" />
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" BgColor="#667280" FgColor="#171717" FgLowColor="#4B535C" FocusLineBgColor="#8A94AA" TagColor="#FFFFFF" HilightAutoGradient="#000000" HilightBorderColor="#292F34" LowlightAutoGradient="#3B3B3B" LOBLowlightBorder="#8A94AA" OutlineLyrText="TRUE" EnableAutoResize="TRUE" />
   </skinwnd>
   <skinwnd Name="lyreditor" Region="Modern.tr2" MinWidth="275" MinHeight="250" Width="640" Height="450" BgColor="#4F586E" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player" OnCreateCommand="dyncmd_load_toolbar_state">
     <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="40">
