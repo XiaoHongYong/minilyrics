@@ -16,7 +16,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 
 	{ ERR_REG_EMAIL_EXIST, _T("The email already exists.") },
 	{ ERR_REG_USER_EXIST, _T("The user already exists.") },	// 用户已经存在, 无法申请
-	{ ERR_UPLOAD_EXIST, _T("The uploaded lyrics have existed already.") },	// 上传的内容已经存在
+	{ ERR_UPLOAD_EXIST, _T("The uploaded lyrics already exist.") },	// 上传的内容已经存在
 	{ ERR_USER_NOT_EXIST, _T("User name doesn't exist.") },	// 用户不存在
 	{ ERR_BAD_USERPWD, _T("Wrong user name or password.") },		// 用户名或者密码错误
 	{ ERR_BAD_CLIENT_VER, _T("Invliad client version.") },	// 客户端版本不正确, 无法登陆

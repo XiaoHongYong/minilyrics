@@ -15,6 +15,7 @@
 #include "PreferPageTheme.h"
 #include "PreferPageLyrOutput.h"
 #include "PreferPageHotkey.h"
+#include "PreferPageAdvanced.h"
 #ifdef _WIN32_DESKTOP
 #include "win32/PreferPageTrayIconCtrl.h"
 #endif
@@ -233,11 +234,6 @@ void CPreferenceDlg::ConstructPreferencePages()
 		pPage = new CPreferPageSkin;
 		pPage->SetParentPage(pPageParent);
 		m_vPreferencePages.push_back(pPage);
-
-		// Advanced Options
-		pPage = new CPPageUIAdvanced;
-		pPage->SetParentPage(pPageParent);
-		m_vPreferencePages.push_back(pPage);
 	}
 
 	{
@@ -316,6 +312,12 @@ void CPreferenceDlg::ConstructPreferencePages()
 		pPage = new CPreferPageLyrOutput;
 		pPage->SetParentPage(pPageParent);
 		m_vPreferencePages.push_back(pPage);
+	}
+
+	{
+		// Advanced
+		pPageParent = new CPreferPageAdvanced();
+		m_vPreferencePages.push_back(pPageParent);
 	}
 }
 

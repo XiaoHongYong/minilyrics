@@ -72,8 +72,6 @@ protected:
 
 	V_LRCSEARCHRESULT	m_vResultsLocal;
 	V_LRCSEARCHRESULT	m_vResultsInet;
-	CWidgetComboBox		m_cbTitle;
-	CWidgetComboBox		m_cbArtist;
 
 	tstring				m_strArtistLastSearch, m_strTitleLastSearch;
 	int					m_nCurPage, m_nPageCount;

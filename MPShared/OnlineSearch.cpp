@@ -397,7 +397,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	if (nRet != ERR_OK)
 	{
 		tstring		str;
-		str += TOLOCAL(_T("Faied to search lyrics with error:"));
+		str += TOLOCAL(_T("Failed to search lyrics with error:"));
 		str += _T(" ");
 		str += LPCTSTR(ERROR2STR_LOCAL(nRet));
 		g_eventDispather.DispatchLongErrorText(str.c_str());
@@ -440,7 +440,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	else
 	{
 		tstring			str;
-		str += TOLOCAL(_T("Faied to search lyrics with error:"));
+		str += TOLOCAL(_T("Failed to search lyrics with error:"));
 		str += _T(" ");
 		str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 		g_eventDispather.DispatchLongErrorText(str.c_str());

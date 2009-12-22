@@ -72,20 +72,4 @@ protected:
 };
 
 
-//
-// User interface advanced options
-//
-class CPPageUIAdvanced : public CPreferencePageBase
-{
-public:
-	CPPageUIAdvanced();
-	~CPPageUIAdvanced();
-
-	BOOL OnInitDialog();
-	void OnCommand(UINT uID, UINT nNotifyCode);
-
-protected:
-
-};
-
 #endif // _PREFER_PAGE_UI_H_

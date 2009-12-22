@@ -174,8 +174,8 @@ void CDlgSearchLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 	switch (uID)
 	{
 #ifdef _WIN32_DESKTOP
-	case IDC_CB_ARTIST:
-	case IDC_CB_TITLE:
+	case IDC_E_ARTIST:
+	case IDC_E_TITLE:
 		{
 			// Research local lyrics file?
 			KillTimer(TIMER_ID_RESEARCH);
@@ -382,8 +382,8 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 
 	m_wndHelper.Init(this);
 
-	m_wndHelper.AddAlignRight(IDC_CB_ARTIST, false);
-	m_wndHelper.AddAlignRight(IDC_CB_TITLE, false);
+	m_wndHelper.AddAlignRight(IDC_E_ARTIST, false);
+	m_wndHelper.AddAlignRight(IDC_E_TITLE, false);
 	m_wndHelper.AddAlignRight(IDC_SEARCH, true);
 	m_wndHelper.AddAlignRightBottom(IDC_RESULT_LIST, FALSE, FALSE);
 	m_wndHelper.AddAlignBottom(IDC_NOT_MATCH, TRUE);
@@ -423,8 +423,8 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 		}
 	}
 
-	m_cbTitle.Attach(this, IDC_CB_TITLE);
-	m_cbArtist.Attach(this, IDC_CB_ARTIST);
+	SetDlgItemText(IDC_E_ARTIST, m_strArtist.c_str());
+	SetDlgItemText(IDC_E_TITLE, m_strTitle.c_str());
 
 	m_resultList.Attach(this, IDC_RESULT_LIST);
 	m_resultList.SetExtendedStyle(LVS_EX_FULLROWSELECT);
@@ -447,38 +447,6 @@ BOOL CDlgSearchLyrics::OnInitDialog()
 #endif
 
 	g_mpApp.GetAssociateFileKeyword(m_szAssociateKeyword, CountOf(m_szAssociateKeyword));
-
-	TCHAR	szArtist[256];
-	TCHAR	szTitle[256];
-	tstring	strFileTitle;
-
-	FileGetTitle(m_strSongFile.c_str(), strFileTitle);
-
-	std::set<tstring>	setArTi;
-
-	setArTi.insert(strFileTitle.c_str());
-
-	AnalysisLyricsFileNameEx(szArtist, CountOf(szArtist), szTitle, CountOf(szTitle), strFileTitle.c_str());
-	setArTi.insert(szArtist);
-	setArTi.insert(szTitle);
-
-	setArTi.insert(m_strArtist.c_str());
-	setArTi.insert(m_strTitle.c_str());
-
-	std::set<tstring>::iterator	it, itEnd;
-
-	itEnd = setArTi.end();
-	for (it = setArTi.begin(); it != itEnd; ++it)
-	{
-		m_cbArtist.AddString((*it).c_str());
-		m_cbTitle.AddString((*it).c_str());
-	}
-
-	m_cbTitle.SelectString(-1, m_strTitle.c_str());
-	m_cbArtist.SelectString(-1, m_strArtist.c_str());
-
-	CheckButton(IDC_NO_PROMPT, 
-		!g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), true));
 
 	CeSHInitFullScrDlg(this);
 
@@ -534,8 +502,8 @@ void CDlgSearchLyrics::OnTimer(UINT nIDEvent)
 	TCHAR		szArtist[256];
 	TCHAR		szTitle[256];
 
-	GetDlgItemText(IDC_CB_ARTIST, szArtist, CountOf(szArtist));
-	GetDlgItemText(IDC_CB_TITLE, szTitle, CountOf(szTitle));
+	GetDlgItemText(IDC_E_ARTIST, szArtist, CountOf(szArtist));
+	GetDlgItemText(IDC_E_TITLE, szTitle, CountOf(szTitle));
 
 	// Not changed?
 	if (_tcsicmp(szArtist, m_strArtist.c_str()) == 0 && _tcsicmp(szTitle, m_strTitle.c_str()) == 0
@@ -567,8 +535,8 @@ void CDlgSearchLyrics::OnTimer(UINT nIDEvent)
 
 void CDlgSearchLyrics::OnSearch()
 {
-	GetDlgItemText(IDC_CB_ARTIST, m_strArtist);
-	GetDlgItemText(IDC_CB_TITLE, m_strTitle);
+	GetDlgItemText(IDC_E_ARTIST, m_strArtist);
+	GetDlgItemText(IDC_E_TITLE, m_strTitle);
 
 	m_strArtistLastSearch = m_strArtist;
 	m_strTitleLastSearch = m_strTitle;

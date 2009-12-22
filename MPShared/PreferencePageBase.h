@@ -37,6 +37,8 @@ enum PreferPageID
 	PAGE_LYRICS,
 	PAGE_LYR_DOWNLOAD,
 	PAGE_LYR_OUTPUT_PLUGINS,
+
+	PAGE_ADVANCED,
 };
 
 class CPreferencePageBase : public CBaseDialog  
