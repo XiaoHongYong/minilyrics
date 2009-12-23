@@ -2,6 +2,9 @@
 #include "MPlayerApp.h"
 #include "PreferPageAdvanced.h"
 
+#define TIMER_ID_SEARCH		1
+#define DURATION_SEARCH		500
+
 #define SZ_YES			_T("Yes")
 #define SZ_NO			_T("No")
 #define SZ_ENABLED		_T("Enabled")
@@ -10,6 +13,7 @@
 #define SZ_RESET		_T("Reset setting of selection")
 
 #define MENUID_START		3000
+
 
 class CPfItemInt : public CPreferItem
 {
@@ -156,6 +160,9 @@ public:
 
 #endif // #ifdef _WIN32_DESKTOP
 
+void SplitKeywords(LPCTSTR szKeywords, V_Str &vKeywords);
+
+
 
 CPreferPageAdvanced::CPreferPageAdvanced() : CPreferencePageBase(IDD_PAGE_ADVANCED, _T("Advanced"))
 {
@@ -197,12 +204,7 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 	// m_vPreferItems.push_back(new CPfItemBool(_T("Hide the link of rating lyrics"), ET_NULL, SZ_SECT_UI, _T("HideRateLink"), true));
 	m_vPreferItems.push_back(new CPfItemBool(_T("Allow to adjust the vertical position of lyrics"), ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("EnableAdjustVertAlign"), false));
 
-	for (size_t i = 0; i < m_vPreferItems.size(); i++)
-	{
-		CPreferItem	*item = m_vPreferItems[i];
-		int	n = m_listItems.InsertItem(i, item->m_strName.c_str());
-		m_listItems.SetItemText(n, 1, item->GetValue().c_str());
-	}
+	ListAllItems();
 
 	return TRUE;
 }
@@ -228,12 +230,62 @@ BOOL CPreferPageAdvanced::OnNotify(WIDGET_NOTIFY_INFO *info)
 	return true;
 }
 
+void CPreferPageAdvanced::OnTimer(UINT nIDEvent)
+{
+	if (nIDEvent != TIMER_ID_SEARCH)
+		return;
+
+	KillTimer(TIMER_ID_SEARCH);
+
+	tstring		strKey;
+
+	GetDlgItemText(IDC_E_SEARCH, strKey);
+	if (_tcsicmp(strKey.c_str(), m_strLastSearch.c_str()) == 0)
+		return;
+
+	m_strLastSearch = strKey;
+
+	V_Str		vKeyWords;
+	SplitKeywords(strKey.c_str(), vKeyWords);
+	if (vKeyWords.empty() || (vKeyWords.size() == 1 && vKeyWords[0].empty()))
+	{
+		ListAllItems();
+		return;
+	}
+
+	m_listItems.DeleteAllItems();
+
+	// List results.
+	for (size_t i = 0; i < m_vPreferItems.size(); i++)
+	{
+		CPreferItem	*item = m_vPreferItems[i];
+		bool		bMatch = false;
+
+		for (size_t k = 0; k < vKeyWords.size(); k++)
+		{
+			if (!stristr(item->m_strName.c_str(), vKeyWords[k].c_str()))
+				break;
+			bMatch = true;
+		}
+
+		if (bMatch)
+		{
+			int	n = m_listItems.InsertItem(i, item->m_strName.c_str());
+			m_listItems.SetItemText(n, 1, item->GetValue().c_str());
+		}
+	}
+}
+
 void CPreferPageAdvanced::OnCommand(UINT uID, UINT nNotifyCode)
 {
 	CBaseDialog::OnCommand(uID, nNotifyCode);
 
 	switch (uID)
 	{
+	case IDC_E_SEARCH:
+		KillTimer(TIMER_ID_SEARCH);
+		SetTimer(TIMER_ID_SEARCH, DURATION_SEARCH);
+		break;
 	case IDC_CUSTOMIZE:
 		{
 			CRect		rc;
@@ -303,4 +355,16 @@ void CPreferPageAdvanced::ShowCustomizeMenu(int x, int y)
 		menu.CheckRadioItem(m_nMenuIdStart + nRadio, m_nMenuIdStart, m_nMenuIdEnd - 1);
 
 	menu.TrackPopupMenu(x, y, this);
+}
+
+void CPreferPageAdvanced::ListAllItems()
+{
+	m_listItems.DeleteAllItems();
+
+	for (size_t i = 0; i < m_vPreferItems.size(); i++)
+	{
+		CPreferItem	*item = m_vPreferItems[i];
+		int	n = m_listItems.InsertItem(i, item->m_strName.c_str());
+		m_listItems.SetItemText(n, 1, item->GetValue().c_str());
+	}
 }

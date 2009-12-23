@@ -100,7 +100,7 @@
     <Image Left="0" Top="23" Width="4" Height="h-31" Name="left frame" Image="caption.bmp" ImageRect="276,0,4,23" BltMode="stretch"/>
     <Image Left="w-4" Top="23" Width="4" Height="h-31" Name="right frame" Image="caption.bmp" ImageRect="281,0,4,23" BltMode="stretch"/>
   </skinwnd>
-  <skinwnd Name="lyreditor" Region="wmp11.tr2" MinWidth="200" MinHeight="26" Width="295" Height="116" BgColor="#000000" FgColor="#E6EBF7" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
+  <skinwnd Name="lyreditor" Region="wmp11.tr2" MinWidth="200" MinHeight="26" Width="295" Height="116" BgColor="#000000" FgColor="#E6EBF7" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player" OnCreateCommand="dyncmd_load_toolbar_state">
     <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="23">
       <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" EnableDblClick="TRUE" Image="editor-caption.png" ImageRect="0,0,275,23" ImageFocus="editor-caption.png" ImageFocusRect="0,0,275,23" CutPos="85,125,130,172"/>
       <Button Left="7" Top="4" Width="16" Height="16" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,60,16,16" ImageSel="buttons.bmp" ImageSelRect="17,60,16,16"/>

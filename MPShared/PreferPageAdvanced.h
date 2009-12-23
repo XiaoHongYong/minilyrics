@@ -33,6 +33,8 @@ public:
 
 	BOOL OnInitDialog();
 
+	void OnTimer(UINT nIDEvent);
+
 	void OnCommand(UINT uID, UINT nNotifyCode);
 	void OnDestroy();
 
@@ -42,10 +44,13 @@ protected:
 	CPreferItem *GetCurItem();
 	void ShowCustomizeMenu(int x, int y);
 
+	void ListAllItems();
+
 protected:
 	VecPreferItems				m_vPreferItems;
 	int							m_nMenuIdStart, m_nMenuIdEnd;
 	CWidgetListCtrl				m_listItems;
+	tstring						m_strLastSearch;
 
 
 };

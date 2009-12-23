@@ -525,6 +525,15 @@ SectionIn 1 2
     File ..\bin\PluginZune.exe
   J_ZUNEEnd:
 
+  ; Spotify
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSpotify"
+  IntCmp ${TEMP1} 0 J_SpotifyEnd J_SpotifyEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSpotify" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File ..\bin\PluginSpotify.exe
+  J_SpotifyEnd:
+
   ; Shortcuts of desktop and quick lanuch
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
   IntCmp ${TEMP1} 0 J_ShortcutsDtEnd J_ShortcutsDtEnd
@@ -551,6 +560,11 @@ SectionIn 1 2
       CreateShortCut "$DESKTOP\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
       CreateShortCut "$QUICKLAUNCH\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
     J_ZUNEDesktopEnd:
+
+    IfFileExists "$INSTDIR\PluginSpotify.exe" 0 J_SpotifyDesktopEnd
+      CreateShortCut "$DESKTOP\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
+      CreateShortCut "$QUICKLAUNCH\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
+    J_SpotifyDesktopEnd:
 
   J_ShortcutsDtEnd:
 
@@ -626,6 +640,10 @@ SectionIn 1
   IfFileExists "$INSTDIR\PluginZune.exe" 0 J_ZUNESEnd
 	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
   J_ZUNESEnd:
+
+  IfFileExists "$INSTDIR\PluginSpotify.exe" 0 J_SpotifySEnd
+	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
+  J_SpotifySEnd:
 
   IfFileExists "$INSTDIR\PluginAP.exe" 0 J_APSEnd
 	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe" "" "$INSTDIR\PluginAP.exe" 0
@@ -843,6 +861,7 @@ Section "Uninstall"
   Delete $INSTDIR\PluginJetaudio.exe
   Delete $INSTDIR\PluginHMM.exe
   Delete $INSTDIR\PluginZune.exe
+  Delete $INSTDIR\PluginSpotify.exe
   Delete $INSTDIR\PluginAP.exe
 
   ; MUST REMOVE UNINSTALLER, too
@@ -898,7 +917,10 @@ Section "Uninstall"
   Delete "$QUICKLAUNCH\MiniLyrics for AlbumPlayer.lnk"
   Delete "$DESKTOP\MiniLyrics for Helium Music Manager.lnk"
   Delete "$QUICKLAUNCH\MiniLyrics for Helium Music Manager.lnk"
+  Delete "$DESKTOP\MiniLyrics for Zune software.lnk"
   Delete "$QUICKLAUNCH\MiniLyrics for Zune software.lnk"
+  Delete "$DESKTOP\MiniLyrics for Spotify.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for Spotify.lnk"
 
   ; remove directories used.
 ;  RMDir "$SMPROGRAMS\√‘ƒ„∏Ë¥ "
