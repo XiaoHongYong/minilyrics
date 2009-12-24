@@ -6,28 +6,6 @@
 #include "PreferencePageBase.h"
 
 //
-// Lyrics search folder
-//
-class CPreferPageLyrics : public CPreferencePageBase
-{
-public:
-	CPreferPageLyrics();
-	~CPreferPageLyrics();
-
-	BOOL OnInitDialog();
-	void OnCommand(UINT uID, UINT nNotifyCode);
-	void OnDestroy();
-	BOOL OnNotify(WIDGET_NOTIFY_INFO *info);
-
-protected:
-	BOOL IsDirAdded(TCHAR szDir[]);
-
-	CWidgetListCtrl		m_listCtrl;
-
-};
-
-
-//
 // Internet Lyrics Search Options
 //
 class CPreferPageLyricsDownload : public CPreferencePageBase

@@ -17,7 +17,6 @@ enum PreferPageID
 
 	// User interface
 	PAGE_UI_ROOT,
-	PAGE_LOCALIZATION,
 	PAGE_SKINS,
 	PAGE_UI_ADVANCED,
 
@@ -34,7 +33,6 @@ enum PreferPageID
 	PAGE_STARTUP,
 
 	// Lyrics
-	PAGE_LYRICS,
 	PAGE_LYR_DOWNLOAD,
 	PAGE_LYR_OUTPUT_PLUGINS,
 

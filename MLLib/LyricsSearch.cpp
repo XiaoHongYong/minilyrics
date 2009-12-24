@@ -140,6 +140,7 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 		result.strUrl += str;
 
 		result.strSaveFileName = TOLOCAL(SZ_SONG_ID3V2_SYLT_DESC);
+		result.strSaveFileName += _T(", ");
 		result.strSaveFileName += str;
 		result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
 
@@ -164,6 +165,7 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 			result.strUrl += str;
 
 			result.strSaveFileName = TOLOCAL(SZ_SONG_ID3V2_USLT_DESC);
+			result.strSaveFileName += _T(", ");
 			result.strSaveFileName += str;
 			result.nMatchValue = MATCH_VALUE_OK + 2;
 

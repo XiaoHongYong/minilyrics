@@ -225,11 +225,6 @@ void CPreferenceDlg::ConstructPreferencePages()
 		pPageParent = new CPPageUI;
 		m_vPreferencePages.push_back(pPageParent);
 
-		// Localization
-		pPage = new CPPageLocalization;
-		pPage->SetParentPage(pPageParent);
-		m_vPreferencePages.push_back(pPage);
-
 		// Skins
 		pPage = new CPreferPageSkin;
 		pPage->SetParentPage(pPageParent);
@@ -300,7 +295,7 @@ void CPreferenceDlg::ConstructPreferencePages()
 		//
 
 		// lyrics
-		pPageParent = new CPreferPageLyrics();
+		pPageParent = new CPreferencePageBase(0, _T("Lyrics"));
 		m_vPreferencePages.push_back(pPageParent);
 
 		// lyrics download
@@ -315,7 +310,9 @@ void CPreferenceDlg::ConstructPreferencePages()
 	}
 
 	{
+		//
 		// Advanced
+		//
 		pPageParent = new CPreferPageAdvanced();
 		m_vPreferencePages.push_back(pPageParent);
 	}

@@ -589,6 +589,12 @@ void TrimStr(tstring &str, TCHAR ch)
 		str.erase(str.begin(), it);
 }
 
+void TrimStr(V_Str &vStr, TCHAR ch)
+{
+	for (size_t i = 0; i < vStr.size(); i++)
+		TrimStr(vStr[i]);
+}
+
 //
 // 去掉字符串两端的空格
 void TrimStr(LPTSTR szString, TCHAR ch)

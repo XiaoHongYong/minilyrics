@@ -100,9 +100,9 @@ public:
 #define SZ_SONG_LYRICS3V2		_T("song://lyrics3v2")
 #define SZ_SONG_ID3V2_LYRICS	_T("song://id3v2/lyrics(nonstandard)")
 
-#define SZ_SONG_ID3V2_SYLT_DESC	_T("Embedded ID3v2 synchronised lyrics, ")
-#define SZ_SONG_ID3V2_USLT_DESC	_T("Embedded ID3v2 unsynchronised lyrics, ")
-#define SZ_SONG_LYRICS3V2_DESC	_T("Embedded Lyrics3v2 synchronised lyrics")
+#define SZ_SONG_ID3V2_SYLT_DESC	_T("ID3v2 synchronized Lyrics (Support Windows Media player)")
+#define SZ_SONG_ID3V2_USLT_DESC	_T("ID3v2 unsynchronized Lyrics (Support iTunes, WMP)")
+#define SZ_SONG_LYRICS3V2_DESC	_T("Lyrics3v2 lyrics (Few players support this format)")
 #define SZ_SONG_ID3V2_LYRICS_DESC	_T("Embedded ID3v2 lyrics (Nonstandard)")
 
 void GetID3v2LrcSourceLang(LPCTSTR szLrcSource, char szLang[], int len);

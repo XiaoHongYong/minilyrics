@@ -46,12 +46,20 @@ protected:
 
 	void ListAllItems();
 
+	enum {
+		IMG_MODIFIED = 0,
+		IMG_UNMODIFIED,
+	};
+
 protected:
 	VecPreferItems				m_vPreferItems;
 	int							m_nMenuIdStart, m_nMenuIdEnd;
 	CWidgetListCtrl				m_listItems;
 	tstring						m_strLastSearch;
 
+#ifdef _WIN32
+	CImgList			m_imgList;
+#endif
 
 };
 

@@ -768,8 +768,7 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 			else if (uID == IDC_SET_OPAQUE_20)	nPercent = 20;
 			else if (uID == IDC_SET_OPAQUE_10)	nPercent = 10;
 
-			g_Profile.WriteProfileInt(GetCfgSectName(), _T("WndOpacity"), false);
-			g_Profile.WriteProfileInt(GetCfgSectName(), _T("WndOpaquePercent"), nPercent);
+			g_Profile.WriteProfileInt(GetCfgSectName(), _T("WindowOpaquePercent"), nPercent);
 			if (m_bIndividualProperties)
 				LoadTransparentSettings();
 			else
@@ -1323,22 +1322,18 @@ bool CMPSkinWnd::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 
 	if (vIDs[0] == IDC_SET_OPAQUE_100)
 	{
-		if (g_Profile.GetProfileBool(GetCfgSectName(), _T("WndOpacity"), true))
-			nIDChecked = IDC_SET_OPAQUE_100;
-		else
-		{
-			int		nPercent = g_Profile.GetProfileInt(GetCfgSectName(), _T("WndOpaquePercent"), 70);
-			if (nPercent >= 95) nIDChecked = IDC_SET_OPAQUE_100;
-			else if (nPercent >= 85) nIDChecked = IDC_SET_OPAQUE_90;
-			else if (nPercent >= 75) nIDChecked = IDC_SET_OPAQUE_80;
-			else if (nPercent >= 65) nIDChecked = IDC_SET_OPAQUE_70;
-			else if (nPercent >= 55) nIDChecked = IDC_SET_OPAQUE_60;
-			else if (nPercent >= 45) nIDChecked = IDC_SET_OPAQUE_50;
-			else if (nPercent >= 35) nIDChecked = IDC_SET_OPAQUE_40;
-			else if (nPercent >= 25) nIDChecked = IDC_SET_OPAQUE_30;
-			else if (nPercent >= 15) nIDChecked = IDC_SET_OPAQUE_20;
-			else nIDChecked = IDC_SET_OPAQUE_10;
-		}
+		int		nPercent = g_Profile.GetProfileInt(GetCfgSectName(), _T("WindowOpaquePercent"), 100);
+		if (nPercent >= 95) nIDChecked = IDC_SET_OPAQUE_100;
+		else if (nPercent >= 85) nIDChecked = IDC_SET_OPAQUE_90;
+		else if (nPercent >= 75) nIDChecked = IDC_SET_OPAQUE_80;
+		else if (nPercent >= 65) nIDChecked = IDC_SET_OPAQUE_70;
+		else if (nPercent >= 55) nIDChecked = IDC_SET_OPAQUE_60;
+		else if (nPercent >= 45) nIDChecked = IDC_SET_OPAQUE_50;
+		else if (nPercent >= 35) nIDChecked = IDC_SET_OPAQUE_40;
+		else if (nPercent >= 25) nIDChecked = IDC_SET_OPAQUE_30;
+		else if (nPercent >= 15) nIDChecked = IDC_SET_OPAQUE_20;
+		else nIDChecked = IDC_SET_OPAQUE_10;
+
 		return true;
 	}
 	else if (vIDs[0] == IDC_LDS_MULTI_LINE)
@@ -1463,16 +1458,13 @@ void CMPSkinWnd::LoadTransparentSettings()
 	BYTE			byAlpha = 255;
 	bool			bTransparentClr = false;
 
-	if (!g_Profile.GetProfileBool(GetCfgSectName(), _T("WndOpacity"), true))
-	{
-		// 半透明值
-		int		nOpaque = g_Profile.GetProfileInt(GetCfgSectName(), _T("WndOpaquePercent"), 70);
-		if (nOpaque < 10)
-			nOpaque = 10;
-		else if (nOpaque > 100)
-			nOpaque = 100;
-		byAlpha = nOpaque * 255 / 100;
-	}
+	// 半透明值
+	int		nOpaque = g_Profile.GetProfileInt(GetCfgSectName(), _T("WindowOpaquePercent"), 100);
+	if (nOpaque < 10)
+		nOpaque = 10;
+	else if (nOpaque > 100)
+		nOpaque = 100;
+	byAlpha = nOpaque * 255 / 100;
 
 	// bTransparentClr = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
 

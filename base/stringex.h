@@ -68,6 +68,7 @@ TCHAR * __cdecl stristrignore (
 						);
 
 void TrimStr(tstring &str, TCHAR ch = ' ');
+void TrimStr(V_Str &vStr, TCHAR ch = ' ');
 void TrimStr(LPTSTR pszString, TCHAR ch = ' ');
 void TrimStrRight(LPTSTR pszString, LPCTSTR pszChars = _T(" "));
 

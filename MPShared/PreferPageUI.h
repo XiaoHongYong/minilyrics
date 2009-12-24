@@ -17,23 +17,6 @@ public:
 
 	BOOL OnInitDialog();
 	void OnCommand(UINT uID, UINT nNotifyCode);
-
-protected:
-
-};
-
-
-//
-// Localization
-//
-class CPPageLocalization : public CPreferencePageBase
-{
-public:
-	CPPageLocalization();
-	~CPPageLocalization();
-
-	BOOL OnInitDialog();
-	void OnCommand(UINT uID, UINT nNotifyCode);
 	void OnDestroy();
 
 protected:

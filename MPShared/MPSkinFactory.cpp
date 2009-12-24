@@ -577,16 +577,13 @@ void CMPSkinFactory::AllUpdateTransparent()
 	BYTE			byAlpha = 255;
 	bool			bTransparentClr = false;
 
-	if (!g_Profile.GetProfileBool(SZ_SECT_UI, _T("WndOpacity"), true))
-	{
 		// °ëÍ¸Ã÷Öµ
-		int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WndOpaquePercent"), 70);
-		if (nOpaque < 10)
-			nOpaque = 10;
-		else if (nOpaque > 100)
-			nOpaque = 100;
-		byAlpha = nOpaque * 255 / 100;
-	}
+	int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
+	if (nOpaque < 10)
+		nOpaque = 10;
+	else if (nOpaque > 100)
+		nOpaque = 100;
+	byAlpha = nOpaque * 255 / 100;
 
 	// bTransparentClr = g_Profile.GetProfileBool(SZ_SECT_UI, _T("TransparentBkColor"), FALSE);
 

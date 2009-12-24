@@ -1,16 +1,17 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferPageAdvanced.h"
+#include "LyricsDownloadMgr.h"
 
 #define TIMER_ID_SEARCH		1
 #define DURATION_SEARCH		500
 
-#define SZ_YES			_T("Yes")
-#define SZ_NO			_T("No")
-#define SZ_ENABLED		_T("Enabled")
-#define SZ_DISABLED		_T("Disabled")
-#define SZ_EDIT			_T("Edit...")
-#define SZ_RESET		_T("Reset setting of selection")
+#define SZ_YES			TOLOCAL(_T("Yes"))
+#define SZ_NO			TOLOCAL(_T("No"))
+#define SZ_ENABLED		TOLOCAL(_T("Enabled"))
+#define SZ_DISABLED		TOLOCAL(_T("Disabled"))
+#define SZ_EDIT			TOLOCAL(_T("Edit..."))
+#define SZ_RESET		TOLOCAL(_T("Reset Setting of Selection"))
 
 #define MENUID_START		3000
 
@@ -96,6 +97,171 @@ public:
 
 };
 
+class CPfItemBoolEnableAutoDlLyr : public CPfItemBool
+{
+public:
+	CPfItemBoolEnableAutoDlLyr() 
+		: CPfItemBool(_T("Auto download lyrics"), ET_NULL, SZ_SECT_LYR_DL,
+			_T("EnableAuoDownload"), true)
+	{
+	}
+
+	virtual void SetIntValue(int nValue)
+	{
+		g_LyricsDownloader.m_bAutoDownload = Tobool(nValue);
+		CPfItemBool::SetIntValue(nValue);
+	}
+
+};
+
+class CPfItemLyrSearchFolder : public CPreferItem
+{
+public:
+	CPfItemLyrSearchFolder(CBaseWnd *pWndParent)
+		: CPreferItem(_T("Lyrics search folder"))
+	{
+		m_pWndParent = pWndParent;
+	}
+
+	virtual tstring GetValue() {
+		tstring		strValue;
+
+		for (int i = 0; i < g_LyricSearch.GetSearchFolerCount(); i++)
+		{
+			CLyricsLocalSearch::SearchFolder	*psf;
+
+			psf = g_LyricSearch.GetFolder(i);
+			strValue += psf->strFolder;
+			strValue += _T("; ");
+		}
+
+		return strValue;
+	}
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		vString.push_back(TOLOCAL(_T("Add folder...")));
+
+		if (g_LyricSearch.GetSearchFolerCount() > 0)
+			vString.push_back(_T(""));
+
+		for (int i = 0; i < g_LyricSearch.GetSearchFolerCount(); i++)
+		{
+			CLyricsLocalSearch::SearchFolder	*psf;
+
+			psf = g_LyricSearch.GetFolder(i);
+			vString.push_back(tstring(TOLOCAL(_T("Remove folder:"))) + _T(" ") + psf->strFolder);
+		}
+	}
+
+	virtual void SetOption(int nIndex) {
+		if (nIndex == 0)
+		{
+			// Add new folder:
+			CFolderDialog		dlg;
+			TCHAR	szPath[MAX_PATH];
+
+			// 取得上次选择过的文件夹的位置
+			g_Profile.GetProfileString(_T("LastSelectFolder"), _T(""), szPath, MAX_PATH);
+			dlg.SetInitFolder(szPath);
+
+			if (dlg.DoBrowse(m_pWndParent))
+			{
+				// 保存上次选择过的文件夹的位置
+				_tcscpy_safe(szPath, CountOf(szPath), dlg.GetFolder());
+				g_Profile.WriteProfileString(_T("LastSelectFolder"), szPath);
+
+				if (! g_LyricSearch.IsFolderAdded(szPath))
+				{
+					g_LyricSearch.SetFolder(szPath, TRUE);
+
+					// update lyric
+					g_mpApp.ResearchLyrics();
+					g_LyricSearch.SaveLyricFolderCfg();
+				}
+			}
+		}
+		else
+		{
+			// Remove search folder
+			nIndex--;
+			if (nIndex >= g_LyricSearch.GetSearchFolerCount())
+			{
+				ASSERT(0);
+				return;
+			}
+			g_LyricSearch.RemoveFolder(nIndex);
+			g_LyricSearch.SaveLyricFolderCfg();
+
+			g_mpApp.ResearchLyrics();
+		}
+	}
+
+	virtual bool IsDefault() {
+		return g_LyricSearch.GetSearchFolerCount() == 0;
+	}
+
+	virtual void Reset() {
+		for (int i = 0; i < g_LyricSearch.GetSearchFolerCount(); i++)
+			g_LyricSearch.RemoveFolder(i);
+		g_LyricSearch.SaveLyricFolderCfg();
+	}
+
+	CBaseWnd	*m_pWndParent;
+
+};
+
+class CPfItemLyrExternalEditor : public CPreferItem
+{
+public:
+	CPfItemLyrExternalEditor(CBaseWnd *pWndParent)
+		: CPreferItem(_T("External Lyrics Editor"))
+	{
+		m_pWndParent = pWndParent;
+	}
+
+	virtual tstring GetValue() {
+		tstring		strEditor;
+		GetNotepadEditor(strEditor);
+		return CMLProfile::GetDir(SZ_SECT_UI, _T("LyricsEditor"), strEditor.c_str()).c_str();
+	}
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		vString.push_back(TOLOCAL(SZ_EDIT));
+	}
+
+	virtual void SetOption(int nIndex) {
+		ASSERT(nIndex == 0);
+		tstring		strEditor;
+
+		GetNotepadEditor(strEditor);
+
+		CFileOpenDlg	dlg(TOLOCAL(_T("Browse lyrics editor program")), strEditor.c_str(), _T("Executable file(*.exe)\0*.exe\0\0"), 1);
+
+		if (dlg.DoModal(m_pWndParent) == IDOK)
+		{
+			CMLProfile::WriteDir(SZ_SECT_UI, _T("LyricsEditor"), dlg.GetOpenFile());
+		}
+	}
+
+	virtual bool IsDefault() {
+		tstring		strEditor;
+		GetNotepadEditor(strEditor);
+		return _tcscmp(strEditor.c_str(), GetValue().c_str()) == 0;
+	}
+
+	virtual void Reset() {
+		tstring		strEditor;
+
+		GetNotepadEditor(strEditor);
+		CMLProfile::WriteDir(SZ_SECT_UI, _T("LyricsEditor"), strEditor.c_str());
+	}
+
+	CBaseWnd	*m_pWndParent;
+
+};
+
+
+
 #ifdef _WIN32_DESKTOP
 class CPfItemWndOpacity : public CPreferItem
 {
@@ -103,16 +269,11 @@ public:
 	CPfItemWndOpacity() : CPreferItem(_T("Window opaque percent(10 - 100)")) { }
 
 	virtual tstring GetValue() {
-		if (IsEnabled())
-			return CStrPrintf(_T("%d"), GetOpacity()).c_str();
-		else
-			return SZ_DISABLED;
+		return CStrPrintf(_T("%d"), GetOpacity()).c_str();
 	}
 
-	bool IsEnabled()
-		{ return !g_Profile.GetProfileBool(SZ_SECT_UI, _T("WndOpacity"), false); }
 	int GetOpacity() {
-		int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WndOpaquePercent"), 70);
+		int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
 		if (nOpaque < 10)
 			nOpaque = 10;
 		else if (nOpaque > 100)
@@ -122,46 +283,31 @@ public:
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
 		CStrPrintf	str;
-		vString.push_back(SZ_DISABLED);
 		for (int i = 10; i <= 100; i += 10)
 		{
 			str.printf(_T("%d"), i);
 			vString.push_back(str.c_str());
 		}
 
-		if (!IsEnabled())
-			nRadio = 0;
-		else
-			nRadio = GetOpacity() / 10;
+		nRadio = GetOpacity() / 10 - 1;
 	}
 
 	virtual void SetOption(int nIndex) {
-		if (nIndex == 0)
-			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WndOpacity"), true);
-		else
-		{
-			if (!IsEnabled())
-				g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WndOpacity"), false);
-			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WndOpaquePercent"), nIndex * 10);
-		}
+		g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), (nIndex + 1) * 10);
 
 		g_mpApp.GetSkinFactory()->AllUpdateTransparent();
 	}
 
 	virtual bool IsDefault() {
-		return !IsEnabled();
+		return GetOpacity() == 100;
 	}
 
 	virtual void Reset() {
-		SetOption(0);
+		SetOption(9);
 	}
 
 };
-
 #endif // #ifdef _WIN32_DESKTOP
-
-void SplitKeywords(LPCTSTR szKeywords, V_Str &vKeywords);
-
 
 
 CPreferPageAdvanced::CPreferPageAdvanced() : CPreferencePageBase(IDD_PAGE_ADVANCED, _T("Advanced"))
@@ -184,8 +330,15 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 
 	m_listItems.Attach(this, IDC_LIST_SETTINGS);
 	m_listItems.SetExtendedStyle(LVS_EX_FULLROWSELECT);
-	m_listItems.InsertColumn(0, _T("Option"), LVCFMT_LEFT, 200);
-	m_listItems.InsertColumn(1, _T("Value"), LVCFMT_LEFT, 200);
+	m_listItems.InsertColumn(0, TOLOCAL(_T("Option")), LVCFMT_LEFT, 300);
+	m_listItems.InsertColumn(1, TOLOCAL(_T("Value")), LVCFMT_LEFT, 150);
+
+#ifdef _WIN32
+	// 创建ImageList
+	m_imgList.LoadBitmap(IDB_ADV_PREFERENCE, 16, RGB(255, 255, 255));
+
+	m_listItems.SetImageList(m_imgList.GetHandle(), LVSIL_SMALL);
+#endif
 
 #ifdef _WIN32_DESKTOP
 	m_vPreferItems.push_back(new CPfItemWndOpacity());
@@ -193,16 +346,27 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 
 #ifndef _MPLAYER
 	// 自动隐藏迷你歌词如果没有歌词
-	m_vPreferItems.push_back(new CPfItemBool(_T("Auto hide MiniLyrics if no lyrics is opened"), ET_NULL, SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Auto hide minilyrics when playing movie"), ET_NULL, SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Hide toolbar"), ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("HideToolbar"), false));
 	m_vPreferItems.push_back(new CPfItemBool(_T("Activate, minimize and restore with player window"),
 		ET_NULL, SZ_SECT_UI, _T("ActivateWithWinamp"), true));
+	m_vPreferItems.push_back(new CPfItemBool(_T("Hide toolbar"), ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("HideToolbar"), false));
+	m_vPreferItems.push_back(new CPfItemBool(_T("Auto hide MiniLyrics if no lyrics is opened"), ET_NULL, SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false));
+	m_vPreferItems.push_back(new CPfItemBool(_T("Auto hide minilyrics when playing movie"), ET_NULL, SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true));
 #endif
 	m_vPreferItems.push_back(new CPfItemBool(_T("Auto adjust window width with lyrics"), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndWidth"), false));
 	m_vPreferItems.push_back(new CPfItemBool(_T("Auto adjust window height with lyrics"), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndHeight"), true));
 	// m_vPreferItems.push_back(new CPfItemBool(_T("Hide the link of rating lyrics"), ET_NULL, SZ_SECT_UI, _T("HideRateLink"), true));
 	m_vPreferItems.push_back(new CPfItemBool(_T("Allow to adjust the vertical position of lyrics"), ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("EnableAdjustVertAlign"), false));
+
+	//
+	// Lyrics
+	//
+	// m_vPreferItems.push_back(new CPfItemBool(_T(""), ));
+	m_vPreferItems.push_back(new CPfItemBoolEnableAutoDlLyr());
+	m_vPreferItems.push_back(new CPfItemBool(_T("Do not download txt lyrics file automatically"), ET_NULL, SZ_SECT_LYR_DL, _T("NoDlTxtFile"), false));
+	m_vPreferItems.push_back(new CPfItemBool(_T("Pop up lyrics searching dialog when lyrics are found"), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), true));
+	m_vPreferItems.push_back(new CPfItemBool(_T("Save lyrics in the subfolder in abc order"), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
+	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(this));
+	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(this));
 
 	ListAllItems();
 
@@ -225,6 +389,10 @@ BOOL CPreferPageAdvanced::OnNotify(WIDGET_NOTIFY_INFO *info)
 			GetCursorPos(&pt);
 			ShowCustomizeMenu(pt.x, pt.y);
 		}
+		else if (info->nCode == WN_LV_SELECTED || info->nCode == WN_LV_UNSELECTED)
+		{
+			EnableDlgItem(IDC_CUSTOMIZE, m_listItems.GetNextSelectedItem() != -1);
+		}
 	}
 
 	return true;
@@ -246,7 +414,8 @@ void CPreferPageAdvanced::OnTimer(UINT nIDEvent)
 	m_strLastSearch = strKey;
 
 	V_Str		vKeyWords;
-	SplitKeywords(strKey.c_str(), vKeyWords);
+	StrSplit(strKey.c_str(), _T(' '), vKeyWords);
+	TrimStr(vKeyWords, ' ');
 	if (vKeyWords.empty() || (vKeyWords.size() == 1 && vKeyWords[0].empty()))
 	{
 		ListAllItems();
@@ -259,18 +428,20 @@ void CPreferPageAdvanced::OnTimer(UINT nIDEvent)
 	for (size_t i = 0; i < m_vPreferItems.size(); i++)
 	{
 		CPreferItem	*item = m_vPreferItems[i];
-		bool		bMatch = false;
+		bool		bMatch = true;
 
 		for (size_t k = 0; k < vKeyWords.size(); k++)
 		{
-			if (!stristr(item->m_strName.c_str(), vKeyWords[k].c_str()))
+			if (!stristr(TOLOCAL(item->m_strName.c_str()), vKeyWords[k].c_str()))
+			{
+				bMatch = false;
 				break;
-			bMatch = true;
+			}
 		}
 
 		if (bMatch)
 		{
-			int	n = m_listItems.InsertItem(i, item->m_strName.c_str());
+			int	n = m_listItems.InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
 			m_listItems.SetItemText(n, 1, item->GetValue().c_str());
 		}
 	}
@@ -309,6 +480,11 @@ void CPreferPageAdvanced::OnCommand(UINT uID, UINT nNotifyCode)
 
 			int		nSel = m_listItems.GetNextSelectedItem();
 			m_listItems.SetItemText(nSel, 1, item->GetValue().c_str());
+
+#ifdef _WIN32
+			m_listItems.SetItem(nSel, 0, LVIF_IMAGE, _T(""), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, 0, 0);
+#endif
+
 		}
 
 		break;
@@ -343,7 +519,10 @@ void CPreferPageAdvanced::ShowCustomizeMenu(int x, int y)
 	item->GetOptions(vOptions, nRadio);
 	for (size_t i = 0; i < vOptions.size(); i++)
 	{
-		menu.AppendItem(m_nMenuIdEnd++, vOptions[i].c_str());
+		if (vOptions[i].empty())
+			menu.AppendSeperator();
+		else
+			menu.AppendItem(m_nMenuIdEnd++, vOptions[i].c_str());
 	}
 	menu.AppendSeperator();
 
@@ -364,7 +543,7 @@ void CPreferPageAdvanced::ListAllItems()
 	for (size_t i = 0; i < m_vPreferItems.size(); i++)
 	{
 		CPreferItem	*item = m_vPreferItems[i];
-		int	n = m_listItems.InsertItem(i, item->m_strName.c_str());
+		int	n = m_listItems.InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
 		m_listItems.SetItemText(n, 1, item->GetValue().c_str());
 	}
 }

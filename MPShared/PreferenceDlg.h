@@ -21,7 +21,7 @@ public:
 	CPreferenceDlg();
 	virtual ~CPreferenceDlg();
 
-	BOOL Create(CBaseWnd *pWndParent, PreferPageID idToactivate = PAGE_LOCALIZATION, bool bFloatingLyrMode = false);
+	BOOL Create(CBaseWnd *pWndParent, PreferPageID idToactivate = PAGE_UI_ROOT, bool bFloatingLyrMode = false);
 
 public:
 	BOOL OnInitDialog();

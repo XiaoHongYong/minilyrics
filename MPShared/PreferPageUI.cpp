@@ -3,9 +3,10 @@
 #include "PreferPageUI.h"
 #include "PreferenceDlg.h"
 
+//////////////////////////////////////////////////////////////////////////
+
 CPPageUI::CPPageUI() : CPreferencePageBase(IDD_PAGE_UI_ROOT, _T("User Interface"))
 {
-	m_PageID = PAGE_UI_ROOT;
 }
 
 CPPageUI::~CPPageUI()
@@ -25,56 +26,12 @@ BOOL CPPageUI::OnInitDialog()
 
 	InitCheckButtons();
 
-	return TRUE;
-}
-
-void CPPageUI::OnCommand(UINT uID, UINT nNotifyCode)
-{
-	CPreferencePageBase::OnCommand(uID, nNotifyCode);
-
-	switch (uID)
-	{
-	case IDC_ALWAYS_ON_TOP:
-		{
-			bool		bValue = IsButtonChecked(uID);
-
-			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bValue);
-			g_mpApp.GetSkinFactory()->TopmostAll(bValue);
-		}
-		break;
-#ifdef _WIN32_DESKTOP
-	case IDC_CLICK_THROUGH:
-		g_mpApp.GetSkinFactory()->SetClickThrough(IsButtonChecked(IDC_CLICK_THROUGH));
-		g_mpApp.GetSkinFactory()->AllUpdateTransparent();
-		break;
-#endif
-	default:
-		ProcessCommand(uID, nNotifyCode);
-		break;
-	}
-}
-
-//////////////////////////////////////////////////////////////////////////
-
-CPPageLocalization::CPPageLocalization() : CPreferencePageBase(IDD_PAGE_LOCALIZATION, _T("Localization"))
-{
-	m_PageID = PAGE_LOCALIZATION;
-}
-
-CPPageLocalization::~CPPageLocalization()
-{
-}
-
-BOOL CPPageLocalization::OnInitDialog()
-{
-	CPreferencePageBase::OnInitDialog();
-
 	UpdateLanguageInfo();
 
 	return TRUE;
 }
 
-void CPPageLocalization::OnDestroy()
+void CPPageUI::OnDestroy()
 {
 	m_LangDlgHelper.Destroy();
 
@@ -86,7 +43,7 @@ void CPPageLocalization::OnDestroy()
 
 const int	_CMD_ID_LANGUANG_BEGIN	= 3000;
 
-void CPPageLocalization::OnCommand(UINT uID, UINT nNotifyCode)
+void CPPageUI::OnCommand(UINT uID, UINT nNotifyCode)
 {
 	CBaseDialog::OnCommand(uID, nNotifyCode);
 
@@ -125,6 +82,20 @@ void CPPageLocalization::OnCommand(UINT uID, UINT nNotifyCode)
 			m_menuLang.TrackPopupMenu(rc.left, rc.top, this);
 		}
 		break;
+	case IDC_ALWAYS_ON_TOP:
+		{
+			bool		bValue = IsButtonChecked(uID);
+
+			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bValue);
+			g_mpApp.GetSkinFactory()->TopmostAll(bValue);
+		}
+		break;
+#ifdef _WIN32_DESKTOP
+	case IDC_CLICK_THROUGH:
+		g_mpApp.GetSkinFactory()->SetClickThrough(IsButtonChecked(IDC_CLICK_THROUGH));
+		g_mpApp.GetSkinFactory()->AllUpdateTransparent();
+		break;
+#endif
 	default:
 		//
 		// 选择了一个语言包, 则立即切换到该语言
@@ -147,11 +118,13 @@ void CPPageLocalization::OnCommand(UINT uID, UINT nNotifyCode)
 
 			UpdateLanguageInfo();
 		}
+		else
+			ProcessCommand(uID, nNotifyCode);
 		break;
 	}
 }
 
-void CPPageLocalization::UpdateLanguageInfo()
+void CPPageUI::UpdateLanguageInfo()
 {
 	tstring		strLangFile;
 	tstring		strInfo;
