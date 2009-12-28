@@ -53,6 +53,7 @@ protected:
 
 protected:
 	VecPreferItems				m_vPreferItems;
+	VecPreferItems				m_vFilteredItems;
 	int							m_nMenuIdStart, m_nMenuIdEnd;
 	CWidgetListCtrl				m_listItems;
 	tstring						m_strLastSearch;

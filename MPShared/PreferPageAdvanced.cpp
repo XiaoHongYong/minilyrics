@@ -11,7 +11,7 @@
 #define SZ_ENABLED		TOLOCAL(_T("Enabled"))
 #define SZ_DISABLED		TOLOCAL(_T("Disabled"))
 #define SZ_EDIT			TOLOCAL(_T("Edit..."))
-#define SZ_RESET		TOLOCAL(_T("Reset Setting of Selection"))
+#define SZ_RESET		TOLOCAL(_T("Reset Selected Settings"))
 
 #define MENUID_START		3000
 
@@ -362,7 +362,7 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 	//
 	// m_vPreferItems.push_back(new CPfItemBool(_T(""), ));
 	m_vPreferItems.push_back(new CPfItemBoolEnableAutoDlLyr());
-	m_vPreferItems.push_back(new CPfItemBool(_T("Do not download txt lyrics file automatically"), ET_NULL, SZ_SECT_LYR_DL, _T("NoDlTxtFile"), false));
+	m_vPreferItems.push_back(new CPfItemBool(_T("Only download synchronized lyrics with .lrc extension"), ET_NULL, SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false));
 	m_vPreferItems.push_back(new CPfItemBool(_T("Pop up lyrics searching dialog when lyrics are found"), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), true));
 	m_vPreferItems.push_back(new CPfItemBool(_T("Save lyrics in the subfolder in abc order"), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
 	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(this));
@@ -423,6 +423,7 @@ void CPreferPageAdvanced::OnTimer(UINT nIDEvent)
 	}
 
 	m_listItems.DeleteAllItems();
+	m_vFilteredItems.clear();
 
 	// List results.
 	for (size_t i = 0; i < m_vPreferItems.size(); i++)
@@ -441,6 +442,7 @@ void CPreferPageAdvanced::OnTimer(UINT nIDEvent)
 
 		if (bMatch)
 		{
+			m_vFilteredItems.push_back(item);
 			int	n = m_listItems.InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
 			m_listItems.SetItemText(n, 1, item->GetValue().c_str());
 		}
@@ -496,10 +498,10 @@ CPreferItem *CPreferPageAdvanced::GetCurItem()
 	int			nSel = 0;
 
 	nSel = m_listItems.GetNextSelectedItem();
-	if (nSel < 0 || nSel >= m_vPreferItems.size())
+	if (nSel < 0 || nSel >= m_vFilteredItems.size())
 		return NULL;
 
-	return m_vPreferItems[nSel];
+	return m_vFilteredItems[nSel];
 }
 
 void CPreferPageAdvanced::ShowCustomizeMenu(int x, int y)
@@ -539,6 +541,8 @@ void CPreferPageAdvanced::ShowCustomizeMenu(int x, int y)
 void CPreferPageAdvanced::ListAllItems()
 {
 	m_listItems.DeleteAllItems();
+
+	m_vFilteredItems = m_vPreferItems;
 
 	for (size_t i = 0; i < m_vPreferItems.size(); i++)
 	{
