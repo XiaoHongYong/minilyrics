@@ -392,6 +392,12 @@ bool CRawImage::Blt(CRawImage *pImage, int xDest, int yDest, int widthDest, int 
 	if (rcDst.Height() > pImage->m_cy)
 		rcDst.bottom = rcDst.top + pImage->m_cy;
 
+	if (rcDst.top >= pImage->m_y + pImage->m_cy)
+		return true;
+
+	if (rcDst.left >= pImage->m_x + pImage->m_cx)
+		return true;
+
 	return BltRawImage(pImage->m_hImage, rcDst, m_hImage, xSrc, ySrc, bpm, nOpacitySrc);
 }
 
@@ -531,6 +537,12 @@ bool CRawImage::StretchBlt(CRawImage *pImage, int xDest, int yDest, int widthDes
 		rcSrc.y2 = ySrc + heightSrc - dy * (yDest + heightDest - rcDst.bottom);
 
 	if (rcDst.Width() <= 0 || rcDst.Height() <= 0)
+		return true;
+
+	if (rcDst.top >= pImage->m_y + pImage->m_cy)
+		return true;
+
+	if (rcDst.left >= pImage->m_x + pImage->m_cx)
 		return true;
 
 	return StretchBlt(pImage->m_hImage, rcDst, rcSrc, bpm, nOpacitySrc);
