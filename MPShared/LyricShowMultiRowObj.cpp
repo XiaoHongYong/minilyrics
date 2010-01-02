@@ -27,8 +27,6 @@ CLyricShowMultiRowObj::CLyricShowMultiRowObj()
 
 	m_nDarkenTopArea = float(1.5);
 	m_nDarkenBottomArea = float(1.5);
-
-	m_bOnlyDisplayCurLineLyr = true;
 }
 
 CLyricShowMultiRowObj::~CLyricShowMultiRowObj()
@@ -40,15 +38,6 @@ void CLyricShowMultiRowObj::Invalidate()
 	m_yDrawingOld = -1;
 	m_nCurRowOld = -1;
 	CLyricShowObj::Invalidate();
-}
-
-
-void CLyricShowMultiRowObj::OnCreate()
-{
-	CLyricShowObj::OnCreate();
-
-	if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
-		m_bOnlyDisplayCurLineLyr = g_Profile.GetProfileBool(SZ_SECT_LYR_DISPLAY, _T("DispCurLineLyr"), true);
 }
 
 void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
@@ -66,7 +55,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	pGraphics->SetFont(&m_font);
 
 	CDispOptRecover		dispOptRecover(this);
-	if (m_img.IsValid() && m_bOnlyDisplayCurLineLyr)
+	if (m_img.IsValid())
 		m_LyricsDisplayOpt = DO_FADEOUT_BG;
 
 	if (prcUpdate)
@@ -150,7 +139,8 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		pGraphics->SetClipBoundBox(rcClip);
 	}
 
-	int nRow, nRowEnd;
+	int		nRow, nRowEnd;
+	int		yLyrStart, yLyrEnd;
 
 	// draw center row, the row lyric is current
 	DrawCurrentRow(pGraphics, pRowCur, AUTO_CAL_X, yCurRow);
@@ -166,6 +156,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 			break;
 		nRow--;
 	}
+	yLyrStart = y + nRowHeight;
 
 	// Draw lyrics lines below current line
 	nRow = nRowCur + 1;
@@ -177,25 +168,31 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 			break;
 		nRow++;
 	}
+	yLyrEnd = y;
 
 #ifdef _WIN32_DESKTOP
-	// if (/*m_pSkin->GetEnableTranslucencyLayered() && */m_LyricsDisplayOpt != DO_FADEOUT_BG)
-	if (!m_pSkin->IsBgImageUsed() || m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+	if ((!m_pSkin->IsBgImageUsed() && !m_img.IsValid()) || m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 	{
 		CRect	rc;
 
 		rc.SetRect(m_rcObj.left, m_rcObj.top, m_rcObj.right, m_rcObj.top + m_nFontHeight);
-		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-			pGraphics->VertAlphaFadeOut(&rc, true);
-		else
-			pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), true);
+		if (rc.bottom > yLyrStart)
+		{
+			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+				pGraphics->VertAlphaFadeOut(&rc, true);
+			else
+				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), true);
+		}
 
 		rc.bottom = m_rcObj.bottom;
 		rc.top = m_rcObj.bottom - m_nFontHeight;
-		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-			pGraphics->VertAlphaFadeOut(&rc, false);
-		else
-			pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), false);
+		if (rc.top < yLyrEnd)
+		{
+			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+				pGraphics->VertAlphaFadeOut(&rc, false);
+			else
+				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), false);
+		}
 	}
 #endif
 
@@ -308,7 +305,7 @@ void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGra
 
 	if (prcUpdate->top < m_rcObj.top + m_nYMargin)
 		prcUpdate->top = m_rcObj.top + m_nYMargin;
-	if (prcUpdate->bottom < m_rcObj.bottom - m_nYMargin)
+	if (prcUpdate->bottom > m_rcObj.bottom - m_nYMargin)
 		prcUpdate->bottom = m_rcObj.bottom - m_nYMargin;
 }
 
@@ -326,16 +323,4 @@ void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfNormal(CRawGraph *pGraphi
 		prcUpdate->top = m_rcObj.top + m_nYMargin;
 	if (prcUpdate->bottom > m_rcObj.bottom - m_nYMargin)
 		prcUpdate->bottom = m_rcObj.bottom - m_nYMargin;
-}
-
-bool CLyricShowMultiRowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
-{
-	if (IsPropertyName(szProperty, _T("DispCurLineLyr")))
-	{
-		m_bOnlyDisplayCurLineLyr = IsTRUE(szValue);
-	}
-	else
-		return CLyricShowObj::OnLyrDisplaySettings(szProperty, szValue);
-
-	return true;
 }

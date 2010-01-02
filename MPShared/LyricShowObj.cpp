@@ -15,6 +15,68 @@
 #endif
 
 
+PRAW_IMAGE_DATA AutoFitImageToRect(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst, int nBitCount)
+{
+	ASSERT(pImgSrc);
+	CRect	rc;
+	int		x = 0, y = 0;
+	int		wSrcToBlt, hSrcToBlt;
+
+	if (!pImgSrc)
+		return NULL;
+
+	if (float(pImgSrc->width) / pImgSrc->height >= float(wDst) / hDst)
+	{
+		wSrcToBlt = (int)(float(wDst) * pImgSrc->height / hDst + 0.5);
+		hSrcToBlt = pImgSrc->height;
+		x = (pImgSrc->width - wSrcToBlt) / 2;
+		y = 0;
+	}
+	else
+	{
+		wSrcToBlt = pImgSrc->width;
+		hSrcToBlt = (int)(float(hDst) * pImgSrc->width / wDst + 0.5);
+		x = 0;
+		y = (pImgSrc->height - hSrcToBlt) / 2;
+	}
+
+	CRawImage	imgSrc;
+	CRawImage	imgDst;
+	PRAW_IMAGE_DATA		pImgDst;
+
+	pImgDst = new RAW_IMAGE_DATA;
+	if (!pImgDst->Create(wDst, hDst, pImgSrc->bitCount))
+		return NULL;
+
+	imgSrc.Attach(pImgSrc);
+	imgDst.Attach(pImgDst);
+
+	imgSrc.StretchBlt(&imgDst, 0, 0, wDst, hDst, x, y, wSrcToBlt, hSrcToBlt, BPM_COPY | BPM_BILINEAR);
+
+	if (pImgSrc->bitCount != nBitCount)
+	{
+		PRAW_IMAGE_DATA		pImgDstNew;
+		pImgDstNew = new RAW_IMAGE_DATA;
+		if (pImgDstNew->Create(wDst, hDst, nBitCount))
+		{
+			imgSrc.Detach();
+			imgSrc.Attach(pImgDst);
+			imgDst.Detach();
+			imgDst.Attach(pImgDstNew);
+
+			imgSrc.Blt(&imgDst, 0, 0, BPM_COPY);
+
+			FreeRawImage(pImgDst);
+			pImgDst = pImgDstNew;
+		}
+	}
+
+	imgSrc.Detach();
+	imgDst.Detach();
+
+	return pImgDst;
+}
+
 int GetLyricFragDrawWidth(LYRIC_FRAG *pFrag, CRawGraph* pGraphics)
 {
 	ASSERT(pFrag);
@@ -242,10 +304,21 @@ void AlphaBlendColor(MLColor &clr1, MLColor &clr2, int nAlpha, MLColor &clrOut)
 		(clr1.b() * nPart1 + clr2.b() * nAlpha) / 255);
 }
 
-void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CLyricShowObj::MLColorEx clrGradient[3])
+void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CRect &rc, CLyricShowObj::MLColorEx clrGradient[3])
 {
-	ASSERT(pImage->bitCount == 24);
+	ASSERT(pImage->bitCount == 24 || pImage->bitCount == 32);
+
+	int		nPixCount = 3;
+	if (pImage->bitCount == 24)
+		nPixCount = 3;
+	else if (pImage->bitCount == 32)
+		nPixCount = 4;
 //	agg::rendering_buffer	buff(pImageData->buff, pImageData->width, pImageData->height, pImageData->stride);
+
+	if (rc.right > pImage->width)
+		rc.right = pImage->width;
+	if (rc.bottom > pImage->height)
+		rc.bottom = pImage->height;
 
 	int		r0 = clrGradient[0].r(), g0 = clrGradient[0].g(), b0 = clrGradient[0].b();
 	int		r1 = clrGradient[1].r(), g1 = clrGradient[1].g(), b1 = clrGradient[1].b();
@@ -255,7 +328,7 @@ void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CLyricShowObj::MLColorEx clr
 	uint8	*row, *pixl;
 	int		x, y;
 
-	nMiddle = pImage->height / 2;
+	nMiddle = rc.bottom / 2;
 
 	// fill top
 	dr = float(r1 - r0) / nMiddle;
@@ -263,16 +336,16 @@ void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CLyricShowObj::MLColorEx clr
 	db = float(b1 - b0) / nMiddle;
 
 	rN = (float)(r0 + 0.5); gN = (float)(g0 + 0.5); bN = (float)(b0 + 0.5);
-	row = pImage->RowPtr(0);
-	for (y = 0; y < nMiddle; y++)
+	row = pImage->PixPtr(rc.left, rc.top);
+	for (y = rc.top; y < nMiddle; y++)
 	{
 		pixl = row;
-		for (x = 0; x < pImage->width; x++)
+		for (x = rc.left; x < rc.right; x++)
 		{
 			pixl[0] = (uint8)bN;
 			pixl[1] = (uint8)gN;
 			pixl[2] = (uint8)rN;
-			pixl += 3;
+			pixl += nPixCount;
 		}
 
 		bN += db; gN += dg; rN += dr;
@@ -285,16 +358,16 @@ void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CLyricShowObj::MLColorEx clr
 	db = float(b2 - b1) / nMiddle;
 
 	rN = (float)(r1 + 0.5); gN = (float)(g1 + 0.5); bN = (float)(b1 + 0.5);
-	row = pImage->RowPtr(nMiddle);
-	for (y = nMiddle; y < pImage->height; y++)
+	row = pImage->PixPtr(rc.left, nMiddle);
+	for (y = nMiddle; y < rc.bottom; y++)
 	{
 		pixl = row;
-		for (x = 0; x < pImage->width; x++)
+		for (x = rc.left; x < rc.right; x++)
 		{
 			pixl[0] = (uint8)bN;
 			pixl[1] = (uint8)gN;
 			pixl[2] = (uint8)rN;
-			pixl += 3;
+			pixl += nPixCount;
 		}
 
 		bN += db; gN += dg; rN += dr;
@@ -326,7 +399,8 @@ void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::
 
 	if (pImage)
 	{
-		GradientFillImage24bpp(pImage, clrGradient);
+		CRect	rc(0, 0, pImage->width, pImage->height);
+		GradientFillImage24bpp(pImage, rc, clrGradient);
 		image.Attach(pImage);
 	}
 }
@@ -386,7 +460,6 @@ static ID_TO_STRING g_idsLOB[] =
 {
 	DEFINE_IDT(OBM_COLOR),
 	DEFINE_IDT(OBM_GRADIENT_COLOR),
-	DEFINE_IDT(OBM_AUTO_GRADIENT),
 	DEFINE_IDT(OBM_PATTERN),
 	{ 0, NULL },
 };
@@ -466,12 +539,6 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 
 		CreateGradientFillImage24bpp(tob.imgPattern, nGradientPatternHeight, tob.clr + CLyricShowObj::TCI_GRADIENT1);
 	}
-	else if (tob.obm == OBM_AUTO_GRADIENT)
-	{
-		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_AUTO_GRADIENT], szSectName, pFiledName[CLyricShowObj::TCI_AUTO_GRADIENT]);
-
-		CreateGradientFillImage24bpp(tob.imgPattern, nGradientPatternHeight, tob.clr[CLyricShowObj::TCI_AUTO_GRADIENT]);
-	}
 	else
 	{
 		tob.imgPattern.Destroy();
@@ -506,10 +573,6 @@ void CreateLyrOverlayBlendingPattern(CLyricShowObj::TextOverlayBlending &tob, in
 	else if (tob.obm == OBM_GRADIENT_COLOR)
 	{
 		CreateGradientFillImage24bpp(tob.imgPattern, nGradientPatternHeight, tob.clr + CLyricShowObj::TCI_GRADIENT1);
-	}
-	else if (tob.obm == OBM_AUTO_GRADIENT)
-	{
-		CreateGradientFillImage24bpp(tob.imgPattern, nGradientPatternHeight, tob.clr[CLyricShowObj::TCI_AUTO_GRADIENT]);
 	}
 	else
 		tob.imgPattern.Destroy();
@@ -622,15 +685,12 @@ CLyricShowObj::CLyricShowObj()
 
 	m_bUseAlbumArtAsBg = false;
 	m_bUseBgImg = false;
-	m_bOutlineLyricsOnBgPic = true;
 
 	m_bDarkenLyrBgOnImg = true;
 	m_nDarkenTopArea = float(1.25);
 	m_nDarkenBottomArea = float(1.25);
 	m_clrDarken.set(RGB(0x18, 0x3C, 0x7B));
 	m_clrDarken.setAlpha(128);
-
-	m_bgImgPos = BIP_CENTER;
 
 	m_nNextPic = 0;
 
@@ -693,9 +753,6 @@ void CLyricShowObj::OnCreate()
 
 	ColorToStr(m_clrBg, strColor);
 	m_pSkin->SetProperty(_T("BgColor"), strColor.c_str());
-
-	if (m_bUseAlbumArtAsBg || m_bUseBgImg)
-		LoadNextBgImage();
 
 	// !auto resize || !wrap lines
 	if (!m_bEnableAutoResize || !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)
@@ -1340,12 +1397,14 @@ void CLyricShowObj::UpdateLyricDrawBufferBackground(CRawGraph *pGraphics, CRect 
 	if (m_img.IsValid())
 	{
 		m_img.TileBltEx(pGraphics, m_rcObj.left, m_rcObj.top, rc.left, rc.top, rc.Width(), rc.Height());
+		// m_img.Blt(pGraphics, m_rcObj.left, m_rcObj.top);
 
 		if (m_bDarkenLyrBgOnImg)
 			DarkenLyricsBg(pGraphics, rc);
 	}
 	else
 	{
+		ASSERT(rc.bottom <= m_rcObj.bottom);
 		m_pSkin->RedrawBackground(pGraphics, &rc);
 		// pGraphics->FillRect(rc.left, rc.top, rc.Width(), rc.Height(), &m_brBg);
 	}
@@ -1373,7 +1432,7 @@ void CLyricShowObj::DarkenLyricsBg(CRawGraph *pGraphics, CRect &rc)
 	nFillBottom = min(rc.bottom, (long)nDarkenBottom);
 	nFillTop = max(rc.top, (long)nDarkenTop);
 	if (nFillBottom > nFillTop)
-		pGraphics->FillRect(rc.left, nFillTop, rc.Width(), nFillBottom - nFillTop, m_clrDarken);
+		pGraphics->FillRect(rc.left, nFillTop, rc.Width(), nFillBottom - nFillTop, m_clrDarken, BPM_BLEND);
 }
 
 void CLyricShowObj::SetAntialise(BOOL bAntialis)
@@ -1648,11 +1707,6 @@ void CLyricShowObj::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 
 void CLyricShowObj::OnLyricsChanged()
 {
-	if (m_bUseAlbumArtAsBg || m_bUseBgImg)
-	{
-		LoadNextBgImage();
-	}
-
 	if ((m_bEnableAutoResize && g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
 		|| !m_bCanWrapLines)
 	{
@@ -2024,37 +2078,13 @@ void CLyricShowObj::LoadNextBgImage()
 
 	if (hBmp)
 	{
-// 		if (g_Profile.GetProfileBool(_T("EnableBlendBgPic"), true))
-// 		{
-// 			CImageData		imgData;
-// 			int				nAlpha;
-// 
-// 			nAlpha = g_Profile.GetProfileInt(_T("BlendBgPicPercent"), 70);
-// 			if (nAlpha < 0 || nAlpha > 100)
-// 				nAlpha = 128;
-// 
-// 			if (imgData.CopyFromHBitmap(hBmp))
-// 			{
-// 				DeleteObject(hBmp);
-// 
-// 				imgData.ConvertTo24Bpp();
-// 
-// 				BlendImage(imgData, m_clrBg.get(), nAlpha * 255 / 100);
-// 
-// 				m_img.Attach(imgData.ToHBitmap(NULL));
-// 			}
-// 			else
-// 				m_img.Attach(hBmp);
-// 		}
-// 		else
-		m_img.Attach(hBmp);
-
-		m_img.GetOrginalSize(m_img.m_cx, m_img.m_cy);
-	}
-
-	if (m_img.IsValid())
-	{
-		//m_bgImgPos = (BgImagePos)g_Profile.GetProfileInt(_T("BgPicPos"), BIP_CENTER);
+		PRAW_IMAGE_DATA	hImg = AutoFitImageToRect(hBmp, m_rcObj.Width(), m_rcObj.Height(), hBmp->bitCount);
+		if (hImg)
+		{
+			m_img.Attach(hImg);
+			m_img.GetOrginalSize(m_img.m_cx, m_img.m_cy);
+		}
+		FreeRawImage(hBmp);
 	}
 }
 
@@ -2067,6 +2097,9 @@ void CLyricShowObj::OnTimer(int nId)
 
 void CLyricShowObj::OnSize(int cx, int cy)
 {
+	if (m_bUseBgImg || m_bUseAlbumArtAsBg)
+		LoadNextBgImage();
+
 	if (m_bCanWrapLines)
 		WrapLyricsLines();
 }
@@ -2179,8 +2212,6 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (IsPropertyName(szProperty, _T("DarkenLyrBg")))
 		m_bDarkenLyrBgOnImg = IsTRUE(szValue);
-	else if (IsPropertyName(szProperty, _T("OutlineLyrTextOnBgPic")))
-		m_bOutlineLyricsOnBgPic = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("SlideDelayTime")))
 	{
 		if (m_bUseBgImg)
@@ -2559,7 +2590,6 @@ void CLyricShowObj::LoadAllSettings()
 	{
 		m_bUseAlbumArtAsBg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("UseAlbumArtAsBg"), false);
 		m_bUseBgImg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("UseBgImage"), false);
-		m_bOutlineLyricsOnBgPic = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("OutlineLyrTextOnBgPic"), true);
 		m_strBgPicFolder = CMLProfile::GetDir(m_strSectName.c_str(), _T("BgPicFolder"), _T(""));
 
 		m_bDarkenLyrBgOnImg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("DarkenLyrBg"), true);
@@ -2571,9 +2601,6 @@ void CLyricShowObj::LoadAllSettings()
 			LoadBgImageFolder();
 			m_nNextPicInFolder = g_Profile.GetProfileInt(m_strSectName.c_str(), _T("NextPicInFolder"), 0);
 		}
-
-		if (m_bUseBgImg || m_bUseAlbumArtAsBg)
-			LoadNextBgImage();
 
 		LoadLyrOverlaySettings();
 	}

@@ -33,7 +33,6 @@ enum OverlayBlendingMode
 	OBM_UNKNOWN,
 	OBM_COLOR,				// 1 pure color
 	OBM_GRADIENT_COLOR,		// 3 colors
-	OBM_AUTO_GRADIENT,		// 1 color to generate gradient pattern
 	OBM_PATTERN,			// picture pattern
 };
 
@@ -57,13 +56,6 @@ class CLyricShowObj : public CUIObject, public IEventHandler
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
 public:
-	enum BgImagePos
-	{
-		BIP_CENTER,
-		BIP_TILE,
-		BIP_STRETCH,
-	};
-
 	enum LinePos
 	{
 		LP_ABOVE_CUR_LINE,
@@ -288,7 +280,6 @@ protected:
 	//
 	bool					m_bUseAlbumArtAsBg;
 	bool					m_bUseBgImg;
-	bool					m_bOutlineLyricsOnBgPic;
 
 	CCurMediaAlbumArt		m_curAlbumArt;
 	tstring					m_strBgPicFolder;
@@ -296,7 +287,6 @@ protected:
 	int						m_nNextPic;
 	int						m_nNextPicInFolder;
 	CSFImage				m_img;
-	BgImagePos				m_bgImgPos;
 	bool					m_bDarkenLyrBgOnImg;
 	float					m_nDarkenTopArea, m_nDarkenBottomArea;
 	MLColor					m_clrDarken;

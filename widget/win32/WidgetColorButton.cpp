@@ -65,7 +65,7 @@ void CWidgetColorButton::OnPaint(IMLGraphicsBase *pGraph)
 
 LRESULT CWidgetColorButton::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	if (message == WM_PAINT || message == WM_LBUTTONUP)
+	if (message == WM_PAINT || message == WM_LBUTTONUP || message == WM_LBUTTONDOWN)
 		return CBaseWnd::WndProc(message, wParam, lParam);
 	else if (message == WM_DESTROY)
 	{

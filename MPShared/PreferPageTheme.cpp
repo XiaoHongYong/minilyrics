@@ -649,18 +649,9 @@ BOOL CPreferPageDispBgPic::OnInitDialog()
 {
 	CPreferencePageBase::OnInitDialog();
 
-	/*	m_cbPicPos.Attach(this, IDC_CB_POSITION);
-	m_cbPicPos.AddString(TOLOCAL(_T("Center")));
-	m_cbPicPos.AddString(TOLOCAL(_T("Tile")));
-	m_cbPicPos.AddString(TOLOCAL(_T("Stretch")));
+	AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), false, IDC_C_ALBUMART);
 
-	m_cbPicPos.SetCurSel(g_Profile.GetProfileInt(_T("BgPicPos"), 0));*/
-
-	AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), true, IDC_C_ALBUMART);
-
-	AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("OutlineLyrTextOnBgPic"), true, IDC_C_OUTLINE_LYR_ON_BGPIC);
-
-	AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), true, IDC_C_BKIMAGE);
+	AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), false, IDC_C_BKIMAGE);
 
 	AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("DarkenLyrBg"), true, IDC_C_DARKEN_LYR_BG);
 
@@ -669,8 +660,6 @@ BOOL CPreferPageDispBgPic::OnInitDialog()
 
 	SetDlgItemInt(IDC_E_DELAYTIME, 
 		g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), 10), false);
-
-	AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("DispCurLineLyr"), true, IDC_C_DISP_CUR_LINE_LYR);
 
 	InitCheckButtons();
 

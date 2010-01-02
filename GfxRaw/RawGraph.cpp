@@ -51,21 +51,17 @@ bool CRawGraph::Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCount)
 
 void CRawGraph::Line(int x1, int y1, int x2, int y2)
 {
-	ASSERT(m_imageData.bitCount == 32);
-
-	typedef agg::pixfmt_rgba32	pixfmt;
-	typedef agg::renderer_base<pixfmt> renderer_base;
 	typedef agg::scanline_p8 scanline_type;
-
-	agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
-	pixfmt	pixf(buf);
-	renderer_base rb(pixf);
-
 	scanline_type sl;
 	agg::rasterizer_scanline_aa<> ras;
 
 	agg::path_storage ps;
 	agg::conv_stroke<agg::path_storage> pg(ps);
+	agg::rgba	clr(m_pen.m_clrPen.r() / (double)255, 
+		m_pen.m_clrPen.g() / (double)255, 
+		m_pen.m_clrPen.b() / (double)255,
+		m_pen.m_clrPen.a() / (double)255);
+
 	pg.width(m_pen.m_nWidth);
 
 	ps.remove_all();
@@ -73,27 +69,44 @@ void CRawGraph::Line(int x1, int y1, int x2, int y2)
 	ps.line_to(x2, y2);
 	ras.add_path(pg);
 
-	agg::render_scanlines_aa_solid(ras, sl, rb, 
-		agg::rgba(m_pen.m_clrPen.r() / (double)255, m_pen.m_clrPen.g() / (double)255, m_pen.m_clrPen.b() / (double)255, m_pen.m_clrPen.a() / (double)255));
+	if (m_imageData.bitCount == 24)
+	{
+		typedef agg::pixfmt_rgb24	pixfmt;
+		typedef agg::renderer_base<pixfmt> renderer_base;
+
+		agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
+		pixfmt	pixf(buf);
+		renderer_base rb(pixf);
+
+		agg::render_scanlines_aa_solid(ras, sl, rb, clr);
+	}
+	else if (m_imageData.bitCount == 32)
+	{
+		typedef agg::pixfmt_rgba32	pixfmt;
+		typedef agg::renderer_base<pixfmt> renderer_base;
+
+		agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
+		pixfmt	pixf(buf);
+		renderer_base rb(pixf);
+
+		agg::render_scanlines_aa_solid(ras, sl, rb, clr);
+	}
 }
 
 void CRawGraph::Rectangle(int x, int y, int width, int height)
 {
-	ASSERT(m_imageData.bitCount == 32);
-
-	typedef agg::pixfmt_rgba32	pixfmt;
-	typedef agg::renderer_base<pixfmt> renderer_base;
 	typedef agg::scanline_p8 scanline_type;
-
-	agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
-	pixfmt	pixf(buf);
-	renderer_base rb(pixf);
 
 	scanline_type sl;
 	agg::rasterizer_scanline_aa<> ras;
 
 	agg::path_storage ps;
 	agg::conv_stroke<agg::path_storage> pg(ps);
+	agg::rgba	clr(m_pen.m_clrPen.r() / (double)255, 
+		m_pen.m_clrPen.g() / (double)255, 
+		m_pen.m_clrPen.b() / (double)255,
+		m_pen.m_clrPen.a() / (double)255);
+
 	pg.width(m_pen.m_nWidth);
 
 	ps.remove_all();
@@ -101,11 +114,31 @@ void CRawGraph::Rectangle(int x, int y, int width, int height)
 	ps.line_to(x + width, y);
 	ps.line_to(x + width, y + height);
 	ps.line_to(x, y + height);
-	ps.move_to(x, y);
+	ps.line_to(x, y);
 	ras.add_path(pg);
 
-	agg::render_scanlines_aa_solid(ras, sl, rb, 
-		agg::rgba(m_pen.m_clrPen.r() / (double)255, m_pen.m_clrPen.g() / (double)255, m_pen.m_clrPen.b() / (double)255, m_pen.m_clrPen.a() / (double)255));
+	if (m_imageData.bitCount == 24)
+	{
+		typedef agg::pixfmt_rgb24	pixfmt;
+		typedef agg::renderer_base<pixfmt> renderer_base;
+
+		agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
+		pixfmt	pixf(buf);
+		renderer_base rb(pixf);
+
+		agg::render_scanlines_aa_solid(ras, sl, rb, clr);
+	}
+	else if (m_imageData.bitCount == 32)
+	{
+		typedef agg::pixfmt_rgba32	pixfmt;
+		typedef agg::renderer_base<pixfmt> renderer_base;
+
+		agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
+		pixfmt	pixf(buf);
+		renderer_base rb(pixf);
+
+		agg::render_scanlines_aa_solid(ras, sl, rb, clr);
+	}
 }
 
 void CRawGraph::SetPen(CRawPen &pen)
@@ -491,8 +524,19 @@ void FillRectMask(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, PRAW
 	byte		*p, *pEnd, *pRow;
 	byte		*pMask, *pRowMask;
 	int			nStrideModify;
+	int			nPixSize, nPixSizeMask;
 
-	nStrideModify = (xMax - x) * PIX_SIZE;
+	if (pImage->bitCount == 32)
+		nPixSize = 4;
+	else if (pImage->bitCount == 24)
+		nPixSize = 3;
+
+	if (pImageMask->bitCount == 32)
+		nPixSizeMask = 4;
+	else if (pImageMask->bitCount == 24)
+		nPixSizeMask = 3;
+
+	nStrideModify = (xMax - x) * nPixSize;
 
 	pRow = pImage->PixPtr(x, y);
 	pRowMask = pImageMask->PixPtr(xMask, yMask);
@@ -500,14 +544,14 @@ void FillRectMask(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, PRAW
 	{
 		pEnd = pRow + nStrideModify;
 		pMask = pRowMask;
-		for (p = pRow; p < pEnd; p += PIX_SIZE)
+		for (p = pRow; p < pEnd; p += nPixSize)
 		{
 			if (pMask[3] != 0)
 			{
 				_PixRGBBlender::blend(p, srcPixel, pMask);
 				_PixAlphaBlender::blend(p, srcPixel, pMask);
 			}
-			pMask += PIX_SIZE;
+			pMask += nPixSizeMask;
 		}
 		pRow += pImage->stride;
 		pRowMask += pImageMask->stride;
@@ -517,6 +561,8 @@ void FillRectMask(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, PRAW
 
 void CRawGraph::FillRect(const RECT *lpRect, PRAW_IMAGE_DATA pImgMask, const RECT *rcMask, const MLColor &clrFill, BlendPixMode bpm)
 {
+	ASSERT(m_imageData.bitCount == 32 || m_imageData.bitCount == 24);
+
 	int			x, y, xMax, yMax;
 	uint8		srcPixel[4];
 
@@ -596,14 +642,20 @@ void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *s
 {
 	byte		*p, *pEnd, *pRow;
 	int			nStrideModify;
+	int			nPixSize;
 
-	nStrideModify = (xMax - x) * PIX_SIZE;
+	if (pImage->bitCount == 32)
+		nPixSize = 4;
+	else if (pImage->bitCount == 24)
+		nPixSize = 3;
+
+	nStrideModify = (xMax - x) * nPixSize;
 
 	pRow = pImage->PixPtr(x, y);
 	for (; y < yMax; y++)
 	{
 		pEnd = pRow + nStrideModify;
-		for (p = pRow; p < pEnd; p += PIX_SIZE)
+		for (p = pRow; p < pEnd; p += nPixSize)
 		{
 			_PixRGBBlender::blend(p, srcPixel);
 			_PixAlphaBlender::blend(p, srcPixel);
@@ -615,7 +667,7 @@ void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *s
 
 void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMode bpm)
 {
-	ASSERT(m_imageData.bitCount == 32);
+	ASSERT(m_imageData.bitCount == 32 || m_imageData.bitCount == 24);
 
 	int			x, y, xMax, yMax;
 	uint8		srcPixel[4];

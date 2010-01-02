@@ -6,36 +6,6 @@
 #include "MPlayerApp.h"
 #include "DlgAdjustHue.h"
 
-void CWidgetTrackBar::SetRange(int nMin, int nMax)
-{
-	SendMessage(m_hWnd, TBM_SETRANGE, TRUE, MAKELONG(nMin, nMax));
-}
-
-void CWidgetTrackBar::SetLineSize(int nLine)
-{
-	SendMessage(m_hWnd, TBM_SETLINESIZE, 0, nLine);
-}
-
-void CWidgetTrackBar::SetPageSize(int nPage)
-{
-	SendMessage(m_hWnd, TBM_SETPAGESIZE, 0, nPage);
-}
-
-void CWidgetTrackBar::SetTickFreq(int nFreq)
-{
-	SendMessage(m_hWnd, TBM_SETTICFREQ, nFreq, 0);
-}
-
-void CWidgetTrackBar::SetPos(int nPos)
-{
-	SendMessage(m_hWnd, TBM_SETPOS, TRUE, nPos);
-}
-
-int CWidgetTrackBar::GetPos()
-{
-	return SendMessage(m_hWnd, TBM_GETPOS, 0, 0);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -93,7 +63,7 @@ BOOL CDlgAdjustHue::OnInitDialog()
 	AdjustColorHue(clr, 1);
 
 	m_tbHue.SetLineSize(10);
-	m_tbHue.SetPageSize(40);
+	m_tbHue.SetPageSize(30);
 	m_tbHue.SetTickFreq(0);
 
 	m_hueOld = (float)(g_Profile.GetProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), 0));
@@ -109,22 +79,10 @@ BOOL CDlgAdjustHue::OnInitDialog()
 	return TRUE;
 }
 
-LRESULT CDlgAdjustHue::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
+void CDlgAdjustHue::OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 {
-	ASSERT(m_hWnd);
-	switch (message)
-	{
-	case WM_HSCROLL:
-		{
-			// CSkinVScrollBarOSStyle
-			m_hue = (float)m_tbHue.GetPos();
-			UpdateAdjustHue(m_hue);
-		}
-		break;
-	default:
-		return CBaseDialog::WndProc(message, wParam, lParam);
-	}
-	return 0;
+	m_hue = (float)m_tbHue.GetPos();
+	UpdateAdjustHue(m_hue);
 }
 
 void CDlgAdjustHue::UpdateAdjustHue(float hue)

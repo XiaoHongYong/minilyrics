@@ -22,8 +22,6 @@ public:
 	CLyricShowMultiRowObj();
 	virtual ~CLyricShowMultiRowObj();
 
-	void OnCreate();
-
 	void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
 
 	void Invalidate();
@@ -33,8 +31,6 @@ protected:
 
 	void FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine);
 	void FastestDraw_GetUpdateRectOfNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y);
-
-	bool OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue);
 
 	virtual int GetAutoHeightLines() {
 		if (m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS
@@ -50,8 +46,6 @@ public:
 	int             m_yDrawingOld;		// 上一次歌词显示的位置
 	int				m_nCurRowOld;		// 上一次显示的当前行歌词
 	int				m_nPrevLineAlphaOld, m_nNextLineAlphaOld;		// Old alpha value
-
-	bool			m_bOnlyDisplayCurLineLyr;
 
 };
 

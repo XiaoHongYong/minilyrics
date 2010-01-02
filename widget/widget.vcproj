@@ -1488,6 +1488,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\win32\WidgetTrackBar.cpp"
+				>
+			</File>
+			<File
 				RelativePath="win32\WidgetTreeCtrl.cpp"
 				>
 				<FileConfiguration
@@ -1708,6 +1712,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\WidgetTabCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\win32\WidgetTrackBar.h"
 				>
 			</File>
 			<File

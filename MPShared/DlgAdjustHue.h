@@ -9,22 +9,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-class CWidgetTrackBar : public CWidgetCtrlBase
-{
-
-public:
-
-	void SetRange(int nMin, int nMax);
-	void SetLineSize(int nLine);
-	void SetPageSize(int nPage);
-	void SetTickFreq(int nFreq);
-
-	void SetPos(int nPos);
-	int GetPos();
-	void SetTick();
-
-};
-
 class CDlgAdjustHue : public CBaseDialog  
 {
 public:
@@ -36,7 +20,7 @@ public:
 	void OnCommand(UINT uID, UINT nNotifyCode);
 	virtual BOOL OnInitDialog();
 
-	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
+	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 
 	void UpdateAdjustHue(float hue);
 

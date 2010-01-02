@@ -45,7 +45,6 @@ LPCTSTR		__LyrBgPicProperties[] = {
 	_T("BgPicFolder"),
 	_T("UseAlbumArtAsBg"),
 	_T("DarkenLyrBg"),
-	_T("OutlineLyrTextOnBgPic"),
 	_T("SlideDelayTime"),
 };
 
