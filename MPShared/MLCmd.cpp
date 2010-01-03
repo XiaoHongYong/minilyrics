@@ -73,8 +73,8 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_FORWARD_LYRICS"), CMD_FORWARD_LYRICS, _T("Lyrics Forward 0.5 Sec(Down)") },
 	{ _T("ID_DISPLAY_OPT"), CMD_DISPLAY_OPT, _T("Lyrics Display Options") },
 	{ _T("ID_HELP"), CMD_HELP, _T("Help and Support") },
-	{ _T("ID_PREVIOUS"), CMD_PREVIOUS, _T("Previous") },
-	{ _T("ID_NEXT"), CMD_NEXT, _T("Next") },
+	{ _T("ID_PREVIOUS"), CMD_PREVIOUS, _T("Previous Track") },
+	{ _T("ID_NEXT"), CMD_NEXT, _T("Next Track") },
 
 #ifdef _MPLAYER
 	{ _T("ID_SEEK"), CMD_SEEK, _T("Seek") },

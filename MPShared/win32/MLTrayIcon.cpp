@@ -26,16 +26,14 @@ void CMLTrayIcon::ForceShow(bool bForceShow) { }
 #define IDN_PLAYER_CTRL			2
 #define IDN_PLAYER_CTRL_MAX		(2 + 5)
 
-#define MAX_PLAYER_TRAY_ICON_CMD	4
-
 SYSTRAY_ICON_CMD	g_SysTrayIconCmd[] = 
 {
-	{ CMD_NEXT,	_T("Next Track"), IDI_NEXT,	NULL, false },
-	{ CMD_STOP, _T("Stop"), IDI_STOP, NULL, false },
-	{ CMD_PLAYPAUSE, _T("Play/Pause"), IDI_PLAY, NULL, false },
 	{ CMD_PREVIOUS, _T("Previous Track"), IDI_PREV, NULL, false },
-	{ 0, NULL, 0, NULL }
+	{ CMD_PLAYPAUSE, _T("Play/Pause"), IDI_PLAY, NULL, false },
+	{ CMD_NEXT,	_T("Next Track"), IDI_NEXT,	NULL, false },
 };
+
+int MAX_PLAYER_TRAY_ICON_CMD = CountOf(g_SysTrayIconCmd);
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -43,9 +41,6 @@ SYSTRAY_ICON_CMD	g_SysTrayIconCmd[] =
 
 CMLTrayIcon::CMLTrayIcon()
 {
-// 	for (int i = 0; i < MAX_PLAYER_TRAY_ICON_CMD; i++)
-// 		g_SysTrayIconCmd[i] = NULL;
-
 	m_pWnd = NULL;
 	m_hIconTray = NULL;
 	m_bForceShow = false;
@@ -188,7 +183,7 @@ void CMLTrayIcon::UpdateTrayIconText(LPCTSTR szText)
 {
 	int			nShowPos;
 
-	nShowPos = g_Profile.GetProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_SYSTRAY);
+	nShowPos = g_Profile.GetProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_BAR_TRAY);
 
 	if (nShowPos == SHOW_ICON_ON_BAR_TRAY || nShowPos == SHOW_ICON_ON_SYSTRAY)
 		CShellNotifyIcon::ModifyIcon(m_pWnd, IDN_MINILYRICS, szText, NULL);

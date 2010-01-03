@@ -15,6 +15,31 @@
 
 #define MENUID_START		3000
 
+// Remove '&'
+tstring RemovePrefixOfAcckey(LPCTSTR szStr)
+{
+	LPCTSTR		p;
+
+	p = _tcschr(szStr, '&');
+	if (!p)
+		return szStr;
+
+	tstring		str;
+
+	// Remove "(&A)"
+	if (p > szStr && *(p - 1) == '(' && p[1] != '\0' && p[2] == ')' && p[3] == '\0')
+	{
+		str.append(szStr, (int)(p - szStr) - 1);
+	}
+	else
+	{
+		str.append(szStr, (int)(p - szStr));
+		str.append(p + 1);
+	}
+
+	return str;
+}
+
 
 class CPfItemInt : public CPreferItem
 {
@@ -23,7 +48,7 @@ public:
 	{
 		eventType = etNotify;
 		strSection = szSectName;
-		strSettingName = szValueName;
+		strValueName = szValueName;
 		nDefaultValue = nDefault;
 	}
 
@@ -33,13 +58,13 @@ public:
 
 	int GetIntValue()
 	{
-		return g_Profile.GetProfileInt(strSection.c_str(), strSettingName.c_str(), nDefaultValue);
+		return g_Profile.GetProfileInt(strSection.c_str(), strValueName.c_str(), nDefaultValue);
 	}
 
 	virtual void SetIntValue(int nValue)
 	{
 		CMPlayerSettings::SetSettings(eventType, strSection.c_str(),
-			strSettingName.c_str(), nValue, eventType != ET_INVALID);
+			strValueName.c_str(), nValue, eventType != ET_INVALID);
 	}
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
@@ -60,7 +85,7 @@ public:
 
 	EventType	eventType;
 	tstring		strSection;
-	tstring		strSettingName;
+	tstring		strValueName;
 	int			nDefaultValue;
 
 };
@@ -307,6 +332,67 @@ public:
 	}
 
 };
+
+class CPfItemTrayIconPlayerCtrl : public CPfItemBool
+{
+public:
+	CPfItemTrayIconPlayerCtrl(LPCTSTR szName, int nPlayerCtrlIndex) 
+		: CPfItemBool((tstring(TOLOCAL(_T("System tray icon player control"))) + _T(": ") + TOLOCAL(szName)).c_str(),
+		ET_NULL, SZ_SECT_UI,
+		_T(""), false)
+	{
+		TCHAR	szKey[128];
+
+		wsprintf(szKey, _T("TrayIcon%d"), nPlayerCtrlIndex);
+		strValueName = szKey;
+
+		this->nPlayerCtrlIndex = nPlayerCtrlIndex;
+	}
+
+	virtual void SetIntValue(int nValue)
+	{
+		g_Profile.WriteProfileInt(strValueName.c_str(), nValue);
+
+		g_SysTrayIconCmd[nPlayerCtrlIndex].bEnable = Tobool(nValue);
+
+		g_mpApp.GetMainWnd()->UpdatePlayerSysTrayIcon();
+	}
+
+	int			nPlayerCtrlIndex;
+
+};
+
+LPCTSTR		g_szSysTrayOpt[] = { _T("&Taskbar only"), _T("S&ystem tray only"), _T("T&askbar and system tray") };
+
+class CPfItemSystemTrayIcon : public CPfItemInt
+{
+public:
+	CPfItemSystemTrayIcon() 
+		: CPfItemInt(_T("Show $Product$ in System tray and taskbar"), 
+		ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_BAR_TRAY)
+	{
+	}
+
+	virtual tstring GetValue() {
+		int	n = GetIntValue();
+		if (n < 0 || n >= CountOf(g_szSysTrayOpt))
+			n = SHOW_ICON_ON_BAR_TRAY;
+		return RemovePrefixOfAcckey(TOLOCAL(g_szSysTrayOpt[n]));
+	}
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		for (int i = 0; i < CountOf(g_szSysTrayOpt); i++)
+			vString.push_back(TOLOCAL(g_szSysTrayOpt[i]));
+
+		nRadio = GetIntValue();
+	}
+
+	virtual void SetOption(int nIndex) {
+		SetIntValue(nIndex);
+	}
+
+};
+
 #endif // #ifdef _WIN32_DESKTOP
 
 
@@ -367,6 +453,16 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 	m_vPreferItems.push_back(new CPfItemBool(_T("Save lyrics in the subfolder in abc order"), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
 	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(this));
 	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(this));
+
+	//
+	// Tray Icon controls
+	//
+	for (int i = 0; i < MAX_PLAYER_TRAY_ICON_CMD; i++)
+	{
+		m_vPreferItems.push_back(new CPfItemTrayIconPlayerCtrl(g_SysTrayIconCmd[i].szCmd, i));
+	}
+	m_vPreferItems.push_back(new CPfItemSystemTrayIcon());
+
 
 	ListAllItems();
 

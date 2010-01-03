@@ -16,9 +16,6 @@
 #include "PreferPageLyrOutput.h"
 #include "PreferPageHotkey.h"
 #include "PreferPageAdvanced.h"
-#ifdef _WIN32_DESKTOP
-#include "win32/PreferPageTrayIconCtrl.h"
-#endif
 
 #ifdef _MPLAYER
 #include "PreferPageAssociation.h"
@@ -268,15 +265,6 @@ void CPreferenceDlg::ConstructPreferencePages()
 		pPage = new CPreferPageHotkey;
 		pPage->SetParentPage(pPageParent);
 		m_vPreferencePages.push_back(pPage);
-
-#ifdef _WIN32_DESKTOP
-		//
-		// TrayIcon controls
-		//
-		pPage = new CPreferPageTrayIconCtrl();
-		pPage->SetParentPage(pPageParent);
-		m_vPreferencePages.push_back(pPage);
-#endif
 
 		// internet
 		pPage = new CPreferPageInternet;

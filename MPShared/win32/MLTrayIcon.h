@@ -28,6 +28,9 @@ struct SYSTRAY_ICON_CMD
 	bool	bEnable;
 };
 
+extern SYSTRAY_ICON_CMD	g_SysTrayIconCmd[];
+extern int				MAX_PLAYER_TRAY_ICON_CMD;
+
 class CMLTrayIcon  
 {
 public:
