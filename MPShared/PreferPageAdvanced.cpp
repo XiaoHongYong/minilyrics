@@ -3,6 +3,14 @@
 #include "PreferPageAdvanced.h"
 #include "LyricsDownloadMgr.h"
 
+#ifdef _WIN32
+#include "win32/HotkeyCtrlEx.h"
+#endif
+
+#ifdef _LINUX_GTK2
+#include "gtk2/HotkeyCtrlEx.h"
+#endif
+
 #define TIMER_ID_SEARCH		1
 #define DURATION_SEARCH		500
 
@@ -395,6 +403,206 @@ public:
 
 #endif // #ifdef _WIN32_DESKTOP
 
+class CDlgShortcutKey : public CBaseDialog
+{
+public:
+	CDlgShortcutKey(LPCTSTR szCaption) : CBaseDialog(IDD_SET_HOTKEY)
+	{
+		m_strCaption = szCaption;
+	}
+	BOOL OnInitDialog()
+	{
+		CBaseDialog::OnInitDialog();
+
+		m_hotkey.Init(this, IDC_HOTKEY);
+		SetWindowText(m_strCaption.c_str());
+
+		return TRUE;
+	}
+
+	void OnOK()
+	{
+		m_hotkey.GetHotkey(m_nVirtualKey, m_fsModifiers);
+
+		CBaseDialog::OnOK();
+	}
+
+	UINT				m_nVirtualKey, m_fsModifiers;
+
+protected:
+	CHotkeyCtrlEx		m_hotkey;
+	tstring				m_strCaption;
+
+};
+
+
+static tstring GetCmdIDDescription(int nCmd)
+{
+	LPCTSTR		szTooltip = MPCMDIDToToolTip(nCmd);
+	if (!szTooltip)
+		return _T("");
+
+	MPHotKeySection		*pSect = g_vHotkeySections;
+	for (; pSect->szName != NULL; pSect++)
+	{
+		for (int k = 0; pSect->vHotkeys[k] != 0; k++)
+		{
+			if (pSect->vHotkeys[k] == nCmd)
+			{
+				return tstring(TOLOCAL(pSect->szName)) + _T(" ") + TOLOCAL(szTooltip);
+			}
+		}
+	}
+
+	return szTooltip;
+}
+
+class CPfItemShortcut : public CPreferItem
+{
+public:
+	struct Hotkey {
+		bool		bGlobal;
+		tstring		strHotkey;
+	};
+	typedef vector<Hotkey>	VecHotkeys;
+
+	CPfItemShortcut(CPreferPageAdvanced *pWndParent, LPCTSTR szName, int nCmd)
+		: CPreferItem(szName)
+	{
+		m_nCmd = nCmd;
+		m_pWndParent = pWndParent;
+	}
+
+	virtual tstring GetValue() {
+		tstring		strValue;
+		VecHotkeys	vHotkeys;
+
+		EnumAll(vHotkeys);
+
+		for (int i = 0; i < vHotkeys.size(); i++)
+		{
+			if (!strValue.empty())
+				strValue.append(_T("; "));
+			if (vHotkeys[i].bGlobal)
+			{
+				strValue += TOLOCAL(_T("Global:"));
+				strValue += _T(" ");
+			}
+			strValue += vHotkeys[i].strHotkey;
+		}
+
+		return strValue;
+	}
+
+	void EnumAll(VecHotkeys &vHotkeys)
+	{
+		int			nIndex = -1;
+		CMPHotkey::CmdAccKey	*pCmdKey;
+		while (1)
+		{
+			nIndex = g_mpApp.GetHotkey().GetByCmd(m_nCmd, nIndex);
+			if (nIndex == -1)
+				break;
+
+			pCmdKey = g_mpApp.GetHotkey().Get(nIndex);
+			if (pCmdKey)
+			{
+				Hotkey		hotkey;
+				FormatHotkeyText(hotkey.strHotkey, pCmdKey->button, pCmdKey->fsModifiers);
+				hotkey.bGlobal = pCmdKey->bGlobal;
+				vHotkeys.push_back(hotkey);
+			}
+		}
+	}
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		vString.push_back(TOLOCAL(_T("Add Shortcut Key...")));
+		vString.push_back(TOLOCAL(_T("Add Global Hotkey...")));
+
+		VecHotkeys		vHotkeys;
+
+		EnumAll(vHotkeys);
+
+		if (vHotkeys.size())
+			vString.push_back(_T(""));
+
+		for (int i = 0; i < vHotkeys.size(); i++)
+		{
+			vString.push_back(
+				tstring(TOLOCAL(vHotkeys[i].bGlobal ? _T("Remove Global Hotkey:") : _T("Remove Shortcut Key:")))
+				+ _T(" ") + vHotkeys[i].strHotkey);
+		}
+	}
+
+	virtual void SetOption(int nIndex) {
+		if (nIndex == 0 || nIndex == 1)
+		{
+			// Add new shortcut key:
+			CDlgShortcutKey		dlg(m_strName.c_str());
+			bool				bGloal = (nIndex == 1);
+
+			if (dlg.DoModal(m_pWndParent) == IDOK)
+			{
+				// Is this hotkey already being used?
+				int			nUsedCmdIndex;
+				nUsedCmdIndex = g_mpApp.GetHotkey().GetByKey(dlg.m_nVirtualKey, dlg.m_fsModifiers);
+				if (nUsedCmdIndex != -1)
+				{
+					tstring		strCmd;
+					tstring		strMsg;
+
+					// Same one is self?
+					if (g_mpApp.GetHotkey().Get(nUsedCmdIndex)->cmd == m_nCmd)
+						return;
+
+					strCmd = GetCmdIDDescription(g_mpApp.GetHotkey().Get(nUsedCmdIndex)->cmd);
+
+					strMsg = CStrPrintf(TOLOCAL(_T("This hotkey is currently used by action: %s.")), TOLOCAL(strCmd.c_str())).c_str();
+					strMsg += _T("\r\n");
+					strMsg += TOLOCAL(_T("Do you want to replace it?"));
+					if (m_pWndParent->MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_YESNO) != IDYES)
+						return;
+
+					g_mpApp.GetHotkey().Remove(nUsedCmdIndex);
+
+					m_pWndParent->UpdateValues();
+
+				}
+
+				g_mpApp.GetHotkey().Add(m_nCmd, bGloal, dlg.m_nVirtualKey, dlg.m_fsModifiers);
+			}
+		}
+		else
+		{
+			// Remove shortcut key
+			int			nShortcutIndex = -1;
+			for (int i = 2; i <= nIndex; i++)
+			{
+				nShortcutIndex = g_mpApp.GetHotkey().GetByCmd(m_nCmd, nShortcutIndex);
+				if (nShortcutIndex == -1)
+					break;
+
+				if (i == nIndex)
+					g_mpApp.GetHotkey().Remove(nShortcutIndex);
+			}
+		}
+	}
+
+	virtual bool IsDefault() {
+		return g_mpApp.GetHotkey().IsDefaultKey(m_nCmd);
+	}
+
+	virtual void Reset() {
+		return g_mpApp.GetHotkey().RestoreDefaultKey(m_nCmd);
+	}
+
+	CPreferPageAdvanced	*m_pWndParent;
+	int					m_nCmd;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////////
 
 CPreferPageAdvanced::CPreferPageAdvanced() : CPreferencePageBase(IDD_PAGE_ADVANCED, _T("Advanced"))
 {
@@ -463,6 +671,25 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 	}
 	m_vPreferItems.push_back(new CPfItemSystemTrayIcon());
 
+	//
+	// Shortcut keys
+	//
+	MPHotKeySection		*pSect = g_vHotkeySections;
+	for (; pSect->szName != NULL; pSect++)
+	{
+		for (int k = 0; pSect->vHotkeys[k] != 0; k++)
+		{
+			LPCTSTR		szID = MPCMDIDToToolTip(pSect->vHotkeys[k]);
+			if (!szID)
+				continue;
+
+			m_vPreferItems.push_back(new CPfItemShortcut(
+				this,
+				(tstring(TOLOCAL(_T("Shortcut:"))) + _T(" ")
+					+ TOLOCAL(pSect->szName) + _T(" ") + TOLOCAL(szID)).c_str(),
+				pSect->vHotkeys[k]));
+		}
+	}
 
 	ListAllItems();
 
@@ -567,25 +794,57 @@ void CPreferPageAdvanced::OnCommand(UINT uID, UINT nNotifyCode)
 	default:
 		if (uID >= m_nMenuIdStart && uID <= m_nMenuIdEnd)
 		{
-			CPreferItem	*item = GetCurItem();
-			if (!item)
-				break;
-
 			if (uID == m_nMenuIdEnd)
-				item->Reset();
+			{
+				// Reset selected settings
+				int			nSel = -1;
+				while (1)
+				{
+					nSel = m_listItems.GetNextSelectedItem(nSel);
+					if (nSel >= 0 && nSel < m_vFilteredItems.size())
+					{
+						CPreferItem	*item = m_vFilteredItems[nSel];
+						item->Reset();
+						m_listItems.SetItemText(nSel, 1, item->GetValue().c_str());
+#ifdef _WIN32
+						m_listItems.SetItem(nSel, 0, LVIF_IMAGE, _T(""), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, 0, 0);
+#endif
+					}
+					else
+						break;
+				}
+			}
 			else
+			{
+				// Set option.
+				CPreferItem	*item = GetCurItem();
+				if (!item)
+					break;
+
 				item->SetOption(uID - m_nMenuIdStart);
 
-			int		nSel = m_listItems.GetNextSelectedItem();
-			m_listItems.SetItemText(nSel, 1, item->GetValue().c_str());
+				int		nSel = m_listItems.GetNextSelectedItem();
+				m_listItems.SetItemText(nSel, 1, item->GetValue().c_str());
 
 #ifdef _WIN32
-			m_listItems.SetItem(nSel, 0, LVIF_IMAGE, _T(""), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, 0, 0);
+				m_listItems.SetItem(nSel, 0, LVIF_IMAGE, _T(""), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, 0, 0);
 #endif
-
+			}
 		}
 
 		break;
+	}
+}
+
+void CPreferPageAdvanced::UpdateValues()
+{
+	for (size_t i = 0; i < m_vFilteredItems.size(); i++)
+	{
+		CPreferItem	*item = m_vFilteredItems[i];
+		m_listItems.SetItemText(i, 1, item->GetValue().c_str());
+#ifdef _WIN32
+		m_listItems.SetItem(i, 0, LVIF_IMAGE, _T(""), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, 0, 0);
+#endif
 	}
 }
 
@@ -605,8 +864,9 @@ void CPreferPageAdvanced::ShowCustomizeMenu(int x, int y)
 	CMLMenu		menu;
 	V_Str		vOptions;
 	int			nRadio = -1;
-	CPreferItem	*item = GetCurItem();
-	if (!item)
+	bool		bEnabeReset = false;
+
+	if (m_listItems.GetSelectedCount() == 0)
 		return;
 
 	m_nMenuIdStart = MENUID_START;
@@ -614,19 +874,45 @@ void CPreferPageAdvanced::ShowCustomizeMenu(int x, int y)
 
 	menu.CreatePopupMenu();
 
-	item->GetOptions(vOptions, nRadio);
-	for (size_t i = 0; i < vOptions.size(); i++)
+	if (m_listItems.GetSelectedCount() == 1)
 	{
-		if (vOptions[i].empty())
-			menu.AppendSeperator();
-		else
-			menu.AppendItem(m_nMenuIdEnd++, vOptions[i].c_str());
+		CPreferItem	*item = GetCurItem();
+		if (!item)
+			return;
+
+		item->GetOptions(vOptions, nRadio);
+		for (size_t i = 0; i < vOptions.size(); i++)
+		{
+			if (vOptions[i].empty())
+				menu.AppendSeperator();
+			else
+				menu.AppendItem(m_nMenuIdEnd++, vOptions[i].c_str());
+		}
+		menu.AppendSeperator();
+		if (!item->IsDefault())
+			bEnabeReset = true;
 	}
-	menu.AppendSeperator();
+	else
+	{
+		int			nSel = -1;
+
+		while (1)
+		{
+			nSel = m_listItems.GetNextSelectedItem(nSel);
+			if (nSel >= 0 && nSel < m_vFilteredItems.size())
+			{
+				CPreferItem	*item = m_vFilteredItems[nSel];
+				if (!item->IsDefault())
+					bEnabeReset = true;
+			}
+			else
+				break;
+		}
+	}
 
 	menu.AppendItem(m_nMenuIdEnd, SZ_RESET);
-	if (item->IsDefault())
-		menu.EnableItem(m_nMenuIdEnd, false);
+	if (!bEnabeReset)
+		menu.EnableItem(m_nMenuIdEnd, bEnabeReset);
 
 	if (nRadio != -1)
 		menu.CheckRadioItem(m_nMenuIdStart + nRadio, m_nMenuIdStart, m_nMenuIdEnd - 1);

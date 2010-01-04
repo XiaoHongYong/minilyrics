@@ -396,6 +396,75 @@ int CMPHotkey::GetByKey(int nKey, int nModifiers)
 	return -1;
 }
 
+int CMPHotkey::GetByCmd(int cmd, int nStartFind)
+{
+	if (nStartFind < -1 || nStartFind >= (int)m_vAccKey.size())
+		return -1;
+
+	for (int i = nStartFind + 1; i < (int)m_vAccKey.size(); i++)
+	{
+		CmdAccKey		&cmdKey = m_vAccKey[i];
+
+		if (cmd == cmdKey.cmd)
+		{
+			return i;
+		}
+	}
+
+	return -1;
+}
+
+bool CMPHotkey::IsDefaultKey(int cmd)
+{
+	std::set<int>	setKeys;
+	int				i;
+
+	for (i = 0; i < (int)m_vAccKey.size(); i++)
+	{
+		CmdAccKey		&cmdKey = m_vAccKey[i];
+
+		if (cmdKey.cmd == cmd)
+			setKeys.insert(MakeHotkeyID(cmdKey.fsModifiers, cmdKey.button));
+	}
+
+	for (i = 0; i < CountOf(g_vDefAccKey); i++)
+	{
+		if (g_vDefAccKey[i].cmd == cmd)
+		{
+			int		nId = MakeHotkeyID(g_vDefAccKey[i].fsModifiers, g_vDefAccKey[i].button);
+			std::set<int>::iterator it = setKeys.find(nId);
+			if (it != setKeys.end())
+				setKeys.erase(it);
+			else
+				return false;
+		}
+	}
+
+	return setKeys.empty();
+}
+
+void CMPHotkey::RestoreDefaultKey(int cmd)
+{
+	int				i;
+
+	for (i = 0; i < (int)m_vAccKey.size(); i++)
+	{
+		CmdAccKey		&cmdKey = m_vAccKey[i];
+
+		if (cmdKey.cmd == cmd)
+		{
+			Remove(i);
+			i--;
+		}
+	}
+
+	for (i = 0; i < CountOf(g_vDefAccKey); i++)
+	{
+		if (g_vDefAccKey[i].cmd == cmd)
+			Add(cmd, g_vDefAccKey[i].bGlobal, g_vDefAccKey[i].button, g_vDefAccKey[i].fsModifiers);
+	}
+}
+
 bool CMPHotkey::GetHotkeyText(int cmd, tstring &strKey)
 {
 	for (int i = 0; i < (int)m_vAccKey.size(); i++)

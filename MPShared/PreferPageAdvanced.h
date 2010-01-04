@@ -40,6 +40,8 @@ public:
 
 	BOOL OnNotify(WIDGET_NOTIFY_INFO *info);
 
+	void UpdateValues();
+
 protected:
 	CPreferItem *GetCurItem();
 	void ShowCustomizeMenu(int x, int y);

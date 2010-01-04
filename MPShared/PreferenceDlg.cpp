@@ -260,11 +260,11 @@ void CPreferenceDlg::ConstructPreferencePages()
 		m_vPreferencePages.push_back(pPage);
 #else
 #endif // _MPLAYER
-
-		// HotKey
-		pPage = new CPreferPageHotkey;
-		pPage->SetParentPage(pPageParent);
-		m_vPreferencePages.push_back(pPage);
+// 
+// 		// HotKey
+// 		pPage = new CPreferPageHotkey;
+// 		pPage->SetParentPage(pPageParent);
+// 		m_vPreferencePages.push_back(pPage);
 
 		// internet
 		pPage = new CPreferPageInternet;
