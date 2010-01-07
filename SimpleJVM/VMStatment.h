@@ -14,7 +14,6 @@ enum StmtType
 	ST_DO_WHILE,
 	ST_BREAK,
 	ST_CONTINUE,
-	ST_ASSIGN,
 	ST_RETURN,
 	ST_PUSH_STACK,
 	ST_POP_STACK,
@@ -59,11 +58,6 @@ struct StmtDoWhile {
 	stmt_index			siStmt;
 };
 
-struct StmtAssign {
-	stmt_index			siVarAddress;
-	stmt_index			siExpression;
-};
-
 struct StmtReturn {
 	stmt_index			siExpression;
 };
@@ -87,6 +81,9 @@ struct StmtExpression {
 			stmt_index		siParameter;	// Parameter of construction method
 			int				nMemberIndex;
 		}					newObj;			// E_NEW
+		struct DynCast {
+			stmt_index		siVar;
+		}					dynCast;		// E_DYNAMIC_CAST
 		struct Var {						// E_VAR
 			int				nAddress;
 			bool			bStatic;
@@ -99,6 +96,10 @@ struct StmtExpression {
 			stmt_index		siParentVar;
 			stmt_index		siParameter;
 		}					functionCall;		// E_METHOD_CALL
+		struct Assign {
+			stmt_index			siVarAddress;
+			stmt_index			siExpression;
+		}					assign;				// E_ASSIGN
 		struct OpExression {
 			stmt_index		siExprLeft;
 			stmt_index		siExprRight;
@@ -132,7 +133,6 @@ struct Statement
 		StmtFor					sFor;
 		StmtWhile				sWhile;
 		StmtDoWhile				sDoWhile;
-		StmtAssign				sAssign;
 		StmtReturn				sRetrun;
 		StmtBlock				sBlock;
 		StmtExpression			sExpression;
@@ -154,8 +154,6 @@ public:
 	Statement *newStmt(int nLineNo, StmtType st, stmt_index &index);
 
 public:
-	stmt_index newStmtAssign(int nLineNo, stmt_index siVarAddr, stmt_index siExpression);
-
 	stmt_index newStmtExpConstInt(int nLineNo, int nValue);
 	stmt_index newStmtExpConstBool(int nLineNo, bool bValue);
 	stmt_index newStmtExpNull(int nLineNo);
@@ -163,7 +161,10 @@ public:
 	stmt_index newStmtExpNew(int nLineNo, TypeId typeId, int nMemberIndex, stmt_index siParameter);
 	stmt_index newStmtExpVar(int nLineNo, bool bStatic, TypeId typeId, int nAddress, stmt_index siParentVar);
 	stmt_index newStmtExpFuncCall(int nLineNo, bool bStatic, TypeId typeIdRet, TypeId typeIdMethodClass, stmt_index siParentVar, int nMemberIndex, stmt_index siParameter);
+	stmt_index newStmtExpAssign(int nLineNo, TypeId typeId, stmt_index siVarAddr, stmt_index siExpression);
+	stmt_index newStmtExpAssignStaticVarInitial(int nLineNo, TypeId typeId, stmt_index siVarAddr, stmt_index siExpression);
 	stmt_index newStmtExpOperate(int nLineNo, ExpressionType typeOperator, TypeId typeIdValue, stmt_index siExprLeft, stmt_index siExprRight, TypeId typeIdOperand);
+	stmt_index newStmtExpDynCast(int nLineNo, TypeId typeId, stmt_index siVar);
 
 	stmt_index newStmtIf(int nLineNo, stmt_index siCondition, stmt_index siTrueStmt, stmt_index siFalseStmt);
 	stmt_index newStmtFor(int nLineNo, stmt_index siInitalization, stmt_index siTermination, stmt_index siIncrement, stmt_index siActionStmt);

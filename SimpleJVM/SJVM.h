@@ -38,10 +38,7 @@ enum SIMPLE_JAVA_COMPILE_ERROR
 	ERR_C_NO_THIS_SUPER_IN_STATIC_METHOD,
 	ERR_C_BREAK_CONTINUE_MUST_IN_LOOP,
 
-	ERR_R_UNDECLARED_FUNCTION,		// undeclared function
-	ERR_R_FUNC_PARAM_COUNT,			// incorrect function parameter count is passed
-	ERR_R_FUNC_PARAM_TYPE,			// incorrect function parameter is passed
-	ERR_R_FUNC_PARAM,
+	ERR_R_NO_ENTRY_POINT,
 };
 
 
@@ -65,8 +62,13 @@ inline bool IsSimpleType(TypeId typeId) { return typeId < TID_NULL; }
 #define	SZ_SUPER	"super"
 #define SZ_NULL		"null"
 
+#define SJNI_API			__stdcall
+
+typedef int					jobject;
+
 typedef vector<TypeId>		VecParamType;
 typedef vector<int>			VecInt;
+typedef vector<bool>		VecBool;
 typedef vector<tstring>		VecString;
 
 typedef int					Variable;
@@ -143,6 +145,9 @@ public:
 	// VecClass				m_vChildClass;
 
 public:
+	// Return the index of method, -1 for error.
+	int AddNativeMethod(bool bStatic, LPCSTR szMethodName, LPVOID funcPtr, TypeId typeIdReturn, ...);
+
 	int AddMethod(CMemberMethod *pMethod);
 
 	int AddMemberVar(TypeId typeId, LPCSTR szVarName, bool bStatic, int nStaticAddr);
@@ -155,12 +160,6 @@ public:
 	CMemberMethod *GetMethod(LPCSTR szMethodName, VecParamType &vParameter);
 
 	CMemberMethod *GetMethod(size_t nMethodIndex) {
-		ASSERT(nMethodIndex < vVirtualMethod.size());
-		if (nMethodIndex >= vVirtualMethod.size())
-			return NULL;
-		return vVirtualMethod[nMethodIndex];
-	}
-	CMemberMethod *GetVirtualMethod(size_t nMethodIndex) {
 		ASSERT(nMethodIndex < vVirtualMethod.size());
 		if (nMethodIndex >= vVirtualMethod.size())
 			return NULL;
@@ -260,6 +259,18 @@ protected:
 typedef map<int, CJObject *>	MapJObject;
 typedef vector<CJObject *>	VecJObject;
 
+class CJObjectNewer
+{
+public:
+	CJObjectNewer(TypeId typeId) { m_typeId = typeId; }
+	virtual ~CJObjectNewer() { }
+
+	virtual CJObject *New() = 0;
+
+	TypeId				m_typeId;
+
+};
+
 class CObjectMgr
 {
 public:
@@ -268,6 +279,8 @@ public:
 		m_vJObjects.push_back(NULL);
 	}
 	virtual ~CObjectMgr();
+
+	void RegisterJObjNewer(CJObjectNewer *pJObjNewer);
 
 	int New(TypeId typeId, int nMemberVarCount);
 
@@ -280,8 +293,11 @@ public:
 	void InitAddConstString(MapStrIndex &mapStr);
 
 protected:
+	typedef list<CJObjectNewer*>		ListJObjNewer;
+
 	VecJObject				m_vJObjects;
 	list<int>				m_vFreeJObjs;
+	ListJObjNewer			m_listJObjNewer;
 
 };
 
@@ -302,9 +318,7 @@ public:
 		Item i; i.nValue = nValue; i.typeId = typeId; m_vItems.push_back(i); }
 	void Pop() { m_vItems.pop_back(); }
 
-	void Push(CVMStack &stack) {
-		m_vItems.insert(m_vItems.end(), stack.m_vItems.begin(), stack.m_vItems.end());
-	}
+	void Push(class CVMParameters &parameters);
 
 	void Resize(size_t s) { m_vItems.resize(s); }
 
@@ -327,11 +341,37 @@ protected:
 
 };
 
+class CVMParameters
+{
+public:
+	enum { COUNT_MAX		= 32 };
+
+	CVMParameters() { m_nCount = 0; }
+
+	void Push(int nValue, TypeId typeId) { 
+		ASSERT(m_nCount < COUNT_MAX);
+		m_vItems[m_nCount].nValue = nValue;
+		m_vItems[m_nCount].typeId = typeId;
+		m_nCount++;
+	}
+
+public:
+	CVMStack::Item		m_vItems[COUNT_MAX];
+	size_t				m_nCount;
+
+};
+
 class CSJVM
 {
 public:
 	CSJVM(void);
 	virtual ~CSJVM(void);
+
+	struct StackVar {
+		bool	bInitialized;
+		int		nValue;
+	};
+	typedef vector<StackVar>	VecStack;
 
 	void Reset();
 
@@ -342,7 +382,6 @@ public:
 
 	void FinishedInitSysModule();
 
-
 public:
 	//
 	// Interfaces for Simple JNI
@@ -350,11 +389,19 @@ public:
 
 	int RegisterNativeAPI(LPCSTR szClassName, LPCSTR szFuncName, LPVOID funcPtr, TypeId retValue, ...);
 
-	int CallNativeAPI(CMemberMethod *pMethod, CVMStack &stackParameter);
+	void RegisterJObjNewer(CJObjectNewer *pNewer) { m_jobjMgr.RegisterJObjNewer(pNewer); }
+	CJObject *NewJObject(TypeId typeId, jobject &jobj);
+	void FreeJObject(jobject jobj) { m_jobjMgr.Free(jobj, m_classTable); }
+	CJObject *GetJObject(jobject jobj) { return m_jobjMgr.Get(jobj); }
 
-	LPVOID StackVarToNativeValue(int nvmStackPtr, TypeId paramType);
+	int AddClass(LPCSTR szClassName) { return m_classTable.AddClass(szClassName); }
+	CClass *GetClass(LPCSTR szClassName) { return m_classTable.GetClass(szClassName); }
 
-	CJObject *NewJObject(int nClassID);
+	int CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParameters &parameters);
+
+	// LPVOID StackVarToNativeValue(int nvmStackPtr, TypeId paramType);
+
+	void ThrowException(LPCTSTR szException) { }
 
 protected:
 	//
@@ -407,16 +454,15 @@ protected:
 protected:
 	int ExecuteExpression(stmt_index siExpr);
 	int *ExeExprGetVarAddr(stmt_index siExprVar);
+	StackVar *ExeExprGetStaticVar(stmt_index siExprVar);
 
-	int NewJObject(StmtExpression &expr);
-	void FreeJObject(int nJObject);
+	int ExeNewJObject(StmtExpression &expr);
 
-	int CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMStack &stackParameter);
+	int CallNativeAPI(CMemberMethod *pMethod, CVMParameters &parameters);
 
 	int GetStaticVarValue(size_t nAddress);
 	int GetJObjectMemberVarValue(int nJobject, int nMember);
 
-	int *GetStaticVarAddress(size_t nAddress);
 	int *GetJObjectMemberVarAddr(int nJobject, int nMember);
 
 protected:
@@ -461,6 +507,7 @@ protected:
 
 	// All classes
 	CClassTable					m_classTable;
+	size_t						m_nSysClassCount;
 
 	// Statement image
 	CStmtImage					m_stmtImage;
@@ -469,7 +516,10 @@ protected:
 	CVMStack					m_stack;
 	size_t						m_bp;		// base pointer of current function call.
 	int							m_valueMethodReturn;
-	VecInt						m_vStaticVars;
+
+	// Static variables
+	VecStack					m_vStaticVars;
+	size_t						m_nSysStaticVarsCount;
 
 	EXE_ACTION					m_exeAction;
 
@@ -486,9 +536,28 @@ protected:
 
 	CVarDeclStack				m_varDeclStack;
 
-	string						m_strLastErr;
+	tstring						m_strLastErr;
 
 	MapStrIndex					m_mapStrings;
 	bool						m_bsiInLoop;
 
 };
+
+extern CSJVM			g_sjvm;
+
+#define DECLARE_JNI_OBJ()								\
+	public:												\
+	static void RegisterClassType();					\
+	static LPCSTR			CLASS_NAME;					\
+	static TypeId			m_sTypeId;					
+
+
+#define IMPLENENT_JNI_OBJ(_Class, _ClassName)			\
+	TypeId	_Class::m_sTypeId		= 0;				\
+	LPCSTR	_Class::CLASS_NAME		= _ClassName;		\
+	void _Class::RegisterClassType() {					\
+	int nRet;											\
+	nRet = g_sjvm.AddClass(_Class::CLASS_NAME);			\
+	ASSERT(nRet == ERR_OK);								\
+	m_sTypeId = g_sjvm.GetTypeIdByName(_Class::CLASS_NAME);\
+}

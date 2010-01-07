@@ -51,11 +51,6 @@ struct StnMemberMethod {
 	STreeNode		*pBody;
 };
 
-struct StnAssign {
-	STreeNode		*pVar;
-	STreeNode		*pRightExp;
-};
-
 struct StnIf {
 	STreeNode		*pCondition;
 	STreeNode		*pTrueNode;
@@ -81,8 +76,11 @@ enum ExpressionType {
 	E_CONST_NULL,
 	E_CONST_STRING,
 	E_NEW,
+	E_DYNAMIC_CAST,
 	E_VAR,
 	E_METHOD_CALL,
+	E_ASSIGN,
+	E_ASSIGN_STATIC_VAR_INIT,
 	OP_LT_EQ,		// <=
 	OP_GT_EQ,		// >=
 	OP_LITTLE,		// <
@@ -91,6 +89,8 @@ enum ExpressionType {
 	OP_NOT_EQUAL,	// !=
 	OP_OP_INC,		// ++
 	OP_OP_DEC,		// --
+	OP_PLUS_ASSIGN, // +=
+	OP_MINUS_ASSIGN,// -=
 	OP_PLUS,		// +
 	OP_MINUS,		// -
 	OP_MULT,		// *
@@ -114,6 +114,11 @@ struct StnExpression {
 			int				nMemberIndex;
 			STreeNode		*pParameter;		// Parameter of construction
 		}					newObj;				// E_NEW
+		struct 
+		{
+			LPSTR			szCastToType;
+			STreeNode		*pVar;
+		}					dynCast;			// E_DYNAMIC_CAST
 		struct Var {
 			LPSTR			szVarName;
 			int				nAddress;
@@ -128,6 +133,11 @@ struct StnExpression {
 			STreeNode			*pVarParent;
 			STreeNode			*pParameter;
 		}					functionCall;		// E_METHOD_CALL
+		struct 
+		{
+			STreeNode		*pVar;
+			STreeNode		*pRightExp;
+		}					assign;				// E_ASSIGN, E_ASSIGN_STATIC_VAR
 		struct OpExression {
 			STreeNode			*pExpressionLeft;
 			STreeNode			*pExpressionRight;
@@ -156,7 +166,6 @@ struct STreeNode
 		T_VAR_DECLAR,
 		T_VAR,
 		T_MEMBER_METHOD,
-		T_ASSIGN,
 		T_IF,
 		T_FOR,
 		T_WHILE,
@@ -178,7 +187,6 @@ struct STreeNode
 		StnVarDeclare	sVarDeclare;
 		StnVar			sVar;
 		StnMemberMethod	sMemberMethod;
-		StnAssign		sAssign;
 		StnIf			sIf;
 		StnWhile		sWhile;
 		StnFor			sFor;
@@ -213,8 +221,6 @@ STreeNode *newStnMethodDeclareNode(STreeNode *pMethodNameString,
 					STreeNode *pRetTypeString, STreeNode *pParameterList, STreeNode *pBody,
 					bool bStatic = false);
 
-STreeNode *newStnAssign(STreeNode *pTargetVar, STreeNode *pExpression);
-
 STreeNode *newStnIf(STreeNode *pCondition, STreeNode *pTrueBlock, STreeNode *pFalseBlock);
 
 STreeNode *newStnFor(STreeNode *pInitalization, STreeNode *pTermination, STreeNode *pIncrement, STreeNode *pActionBlock);
@@ -239,6 +245,10 @@ STreeNode *newStnExprNull(int nLineNo);
 STreeNode *newStnExprConstString(STreeNode *pString);
 
 STreeNode *newStnExpNew(STreeNode *pString, STreeNode *pParameterList);
+
+STreeNode *newStnExpAssign(STreeNode *pTargetVar, STreeNode *pExpression);
+
+STreeNode *newStnExpDynamicCast(STreeNode *pIDStr, STreeNode *pVar);
 
 STreeNode *newStnExpOp(ExpressionType expType, STreeNode *pExpressionLeft, STreeNode *pExpressionRight);
 

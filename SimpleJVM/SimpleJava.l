@@ -86,6 +86,8 @@ null		{ return TK_NULL; }
 
 "++"		{ return TK_OP_INC; }
 "--"		{ return TK_OP_DEC; }
+"+="		{ return TK_OP_PLUS_ASSIGN; }
+"-="		{ return TK_OP_MINUS_ASSIGN; }
 "+"			{ return TK_PLUS; }
 "-"			{ return TK_MINUS; }
 "*"			{ return TK_MULT; }

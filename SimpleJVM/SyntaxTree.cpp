@@ -145,17 +145,6 @@ STreeNode *newStnMethodDeclareNode(STreeNode *pMethodNameString,
 	return pNode;
 }
 
-STreeNode *newStnAssign(STreeNode *pTargetVar, STreeNode *pExpression)
-{
-	STreeNode	*pNode = NewSTreeNode(STreeNode::T_ASSIGN, pTargetVar->nLineNo);
-	StnAssign	&sAssign = pNode->sAssign;
-
-	sAssign.pRightExp = pExpression;
-	sAssign.pVar = pTargetVar;
-
-	return pNode;
-}
-
 STreeNode *newStnIf(STreeNode *pCondition, STreeNode *pTrueBlock, STreeNode *pFalseBlock)
 {
 	STreeNode	*pNode = NewSTreeNode(STreeNode::T_IF, pCondition->nLineNo);
@@ -211,6 +200,18 @@ STreeNode *newStnBreak(int nLineNo)
 STreeNode *newStnContinue(int nLineNo)
 {
 	return NewSTreeNode(STreeNode::T_CONTINUE, nLineNo);
+}
+
+STreeNode *newStnExpAssign(STreeNode *pTargetVar, STreeNode *pExpression)
+{
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, pTargetVar->nLineNo);
+	StnExpression	&sExp = pNode->sExpression;
+	sExp.type = E_ASSIGN;
+
+	sExp.assign.pRightExp = pExpression;
+	sExp.assign.pVar = pTargetVar;
+
+	return pNode;
 }
 
 STreeNode *newStnExpVar(int nLineNo, LPCSTR szVarName, STreeNode *pParentVar)
@@ -295,6 +296,21 @@ STreeNode *newStnExpNew(STreeNode *pString, STreeNode *pParameterList)
 	sExp.newObj.pParameter = pParameterList;
 
 	deleteStn(pString);
+
+	return pNode;
+}
+
+STreeNode *newStnExpDynamicCast(STreeNode *pIDStr, STreeNode *pVar)
+{
+	ASSERT(pIDStr->nodeType == STreeNode::T_STRING);
+
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, pIDStr->nLineNo);
+	StnExpression	&sExp = pNode->sExpression;
+	sExp.type = E_DYNAMIC_CAST;
+	sExp.dynCast.szCastToType = dupStnStr(pIDStr->szString);
+	sExp.dynCast.pVar = pVar;
+
+	deleteStn(pIDStr);
 
 	return pNode;
 }
@@ -412,17 +428,6 @@ void PrintSyntaxTree(STreeNode *t, int &nIndent)
 				printf("}\n");
 			}
 			break;
-		case STreeNode::T_ASSIGN:
-			{
-				PrintSapces(nIndent, t->nLineNo);
-				if (t->sAssign.pVar)
-					PrintSyntaxTree(t->sAssign.pVar, nIndent);
-				printf(" = ");
-				if (t->sAssign.pRightExp)
-					PrintSyntaxTree(t->sAssign.pRightExp, nIndent);
-				printf("\n");
-			}
-			break;
 		case STreeNode::T_IF:
 			{
 				PrintSapces(nIndent, t->nLineNo);
@@ -533,6 +538,11 @@ void PrintSyntaxTree(STreeNode *t, int &nIndent)
 					printf("new %s\n", t->sExpression.newObj.szNewType);
 					return;
 				}
+				else if (t->sExpression.type == E_DYNAMIC_CAST)
+				{
+					printf("DynamicCast %s\n", t->sExpression.dynCast.szCastToType);
+					return;
+				}
 				else if (t->sExpression.type == E_VAR)
 				{
 					STreeNode	*pParent = t->sExpression.var.pVarParent;
@@ -563,6 +573,17 @@ void PrintSyntaxTree(STreeNode *t, int &nIndent)
 					printf(");\n");
 					return;
 				}
+				else if (t->sExpression.type == E_ASSIGN || t->sExpression.type == E_ASSIGN_STATIC_VAR_INIT)
+				{
+					PrintSapces(nIndent, t->nLineNo);
+					if (t->sExpression.assign.pVar)
+						PrintSyntaxTree(t->sExpression.assign.pVar, nIndent);
+					printf(" = ");
+					if (t->sExpression.assign.pRightExp)
+						PrintSyntaxTree(t->sExpression.assign.pRightExp, nIndent);
+					printf("\n");
+					return;
+				}
 
 				if (t->sExpression.opParameter.pExpressionLeft)
 					PrintSyntaxTree(t->sExpression.opParameter.pExpressionLeft, nIndent);
@@ -570,7 +591,7 @@ void PrintSyntaxTree(STreeNode *t, int &nIndent)
 					case OP_LT_EQ:		printf("<=");	break;	// <=
 					case OP_GT_EQ:		printf(">=");	break;	// >=
 					case OP_LITTLE:		printf("<");	break;	// <
-					case OP_GREATER:		printf(">");	break;	// >
+					case OP_GREATER:	printf(">");	break;	// >
 					case OP_EQUAL:		printf("==");	break;	// ==
 					case OP_NOT_EQUAL:	printf("!=");	break;	// !=
 					case OP_OP_INC:		printf("++");	break;	// ++
@@ -578,9 +599,13 @@ void PrintSyntaxTree(STreeNode *t, int &nIndent)
 					case OP_PLUS:		printf("+");	break;	// +
 					case OP_MINUS:		printf("-");	break;	// -
 					case OP_MULT:		printf("*");	break;	// *
-					case OP_DIV:			printf("/");	break;	// /
+					case OP_DIV:		printf("/");	break;	// /
 					case OP_BOOL_AND:	printf("&&");	break;	// &&
-					case OP_BOOL_OR:		printf("||");	break;	// ||
+					case OP_BOOL_OR:	printf("||");	break;	// ||
+					case OP_PLUS_ASSIGN:printf("+=");	break;	// +=
+					case OP_MINUS_ASSIGN:printf("-=");	break;	// -=
+					default:
+						ASSERT(0 && "Invalid expression Type."); break;
 				}
 				if (t->sExpression.opParameter.pExpressionRight)
 					PrintSyntaxTree(t->sExpression.opParameter.pExpressionRight, nIndent);

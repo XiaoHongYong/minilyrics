@@ -17,9 +17,10 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="1"
+			UseOfATL="0"
 			CharacterSet="1"
 			>
 			<Tool
@@ -62,7 +63,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\$(ProjectName)D.exe"
+				AdditionalDependencies="atls.lib"
+				OutputFile="../bin/$(ProjectName)D.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -95,8 +97,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -137,7 +139,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\$(ProjectName).exe"
+				OutputFile="../bin/$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -193,6 +195,10 @@
 			</File>
 			<File
 				RelativePath=".\SJVM.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SjvmLib.cpp"
 				>
 			</File>
 			<File
@@ -266,6 +272,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SjvmLib.h"
+				>
+			</File>
+			<File
 				RelativePath=".\stdafx.h"
 				>
 			</File>
@@ -288,6 +298,10 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
+		<File
+			RelativePath=".\test\case1.java"
+			>
+		</File>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

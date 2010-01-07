@@ -36,6 +36,7 @@ void yyerror (char const *);
 %token	TK_NUMBER	TK_STRING
 %token	TK_L_PARENTHESIS		TK_R_PARENTHESIS		TK_COLON	TK_SEMICOLON 
 %token	TK_L_BRACE	TK_R_BRACE	TK_COMMA	TK_DOT		TK_ASSIGN
+%token	TK_OP_PLUS_ASSIGN		TK_OP_MINUS_ASSIGN
 %token	TK_OP_INC	TK_OP_DEC	TK_PLUS		TK_MINUS	TK_MULT		TK_DIV
 %token	TK_LT_EQ	TK_GT_EQ	TK_LITTLE	TK_GREATER	TK_EQUAL	TK_NOT_EQUAL
 %token	TK_BOOL_AND	TK_BOOL_OR
@@ -185,8 +186,7 @@ stmt_block			:	TK_L_BRACE stmt_list TK_R_BRACE
 					;
 
 
-stmt				:	assign	{ $$ = $1; }
-					|	if_stmt		{ $$ = $1; }
+stmt				:	if_stmt		{ $$ = $1; }
 					|	while_stmt	{ $$ = $1; }
 					|	for_stmt	{ $$ = $1; }
 					|	do_while_stmt	{ $$ = $1; }
@@ -197,12 +197,6 @@ stmt				:	assign	{ $$ = $1; }
 					|	TK_RETURN expression TK_SEMICOLON { $$ = $1; $1->sReturn.pExpression = $2; }
 					|	TK_RETURN TK_SEMICOLON { $$ = $1; }
 					|	decl_var { $$ = $1; /* empty */ }
-					;
-
-assign				:	exp_var TK_ASSIGN expression TK_SEMICOLON
-						{
-							$$ = newStnAssign($1, $3);
-						}
 					;
 
 if_stmt				:	TK_IF TK_L_PARENTHESIS expression TK_R_PARENTHESIS stmt_block TK_ELSE stmt_block
@@ -249,6 +243,7 @@ expression			:	TK_NUMBER
 						{ $$ = $2; }
 					|	exp_var { $$ = $1; }
 					|	exp_fun_call { $$ = $1; }
+					|	TK_L_PARENTHESIS TK_ID TK_R_PARENTHESIS exp_var	{ $$ = newStnExpDynamicCast($2, $4); }
 					|	expression TK_LT_EQ		 expression { $$ = newStnExpOp(OP_LT_EQ	, $1, $3); }
 					|	expression TK_GT_EQ		 expression { $$ = newStnExpOp(OP_GT_EQ	, $1, $3); }
 					|	expression TK_LITTLE	 expression { $$ = newStnExpOp(OP_LITTLE	, $1, $3); }
@@ -263,6 +258,9 @@ expression			:	TK_NUMBER
 					|	expression TK_DIV		 expression { $$ = newStnExpOp(OP_DIV		, $1, $3); }
 					|	expression TK_BOOL_AND	 expression { $$ = newStnExpOp(OP_BOOL_AND	, $1, $3); }
 					|	expression TK_BOOL_OR	 expression { $$ = newStnExpOp(OP_BOOL_OR	, $1, $3); }
+					|	exp_var TK_OP_PLUS_ASSIGN expression { $$ = newStnExpOp(OP_PLUS_ASSIGN	, $1, $3); }
+					|	exp_var TK_OP_MINUS_ASSIGN expression { $$ = newStnExpOp(OP_MINUS_ASSIGN	, $1, $3); }
+					|	exp_var TK_ASSIGN expression		{ $$ = newStnExpAssign($1, $3); }
 					;
 
 exp_var				:	exp_var TK_DOT TK_ID

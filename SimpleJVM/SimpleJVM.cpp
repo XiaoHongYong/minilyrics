@@ -62,35 +62,86 @@ void __stdcall SJVM_DebugLog_printStr(LPCWSTR szValue)
 	wprintf(L"%s\n", szValue);
 }
 
-int _tmain(int argc, _TCHAR* argv[])
+int RunFile(LPCTSTR szFile)
 {
-	++argv, --argc;
-	if (argc <= 0)
-	{
-		printf("Please input the file to be compiled.");
-		return 1;
-	}
-
-	CSJVM		vm;
-
 	DWORD		dwBeg, dwEnd;
 
 	dwBeg = GetTickCount();
 
-	if (vm.Compile(argv[0]) != ERR_OK)
+	if (g_sjvm.Compile(szFile) != ERR_OK)
 		return 1;
 
 	dwEnd = GetTickCount();
 	printf("Compile cost: %d ms\n", dwEnd - dwBeg);
 
-	vm.RegisterNativeAPI("DebugLog", "print", SJVM_DebugLog_print_Int, TID_VOID, TID_INT, TID_INVALID);
+	g_sjvm.RegisterNativeAPI("DebugLog", "print", SJVM_DebugLog_print_Int, TID_VOID, TID_INT, TID_INVALID);
 
-	vm.RegisterNativeAPI("DebugLog", "print", SJVM_DebugLog_printStr, TID_VOID, TID_STRING, TID_INVALID);
+	g_sjvm.RegisterNativeAPI("DebugLog", "print", SJVM_DebugLog_printStr, TID_VOID, TID_STRING, TID_INVALID);
 
-	vm.Run();
+	g_sjvm.Run();
 
 	dwEnd = GetTickCount();
 	printf("Execute cost: %d ms\n", dwEnd - dwBeg);
+
+	return 0;
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+/*	++argv, --argc;
+	if (argc <= 0)
+	{
+		printf("Please input the file to be compiled.");
+		return 1;
+	}*/
+
+	// Set flag to freeze the current SJVM status as system module.
+	g_sjvm.FinishedInitSysModule();
+
+	if (argc > 1)
+	{
+		RunFile(argv[1]);
+	}
+
+	TCHAR		szFolder[MAX_PATH];
+
+	GetModulePath(szFolder, NULL);
+	tstring		strFolder = szFolder;
+	strFolder += _T("..\\SimpleJVM\\Test\\");
+
+	V_Str		vFiles;
+
+	if (!EnumFilesInDir(strFolder.c_str(), _T("*.*"), vFiles, true))
+	{
+		printf("No file is in the test folder");
+		return 1;
+	}
+
+	DWORD		dwBeg, dwEnd;
+
+	for (size_t i = 0; i < vFiles.size(); i++)
+	{
+		_tprintf(_T("Run Test case: %s\n"), vFiles[i].c_str());
+
+		dwBeg = GetTickCount();
+
+		g_sjvm.Reset();
+
+		if (g_sjvm.Compile(vFiles[i].c_str()) != ERR_OK)
+			return 1;
+
+		dwEnd = GetTickCount();
+		printf("Compile cost: %d ms\n", dwEnd - dwBeg);
+
+		g_sjvm.RegisterNativeAPI("DebugLog", "print", SJVM_DebugLog_print_Int, TID_VOID, TID_INT, TID_INVALID);
+
+		g_sjvm.RegisterNativeAPI("DebugLog", "print", SJVM_DebugLog_printStr, TID_VOID, TID_STRING, TID_INVALID);
+
+		g_sjvm.Run();
+
+		dwEnd = GetTickCount();
+		printf("Execute cost: %d ms\n", dwEnd - dwBeg);
+	}
 
 	return 0;
 }

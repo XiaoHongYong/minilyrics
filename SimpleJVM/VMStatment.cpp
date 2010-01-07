@@ -26,17 +26,6 @@ Statement *CStmtImage::newStmt(int nLineNo, StmtType st, stmt_index &index)
 	return ps;
 }
 
-stmt_index CStmtImage::newStmtAssign(int nLineNo, stmt_index siVarAddr, stmt_index siExpression)
-{
-	stmt_index		si;
-	Statement		*ps = newStmt(nLineNo, ST_ASSIGN, si);
-
-	ps->sAssign.siVarAddress = siVarAddr;
-	ps->sAssign.siExpression = siExpression;
-
-	return si;
-}
-
 stmt_index CStmtImage::newStmtExpConstInt(int nLineNo, int nValue)
 {
 	stmt_index		si;
@@ -128,6 +117,32 @@ stmt_index CStmtImage::newStmtExpFuncCall(int nLineNo, bool bStatic, TypeId type
 	return si;
 }
 
+stmt_index CStmtImage::newStmtExpAssign(int nLineNo, TypeId typeId, stmt_index siVarAddr, stmt_index siExpression)
+{
+	stmt_index		si;
+	Statement		*ps = newStmt(nLineNo, ST_EXPRESSION, si);
+
+	ps->sExpression.expType = E_ASSIGN;
+	ps->sExpression.typeId = typeId;
+	ps->sExpression.assign.siVarAddress = siVarAddr;
+	ps->sExpression.assign.siExpression = siExpression;
+
+	return si;
+}
+
+stmt_index CStmtImage::newStmtExpAssignStaticVarInitial(int nLineNo, TypeId typeId, stmt_index siVarAddr, stmt_index siExpression)
+{
+	stmt_index		si;
+	Statement		*ps = newStmt(nLineNo, ST_EXPRESSION, si);
+
+	ps->sExpression.expType = E_ASSIGN_STATIC_VAR_INIT;
+	ps->sExpression.typeId = typeId;
+	ps->sExpression.assign.siVarAddress = siVarAddr;
+	ps->sExpression.assign.siExpression = siExpression;
+
+	return si;
+}
+
 stmt_index CStmtImage::newStmtExpOperate(int nLineNo, ExpressionType typeOperator, TypeId typeIdValue, stmt_index siExprLeft, stmt_index siExprRight, TypeId typeIdOperand)
 {
 	stmt_index		si;
@@ -138,6 +153,18 @@ stmt_index CStmtImage::newStmtExpOperate(int nLineNo, ExpressionType typeOperato
 	ps->sExpression.opParameter.siExprLeft = siExprLeft;
 	ps->sExpression.opParameter.siExprRight = siExprRight;
 	ps->sExpression.opParameter.typeIdOperand = typeIdOperand;
+
+	return si;
+}
+
+stmt_index CStmtImage::newStmtExpDynCast(int nLineNo, TypeId typeId, stmt_index siVar)
+{
+	stmt_index		si;
+	Statement		*ps = newStmt(nLineNo, ST_EXPRESSION, si);
+
+	ps->sExpression.expType = E_DYNAMIC_CAST;
+	ps->sExpression.typeId = typeId;
+	ps->sExpression.dynCast.siVar = siVar;
 
 	return si;
 }
@@ -383,15 +410,6 @@ void CStmtImage::PrintStmtCodeTree(stmt_index si, int &nIndent)
 		case ST_CONTINUE:
 			printf("continue;");
 			break;
-		case ST_ASSIGN:
-			{
-				StmtAssign	&sAssign = ps->sAssign;
-				PrintSapces(nIndent); 
-				PrintStmtCodeTree(sAssign.siVarAddress, nIndent);
-				printf("=");
-				PrintStmtCodeTree(sAssign.siExpression, nIndent);
-			}
-			break;
 		case ST_RETURN:
 			{
 				StmtReturn	&sReturn = ps->sRetrun;
@@ -445,6 +463,10 @@ void CStmtImage::PrintExpression(stmt_index siExpr)
 		return;
 	case E_NEW:
 		printf("new %d", expr.typeId);
+		return;
+	case E_DYNAMIC_CAST:
+		printf("DynamicCast to: %d", expr.typeId);
+		PrintExpression(expr.dynCast.siVar);
 		return;
 	case E_VAR:
 		{
@@ -500,6 +522,15 @@ void CStmtImage::PrintExpression(stmt_index siExpr)
 
 			return;
 		}
+	case E_ASSIGN:
+	case E_ASSIGN_STATIC_VAR_INIT:
+		{
+			PrintExpression(expr.assign.siVarAddress);
+			printf(" = ");
+			PrintExpression(expr.assign.siExpression);
+			return;
+		}
+		break;
 	default:
 		break;
 	}
@@ -536,6 +567,10 @@ void CStmtImage::PrintExpression(stmt_index siExpr)
 		printf("++"); return;
 	case OP_OP_DEC:		// --
 		printf("--"); return;
+	case OP_PLUS_ASSIGN:		// +=
+		printf("+="); return;
+	case OP_MINUS_ASSIGN:		// -=
+		printf("-="); return;
 	default:
 		ASSERT(0 && "Undefined expression type.");
 	}

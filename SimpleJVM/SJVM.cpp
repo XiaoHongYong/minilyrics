@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "SJVM.h"
+#include "SjvmLib.h"
 
 #pragma warning(disable : 4996)
 
@@ -8,6 +9,7 @@
 
 #define D_PRINT_SYNTAX_TREE
 
+CSJVM			g_sjvm;
 
 static LPTSTR dupStrT(LPCTSTR str)
 {
@@ -55,6 +57,57 @@ bool CMemberMethod::IsSame(CMemberMethod *pMethod)
 		return false;
 
 	return IsSameNameAndParameter(pMethod);
+}
+
+int CClass::AddNativeMethod(bool bStatic, LPCSTR szMethodName, LPVOID funcPtr, TypeId typeIdReturn, ...)
+{
+	CMemberMethod	*pMethod = new CMemberMethod();
+	pMethod->strName = szMethodName;
+	pMethod->typeIDRet = typeIdReturn;
+	pMethod->pNativeFunc = funcPtr;
+	pMethod->bStatic = bStatic;
+
+	va_list		args;
+
+	va_start(args, typeIdReturn);
+
+	for (int i = 0; i < CVMParameters::COUNT_MAX; i++)
+	{
+		TypeId		typeId = va_arg(args, TypeId);
+		if (typeId == TID_INVALID)
+			break;
+
+		pMethod->AddParam(typeId);
+	}
+
+	va_end(args);
+
+	vMethod.push_back(pMethod);
+
+	if (pClassParent && vVirtualMethod.empty())
+		vVirtualMethod = pClassParent->vVirtualMethod;
+
+	for (size_t i = 0; i < vVirtualMethod.size(); i++)
+	{
+		if (pMethod->IsSameNameAndParameter(vVirtualMethod[i]))
+		{
+			if (pMethod->typeIDRet != vVirtualMethod[i]->typeIDRet)
+			{
+				ASSERT(0 && "Added native method override the existed method, but with different return type.");
+				delete pMethod;
+				return -1;
+			}
+
+			vVirtualMethod[i] = pMethod;
+			pMethod->nVirtualIndex = (int)i;
+			return (int)i;
+		}
+	}
+
+	pMethod->nVirtualIndex = (int)vVirtualMethod.size();
+	vVirtualMethod.push_back(pMethod);
+
+	return pMethod->nVirtualIndex;
 }
 
 int CClass::AddMethod(CMemberMethod *pMethod)
@@ -396,23 +449,54 @@ CStrJObject::~CStrJObject()
 
 CObjectMgr::~CObjectMgr()
 {
+	for (ListJObjNewer::iterator it = m_listJObjNewer.begin(); it != m_listJObjNewer.end(); ++it)
+	{
+		delete *it;
+	}
+}
 
+void CObjectMgr::RegisterJObjNewer(CJObjectNewer *pJObjNewer)
+{
+	for (ListJObjNewer::iterator it = m_listJObjNewer.begin(); it != m_listJObjNewer.end(); ++it)
+	{
+		if ((*it)->m_typeId == pJObjNewer->m_typeId)
+		{
+			ASSERT(0 && "Already registered this JObjectNewer");
+			return;
+		}
+	}
+
+	m_listJObjNewer.push_back(pJObjNewer);
 }
 
 int CObjectMgr::New(TypeId typeId, int nMemberVarCount)
 {
-	int		nPos = 0;
+	int			nPos = 0;
+	CJObject	*pNew = NULL;
+
+	ASSERT(typeId != TID_STRING);
+
+	for (ListJObjNewer::iterator it = m_listJObjNewer.begin(); it != m_listJObjNewer.end(); ++it)
+	{
+		if ((*it)->m_typeId == typeId)
+		{
+			pNew = (*it)->New();
+		}
+	}
+
+	if (!pNew)
+		pNew = new CJObject(typeId, nMemberVarCount);
 
 	if (m_vFreeJObjs.size())
 	{
 		nPos = m_vFreeJObjs.front();
 		m_vFreeJObjs.pop_front();
-		m_vJObjects[nPos] = new CJObject(typeId, nMemberVarCount);
+		m_vJObjects[nPos] = pNew;
 	}
 	else
 	{
 		nPos = (int)m_vJObjects.size();
-		m_vJObjects.push_back(new CJObject(typeId, nMemberVarCount));
+		m_vJObjects.push_back(pNew);
 	}
 
 	return nPos;
@@ -472,12 +556,20 @@ void CObjectMgr::InitAddConstString(MapStrIndex &mapStr)
 	}
 }
 
+void CVMStack::Push(CVMParameters &parameters)
+{
+	for (size_t i = 0; i < parameters.m_nCount; i++)
+	{
+		m_vItems.push_back(parameters.m_vItems[i]);
+	}
+}
 
 //////////////////////////////////////////////////////////////////////////
 
 CSJVM::CSJVM(void)
 {
 	m_bFinishedInitSysModule = false;
+	m_nSysClassCount = 0;
 
 	int			nRet;
 	LPCSTR		vIDPredefined[] = { "", "void", "char", "boolean", "short", "int", "__jobject", "String" };
@@ -491,6 +583,8 @@ CSJVM::CSJVM(void)
 		ASSERT(nRet == ERR_OK);
 		ASSERT(nIDPredefined[i] == GetTypeIdByName(vIDPredefined[i]));
 	}
+
+	InitSjvmLib();
 
 /*	nRet = m_classTable.AddClass("String");
 	if (nRet == ERR_OK)
@@ -513,10 +607,31 @@ extern STreeNode *		_syntaxTree;
 extern int yyleng;
 extern FILE *yyin, *yyout;
 
+void CSJVM::Reset()
+{
+	// Reset class table
+	ASSERT(m_nSysClassCount <= m_classTable.m_vClass.size());
+	for (size_t i = m_nSysClassCount; i < m_classTable.m_vClass.size(); i++)
+	{
+		delete m_classTable.m_vClass[i];
+	}
+	if (m_nSysClassCount < m_classTable.m_vClass.size())
+		m_classTable.m_vClass.resize(m_nSysClassCount);
+
+	// Reset static variables
+	ASSERT(m_nSysStaticVarsCount <= m_vStaticVars.size());
+	m_vStaticVars.resize(m_nSysStaticVarsCount);
+	for (size_t i = 0; i < m_vStaticVars.size(); i++)
+		m_vStaticVars[i].bInitialized = false;
+
+	// Reset statement image
+}
+
 int CSJVM::Compile(LPCTSTR szFile)
 {
 	int		nRet;
 
+	g_srcLineNo = 1;
 	yyin = _tfopen(szFile, _T("rb"));
 	if (!yyin)
 	{
@@ -525,8 +640,12 @@ int CSJVM::Compile(LPCTSTR szFile)
 	}
 
 	nRet = yyparse();
+	fclose(yyin);
+	yyin = NULL;
 	if (nRet != 0)
+	{
 		return ERR_C_PARSE;
+	}
 	m_syntaxTree = _syntaxTree;
 	m_bsiInLoop = false;
 
@@ -571,6 +690,7 @@ int CSJVM::CompileFiles(VecString &vFiles)
 	{
 		LPCTSTR	szFile = vFiles[i].c_str();
 
+		g_srcLineNo = 1;
 		yyin = _tfopen(szFile, _T("rb"));
 		if (!yyin)
 		{
@@ -579,6 +699,8 @@ int CSJVM::CompileFiles(VecString &vFiles)
 		}
 
 		nRet = yyparse();
+		fclose(yyin);
+		yyin = NULL;
 		if (nRet != 0)
 			return ERR_C_PARSE;
 
@@ -635,26 +757,33 @@ int CSJVM::Run()
 	m_stack.Resize(0);
 	m_bp = 0;
 	m_vStaticVars.resize(m_varDeclStack.GetSizeOfAllStaticVar());
+	for (size_t i = 0; i < m_vStaticVars.size(); i++)
+		m_vStaticVars[i].bInitialized = false;
 
 	m_jobjMgr.InitAddConstString(m_mapStrings);
 
 	CMemberMethod *pMethod;
 
-	// Execute static member variable inital statement
+	// Execute static member variable initial statement
 	pMethod = m_classTable.GetClassStaticVarInitMethod();
-	Execute(pMethod->siMethod);
+	if (pMethod && pMethod->siMethod != SI_INVALID)
+		Execute(pMethod->siMethod);
 
 	pMethod = m_classTable.GetEntryPoint();
-	return Execute(pMethod->siMethod);
+	if (pMethod && pMethod->siMethod)
+		return Execute(pMethod->siMethod);
+	else
+		return ERR_R_NO_ENTRY_POINT;
 }
 
 
 void CSJVM::FinishedInitSysModule()
 {
+	m_nSysClassCount = m_classTable.m_vClass.size();
+	m_nSysStaticVarsCount = m_vStaticVars.size();
+
 	m_bFinishedInitSysModule = true;
 }
-
-#define PAMETER_COUNT_MAX		32
 
 /*
 typedef void (* VoidFuncP0)();
@@ -727,17 +856,32 @@ int CSJVM::RegisterNativeAPI(LPCSTR szClassName, LPCSTR szFuncName, LPVOID funcP
 	return ERR_C_UNDECLARED_METHOD;
 }
 
+CJObject *CSJVM::NewJObject(TypeId typeId, jobject &jobj)
+{
+	jobj = JOBJ_NULL;
 
-int CSJVM::CallNativeAPI(CMemberMethod *pMethod, CVMStack &stackParameter)
+	CClass	*pClass = m_classTable.GetClass(typeId);
+	ASSERT(pClass);
+	if (!pClass)
+		return NULL;
+
+	jobj = m_jobjMgr.New(typeId, pClass->GetTotalMemberCount());
+	if (jobj == JOBJ_NULL)
+		return NULL;
+
+	return m_jobjMgr.Get(jobj);
+}
+
+int CSJVM::CallNativeAPI(CMemberMethod *pMethod, CVMParameters &parameters)
 {
 	ASSERT(pMethod->pNativeFunc);
-	ASSERT(stackParameter.size() <= PAMETER_COUNT_MAX);
+	ASSERT(parameters.m_nCount <= CVMParameters::COUNT_MAX);
 
-	LPCVOID				vParameter[PAMETER_COUNT_MAX];
+	LPCVOID				vParameter[CVMParameters::COUNT_MAX];
 
-	for (size_t i = 0; i < stackParameter.size(); i++)
+	for (size_t i = 0; i < parameters.m_nCount; i++)
 	{
-		CVMStack::Item	&item = stackParameter.Get(i);
+		CVMStack::Item	&item = parameters.m_vItems[i];
 		if (item.typeId == TID_STRING)
 		{
 			CJObject	*pObj = m_jobjMgr.Get(item.nValue);
@@ -762,7 +906,7 @@ int CSJVM::CallNativeAPI(CMemberMethod *pMethod, CVMStack &stackParameter)
 			vParameter[i] = m_jobjMgr.Get(item.nValue);*/
 	}
 
-	int		nCount = (int)stackParameter.size() - 1;
+	int		nCount = (int)parameters.m_nCount - 1;
 	LPVOID	pNativeFunc = pMethod->pNativeFunc;
 	int		nRet = 0;
 
@@ -807,14 +951,14 @@ int CSJVM::PreBuildSymbolInfo()
 	nRet = PreBSI_AddClassDefinition();
 	if (nRet != ERR_OK)
 	{
-		printf("Build Error: %s\n", m_strLastErr.c_str());
+		_tprintf(_T("Build Error: %s\n"), m_strLastErr.c_str());
 		return nRet;
 	}
 
 	nRet = PreBSI_AddClassInformation();
 	if (nRet != ERR_OK)
 	{
-		printf("Build Error: %s\n", m_strLastErr.c_str());
+		_tprintf(_T("Build Error: %s\n"), m_strLastErr.c_str());
 		return nRet;
 	}
 
@@ -837,7 +981,7 @@ int CSJVM::BuildSymbolInfo()
 		nRet = BSI_ClassDefinition(pTree);
 		if (nRet != ERR_OK)
 		{
-			printf("Build Error: %s\n", m_strLastErr.c_str());
+			_tprintf(_T("Build Error: %s\n"), m_strLastErr.c_str());
 			return nRet;
 		}
 
@@ -1035,33 +1179,6 @@ int CSJVM::BSI_Tree(STreeNode *pTree)
 		case STreeNode::T_VAR:
 			{
 				ASSERT(0 && "Var can't be here.");
-			}
-			break;
-		case STreeNode::T_ASSIGN:
-			{
-				StnAssign		&assign = pTree->sAssign;
-				ASSERT(assign.pVar && assign.pRightExp);
-				ASSERT(assign.pVar->nodeType == STreeNode::T_EXPRESSION && assign.pVar->sExpression.type == E_VAR);
-				ASSERT(assign.pRightExp->nodeType == STreeNode::T_EXPRESSION);
-
-				nRet = BSI_Expression(assign.pVar);
-				if (nRet != ERR_OK)
-					return nRet;
-
-				nRet = BSI_Expression(assign.pRightExp);
-				if (nRet != ERR_OK)
-					return nRet;
-
-				nRet = CanCovertRightToLeftType(assign.pVar->sExpression.typeIdValExp, assign.pRightExp->sExpression.typeIdValExp);
-				if (nRet != ERR_OK)
-				{
-					char		szMsg[512];
-					sprintf(szMsg, "Can't convert from type '%s' to '%s'.", 
-						GetTypeNameStrByID(assign.pRightExp->sExpression.typeIdValExp),
-						GetTypeNameStrByID(assign.pVar->sExpression.typeIdValExp));
-					FORMATLASTERROR(pTree->nLineNo, ERR_C_CONVERT_VALUE, szMsg);
-					return ERR_C_CONVERT_VALUE;
-				}
 			}
 			break;
 		case STreeNode::T_IF:
@@ -1516,6 +1633,12 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 	case E_NEW:
 		{
 			exp.typeIdValExp = GetTypeIdByName(exp.newObj.szNewType);
+			if (exp.typeIdValExp == TID_INVALID)
+			{
+				FORMATLASTERROR(pTree->nLineNo, ERR_C_UNDECLARED_TYPE, exp.newObj.szNewType);
+				return ERR_C_UNDECLARED_TYPE;
+			}
+
 			VecParamType	vParameter;
 			if (exp.newObj.pParameter)
 			{
@@ -1540,6 +1663,33 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 				return nRet;
 
 			exp.newObj.nMemberIndex = pMethod->nVirtualIndex;
+			return ERR_OK;
+		}
+	case E_DYNAMIC_CAST:
+		{
+			exp.typeIdValExp = GetTypeIdByName(exp.dynCast.szCastToType);
+			if (exp.typeIdValExp == TID_INVALID)
+			{
+				FORMATLASTERROR(pTree->nLineNo, ERR_C_UNDECLARED_TYPE, exp.dynCast.szCastToType);
+				return ERR_C_UNDECLARED_TYPE;
+			}
+
+			nRet = BSI_Expression(exp.dynCast.pVar);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			// Is castToType derived from type of pVar?
+			if (!m_classTable.IsSubClassOf(exp.dynCast.pVar->sExpression.typeIdValExp, exp.typeIdValExp)
+				&& !m_classTable.IsSubClassOf(exp.typeIdValExp, exp.dynCast.pVar->sExpression.typeIdValExp))
+			{
+				char		szMsg[512];
+				sprintf(szMsg, "Can't convert from type '%s' to '%s'.", 
+					GetTypeNameStrByID(exp.dynCast.pVar->sExpression.typeIdValExp),
+					GetTypeNameStrByID(exp.typeIdValExp));
+				FORMATLASTERROR(pTree->nLineNo, ERR_C_CONVERT_VALUE, szMsg);
+				return ERR_C_CONVERT_VALUE;
+			}
+
 			return ERR_OK;
 		}
 	case E_VAR:
@@ -1611,6 +1761,38 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 		}
 	case E_METHOD_CALL:
 		return BSI_ExpressionFunctionCall(pTree);
+	case E_ASSIGN:
+		{
+			ASSERT(exp.assign.pVar && exp.assign.pRightExp);
+			ASSERT(exp.assign.pVar->nodeType == STreeNode::T_EXPRESSION && exp.assign.pVar->sExpression.type == E_VAR);
+			ASSERT(exp.assign.pRightExp->nodeType == STreeNode::T_EXPRESSION);
+
+			StnExpression &expVar = exp.assign.pVar->sExpression;
+			StnExpression &expRight = exp.assign.pRightExp->sExpression;
+
+			nRet = BSI_Expression(exp.assign.pVar);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			nRet = BSI_Expression(exp.assign.pRightExp);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			nRet = CanCovertRightToLeftType(expVar.typeIdValExp, expRight.typeIdValExp);
+			if (nRet != ERR_OK)
+			{
+				char		szMsg[512];
+				sprintf(szMsg, "Can't convert from type '%s' to '%s'.", 
+					GetTypeNameStrByID(expRight.typeIdValExp),
+					GetTypeNameStrByID(expVar.typeIdValExp));
+				FORMATLASTERROR(pTree->nLineNo, ERR_C_CONVERT_VALUE, szMsg);
+				return ERR_C_CONVERT_VALUE;
+			}
+			exp.typeIdValExp = expVar.typeIdValExp;
+
+			return ERR_OK;
+		}
+		break;
 	default:
 		break;
 	}
@@ -1675,12 +1857,14 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 	case OP_LT_EQ:		// <=
 	case OP_GT_EQ:		// >=
 	case OP_LITTLE:		// <
-	case OP_GREATER:		// >
+	case OP_GREATER:	// >
 		exp.typeIdValExp = TID_BOOLEAN;		// Boolean result
 	case OP_PLUS:		// +
 	case OP_MINUS:		// -
 	case OP_MULT:		// *
-	case OP_DIV:			// /
+	case OP_DIV:		// /
+	case OP_PLUS_ASSIGN:
+	case OP_MINUS_ASSIGN:
 		{
 			if (pExpLeft->sExpression.typeIdValExp == pExpRight->sExpression.typeIdValExp
 				&& pExpRight->sExpression.typeIdValExp == TID_BOOLEAN)
@@ -1701,7 +1885,7 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 		}
 		break;
 	case OP_BOOL_AND:	// &&
-	case OP_BOOL_OR:		// ||
+	case OP_BOOL_OR:	// ||
 		{
 			STreeNode	*pExpLeft = exp.opParameter.pExpressionLeft;
 			STreeNode	*pExpRight = exp.opParameter.pExpressionRight;
@@ -1961,7 +2145,7 @@ int CSJVM::BuildCodeStmt()
 		nRet = BCS_ClassDefinition(pTree);
 		if (nRet != ERR_OK)
 		{
-			printf("BuildCodeStmt Error: %s\n", m_strLastErr.c_str());
+			_tprintf(_T("BuildCodeStmt Error: %s\n"), m_strLastErr.c_str());
 			return nRet;
 		}
 		pTree = pTree->pNext;
@@ -2071,7 +2255,10 @@ int CSJVM::BCS_ClassVariable(STreeNode *pTree, CClass *pClass)
 				return nRet;
 
 			// new assign statement
-			*psiTail = m_stmtImage.newStmtAssign(pVarNode->nLineNo, siVarAddress, siExpression);
+			if (bStatic)
+				*psiTail = m_stmtImage.newStmtExpAssignStaticVarInitial(pVarNode->nLineNo, typeId, siVarAddress, siExpression);
+			else
+				*psiTail = m_stmtImage.newStmtExpAssign(pVarNode->nLineNo, typeId, siVarAddress, siExpression);
 			psiTail = m_stmtImage.GetTail(psiTail);
 		}
 
@@ -2117,7 +2304,10 @@ int CSJVM::BCS_VarDeclaration(STreeNode *pTree, stmt_index &siOut)
 				return nRet;
 
 			// new assign statement
-			*psiTail = m_stmtImage.newStmtAssign(pVarNode->nLineNo, siVarAddress, siExpression);
+			if (bStatic)
+				*psiTail = m_stmtImage.newStmtExpAssignStaticVarInitial(pVarNode->nLineNo, typeId, siVarAddress, siExpression);
+			else
+				*psiTail = m_stmtImage.newStmtExpAssign(pVarNode->nLineNo, typeId, siVarAddress, siExpression);
 			psiTail = m_stmtImage.GetTail(psiTail);
 		}
 
@@ -2179,6 +2369,16 @@ int CSJVM::BCS_Expression(STreeNode *pTree, stmt_index &siOut)
 			siOut = m_stmtImage.newStmtExpNew(pTree->nLineNo, exp.typeIdValExp, exp.newObj.nMemberIndex, siParameter);
 			return ERR_OK;
 		}
+	case E_DYNAMIC_CAST:
+		{
+			stmt_index	siVar = SI_INVALID;
+			nRet = BCS_Expression(exp.dynCast.pVar, siVar);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			siOut = m_stmtImage.newStmtExpDynCast(pTree->nLineNo, exp.typeIdValExp, siVar);
+			return ERR_OK;
+		}
 	case E_VAR:
 		{
 			STreeNode	*pParent = exp.var.pVarParent;
@@ -2218,6 +2418,26 @@ int CSJVM::BCS_Expression(STreeNode *pTree, stmt_index &siOut)
 
 			return ERR_OK;
 		}
+	case E_ASSIGN:
+		{
+			ASSERT(exp.assign.pVar && exp.assign.pRightExp);
+			ASSERT(exp.assign.pVar->nodeType == STreeNode::T_EXPRESSION && exp.assign.pVar->sExpression.type == E_VAR);
+			ASSERT(exp.assign.pRightExp->nodeType == STreeNode::T_EXPRESSION);
+			stmt_index		siVar = SI_INVALID, siRightExpr = SI_INVALID;
+
+			nRet = BCS_Expression(exp.assign.pVar, siVar);
+			if (nRet != ERR_OK)
+				return nRet;
+			nRet = BCS_Expression(exp.assign.pRightExp, siRightExpr);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			siOut = m_stmtImage.newStmtExpAssign(pTree->nLineNo, exp.typeIdValExp, siVar, siRightExpr);
+			return ERR_OK;
+		}
+	case E_ASSIGN_STATIC_VAR_INIT:
+		ASSERT(0 && "Invalid E_ASSIGN_STATIC_VAR_INIT");
+		return ERR_OK;
 	default:
 		break;
 	}
@@ -2278,24 +2498,6 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 		case STreeNode::T_VAR:
 			{
 				ASSERT(0 && "Var can't be here.");
-			}
-			break;
-		case STreeNode::T_ASSIGN:
-			{
-				StnAssign		&assign = pTree->sAssign;
-				ASSERT(assign.pVar && assign.pRightExp);
-				ASSERT(assign.pVar->nodeType == STreeNode::T_EXPRESSION && assign.pVar->sExpression.type == E_VAR);
-				ASSERT(assign.pRightExp->nodeType == STreeNode::T_EXPRESSION);
-				stmt_index		siVar = SI_INVALID, siRightExpr = SI_INVALID;
-
-				nRet = BCS_Expression(assign.pVar, siVar);
-				if (nRet != ERR_OK)
-					return nRet;
-				nRet = BCS_Expression(assign.pRightExp, siRightExpr);
-				if (nRet != ERR_OK)
-					return nRet;
-
-				*psiTail = m_stmtImage.newStmtAssign(pTree->nLineNo, siVar, siRightExpr);
 			}
 			break;
 		case STreeNode::T_IF:
@@ -2470,6 +2672,65 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 
 //////////////////////////////////////////////////////////////////////////
 
+#define LOG_CODE_EXE
+
+#ifdef LOG_CODE_EXE
+
+// CE == CODE_EXE
+
+static int	g_Deep = 0;
+
+void printSpace() {
+	for (int i = 0; i < g_Deep + 8; i++) printf(" ");
+}
+
+void printSpace(int nLineNo){
+	printf("%3d     ", nLineNo);
+	for (int i = 0; i < g_Deep; i++) printf(" ");
+}
+
+class CAutoBlock {
+public:
+	CAutoBlock(LPCSTR szName, int nLineNo) : m_szName(szName)
+		{ printSpace(nLineNo); printf("Enter >> %s\n", szName); g_Deep++; }
+	~CAutoBlock() { g_Deep--; printSpace(); printf("Leave << %s\n", m_szName); }
+	LPCSTR		m_szName;
+};
+
+#define CE_AUTO_BLOCK(szName, nLineNo)		CAutoBlock	__autoBlcok(szName, nLineNo)
+
+/*void CE_LOG(int nLineNo, LPCSTR szName)
+{
+	printSpace(nLineNo);
+	printf("%s\n", szName); 
+}*/
+
+void CE_LOG(int nLineNo, LPCSTR szFormat, ...)
+{
+	va_list		args;
+
+	printSpace(nLineNo);
+
+	va_start(args, szFormat);
+	vprintf(szFormat, args);
+	va_end(args);
+	printf("\n");
+}
+
+#define CE_LOG0(nLineNo, szFormat)	CE_LOG(nLineNo, szFormat)
+#define CE_LOG1(nLineNo, szFormat, p1)	CE_LOG(nLineNo, szFormat, p1)
+#define CE_LOG2(nLineNo, szFormat, p1, p2)	CE_LOG(nLineNo, szFormat, p1, p2)
+#define CE_LOG3(nLineNo, szFormat, p1, p2, p3)	CE_LOG(nLineNo, szFormat, p1, p2, p3)
+
+
+#else
+#define CE_AUTO_BLOCK(szName, nLineNo)
+#define CE_LOG0(nLineNo, szFormat)	
+#define CE_LOG1(nLineNo, szFormat, p1)	
+#define CE_LOG2(nLineNo, szFormat, p1, p2)	
+#define CE_LOG3(nLineNo, szFormat, p1, p2, p3)	
+#endif
+
 //
 // Execute statement
 //
@@ -2488,11 +2749,15 @@ int CSJVM::Execute(stmt_index siEntry)
 				{
 					StmtBlock	&sBlock = ps->sBlock;
 					if (sBlock.siFirstChild != SI_INVALID)
+					{
+						CE_AUTO_BLOCK("{ }", ps->nLineNo);
 						Execute(sBlock.siFirstChild);
+					}
 				}
 				break;
 			case ST_IF:
 				{
+					CE_AUTO_BLOCK("if", ps->nLineNo);
 					StmtIf	&sIf = ps->sIf;
 					nRet = ExecuteExpression(sIf.siCondition);
 					if (nRet > 0)
@@ -2509,6 +2774,8 @@ int CSJVM::Execute(stmt_index siEntry)
 				break;
 			case ST_FOR:
 				{
+					CE_AUTO_BLOCK("for", ps->nLineNo);
+
 					StmtFor	sFor = ps->sFor;
 
 					if (sFor.siInitalization != SI_INVALID)
@@ -2538,6 +2805,8 @@ int CSJVM::Execute(stmt_index siEntry)
 				break;
 			case ST_WHILE:
 				{
+					CE_AUTO_BLOCK("while", ps->nLineNo);
+
 					StmtWhile	sWhile = ps->sWhile;
 					while (ExecuteExpression(sWhile.siCondition))
 					{
@@ -2561,6 +2830,8 @@ int CSJVM::Execute(stmt_index siEntry)
 				break;
 			case ST_DO_WHILE:
 				{
+					CE_AUTO_BLOCK("do while", ps->nLineNo);
+
 					StmtWhile	sWhile = ps->sWhile;
 					do {
 						if (sWhile.siStmt != SI_INVALID)
@@ -2590,18 +2861,10 @@ int CSJVM::Execute(stmt_index siEntry)
 				ASSERT(m_exeAction == EXE_GO_ON);
 				m_exeAction = EXE_LOOP_CONTINUE;
 				break;
-			case ST_ASSIGN:
-				{
-					StmtAssign	&sAssign = ps->sAssign;
-					nRet = ExecuteExpression(sAssign.siExpression);
-					int			*pAddress;
-					pAddress = ExeExprGetVarAddr(sAssign.siVarAddress);
-
-					*pAddress = nRet;
-				}
-				break;
 			case ST_RETURN:
 				{
+					CE_AUTO_BLOCK("return", ps->nLineNo);
+
 					StmtReturn	&sReturn = ps->sRetrun;
 					if (sReturn.siExpression != SI_INVALID)
 						m_valueMethodReturn = ExecuteExpression(sReturn.siExpression);
@@ -2658,41 +2921,89 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 	switch (expr.expType)
 	{
 	case E_CONST:
+		CE_LOG1(ps->nLineNo, "Const: %d", expr.nConstValue);
 		return expr.nConstValue;
 	case E_CONST_STRING:
+#ifdef LOG_CODE_EXE
+		{
+			CJObject	*pObj = m_jobjMgr.Get(expr.nConstValue);
+			if (pObj && pObj->m_typeId == TID_STRING)
+			{
+				// valid input
+				CStrJObject	*pStrObj = (CStrJObject *)pObj;
+				CE_LOG1(ps->nLineNo, "Const String: %s", pStrObj->GetStrValue());
+			}
+		}
+#endif
 		return expr.nConstValue;
 	case E_NEW:
-		return NewJObject(expr);
+		CE_LOG0(ps->nLineNo, "NewJObject");
+		return ExeNewJObject(expr);
+	case E_DYNAMIC_CAST:
+		{
+			CE_LOG1(ps->nLineNo, "DynamicCast: %d", expr.dynCast.siVar);
+			int		nVarValue;
+			nVarValue = ExecuteExpression(expr.dynCast.siVar);
+			if (nVarValue != JOBJ_NULL)
+			{
+				CJObject	*pObj = m_jobjMgr.Get(nVarValue);
+				ASSERT(pObj);
+				if (pObj)
+				{
+					int nRet = CanCovertRightToLeftType(expr.typeId, pObj->m_typeId);
+					if (nRet != ERR_OK)
+					{
+						TCHAR		szMsg[512];
+						_stprintf(szMsg, _T("Can't convert from type '%s' to '%s'."), 
+							GetTypeNameStrByID(pObj->m_typeId),
+							GetTypeNameStrByID(expr.typeId));
+						ThrowException(szMsg);
+						return 0;
+					}
+				}
+			}
+			return nVarValue;
+		}
 	case E_VAR:
 		{
+			int		nRet;
 			if (expr.var.bStatic)
-				return GetStaticVarValue(expr.var.nAddress);
-
-			if (expr.var.siParentVar != SI_INVALID)
+				nRet = GetStaticVarValue(expr.var.nAddress);
+			else
 			{
-				// A Jobject member varaible
-				int		nParentValue;
-				nParentValue = ExecuteExpression(expr.var.siParentVar);
-				return GetJObjectMemberVarValue(nParentValue, expr.var.nAddress);
+				if (expr.var.siParentVar != SI_INVALID)
+				{
+					// A Jobject member varaible
+					int		nParentValue;
+					nParentValue = ExecuteExpression(expr.var.siParentVar);
+					nRet = GetJObjectMemberVarValue(nParentValue, expr.var.nAddress);
+				}
+				else
+				{
+					// Variable is in stack
+					nRet = m_stack.GetValue(m_bp + expr.var.nAddress);
+				}
 			}
-
-			// Variable is in stack
-			return m_stack.GetValue(m_bp + expr.var.nAddress);
+			CE_LOG1(ps->nLineNo, "Var Value: %d", nRet);
+			return nRet;
 		}
 	case E_METHOD_CALL:
 		{
 			Statement		*pStmt;
 			int				nParentVarValue = 0;
-			CVMStack		stackParameter;
+			CVMParameters	parameters;
 
 			if (!expr.functionCall.bStatic)
 			{
 				ASSERT(expr.functionCall.siParentVar != SI_INVALID);
 				nParentVarValue = ExecuteExpression(expr.functionCall.siParentVar);
+
 				pStmt = m_stmtImage.GetStmt(expr.functionCall.siParentVar);
 
 				// Push "this" pointer in stack first.
-				stackParameter.Push(nParentVarValue, pStmt->sExpression.typeId);
+				parameters.Push(nParentVarValue, pStmt->sExpression.typeId);
+
+				CE_LOG2(ps->nLineNo, "Method call This: %d, type: %d", nParentVarValue, pStmt->sExpression.typeId);
 			}
 
 			// Execute parameter expressions
@@ -2706,26 +3017,65 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 				int		nParamValue = ExecuteExpression(siParameter);
 
 				// Push value in stack
-				stackParameter.Push(nParamValue, pStmt->sExpression.typeId);
+				parameters.Push(nParamValue, pStmt->sExpression.typeId);
+
+				CE_LOG2(ps->nLineNo, "Method Parameter: %d, type: %d", nParamValue, pStmt->sExpression.typeId);
 
 				siParameter = m_stmtImage.GetNext(siParameter);
 			}
 
 			// Call method
 			int		nRet;
-			nRet = CallMethod(expr.functionCall.typeIdSpecialfiedClass, nParentVarValue, expr.functionCall.nMemberIndex, stackParameter);
+			nRet = CallMethod(expr.functionCall.typeIdSpecialfiedClass, nParentVarValue, expr.functionCall.nMemberIndex, parameters);
+
+			CE_LOG1(ps->nLineNo, "Call Method: return: %d", nRet);
 
 			m_exeAction = EXE_GO_ON;
 
 			return nRet;
 		}
+	case E_ASSIGN:
+		{
+			int			*pAddress;
+			int			nRet;
+
+			nRet = ExecuteExpression(expr.assign.siExpression);
+			pAddress = ExeExprGetVarAddr(expr.assign.siVarAddress);
+			if (pAddress)
+			{
+				*pAddress = nRet;
+				CE_LOG1(ps->nLineNo, " = %d", *pAddress);
+			}
+			return nRet;
+		}
+		break;
+	case E_ASSIGN_STATIC_VAR_INIT:
+		{
+			CE_AUTO_BLOCK(" static var initial = ", ps->nLineNo);
+
+			StackVar	*staticVar = ExeExprGetStaticVar(expr.assign.siVarAddress);
+
+			if (staticVar && !staticVar->bInitialized)
+			{
+				staticVar->nValue = ExecuteExpression(expr.assign.siExpression);
+				if (staticVar)
+				{
+					staticVar = ExeExprGetStaticVar(expr.assign.siVarAddress);
+					staticVar->bInitialized = true;
+				}
+				return staticVar->nValue;
+			}
+			return 0;
+		}
+		break;
 	default:
 		break;
 	}
 
 	int		nLeftVal = 0, nRightVal = 0;
 
-	if (expr.expType != OP_OP_INC && expr.expType != OP_OP_DEC)
+	if (expr.expType != OP_OP_INC && expr.expType != OP_OP_DEC
+		&& expr.expType != OP_PLUS_ASSIGN && expr.expType != OP_MINUS_ASSIGN)
 	{
 		nLeftVal = ExecuteExpression(expr.opParameter.siExprLeft);
 		nRightVal = ExecuteExpression(expr.opParameter.siExprRight);
@@ -2806,16 +3156,42 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 	case OP_OP_INC:		// ++
 		{
 			int		*pInt = ExeExprGetVarAddr(expr.opParameter.siExprLeft);
-			int		nOld = *pInt;
-			(*pInt)++;
-			return nOld;
+			if (pInt)
+			{
+				int		nOld = *pInt;
+				(*pInt)++;
+				return nOld;
+			}
 		}
 	case OP_OP_DEC:		// --
 		{
 			int		*pInt = ExeExprGetVarAddr(expr.opParameter.siExprLeft);
-			int		nOld = *pInt;
-			(*pInt)--;
-			return nOld;
+			if (pInt)
+			{
+				int		nOld = *pInt;
+				(*pInt)--;
+				return nOld;
+			}
+		}
+	case OP_PLUS_ASSIGN:	// +=
+		{
+			int		*pInt = ExeExprGetVarAddr(expr.opParameter.siExprLeft);
+			if (pInt)
+			{
+				int		nOld = *pInt;
+				(*pInt) += ExecuteExpression(expr.opParameter.siExprRight);
+				return nOld;
+			}
+		}
+	case OP_MINUS_ASSIGN:	// -=
+		{
+			int		*pInt = ExeExprGetVarAddr(expr.opParameter.siExprLeft);
+			if (pInt)
+			{
+				int		nOld = *pInt;
+				(*pInt) -= ExecuteExpression(expr.opParameter.siExprRight);
+				return nOld;
+			}
 		}
 	default:
 		ASSERT(0 && "Undefined expression type.");
@@ -2832,7 +3208,14 @@ int *CSJVM::ExeExprGetVarAddr(stmt_index siExprVar)
 	ASSERT(expr.expType == E_VAR);
 
 	if (expr.var.bStatic)
-		return GetStaticVarAddress(expr.var.nAddress);
+	{
+		ASSERT(expr.var.nAddress < (int)m_vStaticVars.size());
+		if (expr.var.nAddress >= (int)m_vStaticVars.size())
+			return NULL;
+
+		// ASSERT(m_vStaticVars[expr.var.nAddress].bInitialized);
+		return &(m_vStaticVars[expr.var.nAddress].nValue);
+	}
 
 	if (expr.var.siParentVar)
 	{
@@ -2846,15 +3229,34 @@ int *CSJVM::ExeExprGetVarAddr(stmt_index siExprVar)
 	return &(m_stack.Get(m_bp + expr.var.nAddress).nValue);
 }
 
+CSJVM::StackVar *CSJVM::ExeExprGetStaticVar(stmt_index siExprVar)
+{
+	Statement		*ps = m_stmtImage.GetStmt(siExprVar);
+	ASSERT(ps->stmtType == ST_EXPRESSION);
+	StmtExpression	&expr = ps->sExpression;
+	ASSERT(expr.expType == E_VAR);
+	ASSERT(expr.var.bStatic);
 
-int CSJVM::NewJObject(StmtExpression &expr)
+	ASSERT(expr.var.nAddress < (int)m_vStaticVars.size());
+	if (expr.var.nAddress >= (int)m_vStaticVars.size())
+		return NULL;
+
+	return &(m_vStaticVars[expr.var.nAddress]);
+}
+
+int CSJVM::ExeNewJObject(StmtExpression &expr)
 {
 	CClass	*pClass = m_classTable.GetClass(expr.typeId);
 	ASSERT(pClass);
 	if (!pClass)
 		return 0;
 
-	CVMStack		stackParameter;
+	CVMParameters	parameters;
+
+	// New jobject
+	int		nJObj = m_jobjMgr.New(expr.typeId, pClass->GetTotalMemberCount());
+
+	parameters.Push(nJObj, expr.typeId);
 
 	// Execute parameter expressions
 	// And push parameter in stack
@@ -2866,7 +3268,7 @@ int CSJVM::NewJObject(StmtExpression &expr)
 		int		nParamValue = ExecuteExpression(siParameter);
 
 		// Push value in stack
-		stackParameter.Push(nParamValue, pStmt->sExpression.typeId);
+		parameters.Push(nParamValue, pStmt->sExpression.typeId);
 
 		siParameter = m_stmtImage.GetNext(siParameter);
 	}
@@ -2877,21 +3279,12 @@ int CSJVM::NewJObject(StmtExpression &expr)
 	if (!pMethod)
 		return 0;
 
-	int		nJObj = m_jobjMgr.New(expr.typeId, pClass->GetTotalMemberCount());
-
-	stackParameter.Insert(0, nJObj, expr.typeId);
-
-	CallMethod(expr.typeId, nJObj, expr.newObj.nMemberIndex, stackParameter);
+	CallMethod(expr.typeId, nJObj, expr.newObj.nMemberIndex, parameters);
 
 	return nJObj;
 }
 
-void CSJVM::FreeJObject(int nJObject)
-{
-	m_jobjMgr.Free(nJObject, m_classTable);
-}
-
-int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMStack &stackParameter)
+int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParameters &parameters)
 {
 	// Save bp, sp
 	size_t				nBp, nSp;
@@ -2911,7 +3304,7 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMStack &s
 	if (!pClass)
 		return 0;
 
-	CMemberMethod *pMethod = pClass->GetVirtualMethod(nMethodIndex);
+	CMemberMethod *pMethod = pClass->GetMethod(nMethodIndex);
 	if (!pMethod)
 		return 0;
 
@@ -2921,13 +3314,13 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMStack &s
 		// Call native member method.
 		ASSERT(pMethod->pNativeFunc);
 		if (pMethod->pNativeFunc)
-			nRet = CallNativeAPI(pMethod, stackParameter);
+			nRet = CallNativeAPI(pMethod, parameters);
 	}
 	else
 	{
 		m_bp = m_stack.size();
 
-		m_stack.Push(stackParameter);
+		m_stack.Push(parameters);
 
 		// Return value is in m_valueMethodReturn.
 		Execute(pMethod->siMethod);
@@ -2961,7 +3354,9 @@ int CSJVM::GetStaticVarValue(size_t nAddress)
 	if (nAddress >= m_vStaticVars.size())
 		return 0;
 
-	return m_vStaticVars[nAddress];
+	// ASSERT(m_vStaticVars[nAddress].bInitialized);
+
+	return m_vStaticVars[nAddress].nValue;
 }
 
 int CSJVM::GetJObjectMemberVarValue(int nJobject, int nMember)
@@ -2971,15 +3366,6 @@ int CSJVM::GetJObjectMemberVarValue(int nJobject, int nMember)
 		return 0;
 
 	return pObj->GetValue(nMember);
-}
-
-int *CSJVM::GetStaticVarAddress(size_t nAddress)
-{
-	ASSERT(nAddress < m_vStaticVars.size());
-	if (nAddress >= m_vStaticVars.size())
-		return 0;
-
-	return &(m_vStaticVars[nAddress]);
 }
 
 int *CSJVM::GetJObjectMemberVarAddr(int nJobject, int nMember)
@@ -2997,63 +3383,57 @@ void PrintSapces(int nIndent);
 
 //////////////////////////////////////////////////////////////////////////
 
-void FormatLastError(string &strOutput, int nLine, int nError, LPCSTR szStr, int nLineSrc)
+
+static ID_TO_STRING	__ErrID2Str[] = 
 {
-	string str;
-	switch (nError)
-	{
-	case ERR_C_UNDECLARED_ID:	str = "undeclared identifier"; break;
-	case ERR_C_UNDECLARED_TYPE:	str = "undeclared class or type"; break;
-	case ERR_C_UNDECLARED_METHOD:	str = "undeclared class member method"; break;
-	case ERR_C_UNDECLARED_VAR:	str = "undeclared variable"; break;
-	case ERR_C_UNDECLARED_MEMBER_VAR:	str = "undeclared member variable"; break;
-	case ERR_C_PARSE:	str = "Parse script file"; break;
-	case ERR_C_REDEFINITION_ID:	str = "redefinition of identifier"; break;
-	case ERR_C_OP_TYPE_NOT_MATCH:	str = "operand type not match"; break;
-	case ERR_C_OP_REQUIRE_INT_STR_TYPE:	str = "operand type should be int or string"; break;
-	case ERR_C_OP_REQUIRE_INT_TYPE:	str = "operand type should be int"; break;
-	case ERR_C_OP_REQUIRE_BOOL_TYPE:	str = "operand type should be boolean"; break;
-	case ERR_C_REDEFINITION_TYPE:	str = "redefinition of type"; break;
-	case ERR_C_REDEFINITION_METHOD:	str = "redefinition of class method"; break;
-	case ERR_C_CONVERT_VALUE:	str = "Can't convert value to another"; break;
-	case ERR_C_UNEXPECTED_ERR:	str = "Got unexpected error"; break;
-	case ERR_C_FUNC_RETURN_VALUE:	str = "Method return value is incorrect."; break;
-	case ERR_C_NEW_WRONG_TYPE:	str = "New type is incorrect."; break;
-	case ERR_C_NOT_CLASS_TYPE:	str = "Not a class type, it hasn't member variable or method, or can NOT be extended."; break;
-	case ERR_C_CAN_NOT_CALL_NONE_STATIC_MEMBER:	str = "Static method of class, can NOT call NONE static member."; break;
-	case ERR_C_REQUIRE_LOGICAL_CONDITION:	str = "Logical condition is required in (if, while, etc)"; break;
-	case ERR_C_METHOD_CALL_PARAMETER_COUNT:	str = "Class method parameter count is incorrect."; break;
-	case ERR_C_CLASS_TYPE_NOT_VAR:	str = "It's class type, not a variable."; break;
-	case ERR_C_CLASS_HIERARCHY_INCONSISTENT:	str = "The hierarchy of class is inconsistent."; break;
-	case ERR_C_OVERRIDE_METHOD_RET_DIFF:	str = "Override method must have same return value type."; break;
-	case ERR_C_DUMPLICATE_METHOD:	str = "Duplicated member method."; break;
-	case ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT:	str = "Constructor must be the first statement in a constructor."; break;
-	case ERR_C_CONSTRUCTOR_OBJ_UNDEFINED:	str = "The constructor object is undefined."; break;
-	case ERR_C_CONSTRUCTOR_NO_RETRUN_VALUE:	str = "The constructor should NOT have return value."; break;
-	case ERR_C_RETRUN_TYPE_MISSING:	str = "Return type for the method is missing."; break;
-	case ERR_C_NO_THIS_SUPER_IN_STATIC_METHOD:	str = "Can NOT use super in a static method."; break;
-	case ERR_C_BREAK_CONTINUE_MUST_IN_LOOP:	str = "Break/continue statement must be in a loop."; break;
+	{ ERR_C_UNDECLARED_ID, _T("undeclared identifier") },
+	{ ERR_C_UNDECLARED_TYPE, _T("undeclared class or type") },
+	{ ERR_C_UNDECLARED_METHOD, _T("undeclared class member method") },
+	{ ERR_C_UNDECLARED_VAR, _T("undeclared variable") },
+	{ ERR_C_UNDECLARED_MEMBER_VAR, _T("undeclared member variable") },
+	{ ERR_C_PARSE, _T("Parse script file") },
+	{ ERR_C_REDEFINITION_ID, _T("redefinition of identifier") },
+	{ ERR_C_OP_TYPE_NOT_MATCH, _T("operand type not match") },
+	{ ERR_C_OP_REQUIRE_INT_STR_TYPE, _T("operand type should be int or string") },
+	{ ERR_C_OP_REQUIRE_INT_TYPE, _T("operand type should be int") },
+	{ ERR_C_OP_REQUIRE_BOOL_TYPE, _T("operand type should be boolean") },
+	{ ERR_C_REDEFINITION_TYPE, _T("redefinition of type") },
+	{ ERR_C_REDEFINITION_METHOD, _T("redefinition of class method") },
+	{ ERR_C_CONVERT_VALUE, _T("Can't convert value to another") },
+	{ ERR_C_UNEXPECTED_ERR, _T("Got unexpected error") },
+	{ ERR_C_FUNC_RETURN_VALUE, _T("Method return value is incorrect.") },
+	{ ERR_C_NEW_WRONG_TYPE, _T("New type is incorrect.") },
+	{ ERR_C_NOT_CLASS_TYPE, _T("Not a class type, it hasn't member variable or method, or can NOT be extended.") },
+	{ ERR_C_CAN_NOT_CALL_NONE_STATIC_MEMBER, _T("Static method of class, can NOT call NONE static member.") },
+	{ ERR_C_REQUIRE_LOGICAL_CONDITION, _T("Logical condition is required in (if, while, etc)") },
+	{ ERR_C_METHOD_CALL_PARAMETER_COUNT, _T("Class method parameter count is incorrect.") },
+	{ ERR_C_CLASS_TYPE_NOT_VAR, _T("It's class type, not a variable.") },
+	{ ERR_C_CLASS_HIERARCHY_INCONSISTENT, _T("The hierarchy of class is inconsistent.") },
+	{ ERR_C_OVERRIDE_METHOD_RET_DIFF, _T("Override method must have same return value type.") },
+	{ ERR_C_DUMPLICATE_METHOD, _T("Duplicated member method.") },
+	{ ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT, _T("Constructor must be the first statement in a constructor.") },
+	{ ERR_C_CONSTRUCTOR_OBJ_UNDEFINED, _T("The constructor object is undefined.") },
+	{ ERR_C_CONSTRUCTOR_NO_RETRUN_VALUE, _T("The constructor should NOT have return value.") },
+	{ ERR_C_RETRUN_TYPE_MISSING, _T("Return type for the method is missing.") },
+	{ ERR_C_NO_THIS_SUPER_IN_STATIC_METHOD, _T("Can NOT use super in a static method.") },
+	{ ERR_C_BREAK_CONTINUE_MUST_IN_LOOP, _T("Break/continue statement must be in a loop.") },
 
-	case ERR_R_UNDECLARED_FUNCTION:	str = "undeclared function"; break;
-	case ERR_R_FUNC_PARAM_COUNT:	str = "function parameter count not match"; break;
-	case ERR_R_FUNC_PARAM_TYPE:	str = "function parameter type not match"; break;
-	default:
-		{
-			// str = Error2Str(nError);
-			str = "Unknown error code";
-		}
-		break;
-	}
+	{ ERR_R_NO_ENTRY_POINT, _T("Can NOT find the entry point.") },
 
-	char		szBuffer[512] = "";
-	sprintf(szBuffer, "%4d: Line: %d, %s: %s", nLineSrc, nLine, str.c_str(), szStr);
+	{ 0, NULL}
+};
 
-	strOutput = szBuffer;
-}
+static RegErr2Str	__addErr2Str(__ErrID2Str);
 
 void CSJVM::FormatLastError(int nLine, int nError, LPCSTR szStr, int nLineSrc)
 {
-	::FormatLastError(m_strLastErr, nLine, nError, szStr, nLineSrc);
+	TCHAR		szBuffer[512] = _T("");
+	tstringex	strW;
+	ConvertStr(szStr, -1, strW);
+	_stprintf(szBuffer, _T("%4d: Line: %d, %s: %s"), nLineSrc, nLine, 
+		(LPCTSTR)Error2Str(nError), strW.c_str());
+
+	m_strLastErr = szBuffer;
 }
 
 // Get TypeId by class name, or system predefined name.
