@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "BatchMem.h"
 #include "SyntaxTree.h"
+#include "SJVM.h"
 
 #pragma warning (disable: 4996)
 
@@ -34,14 +35,28 @@ STreeNode *NewSTreeNode(STreeNode::Type _t, int _nLineNo)
 	return p;
 }
 
-STreeNode *AppendToSibling(STreeNode *pHead, STreeNode *pTail)
+STreeNode *AppendToSibling(PSTreeNode &pHead, STreeNode *pTail)
 {
+	if (!pHead)
+	{
+		pHead = pTail;
+		return pHead;
+	}
+
 	STreeNode *p = pHead;
 	while (p->pNext)
 		p = p->pNext;
 	p->pNext = pTail;
 
 	return pHead;
+}
+
+void InsertToSibling(PSTreeNode &pHead, STreeNode *pToInsert)
+{
+	ASSERT(pHead && pToInsert);
+	ASSERT(pToInsert->pNext == NULL);
+	pToInsert->pNext = pHead->pNext;
+	pHead->pNext = pToInsert;
 }
 
 void SJType::operator=(STreeNode *pNodeID)
@@ -111,6 +126,11 @@ STreeNode *newStnClassDeclare(STreeNode *pClassNameString, STreeNode *pParentCla
 	deleteStn(pClassNameString);
 
 	return pNode;
+}
+
+void newStnDefConstructorDeclare(LPCSTR szName, CMemberMethod *pMethod, int nLineNo)
+{
+	pMethod->pBodyNode = newStnBlock(nLineNo, NULL);
 }
 
 // For native function, body = NULL

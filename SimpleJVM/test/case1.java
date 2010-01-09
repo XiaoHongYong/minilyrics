@@ -50,6 +50,7 @@ public class CaseStaticVar
 public class CaseMemberVar_A
 {
 	public int		m_Var1 = 1;
+	CaseMemberVar_A() { m_Var1 = 1; }
 }
 
 public class CaseMemberVar_B extends CaseMemberVar_A
@@ -75,7 +76,7 @@ public class CaseMemberVar
 	public static void TestMemberVarDerive()
 	{
 		CaseMemberVar_A		a;
-		a = new CaseMemberVar_B();
+		a = new CaseMemberVar_A();
 
 		if (a.m_Var1 != 1)
 			UnitTest.failedMessage("TestMemberVarDerive: a.m_Var1 != 1");
@@ -95,6 +96,10 @@ public class Test
 
 		CaseStaticVar.TestStaticMemberVar();
 		
+		CaseMemberVar.TestMemberVar();
+
+		CaseMemberVar.TestMemberVarDerive();
+
 		int		a = 5, b = 10;
 		if (a + b != 15)
 			UnitTest.failedMessage("a + b != 15");

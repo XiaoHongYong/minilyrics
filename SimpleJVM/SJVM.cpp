@@ -2,6 +2,14 @@
 #include "SJVM.h"
 #include "SjvmLib.h"
 
+/*
+
+TODO:
+	. CObjectMgr reset()
+	. newStnExpVar, LPCSTR, string allocate and free check.
+
+*/
+
 #pragma warning(disable : 4996)
 
 #define FORMATLASTERROR(p1, p2, p3)		FormatLastError(p1, p2, p3, __LINE__)
@@ -282,7 +290,7 @@ int CClass::UpdateVirtualMethodTable(string &strMsg)
 
 //////////////////////////////////////////////////////////////////////////
 
-int CClassTable::AddClass(LPCSTR szName)
+int CClassTable::AddClass(LPCSTR szName, int nLineNo)
 {
 	CClass *pClass;
 
@@ -291,6 +299,7 @@ int CClassTable::AddClass(LPCSTR szName)
 
 	pClass = new CClass();
 	pClass->strName = szName;
+	pClass->nLineNo = nLineNo;
 
 	m_vClass.push_back(pClass);
 	pClass->typeId = (TypeId)(m_vClass.size() - 1);
@@ -369,6 +378,7 @@ int CClassTable::StandardizeClassMember(string strMsg)
 		{
 			CMemberMethod *pMethod = new CMemberMethod();
 			pMethod->typeIDRet = TID_VOID;
+			pMethod->nLineNo = pClass->nLineNo;
 			pMethod->strName = pClass->strName;
 			if (pClass->AddMethod(pMethod) != ERR_OK)
 				delete pMethod;
@@ -453,6 +463,12 @@ CObjectMgr::~CObjectMgr()
 	{
 		delete *it;
 	}
+}
+
+void CObjectMgr::Reset()
+{
+	m_vJObjects.resize(1);
+	m_listJObjNewer.clear();
 }
 
 void CObjectMgr::RegisterJObjNewer(CJObjectNewer *pJObjNewer)
@@ -586,13 +602,6 @@ CSJVM::CSJVM(void)
 
 	InitSjvmLib();
 
-/*	nRet = m_classTable.AddClass("String");
-	if (nRet == ERR_OK)
-	{
-		CClass	*pClass;
-		pClass->AddMethod("");
-	}
-	*/
 	m_bsiInLoop = false;
 }
 
@@ -624,9 +633,25 @@ void CSJVM::Reset()
 	for (size_t i = 0; i < m_vStaticVars.size(); i++)
 		m_vStaticVars[i].bInitialized = false;
 
+	// Reset jobject manager
+	m_jobjMgr.Reset();
+
 	// Reset statement image
 }
 
+/************************************************************************
+
+Syntax parse
+1. Add class type
+2. Add class member variable and method definition (PreBSI_XXX)
+   Add class default constructor, update class method index
+3. Check class member variable initial syntax. (BSI_XXX)
+   Check class member method syntax.
+   Check all constructors, and insert member variable initial statement to all constructors.
+
+4. Generate member method code
+
+************************************************************************/
 int CSJVM::Compile(LPCTSTR szFile)
 {
 	int		nRet;
@@ -929,6 +954,8 @@ Param_end:
 		mov         dword ptr [nRet],eax 
 	}
 
+	m_valueMethodReturn = nRet;
+
 	return nRet;
 	// return __asm eax;
 }
@@ -1006,7 +1033,7 @@ int CSJVM::PreBSI_AddClassDefinition()
 		if (pTree->nodeType == STreeNode::T_CLASS)
 		{
 			// Add class 
-			nRet = m_classTable.AddClass(pTree->sClass.szClassName);
+			nRet = m_classTable.AddClass(pTree->sClass.szClassName, pTree->nLineNo);
 			if (nRet != ERR_OK)
 			{
 				FORMATLASTERROR(pTree->nLineNo, nRet, pTree->sClass.szClassName);
@@ -1124,7 +1151,7 @@ int CSJVM::PreBSI_AddClassMember(STreeNode *pTree, CClass *pClass)
 			m_varDeclStack.EnterMethod(NULL);
 
 			// check function declaration, update typeId of function parameter and return value.
-			nRet = BSI_FunctionDecl(pTree, pClass);
+			nRet = BSI_MethodDeclare(pTree, pClass);
 			if (nRet != ERR_OK)
 				return nRet;
 
@@ -1133,12 +1160,55 @@ int CSJVM::PreBSI_AddClassMember(STreeNode *pTree, CClass *pClass)
 		else if (pTree->nodeType == STreeNode::T_VAR_DECLAR)
 		{
 			// Add declared variable
-			nRet = BSI_VariableDecl(pTree, pClass);
+			nRet = PreBSI_AddMemberVarDecl(pTree, pClass);
 			if (nRet  != ERR_OK)
 				return nRet;
 		}
 
 		pTree = pTree->pNext;
+	}
+
+	return ERR_OK;
+}
+
+int CSJVM::PreBSI_AddMemberVarDecl(STreeNode *pTree, CClass *pClass)
+{
+	ASSERT(pClass);
+	int		nRet;
+
+	// Check variable declaration
+	ASSERT(pTree->nodeType == STreeNode::T_VAR_DECLAR);
+	StnVarDeclare	&varDeclare = pTree->sVarDeclare;
+
+	// Check type name
+	varDeclare.type.typeId = GetTypeIdByName(varDeclare.type.szTypeName);
+	if (varDeclare.type.typeId == TID_INVALID)
+	{
+		// report error.
+		FORMATLASTERROR(pTree->nLineNo, ERR_C_UNDECLARED_TYPE, varDeclare.type.szTypeName);
+		return ERR_C_UNDECLARED_TYPE;
+	}
+
+	// Check variable name
+	TypeId		typeId = varDeclare.type.typeId;
+	bool		bStatic = varDeclare.bStatic;
+	STreeNode	*pVarNode = varDeclare.pVarList;
+	while (pVarNode)
+	{
+		ASSERT(pVarNode->nodeType == STreeNode::T_VAR);
+		StnVar		&var = pVarNode->sVar;
+
+		// Add class member variable
+		nRet = pClass->AddMemberVar(typeId, var.szVarName, bStatic, 
+			bStatic ? m_varDeclStack.DeclareStaticMemberVar(pClass, var.szVarName) : -1);
+		if (nRet != ERR_OK)
+		{
+			FORMATLASTERROR(pVarNode->nLineNo, nRet, var.szVarName);
+			return nRet;
+		}
+		var.nAddress = pClass->GetMemberVar(var.szVarName)->nAddr;
+
+		pVarNode = pVarNode->pNext;
 	}
 
 	return ERR_OK;
@@ -1163,7 +1233,7 @@ int CSJVM::BSI_Tree(STreeNode *pTree)
 			break;
 		case STreeNode::T_VAR_DECLAR:
 			{
-				nRet = BSI_VariableDecl(pTree);
+				nRet = BSI_LocalVariable(pTree);
 				if (nRet != ERR_OK)
 					return nRet;
 			}
@@ -1364,7 +1434,6 @@ int CSJVM::BSI_ClassDefinition(STreeNode *pTree)
 
 	m_varDeclStack.EnterClass(pClass);
 
-	// Check class member methods only.
 	STreeNode	*pMemberNode = sClass.pClassMember;
 	while (pMemberNode)
 	{
@@ -1375,15 +1444,8 @@ int CSJVM::BSI_ClassDefinition(STreeNode *pTree)
 
 			m_varDeclStack.EnterMethod(sMethod.pMethod);
 
-			if (strcmp(sMethod.szMethodName, pClass->strName.c_str()) == 0)
-			{
-				nRet = BSI_ConstructorCheck(pMemberNode, pClass);
-				if (nRet != ERR_OK)
-					return nRet;
-			}
-
 			// Add parameter variable declaration.
-			nRet = BSI_FunctionDecl(pMemberNode, pClass);
+			nRet = BSI_MethodDeclare(pMemberNode, pClass);
 			if (nRet != ERR_OK)
 				return nRet;
 
@@ -1396,11 +1458,53 @@ int CSJVM::BSI_ClassDefinition(STreeNode *pTree)
 		}
 		else
 		{
+			m_varDeclStack.EnterMethod(pClass->GetVarInitMethod());
+
+			// Add "this" as first parameters of function call
+			m_varDeclStack.Add_this_super_Var();
+
 			// Class member variable has been declared in PreBSI_...
 			ASSERT(pMemberNode->nodeType == STreeNode::T_VAR_DECLAR);
+			nRet = BSI_MemberVariable(pMemberNode, pClass);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			m_varDeclStack.LeaveBlock();
 		}
 
 		pMemberNode = pMemberNode->pNext;
+	}
+
+	// Check constructor after class declaration.
+	for (size_t i = 0; i < pClass->vMethod.size(); i++)
+	{
+		CMemberMethod *pMethod = pClass->vMethod[i];
+		if (strcmp(pMethod->strName.c_str(), pClass->strName.c_str()) == 0)
+		{
+			if (pMethod->pBodyNode == NULL)
+			{
+				// This constructor was inserted by program, it may be NULL
+				if (pClass->GetVarInitMethod()->pBodyNode || pClass->pClassParent)
+				{
+					// Insert empty body node
+					newStnDefConstructorDeclare(pClass->strName.c_str(), pMethod, pMethod->nLineNo);
+				}
+				else
+					continue;
+			}
+
+			m_varDeclStack.EnterMethod(pMethod);
+
+			// Add "this" as first parameters of function call
+			m_varDeclStack.Add_this_super_Var();
+
+			ASSERT(pMethod->pBodyNode);
+			nRet = BSI_ConstructorCheck(pMethod, pMethod->pBodyNode, pClass);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			m_varDeclStack.LeaveBlock();
+		}
 	}
 
 	m_varDeclStack.LeaveBlock();
@@ -1408,7 +1512,7 @@ int CSJVM::BSI_ClassDefinition(STreeNode *pTree)
 	return ERR_OK;
 }
 
-int CSJVM::BSI_FunctionDecl(STreeNode *pTree, CClass *pClass)
+int CSJVM::BSI_MethodDeclare(STreeNode *pTree, CClass *pClass)
 {
 	int				nRet;
 	StnMemberMethod	&sMethod = pTree->sMemberMethod;
@@ -1450,7 +1554,7 @@ int CSJVM::BSI_FunctionDecl(STreeNode *pTree, CClass *pClass)
 	while (pNode)
 	{
 		ASSERT(pNode->nodeType == STreeNode::T_VAR_DECLAR);
-		nRet = BSI_VariableDecl(pNode);
+		nRet = BSI_LocalVariable(pNode);
 		if (nRet != ERR_OK)
 			return nRet;
 		vParameter.push_back(pNode->sVarDeclare.type.typeId);
@@ -1481,21 +1585,25 @@ int CSJVM::BSI_FunctionDecl(STreeNode *pTree, CClass *pClass)
 	return ERR_OK;
 }
 
-int CSJVM::BSI_ConstructorCheck(STreeNode *pTree, CClass *pClass)
+int CSJVM::BSI_ConstructorCheck(CMemberMethod *pMethod, STreeNode *pBody, CClass *pClass)
 {
-	// Check whether the method called super() constructor
+	// make sure super() constructor is called, if not, insert it.
+	// insert member variable initial statement, after super()
 
-	StnMemberMethod	&sMethod = pTree->sMemberMethod;
-	STreeNode		*pBody = sMethod.pBody;
-
-	ASSERT(strcmp(sMethod.szMethodName, pClass->strName.c_str()) == 0);
+	STreeNode		*pVarInit = pClass->GetVarInitMethod()->pBodyNode;
 
 	// Is super() constructor called already?
 	if (pBody && pBody->nodeType == STreeNode::T_EXPRESSION && 
 		pBody->sExpression.type == E_METHOD_CALL)
 	{
 		if (strcmp(pBody->sExpression.functionCall.szFuncName, SZ_SUPER) == 0)
+		{
+			// insert member variable initial statement, after super()
+			if (pVarInit)
+				InsertToSibling(pBody, newStnBlock(pBody->nLineNo, pVarInit));
+
 			return ERR_OK; // Super constructor called, return.
+		}
 	}
 
 	CClass		*pParentClass = pClass->pClassParent;
@@ -1505,27 +1613,100 @@ int CSJVM::BSI_ConstructorCheck(STreeNode *pTree, CClass *pClass)
 		if (!pParentConstructor)
 		{
 			// All super() constructor has parameter type.
-			FORMATLASTERROR(pTree->nLineNo, ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT, sMethod.szMethodName);
+			FORMATLASTERROR(pBody->nLineNo, ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT, pMethod->strName.c_str());
 			return ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT;
 		}
 
 		// Add super constructor call
-		STreeNode	*pNodeConstructor = newStnExpFuncCall(pTree->nLineNo, "super", NULL, NULL);
-		pNodeConstructor->pNext = sMethod.pBody;
-		sMethod.pBody = pNodeConstructor;
-		m_varDeclStack.GetCurMethod()->pBodyNode = sMethod.pBody;
+		STreeNode	*pNodeConstructor = newStnExpFuncCall(pBody->nLineNo, SZ_SUPER, NULL, NULL);
+		pNodeConstructor->pNext = pMethod->pBodyNode;
+		pMethod->pBodyNode = pNodeConstructor;
+
+		int nRet = BSI_ExpressionFunctionCall(pNodeConstructor);
+		ASSERT(nRet == ERR_OK);
 	}
-	else
+
+	// insert member variable initial statement, after super()
+	if (pVarInit)
 	{
-		// No parent constructor
-		// Call CallVarInit method
-		BSI_InsertClassVarInitNode(pTree);
+		InsertToSibling(pMethod->pBodyNode, newStnBlock(pBody->nLineNo, pVarInit));
 	}
 
 	return ERR_OK;
 }
 
-int CSJVM::BSI_VariableDecl(STreeNode *pTree, CClass *pClass)
+//
+// Append member variable initial code in VarInitMethod.
+//
+int CSJVM::BSI_MemberVariable(STreeNode *pTree, CClass *pClass)
+{
+	int		nRet;
+
+	// Check variable declaration
+	ASSERT(pTree->nodeType == STreeNode::T_VAR_DECLAR);
+	StnVarDeclare	&varDeclare = pTree->sVarDeclare;
+	ASSERT(varDeclare.type.typeId != TID_INVALID);
+
+	// Check variable name
+	TypeId		typeId = varDeclare.type.typeId;
+	bool		bStatic = varDeclare.bStatic;
+	CMemberMethod	*pMethod;
+
+	if (bStatic)
+		pMethod = m_classTable.GetClassStaticVarInitMethod();
+	else
+		pMethod = pClass->GetVarInitMethod();
+	ASSERT(pMethod);
+
+	STreeNode	*pVarNode = varDeclare.pVarList;
+	while (pVarNode)
+	{
+		ASSERT(pVarNode->nodeType == STreeNode::T_VAR);
+		StnVar		&var = pVarNode->sVar;
+
+		var.nAddress = m_varDeclStack.GetVariableAddress(var.szVarName);
+
+		// Check variable assign expression.
+		if (var.pExpAssign)
+		{
+			nRet = BSI_Expression(var.pExpAssign);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			// Can new object assign to left? Type check.
+			nRet = CanCovertRightToLeftType(typeId, var.pExpAssign->sExpression.typeIdValExp);
+			if (nRet != ERR_OK)
+			{
+				char		szMsg[512];
+				sprintf(szMsg, "Can't convert from type '%s' to '%s'.", 
+					GetTypeNameStrByID(var.pExpAssign->sExpression.typeIdValExp),
+					GetTypeNameStrByID(typeId));
+				FORMATLASTERROR(pVarNode->nLineNo, nRet, szMsg);
+				return nRet;
+			}
+
+			// this.szVarName = pExpAssign
+			STreeNode *pThisVar = newStnExpVar(pVarNode->nLineNo, var.szVarName, 
+				newStnExpVar(pTree->nLineNo, SZ_THIS, NULL));
+			STreeNode *pAssign = newStnExpAssign(pThisVar, var.pExpAssign);
+
+			nRet = BSI_Expression(pAssign);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			// Add initial assign statement
+			if (pMethod->pBodyNode == NULL)
+				newStnDefConstructorDeclare(pClass->strName.c_str(), pMethod, pTree->nLineNo);
+			AppendToSibling(pMethod->pBodyNode, pAssign);
+		}
+
+		pVarNode = pVarNode->pNext;
+	}
+
+	return ERR_OK;
+}
+
+int CSJVM::BSI_LocalVariable(STreeNode *pTree)
 {
 	int		nRet;
 
@@ -1551,29 +1732,14 @@ int CSJVM::BSI_VariableDecl(STreeNode *pTree, CClass *pClass)
 		ASSERT(pVarNode->nodeType == STreeNode::T_VAR);
 		StnVar		&var = pVarNode->sVar;
 
-		if (pClass)
+		// Add local variable declaration in m_varDeclStack
+		nRet = m_varDeclStack.AddVarDecl(var.szVarName, typeId, bStatic);
+		if (nRet != ERR_OK)
 		{
-			// Add class member variable
-			nRet = pClass->AddMemberVar(typeId, var.szVarName, bStatic, 
-				bStatic ? m_varDeclStack.DeclareStaticMemberVar(pClass, var.szVarName) : -1);
-			if (nRet != ERR_OK)
-			{
-				FORMATLASTERROR(pVarNode->nLineNo, nRet, var.szVarName);
-				return nRet;
-			}
-			var.nAddress = pClass->GetMemberVar(var.szVarName)->nAddr;
+			FORMATLASTERROR(pVarNode->nLineNo, nRet, var.szVarName);
+			return nRet;
 		}
-		else
-		{
-			// Add variable declaration in m_varDeclStack
-			nRet = m_varDeclStack.AddVarDecl(var.szVarName, typeId, bStatic);
-			if (nRet != ERR_OK)
-			{
-				FORMATLASTERROR(pVarNode->nLineNo, nRet, var.szVarName);
-				return nRet;
-			}
-			var.nAddress = m_varDeclStack.GetVariableAddress(var.szVarName);
-		}
+		var.nAddress = m_varDeclStack.GetVariableAddress(var.szVarName);
 
 		// Check variable assign expression.
 		if (var.pExpAssign)
@@ -1582,7 +1748,7 @@ int CSJVM::BSI_VariableDecl(STreeNode *pTree, CClass *pClass)
 			if (nRet != ERR_OK)
 				return nRet;
 
-			// Can new object asign to left? Type check.
+			// Can new object assign to left? Type check.
 			nRet = CanCovertRightToLeftType(typeId, var.pExpAssign->sExpression.typeIdValExp);
 			if (nRet != ERR_OK)
 			{
@@ -2009,10 +2175,6 @@ int CSJVM::BSI_ExpressionFunctionCall(STreeNode *pTree)
 		}
 
 		exp.functionCall.typeIdSpecialfiedClass = pParentClass->typeId;
-
-		// Insert the class initial variable statement
-		// After super() call.
-		BSI_InsertClassVarInitNode(pTree);
 	}
 	else
 	{
@@ -2097,23 +2259,6 @@ int CSJVM::BSI_GetCalledMethod(CClass *pClass, LPCSTR szMethodName, VecParamType
 	return ERR_C_UNDECLARED_METHOD;
 }
 
-int CSJVM::BSI_InsertClassVarInitNode(STreeNode *pTree)
-{
-	ASSERT(pTree);
-	CClass		*pCurClass = m_varDeclStack.GetCurClass();
-	ASSERT(pCurClass);
-
-	if (pCurClass->methodVarInit.pBodyNode)
-	{
-		ASSERT(!(pTree->pNext && pTree->pNext->nodeType == STreeNode::T_BLOCK && pTree->pNext->sBlock.pChildList == pCurClass->methodVarInit.pBodyNode));
-		STreeNode *pVarInit = newStnBlock(pTree->nLineNo, pCurClass->methodVarInit.pBodyNode);
-		pVarInit->pNext = pTree->pNext;
-		pTree->pNext = pVarInit;
-	}
-
-	return ERR_OK;
-}
-
 int CSJVM::CanCovertRightToLeftType(TypeId typeIdLeft, TypeId typeIdRight)
 {
 	if (typeIdRight == typeIdLeft)
@@ -2162,54 +2307,17 @@ int CSJVM::BCS_ClassDefinition(STreeNode *pTree)
 
 	CClass	*pClass = m_classTable.GetClass(sClass.szClassName);
 	ASSERT(pClass);
-	if (!pClass)
+
+	// Build class member method code.
+	for (size_t i = 0; i < pClass->vMethod.size(); i++)
 	{
-		nRet = ERR_C_UNEXPECTED_ERR;
-		FORMATLASTERROR(pTree->nLineNo, nRet, sClass.szClassName);
-		return nRet;
+		CMemberMethod *pMethod = pClass->vMethod[i];
+
+		// Build code statement of function body/statement
+		nRet = BCS_Tree(pMethod->pBodyNode, pMethod->siMethod);
+		if (nRet != ERR_OK)
+			return nRet;
 	}
-
-	// Check class members.
-	STreeNode	*pMemberNode = sClass.pClassMember;
-	while (pMemberNode)
-	{
-		if (pMemberNode->nodeType == STreeNode::T_MEMBER_METHOD)
-		{
-			// Method definition
-			nRet = BCS_FunctionDefinition(pMemberNode, pClass);
-			if (nRet != ERR_OK)
-				return nRet;
-		}
-		else
-		{
-			// Class member variable has been declared in PreBSI_...
-			ASSERT(pMemberNode->nodeType == STreeNode::T_VAR_DECLAR);
-
-			//
-			// Add variable initial code in construction method
-			//
-			nRet = BCS_ClassVariable(pMemberNode, pClass);
-			if (nRet != ERR_OK)
-				return nRet;
-		}
-
-		pMemberNode = pMemberNode->pNext;
-	}
-
-	return ERR_OK;
-}
-
-int CSJVM::BCS_FunctionDefinition(STreeNode *pTree, CClass *pClass)
-{
-	StnMemberMethod	&sMethod = pTree->sMemberMethod;
-	int				nRet;
-
-	ASSERT(sMethod.pMethod);
-
-	// Check function body/statement
-	nRet = BCS_Tree(sMethod.pBody, sMethod.pMethod->siMethod);
-	if (nRet != ERR_OK)
-		return nRet;
 
 	return ERR_OK;
 }
@@ -2954,7 +3062,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 					if (nRet != ERR_OK)
 					{
 						TCHAR		szMsg[512];
-						_stprintf(szMsg, _T("Can't convert from type '%s' to '%s'."), 
+						_stprintf(szMsg, _T("Can't convert from type '%S' to '%S'."), 
 							GetTypeNameStrByID(pObj->m_typeId),
 							GetTypeNameStrByID(expr.typeId));
 						ThrowException(szMsg);
@@ -2967,6 +3075,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 	case E_VAR:
 		{
 			int		nRet;
+			ASSERT(expr.var.nAddress >= 0);
 			if (expr.var.bStatic)
 				nRet = GetStaticVarValue(expr.var.nAddress);
 			else
@@ -3273,11 +3382,15 @@ int CSJVM::ExeNewJObject(StmtExpression &expr)
 		siParameter = m_stmtImage.GetNext(siParameter);
 	}
 
+	CMemberMethod	*pMethod;
+
 	// Execute construction method.
-	CMemberMethod	*pMethod = pClass->GetMethod(expr.newObj.nMemberIndex);
+	pMethod = pClass->GetMethod(expr.newObj.nMemberIndex);
 	ASSERT(pMethod);
 	if (!pMethod)
 		return 0;
+
+	CE_LOG3(pMethod->nLineNo, "Call Constructor: type: %d, JObj: %d, Constructor Index: %d", expr.typeId, nJObj, expr.newObj.nMemberIndex);
 
 	CallMethod(expr.typeId, nJObj, expr.newObj.nMemberIndex, parameters);
 
@@ -3308,13 +3421,14 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParamete
 	if (!pMethod)
 		return 0;
 
-	int		nRet;
+	m_valueMethodReturn = -1;
 	if (pMethod->siMethod == SI_INVALID)
 	{
 		// Call native member method.
-		ASSERT(pMethod->pNativeFunc);
 		if (pMethod->pNativeFunc)
-			nRet = CallNativeAPI(pMethod, parameters);
+			m_valueMethodReturn = CallNativeAPI(pMethod, parameters);
+		else
+			ASSERT(strcmp(pClass->strName.c_str(), pMethod->strName.c_str()) == 0);
 	}
 	else
 	{
@@ -3326,8 +3440,6 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParamete
 		Execute(pMethod->siMethod);
 		if (pMethod->typeIDRet == TID_VOID)
 			m_valueMethodReturn = 0;
-		else
-			nRet = m_valueMethodReturn;
 	}
 
 	// Recover bp, sp, and free object allocated in previous function of stack
@@ -3343,9 +3455,12 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParamete
 	}
 	m_bp = nBp;
 
-	m_valueMethodReturn = nRet;
+	return m_valueMethodReturn;
+}
 
-	return nRet;
+void CSJVM::ThrowException(LPCTSTR szException)
+{
+	_tprintf(_T("Exception: %s"), szException);
 }
 
 int CSJVM::GetStaticVarValue(size_t nAddress)

@@ -204,7 +204,10 @@ struct STreeNode
 
 };
 
-STreeNode *AppendToSibling(STreeNode *pHead, STreeNode *pTail);
+typedef STreeNode *	PSTreeNode;
+
+STreeNode *AppendToSibling(PSTreeNode &pHead, STreeNode *pTail);
+void InsertToSibling(PSTreeNode &pHead, STreeNode *pToInsert);
 
 inline void deleteStn(STreeNode *p) { }
 
@@ -215,6 +218,8 @@ STreeNode *newStnVarDeclare(STreeNode *pVarType, STreeNode *pVarNameList, bool b
 STreeNode *newStnVar(STreeNode *pVarIdString, STreeNode *pExp = NULL);
 
 STreeNode *newStnClassDeclare(STreeNode *pClassNameString, STreeNode *pParentClassString, STreeNode *pClassMember);
+
+void newStnDefConstructorDeclare(LPCSTR szName, CMemberMethod *pMethod, int nLineNo);
 
 // For native function, body = NULL
 STreeNode *newStnMethodDeclareNode(STreeNode *pMethodNameString, 

@@ -79,6 +79,8 @@ class CMemberMethod
 {
 public:
 	CMemberMethod() {
+		nLineNo = -1;
+		nVirtualIndex = -1;
 		siMethod = SI_INVALID;
 		pNativeFunc = NULL;
 		typeIDRet = TID_INVALID;
@@ -128,11 +130,13 @@ class CClass
 {
 public:
 	CClass() {
+		nLineNo = -1;
 		pClassParent = NULL;
 		typeId = TID_INVALID;
 	}
 
 public:
+	int						nLineNo;
 	TypeId					typeId;
 	CClass					*pClassParent;
 	VecMethod				vMethod;
@@ -140,9 +144,6 @@ public:
 	CMemberMethod			methodVarInit;
 	VecMemberVar			vMemberVar;
 	string					strName;
-
-	// typedef vector<class CClass *>		VecClass;
-	// VecClass				m_vChildClass;
 
 public:
 	// Return the index of method, -1 for error.
@@ -181,7 +182,7 @@ typedef vector<CClass *>	VecClass;
 class CClassTable
 {
 public:
-	int AddClass(LPCSTR szName);
+	int AddClass(LPCSTR szName, int nLineNo = -1);
 
 	CClass *GetClass(LPCSTR szClassName);
 	CClass *GetClass(TypeId typeId);
@@ -279,6 +280,8 @@ public:
 		m_vJObjects.push_back(NULL);
 	}
 	virtual ~CObjectMgr();
+
+	void Reset();
 
 	void RegisterJObjNewer(CJObjectNewer *pJObjNewer);
 
@@ -394,14 +397,14 @@ public:
 	void FreeJObject(jobject jobj) { m_jobjMgr.Free(jobj, m_classTable); }
 	CJObject *GetJObject(jobject jobj) { return m_jobjMgr.Get(jobj); }
 
-	int AddClass(LPCSTR szClassName) { return m_classTable.AddClass(szClassName); }
+	int AddClass(LPCSTR szClassName, int nLineNo = -1) { return m_classTable.AddClass(szClassName, nLineNo); }
 	CClass *GetClass(LPCSTR szClassName) { return m_classTable.GetClass(szClassName); }
 
 	int CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParameters &parameters);
 
 	// LPVOID StackVarToNativeValue(int nvmStackPtr, TypeId paramType);
 
-	void ThrowException(LPCTSTR szException) { }
+	void ThrowException(LPCTSTR szException);
 
 protected:
 	//
@@ -417,18 +420,19 @@ protected:
 	int PreBSI_AddClassDefinition();
 	int PreBSI_AddClassInformation();
 	int PreBSI_AddClassMember(STreeNode *pTree, CClass *pClass);
+	int PreBSI_AddMemberVarDecl(STreeNode *pTree, CClass *pClass = NULL);
 
 	int BuildSymbolInfo();
 	int BSI_Tree(STreeNode *pTree);
 	int BSI_ClassDefinition(STreeNode *pTree);
-	int BSI_FunctionDecl(STreeNode *pTree, CClass *pClass);
-	int BSI_ConstructorCheck(STreeNode *pTree, CClass *pClass);
-	int BSI_VariableDecl(STreeNode *pTree, CClass *pClass = NULL);
+	int BSI_MemberVariable(STreeNode *pTree, CClass *pClass);
+	int BSI_MethodDeclare(STreeNode *pTree, CClass *pClass);
+	int BSI_ConstructorCheck(CMemberMethod *pMethod, STreeNode *pBody, CClass *pClass);
+	int BSI_LocalVariable(STreeNode *pTree);
 	int BSI_Expression(STreeNode *pTree);
 	int BSI_ExpressionFunctionCall(STreeNode *pTree);
 
 	int BSI_GetCalledMethod(CClass *pClass, LPCSTR szMethodName, VecParamType &vParameters, CMemberMethod **ppMethod, int nLineNo);
-	int BSI_InsertClassVarInitNode(STreeNode *pTree);
 
 	int CanCovertRightToLeftType(TypeId typeIdLeft, TypeId typeIdRight);
 
@@ -440,7 +444,6 @@ protected:
 
 	int BCS_ClassDefinition(STreeNode *pTree);
 	int BCS_Tree(STreeNode *pTree, stmt_index &siOut);
-	int BCS_FunctionDefinition(STreeNode *pTree, CClass *pClass);
 	int BCS_ClassVariable(STreeNode *pTree, CClass *pClass);
 	int BCS_VarDeclaration(STreeNode *pTree, stmt_index	&siOut);
 	int BCS_Expression(STreeNode *pTree, stmt_index &siOut);
