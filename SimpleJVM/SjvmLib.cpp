@@ -1,29 +1,18 @@
 #include "StdAfx.h"
-#include "SjvmLib.h"
 #include "SJVM.h"
+#include "SjvmLib.h"
 
+//////////////////////////////////////////////////////////////////////////
 
 class CSjobjUnitTest : public CJObject
 {
-	DECLARE_JNI_OBJ()
+	DECLARE_JNI_OBJ(CSjobjUnitTest)
 public:
-	class CObjNewer : public CJObjectNewer
-	{
-	public:
-		CObjNewer() : CJObjectNewer(m_sTypeId) { }
-		CJObject *New() {
-			return new CSjobjUnitTest();
-		}
-
-	};
-
 	CSjobjUnitTest() : CJObject(m_sTypeId, 0) { }
 
 	static void RegisterJNI()
 	{
 		int		nRet;
-
-		g_sjvm.RegisterJObjNewer(new CObjNewer());
 
 		// Add class members definition.
 		CClass *pClass = g_sjvm.GetClass(CLASS_NAME);
@@ -61,9 +50,43 @@ public:
 
 IMPLENENT_JNI_OBJ(CSjobjUnitTest, "UnitTest")
 
+
+IMPLENENT_JNI_OBJ(CSjobjException, "Exception")
+
+void CSjobjException::RegisterJNI()
+{
+	int		nRet;
+
+	// Add class members definition.
+	CClass *pClass = g_sjvm.GetClass(CLASS_NAME);
+	ASSERT(pClass);
+
+	nRet = pClass->AddNativeMethod(false, "Exception", ExceptionConstructor, TID_VOID, TID_STRING, TID_INVALID);
+	ASSERT(nRet != -1);
+
+	nRet = pClass->AddNativeMethod(false, "toString", ToString, TID_STRING, TID_INVALID);
+	ASSERT(nRet != -1);
+}
+
+void SJNI_API CSjobjException::ExceptionConstructor(jobject jObj, LPCTSTR szException)
+{
+	CSjobjException	*pException = (CSjobjException *)g_sjvm.GetJObject(jObj);
+	ASSERT(pException->m_typeId == m_sTypeId || g_sjvm.GetClassTable().IsSubClassOf(pException->m_typeId, m_sTypeId));
+	pException->strException = szException;
+}
+
+jobject SJNI_API CSjobjException::ToString(jobject jObj)
+{
+	CSjobjException	*pException = (CSjobjException *)g_sjvm.GetJObject(jObj);
+	ASSERT(pException->m_typeId == m_sTypeId || g_sjvm.GetClassTable().IsSubClassOf(pException->m_typeId, m_sTypeId));
+	return g_sjvm.NewString(pException->strException.c_str(), true);
+}
+
 void InitSjvmLib()
 {
 	CSjobjUnitTest::RegisterClassType();
+	CSjobjException::RegisterClassType();
 
 	CSjobjUnitTest::RegisterJNI();
+	CSjobjException::RegisterJNI();
 }

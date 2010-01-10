@@ -51,6 +51,21 @@ struct StnMemberMethod {
 	STreeNode		*pBody;
 };
 
+struct StnTry {
+	STreeNode		*pTryStmt;
+	STreeNode		*pCatch;
+};
+
+struct StnCatch {
+	STreeNode		*pException;
+	STreeNode		*pCatchStmt;
+	STreeNode		*pNextCatch;
+};
+
+struct StnThrow {
+	STreeNode		*pNewExpr;
+};
+
 struct StnIf {
 	STreeNode		*pCondition;
 	STreeNode		*pTrueNode;
@@ -166,6 +181,9 @@ struct STreeNode
 		T_VAR_DECLAR,
 		T_VAR,
 		T_MEMBER_METHOD,
+		T_TRY,
+		T_CATCH,
+		T_THROW,
 		T_IF,
 		T_FOR,
 		T_WHILE,
@@ -187,6 +205,9 @@ struct STreeNode
 		StnVarDeclare	sVarDeclare;
 		StnVar			sVar;
 		StnMemberMethod	sMemberMethod;
+		StnTry			sTry;
+		StnCatch		sCatch;
+		StnThrow		sThrow;
 		StnIf			sIf;
 		StnWhile		sWhile;
 		StnFor			sFor;
@@ -225,6 +246,14 @@ void newStnDefConstructorDeclare(LPCSTR szName, CMemberMethod *pMethod, int nLin
 STreeNode *newStnMethodDeclareNode(STreeNode *pMethodNameString, 
 					STreeNode *pRetTypeString, STreeNode *pParameterList, STreeNode *pBody,
 					bool bStatic = false);
+
+STreeNode *newStnTry(STreeNode *pTryStmt, STreeNode *pCatchSeq);
+
+STreeNode *newStnCatch(STreeNode *pException, STreeNode *pCatchStmt);
+
+STreeNode *appendCatchTail(STreeNode *pCatchSeq, STreeNode *pCatch);
+
+STreeNode *newStnThrow(STreeNode *pExprThrow);
 
 STreeNode *newStnIf(STreeNode *pCondition, STreeNode *pTrueBlock, STreeNode *pFalseBlock);
 

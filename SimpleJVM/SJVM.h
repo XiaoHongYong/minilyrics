@@ -54,6 +54,8 @@ enum TypeIdPredefined
 	TID_STRING,
 };
 
+#define TID_EXCEPTION		CSjobjException::m_sTypeId
+
 inline bool IsSimpleType(TypeId typeId) { return typeId < TID_NULL; }
 
 #define JOBJ_NULL		0
@@ -74,6 +76,16 @@ typedef vector<tstring>		VecString;
 typedef int					Variable;
 typedef vector<Variable>	VecVariable;
 typedef map<tstring, int>	MapStrIndex;
+
+class CJObjectNewer
+{
+public:
+	CJObjectNewer() { }
+	virtual ~CJObjectNewer() { }
+
+	virtual class CJObject *New() = 0;
+
+};
 
 class CMemberMethod
 {
@@ -133,6 +145,11 @@ public:
 		nLineNo = -1;
 		pClassParent = NULL;
 		typeId = TID_INVALID;
+		bFreeJObjNewer = false;
+	}
+	virtual ~CClass() {
+		if (bFreeJObjNewer)
+			delete pJObojNewer;
 	}
 
 public:
@@ -144,6 +161,8 @@ public:
 	CMemberMethod			methodVarInit;
 	VecMemberVar			vMemberVar;
 	string					strName;
+	CJObjectNewer			*pJObojNewer;
+	bool					bFreeJObjNewer;
 
 public:
 	// Return the index of method, -1 for error.
@@ -182,7 +201,10 @@ typedef vector<CClass *>	VecClass;
 class CClassTable
 {
 public:
-	int AddClass(LPCSTR szName, int nLineNo = -1);
+	CClassTable();
+	virtual ~CClassTable();
+
+	int AddClass(LPCSTR szName, int nLineNo = -1, CJObjectNewer *pJObjNewer = NULL);
 
 	CClass *GetClass(LPCSTR szClassName);
 	CClass *GetClass(TypeId typeId);
@@ -196,12 +218,18 @@ public:
 
 	int StandardizeClassMember(string strMsg);
 
+	void UpdateJObjNewer();
+
 #ifdef _DEBUG
 	void Print(class CSJVM *pVm);
 #endif
 
 	VecClass				m_vClass;
 	CMemberMethod			m_classStaticVarInitMetod;
+
+	typedef list<CJObjectNewer*>		ListJObjNewer;
+
+	ListJObjNewer			m_listJObjNewer;
 
 };
 
@@ -260,18 +288,6 @@ protected:
 typedef map<int, CJObject *>	MapJObject;
 typedef vector<CJObject *>	VecJObject;
 
-class CJObjectNewer
-{
-public:
-	CJObjectNewer(TypeId typeId) { m_typeId = typeId; }
-	virtual ~CJObjectNewer() { }
-
-	virtual CJObject *New() = 0;
-
-	TypeId				m_typeId;
-
-};
-
 class CObjectMgr
 {
 public:
@@ -283,9 +299,7 @@ public:
 
 	void Reset();
 
-	void RegisterJObjNewer(CJObjectNewer *pJObjNewer);
-
-	int New(TypeId typeId, int nMemberVarCount);
+	int New(CClass *pClass);
 
 	int NewString(LPCTSTR szString, bool bCopy = true);
 
@@ -296,11 +310,8 @@ public:
 	void InitAddConstString(MapStrIndex &mapStr);
 
 protected:
-	typedef list<CJObjectNewer*>		ListJObjNewer;
-
 	VecJObject				m_vJObjects;
 	list<int>				m_vFreeJObjs;
-	ListJObjNewer			m_listJObjNewer;
 
 };
 
@@ -392,13 +403,14 @@ public:
 
 	int RegisterNativeAPI(LPCSTR szClassName, LPCSTR szFuncName, LPVOID funcPtr, TypeId retValue, ...);
 
-	void RegisterJObjNewer(CJObjectNewer *pNewer) { m_jobjMgr.RegisterJObjNewer(pNewer); }
 	CJObject *NewJObject(TypeId typeId, jobject &jobj);
+	jobject NewString(LPCTSTR szString, bool bCopy) { return m_jobjMgr.NewString(szString, bCopy); }
 	void FreeJObject(jobject jobj) { m_jobjMgr.Free(jobj, m_classTable); }
 	CJObject *GetJObject(jobject jobj) { return m_jobjMgr.Get(jobj); }
 
-	int AddClass(LPCSTR szClassName, int nLineNo = -1) { return m_classTable.AddClass(szClassName, nLineNo); }
+	int AddClass(LPCSTR szClassName, int nLineNo = -1, CJObjectNewer *pJObjNewer = NULL) { return m_classTable.AddClass(szClassName, nLineNo, pJObjNewer); }
 	CClass *GetClass(LPCSTR szClassName) { return m_classTable.GetClass(szClassName); }
+	CClassTable &GetClassTable() { return m_classTable; }
 
 	int CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParameters &parameters);
 
@@ -468,6 +480,15 @@ protected:
 
 	int *GetJObjectMemberVarAddr(int nJobject, int nMember);
 
+	void inline StackPop()
+	{
+		ASSERT(m_stack.size() > 0);
+		CVMStack::Item &item = m_stack.Back();
+		if (!IsSimpleType(item.typeId))
+			m_jobjMgr.Free(item.nValue, m_classTable);
+		m_stack.Pop();
+	}
+
 protected:
 
 	void FormatLastError(int nLine, int nError, LPCSTR szStr, int nLineSrc);
@@ -506,6 +527,7 @@ protected:
 		EXE_LOOP_CONTINUE,
 		EXE_LOOP_BREAK,
 		EXE_FUNC_RETURN,
+		EXE_EXCEPTION,
 	};
 
 	// All classes
@@ -525,6 +547,8 @@ protected:
 	size_t						m_nSysStaticVarsCount;
 
 	EXE_ACTION					m_exeAction;
+	TypeId						m_typeIdException;
+	jobject						m_jobjException;
 
 	// JObject manager
 	CObjectMgr					m_jobjMgr;
@@ -548,11 +572,19 @@ protected:
 
 extern CSJVM			g_sjvm;
 
-#define DECLARE_JNI_OBJ()								\
+#define DECLARE_JNI_OBJ(_Class)								\
 	public:												\
 	static void RegisterClassType();					\
 	static LPCSTR			CLASS_NAME;					\
-	static TypeId			m_sTypeId;					
+	static TypeId			m_sTypeId;					\
+	class CObjNewer : public CJObjectNewer				\
+	{													\
+	public:												\
+		CObjNewer() : CJObjectNewer() { }		\
+		CJObject *New() {								\
+			return new _Class();						\
+		}												\
+	};
 
 
 #define IMPLENENT_JNI_OBJ(_Class, _ClassName)			\
@@ -560,7 +592,9 @@ extern CSJVM			g_sjvm;
 	LPCSTR	_Class::CLASS_NAME		= _ClassName;		\
 	void _Class::RegisterClassType() {					\
 	int nRet;											\
-	nRet = g_sjvm.AddClass(_Class::CLASS_NAME);			\
+	nRet = g_sjvm.AddClass(_Class::CLASS_NAME, -1, new CObjNewer());	\
 	ASSERT(nRet == ERR_OK);								\
 	m_sTypeId = g_sjvm.GetTypeIdByName(_Class::CLASS_NAME);\
 }
+
+#include "SjvmLib.h"

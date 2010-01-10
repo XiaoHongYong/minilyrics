@@ -56,6 +56,10 @@ do			{ return TK_DO; }
 for			{ return TK_FOR; }
 break		{ return TK_BREAK; }
 continue	{ return TK_CONTINUE; }
+try			{ return TK_TRY; }
+catch		{ return TK_CATCH; }
+throw		{ return TK_THROW; }
+throws		{ return TK_THROWS; }
 return		{
 				yylval = newStnReturn(g_srcLineNo, NULL);
 				return TK_RETURN;

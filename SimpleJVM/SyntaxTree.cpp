@@ -165,6 +165,47 @@ STreeNode *newStnMethodDeclareNode(STreeNode *pMethodNameString,
 	return pNode;
 }
 
+STreeNode *newStnTry(STreeNode *pTryStmt, STreeNode *pCatchSeq)
+{
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_TRY, pTryStmt->nLineNo);
+	StnTry		&sTry = pNode->sTry;
+
+	sTry.pTryStmt = pTryStmt;
+	sTry.pCatch = pCatchSeq;
+
+	return pNode;
+}
+
+STreeNode *newStnCatch(STreeNode *pException, STreeNode *pCatchStmt)
+{
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_CATCH, pException->nLineNo);
+	StnCatch	&sCatch = pNode->sCatch;
+
+	sCatch.pException = pException;
+	sCatch.pCatchStmt = pCatchStmt;
+	sCatch.pNextCatch = NULL;
+
+	return pNode;
+}
+
+STreeNode *appendCatchTail(STreeNode *pCatchSeq, STreeNode *pCatch)
+{
+	ASSERT(pCatchSeq->nodeType == STreeNode::T_CATCH);
+	pCatchSeq->sCatch.pNextCatch = pCatch;
+
+	return pCatchSeq;
+}
+
+STreeNode *newStnThrow(STreeNode *pExprThrow)
+{
+	STreeNode	*pNode = NewSTreeNode(STreeNode::T_THROW, pExprThrow->nLineNo);
+	StnThrow	&sThrow = pNode->sThrow;
+
+	sThrow.pNewExpr = pExprThrow;
+
+	return pNode;
+}
+
 STreeNode *newStnIf(STreeNode *pCondition, STreeNode *pTrueBlock, STreeNode *pFalseBlock)
 {
 	STreeNode	*pNode = NewSTreeNode(STreeNode::T_IF, pCondition->nLineNo);
@@ -374,6 +415,7 @@ STreeNode *newStnBlock(int nLineNo, STreeNode *pChildList)
 	StnBlock	&sBlock = pNode->sBlock;
 
 	sBlock.pChildList = pChildList;
+	sBlock.nCountOfVarToPopup = 0;
 
 	return pNode;
 }
@@ -446,6 +488,37 @@ void PrintSyntaxTree(STreeNode *t, int &nIndent)
 				nIndent--;
 				PrintSapces(nIndent, t->nLineNo);
 				printf("}\n");
+			}
+			break;
+		case STreeNode::T_TRY:
+			{
+				PrintSapces(nIndent, t->nLineNo);
+				printf("try\n");
+				if (t->sTry.pTryStmt)
+					PrintSyntaxTree(t->sTry.pTryStmt, nIndent);
+				ASSERT(t->sTry.pCatch);
+				PrintSyntaxTree(t->sTry.pCatch, nIndent);
+			}
+			break;
+		case STreeNode::T_CATCH:
+			{
+				PrintSapces(nIndent, t->nLineNo);
+				printf("catch\n");
+				if (t->sCatch.pException)
+					PrintSyntaxTree(t->sCatch.pException, nIndent);
+				ASSERT(t->sCatch.pCatchStmt);
+				PrintSyntaxTree(t->sCatch.pCatchStmt, nIndent);
+
+				if (t->sCatch.pNextCatch)
+					PrintSyntaxTree(t->sCatch.pNextCatch, nIndent);
+			}
+			break;
+		case STreeNode::T_THROW:
+			{
+				PrintSapces(nIndent, t->nLineNo);
+				printf("throw");
+				if (t->sThrow.pNewExpr)
+					PrintSyntaxTree(t->sThrow.pNewExpr, nIndent);
 			}
 			break;
 		case STreeNode::T_IF:

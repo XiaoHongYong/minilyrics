@@ -290,7 +290,20 @@ int CClass::UpdateVirtualMethodTable(string &strMsg)
 
 //////////////////////////////////////////////////////////////////////////
 
-int CClassTable::AddClass(LPCSTR szName, int nLineNo)
+CClassTable::CClassTable()
+{
+}
+
+CClassTable::~CClassTable()
+{
+	for (size_t i = 0; i < m_vClass.size(); i++)
+	{
+		delete m_vClass[i];
+	}
+	m_vClass.clear();
+}
+
+int CClassTable::AddClass(LPCSTR szName, int nLineNo, CJObjectNewer *pJObjNewer)
 {
 	CClass *pClass;
 
@@ -303,6 +316,9 @@ int CClassTable::AddClass(LPCSTR szName, int nLineNo)
 
 	m_vClass.push_back(pClass);
 	pClass->typeId = (TypeId)(m_vClass.size() - 1);
+	pClass->pJObojNewer = pJObjNewer;
+	if (pJObjNewer)
+		pClass->bFreeJObjNewer = true;
 
 	return ERR_OK;
 }
@@ -394,6 +410,28 @@ int CClassTable::StandardizeClassMember(string strMsg)
 	return ERR_OK;
 }
 
+void CClassTable::UpdateJObjNewer()
+{
+	for (size_t i = 0; i < m_vClass.size(); i++)
+	{
+		CClass	*pClass = m_vClass[i];
+
+		if (!pClass->pJObojNewer)
+		{
+			CClass	*pParent = pClass->pClassParent;
+			while (pParent)
+			{
+				if (pParent->pJObojNewer)
+				{
+					pClass->pJObojNewer = pParent->pJObojNewer;
+					break;
+				}
+				pParent = pParent->pClassParent;
+			}
+		}
+	}
+}
+
 #ifdef _DEBUG
 
 void CClassTable::Print(class CSJVM *pVm)
@@ -459,49 +497,27 @@ CStrJObject::~CStrJObject()
 
 CObjectMgr::~CObjectMgr()
 {
-	for (ListJObjNewer::iterator it = m_listJObjNewer.begin(); it != m_listJObjNewer.end(); ++it)
-	{
-		delete *it;
-	}
 }
 
 void CObjectMgr::Reset()
 {
 	m_vJObjects.resize(1);
-	m_listJObjNewer.clear();
 }
 
-void CObjectMgr::RegisterJObjNewer(CJObjectNewer *pJObjNewer)
-{
-	for (ListJObjNewer::iterator it = m_listJObjNewer.begin(); it != m_listJObjNewer.end(); ++it)
-	{
-		if ((*it)->m_typeId == pJObjNewer->m_typeId)
-		{
-			ASSERT(0 && "Already registered this JObjectNewer");
-			return;
-		}
-	}
-
-	m_listJObjNewer.push_back(pJObjNewer);
-}
-
-int CObjectMgr::New(TypeId typeId, int nMemberVarCount)
+int CObjectMgr::New(CClass *pClass)
 {
 	int			nPos = 0;
 	CJObject	*pNew = NULL;
 
-	ASSERT(typeId != TID_STRING);
+	ASSERT(pClass->typeId != TID_STRING);
 
-	for (ListJObjNewer::iterator it = m_listJObjNewer.begin(); it != m_listJObjNewer.end(); ++it)
+	if (pClass->pJObojNewer)
 	{
-		if ((*it)->m_typeId == typeId)
-		{
-			pNew = (*it)->New();
-		}
+		pNew = pClass->pJObojNewer->New();
+		pNew->m_typeId = pClass->typeId;
 	}
-
-	if (!pNew)
-		pNew = new CJObject(typeId, nMemberVarCount);
+	else
+		pNew = new CJObject(pClass->typeId, pClass->GetTotalMemberCount());
 
 	if (m_vFreeJObjs.size())
 	{
@@ -620,12 +636,14 @@ void CSJVM::Reset()
 {
 	// Reset class table
 	ASSERT(m_nSysClassCount <= m_classTable.m_vClass.size());
-	for (size_t i = m_nSysClassCount; i < m_classTable.m_vClass.size(); i++)
-	{
-		delete m_classTable.m_vClass[i];
-	}
 	if (m_nSysClassCount < m_classTable.m_vClass.size())
+	{
+		for (size_t i = m_nSysClassCount; i < m_classTable.m_vClass.size(); i++)
+		{
+			delete m_classTable.m_vClass[i];
+		}
 		m_classTable.m_vClass.resize(m_nSysClassCount);
+	}
 
 	// Reset static variables
 	ASSERT(m_nSysStaticVarsCount <= m_vStaticVars.size());
@@ -778,6 +796,10 @@ int CSJVM::Run()
 	// Prepare for environment for run Virtual machine
 	//
 	m_exeAction = EXE_GO_ON;
+	m_typeIdException = TID_INVALID;
+	m_jobjException = JOBJ_NULL;
+
+	m_classTable.UpdateJObjNewer();
 
 	m_stack.Resize(0);
 	m_bp = 0;
@@ -890,7 +912,7 @@ CJObject *CSJVM::NewJObject(TypeId typeId, jobject &jobj)
 	if (!pClass)
 		return NULL;
 
-	jobj = m_jobjMgr.New(typeId, pClass->GetTotalMemberCount());
+	jobj = m_jobjMgr.New(pClass);
 	if (jobj == JOBJ_NULL)
 		return NULL;
 
@@ -1249,6 +1271,54 @@ int CSJVM::BSI_Tree(STreeNode *pTree)
 		case STreeNode::T_VAR:
 			{
 				ASSERT(0 && "Var can't be here.");
+			}
+			break;
+		case STreeNode::T_TRY:
+			{
+				StnTry		&sTry = pTree->sTry;
+
+				nRet = BSI_Tree(sTry.pTryStmt);
+				if (nRet != ERR_OK)
+					return nRet;
+
+				nRet = BSI_Tree(sTry.pCatch);
+				if (nRet != ERR_OK)
+					return nRet;
+			}
+			break;
+		case STreeNode::T_CATCH:
+			{
+				StnCatch	&sCatch = pTree->sCatch;
+
+				m_varDeclStack.EnterBlock();
+
+				nRet = BSI_Tree(sCatch.pException);
+				if (nRet != ERR_OK)
+					return nRet;
+
+				nRet = BSI_Tree(sCatch.pCatchStmt);
+				if (nRet != ERR_OK)
+					return nRet;
+
+				ASSERT(m_varDeclStack.GetCurrentBlockSize() == 1);
+
+				if (sCatch.pNextCatch)
+				{
+					nRet = BSI_Tree(sCatch.pNextCatch);
+					if (nRet != ERR_OK)
+						return nRet;
+				}
+
+				m_varDeclStack.LeaveBlock();
+			}
+			break;
+		case STreeNode::T_THROW:
+			{
+				StnThrow	&sThrow = pTree->sThrow;
+
+				nRet = BSI_Expression(sThrow.pNewExpr);
+				if (nRet != ERR_OK)
+					return nRet;
 			}
 			break;
 		case STreeNode::T_IF:
@@ -2608,6 +2678,63 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 				ASSERT(0 && "Var can't be here.");
 			}
 			break;
+		case STreeNode::T_TRY:
+			{
+				StnTry		&sTry = pTree->sTry;
+				stmt_index	siTryStmt = SI_INVALID, siCatch = SI_INVALID;
+
+				nRet = BCS_Tree(sTry.pTryStmt, siTryStmt);
+				if (nRet != ERR_OK)
+					return nRet;
+
+				nRet = BCS_Tree(sTry.pCatch, siCatch);
+				if (nRet != ERR_OK)
+					return nRet;
+
+				*psiTail = m_stmtImage.newStmtTry(pTree->nLineNo, siTryStmt, siCatch);
+			}
+			break;
+		case STreeNode::T_CATCH:
+			{
+				StnCatch	&sCatch = pTree->sCatch;
+				stmt_index	siCatchStmt = SI_INVALID, siNextCatch = SI_INVALID;
+				TypeId		typeIdException;
+
+				ASSERT(sCatch.pException->nodeType == STreeNode::T_VAR_DECLAR);
+				typeIdException = sCatch.pException->sVarDeclare.type.typeId;
+
+				//m_varDeclStack.EnterBlock();
+
+				nRet = BCS_Tree(sCatch.pCatchStmt, siCatchStmt);
+				if (nRet != ERR_OK)
+					return nRet;
+
+				if (sCatch.pNextCatch)
+				{
+					nRet = BCS_Tree(sCatch.pNextCatch, siNextCatch);
+					if (nRet != ERR_OK)
+						return nRet;
+				}
+
+				//ASSERT(m_varDeclStack.GetCurrentBlockSize() == 1);
+
+				//m_varDeclStack.LeaveBlock();
+
+				*psiTail = m_stmtImage.newStmtCatch(pTree->nLineNo, typeIdException, siCatchStmt, siNextCatch);
+			}
+			break;
+		case STreeNode::T_THROW:
+			{
+				StnThrow	&sThrow = pTree->sThrow;
+				stmt_index	siNewExpr = SI_INVALID;
+
+				nRet = BCS_Expression(sThrow.pNewExpr, siNewExpr);
+				if (nRet != ERR_OK)
+					return nRet;
+
+				*psiTail = m_stmtImage.newStmtThrow(pTree->nLineNo, siNewExpr);
+			}
+			break;
 		case STreeNode::T_IF:
 			{
 				StnIf		&sif = pTree->sIf;
@@ -2757,12 +2884,7 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 						return nRet;
 				}
 
-				*psiTail = m_stmtImage.newStmtBlock(pTree->nLineNo, siChildBlock);
-				psiTail = m_stmtImage.GetTail(psiTail);
-
-				if (sBlock.nCountOfVarToPopup > 0)
-					*psiTail = m_stmtImage.newStmtStackPop(pTree->nLineNo, sBlock.nCountOfVarToPopup);
-
+				*psiTail = m_stmtImage.newStmtBlock(pTree->nLineNo, siChildBlock, sBlock.nCountOfVarToPopup);
 				psiTail = m_stmtImage.GetTail(psiTail);
 			}
 			break;
@@ -2860,6 +2982,61 @@ int CSJVM::Execute(stmt_index siEntry)
 					{
 						CE_AUTO_BLOCK("{ }", ps->nLineNo);
 						Execute(sBlock.siFirstChild);
+
+						// Pop up variables in stack.
+						for (int i = 0; i < sBlock.nCountOfVarToPopup; i++)
+							StackPop();
+					}
+				}
+				break;
+			case ST_TRY:
+				{
+					CE_AUTO_BLOCK("try", ps->nLineNo);
+					StmtTry	&sTry = ps->sTry;
+
+					ASSERT(m_exeAction == EXE_GO_ON);
+					nRet = Execute(sTry.siTryStmt);
+					if (m_exeAction == EXE_EXCEPTION)
+						nRet = Execute(sTry.siCatch);
+				}
+				break;
+			case ST_CATCH:
+				{
+					CE_AUTO_BLOCK("catch", ps->nLineNo);
+					StmtCatch	&sCatch = ps->sCatch;
+
+					ASSERT(m_exeAction == EXE_EXCEPTION);
+					ASSERT(m_typeIdException != TID_INVALID);
+					ASSERT(m_jobjException != JOBJ_NULL);
+					if (sCatch.typeIdException == m_typeIdException)
+					{
+						m_exeAction = EXE_GO_ON;
+
+						// Exception variable is at top of stack, just push it.
+						m_stack.Push(m_jobjException, m_typeIdException);
+
+						nRet = Execute(sCatch.siCatchStmt);
+
+						// Popup exception variable
+						StackPop();
+					}
+					else if (sCatch.siNextCatch != SI_INVALID)
+						nRet = Execute(sCatch.siNextCatch);
+				}
+				break;
+			case ST_THROW:
+				{
+					CE_AUTO_BLOCK("throw", ps->nLineNo);
+					StmtThrow	&sThrow = ps->sThrow;
+
+					nRet = ExecuteExpression(sThrow.siNewExpr);
+					ASSERT(nRet != JOBJ_NULL);
+					m_exeAction = EXE_EXCEPTION;
+					m_jobjException = nRet;
+					if (m_jobjException != JOBJ_NULL)
+					{
+						CJObject *pObj = m_jobjMgr.Get(m_jobjException);
+						m_typeIdException = pObj->m_typeId;
 					}
 				}
 				break;
@@ -2987,18 +3164,6 @@ int CSJVM::Execute(stmt_index siEntry)
 				{
 					StmtStackPush	&sStackPush = ps->sStackPush;
 					m_stack.Push(0, sStackPush.typeIdVar);
-				}
-				break;
-			case ST_POP_STACK:
-				{
-					StmtStackPop	sStackPop = ps->sStackPop;
-					for (int i = 0; i < sStackPop.nCountOfVarToPopup; i++)
-					{
-						CVMStack::Item &item = m_stack.Back();
-						if (!IsSimpleType(item.typeId))
-							m_jobjMgr.Free(item.nValue, m_classTable);
-						m_stack.Pop();
-					}
 				}
 				break;
 			case ST_EXPRESSION:
@@ -3139,7 +3304,8 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 
 			CE_LOG1(ps->nLineNo, "Call Method: return: %d", nRet);
 
-			m_exeAction = EXE_GO_ON;
+			if (m_exeAction == EXE_FUNC_RETURN)
+				m_exeAction = EXE_GO_ON;
 
 			return nRet;
 		}
@@ -3363,7 +3529,7 @@ int CSJVM::ExeNewJObject(StmtExpression &expr)
 	CVMParameters	parameters;
 
 	// New jobject
-	int		nJObj = m_jobjMgr.New(expr.typeId, pClass->GetTotalMemberCount());
+	int		nJObj = m_jobjMgr.New(pClass);
 
 	parameters.Push(nJObj, expr.typeId);
 
@@ -3460,7 +3626,16 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParamete
 
 void CSJVM::ThrowException(LPCTSTR szException)
 {
-	_tprintf(_T("Exception: %s"), szException);
+	m_exeAction = EXE_EXCEPTION;
+	CJObject		*pJObject;
+
+	pJObject = NewJObject(TID_EXCEPTION, m_jobjException);
+	m_typeIdException = TID_EXCEPTION;
+	if (pJObject)
+	{
+		CSjobjException	*pObjException = (CSjobjException *)pJObject;
+		pObjException->strException = szException;
+	}
 }
 
 int CSJVM::GetStaticVarValue(size_t nAddress)

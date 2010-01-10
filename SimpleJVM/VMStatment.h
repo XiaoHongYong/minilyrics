@@ -8,6 +8,9 @@ enum StmtType
 {
 	ST_UNKNOWN,
 	ST_BLOCK,
+	ST_TRY,
+	ST_CATCH,
+	ST_THROW,
 	ST_IF,
 	ST_FOR,
 	ST_WHILE,
@@ -16,7 +19,6 @@ enum StmtType
 	ST_CONTINUE,
 	ST_RETURN,
 	ST_PUSH_STACK,
-	ST_POP_STACK,
 
 	ST_EXPRESSION,
 };
@@ -33,6 +35,22 @@ enum StmtType
 
 struct StmtBlock {
 	stmt_index			siFirstChild;
+	uint16				nCountOfVarToPopup;
+};
+
+struct StmtTry {
+	stmt_index			siTryStmt;
+	stmt_index			siCatch;
+};
+
+struct StmtCatch {
+	TypeId				typeIdException;
+	stmt_index			siCatchStmt;
+	stmt_index			siNextCatch;
+};
+
+struct StmtThrow {
+	stmt_index			siNewExpr;
 };
 
 struct StmtIf {
@@ -65,11 +83,6 @@ struct StmtReturn {
 struct StmtStackPush {
 	// Push variable in stack, and save its typeId
 	TypeId				typeIdVar;
-};
-
-struct StmtStackPop {
-	// Push variable in stack, and save its typeId
-	int					nCountOfVarToPopup;
 };
 
 struct StmtExpression {
@@ -129,6 +142,9 @@ struct Statement
 	StmtType			stmtType;		// Type of the union.
 	union {
 		// StmtVariableAddress		sVar;
+		StmtTry					sTry;
+		StmtCatch				sCatch;
+		StmtThrow				sThrow;
 		StmtIf					sIf;
 		StmtFor					sFor;
 		StmtWhile				sWhile;
@@ -139,7 +155,6 @@ struct Statement
 		StmtNewStackVar			sNewStackVar;
 		StmtFunctionCall		sFunctionCall;
 		StmtStackPush			sStackPush;
-		StmtStackPop			sStackPop;
 	};
 };
 
@@ -166,6 +181,9 @@ public:
 	stmt_index newStmtExpOperate(int nLineNo, ExpressionType typeOperator, TypeId typeIdValue, stmt_index siExprLeft, stmt_index siExprRight, TypeId typeIdOperand);
 	stmt_index newStmtExpDynCast(int nLineNo, TypeId typeId, stmt_index siVar);
 
+	stmt_index newStmtTry(int nLineNo, stmt_index siTryStmt, stmt_index siCatch);
+	stmt_index newStmtCatch(int nLineNo, TypeId typeIdException, stmt_index siCatchStmt, stmt_index siNextCatch);
+	stmt_index newStmtThrow(int nLineNo, stmt_index siNewExpr);
 	stmt_index newStmtIf(int nLineNo, stmt_index siCondition, stmt_index siTrueStmt, stmt_index siFalseStmt);
 	stmt_index newStmtFor(int nLineNo, stmt_index siInitalization, stmt_index siTermination, stmt_index siIncrement, stmt_index siActionStmt);
 	stmt_index newStmtWhile(int nLineNo, stmt_index siCondition, stmt_index siActionStmt);
@@ -173,10 +191,9 @@ public:
 	stmt_index newStmtBreak(int nLineNo);
 	stmt_index newStmtContinue(int nLineNo);
 	stmt_index newStmtReturn(int nLineNo, stmt_index siExpression);
-	stmt_index newStmtBlock(int nLineNo, stmt_index &siChildBlock);
+	stmt_index newStmtBlock(int nLineNo, stmt_index &siChildBlock, int nCountOfVarToPopup);
 
 	stmt_index newStmtStackPush(int nLineNo, TypeId typeId);
-	stmt_index newStmtStackPop(int nLineNo, int nCountOfVarToPopup);
 
 	Statement *GetStmt(stmt_index si);
 	stmt_index *GetTail(stmt_index *psi);

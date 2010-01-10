@@ -169,6 +169,39 @@ stmt_index CStmtImage::newStmtExpDynCast(int nLineNo, TypeId typeId, stmt_index 
 	return si;
 }
 
+stmt_index CStmtImage::newStmtTry(int nLineNo, stmt_index siTryStmt, stmt_index siCatch)
+{
+	stmt_index		si;
+	Statement		*ps = newStmt(nLineNo, ST_TRY, si);
+
+	ps->sTry.siTryStmt = siTryStmt;
+	ps->sTry.siCatch = siCatch;
+
+	return si;
+}
+
+stmt_index CStmtImage::newStmtCatch(int nLineNo, TypeId typeIdException, stmt_index siCatchStmt, stmt_index siNextCatch)
+{
+	stmt_index		si;
+	Statement		*ps = newStmt(nLineNo, ST_CATCH, si);
+
+	ps->sCatch.typeIdException = typeIdException;
+	ps->sCatch.siCatchStmt = siCatchStmt;
+	ps->sCatch.siNextCatch = siNextCatch;
+
+	return si;
+}
+
+stmt_index CStmtImage::newStmtThrow(int nLineNo, stmt_index siNewExpr)
+{
+	stmt_index		si;
+	Statement		*ps = newStmt(nLineNo, ST_THROW, si);
+
+	ps->sThrow.siNewExpr = siNewExpr;
+
+	return si;
+}
+
 stmt_index CStmtImage::newStmtIf(int nLineNo, stmt_index siCondition, stmt_index siTrueStmt, stmt_index siFalseStmt)
 {
 	stmt_index		si;
@@ -240,12 +273,13 @@ stmt_index CStmtImage::newStmtReturn(int nLineNo, stmt_index siExpression)
 	return si;
 }
 
-stmt_index CStmtImage::newStmtBlock(int nLineNo, stmt_index &siChildBlock)
+stmt_index CStmtImage::newStmtBlock(int nLineNo, stmt_index &siChildBlock, int nCountOfVarToPopup)
 {
 	stmt_index		si;
 	Statement		*ps = newStmt(nLineNo, ST_BLOCK, si);
 
 	ps->sBlock.siFirstChild = siChildBlock;
+	ps->sBlock.nCountOfVarToPopup = nCountOfVarToPopup;
 
 	return si;
 }
@@ -256,17 +290,6 @@ stmt_index CStmtImage::newStmtStackPush(int nLineNo, TypeId typeId)
 	Statement		*ps = newStmt(nLineNo, ST_PUSH_STACK, si);
 
 	ps->sStackPush.typeIdVar = typeId;
-
-	return si;
-}
-
-stmt_index CStmtImage::newStmtStackPop(int nLineNo, int nCountOfVarToPopup)
-{
-	ASSERT(nCountOfVarToPopup > 0);
-
-	stmt_index		si;
-	Statement		*ps = newStmt(nLineNo, ST_POP_STACK, si);
-	ps->sStackPop.nCountOfVarToPopup = nCountOfVarToPopup;
 
 	return si;
 }
@@ -336,6 +359,31 @@ void CStmtImage::PrintStmtCodeTree(stmt_index si, int &nIndent)
 					PrintStmtCodeTree(sBlock.siFirstChild, nIndent);
 				nIndent--;
 				PrintSapces(nIndent); printf("}\n");
+			}
+			break;
+		case ST_TRY:
+			{
+				StmtTry	&sTry = ps->sTry;
+				PrintSapces(nIndent); printf("try\n");
+				PrintStmtCodeTree(sTry.siTryStmt, nIndent);
+
+				PrintStmtCodeTree(sTry.siCatch, nIndent);
+			}
+			break;
+		case ST_CATCH:
+			{
+				StmtCatch	&sCatch = ps->sCatch;
+				PrintSapces(nIndent); printf("catch(\n");
+
+				if (sCatch.siNextCatch != SI_INVALID)
+					PrintStmtCodeTree(sCatch.siNextCatch, nIndent);
+			}
+			break;
+		case ST_THROW:
+			{
+				StmtThrow	&sThrow = ps->sThrow;
+				PrintSapces(nIndent); printf("throw ");
+				PrintStmtCodeTree(sThrow.siNewExpr, nIndent);
 			}
 			break;
 		case ST_IF:
@@ -423,11 +471,6 @@ void CStmtImage::PrintStmtCodeTree(stmt_index si, int &nIndent)
 			{
 				StmtStackPush	&sStackPush = ps->sStackPush;
 				PrintSapces(nIndent); printf("LocalVarDeclare, type: %d\n", sStackPush.typeIdVar);
-			}
-			break;
-		case ST_POP_STACK:
-			{
-				PrintSapces(nIndent); printf("Popup and Free type\n");
 			}
 			break;
 		case ST_EXPRESSION:

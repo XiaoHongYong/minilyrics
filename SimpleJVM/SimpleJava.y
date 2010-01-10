@@ -28,7 +28,7 @@ void yyerror (char const *);
 %}
 
 %token	TK_IF		TK_ELSE		TK_WHILE	TK_DO		TK_FOR		TK_NEW
-%token	TK_CONTINUE	TK_BREAK
+%token	TK_CONTINUE	TK_BREAK	TK_TRY		TK_CATCH	TK_THROW	TK_THROWS
 %token	TK_RETURN	TK_SUPER	TK_NULL		TK_TRUE		TK_FALSE
 %token	TK_EXTENDS	TK_PUBLIC	TK_PRIVATE	TK_NATIVE	TK_PROTECTED	TK_IMPLEMENTS
 %token	TK_PACKAGE	TK_IMPORT	TK_STATIC	TK_ABSTRACT	TK_CLASS	TK_INTERFACE
@@ -103,14 +103,31 @@ var_list			:	var_list TK_COMMA TK_ID
 						}
 					;
 
-decl_constructor	:	TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS
+throws_exceptions	:	throws_exceptions TK_COMMA TK_ID
+						{
+							STreeNode	*newTail = newStnVar($3, NULL);
+							$$ = AppendToSibling($3, newTail);
+						}
+					|	TK_ID
+						{
+							$$ = newStnVar($1, NULL);
+						}
+					;
+
+throws				:	TK_THROWS throws_exceptions
+						{
+						}
+					|	{ $$ = NULL; }
+					;
+
+decl_constructor	:	TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS throws
 						fun_body
 						{
 							ASSERT($1->nodeType == STreeNode::T_STRING);
-							$$ = newStnMethodDeclareNode($1, NULL, $3, $5);
+							$$ = newStnMethodDeclareNode($1, NULL, $3, $6);
 						}
 
-					|	TK_NATIVE TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS TK_SEMICOLON
+					|	TK_NATIVE TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS throws TK_SEMICOLON
 						{
 							// For native function, body = NULL
 							ASSERT($2->nodeType == STreeNode::T_STRING);
@@ -118,14 +135,14 @@ decl_constructor	:	TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS
 						}
 					;
 
-decl_function		:	var_type TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS
+decl_function		:	var_type TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS throws
 						fun_body
 						{
 							ASSERT($2->nodeType == STreeNode::T_STRING);
-							$$ = newStnMethodDeclareNode($2, $1, $4, $6);
+							$$ = newStnMethodDeclareNode($2, $1, $4, $7);
 						}
 
-					|	TK_NATIVE var_type TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS TK_SEMICOLON
+					|	TK_NATIVE var_type TK_ID TK_L_PARENTHESIS fun_param_list TK_R_PARENTHESIS throws TK_SEMICOLON
 						{
 							// For native function, body = NULL
 							ASSERT($3->nodeType == STreeNode::T_STRING);
@@ -174,7 +191,7 @@ stmt_list			:	stmt_list stmt_block
 					|	stmt_block { $$ = $1; }
 					;
 
-stmt_block			:	TK_L_BRACE stmt_list TK_R_BRACE
+stmt_brace_block	:	TK_L_BRACE stmt_list TK_R_BRACE
 						{
 							$$ = newStnBlock(g_srcLineNo, $2);
 						}
@@ -182,6 +199,9 @@ stmt_block			:	TK_L_BRACE stmt_list TK_R_BRACE
 						{
 							$$ = newStnBlock(g_srcLineNo, NULL);
 						}
+					;
+
+stmt_block			:	stmt_brace_block { $$ = $1; }
 					|	stmt { $$ = $1; }
 					;
 
@@ -197,6 +217,8 @@ stmt				:	if_stmt		{ $$ = $1; }
 					|	TK_RETURN expression TK_SEMICOLON { $$ = $1; $1->sReturn.pExpression = $2; }
 					|	TK_RETURN TK_SEMICOLON { $$ = $1; }
 					|	decl_var { $$ = $1; /* empty */ }
+					|	try_stmt	{ $$ = $1; }
+					|	throw_exception_stmt { $$ = $1; }
 					;
 
 if_stmt				:	TK_IF TK_L_PARENTHESIS expression TK_R_PARENTHESIS stmt_block TK_ELSE stmt_block
@@ -227,6 +249,34 @@ do_while_stmt		:	TK_DO stmt_block TK_WHILE TK_L_PARENTHESIS expression TK_R_PARE
 						}
 					;
 
+try_stmt			:	TK_TRY stmt_brace_block catch_seq
+						{
+							$$ = newStnTry($2, $3);
+						}
+					;
+
+catch				:	TK_CATCH TK_L_PARENTHESIS fun_param TK_R_PARENTHESIS stmt_brace_block
+						{
+							$$ = newStnCatch($3, $5);
+						}
+					;
+
+catch_seq			:	catch
+						{
+							$$ = $1;
+						}
+					|	catch_seq catch
+						{
+							$$ = appendCatchTail($1, $2);
+						}
+					;
+
+throw_exception_stmt :	TK_THROW exp_new TK_SEMICOLON
+						{
+							$$ = newStnThrow($2);
+						}
+					;
+
 expression			:	TK_NUMBER
 						{ $$ = newStnExprConstInt($1); }
 					|	TK_STRING
@@ -237,8 +287,7 @@ expression			:	TK_NUMBER
 						{ $$ = newStnExprConstBool(g_srcLineNo, false); }
 					|	TK_NULL
 						{ $$ = newStnExprNull(g_srcLineNo); }
-					|	TK_NEW TK_ID TK_L_PARENTHESIS fun_call_param_list TK_R_PARENTHESIS
-						{ $$ = newStnExpNew($2, $4); }
+					|	exp_new	{ $$ = $1; }
 					|	TK_L_PARENTHESIS expression TK_R_PARENTHESIS
 						{ $$ = $2; }
 					|	exp_var { $$ = $1; }
@@ -261,6 +310,10 @@ expression			:	TK_NUMBER
 					|	exp_var TK_OP_PLUS_ASSIGN expression { $$ = newStnExpOp(OP_PLUS_ASSIGN	, $1, $3); }
 					|	exp_var TK_OP_MINUS_ASSIGN expression { $$ = newStnExpOp(OP_MINUS_ASSIGN	, $1, $3); }
 					|	exp_var TK_ASSIGN expression		{ $$ = newStnExpAssign($1, $3); }
+					;
+
+exp_new				:	TK_NEW TK_ID TK_L_PARENTHESIS fun_call_param_list TK_R_PARENTHESIS
+						{ $$ = newStnExpNew($2, $4); }
 					;
 
 exp_var				:	exp_var TK_DOT TK_ID

@@ -1,3 +1,4 @@
+
 public class CaseStaticVar
 {
 	static int incStaticVarInMethod(int initVal)
@@ -76,7 +77,7 @@ public class CaseMemberVar
 	public static void TestMemberVarDerive()
 	{
 		CaseMemberVar_A		a;
-		a = new CaseMemberVar_A();
+		a = new CaseMemberVar_B();
 
 		if (a.m_Var1 != 1)
 			UnitTest.failedMessage("TestMemberVarDerive: a.m_Var1 != 1");
@@ -88,17 +89,75 @@ public class CaseMemberVar
 
 }
 
+//////////////////////////////////////////////////////////////////////////
+
+public class MyException extends Exception {
+	MyException(String str) {
+		super(str);
+	}
+
+}
+
+public class TestThrowException {
+	void MethodThrow() throws Exception, MyException {
+		throw new MyException("Throw Exception");
+	}
+	
+	void CatchException() {
+		UnitTest.message("CatchException");
+		try
+		{
+			MethodThrow();
+		}
+// 		catch (Exception e)
+// 		{
+// 			e.toString();
+// 			// UnitTest.message("catch exception");
+// 		}
+		catch (MyException e)
+		{
+			e.toString();
+			UnitTest.message(e.toString());
+			// UnitTest.message("catch MyException");
+		}
+	}
+}
+
+public class CaseExcetpion
+{
+	public static void TestExceptions()
+	{
+		UnitTest.message("Run TestExceptions()");
+		try
+		{
+			CaseMemberVar_A		a;
+			a = new CaseMemberVar_A();
+
+			CaseMemberVar_B		b = (CaseMemberVar_B)a;
+		}
+		catch (Exception e)
+		{
+			UnitTest.message("CaseExcetpion: " + e.toString());
+		}
+
+		UnitTest.message("Run TestThrowException()");
+		TestThrowException	testE = new TestThrowException();
+		testE.CatchException();
+	}
+
+}
+
 public class Test
 {
 	static void main()
 	{
-		CaseStaticVar.TestStaticVarInMethod();
-
-		CaseStaticVar.TestStaticMemberVar();
-		
-		CaseMemberVar.TestMemberVar();
-
-		CaseMemberVar.TestMemberVarDerive();
+// 		CaseStaticVar.TestStaticVarInMethod();
+// 		CaseStaticVar.TestStaticMemberVar();
+// 		
+// 		CaseMemberVar.TestMemberVar();
+// 		CaseMemberVar.TestMemberVarDerive();
+// 		
+		CaseExcetpion.TestExceptions();
 
 		int		a = 5, b = 10;
 		if (a + b != 15)
