@@ -17,6 +17,8 @@ inline byte RGBToGray(int r, int g, int b)
 CRawGlyphBuilder::CRawGlyphBuilder()
 {
 	m_pmemGraph = NULL;
+	m_nWidthBytesGraph = 0;
+	m_nWidthGraph = 0;
 }
 
 CRawGlyphBuilder::~CRawGlyphBuilder()

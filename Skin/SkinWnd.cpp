@@ -1179,7 +1179,7 @@ bool Scan2IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2)
 	while (*szValue == ' ')
 		szValue++;
 
-	szValue = ReadInt_t(szValue, n2);
+	ReadInt_t(szValue, n2);
 
 	return true;
 }

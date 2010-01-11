@@ -409,6 +409,8 @@ public:
 	CDlgShortcutKey(LPCTSTR szCaption) : CBaseDialog(IDD_SET_HOTKEY)
 	{
 		m_strCaption = szCaption;
+		m_nVirtualKey = 0;
+		m_fsModifiers = 0;
 	}
 	BOOL OnInitDialog()
 	{
@@ -479,7 +481,7 @@ public:
 
 		EnumAll(vHotkeys);
 
-		for (int i = 0; i < vHotkeys.size(); i++)
+		for (size_t i = 0; i < vHotkeys.size(); i++)
 		{
 			if (!strValue.empty())
 				strValue.append(_T("; "));
@@ -526,7 +528,7 @@ public:
 		if (vHotkeys.size())
 			vString.push_back(_T(""));
 
-		for (int i = 0; i < vHotkeys.size(); i++)
+		for (size_t i = 0; i < vHotkeys.size(); i++)
 		{
 			vString.push_back(
 				tstring(TOLOCAL(vHotkeys[i].bGlobal ? _T("Remove Global Hotkey:") : _T("Remove Shortcut Key:")))
@@ -607,6 +609,7 @@ public:
 CPreferPageAdvanced::CPreferPageAdvanced() : CPreferencePageBase(IDD_PAGE_ADVANCED, _T("Advanced"))
 {
 	m_PageID = PAGE_ADVANCED;
+	m_nMenuIdEnd = m_nMenuIdStart = 0;
 }
 
 CPreferPageAdvanced::~CPreferPageAdvanced()
@@ -792,7 +795,7 @@ void CPreferPageAdvanced::OnCommand(UINT uID, UINT nNotifyCode)
 		}
 		break;
 	default:
-		if (uID >= m_nMenuIdStart && uID <= m_nMenuIdEnd)
+		if ((int)uID >= m_nMenuIdStart && (int)uID <= m_nMenuIdEnd)
 		{
 			if (uID == m_nMenuIdEnd)
 			{
@@ -801,7 +804,7 @@ void CPreferPageAdvanced::OnCommand(UINT uID, UINT nNotifyCode)
 				while (1)
 				{
 					nSel = m_listItems.GetNextSelectedItem(nSel);
-					if (nSel >= 0 && nSel < m_vFilteredItems.size())
+					if (nSel >= 0 && nSel < (int)m_vFilteredItems.size())
 					{
 						CPreferItem	*item = m_vFilteredItems[nSel];
 						item->Reset();
@@ -853,7 +856,7 @@ CPreferItem *CPreferPageAdvanced::GetCurItem()
 	int			nSel = 0;
 
 	nSel = m_listItems.GetNextSelectedItem();
-	if (nSel < 0 || nSel >= m_vFilteredItems.size())
+	if (nSel < 0 || nSel >= (int)m_vFilteredItems.size())
 		return NULL;
 
 	return m_vFilteredItems[nSel];
@@ -899,7 +902,7 @@ void CPreferPageAdvanced::ShowCustomizeMenu(int x, int y)
 		while (1)
 		{
 			nSel = m_listItems.GetNextSelectedItem(nSel);
-			if (nSel >= 0 && nSel < m_vFilteredItems.size())
+			if (nSel >= 0 && nSel < (int)m_vFilteredItems.size())
 			{
 				CPreferItem	*item = m_vFilteredItems[nSel];
 				if (!item->IsDefault())

@@ -29,11 +29,13 @@ tstring GetLangPackDir()
 		strLangDir = GetWorkingFolder();
 
 		TCHAR		szFile[MAX_PATH];
-		GetModuleFileName(GetAppInstance(), szFile, CountOf(szFile));
-		if (FileIsExtSame(szFile, _T(".exe")))
-			strLangDir += _T("..\\Install_ZP\\Share\\lang\\");
-		else
-			strLangDir += _T("..\\Install_ML\\Share\\lang\\");
+		if (GetModuleFileName(GetAppInstance(), szFile, CountOf(szFile)))
+		{
+			if (FileIsExtSame(szFile, _T(".exe")))
+				strLangDir += _T("..\\Install_ZP\\Share\\lang\\");
+			else
+				strLangDir += _T("..\\Install_ML\\Share\\lang\\");
+		}
 	}
 #endif
 #endif

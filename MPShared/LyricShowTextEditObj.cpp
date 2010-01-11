@@ -834,7 +834,7 @@ void CLyricShowTextEditObj::UpdateTextFontColor()
 
 void CLyricShowTextEditObj::SyncTimeTag(bool bMoveToNextLine)
 {
-	int		nBegLine, nEndLine, nCol;
+	int		nBegLine, nEndLine, nCol = 0;
 	int		nBegCol, nEndCol;
 	bool	bSelectedEmpty = true;
 	tstring	strLine, strTimeTag;

@@ -10,6 +10,7 @@ CSkinToggleCtrlContainer::CSkinToggleCtrlContainer(void)
 	m_nToggleToCtrl = SKIN_UIOBJ_ID_UNDEFINE;
 	m_nActiveCtrl = SKIN_UIOBJ_ID_UNDEFINE;
 	m_nIDTimerAnimation = 0;
+	m_nTimeBeginAni = 0;
 }
 
 CSkinToggleCtrlContainer::~CSkinToggleCtrlContainer(void)
@@ -52,70 +53,6 @@ void CSkinToggleCtrlContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUI
 {
 	InvalidateUIObject(this);
 	return;
-/*	if (m_memGraph.IsValid())
-	{
-		CUIObject	*pObjToggleTo = NULL;
-		CRawGraph	*pGraph = NULL;
-		int			nOpaque;
-
-		pObjToggleTo = GetUIObjectById(m_nToggleToCtrl, NULL);
-
-		if (m_pContainer)
-			pGraph = m_pContainer->GetMemGraph();
-		else
-			pGraph = m_pSkin->GetMemGraphics();
-
-		// Show child controls in animation
-		if (pObjCallUpdate->m_nId != m_nActiveCtrl && pObjToggleTo)
-			pObjToggleTo->Draw(pGraph);
-
-		if (pObj)
-		{
-			nOpaque = (GetTickCount() - m_nTimeBeginAni) * 255 / m_nAnimateDuration;
-			if (nOpaque > 255)
-				nOpaque = 255;
-			nOpaque = pGraph->SetOpacityPainting(nOpaque);
-
-			pObj->Draw(&m_memGraph);
-			pObj->UpdateTranslucencyWithSkin(pGraph);
-
-			CRawImage	imgTemp;
-			imgTemp.Attach(m_memGraph.GetRawBuff());
-			imgTemp.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 0, 0, BPM_BLEND);
-			imgTemp.Detach();
-
-			pGraph->SetOpacityPainting(nOpaque);
-		}
-	}
-
-	if (m_memGraph.IsValid())
-	{
-/*		CUIObject	*pObjPL = GetUIObjectById(m_pSkin->GetSkinFactory()->GetIDByName(L"CID_PLAYLIST"), NULL);
-		CUIObject	*pObjLyr = GetUIObjectById(m_pSkin->GetSkinFactory()->GetIDByName(L"CID_LYRICS"), NULL);
-		ASSERT(pObjLyr && pObjPL);
-
-
-		pObjPL->Draw(m_pContainer->GetMemGraph());
-
-		CRawImage	imgTemp;
-
-		imgTemp.Attach(m_memGraph.GetRawBuff());
-		imgTemp.Blt(m_pContainer->GetMemGraph(), m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 
-			0, 0, BPM_BLEND);
-		imgTemp.Detach();
-*/
-/*		CRawImage	imgTemp;
-
-		imgTemp.Attach(m_memGraph.GetRawBuff());
-		imgTemp.Blt(m_pContainer->GetMemGraph(), m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 
-			0, 0, BPM_COPY);
-		imgTemp.Detach();
-	}
-*/
-	if (m_pContainer)
-		m_pContainer->UpdateMemGraphicsToScreen(lpRect, this);
-	else
-		m_pSkin->UpdateMemGraphicsToScreen(lpRect);
 }
 
 void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)

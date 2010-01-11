@@ -1254,7 +1254,7 @@ int CID3v2IF::SetTags(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szAlbum, LPCTST
 int CID3v2IF::UpdateUserDefinedTextFrameByDesc(ID3v2TextUserDefined &text)
 {
 	int					nRet;
-	CID3v2Frame			*pFrame;
+	CID3v2Frame			*pFrame = NULL;
 	FrameIterator		it;
 	UINT				nFrameID;
 	CID3v2FrameParserTextUserDefined	parser;
@@ -1289,6 +1289,7 @@ int CID3v2IF::UpdateUserDefinedTextFrameByDesc(ID3v2TextUserDefined &text)
 	}
 
 	// do update
+	ASSERT(pFrame);
 	pFrame->m_frameData.clear();
 	return parser.ToFrameData(text, pFrame);
 }

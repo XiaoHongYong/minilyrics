@@ -530,11 +530,21 @@ void FillRectMask(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, PRAW
 		nPixSize = 4;
 	else if (pImage->bitCount == 24)
 		nPixSize = 3;
+	else
+	{
+		ASSERT(0);
+		return;
+	}
 
 	if (pImageMask->bitCount == 32)
 		nPixSizeMask = 4;
 	else if (pImageMask->bitCount == 24)
 		nPixSizeMask = 3;
+	else
+	{
+		ASSERT(0);
+		return;
+	}
 
 	nStrideModify = (xMax - x) * nPixSize;
 
@@ -648,6 +658,11 @@ void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *s
 		nPixSize = 4;
 	else if (pImage->bitCount == 24)
 		nPixSize = 3;
+	else
+	{
+		ASSERT(0);
+		return;
+	}
 
 	nStrideModify = (xMax - x) * nPixSize;
 

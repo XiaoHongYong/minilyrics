@@ -2706,7 +2706,7 @@ void ReverseStringForRightToLeftLanguage(LPTSTR szText)
 	int         nLen;
 	bool		bArab;
 	WCHAR		seps[4];
-	LPTSTR      tok, next_tok;
+	LPTSTR      tok, next_tok = NULL;
 
 	for (LPTSTR tmpText = szText; *tmpText; tmpText++)
 	{
