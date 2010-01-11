@@ -303,6 +303,10 @@
 			>
 		</File>
 		<File
+			RelativePath=".\test\case2.java"
+			>
+		</File>
+		<File
 			RelativePath=".\ReadMe.txt"
 			>
 		</File>

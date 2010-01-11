@@ -166,7 +166,6 @@ struct StnReturn {
 
 struct StnBlock {
 	STreeNode		*pChildList;
-	int				nCountOfVarToPopup;
 };
 
 struct STreeNode

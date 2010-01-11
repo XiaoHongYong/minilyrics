@@ -26,6 +26,12 @@ public:
 
 		nRet = pClass->AddNativeMethod(true, "message", messageInt, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(true, "getSp", getSp, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(true, "getBp", getBp, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
 	}
 
 	static void SJNI_API messageStr(LPCTSTR szMsg)
@@ -42,6 +48,16 @@ public:
 	{
 		MessageBox(NULL, szMsg, _T("SimpleJVM UnitTest"), MB_OK | MB_TOPMOST);
 		ASSERT(0);
+	}
+
+	static int SJNI_API getSp()
+	{
+		return (int)g_sjvm.m_stack.size();
+	}
+
+	static int SJNI_API getBp()
+	{
+		return (int)g_sjvm.m_bp;
 	}
 
 public:

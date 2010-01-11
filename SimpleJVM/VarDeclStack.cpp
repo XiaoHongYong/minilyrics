@@ -103,7 +103,7 @@ int CVarDeclStack::AddVarDecl(LPCSTR szName, TypeId typeId, bool bStatic)
 		pVarProperty->typeId = typeId;
 		pVarProperty->bStatic = bStatic;
 		if (bStatic)
-			pVarProperty->nAddress = DeclareStaticVar(GetCurMethod(), szName, (int)m_stmtBlockStack.size());
+			pVarProperty->nAddress = DeclareStaticVar(GetCurMethod(), szName, typeId, (int)m_stmtBlockStack.size());
 		else
 			pVarProperty->nAddress = (int)GetCurrentMethodLocalVarCount();
 		pblock->mapVarProp[szName] = pVarProperty;
@@ -124,9 +124,9 @@ void CVarDeclStack::Add_this_super_Var()
 		AddVarDecl(SZ_THIS, pClass->typeId, false);
 }
 
-int CVarDeclStack::DeclareStaticMemberVar(CClass *pClass, LPCSTR szName)
+int CVarDeclStack::DeclareStaticMemberVar(CClass *pClass, LPCSTR szName, TypeId typeId)
 {
-	return DeclareStaticVar(pClass, szName, 0);
+	return DeclareStaticVar(pClass, szName, typeId, 0);
 }
 
 VarInfo CVarDeclStack::GetVariable(LPCSTR szName)
@@ -227,6 +227,19 @@ int CVarDeclStack::GetCurrentBlockSize()
 	return (int)m_stmtBlockStack.back()->mapVarProp.size();
 }
 
+void CVarDeclStack::InitStaticVar(VecStaticVar &vStaticVar)
+{
+	vStaticVar.resize(m_mapStaticVars.size());
+
+	for (MapStaticVars::iterator it = m_mapStaticVars.begin(); it != m_mapStaticVars.end(); ++it)
+	{
+		AddressTypeId	addr = (*it).second;
+		vStaticVar[addr.nAddress].bInitialized = false;
+		vStaticVar[addr.nAddress].typeId = addr.typeId;
+		vStaticVar[addr.nAddress].nValue = 0;
+	}
+}
+
 void CVarDeclStack::FreeStmtBlock(StmtBlock *pblock)
 {
 	MapVarProp::iterator	it, itEnd;
@@ -254,7 +267,7 @@ size_t CVarDeclStack::GetCurrentMethodLocalVarCount()
 	return nCount;
 }
 
-int CVarDeclStack::DeclareStaticVar(LPVOID pMethodOrClass, LPCSTR szVarName, int nStmtDeepOfMethod)
+int CVarDeclStack::DeclareStaticVar(LPVOID pMethodOrClass, LPCSTR szVarName, TypeId typeId, int nStmtDeepOfMethod)
 {
 	char szKey[32];
 
@@ -262,16 +275,18 @@ int CVarDeclStack::DeclareStaticVar(LPVOID pMethodOrClass, LPCSTR szVarName, int
 	string	strKey = szKey;
 	strKey += szVarName;
 
-	int		nAddress;
+	AddressTypeId	addr;
 
 	MapStaticVars::iterator it = m_mapStaticVars.find(strKey);
 	if (it == m_mapStaticVars.end())
 	{
-		nAddress = (int)m_mapStaticVars.size();
-		m_mapStaticVars[strKey] = nAddress;
+
+		addr.nAddress = (uint16)m_mapStaticVars.size();
+		addr.typeId = typeId;
+		m_mapStaticVars[strKey] = addr;
 	}
 	else
-		nAddress = (*it).second;
+		addr = (*it).second;
 
-	return nAddress;
+	return addr.nAddress;
 }

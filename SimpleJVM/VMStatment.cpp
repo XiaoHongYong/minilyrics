@@ -273,13 +273,12 @@ stmt_index CStmtImage::newStmtReturn(int nLineNo, stmt_index siExpression)
 	return si;
 }
 
-stmt_index CStmtImage::newStmtBlock(int nLineNo, stmt_index &siChildBlock, int nCountOfVarToPopup)
+stmt_index CStmtImage::newStmtBlock(int nLineNo, stmt_index &siChildBlock)
 {
 	stmt_index		si;
 	Statement		*ps = newStmt(nLineNo, ST_BLOCK, si);
 
 	ps->sBlock.siFirstChild = siChildBlock;
-	ps->sBlock.nCountOfVarToPopup = nCountOfVarToPopup;
 
 	return si;
 }

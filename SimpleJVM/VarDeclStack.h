@@ -58,7 +58,7 @@ public:
 	// Add new symbol declaration 
 	int AddVarDecl(LPCSTR szName, TypeId typeId, bool bStatic);
 
-	int DeclareStaticMemberVar(CClass *pClass, LPCSTR szName);
+	int DeclareStaticMemberVar(CClass *pClass, LPCSTR szName, TypeId typeId);
 
 	// "this" is the first parameter of method call
 	void Add_this_super_Var();
@@ -73,8 +73,7 @@ public:
 
 	int GetCurrentBlockSize();
 
-	size_t GetSizeOfAllStaticVar() const
-		{ return m_mapStaticVars.size(); }
+	void InitStaticVar(VecStaticVar &vStaticVar);
 
 protected:
 	size_t GetCurrentMethodLocalVarCount();
@@ -89,11 +88,16 @@ protected:
 	StmtBlockStack			m_stmtBlockStack;
 
 protected:
-	int DeclareStaticVar(LPVOID pMethodOrClass, LPCSTR szVarName, int nStmtDeepOfMethod);
+	int DeclareStaticVar(LPVOID pMethodOrClass, LPCSTR szVarName, TypeId typeId, int nStmtDeepOfMethod);
 	//
 	// Static variable space allocate
 	//
-	typedef map<string, int>		MapStaticVars;
+	struct AddressTypeId
+	{
+		TypeId		typeId;
+		uint16		nAddress;
+	};
+	typedef map<string, AddressTypeId>		MapStaticVars;
 	MapStaticVars			m_mapStaticVars;
 
 };

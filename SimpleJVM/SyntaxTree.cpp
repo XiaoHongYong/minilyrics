@@ -415,7 +415,6 @@ STreeNode *newStnBlock(int nLineNo, STreeNode *pChildList)
 	StnBlock	&sBlock = pNode->sBlock;
 
 	sBlock.pChildList = pChildList;
-	sBlock.nCountOfVarToPopup = 0;
 
 	return pNode;
 }

@@ -35,7 +35,6 @@ enum StmtType
 
 struct StmtBlock {
 	stmt_index			siFirstChild;
-	uint16				nCountOfVarToPopup;
 };
 
 struct StmtTry {
@@ -191,7 +190,7 @@ public:
 	stmt_index newStmtBreak(int nLineNo);
 	stmt_index newStmtContinue(int nLineNo);
 	stmt_index newStmtReturn(int nLineNo, stmt_index siExpression);
-	stmt_index newStmtBlock(int nLineNo, stmt_index &siChildBlock, int nCountOfVarToPopup);
+	stmt_index newStmtBlock(int nLineNo, stmt_index &siChildBlock);
 
 	stmt_index newStmtStackPush(int nLineNo, TypeId typeId);
 

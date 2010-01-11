@@ -519,6 +519,21 @@ int CObjectMgr::New(CClass *pClass)
 	else
 		pNew = new CJObject(pClass->typeId, pClass->GetTotalMemberCount());
 
+	CClass		*p = pClass;
+	while (p)
+	{
+		for (size_t i = 0; i < p->vMemberVar.size(); i++)
+		{
+			if (!p->vMemberVar[i]->bStatic)
+			{
+				ASSERT(p->vMemberVar[i]->nAddr <= (int)pNew->m_vMemberVar.size());
+				pNew->m_vMemberVar[p->vMemberVar[i]->nAddr].typeId = p->vMemberVar[i]->typeId;
+			}
+		}
+
+		p = p->pClassParent;
+	}
+
 	if (m_vFreeJObjs.size())
 	{
 		nPos = m_vFreeJObjs.front();
@@ -649,7 +664,10 @@ void CSJVM::Reset()
 	ASSERT(m_nSysStaticVarsCount <= m_vStaticVars.size());
 	m_vStaticVars.resize(m_nSysStaticVarsCount);
 	for (size_t i = 0; i < m_vStaticVars.size(); i++)
+	{
 		m_vStaticVars[i].bInitialized = false;
+		m_vStaticVars[i].nValue = 0;
+	}
 
 	// Reset jobject manager
 	m_jobjMgr.Reset();
@@ -803,9 +821,8 @@ int CSJVM::Run()
 
 	m_stack.Resize(0);
 	m_bp = 0;
-	m_vStaticVars.resize(m_varDeclStack.GetSizeOfAllStaticVar());
-	for (size_t i = 0; i < m_vStaticVars.size(); i++)
-		m_vStaticVars[i].bInitialized = false;
+
+	m_varDeclStack.InitStaticVar(m_vStaticVars);
 
 	m_jobjMgr.InitAddConstString(m_mapStrings);
 
@@ -928,7 +945,7 @@ int CSJVM::CallNativeAPI(CMemberMethod *pMethod, CVMParameters &parameters)
 
 	for (size_t i = 0; i < parameters.m_nCount; i++)
 	{
-		CVMStack::Item	&item = parameters.m_vItems[i];
+		Variable	&item = parameters.m_vItems[i];
 		if (item.typeId == TID_STRING)
 		{
 			CJObject	*pObj = m_jobjMgr.Get(item.nValue);
@@ -1222,7 +1239,7 @@ int CSJVM::PreBSI_AddMemberVarDecl(STreeNode *pTree, CClass *pClass)
 
 		// Add class member variable
 		nRet = pClass->AddMemberVar(typeId, var.szVarName, bStatic, 
-			bStatic ? m_varDeclStack.DeclareStaticMemberVar(pClass, var.szVarName) : -1);
+			bStatic ? m_varDeclStack.DeclareStaticMemberVar(pClass, var.szVarName, typeId) : -1);
 		if (nRet != ERR_OK)
 		{
 			FORMATLASTERROR(pVarNode->nLineNo, nRet, var.szVarName);
@@ -1302,14 +1319,14 @@ int CSJVM::BSI_Tree(STreeNode *pTree)
 
 				ASSERT(m_varDeclStack.GetCurrentBlockSize() == 1);
 
+				m_varDeclStack.LeaveBlock();
+
 				if (sCatch.pNextCatch)
 				{
 					nRet = BSI_Tree(sCatch.pNextCatch);
 					if (nRet != ERR_OK)
 						return nRet;
 				}
-
-				m_varDeclStack.LeaveBlock();
 			}
 			break;
 		case STreeNode::T_THROW:
@@ -1472,7 +1489,6 @@ int CSJVM::BSI_Tree(STreeNode *pTree)
 					nRet = BSI_Tree(sBlock.pChildList);
 					if (nRet != ERR_OK)
 						return nRet;
-					sBlock.nCountOfVarToPopup = m_varDeclStack.GetCurrentBlockSize();
 					m_varDeclStack.LeaveBlock();
 				}
 			}
@@ -2703,7 +2719,7 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 				ASSERT(sCatch.pException->nodeType == STreeNode::T_VAR_DECLAR);
 				typeIdException = sCatch.pException->sVarDeclare.type.typeId;
 
-				//m_varDeclStack.EnterBlock();
+				m_varDeclStack.EnterBlock();
 
 				nRet = BCS_Tree(sCatch.pCatchStmt, siCatchStmt);
 				if (nRet != ERR_OK)
@@ -2716,9 +2732,7 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 						return nRet;
 				}
 
-				//ASSERT(m_varDeclStack.GetCurrentBlockSize() == 1);
-
-				//m_varDeclStack.LeaveBlock();
+				m_varDeclStack.LeaveBlock();
 
 				*psiTail = m_stmtImage.newStmtCatch(pTree->nLineNo, typeIdException, siCatchStmt, siNextCatch);
 			}
@@ -2884,7 +2898,7 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 						return nRet;
 				}
 
-				*psiTail = m_stmtImage.newStmtBlock(pTree->nLineNo, siChildBlock, sBlock.nCountOfVarToPopup);
+				*psiTail = m_stmtImage.newStmtBlock(pTree->nLineNo, siChildBlock);
 				psiTail = m_stmtImage.GetTail(psiTail);
 			}
 			break;
@@ -2980,12 +2994,15 @@ int CSJVM::Execute(stmt_index siEntry)
 					StmtBlock	&sBlock = ps->sBlock;
 					if (sBlock.siFirstChild != SI_INVALID)
 					{
+						size_t	sp = m_stack.size();
+
 						CE_AUTO_BLOCK("{ }", ps->nLineNo);
 						Execute(sBlock.siFirstChild);
 
-						// Pop up variables in stack.
-						for (int i = 0; i < sBlock.nCountOfVarToPopup; i++)
-							StackPop();
+						if (m_exeAction == EXE_EXCEPTION)
+							break;
+
+						m_stack.Resize(sp);
 					}
 				}
 				break;
@@ -2993,11 +3010,17 @@ int CSJVM::Execute(stmt_index siEntry)
 				{
 					CE_AUTO_BLOCK("try", ps->nLineNo);
 					StmtTry	&sTry = ps->sTry;
+					size_t	sp = m_stack.size(), bp = m_bp;
 
 					ASSERT(m_exeAction == EXE_GO_ON);
 					nRet = Execute(sTry.siTryStmt);
 					if (m_exeAction == EXE_EXCEPTION)
+					{
+						// Exception occurs, recover sp, and bp
+						m_bp = bp;
+						m_stack.Resize(sp);
 						nRet = Execute(sTry.siCatch);
+					}
 				}
 				break;
 			case ST_CATCH:
@@ -3018,7 +3041,7 @@ int CSJVM::Execute(stmt_index siEntry)
 						nRet = Execute(sCatch.siCatchStmt);
 
 						// Popup exception variable
-						StackPop();
+						m_stack.Pop();
 					}
 					else if (sCatch.siNextCatch != SI_INVALID)
 						nRet = Execute(sCatch.siNextCatch);
@@ -3328,7 +3351,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 		{
 			CE_AUTO_BLOCK(" static var initial = ", ps->nLineNo);
 
-			StackVar	*staticVar = ExeExprGetStaticVar(expr.assign.siVarAddress);
+			StaticVar	*staticVar = ExeExprGetStaticVar(expr.assign.siVarAddress);
 
 			if (staticVar && !staticVar->bInitialized)
 			{
@@ -3504,7 +3527,7 @@ int *CSJVM::ExeExprGetVarAddr(stmt_index siExprVar)
 	return &(m_stack.Get(m_bp + expr.var.nAddress).nValue);
 }
 
-CSJVM::StackVar *CSJVM::ExeExprGetStaticVar(stmt_index siExprVar)
+StaticVar *CSJVM::ExeExprGetStaticVar(stmt_index siExprVar)
 {
 	Statement		*ps = m_stmtImage.GetStmt(siExprVar);
 	ASSERT(ps->stmtType == ST_EXPRESSION);
@@ -3609,16 +3632,7 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParamete
 	}
 
 	// Recover bp, sp, and free object allocated in previous function of stack
-	if (m_stack.size() != nSp)
-	{
-		for (size_t i = nSp; i < m_stack.size(); i++)
-		{
-			CVMStack::Item	&item = m_stack.Get(i);
-			if (item.nValue != 0 && !IsSimpleType(item.typeId))
-				FreeJObject(item.nValue);
-		}
-		m_stack.Resize(nSp);
-	}
+	m_stack.Resize(nSp);
 	m_bp = nBp;
 
 	return m_valueMethodReturn;

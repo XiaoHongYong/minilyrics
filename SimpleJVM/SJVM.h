@@ -73,9 +73,20 @@ typedef vector<int>			VecInt;
 typedef vector<bool>		VecBool;
 typedef vector<tstring>		VecString;
 
-typedef int					Variable;
-typedef vector<Variable>	VecVariable;
 typedef map<tstring, int>	MapStrIndex;
+
+struct Variable {
+	int			nValue;
+	TypeId		typeId;
+};
+typedef vector<Variable>	VecVariable;
+
+struct StaticVar {
+	bool	bInitialized;
+	TypeId	typeId;
+	int		nValue;
+};
+typedef vector<StaticVar>	VecStaticVar;
 
 class CJObjectNewer
 {
@@ -239,11 +250,14 @@ class CJObject
 {
 public:
 	TypeId				m_typeId;
-	VecInt				m_vMemberVar;
+	VecVariable			m_vMemberVar;
 
 	CJObject(TypeId typeId, int nMemberVarCount) { 
 		m_typeId = typeId;
-		m_vMemberVar.resize(nMemberVarCount, 0);
+		Variable	var;
+		var.nValue = 0;
+		var.typeId = TID_INVALID;
+		m_vMemberVar.resize(nMemberVarCount, var);
 	}
 	virtual ~CJObject() { }
 
@@ -251,7 +265,7 @@ public:
 		ASSERT(nPos < m_vMemberVar.size());
 		if (nPos >= m_vMemberVar.size())
 			return 0;
-		return m_vMemberVar[nPos];
+		return m_vMemberVar[nPos].nValue;
 	}
 
 	void SetValue(size_t nPos, int nValue) {
@@ -259,14 +273,14 @@ public:
 		ASSERT(nPos < m_vMemberVar.size());
 		if (nPos >= m_vMemberVar.size())
 			return;
-		m_vMemberVar[nPos] = nValue;
+		m_vMemberVar[nPos].nValue = nValue;
 	}
 
 	int *GetAddress(size_t nPos) {
 		ASSERT(nPos < m_vMemberVar.size());
 		if (nPos >= m_vMemberVar.size())
 			return NULL;
-		return &(m_vMemberVar[nPos]);
+		return &(m_vMemberVar[nPos].nValue);
 	}
 
 };
@@ -318,32 +332,30 @@ protected:
 class CVMStack
 {
 public:
-	struct Item {
-		int			nValue;
-		TypeId		typeId;
-	};
-	typedef vector<Item>		VecItems;
-
 	void Insert(int nPos, int nValue, TypeId typeId) {
-		Item i; i.nValue = nValue; i.typeId = typeId; m_vItems.insert(m_vItems.begin() + nPos, i);
+		Variable i; i.nValue = nValue; i.typeId = typeId; m_vItems.insert(m_vItems.begin() + nPos, i);
 	}
 
 	void Push(int nValue, TypeId typeId) { 
-		Item i; i.nValue = nValue; i.typeId = typeId; m_vItems.push_back(i); }
+		Variable i; i.nValue = nValue; i.typeId = typeId; m_vItems.push_back(i); }
 	void Pop() { m_vItems.pop_back(); }
+	void PopN(size_t n) {
+		ASSERT(n < m_vItems.size());
+		m_vItems.resize(m_vItems.size() - n);
+	}
 
 	void Push(class CVMParameters &parameters);
 
 	void Resize(size_t s) { m_vItems.resize(s); }
 
-	Item &Back() { ASSERT(m_vItems.size() > 0); return m_vItems.back(); }
+	Variable &Back() { ASSERT(m_vItems.size() > 0); return m_vItems.back(); }
 
 	int GetValue(size_t nOffset)	{
 		ASSERT(nOffset >= 0 && nOffset < (int)m_vItems.size());
 		return m_vItems[nOffset].nValue;
 	}
 
-	Item &Get(size_t nOffset)	{
+	Variable &Get(size_t nOffset)	{
 		ASSERT(nOffset >= 0 && nOffset < (int)m_vItems.size());
 		return m_vItems[nOffset];
 	}
@@ -351,7 +363,7 @@ public:
 	size_t size() { return m_vItems.size(); }
 
 protected:
-	VecItems			m_vItems;
+	VecVariable			m_vItems;
 
 };
 
@@ -370,7 +382,7 @@ public:
 	}
 
 public:
-	CVMStack::Item		m_vItems[COUNT_MAX];
+	Variable			m_vItems[COUNT_MAX];
 	size_t				m_nCount;
 
 };
@@ -381,18 +393,14 @@ public:
 	CSJVM(void);
 	virtual ~CSJVM(void);
 
-	struct StackVar {
-		bool	bInitialized;
-		int		nValue;
-	};
-	typedef vector<StackVar>	VecStack;
-
 	void Reset();
 
 	int CompileFiles(VecString &vFiles);
 	int Compile(LPCTSTR szFile);
 
 	int Run();
+
+	int GarbageRecycle();
 
 	void FinishedInitSysModule();
 
@@ -469,7 +477,7 @@ protected:
 protected:
 	int ExecuteExpression(stmt_index siExpr);
 	int *ExeExprGetVarAddr(stmt_index siExprVar);
-	StackVar *ExeExprGetStaticVar(stmt_index siExprVar);
+	StaticVar *ExeExprGetStaticVar(stmt_index siExprVar);
 
 	int ExeNewJObject(StmtExpression &expr);
 
@@ -479,15 +487,6 @@ protected:
 	int GetJObjectMemberVarValue(int nJobject, int nMember);
 
 	int *GetJObjectMemberVarAddr(int nJobject, int nMember);
-
-	void inline StackPop()
-	{
-		ASSERT(m_stack.size() > 0);
-		CVMStack::Item &item = m_stack.Back();
-		if (!IsSimpleType(item.typeId))
-			m_jobjMgr.Free(item.nValue, m_classTable);
-		m_stack.Pop();
-	}
 
 protected:
 
@@ -520,6 +519,8 @@ protected:
 
 	};
 
+	friend class CSjobjUnitTest;
+
 protected:
 	enum EXE_ACTION
 	{
@@ -543,7 +544,7 @@ protected:
 	int							m_valueMethodReturn;
 
 	// Static variables
-	VecStack					m_vStaticVars;
+	VecStaticVar				m_vStaticVars;
 	size_t						m_nSysStaticVarsCount;
 
 	EXE_ACTION					m_exeAction;

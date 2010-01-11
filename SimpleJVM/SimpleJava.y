@@ -86,7 +86,7 @@ decl_var			:	var_type var_list TK_SEMICOLON
 var_list			:	var_list TK_COMMA TK_ID
 						{
 							STreeNode	*newTail = newStnVar($3, NULL);
-							$$ = AppendToSibling($3, newTail);
+							$$ = AppendToSibling($1, newTail);
 						}
 					|	var_list TK_COMMA TK_ID TK_ASSIGN expression
 						{

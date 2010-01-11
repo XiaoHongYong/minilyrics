@@ -104,22 +104,30 @@ public class TestThrowException {
 	}
 	
 	void CatchException() {
+		int		sp, bp;
+		sp = UnitTest.getSp();
+		bp = UnitTest.getBp();
+
 		UnitTest.message("CatchException");
 		try
 		{
 			MethodThrow();
 		}
-// 		catch (Exception e)
-// 		{
-// 			e.toString();
-// 			// UnitTest.message("catch exception");
-// 		}
+		catch (Exception e)
+		{
+			e.toString();
+			UnitTest.message("catch exception");
+		}
 		catch (MyException e)
 		{
 			e.toString();
-			UnitTest.message(e.toString());
-			// UnitTest.message("catch MyException");
+			UnitTest.message("catch MyException");
 		}
+
+		if (sp != UnitTest.getSp())
+			UnitTest.failedMessage("CatchException: sp != UnitTest.getSp()");
+		if (bp != UnitTest.getBp())
+			UnitTest.failedMessage("CatchException: bp != UnitTest.getBp()");
 	}
 }
 
@@ -151,12 +159,12 @@ public class Test
 {
 	static void main()
 	{
-// 		CaseStaticVar.TestStaticVarInMethod();
-// 		CaseStaticVar.TestStaticMemberVar();
-// 		
-// 		CaseMemberVar.TestMemberVar();
-// 		CaseMemberVar.TestMemberVarDerive();
-// 		
+		CaseStaticVar.TestStaticVarInMethod();
+		CaseStaticVar.TestStaticMemberVar();
+		
+		CaseMemberVar.TestMemberVar();
+		CaseMemberVar.TestMemberVarDerive();
+		
 		CaseExcetpion.TestExceptions();
 
 		int		a = 5, b = 10;
