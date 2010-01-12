@@ -853,6 +853,7 @@ void V_LRCSEARCHRESULT::DeleteByOrder(int n)
 		if (n == 0)
 		{
 			erase(it);
+			break;
 		}
 	}
 }

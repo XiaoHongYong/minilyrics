@@ -517,7 +517,11 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 		bAdvVersion = true;
 	if (SearchCacheForCur(NULL, &dwLatestSearchTime))
 	{
-		if (abs((int)dwLatestSearchTime - GetCurDaysFrom2000()) < (bAdvVersion ? 7 : 30))
+		int			nNextSearch = 30;
+		if (bAdvVersion && !g_LyricData.HasLyricsOpened())
+			nNextSearch = 10;
+
+		if (abs((int)dwLatestSearchTime - GetCurDaysFrom2000()) < nNextSearch)
 		{
 			// ....todo 添加上次搜索时间的介绍, 优化离线歌词搜索库和在下歌词搜索缓存
 			tstring			str;

@@ -100,7 +100,7 @@ if TargetML:
 		[ " PluginAP\\PluginAP.sln", "\"Release|Win32\"" ],
 		[ " PluginBsp\\PluginBsp.sln", "\"Release|Win32\"" ],
 		[ " PluginHMM\\PluginHMM.sln", "\"Release|Win32\"" ],
-		[ " PluginFoobar0.9\\PluginFoobar.sln", "\"Release|Win32\"" ],
+		[ " PluginFoobar1.0\\PluginFoobar.sln", "\"Release|Win32\"" ],
 		[ " pluginiTunes\\pluginiTunes.sln", "\"Release|Win32\"" ],
 		[ " PluginJetaudio\\PluginJetaudio.sln", "\"Release|Win32\"" ],
 		[ " PluginMJ\\PluginMJ.sln", "\"Release|Win32\"" ],

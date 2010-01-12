@@ -279,9 +279,14 @@ SectionIn 1 2
       J_Foobar80:
     ;90
     StrCmp ${TEMP1} "Foobar 0.9" 0 J_Foobar90
-      File "..\bin\foo_ui_minilyrics.dll"
+      File "Foobar 0.9\foo_ui_minilyrics.dll"
       GOTO J_FoobarEnd
       J_Foobar90:
+    ;1.0
+    StrCmp ${TEMP1} "Foobar 1.0" 0 J_Foobar100
+      File "..\bin\foo_ui_minilyrics.dll"
+      GOTO J_FoobarEnd
+      J_Foobar100:
     ;others
     File "..\bin\foo_ui_minilyrics.dll"
   J_FoobarEnd:
