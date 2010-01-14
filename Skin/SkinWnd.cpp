@@ -209,6 +209,8 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 
 	m_bOnMouseHover = false;
 	m_translucencyStatus = TS_NORMAL;
+
+	m_pSjvmNotifyEvent = NULL;
 }
 
 CSkinWnd::~CSkinWnd()
@@ -264,6 +266,11 @@ void CSkinWnd::CloseSkin()
 {
 	if (!m_bSkinOpened)
 		return;
+
+	if (m_pSjvmNotifyEvent)
+		m_pSjvmNotifyEvent->onDestroy();
+
+	CSjvmSkinSystem::OnSkinWndDestory(this);
 
 #ifdef _WIN32_DESKTOP
 	if (m_bWindowsAppearance)
@@ -348,6 +355,7 @@ void CSkinWnd::CloseSkin()
 	m_bMouseInactive = false;
 	m_bHasUIObjHideOnMouseInactive = false;
 
+	m_pSjvmNotifyEvent = NULL;
 	m_vUIObjNotifyHandlers.clear();
 }
 
@@ -1065,6 +1073,9 @@ void CSkinWnd::OnMove(int x, int y)
 		m_rcBoundBox.top = rc.top;
 		m_rcBoundBox.right = (long)(rc.left + rc.Width() / m_dbScale);
 		m_rcBoundBox.bottom = (long)(rc.top + rc.Height() / m_dbScale);
+
+		if (m_pSjvmNotifyEvent)
+			m_pSjvmNotifyEvent->onMove(x, y);
 	}
 }
 
@@ -1127,6 +1138,9 @@ void CSkinWnd::OnSize(int cx, int cy)
 			}
 
 			OnWindowSizeChanged();
+
+			if (m_pSjvmNotifyEvent)
+				m_pSjvmNotifyEvent->onSize(cx, cy);
 		}
 	}
 }
@@ -1676,6 +1690,9 @@ void CSkinWnd::OnActivate(bool bActived)
 		SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
 #endif
 
+	if (m_pSjvmNotifyEvent)
+		m_pSjvmNotifyEvent->onActivate(bActived);
+
 	InvalidateRect();
 }
 
@@ -2129,6 +2146,9 @@ void CSkinWnd::OnSkinLoaded()
 {
 	if (GetFocusUIObj() == NULL)
 		FocusNextUIObject();
+
+	if (m_pSjvmNotifyEvent)
+		m_pSjvmNotifyEvent->onCreate();
 }
 
 void CSkinWnd::OnLoadWndSizePos()
@@ -2152,6 +2172,9 @@ void CSkinWnd::OnLoadWndSizePos()
 
 bool CSkinWnd::OnCustomCommand(int nId)
 {
+	if (m_pSjvmNotifyEvent && m_pSjvmNotifyEvent->onCommand(nId))
+		return true;
+
 	int		nRet = m_pSkinFactory->OnDynamicCmd(nId, this);
 	if (nRet == ERR_NOT_FOUND)
 		return false;
@@ -2447,6 +2470,8 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	m_pSkinFactory->GetResourceMgr()->GetAdjustHueParam(hue, saturation, luminance);
 	if (hue != 0.0f)
 		OnAdjustHue(hue, saturation, luminance);
+
+	CSjvmSkinSystem::OnSkinWndCreate(this);
 
 	m_bCanUpdateWnd = true;
 

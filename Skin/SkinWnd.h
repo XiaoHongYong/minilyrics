@@ -451,6 +451,16 @@ protected:
 	typedef vector<UIObjNotifyHandlerInfo>	VecUIObjNotifyHandlers;
 	VecUIObjNotifyHandlers		m_vUIObjNotifyHandlers;
 
+	//
+	// Skin script message delivery
+	//
+public:
+	void SjvmSetNotifyEvent(SjvmSkinWndEvent *pNotify) { m_pSjvmNotifyEvent = pNotify; }
+
+protected:
+	SjvmSkinWndEvent	*m_pSjvmNotifyEvent;
+
+
 };
 
 #endif // !defined(AFX_SKIN_H__A1FDC39A_7098_11D5_9E04_02608CAD9330__INCLUDED_)

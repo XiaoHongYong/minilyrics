@@ -156,6 +156,7 @@ public:
 	virtual void Close();
 
 	CSkinWnd *FindSkinWnd(LPCTSTR szSkinWndName);
+	bool IsValidSkinWnd(CSkinWnd *pWnd);
 
 	virtual int ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
 	virtual int OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);

@@ -825,6 +825,11 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 	if (pNode)
 		m_resourceMgr.AdjustHueInfoFromXML(pNode);
 
+	// Load and compile SJVM script files.
+	LPCTSTR szScript = m_skinFile.GetSkinProperty(_T("Script"));
+	if (szScript && !IsEmptyString(szScript))
+		CSjvmSkinSystem::LoadScript(szScript);
+
 	return ERR_OK;
 }
 
@@ -846,6 +851,8 @@ int CSkinFactory::SaveSkinFile(LPCTSTR szFile)
 
 void CSkinFactory::Close()
 {
+	CSjvmSkinSystem::CloseScript();
+
 	m_dynamicCtrls.Free();
 	m_dynamicCmds.Free();
 	m_skinFile.Close();
@@ -903,6 +910,18 @@ CSkinWnd *CSkinFactory::FindSkinWnd(LPCTSTR szSkinWndName)
 	}
 
 	return NULL;
+}
+
+bool CSkinFactory::IsValidSkinWnd(CSkinWnd *pWnd)
+{
+	LIST_SKINWNDS::iterator	it;
+	for (it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
+	{
+		if (*it == pWnd)
+			return true;
+	}
+
+	return false;
 }
 
 int CSkinFactory::ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin)

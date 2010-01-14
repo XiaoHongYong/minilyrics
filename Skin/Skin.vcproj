@@ -497,6 +497,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SjvmSkinSystem.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SkinButton.cpp"
 				>
 				<FileConfiguration
@@ -1187,6 +1191,10 @@
 			</File>
 			<File
 				RelativePath=".\sfimglist.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SjvmSkinSystem.h"
 				>
 			</File>
 			<File
