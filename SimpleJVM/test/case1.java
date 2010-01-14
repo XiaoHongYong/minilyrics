@@ -155,6 +155,25 @@ public class CaseExcetpion
 
 }
 
+public class CaseStack
+{
+	public static void TestStack()
+	{
+		UnitTest.message("Run TestStack()");
+		
+		for (int k = 0; k < 10; k++)
+		{
+			UnitTest.printJVMStatus();
+			for (int i = 0; i < 100; i++)
+			{
+				MyException	myExcep = new MyException("Test my exception");
+			}
+		}
+
+	}
+
+}
+
 public class Test
 {
 	static void main()
@@ -166,6 +185,8 @@ public class Test
 		CaseMemberVar.TestMemberVarDerive();
 		
 		CaseExcetpion.TestExceptions();
+		
+		CaseStack.TestStack();
 
 		int		a = 5, b = 10;
 		if (a + b != 15)

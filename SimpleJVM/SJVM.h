@@ -157,6 +157,7 @@ public:
 		pClassParent = NULL;
 		typeId = TID_INVALID;
 		bFreeJObjNewer = false;
+		nTotalMemberVarCount = 0;
 	}
 	virtual ~CClass() {
 		if (bFreeJObjNewer)
@@ -171,11 +172,14 @@ public:
 	VecMethod				vVirtualMethod;
 	CMemberMethod			methodVarInit;
 	VecMemberVar			vMemberVar;
+	int						nTotalMemberVarCount;
 	string					strName;
 	CJObjectNewer			*pJObojNewer;
 	bool					bFreeJObjNewer;
 
 public:
+	void AddNativeDefaultConstructor();
+
 	// Return the index of method, -1 for error.
 	int AddNativeMethod(bool bStatic, LPCSTR szMethodName, LPVOID funcPtr, TypeId typeIdReturn, ...);
 
@@ -183,7 +187,7 @@ public:
 
 	int AddMemberVar(TypeId typeId, LPCSTR szVarName, bool bStatic, int nStaticAddr);
 
-	int GetTotalMemberCount();
+	void UpdateTotalMemberCount();
 
 	bool IsMemberVarStatic(LPCSTR szVarName);
 	CMemberVar *GetMemberVar(LPCSTR szVarName);
@@ -308,6 +312,7 @@ public:
 	CObjectMgr() { 
 		// Take 0 as invalid address
 		m_vJObjects.push_back(NULL);
+		m_nAllocCount = 0;
 	}
 	virtual ~CObjectMgr();
 
@@ -317,15 +322,17 @@ public:
 
 	int NewString(LPCTSTR szString, bool bCopy = true);
 
-	void Free(int nPos, CClassTable &clsTable);
-
 	CJObject *Get(int nPos);
 
 	void InitAddConstString(MapStrIndex &mapStr);
 
 protected:
+	friend class CSJVMGarbageCoolector;
+	friend class CSjobjUnitTest;
+
 	VecJObject				m_vJObjects;
 	list<int>				m_vFreeJObjs;
+	int						m_nAllocCount;
 
 };
 
@@ -363,6 +370,7 @@ public:
 	size_t size() { return m_vItems.size(); }
 
 protected:
+	friend class CSJVM;
 	VecVariable			m_vItems;
 
 };
@@ -400,7 +408,7 @@ public:
 
 	int Run();
 
-	int GarbageRecycle();
+	int GarbageCollect();
 
 	void FinishedInitSysModule();
 
@@ -413,7 +421,6 @@ public:
 
 	CJObject *NewJObject(TypeId typeId, jobject &jobj);
 	jobject NewString(LPCTSTR szString, bool bCopy) { return m_jobjMgr.NewString(szString, bCopy); }
-	void FreeJObject(jobject jobj) { m_jobjMgr.Free(jobj, m_classTable); }
 	CJObject *GetJObject(jobject jobj) { return m_jobjMgr.Get(jobj); }
 
 	int AddClass(LPCSTR szClassName, int nLineNo = -1, CJObjectNewer *pJObjNewer = NULL) { return m_classTable.AddClass(szClassName, nLineNo, pJObjNewer); }
@@ -421,8 +428,6 @@ public:
 	CClassTable &GetClassTable() { return m_classTable; }
 
 	int CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParameters &parameters);
-
-	// LPVOID StackVarToNativeValue(int nvmStackPtr, TypeId paramType);
 
 	void ThrowException(LPCTSTR szException);
 
@@ -481,7 +486,7 @@ protected:
 
 	int ExeNewJObject(StmtExpression &expr);
 
-	int CallNativeAPI(CMemberMethod *pMethod, CVMParameters &parameters);
+	int CallNativeAPI(CMemberMethod *pMethod, jobject thiz, CVMParameters &parameters);
 
 	int GetStaticVarValue(size_t nAddress);
 	int GetJObjectMemberVarValue(int nJobject, int nMember);
@@ -520,6 +525,7 @@ protected:
 	};
 
 	friend class CSjobjUnitTest;
+	friend class CSJVMGarbageCoolector;
 
 protected:
 	enum EXE_ACTION

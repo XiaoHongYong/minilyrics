@@ -32,6 +32,9 @@ public:
 
 		nRet = pClass->AddNativeMethod(true, "getBp", getBp, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(true, "printJVMStatus", printJVMStatus, TID_VOID, TID_INVALID);
+		ASSERT(nRet != -1);
 	}
 
 	static void SJNI_API messageStr(LPCTSTR szMsg)
@@ -58,6 +61,14 @@ public:
 	static int SJNI_API getBp()
 	{
 		return (int)g_sjvm.m_bp;
+	}
+
+	static void SJNI_API printJVMStatus()
+	{
+		_tprintf(_T(">>>SimpleJVM internal status:\n"));
+		_tprintf(_T("BP: %d, SP: %d,	Static variable count: %d,	\n"), g_sjvm.m_bp, g_sjvm.m_stack.size(), g_sjvm.m_vStaticVars.size());
+		_tprintf(_T("JObject manager size: %d,	Free: %d\n"), g_sjvm.m_jobjMgr.m_vJObjects.size(), g_sjvm.m_jobjMgr.m_vFreeJObjs.size());
+		_tprintf(_T("<<<End of status:\n"));
 	}
 
 public:

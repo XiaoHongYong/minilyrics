@@ -14,6 +14,7 @@ TODO:
 
 #define FORMATLASTERROR(p1, p2, p3)		FormatLastError(p1, p2, p3, __LINE__)
 
+#define GC_TRIGGER_COUNT		100
 
 #define D_PRINT_SYNTAX_TREE
 
@@ -65,6 +66,24 @@ bool CMemberMethod::IsSame(CMemberMethod *pMethod)
 		return false;
 
 	return IsSameNameAndParameter(pMethod);
+}
+
+static void SJNI_API ClassDefaultConstructor(LPVOID p)
+{
+
+}
+
+void CClass::AddNativeDefaultConstructor()
+{
+	CMemberMethod	*pMethod = new CMemberMethod();
+	pMethod->strName = strName;
+	pMethod->typeIDRet = TID_INVALID;
+	pMethod->pNativeFunc = ClassDefaultConstructor;
+	pMethod->bStatic = false;
+
+	pMethod->nVirtualIndex = (int)vVirtualMethod.size();
+	vVirtualMethod.push_back(pMethod);
+	vMethod.push_back(pMethod);
 }
 
 int CClass::AddNativeMethod(bool bStatic, LPCSTR szMethodName, LPVOID funcPtr, TypeId typeIdReturn, ...)
@@ -152,12 +171,15 @@ int CClass::AddMemberVar(TypeId typeId, LPCSTR szVarName, bool bStatic, int nSta
 	return ERR_OK;
 }
 
-int CClass::GetTotalMemberCount()
+void CClass::UpdateTotalMemberCount()
 {
-	if (pClassParent)
-		return pClassParent->GetTotalMemberCount() + (int)vMemberVar.size();
+	nTotalMemberVarCount = (int)vMemberVar.size();
 
-	return (int)vMemberVar.size();
+	if (pClassParent)
+	{
+		pClassParent->UpdateTotalMemberCount();
+		nTotalMemberVarCount += pClassParent->nTotalMemberVarCount;
+	}
 }
 
 CMemberVar *CClass::GetMemberVar(LPCSTR szVarName)
@@ -229,7 +251,7 @@ void CClass::UpdateMemberVarAddress()
 		if (!pVar->bStatic)
 		{
 			if (pClassParent)
-				pVar->nAddr = pClassParent->GetTotalMemberCount();
+				pVar->nAddr = pClassParent->nTotalMemberVarCount;
 			else
 				pVar->nAddr = 0;
 			pVar->nAddr += (int)k;
@@ -389,6 +411,8 @@ int CClassTable::StandardizeClassMember(string strMsg)
 	{
 		CClass	*pClass = m_vClass[i];
 
+		pClass->UpdateTotalMemberCount();
+
 		// Add constructor
 		if (!pClass->HasConstructor())
 		{
@@ -509,6 +533,13 @@ int CObjectMgr::New(CClass *pClass)
 	int			nPos = 0;
 	CJObject	*pNew = NULL;
 
+	m_nAllocCount++;
+	if (m_nAllocCount > GC_TRIGGER_COUNT)
+	{
+		m_nAllocCount = 0;
+		g_sjvm.GarbageCollect();
+	}
+
 	ASSERT(pClass->typeId != TID_STRING);
 
 	if (pClass->pJObojNewer)
@@ -517,7 +548,7 @@ int CObjectMgr::New(CClass *pClass)
 		pNew->m_typeId = pClass->typeId;
 	}
 	else
-		pNew = new CJObject(pClass->typeId, pClass->GetTotalMemberCount());
+		pNew = new CJObject(pClass->typeId, pClass->nTotalMemberVarCount);
 
 	CClass		*p = pClass;
 	while (p)
@@ -566,17 +597,6 @@ int CObjectMgr::NewString(LPCTSTR szString, bool bCopy)
 	}
 
 	return nPos;
-}
-
-void CObjectMgr::Free(int nPos, CClassTable &clsTable)
-{
-// 	ASSERT(nPos > 0 && nPos < m_vJObjects.size());
-// 	if (nPos > 0 && nPos < m_vJObjects.size())
-// 	{
-// 		// delete m_vJObjects[nPos];
-// 		m_vFreeJObjs.push_back(nPos);
-// 		m_vJObjects[nPos] = NULL;
-// 	}
 }
 
 CJObject *CObjectMgr::Get(int nPos)
@@ -714,6 +734,12 @@ int CSJVM::Compile(LPCTSTR szFile)
 	if (nRet != ERR_OK)
 		return nRet;
 
+	string		strMsg;
+
+	nRet = m_classTable.StandardizeClassMember(strMsg);
+	if (nRet != ERR_OK)
+		return nRet;
+
 	// build symbol table
 	nRet = BuildSymbolInfo();
 	if (nRet != ERR_OK)
@@ -774,6 +800,12 @@ int CSJVM::CompileFiles(VecString &vFiles)
 		vStnFiles.push_back(_syntaxTree);
 	}
 
+	string		strMsg;
+
+	nRet = m_classTable.StandardizeClassMember(strMsg);
+	if (nRet != ERR_OK)
+		return nRet;
+
 	for (i = 0; i < vFiles.size(); i++)
 	{
 		m_syntaxTree = vStnFiles[i];
@@ -811,7 +843,7 @@ int CSJVM::CompileFiles(VecString &vFiles)
 int CSJVM::Run()
 {
 	//
-	// Prepare for environment for run Virtual machine
+	// Prepare for environment for running Virtual machine
 	//
 	m_exeAction = EXE_GO_ON;
 	m_typeIdException = TID_INVALID;
@@ -840,6 +872,109 @@ int CSJVM::Run()
 		return ERR_R_NO_ENTRY_POINT;
 }
 
+class CSJVMGarbageCoolector
+{
+public:
+	typedef vector<bool>	VecBool;
+	CObjectMgr				*pObjMgr;
+
+	CSJVMGarbageCoolector(class CObjectMgr &objMgr)
+	{
+		pObjMgr = &objMgr;
+		vIsObjReferenced.resize(pObjMgr->m_vJObjects.size(), false);
+	}
+
+	void MarkUsed(int nJObj)
+	{
+		if ((size_t)nJObj >= vIsObjReferenced.size())
+		{
+			ASSERT(0 && "Invalid jobject variable");
+			return;
+		}
+		if (vIsObjReferenced[nJObj])
+			return;
+
+		vIsObjReferenced[nJObj] = true;
+
+		CJObject	*pObj = pObjMgr->m_vJObjects[nJObj];
+		ASSERT(pObj);
+		for (size_t i = 0; i < pObj->m_vMemberVar.size(); i++)
+		{
+			Variable	&var = pObj->m_vMemberVar[i];
+			if (!IsSimpleType(var.typeId) && var.nValue != JOBJ_NULL)
+			{
+				MarkUsed(var.nValue);
+			}
+		}
+	}
+
+	void CollectUnused()
+	{
+		pObjMgr->m_vFreeJObjs.clear();
+		int		nUsedEndPos;
+
+		for (nUsedEndPos = (int)vIsObjReferenced.size() - 1; nUsedEndPos > (int)g_sjvm.m_mapStrings.size(); nUsedEndPos--)
+		{
+			if (vIsObjReferenced[nUsedEndPos])
+				break;
+		}
+		nUsedEndPos++;
+		if (nUsedEndPos < (int)pObjMgr->m_vJObjects.size())
+		{
+			pObjMgr->m_vJObjects.resize(nUsedEndPos);
+			vIsObjReferenced.resize(nUsedEndPos);
+		}
+
+		// 0 ~ g_sjvm.m_mapStrings.size() is the static string.
+		for (size_t i = g_sjvm.m_mapStrings.size(); i < vIsObjReferenced.size(); i++)
+		{
+			if (!vIsObjReferenced[i])
+			{
+				CJObject	*pObj = pObjMgr->m_vJObjects[i];
+				if (pObj)
+				{
+					delete pObj;
+				}
+				pObjMgr->m_vFreeJObjs.push_back((int)i);
+			}
+		}
+	}
+
+public:
+	VecBool		vIsObjReferenced;
+
+};
+
+int CSJVM::GarbageCollect()
+{
+	size_t		i;
+	CSJVMGarbageCoolector	gc(m_jobjMgr);
+
+	_tprintf(_T("run Garbage Collect\n"));
+
+	// Add reference from stack and static variable
+	for (i = 0; i < m_stack.size(); i++)
+	{
+		Variable	&var = m_stack.m_vItems[i];
+		if (!IsSimpleType(var.typeId) && var.nValue != JOBJ_NULL)
+		{
+			gc.MarkUsed(var.nValue);
+		}
+	}
+
+	for (i = 0; i < m_vStaticVars.size(); i++)
+	{
+		StaticVar	&var = m_vStaticVars[i];
+		if (!IsSimpleType(var.typeId) && var.nValue != JOBJ_NULL)
+		{
+			gc.MarkUsed(var.nValue);
+		}
+	}
+
+	gc.CollectUnused();
+
+	return ERR_OK;
+}
 
 void CSJVM::FinishedInitSysModule()
 {
@@ -936,14 +1071,22 @@ CJObject *CSJVM::NewJObject(TypeId typeId, jobject &jobj)
 	return m_jobjMgr.Get(jobj);
 }
 
-int CSJVM::CallNativeAPI(CMemberMethod *pMethod, CVMParameters &parameters)
+int CSJVM::CallNativeAPI(CMemberMethod *pMethod, jobject thiz, CVMParameters &parameters)
 {
 	ASSERT(pMethod->pNativeFunc);
 	ASSERT(parameters.m_nCount <= CVMParameters::COUNT_MAX);
 
 	LPCVOID				vParameter[CVMParameters::COUNT_MAX];
+	size_t				pos = 0;
 
-	for (size_t i = 0; i < parameters.m_nCount; i++)
+	if (!pMethod->bStatic)
+	{
+		// Add this in stack first
+		vParameter[pos] = LPVOID(thiz);
+		pos++;
+	}
+
+	for (size_t i = 0; i < parameters.m_nCount; i++, pos++)
 	{
 		Variable	&item = parameters.m_vItems[i];
 		if (item.typeId == TID_STRING)
@@ -953,24 +1096,16 @@ int CSJVM::CallNativeAPI(CMemberMethod *pMethod, CVMParameters &parameters)
 			{
 				// valid input
 				CStrJObject	*pStrObj = (CStrJObject *)pObj;
-				vParameter[i] = pStrObj->GetStrValue();
+				vParameter[pos] = pStrObj->GetStrValue();
 			}
 			else
-				vParameter[i] = "";
+				vParameter[pos] = "";
 		}
 		else
-			vParameter[i] = LPVOID(item.nValue);
-/*		if (IsSimpleType(item.typeId))
-			vParameter[i] = LPVOID(item.nValue);
-		else if (item.typeId == TID_STRING)
-		{
-			
-		}
-		else
-			vParameter[i] = m_jobjMgr.Get(item.nValue);*/
+			vParameter[pos] = LPVOID(item.nValue);
 	}
 
-	int		nCount = (int)parameters.m_nCount - 1;
+	int		nCount = pos - 1;
 	LPVOID	pNativeFunc = pMethod->pNativeFunc;
 	int		nRet = 0;
 
@@ -1164,12 +1299,6 @@ int CSJVM::PreBSI_AddClassInformation()
 	}
 
 	m_varDeclStack.CleanStack();
-
-	string		strMsg;
-
-	nRet = m_classTable.StandardizeClassMember(strMsg);
-	if (nRet != ERR_OK)
-		return nRet;
 
 	return ERR_OK;
 }
@@ -2916,7 +3045,7 @@ int CSJVM::BCS_Tree(STreeNode *pTree, stmt_index &siOut)
 
 //////////////////////////////////////////////////////////////////////////
 
-#define LOG_CODE_EXE
+// #define LOG_CODE_EXE
 
 #ifdef LOG_CODE_EXE
 
@@ -3296,11 +3425,6 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 				nParentVarValue = ExecuteExpression(expr.functionCall.siParentVar);
 
 				pStmt = m_stmtImage.GetStmt(expr.functionCall.siParentVar);
-
-				// Push "this" pointer in stack first.
-				parameters.Push(nParentVarValue, pStmt->sExpression.typeId);
-
-				CE_LOG2(ps->nLineNo, "Method call This: %d, type: %d", nParentVarValue, pStmt->sExpression.typeId);
 			}
 
 			// Execute parameter expressions
@@ -3554,8 +3678,6 @@ int CSJVM::ExeNewJObject(StmtExpression &expr)
 	// New jobject
 	int		nJObj = m_jobjMgr.New(pClass);
 
-	parameters.Push(nJObj, expr.typeId);
-
 	// Execute parameter expressions
 	// And push parameter in stack
 	stmt_index siParameter = expr.newObj.siParameter;
@@ -3615,13 +3737,19 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParamete
 	{
 		// Call native member method.
 		if (pMethod->pNativeFunc)
-			m_valueMethodReturn = CallNativeAPI(pMethod, parameters);
+			m_valueMethodReturn = CallNativeAPI(pMethod, nJObject, parameters);
 		else
 			ASSERT(strcmp(pClass->strName.c_str(), pMethod->strName.c_str()) == 0);
 	}
 	else
 	{
 		m_bp = m_stack.size();
+
+		if (!pMethod->bStatic)
+		{
+			// push this
+			m_stack.Push(nJObject, typeId);
+		}
 
 		m_stack.Push(parameters);
 
