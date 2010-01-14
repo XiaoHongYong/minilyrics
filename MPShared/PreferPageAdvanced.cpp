@@ -299,7 +299,7 @@ public:
 class CPfItemWndOpacity : public CPreferItem
 {
 public:
-	CPfItemWndOpacity() : CPreferItem(_T("Window opaque percent(10 - 100)")) { }
+	CPfItemWndOpacity() : CPreferItem(_T("Window opaque percent (10 - 100)")) { }
 
 	virtual tstring GetValue() {
 		return CStrPrintf(_T("%d"), GetOpacity()).c_str();

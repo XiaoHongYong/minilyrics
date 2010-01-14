@@ -69,8 +69,8 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_UPLOAD_LYR"), CMD_UPLOAD_LYR, _T("Upload Lyrics...") },
 
 	{ _T("ID_SEARCH_LYRICS"), CMD_SEARCH_LYRICS, _T("Search Lyrics") },
-	{ _T("ID_BACKWARD_LYRICS"), CMD_BACKWARD_LYRICS, _T("Lyrics Backward 0.5 Sec(Up)") },
-	{ _T("ID_FORWARD_LYRICS"), CMD_FORWARD_LYRICS, _T("Lyrics Forward 0.5 Sec(Down)") },
+	{ _T("ID_BACKWARD_LYRICS"), CMD_BACKWARD_LYRICS, _T("Lyrics Backward 0.5 Sec (Up)") },
+	{ _T("ID_FORWARD_LYRICS"), CMD_FORWARD_LYRICS, _T("Lyrics Forward 0.5 Sec (Down)") },
 	{ _T("ID_DISPLAY_OPT"), CMD_DISPLAY_OPT, _T("Lyrics Display Options") },
 	{ _T("ID_HELP"), CMD_HELP, _T("Help and Support") },
 	{ _T("ID_PREVIOUS"), CMD_PREVIOUS, _T("Previous Track") },
@@ -130,7 +130,7 @@ STRING_ID_MAP g_StringIdMap[] =
 
 	{ _T("CMD_TOGGLE_MP"), CMD_TOGGLE_MP, _T("Bring to front/Hide $Product$") },
 	{ _T("CMD_PREFERENCES"), CMD_PREFERENCES, _T("Preferences") },
-	{ _T("CMD_COPY_SONG_FILE_LYR"), CMD_COPY_SONG_FILE_LYR, _T("Copy song and lyrics to ...") },
+	{ _T("CMD_COPY_SONG_FILE_LYR"), CMD_COPY_SONG_FILE_LYR, _T("Copy song file and lyrics to...") },
 	{ _T("CMD_RELOAD_LYR"), CMD_RELOAD_LYR, _T("Reload lyrics") },
 
 	{ _T("CMD_FLOATING_LYRICS"), CMD_FLOATING_LYRICS, _T("Floating Lyrics") },
