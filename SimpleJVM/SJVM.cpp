@@ -1111,7 +1111,7 @@ int CSJVM::CallNativeAPI(CMemberMethod *pMethod, jobject thiz, CVMParameters &pa
 			vParameter[pos] = LPVOID(item.nValue);
 	}
 
-	int		nCount = pos - 1;
+	int		nCount = (int)pos - 1;
 	LPVOID	pNativeFunc = pMethod->pNativeFunc;
 	int		nRet = 0;
 
