@@ -36,7 +36,7 @@ public:
 		SjvmSkinWndEvent::m_sOnCommand = nRet = pClass->AddNativeMethod(false, "onCommand", onCommand, TID_BOOLEAN, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		SjvmSkinWndEvent::m_sOnCreate = nRet = pClass->AddNativeMethod(false, "onCreate", onCreate, TID_VOID, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnCreate = nRet = pClass->AddNativeMethod(false, "onCreate", onCreate, TID_VOID, TID_SKIN_WND, TID_INVALID);
 		ASSERT(nRet != -1);
 
 		SjvmSkinWndEvent::m_sOnDestroy = nRet = pClass->AddNativeMethod(false, "onDestroy", onDestroy, TID_VOID, TID_INVALID);
@@ -78,11 +78,16 @@ boolean SjvmSkinWndEvent::onCommand(int nCmdId)
 	return false;
 }
 
-void SjvmSkinWndEvent::onCreate()
+void SjvmSkinWndEvent::onCreate(CSkinWnd *pWnd)
 {
 	if (m_sOnCreate >= 0)
 	{
 		CVMParameters	parameters;
+		jobject			jobj;
+		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm.NewJObject(TID_SKIN_WND, jobj);
+		ASSERT(pJObjSkinWnd);
+		pJObjSkinWnd->m_pSkinWnd = pWnd;
+		parameters.Push(jobj, TID_SKIN_WND);
 		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_sOnCreate, parameters);
 	}
 }
@@ -502,7 +507,7 @@ void CSjvmSkinSystem::OnSkinWndCreate(CSkinWnd *pSkinWnd)
 		{
 			pSkinWnd->SjvmSetNotifyEvent(pEvent);
 			pEvent->AddSkinWnd(pSkinWnd);
-			pEvent->onCreate();
+			pEvent->onCreate(pSkinWnd);
 		}
 	}
 }

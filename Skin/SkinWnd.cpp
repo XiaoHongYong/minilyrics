@@ -2148,7 +2148,7 @@ void CSkinWnd::OnSkinLoaded()
 		FocusNextUIObject();
 
 	if (m_pSjvmNotifyEvent)
-		m_pSjvmNotifyEvent->onCreate();
+		m_pSjvmNotifyEvent->onCreate(this);
 }
 
 void CSkinWnd::OnLoadWndSizePos()

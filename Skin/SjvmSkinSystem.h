@@ -16,7 +16,7 @@ public:
 
 	// Return true, the command will not be processed down.
 	boolean onCommand(int nCmdId);
-	void onCreate();
+	void onCreate(CSkinWnd *pWnd);
 	void onDestroy();
 	void onSize(int cx, int cy);
 	void onMove(int x, int y);

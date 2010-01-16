@@ -549,6 +549,8 @@ protected:
 	size_t						m_bp;		// base pointer of current function call.
 	int							m_valueMethodReturn;
 
+	int							m_nCallStackDeep;
+
 	// Static variables
 	VecStaticVar				m_vStaticVars;
 	size_t						m_nSysStaticVarsCount;

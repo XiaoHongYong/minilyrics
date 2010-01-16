@@ -14,7 +14,8 @@ TODO:
 
 #define FORMATLASTERROR(p1, p2, p3)		FormatLastError(p1, p2, p3, __LINE__)
 
-#define GC_TRIGGER_COUNT		100
+#define GC_TRIGGER_COUNT		1000
+#define MAX_CALL_STACK_DEEP		5000
 
 #define D_PRINT_SYNTAX_TREE
 
@@ -546,6 +547,8 @@ int CObjectMgr::New(CClass *pClass)
 	{
 		pNew = pClass->pJObojNewer->New();
 		pNew->m_typeId = pClass->typeId;
+		ASSERT((int)pNew->m_vMemberVar.size() <= pClass->nTotalMemberVarCount);
+		pNew->m_vMemberVar.resize(pClass->nTotalMemberVarCount);
 	}
 	else
 		pNew = new CJObject(pClass->typeId, pClass->nTotalMemberVarCount);
@@ -654,6 +657,8 @@ CSJVM::CSJVM(void)
 	InitSjvmLib();
 
 	m_bsiInLoop = false;
+	m_bp = 0;
+	m_nCallStackDeep = 0;
 }
 
 CSJVM::~CSJVM(void)
@@ -853,6 +858,7 @@ int CSJVM::Run()
 
 	m_stack.Resize(0);
 	m_bp = 0;
+	m_nCallStackDeep = 0;
 
 	m_varDeclStack.InitStaticVar(m_vStaticVars);
 
@@ -1081,7 +1087,7 @@ int CSJVM::CallNativeAPI(CMemberMethod *pMethod, jobject thiz, CVMParameters &pa
 
 	if (!pMethod->bStatic)
 	{
-		// Add this in stack first
+		// Add "this" in parameter first
 		vParameter[pos] = LPVOID(thiz);
 		pos++;
 	}
@@ -3140,6 +3146,7 @@ int CSJVM::Execute(stmt_index siEntry)
 					CE_AUTO_BLOCK("try", ps->nLineNo);
 					StmtTry	&sTry = ps->sTry;
 					size_t	sp = m_stack.size(), bp = m_bp;
+					int		nCallStackDeep = m_nCallStackDeep;
 
 					ASSERT(m_exeAction == EXE_GO_ON);
 					nRet = Execute(sTry.siTryStmt);
@@ -3147,6 +3154,7 @@ int CSJVM::Execute(stmt_index siEntry)
 					{
 						// Exception occurs, recover sp, and bp
 						m_bp = bp;
+						m_nCallStackDeep = nCallStackDeep;
 						m_stack.Resize(sp);
 						nRet = Execute(sTry.siCatch);
 					}
@@ -3732,6 +3740,10 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParamete
 	if (!pMethod)
 		return 0;
 
+	m_nCallStackDeep++;
+	if (m_nCallStackDeep > MAX_CALL_STACK_DEEP)
+		return 0;
+
 	m_valueMethodReturn = -1;
 	if (pMethod->siMethod == SI_INVALID)
 	{
@@ -3758,6 +3770,8 @@ int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParamete
 		if (pMethod->typeIDRet == TID_VOID)
 			m_valueMethodReturn = 0;
 	}
+
+	m_nCallStackDeep--;
 
 	// Recover bp, sp, and free object allocated in previous function of stack
 	m_stack.Resize(nSp);
