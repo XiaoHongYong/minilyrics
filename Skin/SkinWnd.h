@@ -325,6 +325,7 @@ protected:
 	void OnSwitchChildFocus(CUIObject *pUIObjFocusOld, CUIObject *pUIObjFocusNew);
 
 	friend class CSkinContainer;
+	friend class CSjvmSkinWnd;
 
 protected:
 	//

@@ -146,7 +146,7 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 				break;
 			}
 
-			if ((*szPtr) > 255 || !(IsAlpha(*szPtr) || IsDigit(*szPtr) 
+			if ((*szPtr) > 255 || !(isalpha(*szPtr) || IsDigit(*szPtr) || (*szPtr >= 127 && *szPtr <= 255)
 				|| *szPtr == '\'' || *szPtr == '\"' || *szPtr == '_' || *szPtr == '-'))
 				szLastBreak = szPtr;
 			szPtr++;

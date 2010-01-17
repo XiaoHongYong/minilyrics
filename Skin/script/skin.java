@@ -35,6 +35,9 @@ public class SkinWnd {
 	public native void setWndPosition(int x, int y);
 	public native void moveWindow(int x, int y, int width, int height);
 
+	public native int registerTimer(int timeOut);
+	public native void unregisterTimer(int nTimerId);
+
 }
 
 public class SkinSystemEvent {

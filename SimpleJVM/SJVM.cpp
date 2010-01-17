@@ -17,8 +17,6 @@ TODO:
 #define GC_TRIGGER_COUNT		1000
 #define MAX_CALL_STACK_DEEP		5000
 
-#define D_PRINT_SYNTAX_TREE
-
 CSJVM			g_sjvm;
 
 static LPTSTR dupStrT(LPCTSTR str)
@@ -750,9 +748,9 @@ int CSJVM::Compile(LPCTSTR szFile)
 	if (nRet != ERR_OK)
 		return nRet;
 
-#ifdef D_PRINT_SYNTAX_TREE
+#ifdef _DEBUG
 	int		nIndent = 0;
-	PrintSyntaxTree(m_syntaxTree, nIndent);
+//	PrintSyntaxTree(m_syntaxTree, nIndent);
 #endif
 
 	nRet = BuildCodeStmt();
@@ -764,7 +762,7 @@ int CSJVM::Compile(LPCTSTR szFile)
 	g_memSyntax.FreeAll();
 
 #ifdef _DEBUG
-	Print();
+//	Print();
 #endif
 
 	return ERR_OK;
@@ -820,22 +818,19 @@ int CSJVM::CompileFiles(VecString &vFiles)
 		if (nRet != ERR_OK)
 			return nRet;
 
-		#ifdef D_PRINT_SYNTAX_TREE
-			int		nIndent = 0;
-			PrintSyntaxTree(m_syntaxTree, nIndent);
-		#endif
-
-		#ifdef _DEBUG
-			Print();
-		#endif
+#ifdef _DEBUG
+		int		nIndent = 0;
+		// PrintSyntaxTree(m_syntaxTree, nIndent);
+		// Print();
+#endif
 
 			nRet = BuildCodeStmt();
 			if (nRet != ERR_OK)
 				return nRet;
 
-		#ifdef _DEBUG
-			Print();
-		#endif
+#ifdef _DEBUG
+		// Print();
+#endif
 	}
 
 	m_syntaxTree = NULL;

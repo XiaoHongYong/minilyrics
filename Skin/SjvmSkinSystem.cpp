@@ -10,6 +10,287 @@
 //////////////////////////////////////////////////////////////////////////
 
 
+class CSjvmSkinWnd : public CJObject
+{
+	DECLARE_JNI_OBJ(CSjvmSkinWnd)
+public:
+	CSjvmSkinWnd() : CJObject(m_sTypeId, 0)
+	{
+		m_pSkinWnd = NULL;
+	}
+	virtual ~CSjvmSkinWnd()
+	{
+		for (SetInt::iterator it = m_setTimers.begin(); it != m_setTimers.end(); ++it)
+		{
+			m_pSkinWnd->KillTimer(*it);
+		}
+		m_setTimers.clear();
+	}
+
+	static void RegisterJNI()
+	{
+		int		nRet;
+
+		// Add class members definition.
+		CClass *pClass = g_sjvm.GetClass(CLASS_NAME);
+		ASSERT(pClass);
+
+		pClass->AddNativeDefaultConstructor();
+
+		nRet = pClass->AddNativeMethod(false, "getUIObject", getUIObject, TID_UIOBJECT, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "setUIObjVisible", setUIObjVisible, TID_VOID, TID_INT, TID_BOOLEAN, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "getUIObjVisible", getUIObjVisible, TID_BOOLEAN, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "setUIObjProperty", setUIObjProperty, TID_VOID, TID_INT, TID_STRING, TID_STRING, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "setProperty", setProperty, TID_VOID, TID_STRING, TID_STRING, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "exeCommand", exeCommand, TID_VOID, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "getWndPositionX", getWndPositionX, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "getWndPositionY", getWndPositionY, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "getWndWidth", getWndWidth, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "getWndHeight", getWndHeight, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "setWndPosition", setWndPosition, TID_VOID, TID_INT, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "moveWindow", moveWindow, TID_VOID, TID_INT, TID_INT, TID_INT, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "registerTimer", registerTimer, TID_INT, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "unregisterTimer", unregisterTimer, TID_VOID, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+	}
+
+public:
+	static jobject SJNI_API getUIObject(jobject thiz, int nId)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return JOBJ_NULL;
+
+		CUIObject	*pObj = pSkinWnd->GetUIObjectById(nId);
+		if (!pObj)
+			return JOBJ_NULL;
+
+		jobject		jobj;
+		CSjvmUIObject *pJObj = (CSjvmUIObject*)g_sjvm.NewJObject(TID_UIOBJECT, jobj);
+		ASSERT(pJObj && pJObj->m_typeId == TID_UIOBJECT);
+
+		pJObj->m_pUIObject = pObj;
+		pJObj->m_pSkinWnd = pSkinWnd;
+
+		return jobj;
+	}
+
+	static void SJNI_API setUIObjVisible(jobject thiz, int nId, bool bVisible)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return;
+
+		CUIObject *pObj = pSkinWnd->GetUIObjectById(nId);
+		if (pObj)
+			pObj->SetVisible(bVisible);
+	}
+
+	static bool SJNI_API getUIObjVisible(jobject thiz, int nId)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return false;
+
+		CUIObject *pObj = pSkinWnd->GetUIObjectById(nId);
+		if (pObj)
+			return pObj->IsVisible();
+
+		return false;
+	}
+
+	static void SJNI_API setUIObjProperty(jobject thiz, int nId, LPCTSTR name, LPCTSTR value)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return;
+
+		CUIObject *pObj = pSkinWnd->GetUIObjectById(nId);
+		if (pObj)
+			pObj->SetProperty(name, value);
+	}
+
+	static void SJNI_API setProperty(jobject thiz, LPCTSTR name, LPCTSTR value)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return;
+
+		pSkinWnd->SetProperty(name, value);
+	}
+
+	static void SJNI_API exeCommand(jobject thiz, int nCmdId)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return;
+
+		pSkinWnd->OnCustomCommand(nCmdId);
+	}
+
+	static int SJNI_API getWndPositionX(jobject thiz)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return 0;
+
+		return pSkinWnd->m_rcBoundBox.left;
+	}
+
+	static int SJNI_API getWndPositionY(jobject thiz)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return 0;
+
+		return pSkinWnd->m_rcBoundBox.top;
+	}
+
+	static int SJNI_API getWndWidth(jobject thiz)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return 0;
+
+		return pSkinWnd->m_rcBoundBox.Width();
+	}
+
+	static int SJNI_API getWndHeight(jobject thiz)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return 0;
+
+		return pSkinWnd->m_rcBoundBox.Height();
+	}
+
+	static void SJNI_API setWndPosition(jobject thiz, int x, int y)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return;
+
+		pSkinWnd->SetWindowPos(x, y);
+	}
+
+	static void SJNI_API moveWindow(jobject thiz, int x, int y, int width, int height)
+	{
+		CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
+		ASSERT(pSkinWnd);
+		if (!pSkinWnd)
+			return;
+
+		pSkinWnd->MoveWindow(x, y, width, height, true);
+	}
+
+	static int SJNI_API registerTimer(jobject thiz, int nTimeOut)
+	{
+		CSjvmSkinWnd	*pThis = GetThis(thiz);
+		ASSERT(pThis);
+		if (!pThis)
+			return 0;
+
+		CSkinWnd		*pSkinWnd = pThis->m_pSkinWnd;
+
+		int		nTimerId = pSkinWnd->m_nTimerIDMax;
+		pSkinWnd->m_nTimerIDMax++;
+		pThis->m_setTimers.insert(nTimerId);
+
+		pSkinWnd->SetTimer(nTimerId, nTimeOut);
+
+		return nTimerId;
+	}
+
+	static void SJNI_API unregisterTimer(jobject thiz, int nTimerId)
+	{
+		CSjvmSkinWnd	*pThis = GetThis(thiz);
+		ASSERT(pThis);
+		if (!pThis)
+			return;
+
+		CSkinWnd		*pSkinWnd = pThis->m_pSkinWnd;
+
+		pThis->m_setTimers.erase(nTimerId);
+
+		pSkinWnd->KillTimer(nTimerId);
+	}
+
+protected:
+	static CSkinWnd *GetSkinWndOfThis(jobject thiz)
+	{
+		CSjvmSkinWnd	*pThis = (CSjvmSkinWnd*)g_sjvm.GetJObject(thiz);
+		ASSERT(pThis && pThis->m_sTypeId == TID_SKIN_WND);
+		if (!pThis)
+			return NULL;
+
+		ASSERT(pThis->m_pSkinWnd && CSjvmSkinSystem::m_pSkinFactory->IsValidSkinWnd(pThis->m_pSkinWnd));
+		if (!CSjvmSkinSystem::m_pSkinFactory->IsValidSkinWnd(pThis->m_pSkinWnd))
+			return NULL;
+
+		return pThis->m_pSkinWnd;
+	}
+
+	static CSjvmSkinWnd *GetThis(jobject thiz)
+	{
+		CSjvmSkinWnd	*pThis = (CSjvmSkinWnd*)g_sjvm.GetJObject(thiz);
+		ASSERT(pThis && pThis->m_sTypeId == TID_SKIN_WND);
+		if (!pThis)
+			return NULL;
+
+		ASSERT(pThis->m_pSkinWnd && CSjvmSkinSystem::m_pSkinFactory->IsValidSkinWnd(pThis->m_pSkinWnd));
+		if (!CSjvmSkinSystem::m_pSkinFactory->IsValidSkinWnd(pThis->m_pSkinWnd))
+			return NULL;
+
+		return pThis;
+	}
+
+public:
+	CSkinWnd				*m_pSkinWnd;
+	SetInt					m_setTimers;
+
+};
+
+IMPLENENT_JNI_OBJ(CSjvmSkinWnd, "SkinWnd")
+
+//////////////////////////////////////////////////////////////////////////
+
 class CSjvmSkinWndEventObj : public CJObject
 {
 	DECLARE_JNI_OBJ(CSjvmSkinWndEventObj)
@@ -22,6 +303,7 @@ public:
 	static void SJNI_API onSize(jobject thiz, int cx, int cy) { }
 	static void SJNI_API onMove(jobject thiz, int x, int y) { }
 	static void SJNI_API onActivate(jobject thiz, boolean bActived) { }
+	static void SJNI_API onTimer(jobject thiz, int nTimerId) { }
 
 	static void RegisterJNI()
 	{
@@ -50,6 +332,9 @@ public:
 
 		SjvmSkinWndEvent::m_sOnActivate = nRet = pClass->AddNativeMethod(false, "onActivate", onActivate, TID_VOID, TID_BOOLEAN, TID_INVALID);
 		ASSERT(nRet != -1);
+
+		SjvmSkinWndEvent::m_sOnTimer = nRet = pClass->AddNativeMethod(false, "onTimer", onTimer, TID_VOID, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
 	}
 
 };
@@ -66,7 +351,7 @@ int		SjvmSkinWndEvent::m_sOnMove = 0;
 int		SjvmSkinWndEvent::m_sOnActivate = 0;
 
 // Return true, the command will not be processed down.
-boolean SjvmSkinWndEvent::onCommand(int nCmdId)
+bool SjvmSkinWndEvent::onCommand(int nCmdId)
 {
 	if (m_sOnCommand >= 0)
 	{
@@ -120,6 +405,14 @@ void SjvmSkinWndEvent::onActivate(boolean bActived)
 	}
 }
 
+void SjvmSkinWndEvent::onTimer(int nTimerId)
+{
+	if (m_sOnTimer >= 0)
+	{
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnTimer, TID_INT, nTimerId);
+	}
+}
+
 SjvmSkinWndEvent::~SjvmSkinWndEvent()
 {
 	g_sjvm.JniReleaseJObjRef(m_jobject);
@@ -154,137 +447,6 @@ void CSjvmUIObject::RegisterJNI()
 {
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-
-IMPLENENT_JNI_OBJ(CSjvmSkinWnd, "SkinWnd")
-
-CSjvmSkinWnd::CSjvmSkinWnd() : CJObject(m_sTypeId, 0)
-{
-	m_pSkinWnd = NULL;
-}
-
-void CSjvmSkinWnd::RegisterJNI()
-{
-	int		nRet;
-
-	// Add class members definition.
-	CClass *pClass = g_sjvm.GetClass(CLASS_NAME);
-	ASSERT(pClass);
-
-	pClass->AddNativeDefaultConstructor();
-
-	nRet = pClass->AddNativeMethod(false, "getUIObject", getUIObject, TID_UIOBJECT, TID_INT, TID_INVALID);
-	ASSERT(nRet != -1);
-
-	nRet = pClass->AddNativeMethod(false, "setUIObjVisible", setUIObjVisible, TID_VOID, TID_INT, TID_BOOLEAN, TID_INVALID);
-	ASSERT(nRet != -1);
-
-	nRet = pClass->AddNativeMethod(false, "getUIObjVisible", getUIObjVisible, TID_BOOLEAN, TID_INT, TID_INVALID);
-	ASSERT(nRet != -1);
-
-	nRet = pClass->AddNativeMethod(false, "setUIObjProperty", setUIObjProperty, TID_VOID, TID_INT, TID_STRING, TID_STRING, TID_INVALID);
-	ASSERT(nRet != -1);
-
-	nRet = pClass->AddNativeMethod(false, "setProperty", setProperty, TID_VOID, TID_STRING, TID_STRING, TID_INVALID);
-	ASSERT(nRet != -1);
-
-	nRet = pClass->AddNativeMethod(false, "exeCommand", exeCommand, TID_VOID, TID_INT, TID_INVALID);
-	ASSERT(nRet != -1);
-}
-
-CSkinWnd *CSjvmSkinWnd::GetSkinWndOfThis(jobject thiz)
-{
-	CSjvmSkinWnd	*pThis = (CSjvmSkinWnd*)g_sjvm.GetJObject(thiz);
-	ASSERT(pThis && pThis->m_sTypeId == TID_SKIN_WND);
-	if (!pThis)
-		return NULL;
-
-	ASSERT(pThis->m_pSkinWnd && CSjvmSkinSystem::m_pSkinFactory->IsValidSkinWnd(pThis->m_pSkinWnd));
-	if (!CSjvmSkinSystem::m_pSkinFactory->IsValidSkinWnd(pThis->m_pSkinWnd))
-		return NULL;
-
-	return pThis->m_pSkinWnd;
-}
-
-jobject SJNI_API CSjvmSkinWnd::getUIObject(jobject thiz, int nId)
-{
-	CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
-	ASSERT(pSkinWnd);
-	if (!pSkinWnd)
-		return JOBJ_NULL;
-
-	CUIObject	*pObj = pSkinWnd->GetUIObjectById(nId);
-	if (!pObj)
-		return JOBJ_NULL;
-
-	jobject		jobj;
-	CSjvmUIObject *pJObj = (CSjvmUIObject*)g_sjvm.NewJObject(TID_UIOBJECT, jobj);
-	ASSERT(pJObj && pJObj->m_typeId == TID_UIOBJECT);
-
-	pJObj->m_pUIObject = pObj;
-	pJObj->m_pSkinWnd = pSkinWnd;
-
-	return jobj;
-}
-
-void SJNI_API CSjvmSkinWnd::setUIObjVisible(jobject thiz, int nId, bool bVisible)
-{
-	CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
-	ASSERT(pSkinWnd);
-	if (!pSkinWnd)
-		return;
-
-	CUIObject *pObj = pSkinWnd->GetUIObjectById(nId);
-	if (pObj)
-		pObj->SetVisible(bVisible);
-}
-
-bool SJNI_API CSjvmSkinWnd::getUIObjVisible(jobject thiz, int nId)
-{
-	CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
-	ASSERT(pSkinWnd);
-	if (!pSkinWnd)
-		return false;
-
-	CUIObject *pObj = pSkinWnd->GetUIObjectById(nId);
-	if (pObj)
-		return pObj->IsVisible();
-
-	return false;
-}
-
-void SJNI_API CSjvmSkinWnd::setUIObjProperty(jobject thiz, int nId, LPCTSTR name, LPCTSTR value)
-{
-	CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
-	ASSERT(pSkinWnd);
-	if (!pSkinWnd)
-		return;
-
-	CUIObject *pObj = pSkinWnd->GetUIObjectById(nId);
-	if (pObj)
-		pObj->SetProperty(name, value);
-}
-
-void SJNI_API CSjvmSkinWnd::setProperty(jobject thiz, LPCTSTR name, LPCTSTR value)
-{
-	CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
-	ASSERT(pSkinWnd);
-	if (!pSkinWnd)
-		return;
-
-	pSkinWnd->SetProperty(name, value);
-}
-
-void SJNI_API CSjvmSkinWnd::exeCommand(jobject thiz, int nCmdId)
-{
-	CSkinWnd	*pSkinWnd = GetSkinWndOfThis(thiz);
-	ASSERT(pSkinWnd);
-	if (!pSkinWnd)
-		return;
-
-	pSkinWnd->OnCustomCommand(nCmdId);
-}
 
 //////////////////////////////////////////////////////////////////////////
 

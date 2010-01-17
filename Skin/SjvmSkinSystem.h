@@ -7,6 +7,7 @@ class CUIObject;
 class CSkinFactory;
 class CSkinWnd;
 
+typedef std::set<int>		SetInt;
 
 class SjvmSkinWndEvent
 {
@@ -15,12 +16,13 @@ public:
 	virtual ~SjvmSkinWndEvent();
 
 	// Return true, the command will not be processed down.
-	boolean onCommand(int nCmdId);
+	bool onCommand(int nCmdId);
 	void onCreate(CSkinWnd *pWnd);
 	void onDestroy();
 	void onSize(int cx, int cy);
 	void onMove(int x, int y);
 	void onActivate(boolean bActived);
+	void onTimer(int nTimerId);
 
 	void AddSkinWnd(CSkinWnd *pWnd);
 	void RemoveSkinWnd(CSkinWnd *pWnd);
@@ -38,6 +40,7 @@ protected:
 	static int		m_sOnSize;
 	static int		m_sOnMove;
 	static int		m_sOnActivate;
+	static int		m_sOnTimer;
 
 };
 
@@ -54,41 +57,6 @@ public:
 public:
 	CUIObject		*m_pUIObject;
 	CSkinWnd		*m_pSkinWnd;
-
-};
-
-class CSjvmSkinWnd : public CJObject
-{
-	DECLARE_JNI_OBJ(CSjvmSkinWnd)
-public:
-	CSjvmSkinWnd();
-
-	static void RegisterJNI();
-
-public:
-	static jobject SJNI_API getUIObject(jobject thiz, int nId);
-	static void SJNI_API setUIObjVisible(jobject thiz, int nId, bool bVisible);
-	static bool SJNI_API getUIObjVisible(jobject thiz, int nId);
-
-	static void SJNI_API setUIObjProperty(jobject thiz, int nId, LPCTSTR name, LPCTSTR value);
-
-	static void SJNI_API setProperty(jobject thiz, LPCTSTR name, LPCTSTR value);
-
-	static void SJNI_API exeCommand(jobject thiz, int nCmdId);
-
-	static int SJNI_API getWndPositionX(jobject thiz);
-	static int SJNI_API getWndPositionY(jobject thiz);
-	static int SJNI_API getWndWidth(jobject thiz);
-	static int SJNI_API getWndHeight(jobject thiz);
-
-	static void SJNI_API setWndPosition(jobject thiz, int x, int y);
-	static void SJNI_API moveWindow(jobject thiz, int x, int y, int width, int height);
-
-protected:
-	static CSkinWnd *GetSkinWndOfThis(jobject thiz);
-
-public:
-	CSkinWnd				*m_pSkinWnd;
 
 };
 
