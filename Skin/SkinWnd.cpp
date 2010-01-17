@@ -1660,6 +1660,8 @@ bool CSkinWnd::OnCreate()
 	if (!m_wndToolTip.Create(this))
 		return false;
 
+	m_pSkinFactory->OnSkinWndCreate(this);
+
 	m_WndDrag.Init(this, this);//, arrszClassCloseTo);
 	m_wndResizer.Init(this, this);//, arrszClassCloseTo, this);
 
@@ -2147,6 +2149,8 @@ void CSkinWnd::OnSkinLoaded()
 	if (GetFocusUIObj() == NULL)
 		FocusNextUIObject();
 
+	CSjvmSkinSystem::OnSkinWndCreate(this);
+
 	if (m_pSjvmNotifyEvent)
 		m_pSjvmNotifyEvent->onCreate(this);
 }
@@ -2470,8 +2474,6 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	m_pSkinFactory->GetResourceMgr()->GetAdjustHueParam(hue, saturation, luminance);
 	if (hue != 0.0f)
 		OnAdjustHue(hue, saturation, luminance);
-
-	CSjvmSkinSystem::OnSkinWndCreate(this);
 
 	m_bCanUpdateWnd = true;
 

@@ -977,7 +977,6 @@ int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCa
 	{
 		if (ppSkin)
 			*ppSkin = pSkin;
-		m_listSkinWnds.push_back(pSkin);
 #ifdef _WIN32
 		if (!bMainWnd)
 			ShowAsToolWindow(pSkin->GetHandle());
@@ -1014,6 +1013,21 @@ int CSkinFactory::CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCT
 	}
 
 	return nRet;
+}
+
+void CSkinFactory::OnSkinWndCreate(CSkinWnd *pSkinWnd)
+{
+	LIST_SKINWNDS::iterator	it;
+
+#ifdef _DEBUG
+	for (it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
+	{
+		CSkinWnd	*pSkin = *it;
+		ASSERT(pSkin != pSkinWnd);
+	}
+#endif
+
+	m_listSkinWnds.push_back(pSkinWnd);
 }
 
 void CSkinFactory::OnSkinWndDestory(CSkinWnd *pSkinWnd)

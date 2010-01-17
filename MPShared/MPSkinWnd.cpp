@@ -965,8 +965,6 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 
 void CMPSkinWnd::OnSkinLoaded()
 {
-	m_autoSwitchToLyrShow.OnCreate(this);
-
 	CSkinWnd::OnSkinLoaded();
 
 	// load new skin command handler
@@ -1002,6 +1000,8 @@ void CMPSkinWnd::OnSkinLoaded()
 		pBt->SetStatus(1);
 
 	UpdateVolumeCtrl();
+
+	m_autoSwitchToLyrShow.OnCreate(this);
 }
 
 void CMPSkinWnd::OnLoadWndSizePos()

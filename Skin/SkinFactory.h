@@ -163,6 +163,7 @@ public:
 	virtual int CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
 	virtual int CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndNameDef, CSkinWnd **ppSkin = NULL);
 
+	virtual void OnSkinWndCreate(CSkinWnd *pSkinWnd);
 	virtual void OnSkinWndDestory(CSkinWnd *pSkinWnd);
 
 	virtual void OnMainSkinWndDestory(CSkinWnd *pSkinWnd);
