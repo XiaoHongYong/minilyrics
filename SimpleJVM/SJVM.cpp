@@ -977,6 +977,12 @@ int CSJVM::GarbageCollect()
 		}
 	}
 
+	for (MapJobjRef::iterator it = m_mapJobjRef.begin(); it != m_mapJobjRef.end(); ++it)
+	{
+		ASSERT((*it).first != JOBJ_NULL);
+		gc.MarkUsed((*it).first);
+	}
+
 	gc.CollectUnused();
 
 	return ERR_OK;
@@ -1077,24 +1083,26 @@ CJObject *CSJVM::NewJObject(TypeId typeId, jobject &jobj)
 	return m_jobjMgr.Get(jobj);
 }
 
-int CSJVM::CallNativeAPI(CMemberMethod *pMethod, jobject thiz, CVMParameters &parameters)
+int CSJVM::CallNativeAPI(CMemberMethod *pMethod)
 {
 	ASSERT(pMethod->pNativeFunc);
-	ASSERT(parameters.m_nCount <= CVMParameters::COUNT_MAX);
 
 	LPCVOID				vParameter[CVMParameters::COUNT_MAX];
 	size_t				pos = 0;
+	size_t				nParamCount = m_stack.size() - m_bp;
+
+	ASSERT(nParamCount <= CVMParameters::COUNT_MAX);
 
 	if (!pMethod->bStatic)
 	{
 		// Add "this" in parameter first
-		vParameter[pos] = LPVOID(thiz);
+		vParameter[0] = LPVOID(m_stack.Get(m_bp).nValue);
 		pos++;
 	}
 
-	for (size_t i = 0; i < parameters.m_nCount; i++, pos++)
+	for (; pos < nParamCount; pos++)
 	{
-		Variable	&item = parameters.m_vItems[i];
+		Variable	&item = m_stack.Get(m_bp + pos);
 		if (item.typeId == TID_STRING)
 		{
 			CJObject	*pObj = m_jobjMgr.Get(item.nValue);
@@ -1111,14 +1119,15 @@ int CSJVM::CallNativeAPI(CMemberMethod *pMethod, jobject thiz, CVMParameters &pa
 			vParameter[pos] = LPVOID(item.nValue);
 	}
 
-	int		nCount = (int)pos - 1;
 	LPVOID	pNativeFunc = pMethod->pNativeFunc;
 	int		nRet = 0;
+
+	nParamCount--;
 
 	__asm
 	{
 		// Push all parameters in stack
-		mov         eax,	dword ptr [nCount]
+		mov         eax,	dword ptr [nParamCount]
 ParamStart:
 		cmp         eax,	0 
 		jl          Param_end
@@ -3173,7 +3182,7 @@ int CSJVM::Execute(stmt_index siEntry)
 						m_exeAction = EXE_GO_ON;
 
 						// Exception variable is at top of stack, just push it.
-						m_stack.Push(m_jobjException, m_typeIdException);
+						m_stack.Push(m_typeIdException, m_jobjException);
 
 						nRet = Execute(sCatch.siCatchStmt);
 
@@ -3323,7 +3332,7 @@ int CSJVM::Execute(stmt_index siEntry)
 			case ST_PUSH_STACK:
 				{
 					StmtStackPush	&sStackPush = ps->sStackPush;
-					m_stack.Push(0, sStackPush.typeIdVar);
+					m_stack.Push(sStackPush.typeIdVar, 0);
 				}
 				break;
 			case ST_EXPRESSION:
@@ -3425,15 +3434,26 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 		{
 			Statement		*pStmt;
 			int				nParentVarValue = 0;
-			CVMParameters	parameters;
+			TypeId			typeIdMethod = TID_INVALID;
 
 			if (!expr.functionCall.bStatic)
 			{
 				ASSERT(expr.functionCall.siParentVar != SI_INVALID);
 				nParentVarValue = ExecuteExpression(expr.functionCall.siParentVar);
 
-				pStmt = m_stmtImage.GetStmt(expr.functionCall.siParentVar);
+				CJObject	*pObj = m_jobjMgr.Get(nParentVarValue);
+				ASSERT(pObj);
+				if (!pObj)
+				{
+					ThrowException(_T("Call method of this is null."));
+					return 0;
+				}
+				typeIdMethod = pObj->m_typeId;
+
+				m_stack.Push(typeIdMethod, nParentVarValue);
 			}
+			else
+				typeIdMethod = expr.functionCall.typeIdSpecialfiedClass;
 
 			// Execute parameter expressions
 			stmt_index		siParameter = expr.functionCall.siParameter;
@@ -3446,7 +3466,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 				int		nParamValue = ExecuteExpression(siParameter);
 
 				// Push value in stack
-				parameters.Push(nParamValue, pStmt->sExpression.typeId);
+				m_stack.Push(pStmt->sExpression.typeId, nParamValue);
 
 				CE_LOG2(ps->nLineNo, "Method Parameter: %d, type: %d", nParamValue, pStmt->sExpression.typeId);
 
@@ -3455,7 +3475,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 
 			// Call method
 			int		nRet;
-			nRet = CallMethod(expr.functionCall.typeIdSpecialfiedClass, nParentVarValue, expr.functionCall.nMemberIndex, parameters);
+			nRet = CallMethod(typeIdMethod, expr.functionCall.nMemberIndex);
 
 			CE_LOG1(ps->nLineNo, "Call Method: return: %d", nRet);
 
@@ -3681,10 +3701,10 @@ int CSJVM::ExeNewJObject(StmtExpression &expr)
 	if (!pClass)
 		return 0;
 
-	CVMParameters	parameters;
-
 	// New jobject
 	int		nJObj = m_jobjMgr.New(pClass);
+
+	m_stack.Push(expr.typeId, nJObj);
 
 	// Execute parameter expressions
 	// And push parameter in stack
@@ -3696,7 +3716,7 @@ int CSJVM::ExeNewJObject(StmtExpression &expr)
 		int		nParamValue = ExecuteExpression(siParameter);
 
 		// Push value in stack
-		parameters.Push(nParamValue, pStmt->sExpression.typeId);
+		m_stack.Push(pStmt->sExpression.typeId, nParamValue);
 
 		siParameter = m_stmtImage.GetNext(siParameter);
 	}
@@ -3711,60 +3731,54 @@ int CSJVM::ExeNewJObject(StmtExpression &expr)
 
 	CE_LOG3(pMethod->nLineNo, "Call Constructor: type: %d, JObj: %d, Constructor Index: %d", expr.typeId, nJObj, expr.newObj.nMemberIndex);
 
-	CallMethod(expr.typeId, nJObj, expr.newObj.nMemberIndex, parameters);
+	CallMethod(expr.typeId, expr.newObj.nMemberIndex);
 
 	return nJObj;
 }
 
-int CSJVM::CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParameters &parameters)
+int CSJVM::CallMethod(TypeId typeId, int nMethodIndex)
 {
 	// Save bp, sp
 	size_t				nBp, nSp;
 	nBp = m_bp;
-	nSp = m_stack.size();
-
-	if (typeId == TID_INVALID)
-	{
-		CJObject	*pObj = m_jobjMgr.Get(nJObject);
-		ASSERT(pObj);
-		if (!pObj)
-			return 0;
-		typeId = pObj->m_typeId;
-	}
 
 	CClass *pClass = m_classTable.GetClass(typeId);
 	if (!pClass)
+	{
+		ThrowException(_T("CallMethod: Invalid class."));
 		return 0;
+	}
 
 	CMemberMethod *pMethod = pClass->GetMethod(nMethodIndex);
 	if (!pMethod)
+	{
+		ThrowException(_T("Call Method: Invalid method index."));
 		return 0;
+	}
 
 	m_nCallStackDeep++;
 	if (m_nCallStackDeep > MAX_CALL_STACK_DEEP)
+	{
+		ThrowException(_T("Call Method: Call stack deep reached MAX_CALL_STACK_DEEP."));
 		return 0;
+	}
+
+	m_bp = m_stack.size() - pMethod->vParamType.size();
+	if (!pMethod->bStatic)
+		m_bp--;
+	nSp = m_bp;
 
 	m_valueMethodReturn = -1;
 	if (pMethod->siMethod == SI_INVALID)
 	{
 		// Call native member method.
 		if (pMethod->pNativeFunc)
-			m_valueMethodReturn = CallNativeAPI(pMethod, nJObject, parameters);
+			m_valueMethodReturn = CallNativeAPI(pMethod);
 		else
 			ASSERT(strcmp(pClass->strName.c_str(), pMethod->strName.c_str()) == 0);
 	}
 	else
 	{
-		m_bp = m_stack.size();
-
-		if (!pMethod->bStatic)
-		{
-			// push this
-			m_stack.Push(nJObject, typeId);
-		}
-
-		m_stack.Push(parameters);
-
 		// Return value is in m_valueMethodReturn.
 		Execute(pMethod->siMethod);
 		if (pMethod->typeIDRet == TID_VOID)
@@ -3791,6 +3805,68 @@ void CSJVM::ThrowException(LPCTSTR szException)
 	{
 		CSjobjException	*pObjException = (CSjobjException *)pJObject;
 		pObjException->strException = szException;
+	}
+}
+
+int CSJVM::JniCallMethod(TypeId typeId, jobject thiz, int nMethodIndex, CVMParameters &parameter)
+{
+	JniCallMethodPushThis(typeId, thiz);
+
+	m_stack.Push(parameter);
+
+	return CallMethod(typeId, nMethodIndex);
+}
+
+int CSJVM::JniCallMethod(TypeId typeId, jobject thiz, int nMethodIndex)
+{
+	JniCallMethodPushThis(typeId, thiz);
+
+	return CallMethod(typeId, nMethodIndex);
+}
+
+int CSJVM::JniCallMethod(TypeId typeId, jobject thiz, int nMethodIndex, TypeId tidParam1, jobject param1)
+{
+	JniCallMethodPushThis(typeId, thiz);
+
+	m_stack.Push(tidParam1, param1);
+
+	return CallMethod(typeId, nMethodIndex);
+}
+
+int CSJVM::JniCallMethod(TypeId typeId, jobject thiz, int nMethodIndex, TypeId tidParam1, jobject param1, TypeId tidParam2, jobject param2)
+{
+	JniCallMethodPushThis(typeId, thiz);
+
+	m_stack.Push(tidParam1, param1);
+	m_stack.Push(tidParam2, param2);
+
+	return CallMethod(typeId, nMethodIndex);
+}
+
+void CSJVM::JniAddJObjRef(jobject jobj)
+{
+	ASSERT(jobj != JOBJ_NULL);
+
+	MapJobjRef::iterator it = m_mapJobjRef.find(jobj);
+	if (it == m_mapJobjRef.end())
+		m_mapJobjRef[jobj] = 1;
+	else
+		(*it).second++;
+}
+
+void CSJVM::JniReleaseJObjRef(jobject jobj)
+{
+	MapJobjRef::iterator it = m_mapJobjRef.find(jobj);
+	if (it == m_mapJobjRef.end())
+	{
+		ASSERT(0 && "Invalid JObject Reference.");
+	}
+	else
+	{
+		if ((*it).second == 1)
+			m_mapJobjRef.erase(it);
+		else
+			(*it).second--;
 	}
 }
 

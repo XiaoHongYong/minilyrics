@@ -72,6 +72,7 @@ typedef vector<TypeId>		VecParamType;
 typedef vector<int>			VecInt;
 typedef vector<bool>		VecBool;
 typedef vector<tstring>		VecString;
+typedef map<jobject, int>	MapJobjRef;
 
 typedef map<tstring, int>	MapStrIndex;
 
@@ -343,7 +344,7 @@ public:
 		Variable i; i.nValue = nValue; i.typeId = typeId; m_vItems.insert(m_vItems.begin() + nPos, i);
 	}
 
-	void Push(int nValue, TypeId typeId) { 
+	void Push(TypeId typeId, int nValue) { 
 		Variable i; i.nValue = nValue; i.typeId = typeId; m_vItems.push_back(i); }
 	void Pop() { m_vItems.pop_back(); }
 	void PopN(size_t n) {
@@ -382,7 +383,7 @@ public:
 
 	CVMParameters() { m_nCount = 0; }
 
-	void Push(int nValue, TypeId typeId) { 
+	void Push(TypeId typeId, int nValue) { 
 		ASSERT(m_nCount < COUNT_MAX);
 		m_vItems[m_nCount].nValue = nValue;
 		m_vItems[m_nCount].typeId = typeId;
@@ -427,9 +428,17 @@ public:
 	CClass *GetClass(LPCSTR szClassName) { return m_classTable.GetClass(szClassName); }
 	CClassTable &GetClassTable() { return m_classTable; }
 
-	int CallMethod(TypeId typeId, int nJObject, int nMethodIndex, CVMParameters &parameters);
+	int CallMethod(TypeId typeId, int nMethodIndex);
 
 	void ThrowException(LPCTSTR szException);
+
+	int JniCallMethod(TypeId typeId, jobject thiz, int nMethodIndex, CVMParameters &parameter);
+	int JniCallMethod(TypeId typeId, jobject thiz, int nMethodIndex);
+	int JniCallMethod(TypeId typeId, jobject thiz, int nMethodIndex, TypeId tidParam1, jobject param1);
+	int JniCallMethod(TypeId typeId, jobject thiz, int nMethodIndex, TypeId tidParam1, jobject param1, TypeId tidParam2, jobject param2);
+
+	void JniAddJObjRef(jobject jobj);
+	void JniReleaseJObjRef(jobject jobj);
 
 protected:
 	//
@@ -486,12 +495,30 @@ protected:
 
 	int ExeNewJObject(StmtExpression &expr);
 
-	int CallNativeAPI(CMemberMethod *pMethod, jobject thiz, CVMParameters &parameters);
+	int CallNativeAPI(CMemberMethod *pMethod);
 
 	int GetStaticVarValue(size_t nAddress);
 	int GetJObjectMemberVarValue(int nJobject, int nMember);
 
 	int *GetJObjectMemberVarAddr(int nJobject, int nMember);
+
+	void JniCallMethodPushThis(TypeId &typeId, jobject thiz)
+	{
+		if (typeId == TID_INVALID)
+		{
+			CJObject	*pObj = m_jobjMgr.Get(thiz);
+			ASSERT(pObj);
+			if (!pObj)
+			{
+				ThrowException(_T("Call method of this is null."));
+				return;
+			}
+			typeId = pObj->m_typeId;
+		}
+
+		if (thiz != JOBJ_NULL)
+			m_stack.Push(typeId, thiz);
+	}
 
 protected:
 
@@ -550,6 +577,7 @@ protected:
 	int							m_valueMethodReturn;
 
 	int							m_nCallStackDeep;
+	MapJobjRef					m_mapJobjRef;
 
 	// Static variables
 	VecStaticVar				m_vStaticVars;

@@ -70,9 +70,7 @@ boolean SjvmSkinWndEvent::onCommand(int nCmdId)
 {
 	if (m_sOnCommand >= 0)
 	{
-		CVMParameters	parameters;
-		parameters.Push(nCmdId, TID_INT);
-		return Tobool(g_sjvm.CallMethod(TID_INVALID, m_jobject, m_sOnCommand, parameters));
+		return Tobool(g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnCommand, TID_INT, nCmdId));
 	}
 
 	return false;
@@ -82,13 +80,11 @@ void SjvmSkinWndEvent::onCreate(CSkinWnd *pWnd)
 {
 	if (m_sOnCreate >= 0)
 	{
-		CVMParameters	parameters;
 		jobject			jobj;
 		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm.NewJObject(TID_SKIN_WND, jobj);
 		ASSERT(pJObjSkinWnd);
 		pJObjSkinWnd->m_pSkinWnd = pWnd;
-		parameters.Push(jobj, TID_SKIN_WND);
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_sOnCreate, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnCreate, TID_SKIN_WND, jobj);
 	}
 }
 
@@ -96,8 +92,7 @@ void SjvmSkinWndEvent::onDestroy()
 {
 	if (m_sOnDestroy >= 0)
 	{
-		CVMParameters	parameters;
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_sOnDestroy, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnDestroy);
 	}
 }
 
@@ -105,10 +100,7 @@ void SjvmSkinWndEvent::onSize(int cx, int cy)
 {
 	if (m_sOnSize >= 0)
 	{
-		CVMParameters	parameters;
-		parameters.Push(cx, TID_INT);
-		parameters.Push(cy, TID_INT);
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_sOnSize, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnSize, TID_INT, cx, TID_INT, cy);
 	}
 }
 
@@ -116,10 +108,7 @@ void SjvmSkinWndEvent::onMove(int x, int y)
 {
 	if (m_sOnMove >= 0)
 	{
-		CVMParameters	parameters;
-		parameters.Push(x, TID_INT);
-		parameters.Push(y, TID_INT);
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_sOnMove, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnMove, TID_INT, x, TID_INT, y);
 	}
 }
 
@@ -127,14 +116,14 @@ void SjvmSkinWndEvent::onActivate(boolean bActived)
 {
 	if (m_sOnActivate >= 0)
 	{
-		CVMParameters	parameters;
-		parameters.Push(bActived, TID_BOOLEAN);
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_sOnActivate, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnActivate, TID_BOOLEAN, bActived);
 	}
 }
 
 SjvmSkinWndEvent::~SjvmSkinWndEvent()
 {
+	g_sjvm.JniReleaseJObjRef(m_jobject);
+
 	for (size_t i = 0; i < m_vSkinWnds.size(); i++)
 		m_vSkinWnds[i]->SjvmSetNotifyEvent(NULL);
 	m_vSkinWnds.clear();
@@ -172,6 +161,7 @@ IMPLENENT_JNI_OBJ(CSjvmSkinWnd, "SkinWnd")
 
 CSjvmSkinWnd::CSjvmSkinWnd() : CJObject(m_sTypeId, 0)
 {
+	m_pSkinWnd = NULL;
 }
 
 void CSjvmSkinWnd::RegisterJNI()
@@ -349,8 +339,7 @@ void CSjvmSkinSystemEvent::onInit()
 {
 	if (m_onInit >= 0)
 	{
-		CVMParameters	parameters;
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_onInit, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_onInit);
 	}
 }
 
@@ -358,8 +347,7 @@ void CSjvmSkinSystemEvent::onDestory()
 {
 	if (m_onDestory >= 0)
 	{
-		CVMParameters	parameters;
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_onDestory, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_onDestory);
 	}
 }
 
@@ -367,13 +355,11 @@ void CSjvmSkinSystemEvent::onSkinWndCreate(CSkinWnd *pSkinWnd)
 {
 	if (m_onSkinWndCreate >= 0)
 	{
-		CVMParameters	parameters;
 		jobject			jobj;
 		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm.NewJObject(TID_SKIN_WND, jobj);
 		ASSERT(pJObjSkinWnd);
 		pJObjSkinWnd->m_pSkinWnd = pSkinWnd;
-		parameters.Push(TID_SKIN_WND, jobj);
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_onSkinWndCreate, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_onSkinWndCreate, TID_SKIN_WND, jobj);
 	}
 }
 
@@ -381,13 +367,11 @@ void CSjvmSkinSystemEvent::onSkinWndDestory(CSkinWnd *pSkinWnd)
 {
 	if (m_onSkinWndDestory >= 0)
 	{
-		CVMParameters	parameters;
 		jobject			jobj;
 		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm.NewJObject(TID_SKIN_WND, jobj);
 		ASSERT(pJObjSkinWnd);
 		pJObjSkinWnd->m_pSkinWnd = pSkinWnd;
-		parameters.Push(TID_SKIN_WND, jobj);
-		g_sjvm.CallMethod(TID_INVALID, m_jobject, m_onSkinWndDestory, parameters);
+		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_onSkinWndDestory, TID_SKIN_WND, jobj);
 	}
 }
 
@@ -572,6 +556,7 @@ bool SJNI_API CSjvmSkinSystem::registerSkinSystemEvent(jobject event)
 
 	CSjvmSkinSystemEvent	*pEvent = new CSjvmSkinSystemEvent();
 
+	g_sjvm.JniAddJObjRef(event);
 	pEvent->m_jobject = event;
 	m_listSkinSystemEvent.push_back(pEvent);
 
@@ -587,6 +572,7 @@ void SJNI_API CSjvmSkinSystem::unRegisterSkinSystemEvent(jobject event)
 		CSjvmSkinSystemEvent *pEvent = *it;
 		if (pEvent->m_jobject == event)
 		{
+			g_sjvm.JniReleaseJObjRef(event);
 			m_listSkinSystemEvent.erase(it);
 			delete pEvent;
 			return;
@@ -604,6 +590,8 @@ bool SJNI_API CSjvmSkinSystem::registerSkinWndEvent(LPCTSTR szWndName, jobject e
 
 	SjvmSkinWndEvent	*pEvent = new SjvmSkinWndEvent();
 
+	g_sjvm.JniAddJObjRef(event);
+
 	pEvent->m_jobject = event;
 	pEvent->m_strSkinWndName = szWndName;
 	m_listSkinWndEvent.push_back(pEvent);
@@ -620,6 +608,7 @@ void SJNI_API CSjvmSkinSystem::unRegisterSkinWndEvent(jobject event)
 		SjvmSkinWndEvent	*pEvent = *it;
 		if (pEvent->m_jobject == event)
 		{
+			g_sjvm.JniReleaseJObjRef(event);
 			m_listSkinWndEvent.erase(it);
 			delete pEvent;
 			return;
