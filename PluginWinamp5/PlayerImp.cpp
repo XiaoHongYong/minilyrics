@@ -349,22 +349,14 @@ int init();
 
 #define app_name	"MiniLyrics"
 
-WNDPROC procWinampOld = 0;
-WNDPROC procMiniLyrics = 0;
+WNDPROC g_pOrgWaPluginWndProc = 0;
+WNDPROC g_pOrgMLWndPro = 0;
+WNDPROC	g_pOrgWinampProc = NULL;
 
-HWND	hWndPlugin = 0;
 
 embedWindowState* wa_wnd = NULL;
 
 winampGeneralPurposePlugin plugin = {GPPHDR_VER, "MiniLyrics for Winamp", init, config, quit, };
-//
-//extern "C"
-//{
-//BOOL WINAPI DLLMAIN(HINSTANCE hModule, DWORD ul_reason_for_call, 
-//							   LPVOID lpReserved){
-//	return 1;
-//}
-//}
 
 HBITMAP WACreateScrollBmp()
 {
@@ -479,125 +471,37 @@ HBITMAP WACreateScrollBmp()
 
 LRESULT CALLBACK WndProcMLHook(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-//	int wmId, wmEvent;
-//	PAINTSTRUCT ps;
-//	HDC hdc;
-//	TCHAR szHello[] = "Hello";
-//
 	switch (message) 
 	{
-//	case WM_CREATE:
-//		// call the internal window initialisation - makes sure that
-//		// the internal controls will be winamp styled
-//		WADlg_init(plugin.hwndParent);
-//
-//		// here we set the window's title
-//		SetWindowText(GetParent(hWnd), "MiniLyrics");
-//		
-//		// shows the owner window and this dialog
-//		//ShowWindow(hwnd, SW_SHOWNORMAL);
-//		ShowWindow(GetParent(hWnd), SW_SHOWNORMAL);
-//		break;
-//	case WM_COMMAND:
-//		wmId    = LOWORD(wParam); 
-//		wmEvent = HIWORD(wParam); 
-		// Parse the menu selections:
-//			switch (wmId)
-//			{
-////				case IDM_ABOUT:
-////				   DialogBox(hInst, (LPCTSTR)IDD_ABOUTBOX, hWnd, (DLGPROC)About);
-////				   break;
-//				case IDM_EXIT:
-//				   DestroyWindow(hWnd);
-//				   break;
-//				default:
-//				   return DefWindowProc(hWnd, message, wParam, lParam);
-//			}
-//			DestroyWindow(GetParent(hwnd));
-//		break;
-//	case WM_PAINT:
-//		hdc = BeginPaint(hWnd, &ps);
-//		// TODO: Add any drawing code here...
-//
-//		{
-//			HDC		hdcbk;
-//			HBITMAP	hBmpOld;
-//			HBITMAP	hBmpSb;
-//			hdcbk = CreateCompatibleDC(hdc);
-//			hBmpSb = WACreateScrollBmp();
-//			hBmpOld = (HBITMAP)SelectObject(hdcbk, hBmpSb);
-//			BitBlt(hdc, 0, 100, VSB_WIDTH * 3, VSB_HEIGHT, hdcbk, 0, 0, SRCCOPY);
-//		//	BitBlt(hdc, 0, 0, 300, 300, hdcbk, 0, 0, SRCCOPY);
-//
-//			SelectObject(hdcbk, hBmpOld);
-//			DeleteObject(hBmpSb);
-//			DeleteDC(hdcbk);
-//		}
-//
-//		RECT rt;
-//		GetClientRect(hWnd, &rt);
-//		DrawText(hdc, szHello, strlen(szHello), &rt, DT_CENTER);
-//
-//		EndPaint(hWnd, &ps);
-//		break;
-		// DestroyWindow(GetParent(hWnd));
-		// g_Player.m_hwndPluginParent = NULL;
-		// break;
 	case WM_DESTROY:
 		// PostQuitMessage(0);
 		{
 			WADlg_close();
 			if (GetWindowLong(hWnd, GWL_WNDPROC) == (LONG)WndProcMLHook)
 			{
-				SetWindowLong(hWnd, GWL_WNDPROC, (LONG)procMiniLyrics);
+				SetWindowLong(hWnd, GWL_WNDPROC, (LONG)g_pOrgMLWndPro);
 			}
-//			LRESULT hr = CallWindowProc(procMiniLyrics, hWnd, message, wParam, lParam);
-//			return hr;
 			break;
 		}
-// 	case WM_DISPLAYCHANGE:
-// 		WADlg_init(plugin.hwndParent);
-// 		{
-// //			// this is a list of controls to winampise
-// //			int tabs[] = {IDC_EDIT|DCW_SUNKENBORDER, IDC_STATIC4|DCW_SUNKENBORDER};
-// //			WADlg_DrawChildWindowBorders(hWnd, tabs, sizeof(tabs)/sizeof(tabs[0]));
-// 		}
-// 
-// 		// set scroll bar bitmap.
-// 		g_MLService.SetWa5Bmp(1, WACreateScrollBmp());
-// 		g_MLService.OnNotifyPlayerSkinChanged();
-// 
-// 		// if winamp changes skin then it sends a dummy WM_DISPLAYCHANGE
-// 		// message. on receive do a quick hide and reshow
-// 		// (simple hack to ensure the window is shown correctly with
-// 		//  the newly loaded skin)
-// 		if(!lParam && !wParam){
-// 			ShowWindow(hWnd, SW_HIDE);
-// 			ShowWindow(hWnd, SW_SHOW);
-// 		}
-// 		break;
 	default:
 		break;
-		// return DefWindowProc(hWnd, message, wParam, lParam);
 	}
 
-	return CallWindowProc(procMiniLyrics, hWnd, message, wParam, lParam);
+	return CallWindowProc(g_pOrgMLWndPro, hWnd, message, wParam, lParam);
 }
 
 LRESULT CALLBACK ProcWAPluginParentHook(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 {
 	int ret;
 	
-	// in here we can process any messages as needed
-	
-	ret = CallWindowProc(procWinampOld, hwnd, msg, wp, lp);
-	
+	ret = CallWindowProc(g_pOrgWaPluginWndProc, hwnd, msg, wp, lp);
+
 	// unsublcass once the WM_DESTROY message has been processed for safety
 	if (msg == WM_DESTROY)
 	{
 		if (GetWindowLong(hwnd, GWL_WNDPROC) == (LONG)ProcWAPluginParentHook)
 		{
-			SetWindowLong(hwnd, GWL_WNDPROC, (LONG)procWinampOld);
+			SetWindowLong(hwnd, GWL_WNDPROC, (LONG)g_pOrgWaPluginWndProc);
 		}
 
 		g_Player.m_hwndPluginParent = NULL;
@@ -639,11 +543,13 @@ int init()
 
 	if (g_Player.IsWinamp5() && g_MLService.GetSkinMode() == CMLService::MLSKIN_PLAYER)
 	{
-		hWndPlugin = g_MLService.GetMainWindow();
+			HWND	hWndMiniLyrics = 0;
 
-		ShowWindow(GetParent(hWndPlugin), SW_SHOWNORMAL);
+			hWndMiniLyrics = g_MLService.GetMainWindow();
 
-		procMiniLyrics = (WNDPROC)SetWindowLong(hWndPlugin, GWL_WNDPROC, (LONG)WndProcMLHook);
+			ShowWindow(GetParent(hWndMiniLyrics), SW_SHOWNORMAL);
+
+			g_pOrgMLWndPro = (WNDPROC)SetWindowLong(hWndMiniLyrics, GWL_WNDPROC, (LONG)WndProcMLHook);
 	}
 
 	// now we can use other g_MLService functions.
@@ -669,18 +575,16 @@ void quit()
 	// close all the windows and free all parts correctly
 	g_MLService.Quit();
 
-//	DestroyWindow(hWndPlugin);
 	if (g_Player.m_hwndPluginParent)
 		DestroyWindow(g_Player.m_hwndPluginParent);
 
 	if (wa_wnd)
 	{
 		GlobalFree(wa_wnd);
+		wa_wnd = NULL;
 	}
 }
 
-
-WNDPROC			g_pOrigProc = NULL;
 
 LRESULT CALLBACK HookWinampWnd(
 							   HWND hwnd,      // handle to window
@@ -690,37 +594,24 @@ LRESULT CALLBACK HookWinampWnd(
 							   )
 {
 	if (!g_Player.m_bWorking)
-		return CallWindowProc(g_pOrigProc, hwnd, uMsg, wParam, lParam);
+		return CallWindowProc(g_pOrgWinampProc, hwnd, uMsg, wParam, lParam);
 
 	switch(uMsg) 
 	{
 	case WM_DESTROY:
 		{
-			// g_MLService.Quit will set g_pOrigProc to NULL, so save g_pOrgProc.
-			WNDPROC pOrigProc = g_pOrigProc;
+			// g_MLService.Quit will set g_pOrgWinampProc to NULL, so save g_pOrgProc.
+			WNDPROC pOrigProc = g_pOrgWinampProc;
 			g_MLService.Quit();
 			return CallWindowProc(pOrigProc, hwnd, uMsg, wParam, lParam); 
 		}
 		break;
-// 	case WM_DISPLAYCHANGE:
-// 		{
-// 			// 使用Spy++可以看到winamp2的skin被改变之后，会收到此消息和WM_STYLECHANGED
-// 			int		nRet;
-// 
-// 			nRet = CallWindowProc(g_pOrigProc, hwnd, uMsg, wParam, lParam);
-// 			// DBGLOG0("Winamp's Skin Changed!");
-// 
-// 			g_MLService.OnNotifyPlayerSkinChanged();
-// 
-// 			return nRet;
-// 		}
-// 		break;
 	case WM_COMMAND:
 		{
 			if (LOWORD(wParam) == 0x9D63)
 			{
 				int		nRet;
-				nRet = CallWindowProc(g_pOrigProc, hwnd, uMsg, wParam, lParam); 
+				nRet = CallWindowProc(g_pOrgWinampProc, hwnd, uMsg, wParam, lParam); 
 
 				// DBGLOG0("Winamp's Skin Changed!");
  				WADlg_init(plugin.hwndParent);
@@ -740,7 +631,7 @@ LRESULT CALLBACK HookWinampWnd(
 		break;
 	case WM_ACTIVATEAPP:
 		{
-			LRESULT		result = CallWindowProc(g_pOrigProc, hwnd, uMsg, wParam, lParam);
+			LRESULT		result = CallWindowProc(g_pOrgWinampProc, hwnd, uMsg, wParam, lParam);
 			g_MLService.OnNotifyPlayerActivate(wParam);
 			return result;
 		}
@@ -748,7 +639,7 @@ LRESULT CALLBACK HookWinampWnd(
 	case WM_SIZE:
 		if (wParam == SIZE_MINIMIZED || wParam == SIZE_RESTORED)
 		{
-			LRESULT		result = CallWindowProc(g_pOrigProc, hwnd, uMsg, wParam, lParam);
+			LRESULT		result = CallWindowProc(g_pOrgWinampProc, hwnd, uMsg, wParam, lParam);
 			g_MLService.OnNotifyPlayerMinRestore(wParam);
 			return result;
 		}
@@ -772,7 +663,7 @@ LRESULT CALLBACK HookWinampWnd(
 	};
 
 	// Call Winamp Window Proc
-	return CallWindowProc(g_pOrigProc, hwnd, uMsg, wParam, lParam); 
+	return CallWindowProc(g_pOrgWinampProc, hwnd, uMsg, wParam, lParam); 
 }
 
 #ifdef __cplusplus
@@ -845,24 +736,11 @@ HWND CPlayerImp::GetAttachedParentWnd(RECT *prc)
 			// hWndPlugin = CreateDialog(plugin.hDllInstance, MAKEINTRESOURCE(IDD_DIALOG1), g_Player.m_hwndPluginParent, (DLGPROC)DlgProc);
 
 			WADlg_init(plugin.hwndParent);
-//			HBITMAP		hBmp;
-//			hBmp = WACreateScrollBmp();
-//			HDC		hdcbk;
-//			HDC		hdc;
-//			HBITMAP	hBmpOld;
-//			hdc = GetDC(NULL);
-//			hdcbk = CreateCompatibleDC(hdc);
-//			hBmpOld = (HBITMAP)SelectObject(hdcbk, hBmp);
-//			BitBlt(hdc, 0, 0, 200, 200, hdcbk, 0, 0, SRCCOPY);
-//			SelectObject(hdcbk, hBmpOld);
-//			DeleteDC(hdcbk);
-//			ReleaseDC(NULL, hdc);
-
 
 			// set scroll bar bitmap.
 			g_MLService.SetWa5Bmp(1, WACreateScrollBmp());
 
-			procWinampOld = (WNDPROC)SetWindowLong(g_Player.m_hwndPluginParent, GWL_WNDPROC, (LONG)ProcWAPluginParentHook);
+			g_pOrgWaPluginWndProc = (WNDPROC)SetWindowLong(g_Player.m_hwndPluginParent, GWL_WNDPROC, (LONG)ProcWAPluginParentHook);
 		}
 	}
 
@@ -1067,8 +945,8 @@ BOOL CPlayerImp::Init()
 	g_MLService.AddWndCloseto(NULL, "Winamp MB", "");
 
 	// Hook Main Window
-	if (g_pOrigProc == NULL)
-		g_pOrigProc = (WNDPROC)SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)HookWinampWnd);
+	if (g_pOrgWinampProc == NULL)
+		g_pOrgWinampProc = (WNDPROC)SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)HookWinampWnd);
 	m_bWorking = true;
 
 	m_state = (PLAYER_STATE)GetPlayerState();
@@ -1081,19 +959,19 @@ BOOL CPlayerImp::Init()
 void CPlayerImp::Quit()
 {
 	// 恢复winamp窗口的窗口过程
-	if (g_pOrigProc && IsWindow(g_hwndPlayer) && GetWindowLong(g_hwndPlayer, GWL_WNDPROC) == (LONG)HookWinampWnd)
+	if (g_pOrgWinampProc && IsWindow(g_hwndPlayer) && GetWindowLong(g_hwndPlayer, GWL_WNDPROC) == (LONG)HookWinampWnd)
 	{
-		SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)g_pOrigProc);
-		g_pOrigProc = NULL;
+		SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)g_pOrgWinampProc);
+		g_pOrgWinampProc = NULL;
 	}
 	m_bWorking = false;
 
 	g_wndInfoQuery.Destroy();
 
-	if (IsWindow(g_Player.m_hwndPluginParent))
+	if (IsWindow(m_hwndPluginParent))
 	{
-		DestroyWindow(g_Player.m_hwndPluginParent);
-		g_Player.m_hwndPluginParent = NULL;
+		DestroyWindow(m_hwndPluginParent);
+		m_hwndPluginParent = NULL;
 	}
 }
 
