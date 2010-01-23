@@ -23,6 +23,16 @@
 
 #define MENUID_START		3000
 
+tstring ConnectToLocalStr(LPCTSTR szStr1, LPCTSTR szStr2)
+{
+	tstring		str = TOLOCAL(szStr1);
+
+	str += _T(" ");
+	str += TOLOCAL(szStr2);
+
+	return str;
+}
+
 // Remove '&'
 tstring RemovePrefixOfAcckey(LPCTSTR szStr)
 {
@@ -64,7 +74,7 @@ public:
 		return CStrPrintf(_T("%d"), GetIntValue()).c_str();
 	}
 
-	int GetIntValue()
+	virtual int GetIntValue()
 	{
 		return g_Profile.GetProfileInt(strSection.c_str(), strValueName.c_str(), nDefaultValue);
 	}
@@ -134,7 +144,7 @@ class CPfItemBoolEnableAutoDlLyr : public CPfItemBool
 {
 public:
 	CPfItemBoolEnableAutoDlLyr() 
-		: CPfItemBool(_T("Auto download lyrics"), ET_NULL, SZ_SECT_LYR_DL,
+		: CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Auto download lyrics")).c_str(), ET_NULL, SZ_SECT_LYR_DL,
 			_T("EnableAuoDownload"), true)
 	{
 	}
@@ -151,7 +161,7 @@ class CPfItemLyrSearchFolder : public CPreferItem
 {
 public:
 	CPfItemLyrSearchFolder(CBaseWnd *pWndParent)
-		: CPreferItem(_T("Lyrics search folder"))
+		: CPreferItem(ConnectToLocalStr(_T("Lyrics:"), _T("Lyrics search folder")).c_str())
 	{
 		m_pWndParent = pWndParent;
 	}
@@ -247,7 +257,7 @@ class CPfItemLyrExternalEditor : public CPreferItem
 {
 public:
 	CPfItemLyrExternalEditor(CBaseWnd *pWndParent)
-		: CPreferItem(_T("External Lyrics Editor"))
+		: CPreferItem(ConnectToLocalStr(_T("Lyrics:"), _T("External Lyrics Editor")).c_str())
 	{
 		m_pWndParent = pWndParent;
 	}
@@ -296,17 +306,14 @@ public:
 
 
 #ifdef _WIN32_DESKTOP
-class CPfItemWndOpacity : public CPreferItem
+class CPfItemWndOpacity : public CPfItemInt
 {
 public:
-	CPfItemWndOpacity() : CPreferItem(_T("Window opaque percent (10 - 100)")) { }
+	CPfItemWndOpacity() : CPfItemInt(ConnectToLocalStr(_T("UI:"), _T("Window opaque percent (10 - 100)")).c_str(),
+		ET_NULL, SZ_SECT_UI, _T("WindowOpaquePercent"), 100) { }
 
-	virtual tstring GetValue() {
-		return CStrPrintf(_T("%d"), GetOpacity()).c_str();
-	}
-
-	int GetOpacity() {
-		int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
+	int GetIntValue() {
+		int		nOpaque = CPfItemInt::GetIntValue();
 		if (nOpaque < 10)
 			nOpaque = 10;
 		else if (nOpaque > 100)
@@ -322,21 +329,17 @@ public:
 			vString.push_back(str.c_str());
 		}
 
-		nRadio = GetOpacity() / 10 - 1;
+		nRadio = GetIntValue() / 10 - 1;
 	}
 
 	virtual void SetOption(int nIndex) {
-		g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), (nIndex + 1) * 10);
+		SetIntValue((nIndex + 1) * 10);
+	}
 
+	virtual void SetIntValue(int nValue)
+	{
+		CPfItemInt::SetIntValue(nValue);
 		g_mpApp.GetSkinFactory()->AllUpdateTransparent();
-	}
-
-	virtual bool IsDefault() {
-		return GetOpacity() == 100;
-	}
-
-	virtual void Reset() {
-		SetOption(9);
 	}
 
 };
@@ -402,6 +405,29 @@ public:
 };
 
 #endif // #ifdef _WIN32_DESKTOP
+
+class CPfItemLyrLineSpacing : public CPfItemInt
+{
+public:
+	CPfItemLyrLineSpacing() : CPfItemInt(ConnectToLocalStr(_T("Lyrics Display:"), _T("Lyrics line spacing")).c_str(),
+		ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("LineSpacing"), 2) { }
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		CStrPrintf	str;
+		for (int i = 0; i <= 10; i++)
+		{
+			str.printf(_T("%d"), i);
+			vString.push_back(str.c_str());
+		}
+
+		nRadio = GetIntValue();
+	}
+
+	virtual void SetOption(int nIndex) {
+		SetIntValue(nIndex);
+	}
+
+};
 
 class CDlgShortcutKey : public CBaseDialog
 {
@@ -643,25 +669,28 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 
 #ifndef _MPLAYER
 	// 自动隐藏迷你歌词如果没有歌词
-	m_vPreferItems.push_back(new CPfItemBool(_T("Activate, minimize and restore with player window"),
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Activate, minimize and restore with player window")).c_str(),
 		ET_NULL, SZ_SECT_UI, _T("ActivateWithWinamp"), true));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Hide toolbar"), ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("HideToolbar"), false));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Auto hide MiniLyrics if no lyrics is opened"), ET_NULL, SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Auto hide minilyrics when playing movie"), ET_NULL, SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Hide toolbar")).c_str(), ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("HideToolbar"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto hide MiniLyrics if no lyrics is opened")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto hide minilyrics when playing movie")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true));
 #endif
-	m_vPreferItems.push_back(new CPfItemBool(_T("Auto adjust window width with lyrics"), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndWidth"), false));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Auto adjust window height with lyrics"), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndHeight"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto adjust window width with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndWidth"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto adjust window height with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndHeight"), true));
 	// m_vPreferItems.push_back(new CPfItemBool(_T("Hide the link of rating lyrics"), ET_NULL, SZ_SECT_UI, _T("HideRateLink"), true));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Allow to adjust the vertical position of lyrics"), ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("EnableAdjustVertAlign"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Display:"), _T("Allow to adjust the vertical position of lyrics")).c_str(),
+		ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, 
+		_T("EnableAdjustVertAlign"), false));
+	m_vPreferItems.push_back(new CPfItemLyrLineSpacing());
 
 	//
 	// Lyrics
 	//
 	// m_vPreferItems.push_back(new CPfItemBool(_T(""), ));
 	m_vPreferItems.push_back(new CPfItemBoolEnableAutoDlLyr());
-	m_vPreferItems.push_back(new CPfItemBool(_T("Only download synchronized lyrics with .lrc extension"), ET_NULL, SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Pop up lyrics searching dialog when lyrics are found"), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), true));
-	m_vPreferItems.push_back(new CPfItemBool(_T("Save lyrics in the subfolder in abc order"), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Only download synchronized lyrics with .lrc extension")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Pop up lyrics searching dialog when lyrics are found")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Save downloaded lyrics in the a, b, c folder of downloaded folder")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
 	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(this));
 	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(this));
 

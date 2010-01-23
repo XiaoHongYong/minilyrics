@@ -26,6 +26,11 @@
 #include "win32/WidgetImageButton.h"
 #include "win32/WidgetTabCtrl.h"
 #include "win32/WidgetTrackBar.h"
+#ifdef _WIN32_DESKTOP
+#include "win32/DlgChooseColor.h"
+#else
+#include "../MiniLyrics6/win32/wce/DlgChooseColor.h"
+#endif
 // #include "win32/EditEx.h"
 
 #ifdef _WIN32_WCE
@@ -57,6 +62,7 @@
 #include "gtk2/WidgetImageButton.h"
 #include "gtk2/WidgetTabCtrl.h"
 #include "gtk2/WidgetTrackBar.h"
+#include "gtk2/DlgChooseColor.h"
 // #include "gtk2/EditEx.h"
 #endif
 

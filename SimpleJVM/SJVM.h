@@ -607,11 +607,11 @@ protected:
 
 };
 
-extern CSJVM			g_sjvm;
+extern CSJVM			*g_sjvm;
 
 #define DECLARE_JNI_OBJ(_Class)								\
 	public:												\
-	static void RegisterClassType();					\
+	static void RegisterClassType(CSJVM *sjvm);					\
 	static LPCSTR			CLASS_NAME;					\
 	static TypeId			m_sTypeId;					\
 	class CObjNewer : public CJObjectNewer				\
@@ -627,11 +627,11 @@ extern CSJVM			g_sjvm;
 #define IMPLENENT_JNI_OBJ(_Class, _ClassName)			\
 	TypeId	_Class::m_sTypeId		= 0;				\
 	LPCSTR	_Class::CLASS_NAME		= _ClassName;		\
-	void _Class::RegisterClassType() {					\
+	void _Class::RegisterClassType(CSJVM *sjvm) {					\
 	int nRet;											\
-	nRet = g_sjvm.AddClass(_Class::CLASS_NAME, -1, new CObjNewer());	\
+	nRet = sjvm->AddClass(_Class::CLASS_NAME, -1, new CObjNewer());	\
 	ASSERT(nRet == ERR_OK);								\
-	m_sTypeId = g_sjvm.GetTypeIdByName(_Class::CLASS_NAME);\
+	m_sTypeId = sjvm->GetTypeIdByName(_Class::CLASS_NAME);\
 }
 
 #include "SjvmLib.h"

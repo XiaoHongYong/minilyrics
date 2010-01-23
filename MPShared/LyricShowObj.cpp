@@ -2593,8 +2593,6 @@ void CLyricShowObj::LoadAllSettings()
 		m_strBgPicFolder = CMLProfile::GetDir(m_strSectName.c_str(), _T("BgPicFolder"), _T(""));
 
 		m_bDarkenLyrBgOnImg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("DarkenLyrBg"), true);
-		m_nDarkenTopArea = float(1.25);
-		m_nDarkenBottomArea = float(1.25);
 
 		if (m_bUseBgImg)
 		{

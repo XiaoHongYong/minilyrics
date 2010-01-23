@@ -873,6 +873,7 @@ void CSkinWnd::RecalculateSizePos()
 
 BOOL CSkinWnd::AddTool(LPCTSTR szText, LPCRECT lpRectTool, UINT nIDTool)
 {
+	ASSERT(!IsEmptyString(szText));
 	return m_wndToolTip.AddTool(szText, 
 			lpRectTool, nIDTool);
 }

@@ -32,7 +32,7 @@ public:
 		int		nRet;
 
 		// Add class members definition.
-		CClass *pClass = g_sjvm.GetClass(CLASS_NAME);
+		CClass *pClass = g_sjvm->GetClass(CLASS_NAME);
 		ASSERT(pClass);
 
 		pClass->AddNativeDefaultConstructor();
@@ -93,7 +93,7 @@ public:
 			return JOBJ_NULL;
 
 		jobject		jobj;
-		CSjvmUIObject *pJObj = (CSjvmUIObject*)g_sjvm.NewJObject(TID_UIOBJECT, jobj);
+		CSjvmUIObject *pJObj = (CSjvmUIObject*)g_sjvm->NewJObject(TID_UIOBJECT, jobj);
 		ASSERT(pJObj && pJObj->m_typeId == TID_UIOBJECT);
 
 		pJObj->m_pUIObject = pObj;
@@ -255,7 +255,7 @@ public:
 protected:
 	static CSkinWnd *GetSkinWndOfThis(jobject thiz)
 	{
-		CSjvmSkinWnd	*pThis = (CSjvmSkinWnd*)g_sjvm.GetJObject(thiz);
+		CSjvmSkinWnd	*pThis = (CSjvmSkinWnd*)g_sjvm->GetJObject(thiz);
 		ASSERT(pThis && pThis->m_sTypeId == TID_SKIN_WND);
 		if (!pThis)
 			return NULL;
@@ -269,7 +269,7 @@ protected:
 
 	static CSjvmSkinWnd *GetThis(jobject thiz)
 	{
-		CSjvmSkinWnd	*pThis = (CSjvmSkinWnd*)g_sjvm.GetJObject(thiz);
+		CSjvmSkinWnd	*pThis = (CSjvmSkinWnd*)g_sjvm->GetJObject(thiz);
 		ASSERT(pThis && pThis->m_sTypeId == TID_SKIN_WND);
 		if (!pThis)
 			return NULL;
@@ -310,7 +310,7 @@ public:
 		int		nRet;
 
 		// Add class members definition.
-		CClass *pClass = g_sjvm.GetClass(CLASS_NAME);
+		CClass *pClass = g_sjvm->GetClass(CLASS_NAME);
 		ASSERT(pClass);
 
 		pClass->AddNativeDefaultConstructor();
@@ -349,13 +349,14 @@ int		SjvmSkinWndEvent::m_sOnDestroy = 0;
 int		SjvmSkinWndEvent::m_sOnSize = 0;
 int		SjvmSkinWndEvent::m_sOnMove = 0;
 int		SjvmSkinWndEvent::m_sOnActivate = 0;
+int		SjvmSkinWndEvent::m_sOnTimer = 0;
 
 // Return true, the command will not be processed down.
 bool SjvmSkinWndEvent::onCommand(int nCmdId)
 {
 	if (m_sOnCommand >= 0)
 	{
-		return Tobool(g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnCommand, TID_INT, nCmdId));
+		return Tobool(g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnCommand, TID_INT, nCmdId));
 	}
 
 	return false;
@@ -366,10 +367,10 @@ void SjvmSkinWndEvent::onCreate(CSkinWnd *pWnd)
 	if (m_sOnCreate >= 0)
 	{
 		jobject			jobj;
-		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm.NewJObject(TID_SKIN_WND, jobj);
+		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm->NewJObject(TID_SKIN_WND, jobj);
 		ASSERT(pJObjSkinWnd);
 		pJObjSkinWnd->m_pSkinWnd = pWnd;
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnCreate, TID_SKIN_WND, jobj);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnCreate, TID_SKIN_WND, jobj);
 	}
 }
 
@@ -377,7 +378,7 @@ void SjvmSkinWndEvent::onDestroy()
 {
 	if (m_sOnDestroy >= 0)
 	{
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnDestroy);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnDestroy);
 	}
 }
 
@@ -385,7 +386,7 @@ void SjvmSkinWndEvent::onSize(int cx, int cy)
 {
 	if (m_sOnSize >= 0)
 	{
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnSize, TID_INT, cx, TID_INT, cy);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnSize, TID_INT, cx, TID_INT, cy);
 	}
 }
 
@@ -393,7 +394,7 @@ void SjvmSkinWndEvent::onMove(int x, int y)
 {
 	if (m_sOnMove >= 0)
 	{
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnMove, TID_INT, x, TID_INT, y);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnMove, TID_INT, x, TID_INT, y);
 	}
 }
 
@@ -401,7 +402,7 @@ void SjvmSkinWndEvent::onActivate(boolean bActived)
 {
 	if (m_sOnActivate >= 0)
 	{
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnActivate, TID_BOOLEAN, bActived);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnActivate, TID_BOOLEAN, bActived);
 	}
 }
 
@@ -409,13 +410,13 @@ void SjvmSkinWndEvent::onTimer(int nTimerId)
 {
 	if (m_sOnTimer >= 0)
 	{
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_sOnTimer, TID_INT, nTimerId);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnTimer, TID_INT, nTimerId);
 	}
 }
 
 SjvmSkinWndEvent::~SjvmSkinWndEvent()
 {
-	g_sjvm.JniReleaseJObjRef(m_jobject);
+	g_sjvm->JniReleaseJObjRef(m_jobject);
 
 	for (size_t i = 0; i < m_vSkinWnds.size(); i++)
 		m_vSkinWnds[i]->SjvmSetNotifyEvent(NULL);
@@ -468,7 +469,7 @@ public:
 		int		nRet;
 
 		// Add class members definition.
-		CClass *pClass = g_sjvm.GetClass(CLASS_NAME);
+		CClass *pClass = g_sjvm->GetClass(CLASS_NAME);
 		ASSERT(pClass);
 
 		pClass->AddNativeDefaultConstructor();
@@ -501,7 +502,7 @@ void CSjvmSkinSystemEvent::onInit()
 {
 	if (m_onInit >= 0)
 	{
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_onInit);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_onInit);
 	}
 }
 
@@ -509,7 +510,7 @@ void CSjvmSkinSystemEvent::onDestory()
 {
 	if (m_onDestory >= 0)
 	{
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_onDestory);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_onDestory);
 	}
 }
 
@@ -518,10 +519,10 @@ void CSjvmSkinSystemEvent::onSkinWndCreate(CSkinWnd *pSkinWnd)
 	if (m_onSkinWndCreate >= 0)
 	{
 		jobject			jobj;
-		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm.NewJObject(TID_SKIN_WND, jobj);
+		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm->NewJObject(TID_SKIN_WND, jobj);
 		ASSERT(pJObjSkinWnd);
 		pJObjSkinWnd->m_pSkinWnd = pSkinWnd;
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_onSkinWndCreate, TID_SKIN_WND, jobj);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_onSkinWndCreate, TID_SKIN_WND, jobj);
 	}
 }
 
@@ -530,10 +531,10 @@ void CSjvmSkinSystemEvent::onSkinWndDestory(CSkinWnd *pSkinWnd)
 	if (m_onSkinWndDestory >= 0)
 	{
 		jobject			jobj;
-		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm.NewJObject(TID_SKIN_WND, jobj);
+		CSjvmSkinWnd	*pJObjSkinWnd = (CSjvmSkinWnd*)g_sjvm->NewJObject(TID_SKIN_WND, jobj);
 		ASSERT(pJObjSkinWnd);
 		pJObjSkinWnd->m_pSkinWnd = pSkinWnd;
-		g_sjvm.JniCallMethod(TID_INVALID, m_jobject, m_onSkinWndDestory, TID_SKIN_WND, jobj);
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_onSkinWndDestory, TID_SKIN_WND, jobj);
 	}
 }
 
@@ -553,13 +554,16 @@ CSjvmSkinSystem::CSjvmSkinSystem() : CJObject(m_sTypeId, 0)
 
 void CSjvmSkinSystem::Init(CSkinFactory *pSkinFactory)
 {
+	ASSERT(g_sjvm == NULL);
+	g_sjvm = new CSJVM();
+
 	m_pSkinFactory = pSkinFactory;
 
 	// Register class name
-	CSjvmSkinWnd::RegisterClassType();
-	CSjvmSkinSystem::RegisterClassType();
-	CSjvmSkinSystemEventObj::RegisterClassType();
-	CSjvmSkinWndEventObj::RegisterClassType();
+	CSjvmSkinWnd::RegisterClassType(g_sjvm);
+	CSjvmSkinSystem::RegisterClassType(g_sjvm);
+	CSjvmSkinSystemEventObj::RegisterClassType(g_sjvm);
+	CSjvmSkinWndEventObj::RegisterClassType(g_sjvm);
 
 	// Add class members definition.
 	CSjvmSkinWnd::RegisterJNI();
@@ -570,12 +574,13 @@ void CSjvmSkinSystem::Init(CSkinFactory *pSkinFactory)
 	// Compile system module files
 
 	// Set flag to freeze the current SJVM status as system module.
-	g_sjvm.FinishedInitSysModule();
+	g_sjvm->FinishedInitSysModule();
 }
 
 void CSjvmSkinSystem::Quit()
 {
-
+	delete g_sjvm;
+	g_sjvm = NULL;
 }
 
 void CSjvmSkinSystem::LoadScript(LPCTSTR szScript)
@@ -598,7 +603,7 @@ void CSjvmSkinSystem::LoadScript(LPCTSTR szScript)
 		vFiles[i] = szFile;
 	}
 
-	nRet = g_sjvm.CompileFiles(vFiles);
+	nRet = g_sjvm->CompileFiles(vFiles);
 	if (nRet != ERR_OK)
 	{
 		ERRLOG2(_T("Failed to compile script files: %s, error: %s"), szScript, (LPCTSTR)Error2Str(nRet));
@@ -609,7 +614,7 @@ void CSjvmSkinSystem::LoadScript(LPCTSTR szScript)
 	// Init and run script
 	//
 
-	g_sjvm.Run();
+	g_sjvm->Run();
 
 	for (ListSkinSystemEvent::iterator it = m_listSkinSystemEvent.begin(); 
 		it != m_listSkinSystemEvent.end(); ++it)
@@ -631,7 +636,7 @@ void CSjvmSkinSystem::CloseScript()
 	m_listSkinSystemEvent.clear();
 	m_listSkinWndEvent.clear();
 
-	g_sjvm.Reset();
+	g_sjvm->Reset();
 }
 
 void CSjvmSkinSystem::OnSkinWndCreate(CSkinWnd *pSkinWnd)
@@ -686,7 +691,7 @@ void CSjvmSkinSystem::RegisterJNI()
 	int		nRet;
 
 	// Add class members definition.
-	CClass *pClass = g_sjvm.GetClass(CLASS_NAME);
+	CClass *pClass = g_sjvm->GetClass(CLASS_NAME);
 	ASSERT(pClass);
 
 	pClass->AddNativeDefaultConstructor();
@@ -718,7 +723,7 @@ bool SJNI_API CSjvmSkinSystem::registerSkinSystemEvent(jobject event)
 
 	CSjvmSkinSystemEvent	*pEvent = new CSjvmSkinSystemEvent();
 
-	g_sjvm.JniAddJObjRef(event);
+	g_sjvm->JniAddJObjRef(event);
 	pEvent->m_jobject = event;
 	m_listSkinSystemEvent.push_back(pEvent);
 
@@ -734,7 +739,7 @@ void SJNI_API CSjvmSkinSystem::unRegisterSkinSystemEvent(jobject event)
 		CSjvmSkinSystemEvent *pEvent = *it;
 		if (pEvent->m_jobject == event)
 		{
-			g_sjvm.JniReleaseJObjRef(event);
+			g_sjvm->JniReleaseJObjRef(event);
 			m_listSkinSystemEvent.erase(it);
 			delete pEvent;
 			return;
@@ -752,7 +757,7 @@ bool SJNI_API CSjvmSkinSystem::registerSkinWndEvent(LPCTSTR szWndName, jobject e
 
 	SjvmSkinWndEvent	*pEvent = new SjvmSkinWndEvent();
 
-	g_sjvm.JniAddJObjRef(event);
+	g_sjvm->JniAddJObjRef(event);
 
 	pEvent->m_jobject = event;
 	pEvent->m_strSkinWndName = szWndName;
@@ -770,7 +775,7 @@ void SJNI_API CSjvmSkinSystem::unRegisterSkinWndEvent(jobject event)
 		SjvmSkinWndEvent	*pEvent = *it;
 		if (pEvent->m_jobject == event)
 		{
-			g_sjvm.JniReleaseJObjRef(event);
+			g_sjvm->JniReleaseJObjRef(event);
 			m_listSkinWndEvent.erase(it);
 			delete pEvent;
 			return;
@@ -788,7 +793,7 @@ jobject SJNI_API CSjvmSkinSystem::getSkinWnd(LPCTSTR skinWndName)
 		return JOBJ_NULL;
 
 	jobject		jobj;
-	CSjvmSkinWnd *pJObj = (CSjvmSkinWnd*)g_sjvm.NewJObject(TID_SKIN_WND, jobj);
+	CSjvmSkinWnd *pJObj = (CSjvmSkinWnd*)g_sjvm->NewJObject(TID_SKIN_WND, jobj);
 	ASSERT(pJObj && pJObj->m_typeId == CSjvmSkinWnd::m_sTypeId);
 
 	pJObj->m_pSkinWnd = pWnd;

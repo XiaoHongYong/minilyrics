@@ -25,8 +25,8 @@ CLyricShowMultiRowObj::CLyricShowMultiRowObj()
 
 	m_nPrevLineAlphaOld = m_nNextLineAlphaOld = 0;
 
-	m_nDarkenTopArea = float(1.5);
-	m_nDarkenBottomArea = float(1.5);
+	m_nDarkenTopArea = float(1.6);
+	m_nDarkenBottomArea = float(1.6);
 }
 
 CLyricShowMultiRowObj::~CLyricShowMultiRowObj()

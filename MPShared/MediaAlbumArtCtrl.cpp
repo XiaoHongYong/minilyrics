@@ -276,15 +276,14 @@ void CMediaAlbumArtCtrl::CreateAlbumArtImage(PRAW_IMAGE_DATA pImgSrc)
 	CRawImage	imgSizedAlbumArt;
 	CSFImage	imgAaFrame;
 
+	if (pImgSrc)
+		pImgSrc = ConvertTo32BppRawImage(pImgSrc);
+	ASSERT(pImgSrc);
+	if (!pImgSrc)
+		return;
+
 	// Create a scale sized image for album art
 	pImgSizedAlbumArt = CreateScaleImage(pImgSrc, m_rcFrameMaskPos.Width(), m_rcFrameMaskPos.Height());
-	if (pImgSizedAlbumArt)
-		pImgSizedAlbumArt = ConvertTo32BppRawImage(pImgSizedAlbumArt);
-	if (!pImgSizedAlbumArt)
-	{
-		FreeRawImage(pImgSrc);
-		return;
-	}
 	imgSizedAlbumArt.Attach(pImgSizedAlbumArt);
 
 	// Load album art frame

@@ -1,6 +1,6 @@
 #pragma once
 
-void InitSjvmLib();
+void InitSjvmLib(CSJVM *sjvm);
 
 class CSjobjException : public CJObject
 {

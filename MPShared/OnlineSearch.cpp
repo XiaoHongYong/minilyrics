@@ -425,7 +425,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	}
 
 	if (retSearch.strMessage.size() && g_mpApp.GetMainWnd())
-		g_mpApp.GetMainWnd()->MessageOut(retSearch.strMessage.c_str());
+		g_mpApp.MessageOut(retSearch.strMessage.c_str());
 
 	if (retSearch.listResultFiles.size() > 0 || nRet == ERR_NOT_FOUND)
 	{
@@ -602,7 +602,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	}
 
 	if (retSearch.strMessage.size() && g_mpApp.GetMainWnd())
-		g_mpApp.GetMainWnd()->MessageOut(retSearch.strMessage.c_str());
+		g_mpApp.MessageOut(retSearch.strMessage.c_str());
 
 	nCurPage = retSearch.nCurPage;
 	nPageCount = retSearch.nPageCount;

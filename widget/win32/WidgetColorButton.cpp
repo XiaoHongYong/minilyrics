@@ -3,12 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "widget.h"
 #include "WidgetColorButton.h"
-#ifdef _WIN32_DESKTOP
-#include "DlgChooseColor.h"
-#else
-#include "../MiniLyrics6/win32/wce/DlgChooseColor.h"
-#endif
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

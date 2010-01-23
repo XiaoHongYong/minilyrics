@@ -223,8 +223,6 @@ BOOL CPPageLyrDisplay::OnInitDialog()
 {
 	CPreferencePageBase::OnInitDialog();
 
-	DWORD	nValue;
-
 	m_cbSettingType.Attach(this, IDC_CB_SETTING_TYPE);
 	m_cbSettingType.InsertString(ST_NORMAL_LYR, TOLOCAL(_T("Normal lyrics mode settings")));
 	m_cbSettingType.InsertString(ST_FLOATING_LYR, TOLOCAL(_T("Floating lyrics mode settings")));
@@ -238,22 +236,14 @@ BOOL CPPageLyrDisplay::OnInitDialog()
 	m_cbFadeMode.Attach(this, IDC_CB_FADE_MODE);
 	m_cbAlign.Attach(this, IDC_CB_ALIGN);
 
-	// Lyrics line spacing
-	nValue = CMPlayerSettings::GetSettings(m_strSectName.c_str(), _T("LineSpacing"), 2);
-	SetDlgItemInt(IDC_LINESPACE, nValue, TRUE);
-
 	// Lyrics colors
 	m_ColorSet[CS_OUTLINED_HIGH_BORDER].strProfileKey = _T("HilightBorderColor");
 	m_ColorSet[CS_OUTLINED_LOW_BORDER].strProfileKey = _T("LowlightBorderColor");
 	m_ColorSet[CS_BG].strProfileKey = _T("BgColor");
-	m_ColorSet[CS_EDITROWBG].strProfileKey = _T("FocusLineBgColor");
-	m_ColorSet[CS_TAG].strProfileKey = _T("TagColor");
 
 	m_ColorSet[CS_OUTLINED_HIGH_BORDER].clrDefault = RGB(255, 0, 0);
 	m_ColorSet[CS_OUTLINED_LOW_BORDER].clrDefault = RGB(0, 0, 255);
 	m_ColorSet[CS_BG].clrDefault = RGB(79, 88, 110);
-	m_ColorSet[CS_EDITROWBG].clrDefault = RGB(64, 71, 88);
-	m_ColorSet[CS_TAG].clrDefault = RGB(255, 128, 64);
 
 	if (m_eventType == ET_LYRICS_FLOATING_SETTINGS)
 	{
@@ -264,8 +254,6 @@ BOOL CPPageLyrDisplay::OnInitDialog()
 	m_ColorSet[CS_OUTLINED_HIGH_BORDER].dwButtonID = IDC_OBM_HIGHLIGHT_BORDER;
 	m_ColorSet[CS_OUTLINED_LOW_BORDER].dwButtonID = IDC_OBM_LOWLIGHT_BORDER;
 	m_ColorSet[CS_BG].dwButtonID = IDC_BG_COLOR;
-	m_ColorSet[CS_EDITROWBG].dwButtonID = IDC_EDIT_ROW_BK_COLOR;
-	m_ColorSet[CS_TAG].dwButtonID = IDC_TAG_CLR;
 
 	// Set drag rect of every color
 	for (int i = 0; i < m_nColorSetCount; i++)
@@ -299,17 +287,16 @@ void CPPageLyrDisplay::SetSettingType(SettingType settingType)
 {
 	EventType	m_eventTypeOld;
 	m_eventTypeOld = m_eventType;
+	m_nColorSetCount = CS_SIZE;
 	if (settingType == ST_FLOATING_LYR)
 	{
 		m_eventType = ET_LYRICS_FLOATING_SETTINGS;
 		m_strSectName = SZ_SECT_FLOATING_LYR;
-		m_nColorSetCount = CS_EDITROWBG;
 	}
 	else
 	{
 		m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
 		m_strSectName = SZ_SECT_LYR_DISPLAY;
-		m_nColorSetCount = CS_SIZE;
 	}
 
 	int		nItemsToHide[] = { IDC_S_FOCUSLINE_COLOR, IDC_S_TAG_COLOR, IDC_EDIT_ROW_BK_COLOR, IDC_TAG_CLR };
@@ -459,22 +446,6 @@ void CPPageLyrDisplay::OnCommand(UINT uID, UINT nNotifyCode)
 		{
 			if (nNotifyCode == CBN_SELCHANGE)
 				SetSettingType((SettingType)m_cbSettingType.GetCurSel());
-		}
-		break;
-	case IDC_LINESPACE:
-		{
-			if (nNotifyCode == EN_CHANGE)
-			{
-				// set lyrics line spacing
-				BOOL	bTranslated;
-				int		nLineSpacing;
-				nLineSpacing = GetDlgItemInt(IDC_LINESPACE, &bTranslated, TRUE);
-
-				if (bTranslated && nLineSpacing != CMPlayerSettings::GetSettings(m_strSectName.c_str(), _T("LineSpacing"), 2))
-				{
-					CMPlayerSettings::SetSettings(m_eventType, m_strSectName.c_str(), _T("LineSpacing"), nLineSpacing);
-				}
-			}
 		}
 		break;
 	case IDC_SEL_FONT_ENGLISH:

@@ -334,10 +334,7 @@ CRawGraph *CSkinContainer::GetMemGraph()
 
 void CSkinContainer::Draw(CRawGraph *pGraph)
 {
-	int		nCount;
-
-	nCount = (int)m_vUIObjs.size();
-	for (int i = 0; i < nCount; i++)
+	for (int i = 0; i < m_vUIObjs.size(); i++)
 	{
 		CUIObject		*pObj = m_vUIObjs[i];
 		if (pObj->IsVisible())

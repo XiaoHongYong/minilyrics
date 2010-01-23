@@ -84,6 +84,37 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
 #endif
+	case IDC_TAG_COLOR:
+	case IDC_EDIT_LINE_COLOR:
+		{
+			CDlgChooseColor		dlg;
+			MLColor				clr;
+			LPCTSTR				szColorValueName = NULL;
+
+			if (nID == IDC_TAG_COLOR)
+			{
+				szColorValueName = _T("TagColor");
+				clr.set(RGB(255, 128, 64));
+			}
+			else
+			{
+				szColorValueName = _T("FocusLineBgColor");
+				clr.set(RGB(64, 71, 88));
+			}
+
+			ProfileGetColorValue(clr, SZ_SECT_LYR_DISPLAY, szColorValueName);
+
+			if (dlg.DoModal(m_pSkinWnd, clr) == IDOK)
+			{
+				clr = dlg.GetColor();
+				tstring		strColor;
+				ColorToStr(clr, strColor);
+				CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, 
+					SZ_SECT_LYR_DISPLAY, szColorValueName, strColor.c_str());
+			}
+		}
+		break;
+
 	case IDC_LOAD_LYRICS_FROM_MP3:
 		{
 			OnCommandOpenLyricsInMp3();

@@ -218,7 +218,8 @@ struct LyricsProperties
 			m_strTitle == other.m_strTitle &&
 			m_strAlbum == other.m_strAlbum &&
 			m_strBy == other.m_strBy &&
-			m_nTimeOffset == other.m_nTimeOffset;
+			m_nTimeOffset == other.m_nTimeOffset &&
+			m_nEncodingID == other.m_nEncodingID; 
 	}
 
 	void clear()

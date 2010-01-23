@@ -560,10 +560,13 @@ void CUIObject::SetVisible(bool bVisible)
 	if (m_bVisible != bVisible)
 	{
 		m_bVisible = bVisible;
-		if (bVisible)
-			m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
-		else
-			m_pSkin->DelTool(m_nAutoUniID);
+		if (m_strTooltip.size())
+		{
+			if (bVisible)
+				m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
+			else
+				m_pSkin->DelTool(m_nAutoUniID);
+		}
 	}
 
 	CUIObject	*pObjFocus;

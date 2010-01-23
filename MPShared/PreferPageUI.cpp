@@ -191,7 +191,7 @@ void CPreferPageSkin::OnTimer(UINT nIDEvent)
 		if (_tcsicmp(szSkin, m_strEmbeddedSkinName.c_str()) == 0)
 		{
 			// 嵌入到player 中的skin
-			g_mpApp.SwitchToEmbeddedSkinMode();
+			g_mpApp.SwitchToEmbeddedSkinMode(true);
 		}
 		else
 #endif

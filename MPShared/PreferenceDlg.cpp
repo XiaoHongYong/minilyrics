@@ -240,10 +240,12 @@ void CPreferenceDlg::ConstructPreferencePages()
 		pPage->SetParentPage(pPageParent);
 		m_vPreferencePages.push_back(pPage);
 
+#ifndef _MPLAYER
 		// Background picture
 		pPage = new CPreferPageDispBgPic;
 		pPage->SetParentPage(pPageParent);
 		m_vPreferencePages.push_back(pPage);
+#endif
 	}
 
 	{

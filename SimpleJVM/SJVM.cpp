@@ -17,7 +17,7 @@ TODO:
 #define GC_TRIGGER_COUNT		1000
 #define MAX_CALL_STACK_DEEP		5000
 
-CSJVM			g_sjvm;
+CSJVM			*g_sjvm;
 
 static LPTSTR dupStrT(LPCTSTR str)
 {
@@ -536,7 +536,7 @@ int CObjectMgr::New(CClass *pClass)
 	if (m_nAllocCount > GC_TRIGGER_COUNT)
 	{
 		m_nAllocCount = 0;
-		g_sjvm.GarbageCollect();
+		g_sjvm->GarbageCollect();
 	}
 
 	ASSERT(pClass->typeId != TID_STRING);
@@ -651,8 +651,6 @@ CSJVM::CSJVM(void)
 		ASSERT(nRet == ERR_OK);
 		ASSERT(nIDPredefined[i] == GetTypeIdByName(vIDPredefined[i]));
 	}
-
-	InitSjvmLib();
 
 	m_bsiInLoop = false;
 	m_bp = 0;
@@ -914,7 +912,7 @@ public:
 		pObjMgr->m_vFreeJObjs.clear();
 		int		nUsedEndPos;
 
-		for (nUsedEndPos = (int)vIsObjReferenced.size() - 1; nUsedEndPos > (int)g_sjvm.m_mapStrings.size(); nUsedEndPos--)
+		for (nUsedEndPos = (int)vIsObjReferenced.size() - 1; nUsedEndPos > (int)g_sjvm->m_mapStrings.size(); nUsedEndPos--)
 		{
 			if (vIsObjReferenced[nUsedEndPos])
 				break;
@@ -926,8 +924,8 @@ public:
 			vIsObjReferenced.resize(nUsedEndPos);
 		}
 
-		// 0 ~ g_sjvm.m_mapStrings.size() is the static string.
-		for (size_t i = g_sjvm.m_mapStrings.size(); i < vIsObjReferenced.size(); i++)
+		// 0 ~ g_sjvm->m_mapStrings.size() is the static string.
+		for (size_t i = g_sjvm->m_mapStrings.size(); i < vIsObjReferenced.size(); i++)
 		{
 			if (!vIsObjReferenced[i])
 			{
