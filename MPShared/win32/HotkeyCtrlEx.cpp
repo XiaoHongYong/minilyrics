@@ -24,13 +24,13 @@ void FormatHotkeyText(tstring &strText, UINT nVirtKey, UINT fsModifiers)
 	GetKeyNameText(nScanCode, szKeyName, CountOf(szKeyName));
 
 	if (IsFlagSet(fsModifiers, MOD_WIN))
-		strText += _T("Winkey + ");
+		strText += _T("Winkey+");
 	if (IsFlagSet(fsModifiers, MOD_CONTROL))
-		strText += _T("Ctrl + ");
+		strText += _T("Ctrl+");
 	if (IsFlagSet(fsModifiers, MOD_SHIFT))
-		strText += _T("Shift + ");
+		strText += _T("Shift+");
 	if (IsFlagSet(fsModifiers, MOD_ALT))
-		strText += _T("Alt + ");
+		strText += _T("Alt+");
 	strText += szKeyName;
 }
 

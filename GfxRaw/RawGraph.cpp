@@ -166,6 +166,11 @@ bool CRawGraph::SetClipBoundBox(const CRect &rc)
 	if (MapY(m_rcClip.bottom) > Height())
 		m_rcClip.bottom = RevertMapY(Height());
 
+	if (m_rcClip.right < m_rcClip.left)
+		m_rcClip.right = m_rcClip.left;
+	if (m_rcClip.bottom < m_rcClip.top)
+		m_rcClip.bottom = m_rcClip.top;
+
 	return true;
 }
 
@@ -786,11 +791,15 @@ void CRawGraph::ClipAndMapRect(const RECT *lpRect, int &x, int &y, int &xMax, in
 		xMax = m_rcClip.right;
 	else
 		xMax = lpRect->right;
+	if (xMax < x)
+		xMax = x;
 
 	if (lpRect->bottom > m_rcClip.bottom)
 		yMax = m_rcClip.bottom;
 	else
 		yMax = lpRect->bottom;
+	if (yMax < y)
+		yMax = y;
 
 	MapPoint(x, y);
 	MapPoint(xMax, yMax);
