@@ -19,6 +19,7 @@
 #define SZ_ENABLED		TOLOCAL(_T("Enabled"))
 #define SZ_DISABLED		TOLOCAL(_T("Disabled"))
 #define SZ_EDIT			TOLOCAL(_T("Edit..."))
+#define SZ_BROWSE		TOLOCAL(_T("Browse..."))
 #define SZ_RESET		TOLOCAL(_T("Reset Selected Settings"))
 
 #define MENUID_START		3000
@@ -269,7 +270,7 @@ public:
 	}
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
-		vString.push_back(TOLOCAL(SZ_EDIT));
+		vString.push_back(TOLOCAL(SZ_BROWSE));
 	}
 
 	virtual void SetOption(int nIndex) {
@@ -652,7 +653,7 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 	CPreferencePageBase::OnInitDialog();
 
 	m_listItems.Attach(this, IDC_LIST_SETTINGS);
-	m_listItems.SetExtendedStyle(LVS_EX_FULLROWSELECT);
+	// m_listItems.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_INFOTIP);
 	m_listItems.InsertColumn(0, TOLOCAL(_T("Option")), LVCFMT_LEFT, 300);
 	m_listItems.InsertColumn(1, TOLOCAL(_T("Value")), LVCFMT_LEFT, 150);
 

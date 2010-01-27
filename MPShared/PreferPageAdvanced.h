@@ -4,6 +4,7 @@
 #pragma once
 
 #include "PreferencePageBase.h"
+#include "../widget/win32/WidgetTooltipListCtrl.h"
 
 class CPreferItem
 {
@@ -57,7 +58,7 @@ protected:
 	VecPreferItems				m_vPreferItems;
 	VecPreferItems				m_vFilteredItems;
 	int							m_nMenuIdStart, m_nMenuIdEnd;
-	CWidgetListCtrl				m_listItems;
+	CWidgetTooltipListCtrl				m_listItems;
 	tstring						m_strLastSearch;
 
 #ifdef _WIN32

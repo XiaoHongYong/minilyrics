@@ -1488,6 +1488,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\win32\WidgetTooltipListCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\win32\WidgetTrackBar.cpp"
 				>
 			</File>
@@ -1712,6 +1716,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\WidgetTabCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\win32\WidgetTooltipListCtrl.h"
 				>
 			</File>
 			<File
