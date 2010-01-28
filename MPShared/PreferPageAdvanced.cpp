@@ -430,6 +430,36 @@ public:
 
 };
 
+class CPfItemLyrDelayTime : public CPfItemInt
+{
+public:
+	CPfItemLyrDelayTime() : CPfItemInt(ConnectToLocalStr(_T("Lyrics Display:"), _T("Global lyrics displaying delay time (seconds)")).c_str(),
+		ET_NULL, SZ_SECT_LYR_DISPLAY, _T("LyrDelayTime"), 0) { }
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		CStrPrintf	str;
+		int			nMax = 20;
+		float		fDelayTime = -5.0;
+		for (int i = 0; i <= nMax; i++)
+		{
+			str.printf(_T("%.1f"), fDelayTime + i * 0.5);
+			vString.push_back(str.c_str());
+		}
+
+		nRadio = GetIntValue() / 500 + nMax / 2;
+		if (nRadio >= nMax)
+			nRadio = nMax;
+		else if (nRadio < 0)
+			nRadio = 0;
+	}
+
+	virtual void SetOption(int nIndex) {
+		g_LyricData.m_nGlobalOffsetTime = -5000 + 500 * nIndex;
+		SetIntValue(g_LyricData.m_nGlobalOffsetTime);
+	}
+
+};
+
 class CDlgShortcutKey : public CBaseDialog
 {
 public:
@@ -683,6 +713,7 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 		ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, 
 		_T("EnableAdjustVertAlign"), false));
 	m_vPreferItems.push_back(new CPfItemLyrLineSpacing());
+	m_vPreferItems.push_back(new CPfItemLyrDelayTime());
 
 	//
 	// Lyrics

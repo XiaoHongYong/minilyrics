@@ -430,6 +430,8 @@ public:
 	// ML_ROW_LYRICS 之外的其他行都存在此处。
 	CMLyrLines				m_arrFileRows;
 
+	int						m_nGlobalOffsetTime;
+
 protected:
 	// Only lyrics lines are saved here, it's just a sub copy of m_arrFileRows.
 	CMLyrLines				m_arrLyricsRows;

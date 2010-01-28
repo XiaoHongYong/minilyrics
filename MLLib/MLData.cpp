@@ -160,6 +160,7 @@ CMLData::CMLData()
 
 	m_nMediaLength = 0;
 	m_nTimeElapsed = 0;
+	m_nGlobalOffsetTime = 0;
 }
 
 CMLData::~CMLData()
@@ -1232,7 +1233,7 @@ int CMLData::GetLyricsFileServerMark(TCHAR szMd5[])
 //		…Ë÷√ ±º‰∆´“∆
 void CMLData::SetPlayElapsedTime(int nTimeElapsed)
 {
-	m_nTimeElapsed = nTimeElapsed + m_lyrProperties.m_nTimeOffset;
+	m_nTimeElapsed = nTimeElapsed + m_lyrProperties.m_nTimeOffset - m_nGlobalOffsetTime;
 }
 
 // COMMENT:
