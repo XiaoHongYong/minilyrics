@@ -453,7 +453,7 @@ LPCTSTR DisplayOptToStr(DISPLAY_OPTIONS displayOpt)
 
 DISPLAY_OPTIONS DisplayOptFromStr(LPCTSTR szDisplayOpt)
 {
-	return (DISPLAY_OPTIONS)StringToID(g_idsLyrDisplayOpt, szDisplayOpt, DO_FADEOUT_BG);
+	return (DISPLAY_OPTIONS)StringToID(g_idsLyrDisplayOpt, szDisplayOpt, DO_FADEOUT_LOWCOLOR);
 }
 
 static ID_TO_STRING g_idsLOB[] = 

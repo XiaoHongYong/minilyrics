@@ -691,7 +691,7 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 	m_vPreferItems.push_back(new CPfItemBoolEnableAutoDlLyr());
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Only download synchronized lyrics with .lrc extension")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false));
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Pop up lyrics searching dialog when lyrics are found")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), true));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Save downloaded lyrics in the a, b, c folder of downloaded folder")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Save downloaded lyrics in the a, b, c... folder of downloaded folder")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
 	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(this));
 	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(this));
 

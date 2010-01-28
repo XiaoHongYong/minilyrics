@@ -360,7 +360,7 @@ void CPPageLyrDisplay::SetSettingType(SettingType settingType)
 
 		OptComboStr		opt;
 		opt.nIDWidgetCombo = IDC_CB_FADE_MODE;
-		opt.Set(m_eventType, m_strSectName.c_str(), _T("LyrDrawOpt"), _T("fadeout"));
+		opt.Set(m_eventType, m_strSectName.c_str(), _T("LyrDrawOpt"), _T("fadein"));
 
 		m_cbFadeMode.ResetContent();
 		ASSERT(CountOf(vszItemName) == DO_MAX);
