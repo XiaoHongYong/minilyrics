@@ -572,7 +572,7 @@ void CDlgSearchLyrics::OnOK()
 		if (nError != ERR_OK)
 		{
 			TCHAR	szLocal[MAX_PATH];
-			UriUnescape(pSel->strUrl.c_str(), szLocal, MAX_PATH);
+			UriUnescape(pSel->strUrl.c_str(), szLocal, MAX_PATH, ED_SYSDEF);
 			ERRLOG2(_T("FAILED to Add Task: %s, %s"), (LPCTSTR)Error2Str(nError), szLocal);
 		}
 	}

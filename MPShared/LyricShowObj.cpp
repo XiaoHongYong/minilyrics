@@ -1096,7 +1096,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				pGraphics->SetOpacityPainting(nAlpha);
 			}
 
-			if (m_bOutlineLyrics)
+			if (m_bOutlineLyrics || m_img.IsValid())
 			{
 				// Draw lyrics text outlined
 				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
@@ -1168,7 +1168,7 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 		else
 #endif*/
 		{
-			if (m_bOutlineLyrics)
+			if (m_bOutlineLyrics || m_img.IsValid())
 			{
 				// Draw lyrics text outlined
 				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
@@ -1243,7 +1243,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 			else
 				m_font.SetOverlayPattern(&m_tobHilight.imgPattern);
 
-			if (m_bOutlineLyrics)
+			if (m_bOutlineLyrics || m_img.IsValid())
 			{
 				// Draw lyrics text outlined
 				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
@@ -1345,7 +1345,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		pFrag = pLyricRow->vFrags[nCurPos];
 
 		// draw text border
-		if (m_bOutlineLyrics)
+		if (m_bOutlineLyrics || m_img.IsValid())
 		{
 			// Draw lyrics text outlined
 			pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER]);

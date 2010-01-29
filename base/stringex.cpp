@@ -994,30 +994,30 @@ void UriUnescape(const char *szInet, char *szLocal, int nLenMax)
 	szLocal[k] = '\0';
 }
 
-void UriUnescape(const WCHAR *szInet, WCHAR *szLocal, int nLenMax)
+void UriUnescape(const WCHAR *szInet, WCHAR *szLocal, int nLenMax, CHAR_ENCODING encoding)
 {
 	stringex		strIn;
-	string				strOut;
+	string			strOut;
 	wstringex		strOutW;
 
 	ConvertStr(szInet, -1, strIn);
 
 	UriUnescape(strIn.c_str(), strOut);
-	ConvertStr(strOut.c_str(), strOut.size(), strOutW);
+	ConvertStr(strOut.c_str(), strOut.size(), strOutW, encoding);
 
 	wcscpy_safe(szLocal, nLenMax, strOutW.c_str());
 }
 
-void UriUnescape(const WCHAR *szInet, wstring &str)
+void UriUnescape(const WCHAR *szInet, wstring &str, CHAR_ENCODING encoding)
 {
 	stringex		strIn;
-	string				strOut;
+	string			strOut;
 	wstringex		strOutW;
 
 	ConvertStr(szInet, -1, strIn);
 
 	UriUnescape(strIn.c_str(), strOut);
-	ConvertStr(strOut.c_str(), strOut.size(), strOutW);
+	ConvertStr(strOut.c_str(), strOut.size(), strOutW, encoding);
 
 	str = strOutW.c_str();
 }
@@ -1078,13 +1078,13 @@ void UriEscape(const char *szLocal, char *szInet, int nLenMax)
 	strcpy_safe(szInet, nLenMax, strTemp.c_str());
 }
 
-void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax)
+void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax, CHAR_ENCODING encoding)
 {
 	stringex		strIn;
 	string				str;
 	wstringex		strOutW;
 
-	ConvertStr(szLocal, -1, strIn);
+	ConvertStr(szLocal, -1, strIn, encoding);
 
 	UriEscape(strIn.c_str(), str);
 	ConvertStr(str.c_str(), str.size(), strOutW);
@@ -1092,13 +1092,13 @@ void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax)
 	wcscpy_safe(szInet, nLenMax, strOutW.c_str());
 }
 
-void UriEscape(const WCHAR *szLocal, wstring &strInet)
+void UriEscape(const WCHAR *szLocal, wstring &strInet, CHAR_ENCODING encoding)
 {
 	stringex		strIn;
 	string				str;
 	wstringex		strOutW;
 
-	ConvertStr(szLocal, -1, strIn);
+	ConvertStr(szLocal, -1, strIn, encoding);
 
 	UriEscape(strIn.c_str(), str);
 	ConvertStr(str.c_str(), str.size(), strOutW);

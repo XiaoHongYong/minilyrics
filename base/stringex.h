@@ -96,15 +96,15 @@ BOOL IsHexChar(char ch);
 // rfc:  http://www.faqs.org/rfcs/rfc2396.html
 void UriEscape(const char *szLocal, string &strInet);
 void UriEscape(const char *szLocal, char *szInet, int nLenMax);
-void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax);
-void UriEscape(const WCHAR *szLocal, wstring &strInet);
+void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax, CHAR_ENCODING encoding);
+void UriEscape(const WCHAR *szLocal, wstring &strInet, CHAR_ENCODING encoding);
 
 // COMMENT:
 //		将%20等类似的名字转换为对应的字符
 void UriUnescape(const char *szInet, string &str);
 void UriUnescape(const char *szInet, char *szLocal, int nLenMax);
-void UriUnescape(const WCHAR *szInet, WCHAR *szLocal, int nLenMax);
-void UriUnescape(const WCHAR *szInet, wstring &str);
+void UriUnescape(const WCHAR *szInet, WCHAR *szLocal, int nLenMax, CHAR_ENCODING encoding);
+void UriUnescape(const WCHAR *szInet, wstring &str, CHAR_ENCODING encoding);
 
 BOOL IsUnicodeStr(LPCVOID lpData);
 

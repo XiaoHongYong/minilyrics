@@ -441,7 +441,7 @@ bool CSkinMenuBar::OnMenuKey(UINT nChar, UINT nFlags)
 {
 	for (int i = 0; i < (int)m_vSubMenus.size(); i++)
 	{
-		if (m_vSubMenus[i].chMenuKey == nChar)
+		if (CharUpr(m_vSubMenus[i].chMenuKey) == CharUpr(nChar))
 		{
 			m_nSelSubMenu = i;
 			if (m_vSubMenus[i].bHasSubMenu)
