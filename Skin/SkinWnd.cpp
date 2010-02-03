@@ -251,13 +251,19 @@ int CSkinWnd::OpenDefaultSkin()
 int CSkinWnd::OpenSkin(LPCTSTR szSkinWndName)
 {
 	SXNode			*pNode;
+	CSimpleXML		xml;
 
 	// before load it we close old first.
 	CloseSkin();
 
 	pNode = m_pSkinFactory->GetSkinWndNode(szSkinWndName);
 	if (!pNode)
-		return ERR_NOT_FOUND;
+	{
+		int nRet = m_pSkinFactory->LoadResourceSkinWndXml(szSkinWndName, xml);
+		if (nRet != ERR_OK)
+			return nRet;
+		pNode = xml.m_pRoot;
+	}
 
 	m_strSkinWndName = szSkinWndName;
 

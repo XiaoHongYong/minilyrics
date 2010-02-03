@@ -58,9 +58,6 @@ public:
 	SXNode *GetMenusNode();
 	int SetMenusNode(SXNode *pNode);
 
-	SXNode *GetDynamicCtrlsNode();
-	int SetDynamicCtrlsNode(SXNode *pNode);
-
 	SXNode *GetDynamicCmdsNode();
 	int SetDynamicCmdsNode(SXNode *pNode);
 
@@ -177,6 +174,9 @@ public:
 	// methods for skin window
 	SXNode *GetSkinWndNode(LPCTSTR szSkinWndName);
 
+	int LoadResourceSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml);
+	bool IsResourceSkinWnd(LPCTSTR szSkinWndName);
+
 	// create new uiobject by class name
 	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
 
@@ -224,6 +224,8 @@ public:
 
 protected:
 	virtual int OpenSkinFile(LPCTSTR szSkinFile);
+
+	void ExpandIncludeNode();
 
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 

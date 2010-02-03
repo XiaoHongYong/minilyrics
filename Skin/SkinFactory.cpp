@@ -223,16 +223,6 @@ int CSkinFileXML::SetMenusNode(SXNode *pNode)
 	return SetNode(_SZ_MENUS, pNode);
 }
 
-SXNode *CSkinFileXML::GetDynamicCtrlsNode()
-{
-	return m_xml.m_pRoot->GetChild(_SZ_DYNMICCTRLS);
-}
-
-int CSkinFileXML::SetDynamicCtrlsNode(SXNode *pNode)
-{
-	return SetNode(_SZ_DYNMICCTRLS, pNode);
-}
-
 SXNode *CSkinFileXML::GetDynamicCmdsNode()
 {
 	return m_xml.m_pRoot->GetChild(_SZ_DYNMICCMDS);
@@ -809,6 +799,8 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 		}
 	}
 
+	ExpandIncludeNode();
+
 	m_skinStyle.FromXML(m_skinFile.GetRootNode());
 	LPCTSTR szDefaultStyle = m_skinFile.GetSkinProperty(_T("DefaultStyle"));
 	if (szDefaultStyle && !IsEmptyString(szDefaultStyle))
@@ -829,6 +821,42 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 		CSjvmSkinSystem::LoadScript(szScript);
 
 	return ERR_OK;
+}
+
+void CSkinFactory::ExpandIncludeNode()
+{
+	SXNode	*pSkinRoot = m_skinFile.GetRootNode();
+	for (SXNode::LIST_CHILDREN::iterator it = pSkinRoot->listChildren.begin();
+		it != pSkinRoot->listChildren.end(); ++it)
+	{
+		SXNode	*p = *it;
+		if (IsPropertyName(p->strName.c_str(), _T("include")))
+		{
+			LPCTSTR szName = p->GetProperty(SZ_PN_NAME);
+			if (!szName || IsEmptyString(szName))
+			{
+				ERRLOG0(_T("Invalid include node"));
+				continue;
+			}
+
+			CSimpleXML	xml;
+			TCHAR		szIncludeFile[MAX_PATH];
+			if (!m_resourceMgr.GetResourcePathName(szIncludeFile, CountOf(szIncludeFile), szName))
+			{
+				ERRLOG1(_T("Can't get resource file: %s"), szName);
+				continue;
+			}
+
+			if (!xml.ParseFile(szIncludeFile))
+			{
+				ERRLOG1(_T("Failed to parse xml file: %s"), szIncludeFile);
+				continue;
+			}
+			delete p;
+			*it = xml.m_pRoot;
+			xml.m_pRoot = NULL;
+		}
+	}
 }
 
 int CSkinFactory::SaveSkinFile(LPCTSTR szFile)
@@ -957,12 +985,12 @@ int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCa
 	int		nRet;
 	CSkinWnd	*pSkin;
 
-	SXNode			*pNode;
-
 	// If the skinwnd doesn't exist, return ERR_NOT_FOUND
-	pNode = GetSkinWndNode(szSkinWndName);
-	if (!pNode)
-		return ERR_NOT_FOUND;
+	if (GetSkinWndNode(szSkinWndName) == NULL)
+	{
+		if (!IsResourceSkinWnd(szSkinWndName))
+			return ERR_NOT_FOUND;
+	}
 
 	if (ppSkin)
 		*ppSkin = NULL;
@@ -976,7 +1004,7 @@ int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCa
 		if (ppSkin)
 			*ppSkin = pSkin;
 #ifdef _WIN32
-		if (!bMainWnd)
+		if (!bMainWnd && !pSkin->IsWindowsAppearance())
 			ShowAsToolWindow(pSkin->GetHandle());
 #endif
 	}
@@ -1055,6 +1083,35 @@ void CSkinFactory::OnMainSkinWndDestory(CSkinWnd *pSkinWnd)
 SXNode *CSkinFactory::GetSkinWndNode(LPCTSTR szSkinWndName)
 {
 	return m_skinFile.GetSkinWndNode(szSkinWndName);
+}
+
+static tstring	GetResourceSkinWndFile(LPCTSTR szSkinWndName)
+{
+	tstring		strFile = GetWorkingFolder();
+	strFile += _T("Resources") _T(SZ_DIR_SLASH);
+	strFile += szSkinWndName;
+
+	return strFile;
+}
+
+int CSkinFactory::LoadResourceSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml)
+{
+	tstring		strFile = GetResourceSkinWndFile(szSkinWndName);
+
+	if (!IsFileExist(strFile.c_str()))
+		return ERR_NOT_FOUND;
+
+	if (!xml.ParseFile(strFile.c_str()))
+		return ERR_PARSE_XML;
+
+	return ERR_OK;
+}
+
+bool CSkinFactory::IsResourceSkinWnd(LPCTSTR szSkinWndName)
+{
+	tstring		strFile = GetResourceSkinWndFile(szSkinWndName);
+
+	return IsFileExist(strFile.c_str());
 }
 
 // create new uiobject by class name

@@ -318,8 +318,11 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #endif
 	case IDC_ABOUT:
 		{
-			CDlgAbout		dlg;
-			dlg.DoModal(m_pSkinWnd);
+			CSkinWnd	*pWnd;
+			int nRet = g_mpApp.GetSkinFactory()->CreateSkinWnd(false, _T("about_box"), _T("AboutBox"),
+				_T("AboutBox.xml"), &pWnd);
+			// CDlgAbout		dlg;
+			// dlg.DoModal(m_pSkinWnd);
 		}
 		break;
 	case IDC_BR_ALBUM_ART:
