@@ -79,4 +79,6 @@ extern CLanguageTool			g_LangTool;
 #define LOADLOCALMENU(ID)	(g_LangTool.LoadLocalMenu(ID))
 #define ERROR2STR_LOCAL(nError)	(g_LangTool.ToLocalString(Error2Str(nError)))
 
+tstring RemovePrefixOfAcckey(LPCTSTR szStr);
+
 #endif // !defined(AFX_LOCALIZETOOL_H__9C311C26_12B8_4F14_AB80_0CD2040E45C5__INCLUDED_)

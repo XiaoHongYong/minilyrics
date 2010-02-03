@@ -131,6 +131,7 @@ enum
 #define SZ_PN_WIDTH			_T("Width")
 #define SZ_PN_HEIGHT		_T("Height")
 #define SZ_PN_TOOLTIP		_T("ToolTip")
+#define SZ_PN_EXTENDS		_T("Extends")
 
 #define SZ_PN_PROPERTY		_T("Property")
 

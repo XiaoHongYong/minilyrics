@@ -139,7 +139,7 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 		result.strUrl = SZ_SONG_ID3V2_SYLT;
 		result.strUrl += str;
 
-		result.strSaveFileName = TOLOCAL(SZ_SONG_ID3V2_SYLT_DESC);
+		result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(SZ_SONG_ID3V2_SYLT_DESC));
 		result.strSaveFileName += _T(", ");
 		result.strSaveFileName += str;
 		result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
@@ -164,7 +164,7 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 			result.strUrl = SZ_SONG_ID3V2_USLT;
 			result.strUrl += str;
 
-			result.strSaveFileName = TOLOCAL(SZ_SONG_ID3V2_USLT_DESC);
+			result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(SZ_SONG_ID3V2_USLT_DESC));
 			result.strSaveFileName += _T(", ");
 			result.strSaveFileName += str;
 			result.nMatchValue = MATCH_VALUE_OK + 2;
@@ -177,7 +177,7 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 		&& (lyricsInfo.m_lyricsUserDefined.m_strDescAnsi.size() || lyricsInfo.m_lyricsUserDefined.m_strDescUCS2.size()))
 	{
 		result.strUrl = SZ_SONG_ID3V2_LYRICS;
-		result.strSaveFileName = TOLOCAL(SZ_SONG_ID3V2_LYRICS_DESC);
+		result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(SZ_SONG_ID3V2_LYRICS_DESC));
 		result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC - 1;
 		vLyrics.push_back(result);
 	}

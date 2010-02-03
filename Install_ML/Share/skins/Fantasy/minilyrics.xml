@@ -30,13 +30,19 @@
     <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
 
+    <cmd ID="CMD_INIT_ANIMATION"       func="start_animation"      param="CID_INITANIMATION" />
   </DynCmds>
-  <DynControls>
+  <style Name="Default">
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
     <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
-  </DynControls>
-  <skinwnd Name="floatinglyr" EnableTranslucency="true" TranslucencyAlpha="0" TranslucencyAlphaOnHover="70" TranslucencyAlphaOnActive="228" MinWidth="400" MinHeight="60" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="FloatingLyrMode" CmdHandler="ch_floating_lyr" LyrDisplayStylePropName="FloatingLyrDispStyle">
+  </style>
+  <skinwnd Name="floatinglyr" EnableTranslucency="true" TranslucencyAlpha="0" 
+           TranslucencyAlphaOnHover="70" TranslucencyAlphaOnActive="228" 
+           MinWidth="400" MinHeight="60" Width="400" Height="200" 
+           PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" 
+           ContextMenu="FloatingLyrMode" CmdHandler="ch_floating_lyr" 
+           LyrDisplayStylePropName="FloatingLyrDispStyle">
     <DecorativeContainer Name="Caption" Left="10" Top="0" Width="w-20" Height="h" >
       <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAdjustVertAlign="FALSE" EnableStaticTextStyle="FALSE" LyrDisplayStylePropName="FloatingLyrDispStyle" FloatingLyr="1" UseAlbumArtAsBg="FALSE" BlendingLyrText="TRUE" ThickOutline="TRUE"/>
       <Toolbar Left="50" Top="8" Width="196" Height="22" HideIfMouseInactive="TRUE" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
@@ -83,9 +89,18 @@
       </Toolbar>
     </DecorativeContainer>
   </skinwnd>
-  <skinwnd Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="228" MinWidth="330" MinHeight="300" Width="330" Height="400" PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
+  <skinwnd Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="228" 
+       MinWidth="330" MinHeight="300" Width="330" Height="400" 
+       PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
+       ContextMenu="NormalMode" CmdHandler="ch_common,ch_player"
+       OnCreateCommand="CMD_INIT_ANIMATION">
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
               CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
+    <Property Name="Motion" />
+
+    <Animation ID="CID_INITANIMATION" MoveFromRight="CID_TB_SYSBT, CCMD_MEDIAINFO"
+          MoveFromLeft="CCMD_ALBUMART, " MoveFromBottom="CID_TOGGLE_LYR_PL" 
+               />
 
     <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
     <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
@@ -93,7 +108,10 @@
     <Image Name="RightBottomCorner" Left="w-20" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="55, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 55, 20, 20" BlendPixMode="copy"/>
     <Image Name="TopRightCorner" Left="w-20" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="55, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 0, 20, 20" BlendPixMode="copy"/>
     <Image Name="RightBorder" Left="w-20+10" Top="20" Width="20-10" Height="h-20-20" Image="frame.png" ImageRect="65, 20, 10, 35" BltMode="tile" BlendPixMode="copy"/>
-    <Toolbar Left="w-62-20" Top="8" Width="62" Height="14" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14" blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10" MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
+    <Toolbar ID="CID_TB_SYSBT"  Left="w-62-20" Top="8" Width="62" Height="14" HideIfWndInactive="TRUE"
+         UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14"
+         blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10" 
+         MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
       <button ID="ID_MINIMIZE" Left="0" />
       <button ID="dyncmd_change_to_bar" Left="4" ToolTip="Lyrics Bar Mode"/>
       <button ID="dyncmd_change_to_floatinglyr" Left="3" ToolTip="Floating Lyrics Mode"/>
@@ -101,7 +119,7 @@
     </Toolbar>
     <BarFrame Name="PanelFrame" ID="CCMD_MAINFRAME" Left="16" Top="16" Width="w-16-20" Height="108" XBorder="0" YBorder="0">
       <ContainerBar Name="AlbumArt" ID="CCMD_ALBUMART" Width="108+10" Height="108" MinWidth="108+10" MinHeight="108" FixedHeight="TRUE" FixedWidth="TRUE" Align="Top" PaintBg="FALSE" BgColor="#000000">
-        <AlbumArt Name="AlbumArt" Left="0" Top="0" Width="108" Height="108" ID="ID_ALBUMART" UseSkinBg="TRUE" Image="AlbumArt.png" FrameMask="albumart-mask.png" FrameMaskRectPos="4,4,100,100" />
+        <AlbumArt Name="AlbumArt" Left="0" Top="0" Width="108" Height="108" ID="ID_ALBUMART" UseSkinBg="TRUE" Image="AlbumArt.png" FrameMask="albumart-mask.png" FrameMaskRectPos="4,4,100,100"/>
 	    </ContainerBar>
       <ContainerBar Name="MediaInfo" ID="CCMD_MEDIAINFO" Width="200" Height="108" MinWidth="108" MinHeight="108" FixedHeight="TRUE" Align="Top" PaintBg="FALSE" BgColor="#000000">
         <MediaInfoText Name="Title" Left="0" Top="8" Width="w" Height="18" UseSkinBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Title" ShowTitle="false" PaintBg="false"/>

@@ -43,6 +43,31 @@ tstring GetLangPackDir()
 }
 
 
+// Remove '&'
+tstring RemovePrefixOfAcckey(LPCTSTR szStr)
+{
+	LPCTSTR		p;
+
+	p = _tcschr(szStr, '&');
+	if (!p)
+		return szStr;
+
+	tstring		str;
+
+	// Remove "(&A)"
+	if (p > szStr && *(p - 1) == '(' && p[1] != '\0' && p[2] == ')' && p[3] == '\0')
+	{
+		str.append(szStr, (int)(p - szStr) - 1);
+	}
+	else
+	{
+		str.append(szStr, (int)(p - szStr));
+		str.append(p + 1);
+	}
+
+	return str;
+}
+
 static bool FindStringValue(LPCTSTR szBuff, LPCTSTR szName, tstring &strValue)
 {
 	LPCTSTR		szBeg, szEnd;

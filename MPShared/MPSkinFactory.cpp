@@ -110,11 +110,11 @@ void CMPSkinFactory::Quit()
 	m_listSkinWnds.clear();
 }
 
-CUIObject *CMPSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
+CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 {
 	CUIObject		*pObj;
 
-	pObj = CSkinFactory::CreateUIObject(pSkin, szClassName);
+	pObj = CSkinFactory::NewUIObject(pSkin, szClassName);
 	if (pObj)
 		return pObj;
 

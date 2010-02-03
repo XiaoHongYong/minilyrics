@@ -10,6 +10,7 @@
 #include "SkinDecorativeContainer.h"
 #include "SkinToggleCtrlContainer.h"
 #include "SkinMenuBar.h"
+#include "SkinAnimationObj.h"
 
 #define _SZ_SKINWND				_T("skinwnd")
 #define _SZ_MENUS				_T("Menus")
@@ -360,91 +361,88 @@ int CSkinFileXML::SetNode(LPCTSTR szName, SXNode *pNode)
 }
 
 //////////////////////////////////////////////////////////////////////////
-// class CDynamicCtrls
-CDynamicCtrls::CDynamicCtrls()
+//
+CSkinStyles::CSkinStyles()
 {
-	m_pNode = NULL;
+	m_pCurStyle = NULL;
 }
 
-CDynamicCtrls::~CDynamicCtrls()
+CSkinStyles::~CSkinStyles()
 {
-	Free();
+	m_listStyleNodes.clear();
 }
 
-int CDynamicCtrls::FromXML(SXNode *pNode)
+int CSkinStyles::FromXML(SXNode *pNodeSkin)
 {
-	Free();
+	m_listStyleNodes.clear();
+	m_pCurStyle = NULL;
 
-	m_pNode = DupSXNode(pNode);
+	for (SXNode::iterator it = pNodeSkin->listChildren.begin(); 
+		it != pNodeSkin->listChildren.end(); ++it)
+	{
+		SXNode		*pNode = *it;
+
+		if (IsPropertyName(pNode->strName.c_str(), _T("styles")))
+		{
+			m_listStyleNodes.insert(m_listStyleNodes.end(), pNode->listChildren.begin(), pNode->listChildren.end());
+		}
+		else if (IsPropertyName(pNode->strName.c_str(), _T("style")))
+		{
+			m_listStyleNodes.push_back(pNode);
+		}
+	}
+
+	if (m_listStyleNodes.size())
+		m_pCurStyle = m_listStyleNodes.front();
 
 	return ERR_OK;
 }
 
-void CDynamicCtrls::Free()
+void CSkinStyles::Free()
 {
-	if (m_pNode)
-	{
-		delete m_pNode;
-		m_pNode = NULL;
-	}
+	m_listStyleNodes.clear();
+	m_pCurStyle = NULL;
 }
 
-CUIObject *CDynamicCtrls::CreateControl(CSkinContainer *pContainer, LPCTSTR szClassName, LPCTSTR szNameToCheck, int nIDAssign, LPCTSTR szLeft, LPCTSTR szTop, LPCTSTR szWidth, LPCTSTR szHeight)
+bool CSkinStyles::SetCurStyle(LPCTSTR szStyleName)
 {
-	CUIObject			*pObj = NULL;
-	SXNode::iterator	it, itEnd;
-
-	if (!m_pNode)
-		return NULL;
-
-	itEnd = m_pNode->listChildren.end();
-	for (it = m_pNode->listChildren.begin(); it != itEnd; ++it)
+	for (SXNode::iterator it = m_listStyleNodes.begin(); 
+		it != m_listStyleNodes.end(); ++it)
 	{
 		SXNode		*pNode = *it;
 
-		// OK, found the contorl
-		if (_tcsicmp(pNode->strName.c_str(), szClassName) == 0)
+		ASSERT(IsPropertyName(pNode->strName.c_str(), _T("style")));
+		if (IsPropertyName(pNode->GetPropertySafe(SZ_PN_NAME), szStyleName))
 		{
-			if (szNameToCheck && !IsEmptyString(szNameToCheck))
-			{
-				if (_tcsicmp(pNode->GetPropertySafe(SZ_PN_NAME), szNameToCheck) != 0)
-					continue;
-			}
-		}
-		else
-			continue;
-
-		// Create the control
-		pObj = pContainer->m_pSkin->GetSkinFactory()->CreateUIObject(pContainer->m_pSkin, pNode->strName.c_str());
-		assert(pObj);
-		if (pObj)
-		{
-			if (nIDAssign == SKIN_UIOBJ_ID_UNDEFINE)
-				nIDAssign = pContainer->m_pSkin->AllocUIObjID();
-			pObj->m_nId =  nIDAssign;
-
-			// 创建成功，首先设置它的属性
-			pObj->FromXML(pContainer, pNode);
-
-			//
-			// 先使用参数来设置高度和宽度
-			if (szWidth && !IsEmptyString(szWidth))
-				pObj->SetProperty(SZ_PN_WIDTH, szWidth);
-			if (szHeight && !IsEmptyString(szHeight))
-				pObj->SetProperty(SZ_PN_HEIGHT, szHeight);
-			if (szLeft && !IsEmptyString(szLeft))
-				pObj->SetProperty(SZ_PN_LEFT, szLeft);
-			if (szLeft && !IsEmptyString(szTop))
-				pObj->SetProperty(SZ_PN_TOP, szTop);
-
-			// 添加到数组中
-			pContainer->AddUIObject(pObj);
-			break;
+			m_pCurStyle = pNode;
+			return true;
 		}
 	}
 
-	return pObj;
+	m_pCurStyle = NULL;
+
+	return false;
 }
+
+SXNode *CSkinStyles::GetClassNode(LPCTSTR szClassName) const
+{
+	if (!m_pCurStyle)
+		return NULL;
+
+	for (SXNode::iterator it = m_pCurStyle->listChildren.begin(); 
+		it != m_pCurStyle->listChildren.end(); ++it)
+	{
+		SXNode		*pNode = *it;
+
+		if (IsPropertyName(pNode->strName.c_str(), szClassName))
+		{
+			return pNode;
+		}
+	}
+
+	return NULL;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // CDynamicCmds class
@@ -471,7 +469,6 @@ int CDynamicCmds::FromXML(SXNode *pNodeDynCmds)
 	}
 
 	return ERR_OK;
-
 }
 
 #ifdef _SKIN_EDITOR_
@@ -812,9 +809,10 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 		}
 	}
 
-	pNode = m_skinFile.GetDynamicCtrlsNode();
-	if (pNode)
-		m_dynamicCtrls.FromXML(pNode);
+	m_skinStyle.FromXML(m_skinFile.GetRootNode());
+	LPCTSTR szDefaultStyle = m_skinFile.GetSkinProperty(_T("DefaultStyle"));
+	if (szDefaultStyle && !IsEmptyString(szDefaultStyle))
+		m_skinStyle.SetCurStyle(szDefaultStyle);
 
 	pNode = m_skinFile.GetDynamicCmdsNode();
 	if (pNode)
@@ -853,7 +851,7 @@ void CSkinFactory::Close()
 {
 	CSjvmSkinSystem::CloseScript();
 
-	m_dynamicCtrls.Free();
+	m_skinStyle.Free();
 	m_dynamicCmds.Free();
 	m_skinFile.Close();
 
@@ -1059,7 +1057,27 @@ SXNode *CSkinFactory::GetSkinWndNode(LPCTSTR szSkinWndName)
 	return m_skinFile.GetSkinWndNode(szSkinWndName);
 }
 
-CUIObject *CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
+// create new uiobject by class name
+CUIObject * CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
+{
+	SXNode *pNode = m_skinStyle.GetClassNode(szClassName);
+	if (!pNode)
+		return NewUIObject(pSkin, szClassName);
+
+	LPCTSTR szExtends = pNode->GetProperty(SZ_PN_EXTENDS);
+	if (szExtends)
+		szClassName = szExtends;
+
+	CUIObject *pObj = NewUIObject(pSkin, szClassName);
+
+	// Set styled properties
+	if (pObj)
+		pObj->FromXML(NULL, pNode);
+
+	return pObj;
+}
+
+CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 {
 	CUIObject *pObj = NULL;
 
@@ -1067,9 +1085,7 @@ CUIObject *CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	{
 		pObj = new CSkinButton;
 	}
-	if (_tcsicmp(szClassName, CSkinActiveButton::ClassName()) == 0 ||
-		_tcsicmp(szClassName, _T("FocusButton")) == 0
-		)
+	if (_tcsicmp(szClassName, CSkinActiveButton::ClassName()) == 0)
 	{
 		pObj = new CSkinActiveButton;
 	}
@@ -1081,8 +1097,7 @@ CUIObject *CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	{
 		pObj = new CSkinNStatusImage;
 	}
-	else if (_tcsicmp(szClassName, CSkinActiveImage::ClassName()) == 0 || 
-		_tcsicmp(szClassName, _T("FocusImage")) == 0)
+	else if (_tcsicmp(szClassName, CSkinActiveImage::ClassName()) == 0)
 	{
 		pObj = new CSkinActiveImage;
 	}
@@ -1128,6 +1143,10 @@ CUIObject *CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinFadeArea;
 	else if (_tcsicmp(szClassName, CSkinToggleCtrlContainer::ClassName()) == 0)
 		pObj = new CSkinToggleCtrlContainer;
+	else if (_tcsicmp(szClassName, CSkinClientArea::ClassName()) == 0)
+		pObj = new CSkinClientArea;
+	else if (_tcsicmp(szClassName, CSkinAnimationObj::ClassName()) == 0)
+		pObj = new CSkinAnimationObj;
 
 	if (pObj)
 	{
@@ -1138,10 +1157,37 @@ CUIObject *CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	return pObj;
 }
 
-
-CUIObject *CSkinFactory::CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, LPCTSTR szNameToCheck, int nIDAssign, LPCTSTR szLeft, LPCTSTR szTop, LPCTSTR szWidth, LPCTSTR szHeight)
+CUIObject *CSkinFactory::CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, int nIDAssign, LPCTSTR szLeft, LPCTSTR szTop, LPCTSTR szWidth, LPCTSTR szHeight)
 {
-	return m_dynamicCtrls.CreateControl(pContainer, szClassName, szNameToCheck, nIDAssign, szLeft, szTop, szWidth, szHeight);
+	CUIObject			*pObj = NULL;
+
+	// Create the control
+	pObj = pContainer->m_pSkin->GetSkinFactory()->CreateUIObject(pContainer->m_pSkin, szClassName);
+	assert(pObj);
+	if (pObj)
+	{
+		pObj->m_pContainer = pContainer;
+
+		if (nIDAssign == SKIN_UIOBJ_ID_UNDEFINE)
+			nIDAssign = pContainer->m_pSkin->AllocUIObjID();
+		pObj->m_nId =  nIDAssign;
+
+		//
+		// 先使用参数来设置高度和宽度
+		if (szWidth && !IsEmptyString(szWidth))
+			pObj->SetProperty(SZ_PN_WIDTH, szWidth);
+		if (szHeight && !IsEmptyString(szHeight))
+			pObj->SetProperty(SZ_PN_HEIGHT, szHeight);
+		if (szLeft && !IsEmptyString(szLeft))
+			pObj->SetProperty(SZ_PN_LEFT, szLeft);
+		if (szLeft && !IsEmptyString(szTop))
+			pObj->SetProperty(SZ_PN_TOP, szTop);
+
+		// 添加到数组中
+		pContainer->AddUIObject(pObj);
+	}
+
+	return pObj;
 }
 
 void CSkinFactory::SetSkinsRootDir(LPCTSTR szSkinsRootDir)
@@ -1246,6 +1292,11 @@ CSkinWnd *CSkinFactory::GetMainWnd()
 		return m_listSkinWnds.front();
 	else
 		return NULL;
+}
+
+SXNode *CSkinFactory::GetExtendSkinWndStyle(LPCTSTR szExtendsSkinWnd) const
+{
+	return m_skinStyle.GetClassNode(szExtendsSkinWnd);
 }
 
 int CSkinFactory::OnDynamicCmd(int nCmdID, CSkinWnd *pSkinWnd)
@@ -1412,6 +1463,12 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
 		if (pObj)
 			pObj->SetProperty(vStrParam[1].c_str(), vStrParam[2].c_str());
+
+		return ERR_OK;
+	}
+	else if (cmd.strFunction == _T("start_animation"))
+	{
+		pSkinWnd->StartAnimation(GetIDByName(cmd.strParam.c_str()));
 
 		return ERR_OK;
 	}

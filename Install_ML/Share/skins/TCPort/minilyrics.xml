@@ -28,11 +28,11 @@
     <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />    
   </DynCmds>
-  <DynControls>
+  <style>
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
     <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
-    <Toolbar Name="normal" Image="toolbar-small.bmp" enablehover="TRUE" Height="18" units_x="18" blank_x="234" blank_cx="18" seperator_x="234" seperator_cx="10">
+    <NormalToolbar Extends="Toolbar" Image="toolbar-small.bmp" enablehover="TRUE" Height="18" units_x="18" blank_x="234" blank_cx="18" seperator_x="234" seperator_cx="10">
       <button ID="ID_SEARCH_LYRICS" Left="8"/>
       <button ID="ID_BACKWARD_LYRICS" Left="9" Continuous="TRUE"/>
       <button ID="ID_FORWARD_LYRICS" Left="10" Continuous="TRUE"/>
@@ -45,8 +45,8 @@
       <button ID="ID_PREVIOUS" Left="3"/>
       <button ID="ID_NEXT" Left="4"/>
       <button ID="ID_HELP" Left="7"/>
-    </Toolbar>
-  </DynControls>
+    </NormalToolbar>
+  </style>
   <skinwnd Name="floatinglyr" EnableTranslucency="true" TranslucencyAlpha="0" TranslucencyAlphaOnHover="100" TranslucencyAlphaOnActive="228" MinWidth="400" MinHeight="60" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="FloatingLyrMode" CmdHandler="ch_floating_lyr" LyrDisplayStylePropName="FloatingLyrDispStyle">
     <DecorativeContainer Name="Caption" Left="10" Top="0" Width="w-20" Height="h" >
       <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAdjustVertAlign="FALSE" EnableStaticTextStyle="FALSE" LyrDisplayStylePropName="FloatingLyrDispStyle" FloatingLyr="1" UseAlbumArtAsBg="FALSE" BlendingLyrText="TRUE" ThickOutline="TRUE"/>
@@ -82,10 +82,10 @@
   <skinwnd Name="minilyrics" MinWidth="180" MinHeight="35" Width="400" Height="200" BgColor="#183C7B" FgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="5" Top="15" Width="w - 10" Height="h-15 - 4" BgColor="#183C7B" FgColor="#FFFFFF" FgLowColor="#BDD3FF" FocusLineBgColor="#638ACE" TagColor="#FF8242"/>
     <CaptionImage Left="0" Top="0" Width="w" Height="15" Name="Caption" Image="caption.bmp" ImageRect="27,15,295,15" ImageFocus="caption.bmp" ImageFocusRect="27,0,295,15" CutPos="60,135,200,275"/>      
-      <FocusButton Left="6" Top="3" Width="18" Height="12" ID="ID_MENU" Name="Menu" Image="caption.bmp" ImageRect="32,18,18,12" ImageSel="caption.bmp" ImageSelRect="32,18,18,12" ImageFocus="caption.bmp" ImageFocusRect="32,3,18,12"/>        
-    <FocusButton Left="w - 31" Top="3" Width="9" Height="9" ID="ID_MINIMIZE" Name="Minimize" Image="caption.bmp" ImageRect="292,18,9,9" ImageSel="caption.bmp" ImageSelRect="0,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="292,3,9,9"/>
-    <FocusButton Left="w - 21" Top="3" Width="9" Height="9" ID="dyncmd_change_to_bar" ToolTip="Lyrics Bar" Name="Minimize" Image="caption.bmp" ImageRect="301,18,9,9" ImageSel="caption.bmp" ImageSelRect="9,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="301,3,9,9"/>
-    <FocusButton Left="w - 11" Top="3" Width="9" Height="9" ID="ID_QUIT" Name="Close" Image="caption.bmp" ImageRect="312,18,9,9" ImageSel="caption.bmp" ImageSelRect="18,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="312,3,9,9"/>
+    <ActiveButton Left="6" Top="3" Width="18" Height="12" ID="ID_MENU" Name="Menu" Image="caption.bmp" ImageRect="32,18,18,12" ImageSel="caption.bmp" ImageSelRect="32,18,18,12" ImageFocus="caption.bmp" ImageFocusRect="32,3,18,12"/>        
+    <ActiveButton Left="w - 31" Top="3" Width="9" Height="9" ID="ID_MINIMIZE" Name="Minimize" Image="caption.bmp" ImageRect="292,18,9,9" ImageSel="caption.bmp" ImageSelRect="0,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="292,3,9,9"/>
+    <ActiveButton Left="w - 21" Top="3" Width="9" Height="9" ID="dyncmd_change_to_bar" ToolTip="Lyrics Bar" Name="Minimize" Image="caption.bmp" ImageRect="301,18,9,9" ImageSel="caption.bmp" ImageSelRect="9,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="301,3,9,9"/>
+    <ActiveButton Left="w - 11" Top="3" Width="9" Height="9" ID="ID_QUIT" Name="Close" Image="caption.bmp" ImageRect="312,18,9,9" ImageSel="caption.bmp" ImageSelRect="18,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="312,3,9,9"/>
     <Image Left="0" Top="15" Width="5" Height="h - 15 - 4" Name="left frame" Image="xframe.bmp" ImageRect="0,15,5,98" BltMode="stretch"/>
     <Image Left="w - 5" Top="15" Width="5" Height="h - 15-4" Name="right frame" Image="xframe.bmp" ImageRect="5,15,5,98" BltMode="stretch"/>
     <XScaleImage Left="0" Top="h-4" Width="w" Height="4" Name="bottom" Image="caption.bmp" ImageRect="27,29,295,4" ImageScaleXStart="50" ImageScaleXEnd="280"/>
@@ -96,16 +96,16 @@
     <YScaleImage Left="w - 15" Top="0" Width="15" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="185,0,15,38" ImageScaleYStart="28" ImageScaleYEnd="34"/>
     <Image Left="3" Top="0" Width="w - 18" Height="2" Name="top frame" Image="lyr-bar-frame.bmp" ImageRect="3,0,182,2" BltMode="stretch"/>
     <Image Left="3" Top="h - 3" Width="w - 18" Height="3" Name="bottom frame" Image="lyr-bar-frame.bmp" ImageRect="3,35,182,3" BltMode="stretch"/>
-    <FocusButton Left="w - 11" Top="h/2-4" Width="9" Height="9" ID="ID_CLOSE" Name="Close" Image="lyr-bar-bt.bmp" ImageRect="18,0,9,9" ImageSel="lyr-bar-bt.bmp" ImageSelRect="0,0,9,9" ImageFocus="lyr-bar-bt.bmp" ImageFocusRect="9,0,9,9"/>
+    <ActiveButton Left="w - 11" Top="h/2-4" Width="9" Height="9" ID="ID_CLOSE" Name="Close" Image="lyr-bar-bt.bmp" ImageRect="18,0,9,9" ImageSel="lyr-bar-bt.bmp" ImageSelRect="0,0,9,9" ImageFocus="lyr-bar-bt.bmp" ImageFocusRect="9,0,9,9"/>
   </skinwnd>  
   <skinwnd Name="lyreditor" MinWidth="180" MinHeight="35" Width="400" Height="200" BgColor="#183C7B" FgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player"
     OnCreateCommand="dyncmd_load_toolbar_state">
     <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="40">
-      <FocusButton Left="6" Top="3" Width="18" Height="12" ID="ID_MENU" Name="Menu" Image="caption.bmp" ImageRect="32,18,18,12" ImageSel="caption.bmp" ImageSelRect="32,18,18,12" ImageFocus="caption.bmp" ImageFocusRect="32,3,18,12"/>
+      <ActiveButton Left="6" Top="3" Width="18" Height="12" ID="ID_MENU" Name="Menu" Image="caption.bmp" ImageRect="32,18,18,12" ImageSel="caption.bmp" ImageSelRect="32,18,18,12" ImageFocus="caption.bmp" ImageFocusRect="32,3,18,12"/>
         <CaptionImage Left="0" Top="0" Width="w" Height="40" Name="Caption" EnableDblClick="true" Image="menu-caption.png" ImageRect="0,45,275,40" ImageFocus="menu-caption.png" ImageFocusRect="0,0,275,40" CutPos="25,90,183,225"/>
-        <FocusButton Left="w - 31" Top="3" Width="9" Height="9" ID="ID_MINIMIZE" Name="Minimize" Image="caption.bmp" ImageRect="292,18,9,9" ImageSel="caption.bmp" ImageSelRect="0,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="292,3,9,9"/>      
-        <FocusButton Left="w - 21" Top="3" Width="9" Height="9" ID="ID_MAXIMIZE" Name="Maximize" Image="caption.bmp" ImageRect="301,18,9,9" ImageSel="caption.bmp" ImageSelRect="9,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="301,3,9,9"/>
-        <FocusButton Left="w - 11" Top="3" Width="9" Height="9" ID="ID_CLOSE" Name="Close" Image="caption.bmp" ImageRect="312,18,9,9" ImageSel="caption.bmp" ImageSelRect="18,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="312,3,9,9"/>
+        <ActiveButton Left="w - 31" Top="3" Width="9" Height="9" ID="ID_MINIMIZE" Name="Minimize" Image="caption.bmp" ImageRect="292,18,9,9" ImageSel="caption.bmp" ImageSelRect="0,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="292,3,9,9"/>      
+        <ActiveButton Left="w - 21" Top="3" Width="9" Height="9" ID="ID_MAXIMIZE" Name="Maximize" Image="caption.bmp" ImageRect="301,18,9,9" ImageSel="caption.bmp" ImageSelRect="9,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="301,3,9,9"/>
+        <ActiveButton Left="w - 11" Top="3" Width="9" Height="9" ID="ID_CLOSE" Name="Close" Image="caption.bmp" ImageRect="312,18,9,9" ImageSel="caption.bmp" ImageSelRect="18,9,9,9" ImageFocus="caption.bmp" ImageFocusRect="312,3,9,9"/>
         <Image Left="0" Top="15" Width="5" Height="h - 15" Name="left frame" Image="xframe.bmp" ImageRect="0,15,5,98" BltMode="stretch"/>
         <Text Left="w/2-38" Top="3" Width="80" Height="18" FontName="Verdana" FontHeight="12" FontBold="TRUE" TextColor="#FFFFFF" TextOutlinedColor="#FFFFFF" TextOutlined="false" LeftMargin="0" Text="LYRICS EDITOR" AlignText="AT_CENTER"/>
         <MenuBar left="10" top="20" width="w-15-15" height="18" Name="Menu" Menu="LyrEditorMenu" FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF" TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF" TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>

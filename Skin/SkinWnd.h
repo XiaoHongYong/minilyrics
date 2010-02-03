@@ -17,13 +17,6 @@ class CSkinContainer;
 
 #define UIOBJ_ID_BEGIN_ALLOC		0xFFFFF
 
-enum CommonCtrlClassName
-{
-	CCCN_VSCROLLBAR,
-	CCCN_HSCROLLBAR,
-};
-
-
 // COMMENT:
 //		窗口的位置是否合法（显示位置是否正常）
 BOOL IsWndOutOfScreen(const CRect &rc);
@@ -122,8 +115,6 @@ public:
 	CSkinContainer *GetRootContainer() { return &m_rootConainter; }
 
 	bool EnableSkinObject(int nId, bool bEnable = true, bool bRedraw = true);
-
-	LPCTSTR GetCommonCtrlClassName(CommonCtrlClassName ctrlClassName);
 
 	// register special messages
 	void SetCaptureMouse(CUIObject *pUIObj);
@@ -264,6 +255,9 @@ public:
 
 
 public:
+	void CreateUIObjects(SXNode *pSkinWndNode, CSkinContainer *pParentContainer);
+
+	void SetProperies(SXNode::LIST_PROPERTIES &listProperties);
 	virtual BOOL SetProperty(SXNode *pXmlNode);
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_
@@ -295,6 +289,8 @@ public:
 	// after process WM_DESTORY, delete this.
 	void SetFreeOnDestory(bool bFreeOnDestory = true) { m_bFreeOnDestory = bFreeOnDestory; }
 
+	CRect &GetBoundBox() { return m_rcBoundBox; }
+
 public:
 	void GetCursorClientPos(CPoint &pt);
 
@@ -325,6 +321,7 @@ protected:
 	void OnSwitchChildFocus(CUIObject *pUIObjFocusOld, CUIObject *pUIObjFocusNew);
 
 	friend class CSkinContainer;
+	friend class CUIObject;
 	friend class CSjvmSkinWnd;
 
 protected:
@@ -461,6 +458,17 @@ public:
 protected:
 	SjvmSkinWndEvent	*m_pSjvmNotifyEvent;
 
+	//
+	// Skin animation object
+	//
+public:
+	void StartAnimation(int nIDAnimation);
+	bool IsInAnimation();
+	CObjAnimation *GetObjAnimation(int nId, AnimateState &as, int &nMotionPercent);
+protected:
+	typedef list<CSkinAnimationObj *>	ListAnimationObj;
+	ListAnimationObj		m_listAnimations;
+	void OnTimerAnimation();
 
 };
 

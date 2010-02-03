@@ -238,7 +238,7 @@ void CLyricShowAgentObj::LoadToolbar()
 	if (m_pToolbar)
 		m_pContainer->RemoveUIObject(m_pToolbar, true);
 
-	m_pToolbar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(m_pContainer, CSkinToolbar::ClassName(), _T("normal"), ID_TOOLBAR, m_formLeft.GetFormula(), m_formTop.GetFormula(), m_formWidth.GetFormula(), NULL);
+	m_pToolbar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(m_pContainer, _T("NormalToolbar"), ID_TOOLBAR, m_formLeft.GetFormula(), m_formTop.GetFormula(), m_formWidth.GetFormula(), NULL);
 	if (!m_pToolbar)
 	{
 		m_strTBHeight = _T("0");

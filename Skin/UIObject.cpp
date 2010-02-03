@@ -428,6 +428,17 @@ BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])
 	if (m_formHeight.CalCualteValue(vars, nValue))
 		m_rcObj.bottom = m_rcObj.top + nValue;
 
+	if (m_pSkin->IsInAnimation() && m_nId != SKIN_UIOBJ_ID_UNDEFINE)
+	{
+		AnimateState		as;
+		int					nMotionPercent;
+		CObjAnimation		*pAnimation = m_pSkin->GetObjAnimation(m_nId, as, nMotionPercent);
+		if (pAnimation)
+		{
+			pAnimation->Animate(as, nMotionPercent, this);
+		}
+	}
+
 	OnSize(m_rcObj.Width(), m_rcObj.Height());
 
 	if (!m_strTooltip.empty()/* && m_nId != SKIN_UIOBJ_ID_UNDEFINE*/)

@@ -664,3 +664,6 @@ void CSkinContainer::OnToXMLChild(CXMLWriter &xmlStream)
 	}
 }
 #endif // _SKIN_EDITOR_
+
+UIOBJECT_CLASS_NAME_IMP(CSkinClientArea, _T("ClientArea"))
+

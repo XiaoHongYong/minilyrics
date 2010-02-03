@@ -27,8 +27,6 @@ public:
 
 	virtual void Quit();
 
-	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
-
 	virtual CSkinWnd *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
 
 	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu);
@@ -80,6 +78,8 @@ protected:
 
 protected:
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
+
+	virtual CUIObject * NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
 
 	SXNode *GetMenuOfMenus(SXNode *pNodeMenus, LPCTSTR szMenuName);
 

@@ -268,8 +268,8 @@ void CLyricShowTxtObj::OnCreate()
 	// Create Scrollbar
 	//
 	m_pObjScrollBar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(m_pContainer, 
-		m_pSkin->GetCommonCtrlClassName(CCCN_VSCROLLBAR),
-		NULL, SKIN_UIOBJ_ID_UNDEFINE, NULL, NULL, NULL, NULL);
+		CSkinVScrollBar::ClassName(),
+		SKIN_UIOBJ_ID_UNDEFINE, NULL, NULL, NULL, NULL);
 	ASSERT(m_pObjScrollBar);
 	if (!m_pObjScrollBar)
 		return;

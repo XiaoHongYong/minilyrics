@@ -501,6 +501,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinAnimationObj.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SkinButton.cpp"
 				>
 				<FileConfiguration
@@ -1198,6 +1202,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinAnimationObj.h"
+				>
+			</File>
+			<File
 				RelativePath="SkinButton.h"
 				>
 			</File>
@@ -1266,11 +1274,11 @@
 				>
 			</File>
 			<File
-				RelativePath="SkinVScrollBarOSStyle.h"
+				RelativePath="win32\SkinVScrollBarOSStyle.h"
 				>
 			</File>
 			<File
-				RelativePath="win32\SkinVScrollBarOSStyle.h"
+				RelativePath="SkinVScrollBarOSStyle.h"
 				>
 			</File>
 			<File

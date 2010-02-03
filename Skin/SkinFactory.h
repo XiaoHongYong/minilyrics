@@ -48,10 +48,12 @@ public:
 	int ChangeSkinWndName(LPCTSTR szNameOld, LPCTSTR szNameNew);
 	bool CanUseSkinWndName(LPCTSTR szName);
 
-	// Get the main window of the SKIN. szSkinWndNameDef specalfies the default main window.
+	// Get the main window of the SKIN. szSkinWndNameDef specifies the default main window.
 	int GetMainSkinWnd(tstring &strSkinWndName, LPCTSTR szSkinWndNameDef);
 
 	void EnumSkinWnd(vector<tstring> &vSkinWnd);
+
+	SXNode *GetRootNode() { return m_xml.m_pRoot; }
 
 	SXNode *GetMenusNode();
 	int SetMenusNode(SXNode *pNode);
@@ -83,20 +85,22 @@ protected:
 
 };
 
-class CDynamicCtrls
+class CSkinStyles
 {
 public:
-	CDynamicCtrls();
-	~CDynamicCtrls();
+	CSkinStyles();
+	~CSkinStyles();
 
-	int FromXML(SXNode *pNode);
+	int FromXML(SXNode *pNodeSkin);
 	void Free();
-	SXNode *GetData() { return m_pNode; }
 
-	CUIObject *CreateControl(CSkinContainer *pContainer, LPCTSTR szClassName, LPCTSTR szNameToCheck = NULL, int nIDAssign = SKIN_UIOBJ_ID_UNDEFINE, LPCTSTR szLeft = NULL, LPCTSTR szTop = NULL, LPCTSTR szWidth = NULL, LPCTSTR szHeight = NULL);
+	bool SetCurStyle(LPCTSTR szStyleName);
+
+	SXNode *GetClassNode(LPCTSTR szClassName) const;
 
 protected:
-	SXNode		*m_pNode;
+	SXNode::LIST_CHILDREN	m_listStyleNodes;
+	SXNode					*m_pCurStyle;
 
 };
 
@@ -177,7 +181,7 @@ public:
 	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
 
 	// 
-	virtual CUIObject *CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, LPCTSTR szNameToCheck = NULL, int nIDAssign = SKIN_UIOBJ_ID_UNDEFINE, LPCTSTR szLeft = NULL, LPCTSTR szTop = NULL, LPCTSTR szWidth = NULL, LPCTSTR szHeight = NULL);
+	virtual CUIObject *CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, int nIDAssign = SKIN_UIOBJ_ID_UNDEFINE, LPCTSTR szLeft = NULL, LPCTSTR szTop = NULL, LPCTSTR szWidth = NULL, LPCTSTR szHeight = NULL);
 
 	//
 	// Skin root dir, and extra dir. resource files search order: SkinDir > SkinRootDir > Extra Dir
@@ -201,6 +205,8 @@ public:
 
 	LPCTSTR GetSkinName() const { return m_strSkinName.c_str(); }
 
+	SXNode *GetExtendSkinWndStyle(LPCTSTR szExtendsSkinWnd) const;
+
 	// resource
 	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu) { *ppMenu = NULL; return false; };
 
@@ -221,6 +227,8 @@ protected:
 
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 
+	virtual CUIObject *NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
+
 protected:
 	tstring						m_strSkinRootDir;
 	tstring						m_strSkinFileName;
@@ -233,9 +241,8 @@ protected:
 	// resource manager
 	CSkinResMgr					m_resourceMgr;
 
-	//
-	// skin中的控件定义
-	CDynamicCtrls				m_dynamicCtrls;
+	// Skin styles
+	CSkinStyles					m_skinStyle;
 
 	//
 	// Dynamic commands define

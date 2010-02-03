@@ -22,6 +22,7 @@ const TCHAR SZ_WINAMP2_DEFSKIN_DIR[] = _T("");
 // 
 
 #define TIMER_ID_BEG_ALLOC		120
+#define TIMER_ID_ANIMATION		117
 #define TIMER_ID_DYNAMIC_TRANS	118
 #define TIMER_ID_MOUSE_INACTIVE	119
 
@@ -29,6 +30,7 @@ const TCHAR SZ_WINAMP2_DEFSKIN_DIR[] = _T("");
 
 #define TIMER_SPAN_DYNAMIC_TRANS	30
 #define TIME_OUT_TRANS_FADEIN		1500
+#define TIME_OUT_ANIMATION		30
 
 BOOL IsWndOutOfScreen(const CRect &rc)
 {
@@ -267,6 +269,9 @@ void CSkinWnd::CloseSkin()
 	if (!m_bSkinOpened)
 		return;
 
+	KillTimer(TIMER_ID_ANIMATION);
+	m_listAnimations.clear();
+
 	if (m_pSjvmNotifyEvent)
 		m_pSjvmNotifyEvent->onDestroy();
 
@@ -354,6 +359,7 @@ void CSkinWnd::CloseSkin()
 	m_nTimeLatestMouseMsg = 0;
 	m_bMouseInactive = false;
 	m_bHasUIObjHideOnMouseInactive = false;
+	KillTimer(TIMER_ID_MOUSE_INACTIVE);
 
 	m_pSjvmNotifyEvent = NULL;
 	m_vUIObjNotifyHandlers.clear();
@@ -1199,6 +1205,47 @@ bool Scan2IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2)
 	return true;
 }
 
+void CSkinWnd::CreateUIObjects(SXNode *pSkinWndNode, CSkinContainer *pParentContainer)
+{
+	SXNode::iterator	it, itEnd;
+
+	itEnd = pSkinWndNode->listChildren.end();
+	for (it = pSkinWndNode->listChildren.begin(); it != itEnd; ++it)
+	{
+		SXNode			*pNode = *it;
+		CUIObject		*pObj;
+
+		if (IsPropertyName(pNode->strName.c_str(), SZ_PN_PROPERTY))
+		{
+			if (!SetProperty(pNode))
+				DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), pNode->GetPropertySafe(SZ_PN_NAME));
+			continue;
+		}
+
+		pObj = m_pSkinFactory->CreateUIObject(this, pNode->strName.c_str());
+		if (pObj)
+		{
+			pObj->FromXML(pParentContainer, pNode);
+
+			pParentContainer->AddUIObject(pObj);
+		}
+	}
+}
+
+void CSkinWnd::SetProperies(SXNode::LIST_PROPERTIES &listProperties)
+{
+	SXNode::iterProperties	it;
+	for (it = listProperties.begin(); it != listProperties.end(); ++it)
+	{
+		SXNode::Property	&prop = *it;
+		if (!SetProperty(prop.strName.c_str(), prop.strValue.c_str()))
+		{
+			m_listUnprocessedProperties.push_back(prop);
+			DBGLOG2(_T("Unknow Property: %s, %s"), prop.strName.c_str(), prop.strValue.c_str());
+		}
+	}
+}
+
 BOOL CSkinWnd::SetProperty(SXNode *pXmlNode)
 {
 	LPCTSTR		szName = pXmlNode->GetPropertySafe(SZ_PN_NAME);
@@ -1604,26 +1651,6 @@ bool CSkinWnd::EnableSkinObject(int nId, bool bEnable, bool bRedraw)
 
 	return true;
 }
-
-LPCTSTR CSkinWnd::GetCommonCtrlClassName(CommonCtrlClassName ctrlClassName)
-{
-	switch (ctrlClassName)
-	{
-	case CCCN_VSCROLLBAR:
-		if (m_bWindowsAppearance)
-			return CSkinVScrollBarOSStyle::ClassName();
-		else
-			return CSkinVScrollBar::ClassName();
-	case CCCN_HSCROLLBAR:
-		if (m_bWindowsAppearance)
-			return CSkinHScrollBarOSStyle::ClassName();
-		else
-			return CSkinHScrollBar::ClassName();
-	}
-
-	return _T("");
-}
-
 
 CUIObject *CSkinWnd::RemoveUIObjectById(int nId)
 {
@@ -2317,6 +2344,11 @@ void CSkinWnd::OnTimer (UINT nIDEvent)
 		OnTimerMouseInactive();
 		return;
 	}
+	else if (nIDEvent == TIMER_ID_ANIMATION)
+	{
+		OnTimerAnimation();
+		return;
+	}
 
 	ASSERT(nIDEvent >= TIMER_ID_BEG_ALLOC);
 
@@ -2399,50 +2431,33 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 
 	m_fontProperty.Create(_T("Tohama"), _T(""), 14, FW_NORMAL, false, false);
 
+	SXNode	*pNodeExtends = NULL;
+	LPCTSTR szExtends = pXmlNode->GetProperty(SZ_PN_EXTENDS);
+	if (szExtends && !IsEmptyString(szExtends))
 	{
-		SXNode::iterProperties	it, itEnd;
-		itEnd = pXmlNode->listProperties.end();
-		for (it = pXmlNode->listProperties.begin(); it != itEnd; ++it)
-		{
-			SXNode::Property	&prop = *it;
-			if (!SetProperty(prop.strName.c_str(), prop.strValue.c_str()))
-			{
-				m_listUnprocessedProperties.push_back(prop);
-				DBGLOG2(_T("Unknow Property: %s, %s"), prop.strName.c_str(), prop.strValue.c_str());
-			}
-		}
+		pNodeExtends = m_pSkinFactory->GetExtendSkinWndStyle(szExtends);
 	}
+
+	if (pNodeExtends)
+		SetProperies(pNodeExtends->listProperties);
+
+	SetProperies(pXmlNode->listProperties);
 
 	// load window size of skin
 	OnLoadWndSizePos();
 
-	// Create UIObjects
+	// Create UIObjects defined in Extends window
+	CSkinContainer	*pContainterClientArea = NULL;
+	if (pNodeExtends)
 	{
-		SXNode::iterator	it, itEnd;
-
-		itEnd = pXmlNode->listChildren.end();
-		for (it = pXmlNode->listChildren.begin(); it != itEnd; ++it)
-		{
-			SXNode			*pNode = *it;
-			CUIObject		*pObj;
-
-			if (IsPropertyName(pNode->strName.c_str(), SZ_PN_PROPERTY))
-			{
-				if (!SetProperty(pNode))
-					DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), pNode->GetPropertySafe(SZ_PN_NAME));
-				continue;
-			}
-
-			pObj = m_pSkinFactory->CreateUIObject(this, pNode->strName.c_str());
-			if (pObj)
-			{
-				pObj->FromXML(&m_rootConainter, pNode);
-
-				m_rootConainter.AddUIObject(pObj);
-			}
-		}
-
+		CreateUIObjects(pNodeExtends, &m_rootConainter);
+		pContainterClientArea = (CSkinContainer*)m_rootConainter.GetUIObjectByClassName(CSkinClientArea::ClassName());
 	}
+	else
+		pContainterClientArea = &m_rootConainter;
+
+	// Create UIObjects
+	CreateUIObjects(pXmlNode, pContainterClientArea);
 
 	m_bSkinOpened = true;
 
@@ -2538,3 +2553,111 @@ void CSkinWnd::OnTimerMouseInactive()
 
 	InvalidateRect();
 }
+
+void CSkinWnd::StartAnimation(int nIDAnimation)
+{
+	for (ListAnimationObj::iterator it = m_listAnimations.begin(); it != m_listAnimations.end(); ++it)
+	{
+		CSkinAnimationObj *p = *it;
+		if (p->m_nId == nIDAnimation)
+			return;
+	}
+
+	CSkinAnimationObj *pObj = (CSkinAnimationObj*)GetUIObjectById(nIDAnimation, CSkinAnimationObj::ClassName());
+	if (pObj)
+	{
+		if (m_listAnimations.empty())
+			SetTimer(TIMER_ID_ANIMATION, TIME_OUT_ANIMATION);
+
+		m_listAnimations.push_back(pObj);
+		pObj->StartAnimation();
+	}
+	else
+		ERRLOG1(_T("Invalid animation id: %s"), m_pSkinFactory->GetStringOfID(nIDAnimation).c_str());
+}
+
+bool CSkinWnd::IsInAnimation()
+{
+	return !m_listAnimations.empty();
+}
+
+CObjAnimation *CSkinWnd::GetObjAnimation(int nId, AnimateState &as, int &nMotionPercent)
+{
+	CObjAnimation	*pAnimation = NULL;
+	for (ListAnimationObj::iterator it = m_listAnimations.begin(); it != m_listAnimations.end(); ++it)
+	{
+		CSkinAnimationObj *p = *it;
+		pAnimation = p->GetObjAnimation(nId);
+		if (pAnimation)
+		{
+			as = p->GetState();
+			nMotionPercent = p->GetMotionPercent();
+			return pAnimation;
+		}
+	}
+
+	return NULL;
+}
+
+void CSkinWnd::OnTimerAnimation()
+{
+	if (m_listAnimations.empty())
+	{
+		KillTimer(TIMER_ID_ANIMATION);
+		return;
+	}
+
+	for (ListAnimationObj::iterator it = m_listAnimations.begin(); it != m_listAnimations.end();)
+	{
+		CSkinAnimationObj *p = *it;
+		if (!p->OneMotion())
+		{
+			it = m_listAnimations.erase(it);
+		}
+		else
+			++it;
+	}
+
+	if (m_listAnimations.empty())
+		KillTimer(TIMER_ID_ANIMATION);
+
+	InvalidateRect();
+}
+
+/*
+int RunModalWindow(
+HWND hwndDialog,
+HWND hwndParent)
+{
+if(hwndParent != NULL)
+EnableWindow(hwndParent,FALSE);
+
+MSG msg;
+
+for(fDone=FALSE;fDone;WaitMessage())
+{
+while(PeekMessage(&msg,0,0,0,PM_REMOVE))
+{
+if(msg.message == WM_QUIT)
+{
+fDone = TRUE;
+PostMessage(NULL,WM_QUIT,0,0);
+break;
+}
+
+if(!IsDialogMessage(hwndDlg,&msg))
+{
+TranslateMessage(&msg);
+DispatchMessage(&msg);
+}
+}
+}
+
+if(hwndParent != NULL)
+EnableWindow(hwndParent,TRUE);
+
+DestroyWindow(hwndDialog);
+
+return nResult;
+}
+*/
