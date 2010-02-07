@@ -728,7 +728,8 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	for (SetTStrNCase::iterator itSet = setOpenedSkinWnds.begin();
 		itSet != setOpenedSkinWnds.end(); ++itSet)
 	{
-		nRet = CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str());
+		if (!IsResourceSkinWnd((*itSet).c_str()))
+			nRet = CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str());
 		// delete pSkinWnd;
 	}
 
