@@ -34,6 +34,7 @@
 #include "MPMsgWnd.h"
 #include "SkinFilterCtrl.h"
 #include "MPSkinInfoTextCtrlEx.h"
+#include "SkinTxtLink.h"
 
 #ifdef _MPLAYER
 #include "SkinDroplistCtrl.h"
@@ -188,8 +189,8 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CMediaInfoTextCtrl;
 	else if (_tcsicmp(szClassName, CMediaAlbumArtCtrl::ClassName()) == 0)
 		pObj = new CMediaAlbumArtCtrl;
-	else if (_tcsicmp(szClassName, CSkinHScrollBar::ClassName()) == 0)
-		pObj = new CSkinHScrollBar;
+	else if (_tcsicmp(szClassName, CSkinTxtLink::ClassName()) == 0)
+		pObj = new CSkinTxtLink;
 	else
 		return NULL;
 

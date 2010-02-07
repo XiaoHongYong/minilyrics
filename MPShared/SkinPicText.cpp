@@ -56,7 +56,7 @@ void CSkinPicText::Draw(CRawGraph *pGraph)
 		if (x <= m_rcObj.left)
 			x = m_rcObj.left;
 		else
-			m_imgText.ExtendXBlt(pGraph, m_rcObj.left, m_rcObj.top, x - m_rcObj.left, m_imgText.height(), m_nSpaceCharPos * m_nCharWidth, m_imgText.m_y, m_nCharWidth, m_imgText.height());
+			m_imgText.XTileBlt(pGraph, m_rcObj.left, m_rcObj.top, x - m_rcObj.left, m_imgText.height(), m_nSpaceCharPos * m_nCharWidth, m_imgText.m_y, m_nCharWidth, m_imgText.height());
 	}
 	else
 		x = m_rcObj.left;
@@ -70,7 +70,7 @@ void CSkinPicText::Draw(CRawGraph *pGraph)
 	}
 
 	if (x < m_rcObj.right)
-		m_imgText.ExtendXBlt(pGraph, x, m_rcObj.top, m_rcObj.right - x, m_imgText.height(), m_nSpaceCharPos * m_nCharWidth, m_imgText.m_y, m_nCharWidth, m_imgText.height());
+		m_imgText.XTileBlt(pGraph, x, m_rcObj.top, m_rcObj.right - x, m_imgText.height(), m_nSpaceCharPos * m_nCharWidth, m_imgText.m_y, m_nCharWidth, m_imgText.height());
 
 /*	while (x < m_rcObj.right)
 	{

@@ -33,6 +33,8 @@ int CMPFloatingLyrWnd::Create()
 
 	CSkinWnd::Create(_T("FloatingLyr"), _T("Floating Lyrics"), g_mpApp.GetSkinFactory(), SZ_SECT_FLOATING_LYR);
 
+	m_pSkinFactory->OnSkinWndDestory(this);
+
 	m_bClickThrough = g_Profile.GetProfileBool(SZ_SECT_FLOATING_LYR, _T("ClickThrough"), false);
 	LoadTransparentSettings();
 

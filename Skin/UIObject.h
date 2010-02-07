@@ -125,6 +125,7 @@ enum
 #define SZ_FALSE			_T("FALSE")
 
 #define SZ_PN_NAME			_T("Name")
+#define SZ_PN_TEXT			_T("Text")
 #define SZ_PN_ID			_T("ID")
 #define SZ_PN_LEFT			_T("Left")
 #define SZ_PN_TOP			_T("Top")
@@ -136,8 +137,13 @@ enum
 #define SZ_PN_PROPERTY		_T("Property")
 
 #define SZ_PN_IMAGE			_T("Image")
+#define SZ_PN_IMAGE_SIZE	_T("ImageSize")
+#define SZ_PN_IMAGE_POS		_T("ImagePos")
 #define SZ_PN_IMAGERECT		_T("ImageRect")
 
+#define SZ_PN_RECT			_T("Rect")
+
+#define SZ_PN_LINK			_T("Link")
 
 #define SKIN_UIOBJ_ID_UNDEFINE		0
 

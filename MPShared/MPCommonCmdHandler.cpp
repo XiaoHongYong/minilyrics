@@ -20,7 +20,6 @@
 #include "DlgEmbeddedLyricsRemove.h"
 #include "LrcUploadDlg.h"
 #include "LoginDlg.h"
-#include "VersionUpdate.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
 #include "AutoProcessEmbeddedLyrics.h"
@@ -284,12 +283,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			Execute(m_pSkinWnd, szTempTxtFile, NULL);
 		}
 		break;
-	case IDC_CHECK_UPDATE:
-		{
-			CVersionUpdate	verUpdate;
-			verUpdate.CheckNewVersionManual(&g_LyricsDownloader);
-		}
-		break;
 #ifdef _WIN32_WCE
 	case IDC_MEDIALIB:
 		g_mpApp.GetSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Media Library"), _T("medialib"));
@@ -318,11 +311,11 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #endif
 	case IDC_ABOUT:
 		{
-			CSkinWnd	*pWnd;
-			int nRet = g_mpApp.GetSkinFactory()->CreateSkinWnd(false, _T("about_box"), _T("AboutBox"),
-				_T("AboutBox.xml"), &pWnd);
-			// CDlgAbout		dlg;
-			// dlg.DoModal(m_pSkinWnd);
+/*			CSkinWnd	*pWnd = new CDlgAbout();
+			int nRet = g_mpApp.GetSkinFactory()->OpenOrCloseSkinWnd(_T("about_box"),
+				_T("AboutBox"),
+				_T("AboutBox.xml"), g_mpApp.GetMainWnd(), &pWnd);*/
+			CMPSkinDialog::ShowDialog(new CDlgAbout(), m_pSkinWnd);
 		}
 		break;
 	case IDC_BR_ALBUM_ART:

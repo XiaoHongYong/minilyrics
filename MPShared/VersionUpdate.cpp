@@ -7,7 +7,6 @@
 #include "LyricsDownloadMgr.h"
 #include "VersionUpdate.h"
 #ifdef _WIN32_DESKTOP
-#include "win32/OnlineMsgWnd.h"
 #include <time.h>
 #endif
 
@@ -33,10 +32,6 @@ BOOL CVersion::From(LPCTSTR szVersion)
 
 CVersionInfo::CVersionInfo()
 {
-	nTrialDays = 0;
-	bUseAffiliate = true;
-	nPageWidth = 320;
-	nPageHeight = 240;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -68,40 +63,14 @@ int CVersionInfo::FromXML(SXNode *pNodeVer)
 	LPCTSTR		szTemp;
 
 	//
-	// Obsolete Version
-	szTemp = pNode->GetProperty(_T("obsoletever"));
-	if (szTemp)
-	{
-		if (!verObs.From(szTemp))
-			return ERR_FALSE;
-	}
-
-	//
 	// new version
-	szTemp = pNode->GetProperty(_T("version"));
-	if (!szTemp)
-		return ERR_FALSE;
+	szTemp = pNode->GetPropertySafe(_T("version"));
 	if (!verNew.From(szTemp))
 		return ERR_FALSE;
-
-	strNewVerDlPage = pNode->GetPropertySafe(_T("NewVerDlPage"));
-	nPageWidth = pNode->GetPropertyInt(_T("DlPageWidth"));
-	nPageHeight = pNode->GetPropertyInt(_T("DlPageHeight"));
 
 	szTemp = pNode->GetProperty(_T("upgradedate"));
 	if (szTemp)
 		strNewVerDate = szTemp;
-
-	szTemp = pNode->GetProperty(_T("TrDaysEx"));
-	if (szTemp)
-		nTrialDays = _ttoi(szTemp);
-
-	szTemp = pNode->GetProperty(_T("UseAffiliate"));
-	if (szTemp)
-		bUseAffiliate = Tobool(_ttoi(szTemp));
-//
-//	if (nTrialDays <= 15 || nTrialDays >= 150)
-//		nTrialDays = 150;
 
 	//
 	// new feature
@@ -121,7 +90,6 @@ class CVersionUpdateDlg : public CBaseDialog
 {
 public:
 	const TCHAR *	m_szVersionDesc;
-	tstring			m_strDlLink;
 	CCECommandBar	m_cmdBar;
 
 	CVersionUpdateDlg() : CBaseDialog(IDD_NEW_VERSION_PROMPT)
@@ -137,10 +105,7 @@ public:
 
 		if (uID == IDC_VISITWEB)
 		{
-			if (m_strDlLink.size())
-				OpenUrl(this, m_strDlLink.c_str());
-			else
-				OpenUrl(this, GetStrName(SN_HTTP_DOMAIN));
+			OpenUrl(this, GetStrName(SN_HTTP_DOMAIN));
 			OnOK();
 		}
 	}
@@ -193,22 +158,32 @@ CVersionUpdate::~CVersionUpdate()
 
 void CVersionUpdate::OnDownloadOK(CDownloadTask *pTask)
 {
-	if (pTask->m_dwDownOkID == DOWNOKID_CHECK_VERSION)
-		OnVersionInfoDownOK(pTask, false);
-	else if (pTask->m_dwDownOkID == DOWNOKID_CHECK_VERSION_MANUAL)
-		OnVersionInfoDownOK(pTask, true);
+	if (pTask->m_dwDownOkID != DOWNOKID_CHECK_VERSION)
+		return;
+
+	CVersionInfo	versionInfo;
+	int				nRet;
+
+	nRet = GetUpdateInfo(pTask, versionInfo);
+	if (nRet != ERR_OK)
+		return;
+
+	CVersion		verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
+	if (verCur < versionInfo.verNew)
+	{
+		CVersionUpdateDlg	dlg;
+
+		dlg.m_szVersionDesc = versionInfo.strFeature.c_str();
+		dlg.DoModal(g_mpApp.GetMainWnd());
+	}
 }
 
-//
-// VER_FILE 文件的格式参考前面的定义
-void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck)
+int CVersionUpdate::GetUpdateInfo(CDownloadTask *pTask, CVersionInfo &versionInfo)
 {
 	assert(pTask);
 
 	TCHAR		szCheckVerTime[256];
 	CSimpleXML	xml;
-	TCHAR		szTemp[MAX_PATH];
-	CVersion	verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
 	time_t		lTime;
 	tm			*curtime;
 
@@ -221,102 +196,49 @@ void CVersionUpdate::OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck
 	_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
 	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 
-	g_Profile.WriteProfileString(_T("ObsoleteVersion"), _T(""));
-
 	// 分析VER_FILE
 	if (!xml.ParseFile(pTask->m_strSaveFile.c_str()))
 	{
 		ERRLOG1(_T("parse xml FILE FAILED: %s"), pTask->m_strSaveFile.c_str());
-		return;
+		return ERR_PARSE_XML;
 	}
 
-	CVersionInfo		verInfo;
-	if (verInfo.FromXML(xml.m_pRoot) != ERR_OK)
+	if (versionInfo.FromXML(xml.m_pRoot) != ERR_OK)
 	{
 		ERRLOG1(_T("xml file data error: %s"), pTask->m_strSaveFile.c_str());
-		return;
+		return ERR_PARSE_XML;
 	}
 
-	g_Profile.WriteProfileInt(_T("UseAffiliate"), verInfo.bUseAffiliate);
-
-	// RegWriteProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_CHECK_REG, _T("TrDaysEx"), verInfo.nTrialDays);
-	// g_Profile.WriteProfileInt(_T("TrDaysEx"), verInfo.nTrialDays);
-
-	verInfo.verObs.To(szTemp);
-	g_Profile.WriteProfileString(_T("ObsoleteVersion"), szTemp);
-
-	if (verCur < verInfo.verNew)
-	{
-#ifdef _WIN32_DESKTOP
-		if (!g_bEngEdition && g_LicenseType != LT_REGISTERED)
-		{
- 			COnlineMsgWnd		*pWnd = NULL;
- 			{
- 				pWnd = new COnlineMsgWnd;
- 				pWnd->Create(CStrPrintf(_T("%s - %s"), TOLOCAL(SZ_APP_NAME), TOLOCAL(_T("New version notice"))).c_str(),
-					verInfo.nPageWidth, verInfo.nPageHeight, verInfo.strNewVerDlPage.c_str());
- 				pWnd->ShowWindow(SW_SHOW);
- 			}
-		}
-		else
-#endif
-		{
-			CVersionUpdateDlg	dlg;
-
-			dlg.m_szVersionDesc = verInfo.strFeature.c_str();
-			dlg.m_strDlLink = verInfo.strNewVerDlPage;
-			dlg.DoModal(g_mpApp.GetMainWnd());
-		}
-	}
-	else if (bManualCheck && g_mpApp.GetMainWnd())
-		g_mpApp.MessageOut(TOLOCAL(_T("Your $Product$ is up to date.")));
+	return ERR_OK;
 }
 
-void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr)
+void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr, bool bAutoCheck)
 {
-	CDownloadTask *pOutTask = NULL;
-	TCHAR		szCheckVerTime[256];
-	int			wYear, wMonth, wDay;
-	TCHAR		szVerFile[MAX_PATH];
-	time_t		lTime;
-	tm			*curtime;
-
-	time(&lTime);
-
-	curtime = localtime(&lTime);
-
-	g_Profile.EncryptGetProfileString(_T("CheckVerTime"), _T(""), szCheckVerTime, CountOf(szCheckVerTime));
-	if (_stscanf(szCheckVerTime, _T("%d-%d-%d"), &wYear, &wMonth, &wDay) < 3)
+	if (bAutoCheck)
 	{
-		// no process
-	}
+		TCHAR		szCheckVerTime[256];
+		int			wYear, wMonth, wDay;
+		time_t		lTime;
+		tm			*curtime;
 
-	// 如果日期相隔7天，则检查更新
-	if (abs(GetCurDaysFrom2000() - GetDaysFrom2000(wMonth, wDay, wYear)) <= 7)
-		return;
+		time(&lTime);
 
-	_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
-	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
-	// g_Profile.WriteProfileString(_T("CheckVerTime"), szCheckVerTime);
+		curtime = localtime(&lTime);
 
-	// 首先删除上次下载的文件
-	_tcscpy_safe(szVerFile, CountOf(szVerFile), GetAppDataDir());
-	_tcscat_safe(szVerFile, CountOf(szVerFile), VER_FILE);
-	if (IsFileExist(szVerFile))
-	{
-		SetFileNoReadOnly(szVerFile);
-		if (!DeleteFile(szVerFile))
+		g_Profile.EncryptGetProfileString(_T("CheckVerTime"), _T(""), szCheckVerTime, CountOf(szCheckVerTime));
+		if (_stscanf(szCheckVerTime, _T("%d-%d-%d"), &wYear, &wMonth, &wDay) < 3)
 		{
-			ERRLOG1(_T("Delete File: %s, FAILED!"), szVerFile);
+			// no process
 		}
+
+		// 如果日期相隔7天，则检查更新
+		if (abs(GetCurDaysFrom2000() - GetDaysFrom2000(wMonth, wDay, wYear)) <= 7)
+			return;
+
+		_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
+		g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 	}
 
-	pMgr->AddTask(GetStrName(SN_HTTP_ML_VER), NULL, szVerFile, DOWNOKID_CHECK_VERSION, NULL, false, true);
-}
-
-void CVersionUpdate::CheckNewVersionManual(CLyricsDownloadMgr *pMgr)
-{
-	CDownloadTask *pOutTask = NULL;
 	TCHAR		szVerFile[MAX_PATH];
 
 	// 首先删除上次下载的文件
@@ -331,5 +253,7 @@ void CVersionUpdate::CheckNewVersionManual(CLyricsDownloadMgr *pMgr)
 		}
 	}
 
-	pMgr->AddTask(GetStrName(SN_HTTP_ML_VER), NULL, szVerFile, DOWNOKID_CHECK_VERSION_MANUAL, NULL, false, true);
+	pMgr->AddTask(GetStrName(SN_HTTP_ML_VER), NULL, szVerFile, 
+		bAutoCheck ? DOWNOKID_CHECK_VERSION : DOWNOKID_CHECK_VERSION_MANUAL,
+		NULL, false, true);
 }

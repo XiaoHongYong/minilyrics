@@ -1,18 +1,25 @@
 #pragma once
 
-class CDlgAbout : public CBaseDialog
+#include "MPSkinDialog.h"
+
+class CDlgAbout : public CMPSkinDialog
 {
 public:
 	CDlgAbout();
 	~CDlgAbout();
 
-	void OnLanguageChanged();
-	void OnCommand(UINT uID, UINT nNotifyCode);
-	void OnDestroy();
-	BOOL OnInitDialog();
+	virtual void OnSkinLoaded();
+
+	virtual void CloseSkin();
+
+	virtual bool OnCustomCommand(int nId);
+
+	void OnEvent(const IEvent *pEvent);
 
 protected:
-	CHyperLinkCtrl	m_hlForum, m_hlWeb, m_hlMail;
+	void UpdateLicenseInfo();
+
 	CCECommandBar	m_cmdBar;
 
 };
+

@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
+#include "LyricsDownloadMgr.h"
+#include "VersionUpdate.h"
 #include "DlgAbout.h"
 #include "RegistrationDlg.h"
 
-CDlgAbout::CDlgAbout() : CBaseDialog(IDD_ABOUTBOX)
+CDlgAbout::CDlgAbout() : CMPSkinDialog(_T("AboutBox.xml"))
 {
 }
 
@@ -11,103 +13,121 @@ CDlgAbout::~CDlgAbout()
 {
 }
 
-void CDlgAbout::OnLanguageChanged()
-{
-	SetDlgItemText(IDC_VERSION, SZ_ML_VERSION);
-
-	CBaseWnd::OnLanguageChanged();
-}
-
-BOOL CDlgAbout::OnInitDialog()
+void CDlgAbout::UpdateLicenseInfo()
 {
 	TCHAR			szName[256];
-	TCHAR			szRegCode[256];
-
-	SetDlgItemText(IDC_TECHSUPPORT, GetStrName(SN_SUPPORT_MAIL));
-
-	CBaseDialog::OnInitDialog();
-
-	m_hlForum.Attach(this, IDC_FORUM, GetStrName(SN_HTTP_BBS));
-	m_hlMail.Attach(this, IDC_TECHSUPPORT, GetStrName(SN_EMAIL));
-	m_hlWeb.Attach(this, IDC_WEB_HOME, GetStrName(SN_HTTP_DOMAIN));
-
-	//
-	// 版本信息
-	m_LangDlgHelper.RemoveDlgItem(IDC_VERSION);
-	m_LangDlgHelper.RemoveDlgItem(IDC_NAME);
-	m_LangDlgHelper.RemoveDlgItem(IDC_REGISTRATION_CODE);
-
-#ifdef _DEBUG
-	ShowDlgItem(IDC_DEBUG_VER, SW_SHOW);
-#endif
-
-	SetDlgItemText(IDC_VERSION, SZ_ML_VERSION);
+	bool			bHasLicense = false;
 
 	//
 	// 注册信息
 	if (g_LicenseType == LT_REGISTERED)
 	{
 		g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""), szName, sizeof(szName));
-		_tcscpy_safe(szRegCode, CountOf(szRegCode), TOLOCAL(_T("Registered")));
-		ShowDlgItem(IDC_UN_REG, SW_HIDE);
-	}
-	else
-	{
-		_tcscpy_safe(szName, CountOf(szName), TOLOCAL(_T("Unregistered")));
-		_tcscpy_safe(szRegCode, CountOf(szRegCode), TOLOCAL(_T("Unregistered")));
-		ShowDlgItem(IDC_UN_REG, SW_SHOW);
-		ShowDlgItem(IDC_S_LICENSE_TO, SW_HIDE);
-		ShowDlgItem(IDC_S_REGCODE, SW_HIDE);
-		ShowDlgItem(IDC_NAME, SW_HIDE);
-		ShowDlgItem(IDC_REGISTRATION_CODE, SW_HIDE);
+		SetUIObjectProperty(_T("CID_LICENSE_TO"), SZ_PN_TEXT, szName);
+		bHasLicense = true;
 	}
 
-	SetDlgItemText(IDC_NAME, szName);
-	SetDlgItemText(IDC_REGISTRATION_CODE, szRegCode);
+	SetUIObjectVisible(_T("CID_LICENSE"), bHasLicense, false);
+	SetUIObjectVisible(_T("CID_LICENSE_TO"), bHasLicense, false);
+	SetUIObjectVisible(_T("CID_UNREGISTERED"), !bHasLicense, false);
 
-	CeSHInitFullScrDlg(this);
-
-	m_cmdBar.Create(this, -1);
-
-	return TRUE;
+	InvalidateRect();
 }
 
-void CDlgAbout::OnDestroy()
+void CDlgAbout::OnSkinLoaded()
 {
-	m_cmdBar.Destroy();
+	CMPSkinDialog::OnSkinLoaded();
 
-	CBaseDialog::OnDestroy();
+	SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, SZ_ML_VERSION);
+
+	// SetUIObjectProperty(_T("CID_COPYRIGHT"), SZ_PN_TEXT, SZ_ML_VERSION);
+	SetUIObjectProperty(_T("CID_COPYRIGHT"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));
+
+	SetUIObjectProperty(_T("CID_EMAIL"), SZ_PN_LINK, GetStrName(SN_EMAIL));
+
+	UpdateLicenseInfo();
+
+	g_eventDispather.RegisterHanlder(ET_DOWNLOAD_END, this);
+
+	CVersionUpdate	verUpdate;
+	verUpdate.CheckNewVersion(&g_LyricsDownloader, false);
 }
 
-void CDlgAbout::OnCommand(UINT uID, UINT nNotifyCode)
+void CDlgAbout::CloseSkin()
 {
-	CBaseDialog::OnCommand(uID, nNotifyCode);
+	g_eventDispather.UnregisterHanlder(ET_DOWNLOAD_END, this);
 
-	switch (uID)
+	CMPSkinDialog::CloseSkin();
+}
+
+bool CDlgAbout::OnCustomCommand(int nId)
+{
+	if (CMPSkinDialog::OnCustomCommand(nId))
+		return true;
+
+	if (nId == m_pSkinFactory->GetIDByName(_T("CID_BUYNOW")))
 	{
-	case IDC_PURCHASEINFO:
 		OpenUrl(this, GetStrName(SN_HTTP_REGISTER));
-		break;
-	case IDC_ENTERCODE:
+	}
+	else if (nId == m_pSkinFactory->GetIDByName(_T("CID_ENTER_CODE")))
+	{
+		CRegistrationDlg	dlg;
+
+		dlg.DoModal(this);
+
+		UpdateLicenseInfo();
+	}
+
+	return true;
+}
+
+
+void CDlgAbout::OnEvent(const IEvent *pEvent)
+{
+	CMPSkinDialog::OnEvent(pEvent);
+
+	if (pEvent->eventType == ET_DOWNLOAD_END)
+	{
+		CEventDownloadEnd		*pDlEvt = (CEventDownloadEnd *)pEvent;
+		if (pDlEvt->pTask->m_dwDownOkID == DOWNOKID_CHECK_VERSION_MANUAL)
 		{
-			TCHAR			szName[256];
-			TCHAR			szRegCode[256];
-			CRegistrationDlg	dlg;
+			int		nRet = ERR_OK;
 
-			if (IDOK == dlg.DoModal(this))
+			if (pDlEvt->pTask->m_errResult == ERR_OK)
 			{
-				g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""), szName, sizeof(szName));
-				_tcscpy_safe(szRegCode, CountOf(szRegCode), TOLOCAL(_T("Registered")));
+				CVersionUpdate	verCheck;
+				CVersionInfo	versionInfo;
 
-				SetDlgItemText(IDC_NAME, szName);
-				SetDlgItemText(IDC_REGISTRATION_CODE, szRegCode);
-				ShowDlgItem(IDC_UN_REG, SW_HIDE);
-				ShowDlgItem(IDC_S_LICENSE_TO, SW_SHOW);
-				ShowDlgItem(IDC_S_REGCODE, SW_SHOW);
-				ShowDlgItem(IDC_NAME, SW_SHOW);
-				ShowDlgItem(IDC_REGISTRATION_CODE, SW_SHOW);
+				// Get new version info
+				nRet = verCheck.GetUpdateInfo(pDlEvt->pTask, versionInfo);
+				if (nRet == ERR_OK)
+				{
+					CVersion		verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
+					if (verCur < versionInfo.verNew)
+					{
+						// New version
+						tstring		strNewVersion = TOLOCAL(_T("New version of $Product$ is available"));
+						strNewVersion += _T(" ");
+						strNewVersion += versionInfo.verNew.To();
+
+						SetUIObjectProperty(_T("CID_NEW_VERSION"), SZ_PN_TEXT, strNewVersion.c_str());
+						SetUIObjectVisible(_T("CID_CHECK_VERSION"), false, false);
+						SetUIObjectVisible(_T("CID_NEW_VERSION"), true, false);
+						InvalidateRect();
+					}
+					else
+					{
+						SetUIObjectProperty(_T("CID_CHECK_VERSION"), SZ_PN_TEXT, TOLOCAL(_T("Your $Product$ is up to date.")));
+						InvalidateUIObject(_T("CID_CHECK_VERSION"));
+					}
+					return;
+				}
 			}
+			else
+				nRet = pDlEvt->pTask->m_errResult;
+
+			SetUIObjectProperty(_T("CID_CHECK_VERSION"), SZ_PN_TEXT, ERROR2STR_LOCAL(nRet));
+			InvalidateUIObject(_T("CID_CHECK_VERSION"));
 		}
-		break;
 	}
 }

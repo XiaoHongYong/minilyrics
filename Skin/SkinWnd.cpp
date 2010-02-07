@@ -320,7 +320,6 @@ void CSkinWnd::CloseSkin()
 
 	m_rootConainter.Destroy();
 
-	m_bTranslucencyLayered = false;
 #ifdef _WIN32_DESKTOP
 	KillTimer(TIMER_ID_DYNAMIC_TRANS);
 	m_translucencyStatus = TS_NORMAL;
@@ -1195,22 +1194,6 @@ BOOL CSkinWnd::MoveWindow(RECT &rc, BOOL bRepaint/* = TRUE*/)
 	return MoveWindow(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, bRepaint);
 }
 
-// szValue format: %d,%d,%d,%d
-template<class TCHARDEF, class _int_t>
-bool Scan2IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2)
-{
-	szValue = ReadInt_t(szValue, n1);
-	if (*szValue != ',')
-		return false;
-	szValue++;
-	while (*szValue == ' ')
-		szValue++;
-
-	ReadInt_t(szValue, n2);
-
-	return true;
-}
-
 void CSkinWnd::CreateUIObjects(SXNode *pSkinWndNode, CSkinContainer *pParentContainer)
 {
 	SXNode::iterator	it, itEnd;
@@ -1641,7 +1624,7 @@ void CSkinWnd::SetFocusUIObject(CUIObject *pObj)
 }
 
 
-bool CSkinWnd::EnableSkinObject(int nId, bool bEnable, bool bRedraw)
+bool CSkinWnd::EnableUIObject(int nId, bool bEnable, bool bRedraw)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
 	if (!pObj)
@@ -1656,6 +1639,56 @@ bool CSkinWnd::EnableSkinObject(int nId, bool bEnable, bool bRedraw)
 	}
 
 	return true;
+}
+
+bool CSkinWnd::SetUIObjectProperty(int nId, LPCTSTR szProperty, LPCTSTR szValue)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+		return false;
+
+	return Tobool(pObj->SetProperty(szProperty, szValue));
+}
+
+bool CSkinWnd::SetUIObjectProperty(LPCTSTR szId, LPCTSTR szProperty, LPCTSTR szValue)
+{
+	return SetUIObjectProperty(m_pSkinFactory->GetIDByName(szId), szProperty, szValue);
+}
+
+void CSkinWnd::SetUIObjectVisible(int nId, bool bVisible, bool bRedraw)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+		return;
+
+	pObj->SetVisible(bVisible);
+
+	if (bRedraw)
+	{
+		if (bVisible)
+			pObj->Invalidate();
+		else
+			pObj->m_pContainer->Invalidate();
+	}
+}
+
+void CSkinWnd::SetUIObjectVisible(LPCTSTR szId, bool bVisible, bool bRedraw)
+{
+	SetUIObjectVisible(m_pSkinFactory->GetIDByName(szId), bVisible, bRedraw);
+}
+
+void CSkinWnd::InvalidateUIObject(int nId)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+		return;
+
+	InvalidateUIObject(pObj);
+}
+
+void CSkinWnd::InvalidateUIObject(LPCTSTR szId)
+{
+	InvalidateUIObject(m_pSkinFactory->GetIDByName(szId));
 }
 
 CUIObject *CSkinWnd::RemoveUIObjectById(int nId)
@@ -2433,6 +2466,8 @@ void CSkinWnd::DispatchUIObjNotify(IUIObjNotify *pNotify)
 
 int CSkinWnd::FromXML(SXNode *pXmlNode)
 {
+	m_bTranslucencyLayered = false;
+
 	m_rootConainter.m_rcObj.SetRect(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height());
 
 	m_fontProperty.Create(_T("Tohama"), _T(""), 14, FW_NORMAL, false, false);
@@ -2459,7 +2494,8 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 		CreateUIObjects(pNodeExtends, &m_rootConainter);
 		pContainterClientArea = (CSkinContainer*)m_rootConainter.GetUIObjectByClassName(CSkinClientArea::ClassName());
 	}
-	else
+
+	if (pContainterClientArea == NULL)
 		pContainterClientArea = &m_rootConainter;
 
 	// Create UIObjects

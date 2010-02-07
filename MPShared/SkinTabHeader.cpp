@@ -558,7 +558,7 @@ void CSkinTabHeader::DrawTabButton(CRawGraph *pGraph, Button &bt, CRect &rcButto
 	m_img.Blt(pGraph, x, y, m_nButtonBorderSize, m_nTabHeight, 0, nYPosTabButton, BPM_BLEND);
 
 	// Draw button face
-	m_img.ExtendXBlt(pGraph, x + m_nButtonBorderSize, y, bt.nWidth - m_nButtonBorderSize, m_nTabHeight, 
+	m_img.XTileBlt(pGraph, x + m_nButtonBorderSize, y, bt.nWidth - m_nButtonBorderSize, m_nTabHeight, 
 		m_nButtonBorderSize, nYPosTabButton, m_nButtonFaceSize, m_nTabHeight, BPM_BLEND);
 
 	// Draw Right border

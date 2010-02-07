@@ -10,8 +10,6 @@
 #include "MLSkin.h"
 #include "SkinButton.h"
 
-#define SZ_IMAGE_CHECK		_T("ImageCheck")
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -41,12 +39,6 @@ BOOL CSkinButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (_tcsicmp(szProperty, _T("Checked")) == 0)
 		m_nCurStatus = IsTRUE(szValue) ? 1 : 0;
-	else if (_tcsnicmp(szProperty, SZ_IMAGE_CHECK, _tcslen(SZ_IMAGE_CHECK)) == 0)
-	{
-		tstring		strNewProperty = _T("S1_image");
-		strNewProperty += szProperty + _tcslen(SZ_IMAGE_CHECK);
-		return CSkinNStatusButton::SetProperty(strNewProperty.c_str(), szValue);
-	}
 	else if (_tcsnicmp(szProperty, SZ_PN_IMAGE, _tcslen(SZ_PN_IMAGE)) == 0)
 	{
 		tstring		strNewProperty = _T("S0_");

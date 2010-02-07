@@ -108,9 +108,9 @@ protected:
 
 };
 
-class CSkinClientArea : public CUIObject
+class CSkinClientArea : public CSkinContainer
 {
-	UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 };
 
 #endif // !defined(AFX_SKINCONTAINER_H__C8C49C75_1237_4E52_A4AC_72AFC3907E3E__INCLUDED_)

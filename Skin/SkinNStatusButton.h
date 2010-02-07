@@ -39,6 +39,8 @@ protected:
 	void SetMaxStat(int nMaxStat);
 	void Destroy();
 
+	bool IsMouseHitBt(POINT &pt);
+
 protected:
 
 	struct BtStatImg
@@ -51,6 +53,10 @@ protected:
 	typedef vector<BtStatImg *>		V_BTSTATIMG;
 
 	V_BTSTATIMG		m_vBtStatImg;
+
+	int				m_xMargin, m_yMargin;
+	int				m_xExtendStart, m_xExtendEnd;
+	bool			m_bTile;
 
 	int				m_nCurStatus;
 

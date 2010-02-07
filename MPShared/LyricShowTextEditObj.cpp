@@ -527,7 +527,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 				if (pLine->lineType == CMLData::LP_TIME_TAG && GetTimeTagOfLine(strLine.c_str(), strTimeTag))
 				{
 					LPCTSTR	szPos = strLine.c_str() + strTimeTag.size();
-					while (*szPos == ' ' || *szPos == '\t')
+					while (*szPos == ' ' || *szPos == '\t' || *szPos == '\'' || *szPos == '\"')
 						szPos++;
 					if ((unsigned)(*szPos) <= 255 && islower(*szPos))
 					{
@@ -540,7 +540,7 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 				else if (pLine->lineType == CMLData::LP_NONE)
 				{
 					LPCTSTR	szPos = strLine.c_str();
-					while (*szPos == ' ' || *szPos == '\t')
+					while (*szPos == ' ' || *szPos == '\t' || *szPos == '\'' || *szPos == '\"')
 						szPos++;
 					if ((unsigned)(*szPos) <= 255 && islower(*szPos))
 					{

@@ -663,7 +663,7 @@ void CSkinVScrollBar::Draw(CRawGraph *pGraph)
 	// 2、绘窗口中的空白区域
 	if (m_nPosThumb > 0)
 	{
-		m_imgTrack.ExtendYBlt(pGraph, m_rcObj.left, y, 
+		m_imgTrack.YTileBlt(pGraph, m_rcObj.left, y, 
 			m_rcObj.Width(), m_nPosThumb);
 		y += m_nPosThumb;
 	}
@@ -699,7 +699,7 @@ void CSkinVScrollBar::Draw(CRawGraph *pGraph)
 	// 4、绘窗口中的空白区域
 	if (m_rcObj.bottom - y - m_nHeightPushBt > 0)
 	{
-		m_imgTrack.ExtendYBlt(pGraph, m_rcObj.left, y, 
+		m_imgTrack.YTileBlt(pGraph, m_rcObj.left, y, 
 			m_rcObj.Width(), m_rcObj.bottom - y - m_nHeightPushBt);
 		y = m_rcObj.top + m_rcObj.Height() - m_nHeightPushBt;
 	}
@@ -969,7 +969,7 @@ void CSkinHScrollBar::Draw(CRawGraph *pGraph)
 	// 2、绘窗口中的空白区域
 	if (m_nPosThumb > 0)
 	{
-		m_imgTrack.ExtendXBlt(pGraph, x, m_rcObj.top,
+		m_imgTrack.XTileBlt(pGraph, x, m_rcObj.top,
 			m_nPosThumb, m_rcObj.Height());
 		x += m_nPosThumb;
 	}
@@ -1005,7 +1005,7 @@ void CSkinHScrollBar::Draw(CRawGraph *pGraph)
 	// 4、绘窗口中的空白区域
 	if (m_rcObj.right - x - m_nWidthPushBt > 0)
 	{
-		m_imgTrack.ExtendXBlt(pGraph, x, m_rcObj.top,
+		m_imgTrack.XTileBlt(pGraph, x, m_rcObj.top,
 			m_rcObj.right - x - m_nWidthPushBt, m_rcObj.Height());
 		x = m_rcObj.right - m_nWidthPushBt;
 	}

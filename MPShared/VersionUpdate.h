@@ -9,25 +9,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-class CInvalidRegCodeDlg : public CBaseDialog
-{
-public:
-	CInvalidRegCodeDlg() : CBaseDialog(IDD_INVALID_REG_CODE)	{};
-
-	~CInvalidRegCodeDlg()	{};
-
-	void OnCommand(UINT uID, UINT nNotifyCode)
-	{
-		CBaseDialog::OnCommand(uID, nNotifyCode);
-
-		if (uID == IDC_VISITWEB)
-		{
-			OpenUrl(this, GetStrName(SN_HTTP_DOMAIN));
-			OnOK();
-		}
-	}
-};
-
 class CVersion
 {
 public:
@@ -42,9 +23,9 @@ public:
 	{
 	}
 	BOOL From(LPCTSTR szVersion);
-	void To(TCHAR szVersion[])
+	tstring To()
 	{
-		_stprintf_s(szVersion, 32, _T("%d.%d.%d"), nVerMajor, nVerMinor, nVerBuild);
+		return CStrPrintf(_T("%d.%d.%d"), nVerMajor, nVerMinor, nVerBuild).c_str();
 	}
 
 	bool operator==(CVersion &ver2)
@@ -105,36 +86,23 @@ public:
 	int FromXML(SXNode *pNodeVer);
 
 public:
-	// int		nNewVerMajor, nNewVerMinor, nNewVerBuild;		// 最新版本
-	// int		nObsVerMajor, nObsVerMinor, nObsVerBuild;		// 废弃版本
 	CVersion		verNew;
-	CVersion		verObs;
 	tstring			strNewVerDate;			// 新版发布日期
 	tstring			strFeature;				// 新版特性
 
-	int				nTrialDays;				// 试用日期
-
-	bool			bUseAffiliate;			// default is true
-
-	//
-	// New Version Download Web Page info
-	tstring			strNewVerDlPage;		// New Version Download Web Page
-	int				nPageWidth, nPageHeight;
 };
 
 class CVersionUpdate  
 {
 public:
-	void CheckNewVersion(CLyricsDownloadMgr *pMgr);
-	void CheckNewVersionManual(CLyricsDownloadMgr *pMgr);
+	CVersionUpdate();
+	virtual ~CVersionUpdate();
+
+	void CheckNewVersion(CLyricsDownloadMgr *pMgr, bool bAutoCheck = true);
 
 	virtual void OnDownloadOK(CDownloadTask *pTask);
 
-	CVersionUpdate();
-	virtual ~CVersionUpdate();
-	
-protected:
-	void OnVersionInfoDownOK(CDownloadTask *pTask, bool bManualCheck);
+	int GetUpdateInfo(CDownloadTask *pTask, CVersionInfo &versionInfo);
 
 };
 

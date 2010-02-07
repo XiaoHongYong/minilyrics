@@ -709,11 +709,31 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	LIST_SKINWNDS		listToBeProcessed;
 
 	// Destroy other skin windows.
-	if (!m_listSkinWnds.empty())
+	if (m_listSkinWnds.size() > 1)
+	{
 		listToBeProcessed.insert(listToBeProcessed.begin(), ++(m_listSkinWnds.begin()), m_listSkinWnds.end());
 
+		LIST_SKINWNDS::iterator	it;
+		for (it = listToBeProcessed.begin(); it != listToBeProcessed.end(); ++it)
+		{
+			CSkinWnd	*pSkinWnd = *it;
+			nRet = pSkinWnd->OpenDefaultSkin();
+			if (nRet != ERR_OK)
+				pSkinWnd->Destroy();
+			else
+				setOpenedSkinWnds.erase(pSkinWnd->GetSkinWndName());
+		}
+	}
+
+	for (SetTStrNCase::iterator itSet = setOpenedSkinWnds.begin();
+		itSet != setOpenedSkinWnds.end(); ++itSet)
+	{
+		nRet = CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str());
+		// delete pSkinWnd;
+	}
+
 	// Open other skin windows.
-	LIST_SKINWNDS::iterator	it;
+/*	LIST_SKINWNDS::iterator	it;
 	SetTStrNCase::iterator itSet;
 	for (it = listToBeProcessed.begin(), itSet = setOpenedSkinWnds.begin();
 		it != listToBeProcessed.end() && itSet != setOpenedSkinWnds.end(); ++it, ++itSet)
@@ -735,7 +755,7 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	{
 		nRet = CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str());
 		// delete pSkinWnd;
-	}
+	}*/
 
 	return ERR_OK;
 }
@@ -904,9 +924,7 @@ void CSkinFactory::Close()
 			strOpenedSkinWnds += pSkin->GetSkinWndName();
 		}
 
-		// PostMessage(pSkin->GetHandle(), WM_CLOSE, 0, 0);
-		pSkin->CloseSkin();
-		// delete pSkin;
+		// pSkin->CloseSkin();
 	}
 	if (bSave || strOpenedSkinWnds.size())
 		g_Profile.WriteProfileString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
@@ -1041,6 +1059,33 @@ int CSkinFactory::CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCT
 	return nRet;
 }
 
+int CSkinFactory::OpenOrCloseSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, CSkinWnd **ppSkinWnd)
+{
+	CSkinWnd *pWndOld = FindSkinWnd(szSkinWndName);
+	if (pWndOld)
+	{
+		pWndOld->ActivateWindow();
+		delete *ppSkinWnd;
+		*ppSkinWnd = pWndOld;
+		return ERR_OK;
+	}
+
+	int nRet = (*ppSkinWnd)->Create(szClassName, szCaption, this, szSkinWndName);
+	if (nRet != ERR_OK)
+	{
+		delete *ppSkinWnd;
+		*ppSkinWnd = NULL;
+		return nRet;
+	}
+
+#ifdef _WIN32
+	if (!(*ppSkinWnd)->IsWindowsAppearance())
+		ShowAsToolWindow((*ppSkinWnd)->GetHandle());
+#endif
+
+	return ERR_OK;
+}
+
 void CSkinFactory::OnSkinWndCreate(CSkinWnd *pSkinWnd)
 {
 	LIST_SKINWNDS::iterator	it;
@@ -1172,6 +1217,8 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	{
 		pObj = new CSkinVScrollBar;
 	}
+	else if (_tcsicmp(szClassName, CSkinHScrollBar::ClassName()) == 0)
+		pObj = new CSkinHScrollBar;
 	else if (_tcsicmp(szClassName, CSkinVScrollBarOSStyle::ClassName()) == 0)
 	{
 		pObj = new CSkinVScrollBarOSStyle;

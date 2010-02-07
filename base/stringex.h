@@ -204,6 +204,22 @@ bool Scan4IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2, _int_t &n3, _int_t &n4)
 	return true;
 }
 
+// szValue format: %d,%d
+template<class TCHARDEF, class _int_t>
+bool Scan2IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2)
+{
+	szValue = ReadInt_t(szValue, n1);
+	if (*szValue != ',')
+		return false;
+	szValue++;
+	while (*szValue == ' ')
+		szValue++;
+
+	ReadInt_t(szValue, n2);
+
+	return true;
+}
+
 void _itostr(int value, tstring &str, int base);
 
 template<class _TCHARPTR, class _int_t>

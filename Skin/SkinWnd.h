@@ -114,7 +114,16 @@ public:
 
 	CSkinContainer *GetRootContainer() { return &m_rootConainter; }
 
-	bool EnableSkinObject(int nId, bool bEnable = true, bool bRedraw = true);
+	bool EnableUIObject(int nId, bool bEnable = true, bool bRedraw = true);
+
+	bool SetUIObjectProperty(int nId, LPCTSTR szProperty, LPCTSTR szValue);
+	bool SetUIObjectProperty(LPCTSTR szId, LPCTSTR szProperty, LPCTSTR szValue);
+
+	void SetUIObjectVisible(int nId, bool bVisible, bool bRedraw = true);
+	void SetUIObjectVisible(LPCTSTR szId, bool bVisible, bool bRedraw = true);
+
+	void InvalidateUIObject(int nId);
+	void InvalidateUIObject(LPCTSTR szId);
 
 	// register special messages
 	void SetCaptureMouse(CUIObject *pUIObj);
@@ -283,6 +292,7 @@ public:
 	CRawBmpFont *GetRawFont() { return m_fontProperty.GetFont(); }
 
 	LPCTSTR GetSkinWndName() { return m_strSkinWndName.c_str(); }
+	LPCTSTR GetCaptionText() { return m_strCaption.c_str(); }
 
 	bool IsWindowsAppearance() const { return m_bWindowsAppearance; }
 

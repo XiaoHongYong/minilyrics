@@ -86,7 +86,50 @@ bool CSFImage::LoadFromSRM(CSkinFactory *pskinFactory, LPCTSTR szResName)
 	return hImage != NULL;
 }
 
-void CSFImage::ExtendXBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
+void CSFImage::XScaleBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, int xExtendStart, int xExtendEnd, bool bTile, BlendPixMode bpm)
+{
+	assert(m_cx);
+	if (m_cx == 0)
+		return;
+
+	int		x = xDest;
+	int		xSrc = m_x;
+
+	// Start ...
+	CRawImage::Blt(pGraphics,
+		x, yDest,
+		xExtendStart - m_x, m_cy,
+		xSrc, m_y, bpm);
+
+	x += xExtendStart - xSrc;
+	xSrc = xExtendStart;
+
+	// Center part
+	if (bTile)
+	{
+		XTileBlt(pGraphics, x, yDest, 
+			nWidthDest - (m_cx - (xExtendEnd - xExtendStart)), m_cy,
+			xExtendStart, m_y,
+			xExtendEnd - xExtendStart, m_cy, bpm);
+	}
+	else
+	{
+		CRawImage::StretchBlt(pGraphics, x, yDest, 
+			nWidthDest - (m_cx - (xExtendEnd - xExtendStart)), m_cy,
+			xExtendStart, m_y,
+			xExtendEnd - xExtendStart, m_cy, bpm);
+	}
+
+	x = xDest + nWidthDest - (m_x + m_cx - xExtendEnd);
+
+	// End ...
+	CRawImage::Blt(pGraphics,
+		x, yDest,
+		m_x + m_cx - xExtendEnd, m_cy,
+		xExtendEnd, m_y, bpm);
+}
+
+void CSFImage::XTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
 {
 	assert(m_cx);
 	if (m_cx == 0)
@@ -111,7 +154,7 @@ void CSFImage::ExtendXBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidth
 	}
 }
 
-void CSFImage::ExtendXBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, int nImageX, int nImageY, int nImageCx, int nImageCy, BlendPixMode bpm)
+void CSFImage::XTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, int nImageX, int nImageY, int nImageCx, int nImageCy, BlendPixMode bpm)
 {
 	assert(nImageCx);
 	if (nImageCx == 0)
@@ -136,7 +179,7 @@ void CSFImage::ExtendXBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidth
 	}
 }
 
-void CSFImage::ExtendYBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
+void CSFImage::YTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
 {
 	assert(m_cy);
 	if (m_cy == 0)

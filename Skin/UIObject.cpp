@@ -468,6 +468,19 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_formWidth.SetFormula(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_HEIGHT) == 0)
 		m_formHeight.SetFormula(szValue);
+	else if (_tcsicmp(szProperty, SZ_PN_RECT) == 0)
+	{
+		V_Str		vRect;
+		StrSplit(szValue, ',', vRect);
+		TrimStr(vRect, ' ');
+		if (vRect.size() != 4)
+			return false;
+
+		m_formLeft.SetFormula(vRect[0].c_str());
+		m_formTop.SetFormula(vRect[1].c_str());
+		m_formWidth.SetFormula(vRect[2].c_str());
+		m_formHeight.SetFormula(vRect[3].c_str());
+	}
 	else if (_tcsicmp(szProperty, SZ_PN_ID) == 0)
 	{
 		if (m_strTooltip.empty())

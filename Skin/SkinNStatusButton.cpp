@@ -18,6 +18,10 @@ CSkinNStatusButton::CSkinNStatusButton()
 {
 	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON;
 
+	m_xMargin = m_yMargin = 0;
+	m_xExtendStart = m_xExtendEnd = -1;
+	m_bTile = true;
+
 	m_bLBtDown = FALSE;
 	m_nCurStatus = 0;
 
@@ -46,7 +50,7 @@ bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 
 	assert(m_pSkin);
 
-	if (!m_rcObj.PtInRect(point))
+	if (!IsMouseHitBt(point))
 		return false;
 
 	m_bLBtDown = TRUE;
@@ -97,7 +101,7 @@ void CSkinNStatusButton::OnTimer(int nId)
 		MLWidget::GetCursorPos(&pt);
 		m_pSkin->ScreenToClient(pt);
 
-		if (m_rcObj.PtInRect(pt))
+		if (IsMouseHitBt(pt))
 		{
 			if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
 				m_pSkin->PostCustomCommandMsg(m_nId);
@@ -180,7 +184,7 @@ bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 
 	assert(m_pSkin);
 
-	if (IsPtIn(point))
+	if (IsMouseHitBt(point))
 	{
 		if (!m_bLBtDown && (nFlags & MK_LBUTTON))
 		{
@@ -280,10 +284,19 @@ void CSkinNStatusButton::Draw(CRawGraph *pGraph)
 		}
 	}
 
-	if (m_imgMask.IsValid())
-		pImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+	if (m_xExtendStart == -1)
+	{
+		if (m_imgMask.IsValid())
+			pImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+		else
+			pImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
+	}
 	else
-		pImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
+	{
+		pImage->XScaleBlt(pGraph, m_rcObj.left, m_rcObj.top, 
+			m_rcObj.Width(), m_rcObj.Height(),
+			m_xExtendStart, m_xExtendEnd, m_bTile, m_bpm);
+	}
 }
 
 void CSkinNStatusButton::FadeInDrawBt(CRawGraph *pGraph, CSFImage *pImage, int nAlpha)
@@ -294,17 +307,35 @@ void CSkinNStatusButton::FadeInDrawBt(CRawGraph *pGraph, CSFImage *pImage, int n
 
 	pGraph->SetOpacityPainting((255 - nAlpha) * nAlphaOld / 255);
 
-	if (m_imgMask.IsValid())
-		m_pLastImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+	if (m_xExtendStart == -1)
+	{
+		if (m_imgMask.IsValid())
+			m_pLastImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+		else
+			m_pLastImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
+	}
 	else
-		m_pLastImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
+	{
+		m_pLastImage->XScaleBlt(pGraph, m_rcObj.left, m_rcObj.top, 
+			m_rcObj.Width(), m_rcObj.Height(),
+			m_xExtendStart, m_xExtendEnd, m_bTile, m_bpm);
+	}
 
 	pGraph->SetOpacityPainting(nAlpha * nAlphaOld / 255);
 
-	if (m_imgMask.IsValid())
-		pImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+	if (m_xExtendStart == -1)
+	{
+		if (m_imgMask.IsValid())
+			pImage->MaskBlt(pGraph, m_rcObj.left, m_rcObj.top, &m_imgMask, m_bpm);
+		else
+			pImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
+	}
 	else
-		pImage->Blt(pGraph, m_rcObj.left, m_rcObj.top, m_bpm);
+	{
+		pImage->XScaleBlt(pGraph, m_rcObj.left, m_rcObj.top, 
+			m_rcObj.Width(), m_rcObj.Height(),
+			m_xExtendStart, m_xExtendEnd, m_bTile, m_bpm);
+	}
 
 	pGraph->SetOpacityPainting(nAlphaOld);
 }
@@ -333,6 +364,42 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 				DBGLOG1(_T("Load image file: %s, FAILED"), szValue);
 			ASSERT(btimg->imgBk.IsValid());
 		}
+		else if (IsPropertyName(szPropertyNew, SZ_PN_IMAGE_SIZE))
+		{
+			Scan2IntX(szValue, btimg->imgBk.m_cx, btimg->imgBk.m_cy);
+		}
+		else if (IsPropertyName(szPropertyNew, SZ_PN_IMAGE_POS))
+		{
+			Scan2IntX(szValue, btimg->imgBk.m_x, btimg->imgBk.m_y);
+		}
+		else if (IsPropertyName(szPropertyNew, _T("ImageSelPos")))
+		{
+			btimg->imgSel.LoadFromSRM(m_pSkin->GetSkinFactory(), btimg->strBkFile.c_str());
+			btimg->imgSel.m_cx = btimg->imgBk.m_cx;
+			btimg->imgSel.m_cy = btimg->imgBk.m_cy;
+			Scan2IntX(szValue, btimg->imgSel.m_x, btimg->imgSel.m_y);
+		}
+		else if (IsPropertyName(szPropertyNew, _T("ImageFocusPos")))
+		{
+			btimg->imgHover.LoadFromSRM(m_pSkin->GetSkinFactory(), btimg->strBkFile.c_str());
+			btimg->imgHover.m_cx = btimg->imgBk.m_cx;
+			btimg->imgHover.m_cy = btimg->imgBk.m_cy;
+			Scan2IntX(szValue, btimg->imgHover.m_x, btimg->imgHover.m_y);
+			m_bEnableHover = true;
+		}
+		else if (IsPropertyName(szPropertyNew, _T("ImageDisabledPos")))
+		{
+			btimg->imgDisabled.LoadFromSRM(m_pSkin->GetSkinFactory(), btimg->strBkFile.c_str());
+			btimg->imgDisabled.m_cx = btimg->imgBk.m_cx;
+			btimg->imgDisabled.m_cy = btimg->imgBk.m_cy;
+			Scan2IntX(szValue, btimg->imgDisabled.m_x, btimg->imgDisabled.m_y);
+		}
+		else if (IsPropertyName(szPropertyNew, _T("IDCmd")))
+		{
+			btimg->nIDCmd = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
+		}
+
+		// Old property styles, decrepted
 		else if (_tcsicmp(szPropertyNew, SZ_PN_IMAGERECT) == 0)
 		{
 			if (!GetRectValue(szValue, btimg->imgBk))
@@ -370,10 +437,6 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			if (!GetRectValue(szValue, btimg->imgDisabled))
 				goto PARSE_VALUE_FAILED;
 		}
-		else if (_tcsicmp(szPropertyNew, _T("IDCmd")) == 0)
-		{
-			btimg->nIDCmd = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
-		}
 		else
 			return FALSE;
 	}
@@ -386,6 +449,18 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		if (m_vBtStatImg.size() == 0)
 			m_vBtStatImg.push_back(new BtStatImg);
 		m_vBtStatImg[0]->nIDCmd = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
+	}
+	else if (IsPropertyName(szProperty, _T("XMargin")))
+		m_xMargin = _ttoi(szValue);
+	else if (IsPropertyName(szProperty, _T("YMargin")))
+		m_yMargin = _ttoi(szValue);
+	else if (IsPropertyName(szProperty, _T("ExtendPos")))
+	{
+		Scan2IntX(szValue, m_xExtendStart, m_xExtendEnd);
+	}
+	else if (IsPropertyName(szProperty, _T("Tile")))
+	{
+		m_bTile = IsTRUE(szValue);
 	}
 	else if (IsPropertyName(szProperty, _T("BlendPixMode")))
 	{
@@ -488,4 +563,15 @@ void CSkinNStatusButton::Destroy()
 		delete m_vBtStatImg[i];
 	}
 	m_vBtStatImg.clear();
+}
+
+bool CSkinNStatusButton::IsMouseHitBt(POINT &pt)
+{
+	if (m_xMargin == 0 && m_yMargin == 0)
+		return Tobool(m_rcObj.PtInRect(pt));
+
+	CRect	rc = m_rcObj;
+
+	rc.DeflateRect(m_xMargin, m_yMargin);
+	return Tobool(rc.PtInRect(pt));
 }
