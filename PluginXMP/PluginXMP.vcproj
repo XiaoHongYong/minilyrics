@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="PluginXMP"
 	ProjectGUID="{2DF13F79-83C6-4706-B350-E142BAF482CC}"
+	RootNamespace="PluginXMP"
 	>
 	<Platforms>
 		<Platform
@@ -164,7 +165,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="G:\XMP\3.4\xmp-ml.dll"
+				OutputFile="H:\Tools\xmplay35\xmp-ml.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\wmpLyrics.def"

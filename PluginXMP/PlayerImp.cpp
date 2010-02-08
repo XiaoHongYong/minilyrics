@@ -160,7 +160,7 @@ bool XMP_GetTagField(const char *info1, const char *name, char *buf)
 	szBeg1 += strlen(name);
 
 	// if id3v2 exist, use it first?
-	szBeg = stristr(info1, name);
+	szBeg = stristr(szBeg1, name);
 	if (szBeg)
 		szBeg += strlen(name);
 	else
@@ -179,22 +179,23 @@ bool XMP_GetTagField(const char *info1, const char *name, char *buf)
 	return true;
 }
 
-BOOL XMP_ParseTrackTags(const char *info1, char *artist, char *title)
+BOOL XMP_ParseTrackTags(const char *info1, char *artist, char *title, char *album)
 {
-	BOOL	status = XMP_GetTagField(info1, "artist\t", artist);
+	EmptyStr(artist);
+	EmptyStr(title);
+	EmptyStr(album);
+
+	BOOL	status = XMP_GetTagField(info1, "title\t", title);
+	if (!status)
+		return FALSE;
+
+	status = XMP_GetTagField(info1, "artist\t", artist);
 	if (!status)
 		status = XMP_GetTagField(info1, "author\t", artist);
 
-	if( !status )
-		return FALSE;
-
-	status = XMP_GetTagField(info1, "title\t", title );
+	status = XMP_GetTagField(info1, "album\t", album );
 	if (!status)
-		return FALSE;
-// 
-// 	status = XMP_GetTagField(info1, "album\t", album );
-// 	if (!status)
-// 		status = XMP_GetTagField(info1, "wm/albumtitle\t", album );
+		status = XMP_GetTagField(info1, "wm/albumtitle\t", album);
 
 	return true;
 }
@@ -321,7 +322,7 @@ bool XMP_GetTrackInfo(char *artist, char *title, char *album)
 		goto R_FAILED;
 	}
 
-	XMP_ParseTrackTags((const char *)data, artist, title);
+	XMP_ParseTrackTags((const char *)data, artist, title, album);
  
 	DdeUnaccessData(hdata);
 	DdeFreeDataHandle(hdata);
