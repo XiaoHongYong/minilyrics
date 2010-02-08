@@ -52,6 +52,22 @@ char * __cdecl stristr (
         return(NULL);
 }
 
+// 安全的字符串拷贝，如果超出长度范围，则进行截断
+int	strncpy_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy)
+{
+	if (nToCopy >= nLenMax)
+		nToCopy = nLenMax - 1;
+
+	int		org = nToCopy;
+
+	while (nToCopy && (*strDestination++ = *strSource++))    /* copy string */
+		nToCopy--;
+
+	*strDestination = '\0';
+
+	return org - nToCopy;
+}
+
 static void *WINAPI DSP_New();
 static void WINAPI DSP_Free(void *inst);
 static const char *WINAPI DSP_GetDescription(void *inst);
@@ -170,11 +186,11 @@ bool XMP_GetTagField(const char *info1, const char *name, char *buf)
 	if (szEnd)
 	{
 		int		len = int(szEnd - szBeg);
-		strncpy(buf, szBeg, len);
+		strncpy_safe(buf, MAX_PATH, szBeg, len);
 		buf[len] = '\0';
 	}
 	else
-		strcpy(buf, szBeg);
+		strcpy_safe(buf, MAX_PATH, szBeg);
 
 	return true;
 }
@@ -348,36 +364,6 @@ R_FAILED:
 		DdeUninitialize(dwDdeInstID);
 
 	return false;
-}
-
-// format string pathname ---> filename
-// "c:\windows\command.com" ----> "command"
-void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
-{
-	LPCTSTR		szBeg, szEnd;
-	int			nLen;
-
-	szEnd = strrchr(szFile, '.');
-
-	szBeg = strrchr(szFile, '\\');
-	if (szBeg == NULL)
-	{
-		szBeg = strrchr(szFile, '/');
-		if (!szBeg)
-			szBeg = szFile;
-		else
-			szBeg++;
-	}
-	else
-		szBeg++;
-
-	if (szEnd == NULL || szBeg > szEnd)
-		nLen = szFile - szBeg + lstrlen(szFile);
-	else
-		nLen = szEnd - szBeg;
-
-	strncpy(szBuff, szBeg, nLen);
-	szBuff[nLen] = '\0';
 }
 
 HANDLE		g_hThread = NULL;
