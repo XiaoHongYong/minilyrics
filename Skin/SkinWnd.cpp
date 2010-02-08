@@ -2655,6 +2655,7 @@ void CSkinWnd::OnTimerAnimation()
 		if (!p->OneMotion())
 		{
 			it = m_listAnimations.erase(it);
+			OnAnimationDone(p->m_nId);
 		}
 		else
 			++it;

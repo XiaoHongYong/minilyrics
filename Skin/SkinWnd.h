@@ -479,6 +479,7 @@ protected:
 	typedef list<CSkinAnimationObj *>	ListAnimationObj;
 	ListAnimationObj		m_listAnimations;
 	void OnTimerAnimation();
+	virtual void OnAnimationDone(int nID) { }
 
 };
 
