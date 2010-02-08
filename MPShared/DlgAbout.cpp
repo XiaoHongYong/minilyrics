@@ -49,6 +49,8 @@ void CDlgAbout::OnSkinLoaded()
 
 	g_eventDispather.RegisterHanlder(ET_DOWNLOAD_END, this);
 
+	StartAnimation(m_pSkinFactory->GetIDByName(_T("CID_AM_SHOW_ABOUT")));
+
 	CVersionUpdate	verUpdate;
 	verUpdate.CheckNewVersion(&g_LyricsDownloader, false);
 }
@@ -71,11 +73,16 @@ bool CDlgAbout::OnCustomCommand(int nId)
 	}
 	else if (nId == m_pSkinFactory->GetIDByName(_T("CID_ENTER_CODE")))
 	{
-		CRegistrationDlg	dlg;
+		StartAnimation(m_pSkinFactory->GetIDByName(_T("CID_AM_HIDE_ABOUT")));
 
-		dlg.DoModal(this);
+		StartAnimation(m_pSkinFactory->GetIDByName(_T("CID_AM_SHOW_CODE")));
+		SetUIObjectVisible(_T("CID_CODE"), true, false);
 
-		UpdateLicenseInfo();
+// 		CRegistrationDlg	dlg;
+// 
+// 		dlg.DoModal(this);
+// 
+// 		UpdateLicenseInfo();
 	}
 
 	return true;
@@ -129,5 +136,15 @@ void CDlgAbout::OnEvent(const IEvent *pEvent)
 			SetUIObjectProperty(_T("CID_CHECK_VERSION"), SZ_PN_TEXT, ERROR2STR_LOCAL(nRet));
 			InvalidateUIObject(_T("CID_CHECK_VERSION"));
 		}
+	}
+}
+
+void CDlgAbout::OnAnimationDone(int nID)
+{
+	if (nID == m_pSkinFactory->GetIDByName(_T("CID_AM_HIDE_ABOUT")))
+	{
+		SetUIObjectVisible(_T("CID_ABOUT"), false, false);
+
+		InvalidateRect();
 	}
 }

@@ -19,6 +19,9 @@ public:
 protected:
 	void UpdateLicenseInfo();
 
+	void OnAnimationDone(int nID);
+
+
 	CCECommandBar	m_cmdBar;
 
 };
