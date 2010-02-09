@@ -1623,6 +1623,14 @@ void CSkinWnd::SetFocusUIObject(CUIObject *pObj)
 	pObj->OnSetFocus();
 }
 
+void CSkinWnd::SetFocusUIObject(LPCTSTR szId)
+{
+	CUIObject *pObj = GetUIObjectById(m_pSkinFactory->GetIDByName(szId), NULL);
+	if (!pObj)
+		return;
+
+	SetFocusUIObject(pObj);
+}
 
 bool CSkinWnd::EnableUIObject(int nId, bool bEnable, bool bRedraw)
 {
@@ -1650,11 +1658,6 @@ bool CSkinWnd::SetUIObjectProperty(int nId, LPCTSTR szProperty, LPCTSTR szValue)
 	return Tobool(pObj->SetProperty(szProperty, szValue));
 }
 
-bool CSkinWnd::SetUIObjectProperty(LPCTSTR szId, LPCTSTR szProperty, LPCTSTR szValue)
-{
-	return SetUIObjectProperty(m_pSkinFactory->GetIDByName(szId), szProperty, szValue);
-}
-
 void CSkinWnd::SetUIObjectVisible(int nId, bool bVisible, bool bRedraw)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
@@ -1672,11 +1675,6 @@ void CSkinWnd::SetUIObjectVisible(int nId, bool bVisible, bool bRedraw)
 	}
 }
 
-void CSkinWnd::SetUIObjectVisible(LPCTSTR szId, bool bVisible, bool bRedraw)
-{
-	SetUIObjectVisible(m_pSkinFactory->GetIDByName(szId), bVisible, bRedraw);
-}
-
 void CSkinWnd::InvalidateUIObject(int nId)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
@@ -1686,9 +1684,22 @@ void CSkinWnd::InvalidateUIObject(int nId)
 	InvalidateUIObject(pObj);
 }
 
-void CSkinWnd::InvalidateUIObject(LPCTSTR szId)
+tstring CSkinWnd::GetUIObjectText(int nId)
 {
-	InvalidateUIObject(m_pSkinFactory->GetIDByName(szId));
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+		return _T("");
+
+	return pObj->m_strText;
+}
+
+void CSkinWnd::SetUIObjectText(int nId, LPCTSTR szText)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+		return;
+
+	pObj->SetProperty(SZ_PN_TEXT, szText);
 }
 
 CUIObject *CSkinWnd::RemoveUIObjectById(int nId)

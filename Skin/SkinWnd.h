@@ -109,6 +109,7 @@ public:
 	void VerifyFocusUIObject();
 
 	void SetFocusUIObject(CUIObject *pObj);
+	void SetFocusUIObject(LPCTSTR szId);
 
 	CUIObject *GetFocusUIObj() { return m_itFocusUIObject.Get(); }
 
@@ -117,13 +118,24 @@ public:
 	bool EnableUIObject(int nId, bool bEnable = true, bool bRedraw = true);
 
 	bool SetUIObjectProperty(int nId, LPCTSTR szProperty, LPCTSTR szValue);
-	bool SetUIObjectProperty(LPCTSTR szId, LPCTSTR szProperty, LPCTSTR szValue);
+	bool SetUIObjectProperty(LPCTSTR szId, LPCTSTR szProperty, LPCTSTR szValue)
+		{ return SetUIObjectProperty(m_pSkinFactory->GetIDByName(szId), szProperty, szValue); }
 
 	void SetUIObjectVisible(int nId, bool bVisible, bool bRedraw = true);
-	void SetUIObjectVisible(LPCTSTR szId, bool bVisible, bool bRedraw = true);
+	void SetUIObjectVisible(LPCTSTR szId, bool bVisible, bool bRedraw = true)
+		{ SetUIObjectVisible(m_pSkinFactory->GetIDByName(szId), bVisible, bRedraw); }
 
 	void InvalidateUIObject(int nId);
-	void InvalidateUIObject(LPCTSTR szId);
+	void InvalidateUIObject(LPCTSTR szId)
+		{ InvalidateUIObject(m_pSkinFactory->GetIDByName(szId)); }
+
+	tstring GetUIObjectText(int nId);
+	tstring GetUIObjectText(LPCTSTR szId)
+		{ return GetUIObjectText(m_pSkinFactory->GetIDByName(szId)); }
+
+	void SetUIObjectText(int nId, LPCTSTR szText);
+	void SetUIObjectText(LPCTSTR szId, LPCTSTR szText)
+		{ SetUIObjectText(m_pSkinFactory->GetIDByName(szId), szText); }
 
 	// register special messages
 	void SetCaptureMouse(CUIObject *pUIObj);
@@ -293,6 +305,10 @@ public:
 
 	LPCTSTR GetSkinWndName() { return m_strSkinWndName.c_str(); }
 	LPCTSTR GetCaptionText() { return m_strCaption.c_str(); }
+	void SetCaptionText(LPCTSTR szCaption, bool bRedraw = false) {
+		ASSERT(szCaption); m_strCaption = szCaption;
+		if (bRedraw) InvalidateRect();
+	}
 
 	bool IsWindowsAppearance() const { return m_bWindowsAppearance; }
 
