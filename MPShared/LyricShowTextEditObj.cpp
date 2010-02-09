@@ -599,7 +599,7 @@ void CLyricShowTextEditObj::OnSaveLyrics()
 {
 	tstring			strEdit;
 
-	GetText(strEdit);
+	CLyrEditHandler::GetText(strEdit);
 
 	FILE_ENCODING	fileEncoding;
 #ifdef _UNICODE

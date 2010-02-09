@@ -1690,7 +1690,7 @@ tstring CSkinWnd::GetUIObjectText(int nId)
 	if (!pObj)
 		return _T("");
 
-	return pObj->m_strText;
+	return pObj->GetText();
 }
 
 void CSkinWnd::SetUIObjectText(int nId, LPCTSTR szText)

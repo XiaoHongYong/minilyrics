@@ -476,10 +476,10 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		if (vRect.size() != 4)
 			return false;
 
-		m_formLeft.SetFormula(vRect[0].c_str());
-		m_formTop.SetFormula(vRect[1].c_str());
-		m_formWidth.SetFormula(vRect[2].c_str());
-		m_formHeight.SetFormula(vRect[3].c_str());
+		if (vRect[0].size()) m_formLeft.SetFormula(vRect[0].c_str());
+		if (vRect[1].size()) m_formTop.SetFormula(vRect[1].c_str());
+		if (vRect[2].size()) m_formWidth.SetFormula(vRect[2].c_str());
+		if (vRect[3].size()) m_formHeight.SetFormula(vRect[3].c_str());
 	}
 	else if (_tcsicmp(szProperty, SZ_PN_ID) == 0)
 	{

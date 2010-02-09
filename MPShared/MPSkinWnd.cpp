@@ -652,6 +652,8 @@ CMPSkinWnd::CMPSkinWnd()
 	m_rcReal.bottom = 250;
 
 	m_autoSwitchToLyrShow.m_pSkinWnd = this;
+
+	m_bRememberSizePos = true;
 }
 
 CMPSkinWnd::~CMPSkinWnd()
@@ -1020,6 +1022,7 @@ void CMPSkinWnd::OnLoadWndSizePos()
 	// WndSizeMode		sizeMode;
 	CRect			rcNew;
 	DWORD			dwShowFlag = 0;
+	bool			bCenterWnd = true;
 
 	if (IsZoomed())
 		ShowWindow(SW_RESTORE);
@@ -1029,20 +1032,42 @@ void CMPSkinWnd::OnLoadWndSizePos()
 
 	rcNew = m_rcReal;
 
-	rcNew.left = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_left"), rcNew.left);
-	rcNew.top = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_top"), rcNew.top);
-	rcNew.right = rcNew.left + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_width"), m_nWidth);
-	rcNew.bottom = rcNew.top + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_height"), m_nHeight);
+	if (m_bRememberSizePos)
+	{
+		rcNew.left = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_left"), rcNew.left);
+		rcNew.top = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_top"), rcNew.top);
+		rcNew.right = rcNew.left + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_width"), m_nWidth);
+		rcNew.bottom = rcNew.top + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_height"), m_nHeight);
+		if (!rcNew.EqualRect(&m_rcReal))
+			bCenterWnd = false;
 
-	if (m_wndResizer.IsFixedWidth())
+		if (m_wndResizer.IsFixedWidth())
+			rcNew.right = long(rcNew.left + m_nWidth * m_dbScale);
+		if (m_wndResizer.IsFixedHeight())
+			rcNew.bottom = long(rcNew.top + m_nHeight * m_dbScale);
+	}
+	else
+	{
 		rcNew.right = long(rcNew.left + m_nWidth * m_dbScale);
-	if (m_wndResizer.IsFixedHeight())
 		rcNew.bottom = long(rcNew.top + m_nHeight * m_dbScale);
+	}
 
 	if (rcNew.Width() < m_wndResizer.GetMinCx())
 		rcNew.right = rcNew.left + m_wndResizer.GetMinCx();
 	if (rcNew.Height() < m_wndResizer.GetMinCy())
 		rcNew.bottom = rcNew.top + m_wndResizer.GetMinCy();
+
+	if (bCenterWnd)
+	{
+		CRect	rcScreen;
+		int		w = rcNew.Width(), h = rcNew.Height();
+
+		GetMonitorRestrictRect(rcNew, rcScreen);
+		rcNew.left = (rcScreen.left + rcScreen.right - w) / 2;
+		rcNew.top = (rcScreen.top + rcScreen.bottom - h) / 2;
+		rcNew.right = rcNew.left + w;
+		rcNew.bottom = rcNew.top + h;
+	}
 
 	if (!rcNew.EqualRect(&m_rcReal))
 		MoveWindowSafely(rcNew.left, rcNew.top, rcNew.Width(), rcNew.Height(), true);
@@ -1231,6 +1256,8 @@ BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bEnableVolumeSwitch = IsTRUE(szValue);
 		m_bUseVolumeSeek = g_Profile.GetProfileBool(_T("UseVolumeSeek"), false);
 	}
+	else if (IsPropertyName(szProperty, _T("RememberSizePos")))
+		m_bRememberSizePos = IsTRUE(szValue);
 	else if (CSkinWnd::SetProperty(szProperty, szValue))
 	{
 		if (m_bSkinOpened && IsPropertyName(szProperty, _T("BgColor")))
@@ -1273,6 +1300,8 @@ void CMPSkinWnd::CloseSkin()
 
 	m_bEnableVolumeSwitch = false;
 	m_bUseVolumeSeek = false;
+
+	m_bRememberSizePos = true;
 }
 
 // IUICheckStatus interface

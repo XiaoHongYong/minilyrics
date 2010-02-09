@@ -115,6 +115,8 @@ protected:
 	bool					m_bEnableVolumeSwitch;
 	bool					m_bUseVolumeSeek;
 
+	bool					m_bRememberSizePos;
+
 	//
 	// Window status and properties
 	//

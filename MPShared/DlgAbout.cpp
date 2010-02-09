@@ -120,13 +120,13 @@ bool CDlgAbout::OnCheckRegCode()
 	if (g_LicenseType == LT_REGISTERED && _tcscmp(strCode.c_str(), TOLOCAL(_T("Registered"))) == 0)
 		return true;
 
-	g_Profile.EncryptWriteProfileString(SZ_REGNAME, strName.c_str());
-	g_Profile.EncryptWriteProfileString(SZ_REGCODE, strCode.c_str());
-
 	tstring		strMsg;
 
 	if (MLVerifyRegCode(strName.c_str(), strCode.c_str()))
 	{
+		g_Profile.EncryptWriteProfileString(SZ_REGNAME, strName.c_str());
+		g_Profile.EncryptWriteProfileString(SZ_REGCODE, strCode.c_str());
+
 		strMsg = TOLOCAL(_T("You have registered successfully!"));
 		strMsg += _T("\n");
 		strMsg += TOLOCAL(_T("Thanks for your registering!"));
