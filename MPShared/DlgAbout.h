@@ -17,6 +17,9 @@ public:
 	void OnEvent(const IEvent *pEvent);
 
 protected:
+	bool OnCheckRegCode();
+	void UpdateRegCode();
+
 	void UpdateLicenseInfo();
 
 	void OnAnimationDone(int nID);
