@@ -128,6 +128,9 @@ STRING_ID_MAP g_StringIdMap[] =
 
 	{ _T("ID_ALBUMART"), ID_ALBUMART, NULL },
 
+	{ _T("ID_OK"), CMD_OK, NULL },
+	{ _T("ID_CANCEL"), CMD_CANCEL, NULL },
+
 	{ _T("CMD_TOGGLE_MP"), CMD_TOGGLE_MP, _T("Bring to front/Hide $Product$") },
 	{ _T("CMD_PREFERENCES"), CMD_PREFERENCES, _T("Preferences") },
 	{ _T("CMD_COPY_SONG_FILE_LYR"), CMD_COPY_SONG_FILE_LYR, _T("Copy song file and lyrics to...") },

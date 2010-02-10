@@ -5,8 +5,9 @@
 #include "DlgAbout.h"
 #include "RegistrationDlg.h"
 
-CDlgAbout::CDlgAbout() : CMPSkinDialog(_T("AboutBox.xml"))
+CDlgAbout::CDlgAbout(bool bEnterCode) : CMPSkinDialog(_T("AboutBox.xml"))
 {
+	m_bEnterCode = bEnterCode;
 }
 
 CDlgAbout::~CDlgAbout()
@@ -37,6 +38,12 @@ void CDlgAbout::UpdateLicenseInfo()
 void CDlgAbout::OnSkinLoaded()
 {
 	CMPSkinDialog::OnSkinLoaded();
+
+	if (m_bEnterCode)
+	{
+		StartAnimation(m_pSkinFactory->GetIDByName(_T("CID_AM_SHOW_CODE")));
+		return;
+	}
 
 	SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, SZ_ML_VERSION);
 
@@ -81,26 +88,35 @@ bool CDlgAbout::OnCustomCommand(int nId)
 
 		SetCaptionText(TOLOCAL(_T("Registration")));
 	}
-	else if (nId == m_pSkinFactory->GetIDByName(_T("CID_OK"))
-		|| nId == m_pSkinFactory->GetIDByName(_T("CID_CANCEL")))
+
+	return true;
+}
+
+void CDlgAbout::OnOK()
+{
+	if (OnCheckRegCode())
 	{
-		if (nId == m_pSkinFactory->GetIDByName(_T("CID_OK")))
+		if (m_bEnterCode)
 		{
-			if (!OnCheckRegCode())
-				return true;
+			CMPSkinDialog::OnOK();
+			return;
 		}
 
 		UpdateLicenseInfo();
 
-		StartAnimation(m_pSkinFactory->GetIDByName(_T("CID_AM_HIDE_CODE")));
+		HideCodeShowAbout();
+	}
+}
 
-		StartAnimation(m_pSkinFactory->GetIDByName(_T("CID_AM_SHOW_ABOUT_LEFT")));
-		SetUIObjectVisible(_T("CID_ABOUT"), true, false);
-
-		SetCaptionText(TOLOCAL(_T("About $Product$")));
+void CDlgAbout::OnCancel()
+{
+	if (m_bEnterCode)
+	{
+		CMPSkinDialog::OnCancel();
+		return;
 	}
 
-	return true;
+	HideCodeShowAbout();
 }
 
 bool CDlgAbout::OnCheckRegCode()
@@ -226,4 +242,14 @@ void CDlgAbout::OnAnimationDone(int nID)
 
 		InvalidateRect();
 	}
+}
+
+void CDlgAbout::HideCodeShowAbout()
+{
+	StartAnimation(m_pSkinFactory->GetIDByName(_T("CID_AM_HIDE_CODE")));
+
+	StartAnimation(m_pSkinFactory->GetIDByName(_T("CID_AM_SHOW_ABOUT_LEFT")));
+	SetUIObjectVisible(_T("CID_ABOUT"), true, false);
+
+	SetCaptionText(TOLOCAL(_T("About $Product$")));
 }

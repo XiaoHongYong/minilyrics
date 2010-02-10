@@ -150,6 +150,10 @@ enum ML_CUSTOM_COMMAND
 
 	ID_ALBUMART,		// album art control
 
+	// Skin Dialog
+	CMD_OK,
+	CMD_CANCEL,
+
 	// other cmd
 	CMD_TOGGLE_MP,
 	CMD_PREFERENCES,

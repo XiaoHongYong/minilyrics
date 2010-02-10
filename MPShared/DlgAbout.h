@@ -5,7 +5,7 @@
 class CDlgAbout : public CMPSkinDialog
 {
 public:
-	CDlgAbout();
+	CDlgAbout(bool bEnterCode = false);
 	~CDlgAbout();
 
 	virtual void OnSkinLoaded();
@@ -16,6 +16,9 @@ public:
 
 	void OnEvent(const IEvent *pEvent);
 
+	virtual void OnOK();
+	virtual void OnCancel();
+
 protected:
 	bool OnCheckRegCode();
 	void UpdateRegCode();
@@ -24,8 +27,9 @@ protected:
 
 	void OnAnimationDone(int nID);
 
+	void HideCodeShowAbout();
 
-	CCECommandBar	m_cmdBar;
+	bool			m_bEnterCode;
 
 };
 
