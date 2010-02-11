@@ -234,7 +234,7 @@ public:
 	inline bool IsUseSkinBg() { return m_bUseSkinBg; }
 	inline void SetUseSkinBg(bool bUseSkinBg) { m_bUseSkinBg = bUseSkinBg; }
 
-	virtual tstring GetText() { return m_strText; }
+	virtual tstring &GetText() { return m_strText; }
 
 	// Keep translucency with skin, when skin window changes its translucency.
 	virtual bool IsUpdateTranslucencyWithSkin() { return m_bTranslucencyWithSkin; }
