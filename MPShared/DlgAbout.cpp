@@ -9,7 +9,7 @@ class CPageAbout : public CSkinPageHandler, public IEventHandler
 public:
 	CPageAbout() : CSkinPageHandler(_T("CID_ABOUT"), 
 		_T("CID_AM_SHOW_ABOUT_F_LEFT"), _T("CID_AM_SHOW_ABOUT_F_RIGHT"),
-		_T("CID_AM_HIDE_2_LEFT"), NULL)
+		_T("CID_AM_HIDE_NOTICE_2_LEFT"), NULL)
 	{
 		g_eventDispather.RegisterHanlder(ET_DOWNLOAD_END, this);
 	}
@@ -58,7 +58,7 @@ public:
 
 	void OnShow()
 	{
-		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Registration")));
+		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("About $Product$")));
 		UpdateLicenseInfo();
 	}
 
@@ -153,6 +153,8 @@ public:
 
 		m_pSkinWnd->SetUIObjectText(_T("CID_E_NAME"), szName);
 		m_pSkinWnd->SetUIObjectText(_T("CID_E_CODE"), szRegCode);
+
+		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Registration")));
 	}
 
 	bool OnCheckRegCode()
@@ -223,10 +225,10 @@ protected:
 
 };
 
-CDlgAbout::CDlgAbout(bool bEnterCode) : CMPSkinDialog(_T("AboutBox.xml"))
-{
-	m_bEnterCode = bEnterCode;
+//////////////////////////////////////////////////////////////////////////
 
+CDlgAbout::CDlgAbout() : CMPSkinDialog(_T("AboutBox.xml"))
+{
 	m_pageHandler.AddPage(new CPageAbout());
 	m_pageHandler.AddPage(new CPageEnterCode(false));
 
@@ -237,13 +239,77 @@ CDlgAbout::~CDlgAbout()
 {
 }
 
-void CDlgAbout::OnSkinLoaded()
-{
+//////////////////////////////////////////////////////////////////////////
 
-	CMPSkinDialog::OnSkinLoaded();
-}
-
-void CDlgAbout::CloseSkin()
+class CPageNotice : public CSkinPageHandler
 {
-	CMPSkinDialog::CloseSkin();
+public:
+	CPageNotice() : CSkinPageHandler(_T("CID_C_NOTICE"), 
+		_T("CID_AM_SHOW_NOTICE_F_LEFT"), _T("CID_AM_SHOW_NOTICE_F_RIGHT"),
+		_T("CID_AM_HIDE_NOTICE_2_LEFT"), NULL)
+	{
+	}
+
+	~CPageNotice()
+	{
+	}
+
+	void OnShow()
+	{
+		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("$Product$ (Evaluation Version)")));
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		if (nId == GetIDByName(_T("CID_BUYNOW")))
+		{
+			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_REGISTER));
+			m_pSkinWnd->Destroy();
+			return true;
+		}
+		else if (nId == GetIDByName(_T("CID_ENTER_CODE")))
+		{
+			m_pParent->SwitchToPage(_T("CID_CODE"));
+		}
+		else if (nId == GetIDByName(_T("CID_NOTICE_OK")))
+		{
+			m_pSkinWnd->Destroy();
+		}
+		return false;
+	}
+
+};
+
+
+class CDlgRegistration : public CMPSkinDialog
+{
+public:
+	CDlgRegistration() : CMPSkinDialog(_T("Registration.xml"))
+	{
+		m_pageHandler.AddPage(new CPageNotice());
+		m_pageHandler.AddPage(new CPageEnterCode(true));
+
+		m_pageHandler.SetDefaultPage(_T("CID_C_NOTICE"));
+	}
+
+};
+
+void ShowRegisterNotice(CBaseWnd *pWnd, BOOL bForceShow)
+{
+	if (!bForceShow 
+		&& (g_LicenseType == LT_REGISTERED || !g_bEngEdition))
+		return;
+
+#ifdef _MPLAYER
+	return;
+#endif
+
+	//
+	//	if (g_LicenseType != LT_EXPIRED && g_LicenseType != LT_CRACK)
+	//	{
+	//		if (!bForceShow && !g_Profile.GetProfileInt(_T("ShowRegNotice"), TRUE))
+	//			return;
+	//	}
+
+	CMPSkinDialog::ShowDialog(new CDlgRegistration(), pWnd);
 }

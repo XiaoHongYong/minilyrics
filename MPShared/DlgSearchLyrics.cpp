@@ -6,7 +6,7 @@
 #include "MPlayerApp.h"
 #include "LyricsDownloadMgr.h"
 #include "DlgSearchLyrics.h"
-#include "RegistrationDlg.h"
+#include "DlgAbout.h"
 #include "OnlineSearch.h"
 #include "WaitingDlg.h"
 #include "Helper.h"

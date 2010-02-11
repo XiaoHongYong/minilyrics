@@ -2,18 +2,14 @@
 
 #include "MPSkinDialog.h"
 
+void ShowRegisterNotice(CBaseWnd *pWnd, BOOL bForceShow = FALSE);
+
+
 class CDlgAbout : public CMPSkinDialog
 {
 public:
-	CDlgAbout(bool bEnterCode = false);
+	CDlgAbout();
 	~CDlgAbout();
-
-	virtual void OnSkinLoaded();
-
-	virtual void CloseSkin();
-
-protected:
-	bool			m_bEnterCode;
 
 };
 

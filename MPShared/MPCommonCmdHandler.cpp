@@ -14,7 +14,6 @@
 #include "DlgSearchLyrics.h"
 #include "DlgSelEncoding.h"
 #include "../widget/win32/FileOpenDlg.h"
-#include "RegistrationDlg.h"
 #include "DlgEmbeddedLyricsLoad.h"
 #include "DlgEmbeddedLyricsSave.h"
 #include "DlgEmbeddedLyricsRemove.h"

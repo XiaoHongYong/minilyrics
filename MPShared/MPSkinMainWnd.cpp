@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "MPSkinMainWnd.h"
-#include "RegistrationDlg.h"
+#include "DlgAbout.h"
 #include "VersionUpdate.h"
 
 #define TIMER_SHOW_REG				1
