@@ -229,6 +229,8 @@ protected:
 		}
 	}
 
+	void SplitToMultiLine(LPRECT lpRect, LPCTSTR szText, int nLen, UINT uFormat, V_Str &vLines);
+
 	bool ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax, tstring &strEllipsis);
 
 	// See DT_PREFIX_TEXT declaration

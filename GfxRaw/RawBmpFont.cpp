@@ -938,7 +938,26 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 	if (!m_prawGlyphSet)
 		return false;
 
-	if (IsFlagSet(uFormat, DT_END_ELLIPSIS))
+	if (!IsFlagSet(uFormat, DT_SINGLELINE))
+	{
+		// Multiple line
+		V_Str	vLines;
+		CRect	rc = *lpRect;
+		uFormat &= ~DT_VCENTER;
+
+		SplitToMultiLine(lpRect, szText, nLen, uFormat, vLines);
+
+		for (int i = 0; i < (int)vLines.size(); i++)
+		{
+			DrawTextEx(pGraph, &rc, clrText, vLines[i].c_str(), vLines[i].size(), uFormat | DT_SINGLELINE);
+			rc.top += GetHeight() + 2;
+			if (rc.top >= rc.bottom)
+				break;
+		}
+
+		return true;
+	}
+	else if (IsFlagSet(uFormat, DT_END_ELLIPSIS))
 	{
 		tstring		str;
 		uFormat &= ~DT_END_ELLIPSIS;
@@ -1304,6 +1323,68 @@ void CRawBmpFont::UseColorOverlay()
 	m_imgPattern1 = NULL;
 	m_imgPattern2 = NULL;
 	m_overlayMode = OM_COLOR;
+}
+
+bool IsWordSplitChar(LPCTSTR szChar)
+{
+#ifdef UNICODE
+	if ((*szChar) > 255 || !(isalpha(*szChar) || IsDigit(*szChar) || (*szChar >= 127 && *szChar <= 255)
+		|| *szChar == '\'' || *szChar == '\"' || *szChar == '_' || *szChar == '-'))
+		return true;
+#else
+	if (!(isalpha(*szChar) || IsDigit(*szChar) || (*szChar >= 127 && *szChar <= 255)
+		|| *szChar == '\'' || *szChar == '\"' || *szChar == '_' || *szChar == '-'))
+		return true;
+#endif
+	return false;
+}
+
+void CRawBmpFont::SplitToMultiLine(LPRECT lpRect, LPCTSTR szText, int nLen, UINT uFormat, V_Str &vLines)
+{
+	int		w = 0;
+	GfxRaw::Glyph	*glyph;
+	int		nWidthMax = lpRect->right - lpRect->left;
+
+	StringIterator	strIterator(szText);
+	tstring			str;
+	int				nBegin = 0, nLastWordSplitPos = 0;
+	for (; strIterator.GetPos() < nLen; ++strIterator)
+	{
+		glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
+		if (!glyph)
+			continue;
+
+		if (IsWordSplitChar(glyph->ch))
+			nLastWordSplitPos = strIterator.GetPos();
+
+		w += glyph->nWidth;
+		if (w > nWidthMax)
+		{
+			int		nEnd = strIterator.GetPos();
+			if (nBegin < nLastWordSplitPos)
+			{
+				nEnd = nLastWordSplitPos;
+			}
+
+			str.clear();
+			str.append(szText + nBegin, szText + nEnd);
+			vLines.push_back(str);
+
+			if (szText[nEnd] == ' ')
+				nEnd++;
+
+			w = 0;
+			strIterator.SetPos(nEnd);
+			nBegin = nEnd;
+		}
+	}
+
+	if (nBegin < nLen)
+	{
+		str.clear();
+		str.append(szText + nBegin);
+		vLines.push_back(str);
+	}
 }
 
 bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax, tstring &strEllipsis)

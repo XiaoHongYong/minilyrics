@@ -276,12 +276,12 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 
 		if (bOutlined)
 			pGraph->DrawTextOutlined(item.strText.c_str(), item.strText.size(), 
-				&rcItem, clrText, clrOutlined, DT_VCENTER | DT_CENTER | DT_PREFIX_TEXT);
+				&rcItem, clrText, clrOutlined, DT_VCENTER | DT_CENTER | DT_PREFIX_TEXT | DT_SINGLELINE);
 		else
 		{
 			pGraph->SetTextColor(clrText);
 			pGraph->DrawText(item.strText.c_str(), item.strText.size(), 
-			&rcItem, DT_VCENTER | DT_CENTER | DT_PREFIX_TEXT);
+			&rcItem, DT_VCENTER | DT_CENTER | DT_PREFIX_TEXT | DT_SINGLELINE);
 		}
 
 		x += item.nWidth;

@@ -571,8 +571,8 @@ void CSkinTabHeader::DrawTabButton(CRawGraph *pGraph, Button &bt, CRect &rcButto
 		CRect	rcText = rcButton;
 		rcText.left += m_nButtonBorderSize;
 		if (m_font.IsOutlined())
-			pGraph->DrawTextOutlined(bt.strText.c_str(), bt.strText.size(), &rcText, m_font.GetTextColor(), m_font.GetColorOutlined(), DT_CENTER | DT_VCENTER);
+			pGraph->DrawTextOutlined(bt.strText.c_str(), bt.strText.size(), &rcText, m_font.GetTextColor(), m_font.GetColorOutlined(), DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 		else
-			pGraph->DrawText(bt.strText.c_str(), bt.strText.size(), &rcText, DT_CENTER | DT_VCENTER);
+			pGraph->DrawText(bt.strText.c_str(), bt.strText.size(), &rcText, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 }
