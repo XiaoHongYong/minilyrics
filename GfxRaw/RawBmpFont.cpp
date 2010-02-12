@@ -1362,20 +1362,20 @@ void CRawBmpFont::SplitToMultiLine(LPRECT lpRect, LPCTSTR szText, int nLen, UINT
 		{
 			int		nEnd = strIterator.GetPos();
 			if (nBegin < nLastWordSplitPos)
-			{
 				nEnd = nLastWordSplitPos;
-			}
+			else if (nEnd <= nBegin)
+				nEnd++;
 
 			str.clear();
 			str.append(szText + nBegin, szText + nEnd);
 			vLines.push_back(str);
 
-			if (szText[nEnd] == ' ')
+			while (szText[nEnd] == ' ')
 				nEnd++;
 
 			w = 0;
-			strIterator.SetPos(nEnd);
 			nBegin = nEnd;
+			strIterator.SetPos(nEnd - 1); // The for ++strIterator, will seek to next.
 		}
 	}
 

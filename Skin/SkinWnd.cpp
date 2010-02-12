@@ -1860,7 +1860,7 @@ LRESULT CSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		m_pUIObjCapMouse = NULL;
 	}
-	else if (message == WM_SYSKEYDOWN)
+	else if (message == WM_SYSCHAR)
 	{
 		if (m_rootConainter.OnMenuKey(wParam, lParam))
 			return 0;
