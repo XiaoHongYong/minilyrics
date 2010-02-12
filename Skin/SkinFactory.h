@@ -175,8 +175,8 @@ public:
 	// methods for skin window
 	SXNode *GetSkinWndNode(LPCTSTR szSkinWndName);
 
-	int LoadResourceSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml);
-	bool IsResourceSkinWnd(LPCTSTR szSkinWndName);
+	int LoadAppResSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml);
+	bool IsAppResSkinWnd(LPCTSTR szSkinWndName);
 
 	// create new uiobject by class name
 	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
@@ -226,7 +226,7 @@ public:
 protected:
 	virtual int OpenSkinFile(LPCTSTR szSkinFile);
 
-	void ExpandIncludeNode();
+	void ExpandIncludeNode(SXNode *pNodeRoot);
 
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 

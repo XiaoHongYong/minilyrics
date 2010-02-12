@@ -259,7 +259,7 @@ int CSkinWnd::OpenSkin(LPCTSTR szSkinWndName)
 	pNode = m_pSkinFactory->GetSkinWndNode(szSkinWndName);
 	if (!pNode)
 	{
-		int nRet = m_pSkinFactory->LoadResourceSkinWndXml(szSkinWndName, xml);
+		int nRet = m_pSkinFactory->LoadAppResSkinWndXml(szSkinWndName, xml);
 		if (nRet != ERR_OK)
 			return nRet;
 		pNode = xml.m_pRoot;

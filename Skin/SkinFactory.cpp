@@ -728,7 +728,7 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 	for (SetTStrNCase::iterator itSet = setOpenedSkinWnds.begin();
 		itSet != setOpenedSkinWnds.end(); ++itSet)
 	{
-		if (!IsResourceSkinWnd((*itSet).c_str()))
+		if (!IsAppResSkinWnd((*itSet).c_str()))
 			nRet = CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str());
 		// delete pSkinWnd;
 	}
@@ -820,7 +820,7 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 		}
 	}
 
-	ExpandIncludeNode();
+	ExpandIncludeNode(m_skinFile.GetRootNode());
 
 	m_skinStyle.FromXML(m_skinFile.GetRootNode());
 	LPCTSTR szDefaultStyle = m_skinFile.GetSkinProperty(_T("DefaultStyle"));
@@ -844,11 +844,10 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 	return ERR_OK;
 }
 
-void CSkinFactory::ExpandIncludeNode()
+void CSkinFactory::ExpandIncludeNode(SXNode *pNodeRoot)
 {
-	SXNode	*pSkinRoot = m_skinFile.GetRootNode();
-	for (SXNode::LIST_CHILDREN::iterator it = pSkinRoot->listChildren.begin();
-		it != pSkinRoot->listChildren.end(); ++it)
+	for (SXNode::LIST_CHILDREN::iterator it = pNodeRoot->listChildren.begin();
+		it != pNodeRoot->listChildren.end(); ++it)
 	{
 		SXNode	*p = *it;
 		if (IsPropertyName(p->strName.c_str(), _T("include")))
@@ -1007,7 +1006,7 @@ int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCa
 	// If the skinwnd doesn't exist, return ERR_NOT_FOUND
 	if (GetSkinWndNode(szSkinWndName) == NULL)
 	{
-		if (!IsResourceSkinWnd(szSkinWndName))
+		if (!IsAppResSkinWnd(szSkinWndName))
 			return ERR_NOT_FOUND;
 	}
 
@@ -1131,18 +1130,17 @@ SXNode *CSkinFactory::GetSkinWndNode(LPCTSTR szSkinWndName)
 	return m_skinFile.GetSkinWndNode(szSkinWndName);
 }
 
-static tstring	GetResourceSkinWndFile(LPCTSTR szSkinWndName)
+static tstring	GetAppResSkinWndFile(CSkinFactory *pFactory, LPCTSTR szSkinWndName)
 {
-	tstring		strFile = GetWorkingFolder();
-	strFile += _T("Resources") _T(SZ_DIR_SLASH);
+	tstring		strFile = pFactory->GetSkinRootDir();
 	strFile += szSkinWndName;
 
 	return strFile;
 }
 
-int CSkinFactory::LoadResourceSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml)
+int CSkinFactory::LoadAppResSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml)
 {
-	tstring		strFile = GetResourceSkinWndFile(szSkinWndName);
+	tstring		strFile = GetAppResSkinWndFile(this, szSkinWndName);
 
 	if (!IsFileExist(strFile.c_str()))
 		return ERR_NOT_FOUND;
@@ -1150,12 +1148,14 @@ int CSkinFactory::LoadResourceSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml)
 	if (!xml.ParseFile(strFile.c_str()))
 		return ERR_PARSE_XML;
 
+	ExpandIncludeNode(xml.m_pRoot);
+
 	return ERR_OK;
 }
 
-bool CSkinFactory::IsResourceSkinWnd(LPCTSTR szSkinWndName)
+bool CSkinFactory::IsAppResSkinWnd(LPCTSTR szSkinWndName)
 {
-	tstring		strFile = GetResourceSkinWndFile(szSkinWndName);
+	tstring		strFile = GetAppResSkinWndFile(this, szSkinWndName);
 
 	return IsFileExist(strFile.c_str());
 }

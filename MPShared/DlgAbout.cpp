@@ -7,9 +7,9 @@
 class CPageAbout : public CSkinPageHandler, public IEventHandler
 {
 public:
-	CPageAbout() : CSkinPageHandler(_T("CID_ABOUT"), 
+	CPageAbout() : CSkinPageHandler(_T("CID_C_ABOUT"), 
 		_T("CID_AM_SHOW_ABOUT_F_LEFT"), _T("CID_AM_SHOW_ABOUT_F_RIGHT"),
-		_T("CID_AM_HIDE_NOTICE_2_LEFT"), NULL)
+		_T("CID_AM_HIDE_ABOUT_2_LEFT"), NULL)
 	{
 		g_eventDispather.RegisterHanlder(ET_DOWNLOAD_END, this);
 	}
@@ -232,7 +232,7 @@ CDlgAbout::CDlgAbout() : CMPSkinDialog(_T("AboutBox.xml"))
 	m_pageHandler.AddPage(new CPageAbout());
 	m_pageHandler.AddPage(new CPageEnterCode(false));
 
-	m_pageHandler.SetDefaultPage(_T("CID_ABOUT"));
+	m_pageHandler.SetDefaultPage(_T("CID_C_ABOUT"));
 }
 
 CDlgAbout::~CDlgAbout()
