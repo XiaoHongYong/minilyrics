@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skinwnd Extends="WindowFrame" Name="AboutBox.xml" Caption="About $Product$"
+         Width="330" Height="340" RememberSizePos="false">
+  <Animation ID="CID_AM_SHOW_ABOUT_F_RIGHT" MoveFromRight="CID_BRANDING,CID_VERSION,CID_COPYRIGHT,CID_EMAIL,CID_LICENSE,CID_LICENSE_TO,CID_UNREGISTERED"
+      MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_CHECK_VERSION"/>
+  <Animation ID="CID_AM_HIDE_ABOUT_2_LEFT" MoveToLeft="CID_C_ABOUT" MoveToBottom="CID_BUYNOW,CID_ENTER_CODE,CID_CHECK_VERSION"/>
+  <Animation ID="CID_AM_SHOW_ABOUT_F_LEFT" MoveFromLeft="CID_C_ABOUT"
+      MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_CHECK_VERSION" ResizeWnd="330,340"/>
+  <Container ID="CID_C_ABOUT" Name="About" Rect="0,0,w,h">
+    <NormalText ID="CID_BRANDING" Text="MiniLyrics" Rect="(w-160)/2,30,160,35" FontHeight="30" AlignText="AT_CENTER"/>
+    <NormalText ID="CID_VERSION" Text="Version" Rect="(w-250)/2,65,250,15" AlignText="AT_CENTER"/>
+    <NormalLink ID="CID_COPYRIGHT" Text="Copyright 2001-2010 Crintsoft" Rect="30,100,w-60,15" AlignText="AT_CENTER"/>
+    <NormalLink ID="CID_EMAIL" Text="support@crintsoft.com" Rect="30,120,w-60,15" AlignText="AT_CENTER"/>
+    <NormalText ID="CID_LICENSE" Text="This Product is licensed to:" Rect="30,150,w-60,25" FontHeight="18" AlignText="AT_CENTER"/>
+    <NormalText ID="CID_LICENSE_TO" Text="" Rect="30,180,w-60,25" FontHeight="18" AlignText="AT_CENTER"/>
+    <NormalText ID="CID_UNREGISTERED" Visible="false" Text="*** UNREGISTERED, TRIAL VERSION ***"
+        Rect="(w-300)/2,165,300,25" FontHeight="16" AlignText="AT_CENTER"/>
+    <NormalTextBt ID="CID_BUYNOW" Text="&amp;Buy Now" Rect="w/2 - 130,220,110,"/>
+    <NormalTextBt ID="CID_ENTER_CODE" Text="&amp;Enter code" Rect="w/2 + 20,220,110,"/>
+    <NormalText ID="CID_CHECK_VERSION" Text="Checking for updates..." Rect="30,260,260,15"/>
+    <NormalLink ID="CID_NEW_VERSION" Visible="false" Text="" Rect="30,260,260,15" AlignText="AT_CENTER"/>
+  </Container>
+  <include Name="EnterCode.xml"/>
+</skinwnd>

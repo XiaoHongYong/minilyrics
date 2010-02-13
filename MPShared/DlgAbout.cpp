@@ -42,7 +42,15 @@ public:
 
 	void OnCreate()
 	{
-		m_pSkinWnd->SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, SZ_ML_VERSION);
+		TCHAR	szVersion[256] = _T("");
+#ifdef _MPLAYER
+		_stprintf_s(szVersion, CountOf(szVersion), _T("%d.%d.%d"), MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
+#else
+		TCHAR		szPlayer[128] = _T("");
+		g_Player.GetPlayerName(szPlayer, CountOf(szPlayer));
+		_stprintf_s(szVersion, CountOf(szVersion), _T("%d.%d.%d for %s"), MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER, szPlayer);
+#endif
+		m_pSkinWnd->SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, szVersion);
 
 		m_pSkinWnd->SetUIObjectProperty(_T("CID_COPYRIGHT"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));
 
@@ -256,7 +264,10 @@ public:
 
 	void OnShow()
 	{
-		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("$Product$ (Evaluation Version)")));
+		if (g_LicenseType == LT_REGISTERED)
+			m_pSkinWnd->SetCaptionText(TOLOCAL(_T("$Product$ (Registered Version)")));
+		else
+			m_pSkinWnd->SetCaptionText(TOLOCAL(_T("$Product$ (Evaluation Version)")));
 	}
 
 	bool OnCustomCommand(int nId)

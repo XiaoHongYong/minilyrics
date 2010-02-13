@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <skin defmainwnd="minilyrics" mainwnds="minilyrics">
+  <include Name="Styles.xml"/>
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>

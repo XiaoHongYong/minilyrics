@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr" ExtraResouceFolder="Modern/">
+  <include Name="Styles.xml"/>
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
@@ -29,14 +30,7 @@
 
     <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
-
-    <cmd ID="CMD_INIT_ANIMATION"       func="start_animation"      param="CID_INITANIMATION" />
   </DynCmds>
-  <style Name="Default">
-    <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
-    <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
-    <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
-  </style>
   <skinwnd Name="floatinglyr" EnableTranslucency="true" TranslucencyAlpha="0" 
            TranslucencyAlphaOnHover="70" TranslucencyAlphaOnActive="228" 
            MinWidth="400" MinHeight="60" Width="400" Height="200" 
@@ -92,16 +86,9 @@
   <skinwnd Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="228" 
        MinWidth="330" MinHeight="300" Width="330" Height="400" 
        PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
-       ContextMenu="NormalMode" CmdHandler="ch_common,ch_player"
-       OnCreateCommand="CMD_INIT_ANIMATION">
+       ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
               CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
-    <Property Name="Motion" />
-
-    <Animation ID="CID_INITANIMATION" MoveFromRight="CID_TB_SYSBT, CCMD_MEDIAINFO"
-          MoveFromLeft="CCMD_ALBUMART, " MoveFromBottom="CID_TOGGLE_LYR_PL" 
-               />
-
     <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
     <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
     <Image Name="BottomBorder" Left="20" Top="h-20+10" Width="w-20-20" Height="20-10" Image="frame.png" ImageRect="20, 65, 35, 10" BltMode="tile" BlendPixMode="copy"/>

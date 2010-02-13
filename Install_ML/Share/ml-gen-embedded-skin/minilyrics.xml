@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <skin defmainwnd="minilyrics" mainwnds="minilyrics" ExtraResouceFolder="Modern/">
+  <include Name="Styles.xml"/>
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="Lyrics &amp;Bar..." IDCmd="dyncmd_openclose_lyrics_bar" CanCheck="true" IsCheckedCmd="dyncmd_is_lyrics_bar_visible" />
