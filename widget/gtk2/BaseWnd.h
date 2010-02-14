@@ -108,6 +108,8 @@ public:
 
 	virtual bool Destroy();
 
+	virtual void PostDestroy();
+
 public:
 	//
 	// Messages

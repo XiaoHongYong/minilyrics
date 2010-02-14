@@ -52,6 +52,10 @@ public:
 	void SetFormula(LPCTSTR szExp);
 	void SetFormula(int nConstValue);
 
+	void Append(LPCTSTR szFormula);
+	void Increase(int nValue);
+	void Decrease(int nValue) { Increase(-nValue); }
+
 	void SimpleOptimize();
 
 	CFormula& operator =(CFormula &fRight);

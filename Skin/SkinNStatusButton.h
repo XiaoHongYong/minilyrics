@@ -23,6 +23,8 @@ public:
 	bool OnMouseMove(UINT nFlags, CPoint point);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 	bool OnLButtonDown(UINT nFlags, CPoint point);
+	void OnSize(int cx, int cy);
+
 	void Draw(CRawGraph *pGraph);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);

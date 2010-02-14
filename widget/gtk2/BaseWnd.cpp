@@ -136,6 +136,11 @@ bool CBaseWnd::Destroy()
 	return true;
 }
 
+void CBaseWnd::PostDestroy()
+{
+	Destroy();
+}
+
 void CBaseWnd::OnClose()
 {
 	// Destroy();

@@ -1451,7 +1451,7 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 			if (pSkinWnd->IsIconic())
 				pSkinWnd->ActivateWindow();
 			else
-				pSkinWnd->Destroy();
+				pSkinWnd->PostDestroy();
 			return ERR_OK;
 		}
 		return CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());

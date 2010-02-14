@@ -47,6 +47,22 @@ void CFormula::SetFormula(int nConstValue)
 	_itostr(nConstValue, m_strFormula, 10);
 }
 
+void CFormula::Append(LPCTSTR szFormula)
+{
+	m_strFormula += szFormula;
+
+	SimpleOptimize();
+}
+
+void CFormula::Increase(int nValue)
+{
+	if (nValue < 0)
+		m_strFormula += CStrPrintf(_T("%d"), nValue).c_str();
+	else
+		m_strFormula += CStrPrintf(_T("+%d"), nValue).c_str();
+	SimpleOptimize();
+}
+
 BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 {
 	BOOL	bRet = FALSE;

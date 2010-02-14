@@ -2460,11 +2460,9 @@ bool CSkinWnd::UnregisterUIObjNotifyHandler(IUIObjNotifyHandler *pHandler)
 
 void CSkinWnd::DispatchUIObjNotify(IUIObjNotify *pNotify)
 {
-	VecUIObjNotifyHandlers::iterator it;
-
-	for (it = m_vUIObjNotifyHandlers.begin(); it != m_vUIObjNotifyHandlers.end(); ++it)
+	for (int i = 0; i < m_vUIObjNotifyHandlers.size(); i++)
 	{
-		UIObjNotifyHandlerInfo	&h = *it;
+		UIObjNotifyHandlerInfo	&h = m_vUIObjNotifyHandlers[i];
 		if (h.nIDUIObj == pNotify->nID)
 		{
 			h.pHandler->OnUIObjNotify(pNotify);

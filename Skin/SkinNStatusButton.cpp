@@ -235,6 +235,16 @@ bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 	return true;
 }
 
+void CSkinNStatusButton::OnSize(int cx, int cy)
+{
+	m_rcObj.left -= m_xMargin;
+	m_rcObj.right -= m_xMargin;
+	m_rcObj.top -= m_yMargin;
+	m_rcObj.bottom -= m_yMargin;
+
+	CUIObject::OnSize(cx, cy);
+}
+
 void CSkinNStatusButton::Draw(CRawGraph *pGraph)
 {
 	if (m_vBtStatImg.empty())

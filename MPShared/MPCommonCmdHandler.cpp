@@ -592,9 +592,12 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			if (!g_bInModalDlLrcSelDlg)
 			{
 				g_bInModalDlLrcSelDlg = TRUE;
-				CDlgSearchLyrics		LyricsDownSelDlg;
 
-				LyricsDownSelDlg.DoModal(m_pSkinWnd);
+				CMPSkinDialog::ShowDialog(new CDlgOpenLyrics(), m_pSkinWnd);
+
+// 				CDlgSearchLyrics		LyricsDownSelDlg;
+// 
+// 				LyricsDownSelDlg.DoModal(m_pSkinWnd);
 				g_bInModalDlLrcSelDlg = FALSE;
 			}
 		}

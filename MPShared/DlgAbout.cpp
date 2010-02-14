@@ -275,7 +275,7 @@ public:
 		if (nId == GetIDByName(_T("CID_BUYNOW")))
 		{
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_REGISTER));
-			m_pSkinWnd->Destroy();
+			PostDestroy();
 			return true;
 		}
 		else if (nId == GetIDByName(_T("CID_ENTER_CODE")))
@@ -284,7 +284,7 @@ public:
 		}
 		else if (nId == GetIDByName(_T("CID_NOTICE_OK")))
 		{
-			m_pSkinWnd->Destroy();
+			PostDestroy();
 		}
 		return false;
 	}
