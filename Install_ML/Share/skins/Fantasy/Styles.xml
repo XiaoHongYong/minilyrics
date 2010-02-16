@@ -15,7 +15,7 @@
            UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14"
            blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10"
            MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
-        <button ID="ID_CLOSE" Left="1" />
+        <button ID="ID_CANCEL" Left="1" />
       </Toolbar>
       <HStretchImage Name="TitleLine" Left="10" Top="25" Width="w-20-10" Height="6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
       <ClientArea Rect="2, 30, w-4-10, h-30-4"/>

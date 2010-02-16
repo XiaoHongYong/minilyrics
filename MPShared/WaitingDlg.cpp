@@ -39,16 +39,69 @@ void CWorkObjBase::WorkThread(LPVOID lpParam)
 	pThis = (CWorkObjBase *)lpParam;
 	dwRet = pThis->DoTheJob();
 
-#ifdef _WIN32
-	PostMessage(pThis->m_hWndNotify->GetHandle(), WM_WORKTHREAD_END_NOTIFY, 0, 0);
-#else
-	pThis->m_hWndNotify->Destroy();
-#endif
+	pThis->m_hWndNotify->PostUserMessage(UMSG_WORK_END, 0);
 }
 
-
 //////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+
+
+CPageWaitMessage::CPageWaitMessage(bool bEndToClose) : CSkinPageHandler(GetPageID(),
+	NULL, _T("CID_AM_SHOW_WAIT_F_RIGHT"), NULL, _T("CID_AM_HIDE_WAIT_2_RIGHT"))
+{
+	m_bEndToClose = bEndToClose;
+}
+
+LPCTSTR CPageWaitMessage::GetPageID()
+{
+	return _T("CID_WAIT");
+}
+
+void CPageWaitMessage::StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase *pWorkObj)
+{
+	m_pSkinWnd->SetCaptionText(szCaption);
+	m_pSkinWnd->SetUIObjectText(_T("CID_WAIT_INFO"), szInfo);
+
+	m_pWorkObj = pWorkObj;
+	ASSERT(pWorkObj);
+
+	m_pParent->SwitchToPage(GetPageID());
+}
+
+void CPageWaitMessage::OnShow()
+{
+	if (m_pWorkObj)
+	{
+		m_pWorkObj->CreateWorkThread(m_pSkinWnd);
+		if (m_pWorkObj->IsCancelEnabled())
+			EnableUIObject(CMD_CANCEL, true);
+		else
+			EnableUIObject(CMD_CANCEL, false);
+	}
+}
+
+void CPageWaitMessage::OnOK()
+{
+}
+
+void CPageWaitMessage::OnCancel()
+{
+	if (m_pWorkObj && m_pWorkObj->IsCancelEnabled())
+	{
+		m_pWorkObj->CancelJob();
+	}
+}
+
+void CPageWaitMessage::OnUserMessage(int nMessageID, LPARAM param)
+{
+	if (nMessageID == UMSG_WORK_END)
+	{
+		if (m_bEndToClose)
+			CSkinPageHandler::OnCancel();
+		else
+			m_pParent->SwitchToLastPage();
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CWaitingDlg::CWaitingDlg() : CBaseDialog(IDD_WAITING)
@@ -98,18 +151,13 @@ void CWaitingDlg::OnOK()
 {
 }
 
-#ifdef _WIN32
-LRESULT CWaitingDlg::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
+void CWaitingDlg::OnUserMessage(int nMessageID, LPARAM param)
 {
-	if (message == WM_WORKTHREAD_END_NOTIFY)
+	if (nMessageID == UMSG_WORK_END)
 	{
 		if (m_pWorkObj && m_pWorkObj->IsJobCanceled())
 			CBaseDialog::OnCancel();
 		else
 			CBaseDialog::OnOK();
-		return 0;
 	}
-	else
-		return CBaseDialog::WndProc(message, wParam, lParam);
 }
-#endif

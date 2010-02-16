@@ -175,6 +175,16 @@ void CBaseWnd::OnLanguageChanged()
 // 	m_LangDlgHelper.ToLocal();
 }
 
+void CBaseWnd::PostUserMessage(int nMessageID, LPARAM param)
+{
+	OnUserMessage(nMessageID, param);
+}
+
+void CBaseWnd::SendUserMessage(int nMessageID, LPARAM param)
+{
+	OnUserMessage(nMessageID, param);
+}
+
 void CBaseWnd::ActivateWindow()
 {
 	ASSERT(GTK_IS_WINDOW(m_window));

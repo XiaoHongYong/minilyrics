@@ -822,12 +822,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		g_mpMsgWnd.PostQuitMPMessage();
 		break;
 	case CMD_CLOSE:
-#ifdef _WIN32
-		::PostMessage(m_pSkinWnd->GetHandle(), WM_CLOSE, 0, 0);
-#else
-		m_pSkinWnd->Destroy();
-#endif
-		// m_pSkinWnd->Destroy();
+		m_pSkinWnd->PostDestroy();
 		break;
 	case ID_ALBUMART:
 		{

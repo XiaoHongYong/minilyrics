@@ -11,8 +11,6 @@
 
 #include "../sqlite_cpp/Sqlite3.h"
 
-#define MSG_ONLINE_SEARCH_RESULT		(WM_USER + 6)
-
 class ILyrSearchResultCacheDB
 {
 public:

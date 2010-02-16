@@ -15,6 +15,7 @@
 #include "agg_pixfmt_rgb.h"
 #include "agg_path_storage.h"
 #include "agg_conv_stroke.h"
+#include "agg_renderer_mclip.h"
 
 using namespace GfxRaw;
 
@@ -72,22 +73,24 @@ void CRawGraph::Line(int x1, int y1, int x2, int y2)
 	if (m_imageData.bitCount == 24)
 	{
 		typedef agg::pixfmt_rgb24	pixfmt;
-		typedef agg::renderer_base<pixfmt> renderer_base;
+		typedef agg::renderer_mclip<pixfmt> renderer_mclip;
 
 		agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
 		pixfmt	pixf(buf);
-		renderer_base rb(pixf);
+		renderer_mclip rb(pixf);
+		rb.add_clip_box(m_rcClip.left, m_rcClip.top, m_rcClip.right, m_rcClip.bottom);
 
 		agg::render_scanlines_aa_solid(ras, sl, rb, clr);
 	}
 	else if (m_imageData.bitCount == 32)
 	{
 		typedef agg::pixfmt_rgba32	pixfmt;
-		typedef agg::renderer_base<pixfmt> renderer_base;
+		typedef agg::renderer_mclip<pixfmt> renderer_mclip;
 
 		agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
 		pixfmt	pixf(buf);
-		renderer_base rb(pixf);
+		renderer_mclip rb(pixf);
+		rb.add_clip_box(m_rcClip.left, m_rcClip.top, m_rcClip.right, m_rcClip.bottom);
 
 		agg::render_scanlines_aa_solid(ras, sl, rb, clr);
 	}
@@ -120,22 +123,24 @@ void CRawGraph::Rectangle(int x, int y, int width, int height)
 	if (m_imageData.bitCount == 24)
 	{
 		typedef agg::pixfmt_rgb24	pixfmt;
-		typedef agg::renderer_base<pixfmt> renderer_base;
+		typedef agg::renderer_mclip<pixfmt> renderer_mclip;
 
 		agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
 		pixfmt	pixf(buf);
-		renderer_base rb(pixf);
+		renderer_mclip rb(pixf);
+		rb.add_clip_box(m_rcClip.left, m_rcClip.top, m_rcClip.right, m_rcClip.bottom);
 
 		agg::render_scanlines_aa_solid(ras, sl, rb, clr);
 	}
 	else if (m_imageData.bitCount == 32)
 	{
 		typedef agg::pixfmt_rgba32	pixfmt;
-		typedef agg::renderer_base<pixfmt> renderer_base;
+		typedef agg::renderer_mclip<pixfmt> renderer_mclip;
 
 		agg::rendering_buffer	buf(m_imageData.buff, m_imageData.width, m_imageData.height, m_imageData.stride);
 		pixfmt	pixf(buf);
-		renderer_base rb(pixf);
+		renderer_mclip rb(pixf);
+		rb.add_clip_box(m_rcClip.left, m_rcClip.top, m_rcClip.right, m_rcClip.bottom);
 
 		agg::render_scanlines_aa_solid(ras, sl, rb, clr);
 	}

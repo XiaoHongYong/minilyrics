@@ -12,7 +12,7 @@ class CBaseWnd;
 
 //
 // 语言改变通知消息
-const int ML_WM_LANGUAGE_CHANGED		= (WM_USER + 3);
+const int ML_WM_LANGUAGE_CHANGED		= (WM_USER + 1212);
 const int ML_LANGUAGE_CHANGED_PARAM		= 172172;
 
 BOOL ToLocalMenu(CMLMenu *pMenu);

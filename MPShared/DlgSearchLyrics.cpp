@@ -238,6 +238,7 @@ public:
 		EmptyStr(m_szAssociateKeyword);
 
 		m_pLyricsList = NULL;
+		m_pSearchObj = NULL;
 	}
 
 	~CPageSearchLyrics()
@@ -377,6 +378,13 @@ public:
 	void OnShow()
 	{
 		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Search lyrics")));
+
+		if (m_pSearchObj)
+		{
+			OnOnlineSearchEnd();
+			delete m_pSearchObj;
+			m_pSearchObj = NULL;
+		}
 	}
 
 	bool OnTimer(UINT nIDEvent)
@@ -623,6 +631,47 @@ public:
 	}
 
 protected:
+	void OnOnlineSearchEnd()
+	{
+		ASSERT(m_pSearchObj);
+
+		if (m_pSearchObj->m_strMsg.size())
+		{
+			m_pSkinWnd->MessageOut(m_pSearchObj->m_strMsg.c_str());
+		}
+
+		if (m_pSearchObj->m_nResult == ERR_NOT_FOUND)
+		{
+			tstring		strMsg;
+			strMsg = TOLOCAL(_T("Sorry, no result returned. Please make sure you enter the correct artist name and title."));
+			strMsg += _T("\r\n");
+			strMsg += TOLOCAL(_T("If you have the lyrics, please upload it to our server to share it with others."));
+			m_pSkinWnd->MessageOut(strMsg.c_str());
+		}
+		else if (m_pSearchObj->m_nResult != ERR_OK)
+			ShowErrorDlg(m_pSkinWnd, m_pSearchObj->m_nResult);
+
+		m_nCurPage = m_pSearchObj->m_nCurPage;
+		m_nPageCount = m_pSearchObj->m_nPageCount;
+
+		m_vResultsInet.Sort();
+
+		SearchLocal();
+
+		UpdateSearchResultToListCtrl();
+
+		m_pLyricsList->SetItemSelectionState(0, TRUE);
+
+		if (m_nPageCount > 1)
+		{
+			m_vCachePages.push_back(m_vResultsInet);
+			HidePreNextButtons(false);
+		}
+		else
+		{
+			HidePreNextButtons(true);
+		}
+	}
 
 	void OnSearch()
 	{
@@ -638,12 +687,6 @@ protected:
 		m_vCachePages.clear();
 
 		SearchOnline();
-
-		SearchLocal();
-
-		UpdateSearchResultToListCtrl();
-
-		m_pLyricsList->SetItemSelectionState(0, true);
 	}
 
 	void SearchLocal()
@@ -712,54 +755,23 @@ protected:
 		if (m_strTitleLastSearch.empty())
 			ShowRegisterNotice(m_pSkinWnd, false);
 
-		CWaitingDlg		dlg;
-		CSearchWorkObj	searchObj;
-
 		m_pLyricsList->DeleteAllItems();
 
-		searchObj.m_strArtist = m_strArtistLastSearch;
-		searchObj.m_strTitle = m_strTitleLastSearch;
-		searchObj.m_pvSearchResult = &m_vResultsInet;
-		searchObj.m_nCurPage = m_nCurPage;
+		ASSERT(!m_pSearchObj);
+		m_pSearchObj = new CSearchWorkObj();
 
-		// LOG0(LOG_LVL_EVENT_IMP, _T("Begin Online search."));
+		m_pSearchObj->m_strArtist = m_strArtistLastSearch;
+		m_pSearchObj->m_strTitle = m_strTitleLastSearch;
+		m_pSearchObj->m_pvSearchResult = &m_vResultsInet;
+		m_pSearchObj->m_nCurPage = m_nCurPage;
 
-		if (dlg.ShowWaitingDlg(m_pSkinWnd, &searchObj, 
-			TOLOCAL(_T("Searching Lyrics")), 
-			TOLOCAL(_T("$Product$ is searching lyrics now, it may take a few seconds."))) != IDOK)
-			return;
-
-		if (searchObj.m_strMsg.size())
+		CPageWaitMessage	*pPageWait = (CPageWaitMessage *)m_pParent->GetPage(_T("CID_WAIT"));
+		ASSERT(pPageWait);
+		if (pPageWait)
 		{
-			m_pSkinWnd->MessageOut(searchObj.m_strMsg.c_str());
-		}
-
-		if (searchObj.m_nResult == ERR_NOT_FOUND)
-		{
-			tstring		strMsg;
-			strMsg = TOLOCAL(_T("Sorry, no result returned. Please make sure you enter the correct artist name and title."));
-			strMsg += _T("\r\n");
-			strMsg += TOLOCAL(_T("If you have the lyrics, please upload it to our server to share it with others."));
-			m_pSkinWnd->MessageOut(strMsg.c_str());
-		}
-		else if (searchObj.m_nResult != ERR_OK)
-			ShowErrorDlg(m_pSkinWnd, searchObj.m_nResult);
-
-		// LOG2(LOG_LVL_EVENT_IMP, _T("Online search returned: %d, %s"), searchObj.m_nResult, (LPCTSTR)ERROR2STR_LOCAL(searchObj.m_nResult));
-
-		m_nCurPage = searchObj.m_nCurPage;
-		m_nPageCount = searchObj.m_nPageCount;
-
-		m_vResultsInet.Sort();
-
-		if (m_nPageCount > 1)
-		{
-			m_vCachePages.push_back(m_vResultsInet);
-			HidePreNextButtons(false);
-		}
-		else
-		{
-			HidePreNextButtons(true);
+			pPageWait->StartWork(TOLOCAL(_T("Searching Lyrics")), 
+				TOLOCAL(_T("$Product$ is searching lyrics now, it may take a few seconds.")),
+				m_pSearchObj);
 		}
 	}
 
@@ -879,12 +891,11 @@ protected:
 			else
 				nIncValue = -(rcResultList.bottom - (rcBt.top - 5));
 
-			m_pLyricsList->m_formHeight.Increase(nIncValue);
-			m_pLyricsList->m_pContainer->RecalculateUIObjSizePos(m_pLyricsList);
+			m_pLyricsList->IncreaseHeight(nIncValue);
 		}
 
-		SetUIObjectVisible(CID_PREV_PAGE, !bHide);
-		SetUIObjectVisible(CID_NEXT_PAGE, !bHide);
+		SetUIObjectVisible(CID_PREV_PAGE, !bHide, false);
+		SetUIObjectVisible(CID_NEXT_PAGE, !bHide, false);
 
 		InvalidateRect();
 		// m_pSkinWnd->EnableUIObject(CID_NEXT_PAGE, m_nCurPage < m_nPageCount - 1);
@@ -916,10 +927,15 @@ protected:
 
 	CSkinListCtrl		*m_pLyricsList;
 
+	CSearchWorkObj		*m_pSearchObj;
+
 };
+
+//////////////////////////////////////////////////////////////////////////
 
 
 CDlgOpenLyrics::CDlgOpenLyrics() : CMPSkinDialog(_T("OpenLyrics.xml"))
 {
 	m_pageHandler.AddPage(new CPageSearchLyrics());
+	m_pageHandler.AddPage(new CPageWaitMessage(false));
 }

@@ -165,6 +165,11 @@ public:
 	// Language Changed Notification message
 	virtual void OnLanguageChanged();
 
+	void PostUserMessage(int nMessageID, LPARAM param);
+	void SendUserMessage(int nMessageID, LPARAM param);
+
+	virtual void OnUserMessage(int nMessageID, LPARAM param) { }
+
 public:
 	//
 	// Operations

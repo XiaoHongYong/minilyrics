@@ -9,10 +9,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "MPSkinDialog.h"
 
-#ifdef _WIN32
-#define WM_WORKTHREAD_END_NOTIFY		(WM_USER+1)
-#endif
+#define UMSG_WORK_END		1
 
 class CWorkObjBase
 {
@@ -40,6 +39,34 @@ protected:
 
 };
 
+
+class CPageWaitMessage : public CSkinPageHandler
+{
+public:
+	CPageWaitMessage(bool bEndToClose);
+
+	~CPageWaitMessage()
+	{
+	}
+
+	static LPCTSTR GetPageID();
+
+	void StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase *pWorkObj);
+
+	void OnShow();
+
+	void OnOK();
+
+	void OnCancel();
+
+	void OnUserMessage(int nMessageID, LPARAM param);
+
+protected:
+	bool			m_bEndToClose;
+	CWorkObjBase	*m_pWorkObj;
+
+};
+
 //
 //
 class CWaitingDlg : public CBaseDialog  
@@ -55,9 +82,8 @@ public:
 
 	int ShowWaitingDlg(CBaseWnd *pWndParent, CWorkObjBase *pWorkObj, LPCTSTR szTitle, LPCTSTR szMsg);
 
-#ifdef _WIN32
-	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
-#endif
+
+	virtual void OnUserMessage(int nMessageID, LPARAM param);
 
 protected:
 	CWorkObjBase	*m_pWorkObj;
