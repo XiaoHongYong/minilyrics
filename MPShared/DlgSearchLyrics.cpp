@@ -109,55 +109,37 @@ inline void sort_insert(_Cont &_Container, _It _First, _It _Last, _Pr _Pred)
 	}
 }*/
 
-//////////////////////////////////////////////////////////////////////
-// CRenameDlg
-class CRenameDlg : public CBaseDialog
+class CPageRename : public CSkinPageHandler
 {
 public:
-	BOOL OnInitDialog();
-	void OnOK();
-	CRenameDlg(): CBaseDialog(IDD_RENAME){
-	}
-	virtual ~CRenameDlg(){
+	CPageRename() : CSkinPageHandler(_T("CID_C_RENAME"), 
+		NULL, _T("CID_AM_SHOW_RENAME_F_RIGHT"),
+		NULL, _T("CID_AM_HIDE_RENAME_2_RIGHT"))
+	{
 	}
 
-public:
-	void UpdateListBoxHorzExtent(LPCTSTR szStrInsert);
+	void OnShow()
+	{
+		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Rename lyrics file")));
 
-	tstring		m_strTitle;
-	tstring		m_strStaticText;
-	tstring		m_strName;
+		SetUIObjectText(_T("CID_E_FILENAME"), m_pParent->GetProperty(_T("FileTitle")).c_str());
+		m_pParent->SetProperty(_T("RenameDlgResult"), IDCANCEL);
+	}
+
+	void OnOK()
+	{
+		m_pParent->SetProperty(_T("FileTitle"), GetUIObjectText(_T("CID_E_FILENAME")).c_str());
+		m_pParent->SetProperty(_T("RenameDlgResult"), IDOK);
+		m_pParent->SwitchToLastPage();
+	}
+
+	void OnCancel()
+	{
+		m_pParent->SwitchToLastPage();
+	}
+
 };
 
-BOOL CRenameDlg::OnInitDialog()
-{
-	if (m_strStaticText.size())
-		SetDlgItemText(IDC_STATIC1, m_strStaticText.c_str());
-	if (m_strTitle.size())
-		SetWindowText(m_strTitle.c_str());
-
-	CBaseDialog::OnInitDialog();
-
-	if (m_strName.size())
-		SetDlgItemText(IDC_NAME, m_strName.c_str());
-
-	return TRUE;
-}
-
-void CRenameDlg::OnOK()
-{
-	TCHAR	szNewName[256];
-
-	GetDlgItemText(IDC_NAME, szNewName, 256);
-	m_strName = szNewName;
-
-	if (m_strName.size() == 0)
-		return;
-
-	CBaseDialog::OnOK();
-}
-
-// CRenameDlg
 //////////////////////////////////////////////////////////////////////
 
 class CSearchWorkObj : public CWorkObjBase
@@ -228,9 +210,9 @@ public:
 		DURATION_AUTO_SEARCH	= 1000,
 	};
 
-	CPageSearchLyrics() : CSkinPageHandler(_T("CID_C_ABOUT"), 
-		_T("CID_AM_SHOW_ABOUT_F_LEFT"), _T("CID_AM_SHOW_ABOUT_F_RIGHT"),
-		_T("CID_AM_HIDE_ABOUT_2_LEFT"), NULL)
+	CPageSearchLyrics() : CSkinPageHandler(_T("CID_C_OPEN"), 
+		_T("CID_AM_SHOW_OPEN_F_LEFT"), _T("CID_AM_SHOW_OPEN_F_RIGHT"),
+		_T("CID_AM_HIDE_OPEN_2_LEFT"), NULL)
 	{
 		m_bAutoSearchLocal = true;
 		m_nCurPage = 0;
@@ -385,6 +367,44 @@ public:
 			delete m_pSearchObj;
 			m_pSearchObj = NULL;
 		}
+		else if (m_pParent->GetPropertyInt(_T("RenameDlgResult")) == IDOK)
+		{
+			//
+			// Rename selected lyrics file
+			//
+			LrcSearchResult	*pSel;
+
+			pSel = GetCurSel();
+			if (!pSel)
+				return;
+
+			if (GetLrcSourceType(pSel->strUrl.c_str()) != LST_FILE)
+				return;
+
+			TCHAR			szFileNew[MAX_PATH];
+
+			tstring		strFileTitleOld;
+			tstring		strFileTitle = m_pParent->GetProperty(_T("FileTitle"));
+			FileGetTitle(pSel->strUrl.c_str(), strFileTitleOld);
+
+			// Same?
+			if (_tcscmp(strFileTitle.c_str(), strFileTitleOld.c_str()) == 0)
+				return;
+
+			FileGetPath(szFileNew, CountOf(szFileNew), pSel->strUrl.c_str());
+			_tcscat_safe(szFileNew, CountOf(szFileNew), strFileTitle.c_str());
+			_tcscat_safe(szFileNew, CountOf(szFileNew), FileGetExt(pSel->strUrl.c_str()));
+			if (!MoveFile(pSel->strUrl.c_str(), szFileNew))
+			{
+				m_pSkinWnd->MessageOut(TOLOCAL(_T("Failed to rename lyrics file.")));
+			}
+			else
+			{
+				int			nSel = m_pLyricsList->GetNextSelectedItem(-1);
+
+				m_pLyricsList->SetItemText(nSel, COL_FILENAME, FileGetName(szFileNew));
+			}
+		}
 	}
 
 	bool OnTimer(UINT nIDEvent)
@@ -432,43 +452,27 @@ public:
 			g_Profile.WriteProfileInt(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), 
 				!g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 			break;
-// 		case IDC_RENAME:
-// 			{
-// 				//
-// 				// Rename selected lyrics file
-// 				//
-// 				LrcSearchResult	*pSel;
-// 
-// 				pSel = GetCurSel();
-// 				if (!pSel)
-// 					break;
-// 
-// 				if (GetLrcSourceType(pSel->strUrl.c_str()) != LST_FILE)
-// 					break;
-// 
-// 				CRenameDlg		dlg;
-// 				TCHAR			szFileNew[MAX_PATH];
-// 
-// 				FileGetTitle(pSel->strUrl.c_str(), dlg.m_strName);
-// 				if (dlg.DoModal(this) == IDOK)
-// 				{
-// 					FileGetPath(szFileNew, CountOf(szFileNew), pSel->strUrl.c_str());
-// 					_tcscat_safe(szFileNew, CountOf(szFileNew), dlg.m_strName.c_str());
-// 					_tcscat_safe(szFileNew, CountOf(szFileNew), FileGetExt(pSel->strUrl.c_str()));
-// 					if (!MoveFile(pSel->strUrl.c_str(), szFileNew))
-// 					{
-// 						MessageOut(TOLOCAL(_T("Rename File FAILED.")));
-// 					}
-// 					else
-// 					{
-// 						int			nSel = m_resultList.GetNextSelectedItem(-1);
-// 
-// 						// m_resultList.SetItemText(nSel, COL_FILE_PATHNAME, szFileNew);
-// 						m_resultList.SetItemText(nSel, COL_FILENAME, FileGetName(szFileNew));
-// 					}
-// 				}
-// 			}
-// 			break;
+		case IDC_RENAME:
+			{
+				//
+				// Rename selected lyrics file
+				//
+				LrcSearchResult	*pSel;
+
+				pSel = GetCurSel();
+				if (!pSel)
+					break;
+
+				if (GetLrcSourceType(pSel->strUrl.c_str()) != LST_FILE)
+					break;
+
+				tstring		strTitle;
+				FileGetTitle(pSel->strUrl.c_str(), strTitle);
+
+				m_pParent->SetProperty(_T("FileTitle"), strTitle.c_str());
+				m_pParent->SwitchToPage(_T("CID_C_RENAME"));
+			}
+			break;
 		case IDC_DEL_FILE:
 			{
 				LrcSearchResult	*pSel;
@@ -561,10 +565,6 @@ public:
 		{
 			CRect		rc;
 			bool		bEnable = false;
-
-			static bool bFlag = true;
-			HidePreNextButtons(bFlag);
-			bFlag = !bFlag;
 
 			LrcSearchResult	*pSel;
 
@@ -938,4 +938,5 @@ CDlgOpenLyrics::CDlgOpenLyrics() : CMPSkinDialog(_T("OpenLyrics.xml"))
 {
 	m_pageHandler.AddPage(new CPageSearchLyrics());
 	m_pageHandler.AddPage(new CPageWaitMessage(false));
+	m_pageHandler.AddPage(new CPageRename());
 }

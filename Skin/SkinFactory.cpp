@@ -1016,14 +1016,14 @@ int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCa
 	pSkin = NewSkinWnd(szSkinWndName, bMainWnd);
 	ASSERT(pSkin);
 	pSkin->SetFreeOnDestory(true);
-	nRet = pSkin->Create(szClassName, szCaption, this, szSkinWndName);
+	nRet = pSkin->Create(szClassName, szCaption, this, szSkinWndName, NULL, !bMainWnd);
 	if (nRet == ERR_OK)
 	{
 		if (ppSkin)
 			*ppSkin = pSkin;
 #ifdef _WIN32
-		if (!bMainWnd && !pSkin->IsWindowsAppearance())
-			ShowAsToolWindow(pSkin->GetHandle());
+		if (!bMainWnd && pSkin->IsWindowsAppearance())
+			ShowAsAppWindow(pSkin->GetHandle());
 #endif
 	}
 	else
@@ -1070,7 +1070,7 @@ int CSkinFactory::OpenOrCloseSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPC
 		return ERR_OK;
 	}
 
-	int nRet = (*ppSkinWnd)->Create(szClassName, szCaption, this, szSkinWndName);
+	int nRet = (*ppSkinWnd)->Create(szClassName, szCaption, this, szSkinWndName, pWndParent, true);
 	if (nRet != ERR_OK)
 	{
 		delete *ppSkinWnd;

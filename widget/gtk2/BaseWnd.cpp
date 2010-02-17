@@ -100,7 +100,7 @@ BOOL CBaseWnd::Create(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, 
 	return CreateEx(BASEWNDCLASSNAME, szCaption, x, y, nWidth, nHeight, pWndParent, dwStyle, nID);
 }
 
-BOOL CBaseWnd::CreateEx(LPCTSTR szClassName, LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, CBaseWnd *pWndParent, DWORD dwStyle, int nID)
+BOOL CBaseWnd::CreateEx(LPCTSTR szClassName, LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, CBaseWnd *pWndParent, DWORD dwStyle, DWORD dwExStyle, int nID)
 {
 	m_nID = nID;
 

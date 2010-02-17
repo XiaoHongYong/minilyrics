@@ -154,7 +154,7 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_bFreeOnDestory = false;
 
 	m_bSkinOpened = false;
-	m_bCanUpdateWnd = false;
+	m_nInRedrawUpdate = 0;
 	m_bInEditorMode = false;
 
 	m_bWindowsAppearance = false;
@@ -220,20 +220,27 @@ CSkinWnd::~CSkinWnd()
 	CloseSkin();
 }
 
-int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName)
+int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWnd)
 {
 	m_pSkinFactory = pSkinFactory;
 	m_strSkinWndName = szSkinWndName;
 
-	// CBaseWnd	*pParent = pSkinFactory->GetMainWnd();
-	CBaseWnd	*pParent = NULL;
+	DWORD	dwExStyle = 0;
+
+	if (bToolWnd)
+		dwExStyle |= WS_EX_TOOLWINDOW;
 
 	// WS_THICKFRAME will cause window flashing on vista
 	if (!CreateEx(szClassName, szCaption,
 		m_rcReal.left, m_rcReal.top, m_rcReal.Width(), m_rcReal.Height(),
-		pParent,
-		DS_NOIDLEMSG | WS_VISIBLE | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX))
+		pWndParent,
+		DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX, dwExStyle))
 		return ERR_FALSE;
+
+	// Load skin
+	OpenDefaultSkin();
+
+	ShowWindow(SW_SHOW);
 
 	return ERR_OK;
 }
@@ -266,6 +273,8 @@ int CSkinWnd::OpenSkin(LPCTSTR szSkinWndName)
 	}
 
 	m_strSkinWndName = szSkinWndName;
+
+	CAutoRedrawLock	redrawLock(this);
 
 	return FromXML(pNode);
 }
@@ -326,7 +335,8 @@ void CSkinWnd::CloseSkin()
 	::UnSetLayeredWindow(m_hWnd);
 #endif
 
-	m_bCanUpdateWnd = false;
+	ASSERT(m_nInRedrawUpdate == 0);
+	m_nInRedrawUpdate = 0;
 	m_bSkinOpened = false;
 	m_bPaintBg = false;
 	m_clrBgOrg.set(0, 0, 0);
@@ -899,7 +909,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 {
 	assert(pObj);
 
-	if (!m_bCanUpdateWnd)
+	if (m_nInRedrawUpdate > 0)
 		return;
 
 	if (!pObj->IsVisible() || !pObj->IsParentVisible())
@@ -1018,6 +1028,21 @@ void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucen
 	pGraph->RecoverClipBox();
 }
 
+void CSkinWnd::EnterInDrawUpdate()
+{
+// 	if (m_nInRedrawUpdate > 0)
+// 		ASSERT(m_nInRedrawUpdate == 0);
+	m_nInRedrawUpdate++;
+}
+
+void CSkinWnd::LeaveInDrawUpdate()
+{
+	m_nInRedrawUpdate--;
+	ASSERT(m_nInRedrawUpdate >= 0);
+	if (m_nInRedrawUpdate == 0)
+		InvalidateRect();
+}
+
 void CSkinWnd::SetMainAppWnd(bool bMainAppWnd)
 {
 	m_bMainAppWnd = bMainAppWnd;
@@ -1097,6 +1122,8 @@ void CSkinWnd::OnSize(int cx, int cy)
 	// bool		bCaption = IsFlagSet(dwStyle, WS_CAPTION);
 	if (!IsIconic())
 	{
+		CAutoRedrawLock	redrawLock(this);
+
 		CRect		rc;
 		GetWindowRect(&rc);
 		rc.right = rc.left + cx;
@@ -1743,9 +1770,6 @@ bool CSkinWnd::OnCreate()
 	m_WndDrag.Init(this, this);//, arrszClassCloseTo);
 	m_wndResizer.Init(this, this);//, arrszClassCloseTo, this);
 
-	// Load skin
-	OpenDefaultSkin();
-
 	return true;
 }
 
@@ -1756,6 +1780,8 @@ bool CSkinWnd::IsWndActive()
 
 void CSkinWnd::OnActivate(bool bActived)
 {
+	CAutoRedrawLock	redrawLock(this);
+
 	m_bActived = bActived;
 
 #ifdef _WIN32_DESKTOP
@@ -1772,8 +1798,6 @@ void CSkinWnd::OnActivate(bool bActived)
 
 	if (m_pSjvmNotifyEvent)
 		m_pSjvmNotifyEvent->onActivate(bActived);
-
-	InvalidateRect();
 }
 
 void CSkinWnd::AddWndCloseto(CBaseWnd *pWnd, LPCTSTR szWndClass, LPCTSTR szWndName)
@@ -2005,7 +2029,7 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 
 BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 {
-	if (!m_bCanUpdateWnd)
+	if (m_nInRedrawUpdate > 0)
 		return FALSE;
 
 	if (!m_bTranslucencyLayered)
@@ -2094,6 +2118,9 @@ HBITMAP Load32Bitbmp(LPCTSTR szImage, int &nWidth, int &nHeight)
 
 BOOL CSkinWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
 {
+	if (m_nInRedrawUpdate > 0 || !IsVisible() || IsIconic())
+		return FALSE;
+
 // 	int		w, h;
 // 	HBITMAP	hBmp;
 // 
@@ -2196,22 +2223,27 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 		nTargetAlpha = m_nTranslucencyAlpha;
 
 	DWORD		dwTimeCur = GetTickCount();
+	int			nAlphaNew;
 	if (dwTimeCur - m_dwTransFadeinBegTime > TIME_OUT_TRANS_FADEIN)
 	{
 		KillTimer(TIMER_ID_DYNAMIC_TRANS);
 		if (m_translucencyStatus == TS_ON_HOVER)
 			m_translucencyStatus = TS_NORMAL;
-		m_nTranslucencyAlphaDynamic = nTargetAlpha;
+		nAlphaNew = nTargetAlpha;
 	}
 	else
 	{
 		float		fRadio = ((float)(dwTimeCur - m_dwTransFadeinBegTime)) / TIME_OUT_TRANS_FADEIN;
-		m_nTranslucencyAlphaDynamic = m_nTransAlphaBeg + int((nTargetAlpha - m_nTransAlphaBeg) * fRadio);
+		nAlphaNew = m_nTransAlphaBeg + int((nTargetAlpha - m_nTransAlphaBeg) * fRadio);
 	}
-	ASSERT(m_nTranslucencyAlphaDynamic >= 0 && m_nTranslucencyAlphaDynamic <= 255);
+	if (m_nTranslucencyAlphaDynamic != nAlphaNew)
+	{
+		m_nTranslucencyAlphaDynamic = nAlphaNew;
+		ASSERT(m_nTranslucencyAlphaDynamic >= 0 && m_nTranslucencyAlphaDynamic <= 255);
 
-	RecreateBrush();
-	InvalidateRect();
+		RecreateBrush();
+		InvalidateRect();
+	}
 }
 
 #else
@@ -2542,10 +2574,6 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	if (hue != 0.0f)
 		OnAdjustHue(hue, saturation, luminance);
 
-	m_bCanUpdateWnd = true;
-
-	InvalidateRect();
-
 	return ERR_OK;
 }
 
@@ -2658,6 +2686,8 @@ void CSkinWnd::OnTimerAnimation()
 		return;
 	}
 
+	CAutoRedrawLock	redrawLock(this);
+
 	for (ListAnimationObj::iterator it = m_listAnimations.begin(); it != m_listAnimations.end();)
 	{
 		CSkinAnimationObj *p = *it;
@@ -2672,8 +2702,6 @@ void CSkinWnd::OnTimerAnimation()
 
 	if (m_listAnimations.empty())
 		KillTimer(TIMER_ID_ANIMATION);
-
-	InvalidateRect();
 }
 
 /*

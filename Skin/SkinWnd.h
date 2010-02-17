@@ -87,7 +87,7 @@ public:
 	virtual ~CSkinWnd();
 
 public:
-	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName);
+	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWnd);
 
 	virtual int OpenDefaultSkin();
 	virtual int OpenSkin(LPCTSTR szSkinWndName);
@@ -154,6 +154,9 @@ public:
 	virtual void InvalidateUIObject(CUIObject *pObj);
 
 	void RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucency = false);
+
+	void EnterInDrawUpdate();
+	void LeaveInDrawUpdate();
 
 	CSkinFactory *GetSkinFactory() { return m_pSkinFactory; }
 
@@ -360,6 +363,14 @@ protected:
 	void OnMouseActiveMsg();
 	void OnTimerMouseInactive();
 
+	class CAutoRedrawLock {
+	public:
+		CAutoRedrawLock(CSkinWnd *pSkinWnd) { pSkinWnd->EnterInDrawUpdate(); m_pSkinWnd = pSkinWnd; }
+		~CAutoRedrawLock() { m_pSkinWnd->LeaveInDrawUpdate(); }
+	protected:
+		CSkinWnd	*m_pSkinWnd;
+	};
+
 public:
 	//
 	// Public method for Hide UIObject, if mouse is inactive.
@@ -380,8 +391,8 @@ protected:
 
 	// flag to indicate whether the skin was opened.
 	bool			m_bSkinOpened;
-	bool			m_bCanUpdateWnd;
 	bool			m_bInEditorMode;	// Is in skin editor mode?
+	int				m_nInRedrawUpdate;
 
 	CSkinFactory	*m_pSkinFactory;
 
