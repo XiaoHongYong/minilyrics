@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Container ID="CID_C_UI" Name="UI" Rect="0,65,w,h-65-10">
+  <Animation ID="CID_AM_SHOW_UI_F_RIGHT" MoveFromRight="CID_UI_INFO,CID_NAME,CID_UI,CID_REG_INFO,CID_BUY_LINK"
+      MoveFromBottom="ID_OK,ID_CANCEL" ResizeWnd="440,280"/>
+  <Animation ID="CID_AM_HIDE_UI_2_RIGHT" MoveToRight="CID_UI_INFO,CID_NAME,CID_UI,CID_REG_INFO,CID_BUY_LINK"
+      MoveToBottom="ID_OK,ID_CANCEL"/>
+  <Container ID="CID_C_UI_LOCALIZE" Name="UI" Rect="0,0,w,h">
+    <NormalTabButton Rect="15,10,w-30,">
+      <button ID="CID_UI" Text="User Interface"/>
+      <button ID="CID_THEME" Text="Skins"/>
+      <button ID="CID_THEME2" Text="Thme"/>
+      <button ID="CID_THEME3" Text="Test"/>
+    </NormalTabButton>
+    <NormalCheckBox ID="CID_C_ON_TOP" Text="Always on top" Rect="15,55,w-30,"/>
+  </Container>
+</Container>

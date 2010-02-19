@@ -21,6 +21,13 @@
 #include "PreferPageAssociation.h"
 #endif
 
+
+
+CPreferenceDlg2::CPreferenceDlg2() : CMPSkinDialog(_T("Preferences.xml"))
+{
+}
+
+
 // Ñ¡Ïî´°¿Ú
 CPreferenceDlg			g_wndPreference;
 

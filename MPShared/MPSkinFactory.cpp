@@ -35,6 +35,7 @@
 #include "SkinFilterCtrl.h"
 #include "MPSkinInfoTextCtrlEx.h"
 #include "SkinTxtLink.h"
+#include "SkinTabButton.h"
 
 #ifdef _MPLAYER
 #include "SkinDroplistCtrl.h"
@@ -191,6 +192,8 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CMediaAlbumArtCtrl;
 	else if (_tcsicmp(szClassName, CSkinTxtLink::ClassName()) == 0)
 		pObj = new CSkinTxtLink;
+	else if (_tcsicmp(szClassName, CSkinTabButton::ClassName()) == 0)
+		pObj = new CSkinTabButton;
 	else
 		return NULL;
 

@@ -89,7 +89,7 @@ bool CSFImage::LoadFromSRM(CSkinFactory *pskinFactory, LPCTSTR szResName)
 void CSFImage::XScaleBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, int xExtendStart, int xExtendEnd, bool bTile, BlendPixMode bpm)
 {
 	assert(m_cx);
-	if (m_cx == 0)
+	if (m_cx <= 0)
 		return;
 
 	int		x = xDest;
@@ -132,7 +132,7 @@ void CSFImage::XScaleBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthD
 void CSFImage::XTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
 {
 	assert(m_cx);
-	if (m_cx == 0)
+	if (m_cx <= 0)
 		return;
 
 	int		x;
@@ -157,7 +157,7 @@ void CSFImage::XTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDe
 void CSFImage::XTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, int nImageX, int nImageY, int nImageCx, int nImageCy, BlendPixMode bpm)
 {
 	assert(nImageCx);
-	if (nImageCx == 0)
+	if (nImageCx <= 0)
 		return;
 
 	int		x;
@@ -182,7 +182,7 @@ void CSFImage::XTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDe
 void CSFImage::YTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
 {
 	assert(m_cy);
-	if (m_cy == 0)
+	if (m_cy <= 0)
 		return;
 
 	int		y;

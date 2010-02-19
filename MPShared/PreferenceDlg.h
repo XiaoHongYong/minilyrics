@@ -13,6 +13,16 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#include "MPSkinDialog.h"
+
+class CPreferenceDlg2 : public CMPSkinDialog
+{
+public:
+	CPreferenceDlg2();
+
+};
+
+
 #include "PreferencePageBase.h"
 
 class CPreferenceDlg : public CBaseDialog

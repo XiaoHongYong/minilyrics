@@ -29,6 +29,13 @@
           Height="28" XMargin="5" YMargin="4" UseSkinBg="true" ExtendPos="20,50"
           Image="s_txt_button.png" ImageSize="70,28"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
+    <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
+          Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeft="25" AlignText="AT_LEFT"
+          CanCheck="true"
+          Image="s_checkbox.png" ImageSize="20,20"
+          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40"
+          S1_Image="s_checkbox.png" S1_ImageSize="20,20"
+          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40"/>
     <NormalEdit Extends="EditCtrl" Height="20" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
           XMargin="12" YMargin="8" ExtendPos="20,50" ImageFrame="s_edit_box.png" ImageFrameSize="70,35"
           ImageFramePos="0,35" ImageFrameFocusPos="0,0"/>
@@ -37,6 +44,10 @@
           NowPlayTextColor="#FFFFFF" FontName="Verdana" FontHeight="14"
           HeaderHeight="17" LineColor="#808080" ImageSortedHeader="s_listctrl_sorted_header.png"
           ImageHeader="s_listctrl_header.png" ImageSortFlag="s_listctrl_sort_flag.png"/>
+    <NormalTabButton Extends="TabButton" Height="22" UseSkinBg="TRUE"
+          FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
+          Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
+          MarginX="0" MarginY="0" />
     <WndFrameCaption Extends="Text" ID="ID_CAPTION" Rect="30,4,w-60,20" Text="About MiniLyrics" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
     <CheckBox Image=""/>
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
