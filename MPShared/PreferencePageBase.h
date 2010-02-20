@@ -11,6 +11,8 @@
 
 #include "EventsDispatcher.h"
 
+#include "SkinPageHandler.h"
+
 enum PreferPageID
 {
 	PAGE_UNKNOWN,
@@ -38,6 +40,61 @@ enum PreferPageID
 
 	PAGE_ADVANCED,
 };
+
+class CPagePfBase : public CSkinPageHandler
+{
+public:
+	CPagePfBase(LPCTSTR szIdPage);
+
+	void OnCreate();
+
+	bool OnCustomCommand(int nId);
+
+	void AddOptBool(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, bool bDefValue, LPCTSTR szCtrlId);
+
+	void InitCheckButtons();
+
+protected:
+	int NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj);
+
+public:
+	struct OptBase
+	{
+		EventType	eventType;
+		tstring		strSection;
+		tstring		strSettingName;
+		tstring		strDefaultValue;
+		int			nDefaultValue;
+
+		void Set(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, LPCTSTR szDefValue)
+		{
+			eventType = evtType;
+			strSection = szSection;
+			strSettingName = szSettingName;
+			strDefaultValue = szDefValue;
+		}
+
+		void Set(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, int nDefValue)
+		{
+			eventType = evtType;
+			strSection = szSection;
+			strSettingName = szSettingName;
+			nDefaultValue = nDefValue;
+		}
+	};
+	struct OptBool : public OptBase
+	{
+		int			nCtrl;
+	};
+	typedef	list<OptBool>			VOptBool;
+
+protected:
+	VOptBool			m_vOptBool;
+	tstring				m_strPageId;
+
+};
+
+
 
 class CPreferencePageBase : public CBaseDialog  
 {

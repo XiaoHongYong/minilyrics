@@ -3,7 +3,7 @@
   <style>
     <WindowFrame Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="245"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
-         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828">
+         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableTransparentFeature="false">
       <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
       <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
       <Image Name="BottomBorder" Left="20" Top="h-20+10" Width="w-20-20" Height="20-10" Image="frame.png" ImageRect="20, 65, 35, 10" BltMode="tile" BlendPixMode="copy"/>
@@ -45,9 +45,11 @@
           HeaderHeight="17" LineColor="#808080" ImageSortedHeader="s_listctrl_sorted_header.png"
           ImageHeader="s_listctrl_header.png" ImageSortFlag="s_listctrl_sort_flag.png"/>
     <NormalTabButton Extends="TabButton" Height="22" UseSkinBg="TRUE"
-          FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
+          FontName="Verdana" FontHeight="15" TextColor="#000000"
           Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
           MarginX="0" MarginY="0" />
+    <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"
+          XBorder="0" YBorder="10" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"/>
     <WndFrameCaption Extends="Text" ID="ID_CAPTION" Rect="30,4,w-60,20" Text="About MiniLyrics" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
     <CheckBox Image=""/>
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />

@@ -147,6 +147,8 @@ public:
 	virtual int GetIDByName(LPCTSTR szId);
 	virtual int GetIDByNameEx(LPCTSTR szId, tstring &strToolTip);
 
+	int AllocCustomID();
+
 	tstring GetStringOfID(int nID);
 
 	virtual int OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));

@@ -3,6 +3,208 @@
 #include "PreferPageUI.h"
 #include "PreferenceDlg.h"
 
+
+//////////////////////////////////////////////////////////////////////////
+const int	_CMD_ID_LANGUANG_BEGIN	= 3000;
+
+class CPagePfUI : public CPagePfBase
+{
+public:
+	CPagePfUI() : CPagePfBase(GetPageID())
+	{
+	}
+
+	static LPCTSTR GetPageID() { return _T("CID_C_UI_LANGUAGE"); }
+
+	void OnCreate()
+	{
+		CPagePfBase::OnCreate();
+		AddOptBool(ET_NULL, SZ_SECT_UI, _T("topmost"), true, _T("CID_C_ON_TOP"));
+
+#ifdef _WIN32_DESKTOP
+		// Click though...
+		CStrPrintf str(_T("%d"), g_mpApp.GetSkinFactory()->GetClickThrough());
+		SetUIObjectProperty(_T("CID_C_CLICK_THROUGH"), _T("CurStatus"), str.c_str());
+#endif
+
+		InitCheckButtons();
+
+		UpdateLanguageInfo();
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		if (nId == GetIDByName(_T("CID_C_ON_TOP")))
+		{
+			bool	bValue = IsButtonChecked(nId);
+			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bValue);
+			g_mpApp.GetSkinFactory()->TopmostAll(bValue);
+		}
+#ifdef _WIN32_DESKTOP
+		else if (nId == GetIDByName(_T("CID_C_CLICK_THROUGH")))
+		{
+			g_mpApp.GetSkinFactory()->SetClickThrough(IsButtonChecked(nId));
+			g_mpApp.GetSkinFactory()->AllUpdateTransparent();
+		}
+#endif
+		else if (nId == GetIDByName(_T("CID_SEL_LANGUAGE")))
+		{
+			//
+			// 创建快捷菜单, 显示可以使用的语言包
+			//
+			int					nCmd;
+			CRect				rc;
+
+			m_menuLang.Destroy();
+
+			m_menuLang.CreatePopupMenu();
+
+			nCmd = _CMD_ID_LANGUANG_BEGIN;
+			m_vTransFiles.clear();
+
+			CLanguageTool::ListTransFiles(NULL, m_vTransFiles);
+
+			// search for full match
+			for (CLanguageTool::V_TRANSFILEINFO::iterator it = m_vTransFiles.begin(); 
+				it != m_vTransFiles.end(); it++)
+			{
+				CLanguageTool::TransFileInfo	&item = *it;
+
+				m_menuLang.AppendItem(nCmd, item.strLanguage.c_str());
+				nCmd++;
+			}
+
+			if (GetUIObjectRect(GetIDByName(_T("CID_SEL_LANGUAGE")), rc))
+				m_pSkinWnd->ClientToScreen(rc);
+
+			m_menuLang.TrackPopupMenu(rc.left, rc.top, m_pSkinWnd);
+		}
+		else
+			return CPagePfBase::OnCustomCommand(nId);
+
+		return true;
+	}
+
+	virtual bool OnCommand(int nId)
+	{
+		if (CPagePfBase::OnCommand(nId))
+			return true;
+
+		//
+		// 选择了一个语言包, 则立即切换到该语言
+		//
+		if (nId >= _CMD_ID_LANGUANG_BEGIN && 
+			nId < _CMD_ID_LANGUANG_BEGIN + m_vTransFiles.size())
+		{
+			TCHAR	szLanFileName[MAX_PATH] = _T("");
+
+			if (g_Profile.GetProfileString(_T("Language"), _T(""), szLanFileName, MAX_PATH))
+			{
+				if (m_vTransFiles[nId - _CMD_ID_LANGUANG_BEGIN].strFileName == szLanFileName)
+					return true;
+			}
+
+			g_Profile.WriteProfileString(_T("Language"), m_vTransFiles[nId - _CMD_ID_LANGUANG_BEGIN].strFileName.c_str());
+
+			g_mpApp.OnLanguageChanged();
+			g_wndPreference.OnLanguageChanged();
+
+			UpdateLanguageInfo();
+
+			return true;
+		}
+
+		return false;
+	}
+
+protected:
+	void UpdateLanguageInfo()
+	{
+		tstring		strLangFile;
+		tstring		strInfo;
+
+		if (CLanguageTool::GetCurrentLanguageFile(strLangFile))
+		{
+			CProfile	profile;
+
+			profile.Init(strLangFile.c_str());
+			profile.DoCache();
+
+			strInfo = TOLOCAL(_T("Translator:"));
+			strInfo += _T(" ");
+			strInfo += profile.GetProfileString(_T("Info"), _T("Translator"), _T(""));
+			strInfo += _T("\r\n");
+			strInfo += TOLOCAL(_T("Contact:"));
+			strInfo += _T(" ");
+			strInfo += profile.GetProfileString(_T("Info"), _T("Contact"), _T(""));
+		}
+
+		SetUIObjectText(_T("CID_LANGUAGE_INFO"), strInfo.c_str());
+	}
+
+protected:
+	CMLMenu			m_menuLang;
+
+	// 每一个菜单项对应的文件
+	CLanguageTool::V_TRANSFILEINFO	m_vTransFiles;
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class CPagePfSkin : public CPagePfBase
+{
+public:
+	CPagePfSkin() : CPagePfBase(GetPageID())
+	{
+	}
+
+	static LPCTSTR GetPageID() { return _T("CID_C_UI_SKIN"); }
+
+	void OnCreate()
+	{
+		CPagePfBase::OnCreate();
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		return CPagePfBase::OnCustomCommand(nId);
+	}
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+CPagePfUIRoot::CPagePfUIRoot() : CPagePfBase(GetPageID())
+{
+	AddPage(new CPagePfUI());
+	AddPage(new CPagePfSkin());
+}
+
+LPCTSTR CPagePfUIRoot::GetPageID()
+{
+	return _T("CID_C_UIROOT");
+}
+
+void CPagePfUIRoot::OnCreate()
+{
+	CPagePfBase::OnCreate();
+
+	CheckToolbarButton(_T("CID_TOOLBAR_UI"), _T("CMD_UI"), true);
+}
+
+bool CPagePfUIRoot::OnCustomCommand(int nId)
+{
+	if (nId == GetIDByName(_T("CMD_UI")))
+		SwitchToPage(CPagePfUI::GetPageID());
+	else if (nId == GetIDByName(_T("CMD_SKINS")))
+		SwitchToPage(CPagePfSkin::GetPageID());
+	else
+		return CPagePfBase::OnCustomCommand(nId);
+
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 CPPageUI::CPPageUI() : CPreferencePageBase(IDD_PAGE_UI_ROOT, _T("User Interface"))
@@ -40,8 +242,6 @@ void CPPageUI::OnDestroy()
 
 	CPreferencePageBase::OnDestroy();
 }
-
-const int	_CMD_ID_LANGUANG_BEGIN	= 3000;
 
 void CPPageUI::OnCommand(UINT uID, UINT nNotifyCode)
 {

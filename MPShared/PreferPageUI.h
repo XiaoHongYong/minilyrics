@@ -6,6 +6,21 @@
 #include "PreferencePageBase.h"
 
 
+class CPagePfUIRoot : public CPagePfBase
+{
+public:
+	CPagePfUIRoot();
+
+	static LPCTSTR GetPageID();
+
+	void OnCreate();
+
+	bool OnCustomCommand(int nId);
+
+};
+
+
+
 //
 // UI Root
 //

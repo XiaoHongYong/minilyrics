@@ -6,7 +6,108 @@
 #include "PreferencePageBase.h"
 
 //////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+
+
+CPagePfBase::CPagePfBase(LPCTSTR szIdPage) :
+	CSkinPageHandler(szIdPage, NULL, NULL, 
+				 NULL, NULL)
+{
+	m_strPageId = szIdPage;
+}
+
+void CPagePfBase::OnCreate()
+{
+	CSkinPageHandler::OnCreate();
+
+	m_nAnimationShowFLeft = NewAnimationObj(_T("MoveFromLeft"), m_strPageId.c_str());
+	m_nAnimationShowFRight = NewAnimationObj(_T("MoveFromRight"), m_strPageId.c_str());
+	m_nAnimationHide2Left = NewAnimationObj(_T("MoveToLeft"), m_strPageId.c_str());
+	m_nAnimationHide2Right = NewAnimationObj(_T("MoveToRight"), m_strPageId.c_str());
+}
+
+bool CPagePfBase::OnCustomCommand(int nId)
+{
+	if (CSkinPageHandler::OnCustomCommand(nId))
+		return true;
+
+	{
+		// Bool
+		VOptBool::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptBool.end();
+		for (it = m_vOptBool.begin(); it != itEnd; ++it)
+		{
+			OptBool		&opt = *it;
+			if (opt.nCtrl == nId)
+			{
+				bool	bValue;
+
+				CSkinNStatusButton *pButton = (CSkinNStatusButton*)GetUIObjectById(opt.nCtrl, CSkinNStatusButton::ClassName());
+				if (pButton)
+				{
+					bValue = Tobool(pButton->GetStatus());
+					CMPlayerSettings::SetSettings(opt.eventType, opt.strSection.c_str(),
+						opt.strSettingName.c_str(), bValue, opt.eventType != ET_INVALID);
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+void CPagePfBase::AddOptBool(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, bool bDefValue, LPCTSTR szCtrlId)
+{
+	OptBool	opt;
+	opt.eventType = evtType;
+	opt.strSection = szSection;
+	opt.strSettingName = szSettingName;
+	opt.nDefaultValue = bDefValue;
+	opt.nCtrl = GetIDByName(szCtrlId);
+
+	m_vOptBool.push_back(opt);
+}
+
+void CPagePfBase::InitCheckButtons()
+{
+
+	{
+		//
+		// Init Check Bool Buttons
+		//
+		VOptBool::iterator	it, itEnd;
+		itEnd = m_vOptBool.end();
+		for (it = m_vOptBool.begin(); it != itEnd; ++it)
+		{
+			OptBool		&opt = *it;
+			bool		bValue;
+
+			bValue = g_Profile.GetProfileBool(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.nDefaultValue);
+			CSkinNStatusButton *pButton = (CSkinNStatusButton*)GetUIObjectById(opt.nCtrl, CSkinNStatusButton::ClassName());
+			if (pButton)
+				pButton->SetStatus(bValue);
+			else
+				ERRLOG1(_T("Control: %s is NOT defined in skin."), m_pSkinWnd->GetSkinFactory()->GetStringOfID(opt.nCtrl));
+		}
+	}
+}
+
+int CPagePfBase::NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj)
+{
+	CSkinFactory	*pSkinFactory = m_pSkinWnd->GetSkinFactory();
+	CUIObject *pObj = pSkinFactory->CreateUIObject(m_pSkinWnd, CSkinAnimationObj::ClassName());
+	if (!pObj)
+		return SKIN_UIOBJ_ID_UNDEFINE;
+
+	pObj->m_nId = pSkinFactory->AllocCustomID();
+	pObj->SetProperty(szAnimationName, szTargetUIObj);
+
+	m_pSkinWnd->GetRootContainer()->AddUIObject(pObj);
+
+	return pObj->m_nId;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CPreferencePageBase::CPreferencePageBase(UINT nIDTemplate, LPCTSTR szCaption) : CBaseDialog(nIDTemplate), m_strCaption(szCaption)

@@ -11,6 +11,7 @@
 #include "SkinToggleCtrlContainer.h"
 #include "SkinMenuBar.h"
 #include "SkinAnimationObj.h"
+#include "SkinFrameCtrl.h"
 
 #define _SZ_SKINWND				_T("skinwnd")
 #define _SZ_MENUS				_T("Menus")
@@ -592,6 +593,12 @@ int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 	m_nCustomCmdIDNext++;
 
 	m_mapCmdStrId[szId] = m_nCustomCmdIDNext;
+	return m_nCustomCmdIDNext;
+}
+
+int CSkinFactory::AllocCustomID()
+{
+	m_nCustomCmdIDNext++;
 	return m_nCustomCmdIDNext;
 }
 
@@ -1244,14 +1251,16 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinWndResizeObj;
 	else if (_tcsicmp(szClassName, CSkinSquare::ClassName()) == 0)
 		pObj = new CSkinSquare;
-	else if (_tcsicmp(szClassName, CSkinFadeArea::ClassName()) == 0)
+	else if (IsPropertyName(szClassName, CSkinFadeArea::ClassName()))
 		pObj = new CSkinFadeArea;
-	else if (_tcsicmp(szClassName, CSkinToggleCtrlContainer::ClassName()) == 0)
+	else if (IsPropertyName(szClassName, CSkinToggleCtrlContainer::ClassName()))
 		pObj = new CSkinToggleCtrlContainer;
-	else if (_tcsicmp(szClassName, CSkinClientArea::ClassName()) == 0)
+	else if (IsPropertyName(szClassName, CSkinClientArea::ClassName()))
 		pObj = new CSkinClientArea;
-	else if (_tcsicmp(szClassName, CSkinAnimationObj::ClassName()) == 0)
+	else if (IsPropertyName(szClassName, CSkinAnimationObj::ClassName()))
 		pObj = new CSkinAnimationObj;
+	else if (IsPropertyName(szClassName, CSkinFrameCtrl::ClassName()))
+		pObj = new CSkinFrameCtrl;
 
 	if (pObj)
 	{

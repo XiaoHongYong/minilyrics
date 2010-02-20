@@ -1357,6 +1357,8 @@ void CRawBmpFont::SplitToMultiLine(LPRECT lpRect, LPCTSTR szText, int nLen, UINT
 		if (IsWordSplitChar(glyph->ch))
 			nLastWordSplitPos = strIterator.GetPos();
 
+		if (glyph->ch == '\r' || glyph->ch == '\n')
+			w = nWidthMax + 1;
 		w += glyph->nWidth;
 		if (w > nWidthMax)
 		{
@@ -1370,7 +1372,7 @@ void CRawBmpFont::SplitToMultiLine(LPRECT lpRect, LPCTSTR szText, int nLen, UINT
 			str.append(szText + nBegin, szText + nEnd);
 			vLines.push_back(str);
 
-			while (szText[nEnd] == ' ')
+			while (szText[nEnd] == ' ' || szText[nEnd] == '\r' || szText[nEnd] == '\n')
 				nEnd++;
 
 			w = 0;

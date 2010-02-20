@@ -204,6 +204,31 @@ void CSFImage::YTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDe
 	}
 }
 
+void CSFImage::YTileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, int nImageX, int nImageY, int nImageCx, int nImageCy, BlendPixMode bpm)
+{
+	assert(nImageCy);
+	if (nImageCy <= 0)
+		return;
+
+	int		y;
+
+	for (y = yDest; y + nImageCy < yDest + nHeightDest; y += nImageCy)
+	{
+		CRawImage::Blt(pGraphics, 
+			xDest, y,
+			nImageCx, nImageCy,
+			nImageX, nImageY, bpm);
+	}
+
+	if (y < yDest + nHeightDest)
+	{
+		CRawImage::Blt(pGraphics, 
+			xDest, y,
+			nImageCx, yDest + nHeightDest - y,
+			nImageX, nImageY, bpm);
+	}
+}
+
 void CSFImage::TileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDest, int nHeightDest, BlendPixMode bpm)
 {
 	CDrawImageFun	fun;

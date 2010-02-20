@@ -20,6 +20,10 @@ class CPreferenceDlg2 : public CMPSkinDialog
 public:
 	CPreferenceDlg2();
 
+	virtual void OnSkinLoaded();
+
+	virtual bool OnCustomCommand(int nId);
+
 };
 
 

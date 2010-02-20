@@ -16,6 +16,7 @@
 #include "PreferPageLyrOutput.h"
 #include "PreferPageHotkey.h"
 #include "PreferPageAdvanced.h"
+#include "SkinToolBar.h"
 
 #ifdef _MPLAYER
 #include "PreferPageAssociation.h"
@@ -25,6 +26,34 @@
 
 CPreferenceDlg2::CPreferenceDlg2() : CMPSkinDialog(_T("Preferences.xml"))
 {
+	m_pageHandler.AddPage(new CPagePfUIRoot());
+}
+
+void CPreferenceDlg2::OnSkinLoaded()
+{
+	CMPSkinDialog::OnSkinLoaded();
+
+	CSkinToolbar*pToolbar = (CSkinToolbar *)GetUIObjectById(GetIDByName(_T("CID_TB_PREFERENCE")),
+		CSkinToolbar::ClassName());
+	if (pToolbar)
+	{
+		//if (m_pageHandler.GetActivePage())
+		pToolbar->SetCheck(GetIDByName(_T("CMD_ROOT_UI")), true, false);
+	}
+}
+
+bool CPreferenceDlg2::OnCustomCommand(int nId)
+{
+	if (CMPSkinDialog::OnCustomCommand(nId))
+		return true;
+
+	if (nId == GetIDByName(_T("CMD_ROOT_UI")))
+	{
+		m_pageHandler.SwitchToPage(CPagePfUIRoot::GetPageID());
+		return true;
+	}
+
+	return false;
 }
 
 

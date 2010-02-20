@@ -709,6 +709,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinFrameCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinImage.cpp"
 				>
 			</File>
@@ -1235,6 +1239,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinFontProperty.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinFrameCtrl.h"
 				>
 			</File>
 			<File
