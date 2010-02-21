@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Container ID="CID_C_THEME_ROOT" Name="Theme" Visible="false" Rect="0,65,w,h-65-10">
+  <NormalFrame Rect="10,10,w-20,h-21-10"/>
+  <NormalTabButton ID="CID_TOOLBAR_THEME"  Rect="30,10,w-30,">
+    <button ID="CMD_THEME_THEME" Text="Theme"/>
+    <button ID="CMD_THEME_LYR_DISPLAY" Text="Lyrics Display"/>
+    <button ID="CMD_THEME_LYR_BG_PIC" Text="Lyrics Background Picture"/>
+  </NormalTabButton>
+  <Container ID="CID_C_THEME" Name="Theme" Rect="10,30,w-20,h-30-20">
+    <NormalText Rect="10,10,w-20,80" Text="Preset themes:"/>
+    <NormalListCtrl ID="CID_THME_LIST" Rect="10,35,w-25,180"/>
+    <NormalText Rect="10,230,120," Text="Theme name:"/>
+    <NormalEdit ID="CID_E_THEME" Text="" Rect="130,230,w-130-10,"/>
+    <NormalTextBt ID="CID_LOAD_THEME" Text="&amp;Load Theme" Rect="w/2-110-110/2-30,260,110,"/>
+    <NormalTextBt ID="CID_SAVE_THEME" Text="&amp;Save Theme" Rect="w/2-110/2,260,110,"/>
+    <NormalTextBt ID="CID_SAVE_THEME" Text="&amp;Delete Theme" Rect="w/2+110/2+30,260,110,"/>
+  </Container>
+  <Container ID="CID_C_THEME_DISPLAY_STYLE" Name="Lyrics Display" Visible="false" Rect="0,30,w,h-30-20">
+    <NormalText Rect="25,10,w-45,80" Text="Installed skins:"/>
+    <NormalText Rect="25,230,w-45,80" Text="Current skin information:"/>
+    <NormalText ID="CID_SKIN_INFO" Rect="25,250,w-45,h-250-10" FontHeight="25" AlignText="AT_CENTER"/>
+  </Container>
+</Container>

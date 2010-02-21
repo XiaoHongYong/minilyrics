@@ -5,6 +5,67 @@
 #include "DlgLyrBlendingOpt.h"
 #include "ThemesFile.h"
 
+
+class CPagePfTheme : public CPagePfBase
+{
+public:
+	CPagePfTheme() : CPagePfBase(GetPageID())
+	{
+	}
+
+	static LPCTSTR GetPageID() { return _T("CID_C_THEME"); }
+
+	void OnCreate()
+	{
+		CPagePfBase::OnCreate();
+	}
+
+	void OnDestroy()
+	{
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		return CPagePfBase::OnCustomCommand(nId);
+	}
+
+protected:
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+CPagePfThemeRoot::CPagePfThemeRoot() : CPagePfBase(GetPageID())
+{
+	AddPage(new CPagePfTheme());
+}
+
+LPCTSTR CPagePfThemeRoot::GetPageID()
+{
+	return _T("CID_C_THEME_ROOT");
+}
+
+void CPagePfThemeRoot::OnCreate()
+{
+	CPagePfBase::OnCreate();
+
+	CheckToolbarButton(_T("CID_TOOLBAR_THEME"), _T("CMD_THEME_THEME"), true);
+}
+
+bool CPagePfThemeRoot::OnCustomCommand(int nId)
+{
+	if (nId == GetIDByName(_T("CMD_THEME_THEME")))
+		SwitchToPage(CPagePfTheme::GetPageID());
+// 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_DISPLAY")))
+// 		SwitchToPage(CPagePfSkin::GetPageID());
+// 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_BG_PIC")))
+// 		SwitchToPage(CPagePfSkin::GetPageID());
+	else
+		return CPagePfBase::OnCustomCommand(nId);
+
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////////
 //
 class CDlgThemeItems : public CBaseDialog  

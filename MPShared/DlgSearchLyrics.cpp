@@ -122,7 +122,7 @@ public:
 	{
 		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Rename lyrics file")));
 
-		SetUIObjectText(_T("CID_E_FILENAME"), m_pParent->GetProperty(_T("FileTitle")).c_str());
+		SetUIObjectText(_T("CID_E_FILENAME"), m_pParent->GetProperty(_T("FileTitle")).c_str(), false);
 		m_pParent->SetProperty(_T("RenameDlgResult"), IDCANCEL);
 	}
 
@@ -284,8 +284,8 @@ public:
 		m_pLyricsList = (CSkinListCtrl *)m_pSkinWnd->GetUIObjectById(CID_L_LYRICS, CSkinListCtrl::ClassName());
 		ASSERT(m_pLyricsList);
 
-		SetUIObjectText(CID_E_ARTIST, m_strArtist.c_str());
-		SetUIObjectText(CID_E_TITLE, m_strTitle.c_str());
+		SetUIObjectText(CID_E_ARTIST, m_strArtist.c_str(), false);
+		SetUIObjectText(CID_E_TITLE, m_strTitle.c_str(), false);
 
 		LPCTSTR		szHead[] = {_T("Artist"), _T("Title"), _T("Rating"), _T("Downloads"), _T("From"), _T("Album"), _T("File Name"), NULL};
 		int			arrWidth[] = {130,        160,         90,           68,              150,       150,         150,	            0};

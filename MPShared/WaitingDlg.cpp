@@ -59,7 +59,7 @@ LPCTSTR CPageWaitMessage::GetPageID()
 void CPageWaitMessage::StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase *pWorkObj)
 {
 	m_pSkinWnd->SetCaptionText(szCaption);
-	m_pSkinWnd->SetUIObjectText(_T("CID_WAIT_INFO"), szInfo);
+	m_pSkinWnd->SetUIObjectText(_T("CID_WAIT_INFO"), szInfo, true);
 
 	m_pWorkObj = pWorkObj;
 	ASSERT(pWorkObj);

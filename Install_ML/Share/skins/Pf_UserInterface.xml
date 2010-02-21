@@ -16,9 +16,9 @@
     <NormalText ID="CID_LANGUAGE_INFO" Rect="20,180,w-40,h-150-10" FontHeight="25" AlignText="AT_CENTER"/>
   </Container>
   <Container ID="CID_C_UI_SKIN" Name="Skins" Visible="false" Rect="0,30,w,h-30-20">
-    <NormalText Rect="25,10,w-20,80" Text="Installed skins:"/>
-    <NormalListCtrl ID="CID_SKIN_LIST" Rect="25,40,w-20,280"/>
-    <NormalText Rect="25,320,w-20,80" Text="Current skin information:"/>
-    <NormalText ID="CID_SKIN_INFO" Rect="25,350,w-40,h-350-10" FontHeight="25" AlignText="AT_CENTER"/>
+    <NormalText Rect="25,10,w-45,80" Text="Installed skins:"/>
+    <NormalListCtrl ID="CID_SKIN_LIST" Rect="25,40,w-45,180"/>
+    <NormalText Rect="25,230,w-45,80" Text="Current skin information:"/>
+    <NormalText ID="CID_SKIN_INFO" Rect="25,250,w-45,h-250-10" FontHeight="25" AlignText="AT_CENTER"/>
   </Container>
 </Container>

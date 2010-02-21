@@ -2,10 +2,13 @@
 #include "MPlayerApp.h"
 #include "PreferPageUI.h"
 #include "PreferenceDlg.h"
+#include "SkinListCtrl.h"
 
 
 //////////////////////////////////////////////////////////////////////////
 const int	_CMD_ID_LANGUANG_BEGIN	= 3000;
+#define TIMER_ID_SKIN_SEL_CHANGED		1
+
 
 class CPagePfUI : public CPagePfBase
 {
@@ -139,7 +142,7 @@ protected:
 			strInfo += profile.GetProfileString(_T("Info"), _T("Contact"), _T(""));
 		}
 
-		SetUIObjectText(_T("CID_LANGUAGE_INFO"), strInfo.c_str());
+		SetUIObjectText(_T("CID_LANGUAGE_INFO"), strInfo.c_str(), true);
 	}
 
 protected:
@@ -152,11 +155,13 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-class CPagePfSkin : public CPagePfBase
+class CPagePfSkin : public CPagePfBase, public IUIObjNotifyHandler
 {
 public:
 	CPagePfSkin() : CPagePfBase(GetPageID())
 	{
+		m_pSkinList = NULL;
+		m_bIgnoreSkinListNotify = false;
 	}
 
 	static LPCTSTR GetPageID() { return _T("CID_C_UI_SKIN"); }
@@ -164,12 +169,152 @@ public:
 	void OnCreate()
 	{
 		CPagePfBase::OnCreate();
+
+		m_bIgnoreSkinListNotify = true;
+
+		m_nIDSkinList = GetIDByName(_T("CID_SKIN_LIST"));
+		m_pSkinWnd->RegisterUIObjNotifyHandler(m_nIDSkinList, this);
+		m_pSkinList = (CSkinListCtrl *)GetUIObjectById(m_nIDSkinList, CSkinListCtrl::ClassName());
+		if (m_pSkinList)
+			m_pSkinList->InsertColumn(_T("Skins"), 200);
+
+		m_bIgnoreSkinListNotify = false;
+
+		UpdateSkinList();
+	}
+
+	void OnDestroy()
+	{
+		m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
 	}
 
 	bool OnCustomCommand(int nId)
 	{
 		return CPagePfBase::OnCustomCommand(nId);
 	}
+
+	bool OnTimer(UINT nTimerId)
+	{
+		if (nTimerId != TIMER_ID_SKIN_SEL_CHANGED)
+			return false;
+
+		m_pSkinWnd->KillTimer(TIMER_ID_SKIN_SEL_CHANGED);
+
+		if (!m_pSkinList)
+			return true;
+
+		int nSel = m_pSkinList->GetNextSelectedItem();
+		if (nSel == -1)
+			return true;
+
+		tstring		strSkinName;
+		m_pSkinList->GetItemText(nSel, 0, strSkinName);
+
+#ifndef _MPLAYER
+		if (_tcsicmp(strSkinName.c_str(), m_strEmbeddedSkinName.c_str()) == 0)
+		{
+			// 嵌入到player 中的skin
+			g_mpApp.SwitchToEmbeddedSkinMode(true);
+		}
+		else
+#endif
+		{
+#ifndef _MPLAYER
+			g_mpApp.EndEmbeddedSkin();
+#endif
+			g_mpApp.ChangeSkin(strSkinName.c_str(), true);
+		}
+		g_wndPreference.ActivateWindow();
+
+		UpdateSkinComment(strSkinName.c_str());
+
+		return true;
+	}
+
+	virtual void OnUIObjNotify(IUIObjNotify *pNotify)
+	{
+		if (pNotify->nID == m_nIDSkinList && pNotify->IsKindOf(CSkinListCtrl::ClassName()))
+		{
+			if (m_bIgnoreSkinListNotify)
+				return;
+
+			CSkinListCtrlEventNotify	*pListCtrlNotify = (CSkinListCtrlEventNotify*)pNotify;
+			if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_SEL_CHANGED)
+			{
+				m_pSkinWnd->KillTimer(TIMER_ID_SKIN_SEL_CHANGED);
+				// 设置延时时间为300ms，即在300ms后，用户的选择才会生效
+				m_pSkinWnd->SetTimer(TIMER_ID_SKIN_SEL_CHANGED, 300);
+			}
+		}
+	}
+
+	void UpdateSkinList()
+	{
+		if (!m_pSkinList)
+			return;
+
+		m_bIgnoreSkinListNotify = true;
+
+		m_pSkinList->DeleteAllItems(false);
+
+		TCHAR		szSkinDef[MAX_PATH];
+
+		// 取得上次加载的Skin
+		g_Profile.GetProfileString(_T("DefaultSkin"), _T(""), szSkinDef, CountOf(szSkinDef));
+
+#if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
+		m_strEmbeddedSkinName = _T("");
+		if (g_mpApp.IsSupportEmbedded())
+		{
+			TCHAR		szName[256];
+
+			g_Player.GetEmbeddedSkinName(szName, CountOf(szName));
+			m_strEmbeddedSkinName = tstring(_T("<< ")) + szName + _T(" >>");
+			m_pSkinList->InsertItem(m_pSkinList->GetItemCount(), m_strEmbeddedSkinName.c_str());
+
+			if (g_mpApp.IsEmbeddedMode())
+				m_pSkinList->SetItemSelectionState(0, true);
+		}
+#endif
+
+		// 查找所有的Skin，并且添加到菜单中
+		vector<tstring>		vSkins;
+		if (g_mpApp.GetSkinFactory()->EnumAllSkins(vSkins))
+		{
+			for (UINT i = 0; i < vSkins.size(); i++)
+			{
+				m_pSkinList->InsertItem(m_pSkinList->GetItemCount(), vSkins[i].c_str());
+				if (_tcscmp(szSkinDef, vSkins[i].c_str()) == 0)
+					m_pSkinList->SetItemSelectionState(m_pSkinList->GetItemCount() - 1, true);
+			}
+			UpdateSkinComment(szSkinDef);
+		}
+
+		m_bIgnoreSkinListNotify = false;
+	}
+
+	BOOL UpdateSkinComment(LPCTSTR szSkin)
+	{
+		TCHAR		szReadme[MAX_PATH] = _T("");
+		tstringex	str;
+
+		// 设置Skin的说明
+		if (g_mpApp.GetSkinFactory()->GetResourceMgr()->GetResourcePathName(szReadme, CountOf(szReadme), _T("Readme.txt"))
+			&& OpenFileToTString(szReadme, str))
+		{
+			SetUIObjectText(_T("CID_SKIN_INFO"), str.c_str(), true);
+			return TRUE;
+		}
+
+		SetUIObjectText(_T("CID_SKIN_INFO"), _T(""), true);
+		return FALSE;
+	}
+
+protected:
+	int				m_nIDSkinList;
+	CSkinListCtrl	*m_pSkinList;
+	tstring			m_strEmbeddedSkinName;
+	bool			m_bIgnoreSkinListNotify;
 
 };
 
@@ -349,8 +494,6 @@ void CPPageUI::UpdateLanguageInfo()
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-#define TIMER_ID_SKIN_SEL_CHANGED		1
 
 CPreferPageSkin::CPreferPageSkin() : CPreferencePageBase(IDD_PAGE_SKIN, _T("Skins"))
 {

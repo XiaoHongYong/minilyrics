@@ -133,9 +133,9 @@ public:
 	tstring GetUIObjectText(LPCTSTR szId)
 		{ return GetUIObjectText(m_pSkinFactory->GetIDByName(szId)); }
 
-	void SetUIObjectText(int nId, LPCTSTR szText);
-	void SetUIObjectText(LPCTSTR szId, LPCTSTR szText)
-		{ SetUIObjectText(m_pSkinFactory->GetIDByName(szId), szText); }
+	void SetUIObjectText(int nId, LPCTSTR szText, bool bRedraw = true);
+	void SetUIObjectText(LPCTSTR szId, LPCTSTR szText, bool bRedraw = true)
+		{ SetUIObjectText(m_pSkinFactory->GetIDByName(szId), szText, bRedraw); }
 
 	// register special messages
 	void SetCaptureMouse(CUIObject *pUIObj);

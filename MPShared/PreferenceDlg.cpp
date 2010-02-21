@@ -27,6 +27,7 @@
 CPreferenceDlg2::CPreferenceDlg2() : CMPSkinDialog(_T("Preferences.xml"))
 {
 	m_pageHandler.AddPage(new CPagePfUIRoot());
+	m_pageHandler.AddPage(new CPagePfThemeRoot());
 }
 
 void CPreferenceDlg2::OnSkinLoaded()
@@ -50,6 +51,11 @@ bool CPreferenceDlg2::OnCustomCommand(int nId)
 	if (nId == GetIDByName(_T("CMD_ROOT_UI")))
 	{
 		m_pageHandler.SwitchToPage(CPagePfUIRoot::GetPageID());
+		return true;
+	}
+	else if (nId == GetIDByName(_T("CMD_ROOT_THEME")))
+	{
+		m_pageHandler.SwitchToPage(CPagePfThemeRoot::GetPageID());
 		return true;
 	}
 

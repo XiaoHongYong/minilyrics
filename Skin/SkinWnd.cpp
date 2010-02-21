@@ -1720,13 +1720,15 @@ tstring CSkinWnd::GetUIObjectText(int nId)
 	return pObj->GetText();
 }
 
-void CSkinWnd::SetUIObjectText(int nId, LPCTSTR szText)
+void CSkinWnd::SetUIObjectText(int nId, LPCTSTR szText, bool bRedraw)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
 	if (!pObj)
 		return;
 
 	pObj->SetProperty(SZ_PN_TEXT, szText);
+	if (bRedraw)
+		pObj->Invalidate();
 }
 
 CUIObject *CSkinWnd::RemoveUIObjectById(int nId)

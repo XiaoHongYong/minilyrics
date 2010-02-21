@@ -5,6 +5,20 @@
 
 #include "PreferencePageBase.h"
 
+class CPagePfThemeRoot : public CPagePfBase
+{
+public:
+	CPagePfThemeRoot();
+
+	static LPCTSTR GetPageID();
+
+	void OnCreate();
+
+	bool OnCustomCommand(int nId);
+
+};
+
+
 
 //
 // Themes root

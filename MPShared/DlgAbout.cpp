@@ -159,8 +159,8 @@ public:
 		else
 			g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
 
-		m_pSkinWnd->SetUIObjectText(_T("CID_E_NAME"), szName);
-		m_pSkinWnd->SetUIObjectText(_T("CID_E_CODE"), szRegCode);
+		m_pSkinWnd->SetUIObjectText(_T("CID_E_NAME"), szName, false);
+		m_pSkinWnd->SetUIObjectText(_T("CID_E_CODE"), szRegCode, false);
 
 		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Registration")));
 	}
