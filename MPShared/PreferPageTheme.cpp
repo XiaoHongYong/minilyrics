@@ -26,9 +26,32 @@ public:
 	{
 	}
 
+	void OnOK()
+	{
+		m_pParent->SetProperty(_T("ThemeItemsActionResult"), IDOK);
+		m_pParent->SwitchToLastPage();
+	}
+
+	void OnCancel()
+	{
+		m_pParent->SetProperty(_T("ThemeItemsActionResult"), IDCANCEL);
+		m_pParent->SwitchToLastPage();
+	}
+
 	void OnShow()
 	{
-
+		if (m_pParent->GetPropertyInt(_T("ThemeItemsLoadAction")))
+		{
+			// Load theme
+			SetUIObjectText(_T("CID_THEME_ITEMS_INFO"), 
+				_T("Please choose the theme items to load:"), false);
+		}
+		else
+		{
+			// Save theme
+			SetUIObjectText(_T("CID_THEME_ITEMS_INFO"), 
+				_T("Please choose the theme items to save:"), false);
+		}
 	}
 
 	bool OnCustomCommand(int nId)
@@ -71,7 +94,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-class CPagePfTheme : public CPagePfBase
+class CPagePfTheme : public CPagePfBase, public IUIObjNotifyHandler
 {
 public:
 	CPagePfTheme() : CPagePfBase(GetPageID())
@@ -80,11 +103,30 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_THEME"); }
 
+	virtual void OnUIObjNotify(IUIObjNotify *pNotify)
+	{
+		if (pNotify->nID == m_nThemeListID && pNotify->IsKindOf(CSkinListCtrl::ClassName()))
+		{
+			CSkinListCtrlEventNotify	*pListCtrlNotify = (CSkinListCtrlEventNotify*)pNotify;
+			if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_SEL_CHANGED)
+			{
+				tstring	strTheme;
+				int nSel = m_pThemeList->GetNextSelectedItem();
+				if (nSel != -1)
+					m_pThemeList->GetItemText(nSel, 0, strTheme);
+				SetUIObjectText(_T("CID_E_THEMENAME"), strTheme.c_str(), true);
+			}
+		}
+	}
+
 	void OnCreate()
 	{
 		CPagePfBase::OnCreate();
 
-		m_pThemeList = (CSkinListCtrl *)GetUIObjectById(_T("CID_THME_LIST"), CSkinListCtrl::ClassName());
+		m_nThemeListID = GetIDByName(_T("CID_THME_LIST"));
+		m_pSkinWnd->RegisterUIObjNotifyHandler(m_nThemeListID, this);
+
+		m_pThemeList = (CSkinListCtrl *)GetUIObjectById(m_nThemeListID, CSkinListCtrl::ClassName());
 		ASSERT(m_pThemeList);
 
 		if (m_pThemeList)
@@ -93,21 +135,55 @@ public:
 		UpdateThemesList();
 	}
 
+	void OnShow()
+	{
+		if (!m_pThemeList)
+			return;
+
+// 		if (m_pParent->GetPropertyInt(_T("ThemeItemsActionResult")) == IDOK)
+// 		{
+// 			m_pParent->SetProperty(_T("ThemeItemsActionResult"), IDCANCEL);
+// 
+// 			if (m_pParent->GetPropertyInt(_T("ThemeItemsLoadAction")))
+// 			{
+// 				LoadTheme();
+// 			}
+// 			else
+// 			{
+// 				SaveTheme();
+// 			}
+// 		}
+	}
+
 	void OnDestroy()
 	{
+		m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
 	}
 
 	bool OnCustomCommand(int nId)
 	{
 		if (nId == GetIDByName(_T("CID_LOAD_THEME")))
 		{
-			m_pParent->SwitchToPage(CPagePfThemeItems::GetPageID());
+// 			m_pParent->SetProperty(_T("ThemeItemsLoadAction"), true);
+// 			m_pParent->SwitchToPage(CPagePfThemeItems::GetPageID());
+			LoadTheme();
 		}
 		else if (nId == GetIDByName(_T("CID_SAVE_THEME")))
 		{
+			SaveTheme();
+// 			tstring strThemeName = GetUIObjectText(_T("CID_E_THEMENAME"));
+// 			if (strThemeName.empty())
+// 			{
+// 				m_pSkinWnd->MessageOut(TOLOCAL(_T("Please enter the theme name.")));
+// 				return true;
+// 			}
+// 
+// 			m_pParent->SetProperty(_T("ThemeItemsLoadAction"), false);
+// 			m_pParent->SwitchToPage(CPagePfThemeItems::GetPageID());
 		}
 		else if (nId == GetIDByName(_T("CID_DELETE_THEME")))
 		{
+			DeleteTheme();
 		}
 		else
 			return CPagePfBase::OnCustomCommand(nId);
@@ -116,6 +192,73 @@ public:
 	}
 
 protected:
+	void LoadTheme()
+	{
+		// Load theme
+		int				nSel;
+
+		nSel = m_pThemeList->GetNextSelectedItem(-1);
+		if (nSel == -1)
+		{
+			m_pSkinWnd->MessageOut(TOLOCAL(_T("Please select the theme from list.")));
+			return;
+		}
+
+		CThemesFile		file;
+		tstring			strSelTheme;
+
+		m_pThemeList->GetItemText(nSel, 0, strSelTheme);
+		file.Open();
+
+		g_Profile.WriteProfileString(_T("CurTheme"), strSelTheme.c_str());
+		file.SetCurTheme(strSelTheme.c_str());
+	}
+
+	void SaveTheme()
+	{
+		// Save theme
+		CThemesFile		file;
+
+		tstring strThemeName = GetUIObjectText(_T("CID_E_THEMENAME"));
+		if (strThemeName.empty())
+		{
+			m_pSkinWnd->MessageOut(TOLOCAL(_T("Please enter the theme name.")));
+			return;
+		}
+
+		file.Open();
+
+		file.UseCurSettingAsTheme(strThemeName.c_str());
+
+		file.Save();
+
+		UpdateThemesList();
+	}
+
+	void DeleteTheme()
+	{
+		int				nSel;
+
+		nSel = m_pThemeList->GetNextSelectedItem(-1);
+		if (nSel == -1)
+		{
+			m_pSkinWnd->MessageOut(TOLOCAL(_T("Please select the theme from list.")));
+			return;
+		}
+
+		CThemesFile		file;
+		tstring			strSelTheme;
+
+		m_pThemeList->GetItemText(nSel, 0, strSelTheme);
+		file.Open();
+
+		file.Delete(strSelTheme.c_str());
+		file.Save();
+		UpdateThemesList();
+
+		SetUIObjectText(_T("CID_E_THEMENAME"), _T(""), true);
+	}
+
 	void UpdateThemesList()
 	{
 		if (!m_pThemeList)
@@ -146,6 +289,7 @@ protected:
 
 protected:
 	CSkinListCtrl		*m_pThemeList;
+	int					m_nThemeListID;
 
 };
 

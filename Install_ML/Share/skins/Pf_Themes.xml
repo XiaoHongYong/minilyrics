@@ -10,15 +10,27 @@
     <NormalText Rect="10,10,w-20,80" Text="Preset themes:"/>
     <NormalListCtrl ID="CID_THME_LIST" Rect="10,35,w-25,180"/>
     <NormalText Rect="10,230,120," Text="Theme name:"/>
-    <NormalEdit ID="CID_E_THEME" Text="" Rect="130,230,w-130-10,"/>
+    <NormalEdit ID="CID_E_THEMENAME" Text="" Rect="130,230,w-130-10,"/>
     <NormalTextBt ID="CID_LOAD_THEME" Text="&amp;Load Theme" Rect="w/2-110-110/2-30,260,110,"/>
     <NormalTextBt ID="CID_SAVE_THEME" Text="&amp;Save Theme" Rect="w/2-110/2,260,110,"/>
     <NormalTextBt ID="CID_DELETE_THEME" Text="&amp;Delete Theme" Rect="w/2+110/2+30,260,110,"/>
   </Container>
   <Container ID="CID_C_THEME_DISPLAY_STYLE" Name="Lyrics Display" Visible="false" Rect="0,30,w,h-30-20">
-    <NormalText Rect="25,10,w-45,80" Text="Installed skins:"/>
-    <NormalText Rect="25,230,w-45,80" Text="Current skin information:"/>
-    <NormalText ID="CID_SKIN_INFO" Rect="25,250,w-45,h-250-10" FontHeight="25" AlignText="AT_CENTER"/>
+    <NormalFrame Rect="10,10,w-20,80" Text="Font of lyrics text"/>
+    <NormalText Rect="25,10,w-45,80" Text="Latin language font:"/>
+    <NormalTextBt ID="CID_LOAD_THEME" Text="Choose Font" Rect="w/2-110-110/2-30,260,110,"/>
+    <NormalText Rect="25,10,w-45,80" Text="Other language font:"/>
+    <NormalTextBt ID="CID_LOAD_THEME" Text="Choose Font" Rect="w/2-110-110/2-30,260,110,"/>
+
+    <NormalFrame Rect="10,10,w-20,80" Text="Color of lyrics text"/>
+    <NormalCheckBox ID="CID_C_CLICK_THROUGH" Text="Draw shadow of lyrics text" Rect="25,55,w-50,"/>
+    <NormalText Rect="25,10,w-45,80" Text="Highlight lyrics color:"/>
+    <NormalText Rect="25,10,w-45,80" Text="Normal lyrics color:"/>
+    <NormalText Rect="25,10,w-45,80" Text="Background color:"/>
+
+    <NormalFrame Rect="10,10,w-20,80" Text="Lyrics display style"/>
+    <NormalText Rect="25,10,w-45,80" Text="Align lyrics at:"/>
+    <NormalTextBt ID="CID_LOAD_THEME" Text="&amp;Karaoke" Rect="w/2-110-110/2-30,260,110,"/>
   </Container>
   <include Name="Pf_ThemeItems.xml" />
 </Container>
