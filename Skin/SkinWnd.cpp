@@ -1654,7 +1654,10 @@ void CSkinWnd::SetFocusUIObject(LPCTSTR szId)
 {
 	CUIObject *pObj = GetUIObjectById(m_pSkinFactory->GetIDByName(szId), NULL);
 	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), szId);
 		return;
+	}
 
 	SetFocusUIObject(pObj);
 }
@@ -1663,7 +1666,10 @@ bool CSkinWnd::EnableUIObject(int nId, bool bEnable, bool bRedraw)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
 	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
 		return false;
+	}
 
 	if (Tobool(pObj->m_bEnable) != bEnable)
 	{
@@ -1680,7 +1686,10 @@ bool CSkinWnd::SetUIObjectProperty(int nId, LPCTSTR szProperty, LPCTSTR szValue)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
 	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
 		return false;
+	}
 
 	return Tobool(pObj->SetProperty(szProperty, szValue));
 }
@@ -1689,7 +1698,10 @@ void CSkinWnd::SetUIObjectVisible(int nId, bool bVisible, bool bRedraw)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
 	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
 		return;
+	}
 
 	pObj->SetVisible(bVisible);
 
@@ -1706,7 +1718,10 @@ void CSkinWnd::InvalidateUIObject(int nId)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
 	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
 		return;
+	}
 
 	InvalidateUIObject(pObj);
 }
@@ -1715,7 +1730,10 @@ tstring CSkinWnd::GetUIObjectText(int nId)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
 	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
 		return _T("");
+	}
 
 	return pObj->GetText();
 }
@@ -1724,7 +1742,10 @@ void CSkinWnd::SetUIObjectText(int nId, LPCTSTR szText, bool bRedraw)
 {
 	CUIObject *pObj = GetUIObjectById(nId, NULL);
 	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
 		return;
+	}
 
 	pObj->SetProperty(SZ_PN_TEXT, szText);
 	if (bRedraw)

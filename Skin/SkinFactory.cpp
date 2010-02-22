@@ -879,6 +879,8 @@ void CSkinFactory::ExpandIncludeNode(SXNode *pNodeRoot)
 				ERRLOG1(_T("Failed to parse xml file: %s"), szIncludeFile);
 				continue;
 			}
+			ExpandIncludeNode(xml.m_pRoot);
+
 			delete p;
 			*it = xml.m_pRoot;
 			xml.m_pRoot = NULL;

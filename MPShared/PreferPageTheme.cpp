@@ -4,16 +4,52 @@
 #include "LyricShowAgentObj.h"
 #include "DlgLyrBlendingOpt.h"
 #include "ThemesFile.h"
+#include "SkinListCtrl.h"
 
+//////////////////////////////////////////////////////////////////////////
 
-class CPagePfTheme : public CPagePfBase
+class CPagePfThemeItems : public CPagePfBase
 {
 public:
-	CPagePfTheme() : CPagePfBase(GetPageID())
+	CPagePfThemeItems() : CPagePfBase(GetPageID())
 	{
 	}
 
-	static LPCTSTR GetPageID() { return _T("CID_C_THEME"); }
+	static LPCTSTR GetPageID() { return _T("CID_C_THEME_ITEMS"); }
+
+	void OnCreate()
+	{
+		CPagePfBase::OnCreate();
+	}
+
+	void OnDestroy()
+	{
+	}
+
+	void OnShow()
+	{
+
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		return CPagePfBase::OnCustomCommand(nId);
+	}
+
+protected:
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class CPagePfDisplayStyle : public CPagePfBase
+{
+public:
+	CPagePfDisplayStyle() : CPagePfBase(GetPageID())
+	{
+	}
+
+	static LPCTSTR GetPageID() { return _T("CID_C_THEME_DISPLAY_STYLE"); }
 
 	void OnCreate()
 	{
@@ -35,9 +71,91 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
+class CPagePfTheme : public CPagePfBase
+{
+public:
+	CPagePfTheme() : CPagePfBase(GetPageID())
+	{
+	}
+
+	static LPCTSTR GetPageID() { return _T("CID_C_THEME"); }
+
+	void OnCreate()
+	{
+		CPagePfBase::OnCreate();
+
+		m_pThemeList = (CSkinListCtrl *)GetUIObjectById(_T("CID_THME_LIST"), CSkinListCtrl::ClassName());
+		ASSERT(m_pThemeList);
+
+		if (m_pThemeList)
+			m_pThemeList->InsertColumn(_T("Theme"), 300);
+
+		UpdateThemesList();
+	}
+
+	void OnDestroy()
+	{
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		if (nId == GetIDByName(_T("CID_LOAD_THEME")))
+		{
+			m_pParent->SwitchToPage(CPagePfThemeItems::GetPageID());
+		}
+		else if (nId == GetIDByName(_T("CID_SAVE_THEME")))
+		{
+		}
+		else if (nId == GetIDByName(_T("CID_DELETE_THEME")))
+		{
+		}
+		else
+			return CPagePfBase::OnCustomCommand(nId);
+
+		return true;
+	}
+
+protected:
+	void UpdateThemesList()
+	{
+		if (!m_pThemeList)
+			return;
+
+		CThemesFile		file;
+		V_Str			vThemes;
+		tstring			strCurTheme;
+		int				nSel =  -1;
+
+		file.Open();
+		file.EnumAllThemes(vThemes);
+
+		m_pThemeList->DeleteAllItems();
+
+		strCurTheme = g_Profile.GetProfileString(_T("CurTheme"), _T(""));
+
+		for (int i = 0; i < (int)vThemes.size(); i++)
+		{
+			m_pThemeList->InsertItem(i, vThemes[i].c_str());
+			if (nSel == -1 && _tcscmp(strCurTheme.c_str(), vThemes[i].c_str()))
+				nSel = i;
+		}
+
+		if (nSel != -1)
+			m_pThemeList->SetItemSelectionState(nSel, true);
+	}
+
+protected:
+	CSkinListCtrl		*m_pThemeList;
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
 CPagePfThemeRoot::CPagePfThemeRoot() : CPagePfBase(GetPageID())
 {
 	AddPage(new CPagePfTheme());
+	AddPage(new CPagePfDisplayStyle());
+	AddPage(new CPagePfThemeItems());
 }
 
 LPCTSTR CPagePfThemeRoot::GetPageID()
@@ -56,8 +174,8 @@ bool CPagePfThemeRoot::OnCustomCommand(int nId)
 {
 	if (nId == GetIDByName(_T("CMD_THEME_THEME")))
 		SwitchToPage(CPagePfTheme::GetPageID());
-// 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_DISPLAY")))
-// 		SwitchToPage(CPagePfSkin::GetPageID());
+	else if (nId == GetIDByName(_T("CMD_THEME_LYR_DISPLAY")))
+		SwitchToPage(CPagePfDisplayStyle::GetPageID());
 // 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_BG_PIC")))
 // 		SwitchToPage(CPagePfSkin::GetPageID());
 	else
