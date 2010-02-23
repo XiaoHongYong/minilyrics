@@ -110,6 +110,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 						m_rcObj.right - m_nXMargin,
 						m_rcObj.bottom - m_nYMargin);
 
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 	pGraphics->SetClipBoundBox(rcClip);
 
 	nRow = nRowCur - 1;
@@ -148,8 +149,6 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 		nRow++;
 	}
 
-	pGraphics->RecoverClipBox();
-
 #ifdef _WIN32_DESKTOP
 	// if (m_pSkin->GetEnableTranslucencyLayered())
 	{
@@ -173,6 +172,8 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 			pGraphics->HorzFadeOut(&rc, m_pSkin->GetBgColor(), false);
 	}
 #endif
+
+	autoCBR.Recover();
 }
 
 LPCTSTR CLyricShowHorzScrollObj::GetClassName()

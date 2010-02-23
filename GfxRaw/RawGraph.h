@@ -47,6 +47,30 @@ public:
 	CRawGraph();
 	virtual ~CRawGraph();
 
+	class CClipBoxAutoRecovery {
+	public:
+		CClipBoxAutoRecovery(CRawGraph *pGraph) {
+			m_pGraph = pGraph;
+			pGraph->GetClipBoundBox(m_rcClipOrg);
+		}
+		~CClipBoxAutoRecovery() {
+			if (m_pGraph)
+				m_pGraph->ResetClipBoundBox(m_rcClipOrg);
+		}
+
+		void Recover() {
+			if (m_pGraph) {
+				m_pGraph->ResetClipBoundBox(m_rcClipOrg);
+				m_pGraph = NULL;
+			}
+		}
+
+	protected:
+		CRawGraph	*m_pGraph;
+		CRect		m_rcClipOrg;
+
+	};
+
 	virtual bool Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCount = 32);
 
 	virtual void Line(int x1, int y1, int x2, int y2);
@@ -55,10 +79,10 @@ public:
 
 	virtual void SetPen(CRawPen &pen);
 
-	virtual bool GetClipBoundBox(CRect &rc);
-	virtual bool SetClipBoundBox(const CRect &rc);
-
-	virtual void RecoverClipBox();
+	virtual void GetClipBoundBox(CRect &rc);
+	virtual void SetClipBoundBox(const CRect &rc);
+	virtual void ResetClipBoundBox(const CRect &rc);
+	virtual void ClearClipBoundBox();
 
 	virtual bool TextOut(int x, int y, LPCTSTR szText, int nLen);
 	virtual bool DrawTextClip(LPCTSTR szText, int nLen, LPRECT lpRect, int xLeftClipOffset = 0);
@@ -133,7 +157,6 @@ protected:
 	CRawPen			m_pen;
 
 	RECT			m_rcClip;
-	vector<RECT>	m_vClipOrg;
 
 	CRawBmpFont		*m_rawBmpFont;
 

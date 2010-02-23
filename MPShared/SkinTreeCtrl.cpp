@@ -436,6 +436,7 @@ void CSkinTreeCtrl::Draw(CRawGraph *pGraph)
 	if (!pNodeFirstVisible)
 		return;
 
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
 	pGraph->SetClipBoundBox(m_rcObj);
 
 	xMax = m_rcObj.right - m_nXMargin;
@@ -520,8 +521,6 @@ void CSkinTreeCtrl::Draw(CRawGraph *pGraph)
 		pNode = pNodeNext;
 		y += m_nLineHeight;
 	}
-
-	pGraph->RecoverClipBox();
 }
 
 CSkinTreeCtrl::TreeArea CSkinTreeCtrl::HitTest(POINT point, ISkinTreeNode **ppNode)

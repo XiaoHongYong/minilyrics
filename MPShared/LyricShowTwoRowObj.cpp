@@ -130,15 +130,12 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 							prcUpdate->top,
 							prcUpdate->right,
 							prcUpdate->bottom);
-		//
-		// 保存旧的剪裁区域, 并且设置剪裁区域为该UIObject的大小
+
+		CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 		pGraphics->SetClipBoundBox(rcClip);
 
 		// 显示当前歌词行
 		DrawCurrentRow(pGraphics, pLyricRow, AUTO_CAL_X, yCurRow);
-
-		// 恢复为原来的剪裁区域大小
-		pGraphics->RecoverClipBox();
 
 		return;
 	}
@@ -149,6 +146,7 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 	}
 
 	// clear back buffer
+	CRect	rcClip;
 	if (prcUpdate)
 	{
 		prcUpdate->SetRect(m_rcObj.left + m_nXMargin, y, m_rcObj.right - m_nXMargin, y + nRowHeight * 2);
@@ -157,20 +155,20 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 		if (prcUpdate->bottom > m_rcObj.bottom - m_nYMargin)
 			prcUpdate->bottom = m_rcObj.bottom - m_nYMargin;
 		UpdateLyricDrawBufferBackground(pGraphics, *prcUpdate);
-		pGraphics->SetClipBoundBox(*prcUpdate);
+		rcClip = *prcUpdate;
 	}
 	else
 	{
 		UpdateLyricDrawBufferBackground(pGraphics, m_rcObj);
 
-		CRect	rcClip;
 
 		rcClip.SetRect(m_rcObj.left + m_nXMargin, 
 							m_rcObj.top + m_nYMargin,
 							m_rcObj.right - m_nXMargin,
 							m_rcObj.bottom - m_nYMargin);
-		pGraphics->SetClipBoundBox(rcClip);
 	}
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
+	pGraphics->SetClipBoundBox(rcClip);
 
 	// 显示当前歌词行
 	DrawCurrentRow(pGraphics, pLyricRow, AUTO_CAL_X, yCurRow);
@@ -181,9 +179,6 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 		DrawRow(pGraphics, pRowTheOther, AUTO_CAL_X, yTheOtherRow, 
 			nRowTheOther < nRowCur ? LP_ABOVE_CUR_LINE : LP_BELOW_CUR_LINE);
 	}
-
-	// 恢复为原来的剪裁区域大小
-	pGraphics->RecoverClipBox();
 }
 
 LPCTSTR CLyricShowTwoRowObj::GetClassName()

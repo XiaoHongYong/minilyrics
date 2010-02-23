@@ -163,8 +163,8 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 						m_rcObj.top + m_nYMargin,
 						m_rcObj.right - m_nXMargin,
 						m_rcObj.bottom - m_nYMargin);
-	//
-	// 保存旧的剪裁区域, 并且设置剪裁区域为该UIObject的大小
+
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 	pGraphics->SetClipBoundBox(rcClip);
 
 	// draw center row, the row lyric is current
@@ -196,9 +196,6 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 		DrawRow(pGraphics, m_lyrLines[nRow], AUTO_CAL_X, h, LP_BELOW_CUR_LINE);
 		nRow++;
 	}
-
-	// 恢复为原来的剪裁区域大小
-	pGraphics->RecoverClipBox();
 }
 
 void CLyricShowTxtObj::OnLyricsChanged()

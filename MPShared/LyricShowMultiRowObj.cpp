@@ -124,8 +124,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 		// clear background
 		UpdateLyricDrawBufferBackground(pGraphics, rcClip);
-
-		pGraphics->SetClipBoundBox(rcClip);
 	}
 	else
 	{
@@ -135,9 +133,10 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 		// clear background
 		UpdateLyricDrawBufferBackground(pGraphics, m_rcObj);
-
-		pGraphics->SetClipBoundBox(rcClip);
 	}
+
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
+	pGraphics->SetClipBoundBox(rcClip);
 
 	int		nRow, nRowEnd;
 	int		yLyrStart, yLyrEnd;
@@ -196,9 +195,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	}
 #endif
 
-	// 恢复为原来的剪裁区域大小
-	pGraphics->RecoverClipBox();
-
 	// if (g_bSave)
 // 	{
 // 		static int g_n = 0;
@@ -241,6 +237,7 @@ void CLyricShowMultiRowObj::FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdat
 		m_rcObj.right - m_nXMargin,
 		m_rcObj.bottom - m_nYMargin);
 
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
 	pGraph->SetClipBoundBox(rcClip);
 
 	for (size_t i = 0; i < m_lyrLines.size(); i++)
@@ -248,8 +245,6 @@ void CLyricShowMultiRowObj::FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdat
 		DrawRow(pGraph, m_lyrLines[i], x, y, LP_CUR_LINE);
 		y += nLineHeight;
 	}
-
-	pGraph->RecoverClipBox();
 }
 
 void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine)

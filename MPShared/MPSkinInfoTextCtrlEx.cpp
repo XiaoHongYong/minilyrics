@@ -57,6 +57,7 @@ void CMPSkinInfoTextCtrlEx::Draw(CRawGraph *pGraph)
 		m_rcObj.right - m_nXMargin,
 		m_rcObj.bottom - m_nYMargin);
 
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
 	pGraph->SetClipBoundBox(rcClip);
 
 	for (size_t i = 0; i < m_vText.size(); i++)
@@ -64,8 +65,6 @@ void CMPSkinInfoTextCtrlEx::Draw(CRawGraph *pGraph)
 		DrawRow(pGraph, m_vText[i], x, y, LP_CUR_LINE);
 		y += nLineHeight;
 	}
-
-	pGraph->RecoverClipBox();
 }
 
 void CMPSkinInfoTextCtrlEx::OnEvent(const IEvent *pEvent)

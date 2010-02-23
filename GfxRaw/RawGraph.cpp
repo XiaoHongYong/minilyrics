@@ -151,16 +151,32 @@ void CRawGraph::SetPen(CRawPen &pen)
 	m_pen = pen;
 }
 
-bool CRawGraph::GetClipBoundBox(CRect &rc)
+void CRawGraph::GetClipBoundBox(CRect &rc)
 {
 	rc = m_rcClip;
-	return true;
 }
 
-bool CRawGraph::SetClipBoundBox(const CRect &rc)
+void CRawGraph::SetClipBoundBox(const CRect &rc)
 {
-	m_vClipOrg.push_back(m_rcClip);
+	if (rc.left > m_rcClip.left)
+		m_rcClip.left = rc.left;
+	if (rc.top > m_rcClip.top)
+		m_rcClip.top = rc.top;
 
+	if (rc.right < m_rcClip.right)
+		m_rcClip.right = rc.right;
+	if (rc.bottom < m_rcClip.bottom)
+		m_rcClip.bottom = rc.bottom;
+
+
+	if (m_rcClip.right < m_rcClip.left)
+		m_rcClip.right = m_rcClip.left;
+	if (m_rcClip.bottom < m_rcClip.top)
+		m_rcClip.bottom = m_rcClip.top;
+}
+
+void CRawGraph::ResetClipBoundBox(const CRect &rc)
+{
 	m_rcClip = rc;
 	if (MapX(m_rcClip.left) < 0)
 		m_rcClip.left = RevertMapX(0);
@@ -175,29 +191,14 @@ bool CRawGraph::SetClipBoundBox(const CRect &rc)
 		m_rcClip.right = m_rcClip.left;
 	if (m_rcClip.bottom < m_rcClip.top)
 		m_rcClip.bottom = m_rcClip.top;
-
-	return true;
 }
 
-void CRawGraph::RecoverClipBox()
+void CRawGraph::ClearClipBoundBox()
 {
-	if (!m_vClipOrg.empty())
-	{
-		m_rcClip = m_vClipOrg.back();
-
-		if (MapX(m_rcClip.left) < 0)
-			m_rcClip.left = RevertMapX(0);
-		if (MapY(m_rcClip.top) < 0)
-			m_rcClip.top = RevertMapY(0);
-		if (MapX(m_rcClip.right) > Width())
-			m_rcClip.right = RevertMapX(Width());
-		if (MapY(m_rcClip.bottom) > Height())
-			m_rcClip.bottom = RevertMapY(Height());
-
-		m_vClipOrg.pop_back();
-	}
-	else
-		ASSERT(0 && "m_vClipOrg.empty()");
+	m_rcClip.left = RevertMapX(0);
+	m_rcClip.top = RevertMapY(0);
+	m_rcClip.right = RevertMapX(Width());
+	m_rcClip.bottom = RevertMapY(Height());
 }
 
 bool CRawGraph::TextOut(int x, int y, LPCTSTR szText, int nLen)

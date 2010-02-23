@@ -714,11 +714,13 @@ void CLyricShowTextEditObj::OnPlayTimeChangedUpdate()
 		EB_GetBoardRect(rc);
 		rcClip.SetRect(rc.left + m_nMarginX, rc.top + m_nMarginY, rc.right - m_nMarginX, rc.bottom - m_nMarginY);
 
+		CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
 		pGraph->SetClipBoundBox(rcClip);
 
 		FastDraw(pGraph, &rcUpdate);
 
-		pGraph->RecoverClipBox();
+		autoCBR.Recover();
+
 		if (rcUpdate.top != rcUpdate.bottom)
 		{
 			EB_UpdateBoardRect(pGraph, &rcUpdate);
@@ -747,12 +749,7 @@ void CLyricShowTextEditObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate)
 	rcCaret.IntersectRect(&m_caret.GetUpdateRect(), prcUpdate);
 	if (!rcCaret.IsRectEmpty())
 	{
-		// pGraphics->SetClipBoundBox(rcCaret);
 		m_caret.Draw(pGraphics);
-		// pGraphics->RecoverClipBox();
-
-		// MLColor		clr(0);
-		// pGraphics->FillRectXOR(&m_rcObj, clr);
 	}
 }
 

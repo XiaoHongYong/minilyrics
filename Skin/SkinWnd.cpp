@@ -924,13 +924,15 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 		RedrawBackground(m_pmemGraph, pObj->m_rcObj, pObj->IsUpdateTranslucencyWithSkin());
 	}
 
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(m_pmemGraph);
+
 	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
 
 	pObj->Draw(m_pmemGraph);
 
 	pObj->UpdateTranslucencyWithSkin(m_pmemGraph);
 
-	m_pmemGraph->RecoverClipBox();
+	autoCBR.Recover();
 
 #ifdef _WIN32_DESKTOP
 	if (m_bTranslucencyLayered)
@@ -993,6 +995,7 @@ void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucen
 
 	rcNewClip.IntersectRect(&rcClip, &rc);
 
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
 	pGraph->SetClipBoundBox(rcNewClip);
 
 	if (m_imageBg.IsValid())
@@ -1024,8 +1027,6 @@ void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucen
 	}
 	else
 		pGraph->FillRect(&rc, m_clrBg);
-
-	pGraph->RecoverClipBox();
 }
 
 void CSkinWnd::EnterInDrawUpdate()

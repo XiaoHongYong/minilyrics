@@ -183,14 +183,13 @@ void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* =
 							m_rcObj.right - m_nXMargin,
 							m_rcObj.bottom - m_nYMargin);
 		// ÉèÖÃ¼ô²ÃÇøÓòÎª: ×ó±ß±ß¿ò-->nSeperatePos
+		CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 		pGraphics->SetClipBoundBox(rcClip);
 
 		if (nRowCur + 1 < (int)m_lyrLines.size())
 			pRowNext = m_lyrLines[nRowCur + 1];
-		
-		DrawCurLineFadeInNextLine(pGraphics, pLyricRow, pRowNext, -1, y);
 
-		pGraphics->RecoverClipBox();
+		DrawCurLineFadeInNextLine(pGraphics, pLyricRow, pRowNext, -1, y);
 	}
 	else
 	{
@@ -202,11 +201,10 @@ void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* =
 							m_rcObj.right - m_nXMargin,
 							m_rcObj.bottom - m_nYMargin);
 		// ÉèÖÃ¼ô²ÃÇøÓòÎª: ×ó±ß±ß¿ò-->ÓÒ±ß¸è´ÊµÄ¿ªÊ¼ÏÔÊ¾²¿·Ö
+		CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 		pGraphics->SetClipBoundBox(rcClip);
 
 		DrawRow(pGraphics, pLyricRow, AUTO_CAL_X, y, LP_CUR_LINE);
-
-		pGraphics->RecoverClipBox();
 	}
 }
 

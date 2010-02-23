@@ -61,7 +61,7 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 	{
 		GetMemGraph();
 
-		m_memGraph.SetClipBoundBox(m_rcObj);
+		m_memGraph.ResetClipBoundBox(m_rcObj);
 
 		// Show child controls in animation
 		CUIObject	*pObj = GetUIObjectById(m_nActiveCtrl, NULL);
@@ -100,75 +100,6 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 		if (!m_memGraph.IsValid())
 			m_memGraph.Destroy();
 	}
-
-/*	CUIObject	*pObjPL = GetUIObjectById(m_pSkin->GetSkinFactory()->GetIDByName(L"CID_PLAYLIST"), NULL);
-	CUIObject	*pObjLyr = GetUIObjectById(m_pSkin->GetSkinFactory()->GetIDByName(L"CID_LYRICS"), NULL);
-	ASSERT(pObjLyr && pObjPL);
-
-
-	pObjPL->Draw(pGraph);
-
-	m_memGraph.SetClipBoundBox(m_rcObj);
-	m_pSkin->RedrawBackground(&m_memGraph, &m_rcObj);
-
-	CRawImage	imgTemp;
-	imgTemp.Attach(m_memGraph.GetRawBuff());
-
-	// CSkinContainer::Draw(&m_memGraph);
-	pObjLyr->Draw(&m_memGraph);
-	imgTemp.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 0, 0, BPM_BLEND);
-	imgTemp.Detach();*/
-
-
-/*	if (m_nIDTimerAnimation)
-	{
-		if (!m_memGraph.IsValid())
-		{
-			IMLGraphicsBase *pTemp = m_pSkin->GetGraphics();
-			m_memGraph.Create(m_rcObj.Width(), m_rcObj.Height(), pTemp);
-			m_pSkin->ReleaseGraphics(pTemp);
-		}
-		//m_memGraph.SetOrigin(CPoint(-m_rcObj.left, -m_rcObj.top));
-		m_memGraph.SetClipBoundBox(m_rcObj);
-		// m_memGraph.FillRect(&m_rcObj, MLColor(RGB(0, 0, 0)), BPM_COPY);
-		m_memGraph.FillRect(&m_rcObj, m_pSkin->GetBgColor(), BPM_COPY);
-
-		// Show child controls in animation
-		CUIObject	*pObj = GetUIObjectById(m_nActiveCtrl, NULL);
-		if (pObj)
-			pObj->Draw(pGraph);
-		int			nOpaque;
-
-		pObj = GetUIObjectById(m_nToggleToCtrl, NULL);
-		if (pObj)
-		{
-			nOpaque = (GetTickCount() - m_nTimeBeginAni) * 255 / m_nAnimateDuration;
-			if (nOpaque > 255)
-				nOpaque = 255;
-			nOpaque = pGraph->SetOpacityPainting(nOpaque);
-
-			pObj->Draw(&m_memGraph);
-
-			pObj->UpdateTranslucencyWithSkin(pGraph);
-
-			// pGraph->DrawGraph(&m_memGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_rcObj.left, m_rcObj.top, BPM_BLEND);
-			CRawImage	imgTemp;
-			imgTemp.Attach(m_memGraph.GetRawBuff());
-
-			imgTemp.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_rcObj.left, m_rcObj.top, BPM_BLEND_RGB);
-
-			imgTemp.Detach();
-
-			pGraph->SetOpacityPainting(nOpaque);
-		}
-	}
-	else
-	{
-		CSkinContainer::Draw(pGraph);
-
-		if (!m_memGraph.IsValid())
-			m_memGraph.Destroy();
-	}*/
 }
 
 BOOL CSkinToggleCtrlContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
