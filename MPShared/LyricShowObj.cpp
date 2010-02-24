@@ -2235,7 +2235,10 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 		if (m_tobHilight.imgPattern.height() != GetPatternFontHeight())
 		{
-			LoadLyrOverlaySettings();
+			if (m_hue == 0)
+				LoadLyrOverlaySettings();
+			else
+				OnAdjustHue(m_hue, 0, 0);
 		}
 
 		OnLyrDrawContextChanged();
@@ -2674,7 +2677,7 @@ void ReverseString(LPTSTR str, int n)
 
 bool inline isStrArab(WCHAR c)
 {
-	return (c >= 0x590 && c <= 0x6ff);
+	return (c >= 0x590 && c <= 0x6ff) || (c >= 0x0E00 && c <= 0x0E7F);
 }
 
 void GetStrArab(LPCTSTR str, bool &bIsArabStr, int &nLen)

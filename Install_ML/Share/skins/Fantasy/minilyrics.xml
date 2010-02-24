@@ -139,7 +139,7 @@
     <WndResizer Name="Right" Left="w-20" Top="0" Width="20" Height="h-20" Direction="right"/>
     <WndResizer Name="RightBottom" Left="w-20" Top="h-20" Width="20" Height="20" Direction="right|bottom"/>
   </skinwnd>
-  <skinwnd Name="lyreditor" Region="Modern.tr2" MinWidth="275" MinHeight="250" Width="640" Height="450" BgColor="#4F586E" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player" OnCreateCommand="dyncmd_load_toolbar_state">
+  <skinwnd Name="lyreditor" Caption="Lyrics Editor" Region="Modern.tr2" MinWidth="275" MinHeight="250" Width="640" Height="450" BgColor="#4F586E" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player" OnCreateCommand="dyncmd_load_toolbar_state">
     <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="40">
       <CaptionImage Left="0" Top="0" Width="w" Height="40" Name="Caption" EnableDblClick="true" Image="menu-caption.png" ImageRect="0,45,275,40" ImageFocus="menu-caption.png" ImageFocusRect="0,0,275,40" CutPos="25,90,183,225"/>
       <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,11,10" ImageSel="buttons.bmp" ImageSelRect="0,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="0,10,11,10"/>

@@ -994,7 +994,7 @@ void CLyricShowTextEditObj::OnFRCommand(IFindReplaceNotify::Command cmd)
 			else
 			{
 				if (!FindText(m_dlgFindReplace.m_strFindWhat.c_str(), dwFlags))
-					m_pSkin->MessageOut(CStrPrintf(_T("%s \"%s\""), TOLOCAL(_T("Can't find")), m_dlgFindReplace.m_strFindWhat.c_str()).c_str());
+					m_pSkin->MessageOut(CStrPrintf(TOLOCAL(_T("Can't find \"%s\"")), m_dlgFindReplace.m_strFindWhat.c_str()).c_str());
 			}
 		}
 		break;
@@ -1031,7 +1031,8 @@ void CLyricShowTextEditObj::ShowFindDialog(bool bFind)
 	m_dlgFindReplace.m_strFindWhat.resize(0);
 	SelectionToText(m_dlgFindReplace.m_strFindWhat);
 
-	m_dlgFindReplace.m_strFindWhat = g_Profile.GetProfileString(_T("FindWhat"), _T(""));
+	if (m_dlgFindReplace.m_strFindWhat.empty())
+		m_dlgFindReplace.m_strFindWhat = g_Profile.GetProfileString(_T("FindWhat"), _T(""));
 	if (!bFind)
 		m_dlgFindReplace.m_strReplaceWith = g_Profile.GetProfileString(_T("ReplaceWith"), _T(""));
 
@@ -1048,5 +1049,5 @@ void CLyricShowTextEditObj::FindNext()
 		dwFlags |= FTF_MATCH_CASE;
 
 	if (!FindText(m_dlgFindReplace.m_strFindWhat.c_str(), dwFlags))
-		m_pSkin->MessageOut(CStrPrintf(_T("%s \"%s\""), TOLOCAL(_T("Can't find")), m_dlgFindReplace.m_strFindWhat.c_str()).c_str());
+		m_pSkin->MessageOut(CStrPrintf(TOLOCAL(_T("Can't find \"%s\"")), m_dlgFindReplace.m_strFindWhat.c_str()).c_str());
 }
