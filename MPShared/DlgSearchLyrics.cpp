@@ -538,7 +538,7 @@ public:
 					if (g_LyricSearch.AssociateLyrics(m_szAssociateKeyword, strFile.c_str()))
 					{
 						g_mpApp.ResearchLyrics();
-						OnOK();
+						CSkinPageHandler::OnOK();
 					}
 				}
 			}
