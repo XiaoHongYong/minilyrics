@@ -151,6 +151,21 @@ HDDEDATA CALLBACK DdeCallback(UINT uType,
     return DDE_FNOTPROCESSED;
 }
 
+const char * stristr_new_line(const char *text, const char *pattern)
+{
+	const char *p = text;
+	while (1)
+	{
+		p = stristr(p, pattern);
+		if (!p)
+			return NULL;
+		if (p == text || *(p - 1) != '\r' && *(p - 1) != '\n')
+			return p;
+		p += strlen(pattern);
+	}
+	return NULL;
+}
+
 /*
 ID3v1:
 Title	Sometimes (Radio Edit)
@@ -170,13 +185,14 @@ Unique ID	http://www.cddb"
 bool XMP_GetTagField(const char *info1, const char *name, char *buf)
 {
 	LPCSTR		szBeg1, szBeg, szEnd;
-	szBeg1 = stristr(info1, name);
+	szBeg1 = stristr_new_line(info1, name);
 	if (!szBeg1)
 		return false;
+
 	szBeg1 += strlen(name);
 
 	// if id3v2 exist, use it first?
-	szBeg = stristr(szBeg1, name);
+	szBeg = stristr_new_line(szBeg1, name);
 	if (szBeg)
 		szBeg += strlen(name);
 	else
