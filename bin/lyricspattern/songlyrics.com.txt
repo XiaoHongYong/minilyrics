@@ -1,6 +1,6 @@
 %%e-x%%
 
- Lyrics &raquo; Artist - %%e-x%% &raquo; %%artist%% lyrics &raquo; %%album%% Lyrics &raquo; %%title%% Lyrics  %%e-n%%
+ Lyrics &raquo; Artist - %%e-x%% &raquo; %%artist%% lyrics &raquo; %%title%% Lyrics  %%e-n%%
 Song details
 
  Title:%%val-title%% 
@@ -13,6 +13,6 @@ ArialCourier NewTahomaVerdana SmallestSmallNormalLargeLargest
 
 %%lyrics%%
 
-%%val-title%% Lyrics @ LyricsMode.com
+Comments and Song Meanings
 
 %%e-eof%%

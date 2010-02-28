@@ -1,4 +1,4 @@
- Mp3 Lyrics (home) &raquo; %%e-x%% Lyrics&raquo; %%artist%% Lyrics&raquo; %%title%% Lyrics search lyrics
+ Lyrics &raquo; %%e-x%% Lyrics&raquo; %%artist%% Lyrics&raquo; %%title%% Lyrics search lyrics
 
 %%e-x%%
 

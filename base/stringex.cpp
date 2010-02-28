@@ -798,7 +798,7 @@ int FilterAllHTMLTags(LPTSTR szText)
 
 		static LPCTSTR		szToNewLine[] = 
 		{
-			_T("<BR>"), _T("<br/>"), _T("<br />"), _T("</P>"), _T("</div>"), _T("</h1>"), _T("</h2>"), _T("</h3>"), _T("</li>"),
+			_T("<BR>"), _T("<br/>"), _T("<br />"), _T("<P>"), _T("</P>"), _T("</div>"), _T("</h1>"), _T("</h2>"), _T("</h3>"), _T("</li>"),
 			_T("</TR>"), _T("<br >"),
 		};
 		bool	bReplaced = false;
