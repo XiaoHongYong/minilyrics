@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Container ID="CID_C_UIROOT" Name="UI" Rect="0,65,w,h-65-10">
-  <NormalFrame Rect="10,10,w-20,h-21-10"/>
+<Container ID="CID_C_UIROOT" Name="UI" Rect="0,65,w,h-65">
+  <NormalFrame Rect="10,10,w-20,h-20"/>
   <NormalTabButton ID="CID_TOOLBAR_UI"  Rect="30,10,w-30,">
     <button ID="CMD_UI" Text="User Interface"/>
     <button ID="CMD_SKINS" Text="Skins"/>
   </NormalTabButton>
-  <Container ID="CID_C_UI_LANGUAGE" Name="UI" Rect="10,30,w-20,h-30-20">
+  <Container ID="CID_C_UI_LANGUAGE" Name="UI" Rect="10,30,w-20,h-30-10">
     <NormalFrame Rect="10,10,w-20,80" Text="Skin window settings"/>
     <NormalCheckBox ID="CID_C_ON_TOP" Text="Always on top" Rect="25,30,w-50,"/>
     <NormalCheckBox ID="CID_C_CLICK_THROUGH" Text="Mouse &amp;click through" Rect="25,55,w-50,"/>
@@ -15,7 +15,7 @@
                 Rect="20,145,w-40,"/>
     <NormalText ID="CID_LANGUAGE_INFO" Rect="20,180,w-40,h-150-10" FontHeight="25" AlignText="AT_CENTER"/>
   </Container>
-  <Container ID="CID_C_UI_SKIN" Name="Skins" Visible="false" Rect="0,30,w,h-30-20">
+  <Container ID="CID_C_UI_SKIN" Name="Skins" Visible="false" Rect="0,30,w,h-30-10">
     <NormalText Rect="25,10,w-45,80" Text="Installed skins:"/>
     <NormalListCtrl ID="CID_SKIN_LIST" Rect="25,40,w-45,180"/>
     <NormalText Rect="25,230,w-45,80" Text="Current skin information:"/>

@@ -36,6 +36,7 @@
 #include "MPSkinInfoTextCtrlEx.h"
 #include "SkinTxtLink.h"
 #include "SkinTabButton.h"
+#include "SkinComboBox.h"
 
 #ifdef _MPLAYER
 #include "SkinDroplistCtrl.h"
@@ -194,6 +195,8 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinTxtLink;
 	else if (_tcsicmp(szClassName, CSkinTabButton::ClassName()) == 0)
 		pObj = new CSkinTabButton;
+	else if (IsPropertyName(szClassName, CSkinComboBox::ClassName()))
+		pObj = new CSkinComboBox;
 	else
 		return NULL;
 

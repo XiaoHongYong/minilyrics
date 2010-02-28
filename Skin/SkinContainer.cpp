@@ -622,7 +622,7 @@ void CSkinContainer::RecalculateSizePos()
 
 void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj)
 {
-	// recalcuate all ui objects' position
+	// recalculate all ui objects' position
 	FORMULA_VAR 	vars[] = {
 		{'w', m_rcObj.Width()},
 		{'h', m_rcObj.Height()},
@@ -633,6 +633,24 @@ void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj)
 	pObj->ReCalculatePos(vars);
 }
 
+bool CSkinContainer::IsChild(CUIObject *pObj)
+{
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
+	{
+		CUIObject	*p = m_vUIObjs[i];
+
+		if (pObj == p)
+			return true;
+
+		if (p->IsContainer())
+		{
+			if (p->GetContainerIf()->IsChild(pObj))
+				return true;
+		}
+	}
+
+	return false;
+}
 
 void CSkinContainer::InvalidateUIObject(CUIObject *pObj)
 {

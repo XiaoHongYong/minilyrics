@@ -68,6 +68,8 @@ public:
 	CUIObjectIterator ChildBegin() { CUIObjectIterator it(this); it.Begin(); return it; }
 	CUIObjectIterator ChildEnd() { CUIObjectIterator it(this); it.End(); return it; }
 
+	bool IsChild(CUIObject *pObj);
+
 	virtual void InvalidateUIObject(CUIObject *pObj);
 
 	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pObjCallUpdate);

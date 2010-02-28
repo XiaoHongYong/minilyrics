@@ -152,6 +152,7 @@ int GetMenuKey(LPCTSTR szText)
 CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 {
 	m_bFreeOnDestory = false;
+	m_bManageBySkinFactory = true;
 
 	m_bSkinOpened = false;
 	m_nInRedrawUpdate = 0;
@@ -290,7 +291,8 @@ void CSkinWnd::CloseSkin()
 	if (m_pSjvmNotifyEvent)
 		m_pSjvmNotifyEvent->onDestroy();
 
-	CSjvmSkinSystem::OnSkinWndDestory(this);
+	if (m_bManageBySkinFactory)
+		CSjvmSkinSystem::OnSkinWndDestory(this);
 
 #ifdef _WIN32_DESKTOP
 	if (m_bWindowsAppearance)
@@ -927,6 +929,18 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	CRawGraph::CClipBoxAutoRecovery	autoCBR(m_pmemGraph);
 
 	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
+
+// 	CUIObject	*pFocusUIObj = GetFocusUIObj();
+// 	if (pFocusUIObj && pFocusUIObj != pObj)
+// 	{
+// 		if (!(pObj->IsContainer() && pObj->GetContainerIf()->IsChild(pFocusUIObj)))
+// 		{
+// 			// Redraw focus UIObject, if it's overlapped on pObj.
+// 			CRect	rc;
+// 			if (rc.IntersectRect(&(pObj->m_rcObj), &(pFocusUIObj->m_rcObj)))
+// 				pFocusUIObj->Draw(m_pmemGraph);
+// 		}
+// 	}
 
 	pObj->Draw(m_pmemGraph);
 
@@ -1774,7 +1788,8 @@ void CSkinWnd::OnDestroy()
 	if (m_bMainAppWnd)
 		m_pSkinFactory->OnMainSkinWndDestory(this);
 
-	m_pSkinFactory->OnSkinWndDestory(this);
+	if (m_bManageBySkinFactory)
+		m_pSkinFactory->OnSkinWndDestory(this);
 }
 
 
@@ -1789,7 +1804,8 @@ bool CSkinWnd::OnCreate()
 	if (!m_wndToolTip.Create(this))
 		return false;
 
-	m_pSkinFactory->OnSkinWndCreate(this);
+	if (m_bManageBySkinFactory)
+		m_pSkinFactory->OnSkinWndCreate(this);
 
 	m_WndDrag.Init(this, this);//, arrszClassCloseTo);
 	m_wndResizer.Init(this, this);//, arrszClassCloseTo, this);
@@ -2283,7 +2299,8 @@ void CSkinWnd::OnSkinLoaded()
 	if (GetFocusUIObj() == NULL)
 		FocusNextUIObject();
 
-	CSjvmSkinSystem::OnSkinWndCreate(this);
+	if (m_bManageBySkinFactory)
+		CSjvmSkinSystem::OnSkinWndCreate(this);
 
 	if (m_pSjvmNotifyEvent)
 		m_pSjvmNotifyEvent->onCreate(this);

@@ -489,6 +489,14 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\PopupSkinListWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\PopupSkinWnd.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SFImage.cpp"
 				>
 			</File>
@@ -1194,6 +1202,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\PopupSkinListWnd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\PopupSkinWnd.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SFImage.h"
 				>
 			</File>
@@ -1282,11 +1298,11 @@
 				>
 			</File>
 			<File
-				RelativePath="win32\SkinVScrollBarOSStyle.h"
+				RelativePath="SkinVScrollBarOSStyle.h"
 				>
 			</File>
 			<File
-				RelativePath="SkinVScrollBarOSStyle.h"
+				RelativePath="win32\SkinVScrollBarOSStyle.h"
 				>
 			</File>
 			<File

@@ -388,6 +388,7 @@ public:
 
 protected:
 	bool			m_bFreeOnDestory;
+	bool			m_bManageBySkinFactory;
 
 	// flag to indicate whether the skin was opened.
 	bool			m_bSkinOpened;
