@@ -159,7 +159,7 @@ const char * stristr_new_line(const char *text, const char *pattern)
 		p = stristr(p, pattern);
 		if (!p)
 			return NULL;
-		if (p == text || *(p - 1) != '\r' && *(p - 1) != '\n')
+		if (p == text || *(p - 1) == '\r' || *(p - 1) == '\n')
 			return p;
 		p += strlen(pattern);
 	}

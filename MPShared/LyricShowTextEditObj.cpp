@@ -529,6 +529,8 @@ BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
 					LPCTSTR	szPos = strLine.c_str() + strTimeTag.size();
 					while (*szPos == ' ' || *szPos == '\t' || *szPos == '\'' || *szPos == '\"')
 						szPos++;
+					if (*szPos == '(' || *szPos == '[')
+						szPos++;
 					if ((unsigned)(*szPos) <= 255 && islower(*szPos))
 					{
 						szReplaceWith[0] = toupper(*szPos);
