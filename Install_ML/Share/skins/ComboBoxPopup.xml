@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skinwnd Extends="PopupWndFrame" Name="ComboBoxPopup.xml" EnableTranslucency="false"
          Width="330" Height="100" RememberSizePos="false">
-  <NormalListCtrl ID="CID_COMBO_LIST" Rect="10,0,w-20,h"/>
+  <NormalListCtrl ID="CID_COMBO_LIST" Rect="10,0,w-20,h" EnableHorzScrollBar="false" EnableVertScrollBar="false"/>
 </skinwnd>
