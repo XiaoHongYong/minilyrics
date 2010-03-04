@@ -2550,6 +2550,8 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 {
 	m_bTranslucencyLayered = false;
 
+	GetWindowRect(&m_rcBoundBox);
+
 	m_rootConainter.m_rcObj.SetRect(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height());
 
 	m_fontProperty.Create(_T("Tohama"), _T(""), 14, FW_NORMAL, false, false);

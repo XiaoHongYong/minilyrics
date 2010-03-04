@@ -7,7 +7,7 @@ class IPopupSkinWndNotify
 {
 public:
 	virtual void PopupSkinWndOnSelected() { }
-	virtual void PopupSkinWndOnDestroy() { }
+	// virtual void PopupSkinWndOnDestroy() { }
 
 };
 

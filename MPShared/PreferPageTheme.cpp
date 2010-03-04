@@ -5,6 +5,7 @@
 #include "DlgLyrBlendingOpt.h"
 #include "ThemesFile.h"
 #include "SkinListCtrl.h"
+#include "SkinComboBox.h"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -70,6 +71,10 @@ class CPagePfDisplayStyle : public CPagePfBase
 public:
 	CPagePfDisplayStyle() : CPagePfBase(GetPageID())
 	{
+// 		if (bFloatingLyrics)
+// 			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
+// 		else
+			m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
 	}
 
 	static LPCTSTR GetPageID() { return _T("CID_C_THEME_DISPLAY_STYLE"); }
@@ -77,6 +82,18 @@ public:
 	void OnCreate()
 	{
 		CPagePfBase::OnCreate();
+
+		m_pcbDisplayMode = (CSkinComboBox *)GetUIObjectById(_T("CID_DS_MODE"), CSkinComboBox::ClassName());
+		if (m_pcbDisplayMode)
+		{
+			m_pcbDisplayMode->AddString(TOLOCAL(_T("Normal lyrics mode settings")));
+			m_pcbDisplayMode->AddString(TOLOCAL(_T("Floating lyrics mode settings")));
+
+			if (m_eventType == ET_LYRICS_FLOATING_SETTINGS)
+				m_pcbDisplayMode->SetCurSel(1);
+			else
+				m_pcbDisplayMode->SetCurSel(0);
+		}
 	}
 
 	void OnDestroy()
@@ -89,6 +106,10 @@ public:
 	}
 
 protected:
+	EventType			m_eventType;
+	tstring				m_strSectName;
+
+	CSkinComboBox		*m_pcbDisplayMode;
 
 };
 

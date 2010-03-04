@@ -32,16 +32,16 @@
       <Image Name="RightBottomCorner" Left="w-20" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="55, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 55, 20, 20" BlendPixMode="copy"/>
       <Image Name="TopRightCorner" Left="w-20" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="55, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 0, 20, 20" BlendPixMode="copy"/>
       <Image Name="RightBorder" Left="w-20+10" Top="20" Width="20-10" Height="h-20-20" Image="frame.png" ImageRect="65, 20, 10, 35" BltMode="tile" BlendPixMode="copy"/>
-      <ClientArea Rect="2, 30, w-4-10, h-30-4"/>
+      <ClientArea Rect="2, 5, w-4-10, h-5-5"/>
     </PopupWndFrame>
     <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"/>
     <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="15" TextColor="#FFFF00"/>
     <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
-          Height="28" XMargin="5" YMargin="4" UseSkinBg="true" ExtendPos="20,50"
-          Image="s_txt_button.png" ImageSize="70,28"
+          Height="28" XMargin="5" YMargin="4" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
+          Image="s_txt_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
     <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
-          Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeft="25" AlignText="AT_LEFT"
+          Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
           CanCheck="true"
           Image="s_checkbox.png" ImageSize="20,20"
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40"
@@ -59,9 +59,9 @@
           FontName="Verdana" FontHeight="15" TextColor="#000000"
           Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
           MarginX="0" MarginY="0" />
-    <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
-          Height="28" XMargin="5" YMargin="4" UseSkinBg="true" ExtendPos="20,50"
-          Image="s_txt_button.png" ImageSize="70,28"
+    <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="15" TextColor="#000000"
+          Height="28" XMargin="5" YMargin="4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
+          UseSkinBg="true" Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
     <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"
           XBorder="0" YBorder="10" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"/>
@@ -72,6 +72,5 @@
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
     <CloseButton Extends="Button" Image=""/>
     <MinimizeButton Extends="Button" Image=""/>
-  
-</style>
+  </style>
 </styles>

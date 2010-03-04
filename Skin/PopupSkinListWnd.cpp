@@ -4,7 +4,8 @@
 
 CPopupSkinListWnd::CPopupSkinListWnd()
 {
-
+	m_nCurSel = -1;
+	m_pListCtrl = NULL;
 }
 
 CPopupSkinListWnd::~CPopupSkinListWnd()
@@ -23,6 +24,8 @@ void CPopupSkinListWnd::OnSkinLoaded()
 	if (!m_pListCtrl)
 		return;
 
+	RegisterUIObjNotifyHandler(m_pListCtrl->m_nId, this);
+
 	m_pListCtrl->InsertColumn(_T("col1"), 100);
 
 	for (int i = 0; i < (int)m_vItems.size(); i++)
@@ -30,6 +33,9 @@ void CPopupSkinListWnd::OnSkinLoaded()
 		Item &item = m_vItems[i];
 		m_pListCtrl->InsertItem(i, item.strText.c_str(), item.nImage, item.nData, false);
 	}
+
+	if (m_nCurSel != -1)
+		m_pListCtrl->SetItemSelectionState(m_nCurSel, true);
 
 	int		nContentHeight = m_pListCtrl->GetContentHeight();
 
@@ -42,6 +48,23 @@ void CPopupSkinListWnd::OnSkinLoaded()
 		rcNew.bottom = rcNew.bottom - m_pListCtrl->m_rcObj.Height() + nContentHeight;
 
 		MoveWindow(rcNew, FALSE);
+	}
+}
+
+void CPopupSkinListWnd::OnUIObjNotify(IUIObjNotify *pNotify)
+{
+	if (!m_pPopupSkinWndNotify)
+		return;
+
+	ASSERT(m_pListCtrl);
+	ASSERT(pNotify->IsKindOf(CSkinListCtrl::ClassName()));
+
+	CSkinListCtrlEventNotify *pListCtrlNotify = (CSkinListCtrlEventNotify*)pNotify;
+	if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_CLICK)
+	{
+		m_nCurSel = m_pListCtrl->GetNextSelectedItem();
+		m_pPopupSkinWndNotify->PopupSkinWndOnSelected();
+		PostDestroy();
 	}
 }
 

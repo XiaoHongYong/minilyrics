@@ -4,7 +4,7 @@
 #include "PopupSkinWnd.h"
 #include "../MPShared/SkinListCtrl.h"
 
-class CPopupSkinListWnd : public CPopupSkinWnd
+class CPopupSkinListWnd : public CPopupSkinWnd, public IUIObjNotifyHandler
 {
 public:
 	CPopupSkinListWnd();
@@ -13,6 +13,8 @@ public:
 	void OnLoadWndSizePos();
 
 	void OnSkinLoaded();
+
+	virtual void OnUIObjNotify(IUIObjNotify *pNotify);
 
 public:
 	// Interface for combo box.

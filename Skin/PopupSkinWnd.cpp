@@ -26,8 +26,8 @@ int CPopupSkinWnd::Create(CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName,
 
 void CPopupSkinWnd::OnKillFocus()
 {
-	if (m_pPopupSkinWndNotify)
-		m_pPopupSkinWndNotify->PopupSkinWndOnDestroy();
+//	if (m_pPopupSkinWndNotify)
+//		m_pPopupSkinWndNotify->PopupSkinWndOnDestroy();
 
 	PostDestroy();
 }
