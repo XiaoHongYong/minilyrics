@@ -151,7 +151,7 @@ public:
 		ASSERT(m_pThemeList);
 
 		if (m_pThemeList)
-			m_pThemeList->InsertColumn(_T("Theme"), 300);
+			m_pThemeList->AddColumn(_T("Theme"), 300);
 
 		UpdateThemesList();
 	}

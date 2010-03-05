@@ -176,7 +176,7 @@ public:
 		m_pSkinWnd->RegisterUIObjNotifyHandler(m_nIDSkinList, this);
 		m_pSkinList = (CSkinListCtrl *)GetUIObjectById(m_nIDSkinList, CSkinListCtrl::ClassName());
 		if (m_pSkinList)
-			m_pSkinList->InsertColumn(_T("Skins"), 200);
+			m_pSkinList->AddColumn(_T("Skins"), 200);
 
 		m_bIgnoreSkinListNotify = false;
 

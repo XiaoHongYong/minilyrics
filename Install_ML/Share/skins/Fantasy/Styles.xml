@@ -3,7 +3,7 @@
   <style>
     <WindowFrame Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="245"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
-         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableTransparentFeature="false">
+         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false">
       <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
       <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
       <Image Name="BottomBorder" Left="20" Top="h-20+10" Width="w-20-20" Height="20-10" Image="frame.png" ImageRect="20, 65, 35, 10" BltMode="tile" BlendPixMode="copy"/>
@@ -25,14 +25,18 @@
     </WindowFrame>
     <PopupWndFrame Name="minilyrics" EnableTranslucency="false"
          FixedWidth="true" FixedHeight="true"
-         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableTransparentFeature="false">
-      <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
-      <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
-      <Image Name="BottomBorder" Left="20" Top="h-20+10" Width="w-20-20" Height="20-10" Image="frame.png" ImageRect="20, 65, 35, 10" BltMode="tile" BlendPixMode="copy"/>
-      <Image Name="RightBottomCorner" Left="w-20" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="55, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 55, 20, 20" BlendPixMode="copy"/>
-      <Image Name="TopRightCorner" Left="w-20" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="55, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 0, 20, 20" BlendPixMode="copy"/>
-      <Image Name="RightBorder" Left="w-20+10" Top="20" Width="20-10" Height="h-20-20" Image="frame.png" ImageRect="65, 20, 10, 35" BltMode="tile" BlendPixMode="copy"/>
-      <ClientArea Rect="2, 5, w-4-10, h-5-5"/>
+         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false">
+      <XScaleImage Left="0" Top="0" Width="w" Height="5" Name="Top border"
+                   Image="menu_frame.png" ImageRect="0,0,50,5"
+                   ImageScaleXStart="10" ImageScaleXEnd="40"/>
+      <XScaleImage Left="0" Top="h-5" Width="w" Height="5" Name="Bottom border"
+                   Image="menu_frame.png" ImageRect="0,15,50,5"
+                   ImageScaleXStart="10" ImageScaleXEnd="40"/>
+      <Image Left="0" Top="5" Width="1" Height="h-10" Name="left frame" 
+             Image="menu_frame.png" ImageRect="0,5,1,10" BltMode="tile"/>
+      <Image Left="w-1" Top="5" Width="1" Height="h-10" Name="left frame"
+             Image="menu_frame.png" ImageRect="49,5,1,10" BltMode="tile"/>
+      <ClientArea Rect="1, 5, w-2, h-5-5"/>
     </PopupWndFrame>
     <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"/>
     <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="15" TextColor="#FFFF00"/>

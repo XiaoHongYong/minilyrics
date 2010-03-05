@@ -26,12 +26,14 @@ void CPopupSkinListWnd::OnSkinLoaded()
 
 	RegisterUIObjNotifyHandler(m_pListCtrl->m_nId, this);
 
-	m_pListCtrl->InsertColumn(_T("col1"), 100);
+	m_pListCtrl->AddColumn(_T("col0"), 10);
+	m_pListCtrl->AddColumn(_T("col1"), 100);
 
 	for (int i = 0; i < (int)m_vItems.size(); i++)
 	{
 		Item &item = m_vItems[i];
-		m_pListCtrl->InsertItem(i, item.strText.c_str(), item.nImage, item.nData, false);
+		m_pListCtrl->InsertItem(i, _T(""), item.nImage, item.nData, false);
+		m_pListCtrl->SetItemText(i, 1, item.strText.c_str());
 	}
 
 	if (m_nCurSel != -1)
@@ -62,7 +64,7 @@ void CPopupSkinListWnd::OnUIObjNotify(IUIObjNotify *pNotify)
 	CSkinListCtrlEventNotify *pListCtrlNotify = (CSkinListCtrlEventNotify*)pNotify;
 	if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_CLICK)
 	{
-		m_nCurSel = m_pListCtrl->GetNextSelectedItem();
+		SetCurSel(m_pListCtrl->GetNextSelectedItem());
 		m_pPopupSkinWndNotify->PopupSkinWndOnSelected();
 		PostDestroy();
 	}
@@ -80,10 +82,15 @@ int CPopupSkinListWnd::GetCurSel()
 
 void CPopupSkinListWnd::SetCurSel(int nIndex)
 {
-	if (nIndex >= m_vItems.size())
+	if (nIndex >= (int)m_vItems.size())
 		return;
 
+	if (m_nCurSel >= 0 && m_nCurSel < (int)m_vItems.size())
+		m_vItems[m_nCurSel].nImage = 0;
+
 	m_nCurSel = nIndex;
+
+	m_vItems[m_nCurSel].nImage = 1;
 }
 
 int CPopupSkinListWnd::AddString(LPCTSTR szStr)
@@ -166,7 +173,7 @@ int CPopupSkinListWnd::FindStringExact(int nIndexStart, LPCTSTR lpszFind) const
 
 int CPopupSkinListWnd::SelectString(int nStartAfter, LPCTSTR lpszString)
 {
-	m_nCurSel = FindStringExact(nStartAfter, lpszString);
+	SetCurSel(FindStringExact(nStartAfter, lpszString));
 
 	return m_nCurSel;
 }

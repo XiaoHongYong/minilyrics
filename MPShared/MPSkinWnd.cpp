@@ -536,7 +536,7 @@ public:
 		m_plistCtrl = plistCtrl;
 		if (plistCtrl->GetColumnCount() == 0)
 		{
-			plistCtrl->InsertColumn(_T("Music"), 230);
+			plistCtrl->AddColumn(_T("Music"), 230);
 			plistCtrl->m_pContainer->RecalculateUIObjSizePos(plistCtrl);
 		}
 		UpdatePlaylist();

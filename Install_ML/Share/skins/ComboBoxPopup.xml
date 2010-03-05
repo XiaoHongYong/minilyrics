@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skinwnd Extends="PopupWndFrame" Name="ComboBoxPopup.xml" EnableTranslucency="false"
          Width="330" Height="100" RememberSizePos="false">
-  <NormalListCtrl ID="CID_COMBO_LIST" Rect="10,0,w-20,h" MouseHoverSel="true"
-       EnableHorzScrollBar="false" EnableVertScrollBar="false"/>
+  <NormalListCtrl ID="CID_COMBO_LIST" Rect="0,0,w,h" MouseHoverSel="true" ImageList="s_combobox_check.png"
+       EnableHorzScrollBar="false" EnableVertScrollBar="false" XMargin="10"/>
 </skinwnd>

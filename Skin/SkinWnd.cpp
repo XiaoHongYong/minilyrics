@@ -208,7 +208,7 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_dwTransFadeinBegTime = 0;
 	m_nTransAlphaBeg = 0;
 	m_bClickThrough = false;
-	m_bEnableTransparentFeature = true;
+	m_bEnableClickThrough = true;
 
 	m_bOnMouseHover = false;
 	m_translucencyStatus = TS_NORMAL;
@@ -310,7 +310,7 @@ void CSkinWnd::CloseSkin()
 	m_dwTransFadeinBegTime = 0;
 	m_nTransAlphaBeg = 0;
 	m_bClickThrough = false;
-	m_bEnableTransparentFeature = true;
+	m_bEnableClickThrough = true;
 
 	m_wndResizer.FixedHeight(false);
 	m_wndResizer.FixedWidth(false);
@@ -1445,9 +1445,9 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_DEFERERASE);
 		}
 	}
-	else if (IsPropertyName(szProperty, _T("EnableTransparentFeature")))
+	else if (IsPropertyName(szProperty, _T("EnableClickThrough")))
 	{
-		m_bEnableTransparentFeature = IsTRUE(szValue);
+		m_bEnableClickThrough = IsTRUE(szValue);
 	}
 	else if (IsPropertyName(szProperty, _T("EnableTranslucency")))
 	{
@@ -1531,7 +1531,7 @@ void CSkinWnd::EnumProperties(CUIObjProperties &listProperties)
 
 #ifdef _WIN32_DESKTOP
 	listProperties.AddPropBoolStr(_T("WindowsAppearance"), m_bWindowsAppearance, m_bWindowsAppearance);
-	listProperties.AddPropBoolStr(_T("EnableTransparentFeature"), m_bEnableTransparentFeature, !m_bEnableTransparentFeature);
+	listProperties.AddPropBoolStr(_T("EnableTransparentFeature"), m_bEnableClickThrough, !m_bEnableClickThrough);
 	listProperties.AddPropBoolStr(_T("EnableTranslucency"), m_bTranslucencyLayered, m_bTranslucencyLayered);
 	listProperties.AddPropInt(_T("TranslucencyAlpha"), m_nTranslucencyAlpha, m_nTranslucencyAlpha != 255);
 	listProperties.AddPropInt(_T("TranslucencyAlphaOnActive"), m_nTranslucencyAlphaOnActive, m_nTranslucencyAlphaOnActive != 255);
@@ -1832,7 +1832,7 @@ void CSkinWnd::OnActivate(bool bActived)
 	else
 		m_translucencyStatus = TS_NORMAL;
 
-	if (m_bClickThrough)
+	if (m_bEnableClickThrough && m_bClickThrough)
 		SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
 #endif
 
@@ -2032,7 +2032,7 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 	m_nAlpha = nAlpha;
 	m_bClickThrough = bClickThrough;
 
-	if (!m_bEnableTransparentFeature)
+	if (!m_bEnableClickThrough)
 		return;
 	if (m_bTranslucencyLayered)
 	{
@@ -2189,7 +2189,7 @@ BOOL CSkinWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
 	// ????WS_EX_LAYERED??
 	dwStyle = GetWindowLong(m_hWnd, GWL_EXSTYLE);
 	dwStyleNew = dwStyle | WS_EX_LAYERED;
-	if (m_bClickThrough && !m_bActived)
+	if (m_bEnableClickThrough && m_bClickThrough && !m_bActived)
 		dwStyleNew |= WS_EX_TRANSPARENT;
 	else
 		dwStyleNew &= ~WS_EX_TRANSPARENT;

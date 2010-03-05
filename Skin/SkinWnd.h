@@ -275,7 +275,7 @@ public:
 
 	int					m_nAlpha;
 	bool				m_bClickThrough;
-	bool				m_bEnableTransparentFeature;
+	bool				m_bEnableClickThrough;
 
 
 public:

@@ -293,9 +293,9 @@ public:
 		ProfileLoadIntArray(_T("OpenLyrics_ListColWidth"), arrWidth, CountOf(arrWidth));
 		ASSERT(CountOf(arrWidth) == CountOf(szHead));
 		for (int i = 0; szHead[i] != NULL; i++)
-			m_pLyricsList->InsertColumn(TOLOCAL(szHead[i]), arrWidth[i]);
+			m_pLyricsList->AddColumn(TOLOCAL(szHead[i]), arrWidth[i]);
 		if (g_Profile.GetProfileInt(_T("ShowLink"), false))
-			m_pLyricsList->InsertColumn(_T("URL"), 200);
+			m_pLyricsList->AddColumn(_T("URL"), 200);
 
 		m_menu.LoadPopupMenu(IDR_MENU_OPEN_LRC_DLG, 0);
 		ToLocalMenu(&m_menu);

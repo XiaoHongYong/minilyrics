@@ -48,6 +48,8 @@ protected:
 
 		Item(LPCTSTR szText) {
 			strText = szText;
+			nImage = 0;
+			nData = 0;
 		}
 		Item(LPCTSTR szText, int nImage, int nData) {
 			this->strText = szText;
