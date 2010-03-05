@@ -248,6 +248,8 @@ public:
 #ifdef _WIN32_DESKTOP
 	virtual BOOL InvalidateRect(const RECT* lpRect = NULL, BOOL bErase = FALSE);
 
+	void InvalidateRectOfLayeredWindow(const RECT* lpRect);
+
 	BOOL UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph);
 
 	void StartTranslucencyFade();

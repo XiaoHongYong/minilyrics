@@ -102,7 +102,13 @@ public:
 
 	bool OnCustomCommand(int nId)
 	{
-		return CPagePfBase::OnCustomCommand(nId);
+		if (nId == GetIDByName(_T("CID_DS_LOAD_LATIN_FONT")))
+		{
+		}
+		else
+			return CPagePfBase::OnCustomCommand(nId);
+
+		return true;
 	}
 
 protected:

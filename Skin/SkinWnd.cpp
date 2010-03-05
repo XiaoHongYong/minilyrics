@@ -241,6 +241,9 @@ int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkin
 	// Load skin
 	OpenDefaultSkin();
 
+	if (m_bTranslucencyLayered)
+		InvalidateRectOfLayeredWindow(NULL);
+
 	ShowWindow(SW_SHOW);
 
 	return ERR_OK;
@@ -911,7 +914,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 {
 	assert(pObj);
 
-	if (m_nInRedrawUpdate > 0)
+	if (m_nInRedrawUpdate > 0 || !IsVisible() || IsIconic())
 		return;
 
 	if (!pObj->IsVisible() || !pObj->IsParentVisible())
@@ -1853,6 +1856,9 @@ void CSkinWnd::TrackMove(CBaseWnd *pWnd, int x, int y)
 
 void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
 {
+	if (m_nInRedrawUpdate > 0 || !IsVisible() || IsIconic())
+		return;
+
 #ifdef _WIN32
 	if (GetEnableTranslucencyLayered())
 		UpdateLayeredWindowUsingMemGraph(m_pmemGraph);
@@ -2069,15 +2075,26 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 
 BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 {
-	if (m_nInRedrawUpdate > 0)
+	if (m_nInRedrawUpdate > 0 || !IsVisible() || IsIconic())
 		return FALSE;
 
 	if (!m_bTranslucencyLayered)
 		return CBaseWnd::InvalidateRect(lpRect, bErase);
 
+	InvalidateRectOfLayeredWindow(lpRect);
+
+	return TRUE;
+}
+
+void CSkinWnd::InvalidateRectOfLayeredWindow(const RECT* lpRect)
+{
+	ASSERT(m_bTranslucencyLayered);
 	CRawGraph	*pMemGraph;
 
 	pMemGraph = GetMemGraphics();
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pMemGraph);
+	if (lpRect)
+		pMemGraph->SetClipBoundBox(*lpRect);
 
 	if (m_bPaintBg)
 	{
@@ -2089,8 +2106,6 @@ BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 	m_rootConainter.Draw(pMemGraph);
 
 	UpdateLayeredWindowUsingMemGraph(pMemGraph);
-
-	return TRUE;
 }
 
 /*
@@ -2158,9 +2173,6 @@ HBITMAP Load32Bitbmp(LPCTSTR szImage, int &nWidth, int &nHeight)
 
 BOOL CSkinWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
 {
-	if (m_nInRedrawUpdate > 0 || !IsVisible() || IsIconic())
-		return FALSE;
-
 // 	int		w, h;
 // 	HBITMAP	hBmp;
 // 
