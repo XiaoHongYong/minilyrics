@@ -183,8 +183,6 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-#define GET_ID_BY_NAME(_id)		_id = GetIDByName(_T(#_id))
-
 class CPageSearchLyrics : public CSkinPageHandler, public IUIObjNotifyHandler, public IEditNotification
 {
 public:

@@ -155,7 +155,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-class CPagePfSkin : public CPagePfBase, public IUIObjNotifyHandler
+class CPagePfSkin : public CPagePfBase
 {
 public:
 	CPagePfSkin() : CPagePfBase(GetPageID())

@@ -41,22 +41,8 @@ enum PreferPageID
 	PAGE_ADVANCED,
 };
 
-class CPagePfBase : public CSkinPageHandler
+class CPagePfBase : public CSkinPageHandler, public IUIObjNotifyHandler
 {
-public:
-	CPagePfBase(LPCTSTR szIdPage);
-
-	void OnCreate();
-
-	bool OnCustomCommand(int nId);
-
-	void AddOptBool(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, bool bDefValue, LPCTSTR szCtrlId);
-
-	void InitCheckButtons();
-
-protected:
-	int NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj);
-
 public:
 	struct OptBase
 	{
@@ -88,8 +74,42 @@ public:
 	};
 	typedef	list<OptBool>			VOptBool;
 
+	struct OptComboStr: public OptBase
+	{
+		int				nIDWidgetCombo;
+		vector<tstring> vValues;
+
+		void AddItemValue(LPCTSTR szValue)
+		{
+			vValues.push_back(szValue);
+		}
+	};
+	typedef	list<OptComboStr>		VOptComboStr;
+
+public:
+	CPagePfBase(LPCTSTR szIdPage);
+
+	void OnCreate();
+
+	void OnDestroy();
+
+	bool OnCustomCommand(int nId);
+
+	void AddOptBool(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, bool bDefValue, LPCTSTR szCtrlId);
+	void AddOptComboStr(OptComboStr &optComboStr) { m_vOptComboStr.push_back(optComboStr); }
+
+	void InitCheckButtons();
+
+	void OnUIObjNotify(IUIObjNotify *pNotify);
+
+protected:
+	int NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj);
+
+	void ClearOptions();
+
 protected:
 	VOptBool			m_vOptBool;
+	VOptComboStr		m_vOptComboStr;
 	tstring				m_strPageId;
 
 };

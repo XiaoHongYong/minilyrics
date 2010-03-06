@@ -66,8 +66,41 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
+void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverlayBlending &tob, int nGradientPatternHeight, bool bHilight);
+
 class CPagePfDisplayStyle : public CPagePfBase
 {
+protected:
+	enum COLOR_SET_TYPE
+	{
+		CS_OUTLINED_HIGH_BORDER,
+		CS_OUTLINED_LOW_BORDER,
+		CS_BG,
+		CS_SIZE,
+	};
+
+	struct ColorOption
+	{
+// 		ColorOption(COLORREF clrDefault, int nButtonID, LPCTSTR szValueName) {
+// 			this->clrDefault = clrDefault;
+// 			this->nButtonID = nButtonID;
+// 			this->strProfileKey = szValueName;
+// 		}
+		ColorOption() {
+			pButton = NULL;
+			nButtonID = 0;
+			clrDefault = 0;
+		}
+
+		CSkinImageButton	*pButton;
+		MLColor		clr;
+		COLORREF	clrDefault;
+		int			nButtonID;
+		tstring		strProfileKey;
+	};
+
+	ColorOption		m_ColorSet[CS_SIZE];
+
 public:
 	CPagePfDisplayStyle() : CPagePfBase(GetPageID())
 	{
@@ -83,45 +116,306 @@ public:
 	{
 		CPagePfBase::OnCreate();
 
-		m_pcbDisplayMode = (CSkinComboBox *)GetUIObjectById(_T("CID_DS_MODE"), CSkinComboBox::ClassName());
-		if (m_pcbDisplayMode)
+		GET_ID_BY_NAME(CID_DS_MODE);
+		GET_ID_BY_NAME(CID_DS_STYLE);
+		GET_ID_BY_NAME(CID_DS_FADEOUT);
+		GET_ID_BY_NAME(CID_DS_ALIGN);
+		GET_ID_BY_NAME(CID_DS_LOAD_LATIN_FONT);
+		GET_ID_BY_NAME(CID_DS_LOAD_OTHER_FONT);
+
+		m_pcbMode = (CSkinComboBox *)GetUIObjectById(CID_DS_MODE, CSkinComboBox::ClassName());
+		if (m_pcbMode)
 		{
-			m_pcbDisplayMode->AddString(TOLOCAL(_T("Normal lyrics mode settings")));
-			m_pcbDisplayMode->AddString(TOLOCAL(_T("Floating lyrics mode settings")));
+			m_pcbMode->AddString(TOLOCAL(_T("Normal lyrics mode settings")));
+			m_pcbMode->AddString(TOLOCAL(_T("Floating lyrics mode settings")));
 
 			if (m_eventType == ET_LYRICS_FLOATING_SETTINGS)
-				m_pcbDisplayMode->SetCurSel(1);
+				m_pcbMode->SetCurSel(1);
 			else
-				m_pcbDisplayMode->SetCurSel(0);
+				m_pcbMode->SetCurSel(0);
+
+			m_pSkinWnd->RegisterUIObjNotifyHandler(CID_DS_MODE, this);
 		}
+
+		SetSettingType(m_eventType == ET_LYRICS_FLOATING_SETTINGS ? ST_FLOATING_LYR : ST_NORMAL_LYR);
 	}
 
 	void OnDestroy()
 	{
+		CPagePfBase::OnDestroy();
+	}
+
+	void OnUIObjNotify(IUIObjNotify *pNotify)
+	{
+		CPagePfBase::OnUIObjNotify(pNotify);
+
+		if (pNotify->IsKindOf(CSkinComboBox::ClassName()))
+		{
+			if (pNotify->nID == CID_DS_MODE)
+			{
+				ASSERT(m_pcbMode);
+				if (m_pcbMode)
+				{
+					SetSettingType(m_pcbMode->GetCurSel() == 0 ? ST_NORMAL_LYR : ST_FLOATING_LYR);
+				}
+			}
+		}
 	}
 
 	bool OnCustomCommand(int nId)
 	{
-		if (nId == GetIDByName(_T("CID_DS_LOAD_LATIN_FONT")))
+		if (nId == CID_DS_LOAD_LATIN_FONT || nId == CID_DS_LOAD_OTHER_FONT)
 		{
+			int		nHeight, nWeight;
+			BYTE	byItalic;
+			tstring	strFaceNameLatin9, strFaceNameOthers;
+			int		nRet;
+			bool	bLatin9 = (nId == CID_DS_LOAD_LATIN_FONT);
+
+			// get default settings in profile
+			ProfileGetLyricsFont(m_strSectName.c_str(), nHeight, nWeight, 
+				byItalic, strFaceNameLatin9, strFaceNameOthers);
+
+			CDlgChooseFont		chooser;
+
+			nRet = chooser.DoModal(m_pSkinWnd, bLatin9 ? strFaceNameLatin9.c_str() : strFaceNameOthers.c_str(), 
+				nHeight, nWeight, byItalic != 0);
+			if (nRet == IDOK)
+			{
+				nHeight = chooser.GetHeight();
+				if (nHeight < 0)
+					nHeight = -nHeight;
+
+				// now save to profile
+				ProfileWriteLyricsFont(m_eventType, m_strSectName.c_str(), nHeight, chooser.GetWeight(), 
+					chooser.GetItalic(), bLatin9 ? chooser.GetFaceName() : NULL, bLatin9 ? NULL : chooser.GetFaceName());
+			}
 		}
 		else
+		{
+			//
+			// lyrics display Color settings
+			//
+			for (int i = 0; i < CountOf(m_ColorSet); i++)
+			{
+				if (nId == m_ColorSet[i].nButtonID)
+				{
+					tstring		strColor;
+
+					if (m_ColorSet[i].pButton)
+					{
+						m_ColorSet[i].clr = m_ColorSet[i].pButton->GetColor();
+
+						ColorToStr(m_ColorSet[i].clr, strColor);
+						CMPlayerSettings::SetSettings(m_eventType, m_strSectName.c_str(), m_ColorSet[i].strProfileKey.c_str(), strColor.c_str());
+					}
+					return true;
+				}
+			}
+
 			return CPagePfBase::OnCustomCommand(nId);
+		}
 
 		return true;
+	}
+
+protected:
+	enum SettingType
+	{
+		ST_NORMAL_LYR		= 0,
+		ST_FLOATING_LYR		= 1,
+	};
+
+	void SetSettingType(SettingType settingType)
+	{
+		ClearOptions();
+
+		if (settingType == ST_FLOATING_LYR)
+		{
+			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
+			m_strSectName = SZ_SECT_FLOATING_LYR;
+		}
+		else
+		{
+			m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
+			m_strSectName = SZ_SECT_LYR_DISPLAY;
+		}
+
+		{
+			// Lyrics border colors and background
+			m_ColorSet[CS_OUTLINED_HIGH_BORDER].strProfileKey = _T("HilightBorderColor");
+			m_ColorSet[CS_OUTLINED_LOW_BORDER].strProfileKey = _T("LowlightBorderColor");
+			m_ColorSet[CS_BG].strProfileKey = _T("BgColor");
+
+			m_ColorSet[CS_OUTLINED_HIGH_BORDER].clrDefault = RGB(255, 0, 0);
+			m_ColorSet[CS_OUTLINED_LOW_BORDER].clrDefault = RGB(0, 0, 255);
+			m_ColorSet[CS_BG].clrDefault = RGB(79, 88, 110);
+
+			if (m_eventType == ET_LYRICS_FLOATING_SETTINGS)
+			{
+				m_ColorSet[CS_OUTLINED_HIGH_BORDER].clrDefault = RGB(0, 0, 255);
+				m_ColorSet[CS_OUTLINED_LOW_BORDER].clrDefault = RGB(128, 128, 255);
+			}
+
+			m_ColorSet[CS_OUTLINED_HIGH_BORDER].nButtonID = GetIDByName(_T("CID_DS_CLR_HIGH_BORDER"));
+			m_ColorSet[CS_OUTLINED_LOW_BORDER].nButtonID = GetIDByName(_T("CID_DS_CLR_LOW_BORDER"));
+			m_ColorSet[CS_BG].nButtonID = GetIDByName(_T("CID_DS_CLR_BG"));
+
+			for (int i = 0; i < CountOf(m_ColorSet); i++)
+			{
+				m_ColorSet[i].pButton = (CSkinImageButton*)GetUIObjectById(m_ColorSet[i].nButtonID, CSkinImageButton::ClassName());
+				if (m_ColorSet[i].pButton)
+				{
+					m_ColorSet[i].clr.set(m_ColorSet[i].clrDefault);
+
+					ProfileGetColorValue(m_ColorSet[i].clr, 
+						m_strSectName.c_str(), m_ColorSet[i].strProfileKey.c_str());
+
+					m_ColorSet[i].pButton->SetColor(m_ColorSet[i].clr, true);
+				}
+			}
+		}
+
+		CSkinComboBox		*m_pcbStyle;
+		m_pcbStyle = (CSkinComboBox *)GetUIObjectById(CID_DS_STYLE, CSkinComboBox::ClassName());
+		if (m_pcbStyle)
+		{
+			//
+			// Add lyrics display style options
+			//
+			LPCTSTR		vszItemName[] = { _T("Vertical scrolling"), _T("Double lines"), _T("Single line"),
+				_T("Horizontal scrolling"), _T("Static text"), _T("Movie subtitle") };
+
+			LPCTSTR		vszItemValues[] = { CLyricShowMultiRowObj::ClassName(), CLyricShowTwoRowObj::ClassName(), 
+				CLyricShowSingleRowObj::ClassName(), CLyricShowHorzScrollObj::ClassName(), 
+				CLyricShowTxtObj::ClassName(), CLyricShowVobSub::ClassName() };
+
+			OptComboStr		opt;
+			opt.nIDWidgetCombo = CID_DS_STYLE;
+			opt.Set(ET_UI_SETTINGS_CHANGED,
+				m_strSectName.c_str(), 
+				_T("LyrDisplayStyle"),
+				CLyricShowMultiRowObj::ClassName());
+
+			m_pcbStyle->ResetContent();
+			ASSERT(CountOf(vszItemName) == CountOf(vszItemValues));
+			for (int i = 0; i < CountOf(vszItemValues); i++)
+			{
+				m_pcbStyle->InsertString(i, TOLOCAL(vszItemName[i]));
+				opt.AddItemValue(vszItemValues[i]);
+			}
+			AddOptComboStr(opt);
+		}
+
+		CSkinComboBox		*m_pcbAlign;
+		m_pcbAlign = (CSkinComboBox *)GetUIObjectById(CID_DS_ALIGN, CSkinComboBox::ClassName());
+		if (m_pcbAlign)
+		{
+			//
+			// lyrics align
+			//
+			LPCTSTR		vszItemName[] = { _T("Left"), _T("Center"), _T("Right") };
+			LPCTSTR		vszItemValues[] = { _T("left"), _T("center"), _T("right") };
+
+			OptComboStr		opt;
+			opt.nIDWidgetCombo = CID_DS_ALIGN;
+			opt.Set(m_eventType, m_strSectName.c_str(), _T("LyrAlign"), _T("center"));
+
+			ASSERT(CountOf(vszItemName) == CountOf(vszItemValues));
+			m_pcbAlign->ResetContent();
+			for (int i = 0; i < CountOf(vszItemValues); i++)
+			{
+				m_pcbAlign->InsertString(i, TOLOCAL(vszItemName[i]));
+				opt.AddItemValue(vszItemValues[i]);
+			}
+			AddOptComboStr(opt);
+		}
+
+		CSkinComboBox		*m_pcbFadeOut;
+		m_pcbFadeOut = (CSkinComboBox *)GetUIObjectById(CID_DS_FADEOUT, CSkinComboBox::ClassName());
+		if (m_pcbFadeOut)
+		{
+			// lyrics Fade out options
+			LPCTSTR		vszItemName[] = { _T("Normal"), _T("Fade in lyrics"), _T("Fade out background") };
+
+			OptComboStr		opt;
+			opt.nIDWidgetCombo = CID_DS_FADEOUT;
+			opt.Set(m_eventType, m_strSectName.c_str(), _T("LyrDrawOpt"), _T("fadein"));
+
+			ASSERT(CountOf(vszItemName) == DO_MAX);
+			m_pcbFadeOut->ResetContent();
+			for (int i = 0; i < CountOf(vszItemName); i++)
+			{
+				m_pcbFadeOut->InsertString(i, TOLOCAL(vszItemName[i]));
+				opt.AddItemValue(g_idsLyrDisplayOpt[i].szId);
+			}
+			AddOptComboStr(opt);
+		}
+
+		// karaoke option
+		AddOptBool(m_eventType, m_strSectName.c_str(), _T("Karaoke"), false, _T("CID_C_KARAOKE"));
+
+		AddOptBool(m_eventType, m_strSectName.c_str(), _T("OutlineLyrText"), false, _T("CID_C_DRAW_SHADOW"));
+
+		InitCheckButtons();
+
+		CreateLOBXlightBmp(true);
+		CreateLOBXlightBmp(false);
+
+		m_pSkinWnd->InvalidateRect();
+	}
+
+	void CreateLOBXlightBmp(bool bHilight)
+	{
+		CRect					rc;
+		CLyricShowObj::TextOverlayBlending		tob;
+
+		if (!GetUIObjectRect(GetIDByName(_T("CID_DS_CLR_HIGH")), rc))
+			return;
+
+		LoadLyrOverlayBlendingSettings(m_strSectName.c_str(), tob, rc.Height(), bHilight);
+
+		if (tob.obm == OBM_COLOR)
+		{
+			PRAW_IMAGE_DATA		pRawImage;
+
+			pRawImage = new RAW_IMAGE_DATA;
+			pRawImage->Create(rc.Width(), rc.Height(), 24);
+			RawImageSet(pRawImage, tob.clr[CLyricShowObj::TCI_FILL].r(), 
+				tob.clr[CLyricShowObj::TCI_FILL].g(), 
+				tob.clr[CLyricShowObj::TCI_FILL].b(),
+				tob.clr[CLyricShowObj::TCI_FILL].getAlpha());
+			tob.imgPattern.Attach(pRawImage);
+		}
+
+		if (tob.imgPattern.IsValid())
+		{
+			CSkinImageButton	*pButton;
+			pButton = (CSkinImageButton*)GetUIObjectById(
+				bHilight ? _T("CID_DS_CLR_HIGH") : _T("CID_DS_CLR_LOW"), CSkinImageButton::ClassName());
+
+			if (pButton)
+			{
+				pButton->SetContentImage(tob.imgPattern.GetHandle());
+				tob.imgPattern.Detach();
+			}
+		}
 	}
 
 protected:
 	EventType			m_eventType;
 	tstring				m_strSectName;
 
-	CSkinComboBox		*m_pcbDisplayMode;
+	int					CID_DS_MODE, CID_DS_STYLE, CID_DS_FADEOUT, CID_DS_ALIGN;
+	int					CID_DS_LOAD_LATIN_FONT, CID_DS_LOAD_OTHER_FONT;
+
+	CSkinComboBox		*m_pcbMode;
 
 };
 
 //////////////////////////////////////////////////////////////////////////
 
-class CPagePfTheme : public CPagePfBase, public IUIObjNotifyHandler
+class CPagePfTheme : public CPagePfBase
 {
 public:
 	CPagePfTheme() : CPagePfBase(GetPageID())
@@ -635,8 +929,6 @@ void CPPageLyrDisplay::OnShowPage()
 
 void CPPageLyrDisplay::SetSettingType(SettingType settingType)
 {
-	EventType	m_eventTypeOld;
-	m_eventTypeOld = m_eventType;
 	m_nColorSetCount = CS_SIZE;
 	if (settingType == ST_FLOATING_LYR)
 	{

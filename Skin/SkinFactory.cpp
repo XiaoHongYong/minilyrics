@@ -1201,6 +1201,8 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	{
 		pObj = new CSkinActiveButton;
 	}
+	else if (IsPropertyName(szClassName, CSkinImageButton::ClassName()))
+		pObj = new CSkinImageButton;
 	else if (_tcsicmp(szClassName, CSkinImage::ClassName()) == 0)
 	{
 		pObj = new CSkinImage;

@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "PreferencePageBase.h"
+#include "SkinComboBox.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -23,6 +24,13 @@ void CPagePfBase::OnCreate()
 	m_nAnimationShowFRight = NewAnimationObj(_T("MoveFromRight"), m_strPageId.c_str());
 	m_nAnimationHide2Left = NewAnimationObj(_T("MoveToLeft"), m_strPageId.c_str());
 	m_nAnimationHide2Right = NewAnimationObj(_T("MoveToRight"), m_strPageId.c_str());
+}
+
+void CPagePfBase::OnDestroy()
+{
+	m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
+
+	ClearOptions();
 }
 
 bool CPagePfBase::OnCustomCommand(int nId)
@@ -71,6 +79,37 @@ void CPagePfBase::AddOptBool(EventType evtType, LPCTSTR szSection, LPCTSTR szSet
 
 void CPagePfBase::InitCheckButtons()
 {
+	{
+		//
+		// Check Combo Str
+		//
+		VOptComboStr::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptComboStr.end();
+		for (it = m_vOptComboStr.begin(); it != itEnd; ++it)
+		{
+			OptComboStr		&opt = *it;
+			CSkinComboBox	*pCombBox = (CSkinComboBox *)m_pSkinWnd->GetUIObjectById(opt.nIDWidgetCombo, CSkinComboBox::ClassName());
+			if (!pCombBox)
+				continue;
+
+			m_pSkinWnd->RegisterUIObjNotifyHandler(opt.nIDWidgetCombo, this);
+
+			strValue = g_Profile.GetProfileString(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.strDefaultValue.c_str());
+			if (strValue.empty())
+				strValue = opt.strDefaultValue;
+			else
+				opt.strDefaultValue = strValue;
+			for (int i = 0; i < (int)opt.vValues.size(); i++)
+			{
+				if (_tcsicmp(opt.vValues[i].c_str(), strValue.c_str()) == 0)
+				{
+					pCombBox->SetCurSel(i);
+					break;
+				}
+			}
+		}
+	}
 
 	{
 		//
@@ -91,6 +130,48 @@ void CPagePfBase::InitCheckButtons()
 				ERRLOG1(_T("Control: %s is NOT defined in skin."), m_pSkinWnd->GetSkinFactory()->GetStringOfID(opt.nCtrl));
 		}
 	}
+}
+
+void CPagePfBase::OnUIObjNotify(IUIObjNotify *pNotify)
+{
+	if (pNotify->IsKindOf(CSkinComboBox::ClassName()))
+	{
+		//
+		// Process Combo Str select changed command
+		//
+		VOptComboStr::iterator	it, itEnd;
+		tstring		strValue;
+		itEnd = m_vOptComboStr.end();
+		for (it = m_vOptComboStr.begin(); it != itEnd; ++it)
+		{
+			OptComboStr		&opt = *it;
+			if (opt.nIDWidgetCombo != pNotify->nID
+				|| ((CSkinComboBoxEventNotify *)pNotify)->cmd != CSkinComboBoxEventNotify::C_SEL_CHANGED)
+				continue;
+
+			CSkinComboBox	*pCombbox = (CSkinComboBox *)pNotify->pUIObject;
+			int				nSel;
+			nSel = pCombbox->GetCurSel();
+
+			if (nSel >= 0 && nSel < (int)opt.vValues.size())
+			{
+				if (_tcsicmp(opt.vValues[nSel].c_str(), opt.strDefaultValue.c_str()) != 0)
+				{
+					// Value changed...
+					opt.strDefaultValue = opt.vValues[nSel];
+					CMPlayerSettings::SetSettings(opt.eventType, opt.strSection.c_str(),
+						opt.strSettingName.c_str(), opt.vValues[nSel].c_str(), opt.eventType != ET_INVALID);
+				}
+			}
+			return;
+		}
+	}
+}
+
+void CPagePfBase::ClearOptions()
+{
+	m_vOptBool.clear();
+	m_vOptComboStr.clear();
 }
 
 int CPagePfBase::NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj)

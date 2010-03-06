@@ -27,13 +27,13 @@
     <NormalFrame Rect="10,130,w-20,160" Text="Color of lyrics text"/>
     <NormalCheckBox ID="CID_C_DRAW_SHADOW" Text="Draw shadow of lyrics text" Rect="25,155,w-50,"/>
     <NormalText Rect="25,185,w/2-35," Text="Highlight lyrics color:"/>
-    <NormalTextBt ID="CID_DS_CLR_HIGH" Text="Highligh" Rect="w/2,185,w/4-20,"/>
-    <NormalTextBt ID="CID_DS_CLR_HIGH_BORDER" Text="Highligh Border" Rect="w/2+w/4,185,w/4-20,"/>
+    <NormalImageBt ID="CID_DS_CLR_HIGH" Text="Highligh" Rect="w/2,185,w/4-20,"/>
+    <NormalImageBt ID="CID_DS_CLR_HIGH_BORDER" Text="Highligh Border" Rect="w/2+w/4,185,w/4-20,"/>
     <NormalText Rect="25,215,w/2-35," Text="Normal lyrics color:"/>
-    <NormalTextBt ID="CID_DS_CLR_LOW" Text="lowligh" Rect="w/2,215,w/4-20,"/>
-    <NormalTextBt ID="CID_DS_CLR_LOW_BORDER" Text="lowligh Border" Rect="w/2+w/4,215,w/4-20,"/>
+    <NormalImageBt ID="CID_DS_CLR_LOW" Text="lowligh" Rect="w/2,215,w/4-20,"/>
+    <NormalImageBt ID="CID_DS_CLR_LOW_BORDER" Text="lowligh Border" Rect="w/2+w/4,215,w/4-20,"/>
     <NormalText Rect="25,245,w/2-35," Text="Background color:"/>
-    <NormalTextBt ID="CID_DS_CLR_BG" Text="lowligh" Rect="w/2,245,w/4-20,"/>
+    <NormalImageBt ID="CID_DS_CLR_BG" Text="bg" Rect="w/2,245,w/4-20,"/>
 
     <NormalFrame Rect="10,285,w-20,100" Text="Lyrics display style"/>
     <NormalComboBox ID="CID_DS_STYLE" Text="Display Style" Rect="25,310,w/2-45,"/>

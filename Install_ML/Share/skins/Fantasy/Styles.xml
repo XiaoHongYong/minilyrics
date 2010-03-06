@@ -44,6 +44,10 @@
           Height="28" XMargin="5" YMargin="4" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
           Image="s_txt_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
+    <NormalImageBt Extends="ImageButton" ContentMarginX="9" ContentMarginY="7"
+          Height="28" XMargin="5" YMargin="4" UseSkinBg="true" 
+          Image="s_image_button.png" ImageSize="70,28" ExtendPos="20,50"
+          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
     <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
           Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
           CanCheck="true"

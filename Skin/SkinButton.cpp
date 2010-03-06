@@ -149,3 +149,92 @@ void CSkinActiveButton::Draw(CRawGraph *pGraph)
 
 // class CSkinActiveButton
 ///////////////////////////////////////////////////////////////////////////////
+
+UIOBJECT_CLASS_NAME_IMP(CSkinImageButton, _T("ImageButton"))
+
+CSkinImageButton::CSkinImageButton()
+{
+	m_bContentImage = true;
+	m_bAutoSelColor = false;
+	m_nContentMarginX = 5, m_nContentMarginY = 5;
+}
+
+CSkinImageButton::~CSkinImageButton()
+{
+
+}
+
+void CSkinImageButton::Draw(CRawGraph *pGraph)
+{
+	CSkinButton::Draw(pGraph);
+
+	CRect	rc = m_rcObj;
+	rc.DeflateRect(m_nContentMarginX, m_nContentMarginY);
+	if (m_bContentImage)
+	{
+		// DrawImage
+		if (m_contentImage.IsValid())
+			m_contentImage.StretchBlt(pGraph, rc.left, rc.top, rc.Width(), rc.Height());
+	}
+	else
+	{
+		// Fill with color
+		pGraph->FillRect(&rc, m_clrContent);
+	}
+}
+
+BOOL CSkinImageButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
+{
+	if (CSkinButton::SetProperty(szProperty, szValue))
+		return TRUE;
+
+	if (IsPropertyName(szProperty, _T("ContentMarginX")))
+		m_nContentMarginX = _ttoi(szValue);
+	else if (IsPropertyName(szProperty, _T("ContentMarginY")))
+		m_nContentMarginY = _ttoi(szValue);
+	else
+		return FALSE;
+
+	return TRUE;
+}
+
+void CSkinImageButton::SetContentImage(PRAW_IMAGE_DATA pRawImage)
+{
+	m_contentImage.Attach(pRawImage);
+	m_bContentImage = true;
+}
+
+void CSkinImageButton::SetColor(const MLColor &clr, bool bAutoSelColor)
+{
+	m_clrContent = clr;
+	m_bContentImage = false;
+	m_bAutoSelColor = bAutoSelColor;
+}
+
+bool CSkinImageButton::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	if (!m_bEnable)
+		return false;
+
+	// ÊÍ·ÅÊó±êÊäÈë
+	m_pSkin->ReleaseCaptureMouse(this);
+
+	if (!m_bLBtDown)
+		return true;
+
+	if (!m_bContentImage && m_bAutoSelColor)
+	{
+		CDlgChooseColor		dlg;
+
+		if (dlg.DoModal(m_pSkin, m_clrContent) == IDOK)
+			m_clrContent = dlg.GetColor();
+		else
+		{
+			m_bLBtDown = FALSE;
+			Invalidate();
+			return true;
+		}
+	}
+
+	return CSkinButton::OnLButtonUp(nFlags, point);
+}
