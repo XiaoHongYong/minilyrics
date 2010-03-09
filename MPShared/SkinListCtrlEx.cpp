@@ -65,6 +65,12 @@ CSkinListCtrlEx::~CSkinListCtrlEx()
 {
 }
 
+void CSkinListCtrlEx::AddColumn(LPCTSTR szCol, int nWidth)
+{
+	m_vHeading.push_back(new LC_ITEMEX::CExColHeader(szCol, nWidth));
+
+	SetHorzScrollInfo(false);
+}
 
 BOOL CSkinListCtrlEx::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText)
 {
@@ -72,7 +78,7 @@ BOOL CSkinListCtrlEx::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText)
 	if (nItem >= 0 && nItem < (int)m_vRows.size())
 	{
 		LC_ROW		*row = m_vRows[nItem];
-		LC_ITEMEX		*item = (LC_ITEMEX*)row->GetSubItem(nSubItem);
+		LC_ITEMEX	*item = (LC_ITEMEX*)row->GetSubItem(nSubItem);
 		if (item)
 		{
 			item->strText = lpszText;
@@ -114,38 +120,21 @@ BOOL CSkinListCtrlEx::SetItemTextEx(int nItem, int nSubItem, LPCTSTR lpszText, c
 
 int CSkinListCtrlEx::InsertItem(int nItem, LPCTSTR lpszItem, const LC_ITEMEX::VecTextColor & vTextColor, int nImageIndex, UINT nItemData, bool bRedraw)
 {
-	LC_ROW		*row = new LC_ROW;
-	LC_ITEMEX		*item = NULL;
+	int	n = CSkinListCtrl::InsertItem(nItem, lpszItem, nImageIndex, nItemData, false);
 
-	row->nItemData = nItemData;
-	row->nImageIndex = nImageIndex;
-
-	item = new LC_ITEMEX;
-	item->strText = lpszItem;
-	item->vTextColor = vTextColor;
-	row->listItems.push_back(item);
-
-	// alloc space for the new item column
-	for (int i = 1; i < (int)m_vHeading.size(); i++)
+	if (n >= 0 && n < m_vRows.size())
 	{
-		item = new LC_ITEMEX;
-		row->listItems.push_back(item);
+		LC_ITEMEX		*item = (LC_ITEMEX *)(m_vRows[n]->listItems.front());
+		item->vTextColor = vTextColor;
 	}
 
-	if (nItem >= 0 && nItem < (int)m_vRows.size())
+	if (bRedraw)
 	{
-		m_vRows.insert(m_vRows.begin() + nItem, row);
-	}
-	else
-	{
-		m_vRows.push_back(row);
-		nItem = m_vRows.size() - 1;
-	}
+		SetScrollInfo(true);
 
-	SetScrollInfo(bRedraw);
-
-	if (bRedraw && nItem >= m_nFirstVisibleRow && nItem <= m_nFirstVisibleRow + m_rcObj.Height() / m_nLineHeight)
-		Invalidate();
+		if (nItem >= m_nFirstVisibleRow && nItem <= m_nFirstVisibleRow + m_rcObj.Height() / m_nLineHeight)
+			Invalidate();
+	}
 
 	return nItem;
 }

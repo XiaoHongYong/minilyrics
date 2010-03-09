@@ -85,9 +85,9 @@
   <skinwnd Name="minilyrics" MinWidth="215" MinHeight="35" Width="400" Height="200" BgColor="#D6DBBD" FgColor="#0061FF" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="2" Top="23" Width="w - 4" Height="h -23 - 8" BgColor="#D6DBBD" FgColor="#0061FF" FgLowColor="#848284" FocusLineBgColor="#8CBAEF" />
     <XScaleImage Left="0" Top="0" Width="w" Height="23" ID="ID_NONE" Name="Caption" Image="caption.bmp" ImageRect="0,0,265,23" ImageScaleXStart="80" ImageScaleXEnd="205"/>
-    <Button Left="w - 56" Top="5" Width="15" Height="15" ID="ID_MINIMIZE" Name="Minimize" CanCheck="FALSE" Checked="FALSE" Image="std-buttons.bmp" ImageRect="0,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="0,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="0,30,15,15"/>
-    <Button Left="w - 38" Top="5" Width="15" Height="15" ID="dyncmd_change_to_bar" Name="lyrics bar" ToolTip="Lyrics Bar" CanCheck="FALSE" Checked="FALSE" Image="std-buttons.bmp" ImageRect="15,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="15,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="15,30,15,15"/>
-    <Button Left="w - 20" Top="5" Width="15" Height="15" ID="ID_QUIT" Name="Quit" CanCheck="FALSE" Checked="FALSE" Image="std-buttons.bmp" ImageRect="30,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="30,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="30,30,15,15"/>
+    <Button Left="w - 56" Top="5" Width="15" Height="15" ID="ID_MINIMIZE" Name="Minimize" Image="std-buttons.bmp" ImageRect="0,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="0,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="0,30,15,15"/>
+    <Button Left="w - 38" Top="5" Width="15" Height="15" ID="dyncmd_change_to_bar" Name="lyrics bar" ToolTip="Lyrics Bar" Image="std-buttons.bmp" ImageRect="15,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="15,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="15,30,15,15"/>
+    <Button Left="w - 20" Top="5" Width="15" Height="15" ID="ID_QUIT" Name="Quit" Image="std-buttons.bmp" ImageRect="30,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="30,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="30,30,15,15"/>
     <Toolbar Left="83" Top="2" Width="72" Height="20" Image="button.bmp" enablehover="TRUE" units_x="18" blank_x="0" blank_cx="0">
       <button ID="ID_SEARCH_LYRICS" Left="0" Width="1" Continuous="TRUE"/>
       <button ID="ID_Previous" Left="1" Width="1" Continuous="TRUE"/>
@@ -105,15 +105,15 @@
     <Image Left="8" Top="0" Width="w-8-45" Height="4" ID="ID_NONE" Name="top Frame" Image="lyr-bar-frame.bmp" ImageRect="8,0,148,4" BltMode="stretch"/>
     <Image Left="8" Top="h-4" Width="w-8-45" Height="4" ID="ID_NONE" Name="Bt Frame" Image="lyr-bar-frame.bmp" ImageRect="8,21,148,4" BltMode="stretch"/>
     <Button Left="w-9" Top="h/2-3" Width="7" Height="7" ID="ID_CLOSE" Image="smallbt.bmp" ImageRect="21,0,7,7" ImageSel="smallbt.bmp" ImageSelRect="21,7,7,7"/>
-    <Button Left="w-40" Top="h/2-8" Width="12" Height="16" ID="ID_MENU" Name="Menu" CanCheck="FALSE" Checked="FALSE" Image="buttons.bmp" ImageRect="0,0,16,16" ImageSel="buttons.bmp" ImageSelRect="17,0,16,16" ImageFocus="buttons.bmp" ImageFocusRect="0,17,16,16"/>
-    <Button Left="w-26" Top="h/2-8" Width="14" Height="16" ID="ID_NEXT" Name="Next" CanCheck="FALSE" Checked="FALSE" Image="buttons2.bmp" ImageRect="0,0,16,16" ImageSel="buttons2.bmp" ImageSelRect="17,0,16,16" ImageFocus="buttons2.bmp" ImageFocusRect="0,17,16,16"/>
+    <Button Left="w-40" Top="h/2-8" Width="12" Height="16" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,16,16" ImageSel="buttons.bmp" ImageSelRect="17,0,16,16" ImageFocus="buttons.bmp" ImageFocusRect="0,17,16,16"/>
+    <Button Left="w-26" Top="h/2-8" Width="14" Height="16" ID="ID_NEXT" Name="Next" Image="buttons2.bmp" ImageRect="0,0,16,16" ImageSel="buttons2.bmp" ImageSelRect="17,0,16,16" ImageFocus="buttons2.bmp" ImageFocusRect="0,17,16,16"/>
   </skinwnd>
   <skinwnd Name="lyreditor" MinWidth="215" MinHeight="35" Width="400" Height="200" BgColor="#D6DBBD" FgColor="#0061FF" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player" OnCreateCommand="dyncmd_load_toolbar_state">    
       <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="23">      
     <XScaleImage Left="0" Top="0" Width="w" Height="23" ID="ID_NONE" Name="Caption" Image="editor-caption.png" ImageRect="0,0,275,23" ImageScaleXStart="115" ImageScaleXEnd="225"/>      
-    <Button Left="w - 56" Top="5" Width="15" Height="15" ID="ID_MINIMIZE" Name="Minimize" CanCheck="FALSE" Checked="FALSE" Image="std-buttons.bmp" ImageRect="0,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="0,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="0,30,15,15"/>
-    <Button Left="w - 38" Top="5" Width="15" Height="15" ID="ID_MAXIMIZE" Name="Maximize" CanCheck="FALSE" Checked="FALSE" Image="std-buttons.bmp" ImageRect="15,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="15,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="15,30,15,15"/>
-    <Button Left="w - 20" Top="5" Width="15" Height="15" ID="ID_CLOSE" Name="Quit" CanCheck="FALSE" Checked="FALSE" Image="std-buttons.bmp" ImageRect="30,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="30,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="30,30,15,15"/>    
+    <Button Left="w - 56" Top="5" Width="15" Height="15" ID="ID_MINIMIZE" Name="Minimize" Image="std-buttons.bmp" ImageRect="0,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="0,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="0,30,15,15"/>
+    <Button Left="w - 38" Top="5" Width="15" Height="15" ID="ID_MAXIMIZE" Name="Maximize" Image="std-buttons.bmp" ImageRect="15,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="15,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="15,30,15,15"/>
+    <Button Left="w - 20" Top="5" Width="15" Height="15" ID="ID_CLOSE" Name="Quit" Image="std-buttons.bmp" ImageRect="30,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="30,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="30,30,15,15"/>    
       <MenuBar left="200" top="4" width="w-200-15" height="15" Name="Menu" Menu="LyrEditorMenu" FontHeight="14" FontBold="false" TextColor="#202020" TextOutlinedColor="#FFFFFF" TextOutlined="TRUE" TextColorHover="#800040" TextOutlinedColorHover="#FFFFFF" TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" BgColorPressed="#FFFFFF" BgPressedAlpha="127"/>           
     <Toolbar Left="115" Top="2" Width="72" Height="20" Image="button.bmp" enablehover="TRUE" units_x="18" blank_x="0" blank_cx="0">
       <button ID="ID_SEARCH_LYRICS" Left="0" Width="1"/>

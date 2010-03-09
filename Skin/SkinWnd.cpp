@@ -677,6 +677,13 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 		return;
 	}
 
+	if (nChar == VK_RETURN)
+	{
+		// let focus uiobject to process key message
+		if (pObjFocus && pObjFocus->WantMsgEnterKey())
+			pObjFocus->OnKeyDown(nChar, nFlags);
+	}
+
 	// let focus uiobject to process key message
 	if (pObjFocus && pObjFocus->WantMsgKey())
 		pObjFocus->OnKeyDown(nChar, nFlags);

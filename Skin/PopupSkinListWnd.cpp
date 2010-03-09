@@ -6,6 +6,9 @@ CPopupSkinListWnd::CPopupSkinListWnd()
 {
 	m_nCurSel = -1;
 	m_pListCtrl = NULL;
+	m_nLineHeight = 0;
+
+	m_pListCtrl = &m_listCtrlData;
 }
 
 CPopupSkinListWnd::~CPopupSkinListWnd()
@@ -19,25 +22,27 @@ void CPopupSkinListWnd::OnLoadWndSizePos()
 
 void CPopupSkinListWnd::OnSkinLoaded()
 {
-	m_pListCtrl = (CSkinListCtrl *)GetUIObjectByClassName(CSkinListCtrl::ClassName());
-	ASSERT(m_pListCtrl);
-	if (!m_pListCtrl)
+	CSkinListCtrl *pListCtrl = (CSkinListCtrl *)GetUIObjectByClassName(CSkinListCtrl::ClassName());
+	ASSERT(pListCtrl);
+	if (!pListCtrl)
 		return;
+
+	m_pListCtrl = pListCtrl;
 
 	RegisterUIObjNotifyHandler(m_pListCtrl->m_nId, this);
 
-	m_pListCtrl->AddColumn(_T("col0"), 10);
-	m_pListCtrl->AddColumn(_T("col1"), 100);
+	m_pListCtrl->m_imageListRightSpace = 14;
 
-	for (int i = 0; i < (int)m_vItems.size(); i++)
-	{
-		Item &item = m_vItems[i];
-		m_pListCtrl->InsertItem(i, _T(""), item.nImage, item.nData, false);
-		m_pListCtrl->SetItemText(i, 1, item.strText.c_str());
-	}
+	m_pListCtrl->m_vHeading = m_listCtrlData.m_vHeading;
+	m_pListCtrl->m_vRows = m_listCtrlData.m_vRows;
+
+	m_listCtrlData.m_vHeading.clear();
+	m_listCtrlData.m_vRows.clear();
+
+	m_pListCtrl->SetLineHeight(m_nLineHeight);
 
 	if (m_nCurSel != -1)
-		m_pListCtrl->SetItemSelectionState(m_nCurSel, true);
+		m_pListCtrl->SelectRangeRow(m_nCurSel, m_nCurSel);
 
 	int		nContentHeight = m_pListCtrl->GetContentHeight();
 
@@ -51,6 +56,24 @@ void CPopupSkinListWnd::OnSkinLoaded()
 
 		MoveWindow(rcNew, FALSE);
 	}
+
+	CPopupSkinWnd::OnSkinLoaded();
+}
+
+void CPopupSkinListWnd::CloseSkin()
+{
+	if (m_bSkinOpened && m_pListCtrl)
+	{
+		m_listCtrlData.m_vHeading = m_pListCtrl->m_vHeading;
+		m_listCtrlData.m_vRows = m_pListCtrl->m_vRows;
+
+		m_pListCtrl->m_vHeading.clear();
+		m_pListCtrl->m_vRows.clear();
+
+		m_pListCtrl = &m_listCtrlData;
+	}
+
+	CPopupSkinWnd::CloseSkin();
 }
 
 void CPopupSkinListWnd::OnUIObjNotify(IUIObjNotify *pNotify)
@@ -62,7 +85,8 @@ void CPopupSkinListWnd::OnUIObjNotify(IUIObjNotify *pNotify)
 	ASSERT(pNotify->IsKindOf(CSkinListCtrl::ClassName()));
 
 	CSkinListCtrlEventNotify *pListCtrlNotify = (CSkinListCtrlEventNotify*)pNotify;
-	if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_CLICK)
+	if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_CLICK
+		|| pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_ENTER)
 	{
 		SetCurSel(m_pListCtrl->GetNextSelectedItem());
 		m_pPopupSkinWndNotify->PopupSkinWndOnSelected();
@@ -70,116 +94,106 @@ void CPopupSkinListWnd::OnUIObjNotify(IUIObjNotify *pNotify)
 	}
 }
 
-int CPopupSkinListWnd::GetCount() const
-{
-	return (int)m_vItems.size();
-}
-
 int CPopupSkinListWnd::GetCurSel()
 {
 	return m_nCurSel;
 }
 
+int CPopupSkinListWnd::GetItemCount() const
+{
+	if (m_pListCtrl)
+		return m_pListCtrl->GetItemCount();
+	else
+	{
+		ASSERT(0);
+		return 0;
+	}
+}
+
 void CPopupSkinListWnd::SetCurSel(int nIndex)
 {
-	if (nIndex >= (int)m_vItems.size())
+	if (nIndex >= (int)GetItemCount())
 		return;
 
-	if (m_nCurSel >= 0 && m_nCurSel < (int)m_vItems.size())
-		m_vItems[m_nCurSel].nImage = 0;
+	ASSERT(m_pListCtrl);
+	if (!m_pListCtrl)
+		return;
+
+	if (m_nCurSel != -1)
+		m_pListCtrl->SetItemImageIndex(m_nCurSel, 0);
 
 	m_nCurSel = nIndex;
 
-	m_vItems[m_nCurSel].nImage = 1;
+	if (m_nCurSel != -1)
+		m_pListCtrl->SetItemImageIndex(m_nCurSel, 1);
 }
 
-int CPopupSkinListWnd::AddString(LPCTSTR szStr)
+BOOL CPopupSkinListWnd::DeleteItem(int nItem)
 {
-	Item	item(szStr);
-	m_vItems.push_back(item);
-	return m_vItems.size() - 1;
-}
-
-int CPopupSkinListWnd::InsertString(int nIndex, LPCTSTR lpszString)
-{
-	Item	item(lpszString);
-	if (nIndex >= m_vItems.size() || nIndex < 0)
-	{
-		m_vItems.push_back(item);
-		return m_vItems.size() - 1;
-	}
+	ASSERT(m_pListCtrl);
+	if (m_pListCtrl)
+		return m_pListCtrl->DeleteItem(nItem, false);
 	else
-	{
-		m_vItems.insert(m_vItems.begin() + nIndex, item);
-		return nIndex;
-	}
+		return FALSE;
 }
 
-void CPopupSkinListWnd::SetItemData(int nIndex, UINT nItemData)
+BOOL CPopupSkinListWnd::DeleteAllItems()
 {
-	if (nIndex < 0 || nIndex >= m_vItems.size())
-		return;
-	m_vItems[nIndex].nData = nItemData;
+	ASSERT(m_pListCtrl);
+	if (m_pListCtrl)
+		return m_pListCtrl->DeleteAllItems(false);
+	else
+		return FALSE;
 }
 
-UINT CPopupSkinListWnd::GetItemData(int nIndex)
+int CPopupSkinListWnd::InsertItem(int nItem, LPCTSTR lpszItem, int nImageIndex, UINT nItemData)
 {
-	if (nIndex < 0 || nIndex >= m_vItems.size())
+	ASSERT(m_pListCtrl);
+	if (m_pListCtrl)
+		return m_pListCtrl->InsertItem(nItem, lpszItem, nImageIndex, nItemData, false);
+	else
+		return -1;
+}
+
+BOOL CPopupSkinListWnd::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText)
+{
+	ASSERT(m_pListCtrl);
+	if (m_pListCtrl)
+		return m_pListCtrl->SetItemText(nItem, nSubItem, lpszText);
+	else
+		return FALSE;
+}
+
+BOOL CPopupSkinListWnd::SetItemImage(int nItem, int nSubItem, PRAW_IMAGE_DATA hImage)
+{
+	ASSERT(m_pListCtrl);
+	if (m_pListCtrl)
+		return m_pListCtrl->SetItemImage(nItem, nSubItem, hImage);
+	else
+		return FALSE;
+}
+
+tstring CPopupSkinListWnd::GetItemText(int nItem, int nSubItem) const
+{
+	tstring	str;
+	ASSERT(m_pListCtrl);
+	if (m_pListCtrl)
+		m_pListCtrl->GetItemText(nItem, nSubItem, str);
+	return str;
+}
+
+void CPopupSkinListWnd::SetItemData(int nItem, UINT nItemData)
+{
+	ASSERT(m_pListCtrl);
+	if (m_pListCtrl)
+		m_pListCtrl->SetItemData(nItem, nItemData);
+}
+
+UINT CPopupSkinListWnd::GetItemData(int nItem)
+{
+	ASSERT(m_pListCtrl);
+	if (m_pListCtrl)
+		return m_pListCtrl->GetItemData(nItem);
+	else
 		return 0;
-	return m_vItems[nIndex].nData;
-}
-
-UINT CPopupSkinListWnd::GetItemText(int nIndex, tstring &str)
-{
-	str.clear();
-	if (nIndex < 0 || nIndex >= m_vItems.size())
-		return 0;
-
-	str = m_vItems[nIndex].strText;
-
-	return str.size();
-}
-
-bool CPopupSkinListWnd::DeleteString(UINT nIndex)
-{
-	if (nIndex < 0 || nIndex >= m_vItems.size())
-		return false;
-
-	m_vItems.erase(m_vItems.begin() + nIndex);
-
-	if (m_nCurSel > nIndex)
-		m_nCurSel--;
-
-	return true;
-}
-
-void CPopupSkinListWnd::ResetContent()
-{
-	m_vItems.clear();
-}
-
-int CPopupSkinListWnd::FindStringExact(int nIndexStart, LPCTSTR lpszFind) const
-{
-	ASSERT(nIndexStart >= -1);
-	for (int i = nIndexStart + 1; i < (int)m_vItems.size(); i++)
-	{
-		const Item	&item = m_vItems[i];
-		if (_tcscmp(item.strText.c_str(), lpszFind) == 0)
-			return i;
-	}
-
-	return -1;
-}
-
-int CPopupSkinListWnd::SelectString(int nStartAfter, LPCTSTR lpszString)
-{
-	SetCurSel(FindStringExact(nStartAfter, lpszString));
-
-	return m_nCurSel;
-}
-
-void CPopupSkinListWnd::GetSelItemText(tstring &str)
-{
-	if (m_nCurSel >= 0 && m_nCurSel < (int)m_vItems.size())
-		str = m_vItems[m_nCurSel].strText;
 }

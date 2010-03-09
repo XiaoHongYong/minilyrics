@@ -14,54 +14,49 @@ public:
 
 	void OnSkinLoaded();
 
+	virtual void CloseSkin();
+
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify);
 
+	class CDataSkinListCtrl : public CSkinListCtrl
+	{
+	public:
+		virtual void Invalidate() { }
+
+	};
+
 public:
-	// Interface for combo box.
-	int GetCount() const;
+	void AddColumn(LPCTSTR szCol, int nWidth)
+		{ m_listCtrlData.AddColumn(szCol, nWidth); }
+	void AddImageColumn(LPCTSTR szCol, int nWidth)
+		{ m_listCtrlData.AddImageColumn(szCol, nWidth); }
+
+	void SetLineHeight(int nLineHeight)
+		{ m_listCtrlData.SetLineHeight(nLineHeight); }
+
+	int GetItemCount() const;
 
 	virtual int GetCurSel();
 	void SetCurSel(int nIndex);
 
-	int AddString(LPCTSTR szStr);
-	int InsertString(int nIndex, LPCTSTR lpszString);
-	void SetItemData(int nIndex, UINT nItemData);
-	UINT GetItemData(int nIndex);
-	UINT GetItemText(int nIndex, tstring &str);
+	BOOL DeleteItem(int nItem);
+	BOOL DeleteAllItems();
 
-	bool DeleteString(UINT nIndex);
+	int InsertItem(int nItem, LPCTSTR lpszItem, int nImageIndex = 0, UINT nItemData = 0);
+	BOOL SetItemText(int nItem, int nSubItem, LPCTSTR lpszText);
+	BOOL SetItemImage(int nItem, int nSubItem, PRAW_IMAGE_DATA hImage);
 
-	void ResetContent();
+	void SetItemData(int nItem, UINT nItemData);
+	UINT GetItemData(int nItem);
 
-	int FindStringExact(int nIndexStart, LPCTSTR lpszFind) const;
-
-	int SelectString(int nStartAfter, LPCTSTR lpszString);
-
-	void GetSelItemText(tstring &str);
+	tstring GetItemText(int nItem, int nSubItem) const;
 
 protected:
-	struct Item
-	{
-		int			nImage;
-		tstring		strText;
-		int			nData;
+	CDataSkinListCtrl			m_listCtrlData;
+	int							m_nLineHeight;
 
-		Item(LPCTSTR szText) {
-			strText = szText;
-			nImage = 0;
-			nData = 0;
-		}
-		Item(LPCTSTR szText, int nImage, int nData) {
-			this->strText = szText;
-			this->nData = nData;
-			this->nImage = nImage;
-		}
-	};
-	typedef vector<Item>	VecItem;
+	CSkinListCtrl				*m_pListCtrl;
 
-	CSkinListCtrl		*m_pListCtrl;
-	VecItem				m_vItems;
-
-	int					m_nCurSel;
+	int							m_nCurSel;
 
 };

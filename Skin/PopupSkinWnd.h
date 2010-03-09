@@ -22,6 +22,8 @@ public:
 
 	virtual void OnKillFocus();
 
+	void OnKeyDown(UINT nChar, UINT nFlags);
+
 protected:
 	IPopupSkinWndNotify			*m_pPopupSkinWndNotify;
 

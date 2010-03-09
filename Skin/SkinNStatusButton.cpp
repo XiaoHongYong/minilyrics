@@ -16,7 +16,7 @@ UIOBJECT_CLASS_NAME_IMP(CSkinNStatusButton, _T("NStatusButton"))
 
 CSkinNStatusButton::CSkinNStatusButton()
 {
-	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON;
+	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON | UO_MSG_WANT_ENTER_KEY;
 
 	m_xMargin = m_yMargin = 0;
 	m_xExtendStart = m_xExtendEnd = -1;
@@ -48,12 +48,12 @@ bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 	if (!m_bEnable)
 		return false;
 
+	m_pSkin->SetFocusUIObject(this);
+
 	assert(m_pSkin);
 
 	if (!IsMouseHitBt(point))
 		return false;
-
-	m_bLBtDown = TRUE;
 
 	if (m_bHover)
 		m_bHover = false;
@@ -63,24 +63,7 @@ bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 		m_pSkin->SetCaptureMouse(this);
 	}
 
-	if (m_bFadein)
-	{
-		m_pSkin->RegisterTimerObject(this, 50);
-		m_dwBeginFadeinTime = GetTickCount();
-
-		m_pLastImage = NULL;
-// 		if (m_bEnableHover)
-// 			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgHover);
-		if (!m_pLastImage || !m_pLastImage->IsValid())
-			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
-	}
-	else if (m_bContinuousCmd)
-	{
-		m_bContinuousBegin = true;
-		m_nTimerIdContinuous = m_pSkin->RegisterTimerObject(this, 500);
-	}
-
-	Invalidate();
+	ButtonDownAction();
 
 	return true;
 }
@@ -138,41 +121,7 @@ bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 	if (!m_bLBtDown)
 		return true;
 
-	m_bLBtDown = FALSE;
-
-	if (m_bContinuousCmd)
-	{
-		m_pSkin->UnregisterTimerObject(this);
-		m_nTimerIdContinuous = 0;
-	}
-
-	if (m_bFadein)
-	{
-		m_pSkin->RegisterTimerObject(this, 50);
-		m_dwBeginFadeinTime = GetTickCount();
-
-		m_pLastImage = NULL;
-		m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgSel);
-		if (!m_pLastImage->IsValid())
-			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
-	}
-
-	// ×ª»»°´Å¥µÄ×´Ì¬
-	if (m_nCurStatus >= 0 && m_nCurStatus < (int)m_vBtStatImg.size() - 1)
-		m_nCurStatus++;
-	else
-		m_nCurStatus = 0;
-
-	if (m_nCurStatus < (int)m_vBtStatImg.size())
-		m_bEnableHover = m_vBtStatImg[m_nCurStatus]->imgHover.IsValid();
-
-	Invalidate();
-
-	if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
-		m_pSkin->PostCustomCommandMsg(m_nId);
-
-	if (m_vBtStatImg[m_nCurStatus]->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE)
-		m_pSkin->PostCustomCommandMsg(m_vBtStatImg[m_nCurStatus]->nIDCmd);
+	ButtonUpAction();
 
 	return true;
 }
@@ -233,6 +182,38 @@ bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 	}
 
 	return true;
+}
+
+void CSkinNStatusButton::OnKeyUp(UINT nChar, UINT nFlags)
+{
+	if (nChar == VK_SPACE)
+		ButtonUpAction();
+}
+
+void CSkinNStatusButton::OnKeyDown(UINT nChar, UINT nFlags)
+{
+	if (nChar == VK_SPACE && !m_bLBtDown)
+		ButtonDownAction();
+	else if (nChar == VK_RETURN)
+	{
+		ButtonDownAction();
+		ButtonUpAction();
+	}
+}
+
+void CSkinNStatusButton::OnSetFocus()
+{
+	m_bHover = true;
+	Invalidate();
+}
+
+void CSkinNStatusButton::OnKillFocus()
+{
+	if (m_bLBtDown)
+		m_bLBtDown = false;
+
+	m_bHover = false;
+	Invalidate();
 }
 
 void CSkinNStatusButton::OnSize(int cx, int cy)
@@ -480,6 +461,13 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_bFadein = IsTRUE(szValue);
 	}
+	else if (IsPropertyName(szProperty, _T("TabFocus")))
+	{
+		if (IsTRUE(szValue))
+			m_nMsgWant |= UO_MSG_WANT_KEY;
+		else
+			m_nMsgWant &= ~UO_MSG_WANT_KEY;
+	}
 	else
 		return FALSE;
 
@@ -564,6 +552,71 @@ void CSkinNStatusButton::SetMaxStat(int nMaxStat)
 			m_vBtStatImg.push_back(new BtStatImg);
 		}
 	}
+}
+
+void CSkinNStatusButton::ButtonDownAction()
+{
+	m_bLBtDown = TRUE;
+
+	if (m_bFadein)
+	{
+		m_pSkin->RegisterTimerObject(this, 50);
+		m_dwBeginFadeinTime = GetTickCount();
+
+		m_pLastImage = NULL;
+		// 		if (m_bEnableHover)
+		// 			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgHover);
+		if (!m_pLastImage || !m_pLastImage->IsValid())
+			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
+	}
+	else if (m_bContinuousCmd)
+	{
+		m_bContinuousBegin = true;
+		m_nTimerIdContinuous = m_pSkin->RegisterTimerObject(this, 500);
+	}
+
+	Invalidate();
+}
+
+void CSkinNStatusButton::ButtonUpAction()
+{
+	if (!m_bLBtDown)
+		return;
+
+	m_bLBtDown = FALSE;
+
+	if (m_bContinuousCmd)
+	{
+		m_pSkin->UnregisterTimerObject(this);
+		m_nTimerIdContinuous = 0;
+	}
+
+	if (m_bFadein)
+	{
+		m_pSkin->RegisterTimerObject(this, 50);
+		m_dwBeginFadeinTime = GetTickCount();
+
+		m_pLastImage = NULL;
+		m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgSel);
+		if (!m_pLastImage->IsValid())
+			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
+	}
+
+	if (m_nCurStatus >= 0 && m_nCurStatus < (int)m_vBtStatImg.size() - 1)
+		m_nCurStatus++;
+	else
+		m_nCurStatus = 0;
+
+	if (m_nCurStatus < (int)m_vBtStatImg.size())
+		m_bEnableHover = m_vBtStatImg[m_nCurStatus]->imgHover.IsValid();
+
+	Invalidate();
+
+	if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
+		m_pSkin->PostCustomCommandMsg(m_nId);
+
+	if (m_vBtStatImg[m_nCurStatus]->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE)
+		m_pSkin->PostCustomCommandMsg(m_vBtStatImg[m_nCurStatus]->nIDCmd);
 }
 
 void CSkinNStatusButton::Destroy()

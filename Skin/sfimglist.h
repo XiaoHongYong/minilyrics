@@ -16,6 +16,9 @@ public:
 	int GetIconCx();
 	int GetIconCy();
 
+	void SetIconCx(int nIconCx)
+		{ m_nItemCx = nIconCx; }
+
 protected:
 	int				m_nItemCx;
 

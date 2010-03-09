@@ -14,6 +14,16 @@ class CSkinListCtrlEx;
 class LC_ITEMEX : public LC_ITEM
 {
 public:
+	class CExColHeader : public CColHeader
+	{
+	public:
+		CExColHeader(LPCTSTR szTitle, int nWidth) : CColHeader(szTitle, nWidth) {
+			colType = LCCT_STRING;
+		}
+
+		virtual LC_ITEMEX *NewLCItem() { return new LC_ITEMEX(); }
+	};
+
 	struct TextColor
 	{
 		TextColor(byte _nCountOfText, byte _nClrIndex) : nCountOfText(_nCountOfText), nClrIndex(_nClrIndex) { }
@@ -49,6 +59,8 @@ public:
 	virtual ~CSkinListCtrlEx();
 
 public:
+	virtual void AddColumn(LPCTSTR szCol, int nWidth);
+
 	virtual BOOL SetItemText(int nItem, int nSubItem, LPCTSTR lpszText);
 	virtual int InsertItem(int nItem, LPCTSTR lpszItem, int nImageIndex = 0, UINT nItemData = 0, bool bRedraw = false);
 

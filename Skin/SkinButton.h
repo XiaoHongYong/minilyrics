@@ -59,7 +59,7 @@ public:
 	MLColor GetColor() const
 		{ return m_clrContent; }
 
-	bool OnLButtonUp(UINT nFlags, CPoint point);
+	void ButtonUpAction();
 
 protected:
 	int					m_nContentMarginX, m_nContentMarginY;

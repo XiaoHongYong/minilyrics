@@ -30,10 +30,13 @@ BOOL CSkinButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (CSkinNStatusButton::SetProperty(szProperty, szValue))
 		return TRUE;
 
-	if (_tcsicmp(szProperty, _T("CanCheck")) == 0)
+	if (_tcsicmp(szProperty, _T("CheckBox")) == 0)
 	{
 		if (IsTRUE(szValue))
+		{
 			SetMaxStat(2);
+			m_nMsgWant &= ~UO_MSG_WANT_ENTER_KEY;
+		}
 		else
 			SetMaxStat(1);
 	}
@@ -59,7 +62,7 @@ void CSkinButton::EnumProperties(CUIObjProperties &listProperties)
 	if (m_vBtStatImg.empty())
 		return;
 
-	listProperties.AddPropBoolStr(_T("CanCheck"), m_vBtStatImg.size() == 2, m_vBtStatImg.size() == 2);
+	listProperties.AddPropBoolStr(_T("CheckBox"), m_vBtStatImg.size() == 2, m_vBtStatImg.size() == 2);
 	listProperties.AddPropBoolStr(_T("Checked"), m_nCurStatus == 1, m_vBtStatImg.size() == 2);
 
 	{
@@ -211,17 +214,8 @@ void CSkinImageButton::SetColor(const MLColor &clr, bool bAutoSelColor)
 	m_bAutoSelColor = bAutoSelColor;
 }
 
-bool CSkinImageButton::OnLButtonUp(UINT nFlags, CPoint point)
+void CSkinImageButton::ButtonUpAction()
 {
-	if (!m_bEnable)
-		return false;
-
-	// ÊÍ·ÅÊó±êÊäÈë
-	m_pSkin->ReleaseCaptureMouse(this);
-
-	if (!m_bLBtDown)
-		return true;
-
 	if (!m_bContentImage && m_bAutoSelColor)
 	{
 		CDlgChooseColor		dlg;
@@ -232,9 +226,9 @@ bool CSkinImageButton::OnLButtonUp(UINT nFlags, CPoint point)
 		{
 			m_bLBtDown = FALSE;
 			Invalidate();
-			return true;
+			return;
 		}
 	}
 
-	return CSkinButton::OnLButtonUp(nFlags, point);
+	return CSkinButton::ButtonUpAction();
 }

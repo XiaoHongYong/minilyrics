@@ -23,6 +23,13 @@ public:
 	bool OnMouseMove(UINT nFlags, CPoint point);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 	bool OnLButtonDown(UINT nFlags, CPoint point);
+
+	virtual void OnKeyUp(UINT nChar, UINT nFlags);
+	virtual void OnKeyDown(UINT nChar, UINT nFlags);
+
+	virtual void OnSetFocus();
+	virtual void OnKillFocus();
+
 	void OnSize(int cx, int cy);
 
 	void Draw(CRawGraph *pGraph);
@@ -36,6 +43,9 @@ public:
 	void SetStatus(int nStatus);
 
 protected:
+	virtual void ButtonDownAction();
+	virtual void ButtonUpAction();
+
 	void FadeInDrawBt(CRawGraph *pGraph, CSFImage *pImage, int nAlpha);
 
 	void SetMaxStat(int nMaxStat);

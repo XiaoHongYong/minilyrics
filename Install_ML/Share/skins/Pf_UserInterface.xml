@@ -19,6 +19,6 @@
     <NormalText Rect="25,10,w-45,80" Text="Installed skins:"/>
     <NormalListCtrl ID="CID_SKIN_LIST" Rect="25,40,w-45,180"/>
     <NormalText Rect="25,230,w-45,80" Text="Current skin information:"/>
-    <NormalText ID="CID_SKIN_INFO" Rect="25,250,w-45,h-250-10" FontHeight="25" AlignText="AT_CENTER"/>
+    <NormalText ID="CID_SKIN_INFO" Rect="25,250,w-45,h-250-30" FontHeight="25" AlignText="AT_CENTER"/>
   </Container>
 </Container>

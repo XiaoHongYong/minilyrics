@@ -31,3 +31,23 @@ void CPopupSkinWnd::OnKillFocus()
 
 	PostDestroy();
 }
+
+void CPopupSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
+{
+	CUIObject	*pObjFocus = GetFocusUIObj();
+
+	// let focus uiobject to process key message
+	if (pObjFocus && pObjFocus->WantMsgAllKeys())
+	{
+		pObjFocus->OnKeyDown(nChar, nFlags);
+		return;
+	}
+
+	if (nChar == VK_ESCAPE)
+	{
+		PostDestroy();
+		return;
+	}
+
+	CSkinWnd::OnKeyDown(nChar, nFlags);
+}

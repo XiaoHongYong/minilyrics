@@ -110,9 +110,10 @@ enum
 	UO_MSG_WANT_LBUTTON		= 1 << 1,
 	UO_MSG_WANT_RBUTTON		= 1 << 2,
 	UO_MSG_WANT_KEY			= 1 << 3,
-	UO_MSG_WANT_ALL_KEYS	= 1 << 4,
-	UO_MSG_WANT_MOUSEWHEEL	= 1 << 5,
-	UO_MSG_WANT_MENU_KEY	= 1 << 6,
+	UO_MSG_WANT_ENTER_KEY	= 1 << 4,
+	UO_MSG_WANT_ALL_KEYS	= 1 << 5,
+	UO_MSG_WANT_MOUSEWHEEL	= 1 << 6,
+	UO_MSG_WANT_MENU_KEY	= 1 << 7,
 	UO_MSG_WANT_ALL			= 0xFFFFFFFF
 };
 
@@ -222,6 +223,7 @@ public:
 	inline bool WantMsgRButton()	{ return (m_nMsgWant & UO_MSG_WANT_RBUTTON) != 0; }
 	inline bool WantMsgKey()	{ return (m_nMsgWant & (UO_MSG_WANT_KEY | UO_MSG_WANT_ALL_KEYS)) != 0; }
 	inline bool WantMsgAllKeys()	{ return (m_nMsgWant & UO_MSG_WANT_ALL_KEYS) != 0; }
+	inline bool WantMsgEnterKey()	{ return (m_nMsgWant & UO_MSG_WANT_ENTER_KEY) != 0; }
 	inline bool WantMsgMenuKey()	{ return (m_nMsgWant & UO_MSG_WANT_MENU_KEY) != 0; }
 
 	bool IsVisible();
