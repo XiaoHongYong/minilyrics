@@ -27,6 +27,10 @@ void SetWorkingFolder(LPCTSTR szWorkingFolder);
 
 #ifdef _WIN32
 
+#if defined (_DEBUG) && defined (_WIN32)
+tstring GetInstallShareDir();
+#endif
+
 HINSTANCE GetAppInstance();
 void SetAppInstance(HINSTANCE hInst);
 

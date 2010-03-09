@@ -51,6 +51,24 @@ LPCTSTR GetWorkingFolder()
 	return g_szWorkingFolder;
 }
 
+#if defined (_DEBUG) && defined (_WIN32)
+tstring GetInstallShareDir()
+{
+	tstring strShareDir = GetWorkingFolder();
+
+	TCHAR		szFile[MAX_PATH];
+	if (GetModuleFileName(GetAppInstance(), szFile, CountOf(szFile)))
+	{
+		if (FileIsExtSame(szFile, _T(".exe")))
+			strShareDir += _T("..\\Install_ZP\\Share\\");
+		else
+			strShareDir += _T("..\\Install_ML\\Share\\");
+	}
+
+	return strShareDir;
+}
+#endif
+
 HINSTANCE GetAppInstance()
 {
 	return g_hInst;

@@ -39,7 +39,8 @@ void CPopupSkinListWnd::OnSkinLoaded()
 	m_listCtrlData.m_vHeading.clear();
 	m_listCtrlData.m_vRows.clear();
 
-	m_pListCtrl->SetLineHeight(m_nLineHeight);
+	if (m_nLineHeight > 0)
+		m_pListCtrl->SetLineHeight(m_nLineHeight);
 
 	if (m_nCurSel != -1)
 		m_pListCtrl->SelectRangeRow(m_nCurSel, m_nCurSel);
@@ -53,6 +54,16 @@ void CPopupSkinListWnd::OnSkinLoaded()
 
 		CRect	rcNew = rcOrg;
 		rcNew.bottom = rcNew.bottom - m_pListCtrl->m_rcObj.Height() + nContentHeight;
+
+		CRect	rcMonitor;
+		GetMonitorRestrictRect(rcOrg, rcMonitor);
+		if (rcNew.bottom > rcMonitor.bottom)
+		{
+			rcNew.top -= rcNew.bottom - rcMonitor.bottom;
+			if (rcNew.top < rcMonitor.top)
+				rcNew.top = rcMonitor.top;
+			rcNew.bottom = rcMonitor.bottom;
+		}
 
 		MoveWindow(rcNew, FALSE);
 	}

@@ -1334,22 +1334,12 @@ LPCTSTR CSkinFactory::GetSkinRootDir()
 		m_strSkinRootDir += _T("skins");
 		m_strSkinRootDir += _T(SZ_DIR_SLASH);
 
-#ifdef _DEBUG
-#ifdef _WIN32
+#if defined (_DEBUG) && defined (_WIN32)
 		if (!IsDirExist(m_strSkinRootDir.c_str()))
 		{
-			m_strSkinRootDir = GetWorkingFolder();
-
-			TCHAR		szFile[MAX_PATH];
-			if (GetModuleFileName(GetAppInstance(), szFile, CountOf(szFile)))
-			{
-				if (FileIsExtSame(szFile, _T(".exe")))
-					m_strSkinRootDir += _T("..\\Install_ZP\\Share\\skins\\");
-				else
-					m_strSkinRootDir += _T("..\\Install_ML\\Share\\skins\\");
-			}
+			m_strSkinRootDir = GetInstallShareDir();
+			m_strSkinRootDir += _T("skins\\");
 		}
-#endif
 #endif
 	}
 

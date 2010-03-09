@@ -68,6 +68,168 @@ protected:
 
 void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverlayBlending &tob, int nGradientPatternHeight, bool bHilight);
 
+void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::MLColorEx clrGradient[3]);
+
+class CLyrDisplayClrListWnd : public IPopupSkinWndNotify
+{
+public:
+	CLyrDisplayClrListWnd()
+	{
+		m_bInitialized = false;
+	}
+
+	void Create(CSkinWnd *pWnd, CRect &rc, bool bHighLight, bool bFloatingLyr)
+	{
+		if (!m_bInitialized)
+		{
+			m_popupListWnd.AddImageColumn(_T(""), 100);
+			m_bInitialized = true;
+		}
+
+		if (bFloatingLyr)
+			m_strSectName = SZ_SECT_FLOATING_LYR;
+		else
+			m_strSectName = SZ_SECT_LYR_DISPLAY;
+		m_bHighLight = bHighLight;
+
+		m_nWidthMax = 0;
+		m_popupListWnd.DeleteAllItems();
+
+		AddCurrentSetting();
+
+		AddGradientColors();
+
+		AddPatternImages();
+
+		if (m_nWidthMax > rc.Width())
+			rc.right = rc.left + m_nWidthMax + 50;
+
+		// Popup list window
+		m_popupListWnd.Create(pWnd->GetSkinFactory(), _T("ComboBoxPopup.xml"),
+			pWnd, this, rc);
+	}
+
+	virtual void PopupSkinWndOnSelected()
+	{
+		m_popupListWnd.GetCurSel();
+		m_popupListWnd.PostDestroy();
+	}
+
+protected:
+	enum {
+		HEIGHT_COLOR = 50,
+		WIDTH_COLOR = 100
+	};
+
+	void AddCurrentSetting()
+	{
+		CLyricShowObj::TextOverlayBlending		tob;
+
+		LoadLyrOverlayBlendingSettings(m_strSectName.c_str(), tob, HEIGHT_COLOR, m_bHighLight);
+
+		if (tob.obm == OBM_COLOR)
+			AddPureColor(tob.clr[CLyricShowObj::TCI_FILL].get());
+		else
+		{
+			if (tob.imgPattern.IsValid())
+			{
+				AddImage(tob.imgPattern.GetHandle());
+				tob.imgPattern.Detach();
+			}
+		}
+	}
+
+	void AddPureColor(COLORREF clr)
+	{
+		PRAW_IMAGE_DATA		pRawImage;
+		MLColor	color(clr);
+
+		pRawImage = new RAW_IMAGE_DATA;
+		pRawImage->Create(WIDTH_COLOR, HEIGHT_COLOR, 24);
+		RawImageSet(pRawImage, color.r(), 
+			color.g(), 
+			color.b(),
+			255);
+
+		AddImage(pRawImage);
+	}
+
+	void AddGradientColors()
+	{
+		AddGradientColor(RGB(255, 0, 0), RGB(0, 255, 0), RGB(0, 0, 255));
+		// AddGradientColor(RGB(, , ), RGB(, , ), RGB(, , ));
+	}
+
+	void AddGradientColor(COLORREF clr0, COLORREF clr1, COLORREF clr2)
+	{
+		CRawImage	image;
+		CLyricShowObj::MLColorEx clr[3];
+
+		clr[0].set(clr0);
+		clr[1].set(clr1);
+		clr[2].set(clr2);
+
+		CreateGradientFillImage24bpp(image, HEIGHT_COLOR, clr);
+
+		if (image.IsValid())
+		{
+			AddImage(image.GetHandle());
+			image.Detach();
+		}
+	}
+
+	void AddPatternImages()
+	{
+		tstring		strPatternDir;
+		strPatternDir = GetWorkingFolder();
+		strPatternDir += _T("Patterns") _T(SZ_DIR_SLASH);
+
+#if defined (_DEBUG) && defined (_WIN32)
+		if (!IsDirExist(strPatternDir.c_str()))
+		{
+			strPatternDir = GetInstallShareDir();
+			strPatternDir += _T("Patterns\\");
+		}
+#endif
+
+		V_Str		vFiles;
+		EnumFilesInDir(strPatternDir.c_str(), NULL, vFiles, true);
+
+		for (int i = 0; i < (int)vFiles.size(); i++)
+		{
+			PRAW_IMAGE_DATA	hImage = LoadRawImageDataFromFile(vFiles[i].c_str());
+			if (hImage)
+				AddImage(hImage);
+		}
+	}
+
+	void AddImage(PRAW_IMAGE_DATA hImage)
+	{
+		ASSERT(hImage);
+		if (!hImage)
+			return;
+
+		int n = m_popupListWnd.InsertItem(0, _T(""), 0, 0);
+
+		const int LINE_SPACE = 4;
+		m_popupListWnd.SetItemImage(n, 0, hImage);
+		if (m_popupListWnd.GetLineHeight() < hImage->height + LINE_SPACE)
+			m_popupListWnd.SetLineHeight(hImage->height + LINE_SPACE);
+		if (m_nWidthMax < hImage->width)
+			m_nWidthMax = hImage->width;
+	}
+
+protected:
+	bool				m_bInitialized;
+	CPopupSkinListWnd	m_popupListWnd;
+	int					m_nWidthMax;
+
+	tstring				m_strSectName;
+	bool				m_bHighLight;
+
+};
+
+
 class CPagePfDisplayStyle : public CPagePfBase
 {
 protected:
@@ -122,6 +284,8 @@ public:
 		GET_ID_BY_NAME(CID_DS_ALIGN);
 		GET_ID_BY_NAME(CID_DS_LOAD_LATIN_FONT);
 		GET_ID_BY_NAME(CID_DS_LOAD_OTHER_FONT);
+		GET_ID_BY_NAME(CID_DS_CLR_HIGH);
+		GET_ID_BY_NAME(CID_DS_CLR_LOW);
 
 		m_pcbMode = (CSkinComboBox *)GetUIObjectById(CID_DS_MODE, CSkinComboBox::ClassName());
 		if (m_pcbMode)
@@ -190,6 +354,16 @@ public:
 				ProfileWriteLyricsFont(m_eventType, m_strSectName.c_str(), nHeight, chooser.GetWeight(), 
 					chooser.GetItalic(), bLatin9 ? chooser.GetFaceName() : NULL, bLatin9 ? NULL : chooser.GetFaceName());
 			}
+		}
+		else if (nId == CID_DS_CLR_HIGH)
+		{
+			CRect	rc;
+			GetUIObjectRect(CID_DS_CLR_HIGH, rc);
+
+			m_pSkinWnd->ClientToScreen(rc);
+
+			// Popup list window
+			m_popupHighClrListWnd.Create(m_pSkinWnd, rc, true, false);
 		}
 		else
 		{
@@ -407,9 +581,12 @@ protected:
 	tstring				m_strSectName;
 
 	int					CID_DS_MODE, CID_DS_STYLE, CID_DS_FADEOUT, CID_DS_ALIGN;
-	int					CID_DS_LOAD_LATIN_FONT, CID_DS_LOAD_OTHER_FONT;
+	int					CID_DS_LOAD_LATIN_FONT, CID_DS_LOAD_OTHER_FONT, CID_DS_CLR_HIGH, CID_DS_CLR_LOW;
 
 	CSkinComboBox		*m_pcbMode;
+
+	CLyrDisplayClrListWnd	m_popupHighClrListWnd;
+	CLyrDisplayClrListWnd	m_popupLowClrListWnd;
 
 };
 

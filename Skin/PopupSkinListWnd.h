@@ -31,8 +31,9 @@ public:
 	void AddImageColumn(LPCTSTR szCol, int nWidth)
 		{ m_listCtrlData.AddImageColumn(szCol, nWidth); }
 
+	int GetLineHeight() { return m_nLineHeight; }
 	void SetLineHeight(int nLineHeight)
-		{ m_listCtrlData.SetLineHeight(nLineHeight); }
+		{ m_nLineHeight = nLineHeight; }
 
 	int GetItemCount() const;
 

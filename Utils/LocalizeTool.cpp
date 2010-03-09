@@ -22,22 +22,13 @@ tstring GetLangPackDir()
 {
 	tstring strLangDir = GetWorkingFolder();
 	strLangDir += SZ_LANG_DIR _T(SZ_DIR_SLASH);
-#ifdef _DEBUG
-#ifdef _WIN32
+
+#if defined (_DEBUG) && defined (_WIN32)
 	if (!IsDirExist(strLangDir.c_str()))
 	{
-		strLangDir = GetWorkingFolder();
-
-		TCHAR		szFile[MAX_PATH];
-		if (GetModuleFileName(GetAppInstance(), szFile, CountOf(szFile)))
-		{
-			if (FileIsExtSame(szFile, _T(".exe")))
-				strLangDir += _T("..\\Install_ZP\\Share\\lang\\");
-			else
-				strLangDir += _T("..\\Install_ML\\Share\\lang\\");
-		}
+		strLangDir = GetInstallShareDir();
+		strLangDir += _T("lang\\");
 	}
-#endif
 #endif
 	return strLangDir;
 }
