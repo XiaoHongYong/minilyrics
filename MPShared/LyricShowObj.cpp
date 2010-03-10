@@ -479,6 +479,8 @@ LPCTSTR		_LyrShowTOBFieldNameHilight[] =
 	_T("FgColor"),
 	_T("HilightGradient1"), _T("HilightGradient2"), _T("HilightGradient3"),
 	_T("HilightBorderColor"),
+	_T("HilightOBM"),
+	_T("HilightPattern"),
 };
 
 LPCTSTR		_LyrShowTOBFieldNameLowlight[] = 
@@ -486,7 +488,19 @@ LPCTSTR		_LyrShowTOBFieldNameLowlight[] =
 	_T("FgLowColor"),
 	_T("LowlightGradient1"), _T("LowlightGradient2"), _T("LowlightGradient3"),
 	_T("LowlightBorderColor"),
+	_T("LowlightOBM"),
+	_T("LowlightPattern"),
 };
+
+LPCTSTR GetLyrTOBSettingName(bool bHighlight, CLyricShowObj::TOBColorIndex nameIndex)
+{
+	ASSERT(CountOf(_LyrShowTOBFieldNameLowlight) == CountOf(_LyrShowTOBFieldNameHilight));
+	ASSERT(nameIndex >= 0 && nameIndex < CountOf(_LyrShowTOBFieldNameLowlight));
+	if (bHighlight)
+		return _LyrShowTOBFieldNameHilight[nameIndex];
+	else
+		return _LyrShowTOBFieldNameLowlight[nameIndex];
+}
 
 tstring GetPatternDir();
 
@@ -502,8 +516,7 @@ PRAW_IMAGE_DATA LoadRawImageDataPatternFile(LPCTSTR szFile)
 
 void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverlayBlending &tob, int nGradientPatternHeight, bool bHilight)
 {
-	ASSERT(CountOf(_LyrShowTOBFieldNameLowlight) == CLyricShowObj::TCI_COUNT);
-	ASSERT(CountOf(_LyrShowTOBFieldNameHilight) == CLyricShowObj::TCI_COUNT);
+	ASSERT(CountOf(_LyrShowTOBFieldNameLowlight) == CountOf(_LyrShowTOBFieldNameHilight));
 
 	LPCTSTR		*pFieledName;
 
@@ -514,7 +527,7 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 
 	ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_BORDER], szSectName, pFieledName[CLyricShowObj::TCI_BORDER]);
 
-	tob.obm = (OverlayBlendingMode)g_Profile.GetProfileInt(szSectName, bHilight ? _T("HilightOBM") : _T("LowlightOBM"),  OBM_COLOR);
+	tob.obm = (OverlayBlendingMode)g_Profile.GetProfileInt(szSectName, GetLyrTOBSettingName(bHilight, CLyricShowObj::TCI_OBM),  OBM_COLOR);
 	if (tob.obm == OBM_PATTERN)
 	{
 		tob.imgPattern.Destroy();

@@ -110,6 +110,8 @@ public:
 		TCI_GRADIENT3,
 		TCI_BORDER,
 		TCI_COUNT,
+		TCI_OBM = TCI_COUNT,		// obm name
+		TCI_PATTERN,
 	};
 
 	struct TextOverlayBlending
@@ -350,6 +352,8 @@ protected:
 	int					m_nLeftOrg, m_nLeftAdjust;
 
 };
+
+LPCTSTR GetLyrTOBSettingName(bool bHighlight, CLyricShowObj::TOBColorIndex nameIndex);
 
 void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::MLColorEx clrGradient[3]);
 
