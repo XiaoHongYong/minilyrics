@@ -490,10 +490,11 @@ LPCTSTR		_LyrShowTOBFieldNameLowlight[] =
 	_T("LowlightBorderColor"),
 };
 
+tstring GetPatternDir();
+
 PRAW_IMAGE_DATA LoadRawImageDataPatternFile(LPCTSTR szFile)
 {
-	tstring		strFile = GetWorkingFolder();
-	strFile += _T("Patterns\\");
+	tstring		strFile = GetPatternDir();
 	strFile += szFile;
 	if (IsFileExist(strFile.c_str()))
 		return LoadRawImageDataFromFile(strFile.c_str());
@@ -506,14 +507,14 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 	ASSERT(CountOf(_LyrShowTOBFieldNameLowlight) == CLyricShowObj::TCI_COUNT);
 	ASSERT(CountOf(_LyrShowTOBFieldNameHilight) == CLyricShowObj::TCI_COUNT);
 
-	LPCTSTR		*pFiledName;
+	LPCTSTR		*pFieledName;
 
 	if (bHilight)
-		pFiledName = _LyrShowTOBFieldNameHilight;
+		pFieledName = _LyrShowTOBFieldNameHilight;
 	else
-		pFiledName = _LyrShowTOBFieldNameLowlight;
+		pFieledName = _LyrShowTOBFieldNameLowlight;
 
-	ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_BORDER], szSectName, pFiledName[CLyricShowObj::TCI_BORDER]);
+	ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_BORDER], szSectName, pFieledName[CLyricShowObj::TCI_BORDER]);
 
 	tob.obm = (OverlayBlendingMode)g_Profile.GetProfileInt(szSectName, bHilight ? _T("HilightOBM") : _T("LowlightOBM"),  OBM_COLOR);
 	if (tob.obm == OBM_PATTERN)
@@ -533,9 +534,9 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 	}
 	else if (tob.obm == OBM_GRADIENT_COLOR)
 	{
-		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_GRADIENT1], szSectName, pFiledName[CLyricShowObj::TCI_GRADIENT1]);
-		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_GRADIENT2], szSectName, pFiledName[CLyricShowObj::TCI_GRADIENT2]);
-		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_GRADIENT3], szSectName, pFiledName[CLyricShowObj::TCI_GRADIENT3]);
+		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_GRADIENT1], szSectName, pFieledName[CLyricShowObj::TCI_GRADIENT1]);
+		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_GRADIENT2], szSectName, pFieledName[CLyricShowObj::TCI_GRADIENT2]);
+		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_GRADIENT3], szSectName, pFieledName[CLyricShowObj::TCI_GRADIENT3]);
 
 		CreateGradientFillImage24bpp(tob.imgPattern, nGradientPatternHeight, tob.clr + CLyricShowObj::TCI_GRADIENT1);
 	}
@@ -548,7 +549,7 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 	if (!tob.imgPattern.IsValid())
 	{
 		tob.obm = OBM_COLOR;
-		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_FILL], szSectName, pFiledName[CLyricShowObj::TCI_FILL]);
+		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_FILL], szSectName, pFieledName[CLyricShowObj::TCI_FILL]);
 	}
 }
 

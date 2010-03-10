@@ -70,6 +70,20 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 
 void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::MLColorEx clrGradient[3]);
 
+tstring GetPatternDir()
+{
+	tstring strPatternDir = GetWorkingFolder();
+	strPatternDir += _T("Patterns") _T(SZ_DIR_SLASH);
+
+#if defined (_DEBUG) && defined (_WIN32)
+	if (!IsDirExist(strPatternDir.c_str()))
+	{
+		strPatternDir = GetInstallShareDir();
+		strPatternDir += _T("Patterns\\");
+	}
+#endif
+}
+
 class CLyrDisplayClrListWnd : public IPopupSkinWndNotify
 {
 public:
@@ -180,17 +194,7 @@ protected:
 
 	void AddPatternImages()
 	{
-		tstring		strPatternDir;
-		strPatternDir = GetWorkingFolder();
-		strPatternDir += _T("Patterns") _T(SZ_DIR_SLASH);
-
-#if defined (_DEBUG) && defined (_WIN32)
-		if (!IsDirExist(strPatternDir.c_str()))
-		{
-			strPatternDir = GetInstallShareDir();
-			strPatternDir += _T("Patterns\\");
-		}
-#endif
+		tstring		strPatternDir = GetPatternDir();
 
 		V_Str		vFiles;
 		EnumFilesInDir(strPatternDir.c_str(), NULL, vFiles, true);
