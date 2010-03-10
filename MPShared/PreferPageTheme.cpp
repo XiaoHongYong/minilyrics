@@ -82,10 +82,36 @@ tstring GetPatternDir()
 		strPatternDir += _T("Patterns\\");
 	}
 #endif
+
+	return strPatternDir;
 }
 
 class CLyrDisplayClrListWnd : public IPopupSkinWndNotify
 {
+public:
+	struct FontClrOpt
+	{
+		FontClrOpt(COLORREF clr) {
+			this->obm = OBM_COLOR;
+			this->clr[0] = clr;
+		}
+		FontClrOpt(COLORREF clr0, COLORREF clr1, COLORREF clr2) {
+			this->obm = OBM_GRADIENT_COLOR;
+			this->clr[0] = clr0;
+			this->clr[1] = clr1;
+			this->clr[2] = clr2;
+		}
+		FontClrOpt(LPCTSTR szFile) {
+			this->obm = OBM_PATTERN;
+			strPatternFile = szFile;
+		}
+
+		OverlayBlendingMode		obm;				// Overlay blending mode
+		COLORREF				clr[3];
+		tstring					strPatternFile;
+	};
+	typedef vector<FontClrOpt>	VecFontClr;
+
 public:
 	CLyrDisplayClrListWnd()
 	{
@@ -125,8 +151,18 @@ public:
 
 	virtual void PopupSkinWndOnSelected()
 	{
-		m_popupListWnd.GetCurSel();
+		int	nSel = m_popupListWnd.GetCurSel();
 		m_popupListWnd.PostDestroy();
+
+		if (nSel == -1)
+			return;
+		ASSERT(nSel >= 0 && nSel < m_vFontClr.size());
+
+		// Save selected color
+		FontClrOpt &fontClr = m_vFontClr[nSel];
+		if (fontClr.obm == OBM_COLOR)
+		{
+		}
 	}
 
 protected:
@@ -166,6 +202,7 @@ protected:
 			255);
 
 		AddImage(pRawImage);
+		m_vFontClr.push_back(FontClrOpt(clr));
 	}
 
 	void AddGradientColors()
@@ -189,6 +226,8 @@ protected:
 		{
 			AddImage(image.GetHandle());
 			image.Detach();
+
+			m_vFontClr.push_back(FontClrOpt(clr0, clr1, clr2));
 		}
 	}
 
@@ -203,7 +242,10 @@ protected:
 		{
 			PRAW_IMAGE_DATA	hImage = LoadRawImageDataFromFile(vFiles[i].c_str());
 			if (hImage)
+			{
 				AddImage(hImage);
+				m_vFontClr.push_back(FontClrOpt(FileGetName(vFiles[i].c_str())));
+			}
 		}
 	}
 
@@ -212,6 +254,8 @@ protected:
 		ASSERT(hImage);
 		if (!hImage)
 			return;
+
+		ASSERT(m_vFontClr.size() == m_popupListWnd.GetItemCount());
 
 		int n = m_popupListWnd.InsertItem(0, _T(""), 0, 0);
 
@@ -227,6 +271,8 @@ protected:
 	bool				m_bInitialized;
 	CPopupSkinListWnd	m_popupListWnd;
 	int					m_nWidthMax;
+
+	VecFontClr			m_vFontClr;
 
 	tstring				m_strSectName;
 	bool				m_bHighLight;

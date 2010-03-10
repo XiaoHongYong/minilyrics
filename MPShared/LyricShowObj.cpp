@@ -478,7 +478,6 @@ LPCTSTR		_LyrShowTOBFieldNameHilight[] =
 {
 	_T("FgColor"),
 	_T("HilightGradient1"), _T("HilightGradient2"), _T("HilightGradient3"),
-	_T("HilightAutoGradient"),
 	_T("HilightBorderColor"),
 };
 
@@ -486,7 +485,6 @@ LPCTSTR		_LyrShowTOBFieldNameLowlight[] =
 {
 	_T("FgLowColor"),
 	_T("LowlightGradient1"), _T("LowlightGradient2"), _T("LowlightGradient3"),
-	_T("LowlightAutoGradient"),
 	_T("LowlightBorderColor"),
 };
 
@@ -2393,7 +2391,7 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 				break;
 			}
 		}
-		if ((i == TCI_AUTO_GRADIENT || i == TCI_GRADIENT1 || i == TCI_GRADIENT2 || i == TCI_GRADIENT3))
+		if ((i == TCI_GRADIENT1 || i == TCI_GRADIENT2 || i == TCI_GRADIENT3))
 			CreateLyrOverlayBlendingPattern(m_tobHilight, GetPatternFontHeight());
 		else if (i == TCI_COUNT)
 		{
@@ -2408,7 +2406,7 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 					break;
 				}
 			}
-			if ((i == TCI_AUTO_GRADIENT || i == TCI_GRADIENT1 || i == TCI_GRADIENT2 || i == TCI_GRADIENT3))
+			if ((i == TCI_GRADIENT1 || i == TCI_GRADIENT2 || i == TCI_GRADIENT3))
 				CreateLyrOverlayBlendingPattern(m_tobLowlight, GetPatternFontHeight());
 			else if (i == TCI_COUNT)
 			{
