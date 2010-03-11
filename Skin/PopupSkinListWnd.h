@@ -4,7 +4,7 @@
 #include "PopupSkinWnd.h"
 #include "../MPShared/SkinListCtrl.h"
 
-class CPopupSkinListWnd : public CPopupSkinWnd, public IUIObjNotifyHandler
+class CPopupSkinListWnd : public CPopupSkinWnd
 {
 public:
 	CPopupSkinListWnd();

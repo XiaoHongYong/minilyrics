@@ -29,8 +29,6 @@ void CPopupSkinListWnd::OnSkinLoaded()
 
 	m_pListCtrl = pListCtrl;
 
-	RegisterUIObjNotifyHandler(m_pListCtrl->m_nId, this);
-
 	m_pListCtrl->m_imageListRightSpace = 14;
 
 	m_pListCtrl->m_vHeading = m_listCtrlData.m_vHeading;
