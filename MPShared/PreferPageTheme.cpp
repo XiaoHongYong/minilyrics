@@ -115,12 +115,14 @@ public:
 public:
 	CLyrDisplayClrListWnd()
 	{
+		m_pWnd = NULL;
 		m_pNotify = NULL;
 		m_bInitialized = false;
 	}
 
 	void Create(CSkinWnd *pWnd, CRect &rc, bool bHighLight, bool bFloatingLyr, IPopupSkinWndNotify *pNotify)
 	{
+		m_pWnd = pWnd;
 		m_pNotify = pNotify;
 
 		if (!m_bInitialized)
@@ -145,14 +147,22 @@ public:
 		m_popupListWnd.DeleteAllItems();
 		m_vFontClr.clear();
 
-		AddCurrentSetting();
+		MLColor	clr(RGB(255, 255, 255));
+		ProfileGetColorValue(clr,
+			m_strSectName.c_str(),
+			GetLyrTOBSettingName(m_bHilight, CLyricShowObj::TCI_FILL));
+		AddPureColor(clr.get());
 
 		AddGradientColors();
 
 		AddPatternImages();
 
+		SelectCurrentSetting();
+
+		m_popupListWnd.SetLineHeight(HEIGHT_COLOR);
+
 		if (m_nWidthMax > rc.Width())
-			rc.right = rc.left + m_nWidthMax + 50;
+			rc.right = rc.left + m_nWidthMax + 60;
 
 		// Popup list window
 		m_popupListWnd.Create(pWnd->GetSkinFactory(), _T("ComboBoxPopup.xml"),
@@ -174,6 +184,13 @@ public:
 
 		if (fontClr.obm == OBM_COLOR)
 		{
+			CDlgChooseColor		dlg;
+
+			if (dlg.DoModal(m_pWnd, fontClr.clr[0]) != IDOK)
+				return;
+
+			fontClr.clr[0] = dlg.GetColor().get();
+
 			ColorToStr(fontClr.clr[0], strColor);
 			CMPlayerSettings::SetSettings(m_et, m_strSectName.c_str(), 
 				GetLyrTOBSettingName(m_bHilight, CLyricShowObj::TCI_FILL), strColor.c_str());
@@ -203,33 +220,78 @@ public:
 
 protected:
 	enum {
-		HEIGHT_COLOR = 50,
+		HEIGHT_COLOR = 40,
 		WIDTH_COLOR = 100
 	};
 
-	void AddCurrentSetting()
+	void SelectCurrentSetting()
 	{
 		CLyricShowObj::TextOverlayBlending		tob;
+		int		nToSelect = 0;
 
 		LoadLyrOverlayBlendingSettings(m_strSectName.c_str(), tob, HEIGHT_COLOR, m_bHilight);
 
 		if (tob.obm == OBM_COLOR)
-			AddPureColor(tob.clr[CLyricShowObj::TCI_FILL].get());
+		{
+			nToSelect = 0;
+			// AddPureColor(tob.clr[CLyricShowObj::TCI_FILL].get());
+		}
 		else if (tob.obm == OBM_GRADIENT_COLOR)
 		{
-			AddGradientColor(tob.clr[CLyricShowObj::TCI_GRADIENT1].get(), 
-							tob.clr[CLyricShowObj::TCI_GRADIENT2].get(), 
-							tob.clr[CLyricShowObj::TCI_GRADIENT3].get());
+			nToSelect = FindGradientColor(tob.clr[CLyricShowObj::TCI_GRADIENT1].get(), 
+				tob.clr[CLyricShowObj::TCI_GRADIENT2].get(), 
+				tob.clr[CLyricShowObj::TCI_GRADIENT3].get());
+			if (nToSelect == -1)
+			{
+				AddGradientColor(tob.clr[CLyricShowObj::TCI_GRADIENT1].get(), 
+								tob.clr[CLyricShowObj::TCI_GRADIENT2].get(), 
+								tob.clr[CLyricShowObj::TCI_GRADIENT3].get());
+				nToSelect = m_vFontClr.size() - 1;
+			}
 		}
 		else if (tob.obm == OBM_PATTERN)
 		{
-			if (tob.imgPattern.IsValid())
+			nToSelect = FindPattern(tob.strPatternFile.c_str());
+			if (nToSelect == -1 && tob.imgPattern.IsValid())
 			{
 				AddImage(tob.imgPattern.GetHandle());
 				m_vFontClr.push_back(FontClrOpt(tob.strPatternFile.c_str()));
 				tob.imgPattern.Detach();
+				nToSelect = m_vFontClr.size() - 1;
 			}
 		}
+
+		m_popupListWnd.SetCurSel(nToSelect);
+	}
+
+	int FindGradientColor(COLORREF clr0, COLORREF clr1, COLORREF clr2)
+	{
+		for (int i = 0; i < (int)m_vFontClr.size(); i++)
+		{
+			FontClrOpt &opt = m_vFontClr[i];
+			if (opt.obm == OBM_GRADIENT_COLOR)
+			{
+				if (opt.clr[0] == clr0 && opt.clr[1] == clr1 && opt.clr[2] == clr2)
+					return i;
+			}
+		}
+
+		return -1;
+	}
+
+	int FindPattern(LPCTSTR szPatternFile)
+	{
+		for (int i = 0; i < (int)m_vFontClr.size(); i++)
+		{
+			FontClrOpt &opt = m_vFontClr[i];
+			if (opt.obm == OBM_PATTERN)
+			{
+				if (_tcsicmp(opt.strPatternFile.c_str(), szPatternFile) == 0)
+					return i;
+			}
+		}
+
+		return -1;
 	}
 
 	void AddPureColor(COLORREF clr)
@@ -302,16 +364,17 @@ protected:
 
 		int n = m_popupListWnd.InsertItem(m_popupListWnd.GetItemCount(), _T(""), 0, 0);
 
-		const int LINE_SPACE = 4;
 		m_popupListWnd.SetItemImage(n, 0, hImage);
-		if (m_popupListWnd.GetLineHeight() < hImage->height + LINE_SPACE)
-			m_popupListWnd.SetLineHeight(hImage->height + LINE_SPACE);
+		// const int LINE_SPACE = 4;
+		// if (m_popupListWnd.GetLineHeight() < hImage->height + LINE_SPACE)
+		//	m_popupListWnd.SetLineHeight(hImage->height + LINE_SPACE);
 		if (m_nWidthMax < hImage->width)
 			m_nWidthMax = hImage->width;
 	}
 
 protected:
 	bool				m_bInitialized;
+	CSkinWnd			*m_pWnd;
 	IPopupSkinWndNotify	*m_pNotify;
 	CPopupSkinListWnd	m_popupListWnd;
 	int					m_nWidthMax;
@@ -358,6 +421,8 @@ public:
 	{
 		CreateLOBXlightBmp(true);
 		CreateLOBXlightBmp(false);
+		InvalidateUIObject(CID_DS_CLR_HIGH);
+		InvalidateUIObject(CID_DS_CLR_LOW);
 	}
 
 public:
