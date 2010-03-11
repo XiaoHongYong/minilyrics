@@ -580,9 +580,6 @@ void CSkinNStatusButton::ButtonDownAction()
 
 void CSkinNStatusButton::ButtonUpAction()
 {
-	if (!m_bLBtDown)
-		return;
-
 	m_bLBtDown = FALSE;
 
 	if (m_bContinuousCmd)

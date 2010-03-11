@@ -23,10 +23,6 @@ public:
 		CPagePfBase::OnCreate();
 	}
 
-	void OnDestroy()
-	{
-	}
-
 	void OnOK()
 	{
 		m_pParent->SetProperty(_T("ThemeItemsActionResult"), IDOK);
@@ -57,6 +53,76 @@ public:
 
 	bool OnCustomCommand(int nId)
 	{
+		return CPagePfBase::OnCustomCommand(nId);
+	}
+
+protected:
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class CPagePfLyricsBgPic : public CPagePfBase
+{
+public:
+	CPagePfLyricsBgPic() : CPagePfBase(GetPageID())
+	{
+	}
+
+	static LPCTSTR GetPageID() { return _T("CID_C_THEME_LYR_BG"); }
+
+	void OnCreate()
+	{
+		CPagePfBase::OnCreate();
+
+		AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), false, _T("CID_C_USE_ALBUM_ART_AS_BG"));
+
+		AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), false, _T("CID_C_ENABLE_BG_IMAGE"));
+
+		AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("DarkenLyrBg"), true, _T("CID_C_DARKEN_LYR_BG"));
+
+		SetUIObjectText(_T("CID_E_DELAY_TIME"), 
+			g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), _T("10")));
+
+		InitCheckButtons();
+
+		SetUIObjectText(_T("CID_E_PIC_FOLDER"), 
+			CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());
+
+	}
+
+	void OnDestroy()
+	{
+		int		nDelayTime;
+
+		tstring strDelayTime = GetUIObjectText(_T("CID_E_DELAY_TIME"));
+		nDelayTime = _ttoi(strDelayTime.c_str());
+		if (nDelayTime > 0)
+		{
+			if (nDelayTime < 10)
+				nDelayTime = 10;
+			if (nDelayTime > 10000)
+				nDelayTime = 10000;
+
+			if (nDelayTime != g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), 10))
+			{
+				CMPlayerSettings::SetLyricsDisplaySettings(_T("SlideDelayTime"), nDelayTime);
+			}
+		}
+
+		CPagePfBase::OnDestroy();
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		if (nId == GetIDByName(_T("CID_BR_PIC_FOLDER")))
+		{
+			if (g_mpApp.GetMainWnd())
+				g_mpApp.GetMainWnd()->OnCommand(IDC_SEL_BKIMAGE, 0);
+
+			SetUIObjectText(_T("CID_E_PIC_FOLDER"), 
+				CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());
+		}
 		return CPagePfBase::OnCustomCommand(nId);
 	}
 
@@ -312,7 +378,8 @@ protected:
 
 	void AddGradientColors()
 	{
-		AddGradientColor(RGB(255, 0, 0), RGB(0, 255, 0), RGB(0, 0, 255));
+		AddGradientColor(RGB(255, 255, 128), RGB(255, 128, 0), RGB(255, 128, 128));
+		AddGradientColor(RGB(128, 255, 255), RGB(0, 128, 255), RGB(128, 255, 255));
 		// AddGradientColor(RGB(, , ), RGB(, , ), RGB(, , ));
 	}
 
@@ -426,11 +493,11 @@ public:
 	}
 
 public:
-	CPagePfDisplayStyle() : CPagePfBase(GetPageID())
+	CPagePfDisplayStyle(bool bFloatingLyrMode) : CPagePfBase(GetPageID())
 	{
-// 		if (bFloatingLyrics)
-// 			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
-// 		else
+ 		if (bFloatingLyrMode)
+ 			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
+ 		else
 			m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
 	}
 
@@ -464,11 +531,6 @@ public:
 		}
 
 		SetSettingType(m_eventType == ET_LYRICS_FLOATING_SETTINGS ? ST_FLOATING_LYR : ST_NORMAL_LYR);
-	}
-
-	void OnDestroy()
-	{
-		CPagePfBase::OnDestroy();
 	}
 
 	void OnUIObjNotify(IUIObjNotify *pNotify)
@@ -819,6 +881,8 @@ public:
 	void OnDestroy()
 	{
 		m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
+
+		CPagePfBase::OnDestroy();
 	}
 
 	bool OnCustomCommand(int nId)
@@ -956,10 +1020,11 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfThemeRoot::CPagePfThemeRoot() : CPagePfBase(GetPageID())
+CPagePfThemeRoot::CPagePfThemeRoot(bool bFloatingLyrMode) : CPagePfBase(GetPageID())
 {
 	AddPage(new CPagePfTheme());
-	AddPage(new CPagePfDisplayStyle());
+	AddPage(new CPagePfDisplayStyle(bFloatingLyrMode));
+	AddPage(new CPagePfLyricsBgPic());
 	AddPage(new CPagePfThemeItems());
 }
 
@@ -981,8 +1046,8 @@ bool CPagePfThemeRoot::OnCustomCommand(int nId)
 		SwitchToPage(CPagePfTheme::GetPageID());
 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_DISPLAY")))
 		SwitchToPage(CPagePfDisplayStyle::GetPageID());
-// 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_BG_PIC")))
-// 		SwitchToPage(CPagePfSkin::GetPageID());
+	else if (nId == GetIDByName(_T("CMD_THEME_LYR_BG_PIC")))
+		SwitchToPage(CPagePfLyricsBgPic::GetPageID());
 	else
 		return CPagePfBase::OnCustomCommand(nId);
 

@@ -24,10 +24,10 @@
 
 
 
-CPreferenceDlg2::CPreferenceDlg2() : CMPSkinDialog(_T("Preferences.xml"))
+CPreferenceDlg2::CPreferenceDlg2(bool bFloatingLyrMode) : CMPSkinDialog(_T("Preferences.xml"))
 {
 	m_pageHandler.AddPage(new CPagePfUIRoot());
-	m_pageHandler.AddPage(new CPagePfThemeRoot());
+	m_pageHandler.AddPage(new CPagePfThemeRoot(bFloatingLyrMode));
 }
 
 void CPreferenceDlg2::OnSkinLoaded()

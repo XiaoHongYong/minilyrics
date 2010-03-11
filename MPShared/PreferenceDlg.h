@@ -18,7 +18,7 @@
 class CPreferenceDlg2 : public CMPSkinDialog
 {
 public:
-	CPreferenceDlg2();
+	CPreferenceDlg2(bool bFloatingLyrMode = false);
 
 	virtual void OnSkinLoaded();
 

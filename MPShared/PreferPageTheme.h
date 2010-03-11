@@ -8,7 +8,7 @@
 class CPagePfThemeRoot : public CPagePfBase
 {
 public:
-	CPagePfThemeRoot();
+	CPagePfThemeRoot(bool bFloatingLyrMode);
 
 	static LPCTSTR GetPageID();
 

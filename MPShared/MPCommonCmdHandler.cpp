@@ -391,7 +391,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_PREFERENCES:
-		CMPSkinDialog::ShowDialog(new CPreferenceDlg2(), m_pSkinWnd);
+		CMPSkinDialog::ShowDialog(new CPreferenceDlg2(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS), m_pSkinWnd);
 		g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case CMD_DISPLAY_OPT:
@@ -1079,9 +1079,9 @@ void CMPCommonCmdHandler::OnCommandSetBkImg()
 	dlg.SetInitFolder(CMLProfile::GetDir(m_strSectName.c_str(), _T("BgPicFolder"), _T("")).c_str());
 	if (dlg.DoBrowse(m_pSkinWnd))
 	{
-		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("UseBgImage"), SZ_TRUE);
-		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("BgPicFolder"), dlg.GetFolder());
-		CMLProfile::WriteDir(m_strSectName.c_str(), _T("BgPicFolder"), dlg.GetFolder());
+		CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), SZ_TRUE);
+		CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), dlg.GetFolder());
+		CMLProfile::WriteDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), dlg.GetFolder());
 	}
 }
 

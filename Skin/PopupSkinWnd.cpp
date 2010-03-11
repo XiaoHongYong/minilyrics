@@ -20,6 +20,8 @@ int CPopupSkinWnd::Create(CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName,
 	if (nRet != ERR_OK)
 		return nRet;
 
+	SetTopmost(true);
+
 	m_pPopupSkinWndNotify = pNotify;
 	return ERR_OK;
 }
