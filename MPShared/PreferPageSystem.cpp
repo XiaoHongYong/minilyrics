@@ -4,6 +4,72 @@
 #include "INetTestDlg.h"
 
 
+//////////////////////////////////////////////////////////////////////////
+
+class CPagePfInternet : public CPagePfBase
+{
+public:
+	CPagePfInternet() : CPagePfBase(GetPageID())
+	{
+	}
+
+	static LPCTSTR GetPageID() { return _T("CID_C_INTERNET"); }
+
+	void OnCreate()
+	{
+		CPagePfBase::OnCreate();
+
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+// 		if (nId == GetIDByName(_T("CID_BR_PIC_FOLDER")))
+// 		{
+// 			if (g_mpApp.GetMainWnd())
+// 				g_mpApp.GetMainWnd()->OnCommand(IDC_SEL_BKIMAGE, 0);
+// 
+// 			SetUIObjectText(_T("CID_E_PIC_FOLDER"), 
+// 				CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());
+// 		}
+		return CPagePfBase::OnCustomCommand(nId);
+	}
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+CPagePfSystemRoot::CPagePfSystemRoot() : CPagePfBase(GetPageID())
+{
+	AddPage(new CPagePfInternet());
+}
+
+LPCTSTR CPagePfSystemRoot::GetPageID()
+{
+	return _T("CID_C_SYSTEM_ROOT");
+}
+
+void CPagePfSystemRoot::OnCreate()
+{
+	CPagePfBase::OnCreate();
+
+	CheckToolbarButton(_T("CID_TOOLBAR_SYSTEM"), _T("CMD_SYSTEM_INTERNET"), true);
+}
+
+bool CPagePfSystemRoot::OnCustomCommand(int nId)
+{
+	if (nId == GetIDByName(_T("CMD_SYSTEM_INTERNET")))
+		SwitchToPage(CPagePfInternet::GetPageID());
+// 	else if (nId == GetIDByName(_T("CMD_SYSTEM_STARTUP")))
+// 		SwitchToPage(CPagePfInternet::GetPageID());
+	else
+		return CPagePfBase::OnCustomCommand(nId);
+
+	return true;
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+
 CPreferPageInternet::CPreferPageInternet() : CPreferencePageBase(IDD_PAGE_INTERNET, _T("Internet"))
 {
 	m_PageID = PAGE_INET;

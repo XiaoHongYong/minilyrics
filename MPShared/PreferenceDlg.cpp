@@ -28,6 +28,7 @@ CPreferenceDlg2::CPreferenceDlg2(bool bFloatingLyrMode) : CMPSkinDialog(_T("Pref
 {
 	m_pageHandler.AddPage(new CPagePfUIRoot());
 	m_pageHandler.AddPage(new CPagePfThemeRoot(bFloatingLyrMode));
+	m_pageHandler.AddPage(new CPagePfSystemRoot());
 }
 
 void CPreferenceDlg2::OnSkinLoaded()
@@ -49,17 +50,15 @@ bool CPreferenceDlg2::OnCustomCommand(int nId)
 		return true;
 
 	if (nId == GetIDByName(_T("CMD_ROOT_UI")))
-	{
 		m_pageHandler.SwitchToPage(CPagePfUIRoot::GetPageID());
-		return true;
-	}
 	else if (nId == GetIDByName(_T("CMD_ROOT_THEME")))
-	{
 		m_pageHandler.SwitchToPage(CPagePfThemeRoot::GetPageID());
-		return true;
-	}
+	else if (nId == GetIDByName(_T("CMD_ROOT_SYSTEM")))
+		m_pageHandler.SwitchToPage(CPagePfSystemRoot::GetPageID());
+	else
+		return false;
 
-	return false;
+	return true;
 }
 
 

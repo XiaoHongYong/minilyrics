@@ -6,6 +6,20 @@
 #include "PreferencePageBase.h"
 
 
+class CPagePfSystemRoot : public CPagePfBase
+{
+public:
+	CPagePfSystemRoot();
+
+	static LPCTSTR GetPageID();
+
+	void OnCreate();
+
+	bool OnCustomCommand(int nId);
+
+};
+
+
 //
 // Internet settings
 //

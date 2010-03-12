@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Container ID="CID_C_SYSTEM_ROOT" Name="System" Visible="false" Rect="0,65,w,h-65">
+  <NormalFrame Rect="10,10,w-20,h-20"/>
+  <NormalTabButton ID="CID_TOOLBAR_SYSTEM"  Rect="30,10,w-30,">
+    <button ID="CMD_SYSTEM_INTERNET" Text="Internet"/>
+    <button ID="CMD_SYSTEM_STARTUP" Text="Startup"/>
+  </NormalTabButton>
+  <Container ID="CID_C_INTERNET" Name="Internet" Rect="10,30,w-20,h-30-20">
+    <NormalFrame Rect="10,15,w-20,210" Text="HTTP proxy"/>
+    <NormalTextBt ID="CID_LOAD_IE_PROXY" Text="Load Setting From IE" Rect="20,40,200,"/>
+    <NormalCheckBox ID="CID_USE_PROXY" Text="Use proxy" Rect="20,70,200,"/>
+
+    <NormalText Rect="20,100,100," Text="Address:" AlignText="AT_RIGHT"/>
+    <NormalEdit ID="CID_HTTP_PROXY" Text="" Rect="130,100,200,"/>
+    <NormalText Rect="340,100,80," Text="Port:" AlignText="AT_RIGHT"/>
+    <NormalEdit ID="CID_HTTP_PROXY" Text="" Rect="430,100,80,"/>
+
+    <NormalText Rect="20,130,150," Text="Proxy user name:" AlignText="AT_RIGHT"/>
+    <NormalEdit ID="CID_USER" Text="" Rect="210,130,200,"/>
+
+    <NormalText Rect="20,160,150," Text="Proxy password:" AlignText="AT_RIGHT"/>
+    <NormalEdit ID="CID_PASS" Text="" Rect="210,160,200,"/>
+  </Container>
+</Container>

@@ -16,4 +16,5 @@
   </Toolbar>
   <include Name="Pf_UserInterface.xml"/>
   <include Name="Pf_Themes.xml"/>
+  <include Name="Pf_System.xml"/>
 </skinwnd>
