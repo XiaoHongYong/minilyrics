@@ -123,7 +123,10 @@ public:
 			SetUIObjectText(_T("CID_E_PIC_FOLDER"), 
 				CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());
 		}
-		return CPagePfBase::OnCustomCommand(nId);
+		else
+			return CPagePfBase::OnCustomCommand(nId);
+
+		return true;
 	}
 
 protected:

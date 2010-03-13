@@ -19,20 +19,141 @@ public:
 	{
 		CPagePfBase::OnCreate();
 
+
+		//
+		// HTTP ´úÀíÉèÖÃ
+		//
+		TCHAR	szProxyServer[256];
+		int		nProxyPort;
+		BOOL	bUseProxy;
+
+		bUseProxy = CMLProfile::InetGetProxy(szProxyServer, nProxyPort);
+		CheckButton(_T("CID_USE_PROXY"), Tobool(bUseProxy));
+
+		// Proxy server address
+		SetUIObjectText(_T("CID_HTTP_PROXY"), g_Profile.GetProfileString(_T("ProxyServer"), _T("")));
+		SetUIObjectText(_T("CID_HTTP_PORT"), g_Profile.GetProfileString(_T("ProxyPort"), _T("")));
+
+		// Proxy user name and password
+		SetUIObjectText(_T("CID_USER"), g_Profile.GetProfileString(_T("ProxyUser"), _T("")));
+		TCHAR	szPwd[256];
+		g_Profile.EncryptGetProfileString(_T("ProxyPassEnc"), _T(""), szPwd, CountOf(szPwd));
+		if (IsEmptyString(szPwd))
+			g_Profile.GetProfileString(_T("ProxyPass"), _T(""), szPwd, CountOf(szPwd));
+		SetUIObjectText(_T("CID_PASS"), szPwd);
+	}
+
+	void OnDestroy()
+	{
+		SaveProxyServerUserPwd();
+
+		CPagePfBase::OnDestroy();
 	}
 
 	bool OnCustomCommand(int nId)
 	{
-// 		if (nId == GetIDByName(_T("CID_BR_PIC_FOLDER")))
-// 		{
-// 			if (g_mpApp.GetMainWnd())
-// 				g_mpApp.GetMainWnd()->OnCommand(IDC_SEL_BKIMAGE, 0);
-// 
-// 			SetUIObjectText(_T("CID_E_PIC_FOLDER"), 
-// 				CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());
-// 		}
+		if (nId == GetIDByName(_T("CID_LOAD_IE_PROXY")))
+		{
+			bool		bUseProxy;
+			tstring		strSvr;
+			int			nPort;
+			if (LoadProxySvrFromIE(bUseProxy, strSvr, nPort))
+			{
+				int		nHttpProxyType;
+
+				CheckButton(_T("CID_USE_PROXY"), Tobool(bUseProxy));
+				if (bUseProxy)
+					nHttpProxyType = HTTP_PROXY_OURS;
+				else
+					nHttpProxyType = HTTP_PROXY_NONE;
+
+				g_Profile.WriteProfileInt(_T("ProxyType"), nHttpProxyType);
+
+				SetUIObjectText(_T("CID_HTTP_PROXY"), strSvr.c_str());
+				SetUIObjectText(_T("CID_HTTP_PORT"), CStrPrintf(_T("%d"), nPort).c_str());
+			}
+		}
+		else if (nId == GetIDByName(_T("CID_USE_PROXY")))
+		{
+			int		nHttpProxyType;
+
+			if (IsButtonChecked(nId))
+				nHttpProxyType = HTTP_PROXY_OURS;
+			else
+				nHttpProxyType = HTTP_PROXY_NONE;
+			g_Profile.WriteProfileInt(_T("ProxyType"), nHttpProxyType);
+		}
+		else
+			return CPagePfBase::OnCustomCommand(nId);
+
+		return true;
+	}
+
+protected:
+	void SaveProxyServerUserPwd()
+	{
+		g_Profile.WriteProfileString(_T("ProxyServer"), 
+			GetUIObjectText(_T("CID_HTTP_PROXY")).c_str());
+
+		g_Profile.WriteProfileString(_T("ProxyPort"), 
+			GetUIObjectText(_T("CID_HTTP_PORT")).c_str());
+
+		tstring strUser = GetUIObjectText(_T("CID_USER"));
+		g_Profile.WriteProfileString(_T("ProxyUser"), strUser.c_str());
+
+		tstring strPwd = GetUIObjectText(_T("CID_PASS"));
+		g_Profile.EncryptWriteProfileString(_T("ProxyPassEnc"), strPwd.c_str());
+		g_Profile.WriteProfileString(_T("ProxyPass"), _T(""));
+
+		if (strUser.size())
+		{
+			stringex	strBase64, strPwdUser;
+			TCHAR			szPwdUser[256];
+
+			_stprintf_s(szPwdUser, CountOf(szPwdUser), _T("%s:%s"), strUser.c_str(), strPwd.c_str());
+			ConvertStr(szPwdUser, -1, strPwdUser);
+			encodeuu(strPwdUser, strPwdUser.size(), strBase64, true);
+#ifdef _UNICODE
+			wstringex	strW;
+			ConvertStr(strBase64.c_str(), strBase64.size(), strW);
+			g_Profile.WriteProfileString(_T("Base64ProxyUserPass"), strW.c_str());
+#else
+			g_Profile.WriteProfileString(_T("Base64ProxyUserPass"), strBase64.c_str());
+#endif
+		}
+	}
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class CPagePfStartup: public CPagePfBase
+{
+public:
+	CPagePfStartup() : CPagePfBase(GetPageID())
+	{
+	}
+
+	static LPCTSTR GetPageID() { return _T("CID_C_STARTUP"); }
+
+	void OnCreate()
+	{
+		CPagePfBase::OnCreate();
+
+		AddOptBool(ET_NULL, SZ_SECT_UI, _T("CheckNewVer"), true, _T("CID_C_CHECK_NEW_VERSION"));
+
+		InitCheckButtons();
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		// if (nId == GetIDByName(_T("CID_BR_PIC_FOLDER")))
+		{
+		}
 		return CPagePfBase::OnCustomCommand(nId);
 	}
+
+protected:
 
 };
 
@@ -41,6 +162,7 @@ public:
 CPagePfSystemRoot::CPagePfSystemRoot() : CPagePfBase(GetPageID())
 {
 	AddPage(new CPagePfInternet());
+	AddPage(new CPagePfStartup());
 }
 
 LPCTSTR CPagePfSystemRoot::GetPageID()
@@ -59,8 +181,8 @@ bool CPagePfSystemRoot::OnCustomCommand(int nId)
 {
 	if (nId == GetIDByName(_T("CMD_SYSTEM_INTERNET")))
 		SwitchToPage(CPagePfInternet::GetPageID());
-// 	else if (nId == GetIDByName(_T("CMD_SYSTEM_STARTUP")))
-// 		SwitchToPage(CPagePfInternet::GetPageID());
+	else if (nId == GetIDByName(_T("CMD_SYSTEM_STARTUP")))
+		SwitchToPage(CPagePfStartup::GetPageID());
 	else
 		return CPagePfBase::OnCustomCommand(nId);
 

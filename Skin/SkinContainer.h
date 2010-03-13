@@ -105,6 +105,7 @@ protected:
 
 	V_UIOBJECT			m_vUIObjs;
 
+	bool				m_bClipChildren;
 	tstring				m_strContextMenu;
 	CMLMenu				*m_pMenu;
 

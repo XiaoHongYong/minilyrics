@@ -15,6 +15,7 @@ CSkinContainer::CSkinContainer()
 {
 	m_nMsgWant = UO_MSG_WANT_ALL;
 	m_pMenu = NULL;
+	m_bClipChildren = false;
 }
 
 CSkinContainer::~CSkinContainer()
@@ -334,6 +335,14 @@ CRawGraph *CSkinContainer::GetMemGraph()
 
 void CSkinContainer::Draw(CRawGraph *pGraph)
 {
+	CRect	rc;
+
+	if (m_bClipChildren)
+	{
+		pGraph->GetClipBoundBox(rc);
+		pGraph->SetClipBoundBox(m_rcObj);
+	}
+
 	for (int i = 0; i < m_vUIObjs.size(); i++)
 	{
 		CUIObject		*pObj = m_vUIObjs[i];
@@ -350,6 +359,9 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 			pObj->UpdateTranslucencyWithSkin(pGraph);
 		}
 	}
+
+	if (m_bClipChildren)
+		pGraph->SetClipBoundBox(rc);
 }
 
 int CSkinContainer::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
@@ -401,6 +413,8 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_strContextMenu = szValue;
 		m_pSkin->GetSkinFactory()->LoadMenu(m_pSkin, &m_pMenu, szValue);
 	}
+	else if (IsPropertyName(szProperty, _T("ClipChildren")))
+		m_bClipChildren = IsTRUE(szValue);
 	else
 		return FALSE;
 
