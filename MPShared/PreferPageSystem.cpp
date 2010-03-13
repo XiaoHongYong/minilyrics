@@ -127,6 +127,22 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
+#ifndef _MPLAYER
+
+ID_TO_STRING		_id2strPlayers[] = { { 0, _T("Winamp2") }, { 0, _T("Winamp5") },
+	{ 0, _T("Windows Media Player") }, { 0, _T("Foobar2000") }, 
+	{ 0, _T("RealPlayer") }, { 0, _T("Quintessential Player") }, 
+	{ 0, _T("iTunes") }, { 0, _T("Silverjuke") },
+	{ 0, _T("MediaMonkey") }, { 0, _T("KMPlayer") }, 
+	{ 0, _T("JetAudio") }, { 0, _T("Yahoo! Music Jukebox") }, 
+	{ 0, _T("Bsplayer") }, { 0, _T("Media Jukebox") }, 
+	{ 0, _T("XMPlay") }, { 0, _T("AIMP2") },
+	{ 0, _T("VLC Media Player") },
+	{ 0, NULL }
+};
+
+#endif // #ifndef _MPLAYER
+
 class CPagePfStartup: public CPagePfBase
 {
 public:
@@ -143,14 +159,76 @@ public:
 		AddOptBool(ET_NULL, SZ_SECT_UI, _T("CheckNewVer"), true, _T("CID_C_CHECK_NEW_VERSION"));
 
 		InitCheckButtons();
+
+#ifndef _MPLAYER
+		CSkinContainer *pContainer = (CSkinContainer *)GetUIObjectById(GetPageID(), CSkinContainer::ClassName());
+		ASSERT(pContainer);
+		if (!pContainer)
+			return;
+
+		CUIObject *pObjFrame = GetUIObjectById(_T("CID_STARTUP_FRAME"));
+		ASSERT(pObjFrame);
+		if (!pObjFrame)
+			return;
+
+		CStrPrintf	strWidth(_T("(%s)/2-10"), pObjFrame->m_formWidth.GetFormula());
+		CStrPrintf	strP1Left(_T("%s + 10"), pObjFrame->m_formLeft.GetFormula());
+		CStrPrintf	strP2Left(_T("%s+(%s)/2+10"), pObjFrame->m_formLeft.GetFormula(),
+			pObjFrame->m_formWidth.GetFormula());
+		CFormula	formTop;
+
+		formTop.SetFormula(pObjFrame->m_formTop.GetFormula());
+		formTop.Increase(25);
+
+		for (int i = 0; _id2strPlayers[i].szId != NULL; i++)
+		{
+			bool bLeft = (i % 2 == 0);
+
+			if (_id2strPlayers[i].dwId == 0)
+				_id2strPlayers[i].dwId = m_pSkinWnd->GetSkinFactory()->AllocCustomID();
+
+			CSkinNStatusButton *pButton = (CSkinNStatusButton*)m_pSkinWnd->GetSkinFactory()->CreateDynamicCtrl(
+				pContainer, _T("NormalCheckBox"), _id2strPlayers[i].dwId,
+				bLeft ? strP1Left.c_str() : strP2Left.c_str(), formTop.GetFormula(), strWidth.c_str());
+			if (pButton)
+			{
+				pButton->SetProperty(SZ_PN_TEXT, _id2strPlayers[i].szId);
+				if (g_Profile.GetProfileInt(_id2strPlayers[i].szId, TRUE))
+					pButton->SetStatus(true);
+			}
+
+			if (!bLeft)
+				formTop.Increase(30);
+		}
+#endif // #ifndef _MPLAYER
 	}
 
 	bool OnCustomCommand(int nId)
 	{
-		// if (nId == GetIDByName(_T("CID_BR_PIC_FOLDER")))
+#ifndef _MPLAYER
+		//
+		// Should MiniLyrics get started with the checked player?
+		//
+		LPCTSTR		szPlayer;
+		szPlayer = IDToString(_id2strPlayers, nId, _T(""));
+		if (!IsEmptyString(szPlayer))
 		{
+			g_Profile.WriteProfileInt(szPlayer, IsButtonChecked(nId));
+			return true;
 		}
+#endif // #ifndef _MPLAYER
+
 		return CPagePfBase::OnCustomCommand(nId);
+	}
+
+	void OnDestroy()
+	{
+#ifndef _MPLAYER
+		RegWriteProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\UIPlugins\\{46B5EE7F-3B6B-4079-A756-5EFC10B1F50B}"), 
+			_T("Running"), IsButtonChecked(IDC_WMP));
+#endif // #ifndef _MPLAYER
+
+		CPagePfBase::OnDestroy();
 	}
 
 protected:

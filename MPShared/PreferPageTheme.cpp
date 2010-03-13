@@ -1028,7 +1028,7 @@ CPagePfThemeRoot::CPagePfThemeRoot(bool bFloatingLyrMode) : CPagePfBase(GetPageI
 	AddPage(new CPagePfTheme());
 	AddPage(new CPagePfDisplayStyle(bFloatingLyrMode));
 	AddPage(new CPagePfLyricsBgPic());
-	AddPage(new CPagePfThemeItems());
+	// AddPage(new CPagePfThemeItems());
 }
 
 LPCTSTR CPagePfThemeRoot::GetPageID()

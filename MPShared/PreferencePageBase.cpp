@@ -31,6 +31,8 @@ void CPagePfBase::OnDestroy()
 	m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
 
 	ClearOptions();
+
+	CSkinPageHandler::OnDestroy();
 }
 
 bool CPagePfBase::OnCustomCommand(int nId)

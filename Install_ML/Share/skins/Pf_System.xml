@@ -5,7 +5,7 @@
     <button ID="CMD_SYSTEM_INTERNET" Text="Internet"/>
     <button ID="CMD_SYSTEM_STARTUP" Text="Startup"/>
   </NormalTabButton>
-  <Container Name="Region" Rect="10,0,w-20,h" ClipChildren="true">
+  <Container Name="Content" Rect="10,0,w-20,h" ClipChildren="true">
     <Container ID="CID_C_INTERNET" Name="Internet" Rect="0,30,w,h-30-20" Visible="false">
       <NormalFrame Rect="10,15,w-20,210" Text="HTTP proxy"/>
       <NormalTextBt ID="CID_LOAD_IE_PROXY" Text="Load Setting From IE" Rect="20,40,200,"/>
@@ -23,10 +23,8 @@
       <NormalEdit ID="CID_PASS" Text="" Rect="210,160,200,"/>
     </Container>
     <Container ID="CID_C_STARTUP" Name="Startup" Rect="0,30,w,h-30-20" Visible="false">
-      <NormalCheckBox ID="CID_C_CHECK_NEW_VERSION" Text="Check for new versions at startup" Rect="20,10,w-40,"/>
-
-      <NormalFrame Rect="10,40,w-20,210" Text="HTTP proxy"/>
-      <NormalCheckBox ID="CID_C_WINAMP2" Text="Winamp2" Rect="20,60,w/2-30,"/>
+      <NormalCheckBox ID="CID_C_CHECK_NEW_VERSION" Text="Check for new versions at startup" Rect="25,10,w-40,"/>
+      <NormalFrame ID="CID_STARTUP_FRAME"  Rect="10,40,w-20,h-40" Text="Run MiniLyrics When Players run"/>
     </Container>
   </Container>
 </Container>

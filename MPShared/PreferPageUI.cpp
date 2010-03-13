@@ -186,6 +186,8 @@ public:
 	void OnDestroy()
 	{
 		m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
+
+		CPagePfBase::OnDestroy();
 	}
 
 	bool OnCustomCommand(int nId)

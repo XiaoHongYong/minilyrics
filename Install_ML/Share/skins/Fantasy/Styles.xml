@@ -18,7 +18,7 @@
         <button ID="ID_CANCEL" Left="1" />
       </Toolbar>
       <HStretchImage Name="TitleLine" Left="10" Top="25" Width="w-20-10" Height="6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
-      <ClientArea Rect="2, 30, w-4-10, h-30-4"/>
+      <ClientArea Rect="2, 30, w-4-10, h-30-4" ClipChildren="true"/>
       <WndResizer Name="Bottom" Left="0" Top="h-20" Width="w-20" Height="20" Direction="bottom"/>
       <WndResizer Name="Right" Left="w-20" Top="0" Width="20" Height="h-20" Direction="right"/>
       <WndResizer Name="RightBottom" Left="w-20" Top="h-20" Width="20" Height="20" Direction="right|bottom"/>

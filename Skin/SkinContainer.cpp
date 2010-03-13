@@ -361,7 +361,7 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 	}
 
 	if (m_bClipChildren)
-		pGraph->SetClipBoundBox(rc);
+		pGraph->ResetClipBoundBox(rc);
 }
 
 int CSkinContainer::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
