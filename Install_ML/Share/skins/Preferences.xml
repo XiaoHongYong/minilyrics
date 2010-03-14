@@ -16,4 +16,6 @@
   <include Name="Pf_UserInterface.xml"/>
   <include Name="Pf_Themes.xml"/>
   <include Name="Pf_System.xml"/>
+  <include Name="Pf_Lyrics.xml"/>
+  <include Name="Pf_Advanced.xml"/>
 </skinwnd>

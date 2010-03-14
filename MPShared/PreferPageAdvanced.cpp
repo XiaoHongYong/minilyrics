@@ -971,3 +971,37 @@ void CPreferPageAdvanced::ListAllItems()
 		m_listItems.SetItemText(n, 1, item->GetValue().c_str());
 	}
 }
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+
+CPagePfAdvanced::CPagePfAdvanced() : CPagePfBase(GetPageID())
+{
+}
+
+LPCTSTR CPagePfAdvanced::GetPageID()
+{
+	return _T("CID_C_ADVANCED");
+}
+
+void CPagePfAdvanced::OnCreate()
+{
+	CPagePfBase::OnCreate();
+
+	// CheckToolbarButton(_T("CID_TOOLBAR_THEME"), _T("CMD_THEME_THEME"), true);
+}
+
+bool CPagePfAdvanced::OnCustomCommand(int nId)
+{
+// 	if (nId == GetIDByName(_T("CMD_THEME_THEME")))
+// 		SwitchToPage(CPagePfTheme::GetPageID());
+// 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_DISPLAY")))
+// 		SwitchToPage(CPagePfDisplayStyle::GetPageID());
+// 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_BG_PIC")))
+// 		SwitchToPage(CPagePfLyricsBgPic::GetPageID());
+// 	else
+		return CPagePfBase::OnCustomCommand(nId);
+
+	return true;
+}

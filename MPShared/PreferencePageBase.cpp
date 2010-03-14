@@ -64,6 +64,35 @@ bool CPagePfBase::OnCustomCommand(int nId)
 		}
 	}
 
+	{
+		//
+		// Process Radio int Buttons Command
+		//
+		VOptRadioInt::iterator	it, itEnd;
+		itEnd = m_vOptRadioInt.end();
+		for (it = m_vOptRadioInt.begin(); it != itEnd; ++it)
+		{
+			OptRadioInt		&opt = *it;
+
+			for (int i = 0; i < (int)opt.vCtrls.size(); i++)
+			{
+				if (opt.vCtrls[i] == nId)
+				{
+					CMPlayerSettings::SetSettings(opt.eventType, opt.strSection.c_str(),
+						opt.strSettingName.c_str(), opt.vValues[i], opt.eventType != ET_INVALID);
+
+					// Uncheck all buttons, in this group.
+					for (int k = 0; k < (int)opt.vCtrls.size(); k++)
+					{
+						if (k != i)
+							CheckButton(opt.vCtrls[k], false);
+					}
+					return true;
+				}
+			}
+		}
+	}
+
 	return false;
 }
 
@@ -132,6 +161,29 @@ void CPagePfBase::InitCheckButtons()
 				ERRLOG1(_T("Control: %s is NOT defined in skin."), m_pSkinWnd->GetSkinFactory()->GetStringOfID(opt.nCtrl));
 		}
 	}
+
+	{
+		//
+		// Check Radio Int Buttons
+		//
+		VOptRadioInt::iterator	it, itEnd;
+		int		nValue;
+		itEnd = m_vOptRadioInt.end();
+		for (it = m_vOptRadioInt.begin(); it != itEnd; ++it)
+		{
+			OptRadioInt		&opt = *it;
+
+			nValue = g_Profile.GetProfileInt(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.nDefaultValue);
+			for (int i = 0; i < (int)opt.vValues.size(); i++)
+			{
+				if (opt.vValues[i] == nValue)
+				{
+					CheckButton(opt.vCtrls[i], true);
+					break;
+				}
+			}
+		}
+	}
 }
 
 void CPagePfBase::OnUIObjNotify(IUIObjNotify *pNotify)
@@ -174,6 +226,7 @@ void CPagePfBase::ClearOptions()
 {
 	m_vOptBool.clear();
 	m_vOptComboStr.clear();
+	m_vOptRadioInt.clear();
 }
 
 int CPagePfBase::NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj)

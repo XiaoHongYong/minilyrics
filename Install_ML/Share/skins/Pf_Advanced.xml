@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Container ID="CID_C_ADVANCED" Name="Advanced" Rect="0,65,w,h-65" Visible="false">
+  <NormalFrame Rect="10,10,w-20,80" Text="&amp;Save downloaded lyrics in:"/>
+  <NormalRadioBt ID="CID_C_SAVE_IN_SONG_DIR" Text="Save lyrics in the song's directory" Rect="25,30,w-50,"/>
+  <NormalRadioBt ID="CID_C_SAVE_IN_DIR" Text="&amp;Save lyrics in:" Rect="25,60,w-50,"/>
+  <NormalCheckBox ID="CID_C_SAVE_IN_MP3" Text="&amp;Save lyrics in mp3 file" Rect="25,90,w-50,"/>
+</Container>

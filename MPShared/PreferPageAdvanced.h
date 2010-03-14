@@ -23,6 +23,19 @@ public:
 typedef vector<CPreferItem *>		VecPreferItems;
 
 
+class CPagePfAdvanced : public CPagePfBase
+{
+public:
+	CPagePfAdvanced();
+
+	static LPCTSTR GetPageID();
+
+	void OnCreate();
+
+	bool OnCustomCommand(int nId);
+
+};
+
 //
 // Internet settings
 //

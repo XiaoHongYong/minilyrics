@@ -86,6 +86,19 @@ public:
 	};
 	typedef	list<OptComboStr>		VOptComboStr;
 
+	struct OptRadioInt : public OptBase
+	{
+		vector<int>	vCtrls;
+		vector<int>	vValues;
+
+		void AddCtrlValue(int nCtrl, int nValue)
+		{
+			vCtrls.push_back(nCtrl);
+			vValues.push_back(nValue);
+		}
+	};
+	typedef	list<OptRadioInt>		VOptRadioInt;
+
 public:
 	CPagePfBase(LPCTSTR szIdPage);
 
@@ -97,6 +110,7 @@ public:
 
 	void AddOptBool(EventType evtType, LPCTSTR szSection, LPCTSTR szSettingName, bool bDefValue, LPCTSTR szCtrlId);
 	void AddOptComboStr(OptComboStr &optComboStr) { m_vOptComboStr.push_back(optComboStr); }
+	void AddOptRadioInt(OptRadioInt &optRadioInt) { m_vOptRadioInt.push_back(optRadioInt); }
 
 	void InitCheckButtons();
 
@@ -110,6 +124,7 @@ protected:
 protected:
 	VOptBool			m_vOptBool;
 	VOptComboStr		m_vOptComboStr;
+	VOptRadioInt		m_vOptRadioInt;
 	tstring				m_strPageId;
 
 };

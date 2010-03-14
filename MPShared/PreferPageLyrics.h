@@ -5,6 +5,19 @@
 
 #include "PreferencePageBase.h"
 
+class CPagePfLyricsRoot : public CPagePfBase
+{
+public:
+	CPagePfLyricsRoot();
+
+	static LPCTSTR GetPageID();
+
+	void OnCreate();
+
+	bool OnCustomCommand(int nId);
+
+};
+
 //
 // Internet Lyrics Search Options
 //

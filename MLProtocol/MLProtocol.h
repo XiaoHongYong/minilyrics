@@ -40,7 +40,6 @@ enum ML_PROTOCAL_ERROR
 };
 
 
-#define ML_SERVER_PORT		1212
 #define ML_PROTOCOL_VERION_V8		_T("0.8")
 #define ML_PROTOCOL_VERION			_T("0.9")
 

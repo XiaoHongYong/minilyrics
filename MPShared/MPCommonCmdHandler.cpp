@@ -663,7 +663,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 				g_eventDispather.DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
 
-				g_eventDispather.DispatchInfoText(TOLOCAL(_T("Lyrics Forward 0.5 Sec")));
+				// g_eventDispather.DispatchInfoText(TOLOCAL(_T("Lyrics Forward 0.5 Sec")));
 			}
 		}
 		break;
@@ -684,7 +684,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 				g_eventDispather.DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
 
-				g_eventDispather.DispatchInfoText(TOLOCAL(_T("Lyrics Backward 0.5 Sec")));
+				// g_eventDispather.DispatchInfoText(TOLOCAL(_T("Lyrics Backward 0.5 Sec")));
 			}
 		}
 		break;

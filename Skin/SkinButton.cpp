@@ -19,6 +19,7 @@ UIOBJECT_CLASS_NAME_IMP(CSkinButton, _T("Button"))
 CSkinButton::CSkinButton()
 {
 	m_vBtStatImg.push_back(new BtStatImg);
+	m_bRadioBt = false;
 }
 
 CSkinButton::~CSkinButton()
@@ -33,6 +34,17 @@ BOOL CSkinButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (_tcsicmp(szProperty, _T("CheckBox")) == 0)
 	{
 		if (IsTRUE(szValue))
+		{
+			SetMaxStat(2);
+			m_nMsgWant &= ~UO_MSG_WANT_ENTER_KEY;
+		}
+		else
+			SetMaxStat(1);
+	}
+	else if (_tcsicmp(szProperty, _T("Radio")) == 0)
+	{
+		m_bRadioBt = IsTRUE(szValue);
+		if (m_bRadioBt)
 		{
 			SetMaxStat(2);
 			m_nMsgWant &= ~UO_MSG_WANT_ENTER_KEY;
@@ -109,6 +121,21 @@ bool CSkinButton::IsCheck()
 	ASSERT(m_vBtStatImg.size() == 2);
 
 	return m_nCurStatus == 1;
+}
+
+void CSkinButton::ButtonUpAction()
+{
+	if (m_bRadioBt)
+	{
+		if (m_nCurStatus >= (int)m_vBtStatImg.size() - 1)
+		{
+			m_bLBtDown = FALSE;
+			Invalidate();
+			return;
+		}
+	}
+
+	CSkinNStatusButton::ButtonUpAction();
 }
 
 ///////////////////////////////////////////////////////////////////////////////

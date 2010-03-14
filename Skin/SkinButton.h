@@ -27,6 +27,11 @@ public:
 	bool IsCheck();
 	void SetCheck(bool bCheck);
 
+protected:
+	virtual void ButtonUpAction();
+
+	bool			m_bRadioBt;
+
 };
 
 class CSkinActiveButton : public CSkinButton
