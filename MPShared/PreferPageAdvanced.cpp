@@ -11,7 +11,7 @@
 #include "gtk2/HotkeyCtrlEx.h"
 #endif
 
-#define TIMER_ID_SEARCH		1
+#define TIMER_ID_SEARCH		2
 #define DURATION_SEARCH		500
 
 #define SZ_YES			TOLOCAL(_T("Yes"))
@@ -499,7 +499,7 @@ public:
 	};
 	typedef vector<Hotkey>	VecHotkeys;
 
-	CPfItemShortcut(CPreferPageAdvanced *pWndParent, LPCTSTR szName, int nCmd)
+	CPfItemShortcut(CPagePfAdvanced *pWndParent, LPCTSTR szName, int nCmd)
 		: CPreferItem(szName)
 	{
 		m_nCmd = nCmd;
@@ -574,7 +574,7 @@ public:
 			CDlgShortcutKey		dlg(m_strName.c_str());
 			bool				bGloal = (nIndex == 1);
 
-			if (dlg.DoModal(m_pWndParent) == IDOK)
+			if (dlg.DoModal(m_pWndParent->GetSkinWnd()) == IDOK)
 			{
 				// Is this hotkey already being used?
 				int			nUsedCmdIndex;
@@ -593,7 +593,7 @@ public:
 					strMsg = CStrPrintf(TOLOCAL(_T("This hotkey is currently used by action: %s.")), TOLOCAL(strCmd.c_str())).c_str();
 					strMsg += _T("\r\n");
 					strMsg += TOLOCAL(_T("Do you want to replace it?"));
-					if (m_pWndParent->MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_YESNO) != IDYES)
+					if (m_pWndParent->GetSkinWnd()->MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_YESNO) != IDYES)
 						return;
 
 					g_mpApp.GetHotkey().Remove(nUsedCmdIndex);
@@ -629,7 +629,7 @@ public:
 		return g_mpApp.GetHotkey().RestoreDefaultKey(m_nCmd);
 	}
 
-	CPreferPageAdvanced	*m_pWndParent;
+	CPagePfAdvanced		*m_pWndParent;
 	int					m_nCmd;
 
 };
@@ -709,7 +709,7 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 	}
 	m_vPreferItems.push_back(new CPfItemSystemTrayIcon());
 
-	//
+/*	//
 	// Shortcut keys
 	//
 	MPHotKeySection		*pSect = g_vHotkeySections;
@@ -727,7 +727,7 @@ BOOL CPreferPageAdvanced::OnInitDialog()
 					+ TOLOCAL(pSect->szName) + _T(" ") + TOLOCAL(szID)).c_str(),
 				pSect->vHotkeys[k]));
 		}
-	}
+	}*/
 
 	ListAllItems();
 
@@ -978,6 +978,18 @@ void CPreferPageAdvanced::ListAllItems()
 
 CPagePfAdvanced::CPagePfAdvanced() : CPagePfBase(GetPageID())
 {
+	m_nMenuIdEnd = m_nMenuIdStart = 0;
+	m_bIgnoreSettingListNotify = false;
+	CID_LIST_SETTINGS = 0;
+}
+
+CPagePfAdvanced::~CPagePfAdvanced()
+{
+	for (size_t i = 0; i < m_vPreferItems.size(); i++)
+	{
+		delete m_vPreferItems[i];
+	}
+	m_vPreferItems.clear();
 }
 
 LPCTSTR CPagePfAdvanced::GetPageID()
@@ -989,19 +1001,319 @@ void CPagePfAdvanced::OnCreate()
 {
 	CPagePfBase::OnCreate();
 
-	// CheckToolbarButton(_T("CID_TOOLBAR_THEME"), _T("CMD_THEME_THEME"), true);
+	GET_ID_BY_NAME(CID_LIST_SETTINGS);
+	GET_ID_BY_NAME(CID_E_ADV_SEARCH);
+
+	m_pListItems = (CSkinListCtrl *)GetUIObjectById(CID_LIST_SETTINGS, CSkinListCtrl::ClassName());
+	ASSERT(m_pListItems);
+	if (!m_pListItems)
+		return;
+
+	m_pListItems->AddColumn(TOLOCAL(_T("Option")), 300);
+	m_pListItems->AddColumn(TOLOCAL(_T("Value")), 150);
+
+#ifdef _WIN32_DESKTOP
+	m_vPreferItems.push_back(new CPfItemWndOpacity());
+#endif
+
+#ifndef _MPLAYER
+	// 自动隐藏迷你歌词如果没有歌词
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Activate, minimize and restore with player window")).c_str(),
+		ET_NULL, SZ_SECT_UI, _T("ActivateWithWinamp"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Hide toolbar")).c_str(), ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("HideToolbar"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto hide MiniLyrics if no lyrics is opened")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto hide minilyrics when playing movie")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true));
+#endif
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto adjust window width with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndWidth"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto adjust window height with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndHeight"), true));
+	// m_vPreferItems.push_back(new CPfItemBool(_T("Hide the link of rating lyrics"), ET_NULL, SZ_SECT_UI, _T("HideRateLink"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Display:"), _T("Allow to adjust the vertical position of lyrics")).c_str(),
+		ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, 
+		_T("EnableAdjustVertAlign"), false));
+	m_vPreferItems.push_back(new CPfItemLyrLineSpacing());
+	m_vPreferItems.push_back(new CPfItemLyrDelayTime());
+
+	//
+	// Lyrics
+	//
+	// m_vPreferItems.push_back(new CPfItemBool(_T(""), ));
+	m_vPreferItems.push_back(new CPfItemBoolEnableAutoDlLyr());
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Only download synchronized lyrics with .lrc extension")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Pop up lyrics searching dialog when lyrics are found")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Save downloaded lyrics in the a, b, c... folder of downloaded folder")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
+	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(m_pSkinWnd));
+	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(m_pSkinWnd));
+
+	//
+	// Tray Icon controls
+	//
+	for (int i = 0; i < MAX_PLAYER_TRAY_ICON_CMD; i++)
+	{
+		m_vPreferItems.push_back(new CPfItemTrayIconPlayerCtrl(g_SysTrayIconCmd[i].szCmd, i));
+	}
+	m_vPreferItems.push_back(new CPfItemSystemTrayIcon());
+
+	//
+	// Shortcut keys
+	//
+	MPHotKeySection		*pSect = g_vHotkeySections;
+	for (; pSect->szName != NULL; pSect++)
+	{
+		for (int k = 0; pSect->vHotkeys[k] != 0; k++)
+		{
+			LPCTSTR		szID = MPCMDIDToToolTip(pSect->vHotkeys[k]);
+			if (!szID)
+				continue;
+
+			m_vPreferItems.push_back(new CPfItemShortcut(
+				this,
+				(tstring(TOLOCAL(_T("Shortcut:"))) + _T(" ")
+				+ TOLOCAL(pSect->szName) + _T(" ") + TOLOCAL(szID)).c_str(),
+				pSect->vHotkeys[k]));
+		}
+	}
+
+	ListAllItems();
+
+	CSkinEditCtrl	*pEdit = (CSkinEditCtrl *)GetUIObjectById(CID_E_ADV_SEARCH, CSkinEditCtrl::ClassName());
+	ASSERT(pEdit);
+	if (pEdit)
+		pEdit->SetEditNotification(this);
+}
+
+void CPagePfAdvanced::OnUIObjNotify(IUIObjNotify *pNotify)
+{
+	if (pNotify->nID == CID_LIST_SETTINGS && pNotify->IsKindOf(CSkinListCtrl::ClassName()))
+	{
+		if (m_bIgnoreSettingListNotify)
+			return;
+
+		CSkinListCtrlEventNotify	*pListCtrlNotify = (CSkinListCtrlEventNotify*)pNotify;
+		if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_SEL_CHANGED)
+		{
+			EnableUIObject(GetIDByName(_T("CID_CUSTOMIZE")), m_pListItems->GetNextSelectedItem() != -1);
+		}
+		else if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_DBL_CLICK)
+		{
+			POINT	pt;
+			GetCursorPos(&pt);
+			ShowCustomizeMenu(pt.x, pt.y);
+		}
+	}
+}
+
+// Edit control notification
+void CPagePfAdvanced::OnTextChanged()
+{
+	m_pSkinWnd->KillTimer(TIMER_ID_SEARCH);
+	m_pSkinWnd->SetTimer(TIMER_ID_SEARCH, DURATION_SEARCH);
+}
+
+bool CPagePfAdvanced::OnTimer(UINT nTimerId)
+{
+	if (nTimerId != TIMER_ID_SEARCH)
+		return false;
+
+	m_pSkinWnd->KillTimer(TIMER_ID_SEARCH);
+
+	tstring		strKey;
+
+	strKey = GetUIObjectText(CID_E_ADV_SEARCH);
+	if (_tcsicmp(strKey.c_str(), m_strLastSearch.c_str()) == 0)
+		return true;
+
+	m_strLastSearch = strKey;
+
+	V_Str		vKeyWords;
+	StrSplit(strKey.c_str(), _T(' '), vKeyWords);
+	TrimStr(vKeyWords, ' ');
+	if (vKeyWords.empty() || (vKeyWords.size() == 1 && vKeyWords[0].empty()))
+	{
+		ListAllItems();
+		return true;
+	}
+
+	m_pListItems->DeleteAllItems();
+	m_vFilteredItems.clear();
+
+	// List results.
+	for (size_t i = 0; i < m_vPreferItems.size(); i++)
+	{
+		CPreferItem	*item = m_vPreferItems[i];
+		bool		bMatch = true;
+
+		for (size_t k = 0; k < vKeyWords.size(); k++)
+		{
+			if (!stristr(TOLOCAL(item->m_strName.c_str()), vKeyWords[k].c_str()))
+			{
+				bMatch = false;
+				break;
+			}
+		}
+
+		if (bMatch)
+		{
+			m_vFilteredItems.push_back(item);
+			int	n = m_pListItems->InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
+			m_pListItems->SetItemText(n, 1, item->GetValue().c_str());
+		}
+	}
+
+	return true;
 }
 
 bool CPagePfAdvanced::OnCustomCommand(int nId)
 {
-// 	if (nId == GetIDByName(_T("CMD_THEME_THEME")))
-// 		SwitchToPage(CPagePfTheme::GetPageID());
-// 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_DISPLAY")))
-// 		SwitchToPage(CPagePfDisplayStyle::GetPageID());
-// 	else if (nId == GetIDByName(_T("CMD_THEME_LYR_BG_PIC")))
-// 		SwitchToPage(CPagePfLyricsBgPic::GetPageID());
-// 	else
+	if (nId == GetIDByName(_T("CID_CUSTOMIZE")))
+	{
+		CRect		rc;
+
+		GetUIObjectRect(nId, rc);
+		m_pSkinWnd->ClientToScreen(rc);
+
+		ShowCustomizeMenu(rc.left, rc.top);
+	}
+	else
 		return CPagePfBase::OnCustomCommand(nId);
 
 	return true;
+}
+
+bool CPagePfAdvanced::OnCommand(int nId)
+{
+	if ((int)nId >= m_nMenuIdStart && (int)nId <= m_nMenuIdEnd)
+	{
+		if (nId == m_nMenuIdEnd)
+		{
+			// Reset selected settings
+			int			nSel = -1;
+			while (1)
+			{
+				nSel = m_pListItems->GetNextSelectedItem(nSel);
+				if (nSel >= 0 && nSel < (int)m_vFilteredItems.size())
+				{
+					CPreferItem	*item = m_vFilteredItems[nSel];
+					item->Reset();
+					m_pListItems->SetItemText(nSel, 1, item->GetValue().c_str());
+					m_pListItems->SetItemImageIndex(nSel, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
+				}
+				else
+					break;
+			}
+		}
+		else
+		{
+			// Set option.
+			CPreferItem	*item = GetCurItem();
+			if (!item)
+				return true;
+
+			item->SetOption(nId - m_nMenuIdStart);
+
+			int		nSel = m_pListItems->GetNextSelectedItem();
+			m_pListItems->SetItemText(nSel, 1, item->GetValue().c_str());
+
+			m_pListItems->SetItemImageIndex(nSel, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
+		}
+
+		return true;
+	}
+
+	return false;
+}
+
+void CPagePfAdvanced::UpdateValues()
+{
+	for (size_t i = 0; i < m_vFilteredItems.size(); i++)
+	{
+		CPreferItem	*item = m_vFilteredItems[i];
+		m_pListItems->SetItemText(i, 1, item->GetValue().c_str());
+		m_pListItems->SetItemImageIndex(i, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
+	}
+}
+
+CPreferItem *CPagePfAdvanced::GetCurItem()
+{
+	int			nSel = 0;
+
+	nSel = m_pListItems->GetNextSelectedItem();
+	if (nSel < 0 || nSel >= (int)m_vFilteredItems.size())
+		return NULL;
+
+	return m_vFilteredItems[nSel];
+}
+
+void CPagePfAdvanced::ShowCustomizeMenu(int x, int y)
+{
+	CMLMenu		menu;
+	V_Str		vOptions;
+	int			nRadio = -1;
+	bool		bEnabeReset = false;
+
+	if (m_pListItems->GetSelectedCount() == 0)
+		return;
+
+	m_nMenuIdStart = MENUID_START;
+	m_nMenuIdEnd = MENUID_START;
+
+	menu.CreatePopupMenu();
+
+	if (m_pListItems->GetSelectedCount() == 1)
+	{
+		CPreferItem	*item = GetCurItem();
+		if (!item)
+			return;
+
+		item->GetOptions(vOptions, nRadio);
+		for (size_t i = 0; i < vOptions.size(); i++)
+		{
+			if (vOptions[i].empty())
+				menu.AppendSeperator();
+			else
+				menu.AppendItem(m_nMenuIdEnd++, vOptions[i].c_str());
+		}
+		menu.AppendSeperator();
+		if (!item->IsDefault())
+			bEnabeReset = true;
+	}
+	else
+	{
+		int			nSel = -1;
+
+		while (1)
+		{
+			nSel = m_pListItems->GetNextSelectedItem(nSel);
+			if (nSel >= 0 && nSel < (int)m_vFilteredItems.size())
+			{
+				CPreferItem	*item = m_vFilteredItems[nSel];
+				if (!item->IsDefault())
+					bEnabeReset = true;
+			}
+			else
+				break;
+		}
+	}
+
+	menu.AppendItem(m_nMenuIdEnd, SZ_RESET);
+	if (!bEnabeReset)
+		menu.EnableItem(m_nMenuIdEnd, bEnabeReset);
+
+	if (nRadio != -1)
+		menu.CheckRadioItem(m_nMenuIdStart + nRadio, m_nMenuIdStart, m_nMenuIdEnd - 1);
+
+	menu.TrackPopupMenu(x, y, m_pSkinWnd);
+}
+
+void CPagePfAdvanced::ListAllItems()
+{
+	m_pListItems->DeleteAllItems();
+
+	m_vFilteredItems = m_vPreferItems;
+
+	for (size_t i = 0; i < m_vPreferItems.size(); i++)
+	{
+		CPreferItem	*item = m_vPreferItems[i];
+		int	n = m_pListItems->InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
+		m_pListItems->SetItemText(n, 1, item->GetValue().c_str());
+	}
 }

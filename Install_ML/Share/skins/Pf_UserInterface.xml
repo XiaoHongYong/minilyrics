@@ -18,7 +18,7 @@
     </Container>
     <Container ID="CID_C_UI_SKIN" Name="Skins" Visible="false" Rect="0,30,w,h-30-10">
       <NormalText Rect="10,10,w-45,80" Text="Installed skins:"/>
-      <NormalListCtrl ID="CID_SKIN_LIST" Rect="10,40,w-20,180"/>
+      <NormalListCtrl ID="CID_SKIN_LIST" Rect="10,40,w-20,180" EnableHorzScrollBar="false"/>
       <NormalText Rect="10,230,w-45,80" Text="Current skin information:"/>
       <NormalText ID="CID_SKIN_INFO" Rect="10,250,w-45,h-250-30" FontHeight="25" AlignText="AT_CENTER"/>
     </Container>

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Container ID="CID_C_ADVANCED" Name="Advanced" Rect="0,65,w,h-65" Visible="false">
-  <NormalFrame Rect="10,10,w-20,80" Text="&amp;Save downloaded lyrics in:"/>
-  <NormalRadioBt ID="CID_C_SAVE_IN_SONG_DIR" Text="Save lyrics in the song's directory" Rect="25,30,w-50,"/>
-  <NormalRadioBt ID="CID_C_SAVE_IN_DIR" Text="&amp;Save lyrics in:" Rect="25,60,w-50,"/>
-  <NormalCheckBox ID="CID_C_SAVE_IN_MP3" Text="&amp;Save lyrics in mp3 file" Rect="25,90,w-50,"/>
+  <NormalFrame Rect="10,10,w-20,h-20" Text="Advanced settings"/>
+  <NormalText Rect="20,40,100," Text="Search:" AlignText="AT_LEFT"/>
+  <NormalEdit ID="CID_E_ADV_SEARCH" Text="" Rect="130,40,w-160,"/>
+  <NormalListCtrl ID="CID_LIST_SETTINGS" Rect="20,70,w-40,h-70-20-40"/>
+  <NormalTextBt ID="CID_CUSTOMIZE" Text="Customize >>" Rect="20,h-20-30,120,"/>
 </Container>

@@ -9,7 +9,7 @@
   <Container Name="Content" Rect="10,0,w-20,h" ClipChildren="true">
     <Container ID="CID_C_THEME" Name="Theme" Rect="0,30,w,h-30-20">
       <NormalText Rect="10,10,w-20,80" Text="Preset themes:"/>
-      <NormalListCtrl ID="CID_THME_LIST" Rect="10,35,w-25,180"/>
+      <NormalListCtrl ID="CID_THME_LIST" Rect="10,35,w-25,180" EnableHorzScrollBar="false"/>
       <NormalText Rect="10,230,120," Text="Theme name:"/>
       <NormalEdit ID="CID_E_THEMENAME" Text="" Rect="130,230,w-130-10,"/>
       <NormalTextBt ID="CID_LOAD_THEME" Text="&amp;Load Theme" Rect="w/2-110-110/2-30,260,110,"/>

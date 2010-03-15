@@ -5,6 +5,8 @@
 
 #include "PreferencePageBase.h"
 #include "../widget/win32/WidgetTooltipListCtrl.h"
+#include "SkinListCtrl.h"
+#include "SkinEditCtrl.h"
 
 class CPreferItem
 {
@@ -23,16 +25,47 @@ public:
 typedef vector<CPreferItem *>		VecPreferItems;
 
 
-class CPagePfAdvanced : public CPagePfBase
+class CPagePfAdvanced : public CPagePfBase, public IEditNotification
 {
 public:
 	CPagePfAdvanced();
+	~CPagePfAdvanced();
 
 	static LPCTSTR GetPageID();
 
 	void OnCreate();
 
+	virtual void OnUIObjNotify(IUIObjNotify *pNotify);
+
+	bool OnCommand(int nId);
 	bool OnCustomCommand(int nId);
+
+	bool OnTimer(UINT nTimerId);
+
+	void OnTextChanged();
+
+	void UpdateValues();
+
+protected:
+	enum {
+		IMG_MODIFIED = 0,
+		IMG_UNMODIFIED,
+	};
+
+	CPreferItem *GetCurItem();
+	void ShowCustomizeMenu(int x, int y);
+
+	void ListAllItems();
+
+protected:
+	VecPreferItems				m_vPreferItems;
+	VecPreferItems				m_vFilteredItems;
+	int							m_nMenuIdStart, m_nMenuIdEnd;
+	CSkinListCtrl				*m_pListItems;
+	tstring						m_strLastSearch;
+
+	int				CID_LIST_SETTINGS, CID_E_ADV_SEARCH;
+	bool			m_bIgnoreSettingListNotify;
 
 };
 
