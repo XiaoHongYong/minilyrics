@@ -61,8 +61,8 @@ public:
 public:
 	virtual void AddColumn(LPCTSTR szCol, int nWidth);
 
-	virtual BOOL SetItemText(int nItem, int nSubItem, LPCTSTR lpszText);
-	virtual int InsertItem(int nItem, LPCTSTR lpszItem, int nImageIndex = 0, UINT nItemData = 0, bool bRedraw = false);
+	virtual BOOL SetItemText(int nItem, int nSubItem, LPCTSTR lpszText, bool bRedraw = true);
+	virtual int InsertItem(int nItem, LPCTSTR lpszItem, int nImageIndex = 0, UINT nItemData = 0, bool bRedraw = true);
 
 	BOOL SetItemTextEx(int nItem, int nSubItem, LPCTSTR lpszText, const LC_ITEMEX::VecTextColor & vTextColor);
 	int InsertItem(int nItem, LPCTSTR lpszItem, const LC_ITEMEX::VecTextColor & vTextColor, int nImageIndex = 0, UINT nItemData = 0, bool bRedraw = false);

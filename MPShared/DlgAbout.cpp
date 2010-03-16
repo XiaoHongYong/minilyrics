@@ -42,6 +42,8 @@ public:
 
 	void OnCreate()
 	{
+		CSkinPageHandler::OnCreate();
+
 		TCHAR	szVersion[256] = _T("");
 #ifdef _MPLAYER
 		_stprintf_s(szVersion, CountOf(szVersion), _T("%d.%d.%d"), MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
@@ -66,6 +68,8 @@ public:
 
 	void OnShow()
 	{
+		CSkinPageHandler::OnShow();
+
 		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("About $Product$")));
 		UpdateLicenseInfo();
 	}
@@ -150,6 +154,8 @@ public:
 
 	void OnShow()
 	{
+		CSkinPageHandler::OnShow();
+
 		TCHAR			szName[256];
 		TCHAR			szRegCode[256];
 
@@ -264,6 +270,8 @@ public:
 
 	void OnShow()
 	{
+		CSkinPageHandler::OnShow();
+
 		if (g_LicenseType == LT_REGISTERED)
 			m_pSkinWnd->SetCaptionText(TOLOCAL(_T("$Product$ (Registered Version)")));
 		else

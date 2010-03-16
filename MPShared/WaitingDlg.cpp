@@ -69,6 +69,8 @@ void CPageWaitMessage::StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase
 
 void CPageWaitMessage::OnShow()
 {
+	CSkinPageHandler::OnShow();
+
 	if (m_pWorkObj)
 	{
 		m_pWorkObj->CreateWorkThread(m_pSkinWnd);

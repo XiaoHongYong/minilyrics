@@ -18,11 +18,6 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_THEME_ITEMS"); }
 
-	void OnCreate()
-	{
-		CPagePfBase::OnCreate();
-	}
-
 	void OnOK()
 	{
 		m_pParent->SetProperty(_T("ThemeItemsActionResult"), IDOK);
@@ -37,6 +32,8 @@ public:
 
 	void OnShow()
 	{
+		CPagePfBase::OnShow();
+
 		if (m_pParent->GetPropertyInt(_T("ThemeItemsLoadAction")))
 		{
 			// Load theme
@@ -859,26 +856,6 @@ public:
 			m_pThemeList->AddColumn(_T("Theme"), 300);
 
 		UpdateThemesList();
-	}
-
-	void OnShow()
-	{
-		if (!m_pThemeList)
-			return;
-
-// 		if (m_pParent->GetPropertyInt(_T("ThemeItemsActionResult")) == IDOK)
-// 		{
-// 			m_pParent->SetProperty(_T("ThemeItemsActionResult"), IDCANCEL);
-// 
-// 			if (m_pParent->GetPropertyInt(_T("ThemeItemsLoadAction")))
-// 			{
-// 				LoadTheme();
-// 			}
-// 			else
-// 			{
-// 				SaveTheme();
-// 			}
-// 		}
 	}
 
 	void OnDestroy()

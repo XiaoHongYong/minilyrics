@@ -72,7 +72,7 @@ void CSkinListCtrlEx::AddColumn(LPCTSTR szCol, int nWidth)
 	SetHorzScrollInfo(false);
 }
 
-BOOL CSkinListCtrlEx::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText)
+BOOL CSkinListCtrlEx::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText, bool bRedraw)
 {
 	ASSERT(nItem >= 0 && nItem < (int)m_vRows.size());
 	if (nItem >= 0 && nItem < (int)m_vRows.size())
@@ -83,6 +83,8 @@ BOOL CSkinListCtrlEx::SetItemText(int nItem, int nSubItem, LPCTSTR lpszText)
 		{
 			item->strText = lpszText;
 			item->vTextColor.clear();
+			if (bRedraw)
+				InvalidateItem(nItem);
 			return TRUE;
 		}
 	}

@@ -120,6 +120,8 @@ public:
 
 	void OnShow()
 	{
+		CSkinPageHandler::OnShow();
+
 		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Rename lyrics file")));
 
 		SetUIObjectText(_T("CID_E_FILENAME"), m_pParent->GetProperty(_T("FileTitle")).c_str(), false);
@@ -260,6 +262,8 @@ public:
 
 	void OnCreate()
 	{
+		CSkinPageHandler::OnCreate();
+
 		GET_ID_BY_NAME(CID_PREV_PAGE);
 		GET_ID_BY_NAME(CID_NEXT_PAGE);
 		GET_ID_BY_NAME(CID_OPEN);
@@ -357,6 +361,8 @@ public:
 
 	void OnShow()
 	{
+		CSkinPageHandler::OnShow();
+
 		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Search lyrics")));
 
 		if (m_pSearchObj)

@@ -1009,7 +1009,9 @@ void CPagePfAdvanced::OnCreate()
 	if (!m_pListItems)
 		return;
 
-	m_pListItems->AddColumn(TOLOCAL(_T("Option")), 300);
+	m_pSkinWnd->RegisterUIObjNotifyHandler(CID_LIST_SETTINGS, this);
+
+	m_pListItems->AddColumn(TOLOCAL(_T("Option")), 450);
 	m_pListItems->AddColumn(TOLOCAL(_T("Value")), 150);
 
 #ifdef _WIN32_DESKTOP
@@ -1081,6 +1083,13 @@ void CPagePfAdvanced::OnCreate()
 		pEdit->SetEditNotification(this);
 }
 
+void CPagePfAdvanced::OnDestroy()
+{
+	m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
+
+	CPagePfBase::OnDestroy();
+}
+
 void CPagePfAdvanced::OnUIObjNotify(IUIObjNotify *pNotify)
 {
 	if (pNotify->nID == CID_LIST_SETTINGS && pNotify->IsKindOf(CSkinListCtrl::ClassName()))
@@ -1093,7 +1102,8 @@ void CPagePfAdvanced::OnUIObjNotify(IUIObjNotify *pNotify)
 		{
 			EnableUIObject(GetIDByName(_T("CID_CUSTOMIZE")), m_pListItems->GetNextSelectedItem() != -1);
 		}
-		else if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_DBL_CLICK)
+		else if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_DBL_CLICK
+			|| pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_RBTN_CLICK)
 		{
 			POINT	pt;
 			GetCursorPos(&pt);
@@ -1154,10 +1164,12 @@ bool CPagePfAdvanced::OnTimer(UINT nTimerId)
 		if (bMatch)
 		{
 			m_vFilteredItems.push_back(item);
-			int	n = m_pListItems->InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
-			m_pListItems->SetItemText(n, 1, item->GetValue().c_str());
+			int	n = m_pListItems->InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, false);
+			m_pListItems->SetItemText(n, 1, item->GetValue().c_str(), false);
 		}
 	}
+
+	m_pListItems->Invalidate();
 
 	return true;
 }
@@ -1194,8 +1206,8 @@ bool CPagePfAdvanced::OnCommand(int nId)
 				{
 					CPreferItem	*item = m_vFilteredItems[nSel];
 					item->Reset();
-					m_pListItems->SetItemText(nSel, 1, item->GetValue().c_str());
-					m_pListItems->SetItemImageIndex(nSel, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
+					m_pListItems->SetItemText(nSel, 1, item->GetValue().c_str(), false);
+					m_pListItems->SetItemImageIndex(nSel, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, false);
 				}
 				else
 					break;
@@ -1211,10 +1223,12 @@ bool CPagePfAdvanced::OnCommand(int nId)
 			item->SetOption(nId - m_nMenuIdStart);
 
 			int		nSel = m_pListItems->GetNextSelectedItem();
-			m_pListItems->SetItemText(nSel, 1, item->GetValue().c_str());
+			m_pListItems->SetItemText(nSel, 1, item->GetValue().c_str(), false);
 
-			m_pListItems->SetItemImageIndex(nSel, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
+			m_pListItems->SetItemImageIndex(nSel, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, false);
 		}
+
+		m_pListItems->Invalidate();
 
 		return true;
 	}
@@ -1227,9 +1241,11 @@ void CPagePfAdvanced::UpdateValues()
 	for (size_t i = 0; i < m_vFilteredItems.size(); i++)
 	{
 		CPreferItem	*item = m_vFilteredItems[i];
-		m_pListItems->SetItemText(i, 1, item->GetValue().c_str());
-		m_pListItems->SetItemImageIndex(i, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
+		m_pListItems->SetItemText(i, 1, item->GetValue().c_str(), false);
+		m_pListItems->SetItemImageIndex(i, item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, false);
 	}
+
+	m_pListItems->Invalidate();
 }
 
 CPreferItem *CPagePfAdvanced::GetCurItem()
@@ -1313,7 +1329,9 @@ void CPagePfAdvanced::ListAllItems()
 	for (size_t i = 0; i < m_vPreferItems.size(); i++)
 	{
 		CPreferItem	*item = m_vPreferItems[i];
-		int	n = m_pListItems->InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED);
-		m_pListItems->SetItemText(n, 1, item->GetValue().c_str());
+		int	n = m_pListItems->InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, false);
+		m_pListItems->SetItemText(n, 1, item->GetValue().c_str(), false);
 	}
+
+	m_pListItems->Invalidate();
 }

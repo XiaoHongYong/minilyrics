@@ -35,6 +35,8 @@ public:
 
 	void OnCreate();
 
+	void OnDestroy();
+
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify);
 
 	bool OnCommand(int nId);
