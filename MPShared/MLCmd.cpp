@@ -76,7 +76,6 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_PREVIOUS"), CMD_PREVIOUS, _T("Previous Track") },
 	{ _T("ID_NEXT"), CMD_NEXT, _T("Next Track") },
 
-#ifdef _MPLAYER
 	{ _T("ID_SEEK"), CMD_SEEK, _T("Seek") },
 	{ _T("ID_VOL_INC"), CMD_VOL_INC, _T("Increase Volume") },
 	{ _T("ID_VOL_DEC"), CMD_VOL_DEC, _T("Decrease Volume") },
@@ -121,7 +120,6 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_ML_GUIDE"), CMD_ML_GUIDE, NULL },
 	{ _T("ID_ML_BACK"), CMD_ML_BACK, _T("Back") },
 	{ _T("ID_ML_MEDIA_LIST"), ID_ML_MEDIA_LIST, NULL },
-#endif // _MPLAYER
 
 	{ _T("ID_AD_TXT_LINK"), ID_AD_TXT_LINK, NULL },
 	{ _T("ID_AD_IMG_LINK"), ID_AD_IMG_LINK, NULL },

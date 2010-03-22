@@ -39,11 +39,13 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 	{
 		if (bActived)
 		{
+			mSkinWnd.stopAnimation(Glass.CID_AM_HIDE_PLAY);
 			mSkinWnd.startAnimation(Glass.CID_AM_SHOW_PLAY);
 			UnitTest.message("CID_AM_SHOW_PLAY");
 		}
 		else
 		{
+			mSkinWnd.stopAnimation(Glass.CID_AM_SHOW_PLAY);
 			mSkinWnd.startAnimation(Glass.CID_AM_HIDE_PLAY);
 			UnitTest.message("CID_AM_HIDE_PLAY");
 		}
@@ -53,11 +55,13 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 	{
 		if (bMouseActive)
 		{
+			mSkinWnd.stopAnimation(Glass.CID_AM_HIDE_PLAY);
 			mSkinWnd.startAnimation(Glass.CID_AM_SHOW_PLAY);
 			UnitTest.message("CID_AM_SHOW_PLAY");
 		}
 		else
 		{
+			mSkinWnd.stopAnimation(Glass.CID_AM_SHOW_PLAY);
 			mSkinWnd.startAnimation(Glass.CID_AM_HIDE_PLAY);
 			UnitTest.message("CID_AM_HIDE_PLAY");
 		}

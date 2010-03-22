@@ -196,7 +196,7 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_bIgnoreNextOnCharMsg = false;
 
 	m_nTimeLatestMouseMsg = 0;
-	m_bMouseInactive = true;
+	m_bMouseActive = false;
 
 	m_bTranslucencyLayered = false;
 	m_nAlpha = 255;
@@ -376,7 +376,7 @@ void CSkinWnd::CloseSkin()
 	m_bIndividualProperties = false;
 
 	m_nTimeLatestMouseMsg = 0;
-	m_bMouseInactive = true;
+	m_bMouseActive = false;
 	KillTimer(TIMER_ID_MOUSE_INACTIVE);
 
 	m_pSjvmNotifyEvent = NULL;
@@ -1827,6 +1827,11 @@ void CSkinWnd::OnActivate(bool bActived)
 	if (m_bEnableClickThrough && m_bClickThrough)
 		SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
 #endif
+	if (bActived != m_bMouseActive)
+	{
+		m_bMouseActive = bActived;
+		OnMouseActive(m_bMouseActive);
+	}
 
 	if (m_pSjvmNotifyEvent)
 		m_pSjvmNotifyEvent->onActivate(bActived);
@@ -2657,18 +2662,18 @@ void CSkinWnd::OnMouseActiveMsg()
 	KillTimer(TIMER_ID_MOUSE_INACTIVE);
 	SetTimer(TIMER_ID_MOUSE_INACTIVE, TIMER_SPAN_MOUSE_INACTIVE);
 
-	if (m_bMouseInactive)
+	if (!m_bMouseActive)
 	{
-		m_bMouseInactive = false;
-		OnMouseActive(!m_bMouseInactive);
+		m_bMouseActive = true;
+		OnMouseActive(m_bMouseActive);
 		InvalidateRect();
 	}
 }
 
 void CSkinWnd::OnTimerMouseInactive()
 {
-	m_bMouseInactive = true;
-	OnMouseActive(!m_bMouseInactive);
+	m_bMouseActive = false;
+	OnMouseActive(m_bMouseActive);
 
 	KillTimer(TIMER_ID_MOUSE_INACTIVE);
 
@@ -2701,6 +2706,22 @@ void CSkinWnd::StartAnimation(int nIDAnimation)
 	}
 	else
 		ERRLOG1(_T("Invalid animation id: %s"), m_pSkinFactory->GetStringOfID(nIDAnimation).c_str());
+}
+
+void CSkinWnd::StopAnimation(int nIDAnimation)
+{
+	for (ListAnimationObj::iterator it = m_listAnimations.begin(); it != m_listAnimations.end(); ++it)
+	{
+		CSkinAnimationObj *p = *it;
+		if (p->m_nId == nIDAnimation)
+		{
+			m_listAnimations.erase(it);
+			if (m_listAnimations.empty())
+				KillTimer(TIMER_ID_ANIMATION);
+
+			return;
+		}
+	}
 }
 
 bool CSkinWnd::IsInAnimation()

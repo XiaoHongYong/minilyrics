@@ -82,6 +82,9 @@ public:
 
 		nRet = pClass->AddNativeMethod(false, "startAnimation", startAnimation, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "stopAnimation", stopAnimation, TID_VOID, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
 	}
 
 public:
@@ -266,6 +269,18 @@ public:
 		CSkinWnd		*pSkinWnd = pThis->m_pSkinWnd;
 
 		pSkinWnd->StartAnimation(nAnimationId);
+	}
+
+	static void SJNI_API stopAnimation(jobject thiz, int nAnimationId)
+	{
+		CSjvmSkinWnd	*pThis = GetThis(thiz);
+		ASSERT(pThis);
+		if (!pThis)
+			return;
+
+		CSkinWnd		*pSkinWnd = pThis->m_pSkinWnd;
+
+		pSkinWnd->StopAnimation(nAnimationId);
 	}
 
 protected:

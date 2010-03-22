@@ -31,7 +31,7 @@
   </DynCmds>
   <skinwnd Name="minilyrics" EnableTranslucency="true"
        TranslucencyAlpha="0" TranslucencyAlphaOnHover="255" TranslucencyAlphaOnActive="255"
-       MinWidth="330" MinHeight="190" Width="450" Height="240" 
+       MinWidth="330" MinHeight="150" Width="450" Height="240" 
        PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
        ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
     <Property Name="BgImage" Image="frame.png" ImageRect="0,0,458,190"
@@ -60,15 +60,22 @@
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
 
-        <Container Name="Lyrics" ID="CID_TOP_CTRL" Rect="0,0,w,26" TranslucencyWithSkin="TRUE">
+        <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,26" TranslucencyWithSkin="TRUE">
           <Image Name="Top-ctrl-bg" Rect="0,0,w,26" Image="top-ctrl-bg.png" BltMode="tile" />
-          <Toolbar Rect="5,2,70,22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+          <Toolbar Rect="5,0,70,22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
                units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
                MarginX="0" MarginY="0" FullStatusImage="TRUE">
             <button ID="ID_SEARCH_LYRICS" Left="5" />
             <button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
             <button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
           </Toolbar>
+          <PlayingTimeText Name="PlayingTime" Rect="70,4,50,18" AlignText="AT_CENTER | AT_VCENTER"
+             FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#000000"
+             LeftMargin="0" Text="" PaintBg="false"/>
+          <SeekCtrl TranslucencyWithSkin="TRUE" Name="Seek" ID="ID_SEEK"
+                    Rect="122,8,w-122-80,12" EndWidth="3" ThumbWidth="10"
+                    TrackWidthLeft="23" TrackWidthRight="20" SeekCtrlHeight="12"
+                    Image="progress.png" BlendPixMode="alpha_blend"/>
         </Container>
 
         <Container ID="CID_PLAY_CTRL" Rect="(w-190)/2,h-35,190,32" TranslucencyWithSkin="TRUE">

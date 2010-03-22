@@ -584,7 +584,7 @@ void CUIObject::OnSize(int cx, int cy)
 bool CUIObject::IsVisible()
 {
 	return m_bVisible && (!m_bHideIfWndInactive || m_pSkin->IsWndActive())
-		&& (!m_bHideIfMouseInactive || !m_pSkin->IsMouseInactive());
+		&& (!m_bHideIfMouseInactive || m_pSkin->IsMouseActive());
 }
 
 

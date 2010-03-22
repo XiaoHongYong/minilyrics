@@ -360,7 +360,7 @@ protected:
 	// Hide UIObject, if mouse is inactive in 3 seconds.
 	//
 	uint32			m_nTimeLatestMouseMsg;
-	bool			m_bMouseInactive;
+	bool			m_bMouseActive;
 
 	void OnMouseActiveMsg();
 	void OnTimerMouseInactive();
@@ -378,7 +378,7 @@ public:
 	//
 	// Public method for Hide UIObject, if mouse is inactive.
 	//
-	bool IsMouseInactive() { return m_bMouseInactive; }
+	bool IsMouseActive() { return m_bMouseActive; }
 
 public:
 	CSkinWndDrag	m_WndDrag;
@@ -502,11 +502,15 @@ protected:
 	//
 public:
 	void StartAnimation(int nIDAnimation);
+	void StopAnimation(int nIDAnimation);
+
 	bool IsInAnimation();
 	CObjAnimation *GetObjAnimation(int nId, AnimateState &as, int &nMotionPercent);
+
 protected:
 	typedef list<CSkinAnimationObj *>	ListAnimationObj;
 	ListAnimationObj		m_listAnimations;
+
 	void OnTimerAnimation();
 	virtual void OnAnimationDone(int nID) { }
 

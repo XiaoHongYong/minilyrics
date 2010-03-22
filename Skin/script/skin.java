@@ -40,6 +40,7 @@ public class SkinWnd {
 	public native void unregisterTimer(int nTimerId);
 
 	public native void startAnimation(int nAnimationId);
+	public native void stopAnimation(int nAnimationId);
 
 }
 
