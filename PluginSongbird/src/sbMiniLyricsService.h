@@ -23,17 +23,16 @@
 //------------------------------------------------------------------------------
 
 //
-// Songbird album art service component defs.
+// Songbird minilyrics service component defs.
 //
 
 #define SB_MINILYRICSSERVICE_CLASSNAME "sbMiniLyricsService"
 #define SB_MINILYRICSSERVICE_CID                                                 \
-  /* {8DF4920B-89AC-49A3-8552-D74D313C62B6} */                                 \
   {                                                                            \
-    0x8DF4920B,                                                                \
+    0x8CF4920B,                                                                \
     0x89AC,                                                                    \
-    0x49A3,                                                                    \
-    { 0x85, 0x52, 0xD7, 0x4D, 0x31, 0x3C, 0x62, 0xB6 }                         \
+    0x4AA3,                                                                    \
+    { 0x15, 0x52, 0xD7, 0x4D, 0x31, 0x3C, 0x62, 0xB6 }                         \
   }
 
 //------------------------------------------------------------------------------

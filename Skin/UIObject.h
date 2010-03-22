@@ -206,7 +206,11 @@ public:
 
 	virtual void Draw(CRawGraph *pGraph);
 
+
+	// Keep translucency with skin, when skin window changes its translucency.
+	virtual bool IsUpdateTranslucencyWithSkin() { return m_bTranslucencyWithSkin; }
 	virtual void UpdateTranslucencyWithSkin(CRawGraph *pGraph);
+	int GetOpacity();
 
 	virtual void OnKillFocus() { }
 	virtual void OnSetFocus() { }
@@ -237,9 +241,6 @@ public:
 	inline void SetUseSkinBg(bool bUseSkinBg) { m_bUseSkinBg = bUseSkinBg; }
 
 	virtual tstring &GetText() { return m_strText; }
-
-	// Keep translucency with skin, when skin window changes its translucency.
-	virtual bool IsUpdateTranslucencyWithSkin() { return m_bTranslucencyWithSkin; }
 
 	void SetFocus();
 	bool IsOnFocus();
@@ -308,6 +309,7 @@ public:
 	bool		m_bUseSkinBg;	// Invalidate call will update background, if m_bUseSkinBg is true
 
 	bool		m_bTranslucencyWithSkin;	// Set the alpha of UIObject to the skin, if this flag is set.
+	int16		m_nOpacity;
 
 	tstring		m_strMaskImage;
 	CSFImage	m_imgMask;

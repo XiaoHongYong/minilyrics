@@ -352,6 +352,7 @@ CUIObject::CUIObject()
 	m_bUseSkinBg = false;
 
 	m_bTranslucencyWithSkin = false;
+	m_nOpacity = 255;
 
 	m_bCreated = false;
 }
@@ -404,6 +405,14 @@ void CUIObject::UpdateTranslucencyWithSkin(CRawGraph *pGraph)
 	else
 		pGraph->FillRect(&m_rcObj, clrAlpha, BPM_MULTIPLY);
 #endif
+}
+
+int CUIObject::GetOpacity()
+{
+	if (m_bTranslucencyWithSkin)
+		return m_nOpacity * m_pSkin->m_nTranslucencyAlphaDynamic / 255;
+	else
+		return m_nOpacity;
 }
 
 BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])

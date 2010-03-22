@@ -71,6 +71,38 @@ public:
 
 	};
 
+	class COpacityBlendAutoRecovery {
+	public:
+		COpacityBlendAutoRecovery(CRawGraph *pGraph, int nOpacityPainting) {
+			if (nOpacityPainting != 255)
+			{
+				m_pGraph = pGraph;
+				m_nOpacityPainting = pGraph->GetOpacityPainting();
+
+				nOpacityPainting = m_nOpacityPainting * nOpacityPainting / 255;
+				m_pGraph->SetOpacityPainting(nOpacityPainting);
+			}
+			else
+				m_pGraph = NULL;
+		}
+		~COpacityBlendAutoRecovery() {
+			if (m_pGraph)
+				m_pGraph->SetOpacityPainting(m_nOpacityPainting);
+		}
+
+		void Recover() {
+			if (m_pGraph) {
+				m_pGraph->SetOpacityPainting(m_nOpacityPainting);
+				m_pGraph = NULL;
+			}
+		}
+
+	protected:
+		CRawGraph	*m_pGraph;
+		int			m_nOpacityPainting;
+
+	};
+
 	virtual bool Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCount = 32);
 
 	virtual void Line(int x1, int y1, int x2, int y2);

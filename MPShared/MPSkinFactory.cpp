@@ -99,18 +99,6 @@ int CMPSkinFactory::LoadDefaultSkin()
 void CMPSkinFactory::Quit()
 {
 	Close();
-
-	LIST_SKINWNDS::iterator	it, itEnd;
-	LIST_SKINWNDS	listSkinWnds;
-	listSkinWnds = m_listSkinWnds;
-
-	itEnd = listSkinWnds.end();
-	for (it = listSkinWnds.begin(); it != itEnd; ++it)
-	{
-		CSkinWnd	*pSkin = *it;
-		pSkin->Destroy();
-	}
-	m_listSkinWnds.clear();
 }
 
 CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)

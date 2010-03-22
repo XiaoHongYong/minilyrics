@@ -196,8 +196,7 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_bIgnoreNextOnCharMsg = false;
 
 	m_nTimeLatestMouseMsg = 0;
-	m_bMouseInactive = false;
-	m_bHasUIObjHideOnMouseInactive = false;
+	m_bMouseInactive = true;
 
 	m_bTranslucencyLayered = false;
 	m_nAlpha = 255;
@@ -377,8 +376,7 @@ void CSkinWnd::CloseSkin()
 	m_bIndividualProperties = false;
 
 	m_nTimeLatestMouseMsg = 0;
-	m_bMouseInactive = false;
-	m_bHasUIObjHideOnMouseInactive = false;
+	m_bMouseInactive = true;
 	KillTimer(TIMER_ID_MOUSE_INACTIVE);
 
 	m_pSjvmNotifyEvent = NULL;
@@ -397,8 +395,7 @@ CUIObject * CSkinWnd::GetUIObjectById(int nId, LPCTSTR szClassName)
 
 void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if (m_bHasUIObjHideOnMouseInactive)
-		OnMouseActiveMsg();
+	OnMouseActiveMsg();
 
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
@@ -459,8 +456,7 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 
 void CSkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	if (m_bHasUIObjHideOnMouseInactive)
-		OnMouseActiveMsg();
+	OnMouseActiveMsg();
 
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
@@ -499,8 +495,7 @@ void CSkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CSkinWnd::OnLButtonDblClk(UINT nFlags, CPoint point)
 {
-	if (m_bHasUIObjHideOnMouseInactive)
-		OnMouseActiveMsg();
+	OnMouseActiveMsg();
 
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
@@ -933,28 +928,18 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	if (pObj->IsUseSkinBg() && m_bPaintBg)
 	{
 		// redraw background ?
-		RedrawBackground(m_pmemGraph, pObj->m_rcObj, pObj->IsUpdateTranslucencyWithSkin());
+		RedrawBackground(m_pmemGraph, pObj->m_rcObj);
 	}
 
 	CRawGraph::CClipBoxAutoRecovery	autoCBR(m_pmemGraph);
 
 	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
 
-// 	CUIObject	*pFocusUIObj = GetFocusUIObj();
-// 	if (pFocusUIObj && pFocusUIObj != pObj)
-// 	{
-// 		if (!(pObj->IsContainer() && pObj->GetContainerIf()->IsChild(pFocusUIObj)))
-// 		{
-// 			// Redraw focus UIObject, if it's overlapped on pObj.
-// 			CRect	rc;
-// 			if (rc.IntersectRect(&(pObj->m_rcObj), &(pFocusUIObj->m_rcObj)))
-// 				pFocusUIObj->Draw(m_pmemGraph);
-// 		}
-// 	}
+	CRawGraph::COpacityBlendAutoRecovery opacityAR(m_pmemGraph, pObj->GetOpacity());
 
 	pObj->Draw(m_pmemGraph);
 
-	pObj->UpdateTranslucencyWithSkin(m_pmemGraph);
+	opacityAR.Recover();
 
 	autoCBR.Recover();
 
@@ -988,7 +973,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	ReleaseGraphics(pGraphics);
 }
 
-void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucency)
+void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc)
 {
 	if (!pGraph)
 		return;
@@ -1031,11 +1016,9 @@ void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucen
 		func.m_pGraph = pGraph;
 		func.m_pImage = &m_imageBg;
 
-		if (!bNoTranslucency)
-		{
-			nAlphaOld = pGraph->GetOpacityPainting();
-			pGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
-		}
+		nAlphaOld = pGraph->GetOpacityPainting();
+		pGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
+
 		if (m_nTranslucencyAlphaDynamic != 255)
 		{
 			MLColor	clr(RGB(0, 0, 0));
@@ -1046,8 +1029,7 @@ void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucen
 		if (m_nTranslucencyAlphaDynamic != 0)
 			m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), func);
 
-		if (!bNoTranslucency)
-			pGraph->SetOpacityPainting(nAlphaOld);
+		pGraph->SetOpacityPainting(nAlphaOld);
 	}
 	else
 		pGraph->FillRect(&rc, m_clrBg);
@@ -2374,9 +2356,6 @@ void CSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 
 void CSkinWnd::OnAddUIObj(CUIObject *pObj)
 {
-	if (!m_bHasUIObjHideOnMouseInactive && pObj->m_bHideIfMouseInactive)
-		m_bHasUIObjHideOnMouseInactive = true;
-
 	// Only skin is opened, OnCreate will be called.
 	if (m_bSkinOpened)
 	{
@@ -2673,7 +2652,6 @@ void CSkinWnd::OnSwitchChildFocus(CUIObject *pUIObjFocusOld, CUIObject *pUIObjFo
 
 void CSkinWnd::OnMouseActiveMsg()
 {
-	ASSERT(m_bHasUIObjHideOnMouseInactive);
 	m_nTimeLatestMouseMsg = GetTickCount();
 
 	KillTimer(TIMER_ID_MOUSE_INACTIVE);
@@ -2682,17 +2660,25 @@ void CSkinWnd::OnMouseActiveMsg()
 	if (m_bMouseInactive)
 	{
 		m_bMouseInactive = false;
+		OnMouseActive(!m_bMouseInactive);
 		InvalidateRect();
 	}
 }
 
-
 void CSkinWnd::OnTimerMouseInactive()
 {
 	m_bMouseInactive = true;
+	OnMouseActive(!m_bMouseInactive);
+
 	KillTimer(TIMER_ID_MOUSE_INACTIVE);
 
 	InvalidateRect();
+}
+
+void CSkinWnd::OnMouseActive(boolean bMouseActive)
+{
+	if (m_pSjvmNotifyEvent)
+		m_pSjvmNotifyEvent->onMouseActive(bMouseActive);
 }
 
 void CSkinWnd::StartAnimation(int nIDAnimation)

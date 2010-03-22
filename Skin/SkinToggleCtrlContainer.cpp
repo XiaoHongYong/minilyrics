@@ -82,8 +82,9 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 
 			if (m_bUseSkinBg || pObj->IsUseSkinBg())
 				m_pSkin->RedrawBackground(&m_memGraph, m_rcObj);
+			CRawGraph::COpacityBlendAutoRecovery opacityAR(&m_memGraph, pObj->GetOpacity());
 			pObj->Draw(&m_memGraph);
-			pObj->UpdateTranslucencyWithSkin(pGraph);
+			opacityAR.Recover();
 
 			CRawImage	imgTemp;
 			imgTemp.Attach(m_memGraph.GetRawBuff());

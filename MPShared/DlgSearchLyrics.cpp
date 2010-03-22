@@ -781,7 +781,7 @@ protected:
 
 	void UpdateSearchResultToListCtrl()
 	{
-		m_pLyricsList->DeleteAllItems();
+		m_pLyricsList->DeleteAllItems(false);
 
 		for (V_LRCSEARCHRESULT::iterator it = m_vResultsLocal.begin(); it != m_vResultsLocal.end(); it++)
 		{
@@ -796,6 +796,8 @@ protected:
 		if (m_pLyricsList->GetItemCount()
 			&& !g_LyricSearch.IsAssociatedWithNoneLyrics(m_szAssociateKeyword))
 			m_pLyricsList->SetItemSelectionState(0, true);
+
+		m_pLyricsList->Invalidate();
 	}
 
 	void AppendItemInResultsList(LrcSearchResult &Item, bool bInetFile)
@@ -832,8 +834,8 @@ protected:
 		else
 			nImg += IMG_OFFSET_INET;
 
-		nItem = m_pLyricsList->InsertItem(m_pLyricsList->GetItemCount(), Item.strArtist.c_str(), nImg);
-		m_pLyricsList->SetItemText(nItem, COL_TITLE, Item.strTitle.c_str());
+		nItem = m_pLyricsList->InsertItem(m_pLyricsList->GetItemCount(), Item.strArtist.c_str(), nImg, 0, false);
+		m_pLyricsList->SetItemText(nItem, COL_TITLE, Item.strTitle.c_str(), false);
 
 		if (Item.fRate != 0.0)
 		{
@@ -841,25 +843,25 @@ protected:
 		}
 		else
 			_tcscpy_safe(szTemp, CountOf(szTemp), _T("-"));
-		m_pLyricsList->SetItemText(nItem, COL_RATING, szTemp);
+		m_pLyricsList->SetItemText(nItem, COL_RATING, szTemp, false);
 
 		if (bInetFile)
 		{
 			_itot_s(Item.nDownloads, szTemp, CountOf(szTemp), 10);
-			m_pLyricsList->SetItemText(nItem, COL_DOWNLOADS, szTemp);
+			m_pLyricsList->SetItemText(nItem, COL_DOWNLOADS, szTemp, false);
 		}
 
 		if (bLocalFile)
 		{
 			FileGetPath(szTemp, CountOf(szTemp), Item.strUrl.c_str());
-			m_pLyricsList->SetItemText(nItem, COL_FROM, szTemp);
+			m_pLyricsList->SetItemText(nItem, COL_FROM, szTemp, false);
 		}
 		else
-			m_pLyricsList->SetItemText(nItem, COL_FROM, Item.strUploader.c_str());
+			m_pLyricsList->SetItemText(nItem, COL_FROM, Item.strUploader.c_str(), false);
 
-		m_pLyricsList->SetItemText(nItem, COL_ALBUM, Item.strAlbum.c_str());
-		m_pLyricsList->SetItemText(nItem, COL_FILENAME, Item.strSaveFileName.c_str());
-		m_pLyricsList->SetItemText(nItem, COL_URL, Item.strUrl.c_str());
+		m_pLyricsList->SetItemText(nItem, COL_ALBUM, Item.strAlbum.c_str(), false);
+		m_pLyricsList->SetItemText(nItem, COL_FILENAME, Item.strSaveFileName.c_str(), false);
+		m_pLyricsList->SetItemText(nItem, COL_URL, Item.strUrl.c_str(), false);
 	}
 
 	LrcSearchResult *GetCurSel()

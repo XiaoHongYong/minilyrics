@@ -61,9 +61,9 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUI
 				pGraphMem->SetClipBoundBox(*lpRect);
 			}
 
-			pObj->Draw(pGraphMem);
+			CRawGraph::COpacityBlendAutoRecovery opacityAR(pGraphMem, pObj->GetOpacity());
 
-			pObj->UpdateTranslucencyWithSkin(pGraphMem);
+			pObj->Draw(pGraphMem);
 		}
 	}
 

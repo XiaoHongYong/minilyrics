@@ -2,6 +2,7 @@
 #include "MLSkin.h"
 
 #include "SjvmSkinSystem.h"
+#include "../SimpleJVM/SjvmLib.h"
 
 #define TID_SKIN_WND_NOTIFY_EVENT	CSjvmSkinWndEventObj::m_sTypeId
 #define TID_SKIN_WND				CSjvmSkinWnd::m_sTypeId
@@ -77,6 +78,9 @@ public:
 		ASSERT(nRet != -1);
 
 		nRet = pClass->AddNativeMethod(false, "unregisterTimer", unregisterTimer, TID_VOID, TID_INT, TID_INVALID);
+		ASSERT(nRet != -1);
+
+		nRet = pClass->AddNativeMethod(false, "startAnimation", startAnimation, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 	}
 
@@ -252,6 +256,18 @@ public:
 		pSkinWnd->KillTimer(nTimerId);
 	}
 
+	static void SJNI_API startAnimation(jobject thiz, int nAnimationId)
+	{
+		CSjvmSkinWnd	*pThis = GetThis(thiz);
+		ASSERT(pThis);
+		if (!pThis)
+			return;
+
+		CSkinWnd		*pSkinWnd = pThis->m_pSkinWnd;
+
+		pSkinWnd->StartAnimation(nAnimationId);
+	}
+
 protected:
 	static CSkinWnd *GetSkinWndOfThis(jobject thiz)
 	{
@@ -303,6 +319,7 @@ public:
 	static void SJNI_API onSize(jobject thiz, int cx, int cy) { }
 	static void SJNI_API onMove(jobject thiz, int x, int y) { }
 	static void SJNI_API onActivate(jobject thiz, boolean bActived) { }
+	static void SJNI_API OnMouseActive(jobject thiz, boolean bMouseActive) { }
 	static void SJNI_API onTimer(jobject thiz, int nTimerId) { }
 
 	static void RegisterJNI()
@@ -333,6 +350,9 @@ public:
 		SjvmSkinWndEvent::m_sOnActivate = nRet = pClass->AddNativeMethod(false, "onActivate", onActivate, TID_VOID, TID_BOOLEAN, TID_INVALID);
 		ASSERT(nRet != -1);
 
+		SjvmSkinWndEvent::m_sOnMouseActive = nRet = pClass->AddNativeMethod(false, "onMouseActive", OnMouseActive, TID_VOID, TID_BOOLEAN, TID_INVALID);
+		ASSERT(nRet != -1);
+
 		SjvmSkinWndEvent::m_sOnTimer = nRet = pClass->AddNativeMethod(false, "onTimer", onTimer, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 	}
@@ -349,6 +369,7 @@ int		SjvmSkinWndEvent::m_sOnDestroy = 0;
 int		SjvmSkinWndEvent::m_sOnSize = 0;
 int		SjvmSkinWndEvent::m_sOnMove = 0;
 int		SjvmSkinWndEvent::m_sOnActivate = 0;
+int		SjvmSkinWndEvent::m_sOnMouseActive = 0;
 int		SjvmSkinWndEvent::m_sOnTimer = 0;
 
 // Return true, the command will not be processed down.
@@ -403,6 +424,14 @@ void SjvmSkinWndEvent::onActivate(boolean bActived)
 	if (m_sOnActivate >= 0)
 	{
 		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnActivate, TID_BOOLEAN, bActived);
+	}
+}
+
+void SjvmSkinWndEvent::onMouseActive(boolean bMouseActive)
+{
+	if (m_sOnMouseActive >= 0)
+	{
+		g_sjvm->JniCallMethod(TID_INVALID, m_jobject, m_sOnMouseActive, TID_BOOLEAN, bMouseActive);
 	}
 }
 
@@ -558,6 +587,8 @@ void CSjvmSkinSystem::Init(CSkinFactory *pSkinFactory)
 	g_sjvm = new CSJVM();
 
 	m_pSkinFactory = pSkinFactory;
+
+	InitSjvmLib(g_sjvm);
 
 	// Register class name
 	CSjvmSkinWnd::RegisterClassType(g_sjvm);

@@ -8,6 +8,7 @@ public class SkinWndEvent {
 	public void onSize(int cx, int cy) { }
 	public void onMove(int x, int y) { }
 	public void onActivate(boolean bActived) { }
+	public void onMouseActive(boolean bMouseActive) { }
 
 }
 
@@ -37,6 +38,8 @@ public class SkinWnd {
 
 	public native int registerTimer(int timeOut);
 	public native void unregisterTimer(int nTimerId);
+
+	public native void startAnimation(int nAnimationId);
 
 }
 

@@ -906,8 +906,6 @@ int CSkinFactory::SaveSkinFile(LPCTSTR szFile)
 
 void CSkinFactory::Close()
 {
-	CSjvmSkinSystem::CloseScript();
-
 	m_skinStyle.Free();
 	m_dynamicCmds.Free();
 	m_skinFile.Close();
@@ -917,7 +915,9 @@ void CSkinFactory::Close()
 	// Save opened window name, and close it.
 	tstring		strOpenedSkinWnds;
 	bool		bSave = false;
-	for (it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
+	LIST_SKINWNDS	listSkinWnds;
+	listSkinWnds = m_listSkinWnds;
+	for (it = listSkinWnds.begin(); it != listSkinWnds.end(); ++it)
 	{
 		CSkinWnd	*pSkin = *it;
 
@@ -925,23 +925,27 @@ void CSkinFactory::Close()
 		{
 			bSave = true;
 			g_Profile.WriteProfileString(_T("DefaultSkinWnd"), pSkin->GetSkinWndName());
+			pSkin->CloseSkin();
 		}
 		else
 		{
 			if (!strOpenedSkinWnds.empty())
 				strOpenedSkinWnds += _T(",");
 			strOpenedSkinWnds += pSkin->GetSkinWndName();
+			pSkin->Destroy();
 		}
-
-		// pSkin->CloseSkin();
 	}
-	if (bSave || strOpenedSkinWnds.size())
+	if (bSave)
 		g_Profile.WriteProfileString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
+
+	ASSERT(m_listSkinWnds.size() <= 1);
 
 	m_resourceMgr.OnClose();
 
 	m_mapCmdStrId.clear();
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
+
+	CSjvmSkinSystem::CloseScript();
 }
 
 CSkinWnd *CSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)

@@ -153,7 +153,7 @@ public:
 	// update draw of UIObject
 	virtual void InvalidateUIObject(CUIObject *pObj);
 
-	void RedrawBackground(CRawGraph *pGraph, RECT *prc, bool bNoTranslucency = false);
+	void RedrawBackground(CRawGraph *pGraph, RECT *prc);
 
 	void EnterInDrawUpdate();
 	void LeaveInDrawUpdate();
@@ -364,6 +364,7 @@ protected:
 
 	void OnMouseActiveMsg();
 	void OnTimerMouseInactive();
+	virtual void OnMouseActive(boolean bMouseActive);
 
 	class CAutoRedrawLock {
 	public:
@@ -377,8 +378,6 @@ public:
 	//
 	// Public method for Hide UIObject, if mouse is inactive.
 	//
-	bool			m_bHasUIObjHideOnMouseInactive;
-
 	bool IsMouseInactive() { return m_bMouseInactive; }
 
 public:

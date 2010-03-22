@@ -61,7 +61,7 @@ void CRawGraph::Line(int x1, int y1, int x2, int y2)
 	agg::rgba	clr(m_pen.m_clrPen.r() / (double)255, 
 		m_pen.m_clrPen.g() / (double)255, 
 		m_pen.m_clrPen.b() / (double)255,
-		m_pen.m_clrPen.a() / (double)255);
+		m_pen.m_clrPen.a() * m_nOpacityPainting / 255 / (double)255);
 
 	pg.width(m_pen.m_nWidth);
 
@@ -108,7 +108,7 @@ void CRawGraph::Rectangle(int x, int y, int width, int height)
 	agg::rgba	clr(m_pen.m_clrPen.r() / (double)255, 
 		m_pen.m_clrPen.g() / (double)255, 
 		m_pen.m_clrPen.b() / (double)255,
-		m_pen.m_clrPen.a() / (double)255);
+		m_pen.m_clrPen.a() * m_nOpacityPainting / 255 / (double)255);
 
 	pg.width(m_pen.m_nWidth);
 
@@ -370,7 +370,7 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 	int			r, g, b, a;
 	int			nStrideModify;
 
-	a = clrBg.getAlpha();
+	a = clrBg.getAlpha() * m_nOpacityPainting / 255;
 	r = clrBg.r() * a / 255;
 	g = clrBg.g() * a / 255;
 	b = clrBg.b() * a / 255;
@@ -590,7 +590,7 @@ void CRawGraph::FillRect(const RECT *lpRect, PRAW_IMAGE_DATA pImgMask, const REC
 	srcPixel[PIX_R] = clrFill.r() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_G] = clrFill.g() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_B] = clrFill.b() * clrFill.getAlpha() / 255;
-	srcPixel[PIX_A] = clrFill.getAlpha();
+	srcPixel[PIX_A] = clrFill.getAlpha() * m_nOpacityPainting / 255;
 
 	ASSERT(pImgMask);
 	if (!pImgMask)
@@ -701,7 +701,7 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 	srcPixel[PIX_R] = clrFill.r() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_G] = clrFill.g() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_B] = clrFill.b() * clrFill.getAlpha() / 255;
-	srcPixel[PIX_A] = clrFill.getAlpha();
+	srcPixel[PIX_A] = clrFill.getAlpha() * m_nOpacityPainting / 255;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 

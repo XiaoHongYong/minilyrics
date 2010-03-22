@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr"
+      ExtraResouceFolder="Fantasy" Script="minilyrics.java">
+  <include Name="Styles.xml"/>
+  <Menus>
+    <Menu Name="NormalMode" From="MainMenu" >
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+    </Menu>
+    <Menu Name="LyrBarMode" From="MainMenu" >
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+    </Menu>
+    <Menu Name="FloatingLyrMode" From="MainMenu" >
+      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
+    </Menu>
+  </Menus>
+  <DynCmds>
+    <cmd ID="dyncmd_change_to_bar" func="change_skin_wnd" param="lyrbar"/>
+    <cmd ID="dyncmd_change_to_floatinglyr" func="change_skin_wnd" param="floatinglyr"/>
+    <cmd ID="dyncmd_change_to_normal" func="change_skin_wnd" param="minilyrics"/>
+    <cmd ID="ID_LYR_EDITOR" func="openclose_skin_wnd" param="lyreditor" />
+    <cmd ID="dyncmd_is_lyr_editor_visible" func="is_skin_wnd_visible" param="lyreditor" />
+    <cmd ID="dyncmd_openclose_albumart_bar" func="openclose_framebar_bar" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
+    <cmd ID="dyncmd_is_albumart_bar_visible" func="is_framebar_bar_visible" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
+    <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
+    <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
+    <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
+    <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
+
+    <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
+    <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
+  </DynCmds>
+  <skinwnd Name="minilyrics" EnableTranslucency="true"
+       TranslucencyAlpha="0" TranslucencyAlphaOnHover="255" TranslucencyAlphaOnActive="255"
+       MinWidth="330" MinHeight="190" Width="450" Height="240" 
+       PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
+       ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
+    <Property Name="BgImage" Image="frame.png" ImageRect="0,0,458,190"
+              HorzExtendPos="230,410" VertExtendPos="70,160"/>
+    <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
+              CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
+
+    <Button Left="10" Top="9" Width="16" Height="16" ID="ID_MENU" Name="Menu"
+      Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
+      ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
+    <Image Name="Brand" Left="44" Top="8" Width="81" Height="20" Image="name.png"
+           UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
+    <MenuBar left="150" top="8" width="w-90-150" height="18" Name="Menu" Menu="LyrEditorMenu"
+             UseSkinBg="true" TranslucencyWithSkin="TRUE"
+       FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
+       TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
+       TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" 
+       BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+
+    <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
+      <Container Name="Lyrics" ID="CID_LYRICS" left="0" top="0" width="w" height="h">
+        <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h"
+                  EnableToolbar="FALSE" BgColor="#576C91" FgColor="#FFFFFF"
+                  FgLowColor="#B2B2B2" FocusLineBgColor="#8A94AA" TagColor="#FFFFFF"
+                  EnableAutoResize="TRUE"/>
+        <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
+        <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
+
+        <Container Name="Lyrics" ID="CID_TOP_CTRL" Rect="0,0,w,26" TranslucencyWithSkin="TRUE">
+          <Image Name="Top-ctrl-bg" Rect="0,0,w,26" Image="top-ctrl-bg.png" BltMode="tile" />
+          <Toolbar Rect="5,2,70,22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+               units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
+               MarginX="0" MarginY="0" FullStatusImage="TRUE">
+            <button ID="ID_SEARCH_LYRICS" Left="5" />
+            <button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
+            <button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
+          </Toolbar>
+        </Container>
+
+        <Container ID="CID_PLAY_CTRL" Rect="(w-190)/2,h-35,190,32" TranslucencyWithSkin="TRUE">
+          <Image Name="Bg" Rect="0,0,190,32" Image="play-bg.png"/>
+          <Toolbar Name="PlayControl" Rect="44,5,110,22"
+                   Image="buttons.png" enablehover="TRUE"
+                   units_x="22" blank_x="-1" blank_cx="22" seperator_x="176"
+                   seperator_cx="12" ButtonSpacesCX="14" FullStatusImage="true">
+            <button ID="ID_PREVIOUS"  left="1"/>
+            <button ID="ID_PLAYPAUSE" left="2"  left_of_status_1="3"/>
+            <button ID="ID_NEXT"      left="4"/>
+          </Toolbar>
+        </Container>
+      </Container>
+      <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" left="0" top="0" width="w" height="h" Visible="false"/>
+    </ToggleCtrlContainer>
+
+    <WndResizer Name="Bottom" Left="0" Top="h-20" Width="w-20" Height="20" Direction="bottom"/>
+    <WndResizer Name="Right" Left="w-20" Top="0" Width="20" Height="h-20" Direction="right"/>
+    <WndResizer Name="RightBottom" Left="w-20" Top="h-20" Width="20" Height="20" Direction="right|bottom"/>
+  </skinwnd>
+</skin>

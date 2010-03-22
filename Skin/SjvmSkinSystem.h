@@ -22,6 +22,7 @@ public:
 	void onSize(int cx, int cy);
 	void onMove(int x, int y);
 	void onActivate(boolean bActived);
+	void onMouseActive(boolean bMouseActive);
 	void onTimer(int nTimerId);
 
 	void AddSkinWnd(CSkinWnd *pWnd);
@@ -40,6 +41,7 @@ protected:
 	static int		m_sOnSize;
 	static int		m_sOnMove;
 	static int		m_sOnActivate;
+	static int		m_sOnMouseActive;
 	static int		m_sOnTimer;
 
 };

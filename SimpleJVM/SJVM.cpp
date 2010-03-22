@@ -670,6 +670,8 @@ extern FILE *yyin, *yyout;
 
 void CSJVM::Reset()
 {
+	printf("Reset SJVM\n");
+
 	// Reset class table
 	ASSERT(m_nSysClassCount <= m_classTable.m_vClass.size());
 	if (m_nSysClassCount < m_classTable.m_vClass.size())

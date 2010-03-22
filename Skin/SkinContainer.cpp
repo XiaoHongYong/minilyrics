@@ -348,15 +348,16 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 		CUIObject		*pObj = m_vUIObjs[i];
 		if (pObj->IsVisible())
 		{
-			if (pObj->IsUseSkinBg() && pObj->IsUpdateTranslucencyWithSkin()
+/*			if (pObj->IsUseSkinBg() && pObj->IsUpdateTranslucencyWithSkin()
 				&& m_pSkin->m_nTranslucencyAlphaDynamic != m_pSkin->m_nTranslucencyAlphaOnActive)
 			{
 				// Redraw background
 				m_pSkin->RedrawBackground(pGraph, &pObj->m_rcObj, true);
-			}
-			pObj->Draw(pGraph);
+			}*/
 
-			pObj->UpdateTranslucencyWithSkin(pGraph);
+			CRawGraph::COpacityBlendAutoRecovery opacityAR(pGraph, pObj->GetOpacity());
+
+			pObj->Draw(pGraph);
 		}
 	}
 
