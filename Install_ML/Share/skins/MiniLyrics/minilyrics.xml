@@ -51,6 +51,14 @@
        TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" 
        BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
 
+    <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16"
+         UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+         blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
+         MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
+      <button ID="ID_MINIMIZE" Left="1" />
+      <button ID="ID_CLOSE" Left="4" />
+    </Toolbar>
+
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
       <Container Name="Lyrics" ID="CID_LYRICS" left="0" top="0" width="w" height="h">
         <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h"
@@ -72,10 +80,9 @@
           <PlayingTimeText Name="PlayingTime" Rect="70,4,50,18" AlignText="AT_CENTER | AT_VCENTER"
              FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#000000"
              LeftMargin="0" Text="" PaintBg="false"/>
-          <SeekCtrl TranslucencyWithSkin="TRUE" Name="Seek" ID="ID_SEEK"
-                    Rect="122,8,w-122-80,12" EndWidth="3" ThumbWidth="10"
-                    TrackWidthLeft="23" TrackWidthRight="20" SeekCtrlHeight="12"
-                    Image="progress.png" BlendPixMode="alpha_blend"/>
+          <SeekCtrl Name="Seek" ID="ID_SEEK"
+                    Rect="122,8,w-122-80,12" EndWidth="3" ImageThumb="seek_thumb.png" 
+                    ImageTrack="seek_track.png"/>
         </Container>
 
         <Container ID="CID_PLAY_CTRL" Rect="(w-190)/2,h-35,190,32" TranslucencyWithSkin="TRUE">
