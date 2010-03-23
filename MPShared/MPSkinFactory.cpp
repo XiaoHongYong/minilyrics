@@ -249,7 +249,6 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		pSkinMenu = new CLyrEditorMenu();
 		pSkinMenu->LoadMenu(IDM_LYR_EDITOR);
 	}
-#ifdef _MPLAYER
 	else if (_tcsicmp(szMenu, _T("MainWndMenu")) == 0)
 	{
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
@@ -257,6 +256,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadMenu(IDM_MAIN_WND);
 	}
+#ifdef _MPLAYER
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();

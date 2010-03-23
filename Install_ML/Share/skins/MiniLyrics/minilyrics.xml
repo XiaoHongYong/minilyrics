@@ -31,7 +31,7 @@
   </DynCmds>
   <skinwnd Name="minilyrics" EnableTranslucency="true"
        TranslucencyAlpha="0" TranslucencyAlphaOnHover="255" TranslucencyAlphaOnActive="255"
-       MinWidth="330" MinHeight="150" Width="450" Height="240" 
+       MinWidth="330" MinHeight="190" Width="450" Height="240" 
        PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
        ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
     <Property Name="BgImage" Image="frame.png" ImageRect="0,0,458,190"
@@ -44,7 +44,7 @@
       ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
     <Image Name="Brand" Left="44" Top="8" Width="81" Height="20" Image="name.png"
            UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
-    <MenuBar left="150" top="8" width="w-90-150" height="18" Name="Menu" Menu="LyrEditorMenu"
+    <MenuBar left="150" top="8" width="w-90-150" height="18" Name="Menu" Menu="MainWndMenu"
              UseSkinBg="true" TranslucencyWithSkin="TRUE"
        FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
        TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
