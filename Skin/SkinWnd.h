@@ -87,7 +87,7 @@ public:
 	virtual ~CSkinWnd();
 
 public:
-	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWnd);
+	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow = true, bool bTopmost = true);
 
 	virtual int OpenDefaultSkin();
 	virtual int OpenSkin(LPCTSTR szSkinWndName);

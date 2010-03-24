@@ -645,8 +645,6 @@ CMPSkinWnd::CMPSkinWnd()
 	m_bEnableVolumeSwitch = false;
 	m_bUseVolumeSeek = false;
 
-	m_bTopmost = false;
-
 	m_rcReal.top = m_rcReal.left = 0;
 	m_rcReal.right = 400;
 	m_rcReal.bottom = 250;
@@ -659,6 +657,13 @@ CMPSkinWnd::CMPSkinWnd()
 CMPSkinWnd::~CMPSkinWnd()
 {
 
+}
+
+int CMPSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow, bool bTopmost)
+{
+	bTopmost |= g_Profile.GetProfileBool(GetCfgSectName(), _T("topmost"), true);
+
+	return CSkinWnd::Create(szClassName, szCaption, pSkinFactory, szSkinWndName, pWndParent, bToolWindow, bTopmost);
 }
 
 void CMPSkinWnd::OnActivate(bool bActived)
@@ -982,10 +987,6 @@ void CMPSkinWnd::OnSkinLoaded()
 
 #ifdef _WIN32_DESKTOP
 	// m_bClickThrough = g_Profile.GetProfileBool(GetCfgSectName(), _T("ClickThrough"), false);
-	m_bTopmost = g_Profile.GetProfileBool(GetCfgSectName(), _T("topmost"), true);
-
-	SetTopmost(m_bTopmost);
-
 	LoadTransparentSettings();
 #endif
 
@@ -1295,8 +1296,6 @@ void CMPSkinWnd::CloseSkin()
 	}
 	m_listSkinCmdHandler.clear();
 	m_strCmdHandler.resize(0);
-
-	m_bTopmost = false;
 
 	m_bEnableVolumeSwitch = false;
 	m_bUseVolumeSeek = false;

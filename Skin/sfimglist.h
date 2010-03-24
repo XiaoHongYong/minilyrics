@@ -11,7 +11,7 @@ public:
 
 	bool Load(CSkinFactory *pSkinFactory, LPCTSTR szImage, int nCx);
 
-	bool Draw(CRawGraph *pGraph, int nIndex, int x, int y, BlendPixMode bpm = BPM_BLEND);
+	bool Draw(CRawGraph *pGraph, int nIndex, int x, int y, int width = 0, int height = 0, BlendPixMode bpm = BPM_BLEND);
 
 	int GetIconCx();
 	int GetIconCy();

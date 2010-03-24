@@ -1083,7 +1083,7 @@ int CSkinFactory::OpenOrCloseSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPC
 		return ERR_OK;
 	}
 
-	int nRet = (*ppSkinWnd)->Create(szClassName, szCaption, this, szSkinWndName, pWndParent, true);
+	int nRet = (*ppSkinWnd)->Create(szClassName, szCaption, this, szSkinWndName, pWndParent);
 	if (nRet != ERR_OK)
 	{
 		delete *ppSkinWnd;

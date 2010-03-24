@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "MPlayerApp.h"
 #include "MLCmd.h"
 #include "MPCommonCmdHandler.h"
-#include "MPlayerApp.h"
 #include "LyricShowAgentObj.h"
 #include "LyricShowTextEditObj.h"
 #include "CharsetEncoding.h"
@@ -733,6 +733,25 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 			g_Profile.WriteProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
 			g_mpApp.GetSkinFactory()->AdjustHue(hue);
+		}
+		break;
+	case CMD_LYR_HIGH_CLR_LIST:
+		{
+			CRect	rc;
+			CUIObject *pObj = m_pSkinWnd->GetUIObjectById(CMD_LYR_HIGH_CLR_LIST, NULL);
+			if (pObj)
+			{
+				rc = pObj->m_rcObj;
+				m_pSkinWnd->ScreenToClient(rc);
+			}
+			else
+			{
+				CPoint	pt;
+				MLWidget::GetCursorPos(&pt);
+				rc.SetRect(pt.x, pt.y, pt.x + 100, pt.y + 25);
+			}
+			m_popupHighClrListWnd.Create(m_pSkinWnd, rc, true,
+				m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS, NULL);
 		}
 		break;
 

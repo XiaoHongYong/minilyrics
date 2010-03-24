@@ -34,6 +34,7 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_FONT_SIZE_DEC"), CMD_FONT_SIZE_DEC, _T("Decrease font size") },
 	{ _T("ID_CLR_PREV_HUE"), CMD_CLR_PREV_HUE, _T("Previous Color") },
 	{ _T("ID_CLR_NEXT_HUE"), CMD_CLR_NEXT_HUE, _T("Next Color") },
+	{ _T("ID_LYR_HIGH_CLR_LIST"), CMD_LYR_HIGH_CLR_LIST, _T("Highlight lyrics color") },
 
 	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, _T("Synchronize the current line") },
 	{ _T("ID_DEL_TAG"), CMD_DEL_TAG, _T("Remove Timestamp of the current line") },

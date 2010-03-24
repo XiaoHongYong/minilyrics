@@ -36,9 +36,17 @@ bool CSFImgList::Load(CSkinFactory *pSkinFactory, LPCTSTR szImage, int nCx)
 	return true;
 }
 
-bool CSFImgList::Draw(CRawGraph *pGraph, int nIndex, int x, int y, BlendPixMode bpm)
+bool CSFImgList::Draw(CRawGraph *pGraph, int nIndex, int x, int y, int width, int height, BlendPixMode bpm)
 {
-	return Blt(pGraph, x, y, m_nItemCx, m_cy, m_x + m_nItemCx * nIndex, m_y);
+	if (width <= 0)
+		width = m_nItemCx;
+	else if (width > m_nItemCx)
+		width = m_nItemCx;
+	if (height <= 0)
+		height = m_cy;
+	else if (height > m_cy)
+		height = m_cy;
+	return Blt(pGraph, x, y, width, height, m_x + m_nItemCx * nIndex, m_y);
 }
 
 int CSFImgList::GetIconCx()

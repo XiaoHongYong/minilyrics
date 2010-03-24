@@ -355,6 +355,8 @@ protected:
 
 LPCTSTR GetLyrTOBSettingName(bool bHighlight, CLyricShowObj::TOBColorIndex nameIndex);
 
+void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverlayBlending &tob, int nGradientPatternHeight, bool bHilight);
+
 void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::MLColorEx clrGradient[3]);
 
 void ProfileWriteTOBToOld(bool bOutlineLyrText, 

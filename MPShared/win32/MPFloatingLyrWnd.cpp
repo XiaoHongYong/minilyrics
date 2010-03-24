@@ -32,7 +32,7 @@ int CMPFloatingLyrWnd::Create()
 	m_rcReal.right = m_rcReal.left + g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("wnd_width"), m_rcReal.Width());
 	m_rcReal.bottom = m_rcReal.top + g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("wnd_height"), m_rcReal.Height());
 
-	CSkinWnd::Create(_T("FloatingLyr"), _T("Floating Lyrics"), g_mpApp.GetSkinFactory(), SZ_SECT_FLOATING_LYR, NULL, true);
+	CSkinWnd::Create(_T("FloatingLyr"), _T("Floating Lyrics"), g_mpApp.GetSkinFactory(), SZ_SECT_FLOATING_LYR, NULL);
 
 	m_bClickThrough = g_Profile.GetProfileBool(SZ_SECT_FLOATING_LYR, _T("ClickThrough"), false);
 	LoadTransparentSettings();

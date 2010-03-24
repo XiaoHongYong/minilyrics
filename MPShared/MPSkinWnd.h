@@ -28,6 +28,8 @@ public:
 	CMPSkinWnd();
 	virtual ~CMPSkinWnd();
 
+	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow = true, bool bTopmost = false);
+
 	void OnActivate(bool bActived);
 
 	virtual bool OnCreate();
@@ -120,8 +122,6 @@ protected:
 	//
 	// Window status and properties
 	//
-
-	bool					m_bTopmost;	
 
 	CLyrPlaylistAutoSwitch	m_autoSwitchToLyrShow;
 

@@ -51,7 +51,7 @@
        TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" 
        BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
 
-    <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16"
+    <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16" TranslucencyWithSkin="TRUE"
          UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
          blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
          MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
@@ -83,6 +83,14 @@
           <SeekCtrl Name="Seek" ID="ID_SEEK"
                     Rect="122,8,w-122-80,12" EndWidth="3" ImageThumb="seek_thumb.png" 
                     ImageTrack="seek_track.png"/>
+
+          <Toolbar Rect="w-75,0,70,22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+                   units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" 
+                   MarginX="0" MarginY="0" FullStatusImage="TRUE">
+            <button ID="ID_FONT_SIZE_INC" Left="8"/>
+            <button ID="ID_FONT_SIZE_DEC" Left="9"/>
+            <button ID="ID_LYR_HIGH_CLR_LIST" Left="5" />
+          </Toolbar>
         </Container>
 
         <Container ID="CID_PLAY_CTRL" Rect="(w-190)/2,h-35,190,32" TranslucencyWithSkin="TRUE">

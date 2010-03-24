@@ -220,30 +220,23 @@ CSkinWnd::~CSkinWnd()
 	CloseSkin();
 }
 
-int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWnd)
+int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow, bool bTopmost)
 {
 	m_pSkinFactory = pSkinFactory;
 	m_strSkinWndName = szSkinWndName;
 
 	DWORD	dwExStyle = 0;
-
-	if (bToolWnd)
+	if (bTopmost)
+		dwExStyle |= WS_EX_TOPMOST;
+	if (bToolWindow)
 		dwExStyle |= WS_EX_TOOLWINDOW;
 
 	// WS_THICKFRAME will cause window flashing on vista
 	if (!CreateEx(szClassName, szCaption,
 		m_rcReal.left, m_rcReal.top, m_rcReal.Width(), m_rcReal.Height(),
 		pWndParent,
-		DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX, dwExStyle))
+		DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX | WS_VISIBLE, dwExStyle))
 		return ERR_FALSE;
-
-	// Load skin
-	OpenDefaultSkin();
-
-	if (m_bTranslucencyLayered)
-		InvalidateRectOfLayeredWindow(NULL);
-
-	ShowWindow(SW_SHOW);
 
 	return ERR_OK;
 }
@@ -1801,6 +1794,13 @@ bool CSkinWnd::OnCreate()
 
 	m_WndDrag.Init(this, this);//, arrszClassCloseTo);
 	m_wndResizer.Init(this, this);//, arrszClassCloseTo, this);
+
+	// Load skin
+	OpenDefaultSkin();
+
+	// If translucency is used, call this to update screen explicitly
+	if (m_bTranslucencyLayered)
+		InvalidateRectOfLayeredWindow(NULL);
 
 	return true;
 }

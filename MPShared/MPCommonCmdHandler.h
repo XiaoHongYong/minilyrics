@@ -10,6 +10,7 @@
 #endif // _MSC_VER > 1000
 
 #include "EventsDispatcher.h"
+#include "LyrDisplayClrListWnd.h"
 
 class CMPCommonCmdHandler : public ISkinCmdHandler  
 {
@@ -41,6 +42,7 @@ protected:
 	tstring			m_strSectName;
 	EventType		m_etDispSettings;
 
+	CLyrDisplayClrListWnd	m_popupHighClrListWnd;
 
 };
 
