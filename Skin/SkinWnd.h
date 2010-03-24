@@ -315,6 +315,8 @@ public:
 		if (bRedraw) InvalidateRect();
 	}
 
+	LPCTSTR GetMenuName() { return m_strMenuName.c_str(); }
+
 	bool IsWindowsAppearance() const { return m_bWindowsAppearance; }
 
 	// after process WM_DESTORY, delete this.
@@ -400,6 +402,8 @@ protected:
 
 	tstring			m_strSkinWndName;		// skin Ãû
 	tstring			m_strCaption;
+
+	tstring			m_strMenuName;
 
 	CSkinToolTip	m_wndToolTip;
 

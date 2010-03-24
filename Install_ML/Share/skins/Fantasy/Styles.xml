@@ -3,7 +3,8 @@
   <style>
     <WindowFrame Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="245"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
-         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false">
+         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false"
+         FontName="Verdana" FontHeight="15" TextColor="#FFFFFF">
       <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
       <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
       <Image Name="BottomBorder" Left="20" Top="h-20+10" Width="w-20-20" Height="20-10" Image="frame.png" ImageRect="20, 65, 35, 10" BltMode="tile" BlendPixMode="copy"/>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<skinwnd Extends="WindowFrame" Name="LyricsEditor.xml" Caption="Lyrics Editor" CmdHandler="ch_common"
+         Width="620" Height="440" ContextMenu="NormalMode" Menu="LyrEditorMenu"
+         OnCreateCommand="dyncmd_load_toolbar_state">
+  <Toolbar Left="0" Top="0" Width="22*4+10" Height="26" Image="lyr-tb.bmp"
+           enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22" 
+           seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3">
+    <button ID="ID_INSERTTAG_DOWN" Left="12" Width="2" />
+    <button ID="ID_INSERTTAG" Left="14" />
+    <button ID="dyncmd_toggle_toolbarex_visible" Left="23" ToolTip="Toggle Extended Toolbar Visible"/>
+  </Toolbar>
+  <Image Left="22*4+10" Top="0" Width="w-(22*4+10+6)" Height="26" Name="Toolbar Bg"
+         Image="lyr-tb.bmp" ImageRect="858,0,22,26" BltMode="tile"/>
+  <Toolbar ID="ID_TOOLBAR" Left="22*4+10" Top="0" Width="w-(22*4+10+6)" Height="26"
+           Image="lyr-tb.bmp" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
+           seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3" Visible="false">
+    <seperator/>
+    <button ID="ID_SEARCH_LYRICS" Left="20" />
+    <button ID="ID_NEW_LRC" Left="0" />
+    <button ID="ID_OPEN_LRC" Left="1" />
+    <button ID="ID_SAVE_LRC" Left="2" />
+    <button ID="ID_SAVE_LRC_AS" Left="3" />
+    <seperator/>
+    <button ID="ID_PLAY" Left="4" />
+    <button ID="ID_PAUSE" Left="5" />
+    <button ID="ID_BACKWARD" Left="9" />
+    <button ID="ID_FORWARD" Left="10" />
+    <button ID="ID_JUMP" Left="11" />
+    <seperator/>
+    <button ID="ID_EDIT_CUT" Left="26" disabled_Left="35" />
+    <button ID="ID_EDIT_COPY" Left="27" disabled_Left="36" />
+    <button ID="ID_EDIT_PASTE" Left="28" />
+    <seperator/>
+    <button ID="ID_EDIT_UNDO" Left="29" disabled_Left="37" />
+    <button ID="ID_EDIT_REDO" Left="30" disabled_Left="38" />
+    <seperator/>
+    <button ID="ID_EDIT_FIND" Left="31" />
+    <button ID="ID_EDIT_REPLACE" Left="32" />
+    <seperator/>
+    <button ID="ID_BACKWARD_LYRICS" Left="21" />
+    <button ID="ID_FORWARD_LYRICS" Left="22" />
+    <button ID="ID_EDIT_TAG" Left="25" />
+    <seperator/>
+    <button ID="ID_EDIT_HELP" Left="24" />
+  </Toolbar>
+  <LyricShowTextEdit Left="6" Top="26" Width="w-12" Height="(h-10-26)"
+                     BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD"
+                     FocusLineBgColor="#000000" TagColor="#FF8242" />
+</skinwnd>

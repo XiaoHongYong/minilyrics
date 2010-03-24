@@ -207,7 +207,12 @@ void CSkinMenuBar::OnCreate()
 
 	m_font.OnCreate(m_pSkin);
 
-	ASSERT(m_pMenu);
+	if (m_strMenu.empty() && !IsEmptyString(m_pSkin->GetMenuName()))
+	{
+		m_pSkin->GetSkinFactory()->LoadMenu(m_pSkin, &m_pMenu, 
+			m_pSkin->GetMenuName());
+	}
+
 	if (m_pMenu)
 	{
 		for (int i = 0; i < 255; i++)
@@ -483,6 +488,7 @@ BOOL CSkinMenuBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_strMenu = szValue;
 		m_pSkin->GetSkinFactory()->LoadMenu(m_pSkin, &m_pMenu, szValue);
+		ASSERT(m_pMenu);
 	}
 	else if (m_font.SetProperty(szProperty, szValue))
 		return TRUE;

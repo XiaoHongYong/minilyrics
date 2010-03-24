@@ -89,7 +89,7 @@
                    MarginX="0" MarginY="0" FullStatusImage="TRUE">
             <button ID="ID_FONT_SIZE_INC" Left="8"/>
             <button ID="ID_FONT_SIZE_DEC" Left="9"/>
-            <button ID="ID_LYR_HIGH_CLR_LIST" Left="5" />
+            <button ID="ID_LYR_HIGH_CLR_LIST" Left="14" />
           </Toolbar>
         </Container>
 

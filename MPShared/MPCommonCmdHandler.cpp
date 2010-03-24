@@ -407,6 +407,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 #endif // _WIN32_DESKTOP
+	case CMD_LYR_EDITOR:
+		g_mpApp.GetSkinFactory()->ActiveOrCreateSkinWnd(false,
+			_T("LyrEditor"), TOLOCAL(_T("Lyrics Editor")), _T("LyricsEditor.xml"));
+		break;
 	case CMD_EDIT_HELP:
 		MLHtmlHelper(m_pSkinWnd, _T("help.chm::/how-to-editlyrics.htm"));
 		break;

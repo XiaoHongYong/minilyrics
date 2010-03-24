@@ -1404,6 +1404,10 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_rootConainter.SetProperty(szProperty, szValue);
 	}
+	else if (_tcsicmp(szProperty, _T("Menu")) == 0)
+	{
+		m_strMenuName = szValue;
+	}
 	else if (_tcsicmp(szProperty, _T("IndividualProperties")) == 0)
 	{
 		m_bIndividualProperties = IsTRUE(szValue);
