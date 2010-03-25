@@ -759,6 +759,18 @@ void CSjvmSkinSystem::RegisterJNI()
 
 	nRet = pClass->AddNativeMethod(true, "getCommandID", getCommandID, TID_INT, TID_STRING, TID_INVALID);
 	ASSERT(nRet != -1);
+
+	nRet = pClass->AddNativeMethod(true, "writeProfileInt", writeProfileInt, TID_VOID, TID_STRING, TID_INT, TID_INVALID);
+	ASSERT(nRet != -1);
+
+	nRet = pClass->AddNativeMethod(true, "writeProfileString", writeProfileString, TID_VOID, TID_STRING, TID_STRING, TID_INVALID);
+	ASSERT(nRet != -1);
+
+	nRet = pClass->AddNativeMethod(true, "getProfileInt", getProfileInt, TID_INT, TID_STRING, TID_INT, TID_INVALID);
+	ASSERT(nRet != -1);
+
+	nRet = pClass->AddNativeMethod(true, "getProfileString", getProfileString, TID_STRING, TID_STRING, TID_STRING, TID_INVALID);
+	ASSERT(nRet != -1);
 }
 
 bool SJNI_API CSjvmSkinSystem::registerSkinSystemEvent(jobject event)
@@ -854,3 +866,28 @@ int SJNI_API CSjvmSkinSystem::getCommandID(LPCTSTR string)
 	return m_pSkinFactory->GetIDByName(string);
 }
 
+
+void SJNI_API CSjvmSkinSystem::writeProfileInt(LPCTSTR szValueName, int nValue)
+{
+	g_Profile.WriteProfileInt(m_pSkinFactory->GetSkinName(), szValueName, nValue);
+}
+
+void SJNI_API CSjvmSkinSystem::writeProfileString(LPCTSTR szValueName, LPCTSTR szValue)
+{
+	g_Profile.WriteProfileString(m_pSkinFactory->GetSkinName(), szValueName, szValue);
+}
+
+int SJNI_API CSjvmSkinSystem::getProfileInt(LPCTSTR szValueName, int nDefault)
+{
+	return g_Profile.GetProfileInt(m_pSkinFactory->GetSkinName(), szValueName, nDefault);
+}
+
+jobject SJNI_API CSjvmSkinSystem::getProfileString(LPCTSTR szValueName, LPCTSTR szDefault)
+{
+	LPCTSTR szValue = g_Profile.GetProfileString(m_pSkinFactory->GetSkinName(), szValueName, szDefault);
+
+	if (!szValue)
+		return g_sjvm->NewString(_T(""), false);
+
+	return g_sjvm->NewString(szValue, true);
+}

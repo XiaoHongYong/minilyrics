@@ -65,4 +65,10 @@ public class SkinSystem {
 
 	public static native int getCommandID(String string);
 
+	public static void writeProfileInt(String szValueName, int nValue);
+	public static void writeProfileString(String szValueName, String szValue);
+
+	public static int getProfileInt(String szValueName, int nDefault);
+	public static String getProfileString(String szValueName, String szDefault);
+
 }

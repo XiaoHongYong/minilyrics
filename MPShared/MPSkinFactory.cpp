@@ -231,7 +231,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		CWCEMainCmdBar *pMenu = new CWCEMainCmdBar;
 		pMenu->Create(pWnd, IDM_MENU);
 #else
-		CMPSkinMenu	*pMenu = new CMPSkinMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
@@ -239,19 +239,19 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 	}
 	else if (_tcsicmp(szMenu, _T("LyricsMenu")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 1);
 	}
 	else if (_tcsicmp(szMenu, _T("LyrEditorMenu")) == 0)
 	{
-		pSkinMenu = new CLyrEditorMenu();
+		pSkinMenu = new CLyrEditorMenu(this);
 		pSkinMenu->LoadMenu(IDM_LYR_EDITOR);
 	}
 	else if (_tcsicmp(szMenu, _T("MainWndMenu")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadMenu(IDM_MAIN_WND);
@@ -259,30 +259,30 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 #ifdef _MPLAYER
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 2);
 	}
 	else if (_tcsicmp(szMenu, _T("MediaLibMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu();
+		pSkinMenu = new CSkinMenu(this);
 		pSkinMenu->LoadPopupMenu(IDM_PLAYER_MENU, 1);
 	}
 	else if (_tcsicmp(szMenu, _T("MediaGuideTreeMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu();
+		pSkinMenu = new CSkinMenu(this);
 		pSkinMenu->LoadPopupMenu(IDM_PLAYER_MENU, 1);
 	}
 	else if (_tcsicmp(szMenu, _T("MediaGuideSongListMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu();
+		pSkinMenu = new CSkinMenu(this);
 		pSkinMenu->LoadPopupMenu(IDM_PLAYER_MENU, 1);
 	}
 #endif
 	else
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu();
+		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
@@ -310,9 +310,9 @@ bool CMPSkinFactory::LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu)
 				pSkinMenu = LoadPresetMenu(pWnd, szFromMenu);
 
 			if (!pSkinMenu)
-				pSkinMenu = new CSkinMenu;
+				pSkinMenu = new CSkinMenu(this);
 
-			pSkinMenu->FromXML(pNode, pSkinMenu->GetOrgAppendPos(), this);
+			pSkinMenu->FromXML(pNode, pSkinMenu->GetOrgAppendPos());
 		}
 	}
 

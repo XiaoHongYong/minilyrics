@@ -348,13 +348,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		break;
 	default:
 		{
-			int		nCmdID = MenuIDToCmdID(nID);
-			if (nCmdID != CMD_UNDEFINE)
-			{
-				OnCustomCommand(nCmdID);
-				break;
-			}
-
 			if (OnCommandCharEncoding(nID))
 				break;
 			return false;

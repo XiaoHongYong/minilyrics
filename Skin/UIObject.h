@@ -146,10 +146,12 @@ enum
 
 #define SZ_PN_LINK			_T("Link")
 
-#define SKIN_UIOBJ_ID_UNDEFINE		0
+#define SKIN_UIOBJ_ID_UNDEFINE		0 // decrepted.
+
+#define UID_INVALID					0 // UID = UIObject ID
 
 //
-// delcare GetClassName, IsKindOf, ClassName of classes derived from CUIObject
+// declare GetClassName, IsKindOf, ClassName of classes derived from CUIObject
 //
 #define UIOBJECT_CLASS_NAME_DECLARE(BaseClass)	\
 public:\

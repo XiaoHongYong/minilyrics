@@ -112,6 +112,12 @@ protected:
 
 	static int SJNI_API getCommandID(LPCTSTR string);
 
+	static void SJNI_API writeProfileInt(LPCTSTR szValueName, int nValue);
+	static void SJNI_API writeProfileString(LPCTSTR szValueName, LPCTSTR szValue);
+
+	static int SJNI_API getProfileInt(LPCTSTR szValueName, int nDefault);
+	static jobject SJNI_API getProfileString(LPCTSTR szValueName, LPCTSTR szDefault);
+
 protected:
 	static ListSjvmSkinWndEvent		m_listSkinWndEvent;
 	static ListSkinSystemEvent		m_listSkinSystemEvent;

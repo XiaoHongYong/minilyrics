@@ -18,8 +18,6 @@ struct MPHotKeySection
 
 extern MPHotKeySection	g_vHotkeySections[];
 
-int MenuIDToCmdID(int nMenuID);
-
 class CMPHotkey  
 {
 public:

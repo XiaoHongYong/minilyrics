@@ -186,6 +186,8 @@ public:
 	virtual void OnDestroy();
 	virtual void OnPaint(IMLGraphicsBase *pGraph);
 
+	virtual void OnCommand(UINT uID, UINT nNotifyCode);
+
 	// normal input message
 	virtual void OnKeyDown(UINT nChar, UINT nFlags);
 	virtual void OnKeyUp(UINT nChar, UINT nFlags);

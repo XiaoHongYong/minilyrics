@@ -670,7 +670,7 @@ bool CLyricShowTextEditObj::OnRButtonUp(UINT nFlags, CPoint point)
 
 void CLyricShowTextEditObj::OnContexMenu(int xPos, int yPos)
 {
-	CMPSkinMenu	menu;
+	CMPSkinMenu	menu(m_pSkin->GetSkinFactory());
 	bool		bEnable;
 
 	menu.LoadPopupMenu(IDM_MENU, 2);

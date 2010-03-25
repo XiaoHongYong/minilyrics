@@ -21,6 +21,24 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 			// mSkinWnd.setUIObjProperty(Glass.CID_TOGGLE_LYR_PL, "CmdToggle", "CID_INFOTEXT");
 			return true;
 		}
+		else if (nCmdId == Glass.ID_HIDE_WND_FRAME)
+		{
+			if (Glass.nHideFrameOnLostFocus > 0)
+			{
+				Glass.nHideFrameOnLostFocus = 0;
+				mSkinWnd.setProperty("TranslucencyAlpha", "0");
+			}
+			else
+			{
+				Glass.nHideFrameOnLostFocus = 1;
+				mSkinWnd.setProperty("TranslucencyAlpha", "255");
+			}
+
+			SkinSystem.writeProfileInt("HideFrameOnLostFocus", Glass.nHideFrameOnLostFocus);
+		
+			// mSkinWnd.setProperty("TranslucencyAlphaOnActive", "255");
+			// mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
+		}
 		
 		return false;
 	}
@@ -28,6 +46,11 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 	{
 		mSkinWnd = wnd;
 		UnitTest.message("onCreate()");
+
+		if (Glass.nHideFrameOnLostFocus > 0)
+			mSkinWnd.setProperty("TranslucencyAlpha", "255");
+		else
+			mSkinWnd.setProperty("TranslucencyAlpha", "0");
 	}
 
 	public void onDestroy()
@@ -79,6 +102,8 @@ public class Glass
 	public static int CID_BT_TOGGLE_PL_LYR;
 	public static int CID_AM_HIDE_PLAY;
 	public static int CID_AM_SHOW_PLAY;
+	public static int ID_HIDE_WND_FRAME;
+	public static int nHideFrameOnLostFocus;
 
 	public static void main()
 	{
@@ -92,6 +117,9 @@ public class Glass
 		CID_BT_TOGGLE_PL_LYR = SkinSystem.getCommandID("CID_BT_TOGGLE_PL_LYR");
 		CID_AM_HIDE_PLAY = SkinSystem.getCommandID("CID_AM_HIDE_PLAY");
 		CID_AM_SHOW_PLAY = SkinSystem.getCommandID("CID_AM_SHOW_PLAY");
+		ID_HIDE_WND_FRAME = SkinSystem.getCommandID("ID_HIDE_WND_FRAME");
+		
+		nHideFrameOnLostFocus = SkinSystem.getProfileInt("HideFrameOnLostFocus", 1);
 
 		static GlassSkinWndEvent	skinWndEvent = new GlassSkinWndEvent();
 		

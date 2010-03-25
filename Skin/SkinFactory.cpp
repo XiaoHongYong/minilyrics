@@ -21,6 +21,7 @@
 #define _SZ_SKIN_FILE_NAME		_T("ZikiPlayer.xml")
 #define _SZ_ADJUST_HUE			_T("AdjustHue")
 
+#define MENU_ID_CUSTOM_BASE		46000
 
 /*
    <DynControls>
@@ -538,6 +539,7 @@ CSkinFactory::CSkinFactory()
 	m_IdMap = NULL;
 	m_strSkinFileName = _SZ_SKIN_FILE_NAME;
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
+	m_nMenuIDNext = MENU_ID_CUSTOM_BASE;
 	m_dynamicCmds.Init(this);
 }
 
@@ -587,18 +589,73 @@ int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 	MAP_STRID::iterator it = m_mapCmdStrId.find(szId);
 	if (it != m_mapCmdStrId.end())
 	{
-		return (*it).second;
+		return (*it).second.nUID;
 	}
 
 	m_nCustomCmdIDNext++;
 
-	m_mapCmdStrId[szId] = m_nCustomCmdIDNext;
+	m_mapCmdStrId[szId] = UID_MenuID(m_nCustomCmdIDNext, 0);
 	return m_nCustomCmdIDNext;
+}
+
+int CSkinFactory::GetMenuIDByUID(int nUID)
+{
+	ASSERT(m_IdMap);
+	if (nUID == UID_INVALID)
+		return 0;
+
+	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	{
+		if (m_IdMap[i].nId == nUID)
+			return m_IdMap[i].nIdMenu;
+	}
+
+	MAP_STRID::iterator it;
+	for (it = m_mapCmdStrId.begin(); it != m_mapCmdStrId.end(); ++it)
+	{
+		if ((*it).second.nUID == nUID)
+		{
+			if ((*it).second.nMenuID == 0)
+			{
+				(*it).second.nMenuID = m_nMenuIDNext;
+				m_nMenuIDNext++;
+			}
+			return (*it).second.nMenuID;
+		}
+	}
+
+	return 0;
+}
+
+int CSkinFactory::GetUIDByMenuID(int nMenuID)
+{
+	ASSERT(m_IdMap);
+	if (nMenuID == 0)
+		return UID_INVALID;
+
+	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	{
+		if (m_IdMap[i].nIdMenu == nMenuID)
+			return m_IdMap[i].nId;
+	}
+
+	MAP_STRID::iterator it;
+	for (it = m_mapCmdStrId.begin(); it != m_mapCmdStrId.end(); ++it)
+	{
+		if ((*it).second.nMenuID == nMenuID)
+			return (*it).second.nUID;
+	}
+
+	return UID_INVALID;
 }
 
 int CSkinFactory::AllocCustomID()
 {
 	m_nCustomCmdIDNext++;
+	ASSERT(m_nCustomCmdIDNext <= uint16(-1));
+	if (m_nCustomCmdIDNext >= uint16(-1))
+		m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE + 1000;
+
 	return m_nCustomCmdIDNext;
 }
 
@@ -617,7 +674,7 @@ tstring CSkinFactory::GetStringOfID(int nID)
 	MAP_STRID::iterator it;
 	for (it = m_mapCmdStrId.begin(); it != m_mapCmdStrId.end(); ++it)
 	{
-		if ((*it).second == nID)
+		if ((*it).second.nUID == nID)
 			return (*it).first;
 	}
 
@@ -944,6 +1001,7 @@ void CSkinFactory::Close()
 
 	m_mapCmdStrId.clear();
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
+	m_nMenuIDNext = MENU_ID_CUSTOM_BASE;
 
 	CSjvmSkinSystem::CloseScript();
 }

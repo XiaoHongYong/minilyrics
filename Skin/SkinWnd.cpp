@@ -685,6 +685,16 @@ void CSkinWnd::OnKeyUp(UINT nChar, UINT nFlags)
 		pObjFocus->OnKeyUp(nChar, nFlags);
 }
 
+void CSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
+{
+	int	nUID = m_pSkinFactory->GetUIDByMenuID(uID);
+	if (nUID != UID_INVALID)
+		OnCustomCommand(nUID);
+	else
+		CBaseWnd::OnCommand(uID, nNotifyCode);
+
+}
+
 void CSkinWnd::OnChar(UINT nChar)
 {
 	if (m_bIgnoreNextOnCharMsg)

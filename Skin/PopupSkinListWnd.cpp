@@ -44,17 +44,17 @@ void CPopupSkinListWnd::OnSkinLoaded()
 		m_pListCtrl->SelectRangeRow(m_nCurSel, m_nCurSel);
 
 	int		nContentHeight = m_pListCtrl->GetContentHeight();
+	CRect	rcOrg;
+	GetWindowRect(&rcOrg);
+
+	CRect	rcNew = rcOrg;
+	CRect	rcMonitor;
+	GetMonitorRestrictRect(rcOrg, rcMonitor);
 
 	if (m_pListCtrl->m_rcObj.Height() != nContentHeight)
 	{
-		CRect	rcOrg;
-		GetWindowRect(&rcOrg);
-
-		CRect	rcNew = rcOrg;
 		rcNew.bottom = rcNew.bottom - m_pListCtrl->m_rcObj.Height() + nContentHeight;
 
-		CRect	rcMonitor;
-		GetMonitorRestrictRect(rcOrg, rcMonitor);
 		if (rcNew.bottom > rcMonitor.bottom)
 		{
 			rcNew.top -= rcNew.bottom - rcMonitor.bottom;
@@ -62,9 +62,16 @@ void CPopupSkinListWnd::OnSkinLoaded()
 				rcNew.top = rcMonitor.top;
 			rcNew.bottom = rcMonitor.bottom;
 		}
-
-		MoveWindow(rcNew, FALSE);
 	}
+
+	if (rcNew.right > rcMonitor.right)
+	{
+		rcNew.left -= rcNew.right - rcMonitor.right;
+		rcNew.right = rcMonitor.right;
+	}
+
+	if (rcNew != rcOrg)
+		MoveWindow(rcNew, FALSE);
 
 	CPopupSkinWnd::OnSkinLoaded();
 }

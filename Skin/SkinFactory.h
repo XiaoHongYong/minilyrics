@@ -16,7 +16,8 @@ class CSkinFactory;
 typedef struct STRING_ID_MAP
 {
 	const TCHAR		*szId;
-	int				nId;
+	uint16			nId;
+	uint16			nIdMenu;
 	const TCHAR		*szToolTip;
 }STRING_ID_MAP;
 
@@ -147,6 +148,9 @@ public:
 	virtual int GetIDByName(LPCTSTR szId);
 	virtual int GetIDByNameEx(LPCTSTR szId, tstring &strToolTip);
 
+	virtual int GetMenuIDByUID(int nUID);
+	virtual int GetUIDByMenuID(int nMenuID);
+
 	int AllocCustomID();
 
 	tstring GetStringOfID(int nID);
@@ -255,9 +259,20 @@ protected:
 
 	// ID 的字符串与数值的映射表结构定义
 	STRING_ID_MAP				*m_IdMap;
-	typedef map<tstring, int>	MAP_STRID;
+	struct UID_MenuID {
+		uint16		nUID;
+		uint16		nMenuID;
+		UID_MenuID(uint16 nUID, uint16 nMenuID)
+		{
+			this->nUID = nUID;
+			this->nMenuID = nMenuID;
+		}
+		UID_MenuID() { }
+	};
+	typedef map<tstring, UID_MenuID>	MAP_STRID;
 	MAP_STRID					m_mapCmdStrId;
 	int							m_nCustomCmdIDNext;
+	int							m_nMenuIDNext;
 
 	typedef	list<CSkinWnd*>		LIST_SKINWNDS;
 

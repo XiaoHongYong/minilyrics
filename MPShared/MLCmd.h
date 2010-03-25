@@ -13,7 +13,7 @@
 // Command ID of UIObject in SkinWnd:
 enum ML_CUSTOM_COMMAND
 {
-	CMD_UNDEFINE	= SKIN_UIOBJ_ID_UNDEFINE,
+	CMD_UNDEFINE	= UID_INVALID,
 
 	///////////////
 	// ¿Ø¼þµÄÃüÁîID
