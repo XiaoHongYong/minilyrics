@@ -26,12 +26,12 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 			if (Glass.nHideFrameOnLostFocus > 0)
 			{
 				Glass.nHideFrameOnLostFocus = 0;
-				mSkinWnd.setProperty("TranslucencyAlpha", "0");
+				mSkinWnd.setProperty("TranslucencyAlpha", "255");
 			}
 			else
 			{
 				Glass.nHideFrameOnLostFocus = 1;
-				mSkinWnd.setProperty("TranslucencyAlpha", "255");
+				mSkinWnd.setProperty("TranslucencyAlpha", "0");
 			}
 
 			SkinSystem.writeProfileInt("HideFrameOnLostFocus", Glass.nHideFrameOnLostFocus);
@@ -48,9 +48,9 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 		UnitTest.message("onCreate()");
 
 		if (Glass.nHideFrameOnLostFocus > 0)
-			mSkinWnd.setProperty("TranslucencyAlpha", "255");
-		else
 			mSkinWnd.setProperty("TranslucencyAlpha", "0");
+		else
+			mSkinWnd.setProperty("TranslucencyAlpha", "255");
 	}
 
 	public void onDestroy()

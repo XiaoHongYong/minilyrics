@@ -1675,6 +1675,23 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		}
 		return nRet;
 	}
+	else if (cmd.strFunction == _T("get_profile_bool"))
+	{
+		V_Str		vStrParam;
+		StrSplit(cmd.strParam.c_str(), ',', vStrParam);
+		TrimStr(vStrParam);
+
+		if (vStrParam.size() == 0)
+			return ERR_FALSE;
+
+		bool bDefault = true;
+		if (vStrParam.size() > 1)
+			bDefault = IsTRUE(vStrParam[1].c_str());
+		if (g_Profile.GetProfileBool(GetSkinName(), vStrParam[0].c_str(), bDefault))
+			return ERR_OK;
+
+		return ERR_FALSE;
+	}
 //	else if (cmd.strFunction == _T("open_skin_wnd"))
 //		return ActiveOrCreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, cmd.strParam.c_str(), cmd.strParam.c_str());
 
