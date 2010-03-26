@@ -1,0 +1,1593 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_ADV_PREFERENCE      BITMAP                  "Res\\AdvancedPref.bmp"
+IDB_LRC_TYPE            BITMAP                  "Res\\fileType.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU_ID MENU 
+BEGIN
+    POPUP "Skin:)"
+    BEGIN
+        MENUITEM "IDC_SKIN_0",                  IDC_SKIN_0
+        MENUITEM "IDC_SKIN_1",                  IDC_SKIN_1
+        MENUITEM "IDC_SKIN_2",                  IDC_SKIN_2
+        MENUITEM "IDC_SKIN_3",                  IDC_SKIN_3
+        MENUITEM "IDC_SKIN_4",                  IDC_SKIN_4
+        MENUITEM "IDC_SKIN_5",                  IDC_SKIN_5
+        MENUITEM "IDC_SKIN_6",                  IDC_SKIN_6
+        MENUITEM "IDC_SKIN_7",                  IDC_SKIN_7
+        MENUITEM "IDC_SKIN_8",                  IDC_SKIN_8
+        MENUITEM "IDC_SKIN_9",                  IDC_SKIN_9
+        MENUITEM "IDC_SKIN_10",                 IDC_SKIN_10
+        MENUITEM "IDC_SKIN_11",                 IDC_SKIN_11
+        MENUITEM "IDC_SKIN_12",                 IDC_SKIN_12
+        MENUITEM "IDC_SKIN_13",                 IDC_SKIN_13
+        MENUITEM "IDC_SKIN_14",                 IDC_SKIN_14
+        MENUITEM "IDC_SKIN_15",                 IDC_SKIN_15
+        MENUITEM "IDC_SKIN_16",                 IDC_SKIN_16
+        MENUITEM "IDC_SKIN_17",                 IDC_SKIN_17
+        MENUITEM "IDC_SKIN_18",                 IDC_SKIN_18
+        MENUITEM "IDC_SKIN_19",                 IDC_SKIN_19
+        MENUITEM "IDC_SKIN_20",                 IDC_SKIN_20
+        MENUITEM "IDC_SKIN_MAX",                IDC_SKIN_MAX
+    END
+    POPUP "Theme:)"
+    BEGIN
+        MENUITEM "THEME0",                      IDC_THEME0
+        MENUITEM "THEME1",                      IDC_THEME1
+        MENUITEM "THEME1",                      IDC_THEME2
+        MENUITEM "THEME1",                      IDC_THEME3
+        MENUITEM "THEME1",                      IDC_THEME4
+        MENUITEM "THEME1",                      IDC_THEME5
+        MENUITEM "THEME1",                      IDC_THEME6
+        MENUITEM "THEME1",                      IDC_THEME7
+        MENUITEM "THEME1",                      IDC_THEME8
+        MENUITEM "THEME1",                      IDC_THEME9
+        MENUITEM "THEME1",                      IDC_THEME10
+        MENUITEM "THEME1",                      IDC_THEME11
+        MENUITEM "THEME1",                      IDC_THEME12
+        MENUITEM "THEME1",                      IDC_THEME13
+        MENUITEM "THEME1",                      IDC_THEME14
+        MENUITEM "THEME1",                      IDC_THEME15
+        MENUITEM "THEME1",                      IDC_THEME16
+        MENUITEM "THEME1",                      IDC_THEME17
+        MENUITEM "THEME1",                      IDC_THEME18
+        MENUITEM "THEME1",                      IDC_THEME19
+        MENUITEM "THEME1",                      IDC_THEME20
+        MENUITEM "THEME1",                      IDC_THEME21
+    END
+    POPUP "Remain"
+    BEGIN
+        MENUITEM "Play",                        IDC_PLAY
+        MENUITEM "Pause",                       IDC_PAUSE
+    END
+END
+
+IDM_MENU MENU 
+BEGIN
+    POPUP "normal"
+    BEGIN
+        MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
+        POPUP "&Lyrics"
+        BEGIN
+            MENUITEM "Ra&te this Lyrics...",        IDC_RATE_LYRICS
+            MENUITEM SEPARATOR
+            MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
+            MENUITEM SEPARATOR
+            MENUITEM "Load Lyrics From Mp&3",       IDC_LOAD_LYRICS_FROM_MP3
+            MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
+            MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
+            MENUITEM SEPARATOR
+            MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
+            MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
+            MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
+            MENUITEM SEPARATOR
+            POPUP "&Upload Lyrics..."
+            BEGIN
+                MENUITEM "&Upload Lyrics...",           IDC_UPLOAD_LYRICS
+                MENUITEM "Sign &in...",                 IDC_LOGIN
+                MENUITEM "Sign in Via &Web Browser...", IDC_LOGIN_VIA_IE
+                MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
+            END
+            MENUITEM SEPARATOR
+            POPUP "&Character Encoding"
+            BEGIN
+                MENUITEM "&Default",                    IDC_ENC_DEFAULT
+                MENUITEM SEPARATOR
+                MENUITEM "Arabic",                      IDC_ENC_ARABIC
+                MENUITEM SEPARATOR
+                MENUITEM "Baltic",                      IDC_ENC_BALTIC
+                MENUITEM SEPARATOR
+                MENUITEM "Cyrillic",                    IDC_ENC_CYRILLIC
+                MENUITEM SEPARATOR
+                MENUITEM "Central European",            IDC_ENC_CENTRAL_EUROPE
+                MENUITEM SEPARATOR
+                MENUITEM "Western European",            IDC_ENC_WEST_EUROPE
+                MENUITEM SEPARATOR
+                MENUITEM "Greek",                       IDC_ENC_GREEK
+                MENUITEM SEPARATOR
+                MENUITEM "Hebrew",                      IDC_ENC_HEBREW
+                MENUITEM SEPARATOR
+                MENUITEM "&Japanese",                   IDC_ENC_JAPANESE
+                MENUITEM SEPARATOR
+                MENUITEM "&Korean",                     IDC_ENC_KOREAN
+                MENUITEM SEPARATOR
+                MENUITEM "Latin 9 (ISO)",               IDC_ENC_LATIN9_ISO
+                MENUITEM SEPARATOR
+                MENUITEM "&Simplified Chinese (GB)",    IDC_ENC_CHS
+                MENUITEM "&Traditional Chinese (Big5)", IDC_ENC_CHT
+                MENUITEM SEPARATOR
+                MENUITEM "Thai",                        IDC_ENC_THAI
+                MENUITEM SEPARATOR
+                MENUITEM "Turkish",                     IDC_ENC_TURKISH
+                MENUITEM SEPARATOR
+                MENUITEM "&Unicode",                    IDC_ENC_UNICODE
+                MENUITEM "Utf-&8",                      IDC_ENC_UTF8
+                MENUITEM SEPARATOR
+                MENUITEM "Vietnamese",                  IDC_ENC_VIETNAMESE
+            END
+            MENUITEM SEPARATOR
+            MENUITEM "&Edit with External Lyrics Editor\tCtrl+Alt+E", IDC_EXTERNAL_LYR_EDIT
+            MENUITEM SEPARATOR
+            MENUITEM "Cop&y Song File and Lyrics To...\tF12", IDC_COPYTO
+        END
+        MENUITEM SEPARATOR
+        POPUP "S&kins"
+        BEGIN
+            MENUITEM "Winamp's skin",               IDC_WINAMP_SKIN
+            MENUITEM SEPARATOR
+            MENUITEM "INSERT_SKIN_POS",             IDC_SKIN_POS
+            MENUITEM SEPARATOR
+        END
+        POPUP "Display &Options"
+        BEGIN
+            MENUITEM "Dis&play Options...",         IDC_LYR_DISPLAY_OPT
+            MENUITEM "Ad&just Hue...",              IDC_ADJUST_HUE
+            MENUITEM SEPARATOR
+            MENUITEM "Mouse &click through",        IDC_CLICK_THROUGH
+            MENUITEM SEPARATOR
+            MENUITEM "&Vertical Scrolling Style",   IDC_LDS_MULTI_LINE
+            MENUITEM "&Double Line Style",          IDC_LDS_TWO_LINE
+            MENUITEM "Single &Line Style",          IDC_LDS_SINGLE_LINE
+            MENUITEM "&Horizontal Scrolling style", IDC_LDS_HORZ_SCROLL
+            MENUITEM "S&tatic Text Style",          IDC_LDS_STATIC_TXT
+            MENUITEM "Movie S&ubtitle Style",       IDC_LDS_VOBSUB
+            MENUITEM SEPARATOR
+            MENUITEM "&Karaoke",                    IDC_LDO_KARAOKE
+            MENUITEM SEPARATOR
+            MENUITEM "Norma&l",                     IDC_LDO_NORMAL
+            MENUITEM "&Fade in Lyrics",             IDC_LDO_FADE_IN
+            MENUITEM "Fadeout back&ground",         IDC_LDO_FADEOUT_BG
+            MENUITEM SEPARATOR
+            MENUITEM "Ant&ialiasing",               IDC_ANTIAlIAS
+        END
+        MENUITEM "&Preferences...\tCtrl+P",     IDC_PREFERENCE
+        MENUITEM SEPARATOR
+        MENUITEM "&Floating Lyrics...",         IDC_FLOATING_LYRICS
+        MENUITEM "Lyrics &Editor...",           IDC_LYR_EDITOR
+        MENUITEM "INSERT_NEW_MENU_POS",         IDC_NEW_MENU_POS
+        MENUITEM SEPARATOR
+        POPUP "&Help and Support"
+        BEGIN
+            MENUITEM "A&bout $Product$...",         IDC_ABOUT
+            MENUITEM "$Product$ &Help",             IDC_ML_HELP
+            MENUITEM SEPARATOR
+            MENUITEM "&Register...",                IDC_REGISTER
+            MENUITEM SEPARATOR
+            MENUITEM "$Product$ &Website",          IDC_WEBHOME
+            MENUITEM "&Report to Author",           IDC_EMAIL
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Always On &Top\tCtrl+T",      IDC_SETTOPMOST
+        MENUITEM SEPARATOR
+        MENUITEM "&Exit",                       IDC_EXIT
+    END
+    POPUP "Lyrics"
+    BEGIN
+        MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
+        POPUP "&Lyrics"
+        BEGIN
+            MENUITEM "Ra&te this Lyrics...",        IDC_RATE_LYRICS
+            MENUITEM SEPARATOR
+            MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
+            MENUITEM SEPARATOR
+            MENUITEM "Load Lyrics From Mp&3",       IDC_LOAD_LYRICS_FROM_MP3
+            MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
+            MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
+            MENUITEM SEPARATOR
+            MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
+            MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
+            MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
+            MENUITEM SEPARATOR
+            POPUP "&Character Encoding"
+            BEGIN
+                MENUITEM "&Default",                    IDC_ENC_DEFAULT
+                MENUITEM SEPARATOR
+                MENUITEM "Arabic",                      IDC_ENC_ARABIC
+                MENUITEM SEPARATOR
+                MENUITEM "Baltic",                      IDC_ENC_BALTIC
+                MENUITEM SEPARATOR
+                MENUITEM "Cyrillic",                    IDC_ENC_CYRILLIC
+                MENUITEM SEPARATOR
+                MENUITEM "Central European",            IDC_ENC_CENTRAL_EUROPE
+                MENUITEM SEPARATOR
+                MENUITEM "Western European",            IDC_ENC_WEST_EUROPE
+                MENUITEM SEPARATOR
+                MENUITEM "Greek",                       IDC_ENC_GREEK
+                MENUITEM SEPARATOR
+                MENUITEM "Hebrew",                      IDC_ENC_HEBREW
+                MENUITEM SEPARATOR
+                MENUITEM "&Japanese",                   IDC_ENC_JAPANESE
+                MENUITEM SEPARATOR
+                MENUITEM "&Korean",                     IDC_ENC_KOREAN
+                MENUITEM SEPARATOR
+                MENUITEM "Latin 9 (ISO)",               IDC_ENC_LATIN9_ISO
+                MENUITEM SEPARATOR
+                MENUITEM "&Simplified Chinese (GB)",    IDC_ENC_CHS
+                MENUITEM "&Traditional Chinese (Big5)", IDC_ENC_CHT
+                MENUITEM SEPARATOR
+                MENUITEM "Thai",                        IDC_ENC_THAI
+                MENUITEM SEPARATOR
+                MENUITEM "Turkish",                     IDC_ENC_TURKISH
+                MENUITEM SEPARATOR
+                MENUITEM "&Unicode",                    IDC_ENC_UNICODE
+                MENUITEM "Utf-&8",                      IDC_ENC_UTF8
+                MENUITEM SEPARATOR
+                MENUITEM "Vietnamese",                  IDC_ENC_VIETNAMESE
+            END
+            MENUITEM SEPARATOR
+            MENUITEM "&Edit with External Lyrics Editor\tCtrl+Alt+E", IDC_EXTERNAL_LYR_EDIT
+            MENUITEM SEPARATOR
+            MENUITEM "Cop&y Song File and Lyrics To...\tF12", IDC_COPYTO
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Dis&play Options...",         IDC_LYR_DISPLAY_OPT
+        MENUITEM SEPARATOR
+        MENUITEM "Mouse &click through",        IDC_CLICK_THROUGH
+        MENUITEM SEPARATOR
+        MENUITEM "Norma&l",                     IDC_LDO_NORMAL
+        MENUITEM "&Fade in Lyrics",             IDC_LDO_FADE_IN
+        MENUITEM "Fadeout back&ground",         IDC_LDO_FADEOUT_BG
+        MENUITEM SEPARATOR
+        MENUITEM "Always On &Top\tCtrl+T",      IDC_SETTOPMOST
+        MENUITEM SEPARATOR
+        MENUITEM "A&bout $Product$...",         IDC_ABOUT
+        MENUITEM SEPARATOR
+        MENUITEM "&Close",                      IDC_CLOSE
+    END
+    POPUP "Lyrics Editor"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               IDC_EDIT_UNDO
+        MENUITEM "&Redo\tCtrl+Y",               IDC_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                IDC_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               IDC_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              IDC_EDIT_PASTE
+        MENUITEM "&Delete\tDel",                IDC_EDIT_DELETE
+    END
+END
+
+IDR_MENU_OPEN_LRC_DLG MENU 
+BEGIN
+    POPUP "M"
+    BEGIN
+        MENUITEM "&Browse File...",             IDC_BROWSE
+        MENUITEM "&No suitable lyrics for the song file", IDC_NOT_MATCH
+        MENUITEM "&Edit with External Lyrics Editor", IDC_EXTERNAL_LYR_EDIT
+        MENUITEM SEPARATOR
+        MENUITEM "&Delete File",                IDC_DEL_FILE
+        MENUITEM "&Rename File",                IDC_RENAME
+        MENUITEM SEPARATOR
+        MENUITEM "Don't &Pop up This Window Automatically", IDC_NO_PROMPT
+    END
+END
+
+IDR_MENU_ALBUMART MENU 
+BEGIN
+    POPUP "Album art"
+    BEGIN
+        MENUITEM "Browse Album Art...",         IDC_BR_ALBUM_ART
+    END
+END
+
+IDM_MOUSE_CLICK_THROUGH MENU 
+BEGIN
+    POPUP "click through"
+    BEGIN
+        MENUITEM "Mouse &click through",        IDC_CLICK_THROUGH, CHECKED
+    END
+END
+
+IDM_LYR_EDITOR MENU 
+BEGIN
+    POPUP "&File"
+    BEGIN
+        POPUP "&Upload Lyrics..."
+        BEGIN
+            MENUITEM "&Upload Lyrics...",           IDC_UPLOAD_LYRICS
+            MENUITEM "Sign &in...",                 IDC_LOGIN
+            MENUITEM "Sign in Via &Web Browser...", IDC_LOGIN_VIA_IE
+            MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
+        MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
+        MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
+        MENUITEM SEPARATOR
+        MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
+        MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
+        MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
+        MENUITEM SEPARATOR
+        POPUP "&Character Encoding"
+        BEGIN
+            MENUITEM "&Default",                    IDC_ENC_DEFAULT
+            MENUITEM SEPARATOR
+            MENUITEM "Arabic",                      IDC_ENC_ARABIC
+            MENUITEM SEPARATOR
+            MENUITEM "Baltic",                      IDC_ENC_BALTIC
+            MENUITEM SEPARATOR
+            MENUITEM "Cyrillic",                    IDC_ENC_CYRILLIC
+            MENUITEM SEPARATOR
+            MENUITEM "Central European",            IDC_ENC_CENTRAL_EUROPE
+            MENUITEM SEPARATOR
+            MENUITEM "Western European",            IDC_ENC_WEST_EUROPE
+            MENUITEM SEPARATOR
+            MENUITEM "Greek",                       IDC_ENC_GREEK
+            MENUITEM SEPARATOR
+            MENUITEM "Hebrew",                      IDC_ENC_HEBREW
+            MENUITEM SEPARATOR
+            MENUITEM "&Japanese",                   IDC_ENC_JAPANESE
+            MENUITEM SEPARATOR
+            MENUITEM "&Korean",                     IDC_ENC_KOREAN
+            MENUITEM SEPARATOR
+            MENUITEM "Latin 9 (ISO)",               IDC_ENC_LATIN9_ISO
+            MENUITEM SEPARATOR
+            MENUITEM "&Simplified Chinese (GB)",    IDC_ENC_CHS
+            MENUITEM "&Traditional Chinese (Big5)", IDC_ENC_CHT
+            MENUITEM SEPARATOR
+            MENUITEM "Thai",                        IDC_ENC_THAI
+            MENUITEM SEPARATOR
+            MENUITEM "Turkish",                     IDC_ENC_TURKISH
+            MENUITEM SEPARATOR
+            MENUITEM "&Unicode",                    IDC_ENC_UNICODE
+            MENUITEM "Utf-&8",                      IDC_ENC_UTF8
+            MENUITEM SEPARATOR
+            MENUITEM "Vietnamese",                  IDC_ENC_VIETNAMESE
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Close",                      IDC_CLOSE
+    END
+    POPUP "&Play"
+    BEGIN
+        MENUITEM "&Play/Pause",                 IDC_PLAYPAUSE
+        MENUITEM "&Stop",                       IDC_STOP
+        MENUITEM SEPARATOR
+        MENUITEM "Pr&evious",                   IDC_PREV
+        MENUITEM "&Next",                       IDC_NEXT
+        MENUITEM SEPARATOR
+        MENUITEM "&Backward 2 Seconds\tCtrl+Page up", IDC_BACKWARD2SEC
+        MENUITEM "&Forward 2 Seconds\tCtrl+Page down", IDC_FORWARD2SEC
+        MENUITEM "Jump to current line\tCtrl+J", IDC_JUMP_TO_CURRENT_LINE
+    END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "&Undo\tCtrl+Z",               IDC_EDIT_UNDO
+        MENUITEM "&Redo\tCtrl+Y",               IDC_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t\tCtrl+X",                IDC_EDIT_CUT
+        MENUITEM "&Copy\tCtrl+C",               IDC_EDIT_COPY
+        MENUITEM "&Paste\tCtrl+V",              IDC_EDIT_PASTE
+        MENUITEM "&Delete\tDel",                IDC_EDIT_DELETE
+        MENUITEM SEPARATOR
+        MENUITEM "&Find...\tCtrl+F",            IDC_EDIT_FIND
+        MENUITEM "&Replace...\tCtrl+H",         IDC_EDIT_REPLACE
+    END
+    POPUP "&Lyrics"
+    BEGIN
+        MENUITEM "Synchronize the current line and move to next line\tF7", IDC_INSERT_TAG_AND_MOVE_DOWN
+        MENUITEM "Synchronize the current line\tCtrl+F7", IDC_INSERT_TAG
+        MENUITEM SEPARATOR
+        MENUITEM "Auto fill artist, album and title info", IDC_AUTO_FILL_LYRICS_INFO
+        MENUITEM SEPARATOR
+        MENUITEM "Forward the timestamp of this line 0.2s\tCtrl+'+'", IDC_FORWARD_CUR_LINE
+        MENUITEM "Backward the timestamp of this line 0.2s\tCtrl+'-'", IDC_BACKWARD_CUR_LINE
+        MENUITEM SEPARATOR
+        MENUITEM "Forward the remaining lyrics 0.2s", IDC_FORWARD_REMAIN_LINES
+        MENUITEM "Backward the remaining lyrics 0.2s", IDC_BACKWARD_REMAIN_LINES
+        MENUITEM SEPARATOR
+        MENUITEM "Trim Leading and Trailing Whitespace of All Lines", IDC_TRIM_SPACE
+        MENUITEM "Remove All Timestamps",       IDC_REMOVE_ALL_TAG
+        MENUITEM "Remove All Blank Lines",      IDC_REMOVE_BLANK_LINE
+        MENUITEM "Remove All Unsynchronized Lines", IDC_REMOVE_UNSYNC_LINE
+        MENUITEM SEPARATOR
+        MENUITEM "Capitalize the Leading Letter of All Lines", IDC_CAPITALIZE_LEADING_LETTER
+        MENUITEM "Convert All Lyrics Characters to Lower Case", IDC_TO_LOWER_CASE
+    END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "&Tag Color...",               IDC_TAG_COLOR
+        MENUITEM "&Background Color of Edited Line...", IDC_EDIT_LINE_COLOR
+        MENUITEM SEPARATOR
+        MENUITEM "&Preferences...",             IDC_LYR_DISPLAY_OPT
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "A&bout $Product$...",         IDC_ABOUT
+        MENUITEM "$Product$ &Help",             IDC_ML_HELP
+        MENUITEM SEPARATOR
+        MENUITEM "$Product$ &Website",          IDC_WEBHOME
+        MENUITEM "&Report to Author",           IDC_EMAIL
+    END
+END
+
+IDM_MAIN_WND MENU 
+BEGIN
+    POPUP "&Lyrics"
+    BEGIN
+        MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
+        MENUITEM SEPARATOR
+        MENUITEM "Ra&te this Lyrics...",        IDC_RATE_LYRICS
+        MENUITEM SEPARATOR
+        MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
+        MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
+        MENUITEM SEPARATOR
+        MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
+        MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
+        MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
+        MENUITEM SEPARATOR
+        POPUP "&Character Encoding"
+        BEGIN
+            MENUITEM "&Default",                    IDC_ENC_DEFAULT
+            MENUITEM SEPARATOR
+            MENUITEM "Arabic",                      IDC_ENC_ARABIC
+            MENUITEM SEPARATOR
+            MENUITEM "Baltic",                      IDC_ENC_BALTIC
+            MENUITEM SEPARATOR
+            MENUITEM "Cyrillic",                    IDC_ENC_CYRILLIC
+            MENUITEM SEPARATOR
+            MENUITEM "Central European",            IDC_ENC_CENTRAL_EUROPE
+            MENUITEM SEPARATOR
+            MENUITEM "Western European",            IDC_ENC_WEST_EUROPE
+            MENUITEM SEPARATOR
+            MENUITEM "Greek",                       IDC_ENC_GREEK
+            MENUITEM SEPARATOR
+            MENUITEM "Hebrew",                      IDC_ENC_HEBREW
+            MENUITEM SEPARATOR
+            MENUITEM "&Japanese",                   IDC_ENC_JAPANESE
+            MENUITEM SEPARATOR
+            MENUITEM "&Korean",                     IDC_ENC_KOREAN
+            MENUITEM SEPARATOR
+            MENUITEM "Latin 9 (ISO)",               IDC_ENC_LATIN9_ISO
+            MENUITEM SEPARATOR
+            MENUITEM "&Simplified Chinese (GB)",    IDC_ENC_CHS
+            MENUITEM "&Traditional Chinese (Big5)", IDC_ENC_CHT
+            MENUITEM SEPARATOR
+            MENUITEM "Thai",                        IDC_ENC_THAI
+            MENUITEM SEPARATOR
+            MENUITEM "Turkish",                     IDC_ENC_TURKISH
+            MENUITEM SEPARATOR
+            MENUITEM "&Unicode",                    IDC_ENC_UNICODE
+            MENUITEM "Utf-&8",                      IDC_ENC_UTF8
+            MENUITEM SEPARATOR
+            MENUITEM "Vietnamese",                  IDC_ENC_VIETNAMESE
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Edit with External Lyrics Editor\tCtrl+Alt+E", IDC_EXTERNAL_LYR_EDIT
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "Lyrics &Editor...",           IDC_LYR_EDITOR
+        MENUITEM "&Floating Lyrics...",         IDC_FLOATING_LYRICS
+        MENUITEM "&Preferences...\tCtrl+P",     IDC_PREFERENCE
+        MENUITEM "INSERT_NEW_MENU_POS",         IDC_NEW_MENU_POS
+        MENUITEM SEPARATOR
+        MENUITEM "Ad&just Hue...",              IDC_ADJUST_HUE
+        MENUITEM SEPARATOR
+        MENUITEM "&Vertical Scrolling Style",   IDC_LDS_MULTI_LINE
+        MENUITEM "S&tatic Text Style",          IDC_LDS_STATIC_TXT
+        MENUITEM SEPARATOR
+        MENUITEM "Mouse &click through",        IDC_CLICK_THROUGH
+        MENUITEM "Always On &Top\tCtrl+T",      IDC_SETTOPMOST
+    END
+    POPUP "S&kins"
+    BEGIN
+        MENUITEM "Winamp's skin",               IDC_WINAMP_SKIN
+        MENUITEM SEPARATOR
+        MENUITEM "INSERT_SKIN_POS",             IDC_SKIN_POS
+        MENUITEM SEPARATOR
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "A&bout $Product$...",         IDC_ABOUT
+        MENUITEM "$Product$ &Help",             IDC_ML_HELP
+        MENUITEM SEPARATOR
+        MENUITEM "&Register...",                IDC_REGISTER
+        MENUITEM SEPARATOR
+        MENUITEM "$Product$ &Website",          IDC_WEBHOME
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_MPLAYER             ICON                    "res\\mplayer.ico"
+IDI_SAVE                ICON                    "res\\save.ico"
+IDI_PLAY                ICON                    "Res\\play.ICO"
+IDI_STOP                ICON                    "Res\\stop.ICO"
+IDI_OPEN                ICON                    "Res\\open.ICO"
+IDI_PREV                ICON                    "Res\\prev.ico"
+IDI_NEXT                ICON                    "Res\\next.ICO"
+IDI_CRASH               ICON                    "Res\\applicat.ico"
+IDI_DRAGAFTER           ICON                    "Res\\dragafte.ico"
+IDI_DRAGBEFORE          ICON                    "Res\\dragbefo.ico"
+IDI_F_TXT               ICON                    "res\\icon-tga.ico"
+IDI_F_LRC               ICON                    "res\\ico00001.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_LOGIN DIALOGEX 0, 0, 227, 119
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Login"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Login Name:",IDC_STATIC,33,39,52,8
+    EDITTEXT        IDC_E_USER,89,37,87,14,ES_AUTOHSCROLL
+    LTEXT           "Password:",IDC_STATIC,33,58,52,8
+    EDITTEXT        IDC_E_PWD,89,56,87,14,ES_PASSWORD | ES_AUTOHSCROLL
+    CONTROL         "Remember password",IDC_C_REMBERPWD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,33,78,118,10
+    DEFPUSHBUTTON   "OK",IDOK,24,98,50,14
+    PUSHBUTTON      "Ignore",IDNO,88,98,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,152,98,50,14
+    LTEXT           "Please login, so you could manage the uploaded lyrics.",IDC_STATIC,19,21,201,8
+    LTEXT           "Thank you for uploading lyrics.",IDC_STATIC,19,7,97,8
+    PUSHBUTTON      "Sign up Free",IDC_APPLY_ACCOUNT,153,78,50,14
+END
+
+IDD_UPLOAD_LRC DIALOG  0, 0, 420, 239
+STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Upload Lyrics"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    PUSHBUTTON      "Browse",IDC_BROWSE,310,7,50,14
+    PUSHBUTTON      "Refresh",IDC_REFRESH,363,7,50,14
+    CONTROL         "List1",IDC_LIST_FILES,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,26,406,122
+    LTEXT           "File Name:",IDC_S_FILENAME,7,155,51,8
+    EDITTEXT        IDC_E_FILENAME,62,153,351,14,ES_AUTOHSCROLL
+    LTEXT           "Artist:",IDC_S_ARTIST,7,174,32,8
+    EDITTEXT        IDC_E_ARTIST,62,171,151,14,ES_AUTOHSCROLL
+    LTEXT           "Title:",IDC_S_TITLE,221,174,29,8
+    EDITTEXT        IDC_E_TITLE,262,171,151,14,ES_AUTOHSCROLL
+    LTEXT           "Album (Optional):",IDC_S_ALBUM,7,193,53,8
+    EDITTEXT        IDC_E_ALBUM,62,190,151,14,ES_AUTOHSCROLL
+    LTEXT           "Comment:",IDC_S_COMMENT,221,193,39,8,NOT WS_VISIBLE
+    EDITTEXT        IDC_E_COMMENT,262,190,151,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
+    DEFPUSHBUTTON   "Upload",IDC_UPLOAD,95,218,50,14
+    PUSHBUTTON      "Help",IDC_MLHELP,155,218,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,275,218,50,14
+    LTEXT           "Directory:",IDC_STATIC,7,9,55,8
+    EDITTEXT        IDC_E_DIR,70,7,236,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "Edit",IDC_EDIT,215,218,50,14
+END
+
+IDD_UPLOAD_EXIST DIALOG  0, 0, 351, 151
+STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "$Product$"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "The lyrics exists on the server, your upload action doesn't take effect.",IDC_STATIC,8,10,296,8
+    LTEXT           "Existed lyrics on the server:",IDC_STATIC,7,23,114,8
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,36,337,87
+    DEFPUSHBUTTON   "OK",IDOK,147,130,50,14
+END
+
+IDD_MLSTART DIALOG  0, 0, 243, 191
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Restart $Product$"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,61,229,103
+    DEFPUSHBUTTON   "OK",IDOK,60,170,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,138,170,50,14
+    LTEXT           "If $Product$ was closed, please choose one of the listed items, and click OK to start $Product$.",IDC_STATIC,7,34,229,22
+    LTEXT           "If no items are listed below, please run your player, and $Product$ window should show up automatically.",IDC_STATIC,7,7,229,22
+END
+
+IDD_TAGINFO DIALOGEX 0, 0, 257, 134
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Edit lyrics' information"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Title:",IDC_STATIC,7,9,40,8
+    EDITTEXT        IDC_E_TITLE,87,7,163,14,ES_AUTOHSCROLL
+    LTEXT           "Artist:",IDC_STATIC,7,28,40,8
+    EDITTEXT        IDC_E_ARTIST,87,26,163,14,ES_AUTOHSCROLL
+    LTEXT           "Album:",IDC_STATIC,7,49,40,8
+    EDITTEXT        IDC_E_ALBUM,87,46,163,14,ES_AUTOHSCROLL
+    LTEXT           "Edited by:",IDC_STATIC,7,70,67,8
+    EDITTEXT        IDC_E_EDITBY,87,67,163,14,ES_AUTOHSCROLL
+    LTEXT           "character encoding:",IDC_STATIC,7,89,76,8,NOT WS_VISIBLE
+    COMBOBOX        IDC_CB_ENCODING,87,87,163,150,CBS_DROPDOWNLIST | CBS_SORT | NOT WS_VISIBLE | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Delay time (ms):",IDC_STATIC,7,88,68,8
+    EDITTEXT        IDC_E_OFFSET,87,87,163,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,70,110,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,138,110,50,14
+END
+
+IDD_INET_TEST DIALOG  0, 0, 293, 215
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Internet Connection Test"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Log:",-1,7,9,41,8
+    EDITTEXT        IDC_E_LOG,7,22,279,163,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
+    PUSHBUTTON      "Copy To Clipboard",IDC_COPYTOCLIPBOARD,57,194,81,14
+    PUSHBUTTON      "Report Bug?",IDC_REPORT,156,194,81,14
+END
+
+IDD_COPYSONGLYRICS DIALOG  0, 0, 279, 111
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Copy song file and lyrics to..."
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Source file:",IDC_STATIC,7,11,49,8
+    EDITTEXT        IDC_E_SRC,70,9,202,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Target folder:",IDC_STATIC,7,30,51,8
+    EDITTEXT        IDC_E_TARGET,70,28,187,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "...",IDC_BROWSE,260,28,12,14
+    CONTROL         "copy lyrics",IDC_C_COPYLYRICS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,49,113,10
+    CONTROL         "rename lyrics as the same name as the song",IDC_C_RENAMELYRICS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,68,251,10
+    DEFPUSHBUTTON   "OK",IDOK,75,90,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,154,90,50,14
+END
+
+IDD_EMBEDDED_LRC_SEL DIALOGEX 0, 0, 340, 118
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Load the embedded lyrics in the song file"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Embedded lyrics in the song file:",-1,7,10,215,8
+    CONTROL         "List1",IDC_LYRICS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,23,326,66,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "OK",IDOK,74,97,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,145,97,50,14
+    PUSHBUTTON      "Help",IDC_MLHELP,216,97,50,14
+END
+
+IDD_EMBEDDED_LRC_SAVE DIALOGEX 0, 0, 340, 116
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Save the lyrics into the song file"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Embedded lyrics in the song file:",-1,7,10,215,8
+    CONTROL         "List1",IDC_LYRICS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,23,326,66,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "OK",IDOK,73,95,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,144,95,50,14
+    PUSHBUTTON      "Help",IDC_MLHELP,215,95,50,14
+END
+
+IDD_EMBEDDED_LRC_REMOVE DIALOGEX 0, 0, 340, 116
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Remove embedded lyrics in the song file"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Embedded lyrics in the song file:",-1,7,10,215,8
+    CONTROL         "List1",IDC_LYRICS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,23,326,66,WS_EX_CLIENTEDGE
+    DEFPUSHBUTTON   "OK",IDOK,73,95,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,144,95,50,14
+    PUSHBUTTON      "Help",IDC_MLHELP,215,95,50,14
+END
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 225, 206
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About $Product$"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CTEXT           "ML Ver",IDC_VERSION,35,24,154,8
+    LTEXT           "Debug",IDC_DEBUG_VER,194,16,24,8,NOT WS_VISIBLE
+    PUSHBUTTON      "Copyright 2001-2010 Crintsoft $Product$",IDC_WEB_HOME,28,46,163,14
+    PUSHBUTTON      "Submit bugs && Forum",IDC_FORUM,7,7,121,14,NOT WS_VISIBLE
+    PUSHBUTTON      "support@crintsoft.com",IDC_TECHSUPPORT,51,73,121,14
+    LTEXT           "This Product is licensed to:",IDC_S_LICENSE_TO,52,98,164,8
+    EDITTEXT        IDC_NAME,52,111,96,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Registration Code:",IDC_S_REGCODE,53,130,160,8
+    EDITTEXT        IDC_REGISTRATION_CODE,52,144,96,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "&Buy Now",IDC_PURCHASEINFO,39,168,57,14
+    DEFPUSHBUTTON   "&Enter code",IDC_ENTERCODE,127,168,57,14
+    CTEXT           "* * *  UNREGISTERED, TRIAL VERSION  * * *",IDC_UN_REG,9,131,204,8
+END
+
+IDD_PAGE_SKIN DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Skins",IDC_STATIC,0,0,269,254
+    LISTBOX         IDC_SKIN_LIST,6,21,256,148,LBS_SORT | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_HSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_SKIN_COMMENT,4,187,256,46,ES_MULTILINE | ES_READONLY | WS_VSCROLL
+    CONTROL         "Get more skins",IDC_MORE_SKINS,"Button",BS_OWNERDRAW | BS_CENTER | BS_VCENTER,179,238,83,10
+    LTEXT           "Current skin information:",IDC_STATIC,7,172,144,8
+    LTEXT           "Installed skins:",IDC_STATIC,7,9,144,8
+END
+
+IDD_PAGE_STARTUP DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "Check for new versions at startup",IDC_C_CHECK_NEW_VERSION,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,16,241,10
+    GROUPBOX        "Startup",IDC_STATIC,0,0,270,254
+    GROUPBOX        "Run MiniLyrics When Players run",IDC_STATIC,5,35,258,198
+    CONTROL         "Winamp2",IDC_WINAMP2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,47,121,10
+    CONTROL         "Silverjuke",IDC_SILVERJUKE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,47,108,11
+    CONTROL         "Winamp5",IDC_WINAMP5,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,62,121,10
+    CONTROL         "MediaMonkey",IDC_MEDIAMONKEY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,62,108,11
+    CONTROL         "Windows media player 9.0, 10.0",IDC_WMP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,77,121,10
+    CONTROL         "KMPlayer",IDC_KMPLAYER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,77,108,11
+    CONTROL         "Foobar2000",IDC_FOOBAR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,92,121,10
+    CONTROL         "JetAudio",IDC_JETAUDIO,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,92,108,11
+    CONTROL         "RealPlayer",IDC_REALONE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,107,121,11
+    CONTROL         "Yahoo! Music Jukebox",IDC_YME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,108,108,11
+    CONTROL         "QCD Player",IDC_QCD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,123,121,11
+    CONTROL         "Bsplayer",IDC_BSPLAYER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,123,108,11
+    CONTROL         "iTunes",IDC_ITUNES,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,139,121,11
+    CONTROL         "XMPlay",IDC_XMPLAY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,139,121,11
+    CONTROL         "AIMP2",IDC_AIMP2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,153,121,11
+    CONTROL         "VLC Media Player",IDC_VLC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,140,153,121,11
+    CONTROL         "J. River Media Jukebox && Media Center",IDC_MEDIAJUKEBOX,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,168,227,11
+    LTEXT           "Run setup program to install the plugin to support these players.",IDC_STATIC,13,198,243,26
+END
+
+IDD_PAGE_LYR_DOWNLOAD DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Lyrics Download",IDC_STATIC,0,0,270,254
+    GROUPBOX        "Save downloaded lyrics in:",IDC_STATIC,5,14,259,103
+    CONTROL         "&Save lyrics in the song's directory",IDC_DOWNLOAD_LYRICS_IN_SONG_DIRECOTRY,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP,9,28,209,10
+    CONTROL         "&Save lyrics in:",IDC_DL_SAVE_IN_DIR,"Button",BS_AUTORADIOBUTTON,9,43,77,10
+    PUSHBUTTON      "Choose the directory",IDC_DOWN_DIR,120,41,139,14
+    CONTROL         "&Save lyrics in mp3 file",IDC_DL_SAVE_TO_MP3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,58,200,10
+    CONTROL         "ID3v2 synchronized Lyrics (Support Windows Media player)",IDC_EMBEDDED_ID3V2_SYLT,
+                    "Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,25,74,237,10
+    CONTROL         "ID3v2 unsynchronized Lyrics (Support iTunes, WMP)",IDC_EMBEDDED_ID3V2_USLT,
+                    "Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,25,87,216,10
+    CONTROL         "Lyrics3v2 lyrics (Few players support this format)",IDC_EMBEDDED_LYRICS3V2,
+                    "Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,25,100,216,10
+    GROUPBOX        "Rename the downloaded lyrics file name",IDC_STATIC,5,124,259,45
+    CONTROL         "Keep the file name",IDC_DL_KEEP_NAME,"Button",BS_AUTORADIOBUTTON | WS_GROUP,9,137,210,10
+    CONTROL         "As the same name as the song",IDC_DL_SAVE_AS_SONG_NAME,
+                    "Button",BS_AUTORADIOBUTTON,9,151,210,10
+END
+
+IDD_PREFERENCE DIALOGEX 0, 0, 412, 270
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "$Product$ Preferences"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_POS_PAGE,"Static",SS_BLACKRECT | NOT WS_VISIBLE,136,7,270,258
+    DEFPUSHBUTTON   "Close",IDOK,6,252,125,13
+    CONTROL         "Tree1",IDC_TVPAGES,"SysTreeView32",TVS_HASLINES | TVS_DISABLEDRAGDROP | TVS_SHOWSELALWAYS | TVS_TRACKSELECT | WS_BORDER | WS_TABSTOP,5,7,125,239
+END
+
+IDD_SURE_SAVE DIALOGEX 0, 0, 268, 85
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Confirm to save the lyrics file"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Yes",IDYES,100,64,50,14
+    PUSHBUTTON      "No",IDNO,155,64,50,14
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,210,64,50,14
+    LTEXT           "The lyrics have changed.",IDC_S_MSG,37,8,205,20,SS_NOPREFIX
+    LTEXT           "Do you want to save the changes?",IDC_STATIC,37,33,205,8
+    CONTROL         "Use as default setting, don't prompt any more",IDC_NO_PROMPT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,48,196,10
+    ICON            IDI_SAVE,IDC_STATIC,7,9,20,20
+END
+
+IDD_REGISTRATION DIALOG  0, 0, 250, 142
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Registration"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Enter the following information exactly as what are shown in your received registration message.",IDC_STATIC,21,9,216,19
+    LTEXT           "Name:",IDC_STATIC,29,37,79,8
+    EDITTEXT        IDC_NAME,114,34,108,14,ES_AUTOHSCROLL
+    LTEXT           "Registration Code:",IDC_STATIC,29,58,73,8
+    EDITTEXT        IDC_REGISTRATION_CODE,114,55,108,14,ES_UPPERCASE | ES_AUTOHSCROLL
+    LTEXT           "If you have not registered yet, please visit our website to register.",IDC_STATIC,21,77,205,18
+    CONTROL         "www.viewlyrics.com",IDC_REGISTER_WEB,"Button",BS_OWNERDRAW | WS_TABSTOP,11,100,99,14
+    CONTROL         "support@crintsoft.com",IDC_TECHSUPPORT,"Button",BS_OWNERDRAW | WS_TABSTOP,143,100,96,14
+    DEFPUSHBUTTON   "OK",IDOK,61,121,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,145,121,50,14
+END
+
+IDD_REGISTER_NOTICE DIALOG  0, 0, 246, 156
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "$Product$ (Evaluation Version)"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CTEXT           "Thank you for choosing $Product$",IDC_STATIC,49,10,148,8
+    DEFPUSHBUTTON   "&Buy Now",IDC_PURCHASEINFO,19,135,58,14
+    PUSHBUTTON      "&Enter code",IDOK,94,135,58,14
+    PUSHBUTTON      "&Close",IDCANCEL,169,135,58,14
+    LTEXT           "We hope you do buy it, but of course it is free for you to try $Product$ before you buy.",IDC_STATIC,7,28,232,29
+    LTEXT           "$Product$ does NOT contain any advertising systems or ""adware"" or ""spyware"" or any ""tag-along"" extra software in its installer.",IDC_STATIC,7,61,232,34
+    LTEXT           "We only make money by selling $Product$ to real people like you.  If you like and use $Product$, please do buy it.",IDC_STATIC,7,98,232,31
+END
+
+IDD_NEW_VERSION_PROMPT DIALOGEX 0, 0, 281, 187
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "New version notice"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    DEFPUSHBUTTON   "&Visit website",IDC_VISITWEB,68,166,60,14
+    PUSHBUTTON      "&Close",IDCANCEL,152,166,60,14
+    CTEXT           "New Version Notice",IDC_STATIC,66,6,117,8
+    EDITTEXT        IDC_NEW_VERSION,7,24,267,133,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_NOHIDESEL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
+END
+
+IDD_PAGE_INTERNET DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Internet",IDC_STATIC,0,0,270,255
+    GROUPBOX        "HTTP proxy",IDC_STATIC,6,14,258,124
+    PUSHBUTTON      "Load Setting From IE",IDC_LOAD_IE_PROXY,13,25,166,14
+    CONTROL         "No proxy",IDC_PROXY_NONE,"Button",BS_AUTORADIOBUTTON | WS_GROUP,12,44,206,10
+    CONTROL         "Use proxy",IDC_PROXY_OURS,"Button",BS_AUTORADIOBUTTON,12,58,206,10
+    LTEXT           "Address:",IDC_STATIC,14,76,36,8
+    EDITTEXT        IDC_HTTP_PROXY,54,73,126,14,ES_AUTOHSCROLL
+    LTEXT           "Port:",IDC_STATIC,188,76,22,8
+    EDITTEXT        IDC_E_PORT,215,73,40,14,ES_AUTOHSCROLL
+    LTEXT           "Proxy user name:",IDC_STATIC,14,98,66,8
+    EDITTEXT        IDC_USER,91,97,164,14,ES_AUTOHSCROLL
+    LTEXT           "Proxy password:",IDC_STATIC,14,118,67,8
+    EDITTEXT        IDC_PASS,91,116,164,14,ES_PASSWORD | ES_AUTOHSCROLL
+    PUSHBUTTON      "Test Connection",IDC_TEST,11,143,82,14
+END
+
+IDD_PAGE_TRAYICON DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Show $Product$ in",IDC_STATIC,6,16,256,62
+    CONTROL         "&Taskbar only",IDC_SHOW_TASKBAR,"Button",BS_AUTORADIOBUTTON | WS_GROUP,16,31,133,10
+    CONTROL         "S&ystem tray only",IDC_SHOW_SYSTRAY,"Button",BS_AUTORADIOBUTTON,16,46,130,10
+    CONTROL         "T&askbar and system tray",IDC_SHOW_BOTH_BAR_TRAY,"Button",BS_AUTORADIOBUTTON,16,61,137,10
+    GROUPBOX        "System tray icon player control",IDC_STATIC,6,85,256,91
+    GROUPBOX        "Tray Icons",IDC_STATIC,0,0,270,255
+    CONTROL         "P&revious Track",IDC_TRAYICON1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,101,87,10
+    PUSHBUTTON      "",IDC_SEL_ICON1,107,101,16,14,BS_ICON | BS_FLAT
+    CONTROL         "&Play/Pause",IDC_TRAYICON2,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,120,87,10
+    PUSHBUTTON      "",IDC_SEL_ICON2,107,118,16,14,BS_ICON | BS_FLAT
+    CONTROL         "&Stop",IDC_TRAYICON3,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,138,87,10
+    PUSHBUTTON      "",IDC_SEL_ICON3,107,136,16,14,BS_ICON | BS_FLAT
+    CONTROL         "&Next Track",IDC_TRAYICON4,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,16,155,87,10
+    PUSHBUTTON      "",IDC_SEL_ICON4,107,154,16,14,BS_ICON | BS_FLAT
+END
+
+IDD_RENAME DIALOGEX 0, 0, 265, 73
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Rename lyrics file"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "File Name:",IDC_STATIC1,7,22,55,8
+    EDITTEXT        IDC_NAME,67,20,190,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "OK",IDOK,53,52,58,14
+    PUSHBUTTON      "Cancel",IDCANCEL,153,52,58,14
+END
+
+IDD_CRASH_REPORT DIALOGEX 0, 0, 268, 129
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "$Product$ Crash Report"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "$Product$ has encountered a problem and needs to close. We are sorry for the inconvenience.",IDC_STATIC,19,17,201,24
+    DEFPUSHBUTTON   "&Send",IDOK,145,107,50,14
+    PUSHBUTTON      "E&xit",IDCANCEL,211,107,50,14
+    ICON            IDI_CRASH,IDC_STATIC,226,16,21,20,SS_REALSIZEIMAGE
+    LTEXT           "We have created an error report that you can send to us.  We will treat this report as confidential and anonymous.",IDC_STATIC,20,45,230,20
+    LTEXT           "Please click 'Send' button, a new mail will be generated, then send this mail to us. It will be very helpful to solve this error.",IDC_STATIC,20,70,230,33
+END
+
+IDD_MSG DIALOG  0, 0, 268, 85
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "$Product$"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Your messages here!",IDC_MSG,27,17,226,21
+    CONTROL         "Use as default setting, don't prompt any more",IDC_NO_PROMPT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,45,196,10
+    PUSHBUTTON      "YES",IDYES,100,64,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "NO",IDNO,155,64,50,14,NOT WS_VISIBLE
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,210,64,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "OK",IDOK,100,64,50,14,NOT WS_VISIBLE
+END
+
+IDD_ERROR_RESOLVE DIALOG  0, 0, 300, 174
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "$Product$"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Your messages here!",IDC_ERROR,27,11,238,36
+    LTEXT           "How to solve the problem?",IDC_STATIC,7,52,139,8
+    LTEXT           "How to solve the problem?",IDC_RESOLVE,27,67,238,81
+    PUSHBUTTON      "Copy To Clipboard",IDC_COPYTOCLIPBOARD,7,153,65,14
+    PUSHBUTTON      "Setup Connection",IDC_SETUP_INET,80,153,65,14
+    PUSHBUTTON      "Help",IDC_ML_HELP,153,153,65,14
+    PUSHBUTTON      "Report Bug?",IDC_REPORT,226,153,65,14
+END
+
+IDD_WAITING DIALOGEX 0, 0, 253, 66
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Searching Lyrics"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,90,45,73,14,WS_DISABLED
+    LTEXT           "$Product$ is searching lyrics now, it may take a few seconds.",IDC_MSG,11,13,235,24
+END
+
+IDD_SEL_ENCODING DIALOGEX 0, 0, 293, 161
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Advanced Save Options"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "&Encoding:",IDC_STATIC,7,10,55,10
+    COMBOBOX        IDC_CB_ENCODING,71,10,215,245,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_E_SAMPLE,7,29,279,105,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
+    DEFPUSHBUTTON   "OK",IDOK,169,140,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,236,140,50,14
+END
+
+IDD_FRAME_DLG DIALOG  0, 0, 283, 270
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "$Product$ setup"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "",IDC_POS_PAGE,"Static",SS_BLACKRECT | NOT WS_VISIBLE,7,7,270,255
+END
+
+IDD_PAGE_LYR_OUTPUT DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Lyrics Output Plug-ins",IDC_STATIC,0,0,270,255
+    LISTBOX         IDC_LIST_PLUGINS,4,38,261,191,LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Configure",IDC_CONFIGURE,7,234,50,14
+    PUSHBUTTON      "About",IDC_ABOUT,63,234,50,14
+    CONTROL         "Get plug-ins",IDC_GET_PLUGINS,"Button",BS_OWNERDRAW | WS_TABSTOP,206,234,58,14
+    PUSHBUTTON      "Uninstall plug-in",IDC_UNINST_PLUGIN,120,234,77,14
+    LTEXT           "$Product$ will use the plug-ins below for lyrics output. You can select a plug-in and configure, view about boxes, or uninstall them.",IDC_STATIC,7,11,252,24
+END
+
+IDD_RATE_LYR DIALOGEX 0, 0, 203, 90
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Rate these lyrics"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "rating:",IDC_STATIC1,7,8,55,8
+    PUSHBUTTON      "Rate!",IDOK,72,70,58,14,BS_CENTER
+    COMBOBOX        IDC_CB_RATING,65,7,130,93,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Hide the link of rating lyrics",IDC_HIDE_RATE_LINK,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,29,162,10
+    LTEXT           "$Product$ will open a web page to submit the rating result.",IDC_STATIC,7,42,188,24
+END
+
+IDD_BATCH_EMBEDDED_LYR DIALOG  0, 0, 384, 228
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Batch process embedded lyrics"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,2,369,200
+    DEFPUSHBUTTON   "Process All",IDOK,128,207,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,204,207,50,14
+    PUSHBUTTON      "Add More...",IDC_ADD_SONG_FILE,7,207,50,14,NOT WS_VISIBLE
+END
+
+IDD_PAGE_HOTKEYS DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Hotkeys",IDC_STATIC,0,0,270,254
+    CONTROL         "&Enable Global Hotkeys",IDC_ENABLE_GLOBAL_HOTKEY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,5,11,114,10
+    PUSHBUTTON      "Restore &defaults",IDC_RESTORE_DEFAULTS,180,7,81,14
+    CONTROL         "",IDC_LIST_HOTKEYS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,5,23,258,171,WS_EX_CLIENTEDGE
+    LTEXT           "Action:",IDC_S_ACTION,7,201,33,10
+    COMBOBOX        IDC_CB_ACTIONS,44,199,219,256,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Hotkey:",IDC_S_HOTKEY,7,217,33,10
+    EDITTEXT        IDC_HOTKEY,44,215,145,14,ES_AUTOHSCROLL
+    CONTROL         "&Global Hotkey",IDC_C_GLOBAL_HOTKEY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,196,217,69,10
+    PUSHBUTTON      "&Add",IDC_ADD,29,235,66,14
+    PUSHBUTTON      "&Set",IDC_SET,102,235,66,14
+    PUSHBUTTON      "&Remove Selected",IDC_REMOVE_SEL,175,235,66,14
+END
+
+IDD_PAGE_LYR_BG_PIC DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "Use album art picture if possible",IDC_C_ALBUMART,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,14,186,10
+    CONTROL         "Darken background of lyrics",IDC_C_DARKEN_LYR_BG,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,27,247,10
+    CONTROL         "Enable background picture",IDC_C_BKIMAGE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,8,39,111,12
+    LTEXT           "Picture folder:",IDC_STATIC,10,58,58,8
+    EDITTEXT        IDC_E_BG_PIC_FOLDER,75,56,168,14,ES_AUTOHSCROLL | ES_READONLY
+    PUSHBUTTON      "...",IDC_BR_BG_PIC_FOLDER,245,56,11,14
+    LTEXT           "Picture show delay time (seconds):",IDC_STATIC,9,79,144,8
+    EDITTEXT        IDC_E_DELAYTIME,214,77,41,14,ES_AUTOHSCROLL | ES_NUMBER
+    GROUPBOX        "Lyrics Background Picture",IDC_STATIC,0,0,266,255
+END
+
+IDD_PAGE_UI_ROOT DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "Always on top",IDC_ALWAYS_ON_TOP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,25,166,10
+    CONTROL         "Mouse &click through",IDC_CLICK_THROUGH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,39,178,10
+    GROUPBOX        "Skin window settings",IDC_STATIC,6,12,258,43
+    GROUPBOX        "Installed language packs",IDC_STATIC,6,61,258,129
+    PUSHBUTTON      "Select Language",IDC_SEL_LANGUAGE,12,75,246,14
+    LTEXT           "Current language pack information:",IDC_STATIC,16,99,237,10
+    EDITTEXT        IDC_E_LANGUAGE_INFO,13,114,245,66,ES_MULTILINE | ES_AUTOHSCROLL | ES_READONLY
+    GROUPBOX        "User Interface",IDC_STATIC,0,0,269,254
+END
+
+IDD_LYR_BLENDING_OPT DIALOGEX 0, 0, 290, 161
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Blending options of lyrics text"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    CONTROL         "Gradient overlay",IDC_R_O_GRADIENT,"Button",BS_AUTORADIOBUTTON,16,22,116,10
+    CONTROL         "",IDC_GRADIENT,"Button",BS_OWNERDRAW | WS_TABSTOP,27,36,107,74,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "<<",IDC_PREV,27,112,39,14
+    PUSHBUTTON      ">>",IDC_NEXT,95,112,39,14
+    CONTROL         "Pattern overlay",IDC_R_O_PATTERN,"Button",BS_AUTORADIOBUTTON,156,22,107,10
+    CONTROL         "",IDC_O_PATTERN,"Button",BS_OWNERDRAW | WS_TABSTOP,170,36,107,90,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "Close",IDCANCEL,233,140,50,14
+    GROUPBOX        "Blending options of lyrics text",IDC_STATIC,7,7,276,127
+END
+
+IDD_ADJUST_HUE DIALOG  0, 0, 279, 93
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Adjust hue"
+FONT 8, "MS Shell Dlg"
+BEGIN
+    LTEXT           "Hue:",IDC_STATIC,7,34,37,8
+    DEFPUSHBUTTON   "OK",IDOK,115,72,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,188,72,50,14
+    CONTROL         "Slider1",IDC_HUE,"msctls_trackbar32",TBS_AUTOTICKS | TBS_TOP | WS_TABSTOP,52,28,220,29
+    PUSHBUTTON      "&Reset",IDC_RESET,42,72,50,14
+END
+
+IDD_EDIT_FIND DIALOGEX 0, 0, 295, 78
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Find"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Find &what:",IDC_STATIC,7,14,53,8
+    EDITTEXT        IDC_E_FIND,63,11,159,14,ES_AUTOHSCROLL
+    CONTROL         "Match &case",IDC_C_MATCH_CASE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,28,35,151,12
+    CONTROL         "Search &up",IDC_C_SEARCH_UP,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,28,49,99,12
+    DEFPUSHBUTTON   "&Find Next",IDC_FIND_NEXT,225,11,62,14
+    PUSHBUTTON      "Cancel",IDCANCEL,225,31,62,14
+END
+
+IDD_EDIT_REPLACE DIALOGEX 0, 0, 295, 102
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Replace"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "Find &what:",IDC_STATIC,7,14,53,8
+    EDITTEXT        IDC_E_FIND,64,11,158,14,ES_AUTOHSCROLL
+    LTEXT           "R&eplace with:",IDC_STATIC,7,33,54,8
+    EDITTEXT        IDC_E_REPLACE,64,31,158,14,ES_AUTOHSCROLL
+    CONTROL         "Match &case",IDC_C_MATCH_CASE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,70,159,12
+    DEFPUSHBUTTON   "&Find Next",IDC_FIND_NEXT,225,11,62,14
+    PUSHBUTTON      "&Replace",IDC_REPLACE,225,30,62,14
+    PUSHBUTTON      "Replace &All",IDC_REPLACE_ALL,225,49,62,14
+    PUSHBUTTON      "Cancel",IDCANCEL,225,68,62,14
+END
+
+IDD_LRC_SEARCH DIALOGEX 0, 0, 380, 209
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Search lyrics"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    LTEXT           "Title:",IDC_STATIC,7,27,37,8
+    LTEXT           "Artist:",IDC_STATIC,7,11,37,8
+    DEFPUSHBUTTON   "&Search",IDC_SEARCH,318,24,55,14
+    CONTROL         "List1",IDC_RESULT_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,43,366,122,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "<< Prev Page",IDC_PREV_PAGE,255,167,55,14,NOT WS_VISIBLE
+    PUSHBUTTON      "Next Page >>",IDC_NEXT_PAGE,318,167,55,14,NOT WS_VISIBLE
+    PUSHBUTTON      "&Open",IDOK,122,188,55,14
+    PUSHBUTTON      "&More >>",IDC_MORE,202,188,55,14
+    PUSHBUTTON      "Cancel",IDCANCEL,318,188,55,14
+    EDITTEXT        IDC_E_ARTIST,53,7,256,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_E_TITLE,53,24,256,14,ES_AUTOHSCROLL
+END
+
+IDD_PAGE_THEMES DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    LTEXT           "Preset themes:",IDC_STATIC,11,15,235,10
+    CONTROL         "",IDC_LIST_THEMES,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,9,30,247,109,WS_EX_CLIENTEDGE
+    LTEXT           "Theme name:",IDC_STATIC,9,147,65,10
+    EDITTEXT        IDC_E_THEME,83,146,173,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Load Theme",IDC_LOAD,25,166,61,14
+    PUSHBUTTON      "&Save Theme",IDC_SAVE,104,166,61,14
+    PUSHBUTTON      "&Delete Theme",IDC_DELETE,183,166,61,14
+    GROUPBOX        "Themes",IDC_STATIC,0,0,266,255
+END
+
+IDD_PAGE_LYR_DISPLAY DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    COMBOBOX        IDC_CB_SETTING_TYPE,11,13,246,64,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Latin language font:",IDC_STATIC,11,42,124,8
+    PUSHBUTTON      "Choose Font",IDC_SEL_FONT_ENGLISH,151,40,101,13
+    LTEXT           "Other language font:",IDC_STATIC,11,56,124,8
+    PUSHBUTTON      "Choose Font",IDC_SEL_FONT_OTHERS,151,55,101,13
+    GROUPBOX        "Font of lyrics text",IDC_STATIC,5,29,252,45
+    CONTROL         "Draw shadow of lyrics text",IDC_C_OUTLINE_LYR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,11,93,175,10
+    LTEXT           "Highlight lyrics color:",IDC_STATIC,11,109,123,8
+    LTEXT           "Normal lyrics color:",IDC_STATIC,11,124,123,8
+    LTEXT           "Background color:",IDC_S_BG_COLOR,11,140,123,8
+    PUSHBUTTON      "",IDC_OBM_HIGHLIGHT,152,109,40,13,0,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "",IDC_OBM_HIGHLIGHT_BORDER,211,109,40,13,0,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "",IDC_OBM_LOWGHLIGHT,152,124,40,13,0,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "",IDC_OBM_LOWLIGHT_BORDER,211,124,40,13,0,WS_EX_CLIENTEDGE
+    PUSHBUTTON      "",IDC_BG_COLOR,152,140,40,13,0,WS_EX_CLIENTEDGE
+    GROUPBOX        "Color of lyrics text",IDC_STATIC,6,80,252,76
+    COMBOBOX        IDC_CB_LYR_STYLE,11,175,130,149,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_CB_FADE_MODE,152,175,99,112,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Align lyrics at:",IDC_STATIC,11,197,65,8
+    COMBOBOX        IDC_CB_ALIGN,79,196,62,77,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "&Karaoke",IDC_C_KARAOKE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,152,198,99,10
+    GROUPBOX        "Lyrics display style",IDC_STATIC,6,164,252,58
+    GROUPBOX        "Lyrics Display",IDC_STATIC,0,0,266,255
+END
+
+IDD_THEME_ITEMS DIALOGEX 0, 0, 240, 114
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Theme items"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    LTEXT           "",IDC_INFO,23,7,209,11
+    CONTROL         "Lyrics colors",IDC_C_LYR_COLORS,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,24,146,10
+    CONTROL         "Lyrics font",IDC_C_LYR_FONT,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,40,146,10
+    CONTROL         "Lyrics display style",IDC_C_LYR_STYLE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,56,146,10
+    CONTROL         "Lyrics Background Picture",IDC_C_LYR_BG_PIC,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,72,146,10
+    PUSHBUTTON      "OK",IDOK,57,93,58,14,BS_CENTER
+    PUSHBUTTON      "Cancel",IDCANCEL,124,93,58,14,BS_CENTER
+END
+
+IDD_PAGE_ADVANCED DIALOGEX 0, 0, 270, 255
+STYLE DS_SETFONT | DS_FIXEDSYS | DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Advanced settings",IDC_STATIC,0,0,270,251
+    EDITTEXT        IDC_E_SEARCH,60,12,203,14,ES_AUTOHSCROLL
+    LTEXT           "Search:",IDC_STATIC,8,14,46,8
+    CONTROL         "",IDC_LIST_SETTINGS,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,6,32,257,196
+    PUSHBUTTON      "Customize >>",IDC_CUSTOMIZE,5,232,73,14,WS_DISABLED
+END
+
+IDD_SET_HOTKEY DIALOGEX 0, 0, 191, 75
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Shortcut"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    EDITTEXT        IDC_HOTKEY,6,29,178,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "OK",IDOK,37,54,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,104,54,50,14
+    LTEXT           "Press shortcut keys:",IDC_STATIC,6,11,178,12
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_LOGIN, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 112
+    END
+
+    IDD_UPLOAD_LRC, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 413
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 232
+    END
+
+    IDD_UPLOAD_EXIST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 344
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 144
+    END
+
+    IDD_MLSTART, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 236
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 184
+    END
+
+    IDD_TAGINFO, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 250
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 127
+    END
+
+    IDD_INET_TEST, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 286
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 208
+    END
+
+    IDD_COPYSONGLYRICS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 272
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 104
+    END
+
+    IDD_EMBEDDED_LRC_SEL, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 333
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 111
+    END
+
+    IDD_EMBEDDED_LRC_SAVE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 333
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 109
+    END
+
+    IDD_EMBEDDED_LRC_REMOVE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 333
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 109
+    END
+
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 218
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 199
+    END
+
+    IDD_PAGE_SKIN, DIALOG
+    BEGIN
+        RIGHTMARGIN, 269
+        BOTTOMMARGIN, 254
+    END
+
+    IDD_PAGE_STARTUP, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 254
+    END
+
+    IDD_PAGE_LYR_DOWNLOAD, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 254
+    END
+
+    IDD_PREFERENCE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 406
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 265
+    END
+
+    IDD_SURE_SAVE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 261
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 78
+    END
+
+    IDD_REGISTRATION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 243
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 135
+    END
+
+    IDD_REGISTER_NOTICE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 239
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 149
+    END
+
+    IDD_NEW_VERSION_PROMPT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 274
+        BOTTOMMARGIN, 180
+    END
+
+    IDD_RENAME, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 257
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 66
+    END
+
+    IDD_CRASH_REPORT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 261
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 121
+    END
+
+    IDD_MSG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 261
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 78
+    END
+
+    IDD_ERROR_RESOLVE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 293
+        BOTTOMMARGIN, 167
+    END
+
+    IDD_WAITING, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 246
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 59
+    END
+
+    IDD_SEL_ENCODING, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 286
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 154
+    END
+
+    IDD_FRAME_DLG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 277
+        TOPMARGIN, 7
+    END
+
+    IDD_RATE_LYR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 195
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 83
+    END
+
+    IDD_BATCH_EMBEDDED_LYR, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 376
+        TOPMARGIN, 2
+        BOTTOMMARGIN, 221
+    END
+
+    IDD_PAGE_HOTKEYS, DIALOG
+    BEGIN
+        BOTTOMMARGIN, 254
+    END
+
+    IDD_PAGE_LYR_BG_PIC, DIALOG
+    BEGIN
+        RIGHTMARGIN, 266
+    END
+
+    IDD_LYR_BLENDING_OPT, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 283
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 154
+    END
+
+    IDD_ADJUST_HUE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 272
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 86
+    END
+
+    IDD_EDIT_FIND, DIALOG
+    BEGIN
+        RIGHTMARGIN, 292
+    END
+
+    IDD_EDIT_REPLACE, DIALOG
+    BEGIN
+        RIGHTMARGIN, 289
+    END
+
+    IDD_LRC_SEARCH, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 373
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 202
+    END
+
+    IDD_PAGE_THEMES, DIALOG
+    BEGIN
+        RIGHTMARGIN, 266
+    END
+
+    IDD_PAGE_LYR_DISPLAY, DIALOG
+    BEGIN
+        RIGHTMARGIN, 266
+    END
+
+    IDD_THEME_ITEMS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 232
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 107
+    END
+
+    IDD_SET_HOTKEY, DIALOG
+    BEGIN
+        LEFTMARGIN, 6
+        RIGHTMARGIN, 184
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 68
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_MLHAND              CURSOR                  "Res\\hand.cur"
+IDC_SELCOLOR            CURSOR                  "Res\\selcolor.cur"
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

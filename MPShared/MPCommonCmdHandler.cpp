@@ -128,27 +128,24 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			OnCommandRemoveLyricsInMp3();
 		}
 		break;
-	case IDC_LOAD_SKIN_THEME:
-		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("ReloadSkinDefClrTheme"), TRUE);
-		break;
-	case IDC_ALIGN_LYRICS_LEFT:
-	case IDC_ALIGN_LYRICS_CENTER:
-	case IDC_ALIGN_LYRICS_RIGHT:
-		{
-			tstring		strAlign;
-
-			if (nID == IDC_ALIGN_LYRICS_LEFT)
-				strAlign = _T("left");
-			else if (nID == IDC_ALIGN_LYRICS_CENTER)
-				strAlign = _T("center");
-			else if (nID == IDC_ALIGN_LYRICS_RIGHT)
-				strAlign = _T("right");
-			else
-				ASSERT(0 && _T("Invalid ID."));
-
-			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("LyrAlign"), strAlign.c_str());
-		}
-		break;
+// 	case IDC_ALIGN_LYRICS_LEFT:
+// 	case IDC_ALIGN_LYRICS_CENTER:
+// 	case IDC_ALIGN_LYRICS_RIGHT:
+// 		{
+// 			tstring		strAlign;
+// 
+// 			if (nID == IDC_ALIGN_LYRICS_LEFT)
+// 				strAlign = _T("left");
+// 			else if (nID == IDC_ALIGN_LYRICS_CENTER)
+// 				strAlign = _T("center");
+// 			else if (nID == IDC_ALIGN_LYRICS_RIGHT)
+// 				strAlign = _T("right");
+// 			else
+// 				ASSERT(0 && _T("Invalid ID."));
+// 
+// 			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("LyrAlign"), strAlign.c_str());
+// 		}
+// 		break;
 
 	case IDC_LDO_KARAOKE:
 		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("Karaoke"), 
@@ -172,15 +169,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("LyrDrawOpt"), 
 				DisplayOptToStr(displayOpt));
 		}
-		break;
-	case IDC_ENABLE_BK_IMAGE:
-		{
-			bool bUseBgImg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("UseBgImage"), false);
-			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("UseBgImage"), !bUseBgImg);
-		}
-		break;
-	case IDC_SEL_BKIMAGE:
-		OnCommandSetBkImg();
 		break;
 #ifdef _WIN32_DESKTOP
 	case IDC_ANTIAlIAS:
@@ -218,16 +206,9 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			CMPlayerSettings::SetPlayerUISettings(_T("Antialias"), bAntialias);
 		}
 		break;
-	case IDC_CLICK_THROUGH_FLOATING_LYR:
-		if (g_wndFloatingLyr.IsValid())
-			g_wndFloatingLyr.OnCommand(IDC_CLICK_THROUGH, 0);
-		break;
 #endif // _WIN32_DESKTOP
 	case IDC_WEBHOME:
 		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_DOMAIN));
-		break;
-	case IDC_WEBFORUM:
-		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_BBS));
 		break;
 	case IDC_EMAIL:
 		// feed back
@@ -240,19 +221,16 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			OpenUrl(m_pSkinWnd, str.c_str());
 		}
 		break;
-	case IDC_PROMOTE:
-			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_PROMOTE));
-		break;
 	case IDC_REGISTER:
 		ShowRegisterNotice(m_pSkinWnd, TRUE);
 		break;
-	case IDC_MINIMIZE:
-#if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
-		if (::GetParent(g_mpApp.GetMainWnd()->GetHandle()))
-			break;
-#endif
-		g_mpApp.GetSkinFactory()->MinizeAll();
-		break;
+// 	case IDC_MINIMIZE:
+// #if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
+// 		if (::GetParent(g_mpApp.GetMainWnd()->GetHandle()))
+// 			break;
+// #endif
+// 		g_mpApp.GetSkinFactory()->MinizeAll();
+// 		break;
 	case IDC_LOGIN:
 		{
 			CLoginDlg		dlg;
@@ -269,19 +247,19 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_LOGIN));
 		}
 		break;
-	case IDC_VIEW_AS_TEXT:
-		{
-			// 转换尾纯文本，并使用用记事本打开
-			TCHAR		szTempTxtFile[MAX_PATH];
-
-			GetAppDataDir(szTempTxtFile);
-			_tcscat_safe(szTempTxtFile, CountOf(szTempTxtFile), _T("TempTxtLyrics.txt"));
-			g_LyricData.SaveToTextFile(szTempTxtFile, true);
-
-			// 用记事本打开
-			Execute(m_pSkinWnd, szTempTxtFile, NULL);
-		}
-		break;
+// 	case IDC_VIEW_AS_TEXT:
+// 		{
+// 			// 转换尾纯文本，并使用用记事本打开
+// 			TCHAR		szTempTxtFile[MAX_PATH];
+// 
+// 			GetAppDataDir(szTempTxtFile);
+// 			_tcscat_safe(szTempTxtFile, CountOf(szTempTxtFile), _T("TempTxtLyrics.txt"));
+// 			g_LyricData.SaveToTextFile(szTempTxtFile, true);
+// 
+// 			// 用记事本打开
+// 			Execute(m_pSkinWnd, szTempTxtFile, NULL);
+// 		}
+// 		break;
 #ifdef _WIN32_WCE
 	case IDC_MEDIALIB:
 		g_mpApp.GetSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Media Library"), _T("medialib"));
@@ -1019,20 +997,20 @@ bool CMPCommonCmdHandler::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 				nIDChecked = IDC_LDO_FADEOUT_BG;
 		}
 		break;
-	case IDC_ALIGN_LYRICS_LEFT:
-	case IDC_ALIGN_LYRICS_CENTER:
-	case IDC_ALIGN_LYRICS_RIGHT:
-		{
-			tstring		strAlign;
-			strAlign = g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrAlign"), _T("center"));
-			if (_tcsicmp(strAlign.c_str(), _T("left")) == 0)
-				nIDChecked = IDC_ALIGN_LYRICS_LEFT;
-			else if (_tcsicmp(strAlign.c_str(), _T("right")) == 0)
-				nIDChecked = IDC_ALIGN_LYRICS_RIGHT;
-			else
-				nIDChecked = IDC_ALIGN_LYRICS_CENTER;
-		}
-		break;
+// 	case IDC_ALIGN_LYRICS_LEFT:
+// 	case IDC_ALIGN_LYRICS_CENTER:
+// 	case IDC_ALIGN_LYRICS_RIGHT:
+// 		{
+// 			tstring		strAlign;
+// 			strAlign = g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrAlign"), _T("center"));
+// 			if (_tcsicmp(strAlign.c_str(), _T("left")) == 0)
+// 				nIDChecked = IDC_ALIGN_LYRICS_LEFT;
+// 			else if (_tcsicmp(strAlign.c_str(), _T("right")) == 0)
+// 				nIDChecked = IDC_ALIGN_LYRICS_RIGHT;
+// 			else
+// 				nIDChecked = IDC_ALIGN_LYRICS_CENTER;
+// 		}
+// 		break;
 	default:
 		return false;
 	}
@@ -1083,22 +1061,6 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 		return true;
 	}
 	return false;
-}
-
-//
-// 设置歌词显示背景图片
-//
-void CMPCommonCmdHandler::OnCommandSetBkImg()
-{
-	CFolderDialog	dlg;
-
-	dlg.SetInitFolder(CMLProfile::GetDir(m_strSectName.c_str(), _T("BgPicFolder"), _T("")).c_str());
-	if (dlg.DoBrowse(m_pSkinWnd))
-	{
-		CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), SZ_TRUE);
-		CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), dlg.GetFolder());
-		CMLProfile::WriteDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), dlg.GetFolder());
-	}
 }
 
 #ifndef _WIN32_WCE

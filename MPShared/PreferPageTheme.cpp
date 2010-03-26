@@ -113,8 +113,7 @@ public:
 	{
 		if (nId == GetIDByName(_T("CID_BR_PIC_FOLDER")))
 		{
-			if (g_mpApp.GetMainWnd())
-				g_mpApp.GetMainWnd()->OnCommand(IDC_SEL_BKIMAGE, 0);
+			OnCommandSetBkImg();
 
 			SetUIObjectText(_T("CID_E_PIC_FOLDER"), 
 				CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());
@@ -123,6 +122,19 @@ public:
 			return CPagePfBase::OnCustomCommand(nId);
 
 		return true;
+	}
+
+	void OnCommandSetBkImg()
+	{
+		CFolderDialog	dlg;
+
+		dlg.SetInitFolder(CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());
+		if (dlg.DoBrowse(m_pSkinWnd))
+		{
+			CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), SZ_TRUE);
+			CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), dlg.GetFolder());
+			CMLProfile::WriteDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), dlg.GetFolder());
+		}
 	}
 
 protected:
@@ -1002,10 +1014,6 @@ void CPPageLyrDisplay::SetSettingType(SettingType settingType)
 		m_strSectName = SZ_SECT_LYR_DISPLAY;
 	}
 
-	int		nItemsToHide[] = { IDC_S_FOCUSLINE_COLOR, IDC_S_TAG_COLOR, IDC_EDIT_ROW_BK_COLOR, IDC_TAG_CLR };
-	for (int i = 0; i < CountOf(nItemsToHide); i++)
-		ShowDlgItem(nItemsToHide[i], settingType == ST_FLOATING_LYR ? SW_HIDE : SW_SHOW);
-
 	ClearOptions();
 
 	{
@@ -1181,8 +1189,6 @@ void CPPageLyrDisplay::OnCommand(UINT uID, UINT nNotifyCode)
 		}
 		break;
 	case IDC_BG_COLOR:
-	case IDC_EDIT_ROW_BK_COLOR:
-	case IDC_TAG_CLR:
 	case IDC_OBM_HIGHLIGHT_BORDER:
 	case IDC_OBM_LOWLIGHT_BORDER:
 		{
@@ -1382,8 +1388,8 @@ void CPreferPageDispBgPic::OnCommand(UINT uID, UINT nNotifyCode)
 		}*/
 	case IDC_BR_BG_PIC_FOLDER:
 		{
-			if (g_mpApp.GetMainWnd())
-				g_mpApp.GetMainWnd()->OnCommand(IDC_SEL_BKIMAGE, 0);
+//			if (g_mpApp.GetMainWnd())
+//				g_mpApp.GetMainWnd()->OnCommand(IDC_SEL_BKIMAGE, 0);
 
 			SetDlgItemText(IDC_E_BG_PIC_FOLDER,
 				CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());

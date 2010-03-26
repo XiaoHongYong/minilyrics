@@ -8,23 +8,10 @@
             Name="Hide window frame on lost focus" IDCmd="ID_HIDE_WND_FRAME"
             CanCheck="true" IsCheckedCmd="dyncmd_is_frame_hide" />
     </Menu>
-    <Menu Name="LyrBarMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
-    </Menu>
-    <Menu Name="FloatingLyrMode" From="MainMenu" >
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
-    </Menu>
   </Menus>
   <DynCmds>
     <cmd ID="dyncmd_is_frame_hide" func="get_profile_bool" param="HideFrameOnLostFocus,1"/>
 
-    <cmd ID="dyncmd_change_to_bar" func="change_skin_wnd" param="lyrbar"/>
-    <cmd ID="dyncmd_change_to_floatinglyr" func="change_skin_wnd" param="floatinglyr"/>
-    <cmd ID="dyncmd_change_to_normal" func="change_skin_wnd" param="minilyrics"/>
-    <cmd ID="ID_LYR_EDITOR" func="openclose_skin_wnd" param="lyreditor" />
-    <cmd ID="dyncmd_is_lyr_editor_visible" func="is_skin_wnd_visible" param="lyreditor" />
-    <cmd ID="dyncmd_openclose_albumart_bar" func="openclose_framebar_bar" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
-    <cmd ID="dyncmd_is_albumart_bar_visible" func="is_framebar_bar_visible" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
     <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
     <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
     <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />

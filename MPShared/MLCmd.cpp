@@ -11,7 +11,7 @@
 STRING_ID_MAP g_StringIdMap[] = 
 {
 	{ _T("ID_WND_TITLE"), CMD_WND_TITLE, 0, NULL },
-	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, IDC_MINIMIZE, _T("Minimize") },
+	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, 0, _T("Minimize") },
 	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, 0, _T("Maximize") },
 	{ _T("ID_TOPMOST"), CMD_TOPMOST, IDC_SETTOPMOST, _T("Toggle always on top") },
 	{ _T("ID_CLICK_THROUGH"), CMD_CLICK_THROUGH, IDC_CLICK_THROUGH, _T("Mouse click through") },
@@ -46,7 +46,7 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_FORWARD_CUR_LINE"), CMD_FORWARD_CUR_LINE, IDC_FORWARD_CUR_LINE, _T("Forward the timestamp of this line 0.2s") },
 	{ _T("ID_BACKWARD_CUR_LINE"), CMD_BACKWARD_CUR_LINE, IDC_BACKWARD_CUR_LINE, _T("Backward the timestamp of this line 0.2s") },
 	{ _T("ID_AUTO_FILL_LYR_INFO"), CMD_AUTO_FILL_LYR_INFO, IDC_AUTO_FILL_LYRICS_INFO, _T("Auto fill artist, album and title info") },
-	{ _T("ID_EDIT_TAG"), CMD_EDIT_TAG, IDC_EDIT_LRC_TAG, _T("Lyrics Information") },
+	{ _T("ID_EDIT_TAG"), CMD_EDIT_TAG, 0, _T("Lyrics Information") },
 	{ _T("ID_MENU_LYR_EDIT"), CMD_MENU_LYR_EDIT, 0, _T("More...") },
 	{ _T("ID_LYR_EDITOR"), CMD_LYR_EDITOR, IDC_LYR_EDITOR, _T("Lyrics Editor...") },
 	{ _T("ID_EXTERNAL_LYR_EDIT"), CMD_EXTERNAL_LYR_EDIT, IDC_EXTERNAL_LYR_EDIT, _T("Edit with external lyrics editor...") },
@@ -70,11 +70,11 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_UPLOAD_LYR"), CMD_UPLOAD_LYR, IDC_UPLOAD_LYRICS, _T("Upload Lyrics...") },
 
 	{ _T("ID_SEARCH_LYRICS"), CMD_SEARCH_LYRICS, IDC_OPEN_LYRICS, _T("Search Lyrics") },
-	{ _T("ID_BACKWARD_LYRICS"), CMD_BACKWARD_LYRICS, IDC_FORWARD_LYRICS, _T("Lyrics Backward 0.5 Sec (Up)") },
-	{ _T("ID_FORWARD_LYRICS"), CMD_FORWARD_LYRICS, IDC_BACKWARD_LYRICS, _T("Lyrics Forward 0.5 Sec (Down)") },
+	{ _T("ID_BACKWARD_LYRICS"), CMD_BACKWARD_LYRICS, 0, _T("Lyrics Backward 0.5 Sec (Up)") },
+	{ _T("ID_FORWARD_LYRICS"), CMD_FORWARD_LYRICS, 0, _T("Lyrics Forward 0.5 Sec (Down)") },
 	{ _T("ID_DISPLAY_OPT"), CMD_DISPLAY_OPT, IDC_LYR_DISPLAY_OPT, _T("Lyrics Display Options") },
 	{ _T("ID_HELP"), CMD_HELP, IDC_ML_HELP, _T("Help and Support") },
-	{ _T("ID_PREVIOUS"), CMD_PREVIOUS, IDC_PREVIOUS, _T("Previous Track") },
+	{ _T("ID_PREVIOUS"), CMD_PREVIOUS, IDC_PREV, _T("Previous Track") },
 	{ _T("ID_NEXT"), CMD_NEXT, IDC_NEXT, _T("Next Track") },
 
 	{ _T("ID_SEEK"), CMD_SEEK, 0, _T("Seek") },

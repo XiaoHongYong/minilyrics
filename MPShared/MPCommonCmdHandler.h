@@ -30,7 +30,6 @@ public:
 
 protected:
 	bool OnCommandCharEncoding(int nCmdId);
-	void OnCommandSetBkImg();
 
 #ifndef _WIN32_WCE
 	void OnCommandSaveLyricsToMp3();
