@@ -1289,6 +1289,14 @@ int CMLData::GetCurPlayLine(const VLyrLines &lyrLines)
 	if (nRow == nRowCount)
 		nRow = nRowCount - 1;
 
+	for (int i = nRow - 1; i >= 0; i--)
+	{
+		if (lyrLines[nRow]->nEndTime != lyrLines[i]->nEndTime)
+		{
+			return i + 1;
+		}
+	}
+
 	assert(nRow != -1);
 	return nRow;
 }

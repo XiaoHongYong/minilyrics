@@ -146,9 +146,6 @@ void CSkinTabHeader::OnCreate()
 
 bool CSkinTabHeader::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	if (!m_bEnable)
-		return false;
-
 	m_nHoverButton = ButtonHitTest(point);
 	if (m_nHoverButton == -1)
 		return false;
@@ -177,9 +174,6 @@ bool CSkinTabHeader::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 bool CSkinTabHeader::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	if (!m_bEnable)
-		return false;
-
 	int			nNewCurButton = ButtonHitTest(point);
 	if (nNewCurButton == -1)
 		return false;
@@ -220,9 +214,6 @@ bool CSkinTabHeader::OnLButtonUp(UINT nFlags, CPoint point)
 
 bool CSkinTabHeader::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if (!m_bEnable)
-		return false;
-
 	assert(m_pSkin);
 
 	if (IsPtIn(point))

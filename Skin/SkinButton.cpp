@@ -259,3 +259,90 @@ void CSkinImageButton::ButtonUpAction()
 
 	return CSkinButton::ButtonUpAction();
 }
+
+///////////////////////////////////////////////////////////////////////////////
+UIOBJECT_CLASS_NAME_IMP(CSkinHoverActionButton, _T("HoverActionButton"))
+
+CSkinHoverActionButton::CSkinHoverActionButton()
+{
+	m_nTimerIdHoverAction = 0;
+	m_bHoverActionBegin = false;
+	m_dwBeginHoverTime = 0;
+}
+
+CSkinHoverActionButton::~CSkinHoverActionButton()
+{
+}
+
+bool CSkinHoverActionButton::OnMouseMove(UINT nFlags, CPoint point)
+{
+	bool	bHoverPrev = m_bHover;
+
+	bool bRet = CSkinButton::OnMouseMove(nFlags, point);
+
+	if (bHoverPrev != m_bHover)
+	{
+		if (m_bHover)
+		{
+			m_nTimerIdHoverAction = m_pSkin->RegisterTimerObject(this, 500);
+			m_bHoverActionBegin = true;
+		}
+		else
+			EndHover();
+	}
+
+	return bRet;
+}
+
+void CSkinHoverActionButton::OnTimer(int nId)
+{
+	if (nId == m_nTimerIdHoverAction)
+	{
+		if (m_bHoverActionBegin)
+		{
+			m_bHoverActionBegin = false;
+			m_pSkin->UnregisterTimerObject(this, m_nTimerIdHoverAction);
+			m_nTimerIdHoverAction = m_pSkin->RegisterTimerObject(this, 100);
+			m_dwBeginHoverTime = GetTickCount();
+			DispatchEvent(CSkinHoverActionBtEventNotify::C_BEGIN_HOVER);
+		}
+		else
+		{
+			DWORD	dwTimeNew = GetTickCount();
+			const int MAX_HOVER_ACTION_TIME	= 20 * 1000;
+			if (dwTimeNew - m_dwBeginHoverTime >= MAX_HOVER_ACTION_TIME)
+				EndHover();
+			else
+				DispatchEvent(CSkinHoverActionBtEventNotify::C_HOVER_ACTION);
+		}
+
+		return;
+	}
+
+	CSkinButton::OnTimer(nId);
+}
+
+void CSkinHoverActionButton::DispatchEvent(CSkinHoverActionBtEventNotify::Command cmd)
+{
+	CSkinHoverActionBtEventNotify	event(this);
+
+	event.cmd = cmd;
+	m_pSkin->DispatchUIObjNotify(&event);
+}
+
+void CSkinHoverActionButton::EndHover()
+{
+	m_pSkin->UnregisterTimerObject(this, m_nTimerIdHoverAction);
+	m_nTimerIdHoverAction = 0;
+	DispatchEvent(CSkinHoverActionBtEventNotify::C_END_HOVER);
+}
+
+void CSkinHoverActionButton::ButtonUpAction()
+{
+	if (m_nTimerIdHoverAction != 0)
+		EndHover();
+
+	DispatchEvent(CSkinHoverActionBtEventNotify::C_CLICK);
+
+	return CSkinButton::ButtonUpAction();
+}

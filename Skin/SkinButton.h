@@ -75,4 +75,46 @@ protected:
 
 };
 
+class CSkinHoverActionBtEventNotify : public IUIObjNotify
+{
+public:
+	CSkinHoverActionBtEventNotify(CUIObject *pObject) : IUIObjNotify(pObject) { cmd = C_CLICK; }
+	enum Command
+	{
+		C_CLICK,
+		C_BEGIN_HOVER,
+		C_HOVER_ACTION,
+		C_END_HOVER,
+	};
+
+	Command				cmd;
+
+};
+
+class CSkinHoverActionButton : public CSkinButton
+{
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinButton)
+
+public:
+	CSkinHoverActionButton();
+	virtual ~CSkinHoverActionButton();
+
+	bool OnMouseMove(UINT nFlags, CPoint point);
+
+	void ButtonUpAction();
+
+	void OnTimer(int nId);
+
+protected:
+	void DispatchEvent(CSkinHoverActionBtEventNotify::Command cmd);
+
+	void EndHover();
+
+protected:
+	int					m_nTimerIdHoverAction;
+	bool				m_bHoverActionBegin;
+	DWORD				m_dwBeginHoverTime;
+
+};
+
 #endif // !defined(AFX_SKINBUTTON_H__FD258491_71A3_11D5_9E04_02608CAD9330__INCLUDED_)

@@ -1327,6 +1327,8 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinAnimationObj;
 	else if (IsPropertyName(szClassName, CSkinFrameCtrl::ClassName()))
 		pObj = new CSkinFrameCtrl;
+	else if (IsPropertyName(szClassName, CSkinHoverActionButton::ClassName()))
+		pObj = new CSkinHoverActionButton;
 
 	if (pObj)
 	{

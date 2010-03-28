@@ -83,6 +83,7 @@ protected:
 
 	bool			m_bFadein;
 	DWORD			m_dwBeginFadeinTime;
+	int				m_nTimerIdFadein;
 	CSFImage		*m_pLastImage;
 
 	BlendPixMode	m_bpm;

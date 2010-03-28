@@ -45,9 +45,6 @@ CSkinNStatusButton::~CSkinNStatusButton()
 
 bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	if (!m_bEnable)
-		return false;
-
 	m_pSkin->SetFocusUIObject(this);
 
 	assert(m_pSkin);
@@ -98,23 +95,21 @@ void CSkinNStatusButton::OnTimer(int nId)
 
 		if (m_bContinuousBegin)
 		{
-			m_pSkin->UnregisterTimerObject(this);
+			if (m_nTimerIdContinuous)
+				m_pSkin->UnregisterTimerObject(this, m_nTimerIdContinuous);
 			m_nTimerIdContinuous = m_pSkin->RegisterTimerObject(this, 100);
 			m_bContinuousBegin = false;
 		}
 	}
 	else
 	{
-		m_pSkin->UnregisterTimerObject(this);
+		m_pSkin->UnregisterTimerObject(this, m_nTimerIdContinuous);
 		m_nTimerIdContinuous = 0;
 	}
 }
 
 bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	if (!m_bEnable)
-		return false;
-
 	// ÊÍ·ÅÊó±êÊäÈë
 	m_pSkin->ReleaseCaptureMouse(this);
 
@@ -128,9 +123,6 @@ bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 
 bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if (!m_bEnable)
-		return false;
-
 	assert(m_pSkin);
 
 	if (IsMouseHitBt(point))
@@ -265,7 +257,8 @@ void CSkinNStatusButton::Draw(CRawGraph *pGraph)
 		if (dwTimeCur - m_dwBeginFadeinTime >= FADE_BUTTON_TIME_OUT)
 		{
 			m_dwBeginFadeinTime = 0;
-			m_pSkin->UnregisterTimerObject(this);
+			m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
+			m_nTimerIdFadein = 0;
 		}
 		else
 		{
@@ -560,7 +553,7 @@ void CSkinNStatusButton::ButtonDownAction()
 
 	if (m_bFadein)
 	{
-		m_pSkin->RegisterTimerObject(this, 50);
+		m_nTimerIdFadein = m_pSkin->RegisterTimerObject(this, 50);
 		m_dwBeginFadeinTime = GetTickCount();
 
 		m_pLastImage = NULL;
@@ -584,13 +577,13 @@ void CSkinNStatusButton::ButtonUpAction()
 
 	if (m_bContinuousCmd)
 	{
-		m_pSkin->UnregisterTimerObject(this);
+		m_pSkin->UnregisterTimerObject(this, m_nTimerIdContinuous);
 		m_nTimerIdContinuous = 0;
 	}
 
 	if (m_bFadein)
 	{
-		m_pSkin->RegisterTimerObject(this, 50);
+		m_nTimerIdFadein = m_pSkin->RegisterTimerObject(this, 50);
 		m_dwBeginFadeinTime = GetTickCount();
 
 		m_pLastImage = NULL;

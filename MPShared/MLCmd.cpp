@@ -36,6 +36,9 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_CLR_NEXT_HUE"), CMD_CLR_NEXT_HUE, 0, _T("Next Color") },
 	{ _T("ID_LYR_HIGH_CLR_LIST"), CMD_LYR_HIGH_CLR_LIST, 0, _T("Highlight lyrics color") },
 
+	{ _T("ID_AUTO_LYR_BW"), 	CMD_AUTO_LYR_BW, 0, _T("Pause/Backward lyrics") },
+	{ _T("ID_AUTO_LYR_FW"), 	CMD_AUTO_LYR_FW, 0, _T("Forward lyrics") },
+
 	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, IDC_INSERT_TAG, _T("Synchronize the current line") },
 	{ _T("ID_DEL_TAG"), CMD_DEL_TAG, 0, _T("Remove Timestamp of the current line") },
 	{ _T("ID_INSERTTAG_DOWN"), CMD_INSERTTAG_DOWN, IDC_INSERT_TAG_AND_MOVE_DOWN, _T("Synchronize the current line and move to next line") },

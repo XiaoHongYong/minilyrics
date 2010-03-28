@@ -30,10 +30,10 @@
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
               CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
 
-    <Button Left="10" Top="9" Width="16" Height="16" ID="ID_MENU" Name="Menu"
+    <Button Rect="10,9,16,16" ID="ID_MENU" Name="Menu"
       Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
       ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
-    <Image Name="Brand" Left="44" Top="8" Width="81" Height="20" Image="name.png"
+    <Image Name="Brand" Rect="44,8,81,20" Image="name.png"
            UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
     <MenuBar left="150" top="8" width="w-90-150" height="18" Name="Menu" Menu="MainWndMenu"
              UseSkinBg="true" TranslucencyWithSkin="TRUE"
@@ -52,12 +52,21 @@
 
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
       <Container Name="Lyrics" ID="CID_LYRICS" left="0" top="0" width="w" height="h">
-        <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h"
+        <LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h"
                   EnableToolbar="FALSE" BgColor="#576C91" FgColor="#FFFFFF"
                   FgLowColor="#B2B2B2" FocusLineBgColor="#8A94AA" TagColor="#FFFFFF"
                   EnableAutoResize="TRUE"/>
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
+        
+        <Container Name="Left control" ID="CID_TXT_LYR" Rect="20,0,w,h">
+          <HoverActionButton Rect="0,h/2-28-5,28,28" ID="ID_AUTO_LYR_BW" Name="Back/pause lyrics"
+            Image="auto_scroll_lyr_bt.png" ImageSize="28,28" ImagePos="0,0" ImageSelPos="0,28"
+            ImageFocusPos="0,56" UseSkinBg="true"/>
+          <HoverActionButton Rect="0,h/2+5,28,28" ID="ID_AUTO_LYR_FW" Name="Forward lyrics"
+            Image="auto_scroll_lyr_bt.png" ImageSize="28,28" ImagePos="28,0" ImageSelPos="28,28"
+            ImageFocusPos="28,56" UseSkinBg="true"/>
+        </Container>
 
         <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,26" TranslucencyWithSkin="TRUE">
           <Image Name="Top-ctrl-bg" Rect="0,0,w,26" Image="top-ctrl-bg.png" BltMode="tile" />
@@ -99,8 +108,8 @@
       <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" left="0" top="0" width="w" height="h" Visible="false"/>
     </ToggleCtrlContainer>
 
-    <WndResizer Name="Bottom" Left="0" Top="h-20" Width="w-20" Height="20" Direction="bottom"/>
-    <WndResizer Name="Right" Left="w-20" Top="0" Width="20" Height="h-20" Direction="right"/>
-    <WndResizer Name="RightBottom" Left="w-20" Top="h-20" Width="20" Height="20" Direction="right|bottom"/>
+    <WndResizer Name="Bottom" Rect="0,h-20,w-20,20" Direction="bottom"/>
+    <WndResizer Name="Right" Rect="w-20,0,20,h-20" Direction="right"/>
+    <WndResizer Name="RightBottom" Rect="w-20,h-20,20,20" Direction="right|bottom"/>
   </skinwnd>
 </skin>

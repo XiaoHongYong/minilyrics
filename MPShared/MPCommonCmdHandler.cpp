@@ -334,6 +334,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 
 	return true;
 }
+#include "AutoScrollLyrics.h"
 
 bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 {
@@ -362,6 +363,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_PREFERENCES:
+		g_autoScrollLyrics.InitCreateAutoEvents(g_LyricData.GetRawLyrics());
+		g_mpApp.DispatchLyricsChangedSyncEvent();
+		break;
+
 		CMPSkinDialog::ShowDialog(new CPreferenceDlg2(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS), m_pSkinWnd);
 		g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
@@ -404,16 +409,25 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		g_Player.Play();
 		break;
 	case CMD_PLAYPAUSE:
-		g_Player.PlayPause();
+		g_autoScrollLyrics.AddPlayPauseAction(g_Player.GetPlayPos());
+		g_autoScrollLyrics.UpdateTimeTagByEvents(g_LyricData.GetRawLyrics());
+		g_mpApp.DispatchLyricsChangedSyncEvent();
+		// g_Player.PlayPause();
 		break;
 	case CMD_STOP:
 		g_Player.Stop();
 		break;
 	case CMD_NEXT:
-		g_Player.Next();
+		g_autoScrollLyrics.AddAction(CAutoScrollLyrics::A_SPEED_UP, g_Player.GetPlayPos());
+		g_autoScrollLyrics.UpdateTimeTagByEvents(g_LyricData.GetRawLyrics());
+		g_mpApp.DispatchLyricsChangedSyncEvent();
+		// g_Player.Next();
 		break;
 	case CMD_PREVIOUS:
-		g_Player.Prev();
+		g_autoScrollLyrics.AddAction(CAutoScrollLyrics::A_SPEED_DOWN, g_Player.GetPlayPos());
+		g_autoScrollLyrics.UpdateTimeTagByEvents(g_LyricData.GetRawLyrics());
+		g_mpApp.DispatchLyricsChangedSyncEvent();
+		// g_Player.Prev();
 		break;
 	case CMD_SEEK:
 		{
@@ -934,6 +948,13 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	return true;
 }
 
+void AddAutoLyrAction(CAutoScrollLyrics::Action action)
+{
+	g_autoScrollLyrics.AddAction(action, g_Player.GetPlayPos());
+	g_autoScrollLyrics.UpdateTimeTagByEvents(g_LyricData.GetRawLyrics());
+	g_mpApp.DispatchLyricsChangedSyncEvent();
+}
+
 bool CMPCommonCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
 {
 	if (pNotify->nID == CMD_SEEK)
@@ -952,11 +973,56 @@ bool CMPCommonCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
 				g_Player.SetUseSeekTimeAsPlayingTime(false);
 			}
 		}
-
-		return true;
 	}
+	else if (pNotify->nID == CMD_AUTO_LYR_BW || pNotify->nID == CMD_AUTO_LYR_FW)
+	{
+		if (!pNotify->IsKindOf(CSkinHoverActionButton::ClassName()))
+			return true;
+		CSkinHoverActionBtEventNotify *pHANotify = (CSkinHoverActionBtEventNotify*)pNotify;
 
-	return false;
+		if (pNotify->nID == CMD_AUTO_LYR_BW)
+		{
+			if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_CLICK)
+			{
+				DBGLOG0(_T("C_CLICK"));
+			}
+			else if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_BEGIN_HOVER)
+			{
+				AddAutoLyrAction(CAutoScrollLyrics::A_PAUSE);
+			}
+			else if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_HOVER_ACTION)
+			{
+				// AddAutoLyrAction(CAutoScrollLyrics::A_PAUSE);
+			}
+			else if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_END_HOVER)
+			{
+				AddAutoLyrAction(CAutoScrollLyrics::A_PLAY);
+			}
+		}
+		else
+		{
+			if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_CLICK)
+			{
+				DBGLOG0(_T("C_CLICK"));
+			}
+			else if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_BEGIN_HOVER)
+			{
+				AddAutoLyrAction(CAutoScrollLyrics::A_SPEED_UP);
+			}
+			else if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_HOVER_ACTION)
+			{
+				AddAutoLyrAction(CAutoScrollLyrics::A_SPEED_UP);
+			}
+			else if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_END_HOVER)
+			{
+				AddAutoLyrAction(CAutoScrollLyrics::A_PLAY);
+			}
+		}
+	}
+	else
+		return false;
+
+	return true;
 }
 
 bool CMPCommonCmdHandler::GetChecked(UINT nID, bool &bChecked)

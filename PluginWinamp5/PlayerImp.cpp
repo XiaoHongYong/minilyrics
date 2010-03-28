@@ -205,6 +205,13 @@ void OnMediaChanged(LPWSTR szFile, LPCWSTR szMediaTitle)
 	if (WAGetCurSongLength(g_hwndPlayer, dwLength))
 		dwLength *= 1000;
 
+	for (int i = 0; i < 10 && int(dwLength) <= 0; i++)
+	{
+		Sleep(50);
+		if (WAGetCurSongLength(g_hwndPlayer, dwLength))
+			dwLength *= 1000;
+	}
+
 	MLMediaInfo		mediaInfo;
 
 	mediaInfo.nMediaLength = dwLength;

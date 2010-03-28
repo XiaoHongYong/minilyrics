@@ -81,7 +81,8 @@ bool CSkinContainer::OnMouseMove(UINT nFlags, CPoint point)
 		CUIObject	*pObj;
 		pObj = m_vUIObjs[i];
 		
-		if (pObj->WantMsgMouseMove() && pObj->IsVisible() && pObj->IsPtIn(point))
+		if (pObj->WantMsgMouseMove() && pObj->IsVisible()
+			 && pObj->IsEnable() && pObj->IsPtIn(point))
 		{
 			if (pObj->OnMouseMove(nFlags, point))
 			{
@@ -107,7 +108,8 @@ bool CSkinContainer::OnLButtonDown(UINT nFlags, CPoint point)
 		pObj = m_vUIObjs[i];
 		assert(pObj);
 
-		if (pObj->WantMsgLButton() && pObj->IsVisible() && pObj->IsPtIn(point))
+		if (pObj->WantMsgLButton() && pObj->IsVisible()
+			 && pObj->IsEnable() && pObj->IsPtIn(point))
 		{
 			if (!pObj->IsContainer() && pObj->WantMsgKey())
 				m_pSkin->SetFocusUIObject(pObj);
@@ -135,7 +137,8 @@ bool CSkinContainer::OnLButtonDblClk(UINT nFlags, CPoint point)
 		pObj = m_vUIObjs[i];
 		assert(pObj);
 
-		if (pObj->WantMsgLButton() && pObj->IsVisible() && pObj->IsPtIn(point))
+		if (pObj->WantMsgLButton() && pObj->IsVisible()
+			 && pObj->IsEnable() && pObj->IsPtIn(point))
 		{
 			if (!pObj->IsContainer() && pObj->WantMsgKey())
 				m_pSkin->SetFocusUIObject(pObj);
@@ -163,7 +166,8 @@ bool CSkinContainer::OnLButtonUp(UINT nFlags, CPoint point)
 		pObj = m_vUIObjs[i];
 		//		assert(pObj == NULL);
 		
-		if (pObj->WantMsgLButton() && pObj->IsVisible() && pObj->IsPtIn(point))
+		if (pObj->WantMsgLButton() && pObj->IsVisible()
+			 && pObj->IsEnable() && pObj->IsPtIn(point))
 		{
 			if (pObj->OnLButtonUp(nFlags, point))
 			{
@@ -189,7 +193,8 @@ bool CSkinContainer::OnRButtonDown(UINT nFlags, CPoint point)
 		pObj = m_vUIObjs[i];
 		//		assert(pObj == NULL);
 
-		if (pObj->WantMsgRButton() && pObj->IsVisible() && pObj->IsPtIn(point))
+		if (pObj->WantMsgRButton() && pObj->IsVisible()
+			 && pObj->IsEnable() && pObj->IsPtIn(point))
 		{
 			if (pObj->OnRButtonDown(nFlags, point))
 			{
@@ -215,7 +220,8 @@ bool CSkinContainer::OnRButtonUp(UINT nFlags, CPoint point)
 		pObj = m_vUIObjs[i];
 		//		assert(pObj == NULL);
 
-		if (pObj->WantMsgRButton() && pObj->IsVisible() && pObj->IsPtIn(point))
+		if (pObj->WantMsgRButton() && pObj->IsVisible()
+			 && pObj->IsEnable() && pObj->IsPtIn(point))
 		{
 			if (pObj->OnRButtonUp(nFlags, point))
 			{
@@ -248,7 +254,8 @@ void CSkinContainer::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 		pObj = m_vUIObjs[i];
 		assert(pObj);
 		
-		if (pObj->WantMsgLButton() && pObj->IsVisible() && pObj->WantMsgMouseWheel())// && pObj->IsPtIn(point))
+		if (pObj->WantMsgLButton() && pObj->IsVisible()
+			 && pObj->IsEnable() && pObj->WantMsgMouseWheel())// && pObj->IsPtIn(point))
 		{
 			pObj->OnMouseWheel(nWheelDistance, nMkeys, pt);
 			return;
@@ -264,7 +271,7 @@ bool CSkinContainer::OnMenuKey(UINT nChar, UINT nFlags)
 		CUIObject	*pObj = m_vUIObjs[i];
 		assert(pObj);
 
-		if (pObj->WantMsgMenuKey() && pObj->IsVisible())
+		if (pObj->WantMsgMenuKey() && pObj->IsVisible() && pObj->IsEnable())
 		{
 			if (pObj->OnMenuKey(nChar, nFlags))
 				return true;

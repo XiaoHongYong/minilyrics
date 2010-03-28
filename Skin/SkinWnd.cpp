@@ -1582,7 +1582,8 @@ void CSkinWnd::FocusPrevUIObject()
 	{
 		CUIObject			*pObj = m_itFocusUIObject.Get();
 
-		if (pObj && pObj->WantMsgKey() && pObj->IsVisible() && pObj->IsParentVisible())
+		if (pObj && pObj->WantMsgKey() && pObj->IsEnable()
+			&& pObj->IsVisible() && pObj->IsParentVisible())
 		{
 			OnSwitchChildFocus(pObjFocusOld, pObj);
 			return;
@@ -1616,7 +1617,8 @@ void CSkinWnd::FocusNextUIObject()
 	{
 		CUIObject			*pObj = m_itFocusUIObject.Get();
 
-		if (pObj && pObj->WantMsgKey() && pObj->IsVisible() && pObj->IsParentVisible())
+		if (pObj && pObj->WantMsgKey() && pObj->IsEnable()
+			&& pObj->IsVisible() && pObj->IsParentVisible())
 		{
 			OnSwitchChildFocus(pObjFocusOld, pObj);
 			return;
@@ -2384,7 +2386,7 @@ void CSkinWnd::OnAddUIObj(CUIObject *pObj)
 			pObj->OnCreate();
 		}
 
-		if (m_itFocusUIObject.Get() == NULL && pObj->WantMsgKey()
+		if (m_itFocusUIObject.Get() == NULL && pObj->WantMsgKey() && pObj->IsEnable()
 			&& pObj->IsVisible() && pObj->IsParentVisible())
 			m_itFocusUIObject.From(pObj);
 	}
