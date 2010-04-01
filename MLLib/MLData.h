@@ -218,6 +218,7 @@ struct LyricsProperties
 			m_strTitle == other.m_strTitle &&
 			m_strAlbum == other.m_strAlbum &&
 			m_strBy == other.m_strBy &&
+			m_strTxtLyrScrollEvents == other.m_strTxtLyrScrollEvents &&
 			m_nTimeOffset == other.m_nTimeOffset &&
 			m_nEncodingID == other.m_nEncodingID; 
 	}
@@ -229,6 +230,7 @@ struct LyricsProperties
 		m_strAlbum.resize(0);
 		m_strBy.resize(0);
 		m_strEncoding.resize(0);
+		m_strTxtLyrScrollEvents.resize(0);
 		m_nTimeOffset = 0;
 		m_nEncodingID = ED_SYSDEF;
 	}
@@ -238,10 +240,13 @@ struct LyricsProperties
 	void SetEncoding(CHAR_ENCODING nEncodingID);
 	void SetEncoding(LPCTSTR szEncoding);
 
+	tstring GetOffsetTimeStr() { return CStrPrintf(_T("%d"), m_nTimeOffset).c_str(); }
+
 	tstring					m_strArtist;
 	tstring					m_strTitle;
 	tstring					m_strAlbum;
 	tstring					m_strBy;
+	tstring					m_strTxtLyrScrollEvents;
 	// offset time of timestamps in lyrics, in ms
 	int						m_nTimeOffset;
 protected:
@@ -371,6 +376,9 @@ public:
 	void SetProperty(LYRICS_PROP &prop, LPCTSTR szValue);
 	LyricsProperties &Properties() { return m_lyrProperties; }
 	static LYRICS_PROP_NAME* GetSupportedLyricsPropName();
+
+	void SetTxtLyrScrollEvents(LPCTSTR szScrEvents) { m_lyrProperties.m_strTxtLyrScrollEvents = szScrEvents; }
+	LPCTSTR GetTxtLyrScrollEvents() { return m_lyrProperties.m_strTxtLyrScrollEvents.c_str(); }
 
 	CHAR_ENCODING GetEncodingIndex() { return m_lyrProperties.GetEncodingIndex(); }
 	LPCTSTR GetEncoding() { return m_lyrProperties.GetEncoding(); }

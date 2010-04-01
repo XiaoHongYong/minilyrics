@@ -18,6 +18,7 @@
 #include "SrtParser.h"
 #include <algorithm>
 #include "LyricsTagReader.h"
+#include "../MPShared/AutoScrollLyrics.h"
 
 #define ROW_TIME_MIN_SPAN			300	// 300 MS
 
@@ -815,8 +816,7 @@ int CMLData::UpdateTagToID3v2DescTxt()
 	CLyricsTagReader<TCHAR>		lrctagWriter;
 
 	LPCTSTR		szTitle = NULL, szArtist = NULL, szAlbum = NULL;
-	LPCTSTR		szEncoding = NULL, szBy = NULL, szOffsetTime = NULL;
-	TCHAR		szOffsetTimeBuff[100];
+	LPCTSTR		szEncoding = NULL, szBy = NULL, szTxtScrollEvents = NULL;
 
 	if (m_lyrProperties.m_strArtist != m_lyrPropertiesOrg.m_strArtist)
 		szArtist = m_lyrProperties.m_strArtist.c_str();
@@ -824,11 +824,8 @@ int CMLData::UpdateTagToID3v2DescTxt()
 		szTitle = m_lyrProperties.m_strTitle.c_str();
 	if (m_lyrProperties.m_strAlbum != m_lyrPropertiesOrg.m_strAlbum)
 		szAlbum = m_lyrProperties.m_strAlbum.c_str();
-	if (m_lyrProperties.m_nTimeOffset != m_lyrPropertiesOrg.m_nTimeOffset)
-	{
-		_itot_s(m_lyrProperties.m_nTimeOffset, szOffsetTimeBuff, CountOf(szOffsetTimeBuff), 10);
-		szOffsetTime = szOffsetTimeBuff;
-	}
+	if (m_lyrProperties.m_strTxtLyrScrollEvents != m_lyrPropertiesOrg.m_strTxtLyrScrollEvents)
+		szTxtScrollEvents = m_lyrPropertiesOrg.m_strTxtLyrScrollEvents.c_str();
 	if (_tcscmp(m_lyrProperties.GetEncoding(), m_lyrPropertiesOrg.GetEncoding()) != 0)
 		szEncoding = m_lyrProperties.GetEncoding();
 
@@ -836,11 +833,11 @@ int CMLData::UpdateTagToID3v2DescTxt()
 	stringex		str;
 	str.append((const char *)m_id3v2SaveCacheInfo.m_strLrcDescription.c_str(),
 		m_id3v2SaveCacheInfo.m_strLrcDescription.size() * sizeof(TCHAR));
-	lrctagWriter.TxtWriteToStr(str, true, szTitle, szArtist, szAlbum, szEncoding);
+	lrctagWriter.TxtWriteToStr(str, true, szTitle, szArtist, szAlbum, szEncoding, szTxtScrollEvents);
 	m_id3v2SaveCacheInfo.m_strLrcDescription.clear();
 	m_id3v2SaveCacheInfo.m_strLrcDescription.append((const wchar_t*)str.c_str(), str.size() / sizeof(TCHAR));
 #else
-	lrctagWriter.TxtWriteToStr(m_id3v2SaveCacheInfo.m_strLrcDescription, false, szTitle, szArtist, szAlbum, szEncoding);
+	lrctagWriter.TxtWriteToStr(m_id3v2SaveCacheInfo.m_strLrcDescription, false, szTitle, szArtist, szAlbum, szEncoding, szTxtScrollEvents);
 #endif
 
 	return ERR_OK;
@@ -877,7 +874,11 @@ BOOL CMLData::SaveTag()
 
 	if (m_lyrConentType == LCT_TXT)
 	{
-		bRet = lrctagReader.TxtWriteToFile(m_strLrcSource.c_str(), szTitle, szArtist, szAlbum, szEncoding);
+		LPCTSTR szTxtScrollEvents = NULL;
+		if (m_lyrProperties.m_strTxtLyrScrollEvents != m_lyrPropertiesOrg.m_strTxtLyrScrollEvents)
+			szTxtScrollEvents = m_lyrProperties.m_strTxtLyrScrollEvents.c_str();
+
+		bRet = lrctagReader.TxtWriteToFile(m_strLrcSource.c_str(), szTitle, szArtist, szAlbum, szEncoding, szTxtScrollEvents);
 	}
 	else if (m_lyrConentType == LCT_LRC)
 	{
@@ -2217,7 +2218,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 			m_lyrProperties.m_strTitle.c_str(),
 			m_lyrProperties.m_strArtist.c_str(),
 			m_lyrProperties.m_strAlbum.c_str(),
-			m_lyrProperties.GetEncoding());
+			m_lyrProperties.GetEncoding(), _T(""));
 		lyrics.m_strUcs2ContentDesc.clear();
 		lyrics.m_strUcs2ContentDesc.append((const WCHAR *)strHeader.c_str(), strHeader.size() / sizeof(WCHAR));
 
@@ -2282,7 +2283,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 			m_lyrProperties.m_strTitle.c_str(),
 			m_lyrProperties.m_strArtist.c_str(),
 			m_lyrProperties.m_strAlbum.c_str(),
-			m_lyrProperties.GetEncoding());
+			m_lyrProperties.GetEncoding(), _T(""));
 
 		// convert lyrics rows
 		for (int i = 0; i < (int)m_arrLyricsRows.size(); i++)
@@ -2613,7 +2614,10 @@ void CMLData::SetProperty(LYRICS_PROP &prop, LPCTSTR szValue)
 		m_lyrProperties.m_strBy = szValue;
 		break;
 	case LP_OFFSET:
-		m_lyrProperties.m_nTimeOffset = _ttoi(szValue);
+		if (CAutoScrollLyrics::IsEventTag(szValue))
+			m_lyrProperties.m_strTxtLyrScrollEvents = szValue;
+		else
+			m_lyrProperties.m_nTimeOffset = _ttoi(szValue);
 		break;
 	}
 

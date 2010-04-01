@@ -11,6 +11,7 @@
 #include "LyricsParser.h"
 #include "LrcParser.h"
 #include "LyricsTagReader.h"
+#include "../MPShared/AutoScrollLyrics.h"
 
 
 #define	SZ_VERSION			"version:"
@@ -140,7 +141,13 @@ S_OTHER_TAGS:
 	if (nTagType == TAG_OFFSET)
 	{
 		// Get offset time
-		m_pMLData->SetOffsetTime(_ttoi(strValue.c_str()));
+		if (CAutoScrollLyrics::IsEventTag(strValue.c_str()))
+		{
+			// Set event tag.
+			m_pMLData->SetTxtLyrScrollEvents(strValue.c_str());
+		}
+		else
+			m_pMLData->SetOffsetTime(_ttoi(strValue.c_str()));
 	}
 	else if (nTagType == TAG_ARTIST)
 		m_pMLData->Properties().m_strArtist = strValue.c_str();
@@ -1267,7 +1274,15 @@ BOOL CLrcParser::ToString(tstring &str, BOOL bIncTags)
 	{
 		//
 		// 保存时间偏移值
-		if (m_pMLData->GetOffsetTime() != 0)
+		if (m_pMLData->GetLyricsSourceType() == LCT_TXT)
+		{
+			if (!IsEmptyString(m_pMLData->GetTxtLyrScrollEvents()))
+			{
+				_stprintf_s(szBuff, CountOf(szBuff), _T("[offset:%s]\r\n"), m_pMLData->GetTxtLyrScrollEvents());
+				str += szBuff;
+			}
+		}
+		else if (m_pMLData->GetOffsetTime() != 0)
 		{
 			_stprintf_s(szBuff, CountOf(szBuff), _T("[offset:%d]\r\n"), m_pMLData->GetOffsetTime());
 			str += szBuff;
