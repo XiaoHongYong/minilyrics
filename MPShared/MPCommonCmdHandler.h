@@ -37,6 +37,8 @@ protected:
 	void OnCommandRemoveLyricsInMp3();
 #endif
 
+	VLyrLines &GetDisplayLyrics();
+
 protected:
 	tstring			m_strSectName;
 	EventType		m_etDispSettings;

@@ -165,6 +165,8 @@ public:
 	//
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 
+	CMLyrLines &GetLyrics() { return m_lyrLines; }
+
 protected:
 	virtual bool OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue);
 
