@@ -160,7 +160,7 @@ public:
 	virtual int ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
 
 	virtual int SaveSkinFile(LPCTSTR szFile);
-	virtual void Close();
+	virtual void Close(bool bQuit = false);
 
 	CSkinWnd *FindSkinWnd(LPCTSTR szSkinWndName);
 	bool IsValidSkinWnd(CSkinWnd *pWnd);

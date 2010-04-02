@@ -89,6 +89,8 @@ public:
 public:
 	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow = true, bool bTopmost = true);
 
+	virtual bool Destroy();
+
 	virtual int OpenDefaultSkin();
 	virtual int OpenSkin(LPCTSTR szSkinWndName);
 	virtual void CloseSkin();
@@ -394,6 +396,8 @@ public:
 protected:
 	bool			m_bFreeOnDestory;
 	bool			m_bManageBySkinFactory;
+
+	bool			m_bOnDestroy;
 
 	// flag to indicate whether the skin was opened.
 	bool			m_bSkinOpened;

@@ -98,7 +98,7 @@ int CMPSkinFactory::LoadDefaultSkin()
 
 void CMPSkinFactory::Quit()
 {
-	Close();
+	Close(true);
 }
 
 CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)

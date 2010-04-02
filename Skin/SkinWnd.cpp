@@ -241,6 +241,13 @@ int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkin
 	return ERR_OK;
 }
 
+bool CSkinWnd::Destroy()
+{
+	m_bOnDestroy = true;
+
+	return CBaseWnd::Destroy();
+}
+
 int CSkinWnd::OpenDefaultSkin()
 {
 	if (m_strSkinWndName.empty())
@@ -1798,6 +1805,8 @@ void CSkinWnd::OnDestroy()
 //		OnCreate must return true to continue the creation of the CWnd object. If the application returns false, the window will be destroyed.
 bool CSkinWnd::OnCreate()
 {
+	m_bOnDestroy = false;
+
 	if (!CBaseWnd::OnCreate())
 		return false;
 
@@ -1832,25 +1841,28 @@ void CSkinWnd::OnActivate(bool bActived)
 
 	m_bActived = bActived;
 
-#ifdef _WIN32_DESKTOP
-	StartTranslucencyFade();
-
-	if (bActived)
-		m_translucencyStatus = TS_ON_ACTIVE;
-	else
-		m_translucencyStatus = TS_NORMAL;
-
-	if (m_bEnableClickThrough && m_bClickThrough)
-		SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
-#endif
-	if (bActived != m_bMouseActive)
+	if (!m_bOnDestroy)
 	{
-		m_bMouseActive = bActived;
-		OnMouseActive(m_bMouseActive);
-	}
+#ifdef _WIN32_DESKTOP
+		StartTranslucencyFade();
 
-	if (m_pSjvmNotifyEvent)
-		m_pSjvmNotifyEvent->onActivate(bActived);
+		if (bActived)
+			m_translucencyStatus = TS_ON_ACTIVE;
+		else
+			m_translucencyStatus = TS_NORMAL;
+
+		if (m_bEnableClickThrough && m_bClickThrough)
+			SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
+#endif
+		if (bActived != m_bMouseActive)
+		{
+			m_bMouseActive = bActived;
+			OnMouseActive(m_bMouseActive);
+		}
+
+		if (m_pSjvmNotifyEvent)
+			m_pSjvmNotifyEvent->onActivate(bActived);
+	}
 }
 
 void CSkinWnd::AddWndCloseto(CBaseWnd *pWnd, LPCTSTR szWndClass, LPCTSTR szWndName)

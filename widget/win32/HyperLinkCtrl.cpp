@@ -6,11 +6,7 @@
 #include "desktop.h"
 #include "WidgetCtrlBase.h"
 #include "HyperLinkCtrl.h"
-#ifdef _WIN32_WCE
-#include "../MPlayer/rc-MPlayer.h"
-#else
-#include "../ML6/rc-MiniLyrics.h"
-#endif
+#include "../MPShared/resource.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
