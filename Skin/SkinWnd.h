@@ -463,7 +463,6 @@ protected:
 	typedef struct TIMER_OBJECT
 	{
 		CUIObject	*pObj;
-		int			nTimerId;
 		int			nTimeDuration;
 	}TIMER_OBJECT;
 	int				m_nTimerIDMax;

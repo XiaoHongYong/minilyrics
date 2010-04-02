@@ -2425,22 +2425,13 @@ int CSkinWnd::RegisterTimerObject(CUIObject *pObj, int nTimeDuration)
 	m_nTimerIDMax++;
 	TimerObj.nTimeDuration = nTimeDuration;
 	TimerObj.pObj = pObj;
-	TimerObj.nTimerId = m_nTimerIDMax;
+	int nTimerId = m_nTimerIDMax;
 
-	// ???TIMER_OBJ???
-/*	MAP_TIMER_OBJS::value_type	value;
+	m_mapTimerObjs[nTimerId] = TimerObj;
 
-	value.first = TimerObj.nTimerId;
-	value.second = TimerObj;
+	SetTimer(nTimerId, TimerObj.nTimeDuration);
 
-	m_mapTimerObjs.insert(value);*/
-	m_mapTimerObjs[TimerObj.nTimerId] = TimerObj;
-
-	// ??TIMER
-	// ????,??nTimeDuration???Objs?????TIMER,???????
-	SetTimer(TimerObj.nTimerId, TimerObj.nTimeDuration);
-
-	return TimerObj.nTimerId;
+	return nTimerId;
 }
 
 // COMMENTS:
@@ -2472,7 +2463,7 @@ void CSkinWnd::UnregisterTimerObject(CUIObject *pObj)
 
 		if (timerObj.pObj == pObj)
 		{
-			KillTimer(timerObj.nTimerId);
+			KillTimer((*it).first);
 			m_mapTimerObjs.erase(it);
 			it = m_mapTimerObjs.begin();
 		}
