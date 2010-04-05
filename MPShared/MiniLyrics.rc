@@ -583,7 +583,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_MPLAYER             ICON                    "res\\mplayer.ico"
+IDI_MPLAYER             ICON                    "res\\Minilyrics.ico"
 IDI_SAVE                ICON                    "res\\save.ico"
 IDI_PLAY                ICON                    "Res\\play.ICO"
 IDI_STOP                ICON                    "Res\\stop.ICO"

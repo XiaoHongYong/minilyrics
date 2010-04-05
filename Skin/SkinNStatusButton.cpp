@@ -557,8 +557,8 @@ void CSkinNStatusButton::ButtonDownAction()
 		m_dwBeginFadeinTime = GetTickCount();
 
 		m_pLastImage = NULL;
-		// 		if (m_bEnableHover)
-		// 			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgHover);
+		if (m_bEnableHover)
+			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgHover);
 		if (!m_pLastImage || !m_pLastImage->IsValid())
 			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
 	}

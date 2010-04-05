@@ -35,7 +35,7 @@
       ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
     <Image Name="Brand" Rect="44,8,81,20" Image="name.png"
            UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
-    <MenuBar left="150" top="8" width="w-90-150" height="18" Name="Menu" Menu="MainWndMenu"
+    <MenuBar Rect="150,8,w-90-150,18" Name="Menu" Menu="MainWndMenu"
              UseSkinBg="true" TranslucencyWithSkin="TRUE"
        FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
        TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
@@ -51,7 +51,7 @@
     </Toolbar>
 
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
-      <Container Name="Lyrics" ID="CID_LYRICS" left="0" top="0" width="w" height="h">
+      <Container Name="Lyrics" ID="CID_LYRICS" Rect="0,0,w,h">
         <LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h"
                   EnableToolbar="FALSE" BgColor="#576C91" FgColor="#FFFFFF"
                   FgLowColor="#B2B2B2" FocusLineBgColor="#8A94AA" TagColor="#FFFFFF"
@@ -59,7 +59,7 @@
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         
-        <Container Name="Static lyrics control" ID="CID_STATIC_LYR_CTRL" Rect="20,0,w,h">
+        <Container Name="Static lyrics control" ID="CID_STATIC_LYR_CTRL" Rect="20,0,w,h" Visible="false">
           <HoverActionButton Rect="0,h/2-28-5,28,28" ID="ID_AUTO_LYR_BW" Name="Back/pause lyrics"
             Image="auto_scroll_lyr_bt.png" ImageSize="28,28" ImagePos="0,0" ImageSelPos="0,28"
             ImageFocusPos="0,56" UseSkinBg="true"/>
@@ -105,7 +105,7 @@
           </Toolbar>
         </Container>
       </Container>
-      <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" left="0" top="0" width="w" height="h" Visible="false"/>
+      <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" Visible="false"/>
     </ToggleCtrlContainer>
 
     <WndResizer Name="Bottom" Rect="0,h-20,w-20,20" Direction="bottom"/>
