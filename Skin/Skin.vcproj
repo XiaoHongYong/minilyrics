@@ -1342,10 +1342,6 @@
 			RelativePath=".\script\skin.java"
 			>
 		</File>
-		<File
-			RelativePath=".\script\skinwnd.java"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

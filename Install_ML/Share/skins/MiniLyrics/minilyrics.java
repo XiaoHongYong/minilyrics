@@ -39,6 +39,16 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 			// mSkinWnd.setProperty("TranslucencyAlphaOnActive", "255");
 			// mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
 		}
+		else if (nCmdId == Glass.CMD_ON_STATIC_LYR_OPEN)
+		{
+			mSkinWnd.setUIObjVisible(Glass.CID_STATIC_LYR_CTRL, true);
+			return true;
+		}
+		else if (nCmdId == Glass.CMD_ON_SYNC_LYR_OPEN)
+		{
+			mSkinWnd.setUIObjVisible(Glass.CID_STATIC_LYR_CTRL, false);
+			return true;
+		}
 		
 		return false;
 	}
@@ -104,6 +114,9 @@ public class Glass
 	public static int CID_AM_SHOW_PLAY;
 	public static int ID_HIDE_WND_FRAME;
 	public static int nHideFrameOnLostFocus;
+	public static int CMD_ON_STATIC_LYR_OPEN;
+	public static int CMD_ON_SYNC_LYR_OPEN;
+	public static int CID_STATIC_LYR_CTRL;
 
 	public static void main()
 	{
@@ -118,7 +131,10 @@ public class Glass
 		CID_AM_HIDE_PLAY = SkinSystem.getCommandID("CID_AM_HIDE_PLAY");
 		CID_AM_SHOW_PLAY = SkinSystem.getCommandID("CID_AM_SHOW_PLAY");
 		ID_HIDE_WND_FRAME = SkinSystem.getCommandID("ID_HIDE_WND_FRAME");
-		
+		CMD_ON_STATIC_LYR_OPEN = SkinSystem.getCommandID("CMD_ON_STATIC_LYR_OPEN");
+		CMD_ON_SYNC_LYR_OPEN = SkinSystem.getCommandID("CMD_ON_SYNC_LYR_OPEN");
+		CID_STATIC_LYR_CTRL = SkinSystem.getCommandID("CID_STATIC_LYR_CTRL");
+
 		nHideFrameOnLostFocus = SkinSystem.getProfileInt("HideFrameOnLostFocus", 1);
 
 		static GlassSkinWndEvent	skinWndEvent = new GlassSkinWndEvent();

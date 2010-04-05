@@ -59,7 +59,7 @@
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         
-        <Container Name="Left control" ID="CID_TXT_LYR" Rect="20,0,w,h">
+        <Container Name="Static lyrics control" ID="CID_STATIC_LYR_CTRL" Rect="20,0,w,h">
           <HoverActionButton Rect="0,h/2-28-5,28,28" ID="ID_AUTO_LYR_BW" Name="Back/pause lyrics"
             Image="auto_scroll_lyr_bt.png" ImageSize="28,28" ImagePos="0,0" ImageSelPos="0,28"
             ImageFocusPos="0,56" UseSkinBg="true"/>

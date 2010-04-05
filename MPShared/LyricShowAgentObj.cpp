@@ -136,15 +136,35 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 	{
 		if (g_LyricData.GetLyrContentType() != LCT_TXT)
 		{
-			// Change to default lyrics display style
-			ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str());
-			m_pSkin->InvalidateRect();
+			if (m_pSkin->OnCustomCommand(CMD_ON_SYNC_LYR_OPEN))
+			{
+				// Change lyrics fade option
+				m_pLyricsShow->SetProperty(_T("LyrDrawOpt"), 
+					g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("LyrDrawOpt"), _T("")));
+			}
+			else
+			{
+				// Change to default lyrics display style
+				ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str());
+				m_pSkin->InvalidateRect();
+			}
 		}
-		else if (m_pLyricsShow && _tcscmp(CLyricShowMultiRowObj::ClassName(), m_pLyricsShow->GetClassName()) == 0)
+		else
 		{
-			// To static text style, if the original is MultiLine style.
-			ChangeLyricsDisplayStyle(CLyricShowTxtObj::ClassName());
-			m_pSkin->InvalidateRect();
+			if (m_pSkin->OnCustomCommand(CMD_ON_STATIC_LYR_OPEN))
+			{
+				// Change lyrics fade option
+				m_pLyricsShow->SetProperty(_T("LyrDrawOpt"), _T("fadein"));
+			}
+			else
+			{
+				if (m_pLyricsShow && _tcscmp(CLyricShowMultiRowObj::ClassName(), m_pLyricsShow->GetClassName()) == 0)
+				{
+					// To static text style, if the original is MultiLine style.
+					ChangeLyricsDisplayStyle(CLyricShowTxtObj::ClassName());
+					m_pSkin->InvalidateRect();
+				}
+			}
 		}
 	}
 }
