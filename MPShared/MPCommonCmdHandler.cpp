@@ -26,6 +26,7 @@
 #include "DlgCopySongLyrics.h"
 #include "MPMsgWnd.h"
 #include "DlgRateLyrics.h"
+#include "MPSkinMenu.h"
 #ifdef _WIN32
 #include "DlgAdjustHue.h"
 #endif
@@ -327,6 +328,8 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	default:
 		{
 			if (OnCommandCharEncoding(nID))
+				break;
+			if (OnCommandSkin(nID))
 				break;
 			return false;
 		}

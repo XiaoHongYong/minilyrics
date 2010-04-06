@@ -27,9 +27,6 @@ bool CSkinContainer::OnCommand(int nID)
 {
 	int		nCount;
 
-	if (m_pMenu && m_pMenu->OnCommand(m_pSkin, nID))
-		return true;
-
 	nCount = (int)m_vUIObjs.size();
 	for (int i = 0; i < nCount; i++)
 	{
