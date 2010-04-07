@@ -68,7 +68,7 @@
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40"
           S1_Image="s_radio_button.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40"/>
-    <NormalEdit Extends="EditCtrl" Height="20" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
+    <NormalEdit Extends="EditCtrl" Height="19" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
           XMargin="12" YMargin="8" ExtendPos="20,50" ImageFrame="s_edit_box.png" ImageFrameSize="70,35"
           ImageFramePos="0,35" ImageFrameFocusPos="0,0"/>
     <NormalListCtrl Extends="ListCtrl" BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 

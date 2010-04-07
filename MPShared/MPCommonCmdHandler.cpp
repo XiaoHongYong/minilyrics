@@ -370,11 +370,8 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_PREFERENCES:
-		g_mpApp.DispatchLyricsChangedSyncEvent();
-		break;
-
 		CMPSkinDialog::ShowDialog(new CPreferenceDlg2(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS), m_pSkinWnd);
-		g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		// g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case CMD_DISPLAY_OPT:
 		g_wndPreference.Create(m_pSkinWnd, PAGE_LYR_DISPLAY, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
