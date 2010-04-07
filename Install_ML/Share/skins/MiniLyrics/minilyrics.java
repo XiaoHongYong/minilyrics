@@ -39,6 +39,21 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 			// mSkinWnd.setProperty("TranslucencyAlphaOnActive", "255");
 			// mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
 		}
+		else if (nCmdId == Glass.ID_MOUSE_HOVER_SHOW_WND)
+		{
+			if (Glass.nShowFrameOnMouseHover > 0)
+			{
+				Glass.nShowFrameOnMouseHover = 0;
+				mSkinWnd.setProperty("TranslucencyAlphaOnHover", "0");
+			}
+			else
+			{
+				Glass.nShowFrameOnMouseHover = 1;
+				mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
+			}
+
+			SkinSystem.writeProfileInt("ShowFrameOnMouseHover", Glass.nShowFrameOnMouseHover);
+		}
 		else if (nCmdId == Glass.CMD_ON_STATIC_LYR_OPEN)
 		{
 			mSkinWnd.setUIObjVisible(Glass.CID_STATIC_LYR_CTRL, true);
@@ -61,6 +76,11 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 			mSkinWnd.setProperty("TranslucencyAlpha", "0");
 		else
 			mSkinWnd.setProperty("TranslucencyAlpha", "255");
+
+		if (Glass.nShowFrameOnMouseHover > 0)
+			mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
+		else
+			mSkinWnd.setProperty("TranslucencyAlphaOnHover", "0");
 	}
 
 	public void onDestroy()
@@ -113,7 +133,8 @@ public class Glass
 	public static int CID_AM_HIDE_PLAY;
 	public static int CID_AM_SHOW_PLAY;
 	public static int ID_HIDE_WND_FRAME;
-	public static int nHideFrameOnLostFocus;
+	public static int ID_MOUSE_HOVER_SHOW_WND;
+	public static int nHideFrameOnLostFocus, nShowFrameOnMouseHover;
 	public static int CMD_ON_STATIC_LYR_OPEN;
 	public static int CMD_ON_SYNC_LYR_OPEN;
 	public static int CID_STATIC_LYR_CTRL;
@@ -131,11 +152,13 @@ public class Glass
 		CID_AM_HIDE_PLAY = SkinSystem.getCommandID("CID_AM_HIDE_PLAY");
 		CID_AM_SHOW_PLAY = SkinSystem.getCommandID("CID_AM_SHOW_PLAY");
 		ID_HIDE_WND_FRAME = SkinSystem.getCommandID("ID_HIDE_WND_FRAME");
+		ID_MOUSE_HOVER_SHOW_WND = SkinSystem.getCommandID("ID_MOUSE_HOVER_SHOW_WND");
 		CMD_ON_STATIC_LYR_OPEN = SkinSystem.getCommandID("CMD_ON_STATIC_LYR_OPEN");
 		CMD_ON_SYNC_LYR_OPEN = SkinSystem.getCommandID("CMD_ON_SYNC_LYR_OPEN");
 		CID_STATIC_LYR_CTRL = SkinSystem.getCommandID("CID_STATIC_LYR_CTRL");
 
 		nHideFrameOnLostFocus = SkinSystem.getProfileInt("HideFrameOnLostFocus", 1);
+		nShowFrameOnMouseHover = SkinSystem.getProfileInt("ShowFrameOnMouseHover", 1);
 
 		static GlassSkinWndEvent	skinWndEvent = new GlassSkinWndEvent();
 		

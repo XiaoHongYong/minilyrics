@@ -7,10 +7,14 @@
       <Item Action="InsertByID" Type="item" Position="ID_CLICK_THROUGH"
             Name="Hide window frame on lost focus" IDCmd="ID_HIDE_WND_FRAME"
             CanCheck="true" IsCheckedCmd="dyncmd_is_frame_hide" />
+      <Item Action="InsertByID" Type="item" Position="ID_CLICK_THROUGH"
+            Name="Show window frame on Mouse Hover" IDCmd="ID_MOUSE_HOVER_SHOW_WND"
+            CanCheck="true" IsCheckedCmd="dyncmd_is_mouse_hover_show_frame" />
     </Menu>
   </Menus>
   <DynCmds>
     <cmd ID="dyncmd_is_frame_hide" func="get_profile_bool" param="HideFrameOnLostFocus,1"/>
+    <cmd ID="dyncmd_is_mouse_hover_show_frame" func="get_profile_bool" param="ShowFrameOnMouseHover,1"/>
 
     <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
     <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
@@ -59,13 +63,16 @@
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         
-        <Container Name="Static lyrics control" ID="CID_STATIC_LYR_CTRL" Rect="20,0,w,h" Visible="false">
+        <Container Name="Static lyrics control" ID="CID_STATIC_LYR_CTRL" Rect="10,0,w,h" Visible="false">
           <HoverActionButton Rect="0,h/2-28-5,28,28" ID="ID_AUTO_LYR_BW" Name="Back/pause lyrics"
             Image="auto_scroll_lyr_bt.png" ImageSize="28,28" ImagePos="0,0" ImageSelPos="0,28"
             ImageFocusPos="0,56" UseSkinBg="true"/>
-          <HoverActionButton Rect="0,h/2+5,28,28" ID="ID_AUTO_LYR_FW" Name="Forward lyrics"
+          <HoverActionButton Rect="0,h/2,28,28" ID="ID_AUTO_LYR_FW" Name="Forward lyrics"
             Image="auto_scroll_lyr_bt.png" ImageSize="28,28" ImagePos="28,0" ImageSelPos="28,28"
             ImageFocusPos="28,56" UseSkinBg="true"/>
+          <HoverActionButton Rect="0,h/2+28+5,28,28" ID="ID_MENU_STATIC_LYR" Name="Back/pause lyrics"
+            Image="auto_scroll_lyr_bt.png" ImageSize="28,28" ImagePos="56,0" ImageSelPos="56,28"
+            ImageFocusPos="56,56" UseSkinBg="true"/>
         </Container>
 
         <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,26" TranslucencyWithSkin="TRUE">

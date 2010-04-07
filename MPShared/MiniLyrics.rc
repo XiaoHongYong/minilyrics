@@ -575,6 +575,15 @@ BEGIN
     END
 END
 
+IDR_MENU_STATIC_LYR MENU 
+BEGIN
+    POPUP "M"
+    BEGIN
+        MENUITEM "Clear Time-Stamp",            IDC_SL_CLEAR_TIME_STAMP
+        MENUITEM "Lyrics &Editor...",           IDC_LYR_EDITOR
+    END
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

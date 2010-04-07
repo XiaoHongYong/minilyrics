@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by MPlayer.rc
+// Used by MiniLyrics.rc
 //
 #define IDC_TEST                        128
 #define IDC_REPORT                      129
@@ -85,6 +85,7 @@
 #define IDD_UPDATE_LIBRARY              208
 #define IDD_PG_MEDIA_ASSOCIATE          209
 #define IDI_MEDIATYPE2                  210
+#define IDR_MENU_STATIC_LYR             211
 #define IDC_E_PWD                       1000
 #define IDC_APPLY_ACCOUNT               1001
 #define IDC_ALWAYS_ON_TOP               1002
@@ -463,13 +464,14 @@
 #define IDC_SAVE_PIC_AS                 40171
 #define IDC_ADDFILE                     40172
 #define IDC_LYR_EDITOR                  40173
+#define IDC_SL_CLEAR_TIME_STAMP         40174
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        211
-#define _APS_NEXT_COMMAND_VALUE         40174
+#define _APS_NEXT_COMMAND_VALUE         40176
 #define _APS_NEXT_CONTROL_VALUE         1204
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -30,6 +30,7 @@
 #ifdef _WIN32
 #include "DlgAdjustHue.h"
 #endif
+#include "AutoScrollLyrics.h"
 
 #ifdef _MPLAYER
 #include "MPHelper.h"
@@ -83,6 +84,10 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
 #endif
+	case IDC_SL_CLEAR_TIME_STAMP:
+		if (g_LyricData.GetLyrContentType() == LCT_TXT)
+			g_autoScrollLyrics.InitCreateAutoEvents(GetDisplayLyrics());
+		break;
 	case IDC_TAG_COLOR:
 	case IDC_EDIT_LINE_COLOR:
 		{
@@ -337,7 +342,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 
 	return true;
 }
-#include "AutoScrollLyrics.h"
 
 bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 {
@@ -366,8 +370,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_PREFERENCES:
-		g_autoScrollLyrics.InitCreateAutoEvents(GetDisplayLyrics());
-		// g_mpApp.DispatchLyricsChangedSyncEvent();
+		g_mpApp.DispatchLyricsChangedSyncEvent();
 		break;
 
 		CMPSkinDialog::ShowDialog(new CPreferenceDlg2(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS), m_pSkinWnd);
@@ -386,6 +389,15 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 #endif // _WIN32_DESKTOP
+	case CMD_MENU_STATIC_LYR:
+		{
+			CMLMenu menu;
+			POINT pt;
+			MLWidget::GetCursorPos(&pt);
+			menu.LoadMenu(IDR_MENU_STATIC_LYR);
+			menu.TrackPopupSubMenu(pt.x, pt.y, 0, m_pSkinWnd, NULL);
+		}
+		break;
 	case CMD_LYR_EDITOR:
 		g_mpApp.GetSkinFactory()->ActiveOrCreateSkinWnd(false,
 			_T("LyrEditor"), TOLOCAL(_T("Lyrics Editor")), _T("LyricsEditor.xml"));
