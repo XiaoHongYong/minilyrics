@@ -9,11 +9,13 @@
 //////////////////////////////////////////////////////////////////////
 
 
-CPagePfBase::CPagePfBase(LPCTSTR szIdPage) :
+CPagePfBase::CPagePfBase(LPCTSTR szIdPage, PreferPageID pfPageId, LPCTSTR szAssociateTabButtonId) :
 	CSkinPageHandler(szIdPage, NULL, NULL, 
 				 NULL, NULL)
 {
 	m_strPageId = szIdPage;
+	m_pfPageId = pfPageId;
+	m_nAssociateTabButtonId = GetIDByName(szAssociateTabButtonId);
 }
 
 void CPagePfBase::OnCreate()
@@ -39,6 +41,18 @@ bool CPagePfBase::OnCustomCommand(int nId)
 {
 	if (CSkinPageHandler::OnCustomCommand(nId))
 		return true;
+
+	// Toolbar(Tab) check command
+	for (ListPageHandler::iterator it = m_listPageHandler.begin();
+		it != m_listPageHandler.end(); ++it)
+	{
+		CPagePfBase	*pPageChild = (CPagePfBase *)*it;
+		if (pPageChild->GetAssociateTabButtonId() == nId)
+		{
+			SwitchToPage(pPageChild->GetPageId());
+			return true;
+		}
+	}
 
 	{
 		// Bool
@@ -227,6 +241,37 @@ void CPagePfBase::ClearOptions()
 	m_vOptBool.clear();
 	m_vOptComboStr.clear();
 	m_vOptRadioInt.clear();
+}
+
+bool CPagePfBase::SetDefaultPreferPage(PreferPageID pfPageIdDefault)
+{
+	if (m_pfPageId == pfPageIdDefault)
+		return true;
+
+	for (ListPageHandler::iterator it = m_listPageHandler.begin();
+		it != m_listPageHandler.end(); ++it)
+	{
+		CPagePfBase	*pPageChild = (CPagePfBase *)*it;
+		if (pPageChild->SetDefaultPreferPage(pfPageIdDefault))
+		{
+			m_nIdPageDefault = pPageChild->GetPageId();
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void CPagePfBase::CheckToolbarDefaultPage(LPCTSTR szToolbarId)
+{
+	CPagePfBase *pPage = (CPagePfBase *)GetPage(m_nIdPageDefault);
+	if (pPage)
+	{
+		CheckToolbarButton(szToolbarId, 
+			pPage->GetAssociateTabButtonId(), true);
+	}
+	else
+		ASSERT(0);
 }
 
 int CPagePfBase::NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj)

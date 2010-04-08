@@ -7,11 +7,11 @@
 #include "LyrDisplayClrListWnd.h"
 
 //////////////////////////////////////////////////////////////////////////
-
+/*
 class CPagePfThemeItems : public CPagePfBase
 {
 public:
-	CPagePfThemeItems() : CPagePfBase(GetPageID())
+	CPagePfThemeItems() : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T(""))
 	{
 	}
 
@@ -54,14 +54,14 @@ public:
 
 protected:
 
-};
+};*/
 
 //////////////////////////////////////////////////////////////////////////
 
 class CPagePfLyricsBgPic : public CPagePfBase
 {
 public:
-	CPagePfLyricsBgPic() : CPagePfBase(GetPageID())
+	CPagePfLyricsBgPic() : CPagePfBase(GetPageID(), PAGE_LYR_BG, _T("CMD_THEME_LYR_BG_PIC"))
 	{
 	}
 
@@ -181,7 +181,7 @@ public:
 	}
 
 public:
-	CPagePfDisplayStyle(bool bFloatingLyrMode) : CPagePfBase(GetPageID())
+	CPagePfDisplayStyle(bool bFloatingLyrMode) : CPagePfBase(GetPageID(), PAGE_LYR_DISPLAY, _T("CMD_THEME_LYR_DISPLAY"))
 	{
  		if (bFloatingLyrMode)
  			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
@@ -508,7 +508,7 @@ protected:
 class CPagePfTheme : public CPagePfBase
 {
 public:
-	CPagePfTheme() : CPagePfBase(GetPageID())
+	CPagePfTheme() : CPagePfBase(GetPageID(), PAGE_THEMES, _T("CMD_THEME_THEME"))
 	{
 	}
 
@@ -688,7 +688,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfThemeRoot::CPagePfThemeRoot(bool bFloatingLyrMode) : CPagePfBase(GetPageID())
+CPagePfThemeRoot::CPagePfThemeRoot(bool bFloatingLyrMode) : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T("CMD_ROOT_THEME"))
 {
 	AddPage(new CPagePfTheme());
 	AddPage(new CPagePfDisplayStyle(bFloatingLyrMode));
@@ -705,9 +705,10 @@ void CPagePfThemeRoot::OnCreate()
 {
 	CPagePfBase::OnCreate();
 
-	CheckToolbarButton(_T("CID_TOOLBAR_THEME"), _T("CMD_THEME_THEME"), true);
+	CheckToolbarDefaultPage(_T("CID_TOOLBAR_THEME"));
 }
 
+/*
 bool CPagePfThemeRoot::OnCustomCommand(int nId)
 {
 	if (nId == GetIDByName(_T("CMD_THEME_THEME")))
@@ -720,7 +721,7 @@ bool CPagePfThemeRoot::OnCustomCommand(int nId)
 		return CPagePfBase::OnCustomCommand(nId);
 
 	return true;
-}
+}*/
 
 //////////////////////////////////////////////////////////////////////////
 //

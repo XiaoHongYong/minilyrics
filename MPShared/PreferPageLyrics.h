@@ -14,7 +14,7 @@ public:
 
 	void OnCreate();
 
-	bool OnCustomCommand(int nId);
+	// bool OnCustomCommand(int nId);
 
 };
 

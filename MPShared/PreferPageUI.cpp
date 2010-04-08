@@ -13,7 +13,7 @@ const int	_CMD_ID_LANGUANG_BEGIN	= 3000;
 class CPagePfUI : public CPagePfBase
 {
 public:
-	CPagePfUI() : CPagePfBase(GetPageID())
+	CPagePfUI() : CPagePfBase(GetPageID(), PAGE_UI, _T("CMD_UI"))
 	{
 	}
 
@@ -158,7 +158,7 @@ protected:
 class CPagePfSkin : public CPagePfBase
 {
 public:
-	CPagePfSkin() : CPagePfBase(GetPageID())
+	CPagePfSkin() : CPagePfBase(GetPageID(), PAGE_SKINS, _T("CMD_SKINS"))
 	{
 		m_pSkinList = NULL;
 		m_bIgnoreSkinListNotify = false;
@@ -322,7 +322,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfUIRoot::CPagePfUIRoot() : CPagePfBase(GetPageID())
+CPagePfUIRoot::CPagePfUIRoot() : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T("CMD_ROOT_UI"))
 {
 	AddPage(new CPagePfUI());
 	AddPage(new CPagePfSkin());
@@ -337,9 +337,10 @@ void CPagePfUIRoot::OnCreate()
 {
 	CPagePfBase::OnCreate();
 
-	CheckToolbarButton(_T("CID_TOOLBAR_UI"), _T("CMD_UI"), true);
+	CheckToolbarDefaultPage(_T("CID_TOOLBAR_UI"));
 }
 
+/*
 bool CPagePfUIRoot::OnCustomCommand(int nId)
 {
 	if (nId == GetIDByName(_T("CMD_UI")))
@@ -351,7 +352,7 @@ bool CPagePfUIRoot::OnCustomCommand(int nId)
 
 	return true;
 }
-
+*/
 //////////////////////////////////////////////////////////////////////////
 
 CPPageUI::CPPageUI() : CPreferencePageBase(IDD_PAGE_UI_ROOT, _T("User Interface"))

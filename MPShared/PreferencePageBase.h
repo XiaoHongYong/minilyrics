@@ -18,9 +18,8 @@ enum PreferPageID
 	PAGE_UNKNOWN,
 
 	// User interface
-	PAGE_UI_ROOT,
+	PAGE_UI,
 	PAGE_SKINS,
-	PAGE_UI_ADVANCED,
 
 	// Themes
 	PAGE_THEMES,
@@ -28,8 +27,6 @@ enum PreferPageID
 	PAGE_LYR_BG,
 
 	// System
-	PAGE_HOTKEYS,
-	PAGE_TRAY_ICON,
 	PAGE_INET,
 	PAGE_ASSOCIATION,
 	PAGE_STARTUP,
@@ -100,7 +97,7 @@ public:
 	typedef	list<OptRadioInt>		VOptRadioInt;
 
 public:
-	CPagePfBase(LPCTSTR szIdPage);
+	CPagePfBase(LPCTSTR szIdPage, PreferPageID pfPageId, LPCTSTR szAssociateTabButtonId);
 
 	void OnCreate();
 
@@ -116,6 +113,12 @@ public:
 
 	void OnUIObjNotify(IUIObjNotify *pNotify);
 
+	PreferPageID GetPfPageID() const { return m_pfPageId; }
+	int GetAssociateTabButtonId() const { return m_nAssociateTabButtonId; }
+	bool SetDefaultPreferPage(PreferPageID pfPageIdDefault);
+
+	void CheckToolbarDefaultPage(LPCTSTR szToolbarId);
+
 protected:
 	int NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj);
 
@@ -126,6 +129,8 @@ protected:
 	VOptComboStr		m_vOptComboStr;
 	VOptRadioInt		m_vOptRadioInt;
 	tstring				m_strPageId;
+	PreferPageID		m_pfPageId;
+	int					m_nAssociateTabButtonId;
 
 };
 

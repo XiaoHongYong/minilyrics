@@ -9,7 +9,7 @@
 class CPagePfInternet : public CPagePfBase
 {
 public:
-	CPagePfInternet() : CPagePfBase(GetPageID())
+	CPagePfInternet() : CPagePfBase(GetPageID(), PAGE_INET, _T("CMD_SYSTEM_INTERNET"))
 	{
 	}
 
@@ -146,7 +146,7 @@ ID_TO_STRING		_id2strPlayers[] = { { 0, _T("Winamp2") }, { 0, _T("Winamp5") },
 class CPagePfStartup: public CPagePfBase
 {
 public:
-	CPagePfStartup() : CPagePfBase(GetPageID())
+	CPagePfStartup() : CPagePfBase(GetPageID(), PAGE_STARTUP, _T("CMD_SYSTEM_STARTUP"))
 	{
 	}
 
@@ -237,7 +237,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfSystemRoot::CPagePfSystemRoot() : CPagePfBase(GetPageID())
+CPagePfSystemRoot::CPagePfSystemRoot() : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T("CMD_ROOT_SYSTEM"))
 {
 	AddPage(new CPagePfInternet());
 	AddPage(new CPagePfStartup());
@@ -252,9 +252,10 @@ void CPagePfSystemRoot::OnCreate()
 {
 	CPagePfBase::OnCreate();
 
-	CheckToolbarButton(_T("CID_TOOLBAR_SYSTEM"), _T("CMD_SYSTEM_INTERNET"), true);
+	CheckToolbarDefaultPage(_T("CID_TOOLBAR_SYSTEM"));
 }
 
+/*
 bool CPagePfSystemRoot::OnCustomCommand(int nId)
 {
 	if (nId == GetIDByName(_T("CMD_SYSTEM_INTERNET")))
@@ -265,7 +266,7 @@ bool CPagePfSystemRoot::OnCustomCommand(int nId)
 		return CPagePfBase::OnCustomCommand(nId);
 
 	return true;
-}
+}*/
 
 
 //////////////////////////////////////////////////////////////////////////

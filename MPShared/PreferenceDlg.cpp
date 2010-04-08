@@ -14,7 +14,6 @@
 #include "PreferPageLyrics.h"
 #include "PreferPageTheme.h"
 #include "PreferPageLyrOutput.h"
-#include "PreferPageHotkey.h"
 #include "PreferPageAdvanced.h"
 #include "SkinToolBar.h"
 
@@ -22,15 +21,28 @@
 #include "PreferPageAssociation.h"
 #endif
 
-
-
-CPreferenceDlg2::CPreferenceDlg2(bool bFloatingLyrMode) : CMPSkinDialog(_T("Preferences.xml"))
+CPreferenceDlg2::CPreferenceDlg2(bool bFloatingLyrMode, PreferPageID defaultPage)
+	: CMPSkinDialog(_T("Preferences.xml"))
 {
 	m_pageHandler.AddPage(new CPagePfUIRoot());
 	m_pageHandler.AddPage(new CPagePfThemeRoot(bFloatingLyrMode));
 	m_pageHandler.AddPage(new CPagePfSystemRoot());
 	m_pageHandler.AddPage(new CPagePfLyricsRoot());
 	m_pageHandler.AddPage(new CPagePfAdvanced());
+
+	m_nDefaultRootPage = UID_INVALID;
+
+	// find default page.
+	CSkinPageHandler::ListPageHandler::iterator it, itEnd = m_pageHandler.ChildEnd();
+	for (it = m_pageHandler.ChildBegin(); it != itEnd; ++it)
+	{
+		CPagePfBase	*pPageRoot = (CPagePfBase *)*it;
+		if (pPageRoot->SetDefaultPreferPage(defaultPage))
+		{
+			m_nDefaultRootPage = pPageRoot->GetPageId();
+			break;
+		}
+	}
 }
 
 void CPreferenceDlg2::OnSkinLoaded()
@@ -41,8 +53,13 @@ void CPreferenceDlg2::OnSkinLoaded()
 		CSkinToolbar::ClassName());
 	if (pToolbar)
 	{
-		//if (m_pageHandler.GetActivePage())
-		pToolbar->SetCheck(GetIDByName(_T("CMD_ROOT_UI")), true, false);
+		CPagePfBase	*pPageRoot = (CPagePfBase *)m_pageHandler.GetPage(m_nDefaultRootPage);
+		ASSERT(pPageRoot);
+		if (pPageRoot)
+		{
+			pToolbar->SetCheck(pPageRoot->GetAssociateTabButtonId(), true, false);
+			m_pageHandler.SwitchToPage(pPageRoot->GetPageId());
+		}
 	}
 }
 
@@ -51,7 +68,20 @@ bool CPreferenceDlg2::OnCustomCommand(int nId)
 	if (CMPSkinDialog::OnCustomCommand(nId))
 		return true;
 
-	if (nId == GetIDByName(_T("CMD_ROOT_UI")))
+	CSkinPageHandler::ListPageHandler::iterator it, itEnd = m_pageHandler.ChildEnd();
+	for (it = m_pageHandler.ChildBegin(); it != itEnd; ++it)
+	{
+		CPagePfBase	*pPageRoot = (CPagePfBase *)*it;
+		if (pPageRoot->GetAssociateTabButtonId() == nId)
+		{
+			m_pageHandler.SwitchToPage(pPageRoot->GetPageId());
+			return true;
+		}
+	}
+
+	return false;
+
+/*	if (nId == GetIDByName(_T("CMD_ROOT_UI")))
 		m_pageHandler.SwitchToPage(CPagePfUIRoot::GetPageID());
 	else if (nId == GetIDByName(_T("CMD_ROOT_THEME")))
 		m_pageHandler.SwitchToPage(CPagePfThemeRoot::GetPageID());
@@ -64,7 +94,7 @@ bool CPreferenceDlg2::OnCustomCommand(int nId)
 	else
 		return false;
 
-	return true;
+	return true;*/
 }
 
 

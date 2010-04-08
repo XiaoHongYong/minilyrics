@@ -976,7 +976,7 @@ void CPreferPageAdvanced::ListAllItems()
 
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfAdvanced::CPagePfAdvanced() : CPagePfBase(GetPageID())
+CPagePfAdvanced::CPagePfAdvanced() : CPagePfBase(GetPageID(), PAGE_ADVANCED, _T("CMD_ROOT_ADVANCED"))
 {
 	m_nMenuIdEnd = m_nMenuIdStart = 0;
 	m_bIgnoreSettingListNotify = false;

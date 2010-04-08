@@ -16,7 +16,7 @@
 class CPagePfLyrDownload : public CPagePfBase
 {
 public:
-	CPagePfLyrDownload() : CPagePfBase(GetPageID())
+	CPagePfLyrDownload() : CPagePfBase(GetPageID(), PAGE_LYR_DOWNLOAD, _T("CMD_LYR_DOWNLOAD"))
 	{
 	}
 
@@ -155,7 +155,7 @@ protected:
 class CPagePfLyrOutputPlugin : public CPagePfBase
 {
 public:
-	CPagePfLyrOutputPlugin() : CPagePfBase(GetPageID())
+	CPagePfLyrOutputPlugin() : CPagePfBase(GetPageID(), PAGE_LYR_OUTPUT_PLUGINS, _T("CMD_LYR_OUTPUT_PLUGIN"))
 	{
 		m_pListPlugins = NULL;
 	}
@@ -245,7 +245,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfLyricsRoot::CPagePfLyricsRoot() : CPagePfBase(GetPageID())
+CPagePfLyricsRoot::CPagePfLyricsRoot() : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T("CMD_ROOT_LYRICS"))
 {
 	AddPage(new CPagePfLyrDownload());
 	AddPage(new CPagePfLyrOutputPlugin());
@@ -260,9 +260,9 @@ void CPagePfLyricsRoot::OnCreate()
 {
 	CPagePfBase::OnCreate();
 
-	CheckToolbarButton(_T("CID_TOOLBAR_LYR"), _T("CMD_LYR_DOWNLOAD"), true);
+	CheckToolbarDefaultPage(_T("CID_TOOLBAR_LYR"));
 }
-
+/*
 bool CPagePfLyricsRoot::OnCustomCommand(int nId)
 {
 	if (nId == GetIDByName(_T("CMD_LYR_DOWNLOAD")))
@@ -273,7 +273,7 @@ bool CPagePfLyricsRoot::OnCustomCommand(int nId)
 		return CPagePfBase::OnCustomCommand(nId);
 
 	return true;
-}
+}*/
 
 //////////////////////////////////////////////////////////////////////////
 

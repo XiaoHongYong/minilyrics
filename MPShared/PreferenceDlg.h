@@ -14,20 +14,23 @@
 #endif // _MSC_VER > 1000
 
 #include "MPSkinDialog.h"
+#include "PreferencePageBase.h"
 
 class CPreferenceDlg2 : public CMPSkinDialog
 {
 public:
-	CPreferenceDlg2(bool bFloatingLyrMode = false);
+	CPreferenceDlg2(bool bFloatingLyrMode = false, PreferPageID defaultPage = PAGE_UI);
 
 	virtual void OnSkinLoaded();
 
 	virtual bool OnCustomCommand(int nId);
 
+protected:
+	int				m_nDefaultRootPage;
+
 };
 
 
-#include "PreferencePageBase.h"
 
 class CPreferenceDlg : public CBaseDialog
 {
@@ -35,7 +38,7 @@ public:
 	CPreferenceDlg();
 	virtual ~CPreferenceDlg();
 
-	BOOL Create(CBaseWnd *pWndParent, PreferPageID idToactivate = PAGE_UI_ROOT, bool bFloatingLyrMode = false);
+	BOOL Create(CBaseWnd *pWndParent, PreferPageID idToactivate = PAGE_UI, bool bFloatingLyrMode = false);
 
 public:
 	BOOL OnInitDialog();
