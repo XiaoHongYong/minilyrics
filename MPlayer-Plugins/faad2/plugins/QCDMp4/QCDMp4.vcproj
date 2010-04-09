@@ -92,7 +92,7 @@
 				AdditionalIncludeDirectories="..\..\include,..\..\common\mp4v2,..\..\common\mp4av"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Release/QCDMp4.pch"

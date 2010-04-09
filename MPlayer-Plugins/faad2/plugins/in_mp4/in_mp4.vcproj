@@ -104,7 +104,7 @@
 				AdditionalIncludeDirectories="..\..\include,..\..\common\mp4v2,..\..\common\mp4av"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="TRUE"
-				RuntimeLibrary="2"
+				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Release/in_mp4.pch"
@@ -123,7 +123,7 @@
 					OmitFramePointers="1"
 					OptimizeForProcessor="2"
 					StringPooling="1"
-					RuntimeLibrary="2"
+					RuntimeLibrary="0"
 					BufferSecurityCheck="1"
 					EnableFunctionLevelLinking="1"
 					AllOptions="/c  /I &quot;..\..\include&quot; /I &quot;..\..\common\mp4v2&quot; /I &quot;..\..\common\mp4av&quot; /nologo /W3 /O1 /Og /Ob1 /Oi /Ot /Oy /G6 /D &quot;WIN32&quot; /D &quot;NDEBUG&quot; /D &quot;_WINDOWS&quot; /D &quot;_WINDLL&quot; /GF /FD /EHsc /MD /GS /Gy /YX&quot;StdAfx.h&quot; /Fp&quot;.\Release/in_mp4.pch&quot; /Fo&quot;.\Release/&quot; /Fd&quot;.\Release/&quot; /Gd"/>
