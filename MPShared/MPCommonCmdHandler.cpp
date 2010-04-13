@@ -994,6 +994,9 @@ bool CMPCommonCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
 			}
 			else if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_BEGIN_HOVER)
 			{
+				CLyricShowMultiRowObj *pObj = (CLyricShowMultiRowObj*)m_pSkinWnd->GetUIObjectByClassName(CLyricShowMultiRowObj::ClassName());
+				if (pObj)
+					pObj->Pause();
 				g_autoScrollLyrics.AddActionAtCurrentPos(CAutoScrollLyrics::A_PAUSE,
 					GetDisplayLyrics());
 				// g_mpApp.DispatchLyricsChangedSyncEvent();
@@ -1004,6 +1007,9 @@ bool CMPCommonCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
 			}
 			else if (pHANotify->cmd == CSkinHoverActionBtEventNotify::C_END_HOVER)
 			{
+				CLyricShowMultiRowObj *pObj = (CLyricShowMultiRowObj*)m_pSkinWnd->GetUIObjectByClassName(CLyricShowMultiRowObj::ClassName());
+				if (pObj)
+					pObj->Resume();
 				g_autoScrollLyrics.AddActionAtCurrentPos(CAutoScrollLyrics::A_PLAY,
 					GetDisplayLyrics());
 				// g_mpApp.DispatchLyricsChangedSyncEvent();

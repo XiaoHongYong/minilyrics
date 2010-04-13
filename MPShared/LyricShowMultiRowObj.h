@@ -17,7 +17,7 @@
 
 class CLyricShowMultiRowObj : public CLyricShowObj  
 {
-	UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
+	UIOBJECT_CLASS_NAME_DECLARE(CLyricShowObj)
 public:
 	CLyricShowMultiRowObj();
 	virtual ~CLyricShowMultiRowObj();
@@ -25,6 +25,9 @@ public:
 	void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
 
 	void Invalidate();
+
+	void Pause();
+	void Resume();
 
 protected:
 	void FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdate = NULL);
@@ -40,12 +43,16 @@ protected:
 			return 0;
 	}
 
-public:
+protected:
 	// 使用下面的变量记录了上一次歌词的显示位置，在新的一次显示时，
 	// 可以优化显示速度
 	int             m_yDrawingOld;		// 上一次歌词显示的位置
 	int				m_nCurRowOld;		// 上一次显示的当前行歌词
 	int				m_nPrevLineAlphaOld, m_nNextLineAlphaOld;		// Old alpha value
+
+	bool			m_bSync;
+	bool			m_bPaused;
+	uint32			m_nTimeBegSync;
 
 };
 
