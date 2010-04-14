@@ -50,7 +50,7 @@ protected:
 	int				m_nCurRowOld;		// 上一次显示的当前行歌词
 	int				m_nPrevLineAlphaOld, m_nNextLineAlphaOld;		// Old alpha value
 
-	bool			m_bSync;
+	bool			m_bResume;
 	bool			m_bPaused;
 	uint32			m_nTimeBegSync;
 

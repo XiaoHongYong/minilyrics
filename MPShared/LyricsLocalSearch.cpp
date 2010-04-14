@@ -603,6 +603,20 @@ void CLyricsLocalSearch::Quit()
 	m_vLyricsFolders.clear();
 }
 
+LPTSTR GetDiskImageFileExtEnd(LPCTSTR szFile)
+{
+	static LPCTSTR vImageExts[] = { _T(".cue"), _T(".tak") };
+
+	for (int i = 0; i < CountOf(vImageExts); i++)
+	{
+		LPTSTR	p = stristr(szFile, vImageExts[i]);
+		if (p)
+			return p + _tcslen(vImageExts[i]);
+	}
+
+	return NULL;
+}
+
 void CLyricsLocalSearch::GetAssociateFileKeyword(LPCTSTR szSongFile, LPCTSTR szFulltitle, LPTSTR szAssociateFileKeyword, int nMaxLen)
 {
 	if (IsEmptyString(szSongFile))
@@ -613,16 +627,13 @@ void CLyricsLocalSearch::GetAssociateFileKeyword(LPCTSTR szSongFile, LPCTSTR szF
 
 	_tcscpy_safe(szAssociateFileKeyword, nMaxLen, szSongFile);
 
-	if (FileIsExtSame(szAssociateFileKeyword, _T(".cue"))
-		|| stristr(szAssociateFileKeyword, _T(".cue,")))
+	LPTSTR szEndPos = GetDiskImageFileExtEnd(szAssociateFileKeyword);
+	if (szEndPos)
 	{
-		// to associate a .cue track correctly, the title will be appended to it.
-		LPTSTR		szCueEnder;
-		szCueEnder = stristr(szAssociateFileKeyword, _T(".cue - "));
-		if (!szCueEnder)
-			szCueEnder = stristr(szAssociateFileKeyword, _T(".cue,"));
-		if (szCueEnder)
-			*(szCueEnder + 4) = '\0';
+		// to associate a .cue, .tak track correctly, the title will be appended to it.
+		if (_tcscmp(szEndPos, _T(" - ")) == 0
+			|| _tcscmp(szEndPos, _T(",")) == 0)
+			*szEndPos = '\0';
 		_tcscat_safe(szAssociateFileKeyword, nMaxLen, szFulltitle);
 	}
 	else if (IsShoutcastMedia(szSongFile))

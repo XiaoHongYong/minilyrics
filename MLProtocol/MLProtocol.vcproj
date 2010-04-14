@@ -4,6 +4,7 @@
 	Version="8.00"
 	Name="MLProtocol"
 	ProjectGUID="{1901BDFE-ECD6-4E00-B29E-4F2CE9C2190E}"
+	RootNamespace="MLProtocol"
 	>
 	<Platforms>
 		<Platform
@@ -734,10 +735,6 @@
 			</File>
 			<File
 				RelativePath="MLUtils.h"
-				>
-			</File>
-			<File
-				RelativePath="NetErrors.h"
 				>
 			</File>
 			<File

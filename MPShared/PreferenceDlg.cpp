@@ -58,7 +58,7 @@ void CPreferenceDlg2::OnSkinLoaded()
 		if (pPageRoot)
 		{
 			pToolbar->SetCheck(pPageRoot->GetAssociateTabButtonId(), true, false);
-			m_pageHandler.SwitchToPage(pPageRoot->GetPageId());
+			m_pageHandler.SwitchToPage(pPageRoot->GetPageId(), false);
 		}
 	}
 }
@@ -80,21 +80,6 @@ bool CPreferenceDlg2::OnCustomCommand(int nId)
 	}
 
 	return false;
-
-/*	if (nId == GetIDByName(_T("CMD_ROOT_UI")))
-		m_pageHandler.SwitchToPage(CPagePfUIRoot::GetPageID());
-	else if (nId == GetIDByName(_T("CMD_ROOT_THEME")))
-		m_pageHandler.SwitchToPage(CPagePfThemeRoot::GetPageID());
-	else if (nId == GetIDByName(_T("CMD_ROOT_SYSTEM")))
-		m_pageHandler.SwitchToPage(CPagePfSystemRoot::GetPageID());
-	else if (nId == GetIDByName(_T("CMD_ROOT_LYRICS")))
-		m_pageHandler.SwitchToPage(CPagePfLyricsRoot::GetPageID());
-	else if (nId == GetIDByName(_T("CMD_ROOT_ADVANCED")))
-		m_pageHandler.SwitchToPage(CPagePfAdvanced::GetPageID());
-	else
-		return false;
-
-	return true;*/
 }
 
 

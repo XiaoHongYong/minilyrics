@@ -20,12 +20,12 @@ CPagePfBase::CPagePfBase(LPCTSTR szIdPage, PreferPageID pfPageId, LPCTSTR szAsso
 
 void CPagePfBase::OnCreate()
 {
-	CSkinPageHandler::OnCreate();
-
 	m_nAnimationShowFLeft = NewAnimationObj(_T("MoveFromLeft"), m_strPageId.c_str());
 	m_nAnimationShowFRight = NewAnimationObj(_T("MoveFromRight"), m_strPageId.c_str());
 	m_nAnimationHide2Left = NewAnimationObj(_T("MoveToLeft"), m_strPageId.c_str());
 	m_nAnimationHide2Right = NewAnimationObj(_T("MoveToRight"), m_strPageId.c_str());
+
+	CSkinPageHandler::OnCreate();
 }
 
 void CPagePfBase::OnDestroy()

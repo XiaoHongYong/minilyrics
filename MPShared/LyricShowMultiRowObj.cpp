@@ -124,7 +124,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	{
 		// 
 		uint32 nDeltaTime = GetTickCount() - m_nTimeBegSync;
-		if (nDeltaTime < 1000)
+		if (nDeltaTime < 2000)
 		{
 			if (nRowCur == m_nCurRowOld && yCurRow > m_yDrawingOld)
 				yCurRow = m_yDrawingOld;
