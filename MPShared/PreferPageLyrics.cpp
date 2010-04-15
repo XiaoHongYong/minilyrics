@@ -22,9 +22,9 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_LYR_DOWNLOAD"); }
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 
 		GET_ID_BY_NAME(CID_DOWN_DIR);
 		GET_ID_BY_NAME(CID_C_SAVE_IN_SONG_DIR);
@@ -162,9 +162,9 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_LYR_OUTPUT_PLUGIN"); }
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 
 		GET_ID_BY_NAME(CID_LO_PLUGIN_LIST);
 
@@ -256,9 +256,9 @@ LPCTSTR CPagePfLyricsRoot::GetPageID()
 	return _T("CID_C_LYR_ROOT");
 }
 
-void CPagePfLyricsRoot::OnCreate()
+void CPagePfLyricsRoot::OnInitialUpdate()
 {
-	CPagePfBase::OnCreate();
+	CPagePfBase::OnInitialUpdate();
 
 	CheckToolbarDefaultPage(_T("CID_TOOLBAR_LYR"));
 }

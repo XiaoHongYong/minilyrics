@@ -997,9 +997,9 @@ LPCTSTR CPagePfAdvanced::GetPageID()
 	return _T("CID_C_ADVANCED");
 }
 
-void CPagePfAdvanced::OnCreate()
+void CPagePfAdvanced::OnInitialUpdate()
 {
-	CPagePfBase::OnCreate();
+	CPagePfBase::OnInitialUpdate();
 
 	GET_ID_BY_NAME(CID_LIST_SETTINGS);
 	GET_ID_BY_NAME(CID_E_ADV_SEARCH);

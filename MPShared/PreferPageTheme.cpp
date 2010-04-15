@@ -67,9 +67,9 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_THEME_LYR_BG"); }
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 
 		AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), false, _T("CID_C_USE_ALBUM_ART_AS_BG"));
 
@@ -191,9 +191,9 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_THEME_DISPLAY_STYLE"); }
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 
 		GET_ID_BY_NAME(CID_DS_MODE);
 		GET_ID_BY_NAME(CID_DS_STYLE);
@@ -530,9 +530,9 @@ public:
 		}
 	}
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 
 		m_nThemeListID = GetIDByName(_T("CID_THME_LIST"));
 		m_pSkinWnd->RegisterUIObjNotifyHandler(m_nThemeListID, this);
@@ -701,9 +701,9 @@ LPCTSTR CPagePfThemeRoot::GetPageID()
 	return _T("CID_C_THEME_ROOT");
 }
 
-void CPagePfThemeRoot::OnCreate()
+void CPagePfThemeRoot::OnInitialUpdate()
 {
-	CPagePfBase::OnCreate();
+	CPagePfBase::OnInitialUpdate();
 
 	CheckToolbarDefaultPage(_T("CID_TOOLBAR_THEME"));
 }

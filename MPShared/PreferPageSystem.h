@@ -13,7 +13,7 @@ public:
 
 	static LPCTSTR GetPageID();
 
-	void OnCreate();
+	void OnInitialUpdate();
 
 	// bool OnCustomCommand(int nId);
 

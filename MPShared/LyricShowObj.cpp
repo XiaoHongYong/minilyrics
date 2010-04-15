@@ -1513,7 +1513,7 @@ void CLyricShowObj::OnKeyDown(UINT nChar, UINT nFlags)
 		g_eventDispather.DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 		break;
 	case 'D':
-		m_pSkin->OnCustomCommand(CMD_SEARCH_LYRICS);
+		m_pSkin->OnCustomCommand(CMD_OPEN_LRC);
 		break;
 	case 'Z':
 		g_Player.Prev();

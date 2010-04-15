@@ -75,7 +75,7 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_ADVANCED_SAVE_LYR"), CMD_ADVANCED_SAVE_LYR, IDC_ADVANCED_SAVE_LYR, _T("Advanced save lyrics options...") },
 	{ _T("ID_UPLOAD_LYR"), CMD_UPLOAD_LYR, IDC_UPLOAD_LYRICS, _T("Upload Lyrics...") },
 
-	{ _T("ID_SEARCH_LYRICS"), CMD_SEARCH_LYRICS, IDC_OPEN_LYRICS, _T("Search Lyrics") },
+	{ _T("ID_SEARCH_LYRICS"), CMD_OPEN_LRC, IDC_OPEN_LYRICS, _T("Search Lyrics") },
 	{ _T("ID_BACKWARD_LYRICS"), CMD_BACKWARD_LYRICS, 0, _T("Lyrics Backward 0.5 Sec (Up)") },
 	{ _T("ID_FORWARD_LYRICS"), CMD_FORWARD_LYRICS, 0, _T("Lyrics Forward 0.5 Sec (Down)") },
 	{ _T("ID_DISPLAY_OPT"), CMD_DISPLAY_OPT, IDC_LYR_DISPLAY_OPT, _T("Lyrics Display Options") },
@@ -86,8 +86,6 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_SEEK"), CMD_SEEK, 0, _T("Seek") },
 	{ _T("ID_VOL_INC"), CMD_VOL_INC, 0, _T("Increase Volume") },
 	{ _T("ID_VOL_DEC"), CMD_VOL_DEC, 0, _T("Decrease Volume") },
-	{ _T("ID_VOL_BT_IMG"), ID_VOL_BT_IMG, 0, NULL },
-	{ _T("ID_VOL_SWITCH"), CMD_VOL_SWITCH, 0, _T("Switch Volume Control") },
 	{ _T("ID_VOLUME"), CMD_VOLUME, 0, _T("Volume") },
 	{ _T("ID_MUTE"), CMD_MUTE, 0, _T("Mute") },
 #ifdef _MPLAYER
@@ -105,8 +103,6 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_STEREO_STAT"), ID_STEREO_STAT, 0, NULL },
 
 #ifdef _MPLAYER
-	{ _T("ID_OPEN_MEDIA"), CMD_OPEN_MEDIA, IDC_OPENFILE, _T("Open") },
-
 	// playlist commands
 	{ _T("ID_PL_UP"), CMD_PL_UP, IDC_MOVE_UP, _T("Up") },
 	{ _T("ID_PL_DOWN"), CMD_PL_DOWN, IDC_MOVE_DOWN, _T("Down") },

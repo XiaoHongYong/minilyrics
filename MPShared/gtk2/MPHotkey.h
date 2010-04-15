@@ -18,8 +18,6 @@ struct MPHotKeySection
 
 extern MPHotKeySection	g_vHotkeySections[];
 
-int MenuIDToCmdID(int nMenuID);
-
 class CMPHotkey  
 {
 public:
@@ -58,6 +56,10 @@ public:
 	bool Remove(int nIndex);
 	CmdAccKey *Get(int nIndex);
 	int GetByKey(int nKey, int nModifiers);
+	int GetByCmd(int cmd, int nStartFind = -1);
+
+	bool IsDefaultKey(int cmd);
+	void RestoreDefaultKey(int cmd);
 
 	bool GetHotkeyText(int cmd, tstring &strKey);
 

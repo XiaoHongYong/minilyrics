@@ -642,9 +642,6 @@ protected:
 
 CMPSkinWnd::CMPSkinWnd()
 {
-	m_bEnableVolumeSwitch = false;
-	m_bUseVolumeSeek = false;
-
 	m_rcReal.top = m_rcReal.left = 0;
 	m_rcReal.right = 400;
 	m_rcReal.bottom = 250;
@@ -859,18 +856,6 @@ bool CMPSkinWnd::OnCustomCommand(int nId)
 			return true;
 	}
 
-	if (nId == CMD_VOL_SWITCH)
-	{
-		if (m_bEnableVolumeSwitch)
-		{
-			m_bUseVolumeSeek = !m_bUseVolumeSeek;
-			g_Profile.WriteProfileInt(_T("UseVolumeSeek"), m_bUseVolumeSeek);
-			UpdateVolumeCtrl();
-			// SetInfoText(TOLOCAL(_T("Switch Volume Control")));
-			return true;
-		}
-	}
-
 	return false;
 }
 
@@ -1001,8 +986,6 @@ void CMPSkinWnd::OnSkinLoaded()
 	pBt = (CSkinNStatusButton *)GetUIObjectById(CMD_TOPMOST, CSkinNStatusButton::ClassName());
 	if (pBt && IsTopmost())
 		pBt->SetStatus(1);
-
-	UpdateVolumeCtrl();
 
 	m_autoSwitchToLyrShow.OnCreate(this);
 }
@@ -1252,11 +1235,6 @@ BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_strCmdHandler = szValue;
 	}
-	else if (_tcsicmp(szProperty, _T("EnableVolumeSwitch")) == 0)
-	{
-		m_bEnableVolumeSwitch = IsTRUE(szValue);
-		m_bUseVolumeSeek = g_Profile.GetProfileBool(_T("UseVolumeSeek"), false);
-	}
 	else if (IsPropertyName(szProperty, _T("RememberSizePos")))
 		m_bRememberSizePos = IsTRUE(szValue);
 	else if (CSkinWnd::SetProperty(szProperty, szValue))
@@ -1296,9 +1274,6 @@ void CMPSkinWnd::CloseSkin()
 	}
 	m_listSkinCmdHandler.clear();
 	m_strCmdHandler.resize(0);
-
-	m_bEnableVolumeSwitch = false;
-	m_bUseVolumeSeek = false;
 
 	m_bRememberSizePos = true;
 }
@@ -1505,45 +1480,6 @@ void CMPSkinWnd::LoadTransparentSettings()
 }
 
 #endif
-
-void CMPSkinWnd::UpdateVolumeCtrl()
-{
-	if (m_bEnableVolumeSwitch)
-	{
-		CUIObject	*pObj;
-		if (m_bUseVolumeSeek)
-		{
-			pObj = GetUIObjectById(CMD_VOL_INC);
-			if (pObj)
-				pObj->SetVisible(false);
-			pObj = GetUIObjectById(CMD_VOL_DEC);
-			if (pObj)
-				pObj->SetVisible(false);
-			pObj = GetUIObjectById(ID_VOL_BT_IMG);
-			if (pObj)
-				pObj->SetVisible(false);
-			pObj = GetUIObjectById(CMD_VOLUME);
-			if (pObj)
-				pObj->SetVisible(true);
-		}
-		else
-		{
-			pObj = GetUIObjectById(CMD_VOL_INC);
-			if (pObj)
-				pObj->SetVisible(true);
-			pObj = GetUIObjectById(CMD_VOL_DEC);
-			if (pObj)
-				pObj->SetVisible(true);
-			pObj = GetUIObjectById(ID_VOL_BT_IMG);
-			if (pObj)
-				pObj->SetVisible(true);
-			pObj = GetUIObjectById(CMD_VOLUME);
-			if (pObj)
-				pObj->SetVisible(false);
-		}
-		InvalidateRect();
-	}
-}
 
 // COMMENT:
 //		save current skin window size pos.

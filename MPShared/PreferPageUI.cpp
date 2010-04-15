@@ -19,9 +19,9 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_UI_LANGUAGE"); }
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 		AddOptBool(ET_NULL, SZ_SECT_UI, _T("topmost"), true, _T("CID_C_ON_TOP"));
 
 #ifdef _WIN32_DESKTOP
@@ -166,9 +166,9 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_UI_SKIN"); }
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 
 		m_bIgnoreSkinListNotify = true;
 
@@ -333,9 +333,9 @@ LPCTSTR CPagePfUIRoot::GetPageID()
 	return _T("CID_C_UIROOT");
 }
 
-void CPagePfUIRoot::OnCreate()
+void CPagePfUIRoot::OnInitialUpdate()
 {
-	CPagePfBase::OnCreate();
+	CPagePfBase::OnInitialUpdate();
 
 	CheckToolbarDefaultPage(_T("CID_TOOLBAR_UI"));
 }

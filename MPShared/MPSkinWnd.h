@@ -96,7 +96,6 @@ public:
 #endif
 
 	void AddCmdHandler(LPCTSTR szName);
-	void UpdateVolumeCtrl();
 
 	void SaveWndPos();
 
@@ -112,10 +111,6 @@ protected:
 	LIST_SKINCMDHANDLER		m_listSkinCmdHandler;
 
 	MAP_EVENT_HANDLER		m_mapEventHandlers;
-
-	// Use volume bar or volume button(inc,dec)
-	bool					m_bEnableVolumeSwitch;
-	bool					m_bUseVolumeSeek;
 
 	bool					m_bRememberSizePos;
 

@@ -577,7 +577,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			g_mpApp.NewLyrics();
 		}
 		break;
-	case CMD_SEARCH_LYRICS:
 	case CMD_OPEN_LRC:
 		//
 		// ∏Ë¥ œ¬‘ÿ

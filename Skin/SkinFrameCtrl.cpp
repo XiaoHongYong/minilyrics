@@ -9,6 +9,7 @@ CSkinFrameCtrl::CSkinFrameCtrl()
 {
 	m_nRoundWidth = 10;
 	m_xBorder = m_yBorder = 0;
+	m_nThickWidth = 0;
 }
 
 CSkinFrameCtrl::~CSkinFrameCtrl()

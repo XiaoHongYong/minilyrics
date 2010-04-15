@@ -15,9 +15,9 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_INTERNET"); }
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 
 
 		//
@@ -152,9 +152,9 @@ public:
 
 	static LPCTSTR GetPageID() { return _T("CID_C_STARTUP"); }
 
-	void OnCreate()
+	void OnInitialUpdate()
 	{
-		CPagePfBase::OnCreate();
+		CPagePfBase::OnInitialUpdate();
 
 		AddOptBool(ET_NULL, SZ_SECT_UI, _T("CheckNewVer"), true, _T("CID_C_CHECK_NEW_VERSION"));
 
@@ -248,9 +248,9 @@ LPCTSTR CPagePfSystemRoot::GetPageID()
 	return _T("CID_C_SYSTEM_ROOT");
 }
 
-void CPagePfSystemRoot::OnCreate()
+void CPagePfSystemRoot::OnInitialUpdate()
 {
-	CPagePfBase::OnCreate();
+	CPagePfBase::OnInitialUpdate();
 
 	CheckToolbarDefaultPage(_T("CID_TOOLBAR_SYSTEM"));
 }
