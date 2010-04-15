@@ -397,6 +397,22 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 {
 	OnMouseActiveMsg();
 
+#ifdef _WIN32_DESKTOP
+	//
+	// Change translucency on hover?
+	//
+	if (m_bTranslucencyLayered && m_bPaintBg
+		&& m_translucencyStatus == TS_NORMAL
+		&& !m_bActived)
+	{
+		m_translucencyStatus = TS_ON_HOVER;
+
+		m_bOnMouseHover = Tobool(m_rcBoundBox.PtInRect(point));
+
+		StartTranslucencyFade();
+	}
+#endif	// _WIN32_DESKTOP
+
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
@@ -436,22 +452,6 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 		// else, should set mouse resizing cursor
 		m_wndResizer.SetSizeCursor(nFlags, point);
 	}
-
-#ifdef _WIN32_DESKTOP
-	//
-	// Change translucency on hover?
-	//
-	if (m_bTranslucencyLayered && m_bPaintBg
-		&& m_translucencyStatus == TS_NORMAL
-		&& !m_bActived)
-	{
-		m_translucencyStatus = TS_ON_HOVER;
-
-		m_bOnMouseHover = Tobool(m_rcBoundBox.PtInRect(point));
-
-		StartTranslucencyFade();
-	}
-#endif	// _WIN32_DESKTOP
 }
 
 void CSkinWnd::OnLButtonDown(UINT nFlags, CPoint point)

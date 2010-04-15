@@ -56,6 +56,11 @@ static const char uu_base64[64] =
   '4', '5', '6', '7', '8', '9', '+', '/'
 };
 
+const char *GetBase64Set()
+{
+	return uu_base64;
+}
+
 /* Pointer to the translation table we currently use.  */
 const char *trans_ptr = uu_base64;
 
