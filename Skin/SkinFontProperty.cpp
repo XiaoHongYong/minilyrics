@@ -93,6 +93,8 @@ CSkinFontProperty::CSkinFontProperty()
 	m_bOutlineText = false;
 	m_clrText.set(RGB(0, 0, 0));
 	m_clrTextOrg.set(RGB(0, 0, 0));
+	m_clrTextDisbled.set(RGB(128, 128, 128));
+	m_clrTextDisbledOrg.set(RGB(128, 128, 128));
 	m_clrOutlined.set(RGB(192, 192, 192));
 	m_clrOutlinedOrg.set(RGB(192, 192, 192));
 }
@@ -210,6 +212,12 @@ bool CSkinFontProperty::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_clrText = m_clrTextOrg;
 		m_nFlagProperties |= FP_TEXT_CLR;
 	}
+	else if (_tcsicmp(szProperty, _T("DisabledTextColor")) == 0)
+	{
+		GetColorValue(m_clrTextDisbledOrg, szValue);
+		m_clrTextDisbled = m_clrTextDisbledOrg;
+		m_nFlagProperties |= FP_DISABLED_TEXT_CLR;
+	}
 	else if (_tcsicmp(szProperty, _T("TextOutlinedColor")) == 0)
 	{
 		GetColorValue(m_clrOutlinedOrg, szValue);
@@ -292,14 +300,24 @@ bool CSkinFontProperty::IsOutlined()
 }
 
 
-const MLColor &CSkinFontProperty::GetTextColor()
+const MLColor &CSkinFontProperty::GetTextColor(bool bEnabledClr)
 {
-	if (IsPropertySet(FP_TEXT_CLR))
-		return m_clrText;
+	if (bEnabledClr)
+	{
+		if (IsPropertySet(FP_TEXT_CLR))
+			return m_clrText;
+		else if (m_pSkin)
+			return m_pSkin->GetFontProperty()->GetTextColor(bEnabledClr);
+		else
+			return m_clrText;
+	}
+
+	if (IsPropertySet(FP_DISABLED_TEXT_CLR))
+		return m_clrTextDisbled;
 	else if (m_pSkin)
-		return m_pSkin->GetFontProperty()->GetTextColor();
+		return m_pSkin->GetFontProperty()->GetTextColor(bEnabledClr);
 	else
-		return m_clrText;
+		return m_clrTextDisbled;
 }
 
 
@@ -321,6 +339,7 @@ void CSkinFontProperty::OnCreate(CSkinWnd *pSkin)
 	if (m_pSkin)
 	{
 		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrText);
+		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrTextDisbled);
 		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrOutlined);
 	}
 }
@@ -355,6 +374,9 @@ void CSkinFontProperty::OnAdjustHue(float hue, float saturation, float luminance
 
 	m_clrText = m_clrTextOrg;
 	m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrText);
+
+	m_clrTextDisbled = m_clrTextDisbledOrg;
+	m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrTextDisbled);
 
 	m_clrOutlined = m_clrOutlinedOrg;
 	m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrOutlined);

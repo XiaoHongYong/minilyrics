@@ -107,11 +107,11 @@ void CSkinScrollText::Draw(CRawGraph *pGraph)
 
 	if (m_font.IsOutlined())
 	{
-		pGraph->DrawTextClipOutlined(m_strText.c_str(), (int)m_strText.size(), &rc, m_font.GetTextColor(), m_font.GetColorOutlined(), nLeftClip);
+		pGraph->DrawTextClipOutlined(m_strText.c_str(), (int)m_strText.size(), &rc, m_font.GetTextColor(m_bEnable), m_font.GetColorOutlined(), nLeftClip);
 	}
 	else
 	{
-		pGraph->SetTextColor(m_font.GetTextColor());
+		pGraph->SetTextColor(m_font.GetTextColor(m_bEnable));
 		pGraph->DrawTextClip(m_strText.c_str(), (int)m_strText.size(), &rc, nLeftClip);
 	}
 	// pGraph->DrawText(m_strText.c_str(), (int)m_strText.size(), &rc, DT_SINGLELINE | DT_VCENTER | DT_LEFT);

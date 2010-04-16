@@ -274,7 +274,7 @@ void CSkinMenuBar::Draw(CRawGraph *pGraph)
 		}
 		else
 		{
-			clrText = m_font.GetTextColor();
+			clrText = m_font.GetTextColor(m_bEnable);
 			clrOutlined = m_font.GetColorOutlined();
 			bOutlined = m_font.IsOutlined();
 		}

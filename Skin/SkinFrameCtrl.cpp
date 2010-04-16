@@ -63,7 +63,7 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 		// Draw text
 		CRect	rcText(xTextStart, m_rcObj.top, 
 			xTextStart + sizeText.cx, m_rcObj.top + m_yBorder * 2 + m_nThickWidth);
-		pGraph->SetTextColor(m_font.GetTextColor());
+		pGraph->SetTextColor(m_font.GetTextColor(m_bEnable));
 		pGraph->DrawText(m_strText.c_str(), m_strText.size(), &rcText, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 
 		// Draw top border right

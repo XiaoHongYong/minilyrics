@@ -36,7 +36,8 @@ public:
 		FP_UNDERLINE		= 0x1 << 5,
 		FP_OUTLINED			= 0x1 << 6,
 		FP_TEXT_CLR			= 0x1 << 7,
-		FP_OUTLINED_CLR		= 0x1 << 8,
+		FP_DISABLED_TEXT_CLR= 0x1 << 8,
+		FP_OUTLINED_CLR		= 0x1 << 9,
 
 		FP_FONT = FP_NAME_LATIN9 | FP_NAME_OTHERS | FP_HEIGHT | FP_WEIGHT | FP_ITALIC | FP_UNDERLINE
 	};
@@ -61,7 +62,7 @@ public:
 	int GetWeight();
 	bool IsOutlined();
 
-	const MLColor &GetTextColor();
+	const MLColor &GetTextColor(bool bEnabledClr = true);
 	const MLColor &GetColorOutlined();
 
 	bool IsGood() { return m_pSkin != NULL || (m_bCustomized && IsFlagSet(m_nFlagProperties, FP_FONT)); }
@@ -89,8 +90,8 @@ protected:
 	uint32			m_nFlagProperties;
 
 	bool			m_bOutlineText;
-	MLColor			m_clrText, m_clrOutlined;
-	MLColor			m_clrTextOrg, m_clrOutlinedOrg;
+	MLColor			m_clrText, m_clrTextDisbled, m_clrOutlined;
+	MLColor			m_clrTextOrg, m_clrTextDisbledOrg, m_clrOutlinedOrg;
 
 };
 

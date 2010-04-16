@@ -480,14 +480,14 @@ void CSkinTreeCtrl::Draw(CRawGraph *pGraph)
 		if (m_font.IsOutlined())
 		{
 			pGraph->DrawTextOutlined(pNode->m_strName.c_str(), pNode->m_strName.size(), &rcNodeText, 
-				pNode->IsSelected() ? m_clrSelText : m_font.GetTextColor(), m_font.GetColorOutlined());
+				pNode->IsSelected() ? m_clrSelText : m_font.GetTextColor(m_bEnable), m_font.GetColorOutlined());
 		}
 		else
 		{
 			if (pNode->IsSelected())
 				pGraph->SetTextColor(m_clrSelText);
 			else
-				pGraph->SetTextColor(m_font.GetTextColor());
+				pGraph->SetTextColor(m_font.GetTextColor(m_bEnable));
 			pGraph->DrawText(pNode->m_strName.c_str(), pNode->m_strName.size(), &rcNodeText);
 		}
 

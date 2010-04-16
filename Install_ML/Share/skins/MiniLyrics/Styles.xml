@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <styles>
   <style>
-    <WindowFrame EnableTranslucency="true" TranslucencyAlpha="245"
+    <WindowFrame EnableTranslucency="true" TranslucencyAlpha="255"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
          PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false"
          FontName="Verdana" FontHeight="15" TextColor="#000000">
@@ -46,28 +46,28 @@
     </PopupWndFrame>
     <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="15" TextColor="#000000"/>
     <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="15" TextColor="#0000FF"/>
-    <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#000000" TabFocus="true"
+    <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
           Height="28" XMargin="5" YMargin="4" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
           Image="s_txt_button.png" ImageSize="70,28" ExtendPos="20,50"
-          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
+          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalImageBt Extends="ImageButton" ContentMarginX="9" ContentMarginY="7"
           Height="28" XMargin="5" YMargin="4" UseSkinBg="true" TabFocus="true"
           Image="s_image_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
-    <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#000000"
+    <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#000000" DisabledTextColor="#808080"
           Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
           CheckBox="true" TabFocus="true"
           Image="s_checkbox.png" ImageSize="20,20"
-          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40"
+          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_checkbox.png" S1_ImageSize="20,20"
-          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40"/>
-    <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#000000"
+          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
+    <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#000000" DisabledTextColor="#808080"
           Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
            Radio="true" TabFocus="true"
           Image="s_radio_button.png" ImageSize="20,20"
-          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40"
+          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_radio_button.png" S1_ImageSize="20,20"
-          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40"/>
+          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
     <NormalEdit Extends="EditCtrl" Height="19" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
           XMargin="12" YMargin="8" ExtendPos="20,50" ImageFrame="s_edit_box.png" ImageFrameSize="70,35"
           ImageFramePos="0,35" ImageFrameFocusPos="0,0"/>
@@ -80,15 +80,15 @@
           FontName="Verdana" FontHeight="15" TextColor="#000000"
           Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
           MarginX="0" MarginY="0" />
-    <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="15" TextColor="#000000" TabFocus="true"
+    <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="15" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
           Height="28" XMargin="5" YMargin="4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
           UseSkinBg="true" Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
-          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
+          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"
           XBorder="0" YBorder="10" FontName="Verdana" FontHeight="15" TextColor="#000000"/>
     <WndFrameCaption Extends="Text" ID="ID_CAPTION" Rect="30,4,w-60,20" Text="About MiniLyrics" FontHeight="16" FontBold="true" TextColor="#000000" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
-    <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
-    <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
+    <VScrollBar Width="15" PushBtHeight="15" ThumbHeight="20" TrackHeight="20" ScrollBarWidth="15" Image="s_vscrollbar.png" ScalableThumb="TRUE" />
+    <HScrollBar Height="15" PushBtWidth="15" ThumbWidth="20" TrackWidth="20" ScrollBarHeight="15" Image="s_hscrollbar.png" ScalableThumb="TRUE" />
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
     <CloseButton Extends="Button" Image=""/>
     <MinimizeButton Extends="Button" Image=""/>

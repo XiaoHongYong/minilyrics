@@ -67,12 +67,12 @@ public:
 		}
 
 		if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
-		{
 			CheckButton(_T("CID_C_SAVE_IN_MP3"), true);
-
-			EnableUIObject(CID_C_ID3V2_SYLT, true);
-			EnableUIObject(CID_C_ID3V2_USLT, true);
-			EnableUIObject(CID_C_LYR3V2, true);
+		else
+		{
+			EnableUIObject(CID_C_ID3V2_SYLT, false, false);
+			EnableUIObject(CID_C_ID3V2_USLT, false, false);
+			EnableUIObject(CID_C_LYR3V2, false, false);
 		}
 
 		InitCheckButtons();
