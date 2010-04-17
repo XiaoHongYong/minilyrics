@@ -16,11 +16,11 @@ int CPopupSkinWnd::Create(CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName,
 			CBaseWnd *pWndParent, IPopupSkinWndNotify *pNotify, const CRect &rc)
 {
 	m_rcReal = rc;
-	int nRet = CSkinWnd::Create(_T("ZPMenu"), _T(""), pSkinFactory, szSkinWndName, pWndParent);
+	int nRet = CSkinWnd::Create(_T("ZPMenu"), _T(""), pSkinFactory, szSkinWndName, pWndParent, true, false);
 	if (nRet != ERR_OK)
 		return nRet;
 
-	SetTopmost(true);
+	// SetTopmost(true);
 
 	m_pPopupSkinWndNotify = pNotify;
 	return ERR_OK;

@@ -34,6 +34,7 @@ CSkinNStatusButton::CSkinNStatusButton()
 	m_nTimerIdContinuous = 0;
 
 	m_bFadein = true;
+	m_nTimerIdFadein = 0;
 	m_dwBeginFadeinTime = 0;
 	m_pLastImage = NULL;
 }
@@ -250,15 +251,14 @@ void CSkinNStatusButton::Draw(CRawGraph *pGraph)
 		return;
 
 
-	if (m_dwBeginFadeinTime != 0)
+	if (m_nTimerIdFadein != 0)
 	{
 		DWORD		dwTimeCur = GetTickCount();
 
 		if (dwTimeCur - m_dwBeginFadeinTime >= FADE_BUTTON_TIME_OUT)
 		{
-			m_dwBeginFadeinTime = 0;
-			m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
 			m_nTimerIdFadein = 0;
+			m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
 		}
 		else
 		{

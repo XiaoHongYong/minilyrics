@@ -138,7 +138,7 @@ BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         POPUP "&Lyrics"
         BEGIN
-            MENUITEM "Ra&te this Lyrics...",        IDC_RATE_LYRICS
+            MENUITEM "Ra&te These Lyrics...",        IDC_RATE_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
             MENUITEM SEPARATOR
@@ -255,7 +255,7 @@ BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         POPUP "&Lyrics"
         BEGIN
-            MENUITEM "Ra&te this Lyrics...",        IDC_RATE_LYRICS
+            MENUITEM "Ra&te These Lyrics...",        IDC_RATE_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
             MENUITEM SEPARATOR
@@ -494,7 +494,7 @@ BEGIN
     BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         MENUITEM SEPARATOR
-        MENUITEM "Ra&te this Lyrics...",        IDC_RATE_LYRICS
+        MENUITEM "Ra&te These Lyrics...",        IDC_RATE_LYRICS
         MENUITEM SEPARATOR
         MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
         MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3

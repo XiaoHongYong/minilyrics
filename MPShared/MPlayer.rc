@@ -166,7 +166,7 @@ BEGIN
         BEGIN
             MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
             MENUITEM SEPARATOR
-            MENUITEM "Ra&te these Lyrics...",       IDC_RATE_LYRICS
+            MENUITEM "Ra&te These Lyrics...",       IDC_RATE_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "&Attach to MP3...",           IDC_LOAD_LYRICS_FROM_MP3
             MENUITEM "&Dettach from MP3...",        IDC_REMOVE_LRC_IN_MP3
@@ -271,7 +271,7 @@ BEGIN
         BEGIN
             MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
             MENUITEM SEPARATOR
-            MENUITEM "Ra&te these Lyrics...",       IDC_RATE_LYRICS
+            MENUITEM "Ra&te These Lyrics...",       IDC_RATE_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "&Attach to MP3...",           IDC_LOAD_LYRICS_FROM_MP3
             MENUITEM "&Dettach from MP3...",        IDC_REMOVE_LRC_IN_MP3
@@ -375,7 +375,7 @@ BEGIN
         BEGIN
             MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
             MENUITEM SEPARATOR
-            MENUITEM "Ra&te these Lyrics...",       IDC_RATE_LYRICS
+            MENUITEM "Ra&te These Lyrics...",       IDC_RATE_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "&Attach to MP3...",           IDC_LOAD_LYRICS_FROM_MP3
             MENUITEM "&Dettach from MP3...",        IDC_REMOVE_LRC_IN_MP3
@@ -546,7 +546,7 @@ BEGIN
     BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         MENUITEM SEPARATOR
-        MENUITEM "Ra&te this Lyrics...",        IDC_RATE_LYRICS
+        MENUITEM "Ra&te These Lyrics...",        IDC_RATE_LYRICS
         MENUITEM SEPARATOR
         MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
         MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
@@ -669,7 +669,7 @@ BEGIN
         BEGIN
             MENUITEM "Search Lyrics",               IDC_OPENDIR
             MENUITEM SEPARATOR
-            MENUITEM "Rate This Lyrics",            IDC_OPENDIR
+            MENUITEM "Rate These Lyrics",            IDC_OPENDIR
             MENUITEM SEPARATOR
             MENUITEM "Attache to MP3",              IDC_OPENDIR
             MENUITEM "Dettache from MP3",           IDC_OPENDIR
@@ -734,7 +734,7 @@ BEGIN
         BEGIN
             MENUITEM "Search Lyrics",               IDC_OPENDIR
             MENUITEM SEPARATOR
-            MENUITEM "Rate This Lyrics",            IDC_OPENDIR
+            MENUITEM "Rate These Lyrics",            IDC_OPENDIR
             MENUITEM SEPARATOR
             MENUITEM "Attache to MP3",              IDC_OPENDIR
             MENUITEM "Dettache from MP3",           IDC_OPENDIR
@@ -800,7 +800,7 @@ BEGIN
         BEGIN
             MENUITEM "Search Lyrics",               IDC_OPENDIR
             MENUITEM SEPARATOR
-            MENUITEM "Rate This Lyrics",            IDC_OPENDIR
+            MENUITEM "Rate These Lyrics",            IDC_OPENDIR
             MENUITEM SEPARATOR
             MENUITEM "Attache to MP3",              IDC_OPENDIR
             MENUITEM "Dettache from MP3",           IDC_OPENDIR
