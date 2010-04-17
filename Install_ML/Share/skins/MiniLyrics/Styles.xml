@@ -29,7 +29,7 @@
 
       <ClientArea Rect="5,31,w-10,h-31-7" ClipChildren="true"/>
     </WindowFrame>
-    <PopupWndFrame Name="minilyrics" EnableTranslucency="false"
+    <PopupWndFrame EnableTranslucency="true" TranslucencyAlpha="255"
          FixedWidth="true" FixedHeight="true"
          PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false">
       <XScaleImage Left="0" Top="0" Width="w" Height="5" Name="Top border"

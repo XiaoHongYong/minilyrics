@@ -274,14 +274,31 @@ CSkinHoverActionButton::~CSkinHoverActionButton()
 {
 }
 
+bool CSkinHoverActionButton::OnLButtonUp(UINT nFlags, CPoint point)
+{
+	if (!CSkinButton::OnLButtonUp(nFlags, point))
+		return false;
+
+	if (!m_bHover)
+	{
+		m_bHover = true;
+
+		// ²¶×½Êó±êÊäÈë
+		m_pSkin->SetCaptureMouse(this);
+	}
+
+	return true;
+}
+
 bool CSkinHoverActionButton::OnMouseMove(UINT nFlags, CPoint point)
 {
 	bool	bHoverPrev = m_bHover;
 
 	bool bRet = CSkinButton::OnMouseMove(nFlags, point);
 
-	if (bHoverPrev != m_bHover)
+	if (!m_bLBtDown && bHoverPrev != m_bHover)
 	{
+		// NOT in button down && hover status changed.
 		if (m_bHover)
 		{
 			m_nTimerIdHoverAction = m_pSkin->RegisterTimerObject(this, 500);
@@ -339,9 +356,6 @@ void CSkinHoverActionButton::EndHover()
 
 void CSkinHoverActionButton::ButtonUpAction()
 {
-	if (m_nTimerIdHoverAction != 0)
-		EndHover();
-
 	DispatchEvent(CSkinHoverActionBtEventNotify::C_CLICK);
 
 	return CSkinButton::ButtonUpAction();
