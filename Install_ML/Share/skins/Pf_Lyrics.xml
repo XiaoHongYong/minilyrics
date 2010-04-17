@@ -24,7 +24,7 @@
     </Container>
     <Container ID="CID_C_LYR_OUTPUT_PLUGIN" Name="Lyrics Output Plug-ins" Visible="false" Rect="0,30,w,h-30-10">
       <NormalText Rect="10,20,w-20,40" Text="$Product$ will use the plug-ins below for lyrics output. You can select a plug-in and configure, view about boxes, or uninstall them."/>
-      <NormalListCtrl ID="CID_LO_PLUGIN_LIST" Rect="10,60,w-20,h-60-50"
+      <NormalListCtrl ID="CID_LO_PLUGIN_LIST" Rect="10,60,w-20,h-60-55"
                       EnableHorzScrollBar="false" EnableVertScrollBar="false"/>
       <NormalTextBt ID="CID_CONFIGURE" Text="Configure" Rect="10,h-40,(w-20)/4-20,"/>
       <NormalTextBt ID="CID_ABOUT" Text="About" Rect="10+(w-20)/4,h-40,(w-20)/4-20,"/>

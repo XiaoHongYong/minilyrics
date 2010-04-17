@@ -1667,9 +1667,9 @@ void CSkinWnd::SetFocusUIObject(CUIObject *pObj)
 	if (pObjFocusOld == pObj)
 		return;
 
+	m_itFocusUIObject.From(pObj);
 	if (pObjFocusOld)
 		pObjFocusOld->OnKillFocus();
-	m_itFocusUIObject.From(pObj);
 	pObj->OnSetFocus();
 }
 
