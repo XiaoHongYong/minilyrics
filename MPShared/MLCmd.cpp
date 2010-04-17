@@ -68,6 +68,13 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_EDIT_FINDNEXT"), CMD_EDIT_FINDNEXT, 0, _T("Find Next") },
 	{ _T("ID_EDIT_REPLACE"), CMD_EDIT_REPLACE, IDC_EDIT_REPLACE, _T("Replace") },
 
+	{ _T("CMD_REMOVE_ALL_TAG"), CMD_REMOVE_ALL_TAG, IDC_REMOVE_ALL_TAG, _T("Remove All Timestamps") },
+	{ _T("CMD_REMOVE_BLANK_LINE"), CMD_REMOVE_BLANK_LINE, IDC_REMOVE_BLANK_LINE, _T("Remove All Blank Lines") },
+	{ _T("CMD_TRIM_WHITESPACE"), CMD_TRIM_WHITESPACE, IDC_TRIM_SPACE, _T("Trim Leading and Trailing Whitespace of All Lines") },
+	{ _T("CMD_REMOVE_UNSYNC_LINES"), CMD_REMOVE_UNSYNC_LINES, IDC_REMOVE_UNSYNC_LINE, _T("Remove All Unsynchronized Lines") },
+	{ _T("CMD_CAPITALIZE_LEADING_LETTER"), CMD_CAPITALIZE_LEADING_LETTER, IDC_CAPITALIZE_LEADING_LETTER, _T("Capitalize the Leading Letter of All Lines") },
+	{ _T("CMD_LYRICS_TO_LOWERCASE"), CMD_LYRICS_TO_LOWERCASE, IDC_TO_LOWER_CASE, _T("Convert All Lyrics Characters to Lower Case") },
+
 	{ _T("ID_NEW_LRC"), CMD_NEW_LRC, 0, _T("New") },
 	{ _T("ID_OPEN_LRC"), CMD_OPEN_LRC, IDC_OPEN_LYRICS, _T("Open lyrics") },
 	{ _T("ID_SAVE_LRC"), CMD_SAVE_LRC, IDC_SAVE_LYRICS, _T("Save lyrics") },
