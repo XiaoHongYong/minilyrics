@@ -1838,12 +1838,12 @@ int CSJVM::BSI_ConstructorCheck(CMemberMethod *pMethod, STreeNode *pBody, CClass
 		if (!pParentConstructor)
 		{
 			// All super() constructor has parameter type.
-			FORMATLASTERROR(pBody->nLineNo, ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT, pMethod->strName.c_str());
+			FORMATLASTERROR(pMethod->nLineNo, ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT, pMethod->strName.c_str());
 			return ERR_C_CONSTRUCTOR_MUST_BE_FIRST_STMT;
 		}
 
 		// Add super constructor call
-		STreeNode	*pNodeConstructor = newStnExpFuncCall(pBody->nLineNo, SZ_SUPER, NULL, NULL);
+		STreeNode	*pNodeConstructor = newStnExpFuncCall(pMethod->nLineNo, SZ_SUPER, NULL, NULL);
 		pNodeConstructor->pNext = pMethod->pBodyNode;
 		pMethod->pBodyNode = pNodeConstructor;
 
@@ -1854,7 +1854,7 @@ int CSJVM::BSI_ConstructorCheck(CMemberMethod *pMethod, STreeNode *pBody, CClass
 	// insert member variable initial statement, after super()
 	if (pVarInit)
 	{
-		InsertToSibling(pMethod->pBodyNode, newStnBlock(pBody->nLineNo, pVarInit));
+		InsertToSibling(pMethod->pBodyNode, newStnBlock(pMethod->nLineNo, pVarInit));
 	}
 
 	return ERR_OK;
@@ -3608,6 +3608,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 				return nOld;
 			}
 		}
+		break;
 	case OP_OP_DEC:		// --
 		{
 			int		*pInt = ExeExprGetVarAddr(expr.opParameter.siExprLeft);
@@ -3618,6 +3619,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 				return nOld;
 			}
 		}
+		break;
 	case OP_PLUS_ASSIGN:	// +=
 		{
 			int		*pInt = ExeExprGetVarAddr(expr.opParameter.siExprLeft);
@@ -3628,6 +3630,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 				return nOld;
 			}
 		}
+		break;
 	case OP_MINUS_ASSIGN:	// -=
 		{
 			int		*pInt = ExeExprGetVarAddr(expr.opParameter.siExprLeft);
@@ -3638,6 +3641,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 				return nOld;
 			}
 		}
+		break;
 	default:
 		ASSERT(0 && "Undefined expression type.");
 	}

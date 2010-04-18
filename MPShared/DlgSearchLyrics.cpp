@@ -221,6 +221,16 @@ public:
 
 		m_pLyricsList = NULL;
 		m_pSearchObj = NULL;
+
+		CID_PREV_PAGE = 0;
+		CID_NEXT_PAGE = 0;
+		CID_OPEN = 0;
+		CID_MORE = 0;
+		CID_CANCEL = 0;
+		CID_E_ARTIST = 0;
+		CID_E_TITLE = 0;
+		CID_SEARCH = 0;
+		CID_L_LYRICS = 0;
 	}
 
 	~CPageSearchLyrics()
@@ -312,9 +322,12 @@ public:
 		m_pSkinWnd->RegisterUIObjNotifyHandler(CID_L_LYRICS, this);
 
 		CSkinEditCtrl *pEdit = (CSkinEditCtrl*)m_pSkinWnd->GetUIObjectById(CID_E_ARTIST, CSkinEditCtrl::ClassName());
-		pEdit->SetEditNotification(this);
-		pEdit = (CSkinEditCtrl*)m_pSkinWnd->GetUIObjectById(CID_E_TITLE, CSkinEditCtrl::ClassName());
-		pEdit->SetEditNotification(this);
+		if (pEdit)
+		{
+			pEdit->SetEditNotification(this);
+			pEdit = (CSkinEditCtrl*)m_pSkinWnd->GetUIObjectById(CID_E_TITLE, CSkinEditCtrl::ClassName());
+			pEdit->SetEditNotification(this);
+		}
 	}
 
 	void OnDestroy()

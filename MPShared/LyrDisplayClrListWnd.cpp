@@ -26,6 +26,9 @@ CLyrDisplayClrListWnd::CLyrDisplayClrListWnd()
 	m_pWnd = NULL;
 	m_pNotify = NULL;
 	m_bInitialized = false;
+	m_bHilight = true;
+	m_et = ET_LYRICS_DISPLAY_SETTINGS;
+	m_nWidthMax = 200;
 }
 
 void CLyrDisplayClrListWnd::Create(CSkinWnd *pWnd, CRect &rc, bool bHighLight, bool bFloatingLyr, IPopupSkinWndNotify *pNotify)

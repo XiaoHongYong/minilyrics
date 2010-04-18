@@ -162,6 +162,7 @@ public:
 	{
 		m_pSkinList = NULL;
 		m_bIgnoreSkinListNotify = false;
+		CID_SKIN_LIST = 0;
 	}
 
 	static LPCTSTR GetPageID() { return _T("CID_C_UI_SKIN"); }
@@ -172,9 +173,9 @@ public:
 
 		m_bIgnoreSkinListNotify = true;
 
-		m_nIDSkinList = GetIDByName(_T("CID_SKIN_LIST"));
-		m_pSkinWnd->RegisterUIObjNotifyHandler(m_nIDSkinList, this);
-		m_pSkinList = (CSkinListCtrl *)GetUIObjectById(m_nIDSkinList, CSkinListCtrl::ClassName());
+		CID_SKIN_LIST = GetIDByName(_T("CID_SKIN_LIST"));
+		m_pSkinWnd->RegisterUIObjNotifyHandler(CID_SKIN_LIST, this);
+		m_pSkinList = (CSkinListCtrl *)GetUIObjectById(CID_SKIN_LIST, CSkinListCtrl::ClassName());
 		if (m_pSkinList)
 			m_pSkinList->AddColumn(_T("Skins"), 200);
 
@@ -235,7 +236,7 @@ public:
 
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify)
 	{
-		if (pNotify->nID == m_nIDSkinList && pNotify->IsKindOf(CSkinListCtrl::ClassName()))
+		if (pNotify->nID == CID_SKIN_LIST && pNotify->IsKindOf(CSkinListCtrl::ClassName()))
 		{
 			if (m_bIgnoreSkinListNotify)
 				return;
@@ -313,7 +314,7 @@ public:
 	}
 
 protected:
-	int				m_nIDSkinList;
+	int				CID_SKIN_LIST;
 	CSkinListCtrl	*m_pSkinList;
 	tstring			m_strEmbeddedSkinName;
 	bool			m_bIgnoreSkinListNotify;

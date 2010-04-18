@@ -66,6 +66,9 @@ CHttpProtocol::CHttpProtocol()
 {
 	m_bHeadParsed = FALSE;
 	m_httpVer = HTTP_V_1_1;
+	m_pNetFile = NULL;
+	m_nHeadEndPos = 0;
+	m_dwContentLen = 0;
 }
 
 CHttpProtocol::~CHttpProtocol()

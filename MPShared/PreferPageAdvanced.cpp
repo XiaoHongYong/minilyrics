@@ -981,6 +981,7 @@ CPagePfAdvanced::CPagePfAdvanced() : CPagePfBase(GetPageID(), PAGE_ADVANCED, _T(
 	m_nMenuIdEnd = m_nMenuIdStart = 0;
 	m_bIgnoreSettingListNotify = false;
 	CID_LIST_SETTINGS = 0;
+	CID_E_ADV_SEARCH = 0;
 }
 
 CPagePfAdvanced::~CPagePfAdvanced()

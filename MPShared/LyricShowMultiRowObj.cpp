@@ -30,6 +30,7 @@ CLyricShowMultiRowObj::CLyricShowMultiRowObj()
 
 	m_bPaused = false;
 	m_bResume = false;
+	m_nTimeBegSync = 0;
 }
 
 CLyricShowMultiRowObj::~CLyricShowMultiRowObj()

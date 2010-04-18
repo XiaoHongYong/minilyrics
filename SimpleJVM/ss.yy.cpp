@@ -1130,9 +1130,7 @@ YY_RULE_SETUP
 					if ( c == '*' )
 					{
 						while ( (c = yyinput()) == '*' )
-						{
-							IF_INC_LINENO(c);
-						}
+							;
 						if ( c == '/' )
 							break;    /* found the end */
 					}
@@ -1147,7 +1145,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 193 "SimpleJava.l"
+#line 191 "SimpleJava.l"
 {
 				printf( "Unrecognized character: %s\n", yytext );
 				return TK_ERROR;
@@ -1155,10 +1153,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 198 "SimpleJava.l"
+#line 196 "SimpleJava.l"
 ECHO;
 	YY_BREAK
-#line 1162 "ss.yy.cpp"
+#line 1160 "ss.yy.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2044,7 +2042,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 198 "SimpleJava.l"
+#line 196 "SimpleJava.l"
 
 
 int yywrap(void)

@@ -159,6 +159,7 @@ public:
 		typeId = TID_INVALID;
 		bFreeJObjNewer = false;
 		nTotalMemberVarCount = 0;
+		pJObojNewer = NULL;
 	}
 	virtual ~CClass() {
 		if (bFreeJObjNewer)
@@ -359,12 +360,12 @@ public:
 	Variable &Back() { ASSERT(m_vItems.size() > 0); return m_vItems.back(); }
 
 	int GetValue(size_t nOffset)	{
-		ASSERT(nOffset >= 0 && nOffset < (int)m_vItems.size());
+		ASSERT(nOffset < (int)m_vItems.size());
 		return m_vItems[nOffset].nValue;
 	}
 
 	Variable &Get(size_t nOffset)	{
-		ASSERT(nOffset >= 0 && nOffset < (int)m_vItems.size());
+		ASSERT(nOffset < (int)m_vItems.size());
 		return m_vItems[nOffset];
 	}
 

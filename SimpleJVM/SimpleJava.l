@@ -175,9 +175,7 @@ null		{ return TK_NULL; }
 					if ( c == '*' )
 					{
 						while ( (c = yyinput()) == '*' )
-						{
-							IF_INC_LINENO(c);
-						}
+							;
 						if ( c == '/' )
 							break;    /* found the end */
 					}

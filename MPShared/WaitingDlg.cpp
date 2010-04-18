@@ -49,6 +49,7 @@ CPageWaitMessage::CPageWaitMessage(bool bEndToClose) : CSkinPageHandler(GetPageI
 	NULL, _T("CID_AM_SHOW_WAIT_F_RIGHT"), NULL, _T("CID_AM_HIDE_WAIT_2_RIGHT"))
 {
 	m_bEndToClose = bEndToClose;
+	m_pWorkObj = NULL;
 }
 
 LPCTSTR CPageWaitMessage::GetPageID()

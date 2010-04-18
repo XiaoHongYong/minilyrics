@@ -187,6 +187,14 @@ public:
  			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
  		else
 			m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
+		CID_DS_MODE = 0;
+		CID_DS_STYLE = 0;
+		CID_DS_FADEOUT = 0;
+		CID_DS_ALIGN = 0;
+		CID_DS_LOAD_LATIN_FONT = 0;
+		CID_DS_LOAD_OTHER_FONT = 0;
+		CID_DS_CLR_HIGH = 0;
+		CID_DS_CLR_LOW = 0;
 	}
 
 	static LPCTSTR GetPageID() { return _T("CID_C_THEME_DISPLAY_STYLE"); }
@@ -510,6 +518,7 @@ class CPagePfTheme : public CPagePfBase
 public:
 	CPagePfTheme() : CPagePfBase(GetPageID(), PAGE_THEMES, _T("CMD_THEME_THEME"))
 	{
+		m_nThemeListID = 0;
 	}
 
 	static LPCTSTR GetPageID() { return _T("CID_C_THEME"); }

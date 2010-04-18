@@ -18,6 +18,13 @@ class CPagePfLyrDownload : public CPagePfBase
 public:
 	CPagePfLyrDownload() : CPagePfBase(GetPageID(), PAGE_LYR_DOWNLOAD, _T("CMD_LYR_DOWNLOAD"))
 	{
+		CID_DOWN_DIR = 0;
+		CID_C_SAVE_IN_SONG_DIR = 0;
+		CID_C_SAVE_IN_DIR = 0;
+		CID_C_SAVE_IN_MP3 = 0;
+		CID_C_ID3V2_SYLT = 0;
+		CID_C_ID3V2_USLT = 0;
+		CID_C_LYR3V2 = 0;
 	}
 
 	static LPCTSTR GetPageID() { return _T("CID_C_LYR_DOWNLOAD"); }
@@ -158,6 +165,7 @@ public:
 	CPagePfLyrOutputPlugin() : CPagePfBase(GetPageID(), PAGE_LYR_OUTPUT_PLUGINS, _T("CMD_LYR_OUTPUT_PLUGIN"))
 	{
 		m_pListPlugins = NULL;
+		CID_LO_PLUGIN_LIST = 0;
 	}
 
 	static LPCTSTR GetPageID() { return _T("CID_C_LYR_OUTPUT_PLUGIN"); }
