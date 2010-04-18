@@ -47,6 +47,8 @@ CPreferenceDlg2::CPreferenceDlg2(bool bFloatingLyrMode, PreferPageID defaultPage
 
 void CPreferenceDlg2::OnSkinLoaded()
 {
+	m_pageHandler.SetDefaultPage(m_nDefaultRootPage);
+
 	CMPSkinDialog::OnSkinLoaded();
 
 	CSkinToolbar*pToolbar = (CSkinToolbar *)GetUIObjectById(GetIDByName(_T("CID_TB_PREFERENCE")),
@@ -56,10 +58,7 @@ void CPreferenceDlg2::OnSkinLoaded()
 		CPagePfBase	*pPageRoot = (CPagePfBase *)m_pageHandler.GetPage(m_nDefaultRootPage);
 		ASSERT(pPageRoot);
 		if (pPageRoot)
-		{
 			pToolbar->SetCheck(pPageRoot->GetAssociateTabButtonId(), true, false);
-			m_pageHandler.SwitchToPage(pPageRoot->GetPageId(), false);
-		}
 	}
 }
 

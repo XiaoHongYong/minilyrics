@@ -5,10 +5,10 @@
   <Menus>
     <Menu Name="MainWndMenu" From="MainWndMenu" >
       <Item Action="InsertByID" Type="item" Position="ID_CLICK_THROUGH"
-            Name="Hide window frame on lost focus" IDCmd="ID_HIDE_WND_FRAME"
+            Name="Hide Background on Lost Focus" IDCmd="ID_HIDE_WND_FRAME"
             CanCheck="true" IsCheckedCmd="dyncmd_is_frame_hide" />
       <Item Action="InsertByID" Type="item" Position="ID_CLICK_THROUGH"
-            Name="Show window frame on Mouse Hover" IDCmd="ID_MOUSE_HOVER_SHOW_WND"
+            Name="Display Background on Mouse Hover" IDCmd="ID_MOUSE_HOVER_SHOW_WND"
             CanCheck="true" IsCheckedCmd="dyncmd_is_mouse_hover_show_frame" />
     </Menu>
   </Menus>

@@ -579,7 +579,7 @@ IDR_MENU_STATIC_LYR MENU
 BEGIN
     POPUP "M"
     BEGIN
-        MENUITEM "&Clear Recorded Lyrics Scrolling Actions", IDC_SL_CLEAR_TIME_STAMP
+        MENUITEM "&Clear Recorded Scrolling Lyrics Actions", IDC_SL_CLEAR_TIME_STAMP
         MENUITEM "Lyrics &Editor...",           IDC_LYR_EDITOR
     END
 END

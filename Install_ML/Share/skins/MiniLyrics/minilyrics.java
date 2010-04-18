@@ -1,67 +1,67 @@
 
-public class GlassSkinWndEvent extends SkinWndEvent {
+public class MiniLyricsSkinWndEvent extends SkinWndEvent {
 
 	public SkinWnd mSkinWnd;
 
 	// Return true, the command will not be passed down.
 	public boolean onCommand(int nCmdId)
 	{
-		UnitTest.message("onCommand()");
-		UnitTest.message(nCmdId);
+		// UnitTest.message("onCommand()");
+		// UnitTest.message(nCmdId);
 		
-		if (nCmdId == Glass.CMD_AUTO_SHOW_LYR)
+		if (nCmdId == MiniLyrics.CMD_AUTO_SHOW_LYR)
 		{
-			UnitTest.message("CMD_AUTO_SHOW_LYR");
+			// UnitTest.message("CMD_AUTO_SHOW_LYR");
 			return true;
 		}
-		else if (nCmdId == Glass.CMD_SHOW_INFO_TEXT)
+		else if (nCmdId == MiniLyrics.CMD_SHOW_INFO_TEXT)
 		{
-			UnitTest.message("CMD_SHOW_INFO_TEXT");
+			// UnitTest.message("CMD_SHOW_INFO_TEXT");
 			// mSkinWnd.setProperty("TranslucencyAlpha", "0");
-			// mSkinWnd.setUIObjProperty(Glass.CID_TOGGLE_LYR_PL, "CmdToggle", "CID_INFOTEXT");
+			// mSkinWnd.setUIObjProperty(MiniLyrics.CID_TOGGLE_LYR_PL, "CmdToggle", "CID_INFOTEXT");
 			return true;
 		}
-		else if (nCmdId == Glass.ID_HIDE_WND_FRAME)
+		else if (nCmdId == MiniLyrics.ID_HIDE_WND_FRAME)
 		{
-			if (Glass.nHideFrameOnLostFocus > 0)
+			if (MiniLyrics.nHideFrameOnLostFocus > 0)
 			{
-				Glass.nHideFrameOnLostFocus = 0;
+				MiniLyrics.nHideFrameOnLostFocus = 0;
 				mSkinWnd.setProperty("TranslucencyAlpha", "255");
 			}
 			else
 			{
-				Glass.nHideFrameOnLostFocus = 1;
+				MiniLyrics.nHideFrameOnLostFocus = 1;
 				mSkinWnd.setProperty("TranslucencyAlpha", "0");
 			}
 
-			SkinSystem.writeProfileInt("HideFrameOnLostFocus", Glass.nHideFrameOnLostFocus);
+			SkinSystem.writeProfileInt("HideFrameOnLostFocus", MiniLyrics.nHideFrameOnLostFocus);
 		
 			// mSkinWnd.setProperty("TranslucencyAlphaOnActive", "255");
 			// mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
 		}
-		else if (nCmdId == Glass.ID_MOUSE_HOVER_SHOW_WND)
+		else if (nCmdId == MiniLyrics.ID_MOUSE_HOVER_SHOW_WND)
 		{
-			if (Glass.nShowFrameOnMouseHover > 0)
+			if (MiniLyrics.nShowFrameOnMouseHover > 0)
 			{
-				Glass.nShowFrameOnMouseHover = 0;
+				MiniLyrics.nShowFrameOnMouseHover = 0;
 				mSkinWnd.setProperty("TranslucencyAlphaOnHover", "0");
 			}
 			else
 			{
-				Glass.nShowFrameOnMouseHover = 1;
+				MiniLyrics.nShowFrameOnMouseHover = 1;
 				mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
 			}
 
-			SkinSystem.writeProfileInt("ShowFrameOnMouseHover", Glass.nShowFrameOnMouseHover);
+			SkinSystem.writeProfileInt("ShowFrameOnMouseHover", MiniLyrics.nShowFrameOnMouseHover);
 		}
-		else if (nCmdId == Glass.CMD_ON_STATIC_LYR_OPEN)
+		else if (nCmdId == MiniLyrics.CMD_ON_STATIC_LYR_OPEN)
 		{
-			mSkinWnd.setUIObjVisible(Glass.CID_STATIC_LYR_CTRL, true);
+			mSkinWnd.setUIObjVisible(MiniLyrics.CID_STATIC_LYR_CTRL, true);
 			return true;
 		}
-		else if (nCmdId == Glass.CMD_ON_SYNC_LYR_OPEN)
+		else if (nCmdId == MiniLyrics.CMD_ON_SYNC_LYR_OPEN)
 		{
-			mSkinWnd.setUIObjVisible(Glass.CID_STATIC_LYR_CTRL, false);
+			mSkinWnd.setUIObjVisible(MiniLyrics.CID_STATIC_LYR_CTRL, false);
 			return true;
 		}
 		
@@ -72,35 +72,35 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 		mSkinWnd = wnd;
 		UnitTest.message("onCreate()");
 
-		if (Glass.nHideFrameOnLostFocus > 0)
+		if (MiniLyrics.nHideFrameOnLostFocus > 0)
 			mSkinWnd.setProperty("TranslucencyAlpha", "0");
 		else
 			mSkinWnd.setProperty("TranslucencyAlpha", "255");
 
-		if (Glass.nShowFrameOnMouseHover > 0)
+		if (MiniLyrics.nShowFrameOnMouseHover > 0)
 			mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
 		else
 			mSkinWnd.setProperty("TranslucencyAlphaOnHover", "0");
 	}
 
-	public void onDestroy()
+/*	public void onDestroy()
 	{
 		UnitTest.message("onDestroy()");
-	}
+	}*/
 
 	public void onActivate(boolean bActived)
 	{
 		if (bActived)
 		{
-			mSkinWnd.stopAnimation(Glass.CID_AM_HIDE_PLAY);
-			mSkinWnd.startAnimation(Glass.CID_AM_SHOW_PLAY);
-			UnitTest.message("CID_AM_SHOW_PLAY");
+			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_HIDE_PLAY);
+			mSkinWnd.startAnimation(MiniLyrics.CID_AM_SHOW_PLAY);
+			// UnitTest.message("CID_AM_SHOW_PLAY");
 		}
 		else
 		{
-			mSkinWnd.stopAnimation(Glass.CID_AM_SHOW_PLAY);
-			mSkinWnd.startAnimation(Glass.CID_AM_HIDE_PLAY);
-			UnitTest.message("CID_AM_HIDE_PLAY");
+			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_SHOW_PLAY);
+			mSkinWnd.startAnimation(MiniLyrics.CID_AM_HIDE_PLAY);
+			// UnitTest.message("CID_AM_HIDE_PLAY");
 		}
 	}
 
@@ -108,21 +108,21 @@ public class GlassSkinWndEvent extends SkinWndEvent {
 	{
 		if (bMouseActive)
 		{
-			mSkinWnd.stopAnimation(Glass.CID_AM_HIDE_PLAY);
-			mSkinWnd.startAnimation(Glass.CID_AM_SHOW_PLAY);
-			UnitTest.message("CID_AM_SHOW_PLAY");
+			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_HIDE_PLAY);
+			mSkinWnd.startAnimation(MiniLyrics.CID_AM_SHOW_PLAY);
+			// UnitTest.message("CID_AM_SHOW_PLAY");
 		}
 		else
 		{
-			mSkinWnd.stopAnimation(Glass.CID_AM_SHOW_PLAY);
-			mSkinWnd.startAnimation(Glass.CID_AM_HIDE_PLAY);
-			UnitTest.message("CID_AM_HIDE_PLAY");
+			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_SHOW_PLAY);
+			mSkinWnd.startAnimation(MiniLyrics.CID_AM_HIDE_PLAY);
+			// UnitTest.message("CID_AM_HIDE_PLAY");
 		}
 	}
 
 }
 
-public class Glass
+public class MiniLyrics
 {
 	public static int ID_PLAYPAUSE;
 	public static int CMD_AUTO_SHOW_PL;
@@ -141,7 +141,7 @@ public class Glass
 
 	public static void main()
 	{
-		UnitTest.message("Glass main()");
+		// UnitTest.message("MiniLyrics main()");
 
 		ID_PLAYPAUSE = SkinSystem.getCommandID("ID_PLAYPAUSE");
 		CMD_AUTO_SHOW_PL = SkinSystem.getCommandID("CMD_AUTO_SHOW_PL");
@@ -160,7 +160,7 @@ public class Glass
 		nHideFrameOnLostFocus = SkinSystem.getProfileInt("HideFrameOnLostFocus", 1);
 		nShowFrameOnMouseHover = SkinSystem.getProfileInt("ShowFrameOnMouseHover", 1);
 
-		static GlassSkinWndEvent	skinWndEvent = new GlassSkinWndEvent();
+		static MiniLyricsSkinWndEvent	skinWndEvent = new MiniLyricsSkinWndEvent();
 		
 		SkinSystem.registerSkinWndEvent("minilyrics", skinWndEvent);
 	}
