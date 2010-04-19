@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding='UTF-8'?>
-<skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr">
+<skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr" ExtraResouceFolder="MiniLyrics">
   <include Name="Styles.xml"/>
+  <style>
+    <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
+    <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
+  </style>
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
       <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" IDCmd="dyncmd_change_to_bar"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
     <Menu Name="LyrBarMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
       <Item Action="Append" Type="item" Name="&amp;Normal Mode" IDCmd="dyncmd_change_to_normal"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
     <Menu Name="FloatingLyrMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="Lyrics &amp;Bar Mode" IDCmd="dyncmd_change_to_bar"/>
       <Item Action="Append" Type="item" Name="&amp;Normal Mode" IDCmd="dyncmd_change_to_normal"/>
-      <Item Action="Append" Type="item" Name="Ly&amp;rics Editor..." IDCmd="ID_LYR_EDITOR" CanCheck="true" IsCheckedCmd="dyncmd_is_lyr_editor_visible" />
     </Menu>
   </Menus>
   <DynCmds>
     <cmd ID="dyncmd_change_to_bar" func="change_skin_wnd" param="lyrbar"/>
     <cmd ID="dyncmd_change_to_floatinglyr" func="change_skin_wnd" param="floatinglyr"/>
     <cmd ID="dyncmd_change_to_normal" func="change_skin_wnd" param="minilyrics"/>
-    <cmd ID="ID_LYR_EDITOR" func="openclose_skin_wnd" param="lyreditor" />
-    <cmd ID="dyncmd_is_lyr_editor_visible" func="is_skin_wnd_visible" param="lyreditor" />
     <cmd ID="dyncmd_openclose_albumart_bar" func="openclose_framebar_bar" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
     <cmd ID="dyncmd_is_albumart_bar_visible" func="is_framebar_bar_visible" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
     <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
@@ -31,57 +30,7 @@
     <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />  
   </DynCmds>
-  <style>
-    <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
-    <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
-    <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
-    <NormalToolbar Extends="Toolbar" Image="minitoolbar.bmp" enablehover="TRUE" Height="23" units_x="23" blank_x="304" blank_cx="23" seperator_x="204" seperator_cx="5">
-      <button ID="ID_SEARCH_LYRICS" Left="8"/>
-      <button ID="ID_BACKWARD_LYRICS" Left="9" Continuous="TRUE"/>
-      <button ID="ID_FORWARD_LYRICS" Left="10" Continuous="TRUE"/>
-      <button ID="ID_MENU" Left="11"/>
-      <button ID="ID_RATE_LYR" Left="12"/>
-      <seperator/>
-      <button ID="ID_PLAY" Left="0"/>
-      <button ID="ID_PAUSE" Left="1"/>
-      <button ID="ID_STOP" Left="2"/>
-      <button ID="ID_PREVIOUS" Left="3"/>
-      <button ID="ID_NEXT" Left="4"/>
-      <button ID="ID_HELP" Left="7"/>
-    </NormalToolbar>    
-  </style>
-  <skinwnd Name="floatinglyr" EnableTranslucency="true" TranslucencyAlpha="0" TranslucencyAlphaOnHover="100" TranslucencyAlphaOnActive="228" MinWidth="400" MinHeight="60" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="FloatingLyrMode" CmdHandler="ch_floating_lyr" LyrDisplayStylePropName="FloatingLyrDispStyle">
-    <DecorativeContainer Name="Caption" Left="10" Top="0" Width="w-20" Height="h" >
-      <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAdjustVertAlign="FALSE" EnableStaticTextStyle="FALSE" LyrDisplayStylePropName="FloatingLyrDispStyle" FloatingLyr="1" UseAlbumArtAsBg="FALSE" BlendingLyrText="TRUE" ThickOutline="TRUE"/>
-      <Toolbar Left="50" Top="8" Width="196" Height="22" HideIfMouseInactive="TRUE" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
-        <button ID="ID_PREVIOUS" Left="0" />
-        <button ID="ID_PLAYPAUSE" Left="1" CanCheck="TRUE" checked_left="2"/>
-        <button ID="ID_NEXT" Left="3" />
-        <seperator/>
-        <button ID="ID_SEARCH_LYRICS" Left="5" />
-        <button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
-        <button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
-        <seperator/>
-        <button ID="ID_FONT_SIZE_INC" Left="8"/>
-        <button ID="ID_FONT_SIZE_DEC" Left="9"/>
-      </Toolbar>
-      <Toolbar Left="w-62-10" Top="10" Width="62" Height="14" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14" blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10" MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
-        <button ID="ID_MINIMIZE" Left="0" />
-        <button ID="dyncmd_change_to_bar" Left="4" ToolTip="Lyrics Bar Mode"/>        
-        <button ID="dyncmd_change_to_normal" Left="2" ToolTip="Normal Mode"/>
-        <button ID="ID_CLOSE" Left="1" />
-      </Toolbar>
-      <Toolbar Left="w-70" Top="h-8-22" Width="70" Height="22" HideIfMouseInactive="TRUE" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
-        <button ID="ID_CLICK_THROUGH" Left="11"/>
-        <button ID="ID_CLR_PREV_HUE" Left="12"/>
-        <button ID="ID_CLR_NEXT_HUE" Left="13" />
-      </Toolbar>            
-    </DecorativeContainer>
-    <Image Left="0" Top="0" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="0, 0, 10, 10" BlendPixMode="alpha_mask"/>
-    <Image Left="w-10" Top="0" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="10, 0, 10, 10" BlendPixMode="alpha_mask"/>
-    <Image Left="0" Top="h-10" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="0, 10, 10, 10" BlendPixMode="alpha_mask"/>
-    <Image Left="w-10" Top="h-10" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="10, 10, 10, 10" BlendPixMode="alpha_mask"/>
-  </skinwnd>
+  <include Name="FloatingLyrMode.xml"/>
   <skinwnd Name="minilyrics" MinWidth="215" MinHeight="35" Width="400" Height="200" BgColor="#D6DBBD" FgColor="#0061FF" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="2" Top="23" Width="w - 4" Height="h -23 - 8" BgColor="#D6DBBD" FgColor="#0061FF" FgLowColor="#848284" FocusLineBgColor="#8CBAEF" />
     <XScaleImage Left="0" Top="0" Width="w" Height="23" ID="ID_NONE" Name="Caption" Image="caption.bmp" ImageRect="0,0,265,23" ImageScaleXStart="80" ImageScaleXEnd="205"/>
@@ -107,61 +56,5 @@
     <Button Left="w-9" Top="h/2-3" Width="7" Height="7" ID="ID_CLOSE" Image="smallbt.bmp" ImageRect="21,0,7,7" ImageSel="smallbt.bmp" ImageSelRect="21,7,7,7"/>
     <Button Left="w-40" Top="h/2-8" Width="12" Height="16" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,16,16" ImageSel="buttons.bmp" ImageSelRect="17,0,16,16" ImageFocus="buttons.bmp" ImageFocusRect="0,17,16,16"/>
     <Button Left="w-26" Top="h/2-8" Width="14" Height="16" ID="ID_NEXT" Name="Next" Image="buttons2.bmp" ImageRect="0,0,16,16" ImageSel="buttons2.bmp" ImageSelRect="17,0,16,16" ImageFocus="buttons2.bmp" ImageFocusRect="0,17,16,16"/>
-  </skinwnd>
-  <skinwnd Name="lyreditor" MinWidth="215" MinHeight="35" Width="400" Height="200" BgColor="#D6DBBD" FgColor="#0061FF" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player" OnCreateCommand="dyncmd_load_toolbar_state">    
-      <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="23">      
-    <XScaleImage Left="0" Top="0" Width="w" Height="23" ID="ID_NONE" Name="Caption" Image="editor-caption.png" ImageRect="0,0,275,23" ImageScaleXStart="115" ImageScaleXEnd="225"/>      
-    <Button Left="w - 56" Top="5" Width="15" Height="15" ID="ID_MINIMIZE" Name="Minimize" Image="std-buttons.bmp" ImageRect="0,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="0,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="0,30,15,15"/>
-    <Button Left="w - 38" Top="5" Width="15" Height="15" ID="ID_MAXIMIZE" Name="Maximize" Image="std-buttons.bmp" ImageRect="15,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="15,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="15,30,15,15"/>
-    <Button Left="w - 20" Top="5" Width="15" Height="15" ID="ID_CLOSE" Name="Quit" Image="std-buttons.bmp" ImageRect="30,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="30,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="30,30,15,15"/>    
-      <MenuBar left="200" top="4" width="w-200-15" height="15" Name="Menu" Menu="LyrEditorMenu" FontHeight="14" FontBold="false" TextColor="#202020" TextOutlinedColor="#FFFFFF" TextOutlined="TRUE" TextColorHover="#800040" TextOutlinedColorHover="#FFFFFF" TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" BgColorPressed="#FFFFFF" BgPressedAlpha="127"/>           
-    <Toolbar Left="115" Top="2" Width="72" Height="20" Image="button.bmp" enablehover="TRUE" units_x="18" blank_x="0" blank_cx="0">
-      <button ID="ID_SEARCH_LYRICS" Left="0" Width="1"/>
-      <button ID="ID_Previous" Left="1" Width="1"/>
-      <button ID="ID_Next" Left="2" Width="1"/>
-      <button ID="ID_MENU" Left="3" Width="1"/>
-    </Toolbar>      
-    </DecorativeContainer>      
-    <Toolbar Left="2" Top="23" Width="22*4+10" Height="22" Image="Toolbar.bmp" enablehover="TRUE" units_x="22" blank_x="920" blank_cx="22" seperator_x="920" seperator_cx="10" MarginX="5" MarginY="3">
-      <button ID="ID_INSERTTAG_DOWN" Left="12" Width="2" />
-      <button ID="ID_INSERTTAG" Left="14" />
-      <button ID="dyncmd_toggle_toolbarex_visible" Left="23" ToolTip="Toggle Extended Toolbar Visible"/>
-    </Toolbar>
-    <Image Left="22*4+10+2" Top="23" Width="w-(22*4+10+2)" Height="22" Name="Toolbar Bg" Image="Toolbar.bmp" ImageRect="920,0,22,22" BltMode="tile"/>
-    <Toolbar ID="ID_TOOLBAR" Left="22*4+10+6" Top="23" Width="w-(22*4+10+6)-6" Height="22" Image="Toolbar.bmp" enablehover="TRUE" units_x="22" blank_x="920" blank_cx="22" seperator_x="920" seperator_cx="10" MarginX="5" MarginY="3" Visible="false">
-      <seperator/>      
-      <button ID="ID_SEARCH_LYRICS" Left="20"/>
-      <button ID="ID_NEW_LRC" Left="0"/>
-      <button ID="ID_OPEN_LRC" Left="1"/>
-      <button ID="ID_SAVE_LRC" Left="2"/>
-      <button ID="ID_SAVE_LRC_AS" Left="3"/>
-      <seperator/>
-      <button ID="ID_PLAY" Left="4"/>
-      <button ID="ID_PAUSE" Left="5"/>
-      <seperator/>
-      <button ID="ID_BACKWARD" Left="9"/>
-      <button ID="ID_FORWARD" Left="10"/>
-      <button ID="ID_JUMP" Left="11"/>
-      <seperator/>
-      <button ID="ID_EDIT_CUT" Left="26" disabled_Left="37"/>
-      <button ID="ID_EDIT_COPY" Left="27" Width="2" disabled_Left="38"/>
-      <button ID="ID_EDIT_PASTE" Width="2" Left="29"/>
-      <seperator/>
-      <button ID="ID_EDIT_UNDO" Left="31" disabled_Left="40"/>
-      <button ID="ID_EDIT_REDO" Left="32" disabled_Left="41"/>
-      <seperator/>
-      <button ID="ID_EDIT_FIND" Left="33"/>
-      <button ID="ID_EDIT_REPLACE" Left="34"/>
-      <seperator/>
-      <button ID="ID_BACKWARD_LYRICS" Left="21"/>
-      <button ID="ID_FORWARD_LYRICS" Left="22"/>
-      <button ID="ID_EDIT_TAG" Left="25"/>
-      <seperator/>
-      <button ID="ID_EDIT_HELP" Left="24" Width="1"/>      
-    </Toolbar>
-    <LyricShowTextEdit ID="ID_LYRICS_SHOW" Left="2" Top="23+22" Width="w - 4" Height="h -23 - 8-22" BgColor="#D6DBBD" FgColor="#0061FF" FgLowColor="#848284" FocusLineBgColor="#8CBAEF" />
-    <Image Left="0" Top="23" Width="2" Height="h - 23 - 8" ID="ID_NONE" Name="Left frame" Image="xframe.bmp" ImageRect="0,23,2,97" BltMode="stretch"/>
-    <Image Left="w - 2" Top="23" Width="2" Height="h - 23 - 8" ID="ID_NONE" Name="Right frame" Image="xframe.bmp" ImageRect="2,23,2,97" BltMode="stretch"/>
-    <XScaleImage Left="0" Top="h - 8" Width="w" Height="8" ID="ID_NONE" Name="BottomImage" Image="caption.bmp" ImageRect="0,24,265,8" ImageScaleXStart="10" ImageScaleXEnd="255"/>
   </skinwnd>
 </skin>

@@ -7,21 +7,21 @@
   <Animation ID="CID_AM_HIDE_OPEN_2_LEFT" MoveToLeft="CID_C_OPEN"/>
   <Animation ID="CID_AM_SHOW_OPEN_F_LEFT" MoveFromLeft="CID_C_OPEN"/>
   <Container ID="CID_C_OPEN" Name="Search lyrics" Rect="0,0,w,h">
-    <NormalText ID="CID_S_AR" Text="Artist:" Rect="20,20,60,"/>
-    <NormalEdit ID="CID_E_ARTIST" Rect="80,20,w-80-20-80-20,"/>
-    <NormalText ID="CID_S_TI" Text="Title:" Rect="20,50,60,"/>
-    <NormalEdit ID="CID_E_TITLE" Rect="80,50,w-80-20-80-20,"/>
+    <NormalText ID="CID_S_AR" Text="Artist:" Rect="10,20,60,"/>
+    <NormalEdit ID="CID_E_ARTIST" Rect="70,20,w-70-20-80-20,"/>
+    <NormalText ID="CID_S_TI" Text="Title:" Rect="10,50,60,"/>
+    <NormalEdit ID="CID_E_TITLE" Rect="70,50,w-70-20-80-20,"/>
     <NormalTextBt ID="CID_SEARCH" Text="&amp;Search" Rect="w-90-10,50,90,"/>
 
-    <NormalListCtrl ID="CID_L_LYRICS" Rect="20,90,w-40,h-90-60" DrawHeader="true"
+    <NormalListCtrl ID="CID_L_LYRICS" Rect="10,85,w-20,h-85-45" DrawHeader="true"
          EnableSort="true" DrawBorder="true" ImageList="LyrFileType.png"/>
 
-    <NormalTextBt ID="CID_PREV_PAGE" Visible="false" Text="&lt;&lt; Prev Page" Rect="w-220,h-40-15-28,100,"/>
-    <NormalTextBt ID="CID_NEXT_PAGE" Visible="false" Text="Next Page &gt;&gt;" Rect="w-110,h-40-15-28,100,"/>
+    <NormalTextBt ID="CID_PREV_PAGE" Visible="false" Text="&lt;&lt; Prev Page" Rect="w-230,h-30-10-20,100,"/>
+    <NormalTextBt ID="CID_NEXT_PAGE" Visible="false" Text="Next Page &gt;&gt;" Rect="w-110,h-30-10-20,100,"/>
 
-    <NormalTextBt ID="CID_OPEN" Text="&amp;Open" Rect="w/2-120,h-15-28,100,"/>
-    <NormalTextBt ID="CID_MORE" Text="&amp;More &gt;&gt;" Rect="w/2+20,h-15-28,100,"/>
-    <NormalTextBt ID="CID_CANCEL" Text="Cancel" Rect="w-110,h-15-28,100,"/>
+    <NormalTextBt ID="CID_OPEN" Text="&amp;Open" Rect="w/2-120,h-10-20,100,"/>
+    <NormalTextBt ID="CID_MORE" Text="&amp;More &gt;&gt;" Rect="w/2+20,h-10-20,100,"/>
+    <NormalTextBt ID="CID_CANCEL" Text="Cancel" Rect="w-110,h-10-20,100,"/>
   </Container>
   <Animation ID="CID_AM_SHOW_RENAME_F_RIGHT" MoveFromRight="CID_C_RENAME"/>
   <Animation ID="CID_AM_HIDE_RENAME_2_RIGHT" MoveToRight="CID_C_RENAME"/>

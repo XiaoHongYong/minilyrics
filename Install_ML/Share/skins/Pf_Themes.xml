@@ -19,13 +19,13 @@
     <Container ID="CID_C_THEME_DISPLAY_STYLE" Name="Lyrics Display" Visible="false" Rect="0,30,w,h-30-20">
       <NormalComboBox ID="CID_DS_MODE" Text="Display Mode" Rect="10,10,w-20,"/>
 
-      <NormalFrame Rect="10,35,w-20,100" Text="Font of lyrics text"/>
+      <NormalFrame Rect="10,35,w-20,90" Text="Font of lyrics text"/>
       <NormalText Rect="25,60,w/2-30," Text="Latin language font:"/>
       <NormalTextBt ID="CID_DS_LOAD_LATIN_FONT" Text="Choose Font" Rect="w/2,60,w/2-20,"/>
       <NormalText Rect="25,90,w/2-30," Text="Other language font:"/>
       <NormalTextBt ID="CID_DS_LOAD_OTHER_FONT" Text="Choose Font" Rect="w/2,90,w/2-20,"/>
 
-      <NormalFrame Rect="10,130,w-20,160" Text="Color of lyrics text"/>
+      <NormalFrame Rect="10,130,w-20,150" Text="Color of lyrics text"/>
       <NormalCheckBox ID="CID_C_DRAW_SHADOW" Text="Draw shadow of lyrics text" Rect="25,155,w-50,"/>
       <NormalText Rect="25,185,w/2-35," Text="Highlight lyrics color:"/>
       <NormalImageBt ID="CID_DS_CLR_HIGH" Text="Highligh" Rect="w/2,185,w/4-20,"/>
@@ -36,7 +36,7 @@
       <NormalText Rect="25,245,w/2-35," Text="Background color:"/>
       <NormalImageBt ID="CID_DS_CLR_BG" Text="bg" Rect="w/2,245,w/4-20,"/>
 
-      <NormalFrame Rect="10,285,w-20,100" Text="Lyrics display style"/>
+      <NormalFrame Rect="10,285,w-20,90" Text="Lyrics display style"/>
       <NormalComboBox ID="CID_DS_STYLE" Text="Display Style" Rect="25,310,w/2-45,"/>
       <NormalComboBox ID="CID_DS_FADEOUT" Text="Fade out" Rect="w/2,310,w/2-20,"/>
       <NormalText Rect="25,340,w/4-25," Text="Align lyrics at:"/>

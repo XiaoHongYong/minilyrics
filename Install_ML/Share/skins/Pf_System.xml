@@ -7,7 +7,7 @@
   </NormalTabButton>
   <Container Name="Content" Rect="10,0,w-20,h" ClipChildren="true">
     <Container ID="CID_C_INTERNET" Name="Internet" Rect="0,30,w,h-30-20" Visible="false">
-      <NormalFrame Rect="10,15,w-20,220" Text="HTTP proxy"/>
+      <NormalFrame Rect="10,15,w-20,210" Text="HTTP proxy"/>
       <NormalTextBt ID="CID_LOAD_IE_PROXY" Text="Load Setting From IE" Rect="20,40,200,"/>
       <NormalCheckBox ID="CID_USE_PROXY" Text="Use proxy" Rect="20,70,200,"/>
 

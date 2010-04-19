@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<skinwnd Extends="WindowFrame" Name="LyricsEditor.xml" Caption="Lyrics Editor" CmdHandler="ch_common"
+<skinwnd Extends="MenuWindowFrame" Name="LyricsEditor.xml" Caption="Lyrics Editor" CmdHandler="ch_common"
          Width="620" Height="440" ContextMenu="NormalMode" Menu="LyrEditorMenu"
          OnCreateCommand="dyncmd_load_toolbar_state">
   <Toolbar Left="0" Top="0" Width="22*4+10" Height="26" Image="lyr-tb.bmp"
@@ -9,9 +9,9 @@
     <button ID="ID_INSERTTAG" Left="14" />
     <button ID="dyncmd_toggle_toolbarex_visible" Left="23" ToolTip="Toggle Extended Toolbar Visible"/>
   </Toolbar>
-  <Image Left="22*4+10" Top="0" Width="w-(22*4+10+6)" Height="26" Name="Toolbar Bg"
+  <Image Left="22*4+10" Top="0" Width="w-(22*4+10)" Height="26" Name="Toolbar Bg"
          Image="lyr-tb.bmp" ImageRect="858,0,22,26" BltMode="tile"/>
-  <Toolbar ID="ID_TOOLBAR" Left="22*4+10" Top="0" Width="w-(22*4+10+6)" Height="26"
+  <Toolbar ID="ID_TOOLBAR" Left="22*4+10" Top="0" Width="w-(22*4+10)" Height="26"
            Image="lyr-tb.bmp" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3" Visible="false">
     <seperator/>
@@ -43,7 +43,7 @@
     <seperator/>
     <button ID="ID_EDIT_HELP" Left="24" />
   </Toolbar>
-  <LyricShowTextEdit Left="6" Top="26" Width="w-12" Height="(h-10-26)"
+  <LyricShowTextEdit Left="0" Top="26" Width="w" Height="h-26"
                      BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD"
                      FocusLineBgColor="#000000" TagColor="#FF8242" />
 </skinwnd>

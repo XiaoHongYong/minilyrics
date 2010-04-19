@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <styles>
   <style>
-    <WindowFrame Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="245"
+    <WindowFrame EnableTranslucency="true" TranslucencyAlpha="255"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
          PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false"
          FontName="Verdana" FontHeight="15" TextColor="#FFFFFF">
@@ -19,12 +19,42 @@
         <button ID="ID_CANCEL" Left="1" />
       </Toolbar>
       <HStretchImage Name="TitleLine" Left="10" Top="25" Width="w-20-10" Height="6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
-      <ClientArea Rect="2, 30, w-4-10, h-30-4" ClipChildren="true"/>
+      <ClientArea Rect="0,30,w-10,h-30-10" ClipChildren="true"/>
       <WndResizer Name="Bottom" Left="0" Top="h-20" Width="w-20" Height="20" Direction="bottom"/>
       <WndResizer Name="Right" Left="w-20" Top="0" Width="20" Height="h-20" Direction="right"/>
       <WndResizer Name="RightBottom" Left="w-20" Top="h-20" Width="20" Height="20" Direction="right|bottom"/>
     </WindowFrame>
-    <PopupWndFrame Name="minilyrics" EnableTranslucency="false"
+    <MenuWindowFrame EnableTranslucency="true" TranslucencyAlpha="255"
+         MinWidth="100" MinHeight="100" Width="330" Height="400"
+         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false"
+         FontName="Verdana" FontHeight="15" TextColor="#FFFFFF">
+      <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
+      <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
+      <Image Name="BottomBorder" Left="20" Top="h-20+10" Width="w-20-20" Height="20-10" Image="frame.png" ImageRect="20, 65, 35, 10" BltMode="tile" BlendPixMode="copy"/>
+      <Image Name="RightBottomCorner" Left="w-20" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="55, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 55, 20, 20" BlendPixMode="copy"/>
+      <Image Name="TopRightCorner" Left="w-20" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="55, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 0, 20, 20" BlendPixMode="copy"/>
+      <Image Name="RightBorder" Left="w-20+10" Top="20" Width="20-10" Height="h-20-20" Image="frame.png" ImageRect="65, 20, 10, 35" BltMode="tile" BlendPixMode="copy"/>
+      <Text ID="ID_CAPTION" Rect="30,4,w-60,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
+      <Toolbar ID="CID_TB_SYSBT"  Left="w-15-20" Top="8" Width="20" Height="14"
+           UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14"
+           blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10"
+           MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
+        <button ID="ID_CANCEL" Left="1" />
+      </Toolbar>
+      <HStretchImage Name="TitleLine" Left="10" Top="25" Width="w-20-10" Height="6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
+      <MenuBar Rect="10,36,w-10-20,18" Name="Menu"
+               UseSkinBg="true" TranslucencyWithSkin="TRUE"
+         FontHeight="15" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#303030"
+         TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
+         TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
+         BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+      <ClientArea Rect="10,60,w-30,h-50-30" ClipChildren="true"/>
+      <ListCtrlFrame Rect="10-4,60-4,w-30+8,h-50-30+8"/>
+      <WndResizer Name="Bottom" Left="0" Top="h-20" Width="w-20" Height="20" Direction="bottom"/>
+      <WndResizer Name="Right" Left="w-20" Top="0" Width="20" Height="h-20" Direction="right"/>
+      <WndResizer Name="RightBottom" Left="w-20" Top="h-20" Width="20" Height="20" Direction="right|bottom"/>
+    </MenuWindowFrame>
+    <PopupWndFrame EnableTranslucency="false"
          FixedWidth="true" FixedHeight="true"
          PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false">
       <XScaleImage Left="0" Top="0" Width="w" Height="5" Name="Top border"
@@ -39,30 +69,44 @@
              Image="menu_frame.png" ImageRect="49,5,1,10" BltMode="tile"/>
       <ClientArea Rect="1, 5, w-2, h-5-5"/>
     </PopupWndFrame>
+    <NormalToolbar Extends="Toolbar" Image="toolbar-small.bmp" enablehover="TRUE" Height="18" units_x="18" blank_x="234" blank_cx="18" seperator_x="234" seperator_cx="10">
+      <button ID="ID_SEARCH_LYRICS" Left="8"/>
+      <button ID="ID_BACKWARD_LYRICS" Left="9" Continuous="TRUE"/>
+      <button ID="ID_FORWARD_LYRICS" Left="10" Continuous="TRUE"/>
+      <button ID="ID_MENU" Left="11"/>
+      <button ID="ID_RATE_LYR" Left="12"/>
+      <seperator/>
+      <button ID="ID_PLAY" Left="0"/>
+      <button ID="ID_PAUSE" Left="1"/>
+      <button ID="ID_STOP" Left="2"/>
+      <button ID="ID_PREVIOUS" Left="3"/>
+      <button ID="ID_NEXT" Left="4"/>
+      <button ID="ID_HELP" Left="7"/>
+    </NormalToolbar>
     <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"/>
     <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="15" TextColor="#FFFF00"/>
     <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF" TabFocus="true"
-          Height="28" XMargin="5" YMargin="4" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
+          Height="20" XMargin="5" YMargin="4" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
           Image="s_txt_button.png" ImageSize="70,28" ExtendPos="20,50"
-          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
+          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalImageBt Extends="ImageButton" ContentMarginX="9" ContentMarginY="7"
-          Height="28" XMargin="5" YMargin="4" UseSkinBg="true" TabFocus="true"
+          Height="20" XMargin="5" YMargin="4" UseSkinBg="true" TabFocus="true"
           Image="s_image_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
-    <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
+    <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF" DisabledTextColor="#808080"
           Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
           CheckBox="true" TabFocus="true"
           Image="s_checkbox.png" ImageSize="20,20"
-          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40"
+          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_checkbox.png" S1_ImageSize="20,20"
-          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40"/>
-    <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"
+          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
+    <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF" DisabledTextColor="#808080"
           Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
            Radio="true" TabFocus="true"
           Image="s_radio_button.png" ImageSize="20,20"
-          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40"
+          ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_radio_button.png" S1_ImageSize="20,20"
-          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40"/>
+          S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
     <NormalEdit Extends="EditCtrl" Height="19" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
           XMargin="12" YMargin="8" ExtendPos="20,50" ImageFrame="s_edit_box.png" ImageFrameSize="70,35"
           ImageFramePos="0,35" ImageFrameFocusPos="0,0"/>
@@ -75,17 +119,20 @@
           FontName="Verdana" FontHeight="15" TextColor="#000000"
           Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
           MarginX="0" MarginY="0" />
-    <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="15" TextColor="#000000" TabFocus="true"
-          Height="28" XMargin="5" YMargin="4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
+    <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="15" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
+          Height="22" XMargin="5" YMargin="4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
           UseSkinBg="true" Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
-          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
+          ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"
           XBorder="0" YBorder="10" FontName="Verdana" FontHeight="15" TextColor="#FFFFFF"/>
+    <ListCtrlFrame Extends="Frame" Image="s_listctrl_frame.png" ImageFocus="s_listctrl_frame_focus.png"
+          RoundWidth="4" ThickWidth="4" XBorder="0" YBorder="0"/>
     <WndFrameCaption Extends="Text" ID="ID_CAPTION" Rect="30,4,w-60,20" Text="About MiniLyrics" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
     <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
     <CloseButton Extends="Button" Image=""/>
     <MinimizeButton Extends="Button" Image=""/>
+  
   </style>
 </styles>
