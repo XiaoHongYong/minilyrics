@@ -284,9 +284,6 @@ public:
 		GET_ID_BY_NAME(CID_SEARCH);
 		GET_ID_BY_NAME(CID_L_LYRICS);
 
-		m_pLocalizeTool->RemoveItem(CID_E_ARTIST);
-		m_pLocalizeTool->RemoveItem(CID_E_TITLE);
-
 		// Save current media info.
 		m_strSongFile = g_Player.GetSrcMedia();
 		m_strArtist = g_Player.GetArtist();

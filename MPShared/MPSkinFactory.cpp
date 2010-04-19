@@ -468,6 +468,23 @@ int CMPSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 	return nID;
 }
 
+void CMPSkinFactory::GetTooltip(int nId, tstring &strToolTip)
+{
+	CSkinFactory::GetTooltip(nId, strToolTip);
+
+	if (strToolTip.size())
+	{
+		tstring		strHotkey;
+
+		if (g_mpApp.GetHotkey().GetHotkeyText(nId, strHotkey))
+		{
+			strToolTip += _T(" (");
+			strToolTip += strHotkey;
+			strToolTip += _T(")");
+		}
+	}
+}
+
 int CMPSkinFactory::OpenSimpliestSkin()
 {
 	int			nRet;

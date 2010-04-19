@@ -37,7 +37,6 @@ public:
 
 	bool IsMenuPopuped() { return m_bMenuPopup; }
 
-
 	void OnKeyDown(UINT nChar, UINT nFlags);
 
 	void OnMouseMove(UINT nFlags, CPoint point);
@@ -115,6 +114,8 @@ public:
 #ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
+
+	virtual void OnLanguageChanged();
 
 protected:
 	int HitTestSubMenu(const POINT point);

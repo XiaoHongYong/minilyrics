@@ -84,12 +84,7 @@ BOOL CSkinPicText::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (CUIObject::SetProperty(szProperty, szValue))
 		return TRUE;
 
-	if (_tcsicmp(szProperty, _T("Text")) == 0)
-	{
-		m_strText = szValue;
-		m_vPos.clear();
-	}
-	else if (_tcsicmp(szProperty, _T("AlignText")) == 0)
+	if (_tcsicmp(szProperty, _T("AlignText")) == 0)
 	{
 		m_dwAlignTextFlags = AlignTextFromStr(szValue);
 	}
@@ -119,6 +114,12 @@ BOOL CSkinPicText::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	return TRUE;
 }
 
+void CSkinPicText::SetText(LPCTSTR szText)
+{
+	CUIObject::SetText(szText);
+	m_vPos.clear();
+}
+
 #ifdef _SKIN_EDITOR_
 void CSkinPicText::EnumProperties(CUIObjProperties &listProperties)
 {
@@ -132,9 +133,3 @@ void CSkinPicText::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropStr(_T("ImageChars"), m_strImgChars.c_str());
 }
 #endif // _SKIN_EDITOR_
-
-void CSkinPicText::SetText(LPCTSTR szText)
-{
-	m_strText = szText;
-	m_vPos.clear();
-}

@@ -342,7 +342,6 @@ CUIObject::CUIObject()
 
 	m_rcObj.SetRect(0, 0, 50, 30);
 
-//	m_strText[0] = '\0';
 	m_bTempTooltip = false;
 
 	m_bEnable = true;
@@ -503,6 +502,8 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (_tcsicmp(szProperty, SZ_PN_NAME) == 0)
 		m_strName = szValue;
+	else if (_tcsicmp(szProperty, _T("Text")) == 0)
+		SetText(szValue);
 	else if (_tcsicmp(szProperty, _T("Visible")) == 0)
 		m_bVisible = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("HideIfWndInactive")) == 0)
@@ -515,11 +516,11 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bTranslucencyWithSkin = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_TOOLTIP) == 0)
 	{
-		if (_tcscmp(m_strTooltip.c_str(), szValue) != 0)
+		tstring str = TOLOCAL(szValue);
+		if (_tcscmp(m_strTooltip.c_str(), str.c_str()) != 0)
 		{
-			m_strTooltip = szValue;
-			if (m_bTempTooltip)
-				m_bTempTooltip = FALSE;
+			m_strTooltip = str.c_str();
+			m_bTempTooltip = FALSE;
 		}
 	}
 	else if (IsPropertyName(szProperty, _T("ImageMask")))
@@ -640,6 +641,11 @@ bool CUIObject::IsParentVisible()
 	return true;
 }
 
+void CUIObject::SetText(LPCTSTR szText)
+{
+	m_strTextEnglish = szText;
+	m_strText = TOLOCAL(m_strTextEnglish.c_str());
+}
 
 void CUIObject::SetFocus()
 {
@@ -772,4 +778,13 @@ tstring CUIObject::GetProfileKeyName(LPCTSTR szSubKeyName)
 	strKeyName += szSubKeyName;
 
 	return strKeyName;
+}
+
+void CUIObject::OnLanguageChanged()
+{
+	if (m_strTextEnglish.size())
+		m_strText = TOLOCAL(m_strTextEnglish.c_str());
+
+	if (m_strTooltip.size())
+		m_pSkin->GetSkinFactory()->GetTooltip(m_nId, m_strTooltip);
 }

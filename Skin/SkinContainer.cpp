@@ -286,8 +286,6 @@ void CSkinContainer::OnSize(int cx, int cy)
 
 void CSkinContainer::OnLanguageChanged()
 {
-	int nCount;
-
 	if (m_pMenu)
 	{
 		delete m_pMenu;
@@ -297,14 +295,9 @@ void CSkinContainer::OnLanguageChanged()
 	}
 
 	// Notify to child container...
-	nCount = (int)m_vUIObjs.size();
-	for (int i = 0; i < nCount; i++)
+	for (int i = 0; i < m_vUIObjs.size(); i++)
 	{
-		CUIObject	*pObj = m_vUIObjs[i];
-		if (pObj->IsContainer())
-		{
-			pObj->GetContainerIf()->OnLanguageChanged();
-		}
+		m_vUIObjs[i]->OnLanguageChanged();
 	}
 }
 

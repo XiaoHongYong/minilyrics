@@ -40,6 +40,8 @@ public:
 	void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
 
+	virtual void OnLanguageChanged();
+
 public:
 	// functions for CSkinWnd
 	void Destroy();
@@ -80,8 +82,6 @@ public:
 
 	virtual bool IsContainer() const { return true; }
 	virtual CSkinContainer *GetContainerIf() { return this; }
-
-	virtual void OnLanguageChanged();
 
 	virtual void OnAdjustHue(float hue, float saturation, float luminance);
 	virtual void OnSkinFontChanged();

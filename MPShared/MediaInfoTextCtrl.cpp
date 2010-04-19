@@ -160,14 +160,13 @@ void CMediaInfoTextCtrl::UpdateShowTrackInfo()
 
 	MediaAttribute		infoType = m_vInfoType[m_nCurrentItem];
 	tstring				strValue;
+	tstring				strText;
 
 	if (m_bShowTitle)
 	{
-		m_strText = IDToString(__mediaInfoType, infoType, _T(""));
-		m_strText += _T(": ");
+		strText = TOLOCAL(IDToString(__mediaInfoType, infoType, _T("")));
+		strText += _T(": ");
 	}
-	else
-		m_strText.resize(0);
 
 	g_Player.GetCurMediaAttribute(infoType, strValue);
 	if (infoType == MA_CHANNELS)
@@ -196,6 +195,8 @@ void CMediaInfoTextCtrl::UpdateShowTrackInfo()
         strValue += _T("M");
 	}
 
-	m_strText += strValue;
+	strText += strValue;
+
+	SetText(strText.c_str());
 }
 

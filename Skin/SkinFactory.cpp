@@ -556,31 +556,22 @@ void CSkinFactory::SetStringIDMap(STRING_ID_MAP StringIdMap[])
 	m_IdMap = StringIdMap;
 }
 
-// COMMENT:
-//		根据控件 ID 字符串来取得对应的控件 ID 数值
-//		改进方法: 对所有的ID字符串值进行排序,然后使用二分法进行搜索
-int CSkinFactory::GetIDByName(LPCTSTR szId)
-{
-	tstring		strTemp;
-
-	return GetIDByNameEx(szId, strTemp);
-}
-
-int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
+int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip)
 {
 	assert(szId);
 	assert(m_IdMap);
 	if (!m_IdMap || IsEmptyString(szId))
 		return SKIN_UIOBJ_ID_UNDEFINE;
 
-	strToolTip.resize(0);
+	if (pstrToolTip)
+		pstrToolTip->resize(0);
 
 	for (int i = 0; m_IdMap[i].szId != 0; i++)
 	{
 		if (_tcsicmp(szId, m_IdMap[i].szId) == 0)
 		{
-			if (m_IdMap[i].szToolTip)
-				strToolTip = TOLOCAL(m_IdMap[i].szToolTip);
+			if (m_IdMap[i].szToolTip && pstrToolTip)
+				*pstrToolTip = TOLOCAL(m_IdMap[i].szToolTip);
 
 			return m_IdMap[i].nId;
 		}
@@ -596,6 +587,21 @@ int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 
 	m_mapCmdStrId[szId] = UID_MenuID(m_nCustomCmdIDNext, 0);
 	return m_nCustomCmdIDNext;
+}
+
+void CSkinFactory::GetTooltip(int nId, tstring &strToolTip)
+{
+	strToolTip.resize(0);
+
+	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	{
+		if (nId == m_IdMap[i].nId)
+		{
+			if (m_IdMap[i].szToolTip)
+				strToolTip = TOLOCAL(m_IdMap[i].szToolTip);
+			return;
+		}
+	}
 }
 
 int CSkinFactory::GetMenuIDByUID(int nUID)

@@ -58,10 +58,6 @@ public:
 
 		m_pSkinWnd->SetUIObjectProperty(_T("CID_EMAIL"), SZ_PN_LINK, GetStrName(SN_EMAIL));
 
-		m_pLocalizeTool->RemoveItem(_T("CID_VERSION"));
-		m_pLocalizeTool->RemoveItem(_T("CID_COPYRIGHT"));
-		m_pLocalizeTool->RemoveItem(_T("CID_EMAIL"));
-
 		CVersionUpdate	verUpdate;
 		verUpdate.CheckNewVersion(&g_LyricsDownloader, false);
 	}

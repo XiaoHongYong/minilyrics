@@ -638,7 +638,7 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 	}
 	str.insert(str.begin(), strTags.begin(), strTags.end());
 
-	SetText(str.c_str());
+	CLyrEditHandler::SetText(str.c_str());
 
 	int		nCurLine;
 	nCurLine = g_LyricData.GetCurPlayLine(m_lyrLines);

@@ -44,7 +44,7 @@ void CMPSkinInfoTextCtrl::OnEvent(const IEvent *pEvent)
 {
 	if (pEvent->eventType == ET_UI_INFO_TEXT)
 	{
-		m_strText = pEvent->strValue;
+		SetText(pEvent->strValue.c_str());
 		Invalidate();
 		m_pSkin->UnregisterTimerObject(this);
 		m_nTimerIDHideInfo = m_pSkin->RegisterTimerObject(this, 3000);
@@ -86,5 +86,5 @@ void CMPSkinInfoTextCtrl::Draw(CRawGraph *pGraph)
 
 void CMPSkinInfoTextCtrl::UpdateShowTrackInfo()
 {
-	m_strText = g_Player.GetFullTitle();
+	SetText(g_Player.GetFullTitle());
 }

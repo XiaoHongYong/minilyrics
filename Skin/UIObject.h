@@ -242,6 +242,7 @@ public:
 	inline bool IsUseSkinBg() { return m_bUseSkinBg; }
 	inline void SetUseSkinBg(bool bUseSkinBg) { m_bUseSkinBg = bUseSkinBg; }
 
+	virtual void SetText(LPCTSTR szText);
 	virtual tstring &GetText() { return m_strText; }
 
 	void SetFocus();
@@ -270,6 +271,8 @@ public:
 	tstring GetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault);
 	void WriteProfileInt(LPCTSTR szKeyName, int nValue);
 	tstring GetProfileKeyName(LPCTSTR szSubKeyName);
+
+	virtual void OnLanguageChanged();
 
 public:
 	//
@@ -303,7 +306,7 @@ public:
 	tstring		m_strName;
 
 	int			m_nMsgWant;		// message mask is used to specify what messages ui objects want to process
-	tstring		m_strText;
+	tstring		m_strText, m_strTextEnglish;
 	bool		m_bEnable;		// Is control being enabled?
 	bool		m_bVisible;
 	bool		m_bHideIfWndInactive;

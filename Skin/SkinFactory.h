@@ -145,8 +145,11 @@ public:
 
 	void SetStringIDMap(STRING_ID_MAP StringIdMap[]);
 
-	virtual int GetIDByName(LPCTSTR szId);
-	virtual int GetIDByNameEx(LPCTSTR szId, tstring &strToolTip);
+	int GetIDByName(LPCTSTR szId) { return GetIDByNameEx(szId, NULL); }
+	int GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip);
+	virtual int GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
+		{ return GetIDByNameEx(szId, &strToolTip); }
+	virtual void GetTooltip(int nId, tstring &strToolTip);
 
 	virtual int GetMenuIDByUID(int nUID);
 	virtual int GetUIDByMenuID(int nMenuID);

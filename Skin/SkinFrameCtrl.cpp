@@ -130,8 +130,6 @@ BOOL CSkinFrameCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_imageFocus.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 	else if (IsPropertyName(szProperty, _T("RoundWidth")))
 		m_nRoundWidth = _ttoi(szValue);
-	else if (IsPropertyName(szProperty, _T("Text")))
-		m_strText = szValue;
 	else if (IsPropertyName(szProperty, _T("ThickWidth")))
 		m_nThickWidth = _ttoi(szValue);
 	else if (IsPropertyName(szProperty, _T("XBorder")))

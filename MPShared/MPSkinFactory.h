@@ -44,6 +44,7 @@ public:
 	void RestoreAll();
 
 	virtual int GetIDByNameEx(LPCTSTR szId, tstring &strToolTip);
+	virtual void GetTooltip(int nId, tstring &strToolTip);
 
 	int OpenSimpliestSkin();
 

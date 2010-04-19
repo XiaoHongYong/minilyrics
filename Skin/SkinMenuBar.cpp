@@ -62,7 +62,6 @@ bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, CMLMenu *pMenu, int nSu
 	return true;
 }
 
-
 void CMenuBarMsgHandler::OnKeyDown(UINT nChar, UINT nFlags)
 {
 	m_pMenuBar->OnKeyDown(nChar, nFlags);
@@ -207,25 +206,7 @@ void CSkinMenuBar::OnCreate()
 
 	m_font.OnCreate(m_pSkin);
 
-	if (m_strMenu.empty() && !IsEmptyString(m_pSkin->GetMenuName()))
-	{
-		m_pSkin->GetSkinFactory()->LoadMenu(m_pSkin, &m_pMenu, 
-			m_pSkin->GetMenuName());
-	}
-
-	if (m_pMenu)
-	{
-		for (int i = 0; i < 255; i++)
-		{
-			SubMenu		item;
-
-			if (m_pMenu->GetMenuItemInfo(i, item.strText, item.nID, item.bHasSubMenu, true))
-			{
-				item.chMenuKey = GetMenuKey(item.strText.c_str());
-				m_vSubMenus.push_back(item);
-			}
-		}
-	}
+	OnLanguageChanged();
 }
 
 
@@ -487,8 +468,6 @@ BOOL CSkinMenuBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (IsPropertyName(szProperty, _T("Menu")))
 	{
 		m_strMenu = szValue;
-		m_pSkin->GetSkinFactory()->LoadMenu(m_pSkin, &m_pMenu, szValue);
-		ASSERT(m_pMenu);
 	}
 	else if (m_font.SetProperty(szProperty, szValue))
 		return TRUE;
@@ -524,6 +503,38 @@ void CSkinMenuBar::EnumProperties(CUIObjProperties &listProperties)
 }
 #endif // _SKIN_EDITOR_
 
+
+void CSkinMenuBar::OnLanguageChanged()
+{
+	if (m_pMenu)
+	{
+		delete m_pMenu;
+		m_pMenu = NULL;
+	}
+	m_vSubMenus.clear();
+
+	if (m_strMenu.size())
+		m_pSkin->GetSkinFactory()->LoadMenu(m_pSkin, &m_pMenu, m_strMenu.c_str());
+	else if (!IsEmptyString(m_pSkin->GetMenuName()))
+	{
+		m_pSkin->GetSkinFactory()->LoadMenu(m_pSkin, &m_pMenu, 
+			m_pSkin->GetMenuName());
+	}
+
+	if (m_pMenu)
+	{
+		for (int i = 0; i < 255; i++)
+		{
+			SubMenu		item;
+
+			if (m_pMenu->GetMenuItemInfo(i, item.strText, item.nID, item.bHasSubMenu, true))
+			{
+				item.chMenuKey = GetMenuKey(item.strText.c_str());
+				m_vSubMenus.push_back(item);
+			}
+		}
+	}
+}
 
 int CSkinMenuBar::HitTestSubMenu(const POINT point)
 {
