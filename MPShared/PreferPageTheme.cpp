@@ -2,7 +2,6 @@
 #include "MPlayerApp.h"
 #include "PreferPageTheme.h"
 #include "LyricShowAgentObj.h"
-#include "DlgLyrBlendingOpt.h"
 #include "ThemesFile.h"
 #include "LyrDisplayClrListWnd.h"
 
