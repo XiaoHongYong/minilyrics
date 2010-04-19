@@ -3474,9 +3474,6 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 
 			CE_LOG1(ps->nLineNo, "Call Method: return: %d", nRet);
 
-			if (m_exeAction == EXE_FUNC_RETURN)
-				m_exeAction = EXE_GO_ON;
-
 			return nRet;
 		}
 	case E_ASSIGN:
@@ -3789,6 +3786,9 @@ int CSJVM::CallMethod(TypeId typeId, int nMethodIndex)
 	// Recover bp, sp, and free object allocated in previous function of stack
 	m_stack.Resize(nSp);
 	m_bp = nBp;
+
+	if (m_exeAction == EXE_FUNC_RETURN)
+		m_exeAction = EXE_GO_ON;
 
 	return m_valueMethodReturn;
 }
