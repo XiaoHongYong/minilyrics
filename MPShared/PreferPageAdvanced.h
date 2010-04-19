@@ -71,49 +71,5 @@ protected:
 
 };
 
-//
-// Internet settings
-//
-class CPreferPageAdvanced : public CPreferencePageBase
-{
-public:
-	CPreferPageAdvanced();
-	~CPreferPageAdvanced();
-
-	BOOL OnInitDialog();
-
-	void OnTimer(UINT nIDEvent);
-
-	void OnCommand(UINT uID, UINT nNotifyCode);
-	void OnDestroy();
-
-	BOOL OnNotify(WIDGET_NOTIFY_INFO *info);
-
-	void UpdateValues();
-
-protected:
-	CPreferItem *GetCurItem();
-	void ShowCustomizeMenu(int x, int y);
-
-	void ListAllItems();
-
-	enum {
-		IMG_MODIFIED = 0,
-		IMG_UNMODIFIED,
-	};
-
-protected:
-	VecPreferItems				m_vPreferItems;
-	VecPreferItems				m_vFilteredItems;
-	int							m_nMenuIdStart, m_nMenuIdEnd;
-	CWidgetTooltipListCtrl				m_listItems;
-	tstring						m_strLastSearch;
-
-#ifdef _WIN32
-	CImgList			m_imgList;
-#endif
-
-};
-
 
 #endif // _PREFER_PAGE_ADVANCED_H_

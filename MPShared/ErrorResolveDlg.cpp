@@ -99,7 +99,7 @@ void CErrorResolveDlg::OnCommand(UINT uID, UINT nNotifyCode)
 
 		OnOK();
 
-		g_wndPreference.Create(pParent, PAGE_INET);
+		CMPSkinDialog::ShowDialog(new CPreferenceDlg(false, PAGE_INET), this);
 	}
 	else if (IDC_COPYTOCLIPBOARD == uID)
 	{
