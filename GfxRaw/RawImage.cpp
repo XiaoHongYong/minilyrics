@@ -439,7 +439,7 @@ bool CRawImage::StretchBlt(CRawGraph *pGraphics, int xDest, int yDest, int width
 		rcSrc.x1 = (float)xSrc;
 	}
 	else
-		rcSrc.x1 = xSrc + dx * (xDest - rcDst.left);
+		rcSrc.x1 = xSrc + dx * (rcDst.left - xDest);
 
 	if (yDest > rcDst.top)
 	{
@@ -450,7 +450,7 @@ bool CRawImage::StretchBlt(CRawGraph *pGraphics, int xDest, int yDest, int width
 		rcSrc.y1 = ySrc + dy * (rcDst.top - yDest);
 
 	// get the clip box to copy
-	if (xDest + widthDest < rcDst.right)
+	if (xDest + widthDest <= rcDst.right)
 	{
 		rcDst.right = xDest + widthDest;
 		rcSrc.x2 = (float)(xSrc + widthSrc);
@@ -458,7 +458,7 @@ bool CRawImage::StretchBlt(CRawGraph *pGraphics, int xDest, int yDest, int width
 	else
 		rcSrc.x2 = xSrc + widthSrc - dx * (xDest + widthDest - rcDst.right);
 
-	if (yDest + heightDest < rcDst.bottom)
+	if (yDest + heightDest <= rcDst.bottom)
 	{
 		rcDst.bottom = yDest + heightDest;
 		rcSrc.y2 = (float)(ySrc + heightSrc);
@@ -470,6 +470,11 @@ bool CRawImage::StretchBlt(CRawGraph *pGraphics, int xDest, int yDest, int width
 		return true;
 
 	pImageDst = pGraphics->GetRawBuff();
+
+	ASSERT(rcSrc.x1 >= xSrc);
+	ASSERT(rcSrc.x2 <= xSrc + widthSrc);
+	ASSERT(rcSrc.y1 >= ySrc);
+	ASSERT(rcSrc.y2 <= ySrc + heightSrc);
 
 	return StretchBlt(pImageDst, rcDst, rcSrc, bpm, pGraphics->GetOpacityPainting());
 }

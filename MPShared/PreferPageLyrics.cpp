@@ -85,12 +85,6 @@ public:
 		InitCheckButtons();
 	}
 
-	void OnDestroy()
-	{
-
-		CPagePfBase::OnDestroy();
-	}
-
 	bool OnCustomCommand(int nId)
 	{
 		if (nId == CID_C_SAVE_IN_SONG_DIR

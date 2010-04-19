@@ -88,20 +88,22 @@ public:
 
 	void OnDestroy()
 	{
-		int		nDelayTime;
-
-		tstring strDelayTime = GetUIObjectText(_T("CID_E_DELAY_TIME"));
-		nDelayTime = _ttoi(strDelayTime.c_str());
-		if (nDelayTime > 0)
+		if (IsInitialUpdated())
 		{
-			if (nDelayTime < 10)
-				nDelayTime = 10;
-			if (nDelayTime > 10000)
-				nDelayTime = 10000;
-
-			if (nDelayTime != g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), 10))
+			int		nDelayTime;
+			tstring strDelayTime = GetUIObjectText(_T("CID_E_DELAY_TIME"));
+			nDelayTime = _ttoi(strDelayTime.c_str());
+			if (nDelayTime > 0)
 			{
-				CMPlayerSettings::SetLyricsDisplaySettings(_T("SlideDelayTime"), nDelayTime);
+				if (nDelayTime < 10)
+					nDelayTime = 10;
+				if (nDelayTime > 10000)
+					nDelayTime = 10000;
+
+				if (nDelayTime != g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), 10))
+				{
+					CMPlayerSettings::SetLyricsDisplaySettings(_T("SlideDelayTime"), nDelayTime);
+				}
 			}
 		}
 

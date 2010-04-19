@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferPageSystem.h"
-#include "INetTestDlg.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -92,6 +91,9 @@ public:
 protected:
 	void SaveProxyServerUserPwd()
 	{
+		if (!IsInitialUpdated())
+			return;
+
 		g_Profile.WriteProfileString(_T("ProxyServer"), 
 			GetUIObjectText(_T("CID_HTTP_PROXY")).c_str());
 
@@ -141,6 +143,8 @@ ID_TO_STRING		_id2strPlayers[] = { { 0, _T("Winamp2") }, { 0, _T("Winamp5") },
 	{ 0, NULL }
 };
 
+int   _idWmp = 0;
+
 #endif // #ifndef _MPLAYER
 
 class CPagePfStartup: public CPagePfBase
@@ -187,6 +191,9 @@ public:
 			if (_id2strPlayers[i].dwId == 0)
 				_id2strPlayers[i].dwId = m_pSkinWnd->GetSkinFactory()->AllocCustomID();
 
+			if (_tcscmp(_id2strPlayers[i].szId, _T("Windows Media Player")) == 0)
+				_idWmp = _id2strPlayers[i].dwId;
+
 			CSkinNStatusButton *pButton = (CSkinNStatusButton*)m_pSkinWnd->GetSkinFactory()->CreateDynamicCtrl(
 				pContainer, _T("NormalCheckBox"), _id2strPlayers[i].dwId,
 				bLeft ? strP1Left.c_str() : strP2Left.c_str(), formTop.GetFormula(), strWidth.c_str());
@@ -224,8 +231,12 @@ public:
 	void OnDestroy()
 	{
 #ifndef _MPLAYER
-		RegWriteProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\UIPlugins\\{46B5EE7F-3B6B-4079-A756-5EFC10B1F50B}"), 
-			_T("Running"), IsButtonChecked(IDC_WMP));
+		if (IsInitialUpdated())
+		{
+			ASSERT(_idWmp != UID_INVALID);
+			RegWriteProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\UIPlugins\\{46B5EE7F-3B6B-4079-A756-5EFC10B1F50B}"), 
+				_T("Running"), IsButtonChecked(_idWmp));
+		}
 #endif // #ifndef _MPLAYER
 
 		CPagePfBase::OnDestroy();

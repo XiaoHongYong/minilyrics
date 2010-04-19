@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by MPlayer.rc
+// Used by MiniLyrics.rc
 //
 #define IDC_REPORT                      129
 #define IDC_MLHELP                      130
@@ -36,7 +36,6 @@
 #define IDD_MLSTART                     167
 #define IDD_TAGINFO                     168
 #define IDD_ERROR_RESOLVE               169
-#define IDD_INET_TEST                   170
 #define IDD_WAITING                     172
 #define IDD_COPYSONGLYRICS              173
 #define IDD_SEL_ENCODING                174
@@ -70,7 +69,6 @@
 #define IDR_MENU_STATIC_LYR             211
 #define IDC_E_PWD                       1000
 #define IDC_APPLY_ACCOUNT               1001
-#define IDC_E_LOG                       1003
 #define IDC_E_SAMPLE                    1005
 #define IDC_HOTKEY                      1006
 #define IDC_E_TITLE                     1008
