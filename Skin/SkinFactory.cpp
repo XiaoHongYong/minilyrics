@@ -356,7 +356,6 @@ int CSkinFileXML::SetNode(LPCTSTR szName, SXNode *pNode)
 //
 CSkinStyles::CSkinStyles()
 {
-	m_pCurStyle = NULL;
 }
 
 CSkinStyles::~CSkinStyles()
@@ -367,7 +366,6 @@ CSkinStyles::~CSkinStyles()
 int CSkinStyles::FromXML(SXNode *pNodeSkin)
 {
 	m_listStyleNodes.clear();
-	m_pCurStyle = NULL;
 
 	for (SXNode::iterator it = pNodeSkin->listChildren.begin(); 
 		it != pNodeSkin->listChildren.end(); ++it)
@@ -384,51 +382,30 @@ int CSkinStyles::FromXML(SXNode *pNodeSkin)
 		}
 	}
 
-	if (m_listStyleNodes.size())
-		m_pCurStyle = m_listStyleNodes.front();
-
 	return ERR_OK;
 }
 
 void CSkinStyles::Free()
 {
 	m_listStyleNodes.clear();
-	m_pCurStyle = NULL;
-}
-
-bool CSkinStyles::SetCurStyle(LPCTSTR szStyleName)
-{
-	for (SXNode::iterator it = m_listStyleNodes.begin(); 
-		it != m_listStyleNodes.end(); ++it)
-	{
-		SXNode		*pNode = *it;
-
-		ASSERT(IsPropertyName(pNode->strName.c_str(), _T("style")));
-		if (IsPropertyName(pNode->GetPropertySafe(SZ_PN_NAME), szStyleName))
-		{
-			m_pCurStyle = pNode;
-			return true;
-		}
-	}
-
-	m_pCurStyle = NULL;
-
-	return false;
 }
 
 SXNode *CSkinStyles::GetClassNode(LPCTSTR szClassName) const
 {
-	if (!m_pCurStyle)
-		return NULL;
-
-	for (SXNode::iterator it = m_pCurStyle->listChildren.begin(); 
-		it != m_pCurStyle->listChildren.end(); ++it)
+	for (SXNode::LIST_CHILDREN::const_reverse_iterator itStyle = m_listStyleNodes.rbegin(); 
+		itStyle != m_listStyleNodes.rend(); ++itStyle)
 	{
-		SXNode		*pNode = *it;
+		SXNode		*pNodeStyle = *itStyle;
 
-		if (IsPropertyName(pNode->strName.c_str(), szClassName))
+		for (SXNode::iterator it = pNodeStyle->listChildren.begin(); 
+			it != pNodeStyle->listChildren.end(); ++it)
 		{
-			return pNode;
+			SXNode		*pNode = *it;
+
+			if (IsPropertyName(pNode->strName.c_str(), szClassName))
+			{
+				return pNode;
+			}
 		}
 	}
 
@@ -893,9 +870,6 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 	ExpandIncludeNode(m_skinFile.GetRootNode());
 
 	m_skinStyle.FromXML(m_skinFile.GetRootNode());
-	LPCTSTR szDefaultStyle = m_skinFile.GetSkinProperty(_T("DefaultStyle"));
-	if (szDefaultStyle && !IsEmptyString(szDefaultStyle))
-		m_skinStyle.SetCurStyle(szDefaultStyle);
 
 	pNode = m_skinFile.GetDynamicCmdsNode();
 	if (pNode)

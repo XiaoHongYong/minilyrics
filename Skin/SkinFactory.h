@@ -92,13 +92,10 @@ public:
 	int FromXML(SXNode *pNodeSkin);
 	void Free();
 
-	bool SetCurStyle(LPCTSTR szStyleName);
-
 	SXNode *GetClassNode(LPCTSTR szClassName) const;
 
 protected:
 	SXNode::LIST_CHILDREN	m_listStyleNodes;
-	SXNode					*m_pCurStyle;
 
 };
 

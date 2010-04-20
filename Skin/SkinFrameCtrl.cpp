@@ -36,7 +36,8 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 	SIZE sizeText = {0, 0};
 	CRect rcFrame = m_rcObj;
 
-	rcFrame.DeflateRect(m_xBorder, m_yBorder);
+	rcFrame.DeflateRect(m_xBorder, 0);
+	rcFrame.top += m_yBorder;
 
 	pGraph->GetTextExtentPoint32(m_strText.c_str(), m_strText.size(), &sizeText);
 	if (sizeText.cx > 0)

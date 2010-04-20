@@ -113,6 +113,8 @@ public:
 
 			UpdateLanguageInfo();
 
+			InvalidateRect();
+
 			return true;
 		}
 

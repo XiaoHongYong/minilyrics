@@ -833,6 +833,8 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_QUIT:
 		g_mpMsgWnd.PostQuitMPMessage();
 		break;
+	case CMD_OK:
+	case CMD_CANCEL:
 	case CMD_CLOSE:
 		m_pSkinWnd->PostDestroy();
 		break;
