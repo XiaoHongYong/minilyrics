@@ -574,7 +574,7 @@ void CreateLyrOverlayBlendingPattern(CLyricShowObj::TextOverlayBlending &tob, in
 
 		if (!tob.strPatternFile.empty())
 		{
-			PRAW_IMAGE_DATA		pImage = LoadRawImageDataFromFile(tob.strPatternFile.c_str());
+			PRAW_IMAGE_DATA		pImage = LoadRawImageDataPatternFile(tob.strPatternFile.c_str());
 			if (pImage && pImage->bitCount != 24)
 				pImage = ConvertTo24BppRawImage(pImage);
 
@@ -2275,9 +2275,17 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_skin_tobHilight.obm = (OverlayBlendingMode)StringToID(g_idsLOB, szValue, OBM_UNKNOWN);
 	}
+	else if (IsPropertyName(szProperty, _T("HilightPattern")))
+	{
+		m_skin_tobHilight.strPatternFile = szValue;
+	}
 	else if (IsPropertyName(szProperty, _T("LowlightOBM")))
 	{
 		m_skin_tobLowlight.obm = (OverlayBlendingMode)StringToID(g_idsLOB, szValue, OBM_UNKNOWN);
+	}
+	else if (IsPropertyName(szProperty, _T("LowlightPattern")))
+	{
+		m_skin_tobLowlight.strPatternFile = szValue;
 	}
 	else if (IsPropertyName(szProperty, _T("Karaoke")))
 		m_bKaraoke = IsTRUE(szValue);
@@ -2370,7 +2378,7 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		if (m_tobLowlight.obm == OBM_PATTERN)
 		{
-			PRAW_IMAGE_DATA		pImage = LoadRawImageDataFromFile(szValue);
+			PRAW_IMAGE_DATA		pImage = LoadRawImageDataPatternFile(szValue);
 			if (pImage && pImage->bitCount != 24)
 				pImage = ConvertTo24BppRawImage(pImage);
 
@@ -2496,12 +2504,24 @@ void CLyricShowObj::ReloadThemeOfSkin(bool bSavetoProfile)
 	{
 		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("HilightOBM"), m_skin_tobHilight.obm);
 		m_tobHilight.obm = m_skin_tobHilight.obm;
+		if (m_skin_tobHilight.obm == OBM_PATTERN)
+		{
+			m_tobHilight.strPatternFile = m_skin_tobHilight.strPatternFile;
+			g_Profile.WriteProfileString(m_strSectName.c_str(), _T("HilightPattern"),
+				m_skin_tobHilight.strPatternFile.c_str());
+		}
 	}
 
 	if (m_skin_tobLowlight.obm != OBM_UNKNOWN)
 	{
 		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("LowlightOBM"), m_skin_tobLowlight.obm);
 		m_tobLowlight.obm = m_skin_tobLowlight.obm;
+		if (m_skin_tobLowlight.obm == OBM_PATTERN)
+		{
+			m_tobLowlight.strPatternFile = m_skin_tobLowlight.strPatternFile;
+			g_Profile.WriteProfileString(m_strSectName.c_str(), _T("LowlightPattern"),
+				m_skin_tobLowlight.strPatternFile.c_str());
+		}
 	}
 
 	CreateLyrOverlayBlendingPattern(m_tobHilight, GetPatternFontHeight());

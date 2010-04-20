@@ -180,6 +180,12 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_rcBoundBox.SetRect(0, 0, 400, 350);
 	m_rcReal.SetRect(0, 0, 400, 350);
 
+	CRect rcRestrict;
+	GetMonitorRestrictRect(m_rcBoundBox, rcRestrict);
+	m_rcBoundBox.OffsetRect((rcRestrict.Width() - m_rcBoundBox.Width()) / 2,
+		(rcRestrict.Height() - m_rcBoundBox.Height()) / 2);
+	m_rcReal = m_rcBoundBox;
+
 	m_nTimerIDMax = TIMER_ID_BEG_ALLOC;
 
 	m_dbScale = 1.0;

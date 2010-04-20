@@ -82,20 +82,6 @@ CMPSkinFactory::~CMPSkinFactory()
 
 }
 
-int CMPSkinFactory::LoadDefaultSkin()
-{
-	tstring		strSkin;
-
-	strSkin = g_Profile.GetProfileString(_T("DefaultSkin"), _T(""));
-	if (strSkin.empty())
-	{
-		strSkin = SZ_DEFSKIN;
-		g_Profile.WriteProfileString(_T("DefaultSkin"), strSkin.c_str());
-	}
-
-	return ChangeSkinEx(strSkin.c_str());
-}
-
 void CMPSkinFactory::Quit()
 {
 	Close(true);

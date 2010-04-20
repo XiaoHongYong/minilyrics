@@ -12,7 +12,7 @@
 #ifdef _MPLAYER
 #define SZ_DEFSKIN		_T("ZikiPlayer")
 #else
-#define SZ_DEFSKIN		_T("Fantasy")
+#define SZ_DEFSKIN		_T("MiniLyrics")
 #endif
 
 class CSkinMenu;
@@ -22,8 +22,6 @@ class CMPSkinFactory : public CSkinFactory
 public:
 	CMPSkinFactory();
 	virtual ~CMPSkinFactory();
-
-	virtual int LoadDefaultSkin();
 
 	virtual void Quit();
 

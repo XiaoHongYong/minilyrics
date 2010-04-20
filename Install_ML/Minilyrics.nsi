@@ -163,6 +163,7 @@ SectionIn 1 2
   Delete "$INSTDIR\Skins\iTunes Mode\*.*"
   Delete "$INSTDIR\Skins\Aimp2\*.*"
   Delete "$INSTDIR\Skins\Modern\*.*"
+  Delete "$INSTDIR\Skins\MiniLyrics\*.*"
   Delete "$INSTDIR\Skins\base\*.*"
   Delete "$INSTDIR\Skins\Plain\*.*"
   Delete "$INSTDIR\Skins\Have Nothing On\*.*"
@@ -187,6 +188,7 @@ SectionIn 1 2
   RMDir "$INSTDIR\Skins\iTunes Mode"
   RMDir "$INSTDIR\Skins\Aimp2"
   RMDir "$INSTDIR\Skins\Modern"
+  RMDir "$INSTDIR\Skins\MiniLyrics"
   RMDir "$INSTDIR\Skins\base"
   RMDir "$INSTDIR\Skins\Plain"
   RMDir "$INSTDIR\Skins\Fantasy"
@@ -215,6 +217,9 @@ SectionIn 1 2
 
   SetOutPath $INSTDIR\Patterns
   File Share\Patterns\*.*
+
+  SetOutPath $INSTDIR\Skins\MiniLyrics
+  File Share\Skins\MiniLyrics\*.*
 
   SetOutPath $INSTDIR\Skins\Modern
   File Share\Skins\Modern\*.*
@@ -597,6 +602,9 @@ SectionIn 1
   SetOutPath "$INSTDIR\Skins\iTunes Mode"
   File "Share\Skins\iTunes Mode\*.*"
 
+  SetOutPath $INSTDIR\Skins\MiniLyrics
+  File Share\Skins\MiniLyrics\*.*
+
   SetOutPath $INSTDIR\Skins\Modern
   File Share\Skins\Modern\*.*
 
@@ -887,6 +895,7 @@ Section "Uninstall"
   Delete "$INSTDIR\Skins\Fantasy (Transparent)\*.*"
   Delete "$INSTDIR\Skins\iTunes Mode\*.*"
   Delete "$INSTDIR\Skins\Aimp2\*.*"
+  Delete "$INSTDIR\Skins\MiniLyrics\*.*"
   Delete "$INSTDIR\Skins\Modern\*.*"
   Delete "$INSTDIR\Skins\base\*.*"
   Delete "$INSTDIR\Skins\Plain\*.*"
@@ -936,6 +945,7 @@ Section "Uninstall"
   RMDir "$INSTDIR\Skins\iTunes Mode"
   RMDir "$SMPROGRAMS\$R0"
   RMDir "$INSTDIR\Skins\Aimp2"
+  RMDir "$INSTDIR\Skins\MiniLyrics"
   RMDir "$INSTDIR\Skins\Modern"
   RMDir "$INSTDIR\Skins\base"
   RMDir "$INSTDIR\Skins\Plain"

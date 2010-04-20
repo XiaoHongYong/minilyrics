@@ -642,10 +642,6 @@ protected:
 
 CMPSkinWnd::CMPSkinWnd()
 {
-	m_rcReal.top = m_rcReal.left = 0;
-	m_rcReal.right = 400;
-	m_rcReal.bottom = 250;
-
 	m_autoSwitchToLyrShow.m_pSkinWnd = this;
 
 	m_bRememberSizePos = true;
