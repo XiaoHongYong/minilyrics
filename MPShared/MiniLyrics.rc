@@ -248,7 +248,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Always On &Top\tCtrl+T",      IDC_SETTOPMOST
         MENUITEM SEPARATOR
-        MENUITEM "&Exit",                       IDC_EXIT
+        MENUITEM "E&xit",                       IDC_EXIT
     END
     POPUP "Lyrics"
     BEGIN
