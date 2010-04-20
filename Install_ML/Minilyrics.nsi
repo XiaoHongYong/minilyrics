@@ -104,7 +104,6 @@
   LangString SecShortcut.MLUninst ${LANG_ENGLISH} "Uninstall MiniLyrics"
   LangString SecShortcut.MLReadme ${LANG_ENGLISH} "Readme"
   LangString SecShortcut.MLHelp ${LANG_ENGLISH} "MiniLyrics Help"
-  LangString SecShortcut.MLSetupStr ${LANG_ENGLISH} "Setup MiniLyrics"
 
   LangString LS_ShortcutsSettings ${LANG_ENGLISH} "Shortcuts and settings"
   LangString LS_ShortcutsSettingsDesc ${LANG_ENGLISH} "Create shortcuts and personal settings."
@@ -631,8 +630,6 @@ Section "Start Menu Shortcuts" SecShortcut
 SectionIn 1
   StrCpy $R0 $(SecShortcut.MLDir)
   CreateDirectory "$SMPROGRAMS\$R0"
-  StrCpy $R1 $(SecShortcut.MLSetupStr)
-  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\MLSetup.exe"
   StrCpy $R1 $(SecShortcut.MLStart)
   CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\MLStart.exe"
   StrCpy $R1 $(SecShortcut.MLUninst)

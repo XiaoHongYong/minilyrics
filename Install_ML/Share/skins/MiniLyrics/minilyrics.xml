@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr"
-      ExtraResouceFolder="Fantasy" Script="minilyrics.java">
+      Script="minilyrics.java">
   <include Name="Styles.xml"/>
   <Menus>
     <Menu Name="MainWndMenu" From="MainWndMenu" >

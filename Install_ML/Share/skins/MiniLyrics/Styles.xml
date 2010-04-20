@@ -12,11 +12,10 @@
         Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
         ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
       <Text ID="ID_CAPTION" Rect="44,8,w-100,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
-      <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16" TranslucencyWithSkin="TRUE"
+      <Toolbar ID="CID_TB_SYSBT" Rect="w-30,10,20,16" TranslucencyWithSkin="TRUE"
            UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
            blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
            MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
-        <button ID="ID_MINIMIZE" Left="1" />
         <button ID="ID_CLOSE" Left="4" />
       </Toolbar>
 

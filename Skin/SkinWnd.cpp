@@ -1420,8 +1420,8 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (IsPropertyName(szProperty, _T("Caption")))
 	{
-		m_strCaption = szValue;
-		SetWindowText(TOLOCAL(szValue));
+		m_strCaption = TOLOCAL(szValue);
+		SetWindowText(m_strCaption.c_str());
 	}
 	else if (_tcsicmp(szProperty, _T("ContextMenu")) == 0)
 	{
