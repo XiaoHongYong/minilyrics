@@ -26,6 +26,9 @@ bool IsHttpUrl(LPCTSTR szUrl)
 template<class TCHARDEF, class _int_t>
 bool ScanNIntX(TCHARDEF szValue, _int_t arr[], size_t nCount)
 {
+	if (IsEmptyString(szValue))
+		return false;
+
 	size_t	i;
 	for (i = 0; i < nCount; i++)
 	{
@@ -292,6 +295,8 @@ public:
 
 		m_pLyricsList = (CSkinListCtrl *)m_pSkinWnd->GetUIObjectById(CID_L_LYRICS, CSkinListCtrl::ClassName());
 		ASSERT(m_pLyricsList);
+		if (!m_pLyricsList)
+			return;
 
 		SetUIObjectText(CID_E_ARTIST, m_strArtist.c_str(), false);
 		SetUIObjectText(CID_E_TITLE, m_strTitle.c_str(), false);

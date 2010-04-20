@@ -526,6 +526,7 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 		pFieledName = _LyrShowTOBFieldNameLowlight;
 
 	ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_BORDER], szSectName, pFieledName[CLyricShowObj::TCI_BORDER]);
+	ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_FILL], szSectName, pFieledName[CLyricShowObj::TCI_FILL]);
 
 	tob.obm = (OverlayBlendingMode)g_Profile.GetProfileInt(szSectName, GetLyrTOBSettingName(bHilight, CLyricShowObj::TCI_OBM),  OBM_COLOR);
 	if (tob.obm == OBM_PATTERN)
@@ -558,10 +559,7 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 	}
 
 	if (!tob.imgPattern.IsValid())
-	{
 		tob.obm = OBM_COLOR;
-		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_FILL], szSectName, pFieledName[CLyricShowObj::TCI_FILL]);
-	}
 }
 
 void CreateLyrOverlayBlendingPattern(CLyricShowObj::TextOverlayBlending &tob, int nGradientPatternHeight)

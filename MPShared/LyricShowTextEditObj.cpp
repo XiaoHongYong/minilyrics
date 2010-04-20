@@ -966,7 +966,8 @@ void CLyricShowTextEditObj::AdjustSyncTimeOfSelected(bool bIncreaseTime)
 
 void CLyricShowTextEditObj::ReloadThemeOfSkin(bool bSavetoProfile)
 {
-	CLyricShowObj::ReloadThemeOfSkin(bSavetoProfile);
+	// Don't load theme of skin, other CLyricShowObj will reload it.
+	// CLyricShowObj::ReloadThemeOfSkin(bSavetoProfile);
 
 	UpdateTextFontColor();
 }

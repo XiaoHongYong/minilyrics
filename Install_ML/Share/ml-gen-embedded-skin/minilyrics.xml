@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding='UTF-8'?>
-<skin defmainwnd="minilyrics" mainwnds="minilyrics" ExtraResouceFolder="Modern/">
+<skin defmainwnd="minilyrics" mainwnds="minilyrics" ExtraResouceFolder="MiniLyrics">
   <include Name="Styles.xml"/>
   <style>
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />

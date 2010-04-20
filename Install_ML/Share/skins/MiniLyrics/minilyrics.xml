@@ -56,13 +56,11 @@
 
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
       <Container Name="Lyrics" ID="CID_LYRICS" Rect="0,0,w,h">
-        <LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h"
-                  EnableToolbar="FALSE" BgColor="#576C91" FgColor="#FFFFFF"
-                  FgLowColor="#B2B2B2" FocusLineBgColor="#8A94AA" TagColor="#FFFFFF"
-                  LyrDrawOpt="fadeout" HilightOBM="OBM_PATTERN" LowlightOBM="OBM_PATTERN"
-                  HilightPattern="pattern13.jpg" LowlightPattern="pattern12.jpg" OutlineLyrText="true"
-                  FontHeight="20"
-                  EnableAutoResize="FALSE"/>
+        <LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" EnableToolbar="FALSE"
+            BgColor="#FFFFFF" FgColor="#0080FF" FgLowColor="#003060" FocusLineBgColor="#C0C0C0"
+            TagColor="#FF8000" LyrDrawOpt="fadeout" HilightOBM="OBM_PATTERN"
+            HilightPattern="pattern13.jpg" LowlightOBM="OBM_PATTERN" LowlightPattern="pattern12.jpg"
+            OutlineLyrText="true" FontHeight="20" EnableAutoResize="FALSE"/>
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         

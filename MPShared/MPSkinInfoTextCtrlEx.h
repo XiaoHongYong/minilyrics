@@ -22,6 +22,8 @@ public:
 
 	void OnSize(int cx, int cy);
 
+	void ReloadThemeOfSkin(bool bSavetoProfile) { }
+
 protected:
 	void AppendInfoText(const tstring &str);
 
