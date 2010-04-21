@@ -391,7 +391,14 @@ bool CMPHotkey::GetHotkeyText(int cmd, tstring &strKey)
 		}
 	}
 
-	return false;
+	if (cmd == CMD_FONT_SIZE_INC)
+		strKey = _T("Mouse Wheel Up");
+	else if (cmd == CMD_FONT_SIZE_DEC)
+		strKey = _T("Mouse Wheel Down");
+	else
+		return false;
+
+	return true;
 }
 
 

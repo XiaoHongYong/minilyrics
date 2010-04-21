@@ -101,16 +101,19 @@
           </Toolbar>
         </Container>
 
-        <Container ID="CID_PLAY_CTRL" Rect="(w-190)/2,h-35,190,32" TranslucencyWithSkin="TRUE">
-          <Image Name="Bg" Rect="0,0,190,32" Image="play-bg.png"/>
-          <Toolbar Name="PlayControl" Rect="44,5,110,22"
+        <Container ID="CID_PLAY_CTRL" Rect="(w-190)/2,h-54,190,52" TranslucencyWithSkin="TRUE">
+          <Image Name="Bg" Rect="0,0,190,52" Image="play-bg.png"/>
+          <Toolbar Name="PlayControl" Rect="34,5,120,22"
                    Image="buttons.png" enablehover="TRUE"
                    units_x="22" blank_x="-1" blank_cx="22" seperator_x="176"
-                   seperator_cx="12" ButtonSpacesCX="14" FullStatusImage="true">
+                   seperator_cx="12" ButtonSpacesCX="24" FullStatusImage="true">
             <button ID="ID_PREVIOUS"  left="1"/>
             <button ID="ID_PLAYPAUSE" left="2"  left_of_status_1="3"/>
             <button ID="ID_NEXT"      left="4"/>
           </Toolbar>
+          <SeekCtrl Name="Seek" ID="ID_VOLUME"
+                    Rect="20,35,w-40,12" EndWidth="3" ImageThumb="seek_thumb.png"
+                    ImageTrack="seek_track.png"/>
         </Container>
       </Container>
       <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" Visible="false"/>
