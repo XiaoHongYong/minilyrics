@@ -26,14 +26,14 @@
          MinWidth="100" MinHeight="100" Width="330" Height="400"
          PaintBg="TRUE" BgColor="#ece9d8" FgColor="#282828" EnableClickThrough="false"
          FontName="Verdana" FontHeight="15" TextColor="#000000">
-      <Property Name="BgImage" Image="frame-opaque.png" ImageRect="0,0,458,190"
-                HorzExtendPos="230,410" VertExtendPos="70,160"/>
+      <Property Name="BgImage" Image="frame-opaque-menu.png"
+                HorzExtendPos="20,80" VertExtendPos="55,80"/>
 
       <Button Left="10" Top="9" Width="16" Height="16" ID="ID_MENU" Name="Menu"
         Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
         ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
       <Text ID="ID_CAPTION" Rect="44,8,w-100,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
-      <MenuBar Rect="160,8,w-90-150,18" Name="Menu"
+      <MenuBar Rect="10,33,w-90-150,20" Name="Menu"
                UseSkinBg="true" TranslucencyWithSkin="TRUE"
          FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
          TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
@@ -48,7 +48,7 @@
         <button ID="ID_CLOSE" Left="4" />
       </Toolbar>
 
-      <ClientArea Rect="10,31,w-20,h-31-12" ClipChildren="true"/>
+      <ClientArea Rect="10,54,w-20,h-54-12" ClipChildren="true"/>
     </MenuWindowFrame>
 
     <PopupWndFrame EnableTranslucency="true" TranslucencyAlpha="255"

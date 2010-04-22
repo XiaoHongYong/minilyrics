@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<skinwnd Extends="WindowFrame" Name="Registration.xml" Caption="$Product$ (Evaluation Version)"
-         Width="430" Height="320" RememberSizePos="false">
+<skinwnd Extends="WindowFrame" Name="Registration.xml" Caption="$Product$ (Trial Version)"
+         Width="430" Height="310" RememberSizePos="false">
   <Animation ID="CID_AM_SHOW_NOTICE_F_RIGHT" MoveFromRight="CID_C_NOTICE"
       MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_NOTICE_OK"/>
   <Animation ID="CID_AM_HIDE_NOTICE_2_LEFT" MoveToLeft="CID_C_NOTICE"
@@ -8,10 +8,11 @@
   <Animation ID="CID_AM_SHOW_NOTICE_F_LEFT" MoveFromLeft="CID_C_NOTICE"
       MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_NOTICE_OK" ResizeWnd="330,340"/>
   <Container ID="CID_C_NOTICE" Name="Notice" Rect="0,0,w,h">
-    <NormalText Text="Thank you for choosing $Product$" Rect="30,30,w-60,20" FontHeight="20" AlignText="AT_CENTER"/>
-    <NormalText Text="We hope you do buy it, but of course it is free for you to try $Product$ before you buy."
-                Rect="30,65,w-60,40" FontHeight="16"/>
-    <NormalText Text="We only make money by selling $Product$ to real people like you.  If you like and use $Product$, please do buy it."
+    <NormalText Text="Do you think MiniLyrics is valuable to you? If yes, you may purchase it."
+                Rect="30,15,w-60,40" FontHeight="18"/>
+    <NormalText Text="Your payment will be taken as recognition of our works and encouragement of making this software better."
+                Rect="30,70,w-60,40" FontHeight="16"/>
+    <NormalText Text="This reminder window will be removed permanently after you enter the registration code."
                 Rect="30,150,w-60,40" FontHeight="16"/>
     <NormalTextBt ID="CID_BUYNOW" Text="&amp;Buy Now" Left="w/2 - 110 - 110/2 - 20" Top="220" Width="110"/>
     <NormalTextBt ID="CID_ENTER_CODE" Text="&amp;Enter code" Left="w/2 - 110/2" Top="220" Width="110"/>

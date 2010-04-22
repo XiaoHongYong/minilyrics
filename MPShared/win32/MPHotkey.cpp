@@ -392,9 +392,9 @@ bool CMPHotkey::GetHotkeyText(int cmd, tstring &strKey)
 	}
 
 	if (cmd == CMD_FONT_SIZE_INC)
-		strKey = _T("Mouse Wheel Up");
+		strKey = tstring(TOLOCAL(_T("Ctrl+"))) + TOLOCAL(_T("Mouse Wheel Up"));
 	else if (cmd == CMD_FONT_SIZE_DEC)
-		strKey = _T("Mouse Wheel Down");
+		strKey = tstring(TOLOCAL(_T("Ctrl+"))) + TOLOCAL(_T("Mouse Wheel Down"));
 	else
 		return false;
 
