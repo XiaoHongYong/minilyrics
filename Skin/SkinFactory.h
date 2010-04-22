@@ -157,7 +157,7 @@ public:
 
 	virtual int OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
 
-	virtual int ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
+	virtual int ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""), bool bLoadSkinColorTheme = false);
 
 	virtual int SaveSkinFile(LPCTSTR szFile);
 	virtual void Close(bool bQuit = false);
@@ -237,6 +237,8 @@ protected:
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 
 	virtual CUIObject *NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
+
+	void ApplyDefaultThemeOfSkin();
 
 protected:
 	tstring						m_strSkinRootDir;

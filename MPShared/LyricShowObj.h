@@ -212,8 +212,6 @@ protected:
 	inline MLColor &GetHighlightColor() { return m_tobHilight.clr[TCI_FILL]; }
 	inline MLColor &GetLowlightColor() { return m_tobLowlight.clr[TCI_FILL]; }
 
-	virtual void ReloadThemeOfSkin(bool bSavetoProfile);
-
 	void SetLyrAlign(LPCTSTR szValue);
 	void SetBgColor(LPCTSTR szValue);
 
@@ -252,20 +250,6 @@ protected:
 	//
 	TextOverlayBlending		m_tobHilight;
 	TextOverlayBlending		m_tobLowlight;
-
-	//
-	// Original Properties of skin theme
-	//
-
-	// The following theme available?
-	MLColorEx				m_skin_clrFg, m_skin_clrFgLow, m_skin_clrBg;
-	MLColorEx				m_skin_clrTag, m_skin_clrFocusLineBg;
-	bool					m_skin_bOutlineLyrics;
-	TextOverlayBlending		m_skin_tobHilight;
-	TextOverlayBlending		m_skin_tobLowlight;
-	int						m_skin_fontHeight, m_skin_fontWeight;
-	DISPLAY_OPTIONS			m_skin_do;
-
 
 	// TRUE: NEVER load customized settings.
 	bool					m_bUseSkinStyle;

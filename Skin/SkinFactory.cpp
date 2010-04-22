@@ -698,13 +698,21 @@ int CSkinFactory::OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	return OpenSkinFile(szSkinFile);
 }
 
-int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir)
+int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir, bool bLoadSkinColorTheme)
 {
 	int		nRet;
 
 	nRet = OpenSkinEx(szSkinName, szSkinDir, szExtraDir);
 	if (nRet != ERR_OK)
 		return nRet;
+
+	if (bLoadSkinColorTheme)
+	{
+		// Load the default theme settings of skin
+		g_Profile.WriteProfileInt(szSkinName, _T("Hue"), 0);
+
+		ApplyDefaultThemeOfSkin();
+	}
 
 	float hue = (float)g_Profile.GetProfileInt(szSkinName, _T("Hue"), 0);
 	if (hue < 0)
@@ -957,23 +965,24 @@ void CSkinFactory::Close(bool bQuit)
 	{
 		CSkinWnd	*pSkin = *it;
 
-		if (!bQuit && pSkin->IsMainAppWnd())
-		{
+		if (pSkin->IsMainAppWnd())
 			g_Profile.WriteProfileString(_T("DefaultSkinWnd"), pSkin->GetSkinWndName());
-			pSkin->CloseSkin();
-		}
 		else
 		{
 			if (!strOpenedSkinWnds.empty())
 				strOpenedSkinWnds += _T(",");
 			strOpenedSkinWnds += pSkin->GetSkinWndName();
-			pSkin->Destroy();
 		}
+
+		if (bQuit)
+			pSkin->Destroy();
+		else
+			pSkin->CloseSkin();
 	}
-	if (m_listSkinWnds.size() > 0)
+	if (listSkinWnds.size() > 0)
 		g_Profile.WriteProfileString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
 
-	ASSERT(m_listSkinWnds.size() <= 1);
+	// ASSERT(m_listSkinWnds.size() <= 1);
 
 	m_resourceMgr.OnClose();
 
@@ -1716,4 +1725,39 @@ void CSkinFactory::GetAdjustedHueResult(COLORREF &clr)
 	m_resourceMgr.GetAdjustHueParam(H, S, L);
 	if (H != 0)
 		AdjustColorHue(clr, H);
+}
+
+void CSkinFactory::ApplyDefaultThemeOfSkin()
+{
+	TCHAR	szThemeFile[MAX_PATH];
+
+	if (!m_resourceMgr.GetResourcePathName(szThemeFile, CountOf(szThemeFile), _T("Theme.xml")))
+		return;
+
+
+	if (!IsFileExist(szThemeFile))
+		return;
+
+	CSimpleXML xml;
+	if (!xml.ParseFile(szThemeFile))
+	{
+		ERRLOG1(_T("Failed to parse theme file: %s"), szThemeFile);
+		return;
+	}
+
+	if (_tcscmp(xml.m_pRoot->strName.c_str(), _T("Theme")) != 0)
+		return;
+
+	for (SXNode::iterator itSection = xml.m_pRoot->listChildren.begin();
+		itSection != xml.m_pRoot->listChildren.end(); ++itSection)
+	{
+		SXNode *pNodeSection = *itSection;
+		for (SXNode::iterator itValue = pNodeSection->listChildren.begin();
+			itValue != pNodeSection->listChildren.end(); ++itValue)
+		{
+			SXNode *pNodeValue = *itValue;
+			g_Profile.WriteProfileString(pNodeSection->strName.c_str(),
+				pNodeValue->strName.c_str(), pNodeValue->strContent.c_str());
+		}
+	}
 }

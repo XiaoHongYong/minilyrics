@@ -25,16 +25,16 @@
     <cmd ID="dyncmd_change_to_normal" func="change_skin_wnd" param="minilyrics"/>
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common,ch_player" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="8" Top="4" Width="w-8-25" Height="h-8" EnableToolbar="FALSE" BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD" FocusLineBgColor="#000000" TagColor="#FF8242" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
+  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="8" Top="4" Width="w-8-25" Height="h-8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="8" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,8,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <YScaleImage Left="w-25" Top="0" Width="25" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="155,0,25,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <Image Left="8" Top="0" Width="w-8-25" Height="4" Name="top frame" Image="lyr-bar-frame.bmp" ImageRect="8,0,147,4" BltMode="stretch"/>
     <Image Left="8" Top="h-4" Width="w-8-25" Height="4" Name="bottom frame" Image="lyr-bar-frame.bmp" ImageRect="8,21,147,4" BltMode="stretch"/>
     <Button Left="w-17" Top="5" Width="11" Height="10" ID="ID_CLOSE" Name="Close" Image="buttons.bmp" ImageRect="33,10,11,10" ImageSel="buttons.bmp" ImageSelRect="33,20,11,10"/>
   </skinwnd>
-  <skinwnd Name="minilyrics" MinWidth="275" MinHeight="35" Width="400" Height="200" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="4" Top="14" Width="w - 8" Height="h - 14 - 4" BgColor="#4F586E" FgColor="#ECECEC" FgLowColor="#83949E" FocusLineBgColor="#404758" TagColor="#FF0000"/>
+  <skinwnd Name="minilyrics" MinWidth="275" MinHeight="35" Width="400" Height="200" ContextMenu="NormalMode" CmdHandler="ch_common">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="4" Top="14" Width="w - 8" Height="h - 14 - 4"/>
     <ActiveImage Left="0" Top="0" Width="24" Height="14" Name="LeftTopcaption" Image="titlebar.bmp" ImageRect="27,15,24,14" BltMode="copy" ImageFocus="titlebar.bmp" ImageFocusRect="27,0,24,14"/>
     <ActiveImage Left="24" Top="0" Width="w - 64" Height="14" Name="Left2Topcaption" Image="titlebar.bmp" ImageRect="50,15,77,14" BltMode="stretch" ImageFocus="titlebar.bmp" ImageFocusRect="50,0,77,14"/>
     <ActiveImage Left="w - 41" Top="0" Width="41" Height="14" Name="LeftTopImage" Image="titlebar.bmp" ImageRect="261,15,41,14" BltMode="copy" ImageFocus="titlebar.bmp" ImageFocusRect="261,0,41,14"/>

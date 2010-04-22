@@ -28,7 +28,7 @@
        TranslucencyAlpha="0" TranslucencyAlphaOnHover="255" TranslucencyAlphaOnActive="255"
        MinWidth="330" MinHeight="190" Width="450" Height="240" 
        PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
-       ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
+       ContextMenu="NormalMode" CmdHandler="ch_common">
     <Property Name="BgImage" Image="frame.png" ImageRect="0,0,458,190"
               HorzExtendPos="230,410" VertExtendPos="70,160"/>
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
@@ -57,10 +57,7 @@
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
       <Container Name="Lyrics" ID="CID_LYRICS" Rect="0,0,w,h">
         <LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" EnableToolbar="FALSE"
-            BgColor="#FFFFFF" FgColor="#0080FF" FgLowColor="#003060" FocusLineBgColor="#C0C0C0"
-            TagColor="#FF8000" LyrDrawOpt="fadeout" HilightOBM="OBM_PATTERN"
-            HilightPattern="pattern13.jpg" LowlightOBM="OBM_PATTERN" LowlightPattern="pattern12.jpg"
-            OutlineLyrText="true" FontHeight="20" EnableAutoResize="FALSE"/>
+            FontHeight="20" EnableAutoResize="FALSE"/>
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         

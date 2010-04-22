@@ -21,11 +21,11 @@
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="MiniLyrics"  MinWidth="275" MinHeight="35" Width="400" Height="200" TagColor="#FF8242" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" BgColor="#4F586E" FgColor="#ECECEC" FgLowColor="#83949E" FocusLineBgColor="#404758" TagColor="#FF0000" EnableAutoResize="FALSE"/>
+  <skinwnd Name="MiniLyrics"  MinWidth="275" MinHeight="35" Width="400" Height="200" TagColor="#FF8242" ContextMenu="NormalMode" CmdHandler="ch_common">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableAutoResize="FALSE"/>
   </skinwnd>
-  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common,ch_player" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="8" Top="4" Width="w-8-48" Height="h-8" EnableToolbar="FALSE" BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD" FocusLineBgColor="#000000" TagColor="#FF8242" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
+  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="8" Top="4" Width="w-8-48" Height="h-8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="8" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,8,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <YScaleImage Left="w-48" Top="0" Width="48" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="132,0,48,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <Image Left="8" Top="0" Width="w-8-48" Height="4" Name="top frame" Image="lyr-bar-frame.bmp" ImageRect="8,0,124,4" BltMode="stretch"/>

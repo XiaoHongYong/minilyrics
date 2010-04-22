@@ -23,30 +23,33 @@
 CPreferenceDlg::CPreferenceDlg(bool bFloatingLyrMode, PreferPageID defaultPage)
 	: CMPSkinDialog(_T("Preferences.xml"))
 {
+	m_bFloatingLyrMode = bFloatingLyrMode;
+	m_defaultPage = defaultPage;
+}
+
+void CPreferenceDlg::OnSkinLoaded()
+{
 	m_pageHandler.AddPage(new CPagePfUIRoot());
-	m_pageHandler.AddPage(new CPagePfThemeRoot(bFloatingLyrMode));
+	m_pageHandler.AddPage(new CPagePfThemeRoot(m_bFloatingLyrMode));
 	m_pageHandler.AddPage(new CPagePfSystemRoot());
 	m_pageHandler.AddPage(new CPagePfLyricsRoot());
 	m_pageHandler.AddPage(new CPagePfAdvanced());
 
-	m_nDefaultRootPage = UID_INVALID;
+	int				nDefaultRootPage = UID_INVALID;
 
 	// find default page.
 	CSkinPageHandler::ListPageHandler::iterator it, itEnd = m_pageHandler.ChildEnd();
 	for (it = m_pageHandler.ChildBegin(); it != itEnd; ++it)
 	{
 		CPagePfBase	*pPageRoot = (CPagePfBase *)*it;
-		if (pPageRoot->SetDefaultPreferPage(defaultPage))
+		if (pPageRoot->SetDefaultPreferPage(m_defaultPage))
 		{
-			m_nDefaultRootPage = pPageRoot->GetPageId();
+			nDefaultRootPage = pPageRoot->GetPageId();
 			break;
 		}
 	}
-}
 
-void CPreferenceDlg::OnSkinLoaded()
-{
-	m_pageHandler.SetDefaultPage(m_nDefaultRootPage);
+	m_pageHandler.SetDefaultPage(nDefaultRootPage);
 
 	CMPSkinDialog::OnSkinLoaded();
 
@@ -54,7 +57,7 @@ void CPreferenceDlg::OnSkinLoaded()
 		CSkinToolbar::ClassName());
 	if (pToolbar)
 	{
-		CPagePfBase	*pPageRoot = (CPagePfBase *)m_pageHandler.GetPage(m_nDefaultRootPage);
+		CPagePfBase	*pPageRoot = (CPagePfBase *)m_pageHandler.GetPage(nDefaultRootPage);
 		ASSERT(pPageRoot);
 		if (pPageRoot)
 			pToolbar->SetCheck(pPageRoot->GetAssociateTabButtonId(), true, false);

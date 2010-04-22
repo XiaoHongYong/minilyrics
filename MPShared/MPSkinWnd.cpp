@@ -1018,8 +1018,9 @@ void CMPSkinWnd::OnLoadWndSizePos()
 		rcNew.top = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_top"), rcNew.top);
 		rcNew.right = rcNew.left + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_width"), m_nWidth);
 		rcNew.bottom = rcNew.top + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_height"), m_nHeight);
-		if (!rcNew.EqualRect(&m_rcReal))
-			bCenterWnd = false;
+		// if (!rcNew.EqualRect(&m_rcReal))
+		//	bCenterWnd = false;
+		bCenterWnd = false;
 
 		if (m_wndResizer.IsFixedWidth())
 			rcNew.right = long(rcNew.left + m_nWidth * m_dbScale);

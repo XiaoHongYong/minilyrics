@@ -62,8 +62,9 @@
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="minilyrics" Region="Modern.tr2" MinWidth="275" MinHeight="116" Width="295" Height="116" BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD" FocusLineBgColor="#000000" TagColor="#FF8242" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="6" Top="23" Width="w-12" Height="h-23-10" BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD" FocusLineBgColor="#000000" TagColor="#FF8242" />
+  <skinwnd Name="minilyrics" Region="Modern.tr2" MinWidth="275" MinHeight="116" Width="295" Height="116"
+           ContextMenu="NormalMode" CmdHandler="ch_common">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="6" Top="23" Width="w-12" Height="h-23-10"/>
     <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption.bmp" ImageRect="0,24,275,23" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" CutPos="25,97,177,225"/>
     <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,11,10" ImageSel="buttons.bmp" ImageSelRect="0,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="0,10,11,10"/>
     <ActiveButton Left="w-41" Top="4" Width="11" Height="10" ID="ID_MINIMIZE" Name="Minimize" Image="buttons.bmp" ImageRect="11,0,11,10" ImageSel="buttons.bmp" ImageSelRect="11,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="11,10,11,10"/>
@@ -73,8 +74,8 @@
 	<VStretchImage Left="w-6" Top="23" Width="6" Height="h-23-10" Name="right frame" Image="caption.bmp" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
 	<HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.bmp" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
   </skinwnd>
-  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common,ch_player" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="8" Top="4" Width="w-8-48" Height="h-8" EnableToolbar="FALSE" BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD" FocusLineBgColor="#000000" TagColor="#FF8242" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
+  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="8" Top="4" Width="w-8-48" Height="h-8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="8" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,8,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <YScaleImage Left="w-48" Top="0" Width="48" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="132,0,48,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <Image Left="8" Top="0" Width="w-8-48" Height="4" Name="top frame" Image="lyr-bar-frame.bmp" ImageRect="8,0,124,4" BltMode="stretch"/>

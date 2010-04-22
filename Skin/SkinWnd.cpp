@@ -359,7 +359,8 @@ void CSkinWnd::CloseSkin()
 
 	m_strCusor.resize(0);
 	m_strRgn.resize(0);
-	m_strSkinWndName.resize(0);
+	// Remember skin window name, it can be used to reload it.
+	// m_strSkinWndName.resize(0);
 
 	m_imageBg.Destroy();
 

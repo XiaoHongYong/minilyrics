@@ -29,10 +29,10 @@
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />        
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="minilyrics" Caption="MiniLyrics" MinWidth="275" MinHeight="35" Width="400" Height="200" WindowsAppearance="TRUE" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" BgColor="#E7E7E7" FgColor="#313131" FgLowColor="#848484" FocusLineBgColor="#FFFFFF" TagColor="#0000FF"/>
+  <skinwnd Name="minilyrics" Caption="MiniLyrics" MinWidth="275" MinHeight="35" Width="400" Height="200" WindowsAppearance="TRUE" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="NormalMode" CmdHandler="ch_common">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h"/>
   </skinwnd>
-  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="10" Width="400" Height="200" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="LyrBarMode" CmdHandler="ch_common,ch_player" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" BgColor="#E7E7E7" FgColor="#313131" FgLowColor="#848484" FocusLineBgColor="#FFFFFF" TagColor="#0000FF" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
+  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="10" Width="400" Height="200" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
   </skinwnd>
 </skin>

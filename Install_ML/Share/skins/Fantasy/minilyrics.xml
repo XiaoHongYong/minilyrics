@@ -27,13 +27,14 @@
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="lyrbar" EnableTranslucency="true" TranslucencyAlpha="228" MinWidth="275" MinHeight="20" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common,ch_player" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+  <skinwnd Name="lyrbar" EnableTranslucency="true" TranslucencyAlpha="228" MinWidth="275" MinHeight="20" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
     <Image Left="0" Top="0" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="0, 0, 10, 10" BlendPixMode="alpha_mask"/>
     <Image Left="w-10" Top="0" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="10, 0, 10, 10" BlendPixMode="alpha_mask"/>
     <Image Left="0" Top="h-10" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="0, 10, 10, 10" BlendPixMode="alpha_mask"/>
     <Image Left="w-10" Top="h-10" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="10, 10, 10, 10" BlendPixMode="alpha_mask"/>
     <DecorativeContainer Name="Lyrics" Left="10" Top="2" Width="w-20" Height="h-4" >
-      <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" BgColor="#576C91" FgColor="#FFFFFF" FgLowColor="#B2B2B2" FocusLineBgColor="#8A94AA" TagColor="#FFFFFF" HilightAutoGradient="#000000" HilightBorderColor="#292F34" LowlightAutoGradient="#3B3B3B" LOBLowlightBorder="#8A94AA" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
+      <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" 
+                  LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
       <Toolbar Left="w-62" Top="h/2-7" Width="62" Height="14" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14" blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10" MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
         <button ID="ID_MINIMIZE" Left="0" />
         <button ID="dyncmd_change_to_floatinglyr" Left="3" ToolTip="Floating Lyrics Mode"/>
@@ -45,7 +46,7 @@
   <skinwnd Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="228" 
        MinWidth="330" MinHeight="300" Width="330" Height="400" 
        PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
-       ContextMenu="NormalMode" CmdHandler="ch_common,ch_player">
+       ContextMenu="NormalMode" CmdHandler="ch_common">
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
               CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
     <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
@@ -88,9 +89,7 @@
 
       <Container Name="Lyrics" ID="CID_LYRICS" left="0" top="0" width="w" height="h">
         <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" 
-                  EnableToolbar="FALSE" BgColor="#576C91" FgColor="#FFFFFF" 
-                  FgLowColor="#B2B2B2" FocusLineBgColor="#8A94AA" TagColor="#FFFFFF" 
-                  EnableAutoResize="TRUE"/>
+                  EnableToolbar="FALSE" EnableAutoResize="TRUE"/>
       </Container>
       <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" left="0" top="0" width="w" height="h" Visible="false"/>
     </ToggleCtrlContainer>

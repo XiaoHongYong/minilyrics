@@ -214,9 +214,13 @@ public:
 		tstring		strSkinName;
 		m_pSkinList->GetItemText(nSel, 0, strSkinName);
 
+		// Set default page, when skin changes.
+		((CPreferenceDlg *)m_pSkinWnd)->m_defaultPage = PAGE_SKINS;
+
 #ifndef _MPLAYER
 		if (_tcsicmp(strSkinName.c_str(), m_strEmbeddedSkinName.c_str()) == 0)
 		{
+			g_Profile.WriteProfileInt(_T("MPSkinMode"), false);
 			// 嵌入到player 中的skin
 			g_mpApp.SwitchToEmbeddedSkinMode(true);
 		}
@@ -224,12 +228,15 @@ public:
 #endif
 		{
 #ifndef _MPLAYER
+			if (g_mpApp.IsEmbeddedMode())
+				g_Profile.WriteProfileInt(_T("MPSkinMode"), true);
 			g_mpApp.EndEmbeddedSkin();
 #endif
+			g_Profile.WriteProfileString(_T("DefaultSkin"), strSkinName.c_str());
 			g_mpApp.ChangeSkin(strSkinName.c_str(), true);
 		}
 
-		UpdateSkinComment(strSkinName.c_str());
+		// UpdateSkinComment(strSkinName.c_str());
 
 		return true;
 	}

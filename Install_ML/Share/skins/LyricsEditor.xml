@@ -43,7 +43,5 @@
     <seperator/>
     <button ID="ID_EDIT_HELP" Left="24" />
   </Toolbar>
-  <LyricShowTextEdit Left="0" Top="26" Width="w" Height="h-26"
-                     BgColor="#183C7B" FgColor="#ECECEC" FgLowColor="#8297BD"
-                     FocusLineBgColor="#000000" TagColor="#FF8242" />
+  <LyricShowTextEdit Left="0" Top="26" Width="w" Height="h-26" />
 </skinwnd>

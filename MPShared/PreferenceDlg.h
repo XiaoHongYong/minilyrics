@@ -26,7 +26,10 @@ public:
 	virtual bool OnCustomCommand(int nId);
 
 protected:
-	int				m_nDefaultRootPage;
+	friend class CPagePfSkin;
+
+	PreferPageID	m_defaultPage;
+	bool			m_bFloatingLyrMode;
 
 };
 

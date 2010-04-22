@@ -595,6 +595,17 @@ bool ProfileGetLyricsFont(LPCTSTR szSectName, int &nHeight, int &nWeight, BYTE &
 {
 	tstring		strFont;
 
+	strFont = g_Profile.GetProfileString(szSectName, _T("ThemeFont"), _T(""));
+	if (strFont.size())
+	{
+		// Apply ThemeFont to current font setting, then remove it.
+		FontPropertyValueFromStr(strFont.c_str(), nHeight, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
+
+		g_Profile.WriteProfileString(szSectName, _T("ThemeFont"), _T(""));
+
+		ProfileWriteLyricsFont(ET_NULL, szSectName, nHeight, nWeight, byItalic, strFaceNameLatin9.c_str(), strFaceNameOthers.c_str());
+	}
+
 #ifdef _WIN32
 	strFont = g_Profile.GetProfileString(szSectName, _T("Font"), _T("Verdana, 13, bold, 0, 0, Tahoma"));
 #else
@@ -683,10 +694,6 @@ CLyricShowObj::CLyricShowObj()
 	m_tobLowlight.clr[TCI_FILL].set(RGB(255, 255, 255));
 	m_tobLowlight.clr[TCI_BORDER].set(RGB(0, 0, 255));
 
-	m_skin_bOutlineLyrics = false;
-	m_skin_fontHeight = m_skin_fontWeight = -1;
-	m_skin_do = DO_MAX;
-
 	m_nLineSpacing = 2;
 
 	m_bOutlineLyrics = false;
@@ -758,11 +765,6 @@ void CLyricShowObj::OnCreate()
 	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	if (m_bUseBgImg)
 		m_pSkin->RegisterTimerObject(this, g_Profile.GetProfileInt(_T("SlideDelayTime"), 10) * 1000);
-
-	tstring			strColor;
-
-	ColorToStr(m_clrBg, strColor);
-	m_pSkin->SetProperty(_T("BgColor"), strColor.c_str());
 
 	// !auto resize || !wrap lines
 	if (!m_bEnableAutoResize || !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)
@@ -2171,25 +2173,19 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		SetLyrAlign(szValue);
 	else if (_tcsicmp(szProperty, _T("LyrDrawOpt")) == 0)
 	{
-		m_skin_do = m_LyricsDisplayOpt = DisplayOptFromStr(szValue);
+		m_LyricsDisplayOpt = DisplayOptFromStr(szValue);
 	}
 	else if (_tcsicmp(szProperty, _T("BgColor")) == 0)
 	{
 		SetBgColor(szValue);
-		m_skin_clrBg = m_clrBg;
-		m_skin_clrBg.m_bValid = true;
 	}
 	else if (IsPropertyName(szProperty, _T("TagColor")))
 	{
 		GetColorValue(m_clrTag, szValue);
-		m_skin_clrTag = m_clrTag;
-		m_skin_clrTag.m_bValid = true;
 	}
 	else if (IsPropertyName(szProperty, _T("FocusLineBgColor")))
 	{
 		GetColorValue(m_clrFocusLineBg, szValue);
-		m_skin_clrFocusLineBg = m_clrFocusLineBg;
-		m_skin_clrFocusLineBg.m_bValid = true;
 	}
 	else if (_tcsicmp(szProperty, _T("UseBgImage")) == 0)
 	{
@@ -2253,37 +2249,9 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 		OnLyrDrawContextChanged();
 	}
-	else if (IsPropertyName(szProperty, _T("FontHeight")))
-	{
-		m_skin_fontHeight = _ttoi(szValue);
-	}
-	else if (IsPropertyName(szProperty, _T("FontBold")))
-	{
-		if (IsTRUE(szValue))
-			m_skin_fontWeight = FW_HEAVY;
-		else
-			m_skin_fontWeight = FW_NORMAL;
-	}
 	else if (IsPropertyName(szProperty, _T("OutlineLyrText")))
 	{
 		m_bOutlineLyrics = IsTRUE(szValue);
-		m_skin_bOutlineLyrics = m_bOutlineLyrics;
-	}
-	else if (IsPropertyName(szProperty, _T("HilightOBM")))
-	{
-		m_skin_tobHilight.obm = (OverlayBlendingMode)StringToID(g_idsLOB, szValue, OBM_UNKNOWN);
-	}
-	else if (IsPropertyName(szProperty, _T("HilightPattern")))
-	{
-		m_skin_tobHilight.strPatternFile = szValue;
-	}
-	else if (IsPropertyName(szProperty, _T("LowlightOBM")))
-	{
-		m_skin_tobLowlight.obm = (OverlayBlendingMode)StringToID(g_idsLOB, szValue, OBM_UNKNOWN);
-	}
-	else if (IsPropertyName(szProperty, _T("LowlightPattern")))
-	{
-		m_skin_tobLowlight.strPatternFile = szValue;
 	}
 	else if (IsPropertyName(szProperty, _T("Karaoke")))
 		m_bKaraoke = IsTRUE(szValue);
@@ -2302,15 +2270,11 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			if (IsPropertyName(szProperty, _LyrShowTOBFieldNameHilight[i]))
 			{
 				GetColorValue(m_tobHilight.clr[i], szValue);
-				m_skin_tobHilight.clr[i] = m_tobHilight.clr[i];
-				m_skin_tobHilight.clr[i].m_bValid = true;
 				break;
 			}
 			else if (IsPropertyName(szProperty, _LyrShowTOBFieldNameLowlight[i]))
 			{
 				GetColorValue(m_tobLowlight.clr[i], szValue);
-				m_skin_tobLowlight.clr[i] = m_tobLowlight.clr[i];
-				m_skin_tobLowlight.clr[i].m_bValid = true;
 				break;
 			}
 		}
@@ -2384,12 +2348,6 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 				m_tobLowlight.imgPattern.Attach(pImage);
 		}
 	}
-	else if (IsPropertyName(szProperty, _T("ReloadSkinDefClrTheme")))
-	{
-		ReloadThemeOfSkin(true);
-		m_pSkin->InvalidateRect();
-		return true;
-	}
 	else if (IsPropertyName(szProperty, _T("EnableAdjustVertAlign")))
 	{
 		m_bEnableAdjustVertAlignUser = IsTRUE(szValue);
@@ -2453,83 +2411,6 @@ void CLyricShowObj::UpdateBgImage()
 
 	if (m_bUseBgImg || m_bUseAlbumArtAsBg)
 		LoadNextBgImage();
-}
-
-void CLyricShowObj::ReloadThemeOfSkin(bool bSavetoProfile)
-{
-	tstring			strColor;
-
-#define		SET_THEME_COLOR(szKeyName, skin_clr, clr)	\
-			if (skin_clr.m_bValid)\
-			{\
-				clr = skin_clr;\
-				if (bSavetoProfile)\
-				{\
-					ColorToStr(skin_clr, strColor);\
-					g_Profile.WriteProfileString(m_strSectName.c_str(), szKeyName, strColor.c_str());\
-				}\
-			}
-
-	if (m_skin_clrBg.m_bValid)
-	{
-		ColorToStr(m_skin_clrBg, strColor);
-		SetBgColor(strColor.c_str());
-		if (bSavetoProfile)
-			g_Profile.WriteProfileString(m_strSectName.c_str(), _T("BgColor"), strColor.c_str());
-	}
-
-	if (m_skin_fontHeight != -1 || m_skin_fontWeight != -1)
-		ProfileWriteLyricsFont(m_etDispSettings, m_strSectName.c_str(), m_skin_fontHeight, m_skin_fontWeight, 0xFF, NULL, NULL);
-
-	SET_THEME_COLOR(_T("TagColor"), m_skin_clrTag, m_clrTag);
-	SET_THEME_COLOR(_T("FocusLineBgColor"), m_skin_clrFocusLineBg, m_clrFocusLineBg);
-
-	if (m_skin_bOutlineLyrics)
-	{
-		m_bOutlineLyrics = m_skin_bOutlineLyrics;
-		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("OutlineLyrText"), m_bOutlineLyrics);
-	}
-
-	TOBColorIndex	i;
-
-	for (i = TCI_START; i < TCI_COUNT; i = (TOBColorIndex)(i + 1))
-	{
-		SET_THEME_COLOR(_LyrShowTOBFieldNameHilight[i], m_skin_tobHilight.clr[i], m_tobHilight.clr[i]);
-		SET_THEME_COLOR(_LyrShowTOBFieldNameLowlight[i], m_skin_tobLowlight.clr[i], m_tobLowlight.clr[i]);
-	}
-
-	if (m_skin_tobHilight.obm != OBM_UNKNOWN)
-	{
-		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("HilightOBM"), m_skin_tobHilight.obm);
-		m_tobHilight.obm = m_skin_tobHilight.obm;
-		if (m_skin_tobHilight.obm == OBM_PATTERN)
-		{
-			m_tobHilight.strPatternFile = m_skin_tobHilight.strPatternFile;
-			g_Profile.WriteProfileString(m_strSectName.c_str(), _T("HilightPattern"),
-				m_skin_tobHilight.strPatternFile.c_str());
-		}
-	}
-
-	if (m_skin_tobLowlight.obm != OBM_UNKNOWN)
-	{
-		g_Profile.WriteProfileInt(m_strSectName.c_str(), _T("LowlightOBM"), m_skin_tobLowlight.obm);
-		m_tobLowlight.obm = m_skin_tobLowlight.obm;
-		if (m_skin_tobLowlight.obm == OBM_PATTERN)
-		{
-			m_tobLowlight.strPatternFile = m_skin_tobLowlight.strPatternFile;
-			g_Profile.WriteProfileString(m_strSectName.c_str(), _T("LowlightPattern"),
-				m_skin_tobLowlight.strPatternFile.c_str());
-		}
-	}
-
-	CreateLyrOverlayBlendingPattern(m_tobHilight, GetPatternFontHeight());
-	CreateLyrOverlayBlendingPattern(m_tobLowlight, GetPatternFontHeight());
-
-	if (m_skin_do != DO_MAX)
-	{
-		m_LyricsDisplayOpt = m_skin_do;
-		g_Profile.WriteProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), DisplayOptToStr(m_skin_do));
-	}
 }
 
 void CLyricShowObj::SetLyrAlign(LPCTSTR szValue)

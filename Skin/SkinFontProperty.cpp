@@ -25,25 +25,33 @@ bool FontPropertyValueFromStr(LPCTSTR szValue, int &nHeight, int &nWeight, BYTE 
 
 	// height
 	csvLine.IgnoreChars(_T(" "));
-	csvLine.ReadFieldInt(nHeight);
+	if (!csvLine.ReadFieldInt(nHeight))
+		nHeight = -1;
 
 	// font weight?
 	csvLine.IgnoreChars(_T(" "));
 	csvLine.ReadFieldString(strWeight);
-	if (_tcsicmp(strWeight.c_str(), _T("bold")) == 0)
-		nWeight = FW_BOLD;
-	else if (_tcsicmp(strWeight.c_str(), _T("thin")) == 0)
-		nWeight = FW_THIN;
+	if (strWeight.empty())
+		nWeight = -1;
 	else
-		nWeight = FW_NORMAL;
+	{
+		if (_tcsicmp(strWeight.c_str(), _T("bold")) == 0)
+			nWeight = FW_BOLD;
+		else if (_tcsicmp(strWeight.c_str(), _T("thin")) == 0)
+			nWeight = FW_THIN;
+		else
+			nWeight = FW_NORMAL;
+	}
 
 	// italic
 	csvLine.IgnoreChars(_T(" "));
-	csvLine.ReadFieldInt(byItalic);
+	if (!csvLine.ReadFieldInt(byItalic))
+		byItalic = -1;
 
 	// underline
 	csvLine.IgnoreChars(_T(" "));
-	csvLine.ReadFieldInt(nUnderLine);
+	if (!csvLine.ReadFieldInt(nUnderLine))
+		nUnderLine = -1;
 
 	// other character set font name.
 	csvLine.IgnoreChars(_T(" "));

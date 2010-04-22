@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding='utf-8'?>
+<Theme>
+  <LyrDispaly>
+    <BgColor>#183C7B</BgColor>
+    <FgColor>#ECECEC</FgColor>
+    <FgLowColor>#8297BD</FgLowColor>
+    <TagColor>#FF8242</TagColor>
+    <FocusLineBgColor>#000000</FocusLineBgColor>
+    <OutlineLyrText>0</OutlineLyrText>
+    <HilightOBM>1</HilightOBM>
+    <LowlightOBM>1</LowlightOBM>
+    <ThemeFont>, 15, , , , </ThemeFont>
+    <LyrDrawOpt>fadein</LyrDrawOpt>
+    <LyrDisplayStyle>LyricShowMultiRow</LyrDisplayStyle>
+  </LyrDispaly>
+</Theme>
