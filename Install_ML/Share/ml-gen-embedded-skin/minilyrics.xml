@@ -13,7 +13,6 @@
   <DynCmds>
     <cmd ID="dyncmd_openclose_floatinglyr" func="openclose_skin_wnd" param="floatinglyr" />
     <cmd ID="dyncmd_openclose_lyrics_bar" func="openclose_skin_wnd" param="lyrbar" />
-    <cmd ID="dyncmd_is_floatinglyr_visible" func="is_skin_wnd_visible" param="floatinglyr" />
     <cmd ID="dyncmd_is_lyrics_bar_visible" func="is_skin_wnd_visible" param="lyrbar" />
     <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
     <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
