@@ -15,7 +15,7 @@ PRAW_IMAGE_DATA CreateScaleImage(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst)
 	CRect	rc;
 	int		w, h;
 
-	if (!pImgSrc)
+	if (!pImgSrc || pImgSrc->height == 0 || pImgSrc->width == 0)
 		return NULL;
 
 	w = pImgSrc->width * hDst / pImgSrc->height;

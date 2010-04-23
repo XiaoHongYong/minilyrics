@@ -22,7 +22,7 @@ PRAW_IMAGE_DATA AutoFitImageToRect(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst, 
 	int		x = 0, y = 0;
 	int		wSrcToBlt, hSrcToBlt;
 
-	if (!pImgSrc)
+	if (!pImgSrc || pImgSrc->height == 0 || hDst == 0 || wDst == 0)
 		return NULL;
 
 	if (float(pImgSrc->width) / pImgSrc->height >= float(wDst) / hDst)

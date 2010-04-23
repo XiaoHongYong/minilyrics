@@ -324,6 +324,8 @@ void CRawGraph::MultiplyAlpha(BYTE byAlpha, const RECT *lpRect)
 void CRawGraph::VertAlphaFadeOut(const RECT *lpRect, bool bTop)
 {
 	ASSERT(m_imageData.bitCount == 32);
+	if (lpRect->bottom == lpRect->top)
+		return;
 
 	int			x, y, xMax, yMax;
 	byte		*p, *pEnd, *pRow;
@@ -363,6 +365,8 @@ void CRawGraph::VertAlphaFadeOut(const RECT *lpRect, bool bTop)
 void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 {
 	ASSERT(m_imageData.bitCount == 32);
+	if (lpRect->bottom == lpRect->top)
+		return;
 
 	int			x, y, xMax, yMax;
 	byte		*p, *pEnd, *pRow;
@@ -412,6 +416,8 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 void CRawGraph::HorzAlphaFadeOut(const RECT *lpRect, bool bLeft)
 {
 	ASSERT(m_imageData.bitCount == 32);
+	if (lpRect->left == lpRect->right)
+		return;
 
 	int			x, y, xMax, yMax;
 	byte		*p, *pEnd, *pRow;
@@ -456,6 +462,8 @@ void CRawGraph::HorzAlphaFadeOut(const RECT *lpRect, bool bLeft)
 void CRawGraph::HorzFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bLeft)
 {
 	ASSERT(m_imageData.bitCount == 32);
+	if (lpRect->left == lpRect->right)
+		return;
 
 	int			x, y, xMax, yMax;
 	byte		*p, *pEnd, *pRow;

@@ -414,7 +414,8 @@ bool CRawImage::StretchBlt(CRawGraph *pGraphics, int xDest, int yDest, int width
 	CRect			rcDst;
 	PRAW_IMAGE_DATA	pImageDst;
 
-	if (xSrc >= m_hImage->width || ySrc >= m_hImage->height)
+	if (xSrc >= m_hImage->width || ySrc >= m_hImage->height
+		|| widthDest == 0 || heightDest == 0)
 		return true;
 
 	if (xSrc + widthSrc > m_x + m_cx)
@@ -492,7 +493,8 @@ bool CRawImage::StretchBlt(CRawImage *pImage, int xDest, int yDest, int widthDes
 
 	CRect			rcDst;
 
-	if (xSrc >= m_hImage->width || ySrc >= m_hImage->height)
+	if (xSrc >= m_hImage->width || ySrc >= m_hImage->height
+		|| widthDest == 0 || heightDest == 0)
 		return true;
 
 	if (xSrc + widthSrc > m_x + m_cx)

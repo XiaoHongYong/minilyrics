@@ -49,7 +49,7 @@ void CSkinFilterCtrl::Draw(CRawGraph *pGraph)
 	CRect rcClip;
 	pGraph->GetClipBoundBox(rcClip);
 	rcClip.IntersectRect(&rcClip, &m_rcObj);
-	if (rcClip.IsRectEmpty())
+	if (rcClip.IsRectEmpty() || m_rcObj.Height() == 0)
 		return;
 
 	byte			*pSrc, *pDst;
