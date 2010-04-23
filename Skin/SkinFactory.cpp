@@ -254,8 +254,8 @@ int CSkinFileXML::GetMainSkinWnd(tstring &strSkinWndName, LPCTSTR szSkinWndNameD
 {
 	LPCTSTR		szMainWnds, szDefMainWnd;
 
-	szDefMainWnd = m_xml.m_pRoot->GetProperty(_T("defmainwnd"));
-	szMainWnds = m_xml.m_pRoot->GetProperty(_T("mainwnds"));
+	szDefMainWnd = m_xml.m_pRoot->GetPropertySafe(_T("defmainwnd"));
+	szMainWnds = m_xml.m_pRoot->GetPropertySafe(_T("mainwnds"));
 
 	strSkinWndName.resize(0);
 
@@ -264,7 +264,7 @@ int CSkinFileXML::GetMainSkinWnd(tstring &strSkinWndName, LPCTSTR szSkinWndNameD
 	//
 	if (szSkinWndNameDef == NULL || IsEmptyString(szSkinWndNameDef))
 	{
-		if (szDefMainWnd && !IsEmptyString(szDefMainWnd))
+		if (!IsEmptyString(szDefMainWnd))
 		{
 			strSkinWndName = szDefMainWnd;
 			return ERR_OK;
@@ -288,7 +288,7 @@ int CSkinFileXML::GetMainSkinWnd(tstring &strSkinWndName, LPCTSTR szSkinWndNameD
 	//
 	// Use defined "defmainwnd"
 	//
-	if (szDefMainWnd && !IsEmptyString(szDefMainWnd))
+	if (!IsEmptyString(szDefMainWnd))
 	{
 		strSkinWndName = szDefMainWnd;
 		return ERR_OK;
