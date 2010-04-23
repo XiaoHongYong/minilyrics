@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<skin defmainwnd="minilyrics" mainwnds="minilyrics" ExtraResouceFolder="Modern/">
+  <include Name="Styles.xml"/>
+  <Menus>
+    <Menu Name="NormalMode" From="MainMenu" >
+      <Item Action="Append" Type="item" Name="&amp;Album Art" IDCmd="dyncmd_openclose_albumart_bar" CanCheck="true" IsCheckedCmd="dyncmd_is_albumart_bar_visible" />
+    </Menu>
+  </Menus>
+  <DynCmds>
+    <cmd ID="dyncmd_openclose_albumart_bar" func="openclose_framebar_bar" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
+    <cmd ID="dyncmd_is_albumart_bar_visible" func="is_framebar_bar_visible" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
+  </DynCmds>
+  <DynControls>
+    <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
+    <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
+    <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
+  </DynControls>
+  <AdjustHue>
+    <ImageFile file="cap-bt.png"/>
+    <ImageFile file="albumart.png"/>
+    <ImageFile file="button.png"/>
+    <ImageFile file="button-line.png"/>
+    <ImageFile file="cap-bt.png"/>
+    <ImageFile file="title_line.png"/>
+  </AdjustHue>
+  <skinwnd Name="minilyrics" EnableTranslucency="true" TranslucencyAlpha="0" TranslucencyAlphaOnHover="150" TranslucencyAlphaOnActive="228" MinWidth="330" MinHeight="170" FixedHeight="TRUE" Width="330" Height="170" PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" cursor="cursor.cur" ContextMenu="NormalMode" CmdHandler="ch_common">
+	<Image Left="0" Top="0" Width="14" Height="14" Image="frame-mask.png" ImageRect="0, 0, 14, 14" BlendPixMode="alpha_mask"/>
+	<Image Left="w-14" Top="0" Width="14" Height="14" Image="frame-mask.png" ImageRect="26, 0, 14, 14" BlendPixMode="alpha_mask"/>
+	<Image Left="0" Top="h-14" Width="14" Height="14" Image="frame-mask.png" ImageRect="0, 26, 14, 14" BlendPixMode="alpha_mask"/>
+	<Image Left="w-14" Top="h-14" Width="14" Height="14" Image="frame-mask.png" ImageRect="26, 26, 14, 14" BlendPixMode="alpha_mask"/>
+    <ActiveButton Left="w-32" Top="8" Width="14" Height="14" ID="ID_CLOSE" Name="Close" UseSkinBg="TRUE" ImageSel="cap-bt.png" ImageSelRect="14,14,14,14" ImageFocus="cap-bt.png" ImageFocusRect="14,0,14,14"/>
+    <ActiveButton Left="w-48" Top="8" Width="14" Height="14" ID="ID_MINIMIZE" Name="Minimize" UseSkinBg="TRUE" ImageSel="cap-bt.png" ImageSelRect="0,14,14,14" ImageFocus="cap-bt.png" ImageFocusRect="0,0,14,14"/>
+    <BarFrame Name="PanelFrame" ID="CCMD_MAINFRAME" Left="16" Top="16" Width="w-26" Height="138" XBorder="0" YBorder="0">
+      <ContainerBar Name="AlbumArt" ID="CCMD_ALBUMART" Width="138+10" Height="138" MinWidth="138+10" MinHeight="138" FixedHeight="TRUE" FixedWidth="TRUE" Align="Top" PaintBg="FALSE" BgColor="#000000">
+        <AlbumArt Name="AlbumArt" Left="0" Top="0" Width="138" Height="138" ID="ID_ALBUMART" UseSkinBg="TRUE" Image="AlbumArt.png" FrameMask="albumart-mask.png" FrameMaskRectPos="4,4,130,130" />
+	  </ContainerBar>
+      <ContainerBar Name="MediaInfo" ID="CCMD_MEDIAINFO" Width="200" Height="138" MinWidth="138" MinHeight="138" FixedHeight="TRUE" Align="Top" PaintBg="FALSE" BgColor="#000000">
+        <MediaInfoText Name="Title" Left="0" Top="8" Width="w-5" Height="24" UseSkinBg="TRUE" Font="Tahoma" FontHeight="20" FontBold="TRUE" Outlined="TRUE" OutlinedColor="#313131" TextColor="#fe9800" LeftMargin="0" Text="" MediaInfoType="Title" ShowTitle="false" PaintBg="false"/>
+        <MediaInfoText Name="Artist" Left="0" Top="38" Width="w-5" Height="20" UseSkinBg="TRUE" Font="Tahoma" FontHeight="16" FontBold="TRUE" Outlined="TRUE" OutlinedColor="#313131" TextColor="#fe9800" LeftMargin="0" Text="" MediaInfoType="Artist" ShowTitle="false" PaintBg="false"/>
+        <MediaInfoText Name="Album" Left="0" Top="58" Width="w-5" Height="20" UseSkinBg="TRUE" Font="Tahoma" FontHeight="16" FontBold="TRUE" Outlined="TRUE" OutlinedColor="#313131" TextColor="#fe9800" LeftMargin="0" Text="" MediaInfoType="Album" ShowTitle="false" PaintBg="false" />
+        <Button Left="0" Top="78" Width="22" Height="22" ID="ID_PREVIOUS" Name="Prev" UseSkinBg="TRUE" CanCheck="FALSE" Checked="FALSE" Image="button.png" ImageRect="0,0,22,22" ImageSel="button.png" ImageSelRect="0,22,22,22" ImageFocus="button.png" ImageFocusRect="0,44,22,22"/>
+        <NStatusButton Left="20" Top="78" Width="22" Height="22" ID="ID_PLAYPAUSE" Name="Prev" UseSkinBg="TRUE" CurStatus="0" S0_Image="button.png" S0_ImageRect="22,0,22,22" S0_ImageSel="button.png" S0_ImageSelRect="22,22,22,22" S0_ImageFocus="button.png" S0_ImageFocusRect="22,44,22,22" S1_Image="button.png" S1_ImageRect="44,0,22,22" S1_ImageSel="button.png" S1_ImageSelRect="44,22,22,22" S1_ImageFocus="button.png" S1_ImageFocusRect="44,44,22,22" />
+        <Button Left="40" Top="78" Width="22" Height="22" ID="ID_NEXT" Name="Next" UseSkinBg="TRUE" Image="button.png" ImageRect="66,0,22,22" ImageSel="button.png" ImageSelRect="66,22,22,22" ImageFocus="button.png" ImageFocusRect="66,44,22,22"/>
+        <Image Left="69" Top="78" Width="5" Height="22" Image="button-line.png" ImageRect="0,0,5,22"/>
+        <Button Left="80" Top="78" Width="22" Height="22" ID="ID_SEARCH_LYRICS" Name="Search Lyrics" UseSkinBg="TRUE" Image="button.png" ImageRect="110,0,22,22" ImageSel="button.png" ImageSelRect="110,22,22,22" ImageFocus="button.png" ImageFocusRect="110,44,22,22"/>
+        <Button Left="100" Top="78" Width="22" Height="22" ID="ID_BACKWARD_LYRICS" Name="Backward Lyrics" UseSkinBg="TRUE" Image="button.png" ImageRect="132,0,22,22" ImageSel="button.png" ImageSelRect="132,22,22,22" ImageFocus="button.png" ImageFocusRect="132,44,22,22" Continuous="TRUE"/>
+        <Button Left="120" Top="78" Width="22" Height="22" ID="ID_FORWARD_LYRICS" Name="Forward Lyrics" UseSkinBg="TRUE" Image="button.png" ImageRect="154,0,22,22" ImageSel="button.png" ImageSelRect="154,22,22,22" ImageFocus="button.png" ImageFocusRect="154,44,22,22" Continuous="TRUE"/>
+        <LyricShowSingleRow ID="ID_LYRICS_SHOW" Left="0" Top="103" Width="w" Height="h-78-22-8" EnableToolbar="FALSE" Font="Verdana,22,bold,0,0,Tahoma" BlendingLyrText="TRUE" BgColor="#576C91" FgColor="#fe9800" FgLowColor="#fe9800" LOBHilightColor="#fe9800" LOBHilightBorder="#313131" LOBLowlightColor="#fe9800" LOBLowlightBorder="#313131" OutlineLyrText="TRUE" EnableAutoResize="TRUE" LyrAlign="left" UseSkinStyle="TRUE" XMargin="0"/>
+	  </ContainerBar>
+    </BarFrame>
+  </skinwnd>
+</skin>
