@@ -33,6 +33,9 @@ LRESULT CBaseDialog::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 	case ML_WM_LANGUAGE_CHANGED:
 		OnLanguageChanged();
 		break;
+	case ML_WM_USER:
+		OnUserMessage(wParam, lParam);
+		break;
 	case WM_ACTIVATE:
 		{
 			WORD		wActived;
@@ -100,6 +103,9 @@ LRESULT CBaseDialog::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 			// g_mapWnd.remove(m_hWnd);
 		}
 		return 0;
+	case WM_DROPFILES:
+		OnDropFiles((HDROP)wParam);
+		break;
 	case WM_HSCROLL:
 		OnHScroll(LOWORD(wParam), HIWORD(wParam), NULL);
 		break;
