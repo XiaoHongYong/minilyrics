@@ -581,6 +581,7 @@ BEGIN
     BEGIN
         MENUITEM "&Clear Recorded Scrolling Lyrics Actions", IDC_SL_CLEAR_TIME_STAMP
         MENUITEM "Lyrics &Editor...",           IDC_LYR_EDITOR
+        MENUITEM "&Help",                       IDC_HELP_STATIC_LYR
     END
 END
 

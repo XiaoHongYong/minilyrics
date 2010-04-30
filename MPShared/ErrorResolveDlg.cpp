@@ -107,6 +107,6 @@ void CErrorResolveDlg::OnCommand(UINT uID, UINT nNotifyCode)
 	}
 	else if (IDC_ML_HELP == uID)
 	{
-		MLHtmlHelper(this, _T("help.chm::/mlfaq-ineterror.htm"));
+		OpenUrl(this, GetStrName(SN_HTTP_HELP));
 	}
 }

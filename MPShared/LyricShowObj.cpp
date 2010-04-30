@@ -120,7 +120,7 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 
 	szLineBeg = szText;
 
-	if (_tcslen(szText) <= 15)
+	if (_tcslen(szText) <= 10)
 	{
 		vStr.push_back(szText);
 		return;

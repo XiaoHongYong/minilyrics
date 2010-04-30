@@ -347,13 +347,14 @@
 #define IDC_ADDFILE                     40172
 #define IDC_LYR_EDITOR                  40173
 #define IDC_SL_CLEAR_TIME_STAMP         40174
+#define IDC_HELP_STATIC_LYR             40177
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        211
-#define _APS_NEXT_COMMAND_VALUE         40176
+#define _APS_NEXT_COMMAND_VALUE         40178
 #define _APS_NEXT_CONTROL_VALUE         1204
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

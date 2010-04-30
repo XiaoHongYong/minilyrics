@@ -330,6 +330,9 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			g_eventDispather.DispatchSyncEvent(ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
 		}
 		break;
+	case IDC_HELP_STATIC_LYR:
+		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_HELP_STATIC_LYR));
+		break;
 	default:
 		{
 			if (OnCommandCharEncoding(nID))
@@ -401,15 +404,15 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			_T("LyrEditor"), TOLOCAL(_T("Lyrics Editor")), _T("LyricsEditor.xml"));
 		break;
 	case CMD_EDIT_HELP:
-		MLHtmlHelper(m_pSkinWnd, _T("help.chm::/how-to-editlyrics.htm"));
+		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_HELP_EDIT_LYR));
 		break;
 	case CMD_HELP:
 		{
 			CUIObject	*pObjLyrEdit = m_pSkinWnd->GetUIObjectByClassName(CLyricShowTextEditObj::ClassName());
 			if (pObjLyrEdit && pObjLyrEdit->IsVisible())
-				MLHtmlHelper(m_pSkinWnd, _T("help.chm::/how-to-editlyrics.htm"));
+				OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_HELP_EDIT_LYR));
 			else
-				MLHtmlHelper(m_pSkinWnd, _T("help.chm::/getstarted.htm#downlyrics"));
+				OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_HELP));
 		}
 		break;
 	case CMD_PAUSE:
