@@ -219,6 +219,8 @@ void CLyrDisplayClrListWnd::AddGradientColors()
 {
 	AddGradientColor(RGB(255, 255, 128), RGB(255, 128, 0), RGB(255, 128, 128));
 	AddGradientColor(RGB(128, 255, 255), RGB(0, 128, 255), RGB(128, 255, 255));
+	AddGradientColor(RGB(164, 164, 164), RGB(255, 255, 255), RGB(164, 164, 164));
+	AddGradientColor(RGB(164, 164, 164), RGB(255, 148, 0), RGB(164, 164, 164));
 	// AddGradientColor(RGB(, , ), RGB(, , ), RGB(, , ));
 }
 
