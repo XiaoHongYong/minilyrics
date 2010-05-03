@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <skinwnd Extends="WindowFrame" Name="Preferences.xml" Caption="Preferences"
-         Width="600" Height="540" RememberSizePos="true">
+         MinWidth="600" MinHeight="540" RememberSizePos="true">
   <Toolbar ID="CID_TB_PREFERENCE" Left="20" Top="10" Width="w-40" Height="55" UseSkinBg="TRUE"
            DrawBtText="true" 
            BgImageChecked="pf_toolbar_bg_checked.png"

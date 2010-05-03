@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skinwnd Extends="WindowFrame" Name="AboutBox.xml" Caption="About $Product$"
-         Width="360" Height="340" RememberSizePos="false">
+         FixedWidth="true" FixedHeight="true" Width="360" Height="340" RememberSizePos="false">
   <Animation ID="CID_AM_SHOW_ABOUT_F_RIGHT" MoveFromRight="CID_BRANDING,CID_VERSION,CID_COPYRIGHT,CID_EMAIL,CID_LICENSE,CID_LICENSE_TO,CID_UNREGISTERED"
       MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_CHECK_VERSION"/>
   <Animation ID="CID_AM_HIDE_ABOUT_2_LEFT" MoveToLeft="CID_C_ABOUT" MoveToBottom="CID_BUYNOW,CID_ENTER_CODE,CID_CHECK_VERSION"/>

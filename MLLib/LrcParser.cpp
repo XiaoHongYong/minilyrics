@@ -93,12 +93,15 @@ S_BEGIN:
 	{
 		if (bConvertStr)	// Keep empty line in text lyrcs file.
 			AddStrTimeRow(_T(""), 0);
+		else
+		{
+			pFileRow = new ML_ROW;
+			pFileRow->nRowType = ML_ROW_NULL;	// TAG_NEWROW;
+			pFileRow->szContent = NULL;
 
-		pFileRow = new ML_ROW;
-		pFileRow->nRowType = ML_ROW_NULL;	// TAG_NEWROW;
-		pFileRow->szContent = NULL;
+			AddFileRowsToMLData(pFileRow);
+		}
 
-		AddFileRowsToMLData(pFileRow);
 		if (!buffWords.pop_read_front(word))
 			goto S_END;
 
