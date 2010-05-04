@@ -2364,7 +2364,7 @@ bool CMLData::ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, FILE_ENCODING fil
 
 BOOL CMLData::ToString(tstring &str, MLFileType lrcFormat, BOOL bIncTags)
 {
-	if (lrcFormat == FT_LYRICS_LRC)
+	if (lrcFormat == FT_LYRICS_LRC && GetLyrContentType() != LCT_TXT)
 	{
 		// 转换为 LRC 格式的字符串
 		CLrcParser		parser(this);
@@ -2373,7 +2373,7 @@ BOOL CMLData::ToString(tstring &str, MLFileType lrcFormat, BOOL bIncTags)
 	}
 	else
 	{
-		ASSERT(lrcFormat == FT_LYRICS_TXT);
+		ASSERT(lrcFormat == FT_LYRICS_TXT || GetLyrContentType() == LCT_TXT);
 		// 转换为 TXT 格式的字符串
 		CTextFileParser		parser(this);
 
