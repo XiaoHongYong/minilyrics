@@ -1,0 +1,15 @@
+Lyricszoo lyrics and videos
+Skip to navigation
+
+%%title%% lyrics
+%%artist%% See albums and popular songs
+
+%%e-x%%
+
+  Send "%%val-title%%" Ringtone to your Cell 
+
+ %%lyrics%%
+
+  Send "%%val-title%%" Ringtone to your Cell 
+ 
+ %%e-eof%%

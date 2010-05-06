@@ -11,7 +11,7 @@
 
 CHttpClient::CHttpClient()
 {
-	m_strUserAgent = "User-Agent: Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)";
+	m_strUserAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3 ( .NET CLR 3.5.30729)";
 	m_bUseProxy = false;
 	m_nHostPort = 80;
 	m_nServerPort = 80;
@@ -38,12 +38,15 @@ int CHttpClient::Init(LPCTSTR szHost, LPCTSTR szUri, LPCTSTR szReferUrl, int nPo
 	m_httpRequest.SetAvailProp(CHttpRequestProtocol::RP_BASE_GET | CHttpRequestProtocol::RP_PRAGMA | CHttpRequestProtocol::RP_CONNECTION | CHttpRequestProtocol::RP_CACHE_CONTROL);
  	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_HOST, m_strHost.c_str());
  	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_ACCEPT, "*/*");
- 	ConvertStr(szReferUrl, -1, strOut);
-	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_REFERER, strOut.c_str());
+	if (szReferUrl)
+	{
+ 		ConvertStr(szReferUrl, -1, strOut);
+		m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_REFERER, strOut.c_str());
+	}
 	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_USER_AGENT, m_strUserAgent.c_str());
- 	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_PRAGMA, "no-cache");
- 	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_CONNECTION, "close");
- 	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_CACHE_CONTROL, "no-cache");
+ 	// m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_PRAGMA, "no-cache");
+ 	// m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_CONNECTION, "close");
+ 	// m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_CACHE_CONTROL, "no-cache");
 
 	m_httpReturn.SetNetFile(&m_NetFile);
 	m_httpReturn.SetAvailProp(CHttpReturnProtocol::RP_MIN_RET);

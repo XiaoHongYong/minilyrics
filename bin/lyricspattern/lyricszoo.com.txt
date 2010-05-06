@@ -1,10 +1,13 @@
- Home
- Skip to navigation
- %%title%% Lyrics &Video
-%%artist%% See albums and popular songs
+%%e-x%%
+Skip to navigation
+ %%title%% - %%artist%% Lyrics 
+ 
+ %%e-x%%
+ 
+Send "%%val-title%% - %%val-artist%%" Ringtone to your Cell 
 
 %%lyrics%%
 
-Part of These Albums %%e-line%%
- %%album%% %%e-n%%
+Send "%%val-title%% - %%val-artist%%" Ringtone to your Cell
+
 %%e-eof%%

@@ -87,12 +87,24 @@ HINSTANCE SetResourceHandle(HINSTANCE hResHandle)
 {
 }*/
 
+static void _invalid_parameter(
+						const wchar_t * expression,
+						const wchar_t * function, 
+						const wchar_t * file, 
+						unsigned int line,
+						uintptr_t pReserved
+						)
+{
+}
+
 BOOL InitBaseFrameWork(HINSTANCE hInst, LPCTSTR szLogFile, LPCTSTR szProfileName, LPCTSTR szDefAppName)
 {
 	g_hInst = hInst;
 
 	g_Profile.Init(szProfileName, szDefAppName);
 	g_Log.Init(szLogFile);
+
+	 _set_invalid_parameter_handler(_invalid_parameter);
 
 	return TRUE;
 }

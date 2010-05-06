@@ -1,14 +1,13 @@
-%%e-x%%
+%%artist%% Lyrics, %%title%% Lyrics,
 
-Artist: %%artist%%
-Song: %%title%%
-Album: %%album%%  [Buy this CD]
+%%e-x%%
+ 
+   A B C D E F G H I J K L M N O P Q R S T U V W X Y Z # A B C D E F G H I J K L M N O P Q R S T U V W X Y Z #
+  
+%%val-artist%% - %%val-title%% Lyrics
 
 %%lyrics%%
 
-
-Related %%val-artist%%
+Soundtrack Lyrics &Videos:
 
 %%e-eof%%
-
- 

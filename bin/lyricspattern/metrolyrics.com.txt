@@ -1,7 +1,8 @@
-%%title%% Lyrics
- LYRICS
+%%title%%  Lyrics
+ 
 %%e-x%%
-#
+
+ #
  A
  B
  C
@@ -28,11 +29,20 @@
  X
  Y
  Z
+ 
+ %%e-x%%
+ 
+ Add to MyLyrics
+ 
+%%artist%% : %%val-title%% Lyrics
 
-%%artist%% 
+%%e-x%%
 
-%%val-title%% Lyrics
+Send "%%val-title%%" Ringtone to your Cell
 
-%%e-x%% 
+%%lyrics%%
 
-%%val-artist%% : %%val-title%% Lyrics%%e-eof%%
+
+Send "%%val-title%%" Ringtone to your Cell
+
+%%e-eof%%

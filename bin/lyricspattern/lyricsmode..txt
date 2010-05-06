@@ -1,17 +1,10 @@
-%%artist%% - %%title%% lyrics
- 
+%%title%% lyrics %%e-n%%
+%%artist%% %%val-title%% lyrics
 
 %%e-x%%
 
- Lyrics  Artists : %%e-x%%  %%val-artist%% lyrics  %%album%% album lyrics  %%val-title%% lyrics
-
-%%e-x%%
-
-Please login or register first     [x] 
-
-%%val-artist%%
-%%val-title%% lyrics
+my profile %%e-x%% logout
 
 %%lyrics%%
 
-Bookmark:   %%e-eof%%
+Browse by band : %%e-eof%%

@@ -34,6 +34,8 @@ public:
 	void SetProxy(BOOL bEnableProxy, LPCSTR szProxyServer, int nPort, LPCSTR szBase64ProxyUserPass = NULL);
 	void SetUserAgent(LPCTSTR szUserAgent);
 
+	CHttpRequestProtocol &GetHttpRequestProtocol() { return m_httpRequest; }
+
 protected:
 	CClientCom		m_ClientCom;
 	CHttpRequestProtocol		m_httpRequest;
