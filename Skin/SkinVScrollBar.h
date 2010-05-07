@@ -87,6 +87,8 @@ protected:
 
 	int				m_nPosThumb;		// 滚动条的位置(上面按钮的下方 －> thumb的上方的距离)
 
+	int				m_nLinesPerWheel;
+
 	// 虚拟滚动位置
 	int				m_nVirtualMin;		// 最小的值
 	int				m_nVirtualMax;		// 最大的值

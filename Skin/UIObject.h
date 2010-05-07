@@ -206,6 +206,8 @@ public:
 
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }
 
+	virtual bool OnCommand(UINT uID) { return false; }
+
 	virtual void Draw(CRawGraph *pGraph);
 
 

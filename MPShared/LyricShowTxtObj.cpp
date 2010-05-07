@@ -23,8 +23,6 @@ CLyricShowTxtObj::CLyricShowTxtObj()
 
 	m_nMsgWant |= UO_MSG_WANT_MOUSEWHEEL;
 
-	m_brCurRow.CreateSolidBrush(m_clrFocusLineBg);
-
 	m_nCurRowOld = -1;
 
 	m_nDarkenTopArea = float(0.5);
@@ -120,10 +118,8 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 {
 	assert(m_pMLData);
 
-	int		y;
 	PML_ROW	pLyricRow;
 	int		nRowHeight;
-	int		nCurRowReal;
 
 	pGraphics->SetFont(&m_font);
 
@@ -145,12 +141,9 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 
 	pLyricRow = m_lyrLines[m_nRowCur];
 
-	nCurRowReal = m_pMLData->GetCurPlayLine(m_lyrLines);
-
 	// 行高
 	nRowHeight = GetLineHeight();
 
-	y = GetLineVertAlignPos() - GetLineHeight() / 2;
 	if (m_nRowCur == m_nCurRowOld)
 		return;
 
@@ -169,38 +162,21 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 
 	// draw center row, the row lyric is current
 	// select Center font
-	int nRow;
-	int h;
-
 	CDispOptRecover		dispOptRecover(this);
 	m_LyricsDisplayOpt = DO_NORMAL;
 
-	// 显示当前歌词行
-	// DrawRow(pGraphics, pLyricRow, AUTO_CAL_X, y, GetHighlightColor(), m_tobHilight.clrBorder);
-	DrawRow(pGraphics, pLyricRow, AUTO_CAL_X, y, LP_CUR_LINE);
-
-	// 显示此行之前的歌词行
-	nRow = m_nRowCur - 1;
-	for (h = y - nRowHeight; h + nRowHeight > m_rcObj.top && nRow >= 0; h -= nRowHeight)
+	for (int i = m_nRowCur, y = m_rcObj.top + m_nYMargin;
+		i < (int)m_lyrLines.size() && y < m_rcObj.bottom - m_nYMargin; i++, y += nRowHeight)
 	{
-		// DrawRow(pGraphics, m_lyrLines[nRow], AUTO_CAL_X, h, GetLowlightColor(), m_tobLowlight.clrBorder);
-		DrawRow(pGraphics, m_lyrLines[nRow], AUTO_CAL_X, h, LP_ABOVE_CUR_LINE);
-		nRow--;
-	}
-	
-	// 显示此行之后的歌词行
-	nRow = m_nRowCur + 1;
-	for (h = y + nRowHeight; h < m_rcObj.bottom && nRow < (int)m_lyrLines.size(); h += nRowHeight)
-	{
-		// DrawRow(pGraphics, m_lyrLines[nRow], AUTO_CAL_X, h, GetLowlightColor(), m_tobLowlight.clrBorder);
-		DrawRow(pGraphics, m_lyrLines[nRow], AUTO_CAL_X, h, LP_BELOW_CUR_LINE);
-		nRow++;
+		DrawRow(pGraphics, m_lyrLines[i], AUTO_CAL_X, y, LP_CUR_LINE);
 	}
 }
 
 void CLyricShowTxtObj::OnLyricsChanged()
 {
 	CLyricShowObj::OnLyricsChanged();
+
+	m_nRowCur = 0;
 
 	SetScrollInfo();
 }
@@ -216,13 +192,11 @@ void CLyricShowTxtObj::SetScrollInfo()
 {
 	if (m_pScrollBar)
 	{
-		int				nPage = m_rcObj.Height() / GetLineHeight();
-
-		m_nRowCur = (GetLineVertAlignPos() - m_rcObj.top) / GetLineHeight() - 1;
-		if (m_nRowCur < 0)
+		if (m_nRowCur < 0 || m_nRowCur >= m_lyrLines.size())
 			m_nRowCur = 0;
 
-		m_pScrollBar->SetScrollInfo(0, m_lyrLines.size() - 1 + nPage, nPage, m_nRowCur);
+		int				nPage = (m_rcObj.Height() - m_nYMargin * 2) / GetLineHeight();
+		m_pScrollBar->SetScrollInfo(0, m_lyrLines.size(), nPage, m_nRowCur);
 	}
 }
 
@@ -251,6 +225,12 @@ void CLyricShowTxtObj::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 
 void CLyricShowTxtObj::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 {
+	if (nMkeys == MK_CONTROL)
+	{
+		CLyricShowObj::OnMouseWheel(nWheelDistance, nMkeys, pt);
+		return;
+	}
+
 	if (m_pObjScrollBar)
 		m_pObjScrollBar->OnMouseWheel(nWheelDistance, nMkeys, pt);
 	else
@@ -270,6 +250,8 @@ void CLyricShowTxtObj::OnCreate()
 	ASSERT(m_pObjScrollBar);
 	if (!m_pObjScrollBar)
 		return;
+
+	m_pObjScrollBar->SetProperty(_T("LinesPerWheel"), _T("1"));
 
 	TCHAR		szTemp[MAX_PATH];
 
@@ -311,16 +293,12 @@ void CLyricShowTxtObj::OnSize(int cx, int cy)
 
 BOOL CLyricShowTxtObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
-	if (CLyricShowObj::SetProperty(szProperty, szValue))
+	if (IsPropertyName(szProperty, _T("MarginY")))
 	{
-		if (_tcsicmp(szProperty, _T("FocusLineBgColor")) == 0)
-		{
-			m_brCurRow.Destroy();
-			m_brCurRow.CreateSolidBrush(m_clrFocusLineBg);
-		}
+		m_nYMargin = _ttoi(szValue);
 	}
 	else
-		return FALSE;
+		return CLyricShowObj::SetProperty(szProperty, szValue);
 
 	return TRUE;
 }

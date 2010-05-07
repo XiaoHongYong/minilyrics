@@ -175,6 +175,8 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_rootConainter.m_pSkin = this;
 	m_pUIObjCapMouse = NULL;
 
+	m_pUIObjHandleContextMenuCmd = NULL;
+
 	m_bUseRgn = FALSE;
 
 	m_rcBoundBox.SetRect(0, 0, 400, 350);
@@ -333,6 +335,8 @@ void CSkinWnd::CloseSkin()
 		KillTimer((*it).first);
 	}
 	m_mapTimerObjs.clear();
+
+	m_pUIObjHandleContextMenuCmd = NULL;
 
 	m_pUIObjCapMouse = NULL;
 	m_itFocusUIObject.End();
@@ -701,6 +705,17 @@ void CSkinWnd::OnKeyUp(UINT nChar, UINT nFlags)
 
 void CSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 {
+	if (m_pUIObjHandleContextMenuCmd)
+	{
+		// Only handle 1 command.
+		if (m_pUIObjHandleContextMenuCmd->OnCommand(uID))
+		{
+			m_pUIObjHandleContextMenuCmd = NULL;
+			return;
+		}
+		m_pUIObjHandleContextMenuCmd = NULL;
+	}
+
 	int	nUID = m_pSkinFactory->GetUIDByMenuID(uID);
 	if (nUID != UID_INVALID)
 		OnCustomCommand(nUID);

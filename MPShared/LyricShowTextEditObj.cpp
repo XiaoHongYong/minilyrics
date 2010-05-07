@@ -220,7 +220,7 @@ void CLyricShowTextEditObj::OnEvent(const IEvent *pEvent)
 	else if (pEvent->eventType == ET_LYRICS_EDITOR_CMD)
 	{
 		CEventLyricsEditorCmd	*pCmdEvent = (CEventLyricsEditorCmd *)pEvent;
-		OnCommand(pCmdEvent->cmd, 0);
+		OnUIDCommand(pCmdEvent->cmd);
 	}
 	else if (pEvent->eventType == m_etDispSettings)
 	{
@@ -246,7 +246,7 @@ void CLyricShowTextEditObj::OnEvent(const IEvent *pEvent)
 		CLyricShowObj::OnEvent(pEvent);
 }
 
-BOOL CLyricShowTextEditObj::OnCommand(DWORD dwCmdID, LPARAM lParam)
+BOOL CLyricShowTextEditObj::OnUIDCommand(DWORD dwCmdID)
 {
 	switch (dwCmdID)
 	{

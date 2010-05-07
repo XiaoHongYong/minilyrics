@@ -45,7 +45,7 @@ public:
 
 	virtual void OnEvent(const IEvent *pEvent);
 
-	virtual BOOL OnCommand(DWORD dwCmdID, LPARAM lParam);
+	virtual BOOL OnUIDCommand(DWORD dwCmdID);
 
 	virtual bool OnRButtonUp(UINT nFlags, CPoint point);
 

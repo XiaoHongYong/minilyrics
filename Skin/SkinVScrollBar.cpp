@@ -33,6 +33,7 @@ CSkinSrollBarBase::CSkinSrollBarBase()
 	m_PushDownPos = PUSH_DOWN_NONE;
 	m_CursorPosLatest = PUSH_DOWN_NONE;
 
+	m_nLinesPerWheel = 3;
 }
 
 CSkinSrollBarBase::~CSkinSrollBarBase()
@@ -318,7 +319,7 @@ void CSkinSrollBarBase::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 
 		nVirtualPosOld = m_nVirtualCurPos;
 
-		m_nVirtualCurPos -= m_nVirtualLine * (nWheelDistance / WHEEL_DELTA) * 3;
+		m_nVirtualCurPos -= m_nVirtualLine * (nWheelDistance / WHEEL_DELTA) * m_nLinesPerWheel;
 		if (m_nVirtualCurPos < m_nVirtualMin)
 			m_nVirtualCurPos = m_nVirtualMin;
 		else if (m_nVirtualCurPos > m_nVirtualMax)
@@ -738,6 +739,8 @@ BOOL CSkinVScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_nHeightTrack = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, _T("ScrollBarWidth")) == 0)
 		m_nSBWidth = _ttoi(szValue);
+	else if (_tcsicmp(szProperty, _T("LinesPerWheel")) == 0)
+		m_nLinesPerWheel = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_IMAGE) == 0)
 	{
 		// ͼƬ
@@ -1044,6 +1047,8 @@ BOOL CSkinHScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_nWidthTrack = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, _T("ScrollBarHeight")) == 0)
 		m_nSBHeight = _ttoi(szValue);
+	else if (_tcsicmp(szProperty, _T("LinesPerWheel")) == 0)
+		m_nLinesPerWheel = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_IMAGE) == 0)
 	{
 		// ͼƬ

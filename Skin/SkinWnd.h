@@ -148,6 +148,8 @@ public:
 	void UnregisterTimerObject(CUIObject *pObj, int nTimerId);
 	int RegisterTimerObject(CUIObject *pObj, int nTimeDuration);
 
+	void RegisterHandleContextMenuCmd(CUIObject *pObj) { m_pUIObjHandleContextMenuCmd = pObj; }
+
 	int AllocAutoUniID() { return ++m_nNextAuoUniID; }
 
 	int AllocUIObjID() { return ++m_nNextUIObjIDAlloc; }
@@ -478,6 +480,9 @@ protected:
 
 	// only one ui object can capture the mouse at any time
 	CUIObject		*m_pUIObjCapMouse;
+
+	// The UIObject registered to handle context menu command.
+	CUIObject		*m_pUIObjHandleContextMenuCmd;
 
 	// auto allocated uni-ID
 	int				m_nNextAuoUniID;

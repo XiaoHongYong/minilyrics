@@ -102,9 +102,10 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 		return NULL;
 
 	nWidth = size.cx + MARGIN_BITMAP * 2;
+	int nHeightBitmap = GetHeightBitmap();
 
 	pRowSrc = bufGraph.row_ptr(0);
-	for (y = 0; y < GetHeightBitmap(); y++)
+	for (y = 0; y < nHeightBitmap; y++)
 	{
 		memset(pRowSrc, 0, bufGraph.stride_abs());
 		pRowSrc += bufGraph.stride();
@@ -117,11 +118,11 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 	glyph->ch = ch;
 	glyph->nWidth = (int16)size.cx;
 	glyph->nWidthBitmap = nWidth;
-	glyph->bitmap = new byte[glyph->WidthBytes() * GetHeightBitmap()];
+	glyph->bitmap = new byte[glyph->WidthBytes() * nHeightBitmap];
 
 	pRowSrc = bufGraph.row_ptr(0);
 	pRowDst = glyph->bitmap;
-	for (y = 0; y < GetHeightBitmap(); y++)
+	for (y = 0; y < nHeightBitmap; y++)
 	{
 		pDst = pRowDst;
 		pSrc = pRowSrc;
