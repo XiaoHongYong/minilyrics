@@ -10,20 +10,13 @@
 #include "MPlayerApp.h"
 #include "LyricShowTxtObj.h"
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
-// set classname
-LPCTSTR CLyricShowTxtObj::ms_szClassName = _T("LyricShowTxt");
+UIOBJECT_CLASS_NAME_IMP(CLyricShowTxtObj, _T("LyricShowTxt"))
 
 CLyricShowTxtObj::CLyricShowTxtObj()
 {
-	m_nRowCur = 0;
+	m_nFirstVisibleLine = 0;
 
 	m_nMsgWant |= UO_MSG_WANT_MOUSEWHEEL;
-
-	m_nCurRowOld = -1;
 
 	m_nDarkenTopArea = float(0.5);
 	m_nDarkenBottomArea = float(0.5);
@@ -38,80 +31,67 @@ CLyricShowTxtObj::~CLyricShowTxtObj()
 		m_pSkin->RemoveUIObject(m_pObjScrollBar, true);
 }
 
-void CLyricShowTxtObj::Invalidate()
-{
-	// m_nRowCur = 0;
-	m_nCurRowOld = -1;
-	CLyricShowObj::Invalidate();
-}
-
 void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
 {
 	BOOL	bProcessed = FALSE;
 	int		nRowOld;
 
-	nRowOld = m_nRowCur;
+	nRowOld = m_nFirstVisibleLine;
 
 	switch (nChar)
 	{
 	case VK_UP:
 		// 跳到前一行歌词
-		m_nRowCur--;
-		if (m_nRowCur < 0)
-			m_nRowCur = 0;
+		m_nFirstVisibleLine--;
+		if (m_nFirstVisibleLine < 0)
+			m_nFirstVisibleLine = 0;
 		bProcessed = TRUE;
 		break;
 	case VK_DOWN:
-		m_nRowCur++;
-		if (m_nRowCur >= (int)m_lyrLines.size())
-			m_nRowCur = m_lyrLines.size() - 1;
+		m_nFirstVisibleLine++;
+		if (m_nFirstVisibleLine + GetLinesPerPage() > (int)m_lyrLines.size())
+			m_nFirstVisibleLine--;
 		bProcessed = TRUE;
 		break;
 	case VK_HOME:
-		m_nRowCur = 0;
+		m_nFirstVisibleLine = 0;
 		bProcessed = TRUE;
 		break;
 	case VK_END:
-		m_nRowCur = m_lyrLines.size() - 1;
+		m_nFirstVisibleLine = m_lyrLines.size() - GetLinesPerPage();
 		bProcessed = TRUE;
 		break;
 	case VK_PRIOR:
-		if (m_pScrollBar)
-		{
-			m_nRowCur -= m_pScrollBar->GetPage() - 1;
-			if (m_nRowCur < 0)
-				m_nRowCur = 0;
-		}
+		m_nFirstVisibleLine -= GetLinesPerPage() - 1;
 		bProcessed = TRUE;
 		break;
 	case VK_NEXT:
-		if (m_pScrollBar)
+		m_nFirstVisibleLine += GetLinesPerPage() - 1;
+		if (m_nFirstVisibleLine + GetLinesPerPage() >= (int)m_lyrLines.size())
 		{
-			m_nRowCur += m_pScrollBar->GetPage() - 1;
-			if (m_nRowCur >= (int)m_lyrLines.size())
-				m_nRowCur = m_lyrLines.size() - 1;
+			m_nFirstVisibleLine = m_lyrLines.size() - GetLinesPerPage();
 		}
 		bProcessed = TRUE;
 		break;
 	}
 
-	if (!bProcessed)
+	if (bProcessed)
+	{
+		if (m_nFirstVisibleLine < 0)
+			m_nFirstVisibleLine = 0;
+	}
+	else
 	{
 		CLyricShowObj::OnKeyDown(nChar, nFlags);
 		bProcessed = TRUE;
 	}
 
-	if (nRowOld != m_nRowCur)
+	if (nRowOld != m_nFirstVisibleLine)
 	{
 		if (m_pScrollBar)
-			m_pScrollBar->SetScrollPos(m_nRowCur);
+			m_pScrollBar->SetScrollPos(m_nFirstVisibleLine);
 		Invalidate();
 	}
-}
-
-LPCTSTR CLyricShowTxtObj::GetClassName()
-{
-	return ms_szClassName;
 }
 
 void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
@@ -136,16 +116,13 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 		return;
 	}
 
-	if (m_nRowCur >= (int)m_lyrLines.size() || m_nRowCur < 0)
-		m_nRowCur = 0;
+	if (m_nFirstVisibleLine >= (int)m_lyrLines.size() || m_nFirstVisibleLine < 0)
+		m_nFirstVisibleLine = 0;
 
-	pLyricRow = m_lyrLines[m_nRowCur];
+	pLyricRow = m_lyrLines[m_nFirstVisibleLine];
 
 	// 行高
 	nRowHeight = GetLineHeight();
-
-	if (m_nRowCur == m_nCurRowOld)
-		return;
 
 	// clear background
 	UpdateLyricDrawBufferBackground(pGraphics, m_rcObj);
@@ -165,7 +142,7 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 	CDispOptRecover		dispOptRecover(this);
 	m_LyricsDisplayOpt = DO_NORMAL;
 
-	for (int i = m_nRowCur, y = m_rcObj.top + m_nYMargin;
+	for (int i = m_nFirstVisibleLine, y = m_rcObj.top + m_nYMargin;
 		i < (int)m_lyrLines.size() && y < m_rcObj.bottom - m_nYMargin; i++, y += nRowHeight)
 	{
 		DrawRow(pGraphics, m_lyrLines[i], AUTO_CAL_X, y, LP_CUR_LINE);
@@ -176,7 +153,7 @@ void CLyricShowTxtObj::OnLyricsChanged()
 {
 	CLyricShowObj::OnLyricsChanged();
 
-	m_nRowCur = 0;
+	m_nFirstVisibleLine = 0;
 
 	SetScrollInfo();
 }
@@ -192,20 +169,11 @@ void CLyricShowTxtObj::SetScrollInfo()
 {
 	if (m_pScrollBar)
 	{
-		if (m_nRowCur < 0 || m_nRowCur >= m_lyrLines.size())
-			m_nRowCur = 0;
+		if (m_nFirstVisibleLine < 0 || m_nFirstVisibleLine >= m_lyrLines.size())
+			m_nFirstVisibleLine = 0;
 
-		int				nPage = (m_rcObj.Height() - m_nYMargin * 2) / GetLineHeight();
-		m_pScrollBar->SetScrollInfo(0, m_lyrLines.size(), nPage, m_nRowCur);
+		m_pScrollBar->SetScrollInfo(0, m_lyrLines.size(), GetLinesPerPage(), m_nFirstVisibleLine);
 	}
-}
-
-BOOL CLyricShowTxtObj::IsKindOf(LPCTSTR szClassName)
-{
-	if (CLyricShowObj::IsKindOf(szClassName))
-		return TRUE;
-
-	return _tcsicmp(szClassName, ms_szClassName) == 0;
 }
 
 void CLyricShowTxtObj::OnPlayTimeChangedUpdate()
@@ -215,10 +183,10 @@ void CLyricShowTxtObj::OnPlayTimeChangedUpdate()
 
 void CLyricShowTxtObj::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 {
-	m_nRowCur = pScrollBar->GetScrollPos();
+	m_nFirstVisibleLine = pScrollBar->GetScrollPos();
 
-	if (m_nRowCur >= (int)m_lyrLines.size())
-		m_nRowCur = m_lyrLines.size() - 1;
+	if (m_nFirstVisibleLine >= (int)m_lyrLines.size())
+		m_nFirstVisibleLine = m_lyrLines.size() - 1;
 
 	Invalidate();
 }
@@ -301,4 +269,9 @@ BOOL CLyricShowTxtObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		return CLyricShowObj::SetProperty(szProperty, szValue);
 
 	return TRUE;
+}
+
+int CLyricShowTxtObj::GetLinesPerPage()
+{
+	return (m_rcObj.Height() - m_nYMargin * 2) / GetLineHeight();
 }

@@ -17,14 +17,12 @@
 
 class CLyricShowTxtObj : public CLyricShowObj, IScrollNotify
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CLyricShowObj)
 public:
-	void Invalidate();
-
 	CLyricShowTxtObj();
 	virtual ~CLyricShowTxtObj();
 
 public:
-	LPCTSTR GetClassName();
 	void OnKeyDown(UINT nChar, UINT nFlags);
 	void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 	void OnLyricsChanged();
@@ -35,19 +33,7 @@ public:
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }
 
-protected:
-	IScrollBar				*m_pScrollBar;
-	CUIObject				*m_pObjScrollBar;
-
-	int						m_nRowCur;			// 当前歌词行
-
-	int						m_nCurRowOld;		// 上一次显示的当前行歌词
-
-public:
 	void OnPlayTimeChangedUpdate();
-
-	static LPCTSTR ClassName() { return ms_szClassName; }
-	BOOL IsKindOf(LPCTSTR szClassName);
 
 protected:
 	void OnLyrDrawContextChanged();
@@ -58,9 +44,16 @@ protected:
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 
-protected:
+	int GetLinesPerPage();
 
-	static LPCTSTR		ms_szClassName;
+protected:
+	IScrollBar				*m_pScrollBar;
+	CUIObject				*m_pObjScrollBar;
+
+	int						m_nFirstVisibleLine;			// 当前歌词行
+
+	bool					m_bInScrolling;
+	bool					m_bEnableAutoScroll;
 
 };
 
