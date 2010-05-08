@@ -215,47 +215,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 // 	}
 }
 
-void CLyricShowMultiRowObj::FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdate)
-{
-	if (prcUpdate)
-	{
-		prcUpdate->left = prcUpdate->top = prcUpdate->right = prcUpdate->bottom = 0;
-		return;
-	}
-
-	UpdateLyricDrawBufferBackground(pGraph, m_rcObj);
-
-	pGraph->SetFont(&m_font);
-
-	int		nLineHeight = GetLineHeight();
-	int		y = (m_rcObj.top + m_rcObj.bottom) / 2 - m_lyrLines.size() * nLineHeight / 2;
-	int		x;
-
-	if (m_lyrLines.size() > 1)
-		x = m_rcObj.left + m_nXMargin;
-	else
-		x = AUTO_CAL_X;
-
-	if (y < m_rcObj.top + m_nYMargin)
-		y = m_rcObj.top + m_nYMargin;
-
-	CRect	rcClip;
-
-	rcClip.SetRect(m_rcObj.left + m_nXMargin, 
-		m_rcObj.top + m_nYMargin,
-		m_rcObj.right - m_nXMargin,
-		m_rcObj.bottom - m_nYMargin);
-
-	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
-	pGraph->SetClipBoundBox(rcClip);
-
-	for (size_t i = 0; i < m_lyrLines.size(); i++)
-	{
-		DrawRow(pGraph, m_lyrLines[i], x, y, LP_CUR_LINE);
-		y += nLineHeight;
-	}
-}
-
 void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine)
 {
 	int			nRowHeight = GetLineHeight();

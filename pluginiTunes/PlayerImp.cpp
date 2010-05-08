@@ -10,6 +10,14 @@ CPlayerImp		g_Player;
 //
 HANDLE			g_hThread = NULL;
 DWORD			g_dwThreadID = 0;
+WNDPROC			g_pOrgiTunesProc = NULL;
+
+LRESULT CALLBACK HookiTunesWnd(
+							   HWND hwnd,      // handle to window
+							   UINT uMsg,      // message identifier
+							   WPARAM wParam,  // first message parameter
+							   LPARAM lParam   // second message parameter
+							   );
 
 DWORD WINAPI ThreadML(LPVOID lpParam)
 {
@@ -112,6 +120,8 @@ public:
 	{
 		TIMER_QUERYITUNES		= TIMER_NEXT + 1,
 		WM_SONG_CHANGED			= WM_USER + 1,
+		WM_U_ACTIVATEAPP		= WM_USER + 2,
+		WM_U_MIN_MAX			= WM_USER + 3
 	};
 
 	void OnCreate()
@@ -141,7 +151,21 @@ public:
 		{
 			g_hwndPlayer = FindWindow("iTunes", "iTunes");
 			if (g_hwndPlayer)
-				KillTimer(m_hWnd, TIMER_QUERYITUNES);
+			{
+				if (FindWindowEx(g_hwndPlayer, NULL, NULL, NULL) == NULL)
+				{
+					// No Child window, it is NOT iTunes' Window, try another one.
+					g_hwndPlayer = FindWindowEx(NULL, g_hwndPlayer, "iTunes", "iTunes");
+				}
+				if (g_hwndPlayer)
+				{
+					KillTimer(m_hWnd, TIMER_QUERYITUNES);
+
+					// Hook iTunes Window
+					if (g_pOrgiTunesProc == NULL)
+						g_pOrgiTunesProc = (WNDPROC)SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)HookiTunesWnd);
+				}
+			}
 		}
 	}
 
@@ -217,15 +241,58 @@ public:
 			OnMediaChanged(pTrackInfo);
 
 			delete pTrackInfo;
-			return 1;
+		}
+		else if (uMsg == WM_U_ACTIVATEAPP)
+		{
+			g_MLService.OnNotifyPlayerActivate(wParam);
+		}
+		else if (uMsg == WM_U_MIN_MAX)
+		{
+			g_MLService.OnNotifyPlayerMinRestore(wParam);
 		}
 		else
 			return CPlayerInfoQueryBaseWnd::WndProc(uMsg, wParam, lParam);
+		return 1;
 	}
 
 };
 
 CPlayerInfoQueryWnd	g_wndInfoQuery;
+
+LRESULT CALLBACK HookiTunesWnd(
+							   HWND hwnd,      // handle to window
+							   UINT uMsg,      // message identifier
+							   WPARAM wParam,  // first message parameter
+							   LPARAM lParam   // second message parameter
+							   )
+{
+	if (!g_Player.m_bWorking)
+		return CallWindowProc(g_pOrgiTunesProc, hwnd, uMsg, wParam, lParam);
+
+	switch(uMsg) 
+	{
+	case WM_DESTROY:
+		{
+			// g_MLService.Quit will set g_pOrgiTunesProc to NULL, so save g_pOrgProc.
+			WNDPROC pOrigProc = g_pOrgiTunesProc;
+			g_MLService.Quit();
+			return CallWindowProc(pOrigProc, hwnd, uMsg, wParam, lParam); 
+		}
+		break;
+	case WM_ACTIVATEAPP:
+		::PostMessage(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryWnd::WM_U_ACTIVATEAPP, wParam, lParam);
+		break;
+	case WM_SIZE:
+		if (wParam == SIZE_MINIMIZED || wParam == SIZE_RESTORED)
+			::PostMessage(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryWnd::WM_U_MIN_MAX, wParam, lParam);
+		break;
+	default:
+		break;
+	};
+
+	// Call Winamp Window Proc
+	return CallWindowProc(g_pOrgiTunesProc, hwnd, uMsg, wParam, lParam); 
+}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -266,6 +333,7 @@ CPlayerImp::CPlayerImp()
 {
 	m_dwPos = 0;
 	m_dwBegTickCount = 0;
+	m_bWorking = false;
 
 	m_hWndiTunesVisual = NULL;
 	m_rciTunesVisual.left = m_rciTunesVisual.top = m_rciTunesVisual.right = m_rciTunesVisual.bottom = -1;
@@ -373,6 +441,8 @@ BOOL CPlayerImp::SeekTo(int nMsPos)
 
 BOOL CPlayerImp::Init()
 {
+	m_bWorking = true;
+
 	g_MLService.AddWndCloseto(NULL, "iTunes", "iTunes");
 
 	g_wndInfoQuery.Create(g_hInstance);
@@ -382,7 +452,8 @@ BOOL CPlayerImp::Init()
 
 void CPlayerImp::Quit()
 {
-//	g_wndInfoQuery.Destroy();
+	m_bWorking = false;
+	g_wndInfoQuery.Destroy();
 }
 
 int CPlayerImp::HasVideo()

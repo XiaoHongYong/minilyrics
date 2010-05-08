@@ -52,6 +52,7 @@ public:
 
 public:
 	DWORD			m_dwPos;
+	bool			m_bWorking;
 
 	PLAYER_STATE	m_bPlayerState;
 	DWORD			m_dwBegTickCount;

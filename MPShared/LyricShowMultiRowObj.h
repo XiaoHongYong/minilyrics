@@ -30,8 +30,6 @@ public:
 	void Resume();
 
 protected:
-	void FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdate = NULL);
-
 	void FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine);
 	void FastestDraw_GetUpdateRectOfNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y);
 

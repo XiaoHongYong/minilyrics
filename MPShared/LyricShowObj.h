@@ -190,6 +190,8 @@ protected:
 	int GetLyricRowAlignPos(CRawGraph	*pGraphics, PML_ROW pLyricRow);
 	int GetLyricRowTextWidth(CRawGraph	*pGraphics, PML_ROW pLyricRow);
 
+	void FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdate = NULL);
+
 	bool DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y, LinePos linePos = LP_ABOVE_CUR_LINE);
 	void DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y, MLColor &clrTxt, MLColor &clrTxtBorder);
 

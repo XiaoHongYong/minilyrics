@@ -109,6 +109,12 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 		return;
 	}
 
+	if (!m_pMLData->HasLyricsOpened())
+	{
+		FastDrawMediaInfo(pGraphics, prcUpdate);
+		return;
+	}
+
 	if (prcUpdate)
 		*prcUpdate = m_rcObj;
 
@@ -193,6 +199,24 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 void CLyricShowTxtObj::OnLyricsChanged()
 {
 	CLyricShowObj::OnLyricsChanged();
+
+	if (m_lyrLines.size() > 0 && m_lyrLines[0]->vFrags.size() > 0)
+	{
+		// Insert an empty line of lyrics
+		if (m_lyrLines[0]->vFrags[0]->nLen > 0)
+		{
+			PML_ROW pRow = g_LyricData.NewMLRow(0, 
+				0, 
+				_T(""), -1,
+				ML_ROW_LYRICS);
+
+			PLYRIC_FRAG pFrag = g_LyricData.NewLyricFrag(0, 0, _T(""), 0, false, false, 0);
+			pFrag->nDrawWidth = 0;
+			pRow->vFrags.push_back(pFrag);
+
+			m_lyrLines.insert(m_lyrLines.begin(), pRow);
+		}
+	}
 
 	m_nFirstVisibleLine = 0;
 	m_nFirstVisibleLineNew = 0;
