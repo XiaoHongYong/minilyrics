@@ -124,7 +124,7 @@ int CSkinListCtrlEx::InsertItem(int nItem, LPCTSTR lpszItem, const LC_ITEMEX::Ve
 {
 	int	n = CSkinListCtrl::InsertItem(nItem, lpszItem, nImageIndex, nItemData, false);
 
-	if (n >= 0 && n < m_vRows.size())
+	if (n >= 0 && n < (int)m_vRows.size())
 	{
 		LC_ITEMEX		*item = (LC_ITEMEX *)(m_vRows[n]->listItems.front());
 		item->vTextColor = vTextColor;

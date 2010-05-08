@@ -235,7 +235,7 @@ void CLyricShowTxtObj::SetScrollInfo()
 {
 	if (m_pScrollBar)
 	{
-		if (m_nFirstVisibleLine < 0 || m_nFirstVisibleLine >= m_lyrLines.size())
+		if (m_nFirstVisibleLine < 0 || m_nFirstVisibleLine >= (int)m_lyrLines.size())
 			m_nFirstVisibleLine = 0;
 
 		m_pScrollBar->SetScrollInfo(0, m_lyrLines.size(), GetLinesPerPage(), m_nFirstVisibleLine);

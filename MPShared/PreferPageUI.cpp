@@ -97,7 +97,7 @@ public:
 		// 选择了一个语言包, 则立即切换到该语言
 		//
 		if (nId >= _CMD_ID_LANGUANG_BEGIN && 
-			nId < _CMD_ID_LANGUANG_BEGIN + m_vTransFiles.size())
+			nId < _CMD_ID_LANGUANG_BEGIN + (int)m_vTransFiles.size())
 		{
 			TCHAR	szLanFileName[MAX_PATH] = _T("");
 
