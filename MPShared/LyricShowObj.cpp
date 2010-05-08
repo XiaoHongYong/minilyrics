@@ -1383,6 +1383,35 @@ void CLyricShowObj::DrawCurrentRow(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		DrawRow(pGraphics, pLyricRow, x, y, LP_CUR_LINE);
 }
 
+void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos, int yDrawLyrEndPos)
+{
+#ifdef _WIN32_DESKTOP
+	if ((!m_pSkin->IsBgImageUsed() && !m_img.IsValid()) || m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+	{
+		CRect	rc;
+
+		rc.SetRect(m_rcObj.left, m_rcObj.top + m_nYMargin, m_rcObj.right, m_rcObj.top - m_nYMargin + m_nFontHeight);
+		if (rc.bottom > yDrawLyrStartPos)
+		{
+			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+				pGraphics->VertAlphaFadeOut(&rc, true);
+			else
+				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), true);
+		}
+
+		rc.bottom = m_rcObj.bottom;
+		rc.top = m_rcObj.bottom - m_nFontHeight;
+		if (rc.top < yDrawLyrEndPos)
+		{
+			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+				pGraphics->VertAlphaFadeOut(&rc, false);
+			else
+				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), false);
+		}
+	}
+#endif
+}
+
 // COMMENT:
 //		根据当前的 Graphics 环境，取得歌词pLyricRow行的宽度
 int CLyricShowObj::GetLyricRowTextWidth(CRawGraph	*pGraphics, PML_ROW pLyricRow)

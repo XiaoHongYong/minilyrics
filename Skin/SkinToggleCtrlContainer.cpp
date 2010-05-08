@@ -51,8 +51,10 @@ void CSkinToggleCtrlContainer::InvalidateUIObject(CUIObject *pObj)
 
 void CSkinToggleCtrlContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pObjCallUpdate)
 {
-	InvalidateUIObject(this);
-	return;
+	if (m_nIDTimerAnimation != 0)
+		InvalidateUIObject(this);
+	else
+		CSkinContainer::UpdateMemGraphicsToScreen(lpRect, pObjCallUpdate);
 }
 
 void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)

@@ -30,6 +30,8 @@ public:
 	void OnCreate();
 	void OnSize(int cx, int cy);
 
+	void OnTimer(int nId);
+
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }
 
@@ -46,13 +48,20 @@ protected:
 
 	int GetLinesPerPage();
 
+	void StartScrollAnimation(int nFirstVisibleLineNew);
+
 protected:
 	IScrollBar				*m_pScrollBar;
 	CUIObject				*m_pObjScrollBar;
 
-	int						m_nFirstVisibleLine;			// µ±Ç°¸è´ÊÐÐ
+	int						m_nFirstVisibleLine;
 
 	bool					m_bInScrolling;
+	int						m_nFirstVisibleLineNew;
+	int						m_yFirstVisibleLineLatest, m_nFirstVisibleLineLatest;
+	int						m_yOffsetScroll;
+	uint32					m_nBeginScrollTime;
+
 	bool					m_bEnableAutoScroll;
 
 };

@@ -55,7 +55,7 @@
     </Toolbar>
 
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
-      <Container Name="Lyrics" ID="CID_LYRICS" Rect="0,0,w,h">
+      <DecorativeContainer Name="Lyrics" ID="CID_LYRICS" Rect="0,0,w,h">
         <LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" EnableToolbar="FALSE" MarginY="26" 
             FontHeight="20" EnableAutoResize="FALSE"/>
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
@@ -113,7 +113,7 @@
                     Rect="w/2+30,h/2-6,100,12" EndWidth="3" ImageThumb="seek_thumb.png"
                     ImageTrack="seek_track.png"/>
         </Container>
-      </Container>
+      </DecorativeContainer>
       <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" Visible="false"/>
     </ToggleCtrlContainer>
 

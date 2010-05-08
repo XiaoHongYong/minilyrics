@@ -197,6 +197,8 @@ protected:
 
 	void DrawCurrentRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y);
 
+	void FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos, int yDrawLyrEndPos);
+
 	void LoadBgImageFolder();
 
 	void LoadNextBgImage();

@@ -10,6 +10,9 @@
 #include "MPlayerApp.h"
 #include "LyricShowTxtObj.h"
 
+#define SCROLL_ANIMATION_DURATION	500
+#define SCROLL_ANIMATION_TIMEOUT	50
+
 UIOBJECT_CLASS_NAME_IMP(CLyricShowTxtObj, _T("LyricShowTxt"))
 
 CLyricShowTxtObj::CLyricShowTxtObj()
@@ -23,6 +26,11 @@ CLyricShowTxtObj::CLyricShowTxtObj()
 
 	m_pScrollBar = NULL;
 	m_pObjScrollBar = NULL;
+
+	m_bInScrolling = false;
+	m_nFirstVisibleLineNew = 0;
+	m_yFirstVisibleLineLatest = 0, m_nFirstVisibleLineLatest = 0;
+	m_nBeginScrollTime = 0;
 }
 
 CLyricShowTxtObj::~CLyricShowTxtObj()
@@ -34,42 +42,40 @@ CLyricShowTxtObj::~CLyricShowTxtObj()
 void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
 {
 	BOOL	bProcessed = FALSE;
-	int		nRowOld;
-
-	nRowOld = m_nFirstVisibleLine;
+	int		nFirstVisibleLineNew = m_nFirstVisibleLineNew;
 
 	switch (nChar)
 	{
 	case VK_UP:
 		// 跳到前一行歌词
-		m_nFirstVisibleLine--;
-		if (m_nFirstVisibleLine < 0)
-			m_nFirstVisibleLine = 0;
+		nFirstVisibleLineNew--;
+		if (nFirstVisibleLineNew < 0)
+			nFirstVisibleLineNew = 0;
 		bProcessed = TRUE;
 		break;
 	case VK_DOWN:
-		m_nFirstVisibleLine++;
-		if (m_nFirstVisibleLine + GetLinesPerPage() > (int)m_lyrLines.size())
-			m_nFirstVisibleLine--;
+		nFirstVisibleLineNew++;
+		if (nFirstVisibleLineNew + GetLinesPerPage() > (int)m_lyrLines.size())
+			nFirstVisibleLineNew--;
 		bProcessed = TRUE;
 		break;
 	case VK_HOME:
-		m_nFirstVisibleLine = 0;
+		nFirstVisibleLineNew = 0;
 		bProcessed = TRUE;
 		break;
 	case VK_END:
-		m_nFirstVisibleLine = m_lyrLines.size() - GetLinesPerPage();
+		nFirstVisibleLineNew = m_lyrLines.size() - GetLinesPerPage();
 		bProcessed = TRUE;
 		break;
 	case VK_PRIOR:
-		m_nFirstVisibleLine -= GetLinesPerPage() - 1;
+		nFirstVisibleLineNew -= GetLinesPerPage() - 1;
 		bProcessed = TRUE;
 		break;
 	case VK_NEXT:
-		m_nFirstVisibleLine += GetLinesPerPage() - 1;
-		if (m_nFirstVisibleLine + GetLinesPerPage() >= (int)m_lyrLines.size())
+		nFirstVisibleLineNew += GetLinesPerPage() - 1;
+		if (nFirstVisibleLineNew + GetLinesPerPage() >= (int)m_lyrLines.size())
 		{
-			m_nFirstVisibleLine = m_lyrLines.size() - GetLinesPerPage();
+			nFirstVisibleLineNew = m_lyrLines.size() - GetLinesPerPage();
 		}
 		bProcessed = TRUE;
 		break;
@@ -77,38 +83,34 @@ void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
 
 	if (bProcessed)
 	{
-		if (m_nFirstVisibleLine < 0)
-			m_nFirstVisibleLine = 0;
+		if (nFirstVisibleLineNew < 0)
+			nFirstVisibleLineNew = 0;
+
+		if (nFirstVisibleLineNew != m_nFirstVisibleLine)
+		{
+			if (m_pScrollBar)
+				m_pScrollBar->SetScrollPos(nFirstVisibleLineNew);
+			StartScrollAnimation(nFirstVisibleLineNew);
+		}
 	}
 	else
 	{
 		CLyricShowObj::OnKeyDown(nChar, nFlags);
 		bProcessed = TRUE;
 	}
-
-	if (nRowOld != m_nFirstVisibleLine)
-	{
-		if (m_pScrollBar)
-			m_pScrollBar->SetScrollPos(m_nFirstVisibleLine);
-		Invalidate();
-	}
 }
 
 void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
 {
-	assert(m_pMLData);
-
-	PML_ROW	pLyricRow;
-	int		nRowHeight;
-
-	pGraphics->SetFont(&m_font);
-
-	if (prcUpdate)
+	if (prcUpdate && !m_bInScrolling)
 	{
-		// *prcUpdate = m_rcObj;
+		// Fast draw, don't update anything
 		prcUpdate->SetRect(0, 0, 0, 0);
 		return;
 	}
+
+	if (prcUpdate)
+		*prcUpdate = m_rcObj;
 
 	if (m_lyrLines.size() == 0)
 	{
@@ -116,13 +118,40 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 		return;
 	}
 
+	int		nLineHeight = GetLineHeight();
+	int		yFirstVisibleLine = m_rcObj.top + m_nYMargin;
+
+	if (m_bInScrolling)
+	{
+		uint32 nTimeCur = GetTickCount();
+		if (nTimeCur < m_nBeginScrollTime
+			|| (nTimeCur - m_nBeginScrollTime) >= SCROLL_ANIMATION_DURATION)
+		{
+			m_bInScrolling = false;
+			m_nFirstVisibleLine = m_nFirstVisibleLineNew;
+			m_pSkin->UnregisterTimerObject(this);
+		}
+		else
+		{
+			int	distance = (m_nFirstVisibleLine - m_nFirstVisibleLineNew) * nLineHeight
+				- m_yOffsetScroll;
+			yFirstVisibleLine = yFirstVisibleLine + m_yOffsetScroll + distance * (int)(nTimeCur - m_nBeginScrollTime) / SCROLL_ANIMATION_DURATION;
+			DBGLOG2(_T("yFirstVisibleLine: %d, yOffset: %d"), yFirstVisibleLine, m_yOffsetScroll);
+		}
+
+		if (prcUpdate
+			&& yFirstVisibleLine == m_yFirstVisibleLineLatest
+			&& m_nFirstVisibleLine == m_nFirstVisibleLineLatest)
+		{
+			prcUpdate->SetRectEmpty();
+			return;
+		}
+		m_nFirstVisibleLineLatest = m_nFirstVisibleLine;
+		m_yFirstVisibleLineLatest = yFirstVisibleLine;
+	}
+
 	if (m_nFirstVisibleLine >= (int)m_lyrLines.size() || m_nFirstVisibleLine < 0)
 		m_nFirstVisibleLine = 0;
-
-	pLyricRow = m_lyrLines[m_nFirstVisibleLine];
-
-	// 行高
-	nRowHeight = GetLineHeight();
 
 	// clear background
 	UpdateLyricDrawBufferBackground(pGraphics, m_rcObj);
@@ -137,16 +166,28 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 	pGraphics->SetClipBoundBox(rcClip);
 
-	// draw center row, the row lyric is current
-	// select Center font
 	CDispOptRecover		dispOptRecover(this);
 	m_LyricsDisplayOpt = DO_NORMAL;
 
-	for (int i = m_nFirstVisibleLine, y = m_rcObj.top + m_nYMargin;
-		i < (int)m_lyrLines.size() && y < m_rcObj.bottom - m_nYMargin; i++, y += nRowHeight)
+	pGraphics->SetFont(&m_font);
+
+	// Draw lines before m_nFirstVisibleLine
+	for (int i = m_nFirstVisibleLine - 1, y = yFirstVisibleLine;
+		i >= 0 && y > rcClip.top; i--)
 	{
+		y -= nLineHeight;
 		DrawRow(pGraphics, m_lyrLines[i], AUTO_CAL_X, y, LP_CUR_LINE);
 	}
+
+	// Draw lines from m_nFirstVisibleLine
+	for (int i = m_nFirstVisibleLine, y = yFirstVisibleLine;
+		i < (int)m_lyrLines.size() && y < rcClip.bottom; i++, y += nLineHeight)
+	{
+		if (y + nLineHeight > rcClip.top)
+			DrawRow(pGraphics, m_lyrLines[i], AUTO_CAL_X, y, LP_CUR_LINE);
+	}
+
+	FadeOutVertBorder(pGraphics, rcClip.top, rcClip.bottom);
 }
 
 void CLyricShowTxtObj::OnLyricsChanged()
@@ -154,6 +195,7 @@ void CLyricShowTxtObj::OnLyricsChanged()
 	CLyricShowObj::OnLyricsChanged();
 
 	m_nFirstVisibleLine = 0;
+	m_nFirstVisibleLineNew = 0;
 
 	SetScrollInfo();
 }
@@ -179,16 +221,17 @@ void CLyricShowTxtObj::SetScrollInfo()
 void CLyricShowTxtObj::OnPlayTimeChangedUpdate()
 {
 	// No need to update lyrics with time
+	if (!m_bInScrolling)
+		return;
+
+	CLyricShowObj::OnPlayTimeChangedUpdate();
 }
 
 void CLyricShowTxtObj::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 {
-	m_nFirstVisibleLine = pScrollBar->GetScrollPos();
-
-	if (m_nFirstVisibleLine >= (int)m_lyrLines.size())
-		m_nFirstVisibleLine = m_lyrLines.size() - 1;
-
-	Invalidate();
+	int nFirstVisibleLineNew = pScrollBar->GetScrollPos();
+	if (nFirstVisibleLineNew != m_nFirstVisibleLine)
+		StartScrollAnimation(nFirstVisibleLineNew);
 }
 
 void CLyricShowTxtObj::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
@@ -219,7 +262,7 @@ void CLyricShowTxtObj::OnCreate()
 	if (!m_pObjScrollBar)
 		return;
 
-	m_pObjScrollBar->SetProperty(_T("LinesPerWheel"), _T("1"));
+	m_pObjScrollBar->SetProperty(_T("LinesPerWheel"), _T("2"));
 
 	TCHAR		szTemp[MAX_PATH];
 
@@ -259,6 +302,11 @@ void CLyricShowTxtObj::OnSize(int cx, int cy)
 	SetScrollInfo();
 }
 
+void CLyricShowTxtObj::OnTimer(int nId)
+{
+	OnPlayTimeChangedUpdate();
+}
+
 BOOL CLyricShowTxtObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	if (IsPropertyName(szProperty, _T("MarginY")))
@@ -274,4 +322,20 @@ BOOL CLyricShowTxtObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 int CLyricShowTxtObj::GetLinesPerPage()
 {
 	return (m_rcObj.Height() - m_nYMargin * 2) / GetLineHeight();
+}
+
+void CLyricShowTxtObj::StartScrollAnimation(int nFirstVisibleLineNew)
+{
+	if (m_bInScrolling)
+	{
+		m_yOffsetScroll = m_yFirstVisibleLineLatest - (m_rcObj.top + m_nYMargin);
+	}
+	else
+		m_yOffsetScroll = 0;
+
+	m_nFirstVisibleLineNew = nFirstVisibleLineNew;
+	m_bInScrolling = true;
+	m_nBeginScrollTime = GetTickCount();
+
+	m_pSkin->RegisterTimerObject(this, SCROLL_ANIMATION_TIMEOUT);
 }

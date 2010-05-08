@@ -202,31 +202,7 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	}
 	yLyrEnd = y;
 
-#ifdef _WIN32_DESKTOP
-	if ((!m_pSkin->IsBgImageUsed() && !m_img.IsValid()) || m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-	{
-		CRect	rc;
-
-		rc.SetRect(m_rcObj.left, m_rcObj.top, m_rcObj.right, m_rcObj.top + m_nFontHeight);
-		if (rc.bottom > yLyrStart)
-		{
-			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-				pGraphics->VertAlphaFadeOut(&rc, true);
-			else
-				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), true);
-		}
-
-		rc.bottom = m_rcObj.bottom;
-		rc.top = m_rcObj.bottom - m_nFontHeight;
-		if (rc.top < yLyrEnd)
-		{
-			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-				pGraphics->VertAlphaFadeOut(&rc, false);
-			else
-				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), false);
-		}
-	}
-#endif
+	FadeOutVertBorder(pGraphics, yLyrStart, yLyrEnd);
 
 	// if (g_bSave)
 // 	{
