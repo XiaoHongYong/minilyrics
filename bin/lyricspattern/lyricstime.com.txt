@@ -5,8 +5,12 @@ Browse
 %%artist%% Lyrics %%e-n%%
 "%%val-artist%% %%title%% lyrics" %%e-n%%
 
+%%e-x%%
+
+Send "%%val-title%%" Ringtone to your Cell 
+
 %%lyrics%%
 
-Search :
+Send "%%val-title%%" Ringtone to your Cell 
 
 %%e-eof%%  

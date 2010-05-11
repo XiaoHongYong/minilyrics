@@ -45,3 +45,7 @@
 2, Ringtones to your Cell at
 2, &copy;
 2, Lyrics Terms of Use
+2, Customize : Arial
+2, E-Mail &IM :
+2, Websites &Blogs :
+2,  Forums :

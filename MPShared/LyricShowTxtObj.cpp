@@ -286,7 +286,7 @@ void CLyricShowTxtObj::OnCreate()
 	if (!m_pObjScrollBar)
 		return;
 
-	m_pObjScrollBar->SetProperty(_T("LinesPerWheel"), _T("2"));
+	m_pObjScrollBar->SetProperty(_T("LinesPerWheel"), _T("1"));
 
 	TCHAR		szTemp[MAX_PATH];
 
