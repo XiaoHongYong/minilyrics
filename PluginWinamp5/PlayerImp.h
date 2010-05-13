@@ -55,6 +55,8 @@ public:
 
 	BOOL IsWinamp5();
 
+	DWORD GetStartupFlags();
+
 public:
 	DWORD			m_dwPlayerVer;
 	HWND			m_hwndPluginParent;

@@ -10,6 +10,55 @@
 
 #include "wa_wrap.h"
 
+
+UINT Get_WMCOMMAND_Id(UINT fallback)
+{
+	DWORD	dwVersion = 0;
+
+	WAGetVersion(g_hwndPlayer, dwVersion);
+
+	if (dwVersion >= 0x5010)
+	{
+		return SendMessage(g_hwndPlayer, WM_WA_IPC, 0, IPC_REGISTER_LOWORD_COMMAND);
+	}
+
+	return fallback;
+
+}
+
+static UINT nIDMenuMLItem = 27562;
+
+void AddRemoveMLMenuInWinamp(bool bAdd)
+{
+	static bool bGetMenuID = false;
+	if (!bGetMenuID)
+	{
+		bGetMenuID = true;
+		nIDMenuMLItem = Get_WMCOMMAND_Id(nIDMenuMLItem);
+	}
+
+	HMENU main_menu = (HMENU)SendMessage(g_hwndPlayer, WM_WA_IPC, 0, IPC_GET_HMENU);
+	if (!main_menu)
+		return;
+
+	if (bAdd)
+	{
+		int prior_item = GetMenuItemID(main_menu, 9);
+		if (prior_item <= 0)
+			prior_item = GetMenuItemID(main_menu, 8);
+
+		// now add the menu item using prior_item as the item to instert after
+		InsertMenu(main_menu, prior_item, MF_BYCOMMAND, nIDMenuMLItem, "MiniLyrics");
+	}
+	else
+	{
+		DeleteMenu(main_menu, nIDMenuMLItem, MF_BYCOMMAND);
+	}
+
+	SendMessage(g_hwndPlayer, WM_WA_IPC, (bAdd ? 1 : -1), IPC_ADJUST_OPTIONSMENUPOS);
+}
+
+
 // #define IPC_GETPLAYLISTFILE 211
 BOOL WAGetPlayListFileW(HWND hwndWinamp, int index, LPWSTR &szFile)
 {
@@ -511,6 +560,8 @@ LRESULT CALLBACK ProcWAPluginParentHook(HWND hwnd, UINT msg, WPARAM wp, LPARAM l
 			SetWindowLong(hwnd, GWL_WNDPROC, (LONG)g_pOrgWaPluginWndProc);
 		}
 
+		AddRemoveMLMenuInWinamp(true);
+
 		g_Player.m_hwndPluginParent = NULL;
 	}
 
@@ -536,16 +587,11 @@ int init()
 		GetPrivateProfileString("MiniLyrics", "PlayerName", "", g_Player.m_szPlayerName, CountOf(g_Player.m_szPlayerName), szPlayerIni);
 	}
 
-	DWORD		dwStartupFlag;
-
 	WAGetVersion(g_hwndPlayer, g_Player.m_dwPlayerVer);
 
-	if (g_Player.IsWinamp5())
-		dwStartupFlag = ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS;
-	else
-		dwStartupFlag = ML_SUPPORT_EMBEDDED | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS;
+	AddRemoveMLMenuInWinamp(true);
 
-	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player, dwStartupFlag))
+	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player, g_Player.GetStartupFlags()))
 		return 0;	// we must return 0!
 
 	if (g_Player.IsWinamp5() && g_MLService.GetSkinMode() == CMLService::MLSKIN_PLAYER)
@@ -579,6 +625,8 @@ void config()
 
 void quit()
 {
+	AddRemoveMLMenuInWinamp(false);
+
 	// close all the windows and free all parts correctly
 	g_MLService.Quit();
 
@@ -601,7 +649,15 @@ LRESULT CALLBACK HookWinampWnd(
 							   )
 {
 	if (!g_Player.m_bWorking)
+	{
+		if (uMsg == WM_COMMAND && LOWORD(wParam) == nIDMenuMLItem)
+		{
+			// Open MiniLyrics
+			g_MLService.Init(g_hModMiniLyrics, g_Player.GetStartupFlags());
+			return 0;
+		}
 		return CallWindowProc(g_pOrgWinampProc, hwnd, uMsg, wParam, lParam);
+	}
 
 	switch(uMsg) 
 	{
@@ -629,10 +685,15 @@ LRESULT CALLBACK HookWinampWnd(
 
 				return nRet;
 			}
-			else if (LOWORD(wParam) == 0x9C53)
+// 			else if (LOWORD(wParam) == 0x9C53)
+// 			{
+// 				// ¶¥²ã´°¿Ú
+// 				// g_wndLyricShow.OnCommand(IDC_ALWAYS_ON_TOP);
+// 			}
+			else if (LOWORD(wParam) == nIDMenuMLItem)
 			{
-				// ¶¥²ã´°¿Ú
-				// g_wndLyricShow.OnCommand(IDC_ALWAYS_ON_TOP);
+				// Open/close MiniLyrics
+				g_MLService.Quit();
 			}
 		}
 		break;
@@ -750,6 +811,8 @@ HWND CPlayerImp::GetAttachedParentWnd(RECT *prc)
 			g_pOrgWaPluginWndProc = (WNDPROC)SetWindowLong(g_Player.m_hwndPluginParent, GWL_WNDPROC, (LONG)ProcWAPluginParentHook);
 		}
 	}
+
+	AddRemoveMLMenuInWinamp(false);
 
 	return m_hwndPluginParent;
 }
@@ -998,4 +1061,15 @@ int CPlayerImp::HasVideo()
 void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 {
 	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
+}
+
+DWORD CPlayerImp::GetStartupFlags()
+{
+	DWORD	dwStartupFlag = 0;
+	if (IsWinamp5())
+		dwStartupFlag = ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS;
+	else
+		dwStartupFlag = ML_SUPPORT_EMBEDDED | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS;
+
+	return dwStartupFlag;
 }
