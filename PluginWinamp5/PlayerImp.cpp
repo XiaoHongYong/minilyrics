@@ -28,7 +28,16 @@ UINT Get_WMCOMMAND_Id(UINT fallback)
 
 static UINT nIDMenuMLItem = 27562;
 
-void AddRemoveMLMenuInWinamp(bool bAdd)
+void CheckMLItemInWinampMenu(bool bChecked)
+{
+	HMENU main_menu = (HMENU)SendMessage(g_hwndPlayer, WM_WA_IPC, 0, IPC_GET_HMENU);
+	if (!main_menu)
+		return;
+
+	CheckMenuItem(main_menu, nIDMenuMLItem, MF_BYCOMMAND | (bChecked ? MF_CHECKED : MF_UNCHECKED));
+}
+
+void AddRemoveMLItemInWinampMenu(bool bAdd)
 {
 	static bool bGetMenuID = false;
 	if (!bGetMenuID)
@@ -49,6 +58,7 @@ void AddRemoveMLMenuInWinamp(bool bAdd)
 
 		// now add the menu item using prior_item as the item to instert after
 		InsertMenu(main_menu, prior_item, MF_BYCOMMAND, nIDMenuMLItem, "MiniLyrics");
+		CheckMLItemInWinampMenu(true);
 	}
 	else
 	{
@@ -560,7 +570,7 @@ LRESULT CALLBACK ProcWAPluginParentHook(HWND hwnd, UINT msg, WPARAM wp, LPARAM l
 			SetWindowLong(hwnd, GWL_WNDPROC, (LONG)g_pOrgWaPluginWndProc);
 		}
 
-		AddRemoveMLMenuInWinamp(true);
+		AddRemoveMLItemInWinampMenu(true);
 
 		g_Player.m_hwndPluginParent = NULL;
 	}
@@ -589,7 +599,7 @@ int init()
 
 	WAGetVersion(g_hwndPlayer, g_Player.m_dwPlayerVer);
 
-	AddRemoveMLMenuInWinamp(true);
+	AddRemoveMLItemInWinampMenu(true);
 
 	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player, g_Player.GetStartupFlags()))
 		return 0;	// we must return 0!
@@ -625,7 +635,7 @@ void config()
 
 void quit()
 {
-	AddRemoveMLMenuInWinamp(false);
+	AddRemoveMLItemInWinampMenu(false);
 
 	// close all the windows and free all parts correctly
 	g_MLService.Quit();
@@ -812,7 +822,7 @@ HWND CPlayerImp::GetAttachedParentWnd(RECT *prc)
 		}
 	}
 
-	AddRemoveMLMenuInWinamp(false);
+	AddRemoveMLItemInWinampMenu(false);
 
 	return m_hwndPluginParent;
 }
@@ -1023,11 +1033,15 @@ BOOL CPlayerImp::Init()
 
 	g_wndInfoQuery.Create(g_hInstance);
 
+	CheckMLItemInWinampMenu(true);
+
 	return TRUE;
 }
 
 void CPlayerImp::Quit()
 {
+	CheckMLItemInWinampMenu(false);
+
 	// 恢复winamp窗口的窗口过程
 	if (g_pOrgWinampProc && IsWindow(g_hwndPlayer) && GetWindowLong(g_hwndPlayer, GWL_WNDPROC) == (LONG)HookWinampWnd)
 	{
