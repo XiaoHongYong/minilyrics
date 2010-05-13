@@ -1431,7 +1431,7 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 	{
 		CRect	rc;
 
-		rc.SetRect(m_rcObj.left, m_rcObj.top + m_nYMargin, m_rcObj.right, m_rcObj.top - m_nYMargin + m_nFontHeight);
+		rc.SetRect(m_rcObj.left, m_rcObj.top + m_nYMargin, m_rcObj.right, m_rcObj.top + m_nYMargin + m_nFontHeight);
 		if (rc.bottom > yDrawLyrStartPos)
 		{
 			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
@@ -1440,8 +1440,8 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), true);
 		}
 
-		rc.bottom = m_rcObj.bottom;
-		rc.top = m_rcObj.bottom - m_nFontHeight;
+		rc.bottom = m_rcObj.bottom - m_nYMargin;
+		rc.top = m_rcObj.bottom - m_nYMargin - m_nFontHeight;
 		if (rc.top < yDrawLyrEndPos)
 		{
 			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)

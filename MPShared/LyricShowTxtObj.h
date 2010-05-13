@@ -13,11 +13,11 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "LyricShowObj.h"
+#include "LyricShowMultiRowObj.h"
 
-class CLyricShowTxtObj : public CLyricShowObj, IScrollNotify
+class CLyricShowTxtObj : public CLyricShowMultiRowObj, IScrollNotify
 {
-	UIOBJECT_CLASS_NAME_DECLARE(CLyricShowObj)
+	UIOBJECT_CLASS_NAME_DECLARE(CLyricShowMultiRowObj)
 public:
 	CLyricShowTxtObj();
 	virtual ~CLyricShowTxtObj();
@@ -28,6 +28,7 @@ public:
 	void OnLyricsChanged();
 
 	void OnCreate();
+	void OnEvent(const IEvent *pEvent);
 	void OnSize(int cx, int cy);
 
 	void OnTimer(int nId);
@@ -48,21 +49,21 @@ protected:
 
 	int GetLinesPerPage();
 
-	void StartScrollAnimation(int nFirstVisibleLineNew);
+	void StartScrollAnimation(int nCurLineNew);
 
 protected:
 	IScrollBar				*m_pScrollBar;
 	CUIObject				*m_pObjScrollBar;
 
-	int						m_nFirstVisibleLine;
+	int						m_nCurLine;
 
-	bool					m_bInScrolling;
-	int						m_nFirstVisibleLineNew;
-	int						m_yFirstVisibleLineLatest, m_nFirstVisibleLineLatest;
+	bool					m_bInScrollingToNewLine;
+	int						m_nCurLineNew;
+	int						m_yCurLineLatest, m_nCurLineLatest;
 	int						m_yOffsetScroll;
 	uint32					m_nBeginScrollTime;
 
-	bool					m_bEnableAutoScroll;
+	bool					m_bInVerticalScrollingMode;
 
 };
 

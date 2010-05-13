@@ -26,9 +26,6 @@ public:
 
 	void Invalidate();
 
-	void Pause();
-	void Resume();
-
 protected:
 	void FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGraphics, CRect *prcUpdate, int y, int nCurLine);
 	void FastestDraw_GetUpdateRectOfNormal(CRawGraph *pGraphics, CRect *prcUpdate, int y);
@@ -47,10 +44,6 @@ protected:
 	int             m_yDrawingOld;		// 上一次歌词显示的位置
 	int				m_nCurRowOld;		// 上一次显示的当前行歌词
 	int				m_nPrevLineAlphaOld, m_nNextLineAlphaOld;		// Old alpha value
-
-	bool			m_bResume;
-	bool			m_bPaused;
-	uint32			m_nTimeBegSync;
 
 };
 

@@ -35,8 +35,6 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_CLR_PREV_HUE"), CMD_CLR_PREV_HUE, 0, _T("Previous Color") },
 	{ _T("ID_CLR_NEXT_HUE"), CMD_CLR_NEXT_HUE, 0, _T("Next Color") },
 	{ _T("ID_LYR_HIGH_CLR_LIST"), CMD_LYR_HIGH_CLR_LIST, 0, _T("Highlight lyrics color") },
-	{ _T("CMD_ON_STATIC_LYR_OPEN"), CMD_ON_STATIC_LYR_OPEN, 0, NULL },
-	{ _T("CMD_ON_SYNC_LYR_OPEN"), CMD_ON_SYNC_LYR_OPEN, 0, NULL },
 	{ _T("ID_MENU_STATIC_LYR"), CMD_MENU_STATIC_LYR, 0, _T("Menu") },
 
 	{ _T("ID_AUTO_LYR_BW"), 	CMD_AUTO_LYR_BW, 0, _T("Pause lyrics") },

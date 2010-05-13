@@ -54,17 +54,7 @@ public class MiniLyricsSkinWndEvent extends SkinWndEvent {
 
 			SkinSystem.writeProfileInt("ShowFrameOnMouseHover", MiniLyrics.nShowFrameOnMouseHover);
 		}
-		else if (nCmdId == MiniLyrics.CMD_ON_STATIC_LYR_OPEN)
-		{
-			mSkinWnd.setUIObjVisible(MiniLyrics.CID_STATIC_LYR_CTRL, true);
-			return true;
-		}
-		else if (nCmdId == MiniLyrics.CMD_ON_SYNC_LYR_OPEN)
-		{
-			mSkinWnd.setUIObjVisible(MiniLyrics.CID_STATIC_LYR_CTRL, false);
-			return true;
-		}
-		
+
 		return false;
 	}
 	public void onCreate(SkinWnd wnd)
@@ -135,9 +125,6 @@ public class MiniLyrics
 	public static int ID_HIDE_WND_FRAME;
 	public static int ID_MOUSE_HOVER_SHOW_WND;
 	public static int nHideFrameOnLostFocus, nShowFrameOnMouseHover;
-	public static int CMD_ON_STATIC_LYR_OPEN;
-	public static int CMD_ON_SYNC_LYR_OPEN;
-	public static int CID_STATIC_LYR_CTRL;
 
 	public static void main()
 	{
@@ -153,9 +140,6 @@ public class MiniLyrics
 		CID_AM_SHOW_PLAY = SkinSystem.getCommandID("CID_AM_SHOW_PLAY");
 		ID_HIDE_WND_FRAME = SkinSystem.getCommandID("ID_HIDE_WND_FRAME");
 		ID_MOUSE_HOVER_SHOW_WND = SkinSystem.getCommandID("ID_MOUSE_HOVER_SHOW_WND");
-		CMD_ON_STATIC_LYR_OPEN = SkinSystem.getCommandID("CMD_ON_STATIC_LYR_OPEN");
-		CMD_ON_SYNC_LYR_OPEN = SkinSystem.getCommandID("CMD_ON_SYNC_LYR_OPEN");
-		CID_STATIC_LYR_CTRL = SkinSystem.getCommandID("CID_STATIC_LYR_CTRL");
 
 		nHideFrameOnLostFocus = SkinSystem.getProfileInt("HideFrameOnLostFocus", 1);
 		nShowFrameOnMouseHover = SkinSystem.getProfileInt("ShowFrameOnMouseHover", 1);

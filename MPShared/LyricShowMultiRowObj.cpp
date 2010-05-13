@@ -27,10 +27,6 @@ CLyricShowMultiRowObj::CLyricShowMultiRowObj()
 
 	m_nDarkenTopArea = float(1.6);
 	m_nDarkenBottomArea = float(1.6);
-
-	m_bPaused = false;
-	m_bResume = false;
-	m_nTimeBegSync = 0;
 }
 
 CLyricShowMultiRowObj::~CLyricShowMultiRowObj()
@@ -44,26 +40,13 @@ void CLyricShowMultiRowObj::Invalidate()
 	CLyricShowObj::Invalidate();
 }
 
-void CLyricShowMultiRowObj::Pause()
-{
-	m_bPaused = true;
-	m_bResume = false;
-}
-
-void CLyricShowMultiRowObj::Resume()
-{
-	m_bPaused = false;
-	m_bResume = true;
-	m_nTimeBegSync = GetTickCount();
-}
-
 void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
 {
 	assert(m_pMLData);
 	if (m_pMLData == NULL)
 		return;
 
-	if (!m_pMLData->HasLyricsOpened())
+	if (!m_pMLData->HasLyricsOpened() || m_lyrLines.size() == 0)
 	{
 		FastDrawMediaInfo(pGraphics, prcUpdate);
 		return;
@@ -116,22 +99,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		else
 			yCurRow += -nRowHeight + 
 				nRowHeight * (pRowCur->nEndTime - m_pMLData->GetPlayElapsedTime()) / nDeltaTime;
-
-		if (m_bPaused && m_yDrawingOld != -1)
-			yCurRow = m_yDrawingOld;
-	}
-
-	if (m_bResume)
-	{
-		// 
-		uint32 nDeltaTime = GetTickCount() - m_nTimeBegSync;
-		if (nDeltaTime < 2000)
-		{
-			if (nRowCur == m_nCurRowOld && yCurRow > m_yDrawingOld)
-				yCurRow = m_yDrawingOld;
-		}
-		else
-			m_bResume = false;
 	}
 
 	CRect	rcClip;
