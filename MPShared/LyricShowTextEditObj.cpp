@@ -693,6 +693,13 @@ void CLyricShowTextEditObj::OnPlayTimeChangedUpdate()
 	if (m_pSkin->IsIconic() || !IsVisible() || !IsParentVisible())
 		return;
 
+	{
+		// Prevent player forward to next track, if lyrics editor is focus, and lyrics changed.
+		if (g_Player.GetMediaLength() > 30 * 1000
+			&& CanUndo() && g_LyricData.GetPlayElapsedTime() >= g_Player.GetMediaLength() - 1000)
+			g_Player.SeekTo(0);
+	}
+
 	CRect	rc;
 	int		nBegSelRow, nEndSelRow;
 	int		nBegSelCol, nEndSelCol;

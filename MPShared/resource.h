@@ -24,7 +24,6 @@
 #define IDR_MENU_ID                     150
 #define IDR_MENU_OPEN_LRC_DLG           151
 #define IDR_MENU_ALBUMART               152
-#define IDD_SURE_SAVE                   156
 #define IDD_REGISTRATION                157
 #define IDD_REGISTER_NOTICE             158
 #define IDD_NEW_VERSION_PROMPT          159

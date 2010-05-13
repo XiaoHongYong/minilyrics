@@ -126,7 +126,7 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 		{
 			m_nCurLineNew = m_nCurLine = nCurLine;
 			if (m_pScrollBar)
-				m_pScrollBar->SetScrollPos(m_nCurLine, false);
+				m_pScrollBar->SetScrollPos(m_nCurLine);
 		}
 
 		CDispOptRecover		dispOptRecover(this);

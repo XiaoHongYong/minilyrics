@@ -771,21 +771,6 @@ BEGIN
     CTEXT           "* * *  UNREGISTERED, TRIAL VERSION  * * *",IDC_UN_REG,9,131,204,8
 END
 
-IDD_SURE_SAVE DIALOGEX 0, 0, 268, 85
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Confirm to save the lyrics file"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    PUSHBUTTON      "Yes",IDYES,100,64,50,14
-    PUSHBUTTON      "No",IDNO,155,64,50,14
-    DEFPUSHBUTTON   "Cancel",IDCANCEL,210,64,50,14
-    LTEXT           "The lyrics have changed.",IDC_S_MSG,37,8,205,20,SS_NOPREFIX
-    LTEXT           "Do you want to save the changes?",IDC_STATIC,37,33,205,8
-    CONTROL         "Use as default setting, don't prompt any more",IDC_NO_PROMPT,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,48,196,10
-    ICON            IDI_SAVE,IDC_STATIC,7,9,20,20
-END
-
 IDD_REGISTRATION DIALOG  0, 0, 250, 142
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Registration"
@@ -1082,14 +1067,6 @@ BEGIN
         RIGHTMARGIN, 218
         TOPMARGIN, 7
         BOTTOMMARGIN, 199
-    END
-
-    IDD_SURE_SAVE, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 261
-        TOPMARGIN, 1
-        BOTTOMMARGIN, 78
     END
 
     IDD_REGISTRATION, DIALOG
