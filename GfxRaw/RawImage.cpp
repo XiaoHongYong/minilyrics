@@ -321,15 +321,11 @@ bool CRawImage::MaskBlt(CRawGraph *pGraphics, int xDest, int yDest, int widthDes
 
 	CRect			rcDst;
 	PRAW_IMAGE_DATA	pImageDst;
-	int				xMask, yMask;
 
 	pGraphics->GetMappedClipBoundRect(rcDst);
 
 	xDest = pGraphics->MapX(xDest);
 	yDest = pGraphics->MapY(yDest);
-
-	xMask = pImgMask->m_x;
-	yMask = pImgMask->m_y;
 
 	// get the clip box to copy
 	if (xDest + widthDest < rcDst.right)
@@ -343,14 +339,12 @@ bool CRawImage::MaskBlt(CRawGraph *pGraphics, int xDest, int yDest, int widthDes
 	else
 	{
 		xSrc += rcDst.left - xDest;
-		xMask += rcDst.left - xDest;
 	}
 	if (yDest >= rcDst.top)
 		rcDst.top = yDest;
 	else
 	{
 		ySrc += rcDst.top - yDest;
-		yMask += rcDst.top - yDest;
 	}
 
 	// make sure the right is within the image region.
@@ -367,7 +361,7 @@ bool CRawImage::MaskBlt(CRawGraph *pGraphics, int xDest, int yDest, int widthDes
 
 	pImageDst = pGraphics->GetRawBuff();
 
-	return MaskBlt(pImageDst, rcDst, xSrc, ySrc, pImgMask->GetHandle(), xMask, yMask, bpm, pGraphics->GetOpacityPainting());
+	return MaskBlt(pImageDst, rcDst, xSrc, ySrc, pImgMask->GetHandle(), xSrc, ySrc, bpm, pGraphics->GetOpacityPainting());
 }
 
 bool CRawImage::Blt(CRawImage *pImage, int xDest, int yDest, int widthDest, int heightDest, int xSrc, int ySrc, BlendPixMode bpm, int nOpacitySrc)

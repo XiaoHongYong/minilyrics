@@ -448,7 +448,7 @@ protected:
 
 	// Background images
 	CScaleImagePainter	m_bgImagePainter;
-	CSFImage		m_imageBg;
+	CSFImage		m_imageBg, m_imageBgMask;
 
 	// Window properties
 	bool			m_bIndividualProperties;

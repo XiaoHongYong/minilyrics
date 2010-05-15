@@ -367,6 +367,7 @@ void CSkinWnd::CloseSkin()
 	// m_strSkinWndName.resize(0);
 
 	m_imageBg.Destroy();
+	m_imageBgMask.Destroy();
 
 	m_nWidth = 0;
 	m_nHeight = 0;
@@ -1036,35 +1037,45 @@ void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc)
 
 	rcNewClip.IntersectRect(&rcClip, &rc);
 
+	if (m_nTranslucencyAlphaDynamic == 0)
+	{
+		// Speed optimize for totoally transparent background
+		MLColor	clr(RGB(0, 0, 0));
+		clr.setAlpha(0);
+		pGraph->FillRect(&rcNewClip, clr);
+		return;
+	}
+
 	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
 	pGraph->SetClipBoundBox(rcNewClip);
 
 	if (m_imageBg.IsValid())
 	{
-		int				nAlphaOld = 255;
-		CDrawImageFun	func;
+		// Draw Bg with color
+		CDrawImageFunMask	funcDraw(pGraph, &m_imageBg, NULL, BPM_COPY);
 
-		func.m_bpm = BPM_COPY;
-		func.m_pGraph = pGraph;
-		func.m_pImage = &m_imageBg;
+		if (m_imageBgMask.IsValid())
+			funcDraw.m_pImageMask = &m_imageBgMask;
 
-		nAlphaOld = pGraph->GetOpacityPainting();
-		pGraph->SetOpacityPainting((int)m_nTranslucencyAlphaDynamic);
-
-		if (m_nTranslucencyAlphaDynamic != 255)
+		// Fill background
+ 		if (m_imageBgMask.IsValid())
+		{
+			pGraph->FillRect(&rcNewClip, m_clrBg);
+		}
+		else if (m_nTranslucencyAlphaDynamic != 255)
 		{
 			MLColor	clr(RGB(0, 0, 0));
 			clr.setAlpha(0);
-			pGraph->FillRect(&rc, clr);
+			pGraph->FillRect(&rcNewClip, clr);
 		}
 
-		if (m_nTranslucencyAlphaDynamic != 0)
-			m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), func);
+		m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), funcDraw);
 
-		pGraph->SetOpacityPainting(nAlphaOld);
+		if (m_nTranslucencyAlphaDynamic != 255)
+			pGraph->MultiplyAlpha(m_nTranslucencyAlphaDynamic, &rcNewClip);
 	}
 	else
-		pGraph->FillRect(&rc, m_clrBg);
+		pGraph->FillRect(&rcNewClip, m_clrBg);
 }
 
 void CSkinWnd::EnterInDrawUpdate()
@@ -1313,8 +1324,10 @@ BOOL CSkinWnd::SetProperty(SXNode *pXmlNode)
 	{
 		// Set background image
 		m_imageBg.LoadFromSRM(m_pSkinFactory, pXmlNode->GetPropertySafe(SZ_PN_IMAGE));
+		m_imageBgMask.LoadFromSRM(m_pSkinFactory, pXmlNode->GetPropertySafe(_T("ImageMask")));
 
 		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBg);
+		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBgMask);
 
 		szValue = pXmlNode->GetPropertySafe(_T("HorzExtendPos"));
 		Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd);
@@ -1326,6 +1339,7 @@ BOOL CSkinWnd::SetProperty(SXNode *pXmlNode)
 		m_bgImagePainter.nSrcY = m_imageBg.m_y;
 		m_bgImagePainter.nSrcWidth = m_imageBg.m_cx;
 		m_bgImagePainter.nSrcHeight = m_imageBg.m_cy;
+		m_bgImagePainter.bDrawCenterArea = !m_imageBgMask.IsValid();
 
 		return TRUE;
 	}

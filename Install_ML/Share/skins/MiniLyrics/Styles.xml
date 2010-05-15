@@ -5,19 +5,33 @@
          MinWidth="100" MinHeight="100" Width="330" Height="400"
          PaintBg="TRUE" BgColor="#ece9d8" FgColor="#282828" EnableClickThrough="false"
          FontName="Verdana" FontHeight="15" TextColor="#000000">
-      <Property Name="BgImage" Image="frame-opaque.png" ImageRect="0,0,458,190"
-                HorzExtendPos="230,410" VertExtendPos="70,160"/>
 
-      <Button Left="10" Top="9" Width="16" Height="16" ID="ID_MENU" Name="Menu"
-        Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
-        ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
-      <Text ID="ID_CAPTION" Rect="44,8,w-100,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
-      <Toolbar ID="CID_TB_SYSBT" Rect="w-30,10,20,16" TranslucencyWithSkin="TRUE"
-           UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
-           blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
-           MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
-        <button ID="ID_CLOSE" Left="4" />
-      </Toolbar>
+      <Image Name="Left border" Rect="0,31,5,h-31-15" Image="frame.png" ImageRect="0,31,5,54"
+             BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+      <Image Name="Right border" Rect="w-5,31,5,h-31-15" Image="frame.png" ImageRect="95,31,5,54"
+             BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+      <Image Name="Bottom border" Rect="15,h-5,w-30,h-5" Image="frame.png" ImageRect="15,95,70,5"
+             BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+      <Image Name="Left Bottom border" Rect="0,h-15,15,15" Image="frame.png" ImageRect="0,85,15,15"
+             BlendPixMode="copy" TranslucencyWithSkin="TRUE" ImageMask="frame-mask.png"/>
+      <Image Name="Right Bottom border" Rect="w-15,h-15,15,15" Image="frame.png" ImageRect="85,85,15,15"
+             BlendPixMode="copy" TranslucencyWithSkin="TRUE" ImageMask="frame-mask.png"/>
+
+      <DecorativeContainer Name="Caption bar" Rect="0,0,w,31" TranslucencyWithSkin="TRUE">
+        <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
+          ImageFocus="frame-foucs.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
+
+        <Button Left="10" Top="9" Width="16" Height="16" ID="ID_MENU" Name="Menu"
+          Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
+          ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
+        <Text ID="ID_CAPTION" Rect="44,8,w-100,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
+        <Toolbar ID="CID_TB_SYSBT" Rect="w-30,10,20,16" TranslucencyWithSkin="TRUE"
+             UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+             blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
+             MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
+          <button ID="ID_CLOSE" Left="4" />
+        </Toolbar>
+      </DecorativeContainer>
 
       <ClientArea Rect="10,31,w-20,h-31-12" ClipChildren="true"/>
     </WindowFrame>
@@ -26,27 +40,36 @@
          MinWidth="100" MinHeight="100" Width="330" Height="400"
          PaintBg="TRUE" BgColor="#ece9d8" FgColor="#282828" EnableClickThrough="false"
          FontName="Verdana" FontHeight="15" TextColor="#000000">
-      <Property Name="BgImage" Image="frame-opaque-menu.png"
-                HorzExtendPos="20,80" VertExtendPos="55,80"/>
 
-      <Button Left="10" Top="9" Width="16" Height="16" ID="ID_MENU" Name="Menu"
-        Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
-        ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
-      <Text ID="ID_CAPTION" Rect="44,8,w-100,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
-      <MenuBar Rect="10,33,w-90-150,20" Name="Menu"
-               UseSkinBg="true" TranslucencyWithSkin="TRUE"
-         FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
-         TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
-         TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
-         BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+      <Property Name="BgImage" Image="frame.png"
+                HorzExtendPos="15,85" VertExtendPos="31,85"/>
 
-      <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16" TranslucencyWithSkin="TRUE"
-           UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
-           blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
-           MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
-        <button ID="ID_MINIMIZE" Left="1" />
-        <button ID="ID_CLOSE" Left="4" />
-      </Toolbar>
+      <DecorativeContainer Name="Caption bar" Rect="0,0,w,31" TranslucencyWithSkin="TRUE">
+        <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
+          ImageFocus="frame-foucs.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
+
+        <Button Left="10" Top="9" Width="16" Height="16" ID="ID_MENU" Name="Menu"
+          Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
+          ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
+        <Text ID="ID_CAPTION" Rect="44,8,w-100,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
+        <Toolbar ID="CID_TB_SYSBT" Rect="w-30,10,20,16" TranslucencyWithSkin="TRUE"
+             UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+             blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
+             MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
+          <button ID="ID_CLOSE" Left="4" />
+        </Toolbar>
+      </DecorativeContainer>
+      
+      <DecorativeContainer Name="Menu bar" Rect="0,31,w,31">
+        <Image Name="Menu Bg" Rect="5,0,w-10,23" Image="menu_bg.png"
+               BltMode="tile" BlendPixMode="copy"/>
+        <MenuBar Rect="10,2,w-90-150,20" Name="Menu"
+                 UseSkinBg="true" TranslucencyWithSkin="TRUE"
+           FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
+           TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
+           TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
+           BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+      </DecorativeContainer>
 
       <ClientArea Rect="10,54,w-20,h-54-12" ClipChildren="true"/>
     </MenuWindowFrame>

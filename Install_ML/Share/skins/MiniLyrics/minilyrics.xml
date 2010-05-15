@@ -24,35 +24,68 @@
     <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
   </DynCmds>
+  <AdjustHue>
+    <ImageFile file="frame.png"/>
+    <ImageFile file="frame-focus.png"/>
+  </AdjustHue>
   <skinwnd Name="minilyrics" EnableTranslucency="true"
-       TranslucencyAlpha="0" TranslucencyAlphaOnHover="255" TranslucencyAlphaOnActive="255"
+       TranslucencyAlpha="0" TranslucencyAlphaOnHover="228" TranslucencyAlphaOnActive="228"
        MinWidth="330" MinHeight="190" Width="450" Height="240" 
        PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
        ContextMenu="NormalMode" CmdHandler="ch_common">
-    <Property Name="BgImage" Image="frame.png" ImageRect="0,0,458,190"
-              HorzExtendPos="230,410" VertExtendPos="70,160"/>
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
               CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
 
-    <Button Rect="10,9,16,16" ID="ID_MENU" Name="Menu"
-      Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
-      ImageFocusPos="0,32" UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
-    <Image Name="Brand" Rect="44,8,81,20" Image="name.png"
-           UseSkinBg="true" TranslucencyWithSkin="TRUE"/>
-    <MenuBar Rect="150,8,w-90-150,18" Name="Menu" Menu="MainWndMenu"
-             UseSkinBg="true" TranslucencyWithSkin="TRUE"
-       FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
-       TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
-       TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" 
-       BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+    <Image Name="Left top border" Rect="0,0,15,15" Image="frame.png" ImageRect="0,0,15,15"
+           BlendPixMode="alpha_mask" ImageMask="frame-mask.png"/>
+    <Image Name="Right top border" Rect="w-15,0,15,15" Image="frame.png" ImageRect="85,0,15,15"
+           BlendPixMode="alpha_mask" ImageMask="frame-mask.png"/>
+    <Image Name="Top border" Rect="15,0,w-30,5" Image="frame.png" ImageRect="15,0,70,5"
+           BltMode="tile" BlendPixMode="alpha_mask"/>
+    <Image Name="Left border" Rect="0,15,5,h-15-15" Image="frame.png" ImageRect="0,31,5,54"
+           BltMode="tile" BlendPixMode="alpha_mask"/>
+    <Image Name="Right border" Rect="w-5,15,5,h-15-15" Image="frame.png" ImageRect="95,31,5,54"
+           BltMode="tile" BlendPixMode="alpha_mask"/>
+    <Image Name="Bottom border" Rect="15,h-5,w-30,h-5" Image="frame.png" ImageRect="15,95,70,5"
+           BltMode="tile" BlendPixMode="alpha_mask"/>
+    <Image Name="Left Bottom border" Rect="0,h-15,15,15" Image="frame.png" ImageRect="0,85,15,15"
+           BlendPixMode="alpha_mask"/>
+    <Image Name="Right Bottom border" Rect="w-15,h-15,15,15" Image="frame.png" ImageRect="85,85,15,15"
+           BlendPixMode="alpha_mask"/>
 
-    <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16" TranslucencyWithSkin="TRUE"
-         UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
-         blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
-         MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
-      <button ID="ID_MINIMIZE" Left="1" />
-      <button ID="ID_CLOSE" Left="4" />
-    </Toolbar>
+    <Image Name="Left border" Rect="0,31,5,h-31-15" Image="frame.png" ImageRect="0,31,5,54"
+           BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+    <Image Name="Right border" Rect="w-5,31,5,h-31-15" Image="frame.png" ImageRect="95,31,5,54"
+           BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+    <Image Name="Bottom border" Rect="15,h-5,w-30,h-5" Image="frame.png" ImageRect="15,95,70,5"
+           BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+    <Image Name="Left Bottom border" Rect="0,h-15,15,15" Image="frame.png" ImageRect="0,85,15,15"
+           BlendPixMode="copy" TranslucencyWithSkin="TRUE" ImageMask="frame-mask.png"/>
+    <Image Name="Right Bottom border" Rect="w-15,h-15,15,15" Image="frame.png" ImageRect="85,85,15,15"
+           BlendPixMode="copy" TranslucencyWithSkin="TRUE" ImageMask="frame-mask.png"/>
+
+    <DecorativeContainer Name="Caption bar" Rect="0,0,w,31" TranslucencyWithSkin="TRUE">
+      <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
+        ImageFocus="frame-foucs.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
+
+      <Button Rect="10,9,16,16" ID="ID_MENU" Name="Menu"
+        Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
+        ImageFocusPos="0,32" />
+      <Image Name="Brand" Rect="44,8,81,20" Image="name.png"/>
+      <MenuBar Rect="150,9,w-75-150,18" Name="Menu" Menu="MainWndMenu"
+         FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
+         TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
+         TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
+         BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+
+      <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16" TranslucencyWithSkin="TRUE"
+           Image="caption_btn.png" enablehover="TRUE" units_x="16"
+           blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
+           MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
+        <button ID="ID_MINIMIZE" Left="1" />
+        <button ID="ID_CLOSE" Left="4" />
+      </Toolbar>
+    </DecorativeContainer>
 
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
       <DecorativeContainer Name="Lyrics" ID="CID_LYRICS" Rect="0,0,w,h">
@@ -74,11 +107,11 @@
              FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#FFFFFF"
              TextOutlinedColor="#000000" LeftMargin="0" Text="" PaintBg="false"/>
           <SeekCtrl Name="Seek" ID="ID_SEEK"
-                    Rect="137,8,w-137-90,12" EndWidth="3" ImageThumb="seek_thumb.png" 
+                    Rect="137,8,w-137-90,12" EndWidth="3" ImageThumb="seek_thumb.png"
                     ImageTrack="seek_track.png"/>
 
           <Toolbar Rect="w-85,0,70,22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
-                   units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" 
+                   units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
                    MarginX="0" MarginY="0" FullStatusImage="TRUE">
             <button ID="ID_FONT_SIZE_INC" Left="8"/>
             <button ID="ID_FONT_SIZE_DEC" Left="9"/>

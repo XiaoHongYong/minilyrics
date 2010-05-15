@@ -88,6 +88,9 @@ PRAW_IMAGE_DATA CSkinResMgr::LoadBitmap(LPCTSTR szBmp)
 	RES_COUNTER		ResBmp;
 	TCHAR			szFile[MAX_PATH];
 
+	if (IsEmptyString(szBmp))
+		return NULL;
+
 	//
 	// 先从m_mapFastBmp中查找……
 	map<tstring, PRAW_IMAGE_DATA>::iterator	itFastBmp;

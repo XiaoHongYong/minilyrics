@@ -20,9 +20,15 @@ The image with --- is extendable
 class CScaleImagePainter
 {
 public:
+	CScaleImagePainter()
+	{
+		bDrawCenterArea = true;
+	}
+
 	int			nSrcX, nSrcY, nSrcWidth, nSrcHeight;
 	int			nSrcHorzExtendStart, nSrcHorzExtendEnd;
 	int			nSrcVertExtendStart, nSrcVertExtendEnd;
+	bool		bDrawCenterArea;
 
 public:
 	template<class _DrawImageFun>
@@ -77,12 +83,15 @@ public:
 			nSrcVertExtendEnd - nSrcVertExtendStart, blter);
 
 		// Draw area E
-		TileBltT(nDstHorzExtendStart, nDstVertExtendStart,
-			nDstHorzExtendEnd - nDstHorzExtendStart,
-			nDstVertExtendEnd - nDstVertExtendStart,
-			nSrcHorzExtendStart, nSrcVertExtendStart,
-			nSrcHorzExtendEnd - nSrcHorzExtendStart,
-			nSrcVertExtendEnd - nSrcVertExtendStart, blter);
+		if (bDrawCenterArea)
+		{
+			TileBltT(nDstHorzExtendStart, nDstVertExtendStart,
+				nDstHorzExtendEnd - nDstHorzExtendStart,
+				nDstVertExtendEnd - nDstVertExtendStart,
+				nSrcHorzExtendStart, nSrcVertExtendStart,
+				nSrcHorzExtendEnd - nSrcHorzExtendStart,
+				nSrcVertExtendEnd - nSrcVertExtendStart, blter);
+		}
 
 		// Draw area F
 		TileBltT(nDstHorzExtendEnd, nDstVertExtendStart,
@@ -193,6 +202,33 @@ public:
 	}
 public:
 	CRawImage		*m_pImage;
+	CRawGraph		*m_pGraph;
+	BlendPixMode	m_bpm;
+
+};
+
+class CDrawImageFunMask
+{
+public:
+	CDrawImageFunMask(CRawGraph *pGraph, CRawImage *pImage, CRawImage *pImageMask, BlendPixMode bpm)
+	{
+		m_pGraph = pGraph;
+		m_pImage = pImage;
+		m_pImageMask = pImageMask;
+		m_bpm = bpm;
+	}
+
+	void operator()(int xdest, int ydest, int width, int height, int xsrc, int ysrc)
+	{
+		if (m_pImageMask)
+			m_pImage->MaskBlt(m_pGraph, xdest, ydest, width, height, xsrc, ysrc, m_pImageMask, m_bpm);
+		else
+			m_pImage->Blt(m_pGraph, xdest, ydest, width, height, xsrc, ysrc, m_bpm);
+	}
+
+public:
+	CRawImage		*m_pImage;
+	CRawImage		*m_pImageMask;
 	CRawGraph		*m_pGraph;
 	BlendPixMode	m_bpm;
 

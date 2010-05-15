@@ -26,7 +26,7 @@ public class MiniLyricsSkinWndEvent extends SkinWndEvent {
 			if (MiniLyrics.nHideFrameOnLostFocus > 0)
 			{
 				MiniLyrics.nHideFrameOnLostFocus = 0;
-				mSkinWnd.setProperty("TranslucencyAlpha", "255");
+				mSkinWnd.setProperty("TranslucencyAlpha", "228");
 			}
 			else
 			{
@@ -36,8 +36,8 @@ public class MiniLyricsSkinWndEvent extends SkinWndEvent {
 
 			SkinSystem.writeProfileInt("HideFrameOnLostFocus", MiniLyrics.nHideFrameOnLostFocus);
 		
-			// mSkinWnd.setProperty("TranslucencyAlphaOnActive", "255");
-			// mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
+			// mSkinWnd.setProperty("TranslucencyAlphaOnActive", "228");
+			// mSkinWnd.setProperty("TranslucencyAlphaOnHover", "228");
 		}
 		else if (nCmdId == MiniLyrics.ID_MOUSE_HOVER_SHOW_WND)
 		{
@@ -49,7 +49,7 @@ public class MiniLyricsSkinWndEvent extends SkinWndEvent {
 			else
 			{
 				MiniLyrics.nShowFrameOnMouseHover = 1;
-				mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
+				mSkinWnd.setProperty("TranslucencyAlphaOnHover", "228");
 			}
 
 			SkinSystem.writeProfileInt("ShowFrameOnMouseHover", MiniLyrics.nShowFrameOnMouseHover);
@@ -65,10 +65,10 @@ public class MiniLyricsSkinWndEvent extends SkinWndEvent {
 		if (MiniLyrics.nHideFrameOnLostFocus > 0)
 			mSkinWnd.setProperty("TranslucencyAlpha", "0");
 		else
-			mSkinWnd.setProperty("TranslucencyAlpha", "255");
+			mSkinWnd.setProperty("TranslucencyAlpha", "228");
 
 		if (MiniLyrics.nShowFrameOnMouseHover > 0)
-			mSkinWnd.setProperty("TranslucencyAlphaOnHover", "255");
+			mSkinWnd.setProperty("TranslucencyAlphaOnHover", "228");
 		else
 			mSkinWnd.setProperty("TranslucencyAlphaOnHover", "0");
 	}
