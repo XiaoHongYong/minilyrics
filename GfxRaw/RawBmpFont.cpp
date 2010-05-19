@@ -17,6 +17,125 @@ namespace GfxRaw
 
 bool	g_bAntialiasFontEnabled = false;
 
+inline byte RGBToGray(int r, int g, int b)
+{
+	// 5 = ËÄÉáÎåÈë
+	return (r * 3 + g * 6 + b + 5) / 10;
+}
+
+void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph)
+{
+#define MEM_GRAPH_PIX_SIZE	3
+	int		nHeightBitmap = bufGraph.height();
+
+	// Determine the right of Bitmap.
+	int nRightBitmap = min_fun(pGlyph->nWidth + nHeightBitmap / 2, (int)bufGraph.width());
+	uint8 *pRowSrc = bufGraph.row_ptr(0) + (nRightBitmap - 1) * MEM_GRAPH_PIX_SIZE;
+	for (; nRightBitmap > 0; nRightBitmap--)
+	{
+		uint8 *p = pRowSrc;
+		int y = 0;
+		for (; y < nHeightBitmap; y++)
+		{
+			if (p[0] != 0 || p[1] != 0 || p[2] != 0)
+				break;
+			p += bufGraph.stride();
+		}
+		if (y != nHeightBitmap)
+			break;
+		pRowSrc -= MEM_GRAPH_PIX_SIZE;
+	}
+	ASSERT(nRightBitmap <= min_fun(pGlyph->nWidth + nHeightBitmap / 2, (int)bufGraph.width()));
+	if (nRightBitmap == 0)
+		return;
+
+	// Determine the left of Bitmap.
+	int nLeftBitmap = 0;
+	pRowSrc = bufGraph.row_ptr(0);
+	for (; nLeftBitmap < nRightBitmap; nLeftBitmap++)
+	{
+		uint8 *p = pRowSrc;
+		int y = 0;
+		for (; y < nHeightBitmap; y++)
+		{
+			if (p[0] != 0 || p[1] != 0 || p[2] != 0)
+				break;
+			p += bufGraph.stride();
+		}
+		if (y != nHeightBitmap)
+			break;
+		pRowSrc += MEM_GRAPH_PIX_SIZE;
+	}
+
+	// Determine the top of Bitmap.
+	int nTopBitmap = 0;
+	pRowSrc = bufGraph.row_ptr(0) + nLeftBitmap * MEM_GRAPH_PIX_SIZE;
+	for (; nTopBitmap < nHeightBitmap; nTopBitmap++)
+	{
+		uint8 *p = pRowSrc;
+		int x = nLeftBitmap;
+		for (; x < nRightBitmap; x++)
+		{
+			if (p[0] != 0 || p[1] != 0 || p[2] != 0)
+				break;
+			p += MEM_GRAPH_PIX_SIZE;
+		}
+		if (x != nRightBitmap)
+			break;
+		pRowSrc += bufGraph.stride();
+	}
+
+	// Determine the bottom of Bitmap.
+	int nBottomBitmap = nHeightBitmap - 1;
+	pRowSrc = bufGraph.pix_ptr(nLeftBitmap, nBottomBitmap);
+	for (; nBottomBitmap > nTopBitmap; nBottomBitmap--)
+	{
+		uint8 *p = pRowSrc;
+		int x = nLeftBitmap;
+		for (; x < nRightBitmap; x++)
+		{
+			if (p[0] != 0 || p[1] != 0 || p[2] != 0)
+				break;
+			p += MEM_GRAPH_PIX_SIZE;
+		}
+		if (x != nRightBitmap)
+			break;
+		pRowSrc -= bufGraph.stride();
+	}
+
+	pGlyph->leftOffset = nLeftBitmap;
+	pGlyph->topOffset = nTopBitmap;
+	pGlyph->widthBitmap = nRightBitmap - nLeftBitmap + 1;
+	pGlyph->heightBitmap = nBottomBitmap - nTopBitmap + 1;
+
+	pGlyph->bitmap = new byte[pGlyph->WidthBytes() * pGlyph->heightBitmap];
+
+	pRowSrc = bufGraph.pix_ptr(pGlyph->leftOffset, pGlyph->topOffset);
+	uint8 *pRowDst = pGlyph->bitmap;
+	for (int y = 0; y < pGlyph->heightBitmap; y++)
+	{
+		uint8 *pDst = pRowDst;
+		uint8 *pSrc = pRowSrc;
+		for (int x = 0; x < pGlyph->widthBitmap; x++)
+		{
+			// 			pDst[G_R] = 255;
+			// 			pDst[G_G] = 255;
+			// 			pDst[G_B] = 255;
+			// 			pDst[G_A] = 255;
+#ifdef _CLEAR_TYPE
+			pDst[G_R] = pSrc[2];
+			pDst[G_G] = pSrc[1];
+			pDst[G_B] = pSrc[0];
+#endif
+			pDst[G_A] = RGBToGray(pSrc[G_R], pSrc[G_G], pSrc[G_B]);
+			pDst += G_PIX_SIZE;
+			pSrc += MEM_GRAPH_PIX_SIZE;
+		}
+		pRowSrc += bufGraph.stride();
+		pRowDst += pGlyph->WidthBytes();
+	}
+}
+
 static void CopyToOutlined(byte *pOut, byte *pIn, int nWidth, int nHeight, int nMarginShadow, int nOffset)
 {
 	byte		*p, *pOutlined;
@@ -63,7 +182,7 @@ static void CopyAndOutlineBuffRGBA32(byte *pOut, byte *pIn, int nWidth, int nHei
 	int			nWidthBytesOut = (nWidth + nMargin * 2) * G_PIX_SIZE;
 	int			nWidthBytesIn = nWidth * G_PIX_SIZE;
 
-	// CopyToOutlined(pOut, pIn, nWidth, nHeight, OUTLINED_BORDER / 2, 0);
+	// CopyToOutlined(pOut, pIn, nWidth, nHeight, m_marginOutlined / 2, 0);
 
 	// outline
 	pIRow = pIn;
@@ -118,20 +237,17 @@ static void EraseBuffRGBA32(byte *pOut, byte *pIn, int nWidth, int nHeight, int 
 	}
 }
 
-static void CopyAndShadowBuffRGBA32(byte *pOut, byte *pIn, int nWidth, int nHeight, int nMarginShadow, int nAlphaShadow, int nRangeShadow)
+static void CopyAndShadowBuffRGBA32(byte *pOut, byte *pIn, int nWidth, int nHeight, int nAlphaShadow, int nRangeShadow)
 {
-	// 	if (nRangeShadow > nMarginShadow)
-	// 		nRangeShadow = nMarginShadow;
+	// CopyToOutlined(pOut, pIn, nWidth, nHeight, nRangeShadow, 0);
+	CopyAndOutlineBuffRGBA32(pOut, pIn, nWidth, nHeight, nRangeShadow);
 
-	// CopyToOutlined(pOut, pIn, nWidth, nHeight, nMarginShadow, 0);
-	CopyAndOutlineBuffRGBA32(pOut, pIn, nWidth, nHeight, nMarginShadow);
-
-	agg::rendering_buffer	buff(pOut, nWidth + nMarginShadow * 2, nHeight + nMarginShadow * 2,  (nWidth + nMarginShadow * 2) * G_PIX_SIZE);
+	agg::rendering_buffer	buff(pOut, nWidth + nRangeShadow * 2, nHeight + nRangeShadow * 2,  (nWidth + nRangeShadow * 2) * G_PIX_SIZE);
 	agg::pixfmt_rgba32		pixf(buff);
 
 	agg::stack_blur_rgba32(pixf, nRangeShadow, nRangeShadow);
 
-	EraseBuffRGBA32(pOut, pIn, nWidth, nHeight, nMarginShadow);
+	EraseBuffRGBA32(pOut, pIn, nWidth, nHeight, nRangeShadow);
 
 	/*	byte		*p, *pOutlined;
 	int			y, c;
@@ -163,28 +279,30 @@ static void CopyAndShadowBuffRGBA32(byte *pOut, byte *pIn, int nWidth, int nHeig
 }
 
 
-void CreateOutlinedGlyph(GfxRaw::Glyph *glyph, int nHeightBitmap, CRawBmpFont::ShadowMode shadowMode)
+void CreateOutlinedGlyph(GfxRaw::Glyph *glyph, int marginOutlined, CRawBmpFont::ShadowMode shadowMode)
 {
-	int			nWidthOutlined;
-
 	ASSERT(glyph->bitmapOutlined == NULL);
 
-	nWidthOutlined = glyph->nWidthBitmap + OUTLINED_BORDER;
+	glyph->marginOutlined = marginOutlined;
 
-	glyph->bitmapOutlined = new byte[(nHeightBitmap + OUTLINED_BORDER) * glyph->WidthBytesOutlined()];
+	int bytesBitmap = (glyph->heightBitmap + marginOutlined) * glyph->WidthBytesOutlined();
+	glyph->bitmapOutlined = new byte[bytesBitmap];
 	if (!glyph->bitmapOutlined)
 		return;
 
-	memset(glyph->bitmapOutlined, 0, (nHeightBitmap + OUTLINED_BORDER) * glyph->WidthBytesOutlined());
+	memset(glyph->bitmapOutlined, 0, bytesBitmap);
 
 	if (shadowMode == CRawBmpFont::SM_SHADOW)
-		CopyAndShadowBuffRGBA32(glyph->bitmapOutlined, glyph->bitmap, glyph->nWidthBitmap, nHeightBitmap, OUTLINED_BORDER / 2, 255, nHeightBitmap / 8);
+	{
+		CopyAndShadowBuffRGBA32(glyph->bitmapOutlined, glyph->bitmap, glyph->widthBitmap,
+			glyph->heightBitmap, 255, marginOutlined / 2);
+	}
 	else
 	{
 		// Outline glyph
-		CopyAndOutlineBuffRGBA32(glyph->bitmapOutlined, glyph->bitmap, glyph->nWidthBitmap, nHeightBitmap, OUTLINED_BORDER / 2);
+		CopyAndOutlineBuffRGBA32(glyph->bitmapOutlined, glyph->bitmap, glyph->widthBitmap, glyph->heightBitmap, marginOutlined / 2);
 
-		EraseBuffRGBA32(glyph->bitmapOutlined, glyph->bitmap, glyph->nWidthBitmap, nHeightBitmap, OUTLINED_BORDER / 2);
+		EraseBuffRGBA32(glyph->bitmapOutlined, glyph->bitmap, glyph->widthBitmap, glyph->heightBitmap, marginOutlined / 2);
 	}
 }
 
@@ -311,6 +429,7 @@ GfxRaw::Glyph *CRawGlyphSet::GetGlyph(StringIterator::CharType ch)
 				{
 					delete[] glyph->bitmap;
 					glyph->bitmap = NULL;
+					glyph->freed = true;
 					if (glyph->bitmapOutlined)
 					{
 						delete[] glyph->bitmapOutlined;
@@ -333,7 +452,7 @@ GfxRaw::Glyph *CRawGlyphSet::GetGlyph(StringIterator::CharType ch)
 	else
 	{
 		glyph = (*it).second;
-		if (glyph->bitmap == NULL)
+		if (glyph->freed && glyph->bitmap == NULL)
 		{
 			// It must has been freed, renew one.
 			Glyph		*temp = m_rawGlyphBuilder.BuildGlyph(ch);
@@ -341,6 +460,7 @@ GfxRaw::Glyph *CRawGlyphSet::GetGlyph(StringIterator::CharType ch)
 			if (!temp)
 				return NULL;
 			glyph->bitmap = temp->bitmap;
+			glyph->freed = false;
 			temp->bitmap = NULL;
 			delete temp;
 		}
@@ -568,6 +688,9 @@ bool CRawBmpFont::Create(const CFontInfo &font)
 	}
 
 	m_prawGlyphSet = GfxRaw::g_rawGlyphSetMgr.GetGlyphSet(font);
+	m_marginOutlined = GetGlyphHeight() / 8 * 2;
+	if (m_marginOutlined <= 1)
+		m_marginOutlined = 2;
 
 	return m_prawGlyphSet != NULL;
 }
@@ -587,10 +710,11 @@ bool CRawBmpFont::TextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrTex
 }
 
 // graph is 32 bpp, glyph is 32 bpp
-static inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, agg::rendering_buffer &glyph, int xSrc, int ySrc, int xSrcEnd, int ySrcEnd, 
-					  int nAlphaGlyph, const MLColor &clrGlyph)
+void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rcClip,
+						bool bDrawOutlined, Glyph *pGlyph, int nAlphaGlyph, const MLColor &clrGlyph)
 {
-	byte		*pDst, *pRowDst, *pSrc, *pRowSrc;
+	ASSERT(G_PIX_SIZE == 4);
+
 	int			x, y;
 	byte		clr[3];
 
@@ -598,18 +722,51 @@ static inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int y
 	clr[1] = clrGlyph.g();
 	clr[2] = clrGlyph.r();
 
-	pRowDst = graph.row_ptr(yDst);
-	pRowDst += xDst * 4;
+	int	xSrc = 0, ySrc = 0;
 
-	pRowSrc = glyph.row_ptr(ySrc);
-	pRowSrc += xSrc * G_PIX_SIZE;
+	xDst += pGlyph->leftOffset;
+	yDst += pGlyph->topOffset;
+	int xDstEnd = xDst + pGlyph->widthBitmap;
+	int yDstEnd = yDst + pGlyph->heightBitmap;
+
+	// Set outlined glyph parameters
+	agg::rendering_buffer bufGlyph;
+	if (bDrawOutlined)
+	{
+		bufGlyph.attach(pGlyph->bitmapOutlined, pGlyph->widthOutlined(), pGlyph->heightOutlined(), pGlyph->WidthBytesOutlined());
+		xDst -= pGlyph->marginOutlined / 2;
+		yDst -= pGlyph->marginOutlined / 2;
+		xDstEnd += pGlyph->marginOutlined / 2;
+		yDstEnd += pGlyph->marginOutlined / 2;
+	}
+	else
+		bufGlyph.attach(pGlyph->bitmap, pGlyph->widthBitmap, pGlyph->heightBitmap, pGlyph->WidthBytes());
+
+	// Set clip area
+	if (xDstEnd > rcClip.right)
+		xDstEnd = rcClip.right;
+	if (yDstEnd > rcClip.bottom)
+		yDstEnd = rcClip.bottom;
+	if (xDst < rcClip.left)
+	{
+		xSrc = rcClip.left - xDst;
+		xDst = rcClip.left;
+	}
+	if (yDst < rcClip.top)
+	{
+		ySrc = rcClip.top - yDst;
+		yDst = rcClip.top;
+	}
+
+	byte *pRowDst = graph.row_ptr(yDst) + xDst * 4;
+	byte *pRowSrc = bufGlyph.row_ptr(ySrc) + xSrc * 4;
 
 	// Fill with color
-	for (y = ySrc; y < ySrcEnd; y++)
+	for (y = yDst; y < yDstEnd; y++)
 	{
-		pDst = pRowDst;
-		pSrc = pRowSrc;
-		for (x = xSrc; x < xSrcEnd; x++)
+		byte *pDst = pRowDst;
+		byte *pSrc = pRowSrc;
+		for (x = xDst; x < xDstEnd; x++)
 		{
 			if (pSrc[3] != 0)
 			{
@@ -626,49 +783,76 @@ static inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int y
 			pSrc += G_PIX_SIZE;
 		}
 		pRowDst += graph.stride();
-		pRowSrc += glyph.stride();
+		pRowSrc += bufGlyph.stride();
+	}
+}
+
+inline void GetDrawGlyphClipPos(int &xDst, int &yDst, int &xDstEnd, int &yDstEnd, int &xSrc, int &ySrc, Glyph *pGlyph, CRect &rcClip)
+{
+	xSrc = 0, ySrc = 0;
+
+	xDst += pGlyph->leftOffset;
+	yDst += pGlyph->topOffset;
+	xDstEnd = xDst + pGlyph->widthBitmap;
+	yDstEnd = yDst + pGlyph->heightBitmap;
+
+	// Set clip area
+	if (xDstEnd > rcClip.right)
+		xDstEnd = rcClip.right;
+	if (yDstEnd > rcClip.bottom)
+		yDstEnd = rcClip.bottom;
+	if (xDst < rcClip.left)
+	{
+		xSrc = rcClip.left - xDst;
+		xDst = rcClip.left;
+	}
+	if (yDst < rcClip.top)
+	{
+		ySrc = rcClip.top - yDst;
+		yDst = rcClip.top;
 	}
 }
 
 // graph is 32 bpp, glyph is 32 bpp
 // pattern is 24 bpp.
-inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, agg::rendering_buffer &glyph, int xSrc, int ySrc, int xSrcEnd, int ySrcEnd,
-					  int nAlphaGlyph, CRawImage *pattern, int &xPtStart)
+void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rcClip,
+					 Glyph *pGlyph, int nAlphaGlyph,
+					 CRawImage *pattern)
 {
-	byte		*pDst, *pRowDst, *pSrc, *pRowSrc;
 	byte		*pPt, *pRowPt;
 	PRAW_IMAGE_DATA	imgPattern;
 	int			x, y;
-	int			yPtStart = 0;
-	int			xPtStartNew = xPtStart;
 
-	pRowDst = graph.row_ptr(yDst);
-	pRowDst += xDst * 4;
+	int			xDstEnd, yDstEnd, xSrc, ySrc;
 
-	pRowSrc = glyph.row_ptr(ySrc);
-	pRowSrc += xSrc * G_PIX_SIZE;
+	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 
 	imgPattern = pattern->GetHandle();
 	ASSERT(imgPattern->bitCount == 24);
 
-	yPtStart += ySrc;
+	int			xPtStart = xDst % imgPattern->width;
+	int			yPtStart = 0;
+	yPtStart += ySrc + pGlyph->topOffset;
 	if (yPtStart >= imgPattern->height)
 		yPtStart = 0;
-	// xPtStart += xSrc;
-	if (xPtStart >= imgPattern->width)
-		xPtStart = 0;
 
 	pRowPt = imgPattern->RowPtr(yPtStart);
 	pRowPt += xPtStart * 3;
 
-	// Fill with color
-	for (y = ySrc; y < ySrcEnd; y++)
+	agg::rendering_buffer bufGlyph(pGlyph->bitmap, pGlyph->widthBitmap, pGlyph->heightBitmap, pGlyph->WidthBytes());
+
+	byte *pRowDst = graph.row_ptr(yDst) + xDst * 4;
+	byte *pRowSrc = bufGlyph.row_ptr(ySrc) + xSrc * 4;
+
+	for (y = yDst; y < yDstEnd; y++)
 	{
+		byte *pDst = pRowDst;
+		byte *pSrc = pRowSrc;
 		pDst = pRowDst;
 		pSrc = pRowSrc;
 		pPt = pRowPt;
-		xPtStartNew = xPtStart;
-		for (x = xSrc; x < xSrcEnd; x++)
+		int xPtStartNew = xPtStart;
+		for (x = xDst; x < xDstEnd; x++)
 		{
 			if (pSrc[3] != 0)
 			{
@@ -699,7 +883,7 @@ inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, ag
 				pPt += 3;
 		}
 		pRowDst += graph.stride();
-		pRowSrc += glyph.stride();
+		pRowSrc += bufGlyph.stride();
 		yPtStart++;
 		if (yPtStart >= imgPattern->height)
 		{
@@ -710,54 +894,54 @@ inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, ag
 		else
 			pRowPt += imgPattern->stride;
 	}
-
-	xPtStart = xPtStartNew;
 }
 
 // graph is 32 bpp, glyph is 32 bpp
 // pattern is 24 bpp.
-inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, agg::rendering_buffer &glyph, int xSrc, int ySrc, int xSrcEnd, int ySrcEnd,
-					  int nAlphaGlyph, CRawImage *pattern, int &xPtStart, int nAlphaPattern, const MLColor &clrPt, int nAlphaClrPt)
+void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rcClip,
+					 Glyph *pGlyph, int nAlphaGlyph, 
+					 CRawImage *pattern, int nAlphaPattern,
+					 const MLColor &clrPt, int nAlphaClrPt)
 {
-	byte		*pDst, *pRowDst, *pSrc, *pRowSrc;
 	byte		*pPt, *pRowPt;
 	PRAW_IMAGE_DATA	imgPattern;
 	int			x, y;
-	int			yPtStart = 0;
-	int			xPtStartNew = xPtStart;
 	byte		pclrPt[3];
 
 	pclrPt[0] = clrPt.b();
 	pclrPt[1] = clrPt.g();
 	pclrPt[2] = clrPt.r();
 
-	pRowDst = graph.row_ptr(yDst);
-	pRowDst += xDst * 4;
+	int			xDstEnd, yDstEnd, xSrc, ySrc;
 
-	pRowSrc = glyph.row_ptr(ySrc);
-	pRowSrc += xSrc * G_PIX_SIZE;
+	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 
 	imgPattern = pattern->GetHandle();
 	ASSERT(imgPattern->bitCount == 24);
 
-	yPtStart += ySrc;
+	int			xPtStart = xDst % imgPattern->width;
+	int			yPtStart = 0;
+	yPtStart += ySrc + pGlyph->topOffset;
 	if (yPtStart >= imgPattern->height)
 		yPtStart = 0;
-	// xPtStart += xSrc;
-	if (xPtStart >= imgPattern->width)
-		xPtStart = 0;
 
 	pRowPt = imgPattern->RowPtr(yPtStart);
 	pRowPt += xPtStart * 3;
 
-	// Fill with color
-	for (y = ySrc; y < ySrcEnd; y++)
+	agg::rendering_buffer bufGlyph(pGlyph->bitmap, pGlyph->widthBitmap, pGlyph->heightBitmap, pGlyph->WidthBytes());
+
+	byte *pRowDst = graph.row_ptr(yDst) + xDst * 4;
+	byte *pRowSrc = bufGlyph.row_ptr(ySrc) + xSrc * 4;
+
+	for (y = yDst; y < yDstEnd; y++)
 	{
+		byte *pDst = pRowDst;
+		byte *pSrc = pRowSrc;
 		pDst = pRowDst;
 		pSrc = pRowSrc;
 		pPt = pRowPt;
-		xPtStartNew = xPtStart;
-		for (x = xSrc; x < xSrcEnd; x++)
+		int xPtStartNew = xPtStart;
+		for (x = xDst; x < xDstEnd; x++)
 		{
 			if (pSrc[3] != 0)
 			{
@@ -793,7 +977,7 @@ inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, ag
 				pPt += 3;
 		}
 		pRowDst += graph.stride();
-		pRowSrc += glyph.stride();
+		pRowSrc += bufGlyph.stride();
 		yPtStart++;
 		if (yPtStart >= imgPattern->height)
 		{
@@ -803,39 +987,33 @@ inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, ag
 		else
 			pRowPt += imgPattern->stride;
 	}
-
-	xPtStart = xPtStartNew;
 }
 
 // graph is 32 bpp, glyph is 32 bpp
 // pattern is 24 bpp.
-inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, agg::rendering_buffer &glyph, int xSrc, int ySrc, int xSrcEnd, int ySrcEnd,
-					  int nAlphaGlyph, CRawImage *pattern1, int &xPt1Start, int nAlphaPt1, CRawImage *pattern2, int &xPt2Start, int nAlphaPt2)
+void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rcClip,
+					 Glyph *pGlyph, int nAlphaGlyph,
+					 CRawImage *pattern1, int nAlphaPt1,
+					 CRawImage *pattern2, int nAlphaPt2)
 {
-	byte		*pDst, *pRowDst, *pSrc, *pRowSrc;
 	byte		*pPt1, *pRowPt1;
 	byte		*pPt2, *pRowPt2;
 	PRAW_IMAGE_DATA	imgPattern1, imgPattern2;
 	int			x, y;
-	int			yPt1Start = 0, yPt2Start = 0;
-	int			xPt1StartNew = xPt1Start;
-	int			xPt2StartNew = xPt2Start;
 
-	pRowDst = graph.row_ptr(yDst);
-	pRowDst += xDst * 4;
+	int			xDstEnd, yDstEnd, xSrc, ySrc;
 
-	pRowSrc = glyph.row_ptr(ySrc);
-	pRowSrc += xSrc * G_PIX_SIZE;
+	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 
 	// pattern 1
 	imgPattern1 = pattern1->GetHandle();
 	ASSERT(imgPattern1->bitCount == 24);
-	yPt1Start += ySrc;
+
+	int			xPt1Start = xDst % imgPattern1->width;
+	int			yPt1Start = 0;
+	yPt1Start += ySrc + pGlyph->topOffset;
 	if (yPt1Start >= imgPattern1->height)
 		yPt1Start = 0;
-	// xPt1Start += xSrc;
-	if (xPt1Start >= imgPattern1->width)
-		xPt1Start = 0;
 
 	pRowPt1 = imgPattern1->RowPtr(yPt1Start);
 	pRowPt1 += xPt1Start * 3;
@@ -843,26 +1021,30 @@ inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, ag
 	// pattern 2
 	imgPattern2 = pattern2->GetHandle();
 	ASSERT(imgPattern2->bitCount == 24);
-	yPt2Start += ySrc;
+
+	int			xPt2Start = xDst % imgPattern2->width;
+	int			yPt2Start = 0;
+	yPt2Start += ySrc + pGlyph->topOffset;
 	if (yPt2Start >= imgPattern2->height)
 		yPt2Start = 0;
-	// xPt2Start += xSrc;
-	if (xPt2Start >= imgPattern2->width)
-		xPt2Start = 0;
 
 	pRowPt2 = imgPattern2->RowPtr(yPt2Start);
 	pRowPt2 += xPt2Start * 3;
 
-	// Fill with color
-	for (y = ySrc; y < ySrcEnd; y++)
+	agg::rendering_buffer bufGlyph(pGlyph->bitmap, pGlyph->widthBitmap, pGlyph->heightBitmap, pGlyph->WidthBytes());
+
+	byte *pRowDst = graph.row_ptr(yDst) + xDst * 4;
+	byte *pRowSrc = bufGlyph.row_ptr(ySrc) + xSrc * 4;
+
+	for (y = yDst; y < yDstEnd; y++)
 	{
-		pDst = pRowDst;
-		pSrc = pRowSrc;
+		byte *pDst = pRowDst;
+		byte *pSrc = pRowSrc;
 		pPt1 = pRowPt1;
 		pPt2 = pRowPt2;
-		xPt1StartNew = xPt1Start;
-		xPt2StartNew = xPt2Start;
-		for (x = xSrc; x < xSrcEnd; x++)
+		int xPt1StartNew = xPt1Start;
+		int xPt2StartNew = xPt2Start;
+		for (x = xDst; x < xDstEnd; x++)
 		{
 			if (pSrc[3] != 0)
 			{
@@ -907,7 +1089,7 @@ inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, ag
 				pPt2 += 3;
 		}
 		pRowDst += graph.stride();
-		pRowSrc += glyph.stride();
+		pRowSrc += bufGlyph.stride();
 
 		yPt1Start++;
 		if (yPt1Start >= imgPattern1->height)
@@ -927,9 +1109,6 @@ inline void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, ag
 		else
 			pRowPt2 += imgPattern2->stride;
 	}
-
-	xPt1Start = xPt1StartNew;
-	xPt2Start = xPt2StartNew;
 }
 
 bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, LPCTSTR szText, int nLen, UINT uFormat)
@@ -1011,11 +1190,9 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 {
 	byte		r = clrText.r(), g = clrText.g(), b = clrText.b();
 	byte		textAlpha = pGraph->GetOpacityPainting();
-	int			yyStart, yyEnd;
 	CRect		rcClip;
 	PRAW_IMAGE_DATA pGraphRaw = pGraph->GetRawBuff();
 	agg::rendering_buffer bufGraph(pGraphRaw->buff, pGraphRaw->width, pGraphRaw->height, pGraphRaw->stride);
-	int			xPattern1 = 0, xPattern2 = 0;
 
 	pGraph->GetMappedClipBoundRect(rcClip);
 
@@ -1032,21 +1209,9 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 	if (x + width < rcClip.right)
 		rcClip.right = x + width;
 
-	if (y < rcClip.top)
-		yyStart = rcClip.top - y;
-	else
-		yyStart = 0;
-	if (y + GetGlyphHeight() > rcClip.bottom)
-		yyEnd = rcClip.bottom - y;
-	else
-		yyEnd = GetGlyphHeight();
-
 	StringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
-		int			xxStart, xxEnd;
-		// byte		*p, *pRowGlyph, *graphData, *pRowGraph;
-		// int		xx, yy;
 		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
@@ -1054,41 +1219,20 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 		if (x >= rcClip.right)
 			return true;
 
-		if (x + glyph->nWidthBitmap <= rcClip.left)
+		if (x + glyph->nWidth <= rcClip.left)
 		{
 			x += glyph->nWidth;
-			if (m_imgPattern1)
-				xPattern1 = (xPattern1 + glyph->nWidthBitmap) % m_imgPattern1->width();
-			if (m_imgPattern2)
-				xPattern2 = (xPattern2 + glyph->nWidthBitmap) % m_imgPattern2->width();
 			continue;
 		}
 
-		if (x < rcClip.left)
-			xxStart = rcClip.left - x;
-		else
-			xxStart = 0;
-		if (x + glyph->nWidthBitmap > rcClip.right)
-			xxEnd = rcClip.right - x;
-		else
-			xxEnd = glyph->nWidthBitmap;
-
-		if (m_imgPattern1)
-			xPattern1 = (xPattern1 + xxStart) % m_imgPattern1->width();
-
-		agg::rendering_buffer bufGlyph(glyph->bitmap, glyph->nWidthBitmap, GetGlyphHeight(), glyph->WidthBytes());
-
 		if (m_overlayMode == OM_PATTERN)
-			DrawGlyphRGBA32(bufGraph, x + xxStart, y + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, m_imgPattern1, xPattern1);
+			DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1);
 		else if (m_overlayMode == OM_COLOR)
-			DrawGlyphRGBA32(bufGraph, x + xxStart, y + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, clrText);
+			DrawGlyphRGBA32(bufGraph, x, y, rcClip, false, glyph, textAlpha, clrText);
 		else if (m_overlayMode == OM_DUAL_PATTERN)
-		{
-			xPattern2 = (xPattern2 + xxStart) % m_imgPattern2->width();
-			DrawGlyphRGBA32(bufGraph, x + xxStart, y + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, m_imgPattern1, xPattern1, m_nAlphaPattern1, m_imgPattern2, xPattern2, m_nAlphaPattern2);
-		}
+			DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1, m_nAlphaPattern1, m_imgPattern2, m_nAlphaPattern2);
 		else if (m_overlayMode == OM_PATTERN_COLOR)
-			DrawGlyphRGBA32(bufGraph, x + xxStart, y + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, m_imgPattern1, xPattern1, m_nAlphaPattern1, m_clrPattern2, m_nAlphaPattern2);
+			DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1, m_nAlphaPattern1, m_clrPattern2, m_nAlphaPattern2);
 
 		x += glyph->nWidth;
 	}
@@ -1163,16 +1307,10 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen)
 {
 	byte		textAlpha = pGraph->GetOpacityPainting();
-	int			yyStart, yyEnd;
-	int			nOFHeight = GetGlyphHeight() + OUTLINED_BORDER;
-	int			nOFWidth;	// OF = OutlinedFont
 	CRect		rcClip;
-
-	y -= OUTLINED_BORDER / 2;
 
 	PRAW_IMAGE_DATA pGraphRaw = pGraph->GetRawBuff();
 	agg::rendering_buffer bufGraph(pGraphRaw->buff, pGraphRaw->width, pGraphRaw->height, pGraphRaw->stride);
-	int			xPattern1 = 0, xPattern2 = 0;
 
 	pGraph->GetMappedClipBoundRect(rcClip);
 
@@ -1183,26 +1321,15 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 
 	if (y >= rcClip.bottom)
 		return true;
-	if (y + nOFHeight <= rcClip.top)
+	if (y + GetGlyphHeight() + m_marginOutlined / 2 <= rcClip.top)
 		return true;
 
 	if (x + width < rcClip.right)
 		rcClip.right = x + width;
 
-	if (x + OUTLINED_BORDER / 2 < rcClip.left)
-	{
-		if (m_imgPattern1)
-			xPattern1 = (rcClip.left - x - OUTLINED_BORDER / 2) % m_imgPattern1->width();
-		if (m_imgPattern2)
-			xPattern2 = (rcClip.left - x - OUTLINED_BORDER / 2) % m_imgPattern2->width();
-	}
-
 	StringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
-		int			xxStart, xxEnd;
-		// int			xx, yy;
-		// byte		*p, *pRowGlyph, *graphData, *pRowGraph;
 		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
@@ -1210,42 +1337,24 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 		if (x >= rcClip.right)
 			return true;
 
-		nOFWidth = glyph->nWidthBitmap + OUTLINED_BORDER;
+		int rightGlyph = glyph->leftOffset + glyph->widthBitmap;
+		int bottomGlyph = glyph->topOffset + glyph->heightBitmap;
 
-		if (x + nOFWidth <= rcClip.left)
+		if (x + glyph->nWidth <= rcClip.left)
 		{
 			x += glyph->nWidth;
 			continue;
 		}
 
-		if (!glyph->bitmapOutlined)
-			CreateOutlinedGlyph(glyph, GetGlyphHeight(), m_shadowMode);
+		if (!glyph->bitmapOutlined && glyph->bitmap)
+			CreateOutlinedGlyph(glyph, m_marginOutlined, m_shadowMode);
 
 		if (glyph->bitmapOutlined)
 		{
 			//
 			// Draw outlined border
 			//
-			if (y < rcClip.top)
-				yyStart = rcClip.top - y;
-			else
-				yyStart = 0;
-			if (y + nOFHeight > rcClip.bottom)
-				yyEnd = rcClip.bottom - y;
-			else
-				yyEnd = nOFHeight;
-
-			if (x < rcClip.left)
-				xxStart = rcClip.left - x;
-			else
-				xxStart = 0;
-			if (x + nOFWidth > rcClip.right)
-				xxEnd = rcClip.right - x;
-			else
-				xxEnd = nOFWidth;
-
-			agg::rendering_buffer bufGlyph(glyph->bitmapOutlined, nOFWidth, nOFHeight, glyph->WidthBytesOutlined());
-			DrawGlyphRGBA32(bufGraph, x + xxStart, y + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, clrBorder);
+			DrawGlyphRGBA32(bufGraph, x, y, rcClip, true, glyph, textAlpha, clrBorder);
 		}
 
 		if (glyph->bitmap)
@@ -1253,34 +1362,14 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 			//
 			// Draw inner text
 			//
-			if (y + OUTLINED_BORDER / 2 < rcClip.top)
-				yyStart = rcClip.top - (y + OUTLINED_BORDER / 2);
-			else
-				yyStart = 0;
-			if (y + OUTLINED_BORDER / 2 + GetGlyphHeight() > rcClip.bottom)
-				yyEnd = rcClip.bottom - (y + OUTLINED_BORDER / 2);
-			else
-				yyEnd = GetGlyphHeight();
-
-			if (x + OUTLINED_BORDER / 2 < rcClip.left)
-				xxStart = rcClip.left - (x + OUTLINED_BORDER / 2);
-			else
-				xxStart = 0;
-			if (x + OUTLINED_BORDER / 2 + glyph->nWidthBitmap > rcClip.right)
-				xxEnd = rcClip.right - (x + OUTLINED_BORDER / 2);
-			else
-				xxEnd = glyph->nWidthBitmap;
-
-			agg::rendering_buffer bufGlyph(glyph->bitmap, glyph->nWidthBitmap, GetGlyphHeight(), glyph->WidthBytes());
-
 			if (m_overlayMode == OM_PATTERN)
-				DrawGlyphRGBA32(bufGraph, x + OUTLINED_BORDER / 2 + xxStart, y + OUTLINED_BORDER / 2 + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, m_imgPattern1, xPattern1);
+				DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1);
 			else if (m_overlayMode == OM_COLOR)
-				DrawGlyphRGBA32(bufGraph, x + OUTLINED_BORDER / 2 + xxStart, y + OUTLINED_BORDER / 2 + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, clrText);
+				DrawGlyphRGBA32(bufGraph, x, y, rcClip, false, glyph, textAlpha, clrText);
 			else if (m_overlayMode == OM_DUAL_PATTERN)
-				DrawGlyphRGBA32(bufGraph, x + OUTLINED_BORDER / 2 + xxStart, y + OUTLINED_BORDER / 2 + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, m_imgPattern1, xPattern1, m_nAlphaPattern1, m_imgPattern2, xPattern2, m_nAlphaPattern2);
+				DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1, m_nAlphaPattern1, m_imgPattern2, m_nAlphaPattern2);
 			else if (m_overlayMode == OM_PATTERN_COLOR)
-				DrawGlyphRGBA32(bufGraph, x + OUTLINED_BORDER / 2 + xxStart, y + OUTLINED_BORDER / 2 + yyStart, bufGlyph, xxStart, yyStart, xxEnd, yyEnd, textAlpha, m_imgPattern1, xPattern1, m_nAlphaPattern1, m_clrPattern2, m_nAlphaPattern2);
+				DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1, m_nAlphaPattern1, m_clrPattern2, m_nAlphaPattern2);
 		}
 
 		x += glyph->nWidth;

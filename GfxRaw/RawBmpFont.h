@@ -41,7 +41,6 @@ enum
 enum
 {
 	MARGIN_BITMAP			= 1,
-	OUTLINED_BORDER			= 4
 };
 
 
@@ -49,10 +48,11 @@ struct Glyph
 {
 	Glyph()
 	{
-		nWidth = nWidthBitmap = 0;
+		leftOffset = topOffset = nWidth = widthBitmap = heightBitmap = marginOutlined = 0;
 		bitmap = NULL;
 		bitmapOutlined = NULL;
 		nLastUsedTime = GetTickCount();
+		freed = false;
 	}
 	~Glyph()
 	{
@@ -62,12 +62,20 @@ struct Glyph
 			delete[] bitmap;
 	}
 
-	int WidthBytes() const { return nWidthBitmap * G_PIX_SIZE; }
-	int WidthBytesOutlined() const { return (nWidthBitmap + OUTLINED_BORDER) * G_PIX_SIZE; }
+	int widthOutlined() { return widthBitmap + marginOutlined; }
+	int heightOutlined() { return heightBitmap + marginOutlined; }
+
+	int WidthBytes() const { return widthBitmap * G_PIX_SIZE; }
+	int WidthBytesOutlined() const { return (widthBitmap + marginOutlined) * G_PIX_SIZE; }
 
 	StringIterator::CharType	ch;
-	int16		nWidth;				// Width of char
-	int16		nWidthBitmap;		// Width of bitmap
+	byte		nWidth;					// Width of char
+
+	byte		leftOffset, topOffset;	// Left and top offset of bitmap.
+	byte		widthBitmap, heightBitmap;			// Width of bitmap
+	byte		marginOutlined;
+	bool		freed;
+
 	byte		*bitmap;
 	byte		*bitmapOutlined;
 	uint32		nLastUsedTime;
@@ -225,7 +233,7 @@ protected:
 		}
 		else
 		{
-			width = GetTextWidth(szText, nLen) + GfxRaw::OUTLINED_BORDER * 2;
+			width = GetTextWidth(szText, nLen) + m_marginOutlined;
 		}
 	}
 
@@ -246,6 +254,7 @@ protected:
 	int						m_nAlphaPattern1, m_nAlphaPattern2;
 	OverlayMode				m_overlayMode;
 	ShadowMode				m_shadowMode;
+	int						m_marginOutlined;
 
 	CRect					m_rcClip;
 

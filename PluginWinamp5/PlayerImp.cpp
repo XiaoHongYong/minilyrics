@@ -58,7 +58,7 @@ void AddRemoveMLItemInWinampMenu(bool bAdd)
 
 		// now add the menu item using prior_item as the item to instert after
 		InsertMenu(main_menu, prior_item, MF_BYCOMMAND, nIDMenuMLItem, "MiniLyrics");
-		CheckMLItemInWinampMenu(true);
+		CheckMLItemInWinampMenu(g_Player.m_bWorking);
 	}
 	else
 	{

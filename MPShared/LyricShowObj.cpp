@@ -1377,7 +1377,6 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 
 		if (m_bOutlineLyrics)
 		{
-			rcText.right += GfxRaw::OUTLINED_BORDER;
 			// Draw lyrics text outlined
 			pGraphics->DrawTextClipOutlined(pFrag->szLyric, pFrag->nLen, &rcText, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
 		}

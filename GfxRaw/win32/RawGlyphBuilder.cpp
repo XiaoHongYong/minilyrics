@@ -6,13 +6,10 @@
 namespace GfxRaw
 {
 
-extern bool	g_bAntialiasFontEnabled;
+#define MEM_GRAPH_BITS	24
+#define MEM_GRAPH_PIX_SIZE	3
 
-inline byte RGBToGray(int r, int g, int b)
-{
-	// 5 = ËÄÉáÎåÈë
-	return (r * 3 + g * 6 + b + 5) / 10;
-}
+extern bool	g_bAntialiasFontEnabled;
 
 CRawGlyphBuilder::CRawGlyphBuilder()
 {
@@ -87,25 +84,24 @@ void CRawGlyphBuilder::Destroy()
 	m_font.Destroy();
 }
 
+void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph);
+
 Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 {
 	SIZE			size;
-	int				nWidth;
-	int				x, y;
-	byte			*pDst, *pRowDst, *pSrc, *pRowSrc;
 
 	agg::rendering_buffer	bufGraph(m_memGraph.GetBuff(), m_memGraph.Width(), m_memGraph.Height(), -m_nWidthBytesGraph);
+
 
 	ASSERT(m_pmemGraph);
 
 	if (!m_pmemGraph->GetTextExtentPoint32(ch, ch.size(), &size))
 		return NULL;
 
-	nWidth = size.cx + MARGIN_BITMAP * 2;
 	int nHeightBitmap = GetHeightBitmap();
 
-	pRowSrc = bufGraph.row_ptr(0);
-	for (y = 0; y < nHeightBitmap; y++)
+	uint8 *pRowSrc = bufGraph.row_ptr(0);
+	for (int y = 0; y < nHeightBitmap; y++)
 	{
 		memset(pRowSrc, 0, bufGraph.stride_abs());
 		pRowSrc += bufGraph.stride();
@@ -116,46 +112,10 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 
 	Glyph		*glyph = new Glyph;
 	glyph->ch = ch;
-	glyph->nWidth = (int16)size.cx;
-	glyph->nWidthBitmap = nWidth;
-	glyph->bitmap = new byte[glyph->WidthBytes() * nHeightBitmap];
+	glyph->nWidth = (byte)size.cx;
 
-	pRowSrc = bufGraph.row_ptr(0);
-	pRowDst = glyph->bitmap;
-	for (y = 0; y < nHeightBitmap; y++)
-	{
-		pDst = pRowDst;
-		pSrc = pRowSrc;
-		for (x = 0; x < glyph->nWidthBitmap; x++)
-		{
-			// 			pDst[G_R] = 255;
-			// 			pDst[G_G] = 255;
-			// 			pDst[G_B] = 255;
-			// 			pDst[G_A] = 255;
-			pDst[G_R] = pSrc[2];
-			pDst[G_G] = pSrc[1];
-			pDst[G_B] = pSrc[0];
-			pDst[G_A] = RGBToGray(pSrc[G_R], pSrc[G_G], pSrc[G_B]);
-			pDst += G_PIX_SIZE;
-			pSrc += 3;
-		}
-		pRowSrc += bufGraph.stride();
-		pRowDst += glyph->WidthBytes();
-	}
-
-	//	memset(glyph->bitmap, 255, size.cx * GetHeightBitmap());
-
-	// 
-	// 	byte		*ptemp;
-	// 	ptemp = new byte[size.cx * GetHeightBitmap()];
-	// 
-	// 	memcpy(ptemp, glyph->bitmap, size.cx * GetHeightBitmap());
-	// 
-	// 	agg::rendering_buffer		rbufDest(glyph->bitmap, nWidth, GetHeightBitmap(), glyph->nWidth);
-	// 	agg::rendering_buffer		rbufSrc(ptemp, nWidth, GetHeightBitmap(), glyph->nWidth);
-	// 	// agg::rendering_buffer		rbufSrc(graphData, m_memGraph.Width(), GetHeightBitmap(), m_nWidthBytesGraph);
-	// 
-	// 	blur_text(100, 2, 3, rbufSrc, rbufDest, 1);
+	agg::pixfmt_rgb24		pixf(bufGraph);
+	CopyBitmpDataFromGraphBuffer(glyph, pixf);
 
 	return glyph;
 }
