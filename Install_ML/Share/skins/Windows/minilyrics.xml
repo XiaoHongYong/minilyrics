@@ -32,7 +32,7 @@
   <skinwnd Name="minilyrics" Caption="MiniLyrics" MinWidth="275" MinHeight="35" Width="400" Height="200" WindowsAppearance="TRUE" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h"/>
   </skinwnd>
-  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="10" Width="400" Height="200" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="10" Width="400" Height="200" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
   </skinwnd>
 </skin>

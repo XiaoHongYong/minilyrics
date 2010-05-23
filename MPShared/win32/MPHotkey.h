@@ -70,12 +70,12 @@ protected:
 	int LoadSettings();
 	int SaveSettings();
 
-	void RegisterAllHotKeys();
-	void UnregisterAllHotKeys();
+	void RegisterAllGlobalHotKeys();
+	void UnregisterAllGlobalHotKeys();
 
 protected:
 	HWND			m_hWnd;
-	bool			m_bEnabled;
+	bool			m_bGlobalHotkeyEnabled;
 	V_ACCKEY		m_vAccKey;
 
 };

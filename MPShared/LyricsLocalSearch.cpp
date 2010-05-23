@@ -605,7 +605,7 @@ void CLyricsLocalSearch::Quit()
 
 LPTSTR GetDiskImageFileExtEnd(LPCTSTR szFile)
 {
-	static LPCTSTR vImageExts[] = { _T(".cue"), _T(".tak") };
+	static LPCTSTR vImageExts[] = { _T(".cue"), _T(".tak"), _T(".wv") };
 
 	for (int i = 0; i < CountOf(vImageExts); i++)
 	{

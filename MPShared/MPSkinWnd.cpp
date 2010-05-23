@@ -652,13 +652,6 @@ CMPSkinWnd::~CMPSkinWnd()
 
 }
 
-int CMPSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow, bool bTopmost)
-{
-	bTopmost |= g_Profile.GetProfileBool(GetCfgSectName(), _T("topmost"), true);
-
-	return CSkinWnd::Create(szClassName, szCaption, pSkinFactory, szSkinWndName, pWndParent, bToolWindow, bTopmost);
-}
-
 void CMPSkinWnd::OnActivate(bool bActived)
 {
 #ifdef _MPLAYER
@@ -670,6 +663,14 @@ void CMPSkinWnd::OnActivate(bool bActived)
 
 	if (bActived && !IsIconic())
 		g_mpApp.GetSkinFactory()->OnSkinWndActivate(this);
+}
+
+void CMPSkinWnd::OnPreCreate(DWORD &dwStyle, DWORD &dwExStyle)
+{
+	if (SettingGetTopmost())
+		dwExStyle |= WS_EX_TOPMOST;
+	else
+		dwExStyle &= ~WS_EX_TOPMOST;
 }
 
 bool CMPSkinWnd::OnCreate()
@@ -705,44 +706,14 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 	{
 	case IDC_CLICK_THROUGH:
 		{
-			//bool		bValue = !g_Profile.GetProfileBool(GetCfgSectName(), _T("ClickThrough"), FALSE);
-			//g_Profile.WriteProfileInt(GetCfgSectName(), _T("ClickThrough"), bValue);
-			if (m_bIndividualProperties)
-			{
-				m_bClickThrough = !m_bClickThrough;
-				LoadTransparentSettings();
-			}
-			else
-			{
-				g_mpApp.GetSkinFactory()->SetClickThrough(!g_mpApp.GetSkinFactory()->GetClickThrough());
-				g_mpApp.GetSkinFactory()->AllUpdateTransparent();
-			}
+			SettingReverseClickThrough();
 		}
 		return;
 	case IDC_SETTOPMOST:
 		{
-			bool		bTopmost = !IsTopmost();
-
-			if (m_bIndividualProperties)
-			{
-				g_Profile.WriteProfileInt(GetCfgSectName(), _T("topmost"), bTopmost);
-				SetTopmost(bTopmost);
-			}
-			else
-			{
-				g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bTopmost);
-				g_mpApp.GetSkinFactory()->TopmostAll(bTopmost);
-			}
+			SettingReverseTopmost();
 		}
 		return;
-// 	case IDC_USE_TRANSPT_BK_COLOR:
-// 		g_Profile.WriteProfileInt(GetCfgSectName(), _T("TransparentBkColor"), 
-// 			!g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE));
-// 		if (m_bIndividualProperties)
-// 			LoadTransparentSettings();
-// 		else
-// 			g_mpApp.GetSkinFactory()->AllUpdateTransparent();
-// 		return;
 	case IDC_SET_OPAQUE_100:
 	case IDC_SET_OPAQUE_90:
 	case IDC_SET_OPAQUE_80:
@@ -768,11 +739,7 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 			else if (uID == IDC_SET_OPAQUE_20)	nPercent = 20;
 			else if (uID == IDC_SET_OPAQUE_10)	nPercent = 10;
 
-			g_Profile.WriteProfileInt(GetCfgSectName(), _T("WindowOpaquePercent"), nPercent);
-			if (m_bIndividualProperties)
-				LoadTransparentSettings();
-			else
-				g_mpApp.GetSkinFactory()->AllUpdateTransparent();
+			SettingSetOpaquePercent(nPercent);
 		}
 		return;
 	case IDC_LDS_MULTI_LINE:
@@ -967,8 +934,9 @@ void CMPSkinWnd::OnSkinLoaded()
 		AddCmdHandler(_T("ch_common"));
 
 #ifdef _WIN32_DESKTOP
-	// m_bClickThrough = g_Profile.GetProfileBool(GetCfgSectName(), _T("ClickThrough"), false);
-	LoadTransparentSettings();
+	// 半透明值
+	int		nOpaque = SettingGetOpaquePercent();
+	SetTransparent(OpaquePercentToAlpha(nOpaque), SettingGetClickThrough());
 #endif
 
 	CSkinNStatusButton	*pBt;
@@ -1234,17 +1202,8 @@ BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (IsPropertyName(szProperty, _T("RememberSizePos")))
 		m_bRememberSizePos = IsTRUE(szValue);
-	else if (CSkinWnd::SetProperty(szProperty, szValue))
-	{
-		if (m_bSkinOpened && IsPropertyName(szProperty, _T("BgColor")))
-		{
-// 			if (g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE))
-// 				LoadTransparentSettings();
-		}
-		return true;
-	}
 	else
-		return false;
+		return CSkinWnd::SetProperty(szProperty, szValue);
 
 	return true;
 }
@@ -1282,20 +1241,12 @@ bool CMPSkinWnd::GetChecked(UINT nID, bool &bChecked)
 	{
 	case IDC_SETTOPMOST:
 		bChecked = IsTopmost();
-		// bChecked = g_Profile.GetProfileBool(GetCfgSectName(), _T("topmost"), true);
 		break;
 #ifdef _WIN32
 	case IDC_CLICK_THROUGH:
-		// bChecked = g_Profile.GetProfileBool(GetCfgSectName(), _T("ClickThrough"), false);
-		if (m_bIndividualProperties)
-			bChecked = m_bClickThrough;
-		else
-			bChecked = g_mpApp.GetSkinFactory()->GetClickThrough();
+		bChecked = m_bClickThrough;
 		break;
 #endif
-// 	case IDC_USE_TRANSPT_BK_COLOR:
-// 		bChecked = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
-// 		break;
 	default:
 		{
 			LIST_SKINCMDHANDLER::iterator	it, itEnd;
@@ -1322,7 +1273,7 @@ bool CMPSkinWnd::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 
 	if (vIDs[0] == IDC_SET_OPAQUE_100)
 	{
-		int		nPercent = g_Profile.GetProfileInt(GetCfgSectName(), _T("WindowOpaquePercent"), 100);
+		int		nPercent = SettingGetOpaquePercent();
 		if (nPercent >= 95) nIDChecked = IDC_SET_OPAQUE_100;
 		else if (nPercent >= 85) nIDChecked = IDC_SET_OPAQUE_90;
 		else if (nPercent >= 75) nIDChecked = IDC_SET_OPAQUE_80;
@@ -1444,38 +1395,6 @@ void CMPSkinWnd::OnDropFiles(HDROP hDrop)
 
 	DragFinish(hDrop);
 }
-
-void CMPSkinWnd::LoadTransparentSettings()
-{
-	if (!IsLayeredWndSupported())
-		return;
-
-#ifndef _MPLAYER
-	if (::GetParent(m_hWnd))
-		return;
-#endif
-
-	BYTE			byAlpha = 255;
-	bool			bTransparentClr = false;
-
-	// 半透明值
-	int		nOpaque = g_Profile.GetProfileInt(GetCfgSectName(), _T("WindowOpaquePercent"), 100);
-	if (nOpaque < 10)
-		nOpaque = 10;
-	else if (nOpaque > 100)
-		nOpaque = 100;
-	byAlpha = nOpaque * 255 / 100;
-
-	// bTransparentClr = g_Profile.GetProfileBool(GetCfgSectName(), _T("TransparentBkColor"), FALSE);
-
-#ifdef _WIN32
-	if (!m_bIndividualProperties && g_mpApp.GetSkinFactory()->GetClickThrough())
-		m_bClickThrough = true;
-
-	SetTransparent(byAlpha, bTransparentClr, m_clrBg.get(), m_bClickThrough);
-#endif
-}
-
 #endif
 
 // COMMENT:
@@ -1537,10 +1456,36 @@ CBaseWnd *CMPSkinWnd::GetParentOrSelf()
 #endif
 }
 
-LPCTSTR CMPSkinWnd::GetCfgSectName()
+bool CMPSkinWnd::SettingGetTopmost()
 {
-	if (m_bIndividualProperties)
-		return GetSkinWndName();
-	else
-		return SZ_SECT_UI;
+	return g_Profile.GetProfileBool(SZ_SECT_UI, _T("topmost"), true);
+}
+
+int CMPSkinWnd::SettingGetOpaquePercent()
+{
+	return g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
+}
+
+bool CMPSkinWnd::SettingGetClickThrough()
+{
+	return g_mpApp.GetSkinFactory()->GetClickThrough();
+}
+
+void CMPSkinWnd::SettingReverseTopmost()
+{
+	bool		bTopmost = !IsTopmost();
+
+	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bTopmost);
+	g_mpApp.GetSkinFactory()->TopmostAll(bTopmost);
+}
+
+void CMPSkinWnd::SettingSetOpaquePercent(int nPercent)
+{
+	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), nPercent);
+	g_mpApp.GetSkinFactory()->AllUpdateTransparent();
+}
+
+void CMPSkinWnd::SettingReverseClickThrough()
+{
+	g_mpApp.GetSkinFactory()->SetClickThrough(!g_mpApp.GetSkinFactory()->GetClickThrough());
 }

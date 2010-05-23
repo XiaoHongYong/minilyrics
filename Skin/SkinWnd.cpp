@@ -160,8 +160,6 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 
 	m_bWindowsAppearance = false;
 
-	m_bIndividualProperties = false;
-
 	m_bPaintBg = false;
 	m_clrBgOrg.set(0, 0, 0);
 	m_clrBgOrg.setAlpha(255);
@@ -233,17 +231,20 @@ int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkin
 	m_pSkinFactory = pSkinFactory;
 	m_strSkinWndName = szSkinWndName;
 
+	DWORD	dwStyle = DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX | WS_VISIBLE;
 	DWORD	dwExStyle = 0;
 	if (bTopmost)
 		dwExStyle |= WS_EX_TOPMOST;
 	if (bToolWindow)
 		dwExStyle |= WS_EX_TOOLWINDOW;
 
+	OnPreCreate(dwStyle, dwExStyle);
+
 	// WS_THICKFRAME will cause window flashing on vista
 	if (!CreateEx(szClassName, szCaption,
 		m_rcReal.left, m_rcReal.top, m_rcReal.Width(), m_rcReal.Height(),
 		pWndParent,
-		DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX | WS_VISIBLE, dwExStyle))
+		dwStyle, dwExStyle))
 		return ERR_FALSE;
 
 	return ERR_OK;
@@ -384,8 +385,6 @@ void CSkinWnd::CloseSkin()
 		delete m_pmemGraph;
 		m_pmemGraph = NULL;
 	}
-
-	m_bIndividualProperties = false;
 
 	m_nTimeLatestMouseMsg = 0;
 	m_bMouseActive = false;
@@ -1461,10 +1460,6 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_strMenuName = szValue;
 	}
-	else if (_tcsicmp(szProperty, _T("IndividualProperties")) == 0)
-	{
-		m_bIndividualProperties = IsTRUE(szValue);
-	}
 	else if (m_fontProperty.SetProperty(szProperty, szValue))
 	{
 		if (m_bSkinOpened)
@@ -1568,8 +1563,6 @@ void CSkinWnd::EnumProperties(CUIObjProperties &listProperties)
 	m_fontProperty.EnumProperties(listProperties);
 
 	listProperties.AddPropStr(_T("ContextMenu"), m_rootConainter.m_strContextMenu.c_str(), !m_rootConainter.m_strContextMenu.empty());
-
-	listProperties.AddPropBoolStr(_T("IndividualProperties"), m_bIndividualProperties, m_bIndividualProperties);
 
 #ifdef _WIN32_DESKTOP
 	listProperties.AddPropBoolStr(_T("WindowsAppearance"), m_bWindowsAppearance, m_bWindowsAppearance);
@@ -1888,7 +1881,7 @@ void CSkinWnd::OnActivate(bool bActived)
 			m_translucencyStatus = TS_NORMAL;
 
 		if (m_bEnableClickThrough && m_bClickThrough)
-			SetTransparent(m_nAlpha, false, m_clrBg.get(), m_bClickThrough);
+			SetTransparent(m_nAlpha, m_bClickThrough);
 #endif
 		if (bActived != m_bMouseActive)
 		{
@@ -2087,7 +2080,7 @@ void CSkinWnd::EnableTranslucencyLayered(bool bTranslucencyLayered)
 
 #ifdef _WIN32_DESKTOP
 
-void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTransparent, bool bClickThrough)
+void CSkinWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
 {
 	// If it's child old, ignore this.
 	if (::GetParent(m_hWnd))
@@ -2096,8 +2089,6 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 	m_nAlpha = nAlpha;
 	m_bClickThrough = bClickThrough;
 
-	if (!m_bEnableClickThrough)
-		return;
 	if (m_bTranslucencyLayered)
 	{
 		InvalidateRect(NULL, true);
@@ -2110,13 +2101,13 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 	if (nAlpha < 255)
 		dwFlags = LWA_ALPHA;
 
-	if (bTransparentClr)
+/*	if (bTransparentClr)
 	{
 		clrTrans = clrTransparent;
 		dwFlags |= LWA_COLORKEY;
-	}
+	}*/
 
-	if (bClickThrough && !m_bActived)
+	if (m_bEnableClickThrough && bClickThrough && !m_bActived)
 	{
 		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) | WS_EX_TRANSPARENT);
 	}
@@ -2125,7 +2116,7 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTra
 		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) & ~WS_EX_TRANSPARENT);
 	}
 
-	if (dwFlags != 0 || (bClickThrough && !m_bActived))
+	if (dwFlags != 0 || (m_bEnableClickThrough && bClickThrough && !m_bActived))
 		::SetLayeredWindow(m_hWnd, clrTrans, nAlpha, dwFlags);
 	else
 		::UnSetLayeredWindow(m_hWnd);
@@ -2358,7 +2349,7 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 
 #else
 
-void CSkinWnd::SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTransparent, bool bClickThrough)
+void CSkinWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
 {
 }
 
@@ -2827,41 +2818,3 @@ void CSkinWnd::OnTimerAnimation()
 	if (m_listAnimations.empty())
 		KillTimer(TIMER_ID_ANIMATION);
 }
-
-/*
-int RunModalWindow(
-HWND hwndDialog,
-HWND hwndParent)
-{
-if(hwndParent != NULL)
-EnableWindow(hwndParent,FALSE);
-
-MSG msg;
-
-for(fDone=FALSE;fDone;WaitMessage())
-{
-while(PeekMessage(&msg,0,0,0,PM_REMOVE))
-{
-if(msg.message == WM_QUIT)
-{
-fDone = TRUE;
-PostMessage(NULL,WM_QUIT,0,0);
-break;
-}
-
-if(!IsDialogMessage(hwndDlg,&msg))
-{
-TranslateMessage(&msg);
-DispatchMessage(&msg);
-}
-}
-}
-
-if(hwndParent != NULL)
-EnableWindow(hwndParent,TRUE);
-
-DestroyWindow(hwndDialog);
-
-return nResult;
-}
-*/

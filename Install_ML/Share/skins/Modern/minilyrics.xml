@@ -74,7 +74,7 @@
 	<VStretchImage Left="w-6" Top="23" Width="6" Height="h-23-10" Name="right frame" Image="caption.bmp" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
 	<HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.bmp" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
   </skinwnd>
-  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="8" Top="4" Width="w-8-48" Height="h-8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="8" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,8,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <YScaleImage Left="w-48" Top="0" Width="48" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="132,0,48,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>

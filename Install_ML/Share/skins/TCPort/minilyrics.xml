@@ -40,7 +40,7 @@
     <Image Left="w - 5" Top="15" Width="5" Height="h - 15-4" Name="right frame" Image="xframe.bmp" ImageRect="5,15,5,98" BltMode="stretch"/>
     <XScaleImage Left="0" Top="h-4" Width="w" Height="4" Name="bottom" Image="caption.bmp" ImageRect="27,29,295,4" ImageScaleXStart="50" ImageScaleXEnd="280"/>
   </skinwnd>
-  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="20" Width="400" Height="20" BgColor="#183C7B" FgColor="#FFFFFF" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="20" Width="400" Height="20" BgColor="#183C7B" FgColor="#FFFFFF" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="3" Top="2" Width="w - 18" Height="h - 5" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="3" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,3,38" ImageScaleYStart="2" ImageScaleYEnd="34"/>
     <YScaleImage Left="w - 15" Top="0" Width="15" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="185,0,15,38" ImageScaleYStart="28" ImageScaleYEnd="34"/>

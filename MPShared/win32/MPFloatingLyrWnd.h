@@ -19,14 +19,23 @@ public:
 
 	int Create();
 
-	virtual void OnCommand(UINT uID, UINT nNotifyCode);
-
 	virtual bool OnCustomCommand(int nId);
 
 protected:
 	virtual int OpenDefaultSkin();
 
 	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
+
+	//
+	// Special settings for different kind of winodw (Floating lyrics and Normal window).
+	//
+	virtual bool SettingGetTopmost();
+	virtual int SettingGetOpaquePercent();
+	virtual bool SettingGetClickThrough();
+
+	virtual void SettingReverseTopmost();
+	virtual void SettingSetOpaquePercent(int nPercent);
+	virtual void SettingReverseClickThrough();
 
 };
 

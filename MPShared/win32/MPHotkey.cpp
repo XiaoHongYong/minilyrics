@@ -104,7 +104,7 @@ inline int MakeHotkeyID(int nModifier, int button)
 
 CMPHotkey::CMPHotkey()
 {
-	m_bEnabled = false;
+	m_bGlobalHotkeyEnabled = false;
 	m_hWnd = NULL;
 }
 
@@ -115,6 +115,8 @@ CMPHotkey::~CMPHotkey()
 
 void CMPHotkey::Init()
 {
+	m_bGlobalHotkeyEnabled = g_Profile.GetProfileBool(_T("EnableGlobalHotkey"), false);
+
 	if (LoadSettings() != ERR_OK)
 	{
 		// load default
@@ -131,38 +133,35 @@ void CMPHotkey::SetEventWnd(CBaseWnd *pWnd)
 {
 	m_hWnd = pWnd->GetHandle();
 
-	m_bEnabled = g_Profile.GetProfileBool(_T("EnableGlobalHotkey"), false);
-	if (!m_bEnabled)
-		return;
-
-	RegisterAllHotKeys();
+	if (m_bGlobalHotkeyEnabled)
+		RegisterAllGlobalHotKeys();
 }
 
 void CMPHotkey::Quit()
 {
 	// free hotkeys...
-	UnregisterAllHotKeys();
+	UnregisterAllGlobalHotKeys();
 	m_vAccKey.clear();
 }
 
 void CMPHotkey::EnableGlobalHotkey(bool bEnable)
 {
-	if (m_bEnabled == bEnable)
+	if (m_bGlobalHotkeyEnabled == bEnable)
 		return;
 
 	g_Profile.WriteProfileInt(_T("EnableGlobalHotkey"), bEnable);
 
-	m_bEnabled = bEnable;
+	m_bGlobalHotkeyEnabled = bEnable;
 
-	if (m_bEnabled)
-		RegisterAllHotKeys();
+	if (m_bGlobalHotkeyEnabled)
+		RegisterAllGlobalHotKeys();
 	else
-		UnregisterAllHotKeys();
+		UnregisterAllGlobalHotKeys();
 }
 
 void CMPHotkey::RestoreDefaults()
 {
-	UnregisterAllHotKeys();
+	UnregisterAllGlobalHotKeys();
 	m_vAccKey.clear();
 
 	for (int i = 0; i < CountOf(g_vDefAccKey); i++)
@@ -171,8 +170,8 @@ void CMPHotkey::RestoreDefaults()
 		m_vAccKey.back().idHotKey = MakeHotkeyID(g_vDefAccKey[i].fsModifiers, g_vDefAccKey[i].button);
 	}
 
-	if (m_bEnabled)
-		RegisterAllHotKeys();
+	if (m_bGlobalHotkeyEnabled)
+		RegisterAllGlobalHotKeys();
 
 	SaveSettings();
 }
@@ -237,7 +236,7 @@ void CMPHotkey::Add(int cmd, bool bGlobal, int nKey, int fuModifiers)
 	cmdKey.fsModifiers = fuModifiers;
 	cmdKey.idHotKey = MakeHotkeyID(cmdKey.fsModifiers, cmdKey.button);
 
-	if (bGlobal && cmdKey.button != 0)
+	if (bGlobal && cmdKey.button != 0 && m_bGlobalHotkeyEnabled)
 		RegisterHotKey(m_hWnd, cmdKey.idHotKey, cmdKey.fsModifiers, cmdKey.button);
 
 	m_vAccKey.push_back(cmdKey);
@@ -499,7 +498,7 @@ int CMPHotkey::SaveSettings()
 	return ERR_OK;
 }
 
-void CMPHotkey::RegisterAllHotKeys()
+void CMPHotkey::RegisterAllGlobalHotKeys()
 {
 	for (int i = 0; i < (int)m_vAccKey.size(); i++)
 	{
@@ -511,7 +510,7 @@ void CMPHotkey::RegisterAllHotKeys()
 	}
 }
 
-void CMPHotkey::UnregisterAllHotKeys()
+void CMPHotkey::UnregisterAllGlobalHotKeys()
 {
 	for (int i = 0; i < (int)m_vAccKey.size(); i++)
 	{

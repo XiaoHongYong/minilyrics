@@ -27,7 +27,7 @@
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="lyrbar" EnableTranslucency="true" TranslucencyAlpha="228" MinWidth="275" MinHeight="20" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+  <skinwnd Name="lyrbar" EnableTranslucency="true" TranslucencyAlpha="228" MinWidth="275" MinHeight="20" Width="400" Height="200" PaintBg="TRUE" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <Image Left="0" Top="0" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="0, 0, 10, 10" BlendPixMode="alpha_mask"/>
     <Image Left="w-10" Top="0" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="10, 0, 10, 10" BlendPixMode="alpha_mask"/>
     <Image Left="0" Top="h-10" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="0, 10, 10, 10" BlendPixMode="alpha_mask"/>

@@ -47,7 +47,6 @@ public:
 		else if (nId == GetIDByName(_T("CID_C_CLICK_THROUGH")))
 		{
 			g_mpApp.GetSkinFactory()->SetClickThrough(IsButtonChecked(nId));
-			g_mpApp.GetSkinFactory()->AllUpdateTransparent();
 		}
 #endif
 		else if (nId == GetIDByName(_T("CID_SEL_LANGUAGE")))

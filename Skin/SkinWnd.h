@@ -169,8 +169,6 @@ public:
 
 	bool IsInEditorMode() const { return m_bInEditorMode; }
 
-	bool IsIndividualProperties() const { return m_bIndividualProperties; }
-
 public:
 	// ISkinWndDragHost
 	virtual void GetWndDragAutoCloseTo(vector<CBaseWnd *> &vWnd);
@@ -186,6 +184,7 @@ public:
 	// Messages of the window
 	//
 	virtual void OnActivate(bool bActived);
+	virtual void OnPreCreate(DWORD &dwStyle, DWORD &dwExStyle) { }
 	virtual bool OnCreate();
 	virtual void OnDestroy();
 	virtual void OnPaint(IMLGraphicsBase *pGraph);
@@ -247,7 +246,7 @@ public:
 	//
 	// window alpha and transparent features
 	//
-	void SetTransparent(BYTE nAlpha, bool bTransparentClr, COLORREF clrTransparent, bool bClickThrough);
+	void SetTransparent(BYTE nAlpha, bool bClickThrough);
 	bool GetEnableTranslucencyLayered() const { return m_bTranslucencyLayered; }
 	void EnableTranslucencyLayered(bool bTranslucencyLayered);
 
@@ -449,9 +448,6 @@ protected:
 	// Background images
 	CScaleImagePainter	m_bgImagePainter;
 	CSFImage		m_imageBg, m_imageBgMask;
-
-	// Window properties
-	bool			m_bIndividualProperties;
 
 	// Unprocessed properties
 	SXNode::LIST_PROPERTIES	m_listUnprocessedProperties;

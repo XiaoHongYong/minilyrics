@@ -75,13 +75,18 @@ public:
 		if (nId == GetIDByName(_T("CID_BUYNOW")))
 		{
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_REGISTER));
-			return true;
+		}
+		else if (nId == GetIDByName(_T("CID_NEW_VERSION")))
+		{
+			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_DOMAIN));
 		}
 		else if (nId == GetIDByName(_T("CID_ENTER_CODE")))
 		{
 			m_pParent->SwitchToPage(_T("CID_CODE"));
 		}
-		return false;
+		else
+			return false;
+		return true;
 	}
 
 	void OnEvent(const IEvent *pEvent)

@@ -40,7 +40,7 @@
     </Toolbar>
   </DynControls>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="lyrbar" MinWidth="275" MinHeight="20" Width="400" Height="200" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+  <skinwnd Name="lyrbar" MinWidth="275" MinHeight="20" Width="400" Height="200" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="2" Top="2" Width="w - 21" Height="h - 5" BgColor="#000000" FgColor="#00FF00" FgLowColor="#008200" FocusLineBgColor="#171717" TagColor="#0000FF" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="2" Height="h" Name="left frame" Image="mmframe.png" ImageRect="0,0,2,25" ImageScaleYStart="3" ImageScaleYEnd="22"/>
     <YScaleImage Left="w - 19" Top="0" Width="19" Height="h" Name="right frame" Image="mmframe.png" ImageRect="161,0,19,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>

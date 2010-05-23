@@ -695,8 +695,9 @@ void CLyricShowTextEditObj::OnPlayTimeChangedUpdate()
 
 	{
 		// Prevent player forward to next track, if lyrics editor is focus, and lyrics changed.
-		if (g_Player.GetMediaLength() > 30 * 1000
-			&& CanUndo() && g_LyricData.GetPlayElapsedTime() >= g_Player.GetMediaLength() - 1000)
+		if ((int)g_Player.GetMediaLength() > 30 * 1000
+			&& CanUndo() && g_LyricData.GetPlayElapsedTime() >= (int)g_Player.GetMediaLength() - 1000
+			&& _tcscmp(g_Player.GetSrcMedia(), g_LyricData.GetSongFileName()) == 0)
 			g_Player.SeekTo(0);
 	}
 

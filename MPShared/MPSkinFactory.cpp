@@ -396,8 +396,7 @@ void CMPSkinFactory::TopmostAll(bool bTopmost)
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
 		CSkinWnd	*pWnd = *it;
-		if (!pWnd->IsIndividualProperties())
-			pWnd->SetTopmost(bTopmost);
+		pWnd->SetTopmost(bTopmost);
 	}
 }
 
@@ -571,19 +570,9 @@ void CMPSkinFactory::AllUpdateTransparent()
 		return;
 #endif
 
-	COLORREF		clrTrans = RGB(0, 0, 0);
-	BYTE			byAlpha = 255;
-	bool			bTransparentClr = false;
-
-		// 半透明值
+	// 半透明值
 	int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
-	if (nOpaque < 10)
-		nOpaque = 10;
-	else if (nOpaque > 100)
-		nOpaque = 100;
-	byAlpha = nOpaque * 255 / 100;
-
-	// bTransparentClr = g_Profile.GetProfileBool(SZ_SECT_UI, _T("TransparentBkColor"), FALSE);
+	byte	byAlpha = OpaquePercentToAlpha(nOpaque);
 
 	LIST_SKINWNDS::iterator	it, itEnd;
 
@@ -591,8 +580,7 @@ void CMPSkinFactory::AllUpdateTransparent()
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
 		CSkinWnd	*pWnd = *it;
-		if (!pWnd->IsIndividualProperties())
-			pWnd->SetTransparent(byAlpha, bTransparentClr, pWnd->GetBgColor().get(), m_bClickThrough);
+		pWnd->SetTransparent(byAlpha, m_bClickThrough);
 	}
 }
 
@@ -615,6 +603,8 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 			g_mpApp.GetMainWnd()->GetTrayIcon().UpdateShowIconPos();
 		}
 	}
+
+	AllUpdateTransparent();
 }
 
 #endif // _WIN32_DESKTOP

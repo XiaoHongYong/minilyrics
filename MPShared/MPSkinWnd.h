@@ -28,9 +28,9 @@ public:
 	CMPSkinWnd();
 	virtual ~CMPSkinWnd();
 
-	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow = true, bool bTopmost = false);
-
 	void OnActivate(bool bActived);
+
+	virtual void OnPreCreate(DWORD &dwStyle, DWORD &dwExStyle);
 
 	virtual bool OnCreate();
 
@@ -84,15 +84,6 @@ public:
 #ifdef _WIN32_DESKTOP
 protected:
 	virtual void OnDropFiles(HDROP hDrop);
-
-public:
-	//
-	// Window transparent properties for windows
-	//
-	void LoadTransparentSettings();
-
-	void SetClickThrough(bool bClickThrough) { m_bClickThrough = bClickThrough; }
-	bool GetClickThrough() const { return m_bClickThrough; }
 #endif
 
 	void AddCmdHandler(LPCTSTR szName);
@@ -102,7 +93,16 @@ public:
 	void SetTopmost(bool bTopmost);
 	CBaseWnd *GetParentOrSelf();
 
-	LPCTSTR GetCfgSectName();
+	//
+	// Special settings for different kind of winodw (Floating lyrics and Normal window).
+	//
+	virtual bool SettingGetTopmost();
+	virtual int SettingGetOpaquePercent();
+	virtual bool SettingGetClickThrough();
+
+	virtual void SettingReverseTopmost();
+	virtual void SettingSetOpaquePercent(int nPercent);
+	virtual void SettingReverseClickThrough();
 
 protected:
 	typedef list<ISkinCmdHandler *>	LIST_SKINCMDHANDLER;
@@ -121,5 +121,14 @@ protected:
 	CLyrPlaylistAutoSwitch	m_autoSwitchToLyrShow;
 
 };
+
+inline byte OpaquePercentToAlpha(int nOpaquePercent)
+{
+	if (nOpaquePercent < 10)
+		nOpaquePercent = 10;
+	else if (nOpaquePercent > 100)
+		nOpaquePercent = 100;
+	return (byte)(nOpaquePercent * 255 / 100);
+}
 
 #endif // !defined(AFX_MPSKINWND_H__C466015C_6B75_4118_98E2_AEDA64F864DA__INCLUDED_)

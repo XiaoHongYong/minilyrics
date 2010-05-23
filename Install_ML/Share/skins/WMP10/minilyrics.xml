@@ -31,7 +31,7 @@
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="33" Width="400" Height="200" BgColor="#3169B5" FgColor="#FFFFFF" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle" IndividualProperties="TRUE">
+  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="33" Width="400" Height="200" BgColor="#3169B5" FgColor="#FFFFFF" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow ID="ID_LYRICS_SHOW" Left="4" Top="4" Width="w - 18" Height="h - 8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="4" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,4,35" ImageScaleYStart="5" ImageScaleYEnd="30"/>
     <YScaleImage Left="w - 16" Top="0" Width="16" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="184,0,16,35" ImageScaleYStart="30" ImageScaleYEnd="31"/>

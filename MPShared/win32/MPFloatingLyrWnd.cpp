@@ -31,25 +31,9 @@ int CMPFloatingLyrWnd::Create()
 
 	CMPSkinWnd::Create(_T("FloatingLyr"), _T("Floating Lyrics"), g_mpApp.GetSkinFactory(), SZ_SECT_FLOATING_LYR, NULL);
 
-	m_bClickThrough = g_Profile.GetProfileBool(SZ_SECT_FLOATING_LYR, _T("ClickThrough"), false);
-	LoadTransparentSettings();
-
 	m_cursor.LoadCursorFromRes(IDC_MLHAND);
 
 	return ERR_OK;
-}
-
-void CMPFloatingLyrWnd::OnCommand(UINT uID, UINT nNotifyCode)
-{
-	if (uID == IDC_CLICK_THROUGH)
-	{
-		g_Profile.WriteProfileInt(SZ_SECT_FLOATING_LYR, _T("ClickThrough"), !m_bClickThrough);
-		m_bClickThrough = !m_bClickThrough;
-		LoadTransparentSettings();
-		return;
-	}
-
-	CMPSkinWnd::OnCommand(uID, nNotifyCode);
 }
 
 bool CMPFloatingLyrWnd::OnCustomCommand(int nId)
@@ -98,4 +82,41 @@ LRESULT CMPFloatingLyrWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 
 	return CMPSkinWnd::WndProc(message, wParam, lParam);
+}
+
+bool CMPFloatingLyrWnd::SettingGetTopmost()
+{
+	return g_Profile.GetProfileBool(SZ_SECT_FLOATING_LYR, _T("topmost"), true);
+}
+
+int CMPFloatingLyrWnd::SettingGetOpaquePercent()
+{
+	return g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("WindowOpaquePercent"), 100);
+}
+
+bool CMPFloatingLyrWnd::SettingGetClickThrough()
+{
+	return g_Profile.GetProfileBool(SZ_SECT_FLOATING_LYR, _T("ClickThrough"), false);
+}
+
+void CMPFloatingLyrWnd::SettingReverseTopmost()
+{
+	bool		bTopmost = !IsTopmost();
+
+	g_Profile.WriteProfileInt(SZ_SECT_FLOATING_LYR, _T("topmost"), bTopmost);
+	SetTopmost(bTopmost);
+}
+
+void CMPFloatingLyrWnd::SettingSetOpaquePercent(int nPercent)
+{
+	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), nPercent);
+	SetTransparent(OpaquePercentToAlpha(nPercent), m_bClickThrough);
+}
+
+void CMPFloatingLyrWnd::SettingReverseClickThrough()
+{
+	g_Profile.WriteProfileInt(SZ_SECT_FLOATING_LYR, _T("ClickThrough"), !m_bClickThrough);
+	m_bClickThrough = !m_bClickThrough;
+	SetTransparent(OpaquePercentToAlpha(SettingGetOpaquePercent()),
+		m_bClickThrough);
 }

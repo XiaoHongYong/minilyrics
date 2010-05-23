@@ -428,8 +428,15 @@ public:
 	}
 
 	virtual void SetOption(int nIndex) {
-		g_LyricData.m_nGlobalOffsetTime = -5000 + 500 * nIndex;
-		SetIntValue(g_LyricData.m_nGlobalOffsetTime);
+		int nGlobalOffsetTime = -5000 + 500 * nIndex;
+		SetIntValue(nGlobalOffsetTime);
+	}
+
+	virtual void SetIntValue(int nValue)
+	{
+		g_LyricData.m_nGlobalOffsetTime = nValue;
+		CMPlayerSettings::SetSettings(eventType, strSection.c_str(),
+			strValueName.c_str(), nValue, eventType != ET_INVALID);
 	}
 
 };
@@ -489,6 +496,23 @@ static tstring GetCmdIDDescription(int nCmd)
 
 	return szTooltip;
 }
+
+class CPfItemBoolEnableGlobalHotkey : public CPfItemBool
+{
+public:
+	CPfItemBoolEnableGlobalHotkey()
+		: CPfItemBool(RemovePrefixOfAcckey(ConnectToLocalStr(_T("Shortcut:"), _T("&Enable Global Hotkeys")).c_str()).c_str(),
+			ET_NULL, SZ_APP_NAME, _T("EnableGlobalHotkey"), false)
+	{
+	}
+
+	virtual void SetIntValue(int nValue)
+	{
+		g_mpApp.GetHotkey().EnableGlobalHotkey(Tobool(nValue));
+		CPfItemBool::SetIntValue(nValue);
+	}
+
+};
 
 class CPfItemShortcut : public CPreferItem
 {
@@ -598,8 +622,10 @@ public:
 
 					g_mpApp.GetHotkey().Remove(nUsedCmdIndex);
 
-					m_pWndParent->UpdateValues();
+					if (bGloal)
+						g_mpApp.GetHotkey().EnableGlobalHotkey(true);
 
+					m_pWndParent->UpdateValues();
 				}
 
 				g_mpApp.GetHotkey().Add(m_nCmd, bGloal, dlg.m_nVirtualKey, dlg.m_fsModifiers);
@@ -716,6 +742,8 @@ void CPagePfAdvanced::OnInitialUpdate()
 		m_vPreferItems.push_back(new CPfItemTrayIconPlayerCtrl(g_SysTrayIconCmd[i].szCmd, i));
 	}
 	m_vPreferItems.push_back(new CPfItemSystemTrayIcon());
+
+	m_vPreferItems.push_back(new CPfItemBoolEnableGlobalHotkey());
 
 	//
 	// Shortcut keys
