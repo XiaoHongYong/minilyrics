@@ -87,6 +87,10 @@ int FilterAllHTMLTags(LPTSTR szText);
 
 #define IsAlpha(ch) (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))
 
+#ifdef _MAC
+inline bool __isascii(int c) { return c >= 0 && c <= 0x7F; }
+#endif
+
 
 int HexToInt(char chHex);
 BOOL IsHexChar(char ch);

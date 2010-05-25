@@ -12,7 +12,7 @@
 #include "linux/Win32Error.h"
 #endif
 
-#ifdef _MAC_OSX
+#ifdef _MAC
 #include "Mac/Win32Error.h"
 #endif
 

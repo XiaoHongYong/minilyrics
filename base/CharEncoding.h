@@ -54,10 +54,7 @@ typedef struct _ENCODING_CODEPAGE
 	LPCSTR				szEncoding;
 	LPCSTR				szAlias;
 	LPCSTR				szDesc;
-#ifdef _LINUX
-	LPCSTR				szIConvCode;
-#endif
-#ifdef _MAC_OSX
+#ifndef _WIN32
 	LPCSTR				szIConvCode;
 #endif
 }ENCODING_CODEPAGE;

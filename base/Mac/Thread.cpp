@@ -67,4 +67,6 @@ void *CThread::ThreadFunction(void *lpParam)
 	CThread	*pThis = (CThread *)lpParam;
 
 	pThis->m_funThead(pThis->m_lpData);
+	
+	return NULL;
 }

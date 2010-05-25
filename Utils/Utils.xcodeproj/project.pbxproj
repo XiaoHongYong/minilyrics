@@ -1,0 +1,290 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5F9DEE7A11ABFD5800312E83 /* App.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6211ABFD5800312E83 /* App.h */; };
+		5F9DEE7B11ABFD5800312E83 /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6311ABFD5800312E83 /* CSVFile.cpp */; };
+		5F9DEE7C11ABFD5800312E83 /* CSVFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6411ABFD5800312E83 /* CSVFile.h */; };
+		5F9DEE7D11ABFD5800312E83 /* HtmlWrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6511ABFD5800312E83 /* HtmlWrite.cpp */; };
+		5F9DEE7E11ABFD5800312E83 /* HtmlWrite.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6611ABFD5800312E83 /* HtmlWrite.h */; };
+		5F9DEE7F11ABFD5800312E83 /* LocalizeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6711ABFD5800312E83 /* LocalizeTool.cpp */; };
+		5F9DEE8011ABFD5800312E83 /* LocalizeTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6811ABFD5800312E83 /* LocalizeTool.h */; };
+		5F9DEE8111ABFD5800312E83 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6911ABFD5800312E83 /* Log.cpp */; };
+		5F9DEE8211ABFD5800312E83 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6A11ABFD5800312E83 /* log.h */; };
+		5F9DEE8311ABFD5800312E83 /* LogAlias.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6B11ABFD5800312E83 /* LogAlias.h */; };
+		5F9DEE8411ABFD5800312E83 /* Profile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6C11ABFD5800312E83 /* Profile.h */; };
+		5F9DEE8511ABFD5800312E83 /* SimpleXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6D11ABFD5800312E83 /* SimpleXML.cpp */; };
+		5F9DEE8611ABFD5800312E83 /* SimpleXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6E11ABFD5800312E83 /* SimpleXML.h */; };
+		5F9DEE8711ABFD5800312E83 /* SimpleXMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6F11ABFD5800312E83 /* SimpleXMLParser.cpp */; };
+		5F9DEE8811ABFD5800312E83 /* SimpleXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7011ABFD5800312E83 /* SimpleXMLParser.h */; };
+		5F9DEE8911ABFD5800312E83 /* StdAfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7111ABFD5800312E83 /* StdAfx.cpp */; };
+		5F9DEE8A11ABFD5800312E83 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7211ABFD5800312E83 /* stdafx.h */; };
+		5F9DEE8B11ABFD5800312E83 /* UndoMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7311ABFD5800312E83 /* UndoMgr.cpp */; };
+		5F9DEE8C11ABFD5800312E83 /* UndoMgr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7411ABFD5800312E83 /* UndoMgr.h */; };
+		5F9DEE8D11ABFD5800312E83 /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7511ABFD5800312E83 /* Utils.h */; };
+		5F9DEE8E11ABFD5800312E83 /* UUEncode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7611ABFD5800312E83 /* UUEncode.cpp */; };
+		5F9DEE8F11ABFD5800312E83 /* UUEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7711ABFD5800312E83 /* UUEncode.h */; };
+		5F9DEE9011ABFD5800312E83 /* XMLWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7811ABFD5800312E83 /* XMLWriter.cpp */; };
+		5F9DEE9111ABFD5800312E83 /* XMLWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7911ABFD5800312E83 /* XMLWriter.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5F9DEE6211ABFD5800312E83 /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
+		5F9DEE6311ABFD5800312E83 /* CSVFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CSVFile.cpp; sourceTree = "<group>"; };
+		5F9DEE6411ABFD5800312E83 /* CSVFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSVFile.h; sourceTree = "<group>"; };
+		5F9DEE6511ABFD5800312E83 /* HtmlWrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HtmlWrite.cpp; sourceTree = "<group>"; };
+		5F9DEE6611ABFD5800312E83 /* HtmlWrite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HtmlWrite.h; sourceTree = "<group>"; };
+		5F9DEE6711ABFD5800312E83 /* LocalizeTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalizeTool.cpp; sourceTree = "<group>"; };
+		5F9DEE6811ABFD5800312E83 /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizeTool.h; sourceTree = "<group>"; };
+		5F9DEE6911ABFD5800312E83 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
+		5F9DEE6A11ABFD5800312E83 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		5F9DEE6B11ABFD5800312E83 /* LogAlias.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogAlias.h; sourceTree = "<group>"; };
+		5F9DEE6C11ABFD5800312E83 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
+		5F9DEE6D11ABFD5800312E83 /* SimpleXML.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleXML.cpp; sourceTree = "<group>"; };
+		5F9DEE6E11ABFD5800312E83 /* SimpleXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXML.h; sourceTree = "<group>"; };
+		5F9DEE6F11ABFD5800312E83 /* SimpleXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleXMLParser.cpp; sourceTree = "<group>"; };
+		5F9DEE7011ABFD5800312E83 /* SimpleXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXMLParser.h; sourceTree = "<group>"; };
+		5F9DEE7111ABFD5800312E83 /* StdAfx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StdAfx.cpp; sourceTree = "<group>"; };
+		5F9DEE7211ABFD5800312E83 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
+		5F9DEE7311ABFD5800312E83 /* UndoMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UndoMgr.cpp; sourceTree = "<group>"; };
+		5F9DEE7411ABFD5800312E83 /* UndoMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UndoMgr.h; sourceTree = "<group>"; };
+		5F9DEE7511ABFD5800312E83 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		5F9DEE7611ABFD5800312E83 /* UUEncode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UUEncode.cpp; sourceTree = "<group>"; };
+		5F9DEE7711ABFD5800312E83 /* UUEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUEncode.h; sourceTree = "<group>"; };
+		5F9DEE7811ABFD5800312E83 /* XMLWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XMLWriter.cpp; sourceTree = "<group>"; };
+		5F9DEE7911ABFD5800312E83 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
+		D2AAC046055464E500DB518D /* libUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = Utils;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5F9DEE6211ABFD5800312E83 /* App.h */,
+				5F9DEE6311ABFD5800312E83 /* CSVFile.cpp */,
+				5F9DEE6411ABFD5800312E83 /* CSVFile.h */,
+				5F9DEE6511ABFD5800312E83 /* HtmlWrite.cpp */,
+				5F9DEE6611ABFD5800312E83 /* HtmlWrite.h */,
+				5F9DEE6711ABFD5800312E83 /* LocalizeTool.cpp */,
+				5F9DEE6811ABFD5800312E83 /* LocalizeTool.h */,
+				5F9DEE6911ABFD5800312E83 /* Log.cpp */,
+				5F9DEE6A11ABFD5800312E83 /* log.h */,
+				5F9DEE6B11ABFD5800312E83 /* LogAlias.h */,
+				5F9DEE6C11ABFD5800312E83 /* Profile.h */,
+				5F9DEE6D11ABFD5800312E83 /* SimpleXML.cpp */,
+				5F9DEE6E11ABFD5800312E83 /* SimpleXML.h */,
+				5F9DEE6F11ABFD5800312E83 /* SimpleXMLParser.cpp */,
+				5F9DEE7011ABFD5800312E83 /* SimpleXMLParser.h */,
+				5F9DEE7111ABFD5800312E83 /* StdAfx.cpp */,
+				5F9DEE7211ABFD5800312E83 /* stdafx.h */,
+				5F9DEE7311ABFD5800312E83 /* UndoMgr.cpp */,
+				5F9DEE7411ABFD5800312E83 /* UndoMgr.h */,
+				5F9DEE7511ABFD5800312E83 /* Utils.h */,
+				5F9DEE7611ABFD5800312E83 /* UUEncode.cpp */,
+				5F9DEE7711ABFD5800312E83 /* UUEncode.h */,
+				5F9DEE7811ABFD5800312E83 /* XMLWriter.cpp */,
+				5F9DEE7911ABFD5800312E83 /* XMLWriter.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libUtils.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9DEE7A11ABFD5800312E83 /* App.h in Headers */,
+				5F9DEE7C11ABFD5800312E83 /* CSVFile.h in Headers */,
+				5F9DEE7E11ABFD5800312E83 /* HtmlWrite.h in Headers */,
+				5F9DEE8011ABFD5800312E83 /* LocalizeTool.h in Headers */,
+				5F9DEE8211ABFD5800312E83 /* log.h in Headers */,
+				5F9DEE8311ABFD5800312E83 /* LogAlias.h in Headers */,
+				5F9DEE8411ABFD5800312E83 /* Profile.h in Headers */,
+				5F9DEE8611ABFD5800312E83 /* SimpleXML.h in Headers */,
+				5F9DEE8811ABFD5800312E83 /* SimpleXMLParser.h in Headers */,
+				5F9DEE8A11ABFD5800312E83 /* stdafx.h in Headers */,
+				5F9DEE8C11ABFD5800312E83 /* UndoMgr.h in Headers */,
+				5F9DEE8D11ABFD5800312E83 /* Utils.h in Headers */,
+				5F9DEE8F11ABFD5800312E83 /* UUEncode.h in Headers */,
+				5F9DEE9111ABFD5800312E83 /* XMLWriter.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* Utils */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "Utils" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Utils;
+			productName = Utils;
+			productReference = D2AAC046055464E500DB518D /* libUtils.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "Utils" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* Utils */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* Utils */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9DEE7B11ABFD5800312E83 /* CSVFile.cpp in Sources */,
+				5F9DEE7D11ABFD5800312E83 /* HtmlWrite.cpp in Sources */,
+				5F9DEE7F11ABFD5800312E83 /* LocalizeTool.cpp in Sources */,
+				5F9DEE8111ABFD5800312E83 /* Log.cpp in Sources */,
+				5F9DEE8511ABFD5800312E83 /* SimpleXML.cpp in Sources */,
+				5F9DEE8711ABFD5800312E83 /* SimpleXMLParser.cpp in Sources */,
+				5F9DEE8911ABFD5800312E83 /* StdAfx.cpp in Sources */,
+				5F9DEE8B11ABFD5800312E83 /* UndoMgr.cpp in Sources */,
+				5F9DEE8E11ABFD5800312E83 /* UUEncode.cpp in Sources */,
+				5F9DEE9011ABFD5800312E83 /* XMLWriter.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = Utils;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = Utils;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.1.2;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.1.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "Utils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "Utils" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

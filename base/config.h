@@ -4,6 +4,16 @@
 // #define _LINUX_GTK2
 // #define _LINUX
 // #define _MAC_OSX
+// #define _IPHONE
+
+#ifdef __MAC_OS_X_VERSION_MAX_ALLOWED
+#define _MAC_OSX
+#endif
+
+#if defined(_IPHONE) || defined(_MAC_OSX)
+#define _MAC
+#endif
+
 
 #ifdef _LINUX
 #define UTF8

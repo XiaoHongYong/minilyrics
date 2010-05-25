@@ -49,7 +49,7 @@
 #include "linux/Thread.h"
 #endif
 
-#ifdef _MAC_OSX
+#ifdef _MAC
 #include "Mac/fileapi.h"
 
 #include "Mac/Event.h"

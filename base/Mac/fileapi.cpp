@@ -28,7 +28,6 @@ bool IsFileExist(LPCTSTR szFileName)
 bool IsDirExist(LPCTSTR szDir)
 {
 	DIR			*dp;
-	dirent		*dirp;
 
 	dp = opendir(szDir);
 	if (dp == NULL)
@@ -59,9 +58,9 @@ bool GetFileLength(LPCTSTR szFileName, uint64 &nLength)
 }
 
 // COMMENT:
-//		ȡ���ļ��Ĵ�С
+//		»°µ√Œƒº˛µƒ¥Û–°
 // RETURN:
-//		INVALID_FILE_SIZE	-	��Ч�Ĵ�С���ļ�������Ч
+//		INVALID_FILE_SIZE	-	Œﬁ–ßµƒ¥Û–°£¨Œƒº˛ø…ƒ‹Œﬁ–ß
 DWORD GetFileLength(LPCSTR szFileName)
 {
 	struct stat		filestat;
@@ -95,7 +94,7 @@ bool MoveFile(const char *oldname, const char *newname)
 
 /*
 
-// �����ļ����޸�ʱ��ʹ���ʱ��
+// …Ë÷√Œƒº˛µƒ–ﬁ∏ƒ ±º‰∫Õ¥¥Ω® ±º‰
 BOOL SetFileTime(LPCTSTR szFile, FILETIME *lpWriteTime)
 {
 	HANDLE	hFile;
@@ -162,7 +161,7 @@ bool CopyFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName, BOOL bFailIfExi
 }
 
 // COMMENT:
-//		�ж�Ŀ¼���Ƿ����д
+//		≈–∂œƒø¬ºƒ⁄ «∑Òø…“‘–¥
 DWORD CanWriteInDir(LPCTSTR szDir)
 {
 	return true;
@@ -207,7 +206,6 @@ BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles
 BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData)
 {
 	CMLFileFind			find;
-	TCHAR				szSearch[MAX_PATH];
 
 	if (!find.OpenDir(szBaseDir, NULL))
 		return FALSE;
@@ -234,7 +232,7 @@ BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 }
 
 // COMMENT:
-//		��Ŀ¼�ַ�����ʽ��Ϊĩβ��'/'��
+//		Ω´ƒø¬º◊÷∑˚¥Æ∏Ò ΩªØŒ™ƒ©Œ≤¥¯'/'µƒ
 void DirStringAddSlash(WCHAR *szDir)
 {
 	int		nLen;
@@ -251,7 +249,7 @@ void DirStringAddSlash(WCHAR *szDir)
 }
 
 // COMMENT:
-//		��Ŀ¼�ַ�����ʽ��Ϊĩβ��'/'��
+//		Ω´ƒø¬º◊÷∑˚¥Æ∏Ò ΩªØŒ™ƒ©Œ≤¥¯'/'µƒ
 void DirStringAddSlash(char *szDir)
 {
 	int		nLen;
@@ -268,7 +266,7 @@ void DirStringAddSlash(char *szDir)
 }
 
 // COMMENT:
-//		��Ŀ¼�ַ�����ʽ��Ϊĩβ��'/'��
+//		Ω´ƒø¬º◊÷∑˚¥Æ∏Ò ΩªØŒ™ƒ©Œ≤¥¯'/'µƒ
 void DirStringAddSlash(tstring &strDir)
 {
 	if (!strDir.empty())
@@ -526,7 +524,7 @@ void FileSetExt(tstring &strFile, LPCTSTR szExt)
 	strFile += szExt;
 }
 
-// �ж��ļ�����չ���Ƿ�ƥ��
+// ≈–∂œŒƒº˛µƒ¿©’π√˚ «∑Ò∆•≈‰
 BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt)
 {
 	int len1 = _tcslen(szFile);
@@ -547,7 +545,7 @@ BOOL FileNameIsIncInvalidChars(LPCTSTR szFile)
 	szBeg = szFile;
 
 #ifdef _WIN32_DESKTOP
-	// ����c:\\֮����ַ�
+	// ∫ˆ¬‘c:\\÷Æ¿‡µƒ◊÷∑˚
 	if (IsCharAlpha(*szBeg))
 	{
 		szBeg++;
@@ -584,7 +582,7 @@ void FileNameFilterInvalidChars(LPCTSTR szFile, LPTSTR szNewFile, int nSizeMax)
 	szNew = szNewFile;
 
 #ifdef _WIN32_DESKTOP
-	// ����c:\\֮����ַ�
+	// ∫ˆ¬‘c:\\÷Æ¿‡µƒ◊÷∑˚
 	if (IsCharAlpha(*szBeg))
 	{
 		*szNew = *szBeg;
@@ -631,7 +629,7 @@ void FileNameFilterInvalidChars(LPTSTR szFile)
 	szBeg = szFile;
 
 #ifdef _WIN32_DESKTOP
-	// ����c:\\֮����ַ�
+	// ∫ˆ¬‘c:\\÷Æ¿‡µƒ◊÷∑˚
 	if (IsCharAlpha(*szBeg))
 	{
 		szBeg++;
@@ -665,7 +663,7 @@ void FilePathFilterInvalidChars(LPTSTR szFile)
 	szBeg = szFile;
 
 #ifdef _WIN32_DESKTOP
-	// ����c:\\֮����ַ�
+	// ∫ˆ¬‘c:\\÷Æ¿‡µƒ◊÷∑˚
 	if (IsCharAlpha(*szBeg))
 	{
 		szBeg++;

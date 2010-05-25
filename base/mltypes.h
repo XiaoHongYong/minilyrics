@@ -25,13 +25,24 @@ typedef int64 uint64;
 #endif
 #endif
 
-
-#ifdef _MAC_OSX
+#if defined(_MAC)
 typedef int64_t int64;
 typedef u_int64_t uint64;
+#ifndef TRUE
+#define TRUE		1
+#define FALSE		0
+#endif
 #endif
 
 #if !defined(WIN32) && !defined(_WIN32_WCE)
+
+#if !defined( _OBJC_OBJC_H_)
+#if defined(_MAC)
+typedef signed char		BOOL; 
+#else
+typedef long BOOL;
+#endif
+#endif // !defined( _OBJC_OBJC_H_)
 
 #define  __cdecl		
 #define WINAPI __stdcall
@@ -40,7 +51,6 @@ typedef unsigned char byte;
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
 typedef unsigned long DWORD;
-typedef long BOOL;
 typedef long LONG;
 typedef unsigned int UINT;
 typedef unsigned int uint;

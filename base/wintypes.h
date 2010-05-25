@@ -94,19 +94,17 @@ typedef struct  tagSIZE
     long cy;
 }SIZE, *LPSIZE;
 
-#ifdef _MAC_OSX
+#ifdef _LINUX_GTK2
+typedef GdkPoint	tagPOINT;
+typedef GdkPoint	POINT;
+typedef GdkPoint	*LPPOINT;
+#else // _LINUX_GTK2
 typedef struct  tagPOINT
 {
 	long x;
 	long y;
 }POINT, *LPPOINT;
-#endif
-
-#ifdef _LINUX_GTK2
-typedef GdkPoint	tagPOINT;
-typedef GdkPoint	POINT;
-typedef GdkPoint	*LPPOINT;
-#endif
+#endif // _LINUX_GTK2
 
 typedef struct  tagRECT
 {
