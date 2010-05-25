@@ -57,10 +57,8 @@ bool GetFileLength(LPCTSTR szFileName, uint64 &nLength)
 	}
 }
 
-// COMMENT:
-//		»°µ√Œƒº˛µƒ¥Û–°
 // RETURN:
-//		INVALID_FILE_SIZE	-	Œﬁ–ßµƒ¥Û–°£¨Œƒº˛ø…ƒ‹Œﬁ–ß
+//		INVALID_FILE_SIZE	- Invalid file size
 DWORD GetFileLength(LPCSTR szFileName)
 {
 	struct stat		filestat;
@@ -94,7 +92,6 @@ bool MoveFile(const char *oldname, const char *newname)
 
 /*
 
-// …Ë÷√Œƒº˛µƒ–ﬁ∏ƒ ±º‰∫Õ¥¥Ω® ±º‰
 BOOL SetFileTime(LPCTSTR szFile, FILETIME *lpWriteTime)
 {
 	HANDLE	hFile;
@@ -160,8 +157,6 @@ bool CopyFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName, BOOL bFailIfExi
 	return false;
 }
 
-// COMMENT:
-//		≈–∂œƒø¬ºƒ⁄ «∑Òø…“‘–¥
 DWORD CanWriteInDir(LPCTSTR szDir)
 {
 	return true;
@@ -231,8 +226,6 @@ BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 	return TRUE;
 }
 
-// COMMENT:
-//		Ω´ƒø¬º◊÷∑˚¥Æ∏Ò ΩªØŒ™ƒ©Œ≤¥¯'/'µƒ
 void DirStringAddSlash(WCHAR *szDir)
 {
 	int		nLen;
@@ -248,8 +241,6 @@ void DirStringAddSlash(WCHAR *szDir)
 	}
 }
 
-// COMMENT:
-//		Ω´ƒø¬º◊÷∑˚¥Æ∏Ò ΩªØŒ™ƒ©Œ≤¥¯'/'µƒ
 void DirStringAddSlash(char *szDir)
 {
 	int		nLen;
@@ -265,8 +256,6 @@ void DirStringAddSlash(char *szDir)
 	}
 }
 
-// COMMENT:
-//		Ω´ƒø¬º◊÷∑˚¥Æ∏Ò ΩªØŒ™ƒ©Œ≤¥¯'/'µƒ
 void DirStringAddSlash(tstring &strDir)
 {
 	if (!strDir.empty())
@@ -524,7 +513,6 @@ void FileSetExt(tstring &strFile, LPCTSTR szExt)
 	strFile += szExt;
 }
 
-// ≈–∂œŒƒº˛µƒ¿©’π√˚ «∑Ò∆•≈‰
 BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt)
 {
 	int len1 = _tcslen(szFile);
@@ -545,7 +533,7 @@ BOOL FileNameIsIncInvalidChars(LPCTSTR szFile)
 	szBeg = szFile;
 
 #ifdef _WIN32_DESKTOP
-	// ∫ˆ¬‘c:\\÷Æ¿‡µƒ◊÷∑˚
+	// Ignore string like "c:\\"
 	if (IsCharAlpha(*szBeg))
 	{
 		szBeg++;
@@ -582,7 +570,7 @@ void FileNameFilterInvalidChars(LPCTSTR szFile, LPTSTR szNewFile, int nSizeMax)
 	szNew = szNewFile;
 
 #ifdef _WIN32_DESKTOP
-	// ∫ˆ¬‘c:\\÷Æ¿‡µƒ◊÷∑˚
+	// Ignore string like "c:\\"
 	if (IsCharAlpha(*szBeg))
 	{
 		*szNew = *szBeg;
@@ -629,7 +617,7 @@ void FileNameFilterInvalidChars(LPTSTR szFile)
 	szBeg = szFile;
 
 #ifdef _WIN32_DESKTOP
-	// ∫ˆ¬‘c:\\÷Æ¿‡µƒ◊÷∑˚
+	// Ignore string like "c:\\"
 	if (IsCharAlpha(*szBeg))
 	{
 		szBeg++;
@@ -663,7 +651,7 @@ void FilePathFilterInvalidChars(LPTSTR szFile)
 	szBeg = szFile;
 
 #ifdef _WIN32_DESKTOP
-	// ∫ˆ¬‘c:\\÷Æ¿‡µƒ◊÷∑˚
+	// Ignore string like "c:\\"
 	if (IsCharAlpha(*szBeg))
 	{
 		szBeg++;
@@ -807,7 +795,7 @@ protected:
 	{
 #ifdef _WIN32
 		LPCTSTR		SZ_DIR_CMP[] =  { _T("c:\\folder"), _T("c:\\folder\\"), _T("") };
-		LPCTSTR		SZ_DIR_CMP_OK[] = { _T("c:\\folder\\"), _T("c:\\folder\\"), _T("\\") };
+		LPCTSTR		SZ_DIR_CMP_OK[] = { _T("c:\\folder\\"), _T("c:\\folder\\"), _T("") };
 #else
 		LPCTSTR		SZ_DIR_CMP[] = { _T("/tmp/folder"), _T("/tmp/folder/"), _T("") };
 		LPCTSTR		SZ_DIR_CMP_OK[] = { _T("/tmp/folder/"), _T("/tmp/folder/"), _T("") };

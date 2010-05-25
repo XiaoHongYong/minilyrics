@@ -809,7 +809,7 @@ protected:
 	{
 #ifdef _WIN32
 		LPCTSTR		SZ_DIR_CMP[] =  { _T("c:\\folder"), _T("c:\\folder\\"), _T("") };
-		LPCTSTR		SZ_DIR_CMP_OK[] = { _T("c:\\folder\\"), _T("c:\\folder\\"), _T("\\") };
+		LPCTSTR		SZ_DIR_CMP_OK[] = { _T("c:\\folder\\"), _T("c:\\folder\\"), _T("") };
 #else
 		LPCTSTR		SZ_DIR_CMP[] = { _T("/tmp/folder"), _T("/tmp/folder/"), _T("") };
 		LPCTSTR		SZ_DIR_CMP_OK[] = { _T("/tmp/folder/"), _T("/tmp/folder/"), _T("") };

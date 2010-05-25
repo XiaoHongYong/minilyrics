@@ -92,7 +92,7 @@ BOOL ToLocalMenu(HMENU hMenu)
 		if (!SetMenuItemInfo(hMenu, i, TRUE, &MenuItemInfo))
 		{
 			CWin32Error		Err;
-			LOG1(LOG_LVL_ERROR_MINOR, _T("SetMenuItemInfo: %s"), Err);
+			ERRLOG1(_T("SetMenuItemInfo: %s"), Err);
 			continue;
 		}
 	}

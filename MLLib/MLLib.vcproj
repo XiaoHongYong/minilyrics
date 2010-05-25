@@ -189,7 +189,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories=".\;..\SDK\Agg\include,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;UNICODE;_MPLAYER"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;UNICODE;"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"

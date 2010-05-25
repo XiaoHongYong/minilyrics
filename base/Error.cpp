@@ -59,22 +59,22 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_NOT_SUPPORT_ID3V2_VER, _T("Not supported id3v2 tag version.") },
 	{ ERR_INVALID_ID3V2_FRAME, _T("Invalid id3v2 tag frame.") },
 
-	{ ERR_HTTP_BAD_REQUEST, _T("Invalid HTTP request.") },		// Å’ï¬â€“ÃŸÂµÆ’HTTPÂ«ÃÂ«Ã›
-	{ ERR_HTTP_BAD_FORMAT, _T("Invalid Http format.") },		// Å’ï¬â€“ÃŸÂµÆ’HTTPâˆÃ’Â Î©
-	{ ERR_HTTP_BAD_HTTP_PRO_TYPE, _T("Unrecognized HTTP protocol type.") },		// Å’ï¬âˆ‘Â®Â âˆ‚Â±ï£¿ÂµÆ’HTTPâ€“â‰ â€œÃˆÂ¿â€¡â€“Ã•
-	{ ERR_HTTP_GET_NODATA, _T("Can't read any data with HTTP GET command.") },		// HTTP ÂµÆ’GETâˆšÂ¸âˆšËšÂ Â«â‰¤ÂªÆ’â€¹âˆ‚Â¡Â»Â°Â»Å’âˆ«Å’Â ËÃ¦â€ºâˆ‚Ã€ÂµÆ’
-	{ ERR_HTTP_INVLIAD_TRUNK, _T("Invalid HTTP trunck size.") },		// Î©â€šÅ’Ë†HTTP return Â ËÃ¦â€ºÂ ÃŸâˆâ€¹Â£Â¨Å’ï¬âˆ‘Â®Â âˆ‚Â±ï£¿ÂµÆ’trunckÂ¥Ã›â€“Â°
-	{ ERR_HTTP_BAD_URL, _T("Invalid HTTP URL format.") },		// Å’ï¬â€“ÃŸÂµÆ’HTTP URLâˆÃ’Â Î©
-	{ ERR_HTTP_CODE_ERROR, _T("NOT dealed HTTP return code.") },		// Å’Â¥Â¥Â¶Â¿ÃŒÂµÆ’HTTP return Â¥Ë™Â¬Ã
-	{ ERR_HTTP_HEAD_NOT_END, _T("Can't read the whole HTTP head.") },		// Å’ï¬âˆ‘Â®Ã•Ãâ€™ËšÂµÆ’âˆ‚Â¡Â»Â°HTTPÃ•âˆ‘
-	{ ERR_HTTP_DATA_NOT_FINISHED, _T("Can't read all the data of the HTTP message.") },		// Å’ï¬âˆ‘Â®Ã•ÃÂ»Â´âˆ‚Â¡Â»Â°HTTPÅ“ËšÅ“Â¢ÂµÆ’Â ËÃ¦â€ºâˆ‚Å’
-	{ ERR_HTTP_302, _T("HTTP status code: 302, Redirect the request.") },		// HTTPâ—ŠÂ¥ÃƒÂ¨Â¥Ë™Â¬ÃÂ£âˆ«302Â£Â¨Ã·Ã¿âˆ‚Â®Å“ÃšÂ«ÃÂ«Ã›
-	{ ERR_HTTP_400, _T("HTTP status code: 400, The request could not be understood by the server due to malformed syntax.") },		// HTTPâ—ŠÂ¥ÃƒÂ¨Â¥Ë™Â¬ÃÂ£âˆ«400Â£Â¨âˆ‘Ë›Å’Ã’âˆ†ËœÅ’ï¬âˆ‘Â®Â âˆ‚Â±ï£¿ÂµÆ’Â«ÃÂ«Ã›
-	{ ERR_HTTP_401, _T("HTTP status code: 401, The request requires user authentication.") },		// HTTPâ—ŠÂ¥ÃƒÂ¨Â¥Ë™Â¬ÃÂ£âˆ«401Â£Â¨Â¥Ã€Â«ÃÂ«Ã›â€“Ã‹â€œâ„¢â€âˆšÂªÃŸâˆšËšâˆ«Ã•âˆšâ€¹Â¬Ãâ€”ÃˆÃ·Â§
-	{ ERR_HTTP_403, _T("HTTP status code: 403, Forbidden.") },		// HTTPâ—ŠÂ¥ÃƒÂ¨Â¥Ë™Â¬ÃÂ£âˆ«403Â£Â¨âˆ‘âˆšÅ’Â Â±ÂªÎ©ËšÃ·Ï€
-	{ ERR_HTTP_404, _T("HTTP status code: 404, The server has not found anything matching the Request-URI.") },		// HTTPâ—ŠÂ¥ÃƒÂ¨Â¥Ë™Â¬ÃÂ£âˆ«404Â£Â¨Â«ÃÂ«Ã›ÂµÆ’URIâ€˜â„âˆ‘Ë›Å’Ã’âˆ†Ëœâˆ‚Ã€â‰¤ÂªÆ’â€¹â€™â€œÂµÎ©
-	{ ERR_HTTP_407, _T("HTTP status code: 407, Proxy Authentication Required.") },		// HTTPâ—ŠÂ¥ÃƒÂ¨Â¥Ë™Â¬ÃÂ£âˆ«407Â£Â¨Â Ï€â€âˆšÂ¥Ë™Â¿ÃŒÂ Â±â€âˆšÂªÃŸâˆšËšâˆ«Ã•âˆšâ€¹Â¬Ãâ€”ÃˆÃ·Â§Â ÃŸâˆâ€¹Â£Â°
-	{ ERR_HTTP_500, _T("HTTP status code: 500, Internal Server Error.") },		// HTTPâ—ŠÂ¥ÃƒÂ¨Â¥Ë™Â¬ÃÂ£âˆ«500Â£Â¨âˆ‘Ë›Å’Ã’âˆ†ËœÆ’â„â‰¤Ã¸Â¥ÃŒÅ’Ã›
+	{ ERR_HTTP_BAD_REQUEST, _T("Invalid HTTP request.") },		// ÎŞĞ§µÄHTTPÇëÇó
+	{ ERR_HTTP_BAD_FORMAT, _T("Invalid Http format.") },		// ÎŞĞ§µÄHTTP¸ñÊ½
+	{ ERR_HTTP_BAD_HTTP_PRO_TYPE, _T("Unrecognized HTTP protocol type.") },		// ÎŞ·¨Ê¶±ğµÄHTTPĞ­ÒéÀàĞÍ
+	{ ERR_HTTP_GET_NODATA, _T("Can't read any data with HTTP GET command.") },		// HTTP µÄGETÃüÃûÊÇ²»ÄÜ¶ÁÈ¡ÈÎºÎÊı¾İ¶ËµÄ
+	{ ERR_HTTP_INVLIAD_TRUNK, _T("Invalid HTTP trunck size.") },		// ½âÎöHTTP return Êı¾İÊ§°Ü£¬ÎŞ·¨Ê¶±ğµÄtrunck´óĞ¡
+	{ ERR_HTTP_BAD_URL, _T("Invalid HTTP URL format.") },		// ÎŞĞ§µÄHTTP URL¸ñÊ½
+	{ ERR_HTTP_CODE_ERROR, _T("NOT dealed HTTP return code.") },		// Î´´¦ÀíµÄHTTP return ´úÂë
+	{ ERR_HTTP_HEAD_NOT_END, _T("Can't read the whole HTTP head.") },		// ÎŞ·¨ÍêÕûµÄ¶ÁÈ¡HTTPÍ·
+	{ ERR_HTTP_DATA_NOT_FINISHED, _T("Can't read all the data of the HTTP message.") },		// ÎŞ·¨ÍêÈ«¶ÁÈ¡HTTPÏûÏ¢µÄÊı¾İ¶Î
+	{ ERR_HTTP_302, _T("HTTP status code: 302, Redirect the request.") },		// HTTP×´Ì¬´úÂë£º302£¬ÖØ¶¨ÏòÇëÇó
+	{ ERR_HTTP_400, _T("HTTP status code: 400, The request could not be understood by the server due to malformed syntax.") },		// HTTP×´Ì¬´úÂë£º400£¬·şÎñÆ÷ÎŞ·¨Ê¶±ğµÄÇëÇó
+	{ ERR_HTTP_401, _T("HTTP status code: 401, The request requires user authentication.") },		// HTTP×´Ì¬´úÂë£º401£¬´ËÇëÇóĞèÒªÓÃ»§ÃûºÍÃÜÂëÑéÖ¤
+	{ ERR_HTTP_403, _T("HTTP status code: 403, Forbidden.") },		// HTTP×´Ì¬´úÂë£º403£¬·ÃÎÊ±»½ûÖ¹
+	{ ERR_HTTP_404, _T("HTTP status code: 404, The server has not found anything matching the Request-URI.") },		// HTTP×´Ì¬´úÂë£º404£¬ÇëÇóµÄURIÔÚ·şÎñÆ÷¶Ë²»ÄÜÕÒµ½
+	{ ERR_HTTP_407, _T("HTTP status code: 407, Proxy Authentication Required.") },		// HTTP×´Ì¬´úÂë£º407£¬Ê¹ÓÃ´úÀíÊ±ÓÃ»§ÃûºÍÃÜÂëÑéÖ¤Ê§°Ü£¡
+	{ ERR_HTTP_500, _T("HTTP status code: 500, Internal Server Error.") },		// HTTP×´Ì¬´úÂë£º500£¬·şÎñÆ÷ÄÚ²¿´íÎó
 
 	{ 0, NULL}
 };
