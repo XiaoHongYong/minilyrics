@@ -577,6 +577,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LyrScrollActionRecorder.cpp"
+				>
+			</File>
+			<File
 				RelativePath="MLClientSession.cpp"
 				>
 				<FileConfiguration
@@ -1172,6 +1176,10 @@
 			</File>
 			<File
 				RelativePath="LyricsTagReader.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LyrScrollActionRecorder.h"
 				>
 			</File>
 			<File

@@ -11,7 +11,7 @@
 #include "LyricsParser.h"
 #include "LrcParser.h"
 #include "LyricsTagReader.h"
-#include "../MPShared/AutoScrollLyrics.h"
+#include "LyrScrollActionRecorder.h"
 
 
 #define	SZ_VERSION			"version:"
@@ -144,7 +144,7 @@ S_OTHER_TAGS:
 	if (nTagType == TAG_OFFSET)
 	{
 		// Get offset time
-		if (CAutoScrollLyrics::IsEventTag(strValue.c_str()))
+		if (CLyrScrollActionRecorder::IsEventTag(strValue.c_str()))
 		{
 			// Set event tag.
 			m_pMLData->SetTxtLyrScrollEvents(strValue.c_str());

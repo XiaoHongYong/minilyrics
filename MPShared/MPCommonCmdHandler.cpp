@@ -30,7 +30,6 @@
 #ifdef _WIN32
 #include "DlgAdjustHue.h"
 #endif
-#include "AutoScrollLyrics.h"
 
 #ifdef _MPLAYER
 #include "MPHelper.h"
@@ -84,10 +83,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
 #endif
-	case IDC_SL_CLEAR_TIME_STAMP:
-		if (g_LyricData.GetLyrContentType() == LCT_TXT)
-			g_autoScrollLyrics.InitCreateAutoEvents(GetDisplayLyrics());
-		break;
 	case IDC_TAG_COLOR:
 	case IDC_EDIT_LINE_COLOR:
 		{

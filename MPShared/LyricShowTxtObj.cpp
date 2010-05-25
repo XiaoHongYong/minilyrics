@@ -9,7 +9,6 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "LyricShowTxtObj.h"
-#include "AutoScrollLyrics.h"
 
 #define SCROLL_ANIMATION_DURATION	500
 #define SCROLL_ANIMATION_TIMEOUT	50
@@ -118,7 +117,7 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 	if (nCurLine < 0 || nCurLine >= m_lyrLines.size())
 		return;
 
-	if (m_lyrLines[nCurLine]->nEndTime != CAutoScrollLyrics::MAX_TIME)
+	if (m_lyrLines[nCurLine]->nEndTime != CLyrScrollActionRecorder::MAX_TIME)
 	{
 		// in Scrolling mode
 		m_bInVerticalScrollingMode = true;
@@ -251,8 +250,8 @@ void CLyricShowTxtObj::OnLyrDrawContextChanged()
 
 	SetScrollInfo();
 
-	if (g_LyricData.GetLyrContentType() == LCT_TXT)
-		g_autoScrollLyrics.UpdateTimeTagByEvents(m_lyrLines);
+	if (g_LyricData.IsUsingLyrScrollActionRecorder())
+		g_LyricData.UpdateTimeTagByLyrScrollActions(m_lyrLines);
 }
 
 void CLyricShowTxtObj::SetScrollInfo()
@@ -350,7 +349,7 @@ void CLyricShowTxtObj::OnEvent(const IEvent *pEvent)
 	if (pEvent->eventType == ET_LYRICS_ON_SAVE_EDIT)
 	{
 		if (g_LyricData.GetLyrContentType() == LCT_TXT)
-			g_LyricData.SetTxtLyrScrollEvents(g_autoScrollLyrics.EventsDataToString().c_str());
+			g_LyricData.LyrScrollActionsToTag();
 	}
 	else
 		CLyricShowMultiRowObj::OnEvent(pEvent);
@@ -362,8 +361,8 @@ void CLyricShowTxtObj::OnSize(int cx, int cy)
 
 	SetScrollInfo();
 
-	if (g_LyricData.GetLyrContentType() == LCT_TXT)
-		g_autoScrollLyrics.UpdateTimeTagByEvents(m_lyrLines);
+	if (g_LyricData.IsUsingLyrScrollActionRecorder())
+		g_LyricData.UpdateTimeTagByLyrScrollActions(m_lyrLines);
 }
 
 void CLyricShowTxtObj::OnTimer(int nId)
@@ -391,7 +390,7 @@ int CLyricShowTxtObj::GetLinesPerPage()
 void CLyricShowTxtObj::StartScrollAnimation(int nCurLineNew)
 {
 	if (g_LyricData.GetLyrContentType() == LCT_TXT)
-		g_autoScrollLyrics.ScrollToLine(m_lyrLines, nCurLineNew, g_LyricData.GetPlayElapsedTime(), true);
+		g_LyricData.LyrScrollToLine(m_lyrLines, nCurLineNew, g_LyricData.GetPlayElapsedTime(), true);
 
 	if (m_bInScrollingToNewLine)
 	{

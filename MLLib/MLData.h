@@ -13,7 +13,7 @@
 #endif // _MSC_VER > 1000
 
 #include "../ID3Lib/ID3v2.h"
-#include "../MLProtocol//MLUtils.h"
+#include "../MLProtocol/MLUtils.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // BEGIN 歌词数据的数据结构定义
@@ -256,6 +256,8 @@ protected:
 
 };
 
+#include "LyrScrollActionRecorder.h"
+
 class CMLData  
 {
 public:
@@ -366,6 +368,28 @@ public:
 	BOOL LyricsRowToText(PML_ROW pRow, tstring &strLyricsRow);
 
 public:
+	//
+	// Interface for Lyrics Scroll Action Recoder (CLyrScrollActionRecorder).
+	//
+
+	bool IsUsingLyrScrollActionRecorder()
+		{ return m_lyrScrollActionRecorder.HasActions(); }
+
+	void UpdateTimeTagByLyrScrollActions(VLyrLines &lyrLines)
+		{ m_lyrScrollActionRecorder.UpdateTimeTagByEvents(lyrLines); }
+
+	void LyrScrollActionsToTag() {
+		if (GetLyrContentType() == LCT_TXT)
+			m_lyrProperties.m_strTxtLyrScrollEvents = m_lyrScrollActionRecorder.EventsDataToString();
+	}
+
+	void LyrScrollToLine(VLyrLines &lyrLines, int nLine, int nTime, bool bUpdateTimeTag = true)
+	{
+		ASSERT(GetLyrContentType() == LCT_TXT);
+		m_lyrScrollActionRecorder.ScrollToLine(lyrLines, nLine, nTime, bUpdateTimeTag);
+	}
+
+public:
 	LPCTSTR GetLyricsFileName();
 	LPCTSTR GetSongFileName() { return m_strSongFile.c_str(); }
 	int GetLyricsFileServerMark(TCHAR szMd5[]);
@@ -445,6 +469,8 @@ protected:
 	CMLyrLines				m_arrLyricsRows;
 
 protected:
+	CLyrScrollActionRecorder	m_lyrScrollActionRecorder;
+
 	// save id3v2 lyrics infomation for cache.
 	struct ID3v2LyricsSaveCacheInfo
 	{

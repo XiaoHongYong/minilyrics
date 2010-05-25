@@ -18,7 +18,6 @@
 #include "SrtParser.h"
 #include <algorithm>
 #include "LyricsTagReader.h"
-#include "../MPShared/AutoScrollLyrics.h"
 
 #define ROW_TIME_MIN_SPAN			300	// 300 MS
 
@@ -273,6 +272,13 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 	FilterContents();
 
 	ResetModificationFlag();
+
+	if (GetLyrContentType() == LCT_TXT)
+	{
+		m_lyrScrollActionRecorder.EventsDataFromString(
+			GetTxtLyrScrollEvents(), 
+			GetRawLyrics());
+	}
 
 	return nRet;
 }
@@ -2614,7 +2620,7 @@ void CMLData::SetProperty(LYRICS_PROP &prop, LPCTSTR szValue)
 		m_lyrProperties.m_strBy = szValue;
 		break;
 	case LP_OFFSET:
-		if (CAutoScrollLyrics::IsEventTag(szValue))
+		if (CLyrScrollActionRecorder::IsEventTag(szValue))
 			m_lyrProperties.m_strTxtLyrScrollEvents = szValue;
 		else
 			m_lyrProperties.m_nTimeOffset = _ttoi(szValue);
