@@ -346,7 +346,8 @@ void CRawGraph::VertAlphaFadeOut(const RECT *lpRect, bool bTop)
 		fStart = 1;
 	}
 
-	fStart += fStep * (y - lpRect->top);
+	fStart += fStep * (y - MapY(lpRect->top));
+	ASSERT(fStart <= 1.0 && fStart >= 0.0);
 
 	// PIX_SIZE is the pixel size(rgba).
 	pRow = m_imageData.PixPtr(x, y);
@@ -393,7 +394,8 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 		fStart = 1;
 	}
 
-	fStart += fStep * (y - lpRect->top);
+	fStart += fStep * (y - MapY(lpRect->top));
+	ASSERT(fStart <= 1.0 && fStart >= 0.0);
 
 	pRow = m_imageData.PixPtr(x, y);
 	for (; y < yMax; y++)
@@ -438,7 +440,8 @@ void CRawGraph::HorzAlphaFadeOut(const RECT *lpRect, bool bLeft)
 		fStart = 1;
 	}
 
-	fStart += fStep * (x - lpRect->left);
+	fStart += fStep * (x - MapX(lpRect->left));
+	ASSERT(fStart <= 1.0 && fStart >= 0.0);
 
 	pRow = m_imageData.PixPtr(x, y);
 	for (; y < yMax; y++)
@@ -490,7 +493,8 @@ void CRawGraph::HorzFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bLeft
 		fStart = 1;
 	}
 
-	fStart += fStep * (x - lpRect->left);
+	fStart += fStep * (x - MapX(lpRect->left));
+	ASSERT(fStart <= 1.0 && fStart >= 0.0);
 
 	pRow = m_imageData.PixPtr(x, y);
 	for (; y < yMax; y++)
