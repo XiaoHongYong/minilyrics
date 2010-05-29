@@ -1287,7 +1287,7 @@ void CSkinWnd::CreateUIObjects(SXNode *pSkinWndNode, CSkinContainer *pParentCont
 			continue;
 		}
 
-		pObj = m_pSkinFactory->CreateUIObject(this, pNode->strName.c_str());
+		pObj = m_pSkinFactory->CreateUIObject(this, pNode->strName.c_str(), pParentContainer);
 		if (pObj)
 		{
 			pObj->FromXML(pParentContainer, pNode);
@@ -1649,7 +1649,8 @@ void CSkinWnd::FocusNextUIObject()
 	else
 		m_itFocusUIObject++;
 
-	while (1)
+	int	nLoopCount = 0;
+	while (nLoopCount < 2)
 	{
 		CUIObject			*pObj = m_itFocusUIObject.Get();
 
@@ -1665,7 +1666,10 @@ void CSkinWnd::FocusNextUIObject()
 			break;
 
 		if (m_itFocusUIObject.IsEnd())
+		{
+			nLoopCount++;
 			m_itFocusUIObject.Begin();
+		}
 		else
 			m_itFocusUIObject++;
 	}
@@ -1802,6 +1806,24 @@ void CSkinWnd::SetUIObjectText(int nId, LPCTSTR szText, bool bRedraw)
 	pObj->SetProperty(SZ_PN_TEXT, szText);
 	if (bRedraw)
 		pObj->Invalidate();
+}
+
+void CSkinWnd::CheckButton(int nId, bool bCheck)
+{
+	CSkinNStatusButton *pButton = (CSkinNStatusButton*)GetUIObjectById(nId, CSkinNStatusButton::ClassName());
+	if (pButton)
+		pButton->SetStatus(bCheck);
+}
+
+bool CSkinWnd::IsButtonChecked(int nId)
+{
+	CSkinNStatusButton *pButton = (CSkinNStatusButton*)GetUIObjectById(nId, CSkinNStatusButton::ClassName());
+	if (pButton)
+	{
+		return Tobool(pButton->GetStatus());
+	}
+
+	return false;
 }
 
 CUIObject *CSkinWnd::RemoveUIObjectById(int nId)

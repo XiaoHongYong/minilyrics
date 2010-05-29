@@ -66,6 +66,7 @@
 #define IDD_PG_MEDIA_ASSOCIATE          209
 #define IDI_MEDIATYPE2                  210
 #define IDR_MENU_STATIC_LYR             211
+#define IDM_LYRICS_TOOL                 212
 #define IDC_E_PWD                       1000
 #define IDC_APPLY_ACCOUNT               1001
 #define IDC_E_SAMPLE                    1005

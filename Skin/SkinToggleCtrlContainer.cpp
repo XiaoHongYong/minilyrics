@@ -66,6 +66,7 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 		m_memGraph.ResetClipBoundBox(m_rcObj);
 
 		// Show child controls in animation
+		// Draw active control
 		CUIObject	*pObj = GetUIObjectById(m_nActiveCtrl, NULL);
 		if (pObj)
 		{
@@ -82,12 +83,14 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 				nOpaque = 255;
 			nOpaque = pGraph->SetOpacityPainting(nOpaque);
 
+			// Draw toggle to control
 			if (m_bUseSkinBg || pObj->IsUseSkinBg())
 				m_pSkin->RedrawBackground(&m_memGraph, m_rcObj);
 			CRawGraph::COpacityBlendAutoRecovery opacityAR(&m_memGraph, pObj->GetOpacity());
 			pObj->Draw(&m_memGraph);
 			opacityAR.Recover();
 
+			// Draw final result
 			CRawImage	imgTemp;
 			imgTemp.Attach(m_memGraph.GetRawBuff());
 			imgTemp.Blt(pGraph, m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), 0, 0, BPM_COPY);

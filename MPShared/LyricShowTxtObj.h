@@ -15,6 +15,8 @@
 
 #include "LyricShowMultiRowObj.h"
 
+#define SZ_TXT_LYR_CONTAINER _T("LyricShowTxtContainer")
+
 class CLyricShowTxtObj : public CLyricShowMultiRowObj, IScrollNotify
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CLyricShowMultiRowObj)
@@ -37,6 +39,14 @@ public:
 	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }
 
 	void OnPlayTimeChangedUpdate();
+
+	bool IsRecordScrollingActionsEnabled()
+		const { return m_bRecordScrollingActionsEnabled; };
+	void EnableRecordScrollingActions(bool bEnable);
+
+	bool IsReplayScrollingActionsEnabled()
+		const { return m_bReplayScrollingActionsEnabled; };
+	void EnableReplayScrollingActions(bool bEnable);
 
 protected:
 	void OnLyrDrawContextChanged();
@@ -64,6 +74,11 @@ protected:
 	uint32					m_nBeginScrollTime;
 
 	bool					m_bInVerticalScrollingMode;
+
+	bool					m_bRecordScrollingActionsEnabled;
+	bool					m_bReplayScrollingActionsEnabled;
+
+	bool					m_bReplayDisabledTemp;
 
 };
 

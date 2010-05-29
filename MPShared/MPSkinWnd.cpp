@@ -754,7 +754,7 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 			if (uID == IDC_LDS_MULTI_LINE)
 				strName = CLyricShowMultiRowObj::ClassName();
 			else if (uID == IDC_LDS_STATIC_TXT)
-				strName = CLyricShowTxtObj::ClassName();
+				strName = SZ_TXT_LYR_CONTAINER;
 			else if (uID == IDC_LDS_TWO_LINE)
 				strName = CLyricShowTwoRowObj::ClassName();
 			else if (uID == IDC_LDS_HORZ_SCROLL)
@@ -1295,7 +1295,7 @@ bool CMPSkinWnd::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 
 		if (IsPropertyName(strName.c_str(), CLyricShowMultiRowObj::ClassName()))
 			nIDChecked = IDC_LDS_MULTI_LINE;
-		else if (IsPropertyName(strName.c_str(), CLyricShowTxtObj::ClassName()))
+		else if (IsPropertyName(strName.c_str(), SZ_TXT_LYR_CONTAINER))
 			nIDChecked = IDC_LDS_STATIC_TXT;
 		else if (IsPropertyName(strName.c_str(), CLyricShowTwoRowObj::ClassName()))
 			nIDChecked = IDC_LDS_TWO_LINE;

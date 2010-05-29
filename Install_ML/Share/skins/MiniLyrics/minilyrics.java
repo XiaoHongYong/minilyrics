@@ -9,19 +9,7 @@ public class MiniLyricsSkinWndEvent extends SkinWndEvent {
 		// UnitTest.message("onCommand()");
 		// UnitTest.message(nCmdId);
 		
-		if (nCmdId == MiniLyrics.CMD_AUTO_SHOW_LYR)
-		{
-			// UnitTest.message("CMD_AUTO_SHOW_LYR");
-			return true;
-		}
-		else if (nCmdId == MiniLyrics.CMD_SHOW_INFO_TEXT)
-		{
-			// UnitTest.message("CMD_SHOW_INFO_TEXT");
-			// mSkinWnd.setProperty("TranslucencyAlpha", "0");
-			// mSkinWnd.setUIObjProperty(MiniLyrics.CID_TOGGLE_LYR_PL, "CmdToggle", "CID_INFOTEXT");
-			return true;
-		}
-		else if (nCmdId == MiniLyrics.ID_HIDE_WND_FRAME)
+		if (nCmdId == MiniLyrics.ID_HIDE_WND_FRAME)
 		{
 			if (MiniLyrics.nHideFrameOnLostFocus > 0)
 			{

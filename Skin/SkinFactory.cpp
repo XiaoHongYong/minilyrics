@@ -1219,7 +1219,7 @@ bool CSkinFactory::IsAppResSkinWnd(LPCTSTR szSkinWndName)
 }
 
 // create new uiobject by class name
-CUIObject * CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
+CUIObject * CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName, CSkinContainer *pContainer)
 {
 	SXNode *pNode = m_skinStyle.GetClassNode(szClassName);
 	if (!pNode)
@@ -1231,9 +1231,9 @@ CUIObject * CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 
 	CUIObject *pObj = NewUIObject(pSkin, szClassName);
 
-	// Set styled properties
+	// Set styled properties of Extends from
 	if (pObj)
-		pObj->FromXML(NULL, pNode);
+		pObj->FromXML(pContainer, pNode);
 
 	return pObj;
 }
@@ -1331,7 +1331,7 @@ CUIObject *CSkinFactory::CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR s
 	CUIObject			*pObj = NULL;
 
 	// Create the control
-	pObj = pContainer->m_pSkin->GetSkinFactory()->CreateUIObject(pContainer->m_pSkin, szClassName);
+	pObj = pContainer->m_pSkin->GetSkinFactory()->CreateUIObject(pContainer->m_pSkin, szClassName, pContainer);
 	assert(pObj);
 	if (pObj)
 	{

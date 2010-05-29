@@ -151,7 +151,22 @@
     <VScrollBar Width="15" PushBtHeight="15" ThumbHeight="20" TrackHeight="20" ScrollBarWidth="15" Image="s_vscrollbar.png" ScalableThumb="TRUE" />
     <HScrollBar Height="15" PushBtWidth="15" ThumbWidth="20" TrackWidth="20" ScrollBarHeight="15" Image="s_hscrollbar.png" ScalableThumb="TRUE" />
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
-    <CloseButton Extends="Button" Image=""/>
-    <MinimizeButton Extends="Button" Image=""/>
+
+    <LyricShowTxtContainer Extends="DecorativeContainer">
+      <LyricShowTxt Rect="0,0,w,h"/>
+      <Button Rect="w-55,h/2-28-5-28/2,28,28" ID="ID_LYR_SCROLL_ENABLE_RECORD" TranslucencyWithSkin="TRUE"
+        S0_Image="lyr_scroll_actions_bt.png" S0_ImageSize="28,28" S0_ImagePos="0,0" S0_ImageSelPos="0,28"
+        S0_ImageFocusPos="0,56"
+        S1_Image="lyr_scroll_actions_bt.png" S1_ImageSize="28,28" S1_ImagePos="28,0" S1_ImageSelPos="28,28"
+        S1_ImageFocusPos="28,56" />
+      <Button Rect="w-55,h/2-28/2,28,28" ID="ID_LYR_SCROLL_ENABLE_REPLAY" TranslucencyWithSkin="TRUE"
+        S0_Image="lyr_scroll_actions_bt.png" S0_ImageSize="28,28" S0_ImagePos="56,0" S0_ImageSelPos="56,28"
+        ImageFocusPos="56,56"
+        S1_Image="lyr_scroll_actions_bt.png" S1_ImageSize="28,28" S1_ImagePos="84,0" S1_ImageSelPos="84,28"
+        S1_ImageFocusPos="84,56" />
+      <Button Rect="w-55,h/2+28/2+5,28,28" ID="ID_LYR_SCROLL_MENU" TranslucencyWithSkin="TRUE"
+        Image="lyr_scroll_actions_bt.png" ImageSize="28,28" ImagePos="112,0" ImageSelPos="112,28"
+        ImageFocusPos="112,56" />
+    </LyricShowTxtContainer>
   </style>
 </styles>

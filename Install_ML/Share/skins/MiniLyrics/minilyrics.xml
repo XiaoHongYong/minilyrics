@@ -30,7 +30,7 @@
   </AdjustHue>
   <skinwnd Name="minilyrics" EnableTranslucency="true"
        TranslucencyAlpha="0" TranslucencyAlphaOnHover="228" TranslucencyAlphaOnActive="228"
-       MinWidth="330" MinHeight="190" Width="450" Height="240" 
+       MinWidth="330" MinHeight="190" Width="640" Height="240" 
        PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" 
        ContextMenu="NormalMode" CmdHandler="ch_common">
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
@@ -87,10 +87,14 @@
       </Toolbar>
     </DecorativeContainer>
 
-    <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Rect="5,31,w-10,h-33-9">
-      <DecorativeContainer Name="Lyrics" ID="CID_LYRICS" Rect="0,0,w,h">
-        <LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" EnableToolbar="FALSE"
-            FontHeight="20" EnableAutoResize="FALSE"/>
+    <DecorativeContainer Name="Body" Rect="5,31,w-10,h-33-9" UseSkinBg="TRUE">
+      <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Lyrics" Rect="0,0,w,h" >
+        <Container ID="CID_LYRICS" Rect="0,0,w,h">
+          <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE"
+              FontHeight="20" EnableAutoResize="FALSE"/>
+        </Container>
+        <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" UseSkinBg="TRUE" Visible="false"/>
+      </ToggleCtrlContainer>
         <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
         <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
 
@@ -134,12 +138,11 @@
                     Rect="w/2+30,h/2-6,100,12" EndWidth="3" ImageThumb="seek_thumb.png"
                     ImageTrack="seek_track.png"/>
         </Container>
-      </DecorativeContainer>
-      <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" Visible="false"/>
-    </ToggleCtrlContainer>
+    </DecorativeContainer>
 
     <WndResizer Name="Bottom" Rect="0,h-20,w-20,20" Direction="bottom"/>
     <WndResizer Name="Right" Rect="w-20,0,20,h-20" Direction="right"/>
     <WndResizer Name="RightBottom" Rect="w-20,h-20,20,20" Direction="right|bottom"/>
-  </skinwnd>
+  
+</skinwnd>
 </skin>

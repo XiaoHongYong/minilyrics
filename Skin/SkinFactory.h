@@ -185,7 +185,7 @@ public:
 	bool IsAppResSkinWnd(LPCTSTR szSkinWndName);
 
 	// create new uiobject by class name
-	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
+	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName, CSkinContainer *pContainer);
 
 	// 
 	virtual CUIObject *CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, int nIDAssign = SKIN_UIOBJ_ID_UNDEFINE, LPCTSTR szLeft = NULL, LPCTSTR szTop = NULL, LPCTSTR szWidth = NULL, LPCTSTR szHeight = NULL);

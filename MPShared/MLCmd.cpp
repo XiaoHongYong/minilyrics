@@ -37,8 +37,9 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_LYR_HIGH_CLR_LIST"), CMD_LYR_HIGH_CLR_LIST, 0, _T("Highlight lyrics color") },
 	{ _T("ID_MENU_STATIC_LYR"), CMD_MENU_STATIC_LYR, 0, _T("Menu") },
 
-	{ _T("ID_AUTO_LYR_BW"), 	CMD_AUTO_LYR_BW, 0, _T("Pause lyrics") },
-	{ _T("ID_AUTO_LYR_FW"), 	CMD_AUTO_LYR_FW, 0, _T("Forward lyrics") },
+	{ _T("ID_LYR_SCROLL_ENABLE_RECORD"), 	CMD_LYR_SCROLL_ENABLE_RECORD, 0, _T("Enable/Disable record lyrics scrolling actions") },
+	{ _T("ID_LYR_SCROLL_ENABLE_REPLAY"), 	CMD_LYR_SCROLL_ENABLE_REPLAY, 0, _T("Enable/Disable replay lyrics scrolling actions") },
+	{ _T("ID_LYR_SCROLL_MENU"), 	CMD_LYR_SCROLL_MENU, 0, _T("Menu") },
 
 	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, IDC_INSERT_TAG, _T("Synchronize the current line") },
 	{ _T("ID_DEL_TAG"), CMD_DEL_TAG, 0, _T("Remove Timestamp of the current line") },

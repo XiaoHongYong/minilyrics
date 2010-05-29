@@ -99,31 +99,6 @@ BEGIN
         MENUITEM "IDC_SKIN_20",                 IDC_SKIN_20
         MENUITEM "IDC_SKIN_MAX",                IDC_SKIN_MAX
     END
-    POPUP "Theme:)"
-    BEGIN
-        MENUITEM "THEME0",                      IDC_THEME0
-        MENUITEM "THEME1",                      IDC_THEME1
-        MENUITEM "THEME1",                      IDC_THEME2
-        MENUITEM "THEME1",                      IDC_THEME3
-        MENUITEM "THEME1",                      IDC_THEME4
-        MENUITEM "THEME1",                      IDC_THEME5
-        MENUITEM "THEME1",                      IDC_THEME6
-        MENUITEM "THEME1",                      IDC_THEME7
-        MENUITEM "THEME1",                      IDC_THEME8
-        MENUITEM "THEME1",                      IDC_THEME9
-        MENUITEM "THEME1",                      IDC_THEME10
-        MENUITEM "THEME1",                      IDC_THEME11
-        MENUITEM "THEME1",                      IDC_THEME12
-        MENUITEM "THEME1",                      IDC_THEME13
-        MENUITEM "THEME1",                      IDC_THEME14
-        MENUITEM "THEME1",                      IDC_THEME15
-        MENUITEM "THEME1",                      IDC_THEME16
-        MENUITEM "THEME1",                      IDC_THEME17
-        MENUITEM "THEME1",                      IDC_THEME18
-        MENUITEM "THEME1",                      IDC_THEME19
-        MENUITEM "THEME1",                      IDC_THEME20
-        MENUITEM "THEME1",                      IDC_THEME21
-    END
     POPUP "Remain"
     BEGIN
         MENUITEM "Play",                        IDC_PLAY
@@ -579,9 +554,36 @@ IDR_MENU_STATIC_LYR MENU
 BEGIN
     POPUP "M"
     BEGIN
-        MENUITEM "&Clear Recorded Scrolling Lyrics Actions", IDC_SL_CLEAR_TIME_STAMP
+        MENUITEM "&Clear Lyrics Scrolling Actions", IDC_SL_CLEAR_TIME_STAMP
         MENUITEM "Lyrics &Editor...",           IDC_LYR_EDITOR
         MENUITEM "&Help",                       IDC_HELP_STATIC_LYR
+    END
+END
+
+IDM_LYRICS_TOOL MENU 
+BEGIN
+    POPUP "Song file"
+    BEGIN
+        MENUITEM "Open Media File...\tCtrl+O",  IDC_OPEN_LYRICS
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDC_EXIT
+    END
+    POPUP "Lyrics"
+    BEGIN
+        MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
+        MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
+        MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
+        MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
+        MENUITEM "Cop&y Song File and Lyrics To...\tF12", IDC_COPYTO
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "A&bout $Product$...",         IDC_ABOUT
+        MENUITEM "$Product$ &Help",             IDC_ML_HELP
+        MENUITEM SEPARATOR
+        MENUITEM "&Register...",                IDC_REGISTER
+        MENUITEM SEPARATOR
+        MENUITEM "$Product$ &Website",          IDC_WEBHOME
     END
 END
 

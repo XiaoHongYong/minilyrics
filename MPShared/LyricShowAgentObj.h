@@ -48,7 +48,8 @@ protected:
 protected:
 	bool			m_bFloatingLyr;
 	tstring			m_strLyrDisplayStylePropName;
-	tstring			m_strLyrDisplayStyle;
+	tstring			m_strLyrDisplayStyleDefault;
+	tstring			m_strLyrDisplayStyleCurrent;
 	CUIObject		*m_pLyricsShow;
 	vector<tstring>	m_vProperties;
 	bool			m_bEnableStaticTextStyle;

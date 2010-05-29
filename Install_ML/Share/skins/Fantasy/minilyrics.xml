@@ -33,7 +33,7 @@
     <Image Left="0" Top="h-10" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="0, 10, 10, 10" BlendPixMode="alpha_mask"/>
     <Image Left="w-10" Top="h-10" Width="10" Height="10" Image="fl_border_mask.png" ImageRect="10, 10, 10, 10" BlendPixMode="alpha_mask"/>
     <DecorativeContainer Name="Lyrics" Left="10" Top="2" Width="w-20" Height="h-4" >
-      <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" 
+      <LyricsShow Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" 
                   LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
       <Toolbar Left="w-62" Top="h/2-7" Width="62" Height="14" HideIfWndInactive="TRUE" UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14" blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10" MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
         <button ID="ID_MINIMIZE" Left="0" />
@@ -88,7 +88,7 @@
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Left="15" Top="140" Width="w-30" Height="h-150-15" UseSkinBg="true" >
 
       <Container Name="Lyrics" ID="CID_LYRICS" left="0" top="0" width="w" height="h">
-        <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" 
+        <LyricsShow Left="0" Top="0" Width="w" Height="h" 
                   EnableToolbar="FALSE" EnableAutoResize="TRUE"/>
       </Container>
       <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" left="0" top="0" width="w" height="h" Visible="false"/>

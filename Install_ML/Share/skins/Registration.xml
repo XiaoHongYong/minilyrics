@@ -10,7 +10,7 @@
   <Container ID="CID_C_NOTICE" Name="Notice" Rect="0,0,w,h">
     <NormalText Text="Do you think MiniLyrics is valuable to you? If yes, you may purchase it."
                 Rect="30,15,w-60,40" FontHeight="18"/>
-    <NormalText Text="Your payment will be taken as recognition of our works and encouragement of making this software better."
+    <NormalText Text="You could support the development of MiniLyrics by purchasing it, and we will make MiniLyrics better."
                 Rect="30,70,w-60,40" FontHeight="16"/>
     <NormalText Text="This reminder window will be removed permanently after you enter the registration code."
                 Rect="30,150,w-60,40" FontHeight="16"/>

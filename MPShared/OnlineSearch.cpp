@@ -524,12 +524,12 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 		if (abs((int)dwLatestSearchTime - GetCurDaysFrom2000()) < nNextSearch)
 		{
 			// ....todo 添加上次搜索时间的介绍, 优化离线歌词搜索库和在下歌词搜索缓存
-			tstring			str;
-			CStrPrintf		str2(TOLOCAL(_T("Searched lyrics %d days ago, no results returned.")), abs((int)dwLatestSearchTime - GetCurDaysFrom2000()));
-			str = str2.c_str();
-			str += _T(" ");
-			str += TOLOCAL(_T("Auto search canceled."));
-			g_eventDispather.DispatchLongErrorText(str.c_str());
+// 			tstring			str;
+// 			CStrPrintf		str2(TOLOCAL(_T("Searched lyrics %d days ago, no results returned.")), abs((int)dwLatestSearchTime - GetCurDaysFrom2000()));
+// 			str = str2.c_str();
+// 			str += _T(" ");
+// 			str += TOLOCAL(_T("Auto search canceled."));
+// 			g_eventDispather.DispatchLongErrorText(str.c_str());
 			return FALSE;
 		}
 	}

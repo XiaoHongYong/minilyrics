@@ -1317,6 +1317,18 @@ BOOL CMLData::IsModified()
 {
 	return !m_lyrProperties.Equal(m_lyrPropertiesOrg) || IsContentModified();
 }
+
+bool CMLData::IsOnlyAddLyrScrollActions()
+{
+	if (GetLyrContentType() != LCT_TXT)
+		return false;
+	if (IsContentModified())
+		return false;
+
+	return (m_lyrPropertiesOrg.m_strTxtLyrScrollEvents.empty()
+		&& m_lyrProperties.m_strTxtLyrScrollEvents.size());
+}
+
 // 
 // bool CMLData::IsEncodingModified()
 // {
@@ -2575,7 +2587,7 @@ void CMLData::CopyMLyrLines(CMLyrLines &lyrLines)
 	}
 }
 
-void CMLData::GetProperty(LYRICS_PROP &prop, tstring &strValue)
+void CMLData::GetProperty(LYRICS_PROP prop, tstring &strValue)
 {
 	switch (prop)
 	{
@@ -2595,12 +2607,15 @@ void CMLData::GetProperty(LYRICS_PROP &prop, tstring &strValue)
 		strValue = m_lyrProperties.m_strBy;
 		break;
 	case LP_OFFSET:
-		strValue = CStrPrintf(_T("%d"), m_lyrProperties.m_nTimeOffset).c_str();
+		if (m_lyrProperties.m_strTxtLyrScrollEvents.size())
+			strValue = m_lyrProperties.m_strTxtLyrScrollEvents;
+		else if (m_lyrProperties.m_nTimeOffset != 0)
+			strValue = CStrPrintf(_T("%d"), m_lyrProperties.m_nTimeOffset).c_str();
 		break;
 	}
 }
 
-void CMLData::SetProperty(LYRICS_PROP &prop, LPCTSTR szValue)
+void CMLData::SetProperty(LYRICS_PROP prop, LPCTSTR szValue)
 {
 	switch (prop)
 	{

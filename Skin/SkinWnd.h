@@ -139,6 +139,10 @@ public:
 	void SetUIObjectText(LPCTSTR szId, LPCTSTR szText, bool bRedraw = true)
 		{ SetUIObjectText(m_pSkinFactory->GetIDByName(szId), szText, bRedraw); }
 
+	void CheckButton(int nId, bool bCheck);
+
+	bool IsButtonChecked(int nId);
+
 	// register special messages
 	void SetCaptureMouse(CUIObject *pUIObj);
 	CUIObject *GetCaptureMouse();

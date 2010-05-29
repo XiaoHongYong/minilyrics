@@ -10,7 +10,7 @@
 #include "MPlayerApp.h"
 #include "LyricShowTxtObj.h"
 
-#define SCROLL_ANIMATION_DURATION	500
+#define SCROLL_ANIMATION_DURATION	300
 #define SCROLL_ANIMATION_TIMEOUT	50
 
 UIOBJECT_CLASS_NAME_IMP(CLyricShowTxtObj, _T("LyricShowTxt"))
@@ -32,6 +32,10 @@ CLyricShowTxtObj::CLyricShowTxtObj()
 	m_yCurLineLatest = 0, m_nCurLineLatest = 0;
 	m_nBeginScrollTime = 0;
 	m_bInVerticalScrollingMode = false;
+
+	m_bRecordScrollingActionsEnabled = true;
+	m_bReplayScrollingActionsEnabled = true;
+	m_bReplayDisabledTemp = false;
 }
 
 CLyricShowTxtObj::~CLyricShowTxtObj()
@@ -44,6 +48,15 @@ CLyricShowTxtObj::~CLyricShowTxtObj()
 
 void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
 {
+	if (g_LyricData.GetLyrContentType() != LCT_TXT && !m_bReplayScrollingActionsEnabled)
+	{
+		CLyricShowMultiRowObj::OnKeyDown(nChar, nFlags);
+		return;
+	}
+
+	if (!m_bRecordScrollingActionsEnabled)
+		m_bReplayDisabledTemp = true;
+
 	BOOL	bProcessed = FALSE;
 	int		nCurLineNew = m_nCurLineNew;
 
@@ -117,7 +130,8 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 	if (nCurLine < 0 || nCurLine >= m_lyrLines.size())
 		return;
 
-	if (m_lyrLines[nCurLine]->nEndTime != CLyrScrollActionRecorder::MAX_TIME)
+	if (m_bReplayScrollingActionsEnabled && !m_bReplayDisabledTemp
+		&& m_lyrLines[nCurLine]->nEndTime != CLyrScrollActionRecorder::MAX_TIME)
 	{
 		// in Scrolling mode
 		m_bInVerticalScrollingMode = true;
@@ -238,10 +252,23 @@ void CLyricShowTxtObj::OnLyricsChanged()
 {
 	CLyricShowMultiRowObj::OnLyricsChanged();
 
+	m_bReplayDisabledTemp = false;
+
+	m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_RECORD,
+		IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
+
+	bool bVisible = Tobool(g_LyricData.HasLyricsOpened());
+	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_ENABLE_RECORD, bVisible, false);
+	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_ENABLE_REPLAY, bVisible, false);
+	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_MENU, bVisible, false);
+	m_pObjScrollBar->SetVisible(bVisible);
+
 	m_nCurLine = 0;
 	m_nCurLineNew = 0;
 
 	SetScrollInfo();
+
+	m_pSkin->InvalidateRect();
 }
 
 void CLyricShowTxtObj::OnLyrDrawContextChanged()
@@ -268,10 +295,31 @@ void CLyricShowTxtObj::SetScrollInfo()
 void CLyricShowTxtObj::OnPlayTimeChangedUpdate()
 {
 	// No need to update lyrics with time
-	if (!m_bInScrollingToNewLine && !m_bInVerticalScrollingMode)
+	if (!m_bInScrollingToNewLine && !m_bInVerticalScrollingMode && (!m_bReplayScrollingActionsEnabled || m_bReplayDisabledTemp))
 		return;
 
 	CLyricShowMultiRowObj::OnPlayTimeChangedUpdate();
+}
+
+void CLyricShowTxtObj::EnableRecordScrollingActions(bool bEnable)
+{
+	if (g_LyricData.GetLyrContentType() == LCT_TXT)
+	{
+		m_bReplayDisabledTemp = false;
+		m_bRecordScrollingActionsEnabled = bEnable;
+		g_Profile.WriteProfileInt(_T("LyrRecordSAEnabled"), bEnable);
+	}
+	else
+		m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_RECORD,
+			IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
+}
+
+void CLyricShowTxtObj::EnableReplayScrollingActions(bool bEnable)
+{
+	if (bEnable)
+		m_bReplayDisabledTemp = false;
+	m_bReplayScrollingActionsEnabled = bEnable;
+	g_Profile.WriteProfileInt(_T("LyrReplaySAEnabled"), bEnable);
 }
 
 void CLyricShowTxtObj::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
@@ -300,6 +348,9 @@ void CLyricShowTxtObj::OnCreate()
 	CLyricShowMultiRowObj::OnCreate();
 
 	g_eventDispather.RegisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
+
+	m_bRecordScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrRecordSAEnabled"), true);
+	m_bReplayScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrReplaySAEnabled"), true);
 
 	//
 	// Create Scrollbar
@@ -348,7 +399,7 @@ void CLyricShowTxtObj::OnEvent(const IEvent *pEvent)
 {
 	if (pEvent->eventType == ET_LYRICS_ON_SAVE_EDIT)
 	{
-		if (g_LyricData.GetLyrContentType() == LCT_TXT)
+		if (g_LyricData.GetLyrContentType() == LCT_TXT && m_bRecordScrollingActionsEnabled)
 			g_LyricData.LyrScrollActionsToTag();
 	}
 	else
@@ -389,7 +440,7 @@ int CLyricShowTxtObj::GetLinesPerPage()
 
 void CLyricShowTxtObj::StartScrollAnimation(int nCurLineNew)
 {
-	if (g_LyricData.GetLyrContentType() == LCT_TXT)
+	if (g_LyricData.GetLyrContentType() == LCT_TXT && m_bRecordScrollingActionsEnabled)
 		g_LyricData.LyrScrollToLine(m_lyrLines, nCurLineNew, g_LyricData.GetPlayElapsedTime(), true);
 
 	if (m_bInScrollingToNewLine)

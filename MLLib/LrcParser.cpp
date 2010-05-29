@@ -512,7 +512,10 @@ bool CLrcParserObj::ReadTxtTag(TCHAR *szTag, int nLen)
 		{
 			strValue.append(szTag + nNameLen, nLen - nNameLen);
 			TrimStr(strValue);
-			m_pMLData->SetProperty(lyricsPropNames[i].prop, strValue.c_str());
+			tstring strOrg;
+			m_pMLData->GetProperty(lyricsPropNames[i].prop, strOrg);
+			if (strOrg.empty())
+				m_pMLData->SetProperty(lyricsPropNames[i].prop, strValue.c_str());
 			return true;
 		}
 	}

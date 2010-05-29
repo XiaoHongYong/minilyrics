@@ -277,7 +277,7 @@ void CPagePfBase::CheckToolbarDefaultPage(LPCTSTR szToolbarId)
 int CPagePfBase::NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj)
 {
 	CSkinFactory	*pSkinFactory = m_pSkinWnd->GetSkinFactory();
-	CUIObject *pObj = pSkinFactory->CreateUIObject(m_pSkinWnd, CSkinAnimationObj::ClassName());
+	CUIObject *pObj = pSkinFactory->CreateUIObject(m_pSkinWnd, CSkinAnimationObj::ClassName(), NULL);
 	if (!pObj)
 		return SKIN_UIOBJ_ID_UNDEFINE;
 

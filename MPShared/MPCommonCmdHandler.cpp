@@ -83,6 +83,16 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
 #endif
+	case IDC_SL_CLEAR_TIME_STAMP:
+		{
+			if (g_LyricData.GetLyrContentType() == LCT_TXT)
+			{
+				CLyricShowTxtObj *pObj = (CLyricShowTxtObj*)m_pSkinWnd->GetUIObjectByClassName(CLyricShowTxtObj::ClassName());
+				if (pObj)
+					g_LyricData.ClearRecordedLyrScrollActions(pObj->GetLyrics());
+			}
+		}
+		break;
 	case IDC_TAG_COLOR:
 	case IDC_EDIT_LINE_COLOR:
 		{
@@ -385,13 +395,29 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 #endif // _WIN32_DESKTOP
-	case CMD_MENU_STATIC_LYR:
+
+	case CMD_LYR_SCROLL_ENABLE_RECORD:
+	case CMD_LYR_SCROLL_ENABLE_REPLAY:
+		{
+			CLyricShowTxtObj *pObj = (CLyricShowTxtObj*)m_pSkinWnd->GetUIObjectByClassName(CLyricShowTxtObj::ClassName());
+			if (pObj)
+			{
+				if (nID == CMD_LYR_SCROLL_ENABLE_RECORD)
+					pObj->EnableRecordScrollingActions(!pObj->IsRecordScrollingActionsEnabled());
+				else
+					pObj->EnableReplayScrollingActions(!pObj->IsReplayScrollingActionsEnabled());
+			}
+		}
+		break;
+
+	case CMD_LYR_SCROLL_MENU:
 		{
 			CMLMenu menu;
 			POINT pt;
 			MLWidget::GetCursorPos(&pt);
-			menu.LoadMenu(IDR_MENU_STATIC_LYR);
-			menu.TrackPopupSubMenu(pt.x, pt.y, 0, m_pSkinWnd, NULL);
+			menu.LoadPopupMenu(IDR_MENU_STATIC_LYR, 0);
+			menu.EnableItem(IDC_SL_CLEAR_TIME_STAMP, g_LyricData.GetLyrContentType() == LCT_TXT);
+			menu.TrackPopupMenu(pt.x, pt.y, m_pSkinWnd, NULL);
 		}
 		break;
 	case CMD_LYR_EDITOR:

@@ -12,6 +12,7 @@
 
 #if defined(_IPHONE) || defined(_MAC_OSX)
 #define _MAC
+#define UTF8 // in iPhone and Mac OS X, default character encoding is UTF8
 #endif
 
 

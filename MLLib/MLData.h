@@ -371,12 +371,17 @@ public:
 	//
 	// Interface for Lyrics Scroll Action Recoder (CLyrScrollActionRecorder).
 	//
+	void ClearRecordedLyrScrollActions(VLyrLines &lyrLines) {
+		ASSERT(GetLyrContentType() == LCT_TXT);
+		m_lyrScrollActionRecorder.InitCreateAutoEvents(lyrLines);
+		m_lyrScrollActionRecorder.InitCreateAutoEvents(GetRawLyrics());
+	}
 
 	bool IsUsingLyrScrollActionRecorder()
-		{ return m_lyrScrollActionRecorder.HasActions(); }
+		{ return GetLyrContentType() == LCT_TXT && m_lyrScrollActionRecorder.HasActions(); }
 
 	void UpdateTimeTagByLyrScrollActions(VLyrLines &lyrLines)
-		{ m_lyrScrollActionRecorder.UpdateTimeTagByEvents(lyrLines); }
+		{ ASSERT(GetLyrContentType() == LCT_TXT); m_lyrScrollActionRecorder.UpdateTimeTagByEvents(lyrLines); }
 
 	void LyrScrollActionsToTag() {
 		if (GetLyrContentType() == LCT_TXT)
@@ -389,6 +394,8 @@ public:
 		m_lyrScrollActionRecorder.ScrollToLine(lyrLines, nLine, nTime, bUpdateTimeTag);
 	}
 
+	bool IsOnlyAddLyrScrollActions();
+
 public:
 	LPCTSTR GetLyricsFileName();
 	LPCTSTR GetSongFileName() { return m_strSongFile.c_str(); }
@@ -396,8 +403,8 @@ public:
 
 	FILE_ENCODING GetFileEncoding() { return m_fileEncoding; }
 
-	void GetProperty(LYRICS_PROP &prop, tstring &strValue);
-	void SetProperty(LYRICS_PROP &prop, LPCTSTR szValue);
+	void GetProperty(LYRICS_PROP prop, tstring &strValue);
+	void SetProperty(LYRICS_PROP prop, LPCTSTR szValue);
 	LyricsProperties &Properties() { return m_lyrProperties; }
 	static LYRICS_PROP_NAME* GetSupportedLyricsPropName();
 

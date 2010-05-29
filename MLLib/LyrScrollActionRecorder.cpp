@@ -150,7 +150,8 @@ tstring CLyrScrollActionRecorder::EventsDataToString()
 	// CStrPrintf	strEvents;
 	int nLastTime = 0, nLastDistance = 0;
 
-	if (m_listEvents.size() == 1 || !m_bHasActions)
+	// If events too less, don't store these actions.
+	if (m_listEvents.size() <= 6 || !m_bHasActions)
 		return _T("");
 
 	tstring strData = AUTO_SCROLL_LYR_HEADERV0 _T("AA"); // "AA"(base64) = "00"(16#)

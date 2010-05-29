@@ -46,7 +46,7 @@ CSkinNStatusButton::~CSkinNStatusButton()
 
 bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	m_pSkin->SetFocusUIObject(this);
+	// m_pSkin->SetFocusUIObject(this);
 
 	assert(m_pSkin);
 
@@ -257,8 +257,8 @@ void CSkinNStatusButton::Draw(CRawGraph *pGraph)
 
 		if (dwTimeCur - m_dwBeginFadeinTime >= FADE_BUTTON_TIME_OUT)
 		{
-			m_nTimerIdFadein = 0;
 			m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
+			m_nTimerIdFadein = 0;
 		}
 		else
 		{
@@ -553,6 +553,8 @@ void CSkinNStatusButton::ButtonDownAction()
 
 	if (m_bFadein)
 	{
+		if (m_nTimerIdFadein != 0)
+			m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
 		m_nTimerIdFadein = m_pSkin->RegisterTimerObject(this, 50);
 		m_dwBeginFadeinTime = GetTickCount();
 
@@ -583,6 +585,8 @@ void CSkinNStatusButton::ButtonUpAction()
 
 	if (m_bFadein)
 	{
+		if (m_nTimerIdFadein != 0)
+			m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
 		m_nTimerIdFadein = m_pSkin->RegisterTimerObject(this, 50);
 		m_dwBeginFadeinTime = GetTickCount();
 

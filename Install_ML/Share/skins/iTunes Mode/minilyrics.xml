@@ -32,7 +32,7 @@
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
   <skinwnd Name="minilyrics" MinWidth="215" MinHeight="35" Width="400" Height="200" BgColor="#D6DBBD" FgColor="#0061FF" ContextMenu="NormalMode" CmdHandler="ch_common">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="2" Top="23" Width="w - 4" Height="h -23 - 8"/>
+    <LyricsShow Left="2" Top="23" Width="w - 4" Height="h -23 - 8"/>
     <XScaleImage Left="0" Top="0" Width="w" Height="23" ID="ID_NONE" Name="Caption" Image="caption.bmp" ImageRect="0,0,265,23" ImageScaleXStart="80" ImageScaleXEnd="205"/>
     <Button Left="w - 56" Top="5" Width="15" Height="15" ID="ID_MINIMIZE" Name="Minimize" Image="std-buttons.bmp" ImageRect="0,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="0,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="0,30,15,15"/>
     <Button Left="w - 38" Top="5" Width="15" Height="15" ID="dyncmd_change_to_bar" Name="lyrics bar" ToolTip="Lyrics Bar" Image="std-buttons.bmp" ImageRect="15,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="15,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="15,30,15,15"/>
@@ -48,7 +48,7 @@
     <XScaleImage Left="0" Top="h - 8" Width="w" Height="8" ID="ID_NONE" Name="BottomImage" Image="caption.bmp" ImageRect="0,24,265,8" ImageScaleXStart="10" ImageScaleXEnd="255"/>
   </skinwnd>
   <skinwnd Name="lyrbar" MinWidth="150" MinHeight="25" Width="400" Height="200" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
-    <LyricsShow ID="ID_LYRICS_SHOW" Left="8" Top="4" Width="w-8-45" Height="h-8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
+    <LyricsShow Left="8" Top="4" Width="w-8-45" Height="h-8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="8" Height="h" ID="ID_NONE" Name="Left Frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,8,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <YScaleImage Left="w-45" Top="0" Width="45" Height="h" ID="ID_NONE" Name="Right Frame" Image="lyr-bar-frame.bmp" ImageRect="155,0,45,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
     <Image Left="8" Top="0" Width="w-8-45" Height="4" ID="ID_NONE" Name="top Frame" Image="lyr-bar-frame.bmp" ImageRect="8,0,148,4" BltMode="stretch"/>

@@ -378,7 +378,7 @@ int CSkinContainer::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
 		SXNode			*pNode = *it;
 		CUIObject		*pObj;
 
-		pObj = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, pNode->strName.c_str());
+		pObj = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, pNode->strName.c_str(), this);
 		// assert(pObj);
 
 		if (pObj)

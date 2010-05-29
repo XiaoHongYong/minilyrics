@@ -77,10 +77,10 @@ void CLyricShowAgentObj::OnCreate()
 
 	GetLyrDispStylePropName(m_pSkin, m_bFloatingLyr, m_strLyrDisplayStylePropName);
 
-	m_strLyrDisplayStyle = g_Profile.GetProfileString(
+	m_strLyrDisplayStyleDefault = g_Profile.GetProfileString(
 		m_bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY,
 		m_strLyrDisplayStylePropName.c_str(),
-		m_strLyrDisplayStyle.c_str());
+		m_strLyrDisplayStyleDefault.c_str());
 
 	g_eventDispather.RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
@@ -91,7 +91,7 @@ void CLyricShowAgentObj::OnCreate()
 		LoadToolbar();
 	}
 
-	ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str(), false);
+	ChangeLyricsDisplayStyle(m_strLyrDisplayStyleDefault.c_str(), false);
 }
 
 void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
@@ -100,9 +100,8 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 	{
 		if (_tcsicmp(pEvent->strName.c_str(), m_strLyrDisplayStylePropName.c_str()) == 0)
 		{
-			GetLyrDispStyleSettings(m_pSkin, m_strLyrDisplayStyle);
-			// m_strLyrDisplayStyle = pEvent->strValue;
-			ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str());
+			GetLyrDispStyleSettings(m_pSkin, m_strLyrDisplayStyleDefault);
+			ChangeLyricsDisplayStyle(m_strLyrDisplayStyleDefault.c_str());
 			m_pSkin->InvalidateRect();
 		}
 		else if (IsPropertyName(pEvent->strName.c_str(), _T("HideToolbar")))
@@ -134,21 +133,13 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 	}
 	else if (pEvent->eventType == ET_LYRICS_CHANGED)
 	{
+		tstring		strNewStyle;
 		if (g_LyricData.GetLyrContentType() != LCT_TXT)
-		{
-			// Change to default lyrics display style
-			ChangeLyricsDisplayStyle(m_strLyrDisplayStyle.c_str());
-			m_pSkin->InvalidateRect();
-		}
+			strNewStyle = m_strLyrDisplayStyleDefault;
 		else
-		{
-			if (m_pLyricsShow && _tcscmp(CLyricShowMultiRowObj::ClassName(), m_pLyricsShow->GetClassName()) == 0)
-			{
-				// To static text style, if the original is MultiLine style.
-				ChangeLyricsDisplayStyle(CLyricShowTxtObj::ClassName());
-				m_pSkin->InvalidateRect();
-			}
-		}
+			strNewStyle = SZ_TXT_LYR_CONTAINER;
+
+		ChangeLyricsDisplayStyle(strNewStyle.c_str());
 	}
 }
 
@@ -162,7 +153,7 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 	if (IsPropertyName(szProperty, _T("LyrDisplayStyle"))
 		|| IsPropertyName(szProperty, m_strLyrDisplayStylePropName.c_str()))
-		m_strLyrDisplayStyle = szValue;
+		m_strLyrDisplayStyleDefault = szValue;
 	else if (IsPropertyName(szProperty, _T("EnableStaticTextStyle")))
 		m_bEnableStaticTextStyle = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("EnableToolbar")))
@@ -178,28 +169,30 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, bool bRedraw)
 {
+	if (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), szLyrDispalyStyle) == 0)
+		return;
+
+	m_strLyrDisplayStyleCurrent = szLyrDispalyStyle;
+
 	if (m_pLyricsShow)
 	{
-		if (_tcsicmp(szLyrDispalyStyle, m_pLyricsShow->GetClassName()) == 0)
-			return;
-
 		m_pSkin->RemoveUIObject(m_pLyricsShow, true);
 		m_pLyricsShow = NULL;
 	}
 
 	if ((_tcsicmp(szLyrDispalyStyle, CLyricShowMultiRowObj::ClassName()) != 0
-		&& _tcsicmp(szLyrDispalyStyle, CLyricShowTxtObj::ClassName()) != 0
+		&& _tcsicmp(szLyrDispalyStyle, SZ_TXT_LYR_CONTAINER) != 0
 		&& _tcsicmp(szLyrDispalyStyle, CLyricShowTwoRowObj::ClassName()) != 0
 		&& _tcsicmp(szLyrDispalyStyle, CLyricShowHorzScrollObj::ClassName()) != 0
 		&& _tcsicmp(szLyrDispalyStyle, CLyricShowSingleRowObj::ClassName()) != 0
 		&& _tcsicmp(szLyrDispalyStyle, CLyricShowVobSub::ClassName()) != 0)
-		|| (_tcsicmp(szLyrDispalyStyle, CLyricShowTxtObj::ClassName()) == 0 && !m_bEnableStaticTextStyle))
+		|| (_tcsicmp(szLyrDispalyStyle, SZ_TXT_LYR_CONTAINER) == 0 && !m_bEnableStaticTextStyle))
 	{
-		m_strLyrDisplayStyle = CLyricShowMultiRowObj::ClassName();
-		szLyrDispalyStyle = m_strLyrDisplayStyle.c_str();
+		m_strLyrDisplayStyleDefault = CLyricShowMultiRowObj::ClassName();
+		szLyrDispalyStyle = m_strLyrDisplayStyleDefault.c_str();
 	}
 
-	m_pLyricsShow = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, szLyrDispalyStyle);
+	m_pLyricsShow = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, szLyrDispalyStyle, m_pContainer);
 	if (!m_pLyricsShow)
 		return;
 
@@ -231,6 +224,20 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 
 	if (bRedraw)
 		m_pContainer->RecalculateUIObjSizePos(m_pLyricsShow);
+
+	if (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), SZ_TXT_LYR_CONTAINER) == 0)
+	{
+		// Set the stat of record scrolling lyrics buttons
+		CLyricShowTxtObj *pObj = (CLyricShowTxtObj*)m_pSkin->GetUIObjectByClassName(CLyricShowTxtObj::ClassName());
+		if (pObj)
+		{
+			m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_RECORD,
+				pObj->IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
+
+			m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_REPLAY,
+				pObj->IsReplayScrollingActionsEnabled());
+		}
+	}
 }
 
 void CLyricShowAgentObj::LoadToolbar()

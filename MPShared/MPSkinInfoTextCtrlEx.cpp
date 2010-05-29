@@ -10,7 +10,7 @@ UIOBJECT_CLASS_NAME_IMP(CMPSkinInfoTextCtrlEx,  _T("InfoTextEx"))
 
 CMPSkinInfoTextCtrlEx::CMPSkinInfoTextCtrlEx()
 {
-	m_nMsgWant = 0;
+	m_nMsgWant = UO_MSG_WANT_KEY;
 }
 
 CMPSkinInfoTextCtrlEx::~CMPSkinInfoTextCtrlEx()

@@ -384,7 +384,7 @@ protected:
 
 			LPCTSTR		vszItemValues[] = { CLyricShowMultiRowObj::ClassName(), CLyricShowTwoRowObj::ClassName(), 
 				CLyricShowSingleRowObj::ClassName(), CLyricShowHorzScrollObj::ClassName(), 
-				CLyricShowTxtObj::ClassName(), CLyricShowVobSub::ClassName() };
+				SZ_TXT_LYR_CONTAINER, CLyricShowVobSub::ClassName() };
 
 			OptComboStr		opt;
 			opt.nIDWidgetCombo = CID_DS_STYLE;

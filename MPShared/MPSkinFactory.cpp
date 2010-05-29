@@ -242,6 +242,12 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadMenu(IDM_MAIN_WND);
 	}
+	else if (_tcsicmp(szMenu, _T("LyricsTool")) == 0)
+	{
+		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		pSkinMenu = pMenu;
+		pSkinMenu->LoadMenu(IDM_LYRICS_TOOL);
+	}
 #ifdef _MPLAYER
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
