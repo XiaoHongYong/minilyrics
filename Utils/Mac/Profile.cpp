@@ -11,7 +11,7 @@
 #include "UUEncode.h"
 #include "App.h"
 
-#include "privateprofilestring.cpp"
+#include "../privateprofilestring.cpp"
 
 /*
 Test Encrypt ....

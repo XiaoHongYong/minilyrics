@@ -148,7 +148,7 @@ public:
 	// Is end of string
 	bool IsEOS() { return m_szText[m_nPos] == 0; }
 
-	const CharType &CurChar()
+	CharType &CurChar()
 	{
 		return m_ch;
 	}

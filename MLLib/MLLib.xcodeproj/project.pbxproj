@@ -42,6 +42,8 @@
 		5F9DED6F11ABF82E00312E83 /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4B11ABF82E00312E83 /* StdAfx.h */; };
 		5F9DED7011ABF82E00312E83 /* TextFileParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED4C11ABF82E00312E83 /* TextFileParser.cpp */; };
 		5F9DED7111ABF82E00312E83 /* TextFileParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4D11ABF82E00312E83 /* TextFileParser.h */; };
+		5FB1948611ACA951008C4A46 /* LyrScrollActionRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB1948411ACA951008C4A46 /* LyrScrollActionRecorder.cpp */; };
+		5FB1948711ACA951008C4A46 /* LyrScrollActionRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB1948511ACA951008C4A46 /* LyrScrollActionRecorder.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +82,8 @@
 		5F9DED4B11ABF82E00312E83 /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = "<group>"; };
 		5F9DED4C11ABF82E00312E83 /* TextFileParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextFileParser.cpp; sourceTree = "<group>"; };
 		5F9DED4D11ABF82E00312E83 /* TextFileParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFileParser.h; sourceTree = "<group>"; };
+		5FB1948411ACA951008C4A46 /* LyrScrollActionRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = LyrScrollActionRecorder.cpp; sourceTree = "<group>"; };
+		5FB1948511ACA951008C4A46 /* LyrScrollActionRecorder.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LyrScrollActionRecorder.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libMLLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMLLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -107,6 +111,8 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FB1948411ACA951008C4A46 /* LyrScrollActionRecorder.cpp */,
+				5FB1948511ACA951008C4A46 /* LyrScrollActionRecorder.h */,
 				5F9DED2A11ABF82E00312E83 /* HelperFun.cpp */,
 				5F9DED2B11ABF82E00312E83 /* HelperFun.h */,
 				5F9DED2C11ABF82E00312E83 /* LrcParser.cpp */,
@@ -187,6 +193,7 @@
 				5F9DED6D11ABF82E00312E83 /* SrtParser.h in Headers */,
 				5F9DED6F11ABF82E00312E83 /* StdAfx.h in Headers */,
 				5F9DED7111ABF82E00312E83 /* TextFileParser.h in Headers */,
+				5FB1948711ACA951008C4A46 /* LyrScrollActionRecorder.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -248,6 +255,7 @@
 				5F9DED6C11ABF82E00312E83 /* SrtParser.cpp in Sources */,
 				5F9DED6E11ABF82E00312E83 /* StdAfx.cpp in Sources */,
 				5F9DED7011ABF82E00312E83 /* TextFileParser.cpp in Sources */,
+				5FB1948611ACA951008C4A46 /* LyrScrollActionRecorder.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

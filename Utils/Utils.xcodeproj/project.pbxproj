@@ -31,6 +31,8 @@
 		5F9DEE8F11ABFD5800312E83 /* UUEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7711ABFD5800312E83 /* UUEncode.h */; };
 		5F9DEE9011ABFD5800312E83 /* XMLWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7811ABFD5800312E83 /* XMLWriter.cpp */; };
 		5F9DEE9111ABFD5800312E83 /* XMLWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7911ABFD5800312E83 /* XMLWriter.h */; };
+		5F9DEF7911AC0EE600312E83 /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF7711AC0EE600312E83 /* App.cpp */; };
+		5F9DEF7A11AC0EE600312E83 /* Profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF7811AC0EE600312E83 /* Profile.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +60,8 @@
 		5F9DEE7711ABFD5800312E83 /* UUEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUEncode.h; sourceTree = "<group>"; };
 		5F9DEE7811ABFD5800312E83 /* XMLWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XMLWriter.cpp; sourceTree = "<group>"; };
 		5F9DEE7911ABFD5800312E83 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
+		5F9DEF7711AC0EE600312E83 /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
+		5F9DEF7811AC0EE600312E83 /* Profile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profile.cpp; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -75,6 +79,7 @@
 		08FB7794FE84155DC02AAC07 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				5F9DEF7611AC0EE600312E83 /* Mac */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -119,6 +124,15 @@
 				D2AAC046055464E500DB518D /* libUtils.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5F9DEF7611AC0EE600312E83 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				5F9DEF7711AC0EE600312E83 /* App.cpp */,
+				5F9DEF7811AC0EE600312E83 /* Profile.cpp */,
+			);
+			path = Mac;
 			sourceTree = "<group>";
 		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
@@ -204,6 +218,8 @@
 				5F9DEE8B11ABFD5800312E83 /* UndoMgr.cpp in Sources */,
 				5F9DEE8E11ABFD5800312E83 /* UUEncode.cpp in Sources */,
 				5F9DEE9011ABFD5800312E83 /* XMLWriter.cpp in Sources */,
+				5F9DEF7911AC0EE600312E83 /* App.cpp in Sources */,
+				5F9DEF7A11AC0EE600312E83 /* Profile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

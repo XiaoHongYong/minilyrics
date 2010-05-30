@@ -1,0 +1,242 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5F9DEF9F11AC0F5700312E83 /* ID3Helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF9311AC0F5700312E83 /* ID3Helper.cpp */; };
+		5F9DEFA011AC0F5700312E83 /* ID3Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEF9411AC0F5700312E83 /* ID3Helper.h */; };
+		5F9DEFA111AC0F5700312E83 /* ID3v1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF9511AC0F5700312E83 /* ID3v1.cpp */; };
+		5F9DEFA211AC0F5700312E83 /* ID3v1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEF9611AC0F5700312E83 /* ID3v1.h */; };
+		5F9DEFA311AC0F5700312E83 /* ID3v2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF9711AC0F5700312E83 /* ID3v2.cpp */; };
+		5F9DEFA411AC0F5700312E83 /* ID3v2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEF9811AC0F5700312E83 /* ID3v2.h */; };
+		5F9DEFA511AC0F5700312E83 /* ID3v2Frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF9911AC0F5700312E83 /* ID3v2Frame.cpp */; };
+		5F9DEFA611AC0F5700312E83 /* ID3v2Frame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEF9A11AC0F5700312E83 /* ID3v2Frame.h */; };
+		5F9DEFA711AC0F5700312E83 /* ID3v2FrameParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF9B11AC0F5700312E83 /* ID3v2FrameParser.cpp */; };
+		5F9DEFA811AC0F5700312E83 /* ID3v2FrameParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEF9C11AC0F5700312E83 /* ID3v2FrameParser.h */; };
+		5F9DEFA911AC0F5700312E83 /* StdAfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF9D11AC0F5700312E83 /* StdAfx.cpp */; };
+		5F9DEFAA11AC0F5700312E83 /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEF9E11AC0F5700312E83 /* StdAfx.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5F9DEF9311AC0F5700312E83 /* ID3Helper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3Helper.cpp; sourceTree = "<group>"; };
+		5F9DEF9411AC0F5700312E83 /* ID3Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3Helper.h; sourceTree = "<group>"; };
+		5F9DEF9511AC0F5700312E83 /* ID3v1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3v1.cpp; sourceTree = "<group>"; };
+		5F9DEF9611AC0F5700312E83 /* ID3v1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3v1.h; sourceTree = "<group>"; };
+		5F9DEF9711AC0F5700312E83 /* ID3v2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3v2.cpp; sourceTree = "<group>"; };
+		5F9DEF9811AC0F5700312E83 /* ID3v2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3v2.h; sourceTree = "<group>"; };
+		5F9DEF9911AC0F5700312E83 /* ID3v2Frame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3v2Frame.cpp; sourceTree = "<group>"; };
+		5F9DEF9A11AC0F5700312E83 /* ID3v2Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3v2Frame.h; sourceTree = "<group>"; };
+		5F9DEF9B11AC0F5700312E83 /* ID3v2FrameParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3v2FrameParser.cpp; sourceTree = "<group>"; };
+		5F9DEF9C11AC0F5700312E83 /* ID3v2FrameParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3v2FrameParser.h; sourceTree = "<group>"; };
+		5F9DEF9D11AC0F5700312E83 /* StdAfx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StdAfx.cpp; sourceTree = "<group>"; };
+		5F9DEF9E11AC0F5700312E83 /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = "<group>"; };
+		D2AAC046055464E500DB518D /* libID3Lib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libID3Lib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* ID3Lib */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = ID3Lib;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5F9DEF9311AC0F5700312E83 /* ID3Helper.cpp */,
+				5F9DEF9411AC0F5700312E83 /* ID3Helper.h */,
+				5F9DEF9511AC0F5700312E83 /* ID3v1.cpp */,
+				5F9DEF9611AC0F5700312E83 /* ID3v1.h */,
+				5F9DEF9711AC0F5700312E83 /* ID3v2.cpp */,
+				5F9DEF9811AC0F5700312E83 /* ID3v2.h */,
+				5F9DEF9911AC0F5700312E83 /* ID3v2Frame.cpp */,
+				5F9DEF9A11AC0F5700312E83 /* ID3v2Frame.h */,
+				5F9DEF9B11AC0F5700312E83 /* ID3v2FrameParser.cpp */,
+				5F9DEF9C11AC0F5700312E83 /* ID3v2FrameParser.h */,
+				5F9DEF9D11AC0F5700312E83 /* StdAfx.cpp */,
+				5F9DEF9E11AC0F5700312E83 /* StdAfx.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libID3Lib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9DEFA011AC0F5700312E83 /* ID3Helper.h in Headers */,
+				5F9DEFA211AC0F5700312E83 /* ID3v1.h in Headers */,
+				5F9DEFA411AC0F5700312E83 /* ID3v2.h in Headers */,
+				5F9DEFA611AC0F5700312E83 /* ID3v2Frame.h in Headers */,
+				5F9DEFA811AC0F5700312E83 /* ID3v2FrameParser.h in Headers */,
+				5F9DEFAA11AC0F5700312E83 /* StdAfx.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* ID3Lib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "ID3Lib" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ID3Lib;
+			productName = ID3Lib;
+			productReference = D2AAC046055464E500DB518D /* libID3Lib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "ID3Lib" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* ID3Lib */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* ID3Lib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9DEF9F11AC0F5700312E83 /* ID3Helper.cpp in Sources */,
+				5F9DEFA111AC0F5700312E83 /* ID3v1.cpp in Sources */,
+				5F9DEFA311AC0F5700312E83 /* ID3v2.cpp in Sources */,
+				5F9DEFA511AC0F5700312E83 /* ID3v2Frame.cpp in Sources */,
+				5F9DEFA711AC0F5700312E83 /* ID3v2FrameParser.cpp in Sources */,
+				5F9DEFA911AC0F5700312E83 /* StdAfx.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = ID3Lib;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = ID3Lib;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.1.2;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.1.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "ID3Lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "ID3Lib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}
