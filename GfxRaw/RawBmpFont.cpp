@@ -3,11 +3,16 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "../SDK/Agg/include/agg_scanline_p.h"
+#include "../SDK/Agg/include/agg_renderer_scanline.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgba.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgb.h"
+#include "../SDK/Agg/include/agg_rasterizer_scanline_aa.h"
+#include "../SDK/Agg/include/agg_pixfmt_gray.h"
+#include "../SDK/Agg/include/agg_blur.h"
 #include "GfxRaw.h"
 #include "RawGraph.h"
 #include "RawBmpFont.h"
-#include "agg_pixfmt_gray.h"
-#include "agg_blur.h"
 
 #define PATTERN_COLOR_RANGE		100
 #define MEM_CLEAN_DURATION		(1000 * 60 * 2)

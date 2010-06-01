@@ -21,13 +21,12 @@ png_cexcept_error(png_structp png_ptr, png_const_charp msg)
 void PreMultiplyRGBChannels(PRAW_IMAGE_DATA imgData)
 {
 	ASSERT(imgData->pixFormat == PF_RGBA32);
-	agg::rendering_buffer	rbuf(imgData->buff, imgData->width, imgData->height, imgData->stride);
 
 	// pre-multiply rgb channels with alpha channel
 	LPBYTE	byPixel;
 	LPBYTE	byRow;
 
-	byRow = rbuf.row_ptr(0);
+	byRow = imgData->RowPtr(0);
 	for (int y = 0; y < imgData->height; y++)
 	{
 		byPixel = byRow;

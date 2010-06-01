@@ -6,6 +6,12 @@
 #include "ILIO.h"
 #include "RawImageData.h"
 
+#include "../SDK/Agg/include/agg_scanline_p.h"
+#include "../SDK/Agg/include/agg_renderer_scanline.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgba.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgb.h"
+#include "../SDK/Agg/include/agg_rasterizer_scanline_aa.h"
+
 #define BMPWIDTHBYTES(dwWidth, dwBitCount)	(( ( dwWidth * dwBitCount + 7 ) / 8 + 3 ) & ~3)
 
 PRAW_IMAGE_DATA Convert32BppTo24BppRawImage(PRAW_IMAGE_DATA src)

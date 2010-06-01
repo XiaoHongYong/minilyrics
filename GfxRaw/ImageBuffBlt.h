@@ -3,18 +3,17 @@
 
 #pragma once
 
-#include "util/agg_color_conv_rgb8.h"
-#include "agg_scanline_u.h"
-#include "agg_renderer_scanline.h"
-#include "agg_span_allocator.h"
-#include "agg_span_interpolator_linear.h"
-#include "agg_span_interpolator_trans.h"
-#include "agg_span_subdiv_adaptor.h"
-#include "agg_pixfmt_rgba.h"
-#include "agg_image_accessors.h"
-#include "agg_span_image_filter_rgba.h"
-#include "agg_span_image_filter_rgb.h"
-#include "agg_trans_bilinear.h"
+#include "../SDK/Agg/include/agg_scanline_u.h"
+#include "../SDK/Agg/include/agg_renderer_scanline.h"
+#include "../SDK/Agg/include/agg_span_allocator.h"
+#include "../SDK/Agg/include/agg_span_interpolator_linear.h"
+#include "../SDK/Agg/include/agg_span_interpolator_trans.h"
+#include "../SDK/Agg/include/agg_span_subdiv_adaptor.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgba.h"
+#include "../SDK/Agg/include/agg_image_accessors.h"
+#include "../SDK/Agg/include/agg_span_image_filter_rgba.h"
+#include "../SDK/Agg/include/agg_span_image_filter_rgb.h"
+#include "../SDK/Agg/include/agg_trans_bilinear.h"
 
 
 

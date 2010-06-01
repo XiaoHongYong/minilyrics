@@ -3,11 +3,16 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "../SDK/Agg/include/agg_scanline_p.h"
+#include "../SDK/Agg/include/agg_renderer_scanline.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgba.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgb.h"
+#include "../SDK/Agg/include/agg_rasterizer_scanline_aa.h"
+
 #include "GfxRaw.h"
 #include "RawImage.h"
 
 #include "ImageBuffBlt.h"
-
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
@@ -196,8 +201,36 @@ bool BltRawImage(PRAW_IMAGE_DATA pImageDst, CRect &rcDst, PRAW_IMAGE_DATA pImage
 	}
 }
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+
+bool StretchBlt(PRAW_IMAGE_DATA pImageSrc, PRAW_IMAGE_DATA pImageDst, CRect &rcDst, agg::rect_f &rcSrc, BlendPixMode bpm, int nOpacitySrc)
+{
+	if (IsFlagSet(bpm, BPM_BILINEAR))
+	{
+		return StretchBltBilinear(pImageDst, rcDst, pImageSrc, rcSrc, bpm & ~BPM_BILINEAR);
+	}
+
+	if (nOpacitySrc == 255)
+	{
+		CBuffStretchBitBlter	blter;
+
+		blter.rcDest = rcDst;
+		blter.rcSrc = rcSrc;
+
+		return XBltRawImage<blend_rgb, blend_alpha, copy_rgb, copy_alpha, copy_alpha_255, blend_copy_none, multiply_rgb, multiply_alpha>(blter, pImageDst, pImageSrc, bpm);
+	}
+	else
+	{
+		CBuffStretchBitBlterOpacity	blter;
+
+		blter.rcDest = rcDst;
+		blter.rcSrc = rcSrc;
+		blter.nOpacitySrc = nOpacitySrc;
+
+		return XBltRawImage<blend_rgb_opacity, blend_alpha_opacity, copy_rgb_opacity, copy_alpha_opacity, copy_alpha_255_opacity, blend_copy_none_opacity, multiply_rgb_opacity, multiply_alpha_opacity>(blter, pImageDst, pImageSrc, bpm);
+	}
+}
+
+
 //////////////////////////////////////////////////////////////////////
 
 CRawImage::CRawImage(void)
@@ -471,7 +504,7 @@ bool CRawImage::StretchBlt(CRawGraph *pGraphics, int xDest, int yDest, int width
 	ASSERT(rcSrc.y1 >= ySrc);
 	ASSERT(rcSrc.y2 <= ySrc + heightSrc);
 
-	return StretchBlt(pImageDst, rcDst, rcSrc, bpm, pGraphics->GetOpacityPainting());
+	return ::StretchBlt(m_hImage, pImageDst, rcDst, rcSrc, bpm, pGraphics->GetOpacityPainting());
 }
 
 void CRawImage::StretchBlt(CRawImage *pImage, int xDest, int yDest, int widthDest, int heightDest, BlendPixMode bpm, int nOpacitySrc)
@@ -546,36 +579,7 @@ bool CRawImage::StretchBlt(CRawImage *pImage, int xDest, int yDest, int widthDes
 	if (rcDst.left >= pImage->m_x + pImage->m_cx)
 		return true;
 
-	return StretchBlt(pImage->m_hImage, rcDst, rcSrc, bpm, nOpacitySrc);
-}
-
-
-bool CRawImage::StretchBlt(PRAW_IMAGE_DATA pImageDst, CRect &rcDst, agg::rect_f &rcSrc, BlendPixMode bpm, int nOpacitySrc)
-{
-	if (IsFlagSet(bpm, BPM_BILINEAR))
-	{
-		return StretchBltBilinear(pImageDst, rcDst, m_hImage, rcSrc, bpm & ~BPM_BILINEAR);
-	}
-
-	if (nOpacitySrc == 255)
-	{
-		CBuffStretchBitBlter	blter;
-
-		blter.rcDest = rcDst;
-		blter.rcSrc = rcSrc;
-
-		return XBltRawImage<blend_rgb, blend_alpha, copy_rgb, copy_alpha, copy_alpha_255, blend_copy_none, multiply_rgb, multiply_alpha>(blter, pImageDst, m_hImage, bpm);
-	}
-	else
-	{
-		CBuffStretchBitBlterOpacity	blter;
-
-		blter.rcDest = rcDst;
-		blter.rcSrc = rcSrc;
-		blter.nOpacitySrc = nOpacitySrc;
-
-		return XBltRawImage<blend_rgb_opacity, blend_alpha_opacity, copy_rgb_opacity, copy_alpha_opacity, copy_alpha_255_opacity, blend_copy_none_opacity, multiply_rgb_opacity, multiply_alpha_opacity>(blter, pImageDst, m_hImage, bpm);
-	}
+	return ::StretchBlt(m_hImage, pImage->m_hImage, rcDst, rcSrc, bpm, nOpacitySrc);
 }
 
 // Mask Blt

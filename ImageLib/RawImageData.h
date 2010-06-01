@@ -7,13 +7,6 @@
 
 #pragma once
 
-#include "platform/agg_platform_support.h"
-#include "agg_scanline_p.h"
-#include "agg_renderer_scanline.h"
-#include "agg_pixfmt_rgba.h"
-#include "agg_pixfmt_rgb.h"
-#include "agg_rasterizer_scanline_aa.h"
-
 #ifndef _WIN32
 typedef struct tagRGBQUAD {
 	BYTE    rgbBlue;

@@ -54,7 +54,6 @@ public:
 
 protected:
 	bool MaskBlt(PRAW_IMAGE_DATA pImageDst, CRect &rcDst, int xSrc, int ySrc, PRAW_IMAGE_DATA pImageMask, int xMask, int yMask, BlendPixMode bpm, int nOpacitySrc);
-	bool StretchBlt(PRAW_IMAGE_DATA pImageDst, CRect &rcDst, agg::rect_f &rcSrc, BlendPixMode bpm, int nOpacitySrc);
 
 public:
 	int			m_x;

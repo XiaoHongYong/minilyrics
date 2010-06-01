@@ -3,19 +3,19 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "../SDK/Agg/include/agg_scanline_p.h"
+#include "../SDK/Agg/include/agg_renderer_scanline.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgba.h"
+#include "../SDK/Agg/include/agg_pixfmt_rgb.h"
+#include "../SDK/Agg/include/agg_rasterizer_scanline_aa.h"
+#include "../SDK/Agg/include/agg_path_storage.h"
+#include "../SDK/Agg/include/agg_scanline_u.h"
+#include "../SDK/Agg/include/agg_conv_stroke.h"
+#include "../SDK/Agg/include/agg_renderer_mclip.h"
+
 #include "GfxRaw.h"
 #include "RawGraph.h"
 #include "ImageBuffBlt.h"
-
-#include "agg_basics.h"
-#include "agg_rendering_buffer.h"
-#include "agg_rasterizer_scanline_aa.h"
-#include "agg_scanline_u.h"
-#include "agg_renderer_scanline.h"
-#include "agg_pixfmt_rgb.h"
-#include "agg_path_storage.h"
-#include "agg_conv_stroke.h"
-#include "agg_renderer_mclip.h"
 
 using namespace GfxRaw;
 
