@@ -33,6 +33,10 @@ enum
 #include "gtk2/RawGraphData.h"
 #endif
 
+#ifdef _MAC
+#include "mac/RawGraphData.h"
+#endif
+
 
 class CRawBmpFont;
 

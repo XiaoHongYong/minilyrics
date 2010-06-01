@@ -46,6 +46,10 @@ IMLGraphicsBase *CMLGraphicsFactory::CreateMLGraphics(HDC hdc, MLGRAPHICS_TYPE g
 	return new CMLGraphics();
 #endif
 
+#ifdef _MAC
+	return new CMLGraphics();
+#endif
+
 	return NULL;
 }
 

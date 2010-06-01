@@ -39,7 +39,6 @@
 #include "SkinComboBox.h"
 
 #ifdef _MPLAYER
-#include "SkinDroplistCtrl.h"
 #include "SkinTreeCtrl.h"
 #include "MPSkinVis.h"
 #include "MPlaylistCtrl.h"
@@ -148,8 +147,6 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	else if (_tcsicmp(szClassName, CSkinFilterCtrl::ClassName()) == 0)
 		pObj = new CSkinFilterCtrl;
 #ifdef _MPLAYER
-	else if (_tcsicmp(szClassName, CSkinDroplistCtrl::ClassName()) == 0)
-		pObj = new CSkinDroplistCtrl;
 	else if (_tcsicmp(szClassName, CSkinTreeCtrl::ClassName()) == 0)
 		pObj = new CSkinTreeCtrl;
 	else if (_tcsicmp(szClassName, CMPSkinVis::ClassName()) == 0)

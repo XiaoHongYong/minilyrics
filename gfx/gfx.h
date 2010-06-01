@@ -26,6 +26,19 @@ class CRegion;
 
 #endif
 
+#ifdef _MAC
+
+#include "mac/Cursor.h"
+#include "mac/MLColor.h"
+#include "mac/MLBrush.h"
+#include "mac/MLFont.h"
+#include "mac/MLPen.h"
+#include "mac/MLImage.h"
+#include "mac/Region.h"
+#include "mac/MLGraphics.h"
+
+#endif
+
 #ifdef _WIN32
 #include "MLHandlerMap.h"
 

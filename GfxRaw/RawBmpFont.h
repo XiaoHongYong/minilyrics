@@ -91,6 +91,10 @@ struct Glyph
 #include "gtk2/RawGlyphBuilder.h"
 #endif
 
+#ifdef _LINUX_GTK2
+#include "mac/RawGlyphBuilder.h"
+#endif
+
 namespace GfxRaw
 {
 

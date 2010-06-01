@@ -847,47 +847,10 @@ bool CSkinWnd::RecreateMemGraphics()
 	if (m_pmemGraph)
 		delete m_pmemGraph;
 
-#ifdef WIN32
-#ifdef _WINCE_
-	CMemGraphics		*pMemGraph;
-	pMemGraph = new CMemGraphics();
+	CRawGraph				*pMemGraph;
+	pMemGraph = new CRawGraph();
 	pMemGraph->Create(m_rcBoundBox.Width(), m_rcBoundBox.Height(), pGraph);
 	m_pmemGraph = pMemGraph;
-#else
-// 	if (m_bTranslucencyLayered)
-// 	{
-		CRawGraph				*pMemGraph;
-		pMemGraph = new CRawGraph();
-		pMemGraph->Create(m_rcBoundBox.Width(), m_rcBoundBox.Height(), pGraph);
-		m_pmemGraph = pMemGraph;
-// 	}
-// 	else
-// 	{
-// 		if (CMLGraphicsFactory::GetGraphicsType() == MGT_GDIPLUS)
-// 		{
-// 			CMemGdiplusGraphics		*pMemGraph;
-// 			pMemGraph = new CMemGdiplusGraphics();
-// 			pMemGraph->Create(m_rcBoundBox.Width(), m_rcBoundBox.Height(), pGraph);
-// 			m_pmemGraph = pMemGraph;
-// 		}
-// 		else
-// 		{
-// 			CMemGraphics		*pMemGraph;
-// 			pMemGraph = new CMemGraphics();
-// 			pMemGraph->Create(m_rcBoundBox.Width(), m_rcBoundBox.Height(), pGraph);
-// 			m_pmemGraph = pMemGraph;
-// 		}
-// 	}
-#endif
-#else
-	CRawGraph		*pGraphMem = new CRawGraph;
-
-	if (!pGraphMem->Create(m_rcBoundBox.Width(), m_rcBoundBox.Height(), pGraph, 32))
-	{
-		ERRLOG0(_T("Create Mem DC FAILED!"));
-	}
-	m_pmemGraph = pGraphMem;
-#endif
 
 	if (m_bPaintBg)
 	{

@@ -11,7 +11,7 @@ public:
 	CMLPen();
 	virtual ~CMLPen();
 
-	bool IsValid() const { true; }
+	bool IsValid() const { return true; }
 
 	bool CreateSolidPen(int nWidth, MLColor &color);
 
