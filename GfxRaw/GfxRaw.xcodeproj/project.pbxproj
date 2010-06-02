@@ -1,0 +1,272 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5FD0B71511B4B42700E14740 /* GfxRaw.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B70811B4B42700E14740 /* GfxRaw.h */; };
+		5FD0B71611B4B42700E14740 /* ImageBuffBlt.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B70911B4B42700E14740 /* ImageBuffBlt.h */; };
+		5FD0B71711B4B42700E14740 /* RawBmpFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B70A11B4B42700E14740 /* RawBmpFont.cpp */; };
+		5FD0B71811B4B42700E14740 /* RawBmpFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B70B11B4B42700E14740 /* RawBmpFont.h */; };
+		5FD0B71911B4B42700E14740 /* RawGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B70C11B4B42700E14740 /* RawGraph.cpp */; };
+		5FD0B71A11B4B42700E14740 /* RawGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B70D11B4B42700E14740 /* RawGraph.h */; };
+		5FD0B71B11B4B42700E14740 /* RawImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B70E11B4B42700E14740 /* RawImage.cpp */; };
+		5FD0B71C11B4B42700E14740 /* RawImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B70F11B4B42700E14740 /* RawImage.h */; };
+		5FD0B71D11B4B42700E14740 /* RawImageUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B71011B4B42700E14740 /* RawImageUtils.cpp */; };
+		5FD0B71E11B4B42700E14740 /* RawImageUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B71111B4B42700E14740 /* RawImageUtils.h */; };
+		5FD0B71F11B4B42700E14740 /* RawPen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B71211B4B42700E14740 /* RawPen.cpp */; };
+		5FD0B72011B4B42700E14740 /* RawPen.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B71311B4B42700E14740 /* RawPen.h */; };
+		5FD0B72111B4B42700E14740 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B71411B4B42700E14740 /* stdafx.h */; };
+		5FD0B76811B5301400E14740 /* RawGlyphBuilder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B76411B5301400E14740 /* RawGlyphBuilder.cpp */; };
+		5FD0B76911B5301400E14740 /* RawGlyphBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B76511B5301400E14740 /* RawGlyphBuilder.h */; };
+		5FD0B76A11B5301400E14740 /* RawGraphData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B76611B5301400E14740 /* RawGraphData.cpp */; };
+		5FD0B76B11B5301400E14740 /* RawGraphData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FD0B76711B5301400E14740 /* RawGraphData.h */; };
+		5FD0B7A711B54B7C00E14740 /* agg_image_filters.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B7A511B54B7C00E14740 /* agg_image_filters.cpp */; };
+		5FD0B7A811B54B7C00E14740 /* agg_vcgen_stroke.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FD0B7A611B54B7C00E14740 /* agg_vcgen_stroke.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5FD0B70811B4B42700E14740 /* GfxRaw.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = GfxRaw.h; sourceTree = "<group>"; };
+		5FD0B70911B4B42700E14740 /* ImageBuffBlt.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = ImageBuffBlt.h; sourceTree = "<group>"; };
+		5FD0B70A11B4B42700E14740 /* RawBmpFont.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = RawBmpFont.cpp; sourceTree = "<group>"; };
+		5FD0B70B11B4B42700E14740 /* RawBmpFont.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = RawBmpFont.h; sourceTree = "<group>"; };
+		5FD0B70C11B4B42700E14740 /* RawGraph.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = RawGraph.cpp; sourceTree = "<group>"; };
+		5FD0B70D11B4B42700E14740 /* RawGraph.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = RawGraph.h; sourceTree = "<group>"; };
+		5FD0B70E11B4B42700E14740 /* RawImage.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = RawImage.cpp; sourceTree = "<group>"; };
+		5FD0B70F11B4B42700E14740 /* RawImage.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = RawImage.h; sourceTree = "<group>"; };
+		5FD0B71011B4B42700E14740 /* RawImageUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = RawImageUtils.cpp; sourceTree = "<group>"; };
+		5FD0B71111B4B42700E14740 /* RawImageUtils.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = RawImageUtils.h; sourceTree = "<group>"; };
+		5FD0B71211B4B42700E14740 /* RawPen.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = RawPen.cpp; sourceTree = "<group>"; };
+		5FD0B71311B4B42700E14740 /* RawPen.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = RawPen.h; sourceTree = "<group>"; };
+		5FD0B71411B4B42700E14740 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
+		5FD0B76411B5301400E14740 /* RawGlyphBuilder.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = RawGlyphBuilder.cpp; path = mac/RawGlyphBuilder.cpp; sourceTree = "<group>"; };
+		5FD0B76511B5301400E14740 /* RawGlyphBuilder.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = RawGlyphBuilder.h; path = mac/RawGlyphBuilder.h; sourceTree = "<group>"; };
+		5FD0B76611B5301400E14740 /* RawGraphData.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = RawGraphData.cpp; path = mac/RawGraphData.cpp; sourceTree = "<group>"; };
+		5FD0B76711B5301400E14740 /* RawGraphData.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = RawGraphData.h; path = mac/RawGraphData.h; sourceTree = "<group>"; };
+		5FD0B7A511B54B7C00E14740 /* agg_image_filters.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = agg_image_filters.cpp; path = ../SDK/Agg/src/agg_image_filters.cpp; sourceTree = SOURCE_ROOT; };
+		5FD0B7A611B54B7C00E14740 /* agg_vcgen_stroke.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = agg_vcgen_stroke.cpp; path = ../SDK/Agg/src/agg_vcgen_stroke.cpp; sourceTree = SOURCE_ROOT; };
+		D2AAC046055464E500DB518D /* libGfxRaw.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGfxRaw.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* GfxRaw */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = GfxRaw;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5FD0B7A511B54B7C00E14740 /* agg_image_filters.cpp */,
+				5FD0B7A611B54B7C00E14740 /* agg_vcgen_stroke.cpp */,
+				5FD0B76411B5301400E14740 /* RawGlyphBuilder.cpp */,
+				5FD0B76511B5301400E14740 /* RawGlyphBuilder.h */,
+				5FD0B76611B5301400E14740 /* RawGraphData.cpp */,
+				5FD0B76711B5301400E14740 /* RawGraphData.h */,
+				5FD0B70811B4B42700E14740 /* GfxRaw.h */,
+				5FD0B70911B4B42700E14740 /* ImageBuffBlt.h */,
+				5FD0B70A11B4B42700E14740 /* RawBmpFont.cpp */,
+				5FD0B70B11B4B42700E14740 /* RawBmpFont.h */,
+				5FD0B70C11B4B42700E14740 /* RawGraph.cpp */,
+				5FD0B70D11B4B42700E14740 /* RawGraph.h */,
+				5FD0B70E11B4B42700E14740 /* RawImage.cpp */,
+				5FD0B70F11B4B42700E14740 /* RawImage.h */,
+				5FD0B71011B4B42700E14740 /* RawImageUtils.cpp */,
+				5FD0B71111B4B42700E14740 /* RawImageUtils.h */,
+				5FD0B71211B4B42700E14740 /* RawPen.cpp */,
+				5FD0B71311B4B42700E14740 /* RawPen.h */,
+				5FD0B71411B4B42700E14740 /* stdafx.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libGfxRaw.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FD0B71511B4B42700E14740 /* GfxRaw.h in Headers */,
+				5FD0B71611B4B42700E14740 /* ImageBuffBlt.h in Headers */,
+				5FD0B71811B4B42700E14740 /* RawBmpFont.h in Headers */,
+				5FD0B71A11B4B42700E14740 /* RawGraph.h in Headers */,
+				5FD0B71C11B4B42700E14740 /* RawImage.h in Headers */,
+				5FD0B71E11B4B42700E14740 /* RawImageUtils.h in Headers */,
+				5FD0B72011B4B42700E14740 /* RawPen.h in Headers */,
+				5FD0B72111B4B42700E14740 /* stdafx.h in Headers */,
+				5FD0B76911B5301400E14740 /* RawGlyphBuilder.h in Headers */,
+				5FD0B76B11B5301400E14740 /* RawGraphData.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* GfxRaw */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "GfxRaw" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GfxRaw;
+			productName = GfxRaw;
+			productReference = D2AAC046055464E500DB518D /* libGfxRaw.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "GfxRaw" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* GfxRaw */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* GfxRaw */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FD0B71711B4B42700E14740 /* RawBmpFont.cpp in Sources */,
+				5FD0B71911B4B42700E14740 /* RawGraph.cpp in Sources */,
+				5FD0B71B11B4B42700E14740 /* RawImage.cpp in Sources */,
+				5FD0B71D11B4B42700E14740 /* RawImageUtils.cpp in Sources */,
+				5FD0B71F11B4B42700E14740 /* RawPen.cpp in Sources */,
+				5FD0B76811B5301400E14740 /* RawGlyphBuilder.cpp in Sources */,
+				5FD0B76A11B5301400E14740 /* RawGraphData.cpp in Sources */,
+				5FD0B7A711B54B7C00E14740 /* agg_image_filters.cpp in Sources */,
+				5FD0B7A811B54B7C00E14740 /* agg_vcgen_stroke.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = GfxRaw;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = GfxRaw;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../SDK/Agg/include;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.1.2;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../SDK/Agg/include;
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.1.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "GfxRaw" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "GfxRaw" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

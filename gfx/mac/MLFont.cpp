@@ -1,9 +1,9 @@
 #include "StdAfx.h"
+#include "FontInfo.h"
 #include "MLFont.h"
 
 CMLFont::CMLFont()
 {
-	m_pFont = NULL;
 }
 
 CMLFont::~CMLFont(void)
@@ -19,7 +19,7 @@ bool CMLFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHe
 
 	ERRLOG0("Unimplemented fun CMLGraphics::");
 
-	return m_pFont != NULL;
+	return true;
 }
 
 bool CMLFont::Create(const CFontInfo &font)

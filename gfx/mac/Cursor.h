@@ -32,7 +32,7 @@ public:
 		C_SIZENS		,
 		C_SIZENWSE		,
 		C_SIZEWE		,
-		C_NO			
+		C_NO			,
 		C_IBEAM			,
 	};
 

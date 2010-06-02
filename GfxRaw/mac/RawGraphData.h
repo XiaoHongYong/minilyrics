@@ -3,6 +3,8 @@
 
 #pragma once
 
+#include <CoreGraphics/CGContext.h>
+
 class CRawGraphData
 {
 public:
@@ -24,14 +26,10 @@ public:
 	virtual void DrawToGraphics(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc);
 	virtual void DrawToGraphicsStretch(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc, int widthsrc, int heightsrc);
 
-public:
-	// For win32 only
-	GdkPixbuf *GetHandle() const { return m_pGdkPixBuf; }
-
 protected:
 	RAW_IMAGE_DATA	m_imageData;
-	GdkPixbuf		*m_pGdkPixBuf;
-
+	CGContextRef	m_context;
+	
 };
 
 #endif // _RAW_GRAPH_DATA_H_

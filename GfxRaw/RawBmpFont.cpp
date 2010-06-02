@@ -1193,7 +1193,6 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 
 bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, LPCTSTR szText, int nLen)
 {
-	byte		r = clrText.r(), g = clrText.g(), b = clrText.b();
 	byte		textAlpha = pGraph->GetOpacityPainting();
 	CRect		rcClip;
 	PRAW_IMAGE_DATA pGraphRaw = pGraph->GetRawBuff();
@@ -1342,9 +1341,6 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 		if (x >= rcClip.right)
 			return true;
 
-		int rightGlyph = glyph->leftOffset + glyph->widthBitmap;
-		int bottomGlyph = glyph->topOffset + glyph->heightBitmap;
-
 		if (x + glyph->nWidth <= rcClip.left)
 		{
 			x += glyph->nWidth;
@@ -1426,8 +1422,10 @@ bool IsWordSplitChar(LPCTSTR szChar)
 		|| *szChar == '\'' || *szChar == '\"' || *szChar == '_' || *szChar == '-'))
 		return true;
 #else
-	if (!(isalpha(*szChar) || IsDigit(*szChar) || (*szChar >= 127 && *szChar <= 255)
-		|| *szChar == '\'' || *szChar == '\"' || *szChar == '_' || *szChar == '-'))
+	uint32 c = (uint32)*szChar;
+	
+	if (!(isalpha(c) || IsDigit(c) || (c >= 127 && c <= 255)
+		|| c == '\'' || c == '\"' || c == '_' || c == '-'))
 		return true;
 #endif
 	return false;

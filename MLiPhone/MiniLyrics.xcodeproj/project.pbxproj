@@ -15,7 +15,6 @@
 		0A735D630FACBAAC0057280A /* no_artwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A735D610FACBAAC0057280A /* no_artwork.png */; };
 		0AA6AE310FB773F6008185AA /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AA6AE2B0FB773F6008185AA /* MainView.xib */; };
 		0AA6AE320FB773F6008185AA /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AA6AE2D0FB773F6008185AA /* MainWindow.xib */; };
-		0AB9044B0FB4E0CB004C88C3 /* ReadMe.txt in Resources */ = {isa = PBXBuildFile; fileRef = 0AB9044A0FB4E0CB004C88C3 /* ReadMe.txt */; };
 		0ADFA0840FABA7250020C909 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ADFA0830FABA7250020C909 /* AudioToolbox.framework */; };
 		0ADFA09E0FABA9DF0020C909 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ADFA09D0FABA9DF0020C909 /* AVFoundation.framework */; };
 		1D3623260D0F684500981E51 /* MiniLyricsAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* MiniLyricsAppDelegate.m */; };
@@ -85,7 +84,6 @@
 		0A735D7A0FACBB490057280A /* MiniLyrics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "MiniLyrics-Info.plist"; sourceTree = "<group>"; };
 		0AA6AE2C0FB773F6008185AA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MainView.xib; sourceTree = "<group>"; };
 		0AA6AE2E0FB773F6008185AA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MainWindow.xib; sourceTree = "<group>"; };
-		0AB9044A0FB4E0CB004C88C3 /* ReadMe.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = ReadMe.txt; sourceTree = "<group>"; wrapsLines = 1; };
 		0ADFA0830FABA7250020C909 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0ADFA09D0FABA9DF0020C909 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -173,7 +171,6 @@
 				5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */,
 				5F9DEEF911AC097200312E83 /* Utils.xcodeproj */,
 				5F9DEEEC11AC094500312E83 /* base.xcodeproj */,
-				0AB9044A0FB4E0CB004C88C3 /* ReadMe.txt */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -362,7 +359,6 @@
 			files = (
 				0A735D630FACBAAC0057280A /* no_artwork.png in Resources */,
 				0A6C6CC00FB396DB00F95575 /* Default.png in Resources */,
-				0AB9044B0FB4E0CB004C88C3 /* ReadMe.txt in Resources */,
 				0AA6AE310FB773F6008185AA /* MainView.xib in Resources */,
 				0AA6AE320FB773F6008185AA /* MainWindow.xib in Resources */,
 				0A1C086A0FB7876600C7BA1B /* Localizable.strings in Resources */,

@@ -37,7 +37,6 @@ bool CMLImage::GetOrginalSize(int &nWidth, int &nHeight)
 
 void CMLImage::Attach(IMAGE_HANDLE hBmp)
 {
-	return false;
 }
 
 void CMLImage::Detach()

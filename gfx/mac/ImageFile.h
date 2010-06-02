@@ -1,6 +1,8 @@
 
 #pragma once
 
+#include <CoreGraphics/CGImage.h>
+
 typedef CGImageRef	IMAGE_HANDLE;
 
 IMAGE_HANDLE LoadBitmapFromFile(LPCTSTR szFile, IMLGraphicsBase *pGraph = NULL);

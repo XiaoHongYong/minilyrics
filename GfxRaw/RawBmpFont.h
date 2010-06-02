@@ -91,7 +91,7 @@ struct Glyph
 #include "gtk2/RawGlyphBuilder.h"
 #endif
 
-#ifdef _LINUX_GTK2
+#ifdef _MAC
 #include "mac/RawGlyphBuilder.h"
 #endif
 

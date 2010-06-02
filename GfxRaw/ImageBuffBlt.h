@@ -224,7 +224,7 @@ class blend_alpha
 public:
 	static inline void blend(uint8 *dst, uint8 *src)
 	{
-		uint8	alpha = src[3];
+		// uint8	alpha = src[3];
 
 		// dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
 		dst[3] = BlendAlpha(dst[3], src[3]);
@@ -546,7 +546,7 @@ class mask_blend_alpha
 public:
 	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
 	{
-		int		alpha = src[3] * mask[3] / 255;
+		// int		alpha = src[3] * mask[3] / 255;
 		dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
 	}
 };
