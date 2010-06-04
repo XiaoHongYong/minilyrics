@@ -169,10 +169,9 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, bool bRedraw)
 {
-	if (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), szLyrDispalyStyle) == 0)
+	if (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), szLyrDispalyStyle) == 0
+		&& !IsEmptyString(szLyrDispalyStyle))
 		return;
-
-	m_strLyrDisplayStyleCurrent = szLyrDispalyStyle;
 
 	if (m_pLyricsShow)
 	{
@@ -191,6 +190,8 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 		m_strLyrDisplayStyleDefault = CLyricShowMultiRowObj::ClassName();
 		szLyrDispalyStyle = m_strLyrDisplayStyleDefault.c_str();
 	}
+
+	m_strLyrDisplayStyleCurrent = szLyrDispalyStyle;
 
 	m_pLyricsShow = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, szLyrDispalyStyle, m_pContainer);
 	if (!m_pLyricsShow)
