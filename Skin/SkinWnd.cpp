@@ -461,7 +461,7 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 	if (!m_rootConainter.OnMouseMove(nFlags, point))
 	{
 		// else, should set mouse resizing cursor
-		m_wndResizer.SetSizeCursor(nFlags, point);
+		m_wndResizer.SetSizeCursor(point);
 	}
 }
 
