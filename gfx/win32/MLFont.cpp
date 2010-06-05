@@ -1,4 +1,5 @@
 #include "StdAfx.h"
+#include "FontInfo.h"
 #include "MLFont.h"
 
 #ifdef _WINCE_

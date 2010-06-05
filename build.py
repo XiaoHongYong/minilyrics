@@ -230,11 +230,11 @@ shutil.move(r"src.7z", PackReleaseDir)
 
 if TargetML:
 	shutil.copy(r"Install_ML\MiniLyrics.exe", PackReleaseDir)
-	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"MiniLyrics-pdb.7z bin\MiniLyrics.pdb")
+	#ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"MiniLyrics-pdb.7z bin\MiniLyrics.pdb")
 	shutil.copy(r"Install_ML\Share\readme-MiniLyrics.txt", PackReleaseDir + "MiniLyrics-" + VersionStr(MLMajorVer, MLMinorVer, BuildNum) + ".txt")
 
 if TargetZP:
 	shutil.copy(r"Install_ZP\ZikiPlayer.exe", PackReleaseDir)
 	shutil.move(r"ZikiPlayer-Plugins.7z", PackReleaseDir)
-	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"ZikiPlayer-pdb.7z bin-player\ZikiPlayer.pdb")
+	#ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"ZikiPlayer-pdb.7z bin-player\ZikiPlayer.pdb")
 	shutil.copy(r"Install_ZP\Share\readme-ZikiPlayer.txt", PackReleaseDir + "ZikiPlayer-" + VersionStr(MLMajorVer, MLMinorVer, BuildNum) + ".txt")

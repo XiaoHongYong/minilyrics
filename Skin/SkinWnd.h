@@ -165,6 +165,7 @@ public:
 
 	void EnterInDrawUpdate();
 	void LeaveInDrawUpdate();
+	void CancelDrawUpdate() { m_nInRedrawUpdate--; ASSERT(m_nInRedrawUpdate >= 0); }
 
 	CSkinFactory *GetSkinFactory() { return m_pSkinFactory; }
 
@@ -377,12 +378,20 @@ protected:
 	void OnTimerMouseInactive();
 	virtual void OnMouseActive(boolean bMouseActive);
 
+public:
 	class CAutoRedrawLock {
 	public:
 		CAutoRedrawLock(CSkinWnd *pSkinWnd) { pSkinWnd->EnterInDrawUpdate(); m_pSkinWnd = pSkinWnd; }
-		~CAutoRedrawLock() { m_pSkinWnd->LeaveInDrawUpdate(); }
+		~CAutoRedrawLock() { if (m_pSkinWnd) m_pSkinWnd->LeaveInDrawUpdate(); }
+		void CancelDrawUpdate() {
+			if (m_pSkinWnd) {
+				m_pSkinWnd->CancelDrawUpdate(); m_pSkinWnd = NULL;
+			}
+		}
+
 	protected:
 		CSkinWnd	*m_pSkinWnd;
+
 	};
 
 public:

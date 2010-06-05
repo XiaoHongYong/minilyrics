@@ -56,6 +56,11 @@ void CRawGraph::Line(int x1, int y1, int x2, int y2)
 	scanline_type sl;
 	agg::rasterizer_scanline_aa<> ras;
 
+	x1 = MapX(x1);
+	x2 = MapX(x2);
+	y1 = MapY(y1);
+	y2 = MapY(y2);
+
 	agg::path_storage ps;
 	agg::conv_stroke<agg::path_storage> pg(ps);
 	agg::rgba	clr(m_pen.m_clrPen.r() / (double)255, 
@@ -99,6 +104,9 @@ void CRawGraph::Line(int x1, int y1, int x2, int y2)
 void CRawGraph::Rectangle(int x, int y, int width, int height)
 {
 	typedef agg::scanline_p8 scanline_type;
+
+	x = MapX(x);
+	y = MapY(y);
 
 	scanline_type sl;
 	agg::rasterizer_scanline_aa<> ras;
@@ -602,7 +610,7 @@ void CRawGraph::FillRect(const RECT *lpRect, PRAW_IMAGE_DATA pImgMask, const REC
 	srcPixel[PIX_R] = clrFill.r() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_G] = clrFill.g() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_B] = clrFill.b() * clrFill.getAlpha() / 255;
-	srcPixel[PIX_A] = clrFill.getAlpha() * m_nOpacityPainting / 255;
+	srcPixel[PIX_A] = clrFill.getAlpha();
 
 	ASSERT(pImgMask);
 	if (!pImgMask)
@@ -670,8 +678,8 @@ void CRawGraph::FillRect(const RECT *lpRect, PRAW_IMAGE_DATA pImgMask, const REC
 }
 
 
-template<class _PixRGBBlender, class _PixAlphaBlender>
-void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *srcPixel)
+template<class _PixRGBBlender, class _PixAlphaBlender, class _PixRGBBlender_Opacity, class _PixAlphaBlender_Opacity>
+void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *srcPixel, uint8 alpha)
 {
 	byte		*p, *pEnd, *pRow;
 	int			nStrideModify;
@@ -688,18 +696,35 @@ void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *s
 	}
 
 	nStrideModify = (xMax - x) * nPixSize;
-
 	pRow = pImage->PixPtr(x, y);
-	for (; y < yMax; y++)
+
+	if (alpha == 255)
 	{
-		pEnd = pRow + nStrideModify;
-		for (p = pRow; p < pEnd; p += nPixSize)
+		for (; y < yMax; y++)
 		{
-			_PixRGBBlender::blend(p, srcPixel);
-			_PixAlphaBlender::blend(p, srcPixel);
+			pEnd = pRow + nStrideModify;
+			for (p = pRow; p < pEnd; p += nPixSize)
+			{
+				_PixRGBBlender::blend(p, srcPixel);
+				_PixAlphaBlender::blend(p, srcPixel);
+			}
+			pRow += pImage->stride;
 		}
-		pRow += pImage->stride;
 	}
+	else
+	{
+		for (; y < yMax; y++)
+		{
+			pEnd = pRow + nStrideModify;
+			for (p = pRow; p < pEnd; p += nPixSize)
+			{
+				_PixRGBBlender_Opacity::blend(p, srcPixel, alpha);
+				_PixAlphaBlender_Opacity::blend(p, srcPixel, alpha);
+			}
+			pRow += pImage->stride;
+		}
+	}
+
 }
 
 
@@ -713,7 +738,7 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 	srcPixel[PIX_R] = clrFill.r() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_G] = clrFill.g() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_B] = clrFill.b() * clrFill.getAlpha() / 255;
-	srcPixel[PIX_A] = clrFill.getAlpha() * m_nOpacityPainting / 255;
+	srcPixel[PIX_A] = clrFill.getAlpha();
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 
@@ -723,14 +748,14 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 		if (IsFlagSet(bpm, BPM_CHANNEL_RGB))
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<blend_rgb, blend_alpha>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<blend_rgb, blend_alpha, blend_rgb_opacity, blend_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 			else
-				::FillRect<blend_rgb, blend_copy_none>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<blend_rgb, blend_copy_none, blend_rgb_opacity, blend_copy_none_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 		}
 		else
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<blend_copy_none, blend_alpha>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<blend_copy_none, blend_alpha, blend_copy_none_opacity, blend_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 		}
 	}
 	else if (IsFlagSet(bpm, BPM_OP_MULTIPLY))
@@ -739,14 +764,14 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 		if (IsFlagSet(bpm, BPM_CHANNEL_RGB))
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<multiply_rgb, multiply_alpha>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<multiply_rgb, multiply_alpha, multiply_rgb_opacity, multiply_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 			else
-				::FillRect<multiply_rgb, blend_copy_none>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<multiply_rgb, blend_copy_none, multiply_rgb_opacity, blend_copy_none_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 		}
 		else
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<blend_copy_none, multiply_alpha>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<blend_copy_none, multiply_alpha, blend_copy_none_opacity, multiply_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 		}
 	}
 	else
@@ -755,14 +780,14 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 		if (IsFlagSet(bpm, BPM_CHANNEL_RGB))
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<copy_rgb, copy_alpha>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<copy_rgb, copy_alpha, copy_rgb_opacity, copy_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 			else
-				::FillRect<copy_rgb, blend_copy_none>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<copy_rgb, blend_copy_none, copy_rgb_opacity, blend_copy_none_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 		}
 		else
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<blend_copy_none, copy_alpha>(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<blend_copy_none, copy_alpha, blend_copy_none_opacity, copy_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 		}
 	}
 }

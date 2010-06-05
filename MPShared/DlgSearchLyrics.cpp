@@ -116,8 +116,8 @@ class CPageRename : public CSkinPageHandler
 {
 public:
 	CPageRename() : CSkinPageHandler(_T("CID_C_RENAME"), 
-		NULL, _T("CID_AM_SHOW_RENAME_F_RIGHT"),
-		NULL, _T("CID_AM_HIDE_RENAME_2_RIGHT"))
+		NULL, _T("CID_AM_SHOW_RENAME"),
+		NULL, _T("CID_AM_HIDE_RENAME"))
 	{
 	}
 
@@ -214,8 +214,8 @@ public:
 	};
 
 	CPageSearchLyrics() : CSkinPageHandler(_T("CID_C_OPEN"), 
-		_T("CID_AM_SHOW_OPEN_F_LEFT"), _T("CID_AM_SHOW_OPEN_F_RIGHT"),
-		_T("CID_AM_HIDE_OPEN_2_LEFT"), NULL)
+		_T("CID_AM_SHOW_OPEN"), _T("CID_AM_SHOW_OPEN"),
+		_T("CID_AM_HIDE_OPEN"), NULL)
 	{
 		m_bAutoSearchLocal = true;
 		m_nCurPage = 0;
@@ -378,6 +378,8 @@ public:
 	{
 		CSkinPageHandler::OnShow();
 
+		CSkinWnd::CAutoRedrawLock	redrawLock(m_pSkinWnd);
+
 		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Search lyrics")));
 
 		if (m_pSearchObj)
@@ -424,6 +426,8 @@ public:
 				m_pLyricsList->SetItemText(nSel, COL_FILENAME, FileGetName(szFileNew));
 			}
 		}
+
+		redrawLock.CancelDrawUpdate();
 	}
 
 	bool OnTimer(UINT nIDEvent)
@@ -647,6 +651,29 @@ public:
 			return false;
 
 		return true;
+	}
+
+	bool OnKeyDown(UINT nChar, UINT nFlags)
+	{
+		if (nChar == VK_RETURN)
+		{
+			CUIObject *pObj = m_pSkinWnd->GetFocusUIObj();
+			if (pObj)
+			{
+				int nFocusId = m_pSkinWnd->GetFocusUIObj()->GetID();
+				if (nFocusId == CID_E_ARTIST || nFocusId == CID_E_TITLE)
+				{
+					m_pSkinWnd->PostCustomCommandMsg(CID_SEARCH);
+					return true;
+				}
+				else if (nFocusId == CID_L_LYRICS)
+				{
+					m_pSkinWnd->PostCustomCommandMsg(CID_OPEN);
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 
 protected:
@@ -908,9 +935,9 @@ protected:
 		{
 			int		nIncValue;
 			if (bHide)
-				nIncValue = rcBt.bottom - rcResultList.bottom;
+				nIncValue = rcBt.bottom - rcResultList.bottom - 3;
 			else
-				nIncValue = -(rcResultList.bottom - (rcBt.top - 5));
+				nIncValue = -(rcResultList.bottom - (rcBt.top - 8));
 
 			m_pLyricsList->IncreaseHeight(nIncValue);
 		}

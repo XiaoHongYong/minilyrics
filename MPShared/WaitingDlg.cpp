@@ -46,7 +46,7 @@ void CWorkObjBase::WorkThread(LPVOID lpParam)
 
 
 CPageWaitMessage::CPageWaitMessage(bool bEndToClose) : CSkinPageHandler(GetPageID(),
-	NULL, _T("CID_AM_SHOW_WAIT_F_RIGHT"), NULL, _T("CID_AM_HIDE_WAIT_2_RIGHT"))
+	NULL, _T("CID_AM_SHOW_WAIT"), NULL, _T("CID_AM_HIDE_WAIT"))
 {
 	m_bEndToClose = bEndToClose;
 	m_pWorkObj = NULL;

@@ -177,8 +177,8 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 
 	m_bUseRgn = FALSE;
 
-	m_rcBoundBox.SetRect(0, 0, 400, 350);
-	m_rcReal.SetRect(0, 0, 400, 350);
+	m_rcBoundBox.SetRect(0, 0, 600, 350);
+	m_rcReal.SetRect(0, 0, 600, 350);
 
 	CRect rcRestrict;
 	GetMonitorRestrictRect(m_rcBoundBox, rcRestrict);

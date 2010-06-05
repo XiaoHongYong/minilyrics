@@ -4,7 +4,6 @@
 #pragma once
 
 #include "UnicodeRange.h"
-#include "FontInfo.h"
 
 class CMLFont : public CFontInfo
 {
