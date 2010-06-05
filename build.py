@@ -115,6 +115,7 @@ if TargetML:
 		[ " PluginXMP\\PluginXMP.sln", "\"Release|Win32\"" ],
 		[ " PluginZune\\PluginZune.sln", "\"Release|Win32\"" ],
 		[ " PluginSpotify\\PluginSpotify.sln", "\"Release|Win32\"" ],
+		[ " PluginSpotify\\PluginMPC.sln", "\"Unicode Release|Win32\"" ],
 		[ " MLEncrypt\\MLEncrypt.sln", "\"Release|Win32\"" ],
 		#[ " PluginYme\\PluginYme.sln", "\"Release|Win32\"" ],
 		[ " MLInstallOptions\\MLInstallOptions.sln", "\"Release|Win32\"" ]

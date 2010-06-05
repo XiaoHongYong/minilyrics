@@ -543,6 +543,15 @@ SectionIn 1 2
     File ..\bin\PluginSpotify.exe
   J_SpotifyEnd:
 
+  ; MPC-HC
+  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMPC"
+  IntCmp ${TEMP1} 0 J_MPCEnd J_MPCEnd
+    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMPC" ${TEMP1}
+
+    SetOutPath $INSTDIR
+    File ..\bin\PluginMPC.exe
+  J_MPCEnd:
+
   ; Shortcuts of desktop and quick lanuch
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
   IntCmp ${TEMP1} 0 J_ShortcutsDtEnd J_ShortcutsDtEnd
@@ -574,6 +583,11 @@ SectionIn 1 2
       CreateShortCut "$DESKTOP\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
       CreateShortCut "$QUICKLAUNCH\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
     J_SpotifyDesktopEnd:
+
+    IfFileExists "$INSTDIR\PluginMPC.exe" 0 J_MPCDesktopEnd
+      CreateShortCut "$DESKTOP\MiniLyrics for Media Player Classic Home Cinema.lnk" "$INSTDIR\PluginMPC.exe"
+      CreateShortCut "$QUICKLAUNCH\MiniLyrics for Media Player Classic Home Cinema.lnk" "$INSTDIR\PluginMPC.exe"
+    J_MPCDesktopEnd:
 
   J_ShortcutsDtEnd:
 
@@ -654,6 +668,10 @@ SectionIn 1
   IfFileExists "$INSTDIR\PluginSpotify.exe" 0 J_SpotifySEnd
 	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
   J_SpotifySEnd:
+
+  IfFileExists "$INSTDIR\PluginMPC.exe" 0 J_MPCSEnd
+	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Media Player Classic Home Cinema.lnk" "$INSTDIR\PluginMPC.exe"
+  J_MPCSEnd:
 
   IfFileExists "$INSTDIR\PluginAP.exe" 0 J_APSEnd
 	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe" "" "$INSTDIR\PluginAP.exe" 0
@@ -872,6 +890,7 @@ Section "Uninstall"
   Delete $INSTDIR\PluginHMM.exe
   Delete $INSTDIR\PluginZune.exe
   Delete $INSTDIR\PluginSpotify.exe
+  Delete $INSTDIR\PluginMPC.exe
   Delete $INSTDIR\PluginAP.exe
 
   ; MUST REMOVE UNINSTALLER, too
@@ -932,6 +951,8 @@ Section "Uninstall"
   Delete "$QUICKLAUNCH\MiniLyrics for Zune software.lnk"
   Delete "$DESKTOP\MiniLyrics for Spotify.lnk"
   Delete "$QUICKLAUNCH\MiniLyrics for Spotify.lnk"
+  Delete "$DESKTOP\MiniLyrics for Media Player Classic Home Cinema.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for Media Player Classic Home Cinema.lnk"
 
   ; remove directories used.
 ;  RMDir "$SMPROGRAMS\√‘ƒ„∏Ë¥ "
