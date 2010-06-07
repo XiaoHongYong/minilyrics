@@ -25,8 +25,6 @@ protected:
 	CMLFont					m_font;
 	IMLGraphicsBase			*m_pmemGraph;
 	CRawGraph				m_memGraph;
-	int						m_nWidthGraph;
-	int						m_nWidthBytesGraph;
 
 };
 

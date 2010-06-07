@@ -12,15 +12,12 @@ namespace GfxRaw
 {
 
 #define MEM_GRAPH_BITS	24
-#define MEM_GRAPH_PIX_SIZE	3
 
 extern bool	g_bAntialiasFontEnabled;
 
 CRawGlyphBuilder::CRawGlyphBuilder()
 {
 	m_pmemGraph = NULL;
-	m_nWidthBytesGraph = 0;
-	m_nWidthGraph = 0;
 }
 
 CRawGlyphBuilder::~CRawGlyphBuilder()
@@ -48,10 +45,9 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 	hdcScreen = GetDC(NULL);
 	graphScreen.Create(hdcScreen);
 
-	m_nWidthGraph = GetHeightBitmap() * 2;
-	m_nWidthBytesGraph = (m_nWidthGraph * 3 + 3) & ~ 3;
+	int		nWidthGraph = GetHeightBitmap() * 2;
 
-	m_memGraph.Create(m_nWidthGraph, GetHeightBitmap(), &graphScreen, 24);
+	m_memGraph.Create(nWidthGraph, GetHeightBitmap(), &graphScreen, MEM_GRAPH_BITS);
 
 	if (g_bAntialiasFontEnabled)
 	{
@@ -95,8 +91,8 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 {
 	SIZE			size;
 
-	agg::rendering_buffer	bufGraph(m_memGraph.GetBuff(), m_memGraph.Width(), m_memGraph.Height(), -m_nWidthBytesGraph);
-
+	PRAW_IMAGE_DATA			rawBuff = m_memGraph.GetRawBuff();
+	agg::rendering_buffer	bufGraph(rawBuff->buff, rawBuff->width, rawBuff->height, rawBuff->stride);
 
 	ASSERT(m_pmemGraph);
 

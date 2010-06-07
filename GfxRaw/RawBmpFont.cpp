@@ -28,14 +28,15 @@ inline byte RGBToGray(int r, int g, int b)
 	return (r * 3 + g * 6 + b + 5) / 10;
 }
 
-void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph)
+template<class pixfmt>
+void CopyBitmpDataFromGraphBuffer_t(Glyph *pGlyph, pixfmt &bufGraph)
 {
 #define MEM_GRAPH_PIX_SIZE	3
 	int		nHeightBitmap = bufGraph.height();
 
 	// Determine the right of Bitmap.
 	int nRightBitmap = min_fun(pGlyph->nWidth + nHeightBitmap / 2, (int)bufGraph.width());
-	uint8 *pRowSrc = bufGraph.row_ptr(0) + (nRightBitmap - 1) * MEM_GRAPH_PIX_SIZE;
+	uint8 *pRowSrc = bufGraph.pix_ptr(nRightBitmap - 1, 0);
 	for (; nRightBitmap > 0; nRightBitmap--)
 	{
 		uint8 *p = pRowSrc;
@@ -48,7 +49,7 @@ void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph)
 		}
 		if (y != nHeightBitmap)
 			break;
-		pRowSrc -= MEM_GRAPH_PIX_SIZE;
+		pRowSrc -= pixfmt::pix_width;
 	}
 	ASSERT(nRightBitmap <= min_fun(pGlyph->nWidth + nHeightBitmap / 2, (int)bufGraph.width()));
 	if (nRightBitmap == 0)
@@ -69,12 +70,12 @@ void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph)
 		}
 		if (y != nHeightBitmap)
 			break;
-		pRowSrc += MEM_GRAPH_PIX_SIZE;
+		pRowSrc += pixfmt::pix_width;
 	}
 
 	// Determine the top of Bitmap.
 	int nTopBitmap = 0;
-	pRowSrc = bufGraph.row_ptr(0) + nLeftBitmap * MEM_GRAPH_PIX_SIZE;
+	pRowSrc = bufGraph.pix_ptr(nLeftBitmap, 0);
 	for (; nTopBitmap < nHeightBitmap; nTopBitmap++)
 	{
 		uint8 *p = pRowSrc;
@@ -83,7 +84,7 @@ void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph)
 		{
 			if (p[0] != 0 || p[1] != 0 || p[2] != 0)
 				break;
-			p += MEM_GRAPH_PIX_SIZE;
+			p += pixfmt::pix_width;
 		}
 		if (x != nRightBitmap)
 			break;
@@ -101,7 +102,7 @@ void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph)
 		{
 			if (p[0] != 0 || p[1] != 0 || p[2] != 0)
 				break;
-			p += MEM_GRAPH_PIX_SIZE;
+			p += pixfmt::pix_width;
 		}
 		if (x != nRightBitmap)
 			break;
@@ -134,11 +135,21 @@ void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph)
 #endif
 			pDst[G_A] = RGBToGray(pSrc[G_R], pSrc[G_G], pSrc[G_B]);
 			pDst += G_PIX_SIZE;
-			pSrc += MEM_GRAPH_PIX_SIZE;
+			pSrc += pixfmt::pix_width;
 		}
 		pRowSrc += bufGraph.stride();
 		pRowDst += pGlyph->WidthBytes();
 	}
+}
+
+void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph)
+{
+	CopyBitmpDataFromGraphBuffer_t(pGlyph, bufGraph);
+}
+
+void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgba32 &bufGraph)
+{
+	CopyBitmpDataFromGraphBuffer_t(pGlyph, bufGraph);
 }
 
 static void CopyToOutlined(byte *pOut, byte *pIn, int nWidth, int nHeight, int nMarginShadow, int nOffset)
