@@ -7,6 +7,10 @@
 
 #pragma once
 
+#include <CoreGraphics/CGContext.h>
+#include <CoreGraphics/CGBitmapContext.h>
+#include <CoreGraphics/CGContext.h>
+
 class CMLImage;
 class CMLFont;
 class CMLGraphics;
@@ -71,6 +75,11 @@ public:
 
 	virtual void SetFont(CMLFont *font);
 
+	// For MAC only
+	CGContextRef GetHandle() const { return m_context; }
+	void Attach(CGContextRef context);
+	CGContextRef Detach();
+
 public:
 /*
 	// for memdc.
@@ -86,6 +95,7 @@ protected:
 */
 
 protected:
+	CGContextRef	m_context;
 
 };
 

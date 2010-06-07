@@ -14,6 +14,8 @@ public:
 
 	void Init(const CFontInfo &font);
 
+	void Destroy();
+	
 	Glyph *BuildGlyph(StringIterator::CharType ch);
 
 protected:
@@ -21,7 +23,8 @@ protected:
 
 protected:
 	CMLFont					m_font;
-	int						m_nWidthGraph;
+	CRawGraphData			m_fontMemGraph;
+	CMLGraphics				m_graph;
 
 };
 

@@ -4,6 +4,8 @@
 #pragma once
 
 #include <CoreGraphics/CGContext.h>
+#include <CoreGraphics/CGBitmapContext.h>
+#include <CoreGraphics/CGContext.h>
 
 class CRawGraphData
 {
@@ -25,6 +27,9 @@ public:
 
 	virtual void DrawToGraphics(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc);
 	virtual void DrawToGraphicsStretch(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc, int widthsrc, int heightsrc);
+
+	// For MAC only.
+	CGContextRef GetHandle() const { return m_context; }
 
 protected:
 	RAW_IMAGE_DATA	m_imageData;

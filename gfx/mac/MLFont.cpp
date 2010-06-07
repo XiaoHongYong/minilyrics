@@ -4,6 +4,7 @@
 
 CMLFont::CMLFont()
 {
+	m_font = NULL;
 }
 
 CMLFont::~CMLFont(void)
@@ -17,7 +18,11 @@ bool CMLFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHe
 
 	CFontInfo::Set(szFaceNameLatin9, szFaceNameOthers, nHeight, nWeight, nItalic, bUnderline);
 
-	ERRLOG0("Unimplemented fun CMLGraphics::");
+	//if (szFaceNameLatin9 == NULL || IsEmptyString(szFaceNameLatin9))
+	szFaceNameLatin9 = "Helvetica";
+	CFStringRef	name = CFStringCreateWithCString(NULL, szFaceNameLatin9, kCFStringEncodingUTF8);
+	m_font = CGFontCreateWithFontName(name);
+	CFRelease(name);
 
 	return true;
 }
@@ -29,4 +34,9 @@ bool CMLFont::Create(const CFontInfo &font)
 
 void CMLFont::Destroy()
 {
+	if (m_font != NULL)
+	{
+		CGFontRelease(m_font);
+		m_font = NULL;
+	}
 }

@@ -23,68 +23,95 @@ CMLGraphics::~CMLGraphics()
 
 void CMLGraphics::Line(int x1, int y1, int x2, int y2)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 }
 
 void CMLGraphics::Rectangle(int x, int y, int width, int height)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 }
 
 void CMLGraphics::FillRect(int x, int y, int width, int height, CMLBrush *pBrush)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 }
 
 bool CMLGraphics::TextOut(int x, int y, LPCTSTR szText, int nLen)
 {
+	CGContextShowTextAtPoint(m_context, x, y + m_font->GetHeight(), szText, nLen);
+
 	return TRUE;
 }
 
 bool CMLGraphics::DrawTextClip(LPCTSTR szText, int nLen, LPRECT lpRect)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 	return false;
 }
 
 bool CMLGraphics::TextOutOutlined(int x, int y, LPCTSTR szText, int nLen, const MLColor &clrText, const MLColor &clrBorder)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 	return false;
 }
 
 bool CMLGraphics::DrawTextClipOutlined(LPCTSTR szText, int nLen, LPRECT lpRect, const MLColor &clrText, const MLColor &clrBorder, UINT uFormat)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 	return false;
 }
 
 bool CMLGraphics::DrawText(LPCTSTR szText, int nLen, LPRECT lpRect, UINT uFormat)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 	return false;
 }
 
 bool CMLGraphics::GetTextExtentPoint32(LPCTSTR szText, int nLen, LPSIZE pSize)
 {
-	return false;
+	CGContextSetTextDrawingMode(m_context, kCGTextInvisible);
+
+	CGPoint ptStart = CGContextGetTextPosition(m_context);
+	CGContextShowText(m_context, szText, nLen);
+	CGPoint ptEnd = CGContextGetTextPosition(m_context);
+
+	pSize->cx = ptEnd.x - ptStart.x;
+	pSize->cy = m_font->GetHeight();
+
+	CGContextSetTextDrawingMode(m_context, kCGTextFill);
+	
+	return true;
 }
 
 void CMLGraphics::SetTextColor(const MLColor &color)
 {
+	CGContextSetRGBFillColor(m_context, color.r() / 255.0, color.g() / 255.0, color.b() / 255.0, color.getAlpha() / 255.0);
 }
 
 void CMLGraphics::SetBkMode(bool bTransparent)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 }
 
 void CMLGraphics::SetFgColor(const MLColor &color)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 }
 
 void CMLGraphics::SetBgColor(const MLColor &color)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 }
 
 void CMLGraphics::SetPen(CMLPen &pen)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
 }
 
 bool CMLGraphics::GetClipBoundBox(CRect &rc)
 {
+	ERRLOG0("Unimplemented fun CMLGraphics::");
+	return false;
 }
 
 bool CMLGraphics::SetClipBoundBox(const CRect &rc)
@@ -141,7 +168,16 @@ void CMLGraphics::DrawImageStretchAlphaBlend(CMLImage *pImage, int xdest, int yd
 
 void CMLGraphics::SetFont(CMLFont *font)
 {
-	ERRLOG0("Unimplemented fun CMLGraphics::");
+	IMLGraphicsBase::SetFont(font);
+
+	CGContextSelectFont(m_context, "Helvetica", m_font->GetHeight(), kCGEncodingMacRoman);
+	// Next we set the text matrix to flip our text upside down. We do this because the context itself
+	// is flipped upside down relative to the expected orientation for drawing text (much like the case for drawing Images & PDF).
+	CGContextSetTextMatrix(m_context, CGAffineTransformMakeScale(1.0, -1.0));
+
+	// CGContextSetFont(m_context, m_font->GetHandle());
+	// CGContextSetFontSize(m_context, m_font->GetHeight());
+	CGContextSetTextDrawingMode(m_context, kCGTextFill);
 }
 
 /*
@@ -174,3 +210,19 @@ void CMLGraphics::DeleteDC()
 	}
 }*/
 
+void CMLGraphics::Attach(CGContextRef context)
+{
+	Detach();
+	
+	m_context = context;
+}
+
+CGContextRef CMLGraphics::Detach()
+{
+	CGContextRef old = m_context;
+	
+	if (m_context != NULL)
+		m_context = NULL;
+
+	return old;
+}

@@ -1,6 +1,11 @@
 #ifndef _MLFONT_INC_
 #define _MLFONT_INC_
 
+#pragma once
+
+#include <CoreFoundation/CoreFoundation.h>
+#include <CoreGraphics/CGFont.h>
+
 #ifndef DEFAULT_CHARSET
 #define DEFAULT_CHARSET		1
 #endif
@@ -19,7 +24,11 @@ public:
 
 	virtual void Destroy();
 
+	// For MAC only.
+	CGFontRef GetHandle() const { return m_font; }
+
 protected:
+	CGFontRef		m_font;
 
 };
 
