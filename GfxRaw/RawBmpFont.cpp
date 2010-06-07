@@ -31,7 +31,6 @@ inline byte RGBToGray(int r, int g, int b)
 template<class pixfmt>
 void CopyBitmpDataFromGraphBuffer_t(Glyph *pGlyph, pixfmt &bufGraph)
 {
-#define MEM_GRAPH_PIX_SIZE	3
 	int		nHeightBitmap = bufGraph.height();
 
 	// Determine the right of Bitmap.
