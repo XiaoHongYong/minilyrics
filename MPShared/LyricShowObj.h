@@ -86,19 +86,6 @@ public:
 	};
 	friend class CDispOptRecover;
 
-	class MLColorEx : public MLColor
-	{
-	public:
-		MLColorEx() : m_bValid(false)
-		{
-		}
-		MLColorEx(MLColor &clr) : MLColor(clr), m_bValid(true)
-		{
-		}
-		bool		m_bValid;
-
-	};
-
 	// TOB = Text Overlay Blending
 	// TCI = Text Color Index
 	enum TOBColorIndex
@@ -119,7 +106,7 @@ public:
 		TextOverlayBlending() : obm(OBM_UNKNOWN) { }
 
 		OverlayBlendingMode		obm;				// Overlay blending mode
-		MLColorEx				clr[TCI_COUNT];		// Colors, Accessed by TOBColorIndex
+		MLColor					clr[TCI_COUNT];		// Colors, Accessed by TOBColorIndex
 		CRawImage				imgPattern;
 		tstring					strPatternFile;
 	};
@@ -347,7 +334,7 @@ LPCTSTR GetLyrTOBSettingName(bool bHighlight, CLyricShowObj::TOBColorIndex nameI
 
 void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverlayBlending &tob, int nGradientPatternHeight, bool bHilight);
 
-void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::MLColorEx clrGradient[3]);
+void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, MLColor clrGradient[3]);
 
 void ProfileWriteTOBToOld(bool bOutlineLyrText, 
 						  const CLyricShowObj::TextOverlayBlending &tobHilight, 

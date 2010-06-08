@@ -290,6 +290,8 @@ void CRawGraph::ResetAlphaChannel(BYTE byAlpha, const RECT *lpRect)
 	int			nStrideModify;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
 	// Modify alpha channel directly
@@ -314,6 +316,8 @@ void CRawGraph::MultiplyAlpha(BYTE byAlpha, const RECT *lpRect)
 	int			nStrideModify;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
 	// PIX_SIZE is the pixel size(rgba).
@@ -341,6 +345,8 @@ void CRawGraph::VertAlphaFadeOut(const RECT *lpRect, bool bTop)
 	int			nStrideModify;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
 	fStep = (float)1 / (lpRect->bottom - lpRect->top);
@@ -389,6 +395,9 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 	b = clrBg.b() * a / 255;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
+
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
 	fStep = (float)1 / (lpRect->bottom - lpRect->top);
@@ -435,6 +444,8 @@ void CRawGraph::HorzAlphaFadeOut(const RECT *lpRect, bool bLeft)
 	int			nStrideModify;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
 	fStep = (float)1 / (lpRect->right - lpRect->left);
@@ -488,6 +499,8 @@ void CRawGraph::HorzFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bLeft
 	b = clrBg.b() * a / 255;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
 	fStep = (float)1 / (lpRect->right - lpRect->left);
@@ -532,6 +545,8 @@ void CRawGraph::FillRectXOR(const RECT *lpRect, const MLColor &clrFill)
 	byte		r = clrFill.r(), g = clrFill.g(), b = clrFill.b();
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
 	pRow = m_imageData.PixPtr(x, y);
@@ -620,6 +635,8 @@ void CRawGraph::FillRect(const RECT *lpRect, PRAW_IMAGE_DATA pImgMask, const REC
 		return;
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
 
 	// Fill region must be within mask image
 	if (xMax - x > rcMask->right - rcMask->left)
@@ -741,6 +758,8 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 	srcPixel[PIX_A] = clrFill.getAlpha();
 
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
 
 	if (IsFlagSet(bpm, BPM_OP_BLEND))
 	{

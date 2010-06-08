@@ -109,52 +109,47 @@ int GetMLRowDrawWidth(PML_ROW pRow, CRawGraph *pGraph)
 	return w;
 }
 
+
 void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring> &vStr)
 {
-#ifdef UNICODE
-	int			nCount;
-	LPCWSTR		szLineBeg, szPtr, szLastBreak;
-	tstringex	str;
-	SIZE		size;
-	int			nWidth;
-
-	szLineBeg = szText;
-
 	if (_tcslen(szText) <= 10)
 	{
 		vStr.push_back(szText);
 		return;
 	}
 
-	while (*szLineBeg)
+	tstringex	str;
+
+	StringIterator	strIterator(szText);
+	while (!strIterator.IsEOS())
 	{
-		szPtr = szLineBeg;
-		nCount = 0;
-		nWidth = 0;
-		szLastBreak = NULL;
-		while (*szPtr)
+		int nWidth = 0;
+		int nLineBeg = strIterator.GetPos();
+		int nLastBreak = -1;
+		for (; !strIterator.IsEOS(); ++strIterator)
 		{
-			pGraph->GetTextExtentPoint32(szPtr, 1, &size);
-			nWidth += size.cx;
-			if (nWidth > nWidthMax && int(szPtr - szLineBeg) >= 10)
+			SIZE size;
+			if (pGraph->GetTextExtentPoint32(strIterator.CurChar(), strIterator.CurChar().size(), &size))
+				nWidth += size.cx;
+			if (nWidth > nWidthMax && strIterator.GetPos() - nLineBeg >= 10)
 			{
-				if (szLastBreak)
+				if (nLastBreak > 0)
 				{
-					assert(szLastBreak <= szPtr);
-					szPtr = szLastBreak + 1;
+					assert(nLastBreak <= strIterator.GetPos());
+					strIterator.SetPos(nLastBreak + 1);
 				}
 				break;
 			}
 
-			if ((*szPtr) > 255 || !(isalpha(*szPtr) || IsDigit(*szPtr) || (*szPtr >= 127 && *szPtr <= 255)
-				|| *szPtr == '\'' || *szPtr == '\"' || *szPtr == '_' || *szPtr == '-'))
-				szLastBreak = szPtr;
-			szPtr++;
+			unsigned int c = strIterator.CurChar()[0];
+			if (c >= 127 || !(isalpha(c) || IsDigit(c)
+				|| c == '\'' || c == '\"' || c == '_' || c == '-'))
+				nLastBreak = strIterator.GetPos();
 		}
-		if (szPtr == szLineBeg)
-			szPtr++;
+		if (strIterator.GetPos() == nLineBeg)
+			++strIterator;
 		str.clear();
-		str.append(szLineBeg, int(szPtr - szLineBeg));
+		str.append(szText + nLineBeg, strIterator.GetPos() - nLineBeg);
 		if (str.size())
 		{
 			if (str.data()[str.size() - 1] == '\r')
@@ -162,72 +157,10 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 		}
 		vStr.push_back(str.c_str());
 
-		if (*szPtr == '\n')
-			szPtr++;
-		szLineBeg = szPtr;
+		if (strIterator.CurChar()[0] == '\n')
+			++strIterator;
 	}
-#else
-	vStr.push_back(szText);
-#endif
 }
-
-/*
-
-void WrapWords(IMLGraphicsBase *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring> &vStr)
-{
-int			nCount;
-#ifdef UNICODE
-LPCWSTR		szLineBeg, szPtr, szLastBreak;
-szLineBeg = szText;
-tstringex	str;
-SIZE		size;
-while (*szLineBeg)
-{
-szPtr = szLineBeg;
-nCount = 0;
-szLastBreak = NULL;
-while (*szPtr)
-{
-szPtr++;
-
-pGraph->GetTextExtentPoint32(szLineBeg, int(szPtr - szLineBeg), &size);
-if (size.cx > nWidthMax)
-{
-szPtr--;
-if (szLastBreak)
-{
-assert(szLastBreak <= szPtr);
-if (szLastBreak < szPtr)
-szPtr = szLastBreak + 1;
-else
-szPtr = szLastBreak;
-}
-break;
-}
-
-if ((*szPtr) > 255 || !(isalpha(*szPtr) || IsDigit(*szPtr) || *szPtr == '_' || *szPtr == '-'))
-szLastBreak = szPtr;
-}
-if (szPtr == szLineBeg)
-szPtr++;
-str.clear();
-str.append(szLineBeg, int(szPtr - szLineBeg));
-if (str.size())
-{
-if (str.data()[str.size() - 1] == '\r')
-str.resize(str.size() - 1);
-}
-vStr.push_back(str.c_str());
-
-if (*szPtr == '\n')
-szPtr++;
-szLineBeg = szPtr;
-}
-#else
-vStr.push_back(szText);
-#endif
-}
-*/
 
 bool WrapDisplayLyrics(VLyrLines &lyrLinesSrc, CMLyrLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax)
 {
@@ -304,7 +237,7 @@ void AlphaBlendColor(MLColor &clr1, MLColor &clr2, int nAlpha, MLColor &clrOut)
 		(clr1.b() * nPart1 + clr2.b() * nAlpha) / 255);
 }
 
-void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CRect &rc, CLyricShowObj::MLColorEx clrGradient[3])
+void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CRect &rc, MLColor clrGradient[3])
 {
 	ASSERT(pImage->bitCount == 24 || pImage->bitCount == 32);
 
@@ -375,7 +308,7 @@ void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CRect &rc, CLyricShowObj::ML
 	}
 }
 
-void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::MLColorEx clrGradient[3])
+void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, MLColor clrGradient[3])
 {
 	PRAW_IMAGE_DATA		pImage = image.GetHandle();
 	image.Detach();
@@ -407,7 +340,7 @@ void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, CLyricShowObj::
 
 void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, MLColor clrSimpGradient)
 {
-	CLyricShowObj::MLColorEx		clrGradient[3];
+	MLColor		clrGradient[3];
 
 #define		PATTERN_COLOR_RANGE			100
 	int		r = clrSimpGradient.r(), g = clrSimpGradient.g(), b = clrSimpGradient.b();
