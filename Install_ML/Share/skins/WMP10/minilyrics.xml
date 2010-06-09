@@ -39,7 +39,7 @@
     <Image Left="4" Top="h - 4" Width="w - 20" Height="4" Name="bottom frame" Image="lyr-bar-frame.bmp" ImageRect="4,31,180,4" BltMode="stretch"/>
     <Button Left="w - 12" Top="h/2-4" Width="9" Height="9" ID="ID_CLOSE" Name="Close" Image="lyr-bar-bt.bmp" ImageRect="18,0,9,9" ImageSel="lyr-bar-bt.bmp" ImageSelRect="0,0,9,9" ImageFocus="lyr-bar-bt.bmp" ImageFocusRect="9,0,9,9"/>
   </skinwnd>
-  <skinwnd Name="minilyrics" Region="wmp10.tr2" MinWidth="180" MinHeight="26" Width="295" Height="116" BgColor="#3169B5" FgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common">
+  <skinwnd Name="minilyrics" Region="wmp10.tr2" MinWidth="275" MinHeight="116" Width="295" Height="116" BgColor="#3169B5" FgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="4" Top="23" Width="w-8" Height="h-31"/>
     <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption.bmp" ImageRect="0,0,275,23" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" CutPos="75,125,130,220"/>
     <Button Left="5" Top="4" Width="17" Height="18" ID="ID_MENU" Name="Menu" Image="cap-bt.bmp" ImageRect="0,0,17,18" ImageSel="cap-bt.bmp" ImageSelRect="0,18,17,18"/>

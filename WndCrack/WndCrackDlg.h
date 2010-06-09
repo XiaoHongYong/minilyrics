@@ -78,6 +78,8 @@ protected:
 	afx_msg void OnSelchangedTreeWnd(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedMaximizeWnd();
 };
 
 //{{AFX_INSERT_LOCATION}}

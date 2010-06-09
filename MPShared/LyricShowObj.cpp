@@ -767,7 +767,7 @@ void CLyricShowObj::FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdate)
 
 	pGraph->SetFont(&m_font);
 
-	int		nLineHeight = GetLineHeight();
+	int		nLineHeight = (m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS ? m_nFontHeight : GetLineHeight());
 	int		y = (m_rcObj.top + m_rcObj.bottom) / 2 - m_lyrLines.size() * nLineHeight / 2;
 	int		x;
 

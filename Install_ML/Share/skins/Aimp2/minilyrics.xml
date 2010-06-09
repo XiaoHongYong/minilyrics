@@ -39,7 +39,7 @@
     <Button Left="w-30" Top="4" Width="13" Height="13" ID="ID_SEARCH_LYRICS" Name="search lyrics" Image="lyr-bar.bmp" ImageRect="72,1,13,13" ImageSel="lyr-bar.bmp" ImageSelRect="100,1,13,13" ImageFocus="lyr-bar.bmp" ImageFocusRect="127,1,13,13"/>
     <Button Left="w-16" Top="4" Width="12" Height="12" ID="ID_CLOSE" Name="Quit" Image="caption.bmp" ImageRect="36,0,12,12" ImageSel="caption.bmp" ImageSelRect="36,24,12,12" ImageFocus="caption.bmp" ImageFocusRect="36,12,12,12"/>
   </skinwnd>
-  <skinwnd Name="MiniLyrics" Region="caption.tr2" MinWidth="275" MinHeight="60" Width="275" Height="100" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="NormalMode" CmdHandler="ch_common">
+  <skinwnd Name="MiniLyrics" Region="caption.tr2" MinWidth="275" MinHeight="116" Width="275" Height="100" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="12" Top="25" Width="w-24" Height="h-38" EnableAutoResize="TRUE" />
     <CaptionImage Left="0" Top="0" Width="w" Height="25" Name="Caption" Image="caption.bmp" ImageRect="48,25,349,25" ImageFocus="caption.bmp" ImageFocusRect="48,0,349,25" CutPos="80,170,245,350"/>
     <Button Left="w-29" Top="4" Width="12" Height="12" ID="ID_QUIT" Name="Quit" Image="caption.bmp" ImageRect="36,0,12,12" ImageSel="caption.bmp" ImageSelRect="36,24,12,12" ImageFocus="caption.bmp" ImageFocusRect="36,12,12,12"/>

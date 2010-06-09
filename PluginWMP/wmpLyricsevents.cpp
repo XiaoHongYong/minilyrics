@@ -71,10 +71,13 @@ void CWmpLyrics::PlayStateChange( long NewState )
     case wmppsUndefined:
         break;
 	case wmppsStopped:
+		g_MLService.OnPlayStateChanged(PS_STOPED);
         break;
 	case wmppsPaused:
+		g_MLService.OnPlayStateChanged(PS_PAUSED);
         break;
 	case wmppsPlaying:
+		g_MLService.OnPlayStateChanged(PS_PLAYING);
         break;
 	case wmppsScanForward:
         break;

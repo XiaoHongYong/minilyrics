@@ -123,6 +123,7 @@ BEGIN_MESSAGE_MAP(CWndCrackDlg, CDialog)
 	ON_BN_CLICKED(IDC_ENUM, OnEnum)
 	ON_NOTIFY(TVN_SELCHANGED, IDC_TREE_WND, OnSelchangedTreeWnd)
 	//}}AFX_MSG_MAP
+	ON_BN_CLICKED(IDC_MAXIMIZE_WND, &CWndCrackDlg::OnBnClickedMaximizeWnd)
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
@@ -697,4 +698,16 @@ LRESULT CWndCrackDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 	
 	return CDialog::WindowProc(message, wParam, lParam);
+}
+
+void CWndCrackDlg::OnBnClickedMaximizeWnd()
+{
+	HWND	hWnd = GetCapturedWnd();
+	if (hWnd == NULL)
+		return;
+
+	if (::IsZoomed(hWnd))
+		::ShowWindow(hWnd, SW_RESTORE);
+	else
+		::ShowWindow(hWnd, SW_MAXIMIZE);
 }

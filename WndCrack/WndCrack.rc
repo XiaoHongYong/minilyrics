@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resource.h"
 
@@ -27,18 +27,18 @@ LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE DISCARDABLE 
+1 TEXTINCLUDE 
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE DISCARDABLE 
+2 TEXTINCLUDE 
 BEGIN
     "#include ""afxres.h""\r\n"
     "\0"
 END
 
-3 TEXTINCLUDE DISCARDABLE 
+3 TEXTINCLUDE 
 BEGIN
     "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
     "#define _AFX_NO_OLE_RESOURCES\r\n"
@@ -66,15 +66,15 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDR_MAINFRAME           ICON    DISCARDABLE     "res\\WRENCH.ICO"
+IDR_MAINFRAME           ICON                    "res\\WRENCH.ICO"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 75
-STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+IDD_ABOUTBOX DIALOG  0, 0, 235, 75
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "关于窗口修改器"
 FONT 9, "宋体"
 BEGIN
@@ -87,14 +87,12 @@ BEGIN
 END
 
 IDD_WNDCRACK_DIALOG DIALOGEX 0, 0, 404, 311
-STYLE DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | 
-    WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "窗口修改器"
-FONT 9, "宋体"
+FONT 9, "宋体", 0, 0, 0x1
 BEGIN
-    LTEXT           "拖动下面的图标，到一个窗口中，然后释放，来选择该窗口。",
-                    IDC_STATIC,157,7,237,8
+    LTEXT           "拖动下面的图标，到一个窗口中，然后释放，来选择该窗口。",IDC_STATIC,157,7,237,8
     LTEXT           "选择窗口：",IDC_STATIC,158,24,41,8
     LTEXT           "Select Window Position",IDC_SELWND,207,17,22,20
     LTEXT           "窗口句柄：",IDC_STATIC,157,63,41,8
@@ -121,10 +119,8 @@ BEGIN
     PUSHBUTTON      "标题",IDC_SET_WND_CAPTION,233,236,50,14
     PUSHBUTTON      "透明窗口",IDC_SET_WND_OPAQUE,299,236,50,14
     PUSHBUTTON      "最小化/恢复",IDC_MINIMIZE_WND,167,257,50,14
-    PUSHBUTTON      "允许/禁止",IDC_ENABLE_WND,233,257,50,14
-    CONTROL         "Tree1",IDC_TREE_WND,"SysTreeView32",TVS_HASBUTTONS | 
-                    TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | 
-                    WS_BORDER | WS_TABSTOP,7,30,140,246
+    PUSHBUTTON      "允许/禁止",IDC_ENABLE_WND,299,257,50,14
+    CONTROL         "Tree1",IDC_TREE_WND,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | WS_BORDER | WS_TABSTOP,7,30,140,246
     PUSHBUTTON      "枚举窗口",IDC_ENUM,7,7,50,14
     LTEXT           "Process ID:",IDC_STATIC,157,116,45,8
     EDITTEXT        IDC_E_PROCESSID,208,113,188,14,ES_AUTOHSCROLL
@@ -132,13 +128,13 @@ BEGIN
     EDITTEXT        IDC_E_CTRLID,208,131,188,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_MASK_COLOR,207,42,58,14,ES_AUTOHSCROLL
     LTEXT           "Color: ",IDC_STATIC,158,44,29,8
-    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | 
-                    WS_TABSTOP,356,42,42,14
+    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,356,42,42,14
     EDITTEXT        IDC_MASK_COLOR2,269,42,80,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "最大化/恢复",IDC_MAXIMIZE_WND,233,257,50,14
 END
 
 IDD_MSG_DLG DIALOGEX 0, 0, 374, 253
-STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "WndCrack"
 FONT 9, "宋体", 0, 0, 0x1
@@ -152,36 +148,29 @@ BEGIN
     LTEXT           "LPARAM:",-1,164,172,29,8
     EDITTEXT        IDC_MSGWPARAM,212,154,155,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_MSGLPARAM,212,172,155,14,ES_AUTOHSCROLL
-    COMBOBOX        IDC_MSGTYPE,227,134,140,87,CBS_DROPDOWNLIST | CBS_SORT | 
-                    WS_VSCROLL | WS_TABSTOP
+    COMBOBOX        IDC_MSGTYPE,227,134,140,87,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
     PUSHBUTTON      "发送消息(POST)",IDC_POSTMSG,270,114,83,14
 END
 
 IDD_SET_LAYEREDWND_DLG DIALOGEX 0, 0, 205, 103
-STYLE DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "设置窗口透明属性"
 FONT 9, "宋体", 0, 0, 0x1
 BEGIN
-    CONTROL         "使用透明设置",IDC_ENABLE_LAYERED,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,9,11,64,10
+    CONTROL         "使用透明设置",IDC_ENABLE_LAYERED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,11,64,10
     EDITTEXT        IDC_MASK_COLOR,103,24,33,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_OPAQUE,103,43,33,14,ES_AUTOHSCROLL
     DEFPUSHBUTTON   "修改",IDOK,32,82,50,14
     PUSHBUTTON      "取消",IDCANCEL,110,82,50,14
     LTEXT           "Static",IDC_SELWND,172,19,26,22
-    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | 
-                    WS_TABSTOP,141,23,27,14
-    CONTROL         "使用透明色：",IDC_C_TRANS_COLOR,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,25,26,64,10
-    CONTROL         "使用不透明度：",IDC_R_OPAQUE,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,25,45,72,10
-    CONTROL         "鼠标点击可透过窗口",IDC_C_CLICKTHROUGH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,25,64,125,10
+    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,141,23,27,14
+    CONTROL         "使用透明色：",IDC_C_TRANS_COLOR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,26,64,10
+    CONTROL         "使用不透明度：",IDC_R_OPAQUE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,45,72,10
+    CONTROL         "鼠标点击可透过窗口",IDC_C_CLICKTHROUGH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,64,125,10
 END
 
 
-#ifndef _MAC
 /////////////////////////////////////////////////////////////////////////////
 //
 // Version
@@ -204,18 +193,13 @@ BEGIN
     BEGIN
         BLOCK "080404b0"
         BEGIN
-            VALUE "Comments", "\0"
-            VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "WndCrack Microsoft 基础类应用程序\0"
-            VALUE "FileVersion", "0, 4, 0, 1\0"
-            VALUE "InternalName", "WndCrack\0"
-            VALUE "LegalCopyright", "版权所有 (C) 2000\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "WndCrack.EXE\0"
-            VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "WndCrack 应用程序\0"
-            VALUE "ProductVersion", "0, 4, 0, 1\0"
-            VALUE "SpecialBuild", "\0"
+            VALUE "FileDescription", "WndCrack Microsoft 基础类应用程序"
+            VALUE "FileVersion", "0, 4, 0, 1"
+            VALUE "InternalName", "WndCrack"
+            VALUE "LegalCopyright", "版权所有 (C) 2000"
+            VALUE "OriginalFilename", "WndCrack.EXE"
+            VALUE "ProductName", "WndCrack 应用程序"
+            VALUE "ProductVersion", "0, 4, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
@@ -224,8 +208,6 @@ BEGIN
     END
 END
 
-#endif    // !_MAC
-
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -233,7 +215,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO DISCARDABLE 
+GUIDELINES DESIGNINFO 
 BEGIN
     IDD_ABOUTBOX, DIALOG
     BEGIN
@@ -274,7 +256,7 @@ END
 // String Table
 //
 
-STRINGTABLE DISCARDABLE 
+STRINGTABLE 
 BEGIN
     IDS_ABOUTBOX            "关于窗口修改器(&A)..."
 END
@@ -299,15 +281,15 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_DRAGBEFORE          ICON    DISCARDABLE     "res\\dragbefo.ico"
-IDI_DRAGAFTER           ICON    DISCARDABLE     "res\\dragafte.ico"
+IDI_DRAGBEFORE          ICON                    "res\\dragbefo.ico"
+IDI_DRAGAFTER           ICON                    "res\\dragafte.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Cursor
 //
 
-IDC_CURSORSELWND        CURSOR  DISCARDABLE     "res\\cur10.cur"
+IDC_CURSORSELWND        CURSOR                  "res\\cur10.cur"
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 

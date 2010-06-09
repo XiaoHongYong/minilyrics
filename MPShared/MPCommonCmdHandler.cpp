@@ -351,6 +351,36 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	return true;
 }
 
+#ifdef _WIN32_DESKTOP
+BOOL ShowAsAppWindow2(HWND hWnd)
+{
+	DWORD dwStyleEx;
+	dwStyleEx = (DWORD)GetWindowLong(hWnd, GWL_EXSTYLE);
+	if (IsFlagSet(dwStyleEx, WS_EX_TOOLWINDOW) || IsFlagSet(dwStyleEx, WS_EX_PALETTEWINDOW))
+	{
+		dwStyleEx &= ~(WS_EX_TOOLWINDOW | WS_EX_PALETTEWINDOW);
+		dwStyleEx |= WS_EX_APPWINDOW;
+		SetWindowLong(hWnd, GWL_EXSTYLE, dwStyleEx);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL ShowAsToolWindow2(HWND hWnd)
+{
+	DWORD dwStyleEx;
+	dwStyleEx = (DWORD)GetWindowLong(hWnd, GWL_EXSTYLE);
+	if (!IsFlagSet(dwStyleEx, WS_EX_TOOLWINDOW) && !IsFlagSet(dwStyleEx, WS_EX_PALETTEWINDOW))
+	{
+		dwStyleEx |= WS_EX_TOOLWINDOW;// | WS_EX_PALETTEWINDOW;
+		dwStyleEx &= ~WS_EX_APPWINDOW;
+		SetWindowLong(hWnd, GWL_EXSTYLE, dwStyleEx);
+		return TRUE;
+	}
+	return FALSE;
+}
+#endif // #ifdef _WIN32_DESKTOP
+
 bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 {
 	switch (nID)
@@ -363,7 +393,16 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		if (m_pSkinWnd->IsZoomed())
 			m_pSkinWnd->ShowWindow(SW_RESTORE);
 		else
+		{
+			bool	bToolWindow = Tobool(IsToolWindow(m_pSkinWnd->GetHandle()));
+			if (bToolWindow)
+				ShowAsAppWindow2(m_pSkinWnd->GetHandle());
+
 			m_pSkinWnd->ShowWindow(SW_SHOWMAXIMIZED);
+
+			if (bToolWindow)
+				ShowAsToolWindow2(m_pSkinWnd->GetHandle());
+		}
 		break;
 	case CMD_TOGGLE_MP:
 		{

@@ -31,7 +31,7 @@
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />  
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="minilyrics" MinWidth="215" MinHeight="35" Width="400" Height="200" BgColor="#D6DBBD" FgColor="#0061FF" ContextMenu="NormalMode" CmdHandler="ch_common">
+  <skinwnd Name="minilyrics" MinWidth="275" MinHeight="116" Width="400" Height="200" BgColor="#D6DBBD" FgColor="#0061FF" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="2" Top="23" Width="w - 4" Height="h -23 - 8"/>
     <XScaleImage Left="0" Top="0" Width="w" Height="23" ID="ID_NONE" Name="Caption" Image="caption.bmp" ImageRect="0,0,265,23" ImageScaleXStart="80" ImageScaleXEnd="205"/>
     <Button Left="w - 56" Top="5" Width="15" Height="15" ID="ID_MINIMIZE" Name="Minimize" Image="std-buttons.bmp" ImageRect="0,0,15,15" ImageSel="std-buttons.bmp" ImageSelRect="0,15,15,15" ImageFocus="std-buttons.bmp" ImageFocusRect="0,30,15,15"/>

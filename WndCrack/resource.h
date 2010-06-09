@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by WndCrack.rc
 //
 #define IDI_DRAGBEFORE                  8
@@ -43,6 +43,8 @@
 #define IDC_OPAQUE                      1026
 #define IDC_MASK_COLOR2                 1026
 #define IDC_ENABLE_LAYERED              1027
+#define IDC_MINIMIZE_WND2               1027
+#define IDC_MAXIMIZE_WND                1027
 #define IDC_RADIO1                      1028
 #define IDC_LAYERED_OPAQUE              1029
 #define IDC_SEL_COLOR                   1030

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skinwnd Extends="WindowFrame" Name="Registration.xml" Caption="$Product$ (Trial Version)"
-         Width="430" Height="310" RememberSizePos="false">
+         FixedWidth="true" FixedHeight="true" Width="430" Height="310" RememberSizePos="false">
   <Animation ID="CID_AM_SHOW_NOTICE_F_RIGHT" MoveFromRight="CID_C_NOTICE"
       MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_NOTICE_OK"/>
   <Animation ID="CID_AM_HIDE_NOTICE_2_LEFT" MoveToLeft="CID_C_NOTICE"

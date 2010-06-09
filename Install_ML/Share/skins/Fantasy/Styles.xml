@@ -11,12 +11,12 @@
       <Image Name="RightBottomCorner" Left="w-20" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="55, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 55, 20, 20" BlendPixMode="copy"/>
       <Image Name="TopRightCorner" Left="w-20" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="55, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 0, 20, 20" BlendPixMode="copy"/>
       <Image Name="RightBorder" Left="w-20+10" Top="20" Width="20-10" Height="h-20-20" Image="frame.png" ImageRect="65, 20, 10, 35" BltMode="tile" BlendPixMode="copy"/>
-      <Text ID="ID_CAPTION" Rect="30,4,w-60,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
+      <Text ID="ID_CAPTION" Rect="30,4,w-60,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
       <Toolbar ID="CID_TB_SYSBT"  Left="w-15-20" Top="8" Width="20" Height="14"
            UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14"
            blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10"
            MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
-        <button ID="ID_CANCEL" Left="1" />
+        <button ID="ID_CLOSE" Left="1" />
       </Toolbar>
       <HStretchImage Name="TitleLine" Left="10" Top="25" Width="w-20-10" Height="6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
       <ClientArea Rect="0,30,w-10,h-30-10" ClipChildren="true"/>
@@ -34,12 +34,14 @@
       <Image Name="RightBottomCorner" Left="w-20" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="55, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 55, 20, 20" BlendPixMode="copy"/>
       <Image Name="TopRightCorner" Left="w-20" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="55, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="55, 0, 20, 20" BlendPixMode="copy"/>
       <Image Name="RightBorder" Left="w-20+10" Top="20" Width="20-10" Height="h-20-20" Image="frame.png" ImageRect="65, 20, 10, 35" BltMode="tile" BlendPixMode="copy"/>
-      <Text ID="ID_CAPTION" Rect="30,4,w-60,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
-      <Toolbar ID="CID_TB_SYSBT"  Left="w-15-20" Top="8" Width="20" Height="14"
+      <Text ID="ID_CAPTION" Rect="30,4,w-60,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="true" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
+      <Toolbar ID="CID_TB_SYSBT"  Left="w-15-60" Top="8" Width="60" Height="14"
            UseSkinBg="TRUE" Image="fl_cap_bt.png" enablehover="TRUE" units_x="14"
            blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10"
            MarginX="0" MarginY="0" ButtonSpacesCX="2" FullStatusImage="TRUE">
-        <button ID="ID_CANCEL" Left="1" />
+        <button ID="ID_MINIMIZE" Left="0" />
+        <button ID="ID_MAXIMIZE" Left="2" CanCheck="TRUE" checked_left="2"/>
+        <button ID="ID_CLOSE" Left="1" />
       </Toolbar>
       <HStretchImage Name="TitleLine" Left="10" Top="25" Width="w-20-10" Height="6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
       <MenuBar Rect="10,36,w-10-20,18" Name="Menu"

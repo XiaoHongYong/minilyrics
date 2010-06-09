@@ -2589,6 +2589,8 @@ void CMLData::CopyMLyrLines(CMLyrLines &lyrLines)
 
 void CMLData::GetProperty(LYRICS_PROP prop, tstring &strValue)
 {
+	strValue.resize(0);
+
 	switch (prop)
 	{
 	case LP_ARTIST:

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skinwnd Extends="WindowFrame" Name="OpenLyrics.xml" Caption="Search lyrics"
-         Width="600" Height="400" RememberSizePos="true">
+         MinWidth="520" MinHeight="300" Width="600" Height="400" RememberSizePos="true">
   <Animation ID="CID_AM_SHOW_OPEN" FadeIn="CID_C_OPEN" Duration="300"/>
   <Animation ID="CID_AM_HIDE_OPEN" FadeOut="CID_C_OPEN" Duration="300"/>
   <Animation ID="CID_AM_SHOW_RENAME" FadeIn="CID_C_RENAME" Duration="300"/>

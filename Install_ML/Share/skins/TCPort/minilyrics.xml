@@ -29,7 +29,7 @@
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />    
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="minilyrics" MinWidth="180" MinHeight="35" Width="400" Height="200" BgColor="#183C7B" FgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common">
+  <skinwnd Name="minilyrics" MinWidth="275" MinHeight="116" Width="400" Height="200" BgColor="#183C7B" FgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="5" Top="15" Width="w - 10" Height="h-15 - 4"/>
     <CaptionImage Left="0" Top="0" Width="w" Height="15" Name="Caption" Image="caption.bmp" ImageRect="27,15,295,15" ImageFocus="caption.bmp" ImageFocusRect="27,0,295,15" CutPos="60,135,200,275"/>
     <ActiveButton Left="6" Top="3" Width="18" Height="12" ID="ID_MENU" Name="Menu" Image="caption.bmp" ImageRect="32,18,18,12" ImageSel="caption.bmp" ImageSelRect="32,18,18,12" ImageFocus="caption.bmp" ImageFocusRect="32,3,18,12"/>
