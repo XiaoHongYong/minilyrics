@@ -1201,6 +1201,12 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		return;
 	}
 
+	if (pLyricRow->nBegTime >= m_pMLData->GetPlayElapsedTime())
+	{
+		DrawRow(pGraphics, pLyricRow, x, y, LP_BELOW_CUR_LINE);
+		return;
+	}
+
 	nSize = pLyricRow->vFrags.size();
 
 	// 取得该行歌词显示的X座标
@@ -1323,6 +1329,11 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		x += nFragDrawWidth;
 		nCurPos++;
 	}
+
+	if (m_tobLowlight.obm == OBM_COLOR)
+		m_font.UseColorOverlay();
+	else
+		m_font.SetOverlayPattern(&m_tobLowlight.imgPattern);
 
 	// 显示时间未到的歌词段
 	for (; nCurPos < nSize; nCurPos++)

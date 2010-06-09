@@ -1212,16 +1212,16 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 
 	if (x + xLeftClipOffset > rcClip.right)
 		return true;
-	if (x + xLeftClipOffset > rcClip.left)
-		rcClip.left = x + xLeftClipOffset;
+	if (x + xLeftClipOffset - m_marginOutlined / 2 > rcClip.left)
+		rcClip.left = x + xLeftClipOffset - m_marginOutlined / 2;
 
 	if (y >= rcClip.bottom)
 		return true;
 	if (y + GetGlyphHeight() <= rcClip.top)
 		return true;
 
-	if (x + width < rcClip.right)
-		rcClip.right = x + width;
+	if (x + width + m_marginOutlined / 2 < rcClip.right)
+		rcClip.right = x + width + m_marginOutlined / 2;
 
 	StringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)
@@ -1330,16 +1330,16 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 
 	if (x + xLeftClipOffset > rcClip.right)
 		return true;
-	if (x + xLeftClipOffset > rcClip.left)
-		rcClip.left = x + xLeftClipOffset;
+	if (x + xLeftClipOffset - m_marginOutlined / 2 > rcClip.left)
+		rcClip.left = x + xLeftClipOffset - m_marginOutlined / 2;
 
 	if (y >= rcClip.bottom)
 		return true;
 	if (y + GetGlyphHeight() + m_marginOutlined / 2 <= rcClip.top)
 		return true;
 
-	if (x + width < rcClip.right)
-		rcClip.right = x + width;
+	if (x + width + m_marginOutlined / 2 < rcClip.right)
+		rcClip.right = x + width + m_marginOutlined / 2;
 
 	StringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)

@@ -460,6 +460,8 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bForceUs
 
 			if (syllable.bNewLine)
 			{
+				if (pRow && pRow->vFrags.size() > 1)
+					m_dwDefShowStyle = LSA_SHOW_KARAOKE;
 				pRow = NULL;
 				continue;
 			}
@@ -505,6 +507,8 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bForceUs
 
 			if (syllable.bNewLine)
 			{
+				if (pRow && pRow->vFrags.size() > 1)
+					m_dwDefShowStyle = LSA_SHOW_KARAOKE;
 				pRow = NULL;
 				continue;
 			}
@@ -529,6 +533,8 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bForceUs
 	m_lyrConentType = LCT_LRC;
 
 	CheckLyricsRowTime();
+
+	FixExtendedLrcTimeStamps();
 
 	return ERR_OK;
 }
@@ -1086,6 +1092,42 @@ void CMLData::CheckLyricsRowTime()
 		{
 			assert(m_arrLyricsRows[i]->vFrags.size() != 0);
 			m_arrLyricsRows[i]->nEndTime = m_arrLyricsRows[i]->vFrags[m_arrLyricsRows[i]->vFrags.size() - 1]->nEndTime;
+		}
+	}
+}
+
+void CMLData::FixExtendedLrcTimeStamps()
+{
+	//
+	// For Extended lrc lyrics, the end time of ending lyrics frag is incorrect.
+	//
+	if (GetDefShowStyle() != LSA_SHOW_KARAOKE)
+		return;
+
+	for (int i = 0; i < (int)GetLyricRowCount(); i++)
+	{
+		PML_ROW		pRow = GetLyricsRow(i);
+
+		if (pRow->vFrags.size() < 1)
+			continue;
+
+		int			n = pRow->vFrags.size() - 1;
+		PLYRIC_FRAG	pFrag;
+		pFrag = pRow->vFrags[n];
+		if (IsTempTimeEnd(pFrag->dwAttrib))
+		{
+			PML_ROW		pNextRow;
+			if (i + 1 < (int)GetLyricRowCount())
+				pNextRow = GetLyricsRow(i + 1);
+			else
+				pNextRow = NULL;
+			if (pNextRow)
+			{
+				if (pFrag->nBegTime + 500 < pNextRow->nBegTime)
+					pFrag->nEndTime = pFrag->nBegTime + 500;
+			}
+			else
+				pFrag->nEndTime = pFrag->nBegTime + 500;
 		}
 	}
 }

@@ -47,5 +47,6 @@ public:
 protected:
 	CComPtr<IWMPCore>		m_pCore;
 	CComPtr<IWMPControls>	m_pControl;
+	// int						m_nCrossFadeTime;
 
 };

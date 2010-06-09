@@ -5,6 +5,7 @@
 
 CPlayerImp		g_Player;
 
+int RegGetProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nDefault);
 
 class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
 {
@@ -35,6 +36,7 @@ CPlayerInfoQueryWnd	g_wndInfoQuery;
 
 CPlayerImp::CPlayerImp()
 {
+	// m_nCrossFadeTime = 0;
 }
 
 CPlayerImp::~CPlayerImp()
@@ -162,6 +164,10 @@ BOOL CPlayerImp::Init()
 
 	if (!m_pCore)
 		return FALSE;
+
+	// Get crossfade time:
+	// if (RegGetProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\Preferences\\EqualizerSettings"), _T("CrossFade"), 0))
+	//	m_nCrossFadeTime = RegGetProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\Preferences\\EqualizerSettings"), _T("CrossFadeWindow"), 0);
 
 	hr = m_pCore->get_controls(&m_pControl);
 

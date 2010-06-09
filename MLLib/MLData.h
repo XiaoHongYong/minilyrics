@@ -323,6 +323,8 @@ public:
 	// 检查歌词数据的时间顺序的正确性
 	void CheckLyricsRowTime();
 
+	void FixExtendedLrcTimeStamps();
+
 	void SetLyricsRowEndTime (int nRow, int nTime);
 
 	// 设置从当前行开始的偏移时间

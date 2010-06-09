@@ -996,7 +996,7 @@ int CLrcParser::ParseString(bool bForceUseEncoding,
 		m_pMLData->CheckLyricsRowTime();
 	}
 
-	FixExtendedLrc();
+	m_pMLData->FixExtendedLrcTimeStamps();
 
 	return nRet;
 }
@@ -1215,42 +1215,6 @@ void CLrcParser::LRCCheckRowTime()
 				{
 					if (pFrag->nEndTime > pRow->nEndTime)
 						pFrag->nEndTime = pRow->nEndTime;
-				}
-			}
-		}
-	}
-}
-
-void CLrcParser::FixExtendedLrc()
-{
-	//
-	// 对于 Extended lrc 歌词, 修改每行最后一段歌词的结束时间
-	//
-	if (m_pMLData->GetDefShowStyle() == LSA_SHOW_KARAOKE)
-	{
-		for (int i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
-		{
-			PML_ROW		pRow = m_pMLData->GetLyricsRow(i);
-
-			if (pRow->vFrags.size() > 1)
-			{
-				int			n = pRow->vFrags.size() - 1;
-				PLYRIC_FRAG	pFrag;
-				pFrag = pRow->vFrags[n];
-				if (IsTempTimeEnd(pFrag->dwAttrib))
-				{
-					PML_ROW		pNextRow;
-					if (i + 1 < (int)m_pMLData->GetLyricRowCount())
-						pNextRow = m_pMLData->GetLyricsRow(i + 1);
-					else
-						pNextRow = NULL;
-					if (pNextRow)
-					{
-						if (pFrag->nBegTime + 500 < pNextRow->nBegTime)
-							pFrag->nEndTime = pFrag->nBegTime + 500;
-					}
-					else
-						pFrag->nEndTime = pFrag->nBegTime + 500;
 				}
 			}
 		}

@@ -163,8 +163,6 @@ protected:
 	void FixTextLrcTimeTag();
 	void RemoveExtraBlankLinesOfTextLyr();
 
-	void FixExtendedLrc();
-
 	// old
 	void LRCCheckRowTime();
 
