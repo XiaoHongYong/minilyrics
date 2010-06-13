@@ -11,7 +11,7 @@
 		0A1C08910FB78C0D00C7BA1B /* MusicTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1C088F0FB78C0D00C7BA1B /* MusicTableView.xib */; };
 		0A1C08C20FB7973400C7BA1B /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0A1C08C10FB7973400C7BA1B /* Settings.bundle */; };
 		0A6C6CC00FB396DB00F95575 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A6C6CBF0FB396DB00F95575 /* Default.png */; };
-		0A735D530FACBA430057280A /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0A735D520FACBA430057280A /* MainViewController.m */; };
+		0A735D530FACBA430057280A /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A735D520FACBA430057280A /* MainViewController.mm */; };
 		0A735D630FACBAAC0057280A /* no_artwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A735D610FACBAAC0057280A /* no_artwork.png */; };
 		0AA6AE310FB773F6008185AA /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AA6AE2B0FB773F6008185AA /* MainView.xib */; };
 		0AA6AE320FB773F6008185AA /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AA6AE2D0FB773F6008185AA /* MainWindow.xib */; };
@@ -39,10 +39,19 @@
 		5FAA262311AA18E900474915 /* NowPlayingAlbumInfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA262011AA18E900474915 /* NowPlayingAlbumInfo.png */; };
 		5FAA262411AA18E900474915 /* blue_plus_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA262111AA18E900474915 /* blue_plus_pressed.png */; };
 		5FAA262511AA18E900474915 /* blue_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA262211AA18E900474915 /* blue_plus.png */; };
+		5FAA987011BE13AD0067A90C /* LyricsShowGraphBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAA986C11BE13AD0067A90C /* LyricsShowGraphBase.cpp */; };
+		5FAA987111BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAA986E11BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp */; };
 		5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
+		5FB56C4C11C11088000E68A1 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56C4B11C11088000E68A1 /* helper.cpp */; };
+		5FB56D0111C12D35000E68A1 /* MLApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56D0011C12D35000E68A1 /* MLApp.mm */; };
 		5FBBF02011BC938D0008D709 /* libGfxRaw.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBBF01511BC934A0008D709 /* libGfxRaw.a */; };
 		5FBBF02111BC938D0008D709 /* libgfx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBBF00F11BC932A0008D709 /* libgfx.a */; };
 		5FBBF16211BCCB650008D709 /* libImageLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBBF16111BCCB5D0008D709 /* libImageLib.a */; };
+		5FC0B1BA11C51C59000C6537 /* CMLApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B111C51C59000C6537 /* CMLApp.cpp */; };
+		5FC0B1BB11C51C59000C6537 /* LyricsDownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */; };
+		5FC0B1BC11C51C59000C6537 /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */; };
+		5FC0B1BD11C51C59000C6537 /* OnlineSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */; };
+		5FC0B21611C53867000C6537 /* libMLProtocol.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FC0B21511C5385B000C6537 /* libMLProtocol.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -78,22 +87,29 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libgfx.a */;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = gfx;
 		};
 		5FBBF01411BC934A0008D709 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libGfxRaw.a */;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = GfxRaw;
 		};
 		5FBBF16011BCCB5D0008D709 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5FBBF15911BCCB5D0008D709 /* ImageLib.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libImageLib.a */;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = ImageLib;
+		};
+		5FC0B21411C5385B000C6537 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FC0B20D11C5385B000C6537 /* MLProtocol.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC046055464E500DB518D /* libMLProtocol.a */;
+			remoteInfo = MLProtocol;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -103,7 +119,7 @@
 		0A1C08C10FB7973400C7BA1B /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = "<group>"; };
 		0A6C6CBF0FB396DB00F95575 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
 		0A735D510FACBA430057280A /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
-		0A735D520FACBA430057280A /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		0A735D520FACBA430057280A /* MainViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
 		0A735D610FACBAAC0057280A /* no_artwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = no_artwork.png; path = Resources/no_artwork.png; sourceTree = "<group>"; };
 		0A735D7A0FACBB490057280A /* MiniLyrics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "MiniLyrics-Info.plist"; sourceTree = "<group>"; };
 		0AA6AE2C0FB773F6008185AA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MainView.xib; sourceTree = "<group>"; };
@@ -137,11 +153,29 @@
 		5FAA262011AA18E900474915 /* NowPlayingAlbumInfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NowPlayingAlbumInfo.png; sourceTree = "<group>"; };
 		5FAA262111AA18E900474915 /* blue_plus_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_plus_pressed.png; sourceTree = "<group>"; };
 		5FAA262211AA18E900474915 /* blue_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_plus.png; sourceTree = "<group>"; };
+		5FAA986C11BE13AD0067A90C /* LyricsShowGraphBase.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsShowGraphBase.cpp; sourceTree = "<group>"; };
+		5FAA986D11BE13AD0067A90C /* LyricsShowGraphBase.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsShowGraphBase.h; sourceTree = "<group>"; };
+		5FAA986E11BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsVerticalScrollGraph.cpp; sourceTree = "<group>"; };
+		5FAA986F11BE13AD0067A90C /* LyricsVerticalScrollGraph.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsVerticalScrollGraph.h; sourceTree = "<group>"; };
 		5FAB7BA911B2013700C9395C /* LyrVecticalScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrVecticalScrollView.h; sourceTree = "<group>"; };
 		5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrVecticalScrollView.mm; sourceTree = "<group>"; };
+		5FB56C4A11C11088000E68A1 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
+		5FB56C4B11C11088000E68A1 /* helper.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cpp; sourceTree = "<group>"; };
+		5FB56CFF11C12D35000E68A1 /* MLApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLApp.h; sourceTree = "<group>"; };
+		5FB56D0011C12D35000E68A1 /* MLApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MLApp.mm; sourceTree = "<group>"; };
 		5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = gfx.xcodeproj; path = ../gfx/gfx.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GfxRaw.xcodeproj; path = ../GfxRaw/GfxRaw.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5FBBF15911BCCB5D0008D709 /* ImageLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImageLib.xcodeproj; path = ../ImageLib/ImageLib.xcodeproj; sourceTree = SOURCE_ROOT; };
+		5FC0B1B111C51C59000C6537 /* CMLApp.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = CMLApp.cpp; sourceTree = "<group>"; };
+		5FC0B1B211C51C59000C6537 /* CMLApp.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = CMLApp.h; sourceTree = "<group>"; };
+		5FC0B1B311C51C59000C6537 /* IMLAppNotify.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = IMLAppNotify.h; sourceTree = "<group>"; };
+		5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsDownloadMgr.cpp; sourceTree = "<group>"; };
+		5FC0B1B511C51C59000C6537 /* LyricsDownloadMgr.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsDownloadMgr.h; sourceTree = "<group>"; };
+		5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsLocalSearch.cpp; sourceTree = "<group>"; };
+		5FC0B1B711C51C59000C6537 /* LyricsLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsLocalSearch.h; sourceTree = "<group>"; };
+		5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = OnlineSearch.cpp; sourceTree = "<group>"; };
+		5FC0B1B911C51C59000C6537 /* OnlineSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = OnlineSearch.h; sourceTree = "<group>"; };
+		5FC0B20D11C5385B000C6537 /* MLProtocol.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLProtocol.xcodeproj; path = ../MLProtocol/MLProtocol.xcodeproj; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FBBF16211BCCB650008D709 /* libImageLib.a in Frameworks */,
+				5FC0B21611C53867000C6537 /* libMLProtocol.a in Frameworks */,
 				5FBBF02011BC938D0008D709 /* libGfxRaw.a in Frameworks */,
 				5FBBF02111BC938D0008D709 /* libgfx.a in Frameworks */,
 				5F9DEFBE11AC0FAF00312E83 /* libID3Lib.a in Frameworks */,
@@ -172,16 +207,33 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5FC0B1B111C51C59000C6537 /* CMLApp.cpp */,
+				5FC0B1B211C51C59000C6537 /* CMLApp.h */,
+				5FC0B1B311C51C59000C6537 /* IMLAppNotify.h */,
+				5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */,
+				5FC0B1B511C51C59000C6537 /* LyricsDownloadMgr.h */,
+				5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */,
+				5FC0B1B711C51C59000C6537 /* LyricsLocalSearch.h */,
+				5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */,
+				5FC0B1B911C51C59000C6537 /* OnlineSearch.h */,
+				5FAA986C11BE13AD0067A90C /* LyricsShowGraphBase.cpp */,
+				5FAA986D11BE13AD0067A90C /* LyricsShowGraphBase.h */,
+				5FAA986E11BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp */,
+				5FAA986F11BE13AD0067A90C /* LyricsVerticalScrollGraph.h */,
 				1D3623240D0F684500981E51 /* MiniLyricsAppDelegate.h */,
 				1D3623250D0F684500981E51 /* MiniLyricsAppDelegate.m */,
+				5FB56C4A11C11088000E68A1 /* helper.h */,
+				5FB56C4B11C11088000E68A1 /* helper.cpp */,
 				0A735D510FACBA430057280A /* MainViewController.h */,
-				0A735D520FACBA430057280A /* MainViewController.m */,
+				0A735D520FACBA430057280A /* MainViewController.mm */,
 				580748700FAA6E1600373EAF /* MusicTableViewController.h */,
 				580748710FAA6E1600373EAF /* MusicTableViewController.m */,
 				5F9DD68F11AB646A00312E83 /* LyricsShowView.h */,
 				5F9DD69011AB646A00312E83 /* LyricsShowView.mm */,
 				5FAB7BA911B2013700C9395C /* LyrVecticalScrollView.h */,
 				5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */,
+				5FB56CFF11C12D35000E68A1 /* MLApp.h */,
+				5FB56D0011C12D35000E68A1 /* MLApp.mm */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -197,6 +249,7 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				5FC0B20D11C5385B000C6537 /* MLProtocol.xcodeproj */,
 				5FBBF15911BCCB5D0008D709 /* ImageLib.xcodeproj */,
 				5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */,
 				5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */,
@@ -316,6 +369,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5FC0B20E11C5385B000C6537 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FC0B21511C5385B000C6537 /* libMLProtocol.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -379,6 +440,10 @@
 					ProjectRef = 5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */;
 				},
 				{
+					ProductGroup = 5FC0B20E11C5385B000C6537 /* Products */;
+					ProjectRef = 5FC0B20D11C5385B000C6537 /* MLProtocol.xcodeproj */;
+				},
+				{
 					ProductGroup = 5F9DEEFA11AC097200312E83 /* Products */;
 					ProjectRef = 5F9DEEF911AC097200312E83 /* Utils.xcodeproj */;
 				},
@@ -440,6 +505,13 @@
 			remoteRef = 5FBBF16011BCCB5D0008D709 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		5FC0B21511C5385B000C6537 /* libMLProtocol.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMLProtocol.a;
+			remoteRef = 5FC0B21411C5385B000C6537 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -476,9 +548,17 @@
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* MiniLyricsAppDelegate.m in Sources */,
 				580748730FAA6E1600373EAF /* MusicTableViewController.m in Sources */,
-				0A735D530FACBA430057280A /* MainViewController.m in Sources */,
+				0A735D530FACBA430057280A /* MainViewController.mm in Sources */,
 				5F9DD69111AB646A00312E83 /* LyricsShowView.mm in Sources */,
 				5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */,
+				5FAA987011BE13AD0067A90C /* LyricsShowGraphBase.cpp in Sources */,
+				5FAA987111BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp in Sources */,
+				5FB56C4C11C11088000E68A1 /* helper.cpp in Sources */,
+				5FB56D0111C12D35000E68A1 /* MLApp.mm in Sources */,
+				5FC0B1BA11C51C59000C6537 /* CMLApp.cpp in Sources */,
+				5FC0B1BB11C51C59000C6537 /* LyricsDownloadMgr.cpp in Sources */,
+				5FC0B1BC11C51C59000C6537 /* LyricsLocalSearch.cpp in Sources */,
+				5FC0B1BD11C51C59000C6537 /* OnlineSearch.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

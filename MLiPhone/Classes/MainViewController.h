@@ -57,6 +57,7 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 #import "MiniLyricsAppDelegate.h"
 #import "LyricsShowView.h"
 #import "LyrVecticalScrollView.h"
+#import "MLApp.h"
 
 @interface MainViewController : UIViewController 
 	<MPMediaPickerControllerDelegate, MusicTableViewControllerDelegate, AVAudioPlayerDelegate, LyrViewDelegate> {
@@ -78,9 +79,9 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	
 	MPMusicPlayerController		*musicPlayer;	
 	MPMediaItemCollection		*userMediaItemCollection;
-	UIImage						*noArtworkImage;
-	NSTimer						*backgroundColorTimer;
-	
+
+	MLApp						*mlApp;
+
 }
 
 @property (nonatomic, retain)	UIBarButtonItem			*artworkItem;
@@ -98,8 +99,8 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 
 @property (nonatomic, retain)	MPMediaItemCollection	*userMediaItemCollection; 
 @property (nonatomic, retain)	MPMusicPlayerController	*musicPlayer;
-@property (nonatomic, retain)	UIImage					*noArtworkImage;
-@property (nonatomic, retain)	NSTimer					*backgroundColorTimer;
+
+@property (nonatomic, retain)	MLApp					*mlApp;
 
 - (IBAction)	playOrPauseMusic:		(id) sender;
 - (IBAction)	rewindMusic:			(id) sender;

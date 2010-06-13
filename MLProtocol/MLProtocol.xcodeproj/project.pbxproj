@@ -1,0 +1,250 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 45;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5FB0D19E11C1C1060099CF0C /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB0D19011C1C1060099CF0C /* HttpClient.cpp */; };
+		5FB0D19F11C1C1060099CF0C /* HttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0D19111C1C1060099CF0C /* HttpClient.h */; };
+		5FB0D1A011C1C1060099CF0C /* HttpProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB0D19211C1C1060099CF0C /* HttpProtocol.cpp */; };
+		5FB0D1A111C1C1060099CF0C /* HttpProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0D19311C1C1060099CF0C /* HttpProtocol.h */; };
+		5FB0D1A211C1C1060099CF0C /* MLProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB0D19411C1C1060099CF0C /* MLProtocol.cpp */; };
+		5FB0D1A311C1C1060099CF0C /* MLProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0D19511C1C1060099CF0C /* MLProtocol.h */; };
+		5FB0D1A411C1C1060099CF0C /* MLUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB0D19611C1C1060099CF0C /* MLUtils.cpp */; };
+		5FB0D1A511C1C1060099CF0C /* MLUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0D19711C1C1060099CF0C /* MLUtils.h */; };
+		5FB0D1A611C1C1060099CF0C /* NetSDK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB0D19811C1C1060099CF0C /* NetSDK.cpp */; };
+		5FB0D1A711C1C1060099CF0C /* NetSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0D19911C1C1060099CF0C /* NetSDK.h */; };
+		5FB0D1A811C1C1060099CF0C /* NetServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB0D19A11C1C1060099CF0C /* NetServer.cpp */; };
+		5FB0D1A911C1C1060099CF0C /* NetServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0D19B11C1C1060099CF0C /* NetServer.h */; };
+		5FB0D1AA11C1C1060099CF0C /* sockadapt.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0D19C11C1C1060099CF0C /* sockadapt.h */; };
+		5FB0D1AB11C1C1060099CF0C /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0D19D11C1C1060099CF0C /* StdAfx.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5FB0D19011C1C1060099CF0C /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = HttpClient.cpp; sourceTree = "<group>"; };
+		5FB0D19111C1C1060099CF0C /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = HttpClient.h; sourceTree = "<group>"; };
+		5FB0D19211C1C1060099CF0C /* HttpProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = HttpProtocol.cpp; sourceTree = "<group>"; };
+		5FB0D19311C1C1060099CF0C /* HttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = HttpProtocol.h; sourceTree = "<group>"; };
+		5FB0D19411C1C1060099CF0C /* MLProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = MLProtocol.cpp; sourceTree = "<group>"; };
+		5FB0D19511C1C1060099CF0C /* MLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = MLProtocol.h; sourceTree = "<group>"; };
+		5FB0D19611C1C1060099CF0C /* MLUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = MLUtils.cpp; sourceTree = "<group>"; };
+		5FB0D19711C1C1060099CF0C /* MLUtils.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = MLUtils.h; sourceTree = "<group>"; };
+		5FB0D19811C1C1060099CF0C /* NetSDK.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = NetSDK.cpp; sourceTree = "<group>"; };
+		5FB0D19911C1C1060099CF0C /* NetSDK.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = NetSDK.h; sourceTree = "<group>"; };
+		5FB0D19A11C1C1060099CF0C /* NetServer.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = NetServer.cpp; sourceTree = "<group>"; };
+		5FB0D19B11C1C1060099CF0C /* NetServer.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = NetServer.h; sourceTree = "<group>"; };
+		5FB0D19C11C1C1060099CF0C /* sockadapt.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = sockadapt.h; sourceTree = "<group>"; };
+		5FB0D19D11C1C1060099CF0C /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = "<group>"; };
+		D2AAC046055464E500DB518D /* libMLProtocol.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMLProtocol.a; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D289987405E68DCB004EDB86 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		08FB7794FE84155DC02AAC07 /* MLProtocol */ = {
+			isa = PBXGroup;
+			children = (
+				08FB7795FE84155DC02AAC07 /* Source */,
+				C6A0FF2B0290797F04C91782 /* Documentation */,
+				1AB674ADFE9D54B511CA2CBB /* Products */,
+			);
+			name = MLProtocol;
+			sourceTree = "<group>";
+		};
+		08FB7795FE84155DC02AAC07 /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5FB0D19011C1C1060099CF0C /* HttpClient.cpp */,
+				5FB0D19111C1C1060099CF0C /* HttpClient.h */,
+				5FB0D19211C1C1060099CF0C /* HttpProtocol.cpp */,
+				5FB0D19311C1C1060099CF0C /* HttpProtocol.h */,
+				5FB0D19411C1C1060099CF0C /* MLProtocol.cpp */,
+				5FB0D19511C1C1060099CF0C /* MLProtocol.h */,
+				5FB0D19611C1C1060099CF0C /* MLUtils.cpp */,
+				5FB0D19711C1C1060099CF0C /* MLUtils.h */,
+				5FB0D19811C1C1060099CF0C /* NetSDK.cpp */,
+				5FB0D19911C1C1060099CF0C /* NetSDK.h */,
+				5FB0D19A11C1C1060099CF0C /* NetServer.cpp */,
+				5FB0D19B11C1C1060099CF0C /* NetServer.h */,
+				5FB0D19C11C1C1060099CF0C /* sockadapt.h */,
+				5FB0D19D11C1C1060099CF0C /* StdAfx.h */,
+			);
+			name = Source;
+			sourceTree = "<group>";
+		};
+		1AB674ADFE9D54B511CA2CBB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D2AAC046055464E500DB518D /* libMLProtocol.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		C6A0FF2B0290797F04C91782 /* Documentation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Documentation;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		D2AAC043055464E500DB518D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB0D19F11C1C1060099CF0C /* HttpClient.h in Headers */,
+				5FB0D1A111C1C1060099CF0C /* HttpProtocol.h in Headers */,
+				5FB0D1A311C1C1060099CF0C /* MLProtocol.h in Headers */,
+				5FB0D1A511C1C1060099CF0C /* MLUtils.h in Headers */,
+				5FB0D1A711C1C1060099CF0C /* NetSDK.h in Headers */,
+				5FB0D1A911C1C1060099CF0C /* NetServer.h in Headers */,
+				5FB0D1AA11C1C1060099CF0C /* sockadapt.h in Headers */,
+				5FB0D1AB11C1C1060099CF0C /* StdAfx.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		D2AAC045055464E500DB518D /* MLProtocol */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "MLProtocol" */;
+			buildPhases = (
+				D2AAC043055464E500DB518D /* Headers */,
+				D2AAC044055464E500DB518D /* Sources */,
+				D289987405E68DCB004EDB86 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MLProtocol;
+			productName = MLProtocol;
+			productReference = D2AAC046055464E500DB518D /* libMLProtocol.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "MLProtocol" */;
+			compatibilityVersion = "Xcode 3.1";
+			hasScannedForEncodings = 1;
+			mainGroup = 08FB7794FE84155DC02AAC07 /* MLProtocol */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D2AAC045055464E500DB518D /* MLProtocol */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		D2AAC044055464E500DB518D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB0D19E11C1C1060099CF0C /* HttpClient.cpp in Sources */,
+				5FB0D1A011C1C1060099CF0C /* HttpProtocol.cpp in Sources */,
+				5FB0D1A211C1C1060099CF0C /* MLProtocol.cpp in Sources */,
+				5FB0D1A411C1C1060099CF0C /* MLUtils.cpp in Sources */,
+				5FB0D1A611C1C1060099CF0C /* NetSDK.cpp in Sources */,
+				5FB0D1A811C1C1060099CF0C /* NetServer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		1DEB91EC08733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = MLProtocol;
+			};
+			name = Debug;
+		};
+		1DEB91ED08733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_MODEL_TUNING = G5;
+				INSTALL_PATH = /usr/local/lib;
+				PRODUCT_NAME = MLProtocol;
+			};
+			name = Release;
+		};
+		1DEB91F008733DB70010E9CD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.1.2;
+			};
+			name = Debug;
+		};
+		1DEB91F108733DB70010E9CD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				PREBINDING = NO;
+				SDKROOT = iphoneos3.1.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB91EB08733DB70010E9CD /* Build configuration list for PBXNativeTarget "MLProtocol" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91EC08733DB70010E9CD /* Debug */,
+				1DEB91ED08733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1DEB91EF08733DB70010E9CD /* Build configuration list for PBXProject "MLProtocol" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1DEB91F008733DB70010E9CD /* Debug */,
+				1DEB91F108733DB70010E9CD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}

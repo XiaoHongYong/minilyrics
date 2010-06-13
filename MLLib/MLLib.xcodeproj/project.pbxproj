@@ -44,6 +44,11 @@
 		5F9DED7111ABF82E00312E83 /* TextFileParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4D11ABF82E00312E83 /* TextFileParser.h */; };
 		5FB1948611ACA951008C4A46 /* LyrScrollActionRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB1948411ACA951008C4A46 /* LyrScrollActionRecorder.cpp */; };
 		5FB1948711ACA951008C4A46 /* LyrScrollActionRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB1948511ACA951008C4A46 /* LyrScrollActionRecorder.h */; };
+		5FC0B22A11C53944000C6537 /* Sqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B22811C53944000C6537 /* Sqlite3.cpp */; };
+		5FC0B22B11C53944000C6537 /* Sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FC0B22911C53944000C6537 /* Sqlite3.h */; };
+		5FC0B23011C53965000C6537 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B22D11C53965000C6537 /* sqlite3.c */; };
+		5FC0B23111C53965000C6537 /* sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FC0B22E11C53965000C6537 /* sqlite3.h */; };
+		5FC0B23211C53965000C6537 /* sqlite3ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FC0B22F11C53965000C6537 /* sqlite3ext.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,6 +89,11 @@
 		5F9DED4D11ABF82E00312E83 /* TextFileParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFileParser.h; sourceTree = "<group>"; };
 		5FB1948411ACA951008C4A46 /* LyrScrollActionRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = LyrScrollActionRecorder.cpp; sourceTree = "<group>"; };
 		5FB1948511ACA951008C4A46 /* LyrScrollActionRecorder.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LyrScrollActionRecorder.h; sourceTree = "<group>"; };
+		5FC0B22811C53944000C6537 /* Sqlite3.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = Sqlite3.cpp; path = ../sqlite_cpp/Sqlite3.cpp; sourceTree = SOURCE_ROOT; };
+		5FC0B22911C53944000C6537 /* Sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = Sqlite3.h; path = ../sqlite_cpp/Sqlite3.h; sourceTree = SOURCE_ROOT; };
+		5FC0B22D11C53965000C6537 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = ../SDK/sqlite/sqlite3.c; sourceTree = SOURCE_ROOT; };
+		5FC0B22E11C53965000C6537 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = ../SDK/sqlite/sqlite3.h; sourceTree = SOURCE_ROOT; };
+		5FC0B22F11C53965000C6537 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = sqlite3ext.h; path = ../SDK/sqlite/sqlite3ext.h; sourceTree = SOURCE_ROOT; };
 		D2AAC046055464E500DB518D /* libMLLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMLLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -101,6 +111,7 @@
 		08FB7794FE84155DC02AAC07 /* MLLib */ = {
 			isa = PBXGroup;
 			children = (
+				5FC0B22511C53934000C6537 /* sqlite */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -160,6 +171,18 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5FC0B22511C53934000C6537 /* sqlite */ = {
+			isa = PBXGroup;
+			children = (
+				5FC0B22D11C53965000C6537 /* sqlite3.c */,
+				5FC0B22E11C53965000C6537 /* sqlite3.h */,
+				5FC0B22F11C53965000C6537 /* sqlite3ext.h */,
+				5FC0B22811C53944000C6537 /* Sqlite3.cpp */,
+				5FC0B22911C53944000C6537 /* Sqlite3.h */,
+			);
+			name = sqlite;
+			sourceTree = "<group>";
+		};
 		C6A0FF2B0290797F04C91782 /* Documentation */ = {
 			isa = PBXGroup;
 			children = (
@@ -194,6 +217,9 @@
 				5F9DED6F11ABF82E00312E83 /* StdAfx.h in Headers */,
 				5F9DED7111ABF82E00312E83 /* TextFileParser.h in Headers */,
 				5FB1948711ACA951008C4A46 /* LyrScrollActionRecorder.h in Headers */,
+				5FC0B22B11C53944000C6537 /* Sqlite3.h in Headers */,
+				5FC0B23111C53965000C6537 /* sqlite3.h in Headers */,
+				5FC0B23211C53965000C6537 /* sqlite3ext.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +282,8 @@
 				5F9DED6E11ABF82E00312E83 /* StdAfx.cpp in Sources */,
 				5F9DED7011ABF82E00312E83 /* TextFileParser.cpp in Sources */,
 				5FB1948611ACA951008C4A46 /* LyrScrollActionRecorder.cpp in Sources */,
+				5FC0B22A11C53944000C6537 /* Sqlite3.cpp in Sources */,
+				5FC0B23011C53965000C6537 /* sqlite3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

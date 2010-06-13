@@ -1,0 +1,518 @@
+/*
+    File: MainViewController.m
+Abstract: View controller class for MiniLyrics. Sets up user interface, responds 
+to and manages user interaction.
+ Version: 1.1
+
+Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
+Inc. ("Apple") in consideration of your agreement to the following
+terms, and your use, installation, modification or redistribution of
+this Apple software constitutes acceptance of these terms.  If you do
+not agree with these terms, please do not use, install, modify or
+redistribute this Apple software.
+
+In consideration of your agreement to abide by the following terms, and
+subject to these terms, Apple grants you a personal, non-exclusive
+license, under Apple's copyrights in this original Apple software (the
+"Apple Software"), to use, reproduce, modify and redistribute the Apple
+Software, with or without modifications, in source and/or binary forms;
+provided that if you redistribute the Apple Software in its entirety and
+without modifications, you must retain this notice and the following
+text and disclaimers in all such redistributions of the Apple Software.
+Neither the name, trademarks, service marks or logos of Apple Inc. may
+be used to endorse or promote products derived from the Apple Software
+without specific prior written permission from Apple.  Except as
+expressly stated in this notice, no other rights or licenses, express or
+implied, are granted by Apple herein, including but not limited to any
+patent rights that may be infringed by your derivative works or by other
+works in which the Apple Software may be incorporated.
+
+The Apple Software is provided by Apple on an "AS IS" basis.  APPLE
+MAKES NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
+THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND
+OPERATION ALONE OR IN COMBINATION WITH YOUR PRODUCTS.
+
+IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL
+OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) ARISING IN ANY WAY OUT OF THE USE, REPRODUCTION,
+MODIFICATION AND/OR DISTRIBUTION OF THE APPLE SOFTWARE, HOWEVER CAUSED
+AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
+STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+Copyright (C) 2009 Apple Inc. All Rights Reserved.
+
+*/
+
+
+#import "MainViewController.h"
+#import <Foundation/Foundation.h>
+
+#import "../../base/mlstdafx.h"
+#import "../../base/base.h"
+#import "../../Utils/Utils.h"
+
+@implementation MainViewController
+
+@synthesize artworkItem;				// the now-playing media item's artwork image, displayed in the Navigation bar
+@synthesize userMediaItemCollection;	// the media item collection created by the user, using the media item picker	
+@synthesize musicPlayer;				// the music player, which plays media items from the iPod library
+@synthesize navigationBar;				// the application's Navigation bar
+@synthesize nowPlayingLabel;			// descriptive text shown on the main screen about the now-playing media item
+@synthesize playedMusicOnce;			// A flag indicating if the user has played iPod library music at least one time
+										//		since application launch.
+
+@synthesize lyrView;
+@synthesize scrollLyrView;
+@synthesize lyrVerticalView;
+
+@synthesize	mPlayCtrlToolbar;
+@synthesize mPlayingButtons;
+@synthesize mPausedButtons;
+
+@synthesize mlApp;
+
+
+void AppInit()
+{
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(
+														 NSDocumentDirectory,
+														 NSUserDomainMask,
+														 YES);
+	NSString *documentsDir = [paths objectAtIndex:0];
+	NSString *app = [documentsDir stringByAppendingPathComponent:@"MiniLyrics.app"];
+	LPTSTR  vArgv[2] = { 0 };
+	vArgv[0] = (char *)[app UTF8String];
+
+	InitBaseFrameWork(1, vArgv, NULL, _T("MiniLyrics.ini"), _T("MiniLyrics"));
+}
+
+#pragma mark Music control________________________________
+
+// A toggle control for playing or pausing iPod library music playback, invoked
+//		when the user taps the 'playBarButton' in the Navigation bar. 
+- (IBAction) playOrPauseMusic: (id)sender {
+
+	MPMusicPlaybackState playbackState = [musicPlayer playbackState];
+
+	if (playbackState == MPMusicPlaybackStateStopped || playbackState == MPMusicPlaybackStatePaused) {
+		[musicPlayer play];
+	} else if (playbackState == MPMusicPlaybackStatePlaying) {
+		[musicPlayer pause];
+	}
+}
+
+- (IBAction)	rewindMusic:			(id) sender
+{
+	[musicPlayer skipToPreviousItem];
+}
+
+- (IBAction)	forwardMusic:			(id) sender
+{
+	[musicPlayer skipToNextItem];
+}
+
+// If there is no selected media item collection, display the media item picker. If there's 
+// already a selected collection, display the list of selected songs.
+
+- (IBAction) MiniLyrics: (id) sender {    
+
+		MPMediaPickerController *picker =
+			[[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
+		
+		picker.delegate						= self;
+		picker.allowsPickingMultipleItems	= YES;
+		picker.prompt						= NSLocalizedString (@"Add songs to play", "Prompt in media item picker");
+		
+		// The media item picker uses the default UI style, so it needs a default-style
+		//		status bar to match it visually
+		[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault animated: YES];
+		
+		[self presentModalViewController: picker animated: YES];
+		[picker release];
+}
+
+- (IBAction) ShowMusic: (id) sender {    
+		MusicTableViewController *controller = [[MusicTableViewController alloc] initWithNibName: @"MusicTableView" bundle: nil];
+		controller.delegate = self;
+		
+		controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+		
+		[self presentModalViewController: controller animated: YES];
+		[controller release];
+}
+
+
+// Invoked by the delegate of the media item picker when the user is finished picking music.
+//		The delegate is either this class or the table view controller, depending on the 
+//		state of the application.
+- (void) updatePlayerQueueWithMediaCollection: (MPMediaItemCollection *) mediaItemCollection {
+
+	// Configure the music player, but only if the user chose at least one song to play
+	if (mediaItemCollection) {
+
+		// If there's no playback queue yet...
+		if (userMediaItemCollection == nil) {
+		
+			// apply the new media item collection as a playback queue for the music player
+			[self setUserMediaItemCollection: mediaItemCollection];
+			[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
+			[self setPlayedMusicOnce: YES];
+			[musicPlayer play];
+
+		// Obtain the music player's state so it can then be
+		//		restored after updating the playback queue.
+		} else {
+
+			// Take note of whether or not the music player is playing. If it is
+			//		it needs to be started again at the end of this method.
+			BOOL wasPlaying = NO;
+			if (musicPlayer.playbackState == MPMusicPlaybackStatePlaying) {
+				wasPlaying = YES;
+			}
+			
+			// Save the now-playing item and its current playback time.
+			MPMediaItem *nowPlayingItem			= musicPlayer.nowPlayingItem;
+			NSTimeInterval currentPlaybackTime	= musicPlayer.currentPlaybackTime;
+
+			// Combine the previously-existing media item collection with the new one
+			NSMutableArray *combinedMediaItems	= [[userMediaItemCollection items] mutableCopy];
+			NSArray *newMediaItems				= [mediaItemCollection items];
+			[combinedMediaItems addObjectsFromArray: newMediaItems];
+			
+			[self setUserMediaItemCollection: [MPMediaItemCollection collectionWithItems: (NSArray *) combinedMediaItems]];
+			[combinedMediaItems release];
+
+			// Apply the new media item collection as a playback queue for the music player.
+			[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
+			
+			// Restore the now-playing item and its current playback time.
+			musicPlayer.nowPlayingItem			= nowPlayingItem;
+			musicPlayer.currentPlaybackTime		= currentPlaybackTime;
+			
+			// If the music player was playing, get it playing again.
+			if (wasPlaying) {
+				[musicPlayer play];
+			}
+		}
+	}
+}
+
+// If the music player was paused, leave it paused. If it was playing, it will continue to
+//		play on its own. The music player state is "stopped" only if the previous list of songs
+//		had finished or if this is the first time the user has chosen songs after app 
+//		launch--in which case, invoke play.
+- (void) restorePlaybackState {
+
+	if (musicPlayer.playbackState == MPMusicPlaybackStateStopped && userMediaItemCollection) {
+
+		if (playedMusicOnce == NO) {
+		
+			[self setPlayedMusicOnce: YES];
+			[musicPlayer play];
+		}
+	}
+
+}
+
+
+
+#pragma mark Media item picker delegate methods________
+
+// Invoked when the user taps the Done button in the media item picker after having chosen
+//		one or more media items to play.
+- (void) mediaPicker: (MPMediaPickerController *) mediaPicker didPickMediaItems: (MPMediaItemCollection *) mediaItemCollection {
+  
+	// Dismiss the media item picker.
+	[self dismissModalViewControllerAnimated: YES];
+	
+	// Apply the chosen songs to the music player's queue.
+	[self updatePlayerQueueWithMediaCollection: mediaItemCollection];
+
+	[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleBlackOpaque animated: YES];
+}
+
+// Invoked when the user taps the Done button in the media item picker having chosen zero
+//		media items to play
+- (void) mediaPickerDidCancel: (MPMediaPickerController *) mediaPicker {
+
+	[self dismissModalViewControllerAnimated: YES];
+	
+	[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleBlackOpaque animated: YES];
+}
+
+
+
+#pragma mark Music notification handlers__________________
+
+// When the now-playing item changes, update the media item artwork and the now-playing label.
+- (void) handle_NowPlayingItemChanged: (id) notification {
+
+	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
+	
+	// Display the artist and song name for the now-playing media item
+	[nowPlayingLabel setText: [
+			NSString stringWithFormat: @"%@ %@ %@ %@",
+			NSLocalizedString (@"Now Playing:", @"Label for introducing the now-playing song title and artist"),
+			[currentItem valueForProperty: MPMediaItemPropertyTitle],
+			NSLocalizedString (@"by", @"Article between song name and artist name"),
+			[currentItem valueForProperty: MPMediaItemPropertyArtist]]];
+
+	if (musicPlayer.playbackState == MPMusicPlaybackStateStopped) {
+		// Provide a suitable prompt to the user now that their chosen music has 
+		//		finished playing.
+		[nowPlayingLabel setText: [
+				NSString stringWithFormat: @"%@",
+				NSLocalizedString (@"Music-ended Instructions", @"Label for prompting user to play music again after it has stopped")]];
+
+	}
+	
+	[mlApp onMediaChanged];
+}
+
+// When the playback state changes, set the play/pause button in the Navigation bar
+//		appropriately.
+- (void) handle_PlaybackStateChanged: (id) notification {
+
+	MPMusicPlaybackState playbackState = [musicPlayer playbackState];
+	
+	if (playbackState == MPMusicPlaybackStatePaused) {
+		[mPlayCtrlToolbar setItems:mPausedButtons];
+	} else if (playbackState == MPMusicPlaybackStatePlaying) {
+		[mPlayCtrlToolbar setItems:mPlayingButtons];
+
+	} else if (playbackState == MPMusicPlaybackStateStopped) {
+	
+		[mPlayCtrlToolbar setItems:mPausedButtons];
+
+		// Even though stopped, invoking 'stop' ensures that the music player will play  
+		//		its queue from the start.
+		[musicPlayer stop];
+
+	}
+}
+
+- (void) handle_iPodLibraryChanged: (id) notification {
+
+	// Implement this method to update cached collections of media items when the 
+	// user performs a sync while your application is running. This sample performs 
+	// no explicit media queries, so there is nothing to update.
+}
+
+#pragma mark Table view delegate methods________________
+
+// Invoked when the user taps the Done button in the table view.
+- (void) musicTableViewControllerDidFinish: (MusicTableViewController *) controller {
+	
+	[self dismissModalViewControllerAnimated: YES];
+	[self restorePlaybackState];
+}
+
+
+
+#pragma mark Application setup____________________________
+
+#if TARGET_IPHONE_SIMULATOR
+#warning *** Simulator mode: iPod library access works only when running on a device.
+#endif
+
+// To learn about notifications, see "Notifications" in Cocoa Fundamentals Guide.
+- (void) registerForMediaPlayerNotifications {
+
+	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+
+	[notificationCenter addObserver: self
+						   selector: @selector (handle_NowPlayingItemChanged:)
+							   name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+							 object: musicPlayer];
+	
+	[notificationCenter addObserver: self
+						   selector: @selector (handle_PlaybackStateChanged:)
+							   name: MPMusicPlayerControllerPlaybackStateDidChangeNotification
+							 object: musicPlayer];
+
+/*
+	// This sample doesn't use libray change notifications; this code is here to show how
+	//		it's done if you need it.
+	[notificationCenter addObserver: self
+						   selector: @selector (handle_iPodLibraryChanged:)
+							   name: MPMediaLibraryDidChangeNotification
+							 object: musicPlayer];
+	
+	[[MPMediaLibrary defaultMediaLibrary] beginGeneratingLibraryChangeNotifications];
+*/
+
+	[musicPlayer beginGeneratingPlaybackNotifications];
+}
+
+
+// To learn about the Settings bundle and user preferences, see User Defaults Programming Topics
+//		for Cocoa and "The Settings Bundle" in iPhone Application Programming Guide 
+
+// Returns whether or not to use the iPod music player instead of the application music player.
+- (BOOL) useiPodPlayer {
+
+	if ([[NSUserDefaults standardUserDefaults] boolForKey: PLAYER_TYPE_PREF_KEY]) {
+		return YES;		
+	} else {
+		return NO;
+	}
+}
+
+// Configure the application.
+- (void) viewDidLoad {
+
+    [super viewDidLoad];
+
+	AppInit();
+
+	[self setPlayedMusicOnce: NO];
+	
+	// Create play and pause buttons.
+	[self setMPausedButtons: mPlayCtrlToolbar.items];
+	[self setMPlayingButtons: [[NSMutableArray alloc] initWithArray:mPausedButtons]];
+
+	// Create paused bar button
+	UIImage *pausedButtonImage = [UIImage imageNamed: @"pause.png"];
+	UIBarButtonItem *pauseBarButton = [[UIBarButtonItem alloc]	initWithImage:pausedButtonImage
+																	  style:UIBarButtonItemStylePlain
+																	  target:self
+																	  action:@selector (playOrPauseMusic:)];
+	[mPlayingButtons replaceObjectAtIndex:3 withObject:pauseBarButton];
+	
+	[mPlayCtrlToolbar setItems:mPlayingButtons];
+	[mPlayCtrlToolbar setItems:mPausedButtons];
+
+	[nowPlayingLabel setText: NSLocalizedString (@"Instructions", @"Brief instructions to user, shown at launch")];
+	
+	// Instantiate the music player. If you specied the iPod music player in the Settings app,
+	//		honor the current state of the built-in iPod app.
+	if ([self useiPodPlayer]) {
+	
+		[self setMusicPlayer: [MPMusicPlayerController iPodMusicPlayer]];
+		
+		if ([musicPlayer nowPlayingItem]) {
+		
+			navigationBar.topItem.leftBarButtonItem.enabled = YES;
+			
+			// Update the UI to reflect the now-playing item. 
+			[self handle_NowPlayingItemChanged: nil];
+			
+			if ([musicPlayer playbackState] == MPMusicPlaybackStatePaused) {
+				[mPlayCtrlToolbar setItems:mPausedButtons];
+			}
+		}
+		
+	} else {
+	
+		[self setMusicPlayer: [MPMusicPlayerController applicationMusicPlayer]];
+		
+		// By default, an application music player takes on the shuffle and repeat modes
+		//		of the built-in iPod app. Here they are both turned off.
+		[musicPlayer setShuffleMode: MPMusicShuffleModeOff];
+		[musicPlayer setRepeatMode: MPMusicRepeatModeNone];
+	}	
+
+	[self registerForMediaPlayerNotifications];
+
+
+/*	CGRect rcLyrView = scrollLyrView.bounds;
+	rcLyrView.size.height = 500;
+
+	[self setLyrView:[[LyricsShowView alloc] initWithFrame:rcLyrView]];
+	
+	[lyrView setDelegate:self];
+	[lyrView setMusicPlayer:self.musicPlayer];
+
+	[scrollLyrView setBackgroundColor:[UIColor blackColor]];
+	[scrollLyrView setCanCancelContentTouches:NO];
+	scrollLyrView.clipsToBounds = YES;	// default is NO, we want to restrict drawing within our scrollview
+	scrollLyrView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
+	// UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"image0.jpg"]];
+	[scrollLyrView addSubview:lyrView];
+	// [scrollLyrView setContentSize:CGSizeMake(imageView.frame.size.width, imageView.frame.size.height)];
+	[scrollLyrView setScrollEnabled:YES];
+	// [imageView release];
+	
+	// Reset the scroll view to 1.0 zoom
+	scrollLyrView.contentSize = CGSizeMake(rcLyrView.size.width, rcLyrView.size.height);
+	
+
+	[lyrView onLyricsChanged];*/
+
+
+	[scrollLyrView setHidden:TRUE];
+
+	
+	[lyrVerticalView setDelegate:nil];
+	[lyrVerticalView setMusicPlayer:self.musicPlayer];
+	[lyrVerticalView onLyricsChanged];
+	[lyrVerticalView setNeedsDisplay];
+}
+
+#pragma mark LyricsShowView Delegate
+
+- (void)LyrContentHeightChanged:(LyricsShowView *)lyrShowView contentHeight:(int)height
+{
+	CGSize size = scrollLyrView.bounds.size;
+	size.height = height;
+	[scrollLyrView setContentSize:size];
+
+	[scrollLyrView setNeedsDisplay];
+}
+
+#pragma mark Application state management_____________
+
+- (void) didReceiveMemoryWarning {
+	// Releases the view if it doesn't have a superview.
+    [super didReceiveMemoryWarning];
+	
+	// Release any cached data, images, etc that aren't in use.
+}
+
+
+- (void) viewDidUnload {
+	// Release any retained subviews of the main view.
+	// e.g. self.myOutlet = nil;
+}
+
+
+- (void)dealloc {
+
+/*
+	// This sample doesn't use libray change notifications; this code is here to show how
+	//		it's done if you need it.
+	[[NSNotificationCenter defaultCenter] removeObserver: self
+													name: MPMediaLibraryDidChangeNotification
+												  object: musicPlayer];
+
+	[[MPMediaLibrary defaultMediaLibrary] endGeneratingLibraryChangeNotifications];
+	
+*/
+	[[NSNotificationCenter defaultCenter] removeObserver: self
+													name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification
+												  object: musicPlayer];
+	
+	[[NSNotificationCenter defaultCenter] removeObserver: self
+													name: MPMusicPlayerControllerPlaybackStateDidChangeNotification
+												  object: musicPlayer];
+
+	[musicPlayer endGeneratingPlaybackNotifications];
+	[musicPlayer				release];
+	
+	[mPlayCtrlToolbar release];
+	[mPausedButtons release];
+	[mPlayCtrlToolbar release];
+
+	[artworkItem				release]; 
+	[navigationBar				release];
+	[nowPlayingLabel			release];
+	[userMediaItemCollection	release];
+
+    [super dealloc];
+}
+
+
+@end

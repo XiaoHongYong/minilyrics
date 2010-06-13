@@ -12,13 +12,21 @@
 #import "../../Utils/Utils.h"
 #import "../../gfx/gfx.h"
 #import "../../GfxRaw/GfxRaw.h"
+#import "../../MLLib/MLLib.h"
+#import "CMLApp.h"
+
+#import "LyricsVerticalScrollGraph.h"
 
 
 @implementation LyrVecticalScrollView
 
+@synthesize lyrDisplayTimer;		// a timer for changing the background color -- represents an application that is
+
 CRawGraph m_memGraph;
 CMLFont		m_font;
 CRawBmpFont	m_bmpFont;
+
+CLyricsVerticalScrollGraph	m_lyrGraph;
 
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
@@ -26,6 +34,15 @@ CRawBmpFont	m_bmpFont;
 		m_memGraph.Create(frame.size.width, frame.size.height, NULL, 32);
     }
     return self;
+}
+
+- (void) InitLyrView {
+
+	[self setLyrDisplayTimer: [NSTimer scheduledTimerWithTimeInterval: 0.04
+																	target: self
+																  selector: @selector (onUpdateLyrDisplay)
+																  userInfo: nil
+																   repeats: YES]];
 }
 
 void DrawTextTo(CGContextRef context, CGRect rect)
@@ -51,6 +68,13 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	CGContextShowTextAtPoint(context, 10.0, 80.0, str, strlen(str));
 }
 
+-(void) onLyricsChanged
+{
+	NSString *dbFilePath = [[NSBundle mainBundle] pathForResource:@"lyrics" ofType:@"lrc"];
+	int nRet = CMLApp::GetInstance()->GetLyricsData().OpenLyrics("lyrics.mp3", 100000, [dbFilePath UTF8String]);
+
+	m_lyrGraph.OnLyricsChanged();
+}
 
 - (void)drawRect:(CGRect)rect {
     // Drawing code
@@ -63,14 +87,23 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	graph.Attach(context);
 	
 	// Draw in memGraph
-	if (!m_memGraph.IsValid())
+	if (!m_lyrGraph.GetGraph().IsValid())
 	{
-		m_memGraph.Create(frame.size.width, frame.size.height, NULL, 32);
-		m_font.Create("Helvetica", "Helvetica", 20, FW_NORMAL, 0);
-		m_bmpFont.Create("Helvetica", "Helvetica", 50, FW_NORMAL, 0);
+		// m_memGraph.Create(frame.size.width, frame.size.height, NULL, 32);
+		// m_font.Create("Helvetica", "Helvetica", 20, FW_NORMAL, 0);
+		// m_bmpFont.Create("Helvetica", "Helvetica", 50, FW_NORMAL, 0);
+		m_lyrGraph.Init(frame.size.width, frame.size.height, &CMLApp::GetInstance()->GetLyricsData());
+
+		[self InitLyrView];
+		
+		[self onLyricsChanged];
 	}
 	
-	MLColor	clr(RGB(255, 0, 0));
+	m_lyrGraph.Draw(&m_lyrGraph.GetGraph());
+
+	m_lyrGraph.GetGraph().DrawToGraphics(&graph, 0, 0, frame.size.width, frame.size.height, 0, 0);
+
+/*	MLColor	clr(RGB(255, 0, 0));
 	m_memGraph.FillRect(0, 0, frame.size.width, frame.size.height, clr);
 
 	MLColor	clrText(RGB(255, 255, 255));
@@ -91,10 +124,18 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	DrawTextTo(memContext, frame);
 	
 	m_memGraph.DrawToGraphics(&graph, 0, 0, frame.size.width, frame.size.height, 0, 0);
+ */
 }
 
+// Invoked by the lyrDisplayTimer.
+- (void) onUpdateLyrDisplay {
+	CMLApp::GetInstance()->GetLyricsData().SetPlayElapsedTime(int([musicPlayer currentPlaybackTime] * 1000));
+	[self setNeedsDisplay];
+}
 
 - (void)dealloc {
+	[lyrDisplayTimer		invalidate];
+	[lyrDisplayTimer		release];
     [super dealloc];
 }
 

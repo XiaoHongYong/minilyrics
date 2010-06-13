@@ -13,6 +13,10 @@
 
 @interface LyrVecticalScrollView : LyricsShowView {
 
+	NSTimer						*lyrDisplayTimer;
+	
 }
+
+@property (nonatomic, retain)	NSTimer					*lyrDisplayTimer;
 
 @end
