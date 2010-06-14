@@ -16,9 +16,9 @@ public:
 	int Init();
 	void Quit();
 
-	void OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbum, LPCTSTR szTitle);
+	void OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbum, LPCTSTR szTitle, LPCTSTR szEmbeddedLyr, int nMediaLength);
 
-	virtual void OnLyricsSearchEnd(int nResult);
+	virtual void OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd);
 	virtual void OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile);
 
 public:

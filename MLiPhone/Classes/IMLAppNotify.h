@@ -6,3 +6,4 @@ void PostNotifyLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile);
 
 void PostNotifyMessage(LPCTSTR szMessage);
 
+void PostNotifyLyricsChanged();

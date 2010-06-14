@@ -7,16 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import <MediaPlayer/MediaPlayer.h>
 
-#import "LyricsShowView.h"
 
-
-@interface LyrVecticalScrollView : LyricsShowView {
+@interface LyrVecticalScrollView : UIView {
 
 	NSTimer						*lyrDisplayTimer;
-	
+	MPMusicPlayerController		*musicPlayer;	
+
 }
 
-@property (nonatomic, retain)	NSTimer					*lyrDisplayTimer;
+@property (nonatomic, retain)	NSTimer						*lyrDisplayTimer;
+@property(nonatomic, retain)	MPMusicPlayerController		*musicPlayer;
+
+-(void) onLyricsChanged;
 
 @end

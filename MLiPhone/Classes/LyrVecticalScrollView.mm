@@ -20,7 +20,9 @@
 
 @implementation LyrVecticalScrollView
 
-@synthesize lyrDisplayTimer;		// a timer for changing the background color -- represents an application that is
+@synthesize lyrDisplayTimer;
+@synthesize musicPlayer;
+
 
 CRawGraph m_memGraph;
 CMLFont		m_font;
@@ -36,7 +38,9 @@ CLyricsVerticalScrollGraph	m_lyrGraph;
     return self;
 }
 
-- (void) InitLyrView {
+- (void) InitLyrView
+{
+	m_lyrGraph.Init(self.frame.size.width, self.frame.size.height, &CMLApp::GetInstance()->GetLyricsData());
 
 	[self setLyrDisplayTimer: [NSTimer scheduledTimerWithTimeInterval: 0.04
 																	target: self
@@ -70,16 +74,22 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 
 -(void) onLyricsChanged
 {
-	NSString *dbFilePath = [[NSBundle mainBundle] pathForResource:@"lyrics" ofType:@"lrc"];
-	int nRet = CMLApp::GetInstance()->GetLyricsData().OpenLyrics("lyrics.mp3", 100000, [dbFilePath UTF8String]);
-
 	m_lyrGraph.OnLyricsChanged();
+	[self setNeedsDisplay];
+}
+
+-(void) onPlaybackStateChanged:(MPMusicPlaybackState)state
+{
+	if (state == MPMusicPlaybackStatePaused || state == MPMusicPlaybackStateStopped) {
+		[lyrDisplayTimer invalidate];
+	}
+	else if (state == MPMusicPlaybackStatePlaying) {
+		[lyrDisplayTimer fire];
+	}
 }
 
 - (void)drawRect:(CGRect)rect {
-    // Drawing code
-	self.fontHeight = 15;
-	
+
 	// [super drawRect:rect];
 	CGRect	frame = [self frame];
 	CMLGraphics		graph;
@@ -87,18 +97,13 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	graph.Attach(context);
 	
 	// Draw in memGraph
-	if (!m_lyrGraph.GetGraph().IsValid())
+	ASSERT(m_lyrGraph.GetGraph().IsValid());
 	{
 		// m_memGraph.Create(frame.size.width, frame.size.height, NULL, 32);
 		// m_font.Create("Helvetica", "Helvetica", 20, FW_NORMAL, 0);
 		// m_bmpFont.Create("Helvetica", "Helvetica", 50, FW_NORMAL, 0);
-		m_lyrGraph.Init(frame.size.width, frame.size.height, &CMLApp::GetInstance()->GetLyricsData());
-
-		[self InitLyrView];
-		
-		[self onLyricsChanged];
 	}
-	
+
 	m_lyrGraph.Draw(&m_lyrGraph.GetGraph());
 
 	m_lyrGraph.GetGraph().DrawToGraphics(&graph, 0, 0, frame.size.width, frame.size.height, 0, 0);
@@ -130,12 +135,19 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 // Invoked by the lyrDisplayTimer.
 - (void) onUpdateLyrDisplay {
 	CMLApp::GetInstance()->GetLyricsData().SetPlayElapsedTime(int([musicPlayer currentPlaybackTime] * 1000));
-	[self setNeedsDisplay];
+
+	CRect	rcUpdate;
+	m_lyrGraph.UpdateGraph(rcUpdate);
+	if (rcUpdate.IsEmptyRect())
+		return;
+
+	[self setNeedsDisplayInRect:CGRectMake(rcUpdate.left, rcUpdate.top, rcUpdate.Width(), rcUpdate.Height())];
 }
 
 - (void)dealloc {
 	[lyrDisplayTimer		invalidate];
 	[lyrDisplayTimer		release];
+	[musicPlayer release];
     [super dealloc];
 }
 

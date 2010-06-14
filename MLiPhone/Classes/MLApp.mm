@@ -23,7 +23,8 @@
 enum MLNotifyType {
 	MLNT_LYRICS_SEARCH_END,
 	MLNT_LYRICS_DOWNLOADED,
-	MLNT_MESSAGE
+	MLNT_MESSAGE,
+	MLNT_LYRICS_CHANGED,
 };
 
 tstring GetAppDataDir()
@@ -41,6 +42,23 @@ void GetAppDataDir(TCHAR szDir[])
 {
 	tstring	str = GetAppDataDir();
 	_tcscpy_safe(szDir, MAX_PATH, str.c_str());
+}
+
+tstring GetResourceFile(LPCTSTR szFileName)
+{
+	TCHAR	szTitle[MAX_PATH];
+	FileGetTitle(szTitle, CountOf(szTitle), szFileName);
+	LPCTSTR szExt = FileGetExt(szFileName);
+	if (szExt)
+		szExt++;
+	else
+		szExt = "";
+
+	NSString *name = [[NSString alloc] initWithCString:szTitle];
+	NSString *type = [[NSString alloc] initWithCString:szExt];
+	NSString *dbFilePath = [[NSBundle mainBundle] pathForResource:name ofType:type];
+	
+	return [dbFilePath UTF8String];
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -108,6 +126,14 @@ tstring				message;
 	return self;
 }
 
+- (id) initWithLyrChanged
+{
+	if (self = [super init]) {
+		self.type = MLNT_LYRICS_CHANGED;
+	}
+	return self;
+}
+
 - (LPCTSTR) mediaKey { return mediaKey.c_str(); }
 - (void) setMediaKey: (LPCTSTR) newmediaKey { mediaKey = newmediaKey; }
 
@@ -143,6 +169,13 @@ void PostNotifyMessage(LPCTSTR szMessage)
 	 postNotificationName:MLAPP_NOTIFY_NAME object:pNotifyParam];
 }
 
+void PostNotifyLyricsChanged()
+{
+	MLAppNotifyParam	*pNotifyParam = [[MLAppNotifyParam alloc] initWithLyrChanged];
+	[[NSNotificationCenter defaultCenter]
+	 postNotificationName:MLAPP_NOTIFY_NAME object:pNotifyParam];
+}
+
 @implementation MLApp
 
 @synthesize noArtworkImage;
@@ -156,9 +189,11 @@ void PostNotifyMessage(LPCTSTR szMessage)
 		self.musicPlayer = _musicPlayer;
 		self.noArtworkImage = [UIImage imageNamed: @"no_artwork.png"];
 		[[NSNotificationCenter defaultCenter] addObserver: self
-			selector:@selector(MLNotification)
+			selector:@selector(MLNotification:)
 			name:MLAPP_NOTIFY_NAME
 			object:nil];
+
+		CMLApp::GetInstance()->Init();
     }
     return self;
 }
@@ -168,13 +203,20 @@ void PostNotifyMessage(LPCTSTR szMessage)
 	MLAppNotifyParam *param = [notification object];
 
 	if (param.type == MLNT_LYRICS_SEARCH_END) {
-		CMLApp::GetInstance()->OnLyricsSearchEnd(param.searchEndResult);
+		bool bPopupSearchWnd = false;
+		CMLApp::GetInstance()->OnLyricsSearchEnd(param.searchEndResult, bPopupSearchWnd);
+		if (bPopupSearchWnd)
+			[delegate onPopupLyrSearchView];
 	}
 	else if (param.type == MLNT_LYRICS_DOWNLOADED) {
 		CMLApp::GetInstance()->OnLyricsDownloaded(param.mediaKey, param.lyricsFile);
 	}
 	else if (param.type == MLNT_MESSAGE) {
-		
+		NSString	*msg = [[NSString alloc] initWithCString:[param message]];
+		[delegate onMessage:msg];
+	}
+	else if (param.type == MLNT_LYRICS_CHANGED) {
+		[delegate onLyricsChanged];
 	}
 	[param release];
 }
@@ -186,11 +228,14 @@ void PostNotifyMessage(LPCTSTR szMessage)
 	NSString	*title = [currentItem valueForProperty: MPMediaItemPropertyTitle];
 	NSString	*artist = [currentItem valueForProperty: MPMediaItemPropertyArtist];
 	NSString	*album = [currentItem valueForProperty: MPMediaItemPropertyAlbumTitle];
+	NSString	*lyrics = [currentItem valueForProperty: MPMediaItemPropertyLyrics];
+	NSNumber	*length = [currentItem valueForProperty: MPMediaItemPropertyPlaybackDuration];
 
 	// Create media key
 	NSString	*mediaKey = [[NSString alloc] initWithFormat:@"%@", [currentItem valueForProperty: MPMediaItemPropertyPersistentID]];
 
-	CMLApp::GetInstance()->OnMediaChanged([mediaKey UTF8String], [artist UTF8String], [album UTF8String], [title UTF8String]);
+	CMLApp::GetInstance()->OnMediaChanged([mediaKey UTF8String], [artist UTF8String], [album UTF8String],
+										  [title UTF8String], [lyrics UTF8String], (int)([length doubleValue] * 1000));
 }
 
 -(UIImage*) getAlbumArtWithWidth:(int)width Height:(int)height

@@ -53,10 +53,14 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 #import "../../base/mlstdafx.h"
 #import "../../base/base.h"
 #import "../../Utils/Utils.h"
+#import "../../OurMFCLib/OurMFClib.h"
+#import "../../gfx/gfx.h"
+#import "../../MLLib/MLLib.h"
+
+#import "CMLApp.h"
 
 @implementation MainViewController
 
-@synthesize artworkItem;				// the now-playing media item's artwork image, displayed in the Navigation bar
 @synthesize userMediaItemCollection;	// the media item collection created by the user, using the media item picker	
 @synthesize musicPlayer;				// the music player, which plays media items from the iPod library
 @synthesize navigationBar;				// the application's Navigation bar
@@ -74,20 +78,6 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 
 @synthesize mlApp;
 
-
-void AppInit()
-{
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(
-														 NSDocumentDirectory,
-														 NSUserDomainMask,
-														 YES);
-	NSString *documentsDir = [paths objectAtIndex:0];
-	NSString *app = [documentsDir stringByAppendingPathComponent:@"MiniLyrics.app"];
-	LPTSTR  vArgv[2] = { 0 };
-	vArgv[0] = (char *)[app UTF8String];
-
-	InitBaseFrameWork(1, vArgv, NULL, _T("MiniLyrics.ini"), _T("MiniLyrics"));
-}
 
 #pragma mark Music control________________________________
 
@@ -292,6 +282,8 @@ void AppInit()
 		[musicPlayer stop];
 
 	}
+
+	[lyrVerticalView onPlaybackStateChanged:playbackState];
 }
 
 - (void) handle_iPodLibraryChanged: (id) notification {
@@ -365,9 +357,7 @@ void AppInit()
 - (void) viewDidLoad {
 
     [super viewDidLoad];
-
-	AppInit();
-
+	
 	[self setPlayedMusicOnce: NO];
 	
 	// Create play and pause buttons.
@@ -417,6 +407,9 @@ void AppInit()
 
 	[self registerForMediaPlayerNotifications];
 
+	mlApp = [[MLApp alloc] init:musicPlayer];
+	[mlApp setDelegate:self];
+
 
 /*	CGRect rcLyrView = scrollLyrView.bounds;
 	rcLyrView.size.height = 500;
@@ -445,11 +438,25 @@ void AppInit()
 
 	[scrollLyrView setHidden:TRUE];
 
-	
-	[lyrVerticalView setDelegate:nil];
 	[lyrVerticalView setMusicPlayer:self.musicPlayer];
+
+	[lyrVerticalView InitLyrView];
+}
+
+#pragma mark MLApp event Delegate
+
+- (void)onLyricsChanged
+{
 	[lyrVerticalView onLyricsChanged];
-	[lyrVerticalView setNeedsDisplay];
+}
+
+- (void)onMessage:(NSString*) msg
+{
+	[nowPlayingLabel setText:msg];
+}
+
+- (void)onPopupLyrSearchView
+{
 }
 
 #pragma mark LyricsShowView Delegate
@@ -476,6 +483,7 @@ void AppInit()
 - (void) viewDidUnload {
 	// Release any retained subviews of the main view.
 	// e.g. self.myOutlet = nil;
+	CMLApp::GetInstance()->Quit();
 }
 
 
@@ -506,7 +514,6 @@ void AppInit()
 	[mPausedButtons release];
 	[mPlayCtrlToolbar release];
 
-	[artworkItem				release]; 
 	[navigationBar				release];
 	[nowPlayingLabel			release];
 	[userMediaItemCollection	release];

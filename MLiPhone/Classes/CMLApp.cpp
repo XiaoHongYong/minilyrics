@@ -27,6 +27,12 @@ CMLApp *CMLApp::GetInstance()
 
 int CMLApp::Init()
 {
+	LPTSTR  vArgv[2] = { 0 };
+	tstring strAppDirDir = GetAppDataDir() + _T("MiniLyrics.app");
+	vArgv[0] = (LPTSTR)strAppDirDir.c_str();
+
+	InitBaseFrameWork(1, vArgv, NULL, _T("MiniLyrics.ini"), _T("MiniLyrics"));
+
 	m_localLyrSearch.Init();
 	m_onlineLyrSearch.Init();
 	m_lyrDownloadMgr.Init();
@@ -41,14 +47,30 @@ void CMLApp::Quit()
 	m_lyrDownloadMgr.Quit();
 }
 
-void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbum, LPCTSTR szTitle)
+#define MAKE_SURE_STR_NOT_NULL(str)		if (str == NULL) str = _T("")
+
+void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbum, LPCTSTR szTitle, LPCTSTR szEmbeddedLyr, int nMediaLength)
 {
+	MAKE_SURE_STR_NOT_NULL(szMediaKey);
+	MAKE_SURE_STR_NOT_NULL(szArtist);
+	MAKE_SURE_STR_NOT_NULL(szAlbum);
+	MAKE_SURE_STR_NOT_NULL(szTitle);
+	MAKE_SURE_STR_NOT_NULL(szEmbeddedLyr);
+
 	m_strCurMediaKey = szMediaKey;
 	m_strArtist = szArtist;
 	m_strAlbum = szAlbum;
 	m_strTitle = szTitle;
+	m_nMediaLength = nMediaLength;
 
 	m_lyrData.Close();
+
+	tstring strTestLyr = GetResourceFile(_T("lyrics.lrc"));
+	int nRet = m_lyrData.OpenLyrics(szMediaKey, nMediaLength, strTestLyr.c_str());
+
+	PostNotifyLyricsChanged();
+	
+	return;
 
 	if (m_strCurMediaKey.empty() && m_strArtist.empty() && m_strTitle.empty())
 		return;
@@ -96,8 +118,10 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 	}
 }
 
-void CMLApp::OnLyricsSearchEnd(int nResult)
+void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
 {
+	bPopupSearchWnd = false;
+	
 	// Lyrics are opened already?
 	if (m_localLyrSearch.IsAssociatedLyrics(m_strCurMediaKey.c_str()))
 		return;

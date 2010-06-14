@@ -60,10 +60,9 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 #import "MLApp.h"
 
 @interface MainViewController : UIViewController 
-	<MPMediaPickerControllerDelegate, MusicTableViewControllerDelegate, AVAudioPlayerDelegate, LyrViewDelegate> {
+	<MPMediaPickerControllerDelegate, MusicTableViewControllerDelegate, AVAudioPlayerDelegate, LyrViewDelegate, MLAppEventDelegate> {
 
 	MiniLyricsAppDelegate			*applicationDelegate;
-	IBOutlet UIBarButtonItem	*artworkItem;
 	IBOutlet UINavigationBar	*navigationBar;
 	IBOutlet UILabel			*nowPlayingLabel;
 	BOOL						playedMusicOnce;
@@ -84,7 +83,6 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 
 }
 
-@property (nonatomic, retain)	UIBarButtonItem			*artworkItem;
 @property (nonatomic, retain)	UINavigationBar			*navigationBar;
 @property (nonatomic, retain)	UILabel					*nowPlayingLabel;
 @property (readwrite)			BOOL					playedMusicOnce;

@@ -108,7 +108,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 5FC0B20D11C5385B000C6537 /* MLProtocol.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D /* libMLProtocol.a */;
+			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = MLProtocol;
 		};
 /* End PBXContainerItemProxy section */
