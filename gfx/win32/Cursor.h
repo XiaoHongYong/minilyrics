@@ -22,17 +22,17 @@ public:
 
 	enum STD_CURSOR_TYPE
 	{
-		C_HOURGLASS		= (int)IDC_WAIT,
-		C_ARROW			= (int)IDC_ARROW,
-		C_CROSS			= (int)IDC_CROSS,
-		C_HELP			= (int)IDC_HELP,
-		C_SIZEALL		= (int)IDC_SIZEALL,
-		C_SIZENESW		= (int)IDC_SIZENESW,
-		C_SIZENS		= (int)IDC_SIZENS,
-		C_SIZENWSE		= (int)IDC_SIZENWSE,
-		C_SIZEWE		= (int)IDC_SIZEWE,
-		C_NO			= (int)IDC_NO,
-		C_IBEAM			= (int)IDC_IBEAM,
+		C_HOURGLASS		= (int)(int64)IDC_WAIT,
+		C_ARROW			= (int)(int64)IDC_ARROW,
+		C_CROSS			= (int)(int64)IDC_CROSS,
+		C_HELP			= (int)(int64)IDC_HELP,
+		C_SIZEALL		= (int)(int64)IDC_SIZEALL,
+		C_SIZENESW		= (int)(int64)IDC_SIZENESW,
+		C_SIZENS		= (int)(int64)IDC_SIZENS,
+		C_SIZENWSE		= (int)(int64)IDC_SIZENWSE,
+		C_SIZEWE		= (int)(int64)IDC_SIZEWE,
+		C_NO			= (int)(int64)IDC_NO,
+		C_IBEAM			= (int)(int64)IDC_IBEAM,
 	};
 
 	CCursor(void);

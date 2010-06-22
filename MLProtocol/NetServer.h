@@ -130,7 +130,7 @@ public:
 	// 返回-1，表示接收到的任务线程需要退出
 	int RemoveJob();
 
-	int GetJobCount() const { return m_listJob.size(); }
+	int GetJobCount() const { return (int)m_listJob.size(); }
 
 	int GetWorkThreadCount() const { return m_nWorkThreadCount; }
 

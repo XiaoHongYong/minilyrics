@@ -352,7 +352,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 }
 
 #ifdef _WIN32_DESKTOP
-BOOL ShowAsAppWindow2(HWND hWnd)
+BOOL ShowAsAppWindowNoRefresh(HWND hWnd)
 {
 	DWORD dwStyleEx;
 	dwStyleEx = (DWORD)GetWindowLong(hWnd, GWL_EXSTYLE);
@@ -366,7 +366,7 @@ BOOL ShowAsAppWindow2(HWND hWnd)
 	return FALSE;
 }
 
-BOOL ShowAsToolWindow2(HWND hWnd)
+BOOL ShowAsToolWindowNoRefresh(HWND hWnd)
 {
 	DWORD dwStyleEx;
 	dwStyleEx = (DWORD)GetWindowLong(hWnd, GWL_EXSTYLE);
@@ -387,7 +387,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	{
 #ifdef _WIN32_DESKTOP
 	case CMD_MINIMIZE:
-		m_pSkinWnd->ShowWindow(SW_SHOWMINIMIZED);
+		if (m_pSkinWnd->IsToolWindow())
+			m_pSkinWnd->ShowWindow(SW_HIDE);
+		else
+			m_pSkinWnd->ShowWindow(SW_SHOWMINIMIZED);
 		break;
 	case CMD_MAXIMIZE:
 		if (m_pSkinWnd->IsZoomed())
@@ -396,12 +399,12 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		{
 			bool	bToolWindow = Tobool(IsToolWindow(m_pSkinWnd->GetHandle()));
 			if (bToolWindow)
-				ShowAsAppWindow2(m_pSkinWnd->GetHandle());
+				ShowAsAppWindowNoRefresh(m_pSkinWnd->GetHandle());
 
 			m_pSkinWnd->ShowWindow(SW_SHOWMAXIMIZED);
 
 			if (bToolWindow)
-				ShowAsToolWindow2(m_pSkinWnd->GetHandle());
+				ShowAsToolWindowNoRefresh(m_pSkinWnd->GetHandle());
 		}
 		break;
 	case CMD_TOGGLE_MP:

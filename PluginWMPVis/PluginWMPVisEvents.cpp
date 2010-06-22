@@ -8,6 +8,8 @@
 
 #include "stdafx.h"
 #include "PluginWMPVis.h"
+#include "../MLPluginLib/MLPlugin.h"
+#include "PlayerImp.h"
 
 void CPluginWMPVis::OpenStateChange( long NewState )
 {

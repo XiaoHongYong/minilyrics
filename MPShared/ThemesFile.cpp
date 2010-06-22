@@ -266,12 +266,13 @@ bool CThemesFile::Open()
 
 	strFile = GetWorkingFolder();
 	strFile += SZ_THEMES_FILE;
-	if (!m_xmlThemes.ParseFile(strFile.c_str()))
-		return false;
+	m_xmlThemes.ParseFile(strFile.c_str());
 
-	strFile = GetWorkingFolder();
+	strFile = GetAppDataDir();
 	strFile += SZ_CUST_THEMES_FILE;
-	return Tobool(m_xmlThemesCustomized.ParseFile(strFile.c_str()));
+	m_xmlThemesCustomized.ParseFile(strFile.c_str());
+
+	return true;
 }
 
 bool CThemesFile::Save()
@@ -282,7 +283,7 @@ bool CThemesFile::Save()
 	strFile += SZ_THEMES_FILE;
 	m_xmlThemes.SaveFile(strFile.c_str());
 
-	strFile = GetWorkingFolder();
+	strFile = GetAppDataDir();
 	strFile += SZ_CUST_THEMES_FILE;
 	return Tobool(m_xmlThemesCustomized.SaveFile(strFile.c_str()));
 }

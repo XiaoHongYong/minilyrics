@@ -389,14 +389,6 @@ DISPLAY_OPTIONS DisplayOptFromStr(LPCTSTR szDisplayOpt)
 	return (DISPLAY_OPTIONS)StringToID(g_idsLyrDisplayOpt, szDisplayOpt, DO_FADEOUT_LOWCOLOR);
 }
 
-static ID_TO_STRING g_idsLOB[] = 
-{
-	DEFINE_IDT(OBM_COLOR),
-	DEFINE_IDT(OBM_GRADIENT_COLOR),
-	DEFINE_IDT(OBM_PATTERN),
-	{ 0, NULL },
-};
-
 struct LyrShowTOBFieldName
 {
 	LPCTSTR			szOBM;
@@ -836,7 +828,6 @@ enum	LYR_COLOR_TRANSFORM
 bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y, LinePos linePos)
 {
 	int			nSize;
-	bool		bRet = true;
 	MLColor		clrTxt, clrTxtBorder;
 	int			nAlpha = 255, alphaOld;
 	bool		bSetOpacityPainting = false;
@@ -2368,7 +2359,6 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 	else
 	{
 		TOBColorIndex	i;
-		bool			bCreatePatternImg = false;
 
 		//
 		// Highlight color settings.

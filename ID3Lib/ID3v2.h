@@ -518,7 +518,7 @@ public:
 		Free();
 	}
 
-	int GetCount() const { return m_vItems.size(); }
+	int GetCount() const { return (int)m_vItems.size(); }
 	ITEM *AppendNewPic();
 	bool IsModified();
 

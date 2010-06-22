@@ -1031,7 +1031,7 @@ int CSkinFactory::ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCT
 	CSkinWnd	*pSkinWnd = FindSkinWnd(szSkinWndName);
 	if (pSkinWnd)
 	{
-		if (pSkinWnd->IsVisible())
+		if (!pSkinWnd->IsVisible())
 			pSkinWnd->ShowWindow(SW_SHOW);
 		if (pSkinWnd->IsIconic())
 			pSkinWnd->ShowWindow(SW_RESTORE);

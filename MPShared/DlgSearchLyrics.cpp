@@ -234,6 +234,7 @@ public:
 		CID_E_TITLE = 0;
 		CID_SEARCH = 0;
 		CID_L_LYRICS = 0;
+		CID_SHOW_ERR_RESULT = 0;
 	}
 
 	~CPageSearchLyrics()
@@ -286,6 +287,7 @@ public:
 		GET_ID_BY_NAME(CID_E_TITLE);
 		GET_ID_BY_NAME(CID_SEARCH);
 		GET_ID_BY_NAME(CID_L_LYRICS);
+		GET_ID_BY_NAME(CID_SHOW_ERR_RESULT);
 
 		// Save current media info.
 		m_strSongFile = g_Player.GetSrcMedia();
@@ -584,6 +586,19 @@ public:
 		{
 			OnOK();
 		}
+		else if (nId == CID_SHOW_ERR_RESULT)
+		{
+			if (m_nErrResultToShow == ERR_NOT_FOUND)
+			{
+				tstring		strMsg;
+				strMsg = TOLOCAL(_T("Sorry, no result returned. Please make sure you enter the correct artist name and title."));
+				strMsg += _T("\r\n");
+				strMsg += TOLOCAL(_T("If you have the lyrics, please upload it to our server to share it with others."));
+				m_pSkinWnd->MessageOut(strMsg.c_str());
+			}
+			else if (m_nErrResultToShow != ERR_OK)
+				ShowErrorDlg(m_pSkinWnd, m_nErrResultToShow);
+		}
 		else if (nId == CID_MORE)
 		{
 			CRect		rc;
@@ -686,16 +701,11 @@ protected:
 			m_pSkinWnd->MessageOut(m_pSearchObj->m_strMsg.c_str());
 		}
 
-		if (m_pSearchObj->m_nResult == ERR_NOT_FOUND)
-		{
-			tstring		strMsg;
-			strMsg = TOLOCAL(_T("Sorry, no result returned. Please make sure you enter the correct artist name and title."));
-			strMsg += _T("\r\n");
-			strMsg += TOLOCAL(_T("If you have the lyrics, please upload it to our server to share it with others."));
-			m_pSkinWnd->MessageOut(strMsg.c_str());
-		}
 		else if (m_pSearchObj->m_nResult != ERR_OK)
-			ShowErrorDlg(m_pSkinWnd, m_pSearchObj->m_nResult);
+		{
+			m_nErrResultToShow = m_pSearchObj->m_nResult;
+			m_pSkinWnd->PostCustomCommandMsg(CID_SHOW_ERR_RESULT);
+		}
 
 		m_nCurPage = m_pSearchObj->m_nCurPage;
 		m_nPageCount = m_pSearchObj->m_nPageCount;
@@ -952,7 +962,7 @@ protected:
 
 protected:
 	int			CID_PREV_PAGE, CID_NEXT_PAGE, CID_OPEN, CID_MORE, CID_CANCEL;
-	int			CID_E_ARTIST, CID_E_TITLE, CID_SEARCH, CID_L_LYRICS;
+	int			CID_E_ARTIST, CID_E_TITLE, CID_SEARCH, CID_L_LYRICS, CID_SHOW_ERR_RESULT;
 
 	V_LRCSEARCHRESULT	m_vResultsLocal;
 	V_LRCSEARCHRESULT	m_vResultsInet;
@@ -976,6 +986,7 @@ protected:
 	CSkinListCtrl		*m_pLyricsList;
 
 	CSearchWorkObj		*m_pSearchObj;
+	int					m_nErrResultToShow;
 
 };
 

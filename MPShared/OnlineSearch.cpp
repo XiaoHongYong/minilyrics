@@ -497,7 +497,7 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	// LOG0(LOG_LVL_EVENT_IMP, _T("Enter auto search proc"));
 
 	// 歌词为空, 小于3个字符
-	if (!IsTextWidthExceed(szTitle, 3))
+	if (_tcslen(szTitle) < 3)
 	{
 		// LOG1(LOG_LVL_EVENT_IMP, _T("Title is : %s, quit."), sztitleNew);
 		return FALSE;

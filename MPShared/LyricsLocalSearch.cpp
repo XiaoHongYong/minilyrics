@@ -690,6 +690,8 @@ BOOL CLyricsLocalSearch::CancelAssociate(LPCTSTR szAssociateFileKeyword)
 		return TRUE;
 	}
 
+	SaveLyricsAssociation();
+
 	return FALSE;
 }
 

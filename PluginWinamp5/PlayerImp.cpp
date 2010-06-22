@@ -52,12 +52,16 @@ void AddRemoveMLItemInWinampMenu(bool bAdd)
 
 	if (bAdd)
 	{
-		int prior_item = GetMenuItemID(main_menu, 9);
-		if (prior_item <= 0)
-			prior_item = GetMenuItemID(main_menu, 8);
+		int pos = 0, seperatorCount = 0;
+		for (; seperatorCount < 3 && pos < 50; pos++)
+		{
+			int prior_item = GetMenuItemID(main_menu, pos);
+			if (prior_item == 0)
+				seperatorCount++;
+		}
 
 		// now add the menu item using prior_item as the item to instert after
-		InsertMenu(main_menu, prior_item, MF_BYCOMMAND, nIDMenuMLItem, "MiniLyrics");
+		InsertMenu(main_menu, pos - 1, MF_BYPOSITION, nIDMenuMLItem, "MiniLyrics");
 		CheckMLItemInWinampMenu(g_Player.m_bWorking);
 	}
 	else
@@ -65,7 +69,7 @@ void AddRemoveMLItemInWinampMenu(bool bAdd)
 		DeleteMenu(main_menu, nIDMenuMLItem, MF_BYCOMMAND);
 	}
 
-	SendMessage(g_hwndPlayer, WM_WA_IPC, (bAdd ? 1 : -1), IPC_ADJUST_OPTIONSMENUPOS);
+	// SendMessage(g_hwndPlayer, WM_WA_IPC, (bAdd ? 1 : -1), IPC_ADJUST_OPTIONSMENUPOS);
 }
 
 
