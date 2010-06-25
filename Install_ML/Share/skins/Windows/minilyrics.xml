@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr" ExtraResouceFolder="MiniLyrics">
   <style>
+    <WindowFrame WindowsAppearance="TRUE"
+         MinWidth="100" MinHeight="100" Width="330" Height="400"
+         PaintBg="TRUE" BgColor="#ece9d8" FgColor="#282828" EnableClickThrough="false"
+         FontName="Verdana" FontHeight="14" TextColor="#000000">
+      <ClientArea Rect="0,0,w,h" ClipChildren="true"/>
+    </WindowFrame>
+
+    <MenuWindowFrame WindowsAppearance="TRUE"
+         MinWidth="100" MinHeight="100" Width="330" Height="400"
+         PaintBg="TRUE" BgColor="#ece9d8" FgColor="#282828" EnableClickThrough="false"
+         FontName="Verdana" FontHeight="14" TextColor="#000000">
+
+      <DecorativeContainer Name="Menu bar" Rect="0,0,w,31">
+        <Image Name="Menu Bg" Rect="0,0,w,23" Image="menu_bg.png"
+               BltMode="tile" BlendPixMode="copy"/>
+        <MenuBar Rect="0,2,w-90-150,20" Name="Menu"
+                 UseSkinBg="true" TranslucencyWithSkin="TRUE"
+           FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
+           TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
+           TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
+           BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+      </DecorativeContainer>
+      <ClientArea Rect="0,31,w,h-31" ClipChildren="true"/>
+    </MenuWindowFrame>
     <VScrollBar Extends="VScrollBarOSStyle"/>
     <HScrollBar Extends="HScrollBarOSStyle"/>
   </style>

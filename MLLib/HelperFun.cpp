@@ -795,7 +795,7 @@ bool GetMLEncriptyData(stringex &strData)
 	// decodebase64(str.c_str() + 0x51, 0x78 - 0x51, strData);
 	strData.append(str.c_str() + 0x51, 0x78 - 0x51);
 
-	for (int i = 0; i < 32; i++)
+	for (uint i = 0; i < 32; i++)
 		strData[i] = strData[i] ^ szMD5[i];
 
 	// 解密之后的数据了，这里存储的是核心数据

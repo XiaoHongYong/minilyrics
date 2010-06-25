@@ -46,6 +46,9 @@ protected:
 	virtual void ButtonDownAction();
 	virtual void ButtonUpAction();
 
+	// This should be called before status changed.
+	void StartFadeDrawTimer(bool bPrevButtonDown, bool bPrevHover);
+
 	void FadeInDrawBt(CRawGraph *pGraph, CSFImage *pImage, int nAlpha);
 
 	void SetMaxStat(int nMaxStat);

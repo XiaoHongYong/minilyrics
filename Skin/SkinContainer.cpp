@@ -295,7 +295,7 @@ void CSkinContainer::OnLanguageChanged()
 	}
 
 	// Notify to child container...
-	for (int i = 0; i < m_vUIObjs.size(); i++)
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		m_vUIObjs[i]->OnLanguageChanged();
 	}
@@ -340,7 +340,7 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 		pGraph->SetClipBoundBox(m_rcObj);
 	}
 
-	for (int i = 0; i < m_vUIObjs.size(); i++)
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		CUIObject		*pObj = m_vUIObjs[i];
 		if (pObj->IsVisible())

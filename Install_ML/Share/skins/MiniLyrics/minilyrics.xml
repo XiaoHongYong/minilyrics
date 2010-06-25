@@ -73,7 +73,7 @@
         ImageFocusPos="0,32" />
       <Image Name="Brand" Rect="44,8,81,20" Image="name.png"/>
       <MenuBar Rect="150,9,w-75-150,18" Name="Menu" Menu="MainWndMenu"
-         FontHeight="15" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
+         FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
          TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
          TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
          BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
@@ -91,7 +91,7 @@
       <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Lyrics" Rect="0,0,w,h" >
         <Container ID="CID_LYRICS" Rect="0,0,w,h">
           <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE"
-              FontHeight="20" EnableAutoResize="FALSE"/>
+              EnableAutoResize="FALSE"/>
         </Container>
         <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" UseSkinBg="TRUE" Visible="false"/>
       </ToggleCtrlContainer>

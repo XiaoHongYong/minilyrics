@@ -392,8 +392,8 @@ void CSkinStyles::Free()
 
 SXNode *CSkinStyles::GetClassNode(LPCTSTR szClassName) const
 {
-	for (SXNode::LIST_CHILDREN::const_reverse_iterator itStyle = m_listStyleNodes.rbegin(); 
-		itStyle != m_listStyleNodes.rend(); ++itStyle)
+	for (SXNode::LIST_CHILDREN::const_iterator itStyle = m_listStyleNodes.begin(); 
+		itStyle != m_listStyleNodes.end(); ++itStyle)
 	{
 		SXNode		*pNodeStyle = *itStyle;
 

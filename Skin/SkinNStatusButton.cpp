@@ -125,6 +125,7 @@ bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 {
 	assert(m_pSkin);
+	bool	bStatusChanged = false;
 
 	if (IsMouseHitBt(point))
 	{
@@ -136,20 +137,18 @@ bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 				m_bHover = false;
 			else
 			{
-				// 捕捉鼠标输入
 				m_pSkin->SetCaptureMouse(this);
 			}
 
-			Invalidate();
+			bStatusChanged = true;
 		}
 		else if (!m_bLBtDown && m_bEnableHover && !m_bHover)
 		{
 			m_bHover = true;
 
-			// 捕捉鼠标输入
 			m_pSkin->SetCaptureMouse(this);
 
-			Invalidate();
+			bStatusChanged = true;
 		}
 	}
 	else
@@ -158,20 +157,25 @@ bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			m_bLBtDown = FALSE;
 
-			// 释放鼠标输入
 			m_pSkin->ReleaseCaptureMouse(this);
 
-			Invalidate();
+			bStatusChanged = true;
 		}
 		else if (m_bHover)
 		{
 			m_bHover = false;
 
-			// 释放鼠标输入
 			m_pSkin->ReleaseCaptureMouse(this);
 
-			Invalidate();
+			bStatusChanged = true;
 		}
+	}
+
+	if (bStatusChanged)
+	{
+		if (m_nTimerIdFadein == 0)
+			StartFadeDrawTimer(m_bLBtDown, m_bHover);
+		Invalidate();
 	}
 
 	return true;
@@ -549,20 +553,9 @@ void CSkinNStatusButton::SetMaxStat(int nMaxStat)
 
 void CSkinNStatusButton::ButtonDownAction()
 {
-	m_bLBtDown = TRUE;
-
 	if (m_bFadein)
 	{
-		if (m_nTimerIdFadein != 0)
-			m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
-		m_nTimerIdFadein = m_pSkin->RegisterTimerObject(this, 50);
-		m_dwBeginFadeinTime = GetTickCount();
-
-		m_pLastImage = NULL;
-		if (m_bEnableHover)
-			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgHover);
-		if (!m_pLastImage || !m_pLastImage->IsValid())
-			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
+		StartFadeDrawTimer(false, true);
 	}
 	else if (m_bContinuousCmd)
 	{
@@ -570,13 +563,13 @@ void CSkinNStatusButton::ButtonDownAction()
 		m_nTimerIdContinuous = m_pSkin->RegisterTimerObject(this, 500);
 	}
 
+	m_bLBtDown = TRUE;
+
 	Invalidate();
 }
 
 void CSkinNStatusButton::ButtonUpAction()
 {
-	m_bLBtDown = FALSE;
-
 	if (m_bContinuousCmd)
 	{
 		m_pSkin->UnregisterTimerObject(this, m_nTimerIdContinuous);
@@ -584,17 +577,9 @@ void CSkinNStatusButton::ButtonUpAction()
 	}
 
 	if (m_bFadein)
-	{
-		if (m_nTimerIdFadein != 0)
-			m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
-		m_nTimerIdFadein = m_pSkin->RegisterTimerObject(this, 50);
-		m_dwBeginFadeinTime = GetTickCount();
+		StartFadeDrawTimer(true, false);
 
-		m_pLastImage = NULL;
-		m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgSel);
-		if (!m_pLastImage->IsValid())
-			m_pLastImage = &(m_vBtStatImg[m_nCurStatus]->imgBk);
-	}
+	m_bLBtDown = FALSE;
 
 	if (m_nCurStatus >= 0 && m_nCurStatus < (int)m_vBtStatImg.size() - 1)
 		m_nCurStatus++;
@@ -611,6 +596,25 @@ void CSkinNStatusButton::ButtonUpAction()
 
 	if (m_vBtStatImg[m_nCurStatus]->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE)
 		m_pSkin->PostCustomCommandMsg(m_vBtStatImg[m_nCurStatus]->nIDCmd);
+}
+
+void CSkinNStatusButton::StartFadeDrawTimer(bool bPrevButtonDown, bool bPrevHover)
+{
+	ASSERT(m_nCurStatus >= 0 && m_nCurStatus <= (int)m_vBtStatImg.size());
+	if (m_nTimerIdFadein != 0)
+		m_pSkin->UnregisterTimerObject(this, m_nTimerIdFadein);
+	m_nTimerIdFadein = m_pSkin->RegisterTimerObject(this, 50);
+	m_dwBeginFadeinTime = GetTickCount();
+
+	BtStatImg	*btimg = m_vBtStatImg[m_nCurStatus];
+
+	m_pLastImage = NULL;
+	if (bPrevButtonDown && btimg->imgSel.IsValid())
+		m_pLastImage = &btimg->imgSel;
+	else if (m_bEnableHover && bPrevHover && btimg->imgHover.IsValid())
+		m_pLastImage = &btimg->imgHover;
+	else if (btimg->imgBk.IsValid())
+		m_pLastImage = &btimg->imgBk;
 }
 
 void CSkinNStatusButton::Destroy()

@@ -301,7 +301,7 @@ void CLyrScrollActionRecorder::UpdateTimeTagByEvents(VLyrLines &lyrLines)
 	double speedlast = 0.0;
 	int nTimeLast = 0;
 	// Calculate the speed of every events
-	for (int i = 0; i < m_listEvents.size() - 1; i++)
+	for (int i = 0; i < (int)m_listEvents.size() - 1; i++)
 	{
 		m_listEvents[i].speed = (m_listEvents[i + 1].distance - m_listEvents[i].distance)
 			/ (double) (m_listEvents[i + 1].nTime - m_listEvents[i].nTime);

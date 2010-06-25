@@ -443,6 +443,7 @@ protected:
 	tstring			m_strCusor;		// 光标文件
 
 	bool			m_bWindowsAppearance;
+	bool			m_bAeroGlass;
 
  	// skin region
 	bool			m_bUseRgn;		// SkinWnd 是否使用region

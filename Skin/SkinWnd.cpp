@@ -32,6 +32,46 @@ const TCHAR SZ_WINAMP2_DEFSKIN_DIR[] = _T("");
 #define TIME_OUT_TRANS_FADEIN		500
 #define TIME_OUT_ANIMATION		30
 
+#ifdef _WIN32_DESKTOP
+
+#include <Dwmapi.h>
+
+typedef HRESULT (WINAPI *FUNC_DwmExtendFrameIntoClientArea)(HWND hWnd, const MARGINS* pMarInset);
+
+bool ExtendIntoWholeClient(HWND hwnd, bool bIntoWholeClient)
+{
+	// Set margins, extending to whole client
+	static FUNC_DwmExtendFrameIntoClientArea	pDwmExtendFrameIntoClientArea = NULL;
+	if (!pDwmExtendFrameIntoClientArea)
+	{
+		HMODULE	hModule = LoadLibrary(_T("Dwmapi.dll"));
+		if (hModule)
+		{
+			pDwmExtendFrameIntoClientArea = (FUNC_DwmExtendFrameIntoClientArea)GetProcAddress(hModule, "DwmExtendFrameIntoClientArea");
+		}
+	}
+
+	if (!pDwmExtendFrameIntoClientArea)
+		return false;
+
+	MARGINS margins = {-1};
+	HRESULT hr = S_OK;
+
+	if (!bIntoWholeClient)
+		memset(&margins, 0, sizeof(margins));
+
+	hr = pDwmExtendFrameIntoClientArea(hwnd,&margins);
+	if (!SUCCEEDED(hr))
+	{
+		DBGLOG1(_T("Failed to apply Aero glass: %s"), (LPCTSTR)Error2Str(hr));
+		return false;
+	}
+
+	return true;
+}
+
+#endif // #ifdef _WIN32_DESKTOP
+
 BOOL IsWndOutOfScreen(const CRect &rc)
 {
 	CRect		rcRestrict;
@@ -159,6 +199,7 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 	m_bInEditorMode = false;
 
 	m_bWindowsAppearance = false;
+	m_bAeroGlass = false;
 
 	m_bPaintBg = false;
 	m_clrBgOrg.set(0, 0, 0);
@@ -311,6 +352,11 @@ void CSkinWnd::CloseSkin()
 		SetWindowLong(m_hWnd, GWL_STYLE, GetWindowLong(m_hWnd, GWL_STYLE) & ~(WS_CAPTION | WS_THICKFRAME));
 		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED | SWP_NOOWNERZORDER | SWP_NOMOVE);
 		m_bWindowsAppearance = false;
+	}
+	if (m_bAeroGlass)
+	{
+		m_bAeroGlass = false;
+		ExtendIntoWholeClient(m_hWnd, false);
 	}
 #endif
 	m_nAlpha = 255;
@@ -794,8 +840,20 @@ bool CSkinWnd::UpdateSkinProperty()
 			m_nTranslucencyAlphaDynamic = m_nTranslucencyAlphaOnActive;
 		else
 			m_nTranslucencyAlphaDynamic = m_nTranslucencyAlpha;
-		RecreateBrush();
 	}
+
+#ifdef _WIN32_DESKTOP
+	if (m_bWindowsAppearance)
+	{
+		SetWindowLong(m_hWnd, GWL_STYLE, GetWindowLong(m_hWnd, GWL_STYLE) | WS_CAPTION | WS_THICKFRAME);
+		::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_DEFERERASE);
+	}
+
+	if (m_bAeroGlass)
+		ExtendIntoWholeClient(m_hWnd, true);
+#endif // #ifdef _WIN32_DESKTOP
+
+	RecreateBrush();
 
 	// init 
 	OnWindowSizeChanged();
@@ -867,6 +925,8 @@ void CSkinWnd::RecreateBrush()
 {
 	m_clrBg = m_clrBgOrg;
 #ifdef _WIN32_DESKTOP
+	if (m_bAeroGlass)
+		m_clrBg.setAlpha(0);
 	if (m_bTranslucencyLayered)
 	{
 		m_clrBg.setAlpha((byte)m_nTranslucencyAlphaDynamic);
@@ -1436,14 +1496,13 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		return TRUE;
 	}
 #ifdef _WIN32_DESKTOP
-	else if (_tcsicmp(szProperty, _T("WindowsAppearance")) == 0)
+	else if (IsPropertyName(szProperty, _T("WindowsAppearance")))
 	{
 		m_bWindowsAppearance = IsTRUE(szValue);
-		if (m_bWindowsAppearance)
-		{
-			SetWindowLong(m_hWnd, GWL_STYLE, GetWindowLong(m_hWnd, GWL_STYLE) | WS_CAPTION | WS_THICKFRAME);
-			::SetWindowPos(m_hWnd, NULL, 0, 0, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED | SWP_NOOWNERZORDER | SWP_NOMOVE | SWP_NOOWNERZORDER | SWP_DEFERERASE);
-		}
+	}
+	else if (IsPropertyName(szProperty, _T("AeroGlass")))
+	{
+		m_bAeroGlass = IsTRUE(szValue);
 	}
 	else if (IsPropertyName(szProperty, _T("EnableClickThrough")))
 	{
@@ -2567,7 +2626,7 @@ bool CSkinWnd::UnregisterUIObjNotifyHandler(IUIObjNotifyHandler *pHandler)
 
 void CSkinWnd::DispatchUIObjNotify(IUIObjNotify *pNotify)
 {
-	for (int i = 0; i < m_vUIObjNotifyHandlers.size(); i++)
+	for (int i = 0; i < (int)m_vUIObjNotifyHandlers.size(); i++)
 	{
 		UIObjNotifyHandlerInfo	&h = m_vUIObjNotifyHandlers[i];
 		if (h.nIDUIObj == pNotify->nID)

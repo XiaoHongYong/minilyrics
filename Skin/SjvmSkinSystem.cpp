@@ -636,7 +636,7 @@ void CSjvmSkinSystem::LoadScript(LPCTSTR szScript)
 	TCHAR		szFile[MAX_PATH];
 
 	StrSplit(szScript, ',', vFiles);
-	for (int i = 0; i < vFiles.size(); i++)
+	for (int i = 0; i < (int)vFiles.size(); i++)
 	{
 		TrimStr(vFiles[i]);
 
