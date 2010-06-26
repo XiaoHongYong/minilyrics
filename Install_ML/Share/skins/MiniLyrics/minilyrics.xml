@@ -68,7 +68,7 @@
       <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
         ImageFocus="frame-foucs.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
 
-      <Button Rect="10,9,16,16" ID="ID_MENU" Name="Menu"
+      <Button Rect="15,9,16,16" ID="ID_MENU" Name="Menu"
         Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
         ImageFocusPos="0,32" />
       <Image Name="Brand" Rect="44,8,81,20" Image="name.png"/>
