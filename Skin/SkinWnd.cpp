@@ -850,7 +850,13 @@ bool CSkinWnd::UpdateSkinProperty()
 	}
 
 	if (m_bAeroGlass)
-		ExtendIntoWholeClient(m_hWnd, true);
+	{
+		if (!ExtendIntoWholeClient(m_hWnd, true))
+		{
+			// Failed to set to Aero mode
+			m_bAeroGlass = false;
+		}
+	}
 #endif // #ifdef _WIN32_DESKTOP
 
 	RecreateBrush();

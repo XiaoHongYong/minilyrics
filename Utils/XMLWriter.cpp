@@ -123,7 +123,7 @@ void CXMLWriter::WriteEndElement()
 		m_strBuff += "/>\r\n";
 	else if (m_wp == WP_ELEMENT_BODY)
 	{
-		if (m_strBuff[(int)(m_strBuff.size() - 1)] == '\n')
+		if (m_strBuff[(uint)(m_strBuff.size() - 1)] == '\n')
 		{
 			for (int i = 1; i < (int)m_vElementStack.size(); i++)
 				m_strBuff += m_strIndent.c_str();

@@ -989,7 +989,7 @@ int CMLPacketWrapper::Wrapp(CCharBuffer &buff)
 		MLEncodePacketV1	head;
 		long		n = 0;
 		size_t		nSizeOld;
-		int			i;
+		uint		i;
 
 		szPwd = m_pAccountMgr->GetPwd(m_nCurrentId);
 		if (!szPwd)
@@ -1007,11 +1007,11 @@ int CMLPacketWrapper::Wrapp(CCharBuffer &buff)
 		MDString(buff.c_str(), buff.size(), head.byMd5);
 		buff.setSize(nSizeOld);
 
-		for (i = 0; i < (int)buff.size(); i++)
+		for (i = 0; i < buff.size(); i++)
 			n += (BYTE)(buff[i]);
 		head.byXor = BYTE(n / buff.size());
 
-		for (i = 0; i < (int)buff.size(); i++)
+		for (i = 0; i < buff.size(); i++)
 			buff[i] = buff[i] ^ head.byXor;
 
 		buff.insert(0, (const char *)&head, sizeof(head));
@@ -1053,7 +1053,7 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 		int				i;
 
 		for (i = sizeof(MLEncodePacketV1); i < (int)buff.size(); i++)
-			buff[i] = buff[i] ^ pHead->byXor;
+			buff[(uint)i] = buff[(uint)i] ^ pHead->byXor;
 
 		m_nCurrentId = pHead->GetID();
 		szPwd = m_pAccountMgr->GetPwd(m_nCurrentId);
