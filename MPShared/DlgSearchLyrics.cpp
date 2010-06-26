@@ -643,8 +643,8 @@ public:
 
 			m_pLyricsList->SetItemSelectionState(0, TRUE);
 
-			EnableUIObject(IDC_NEXT_PAGE, m_nCurPage < m_nPageCount - 1);
-			EnableUIObject(IDC_PREV_PAGE, m_nCurPage > 0);
+			EnableUIObject(CID_NEXT_PAGE, m_nCurPage < m_nPageCount - 1);
+			EnableUIObject(CID_PREV_PAGE, m_nCurPage > 0);
 		}
 		else if (nId == CID_PREV_PAGE)
 		{
@@ -659,8 +659,8 @@ public:
 
 			m_pLyricsList->SetItemSelectionState(0, TRUE);
 
-			EnableUIObject(IDC_NEXT_PAGE, m_nCurPage < m_nPageCount - 1);
-			EnableUIObject(IDC_PREV_PAGE, m_nCurPage > 0);
+			EnableUIObject(CID_NEXT_PAGE, m_nCurPage < m_nPageCount - 1);
+			EnableUIObject(CID_PREV_PAGE, m_nCurPage > 0);
 		}
 		else
 			return false;

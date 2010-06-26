@@ -167,6 +167,7 @@ SectionIn 1 2
   Delete "$INSTDIR\Skins\Plain\*.*"
   Delete "$INSTDIR\Skins\Have Nothing On\*.*"
   Delete "$INSTDIR\Skins\Windows\*.*"
+  Delete "$INSTDIR\Skins\Windows 7\*.*"
   Delete "$INSTDIR\Skins\WindowsXP\*.*"
   Delete "$INSTDIR\Skins\WindowsXP2\*.*"
   Delete "$INSTDIR\Skins\TCPort\*.*"
@@ -194,6 +195,7 @@ SectionIn 1 2
   RMDir "$INSTDIR\Skins\Fantasy (Transparent)"
   RMDir "$INSTDIR\Skins\Have Nothing On"
   RMDir "$INSTDIR\Skins\Windows"
+  RMDir "$INSTDIR\Skins\Windows 7"
   RMDir "$INSTDIR\Skins\WindowsXP"
   RMDir "$INSTDIR\Skins\WindowsXP2"
   RMDir "$INSTDIR\Skins\TCPort"
@@ -638,6 +640,9 @@ SectionIn 1
 
   SetOutPath $INSTDIR\Skins\Windows
   File Share\Skins\Windows\*.*
+
+  SetOutPath "$INSTDIR\Skins\Windows 7"
+  File "Share\Skins\Windows 7\*.*"
 SectionEnd
 
 Section "Start Menu Shortcuts" SecShortcut
@@ -917,6 +922,7 @@ Section "Uninstall"
   Delete "$INSTDIR\Skins\Plain\*.*"
   Delete "$INSTDIR\Skins\Have Nothing On\*.*"
   Delete "$INSTDIR\Skins\Windows\*.*"
+  Delete "$INSTDIR\Skins\Windows 7\*.*"
   Delete "$INSTDIR\Skins\WindowsXP\*.*"
   Delete "$INSTDIR\Skins\WindowsXP2\*.*"
   Delete "$INSTDIR\Skins\TCPort\*.*"
@@ -971,6 +977,7 @@ Section "Uninstall"
   RMDir "$INSTDIR\Skins\Fantasy (Transparent)"
   RMDir "$INSTDIR\Skins\Have Nothing On"
   RMDir "$INSTDIR\Skins\Windows"
+  RMDir "$INSTDIR\Skins\Windows 7"
   RMDir "$INSTDIR\Skins\WindowsXP"
   RMDir "$INSTDIR\Skins\WindowsXP2"
   RMDir "$INSTDIR\Skins\TCPort"
