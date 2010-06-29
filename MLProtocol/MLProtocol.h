@@ -472,7 +472,6 @@ enum ML_PACK_VERSION
 };
 
 #pragma pack(push, 1)
-#pragma pack(1)
 struct MLEncodePacketV1
 {
 	BYTE		byVersion;		// 协议的版本：

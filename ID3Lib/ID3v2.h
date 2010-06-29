@@ -35,7 +35,6 @@ enum ID3v2FrameAction
 #define ID3_TAGFOOTERSIZE       (10)
 
 #pragma pack(push, 1)
-#pragma pack(1)
 /************************************************************************\
      +-----------------------------+
      |      Header (10 bytes)      |

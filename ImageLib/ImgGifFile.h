@@ -42,7 +42,7 @@ public:
 	// virtual BOOL Save(IILIO *io);
 
 public:
-#pragma pack(1)
+#pragma pack(push, 1)
 
 typedef struct tag_gifgce{
   BYTE transpcolflag:1;
@@ -98,7 +98,7 @@ typedef struct tag_RLE{
 	unsigned char oblock[256];
 	int oblen;
 } struct_RLE;
-#pragma pack()
+#pragma pack(pop)
 
 	void SetLoops(int loops);
 	long GetLoops();

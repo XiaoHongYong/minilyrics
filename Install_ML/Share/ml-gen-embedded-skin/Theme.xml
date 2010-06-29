@@ -9,7 +9,7 @@
     <OutlineLyrText>0</OutlineLyrText>
     <HilightOBM>1</HilightOBM>
     <LowlightOBM>1</LowlightOBM>
-    <ThemeFont>, 16, thin, , , </ThemeFont>
+    <ThemeFont>, 16, normal, , , </ThemeFont>
     <LyrDrawOpt>fadein</LyrDrawOpt>
     <LyrDisplayStyle>LyricShowMultiRow</LyrDisplayStyle>
   </LyrDispaly>
