@@ -1,4 +1,6 @@
 
+#pragma once
+
 // section name
 #define SZ_SECT_LYR_DISPLAY			_T("LyrDispaly")
 #define SZ_SECT_FLOATING_LYR		_T("FloatingLyr")

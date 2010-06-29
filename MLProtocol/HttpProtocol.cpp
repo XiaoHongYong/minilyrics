@@ -111,8 +111,6 @@ BOOL CHttpProtocol::HttpTimeStrToSysTime(LPCSTR szHttpTime, SYSTEMTIME &sysTime)
 
 int CHttpProtocol::ReadHead(BOOL bParseHead)
 {
-	int			nRead = 0;
-	int			nTotalRead = 0;
 	int			nLastPos = 0;
 	int			i = 0;
 
@@ -961,8 +959,6 @@ int CHttpReturnProtocol::ReadData(CCharBuffer *pBuff, int nLen)
 {
 	if (m_bTransfEncChunked)
 	{
-		DWORD		dwTrunk = 0;
-
 		//
 		// 分析m_buffHead 中部分数据
 		LPSTR		szData;

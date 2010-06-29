@@ -375,7 +375,6 @@ void CLyrScrollActionRecorder::UpdateTimeTagByEvents(VLyrLines &lyrLines)
 
 int CLyrScrollActionRecorder::GetDistanceOfLine(VLyrLines &lyrLines, int nLine)
 {
-	int		d = 0;
 	if (nLine > (int)lyrLines.size())
 		nLine = (int)lyrLines.size();
 

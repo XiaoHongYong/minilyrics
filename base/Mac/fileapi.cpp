@@ -35,6 +35,8 @@ bool IsDirExist(LPCTSTR szDir)
 		return false;
 	}
 
+	closedir(dp);
+	
 	return true;
 }
 
@@ -118,7 +120,9 @@ bool RemoveDirectory(LPCTSTR lpPathName)
 
 bool CreateDirectory(LPCSTR lpPathName)
 {
-	return mkdir(lpPathName, 0) == 0;
+	int n = mkdir(lpPathName, S_IRWXU | S_IRWXG | S_IROTH);
+	
+	return n == 0;
 }
 
 BOOL CreateDirectoryAll(LPCTSTR szDir)
@@ -131,6 +135,13 @@ BOOL CreateDirectoryAll(LPCTSTR szDir)
 	szBeg = _tcschr(szTemp, DIR_SLASH);
 	while (szBeg != NULL)
 	{
+		if (szTemp == szBeg)
+		{
+			// For linux system, dir begin with '\'
+			szBeg = _tcschr(szBeg + 1, DIR_SLASH);
+			continue;
+		}
+
 		*szBeg = '\0';
 
 		if (!IsDirExist(szTemp))
@@ -141,12 +152,6 @@ BOOL CreateDirectoryAll(LPCTSTR szDir)
 
 		*szBeg = DIR_SLASH;
 		szBeg = _tcschr(szBeg + 1, DIR_SLASH);
-	}
-
-	if (!IsDirExist(szDir))
-	{
-		if (!CreateDirectory(szDir))
-			return FALSE;
 	}
 
 	return TRUE;

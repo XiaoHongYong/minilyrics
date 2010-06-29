@@ -522,7 +522,6 @@ bool CLanguageTool::ListTransFiles(LPCTSTR szDir, V_TRANSFILEINFO &vTransFiles)
 	{
 		if (!find.IsCurDir())
 		{
-			bool		bAdd = false;
 			TransFileInfo	item;
 
 			if (_tcsicmp(find.GetCurName(), strEngTransFileName.c_str()) == 0)

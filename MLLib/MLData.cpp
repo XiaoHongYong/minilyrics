@@ -828,7 +828,7 @@ int CMLData::UpdateTagToID3v2DescTxt()
 	CLyricsTagReader<TCHAR>		lrctagWriter;
 
 	LPCTSTR		szTitle = NULL, szArtist = NULL, szAlbum = NULL;
-	LPCTSTR		szEncoding = NULL, szBy = NULL, szTxtScrollEvents = NULL;
+	LPCTSTR		szEncoding = NULL, szTxtScrollEvents = NULL;
 
 	if (m_lyrProperties.m_strArtist != m_lyrPropertiesOrg.m_strArtist)
 		szArtist = m_lyrProperties.m_strArtist.c_str();

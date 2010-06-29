@@ -294,7 +294,7 @@ CNetFile::~CNetFile()
 
 int CNetFile::SetTimeOut(int nTimeOut)
 {
-#ifndef _WINCE_
+#if !defined(_WINCE_) && !defined(_IPHONE)
 	// 设置接收延时和发送延时
 	if (setsockopt(m_s, SOL_SOCKET, SO_SNDTIMEO, (const char *)&nTimeOut, sizeof(nTimeOut)) == SOCKET_ERROR)
 	{

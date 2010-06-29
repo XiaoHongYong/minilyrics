@@ -1312,7 +1312,7 @@ int CMsgProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, int nMaxBuf
 //	return ERR_OK;
 //}
 
-int CMsgProtocol::WriteMsg(char *szMsgType, CCharBuffer *pMsgBuff)
+int CMsgProtocol::WriteMsg(const char *szMsgType, CCharBuffer *pMsgBuff)
 {
 	char	szHeader[256];
 	char	szFormat[32];

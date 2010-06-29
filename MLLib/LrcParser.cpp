@@ -526,7 +526,7 @@ bool CLrcParserObj::ReadTxtTag(TCHAR *szTag, int nLen)
 //
 // Add text file lyrics row
 //
-void CLrcParserObj::AddStrTimeRow(TCHAR *szLyric, int nLen)
+void CLrcParserObj::AddStrTimeRow(const TCHAR *szLyric, int nLen)
 {
 	PLYRIC_FRAG		pFrag;
 	PML_ROW			pRow;
@@ -1244,7 +1244,7 @@ BOOL CLrcParser::ToString(tstring &str, BOOL bIncTags)
 	{
 		//
 		// 保存时间偏移值
-		if (m_pMLData->GetLyricsSourceType() == LCT_TXT)
+		if (m_pMLData->GetLyrContentType() == LCT_TXT)
 		{
 			if (!IsEmptyString(m_pMLData->GetTxtLyrScrollEvents()))
 			{

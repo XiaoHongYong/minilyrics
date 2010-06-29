@@ -4,8 +4,8 @@
 #include "../../OurMFCLib/OurMFClib.h"
 #include "../../gfx/gfx.h"
 #include "../../MLLib/MLLib.h"
-#include "helper.h"
 #include "CMLApp.h"
+#include "LyricsShowGraphBase.h"
 
 CMLApp			*CMLApp::m_pAppInstance = NULL;
 
@@ -32,6 +32,8 @@ int CMLApp::Init()
 	vArgv[0] = (LPTSTR)strAppDirDir.c_str();
 
 	InitBaseFrameWork(1, vArgv, NULL, _T("MiniLyrics.ini"), _T("MiniLyrics"));
+	
+	SetDefaultSettings();
 
 	m_localLyrSearch.Init();
 	m_onlineLyrSearch.Init();
@@ -65,12 +67,12 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 
 	m_lyrData.Close();
 
-	tstring strTestLyr = GetResourceFile(_T("lyrics.lrc"));
+/*	tstring strTestLyr = GetResourceFile(_T("lyrics.lrc"));
 	int nRet = m_lyrData.OpenLyrics(szMediaKey, nMediaLength, strTestLyr.c_str());
 
 	PostNotifyLyricsChanged();
 	
-	return;
+	return;*/
 
 	if (m_strCurMediaKey.empty() && m_strArtist.empty() && m_strTitle.empty())
 		return;
@@ -84,7 +86,10 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 		// Open lyrics and return.
 		int nRet = m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szLyricFile);
 		if (nRet == ERR_OK)
+		{
+			PostNotifyLyricsChanged();
 			return;
+		}
 	}
 
 /*	if (g_LyricData.GetLyrContentType() == LCT_TXT &&
@@ -120,14 +125,25 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 
 void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
 {
-	bPopupSearchWnd = false;
+	if (nResult == ERR_OK)
+	{
+		bPopupSearchWnd = false;
 	
-	// Lyrics are opened already?
-	if (m_localLyrSearch.IsAssociatedLyrics(m_strCurMediaKey.c_str()))
-		return;
+		// Lyrics are opened already?
+		if (m_localLyrSearch.IsAssociatedLyrics(m_strCurMediaKey.c_str()))
+			return;
 
-	// Got lyrics search result, so search it.
-	SearchInCacheResult(true);
+		// Got lyrics search result, so search it.
+		SearchInCacheResult(true);
+	}
+	else
+	{
+		tstring		str;
+		str = TOLOCAL(_T("Failed to search lyrics with error:"));
+		str += _T(" ");
+		str += Error2Str(nResult);
+		PostNotifyMessage(str.c_str());
+	}
 }
 
 void CMLApp::OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
@@ -139,6 +155,7 @@ void CMLApp::OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
 	if (_tcscmp(szMediaKey, m_strCurMediaKey.c_str()) == 0)
 	{
 		m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szFile);
+		PostNotifyLyricsChanged();
 	}
 }
 
@@ -221,4 +238,31 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 	}
 
 	return TRUE;
+}
+
+void CMLApp::SetDefaultSettings()
+{
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("Font"), _T(", 20, bold, 0, 0, "));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgColor"), _T("#FFFFFF"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgLowColor"), _T("#B2B2B2"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("BgColor"), _T("#576C91"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FocusLineBgColor"), _T("#8A94AA"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("TagColor"), _T("#FF8242"));
+
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightBorderColor"), _T("#000000"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightBorderColor"), _T("#000000"));
+	
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightOBM"), OBM_COLOR);
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightGradient1"), _T("#FFFF80"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightGradient2"), _T("#FF2D2D"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightGradient3"), _T("#AE0000"));
+	
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgColor"), _T("#FF0000"));
+	
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightOBM"), OBM_COLOR);
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightGradient1"), _T("#0000A0"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightGradient2"), _T("#0080FF"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightGradient3"), _T("#0000FF"));
+	
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgLowColor"), _T("#0000FF"));
 }

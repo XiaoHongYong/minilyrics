@@ -587,7 +587,6 @@ LPCTSTR ID3v2TextUserDefined::GetValue()
 
 int CID3v2FrameParserText::Parse(const CID3v2Frame *pFrame, ID3v2Text &text)
 {
-	const ID3v2FrameHdr &frameHdr = pFrame->m_framehdr;
 	const char *data = pFrame->m_frameData.c_str();
 	int		len = pFrame->m_frameData.size();
 
@@ -638,7 +637,6 @@ int CID3v2FrameParserText::ToFrameData(ID3v2Text &text, CID3v2Frame *pFrame)
 
 int CID3v2FrameParserTextUserDefined::Parse(const CID3v2Frame *pFrame, ID3v2TextUserDefined &text)
 {
-	const ID3v2FrameHdr &frameHdr = pFrame->m_framehdr;
 	const char *data = pFrame->m_frameData.c_str();
 	int		len = pFrame->m_frameData.size();
 	int		nBytesCopied;

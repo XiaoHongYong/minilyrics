@@ -97,7 +97,7 @@ int CompareVersion(LPCTSTR szVer1, int nMajor, int nMinor, int nBuild)
 int GoDie()
 {
 	char		*p;
-	p = "";
+	p = (char *)"";
 
 	strcpy_safe(p, 100, "xeta");
 

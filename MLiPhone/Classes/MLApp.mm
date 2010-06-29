@@ -34,8 +34,9 @@ tstring GetAppDataDir()
 														 NSUserDomainMask,
 														 YES);
 	NSString *documentsDir = [paths objectAtIndex:0];
-	NSString *app = [documentsDir stringByAppendingPathComponent:@"MiniLyrics.app"];
-	return (char *)[app UTF8String];
+	tstring	str = (const char *)[documentsDir UTF8String];
+	DirStringAddSlash(str);
+	return str;
 }
 
 void GetAppDataDir(TCHAR szDir[])

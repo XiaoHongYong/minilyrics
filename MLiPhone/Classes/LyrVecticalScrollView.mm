@@ -75,17 +75,20 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 -(void) onLyricsChanged
 {
 	m_lyrGraph.OnLyricsChanged();
+	CRect	rcUpdate;
+	m_lyrGraph.Invalidate();
+	m_lyrGraph.UpdateGraph(rcUpdate);
 	[self setNeedsDisplay];
 }
 
 -(void) onPlaybackStateChanged:(MPMusicPlaybackState)state
 {
-	if (state == MPMusicPlaybackStatePaused || state == MPMusicPlaybackStateStopped) {
+/*	if (state == MPMusicPlaybackStatePaused || state == MPMusicPlaybackStateStopped) {
 		[lyrDisplayTimer invalidate];
 	}
 	else if (state == MPMusicPlaybackStatePlaying) {
 		[lyrDisplayTimer fire];
-	}
+	}*/
 }
 
 - (void)drawRect:(CGRect)rect {
@@ -103,8 +106,6 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 		// m_font.Create("Helvetica", "Helvetica", 20, FW_NORMAL, 0);
 		// m_bmpFont.Create("Helvetica", "Helvetica", 50, FW_NORMAL, 0);
 	}
-
-	m_lyrGraph.Draw(&m_lyrGraph.GetGraph());
 
 	m_lyrGraph.GetGraph().DrawToGraphics(&graph, 0, 0, frame.size.width, frame.size.height, 0, 0);
 
@@ -138,7 +139,7 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 
 	CRect	rcUpdate;
 	m_lyrGraph.UpdateGraph(rcUpdate);
-	if (rcUpdate.IsEmptyRect())
+	if (rcUpdate.IsRectEmpty())
 		return;
 
 	[self setNeedsDisplayInRect:CGRectMake(rcUpdate.left, rcUpdate.top, rcUpdate.Width(), rcUpdate.Height())];

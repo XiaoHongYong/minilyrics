@@ -68,6 +68,17 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 @synthesize playedMusicOnce;			// A flag indicating if the user has played iPod library music at least one time
 										//		since application launch.
 
+@synthesize advancedCtrlView;
+@synthesize repeatButton;
+@synthesize shuffleButton;
+@synthesize playingSlider;
+@synthesize volumeSlider;
+@synthesize playedTimeLable;
+@synthesize leftTimeLable;
+@synthesize playingProgressTimer;
+@synthesize mediaLength;
+
+
 @synthesize lyrView;
 @synthesize scrollLyrView;
 @synthesize lyrVerticalView;
@@ -102,6 +113,46 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 - (IBAction)	forwardMusic:			(id) sender
 {
 	[musicPlayer skipToNextItem];
+}
+
+- (IBAction)	shuffle:				(id) sender
+{
+	MPMusicShuffleMode shuffleMode = [musicPlayer shuffleMode];
+	UIImage *imgShuffle;
+
+	if (shuffleMode == MPMusicShuffleModeOff) {
+		shuffleMode = MPMusicShuffleModeSongs;
+		imgShuffle = [UIImage imageNamed:@"shuffle_off.png"];
+	}
+	else {
+		shuffleMode = MPMusicShuffleModeOff;
+		imgShuffle = [UIImage imageNamed:@"shuffle_on.png"];
+	}
+
+	[musicPlayer setShuffleMode: shuffleMode];
+	[shuffleButton setImage:imgShuffle forState:UIControlStateNormal];
+}
+
+- (IBAction)	repeat:					(id) sender
+{
+	MPMusicRepeatMode repeatMode = [musicPlayer repeatMode];
+	UIImage *imgRepeat;
+	
+	if (repeatMode == MPMusicRepeatModeNone) {
+		repeatMode = MPMusicRepeatModeAll;
+		imgRepeat = [UIImage imageNamed:@"repeat_on.png"];
+	}
+	else if (repeatMode == MPMusicRepeatModeAll) {
+		repeatMode = MPMusicRepeatModeOne;
+		imgRepeat = [UIImage imageNamed:@"repeat_on_1.png"];
+	}
+	else {
+		repeatMode = MPMusicRepeatModeNone;
+		imgRepeat = [UIImage imageNamed:@"repeat_off.png"];
+	}
+	
+	[musicPlayer setRepeatMode: repeatMode];
+	[repeatButton setImage:imgRepeat forState:UIControlStateNormal];
 }
 
 // If there is no selected media item collection, display the media item picker. If there's 
@@ -259,6 +310,14 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 
 	}
 	
+	NSNumber	*length = [currentItem valueForProperty: MPMediaItemPropertyPlaybackDuration];
+	[self setMediaLength: [length doubleValue]];
+	
+	[playingSlider setMaximumValue: (float)[length doubleValue]];
+	[playingSlider setMinimumValue: 0.0];
+	
+	[self onUpdatePlayingProgress];
+	
 	[mlApp onMediaChanged];
 }
 
@@ -357,6 +416,12 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 - (void) viewDidLoad {
 
     [super viewDidLoad];
+
+	[self setPlayingProgressTimer: [NSTimer scheduledTimerWithTimeInterval: 0.5
+															   target: self
+															 selector: @selector (onUpdatePlayingProgress)
+															 userInfo: nil
+															  repeats: YES]];	
 	
 	[self setPlayedMusicOnce: NO];
 	
@@ -443,6 +508,18 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	[lyrVerticalView InitLyrView];
 }
 
+// Invoked by the playingProgressTimer.
+- (void) onUpdatePlayingProgress {
+	int currentPlaybackTime = (int)([musicPlayer currentPlaybackTime] + 0.5);
+
+	[playedTimeLable setText:
+	 [NSString stringWithFormat:@"%d", currentPlaybackTime]];
+	[leftTimeLable setText:
+	 [NSString stringWithFormat:@"-%d", int(self.mediaLength - [musicPlayer currentPlaybackTime] + 0.5)]];
+
+	[playingSlider setValue: currentPlaybackTime];
+}
+
 #pragma mark MLApp event Delegate
 
 - (void)onLyricsChanged
@@ -499,6 +576,9 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	[[MPMediaLibrary defaultMediaLibrary] endGeneratingLibraryChangeNotifications];
 	
 */
+	[playingProgressTimer		invalidate];
+	[playingProgressTimer		release];
+
 	[[NSNotificationCenter defaultCenter] removeObserver: self
 													name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification
 												  object: musicPlayer];

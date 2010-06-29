@@ -30,6 +30,8 @@ public:
 protected:
 	BOOL SearchInCacheResult(bool bShowInfoText = false);
 
+	void SetDefaultSettings();
+	
 protected:
 	CLyricsLocalSearch		m_localLyrSearch;
 	COnlineSearch			m_onlineLyrSearch;

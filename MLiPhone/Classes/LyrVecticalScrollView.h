@@ -21,5 +21,6 @@
 @property(nonatomic, retain)	MPMusicPlayerController		*musicPlayer;
 
 -(void) onLyricsChanged;
+- (void) InitLyrView;
 
 @end

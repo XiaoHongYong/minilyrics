@@ -462,8 +462,6 @@ BOOL MLVerifyRegCode(const char *szName, const char *szRegCode)
 // version == 2
 BOOL SimpleVerifyRegCode2()
 {
-	BOOL		bRet = TRUE;
-
 	//
 	// ¸´ÖÆg_szMLRegNameNew
 	strcpy_safe(g_szMLRegNameNew, CountOf(g_szMLRegNameNew), g_szMLRegName);

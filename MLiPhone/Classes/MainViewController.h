@@ -66,6 +66,18 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	IBOutlet UINavigationBar	*navigationBar;
 	IBOutlet UILabel			*nowPlayingLabel;
 	BOOL						playedMusicOnce;
+		
+		
+	// Top play and lyrics display (font size ...)
+	IBOutlet UIView				*advancedCtrlView;
+	IBOutlet UIButton			*repeatButton;
+	IBOutlet UIButton			*shuffleButton;
+	IBOutlet UISlider			*playingSlider;
+	IBOutlet UISlider			*volumeSlider;
+	IBOutlet UILabel			*playedTimeLable;
+	IBOutlet UILabel			*leftTimeLable;
+	NSTimer						*playingProgressTimer;
+	double						mediaLength;
 
 	IBOutlet UIScrollView		*scrollLyrView;
 	LyricsShowView				*lyrView;
@@ -87,6 +99,17 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 @property (nonatomic, retain)	UILabel					*nowPlayingLabel;
 @property (readwrite)			BOOL					playedMusicOnce;
 
+@property (nonatomic, retain)	UIView					*advancedCtrlView;
+@property (nonatomic, retain)	UIButton				*repeatButton;
+@property (nonatomic, retain)	UIButton				*shuffleButton;
+@property (nonatomic, retain)	UISlider				*playingSlider;
+@property (nonatomic, retain)	UISlider				*volumeSlider;
+@property (nonatomic, retain)	UILabel					*playedTimeLable;
+@property (nonatomic, retain)	UILabel					*leftTimeLable;
+@property (nonatomic, retain)	NSTimer					*playingProgressTimer;
+@property (readwrite)			double					mediaLength;
+
+
 @property (nonatomic, retain)	UIScrollView			*scrollLyrView;
 @property (nonatomic, retain)	LyricsShowView			*lyrView;
 @property (nonatomic, retain)	LyrVecticalScrollView	*lyrVerticalView;
@@ -105,6 +128,9 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 - (IBAction)	forwardMusic:			(id) sender;
 - (IBAction)	MiniLyrics:				(id) sender;
 - (IBAction)	ShowMusic:				(id) sender;
+- (IBAction)	shuffle:				(id) sender;
+- (IBAction)	repeat:					(id) sender;
+
 
 - (BOOL) useiPodPlayer;
 

@@ -114,8 +114,6 @@ VERIFY_FAILED_EXIT;\
 // version == 2
 BOOL SimpleVerifyRegCodeV4()
 {
-	BOOL		bRet = TRUE;
-
 	//
 	// ¸´ÖÆg_szMLRegNameNew
 	strcpy_safe(g_szMLRegNameNew, CountOf(g_szMLRegNameNew), g_szMLRegName);

@@ -118,7 +118,7 @@ protected:
 	void AddTimeRow(CBuffWord *pbuffCompWords, TCHAR *szLyric, int nLen);
 
 	void AddTimeRow(COMPILE_WORD *pCompWord, TCHAR *szLyric, int nLen);
-	void AddStrTimeRow(TCHAR *szLyric, int nLen);
+	void AddStrTimeRow(const TCHAR *szLyric, int nLen);
 
 	void AddFileRowsToMLData(PML_ROW pFileRow);
 

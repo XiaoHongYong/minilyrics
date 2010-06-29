@@ -566,7 +566,7 @@ public:
 	int ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, int nMaxBuff, BOOL *pbMLAgent = NULL);
 //	int ContinueReadMsg(int nDataLength, CCharBuffer *pBuffer, int nMaxBuff);
 
-	int WriteMsg(char *szMsgType, CCharBuffer *pMsgBuff);
+	int WriteMsg(const char *szMsgType, CCharBuffer *pMsgBuff);
 
 protected:
 	CNetFile	*m_pNetFile;
