@@ -1,11 +1,11 @@
-#include "../../base/mlstdafx.h"
-#include "../../base/base.h"
-#include "../../Utils/Utils.h"
-#include "../../OurMFCLib/OurMFClib.h"
-#include "../../gfx/gfx.h"
-#include "../../MLLib/MLLib.h"
-#include "CMLApp.h"
-#include "LyricsShowGraphBase.h"
+#import "../../base/mlstdafx.h"
+#import "../../base/base.h"
+#import "../../Utils/Utils.h"
+#import "../../OurMFCLib/OurMFClib.h"
+#import "../../gfx/gfx.h"
+#import "../../MLLib/MLLib.h"
+#import "CMLApp.h"
+#import "LyricsShowGraphBase.h"
 
 CMLApp			*CMLApp::m_pAppInstance = NULL;
 
@@ -146,6 +146,22 @@ void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
 	}
 }
 
+bool CMLApp::SearchCacheForCurrentMedia(V_LRCSEARCHRESULT &vLrcSearchResult)
+{
+	return m_onlineLyrSearch.SearchCache(m_strCurMediaKey.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), &vLrcSearchResult);
+}
+
+void CMLApp::DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szUrl, LPCTSTR szFileName)
+{
+	tstring		str;
+	str = TOLOCAL(_T("Downloading lyrics:"));
+	str += _T(" ");
+	str += szFileName;
+	PostNotifyMessage(str.c_str());
+	
+	m_lyrDownloadMgr.DownloadLyrics(szMediaKey, szUrl, szFileName);
+}
+
 void CMLApp::OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
 {
 	// Associate lyrics
@@ -215,14 +231,8 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 				&& result.nMatchValue < MATCH_VALUE_BETTER)
 				return TRUE;
 
-			// 就下载它了
-			tstring		str;
-			str = TOLOCAL(_T("Downloading lyrics:"));
-			str += _T(" ");
-			str += result.strSaveFileName.c_str();
-			PostNotifyMessage(str.c_str());
-
-			m_lyrDownloadMgr.DownloadLyrics(m_strCurMediaKey.c_str(), result.strUrl.c_str(), result.strSaveFileName.c_str());
+			// Download it
+			DownloadLyrics(m_strCurMediaKey.c_str(), result.strUrl.c_str(), result.strSaveFileName.c_str());
 			return TRUE;
 		}
 	}

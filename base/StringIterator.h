@@ -37,7 +37,7 @@ public:
 		return szChar[0] != ch.szChar[0];
 	}
 
-	int GetIntValue()
+	uint32 GetIntValue()
 	{
 		return szChar[0];
 	}
@@ -103,14 +103,14 @@ public:
 		szChar[n] = 0;
 	}
 
-	int GetIntValue()
+	int32 GetIntValue()
 	{
-		int		nValue = 0;
+		uint32		nValue = 0;
 
 		for (int i = 0; szChar[i] != 0; i++)
 		{
 			nValue <<= 8;
-			nValue |= szChar[i];
+			nValue |= uint8(szChar[i]);
 		}
 
 		return nValue;

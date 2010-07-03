@@ -14,6 +14,8 @@
 #import "../../GfxRaw/GfxRaw.h"
 #import "../../MLLib/MLLib.h"
 #import "CMLApp.h"
+#import <CoreText/CoreText.h>
+#import <CoreFoundation/CFDictionary.h>
 
 #import "LyricsVerticalScrollGraph.h"
 
@@ -91,6 +93,102 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	}*/
 }
 
+CTFontRef CreateFont(CTFontDescriptorRef iFontDescriptor, CGFloat iSize);
+CTFontDescriptorRef CreateFontDescriptorFromFamilyAndTraits(CFStringRef iFamilyName,
+															CTFontSymbolicTraits iTraits, CGFloat iSize);
+
+/*
+CTFontDescriptorRef CreateFontDescriptorFromFamilyAndTraits(CFStringRef iFamilyName,
+															CTFontSymbolicTraits iTraits, CGFloat iSize)
+{
+    CTFontDescriptorRef descriptor = NULL;
+    CFMutableDictionaryRef attributes;
+	
+    assert(iFamilyName != NULL);
+    // Create a mutable dictionary to hold our attributes.
+    attributes = CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
+										   &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    
+    if (attributes != NULL) {
+        CFMutableDictionaryRef traits;
+        CFNumberRef symTraits;
+		
+        // Add a family name to our attributes.
+        CFDictionaryAddValue(attributes, kCTFontFamilyNameAttribute, iFamilyName);
+		
+        // Create the traits dictionary.
+        symTraits = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type,
+								   &iTraits);
+        
+        if (symTraits != NULL) {
+            // Create a dictionary to hold our traits values.
+            traits = CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
+											   &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+            
+            if (traits != NULL) {
+                // Add the symbolic traits value to the traits dictionary.
+                CFDictionaryAddValue(traits, kCTFontSymbolicTrait, symTraits);
+				
+                // Add the traits attribute to our attributes.
+                CFDictionaryAddValue(attributes, kCTFontTraitsAttribute, traits);
+                CFRelease(traits);
+            }
+            CFRelease(symTraits);
+        }
+        // Create the font descriptor with our attributes and input size.
+        descriptor = CTFontDescriptorCreateWithAttributes(attributes);
+		
+        CFRelease(attributes);
+    }
+    // Return our font descriptor.
+    return descriptor;
+}
+
+CTFontRef CreateFont(CTFontDescriptorRef iFontDescriptor, CGFloat iSize)
+{
+    // Create the font from the font descriptor and input size. Pass
+    // NULL for the matrix parameter to use the default matrix (identity).
+	
+    return CTFontCreateWithFontDescriptor(iFontDescriptor, iSize, NULL);
+}*/
+
+void DrawText(CGContextRef context, int x, int y, int nFontHeight)
+{
+	CFStringRef string = CFSTR("Hello");
+	
+	CTFontRef font = CreateFont(
+		CreateFontDescriptorFromFamilyAndTraits(CFSTR("Helvetica"), 0, nFontHeight),
+		nFontHeight);
+
+	CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
+	CGFloat components[] = { 1.0, 1.0, 1.0, 1.0 };
+	CGColorRef red = CGColorCreate(rgbColorSpace, components);
+	CGColorSpaceRelease(rgbColorSpace);
+	
+	// Initialize string, font, and context
+	CFStringRef keys[] = { kCTFontAttributeName, kCTForegroundColorAttributeName };
+	CFTypeRef values[] = { font, red };
+
+	CFDictionaryRef attributes =
+    CFDictionaryCreate(kCFAllocatorDefault, (const void**)&keys,
+					   (const void**)&values, sizeof(keys) / sizeof(keys[0]),
+					   &kCFTypeDictionaryKeyCallBacks,
+					   &kCFTypeDictionaryValueCallBacks);
+	
+	CFAttributedStringRef attrString =
+    CFAttributedStringCreate(kCFAllocatorDefault, string, attributes);
+	CFRelease(string);
+	CFRelease(attributes);
+	
+	CTLineRef line = CTLineCreateWithAttributedString(attrString);
+	
+	// Set text position and draw the line into the graphics context
+	CGContextSetTextPosition(context, x, y + nFontHeight);
+	CTLineDraw(line, context);
+	CFRelease(line);
+	CFRelease(font);
+}
+
 - (void)drawRect:(CGRect)rect {
 
 	// [super drawRect:rect];
@@ -109,7 +207,17 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 
 	m_lyrGraph.GetGraph().DrawToGraphics(&graph, 0, 0, frame.size.width, frame.size.height, 0, 0);
 
-/*	MLColor	clr(RGB(255, 0, 0));
+
+/*	if (!m_memGraph.IsValid())
+	{
+		m_memGraph.Create(frame.size.width, frame.size.height, NULL, 32);
+		m_font.Create("Helvetica", "Helvetica", 20, FW_NORMAL, 0);
+		m_bmpFont.Create("Helvetica", "Helvetica", 50, FW_NORMAL, 0);
+	}
+
+	CRect rcText;
+	
+	MLColor	clr(RGB(255, 0, 0));
 	m_memGraph.FillRect(0, 0, frame.size.width, frame.size.height, clr);
 
 	MLColor	clrText(RGB(255, 255, 255));
@@ -117,17 +225,27 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	m_memGraph.SetTextColor(clrText);
 	
 	m_memGraph.SetFont(&m_bmpFont);
-	m_memGraph.TextOut(10, 150, "BmpFont", 7);
-	m_memGraph.TextOutOutlined(10, 200, "BmpFont2", 8, clrText, clrBorder);
+
+	rcText.SetRect(10, 150, 10 + 200, 150 + m_bmpFont.GetHeight());
+	m_memGraph.FillRect(&rcText, MLColor(RGB(0, 255, 0)), BPM_COPY);
+	m_memGraph.TextOut(rcText.left, rcText.top, "Bm中文150", 7);
+
+	rcText.SetRect(10, 250, 10 + 200, 250 + m_bmpFont.GetHeight());
+	m_memGraph.FillRect(&rcText, MLColor(RGB(0, 255, 0)), BPM_COPY);
+	m_memGraph.TextOutOutlined(rcText.left, rcText.top, "BmpFont300", 8, clrText, clrBorder);
 	
 	CMLGraphics		memGraph;
 	CGContextRef	memContext = m_memGraph.GetHandle();
 	memGraph.Attach(m_memGraph.GetHandle());
 	CGContextSetRGBFillColor(memContext, 1.0, 1.0, 1.0, 1.0);
 	memGraph.SetFont(&m_font);
-	memGraph.TextOut(10, 10, "Hello", 5);
+	memGraph.TextOut(10, 10, "Hello200", 5);
 	
 	DrawTextTo(memContext, frame);
+
+	rcText.SetRect(100, 210, 100 + 80, 210 + 30);
+	m_memGraph.FillRect(&rcText, MLColor(RGB(0, 255, 0)), BPM_COPY);
+	DrawText(memContext, rcText.left, rcText.top, rcText.Height());
 	
 	m_memGraph.DrawToGraphics(&graph, 0, 0, frame.size.width, frame.size.height, 0, 0);
  */

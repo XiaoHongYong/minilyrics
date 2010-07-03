@@ -4,7 +4,8 @@
 #pragma once
 
 #include <CoreFoundation/CoreFoundation.h>
-#include <CoreGraphics/CGFont.h>
+#import <CoreText/CoreText.h>
+#import <CoreFoundation/CFDictionary.h>
 
 #ifndef DEFAULT_CHARSET
 #define DEFAULT_CHARSET		1
@@ -25,10 +26,10 @@ public:
 	virtual void Destroy();
 
 	// For MAC only.
-	CGFontRef GetHandle() const { return m_font; }
+	CTFontRef GetHandle() const { return m_font; }
 
 protected:
-	CGFontRef		m_font;
+	CTFontRef		m_font;
 
 };
 

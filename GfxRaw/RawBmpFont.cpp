@@ -1581,16 +1581,17 @@ bool CRawBmpFont::ShouldDrawTextPrefix(LPCTSTR szText, int nLen, tstring &strPrf
 
 int CRawBmpFont::GetTextWidth(LPCTSTR szText, int nLen)
 {
-	int		n = 0;
+	int		w = 0;
 
-	for (int i = 0; i < nLen; i++)
+	StringIterator	strIterator(szText);
+	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
-		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph((unsigned short)szText[i]);
+		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
-
-		n += glyph->nWidth;
+		
+		w += glyph->nWidth;
 	}
 
-	return n;
+	return w;
 }

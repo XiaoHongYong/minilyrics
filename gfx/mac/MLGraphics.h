@@ -9,7 +9,6 @@
 
 #include <CoreGraphics/CGContext.h>
 #include <CoreGraphics/CGBitmapContext.h>
-#include <CoreGraphics/CGContext.h>
 
 class CMLImage;
 class CMLFont;

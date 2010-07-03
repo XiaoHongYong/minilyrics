@@ -1,9 +1,9 @@
 #pragma once
 
-#include "IMLAppNotify.h"
-#include "LyricsLocalSearch.h"
-#include "OnlineSearch.h"
-#include "LyricsDownloadMgr.h"
+#import "IMLAppNotify.h"
+#import "LyricsLocalSearch.h"
+#import "OnlineSearch.h"
+#import "LyricsDownloadMgr.h"
 
 class CMLApp
 {
@@ -20,6 +20,14 @@ public:
 
 	virtual void OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd);
 	virtual void OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile);
+	
+public:
+	bool SearchCacheForCurrentMedia(V_LRCSEARCHRESULT &vLrcSearchResult);
+	void DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szUrl, LPCTSTR szFileName);
+
+	LPCTSTR GetArtist() const { return m_strArtist.c_str(); }
+	LPCTSTR GetTitle() const { return m_strTitle.c_str(); }
+	LPCTSTR GetMediaKey() const { return m_strCurMediaKey.c_str(); }
 
 public:
 	CLyricsLocalSearch &GetLocalLyrSearch() { return m_localLyrSearch; }

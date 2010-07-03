@@ -12,6 +12,61 @@ CMLFont::~CMLFont(void)
 	Destroy();
 }
 
+
+CTFontDescriptorRef CreateFontDescriptorFromFamilyAndTraits(CFStringRef iFamilyName,
+															CTFontSymbolicTraits iTraits, CGFloat iSize)
+{
+    CTFontDescriptorRef descriptor = NULL;
+    CFMutableDictionaryRef attributes;
+	
+    assert(iFamilyName != NULL);
+    // Create a mutable dictionary to hold our attributes.
+    attributes = CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
+										   &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+    
+    if (attributes != NULL) {
+        CFMutableDictionaryRef traits;
+        CFNumberRef symTraits;
+		
+        // Add a family name to our attributes.
+        CFDictionaryAddValue(attributes, kCTFontFamilyNameAttribute, iFamilyName);
+		
+        // Create the traits dictionary.
+        symTraits = CFNumberCreate(kCFAllocatorDefault, kCFNumberSInt32Type,
+								   &iTraits);
+        
+        if (symTraits != NULL) {
+            // Create a dictionary to hold our traits values.
+            traits = CFDictionaryCreateMutable(kCFAllocatorDefault, 0,
+											   &kCFTypeDictionaryKeyCallBacks, &kCFTypeDictionaryValueCallBacks);
+            
+            if (traits != NULL) {
+                // Add the symbolic traits value to the traits dictionary.
+                CFDictionaryAddValue(traits, kCTFontSymbolicTrait, symTraits);
+				
+                // Add the traits attribute to our attributes.
+                CFDictionaryAddValue(attributes, kCTFontTraitsAttribute, traits);
+                CFRelease(traits);
+            }
+            CFRelease(symTraits);
+        }
+        // Create the font descriptor with our attributes and input size.
+        descriptor = CTFontDescriptorCreateWithAttributes(attributes);
+		
+        CFRelease(attributes);
+    }
+    // Return our font descriptor.
+    return descriptor;
+}
+
+CTFontRef CreateFont(CTFontDescriptorRef iFontDescriptor, CGFloat iSize)
+{
+    // Create the font from the font descriptor and input size. Pass
+    // NULL for the matrix parameter to use the default matrix (identity).
+	
+    return CTFontCreateWithFontDescriptor(iFontDescriptor, iSize, NULL);
+}
+
 bool CMLFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHeight, int nWeight, int nItalic, bool bUnderline)
 {
 	tstring	strFontName;
@@ -21,7 +76,14 @@ bool CMLFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHe
 	//if (szFaceNameLatin9 == NULL || IsEmptyString(szFaceNameLatin9))
 	szFaceNameLatin9 = "Helvetica";
 	CFStringRef	name = CFStringCreateWithCString(NULL, szFaceNameLatin9, kCFStringEncodingUTF8);
-	m_font = CGFontCreateWithFontName(name);
+	CTFontSymbolicTraits fontTraits = 0;
+	if (nWeight == FW_BOLD)
+		fontTraits |= kCTFontBoldTrait;
+	if (nItalic)
+		fontTraits |= kCTFontItalicTrait;
+	m_font = CreateFont(
+						CreateFontDescriptorFromFamilyAndTraits(name, fontTraits, nHeight),
+						nHeight);
 	CFRelease(name);
 
 	return true;
@@ -36,7 +98,7 @@ void CMLFont::Destroy()
 {
 	if (m_font != NULL)
 	{
-		CGFontRelease(m_font);
+		CFRelease(m_font);
 		m_font = NULL;
 	}
 }

@@ -24,7 +24,9 @@ protected:
 protected:
 	CMLFont					m_font;
 	CRawGraphData			m_fontMemGraph;
-	CMLGraphics				m_graph;
+	// CMLGraphics				m_graph;
+	CFDictionaryRef			m_attributes;
+	int						m_nLineHeight;
 
 };
 

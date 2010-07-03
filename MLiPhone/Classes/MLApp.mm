@@ -7,14 +7,14 @@
 //
 
 #import "MLApp.h"
-#include "../../base/mlstdafx.h"
-#include "../../base/base.h"
-#include "../../Utils/Utils.h"
-#include "../../OurMFCLib/OurMFClib.h"
-#include "../../gfx/gfx.h"
-#include "../../MLProtocol/MLProtocol.h"
-#include "../../MLProtocol/HttpClient.h"
-#include "../../MLLib/MLLib.h"
+#import "../../base/mlstdafx.h"
+#import "../../base/base.h"
+#import "../../Utils/Utils.h"
+#import "../../OurMFCLib/OurMFClib.h"
+#import "../../gfx/gfx.h"
+#import "../../MLProtocol/MLProtocol.h"
+#import "../../MLProtocol/HttpClient.h"
+#import "../../MLLib/MLLib.h"
 
 #import "LyricsShowGraphBase.h"
 
@@ -55,11 +55,35 @@ tstring GetResourceFile(LPCTSTR szFileName)
 	else
 		szExt = "";
 
-	NSString *name = [[NSString alloc] initWithCString:szTitle];
-	NSString *type = [[NSString alloc] initWithCString:szExt];
+	NSString *name = [[NSString alloc] initWithUTF8String:szTitle];
+	NSString *type = [[NSString alloc] initWithUTF8String:szExt];
 	NSString *dbFilePath = [[NSBundle mainBundle] pathForResource:name ofType:type];
 	
 	return [dbFilePath UTF8String];
+}
+
+
+int ConvertMultiByteToUtf8(int nEncodingID, const char *lpByteStr, int nSizeMultibyte, char *lpUtf8Str, int nSizeUtf8)
+{
+	EmptyStr(lpUtf8Str);
+
+	NSString	*str;
+	str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)
+		   CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000)];
+	if (!str)
+		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)0x80000632];
+	if (!str)
+		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)0x80000930];
+	if (!str)
+		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)0x80000421];
+	if (!str)
+		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)0x80000019];
+	if (!str)
+		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)NSISOLatin1StringEncoding];
+	if (str)
+		strcpy_safe(lpUtf8Str, nSizeUtf8, [str UTF8String]);
+
+	return strlen(lpUtf8Str);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +237,7 @@ void PostNotifyLyricsChanged()
 		CMLApp::GetInstance()->OnLyricsDownloaded(param.mediaKey, param.lyricsFile);
 	}
 	else if (param.type == MLNT_MESSAGE) {
-		NSString	*msg = [[NSString alloc] initWithCString:[param message]];
+		NSString	*msg = [[NSString alloc] initWithUTF8String:[param message]];
 		[delegate onMessage:msg];
 	}
 	else if (param.type == MLNT_LYRICS_CHANGED) {

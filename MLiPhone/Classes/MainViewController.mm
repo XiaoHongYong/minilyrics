@@ -1,54 +1,7 @@
-/*
-    File: MainViewController.m
-Abstract: View controller class for MiniLyrics. Sets up user interface, responds 
-to and manages user interaction.
- Version: 1.1
-
-Disclaimer: IMPORTANT:  This Apple software is supplied to you by Apple
-Inc. ("Apple") in consideration of your agreement to the following
-terms, and your use, installation, modification or redistribution of
-this Apple software constitutes acceptance of these terms.  If you do
-not agree with these terms, please do not use, install, modify or
-redistribute this Apple software.
-
-In consideration of your agreement to abide by the following terms, and
-subject to these terms, Apple grants you a personal, non-exclusive
-license, under Apple's copyrights in this original Apple software (the
-"Apple Software"), to use, reproduce, modify and redistribute the Apple
-Software, with or without modifications, in source and/or binary forms;
-provided that if you redistribute the Apple Software in its entirety and
-without modifications, you must retain this notice and the following
-text and disclaimers in all such redistributions of the Apple Software.
-Neither the name, trademarks, service marks or logos of Apple Inc. may
-be used to endorse or promote products derived from the Apple Software
-without specific prior written permission from Apple.  Except as
-expressly stated in this notice, no other rights or licenses, express or
-implied, are granted by Apple herein, including but not limited to any
-patent rights that may be infringed by your derivative works or by other
-works in which the Apple Software may be incorporated.
-
-The Apple Software is provided by Apple on an "AS IS" basis.  APPLE
-MAKES NO WARRANTIES, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION
-THE IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY AND FITNESS
-FOR A PARTICULAR PURPOSE, REGARDING THE APPLE SOFTWARE OR ITS USE AND
-OPERATION ALONE OR IN COMBINATION WITH YOUR PRODUCTS.
-
-IN NO EVENT SHALL APPLE BE LIABLE FOR ANY SPECIAL, INDIRECT, INCIDENTAL
-OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) ARISING IN ANY WAY OUT OF THE USE, REPRODUCTION,
-MODIFICATION AND/OR DISTRIBUTION OF THE APPLE SOFTWARE, HOWEVER CAUSED
-AND WHETHER UNDER THEORY OF CONTRACT, TORT (INCLUDING NEGLIGENCE),
-STRICT LIABILITY OR OTHERWISE, EVEN IF APPLE HAS BEEN ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-
-Copyright (C) 2009 Apple Inc. All Rights Reserved.
-
-*/
-
 
 #import "MainViewController.h"
 #import <Foundation/Foundation.h>
+#import "LyricsSearchViewController.h"
 
 #import "../../base/mlstdafx.h"
 #import "../../base/base.h"
@@ -63,6 +16,7 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 
 @synthesize userMediaItemCollection;	// the media item collection created by the user, using the media item picker	
 @synthesize musicPlayer;				// the music player, which plays media items from the iPod library
+@synthesize addMusicButton;
 @synthesize navigationBar;				// the application's Navigation bar
 @synthesize nowPlayingLabel;			// descriptive text shown on the main screen about the now-playing media item
 @synthesize playedMusicOnce;			// A flag indicating if the user has played iPod library music at least one time
@@ -155,13 +109,24 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	[repeatButton setImage:imgRepeat forState:UIControlStateNormal];
 }
 
+- (IBAction)	playingPosSeek:			(id) sender
+{
+	[musicPlayer setCurrentPlaybackTime: [playingSlider value]];
+}
+
+- (IBAction)	volumeSeek:				(id) sender
+{
+	[musicPlayer setVolume: [volumeSlider value]];
+}
+
 // If there is no selected media item collection, display the media item picker. If there's 
 // already a selected collection, display the list of selected songs.
-
-- (IBAction) MiniLyrics: (id) sender {    
-
+- (IBAction) ShowMusic: (id) sender {
+	if (self.userMediaItemCollection == nil ||
+		[[self.userMediaItemCollection items] count] == 0)
+	{
 		MPMediaPickerController *picker =
-			[[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
+		[[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
 		
 		picker.delegate						= self;
 		picker.allowsPickingMultipleItems	= YES;
@@ -173,18 +138,29 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 		
 		[self presentModalViewController: picker animated: YES];
 		[picker release];
-}
-
-- (IBAction) ShowMusic: (id) sender {    
+		
+		UIImage	*imgPlaylist = [UIImage imageNamed:@"NowPlayingAlbumInfo.png"];
+		[addMusicButton setImage:imgPlaylist forState:UIControlStateNormal];
+	}
+	else {
 		MusicTableViewController *controller = [[MusicTableViewController alloc] initWithNibName: @"MusicTableView" bundle: nil];
 		controller.delegate = self;
-		
+		controller.musicPlayer = musicPlayer;
 		controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
 		
 		[self presentModalViewController: controller animated: YES];
 		[controller release];
+	}
 }
 
+- (IBAction) ShowLyrSearchView: (id) sender {
+	LyricsSearchViewController *controller = [[LyricsSearchViewController alloc] initWithNibName: @"LyricsSearchView" bundle: nil];
+	controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+	controller.parentViewController = self;
+	
+	[self presentModalViewController: controller animated: YES];
+	[controller release];
+}
 
 // Invoked by the delegate of the media item picker when the user is finished picking music.
 //		The delegate is either this class or the table view controller, depending on the 
@@ -345,6 +321,12 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	[lyrVerticalView onPlaybackStateChanged:playbackState];
 }
 
+// When volume is changed
+- (void) handle_VolumeChanged: (id) notification {
+	
+	[volumeSlider setValue: [musicPlayer volume]];
+}
+
 - (void) handle_iPodLibraryChanged: (id) notification {
 
 	// Implement this method to update cached collections of media items when the 
@@ -382,6 +364,11 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	[notificationCenter addObserver: self
 						   selector: @selector (handle_PlaybackStateChanged:)
 							   name: MPMusicPlayerControllerPlaybackStateDidChangeNotification
+							 object: musicPlayer];
+
+	[notificationCenter addObserver: self
+						   selector: @selector (handle_VolumeChanged:)
+							   name: MPMusicPlayerControllerVolumeDidChangeNotification
 							 object: musicPlayer];
 
 /*
@@ -468,7 +455,11 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 		//		of the built-in iPod app. Here they are both turned off.
 		[musicPlayer setShuffleMode: MPMusicShuffleModeOff];
 		[musicPlayer setRepeatMode: MPMusicRepeatModeNone];
-	}	
+	}
+
+	[volumeSlider setMinimumValue: 0.0];
+	[volumeSlider setMaximumValue: 1.0];
+	[volumeSlider setValue: [musicPlayer volume]];
 
 	[self registerForMediaPlayerNotifications];
 
@@ -508,14 +499,31 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	[lyrVerticalView InitLyrView];
 }
 
+NSString *formatPlayingTime(int n)
+{
+	int		minutes, seconds, hours;
+	
+	seconds = n % 60;
+	minutes = n / 60;
+
+	hours = minutes / 60;
+	minutes %= 60;
+
+	if (hours > 0)
+		return [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
+	else
+		return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+}
+
 // Invoked by the playingProgressTimer.
 - (void) onUpdatePlayingProgress {
 	int currentPlaybackTime = (int)([musicPlayer currentPlaybackTime] + 0.5);
 
 	[playedTimeLable setText:
-	 [NSString stringWithFormat:@"%d", currentPlaybackTime]];
+	 [NSString stringWithFormat:@"%@", formatPlayingTime(currentPlaybackTime)]];
 	[leftTimeLable setText:
-	 [NSString stringWithFormat:@"-%d", int(self.mediaLength - [musicPlayer currentPlaybackTime] + 0.5)]];
+	 [NSString stringWithFormat:@"-%@", 
+	  formatPlayingTime(int(self.mediaLength - [musicPlayer currentPlaybackTime] + 0.5))]];
 
 	[playingSlider setValue: currentPlaybackTime];
 }
@@ -594,9 +602,19 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 	[mPausedButtons release];
 	[mPlayCtrlToolbar release];
 
+	[addMusicButton release];
 	[navigationBar				release];
 	[nowPlayingLabel			release];
 	[userMediaItemCollection	release];
+
+	[advancedCtrlView release];
+	[repeatButton release];
+	[shuffleButton release];
+	[playingSlider release];
+	[volumeSlider release];
+	[playedTimeLable release];
+	[leftTimeLable release];
+	[playingProgressTimer release];
 
     [super dealloc];
 }

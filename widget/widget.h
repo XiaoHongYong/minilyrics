@@ -66,6 +66,22 @@
 // #include "gtk2/EditEx.h"
 #endif
 
+
+#ifdef _MAC_OSX
+#include "widgetif.h"
+#include "Mac/BaseWnd.h"
+/*#include "Mac/desktop.h"
+#include "Mac/SkinToolTip.h"
+#include "Mac/MLMenu.h"
+#include "Mac/WndResizer.h"
+#include "Mac/WidgetCtrlBase.h"
+#include "Mac/HyperLinkCtrl.h"
+#include "Mac/CommonWidget.h"
+#include "Mac/WidgetTreeCtrl.h"
+#include "Mac/WidgetListBox.h"*/
+#endif
+
+
 #include "WndDrag.h"
 
 #endif // _ML_WIDGET_H_
