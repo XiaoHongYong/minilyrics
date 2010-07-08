@@ -1,0 +1,15 @@
+// Src From modules\misc\notify\msn.c
+
+1.  dumpbin /exports libvlccore.dll > libvlccore.def
+
+2. Edit libvlccore.def:
+LIBRARY      "libvlccore.dll"
+
+EXPORTS
+	ACL_AddNet
+	....
+
+3.  lib /DEF:libvlccore.def
+ 
+got libvlccore.lib
+

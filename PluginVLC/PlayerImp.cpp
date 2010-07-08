@@ -21,8 +21,6 @@ VLC_EXPORT(void, __pl_Release, (vlc_object_t *));
 
 #include <vlc_playlist.h>
 
-int ReadMetaData(intf_thread_t *p_this);
-
 
 #include "../MLPluginLib/MLPlugin.h"
 #include "PlayerImp.h"
@@ -118,13 +116,12 @@ DWORD CPlayerImp::GetPlayPos()
 		return 0;
 
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Hold( m_p_intf );
+	playlist_t *p_playlist = pl_Get( m_p_intf );
 
 	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
 	{
-		pl_Release(m_p_intf);
 		return 0;
 	}
 
@@ -133,7 +130,6 @@ DWORD CPlayerImp::GetPlayPos()
 	input_Control(p_input, INPUT_GET_TIME, &nPos);
 
 	vlc_object_release(p_input);
-	pl_Release(m_p_intf);
 
 	return nPos / 1000;
 }
@@ -144,13 +140,12 @@ int CPlayerImp::HasVideo()
 		return 0;
 
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
 	{
-		pl_Release(m_p_intf);
 		return 0;
 	}
 
@@ -159,7 +154,6 @@ int CPlayerImp::HasVideo()
 	int ret = input_Control(p_input, INPUT_GET_VIDEO_FPS, &dbFps);
 
 	vlc_object_release(p_input);
-	pl_Release(m_p_intf);
 
 	if (ret == VLC_SUCCESS && dbFps > 0.0)
 		return PR_OK;
@@ -173,11 +167,9 @@ BOOL CPlayerImp::Play()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	playlist_Play(p_playlist);
-
-	pl_Release(m_p_intf);
 
 	return TRUE;
 }
@@ -187,11 +179,9 @@ BOOL CPlayerImp::Pause()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	playlist_Pause(p_playlist);
-
-	pl_Release(m_p_intf);
 
 	return TRUE;
 }
@@ -201,14 +191,12 @@ BOOL CPlayerImp::PlayPause()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	if (m_stat != PS_PLAYING)
 		playlist_Play(p_playlist);
 	else
 		playlist_Pause(p_playlist);
-
-	pl_Release(m_p_intf);
 
 	return TRUE;
 }
@@ -218,11 +206,9 @@ BOOL CPlayerImp::Stop()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	playlist_Stop(p_playlist);
-
-	pl_Release(m_p_intf);
 
 	return TRUE;
 }
@@ -232,11 +218,9 @@ BOOL CPlayerImp::Prev()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	playlist_Prev(p_playlist);
-
-	pl_Release(m_p_intf);
 
 	return TRUE;
 }
@@ -246,11 +230,9 @@ BOOL CPlayerImp::Next()
 	if (!m_p_intf)
 		return 0;
 
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	playlist_Next(p_playlist);
-
-	pl_Release(m_p_intf);
 
 	return TRUE;
 }
@@ -261,20 +243,18 @@ BOOL CPlayerImp::SeekTo(int nMsPos)
 		return 0;
 
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
 	{
-		pl_Release(m_p_intf);
 		return 0;
 	}
 
 	input_Control(p_input, INPUT_SET_TIME, nMsPos * 1000);
 
 	vlc_object_release(p_input);
-	pl_Release(m_p_intf);
 
 	return TRUE;
 }
@@ -315,17 +295,15 @@ void CPlayerImp::MediaChangedCheck()
 
 	intf_sys_t          *p_sys = m_p_intf->p_sys;
 
-	p_playlist = pl_Hold(m_p_intf);
+	p_playlist = pl_Get(m_p_intf);
 	PL_LOCK;
 	p_input = playlist_CurrentInput(p_playlist);
 	if (!p_input)
 	{
 		PL_UNLOCK;
-		pl_Release(m_p_intf);
 		return;
 	}
 	PL_UNLOCK;
-	pl_Release(m_p_intf);
 
 	if (p_input->b_dead || !input_GetItem(p_input)->psz_name)
 	{
@@ -426,7 +404,7 @@ void Run(intf_thread_t *p_intf);
 vlc_module_begin();
 set_category(CAT_INTERFACE);
 set_subcategory(SUBCAT_INTERFACE_CONTROL);
-set_shortname(N_("MiniLyrics"));
+set_shortname(N_(MODULE_NAME));
 set_description(N_("MiniLyrics - Auto display lyrics for current playing song"));
 // add_submodule();
 set_capability("interface", 0);
@@ -442,12 +420,14 @@ int  Open(vlc_object_t * p_this)
 	playlist_t *p_playlist;
 
 	p_intf->p_sys = new (intf_sys_t);
+	if( !p_intf->p_sys )
+		return VLC_ENOMEM;
 
-	p_playlist = pl_Hold(p_intf);
+	p_playlist = pl_Get(p_intf);
 	PL_LOCK;
+	var_AddCallback( p_playlist, "item-change", ItemChange, p_intf );
 	var_AddCallback(p_playlist, "item-current", ItemChange, p_intf);
 	PL_UNLOCK;
-	pl_Release(p_intf);
 
 	g_hwndPlayer = NULL;
 
@@ -462,9 +442,10 @@ int  Open(vlc_object_t * p_this)
 void Close(vlc_object_t * p_this)
 {
 	intf_thread_t *p_intf = (intf_thread_t *)p_this;
-	playlist_t *p_playlist = pl_Hold(p_this);
+	playlist_t *p_playlist = pl_Get(p_this);
 	input_thread_t              *p_input;
 
+	var_DelCallback( p_playlist, "item-change", ItemChange, p_intf );
 	var_DelCallback( p_playlist, "item-current", ItemChange, p_intf );
 
 	p_input = playlist_CurrentInput( p_playlist );
@@ -474,8 +455,6 @@ void Close(vlc_object_t * p_this)
 
 		vlc_object_release( p_input );
 	}
-
-	pl_Release( p_intf );
 
 	PostThreadMessage(g_dwMLThreadID, WM_QUIT, 0, 0);
 	WaitForSingleObject(g_hEventOK2Quit, INFINITE);
@@ -561,11 +540,10 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 	(void)psz_var;    (void)oldval;    (void)newval;
 	intf_thread_t *p_intf = (intf_thread_t *)param;
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Hold(p_this);
+	playlist_t *p_playlist = pl_Get(p_this);
 	intf_sys_t          *p_sys = p_intf->p_sys;
 
 	p_input = playlist_CurrentInput(p_playlist);
-	pl_Release(p_this);
 
 	if (!p_input)
 		return VLC_SUCCESS;
@@ -613,13 +591,12 @@ DWORD CPlayerImp::GetMediaLength()
 		return 0;
 
 	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Hold(m_p_intf);
+	playlist_t *p_playlist = pl_Get(m_p_intf);
 
 	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
 	{
-		pl_Release(m_p_intf);
 		return 0;
 	}
 
@@ -628,7 +605,6 @@ DWORD CPlayerImp::GetMediaLength()
 	input_Control(p_input, INPUT_GET_LENGTH, &nPos);
 
 	vlc_object_release(p_input);
-	pl_Release(m_p_intf);
 
 	return nPos / 1000;
 }
