@@ -61,8 +61,6 @@ public:
 	DWORD			m_dwPlayerVer;
 	HWND			m_hwndPluginParent;
 
-	TCHAR			m_szPlayerName[64];
-
 	bool			m_bWorking;
 	DWORD			m_dwShoutcastTitleChangedPos;
 	PLAYER_STATE	m_state;

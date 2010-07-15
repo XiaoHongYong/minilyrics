@@ -10,6 +10,7 @@
 
 #include "wa_wrap.h"
 
+bool g_bKmplayer = false;
 
 UINT Get_WMCOMMAND_Id(UINT fallback)
 {
@@ -251,6 +252,18 @@ bool GetMediaInfo(LPCWSTR szFile, wchar_t szArtist[], wchar_t szAlbum[], wchar_t
 	return true;
 }
 
+void SplitAlbumInfoOfKMPlayer(LPWSTR szTitleAlbum, wchar_t szAlbum[], int nLenAlbum)
+{
+	int		nLenStr = wcslen(szTitleAlbum);
+	LPWSTR	szAlbumBeg = wcsrchr(szTitleAlbum, '(');
+	if (szAlbumBeg && szTitleAlbum[nLenStr - 1] == ')')
+	{
+		szAlbumBeg[0] = '\0';
+		szTitleAlbum[nLenStr - 1] = '\0';
+		wcscpy_safe(szAlbum, nLenAlbum, szAlbumBeg + 1);
+	}
+}
+
 void OnMediaChanged(LPWSTR szFile, LPCWSTR szMediaTitle)
 {
 	wchar_t		szArtist[MAX_PATH] = L"", szAlbum[MAX_PATH] = L"", szTitle[MAX_PATH] = L"";
@@ -262,6 +275,11 @@ void OnMediaChanged(LPWSTR szFile, LPCWSTR szMediaTitle)
 	{
 		// Get artist and title from szMediaTitle
 		AnalysisMediaTitle(szMediaTitle, szArtist, szTitle);
+		if (g_bKmplayer)
+		{
+			// For KMPlayer, szTitle = title(album)
+			SplitAlbumInfoOfKMPlayer(szTitle, szAlbum, CountOf(szAlbum));
+		}
 	}
 
 	DWORD	dwLength = 0;
@@ -588,19 +606,6 @@ int init()
 
 	g_hwndPlayer = plugin.hwndParent; // FindWindow("Winamp v1.x", NULL);
 
-	{
-		//
-		// Compatable for MediaMonkey.
-		//
-		char	szPlayerIni[MAX_PATH];
-
-		GetProgramPath(szPlayerIni, g_hInstance);
-		strcat_safe(szPlayerIni, CountOf(szPlayerIni), "MLPlugin.ini");
-
-		EmptyStr(g_Player.m_szPlayerName);
-		GetPrivateProfileString("MiniLyrics", "PlayerName", "", g_Player.m_szPlayerName, CountOf(g_Player.m_szPlayerName), szPlayerIni);
-	}
-
 	WAGetVersion(g_hwndPlayer, g_Player.m_dwPlayerVer);
 
 	AddRemoveMLItemInWinampMenu(true);
@@ -770,7 +775,6 @@ CPlayerImp::CPlayerImp()
 {
 	m_dwPlayerVer = 0;
 	m_hwndPluginParent = NULL;
-	EmptyStr(m_szPlayerName);
 
 	m_bWorking = false;
 }
@@ -889,16 +893,38 @@ BOOL CPlayerImp::IsWinamp5()
 // Player Info
 int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
 {
-	if (m_szPlayerName[0] != '\0')
+	TCHAR	szFile[MAX_PATH];
+	if (!GetModuleFileName(NULL, szFile, CountOf(szFile)))
 	{
-		strcpy_safe(lpszBuffer, nBufSize, m_szPlayerName);
+		strcpy_safe(lpszBuffer, nBufSize, "Winamp5");
+		return PR_OK;
 	}
-	else
+
+	LPCTSTR szExeName = UrlGetName(szFile);
+	if (strcmp(szExeName, "winamp.exe") == 0)
 	{
 		if (IsWinamp5())
 			strcpy_safe(lpszBuffer, nBufSize, "Winamp5");
 		else
 			strcpy_safe(lpszBuffer, nBufSize, "Winamp2");
+	}
+	else if (strcmp(szExeName, "MediaMonkey.exe") == 0)
+		strcpy_safe(lpszBuffer, nBufSize, "MediaMonkey");
+	else if (strcmp(szExeName, "AIMP2.exe") == 0)
+		strcpy_safe(lpszBuffer, nBufSize, "AIMP2");
+	else if (strcmp(szExeName, "KMPlayer.exe") == 0)
+	{
+		g_bKmplayer = true;
+		strcpy_safe(lpszBuffer, nBufSize, "KMPlayer");
+	}
+	else
+	{
+		char	szPlayerIni[MAX_PATH];
+
+		GetProgramPath(szPlayerIni, g_hInstance);
+		strcat_safe(szPlayerIni, CountOf(szPlayerIni), "MLPlugin.ini");
+
+		GetPrivateProfileString("MiniLyrics", "PlayerName", "", lpszBuffer, nBufSize, szPlayerIni);
 	}
 
 	return PR_OK;
