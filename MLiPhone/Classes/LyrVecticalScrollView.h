@@ -13,14 +13,18 @@
 @interface LyrVecticalScrollView : UIView {
 
 	NSTimer						*lyrDisplayTimer;
-	MPMusicPlayerController		*musicPlayer;	
+	MPMusicPlayerController		*musicPlayer;
+	BOOL						inSeekingLyrics;
 
 }
 
 @property (nonatomic, retain)	NSTimer						*lyrDisplayTimer;
-@property(nonatomic, retain)	MPMusicPlayerController		*musicPlayer;
+@property (nonatomic, retain)	MPMusicPlayerController		*musicPlayer;
+@property (nonatomic)			BOOL						inSeekingLyrics;
 
--(void) onLyricsChanged;
+- (void) onLyricsChanged;
 - (void) InitLyrView;
+- (void) reloadFontSettings;
+- (void) moveLyrics: (int) y;
 
 @end

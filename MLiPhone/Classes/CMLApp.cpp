@@ -33,6 +33,8 @@ int CMLApp::Init()
 
 	InitBaseFrameWork(1, vArgv, NULL, _T("MiniLyrics.ini"), _T("MiniLyrics"));
 	
+	g_Profile.DoCache();
+	
 	SetDefaultSettings();
 
 	m_localLyrSearch.Init();
@@ -75,10 +77,16 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 	return;*/
 
 	if (m_strCurMediaKey.empty() && m_strArtist.empty() && m_strTitle.empty())
+	{
+		PostNotifyLyricsChanged();
 		return;
+	}
 
 	if (m_localLyrSearch.IsAssociatedWithNoneLyrics(m_strCurMediaKey.c_str()))
+	{
+		PostNotifyLyricsChanged();
 		return;
+	}
 
 	TCHAR	szLyricFile[MAX_PATH];
 	if (m_localLyrSearch.GetBestMatchLyrics(szMediaKey, szArtist, szTitle, szLyricFile))
@@ -121,6 +129,8 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 			m_onlineLyrSearch.AutoSearch(szMediaKey, szArtist, szTitle);
 		}
 	}
+
+	PostNotifyLyricsChanged();
 }
 
 void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
@@ -252,10 +262,10 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 
 void CMLApp::SetDefaultSettings()
 {
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("Font"), _T(", 20, bold, 0, 0, "));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgColor"), _T("#FFFFFF"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("Font"), _T(", 18, bold, 0, 0, "));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgColor"), _T("#FF8040"));
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgLowColor"), _T("#B2B2B2"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("BgColor"), _T("#576C91"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("BgColor"), _T("#404040"));
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FocusLineBgColor"), _T("#8A94AA"));
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("TagColor"), _T("#FF8242"));
 

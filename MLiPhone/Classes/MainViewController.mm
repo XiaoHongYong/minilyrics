@@ -18,9 +18,11 @@
 @synthesize musicPlayer;				// the music player, which plays media items from the iPod library
 @synthesize addMusicButton;
 @synthesize navigationBar;				// the application's Navigation bar
-@synthesize nowPlayingLabel;			// descriptive text shown on the main screen about the now-playing media item
 @synthesize playedMusicOnce;			// A flag indicating if the user has played iPod library music at least one time
 										//		since application launch.
+@synthesize artistLabel;
+@synthesize titleLabel;
+@synthesize albumLabel;
 
 @synthesize advancedCtrlView;
 @synthesize repeatButton;
@@ -76,11 +78,11 @@
 
 	if (shuffleMode == MPMusicShuffleModeOff) {
 		shuffleMode = MPMusicShuffleModeSongs;
-		imgShuffle = [UIImage imageNamed:@"shuffle_off.png"];
+		imgShuffle = [UIImage imageNamed:@"shuffle_on.png"];
 	}
 	else {
 		shuffleMode = MPMusicShuffleModeOff;
-		imgShuffle = [UIImage imageNamed:@"shuffle_on.png"];
+		imgShuffle = [UIImage imageNamed:@"shuffle_off.png"];
 	}
 
 	[musicPlayer setShuffleMode: shuffleMode];
@@ -109,14 +111,40 @@
 	[repeatButton setImage:imgRepeat forState:UIControlStateNormal];
 }
 
+- (IBAction)	beginSeek:				(id) sender
+{
+	lyrVerticalView.inSeekingLyrics = YES;
+}
+
+- (IBAction)	endSeek:				(id) sender
+{
+	if (lyrVerticalView.inSeekingLyrics) {
+		lyrVerticalView.inSeekingLyrics = NO;
+		[musicPlayer setCurrentPlaybackTime: [playingSlider value]];
+	}
+}
+
 - (IBAction)	playingPosSeek:			(id) sender
 {
-	[musicPlayer setCurrentPlaybackTime: [playingSlider value]];
+	CMLApp::GetInstance()->GetLyricsData().SetPlayElapsedTime(int([playingSlider value] * 1000));
+	// [musicPlayer setCurrentPlaybackTime: [playingSlider value]];
 }
 
 - (IBAction)	volumeSeek:				(id) sender
 {
 	[musicPlayer setVolume: [volumeSlider value]];
+}
+
+- (IBAction)	forwardLyrics:			(id) sender
+{
+	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
+	lyrData.SetOffsetTime(lyrData.GetOffsetTime() + 500);
+}
+
+- (IBAction)	backwardLyrics:			(id) sender
+{
+	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
+	lyrData.SetOffsetTime(lyrData.GetOffsetTime() - 500);
 }
 
 // If there is no selected media item collection, display the media item picker. If there's 
@@ -136,6 +164,7 @@
 		//		status bar to match it visually
 		[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault animated: YES];
 		
+		picker.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 		[self presentModalViewController: picker animated: YES];
 		[picker release];
 		
@@ -146,7 +175,7 @@
 		MusicTableViewController *controller = [[MusicTableViewController alloc] initWithNibName: @"MusicTableView" bundle: nil];
 		controller.delegate = self;
 		controller.musicPlayer = musicPlayer;
-		controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+		controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 		
 		[self presentModalViewController: controller animated: YES];
 		[controller release];
@@ -155,7 +184,7 @@
 
 - (IBAction) ShowLyrSearchView: (id) sender {
 	LyricsSearchViewController *controller = [[LyricsSearchViewController alloc] initWithNibName: @"LyricsSearchView" bundle: nil];
-	controller.modalTransitionStyle = UIModalTransitionStyleCoverVertical;
+	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
 	controller.parentViewController = self;
 	
 	[self presentModalViewController: controller animated: YES];
@@ -269,21 +298,16 @@
 
 	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
 	
-	// Display the artist and song name for the now-playing media item
-	[nowPlayingLabel setText: [
-			NSString stringWithFormat: @"%@ %@ %@ %@",
-			NSLocalizedString (@"Now Playing:", @"Label for introducing the now-playing song title and artist"),
-			[currentItem valueForProperty: MPMediaItemPropertyTitle],
-			NSLocalizedString (@"by", @"Article between song name and artist name"),
-			[currentItem valueForProperty: MPMediaItemPropertyArtist]]];
-
+	[artistLabel setText: [currentItem valueForProperty: MPMediaItemPropertyArtist]];
+	[albumLabel setText: [currentItem valueForProperty: MPMediaItemPropertyAlbumTitle]];
+	[titleLabel setText: [currentItem valueForProperty: MPMediaItemPropertyTitle]];
+	
 	if (musicPlayer.playbackState == MPMusicPlaybackStateStopped) {
 		// Provide a suitable prompt to the user now that their chosen music has 
 		//		finished playing.
-		[nowPlayingLabel setText: [
-				NSString stringWithFormat: @"%@",
-				NSLocalizedString (@"Music-ended Instructions", @"Label for prompting user to play music again after it has stopped")]];
-
+		[artistLabel setText: @""];
+		[albumLabel setText: @""];
+		[titleLabel setText: @""];
 	}
 	
 	NSNumber	*length = [currentItem valueForProperty: MPMediaItemPropertyPlaybackDuration];
@@ -392,6 +416,7 @@
 // Returns whether or not to use the iPod music player instead of the application music player.
 - (BOOL) useiPodPlayer {
 
+	return YES;
 	if ([[NSUserDefaults standardUserDefaults] boolForKey: PLAYER_TYPE_PREF_KEY]) {
 		return YES;		
 	} else {
@@ -427,8 +452,6 @@
 	[mPlayCtrlToolbar setItems:mPlayingButtons];
 	[mPlayCtrlToolbar setItems:mPausedButtons];
 
-	[nowPlayingLabel setText: NSLocalizedString (@"Instructions", @"Brief instructions to user, shown at launch")];
-	
 	// Instantiate the music player. If you specied the iPod music player in the Settings app,
 	//		honor the current state of the built-in iPod app.
 	if ([self useiPodPlayer]) {
@@ -456,10 +479,6 @@
 		[musicPlayer setShuffleMode: MPMusicShuffleModeOff];
 		[musicPlayer setRepeatMode: MPMusicRepeatModeNone];
 	}
-
-	[volumeSlider setMinimumValue: 0.0];
-	[volumeSlider setMaximumValue: 1.0];
-	[volumeSlider setValue: [musicPlayer volume]];
 
 	[self registerForMediaPlayerNotifications];
 
@@ -497,35 +516,170 @@
 	[lyrVerticalView setMusicPlayer:self.musicPlayer];
 
 	[lyrVerticalView InitLyrView];
-}
 
-NSString *formatPlayingTime(int n)
-{
-	int		minutes, seconds, hours;
+	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scaleLyrics:)];
+	[pinchGesture setDelegate:self];
+	[lyrVerticalView addGestureRecognizer:pinchGesture];
+	[pinchGesture release];
+
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAdvancedCtrl:)];
+	[tapGesture setDelegate:self];
+	[lyrVerticalView addGestureRecognizer:tapGesture];
+	[tapGesture release];
+
+	UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveLyrics:)];
+	[panGesture setMaximumNumberOfTouches:2];
+	[panGesture setDelegate:self];
+	[lyrVerticalView addGestureRecognizer:panGesture];
+	[panGesture release];
+
+/*    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showResetMenu:)];
+    [piece addGestureRecognizer:longPressGesture];
+    [longPressGesture release];*/
+
+	if (!g_Profile.GetProfileBool(_T("HideAdvCtrl"), TRUE))
+		[advancedCtrlView setHidden:NO];
 	
-	seconds = n % 60;
-	minutes = n / 60;
+	//
+	// Set shuffle button status
+	//
+	MPMusicShuffleMode shuffleMode = [musicPlayer shuffleMode];
+	UIImage *imgShuffle;
+	if (shuffleMode == MPMusicShuffleModeOff) {
+		imgShuffle = [UIImage imageNamed:@"shuffle_off.png"];
+	}
+	else {
+		imgShuffle = [UIImage imageNamed:@"shuffle_on.png"];
+	}
+	[shuffleButton setImage:imgShuffle forState:UIControlStateNormal];
 
-	hours = minutes / 60;
-	minutes %= 60;
+	// Set repeat button status
+	MPMusicRepeatMode repeatMode = [musicPlayer repeatMode];
+	UIImage *imgRepeat;
+	if (repeatMode == MPMusicRepeatModeNone) {
+		imgRepeat = [UIImage imageNamed:@"repeat_off.png"];
+	}
+	else if (repeatMode == MPMusicRepeatModeAll) {
+		imgRepeat = [UIImage imageNamed:@"repeat_on.png"];
+	}
+	else {
+		imgRepeat = [UIImage imageNamed:@"repeat_on_1.png"];
+	}
+	[repeatButton setImage:imgRepeat forState:UIControlStateNormal];
+	
+	//
+	// Set volume slider images
+	//
+	playingSlider.backgroundColor = [UIColor clearColor];	
+	UIImage *stetchLeftTrack = [[UIImage imageNamed:@"playing_slider_left.png"]
+								stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0];
+	UIImage *stetchRightTrack = [[UIImage imageNamed:@"playing_slider_right.png"]
+								 stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0];
+	UIImage *sliderBall = [UIImage imageNamed:@"playing_slider_ball.png"];
+	UIImage *sliderBallPressed = [UIImage imageNamed:@"playing_slider_ball.png"];
+	[playingSlider setThumbImage: sliderBall forState:UIControlStateNormal];
+	[playingSlider setThumbImage: sliderBallPressed forState:UIControlStateHighlighted];
+	[playingSlider setThumbImage: sliderBallPressed forState:UIControlStateSelected];
+	[playingSlider setMinimumTrackImage:stetchLeftTrack forState:UIControlStateNormal];
+	[playingSlider setMaximumTrackImage:stetchRightTrack forState:UIControlStateNormal];
 
-	if (hours > 0)
-		return [NSString stringWithFormat:@"%d:%02d:%02d", hours, minutes, seconds];
-	else
-		return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+	[volumeSlider setThumbImage: sliderBall forState:UIControlStateNormal];
+	[volumeSlider setThumbImage: sliderBallPressed forState:UIControlStateHighlighted];
+	[volumeSlider setThumbImage: sliderBallPressed forState:UIControlStateSelected];
+	[volumeSlider setMinimumTrackImage:stetchLeftTrack forState:UIControlStateNormal];
+	[volumeSlider setMaximumTrackImage:stetchRightTrack forState:UIControlStateNormal];	
+	
+	[volumeSlider setMinimumValue: 0.0];
+	[volumeSlider setMaximumValue: 1.0];
+	[volumeSlider setValue: [musicPlayer volume]];
+	
 }
+
+bool ScaleLyricsFont(float scale);
+
+// scale the piece by the current scale
+// reset the gesture recognizer's rotation to 0 after applying so the next callback is a delta from the current scale
+- (void)scaleLyrics:(UIPinchGestureRecognizer *)gestureRecognizer
+{
+    // [self adjustAnchorPointForGestureRecognizer:gestureRecognizer];
+    
+    if ([gestureRecognizer state] == UIGestureRecognizerStateBegan || [gestureRecognizer state] == UIGestureRecognizerStateChanged) {
+		
+		if (!ScaleLyricsFont([gestureRecognizer scale]))
+			return;
+
+		if ([gestureRecognizer view] == self.lyrVerticalView)
+			[lyrVerticalView reloadFontSettings];
+
+        [gestureRecognizer setScale:1];
+    }
+}
+
+- (void)hideAdvancedCtrl:(UITapGestureRecognizer *)gestureRecognizer
+{
+/*	CGPoint ptTap = [gestureRecognizer locationInView: lyrVerticalView];
+	
+	if ([advancedCtrlView pointInside:ptTap withEvent:nil])
+		return;*/
+
+	BOOL isHidden = ![advancedCtrlView isHidden];
+	g_Profile.WriteProfileInt(_T("HideAdvCtrl"), isHidden);
+	[advancedCtrlView setHidden:isHidden];
+}
+
+// shift the piece's center by the pan amount
+// reset the gesture recognizer's translation to {0, 0} after applying so the next callback is a delta from the current position
+- (void)moveLyrics:(UIPanGestureRecognizer *)gestureRecognizer
+{
+	// [self adjustAnchorPointForGestureRecognizer:gestureRecognizer];
+
+	CGPoint translation = [gestureRecognizer translationInView:lyrVerticalView];
+
+	if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
+		[gestureRecognizer setTranslation:CGPointZero inView:lyrVerticalView];
+	}
+	else if ([gestureRecognizer state] == UIGestureRecognizerStateChanged) {
+		[lyrVerticalView moveLyrics: translation.y];
+		[gestureRecognizer setTranslation:CGPointZero inView:lyrVerticalView];
+	}
+	else if ([gestureRecognizer state] == UIGestureRecognizerStateEnded) {
+	}
+}
+
+// ensure that the pinch, pan and rotate gesture recognizers on a particular view can all recognize simultaneously
+// prevent other gesture recognizers from recognizing simultaneously
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
+{
+    // if the gesture recognizers's view isn't one of our pieces, don't allow simultaneous recognition
+    if (gestureRecognizer.view != [self lyrVerticalView])
+        return NO;
+    
+    // if the gesture recognizers are on different views, don't allow simultaneous recognition
+    if (gestureRecognizer.view != otherGestureRecognizer.view)
+        return NO;
+    
+    // if either of the gesture recognizers is the long press, don't allow simultaneous recognition
+    if ([gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]] || [otherGestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]])
+        return NO;
+    
+    return YES;
+}
+
+extern "C" NSString *formatPlayingTime(int n);
 
 // Invoked by the playingProgressTimer.
 - (void) onUpdatePlayingProgress {
-	int currentPlaybackTime = (int)([musicPlayer currentPlaybackTime] + 0.5);
+	if (!lyrVerticalView.inSeekingLyrics) {
+		int currentPlaybackTime = (int)([musicPlayer currentPlaybackTime] + 0.5);
 
-	[playedTimeLable setText:
-	 [NSString stringWithFormat:@"%@", formatPlayingTime(currentPlaybackTime)]];
-	[leftTimeLable setText:
-	 [NSString stringWithFormat:@"-%@", 
-	  formatPlayingTime(int(self.mediaLength - [musicPlayer currentPlaybackTime] + 0.5))]];
+		[playedTimeLable setText:
+		 [NSString stringWithFormat:@"%@", formatPlayingTime(currentPlaybackTime)]];
+		[leftTimeLable setText:
+		 [NSString stringWithFormat:@"-%@", 
+		  formatPlayingTime(int(self.mediaLength - [musicPlayer currentPlaybackTime] + 0.5))]];
 
-	[playingSlider setValue: currentPlaybackTime];
+		[playingSlider setValue: currentPlaybackTime];
+	}
 }
 
 #pragma mark MLApp event Delegate
@@ -537,7 +691,7 @@ NSString *formatPlayingTime(int n)
 
 - (void)onMessage:(NSString*) msg
 {
-	[nowPlayingLabel setText:msg];
+	[titleLabel setText:msg];
 }
 
 - (void)onPopupLyrSearchView
@@ -604,7 +758,9 @@ NSString *formatPlayingTime(int n)
 
 	[addMusicButton release];
 	[navigationBar				release];
-	[nowPlayingLabel			release];
+	[artistLabel				release];
+	[albumLabel					release];
+	[titleLabel					release];
 	[userMediaItemCollection	release];
 
 	[advancedCtrlView release];

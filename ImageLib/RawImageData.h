@@ -71,6 +71,8 @@ public:
 
 	bool Create(int nWidth, int nHeight, int nBitCount);
 	bool CreateReverse(int nWidth, int nHeight, int nBitCount);
+	
+	void ReverseUpDown() { stride = -stride; }
 
 	void Free();
 

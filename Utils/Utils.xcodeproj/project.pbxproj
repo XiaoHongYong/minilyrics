@@ -79,7 +79,6 @@
 		08FB7794FE84155DC02AAC07 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				5F9DEF7611AC0EE600312E83 /* Mac */,
 				08FB7795FE84155DC02AAC07 /* Source */,
 				C6A0FF2B0290797F04C91782 /* Documentation */,
 				1AB674ADFE9D54B511CA2CBB /* Products */,
@@ -90,6 +89,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5F9DEF7611AC0EE600312E83 /* Mac */,
 				5F9DEE6211ABFD5800312E83 /* App.h */,
 				5F9DEE6311ABFD5800312E83 /* CSVFile.cpp */,
 				5F9DEE6411ABFD5800312E83 /* CSVFile.h */,

@@ -50,7 +50,11 @@ typedef struct _ENCODING_CODEPAGE
 	// BYTE		dwCharset;
 	CHAR_ENCODING		nEncodingId;
 	int					nCodePage;		// windows codepage
+#ifdef _MAC
+	int					nCFStringEncoding;
+#else
 	int					nFontCharset;
+#endif
 	LPCSTR				szEncoding;
 	LPCSTR				szAlias;
 	LPCSTR				szDesc;

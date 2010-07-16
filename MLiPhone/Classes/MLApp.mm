@@ -62,28 +62,105 @@ tstring GetResourceFile(LPCTSTR szFileName)
 	return [dbFilePath UTF8String];
 }
 
+void InitSetDefaultCharEncoding()
+{
+	ENCODING_CODEPAGE &ecp = GetCharEncodingByID(ED_SYSDEF);
+	NSLocale *local = [NSLocale currentLocale];
+	NSString *lang = [local objectForKey:NSLocaleLanguageCode];
+	NSString *countryCode = [local objectForKey: NSLocaleCountryCode];
+	
+	// Compare country code
+	if ([countryCode isEqual: @"CN"] || [countryCode isEqual: @"SG"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_GB2312).nCFStringEncoding;
+	else if ([countryCode isEqual: @"TW"] || [countryCode isEqual: @"HK"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_BIG5).nCFStringEncoding;
+	else if ([countryCode isEqual: @"JP"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_JAPANESE_SHIFT_JIS).nCFStringEncoding;
+	
+	// Compare language code
+	else if ([lang isEqual: @"ara"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_ARABIC).nCFStringEncoding;
+	else if ([lang isEqual: @"bat"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_BALTIC_WINDOWS).nCFStringEncoding;
+	else if ([lang isEqual: @"gre"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_GREEK_WINDOWS).nCFStringEncoding;
+	else if ([lang isEqual: @"heb"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_HEBREW_WINDOWS).nCFStringEncoding;
+	else if ([lang isEqual: @"tha"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_THAI).nCFStringEncoding;
+	else if ([lang isEqual: @"tur"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_TURKISH_WINDOWS).nCFStringEncoding;
+	else if ([lang isEqual: @"vie"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_VIETNAMESE).nCFStringEncoding;
+	else if ([lang isEqual: @"rus"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_RUSSIAN_WINDOWS).nCFStringEncoding;
+	else if ([lang isEqual: @"kor"])
+		ecp.nCFStringEncoding = GetCharEncodingByID(ED_KOREAN).nCFStringEncoding;
+}
 
 int ConvertMultiByteToUtf8(int nEncodingID, const char *lpByteStr, int nSizeMultibyte, char *lpUtf8Str, int nSizeUtf8)
 {
 	EmptyStr(lpUtf8Str);
 
 	NSString	*str;
+	// kCFStringEncodingGB_18030_2000
 	str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)
-		   CFStringConvertEncodingToNSStringEncoding(kCFStringEncodingGB_18030_2000)];
-	if (!str)
-		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)0x80000632];
-	if (!str)
-		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)0x80000930];
-	if (!str)
-		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)0x80000421];
-	if (!str)
-		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)0x80000019];
+		   CFStringConvertEncodingToNSStringEncoding(
+				GetCharEncodingByID((CHAR_ENCODING)nEncodingID).nCFStringEncoding)];
 	if (!str)
 		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)NSISOLatin1StringEncoding];
 	if (str)
 		strcpy_safe(lpUtf8Str, nSizeUtf8, [str UTF8String]);
 
 	return strlen(lpUtf8Str);
+}
+
+int ConvertUtf8ToMultiByte(int nEncodingID, const char *lpUtf8Str, int nSizeUtf8, char *lpMbcsStr, int nSizeMultibyte)
+{
+	EmptyStr(lpMbcsStr);
+	
+	NSString	*str;
+	str = [NSString stringWithUTF8String:lpUtf8Str];
+	if (str)
+		[str getCString:lpMbcsStr
+			  maxLength:nSizeMultibyte
+			   encoding:CFStringConvertEncodingToNSStringEncoding(
+																  GetCharEncodingByID((CHAR_ENCODING)nEncodingID).nCFStringEncoding)];
+	
+	return strlen(lpMbcsStr);	
+}
+
+int ConvertMultiByteToWideChar(int nEncodingID, const char *lpByteStr, int nSizeMultibyte, WCHAR *lpWideStr, int nSizeWideChar)
+{
+	EmptyStr(lpWideStr);
+	
+	NSString	*str;
+	// kCFStringEncodingGB_18030_2000
+	str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)
+		   CFStringConvertEncodingToNSStringEncoding(
+													 GetCharEncodingByID((CHAR_ENCODING)nEncodingID).nCFStringEncoding)];
+	if (!str)
+		str = [NSString stringWithCString:lpByteStr encoding:(NSStringEncoding)NSISOLatin1StringEncoding];
+	if (str)
+		[str getCharacters:(unichar *)lpWideStr range: NSMakeRange(0, [str length])];
+	
+	return wcslen(lpWideStr);
+}
+
+int ConvertWideCharToMultiByte(int nEncodingID, const WCHAR *lpWideStr, int nSizeWideChar, char *lpByteStr, int nSizeMultibyte)
+{
+	EmptyStr(lpByteStr);
+	
+	NSString	*str;
+	str = [[NSString alloc] initWithCharacters:(const unichar*)lpWideStr length:nSizeWideChar];
+	if (str) {
+		[str getCString:lpByteStr
+			  maxLength:nSizeMultibyte
+			   encoding:CFStringConvertEncodingToNSStringEncoding(
+						GetCharEncodingByID((CHAR_ENCODING)nEncodingID).nCFStringEncoding)];
+	}
+
+	return strlen(lpByteStr);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
@@ -159,6 +236,11 @@ tstring				message;
 	return self;
 }
 
+- (void) postNoification
+{
+	[[NSNotificationCenter defaultCenter] postNotificationName:MLAPP_NOTIFY_NAME object:self];
+}
+
 - (LPCTSTR) mediaKey { return mediaKey.c_str(); }
 - (void) setMediaKey: (LPCTSTR) newmediaKey { mediaKey = newmediaKey; }
 
@@ -173,32 +255,53 @@ tstring				message;
 
 #import "CMLApp.h"
 
-
 void PostNotifySearchEnd(int nResult)
 {
 	MLAppNotifyParam	*pNotifyParam = [[MLAppNotifyParam alloc] initWithSearchEndResult:nResult];
-	[[NSNotificationCenter defaultCenter] postNotificationName:MLAPP_NOTIFY_NAME object:pNotifyParam];
+	[pNotifyParam performSelectorOnMainThread: @selector (postNoification)
+								   withObject: nil
+								waitUntilDone: YES];
 }
 
 void PostNotifyLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
 {
 	MLAppNotifyParam	*pNotifyParam = [[MLAppNotifyParam alloc] initWithLyrDownloadEnd:szMediaKey file:szFile];
-	[[NSNotificationCenter defaultCenter]
-	 postNotificationName:MLAPP_NOTIFY_NAME object:pNotifyParam];
+	[pNotifyParam performSelectorOnMainThread: @selector (postNoification)
+								   withObject: nil
+								waitUntilDone: YES];
 }
 
 void PostNotifyMessage(LPCTSTR szMessage)
 {
 	MLAppNotifyParam	*pNotifyParam = [[MLAppNotifyParam alloc] initWithMessage:szMessage];
-	[[NSNotificationCenter defaultCenter]
-	 postNotificationName:MLAPP_NOTIFY_NAME object:pNotifyParam];
+	[pNotifyParam performSelectorOnMainThread: @selector (postNoification)
+								   withObject: nil
+								waitUntilDone: YES];
 }
 
 void PostNotifyLyricsChanged()
 {
 	MLAppNotifyParam	*pNotifyParam = [[MLAppNotifyParam alloc] initWithLyrChanged];
-	[[NSNotificationCenter defaultCenter]
-	 postNotificationName:MLAPP_NOTIFY_NAME object:pNotifyParam];
+	[pNotifyParam performSelectorOnMainThread: @selector (postNoification)
+								   withObject: nil
+								waitUntilDone: YES];
+}
+  
+UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, int height)
+{
+	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
+
+	UIImage *artworkImage = NULL;// = noArtworkImage;
+
+	// Get the artwork from the current media item, if it has artwork.
+	MPMediaItemArtwork *artwork = [currentItem valueForProperty: MPMediaItemPropertyArtwork];
+
+	// Obtain a UIImage object from the MPMediaItemArtwork object
+	if (artwork) {
+		artworkImage = [artwork imageWithSize: CGSizeMake (width, height)];
+	}
+
+	return artworkImage;
 }
 
 @implementation MLApp
@@ -262,24 +365,6 @@ void PostNotifyLyricsChanged()
 	CMLApp::GetInstance()->OnMediaChanged([mediaKey UTF8String], [artist UTF8String], [album UTF8String],
 										  [title UTF8String], [lyrics UTF8String], (int)([length doubleValue] * 1000));
 }
-
--(UIImage*) getAlbumArtWithWidth:(int)width Height:(int)height
-{
-	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
-
-	UIImage *artworkImage = noArtworkImage;
-
-	// Get the artwork from the current media item, if it has artwork.
-	MPMediaItemArtwork *artwork = [currentItem valueForProperty: MPMediaItemPropertyArtwork];
-
-	// Obtain a UIImage object from the MPMediaItemArtwork object
-	if (artwork) {
-		artworkImage = [artwork imageWithSize: CGSizeMake (width, height)];
-	}
-
-	return artworkImage;
-}
-
 
 - (void)dealloc
 {

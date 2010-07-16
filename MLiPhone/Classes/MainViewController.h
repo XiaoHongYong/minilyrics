@@ -13,14 +13,17 @@
 #import "MLApp.h"
 
 @interface MainViewController : UIViewController 
-	<MPMediaPickerControllerDelegate, MusicTableViewControllerDelegate, AVAudioPlayerDelegate, LyrViewDelegate, MLAppEventDelegate> {
+	<MPMediaPickerControllerDelegate, MusicTableViewControllerDelegate, AVAudioPlayerDelegate,
+	LyrViewDelegate, MLAppEventDelegate, UIGestureRecognizerDelegate> {
 
 	MiniLyricsAppDelegate			*applicationDelegate;
 	IBOutlet UIButton			*addMusicButton;
 	IBOutlet UINavigationBar	*navigationBar;
-	IBOutlet UILabel			*nowPlayingLabel;
+	IBOutlet UILabel			*artistLabel;
+	IBOutlet UILabel			*titleLabel;
+	IBOutlet UILabel			*albumLabel;
 	BOOL						playedMusicOnce;
-		
+
 		
 	// Top play and lyrics display (font size ...)
 	IBOutlet UIView				*advancedCtrlView;
@@ -51,8 +54,10 @@
 
 @property (nonatomic, retain)	UIButton				*addMusicButton;
 @property (nonatomic, retain)	UINavigationBar			*navigationBar;
-@property (nonatomic, retain)	UILabel					*nowPlayingLabel;
 @property (readwrite)			BOOL					playedMusicOnce;
+@property (nonatomic, retain)	UILabel					*artistLabel;
+@property (nonatomic, retain)	UILabel					*titleLabel;
+@property (nonatomic, retain)	UILabel					*albumLabel;
 
 @property (nonatomic, retain)	UIView					*advancedCtrlView;
 @property (nonatomic, retain)	UIButton				*repeatButton;
@@ -87,6 +92,11 @@
 - (IBAction)	repeat:					(id) sender;
 - (IBAction)	playingPosSeek:			(id) sender;
 - (IBAction)	volumeSeek:				(id) sender;
+- (IBAction)	beginSeek:				(id) sender;
+- (IBAction)	endSeek:				(id) sender;
+
+- (IBAction)	forwardLyrics:			(id) sender;
+- (IBAction)	backwardLyrics:			(id) sender;
 
 - (BOOL) useiPodPlayer;
 
