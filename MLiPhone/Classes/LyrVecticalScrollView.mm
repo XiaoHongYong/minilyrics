@@ -300,11 +300,6 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 	[self onUpdateLyrDisplay];
 }
 
-- (void) moveLyrics: (int) y
-{
-	m_lyrGraph.MovingLyrics(y);
-}
-
 // Invoked by the lyrDisplayTimer.
 - (void) onUpdateLyrDisplay {
 	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();

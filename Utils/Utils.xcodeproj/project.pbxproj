@@ -7,61 +7,60 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5F9DEE7A11ABFD5800312E83 /* App.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6211ABFD5800312E83 /* App.h */; };
-		5F9DEE7B11ABFD5800312E83 /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6311ABFD5800312E83 /* CSVFile.cpp */; };
-		5F9DEE7C11ABFD5800312E83 /* CSVFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6411ABFD5800312E83 /* CSVFile.h */; };
-		5F9DEE7D11ABFD5800312E83 /* HtmlWrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6511ABFD5800312E83 /* HtmlWrite.cpp */; };
-		5F9DEE7E11ABFD5800312E83 /* HtmlWrite.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6611ABFD5800312E83 /* HtmlWrite.h */; };
-		5F9DEE7F11ABFD5800312E83 /* LocalizeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6711ABFD5800312E83 /* LocalizeTool.cpp */; };
-		5F9DEE8011ABFD5800312E83 /* LocalizeTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6811ABFD5800312E83 /* LocalizeTool.h */; };
-		5F9DEE8111ABFD5800312E83 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6911ABFD5800312E83 /* Log.cpp */; };
-		5F9DEE8211ABFD5800312E83 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6A11ABFD5800312E83 /* log.h */; };
-		5F9DEE8311ABFD5800312E83 /* LogAlias.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6B11ABFD5800312E83 /* LogAlias.h */; };
-		5F9DEE8411ABFD5800312E83 /* Profile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6C11ABFD5800312E83 /* Profile.h */; };
-		5F9DEE8511ABFD5800312E83 /* SimpleXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6D11ABFD5800312E83 /* SimpleXML.cpp */; };
-		5F9DEE8611ABFD5800312E83 /* SimpleXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE6E11ABFD5800312E83 /* SimpleXML.h */; };
-		5F9DEE8711ABFD5800312E83 /* SimpleXMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE6F11ABFD5800312E83 /* SimpleXMLParser.cpp */; };
-		5F9DEE8811ABFD5800312E83 /* SimpleXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7011ABFD5800312E83 /* SimpleXMLParser.h */; };
-		5F9DEE8911ABFD5800312E83 /* StdAfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7111ABFD5800312E83 /* StdAfx.cpp */; };
-		5F9DEE8A11ABFD5800312E83 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7211ABFD5800312E83 /* stdafx.h */; };
-		5F9DEE8B11ABFD5800312E83 /* UndoMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7311ABFD5800312E83 /* UndoMgr.cpp */; };
-		5F9DEE8C11ABFD5800312E83 /* UndoMgr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7411ABFD5800312E83 /* UndoMgr.h */; };
-		5F9DEE8D11ABFD5800312E83 /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7511ABFD5800312E83 /* Utils.h */; };
-		5F9DEE8E11ABFD5800312E83 /* UUEncode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7611ABFD5800312E83 /* UUEncode.cpp */; };
-		5F9DEE8F11ABFD5800312E83 /* UUEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7711ABFD5800312E83 /* UUEncode.h */; };
-		5F9DEE9011ABFD5800312E83 /* XMLWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEE7811ABFD5800312E83 /* XMLWriter.cpp */; };
-		5F9DEE9111ABFD5800312E83 /* XMLWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DEE7911ABFD5800312E83 /* XMLWriter.h */; };
-		5F9DEF7911AC0EE600312E83 /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF7711AC0EE600312E83 /* App.cpp */; };
-		5F9DEF7A11AC0EE600312E83 /* Profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DEF7811AC0EE600312E83 /* Profile.cpp */; };
+		5FE7E8AC11F0427600CECD89 /* App.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89011F0427600CECD89 /* App.h */; };
+		5FE7E8AD11F0427600CECD89 /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89111F0427600CECD89 /* CSVFile.cpp */; };
+		5FE7E8AE11F0427600CECD89 /* CSVFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89211F0427600CECD89 /* CSVFile.h */; };
+		5FE7E8AF11F0427600CECD89 /* HtmlWrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89311F0427600CECD89 /* HtmlWrite.cpp */; };
+		5FE7E8B011F0427600CECD89 /* HtmlWrite.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89411F0427600CECD89 /* HtmlWrite.h */; };
+		5FE7E8B111F0427600CECD89 /* LocalizeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89511F0427600CECD89 /* LocalizeTool.cpp */; };
+		5FE7E8B211F0427600CECD89 /* LocalizeTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89611F0427600CECD89 /* LocalizeTool.h */; };
+		5FE7E8B311F0427600CECD89 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89711F0427600CECD89 /* Log.cpp */; };
+		5FE7E8B411F0427600CECD89 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89811F0427600CECD89 /* log.h */; };
+		5FE7E8B511F0427600CECD89 /* LogAlias.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89911F0427600CECD89 /* LogAlias.h */; };
+		5FE7E8B611F0427600CECD89 /* App.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89B11F0427600CECD89 /* App.cpp */; };
+		5FE7E8B711F0427600CECD89 /* Profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89C11F0427600CECD89 /* Profile.cpp */; };
+		5FE7E8B911F0427600CECD89 /* Profile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89E11F0427600CECD89 /* Profile.h */; };
+		5FE7E8BA11F0427600CECD89 /* SimpleXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89F11F0427600CECD89 /* SimpleXML.cpp */; };
+		5FE7E8BB11F0427600CECD89 /* SimpleXML.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A011F0427600CECD89 /* SimpleXML.h */; };
+		5FE7E8BC11F0427600CECD89 /* SimpleXMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E8A111F0427600CECD89 /* SimpleXMLParser.cpp */; };
+		5FE7E8BD11F0427600CECD89 /* SimpleXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A211F0427600CECD89 /* SimpleXMLParser.h */; };
+		5FE7E8BE11F0427600CECD89 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A311F0427600CECD89 /* stdafx.h */; };
+		5FE7E8BF11F0427600CECD89 /* UndoMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E8A411F0427600CECD89 /* UndoMgr.cpp */; };
+		5FE7E8C011F0427600CECD89 /* UndoMgr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A511F0427600CECD89 /* UndoMgr.h */; };
+		5FE7E8C111F0427600CECD89 /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A711F0427600CECD89 /* Utils.h */; };
+		5FE7E8C211F0427600CECD89 /* UUEncode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E8A811F0427600CECD89 /* UUEncode.cpp */; };
+		5FE7E8C311F0427600CECD89 /* UUEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A911F0427600CECD89 /* UUEncode.h */; };
+		5FE7E8C411F0427600CECD89 /* XMLWriter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E8AA11F0427600CECD89 /* XMLWriter.cpp */; };
+		5FE7E8C511F0427600CECD89 /* XMLWriter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8AB11F0427600CECD89 /* XMLWriter.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5F9DEE6211ABFD5800312E83 /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
-		5F9DEE6311ABFD5800312E83 /* CSVFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CSVFile.cpp; sourceTree = "<group>"; };
-		5F9DEE6411ABFD5800312E83 /* CSVFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSVFile.h; sourceTree = "<group>"; };
-		5F9DEE6511ABFD5800312E83 /* HtmlWrite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HtmlWrite.cpp; sourceTree = "<group>"; };
-		5F9DEE6611ABFD5800312E83 /* HtmlWrite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HtmlWrite.h; sourceTree = "<group>"; };
-		5F9DEE6711ABFD5800312E83 /* LocalizeTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalizeTool.cpp; sourceTree = "<group>"; };
-		5F9DEE6811ABFD5800312E83 /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizeTool.h; sourceTree = "<group>"; };
-		5F9DEE6911ABFD5800312E83 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
-		5F9DEE6A11ABFD5800312E83 /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
-		5F9DEE6B11ABFD5800312E83 /* LogAlias.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogAlias.h; sourceTree = "<group>"; };
-		5F9DEE6C11ABFD5800312E83 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
-		5F9DEE6D11ABFD5800312E83 /* SimpleXML.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleXML.cpp; sourceTree = "<group>"; };
-		5F9DEE6E11ABFD5800312E83 /* SimpleXML.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXML.h; sourceTree = "<group>"; };
-		5F9DEE6F11ABFD5800312E83 /* SimpleXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleXMLParser.cpp; sourceTree = "<group>"; };
-		5F9DEE7011ABFD5800312E83 /* SimpleXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleXMLParser.h; sourceTree = "<group>"; };
-		5F9DEE7111ABFD5800312E83 /* StdAfx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StdAfx.cpp; sourceTree = "<group>"; };
-		5F9DEE7211ABFD5800312E83 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
-		5F9DEE7311ABFD5800312E83 /* UndoMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UndoMgr.cpp; sourceTree = "<group>"; };
-		5F9DEE7411ABFD5800312E83 /* UndoMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UndoMgr.h; sourceTree = "<group>"; };
-		5F9DEE7511ABFD5800312E83 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
-		5F9DEE7611ABFD5800312E83 /* UUEncode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UUEncode.cpp; sourceTree = "<group>"; };
-		5F9DEE7711ABFD5800312E83 /* UUEncode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUEncode.h; sourceTree = "<group>"; };
-		5F9DEE7811ABFD5800312E83 /* XMLWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XMLWriter.cpp; sourceTree = "<group>"; };
-		5F9DEE7911ABFD5800312E83 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
-		5F9DEF7711AC0EE600312E83 /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
-		5F9DEF7811AC0EE600312E83 /* Profile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profile.cpp; sourceTree = "<group>"; };
+		5FE7E89011F0427600CECD89 /* App.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
+		5FE7E89111F0427600CECD89 /* CSVFile.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = CSVFile.cpp; sourceTree = "<group>"; };
+		5FE7E89211F0427600CECD89 /* CSVFile.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = CSVFile.h; sourceTree = "<group>"; };
+		5FE7E89311F0427600CECD89 /* HtmlWrite.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = HtmlWrite.cpp; sourceTree = "<group>"; };
+		5FE7E89411F0427600CECD89 /* HtmlWrite.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = HtmlWrite.h; sourceTree = "<group>"; };
+		5FE7E89511F0427600CECD89 /* LocalizeTool.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = LocalizeTool.cpp; sourceTree = "<group>"; };
+		5FE7E89611F0427600CECD89 /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LocalizeTool.h; sourceTree = "<group>"; };
+		5FE7E89711F0427600CECD89 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
+		5FE7E89811F0427600CECD89 /* log.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
+		5FE7E89911F0427600CECD89 /* LogAlias.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LogAlias.h; sourceTree = "<group>"; };
+		5FE7E89B11F0427600CECD89 /* App.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = App.cpp; sourceTree = "<group>"; };
+		5FE7E89C11F0427600CECD89 /* Profile.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = Profile.cpp; sourceTree = "<group>"; };
+		5FE7E89E11F0427600CECD89 /* Profile.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Profile.h; sourceTree = "<group>"; };
+		5FE7E89F11F0427600CECD89 /* SimpleXML.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleXML.cpp; sourceTree = "<group>"; };
+		5FE7E8A011F0427600CECD89 /* SimpleXML.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = SimpleXML.h; sourceTree = "<group>"; };
+		5FE7E8A111F0427600CECD89 /* SimpleXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleXMLParser.cpp; sourceTree = "<group>"; };
+		5FE7E8A211F0427600CECD89 /* SimpleXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = SimpleXMLParser.h; sourceTree = "<group>"; };
+		5FE7E8A311F0427600CECD89 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
+		5FE7E8A411F0427600CECD89 /* UndoMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = UndoMgr.cpp; sourceTree = "<group>"; };
+		5FE7E8A511F0427600CECD89 /* UndoMgr.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = UndoMgr.h; sourceTree = "<group>"; };
+		5FE7E8A611F0427600CECD89 /* Utils.dsp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = text; path = Utils.dsp; sourceTree = "<group>"; };
+		5FE7E8A711F0427600CECD89 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
+		5FE7E8A811F0427600CECD89 /* UUEncode.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = UUEncode.cpp; sourceTree = "<group>"; };
+		5FE7E8A911F0427600CECD89 /* UUEncode.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = UUEncode.h; sourceTree = "<group>"; };
+		5FE7E8AA11F0427600CECD89 /* XMLWriter.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = XMLWriter.cpp; sourceTree = "<group>"; };
+		5FE7E8AB11F0427600CECD89 /* XMLWriter.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = XMLWriter.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libUtils.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUtils.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -89,31 +88,31 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				5F9DEF7611AC0EE600312E83 /* Mac */,
-				5F9DEE6211ABFD5800312E83 /* App.h */,
-				5F9DEE6311ABFD5800312E83 /* CSVFile.cpp */,
-				5F9DEE6411ABFD5800312E83 /* CSVFile.h */,
-				5F9DEE6511ABFD5800312E83 /* HtmlWrite.cpp */,
-				5F9DEE6611ABFD5800312E83 /* HtmlWrite.h */,
-				5F9DEE6711ABFD5800312E83 /* LocalizeTool.cpp */,
-				5F9DEE6811ABFD5800312E83 /* LocalizeTool.h */,
-				5F9DEE6911ABFD5800312E83 /* Log.cpp */,
-				5F9DEE6A11ABFD5800312E83 /* log.h */,
-				5F9DEE6B11ABFD5800312E83 /* LogAlias.h */,
-				5F9DEE6C11ABFD5800312E83 /* Profile.h */,
-				5F9DEE6D11ABFD5800312E83 /* SimpleXML.cpp */,
-				5F9DEE6E11ABFD5800312E83 /* SimpleXML.h */,
-				5F9DEE6F11ABFD5800312E83 /* SimpleXMLParser.cpp */,
-				5F9DEE7011ABFD5800312E83 /* SimpleXMLParser.h */,
-				5F9DEE7111ABFD5800312E83 /* StdAfx.cpp */,
-				5F9DEE7211ABFD5800312E83 /* stdafx.h */,
-				5F9DEE7311ABFD5800312E83 /* UndoMgr.cpp */,
-				5F9DEE7411ABFD5800312E83 /* UndoMgr.h */,
-				5F9DEE7511ABFD5800312E83 /* Utils.h */,
-				5F9DEE7611ABFD5800312E83 /* UUEncode.cpp */,
-				5F9DEE7711ABFD5800312E83 /* UUEncode.h */,
-				5F9DEE7811ABFD5800312E83 /* XMLWriter.cpp */,
-				5F9DEE7911ABFD5800312E83 /* XMLWriter.h */,
+				5FE7E89011F0427600CECD89 /* App.h */,
+				5FE7E89111F0427600CECD89 /* CSVFile.cpp */,
+				5FE7E89211F0427600CECD89 /* CSVFile.h */,
+				5FE7E89311F0427600CECD89 /* HtmlWrite.cpp */,
+				5FE7E89411F0427600CECD89 /* HtmlWrite.h */,
+				5FE7E89511F0427600CECD89 /* LocalizeTool.cpp */,
+				5FE7E89611F0427600CECD89 /* LocalizeTool.h */,
+				5FE7E89711F0427600CECD89 /* Log.cpp */,
+				5FE7E89811F0427600CECD89 /* log.h */,
+				5FE7E89911F0427600CECD89 /* LogAlias.h */,
+				5FE7E89A11F0427600CECD89 /* Mac */,
+				5FE7E89E11F0427600CECD89 /* Profile.h */,
+				5FE7E89F11F0427600CECD89 /* SimpleXML.cpp */,
+				5FE7E8A011F0427600CECD89 /* SimpleXML.h */,
+				5FE7E8A111F0427600CECD89 /* SimpleXMLParser.cpp */,
+				5FE7E8A211F0427600CECD89 /* SimpleXMLParser.h */,
+				5FE7E8A311F0427600CECD89 /* stdafx.h */,
+				5FE7E8A411F0427600CECD89 /* UndoMgr.cpp */,
+				5FE7E8A511F0427600CECD89 /* UndoMgr.h */,
+				5FE7E8A611F0427600CECD89 /* Utils.dsp */,
+				5FE7E8A711F0427600CECD89 /* Utils.h */,
+				5FE7E8A811F0427600CECD89 /* UUEncode.cpp */,
+				5FE7E8A911F0427600CECD89 /* UUEncode.h */,
+				5FE7E8AA11F0427600CECD89 /* XMLWriter.cpp */,
+				5FE7E8AB11F0427600CECD89 /* XMLWriter.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -126,11 +125,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5F9DEF7611AC0EE600312E83 /* Mac */ = {
+		5FE7E89A11F0427600CECD89 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				5F9DEF7711AC0EE600312E83 /* App.cpp */,
-				5F9DEF7811AC0EE600312E83 /* Profile.cpp */,
+				5FE7E89B11F0427600CECD89 /* App.cpp */,
+				5FE7E89C11F0427600CECD89 /* Profile.cpp */,
 			);
 			path = Mac;
 			sourceTree = "<group>";
@@ -149,20 +148,20 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F9DEE7A11ABFD5800312E83 /* App.h in Headers */,
-				5F9DEE7C11ABFD5800312E83 /* CSVFile.h in Headers */,
-				5F9DEE7E11ABFD5800312E83 /* HtmlWrite.h in Headers */,
-				5F9DEE8011ABFD5800312E83 /* LocalizeTool.h in Headers */,
-				5F9DEE8211ABFD5800312E83 /* log.h in Headers */,
-				5F9DEE8311ABFD5800312E83 /* LogAlias.h in Headers */,
-				5F9DEE8411ABFD5800312E83 /* Profile.h in Headers */,
-				5F9DEE8611ABFD5800312E83 /* SimpleXML.h in Headers */,
-				5F9DEE8811ABFD5800312E83 /* SimpleXMLParser.h in Headers */,
-				5F9DEE8A11ABFD5800312E83 /* stdafx.h in Headers */,
-				5F9DEE8C11ABFD5800312E83 /* UndoMgr.h in Headers */,
-				5F9DEE8D11ABFD5800312E83 /* Utils.h in Headers */,
-				5F9DEE8F11ABFD5800312E83 /* UUEncode.h in Headers */,
-				5F9DEE9111ABFD5800312E83 /* XMLWriter.h in Headers */,
+				5FE7E8AC11F0427600CECD89 /* App.h in Headers */,
+				5FE7E8AE11F0427600CECD89 /* CSVFile.h in Headers */,
+				5FE7E8B011F0427600CECD89 /* HtmlWrite.h in Headers */,
+				5FE7E8B211F0427600CECD89 /* LocalizeTool.h in Headers */,
+				5FE7E8B411F0427600CECD89 /* log.h in Headers */,
+				5FE7E8B511F0427600CECD89 /* LogAlias.h in Headers */,
+				5FE7E8B911F0427600CECD89 /* Profile.h in Headers */,
+				5FE7E8BB11F0427600CECD89 /* SimpleXML.h in Headers */,
+				5FE7E8BD11F0427600CECD89 /* SimpleXMLParser.h in Headers */,
+				5FE7E8BE11F0427600CECD89 /* stdafx.h in Headers */,
+				5FE7E8C011F0427600CECD89 /* UndoMgr.h in Headers */,
+				5FE7E8C111F0427600CECD89 /* Utils.h in Headers */,
+				5FE7E8C311F0427600CECD89 /* UUEncode.h in Headers */,
+				5FE7E8C511F0427600CECD89 /* XMLWriter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,18 +207,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F9DEE7B11ABFD5800312E83 /* CSVFile.cpp in Sources */,
-				5F9DEE7D11ABFD5800312E83 /* HtmlWrite.cpp in Sources */,
-				5F9DEE7F11ABFD5800312E83 /* LocalizeTool.cpp in Sources */,
-				5F9DEE8111ABFD5800312E83 /* Log.cpp in Sources */,
-				5F9DEE8511ABFD5800312E83 /* SimpleXML.cpp in Sources */,
-				5F9DEE8711ABFD5800312E83 /* SimpleXMLParser.cpp in Sources */,
-				5F9DEE8911ABFD5800312E83 /* StdAfx.cpp in Sources */,
-				5F9DEE8B11ABFD5800312E83 /* UndoMgr.cpp in Sources */,
-				5F9DEE8E11ABFD5800312E83 /* UUEncode.cpp in Sources */,
-				5F9DEE9011ABFD5800312E83 /* XMLWriter.cpp in Sources */,
-				5F9DEF7911AC0EE600312E83 /* App.cpp in Sources */,
-				5F9DEF7A11AC0EE600312E83 /* Profile.cpp in Sources */,
+				5FE7E8AD11F0427600CECD89 /* CSVFile.cpp in Sources */,
+				5FE7E8AF11F0427600CECD89 /* HtmlWrite.cpp in Sources */,
+				5FE7E8B111F0427600CECD89 /* LocalizeTool.cpp in Sources */,
+				5FE7E8B311F0427600CECD89 /* Log.cpp in Sources */,
+				5FE7E8B611F0427600CECD89 /* App.cpp in Sources */,
+				5FE7E8B711F0427600CECD89 /* Profile.cpp in Sources */,
+				5FE7E8BA11F0427600CECD89 /* SimpleXML.cpp in Sources */,
+				5FE7E8BC11F0427600CECD89 /* SimpleXMLParser.cpp in Sources */,
+				5FE7E8BF11F0427600CECD89 /* UndoMgr.cpp in Sources */,
+				5FE7E8C211F0427600CECD89 /* UUEncode.cpp in Sources */,
+				5FE7E8C411F0427600CECD89 /* XMLWriter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

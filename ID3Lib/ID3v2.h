@@ -403,7 +403,7 @@ struct ID3v2SynchLyrics
 	wstringex			m_strUcs2ContentDesc;
 
 	typedef list< LrcSyllable<char> >		LIST_SYLRC;
-	typedef list< LrcSyllable<wchar_t> >	LIST_SYLRC_W;
+	typedef list< LrcSyllable<WCHAR> >	LIST_SYLRC_W;
 
 	LIST_SYLRC			m_vAnsiSynLyrics;
 	LIST_SYLRC_W		m_vUcs2SynLyrics;

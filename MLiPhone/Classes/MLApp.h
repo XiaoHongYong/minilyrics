@@ -28,6 +28,7 @@
 @property(nonatomic, assign)	id<MLAppEventDelegate>		delegate;
 @property (nonatomic, retain)	UIImage						*noArtworkImage;
 
+- (id)init:(MPMusicPlayerController *)_musicPlayer;
 
 -(void) onMediaChanged;
 

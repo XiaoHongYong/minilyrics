@@ -35,8 +35,8 @@
 @synthesize mediaLength;
 
 
-@synthesize lyrView;
-@synthesize scrollLyrView;
+@synthesize albumArtImage;
+@synthesize staticLyrView;
 @synthesize lyrVerticalView;
 
 @synthesize	mPlayCtrlToolbar;
@@ -47,6 +47,17 @@
 
 
 #pragma mark Music control________________________________
+
+extern "C" NSString *formatPlayingTime(int n);
+
+- (void) updatePlaybackTime:(int)currentPlaybackTime
+{
+	[playedTimeLable setText:
+	 [NSString stringWithFormat:@"%@", formatPlayingTime(currentPlaybackTime)]];
+	[leftTimeLable setText:
+	 [NSString stringWithFormat:@"-%@", 
+	  formatPlayingTime(int(self.mediaLength - [musicPlayer currentPlaybackTime] + 0.5))]];
+}
 
 // A toggle control for playing or pausing iPod library music playback, invoked
 //		when the user taps the 'playBarButton' in the Navigation bar. 
@@ -126,8 +137,9 @@
 
 - (IBAction)	playingPosSeek:			(id) sender
 {
-	CMLApp::GetInstance()->GetLyricsData().SetPlayElapsedTime(int([playingSlider value] * 1000));
-	// [musicPlayer setCurrentPlaybackTime: [playingSlider value]];
+	int playbackTime = int(([playingSlider value] +  + 0.5) * 1000);
+	CMLApp::GetInstance()->GetLyricsData().SetPlayElapsedTime(playbackTime);
+	[self updatePlaybackTime:playbackTime / 1000];
 }
 
 - (IBAction)	volumeSeek:				(id) sender
@@ -197,51 +209,62 @@
 - (void) updatePlayerQueueWithMediaCollection: (MPMediaItemCollection *) mediaItemCollection {
 
 	// Configure the music player, but only if the user chose at least one song to play
-	if (mediaItemCollection) {
+	if (!mediaItemCollection) {
 
-		// If there's no playback queue yet...
-		if (userMediaItemCollection == nil) {
+		[self setUserMediaItemCollection:nil];
 		
-			// apply the new media item collection as a playback queue for the music player
-			[self setUserMediaItemCollection: mediaItemCollection];
-			[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
-			[self setPlayedMusicOnce: YES];
+		[musicPlayer stop];
+
+		// Apply the new media item collection as a playback queue for the music player.
+		[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
+		
+		// Restore the now-playing item and its current playback time.
+		musicPlayer.nowPlayingItem			= nil;
+		return;
+	}
+
+	// If there's no playback queue yet...
+	if (userMediaItemCollection == nil) {
+	
+		// apply the new media item collection as a playback queue for the music player
+		[self setUserMediaItemCollection: mediaItemCollection];
+		[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
+		[self setPlayedMusicOnce: YES];
+		[musicPlayer play];
+
+	// Obtain the music player's state so it can then be
+	//		restored after updating the playback queue.
+	} else {
+
+		// Take note of whether or not the music player is playing. If it is
+		//		it needs to be started again at the end of this method.
+		BOOL wasPlaying = NO;
+		if (musicPlayer.playbackState == MPMusicPlaybackStatePlaying) {
+			wasPlaying = YES;
+		}
+		
+		// Save the now-playing item and its current playback time.
+		MPMediaItem *nowPlayingItem			= musicPlayer.nowPlayingItem;
+		NSTimeInterval currentPlaybackTime	= musicPlayer.currentPlaybackTime;
+
+		// Combine the previously-existing media item collection with the new one
+		NSMutableArray *combinedMediaItems	= [[userMediaItemCollection items] mutableCopy];
+		NSArray *newMediaItems				= [mediaItemCollection items];
+		[combinedMediaItems addObjectsFromArray: newMediaItems];
+		
+		[self setUserMediaItemCollection: [MPMediaItemCollection collectionWithItems: (NSArray *) combinedMediaItems]];
+		[combinedMediaItems release];
+
+		// Apply the new media item collection as a playback queue for the music player.
+		[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
+		
+		// Restore the now-playing item and its current playback time.
+		musicPlayer.nowPlayingItem			= nowPlayingItem;
+		musicPlayer.currentPlaybackTime		= currentPlaybackTime;
+		
+		// If the music player was playing, get it playing again.
+		if (wasPlaying) {
 			[musicPlayer play];
-
-		// Obtain the music player's state so it can then be
-		//		restored after updating the playback queue.
-		} else {
-
-			// Take note of whether or not the music player is playing. If it is
-			//		it needs to be started again at the end of this method.
-			BOOL wasPlaying = NO;
-			if (musicPlayer.playbackState == MPMusicPlaybackStatePlaying) {
-				wasPlaying = YES;
-			}
-			
-			// Save the now-playing item and its current playback time.
-			MPMediaItem *nowPlayingItem			= musicPlayer.nowPlayingItem;
-			NSTimeInterval currentPlaybackTime	= musicPlayer.currentPlaybackTime;
-
-			// Combine the previously-existing media item collection with the new one
-			NSMutableArray *combinedMediaItems	= [[userMediaItemCollection items] mutableCopy];
-			NSArray *newMediaItems				= [mediaItemCollection items];
-			[combinedMediaItems addObjectsFromArray: newMediaItems];
-			
-			[self setUserMediaItemCollection: [MPMediaItemCollection collectionWithItems: (NSArray *) combinedMediaItems]];
-			[combinedMediaItems release];
-
-			// Apply the new media item collection as a playback queue for the music player.
-			[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
-			
-			// Restore the now-playing item and its current playback time.
-			musicPlayer.nowPlayingItem			= nowPlayingItem;
-			musicPlayer.currentPlaybackTime		= currentPlaybackTime;
-			
-			// If the music player was playing, get it playing again.
-			if (wasPlaying) {
-				[musicPlayer play];
-			}
 		}
 	}
 }
@@ -424,6 +447,19 @@
 	}
 }
 
+- (void) registerGestrueRecognizer:(UIView *)view
+{
+	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scaleLyrics:)];
+	[pinchGesture setDelegate:self];
+	[view addGestureRecognizer:pinchGesture];
+	[pinchGesture release];
+	
+	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAdvancedCtrl:)];
+	[tapGesture setDelegate:self];
+	[view addGestureRecognizer:tapGesture];
+	[tapGesture release];
+}
+
 // Configure the application.
 - (void) viewDidLoad {
 
@@ -441,14 +477,15 @@
 	[self setMPausedButtons: mPlayCtrlToolbar.items];
 	[self setMPlayingButtons: [[NSMutableArray alloc] initWithArray:mPausedButtons]];
 
+	//
 	// Create paused bar button
+	//
 	UIImage *pausedButtonImage = [UIImage imageNamed: @"pause.png"];
 	UIBarButtonItem *pauseBarButton = [[UIBarButtonItem alloc]	initWithImage:pausedButtonImage
 																	  style:UIBarButtonItemStylePlain
 																	  target:self
 																	  action:@selector (playOrPauseMusic:)];
 	[mPlayingButtons replaceObjectAtIndex:3 withObject:pauseBarButton];
-	
 	[mPlayCtrlToolbar setItems:mPlayingButtons];
 	[mPlayCtrlToolbar setItems:mPausedButtons];
 
@@ -482,64 +519,41 @@
 
 	[self registerForMediaPlayerNotifications];
 
+	//
+	// Init MLApp.
+	//
 	mlApp = [[MLApp alloc] init:musicPlayer];
 	[mlApp setDelegate:self];
 
+	//
+	// Init set static text lyrics view.
+	//
+	[staticLyrView InitLyrView];
+	[staticLyrView onLyricsChanged];
+	[staticLyrView setHidden:TRUE];
 
-/*	CGRect rcLyrView = scrollLyrView.bounds;
-	rcLyrView.size.height = 500;
-
-	[self setLyrView:[[LyricsShowView alloc] initWithFrame:rcLyrView]];
-	
-	[lyrView setDelegate:self];
-	[lyrView setMusicPlayer:self.musicPlayer];
-
-	[scrollLyrView setBackgroundColor:[UIColor blackColor]];
-	[scrollLyrView setCanCancelContentTouches:NO];
-	scrollLyrView.clipsToBounds = YES;	// default is NO, we want to restrict drawing within our scrollview
-	scrollLyrView.indicatorStyle = UIScrollViewIndicatorStyleWhite;
-	// UIImageView *imageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"image0.jpg"]];
-	[scrollLyrView addSubview:lyrView];
-	// [scrollLyrView setContentSize:CGSizeMake(imageView.frame.size.width, imageView.frame.size.height)];
-	[scrollLyrView setScrollEnabled:YES];
-	// [imageView release];
-	
-	// Reset the scroll view to 1.0 zoom
-	scrollLyrView.contentSize = CGSizeMake(rcLyrView.size.width, rcLyrView.size.height);
-	
-
-	[lyrView onLyricsChanged];*/
-
-
-	[scrollLyrView setHidden:TRUE];
-
+	//
+	// Init set vertical lyrics view.
+	//
 	[lyrVerticalView setMusicPlayer:self.musicPlayer];
-
 	[lyrVerticalView InitLyrView];
 
-	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scaleLyrics:)];
-	[pinchGesture setDelegate:self];
-	[lyrVerticalView addGestureRecognizer:pinchGesture];
-	[pinchGesture release];
+	//
+	// Register Gesture Recognizer
+	//
+	[self registerGestrueRecognizer:lyrVerticalView];
+	[self registerGestrueRecognizer:staticLyrView];
 
-	UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideAdvancedCtrl:)];
-	[tapGesture setDelegate:self];
-	[lyrVerticalView addGestureRecognizer:tapGesture];
-	[tapGesture release];
-
-	UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveLyrics:)];
+/*	UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(moveLyrics:)];
 	[panGesture setMaximumNumberOfTouches:2];
 	[panGesture setDelegate:self];
 	[lyrVerticalView addGestureRecognizer:panGesture];
 	[panGesture release];
 
-/*    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showResetMenu:)];
+    UILongPressGestureRecognizer *longPressGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(showResetMenu:)];
     [piece addGestureRecognizer:longPressGesture];
     [longPressGesture release];*/
 
-	if (!g_Profile.GetProfileBool(_T("HideAdvCtrl"), TRUE))
-		[advancedCtrlView setHidden:NO];
-	
 	//
 	// Set shuffle button status
 	//
@@ -553,7 +567,9 @@
 	}
 	[shuffleButton setImage:imgShuffle forState:UIControlStateNormal];
 
+	//
 	// Set repeat button status
+	//
 	MPMusicRepeatMode repeatMode = [musicPlayer repeatMode];
 	UIImage *imgRepeat;
 	if (repeatMode == MPMusicRepeatModeNone) {
@@ -608,8 +624,8 @@ bool ScaleLyricsFont(float scale);
 		if (!ScaleLyricsFont([gestureRecognizer scale]))
 			return;
 
-		if ([gestureRecognizer view] == self.lyrVerticalView)
-			[lyrVerticalView reloadFontSettings];
+		[lyrVerticalView reloadFontSettings];
+		[staticLyrView reloadFontSettings];
 
         [gestureRecognizer setScale:1];
     }
@@ -633,7 +649,7 @@ bool ScaleLyricsFont(float scale);
 {
 	// [self adjustAnchorPointForGestureRecognizer:gestureRecognizer];
 
-	CGPoint translation = [gestureRecognizer translationInView:lyrVerticalView];
+/*	CGPoint translation = [gestureRecognizer translationInView:lyrVerticalView];
 
 	if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) {
 		[gestureRecognizer setTranslation:CGPointZero inView:lyrVerticalView];
@@ -643,7 +659,7 @@ bool ScaleLyricsFont(float scale);
 		[gestureRecognizer setTranslation:CGPointZero inView:lyrVerticalView];
 	}
 	else if ([gestureRecognizer state] == UIGestureRecognizerStateEnded) {
-	}
+	}*/
 }
 
 // ensure that the pinch, pan and rotate gesture recognizers on a particular view can all recognize simultaneously
@@ -651,7 +667,7 @@ bool ScaleLyricsFont(float scale);
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldRecognizeSimultaneouslyWithGestureRecognizer:(UIGestureRecognizer *)otherGestureRecognizer
 {
     // if the gesture recognizers's view isn't one of our pieces, don't allow simultaneous recognition
-    if (gestureRecognizer.view != [self lyrVerticalView])
+    if (gestureRecognizer.view != [self lyrVerticalView] || gestureRecognizer.view != [self staticLyrView])
         return NO;
     
     // if the gesture recognizers are on different views, don't allow simultaneous recognition
@@ -665,18 +681,12 @@ bool ScaleLyricsFont(float scale);
     return YES;
 }
 
-extern "C" NSString *formatPlayingTime(int n);
-
 // Invoked by the playingProgressTimer.
 - (void) onUpdatePlayingProgress {
 	if (!lyrVerticalView.inSeekingLyrics) {
 		int currentPlaybackTime = (int)([musicPlayer currentPlaybackTime] + 0.5);
 
-		[playedTimeLable setText:
-		 [NSString stringWithFormat:@"%@", formatPlayingTime(currentPlaybackTime)]];
-		[leftTimeLable setText:
-		 [NSString stringWithFormat:@"-%@", 
-		  formatPlayingTime(int(self.mediaLength - [musicPlayer currentPlaybackTime] + 0.5))]];
+		[self updatePlaybackTime:currentPlaybackTime];
 
 		[playingSlider setValue: currentPlaybackTime];
 	}
@@ -684,9 +694,76 @@ extern "C" NSString *formatPlayingTime(int n);
 
 #pragma mark MLApp event Delegate
 
+UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, int height);
+
+
+CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
+{
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+	
+	// create the bitmap context
+	CGContextRef bitmapContext = CGBitmapContextCreate (NULL, pixelsWide, pixelsHigh, 8,
+														0, colorSpace,
+														// this will give us an optimal BGRA format for the device:
+														(kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst));
+	CGColorSpaceRelease(colorSpace);
+	
+    return bitmapContext;
+}
+
+- (UIImage *)createDarkImage:(UIImage *)fromImage
+{
+	// create a bitmap graphics context the size of the image
+	CGContextRef mainViewContentContext = MyCreateBitmapContext(fromImage.size.width, fromImage.size.height);
+	
+	CGRect rect = CGRectMake(0, 0, fromImage.size.width, fromImage.size.height);
+	// draw the image into the bitmap context
+	CGContextDrawImage(mainViewContentContext,
+					   rect,
+					   fromImage.CGImage);
+
+	// Highlight the "first" image from the DrawTiledImage call.
+	CGContextSetRGBFillColor(mainViewContentContext, 0.3, 0.3, 0.3, 0.5);
+	CGContextFillRect(mainViewContentContext, rect);
+	
+	// create CGImageRef of the main view bitmap content, and then release that bitmap context
+	CGImageRef darkImage = CGBitmapContextCreateImage(mainViewContentContext);
+	CGContextRelease(mainViewContentContext);
+	
+	// convert the finished reflection image to a UIImage 
+	UIImage *theImage = [UIImage imageWithCGImage:darkImage];
+	
+	// image is retained by the property setting above, so we can release the original
+	CGImageRelease(darkImage);
+	
+	return theImage;
+}
+
 - (void)onLyricsChanged
 {
-	[lyrVerticalView onLyricsChanged];
+	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
+	if (lyrData.HasLyricsOpened() && lyrData.GetLyrContentType() == LCT_TXT)
+	{
+		// Static lyrics
+		[staticLyrView onLyricsChanged];
+
+		UIImage *imageDark = nil;
+		UIImage *image = getAlbumArtWithSize(self.musicPlayer, albumArtImage.frame.size.width, albumArtImage.frame.size.height);
+		if (image)
+			imageDark = [self createDarkImage:image];
+		[albumArtImage setImage:imageDark];
+		[albumArtImage setHidden:NO];
+
+		[lyrVerticalView setHidden:YES];
+		[staticLyrView setHidden:NO];
+	}
+	else
+	{
+		[lyrVerticalView onLyricsChanged];
+		[albumArtImage setHidden:YES];
+		[staticLyrView setHidden:YES];
+		[lyrVerticalView setHidden:NO];
+	}
 }
 
 - (void)onMessage:(NSString*) msg
@@ -696,17 +773,6 @@ extern "C" NSString *formatPlayingTime(int n);
 
 - (void)onPopupLyrSearchView
 {
-}
-
-#pragma mark LyricsShowView Delegate
-
-- (void)LyrContentHeightChanged:(LyricsShowView *)lyrShowView contentHeight:(int)height
-{
-	CGSize size = scrollLyrView.bounds.size;
-	size.height = height;
-	[scrollLyrView setContentSize:size];
-
-	[scrollLyrView setNeedsDisplay];
 }
 
 #pragma mark Application state management_____________

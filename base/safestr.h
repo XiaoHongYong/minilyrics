@@ -10,10 +10,10 @@ int	strncpy_safe(char *strDestination, int nLenMax, const char *strSource, int n
 int	strncpysz_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy);
 char *strcat_safe(char * dst, int Size, const char * src);
 
-wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource);
-int	wcsncpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource, int nToCopy);
-int	wcsncpysz_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource, int nToCopy);
-wchar_t * __cdecl wcscat_safe(wchar_t * dst, int Size, const wchar_t * src);
+WCHAR *wcscpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource);
+int	wcsncpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int nToCopy);
+int	wcsncpysz_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int nToCopy);
+WCHAR * __cdecl wcscat_safe(WCHAR * dst, int Size, const WCHAR * src);
 
 #ifdef _UNICODE
 #define _tcscpy_safe		wcscpy_safe

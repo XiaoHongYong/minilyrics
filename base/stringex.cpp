@@ -7,7 +7,7 @@
 #include "xstr.h"
 
 #ifdef _UNICODE
-typedef	wchar_t	UTCHAR;
+typedef	WCHAR			UTCHAR;
 #else
 typedef	unsigned char	UTCHAR;
 #endif
@@ -1008,7 +1008,7 @@ void UriUnescape(const WCHAR *szInet, WCHAR *szLocal, int nLenMax, CHAR_ENCODING
 	wcscpy_safe(szLocal, nLenMax, strOutW.c_str());
 }
 
-void UriUnescape(const WCHAR *szInet, wstring &str, CHAR_ENCODING encoding)
+void UriUnescape(const WCHAR *szInet, wstring_t &str, CHAR_ENCODING encoding)
 {
 	stringex		strIn;
 	string			strOut;
@@ -1092,7 +1092,7 @@ void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax, CHAR_ENCODING e
 	wcscpy_safe(szInet, nLenMax, strOutW.c_str());
 }
 
-void UriEscape(const WCHAR *szLocal, wstring &strInet, CHAR_ENCODING encoding)
+void UriEscape(const WCHAR *szLocal, wstring_t &strInet, CHAR_ENCODING encoding)
 {
 	stringex		strIn;
 	string				str;
@@ -1621,6 +1621,97 @@ void ColorToStr(COLORREF clr, WCHAR szStr[])
 	swprintf_s(szStr, 9, L"#%02X%02X%02X", clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);
 }
 #endif
+
+#ifndef _WIN32
+// For gcc compiler, sizeof(wchar_t) == 4, need to reimplementation wcsxxx functions.
+
+size_t	wcslen(const WCHAR *str)
+{
+        const WCHAR *eos = str;
+
+        while( *eos++ ) ;
+
+        return( (size_t)(eos - str - 1) );
+}
+
+int __cdecl wcsncmp (
+        const WCHAR * first,
+        const WCHAR * last,
+        size_t count
+        )
+{
+        if (!count)
+                return(0);
+
+        while (--count && *first && *first == *last)
+        {
+                first++;
+                last++;
+        }
+
+        return((int)(*first - *last));
+}
+
+int wcscmp (
+        const WCHAR * src,
+        const WCHAR * dst
+        )
+{
+        int ret = 0 ;
+
+        while( ! (ret = (int)(*src - *dst)) && *dst)
+                ++src, ++dst;
+
+        if ( ret < 0 )
+                ret = -1 ;
+        else if ( ret > 0 )
+                ret = 1 ;
+
+        return( ret );
+}
+
+WCHAR * __cdecl wcsstr (
+        const WCHAR * wcs1,
+        const WCHAR * wcs2
+        )
+{
+        WCHAR *cp = (WCHAR *) wcs1;
+        WCHAR *s1, *s2;
+
+        if ( !*wcs2)
+            return (WCHAR *)wcs1;
+
+        while (*cp)
+        {
+                s1 = cp;
+                s2 = (WCHAR *) wcs2;
+
+                while ( *s1 && *s2 && !(*s1-*s2) )
+                        s1++, s2++;
+
+                if (!*s2)
+                        return(cp);
+
+                cp++;
+        }
+
+        return(NULL);
+}
+
+WCHAR * __cdecl wcschr (
+        const WCHAR * string,
+        WCHAR ch
+        )
+{
+        while (*string && *string != (WCHAR)ch)
+                string++;
+
+        if (*string == (WCHAR)ch)
+                return((WCHAR *)string);
+        return(NULL);
+}
+
+#endif // #ifndef _WIN32
 
 #ifdef _CPPUNIT_TEST
 

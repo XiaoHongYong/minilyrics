@@ -8,15 +8,15 @@
 #import <AudioToolbox/AudioToolbox.h>
 #import "MusicTableViewController.h"
 #import "MiniLyricsAppDelegate.h"
-#import "LyricsShowView.h"
 #import "LyrVecticalScrollView.h"
 #import "MLApp.h"
+#import "LyrStaticTextView.h"
 
 @interface MainViewController : UIViewController 
 	<MPMediaPickerControllerDelegate, MusicTableViewControllerDelegate, AVAudioPlayerDelegate,
-	LyrViewDelegate, MLAppEventDelegate, UIGestureRecognizerDelegate> {
+	MLAppEventDelegate, UIGestureRecognizerDelegate> {
 
-	MiniLyricsAppDelegate			*applicationDelegate;
+	MiniLyricsAppDelegate		*applicationDelegate;
 	IBOutlet UIButton			*addMusicButton;
 	IBOutlet UINavigationBar	*navigationBar;
 	IBOutlet UILabel			*artistLabel;
@@ -24,7 +24,6 @@
 	IBOutlet UILabel			*albumLabel;
 	BOOL						playedMusicOnce;
 
-		
 	// Top play and lyrics display (font size ...)
 	IBOutlet UIView				*advancedCtrlView;
 	IBOutlet UIButton			*repeatButton;
@@ -33,11 +32,11 @@
 	IBOutlet UISlider			*volumeSlider;
 	IBOutlet UILabel			*playedTimeLable;
 	IBOutlet UILabel			*leftTimeLable;
+	IBOutlet UIImageView		*albumArtImage;
 	NSTimer						*playingProgressTimer;
 	double						mediaLength;
 
-	IBOutlet UIScrollView		*scrollLyrView;
-	LyricsShowView				*lyrView;
+	IBOutlet LyrStaticTextView	*staticLyrView;
 	
 	IBOutlet LyrVecticalScrollView *lyrVerticalView;
 
@@ -70,9 +69,9 @@
 @property (readwrite)			double					mediaLength;
 
 
-@property (nonatomic, retain)	UIScrollView			*scrollLyrView;
-@property (nonatomic, retain)	LyricsShowView			*lyrView;
+@property (nonatomic, retain)	LyrStaticTextView		*staticLyrView;
 @property (nonatomic, retain)	LyrVecticalScrollView	*lyrVerticalView;
+@property (nonatomic, retain)	UIImageView				*albumArtImage;
 
 @property (nonatomic, retain)	UIToolbar				*mPlayCtrlToolbar;
 @property (nonatomic, retain)	NSArray					*mPausedButtons;

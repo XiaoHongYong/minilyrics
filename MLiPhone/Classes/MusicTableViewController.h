@@ -24,6 +24,7 @@
 
 - (IBAction) showMediaPicker: (id) sender;
 - (IBAction) doneShowingMusicList: (id) sender;
+- (IBAction) clearCollection: (id) sender;
 
 @end
 

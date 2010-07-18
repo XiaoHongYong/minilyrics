@@ -66,7 +66,7 @@ CHAR_ENCODING GetCharEncodingID(const char *szEncoding)
 	return ED_SYSDEF;
 }
 
-CHAR_ENCODING GetCharEncodingID(const wchar_t *szEncoding)
+CHAR_ENCODING GetCharEncodingID(const WCHAR *szEncoding)
 {
 	for (int i = 0; i < __MaxEncodings; i++)
 	{
@@ -224,7 +224,7 @@ void ConvertStr(const WCHAR *str, int nLen, string &strOut, int nEncodingID)
 	strOut.resize(n);
 }
 
-void ConvertStr(const WCHAR *str, int nLen, wstring &strOut, int nEncodingID)
+void ConvertStr(const WCHAR *str, int nLen, wstring_t &strOut, int nEncodingID)
 {
 	if (nLen >= 0)
 	{
@@ -246,7 +246,7 @@ void ConvertStr(const char *str, int nLen, string &strOut, int nEncodingID)
 		strOut = str;
 }
 
-void ConvertStr(const char *str, int nLen, wstring &strOut, int nEncodingID)
+void ConvertStr(const char *str, int nLen, wstring_t &strOut, int nEncodingID)
 {
 	int			n;
 
@@ -364,7 +364,7 @@ void UCS2ToMbcs(const WCHAR *str, int nLen, string &strOut, int nEncodingID)
 	ConvertStr(str, nLen, strOut, nEncodingID);
 }
 
-void Utf8ToUCS2(const char *str, int nLen, wstring &strOut)
+void Utf8ToUCS2(const char *str, int nLen, wstring_t &strOut)
 {
 	ConvertStr(str, nLen, strOut, ED_UTF8); // GetEncodingIdx("utf-8"));
 }

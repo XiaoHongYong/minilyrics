@@ -484,7 +484,7 @@ protected:
 
 typedef stringex_t<TCHAR>	tstringex;
 typedef stringex_t<char>	stringex;
-typedef stringex_t<wchar_t>	wstringex;
+typedef stringex_t<WCHAR>	wstringex;
 typedef stringex			CCharBuffer;
 
 

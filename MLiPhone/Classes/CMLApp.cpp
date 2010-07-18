@@ -263,8 +263,8 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 void CMLApp::SetDefaultSettings()
 {
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("Font"), _T(", 18, bold, 0, 0, "));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgColor"), _T("#FF8040"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgLowColor"), _T("#B2B2B2"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgColor"), _T("#FFFFFF"));
+	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgLowColor"), _T("#929292"));
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("BgColor"), _T("#404040"));
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FocusLineBgColor"), _T("#8A94AA"));
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("TagColor"), _T("#FF8242"));

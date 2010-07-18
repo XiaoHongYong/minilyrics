@@ -65,7 +65,7 @@ typedef struct _ENCODING_CODEPAGE
 
 
 CHAR_ENCODING GetCharEncodingID(const char *szEncoding);
-CHAR_ENCODING GetCharEncodingID(const wchar_t *szEncoding);
+CHAR_ENCODING GetCharEncodingID(const WCHAR *szEncoding);
 
 void EnumAllEncodingsName(vector<tstring> &vEncodingNames);
 
@@ -82,9 +82,9 @@ void ConvertStr(const char *str, int nLen, stringex &strOut, int nEncodingID = E
 void ConvertStr(const WCHAR *str, int nLen, wstringex &strOut, int nEncodingID = ED_SYSDEF);
 void ConvertStr(const WCHAR *str, int nLen, stringex &strOut, int nEncodingID = ED_SYSDEF);
 
-void ConvertStr(const char *str, int nLen, wstring &strOut, int nEncodingID = ED_SYSDEF);
+void ConvertStr(const char *str, int nLen, wstring_t &strOut, int nEncodingID = ED_SYSDEF);
 void ConvertStr(const char *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
-void ConvertStr(const WCHAR *str, int nLen, wstring &strOut, int nEncodingID = ED_SYSDEF);
+void ConvertStr(const WCHAR *str, int nLen, wstring_t &strOut, int nEncodingID = ED_SYSDEF);
 void ConvertStr(const WCHAR *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
 
 void ConvertStr2(const char *str, int nLen, WCHAR *strOut, int nOut, int nEncodingID = ED_SYSDEF);
@@ -102,9 +102,9 @@ void MbcsToUCS2(const char *str, int nLen, wstringex &strOut, int nEncodingID = 
 void UCS2ToUtf8(const WCHAR *str, int nLen, string &strOut);
 void UCS2ToMbcs(const WCHAR *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
 void MbcsToUtf8(const char *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
-void MbcsToUCS2(const char *str, int nLen, wstring &strOut, int nEncodingID = ED_SYSDEF);
+void MbcsToUCS2(const char *str, int nLen, wstring_t &strOut, int nEncodingID = ED_SYSDEF);
 void Utf8ToMbcs(const char *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
-void Utf8ToUCS2(const char *str, int nLen, wstring &strOut);
+void Utf8ToUCS2(const char *str, int nLen, wstring_t &strOut);
 
 // ÅÐ¶Ï×Ö·û´®ÖÐÊÇ·ñ°üº¬·ÇANSI±àÂëµÄ×Ö·û
 bool IsAnsiStr(const WCHAR *szStr);

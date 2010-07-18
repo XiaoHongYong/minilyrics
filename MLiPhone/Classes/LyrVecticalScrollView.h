@@ -25,6 +25,5 @@
 - (void) onLyricsChanged;
 - (void) InitLyrView;
 - (void) reloadFontSettings;
-- (void) moveLyrics: (int) y;
 
 @end

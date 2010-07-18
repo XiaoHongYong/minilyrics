@@ -104,7 +104,7 @@ static bool GetLanguagePackInfo(LPCTSTR szFile, tstring &strLanguage, tstring &s
 	else if (fe == FE_UTF8)
 		ConvertStr(buff + 3, CountOf(buff) - 3, strBuff, ED_UTF8);
 	else
-		ConvertStr((wchar_t*)buff + 1, sizeof(buff) / sizeof(wchar_t) - 1, strBuff, ED_UTF8);
+		ConvertStr((WCHAR*)buff + 1, sizeof(buff) / sizeof(WCHAR) - 1, strBuff, ED_UTF8);
 
 	// [Info]
 	if (_tcsnicmp(strBuff.c_str(), SZ_INFO, _tcslen(SZ_INFO)) != 0)

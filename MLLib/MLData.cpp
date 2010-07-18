@@ -249,7 +249,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 						else
 						{
 							nRet = FromString(lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.c_str(),
-								(lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.size() + 1) * sizeof(wchar_t),
+								(lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.size() + 1) * sizeof(WCHAR),
 								&m_fileEncoding, FT_LYRICS_LRC, TRUE, TRUE,
 								bForceUseEncoding, nForceEncodingID);
 						}
@@ -456,7 +456,7 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bForceUs
 		for (ID3v2SynchLyrics::LIST_SYLRC_W::iterator it = lyrics.m_vUcs2SynLyrics.begin();
 			it != lyrics.m_vUcs2SynLyrics.end(); it++)
 		{
-			LrcSyllable<wchar_t>		&syllable = *it;
+			LrcSyllable<WCHAR>		&syllable = *it;
 
 			if (syllable.bNewLine)
 			{
@@ -847,7 +847,7 @@ int CMLData::UpdateTagToID3v2DescTxt()
 		m_id3v2SaveCacheInfo.m_strLrcDescription.size() * sizeof(TCHAR));
 	lrctagWriter.TxtWriteToStr(str, true, szTitle, szArtist, szAlbum, szEncoding, szTxtScrollEvents);
 	m_id3v2SaveCacheInfo.m_strLrcDescription.clear();
-	m_id3v2SaveCacheInfo.m_strLrcDescription.append((const wchar_t*)str.c_str(), str.size() / sizeof(TCHAR));
+	m_id3v2SaveCacheInfo.m_strLrcDescription.append((const WCHAR*)str.c_str(), str.size() / sizeof(TCHAR));
 #else
 	lrctagWriter.TxtWriteToStr(m_id3v2SaveCacheInfo.m_strLrcDescription, false, szTitle, szArtist, szAlbum, szEncoding, szTxtScrollEvents);
 #endif
@@ -2293,7 +2293,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 				for (int k = 0; k < pRow->vFrags.size(); k++)
 				{
 					PLYRIC_FRAG				pFrag = pRow->vFrags[k];
-					LrcSyllable<wchar_t>	syllable;
+					LrcSyllable<WCHAR>	syllable;
 					syllable.bNewLine = false;
 					syllable.strText = pFrag->szLyric;
 					syllable.nTime = pFrag->nBegTime + m_lyrProperties.m_nTimeOffset;
@@ -2304,7 +2304,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 				//
 				// to compatiable with windows media player, the Karaoke info has to be lost.
 				//
-				LrcSyllable<wchar_t>	syllable;
+				LrcSyllable<WCHAR>	syllable;
 				syllable.bNewLine = false;
 				syllable.nTime = pRow->nBegTime - m_lyrProperties.m_nTimeOffset;
 				if (syllable.nTime < 0)
@@ -2323,7 +2323,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 
 				if (!m_id3v2SaveCacheInfo.m_bAllSyllableIsNewLine)
 				{
-					LrcSyllable<wchar_t>	syllable;
+					LrcSyllable<WCHAR>	syllable;
 					syllable.bNewLine = true;
 					lyrics.m_vUcs2SynLyrics.push_back(syllable);
 				}

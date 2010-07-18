@@ -11,7 +11,7 @@ void AppendUcs2Str(CCharBuffer &buff, wstringex &strUcs2)
 	// Unicode
 	buff += (char)0xFF;
 	buff += (char)0xFE;
-	buff.append((const char *)strUcs2.c_str(), (strUcs2.size() + 1) * sizeof(wchar_t));
+	buff.append((const char *)strUcs2.c_str(), (strUcs2.size() + 1) * sizeof(WCHAR));
 }
 */
 
@@ -22,7 +22,7 @@ void AppendUcs2Str(CCharBuffer &buff, ID3v2EncType encType, LPCWSTR str, int nLe
 		buff += (char)0xFF;
 		buff += (char)0xFE;
 
-		buff.append((const char *)str, (nLen + 1) * sizeof(wchar_t));
+		buff.append((const char *)str, (nLen + 1) * sizeof(WCHAR));
 	}
 	else if (encType == IET_UCS2BE_NO_BOM)
 	{
@@ -97,15 +97,15 @@ int CopyUcs2StrByBom(wstringex &str, ID3v2EncType encType, const BYTE *wtext, in
 	if (encType == IET_UCS2LE_BOM)
 	{
 		str.resize(len / 2);
-		int		n = wcsncpysz_safe((wchar_t *)str.c_str(), str.size() + 1, (const wchar_t*)wtext, len / 2);
+		int		n = wcsncpysz_safe((WCHAR *)str.c_str(), str.size() + 1, (const WCHAR*)wtext, len / 2);
 		str.resize(n);
 
-		len -= (str.size() + 1) * sizeof(wchar_t);
+		len -= (str.size() + 1) * sizeof(WCHAR);
 	}
 	else if (encType == IET_UCS2BE_NO_BOM)
 	{
 		const BYTE *end = wtext + len;
-		wchar_t		value;
+		WCHAR		value;
 		for (const BYTE *pos = wtext; pos < end; pos += 2)
 		{
 			value = (pos[0] << 8) | pos[1];
@@ -114,7 +114,7 @@ int CopyUcs2StrByBom(wstringex &str, ID3v2EncType encType, const BYTE *wtext, in
 			str += value;
 		}
 
-		len -= (str.size() + 1) * sizeof(wchar_t);
+		len -= (str.size() + 1) * sizeof(WCHAR);
 	}
 	else if (encType == IET_UTF8)
 	{
@@ -134,7 +134,7 @@ int CopyUcs2StrByBom(wstringex &str, ID3v2EncType encType, const BYTE *wtext, in
 	return lenOrg - len;
 }
 
-int CopyUcs2StrByBom(wstring &str, ID3v2EncType encType, const BYTE *wtext, int len)
+int CopyUcs2StrByBom(wstring_t &str, ID3v2EncType encType, const BYTE *wtext, int len)
 {
 	wstringex		str2;
 	int				nRet;
@@ -161,7 +161,7 @@ int CopyUcs2StrByBom(wstring &str, ID3v2EncType encType, const BYTE *wtext, int 
 	if (encType == IET_UCS2LE_BOM)
 	{
 		const BYTE *end = wtext + len;
-		wchar_t		value;
+		WCHAR		value;
 		for (const BYTE *pos = wtext; pos < end; pos += 2)
 		{
 			value = (pos[0] << 8) | pos[1];
@@ -170,15 +170,15 @@ int CopyUcs2StrByBom(wstring &str, ID3v2EncType encType, const BYTE *wtext, int 
 			str += value;
 		}
 
-		len -= (str.size() + 1) * sizeof(wchar_t);
+		len -= (str.size() + 1) * sizeof(WCHAR);
 	}
 	else if (encType == IET_UCS2BE_NO_BOM)
 	{
 		str.resize(len / 2);
-		int		n = wcsncpysz_safe((wchar_t *)str.c_str(), str.size() + 1, (const wchar_t*)wtext, len / 2);
+		int		n = wcsncpysz_safe((WCHAR *)str.c_str(), str.size() + 1, (const WCHAR*)wtext, len / 2);
 		str.resize(n);
 
-		len -= (str.size() + 1) * sizeof(wchar_t);
+		len -= (str.size() + 1) * sizeof(WCHAR);
 	}
 	else if (encType == IET_UTF8)
 	{

@@ -21,7 +21,7 @@
 //            Terminated with $00 00.
 //      $03   UTF-8 [UTF-8] encoded Unicode [UNICODE]. Terminated with $00.
 
-//#define SizeOfUcs2StrWithBom(strUcs2)	((strUcs2.size() + 1 + 1) * sizeof(wchar_t))
+//#define SizeOfUcs2StrWithBom(strUcs2)	((strUcs2.size() + 1 + 1) * sizeof(WCHAR))
 
 //////////////////////////////////////////////////////////////////////////
 // CID3v2FrameParserSynLyrics
@@ -204,11 +204,11 @@ int CID3v2FrameParserSynLyrics::Parse(CID3v2Frame *pFrame, ID3v2SynchLyrics &syn
 		data += n;
 		len -= n;
 
-		const wchar_t		*wdata = (const wchar_t *)data;
-		int			wlen = len / sizeof(wchar_t);
+		const WCHAR		*wdata = (const WCHAR *)data;
+		int			wlen = len / sizeof(WCHAR);
 		while (wlen > 0)
 		{
-			LrcSyllable<wchar_t>		syllable;
+			LrcSyllable<WCHAR>		syllable;
 
 			while (wdata[0] == 0xA)
 			{
@@ -227,7 +227,7 @@ int CID3v2FrameParserSynLyrics::Parse(CID3v2Frame *pFrame, ID3v2SynchLyrics &syn
 			}
 
 			syllable.bNewLine = false;
-			n = CopyUcs2StrByBom(syllable.strText, synchLyrics.m_encodingType, (const byte *&)wdata, wlen * sizeof(wchar_t));
+			n = CopyUcs2StrByBom(syllable.strText, synchLyrics.m_encodingType, (const byte *&)wdata, wlen * sizeof(WCHAR));
 			wdata += n / 2;
 			wlen -= n / 2;
 
@@ -293,7 +293,7 @@ int CID3v2FrameParserSynLyrics::ToFrameData(ID3v2SynchLyrics &synchLyrics, CID3v
 		for (ID3v2SynchLyrics::LIST_SYLRC_W::iterator it = synchLyrics.m_vUcs2SynLyrics.begin();
 			it != synchLyrics.m_vUcs2SynLyrics.end(); it++)
 		{
-			LrcSyllable<wchar_t>		&syllable = *it;
+			LrcSyllable<WCHAR>		&syllable = *it;
 			if (syllable.bNewLine)
 			{
 				buff += (char)0xA;

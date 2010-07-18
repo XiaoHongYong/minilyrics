@@ -72,7 +72,7 @@ char *strcat_safe(char * dst, int Size, const char * src)
 // UNICODE version
 
 // 安全的字符串拷贝，如果超出长度范围，则进行截断
-int	wcsncpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource, int nToCopy)
+int	wcsncpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int nToCopy)
 {
 	if (nToCopy >= nLenMax)
 		nToCopy = nLenMax - 1;
@@ -89,7 +89,7 @@ int	wcsncpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource,
 
 // 安全的字符串拷贝，如果超出长度范围，则进行截断
 // 并且将结尾设置为以'\0'结束
-int	wcsncpysz_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource, int nToCopy)
+int	wcsncpysz_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int nToCopy)
 {
 	if (nToCopy >= nLenMax)
 		nToCopy = nLenMax - 1;
@@ -105,10 +105,10 @@ int	wcsncpysz_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSourc
 }
 
 // 安全的字符串拷贝，如果超出长度范围，则进行截断
-wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource)
+WCHAR *wcscpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource)
 {
-    wchar_t	*cp = strDestination;
-	wchar_t	*cpEnd = strDestination + nLenMax - 1;
+    WCHAR	*cp = strDestination;
+	WCHAR	*cpEnd = strDestination + nLenMax - 1;
 
 	for (; cp < cpEnd && *strSource; cp++, strSource++)
 	{
@@ -120,10 +120,10 @@ wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSou
     return(strDestination);
 }
 
-wchar_t *wcscat_safe(wchar_t * dst, int Size, const wchar_t * src)
+WCHAR *wcscat_safe(WCHAR * dst, int Size, const WCHAR * src)
 {
-	wchar_t * cp = dst;
-	wchar_t * endcp = dst + Size - 1;
+	WCHAR * cp = dst;
+	WCHAR * endcp = dst + Size - 1;
 
 	while( *cp )
 		cp++;                   /* find end of dst */

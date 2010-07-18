@@ -83,6 +83,7 @@
 		5FE7E3B511EC349E00CECD89 /* forward_lyrics.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E3B311EC349E00CECD89 /* forward_lyrics.png */; };
 		5FE7E40E11EDEEFD00CECD89 /* playing_slider_ball_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E40D11EDEEFD00CECD89 /* playing_slider_ball_pressed.png */; };
 		5FE7E41011EDF5E700CECD89 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E40F11EDF5E700CECD89 /* bg.png */; };
+		5FE7EA0511F1375500CECD89 /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -240,6 +241,8 @@
 		5FE7E3B311EC349E00CECD89 /* forward_lyrics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward_lyrics.png; sourceTree = "<group>"; };
 		5FE7E40D11EDEEFD00CECD89 /* playing_slider_ball_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playing_slider_ball_pressed.png; sourceTree = "<group>"; };
 		5FE7E40F11EDF5E700CECD89 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
+		5FE7EA0311F1375500CECD89 /* LyrStaticTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrStaticTextView.h; sourceTree = "<group>"; };
+		5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrStaticTextView.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -300,6 +303,8 @@
 				5FB56D0011C12D35000E68A1 /* MLApp.mm */,
 				5F2CF47A11DAE72B00A4D095 /* LyricsSearchViewController.h */,
 				5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */,
+				5FE7EA0311F1375500CECD89 /* LyrStaticTextView.h */,
+				5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
@@ -683,6 +688,7 @@
 				5FBEDFF811D979A000E01391 /* HttpProtocol.cpp in Sources */,
 				5F2CF47C11DAE72B00A4D095 /* LyricsSearchViewController.mm in Sources */,
 				5F1B47F211DC171B00AAF8E4 /* CMLApp.cpp in Sources */,
+				5FE7EA0511F1375500CECD89 /* LyrStaticTextView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

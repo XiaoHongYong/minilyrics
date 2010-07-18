@@ -190,7 +190,7 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 	FILE_ENCODING fe = GetStrEncodingType(szLyrics);
 	if (fe == FE_UCS2)
 	{
-		ConvertStr((LPCWSTR)(szLyrics + 2), (nLen - 2) / sizeof(wchar_t), strAnsyLyr);
+		ConvertStr((LPCWSTR)(szLyrics + 2), (nLen - 2) / sizeof(WCHAR), strAnsyLyr);
 
 		// Only when converted ansi lyrics is same with org one, we shall convert it.
 		wstringex	strUcs2;

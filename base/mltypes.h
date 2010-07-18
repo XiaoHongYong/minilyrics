@@ -57,20 +57,27 @@ typedef unsigned int uint;
 
 typedef DWORD   COLORREF;
 
-typedef /* [string] */ const char *LPCSTR;
-typedef /* [string] */ const wchar_t *LPCWSTR;
+typedef /* [string] */ const char		*LPCSTR;
+typedef /* [string] */ const unsigned short *LPCWSTR;
 typedef /* [string] */ char *LPSTR;
-typedef /* [string] */ wchar_t *LPWSTR;
-typedef /* [string] */ wchar_t WCHAR;
+typedef /* [string] */ unsigned short *LPWSTR;
+typedef /* [string] */ unsigned short WCHAR;
+typedef basic_string<WCHAR> wstring_t;
 
 #ifdef UNICODE
-typedef LPCWSTR		LPCTSTR;
-typedef LPWSTR		LPTSTR;
-typedef wchar_t		TCHAR;
+typedef LPCWSTR			LPCTSTR;
+typedef LPWSTR			LPTSTR;
+typedef WCHAR			TCHAR;
 #else
-typedef LPCSTR		LPCTSTR;
-typedef LPSTR		LPTSTR;
-typedef char		TCHAR;
+typedef LPCSTR			LPCTSTR;
+typedef LPSTR			LPTSTR;
+typedef char			TCHAR;
+#endif
+
+#ifdef _UNICODE
+typedef basic_string<WCHAR> tstring;
+#else
+typedef string tstring;
 #endif
 
 typedef const void* LPCVOID;

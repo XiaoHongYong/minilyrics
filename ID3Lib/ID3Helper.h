@@ -18,7 +18,7 @@ void AppendUcs2Str(CCharBuffer &buff, ID3v2EncType encType, LPCWSTR str, int nLe
 int CopyAnsiStr(string &str, const char *data, int nLen);
 int CopyAnsiStr(stringex &str, const char *data, int nLen);
 int CopyUcs2StrByBom(wstringex &str, ID3v2EncType encType, const byte *wtext, int len);
-int CopyUcs2StrByBom(wstring &str, ID3v2EncType encType, const BYTE *wtext, int len);
+int CopyUcs2StrByBom(wstring_t &str, ID3v2EncType encType, const BYTE *wtext, int len);
 
 uint32 SynchDataToUInt(byte *byData, int nLen);
 void SynchDataFromUInt(uint32 nValue, byte *byData, int nLen);

@@ -40,6 +40,11 @@ static NSString *kCellIdentifier = @"MusicCell";
 	[self.delegate musicTableViewControllerDidFinish: self];	
 }
 
+- (IBAction) clearCollection: (id) sender
+{
+	[self.delegate updatePlayerQueueWithMediaCollection: nil];
+	[self.mediaItemCollectionTable reloadData];
+}
 
 // Configures and displays the media item picker.
 - (IBAction) showMediaPicker: (id) sender {

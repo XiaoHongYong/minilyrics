@@ -6,7 +6,7 @@
 class Ucs2CharType
 {
 protected:
-	wchar_t		szChar[2];
+	WCHAR		szChar[2];
 
 public:
 	Ucs2CharType(LPCTSTR str)
@@ -14,7 +14,7 @@ public:
 		szChar[0] = str[0];
 		szChar[1] = 0;
 	}
-	Ucs2CharType(wchar_t ch)
+	Ucs2CharType(WCHAR ch)
 	{
 		szChar[0] = ch;
 		szChar[1] = 0;
@@ -42,7 +42,7 @@ public:
 		return szChar[0];
 	}
 
-	operator const wchar_t *()
+	operator const WCHAR *()
 	{
 		return szChar;
 	}
@@ -169,7 +169,7 @@ protected:
 
 };
 
-typedef StringIterator_t<Ucs2CharType, wchar_t>		UCS2StringIterator;
+typedef StringIterator_t<Ucs2CharType, WCHAR>		UCS2StringIterator;
 typedef StringIterator_t<Utf8CharType, char>		UTF8StringIterator;
 
 #ifdef UNICODE

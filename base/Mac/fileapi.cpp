@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "safestr.h"
 #include "fileapi.h"
+#include "stringex_t.h"
+#include "CharEncoding.h"
+#include "stringex.h"
 
 IMPLEMENT_CPPUNIT_TEST_REG(FileAPI)
 
