@@ -30,7 +30,7 @@ bool CThread::Create(FUNThread function, void* lpData)
 
 void CThread::Destroy()
 {
-
+	pthread_kill(m_threadID, 0);
 }
 
 void CThread::Suspend()

@@ -136,7 +136,6 @@ public:
 
 	void SetPaletteIndex(BYTE n, RGBQUAD &c)
 	{
-		assert(n <= 256);
 		assert(bitCount <= 8);
 
 		pallete[n] = c;

@@ -283,6 +283,31 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 	return nRet;
 }
 
+int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent, CHAR_ENCODING nForceEncodingID)
+{
+	m_strSongFile = szSongFile;
+	m_nMediaLength = nMediaLength;
+	m_lrcSourceType = LST_ID3V2_USLT;
+
+	FILE_ENCODING	fileEncoding;
+	int nRet = FromString(szLyrContent, -1, &fileEncoding, FT_LYRICS_LRC, false, false, true, nForceEncodingID);
+	if (nRet != ERR_OK)
+		return nRet;
+	
+	FilterContents();
+	
+	ResetModificationFlag();
+	
+	if (GetLyrContentType() == LCT_TXT)
+	{
+		m_lyrScrollActionRecorder.EventsDataFromString(
+													   GetTxtLyrScrollEvents(),
+													   GetRawLyrics());
+	}
+	
+	return ERR_OK;
+}
+
 //
 // 重新打开歌词
 //

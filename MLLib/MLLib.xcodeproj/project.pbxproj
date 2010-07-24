@@ -7,93 +7,92 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5F9DED4E11ABF82E00312E83 /* HelperFun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED2A11ABF82E00312E83 /* HelperFun.cpp */; };
-		5F9DED4F11ABF82E00312E83 /* HelperFun.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED2B11ABF82E00312E83 /* HelperFun.h */; };
-		5F9DED5011ABF82E00312E83 /* LrcParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED2C11ABF82E00312E83 /* LrcParser.cpp */; };
-		5F9DED5111ABF82E00312E83 /* LrcParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED2D11ABF82E00312E83 /* LrcParser.h */; };
-		5F9DED5211ABF82E00312E83 /* Lyrics3v2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED2E11ABF82E00312E83 /* Lyrics3v2.cpp */; };
-		5F9DED5311ABF82E00312E83 /* Lyrics3v2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED2F11ABF82E00312E83 /* Lyrics3v2.h */; };
-		5F9DED5411ABF82E00312E83 /* LyricsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3011ABF82E00312E83 /* LyricsParser.h */; };
-		5F9DED5511ABF82E00312E83 /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED3111ABF82E00312E83 /* LyricsSearch.cpp */; };
-		5F9DED5611ABF82E00312E83 /* LyricsSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3211ABF82E00312E83 /* LyricsSearch.h */; };
-		5F9DED5811ABF82E00312E83 /* LyricsTagReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3411ABF82E00312E83 /* LyricsTagReader.h */; };
-		5F9DED5911ABF82E00312E83 /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED3511ABF82E00312E83 /* MLClientSession.cpp */; };
-		5F9DED5A11ABF82E00312E83 /* MLClientSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3611ABF82E00312E83 /* MLClientSession.h */; };
-		5F9DED5B11ABF82E00312E83 /* MLData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED3711ABF82E00312E83 /* MLData.cpp */; };
-		5F9DED5C11ABF82E00312E83 /* MLData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3811ABF82E00312E83 /* MLData.h */; };
-		5F9DED5D11ABF82E00312E83 /* MLEncrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3911ABF82E00312E83 /* MLEncrypt.h */; };
-		5F9DED5E11ABF82E00312E83 /* MLGenRegV4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED3A11ABF82E00312E83 /* MLGenRegV4.cpp */; };
-		5F9DED5F11ABF82E00312E83 /* MLGenRegV4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3B11ABF82E00312E83 /* MLGenRegV4.h */; };
-		5F9DED6011ABF82E00312E83 /* MLLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED3C11ABF82E00312E83 /* MLLib.cpp */; };
-		5F9DED6111ABF82E00312E83 /* MLLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3D11ABF82E00312E83 /* MLLib.h */; };
-		5F9DED6211ABF82E00312E83 /* MLProfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED3E11ABF82E00312E83 /* MLProfile.cpp */; };
-		5F9DED6311ABF82E00312E83 /* MLProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED3F11ABF82E00312E83 /* MLProfile.h */; };
-		5F9DED6411ABF82E00312E83 /* OurDate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED4011ABF82E00312E83 /* OurDate.cpp */; };
-		5F9DED6511ABF82E00312E83 /* OurDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4111ABF82E00312E83 /* OurDate.h */; };
-		5F9DED6611ABF82E00312E83 /* Register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED4211ABF82E00312E83 /* Register.cpp */; };
-		5F9DED6711ABF82E00312E83 /* Register.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4311ABF82E00312E83 /* Register.h */; };
-		5F9DED6811ABF82E00312E83 /* SearchCacheFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED4411ABF82E00312E83 /* SearchCacheFile.cpp */; };
-		5F9DED6911ABF82E00312E83 /* SearchCacheFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4511ABF82E00312E83 /* SearchCacheFile.h */; };
-		5F9DED6A11ABF82E00312E83 /* SncParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED4611ABF82E00312E83 /* SncParser.cpp */; };
-		5F9DED6B11ABF82E00312E83 /* SncParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4711ABF82E00312E83 /* SncParser.h */; };
-		5F9DED6C11ABF82E00312E83 /* SrtParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED4811ABF82E00312E83 /* SrtParser.cpp */; };
-		5F9DED6D11ABF82E00312E83 /* SrtParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4911ABF82E00312E83 /* SrtParser.h */; };
-		5F9DED6E11ABF82E00312E83 /* StdAfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED4A11ABF82E00312E83 /* StdAfx.cpp */; };
-		5F9DED6F11ABF82E00312E83 /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4B11ABF82E00312E83 /* StdAfx.h */; };
-		5F9DED7011ABF82E00312E83 /* TextFileParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9DED4C11ABF82E00312E83 /* TextFileParser.cpp */; };
-		5F9DED7111ABF82E00312E83 /* TextFileParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9DED4D11ABF82E00312E83 /* TextFileParser.h */; };
-		5FB1948611ACA951008C4A46 /* LyrScrollActionRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB1948411ACA951008C4A46 /* LyrScrollActionRecorder.cpp */; };
-		5FB1948711ACA951008C4A46 /* LyrScrollActionRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB1948511ACA951008C4A46 /* LyrScrollActionRecorder.h */; };
 		5FC0B22A11C53944000C6537 /* Sqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B22811C53944000C6537 /* Sqlite3.cpp */; };
 		5FC0B22B11C53944000C6537 /* Sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FC0B22911C53944000C6537 /* Sqlite3.h */; };
 		5FC0B23011C53965000C6537 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B22D11C53965000C6537 /* sqlite3.c */; };
 		5FC0B23111C53965000C6537 /* sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FC0B22E11C53965000C6537 /* sqlite3.h */; };
 		5FC0B23211C53965000C6537 /* sqlite3ext.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FC0B22F11C53965000C6537 /* sqlite3ext.h */; };
+		5FE7ED5F11F6D74700CECD89 /* HelperFun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED3A11F6D74700CECD89 /* HelperFun.cpp */; };
+		5FE7ED6011F6D74700CECD89 /* HelperFun.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED3B11F6D74700CECD89 /* HelperFun.h */; };
+		5FE7ED6111F6D74700CECD89 /* LrcParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED3D11F6D74700CECD89 /* LrcParser.cpp */; };
+		5FE7ED6211F6D74700CECD89 /* LrcParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED3E11F6D74700CECD89 /* LrcParser.h */; };
+		5FE7ED6311F6D74700CECD89 /* Lyrics3v2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED3F11F6D74700CECD89 /* Lyrics3v2.cpp */; };
+		5FE7ED6411F6D74700CECD89 /* Lyrics3v2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4011F6D74700CECD89 /* Lyrics3v2.h */; };
+		5FE7ED6511F6D74700CECD89 /* LyricsParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4111F6D74700CECD89 /* LyricsParser.h */; };
+		5FE7ED6611F6D74700CECD89 /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED4211F6D74700CECD89 /* LyricsSearch.cpp */; };
+		5FE7ED6711F6D74700CECD89 /* LyricsSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4311F6D74700CECD89 /* LyricsSearch.h */; };
+		5FE7ED6811F6D74700CECD89 /* LyricsTagReader.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4411F6D74700CECD89 /* LyricsTagReader.h */; };
+		5FE7ED6911F6D74700CECD89 /* LyrScrollActionRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED4511F6D74700CECD89 /* LyrScrollActionRecorder.cpp */; };
+		5FE7ED6A11F6D74700CECD89 /* LyrScrollActionRecorder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4611F6D74700CECD89 /* LyrScrollActionRecorder.h */; };
+		5FE7ED6B11F6D74700CECD89 /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED4711F6D74700CECD89 /* MLClientSession.cpp */; };
+		5FE7ED6C11F6D74700CECD89 /* MLClientSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4811F6D74700CECD89 /* MLClientSession.h */; };
+		5FE7ED6D11F6D74700CECD89 /* MLData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED4911F6D74700CECD89 /* MLData.cpp */; };
+		5FE7ED6E11F6D74700CECD89 /* MLData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4A11F6D74700CECD89 /* MLData.h */; };
+		5FE7ED6F11F6D74700CECD89 /* MLEncrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4B11F6D74700CECD89 /* MLEncrypt.h */; };
+		5FE7ED7011F6D74700CECD89 /* MLGenRegV4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED4C11F6D74700CECD89 /* MLGenRegV4.cpp */; };
+		5FE7ED7111F6D74700CECD89 /* MLGenRegV4.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4D11F6D74700CECD89 /* MLGenRegV4.h */; };
+		5FE7ED7211F6D74700CECD89 /* MLLib.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED4E11F6D74700CECD89 /* MLLib.cpp */; };
+		5FE7ED7311F6D74700CECD89 /* MLLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4F11F6D74700CECD89 /* MLLib.h */; };
+		5FE7ED7411F6D74700CECD89 /* MLProfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED5011F6D74700CECD89 /* MLProfile.cpp */; };
+		5FE7ED7511F6D74700CECD89 /* MLProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5111F6D74700CECD89 /* MLProfile.h */; };
+		5FE7ED7611F6D74700CECD89 /* OurDate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED5211F6D74700CECD89 /* OurDate.cpp */; };
+		5FE7ED7711F6D74700CECD89 /* OurDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5311F6D74700CECD89 /* OurDate.h */; };
+		5FE7ED7811F6D74700CECD89 /* Register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED5411F6D74700CECD89 /* Register.cpp */; };
+		5FE7ED7911F6D74700CECD89 /* Register.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5511F6D74700CECD89 /* Register.h */; };
+		5FE7ED7A11F6D74700CECD89 /* SearchCacheFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED5611F6D74700CECD89 /* SearchCacheFile.cpp */; };
+		5FE7ED7B11F6D74700CECD89 /* SearchCacheFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5711F6D74700CECD89 /* SearchCacheFile.h */; };
+		5FE7ED7C11F6D74700CECD89 /* SncParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED5811F6D74700CECD89 /* SncParser.cpp */; };
+		5FE7ED7D11F6D74700CECD89 /* SncParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5911F6D74700CECD89 /* SncParser.h */; };
+		5FE7ED7E11F6D74700CECD89 /* SrtParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED5A11F6D74700CECD89 /* SrtParser.cpp */; };
+		5FE7ED7F11F6D74700CECD89 /* SrtParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5B11F6D74700CECD89 /* SrtParser.h */; };
+		5FE7ED8011F6D74700CECD89 /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5C11F6D74700CECD89 /* StdAfx.h */; };
+		5FE7ED8111F6D74700CECD89 /* TextFileParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED5D11F6D74700CECD89 /* TextFileParser.cpp */; };
+		5FE7ED8211F6D74700CECD89 /* TextFileParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5E11F6D74700CECD89 /* TextFileParser.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5F9DED2A11ABF82E00312E83 /* HelperFun.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelperFun.cpp; sourceTree = "<group>"; };
-		5F9DED2B11ABF82E00312E83 /* HelperFun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HelperFun.h; sourceTree = "<group>"; };
-		5F9DED2C11ABF82E00312E83 /* LrcParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LrcParser.cpp; sourceTree = "<group>"; };
-		5F9DED2D11ABF82E00312E83 /* LrcParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LrcParser.h; sourceTree = "<group>"; };
-		5F9DED2E11ABF82E00312E83 /* Lyrics3v2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Lyrics3v2.cpp; sourceTree = "<group>"; };
-		5F9DED2F11ABF82E00312E83 /* Lyrics3v2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Lyrics3v2.h; sourceTree = "<group>"; };
-		5F9DED3011ABF82E00312E83 /* LyricsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsParser.h; sourceTree = "<group>"; };
-		5F9DED3111ABF82E00312E83 /* LyricsSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsSearch.cpp; sourceTree = "<group>"; };
-		5F9DED3211ABF82E00312E83 /* LyricsSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsSearch.h; sourceTree = "<group>"; };
-		5F9DED3411ABF82E00312E83 /* LyricsTagReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsTagReader.h; sourceTree = "<group>"; };
-		5F9DED3511ABF82E00312E83 /* MLClientSession.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLClientSession.cpp; sourceTree = "<group>"; };
-		5F9DED3611ABF82E00312E83 /* MLClientSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLClientSession.h; sourceTree = "<group>"; };
-		5F9DED3711ABF82E00312E83 /* MLData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLData.cpp; sourceTree = "<group>"; };
-		5F9DED3811ABF82E00312E83 /* MLData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLData.h; sourceTree = "<group>"; };
-		5F9DED3911ABF82E00312E83 /* MLEncrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLEncrypt.h; sourceTree = "<group>"; };
-		5F9DED3A11ABF82E00312E83 /* MLGenRegV4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLGenRegV4.cpp; sourceTree = "<group>"; };
-		5F9DED3B11ABF82E00312E83 /* MLGenRegV4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLGenRegV4.h; sourceTree = "<group>"; };
-		5F9DED3C11ABF82E00312E83 /* MLLib.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLLib.cpp; sourceTree = "<group>"; };
-		5F9DED3D11ABF82E00312E83 /* MLLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLLib.h; sourceTree = "<group>"; };
-		5F9DED3E11ABF82E00312E83 /* MLProfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLProfile.cpp; sourceTree = "<group>"; };
-		5F9DED3F11ABF82E00312E83 /* MLProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLProfile.h; sourceTree = "<group>"; };
-		5F9DED4011ABF82E00312E83 /* OurDate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OurDate.cpp; sourceTree = "<group>"; };
-		5F9DED4111ABF82E00312E83 /* OurDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OurDate.h; sourceTree = "<group>"; };
-		5F9DED4211ABF82E00312E83 /* Register.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Register.cpp; sourceTree = "<group>"; };
-		5F9DED4311ABF82E00312E83 /* Register.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Register.h; sourceTree = "<group>"; };
-		5F9DED4411ABF82E00312E83 /* SearchCacheFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SearchCacheFile.cpp; sourceTree = "<group>"; };
-		5F9DED4511ABF82E00312E83 /* SearchCacheFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCacheFile.h; sourceTree = "<group>"; };
-		5F9DED4611ABF82E00312E83 /* SncParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SncParser.cpp; sourceTree = "<group>"; };
-		5F9DED4711ABF82E00312E83 /* SncParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SncParser.h; sourceTree = "<group>"; };
-		5F9DED4811ABF82E00312E83 /* SrtParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SrtParser.cpp; sourceTree = "<group>"; };
-		5F9DED4911ABF82E00312E83 /* SrtParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SrtParser.h; sourceTree = "<group>"; };
-		5F9DED4A11ABF82E00312E83 /* StdAfx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StdAfx.cpp; sourceTree = "<group>"; };
-		5F9DED4B11ABF82E00312E83 /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = "<group>"; };
-		5F9DED4C11ABF82E00312E83 /* TextFileParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextFileParser.cpp; sourceTree = "<group>"; };
-		5F9DED4D11ABF82E00312E83 /* TextFileParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFileParser.h; sourceTree = "<group>"; };
-		5FB1948411ACA951008C4A46 /* LyrScrollActionRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = LyrScrollActionRecorder.cpp; sourceTree = "<group>"; };
-		5FB1948511ACA951008C4A46 /* LyrScrollActionRecorder.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LyrScrollActionRecorder.h; sourceTree = "<group>"; };
 		5FC0B22811C53944000C6537 /* Sqlite3.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = Sqlite3.cpp; path = ../sqlite_cpp/Sqlite3.cpp; sourceTree = SOURCE_ROOT; };
 		5FC0B22911C53944000C6537 /* Sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = Sqlite3.h; path = ../sqlite_cpp/Sqlite3.h; sourceTree = SOURCE_ROOT; };
 		5FC0B22D11C53965000C6537 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = ../SDK/sqlite/sqlite3.c; sourceTree = SOURCE_ROOT; };
 		5FC0B22E11C53965000C6537 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = ../SDK/sqlite/sqlite3.h; sourceTree = SOURCE_ROOT; };
 		5FC0B22F11C53965000C6537 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = sqlite3ext.h; path = ../SDK/sqlite/sqlite3ext.h; sourceTree = SOURCE_ROOT; };
+		5FE7ED3A11F6D74700CECD89 /* HelperFun.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = HelperFun.cpp; sourceTree = "<group>"; };
+		5FE7ED3B11F6D74700CECD89 /* HelperFun.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = HelperFun.h; sourceTree = "<group>"; };
+		5FE7ED3C11F6D74700CECD89 /* LRC File Format.txt */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = text; path = "LRC File Format.txt"; sourceTree = "<group>"; };
+		5FE7ED3D11F6D74700CECD89 /* LrcParser.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = LrcParser.cpp; sourceTree = "<group>"; };
+		5FE7ED3E11F6D74700CECD89 /* LrcParser.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LrcParser.h; sourceTree = "<group>"; };
+		5FE7ED3F11F6D74700CECD89 /* Lyrics3v2.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = Lyrics3v2.cpp; sourceTree = "<group>"; };
+		5FE7ED4011F6D74700CECD89 /* Lyrics3v2.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Lyrics3v2.h; sourceTree = "<group>"; };
+		5FE7ED4111F6D74700CECD89 /* LyricsParser.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LyricsParser.h; sourceTree = "<group>"; };
+		5FE7ED4211F6D74700CECD89 /* LyricsSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsSearch.cpp; sourceTree = "<group>"; };
+		5FE7ED4311F6D74700CECD89 /* LyricsSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LyricsSearch.h; sourceTree = "<group>"; };
+		5FE7ED4411F6D74700CECD89 /* LyricsTagReader.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LyricsTagReader.h; sourceTree = "<group>"; };
+		5FE7ED4511F6D74700CECD89 /* LyrScrollActionRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = LyrScrollActionRecorder.cpp; sourceTree = "<group>"; };
+		5FE7ED4611F6D74700CECD89 /* LyrScrollActionRecorder.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LyrScrollActionRecorder.h; sourceTree = "<group>"; };
+		5FE7ED4711F6D74700CECD89 /* MLClientSession.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = MLClientSession.cpp; sourceTree = "<group>"; };
+		5FE7ED4811F6D74700CECD89 /* MLClientSession.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLClientSession.h; sourceTree = "<group>"; };
+		5FE7ED4911F6D74700CECD89 /* MLData.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = MLData.cpp; sourceTree = "<group>"; };
+		5FE7ED4A11F6D74700CECD89 /* MLData.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLData.h; sourceTree = "<group>"; };
+		5FE7ED4B11F6D74700CECD89 /* MLEncrypt.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLEncrypt.h; sourceTree = "<group>"; };
+		5FE7ED4C11F6D74700CECD89 /* MLGenRegV4.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = MLGenRegV4.cpp; sourceTree = "<group>"; };
+		5FE7ED4D11F6D74700CECD89 /* MLGenRegV4.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLGenRegV4.h; sourceTree = "<group>"; };
+		5FE7ED4E11F6D74700CECD89 /* MLLib.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = MLLib.cpp; sourceTree = "<group>"; };
+		5FE7ED4F11F6D74700CECD89 /* MLLib.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLLib.h; sourceTree = "<group>"; };
+		5FE7ED5011F6D74700CECD89 /* MLProfile.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = MLProfile.cpp; sourceTree = "<group>"; };
+		5FE7ED5111F6D74700CECD89 /* MLProfile.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLProfile.h; sourceTree = "<group>"; };
+		5FE7ED5211F6D74700CECD89 /* OurDate.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = OurDate.cpp; sourceTree = "<group>"; };
+		5FE7ED5311F6D74700CECD89 /* OurDate.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = OurDate.h; sourceTree = "<group>"; };
+		5FE7ED5411F6D74700CECD89 /* Register.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = Register.cpp; sourceTree = "<group>"; };
+		5FE7ED5511F6D74700CECD89 /* Register.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Register.h; sourceTree = "<group>"; };
+		5FE7ED5611F6D74700CECD89 /* SearchCacheFile.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = SearchCacheFile.cpp; sourceTree = "<group>"; };
+		5FE7ED5711F6D74700CECD89 /* SearchCacheFile.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = SearchCacheFile.h; sourceTree = "<group>"; };
+		5FE7ED5811F6D74700CECD89 /* SncParser.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = SncParser.cpp; sourceTree = "<group>"; };
+		5FE7ED5911F6D74700CECD89 /* SncParser.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = SncParser.h; sourceTree = "<group>"; };
+		5FE7ED5A11F6D74700CECD89 /* SrtParser.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = SrtParser.cpp; sourceTree = "<group>"; };
+		5FE7ED5B11F6D74700CECD89 /* SrtParser.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = SrtParser.h; sourceTree = "<group>"; };
+		5FE7ED5C11F6D74700CECD89 /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = "<group>"; };
+		5FE7ED5D11F6D74700CECD89 /* TextFileParser.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = TextFileParser.cpp; sourceTree = "<group>"; };
+		5FE7ED5E11F6D74700CECD89 /* TextFileParser.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = TextFileParser.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libMLLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMLLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -122,43 +121,43 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				5FB1948411ACA951008C4A46 /* LyrScrollActionRecorder.cpp */,
-				5FB1948511ACA951008C4A46 /* LyrScrollActionRecorder.h */,
-				5F9DED2A11ABF82E00312E83 /* HelperFun.cpp */,
-				5F9DED2B11ABF82E00312E83 /* HelperFun.h */,
-				5F9DED2C11ABF82E00312E83 /* LrcParser.cpp */,
-				5F9DED2D11ABF82E00312E83 /* LrcParser.h */,
-				5F9DED2E11ABF82E00312E83 /* Lyrics3v2.cpp */,
-				5F9DED2F11ABF82E00312E83 /* Lyrics3v2.h */,
-				5F9DED3011ABF82E00312E83 /* LyricsParser.h */,
-				5F9DED3111ABF82E00312E83 /* LyricsSearch.cpp */,
-				5F9DED3211ABF82E00312E83 /* LyricsSearch.h */,
-				5F9DED3411ABF82E00312E83 /* LyricsTagReader.h */,
-				5F9DED3511ABF82E00312E83 /* MLClientSession.cpp */,
-				5F9DED3611ABF82E00312E83 /* MLClientSession.h */,
-				5F9DED3711ABF82E00312E83 /* MLData.cpp */,
-				5F9DED3811ABF82E00312E83 /* MLData.h */,
-				5F9DED3911ABF82E00312E83 /* MLEncrypt.h */,
-				5F9DED3A11ABF82E00312E83 /* MLGenRegV4.cpp */,
-				5F9DED3B11ABF82E00312E83 /* MLGenRegV4.h */,
-				5F9DED3C11ABF82E00312E83 /* MLLib.cpp */,
-				5F9DED3D11ABF82E00312E83 /* MLLib.h */,
-				5F9DED3E11ABF82E00312E83 /* MLProfile.cpp */,
-				5F9DED3F11ABF82E00312E83 /* MLProfile.h */,
-				5F9DED4011ABF82E00312E83 /* OurDate.cpp */,
-				5F9DED4111ABF82E00312E83 /* OurDate.h */,
-				5F9DED4211ABF82E00312E83 /* Register.cpp */,
-				5F9DED4311ABF82E00312E83 /* Register.h */,
-				5F9DED4411ABF82E00312E83 /* SearchCacheFile.cpp */,
-				5F9DED4511ABF82E00312E83 /* SearchCacheFile.h */,
-				5F9DED4611ABF82E00312E83 /* SncParser.cpp */,
-				5F9DED4711ABF82E00312E83 /* SncParser.h */,
-				5F9DED4811ABF82E00312E83 /* SrtParser.cpp */,
-				5F9DED4911ABF82E00312E83 /* SrtParser.h */,
-				5F9DED4A11ABF82E00312E83 /* StdAfx.cpp */,
-				5F9DED4B11ABF82E00312E83 /* StdAfx.h */,
-				5F9DED4C11ABF82E00312E83 /* TextFileParser.cpp */,
-				5F9DED4D11ABF82E00312E83 /* TextFileParser.h */,
+				5FE7ED3A11F6D74700CECD89 /* HelperFun.cpp */,
+				5FE7ED3B11F6D74700CECD89 /* HelperFun.h */,
+				5FE7ED3C11F6D74700CECD89 /* LRC File Format.txt */,
+				5FE7ED3D11F6D74700CECD89 /* LrcParser.cpp */,
+				5FE7ED3E11F6D74700CECD89 /* LrcParser.h */,
+				5FE7ED3F11F6D74700CECD89 /* Lyrics3v2.cpp */,
+				5FE7ED4011F6D74700CECD89 /* Lyrics3v2.h */,
+				5FE7ED4111F6D74700CECD89 /* LyricsParser.h */,
+				5FE7ED4211F6D74700CECD89 /* LyricsSearch.cpp */,
+				5FE7ED4311F6D74700CECD89 /* LyricsSearch.h */,
+				5FE7ED4411F6D74700CECD89 /* LyricsTagReader.h */,
+				5FE7ED4511F6D74700CECD89 /* LyrScrollActionRecorder.cpp */,
+				5FE7ED4611F6D74700CECD89 /* LyrScrollActionRecorder.h */,
+				5FE7ED4711F6D74700CECD89 /* MLClientSession.cpp */,
+				5FE7ED4811F6D74700CECD89 /* MLClientSession.h */,
+				5FE7ED4911F6D74700CECD89 /* MLData.cpp */,
+				5FE7ED4A11F6D74700CECD89 /* MLData.h */,
+				5FE7ED4B11F6D74700CECD89 /* MLEncrypt.h */,
+				5FE7ED4C11F6D74700CECD89 /* MLGenRegV4.cpp */,
+				5FE7ED4D11F6D74700CECD89 /* MLGenRegV4.h */,
+				5FE7ED4E11F6D74700CECD89 /* MLLib.cpp */,
+				5FE7ED4F11F6D74700CECD89 /* MLLib.h */,
+				5FE7ED5011F6D74700CECD89 /* MLProfile.cpp */,
+				5FE7ED5111F6D74700CECD89 /* MLProfile.h */,
+				5FE7ED5211F6D74700CECD89 /* OurDate.cpp */,
+				5FE7ED5311F6D74700CECD89 /* OurDate.h */,
+				5FE7ED5411F6D74700CECD89 /* Register.cpp */,
+				5FE7ED5511F6D74700CECD89 /* Register.h */,
+				5FE7ED5611F6D74700CECD89 /* SearchCacheFile.cpp */,
+				5FE7ED5711F6D74700CECD89 /* SearchCacheFile.h */,
+				5FE7ED5811F6D74700CECD89 /* SncParser.cpp */,
+				5FE7ED5911F6D74700CECD89 /* SncParser.h */,
+				5FE7ED5A11F6D74700CECD89 /* SrtParser.cpp */,
+				5FE7ED5B11F6D74700CECD89 /* SrtParser.h */,
+				5FE7ED5C11F6D74700CECD89 /* StdAfx.h */,
+				5FE7ED5D11F6D74700CECD89 /* TextFileParser.cpp */,
+				5FE7ED5E11F6D74700CECD89 /* TextFileParser.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -197,29 +196,29 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F9DED4F11ABF82E00312E83 /* HelperFun.h in Headers */,
-				5F9DED5111ABF82E00312E83 /* LrcParser.h in Headers */,
-				5F9DED5311ABF82E00312E83 /* Lyrics3v2.h in Headers */,
-				5F9DED5411ABF82E00312E83 /* LyricsParser.h in Headers */,
-				5F9DED5611ABF82E00312E83 /* LyricsSearch.h in Headers */,
-				5F9DED5811ABF82E00312E83 /* LyricsTagReader.h in Headers */,
-				5F9DED5A11ABF82E00312E83 /* MLClientSession.h in Headers */,
-				5F9DED5C11ABF82E00312E83 /* MLData.h in Headers */,
-				5F9DED5D11ABF82E00312E83 /* MLEncrypt.h in Headers */,
-				5F9DED5F11ABF82E00312E83 /* MLGenRegV4.h in Headers */,
-				5F9DED6111ABF82E00312E83 /* MLLib.h in Headers */,
-				5F9DED6311ABF82E00312E83 /* MLProfile.h in Headers */,
-				5F9DED6511ABF82E00312E83 /* OurDate.h in Headers */,
-				5F9DED6711ABF82E00312E83 /* Register.h in Headers */,
-				5F9DED6911ABF82E00312E83 /* SearchCacheFile.h in Headers */,
-				5F9DED6B11ABF82E00312E83 /* SncParser.h in Headers */,
-				5F9DED6D11ABF82E00312E83 /* SrtParser.h in Headers */,
-				5F9DED6F11ABF82E00312E83 /* StdAfx.h in Headers */,
-				5F9DED7111ABF82E00312E83 /* TextFileParser.h in Headers */,
-				5FB1948711ACA951008C4A46 /* LyrScrollActionRecorder.h in Headers */,
 				5FC0B22B11C53944000C6537 /* Sqlite3.h in Headers */,
 				5FC0B23111C53965000C6537 /* sqlite3.h in Headers */,
 				5FC0B23211C53965000C6537 /* sqlite3ext.h in Headers */,
+				5FE7ED6011F6D74700CECD89 /* HelperFun.h in Headers */,
+				5FE7ED6211F6D74700CECD89 /* LrcParser.h in Headers */,
+				5FE7ED6411F6D74700CECD89 /* Lyrics3v2.h in Headers */,
+				5FE7ED6511F6D74700CECD89 /* LyricsParser.h in Headers */,
+				5FE7ED6711F6D74700CECD89 /* LyricsSearch.h in Headers */,
+				5FE7ED6811F6D74700CECD89 /* LyricsTagReader.h in Headers */,
+				5FE7ED6A11F6D74700CECD89 /* LyrScrollActionRecorder.h in Headers */,
+				5FE7ED6C11F6D74700CECD89 /* MLClientSession.h in Headers */,
+				5FE7ED6E11F6D74700CECD89 /* MLData.h in Headers */,
+				5FE7ED6F11F6D74700CECD89 /* MLEncrypt.h in Headers */,
+				5FE7ED7111F6D74700CECD89 /* MLGenRegV4.h in Headers */,
+				5FE7ED7311F6D74700CECD89 /* MLLib.h in Headers */,
+				5FE7ED7511F6D74700CECD89 /* MLProfile.h in Headers */,
+				5FE7ED7711F6D74700CECD89 /* OurDate.h in Headers */,
+				5FE7ED7911F6D74700CECD89 /* Register.h in Headers */,
+				5FE7ED7B11F6D74700CECD89 /* SearchCacheFile.h in Headers */,
+				5FE7ED7D11F6D74700CECD89 /* SncParser.h in Headers */,
+				5FE7ED7F11F6D74700CECD89 /* SrtParser.h in Headers */,
+				5FE7ED8011F6D74700CECD89 /* StdAfx.h in Headers */,
+				5FE7ED8211F6D74700CECD89 /* TextFileParser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -265,25 +264,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F9DED4E11ABF82E00312E83 /* HelperFun.cpp in Sources */,
-				5F9DED5011ABF82E00312E83 /* LrcParser.cpp in Sources */,
-				5F9DED5211ABF82E00312E83 /* Lyrics3v2.cpp in Sources */,
-				5F9DED5511ABF82E00312E83 /* LyricsSearch.cpp in Sources */,
-				5F9DED5911ABF82E00312E83 /* MLClientSession.cpp in Sources */,
-				5F9DED5B11ABF82E00312E83 /* MLData.cpp in Sources */,
-				5F9DED5E11ABF82E00312E83 /* MLGenRegV4.cpp in Sources */,
-				5F9DED6011ABF82E00312E83 /* MLLib.cpp in Sources */,
-				5F9DED6211ABF82E00312E83 /* MLProfile.cpp in Sources */,
-				5F9DED6411ABF82E00312E83 /* OurDate.cpp in Sources */,
-				5F9DED6611ABF82E00312E83 /* Register.cpp in Sources */,
-				5F9DED6811ABF82E00312E83 /* SearchCacheFile.cpp in Sources */,
-				5F9DED6A11ABF82E00312E83 /* SncParser.cpp in Sources */,
-				5F9DED6C11ABF82E00312E83 /* SrtParser.cpp in Sources */,
-				5F9DED6E11ABF82E00312E83 /* StdAfx.cpp in Sources */,
-				5F9DED7011ABF82E00312E83 /* TextFileParser.cpp in Sources */,
-				5FB1948611ACA951008C4A46 /* LyrScrollActionRecorder.cpp in Sources */,
 				5FC0B22A11C53944000C6537 /* Sqlite3.cpp in Sources */,
 				5FC0B23011C53965000C6537 /* sqlite3.c in Sources */,
+				5FE7ED5F11F6D74700CECD89 /* HelperFun.cpp in Sources */,
+				5FE7ED6111F6D74700CECD89 /* LrcParser.cpp in Sources */,
+				5FE7ED6311F6D74700CECD89 /* Lyrics3v2.cpp in Sources */,
+				5FE7ED6611F6D74700CECD89 /* LyricsSearch.cpp in Sources */,
+				5FE7ED6911F6D74700CECD89 /* LyrScrollActionRecorder.cpp in Sources */,
+				5FE7ED6B11F6D74700CECD89 /* MLClientSession.cpp in Sources */,
+				5FE7ED6D11F6D74700CECD89 /* MLData.cpp in Sources */,
+				5FE7ED7011F6D74700CECD89 /* MLGenRegV4.cpp in Sources */,
+				5FE7ED7211F6D74700CECD89 /* MLLib.cpp in Sources */,
+				5FE7ED7411F6D74700CECD89 /* MLProfile.cpp in Sources */,
+				5FE7ED7611F6D74700CECD89 /* OurDate.cpp in Sources */,
+				5FE7ED7811F6D74700CECD89 /* Register.cpp in Sources */,
+				5FE7ED7A11F6D74700CECD89 /* SearchCacheFile.cpp in Sources */,
+				5FE7ED7C11F6D74700CECD89 /* SncParser.cpp in Sources */,
+				5FE7ED7E11F6D74700CECD89 /* SrtParser.cpp in Sources */,
+				5FE7ED8111F6D74700CECD89 /* TextFileParser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

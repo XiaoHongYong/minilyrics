@@ -129,6 +129,9 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 			m_onlineLyrSearch.AutoSearch(szMediaKey, szArtist, szTitle);
 		}
 	}
+	
+	if (!IsEmptyString(szEmbeddedLyr))
+		m_lyrData.OpenLyrics(m_strCurMediaKey.c_str(), m_nMediaLength, szEmbeddedLyr, FE_UTF8);
 
 	PostNotifyLyricsChanged();
 }
@@ -262,6 +265,11 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 
 void CMLApp::SetDefaultSettings()
 {
+	if (g_Profile.GetProfileInt(_T("Initialized"), false))
+		return;
+
+	g_Profile.WriteProfileInt(_T("Initialized"), true);
+
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("Font"), _T(", 18, bold, 0, 0, "));
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgColor"), _T("#FFFFFF"));
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgLowColor"), _T("#929292"));

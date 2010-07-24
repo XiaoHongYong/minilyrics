@@ -65,7 +65,7 @@ static NSString *kCellIdentifier = @"MusicCell";
 
 // Responds to the user tapping Done after choosing music.
 - (void) mediaPicker: (MPMediaPickerController *) mediaPicker didPickMediaItems: (MPMediaItemCollection *) mediaItemCollection {
-  
+
 	[self dismissModalViewControllerAnimated: YES];
 	[self.delegate updatePlayerQueueWithMediaCollection: mediaItemCollection];
 	[self.mediaItemCollectionTable reloadData];

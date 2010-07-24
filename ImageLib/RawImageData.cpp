@@ -246,6 +246,9 @@ PRAW_IMAGE_DATA LoadRawImageDataFromGifFile(IILIO *io);
 
 PRAW_IMAGE_DATA LoadRawImageDataFromFile(LPCTSTR szFile)
 {
+#ifdef _IPHONE
+	return NULL;
+#else
 	LPCTSTR			szExt;
 	int				n;
 	CFileILIO		io;
@@ -278,11 +281,15 @@ PRAW_IMAGE_DATA LoadRawImageDataFromFile(LPCTSTR szFile)
 	}
 
 	return image;
+#endif // _IPHONE
 }
 
 
 PRAW_IMAGE_DATA LoadRawImageDataFromMem(const void *buf, int nSize)
 {
+#ifdef _IPHONE
+	return NULL;
+#else
 	CBuffILIO		io;
 	uint8			*tag = (uint8 *)buf;
 	uint8			png_signature[8] = {137, 80, 78, 71, 13, 10, 26, 10};
@@ -309,6 +316,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromMem(const void *buf, int nSize)
 	}
 
 	return image;
+#endif // _IPHONE
 }
 
 void FreeRawImage(PRAW_IMAGE_DATA pRawImage)

@@ -267,6 +267,29 @@ extern "C" NSString *formatPlayingTime(int n);
 			[musicPlayer play];
 		}
 	}
+	
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+														 NSUserDomainMask, YES);
+	NSString *documentPath = [paths objectAtIndex:0];
+	NSString *mediaFile = [documentPath stringByAppendingPathComponent:@"playlist.plist"];
+
+	NSMutableData *data = [[NSMutableData alloc] init];
+	NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData:data];
+
+	[archiver encodeObject:self.userMediaItemCollection forKey:@"playlist"];
+	
+	[archiver finishEncoding];
+	BOOL sucess = [data writeToFile:mediaFile atomically:YES];
+	[archiver release];
+	[data release];
+
+/*	stringex buff;
+	if (OpenFileToBuffer([mediaFile UTF8String], buff))
+	{
+		NSArray *items = [NSArray arrayWithContentsOfFile:mediaFile];
+		if (items)
+			self.userMediaItemCollection = [[MPMediaItemCollection alloc] initWithItems:items];
+	}*/
 }
 
 // If the music player was paused, leave it paused. If it was playing, it will continue to
@@ -608,7 +631,23 @@ extern "C" NSString *formatPlayingTime(int n);
 	[volumeSlider setMinimumValue: 0.0];
 	[volumeSlider setMaximumValue: 1.0];
 	[volumeSlider setValue: [musicPlayer volume]];
-	
+
+	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
+														 NSUserDomainMask, YES);
+	NSString *documentPath = [paths objectAtIndex:0];
+	NSString *mediaFile = [documentPath stringByAppendingPathComponent:@"playlist.plist"];
+
+	NSData *data = [[NSData alloc] initWithContentsOfFile:mediaFile];
+	if (data) {
+		NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+		self.userMediaItemCollection = [unarchiver decodeObjectForKey:@"playlist"];
+		[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
+	}
+
+	if (self.userMediaItemCollection) {
+		UIImage	*imgPlaylist = [UIImage imageNamed:@"NowPlayingAlbumInfo.png"];
+		[addMusicButton setImage:imgPlaylist forState:UIControlStateNormal];
+	}
 }
 
 bool ScaleLyricsFont(float scale);

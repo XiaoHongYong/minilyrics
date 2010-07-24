@@ -42,14 +42,14 @@
 		5FE7E4E211EF112B00CECD89 /* fileapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E4D311EF112B00CECD89 /* fileapi.h */; };
 		5FE7E4E311EF112B00CECD89 /* MemmapFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E4D411EF112B00CECD89 /* MemmapFile.cpp */; };
 		5FE7E4E411EF112B00CECD89 /* MemmapFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E4D511EF112B00CECD89 /* MemmapFile.h */; };
-		5FE7E4E511EF112B00CECD89 /* Mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E4D611EF112B00CECD89 /* Mutex.cpp */; };
 		5FE7E4E611EF112B00CECD89 /* Mutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E4D711EF112B00CECD89 /* Mutex.h */; };
-		5FE7E4E711EF112B00CECD89 /* Semaphore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E4D811EF112B00CECD89 /* Semaphore.cpp */; };
 		5FE7E4E811EF112B00CECD89 /* Semaphore.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E4D911EF112B00CECD89 /* Semaphore.h */; };
 		5FE7E4E911EF112B00CECD89 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E4DA11EF112B00CECD89 /* Thread.cpp */; };
 		5FE7E4EA11EF112B00CECD89 /* Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E4DB11EF112B00CECD89 /* Thread.h */; };
 		5FE7E4EB11EF112B00CECD89 /* Win32Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E4DC11EF112B00CECD89 /* Win32Error.cpp */; };
 		5FE7E4EC11EF112B00CECD89 /* Win32Error.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E4DD11EF112B00CECD89 /* Win32Error.h */; };
+		5FE7EC2711F47CD900CECD89 /* MutexIP.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EC2611F47CD900CECD89 /* MutexIP.mm */; };
+		5FE7EC4911F6BABC00CECD89 /* Semaphore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EC4811F6BABC00CECD89 /* Semaphore.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,14 +88,14 @@
 		5FE7E4D311EF112B00CECD89 /* fileapi.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; name = fileapi.h; path = Mac/fileapi.h; sourceTree = "<group>"; };
 		5FE7E4D411EF112B00CECD89 /* MemmapFile.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; name = MemmapFile.cpp; path = Mac/MemmapFile.cpp; sourceTree = "<group>"; };
 		5FE7E4D511EF112B00CECD89 /* MemmapFile.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; name = MemmapFile.h; path = Mac/MemmapFile.h; sourceTree = "<group>"; };
-		5FE7E4D611EF112B00CECD89 /* Mutex.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; name = Mutex.cpp; path = Mac/Mutex.cpp; sourceTree = "<group>"; };
 		5FE7E4D711EF112B00CECD89 /* Mutex.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; name = Mutex.h; path = Mac/Mutex.h; sourceTree = "<group>"; };
-		5FE7E4D811EF112B00CECD89 /* Semaphore.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; name = Semaphore.cpp; path = Mac/Semaphore.cpp; sourceTree = "<group>"; };
 		5FE7E4D911EF112B00CECD89 /* Semaphore.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; name = Semaphore.h; path = Mac/Semaphore.h; sourceTree = "<group>"; };
 		5FE7E4DA11EF112B00CECD89 /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; name = Thread.cpp; path = Mac/Thread.cpp; sourceTree = "<group>"; };
 		5FE7E4DB11EF112B00CECD89 /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; name = Thread.h; path = Mac/Thread.h; sourceTree = "<group>"; };
 		5FE7E4DC11EF112B00CECD89 /* Win32Error.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; name = Win32Error.cpp; path = Mac/Win32Error.cpp; sourceTree = "<group>"; };
 		5FE7E4DD11EF112B00CECD89 /* Win32Error.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; name = Win32Error.h; path = Mac/Win32Error.h; sourceTree = "<group>"; };
+		5FE7EC2611F47CD900CECD89 /* MutexIP.mm */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.objcpp; name = MutexIP.mm; path = Mac/MutexIP.mm; sourceTree = "<group>"; };
+		5FE7EC4811F6BABC00CECD89 /* Semaphore.mm */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.objcpp; name = Semaphore.mm; path = Mac/Semaphore.mm; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libbase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libbase.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -123,16 +123,16 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FE7EC2611F47CD900CECD89 /* MutexIP.mm */,
 				5FE7E4CF11EF112B00CECD89 /* CharEncoding.cpp */,
+				5FE7EC4811F6BABC00CECD89 /* Semaphore.mm */,
 				5FE7E4D011EF112B00CECD89 /* Event.cpp */,
 				5FE7E4D111EF112B00CECD89 /* Event.h */,
 				5FE7E4D211EF112B00CECD89 /* fileapi.cpp */,
 				5FE7E4D311EF112B00CECD89 /* fileapi.h */,
 				5FE7E4D411EF112B00CECD89 /* MemmapFile.cpp */,
 				5FE7E4D511EF112B00CECD89 /* MemmapFile.h */,
-				5FE7E4D611EF112B00CECD89 /* Mutex.cpp */,
 				5FE7E4D711EF112B00CECD89 /* Mutex.h */,
-				5FE7E4D811EF112B00CECD89 /* Semaphore.cpp */,
 				5FE7E4D911EF112B00CECD89 /* Semaphore.h */,
 				5FE7E4DA11EF112B00CECD89 /* Thread.cpp */,
 				5FE7E4DB11EF112B00CECD89 /* Thread.h */,
@@ -276,10 +276,10 @@
 				5FE7E4DF11EF112B00CECD89 /* Event.cpp in Sources */,
 				5FE7E4E111EF112B00CECD89 /* fileapi.cpp in Sources */,
 				5FE7E4E311EF112B00CECD89 /* MemmapFile.cpp in Sources */,
-				5FE7E4E511EF112B00CECD89 /* Mutex.cpp in Sources */,
-				5FE7E4E711EF112B00CECD89 /* Semaphore.cpp in Sources */,
 				5FE7E4E911EF112B00CECD89 /* Thread.cpp in Sources */,
 				5FE7E4EB11EF112B00CECD89 /* Win32Error.cpp in Sources */,
+				5FE7EC2711F47CD900CECD89 /* MutexIP.mm in Sources */,
+				5FE7EC4911F6BABC00CECD89 /* Semaphore.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

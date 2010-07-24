@@ -46,7 +46,7 @@ CLyricsVerticalScrollGraph	m_lyrGraph;
 	m_lyrGraph.Init(self.frame.size.width, self.frame.size.height, &CMLApp::GetInstance()->GetLyricsData());
 	self.inSeekingLyrics = NO;
 
-	[self setLyrDisplayTimer: [NSTimer scheduledTimerWithTimeInterval: 0.04
+	[self setLyrDisplayTimer: [NSTimer scheduledTimerWithTimeInterval: 0.08
 																	target: self
 																  selector: @selector (onUpdateLyrDisplay)
 																  userInfo: nil

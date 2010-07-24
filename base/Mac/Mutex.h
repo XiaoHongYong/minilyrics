@@ -13,6 +13,8 @@
 #define WAIT_FOREVER 0xFFFFFFFF
 #endif
 
+class _NSLockInternal;
+
 class Mutex  
 {
 public:
@@ -23,6 +25,7 @@ public:
 	void Release();
 
 private:
+	_NSLockInternal		*nslock;
 
 };
 
