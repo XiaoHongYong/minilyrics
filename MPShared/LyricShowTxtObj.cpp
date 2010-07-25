@@ -127,7 +127,7 @@ void CLyricShowTxtObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 	}
 
 	int nCurLine = m_pMLData->GetCurPlayLine(m_lyrLines);
-	if (nCurLine < 0 || nCurLine >= m_lyrLines.size())
+	if (nCurLine < 0 || nCurLine >= (int)m_lyrLines.size())
 		return;
 
 	if (m_bReplayScrollingActionsEnabled && !m_bReplayDisabledTemp

@@ -242,7 +242,7 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 			if (!item.m_strLyricsFile.empty())
 			{
 				nRet = lyricsData.OpenLyrics(item.m_strSongFile.c_str(), item.m_nMediaLength, 
-					item.m_strLyricsFile.c_str());
+					item.m_strLyricsFile.c_str(), false);
 			}
 			else
 			{

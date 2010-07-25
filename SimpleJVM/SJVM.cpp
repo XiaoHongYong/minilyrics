@@ -1091,7 +1091,7 @@ int CSJVM::CallNativeAPI(CMemberMethod *pMethod)
 	if (!pMethod->bStatic)
 	{
 		// Add "this" in parameter first
-		vParameter[0] = LPVOID(m_stack.Get(m_bp).nValue);
+		vParameter[0] = (LPVOID)(int64)(m_stack.Get(m_bp).nValue);
 		pos++;
 	}
 
@@ -1111,7 +1111,7 @@ int CSJVM::CallNativeAPI(CMemberMethod *pMethod)
 				vParameter[pos] = "";
 		}
 		else
-			vParameter[pos] = LPVOID(item.nValue);
+			vParameter[pos] = (LPVOID)(int64)(item.nValue);
 	}
 
 	LPVOID	pNativeFunc = pMethod->pNativeFunc;

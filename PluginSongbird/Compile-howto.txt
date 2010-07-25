@@ -1,6 +1,7 @@
 1. Get Songbird source.
 2. Get Songbird build evironment.
-3. Build Songbird.
+   delete I:\SongBird\dependencies\vendor\*
+3. Build Songbird.    %~/sbird: make -f songbird.mk 
 4. Copy PluginSongbird to : SongBird\compiled\components\PluginSongbird
 5. Copy all files in "MLPluginLib" folder to SongBird\compiled\components\PluginSongbird
 6. Start "start-msvc8.bat" in mozilla-build folder.

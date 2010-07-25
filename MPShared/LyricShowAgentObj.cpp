@@ -131,7 +131,7 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 				LoadToolbar();
 		}
 	}
-	else if (pEvent->eventType == ET_LYRICS_CHANGED)
+	else if (pEvent->eventType == ET_LYRICS_CHANGED && m_bEnableStaticTextStyle)
 	{
 		tstring		strNewStyle;
 		if (g_LyricData.GetLyrContentType() != LCT_TXT)
@@ -184,8 +184,7 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 		&& _tcsicmp(szLyrDispalyStyle, CLyricShowTwoRowObj::ClassName()) != 0
 		&& _tcsicmp(szLyrDispalyStyle, CLyricShowHorzScrollObj::ClassName()) != 0
 		&& _tcsicmp(szLyrDispalyStyle, CLyricShowSingleRowObj::ClassName()) != 0
-		&& _tcsicmp(szLyrDispalyStyle, CLyricShowVobSub::ClassName()) != 0)
-		|| (_tcsicmp(szLyrDispalyStyle, SZ_TXT_LYR_CONTAINER) == 0 && !m_bEnableStaticTextStyle))
+		&& _tcsicmp(szLyrDispalyStyle, CLyricShowVobSub::ClassName()) != 0))
 	{
 		m_strLyrDisplayStyleDefault = CLyricShowMultiRowObj::ClassName();
 		szLyrDispalyStyle = m_strLyrDisplayStyleDefault.c_str();

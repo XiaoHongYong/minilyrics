@@ -136,7 +136,8 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 				if (nLastBreak > 0)
 				{
 					assert(nLastBreak <= strIterator.GetPos());
-					strIterator.SetPos(nLastBreak + 1);
+					strIterator.SetPos(nLastBreak);
+					++strIterator;
 				}
 				break;
 			}

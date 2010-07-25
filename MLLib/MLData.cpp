@@ -283,6 +283,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 	return nRet;
 }
 
+#ifdef _IPHONE
 int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent, CHAR_ENCODING nForceEncodingID)
 {
 	m_strSongFile = szSongFile;
@@ -307,6 +308,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrConte
 	
 	return ERR_OK;
 }
+#endif // #ifdef _IPHONE
 
 //
 // 重新打开歌词

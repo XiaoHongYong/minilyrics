@@ -271,7 +271,7 @@ int CVarDeclStack::DeclareStaticVar(LPVOID pMethodOrClass, LPCSTR szVarName, Typ
 {
 	char szKey[32];
 
-	sprintf_s(szKey, CountOf(szKey), "%08X%02d", (DWORD)pMethodOrClass, nStmtDeepOfMethod);
+	sprintf_s(szKey, CountOf(szKey), "%08X%02d", (int)(int64)pMethodOrClass, nStmtDeepOfMethod);
 	string	strKey = szKey;
 	strKey += szVarName;
 

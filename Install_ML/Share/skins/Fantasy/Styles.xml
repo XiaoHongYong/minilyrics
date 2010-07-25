@@ -95,14 +95,14 @@
           Height="20" XMargin="5" YMargin="4" UseSkinBg="true" TabFocus="true"
           Image="s_image_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
-    <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#FFFFFF" DisabledTextColor="#808080"
+    <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#FFFFFF" DisabledTextColor="#C4C4C4"
           Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
           CheckBox="true" TabFocus="true"
           Image="s_checkbox.png" ImageSize="20,20"
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_checkbox.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
-    <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#FFFFFF" DisabledTextColor="#808080"
+    <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#FFFFFF" DisabledTextColor="#C4C4C4"
           Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
            Radio="true" TabFocus="true"
           Image="s_radio_button.png" ImageSize="20,20"
@@ -121,7 +121,7 @@
           FontName="Verdana" FontHeight="14" TextColor="#000000"
           Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
           MarginX="0" MarginY="0" />
-    <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
+    <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#C4C4C4" TabFocus="true"
           Height="22" XMargin="5" YMargin="4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
           UseSkinBg="true" Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>

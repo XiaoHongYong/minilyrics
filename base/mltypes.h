@@ -62,7 +62,6 @@ typedef /* [string] */ const unsigned short *LPCWSTR;
 typedef /* [string] */ char *LPSTR;
 typedef /* [string] */ unsigned short *LPWSTR;
 typedef /* [string] */ unsigned short WCHAR;
-typedef basic_string<WCHAR> wstring_t;
 
 #ifdef UNICODE
 typedef LPCWSTR			LPCTSTR;
@@ -72,13 +71,7 @@ typedef WCHAR			TCHAR;
 typedef LPCSTR			LPCTSTR;
 typedef LPSTR			LPTSTR;
 typedef char			TCHAR;
-#endif
-
-#ifdef _UNICODE
-typedef basic_string<WCHAR> tstring;
-#else
-typedef string tstring;
-#endif
+#endif // #ifdef UNICODE
 
 typedef const void* LPCVOID;
 
@@ -89,6 +82,14 @@ typedef BYTE		*LPBYTE;
 // #define TRUE		1
 // #define FALSE		0
 
+#endif // #if !defined(WIN32) && !defined(_WIN32_WCE)
+
+typedef basic_string<WCHAR> wstring_t;
+
+#ifdef _UNICODE
+typedef basic_string<WCHAR> tstring;
+#else
+typedef string tstring;
 #endif
 
 #ifdef _LINUX

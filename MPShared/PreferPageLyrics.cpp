@@ -56,7 +56,7 @@ public:
 
 		//
 		// 设置下载路径的显示
-		tstring strDownSaveDir = CMLProfile::GetDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""));
+		tstring strDownSaveDir = g_LyricsDownloader.GetDefSavePath();
 		SetUIObjectText(CID_DOWN_DIR, strDownSaveDir.c_str());
 
 		// 需要保存的歌词目录
@@ -122,7 +122,7 @@ public:
 			tstring				strDownSaveDir;
 
 			// 取得原来的Skin目录
-			strDownSaveDir = CMLProfile::GetDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""));
+			strDownSaveDir = g_LyricsDownloader.GetDefSavePath();
 
 			dlg.SetInitFolder(strDownSaveDir.c_str());
 			if (dlg.DoBrowse(m_pSkinWnd))
@@ -132,8 +132,13 @@ public:
 					strDownSaveDir = dlg.GetFolder();
 					DirStringFormat(strDownSaveDir);
 
-					CMLProfile::WriteDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), strDownSaveDir.c_str());
-					g_LyricsDownloader.SetDefSavePath(strDownSaveDir.c_str());
+					if (!CanWriteInDir(strDownSaveDir.c_str()))
+						m_pSkinWnd->MessageOut(_T("Can't save lyrics in the selected folder."));
+					else
+					{
+						CMLProfile::WriteDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), strDownSaveDir.c_str());
+						g_LyricsDownloader.SetDefSavePath(strDownSaveDir.c_str());
+					}
 
 					SetUIObjectText(nId, strDownSaveDir.c_str());
 				}

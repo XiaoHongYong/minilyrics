@@ -8,6 +8,7 @@
 
 #include "stdafx.h"
 #include "MPlayerApp.h"
+#include "LyricsDownloadMgr.h"
 #include "LyricsLocalSearch.h"
 
 LPCTSTR 		SZ_FOLDER_PREFIX = _T("LyricFolder");
@@ -413,7 +414,7 @@ BOOL CLyricsLocalSearch::SearchLyrics(LPCTSTR szSongFile, LPCTSTR szTitle, BOOL 
 	// ËÑË÷¸è´ÊÏÂÔØÄ¿Â¼
 	//
 	{
-		strDir = CMLProfile::GetDir(_T("Download"), _T("LyricsDownPath"), _T(""));
+		strDir = g_LyricsDownloader.GetDefSavePath();
 		DirStringFormat(strDir);
 
 		SearchMatchLyricsInDir(strDir.c_str(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, pvLyrics, TRUE);

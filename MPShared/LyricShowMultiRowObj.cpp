@@ -187,7 +187,7 @@ void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGra
 	int			nRowHeight = GetLineHeight();
 	int			nAlpha;
 
-	ASSERT(nCurLine >= 0 && nCurLine < m_lyrLines.size());
+	ASSERT(nCurLine >= 0 && nCurLine < (int)m_lyrLines.size());
 
 	prcUpdate->SetRect(m_rcObj.left + m_nXMargin, 0, m_rcObj.right - m_nXMargin, 0);
 	prcUpdate->top = prcUpdate->bottom = y;

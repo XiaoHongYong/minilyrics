@@ -285,7 +285,9 @@ public:
 
 	// 打开歌词文件
 	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSource, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
+#ifdef _IPHONE
 	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
+#endif
 	int ReopenLyrics(bool bForceUseEncoding, CHAR_ENCODING nForceEncodingID);
 
 	int SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding, bool &bUseNewFileName);

@@ -56,6 +56,7 @@ public:
 	bool IsTaskExist(LPCTSTR szURL);
 
 	void SetDefSavePath(LPCTSTR szDefSavePath) { m_strDefSavePath = szDefSavePath; }
+	LPCTSTR GetDefSavePath() const { return m_strDefSavePath.c_str(); }
 
 protected:
 	virtual void OnEndDownload(CDownloadTask *pTask);

@@ -87,7 +87,7 @@ void CLyrDisplayClrListWnd::PopupSkinWndOnSelected()
 
 	if (nSel == -1)
 		return;
-	ASSERT(nSel >= 0 && nSel < m_vFontClr.size());
+	ASSERT(nSel >= 0 && nSel < (int)m_vFontClr.size());
 
 	// Save selected color
 	FontClrOpt &fontClr = m_vFontClr[nSel];
