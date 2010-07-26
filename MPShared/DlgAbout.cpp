@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
-#include "LyricsDownloadMgr.h"
+#include "DownloadMgr.h"
 #include "VersionUpdate.h"
 #include "DlgAbout.h"
 
@@ -59,7 +59,7 @@ public:
 		m_pSkinWnd->SetUIObjectProperty(_T("CID_EMAIL"), SZ_PN_LINK, GetStrName(SN_EMAIL));
 
 		CVersionUpdate	verUpdate;
-		verUpdate.CheckNewVersion(&g_LyricsDownloader, false);
+		verUpdate.CheckNewVersion(false);
 	}
 
 	void OnShow()
@@ -76,10 +76,6 @@ public:
 		{
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_REGISTER));
 		}
-		else if (nId == GetIDByName(_T("CID_NEW_VERSION")))
-		{
-			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_DOMAIN));
-		}
 		else if (nId == GetIDByName(_T("CID_ENTER_CODE")))
 		{
 			m_pParent->SwitchToPage(_T("CID_CODE"));
@@ -94,7 +90,7 @@ public:
 		if (pEvent->eventType == ET_DOWNLOAD_END)
 		{
 			CEventDownloadEnd		*pDlEvt = (CEventDownloadEnd *)pEvent;
-			if (pDlEvt->pTask->m_dwDownOkID == DOWNOKID_CHECK_VERSION_MANUAL)
+			if (pDlEvt->pTask->taskType == DTT_CHECK_VERSION_NOUI)
 			{
 				int		nRet = ERR_OK;
 
@@ -116,6 +112,7 @@ public:
 							strNewVersion += versionInfo.verNew.To();
 
 							SetUIObjectProperty(_T("CID_NEW_VERSION"), SZ_PN_TEXT, strNewVersion.c_str());
+							SetUIObjectProperty(_T("CID_NEW_VERSION"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));
 							SetUIObjectVisible(_T("CID_CHECK_VERSION"), false, false);
 							SetUIObjectVisible(_T("CID_NEW_VERSION"), true, false);
 							InvalidateRect();

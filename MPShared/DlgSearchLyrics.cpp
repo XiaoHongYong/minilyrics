@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "MPlayerApp.h"
-#include "LyricsDownloadMgr.h"
+#include "DownloadMgr.h"
 #include "DlgSearchLyrics.h"
 #include "DlgAbout.h"
 #include "OnlineSearch.h"
@@ -346,7 +346,6 @@ public:
 			return;
 
 		LrcSearchResult	*pSel;
-		int				nError;
 
 		pSel = GetCurSel();
 		if (!pSel)
@@ -355,14 +354,8 @@ public:
 		if (IsHttpUrl(pSel->strUrl.c_str()))
 		{
 			// Download selected lyrics
-			nError = g_LyricsDownloader.AddLyricsDownloadTask(m_szAssociateKeyword, 
-				pSel->strUrl.c_str(), pSel->strSaveFileName.c_str());
-			if (nError != ERR_OK)
-			{
-				TCHAR	szLocal[MAX_PATH];
-				UriUnescape(pSel->strUrl.c_str(), szLocal, MAX_PATH, ED_SYSDEF);
-				ERRLOG2(_T("FAILED to Add Task: %s, %s"), (LPCTSTR)Error2Str(nError), szLocal);
-			}
+			g_LyricsDownloader.DownloadLyrics(m_szAssociateKeyword, 
+				m_strSongFile.c_str(), pSel->strUrl.c_str(), pSel->strSaveFileName.c_str());
 		}
 		else
 		{
@@ -716,7 +709,8 @@ protected:
 
 		UpdateSearchResultToListCtrl();
 
-		m_pLyricsList->SetItemSelectionState(0, TRUE);
+		if (m_pLyricsList->GetItemCount() > 0)
+			m_pLyricsList->SetItemSelectionState(0, TRUE);
 
 		if (m_nPageCount > 1)
 		{

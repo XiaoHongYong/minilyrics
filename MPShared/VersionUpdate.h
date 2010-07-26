@@ -98,7 +98,7 @@ public:
 	CVersionUpdate();
 	virtual ~CVersionUpdate();
 
-	void CheckNewVersion(CLyricsDownloadMgr *pMgr, bool bAutoCheck = true);
+	void CheckNewVersion(bool bAutoCheck = true);
 
 	virtual void OnDownloadOK(CDownloadTask *pTask);
 

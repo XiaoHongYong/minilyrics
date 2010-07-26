@@ -137,9 +137,6 @@ public:
 protected:
 	virtual CSvrSessionBase *NewSession();
 
-	// If the server is busy, jobs will be removed.
-	virtual void OnBusyRemoveJob(SOCKET s);
-
 protected:
 	// accept Ïß³Ì
 	vector<ServicePort *>	m_vServerPort;

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferPageAdvanced.h"
-#include "LyricsDownloadMgr.h"
+#include "DownloadMgr.h"
 
 #ifdef _WIN32
 #include "win32/HotkeyCtrlEx.h"

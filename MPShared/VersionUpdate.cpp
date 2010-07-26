@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #include "MPlayerApp.h"
-#include "LyricsDownloadMgr.h"
+#include "DownloadMgr.h"
 #include "VersionUpdate.h"
 #ifdef _WIN32_DESKTOP
 #include <time.h>
@@ -158,7 +158,7 @@ CVersionUpdate::~CVersionUpdate()
 
 void CVersionUpdate::OnDownloadOK(CDownloadTask *pTask)
 {
-	if (pTask->m_dwDownOkID != DOWNOKID_CHECK_VERSION)
+	if (pTask->taskType != DTT_CHECK_VERSION)
 		return;
 
 	CVersionInfo	versionInfo;
@@ -197,9 +197,9 @@ int CVersionUpdate::GetUpdateInfo(CDownloadTask *pTask, CVersionInfo &versionInf
 	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 
 	// 分析VER_FILE
-	if (!xml.ParseFile(pTask->m_strSaveFile.c_str()))
+	if (!xml.ParseData(pTask->buffContent.c_str(), pTask->buffContent.size()))
 	{
-		ERRLOG1(_T("parse xml FILE FAILED: %s"), pTask->m_strSaveFile.c_str());
+		ERRLOG1(_T("parse xml data FAILED: %s"), pTask->buffContent.c_str());
 		return ERR_PARSE_XML;
 	}
 
@@ -212,7 +212,7 @@ int CVersionUpdate::GetUpdateInfo(CDownloadTask *pTask, CVersionInfo &versionInf
 	return ERR_OK;
 }
 
-void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr, bool bAutoCheck)
+void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 {
 	if (bAutoCheck)
 	{
@@ -239,21 +239,5 @@ void CVersionUpdate::CheckNewVersion(CLyricsDownloadMgr *pMgr, bool bAutoCheck)
 		g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
 	}
 
-	TCHAR		szVerFile[MAX_PATH];
-
-	// 首先删除上次下载的文件
-	_tcscpy_safe(szVerFile, CountOf(szVerFile), GetAppDataDir());
-	_tcscat_safe(szVerFile, CountOf(szVerFile), VER_FILE);
-	if (IsFileExist(szVerFile))
-	{
-		SetFileNoReadOnly(szVerFile);
-		if (!DeleteFile(szVerFile))
-		{
-			ERRLOG1(_T("Delete File: %s, FAILED!"), szVerFile);
-		}
-	}
-
-	pMgr->AddTask(GetStrName(SN_HTTP_ML_VER), NULL, szVerFile, 
-		bAutoCheck ? DOWNOKID_CHECK_VERSION : DOWNOKID_CHECK_VERSION_MANUAL,
-		NULL, false, true);
+	g_LyricsDownloader.DownloadVersionFile(GetStrName(SN_HTTP_ML_VER), !bAutoCheck);
 }

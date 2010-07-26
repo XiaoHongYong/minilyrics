@@ -5,7 +5,7 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "WaitingDlg.h"
-#include "LyricsDownloadMgr.h"
+#include "DownloadMgr.h"
 #include "Helper.h"
 
 CWorkObjBase::CWorkObjBase()

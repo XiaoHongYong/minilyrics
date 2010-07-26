@@ -587,8 +587,8 @@ int CNetServer::AddJob(SOCKET s)
 
 		for (int i = 0; i < m_nWorkThreadCount; i++)
 		{
-			OnBusyRemoveJob(m_listJob.front().nSocket);
-
+			closesocket(m_listJob.front().nSocket);
+			g_nDiscardClients++;
 			m_listJob.erase(m_listJob.begin());
 		}
 	}
@@ -667,8 +667,3 @@ int CNetServer::RemoveJob()
 	return nRet;
 }
 
-void CNetServer::OnBusyRemoveJob(SOCKET s)
-{
-	g_nDiscardClients++;
-	closesocket(s);
-}

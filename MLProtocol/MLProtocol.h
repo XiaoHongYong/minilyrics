@@ -39,6 +39,10 @@ enum ML_PROTOCAL_ERROR
 	ERR_UPDATE_LRC_INFO_SHOULD_SAME	= 1063, // 更新歌词时，前后的歌词标题和作者必须一致
 };
 
+#define SERVER_PORT_BEGIN			8000
+#define SERVER_PORT_END				8080
+
+#define ML_SERVER_PORT				1212
 
 #define ML_PROTOCOL_VERION_V8		_T("0.8")
 #define ML_PROTOCOL_VERION			_T("0.9")
@@ -59,16 +63,10 @@ enum MLMsgCmd
 	//
 	// 从客户端发送到服务器的消息
 	MC_UNKNOWN,				// 未知
-	MC_APPLY_ACCOUNT,		// 申请新帐号
-	MC_MODIFY_ACCOUNT,		// 修改帐号
-	MC_QUERY_ACCOUNT_INFO,	// 修改帐号
 	MC_LOGIN,				// 登陆
-	MC_LOGOUT,				// 退出
 	MC_SEARCH,				// 搜索（歌词……）
-	MC_DOWNLOAD,			// 下载（歌词……）
 	MC_CAN_UPLOAD,			// 是否能够上传（歌词……），服务器返回结果，如果不能上传会返回具体的原因
 	MC_UPLOAD,				// 上传（歌词……）
-	MC_DOWNLOADBEST,		// 下载
 	MC_GET_STATISTICTYPE,	// 查询统计项目
 	MC_STATISTICQUERY,		// 查询统计项目的具体内容
 	MC_POST_REQUIRE,		// 发送请求
@@ -83,21 +81,12 @@ enum MLMsgCmd
 MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 
 
-#define MZ_APPLY_ACCOUNT	_T("apply")
-#define MZ_MODIFY_ACCOUNT	_T("modifyaccount")
-#define MZ_QUERY_ACCOUNT_INFO	_T("getaccountinfo")
 #define MZ_LOGIN			_T("login")
-#define MZ_LOGOUT			_T("logout")
 #define MZ_RETURN			_T("return")
 #define MZ_SEARCH			_T("search")
-#define MZ_DOWNLOAD			_T("download")
 #define MZ_CANUPLOAD		_T("canupload")
 #define MZ_UPLOAD			_T("upload")
-#define MZ_DOWNLOADBEST		_T("downloadbest")
-#define MZ_GETSTATISTICTYPE	_T("getstattype")
-#define MZ_STATISTICQUERY	_T("statquery")
 #define MZ_POST_BUG			_T("bug")
-#define MZ_POST_SONGINFO	_T("submitsonginfo")
 
 #define MZ_FILEINFO			_T("fileinfo")
 #define MZ_ORG_CMD			_T("orgcmd")
@@ -387,59 +376,6 @@ public:
 
 };
 typedef MLMsgRetSearch MLMsgRetUpload;
-
-//
-// 使用XML方式表达了CListCtrl类型的数据结构
-class MLDataList
-{
-public:
-	typedef vector<tstring>	RowData_t;
-	typedef list<RowData_t>::iterator	iterator;
-
-	tstring					strClassID;			// 分类ID
-	vector<tstring>			vTitles;			// 列标题
-	list<RowData_t>			listRowData;		// 值
-
-public:
-	void Clear() { vTitles.clear(); listRowData.clear(); strClassID.erase(); }
-	virtual int FromXML(SXNode *pXmlNode);
-	virtual int ToXML(CXMLWriter &xmlFile);
-
-};
-
-// 发送客户端的歌曲信息到服务器端；
-//
-// 返回值:
-//		ERR_OK			-	成功
-//		ERR_REDIRECT		-	重定向连接
-class MLMsgCmdPostSongInfo : public CXMLMsgCmd
-{
-public:
-	class SongInfo
-	{
-	public:
-		// tstring		strFileName;
-		tstring		strMd5Song;
-		tstring		strMd5Lyrics;			// 
-//		tstring		strAlbum;
-//		tstring		strTitle;
-
-	public:
-		virtual int FromXML(SXNode *pNode);
-		virtual int ToXML(CXMLWriter &xmlFile);
-
-	};
-
-	vector<SongInfo>		vSongInfo;
-
-public:
-	virtual int FromXML(SXNode *pXmlNode);
-	virtual int ToXML(CXMLWriter &xmlFile);
-
-};
-typedef vector<MLMsgCmdPostSongInfo::SongInfo>		V_SONGINFO;
-
-typedef MLRetMsg MLMsgRetPostSongInfo;
 
 
 // 客户端向服务器发送bug

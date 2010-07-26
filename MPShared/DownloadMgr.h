@@ -11,29 +11,33 @@
 
 #pragma once
 
+enum DownloadTaskType
+{
+	DTT_LYRICS,
+	DTT_CHECK_VERSION,
+	DTT_CHECK_VERSION_NOUI,
+	DTT_CHECK_AD,
+};
+
 class CDownloadTask
 {
 public:
-	CDownloadTask()
+	CDownloadTask(DownloadTaskType type, LPCTSTR szUrl)
 	{
-		m_bReportErr = true;
-		m_bHideTask = false;
-		m_dwID = 0;
-		m_dwDownOkID = 0;
-		m_errResult = 0;
+		taskType = type;
+		m_strURL = szUrl;
+		m_errResult = ERR_OK;
 		m_nHttpRetCode = 0;
 	}
 
-	tstring			m_strSaveFile;
+	DownloadTaskType	taskType;
+	tstring				m_strURL;
+	tstring				strMediaKey;
+	tstring				m_strSaveFile;
+	CCharBuffer			buffContent;
 
-	tstring			m_strURL;
-	tstring			m_strReferUrl;		// Referer: http://
-	uint32			m_dwID;
-	MLRESULT		m_errResult;
-	int				m_nHttpRetCode;
-	bool			m_bReportErr;
-	bool			m_bHideTask;
-	DWORD			m_dwDownOkID;
+	MLRESULT			m_errResult;
+	int					m_nHttpRetCode;
 
 };
 
@@ -43,22 +47,33 @@ public:
 	CDownloadMgr();
 	virtual ~CDownloadMgr();
 
-public:
-
 	typedef	list<CDownloadTask *>		LIST_TASK;
 
 public:
 	int Init();
 	void Quit();
 
-	int AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD dwDownOkID, DWORD *pdwTaskID, bool bReportErr = true, bool bHideTask = false);
+	BOOL SearchInCacheResult(bool bShowInfoText);
 
-	bool IsTaskExist(LPCTSTR szURL);
+	void OnSongChanged();
+
+	void DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szSongFile, LPCTSTR szUrl, LPCTSTR szFileName);
+	void DownloadVersionFile(LPCTSTR szUrl, bool bNoUI);
 
 	void SetDefSavePath(LPCTSTR szDefSavePath) { m_strDefSavePath = szDefSavePath; }
 	LPCTSTR GetDefSavePath() const { return m_strDefSavePath.c_str(); }
 
+	bool AutoDownloadEnabled() const { return m_bAutoDownload; }
+
 protected:
+	void AddTask(CDownloadTask *pTask);
+
+	bool IsTaskExist(LPCTSTR szURL);
+
+	void CreateDefaultLyricsDir(tstring &strDefSavePath);
+
+	tstring GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName);
+
 	virtual void OnEndDownload(CDownloadTask *pTask);
 
 	static void DownloadThreadProc(LPVOID lpParam);
@@ -67,18 +82,21 @@ protected:
 
 	int RunHttpTask(CDownloadTask *pTask);
 
+	int TryToConnect(class CHttpClient &httpClient);
+
 	virtual int SaveDownloadedFile(CDownloadTask *pTask, LPVOID lpData, int nSize);
+
+	bool IsQuiting() { return m_eventShutDown.Acquire(0); }
 
 protected:
 	CThread					m_threadDownload;
 	Mutex					m_mutexAccess;
 	LIST_TASK				m_listTasks, m_listRunningTasks;
-	uint32					m_dwTaskIDNext;
-	int						m_nRetryCount;
 	Event					m_eventShutDown;
-	bool					m_bQuit;
 	tstring					m_strDefSavePath;
-	tstring					m_strUserAgent;
+
+public:
+	bool					m_bAutoDownload;
 
 };
 

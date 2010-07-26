@@ -8,7 +8,7 @@
 
 #include "stdafx.h"
 #include "MPlayerApp.h"
-#include "LyricsDownloadMgr.h"
+#include "DownloadMgr.h"
 #include "LyricsLocalSearch.h"
 
 LPCTSTR 		SZ_FOLDER_PREFIX = _T("LyricFolder");

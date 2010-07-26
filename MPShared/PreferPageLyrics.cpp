@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferPageLyrics.h"
-#include "LyricsDownloadMgr.h"
+#include "DownloadMgr.h"
 #include "SkinListCtrl.h"
 
 #ifdef _WIN32

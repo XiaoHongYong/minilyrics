@@ -6,7 +6,7 @@
 #include "MPlayerApp.h"
 #include "../sqlite_cpp/Sqlite3.h"
 #include "OnlineSearch.h"
-#include "LyricsDownloadMgr.h"
+#include "DownloadMgr.h"
 #include "AdManage.h"
 #include "Helper.h"
 

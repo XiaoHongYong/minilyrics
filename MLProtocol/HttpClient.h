@@ -20,6 +20,8 @@ public:
 
 	int Init(LPCTSTR szHost, LPCTSTR szUri, LPCTSTR szReferUrl, int nPort = __HTTP_PORT);
 
+	void SetHostPort(int nPort);
+
 	int Connect();
 
 	int SendRequest();

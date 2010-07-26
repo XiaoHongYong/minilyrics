@@ -10,7 +10,10 @@
 #include "MPlayerApp.h"
 #include "DownloadMgr.h"
 #include "../MLProtocol/HttpClient.h"
+#include "OnlineSearch.h"
+#include "AutoProcessEmbeddedLyrics.h"
 
+void ShowRegisterNoticeSafely();
 
 #define SZ_USER_AGENT_IE5 _T("Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)")
 
@@ -74,10 +77,7 @@ BOOL AnalysisHttpUrl(const TCHAR szURL[], TCHAR szHostBuff[], int nHostBuff, int
 
 CDownloadMgr::CDownloadMgr() : m_eventShutDown(true, false)
 {
-	m_dwTaskIDNext = 0;
-	m_nRetryCount = 2;
-	m_bQuit = false;
-	m_strUserAgent = SZ_USER_AGENT_IE5;
+	m_bAutoDownload = true;
 }
 
 
@@ -89,8 +89,42 @@ CDownloadMgr::~CDownloadMgr()
 
 int CDownloadMgr::Init()
 {
-	m_bQuit = false;
 	m_eventShutDown.Reset();
+
+	g_nPortDownloadServer = g_Profile.GetProfileInt(_T("PortDownloadServer"), 80);
+	g_nPortSearchServer = g_Profile.GetProfileInt(_T("PortSearchServer"), 80);
+
+#ifdef _WIN32_DESKTOP
+	if (g_Profile.GetProfileInt(_T("ProxyType"), 0xFF) == 0xFF)
+	{
+		// 第一次运行，自动加载代理设置
+		bool		bUseProxy;
+		tstring		strSvr;
+		int			nPort;
+
+		if (LoadProxySvrFromIE(bUseProxy, strSvr, nPort))
+		{
+			if (bUseProxy)
+				g_Profile.WriteProfileInt(_T("ProxyType"), HTTP_PROXY_OURS);
+			else
+				g_Profile.WriteProfileInt(_T("ProxyType"), HTTP_PROXY_NONE);
+			g_Profile.WriteProfileString(_T("ProxyServer"), strSvr.c_str());
+			g_Profile.WriteProfileInt(_T("ProxyPort"), nPort);
+		}
+		else
+			g_Profile.WriteProfileInt(_T("ProxyType"), HTTP_PROXY_NONE);
+	}
+#endif
+
+	// 缺省下载路径
+	m_strDefSavePath = CMLProfile::GetDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""));
+	if (m_strDefSavePath.empty() || !CanWriteInDir(m_strDefSavePath.c_str()))
+	{
+		CreateDefaultLyricsDir(m_strDefSavePath);
+	}
+
+	// 自动下载
+	m_bAutoDownload = g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("EnableAuoDownload"), true);
 
 	return ERR_OK;
 }
@@ -98,7 +132,8 @@ int CDownloadMgr::Init()
 
 void CDownloadMgr::Quit()
 {
-	m_bQuit = true;
+	g_Profile.WriteProfileInt(_T("PortDownloadServer"), g_nPortDownloadServer);
+	g_Profile.GetProfileInt(_T("PortSearchServer"), g_nPortSearchServer);
 
 	m_eventShutDown.Set();
 	m_threadDownload.Join();
@@ -113,28 +148,174 @@ void CDownloadMgr::Quit()
 	m_mutexAccess.Release();
 }
 
-
-int CDownloadMgr::AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD dwDownOkID, DWORD *pdwTaskID, bool bReportErr, bool bHideTask)
+// COMMENT:
+//		根据条件判断是否需要到歌词服务器上搜索新的歌词.
+void CDownloadMgr::OnSongChanged()
 {
-	CDownloadTask		*pTask;
-	int					nRet = ERR_OK;
+	// LOG0(LOG_LVL_EVENT_IMP, _T("Enter auto download proc"));
 
-	if (IsTaskExist(szURL))
-		return ERR_EXIST;
-
-	pTask = new CDownloadTask;
-	pTask->m_strURL = szURL;
-	if (szRefUrl)
-		pTask->m_strReferUrl = szRefUrl;
-	pTask->m_strSaveFile = szFile;
-	pTask->m_dwDownOkID = dwDownOkID;
-	pTask->m_bReportErr = bReportErr;
-	pTask->m_bHideTask = bHideTask;
-	if (pdwTaskID)
+	// 用户选择了自动下载?
+	if (!m_bAutoDownload)
 	{
-		pTask->m_dwID = ++m_dwTaskIDNext;
-		*pdwTaskID = m_dwTaskIDNext;
+		// LOG0(LOG_LVL_EVENT_IMP, _T("Auto download is disabled."));
+		return;
 	}
+
+	//
+	// 如果当前状态下打开有歌词，则不再下载
+	//
+	if (_tcslen(g_LyricData.GetLyricsFileName()) != 0)
+	{
+		// LOG1(LOG_LVL_EVENT_IMP, _T("Lyrics: %s was opened, quit auto download."), g_LyricData.GetLyricsFileName());
+		return;
+	}
+
+	if (!SearchInCacheResult(false))
+	{
+		// 使用在线检索，搜索歌词
+		g_OnlineSearch.AutoSearch(g_Player.GetArtist(), g_Player.GetTitle());
+	}
+	else
+	{
+		// LOG0(LOG_LVL_EVENT_IMP, _T("Lyrics in cached data were returned, quit auto search."));
+	}
+}
+
+BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
+{
+	V_LRCSEARCHRESULT		vLrcSearchResult;
+
+	if (!g_OnlineSearch.SearchCacheForCur(&vLrcSearchResult))
+	{
+		static	int nFailedCount = 0;
+		nFailedCount++;
+		if (bShowInfoText && nFailedCount > 2)
+		{
+			tstring		str;
+			str = TOLOCAL(_T("Failed to get searching lyrics results."));
+			str += _T(" ");
+			str += TOLOCAL(_T("Please contact us to report this issue."));
+			g_eventDispather.DispatchLongErrorText(str.c_str());
+		}
+		return FALSE;
+	}
+
+	if (vLrcSearchResult.size() == 0)
+	{
+		if (bShowInfoText)
+		{
+			tstring		str;
+			str = TOLOCAL(_T("Search returned no results."));
+			g_eventDispather.DispatchLongErrorText(str.c_str());
+		}
+		return FALSE;
+	}
+
+	float	nValueMax = 0;
+	BOOL	bUserSelDown;
+	V_LRCSEARCHRESULT::iterator itBest;
+
+	bUserSelDown = g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false);
+
+	//
+	// 分值超过 MATCH_VALUE_OK
+	itBest = vLrcSearchResult.GetTheBestMatchLyrics(FALSE);
+	if (itBest != vLrcSearchResult.end())
+	{
+		LrcSearchResult		&result = *itBest;
+		nValueMax = result.nMatchValue;
+		if (nValueMax >= MATCH_VALUE_OK)
+		{
+			TCHAR		szAssociateKeyword[MAX_PATH] = _T("");
+
+			// Do not download .txt lyrics
+			if (FileIsExtSame(result.strUrl.c_str(), _T(".txt"))
+				&& g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false))
+			{
+				g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
+				return TRUE;
+			}
+
+			// If current lyrics is text lyrics, and the match lyrics is also text
+			// lyrics, do NOT download it.
+			if (g_LyricData.GetLyrContentType() != LCT_UNKNOWN
+				&& result.nMatchValue < MATCH_VALUE_BETTER)
+				return TRUE;
+
+			g_mpApp.GetAssociateFileKeyword(szAssociateKeyword, MAX_PATH);
+
+			// 就下载它了
+			tstring		str;
+			str = TOLOCAL(_T("Downloading lyrics:"));
+			str += _T(" ");
+			str += result.strSaveFileName.c_str();
+			g_eventDispather.DispatchLongErrorText(str.c_str());
+
+			DownloadLyrics(szAssociateKeyword, g_Player.GetSrcMedia(), result.strUrl.c_str(), result.strSaveFileName.c_str());
+			return TRUE;
+		}
+	}
+
+	// If any lyrics is opened, do not continue to download.
+	if (g_LyricData.HasLyricsOpened())
+		return true;
+
+	// 由用户选择？
+	if (bUserSelDown)
+	{
+		// if all lyrics is txt, return directly.
+		if (g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false)
+			&& vLrcSearchResult.IsAllTxtLyrics())
+		{
+			g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
+			return true;
+		}
+
+		if (bShowInfoText)
+		{
+			g_eventDispather.DispatchLongErrorText(
+				TOLOCAL(_T("Found lyrics, please select the lyrics in the popup dialog.")));
+		}
+
+		g_mpApp.GetMainWnd()->OnCustomCommand(CMD_OPEN_LRC);
+		return TRUE;
+	}
+	else
+	{
+		if (bShowInfoText)
+		{
+			g_eventDispather.DispatchLongErrorText(
+				TOLOCAL(_T("Found some similar lyrics, please choose them in 'Search Lyrics' window.")));
+		}
+	}
+
+	return TRUE;
+}
+
+void CDownloadMgr::DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szSongFile, LPCTSTR szUrl, LPCTSTR szFileName)
+{
+	CDownloadTask *pTask = new CDownloadTask(DTT_LYRICS, szUrl);
+	pTask->strMediaKey = szMediaKey;
+	pTask->m_strSaveFile = GetSaveLyricsFile(szSongFile, szFileName);
+
+	AddTask(pTask);
+}
+
+void CDownloadMgr::DownloadVersionFile(LPCTSTR szUrl, bool bNoUI)
+{
+	CDownloadTask *pTask = new CDownloadTask(bNoUI ? DTT_CHECK_VERSION_NOUI : DTT_CHECK_VERSION, szUrl);
+	AddTask(pTask);
+}
+
+void CDownloadMgr::AddTask(CDownloadTask *pTask)
+{
+	if (IsTaskExist(pTask->m_strURL.c_str()))
+	{
+		delete pTask;
+		return;
+	}
+
+	int					nRet = ERR_OK;
 
 	m_mutexAccess.Acquire();
 	m_listTasks.push_back(pTask);
@@ -144,14 +325,10 @@ int CDownloadMgr::AddTask(LPCTSTR szURL, LPCTSTR szRefUrl, LPCTSTR szFile, DWORD
 		if (!m_threadDownload.Create(DownloadThreadProc, this))
 		{
 			ERRLOG0(_T("FAILED to create downloading thread."));
-			nRet = ERR_CREATE_THREAD;
 		}
 	}
 	m_mutexAccess.Release();
-
-	return nRet;
 }
-
 
 bool CDownloadMgr::IsTaskExist(LPCTSTR szURL)
 {
@@ -176,16 +353,187 @@ bool CDownloadMgr::IsTaskExist(LPCTSTR szURL)
 	return false;
 }
 
+void CDownloadMgr::CreateDefaultLyricsDir(tstring &strDefSavePath)
+{
+#ifdef _WIN32_DESKTOP
+	// Retrieve the root Dir.
+	strDefSavePath = GetWorkingFolder();
+	strDefSavePath.resize(3);
+	if (!CanWriteInDir(strDefSavePath.c_str()))
+	{
+		TCHAR		szDir[MAX_PATH];
+
+		// Try to save in windows drive
+		GetWindowsDirectory(szDir, CountOf(szDir));
+		strDefSavePath = szDir;
+		strDefSavePath.resize(3);
+		if (!CanWriteInDir(strDefSavePath.c_str()))
+			strDefSavePath = GetAppDataDir();
+	}
+#else
+	strDefSavePath = GetAppDataDir();
+#endif
+	strDefSavePath += _T("Lyrics\\");
+
+	if (!IsDirExist(strDefSavePath.c_str()))
+		CreateDirectoryAll(strDefSavePath.c_str());
+
+	if (IsEmptyString(g_Profile.GetProfileString(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""))))
+		CMLProfile::WriteDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), strDefSavePath.c_str());
+}
+
+tstring CDownloadMgr::GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName)
+{
+	DOWN_SAVE_DIR		DownSaveDir;
+	DOWN_SAVE_NAME		DownSaveName;
+	tstring				strLyricsFile;
+	TCHAR				szName[MAX_PATH] = _T("");
+
+	DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
+	if (DownSaveDir == DOWN_SAVE_IN_SONG_DIR)
+	{
+		FileGetPath(szSongFile, strLyricsFile);
+	}
+
+	if (strLyricsFile.empty())
+		strLyricsFile = m_strDefSavePath.c_str();
+
+	// Save lyrics in sub folder by ABC order?
+	if (DownSaveDir != DOWN_SAVE_IN_SONG_DIR 
+		&& g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveByABC"), false))
+	{
+		TCHAR			c = *szFileName;
+		if (c >= 'a' && c <='z' || c >= 'A' && c <='Z')
+		{
+			c = toupper(c);
+			strLyricsFile += c;
+			strLyricsFile += _T(SZ_DIR_SLASH);
+		}
+		else if (c >= '0' && c <='9')
+		{
+			strLyricsFile += '#';
+			strLyricsFile += _T(SZ_DIR_SLASH);
+		}
+	}
+
+	DownSaveName = (DOWN_SAVE_NAME)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveName"), DOWN_SAVE_NAME_KEEP);
+	if (DownSaveName == DOWN_SAVE_NAME_AS_SONG_NAME)
+	{
+		_tcscpy_safe(szName, CountOf(szName), UrlGetTitle(szSongFile).c_str());
+		if (!IsEmptyString(szName))
+			_tcscat_safe(szName, CountOf(szName), FileGetExt(szFileName));
+	}
+	if (IsEmptyString(szName) && szFileName)
+		_tcscpy_safe(szName, CountOf(szName), szFileName);
+
+	strLyricsFile += szName;
+
+	return strLyricsFile;
+}
 
 void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 {
-}
+	if (pTask->m_errResult != ERR_OK)
+	{
+		if (pTask->taskType == DTT_LYRICS)
+		{
+			CEventDownloadEnd	*pEvent = new CEventDownloadEnd;
+			pEvent->eventType = ET_DOWNLOAD_END;
+			pEvent->pTask = pTask;
+			pEvent->downloadType = CEventDownloadEnd::DT_DL_LRC_FAILED;
+			g_eventDispather.DispatchSyncEventByNoUIThread(pEvent);
+		}
+		else if (pTask->taskType == DTT_CHECK_VERSION_NOUI
+			|| pTask->taskType == DTT_CHECK_VERSION)
+		{
+			CEventDownloadEnd		*pEvent = new CEventDownloadEnd;
+			pEvent->eventType = ET_DOWNLOAD_END;
+			pEvent->pTask = pTask;
+			pEvent->downloadType = CEventDownloadEnd::DT_DL_CHECK_NEW_VERSION_OK;
+			g_eventDispather.DispatchSyncEventByNoUIThread(pEvent);
+		}
+		return;
+	}
 
+	switch (pTask->taskType)
+	{
+	case DTT_LYRICS:
+		//
+		// 本地链接下载任务完成时的处理
+		//
+		{
+			map<DWORD, tstring>::iterator	it;
+			BOOL			bSaveToMp3 = FALSE;
+
+			// Get md5 of the lyrics, and remember it
+			TCHAR		szMD5[64];
+			if (MD5FileStr(pTask->m_strSaveFile.c_str(), szMD5))
+				g_mpApp.SetCachedLyricsMD5(pTask->strMediaKey.c_str(), szMD5);
+
+			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false)
+				&& FileIsExtSame(pTask->strMediaKey.c_str(), _T(".mp3")))
+			{
+				UINT			uEmbeddedLyrics = 0;
+
+				if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Sylt"), true))
+					uEmbeddedLyrics |= LST_ID3V2_SYLT;
+				if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Uslt"), true))
+					uEmbeddedLyrics |= LST_ID3V2_USLT;
+				if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveLyrics3v2"), false))
+					uEmbeddedLyrics |= LST_LYRICS3V2;
+
+				g_autoProcessEmbeddedLyrics.AddSaveEmbeddedJob(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str(), _T(""), uEmbeddedLyrics);
+			}
+
+			g_LyricSearch.AssociateLyrics(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str());
+
+			// g_AdManage.AddAdDisplayCount(1);
+			g_mpApp.ResearchLyrics();
+
+#ifdef _WIN32
+			if (!IsRegistered())
+			{
+				static int	dwDownloadedCount = 0;
+				static bool bShowRegNoticeNext = false;
+
+				dwDownloadedCount++;
+				if (dwDownloadedCount % 6 == 1 || bShowRegNoticeNext)
+				{
+					// Show registration dialog every xxx time.
+					if (::GetForegroundWindow() == g_mpApp.GetMainWnd()->GetHandle())
+					{
+						ShowRegisterNoticeSafely();
+						bShowRegNoticeNext = false;
+					}
+					else
+						bShowRegNoticeNext = true;
+				}
+			}
+#endif
+		}
+		break;
+	case DTT_CHECK_VERSION:
+	case DTT_CHECK_VERSION_NOUI:
+		{
+			CEventDownloadEnd		*pEvent = new CEventDownloadEnd;
+			pEvent->eventType = ET_DOWNLOAD_END;
+			pEvent->pTask = pTask;
+			pEvent->downloadType = CEventDownloadEnd::DT_DL_CHECK_NEW_VERSION_OK;
+			g_eventDispather.DispatchSyncEventByNoUIThread(pEvent);
+		}
+		break;
+	case DTT_CHECK_AD:
+		{
+			// g_AdManage.OnAdInfoDownloaded(pTask);
+		}
+		break;
+	default:
+		break;
+	}
+}
 
 void CDownloadMgr::DownloadThreadProc(LPVOID lpParam)
 {
-	ASSERT(lpParam);
-
 	CDownloadMgr	*pThis = (CDownloadMgr *)lpParam;
 
 	pThis->DownloadThread();
@@ -194,7 +542,7 @@ void CDownloadMgr::DownloadThreadProc(LPVOID lpParam)
 
 void CDownloadMgr::DownloadThread()
 {
-	while (!m_bQuit)
+	while (!IsQuiting())
 	{
 		CDownloadTask	*pTask = NULL;
 		int				nRet = ERR_FALSE;
@@ -211,7 +559,7 @@ void CDownloadMgr::DownloadThread()
 		m_listRunningTasks.push_back(pTask);
 		m_mutexAccess.Release();
 
-		if (m_bQuit)
+		if (IsQuiting())
 			return;
 
 		if (_tcsnicmp(pTask->m_strURL.c_str(), _T("http://"), 7) == 0)
@@ -219,7 +567,7 @@ void CDownloadMgr::DownloadThread()
 			nRet = RunHttpTask(pTask);
 		}
 
-		if (m_bQuit)
+		if (IsQuiting())
 			return;
 
 		OnEndDownload(pTask);
@@ -239,6 +587,49 @@ void CDownloadMgr::DownloadThread()
 	}
 }
 
+int CDownloadMgr::TryToConnect(CHttpClient &httpClient)
+{
+	int		nRet;
+
+	// Latest port
+	nRet = httpClient.Connect();
+	if (nRet == ERR_OK)
+		return nRet;
+
+	if (IsQuiting())
+		return ERR_FALSE;
+
+	// 80
+	if (g_nPortDownloadServer != 80)
+	{
+		httpClient.SetHostPort(80);
+		nRet = httpClient.Connect();
+		if (nRet == ERR_OK)
+		{
+			g_nPortDownloadServer = 80;
+			return ERR_OK;
+		}
+	}
+
+	// 8000 ~ 8080
+	if (g_nPortDownloadServer < SERVER_PORT_BEGIN)
+		g_nPortDownloadServer = SERVER_PORT_BEGIN;
+	for (int i = SERVER_PORT_BEGIN; i <= SERVER_PORT_END; i++)
+	{
+		if (IsQuiting())
+			return ERR_FALSE;
+
+		g_nPortDownloadServer++;
+		if (g_nPortDownloadServer > SERVER_PORT_END)
+			g_nPortDownloadServer = SERVER_PORT_BEGIN;
+		httpClient.SetHostPort(g_nPortDownloadServer);
+		nRet = httpClient.Connect();
+		if (nRet == ERR_OK)
+			break;
+	}
+
+	return nRet;
+}
 
 int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 {
@@ -249,7 +640,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	LPCTSTR				szProxyPwd;
 
 	int					nHttpCode = 0;
-	CCharBuffer			buffRet;
+	CCharBuffer			&buffRet = pTask->buffContent;
 	int					nRet;
 	TCHAR				szHost[256];
 	TCHAR				szUri[512];
@@ -266,16 +657,22 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	if (!AnalysisHttpUrl(pTask->m_strURL.c_str(), szHost, CountOf(szHost), nPort, szUri, CountOf(szUri)))
 	{
 		CStrPrintf	str(_T("Invalid http url: %s"),pTask->m_strURL.c_str());
-		if (!pTask->m_bHideTask)
+		if (pTask->taskType == DTT_LYRICS)
 			g_eventDispather.DispatchLongErrorText(str.c_str());
 		ERRLOG1(_T("%s"), str.c_str());
 		nRet = ERR_HTTP_BAD_REQUEST;
 		nHttpCode = 0;
 		goto RETURN_END;
 	}
+	bool	bMLServer = false;
+	if (nPort == 80)
+	{
+		bMLServer = true;
+		nPort = g_nPortDownloadServer;
+	}
 
-	httpClient.SetUserAgent(m_strUserAgent.c_str());
-	nRet = httpClient.Init(szHost, szUri, pTask->m_strReferUrl.c_str(), nPort);
+	httpClient.SetUserAgent(SZ_ML_VERSION);
+	nRet = httpClient.Init(szHost, szUri, NULL, nPort);
 
 #ifdef _UNICODE
 	ConvertStr(szProxyServer, -1, strProxyServer);
@@ -285,25 +682,38 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	httpClient.SetProxy(bUseProxy, szProxyServer, nProxyPort, szProxyPwd);
 #endif
 
-	if (m_nRetryCount <= 0)
-		m_nRetryCount = 1;
-
-	for (iRetry = 1; iRetry <= m_nRetryCount && !m_bQuit; iRetry++)
+	const int nRetryCount = 2;
+	for (iRetry = 1; iRetry <= 2 && !IsQuiting(); iRetry++)
 	{
-		nRet = httpClient.Connect();
+		if (iRetry != 1)
+		{
+			//
+			// Wait for 10 sec to try again
+			if (pTask->taskType == DTT_LYRICS)
+				g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("Wait 10 seconds and retry.")));
+
+			if (m_eventShutDown.Acquire(10 * 1000))
+				break;
+		}
+
+		if (bUseProxy || !bMLServer)
+			nRet = httpClient.Connect();
+		else
+			nRet = TryToConnect(httpClient);
 		if (nRet != ERR_OK)
 		{
 			tstring		str;
 			str = TOLOCAL(_T("Failed to download lyrics with error:"));
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
-			if (!pTask->m_bHideTask)
+			if (pTask->taskType == DTT_LYRICS)
 				g_eventDispather.DispatchLongErrorText(str.c_str());
 			DBGLOG1(_T("%s"), str.c_str());
+
 			continue;
 		}
 
-		if (m_bQuit)
+		if (IsQuiting())
 			break;
 
 		nRet = httpClient.SendRequest();
@@ -313,14 +723,14 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			str = TOLOCAL(_T("Failed to download lyrics with error:"));
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
-			if (!pTask->m_bHideTask)
+			if (pTask->taskType == DTT_LYRICS)
 				g_eventDispather.DispatchLongErrorText(str.c_str());
 			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
 			continue;
 		}
 
-		if (m_bQuit)
+		if (IsQuiting())
 			break;
 
 		nRet = httpClient.GetRespond(nHttpCode, buffRet);
@@ -330,29 +740,17 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			str = TOLOCAL(_T("Failed to download lyrics with error:"));
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
-			if (!pTask->m_bHideTask)
+			if (pTask->taskType == DTT_LYRICS)
 				g_eventDispather.DispatchLongErrorText(str.c_str());
 			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
-
-			if (iRetry < m_nRetryCount)
-			{
-				//
-				// Wait for 10 sec to try again
-				if (!pTask->m_bHideTask)
-					g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("Wait 10 seconds and retry.")));
-
-				if (m_eventShutDown.Acquire(10 * 1000))
-					break;
-			}
-
 			continue;
 		}
 
-		if (m_bQuit)
+		if (IsQuiting())
 			break;
 
-		if (nHttpCode != 200 && !pTask->m_bHideTask)
+		if (nHttpCode != 200 && pTask->taskType == DTT_LYRICS)
 		{
 			tstringex	strBuff;
 
@@ -363,6 +761,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			CStrPrintf	str(_T("Url: %s\r\nHttp %d error!\r\n%s"), pTask->m_strURL.c_str(), nHttpCode, strBuff.c_str());
 			g_eventDispather.DispatchLongErrorText(str.c_str());
 			ERRLOG1(_T("%s"), str.c_str());
+			break;
 		}
 
 		httpClient.Close();
@@ -375,7 +774,8 @@ RETURN_END:
 	pTask->m_errResult = nRet;
 	if (nRet == ERR_OK && nHttpCode == 200)
 	{
-		SaveDownloadedFile(pTask, buffRet.data(), buffRet.size());
+		if (pTask->taskType == DTT_LYRICS)
+			SaveDownloadedFile(pTask, buffRet.data(), buffRet.size());
 	}
 	else
 	{

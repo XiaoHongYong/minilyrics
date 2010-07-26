@@ -63,6 +63,13 @@ int CHttpClient::Init(LPCTSTR szHost, LPCTSTR szUri, LPCTSTR szReferUrl, int nPo
 	return ERR_OK;
 }
 
+void CHttpClient::SetHostPort(int nPort)
+{
+	m_nHostPort = nPort;
+	if (!m_bUseProxy)
+		m_nServerPort = nPort;
+}
+
 int CHttpClient::Connect()
 {
 	if (m_ClientCom.IsValid())
