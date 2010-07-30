@@ -239,6 +239,11 @@ public:
 
 	~CPageSearchLyrics()
 	{
+		if (m_pSearchObj)
+		{
+			m_pSearchObj->CancelJob();
+			delete m_pSearchObj;
+		}
 	}
 
 	// SkinListControl notification
@@ -694,7 +699,7 @@ protected:
 			m_pSkinWnd->MessageOut(m_pSearchObj->m_strMsg.c_str());
 		}
 
-		else if (m_pSearchObj->m_nResult != ERR_OK)
+		else if (m_pSearchObj->m_nResult != ERR_OK && !m_pSearchObj->IsJobCanceled())
 		{
 			m_nErrResultToShow = m_pSearchObj->m_nResult;
 			m_pSkinWnd->PostCustomCommandMsg(CID_SHOW_ERR_RESULT);

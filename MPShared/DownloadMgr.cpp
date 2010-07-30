@@ -613,7 +613,7 @@ int CDownloadMgr::TryToConnect(CHttpClient &httpClient)
 
 	// 8000 ~ 8080
 	if (g_nPortDownloadServer < SERVER_PORT_BEGIN)
-		g_nPortDownloadServer = SERVER_PORT_BEGIN;
+		g_nPortDownloadServer = SERVER_PORT_BEGIN - 1;
 	for (int i = SERVER_PORT_BEGIN; i <= SERVER_PORT_END; i++)
 	{
 		if (IsQuiting())
@@ -803,9 +803,10 @@ int CDownloadMgr::SaveDownloadedFile(CDownloadTask *pTask, LPVOID lpData, int nS
 		if (!SaveDataAsFile(pTask->m_strSaveFile.c_str(), lpData, nSize))
 		{
 			// save in the default directory
-			pTask->m_strSaveFile = m_strDefSavePath;
-			DirStringFormat(pTask->m_strSaveFile);
-			pTask->m_strSaveFile += FileGetName(pTask->m_strSaveFile.c_str());
+			tstring	strSaveFile = m_strDefSavePath;
+			DirStringFormat(strSaveFile);
+			strSaveFile += FileGetName(pTask->m_strSaveFile.c_str());
+			pTask->m_strSaveFile = strSaveFile;
 
 			FileGetPath(szPath, CountOf(szPath), pTask->m_strSaveFile.c_str());
 			CreateDirectoryAll(szPath);

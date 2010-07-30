@@ -408,7 +408,10 @@ void CNetServer::ThreadServerAccept(LPVOID lpParam)
 #endif
 		}
 		else
+		{
+			ASSERT(s != -1);
 			pServer->AddJob(s);
+		}
 
 /*#define MAX_IN_QUEUE		1024
 //	SOCKET		arrSock[MAX_IN_QUEUE];
@@ -581,9 +584,9 @@ int CNetServer::AddJob(SOCKET s)
 
 	g_nConnectedClients++;
 
-	if ((int)m_listJob.size() > m_nWorkThreadCount)
+	if ((int)m_listJob.size() > m_nWorkThreadCount * 2)
 	{
-		ERRLOG1(_T("Too many jobs: %d, remove 50"), m_listJob.size());
+		ERRLOG2(_T("Too many jobs: %d, remove %d"), m_listJob.size(), m_nWorkThreadCount);
 
 		for (int i = 0; i < m_nWorkThreadCount; i++)
 		{
@@ -601,28 +604,6 @@ int CNetServer::AddJob(SOCKET s)
 	g_nInQueue = m_listJob.size();
 
 	m_JobMutex.Release();
-	return ERR_OK;
-}
-
-// 添加任务到任务队列中
-int CNetServer::AddJob(SOCKET *arrSock, int nCount)
-{
-	// if (WaitForSingleObject(m_hJobMutex, 0) != WAIT_OBJECT_0)
-	m_JobMutex.Acquire(0);
-
-	for (int i = 0; i < nCount; i++)
-	{
-		NetJob		job;
-		job.nSocket = arrSock[i];
-		// ASSERT(job.nSocket);
-		m_listJob.push_back(job);
-	}
-
-	if (nCount > 1)
-		DBGLOG2(_T("Add Job: %d, %d"), nCount, m_listJob.size());
-
-	m_JobMutex.Release();
-	m_JobSemaphore.Signal();
 	return ERR_OK;
 }
 
@@ -646,10 +627,10 @@ int CNetServer::RemoveJob()
     }
 */
 	if (!m_JobSemaphore.Wait(WAIT_FOREVER))
-		return -1;
+		return 0;
 
 	if (!m_JobMutex.Acquire(WAIT_FOREVER))
-		return -1;
+		return 0;
 
 	// ASSERT(m_listJob.size() > 0);
 	if (m_listJob.size() > 0)
@@ -660,7 +641,7 @@ int CNetServer::RemoveJob()
 		g_nInQueue--;
 	}
 	else
-		nRet = -1;
+		nRet = 0;
 
 	m_JobMutex.Release();
 

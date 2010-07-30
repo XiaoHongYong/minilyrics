@@ -124,7 +124,6 @@ public:
 
 	// 添加一个任务到任务队列中
 	int AddJob(SOCKET s);
-	int AddJob(SOCKET *arrSock, int nCount);
 
 	// 从任务队列中删除一个任务，会阻塞，直到有新任务到达；
 	// 返回-1，表示接收到的任务线程需要退出

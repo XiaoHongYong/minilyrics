@@ -99,6 +99,7 @@ void EnumMBCSEncodingsName(vector<tstring> &vEncodingNames)
 	for (int i = 0; i < __MaxEncodings; i++)
 	{
 		if (__encodingCodepage[i].nEncodingId != ED_UTF8 && 
+			__encodingCodepage[i].nEncodingId != ED_UNICODE_BIG_ENDIAN && 
 			__encodingCodepage[i].nEncodingId != ED_UNICODE)
 		{
 			_xcscpy(szEncoding, __encodingCodepage[i].szDesc);
@@ -192,6 +193,7 @@ void ConvertStr(const char *str, int nLen, wstringex &strOut, int nEncodingID)
 	if (nEncodingID >= __MaxEncodings || nEncodingID < 0)
 		nEncodingID = 0;
 	assert(nEncodingID == __encodingCodepage[nEncodingID].nEncodingId);
+	ASSERT(nEncodingID != ED_UNICODE && nEncodingID != ED_UNICODE_BIG_ENDIAN);
 
 	n = MultiByteToWideChar(__encodingCodepage[nEncodingID].nCodePage, 0,
 		str, nLen, strOut.data(), strOut.capacity());

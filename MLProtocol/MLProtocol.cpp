@@ -148,22 +148,6 @@ ID_TO_STRING	__MlCmdResult2Str[] =
 //
 //}
 
-ID_TO_STRING	__MlLinkTypeIDStr[] = 
-{
-	{MLT_URL, _T("URL") },
-	{MLT_MLL, _T("MLL") },
-	{MLT_NONE, NULL},
-};
-
-LPCTSTR LinkTypeToStr(MLLinkType linkType)
-{
-	return IDToString(__MlLinkTypeIDStr, MLT_NONE, _T(""));
-}
-
-MLLinkType LinkTypeFromStr(LPCTSTR szLinkType)
-{
-	return (MLLinkType)StringToID(__MlLinkTypeIDStr, szLinkType, MLT_NONE);
-}
 
 CXMLMsgCmd::~CXMLMsgCmd()
 {
@@ -177,10 +161,6 @@ int MLMsgCmdLogin::FromXML(SXNode *pXmlNode)
 	strName = SURETEXT(szValue);
 	szValue = pXmlNode->GetProperty(_T("password"));
 	strPwd = SURETEXT(szValue);
-	// szValue = pXmlNode->GetProperty(_T("clientversion"));
-	// strClientVer = SURETEXT(szValue);
-	// szValue = pXmlNode->GetProperty(_T("clientname"));
-	// strClientName = SURETEXT(szValue);
 	szValue = pXmlNode->GetProperty(_T("client"));
 	strClient = SURETEXT(szValue);
 	szValue = pXmlNode->GetProperty(_T("protocolversion"));
@@ -196,8 +176,6 @@ int MLMsgCmdLogin::ToXML(CXMLWriter &xmlFile)
 	xmlFile.WriteStartElement(MZ_LOGIN);
 	xmlFile.WriteAttribute(_T("user"), strName.c_str());
 	xmlFile.WriteAttribute(_T("password"), strPwd.c_str());
-	// xmlFile.WriteAttribute(_T("clientversion"), strClientVer.c_str());
-	// xmlFile.WriteAttribute(_T("clientname"), strClientName.c_str());
 	xmlFile.WriteAttribute(_T("client"), strClient.c_str());
 	xmlFile.WriteAttribute(_T("protocolversion"), strProtocolVer.c_str());
 	if (strRegCode.size())
@@ -262,41 +240,10 @@ int MLRetMsg::ToXML(CXMLWriter &xmlFile)
 	xmlFile.WriteEndElement();
 	return ERR_OK;
 }
-//////////////////////////////////////////////////////////////////////////
-MLFileType StrToMLFileType(LPCTSTR szFileType)
-{
-	if (_tcsicmp(szFileType, _T("lyrics")) == 0)
-		return FT_LYRICS;
-	else if (_tcsicmp(szFileType, _T("song")) == 0)
-		return FT_LYRICS;
-	else 
-		return FT_UNKNOWN;
-}
-
-LPCTSTR MLFileTypeToStr(MLFileType fileType)
-{
-	if (fileType == FT_LYRICS)
-		return _T("lyrics");
-	else if (fileType == FT_SONG)
-		return _T("song");
-	else 
-		return _T("");
-}
 
 int MLFileInfo::FromXML(SXNode *pNode)
 {
-	LPCTSTR		szValue;
-	szValue = pNode->GetProperty(_T("filetype"));
-	if (szValue == NULL)
-		return ERR_CMD_PARAM;
-	fileType = StrToMLFileType(szValue);
-	if (fileType == FT_UNKNOWN)
-		return ERR_CMD_PARAM;
-//
-//	szValue = pNode->GetProperty(_T("ID"));
-//	nLyricsID = _ttoi(SURETEXT(szValue));
-
-	szValue = pNode->GetProperty(_T("artist"));
+	LPCTSTR szValue = pNode->GetProperty(_T("artist"));
 	strArtist = SURETEXT(szValue);
 
 	szValue = pNode->GetProperty(_T("title"));
@@ -305,17 +252,11 @@ int MLFileInfo::FromXML(SXNode *pNode)
 	szValue = pNode->GetProperty(_T("album"));
 	strAlbum = SURETEXT(szValue);
 
-	szValue = pNode->GetProperty(_T("comment"));
-	strComment = SURETEXT(szValue);
-
 	szValue = pNode->GetProperty(_T("filename"));
 	strFileName = SURETEXT(szValue);
 
 	szValue = pNode->GetProperty(_T("uploader"));
 	strUploader = SURETEXT(szValue);
-
-	szValue = pNode->GetProperty(_T("linkType"));
-	strLink = LinkTypeFromStr(SURETEXT(szValue));
 
 	szValue = pNode->GetProperty(_T("link"));
 	strLink = SURETEXT(szValue);
@@ -338,29 +279,20 @@ int MLFileInfo::FromXML(SXNode *pNode)
 
 int MLFileInfo::ToXML(CXMLWriter &xmlFile)
 {
-	tstring		strFileType;
-	strFileType = MLFileTypeToStr(fileType);
-	ASSERT(!strFileType.empty());
-	if (strFileType.empty())
-		return ERR_CMD_PARAM;
 	xmlFile.WriteStartElement(MZ_FILEINFO);
-	xmlFile.WriteAttribute(_T("filetype"), strFileType.c_str());
+	// filetype must be set for old version of MiniLyrics (7.0.614 before).
+	xmlFile.WriteAttribute(_T("filetype"), _T("lyrics"));
 
-//	xmlFile.WriteAttribute(_T("ID"), nLyricsID);
 	if (!strArtist.empty())
 		xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
 	if (!strTitle.empty())
 		xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
 	if (!strAlbum.empty())
 		xmlFile.WriteAttribute(_T("album"), strAlbum.c_str());
-	if (!strComment.empty())
-		xmlFile.WriteAttribute(_T("comment"), strComment.c_str());
 	if (!strFileName.empty())
 		xmlFile.WriteAttribute(_T("filename"), strFileName.c_str());
 	if (!strUploader.empty())
 		xmlFile.WriteAttribute(_T("uploader"), strUploader.c_str());
-	if (linkType != MLT_NONE)
-		xmlFile.WriteAttribute(_T("linkType"), LinkTypeToStr(linkType));
 	if (!strLink.empty())
 		xmlFile.WriteAttribute(_T("link"), strLink.c_str());
 	if (nMatchValue != 0)
@@ -387,15 +319,7 @@ int MLFileInfo::ToXML(CXMLWriter &xmlFile)
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR		szValue;
-	szValue = pXmlNode->GetProperty(_T("filetype"));
-	if (szValue == NULL)
-		return ERR_CMD_PARAM;
-	searchType = StrToMLFileType(szValue);
-	if (searchType == FT_UNKNOWN)
-		return ERR_CMD_PARAM;
-
-	szValue = pXmlNode->GetProperty(_T("artist"));
+	LPCTSTR szValue = pXmlNode->GetProperty(_T("artist"));
 	strArtist = SURETEXT(szValue);
 
 	szValue = pXmlNode->GetProperty(_T("title"));
@@ -403,12 +327,6 @@ int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 
 	szValue = pXmlNode->GetProperty(_T("ProtoVer"));
 	strProtocolVer = SURETEXT(szValue);
-
-	// szValue = pXmlNode->GetProperty(_T("ClientVer"));
-	// strClientVer = SURETEXT(szValue);
-	//
-	// szValue = pXmlNode->GetProperty(_T("ClientName"));
-	// strClientName = SURETEXT(szValue);
 
 	szValue = pXmlNode->GetProperty(_T("client"));
 	strClient = SURETEXT(szValue);
@@ -433,21 +351,14 @@ int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 
 int MLMsgCmdSearch::ToXML(CXMLWriter &xmlFile)
 {
-	tstring		strSearchType;
-	strSearchType = MLFileTypeToStr(searchType);
-	if (strSearchType.empty())
-		return ERR_CMD_PARAM;
 	xmlFile.WriteStartElement(MZ_SEARCH);
-	xmlFile.WriteAttribute(_T("filetype"), strSearchType.c_str());
 
-	xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
-	xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
+	if (strArtist.size())
+		xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
+	if (strTitle.size())
+		xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
 	if (strProtocolVer.size())
 		xmlFile.WriteAttribute(_T("ProtoVer"), strProtocolVer.c_str());
-//	if (strClientVer.size())
-//		xmlFile.WriteAttribute(_T("ClientVer"), strClientVer.c_str());
-//	if (strClientName.size())
-//		xmlFile.WriteAttribute(_T("ClientName"), strClientName.c_str());
 	if (strClient.size())
 		xmlFile.WriteAttribute(_T("client"), strClient.c_str());
 	if (strRegCode.size())
@@ -475,19 +386,6 @@ int MLMsgRetSearch::FromXML(SXNode *pXmlNode)
 
 	result = StringToID(__MlCmdResult2Str, szValue, ERR_UNKNOWN);
 
-	szValue = pNode->GetProperty(_T("filetype"));
-	if (szValue == NULL)
-		return ERR_CMD_PARAM;
-	searchType = StrToMLFileType(szValue);
-	if (searchType == FT_UNKNOWN)
-		return ERR_CMD_PARAM;
-
-	szValue = pNode->GetProperty(_T("artist"));
-	strArtist = SURETEXT(szValue);
-
-	szValue = pNode->GetProperty(_T("title"));
-	strTitle = SURETEXT(szValue);
-
 	szValue = pNode->GetProperty(_T("badrc"));
 	if (szValue)
 		RegVerifyValue = (REGCODE_VERIFY_VALUE)_ttoi(szValue);
@@ -496,16 +394,6 @@ int MLMsgRetSearch::FromXML(SXNode *pXmlNode)
 
 	szValue = pNode->GetProperty(_T("msg"));
 	strMessage = SURETEXT(szValue);
-
-	mledition = ME_NOTSET;
-	szValue = pXmlNode->GetProperty(_T("MLEdition"));
-	if (szValue)
-	{
-		if (_tcsicmp(szValue, _T("ME_ENGLISH")) == 0)
-			mledition = ME_ENGLISH;
-		else if (_tcsicmp(szValue, _T("ME_CHINESE")) == 0)
-			mledition = ME_CHINESE;
-	}
 
 	szValue = pNode->GetProperty(_T("PageCount"));
 	if (szValue)
@@ -534,27 +422,16 @@ int MLMsgRetSearch::FromXML(SXNode *pXmlNode)
 
 int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 {
-	tstring		strSearchType;
-	strSearchType = MLFileTypeToStr(searchType);
-	if (strSearchType.empty())
-		return ERR_CMD_PARAM;
 	xmlFile.WriteStartElement(MZ_RETURN);
 	xmlFile.WriteAttribute(MZ_ORG_CMD, strOrgCmd.c_str());
 	xmlFile.WriteAttribute(MZ_CMD_RESULT, IDToString(__MlCmdResult2Str, result, _T("UNTRANSLATED")));
-	xmlFile.WriteAttribute(_T("filetype"), strSearchType.c_str());
-
-	xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
-	xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
+	// filetype must be set for old version of MiniLyrics (7.0.614 before).
+	xmlFile.WriteAttribute(_T("filetype"), _T("lyrics"));
 
 	if (RegVerifyValue)
 		xmlFile.WriteAttribute(_T("badrc"), RegVerifyValue);
 	if (strMessage.size())
 		xmlFile.WriteAttribute(_T("msg"), strMessage.c_str());
-
-	if (mledition == ME_ENGLISH)
-		xmlFile.WriteAttribute(_T("MLEdition"), _T("ME_ENGLISH"));
-	else if (mledition == ME_CHINESE)
-		xmlFile.WriteAttribute(_T("MLEdition"), _T("ME_CHINESE"));
 
 	if (nPageCount != 1)
 		xmlFile.WriteAttribute(_T("PageCount"), nPageCount);
@@ -573,15 +450,7 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdCanUpload::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR		szValue;
-	szValue = pXmlNode->GetProperty(_T("filetype"));
-	if (szValue == NULL)
-		return ERR_CMD_PARAM;
-	fileType = StrToMLFileType(szValue);
-	if (fileType == FT_UNKNOWN)
-		return ERR_CMD_PARAM;
-
-	szValue = pXmlNode->GetProperty(_T("username"));
+	LPCTSTR szValue = pXmlNode->GetProperty(_T("username"));
 	strLoginName = SURETEXT(szValue);
 
 	szValue = pXmlNode->GetProperty(_T("artist"));
@@ -617,13 +486,9 @@ int MLMsgCmdCanUpload::FromXML(SXNode *pXmlNode)
 
 int MLMsgCmdCanUpload::ToXML(CXMLWriter &xmlFile)
 {
-	tstring		strFileType;
-	strFileType = MLFileTypeToStr(fileType);
-	if (strFileType.empty())
-		return ERR_CMD_PARAM;
 	xmlFile.WriteStartElement(MZ_CANUPLOAD);
+
 	xmlFile.WriteAttribute(_T("username"), strLoginName.c_str());
-	xmlFile.WriteAttribute(_T("filetype"), strFileType.c_str());
 
 	xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
 	xmlFile.WriteAttribute(_T("album"), strAlbum.c_str());
@@ -646,13 +511,6 @@ int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
 	szValue = pXmlNode->GetProperty(_T("username"));
 	strLoginName = SURETEXT(szValue);
 
-	szValue = pXmlNode->GetProperty(_T("filetype"));
-	if (szValue == NULL)
-		return ERR_CMD_PARAM;
-	fileType = StrToMLFileType(szValue);
-	if (fileType == FT_UNKNOWN)
-		return ERR_CMD_PARAM;
-
 	szValue = pXmlNode->GetProperty(_T("artist"));
 	strArtist = SURETEXT(szValue);
 
@@ -661,9 +519,6 @@ int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
 
 	szValue = pXmlNode->GetProperty(_T("title"));
 	strTitle = SURETEXT(szValue);
-
-	szValue = pXmlNode->GetProperty(_T("comment"));
-	strComment = SURETEXT(szValue);
 
 	szValue = pXmlNode->GetProperty(_T("encoding"));
 	strContentEncoding = SURETEXT(szValue);
@@ -694,19 +549,13 @@ int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
 
 int MLMsgCmdUpload::ToXML(CXMLWriter &xmlFile)
 {
-	tstring		strFileType;
-	strFileType = MLFileTypeToStr(fileType);
-	if (strFileType.empty())
-		return ERR_CMD_PARAM;
 	xmlFile.WriteStartElement(MZ_UPLOAD);
+
 	xmlFile.WriteAttribute(_T("username"), strLoginName.c_str());
-	xmlFile.WriteAttribute(_T("filetype"), strFileType.c_str());
 
 	xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
 	xmlFile.WriteAttribute(_T("album"), strAlbum.c_str());
 	xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
-	if (strComment.size())
-	xmlFile.WriteAttribute(_T("comment"), strComment.c_str());
 	if (strContentEncoding.size())
 		xmlFile.WriteAttribute(_T("encoding"), strContentEncoding.c_str());
 	if (nTimeLength > 0)

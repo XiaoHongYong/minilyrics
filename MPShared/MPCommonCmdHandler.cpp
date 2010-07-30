@@ -1201,8 +1201,6 @@ void CMPCommonCmdHandler::OnCommandSaveLyricsToMp3()
 	{
 		CDlgSelEncoding	dlgEncoding;
 
-		dlgEncoding.m_bHideUtf8 = true;
-
 		dlgEncoding.m_encoding = g_LyricData.GetEncodingIndex();
 		if (g_LyricData.GetFileEncoding() == FE_UCS2)
 			dlgEncoding.m_encoding = ED_UNICODE;

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<KeywordFilter>
+  <Remove>︰︱︳︴︵︶︷︸︹︺︻︼︽︾︿﹀﹁﹂﹃﹄﹉﹊﹋﹌﹍﹎﹏﹐﹑﹒﹔﹕﹖﹗﹛﹜﹝﹞﹟﹠﹡﹢﹣﹤﹥﹦﹨﹩﹪﹫！＂＃＄％＆＇＊＋，－．／</Remove>
+  <Remove>：；＜＝＞？＠＼＾＿｀｛｜｝～￠￡￢￣￤￥</Remove>
+  <Replace src="【】［］﹙﹚（）０１２３４５６７８９ＡＢＣＤＥＦＧＨＩＪＫＬＭＮＯＰＱＲＳＴＵＶＷＸＹＺａｂｃｄｅｆｇｈｉｊｋｌｍｎｏｐｑｒｓｔｕｖｗｘｙｚ"
+           dst="()()()()0123456789abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"/>
+</KeywordFilter>

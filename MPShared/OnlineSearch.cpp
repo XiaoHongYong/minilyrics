@@ -407,7 +407,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		return;
 	}
 
-	nRet = session.Search(pSearchParam->strArtist.c_str(), pSearchParam->strTitle.c_str(), TRUE, 0, retSearch);//listResult, bInvalidRegCode, strMsg);
+	nRet = session.Search(pSearchParam->strArtist.c_str(), pSearchParam->strTitle.c_str(), 0, retSearch);//listResult, bInvalidRegCode, strMsg);
 	session.Close();
 
 	if (retSearch.RegVerifyValue != RVV_OK)
@@ -584,7 +584,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 
 	MLMsgRetSearch	retSearch;
 
-	nRet = session.Search(szArtist, szTitle, TRUE, nCurPage, retSearch);
+	nRet = session.Search(szArtist, szTitle, nCurPage, retSearch);
 	session.Close();
 
 	if (retSearch.RegVerifyValue)

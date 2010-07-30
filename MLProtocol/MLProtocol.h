@@ -40,7 +40,7 @@ enum ML_PROTOCAL_ERROR
 };
 
 #define SERVER_PORT_BEGIN			8000
-#define SERVER_PORT_END				8080
+#define SERVER_PORT_END				8050
 
 #define ML_SERVER_PORT				1212
 
@@ -67,10 +67,6 @@ enum MLMsgCmd
 	MC_SEARCH,				// 搜索（歌词……）
 	MC_CAN_UPLOAD,			// 是否能够上传（歌词……），服务器返回结果，如果不能上传会返回具体的原因
 	MC_UPLOAD,				// 上传（歌词……）
-	MC_GET_STATISTICTYPE,	// 查询统计项目
-	MC_STATISTICQUERY,		// 查询统计项目的具体内容
-	MC_POST_REQUIRE,		// 发送请求
-	MC_POST_STATISTIC,		// 发送统计
 	MC_POST_BUG,			// 发送Bug
 
 	//
@@ -92,51 +88,6 @@ MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 #define MZ_ORG_CMD			_T("orgcmd")
 #define MZ_CMD_RESULT		_T("result")
 #define MZ_SESSIONID		_T("sessionid")
-#define MZ_STATNODE			_T("statnode")
-
-/*
-
-enum MLMsgCmdResultCode
-{
-	CR_OK = ERR_OK				,		// 执行成功
-	CR_FAILED = ERR_FALSE		,
-	CR_UNKNOWN = ERR_UNKNOWN	, 		// 1035, 未翻译出来的结果
-	CR_BAD_XMLREQUEST			= 1036,	// 用户协议不正确,无法识别
-	CR_BAD_REQUEST				= 1037,	// 用户协议不正确,无法识别
-	CR_REDIRECT					= 1038,	// 重定向连接
-	CR_RELOGIN					= 1039,	// 需要重新登陆
-//	CR_APPLY_USER_EXIST,// 用户已经存在, 无法申请
-	CR_REG_EMAIL_EXIST			= 1040,
-	CR_REG_USER_EXIST			= 1041,
-	CR_UPLOAD_EXIST				= 1042,	// 上传的内容已经存在
-	CR_USER_NOT_EXIST			= 1043,	// 用户不存在
-	CR_USER_EXPIRED				= 1044,	// 用户已经过期
-	CR_BAD_USERPWD				= 1045,	// 用户名或者密码错误
-	CR_ALREADY_LOGIN			= 1046,	// 用户已经登陆了,不能再次登陆
-	CR_BAD_CLIENT_VER			= 1047,	// 客户端版本不正确, 无法登陆
-	CR_OBSOLETE_CLIENT_VER		= 1048,	// 客户端版本太低, 无法登陆
-	CR_NOT_FOUND				= 1049,	// 未找到(歌词,音乐)
-	CR_TOO_BUSY					= 1050,	// 服务器太忙,暂时无法响应请求
-	CR_ACCESS_DENIED			= 1051,	// 无权访问,被拒绝
-	CR_NOT_SUPPORT_CMD			= 1052,	// 还不支持的命令
-	CR_CMD_NOT_MATCH			= 1053,	// 命令不匹配
-	CR_CMD_PARAM				= 1054,	// 参数错误
-	CR_BAD_QUERY_SUBCMD			= 1055,	// 无效的统计搜索关键字
-	CR_UPLOAD_FILETYPE			= 1056,	// 上传的文件类型错误
-	CR_DISABLE_SUBMIT_SONGINFO	= 1057,	// 禁止上传歌曲信息
-
-};
-*/
-//
-//int MLCmdResultToError(MLMsgCmdResultCode result);
-//MLMsgCmdResultCode ErrorToMLCmdResult(int nErr);
-
-enum MLLinkType
-{
-	MLT_NONE,			// 为定义的链接类型
-	MLT_URL,			// HTTP,OR FTP的链接
-	MLT_MLL,			// MiniLyrics link Lyrics file, 
-};
 
 class CXMLMsgCmd
 {
@@ -146,9 +97,6 @@ public:
 	virtual int FromXML(SXNode *pXmlNode) = 0;
 	virtual int ToXML(CXMLWriter &xmlFile) = 0;
 
-// public:
-//	MLMsgCmd	command;
-//
 };
 
 
@@ -181,8 +129,6 @@ public:
 	tstring		strProtocolVer;		// 使用的协议版本
 	tstring		strName;
 	tstring		strPwd;
-	// tstring		strClientVer;
-	// tstring		strClientName;
 	tstring		strClient;
 	tstring		strRegCode;
 
@@ -195,7 +141,6 @@ public:
 class MLMsgRetLogin : public MLRetMsg
 {
 public:
-	tstring		strSessionID;			// 登陆之后返回的SesssionID
 	tstring		strMessage;				// 消息
 
 public:
@@ -208,17 +153,13 @@ public:
 class MLFileInfo
 {
 public:
-	MLFileType	fileType;
-	// int			nLyricsID;
 	tstring		strArtist;
 	tstring		strTitle;
 	tstring		strAlbum;
-	tstring		strComment;
 	tstring		strFileName;
 	tstring		strMD5;
 	tstring		strUploader;
 	tstring		strEncoding;
-	MLLinkType	linkType;				// 下载链接类型
 	tstring		strLink;
 	int			nMatchValue;			// 搜索结果比较得分
 	int			nTimeLength;			// 歌曲（歌词）长度，单位s
@@ -229,9 +170,6 @@ public:
 public:
 	MLFileInfo()
 	{
-//		nLyricsID = 0;
-		linkType = MLT_NONE;
-		fileType = FT_LYRICS;
 		nMatchValue = 0;
 		nTimeLength = 0;
 		fRate = 0.0;
@@ -262,23 +200,20 @@ enum ML_EDITION
 class MLMsgCmdSearch : public CXMLMsgCmd
 {
 public:
-	tstring		strSessionID;
-	MLFileType	searchType;
 	tstring		strArtist;
 	tstring		strTitle;
 	tstring		strProtocolVer;		// 使用的协议版本
-//	tstring		strClientVer;
-//	tstring		strClientName;
 	tstring		strClient;	// client name + client ver
 	tstring		strRegCode;
 	tstring		strClientCharEncoding;		// 客户的使用的字符编码，服务器用户将utf-8转换为客户端的编码，搜索mbcs的旧歌词
 	int			nRequestPage;
+	bool		bReturnMatchedLyrics;
 
 public:
 	MLMsgCmdSearch()
 	{
-		searchType = FT_LYRICS;
 		nRequestPage = 0;
+		bReturnMatchedLyrics = false;
 	}
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
@@ -296,23 +231,17 @@ enum REGCODE_VERIFY_VALUE
 class MLMsgRetSearch : public MLRetMsg
 {
 public:
-	MLFileType	searchType;
-	tstring		strArtist;
-	tstring		strTitle;
-	REGCODE_VERIFY_VALUE	RegVerifyValue;	// bool		bInvalidRegCode;
-	tstring		strMessage;				// 消息
-	ML_EDITION	mledition;
-	int			nPageCount, nCurPage;
+	REGCODE_VERIFY_VALUE	RegVerifyValue;
+	tstring					strMessage;
+	int						nPageCount, nCurPage;
 
-	list<MLFileInfo>	listResultFiles;
+	list<MLFileInfo>		listResultFiles;
 
 public:
 	MLMsgRetSearch()
 	{
-		searchType = FT_LYRICS;
 		// bInvalidRegCode = FALSE;
 		RegVerifyValue = RVV_OK;
-		mledition = ME_NOTSET;
 		nPageCount = 1;
 		nCurPage = 0;
 	}
@@ -331,7 +260,6 @@ class MLMsgCmdCanUpload : public CXMLMsgCmd
 {
 public:
 	tstring		strLoginName;
-	MLFileType	fileType;
 	tstring		strArtist;
 	tstring		strAlbum;
 	tstring		strTitle;
@@ -357,11 +285,9 @@ class MLMsgCmdUpload : public CXMLMsgCmd
 {
 public:
 	tstring		strLoginName;
-	MLFileType	fileType;
 	tstring		strArtist;
 	tstring		strAlbum;
 	tstring		strTitle;
-	tstring		strComment;
 	tstring		strFileName;
 	int			nTimeLength;			// 歌曲（歌词）长度，单位ms
 	tstring		strMD5;					// 文件的MD5值
@@ -386,7 +312,6 @@ typedef MLMsgRetSearch MLMsgRetUpload;
 class MLMsgCmdPostBug : public CXMLMsgCmd
 {
 public:
-	tstring		strSessionID;
 	tstring		strBugType;			// 建议？一般问题？严重问题……
 	tstring		strBugComment;		// Bug描述
 	tstring		strBugProduce;		// 该bug如何重现？
@@ -521,9 +446,6 @@ public:
 	CMLProtocol();
 	virtual ~CMLProtocol();
 
-	// int ReadMsg(CCharBuffer *pMsgBuff, int nMaxLen);
-	// int WriteMsg(CCharBuffer *pMsgBuff);
-
 	int Init(CNetFile *pFile, LPCSTR szHost, int nPort);
 
 	int Init(CNetFile *pFile, LPCWSTR szHost, int nPort);
@@ -535,8 +457,6 @@ public:
 
 	// ERR_OK
 	int WriteXMLMsg(MLMsgType msgType, CCharBuffer *pMsgBuff);
-
-	// int ParseMsg(const char *szMsgType, CCharBuffer *pMsgBuff);
 
 	int ParseXMLMsg(CCharBuffer *pMsgBuff, CSimpleXML &xml);
 
