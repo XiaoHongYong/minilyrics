@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="GfxRaw"
 	ProjectGUID="{9054DAB7-2AD3-49F4-8B30-07320A6FDA8E}"
 	RootNamespace="GfxRaw"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

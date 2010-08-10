@@ -29,10 +29,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_EXIST, _T("Exist") },
 	{ ERR_NOT_FOUND, _T("Not found.") },
 
-	{ ERR_GET_HOSTBYNAME, _T("gethostbyname FAILED.") },
-	{ ERR_SOCKET, _T("Create socket FAILED.") },
-	{ ERR_CONNECT, _T("Connect to server FAILED.") },
-	{ ERR_NOT_CONNECTED, _T("Not connected to the server.") },
+	{ ERR_NET_HOST_NOT_FOUND, _T("Ineternet connection may be down, no such host is known.") },
 	{ ERR_NOT_RECIVED_ALL, _T("The data packet didn't receive the rest data.") },
 
 	{ ERR_NOT_SUPPORT_FILE_FORMAT, _T("The file may not be supported.") },
@@ -85,6 +82,50 @@ void SetCustomErrorDesc(LPCTSTR szErrorDesc)
 {
 	_tcscpy_safe(g_szCustomErrorDesc, CountOf(g_szCustomErrorDesc), szErrorDesc);
 }
+
+
+#ifndef _WIN32
+LPCTSTR TranslateCERRNO(int err)
+{
+	switch (err) {
+		case EACCES: return _T("The requested address is protected, and the current user has inadequate permission to access it.");
+		case EADDRINUSE: return "The specified address is already in use.";
+		case EADDRNOTAVAIL:  return "The specified address is not available from the local machine.";
+		case EAFNOSUPPORT:	return "address is not valid for the address family of socket.";
+		case EBADF:	return "socket is not a valid file descriptor.";
+		case EDESTADDRREQ:	return "The socket is not bound to a local address and the protocol does not support listening on an unbound socket.";
+		case ENOTSOCK:	return "socket does not refer to a socket.";
+		case EISDIR:	return "An empty pathname was specified.";
+		case ELOOP:	return "Too many symbolic links were encountered in translat-ing the pathname.  This is taken to be indicative of a looping symbolic link.";
+		case ENAMETOOLONG:	return "A component of a pathname exceeded {NAME_MAX} charac-ters, or an entire path name exceeded {PATH_MAX} char-acters.";
+		case ENOENT:	return "A component of the path name does not refer to an existing file.";
+		case ENOTDIR:	return "A component of the path prefix is not a directory.";
+		case EROFS:	return "The name would reside on a read-only file system.";
+		case EALREADY:	return "The socket is non-blocking and a previous connection attempt has not yet been completed.";
+		case ECONNREFUSED:	return "The attempt to connect was ignored (because the target is not listening for connections) or explicitly rejected.";
+		case EHOSTUNREACH:	return "The target host cannot be reached (e.g., down, discon-nected).";
+		case EINPROGRESS:	return "The socket is non-blocking and the connection cannot be completed immediately.  It is possible to select(2) for completion by selecting the socket for writing.";
+		case EINTR:	return "Its execution was interrupted by a signal.";
+		case EINVAL:	return "An invalid argument was detected.";
+		case EISCONN:	return "The socket is already connected.";
+		case ENETDOWN:	return "The local network interface is not functioning.";
+		case ENETUNREACH:	return "The network isn't reachable from this host.";
+		case ENOBUFS:	return "The system call was unable to allocate a needed memory buffer.";
+		case EPROTOTYPE:	return "address has a different type than the socket that is bound to the specified peer address.";
+		case ECONNRESET:	return "Remote host reset the connection request.";
+		case EIO:	return "An I/O error occurred while reading from or writing to the file system.";
+		case EAGAIN:	return "The socket is marked non-blocking, and the receive operation would block, or a receive timeout had been set, and the timeout expired before data were received.";
+		case ENOTCONN:	return "The socket is associated with a connection-oriented protocol and has not been connected.";
+		case EOPNOTSUPP:	return "The type and/or protocol of socket do not support the option(s) specified in flags.";
+		case ETIMEDOUT:	return "The connection timed out.";
+		case EMSGSIZE:	return "The msg_iovlen member of the msghdr structure pointed to by message is less than or equal to 0, or is greater than IOV_MAX.";
+		case ENOMEM:	return "Insufficient memory is available.";
+		default:
+			return "unknown error code.";
+	}
+}
+#endif // #ifndef _WIN32
+
 
 RegErr2Str::RegErr2Str(struct ID_TO_STRING err2Str[])
 {
@@ -152,5 +193,14 @@ Error2Str::operator LPCTSTR () const
 		if (szError)
 			return szError;
 	}
+
+#ifndef _WIN32
+	if (m_nError >= ERR_C_ERRNO_BASE && m_nError - ERR_C_ERRNO_BASE <= 100)
+	{
+		// C error no, translate it.
+		return TranslateCERRNO(m_nError - ERR_C_ERRNO_BASE);
+	}
+#endif
+
 	return _T("Not translated error code.");
 }

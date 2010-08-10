@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="Utils"
 	ProjectGUID="{4FD91EED-050C-4F41-9D31-AB6B5FE92BBE}"
 	RootNamespace="Utils"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

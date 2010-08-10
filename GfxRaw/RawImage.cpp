@@ -338,6 +338,9 @@ bool CRawImage::Blt(CRawGraph *pGraphics, int xDest, int yDest, int widthDest, i
 		return true;
 
 	pImageDst = pGraphics->GetRawBuff();
+	
+	if (!pGraphics->GetEnableAlphaChannel())
+		bpm &= ~BPM_CHANNEL_ALPHA;
 
 	return BltRawImage(pImageDst, rcDst, m_hImage, xSrc, ySrc, bpm, pGraphics->GetOpacityPainting());
 }
@@ -391,6 +394,9 @@ bool CRawImage::MaskBlt(CRawGraph *pGraphics, int xDest, int yDest, int widthDes
 
 	if (rcDst.IsRectEmpty())
 		return true;
+
+	if (!pGraphics->GetEnableAlphaChannel())
+		bpm &= ~BPM_CHANNEL_ALPHA;
 
 	pImageDst = pGraphics->GetRawBuff();
 
@@ -496,6 +502,9 @@ bool CRawImage::StretchBlt(CRawGraph *pGraphics, int xDest, int yDest, int width
 
 	if (rcDst.Width() <= 0 || rcDst.Height() <= 0)
 		return true;
+
+	if (!pGraphics->GetEnableAlphaChannel())
+		bpm &= ~BPM_CHANNEL_ALPHA;
 
 	pImageDst = pGraphics->GetRawBuff();
 

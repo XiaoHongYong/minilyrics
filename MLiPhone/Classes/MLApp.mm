@@ -178,11 +178,16 @@ tstring				lyricsFile;
 
 // Message parameter
 tstring				message;
+bool				showActivityIndicator;
+bool				infoMsg;
 
 
 @property(nonatomic)	MLNotifyType		type;
 
 @property(nonatomic)	int					searchEndResult;
+
+@property(nonatomic)	bool				showActivityIndicator;
+@property(nonatomic)	bool				infoMsg;
 
 - (LPCTSTR) mediaKey;
 - (void) setMediaKey: (LPCTSTR) newmediaKey;
@@ -199,6 +204,8 @@ tstring				message;
 
 @synthesize type;
 @synthesize searchEndResult;
+@synthesize showActivityIndicator;
+@synthesize infoMsg;
 
 - (id) initWithSearchEndResult:(int) result
 {
@@ -219,11 +226,15 @@ tstring				message;
 	return self;
 }
 
-- (id) initWithMessage:(LPCTSTR)msg
+- (id) initWithMessage:(LPCTSTR)msg showActivityIndicator:(bool)bShow infoMsg:(bool)bInfoMsg
 {
 	if (self = [super init]) {
 		self.type = MLNT_MESSAGE;
-		[self setMessage:msg];
+		self.showActivityIndicator = bShow;
+		self.infoMsg = bInfoMsg;
+		tstring	str = msg;
+		str += _T("\n\n\n\n");
+		[self setMessage:str.c_str()];
 	}
 	return self;
 }
@@ -271,9 +282,9 @@ void PostNotifyLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
 								waitUntilDone: YES];
 }
 
-void PostNotifyMessage(LPCTSTR szMessage)
+void PostNotifyMessage(LPCTSTR szMessage, bool bShowActivityIndicator, bool bInfoMsg)
 {
-	MLAppNotifyParam	*pNotifyParam = [[MLAppNotifyParam alloc] initWithMessage:szMessage];
+	MLAppNotifyParam	*pNotifyParam = [[MLAppNotifyParam alloc] initWithMessage:szMessage showActivityIndicator:bShowActivityIndicator infoMsg:bInfoMsg];
 	[pNotifyParam performSelectorOnMainThread: @selector (postNoification)
 								   withObject: nil
 								waitUntilDone: YES];
@@ -341,7 +352,7 @@ UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, in
 	}
 	else if (param.type == MLNT_MESSAGE) {
 		NSString	*msg = [[NSString alloc] initWithUTF8String:[param message]];
-		[delegate onMessage:msg];
+		[delegate onMessage:msg showActivityIndicator:[param showActivityIndicator] infoMsg:[param infoMsg]];
 	}
 	else if (param.type == MLNT_LYRICS_CHANGED) {
 		[delegate onLyricsChanged];

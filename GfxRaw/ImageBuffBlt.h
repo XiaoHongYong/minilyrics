@@ -209,13 +209,13 @@ class blend_rgb
 public:
 	static inline void blend(uint8 *dst, uint8 *src)
 	{
-		uint8	alpha = src[3];
+		uint8	alpha = 256 - src[3];
 // 		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
 // 		dst[1] = (uint8)(((src[1] - dst[1]) * alpha + (dst[1] << 8)) >> 8);
 // 		dst[2] = (uint8)(((src[2] - dst[2]) * alpha + (dst[2] << 8)) >> 8);
-		dst[0] = (uint8)(((dst[0] * (256 - alpha)) >> 8) + src[0]);
-		dst[1] = (uint8)(((dst[1] * (256 - alpha)) >> 8) + src[1]);
-		dst[2] = (uint8)(((dst[2] * (256 - alpha)) >> 8) + src[2]);
+		dst[0] = (uint8)(((dst[0] * alpha) >> 8) + src[0]);
+		dst[1] = (uint8)(((dst[1] * alpha) >> 8) + src[1]);
+		dst[2] = (uint8)(((dst[2] * alpha) >> 8) + src[2]);
 	}
 };
 

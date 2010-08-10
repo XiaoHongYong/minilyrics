@@ -164,6 +164,8 @@ public:
 	int GetOpacityPainting() const { return m_nOpacityPainting; }
 	int SetOpacityPainting(int nOpacityPainting) { int nOrg = m_nOpacityPainting; m_nOpacityPainting = nOpacityPainting; return nOrg; }
 
+	bool SetEnableAlphaChannel(bool bEnable) { bool bOrg = m_bAlphaChannelEnabled; m_bAlphaChannelEnabled = (bEnable && m_imageData.bitCount == 32); return bOrg; }
+	bool GetEnableAlphaChannel() const { return m_bAlphaChannelEnabled; }
 
 	//
 	// The following APIs provide logical coordinate and real coordinate convert.
@@ -201,6 +203,8 @@ protected:
 
 	// The origin of graph, default is 0, 0.
 	POINT			m_ptOrigin;
+	
+	bool			m_bAlphaChannelEnabled;
 
 };
 

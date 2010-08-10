@@ -8,8 +8,7 @@ static NSString *kCellIdentifier = @"MusicCell";
 
 @synthesize delegate;					// The main view controller is the delegate for this class.
 @synthesize mediaItemCollectionTable;	// The table shown in this class's view.
-@synthesize addMusicButton;				// The button for invoking the media item picker. Setting the title
-										//		programmatically supports localization.
+@synthesize clearPlaylistButton;
 @synthesize musicPlayer;
 @synthesize currentPlaying;
 
@@ -27,7 +26,7 @@ static NSString *kCellIdentifier = @"MusicCell";
 							   name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification
 							 object: musicPlayer];
 
-	[self.addMusicButton setTitle: NSLocalizedString (@"MiniLyricsFromTableView", @"Add button shown on table view for invoking the media item picker")];
+	[self.clearPlaylistButton setTitle: NSLocalizedString (@"Clearlocal", @"clear play list")];
 	
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	self.mediaItemCollectionTable.rowHeight = ROW_HEIGHT;
@@ -54,7 +53,7 @@ static NSString *kCellIdentifier = @"MusicCell";
 	
 	picker.delegate						= self;
 	picker.allowsPickingMultipleItems	= YES;
-	picker.prompt						= NSLocalizedString (@"AddSongsPrompt", @"Prompt to user to choose some songs to play");
+	picker.prompt						= NSLocalizedString (@"Add songs to play", "Prompt in media item picker");
 	
 	[[UIApplication sharedApplication] setStatusBarStyle: UIStatusBarStyleDefault animated:YES];
 
@@ -303,7 +302,10 @@ NSString *formatPlayingTime(int n)
 	MPMediaItem *anItem = (MPMediaItem *)[currentQueue.items objectAtIndex: [indexPath row]];
 	
 	if (anItem) {
+		MPMusicPlaybackState state = [musicPlayer playbackState];
 		[musicPlayer setNowPlayingItem:anItem];
+		if (state == MPMusicPlaybackStatePlaying)
+			[musicPlayer play];
 	}
 }
 

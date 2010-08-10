@@ -45,7 +45,7 @@
 // When lyrics has been opened, this message will be sent.
 - (void)onLyricsChanged;
 
-- (void)onMessage:(NSString*) msg;
+- (void)onMessage:(NSString*)msg showActivityIndicator:(bool)bShow infoMsg:(bool)bInfoMsg;
 
 - (void)onPopupLyrSearchView;
 

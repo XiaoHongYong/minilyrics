@@ -36,6 +36,8 @@ public:
 	CMLData &GetLyricsData() { return m_lyrData; }
 
 protected:
+	void AddMediaInfo();
+	
 	BOOL SearchInCacheResult(bool bShowInfoText = false);
 
 	void SetDefaultSettings();

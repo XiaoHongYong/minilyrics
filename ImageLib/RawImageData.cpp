@@ -236,6 +236,19 @@ PRAW_IMAGE_DATA ConvertTo32BppRawImage(PRAW_IMAGE_DATA src)
 	return dst;
 }
 
+PRAW_IMAGE_DATA DuplicateRawImage(PRAW_IMAGE_DATA  src)
+{
+	PRAW_IMAGE_DATA	dst = new RAW_IMAGE_DATA;
+
+	if (!dst->Create(src->width, src->height, src->bitCount))
+		return NULL;
+
+	dst->stride = src->stride;
+
+	memcpy(dst->buff, src->buff, src->GetBuffSize());
+	return dst;
+}
+
 PRAW_IMAGE_DATA LoadRawImageDataFromBmpFile(IILIO *io);
 
 PRAW_IMAGE_DATA LoadRawImageDataFromPngFile(IILIO *io);

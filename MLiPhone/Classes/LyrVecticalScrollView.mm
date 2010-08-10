@@ -20,6 +20,10 @@
 #import "LyricsVerticalScrollGraph.h"
 
 
+UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, int height);
+
+PRAW_IMAGE_DATA RawImageDataFromCGImage(CGImageRef cgimage);
+
 @implementation LyrVecticalScrollView
 
 @synthesize lyrDisplayTimer;
@@ -43,10 +47,14 @@ CLyricsVerticalScrollGraph	m_lyrGraph;
 
 - (void) InitLyrView
 {
-	m_lyrGraph.Init(self.frame.size.width, self.frame.size.height, &CMLApp::GetInstance()->GetLyricsData());
+	UIImage *logo = [UIImage imageNamed: @"logo.png"];
+	PRAW_IMAGE_DATA pRawImage = RawImageDataFromCGImage([logo CGImage]);
+	[logo release];
+
+	m_lyrGraph.Init(self.frame.size.width, self.frame.size.height, &CMLApp::GetInstance()->GetLyricsData(), pRawImage);
 	self.inSeekingLyrics = NO;
 
-	[self setLyrDisplayTimer: [NSTimer scheduledTimerWithTimeInterval: 0.08
+	[self setLyrDisplayTimer: [NSTimer scheduledTimerWithTimeInterval: 0.07
 																	target: self
 																  selector: @selector (onUpdateLyrDisplay)
 																  userInfo: nil
@@ -75,10 +83,6 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	const char *str = [drawArea UTF8String];
 	CGContextShowTextAtPoint(context, 10.0, 80.0, str, strlen(str));
 }
-
-UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, int height);
-
-PRAW_IMAGE_DATA RawImageDataFromCGImage(CGImageRef cgimage);
 
 
 -(void) onLyricsChanged

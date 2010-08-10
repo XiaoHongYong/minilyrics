@@ -10,7 +10,7 @@
 
 	id <MusicTableViewControllerDelegate>	delegate;
 	IBOutlet UITableView					*mediaItemCollectionTable;
-	IBOutlet UIBarButtonItem				*addMusicButton;
+	IBOutlet UIBarButtonItem				*clearPlaylistButton;
 	MPMusicPlayerController					*musicPlayer;
 	int										currentPlaying;
 
@@ -18,7 +18,7 @@
 
 @property (nonatomic, assign) id <MusicTableViewControllerDelegate>	delegate;
 @property (nonatomic, retain) UITableView							*mediaItemCollectionTable;
-@property (nonatomic, retain) UIBarButtonItem						*addMusicButton;
+@property (nonatomic, retain) UIBarButtonItem						*clearPlaylistButton;
 @property (nonatomic, retain) MPMusicPlayerController				*musicPlayer;
 @property (nonatomic)		  int									currentPlaying;
 

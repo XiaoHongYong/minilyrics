@@ -40,10 +40,7 @@ enum Error
 	ERR_EXIST				= 12,
 	ERR_NOT_FOUND			= 13,
 
-	ERR_GET_HOSTBYNAME		= 14,
-	ERR_SOCKET				= 15,
-	ERR_CONNECT				= 16,
-	ERR_NOT_CONNECTED		= 17,
+	ERR_NET_HOST_NOT_FOUND	= 17,
 	ERR_NOT_RECIVED_ALL		= 18,
 
 	//
@@ -102,6 +99,8 @@ enum Error
 	ERR_MLPROTOCAL_ERROR_BASE	= 1035,
 
 	ERR_PLAYER_ERROR_BASE		= 2000,
+
+	ERR_C_ERRNO_BASE			= 3000,	// C error code
 };
 
 void SetCustomErrorDesc(LPCTSTR szErrorDesc);

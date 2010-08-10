@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="MLProtocol"
 	ProjectGUID="{1901BDFE-ECD6-4E00-B29E-4F2CE9C2190E}"
 	RootNamespace="MLProtocol"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

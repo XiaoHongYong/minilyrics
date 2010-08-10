@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="MPlayerLib"
 	ProjectGUID="{4B62933E-FF11-4068-A288-21B7CAE14930}"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

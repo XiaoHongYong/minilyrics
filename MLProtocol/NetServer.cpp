@@ -18,12 +18,12 @@ int			g_nInQueue = 0;
 #endif
 
 #ifdef _WIN32
-#define LOGSOCKERR(strMsg)		g_Log.WriteLog(LOG_LVL_ERROR, _T(__FILE__), __LINE__, strMsg, WSAGetLastError())
+#define LOGSOCKERR(strMsg)		g_Log.WriteLog(LOG_LVL_DEBUG, _T(__FILE__), __LINE__, strMsg, WSAGetLastError())
 #define WSAError()			WSAGetLastError();
 typedef int			socklen_t;
 #else
-#define LOGSOCKERR(strMsg)		g_Log.WriteLog(LOG_LVL_ERROR, _T(__FILE__), __LINE__, strMsg, 0)
-#define WSAError()			ERR_SOCKET
+#define LOGSOCKERR(strMsg)		g_Log.WriteLog(LOG_LVL_DEBUG, _T(__FILE__), __LINE__, strMsg, errno)
+#define WSAError()			(errno + ERR_C_ERRNO_BASE)
 #define SOCKET_ERROR		(-1)
 #define	SD_SEND				SHUT_WR
 #endif
@@ -69,7 +69,6 @@ int ServerBindListen(int nPort, SOCKET &sServer, LPCTSTR szIPServer)
     sServer = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (sServer == INVALID_SOCKET)
     {
-		LOGSOCKERR(_T("socket() FAILED! LastError: %d"));
         return SOCKET_ERROR;
     }
 
@@ -174,9 +173,7 @@ int CClientCom::Connect(LPCSTR szServer, int nPort)
 	
     if(!hostEntry)
     {
-		nRet = WSAError();
-        LOGSOCKERR(_T("gethostbyname() FAILED! LastError: %d"));
-        return nRet;
+		return ERR_NET_HOST_NOT_FOUND;
     }
 
     m_s = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -184,7 +181,6 @@ int CClientCom::Connect(LPCSTR szServer, int nPort)
     if(m_s == SOCKET_ERROR)
     {
 		nRet = WSAError();
-	    LOGSOCKERR(_T("socket() FAILED! LastError: %d"));
         return nRet;
     }
 	
@@ -200,7 +196,6 @@ int CClientCom::Connect(LPCSTR szServer, int nPort)
     if(nRet==SOCKET_ERROR)
     {
 		nRet = WSAError();
-	    LOGSOCKERR(_T("connect() FAILED! LastError: %d"));
 		closesocket(m_s);
 		m_s = 0;
         return nRet;

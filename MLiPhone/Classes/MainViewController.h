@@ -22,6 +22,8 @@
 	IBOutlet UILabel			*artistLabel;
 	IBOutlet UILabel			*titleLabel;
 	IBOutlet UILabel			*albumLabel;
+	IBOutlet UILabel			*messageLabel;
+	IBOutlet UIActivityIndicatorView *searchingIndicator;
 	BOOL						playedMusicOnce;
 
 	// Top play and lyrics display (font size ...)
@@ -57,6 +59,8 @@
 @property (nonatomic, retain)	UILabel					*artistLabel;
 @property (nonatomic, retain)	UILabel					*titleLabel;
 @property (nonatomic, retain)	UILabel					*albumLabel;
+@property (nonatomic, retain)	UILabel					*messageLabel;
+@property (nonatomic, retain)	UIActivityIndicatorView *searchingIndicator;
 
 @property (nonatomic, retain)	UIView					*advancedCtrlView;
 @property (nonatomic, retain)	UIButton				*repeatButton;
@@ -96,7 +100,5 @@
 
 - (IBAction)	forwardLyrics:			(id) sender;
 - (IBAction)	backwardLyrics:			(id) sender;
-
-- (BOOL) useiPodPlayer;
 
 @end

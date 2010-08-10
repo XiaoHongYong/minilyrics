@@ -66,6 +66,10 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 	m_strAlbum = szAlbum;
 	m_strTitle = szTitle;
 	m_nMediaLength = nMediaLength;
+	
+	// Save lyrics changes
+	if (m_lyrData.HasLyricsOpened() && m_lyrData.IsModified())
+		m_lyrData.Save();
 
 	m_lyrData.Close();
 
@@ -84,6 +88,7 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 
 	if (m_localLyrSearch.IsAssociatedWithNoneLyrics(m_strCurMediaKey.c_str()))
 	{
+		AddMediaInfo();
 		PostNotifyLyricsChanged();
 		return;
 	}
@@ -110,15 +115,7 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 			g_OnlineSearch.AutoSearch(g_Player.GetArtist(), g_Player.GetTitle());
 	}*/
 
-	// Add Media Info:
-	V_Str		vMediaInfo;
-	if (m_strArtist.size() > 0)
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Artist:"))) + _T(" ") + m_strArtist);
-	if (m_strTitle.size() > 0)
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Title:"))) + _T(" ") + m_strTitle);
-	if (m_strAlbum.size() > 0)
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Album:"))) + _T(" ") + m_strAlbum);
-	m_lyrData.AddTextInLyrics(vMediaInfo);
+	AddMediaInfo();
 
 	if (m_strTitle.size() >= 3)
 	{
@@ -136,6 +133,20 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 	PostNotifyLyricsChanged();
 }
 
+void CMLApp::AddMediaInfo()
+{
+	V_Str		vMediaInfo;
+	
+	if (m_strArtist.size() > 0)
+		vMediaInfo.push_back(tstring(TOLOCAL(_T("Artist:"))) + _T(" ") + m_strArtist);
+	if (m_strTitle.size() > 0)
+		vMediaInfo.push_back(tstring(TOLOCAL(_T("Title:"))) + _T(" ") + m_strTitle);
+	if (m_strAlbum.size() > 0)
+		vMediaInfo.push_back(tstring(TOLOCAL(_T("Album:"))) + _T(" ") + m_strAlbum);
+	
+	m_lyrData.AddTextInLyrics(vMediaInfo);
+}
+
 void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
 {
 	if (nResult == ERR_OK)
@@ -149,13 +160,17 @@ void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
 		// Got lyrics search result, so search it.
 		SearchInCacheResult(true);
 	}
+	else if (nResult == ERR_NOT_FOUND)
+	{
+		PostNotifyMessage(TOLOCAL(_T("Sorry, no lyrics returned.")), false, true);
+	}
 	else
 	{
 		tstring		str;
-		str = TOLOCAL(_T("Failed to search lyrics with error:"));
+		str = TOLOCAL(_T("Failed to search lyrics:"));
 		str += _T(" ");
 		str += Error2Str(nResult);
-		PostNotifyMessage(str.c_str());
+		PostNotifyMessage(str.c_str(), false, false);
 	}
 }
 
@@ -170,7 +185,7 @@ void CMLApp::DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szUrl, LPCTSTR szFileNam
 	str = TOLOCAL(_T("Downloading lyrics:"));
 	str += _T(" ");
 	str += szFileName;
-	PostNotifyMessage(str.c_str());
+	PostNotifyMessage(str.c_str(), true, true);
 	
 	m_lyrDownloadMgr.DownloadLyrics(szMediaKey, szUrl, szFileName);
 }
@@ -183,6 +198,10 @@ void CMLApp::OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
 	// Open Lyrics
 	if (_tcscmp(szMediaKey, m_strCurMediaKey.c_str()) == 0)
 	{
+		// Save lyrics changes
+		if (m_lyrData.HasLyricsOpened() && m_lyrData.IsModified())
+			m_lyrData.Save();
+
 		m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szFile);
 		PostNotifyLyricsChanged();
 	}
@@ -202,7 +221,7 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 			str = TOLOCAL(_T("Failed to get searching lyrics results."));
 			str += _T(" ");
 			str += TOLOCAL(_T("Please contact us to report this issue."));
-			PostNotifyMessage(str.c_str());
+			PostNotifyMessage(str.c_str(), false, false);
 		}
 		return FALSE;
 	}
@@ -213,7 +232,7 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 		{
 			tstring		str;
 			str = TOLOCAL(_T("Search returned no results."));
-			PostNotifyMessage(str.c_str());
+			PostNotifyMessage(str.c_str(), false, true);
 		}
 		return FALSE;
 	}
@@ -234,7 +253,7 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 			if (FileIsExtSame(result.strUrl.c_str(), _T(".txt"))
 				&& g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false))
 			{
-				PostNotifyMessage(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
+				PostNotifyMessage(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")), false, true);
 				return TRUE;
 			}
 
@@ -257,7 +276,7 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 	if (bShowInfoText)
 	{
 		PostNotifyMessage(
-			TOLOCAL(_T("Found some similar lyrics, please click in 'Search Lyrics' button.")));
+			TOLOCAL(_T("Found some similar lyrics, please click 'Search Lyrics' button.")), false, true);
 	}
 
 	return TRUE;
@@ -265,8 +284,8 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 
 void CMLApp::SetDefaultSettings()
 {
-	if (g_Profile.GetProfileInt(_T("Initialized"), false))
-		return;
+	//if (g_Profile.GetProfileInt(_T("Initialized"), false))
+	//	return;
 
 	g_Profile.WriteProfileInt(_T("Initialized"), true);
 

@@ -23,6 +23,8 @@
 @synthesize artistLabel;
 @synthesize titleLabel;
 @synthesize albumLabel;
+@synthesize messageLabel;
+@synthesize searchingIndicator;
 
 @synthesize advancedCtrlView;
 @synthesize repeatButton;
@@ -150,13 +152,13 @@ extern "C" NSString *formatPlayingTime(int n);
 - (IBAction)	forwardLyrics:			(id) sender
 {
 	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
-	lyrData.SetOffsetTime(lyrData.GetOffsetTime() + 500);
+	lyrData.SetOffsetTime(lyrData.GetOffsetTime() - 500);
 }
 
 - (IBAction)	backwardLyrics:			(id) sender
 {
 	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
-	lyrData.SetOffsetTime(lyrData.GetOffsetTime() - 500);
+	lyrData.SetOffsetTime(lyrData.GetOffsetTime() + 500);
 }
 
 // If there is no selected media item collection, display the media item picker. If there's 
@@ -455,21 +457,6 @@ extern "C" NSString *formatPlayingTime(int n);
 	[musicPlayer beginGeneratingPlaybackNotifications];
 }
 
-
-// To learn about the Settings bundle and user preferences, see User Defaults Programming Topics
-//		for Cocoa and "The Settings Bundle" in iPhone Application Programming Guide 
-
-// Returns whether or not to use the iPod music player instead of the application music player.
-- (BOOL) useiPodPlayer {
-
-	return YES;
-	if ([[NSUserDefaults standardUserDefaults] boolForKey: PLAYER_TYPE_PREF_KEY]) {
-		return YES;		
-	} else {
-		return NO;
-	}
-}
-
 - (void) registerGestrueRecognizer:(UIView *)view
 {
 	UIPinchGestureRecognizer *pinchGesture = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(scaleLyrics:)];
@@ -487,6 +474,10 @@ extern "C" NSString *formatPlayingTime(int n);
 - (void) viewDidLoad {
 
     [super viewDidLoad];
+	
+	[artistLabel setText:@""];
+	[albumLabel setText:@""];
+	[titleLabel setText:@""];
 
 	[self setPlayingProgressTimer: [NSTimer scheduledTimerWithTimeInterval: 0.5
 															   target: self
@@ -514,30 +505,14 @@ extern "C" NSString *formatPlayingTime(int n);
 
 	// Instantiate the music player. If you specied the iPod music player in the Settings app,
 	//		honor the current state of the built-in iPod app.
-	if ([self useiPodPlayer]) {
-	
-		[self setMusicPlayer: [MPMusicPlayerController iPodMusicPlayer]];
-		
-		if ([musicPlayer nowPlayingItem]) {
-		
-			navigationBar.topItem.leftBarButtonItem.enabled = YES;
-			
-			// Update the UI to reflect the now-playing item. 
-			[self handle_NowPlayingItemChanged: nil];
-			
-			if ([musicPlayer playbackState] == MPMusicPlaybackStatePaused) {
-				[mPlayCtrlToolbar setItems:mPausedButtons];
-			}
+	[self setMusicPlayer: [MPMusicPlayerController iPodMusicPlayer]];	
+	if ([musicPlayer nowPlayingItem]) {
+		// Update the UI to reflect the now-playing item. 
+		[self handle_NowPlayingItemChanged: nil];
+
+		if ([musicPlayer playbackState] == MPMusicPlaybackStatePaused) {
+			[mPlayCtrlToolbar setItems:mPausedButtons];
 		}
-		
-	} else {
-	
-		[self setMusicPlayer: [MPMusicPlayerController applicationMusicPlayer]];
-		
-		// By default, an application music player takes on the shuffle and repeat modes
-		//		of the built-in iPod app. Here they are both turned off.
-		[musicPlayer setShuffleMode: MPMusicShuffleModeOff];
-		[musicPlayer setRepeatMode: MPMusicRepeatModeNone];
 	}
 
 	[self registerForMediaPlayerNotifications];
@@ -641,7 +616,9 @@ extern "C" NSString *formatPlayingTime(int n);
 	if (data) {
 		NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
 		self.userMediaItemCollection = [unarchiver decodeObjectForKey:@"playlist"];
+		//MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
 		[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
+		//[musicPlayer setNowPlayingItem:currentItem];
 	}
 
 	if (self.userMediaItemCollection) {
@@ -780,6 +757,9 @@ CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
 
 - (void)onLyricsChanged
 {
+	[searchingIndicator setHidden:YES];
+	[messageLabel setHidden:YES];
+	
 	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
 	if (lyrData.HasLyricsOpened() && lyrData.GetLyrContentType() == LCT_TXT)
 	{
@@ -805,9 +785,31 @@ CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
 	}
 }
 
-- (void)onMessage:(NSString*) msg
+- (void)onMessage:(NSString*)msg showActivityIndicator:(bool)bShow infoMsg:(bool)bInfoMsg
 {
-	[titleLabel setText:msg];
+	if (CMLApp::GetInstance()->GetLyricsData().HasLyricsOpened()) {
+		if (!bInfoMsg) {
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+															message:msg
+														   delegate:nil
+												  cancelButtonTitle:@"OK"
+												  otherButtonTitles:nil];
+			[alert show];
+			[alert release];
+		}
+	}
+	else {
+		[messageLabel setText:msg];
+		[messageLabel setHidden:NO];
+		[messageLabel setNeedsDisplay];
+		if (bShow)
+			[searchingIndicator setHidden:NO];
+		else
+			[searchingIndicator setHidden:YES];
+		[searchingIndicator setNeedsDisplay];
+		[lyrVerticalView setNeedsDisplay];
+		[self.view setNeedsDisplay];
+	}
 }
 
 - (void)onPopupLyrSearchView

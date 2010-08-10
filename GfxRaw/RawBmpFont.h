@@ -164,13 +164,13 @@ public:
 	}
 
 public:
-	bool TextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, LPCTSTR szText, int nLen);
-	bool DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, LPCTSTR szText, int nLen);
-	bool DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, LPCTSTR szText, int nLen, UINT uFormat);
+	bool TextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, LPCTSTR szText, int nLen, bool bDrawAlphaChannel);
+	bool DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, LPCTSTR szText, int nLen, bool bDrawAlphaChannel);
+	bool DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, LPCTSTR szText, int nLen, UINT uFormat, bool bDrawAlphaChannel);
 
-	bool OutlinedTextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen);
-	bool OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen);
-	bool OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen, UINT uFormat);
+	bool OutlinedTextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen, bool bDrawAlphaChannel);
+	bool OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen, bool bDrawAlphaChannel);
+	bool OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen, UINT uFormat, bool bDrawAlphaChannel);
 
 	bool GetTextExtentPoint32(LPCTSTR szText, int nLen, LPSIZE pSize)
 		{	if (!m_prawGlyphSet) return false;

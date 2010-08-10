@@ -40,7 +40,11 @@ enum ML_PROTOCAL_ERROR
 };
 
 #define SERVER_PORT_BEGIN			8000
+#ifdef _IPHONE
+#define SERVER_PORT_END				8010
+#else
 #define SERVER_PORT_END				8050
+#endif
 
 #define ML_SERVER_PORT				1212
 

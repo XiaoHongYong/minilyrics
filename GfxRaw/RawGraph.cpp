@@ -30,6 +30,8 @@ CRawGraph::CRawGraph()
 	m_ptOrigin.x = m_ptOrigin.y = 0;
 
 	memset(&m_rcClip, 0 , sizeof(m_rcClip));
+	
+	m_bAlphaChannelEnabled = true;
 }
 
 CRawGraph::~CRawGraph()
@@ -46,6 +48,8 @@ bool CRawGraph::Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCount)
 	m_rcClip.bottom = cy;
 
 	m_ptOrigin.x = m_ptOrigin.y = 0;
+
+	m_bAlphaChannelEnabled = (nBitCount == 32);
 
 	return true;
 }
@@ -212,7 +216,7 @@ void CRawGraph::ClearClipBoundBox()
 bool CRawGraph::TextOut(int x, int y, LPCTSTR szText, int nLen)
 {
 	if (m_rawBmpFont)
-		return m_rawBmpFont->TextOut(this, MapX(x), MapY(y), m_clrText, szText, nLen);
+		return m_rawBmpFont->TextOut(this, MapX(x), MapY(y), m_clrText, szText, nLen, m_bAlphaChannelEnabled);
 	return false;
 }
 
@@ -220,7 +224,7 @@ bool CRawGraph::DrawTextClip(LPCTSTR szText, int nLen, LPRECT lpRect, int xLeftC
 {
 	if (m_rawBmpFont)
 	{
-		return m_rawBmpFont->DrawText(this, MapX(lpRect->left), MapY(lpRect->top), MapX(lpRect->right - lpRect->left), MapX(xLeftClipOffset), m_clrText, szText, nLen);
+		return m_rawBmpFont->DrawText(this, MapX(lpRect->left), MapY(lpRect->top), MapX(lpRect->right - lpRect->left), MapX(xLeftClipOffset), m_clrText, szText, nLen, m_bAlphaChannelEnabled);
 	}
 	return false;
 }
@@ -228,14 +232,14 @@ bool CRawGraph::DrawTextClip(LPCTSTR szText, int nLen, LPRECT lpRect, int xLeftC
 bool CRawGraph::TextOutOutlined(int x, int y, LPCTSTR szText, int nLen, const MLColor &clrText, const MLColor &clrBorder)
 {
 	if (m_rawBmpFont)
-		return m_rawBmpFont->OutlinedTextOut(this, MapX(x), MapY(y), clrText, clrBorder, szText, nLen);
+		return m_rawBmpFont->OutlinedTextOut(this, MapX(x), MapY(y), clrText, clrBorder, szText, nLen, m_bAlphaChannelEnabled);
 	return false;
 }
 
 bool CRawGraph::DrawTextClipOutlined(LPCTSTR szText, int nLen, LPRECT lpRect, const MLColor &clrText, const MLColor &clrBorder, int xLeftClipOffset)
 {
 	if (m_rawBmpFont)
-		return m_rawBmpFont->OutlinedDrawText(this, MapX(lpRect->left), MapY(lpRect->top), MapX(lpRect->right - lpRect->left), MapX(xLeftClipOffset), clrText, clrBorder, szText, nLen);
+		return m_rawBmpFont->OutlinedDrawText(this, MapX(lpRect->left), MapY(lpRect->top), MapX(lpRect->right - lpRect->left), MapX(xLeftClipOffset), clrText, clrBorder, szText, nLen, m_bAlphaChannelEnabled);
 	return false;
 }
 
@@ -246,7 +250,7 @@ bool CRawGraph::DrawTextOutlined(LPCTSTR szText, int nLen, LPRECT lpRect, const 
 	MapRect(rc);
 
 	if (m_rawBmpFont)
-		return m_rawBmpFont->OutlinedDrawTextEx(this, &rc, clrText, clrBorder, szText, nLen, uFormat);
+		return m_rawBmpFont->OutlinedDrawTextEx(this, &rc, clrText, clrBorder, szText, nLen, uFormat, m_bAlphaChannelEnabled);
 
 	return false;
 }
@@ -258,7 +262,7 @@ bool CRawGraph::DrawText(LPCTSTR szText, int nLen, LPRECT lpRect, UINT uFormat)
 	MapRect(rc);
 
 	if (m_rawBmpFont)
-		return m_rawBmpFont->DrawTextEx(this, &rc, m_clrText, szText, nLen, uFormat);
+		return m_rawBmpFont->DrawTextEx(this, &rc, m_clrText, szText, nLen, uFormat, m_bAlphaChannelEnabled);
 
 	return false;
 }
@@ -283,6 +287,9 @@ void CRawGraph::SetFont(CRawBmpFont *font)
 
 void CRawGraph::ResetAlphaChannel(BYTE byAlpha, const RECT *lpRect)
 {
+	if (!m_bAlphaChannelEnabled)
+		return;
+	
 	ASSERT(m_imageData.bitCount == 32);
 
 	int			x, y, xMax, yMax;
@@ -309,6 +316,9 @@ void CRawGraph::ResetAlphaChannel(BYTE byAlpha, const RECT *lpRect)
 
 void CRawGraph::MultiplyAlpha(BYTE byAlpha, const RECT *lpRect)
 {
+	if (!m_bAlphaChannelEnabled)
+		return;
+
 	ASSERT(m_imageData.bitCount == 32);
 
 	int			x, y, xMax, yMax;
@@ -335,6 +345,9 @@ void CRawGraph::MultiplyAlpha(BYTE byAlpha, const RECT *lpRect)
 
 void CRawGraph::VertAlphaFadeOut(const RECT *lpRect, bool bTop)
 {
+	if (!m_bAlphaChannelEnabled)
+		return;
+
 	ASSERT(m_imageData.bitCount == 32);
 	if (lpRect->bottom == lpRect->top)
 		return;
@@ -385,7 +398,7 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 
 	int			x, y, xMax, yMax;
 	byte		*p, *pEnd, *pRow;
-	float		fStep, fStart;
+	// float		fStep, fStart;
 	int			r, g, b, a;
 	int			nStrideModify;
 
@@ -400,7 +413,13 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 
 	nStrideModify = (xMax - x) * PIX_SIZE;
 
-	fStep = (float)1 / (lpRect->bottom - lpRect->top);
+	int			nFadeRange = lpRect->bottom - lpRect->top;
+	int			nFadeStart = y - MapY(lpRect->top);
+	
+	if (!bTop)
+		nFadeStart = nFadeRange - nFadeStart;
+
+/*	fStep = (float)1 / (lpRect->bottom - lpRect->top);
 	if (bTop)
 	{
 		fStart = 0;
@@ -412,7 +431,7 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 	}
 
 	fStart += fStep * (y - MapY(lpRect->top));
-	ASSERT(fStart <= 1.0 && fStart >= 0.0);
+	ASSERT(fStart <= 1.0 && fStart >= 0.0);*/
 
 	pRow = m_imageData.PixPtr(x, y);
 	for (; y < yMax; y++)
@@ -421,19 +440,30 @@ void CRawGraph::VertFadeOut(const RECT *lpRect, const MLColor &clrBg, bool bTop)
 		for (p = pRow; p < pEnd; p += PIX_SIZE)
 		{
 			// a * f + b * (1 - f) = (a - b) * f + b
-			p[PIX_B] = (byte)((p[PIX_B] - b) * fStart + b);
+			p[PIX_B] = (byte)((p[PIX_B] - b) * nFadeStart / nFadeRange + b);
+			p[PIX_G] = (byte)((p[PIX_G] - g) * nFadeStart / nFadeRange + g);
+			p[PIX_R] = (byte)((p[PIX_R] - r) * nFadeStart / nFadeRange + r);
+			p[PIX_A] = (byte)((p[PIX_A] - a) * nFadeStart / nFadeRange + a);
+/*			p[PIX_B] = (byte)((p[PIX_B] - b) * fStart + b);
 			p[PIX_G] = (byte)((p[PIX_G] - g) * fStart + g);
 			p[PIX_R] = (byte)((p[PIX_R] - r) * fStart + r);
-			p[PIX_A] = (byte)((p[PIX_A] - a) * fStart + a);
+			p[PIX_A] = (byte)((p[PIX_A] - a) * fStart + a);*/
 		}
 		pRow += m_imageData.stride;
-		fStart += fStep;
+		// fStart += fStep;
+		if (bTop)
+			nFadeStart++;
+		else
+			nFadeStart--;
 	}
 }
 
 
 void CRawGraph::HorzAlphaFadeOut(const RECT *lpRect, bool bLeft)
 {
+	if (!m_bAlphaChannelEnabled)
+		return;
+
 	ASSERT(m_imageData.bitCount == 32);
 	if (lpRect->left == lpRect->right)
 		return;
@@ -638,6 +668,9 @@ void CRawGraph::FillRect(const RECT *lpRect, PRAW_IMAGE_DATA pImgMask, const REC
 	if (y >= yMax || x >= xMax)
 		return;
 
+	if (!m_bAlphaChannelEnabled)
+		bpm &= ~BPM_CHANNEL_ALPHA;
+
 	// Fill region must be within mask image
 	if (xMax - x > rcMask->right - rcMask->left)
 		xMax = rcMask->right - rcMask->left + x;
@@ -741,9 +774,40 @@ void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *s
 			pRow += pImage->stride;
 		}
 	}
-
 }
 
+/* Test CPU optimizing code for inline funcitions.
+void FillRectCopyRGB(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *srcPixel)
+{
+	byte		*p, *pEnd, *pRow;
+	int			nStrideModify;
+	int			nPixSize;
+	
+	if (pImage->bitCount == 32)
+		nPixSize = 4;
+	else if (pImage->bitCount == 24)
+		nPixSize = 3;
+	else
+	{
+		ASSERT(0);
+		return;
+	}
+	
+	nStrideModify = (xMax - x) * nPixSize;
+	pRow = pImage->PixPtr(x, y);
+	
+	for (; y < yMax; y++)
+	{
+		pEnd = pRow + nStrideModify;
+		for (p = pRow; p < pEnd; p += nPixSize)
+		{
+			p[PIX_B] = srcPixel[PIX_B];
+			p[PIX_G] = srcPixel[PIX_G];
+			p[PIX_R] = srcPixel[PIX_R];
+		}
+		pRow += pImage->stride;
+	}
+}*/
 
 void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMode bpm)
 {
@@ -760,6 +824,9 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 	ClipAndMapRect(lpRect, x, y, xMax, yMax);
 	if (y >= yMax || x >= xMax)
 		return;
+
+	if (!m_bAlphaChannelEnabled)
+		bpm &= ~BPM_CHANNEL_ALPHA;
 
 	if (IsFlagSet(bpm, BPM_OP_BLEND))
 	{
@@ -801,7 +868,10 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
 				::FillRect<copy_rgb, copy_alpha, copy_rgb_opacity, copy_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
 			else
+			{
 				::FillRect<copy_rgb, blend_copy_none, copy_rgb_opacity, blend_copy_none_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				// FillRectCopyRGB(&m_imageData, x, y, xMax, yMax, srcPixel);
+			}
 		}
 		else
 		{

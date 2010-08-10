@@ -13,6 +13,7 @@
 #include "GfxRaw.h"
 #include "RawGraph.h"
 #include "RawBmpFont.h"
+#include "ImageBuffBlt.h"
 
 #define PATTERN_COLOR_RANGE		100
 #define MEM_CLEAN_DURATION		(1000 * 60 * 2)
@@ -719,14 +720,96 @@ void CRawBmpFont::Destroy()
 	}
 }
 
-bool CRawBmpFont::TextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, LPCTSTR szText, int nLen)
+bool CRawBmpFont::TextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, LPCTSTR szText, int nLen, bool bDrawAlphaChannel)
 {
-	return DrawText(pGraph, x, y, pGraph->Width() - x, 0, clrText, szText, nLen);
+	return DrawText(pGraph, x, y, pGraph->Width() - x, 0, clrText, szText, nLen, bDrawAlphaChannel);
+}
+
+inline void blend_raw_font_clr(uint8 *dst, uint8 src, uint8 clr)
+{
+	dst[0] = (uint8)(((clr - dst[0]) * src + (dst[0] << 8)) >> 8);
+//	dst[0] = (uint8)(((clr[0] - dst[0]) * src[0] + (dst[0] << 8)) >> 8);
+}
+
+class raw_glyph_get_alpha_255
+{
+public:
+	inline uint8 operator()(uint8 alpha)
+	{
+		return alpha;
+	}
+
+};
+
+class raw_glyph_get_alpha
+{
+public:
+	inline uint8 operator()(uint8 alpha)
+	{
+		return uint8(alpha * nGlyphAlpha / 255);
+	}
+	
+	int		nGlyphAlpha;
+	
+};
+
+class raw_glyph_blend_alpha
+{
+public:
+	static inline void blend(uint8 *dst, uint8 src)
+	{
+		dst[3] = BlendAlpha(dst[3], src);
+	}
+};
+
+class raw_glyph_blend_alpha_none
+{
+public:
+	static inline void blend(uint8 *dst, uint8 src)
+	{
+	}
+};
+
+template<class _RawFontAlphaBlender, class _RawGlyphGetAlpha>
+void DrawGlyphRGBA32Buff(agg::rendering_buffer &graph, int xDst, int yDst, int xDstEnd, int yDstEnd,
+					 agg::rendering_buffer &bufGlyph, int xSrc, int ySrc, _RawGlyphGetAlpha &getGlyphAlpha, const MLColor &clrGlyph)
+{
+	byte *pRowDst = graph.row_ptr(yDst) + xDst * 4;
+	byte *pRowSrc = bufGlyph.row_ptr(ySrc) + xSrc * 4;
+	int	x, y;
+	byte		clr[3];
+	
+	clr[0] = clrGlyph.b();
+	clr[1] = clrGlyph.g();
+	clr[2] = clrGlyph.r();
+	
+	for (y = yDst; y < yDstEnd; y++)
+	{
+		byte *pDst = pRowDst;
+		byte *pSrc = pRowSrc;
+		for (x = xDst; x < xDstEnd; x++)
+		{
+			if (pSrc[3] != 0)
+			{
+				blend_raw_font_clr(pDst, getGlyphAlpha(pSrc[0]), clr[0]);
+				blend_raw_font_clr(pDst + 1, getGlyphAlpha(pSrc[1]), clr[1]);
+				blend_raw_font_clr(pDst + 2, getGlyphAlpha(pSrc[2]), clr[2]);
+				/*					pDst[0] = (uint8)(((clr[0] - pDst[0]) * pSrc[0] + (pDst[0] << 8)) >> 8);
+				 pDst[1] = (uint8)(((clr[1] - pDst[1]) * pSrc[1] + (pDst[1] << 8)) >> 8);
+				 pDst[2] = (uint8)(((clr[2] - pDst[2]) * pSrc[2] + (pDst[2] << 8)) >> 8);*/
+				_RawFontAlphaBlender::blend(pDst, getGlyphAlpha(pSrc[3]));
+			}
+			pDst += 4;
+			pSrc += G_PIX_SIZE;
+		}
+		pRowDst += graph.stride();
+		pRowSrc += bufGlyph.stride();
+	}	
 }
 
 // graph is 32 bpp, glyph is 32 bpp
 void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rcClip,
-						bool bDrawOutlined, Glyph *pGlyph, int nAlphaGlyph, const MLColor &clrGlyph)
+						bool bDrawOutlined, Glyph *pGlyph, int nAlphaGlyph, const MLColor &clrGlyph, bool bDrawAlphaChannel)
 {
 	ASSERT(G_PIX_SIZE == 4);
 
@@ -772,34 +855,82 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 		ySrc = rcClip.top - yDst;
 		yDst = rcClip.top;
 	}
+	
+	// Fill with color
+	if (nAlphaGlyph == 255)
+	{
+		raw_glyph_get_alpha_255 getGlyphAlpha;
+		if (bDrawAlphaChannel)
+			DrawGlyphRGBA32Buff<raw_glyph_blend_alpha>(graph, xDst, yDst, xDstEnd, yDstEnd, bufGlyph, xSrc, ySrc, getGlyphAlpha, clrGlyph);
+		else
+			DrawGlyphRGBA32Buff<raw_glyph_blend_alpha_none>(graph, xDst, yDst, xDstEnd, yDstEnd, bufGlyph, xSrc, ySrc, getGlyphAlpha, clrGlyph);
+	}
+	else
+	{
+		raw_glyph_get_alpha getGlyphAlpha;
+		getGlyphAlpha.nGlyphAlpha = nAlphaGlyph;
+		if (bDrawAlphaChannel)
+			DrawGlyphRGBA32Buff<raw_glyph_blend_alpha>(graph, xDst, yDst, xDstEnd, yDstEnd, bufGlyph, xSrc, ySrc, getGlyphAlpha, clrGlyph);
+		else
+			DrawGlyphRGBA32Buff<raw_glyph_blend_alpha_none>(graph, xDst, yDst, xDstEnd, yDstEnd, bufGlyph, xSrc, ySrc, getGlyphAlpha, clrGlyph);
+	}
 
-	byte *pRowDst = graph.row_ptr(yDst) + xDst * 4;
+/*	byte *pRowDst = graph.row_ptr(yDst) + xDst * 4;
 	byte *pRowSrc = bufGlyph.row_ptr(ySrc) + xSrc * 4;
 
 	// Fill with color
-	for (y = yDst; y < yDstEnd; y++)
+	if (nAlphaGlyph == 255)
 	{
-		byte *pDst = pRowDst;
-		byte *pSrc = pRowSrc;
-		for (x = xDst; x < xDstEnd; x++)
+		for (y = yDst; y < yDstEnd; y++)
 		{
-			if (pSrc[3] != 0)
+			byte *pDst = pRowDst;
+			byte *pSrc = pRowSrc;
+			for (x = xDst; x < xDstEnd; x++)
 			{
-				int		a;
-				for (int i = 0; i < 3; i++)
+				if (pSrc[3] != 0)
 				{
-					a = pSrc[i] * nAlphaGlyph / 255;
-					pDst[i] = (uint8)(((clr[i] - pDst[i]) * a + (pDst[i] << 8)) >> 8);
+					blend_raw_font_clr(pDst, pSrc, clr);
+					blend_raw_font_clr(pDst + 1, pSrc + 1, clr + 1);
+					blend_raw_font_clr(pDst + 2, pSrc + 2, clr + 2);
+//					pDst[0] = (uint8)(((clr[0] - pDst[0]) * pSrc[0] + (pDst[0] << 8)) >> 8);
+//					pDst[1] = (uint8)(((clr[1] - pDst[1]) * pSrc[1] + (pDst[1] << 8)) >> 8);
+//					pDst[2] = (uint8)(((clr[2] - pDst[2]) * pSrc[2] + (pDst[2] << 8)) >> 8);
+					_RawFontAlphaBlender::blend(pDst, pSrc);
 				}
-				a = pSrc[G_A] * nAlphaGlyph / 255;
-				pDst[G_A] = (uint8)((a + pDst[G_A]) - ((a * pDst[G_A] + 0xFF) >> 8));
+				pDst += 4;
+				pSrc += G_PIX_SIZE;
 			}
-			pDst += 4;
-			pSrc += G_PIX_SIZE;
+			pRowDst += graph.stride();
+			pRowSrc += bufGlyph.stride();
 		}
-		pRowDst += graph.stride();
-		pRowSrc += bufGlyph.stride();
 	}
+	else
+	{
+		for (y = yDst; y < yDstEnd; y++)
+		{
+			byte *pDst = pRowDst;
+			byte *pSrc = pRowSrc;
+			for (x = xDst; x < xDstEnd; x++)
+			{
+				if (pSrc[3] != 0)
+				{
+					int		a;
+					for (int i = 0; i < 3; i++)
+					{
+						a = pSrc[i] * nAlphaGlyph / 255;
+						pDst[i] = (uint8)(((clr[i] - pDst[i]) * a + (pDst[i] << 8)) >> 8);
+					}
+					a = pSrc[G_A] * nAlphaGlyph / 255;
+					pDst[G_A] = (uint8)((a + pDst[G_A]) - ((a * pDst[G_A] + 0xFF) >> 8));
+				}
+				pDst += 4;
+				pSrc += G_PIX_SIZE;
+			}
+			pRowDst += graph.stride();
+			pRowSrc += bufGlyph.stride();
+		}
+	}
+*/
 }
 
 inline void GetDrawGlyphClipPos(int &xDst, int &yDst, int &xDstEnd, int &yDstEnd, int &xSrc, int &ySrc, Glyph *pGlyph, CRect &rcClip)
@@ -1126,7 +1257,7 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	}
 }
 
-bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, LPCTSTR szText, int nLen, UINT uFormat)
+bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, LPCTSTR szText, int nLen, UINT uFormat, bool bDrawAlphaChannel)
 {
 	ASSERT(m_prawGlyphSet);
 	if (!m_prawGlyphSet)
@@ -1143,7 +1274,7 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 
 		for (int i = 0; i < (int)vLines.size(); i++)
 		{
-			DrawTextEx(pGraph, &rc, clrText, vLines[i].c_str(), vLines[i].size(), uFormat | DT_SINGLELINE);
+			DrawTextEx(pGraph, &rc, clrText, vLines[i].c_str(), vLines[i].size(), uFormat | DT_SINGLELINE, bDrawAlphaChannel);
 			rc.top += GetHeight() + 2;
 			if (rc.top >= rc.bottom)
 				break;
@@ -1157,7 +1288,7 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 		uFormat &= ~DT_END_ELLIPSIS;
 
 		if (ShouldDrawTextEllipsis(szText, nLen, lpRect->right - lpRect->left, str))
-			return DrawTextEx(pGraph, lpRect, clrText, str.c_str(), str.size(), uFormat);
+			return DrawTextEx(pGraph, lpRect, clrText, str.c_str(), str.size(), uFormat, bDrawAlphaChannel);
 	}
 	else if (IsFlagSet(uFormat, DT_PREFIX_TEXT))
 	{
@@ -1168,7 +1299,7 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 
 		if (ShouldDrawTextPrefix(szText, nLen, str, nXPrefix, nPrefixWidth))
 		{
-			DrawTextEx(pGraph, lpRect, clrText, str.c_str(), str.size(), uFormat);
+			DrawTextEx(pGraph, lpRect, clrText, str.c_str(), str.size(), uFormat, bDrawAlphaChannel);
 
 			if (nPrefixWidth > 0)
 			{
@@ -1198,10 +1329,10 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 	x -= 2;
 	y -= 2;
 
-	return DrawText(pGraph, x, y, width, xLeftClipOffset, clrText, szText, nLen);
+	return DrawText(pGraph, x, y, width, xLeftClipOffset, clrText, szText, nLen, bDrawAlphaChannel);
 }
 
-bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, LPCTSTR szText, int nLen)
+bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, LPCTSTR szText, int nLen, bool bDrawAlphaChannel)
 {
 	byte		textAlpha = pGraph->GetOpacityPainting();
 	CRect		rcClip;
@@ -1242,7 +1373,7 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 		if (m_overlayMode == OM_PATTERN)
 			DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1);
 		else if (m_overlayMode == OM_COLOR)
-			DrawGlyphRGBA32(bufGraph, x, y, rcClip, false, glyph, textAlpha, clrText);
+			DrawGlyphRGBA32(bufGraph, x, y, rcClip, false, glyph, textAlpha, clrText, bDrawAlphaChannel);
 		else if (m_overlayMode == OM_DUAL_PATTERN)
 			DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1, m_nAlphaPattern1, m_imgPattern2, m_nAlphaPattern2);
 		else if (m_overlayMode == OM_PATTERN_COLOR)
@@ -1254,13 +1385,13 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 	return true;
 }
 
-bool CRawBmpFont::OutlinedTextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen)
+bool CRawBmpFont::OutlinedTextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen, bool bDrawAlphaChannel)
 {
-	return OutlinedDrawText(pGraph, x, y, pGraph->Width() - x, 0, clrText, clrBorder, szText, nLen);
+	return OutlinedDrawText(pGraph, x, y, pGraph->Width() - x, 0, clrText, clrBorder, szText, nLen, bDrawAlphaChannel);
 }
 
 
-bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen, UINT uFormat)
+bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen, UINT uFormat, bool bDrawAlphaChannel)
 {
 	ASSERT(m_prawGlyphSet);
 	if (!m_prawGlyphSet)
@@ -1273,7 +1404,7 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 		uFormat &= ~DT_END_ELLIPSIS;
 
 		if (ShouldDrawTextEllipsis(szText, nLen, lpRect->right - lpRect->left, str))
-			return OutlinedDrawTextEx(pGraph, lpRect, clrText, clrBorder, str.c_str(), str.size(), uFormat);
+			return OutlinedDrawTextEx(pGraph, lpRect, clrText, clrBorder, str.c_str(), str.size(), uFormat, bDrawAlphaChannel);
 	}
 	else if (IsFlagSet(uFormat, DT_PREFIX_TEXT))
 	{
@@ -1284,7 +1415,7 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 
 		if (ShouldDrawTextPrefix(szText, nLen, str, nXPrefix, nPrefixWidth))
 		{
-			OutlinedDrawTextEx(pGraph, lpRect, clrText, clrBorder, str.c_str(), str.size(), uFormat);
+			OutlinedDrawTextEx(pGraph, lpRect, clrText, clrBorder, str.c_str(), str.size(), uFormat, bDrawAlphaChannel);
 
 			if (nPrefixWidth > 0)
 			{
@@ -1315,10 +1446,10 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 	x -= 2;
 	y -= 2;
 
-	return OutlinedDrawText(pGraph, x, y, width, xLeftClipOffset, clrText, clrBorder, szText, nLen);
+	return OutlinedDrawText(pGraph, x, y, width, xLeftClipOffset, clrText, clrBorder, szText, nLen, bDrawAlphaChannel);
 }
 
-bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen)
+bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, int xLeftClipOffset, const MLColor &clrText, const MLColor &clrBorder, LPCTSTR szText, int nLen, bool bDrawAlphaChannel)
 {
 	byte		textAlpha = pGraph->GetOpacityPainting();
 	CRect		rcClip;
@@ -1365,7 +1496,7 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 			//
 			// Draw outlined border
 			//
-			DrawGlyphRGBA32(bufGraph, x, y, rcClip, true, glyph, textAlpha, clrBorder);
+			DrawGlyphRGBA32(bufGraph, x, y, rcClip, true, glyph, textAlpha, clrBorder, bDrawAlphaChannel);
 		}
 
 		if (glyph->bitmap)
@@ -1376,7 +1507,7 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 			if (m_overlayMode == OM_PATTERN)
 				DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1);
 			else if (m_overlayMode == OM_COLOR)
-				DrawGlyphRGBA32(bufGraph, x, y, rcClip, false, glyph, textAlpha, clrText);
+				DrawGlyphRGBA32(bufGraph, x, y, rcClip, false, glyph, textAlpha, clrText, bDrawAlphaChannel);
 			else if (m_overlayMode == OM_DUAL_PATTERN)
 				DrawGlyphRGBA32(bufGraph, x, y, rcClip, glyph, textAlpha, m_imgPattern1, m_nAlphaPattern1, m_imgPattern2, m_nAlphaPattern2);
 			else if (m_overlayMode == OM_PATTERN_COLOR)

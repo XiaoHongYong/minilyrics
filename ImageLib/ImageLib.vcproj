@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="ImageLib"
 	ProjectGUID="{A2FEBA1A-7F7E-4966-AE06-2796C567EF4E}"
 	RootNamespace="ImageLib"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

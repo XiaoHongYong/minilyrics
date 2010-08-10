@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="MLLib"
 	ProjectGUID="{46C3C3D7-B6FC-428C-B8F1-69A5DE702764}"
 	RootNamespace="MLLib"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
