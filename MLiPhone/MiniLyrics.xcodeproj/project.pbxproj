@@ -26,24 +26,7 @@
 		5F12E55711D8EB8E00F8572F /* MLProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F12E55611D8EB8E00F8572F /* MLProtocol.cpp */; };
 		5F1B47F211DC171B00AAF8E4 /* CMLApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */; };
 		5F1B499B11DCE85500AAF8E4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F1B499A11DCE85500AAF8E4 /* CoreText.framework */; };
-		5F1B508A11E98AC200AAF8E4 /* iPhone_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1B508711E98AC200AAF8E4 /* iPhone_icon.png */; };
-		5F1B508B11E98AC200AAF8E4 /* iPhone_icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1B508811E98AC200AAF8E4 /* iPhone_icon2.png */; };
-		5F1B508C11E98AC200AAF8E4 /* playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1B508911E98AC200AAF8E4 /* playing.png */; };
-		5F1B515411EA977200AAF8E4 /* lyr_lrc_dl.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1B515011EA977100AAF8E4 /* lyr_lrc_dl.png */; };
-		5F1B515511EA977200AAF8E4 /* lyr_lrc.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1B515111EA977100AAF8E4 /* lyr_lrc.png */; };
-		5F1B515611EA977200AAF8E4 /* lyr_txt_dl.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1B515211EA977100AAF8E4 /* lyr_txt_dl.png */; };
-		5F1B515711EA977200AAF8E4 /* lyr_txt.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F1B515311EA977200AAF8E4 /* lyr_txt.png */; };
-		5F2CF47811DAE4A600A4D095 /* LyricsSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F2CF47711DAE4A600A4D095 /* LyricsSearchView.xib */; };
 		5F2CF47C11DAE72B00A4D095 /* LyricsSearchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */; };
-		5F2CF4D611DB427600A4D095 /* Search.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F2CF4D511DB427600A4D095 /* Search.png */; };
-		5F70B4B911D77D36009D0254 /* repeat_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F70B4B411D77D36009D0254 /* repeat_off.png */; };
-		5F70B4BA11D77D36009D0254 /* repeat_on_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F70B4B511D77D36009D0254 /* repeat_on_1.png */; };
-		5F70B4BB11D77D36009D0254 /* repeat_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F70B4B611D77D36009D0254 /* repeat_on.png */; };
-		5F70B4BC11D77D36009D0254 /* shuffle_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F70B4B711D77D36009D0254 /* shuffle_off.png */; };
-		5F70B4BD11D77D36009D0254 /* shuffle_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F70B4B811D77D36009D0254 /* shuffle_on.png */; };
-		5F70B4C111D78300009D0254 /* color_choose.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F70B4BE11D78300009D0254 /* color_choose.png */; };
-		5F70B4C211D78300009D0254 /* font_size_dec.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F70B4BF11D78300009D0254 /* font_size_dec.png */; };
-		5F70B4C311D78300009D0254 /* font_size_inc.png in Resources */ = {isa = PBXBuildFile; fileRef = 5F70B4C011D78300009D0254 /* font_size_inc.png */; };
 		5F70B86E11D8EA46009D0254 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86111D8EA46009D0254 /* HttpClient.cpp */; };
 		5F70B87211D8EA46009D0254 /* MLUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86611D8EA46009D0254 /* MLUtils.cpp */; };
 		5F70B87311D8EA46009D0254 /* NetSDK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86811D8EA46009D0254 /* NetSDK.cpp */; };
@@ -53,14 +36,6 @@
 		5F9DEF0C11AC099800312E83 /* libUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0111AC097200312E83 /* libUtils.a */; };
 		5F9DEFBE11AC0FAF00312E83 /* libID3Lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEFBD11AC0FA900312E83 /* libID3Lib.a */; };
 		5F9DEFC911AC101100312E83 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEFC811AC101100312E83 /* libiconv.dylib */; };
-		5FAA260411AA13C700474915 /* NowPlaying.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA260311AA13C700474915 /* NowPlaying.png */; };
-		5FAA260811AA13E200474915 /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA260511AA13E200474915 /* forward.png */; };
-		5FAA260911AA13E200474915 /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA260611AA13E200474915 /* play.png */; };
-		5FAA260A11AA13E200474915 /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA260711AA13E200474915 /* pause.png */; };
-		5FAA260C11AA13EE00474915 /* rewind.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA260B11AA13EE00474915 /* rewind.png */; };
-		5FAA262311AA18E900474915 /* NowPlayingAlbumInfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA262011AA18E900474915 /* NowPlayingAlbumInfo.png */; };
-		5FAA262411AA18E900474915 /* blue_plus_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA262111AA18E900474915 /* blue_plus_pressed.png */; };
-		5FAA262511AA18E900474915 /* blue_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FAA262211AA18E900474915 /* blue_plus.png */; };
 		5FAA987011BE13AD0067A90C /* LyricsShowGraphBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAA986C11BE13AD0067A90C /* LyricsShowGraphBase.cpp */; };
 		5FAA987111BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAA986E11BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp */; };
 		5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
@@ -72,13 +47,39 @@
 		5FC0B1BB11C51C59000C6537 /* LyricsDownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */; };
 		5FC0B1BC11C51C59000C6537 /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */; };
 		5FC0B1BD11C51C59000C6537 /* OnlineSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */; };
-		5FE7E38211EB54FD00CECD89 /* playing_slider_ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E37F11EB54FD00CECD89 /* playing_slider_ball.png */; };
-		5FE7E38311EB54FD00CECD89 /* playing_slider_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E38011EB54FD00CECD89 /* playing_slider_left.png */; };
-		5FE7E38411EB54FD00CECD89 /* playing_slider_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E38111EB54FD00CECD89 /* playing_slider_right.png */; };
-		5FE7E3B411EC349E00CECD89 /* backward_lyrics.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E3B211EC349E00CECD89 /* backward_lyrics.png */; };
-		5FE7E3B511EC349E00CECD89 /* forward_lyrics.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E3B311EC349E00CECD89 /* forward_lyrics.png */; };
-		5FE7E40E11EDEEFD00CECD89 /* playing_slider_ball_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E40D11EDEEFD00CECD89 /* playing_slider_ball_pressed.png */; };
-		5FE7E41011EDF5E700CECD89 /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FE7E40F11EDF5E700CECD89 /* bg.png */; };
+		5FCB8BFB1210F007009F23BD /* backward_lyrics.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BD91210F007009F23BD /* backward_lyrics.png */; };
+		5FCB8BFC1210F007009F23BD /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDA1210F007009F23BD /* bg.png */; };
+		5FCB8BFD1210F007009F23BD /* blue_plus_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDB1210F007009F23BD /* blue_plus_pressed.png */; };
+		5FCB8BFE1210F007009F23BD /* blue_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDC1210F007009F23BD /* blue_plus.png */; };
+		5FCB8BFF1210F007009F23BD /* color_choose.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDD1210F007009F23BD /* color_choose.png */; };
+		5FCB8C001210F007009F23BD /* font_size_dec.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDE1210F007009F23BD /* font_size_dec.png */; };
+		5FCB8C011210F007009F23BD /* font_size_inc.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDF1210F007009F23BD /* font_size_inc.png */; };
+		5FCB8C021210F007009F23BD /* forward_lyrics.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE01210F007009F23BD /* forward_lyrics.png */; };
+		5FCB8C031210F007009F23BD /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE11210F007009F23BD /* forward.png */; };
+		5FCB8C041210F007009F23BD /* iPhone_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE21210F007009F23BD /* iPhone_icon.png */; };
+		5FCB8C051210F007009F23BD /* iPhone_icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE31210F007009F23BD /* iPhone_icon2.png */; };
+		5FCB8C061210F007009F23BD /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE41210F007009F23BD /* logo.png */; };
+		5FCB8C071210F007009F23BD /* lyr_lrc_dl.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE51210F007009F23BD /* lyr_lrc_dl.png */; };
+		5FCB8C081210F007009F23BD /* lyr_lrc.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE61210F007009F23BD /* lyr_lrc.png */; };
+		5FCB8C091210F007009F23BD /* lyr_txt_dl.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE71210F007009F23BD /* lyr_txt_dl.png */; };
+		5FCB8C0A1210F007009F23BD /* lyr_txt.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE81210F007009F23BD /* lyr_txt.png */; };
+		5FCB8C0B1210F007009F23BD /* LyricsSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE91210F007009F23BD /* LyricsSearchView.xib */; };
+		5FCB8C0C1210F007009F23BD /* NowPlaying.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BEA1210F007009F23BD /* NowPlaying.png */; };
+		5FCB8C0D1210F007009F23BD /* NowPlayingAlbumInfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BEB1210F007009F23BD /* NowPlayingAlbumInfo.png */; };
+		5FCB8C0E1210F007009F23BD /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BEC1210F007009F23BD /* pause.png */; };
+		5FCB8C0F1210F007009F23BD /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BED1210F007009F23BD /* play.png */; };
+		5FCB8C101210F007009F23BD /* playing_slider_ball_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BEE1210F007009F23BD /* playing_slider_ball_pressed.png */; };
+		5FCB8C111210F007009F23BD /* playing_slider_ball.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BEF1210F007009F23BD /* playing_slider_ball.png */; };
+		5FCB8C121210F007009F23BD /* playing_slider_left.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF01210F007009F23BD /* playing_slider_left.png */; };
+		5FCB8C131210F007009F23BD /* playing_slider_right.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF11210F007009F23BD /* playing_slider_right.png */; };
+		5FCB8C141210F007009F23BD /* playing.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF21210F007009F23BD /* playing.png */; };
+		5FCB8C151210F007009F23BD /* repeat_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF31210F007009F23BD /* repeat_off.png */; };
+		5FCB8C161210F007009F23BD /* repeat_on_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF41210F007009F23BD /* repeat_on_1.png */; };
+		5FCB8C171210F007009F23BD /* repeat_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF51210F007009F23BD /* repeat_on.png */; };
+		5FCB8C181210F007009F23BD /* rewind.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF61210F007009F23BD /* rewind.png */; };
+		5FCB8C191210F007009F23BD /* Search.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF71210F007009F23BD /* Search.png */; };
+		5FCB8C1B1210F007009F23BD /* shuffle_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF91210F007009F23BD /* shuffle_off.png */; };
+		5FCB8C1C1210F007009F23BD /* shuffle_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BFA1210F007009F23BD /* shuffle_on.png */; };
 		5FE7EA0511F1375500CECD89 /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
 		5FE7ECF011F6D2AB00CECD89 /* libImageLibiPhone.a in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */; };
 		5FE7ECF311F6D2C500CECD89 /* libImageLibiPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */; };
@@ -163,25 +164,8 @@
 		5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = CMLApp.cpp; sourceTree = "<group>"; };
 		5F1B47F111DC171B00AAF8E4 /* CMLApp.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = CMLApp.h; sourceTree = "<group>"; };
 		5F1B499A11DCE85500AAF8E4 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		5F1B508711E98AC200AAF8E4 /* iPhone_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPhone_icon.png; sourceTree = "<group>"; };
-		5F1B508811E98AC200AAF8E4 /* iPhone_icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = iPhone_icon2.png; sourceTree = "<group>"; };
-		5F1B508911E98AC200AAF8E4 /* playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playing.png; sourceTree = "<group>"; };
-		5F1B515011EA977100AAF8E4 /* lyr_lrc_dl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lyr_lrc_dl.png; sourceTree = "<group>"; };
-		5F1B515111EA977100AAF8E4 /* lyr_lrc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lyr_lrc.png; sourceTree = "<group>"; };
-		5F1B515211EA977100AAF8E4 /* lyr_txt_dl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lyr_txt_dl.png; sourceTree = "<group>"; };
-		5F1B515311EA977200AAF8E4 /* lyr_txt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = lyr_txt.png; sourceTree = "<group>"; };
-		5F2CF47711DAE4A600A4D095 /* LyricsSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = LyricsSearchView.xib; sourceTree = "<group>"; };
 		5F2CF47A11DAE72B00A4D095 /* LyricsSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsSearchViewController.h; sourceTree = "<group>"; };
 		5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyricsSearchViewController.mm; sourceTree = "<group>"; };
-		5F2CF4D511DB427600A4D095 /* Search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Search.png; sourceTree = "<group>"; };
-		5F70B4B411D77D36009D0254 /* repeat_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = repeat_off.png; sourceTree = "<group>"; };
-		5F70B4B511D77D36009D0254 /* repeat_on_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = repeat_on_1.png; sourceTree = "<group>"; };
-		5F70B4B611D77D36009D0254 /* repeat_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = repeat_on.png; sourceTree = "<group>"; };
-		5F70B4B711D77D36009D0254 /* shuffle_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shuffle_off.png; sourceTree = "<group>"; };
-		5F70B4B811D77D36009D0254 /* shuffle_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shuffle_on.png; sourceTree = "<group>"; };
-		5F70B4BE11D78300009D0254 /* color_choose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = color_choose.png; sourceTree = "<group>"; };
-		5F70B4BF11D78300009D0254 /* font_size_dec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = font_size_dec.png; sourceTree = "<group>"; };
-		5F70B4C011D78300009D0254 /* font_size_inc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = font_size_inc.png; sourceTree = "<group>"; };
 		5F70B86111D8EA46009D0254 /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = HttpClient.cpp; path = ../MLProtocol/HttpClient.cpp; sourceTree = SOURCE_ROOT; };
 		5F70B86211D8EA46009D0254 /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = HttpClient.h; path = ../MLProtocol/HttpClient.h; sourceTree = SOURCE_ROOT; };
 		5F70B86611D8EA46009D0254 /* MLUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = MLUtils.cpp; path = ../MLProtocol/MLUtils.cpp; sourceTree = SOURCE_ROOT; };
@@ -198,14 +182,6 @@
 		5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLLib.xcodeproj; path = ../MLLib/MLLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5F9DEFB511AC0FA800312E83 /* ID3Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ID3Lib.xcodeproj; path = ../ID3Lib/ID3Lib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5F9DEFC811AC101100312E83 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
-		5FAA260311AA13C700474915 /* NowPlaying.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NowPlaying.png; sourceTree = "<group>"; };
-		5FAA260511AA13E200474915 /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward.png; sourceTree = "<group>"; };
-		5FAA260611AA13E200474915 /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = play.png; sourceTree = "<group>"; };
-		5FAA260711AA13E200474915 /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pause.png; sourceTree = "<group>"; };
-		5FAA260B11AA13EE00474915 /* rewind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rewind.png; sourceTree = "<group>"; };
-		5FAA262011AA18E900474915 /* NowPlayingAlbumInfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = NowPlayingAlbumInfo.png; sourceTree = "<group>"; };
-		5FAA262111AA18E900474915 /* blue_plus_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_plus_pressed.png; sourceTree = "<group>"; };
-		5FAA262211AA18E900474915 /* blue_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = blue_plus.png; sourceTree = "<group>"; };
 		5FAA986C11BE13AD0067A90C /* LyricsShowGraphBase.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsShowGraphBase.cpp; sourceTree = "<group>"; };
 		5FAA986D11BE13AD0067A90C /* LyricsShowGraphBase.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsShowGraphBase.h; sourceTree = "<group>"; };
 		5FAA986E11BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsVerticalScrollGraph.cpp; sourceTree = "<group>"; };
@@ -227,13 +203,39 @@
 		5FC0B1B711C51C59000C6537 /* LyricsLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsLocalSearch.h; sourceTree = "<group>"; };
 		5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = OnlineSearch.cpp; sourceTree = "<group>"; };
 		5FC0B1B911C51C59000C6537 /* OnlineSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = OnlineSearch.h; sourceTree = "<group>"; };
-		5FE7E37F11EB54FD00CECD89 /* playing_slider_ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playing_slider_ball.png; sourceTree = "<group>"; };
-		5FE7E38011EB54FD00CECD89 /* playing_slider_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playing_slider_left.png; sourceTree = "<group>"; };
-		5FE7E38111EB54FD00CECD89 /* playing_slider_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playing_slider_right.png; sourceTree = "<group>"; };
-		5FE7E3B211EC349E00CECD89 /* backward_lyrics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = backward_lyrics.png; sourceTree = "<group>"; };
-		5FE7E3B311EC349E00CECD89 /* forward_lyrics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = forward_lyrics.png; sourceTree = "<group>"; };
-		5FE7E40D11EDEEFD00CECD89 /* playing_slider_ball_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = playing_slider_ball_pressed.png; sourceTree = "<group>"; };
-		5FE7E40F11EDF5E700CECD89 /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bg.png; sourceTree = "<group>"; };
+		5FCB8BD91210F007009F23BD /* backward_lyrics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = backward_lyrics.png; path = Resources/backward_lyrics.png; sourceTree = "<group>"; };
+		5FCB8BDA1210F007009F23BD /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg.png; path = Resources/bg.png; sourceTree = "<group>"; };
+		5FCB8BDB1210F007009F23BD /* blue_plus_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blue_plus_pressed.png; path = Resources/blue_plus_pressed.png; sourceTree = "<group>"; };
+		5FCB8BDC1210F007009F23BD /* blue_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blue_plus.png; path = Resources/blue_plus.png; sourceTree = "<group>"; };
+		5FCB8BDD1210F007009F23BD /* color_choose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = color_choose.png; path = Resources/color_choose.png; sourceTree = "<group>"; };
+		5FCB8BDE1210F007009F23BD /* font_size_dec.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = font_size_dec.png; path = Resources/font_size_dec.png; sourceTree = "<group>"; };
+		5FCB8BDF1210F007009F23BD /* font_size_inc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = font_size_inc.png; path = Resources/font_size_inc.png; sourceTree = "<group>"; };
+		5FCB8BE01210F007009F23BD /* forward_lyrics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = forward_lyrics.png; path = Resources/forward_lyrics.png; sourceTree = "<group>"; };
+		5FCB8BE11210F007009F23BD /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = forward.png; path = Resources/forward.png; sourceTree = "<group>"; };
+		5FCB8BE21210F007009F23BD /* iPhone_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPhone_icon.png; path = Resources/iPhone_icon.png; sourceTree = "<group>"; };
+		5FCB8BE31210F007009F23BD /* iPhone_icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPhone_icon2.png; path = Resources/iPhone_icon2.png; sourceTree = "<group>"; };
+		5FCB8BE41210F007009F23BD /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Resources/logo.png; sourceTree = "<group>"; };
+		5FCB8BE51210F007009F23BD /* lyr_lrc_dl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lyr_lrc_dl.png; path = Resources/lyr_lrc_dl.png; sourceTree = "<group>"; };
+		5FCB8BE61210F007009F23BD /* lyr_lrc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lyr_lrc.png; path = Resources/lyr_lrc.png; sourceTree = "<group>"; };
+		5FCB8BE71210F007009F23BD /* lyr_txt_dl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lyr_txt_dl.png; path = Resources/lyr_txt_dl.png; sourceTree = "<group>"; };
+		5FCB8BE81210F007009F23BD /* lyr_txt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lyr_txt.png; path = Resources/lyr_txt.png; sourceTree = "<group>"; };
+		5FCB8BE91210F007009F23BD /* LyricsSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = LyricsSearchView.xib; path = Resources/LyricsSearchView.xib; sourceTree = "<group>"; };
+		5FCB8BEA1210F007009F23BD /* NowPlaying.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NowPlaying.png; path = Resources/NowPlaying.png; sourceTree = "<group>"; };
+		5FCB8BEB1210F007009F23BD /* NowPlayingAlbumInfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NowPlayingAlbumInfo.png; path = Resources/NowPlayingAlbumInfo.png; sourceTree = "<group>"; };
+		5FCB8BEC1210F007009F23BD /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pause.png; path = Resources/pause.png; sourceTree = "<group>"; };
+		5FCB8BED1210F007009F23BD /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play.png; path = Resources/play.png; sourceTree = "<group>"; };
+		5FCB8BEE1210F007009F23BD /* playing_slider_ball_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playing_slider_ball_pressed.png; path = Resources/playing_slider_ball_pressed.png; sourceTree = "<group>"; };
+		5FCB8BEF1210F007009F23BD /* playing_slider_ball.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playing_slider_ball.png; path = Resources/playing_slider_ball.png; sourceTree = "<group>"; };
+		5FCB8BF01210F007009F23BD /* playing_slider_left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playing_slider_left.png; path = Resources/playing_slider_left.png; sourceTree = "<group>"; };
+		5FCB8BF11210F007009F23BD /* playing_slider_right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playing_slider_right.png; path = Resources/playing_slider_right.png; sourceTree = "<group>"; };
+		5FCB8BF21210F007009F23BD /* playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = playing.png; path = Resources/playing.png; sourceTree = "<group>"; };
+		5FCB8BF31210F007009F23BD /* repeat_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = repeat_off.png; path = Resources/repeat_off.png; sourceTree = "<group>"; };
+		5FCB8BF41210F007009F23BD /* repeat_on_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = repeat_on_1.png; path = Resources/repeat_on_1.png; sourceTree = "<group>"; };
+		5FCB8BF51210F007009F23BD /* repeat_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = repeat_on.png; path = Resources/repeat_on.png; sourceTree = "<group>"; };
+		5FCB8BF61210F007009F23BD /* rewind.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = rewind.png; path = Resources/rewind.png; sourceTree = "<group>"; };
+		5FCB8BF71210F007009F23BD /* Search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Search.png; path = Resources/Search.png; sourceTree = "<group>"; };
+		5FCB8BF91210F007009F23BD /* shuffle_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = shuffle_off.png; path = Resources/shuffle_off.png; sourceTree = "<group>"; };
+		5FCB8BFA1210F007009F23BD /* shuffle_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = shuffle_on.png; path = Resources/shuffle_on.png; sourceTree = "<group>"; };
 		5FE7EA0311F1375500CECD89 /* LyrStaticTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrStaticTextView.h; sourceTree = "<group>"; };
 		5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrStaticTextView.mm; sourceTree = "<group>"; };
 		5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImageLibiPhone.xcodeproj; path = /Users/showbrave/ZikiPlayer/ImageLib/ImageLibiPhone.xcodeproj; sourceTree = "<absolute>"; };
@@ -342,37 +344,39 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				5FE7E3B211EC349E00CECD89 /* backward_lyrics.png */,
-				5FE7E40F11EDF5E700CECD89 /* bg.png */,
-				5FE7E40D11EDEEFD00CECD89 /* playing_slider_ball_pressed.png */,
-				5FE7E3B311EC349E00CECD89 /* forward_lyrics.png */,
-				5FE7E37F11EB54FD00CECD89 /* playing_slider_ball.png */,
-				5FE7E38011EB54FD00CECD89 /* playing_slider_left.png */,
-				5FE7E38111EB54FD00CECD89 /* playing_slider_right.png */,
-				5F1B515011EA977100AAF8E4 /* lyr_lrc_dl.png */,
-				5F1B515111EA977100AAF8E4 /* lyr_lrc.png */,
-				5F1B515211EA977100AAF8E4 /* lyr_txt_dl.png */,
-				5F1B515311EA977200AAF8E4 /* lyr_txt.png */,
-				5F70B4B411D77D36009D0254 /* repeat_off.png */,
-				5F1B508711E98AC200AAF8E4 /* iPhone_icon.png */,
-				5F1B508811E98AC200AAF8E4 /* iPhone_icon2.png */,
-				5F1B508911E98AC200AAF8E4 /* playing.png */,
-				5F70B4B511D77D36009D0254 /* repeat_on_1.png */,
-				5F70B4B611D77D36009D0254 /* repeat_on.png */,
-				5F70B4B711D77D36009D0254 /* shuffle_off.png */,
-				5F70B4BE11D78300009D0254 /* color_choose.png */,
-				5F70B4BF11D78300009D0254 /* font_size_dec.png */,
-				5F70B4C011D78300009D0254 /* font_size_inc.png */,
-				5F70B4B811D77D36009D0254 /* shuffle_on.png */,
-				5FAA262011AA18E900474915 /* NowPlayingAlbumInfo.png */,
-				5FAA262111AA18E900474915 /* blue_plus_pressed.png */,
-				5FAA262211AA18E900474915 /* blue_plus.png */,
-				5FAA260311AA13C700474915 /* NowPlaying.png */,
-				5F2CF4D511DB427600A4D095 /* Search.png */,
-				5FAA260511AA13E200474915 /* forward.png */,
-				5FAA260611AA13E200474915 /* play.png */,
-				5FAA260B11AA13EE00474915 /* rewind.png */,
-				5FAA260711AA13E200474915 /* pause.png */,
+				5FCB8BD91210F007009F23BD /* backward_lyrics.png */,
+				5FCB8BDA1210F007009F23BD /* bg.png */,
+				5FCB8BDB1210F007009F23BD /* blue_plus_pressed.png */,
+				5FCB8BDC1210F007009F23BD /* blue_plus.png */,
+				5FCB8BDD1210F007009F23BD /* color_choose.png */,
+				5FCB8BDE1210F007009F23BD /* font_size_dec.png */,
+				5FCB8BDF1210F007009F23BD /* font_size_inc.png */,
+				5FCB8BE01210F007009F23BD /* forward_lyrics.png */,
+				5FCB8BE11210F007009F23BD /* forward.png */,
+				5FCB8BE21210F007009F23BD /* iPhone_icon.png */,
+				5FCB8BE31210F007009F23BD /* iPhone_icon2.png */,
+				5FCB8BE41210F007009F23BD /* logo.png */,
+				5FCB8BE51210F007009F23BD /* lyr_lrc_dl.png */,
+				5FCB8BE61210F007009F23BD /* lyr_lrc.png */,
+				5FCB8BE71210F007009F23BD /* lyr_txt_dl.png */,
+				5FCB8BE81210F007009F23BD /* lyr_txt.png */,
+				5FCB8BE91210F007009F23BD /* LyricsSearchView.xib */,
+				5FCB8BEA1210F007009F23BD /* NowPlaying.png */,
+				5FCB8BEB1210F007009F23BD /* NowPlayingAlbumInfo.png */,
+				5FCB8BEC1210F007009F23BD /* pause.png */,
+				5FCB8BED1210F007009F23BD /* play.png */,
+				5FCB8BEE1210F007009F23BD /* playing_slider_ball_pressed.png */,
+				5FCB8BEF1210F007009F23BD /* playing_slider_ball.png */,
+				5FCB8BF01210F007009F23BD /* playing_slider_left.png */,
+				5FCB8BF11210F007009F23BD /* playing_slider_right.png */,
+				5FCB8BF21210F007009F23BD /* playing.png */,
+				5FCB8BF31210F007009F23BD /* repeat_off.png */,
+				5FCB8BF41210F007009F23BD /* repeat_on_1.png */,
+				5FCB8BF51210F007009F23BD /* repeat_on.png */,
+				5FCB8BF61210F007009F23BD /* rewind.png */,
+				5FCB8BF71210F007009F23BD /* Search.png */,
+				5FCB8BF91210F007009F23BD /* shuffle_off.png */,
+				5FCB8BFA1210F007009F23BD /* shuffle_on.png */,
 				0A6C6CBF0FB396DB00F95575 /* Default.png */,
 				0A735D610FACBAAC0057280A /* no_artwork.png */,
 				0AA6AE2D0FB773F6008185AA /* MainWindow.xib */,
@@ -380,7 +384,6 @@
 				0A1C088F0FB78C0D00C7BA1B /* MusicTableView.xib */,
 				0A1C08680FB7876600C7BA1B /* Localizable.strings */,
 				0A735D7A0FACBB490057280A /* MiniLyrics-Info.plist */,
-				5F2CF47711DAE4A600A4D095 /* LyricsSearchView.xib */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -613,38 +616,39 @@
 				0AA6AE320FB773F6008185AA /* MainWindow.xib in Resources */,
 				0A1C086A0FB7876600C7BA1B /* Localizable.strings in Resources */,
 				0A1C08910FB78C0D00C7BA1B /* MusicTableView.xib in Resources */,
-				5FAA260411AA13C700474915 /* NowPlaying.png in Resources */,
-				5FAA260811AA13E200474915 /* forward.png in Resources */,
-				5FAA260911AA13E200474915 /* play.png in Resources */,
-				5FAA260A11AA13E200474915 /* pause.png in Resources */,
-				5FAA260C11AA13EE00474915 /* rewind.png in Resources */,
-				5FAA262311AA18E900474915 /* NowPlayingAlbumInfo.png in Resources */,
-				5FAA262411AA18E900474915 /* blue_plus_pressed.png in Resources */,
-				5FAA262511AA18E900474915 /* blue_plus.png in Resources */,
-				5F70B4B911D77D36009D0254 /* repeat_off.png in Resources */,
-				5F70B4BA11D77D36009D0254 /* repeat_on_1.png in Resources */,
-				5F70B4BB11D77D36009D0254 /* repeat_on.png in Resources */,
-				5F70B4BC11D77D36009D0254 /* shuffle_off.png in Resources */,
-				5F70B4BD11D77D36009D0254 /* shuffle_on.png in Resources */,
-				5F70B4C111D78300009D0254 /* color_choose.png in Resources */,
-				5F70B4C211D78300009D0254 /* font_size_dec.png in Resources */,
-				5F70B4C311D78300009D0254 /* font_size_inc.png in Resources */,
-				5F2CF47811DAE4A600A4D095 /* LyricsSearchView.xib in Resources */,
-				5F2CF4D611DB427600A4D095 /* Search.png in Resources */,
-				5F1B508A11E98AC200AAF8E4 /* iPhone_icon.png in Resources */,
-				5F1B508B11E98AC200AAF8E4 /* iPhone_icon2.png in Resources */,
-				5F1B508C11E98AC200AAF8E4 /* playing.png in Resources */,
-				5F1B515411EA977200AAF8E4 /* lyr_lrc_dl.png in Resources */,
-				5F1B515511EA977200AAF8E4 /* lyr_lrc.png in Resources */,
-				5F1B515611EA977200AAF8E4 /* lyr_txt_dl.png in Resources */,
-				5F1B515711EA977200AAF8E4 /* lyr_txt.png in Resources */,
-				5FE7E38211EB54FD00CECD89 /* playing_slider_ball.png in Resources */,
-				5FE7E38311EB54FD00CECD89 /* playing_slider_left.png in Resources */,
-				5FE7E38411EB54FD00CECD89 /* playing_slider_right.png in Resources */,
-				5FE7E3B411EC349E00CECD89 /* backward_lyrics.png in Resources */,
-				5FE7E3B511EC349E00CECD89 /* forward_lyrics.png in Resources */,
-				5FE7E40E11EDEEFD00CECD89 /* playing_slider_ball_pressed.png in Resources */,
-				5FE7E41011EDF5E700CECD89 /* bg.png in Resources */,
+				5FCB8BFB1210F007009F23BD /* backward_lyrics.png in Resources */,
+				5FCB8BFC1210F007009F23BD /* bg.png in Resources */,
+				5FCB8BFD1210F007009F23BD /* blue_plus_pressed.png in Resources */,
+				5FCB8BFE1210F007009F23BD /* blue_plus.png in Resources */,
+				5FCB8BFF1210F007009F23BD /* color_choose.png in Resources */,
+				5FCB8C001210F007009F23BD /* font_size_dec.png in Resources */,
+				5FCB8C011210F007009F23BD /* font_size_inc.png in Resources */,
+				5FCB8C021210F007009F23BD /* forward_lyrics.png in Resources */,
+				5FCB8C031210F007009F23BD /* forward.png in Resources */,
+				5FCB8C041210F007009F23BD /* iPhone_icon.png in Resources */,
+				5FCB8C051210F007009F23BD /* iPhone_icon2.png in Resources */,
+				5FCB8C061210F007009F23BD /* logo.png in Resources */,
+				5FCB8C071210F007009F23BD /* lyr_lrc_dl.png in Resources */,
+				5FCB8C081210F007009F23BD /* lyr_lrc.png in Resources */,
+				5FCB8C091210F007009F23BD /* lyr_txt_dl.png in Resources */,
+				5FCB8C0A1210F007009F23BD /* lyr_txt.png in Resources */,
+				5FCB8C0B1210F007009F23BD /* LyricsSearchView.xib in Resources */,
+				5FCB8C0C1210F007009F23BD /* NowPlaying.png in Resources */,
+				5FCB8C0D1210F007009F23BD /* NowPlayingAlbumInfo.png in Resources */,
+				5FCB8C0E1210F007009F23BD /* pause.png in Resources */,
+				5FCB8C0F1210F007009F23BD /* play.png in Resources */,
+				5FCB8C101210F007009F23BD /* playing_slider_ball_pressed.png in Resources */,
+				5FCB8C111210F007009F23BD /* playing_slider_ball.png in Resources */,
+				5FCB8C121210F007009F23BD /* playing_slider_left.png in Resources */,
+				5FCB8C131210F007009F23BD /* playing_slider_right.png in Resources */,
+				5FCB8C141210F007009F23BD /* playing.png in Resources */,
+				5FCB8C151210F007009F23BD /* repeat_off.png in Resources */,
+				5FCB8C161210F007009F23BD /* repeat_on_1.png in Resources */,
+				5FCB8C171210F007009F23BD /* repeat_on.png in Resources */,
+				5FCB8C181210F007009F23BD /* rewind.png in Resources */,
+				5FCB8C191210F007009F23BD /* Search.png in Resources */,
+				5FCB8C1B1210F007009F23BD /* shuffle_off.png in Resources */,
+				5FCB8C1C1210F007009F23BD /* shuffle_on.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
