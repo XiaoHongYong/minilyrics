@@ -10,7 +10,7 @@
       <NormalFrame Rect="10,10,w-20,210" Text="Save downloaded lyrics in:"/>
       <NormalRadioBt ID="CID_C_SAVE_IN_SONG_DIR" Text="&amp;Save lyrics in the song's directory" Rect="25,40,w-50,"/>
       <NormalRadioBt ID="CID_C_SAVE_IN_DIR" Text="&amp;Save lyrics in:" Rect="25,70,140,"/>
-      <NormalTextBt ID="CID_DOWN_DIR" Text="Choose the directory" Rect="170,70,w-170-15,"/>
+      <NormalTextBt ID="CID_DOWN_DIR" Text="Choose the directory" Rect="170,70,w-170-20,"/>
       <NormalCheckBox ID="CID_C_SAVE_IN_MP3" Text="&amp;Save lyrics in mp3 file" Rect="25,100,w-50,"/>
       <NormalCheckBox ID="CID_C_ID3V2_SYLT" Text="ID3v2 synchronized Lyrics (Support Windows Media player)"
                       Rect="45,130,w-70,"/>
@@ -24,7 +24,7 @@
     </Container>
     <Container ID="CID_C_LYR_OUTPUT_PLUGIN" Name="Lyrics Output Plug-ins" Visible="false" Rect="0,30,w,h-30-10">
       <NormalText Rect="10,10,w-20,60" Text="$Product$ will use the plug-ins below for lyrics output. You can select a plug-in and configure, view about boxes, or uninstall them."/>
-      <NormalListCtrl ID="CID_LO_PLUGIN_LIST" Rect="10,70,w-20,h-60-55"
+      <NormalListCtrl ID="CID_LO_PLUGIN_LIST" Rect="10,70,w-20,h-70-50"
                       EnableHorzScrollBar="false" EnableVertScrollBar="false"/>
       <NormalTextBt ID="CID_CONFIGURE" Text="Configure" Rect="10,h-40,(w-20)/4-20,"/>
       <NormalTextBt ID="CID_ABOUT" Text="About" Rect="10+(w-20)/4,h-40,(w-20)/4-20,"/>

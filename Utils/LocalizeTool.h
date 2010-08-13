@@ -75,7 +75,11 @@ protected:
 
 extern CLanguageTool			g_LangTool;
 
+#define TOLOCAL_SECTION(szString)
+#define TOLOCAL2(szString, comments)	(g_LangTool.ToLocalString(szString))
+#define TOLOCAL_MARK(szString)	szString
 #define TOLOCAL(szString)	(g_LangTool.ToLocalString(szString))
+
 #define LOADLOCALMENU(ID)	(g_LangTool.LoadLocalMenu(ID))
 #define ERROR2STR_LOCAL(nError)	(g_LangTool.ToLocalString(Error2Str(nError)))
 
