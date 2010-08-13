@@ -11,8 +11,14 @@
 
 #include "../MLProtocol/MLUtils.h"
 
+#ifndef _IPHONE
+#define _ID3V2_SUPPORT
+#endif
+
+#ifdef _ID3V2_SUPPORT
 #include "Lyrics3v2.h"
 #include "../ID3Lib/ID3v2.h"
+#endif // #ifdef _ID3V2_SUPPORT
 
 // 歌词文件匹配类型的定义
 enum LRC_MATCH_TYPE
@@ -105,6 +111,7 @@ public:
 #define SZ_SONG_LYRICS3V2_DESC	_T("Lyrics3v2 lyrics (Few players support this format)")
 #define SZ_SONG_ID3V2_LYRICS_DESC	_T("Embedded ID3v2 lyrics (Nonstandard)")
 
+#ifdef _ID3V2_SUPPORT
 void GetID3v2LrcSourceLang(LPCTSTR szLrcSource, char szLang[], int len);
 
 void ListSupportedEmbeddedFormat(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyricsFormat);
@@ -113,6 +120,7 @@ bool ID3v2LyricsInfoGetSynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSou
 bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2UnsynchLyrics *&plyrics);
 
 void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable = false);
+#endif // #ifdef _ID3V2_SUPPORT
 
 void StrIgnoreCompare(LPCTSTR &szDest, LPCTSTR &szTemplate, BOOL bIgnoreNumb);
 int StrIgnoreCompare(LPCTSTR szStr1, LPCTSTR szStr2);

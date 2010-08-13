@@ -9,6 +9,7 @@ static NSString *kCellIdentifier = @"MusicCell";
 @synthesize delegate;					// The main view controller is the delegate for this class.
 @synthesize mediaItemCollectionTable;	// The table shown in this class's view.
 @synthesize clearPlaylistButton;
+@synthesize navigationBar;
 @synthesize musicPlayer;
 @synthesize currentPlaying;
 
@@ -26,7 +27,8 @@ static NSString *kCellIdentifier = @"MusicCell";
 							   name: MPMusicPlayerControllerNowPlayingItemDidChangeNotification
 							 object: musicPlayer];
 
-	[self.clearPlaylistButton setTitle: NSLocalizedString (@"Clearlocal", @"clear play list")];
+	[navigationBar.topItem setTitle: NSLocalizedString (@"Playlist", @"media playlist")];
+	[self.clearPlaylistButton setTitle: NSLocalizedString (@"Clear", @"clear play list")];
 	
     self.view.backgroundColor = [UIColor groupTableViewBackgroundColor];
 	self.mediaItemCollectionTable.rowHeight = ROW_HEIGHT;
@@ -372,3 +374,28 @@ NSString *formatPlayingTime(int n)
 }
 
 @end
+
+/*
+
+void ForLocalization() {
+	
+	NSLocalizedString (@"Failed to download lyrics:", @"x");
+ 	NSLocalizedString (@"Artist:", @"x");
+ 	NSLocalizedString (@"Title:", @"x");
+ 	NSLocalizedString (@"Album:", @"x");
+ 	NSLocalizedString (@"Sorry, no lyrics returned.", @"x");
+	NSLocalizedString (@"Failed to search lyrics:", @"x");
+	NSLocalizedString (@"Downloading lyrics:", @"x");
+	NSLocalizedString (@"Failed to get searching lyrics results.", @"x");
+	NSLocalizedString (@"Please contact us to report this issue.", @"x");
+	NSLocalizedString (@"Search returned no results.", @"x");
+	NSLocalizedString (@"Found some similar lyrics, please click 'Search Lyrics' button.", @"x");
+	NSLocalizedString (@"Searching lyrics:", @"x");
+	NSLocalizedString (@"Please make sure you enter the correct artist name and title.", @"x");
+	NSLocalizedString (@"No suitable lyrics for the song file", @"x");
+	NSLocalizedString (@"Votes", @"x");
+	NSLocalizedString (@"Ineternet connection may be down, no such host is known.", @"x");
+
+}
+
+*/

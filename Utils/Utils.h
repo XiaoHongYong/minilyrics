@@ -9,6 +9,10 @@
 #include "App.h"
 #include "CSVFile.h"
 #include "UndoMgr.h"
+#ifdef _IPHONE
+#include "Mac/LocalizeTool.h"
+#else
 #include "LocalizeTool.h"
+#endif
 
 #endif	// _ML_UTILS_H

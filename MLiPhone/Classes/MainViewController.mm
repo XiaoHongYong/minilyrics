@@ -41,9 +41,7 @@
 @synthesize staticLyrView;
 @synthesize lyrVerticalView;
 
-@synthesize	mPlayCtrlToolbar;
-@synthesize mPlayingButtons;
-@synthesize mPausedButtons;
+@synthesize	playPauseButton;
 
 @synthesize mlApp;
 
@@ -64,6 +62,10 @@ extern "C" NSString *formatPlayingTime(int n);
 // A toggle control for playing or pausing iPod library music playback, invoked
 //		when the user taps the 'playBarButton' in the Navigation bar. 
 - (IBAction) playOrPauseMusic: (id)sender {
+	if (self.userMediaItemCollection == nil) {
+		[self ShowMusic:sender];
+		return;
+	}
 
 	MPMusicPlaybackState playbackState = [musicPlayer playbackState];
 
@@ -76,11 +78,21 @@ extern "C" NSString *formatPlayingTime(int n);
 
 - (IBAction)	rewindMusic:			(id) sender
 {
+	if (self.userMediaItemCollection == nil) {
+		[self ShowMusic:sender];
+		return;
+	}
+	
 	[musicPlayer skipToPreviousItem];
 }
 
 - (IBAction)	forwardMusic:			(id) sender
 {
+	if (self.userMediaItemCollection == nil) {
+		[self ShowMusic:sender];
+		return;
+	}
+	
 	[musicPlayer skipToNextItem];
 }
 
@@ -376,13 +388,15 @@ extern "C" NSString *formatPlayingTime(int n);
 	MPMusicPlaybackState playbackState = [musicPlayer playbackState];
 	
 	if (playbackState == MPMusicPlaybackStatePaused) {
-		[mPlayCtrlToolbar setItems:mPausedButtons];
+		UIImage *pauseImage = [UIImage imageNamed:@"play.png"];
+		[playPauseButton setImage:pauseImage forState:UIControlStateNormal];
 	} else if (playbackState == MPMusicPlaybackStatePlaying) {
-		[mPlayCtrlToolbar setItems:mPlayingButtons];
-
+		UIImage *playImage = [UIImage imageNamed:@"pause.png"];
+		[playPauseButton setImage:playImage forState:UIControlStateNormal];
 	} else if (playbackState == MPMusicPlaybackStateStopped) {
-	
-		[mPlayCtrlToolbar setItems:mPausedButtons];
+
+		UIImage *playImage = [UIImage imageNamed:@"play.png"];
+		[playPauseButton setImage:playImage forState:UIControlStateNormal];
 
 		// Even though stopped, invoking 'stop' ensures that the music player will play  
 		//		its queue from the start.
@@ -486,22 +500,6 @@ extern "C" NSString *formatPlayingTime(int n);
 															  repeats: YES]];	
 	
 	[self setPlayedMusicOnce: NO];
-	
-	// Create play and pause buttons.
-	[self setMPausedButtons: mPlayCtrlToolbar.items];
-	[self setMPlayingButtons: [[NSMutableArray alloc] initWithArray:mPausedButtons]];
-
-	//
-	// Create paused bar button
-	//
-	UIImage *pausedButtonImage = [UIImage imageNamed: @"pause.png"];
-	UIBarButtonItem *pauseBarButton = [[UIBarButtonItem alloc]	initWithImage:pausedButtonImage
-																	  style:UIBarButtonItemStylePlain
-																	  target:self
-																	  action:@selector (playOrPauseMusic:)];
-	[mPlayingButtons replaceObjectAtIndex:3 withObject:pauseBarButton];
-	[mPlayCtrlToolbar setItems:mPlayingButtons];
-	[mPlayCtrlToolbar setItems:mPausedButtons];
 
 	// Instantiate the music player. If you specied the iPod music player in the Settings app,
 	//		honor the current state of the built-in iPod app.
@@ -511,7 +509,7 @@ extern "C" NSString *formatPlayingTime(int n);
 		[self handle_NowPlayingItemChanged: nil];
 
 		if ([musicPlayer playbackState] == MPMusicPlaybackStatePaused) {
-			[mPlayCtrlToolbar setItems:mPausedButtons];
+			[self handle_PlaybackStateChanged: nil];
 		}
 	}
 
@@ -789,10 +787,10 @@ CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
 {
 	if (CMLApp::GetInstance()->GetLyricsData().HasLyricsOpened()) {
 		if (!bInfoMsg) {
-			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning"
+			UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Warning", @"x")
 															message:msg
 														   delegate:nil
-												  cancelButtonTitle:@"OK"
+												  cancelButtonTitle:NSLocalizedString(@"OK", @"x")
 												  otherButtonTitles:nil];
 			[alert show];
 			[alert release];
@@ -859,9 +857,7 @@ CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
 	[musicPlayer endGeneratingPlaybackNotifications];
 	[musicPlayer				release];
 	
-	[mPlayCtrlToolbar release];
-	[mPausedButtons release];
-	[mPlayCtrlToolbar release];
+	[playPauseButton release];
 
 	[addMusicButton release];
 	[navigationBar				release];

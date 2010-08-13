@@ -12,7 +12,13 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
+#ifndef _IPHONE
+#define _ID3V2_SUPPORT
+#endif
+
+#ifdef _ID3V2_SUPPORT
 #include "../ID3Lib/ID3v2.h"
+#endif
 #include "../MLProtocol/MLUtils.h"
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -294,10 +300,12 @@ public:
 	int Save();
 	
 	int SaveToTextFile(LPCTSTR szFile, bool bSaveErrorInfo = false);
-// 	int SaveLyricsInSongOfID3v2USLT(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
+#ifdef _ID3V2_SUPPORT
+	// 	int SaveLyricsInSongOfID3v2USLT(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
 // 	int SaveLyricsInSongOfID3v2SYLT(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
 	int SaveLyricsInSongOfID3v2(FILE_ENCODING fileEncoding, bool bUslt, bool bSylt, bool bUserDefinedLyr, CHAR_ENCODING nEncodingID);
 	int SaveLyricsInSongOfLyrics3v2(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
+#endif
 
 	BOOL ToString(tstring &str, MLFileType lrcFormat = FT_LYRICS_LRC, BOOL bIncTags = FALSE);
 	int FromString(LPCVOID lpLrc, int nLen, FILE_ENCODING *fileEncoding, MLFileType lrcFormat = FT_LYRICS_LRC, BOOL bStrict = TRUE, BOOL bUnicode = FALSE, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
@@ -448,6 +456,7 @@ protected:
 	// int OpenLyricsFile(LPCTSTR szFile, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
 
 	int OpenLyricsFile(LPCTSTR szFile, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
+#ifdef _ID3V2_SUPPORT
 	int OpenLyricsInSongOfID3v2USLT(ID3v2UnsynchLyrics &lyrics, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
 	int OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
 	int OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
@@ -456,6 +465,7 @@ protected:
 	bool ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
 
 	int UpdateTagToID3v2DescTxt();
+#endif // #ifdef _ID3V2_SUPPORT
 	BOOL SaveTag();
 
 	void ResetModificationFlag();
@@ -483,6 +493,7 @@ protected:
 protected:
 	CLyrScrollActionRecorder	m_lyrScrollActionRecorder;
 
+#ifdef _ID3V2_SUPPORT
 	// save id3v2 lyrics infomation for cache.
 	struct ID3v2LyricsSaveCacheInfo
 	{
@@ -494,6 +505,7 @@ protected:
 		void clear();
 	};
 	ID3v2LyricsSaveCacheInfo	m_id3v2SaveCacheInfo;
+#endif // #ifdef _ID3V2_SUPPORT
 
 	//  «∑Ò”–∏Ë¥ ƒ⁄»›£ø
 	BOOL					m_bHasLyrics;

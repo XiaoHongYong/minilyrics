@@ -8,6 +8,7 @@
 #include "HelperFun.h"
 
 
+#ifdef _ID3V2_SUPPORT
 void GetID3v2LrcSourceLang(LPCTSTR szLrcSource, char szLang[], int len)
 {
 	int		nLen;
@@ -182,6 +183,7 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 		vLyrics.push_back(result);
 	}
 }
+#endif // #ifdef _ID3V2_SUPPORT
 
 
 LPCTSTR			SZ_LRC_FILE_LEFT_COMMENT = _T("ги");

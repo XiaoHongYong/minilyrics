@@ -27,6 +27,13 @@ enum MLNotifyType {
 	MLNT_LYRICS_CHANGED,
 };
 
+LPCTSTR TOLOCAL(LPCTSTR szString)
+{
+	NSString *key = [NSString stringWithUTF8String:szString];
+	NSString *local = [[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil];
+	return [local UTF8String];
+}
+
 tstring GetAppDataDir()
 {
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(

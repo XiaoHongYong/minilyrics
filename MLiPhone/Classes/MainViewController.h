@@ -42,9 +42,7 @@
 	
 	IBOutlet LyrVecticalScrollView *lyrVerticalView;
 
-	IBOutlet UIToolbar			*mPlayCtrlToolbar;
-	NSMutableArray				*mPlayingButtons;
-	NSArray						*mPausedButtons;
+	IBOutlet UIButton			*playPauseButton;
 	
 	MPMusicPlayerController		*musicPlayer;	
 	MPMediaItemCollection		*userMediaItemCollection;
@@ -77,9 +75,7 @@
 @property (nonatomic, retain)	LyrVecticalScrollView	*lyrVerticalView;
 @property (nonatomic, retain)	UIImageView				*albumArtImage;
 
-@property (nonatomic, retain)	UIToolbar				*mPlayCtrlToolbar;
-@property (nonatomic, retain)	NSArray					*mPausedButtons;
-@property (nonatomic, retain)	NSMutableArray			*mPlayingButtons;
+@property (nonatomic, retain)	UIButton				*playPauseButton;
 
 @property (nonatomic, retain)	MPMediaItemCollection	*userMediaItemCollection; 
 @property (nonatomic, retain)	MPMusicPlayerController	*musicPlayer;

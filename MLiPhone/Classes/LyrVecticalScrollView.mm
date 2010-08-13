@@ -93,7 +93,7 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 		pRawImage = RawImageDataFromCGImage([image CGImage]);
 	}
 	else {
-		//image = [UIImage imageNamed: @"bg.png"];
+		//image = [UIImage imageNamed: @"logo.png"];
 		//pRawImage = RawImageDataFromCGImage([image CGImage]);
 		//[image release];	
 	}

@@ -14,8 +14,10 @@
 #include "HelperFun.h"
 #include "LrcParser.h"
 #include "TextFileParser.h"
+#ifndef _IPHONE
 #include "SncParser.h"
 #include "SrtParser.h"
+#endif // #ifndef _IPHONE
 #include <algorithm>
 #include "LyricsTagReader.h"
 
@@ -46,6 +48,7 @@ LRC_SOURCE_TYPE GetLrcSourceType(LPCTSTR szLrcSource)
 		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
 			return LST_LYRICS3V2;
 
+#ifdef _ID3V2_SUPPORT
 		szTemp = SZ_SONG_ID3V2_LYRICS + SONG_HDR_LEN;
 		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
 			return LST_ID3V2_LYRICS;
@@ -57,6 +60,7 @@ LRC_SOURCE_TYPE GetLrcSourceType(LPCTSTR szLrcSource)
 		szTemp = SZ_SONG_ID3V2_USLT + SONG_HDR_LEN;
 		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
 			return LST_ID3V2_USLT;
+#endif // #ifdef _ID3V2_SUPPORT
 
 		return LST_UNKNOWN;
 	}
@@ -130,6 +134,7 @@ void LyricsProperties::SetEncoding(LPCTSTR szEncoding)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+#ifdef _ID3V2_SUPPORT
 CMLData::ID3v2LyricsSaveCacheInfo::ID3v2LyricsSaveCacheInfo()
 {
 	clear();
@@ -141,6 +146,7 @@ void CMLData::ID3v2LyricsSaveCacheInfo::clear()
 	m_strLrcDescription = _T("Lyrics was Saved by MiniLyrics.");
 	m_bAllSyllableIsNewLine = true;
 }
+#endif // #ifdef _ID3V2_SUPPORT
 
 CMLData::CMLData()
 {
@@ -177,6 +183,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 
 	lrcSourceType = GetLrcSourceType(szLrcSource);
 
+#ifdef _ID3V2_SUPPORT
 	if (lrcSourceType == LST_LYRICS3V2)
 	{
 		stringex	strLyrics;
@@ -260,7 +267,10 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 		}
 	}
 	else
+#endif // #ifdef _ID3V2_SUPPORT
+	{
 		nRet = OpenLyricsFile(szLrcSource, bForceUseEncoding, nForceEncodingID);
+	}
 
 	if (nRet == ERR_OK)
 		m_bHasLyrics = TRUE;
@@ -348,11 +358,13 @@ int CMLData::OpenLyricsFile(LPCTSTR szFile, bool bForceUseEncoding, CHAR_ENCODIN
 		pParser = new CLrcParser(this);
 		m_LyricFileType = FT_LYRICS_LRC;
 	}
+#ifndef _IPHONE
 	else if (FileIsExtSame(szFile, _T(".srt")))
 	{
 		pParser = new CSrtParser(this);
 		m_LyricFileType = FT_SUBTITLE_SRT;
 	}
+#endif // #ifndef _IPHONE
 	else
 	{
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
@@ -398,6 +410,7 @@ int CMLData::OpenLyricsFile(LPCTSTR szFile, bool bForceUseEncoding, CHAR_ENCODIN
 	return nRet;
 }
 
+#ifdef _ID3V2_SUPPORT
 int CMLData::OpenLyricsInSongOfID3v2USLT(ID3v2UnsynchLyrics &lyrics, bool bForceUseEncoding, CHAR_ENCODING nForceEncodingID)
 {
 	int		nRet = ERR_OK;
@@ -585,6 +598,7 @@ int CMLData::OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bForc
 
 	return nRet;
 }
+#endif // #ifdef _ID3V2_SUPPORT
 
 int CMLData::Save()
 {
@@ -596,6 +610,7 @@ int CMLData::Save()
 	if (!IsModified())
 		return ERR_OK;
 
+#ifdef _ID3V2_SUPPORT
 	if (m_lrcSourceType == LST_LYRICS3V2)
 	{
 		return SaveLyricsInSongOfLyrics3v2(m_fileEncoding, GetEncodingIndex());
@@ -613,6 +628,7 @@ int CMLData::Save()
 		return SaveLyricsInSongOfID3v2(m_fileEncoding, false, false, true, GetEncodingIndex());
 	}
 	else
+#endif // #ifdef _ID3V2_SUPPORT
 	{
 		if (IsContentModified())
 		{
@@ -684,6 +700,7 @@ int CMLData::Save()
 // 	return nRet;
 // }
 
+#ifdef _ID3V2_SUPPORT
 int CMLData::SaveLyricsInSongOfID3v2(FILE_ENCODING fileEncoding, bool bUslt, bool bSylt, bool bUserDefinedLyr, CHAR_ENCODING nEncodingID)
 {
 	CID3v2IF		id3v2;
@@ -766,6 +783,7 @@ int CMLData::SaveLyricsInSongOfLyrics3v2(FILE_ENCODING fileEncoding, CHAR_ENCODI
 
 	return nRet;
 }
+#endif // #ifdef _ID3V2_SUPPORT
 
 // COMMENT:
 //		将CMLData中的数据保存为文件szFile，文件的类型，由szFile的扩展名决定。
@@ -795,10 +813,12 @@ int CMLData::SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding, bool &bUseNe
 		if (m_lyrConentType <= LCT_TXT)
 			bUseNewFileName = true;
 	}
+#ifndef _IPHONE
 	else if (FileIsExtSame(szFile, _T(".snc")) )
 	{
 		pParser = new CSncParser(this);
 	}
+#endif // #ifndef _IPHONE
 	else
 	{
 		return ERR_UNKNOWN_LRC_FILE_TYPE;
@@ -850,6 +870,7 @@ int CMLData::SaveToTextFile(LPCTSTR szFile, bool bSaveErrorInfo)
 	return Parser.SaveAsFile(szFile, m_fileEncoding);
 }
 
+#ifdef _ID3V2_SUPPORT
 int CMLData::UpdateTagToID3v2DescTxt()
 {
 	CLyricsTagReader<TCHAR>		lrctagWriter;
@@ -881,6 +902,7 @@ int CMLData::UpdateTagToID3v2DescTxt()
 
 	return ERR_OK;
 }
+#endif // #ifdef _ID3V2_SUPPORT
 
 BOOL CMLData::SaveTag()
 {
@@ -1186,7 +1208,9 @@ void CMLData::Close()
 	m_strSongFile.resize(0);;
 	m_strLrcSource.resize(0);;
 
+#ifdef _ID3V2_SUPPORT
 	m_id3v2SaveCacheInfo.clear();
+#endif // #ifdef _ID3V2_SUPPORT
 	ClearLyrics();
 }
 
@@ -2286,6 +2310,7 @@ int CMLData::FilterContents(void)
 	return 0;
 }
 
+#ifdef _ID3V2_SUPPORT
 bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID)
 {
 	strcpy_safe(lyrics.m_szLanguage, CountOf(lyrics.m_szLanguage), m_id3v2SaveCacheInfo.m_strLanguage.c_str());
@@ -2448,6 +2473,7 @@ bool CMLData::ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, FILE_ENCODING fil
 
 	return true;
 }
+#endif // #ifdef _ID3V2_SUPPORT
 
 BOOL CMLData::ToString(tstring &str, MLFileType lrcFormat, BOOL bIncTags)
 {

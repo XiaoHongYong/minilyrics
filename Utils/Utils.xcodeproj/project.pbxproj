@@ -7,13 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5FCB8CE31211813D009F23BD /* LocalizeTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FCB8CE21211813D009F23BD /* LocalizeTool.h */; };
 		5FE7E8AC11F0427600CECD89 /* App.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89011F0427600CECD89 /* App.h */; };
 		5FE7E8AD11F0427600CECD89 /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89111F0427600CECD89 /* CSVFile.cpp */; };
 		5FE7E8AE11F0427600CECD89 /* CSVFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89211F0427600CECD89 /* CSVFile.h */; };
-		5FE7E8AF11F0427600CECD89 /* HtmlWrite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89311F0427600CECD89 /* HtmlWrite.cpp */; };
-		5FE7E8B011F0427600CECD89 /* HtmlWrite.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89411F0427600CECD89 /* HtmlWrite.h */; };
-		5FE7E8B111F0427600CECD89 /* LocalizeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89511F0427600CECD89 /* LocalizeTool.cpp */; };
-		5FE7E8B211F0427600CECD89 /* LocalizeTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89611F0427600CECD89 /* LocalizeTool.h */; };
 		5FE7E8B311F0427600CECD89 /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89711F0427600CECD89 /* Log.cpp */; };
 		5FE7E8B411F0427600CECD89 /* log.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89811F0427600CECD89 /* log.h */; };
 		5FE7E8B511F0427600CECD89 /* LogAlias.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89911F0427600CECD89 /* LogAlias.h */; };
@@ -25,8 +22,6 @@
 		5FE7E8BC11F0427600CECD89 /* SimpleXMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E8A111F0427600CECD89 /* SimpleXMLParser.cpp */; };
 		5FE7E8BD11F0427600CECD89 /* SimpleXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A211F0427600CECD89 /* SimpleXMLParser.h */; };
 		5FE7E8BE11F0427600CECD89 /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A311F0427600CECD89 /* stdafx.h */; };
-		5FE7E8BF11F0427600CECD89 /* UndoMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E8A411F0427600CECD89 /* UndoMgr.cpp */; };
-		5FE7E8C011F0427600CECD89 /* UndoMgr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A511F0427600CECD89 /* UndoMgr.h */; };
 		5FE7E8C111F0427600CECD89 /* Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A711F0427600CECD89 /* Utils.h */; };
 		5FE7E8C211F0427600CECD89 /* UUEncode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E8A811F0427600CECD89 /* UUEncode.cpp */; };
 		5FE7E8C311F0427600CECD89 /* UUEncode.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E8A911F0427600CECD89 /* UUEncode.h */; };
@@ -35,13 +30,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5FCB8CE21211813D009F23BD /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; path = LocalizeTool.h; sourceTree = "<group>"; };
 		5FE7E89011F0427600CECD89 /* App.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
 		5FE7E89111F0427600CECD89 /* CSVFile.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = CSVFile.cpp; sourceTree = "<group>"; };
 		5FE7E89211F0427600CECD89 /* CSVFile.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = CSVFile.h; sourceTree = "<group>"; };
-		5FE7E89311F0427600CECD89 /* HtmlWrite.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = HtmlWrite.cpp; sourceTree = "<group>"; };
-		5FE7E89411F0427600CECD89 /* HtmlWrite.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = HtmlWrite.h; sourceTree = "<group>"; };
-		5FE7E89511F0427600CECD89 /* LocalizeTool.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = LocalizeTool.cpp; sourceTree = "<group>"; };
-		5FE7E89611F0427600CECD89 /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LocalizeTool.h; sourceTree = "<group>"; };
 		5FE7E89711F0427600CECD89 /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = Log.cpp; sourceTree = "<group>"; };
 		5FE7E89811F0427600CECD89 /* log.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = log.h; sourceTree = "<group>"; };
 		5FE7E89911F0427600CECD89 /* LogAlias.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = LogAlias.h; sourceTree = "<group>"; };
@@ -53,9 +45,6 @@
 		5FE7E8A111F0427600CECD89 /* SimpleXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleXMLParser.cpp; sourceTree = "<group>"; };
 		5FE7E8A211F0427600CECD89 /* SimpleXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = SimpleXMLParser.h; sourceTree = "<group>"; };
 		5FE7E8A311F0427600CECD89 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = "<group>"; };
-		5FE7E8A411F0427600CECD89 /* UndoMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = UndoMgr.cpp; sourceTree = "<group>"; };
-		5FE7E8A511F0427600CECD89 /* UndoMgr.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = UndoMgr.h; sourceTree = "<group>"; };
-		5FE7E8A611F0427600CECD89 /* Utils.dsp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = text; path = Utils.dsp; sourceTree = "<group>"; };
 		5FE7E8A711F0427600CECD89 /* Utils.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
 		5FE7E8A811F0427600CECD89 /* UUEncode.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = UUEncode.cpp; sourceTree = "<group>"; };
 		5FE7E8A911F0427600CECD89 /* UUEncode.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = UUEncode.h; sourceTree = "<group>"; };
@@ -91,10 +80,6 @@
 				5FE7E89011F0427600CECD89 /* App.h */,
 				5FE7E89111F0427600CECD89 /* CSVFile.cpp */,
 				5FE7E89211F0427600CECD89 /* CSVFile.h */,
-				5FE7E89311F0427600CECD89 /* HtmlWrite.cpp */,
-				5FE7E89411F0427600CECD89 /* HtmlWrite.h */,
-				5FE7E89511F0427600CECD89 /* LocalizeTool.cpp */,
-				5FE7E89611F0427600CECD89 /* LocalizeTool.h */,
 				5FE7E89711F0427600CECD89 /* Log.cpp */,
 				5FE7E89811F0427600CECD89 /* log.h */,
 				5FE7E89911F0427600CECD89 /* LogAlias.h */,
@@ -105,9 +90,6 @@
 				5FE7E8A111F0427600CECD89 /* SimpleXMLParser.cpp */,
 				5FE7E8A211F0427600CECD89 /* SimpleXMLParser.h */,
 				5FE7E8A311F0427600CECD89 /* stdafx.h */,
-				5FE7E8A411F0427600CECD89 /* UndoMgr.cpp */,
-				5FE7E8A511F0427600CECD89 /* UndoMgr.h */,
-				5FE7E8A611F0427600CECD89 /* Utils.dsp */,
 				5FE7E8A711F0427600CECD89 /* Utils.h */,
 				5FE7E8A811F0427600CECD89 /* UUEncode.cpp */,
 				5FE7E8A911F0427600CECD89 /* UUEncode.h */,
@@ -128,6 +110,7 @@
 		5FE7E89A11F0427600CECD89 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				5FCB8CE21211813D009F23BD /* LocalizeTool.h */,
 				5FE7E89B11F0427600CECD89 /* App.cpp */,
 				5FE7E89C11F0427600CECD89 /* Profile.cpp */,
 			);
@@ -150,18 +133,16 @@
 			files = (
 				5FE7E8AC11F0427600CECD89 /* App.h in Headers */,
 				5FE7E8AE11F0427600CECD89 /* CSVFile.h in Headers */,
-				5FE7E8B011F0427600CECD89 /* HtmlWrite.h in Headers */,
-				5FE7E8B211F0427600CECD89 /* LocalizeTool.h in Headers */,
 				5FE7E8B411F0427600CECD89 /* log.h in Headers */,
 				5FE7E8B511F0427600CECD89 /* LogAlias.h in Headers */,
 				5FE7E8B911F0427600CECD89 /* Profile.h in Headers */,
 				5FE7E8BB11F0427600CECD89 /* SimpleXML.h in Headers */,
 				5FE7E8BD11F0427600CECD89 /* SimpleXMLParser.h in Headers */,
 				5FE7E8BE11F0427600CECD89 /* stdafx.h in Headers */,
-				5FE7E8C011F0427600CECD89 /* UndoMgr.h in Headers */,
 				5FE7E8C111F0427600CECD89 /* Utils.h in Headers */,
 				5FE7E8C311F0427600CECD89 /* UUEncode.h in Headers */,
 				5FE7E8C511F0427600CECD89 /* XMLWriter.h in Headers */,
+				5FCB8CE31211813D009F23BD /* LocalizeTool.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -208,14 +189,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FE7E8AD11F0427600CECD89 /* CSVFile.cpp in Sources */,
-				5FE7E8AF11F0427600CECD89 /* HtmlWrite.cpp in Sources */,
-				5FE7E8B111F0427600CECD89 /* LocalizeTool.cpp in Sources */,
 				5FE7E8B311F0427600CECD89 /* Log.cpp in Sources */,
 				5FE7E8B611F0427600CECD89 /* App.cpp in Sources */,
 				5FE7E8B711F0427600CECD89 /* Profile.cpp in Sources */,
 				5FE7E8BA11F0427600CECD89 /* SimpleXML.cpp in Sources */,
 				5FE7E8BC11F0427600CECD89 /* SimpleXMLParser.cpp in Sources */,
-				5FE7E8BF11F0427600CECD89 /* UndoMgr.cpp in Sources */,
 				5FE7E8C211F0427600CECD89 /* UUEncode.cpp in Sources */,
 				5FE7E8C411F0427600CECD89 /* XMLWriter.cpp in Sources */,
 			);

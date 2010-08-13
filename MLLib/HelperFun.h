@@ -8,10 +8,6 @@ int CompareVersion(LPCTSTR szVer1, int nMajor, int nMinor, int nBuild);
 
 int GoDie();
 
-int MultibyteToUTF8(LPCTSTR szInput, LPTSTR szOutput, int nOutputSize);
-
-int UTF8ToMultibyte(unsigned char* text, char *szOut, int nOutBuffLen);
-
 // 将字符串进行异或操作
 void XorString(char *szString, int nLen);
 

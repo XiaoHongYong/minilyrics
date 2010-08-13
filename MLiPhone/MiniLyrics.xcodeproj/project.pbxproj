@@ -8,12 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		0A1C086A0FB7876600C7BA1B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 0A1C08680FB7876600C7BA1B /* Localizable.strings */; };
-		0A1C08910FB78C0D00C7BA1B /* MusicTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0A1C088F0FB78C0D00C7BA1B /* MusicTableView.xib */; };
 		0A6C6CC00FB396DB00F95575 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A6C6CBF0FB396DB00F95575 /* Default.png */; };
 		0A735D530FACBA430057280A /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A735D520FACBA430057280A /* MainViewController.mm */; };
 		0A735D630FACBAAC0057280A /* no_artwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A735D610FACBAAC0057280A /* no_artwork.png */; };
-		0AA6AE310FB773F6008185AA /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AA6AE2B0FB773F6008185AA /* MainView.xib */; };
-		0AA6AE320FB773F6008185AA /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 0AA6AE2D0FB773F6008185AA /* MainWindow.xib */; };
 		0ADFA0840FABA7250020C909 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ADFA0830FABA7250020C909 /* AudioToolbox.framework */; };
 		0ADFA09E0FABA9DF0020C909 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0ADFA09D0FABA9DF0020C909 /* AVFoundation.framework */; };
 		1D3623260D0F684500981E51 /* MiniLyricsAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* MiniLyricsAppDelegate.m */; };
@@ -34,7 +31,6 @@
 		5F9DEEF811AC095900312E83 /* libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEEF411AC094600312E83 /* libbase.a */; };
 		5F9DEF0B11AC099800312E83 /* libMLLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0A11AC099000312E83 /* libMLLib.a */; };
 		5F9DEF0C11AC099800312E83 /* libUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0111AC097200312E83 /* libUtils.a */; };
-		5F9DEFBE11AC0FAF00312E83 /* libID3Lib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEFBD11AC0FA900312E83 /* libID3Lib.a */; };
 		5F9DEFC911AC101100312E83 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEFC811AC101100312E83 /* libiconv.dylib */; };
 		5FAA987011BE13AD0067A90C /* LyricsShowGraphBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAA986C11BE13AD0067A90C /* LyricsShowGraphBase.cpp */; };
 		5FAA987111BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAA986E11BE13AD0067A90C /* LyricsVerticalScrollGraph.cpp */; };
@@ -47,8 +43,8 @@
 		5FC0B1BB11C51C59000C6537 /* LyricsDownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */; };
 		5FC0B1BC11C51C59000C6537 /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */; };
 		5FC0B1BD11C51C59000C6537 /* OnlineSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */; };
+		5FC1212E1214DF5F003D9B42 /* play_ctrl_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FC1212D1214DF5F003D9B42 /* play_ctrl_bg.png */; };
 		5FCB8BFB1210F007009F23BD /* backward_lyrics.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BD91210F007009F23BD /* backward_lyrics.png */; };
-		5FCB8BFC1210F007009F23BD /* bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDA1210F007009F23BD /* bg.png */; };
 		5FCB8BFD1210F007009F23BD /* blue_plus_pressed.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDB1210F007009F23BD /* blue_plus_pressed.png */; };
 		5FCB8BFE1210F007009F23BD /* blue_plus.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDC1210F007009F23BD /* blue_plus.png */; };
 		5FCB8BFF1210F007009F23BD /* color_choose.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BDD1210F007009F23BD /* color_choose.png */; };
@@ -57,14 +53,12 @@
 		5FCB8C021210F007009F23BD /* forward_lyrics.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE01210F007009F23BD /* forward_lyrics.png */; };
 		5FCB8C031210F007009F23BD /* forward.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE11210F007009F23BD /* forward.png */; };
 		5FCB8C041210F007009F23BD /* iPhone_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE21210F007009F23BD /* iPhone_icon.png */; };
-		5FCB8C051210F007009F23BD /* iPhone_icon2.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE31210F007009F23BD /* iPhone_icon2.png */; };
 		5FCB8C061210F007009F23BD /* logo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE41210F007009F23BD /* logo.png */; };
 		5FCB8C071210F007009F23BD /* lyr_lrc_dl.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE51210F007009F23BD /* lyr_lrc_dl.png */; };
 		5FCB8C081210F007009F23BD /* lyr_lrc.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE61210F007009F23BD /* lyr_lrc.png */; };
 		5FCB8C091210F007009F23BD /* lyr_txt_dl.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE71210F007009F23BD /* lyr_txt_dl.png */; };
 		5FCB8C0A1210F007009F23BD /* lyr_txt.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE81210F007009F23BD /* lyr_txt.png */; };
 		5FCB8C0B1210F007009F23BD /* LyricsSearchView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BE91210F007009F23BD /* LyricsSearchView.xib */; };
-		5FCB8C0C1210F007009F23BD /* NowPlaying.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BEA1210F007009F23BD /* NowPlaying.png */; };
 		5FCB8C0D1210F007009F23BD /* NowPlayingAlbumInfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BEB1210F007009F23BD /* NowPlayingAlbumInfo.png */; };
 		5FCB8C0E1210F007009F23BD /* pause.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BEC1210F007009F23BD /* pause.png */; };
 		5FCB8C0F1210F007009F23BD /* play.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BED1210F007009F23BD /* play.png */; };
@@ -80,6 +74,9 @@
 		5FCB8C191210F007009F23BD /* Search.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF71210F007009F23BD /* Search.png */; };
 		5FCB8C1B1210F007009F23BD /* shuffle_off.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BF91210F007009F23BD /* shuffle_off.png */; };
 		5FCB8C1C1210F007009F23BD /* shuffle_on.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8BFA1210F007009F23BD /* shuffle_on.png */; };
+		5FCB8C621210FCA1009F23BD /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C5F1210FCA1009F23BD /* MainView.xib */; };
+		5FCB8C631210FCA1009F23BD /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C601210FCA1009F23BD /* MainWindow.xib */; };
+		5FCB8C641210FCA1009F23BD /* MusicTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C611210FCA1009F23BD /* MusicTableView.xib */; };
 		5FE7EA0511F1375500CECD89 /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
 		5FE7ECF011F6D2AB00CECD89 /* libImageLibiPhone.a in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */; };
 		5FE7ECF311F6D2C500CECD89 /* libImageLibiPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */; };
@@ -107,13 +104,6 @@
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = MLLib;
 		};
-		5F9DEFBC11AC0FA900312E83 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5F9DEFB511AC0FA800312E83 /* ID3Lib.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = ID3Lib;
-		};
 		5FBBF00E11BC932A0008D709 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */;
@@ -138,15 +128,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0A1C08690FB7876600C7BA1B /* en */ = {isa = PBXFileReference; explicitFileType = text; fileEncoding = 4; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		0A1C08900FB78C0D00C7BA1B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MusicTableView.xib; sourceTree = "<group>"; };
 		0A6C6CBF0FB396DB00F95575 /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Default.png; path = Resources/Default.png; sourceTree = "<group>"; };
 		0A735D510FACBA430057280A /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		0A735D520FACBA430057280A /* MainViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MainViewController.mm; sourceTree = "<group>"; };
 		0A735D610FACBAAC0057280A /* no_artwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = no_artwork.png; path = Resources/no_artwork.png; sourceTree = "<group>"; };
 		0A735D7A0FACBB490057280A /* MiniLyrics-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "MiniLyrics-Info.plist"; sourceTree = "<group>"; };
-		0AA6AE2C0FB773F6008185AA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MainView.xib; sourceTree = "<group>"; };
-		0AA6AE2E0FB773F6008185AA /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Resources/en.lproj/MainWindow.xib; sourceTree = "<group>"; };
 		0ADFA0830FABA7250020C909 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		0ADFA09D0FABA9DF0020C909 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		1D30AB110D05D00D00671497 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -180,7 +166,6 @@
 		5F9DEEEC11AC094500312E83 /* base.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = base.xcodeproj; path = ../base/base.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5F9DEEF911AC097200312E83 /* Utils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Utils.xcodeproj; path = ../Utils/Utils.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLLib.xcodeproj; path = ../MLLib/MLLib.xcodeproj; sourceTree = SOURCE_ROOT; };
-		5F9DEFB511AC0FA800312E83 /* ID3Lib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ID3Lib.xcodeproj; path = ../ID3Lib/ID3Lib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5F9DEFC811AC101100312E83 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		5FAA986C11BE13AD0067A90C /* LyricsShowGraphBase.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsShowGraphBase.cpp; sourceTree = "<group>"; };
 		5FAA986D11BE13AD0067A90C /* LyricsShowGraphBase.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsShowGraphBase.h; sourceTree = "<group>"; };
@@ -203,8 +188,8 @@
 		5FC0B1B711C51C59000C6537 /* LyricsLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsLocalSearch.h; sourceTree = "<group>"; };
 		5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = OnlineSearch.cpp; sourceTree = "<group>"; };
 		5FC0B1B911C51C59000C6537 /* OnlineSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = OnlineSearch.h; sourceTree = "<group>"; };
+		5FC1212D1214DF5F003D9B42 /* play_ctrl_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play_ctrl_bg.png; path = Resources/play_ctrl_bg.png; sourceTree = "<group>"; };
 		5FCB8BD91210F007009F23BD /* backward_lyrics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = backward_lyrics.png; path = Resources/backward_lyrics.png; sourceTree = "<group>"; };
-		5FCB8BDA1210F007009F23BD /* bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = bg.png; path = Resources/bg.png; sourceTree = "<group>"; };
 		5FCB8BDB1210F007009F23BD /* blue_plus_pressed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blue_plus_pressed.png; path = Resources/blue_plus_pressed.png; sourceTree = "<group>"; };
 		5FCB8BDC1210F007009F23BD /* blue_plus.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blue_plus.png; path = Resources/blue_plus.png; sourceTree = "<group>"; };
 		5FCB8BDD1210F007009F23BD /* color_choose.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = color_choose.png; path = Resources/color_choose.png; sourceTree = "<group>"; };
@@ -213,14 +198,12 @@
 		5FCB8BE01210F007009F23BD /* forward_lyrics.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = forward_lyrics.png; path = Resources/forward_lyrics.png; sourceTree = "<group>"; };
 		5FCB8BE11210F007009F23BD /* forward.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = forward.png; path = Resources/forward.png; sourceTree = "<group>"; };
 		5FCB8BE21210F007009F23BD /* iPhone_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPhone_icon.png; path = Resources/iPhone_icon.png; sourceTree = "<group>"; };
-		5FCB8BE31210F007009F23BD /* iPhone_icon2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = iPhone_icon2.png; path = Resources/iPhone_icon2.png; sourceTree = "<group>"; };
 		5FCB8BE41210F007009F23BD /* logo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = logo.png; path = Resources/logo.png; sourceTree = "<group>"; };
 		5FCB8BE51210F007009F23BD /* lyr_lrc_dl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lyr_lrc_dl.png; path = Resources/lyr_lrc_dl.png; sourceTree = "<group>"; };
 		5FCB8BE61210F007009F23BD /* lyr_lrc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lyr_lrc.png; path = Resources/lyr_lrc.png; sourceTree = "<group>"; };
 		5FCB8BE71210F007009F23BD /* lyr_txt_dl.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lyr_txt_dl.png; path = Resources/lyr_txt_dl.png; sourceTree = "<group>"; };
 		5FCB8BE81210F007009F23BD /* lyr_txt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = lyr_txt.png; path = Resources/lyr_txt.png; sourceTree = "<group>"; };
 		5FCB8BE91210F007009F23BD /* LyricsSearchView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = LyricsSearchView.xib; path = Resources/LyricsSearchView.xib; sourceTree = "<group>"; };
-		5FCB8BEA1210F007009F23BD /* NowPlaying.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NowPlaying.png; path = Resources/NowPlaying.png; sourceTree = "<group>"; };
 		5FCB8BEB1210F007009F23BD /* NowPlayingAlbumInfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NowPlayingAlbumInfo.png; path = Resources/NowPlayingAlbumInfo.png; sourceTree = "<group>"; };
 		5FCB8BEC1210F007009F23BD /* pause.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pause.png; path = Resources/pause.png; sourceTree = "<group>"; };
 		5FCB8BED1210F007009F23BD /* play.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play.png; path = Resources/play.png; sourceTree = "<group>"; };
@@ -236,6 +219,11 @@
 		5FCB8BF71210F007009F23BD /* Search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Search.png; path = Resources/Search.png; sourceTree = "<group>"; };
 		5FCB8BF91210F007009F23BD /* shuffle_off.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = shuffle_off.png; path = Resources/shuffle_off.png; sourceTree = "<group>"; };
 		5FCB8BFA1210F007009F23BD /* shuffle_on.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = shuffle_on.png; path = Resources/shuffle_on.png; sourceTree = "<group>"; };
+		5FCB8C2C1210F9AA009F23BD /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Resources/zh_CN.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5FCB8C2D1210F9D3009F23BD /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		5FCB8C5F1210FCA1009F23BD /* MainView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainView.xib; path = Resources/MainView.xib; sourceTree = "<group>"; };
+		5FCB8C601210FCA1009F23BD /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = Resources/MainWindow.xib; sourceTree = "<group>"; };
+		5FCB8C611210FCA1009F23BD /* MusicTableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MusicTableView.xib; path = Resources/MusicTableView.xib; sourceTree = "<group>"; };
 		5FE7EA0311F1375500CECD89 /* LyrStaticTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrStaticTextView.h; sourceTree = "<group>"; };
 		5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrStaticTextView.mm; sourceTree = "<group>"; };
 		5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImageLibiPhone.xcodeproj; path = /Users/showbrave/ZikiPlayer/ImageLib/ImageLibiPhone.xcodeproj; sourceTree = "<absolute>"; };
@@ -249,7 +237,6 @@
 				5FE7ECF311F6D2C500CECD89 /* libImageLibiPhone.a in Frameworks */,
 				5FBBF02011BC938D0008D709 /* libGfxRaw.a in Frameworks */,
 				5FBBF02111BC938D0008D709 /* libgfx.a in Frameworks */,
-				5F9DEFBE11AC0FAF00312E83 /* libID3Lib.a in Frameworks */,
 				5F9DEF0B11AC099800312E83 /* libMLLib.a in Frameworks */,
 				5F9DEF0C11AC099800312E83 /* libUtils.a in Frameworks */,
 				5F9DEEF811AC095900312E83 /* libbase.a in Frameworks */,
@@ -318,7 +305,6 @@
 				5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */,
 				5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */,
 				5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */,
-				5F9DEFB511AC0FA800312E83 /* ID3Lib.xcodeproj */,
 				5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */,
 				5F9DEEF911AC097200312E83 /* Utils.xcodeproj */,
 				5F9DEEEC11AC094500312E83 /* base.xcodeproj */,
@@ -345,7 +331,6 @@
 			isa = PBXGroup;
 			children = (
 				5FCB8BD91210F007009F23BD /* backward_lyrics.png */,
-				5FCB8BDA1210F007009F23BD /* bg.png */,
 				5FCB8BDB1210F007009F23BD /* blue_plus_pressed.png */,
 				5FCB8BDC1210F007009F23BD /* blue_plus.png */,
 				5FCB8BDD1210F007009F23BD /* color_choose.png */,
@@ -354,19 +339,18 @@
 				5FCB8BE01210F007009F23BD /* forward_lyrics.png */,
 				5FCB8BE11210F007009F23BD /* forward.png */,
 				5FCB8BE21210F007009F23BD /* iPhone_icon.png */,
-				5FCB8BE31210F007009F23BD /* iPhone_icon2.png */,
 				5FCB8BE41210F007009F23BD /* logo.png */,
 				5FCB8BE51210F007009F23BD /* lyr_lrc_dl.png */,
 				5FCB8BE61210F007009F23BD /* lyr_lrc.png */,
 				5FCB8BE71210F007009F23BD /* lyr_txt_dl.png */,
 				5FCB8BE81210F007009F23BD /* lyr_txt.png */,
 				5FCB8BE91210F007009F23BD /* LyricsSearchView.xib */,
-				5FCB8BEA1210F007009F23BD /* NowPlaying.png */,
 				5FCB8BEB1210F007009F23BD /* NowPlayingAlbumInfo.png */,
 				5FCB8BEC1210F007009F23BD /* pause.png */,
 				5FCB8BED1210F007009F23BD /* play.png */,
 				5FCB8BEE1210F007009F23BD /* playing_slider_ball_pressed.png */,
 				5FCB8BEF1210F007009F23BD /* playing_slider_ball.png */,
+				5FC1212D1214DF5F003D9B42 /* play_ctrl_bg.png */,
 				5FCB8BF01210F007009F23BD /* playing_slider_left.png */,
 				5FCB8BF11210F007009F23BD /* playing_slider_right.png */,
 				5FCB8BF21210F007009F23BD /* playing.png */,
@@ -374,14 +358,14 @@
 				5FCB8BF41210F007009F23BD /* repeat_on_1.png */,
 				5FCB8BF51210F007009F23BD /* repeat_on.png */,
 				5FCB8BF61210F007009F23BD /* rewind.png */,
+				5FCB8C5F1210FCA1009F23BD /* MainView.xib */,
+				5FCB8C601210FCA1009F23BD /* MainWindow.xib */,
+				5FCB8C611210FCA1009F23BD /* MusicTableView.xib */,
 				5FCB8BF71210F007009F23BD /* Search.png */,
 				5FCB8BF91210F007009F23BD /* shuffle_off.png */,
 				5FCB8BFA1210F007009F23BD /* shuffle_on.png */,
 				0A6C6CBF0FB396DB00F95575 /* Default.png */,
 				0A735D610FACBAAC0057280A /* no_artwork.png */,
-				0AA6AE2D0FB773F6008185AA /* MainWindow.xib */,
-				0AA6AE2B0FB773F6008185AA /* MainView.xib */,
-				0A1C088F0FB78C0D00C7BA1B /* MusicTableView.xib */,
 				0A1C08680FB7876600C7BA1B /* Localizable.strings */,
 				0A735D7A0FACBB490057280A /* MiniLyrics-Info.plist */,
 			);
@@ -447,14 +431,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5F9DEFB611AC0FA800312E83 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5F9DEFBD11AC0FA900312E83 /* libID3Lib.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		5FBBF00B11BC932A0008D709 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -513,6 +489,7 @@
 				French,
 				German,
 				en,
+				zh_CN,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CustomTemplate */;
 			projectDirPath = "";
@@ -528,10 +505,6 @@
 				{
 					ProductGroup = 5FBBF01111BC934A0008D709 /* Products */;
 					ProjectRef = 5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */;
-				},
-				{
-					ProductGroup = 5F9DEFB611AC0FA800312E83 /* Products */;
-					ProjectRef = 5F9DEFB511AC0FA800312E83 /* ID3Lib.xcodeproj */;
 				},
 				{
 					ProductGroup = 5FE7ECC711F6D0CD00CECD89 /* Products */;
@@ -575,13 +548,6 @@
 			remoteRef = 5F9DEF0911AC099000312E83 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5F9DEFBD11AC0FA900312E83 /* libID3Lib.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libID3Lib.a;
-			remoteRef = 5F9DEFBC11AC0FA900312E83 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		5FBBF00F11BC932A0008D709 /* libgfx.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -612,12 +578,8 @@
 			files = (
 				0A735D630FACBAAC0057280A /* no_artwork.png in Resources */,
 				0A6C6CC00FB396DB00F95575 /* Default.png in Resources */,
-				0AA6AE310FB773F6008185AA /* MainView.xib in Resources */,
-				0AA6AE320FB773F6008185AA /* MainWindow.xib in Resources */,
 				0A1C086A0FB7876600C7BA1B /* Localizable.strings in Resources */,
-				0A1C08910FB78C0D00C7BA1B /* MusicTableView.xib in Resources */,
 				5FCB8BFB1210F007009F23BD /* backward_lyrics.png in Resources */,
-				5FCB8BFC1210F007009F23BD /* bg.png in Resources */,
 				5FCB8BFD1210F007009F23BD /* blue_plus_pressed.png in Resources */,
 				5FCB8BFE1210F007009F23BD /* blue_plus.png in Resources */,
 				5FCB8BFF1210F007009F23BD /* color_choose.png in Resources */,
@@ -626,14 +588,12 @@
 				5FCB8C021210F007009F23BD /* forward_lyrics.png in Resources */,
 				5FCB8C031210F007009F23BD /* forward.png in Resources */,
 				5FCB8C041210F007009F23BD /* iPhone_icon.png in Resources */,
-				5FCB8C051210F007009F23BD /* iPhone_icon2.png in Resources */,
 				5FCB8C061210F007009F23BD /* logo.png in Resources */,
 				5FCB8C071210F007009F23BD /* lyr_lrc_dl.png in Resources */,
 				5FCB8C081210F007009F23BD /* lyr_lrc.png in Resources */,
 				5FCB8C091210F007009F23BD /* lyr_txt_dl.png in Resources */,
 				5FCB8C0A1210F007009F23BD /* lyr_txt.png in Resources */,
 				5FCB8C0B1210F007009F23BD /* LyricsSearchView.xib in Resources */,
-				5FCB8C0C1210F007009F23BD /* NowPlaying.png in Resources */,
 				5FCB8C0D1210F007009F23BD /* NowPlayingAlbumInfo.png in Resources */,
 				5FCB8C0E1210F007009F23BD /* pause.png in Resources */,
 				5FCB8C0F1210F007009F23BD /* play.png in Resources */,
@@ -649,6 +609,10 @@
 				5FCB8C191210F007009F23BD /* Search.png in Resources */,
 				5FCB8C1B1210F007009F23BD /* shuffle_off.png in Resources */,
 				5FCB8C1C1210F007009F23BD /* shuffle_on.png in Resources */,
+				5FCB8C621210FCA1009F23BD /* MainView.xib in Resources */,
+				5FCB8C631210FCA1009F23BD /* MainWindow.xib in Resources */,
+				5FCB8C641210FCA1009F23BD /* MusicTableView.xib in Resources */,
+				5FC1212E1214DF5F003D9B42 /* play_ctrl_bg.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -690,33 +654,10 @@
 		0A1C08680FB7876600C7BA1B /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				0A1C08690FB7876600C7BA1B /* en */,
+				5FCB8C2C1210F9AA009F23BD /* zh_CN */,
+				5FCB8C2D1210F9D3009F23BD /* en */,
 			);
 			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
-		0A1C088F0FB78C0D00C7BA1B /* MusicTableView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0A1C08900FB78C0D00C7BA1B /* en */,
-			);
-			name = MusicTableView.xib;
-			sourceTree = "<group>";
-		};
-		0AA6AE2B0FB773F6008185AA /* MainView.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0AA6AE2C0FB773F6008185AA /* en */,
-			);
-			name = MainView.xib;
-			sourceTree = "<group>";
-		};
-		0AA6AE2D0FB773F6008185AA /* MainWindow.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				0AA6AE2E0FB773F6008185AA /* en */,
-			);
-			name = MainWindow.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -757,6 +698,42 @@
 				PRODUCT_NAME = MiniLyrics;
 			};
 			name = Release;
+		};
+		5FCB8DCC1213A07C009F23BD /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Hongyong Xiao";
+				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
+				MACOSX_DEPLOYMENT_TARGET = "";
+				PREBINDING = NO;
+				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6FF320E2-34D2-48A4-A2EC-F78E33E226F9";
+				SDKROOT = iphoneos4.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Distribution;
+		};
+		5FCB8DCD1213A07C009F23BD /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
+				INFOPLIST_FILE = "MiniLyrics-Info.plist";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../base/base/build/Debug\"",
+					"\"$(SRCROOT)/../base/base/build/Debug-iphoneos\"",
+				);
+				PRODUCT_NAME = MiniLyrics;
+			};
+			name = Distribution;
 		};
 		C01FCF4F08A954540054247B /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -803,6 +780,7 @@
 			buildConfigurations = (
 				1D6058940D05DD3E006BFB54 /* Debug */,
 				1D6058950D05DD3E006BFB54 /* Release */,
+				5FCB8DCD1213A07C009F23BD /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -812,6 +790,7 @@
 			buildConfigurations = (
 				C01FCF4F08A954540054247B /* Debug */,
 				C01FCF5008A954540054247B /* Release */,
+				5FCB8DCC1213A07C009F23BD /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
