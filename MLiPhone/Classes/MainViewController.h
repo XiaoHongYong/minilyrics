@@ -12,9 +12,17 @@
 #import "MLApp.h"
 #import "LyrStaticTextView.h"
 
+#ifdef _FREE
+#import <iAd/iAd.h>
+#endif // #ifdef _FREE
+
 @interface MainViewController : UIViewController 
 	<MPMediaPickerControllerDelegate, MusicTableViewControllerDelegate, AVAudioPlayerDelegate,
-	MLAppEventDelegate, UIGestureRecognizerDelegate> {
+	MLAppEventDelegate, UIGestureRecognizerDelegate
+#ifdef _FREE
+	, ADBannerViewDelegate
+#endif // #ifdef _FREE
+	> {
 
 	MiniLyricsAppDelegate		*applicationDelegate;
 	IBOutlet UIButton			*addMusicButton;
@@ -49,6 +57,10 @@
 
 	MLApp						*mlApp;
 
+#ifdef _FREE
+	ADBannerView				*banner;
+#endif // #ifdef _FREE
+
 }
 
 @property (nonatomic, retain)	UIButton				*addMusicButton;
@@ -81,6 +93,10 @@
 @property (nonatomic, retain)	MPMusicPlayerController	*musicPlayer;
 
 @property (nonatomic, retain)	MLApp					*mlApp;
+
+#ifdef _FREE
+@property (nonatomic, retain)	ADBannerView			*banner;
+#endif // #ifdef _FREE
 
 - (IBAction)	playOrPauseMusic:		(id) sender;
 - (IBAction)	rewindMusic:			(id) sender;
