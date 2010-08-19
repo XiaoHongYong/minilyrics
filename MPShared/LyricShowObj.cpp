@@ -549,7 +549,7 @@ void ProfileWriteLyricsFont(EventType etColorTheme, LPCTSTR szSectName, int nHei
 	if (szFaceNameLatin9 == NULL || szFaceNameOthers == NULL || IsEmptyString(szFaceNameLatin9) || IsEmptyString(szFaceNameOthers))
 	{
 		if ((szFaceNameLatin9 == NULL || IsEmptyString(szFaceNameLatin9)) && (szFaceNameOthers == NULL || IsEmptyString(szFaceNameOthers))
-			&& nHeight == -1 && nWeight == -1 && byItalic == 0xFF)
+			&& nHeight == -1 && nWeight == -1)
 			return;
 
 		int		nHeightOld, nWeightOld;
@@ -564,8 +564,6 @@ void ProfileWriteLyricsFont(EventType etColorTheme, LPCTSTR szSectName, int nHei
 			nHeight = nHeightOld;
 		if (nWeight == -1)
 			nWeight = nWeightOld;
-		if (byItalic == 0xFF)
-			byItalic = nItalicOld;
 	}
 
 	FontPropertyValueToStr(strFont, nHeight, nWeight, byItalic, szFaceNameLatin9, szFaceNameOthers);

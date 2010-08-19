@@ -24,8 +24,8 @@ CDlgChooseFont::~CDlgChooseFont()
 
 int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontHeight, int nWeight, int nItalic)
 {
-	LOGFONT lgfont = {25, 0, 0, 0, FW_REGULAR, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, ANTIALIASED_QUALITY, DEFAULT_PITCH | FF_ROMAN, _T("system")};
-	CHOOSEFONT	choosefont;
+	LOGFONT lgfont = { 0 };
+	CHOOSEFONT	choosefont = { 0 };
 
 	m_strFontFaceName = szFontFaceName;
 	m_nFontHeight = nFontHeight;
@@ -37,7 +37,6 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 	lgfont.lfItalic = nItalic;
 	_tcscpy_safe(lgfont.lfFaceName, CountOf(lgfont.lfFaceName), szFontFaceName);
 
-	memset(&choosefont, 0, sizeof(choosefont));
 	choosefont.Flags = CF_INITTOLOGFONTSTRUCT | CF_SCALABLEONLY | CF_SCREENFONTS | CF_NOVERTFONTS;// | CF_EFFECTS;
 	choosefont.lpLogFont = &lgfont;
 	choosefont.hwndOwner = pWndParent->GetHandle();

@@ -39,14 +39,16 @@ bool FontPropertyValueFromStr(LPCTSTR szValue, int &nHeight, int &nWeight, BYTE 
 			nWeight = FW_BOLD;
 		else if (_tcsicmp(strWeight.c_str(), _T("thin")) == 0)
 			nWeight = FW_THIN;
-		else
+		else if (_tcsicmp(strWeight.c_str(), _T("normal")) == 0)
 			nWeight = FW_NORMAL;
+		else
+			nWeight = _ttoi(strWeight.c_str());
 	}
 
 	// italic
 	csvLine.IgnoreChars(_T(" "));
 	if (!csvLine.ReadFieldInt(byItalic))
-		byItalic = -1;
+		byItalic = 0;
 
 	// underline
 	csvLine.IgnoreChars(_T(" "));
@@ -73,12 +75,14 @@ void FontPropertyValueToStr(tstring &strValue, int nHeight, int nWeight, BYTE by
 	_itot_s(nHeight, szBuff, CountOf(szBuff), 10);
 	strValue += szBuff; strValue += SZ_FEILD_SEP;
 
-	if (nWeight >= FW_BOLD)
+	_itot_s(nWeight, szBuff, CountOf(szBuff), 10);
+	strValue += szBuff; strValue += SZ_FEILD_SEP;
+/*	if (nWeight >= FW_BOLD)
 		strValue += _T("bold, ");
 	else if (nWeight <= FW_THIN)
 		strValue += _T("thin, ");
 	else
-		strValue += _T("normal, ");
+		strValue += _T("normal, ");*/
 
 	_itot_s(byItalic, szBuff, CountOf(szBuff), 10);
 	strValue += szBuff; strValue += SZ_FEILD_SEP;
