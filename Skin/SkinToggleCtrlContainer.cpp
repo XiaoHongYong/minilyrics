@@ -27,7 +27,7 @@ CRawGraph *CSkinToggleCtrlContainer::GetMemGraph()
 
 	if (!m_memGraph.IsValid())
 	{
-		IMLGraphicsBase *pTemp = m_pSkin->GetGraphics();
+		CMLGraphics *pTemp = m_pSkin->GetGraphics();
 		m_memGraph.Create(m_rcObj.Width(), m_rcObj.Height(), pTemp);
 		m_memGraph.SetOrigin(CPoint(-m_rcObj.left, -m_rcObj.top));
 		m_pSkin->ReleaseGraphics(pTemp);

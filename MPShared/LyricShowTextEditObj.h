@@ -11,9 +11,8 @@
 #include "LyricShowObj.h"
 #include "SkinEditCtrl_t.h"
 #include "LyrEditHandler.h"
-#include "DlgFindReplace.h"
 
-class CLyricShowTextEditObj : public CSkinEditBoard_t<CLyricShowObj, CLyrEditHandler>, public IEditNotification, public IFindReplaceNotify
+class CLyricShowTextEditObj : public CSkinEditBoard_t<CLyricShowObj, CLyrEditHandler>, public IEditNotification
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CLyricShowObj)
 public:
@@ -77,14 +76,14 @@ protected:
 	virtual void ReloadThemeOfSkin(bool bSavetoProfile);
 	void AdjustSyncTimeOfSelected(bool bIncreaseTime);
 
-	void OnFRCommand(IFindReplaceNotify::Command cmd);
+	// void OnFRCommand(IFindReplaceNotify::Command cmd);
 	void ShowFindDialog(bool bFind = true);
 	void FindNext();
 
 	bool				m_bDiscardLyrChangeEvent;
 	int					m_nTimerIDUpdateLyrics;
 
-	CDlgFindReplace			m_dlgFindReplace;
+	// CDlgFindReplace			m_dlgFindReplace;
 
 };
 

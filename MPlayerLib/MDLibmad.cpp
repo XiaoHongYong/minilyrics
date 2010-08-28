@@ -278,7 +278,6 @@ MLRESULT CMDLibmad::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia 
 		bool	bUpdate = false;
 		tstring  artist,  title,  album,  comment;
 		tstring  track,  year,  genre,  composer;
-		tstring  encoded,  url,  copyRight,  origArtist,  publisher,  bpm;
 
 		CID3v1	id3v1;
 		ID3V1	tag;
@@ -320,8 +319,7 @@ MLRESULT CMDLibmad::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia 
 		if (nRet == ERR_OK)
 		{
 			nRet = id3v2.GetTags(artist,  title,  album,  comment,
-			track,  year,  genre,  composer,
-			encoded,  url,  copyRight,  origArtist,  publisher,  bpm);
+			track,  year,  genre,  composer);
 			if (nRet == ERR_OK)
 				bUpdate = true;
 		}

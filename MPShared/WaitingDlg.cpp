@@ -106,7 +106,7 @@ void CPageWaitMessage::OnUserMessage(int nMessageID, LPARAM param)
 }
 
 //////////////////////////////////////////////////////////////////////
-
+/*
 CWaitingDlg::CWaitingDlg() : CBaseDialog(IDD_WAITING)
 {
 	m_pWorkObj = NULL;
@@ -164,3 +164,4 @@ void CWaitingDlg::OnUserMessage(int nMessageID, LPARAM param)
 			CBaseDialog::OnOK();
 	}
 }
+*/

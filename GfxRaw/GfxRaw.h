@@ -3,7 +3,6 @@
 
 #include "../ImageLib/RawImageData.h"
 #include "RawImage.h"
-#include "RawImageUtils.h"
 #include "RawPen.h"
 #include "RawGraph.h"
 #include "RawBmpFont.h"

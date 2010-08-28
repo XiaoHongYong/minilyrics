@@ -1170,56 +1170,6 @@ BEGIN
     PUSHBUTTON      "Help",IDC_MLHELP,215,95,50,14
 END
 
-IDD_ABOUTBOX DIALOGEX 0, 0, 225, 206
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About $Product$"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    CTEXT           "ML Ver",IDC_VERSION,35,24,154,8
-    LTEXT           "Debug",IDC_DEBUG_VER,194,16,24,8,NOT WS_VISIBLE
-    PUSHBUTTON      "Copyright 2001-2010 Crintsoft $Product$",IDC_WEB_HOME,28,46,163,14
-    PUSHBUTTON      "Submit bugs && Forum",IDC_FORUM,7,7,121,14,NOT WS_VISIBLE
-    PUSHBUTTON      "support@crintsoft.com",IDC_TECHSUPPORT,51,73,121,14
-    LTEXT           "This Product is licensed to:",IDC_S_LICENSE_TO,52,98,164,8
-    EDITTEXT        IDC_NAME,52,111,96,14,ES_AUTOHSCROLL | ES_READONLY
-    LTEXT           "Registration Code:",IDC_S_REGCODE,53,130,160,8
-    EDITTEXT        IDC_REGISTRATION_CODE,52,144,96,14,ES_AUTOHSCROLL | ES_READONLY
-    PUSHBUTTON      "&Buy Now",IDC_PURCHASEINFO,39,168,57,14
-    DEFPUSHBUTTON   "&Enter code",IDC_ENTERCODE,127,168,57,14
-    CTEXT           "* * *  UNREGISTERED, TRIAL VERSION  * * *",IDC_UN_REG,9,131,204,8
-END
-
-IDD_REGISTRATION DIALOG  0, 0, 250, 142
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Registration"
-FONT 8, "MS Shell Dlg"
-BEGIN
-    LTEXT           "Enter the following information exactly as what are shown in your received registration message.",IDC_STATIC,21,9,216,19
-    LTEXT           "Name:",IDC_STATIC,29,37,79,8
-    EDITTEXT        IDC_NAME,114,34,108,14,ES_AUTOHSCROLL
-    LTEXT           "Registration Code:",IDC_STATIC,29,58,73,8
-    EDITTEXT        IDC_REGISTRATION_CODE,114,55,108,14,ES_UPPERCASE | ES_AUTOHSCROLL
-    LTEXT           "If you have not registered yet, please visit our website to register.",IDC_STATIC,21,77,205,18
-    CONTROL         "www.viewlyrics.com",IDC_REGISTER_WEB,"Button",BS_OWNERDRAW | WS_TABSTOP,11,100,99,14
-    CONTROL         "support@crintsoft.com",IDC_TECHSUPPORT,"Button",BS_OWNERDRAW | WS_TABSTOP,143,100,96,14
-    DEFPUSHBUTTON   "OK",IDOK,61,121,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,145,121,50,14
-END
-
-IDD_REGISTER_NOTICE DIALOG  0, 0, 246, 156
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "$Product$ (Evaluation Version)"
-FONT 8, "MS Shell Dlg"
-BEGIN
-    CTEXT           "Thank you for choosing $Product$",IDC_STATIC,49,10,148,8
-    DEFPUSHBUTTON   "&Buy Now",IDC_PURCHASEINFO,19,135,58,14
-    PUSHBUTTON      "&Enter code",IDOK,94,135,58,14
-    PUSHBUTTON      "&Close",IDCANCEL,169,135,58,14
-    LTEXT           "We hope you do buy it, but of course it is free for you to try $Product$ before you buy.",IDC_STATIC,7,28,232,29
-    LTEXT           "$Product$ does NOT contain any advertising systems or ""adware"" or ""spyware"" or any ""tag-along"" extra software in its installer.",IDC_STATIC,7,61,232,34
-    LTEXT           "We only make money by selling $Product$ to real people like you.  If you like and use $Product$, please do buy it.",IDC_STATIC,7,98,232,31
-END
-
 IDD_NEW_VERSION_PROMPT DIALOGEX 0, 0, 281, 187
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "New version notice"
@@ -1229,17 +1179,6 @@ BEGIN
     PUSHBUTTON      "&Close",IDCANCEL,152,166,60,14
     CTEXT           "New Version Notice",IDC_STATIC,66,6,117,8
     EDITTEXT        IDC_NEW_VERSION,7,24,267,133,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_NOHIDESEL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
-END
-
-IDD_RENAME DIALOGEX 0, 0, 265, 73
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Rename lyrics file"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
-BEGIN
-    LTEXT           "File Name:",IDC_STATIC1,7,22,55,8
-    EDITTEXT        IDC_NAME,67,20,190,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "OK",IDOK,53,52,58,14
-    PUSHBUTTON      "Cancel",IDCANCEL,153,52,58,14
 END
 
 IDD_CRASH_REPORT DIALOGEX 0, 0, 268, 129
@@ -1471,24 +1410,6 @@ BEGIN
     PUSHBUTTON      "&Replace",IDC_REPLACE,225,30,62,14
     PUSHBUTTON      "Replace &All",IDC_REPLACE_ALL,225,49,62,14
     PUSHBUTTON      "Cancel",IDCANCEL,225,68,62,14
-END
-
-IDD_LRC_SEARCH DIALOGEX 0, 0, 380, 209
-STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-CAPTION "Search lyrics"
-FONT 8, "MS Shell Dlg", 0, 0, 0x1
-BEGIN
-    LTEXT           "Title:",IDC_STATIC,7,27,37,8
-    LTEXT           "Artist:",IDC_STATIC,7,11,37,8
-    DEFPUSHBUTTON   "&Search",IDC_SEARCH,318,24,55,14
-    CONTROL         "List1",IDC_RESULT_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,43,366,122,WS_EX_CLIENTEDGE
-    PUSHBUTTON      "<< Prev Page",IDC_PREV_PAGE,255,167,55,14,NOT WS_VISIBLE
-    PUSHBUTTON      "Next Page >>",IDC_NEXT_PAGE,318,167,55,14,NOT WS_VISIBLE
-    PUSHBUTTON      "&Open",IDOK,122,188,55,14
-    PUSHBUTTON      "&More >>",IDC_MORE,202,188,55,14
-    PUSHBUTTON      "Cancel",IDCANCEL,318,188,55,14
-    EDITTEXT        IDC_E_ARTIST,53,7,256,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_E_TITLE,53,24,256,14,ES_AUTOHSCROLL
 END
 
 IDD_SET_HOTKEY DIALOGEX 0, 0, 191, 75

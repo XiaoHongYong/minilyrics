@@ -129,7 +129,7 @@ void CSkinFontProperty::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOther
 }
 
 
-void CSkinFontProperty::Create(const CMLFont &font)
+void CSkinFontProperty::Create(const CFontInfo &font)
 {
 	Clear();
 

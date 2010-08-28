@@ -108,14 +108,6 @@ void FormatPlayTime(TCHAR szBuf[], int nmsTime)
 		_stprintf_s(szBuf, 32, _T("%02d:%02d"), nMinute, nSec);
 }
 
-void FillRectBorder(IMLGraphicsBase *pGraph, CRect &rc, int nBorderSize, CMLBrush &br)
-{
-	pGraph->FillRect(0, 0, rc.Width(), nBorderSize, &br);
-	pGraph->FillRect(rc.right - nBorderSize, nBorderSize, nBorderSize, rc.Height() - nBorderSize * 2, &br);
-	pGraph->FillRect(0, rc.Height() - nBorderSize, rc.Width(), nBorderSize, &br);
-	pGraph->FillRect(0, nBorderSize, nBorderSize, rc.Height() - nBorderSize * 2, &br);
-}
-
 void GetAppNameLong(TCHAR szName[], int nLen)
 {
 #ifdef _MPLAYER
@@ -125,27 +117,6 @@ void GetAppNameLong(TCHAR szName[], int nLen)
 	g_Player.GetPlayerName(szPlayer, CountOf(szPlayer));
 	_stprintf_s(szName, nLen, _T("%s for %s"), SZ_APP_NAME, szPlayer);
 #endif
-}
-
-void LogToEdit(CWidgetEditBox *editCtrl, LPCTSTR szText, BOOL bNewLine)
-{
-	if (bNewLine)
-	{
-		TCHAR		szDate[256];
-#ifdef _WIN32_WCE
-		_tcscpy(szDate, _T("\r\n"));
-#else
-		time_t		ltime;
-		tm			*curtime;
-
-		time(&ltime);
-		curtime = localtime(&ltime);
-		_tcsftime(szDate, CountOf(szDate), _T("\r\n%H:%M:%S  "), curtime);
-#endif
-		editCtrl->AppendText(szDate);
-	}
-
-	editCtrl->AppendText(szText);
 }
 
 /*

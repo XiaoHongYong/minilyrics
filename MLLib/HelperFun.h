@@ -23,7 +23,7 @@ void XorString(char *szString, int nLen);
 
 void FilterSongFileExt(LPTSTR szFile);
 
-BOOL AnalysisLyricsFileNameEx(TCHAR szArtist[]/* out */, int nLenArtist, TCHAR szTitle[]/* out */, int nLenTitle, LPCTSTR szFileName);
+BOOL AnalysisLyricsFileNameEx(tstring &strArtist, tstring &strTitle, LPCTSTR szFileName);
 
 BOOL IsEncryptedLyrics(LPCTSTR szFile);
 

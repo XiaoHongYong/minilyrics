@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\;../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;_MPLAYER"
+				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;_MPLAYER;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"

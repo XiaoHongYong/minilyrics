@@ -419,7 +419,7 @@ CRawGlyphSet::~CRawGlyphSet()
 
 bool CRawGlyphSet::Create(const CFontInfo &font)
 {
-	CFontInfo::Set(font);
+	CFontInfo::Create(font);
 
 	m_rawGlyphBuilder.Init(font);
 
@@ -688,7 +688,7 @@ bool CRawBmpFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int
 {
 	CFontInfo	font;
 
-	font.Set(szFaceNameLatin9, szFaceNameOthers, nHeight, nWeight, nItalic, bUnderline);
+	font.Create(szFaceNameLatin9, szFaceNameOthers, nHeight, nWeight, nItalic, bUnderline);
 
 	return Create(font);
 }
@@ -813,7 +813,6 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 {
 	ASSERT(G_PIX_SIZE == 4);
 
-	int			x, y;
 	byte		clr[3];
 
 	clr[0] = clrGlyph.b();
@@ -1313,7 +1312,9 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 				if (x > xLeftClipOffset)
 				{
 					CRect	rc;
-					rc.SetRect(x, y, x + nPrefixWidth, y + 1);
+					CRawGraph::CClipBoxAutoRecovery cbr(pGraph);
+					pGraph->SetClipBoundBox(*lpRect);
+					rc.SetRect(x, y + 1, x + nPrefixWidth, y + 2);
 					pGraph->FillRect(&rc, clrText, BPM_CHANNEL_RGB | BPM_OP_COPY);
 				}
 			}
@@ -1422,14 +1423,16 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 				int			x, y, width, xLeftClipOffset; //, height = lpRect->bottom - lpRect->top;
 
 				GetDrawTextExPosition(str.c_str(), str.size(), lpRect, uFormat, x, y, width, xLeftClipOffset);
-				x += 1;
+				x -= 1;
 				y -= 3;
 				x += nXPrefix;
 				y += m_prawGlyphSet->GetHeight();
 				if (x > xLeftClipOffset)
 				{
 					CRect	rc;
-					rc.SetRect(x, y, x + nPrefixWidth, y + 1);
+					CRawGraph::CClipBoxAutoRecovery cbr(pGraph);
+					pGraph->SetClipBoundBox(*lpRect);
+					rc.SetRect(x, y + 1, x + nPrefixWidth, y + 2);
 					pGraph->FillRect(&rc, clrText, BPM_CHANNEL_RGB | BPM_OP_COPY);
 				}
 			}

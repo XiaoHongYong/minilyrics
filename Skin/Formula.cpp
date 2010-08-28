@@ -63,6 +63,13 @@ void CFormula::Increase(int nValue)
 	SimpleOptimize();
 }
 
+BOOL CFormula::CalCualteValue(int &nRetValue)
+{
+	FORMULA_VAR var[] = { 0, 0 };
+
+	return CalCualteValue(var, nRetValue);
+}
+
 BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 {
 	BOOL	bRet = FALSE;

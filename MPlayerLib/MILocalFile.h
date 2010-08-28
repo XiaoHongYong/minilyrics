@@ -18,7 +18,7 @@ public:
 
 	virtual MLRESULT Open(LPCXSTR szSourceMedia);
 	virtual uint32 Read(LPVOID lpBuffer, uint32 dwSize);
-	virtual MLRESULT Seek(uint32 dwOffset, int nOrigin);
+	virtual MLRESULT Seek(uint32 dwOffset, int nOrigin = SEEK_SET);
 	virtual MLRESULT GetSize(uint32 &dwSize);
 	virtual uint32 GetPos();
 

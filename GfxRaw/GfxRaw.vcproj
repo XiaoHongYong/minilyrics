@@ -104,6 +104,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./;../SDK/Agg/include;../SDK/cppunit/include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				RuntimeLibrary="0"
@@ -210,10 +212,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\RawImageUtils.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\RawPen.cpp"
 				>
 			</File>
@@ -269,10 +267,6 @@
 			</File>
 			<File
 				RelativePath=".\RawImage.h"
-				>
-			</File>
-			<File
-				RelativePath=".\RawImageUtils.h"
 				>
 			</File>
 			<File

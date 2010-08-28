@@ -914,7 +914,7 @@ void CSkinTreeCtrl::SetSelRowBkColor(const MLColor &clrBk)
 	m_clrSelRowBk = clrBk;
 }
 
-void CSkinTreeCtrl::SetFont(const CMLFont &font)
+void CSkinTreeCtrl::SetFont(const CFontInfo &font)
 {
 	m_font.Create(font);
 	m_nLineHeight = m_font.GetHeight() + 2;

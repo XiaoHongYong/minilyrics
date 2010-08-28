@@ -59,6 +59,7 @@ public:
 	
 	void RecalculateSizePos();
 	void RecalculateUIObjSizePos(CUIObject *pObj);
+	BOOL RecalculateVarValue(CFormula &form, int &nRetValue);
 
 	CMLMenu *GetMenu() { return m_pMenu; }
 

@@ -487,7 +487,6 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 
 			g_LyricSearch.AssociateLyrics(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str());
 
-			// g_AdManage.AddAdDisplayCount(1);
 			g_mpApp.ResearchLyrics();
 
 #ifdef _WIN32
@@ -520,11 +519,6 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 			pEvent->pTask = pTask;
 			pEvent->downloadType = CEventDownloadEnd::DT_DL_CHECK_NEW_VERSION_OK;
 			g_eventDispather.DispatchSyncEventByNoUIThread(pEvent);
-		}
-		break;
-	case DTT_CHECK_AD:
-		{
-			// g_AdManage.OnAdInfoDownloaded(pTask);
 		}
 		break;
 	default:
@@ -775,7 +769,7 @@ RETURN_END:
 	if (nRet == ERR_OK && nHttpCode == 200)
 	{
 		if (pTask->taskType == DTT_LYRICS)
-			SaveDownloadedFile(pTask, buffRet.data(), buffRet.size());
+			SaveDownloadedFile(pTask->m_strSaveFile, buffRet.data(), buffRet.size());
 	}
 	else
 	{
@@ -786,31 +780,35 @@ RETURN_END:
 }
 
 
-int CDownloadMgr::SaveDownloadedFile(CDownloadTask *pTask, LPVOID lpData, int nSize)
+int CDownloadMgr::SaveDownloadedFile(tstring &strFile, LPCVOID lpData, int nSize)
 {
-	if (IsFileExist(pTask->m_strSaveFile.c_str()))
+	if (IsFileExist(strFile.c_str()))
 	{
-		SetFileNoReadOnly(pTask->m_strSaveFile.c_str());
+		SetFileNoReadOnly(strFile.c_str());
 	}
 
-	if (!SaveDataAsFile(pTask->m_strSaveFile.c_str(), lpData, nSize))
+	if (!SaveDataAsFile(strFile.c_str(), lpData, nSize))
 	{
 		TCHAR	szPath[MAX_PATH];
 
-		FileGetPath(szPath, CountOf(szPath), pTask->m_strSaveFile.c_str());
+		FileGetPath(szPath, CountOf(szPath), strFile.c_str());
 		CreateDirectoryAll(szPath);
 
-		if (!SaveDataAsFile(pTask->m_strSaveFile.c_str(), lpData, nSize))
+		if (!SaveDataAsFile(strFile.c_str(), lpData, nSize))
 		{
 			// save in the default directory
 			tstring	strSaveFile = m_strDefSavePath;
 			DirStringFormat(strSaveFile);
-			strSaveFile += FileGetName(pTask->m_strSaveFile.c_str());
-			pTask->m_strSaveFile = strSaveFile;
+			strSaveFile += FileGetName(strFile.c_str());
+			strFile = strSaveFile;
 
-			FileGetPath(szPath, CountOf(szPath), pTask->m_strSaveFile.c_str());
+			FileGetPath(szPath, CountOf(szPath), strFile.c_str());
 			CreateDirectoryAll(szPath);
-			SaveDataAsFile(pTask->m_strSaveFile.c_str(), lpData, nSize);
+			if (!SaveDataAsFile(strFile.c_str(), lpData, nSize))
+			{
+				ERRLOG1(_T("Failed to save downloaded lyrics file: %s."), strFile.c_str());
+				return ERR_OPEN_FILE;
+			}
 		}
 	}
 

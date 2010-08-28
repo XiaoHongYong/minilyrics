@@ -67,6 +67,7 @@ protected:
 
 };
 
+/*
 //
 //
 class CWaitingDlg : public CBaseDialog  
@@ -90,6 +91,6 @@ protected:
 
 	tstring			m_strTitle, m_strMsg;
 
-};
+};*/
 
 #endif // !defined(AFX_WAITINGDLG_H__8E8BBE95_0587_4DEB_9DAF_7B3769589439__INCLUDED_)

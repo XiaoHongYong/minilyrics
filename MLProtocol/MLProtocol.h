@@ -5,18 +5,26 @@
 #if !defined(AFX_MLPROTOCOL_H__BB1B1F2A_F36F_47C4_B264_AA43E755E09C__INCLUDED_)
 #define AFX_MLPROTOCOL_H__BB1B1F2A_F36F_47C4_B264_AA43E755E09C__INCLUDED_
 
-#if _MSC_VER > 1000
+/***********************************************************************
+History of MLProtocol:
+2010.08(7.1 or later): support batch download
+
+/***********************************************************************/
+
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "NetServer.h"
 #include "HttpProtocol.h"
 #include "MLUtils.h"
+#include "BinContainer.h"
+
+typedef list<tstring>		ListString;
 
 enum ML_PROTOCAL_ERROR
 {
 	ERR_UNKNOWN				= 1035, // 未翻译出来的结果
 	ERR_BAD_XMLREQUEST		= 1036,
+	ERR_CORRUPTTED_MSG		= 1037,	// The message is corrupted
 	ERR_REDIRECT			= 1038,	// 重定向连接
 	ERR_REG_EMAIL_EXIST		= 1040,
 	ERR_REG_USER_EXIST		= 1041,
@@ -56,10 +64,13 @@ enum MLMsgType
 	MT_UNKNOWN,			// 未知格式
 	MT_XML,				// xml的消息格式
 	MT_BIN,				// 二进制的消息格式
-	MT_HTTP_GET,
-	MT_HTTP_POST,		// Http post 的消息格式
-	MT_HTTP_POST_XML,	// Minilyrics 请求的HTTP tunnel的消息格式
-	MT_HTTP_RET,		// Http return的消息格式
+
+	MT_HTTP_GET,		// Http get request
+	MT_HTTP_POST,		// Http post request
+	MT_HTTP_RET,		// Http return
+
+	MT_HTTP_XML,		// Minilyrics 请求的HTTP tunnel的消息格式,
+						// translated from MT_HTTP_*
 };
 
 enum MLMsgCmd
@@ -69,6 +80,7 @@ enum MLMsgCmd
 	MC_UNKNOWN,				// 未知
 	MC_LOGIN,				// 登陆
 	MC_SEARCH,				// 搜索（歌词……）
+	MC_BATCH_SEARCH,		// Search lyrics by batch
 	MC_CAN_UPLOAD,			// 是否能够上传（歌词……），服务器返回结果，如果不能上传会返回具体的原因
 	MC_UPLOAD,				// 上传（歌词……）
 	MC_POST_BUG,			// 发送Bug
@@ -84,11 +96,13 @@ MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 #define MZ_LOGIN			_T("login")
 #define MZ_RETURN			_T("return")
 #define MZ_SEARCH			_T("search")
+#define MZ_BATCH_SEARCH		_T("batchsearch")		// MiniLyrics 7.1 or later
 #define MZ_CANUPLOAD		_T("canupload")
 #define MZ_UPLOAD			_T("upload")
 #define MZ_POST_BUG			_T("bug")
 
 #define MZ_FILEINFO			_T("fileinfo")
+#define MZ_ITEM				_T("item")
 #define MZ_ORG_CMD			_T("orgcmd")
 #define MZ_CMD_RESULT		_T("result")
 #define MZ_SESSIONID		_T("sessionid")
@@ -114,6 +128,20 @@ public:
 public:
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
+	void ToXMLAttribute(CXMLWriter &xmlFile);
+
+};
+
+// <return .... />
+// $\0$
+// data block
+class MLRetMsgDataBlock : public MLRetMsg
+{
+public:
+	CCharBuffer dataBlock;		// The attached data block.
+
+public:
+	virtual int FromData(CCharBuffer &buff);
 
 };
 
@@ -249,11 +277,88 @@ public:
 		nPageCount = 1;
 		nCurPage = 0;
 	}
+	virtual int FromXML(SXNode *pNode);
+	virtual int ToXML(CXMLWriter &xmlFile);
+
+};
+
+class MLSearchItem
+{
+public:
+	MLSearchItem() : nMediaLength(0) { }
+
+	int FromXML(SXNode *pXmlNode);
+	int ToXML(CXMLWriter &xmlFile);
+
+	tstring		strArtist, strTitle;
+	int			nMediaLength;			// in seconds
+
+	// Fields below are used on in CLIENT of MiniLyrics.
+	tstring		strMediaFile, strLyrFile;
+	int			nIndex;
+
+};
+typedef vector<MLSearchItem>		MLListSearchItems;
+
+
+// Client sent to server to search lyrics by batch.
+//
+// Return:
+//		ERR_OK
+//		ERR_NOT_FOUND
+//		ERR_ACCESS_DENIED
+class MLMsgCmdBatchSearch : public CXMLMsgCmd
+{
+public:
+	tstring		strProtocolVer;
+	tstring		strClient;		// client name + client ver
+	tstring		strRegCode;
+	tstring		strClientCharEncoding;		// 客户的使用的字符编码，服务器用户将utf-8转换为客户端的编码，搜索mbcs的旧歌词
+	MLListSearchItems	listSearchItems;
+
+public:
+	MLMsgCmdBatchSearch();
+
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
 
 };
 
+class MLLyricsInfoLite
+{
+public:
+	tstring			strFile; // strArtist, strTitle, 
+	int				nIndex;
+
+public:
+	virtual int FromXML(SXNode *pXmlNode);
+	virtual int ToXML(CXMLWriter &xmlFile);
+
+};
+
+typedef list<MLLyricsInfoLite>		ListLyricsInfoLite;
+
+// The return message of batch search
+// <return .... />
+// \0$
+// data block
+class MLMsgRetBatchSearch : public MLRetMsgDataBlock
+{
+public:
+	REGCODE_VERIFY_VALUE	RegVerifyValue;
+	tstring					strMessage;
+	CBinContainer			binContainer;		// Lyrics data
+	ListLyricsInfoLite		listLyricsInfo;		// Lyrics info: artist, title, file name
+
+public:
+	MLMsgRetBatchSearch() : binContainer(&dataBlock)
+	{
+		RegVerifyValue = RVV_OK;
+	}
+	virtual int FromXML(SXNode *pXmlNode);
+	virtual int ToXML(CXMLWriter &xmlFile);
+
+};
 
 // 客户端向服务器请求判断是否能够上传
 //
@@ -331,7 +436,6 @@ public:
 enum ML_PACK_VERSION
 {
 	MPV_INVALID			= 0,
-	// MPV_AUTO			= 1,		// 
 	MPV_XML				= '<',		// 没有加密，直接为 XML 协议
 	MPV_V1_MD5_ID		= 2,		// 
 };

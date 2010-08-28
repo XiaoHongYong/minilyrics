@@ -24,10 +24,7 @@
 #define IDR_MENU_ID                     150
 #define IDR_MENU_OPEN_LRC_DLG           151
 #define IDR_MENU_ALBUMART               152
-#define IDD_REGISTRATION                157
-#define IDD_REGISTER_NOTICE             158
 #define IDD_NEW_VERSION_PROMPT          159
-#define IDD_RENAME                      162
 #define IDD_CRASH_REPORT                163
 #define IDD_UPLOAD_LRC                  164
 #define IDD_UPLOAD_EXIST                165
@@ -41,13 +38,11 @@
 #define IDD_EMBEDDED_LRC_SEL            175
 #define IDD_EMBEDDED_LRC_SAVE           176
 #define IDD_EMBEDDED_LRC_REMOVE         177
-#define IDD_ABOUTBOX                    178
 #define IDD_RATE_LYR                    180
 #define IDD_BATCH_EMBEDDED_LYR          181
 #define IDD_ADJUST_HUE                  186
 #define IDD_EDIT_FIND                   187
 #define IDD_EDIT_REPLACE                188
-#define IDD_LRC_SEARCH                  189
 #define IDM_MOUSE_CLICK_THROUGH         190
 #define IDM_LYR_EDITOR                  192
 #define IDB_ADV_PREFERENCE              194
@@ -79,13 +74,7 @@
 #define IDC_E_COMMENT                   1017
 #define IDC_LIST_FILES                  1029
 #define IDC_RESET                       1033
-#define IDC_NEXT_PAGE                   1035
-#define IDC_REGISTER_WEB                1037
-#define IDC_WEB_HOME                    1038
-#define IDC_PREV_PAGE                   1040
-#define IDC_TECHSUPPORT                 1043
 #define IDC_ADD_SONG_FILE               1045
-#define IDC_FORUM                       1050
 #define IDC_CB_ENCODING                 1056
 #define IDC_CB_RATING                   1057
 #define IDC_C_LYR_FONT                  1060
@@ -100,25 +89,17 @@
 #define IDC_REFRESH                     1084
 #define IDC_DEL_FILE                    1086
 #define IDC_RENAME                      1088
-#define IDC_NAME                        1089
-#define IDC_REGISTRATION_CODE           1090
 #define IDC_REGISTER                    1091
-#define IDC_PURCHASEINFO                1092
 #define IDC_NEW_VERSION                 1093
 #define IDC_VISITWEB                    1094
-#define IDC_VERSION                     1096
-#define IDC_SEARCH                      1097
 #define IDC_E_FILENAME                  1100
 #define IDC_PLAY                        1101
-#define IDC_DEBUG_VER                   1102
 #define IDC_STATIC1                     1103
 #define IDC_UPLOAD                      1104
 #define IDC_E_USER                      1105
 #define IDC_TAB                         1107
 #define IDC_LIST                        1108
 #define IDC_MSG                         1109
-#define IDC_S_LICENSE_TO                1110
-#define IDC_S_REGCODE                   1111
 #define IDC_S_FILENAME                  1112
 #define IDC_S_ARTIST                    1113
 #define IDC_S_TITLE                     1114
@@ -132,8 +113,6 @@
 #define IDC_C_RENAMELYRICS              1123
 #define IDC_E_SRC                       1124
 #define IDC_E_TARGET                    1126
-#define IDC_ENTERCODE                   1127
-#define IDC_UN_REG                      1128
 #define IDC_NOT_MATCH                   1129
 #define IDC_HUE                         1148
 #define IDC_EDIT                        1150
@@ -169,8 +148,6 @@
 #define IDC_REPLACE_ALL                 1188
 #define IDC_C_MATCH_CASE                1189
 #define IDC_C_SEARCH_UP                 1190
-#define IDC_MORE                        1191
-#define IDC_RESULT_LIST                 1192
 #define IDC_HIDE_RATE_LINK              1193
 #define IDC_INFO                        1198
 #define IDC_S_MSG                       1202
@@ -347,14 +324,23 @@
 #define IDC_ADDFILE                     40172
 #define IDC_LYR_EDITOR                  40173
 #define IDC_SL_CLEAR_TIME_STAMP         40174
+#define IDC_MORE                        40175
 #define IDC_HELP_STATIC_LYR             40177
+#define ID_Menu                         40178
+#define ID_EMBEDDED_LYRICS              40179
+#define IDC_EMBEDDED_LYRICS             40180
+#define IDC_ADD_FILES                   40181
+#define IDC_ADD_FOLDER                  40182
+#define IDC_CLEAR_LIST                  40183
+#define IDC_REMOVE_SELECTED             40184
+#define IDC_DOWNLOAD_ALL_LYRICS         40185
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        211
-#define _APS_NEXT_COMMAND_VALUE         40178
+#define _APS_NEXT_COMMAND_VALUE         40186
 #define _APS_NEXT_CONTROL_VALUE         1204
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

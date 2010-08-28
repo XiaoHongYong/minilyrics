@@ -13,8 +13,8 @@
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"
-#include "../gfx/gfx.h"
+#include "../GfxLite/GfxLite.h"
 #include "../GfxRaw/GfxRaw.h"
-#include "../widget/widget.h"
+#include "../WidgetLite/WidgetLite.h"
 
 #endif // !defined(AFX_STDAFX_H__62C8D2B2_8513_46C1_AC77_8E6DED4A6D8E__INCLUDED_)

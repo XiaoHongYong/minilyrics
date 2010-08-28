@@ -102,6 +102,7 @@ public:
 	BOOL AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle);
 
 	int SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount);
+	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, tstring &strMsg);
 
 protected:
 	int UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLFileInfoList &fileList);

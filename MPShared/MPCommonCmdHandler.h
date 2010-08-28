@@ -31,12 +31,6 @@ public:
 protected:
 	bool OnCommandCharEncoding(int nCmdId);
 
-#ifndef _WIN32_WCE
-	void OnCommandSaveLyricsToMp3();
-	void OnCommandOpenLyricsInMp3();
-	void OnCommandRemoveLyricsInMp3();
-#endif
-
 	VLyrLines &GetDisplayLyrics();
 
 protected:

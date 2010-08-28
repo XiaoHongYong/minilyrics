@@ -441,10 +441,10 @@ public:
 
 };
 
-class CDlgShortcutKey : public CBaseDialog
+class CDlgShortcutKey// : public CBaseDialog
 {
 public:
-	CDlgShortcutKey(LPCTSTR szCaption) : CBaseDialog(IDD_SET_HOTKEY)
+	CDlgShortcutKey(LPCTSTR szCaption)// : CBaseDialog(IDD_SET_HOTKEY)
 	{
 		m_strCaption = szCaption;
 		m_nVirtualKey = 0;
@@ -452,25 +452,25 @@ public:
 	}
 	BOOL OnInitDialog()
 	{
-		CBaseDialog::OnInitDialog();
+		// CBaseDialog::OnInitDialog();
 
-		m_hotkey.Init(this, IDC_HOTKEY);
-		SetWindowText(m_strCaption.c_str());
+		// m_hotkey.Init(this, IDC_HOTKEY);
+		// SetWindowText(m_strCaption.c_str());
 
 		return TRUE;
 	}
 
 	void OnOK()
 	{
-		m_hotkey.GetHotkey(m_nVirtualKey, m_fsModifiers);
+		// m_hotkey.GetHotkey(m_nVirtualKey, m_fsModifiers);
 
-		CBaseDialog::OnOK();
+		// CBaseDialog::OnOK();
 	}
 
 	UINT				m_nVirtualKey, m_fsModifiers;
 
 protected:
-	CHotkeyCtrlEx		m_hotkey;
+	// CHotkeyCtrlEx		m_hotkey;
 	tstring				m_strCaption;
 
 };
@@ -598,7 +598,7 @@ public:
 			CDlgShortcutKey		dlg(m_strName.c_str());
 			bool				bGloal = (nIndex == 1);
 
-			if (dlg.DoModal(m_pWndParent->GetSkinWnd()) == IDOK)
+			// if (dlg.DoModal(m_pWndParent->GetSkinWnd()) == IDOK)
 			{
 				// Is this hotkey already being used?
 				int			nUsedCmdIndex;

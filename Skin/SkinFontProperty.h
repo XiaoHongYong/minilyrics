@@ -47,7 +47,7 @@ public:
 
 	void Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHeight, int nWeight, int nItalic, bool bUnderline);
 
-	void Create(const CMLFont &font);
+	void Create(const CFontInfo &font);
 
 	void Clear();
 
@@ -70,7 +70,7 @@ public:
 
 	void UpdateMLFontInfo();
 
-	CMLFont & GetMLFont() { return m_font; }
+	CFontInfo & GetMLFont() { return m_font; }
 
 	void OnCreate(CSkinWnd *pSkin);
 
@@ -84,7 +84,7 @@ protected:
 protected:
 	CSkinWnd			*m_pSkin;
 	CRawBmpFont		*m_pRawFont;
-	CMLFont			m_font;
+	CFontInfo			m_font;
 
 	bool			m_bCustomized;			// This is used for skin editor to disable customized font
 	uint32			m_nFlagProperties;

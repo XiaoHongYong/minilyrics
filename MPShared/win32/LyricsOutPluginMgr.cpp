@@ -397,7 +397,7 @@ bool CLyricsOutPluginMgr::GetMediaFile(TCHAR szFile[], int nBuffLen)
 {
 	EmptyStr(szFile);
 	_tcscpy_safe(szFile, nBuffLen, g_Player.GetSrcMedia());
-	return !EmptyStr(szFile);
+	return !IsEmptyString(szFile);
 }
 
 #ifdef _WIN32

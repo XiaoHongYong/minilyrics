@@ -150,11 +150,14 @@ void FilterSongFileExt(LPTSTR szFile)
 	}
 }
 
-BOOL AnalysisLyricsFileNameEx(TCHAR szArtist[]/* out */, int nLenArtist, TCHAR szTitle[]/* out */, int nLenTitle, LPCTSTR szFileName)
+BOOL AnalysisLyricsFileNameEx(tstring &strArtist, tstring &strTitle, LPCTSTR szFileName)
 {
 	LPCTSTR		szEndArtist;
 	LPCTSTR		szBegTitle;
 	TCHAR		szFullTitleNew[MAX_PATH];
+
+	strArtist.resize(0);
+	strTitle.resize(0);
 
 	//
 	// 将FullTitle中的.mp3, .ra, .rm ....等替换掉
@@ -167,16 +170,9 @@ BOOL AnalysisLyricsFileNameEx(TCHAR szArtist[]/* out */, int nLenArtist, TCHAR s
 		szBegTitle += 3;	// strlen(_T(" - "));
 	else
 	{
-/* 不再专门对中文分割做处理
-		szEndArtist = szBegTitle = _tcsstr(szFullTitleNew, _T(" － "));
+		szEndArtist = szBegTitle = _tcschr(szFullTitleNew, '-');
 		if (szBegTitle)
-			szBegTitle += strlen(_T(" － "));
-		else
-*/		{
-			szEndArtist = szBegTitle = _tcschr(szFullTitleNew, '-');
-			if (szBegTitle)
-				szBegTitle++;	// -
-		}
+			szBegTitle++;	// -
 	}
 
 
@@ -187,18 +183,15 @@ BOOL AnalysisLyricsFileNameEx(TCHAR szArtist[]/* out */, int nLenArtist, TCHAR s
 		//
 		// 认为 szFullTitle 都是 Title, Artist 为空
 		szBegTitle = szFullTitleNew;
-
-		szArtist[0] = '\0';
 	}
 	else
 	{
-		_tcsncpysz_safe(szArtist, nLenArtist, szFullTitleNew, int(szEndArtist - szFullTitleNew));
+		strArtist.append(szFullTitleNew, int(szEndArtist - szFullTitleNew));
+		TrimStr(strArtist);
 	}
 
-	_tcscpy_safe(szTitle, nLenTitle, szBegTitle);
-
-	TrimStr(szTitle);
-	TrimStr(szArtist);
+	strTitle = szBegTitle;
+	TrimStr(strTitle);
 
 	return TRUE;
 }

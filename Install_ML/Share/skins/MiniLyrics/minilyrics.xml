@@ -72,7 +72,7 @@
         Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
         ImageFocusPos="0,32" />
       <Image Name="Brand" Rect="44,8,81,20" Image="name.png"/>
-      <MenuBar Rect="150,9,w-75-150,18" Name="Menu" Menu="MainWndMenu"
+      <MenuBar Rect="150,9,w-75-150,18" Name="Menu" Menu="MainWndMenu" FontName="Verdana"
          FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
          TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
          TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"

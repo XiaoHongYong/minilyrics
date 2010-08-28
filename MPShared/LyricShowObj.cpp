@@ -10,9 +10,7 @@
 #include "MPlayerApp.h"
 #include "LyricShowObj.h"
 #include "LyricShowAgentObj.h"
-#ifndef _MPLAYER
 #include "DlgRateLyrics.h"
-#endif
 
 
 PRAW_IMAGE_DATA AutoFitImageToRect(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst, int nBitCount)
@@ -1042,13 +1040,13 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 /*#ifndef _WIN32_WCE
 		if (pFrag->IsAdFrag())
 		{
-			CMLFont		*pOldFont;
+			CFontInfo		*pOldFont;
 
 			pOldFont = pGraphics->GetFont();
 			ASSERT(pOldFont);
 			if (pOldFont)
 			{
-				CMLFont		font;
+				CFontInfo		font;
 				font.Create(m_font.GetName(), font.GetNameOthers(), m_font.GetHeight(), m_font.GetWeight(), m_font.GetItalic(), true);
 
 				pGraphics->SetFont(&font);
@@ -1120,13 +1118,13 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 /*#ifndef _WIN32_WCE
 		if (pFrag->IsAdFrag())
 		{
-			CMLFont		*pOldFont;
+			CFontInfo		*pOldFont;
 
 			pOldFont = pGraphics->GetFont();
 			ASSERT(pOldFont);
 			if (pOldFont)
 			{
-				CMLFont		font;
+				CFontInfo		font;
 				font.Create(m_font.GetName(), font.GetNameOthers(), m_font.GetHeight(), m_font.GetWeight(), m_font.GetItalic(), true);
 
 				pGraphics->SetFont(&font);
@@ -1676,9 +1674,7 @@ bool CLyricShowObj::OnLButtonDown(UINT nFlags, CPoint point)
 				{
 #ifndef _MPLAYER
 					// show rate dialog
-					CDlgRateLyrics	dlg;
-					dlg.m_strLink = ads.strLink.c_str() + _tcslen(_T("cmd://rate/"));
-					dlg.DoModal(m_pSkin);
+					CMPSkinDialog::ShowDialog(new CDlgRateLyrics(ads.strLink.c_str() + _tcslen(_T("cmd://rate/"))), m_pSkin);
 #endif
 				}
 				else

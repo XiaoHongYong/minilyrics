@@ -867,7 +867,7 @@ bool CSkinWnd::UpdateSkinProperty()
 	return TRUE;
 }
 
-void CSkinWnd::OnPaint(IMLGraphicsBase *pGraph)
+void CSkinWnd::OnPaint(CMLGraphics *pGraph)
 {
 	if (IsIconic())
 		return;
@@ -904,7 +904,7 @@ CRawGraph *CSkinWnd::GetMemGraphics()
 
 bool CSkinWnd::RecreateMemGraphics()
 {
-	IMLGraphicsBase		*pGraph;
+	CMLGraphics		*pGraph;
 
 	pGraph = GetGraphics();
 
@@ -1012,7 +1012,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	}
 #endif
 
-	IMLGraphicsBase		*pGraphics;
+	CMLGraphics		*pGraphics;
 
 	pGraphics = GetGraphics();
 
@@ -1642,7 +1642,8 @@ void CSkinWnd::FocusPrevUIObject()
 	else
 		m_itFocusUIObject--;
 
-	while (1)
+	int	nLoopCount = 0;
+	while (nLoopCount < 2)
 	{
 		CUIObject			*pObj = m_itFocusUIObject.Get();
 
@@ -1658,9 +1659,12 @@ void CSkinWnd::FocusPrevUIObject()
 			break;
 
 		if (m_itFocusUIObject.IsBegin())
+		{
+			nLoopCount++;
 			m_itFocusUIObject.End();
-
-		m_itFocusUIObject--;
+		}
+		else
+			m_itFocusUIObject--;
 	}
 
 	m_itFocusUIObject.End();
@@ -1966,7 +1970,7 @@ void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
 	else
 #endif
 	{
-		IMLGraphicsBase		*pGraphics;
+		CMLGraphics		*pGraphics;
 
 		pGraphics = GetGraphics();
 
@@ -2098,14 +2102,14 @@ LRESULT CSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 				PAINTSTRUCT		ps;
 				HDC				hdc;
 				hdc = BeginPaint(m_hWnd, &ps);
-				IMLGraphicsBase	*pGraph;
+				CMLGraphics	*pGraph;
 
-				pGraph = CMLGraphicsFactory::CreateMLGraphics(hdc, m_graphType);
-				assert(pGraph);
+				pGraph = new CMLGraphics;
+				pGraph->Attach(hdc);
 
 				OnPaint(pGraph);
 
-				CMLGraphicsFactory::ReleaseMLGraphics(pGraph);
+				delete pGraph;
 
 				EndPaint(m_hWnd, &ps);
 			}

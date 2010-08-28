@@ -5,9 +5,6 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "AutoProcessEmbeddedLyrics.h"
-#ifndef _WIN32_WCE
-#include "DlgBatchProcessEmbeddedLyrics.h"
-#endif
 
 CAutoProcessEmbeddedLyrics		g_autoProcessEmbeddedLyrics;
 
@@ -124,7 +121,7 @@ void CAutoProcessEmbeddedLyrics::OnQuit()
 {
 	OnSongChanged();
 
-#ifndef _WIN32_WCE
+/*#ifndef _WIN32_WCE
 	if (!m_listJobs.empty())
 	{
 		// Show a dialog to let users choose.
@@ -133,7 +130,7 @@ void CAutoProcessEmbeddedLyrics::OnQuit()
 
 		dlg.DoModal(g_mpApp.GetMainWnd());
 	}
-#endif
+#endif*/
 
 	m_listJobs.clear();
 }

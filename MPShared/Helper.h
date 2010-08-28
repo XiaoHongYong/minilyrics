@@ -19,15 +19,9 @@ void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl);
 
 void Execute(CBaseWnd *pWnd, LPCTSTR szExe, LPCTSTR szParam);
 
-void MLHtmlHelper(CBaseWnd *pWnd, LPCTSTR szFile);
-
 bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText);
 
-void LogToEdit(CWidgetEditBox *editCtrl, LPCTSTR szText, BOOL bNewLine);
-
 LPCTSTR HttpErrorCodeToStr(int nCode);
-
-int MessageOut(LPCTSTR lpText, LPCTSTR szSaveDefault,CBaseWnd *pWnd = NULL, UINT uType = MB_ICONINFORMATION, LPCTSTR lpCaption = NULL);
 
 BOOL SHDeleteFile(LPCTSTR szFile, CBaseWnd *pWndParent);
 
@@ -46,8 +40,6 @@ void ParseMLTextMacro(LPCTSTR szText, tstring &str);
 void GetNotepadEditor(tstring &strEditor);
 
 void FormatPlayTime(TCHAR szBuf[], int nmsTime);
-
-void FillRectBorder(IMLGraphicsBase *pGraph, CRect &rc, int nBorderSize, CMLBrush &br);
 
 void GetAppNameLong(TCHAR szName[], int nLen);
 

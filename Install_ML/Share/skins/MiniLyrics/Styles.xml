@@ -66,7 +66,7 @@
         <Image Name="Menu Bg" Rect="5,0,w-10,23" Image="menu_bg.png"
                BltMode="tile" BlendPixMode="copy"/>
         <MenuBar Rect="10,2,w-90-150,20" Name="Menu"
-                 UseSkinBg="true" TranslucencyWithSkin="TRUE"
+                 UseSkinBg="true" TranslucencyWithSkin="TRUE" FontName="Verdana"
            FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
            TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
            TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
@@ -147,6 +147,7 @@
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"
           XBorder="0" YBorder="10" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
+    <Slider Extends="SeekCtrl" EndWidth="3" ImageThumb="seek_thumb.png" ImageTrack="seek_track.png"/>
     <ListCtrlFrame Extends="Frame" Image="s_listctrl_frame.png" ImageFocus="s_listctrl_frame_focus.png"
           RoundWidth="4" ThickWidth="4" XBorder="0" YBorder="0"/>
     <WndFrameCaption Extends="Text" ID="ID_CAPTION" Rect="30,4,w-60,20" Text="About MiniLyrics" FontHeight="16" FontBold="true" TextColor="#000000" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>

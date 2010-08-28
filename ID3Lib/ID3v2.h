@@ -150,8 +150,6 @@ struct ID3v2FrameHeaderV3
 
 typedef int		ID3v2FrameUID_t;
 
-void UintToByteStr(UINT nFrameID, char szFrameID[5]);
-
 #define MakeUintFrameID3(by1, by2, by3)			(((by1) << 24) | ((by2) << 16) | ((by3) << 8))
 #define MakeUintFrameID4(by1, by2, by3, by4)	(((by1) << 24) | ((by2) << 16) | ((by3) << 8) | (by4))
 
@@ -308,6 +306,7 @@ public:
 	bool IsID3v2_2() const { return m_id3v2Header.byMajorVer == ID3v2Header::ID3V2_V2; }
 
 	virtual int Open(LPCTSTR szFile, bool bModify, bool bCreate = false);
+	virtual int Open(FILE *fp, bool bCreate = false);
 	void Close();
 
 	int Save();
@@ -341,12 +340,13 @@ public:
 	ID3v2Footer	m_id3v2Footer;
 
 protected:
-	FILE		*m_fp;
 	int			m_nId3v2BegPos;
 	size_t		m_nHeaderTotalLen;
 	size_t		m_nExtendedHeaderLen;
 	bool		m_bCreateNew;
 	bool		m_bModify;
+	bool		m_bAttach;
+	FILE		*m_fp;
 
 	list<CID3v2Frame*>		m_listFrames;
 	// long		m_nNextFramePos;
@@ -555,12 +555,10 @@ public:
 	int RemoveUnsynchLyrics(const char *szLanguage);
 
 	virtual int GetTags(tstring &artist, tstring &title, tstring &album, tstring &comment, 
-		tstring &track, tstring &year, tstring &genre, tstring &composer,
-		tstring &encoded, tstring &url, tstring &copyRight, tstring &origArtist, tstring &publisher, tstring &bpm);
+		tstring &track, tstring &year, tstring &genre);
 
 	virtual int SetTags(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szAlbum, LPCTSTR szComment, 
-		LPCTSTR szTrack, LPCTSTR szYear, LPCTSTR szGenre, LPCTSTR szComposer,
-		LPCTSTR szEncoded, LPCTSTR szUrl, LPCTSTR szCopyRight, LPCTSTR szOrigArtist, LPCTSTR szPublisher, LPCTSTR szBpm);
+		LPCTSTR szTrack, LPCTSTR szYear, LPCTSTR szGenre);
 
 	int UpdateUserDefinedTextFrameByDesc(ID3v2TextUserDefined &text);
 	int RemoveUserDefinedTextFrameByDesc(LPCTSTR szDesc);

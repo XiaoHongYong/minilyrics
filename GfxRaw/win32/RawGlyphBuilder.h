@@ -22,8 +22,8 @@ protected:
 	int GetHeightBitmap() { return m_font.GetHeight() + MARGIN_BITMAP * 2; }
 
 protected:
-	CMLFont					m_font;
-	IMLGraphicsBase			*m_pmemGraph;
+	CFontInfo				m_font;
+	CMLGraphics				*m_pmemGraph;
 	CRawGraph				m_memGraph;
 
 };

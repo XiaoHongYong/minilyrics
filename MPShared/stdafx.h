@@ -67,8 +67,8 @@
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"
-#include "../gfx//gfx.h"
-#include "../widget/widget.h"
+#include "../GfxLite/GfxLite.h"
+#include "../WidgetLite/WidgetLite.h"
 #include "../Skin/MLSkin.h"
 #include "../MLLib/MLLib.h"
 

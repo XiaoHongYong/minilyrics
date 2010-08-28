@@ -197,7 +197,7 @@ void CXMLWriter::WriteComment(LPCTSTR szComment)
 
 void CXMLWriter::WriteData(const char *szData, int n)
 {
-	m_strBuff += szData;
+	m_strBuff.append(szData, n);
 }
 
 BOOL CXMLWriter::SaveAsFile(LPCTSTR szFile)

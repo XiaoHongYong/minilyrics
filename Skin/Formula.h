@@ -49,6 +49,7 @@ public:
 
 public:
 	BOOL CalCualteValue(FORMULA_VAR var[], int &nRetValue);
+	BOOL CalCualteValue(int &nRetValue);
 	void SetFormula(LPCTSTR szExp);
 	void SetFormula(int nConstValue);
 
@@ -63,6 +64,7 @@ public:
 	BOOL GetVarValue(int nVar, FORMULA_VAR vars[], int &nRetValue);
 
 	LPCTSTR GetFormula() { return m_strFormula.c_str(); }
+	bool Empty() { return m_strFormula.empty(); }
 
 protected:
 	BOOL PhraseAnalyse(FormulaArray &vWords);

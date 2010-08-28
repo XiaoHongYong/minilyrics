@@ -386,8 +386,6 @@ void CLyricShowTxtObj::OnCreate()
 
 	if (m_pObjScrollBar->IsKindOf(CSkinVScrollBar::ClassName()))
 		m_pScrollBar = (CSkinVScrollBar*)m_pObjScrollBar;
-	else if (m_pObjScrollBar->IsKindOf(CSkinVScrollBarOSStyle::ClassName()))
-		m_pScrollBar = (CSkinVScrollBarOSStyle*)m_pObjScrollBar;
 
 	if (m_pScrollBar)
 		m_pScrollBar->SetScrollNotify(this);

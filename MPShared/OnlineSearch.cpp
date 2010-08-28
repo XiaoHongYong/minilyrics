@@ -7,7 +7,6 @@
 #include "../sqlite_cpp/Sqlite3.h"
 #include "OnlineSearch.h"
 #include "DownloadMgr.h"
-#include "AdManage.h"
 #include "Helper.h"
 
 COnlineSearch		g_OnlineSearch;
@@ -421,7 +420,6 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
 		g_Profile.EncryptWriteProfileString(SZ_INVALID_RC, szRegCode);
 		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
-		g_AdManage.CheckNewAd();
 	}
 
 	if (retSearch.strMessage.size() && g_mpApp.GetMainWnd())
@@ -576,6 +574,8 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	int					nRet;
 	TCHAR				szKeyword[MAX_PATH];
 
+	g_mpApp.GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
+
 	session.Init(SZ_ML_VERSION);
 
 	nRet = session.Connect();
@@ -587,7 +587,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	nRet = session.Search(szArtist, szTitle, nCurPage, retSearch);
 	session.Close();
 
-	if (retSearch.RegVerifyValue)
+	if (retSearch.RegVerifyValue != RVV_OK)
 	{
 		// 注册码无效
 		if (retSearch.RegVerifyValue == RVV_TRIAL)
@@ -598,7 +598,6 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 		g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
 		g_Profile.EncryptWriteProfileString(SZ_INVALID_RC, szRegCode);
 		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
-		g_AdManage.CheckNewAd();
 	}
 
 	if (retSearch.strMessage.size() && g_mpApp.GetMainWnd())
@@ -609,12 +608,71 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 
 	if (retSearch.listResultFiles.size() > 0)
 	{
-		g_mpApp.GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
 		UpdateSearchLrcInfo(szKeyword, retSearch.listResultFiles);
 
 		MLFileInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, vResult);
 
 		return ERR_OK;
+	}
+
+	return nRet;
+}
+
+int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, tstring &strMsg)
+{
+	int					nRet;
+
+	session.Init(SZ_ML_VERSION);
+
+	nRet = session.Connect();
+	if (nRet != ERR_OK)
+		return nRet;
+
+	MLMsgRetBatchSearch	retLyrics;
+
+	nRet = session.BatchSearch(listSearch, retLyrics);
+	session.Close();
+
+	if (retLyrics.RegVerifyValue != RVV_OK)
+	{
+		// 注册码无效
+		if (retLyrics.RegVerifyValue == RVV_TRIAL)
+			g_LicenseType = LT_TRIAL;
+		else
+			g_LicenseType = LT_CRACK;
+		TCHAR		szRegCode[MAX_PATH];
+		g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
+		g_Profile.EncryptWriteProfileString(SZ_INVALID_RC, szRegCode);
+		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
+	}
+
+	if (retLyrics.strMessage.size() && g_mpApp.GetMainWnd())
+		g_mpApp.MessageOut(retLyrics.strMessage.c_str());
+
+	int		nPos = 0;
+	size_t	length = 0;
+
+	for (ListLyricsInfoLite::iterator it = retLyrics.listLyricsInfo.begin();
+		it != retLyrics.listLyricsInfo.end(); ++it)
+	{
+		MLLyricsInfoLite &lyr = *it;
+		const char *data = retLyrics.binContainer.GetData(nPos, length);
+		ASSERT(data != NULL);
+		if (!data)
+		{
+			ERRLOG0(_T("Failed to get data form retLyrics.binContainer."));
+			break;
+		}
+		if (lyr.nIndex >= (int)listSearch.size())
+		{
+			ASSERT(0 && "Returned result is out of index");
+			break;
+		}
+		MLSearchItem	&search = listSearch[lyr.nIndex];
+		tstring			strFile = g_LyricsDownloader.GetSaveLyricsFile(search.strMediaFile.c_str(), lyr.strFile.c_str());
+
+		if (g_LyricsDownloader.SaveDownloadedFile(strFile, data, length) == ERR_OK)
+			search.strLyrFile = strFile;
 	}
 
 	return nRet;

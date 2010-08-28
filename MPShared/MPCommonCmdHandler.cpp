@@ -12,21 +12,17 @@
 #include "SkinSeekCtrl.h"
 #include "SkinRateCtrl.h"
 #include "DlgSearchLyrics.h"
-#include "DlgSelEncoding.h"
-#include "../widget/win32/FileOpenDlg.h"
-#include "DlgEmbeddedLyricsLoad.h"
-#include "DlgEmbeddedLyricsSave.h"
-#include "DlgEmbeddedLyricsRemove.h"
-#include "LrcUploadDlg.h"
-#include "LoginDlg.h"
+#include "../WidgetLite/win32/FileOpenDlg.h"
+//#include "DlgSelEncoding.h"
+//#include "LrcUploadDlg.h"
+//#include "LoginDlg.h"
+#include "AutoProcessEmbeddedLyrics.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
-#include "AutoProcessEmbeddedLyrics.h"
-#include "TagInfoDlg.h"
-#include "DlgCopySongLyrics.h"
 #include "MPMsgWnd.h"
 #include "DlgRateLyrics.h"
 #include "MPSkinMenu.h"
+#include "LyricsTool.h"
 #ifdef _WIN32
 #include "DlgAdjustHue.h"
 #endif
@@ -124,19 +120,10 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		}
 		break;
 
-	case IDC_LOAD_LYRICS_FROM_MP3:
+	case IDC_EMBEDDED_LYRICS:
 		{
-			OnCommandOpenLyricsInMp3();
-		}
-		break;
-	case IDC_SAVE_LYRICS_TO_MP3:
-		{
-			OnCommandSaveLyricsToMp3();
-		}
-		break;
-	case IDC_REMOVE_LRC_IN_MP3:
-		{
-			OnCommandRemoveLyricsInMp3();
+			// Load Embedded lyrics tool.
+			CMPSkinDialog::ShowDialog(new CDlgLyricsTool(), m_pSkinWnd);
 		}
 		break;
 // 	case IDC_ALIGN_LYRICS_LEFT:
@@ -200,17 +187,6 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 					m_pSkinWnd->MessageOut(TOLOCAL(_T("Sorry, Microsoft windows 95 and windows NT4 does not support Antialiasing!")), MB_ICONINFORMATION | MB_YESNO);
 					break;
 				}
-
-				if (!CGdiplusGraphics::CanSupportGdiplus())
-				{
-					//
-					// 告知用户需要Gdiplus支持！
-					if (m_pSkinWnd->MessageOut(TOLOCAL(_T("Antialiasing needs Gdiplus.dll, do you want to download it?")), MB_ICONINFORMATION | MB_YESNO) == IDYES)
-					{
-						OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_GDIPLUS));
-						return TRUE;
-					}
-				}
 			}
 			GfxRaw::EnableAntialiasFont(bAntialias);
 
@@ -242,12 +218,12 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 // #endif
 // 		g_mpApp.GetSkinFactory()->MinizeAll();
 // 		break;
-	case IDC_LOGIN:
+/*	case IDC_LOGIN:
 		{
 			CLoginDlg		dlg;
 			dlg.DoModal(m_pSkinWnd);
 		}
-		break;
+		break;*/
 	case IDC_APPLY_ACCOUNT:
 		{
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_SIGNUP));
@@ -689,7 +665,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 							_T(""), str.c_str(), g_LyricData.GetLyricsSourceType());
 						}
 					}
-					m_pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics, $Product$ will auto try again later."))).c_str());
+					m_pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics."))).c_str());
 				}
 			}
 		}
@@ -813,37 +789,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 
-	case CMD_EDIT_TAG:
-		{
-			CTagInfoDlg		dlg;
-
-			dlg.m_lyrProperties = g_LyricData.Properties();
-			if (dlg.DoModal(m_pSkinWnd) != IDOK)
-				break;
-
-			if (g_LyricData.Properties().m_strTitle != dlg.m_lyrProperties.m_strTitle)
-			{
-				g_LyricData.Properties().m_strTitle = dlg.m_lyrProperties.m_strTitle;
-			}
-			if (g_LyricData.Properties().m_strArtist != dlg.m_lyrProperties.m_strArtist)
-			{
-				g_LyricData.Properties().m_strArtist = dlg.m_lyrProperties.m_strArtist;
-			}
-			if (g_LyricData.Properties().m_strAlbum != dlg.m_lyrProperties.m_strAlbum)
-			{
-				g_LyricData.Properties().m_strAlbum = dlg.m_lyrProperties.m_strAlbum;
-			}
-			if (g_LyricData.Properties().m_strBy != dlg.m_lyrProperties.m_strBy)
-			{
-				g_LyricData.Properties().m_strBy = dlg.m_lyrProperties.m_strBy;
-			}
-			if (g_LyricData.Properties().m_nTimeOffset != dlg.m_lyrProperties.m_nTimeOffset)
-			{
-				g_LyricData.Properties().m_nTimeOffset = dlg.m_lyrProperties.m_nTimeOffset;
-			}
-			g_eventDispather.DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
-		}
-		break;
 	//
 	// Lyrics editor command
 	//
@@ -934,18 +879,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			strUrl += szMD5;
 
 			// show rate dialog
-			CDlgRateLyrics	dlg;
-			dlg.m_strLink = strUrl;
-			dlg.DoModal(m_pSkinWnd);
-		}
-		break;
-	case CMD_COPY_SONG_FILE_LYR:
-		{
-			CDlgCopySongLyrics	dlg;
-
-			dlg.m_strSong = g_Player.GetSrcMedia();
-			dlg.m_strLyrics = g_LyricData.GetLyricsFileName();
-			dlg.DoModal(m_pSkinWnd);
+			CMPSkinDialog::ShowDialog(new CDlgRateLyrics(strUrl.c_str()), m_pSkinWnd);
 		}
 		break;
 	case CMD_RELOAD_LYR:
@@ -983,14 +917,14 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_SAVE_LYR_IN_SONG_FILE:
 		OnCommand(IDC_SAVE_LYRICS_TO_MP3);
 		break;
-	case CMD_UPLOAD_LYR:
+/*	case CMD_UPLOAD_LYR:
 		{
 			// 上传歌词
 			CLrcUploadDlg	dlg;
 
 			dlg.DoModal(m_pSkinWnd);
 		}
-		break;
+		break;*/
 	case CMD_EXTERNAL_LYR_EDIT:
 		//
 		// 调用外部的编辑器编辑歌词
@@ -1148,91 +1082,6 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 	return false;
 }
 
-#ifndef _WIN32_WCE
-
-void CMPCommonCmdHandler::OnCommandOpenLyricsInMp3()
-{
-	TCHAR		szSongFile[MAX_PATH];
-	CDlgEmbeddedLyricsLoad		dlg;
-	int			nRet;
-
-	g_Player.GetSourceMedia(szSongFile, MAX_PATH);
-
-	if (dlg.DoModal(m_pSkinWnd, szSongFile) != IDOK)
-		return;
-
-	nRet = g_mpApp.OpenLyrics(szSongFile, dlg.GetSelLyrics());
-	if (nRet != ERR_OK)
-		m_pSkinWnd->MessageOut((LPCTSTR)ERROR2STR_LOCAL(nRet));
-	else
-	{
-		// associate the embedded lyrics.
-		g_LyricSearch.AssociateLyrics(szSongFile, dlg.GetSelLyrics());
-	}
-}
-
-void CMPCommonCmdHandler::OnCommandSaveLyricsToMp3()
-{
-	TCHAR			szSongFile[MAX_PATH];
-
-	g_Player.GetSourceMedia(szSongFile, MAX_PATH);
-
-	if (!FileIsExtSame(szSongFile, _T(".mp3")))
-	{
-		m_pSkinWnd->MessageOut(TOLOCAL(_T("This file doesn't support embedded lyrics.")));
-		return;
-	}
-
-	if (!g_LyricData.HasLyricsOpened())
-	{
-		m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
-		return;
-	}
-
-	CDlgEmbeddedLyricsSave		dlg;
-	tstring			strLyrics;
-	FILE_ENCODING	fileEncoding = FE_UCS2;
-
-	g_LyricData.ToString(strLyrics, FT_LYRICS_TXT, TRUE);
-
-	if (IsAnsiStr(strLyrics.c_str()))
-		fileEncoding = FE_ANSI;
-	else
-	{
-		CDlgSelEncoding	dlgEncoding;
-
-		dlgEncoding.m_encoding = g_LyricData.GetEncodingIndex();
-		if (g_LyricData.GetFileEncoding() == FE_UCS2)
-			dlgEncoding.m_encoding = ED_UNICODE;
-		else if (g_LyricData.GetFileEncoding() == FE_UTF8)
-			dlgEncoding.m_encoding = ED_UTF8;
-		dlgEncoding.m_strLyrics = strLyrics;
-
-		if (dlgEncoding.DoModal(m_pSkinWnd) != IDOK)
-			return;
-	}
-
-	dlg.DoModal(m_pSkinWnd, szSongFile, g_LyricData.GetEncodingIndex());
-}
-
-void CMPCommonCmdHandler::OnCommandRemoveLyricsInMp3()
-{
-	TCHAR		szSongFile[MAX_PATH];
-	CDlgEmbeddedLyricsRemove		dlg;
-
-	g_Player.GetSourceMedia(szSongFile, MAX_PATH);
-
-	if (!FileIsExtSame(szSongFile, _T(".mp3")))
-	{
-		m_pSkinWnd->MessageOut(TOLOCAL(_T("This file doesn't support embedded lyrics.")));
-		return;
-	}
-
-	dlg.DoModal(m_pSkinWnd, szSongFile);
-}
-
-#endif // _WIN32_WCE
-
 // COMMENT:
 //		保存歌词文件为：
 //		FT_UNKNOWN			= 1,
@@ -1256,7 +1105,7 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 
 	g_LyricData.ToString(strLyrics, FT_LYRICS_TXT, TRUE);
 
-	if (bAdvancedSaveOpt)
+/*	if (bAdvancedSaveOpt)
 	{
 		CDlgSelEncoding	dlgEncoding;
 
@@ -1278,7 +1127,7 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 		else
 			fileEncoding = FE_ANSI;
 	}
-	else
+	else*/
 	{
 		if (IsAnsiStr(strLyrics.c_str()))
 			fileEncoding = FE_ANSI;

@@ -1270,12 +1270,35 @@ BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fi
 	return bRet;
 }
 
+bool AppendFileToBuffer(FILE *fp, CCharBuffer &str)
+{
+	if (fseek(fp, 0, SEEK_END) != 0)
+		return false;
+
+	int nLen = ftell(fp);
+	if (nLen == 0)
+		return true;
+
+	fseek(fp, 0, SEEK_SET);
+
+	str.reserve(str.size() + nLen + 3);
+	char *szBuffer = str.data() + str.size();
+	if (fread(szBuffer, 1, nLen, fp) != nLen)
+		return false;
+
+	str.setSize(str.size() + nLen);
+	// 确保如果读入的是unicode编码的文本也有以'\0'结尾的字符
+	szBuffer[nLen] = '\0';
+	szBuffer[nLen + 1] = '\0';
+	szBuffer[nLen + 2] = '\0';
+
+	return true;
+}
+
 #ifdef WIN32
 BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str)
 {
 	FILE	*fp;
-	int		nLen;
-	char	*szBuffer;
 
 	str.clear();
 
@@ -1283,46 +1306,17 @@ BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str)
 	if (fp == NULL)
 		return FALSE;
 
-	if (fseek(fp, 0, SEEK_END) != 0)
-	{
-		fclose(fp);
-		return FALSE;
-	}
-
-	nLen = ftell(fp);
-	if (nLen == 0)
-	{
-		fclose(fp);
-		return TRUE;
-	}
-
-	fseek(fp, 0, SEEK_SET);
-
-	str.reserve(nLen + 3);
-	szBuffer = str.data();
-	if (fread(szBuffer, 1, nLen, fp) != nLen)
-	{
-		fclose(fp);
-		return FALSE;
-	}
-
-	str.setSize(nLen);
-	// 确保如果读入的是unicode编码的文本也有以'\0'结尾的字符
-	szBuffer[nLen] = '\0';
-	szBuffer[nLen + 1] = '\0';
-	szBuffer[nLen + 2] = '\0';
+	bool bRet = AppendFileToBuffer(fp, str);
 
 	fclose(fp);
-
-	return TRUE;
+	return bRet;
 }
+
 #endif
 
 BOOL OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str)
 {
 	FILE	*fp;
-	int		nLen;
-	char	*szBuffer;
 
 	str.clear();
 
@@ -1330,38 +1324,10 @@ BOOL OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str)
 	if (fp == NULL)
 		return FALSE;
 
-	if (fseek(fp, 0, SEEK_END) != 0)
-	{
-		fclose(fp);
-		return FALSE;
-	}
-
-	nLen = ftell(fp);
-	if (nLen == 0)
-	{
-		fclose(fp);
-		return TRUE;
-	}
-
-	fseek(fp, 0, SEEK_SET);
-
-	str.reserve(nLen + 3);
-	szBuffer = str.data();
-	if (fread(szBuffer, 1, nLen, fp) != nLen)
-	{
-		fclose(fp);
-		return FALSE;
-	}
-
-	str.setSize(nLen);
-	// 确保如果读入的是unicode编码的文本也有以'\0'结尾的字符
-	szBuffer[nLen] = '\0';
-	szBuffer[nLen + 1] = '\0';
-	szBuffer[nLen + 2] = '\0';
+	bool bRet = AppendFileToBuffer(fp, str);
 
 	fclose(fp);
-
-	return TRUE;
+	return bRet;
 }
 
 BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)

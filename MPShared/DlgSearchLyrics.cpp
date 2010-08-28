@@ -67,7 +67,6 @@ void ProfileSaveSkinListCtrlColumnWidth(LPCTSTR szValueName, CSkinListCtrl *pLis
 void UpdateLyrResultArtistTitle(V_LRCSEARCHRESULT &vResultsLocal)
 {
 	V_LRCSEARCHRESULT::iterator	it;
-	TCHAR		szAr[256], szTi[256];
 
 	for (it = vResultsLocal.begin(); it != vResultsLocal.end(); ++it)
 	{
@@ -75,9 +74,7 @@ void UpdateLyrResultArtistTitle(V_LRCSEARCHRESULT &vResultsLocal)
 
 		if (result.strArtist.empty() && result.strTitle.empty())
 		{
-			AnalysisLyricsFileNameEx(szAr, CountOf(szAr), szTi, CountOf(szTi), result.strSaveFileName.c_str());
-			result.strArtist = szAr;
-			result.strTitle = szTi;
+			AnalysisLyricsFileNameEx(result.strArtist, result.strTitle, result.strSaveFileName.c_str());
 		}
 	}
 }

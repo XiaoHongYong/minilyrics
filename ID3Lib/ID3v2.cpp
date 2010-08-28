@@ -10,13 +10,13 @@
 #include "ID3Helper.h"
 #include "ID3v1.h"
 
+void LowerString(LPSTR szString);
+
 UINT	_vTextFrameIDV22[] = { ID3V2_2_ARTIST, ID3V2_2_TITLE, ID3V2_2_ALBUM,
-	ID3V2_2_TRACK, ID3V2_2_YEAR, ID3V2_2_GENRE, ID3V2_2_COMPOSER,
-	ID3V2_2_ENCODED, ID3V2_2_COPYRIGHT, ID3V2_2_ORIG_ARTIST, ID3V2_2_PUBLISHER, ID3V2_2_BPM };
+	ID3V2_2_TRACK, ID3V2_2_YEAR, ID3V2_2_GENRE };
 
 UINT	_vTextFrameIDV23[] = { ID3V2_3_ARTIST, ID3V2_3_TITLE, ID3V2_3_ALBUM,
-	ID3V2_3_TRACK, ID3V2_3_YEAR, ID3V2_3_GENRE, ID3V2_3_COMPOSER,
-	ID3V2_3_ENCODED, ID3V2_3_COPYRIGHT, ID3V2_3_ORIG_ARTIST, ID3V2_3_PUBLISHER, ID3V2_3_BPM };
+	ID3V2_3_TRACK, ID3V2_3_YEAR, ID3V2_3_GENRE };
 
 LPCTSTR _ID3v2PicDescription[] = {
 	_T("Other"),
@@ -43,17 +43,6 @@ LPCTSTR _ID3v2PicDescription[] = {
 };
 
 BOOL IsStrNumeric(LPCTSTR szString);
-
-void UintToByteStr(UINT nFrameID, char szFrameID[5])
-{
-	szFrameID[0] = (nFrameID & 0xFF000000) >> 24;
-	szFrameID[1] = (nFrameID & 0x00FF0000) >> 16;
-	szFrameID[2] = (nFrameID & 0x0000FF00) >> 8;
-	szFrameID[3] = (nFrameID & 0x000000FF);
-	szFrameID[4] = '\0';
-}
-
-void LowerString(LPSTR szString);
 
 ID3v2SynchLyrics::ID3v2SynchLyrics()
 {
@@ -219,6 +208,7 @@ int ID3v2Pictures::GetPicDescriptionsCount()
 
 CID3v2::CID3v2()
 {
+	m_bAttach = false;
 	m_bCreateNew = false;
 	m_fp = NULL;
 	memset(&m_id3v2Header, 0, sizeof(m_id3v2Header));
@@ -239,7 +229,8 @@ void CID3v2::Close()
 {
 	if (m_fp)
 	{
-		fclose(m_fp);
+		if (m_bAttach)
+			fclose(m_fp);
 		m_fp = NULL;
 	}
 
@@ -271,6 +262,10 @@ long CID3v2::FindID3v2()
 			if (nRead <= 0)
 				return -1;
 			buff.resize(buff.size() + nRead);
+
+			// ID3v2 tag must be in the first 4k byte.
+			if (ftell(m_fp) > 8 * 1024)
+				return -1;
 		}
 
 		const char *data, *dataend;
@@ -304,25 +299,35 @@ long CID3v2::FindID3v2()
 
 int CID3v2::Open(LPCTSTR szFile, bool bModify, bool bCreate)
 {
-#define E_RETURN(code)	{ nRet = code; goto R_ERROR; }
+	if (bModify)
+		m_fp = _tfopen(szFile, _T("r+b"));
+	else
+		m_fp = _tfopen(szFile, _T("rb"));
 
-	if (!FileIsExtSame(szFile, _T(".mp3")))
-		return ERR_NOT_SUPPORT_FILE_FORMAT;
+	if (!m_fp)
+	{
+		SetCustomErrorDesc(CStrPrintf(_T("%s: %s"), szFile, (LPCTSTR)CWin32Error()).c_str());
+		return ERR_CUSTOM_ERROR;
+	}
+
+	m_bAttach = false;
+
+	return Open(m_fp, bCreate);
+}
+
+int CID3v2::Open(FILE *fp, bool bCreate)
+{
+#define E_RETURN(code)	{ nRet = code; goto R_ERROR; }
+	ASSERT(fp);
+	m_fp = fp;
+	m_bAttach = true;
 
 	int		nRet;
 
 	m_bCreateNew = false;
 	frameUID = 0;
 
-	if (bModify)
-		m_fp = _tfopen(szFile, _T("r+b"));
-	else
-		m_fp = _tfopen(szFile, _T("rb"));
-	if (!m_fp)
-	{
-		SetCustomErrorDesc(CStrPrintf(_T("%s: %s"), szFile, (LPCTSTR)CWin32Error()).c_str());
-		E_RETURN(ERR_CUSTOM_ERROR);
-	}
+	fseek(fp, 0, SEEK_SET);
 
 	m_nId3v2BegPos = FindID3v2();
 	if (m_nId3v2BegPos == -1)
@@ -1072,8 +1077,7 @@ int CID3v2IF::RemoveUnsynchLyrics(const char *szLanguage)
 // TPUB : Publisher
 // TBPM : bpm
 int CID3v2IF::GetTags(tstring &artist, tstring &title, tstring &album, tstring &comment, 
-	tstring &track, tstring &year, tstring &genre, tstring &composer,
-	tstring &encoded, tstring &url, tstring &copyRight, tstring &origArtist, tstring &publisher, tstring &bpm)
+	tstring &track, tstring &year, tstring &genre)
 {
 	int			nRet;
 	ID3v2Text	txt;
@@ -1082,8 +1086,7 @@ int CID3v2IF::GetTags(tstring &artist, tstring &title, tstring &album, tstring &
 	CID3v2Frame	*pFrame;
 
 	tstring		*vStr[] = { &artist, &title, &album,
-		&track, &year, &genre, &composer,
-		&encoded, &copyRight, &origArtist, &publisher, &bpm
+		&track, &year, &genre
 	};
 
 	if (IsID3v2_2())
@@ -1149,24 +1152,6 @@ int CID3v2IF::GetTags(tstring &artist, tstring &title, tstring &album, tstring &
 		}
 	}
 
-	// read url
-	pFrame = FindFrame(IsID3v2_2() ? (UINT)ID3V2_2_URL : (UINT)ID3V2_3_URL);
-	if (pFrame)
-	{
-		CID3v2FrameParserUserDefinedUrl	parser;
-		nRet = parser.Parse(pFrame);
-		if (nRet == ERR_OK)
-		{
-#ifdef _UNICODE
-			wstringex	strUrl;
-			ConvertStr(parser.m_strUrl.c_str(), parser.m_strUrl.size(), strUrl);
-			url = strUrl.c_str();
-#else
-			url = parser.m_strUrl;
-#endif
-		}
-	}
-
 	// read genre info
 	if (!genre.empty())
 	{
@@ -1205,15 +1190,13 @@ int CID3v2IF::GetTags(tstring &artist, tstring &title, tstring &album, tstring &
 }
 
 int CID3v2IF::SetTags(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szAlbum, LPCTSTR szComment, 
-	LPCTSTR szTrack, LPCTSTR szYear, LPCTSTR szGenre, LPCTSTR szComposer,
-	LPCTSTR szEncoded, LPCTSTR szUrl, LPCTSTR szCopyRight, LPCTSTR szOrigArtist, LPCTSTR szPublisher, LPCTSTR szBpm)
+	LPCTSTR szTrack, LPCTSTR szYear, LPCTSTR szGenre)
 {
 	UINT	nFrameID;
 
 	LPCTSTR	vTextFrameValues[CountOf(_vTextFrameIDV22)] = { 
 		szArtist, szTitle, szAlbum,
-		szTrack, szYear, szGenre, szComposer,
-		szEncoded, szCopyRight, szOrigArtist, szPublisher, szBpm };
+		szTrack, szYear, szGenre };
 
 	for (int i = 0; i < CountOf(vTextFrameValues); i++)
 	{
@@ -1237,15 +1220,6 @@ int CID3v2IF::SetTags(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szAlbum, LPCTST
 			RemoveGeneralCommentFrame();
 		else
 			UpdateGeneralCommentFrame(szComment);
-	}
-
-	// update Url
-	if (szUrl)
-	{
-		if (IsEmptyString(szUrl))
-			RemoveGeneralUrlFrame();
-		else
-			UpdateGeneralUrlFrame(szUrl);
 	}
 
 	return ERR_OK;

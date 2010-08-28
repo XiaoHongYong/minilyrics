@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB"
+				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -391,6 +391,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\BinContainer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="HttpClient.cpp"
 				>
 				<FileConfiguration
@@ -722,6 +726,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\BinContainer.h"
+				>
+			</File>
 			<File
 				RelativePath="HttpClient.h"
 				>

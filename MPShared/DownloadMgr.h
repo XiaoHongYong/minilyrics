@@ -65,6 +65,10 @@ public:
 
 	bool AutoDownloadEnabled() const { return m_bAutoDownload; }
 
+	tstring GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName);
+
+	int SaveDownloadedFile(tstring &strFile, LPCVOID lpData, int nSize);
+
 protected:
 	void AddTask(CDownloadTask *pTask);
 
@@ -72,9 +76,7 @@ protected:
 
 	void CreateDefaultLyricsDir(tstring &strDefSavePath);
 
-	tstring GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName);
-
-	virtual void OnEndDownload(CDownloadTask *pTask);
+	void OnEndDownload(CDownloadTask *pTask);
 
 	static void DownloadThreadProc(LPVOID lpParam);
 
@@ -83,8 +85,6 @@ protected:
 	int RunHttpTask(CDownloadTask *pTask);
 
 	int TryToConnect(class CHttpClient &httpClient);
-
-	virtual int SaveDownloadedFile(CDownloadTask *pTask, LPVOID lpData, int nSize);
 
 	bool IsQuiting() { return m_eventShutDown.Acquire(0); }
 

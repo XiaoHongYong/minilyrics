@@ -777,54 +777,15 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="win32\SkinRgn.cpp"
+				RelativePath=".\win32\SkinRgn.cpp"
 				>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\SkinScaleImage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinScrollFrameCtrlBase.cpp"
 				>
 			</File>
 			<File
@@ -926,53 +887,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="win32\SkinVScrollBarOSStyle.cpp"
-				>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\SkinWnd.cpp"
 				>
 			</File>
@@ -1025,10 +939,6 @@
 			</File>
 			<File
 				RelativePath=".\SkinWndResizeObj.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\win32\SplashScreenWnd.cpp"
 				>
 			</File>
 			<File
@@ -1228,11 +1138,15 @@
 				>
 			</File>
 			<File
-				RelativePath="SkinRgn.h"
+				RelativePath=".\SkinRgn.h"
 				>
 			</File>
 			<File
 				RelativePath=".\SkinScaleImage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinScrollFrameCtrlBase.h"
 				>
 			</File>
 			<File
@@ -1252,10 +1166,6 @@
 				>
 			</File>
 			<File
-				RelativePath="win32\SkinVScrollBarOSStyle.h"
-				>
-			</File>
-			<File
 				RelativePath=".\SkinWnd.h"
 				>
 			</File>
@@ -1265,10 +1175,6 @@
 			</File>
 			<File
 				RelativePath=".\SkinWndResizeObj.h"
-				>
-			</File>
-			<File
-				RelativePath=".\win32\SplashScreenWnd.h"
 				>
 			</File>
 			<File

@@ -38,7 +38,7 @@ CRawGraph::~CRawGraph()
 {
 }
 
-bool CRawGraph::Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCount)
+bool CRawGraph::Create(int cx, int cy, CMLGraphics *pGraph, int nBitCount)
 {
 	if (!CRawGraphData::Create(cx, cy, pGraph, nBitCount))
 		return false;

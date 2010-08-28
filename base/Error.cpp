@@ -21,7 +21,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_NO_MEM, _T("Can't allocate more memory.") },
 	{ ERR_OUTOF_BUFF, _T("Insufficient buffer.") },
 	{ ERR_EOF, _T("Reached the end of the file.") },
-	{ ERR_BAD_MSG, _T("Bad message.") },
+	{ ERR_BAD_MSG, _T("Corrupted message.") },
 	{ ERR_PARSE_XML, _T("Parse xml FAILED.") },
 
 	{ ERR_FILE_NOT_EXIST, _T("File does not exist.") },

@@ -10,4 +10,4 @@
 #include "../Utils/Utils.h"
 
 #include "../OurMFCLib/OurMFClib.h"
-#include "../gfx/gfx.h"
+#include "../GfxLite/GfxLite.h"

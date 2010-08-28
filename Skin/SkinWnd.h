@@ -192,7 +192,7 @@ public:
 	virtual void OnPreCreate(DWORD &dwStyle, DWORD &dwExStyle) { }
 	virtual bool OnCreate();
 	virtual void OnDestroy();
-	virtual void OnPaint(IMLGraphicsBase *pGraph);
+	virtual void OnPaint(CMLGraphics *pGraph);
 
 	virtual void OnCommand(UINT uID, UINT nNotifyCode);
 

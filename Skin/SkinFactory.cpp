@@ -1274,20 +1274,14 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	{
 		pObj = new CSkinYScaleImage;
 	}
-	else if (_tcsicmp(szClassName, CSkinVScrollBar::ClassName()) == 0)
+	else if (_tcsicmp(szClassName, CSkinVScrollBar::ClassName()) == 0
+		|| IsPropertyName(szClassName, _T("VScrollBarOSStyle")))
 	{
 		pObj = new CSkinVScrollBar;
 	}
-	else if (_tcsicmp(szClassName, CSkinHScrollBar::ClassName()) == 0)
+	else if (_tcsicmp(szClassName, CSkinHScrollBar::ClassName()) == 0
+		|| IsPropertyName(szClassName, _T("HScrollBarOSStyle")))
 		pObj = new CSkinHScrollBar;
-	else if (_tcsicmp(szClassName, CSkinVScrollBarOSStyle::ClassName()) == 0)
-	{
-		pObj = new CSkinVScrollBarOSStyle;
-	}
-	else if (_tcsicmp(szClassName, CSkinHScrollBarOSStyle::ClassName()) == 0)
-	{
-		pObj = new CSkinHScrollBarOSStyle;
-	}
 	else if (_tcsicmp(szClassName, CSkinCaption::ClassName()) == 0)
 	{
 		pObj = new CSkinCaption;

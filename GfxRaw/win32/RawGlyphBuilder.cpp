@@ -1,4 +1,6 @@
 #include "stdafx.h"
+#include "../../GfxLite/win32/GdiGraphicsLite.h"
+#include "../../GfxLite/win32/GdiplusGraphicsLite.h"
 #include "../SDK/Agg/include/agg_scanline_p.h"
 #include "../SDK/Agg/include/agg_renderer_scanline.h"
 #include "../SDK/Agg/include/agg_pixfmt_rgba.h"
@@ -39,11 +41,11 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 
 	m_font.Create(font);
 
-	CGdiGraphics	graphScreen;
+	CMLGraphics		graphScreen;
 	HDC				hdcScreen;
 
 	hdcScreen = GetDC(NULL);
-	graphScreen.Create(hdcScreen);
+	graphScreen.Attach(hdcScreen);
 
 	int		nWidthGraph = GetHeightBitmap() * 2;
 
@@ -51,18 +53,18 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 
 	if (g_bAntialiasFontEnabled)
 	{
-		CGdiplusGraphics	*pmemGraph;
+		CGdiplusGraphicsLite	*pmemGraph;
 
-		pmemGraph = new CGdiplusGraphics;
-		pmemGraph->Create(m_memGraph.GetHandle());
+		pmemGraph = new CGdiplusGraphicsLite;
+		pmemGraph->Attach(m_memGraph.GetHandle());
 		m_pmemGraph = pmemGraph;
 	}
 	else
 	{
-		CGdiGraphics	*pmemGraph;
+		CGdiGraphicsLite	*pmemGraph;
 
-		pmemGraph = new CGdiGraphics;
-		pmemGraph->Create(m_memGraph.GetHandle());
+		pmemGraph = new CGdiGraphicsLite;
+		pmemGraph->Attach(m_memGraph.GetHandle());
 		m_pmemGraph = pmemGraph;
 	}
 
@@ -82,7 +84,6 @@ void CRawGlyphBuilder::Destroy()
 	}
 
 	m_memGraph.Destroy();
-	m_font.Destroy();
 }
 
 void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph);

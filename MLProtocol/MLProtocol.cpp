@@ -7,11 +7,14 @@
 
 #define SZ_ML_POST_URL		"/searchlyrics.htm"
 
+#define SZ_DATA_BLOCK_SIGN		"\0$"
+#define LEN_DATA_BLOCK_SIGN		2
 
 static ID_TO_STRING	__ErrID2Str[] = 
 {
 	{ ERR_UNKNOWN, _T("Unknown Error.")},			// 未翻译出来的结果
-	{ ERR_BAD_XMLREQUEST, _T("Bad xml request.")},
+	{ ERR_BAD_XMLREQUEST, _T("Invalid xml request.")},
+	{ ERR_CORRUPTTED_MSG, _T("The message is corrupted, maybe some data get currupted while receiving.")},
 	{ ERR_REDIRECT, _T("Redirect to other server.") },		// 重定向连接
 
 	{ ERR_REG_EMAIL_EXIST, _T("The email already exists.") },
@@ -70,13 +73,14 @@ BOOL SaveBufferAsTempFile(LPTSTR szTempFile, LPVOID lpBuffer, int nLen)
 
 ID_TO_STRING	__MlCmdIDStr[] = 
 {
-	{MC_LOGIN, MZ_LOGIN },
-	{MC_RETURN, MZ_RETURN },
-	{MC_SEARCH, MZ_SEARCH },
-	{MC_CAN_UPLOAD, MZ_CANUPLOAD},
-	{MC_UPLOAD, MZ_UPLOAD },
-	{MC_POST_BUG, MZ_POST_BUG },
-	{MC_UNKNOWN, NULL},
+	{ MC_LOGIN, MZ_LOGIN },
+	{ MC_RETURN, MZ_RETURN },
+	{ MC_SEARCH, MZ_SEARCH },
+	{ MC_BATCH_SEARCH, MZ_BATCH_SEARCH },
+	{ MC_CAN_UPLOAD, MZ_CANUPLOAD},
+	{ MC_UPLOAD, MZ_UPLOAD },
+	{ MC_POST_BUG, MZ_POST_BUG },
+	{ MC_UNKNOWN, NULL},
 //	{, },
 };
 
@@ -188,13 +192,10 @@ int MLMsgCmdLogin::ToXML(CXMLWriter &xmlFile)
 int MLMsgRetLogin::FromXML(SXNode *pXmlNode)
 {
 	LPCTSTR		szValue;
-	szValue = pXmlNode->GetProperty(MZ_ORG_CMD);
-	strOrgCmd = SURETEXT(szValue);
-	szValue = pXmlNode->GetProperty(MZ_CMD_RESULT);
-	if (!szValue)
-		return ERR_CMD_PARAM;
 
-	result = StringToID(__MlCmdResult2Str, szValue, ERR_UNKNOWN);
+	int nRet = MLRetMsg::FromXML(pXmlNode);
+	if (nRet != ERR_OK)
+		return nRet;
 
 	szValue = pXmlNode->GetProperty(_T("message"));
 	strMessage = SURETEXT(szValue);
@@ -205,8 +206,7 @@ int MLMsgRetLogin::FromXML(SXNode *pXmlNode)
 int MLMsgRetLogin::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
-	xmlFile.WriteAttribute(MZ_ORG_CMD, strOrgCmd.c_str());
-	xmlFile.WriteAttribute(MZ_CMD_RESULT, IDToString(__MlCmdResult2Str, result, _T("UNTRANSLATED")));
+	MLRetMsg::ToXMLAttribute(xmlFile);
 
 	// 为了兼容之前的版本，需要返回 MZ_SESSIONID
 	xmlFile.WriteAttribute(MZ_SESSIONID, _T("1"));
@@ -235,11 +235,51 @@ int MLRetMsg::FromXML(SXNode *pXmlNode)
 int MLRetMsg::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
-	xmlFile.WriteAttribute(MZ_ORG_CMD, strOrgCmd.c_str());
-	xmlFile.WriteAttribute(MZ_CMD_RESULT, IDToString(__MlCmdResult2Str, result, _T("UNTRANSLATED")));
+	ToXMLAttribute(xmlFile);
 	xmlFile.WriteEndElement();
 	return ERR_OK;
 }
+
+void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
+{
+	xmlFile.WriteAttribute(MZ_ORG_CMD, strOrgCmd.c_str());
+	xmlFile.WriteAttribute(MZ_CMD_RESULT, IDToString(__MlCmdResult2Str, result, _T("UNTRANSLATED")));
+}
+
+size_t strlen_safe(const char * str, size_t maxLength)
+{
+	size_t n = 0;
+	while (n < maxLength && str[n])
+		n++;
+
+	return n;
+}
+
+int MLRetMsgDataBlock::FromData(CCharBuffer &buff)
+{
+	CSimpleXML		xml;
+	size_t			nXmlLength = strlen_safe(buff.c_str(), buff.size());
+
+	if (nXmlLength > buff.size() - 2)
+		return ERR_CORRUPTTED_MSG;
+
+	const char *pDataBlock = buff.c_str() + nXmlLength;
+	while (*pDataBlock == '\0' && *pDataBlock != '$')
+		pDataBlock++;
+	if (*pDataBlock != '$')
+		return ERR_CORRUPTTED_MSG;
+	pDataBlock++;
+
+	if (!xml.ParseData(buff.c_str(), nXmlLength))
+		return ERR_PARSE_XML;
+
+	nXmlLength += 2;
+	dataBlock.append(pDataBlock, buff.size() - (int)(pDataBlock - buff.c_str()));
+
+	return FromXML(xml.m_pRoot);
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 int MLFileInfo::FromXML(SXNode *pNode)
 {
@@ -373,18 +413,13 @@ int MLMsgCmdSearch::ToXML(CXMLWriter &xmlFile)
 }
 
 //////////////////////////////////////////////////////////////////////////
-int MLMsgRetSearch::FromXML(SXNode *pXmlNode)
+int MLMsgRetSearch::FromXML(SXNode *pNode)
 {
 	LPCTSTR		szValue;
-	SXNode		*pNode;
-	pNode = pXmlNode;
-	szValue = pXmlNode->GetProperty(MZ_ORG_CMD);
-	strOrgCmd = SURETEXT(szValue);
-	szValue = pXmlNode->GetProperty(MZ_CMD_RESULT);
-	if (!szValue)
-		return ERR_CMD_PARAM;
 
-	result = StringToID(__MlCmdResult2Str, szValue, ERR_UNKNOWN);
+	int nRet = MLRetMsg::FromXML(pNode);
+	if (nRet != ERR_OK)
+		return nRet;
 
 	szValue = pNode->GetProperty(_T("badrc"));
 	if (szValue)
@@ -423,8 +458,7 @@ int MLMsgRetSearch::FromXML(SXNode *pXmlNode)
 int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
-	xmlFile.WriteAttribute(MZ_ORG_CMD, strOrgCmd.c_str());
-	xmlFile.WriteAttribute(MZ_CMD_RESULT, IDToString(__MlCmdResult2Str, result, _T("UNTRANSLATED")));
+	MLRetMsg::ToXMLAttribute(xmlFile);
 	// filetype must be set for old version of MiniLyrics (7.0.614 before).
 	xmlFile.WriteAttribute(_T("filetype"), _T("lyrics"));
 
@@ -444,6 +478,189 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 		(*it).ToXML(xmlFile);
 	}
 	xmlFile.WriteEndElement();
+	return ERR_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+int MLSearchItem::FromXML(SXNode *pXmlNode)
+{
+	LPCTSTR szValue = pXmlNode->GetProperty(_T("ar"));
+	strArtist = SURETEXT(szValue);
+
+	szValue = pXmlNode->GetProperty(_T("ti"));
+	strTitle = SURETEXT(szValue);
+
+	nMediaLength = pXmlNode->GetPropertyInt(_T("length"));
+
+	return ERR_OK;
+}
+
+int MLSearchItem::ToXML(CXMLWriter &xmlFile)
+{
+	xmlFile.WriteStartElement(MZ_ITEM);
+
+	if (strArtist.size())
+		xmlFile.WriteAttribute(_T("ar"), strArtist.c_str());
+	xmlFile.WriteAttribute(_T("ti"), strTitle.c_str());
+	if (nMediaLength > 0)
+		xmlFile.WriteAttribute(_T("length"), nMediaLength);
+
+	xmlFile.WriteEndElement();
+	return ERR_OK;
+}
+
+MLMsgCmdBatchSearch::MLMsgCmdBatchSearch()
+{
+	strProtocolVer = ML_PROTOCOL_VERION;
+}
+
+int MLMsgCmdBatchSearch::FromXML(SXNode *pXmlNode)
+{
+	LPCTSTR szValue = pXmlNode->GetProperty(_T("ProtoVer"));
+	strProtocolVer = SURETEXT(szValue);
+
+	szValue = pXmlNode->GetProperty(_T("client"));
+	strClient = SURETEXT(szValue);
+
+	szValue = pXmlNode->GetProperty(_T("RegCode"));
+	strRegCode = SURETEXT(szValue);
+
+	szValue = pXmlNode->GetProperty(_T("ClientCharEncoding"));
+	strClientCharEncoding = SURETEXT(szValue);
+
+	listSearchItems.reserve(pXmlNode->listChildren.size());
+
+	for (SXNode::LIST_CHILDREN::iterator it = pXmlNode->listChildren.begin();
+		it != pXmlNode->listChildren.end(); ++it)
+	{
+		SXNode	*p = *it;
+		if (_tcscmp(p->strName.c_str(), MZ_ITEM) != 0)
+			continue;
+		listSearchItems.push_back(MLSearchItem());
+		listSearchItems.back().FromXML(p);
+	}
+	if (listSearchItems.size() == 0)
+		return ERR_CMD_PARAM;
+
+	return ERR_OK;
+}
+
+int MLMsgCmdBatchSearch::ToXML(CXMLWriter &xmlFile)
+{
+	xmlFile.WriteStartElement(MZ_BATCH_SEARCH);
+
+	if (strProtocolVer.size())
+		xmlFile.WriteAttribute(_T("ProtoVer"), strProtocolVer.c_str());
+	if (strClient.size())
+		xmlFile.WriteAttribute(_T("client"), strClient.c_str());
+	if (strRegCode.size())
+		xmlFile.WriteAttribute(_T("RegCode"), strRegCode.c_str());
+	if (strClientCharEncoding.size())
+		xmlFile.WriteAttribute(_T("ClientCharEncoding"), strClientCharEncoding.c_str());
+
+	for (MLListSearchItems::iterator it = listSearchItems.begin(); it != listSearchItems.end(); ++it)
+	{
+		(*it).ToXML(xmlFile);
+	}
+
+	xmlFile.WriteEndElement();
+	return ERR_OK;
+}
+
+//////////////////////////////////////////////////////////////////////////
+int MLLyricsInfoLite::FromXML(SXNode *pXmlNode)
+{
+	// strArtist = pXmlNode->GetPropertySafe(_T("ar"));
+	// strTitle = pXmlNode->GetPropertySafe(_T("ti"));
+	strFile = pXmlNode->GetPropertySafe(_T("fn"));
+	nIndex = pXmlNode->GetPropertyInt(_T("index"));
+
+	return ERR_OK;
+}
+
+int MLLyricsInfoLite::ToXML(CXMLWriter &xmlFile)
+{
+	xmlFile.WriteStartElement(MZ_ITEM);
+
+	// xmlFile.WriteAttribute(_T("ar"), strArtist.c_str());
+	// xmlFile.WriteAttribute(_T("ti"), strTitle.c_str());
+	xmlFile.WriteAttribute(_T("fn"), FileGetName(strFile.c_str()));
+	xmlFile.WriteAttribute(_T("index"), nIndex);
+
+	xmlFile.WriteEndElement();
+	return ERR_OK;
+}
+
+int MLMsgRetBatchSearch::FromXML(SXNode *pXmlNode)
+{
+	int nRet = MLRetMsgDataBlock::FromXML(pXmlNode);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	LPCTSTR		szValue;
+
+	szValue = pXmlNode->GetProperty(_T("badrc"));
+	if (szValue)
+		RegVerifyValue = (REGCODE_VERIFY_VALUE)_ttoi(szValue);
+	else
+		RegVerifyValue = RVV_OK;
+
+	szValue = pXmlNode->GetProperty(_T("msg"));
+	strMessage = SURETEXT(szValue);
+
+	for (SXNode::LIST_CHILDREN::iterator it = pXmlNode->listChildren.begin();
+		it != pXmlNode->listChildren.end(); ++it)
+	{
+		SXNode	*p = *it;
+		if (_tcscmp(p->strName.c_str(), MZ_ITEM) != 0)
+			continue;
+		listLyricsInfo.push_back(MLLyricsInfoLite());
+		listLyricsInfo.back().FromXML(p);
+	}
+
+	return ERR_OK;
+}
+
+int MLMsgRetBatchSearch::ToXML(CXMLWriter &xmlFile)
+{
+	xmlFile.WriteStartElement(MZ_RETURN);
+
+	MLRetMsgDataBlock::ToXMLAttribute(xmlFile);
+
+	if (RegVerifyValue)
+		xmlFile.WriteAttribute(_T("badrc"), RegVerifyValue);
+	if (strMessage.size())
+		xmlFile.WriteAttribute(_T("msg"), strMessage.c_str());
+
+	wstringex		wstrFile;
+
+	for (ListLyricsInfoLite::iterator it = listLyricsInfo.begin();
+		it != listLyricsInfo.end(); ++it)
+	{
+		MLLyricsInfoLite &fi = *it;
+
+#ifndef _UNICODE
+		Utf8ToUCS2(fi.strFile.c_str(), fi.strFile.size(), wstrFile);
+		if (binContainer.AddFile(wstrFile.c_str()))
+			fi.ToXML(xmlFile);
+		else
+			ERRLOG1(_T("Failed to open lyrics file: %s"), fi.strFile.c_str());
+#else
+		if (binContainer.AddFile(fi.strFile.c_str()))
+			fi.ToXML(xmlFile);
+		else
+			ERRLOG1(_T("Failed to open lyrics file: %s"), fi.strFile.c_str());
+#endif
+	}
+
+	xmlFile.WriteEndElement();
+
+	// Append data block
+	CCharBuffer &buf = xmlFile.GetBuffer();
+	buf.append(SZ_DATA_BLOCK_SIGN, LEN_DATA_BLOCK_SIGN);
+	buf.append(dataBlock.c_str(), dataBlock.size());
+
 	return ERR_OK;
 }
 
@@ -1068,21 +1285,12 @@ int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, BOOL *pbMLAg
 			 || msgType == MT_HTTP_RET)
 		{
 			// 在此对消息类型进行转换
-			msgType = MT_HTTP_POST_XML;
+			msgType = MT_HTTP_XML;
 
 			nRet = m_packetWrapper.Unwrapp(*pMsgBuff);
 			if (nRet != ERR_OK)
 				return nRet;
 		}
-//
-//		if (strcmp(szMsgType, ML_MSG_XML) == 0)
-//			msgType = MT_XML;
-//		else if (strcmp(szMsgType, ML_MSG_BIN) == 0)
-//			msgType = MT_BIN;
-//		else if (strcmp(szMsgType, ML_MSG_HTTP) == 0)
-//			msgType = MT_HTTP;
-//		else
-//			msgType = MT_UNKNOWN;
 	}
 
 	return nRet;
@@ -1099,34 +1307,6 @@ int CMLProtocol::WriteXMLMsg(MLMsgType msgType, CCharBuffer *pMsgBuff)
 
 	if (msgType == MT_HTTP_POST)
 	{
-//	m_httpReqWriteXmlCache.SetNetFile(m_pNetFile);
-//	m_httpReqWriteXmlCache.SetHost(_T("www.minilyrics.com"), 80);
-//
-//	m_httpReqWriteXmlCache.SetRequestType(CHttpRequestProtocol::RQ_GET);
-//	m_httpReqWriteXmlCache.SetAvailProp(CHttpRequestProtocol::RP_BASE_GET);
-//
-//	m_httpReqWriteXmlCache.SetUrl(_T("/"));
-//
-//	m_httpReqWriteXmlCache.SetPropValue(CHttpRequestProtocol::RP_CONNECTION, _T(""));
-//	m_httpReqWriteXmlCache.SetProxyBase64Pass(FALSE);
-//	m_httpReqWriteXmlCache.SetPropValue(CHttpRequestProtocol::RP_HOST, _T("www.getlyrics.com"));
-//	m_httpReqWriteXmlCache.SetPropValue(CHttpRequestProtocol::RP_ACCEPT, _T("*/*"));
-//	m_httpReqWriteXmlCache.SetPropValue(CHttpRequestProtocol::RP_REFERER, _T("http://www.minilyrics.com"));
-//	m_httpReqWriteXmlCache.SetPropValue(CHttpRequestProtocol::RP_USER_AGENT, _T("Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)"));
-//
-//	m_httpReqWriteXmlCache.WriteHead();
-/*
-
-	m_httpReqWriteXmlCache.SetRequestType(CHttpRequestProtocol::RP_BASE_GET);
-	m_httpReqWriteXmlCache.SetUrl(_T(SZ_ML_POST_URL));
-	m_httpReqWriteXmlCache.SetAvailProp(CHttpRequestProtocol::RP_POST_MIN);
-// 	m_httpReqWriteXmlCache.SetPropValue(CHttpRequestProtocol::RP_HOST, _T("www.minilyrics.com"));
-	m_httpReqWriteXmlCache.SetPropValue(CHttpRequestProtocol::RP_USER_AGENT, _T("MiniLyrics 3.0"));
-
-
-	m_httpRetWriteXmlCache.SetNetFile(m_pNetFile);
-	m_httpRetWriteXmlCache.ReadHead(TRUE);
-*/
 #ifdef _DEBUG
 		if (g_Profile.GetProfileInt(_T("PrintMLSend"), FALSE))
 			DBGLOGDUMPS(pMsgBuff->data(), pMsgBuff->size());

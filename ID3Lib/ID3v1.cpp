@@ -197,6 +197,12 @@ CID3v1::~CID3v1()
 
 }
 
+LPCTSTR *CID3v1::GetSupportedExtArray()
+{
+	static LPCTSTR arr[] = { _T(".mp3"), _T(".mp2"), NULL };
+	return arr;
+}
+
 int CID3v1::GetTag(LPCTSTR szFile, ID3V1 *id3v1)
 {
 	FILE	*fp;

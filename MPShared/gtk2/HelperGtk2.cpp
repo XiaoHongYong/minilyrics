@@ -27,10 +27,6 @@ void Execute(CBaseWnd *pWnd, LPCTSTR szExe, LPCTSTR szParam)
 {
 }
 
-void MLHtmlHelper(CBaseWnd *pWnd, LPCTSTR szFile)
-{
-}
-
 bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText)
 {
 	gtk_clipboard_set_text(gtk_clipboard_get(GDK_SELECTION_PRIMARY), szText, _tcslen(szText));

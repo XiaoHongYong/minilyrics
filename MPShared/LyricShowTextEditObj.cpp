@@ -979,7 +979,7 @@ void CLyricShowTextEditObj::ReloadThemeOfSkin(bool bSavetoProfile)
 
 	UpdateTextFontColor();
 }
-
+/*
 void CLyricShowTextEditObj::OnFRCommand(IFindReplaceNotify::Command cmd)
 {
 	DWORD			dwFlags = 0;
@@ -1029,10 +1029,10 @@ void CLyricShowTextEditObj::OnFRCommand(IFindReplaceNotify::Command cmd)
 		break;
 	}
 }
-
+*/
 void CLyricShowTextEditObj::ShowFindDialog(bool bFind)
 {
-	if (m_dlgFindReplace.IsValid())
+/*	if (m_dlgFindReplace.IsValid())
 	{
 		m_dlgFindReplace.ShowWindow(SW_SHOW);
 		m_dlgFindReplace.SetForeground();
@@ -1047,12 +1047,12 @@ void CLyricShowTextEditObj::ShowFindDialog(bool bFind)
 	if (!bFind)
 		m_dlgFindReplace.m_strReplaceWith = g_Profile.GetProfileString(_T("ReplaceWith"), _T(""));
 
-	m_dlgFindReplace.ShowDlg(m_pSkin, this, !bFind);
+	m_dlgFindReplace.ShowDlg(m_pSkin, this, !bFind);*/
 }
 
 void CLyricShowTextEditObj::FindNext()
 {
-	DWORD			dwFlags = 0;
+/*	DWORD			dwFlags = 0;
 
 	if (!m_dlgFindReplace.m_bSearchUp)
 		dwFlags |= FTF_DOWN;
@@ -1060,5 +1060,5 @@ void CLyricShowTextEditObj::FindNext()
 		dwFlags |= FTF_MATCH_CASE;
 
 	if (!FindText(m_dlgFindReplace.m_strFindWhat.c_str(), dwFlags))
-		m_pSkin->MessageOut(CStrPrintf(TOLOCAL(_T("Can't find \"%s\"")), m_dlgFindReplace.m_strFindWhat.c_str()).c_str());
+		m_pSkin->MessageOut(CStrPrintf(TOLOCAL(_T("Can't find \"%s\"")), m_dlgFindReplace.m_strFindWhat.c_str()).c_str());*/
 }

@@ -14,7 +14,7 @@ CRawGraphData::~CRawGraphData()
 	Destroy();
 }
 
-bool CRawGraphData::Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCount)
+bool CRawGraphData::Create(int cx, int cy, CMLGraphics *pGraph, int nBitCount)
 {
 	HDC		hdc = pGraph->GetHandle();
 
@@ -63,12 +63,12 @@ void CRawGraphData::Destroy()
 	m_imageData.buff = NULL;
 }
 
-void CRawGraphData::DrawToGraphics(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc)
+void CRawGraphData::DrawToGraphics(CMLGraphics *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc)
 {
 	BitBlt(pTarg->GetHandle(), xdest, ydest, width, height, GetHandle(), xsrc, ysrc, SRCCOPY);
 }
 
-void CRawGraphData::DrawToGraphicsStretch(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc, int widthsrc, int heightsrc)
+void CRawGraphData::DrawToGraphicsStretch(CMLGraphics *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc, int widthsrc, int heightsrc)
 {
 	StretchBlt(pTarg->GetHandle(), xdest, ydest, width, height, GetHandle(), xsrc, ysrc, widthsrc, heightsrc, SRCCOPY);
 }

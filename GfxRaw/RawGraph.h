@@ -107,7 +107,7 @@ public:
 
 	};
 
-	virtual bool Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCount = 32);
+	virtual bool Create(int cx, int cy, CMLGraphics *pGraph, int nBitCount = 32);
 
 	virtual void Line(int x1, int y1, int x2, int y2);
 

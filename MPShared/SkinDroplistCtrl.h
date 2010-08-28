@@ -256,7 +256,7 @@ protected:
 	CBaseWnd			*m_pWndParent;
 	CImgList			*m_pImageList;
 
-	CMLFont				m_font;
+	CFontInfo			m_font;
 	CMLBrush			m_brBg, m_brSelBg;
 	MLColor				m_clrText, m_clrBg, m_clrSelBg;
 

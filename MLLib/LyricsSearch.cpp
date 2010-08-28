@@ -745,10 +745,10 @@ int CalLyricsMatchValue(LPCTSTR szFile, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, 
 	}
 	else
 	{
-		TCHAR			szTitleTarg[MAX_PATH], szArtTarg[MAX_PATH];
+		tstring		strArTarg, strTiTarg;
+		AnalysisLyricsFileNameEx(strArTarg, strTiTarg, FileGetName(szFile));
 
-		AnalysisLyricsFileNameEx(szArtTarg, CountOf(szArtTarg), szTitleTarg, CountOf(szTitleTarg), szFile);
-		nMatchType = GetLyricsMatchType(szTitleTarg, szArtTarg, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
+		nMatchType = GetLyricsMatchType(strTiTarg.c_str(), strArTarg.c_str(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
 	}
 
 	return GetLyricsMatchValue(nMatchType, nFileType);

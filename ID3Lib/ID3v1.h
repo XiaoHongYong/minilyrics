@@ -54,6 +54,8 @@ public:
 	};
 #pragma pack(pop)
 
+	static LPCTSTR *GetSupportedExtArray();
+
 	int GetTag(LPCTSTR szFile, ID3V1 *id3v1);
 	int GetTag(FILE *fp, ID3V1 *id3v1);
 

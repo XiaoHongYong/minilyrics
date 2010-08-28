@@ -51,16 +51,43 @@ void ShowErrorDlg(CBaseWnd *pWnd, int nError)
 		return;
 	}
 
-	CErrorResolveDlg		dlg;
+	strError += _T("\r\n\r\n\r\n");
+	strError += strResolve;
+	pWnd->MessageOut(strError.c_str());
+/*	CErrorResolveDlg		dlg;
 
 	dlg.SetInfo(strError.c_str(), strResolve.c_str());
-	dlg.DoModal(pWnd);
+	dlg.DoModal(pWnd);*/
 }
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+/*
+class CErrorResolveDlg : public CBaseDialog  
+{
+public:
+	CErrorResolveDlg();
+	virtual ~CErrorResolveDlg();
+
+	BOOL OnInitDialog();
+
+	void SetInfo(LPCTSTR szError, LPCTSTR szResolve)
+	{
+		m_strError = szError;
+		m_strResolve = szResolve;
+	}
+
+	void OnCommand(UINT uID, UINT nNotifyCode);
+
+protected:
+	tstring			m_strError;
+	tstring			m_strResolve;
+	CHyperLinkCtrl	m_hlEmail;
+
+};*/
+/*
 CErrorResolveDlg::CErrorResolveDlg(): CBaseDialog(IDD_ERROR_RESOLVE)
 {
 
@@ -110,3 +137,4 @@ void CErrorResolveDlg::OnCommand(UINT uID, UINT nNotifyCode)
 		OpenUrl(this, GetStrName(SN_HTTP_HELP));
 	}
 }
+*/

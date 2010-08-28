@@ -205,7 +205,7 @@ public:
 protected:
 	void SetBkColor(const MLColor &clrBk);
 	void SetSelRowBkColor(const MLColor &clrBk);
-	void SetFont(const CMLFont &font);
+	void SetFont(const CFontInfo &font);
 	void SetTextColor(const MLColor &clrText);
 
 	void NotifyEvent(CSkinTreeCtrlEventNotify::Command cmd);

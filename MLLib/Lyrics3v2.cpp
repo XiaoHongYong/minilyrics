@@ -248,11 +248,11 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 		if (strTitle.empty())
 		{
 			// 从文件名中取得信息
-			TCHAR		szArtist[MAX_PATH], szTitle[MAX_PATH];
-			AnalysisLyricsFileNameEx(szArtist, CountOf(szArtist), szTitle, CountOf(szTitle), FileGetName(szMp3File));
+			tstring		strAr, strTi;
+			AnalysisLyricsFileNameEx(strAr, strTi, FileGetName(szMp3File));
 
-			ConvertStr(szArtist, -1, strArtist, ED_SYSDEF);
-			ConvertStr(szTitle, -1, strTitle, ED_SYSDEF);
+			ConvertStr(strAr.c_str(), -1, strArtist, ED_SYSDEF);
+			ConvertStr(strTi.c_str(), -1, strTitle, ED_SYSDEF);
 		}
 
 		SetId3v1(szId3v1Tag, strTitle.c_str(), strArtist.c_str(), strAlbum.c_str());
