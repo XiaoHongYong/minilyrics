@@ -483,6 +483,51 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESU
 	return ERR_OK;
 }
 
+int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSourceType)
+{
+	lrcSourceType = 0;
+
+	//
+	// ID3v2 lyrics
+	//
+	CID3v2IF		id3v2;
+	int				nRet;
+
+	if (!IsFileExist(szSongFile))
+		return ERR_NOT_FOUND;
+
+	nRet = id3v2.Open(szSongFile, false, false);
+	if (nRet == ERR_OK)
+	{
+		ID3v2LyricsInfo		lyrics;
+		tstringex			str;
+		nRet = id3v2.GetLyrics(lyrics);
+		if (nRet == ERR_OK)
+		{
+			if (lyrics.m_synchLyrics.size())
+				lrcSourceType |= LST_ID3V2_SYLT;
+			if (lyrics.m_unsynchLyrics.size())
+				lrcSourceType |= LST_ID3V2_USLT;
+			if ((lyrics.m_lyricsUserDefined.m_strValueAnsi.size() || lyrics.m_lyricsUserDefined.m_strValueUCS2.size()))
+				lrcSourceType |= LST_ID3V2_LYRICS;
+		}
+		id3v2.Close();
+	}
+
+	//
+	// Lyrics3v2
+	//
+	{
+		CLyrics3v2		lyrics3v2;
+		stringex	strLyrics;
+
+		if (lyrics3v2.ReadLyrcsInfo(szSongFile, strLyrics) == ERR_OK)
+			lrcSourceType |= LST_LYRICS3V2;
+	}
+
+	return ERR_OK;
+}
+
 BOOL CLyricsLocalSearch::SetFolder(LPCTSTR szFolder, BOOL bIncludeSub)
 {
 	for (int i = GetSearchFolerCount() - 1; i >= 0; i --)

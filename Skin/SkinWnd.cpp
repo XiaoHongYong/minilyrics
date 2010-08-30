@@ -2829,24 +2829,6 @@ bool CSkinWnd::IsInAnimation()
 	return !m_listAnimations.empty();
 }
 
-CObjAnimation *CSkinWnd::GetObjAnimation(int nId, AnimateState &as, int &nMotionPercent)
-{
-	CObjAnimation	*pAnimation = NULL;
-	for (ListAnimationObj::iterator it = m_listAnimations.begin(); it != m_listAnimations.end(); ++it)
-	{
-		CSkinAnimationObj *p = *it;
-		pAnimation = p->GetObjAnimation(nId);
-		if (pAnimation)
-		{
-			as = p->GetState();
-			nMotionPercent = p->GetMotionPercent();
-			return pAnimation;
-		}
-	}
-
-	return NULL;
-}
-
 void CSkinWnd::OnTimerAnimation()
 {
 	if (m_listAnimations.empty())

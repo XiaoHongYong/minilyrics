@@ -414,7 +414,7 @@ int CUIObject::GetOpacity()
 		return m_nOpacity;
 }
 
-BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])
+BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion)
 {
 	int	nValue;
 
@@ -436,16 +436,8 @@ BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])
 	if (m_formHeight.CalCualteValue(vars, nValue))
 		m_rcObj.bottom = m_rcObj.top + nValue;
 
-	if (m_pSkin->IsInAnimation() && m_nId != SKIN_UIOBJ_ID_UNDEFINE)
-	{
-		AnimateState		as;
-		int					nMotionPercent;
-		CObjAnimation		*pAnimation = m_pSkin->GetObjAnimation(m_nId, as, nMotionPercent);
-		if (pAnimation)
-		{
-			pAnimation->Animate(as, nMotionPercent, this);
-		}
-	}
+	if (pMotion)
+		pMotion->Animate(this);
 
 	OnSize(m_rcObj.Width(), m_rcObj.Height());
 
@@ -482,7 +474,11 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		StrSplit(szValue, ',', vRect);
 		TrimStr(vRect, ' ');
 		if (vRect.size() != 4)
+		{
+			ASSERT(0);
+			ERRLOG1(_T("Rect property should have 4 parameters: %s"), szValue);
 			return false;
+		}
 
 		if (vRect[0].size()) m_formLeft.SetFormula(vRect[0].c_str());
 		if (vRect[1].size()) m_formTop.SetFormula(vRect[1].c_str());

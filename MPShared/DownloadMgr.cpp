@@ -482,7 +482,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 				if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveLyrics3v2"), false))
 					uEmbeddedLyrics |= LST_LYRICS3V2;
 
-				g_autoProcessEmbeddedLyrics.AddSaveEmbeddedJob(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str(), _T(""), uEmbeddedLyrics);
+				g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str(), _T(""), uEmbeddedLyrics);
 			}
 
 			g_LyricSearch.AssociateLyrics(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str());

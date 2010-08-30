@@ -78,6 +78,7 @@ public:
 	void SaveLyricFolderCfg();
 
 	static int SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable = false);
+	static int SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSourceType);
 
 protected:
 	// ËÑË÷ËùÓÐµÄ¸è´Ê

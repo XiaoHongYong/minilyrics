@@ -643,7 +643,7 @@ void CSkinContainer::RecalculateSizePos()
 	}
 }
 
-void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj)
+void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj, CSkinAnimateMotion *pMotion)
 {
 	// recalculate all ui objects' position
 	FORMULA_VAR 	vars[] = {
@@ -653,7 +653,7 @@ void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj)
 	};
 
 	// recalculate every ui objects' position on back buffer one by one
-	pObj->ReCalculatePos(vars);
+	pObj->ReCalculatePos(vars, pMotion);
 }
 
 bool CSkinContainer::IsChild(CUIObject *pObj)

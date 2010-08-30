@@ -58,7 +58,7 @@ public:
 	bool AddUIObjectToFront(CUIObject *pObj);
 	
 	void RecalculateSizePos();
-	void RecalculateUIObjSizePos(CUIObject *pObj);
+	void RecalculateUIObjSizePos(CUIObject *pObj, CSkinAnimateMotion *pMotion = NULL);
 	BOOL RecalculateVarValue(CFormula &form, int &nRetValue);
 
 	CMLMenu *GetMenu() { return m_pMenu; }

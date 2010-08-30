@@ -326,7 +326,7 @@ void CSkinTabHeader::Draw(CRawGraph *pGraph)
 }
 
 
-BOOL CSkinTabHeader::ReCalculatePos(FORMULA_VAR vars[])
+BOOL CSkinTabHeader::ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion)
 {
 	CRect	rcBt;
 	int		i;
@@ -335,7 +335,7 @@ BOOL CSkinTabHeader::ReCalculatePos(FORMULA_VAR vars[])
 	if (!m_strTooltip.empty())
 		m_strTooltip.resize(0);
 
-	CUIObject::ReCalculatePos(vars);
+	CUIObject::ReCalculatePos(vars, pMotion);
 
 	// Add tooltip of all the buttons.
 	rcBt.left = m_rcObj.left;

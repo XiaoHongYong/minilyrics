@@ -22,7 +22,6 @@ public:
 
 		// save embedded lyrics
 		tstring				m_strLyricsFile;
-		int					m_nMediaLength;
 		tstring				m_strLyrics;		// if m_strLyricsFile.empty(), this is available.
 
 		// remove embedded lyrics
@@ -32,7 +31,6 @@ public:
 		{
 			m_bDealOK = false;
 			m_bTryFailed = false;
-			m_nMediaLength = 0;
 			m_uEmbeddedLyrType = 0;
 		}
 	};
@@ -41,8 +39,8 @@ public:
 	CAutoProcessEmbeddedLyrics();
 	virtual ~CAutoProcessEmbeddedLyrics();
 
-	int AddSaveEmbeddedJob(LPCTSTR szSongFile, LPCTSTR szLyricsFile, LPCTSTR szLyrics, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2);
-	int AddRemoveEmbeddedJob(LPCTSTR szSongFile, vector<string> &vSyncLang, vector<string> &vUnsyncLang, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2);
+	int SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, LPCTSTR szLyrics, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
+	int RemoveEmbeddedLyrics(LPCTSTR szSongFile, vector<string> &vSyncLang, vector<string> &vUnsyncLang, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
 	void RemoveJob(LPCTSTR szSongFile);
 
 	void OnQuit();
@@ -52,6 +50,8 @@ protected:
 	friend class CDlgBatchProcessEmbeddedLyrics;
 
 	int DealEmbeddedLyrics(Item &item);
+	int DealSaveEmbeddedLyrics(Item &item);
+	int DealRemoveEmbeddedLyrics(Item &item);
 
 	LIST_ITEMS				m_listJobs;
 	Mutex					m_mutex;

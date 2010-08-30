@@ -529,7 +529,6 @@ public:
 	void StopAnimation(int nIDAnimation);
 
 	bool IsInAnimation();
-	CObjAnimation *GetObjAnimation(int nId, AnimateState &as, int &nMotionPercent);
 
 protected:
 	typedef list<CSkinAnimationObj *>	ListAnimationObj;

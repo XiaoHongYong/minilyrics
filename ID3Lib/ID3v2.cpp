@@ -1020,15 +1020,19 @@ int CID3v2IF::RemoveSynchLyrics(const char *szLanguage)
 	{
 		pFrame = *it;
 
-		if (pFrame->m_framehdr.nFrameID == nFrameID &&
-			CID3v2FrameParserSynLyrics::IsFrameLanguageSame(pFrame, szLanguage, CID3v2FrameParserSynLyrics::CT_LYRICS))
+		if (pFrame->m_framehdr.nFrameID == nFrameID)
 		{
-			FrameRemove(it);
+			if (szLanguage == NULL
+				|| CID3v2FrameParserSynLyrics::IsFrameLanguageSame(pFrame, szLanguage, CID3v2FrameParserSynLyrics::CT_LYRICS))
+				FrameRemove(it);
 			return ERR_OK;
 		}
 	}
 
-	return ERR_NOT_FOUND;
+	if (szLanguage)
+		return ERR_NOT_FOUND;
+	else
+		return ERR_OK;
 }
 
 int CID3v2IF::RemoveUnsynchLyrics(const char *szLanguage)
@@ -1047,15 +1051,19 @@ int CID3v2IF::RemoveUnsynchLyrics(const char *szLanguage)
 	{
 		pFrame = *it;
 
-		if (pFrame->m_framehdr.nFrameID == nFrameID &&
-			CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(pFrame, szLanguage))
+		if (pFrame->m_framehdr.nFrameID == nFrameID)
 		{
-			FrameRemove(it);
+			if (szLanguage == NULL
+				|| CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(pFrame, szLanguage))
+				FrameRemove(it);
 			return ERR_OK;
 		}
 	}
 
-	return ERR_NOT_FOUND;
+	if (szLanguage)
+		return ERR_NOT_FOUND;
+	else
+		return ERR_OK;
 }
 
 // TCOM	: Composer

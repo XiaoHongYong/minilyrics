@@ -661,7 +661,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 						tstring		str;
 						if (g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE))
 						{
-							g_autoProcessEmbeddedLyrics.AddSaveEmbeddedJob(g_LyricData.GetSongFileName(), 
+							g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(g_LyricData.GetSongFileName(), 
 							_T(""), str.c_str(), g_LyricData.GetLyricsSourceType());
 						}
 					}

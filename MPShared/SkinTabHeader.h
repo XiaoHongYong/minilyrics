@@ -57,7 +57,7 @@ public:
 
 	void Draw(CRawGraph *pGraph);
 
-	BOOL ReCalculatePos(FORMULA_VAR vars[]);
+	BOOL ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion = NULL);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_

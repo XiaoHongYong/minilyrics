@@ -13,7 +13,7 @@
 #include "ErrorResolveDlg.h"
 #include "SkinListCtrl.h"
 #include "SkinEditCtrl.h"
-#include <set>
+#include "AutoProcessEmbeddedLyrics.h"
 
 bool IsHttpUrl(LPCTSTR szUrl)
 {
@@ -501,11 +501,25 @@ public:
 				if (!pSel)
 					break;
 
-				if (GetLrcSourceType(pSel->strUrl.c_str()) != LST_FILE)
-					break;
+				LRC_SOURCE_TYPE lst = GetLrcSourceType(pSel->strUrl.c_str());
+				bool bDeleted = false;
+				if (lst == LST_FILE)
+				{
+					SHDeleteFile(pSel->strUrl.c_str(), m_pSkinWnd);
+					if (!IsFileExist(pSel->strUrl.c_str()))
+						bDeleted = true;
+				}
+				else
+				{
+					vector<string> vSyncLang, vUnsyncLang;
+					int nRet = g_autoProcessEmbeddedLyrics.RemoveEmbeddedLyrics(m_strSongFile.c_str(), vSyncLang, vUnsyncLang, lst, true);
+					if (nRet == ERR_OK)
+						bDeleted = true;
+					else
+						m_pSkinWnd->MessageOut(ERROR2STR_LOCAL(nRet));
+				}
 
-				SHDeleteFile(pSel->strUrl.c_str(), m_pSkinWnd);
-				if (!IsFileExist(pSel->strUrl.c_str()))
+				if (bDeleted)
 				{
 					int		nSel = m_pLyricsList->GetNextSelectedItem(-1);
 					m_vResultsLocal.DeleteByOrder(nSel);
@@ -597,21 +611,25 @@ public:
 		else if (nId == CID_MORE)
 		{
 			CRect		rc;
-			bool		bEnable = false;
+			bool		bLocalLyr = false;
+			bool		bLocalLyrFile = false;
 
 			LrcSearchResult	*pSel;
 
 			pSel = GetCurSel();
 			if (pSel)
 			{
-				bEnable = GetLrcSourceType(pSel->strUrl.c_str()) == LST_FILE;
-				if (IsHttpUrl(pSel->strUrl.c_str()))
-					bEnable = false;
+				if (!IsHttpUrl(pSel->strUrl.c_str()))
+				{
+					bLocalLyr = true;
+					if (GetLrcSourceType(pSel->strUrl.c_str()) == LST_FILE)
+						bLocalLyrFile = true;
+				}
 			}
 
-			m_menu.EnableItem(IDC_EXTERNAL_LYR_EDIT, bEnable);
-			m_menu.EnableItem(IDC_DEL_FILE, bEnable);
-			m_menu.EnableItem(IDC_RENAME, bEnable);
+			m_menu.EnableItem(IDC_EXTERNAL_LYR_EDIT, bLocalLyrFile);
+			m_menu.EnableItem(IDC_DEL_FILE, bLocalLyr);
+			m_menu.EnableItem(IDC_RENAME, bLocalLyrFile);
 			m_menu.CheckItem(IDC_NO_PROMPT,
 				!g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 

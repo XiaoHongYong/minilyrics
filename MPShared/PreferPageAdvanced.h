@@ -50,8 +50,8 @@ public:
 
 protected:
 	enum {
-		IMG_MODIFIED = 0,
-		IMG_UNMODIFIED,
+		IMG_UNMODIFIED = 0,
+		IMG_MODIFIED,
 	};
 
 	CPreferItem *GetCurItem();

@@ -13,6 +13,7 @@ class CFormula;
 class CSFImage;
 class CSkinContainer;
 class CUIObject;
+class CSkinAnimateMotion;
 
 enum BLT_MODE
 {
@@ -185,7 +186,7 @@ public:
 	virtual void SetProperties(vector<tstring> &vProperties);
 
 	// when CSkinWnd's size is changed, call every CUIObject's RecalclulatePos to change pos
-	virtual BOOL ReCalculatePos(FORMULA_VAR vars[]);
+	virtual BOOL ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion = NULL);
 	virtual void Invalidate();
 
 	CSkinContainer *GetParent() const { return m_pContainer; }
