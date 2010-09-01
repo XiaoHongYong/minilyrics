@@ -762,12 +762,14 @@ void CSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 		m_pUIObjHandleContextMenuCmd = NULL;
 	}
 
+	if (m_rootConainter.OnCommand(uID))
+		return;
+
 	int	nUID = m_pSkinFactory->GetUIDByMenuID(uID);
 	if (nUID != UID_INVALID)
 		OnCustomCommand(nUID);
 	else
 		CBaseWnd::OnCommand(uID, nNotifyCode);
-
 }
 
 void CSkinWnd::OnChar(UINT nChar)
@@ -2443,6 +2445,9 @@ void CSkinWnd::OnLoadWndSizePos()
 bool CSkinWnd::OnCustomCommand(int nId)
 {
 	if (m_pSjvmNotifyEvent && m_pSjvmNotifyEvent->onCommand(nId))
+		return true;
+
+	if (m_rootConainter.OnCustomCommand(nId))
 		return true;
 
 	int		nRet = m_pSkinFactory->OnDynamicCmd(nId, this);

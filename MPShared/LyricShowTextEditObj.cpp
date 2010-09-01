@@ -201,7 +201,7 @@ CLyricShowTextEditObj::CLyricShowTextEditObj()
 	m_lyrEditSyntaxParser.Init(this);
 	SetEditSyntaxParser(&m_lyrEditSyntaxParser);
 
-	m_nMsgWant |= UO_MSG_WANT_RBUTTON;
+	m_nMsgWant |= UO_MSG_WANT_MENU_CMD | UO_MSG_WANT_CUSTOM_CMD;
 	m_nEditorStyles |= S_MULTILINE;
 
 	m_bDiscardLyrChangeEvent = false;
@@ -214,7 +214,6 @@ CLyricShowTextEditObj::~CLyricShowTextEditObj()
 
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_EDITOR_RELOAD_TAG, this);
-	g_eventDispather.UnregisterHanlder(ET_LYRICS_EDITOR_CMD, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_CHANGED, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_DISPLAY_SETTINGS, this);
@@ -230,7 +229,6 @@ void CLyricShowTextEditObj::OnCreate()
 
 	g_eventDispather.RegisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_EDITOR_RELOAD_TAG, this);
-	g_eventDispather.RegisterHanlder(ET_LYRICS_EDITOR_CMD, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_DISPLAY_SETTINGS, this);
@@ -244,11 +242,6 @@ void CLyricShowTextEditObj::OnEvent(const IEvent *pEvent)
 		OnSaveLyrics();
 	else if (pEvent->eventType == ET_LYRICS_EDITOR_RELOAD_TAG)
 		UpdateLyricsProperties();
-	else if (pEvent->eventType == ET_LYRICS_EDITOR_CMD)
-	{
-		CEventLyricsEditorCmd	*pCmdEvent = (CEventLyricsEditorCmd *)pEvent;
-		OnUIDCommand(pCmdEvent->cmd);
-	}
 	else if (pEvent->eventType == ET_LYRICS_CHANGED)
 	{
 		OnLyricsChanged();
@@ -1129,9 +1122,9 @@ void FormtLrcTimeTag(int nTime, TCHAR szBuff[])
 
 //////////////////////////////////////////////////////////////////////
 
-BOOL CLyricShowTextEditObj::OnUIDCommand(DWORD dwCmdID)
+bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 {
-	switch (dwCmdID)
+	switch (nId)
 	{
 	case CMD_JUMP:
 		{
@@ -1221,7 +1214,7 @@ BOOL CLyricShowTextEditObj::OnUIDCommand(DWORD dwCmdID)
 				if (GetTimeTagOfLine(strLine.c_str(), strTimeTag))
 				{
 					nTime = GetTimeTagValue(strTimeTag.c_str(), strTimeTag.size());
-					if (dwCmdID == CMD_FORWARD_REMAIN_LINES)
+					if (nId == CMD_FORWARD_REMAIN_LINES)
 						nTime += 200;
 					else
 						nTime -= 200;

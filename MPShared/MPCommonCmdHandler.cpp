@@ -791,41 +791,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS, NULL);
 		}
 		break;
-
-	//
-	// Lyrics editor command
-	//
-	case CMD_INSERTTAG_DOWN:
-	case CMD_INSERTTAG:
-	case CMD_FORWARD_CUR_LINE:
-	case CMD_BACKWARD_CUR_LINE:
-	case CMD_FORWARD_REMAIN_LINES:
-	case CMD_BACKWARD_REMAIN_LINES:
-	case CMD_JUMP:
-	case CMD_DEL_TAG:
-	case CMD_EDIT_UNDO:
-	case CMD_EDIT_REDO:
-	case CMD_EDIT_CUT:
-	case CMD_EDIT_COPY:
-	case CMD_EDIT_PASTE:
-	case CMD_EDIT_DELETE:
-	case CMD_EDIT_FIND:
-	case CMD_EDIT_FINDNEXT:
-	case CMD_EDIT_REPLACE:
-	case CMD_AUTO_FILL_LYR_INFO:
-	case CMD_REMOVE_ALL_TAG:
-	case CMD_REMOVE_BLANK_LINE:
-	case CMD_TRIM_WHITESPACE:
-	case CMD_REMOVE_UNSYNC_LINES:
-	case CMD_CAPITALIZE_LEADING_LETTER:
-	case CMD_LYRICS_TO_LOWERCASE:
-		{
-			CEventLyricsEditorCmd		*pEvent = new CEventLyricsEditorCmd;
-			pEvent->eventType = ET_LYRICS_EDITOR_CMD;
-			pEvent->cmd = nID;
-			g_eventDispather.DispatchSyncEvent(pEvent);
-		}
-		break;
 	case CMD_MENU_LYR_EDIT:
 		{
 			POINT	pt;

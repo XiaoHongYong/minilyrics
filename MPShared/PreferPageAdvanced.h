@@ -4,9 +4,7 @@
 #pragma once
 
 #include "PreferencePageBase.h"
-#include "../widget/win32/WidgetTooltipListCtrl.h"
 #include "SkinListCtrl.h"
-#include "SkinEditCtrl.h"
 
 class CPreferItem
 {

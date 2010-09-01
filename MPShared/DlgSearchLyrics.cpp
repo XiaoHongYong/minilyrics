@@ -12,7 +12,6 @@
 #include "Helper.h"
 #include "ErrorResolveDlg.h"
 #include "SkinListCtrl.h"
-#include "SkinEditCtrl.h"
 #include "AutoProcessEmbeddedLyrics.h"
 
 bool IsHttpUrl(LPCTSTR szUrl)

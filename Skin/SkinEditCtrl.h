@@ -143,21 +143,6 @@ public:
 		TIMER_DURATION_CARET		= 500
 	};
 
-protected:
-	virtual CRawGraph *GetMemGraphics()
-	{
-		CRawGraph		*pGraph = m_pContainer->GetMemGraph();
-		pGraph->SetFont(m_font.GetFont());
-
-		return pGraph;
-	}
-
-	void UpdateRectToScreen(const CRect *rc);
-
-	virtual void FillGraph(CRawGraph *pGraph, const CRect *rc, int nColorName);
-	void FillGraph(CRawGraph *pGraph, int x, int y, int nWidth, int nHeight, int nColorName)
-	{ CRect		rc(x, y, x + nWidth, y + nHeight); FillGraph(pGraph, &rc, nColorName); }
-
 public:
 	class CAutoUpdate
 	{
@@ -420,6 +405,20 @@ protected:
 
 	// Alpha of background, used to implement translucent effect.
 	virtual byte GetBgAlpha();
+	virtual CRawGraph *GetMemGraphics()
+	{
+		CRawGraph		*pGraph = m_pContainer->GetMemGraph();
+		pGraph->SetFont(m_font.GetFont());
+
+		return pGraph;
+	}
+
+	void UpdateRectToScreen(const CRect *rc);
+
+	void FillGraph(CRawGraph *pGraph, const CRect *rc, int nColorName);
+	void FillGraph(CRawGraph *pGraph, int x, int y, int nWidth, int nHeight, int nColorName)
+		{ CRect		rc(x, y, x + nWidth, y + nHeight); FillGraph(pGraph, &rc, nColorName); }
+	void FillSelectedLineBg(CRawGraph *pGraph, int x, int y, COneLine *pLine, int nBegSelCol, int nEndSelCol);
 
 	void DrawLine(CRawGraph *pGraph, COneLine *pLine, int x, int xMax, int y);
 	void UpdateWidthInfoOfLine(CRawGraph *pGraph, COneLine *pLine);

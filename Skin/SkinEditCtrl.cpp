@@ -793,6 +793,31 @@ void CSkinEditCtrl::OnCreate()
 	m_font.OnCreate(m_pSkin);
 }
 
+void CSkinEditCtrl::FillSelectedLineBg(CRawGraph *pGraph, int x, int y, COneLine *pLine, int nBegSelCol, int nEndSelCol)
+{
+	CRect	rc;
+
+	ASSERT(nBegSelCol <= (int)pLine->size() && nEndSelCol <= (int)pLine->size());
+
+	for (int k = 0; k < nBegSelCol; k++)
+	{
+		CGlyph	&glyph = (*pLine)[k];
+		x += glyph.width;
+	}
+	rc.left = x;
+	rc.top = y;
+	rc.right = rc.left;
+	rc.bottom = rc.top + GetLineDy();
+
+	for (int k = nBegSelCol; k < nEndSelCol; k++)
+	{
+		CGlyph	&glyph = (*pLine)[k];
+		rc.right += glyph.width;
+	}
+
+	FillGraph(pGraph, &rc, CN_SEL_BG);
+}
+
 void CSkinEditCtrl::Draw(CRawGraph *pGraph)
 {
 	CSkinScrollFrameCtrlBase::Draw(pGraph);
@@ -873,9 +898,23 @@ void CSkinEditCtrl::Draw(CRawGraph *pGraph)
 		if (y + GetLineDy() > yMax && i > m_nTopVisibleLine)
 			break;
 
-		COneLine		*pLine = m_vLines[i];
+		COneLine	*pLine = m_vLines[i];
+		int			nBegSelColCurLine, nEndSelColCurLine;
+
+		if (i == nBegSelRow)
+			nBegSelColCurLine = nBegSelCol;
+		else
+			nBegSelColCurLine = 0;
+
+		if (i == nEndSelRow)
+			nEndSelColCurLine = nEndSelCol;
+		else
+			nEndSelColCurLine = pLine->size();
 
 		x = xStart - m_nScrollPosx;
+
+		FillSelectedLineBg(pGraph, x, y, pLine, nBegSelColCurLine, nEndSelColCurLine);
+
 		for (int k = 0; k < (int)pLine->size(); k++)
 		{
 			CGlyph	&glyph = (*pLine)[k];
@@ -888,43 +927,22 @@ void CSkinEditCtrl::Draw(CRawGraph *pGraph)
 			if (x + glyph.width > xMax)
 				break;
 
-			// if (glyph.width)
+			if (k >= nBegSelColCurLine && k < nEndSelColCurLine)
 			{
-				bool		bSel = true;
-				if (i == nBegSelRow)
-				{
-					if (k < nBegSelCol)
-					{
-						// don't fill
-						bSel = false;
-					}
-				}
-				if (i == nEndSelRow)
-				{
-					if (k >= nEndSelCol)
-					{
-						// don't fill
-						bSel = false;
-					}
-				}
-				if (bSel)
-				{
-					CRect		rcLine;
-					rcLine.SetRect(x, y, x + glyph.width, y + GetLineDy());
-					FillGraph(pGraph, &rcLine, CN_SEL_BG);
-					pGraph->SetTextColor(GetColor(CN_SEL_TEXT));
-				}
-				else
-				{
-					if (glyph.clrIndex >= m_vClrTable.size())
-						pGraph->SetTextColor(GetColor(CN_TEXT));
-					else
-						pGraph->SetTextColor(m_vClrTable[glyph.clrIndex]);
-				}
-				if (glyph.chGlyph != '\t')
-					pGraph->TextOut(x, y, glyph.chGlyph, glyph.chGlyph.size());
-				x += glyph.width;
+				CRect		rcLine;
+				rcLine.SetRect(x, y, x + glyph.width, y + GetLineDy());
+				pGraph->SetTextColor(GetColor(CN_SEL_TEXT));
 			}
+			else
+			{
+				if (glyph.clrIndex >= m_vClrTable.size())
+					pGraph->SetTextColor(GetColor(CN_TEXT));
+				else
+					pGraph->SetTextColor(m_vClrTable[glyph.clrIndex]);
+			}
+			if (glyph.chGlyph != '\t')
+				pGraph->TextOut(x, y, glyph.chGlyph, glyph.chGlyph.size());
+			x += glyph.width;
 		}
 
 		y += GetLineDy();

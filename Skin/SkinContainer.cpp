@@ -32,18 +32,34 @@ bool CSkinContainer::OnCommand(int nID)
 	{
 		CUIObject	*pObj = m_vUIObjs[i];
 
-		if (pObj->IsContainer())
+		if (pObj->IsContainer() || pObj->WantMsgMenuCmd())
 		{
-			if (pObj->GetContainerIf()->OnCommand(nID))
-			{
+			if (pObj->OnCommand(nID))
 				return true;
-			}
 		}
 	}
 
 	return false;
 }
 
+bool CSkinContainer::OnCustomCommand(int nId)
+{
+	int		nCount;
+
+	nCount = (int)m_vUIObjs.size();
+	for (int i = 0; i < nCount; i++)
+	{
+		CUIObject	*pObj = m_vUIObjs[i];
+
+		if (pObj->IsContainer() || pObj->WantMsgCustomCmd())
+		{
+			if (pObj->OnCustomCommand(nId))
+				return true;
+		}
+	}
+
+	return false;
+}
 
 void CSkinContainer::DispatchOnCreateMsg()
 {

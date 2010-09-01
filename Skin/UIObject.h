@@ -115,6 +115,8 @@ enum
 	UO_MSG_WANT_ALL_KEYS	= 1 << 5,
 	UO_MSG_WANT_MOUSEWHEEL	= 1 << 6,
 	UO_MSG_WANT_MENU_KEY	= 1 << 7,
+	UO_MSG_WANT_CUSTOM_CMD	= 1 << 8,
+	UO_MSG_WANT_MENU_CMD	= 1 << 9,
 	UO_MSG_WANT_ALL			= 0xFFFFFFFF
 };
 
@@ -208,6 +210,7 @@ public:
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }
 
 	virtual bool OnCommand(UINT uID) { return false; }
+	virtual bool OnCustomCommand(int nId) { return false; }
 
 	virtual void Draw(CRawGraph *pGraph);
 
@@ -234,6 +237,8 @@ public:
 	inline bool WantMsgAllKeys()	{ return (m_nMsgWant & UO_MSG_WANT_ALL_KEYS) != 0; }
 	inline bool WantMsgEnterKey()	{ return (m_nMsgWant & UO_MSG_WANT_ENTER_KEY) != 0; }
 	inline bool WantMsgMenuKey()	{ return (m_nMsgWant & UO_MSG_WANT_MENU_KEY) != 0; }
+	inline bool WantMsgMenuCmd()	{ return (m_nMsgWant & UO_MSG_WANT_MENU_CMD) != 0; }
+	inline bool WantMsgCustomCmd()	{ return (m_nMsgWant & UO_MSG_WANT_CUSTOM_CMD) != 0; }
 
 	bool IsVisible();
 	virtual void SetVisible(bool bVisible);

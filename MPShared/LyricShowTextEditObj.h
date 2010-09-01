@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include "../Skin/SkinEditCtrl.h"
-
 class CLyricShowTextEditObj;
 
 class CLyrEditSyntaxParser : public IEditSyntaxParser
@@ -100,7 +98,7 @@ public:
 
 	virtual void OnEvent(const IEvent *pEvent);
 
-	virtual BOOL OnUIDCommand(DWORD dwCmdID);
+	virtual bool OnCustomCommand(int nId);
 
 	virtual void OnSaveLyrics();
 

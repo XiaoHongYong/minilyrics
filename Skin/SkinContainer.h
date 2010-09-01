@@ -64,6 +64,7 @@ public:
 	CMLMenu *GetMenu() { return m_pMenu; }
 
 	virtual bool OnCommand(int nID);
+	virtual bool OnCustomCommand(int nId);
 
 	//
 	// CSkinContainer API
