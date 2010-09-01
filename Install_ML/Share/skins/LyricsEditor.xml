@@ -39,9 +39,9 @@
     <seperator/>
     <button ID="ID_BACKWARD_LYRICS" Left="21" />
     <button ID="ID_FORWARD_LYRICS" Left="22" />
-    <button ID="ID_EDIT_TAG" Left="25" />
     <seperator/>
     <button ID="ID_EDIT_HELP" Left="24" />
   </Toolbar>
   <LyricShowTextEdit Left="0" Top="26" Width="w" Height="h-26" />
+
 </skinwnd>

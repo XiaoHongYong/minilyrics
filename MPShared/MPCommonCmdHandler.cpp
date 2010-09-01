@@ -89,23 +89,26 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			}
 		}
 		break;
+	case IDC_EDITOR_LYR_COLOR:
+	case IDC_EDITOR_HIGH_COLOR:
 	case IDC_TAG_COLOR:
 	case IDC_EDIT_LINE_COLOR:
+	case IDC_EDITOR_BG_COLOR:
 		{
 			CDlgChooseColor		dlg;
-			MLColor				clr;
+			MLColor				clr(RGB(0, 0, 0));
 			LPCTSTR				szColorValueName = NULL;
 
-			if (nID == IDC_TAG_COLOR)
-			{
-				szColorValueName = _T("TagColor");
-				clr.set(RGB(255, 128, 64));
-			}
+			if (nID == IDC_EDITOR_LYR_COLOR)
+				szColorValueName = _T("Ed_LowColor");
+			else if (nID == IDC_EDITOR_HIGH_COLOR)
+				szColorValueName = _T("Ed_HighColor");
+			else if (nID == IDC_TAG_COLOR)
+				szColorValueName = _T("Ed_TagColor");
+			else if (nID == IDC_EDITOR_BG_COLOR)
+				szColorValueName = _T("Ed_BgColor");
 			else
-			{
-				szColorValueName = _T("FocusLineBgColor");
-				clr.set(RGB(64, 71, 88));
-			}
+				szColorValueName = _T("Ed_FocusLineBgColor");
 
 			ProfileGetColorValue(clr, SZ_SECT_LYR_DISPLAY, szColorValueName);
 

@@ -20,7 +20,7 @@
     <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="MiniLyrics"  MinWidth="275" MinHeight="35" Width="400" Height="200" TagColor="#FF8242" ContextMenu="NormalMode" CmdHandler="ch_common">
+  <skinwnd Name="MiniLyrics"  MinWidth="275" MinHeight="35" Width="400" Height="200" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="0" Top="0" Width="w" Height="h" EnableAutoResize="FALSE"/>
   </skinwnd>
   <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" FgColor="#ECECEC" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">

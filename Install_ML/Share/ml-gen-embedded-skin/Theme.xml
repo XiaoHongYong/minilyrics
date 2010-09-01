@@ -4,8 +4,6 @@
     <BgColor>#4F586E</BgColor>
     <FgColor>#ECECEC</FgColor>
     <FgLowColor>#83949E</FgLowColor>
-    <TagColor>#FF0000</TagColor>
-    <FocusLineBgColor>#404758</FocusLineBgColor>
     <OutlineLyrText>0</OutlineLyrText>
     <HilightOBM>1</HilightOBM>
     <LowlightOBM>1</LowlightOBM>

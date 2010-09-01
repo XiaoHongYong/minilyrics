@@ -2,64 +2,113 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_LYRICSHOWTEXTEDITOBJ_H__5DC5BCC2_135B_11D6_B478_FFFFFF000000__INCLUDED_)
-#define AFX_LYRICSHOWTEXTEDITOBJ_H__5DC5BCC2_135B_11D6_B478_FFFFFF000000__INCLUDED_
-
 #pragma once
 
+#include "../Skin/SkinEditCtrl.h"
 
-#include "LyricShowObj.h"
-#include "SkinEditCtrl_t.h"
-#include "LyrEditHandler.h"
+class CLyricShowTextEditObj;
 
-class CLyricShowTextEditObj : public CSkinEditBoard_t<CLyricShowObj, CLyrEditHandler>, public IEditNotification
+class CLyrEditSyntaxParser : public IEditSyntaxParser
 {
-	UIOBJECT_CLASS_NAME_DECLARE(CLyricShowObj)
+public:
+	enum LYR_CLR
+	{
+		C_LOWLIGHT		= CSkinEditCtrl::CN_CUSTOMIZED_START,
+		C_TAG,
+		C_HILIGHT,
+	};
+
+	CLyrEditSyntaxParser();
+	virtual ~CLyrEditSyntaxParser();
+
+	virtual void Init(CSkinEditCtrl *pEdit);
+	virtual void OnNotifyParseLine(int nLine);
+
+public:
+	CLyricShowTextEditObj	*m_pLyrEdit;
+
+};
+
+class CLyricShowTextEditObj : public CSkinEditCtrl, public IEditNotification, public IEventHandler
+{
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinEditCtrl)
 public:
 	CLyricShowTextEditObj();
 	virtual ~CLyricShowTextEditObj();
 
-public:
-	typedef CSkinEditBoard_t<CLyricShowObj, CLyrEditHandler>		_BaseClass;
-
-public:
-	virtual CRawGraph *EB_GetGraphics()
+	class CLyrOneLine : public CSkinEditCtrl::COneLine
 	{
-		CRawGraph		*pGraph = GetParent()->GetMemGraph();
-		pGraph->SetFont(&m_font);
+	public:
+		CLyrOneLine()
+		{
+			nBegTime = 0, nEndTime = 0;
+			lineType = CMLData::LP_NONE;
+			bTempBegTime = true;
+			bTempEndTime = true;
+		}
+		int			nBegTime, nEndTime;
+		bool		bTempBegTime, bTempEndTime;
+		CMLData::LYRICS_PROP	lineType;
+	};
 
-		return pGraph;
-	}
-
-	virtual int EB_GetFontHeight() { return m_font.GetHeight(); }
-
-	virtual MLColor & GetColor(int nColorName);
-
-	virtual byte GetBgAlpha()
+public:
+	enum FindTextFlag
 	{
-		return byte(m_pSkin->m_nTranslucencyAlphaDynamic);
-	}
+		FTF_DOWN		= 0x1,			// search continue from selection
+		FTF_MATCH_CASE	= 0x1 << 1,		// case sensitive
+		FTF_WHOLEWORD	= 0x1 << 2,		// 
+	};
 
+	void OnKeyDown(UINT nChar, UINT nFlags);
+
+	void AutoVScrollDown(int nDownLine);
+
+	bool FindText(LPCTSTR szText, DWORD dwFlags);
+
+	CLyrOneLine *GetLine(int nLine);
+
+	// for lyrics draw
+	void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
+	void ReDraw(CRawGraph *pGraphics);
+	void OnPlayTimeChangedUpdate();
+	void DrawLineGradual(CRawGraph *pGraph, COneLine *pLine, int x, int xMax, int y);
+
+	void SetColorTheme(MLColor &clrHilight, MLColor &clrLowlight, MLColor &clrTag, MLColor &clrEditLineBg);
+
+	void SetLyricsTagValue(CMLData::LYRICS_PROP lineType, LPCTSTR szValue);
+
+	bool IsTextChanged();
+
+public:
+	virtual void OnCmdDelete();
+
+	virtual COneLine *NewOneLine() { return new CLyrOneLine; }
+
+public:
+	//
+	// Find and replace dialog
+	//
+	virtual void ShowFindDialog(bool bFind = true);
+
+	virtual void FindNext();
+
+protected:
+	virtual int GetCaretLineHomePos();
+
+public:
 	virtual void OnCreate();
 
 	virtual void OnEvent(const IEvent *pEvent);
 
 	virtual BOOL OnUIDCommand(DWORD dwCmdID);
 
-	virtual bool OnRButtonUp(UINT nFlags, CPoint point);
-
-	virtual void OnContexMenu(int xPos, int yPos);
-
 	virtual void OnSaveLyrics();
 
 	virtual void Draw(CRawGraph *pGraph);
 
-	virtual void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
-
 	void UpdateLyricsProperties();
 
 public:
-	void OnPlayTimeChangedUpdate();
 	void OnLyricsChanged();
 
 public:
@@ -73,18 +122,20 @@ protected:
 
 	void SyncTimeTag(bool bMoveToNextLine);
 
-	virtual void ReloadThemeOfSkin(bool bSavetoProfile);
 	void AdjustSyncTimeOfSelected(bool bIncreaseTime);
-
-	// void OnFRCommand(IFindReplaceNotify::Command cmd);
-	void ShowFindDialog(bool bFind = true);
-	void FindNext();
 
 	bool				m_bDiscardLyrChangeEvent;
 	int					m_nTimerIDUpdateLyrics;
 
 	// CDlgFindReplace			m_dlgFindReplace;
 
-};
+protected:
+	CLyrEditSyntaxParser	m_lyrEditSyntaxParser;
 
-#endif // !defined(AFX_LYRICSHOWTEXTEDITOBJ_H__5DC5BCC2_135B_11D6_B478_FFFFFF000000__INCLUDED_)
+	// 
+	int					m_nTopVisibleLineOld;
+	int					m_nCurPosLineOld;
+	int					m_nDrawYOfCurPosLine;
+	int					m_nXOfCurPosLineOld;
+
+};

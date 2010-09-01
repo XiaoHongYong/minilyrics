@@ -334,13 +334,16 @@
 #define IDC_CLEAR_LIST                  40183
 #define IDC_REMOVE_SELECTED             40184
 #define IDC_DOWNLOAD_ALL_LYRICS         40185
+#define IDC_EDITOR_LYR_COLOR            40189
+#define IDC_EDITOR_HIGH_COLOR           40190
+#define IDC_EDITOR_BG_COLOR             40191
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        211
-#define _APS_NEXT_COMMAND_VALUE         40186
+#define _APS_NEXT_COMMAND_VALUE         40192
 #define _APS_NEXT_CONTROL_VALUE         1204
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

@@ -129,8 +129,8 @@
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_radio_button.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
-    <NormalEdit Extends="EditCtrl" Height="18" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
-          XMargin="12" YMargin="6" ExtendPos="20,50" ImageFrame="s_edit_box.png" ImageFrameSize="70,30"
+    <NormalEdit Extends="EditCtrl" Height="28" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
+          XMargin="5" YMargin="0" ExtendPos="20,50" ImageFrame="s_edit_box.png" ImageFrameSize="70,30"
           ImageFramePos="0,30" ImageFrameFocusPos="0,0"/>
     <NormalListCtrl Extends="ListCtrl" BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 
           NowPlayBgColor="#5478CA" TextColor="#000000" SelTextColor="#FFFFFF" 
@@ -151,6 +151,8 @@
     <Progress Extends="SeekCtrl" Height="20" EndWidth="8" ImageThumb="s_progress_null_thumb.png" ImageTrack="s_progress.png"/>
     <ListCtrlFrame Extends="Frame" Image="s_listctrl_frame.png" ImageFocus="s_listctrl_frame_focus.png"
           RoundWidth="4" ThickWidth="4" XBorder="0" YBorder="0"/>
+    <EditCtrlFrame Extends="Frame" Image="s_edit_box_frame.png" ImageFocus="s_edit_box_frame_focus.png"
+          RoundWidth="7" ThickWidth="5" XBorder="0" YBorder="0"/>
     <WndFrameCaption Extends="Text" ID="ID_CAPTION" Rect="30,4,w-60,20" Text="About MiniLyrics" FontHeight="16" FontBold="true" TextColor="#000000" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
     <VScrollBar Width="15" PushBtHeight="15" ThumbHeight="20" TrackHeight="20" ScrollBarWidth="15" Image="s_vscrollbar.png" ScalableThumb="TRUE" />
     <HScrollBar Height="15" PushBtWidth="15" ThumbWidth="20" TrackWidth="20" ScrollBarHeight="15" Image="s_hscrollbar.png" ScalableThumb="TRUE" />

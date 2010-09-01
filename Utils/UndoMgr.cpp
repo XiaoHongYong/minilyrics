@@ -3,6 +3,54 @@
 
 
 //////////////////////////////////////////////////////////////////////////
+// CBatchUndoAction
+CBatchUndoAction::CBatchUndoAction()
+{
+
+}
+
+CBatchUndoAction::~CBatchUndoAction()
+{
+	LIST_ACTIONS::iterator it, itEnd;
+	itEnd = m_listActions.end();
+	for (it = m_listActions.begin(); it != itEnd; ++it)
+	{
+		delete *it;
+	}
+	m_listActions.clear();
+}
+
+void CBatchUndoAction::Undo()
+{
+	LIST_ACTIONS::reverse_iterator it, itEnd;
+	itEnd = m_listActions.rend();
+	for (it = m_listActions.rbegin(); it != itEnd; ++it)
+	{
+		(*it)->Undo();
+	}
+}
+
+void CBatchUndoAction::Redo()
+{
+	LIST_ACTIONS::iterator it, itEnd;
+	itEnd = m_listActions.end();
+	for (it = m_listActions.begin(); it != itEnd; ++it)
+	{
+		(*it)->Redo();
+	}
+}
+
+void CBatchUndoAction::AddAction(CUndoAction *pAction)
+{
+	m_listActions.push_back(pAction);
+}
+
+bool CBatchUndoAction::IsEmpty()
+{
+	return m_listActions.empty();
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 CUndoMgr::CUndoMgr()
 {

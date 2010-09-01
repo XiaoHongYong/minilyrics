@@ -6,7 +6,7 @@
 #define _SKIN_MENU_BAR_H_
 
 #include "UIObject.h"
-#include "../MPShared/SkinMenu.h"
+#include "SkinMenu.h"
 
 class CSkinMenuBar;
 

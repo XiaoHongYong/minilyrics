@@ -8,9 +8,12 @@
 #include "Helper.h"
 
 LPCTSTR		__vLyrClrProperties[] = {
+	_T("Ed_HighColor"),
+	_T("Ed_LowColor"),
+	_T("Ed_TagColor"),
+	_T("Ed_BgColor"),
+	_T("Ed_FocusLineBgColor"),
 	_T("BgColor"),
-	_T("TagColor"),
-	_T("FocusLineBgColor"),
 	_T("OutlineLyrText"),
 
 	_T("HilightOBM"),

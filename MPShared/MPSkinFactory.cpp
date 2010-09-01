@@ -19,7 +19,6 @@
 #include "SkinSeekCtrl.h"
 #include "SkinListCtrl.h"
 #include "SkinListCtrlEx.h"
-#include "SkinEditCtrl.h"
 #include "SkinRateCtrl.h"
 #include "SkinToolBar.h"
 #include "SkinTabHeader.h"
@@ -124,8 +123,6 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinSeekCtrl;
 	else if (_tcsicmp(szClassName, CSkinListCtrl::ClassName()) == 0)
 		pObj = new CSkinListCtrl;
-	else if (_tcsicmp(szClassName, CSkinEditCtrl::ClassName()) == 0)
-		pObj = new CSkinEditCtrl;
 	else if (_tcsicmp(szClassName, CSkinBarFrame::ClassName()) == 0)
 		pObj = new CSkinBarFrame;
 	else if (_tcsicmp(szClassName, CSkinContainerBar::ClassName()) == 0)

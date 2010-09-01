@@ -616,6 +616,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinEditCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SkinFactory.cpp"
 				>
 				<FileConfiguration
@@ -676,6 +680,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinImage.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinMenu.cpp"
 				>
 			</File>
 			<File
@@ -1106,6 +1114,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinEditCtrl.h"
+				>
+			</File>
+			<File
 				RelativePath="SkinFactory.h"
 				>
 			</File>
@@ -1123,6 +1135,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinImage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinMenu.h"
 				>
 			</File>
 			<File

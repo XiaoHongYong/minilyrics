@@ -234,7 +234,6 @@ protected:
 
 	// basic colors
 	MLColor					m_clrBg;
-	MLColor					m_clrTag, m_clrFocusLineBg;
 
 	//
 	// blending lyrics options:

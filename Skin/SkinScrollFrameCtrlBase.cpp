@@ -2,11 +2,12 @@
 #include "MLSkin.h"
 #include "SkinScrollFrameCtrlBase.h"
 #include "SkinFrameCtrl.h"
+#include "../MPShared/SkinListCtrl.h"
 
 CSkinScrollFrameCtrlBase::CSkinScrollFrameCtrlBase()
 {
-	m_bHorzScrollBar = m_bVertScrollBar = true;
-	m_bEnableBorder = true;
+	m_bHorzScrollBar = m_bVertScrollBar = false;
+	m_bEnableBorder = false;
 
 	m_pObjVertScrollBar = NULL;
 	m_pObjHorzScrollBar = NULL;
@@ -110,7 +111,9 @@ BOOL CSkinScrollFrameCtrlBase::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 void CSkinScrollFrameCtrlBase::CreateFrameCtrl()
 {
 	m_pObjFrame = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(this,
-		_T("ListCtrlFrame"), ID_UNDEFINE, _T("0"), _T("0"), _T("w"), _T("h"));
+		IsKindOf(CSkinListCtrl::ClassName()) ? _T("ListCtrlFrame") : _T("EditCtrlFrame"),
+		ID_UNDEFINE, _T("0"), _T("0"), _T("w"), _T("h"));
+
 	ASSERT(m_pObjFrame);
 	if (m_pObjFrame)
 	{

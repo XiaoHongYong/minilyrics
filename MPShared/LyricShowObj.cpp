@@ -605,8 +605,6 @@ CLyricShowObj::CLyricShowObj()
 	m_hue = 0.0;
 
 	m_clrBg.set(RGB(79, 88, 110));
-	m_clrTag.set(RGB(255, 128, 64));
-	m_clrFocusLineBg.set(RGB(64, 71, 88));
 
 	m_tobHilight.obm = OBM_COLOR;
 	m_tobHilight.clr[TCI_FILL].set(RGB(255, 255, 255));
@@ -1760,11 +1758,6 @@ void CLyricShowObj::OnAdjustHue(float hue, float saturation, float luminance)
 	{
 		// Load original settings.
 		SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
-		if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
-		{
-			ProfileGetColorValue(m_clrTag, m_strSectName.c_str(), _T("TagColor"));
-			ProfileGetColorValue(m_clrFocusLineBg, m_strSectName.c_str(), _T("FocusLineBgColor"));
-		}
 
 		LoadLyrOverlaySettings();
 	}
@@ -1775,8 +1768,6 @@ void CLyricShowObj::OnAdjustHue(float hue, float saturation, float luminance)
 		return;
 
 	// Adjust hue
-	AdjustColorHue(m_clrTag, hue);
-	AdjustColorHue(m_clrFocusLineBg, hue);
 	AdjustColorHue(m_clrBg, hue);
 
 	tstring		strColor;
@@ -2178,14 +2169,6 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		SetBgColor(szValue);
 	}
-	else if (IsPropertyName(szProperty, _T("TagColor")))
-	{
-		GetColorValue(m_clrTag, szValue);
-	}
-	else if (IsPropertyName(szProperty, _T("FocusLineBgColor")))
-	{
-		GetColorValue(m_clrFocusLineBg, szValue);
-	}
 	else if (_tcsicmp(szProperty, _T("UseBgImage")) == 0)
 	{
 		m_bUseBgImg = IsTRUE(szValue);
@@ -2296,14 +2279,6 @@ bool CLyricShowObj::OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue)
 		SetBgColor(szValue);
 		m_pSkin->InvalidateRect();
 		return true;
-	}
-	else if (IsPropertyName(szProperty, _T("TagColor")))
-	{
-		GetColorValue(m_clrTag, szValue);
-	}
-	else if (IsPropertyName(szProperty, _T("FocusLineBgColor")))
-	{
-		GetColorValue(m_clrFocusLineBg, szValue);
 	}
 	else if (IsPropertyName(szProperty, _T("OutlineLyrText")))
 	{
@@ -2471,13 +2446,6 @@ void CLyricShowObj::LoadAllSettings()
 	}
 
 	SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
-
-	// Floating lyrics won't use Bgcolor and TagColor
-	if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
-	{
-		ProfileGetColorValue(m_clrTag, m_strSectName.c_str(), _T("TagColor"));
-		ProfileGetColorValue(m_clrFocusLineBg, m_strSectName.c_str(), _T("FocusLineBgColor"));
-	}
 
 	LoadLyrOverlaySettings();
 

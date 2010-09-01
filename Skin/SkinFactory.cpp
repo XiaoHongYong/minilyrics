@@ -12,6 +12,7 @@
 #include "SkinMenuBar.h"
 #include "SkinAnimationObj.h"
 #include "SkinFrameCtrl.h"
+#include "SkinEditCtrl.h"
 
 #define _SZ_SKINWND				_T("skinwnd")
 #define _SZ_MENUS				_T("Menus")
@@ -1296,6 +1297,8 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinMenuBar;
 	else if (_tcsicmp(szClassName, CSkinWndResizeObj::ClassName()) == 0)
 		pObj = new CSkinWndResizeObj;
+	else if (_tcsicmp(szClassName, CSkinEditCtrl::ClassName()) == 0)
+		pObj = new CSkinEditCtrl;
 	else if (_tcsicmp(szClassName, CSkinSquare::ClassName()) == 0)
 		pObj = new CSkinSquare;
 	else if (IsPropertyName(szClassName, CSkinFadeArea::ClassName()))

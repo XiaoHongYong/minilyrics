@@ -440,10 +440,11 @@ BEGIN
     END
     POPUP "&Options"
     BEGIN
+        MENUITEM "&Lyrics Color...",            IDC_EDITOR_LYR_COLOR
+        MENUITEM "&Highlight Lyrics Color...",  IDC_EDITOR_HIGH_COLOR
         MENUITEM "&Tag Color...",               IDC_TAG_COLOR
         MENUITEM "&Background Color of Edited Line...", IDC_EDIT_LINE_COLOR
-        MENUITEM SEPARATOR
-        MENUITEM "&Preferences...",             IDC_LYR_DISPLAY_OPT
+        MENUITEM "Back&ground Color...",        IDC_EDITOR_BG_COLOR
     END
     POPUP "&Help"
     BEGIN
