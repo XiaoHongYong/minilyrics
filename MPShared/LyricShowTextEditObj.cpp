@@ -8,6 +8,7 @@
 #include "LyricShowTextEditObj.h"
 #include "SkinToolBar.h"
 #include "LyricShowObj.h"
+#include "SkinBarFrame.h"
 
 #define TIMER_SPAN_LYR_PREVIEW_UPDATE	500
 
@@ -198,6 +199,8 @@ CLyricShowTextEditObj::CLyricShowTextEditObj()
 {
 	m_bEnableBorder = false;
 
+	m_findReplaceStatus = FRS_NONE;
+
 	m_lyrEditSyntaxParser.Init(this);
 	SetEditSyntaxParser(&m_lyrEditSyntaxParser);
 
@@ -210,8 +213,6 @@ CLyricShowTextEditObj::CLyricShowTextEditObj()
 
 CLyricShowTextEditObj::~CLyricShowTextEditObj()
 {
-	OnSaveLyrics();
-
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_EDITOR_RELOAD_TAG, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_CHANGED, this);
@@ -234,6 +235,29 @@ void CLyricShowTextEditObj::OnCreate()
 	g_eventDispather.RegisterHanlder(ET_LYRICS_DISPLAY_SETTINGS, this);
 
 	UpdateTextFontColor();
+
+	GET_ID_BY_NAME(CID_MATCHCASE);
+	GET_ID_BY_NAME(CID_FIND_PREV);
+	GET_ID_BY_NAME(CID_FIND_NEXT);
+	GET_ID_BY_NAME(CID_E_FIND);
+	GET_ID_BY_NAME(CID_REPLACE);
+	GET_ID_BY_NAME(CID_REPLACE_ALL);
+	GET_ID_BY_NAME(CID_E_REPLACE);
+
+	m_pSkin->SetUIObjectText(CID_E_FIND, g_Profile.GetProfileString(_T("FindWhat"), _T("")));
+	m_pSkin->SetUIObjectText(CID_E_REPLACE, g_Profile.GetProfileString(_T("ReplaceWith"), _T("")));
+}
+
+void CLyricShowTextEditObj::OnDestroy()
+{
+	OnSaveLyrics();
+
+	tstring	strFindWhat = m_pSkin->GetUIObjectText(CID_E_FIND);
+	tstring	strReplaceWith = m_pSkin->GetUIObjectText(CID_E_REPLACE);
+	g_Profile.WriteProfileString(_T("FindWhat"), strFindWhat.c_str());
+	g_Profile.WriteProfileString(_T("ReplaceWith"), strReplaceWith.c_str());
+
+	CSkinEditCtrl::OnDestroy();
 }
 
 void CLyricShowTextEditObj::OnEvent(const IEvent *pEvent)
@@ -1124,6 +1148,41 @@ void FormtLrcTimeTag(int nTime, TCHAR szBuff[])
 
 bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 {
+	if (nId == CID_FIND_PREV)
+	{
+		FindNext(false);
+	}
+	else if (nId == CID_FIND_NEXT)
+	{
+		FindNext();
+	}
+	else if (nId == CID_REPLACE)
+	{
+		// replace
+		tstring	strFindWhat = m_pSkin->GetUIObjectText(CID_E_FIND);
+		tstring	strReplaceWith = m_pSkin->GetUIObjectText(CID_E_REPLACE);
+		tstring strSel;
+
+		SelectionToText(strSel);
+
+		if (strSel.size() && _tcscmp(strSel.c_str(), strFindWhat.c_str()) == 0)
+			ReplaceSel(strReplaceWith.c_str());
+		FindNext();
+	}
+	else if (nId == CID_REPLACE_ALL)
+	{
+		// replace all
+		SetCaret(0, 0);
+		m_nBegSelCol = -1;
+
+		CAutoBatchUndo		autoBatchUndo(this);
+		tstring	strFindWhat = m_pSkin->GetUIObjectText(CID_E_FIND);
+		tstring	strReplaceWith = m_pSkin->GetUIObjectText(CID_E_REPLACE);
+
+		while (FindNext())
+			ReplaceSel(strReplaceWith.c_str());
+	}
+
 	switch (nId)
 	{
 	case CMD_JUMP:
@@ -1490,6 +1549,13 @@ void CLyricShowTextEditObj::OnSaveLyrics()
 	g_LyricData.SetEncoding(nEncodingID);
 	g_LyricData.FromString(strEdit.c_str(), strEdit.size() * sizeof(TCHAR),
 		&fileEncoding, FT_LYRICS_LRC, TRUE, bUnicode, TRUE);
+
+	LyricsProperties &prop = g_LyricData.Properties();
+	prop.m_strArtist = m_pSkin->GetUIObjectText(_T("CID_E_ARTIST"));
+	prop.m_strTitle = m_pSkin->GetUIObjectText(_T("CID_E_TITLE"));
+	prop.m_strAlbum = m_pSkin->GetUIObjectText(_T("CID_E_ALBUM"));
+	prop.m_strBy = m_pSkin->GetUIObjectText(_T("CID_E_BY"));
+	prop.m_nTimeOffset = _ttoi(m_pSkin->GetUIObjectText(_T("CID_E_OFFSET")).c_str());
 };
 
 void CLyricShowTextEditObj::OnLyricsChanged()
@@ -1502,7 +1568,14 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 
 	CMLData::LYRICS_PROP_NAME	*lyricsPropNames = CMLData::GetSupportedLyricsPropName();
 
-	for (int i = 0; lyricsPropNames[i].szName != NULL; i++)
+	LyricsProperties &prop = g_LyricData.Properties();
+	m_pSkin->SetUIObjectText(_T("CID_E_ARTIST"), prop.m_strArtist.c_str(), false);
+	m_pSkin->SetUIObjectText(_T("CID_E_TITLE"), prop.m_strTitle.c_str(), false);
+	m_pSkin->SetUIObjectText(_T("CID_E_ALBUM"), prop.m_strAlbum.c_str(), false);
+	m_pSkin->SetUIObjectText(_T("CID_E_BY"), prop.m_strBy.c_str(), false);
+	m_pSkin->SetUIObjectText(_T("CID_E_OFFSET"), CStrPrintf(_T("%d"), prop.m_nTimeOffset).c_str(), false);
+
+/*	for (int i = 0; lyricsPropNames[i].szName != NULL; i++)
 	{
 		if (lyricsPropNames[i].prop == CMLData::LP_ENCODING)
 			continue;
@@ -1512,7 +1585,7 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 		strTags += strValue;
 		strTags += _T("\r\n");
 	}
-	str.insert(str.begin(), strTags.begin(), strTags.end());
+	str.insert(str.begin(), strTags.begin(), strTags.end());*/
 
 	CLyricShowTextEditObj::SetText(str.c_str());
 
@@ -1803,86 +1876,68 @@ void CLyricShowTextEditObj::AdjustSyncTimeOfSelected(bool bIncreaseTime)
 		SetSel(nBegLine, nBegCol, nEndLine, nEndCol);
 }
 
-/*
-void CLyricShowTextEditObj::OnFRCommand(IFindReplaceNotify::Command cmd)
+void CLyricShowTextEditObj::ShowFindDialog(bool bFind)
+{
+	CSkinBarFrame		*barFrameFindReplace;
+
+	barFrameFindReplace = (CSkinBarFrame *)m_pSkin->GetUIObjectById(
+		GetIDByName(_T("CID_EDITOR_FRAME")),
+		CSkinBarFrame::ClassName());
+	ASSERT(barFrameFindReplace);
+	if (barFrameFindReplace)
+	{
+		int		CID_C_FIND_REPLACE = GetIDByName(_T("CID_C_FIND_REPLACE"));
+
+		if (bFind && m_findReplaceStatus == FRS_FIND
+			|| !bFind && m_findReplaceStatus == FRS_REPLACE)
+		{
+			// Hide
+			m_findReplaceStatus = FRS_NONE;
+			barFrameFindReplace->ShowBar(CID_C_FIND_REPLACE, false);
+			return;
+		}
+
+		if (m_findReplaceStatus == FRS_NONE)
+		{
+			tstring		strFindWhat;
+			SelectionToText(strFindWhat);
+			if (strFindWhat.size())
+				m_pSkin->SetUIObjectText(CID_E_FIND, strFindWhat.c_str(), false);
+		}
+
+		// Show
+		if (bFind)
+		{
+			m_findReplaceStatus = FRS_FIND;
+			barFrameFindReplace->SetTopBarHeight(35, false);
+		}
+		else
+		{
+			m_findReplaceStatus = FRS_REPLACE;
+			barFrameFindReplace->SetTopBarHeight(70, false);
+		}
+		m_pSkin->SetUIObjectVisible(_T("CID_C_REPLACE"), !bFind, false);
+
+		barFrameFindReplace->ShowBar(CID_C_FIND_REPLACE, true);
+	}
+}
+
+bool CLyricShowTextEditObj::FindNext(bool bSearchDown)
 {
 	DWORD			dwFlags = 0;
 
-	if (!m_dlgFindReplace.m_bSearchUp)
-		dwFlags |= FTF_DOWN;
-	if (m_dlgFindReplace.m_bMatchCase)
+	if (m_pSkin->IsButtonChecked(CID_MATCHCASE))
 		dwFlags |= FTF_MATCH_CASE;
+	if (bSearchDown)
+		dwFlags |= FTF_DOWN;
 
-	switch (cmd)
+	tstring	strFindWhat = m_pSkin->GetUIObjectText(CID_E_FIND);
+
+	if (!FindText(strFindWhat.c_str(), dwFlags))
 	{
-	case IFindReplaceNotify::C_FIND_NEXT:
-		FindNext();
-		break;
-	case IFindReplaceNotify::C_REPLACE:
-		{
-			// replace
-			if (IsSelected())
-			{
-				ReplaceSel(m_dlgFindReplace.m_strReplaceWith.c_str());
-				FindText(m_dlgFindReplace.m_strFindWhat.c_str(), dwFlags);
-			}
-			else
-			{
-				if (!FindText(m_dlgFindReplace.m_strFindWhat.c_str(), dwFlags))
-					m_pSkin->MessageOut(CStrPrintf(TOLOCAL(_T("Can't find \"%s\"")), m_dlgFindReplace.m_strFindWhat.c_str()).c_str());
-			}
-		}
-		break;
-	case IFindReplaceNotify::C_REPLACE_ALL:
-		{
-			// replace all
-			SetCaret(0, 0);
-			m_nBegSelCol = -1;
-
-			CAutoBatchUndo		autoBatchUndo(this);
-
-			while (FindText(m_dlgFindReplace.m_strFindWhat.c_str(), dwFlags))
-				ReplaceSel(m_dlgFindReplace.m_strReplaceWith.c_str());
-		}
-		break;
-	case IFindReplaceNotify::C_CLOSE_DLG:
-		{
-			g_Profile.WriteProfileString(_T("FindWhat"), m_dlgFindReplace.m_strFindWhat.c_str());
-			g_Profile.WriteProfileString(_T("ReplaceWith"), m_dlgFindReplace.m_strReplaceWith.c_str());
-		}
-		break;
-	}
-}
-*/
-void CLyricShowTextEditObj::ShowFindDialog(bool bFind)
-{
-/*	if (m_dlgFindReplace.IsValid())
-	{
-		m_dlgFindReplace.ShowWindow(SW_SHOW);
-		m_dlgFindReplace.SetForeground();
-		return;
+		m_pSkin->MessageOut(CStrPrintf(TOLOCAL(_T("Can't find \"%s\"")), strFindWhat.c_str()).c_str());
+		return false;
 	}
 
-	m_dlgFindReplace.m_strFindWhat.resize(0);
-	SelectionToText(m_dlgFindReplace.m_strFindWhat);
-
-	if (m_dlgFindReplace.m_strFindWhat.empty())
-		m_dlgFindReplace.m_strFindWhat = g_Profile.GetProfileString(_T("FindWhat"), _T(""));
-	if (!bFind)
-		m_dlgFindReplace.m_strReplaceWith = g_Profile.GetProfileString(_T("ReplaceWith"), _T(""));
-
-	m_dlgFindReplace.ShowDlg(m_pSkin, this, !bFind);*/
-}
-
-void CLyricShowTextEditObj::FindNext()
-{
-/*	DWORD			dwFlags = 0;
-
-	if (!m_dlgFindReplace.m_bSearchUp)
-		dwFlags |= FTF_DOWN;
-	if (m_dlgFindReplace.m_bMatchCase)
-		dwFlags |= FTF_MATCH_CASE;
-
-	if (!FindText(m_dlgFindReplace.m_strFindWhat.c_str(), dwFlags))
-		m_pSkin->MessageOut(CStrPrintf(TOLOCAL(_T("Can't find \"%s\"")), m_dlgFindReplace.m_strFindWhat.c_str()).c_str());*/
+	return true;
 }

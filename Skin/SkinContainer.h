@@ -19,6 +19,8 @@ public:
 	CSkinContainer();
 	virtual ~CSkinContainer();
 
+	virtual void OnDestroy();
+
 	virtual bool OnMouseMove(UINT nFlags, CPoint point);
 	virtual bool OnLButtonDown(UINT nFlags, CPoint point);
 	virtual bool OnLButtonDblClk(UINT nFlags, CPoint point);

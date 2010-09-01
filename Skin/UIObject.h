@@ -125,6 +125,8 @@ enum
 #define GetFALSE(szValue)		(_tcsicmp(_T("FALSE"), szValue) == 0)
 #define BOOLTOSTR(bValue)		(bValue ? _T("TRUE") : _T("FALSE"))
 
+#define GET_ID_BY_NAME(_id)		_id = GetIDByName(_T(#_id))
+
 #define SZ_TRUE				_T("TRUE")
 #define SZ_FALSE			_T("FALSE")
 
@@ -194,7 +196,8 @@ public:
 	CSkinContainer *GetParent() const { return m_pContainer; }
 
 	// window messages
-	virtual void OnCreate();
+	virtual void OnCreate() { }
+	virtual void OnDestroy() { }
 	virtual void OnKeyUp(UINT nChar, UINT nFlags) { }
 	virtual void OnKeyDown(UINT nChar, UINT nFlags) { }
 	virtual bool OnMenuKey(UINT nChar, UINT nFlags) { return false; }
@@ -281,6 +284,8 @@ public:
 	tstring GetProfileKeyName(LPCTSTR szSubKeyName);
 
 	virtual void OnLanguageChanged();
+
+	int GetIDByName(LPCTSTR szID);
 
 public:
 	//

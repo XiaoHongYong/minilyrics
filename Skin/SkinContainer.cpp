@@ -79,9 +79,23 @@ void CSkinContainer::DispatchOnCreateMsg()
 		}
 	}
 
+	m_bCreated = true;
 	OnCreate();
 }
 
+void CSkinContainer::OnDestroy()
+{
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
+	{
+		CUIObject		*pObj = m_vUIObjs[i];
+
+		if (pObj->m_bCreated)
+		{
+			pObj->OnDestroy();
+			pObj->m_bCreated = false;
+		}
+	}
+}
 
 bool CSkinContainer::OnMouseMove(UINT nFlags, CPoint point) 
 {

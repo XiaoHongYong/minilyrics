@@ -543,9 +543,6 @@ BOOL CUIObject::SetPropertyInt(LPCTSTR szProperty, int nValue)
 	return SetProperty(szProperty, szBuffer);
 }
 
-void CUIObject::OnCreate()
-{
-}
 /*
 LPCTSTR CUIObject::GetClassName()
 {
@@ -783,4 +780,10 @@ void CUIObject::OnLanguageChanged()
 
 	if (m_strTooltip.size())
 		m_pSkin->GetSkinFactory()->GetTooltip(m_nId, m_strTooltip);
+}
+
+int CUIObject::GetIDByName(LPCTSTR szID)
+{
+	ASSERT(m_pSkin);
+	return m_pSkin->GetSkinFactory()->GetIDByName(szID);
 }

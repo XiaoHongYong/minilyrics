@@ -8,9 +8,9 @@
   <Animation ID="CID_AM_SHOW_WAIT" FadeIn="CID_WAIT" Duration="300"/>
   <Animation ID="CID_AM_HIDE_WAIT" FadeOut="CID_WAIT" Duration="300"/>
   <Container ID="CID_C_OPEN" Name="Search lyrics" Rect="0,0,w,h">
-    <NormalText ID="CID_S_AR" Text="Artist:" Rect="10,20,60,"/>
+    <NormalText ID="CID_S_AR" Text="Artist:" Rect="10,25,60,"/>
     <NormalEdit ID="CID_E_ARTIST" Rect="70,20,w-70-20-80-20,"/>
-    <NormalText ID="CID_S_TI" Text="Title:" Rect="10,50,60,"/>
+    <NormalText ID="CID_S_TI" Text="Title:" Rect="10,55,60,"/>
     <NormalEdit ID="CID_E_TITLE" Rect="70,50,w-70-20-80-20,"/>
     <NormalTextBt ID="CID_SEARCH" Text="&amp;Search" Rect="w-90-10,50,90,"/>
 

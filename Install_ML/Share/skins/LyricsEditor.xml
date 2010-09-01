@@ -42,6 +42,40 @@
     <seperator/>
     <button ID="ID_EDIT_HELP" Left="24" />
   </Toolbar>
-  <LyricShowTextEdit Left="0" Top="26" Width="w" Height="h-26" />
-
+  <BarFrame Name="EditorFrame" ID="CID_EDITOR_FRAME" Rect="0,26,w,h-26-110" XBorder="0" YBorder="0">
+    <ContainerBar Name="FindReplace" ID="CID_C_FIND_REPLACE" Visible="false" Width="w" Height="40"
+                  MinWidth="w" MinHeight="30" FixedHeight="TRUE" RememberSizePos="false"
+                  FixedWidth="TRUE" Align="Top" PaintBg="FALSE">
+      <Container Name="Find" ID="CID_C_FIND" Rect="0,0,w,35">
+        <NormalTextBt ID="CID_FIND_PREV" Text="Find &amp;Previous" Rect="10,10,100,"/>
+        <NormalTextBt ID="CID_FIND_NEXT" Text="Find &amp;Next" Rect="130,10,100,"/>
+        <NormalText Text="Find what:" Rect="230,15,100," AlignText="AT_RIGHT | AT_VCENTER"/>
+        <NormalEdit ID="CID_E_FIND" Rect="340,10,w-340-120,"/>
+        <NormalCheckBox ID="CID_MATCHCASE" Text="Match &amp;case" Rect="w-110,15,90,"/>
+      </Container>
+      <Container Name="Replace" ID="CID_C_REPLACE" Rect="0,35,w,35">
+        <NormalTextBt ID="CID_REPLACE" Text="&amp;Replace" Rect="10,10,100,"/>
+        <NormalTextBt ID="CID_REPLACE_ALL" Text="Replace &amp;All" Rect="130,10,100,"/>
+        <NormalText Text="Replace with:" Rect="230,15,100," AlignText="AT_RIGHT | AT_VCENTER"/>
+        <NormalEdit ID="CID_E_REPLACE" Rect="340,10,w-340-120,"/>
+      </Container>
+    </ContainerBar>
+    <BarFrameClientArea Name="Editor" ID="CID_C_EDITOR" MinWidth="220" MinHeight="104">
+      <LyricShowTextEdit Rect="0,0,w,h" />
+    </BarFrameClientArea>
+  </BarFrame>
+  <NormalText Text="Artist:" Rect="10,h-95+5,70," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <NormalEdit ID="CID_E_ARTIST" Rect="90,h-95,w/2-90,"/>
+  <NormalText Text="Edited by:" Rect="w/2,h-95+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <NormalEdit ID="CID_E_BY" Rect="w/2+130,h-95,w/2-130,"/>
+  
+  <NormalText Text="Title:" Rect="10,h-65+5,70," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <NormalEdit ID="CID_E_TITLE" Rect="90,h-65,w/2-90,"/>
+  <NormalText Text="Delay time (ms):" Rect="w/2,h-65+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <NormalEdit ID="CID_E_OFFSET" Rect="w/2+130,h-65,w/2-130,"/>
+  
+  <NormalText Text="Album:" Rect="5,h-35+5,75," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <NormalEdit ID="CID_E_ALBUM" Rect="90,h-35,w/2-90,"/>
+  <NormalText Text="Media length (ms):" Rect="w/2,h-35+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <NormalEdit ID="CID_E_MEDIA_LENGTH" Rect="w/2+130,h-35,w/2-130,"/>
 </skinwnd>

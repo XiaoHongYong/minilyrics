@@ -388,6 +388,7 @@ void CSkinWnd::CloseSkin()
 	m_pUIObjCapMouse = NULL;
 	m_itFocusUIObject.End();
 
+	m_rootConainter.OnDestroy();
 	m_rootConainter.Destroy();
 
 #ifdef _WIN32_DESKTOP

@@ -790,6 +790,9 @@ void CSkinEditCtrl::OnCreate()
 
 	CSkinScrollFrameCtrlBase::OnCreate();
 
+	m_nCaretX = m_xMargin;
+	m_nCaretY = m_yMargin;
+
 	m_font.OnCreate(m_pSkin);
 }
 
@@ -1199,7 +1202,8 @@ void CSkinEditCtrl::ShowCaret(int x, int y, int nWidth, int nHeight)
 		UpdateRectToScreen(&m_caret.GetUpdateRect());
 	}
 
-	m_caret.ShowCaret(x, y, nWidth, nHeight);
+	if (m_pSkin->GetFocusUIObj() == (CUIObject *)this)
+		m_caret.ShowCaret(x, y, nWidth, nHeight);
 }
 
 void CSkinEditCtrl::HideCaret()

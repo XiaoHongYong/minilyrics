@@ -86,15 +86,15 @@ public:
 	//
 	// Find and replace dialog
 	//
-	virtual void ShowFindDialog(bool bFind = true);
-
-	virtual void FindNext();
+	void ShowFindDialog(bool bFind = true);
+	bool FindNext(bool bSearchDown = true);
 
 protected:
 	virtual int GetCaretLineHomePos();
 
 public:
 	virtual void OnCreate();
+	virtual void OnDestroy();
 
 	virtual void OnEvent(const IEvent *pEvent);
 
@@ -125,10 +125,19 @@ protected:
 	bool				m_bDiscardLyrChangeEvent;
 	int					m_nTimerIDUpdateLyrics;
 
-	// CDlgFindReplace			m_dlgFindReplace;
+	enum FindReplaceStatus
+	{
+		FRS_NONE,
+		FRS_FIND,
+		FRS_REPLACE,
+	};
 
 protected:
 	CLyrEditSyntaxParser	m_lyrEditSyntaxParser;
+
+	FindReplaceStatus		m_findReplaceStatus;
+	int						CID_MATCHCASE, CID_FIND_PREV, CID_FIND_NEXT, CID_E_FIND;
+	int						CID_REPLACE, CID_REPLACE_ALL, CID_E_REPLACE;
 
 	// 
 	int					m_nTopVisibleLineOld;
