@@ -70,7 +70,7 @@
 	    </ContainerBar>
       <ContainerBar Name="MediaInfo" ID="CCMD_MEDIAINFO" Width="200" Height="108" MinWidth="108" MinHeight="108" FixedHeight="TRUE" Align="Top" PaintBg="FALSE" BgColor="#000000">
         <MediaInfoText Name="Title" Left="0" Top="8" Width="w" Height="18" UseSkinBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Title" ShowTitle="false" PaintBg="false"/>
-        <HStretchImage Left="-2" Top="27" Width="w+2" Height="6" Name="TitleLine" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
+        <HStretchImage Left="-2" Top="25" Width="w+2" Height="6" Name="TitleLine" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
         <MediaInfoText Name="Artist" Left="0" Top="33" Width="w" Height="16" UseSkinBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Artist" ShowTitle="false" PaintBg="false"/>
         <MediaInfoText Name="Album" Left="0" Top="58" Width="w" Height="16" UseSkinBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Album" ShowTitle="false" PaintBg="false" />
         <Toolbar Left="0" Top="78" Width="160" Height="22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">

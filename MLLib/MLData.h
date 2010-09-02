@@ -218,29 +218,9 @@ struct LyricsProperties
 		m_nTimeOffset = 0;
 		m_nEncodingID = ED_SYSDEF;
 	}
-	bool Equal(const LyricsProperties &other) const
-	{
-		return m_strArtist == other.m_strArtist &&
-			m_strTitle == other.m_strTitle &&
-			m_strAlbum == other.m_strAlbum &&
-			m_strBy == other.m_strBy &&
-			m_strTxtLyrScrollEvents == other.m_strTxtLyrScrollEvents &&
-			m_strTimeOffset == other.m_strTimeOffset &&
-			m_nEncodingID == other.m_nEncodingID; 
-	}
 
-	void clear()
-	{
-		m_strTitle.resize(0);
-		m_strArtist.resize(0);
-		m_strAlbum.resize(0);
-		m_strBy.resize(0);
-		m_strEncoding.resize(0);
-		m_strTxtLyrScrollEvents.resize(0);
-		m_nTimeOffset = 0;
-		m_strTimeOffset.resize(0);
-		m_nEncodingID = ED_SYSDEF;
-	}
+	bool Equal(const LyricsProperties &other) const;
+	void clear();
 
 	CHAR_ENCODING GetEncodingIndex() { return m_nEncodingID; }
 	LPCTSTR GetEncoding() const { return m_strEncoding.c_str(); }
@@ -251,6 +231,8 @@ struct LyricsProperties
 	void SetOffsetTime(LPCTSTR szOfffsetTime) { m_strTimeOffset = szOfffsetTime; m_nTimeOffset = _ttoi(szOfffsetTime); }
 	LPCTSTR GetOffsetTimeStr() { return m_strTimeOffset.c_str(); }
 	int GetOffsetTime() { return m_nTimeOffset; }
+
+	void SetMediaLength(int nMediaLength);
 
 	tstring					m_strArtist;
 	tstring					m_strTitle;

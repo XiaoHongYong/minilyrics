@@ -118,6 +118,7 @@ CLyricShowTextEditObj::~CLyricShowTextEditObj()
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_CHANGED, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
 	g_eventDispather.UnregisterHanlder(ET_LYRICS_DISPLAY_SETTINGS, this);
+	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 }
 
 void CLyricShowTextEditObj::OnCreate()
@@ -147,11 +148,16 @@ void CLyricShowTextEditObj::OnCreate()
 	g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
 	g_eventDispather.RegisterHanlder(ET_LYRICS_DISPLAY_SETTINGS, this);
+	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 
 	UpdateTextFontColor();
 
 	m_pSkin->SetUIObjectText(CID_E_FIND, g_Profile.GetProfileString(_T("FindWhat"), _T("")));
 	m_pSkin->SetUIObjectText(CID_E_REPLACE, g_Profile.GetProfileString(_T("ReplaceWith"), _T("")));
+
+	// If there's no lyrics opened, fill media info.
+	if (!g_LyricData.HasLyricsOpened())
+		OnCustomCommand(CMD_AUTO_FILL_LYR_INFO);
 }
 
 void CLyricShowTextEditObj::OnDestroy()
@@ -171,12 +177,15 @@ void CLyricShowTextEditObj::OnEvent(const IEvent *pEvent)
 	if (pEvent->eventType == ET_LYRICS_ON_SAVE_EDIT)
 		OnSaveLyrics();
 	else if (pEvent->eventType == ET_LYRICS_EDITOR_RELOAD_TAG)
-		UpdateLyricsProperties();
+		UpdateLyricsProperties(true);
 	else if (pEvent->eventType == ET_LYRICS_CHANGED)
 		OnLyricsChanged();
 	else if (pEvent->eventType == ET_LYRICS_DRAW_UPDATE)
-	{
 		OnPlayTimeChangedUpdate();
+	else if (pEvent->eventType == ET_PLAYER_CUR_MEDIA_CHANGED)
+	{
+		if (!g_LyricData.HasLyricsOpened())
+			OnCustomCommand(CMD_AUTO_FILL_LYR_INFO);
 	}
 	else if (pEvent->eventType == ET_LYRICS_DISPLAY_SETTINGS)
 	{
@@ -1163,12 +1172,18 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 		break;
 	case CMD_AUTO_FILL_LYR_INFO:
 		{
-			// Auto fill artist, album and title info
-			g_LyricData.Properties().m_strTitle = g_Player.GetTitle();
-			g_LyricData.Properties().m_strArtist = g_Player.GetArtist();
-			g_LyricData.Properties().m_strAlbum = g_Player.GetAlbum();
+			LyricsProperties &prop = g_LyricData.Properties();
 
-			UpdateLyricsProperties();
+			// Auto fill artist, album and title info
+			prop.m_strTitle = g_Player.GetTitle();
+			prop.m_strArtist = g_Player.GetArtist();
+			prop.m_strAlbum = g_Player.GetAlbum();
+			prop.SetMediaLength(g_Player.GetMediaLength() / 1000);
+			tstring		strLogName = g_Profile.GetProfileString(_T("LoginName"), _T(""));
+			if (strLogName.size())
+				prop.m_strBy = strLogName;
+
+			UpdateLyricsProperties(true);
 		}
 		break;
 	case CMD_REMOVE_ALL_TAG:
@@ -1494,7 +1509,7 @@ void CLyricShowTextEditObj::OnPlayTimeChangedUpdate()
 	}
 }
 
-void CLyricShowTextEditObj::UpdateLyricsProperties()
+void CLyricShowTextEditObj::UpdateLyricsProperties(bool bRedraw)
 {
 	LyricsProperties &prop = g_LyricData.Properties();
 
@@ -1504,6 +1519,9 @@ void CLyricShowTextEditObj::UpdateLyricsProperties()
 	m_pSkin->SetUIObjectText(CID_E_BY, prop.m_strBy.c_str(), false);
 	m_pSkin->SetUIObjectText(CID_E_OFFSET, prop.GetOffsetTimeStr(), false);
 	m_pSkin->SetUIObjectText(CID_E_MEDIA_LENGTH, prop.m_strMediaLength.c_str(), false);
+
+	if (bRedraw)
+		m_pSkin->InvalidateRect();
 }
 
 void CLyricShowTextEditObj::OnStatusChanged(IEditNotification::Status status, bool bVal)

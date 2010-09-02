@@ -67,15 +67,15 @@
   <NormalText Text="Artist:" Rect="10,h-95+5,70," AlignText="AT_RIGHT | AT_VCENTER"/>
   <NormalEdit ID="CID_E_ARTIST" Rect="90,h-95,w/2-90,"/>
   <NormalText Text="Edited by:" Rect="w/2,h-95+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_BY" Rect="w/2+130,h-95,w/2-130,"/>
+  <NormalEdit ID="CID_E_BY" Rect="w/2+130,h-95,w/2-140,"/>
   
   <NormalText Text="Title:" Rect="10,h-65+5,70," AlignText="AT_RIGHT | AT_VCENTER"/>
   <NormalEdit ID="CID_E_TITLE" Rect="90,h-65,w/2-90,"/>
   <NormalText Text="Delay time (ms):" Rect="w/2,h-65+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_OFFSET" Rect="w/2+130,h-65,w/2-130,"/>
+  <NormalEdit ID="CID_E_OFFSET" Rect="w/2+130,h-65,w/2-140,"/>
   
   <NormalText Text="Album:" Rect="5,h-35+5,75," AlignText="AT_RIGHT | AT_VCENTER"/>
   <NormalEdit ID="CID_E_ALBUM" Rect="90,h-35,w/2-90,"/>
-  <NormalText Text="Media length (ms):" Rect="w/2,h-35+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_MEDIA_LENGTH" Rect="w/2+130,h-35,w/2-130,"/>
+  <NormalText Text="Media length:" Rect="w/2,h-35+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <NormalEdit ID="CID_E_MEDIA_LENGTH" Rect="w/2+130,h-35,w/2-140,"/>
 </skinwnd>

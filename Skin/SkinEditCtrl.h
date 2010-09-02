@@ -140,7 +140,7 @@ public:
 
 	enum
 	{
-		TIMER_DURATION_CARET		= 500
+		TIMER_DURATION_CARET		= 600
 	};
 
 public:

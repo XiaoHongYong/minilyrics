@@ -113,6 +113,32 @@ void WrapText(LPCTSTR szText, vector<tstring> &vOutput, int nLineSize)
 #endif
 }
 
+bool LyricsProperties::Equal(const LyricsProperties &other) const
+{
+	return m_strArtist == other.m_strArtist &&
+		m_strTitle == other.m_strTitle &&
+		m_strAlbum == other.m_strAlbum &&
+		m_strBy == other.m_strBy &&
+		m_strTxtLyrScrollEvents == other.m_strTxtLyrScrollEvents &&
+		m_strTimeOffset == other.m_strTimeOffset &&
+		m_strMediaLength == other.m_strMediaLength &&
+		m_nEncodingID == other.m_nEncodingID; 
+}
+
+void LyricsProperties::clear()
+{
+	m_strTitle.resize(0);
+	m_strArtist.resize(0);
+	m_strAlbum.resize(0);
+	m_strBy.resize(0);
+	m_strEncoding.resize(0);
+	m_strTxtLyrScrollEvents.resize(0);
+	m_nTimeOffset = 0;
+	m_strTimeOffset.resize(0);
+	m_strMediaLength.resize(0);
+	m_nEncodingID = ED_SYSDEF;
+}
+
 void LyricsProperties::SetEncoding(CHAR_ENCODING nEncodingID)
 {
 	tstringex		str;
@@ -128,6 +154,18 @@ void LyricsProperties::SetEncoding(LPCTSTR szEncoding)
 	m_strEncoding = szEncoding;
 
 	m_nEncodingID = GetCharEncodingID(szEncoding);
+}
+
+void FormatPlayTime(TCHAR szBuf[], int nmsTime);
+
+void LyricsProperties::SetMediaLength(int nMediaLength)
+{
+	if (nMediaLength > 0)
+	{
+		TCHAR	szBuf[64] = { 0 };
+		FormatPlayTime(szBuf, nMediaLength * 1000);
+		m_strMediaLength = szBuf;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -1404,6 +1442,10 @@ bool CMLData::DoesChooseNewFileName()
 
 BOOL CMLData::IsModified()
 {
+	// No lyrics opened.
+	if (m_arrFileRows.size() == 0 && !IsContentModified())
+		return false;
+
 	return !m_lyrProperties.Equal(m_lyrPropertiesOrg) || IsContentModified();
 }
 
@@ -2494,6 +2536,9 @@ int CMLData::FromString(LPCVOID lpLrc, int nLen, FILE_ENCODING *fileEncoding, ML
 {
 	if (lrcFormat != FT_LYRICS_LRC)
 		return ERR_FALSE;
+
+	if (nLen == 0)
+		return ERR_OK;
 
 	ClearLyrics();
 

@@ -103,7 +103,7 @@ public:
 	virtual void Draw(CRawGraph *pGraph);
 
 public:
-	void UpdateLyricsProperties();
+	void UpdateLyricsProperties(bool bRedraw = false);
 	void OnLyricsChanged();
 
 public:
