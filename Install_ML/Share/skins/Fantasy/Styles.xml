@@ -127,7 +127,7 @@
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"
           XBorder="0" YBorder="10" FontName="Verdana" FontHeight="14" TextColor="#FFFFFF"/>
-    <Slider Extends="SeekCtrl" EndWidth="3" ImageThumb="seek_thumb.png" ImageTrack="seek_track.png"/>
+    <Slider Extends="SeekCtrl" Height="12" EndWidth="3" ImageThumb="seek_thumb.png" ImageTrack="seek_track.png"/>
     <Progress Extends="SeekCtrl" Height="20" EndWidth="8" ImageThumb="s_progress_null_thumb.png" ImageTrack="s_progress.png"/>
     <ListCtrlFrame Extends="Frame" Image="s_listctrl_frame.png" ImageFocus="s_listctrl_frame_focus.png"
           RoundWidth="4" ThickWidth="4" XBorder="0" YBorder="0"/>

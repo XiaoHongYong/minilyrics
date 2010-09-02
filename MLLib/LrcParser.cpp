@@ -21,6 +21,7 @@
 #define	SZ_BY				"by:"
 #define	SZ_ENCODING			"Encoding:"
 #define	SZ_OFFSET			"offset:"
+#define	SZ_LENGTH			"length:"
 
 
 #define _IsCharBlank(ch) (ch == ' ' || ch == '	')
@@ -160,6 +161,8 @@ S_OTHER_TAGS:
 		m_pMLData->Properties().m_strBy = strValue.c_str();
 	else if (nTagType == TAG_AL)
 		m_pMLData->Properties().m_strAlbum = strValue.c_str();
+	else if (nTagType == TAG_LENGTH)
+		m_pMLData->Properties().m_strMediaLength = strValue.c_str();
 
 	if (!buffWords.pop_read_front(word))
 		goto S_END;
@@ -450,6 +453,8 @@ int CLrcParserObj::GetTagType(TCHAR *szTag, int nLen)
 		return TAG_BY;
 	else if (IsTagStringMatch(szTag, SZ_OFFSET, nLen))
 		return TAG_OFFSET;
+	else if (IsTagStringMatch(szTag, SZ_LENGTH, nLen))
+		return TAG_LENGTH;
 	else
 	{
 		// time tag ?
@@ -499,26 +504,44 @@ S_ERROR:
 	return TAG_UNKNOWN;
 }
 
+bool ParseTxtLyrTag(LPCTSTR szText, int nLen, LPCTSTR szTag, tstring &strValue)
+{
+	int		nTagLen = _tcslen(szTag);
+	if (_tcsnicmp(szText, szTag, nTagLen) != 0)
+		return false;
+
+	// If value already exist, use existing.
+	if (strValue.size())
+		return true;
+
+	strValue.resize(0);
+	strValue.append(szText + nTagLen, nLen - nTagLen);
+	TrimStr(strValue);
+	return true;
+}
+
 bool CLrcParserObj::ReadTxtTag(TCHAR *szTag, int nLen)
 {
 	tstring			strValue;
+	LyricsProperties &prop = m_pMLData->Properties();
 
-	CMLData::LYRICS_PROP_NAME	*lyricsPropNames = CMLData::GetSupportedLyricsPropName();
-
-	for (int i = 0; lyricsPropNames[i].szName != NULL; i++)
+	if (ParseTxtLyrTag(szTag, nLen, _T("Artist:"), prop.m_strArtist))
+		return true;
+	else if (ParseTxtLyrTag(szTag, nLen, _T("Album:"), prop.m_strAlbum))
+		return true;
+	else if (ParseTxtLyrTag(szTag, nLen, _T("Title:"), prop.m_strTitle))
+		return true;
+	else if (ParseTxtLyrTag(szTag, nLen, _T("encoding:"), strValue))
 	{
-		int		nNameLen = _tcslen(lyricsPropNames[i].szName);
-		if (_tcsnicmp(szTag, lyricsPropNames[i].szName, nNameLen) == 0)
-		{
-			strValue.append(szTag + nNameLen, nLen - nNameLen);
-			TrimStr(strValue);
-			tstring strOrg;
-			m_pMLData->GetProperty(lyricsPropNames[i].prop, strOrg);
-			if (strOrg.empty())
-				m_pMLData->SetProperty(lyricsPropNames[i].prop, strValue.c_str());
-			return true;
-		}
+		prop.SetEncoding(strValue.c_str());
+		return true;
 	}
+	else if (ParseTxtLyrTag(szTag, nLen, _T("By:"), prop.m_strBy))
+		return true;
+	else if (ParseTxtLyrTag(szTag, nLen, _T("Offset:"), prop.m_strTxtLyrScrollEvents))
+		return true;
+	else if (ParseTxtLyrTag(szTag, nLen, _T("Length:"), prop.m_strMediaLength))
+		return true;
 
 	return false;
 }
@@ -1284,6 +1307,15 @@ BOOL CLrcParser::ToString(tstring &str, BOOL bIncTags)
 		{
 			_stprintf_s(szBuff, CountOf(szBuff), _T("[Encoding:%s]\r\n"), m_pMLData->GetEncoding());
 			str += szBuff;
+		}
+		if (m_pMLData->Properties().m_strMediaLength.size())
+		{
+			int nLength = _ttoi(m_pMLData->Properties().m_strMediaLength.c_str());
+			if (nLength != 0)
+			{
+				_stprintf_s(szBuff, CountOf(szBuff), _T("[length:%d]\r\n"), nLength);
+				str += szBuff;
+			}
 		}
 	}
 

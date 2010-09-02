@@ -821,6 +821,9 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 
 	int	xSrc = 0, ySrc = 0;
 
+	xDst -= MARGIN_BITMAP;
+	yDst -= MARGIN_BITMAP;
+
 	xDst += pGlyph->leftOffset;
 	yDst += pGlyph->topOffset;
 	int xDstEnd = xDst + pGlyph->widthBitmap;
@@ -970,6 +973,9 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 
 	int			xDstEnd, yDstEnd, xSrc, ySrc;
 
+	xDst -= MARGIN_BITMAP;
+	yDst -= MARGIN_BITMAP;
+
 	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 
 	imgPattern = pattern->GetHandle();
@@ -1059,6 +1065,9 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 
 	int			xDstEnd, yDstEnd, xSrc, ySrc;
 
+	xDst -= MARGIN_BITMAP;
+	yDst -= MARGIN_BITMAP;
+
 	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 
 	imgPattern = pattern->GetHandle();
@@ -1147,6 +1156,9 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	int			x, y;
 
 	int			xDstEnd, yDstEnd, xSrc, ySrc;
+
+	xDst -= MARGIN_BITMAP;
+	yDst -= MARGIN_BITMAP;
 
 	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 

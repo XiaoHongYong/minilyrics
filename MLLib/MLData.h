@@ -225,7 +225,7 @@ struct LyricsProperties
 			m_strAlbum == other.m_strAlbum &&
 			m_strBy == other.m_strBy &&
 			m_strTxtLyrScrollEvents == other.m_strTxtLyrScrollEvents &&
-			m_nTimeOffset == other.m_nTimeOffset &&
+			m_strTimeOffset == other.m_strTimeOffset &&
 			m_nEncodingID == other.m_nEncodingID; 
 	}
 
@@ -238,6 +238,7 @@ struct LyricsProperties
 		m_strEncoding.resize(0);
 		m_strTxtLyrScrollEvents.resize(0);
 		m_nTimeOffset = 0;
+		m_strTimeOffset.resize(0);
 		m_nEncodingID = ED_SYSDEF;
 	}
 
@@ -246,19 +247,25 @@ struct LyricsProperties
 	void SetEncoding(CHAR_ENCODING nEncodingID);
 	void SetEncoding(LPCTSTR szEncoding);
 
-	tstring GetOffsetTimeStr() { return CStrPrintf(_T("%d"), m_nTimeOffset).c_str(); }
+	void SetOffsetTime(int nOffsetTime) { m_nTimeOffset = nOffsetTime; m_strTimeOffset = CStrPrintf(_T("%d"), nOffsetTime).c_str(); }
+	void SetOffsetTime(LPCTSTR szOfffsetTime) { m_strTimeOffset = szOfffsetTime; m_nTimeOffset = _ttoi(szOfffsetTime); }
+	LPCTSTR GetOffsetTimeStr() { return m_strTimeOffset.c_str(); }
+	int GetOffsetTime() { return m_nTimeOffset; }
 
 	tstring					m_strArtist;
 	tstring					m_strTitle;
 	tstring					m_strAlbum;
 	tstring					m_strBy;
 	tstring					m_strTxtLyrScrollEvents;
-	// offset time of timestamps in lyrics, in ms
-	int						m_nTimeOffset;
+	tstring					m_strMediaLength;
 protected:
 	// Character encoding
 	tstring					m_strEncoding;
 	CHAR_ENCODING			m_nEncodingID;
+
+	// offset time of timestamps in lyrics, in ms
+	int						m_nTimeOffset;
+	tstring					m_strTimeOffset;
 
 };
 
@@ -266,25 +273,6 @@ protected:
 
 class CMLData  
 {
-public:
-	enum LYRICS_PROP
-	{
-		LP_NONE,
-		LP_ARTIST,
-		LP_ALBUM,
-		LP_TITLE,
-		LP_ENCODING,
-		LP_BY,
-		LP_OFFSET,
-		LP_TIME_TAG,
-	};
-
-	struct LYRICS_PROP_NAME
-	{
-		LPCTSTR			szName;
-		LYRICS_PROP		prop;
-	};
-
 public:
 	CMLData();
 	virtual ~CMLData();
@@ -416,10 +404,7 @@ public:
 
 	FILE_ENCODING GetFileEncoding() { return m_fileEncoding; }
 
-	void GetProperty(LYRICS_PROP prop, tstring &strValue);
-	void SetProperty(LYRICS_PROP prop, LPCTSTR szValue);
 	LyricsProperties &Properties() { return m_lyrProperties; }
-	static LYRICS_PROP_NAME* GetSupportedLyricsPropName();
 
 	void SetTxtLyrScrollEvents(LPCTSTR szScrEvents) { m_lyrProperties.m_strTxtLyrScrollEvents = szScrEvents; }
 	LPCTSTR GetTxtLyrScrollEvents() { return m_lyrProperties.m_strTxtLyrScrollEvents.c_str(); }
@@ -440,8 +425,8 @@ public:
 	bool DoesChooseNewFileName();
 
 	// 取得偏移时间量
-	int GetOffsetTime() { return m_lyrProperties.m_nTimeOffset; }
-	void SetOffsetTime(int nOffsetTime) { m_lyrProperties.m_nTimeOffset = nOffsetTime; }
+	int GetOffsetTime() { return m_lyrProperties.GetOffsetTime(); }
+	void SetOffsetTime(int nOffsetTime) { m_lyrProperties.SetOffsetTime(nOffsetTime); }
 
 	int GetMediaLength() { return m_nMediaLength; }
 

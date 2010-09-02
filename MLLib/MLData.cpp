@@ -569,7 +569,7 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bForceUs
 	m_lyrProperties.m_strArtist = strArtist.c_str();
 	m_lyrProperties.m_strAlbum = strAlbum.c_str();
 	m_lyrProperties.m_strBy = strBy.c_str();
-	m_lyrProperties.m_nTimeOffset = 0;
+	m_lyrProperties.SetOffsetTime(0);
 	m_lyrConentType = LCT_LRC;
 
 	CheckLyricsRowTime();
@@ -913,7 +913,6 @@ BOOL CMLData::SaveTag()
 
 	LPCTSTR		szTitle = NULL, szArtist = NULL, szAlbum = NULL;
 	LPCTSTR		szEncoding = NULL, szBy = NULL, szOffsetTime = NULL;
-	TCHAR		szOffsetTimeBuff[100];
 
 	if (m_lyrProperties.m_strArtist != m_lyrPropertiesOrg.m_strArtist)
 		szArtist = m_lyrProperties.m_strArtist.c_str();
@@ -923,11 +922,8 @@ BOOL CMLData::SaveTag()
 		szAlbum = m_lyrProperties.m_strAlbum.c_str();
 	if (m_lyrProperties.m_strBy != m_lyrPropertiesOrg.m_strBy)
 		szBy = m_lyrProperties.m_strBy.c_str();
-	if (m_lyrProperties.m_nTimeOffset != m_lyrPropertiesOrg.m_nTimeOffset)
-	{
-		_itot_s(m_lyrProperties.m_nTimeOffset, szOffsetTimeBuff, CountOf(szOffsetTimeBuff), 10);
-		szOffsetTime = szOffsetTimeBuff;
-	}
+	if (m_lyrProperties.GetOffsetTime() != m_lyrPropertiesOrg.GetOffsetTime())
+		szOffsetTime = m_lyrProperties.GetOffsetTimeStr();
 	if (_tcscmp(m_lyrProperties.GetEncoding(), m_lyrPropertiesOrg.GetEncoding()) != 0)
 		szEncoding = m_lyrProperties.GetEncoding();
 
@@ -1333,7 +1329,7 @@ int CMLData::GetLyricsFileServerMark(TCHAR szMd5[])
 //		…Ë÷√ ±º‰∆´“∆
 void CMLData::SetPlayElapsedTime(int nTimeElapsed)
 {
-	m_nTimeElapsed = nTimeElapsed + m_lyrProperties.m_nTimeOffset - m_nGlobalOffsetTime;
+	m_nTimeElapsed = nTimeElapsed + m_lyrProperties.GetOffsetTime() - m_nGlobalOffsetTime;
 }
 
 // COMMENT:
@@ -2348,7 +2344,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 					LrcSyllable<WCHAR>	syllable;
 					syllable.bNewLine = false;
 					syllable.strText = pFrag->szLyric;
-					syllable.nTime = pFrag->nBegTime + m_lyrProperties.m_nTimeOffset;
+					syllable.nTime = pFrag->nBegTime + m_lyrProperties.GetOffsetTime();
 					if (syllable.nTime < 0)
 						syllable.nTime = 0;
 					lyrics.m_vUcs2SynLyrics.push_back(syllable);
@@ -2358,7 +2354,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 				//
 				LrcSyllable<WCHAR>	syllable;
 				syllable.bNewLine = false;
-				syllable.nTime = pRow->nBegTime - m_lyrProperties.m_nTimeOffset;
+				syllable.nTime = pRow->nBegTime - m_lyrProperties.GetOffsetTime();
 				if (syllable.nTime < 0)
 					syllable.nTime = 0;
 				for (int k = 0; k < (int)pRow->vFrags.size(); k++)
@@ -2412,7 +2408,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 					syllable.bNewLine = false;
 					ConvertStr(pFrag->szLyric, pFrag->nLen, str, nEncodingID);
 					syllable.strText = str;
-					syllable.nTime = pFrag->nBegTime + m_lyrProperties.m_nTimeOffset;
+					syllable.nTime = pFrag->nBegTime + m_lyrProperties.GetOffsetTime();
 					if (syllable.nTime < 0)
 						syllable.nTime = 0;
 					lyrics.m_vAnsiSynLyrics.push_back(syllable);
@@ -2422,7 +2418,7 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEnc
 				//
 				LrcSyllable<char>	syllable;
 				syllable.bNewLine = false;
-				syllable.nTime = pRow->nBegTime - m_lyrProperties.m_nTimeOffset;
+				syllable.nTime = pRow->nBegTime - m_lyrProperties.GetOffsetTime();
 				if (syllable.nTime < 0)
 					syllable.nTime = 0;
 				for (int k = 0; k < (int)pRow->vFrags.size(); k++)
@@ -2680,79 +2676,4 @@ void CMLData::CopyMLyrLines(CMLyrLines &lyrLines)
 		pRow = CopyMLRow(pRowSrc);
 		lyrLines.push_back(pRow);
 	}
-}
-
-void CMLData::GetProperty(LYRICS_PROP prop, tstring &strValue)
-{
-	strValue.resize(0);
-
-	switch (prop)
-	{
-	case LP_ARTIST:
-		strValue = m_lyrProperties.m_strArtist;
-		break;
-	case LP_ALBUM:
-		strValue = m_lyrProperties.m_strAlbum;
-		break;
-	case LP_TITLE:
-		strValue = m_lyrProperties.m_strTitle;
-		break;
-	case LP_ENCODING:
-		strValue = m_lyrProperties.GetEncoding();
-		break;
-	case LP_BY:
-		strValue = m_lyrProperties.m_strBy;
-		break;
-	case LP_OFFSET:
-		if (m_lyrProperties.m_strTxtLyrScrollEvents.size())
-			strValue = m_lyrProperties.m_strTxtLyrScrollEvents;
-		else if (m_lyrProperties.m_nTimeOffset != 0)
-			strValue = CStrPrintf(_T("%d"), m_lyrProperties.m_nTimeOffset).c_str();
-		break;
-	}
-}
-
-void CMLData::SetProperty(LYRICS_PROP prop, LPCTSTR szValue)
-{
-	switch (prop)
-	{
-	case LP_ARTIST:
-		m_lyrProperties.m_strArtist = szValue;
-		break;
-	case LP_ALBUM:
-		m_lyrProperties.m_strAlbum = szValue;
-		break;
-	case LP_TITLE:
-		m_lyrProperties.m_strTitle = szValue;
-		break;
-	case LP_ENCODING:
-		SetEncoding(szValue);
-		break;
-	case LP_BY:
-		m_lyrProperties.m_strBy = szValue;
-		break;
-	case LP_OFFSET:
-		if (CLyrScrollActionRecorder::IsEventTag(szValue))
-			m_lyrProperties.m_strTxtLyrScrollEvents = szValue;
-		else
-			m_lyrProperties.m_nTimeOffset = _ttoi(szValue);
-		break;
-	}
-
-}
-
-CMLData::LYRICS_PROP_NAME* CMLData::GetSupportedLyricsPropName()
-{
-	static LYRICS_PROP_NAME	_LyricsPropName[] = 
-	{
-		{ _T("Artist:"), LP_ARTIST },
-		{ _T("Album:"), LP_ALBUM },
-		{ _T("Title:"), LP_TITLE },
-		{ _T("encoding:"), LP_ENCODING },
-		{ _T("By:"), LP_BY },
-		{ _T("Offset:"), LP_OFFSET },
-		{ NULL, LP_ARTIST },
-	};
-
-	return _LyricsPropName;
 }

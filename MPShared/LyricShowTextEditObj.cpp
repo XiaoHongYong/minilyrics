@@ -16,86 +16,11 @@
 
 #define GLYPH_WIDTH_INVALID		0xFF
 
-static LPCTSTR _vTags[] = { _T("ar:"), _T("ti:"), _T("al:"), _T("by:"), _T("encoding:"), _T("offset:"), NULL };
-static CMLData::LYRICS_PROP _vLineType[] = { CMLData::LP_ARTIST, CMLData::LP_TITLE, CMLData::LP_ALBUM, 
-	CMLData::LP_BY, CMLData::LP_ENCODING, CMLData::LP_OFFSET };
-
 bool GetTimeTagOfLine(LPCTSTR szLine, tstring &strTimeTag);
 
 int GetTimeTagValue(const TCHAR *szTag, int nLen);
 
 void FormtLrcTimeTag(int nTime, TCHAR szBuff[]);
-
-bool GetLyricsPropOfLine(LPCTSTR szLine, CMLData::LYRICS_PROP &lineType, 
-	int &nContentBegPos, tstring &strContent)
-{
-	LPCTSTR		szPtr = szLine;
-	CMLData::LYRICS_PROP_NAME	*lyricsPropNames = CMLData::GetSupportedLyricsPropName();
-
-	strContent = _T("");
-	lineType = CMLData::LP_NONE;
-
-	// ignore blank space
-	while (*szPtr == ' ' || *szPtr == '\t')
-		szPtr++;
-
-	for (int i = 0; lyricsPropNames[i].szName != NULL; i++)
-	{
-		int		nNameLen = _tcslen(lyricsPropNames[i].szName);
-		if (_tcsnicmp(szPtr, lyricsPropNames[i].szName, nNameLen) == 0)
-		{
-			lineType = lyricsPropNames[i].prop;
-			szPtr += nNameLen;
-			nContentBegPos = (int)(szPtr - szLine);
-			strContent = szPtr;
-			TrimStr(strContent);
-			return true;
-		}
-	}
-
-	return false;
-}
-
-bool GetLrcTagOfLine(LPCTSTR szLine, CMLData::LYRICS_PROP &lineType, 
-	int &nContentBegPos, int &nContentEndPos, tstring &strContent)
-{
-	LPCTSTR		szPtr = szLine;
-	int			i;
-
-	strContent = _T("");
-	lineType = CMLData::LP_NONE;
-
-	// ignore blank space
-	while (*szPtr == ' ' || *szPtr == '\t')
-		szPtr++;
-	if (*szPtr != '[')
-		return false;
-	szPtr++;
-
-	while (*szPtr == ' ' || *szPtr == '\t')
-		szPtr++;
-	for (i = 0; _vTags[i] != NULL; i++)
-	{
-		if (_tcsnicmp(szPtr, _vTags[i], _tcslen(_vTags[i])) == 0)
-		{
-			lineType = _vLineType[i];
-			szPtr += _tcslen(_vTags[i]);
-			nContentBegPos = (int)(szPtr - szLine) - 1;
-			break;
-		}
-	}
-	if (lineType == CMLData::LP_NONE)
-		return false;
-
-	LPCTSTR		szEnd = _tcsrchr(szPtr, ']');
-	if (!szEnd)
-		return false;
-	nContentEndPos = (int)(szEnd - szLine);
-
-	strContent.append(szPtr, szEnd);
-
-	return true;
-}
 
 CLyrEditSyntaxParser::CLyrEditSyntaxParser()
 {
@@ -127,7 +52,7 @@ void CLyrEditSyntaxParser::OnNotifyParseLine(int nLine)
 		if (GetTimeTagOfLine(strLine.c_str(), strTime))
 		{
 			pLine->nBegTime = GetTimeTagValue(strTime.c_str(), strTime.size());
-			pLine->lineType = CMLData::LP_TIME_TAG;
+			pLine->bTimeLine = true;
 			// DBGLOG2(_T("Line: %d Changed: %s"), nLine, strLine.c_str());
 			for (i = 0; i < (int)strTime.size(); i++)
 			{
@@ -146,42 +71,17 @@ void CLyrEditSyntaxParser::OnNotifyParseLine(int nLine)
 				nLine--;
 				pLine2 = m_pLyrEdit->GetLine(nLine);
 			}
-			while (pLine2 && pLine2->lineType != CMLData::LP_TIME_TAG);
+			while (pLine2 && !pLine2->bTimeLine);
 
-			if (pLine2 && pLine2->lineType == CMLData::LP_TIME_TAG)
+			if (pLine2 && pLine2->bTimeLine)
 				pLine2->nEndTime = pLine->nBegTime;
 		}
 		else
 		{
-			int		nContentBegPos, nContentEndPos;
-			tstring strContent;
-			if (GetLrcTagOfLine(strLine.c_str(), pLine->lineType, nContentBegPos, nContentEndPos, strContent))
+			// other text ...
+			for (int i = 0; i < (int)pLine->size(); i++)
 			{
-				// lrc tag line
-				int	i;
-				for (i = 0; i <= nContentBegPos; i++)
-					(*pLine)[i].clrIndex = C_TAG;
-				for (i = nContentBegPos + 1; i < nContentEndPos; i++)
-					(*pLine)[i].clrIndex = C_HILIGHT;
-				(*pLine)[nContentEndPos].clrIndex = C_TAG;
-				for (i = nContentEndPos + 1; i < (int)pLine->size(); i++)
-					(*pLine)[i].clrIndex = C_LOWLIGHT;
-			}
-			else if (GetLyricsPropOfLine(strLine.c_str(), pLine->lineType, nContentBegPos, strContent))
-			{
-				int	i;
-				for (i = 0; i < nContentBegPos; i++)
-					(*pLine)[i].clrIndex = C_TAG;
-				for (i = nContentBegPos; i < (int)pLine->size(); i++)
-					(*pLine)[i].clrIndex = C_HILIGHT;
-			}
-			else
-			{
-				// other text ...
-				for (int i = 0; i < (int)pLine->size(); i++)
-				{
-					(*pLine)[i].clrIndex = C_LOWLIGHT;
-				}
+				(*pLine)[i].clrIndex = C_LOWLIGHT;
 			}
 		}
 	}
@@ -226,6 +126,20 @@ void CLyricShowTextEditObj::OnCreate()
 
 	CSkinEditCtrl::OnCreate();
 
+	GET_ID_BY_NAME(CID_MATCHCASE);
+	GET_ID_BY_NAME(CID_FIND_PREV);
+	GET_ID_BY_NAME(CID_FIND_NEXT);
+	GET_ID_BY_NAME(CID_E_FIND);
+	GET_ID_BY_NAME(CID_REPLACE);
+	GET_ID_BY_NAME(CID_REPLACE_ALL);
+	GET_ID_BY_NAME(CID_E_REPLACE);
+	GET_ID_BY_NAME(CID_E_ARTIST);
+	GET_ID_BY_NAME(CID_E_TITLE);
+	GET_ID_BY_NAME(CID_E_ALBUM);
+	GET_ID_BY_NAME(CID_E_BY);
+	GET_ID_BY_NAME(CID_E_OFFSET);
+	GET_ID_BY_NAME(CID_E_MEDIA_LENGTH);
+
 	OnLyricsChanged();
 
 	g_eventDispather.RegisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
@@ -235,14 +149,6 @@ void CLyricShowTextEditObj::OnCreate()
 	g_eventDispather.RegisterHanlder(ET_LYRICS_DISPLAY_SETTINGS, this);
 
 	UpdateTextFontColor();
-
-	GET_ID_BY_NAME(CID_MATCHCASE);
-	GET_ID_BY_NAME(CID_FIND_PREV);
-	GET_ID_BY_NAME(CID_FIND_NEXT);
-	GET_ID_BY_NAME(CID_E_FIND);
-	GET_ID_BY_NAME(CID_REPLACE);
-	GET_ID_BY_NAME(CID_REPLACE_ALL);
-	GET_ID_BY_NAME(CID_E_REPLACE);
 
 	m_pSkin->SetUIObjectText(CID_E_FIND, g_Profile.GetProfileString(_T("FindWhat"), _T("")));
 	m_pSkin->SetUIObjectText(CID_E_REPLACE, g_Profile.GetProfileString(_T("ReplaceWith"), _T("")));
@@ -267,9 +173,7 @@ void CLyricShowTextEditObj::OnEvent(const IEvent *pEvent)
 	else if (pEvent->eventType == ET_LYRICS_EDITOR_RELOAD_TAG)
 		UpdateLyricsProperties();
 	else if (pEvent->eventType == ET_LYRICS_CHANGED)
-	{
 		OnLyricsChanged();
-	}
 	else if (pEvent->eventType == ET_LYRICS_DRAW_UPDATE)
 	{
 		OnPlayTimeChangedUpdate();
@@ -556,7 +460,6 @@ CLyricShowTextEditObj::CLyrOneLine *CLyricShowTextEditObj::GetLine(int nLine)
 		return NULL;
 }
 
-
 void CLyricShowTextEditObj::Draw(CRawGraph *pGraph)
 {
 	int		nBegSelRow, nEndSelRow;
@@ -598,7 +501,7 @@ void CLyricShowTextEditObj::FastDraw(CRawGraph *pGraph, CRect *prcUpdate/* = NUL
 		if (m_nCurPosLineOld >= 0 && m_nCurPosLineOld < (int)m_vLines.size())
 		{
 			pLyrLine = (CLyrOneLine*)m_vLines[m_nCurPosLineOld];
-			if (pLyrLine->lineType == CMLData::LP_TIME_TAG)
+			if (pLyrLine->bTimeLine)
 			{
 				if (pLyrLine->nBegTime <= nTimePos && nTimePos <= pLyrLine->nEndTime)
 				{
@@ -657,7 +560,7 @@ void CLyricShowTextEditObj::FastDraw(CRawGraph *pGraph, CRect *prcUpdate/* = NUL
 				if (y + GetLineDy() > yMax && i > m_nTopVisibleLine)
 					break;
 				pLyrLine = (CLyrOneLine *)m_vLines[i];
-				if (pLyrLine->lineType == CMLData::LP_TIME_TAG &&
+				if (pLyrLine->bTimeLine &&
 					pLyrLine->nBegTime <= nTimePos && nTimePos <= pLyrLine->nEndTime)
 				{
 					m_nCurPosLineOld = i;
@@ -726,7 +629,7 @@ void CLyricShowTextEditObj::ReDraw(CRawGraph *pGraph)
 			FillGraph(pGraph, m_xMargin, y, xMax - m_xMargin * 2, GetLineDy(), CN_EDIT_LINE_BG);
 
 		pLyrLine = (CLyrOneLine *)m_vLines[i];
-		if (pLyrLine->lineType != CMLData::LP_TIME_TAG)
+		if (!pLyrLine->bTimeLine)
 			DrawLine(pGraph, pLyrLine, xStart, xMax, y);
 		else if (pLyrLine->nEndTime < nTimePos)
 		{
@@ -773,7 +676,7 @@ void CLyricShowTextEditObj::DrawLineGradual(CRawGraph *pGraph, COneLine *pLine, 
 {
 	CLyrOneLine *pLyrLine = (CLyrOneLine *)pLine;
 
-	if (pLyrLine->lineType != CMLData::LP_TIME_TAG)
+	if (!pLyrLine->bTimeLine)
 	{
 		CSkinEditCtrl::DrawLine(pGraph, pLine, x, xMax, y);
 		return;
@@ -885,52 +788,6 @@ void CLyricShowTextEditObj::SetColorTheme(MLColor &clrHilight, MLColor &clrLowli
 	SetColor(CN_EDIT_LINE_BG, clrEditLineBg);
 }
 
-void CLyricShowTextEditObj::SetLyricsTagValue(CMLData::LYRICS_PROP lineType, LPCTSTR szValue)
-{
-	int		i;
-
-	for (i = 0; i < (int)m_vLines.size(); i++)
-	{
-		CLyrOneLine		*pLine = (CLyrOneLine *)m_vLines[i];
-		if (pLine->lineType == lineType)
-		{
-			int		nContentBegPos;
-			tstring strContent;
-			tstring	strLine;
-			GetTextOfLine(i, strLine);
-			if (GetLyricsPropOfLine(strLine.c_str(), pLine->lineType, nContentBegPos, strContent))
-			{
-				ASSERT(pLine->lineType == lineType);
-				TrimStr(strContent);
-				if (_tcscmp(strContent.c_str(), szValue) != 0)
-				{
-					SetSelOfLine(i, nContentBegPos, pLine->size() - nContentBegPos);
-					ReplaceSel((tstring(_T(" ")) + szValue).c_str());
-				}
-				return;
-			}
-		}
-	}
-
-	tstring		strNewTag;
-	CMLData::LYRICS_PROP_NAME	*lyricsPropNames = CMLData::GetSupportedLyricsPropName();
-
-	for (i = 0; lyricsPropNames[i].szName != NULL; i++)
-	{
-		int		nNameLen = _tcslen(lyricsPropNames[i].szName);
-		if (lyricsPropNames[i].prop == lineType)
-		{
-			strNewTag += lyricsPropNames[i].szName;
-			strNewTag += _T(" ");
-			strNewTag += szValue;
-			strNewTag += _T("\r\n");
-			SetSelOfLine(0, 0, 0);
-			ReplaceSel(strNewTag.c_str());
-			return;
-		}
-	}
-}
-
 bool CLyricShowTextEditObj::IsTextChanged()
 {
 	return m_undoMgr.CanUndo();
@@ -950,7 +807,6 @@ void CLyricShowTextEditObj::OnCmdDelete()
 
 	tstring		strToDel;
 	int			nContentBegPos;
-	CMLData::LYRICS_PROP	lineType;
 	tstring		strLine, strContent;
 
 	if (!GetTextOfLine(m_nCaretRow, strLine))
@@ -958,11 +814,6 @@ void CLyricShowTextEditObj::OnCmdDelete()
 
 	if (GetTimeTagOfLine(strLine.c_str(), strToDel))
 		nContentBegPos = strToDel.size();
-	else if (GetLyricsPropOfLine(strLine.c_str(), lineType, nContentBegPos, strContent))
-	{
-		if (strLine[nContentBegPos] == ' ')
-			nContentBegPos++;
-	}
 	else
 	{
 		CSkinEditCtrl::OnCmdDelete();
@@ -978,7 +829,6 @@ int CLyricShowTextEditObj::GetCaretLineHomePos()
 {
 	tstring	strLine, strTimeTag;
 	int		nColHome = 0;
-	CMLData::LYRICS_PROP lineType;
 
 	if (GetTextOfLine(m_nCaretRow, strLine))
 	{
@@ -986,12 +836,6 @@ int CLyricShowTextEditObj::GetCaretLineHomePos()
 		if (GetTimeTagOfLine(strLine.c_str(), strTimeTag))
 		{
 			nColHome = strTimeTag.size();
-		}
-		else
-		{
-			GetLyricsPropOfLine(strLine.c_str(), lineType, nColHome, strTimeTag);
-			if (nColHome != 0 && strLine[nColHome] == ' ')
-				nColHome++;
 		}
 
 		if (nColHome == m_nCaretCol)
@@ -1148,6 +992,8 @@ void FormtLrcTimeTag(int nTime, TCHAR szBuff[])
 
 bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 {
+	CSkinWnd::CAutoRedrawLock		arl(m_pSkin);
+
 	if (nId == CID_FIND_PREV)
 	{
 		FindNext(false);
@@ -1432,7 +1278,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 				GetTextOfLine(i, strLine);
 				pLine = GetLine(i);
 
-				if (pLine && pLine->lineType == CMLData::LP_NONE && !GetTimeTagOfLine(strLine.c_str(), strTimeTag))
+				if (pLine && !pLine->bTimeLine && !GetTimeTagOfLine(strLine.c_str(), strTimeTag))
 				{
 					if (i == GetLineCount() - 1)
 						SetSel(i, 0, i, strLine.size());
@@ -1459,7 +1305,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 				if (!pLine)
 					continue;
 
-				if (pLine->lineType == CMLData::LP_TIME_TAG && GetTimeTagOfLine(strLine.c_str(), strTimeTag))
+				if (pLine->bTimeLine && GetTimeTagOfLine(strLine.c_str(), strTimeTag))
 				{
 					LPCTSTR	szPos = strLine.c_str() + strTimeTag.size();
 					while (*szPos == ' ' || *szPos == '\t' || *szPos == '\'' || *szPos == '\"')
@@ -1474,7 +1320,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 						ReplaceSel(szReplaceWith);
 					}
 				}
-				else if (pLine->lineType == CMLData::LP_NONE)
+				else
 				{
 					LPCTSTR	szPos = strLine.c_str();
 					while (*szPos == ' ' || *szPos == '\t' || *szPos == '\'' || *szPos == '\"')
@@ -1501,27 +1347,24 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 				GetTextOfLine(i, strLine);
 				pLine = GetLine(i);
 
-				if (pLine && (pLine->lineType == CMLData::LP_NONE || pLine->lineType == CMLData::LP_TIME_TAG))
-				{
-					strTimeTag.resize(0);
-					GetTimeTagOfLine(strLine.c_str(), strTimeTag);
+				strTimeTag.resize(0);
+				GetTimeTagOfLine(strLine.c_str(), strTimeTag);
 
-					LPTSTR	szPos = (LPTSTR)strLine.c_str() + strTimeTag.size();
-					bool	bConverted = false;
-					while (*szPos)
+				LPTSTR	szPos = (LPTSTR)strLine.c_str() + strTimeTag.size();
+				bool	bConverted = false;
+				while (*szPos)
+				{
+					if (isupper(*szPos))
 					{
-						if (isupper(*szPos))
-						{
-							bConverted = true;
-							*szPos = tolower(*szPos);
-						}
-						szPos++;
+						bConverted = true;
+						*szPos = tolower(*szPos);
 					}
-					if (bConverted)
-					{
-						SetSel(i, 0, i, strLine.size());
-						ReplaceSel(strLine.c_str());
-					}
+					szPos++;
+				}
+				if (bConverted)
+				{
+					SetSel(i, 0, i, strLine.size());
+					ReplaceSel(strLine.c_str());
 				}
 			}
 		}
@@ -1550,12 +1393,23 @@ void CLyricShowTextEditObj::OnSaveLyrics()
 	g_LyricData.FromString(strEdit.c_str(), strEdit.size() * sizeof(TCHAR),
 		&fileEncoding, FT_LYRICS_LRC, TRUE, bUnicode, TRUE);
 
+#define SET_PROP(strProp, propCtrlId)				\
+	str = m_pSkin->GetUIObjectText(propCtrlId);		\
+	if (str.size())									\
+		strProp = str;								\
+	else if (_tcscmp(strProp.c_str(), str.c_str()) != 0) \
+		m_pSkin->SetUIObjectText(propCtrlId, strProp.c_str());
+
 	LyricsProperties &prop = g_LyricData.Properties();
-	prop.m_strArtist = m_pSkin->GetUIObjectText(_T("CID_E_ARTIST"));
-	prop.m_strTitle = m_pSkin->GetUIObjectText(_T("CID_E_TITLE"));
-	prop.m_strAlbum = m_pSkin->GetUIObjectText(_T("CID_E_ALBUM"));
-	prop.m_strBy = m_pSkin->GetUIObjectText(_T("CID_E_BY"));
-	prop.m_nTimeOffset = _ttoi(m_pSkin->GetUIObjectText(_T("CID_E_OFFSET")).c_str());
+	tstring			str, strOffset = prop.GetOffsetTimeStr();
+	SET_PROP(prop.m_strArtist, CID_E_ARTIST);
+	SET_PROP(prop.m_strTitle, CID_E_TITLE);
+	SET_PROP(prop.m_strAlbum, CID_E_ALBUM);
+	SET_PROP(prop.m_strBy, CID_E_BY);
+	SET_PROP(strOffset, CID_E_OFFSET);
+	SET_PROP(prop.m_strMediaLength, CID_E_MEDIA_LENGTH);
+	if (strOffset.size())
+		prop.SetOffsetTime(strOffset.c_str());
 };
 
 void CLyricShowTextEditObj::OnLyricsChanged()
@@ -1566,26 +1420,7 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 	tstring		str, strTags, strValue;
 	g_LyricData.ToString(str, FT_LYRICS_LRC, false);
 
-	CMLData::LYRICS_PROP_NAME	*lyricsPropNames = CMLData::GetSupportedLyricsPropName();
-
-	LyricsProperties &prop = g_LyricData.Properties();
-	m_pSkin->SetUIObjectText(_T("CID_E_ARTIST"), prop.m_strArtist.c_str(), false);
-	m_pSkin->SetUIObjectText(_T("CID_E_TITLE"), prop.m_strTitle.c_str(), false);
-	m_pSkin->SetUIObjectText(_T("CID_E_ALBUM"), prop.m_strAlbum.c_str(), false);
-	m_pSkin->SetUIObjectText(_T("CID_E_BY"), prop.m_strBy.c_str(), false);
-	m_pSkin->SetUIObjectText(_T("CID_E_OFFSET"), CStrPrintf(_T("%d"), prop.m_nTimeOffset).c_str(), false);
-
-/*	for (int i = 0; lyricsPropNames[i].szName != NULL; i++)
-	{
-		if (lyricsPropNames[i].prop == CMLData::LP_ENCODING)
-			continue;
-		strTags += lyricsPropNames[i].szName;
-		strTags += _T(" ");
-		g_LyricData.GetProperty(lyricsPropNames[i].prop, strValue);
-		strTags += strValue;
-		strTags += _T("\r\n");
-	}
-	str.insert(str.begin(), strTags.begin(), strTags.end());*/
+	UpdateLyricsProperties();
 
 	CLyricShowTextEditObj::SetText(str.c_str());
 
@@ -1594,7 +1429,7 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 	SetCaret(nCurLine, 0);
 	// ::SendMessage(GetHandle(), EM_LINESCROLL, 0, nCurLine);
 
-	Invalidate();
+	m_pSkin->InvalidateRect();
 
 	CSkinToolbar		*pToolBar;
 
@@ -1661,12 +1496,14 @@ void CLyricShowTextEditObj::OnPlayTimeChangedUpdate()
 
 void CLyricShowTextEditObj::UpdateLyricsProperties()
 {
-	CAutoBatchUndo		autoBatchUndo(this);
-	SetLyricsTagValue(CMLData::LP_TITLE, g_LyricData.Properties().m_strTitle.c_str());
-	SetLyricsTagValue(CMLData::LP_ARTIST, g_LyricData.Properties().m_strArtist.c_str());
-	SetLyricsTagValue(CMLData::LP_ALBUM, g_LyricData.Properties().m_strAlbum.c_str());
-	SetLyricsTagValue(CMLData::LP_BY, g_LyricData.Properties().m_strBy.c_str());
-	SetLyricsTagValue(CMLData::LP_OFFSET, CStrPrintf(_T("%d"), g_LyricData.Properties().m_nTimeOffset).c_str());
+	LyricsProperties &prop = g_LyricData.Properties();
+
+	m_pSkin->SetUIObjectText(CID_E_ARTIST, prop.m_strArtist.c_str(), false);
+	m_pSkin->SetUIObjectText(CID_E_TITLE, prop.m_strTitle.c_str(), false);
+	m_pSkin->SetUIObjectText(CID_E_ALBUM, prop.m_strAlbum.c_str(), false);
+	m_pSkin->SetUIObjectText(CID_E_BY, prop.m_strBy.c_str(), false);
+	m_pSkin->SetUIObjectText(CID_E_OFFSET, prop.GetOffsetTimeStr(), false);
+	m_pSkin->SetUIObjectText(CID_E_MEDIA_LENGTH, prop.m_strMediaLength.c_str(), false);
 }
 
 void CLyricShowTextEditObj::OnStatusChanged(IEditNotification::Status status, bool bVal)

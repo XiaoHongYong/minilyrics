@@ -40,13 +40,13 @@ public:
 		CLyrOneLine()
 		{
 			nBegTime = 0, nEndTime = 0;
-			lineType = CMLData::LP_NONE;
+			bTimeLine = false;
 			bTempBegTime = true;
 			bTempEndTime = true;
 		}
 		int			nBegTime, nEndTime;
 		bool		bTempBegTime, bTempEndTime;
-		CMLData::LYRICS_PROP	lineType;
+		bool		bTimeLine;
 	};
 
 public:
@@ -72,8 +72,6 @@ public:
 	void DrawLineGradual(CRawGraph *pGraph, COneLine *pLine, int x, int xMax, int y);
 
 	void SetColorTheme(MLColor &clrHilight, MLColor &clrLowlight, MLColor &clrTag, MLColor &clrEditLineBg);
-
-	void SetLyricsTagValue(CMLData::LYRICS_PROP lineType, LPCTSTR szValue);
 
 	bool IsTextChanged();
 
@@ -104,9 +102,8 @@ public:
 
 	virtual void Draw(CRawGraph *pGraph);
 
-	void UpdateLyricsProperties();
-
 public:
+	void UpdateLyricsProperties();
 	void OnLyricsChanged();
 
 public:
@@ -138,6 +135,8 @@ protected:
 	FindReplaceStatus		m_findReplaceStatus;
 	int						CID_MATCHCASE, CID_FIND_PREV, CID_FIND_NEXT, CID_E_FIND;
 	int						CID_REPLACE, CID_REPLACE_ALL, CID_E_REPLACE;
+	int						CID_E_ARTIST, CID_E_TITLE, CID_E_ALBUM, CID_E_BY;
+	INT						CID_E_OFFSET, CID_E_MEDIA_LENGTH;
 
 	// 
 	int					m_nTopVisibleLineOld;

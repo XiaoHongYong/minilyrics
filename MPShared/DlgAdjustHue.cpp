@@ -47,12 +47,25 @@ public:
 		if (pSeek)
 		{
 			pSeek->SetScrollInfo(0, 360, 30, (int)m_hueOld, 1, false);
+			pSeek->SetScrollNotify(this);
 		}
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		if (nId == GetIDByName(_T("CID_RESET")))
+		{
+			UpdateAdjustHue(0.0);
+			return true;
+		}
+
+		return CSkinPageHandler::OnCustomCommand(nId);
 	}
 
 	void OnCancel()
 	{
 		UpdateAdjustHue(m_hueOld);
+		CSkinPageHandler::OnCancel();
 	}
 
 protected:
@@ -66,7 +79,7 @@ CDlgAdjustHue::CDlgAdjustHue() : CMPSkinDialog(_T("AdjustHue.xml"))
 {
 	m_pageHandler.AddPage(new CPageAdjustHue());
 
-	// m_pageHandler.SetDefaultPage(_T("CID_C_ADJUST_HUE"));
+	m_pageHandler.SetDefaultPage(_T("CID_C_ADJUST_HUE"));
 }
 
 CDlgAdjustHue::~CDlgAdjustHue()
