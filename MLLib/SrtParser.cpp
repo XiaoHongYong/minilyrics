@@ -33,7 +33,7 @@ CSrtParser::~CSrtParser()
 }
 
 // 保存为文件
-int CSrtParser::SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding)
+int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 {
 	int			nCount;
 	tstringex	strData;
@@ -86,7 +86,8 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding)
 		}
 	}
 
-	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), fileEncoding, m_pMLData->GetEncodingIndex()))
+	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), 
+		newEncoding))
 		return ERR_WRITE_FILE;
 
 	return ERR_OK;
@@ -130,10 +131,8 @@ static const char * ReadTime(const char *szBeg, DWORD &dwTime)
 }
 
 // 分析歌词文件，并且存储到 pMLData 中
-int CSrtParser::Parse(bool bForceUseEncoding)
+int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 {
-	m_fileEncoding = FE_ANSI;
-
 	//8
 	//00:00:21,657 --> 00:00:26,516
 	//就像佛洛伊飞船出场前
@@ -219,7 +218,7 @@ int CSrtParser::Parse(bool bForceUseEncoding)
 			pFrag = m_pMLData->NewLyricFrag(dwBegTime, dwEndTime,
 				szBuff, nLen, FALSE, FALSE);
 			
-			pRow = m_pMLData->NewMLRow(dwBegTime, dwEndTime, (const char *)NULL);
+			pRow = m_pMLData->NewMLRow(dwBegTime, dwEndTime);
 			pRow->vFrags.push_back(pFrag);
 
 			m_pMLData->AddRowByTime(pRow);
@@ -246,9 +245,6 @@ BOOL CSrtParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
 //		assert(pRow->szContent);
 //		_tcscpy(szBuff, pRow->szContent);
 //		_tcscat(szBuff, _T("\r\n"));
-		break;
-	case ML_ROW_NULL:		// 空行
-//		_tcscpy(szBuff, _T("\r\n"));
 		break;
 	case ML_ROW_LYRICS:		// 歌词行
 		{

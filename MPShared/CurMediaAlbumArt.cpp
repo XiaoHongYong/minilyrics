@@ -149,7 +149,7 @@ int CCurMediaAlbumArt::Load()
 	strSongFile = g_Player.GetSrcMedia();
 
 	// Load id3v2 pictures...
-	CID3v2IF		id3v2;
+	CID3v2IF		id3v2(ED_SYSDEF);
 	nRet = id3v2.Open(strSongFile.c_str(), false, false);
 	if (nRet == ERR_OK)
 	{

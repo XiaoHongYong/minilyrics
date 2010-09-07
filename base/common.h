@@ -9,8 +9,13 @@ enum FILE_ENCODING
 {
 	FE_ANSI,
 	FE_UCS2,
+	FE_UCS2_BE,
 	FE_UTF8
 };
+
+#define SZ_FE_UCS2			"\xFF\xFE"
+#define SZ_FE_UCS2_BE		"\xFE\xFF"
+#define SZ_FE_UTF8			"\xEF\xBB\xBF"
 
 #define CountOf(arr)		(sizeof(arr) / sizeof(arr[0]))
 

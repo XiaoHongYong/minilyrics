@@ -246,15 +246,6 @@ void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
 	xmlFile.WriteAttribute(MZ_CMD_RESULT, IDToString(__MlCmdResult2Str, result, _T("UNTRANSLATED")));
 }
 
-size_t strlen_safe(const char * str, size_t maxLength)
-{
-	size_t n = 0;
-	while (n < maxLength && str[n])
-		n++;
-
-	return n;
-}
-
 int MLRetMsgDataBlock::FromData(CCharBuffer &buff)
 {
 	CSimpleXML		xml;

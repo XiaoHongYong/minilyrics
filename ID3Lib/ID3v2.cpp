@@ -12,6 +12,39 @@
 
 void LowerString(LPSTR szString);
 
+CHAR_ENCODING ID3v2EncTypeToCharEncoding(ID3v2EncType encType)
+{
+	switch (encType)
+	{
+	case IET_UCS2LE_BOM:
+		return ED_UNICODE;
+	case IET_UCS2BE_NO_BOM:
+		return ED_UNICODE_BIG_ENDIAN;
+	case IET_UTF8:
+		return ED_UTF8;
+	case IET_ANSI:
+		return ED_SYSDEF;
+	default:
+		ASSERT(0);
+		return ED_SYSDEF;
+	}
+}
+
+ID3v2EncType CharEncodingToID3v2EncType(CHAR_ENCODING encoding)
+{
+	switch (encoding)
+	{
+	case ED_UNICODE:
+		return IET_UCS2LE_BOM;
+	case ED_UNICODE_BIG_ENDIAN:
+		return IET_UCS2BE_NO_BOM;
+	case ED_UTF8:
+		return IET_UTF8;
+	default:
+		return IET_ANSI;
+	}
+}
+
 UINT	_vTextFrameIDV22[] = { ID3V2_2_ARTIST, ID3V2_2_TITLE, ID3V2_2_ALBUM,
 	ID3V2_2_TRACK, ID3V2_2_YEAR, ID3V2_2_GENRE };
 
@@ -206,8 +239,9 @@ int ID3v2Pictures::GetPicDescriptionsCount()
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CID3v2::CID3v2()
+CID3v2::CID3v2(CHAR_ENCODING encoding)
 {
+	m_Encoding = encoding;
 	m_bAttach = false;
 	m_bCreateNew = false;
 	m_fp = NULL;
@@ -788,9 +822,8 @@ int CID3v2::GetBeginFramePos()
 
 //////////////////////////////////////////////////////////////////////////
 //
-CID3v2IF::CID3v2IF()
+CID3v2IF::CID3v2IF(CHAR_ENCODING encoding) : CID3v2(encoding)
 {
-
 }
 
 CID3v2IF::~CID3v2IF()
@@ -806,7 +839,7 @@ int CID3v2IF::GetLyrics(ID3v2LyricsInfo &id3v2Lyrics)
 		CID3v2Frame		*pFrame = *it;
 		if (IsUnsynchLyricsFrameID(pFrame->m_framehdr.nFrameID))
 		{
-			CID3v2FrameParserUnsynLyrics	parser;
+			CID3v2FrameParserUnsynLyrics	parser(m_Encoding);
 			ID3v2UnsynchLyrics	*punsynchLyrics = new ID3v2UnsynchLyrics;
 
 			nRet = parser.Parse(pFrame, *punsynchLyrics);
@@ -819,7 +852,7 @@ int CID3v2IF::GetLyrics(ID3v2LyricsInfo &id3v2Lyrics)
 		}
 		else if (IsSynchLyricsFrameID(pFrame->m_framehdr.nFrameID))
 		{
-			CID3v2FrameParserSynLyrics parser;
+			CID3v2FrameParserSynLyrics parser(m_Encoding);
 			ID3v2SynchLyrics	*psynchLyrics = new ID3v2SynchLyrics;
 
 			nRet = parser.Parse(pFrame, *psynchLyrics);
@@ -834,7 +867,7 @@ int CID3v2IF::GetLyrics(ID3v2LyricsInfo &id3v2Lyrics)
 			|| pFrame->m_framehdr.nFrameID == ID3V2_3_USER_TEXT)
 		{
 			ID3v2TextUserDefined	lyrics;
-			CID3v2FrameParserTextUserDefined parser;
+			CID3v2FrameParserTextUserDefined parser(m_Encoding);
 
 			nRet = parser.Parse(pFrame, lyrics);
 			if (nRet == ERR_OK 
@@ -857,7 +890,7 @@ int CID3v2IF::ListLyricsInfoOnly(ID3v2LyricsInfo &id3v2Lyrics)
 		CID3v2Frame		*pFrame = *it;
 		if (IsUnsynchLyricsFrameID(pFrame->m_framehdr.nFrameID))
 		{
-			CID3v2FrameParserUnsynLyrics	parser;
+			CID3v2FrameParserUnsynLyrics	parser(m_Encoding);
 			ID3v2UnsynchLyrics	*punsynchLyrics = new ID3v2UnsynchLyrics;
 
 			nRet = parser.ParseInfoOnly(pFrame, *punsynchLyrics);
@@ -870,7 +903,7 @@ int CID3v2IF::ListLyricsInfoOnly(ID3v2LyricsInfo &id3v2Lyrics)
 		}
 		else if (IsSynchLyricsFrameID(pFrame->m_framehdr.nFrameID))
 		{
-			CID3v2FrameParserSynLyrics parser;
+			CID3v2FrameParserSynLyrics parser(m_Encoding);
 			ID3v2SynchLyrics	*psynchLyrics = new ID3v2SynchLyrics;
 
 			nRet = parser.ParseInfoOnly(pFrame, *psynchLyrics);
@@ -930,7 +963,7 @@ int CID3v2IF::UpdateSynchLyricsFrame(ID3v2SynchLyrics *psynchLyrics)
 	int					nRet;
 	CID3v2Frame			*pFrame = NULL;
 	UINT				nFrameID;
-	CID3v2FrameParserSynLyrics	parser;
+	CID3v2FrameParserSynLyrics	parser(m_Encoding);
 	FrameIterator		it, itEnd;
 
 	if (IsID3v2_2())
@@ -968,7 +1001,7 @@ int CID3v2IF::UpdateUnsynchLyricsFrame(ID3v2UnsynchLyrics *punsynchLyrics)
 {
 	int					nRet;
 	CID3v2Frame			*pFrame = NULL;
-	CID3v2FrameParserUnsynLyrics	parser;
+	CID3v2FrameParserUnsynLyrics	parser(m_Encoding);
 	UINT				nFrameID;
 	FrameIterator		it, itEnd;
 
@@ -1110,7 +1143,7 @@ int CID3v2IF::GetTags(tstring &artist, tstring &title, tstring &album, tstring &
 			CID3v2Frame		*pFrame = *it;
 			if (pFrame->m_framehdr.nFrameID == vTextFrameID[i])
 			{
-				CID3v2FrameParserText	txtParser;
+				CID3v2FrameParserText	txtParser(m_Encoding);
 				nRet = txtParser.Parse(pFrame, txt);
 				if (nRet == ERR_OK)
 					*vStr[i] = txt.GetValue();
@@ -1126,21 +1159,10 @@ int CID3v2IF::GetTags(tstring &artist, tstring &title, tstring &album, tstring &
 	pFrame = FindFrame(nFrameID);
 	if (pFrame)
 	{
-		CID3v2FrameParserComment	parser;
+		CID3v2FrameParserComment	parser(m_Encoding);
 		nRet = parser.Parse(pFrame);
 		if (nRet == ERR_OK)
-		{
-			if (parser.m_EncodingType == IET_ANSI)
-			{
-				ConvertStr(parser.m_strAnsiShortDesc.c_str(), -1, parser.m_strUcs2ShortDesc);
-				ConvertStr(parser.m_strAnsiText.c_str(), -1, parser.m_strUcs2Text);
-			}
-#ifdef _UNICDOE
-			comment = parser.m_strUcs2Text.c_str();
-#else
-			ConvertStr(parser.m_strUcs2Text.c_str(), parser.m_strUcs2Text.size(), comment);
-#endif
-		}
+			comment = parser.m_strText.c_str();
 	}
 
 	// read year
@@ -1153,7 +1175,7 @@ int CID3v2IF::GetTags(tstring &artist, tstring &title, tstring &album, tstring &
 		pFrame = FindFrame(nFrameID);
 		if (pFrame)
 		{
-			CID3v2FrameParserText	txtParser;
+			CID3v2FrameParserText	txtParser(m_Encoding);
 			nRet = txtParser.Parse(pFrame, txt);
 			if (nRet == ERR_OK)
 				year = txt.GetValue();
@@ -1239,7 +1261,7 @@ int CID3v2IF::UpdateUserDefinedTextFrameByDesc(ID3v2TextUserDefined &text)
 	CID3v2Frame			*pFrame = NULL;
 	FrameIterator		it;
 	UINT				nFrameID;
-	CID3v2FrameParserTextUserDefined	parser;
+	CID3v2FrameParserTextUserDefined	parser(m_Encoding);
 
 	if (IsID3v2_2())
 		nFrameID = ID3V2_2_USER_TEXT;
@@ -1282,7 +1304,7 @@ int CID3v2IF::RemoveUserDefinedTextFrameByDesc(LPCTSTR szDesc)
 	CID3v2Frame			*pFrame;
 	FrameIterator		it;
 	UINT				nFrameID;
-	CID3v2FrameParserTextUserDefined	parser;
+	CID3v2FrameParserTextUserDefined	parser(m_Encoding);
 
 	if (IsID3v2_2())
 		nFrameID = ID3V2_2_USER_TEXT;
@@ -1317,7 +1339,7 @@ int CID3v2IF::UpdateGeneralCommentFrame(LPCTSTR szText)
 	CID3v2Frame			*pFrame;
 	FrameIterator		it;
 	UINT				nFrameID;
-	CID3v2FrameParserComment	parser;
+	CID3v2FrameParserComment	parser(m_Encoding);
 
 	if (IsID3v2_2())
 		nFrameID = ID3V2_2_COMMENT;
@@ -1355,7 +1377,7 @@ int CID3v2IF::RemoveGeneralCommentFrame()
 	CID3v2Frame			*pFrame;
 	FrameIterator		it;
 	UINT				nFrameID;
-	CID3v2FrameParserComment	parser;
+	CID3v2FrameParserComment	parser(m_Encoding);
 
 	if (IsID3v2_2())
 		nFrameID = ID3V2_2_COMMENT;
@@ -1372,8 +1394,7 @@ int CID3v2IF::RemoveGeneralCommentFrame()
 			if (nRet == ERR_OK)
 			{
 				if (IsEmptyString(parser.m_szLanguage) && 
-					parser.m_strAnsiShortDesc.empty() &&
-					parser.m_strUcs2ShortDesc.empty())
+					parser.m_strShortDesc.empty())
 				{
 					// find it, and remove it.
 					FrameRemove(it);
@@ -1390,7 +1411,7 @@ int CID3v2IF::UpdateGeneralUrlFrame(LPCTSTR szText)
 {
 	int					nRet;
 	CID3v2Frame			*pFrame = NULL;
-	CID3v2FrameParserUserDefinedUrl	parser;
+	CID3v2FrameParserUserDefinedUrl	parser(m_Encoding);
 	UINT				nFrameID;
 
 	if (IsID3v2_2())
@@ -1430,7 +1451,7 @@ int CID3v2IF::GetPictures(ID3v2Pictures &pictures)
 	int						nRet;
 	FrameIterator			it;
 	CID3v2Frame				*pFrame = NULL;
-	CID3v2FrameParserPic	parser;
+	CID3v2FrameParserPic	parser(m_Encoding);
 	UINT					nFrameID;
 	ID3v2Pictures::ITEM		*pic;
 
@@ -1486,7 +1507,7 @@ int CID3v2IF::UpdatePicFrame(ID3v2Pictures::ITEM *pic)
 {
 	int						nRet;
 	CID3v2Frame				*pFrame = NULL;
-	CID3v2FrameParserPic	parser;
+	CID3v2FrameParserPic	parser(m_Encoding);
 	UINT					nFrameID;
 
 	if (IsID3v2_2())
@@ -1541,7 +1562,7 @@ int CID3v2IF::UpdateTextFrame(UINT nFrameID, LPCTSTR szText)
 	int					nRet;
 	CID3v2Frame			*pFrame = NULL;
 	ID3v2Text			text;
-	CID3v2FrameParserText	parser;
+	CID3v2FrameParserText	parser(m_Encoding);
 
 	pFrame = FindFrame(nFrameID);
 	if (!pFrame)

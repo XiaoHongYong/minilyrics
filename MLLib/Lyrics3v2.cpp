@@ -7,7 +7,7 @@
 #include "Lyrics3v2.h"
 #include "../ID3Lib/ID3v1.h"
 // #include "io.h"
-#include "LyricsTagReader.h"
+#include "LrcTag.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -233,7 +233,6 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 	{
 		//
 		// write tag info
-		stringex	strTitle, strArtist, strAlbum, strEncoding;
 
 		memset(szId3v1Tag, 0, _ID3_V1_LEN);
 		memcpy(szId3v1Tag, "TAG", 3);
@@ -241,19 +240,17 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 		//
 		// 先从歌词标签中取得信息
 		//
-		CLyricsTagReader<char>		lrctagReader;
-		lrctagReader.Set(&strTitle, &strArtist, &strAlbum);
-		lrctagReader.ReadFromStr(szLyrics, nLen, false);
-		strEncoding = lrctagReader.m_strEncoding;
-		if (strTitle.empty())
-		{
-			// 从文件名中取得信息
-			tstring		strAr, strTi;
-			AnalysisLyricsFileNameEx(strAr, strTi, FileGetName(szMp3File));
+		CLrcTag		lrcTag;
 
-			ConvertStr(strAr.c_str(), -1, strArtist, ED_SYSDEF);
-			ConvertStr(strTi.c_str(), -1, strTitle, ED_SYSDEF);
-		}
+		lrcTag.ReadFromText((LPBYTE)szLyrics, nLen);
+
+		if (lrcTag.m_strArtist.empty())
+			AnalysisLyricsFileNameEx(lrcTag.m_strArtist, lrcTag.m_strTitle, FileGetName(szMp3File));
+
+		stringex	strTitle, strArtist, strAlbum, strEncoding;
+		ConvertStr(lrcTag.m_strArtist.c_str(), -1, strArtist, lrcTag.GetEncodingIndex());
+		ConvertStr(lrcTag.m_strTitle.c_str(), -1, strTitle, lrcTag.GetEncodingIndex());
+		ConvertStr(lrcTag.m_strAlbum.c_str(), -1, strAlbum, lrcTag.GetEncodingIndex());
 
 		SetId3v1(szId3v1Tag, strTitle.c_str(), strArtist.c_str(), strAlbum.c_str());
 

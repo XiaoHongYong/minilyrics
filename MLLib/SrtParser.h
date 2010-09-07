@@ -18,11 +18,8 @@ public:
 	virtual ~CSrtParser();
 
 public:
-	// 保存为文件
-	virtual int SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding);
-
-	// 分析歌词文件，并且存储到 pMLData 中
-	virtual int Parse(bool bForceUseEncoding);
+	virtual int ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding);
+	virtual int SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding);
 
 	virtual LYRICS_CONTENT_TYPE GetLyrContentType();
 

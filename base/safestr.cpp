@@ -1,6 +1,24 @@
 #include "stdafx.h"
 #include "safestr.h"
 
+size_t strlen_safe(const char * str, size_t maxLength)
+{
+	size_t n = 0;
+	while (n < maxLength && str[n])
+		n++;
+
+	return n;
+}
+
+size_t wcslen_safe(const WCHAR * str, size_t maxLength)
+{
+	size_t n = 0;
+	while (n < maxLength && str[n])
+		n++;
+
+	return n;
+}
+
 // 安全的字符串拷贝，如果超出长度范围，则进行截断
 char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource)
 {

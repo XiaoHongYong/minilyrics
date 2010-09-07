@@ -58,7 +58,7 @@ int CTagLib::GetTagFast(LPCTSTR szFile, tstring *pArtist, tstring *pTitle, tstri
 			*pMediaLength = reader.GetMediaLength();
 		}
 
-		CID3v2IF	id3v2;
+		CID3v2IF	id3v2(ED_SYSDEF);
 		tstring		temp;
 		nRet = id3v2.Open(fp, false);
 		if (nRet == ERR_OK)

@@ -8,9 +8,11 @@
 #if !defined(AFX_MLDATA_H__89324577_421C_48B2_B812_3D645089F044__INCLUDED_)
 #define AFX_MLDATA_H__89324577_421C_48B2_B812_3D645089F044__INCLUDED_
 
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+
+DECLAR_CPPUNIT_TEST_REG(CMLData)
+
 
 #ifndef _IPHONE
 #define _ID3V2_SUPPORT
@@ -19,7 +21,9 @@
 #ifdef _ID3V2_SUPPORT
 #include "../ID3Lib/ID3v2.h"
 #endif
+
 #include "../MLProtocol/MLUtils.h"
+#include "LrcTag.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // BEGIN 歌词数据的数据结构定义
@@ -73,7 +77,6 @@ typedef struct LYRIC_FRAG
 	bool IsAdFrag() { return (dwAttrib & LSA_AD_FRAG) == LSA_AD_FRAG; }
 	bool IsTempFrag() { return IsTempLyricsFrag(dwAttrib); }
 	bool IsTempBegTime() { return IsTempTimeBeg(dwAttrib); }
-	// bool IsTempTimeBeg() { }
 
 }LYRIC_FRAG, *PLYRIC_FRAG, *LPLYRIC_FRAG;
 
@@ -83,7 +86,6 @@ typedef enum ML_ROW_TYPE
 {
 	ML_ROW_LYRICS,		// 歌词行
 	ML_ROW_UNKNOW,		// 不能识别的行
-	ML_ROW_NULL,		// 空行
 }ML_ROW_TYPE;
 
 // 歌词中的每一行，在 ML 文件中，它表示歌词中的一行
@@ -93,7 +95,6 @@ public:
 	ML_ROW()
 	{
 		szContent = NULL;
-		// nLen = 0;
 	}
 	~ML_ROW()
 	{
@@ -206,50 +207,10 @@ enum LYRICS_CONTENT_TYPE
 	LCT_UNKNOWN,
 	LCT_TXT,
 	LCT_LRC,
-	LCT_KARAOKE,		// karaoke content, full syncd.
+	LCT_KARAOKE,		// karaoke content, full synced.
 };
 
 MLFileType LyricsConentTypeToFileType(LYRICS_CONTENT_TYPE lyrContentType);
-
-struct LyricsProperties
-{
-	LyricsProperties()
-	{
-		m_nTimeOffset = 0;
-		m_nEncodingID = ED_SYSDEF;
-	}
-
-	bool Equal(const LyricsProperties &other) const;
-	void clear();
-
-	CHAR_ENCODING GetEncodingIndex() { return m_nEncodingID; }
-	LPCTSTR GetEncoding() const { return m_strEncoding.c_str(); }
-	void SetEncoding(CHAR_ENCODING nEncodingID);
-	void SetEncoding(LPCTSTR szEncoding);
-
-	void SetOffsetTime(int nOffsetTime) { m_nTimeOffset = nOffsetTime; m_strTimeOffset = CStrPrintf(_T("%d"), nOffsetTime).c_str(); }
-	void SetOffsetTime(LPCTSTR szOfffsetTime) { m_strTimeOffset = szOfffsetTime; m_nTimeOffset = _ttoi(szOfffsetTime); }
-	LPCTSTR GetOffsetTimeStr() { return m_strTimeOffset.c_str(); }
-	int GetOffsetTime() { return m_nTimeOffset; }
-
-	void SetMediaLength(int nMediaLength);
-
-	tstring					m_strArtist;
-	tstring					m_strTitle;
-	tstring					m_strAlbum;
-	tstring					m_strBy;
-	tstring					m_strTxtLyrScrollEvents;
-	tstring					m_strMediaLength;
-protected:
-	// Character encoding
-	tstring					m_strEncoding;
-	CHAR_ENCODING			m_nEncodingID;
-
-	// offset time of timestamps in lyrics, in ms
-	int						m_nTimeOffset;
-	tstring					m_strTimeOffset;
-
-};
 
 #include "LyrScrollActionRecorder.h"
 
@@ -260,25 +221,24 @@ public:
 	virtual ~CMLData();
 
 	// 打开歌词文件
-	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSource, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
+	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSource, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 #ifdef _IPHONE
-	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent, CHAR_ENCODING nForceEncodingID);
+	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent);
 #endif
-	int ReopenLyrics(bool bForceUseEncoding, CHAR_ENCODING nForceEncodingID);
+	int ReopenLyrics(bool bUseSpecifiedEncoding, CHAR_ENCODING encodingSpecified);
 
-	int SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding, bool &bUseNewFileName);
+	int SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNewFileName);
 	int Save();
 	
-	int SaveToTextFile(LPCTSTR szFile, bool bSaveErrorInfo = false);
+	int SaveToTextFile(LPCTSTR szFile);
 #ifdef _ID3V2_SUPPORT
-	// 	int SaveLyricsInSongOfID3v2USLT(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
-// 	int SaveLyricsInSongOfID3v2SYLT(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
-	int SaveLyricsInSongOfID3v2(FILE_ENCODING fileEncoding, bool bUslt, bool bSylt, bool bUserDefinedLyr, CHAR_ENCODING nEncodingID);
-	int SaveLyricsInSongOfLyrics3v2(FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
+	int SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLyr, CHAR_ENCODING encoding);
+	int SaveLyricsInSongOfLyrics3v2(CHAR_ENCODING encoding);
 #endif
 
-	BOOL ToString(tstring &str, MLFileType lrcFormat = FT_LYRICS_LRC, BOOL bIncTags = FALSE);
-	int FromString(LPCVOID lpLrc, int nLen, FILE_ENCODING *fileEncoding, MLFileType lrcFormat = FT_LYRICS_LRC, BOOL bStrict = TRUE, BOOL bUnicode = FALSE, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
+	BOOL ToString(tstring &str, MLFileType lrcFormat = FT_LYRICS_LRC, bool bIncTags = FALSE);
+	// int FromString(LPCVOID lpLrc, int nLen, bool bAddTimeStampForTextLine = false, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
+	int FromString(LPCTSTR szLyrics);
 
 
 	int GetPlayElapsedTime();
@@ -286,35 +246,20 @@ public:
 
 	int GetCurPlayLine(const VLyrLines &lyrLines);
 
-	// 访问歌词行
-	int GetLyricRowCount();
+	int GetLyricRowCount() { return m_arrLyricsRows.size(); }
 	PML_ROW GetLyricsRow(int nRow);
-
 	VLyrLines &GetRawLyrics();
 
 	void CopyMLyrLines(CMLyrLines &lyrLines);
 
-	void ClearTimeTagRromRow(int nRow);
-
 	// 设置缺省的显示风格
 	void SetDefShowStyle(DWORD dwDefShowStyle) { m_dwDefShowStyle = dwDefShowStyle; }
-	DWORD GetDefShowStyle() { return m_dwDefShowStyle; }
 	bool IsKaraokeShowStyle() { return m_dwDefShowStyle == LSA_SHOW_KARAOKE; }
 
 	// 检查歌词数据的时间顺序的正确性
 	void CheckLyricsRowTime();
 
 	void FixExtendedLrcTimeStamps();
-
-	void SetLyricsRowEndTime (int nRow, int nTime);
-
-	// 设置从当前行开始的偏移时间
-	void SetOffsetTimeFromCurrentRow(int nRow, int nOffsetTime);
-
-	// 设置歌词段的开始显示时间，在设置之后并且自动校正前面和后面设置相冲突的时间
-	void SetLyricsFragEndTime(int nRow, int nFrag, int nTime);
-	// 设置歌词段的结束显示时间，在设置之后并且自动校正前面和后面设置相冲突的时间
-	void SetLyricsFragBeginTime(int nRow, int nFrag, int nTime);
 
 	// 计算两个歌词段之间的所有歌词段开始时间和结束时间的值
 	BOOL CalFragTimeBetweenFrags(int nRow, int nBegFrag, int nEndFrag, int nBegTime, int nEndTime);
@@ -329,10 +274,7 @@ public:
 		const WCHAR * szLyrics, int nLen, BOOL bTempBegTime, BOOL bTempEndTime, DWORD dwStyle = LSA_SHOW_DEFAULT);
 
 	PML_ROW NewMLRow(int nBegTime, int nEndTime, 
-		const char *szContent = NULL, int nLen = 0, ML_ROW_TYPE rowType = ML_ROW_LYRICS);
-
-	PML_ROW NewMLRow(int nBegTime, int nEndTime, 
-		const WCHAR *szContent = NULL, int nLen = 0, ML_ROW_TYPE rowType = ML_ROW_LYRICS);
+		LPCTSTR szContent = NULL, int nLen = 0, ML_ROW_TYPE rowType = ML_ROW_LYRICS);
 
 	static PML_ROW CopyMLRow(PML_ROW pRowSrc);
 
@@ -346,13 +288,13 @@ public:
 
 	void AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink);
 
-	int FilterContents(void);
-
 	BOOL LyricsRowToText(PML_ROW pRow, tstring &strLyricsRow);
+
+	int FilterContents(void);
 
 public:
 	//
-	// Interface for Lyrics Scroll Action Recoder (CLyrScrollActionRecorder).
+	// Interface for Lyrics Scroll Action Recorder (CLyrScrollActionRecorder).
 	//
 	void ClearRecordedLyrScrollActions(VLyrLines &lyrLines) {
 		ASSERT(GetLyrContentType() == LCT_TXT);
@@ -368,7 +310,7 @@ public:
 
 	void LyrScrollActionsToTag() {
 		if (GetLyrContentType() == LCT_TXT)
-			m_lyrProperties.m_strTxtLyrScrollEvents = m_lyrScrollActionRecorder.EventsDataToString();
+			m_lyrProperties.SetTxtLyrScrollEvents(m_lyrScrollActionRecorder.EventsDataToString().c_str());
 	}
 
 	void LyrScrollToLine(VLyrLines &lyrLines, int nLine, int nTime, bool bUpdateTimeTag = true)
@@ -382,27 +324,15 @@ public:
 public:
 	LPCTSTR GetLyricsFileName();
 	LPCTSTR GetSongFileName() { return m_strSongFile.c_str(); }
-	int GetLyricsFileServerMark(TCHAR szMd5[]);
-
-	FILE_ENCODING GetFileEncoding() { return m_fileEncoding; }
 
 	LyricsProperties &Properties() { return m_lyrProperties; }
 
-	void SetTxtLyrScrollEvents(LPCTSTR szScrEvents) { m_lyrProperties.m_strTxtLyrScrollEvents = szScrEvents; }
-	LPCTSTR GetTxtLyrScrollEvents() { return m_lyrProperties.m_strTxtLyrScrollEvents.c_str(); }
-
-	CHAR_ENCODING GetEncodingIndex() { return m_lyrProperties.GetEncodingIndex(); }
-	LPCTSTR GetEncoding() { return m_lyrProperties.GetEncoding(); }
-	void SetEncoding(CHAR_ENCODING nEncodingID) { m_lyrProperties.SetEncoding(nEncodingID); }
-	void SetEncoding(LPCTSTR szEncoding) { m_lyrProperties.SetEncoding(szEncoding); }
+	void SetTxtLyrScrollEvents(LPCTSTR szScrEvents) { m_lyrProperties.SetTxtLyrScrollEvents(szScrEvents); }
+	LPCTSTR GetTxtLyrScrollEvents() { return m_lyrProperties.GetTxtLyrScrollEvents(); }
 
 	LRC_SOURCE_TYPE GetLyricsSourceType() { return m_lrcSourceType; }
 
-	//		取得当前文件类型
-	MLFileType GetLyricsFileType() { return m_LyricFileType; }
-
 	LYRICS_CONTENT_TYPE GetLyrContentType() { return m_lyrConentType; }
-	// void SetLyrContentType(LYRICS_CONTENT_TYPE lyrContentType)	{ m_lyrConentType = lyrContentType; }
 
 	bool DoesChooseNewFileName();
 
@@ -413,23 +343,20 @@ public:
 	int GetMediaLength() { return m_nMediaLength; }
 
 	BOOL HasLyricsOpened();
-	// bool IsEncodingModified();
 	BOOL IsModified();
 	BOOL IsContentModified();
 	void Close();
 	void ClearLyrics();
 
 protected:
-	// int OpenLyricsFile(LPCTSTR szFile, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
-
-	int OpenLyricsFile(LPCTSTR szFile, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
+	int OpenLyricsFile(LPCTSTR szFile, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 #ifdef _ID3V2_SUPPORT
-	int OpenLyricsInSongOfID3v2USLT(ID3v2UnsynchLyrics &lyrics, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
-	int OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
-	int OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bForceUseEncoding = FALSE, CHAR_ENCODING nForceEncodingID = ED_SYSDEF);
+	int OpenLyricsInSongOfID3v2USLT(ID3v2UnsynchLyrics &lyrics, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
+	int OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
+	int OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 
-	bool ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
-	bool ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, FILE_ENCODING fileEncoding, CHAR_ENCODING nEncodingID);
+	bool ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encoding);
+	bool ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING encoding);
 
 	int UpdateTagToID3v2DescTxt();
 #endif // #ifdef _ID3V2_SUPPORT
@@ -445,6 +372,8 @@ protected:
 	PLYRIC_FRAG PrevFrag(int nRow, int nFrag);
 	BOOL PrevFrag(int nRow, int nFrag, int &nPrevRow, int &nPrevFrag, PLYRIC_FRAG *ppFrag = NULL);
 
+	CHAR_ENCODING GetEncodingIndex() { return m_lyrProperties.GetEncodingIndex(); }
+
 public:
 
 	// 歌词文件的歌词部分，包含了不能识别的歌词、数据、注释等。
@@ -456,12 +385,13 @@ public:
 protected:
 	// Only lyrics lines are saved here, it's just a sub copy of m_arrFileRows.
 	CMLyrLines				m_arrLyricsRows;
+	bool					m_bHasLyricsOpened;
 
 protected:
 	CLyrScrollActionRecorder	m_lyrScrollActionRecorder;
 
 #ifdef _ID3V2_SUPPORT
-	// save id3v2 lyrics infomation for cache.
+	// save id3v2 lyrics information for cache.
 	struct ID3v2LyricsSaveCacheInfo
 	{
 		ID3v2LyricsSaveCacheInfo();
@@ -474,21 +404,12 @@ protected:
 	ID3v2LyricsSaveCacheInfo	m_id3v2SaveCacheInfo;
 #endif // #ifdef _ID3V2_SUPPORT
 
-	// 是否有歌词内容？
-	BOOL					m_bHasLyrics;
-
-	// 文件编码：ansi unicode？
-	FILE_ENCODING			m_fileEncoding;
-
 	// 歌词文件
 	tstring					m_strLrcSource;
 	tstring					m_strSongFile;
 
 	// lyrics source type: file, id3v2, lyrics3v2
 	LRC_SOURCE_TYPE			m_lrcSourceType;
-
-	// lyrics file type: txt, lrc, etc
-	MLFileType				m_LyricFileType;
 
 	// lyrics properties: tag(artist, title...)
 	LyricsProperties		m_lyrProperties;
@@ -504,7 +425,7 @@ protected:
 	// lyrics display style
 	DWORD					m_dwDefShowStyle;
 
-	// current playing pos of lyrics
+	// current playing position of lyrics
 	int						m_nTimeElapsed;
 
 	// length of the current media file

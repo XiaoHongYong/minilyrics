@@ -116,7 +116,7 @@ void ConvertStrByFileEncoding(CCharBuffer &outData, LPCTSTR szText, int nLen, FI
 
 BOOL SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen);
 
-BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fileEncoding = FE_ANSI, int nCharEncodingID = ED_SYSDEF);
+BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, CHAR_ENCODING encoding = ED_SYSDEF);
 
 #ifdef WIN32
 BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str);

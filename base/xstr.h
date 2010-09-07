@@ -33,8 +33,20 @@ T1 *_xcscpy(T1 *strDestination, const T2 *strSource)
     return (strDestination);
 }
 
+template<class T>
+size_t _xcslen (
+					   const T * str
+					   )
+{
+	const T *eos = str;
+
+	while( *eos++ ) ;
+
+	return( eos - str - 1 );
+}
+
 template<class T1, class T2>
-int __cdecl _xcsncmp(
+int _xcsncmp(
         const T1 * first,
         const T2 * last,
         size_t count
@@ -53,7 +65,7 @@ int __cdecl _xcsncmp(
 }
 
 template<class T1, class T2>
-T1 * __cdecl _xcsistr (
+T1 * _xcsistr (
         const T1 * str1,
         const T2 * str2
         )
@@ -94,7 +106,7 @@ T1 * __cdecl _xcsistr (
 }
 
 template<class T>
-T * __cdecl _xcschr (
+T *  _xcschr (
         const T * string,
         int ch
         )
@@ -105,6 +117,26 @@ T * __cdecl _xcschr (
         if (*string == (T)ch)
                 return((T *)string);
         return(NULL);
+}
+
+template<class T>
+T * _xcsrchr (
+						const T * string,
+						int ch
+						)
+{
+	T *start = (T *)string;
+
+	while (*string++)                       /* find end of string */
+		;
+	/* search towards front */
+	while (--string != start && *string != (T)ch)
+		;
+
+	if (*string == (T)ch)                /* char found ? */
+		return( (T *)string );
+
+	return(NULL);
 }
 
 template<class T1, class T2>
@@ -125,6 +157,40 @@ int _xcsicmp (
 	} while ( f && (f == l) );
 
 	return(f - l);
+}
+
+template<class T1, class T2>
+int _xcsnicmp (
+	const T1 * first,
+	const T2 * last,
+	size_t count
+	)
+{
+	if(count)
+	{
+		int f=0;
+		int l=0;
+
+		do
+		{
+
+			if ( ((f = (unsigned)(*(first++))) >= 'A') &&
+				(f <= 'Z') )
+				f -= 'A' - 'a';
+
+			if ( ((l = (unsigned)(*(last++))) >= 'A') &&
+				(l <= 'Z') )
+				l -= 'A' - 'a';
+
+		}
+		while ( --count && f && (f == l) );
+
+		return ( f - l );
+	}
+	else
+	{
+		return 0;
+	}
 }
 
 template<class TCHARDEF>

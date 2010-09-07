@@ -40,5 +40,17 @@
 #endif
 #endif
 
+#ifdef UTF8
+#define DEFAULT_ENCODING		ED_UTF8
+#endif
+
+#ifdef UNICODE
+#define DEFAULT_ENCODING		ED_UNICODE
+#endif
+
+#ifndef DEFAULT_ENCODING
+#define DEFAULT_ENCODING		ED_SYSDEF
+#endif
+
 
 #endif

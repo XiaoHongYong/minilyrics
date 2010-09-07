@@ -1394,19 +1394,12 @@ void CLyricShowTextEditObj::OnSaveLyrics()
 {
 	tstring			strEdit;
 
-	CLyricShowTextEditObj::GetText(strEdit);
+	GetText(strEdit);
 
-	FILE_ENCODING	fileEncoding;
-#ifdef _UNICODE
-	BOOL			bUnicode = TRUE;
-#else
-	BOOL			bUnicode = FALSE;
-#endif
-	CHAR_ENCODING	nEncodingID = g_LyricData.GetEncodingIndex();
+	CHAR_ENCODING	nEncodingID = g_LyricData.Properties().GetEncodingIndex();
 	g_LyricData.Properties().clear();
-	g_LyricData.SetEncoding(nEncodingID);
-	g_LyricData.FromString(strEdit.c_str(), strEdit.size() * sizeof(TCHAR),
-		&fileEncoding, FT_LYRICS_LRC, TRUE, bUnicode, TRUE);
+	g_LyricData.Properties().SetEncoding(nEncodingID);
+	g_LyricData.FromString(strEdit.c_str());
 
 #define SET_PROP(strProp, propCtrlId)				\
 	str = m_pSkin->GetUIObjectText(propCtrlId);		\
@@ -1437,7 +1430,7 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 
 	UpdateLyricsProperties();
 
-	CLyricShowTextEditObj::SetText(str.c_str());
+	SetText(str.c_str());
 
 	int		nCurLine;
 	nCurLine = g_LyricData.GetCurPlayLine(g_LyricData.GetRawLyrics());

@@ -17,11 +17,8 @@ public:
 	CSncParser(CMLData *pMLData);
 	virtual ~CSncParser();
 
-	// 保存为文件
-	int SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding);
-
-	// 分析歌词文件，并且存储到 pMLData 中
-	int Parse(bool bForceUseEncoding);
+	virtual int ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding) { return ERR_FALSE; }
+	virtual int SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding);
 
 	virtual LYRICS_CONTENT_TYPE GetLyrContentType() { return LCT_UNKNOWN; }
 

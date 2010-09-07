@@ -484,6 +484,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\LrcTag.cpp"
+				>
+			</File>
+			<File
 				RelativePath="Lyrics3v2.cpp"
 				>
 				<FileConfiguration
@@ -1103,53 +1107,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath="TextFileParser.cpp"
-				>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -1164,6 +1121,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LrcParserHelper.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LrcTag.h"
+				>
+			</File>
+			<File
 				RelativePath="Lyrics3v2.h"
 				>
 			</File>
@@ -1173,10 +1138,6 @@
 			</File>
 			<File
 				RelativePath="LyricsSearch.h"
-				>
-			</File>
-			<File
-				RelativePath="LyricsTagReader.h"
 				>
 			</File>
 			<File
@@ -1225,10 +1186,6 @@
 			</File>
 			<File
 				RelativePath="StdAfx.h"
-				>
-			</File>
-			<File
-				RelativePath="TextFileParser.h"
 				>
 			</File>
 		</Filter>

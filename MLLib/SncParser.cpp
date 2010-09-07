@@ -26,7 +26,7 @@ CSncParser::~CSncParser()
 //	snc 文件的格式：
 //		⑩00003210⑿
 //		我躲在车里
-int CSncParser::SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding)
+int CSncParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 {
 	int			nCount;
 	tstringex	strData;
@@ -49,7 +49,7 @@ int CSncParser::SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding)
 		}
 	}
 
-	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), FE_ANSI, m_pMLData->GetEncodingIndex()))
+	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), newEncoding))
 		return ERR_WRITE_FILE;
 
 	return ERR_OK;
@@ -67,9 +67,6 @@ BOOL CSncParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
 	{
 	case ML_ROW_UNKNOW:		// 不能识别的行
 		// lstrcpy(szBuff, pRow->szContent);
-		// lstrcat(szBuff, "\r\n");
-		break;
-	case ML_ROW_NULL:		// 空行
 		// lstrcat(szBuff, "\r\n");
 		break;
 	case ML_ROW_LYRICS:		// 歌词行
@@ -118,10 +115,4 @@ BOOL CSncParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
 		return FALSE;
 	}
 	return TRUE;
-}
-
-// 分析歌词文件，并且存储到 pMLData 中
-int CSncParser::Parse(bool bForceUseEncoding)
-{
-	return ERR_FALSE;
 }

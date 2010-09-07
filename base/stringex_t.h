@@ -64,11 +64,13 @@ public:
 		m_szBuff[0] = '\0';
 	}
 
-	void replace(int nBeg, int n1, const T*str, int n)
+	void replace(int nBeg, int n1, const T*str, int n = -1)
 	{
 		assert(n >= 0);
-		if (nBeg + n1 > (int)nLen || nBeg > (int)nLen)
+		if (nBeg + n1 > (int)nLen)
 			return;
+		if (n < 0)
+			n = _xcslen(str);
 
 		T		*s1, *s2;
 		const T	*sEnd;
@@ -213,8 +215,10 @@ public:
 		return m_szBuff;
 	}
 */
-	stringex_t<T> &append(const T * str, int n)
+	stringex_t<T> &append(const T * str, int n = -1)
 	{
+		if (n == -1)
+			n = _xcslen(str);
 		assert(n >= 0);
 		reserve(size() + n);
 

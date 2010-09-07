@@ -235,11 +235,10 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 				Id3v2Sylt = false;
 
 			nRet = lyricsData.SaveLyricsInSongOfID3v2(
-				lyricsData.GetFileEncoding(),
 				Id3v2Uslt,
 				Id3v2Sylt,
 				bId3v2LyricsUserDefined,
-				lyricsData.GetEncodingIndex());
+				lyricsData.Properties().GetEncodingIndex());
 			if (nRet != ERR_OK)
 				return nRet;
 		}
@@ -300,7 +299,7 @@ int CAutoProcessEmbeddedLyrics::DealRemoveEmbeddedLyrics(Item &item)
 	if (!(Id3v2Sylt || Id3v2Uslt || bId3v2LyricsUserDefined))
 		return ERR_OK;
 
-	CID3v2IF		id3v2;
+	CID3v2IF		id3v2(ED_SYSDEF);
 	int				i;
 	nRet = id3v2.Open(item.m_strSongFile.c_str(), true, false);
 	if (nRet != ERR_OK)

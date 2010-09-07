@@ -441,7 +441,7 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESU
 	//
 	// 读取 ID3v2 歌词，添加到列表中
 	//
-	CID3v2IF		id3v2;
+	CID3v2IF		id3v2(ED_SYSDEF);
 	int				nRet;
 
 	if (!IsFileExist(szSongFile))
@@ -490,7 +490,7 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSour
 	//
 	// ID3v2 lyrics
 	//
-	CID3v2IF		id3v2;
+	CID3v2IF		id3v2(ED_SYSDEF);
 	int				nRet;
 
 	if (!IsFileExist(szSongFile))
@@ -508,7 +508,7 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSour
 				lrcSourceType |= LST_ID3V2_SYLT;
 			if (lyrics.m_unsynchLyrics.size())
 				lrcSourceType |= LST_ID3V2_USLT;
-			if ((lyrics.m_lyricsUserDefined.m_strValueAnsi.size() || lyrics.m_lyricsUserDefined.m_strValueUCS2.size()))
+			if (lyrics.m_lyricsUserDefined.m_strValue.size())
 				lrcSourceType |= LST_ID3V2_LYRICS;
 		}
 		id3v2.Close();

@@ -34,8 +34,6 @@ static ID_TO_STRING	__ErrID2Str[] =
 
 	{ ERR_NOT_SUPPORT_FILE_FORMAT, _T("The file may not be supported.") },
 	{ ERR_NOLYRICS_OPENED, _T("No lyrics file was opened.") },
-	{ ERR_UNKNOWN_LRC_FILE_TYPE, _T("Unknown lyrics file type.") },
-	{ ERR_URL_EXIST_IN_QUEUE, _T("The lyrics is being downloaded now, please wait for a while.") },
 
 	{ ERR_OPEN_FILE, _T("Open file FAILED.")},
 	{ ERR_READ_FILE, _T("Read file FAILED.")},
@@ -43,7 +41,6 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_SEEK_FILE, _T("Seek file FAILED.") },
 	{ ERR_NOT_FIND_LRC3V2, _T("Not found Lyrics3v2 tag") },
 	{ ERR_BAD_LRC3V2_FORMAT, _T("Invalid Lyrics3v2 format.") },
-	{ ERR_BAD_LS_FORMAT, _T("Invalid LS file format.") },
 	{ ERR_BAD_FILE_FORMAT, _T("Invalid file format.") },
 
 	{ ERR_DISABLE_PACK_XML, _T("XML packet was disabled, please upgrade to the latest version.") },

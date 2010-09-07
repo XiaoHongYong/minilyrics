@@ -15,34 +15,37 @@ void AppendUcs2Str(CCharBuffer &buff, wstringex &strUcs2)
 }
 */
 
-void AppendUcs2Str(CCharBuffer &buff, ID3v2EncType encType, LPCWSTR str, int nLen)
+void AppendStrByEncodingAndBom(CCharBuffer &buff, LPCTSTR str, ID3v2EncType encType, CHAR_ENCODING encoding)
 {
 	if (encType == IET_UCS2LE_BOM)
 	{
-		buff += (char)0xFF;
-		buff += (char)0xFE;
-
-		buff.append((const char *)str, (nLen + 1) * sizeof(WCHAR));
+		buff += SZ_FE_UCS2;
+		wstringex	strW;
+		TStringToUCS2(str, -1, strW, encoding);
+		buff.append((const char *)strW.c_str(), (strW.size() + 1) * sizeof(WCHAR));
 	}
 	else if (encType == IET_UCS2BE_NO_BOM)
 	{
-		while (*str)
-		{
-			buff += (char)((*str) >> 8);
-			buff += (char)((*str) & 0xFF);
-			str++;
-		}
-		str += (char)0;
-		str += (char)0;
+		wstringex	strW;
+		TStringToUCS2(str, -1, strW, encoding);
+		UCS2LEToBE(strW.data(), strW.size());
+		buff.append((const char *)strW.c_str(), (strW.size() + 1) * sizeof(WCHAR));
 	}
 	else if (encType == IET_UTF8)
 	{
-// 		buff += (char)0xEF;
-// 		buff += (char)0xBB;
-// 		buff += (char)0xBF;
+		// 		buff += (char)0xEF;
+		// 		buff += (char)0xBB;
+		// 		buff += (char)0xBF;
 		stringex	strUtf8;
-		UCS2ToUtf8(str, nLen, strUtf8);
+		TStringToUTF8(str, -1, strUtf8, encoding);
 		buff.append(strUtf8.c_str(), strUtf8.size() + 1);
+	}
+	else
+	{
+		// IET_ANSI
+		stringex	strAnsi;
+		TStringToMBCS(str, -1, strAnsi, encoding);
+		buff.append(strAnsi.c_str(), strAnsi.size() + 1);
 	}
 }
 
@@ -51,153 +54,81 @@ int CopyAnsiStr(string &str, const char *data, int nLen)
 {
 	str.resize(0);
 
-	int		nStrLen = 0;
-	const char *p = data;
-	while (nStrLen < nLen && *p)
-		p++, nStrLen++;
+	int nStrLen = strlen_safe(data, nLen);
 	str.append(data, nStrLen);
 	return nStrLen + 1;
 }
 
 // return the size of bytes used from buffer data
-int CopyAnsiStr(stringex &str, const char *data, int nLen)
-{
-	str.resize(0);
-
-	int		nStrLen = 0;
-	const char *p = data;
-	while (nStrLen < nLen && *p)
-		p++, nStrLen++;
-	str.append(data, nStrLen);
-	return nStrLen + 1;
-}
-
-// return the size of bytes used from buffer data
-int CopyUcs2StrByBom(wstringex &str, ID3v2EncType encType, const BYTE *wtext, int len)
+int CopyStrByEncodingAndBom(tstringex &str, ID3v2EncType encType, const char *data, int len, CHAR_ENCODING encoding)
 {
 	int		lenOrg = len;
+	LPBYTE	pbyData = (LPBYTE)data;
 
 	str.resize(0);
 
-	if (wtext[0] == 0xFF && wtext[1] == 0xFE)
+	// Determine the encoding type.
+	if (pbyData[0] == 0xFF && pbyData[1] == 0xFE)
 	{
 		ASSERT(encType == IET_UCS2LE_BOM);
 		encType = IET_UCS2LE_BOM;
-		wtext += 2;
+		pbyData += 2;
 		len -= 2;
 	}
-	else if (wtext[0] == 0xFE && wtext[1] == 0xFF)
+	else if (pbyData[0] == 0xFE && pbyData[1] == 0xFF)
 	{
 		ASSERT(encType == IET_UCS2BE_NO_BOM);
 		encType = IET_UCS2BE_NO_BOM;
-		wtext += 2;
+		pbyData += 2;
 		len -= 2;
 	}
-
-	if (encType == IET_UCS2LE_BOM)
+	else if (pbyData[0] == 0xEF && pbyData[1] == 0xBB && pbyData[2] == 0xBF)
 	{
-		str.resize(len / 2);
-		int		n = wcsncpysz_safe((WCHAR *)str.c_str(), str.size() + 1, (const WCHAR*)wtext, len / 2);
-		str.resize(n);
-
-		len -= (str.size() + 1) * sizeof(WCHAR);
+		encType = IET_UTF8;
+		pbyData += 3;
+		len -= 3;
 	}
-	else if (encType == IET_UCS2BE_NO_BOM)
-	{
-		const BYTE *end = wtext + len;
-		WCHAR		value;
-		for (const BYTE *pos = wtext; pos < end; pos += 2)
-		{
-			value = (pos[0] << 8) | pos[1];
-			if (value == '\0')
-				break;
-			str += value;
-		}
 
-		len -= (str.size() + 1) * sizeof(WCHAR);
+	// Copy data
+	int		nCopyiedBytes = 0;
+	if (encType == IET_UCS2LE_BOM || encType == IET_UCS2BE_NO_BOM)
+	{
+		int n = wcslen_safe((WCHAR *)pbyData, len / sizeof(WCHAR));
+
+		if (encType == IET_UCS2BE_NO_BOM)
+			UCS2BEToLE((WCHAR *)pbyData, n);
+		UCS2ToTString((WCHAR *)pbyData, n, str, encoding);
+
+		nCopyiedBytes = (n + 1) * sizeof(WCHAR);
 	}
 	else if (encType == IET_UTF8)
 	{
-		if (wtext[0] == 0xEF && wtext[1] == 0xBB && wtext[2] == 0xBF)
-		{
-			wtext += 3;
-			len -= 3;
-		}
+		int n = strlen_safe((const char *)pbyData, len);
 
-		Utf8ToUCS2((const char *)wtext, -1, str);
+		UTF8ToTString((const char *)pbyData, n, str, encoding);
 
-		len -= strlen((const char *)wtext) + 1;
+		nCopyiedBytes = n + 1;
 	}
 	else
-		return 0;
+	{
+		int n = strlen_safe((const char *)pbyData, len);
+		MBCSToTString((const char *)pbyData, n, str, encoding);
 
-	return lenOrg - len;
+		nCopyiedBytes = n + 1;
+	}
+
+	return lenOrg - len + nCopyiedBytes;
 }
 
-int CopyUcs2StrByBom(wstring_t &str, ID3v2EncType encType, const BYTE *wtext, int len)
+// return the size of bytes used from buffer data
+int CopyStrByEncodingAndBom(tstring &str, ID3v2EncType encType, const char *data, int len, CHAR_ENCODING encoding)
 {
-	wstringex		str2;
-	int				nRet;
-	nRet = CopyUcs2StrByBom(str2, encType, wtext, len);
-	str = str2.c_str();
-	return nRet;
-/*	int		lenOrg = len;
+	tstringex	str2;
+	int n = CopyStrByEncodingAndBom(str2, encType, data, len, encoding);
+	str.clear();
+	str.append(str2.c_str(), str2.size());
 
-	str.resize(0);
-
-	if (wtext[0] == 0xFE && wtext[1] == 0xFF)
-	{
-		encType = IET_UCS2LE_BOM;
-		wtext += 2;
-		len -= 2;
-	}
-	else if (wtext[0] == 0xFF && wtext[1] == 0xFE)
-	{
-		encType = IET_UCS2BE_NO_BOM;
-		wtext += 2;
-		len -= 2;
-	}
-
-	if (encType == IET_UCS2LE_BOM)
-	{
-		const BYTE *end = wtext + len;
-		WCHAR		value;
-		for (const BYTE *pos = wtext; pos < end; pos += 2)
-		{
-			value = (pos[0] << 8) | pos[1];
-			if (value == '\0')
-				break;
-			str += value;
-		}
-
-		len -= (str.size() + 1) * sizeof(WCHAR);
-	}
-	else if (encType == IET_UCS2BE_NO_BOM)
-	{
-		str.resize(len / 2);
-		int		n = wcsncpysz_safe((WCHAR *)str.c_str(), str.size() + 1, (const WCHAR*)wtext, len / 2);
-		str.resize(n);
-
-		len -= (str.size() + 1) * sizeof(WCHAR);
-	}
-	else if (encType == IET_UTF8)
-	{
-		if (wtext[0] == 0xEF && wtext[1] == 0xBB && wtext[2] == 0xBF)
-		{
-			wtext += 3;
-			len -= 3;
-		}
-
-		wstringex	wstr;
-		Utf8ToUCS2((const char *)wtext, -1, wstr);
-		str = wstr.c_str();
-
-		len -= strlen((const char *)wtext) + 1;
-	}
-	else
-		return 0;
-
-	return lenOrg - len;*/
+	return n;
 }
 
 uint32 SynchDataToUInt(BYTE *byData, int nLen)
@@ -496,3 +427,104 @@ bool IsSynchLyricsFrameID(UINT nFrameID)
 {
 	return nFrameID == ID3V2_2_SYLT || nFrameID == ID3V2_3_SYLT;
 }
+
+#ifdef _CPPUNIT_TEST
+
+IMPLEMENT_CPPUNIT_TEST_REG(ID3_HELPER)
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+class CTestCaseLrcTag : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseLrcTag);
+	CPPUNIT_TEST(TestCopyAnsiStr);
+	CPPUNIT_TEST(TestCopyStrByEncodingAndBom);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+
+public:
+	void setUp()
+	{
+	}
+	void tearDown() 
+	{
+	}
+
+protected:
+	void TestCopyAnsiStr()
+	{
+#define		SZ_TEXT_TEST	"abc\0def\0"
+		LPCSTR		text = SZ_TEXT_TEST;
+		int			lenText = CountOf(SZ_TEXT_TEST);
+		int			n;
+
+		{
+			string		str;
+			n = CopyAnsiStr(str, text, lenText);
+			CPPUNIT_ASSERT(n == 4);
+			CPPUNIT_ASSERT(strcmp(str.c_str(), "abc") == 0);
+
+			n = CopyAnsiStr(str, text, 2);
+			CPPUNIT_ASSERT(n == 2);
+			CPPUNIT_ASSERT(strcmp(str.c_str(), "ab") == 0);
+		}
+	}
+
+	void TestCopyStrByEncodingAndBom()
+	{
+#define		SZ_TEXT_TEST	"abc\0def\0"
+		LPCSTR		text = SZ_TEXT_TEST;
+		int			lenText = CountOf(SZ_TEXT_TEST);
+		int			n;
+		wstringex	wStr;
+		ConvertStr(text, lenText, wStr);
+
+		wstringex	wLyrics;
+		wLyrics.append((const WCHAR *)SZ_FE_UCS2, 1);
+		wLyrics.append(wStr.c_str(), wStr.size());
+
+		wstringex	wLyricsBe;
+		wLyricsBe.append(wLyrics.c_str(), wLyrics.size());
+		UCS2LEToBE(wLyricsBe.data(), wLyricsBe.size());
+
+		stringex	utf8Lyrics;
+		utf8Lyrics.append(SZ_FE_UTF8);
+		utf8Lyrics.append(text, lenText);
+
+		LPCSTR		vData[] = { (LPCSTR)text, (LPCSTR)wLyrics.c_str(),		(LPCSTR)wLyricsBe.c_str(),			(LPCSTR)utf8Lyrics.c_str(), };
+		int			vLen[] = { lenText,	wLyrics.size() * sizeof(WCHAR), wLyricsBe.size() * sizeof(WCHAR),	utf8Lyrics.size(), };
+		ID3v2EncType	vEncoding[] = { IET_ANSI,	IET_UCS2LE_BOM,						IET_UCS2BE_NO_BOM,				IET_UTF8, };
+		int			vCopiedOffset[] = {0, 2, 2, 3 };
+
+		for (int i = 0; i < CountOf(vData); i++)
+		{
+			{
+				tstring		str;
+				n = CopyStrByEncodingAndBom(str, vEncoding[i], vData[i], vLen[i]);
+				CPPUNIT_ASSERT(n == 4 + vCopiedOffset[i]);
+				CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("abc")) == 0);
+
+				n = CopyStrByEncodingAndBom(str, vEncoding[i], vData[i], 2);
+				CPPUNIT_ASSERT(n == 2 + vCopiedOffset[i]);
+				CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("ab")) == 0);
+			}
+			{
+				tstringex	str;
+				n = CopyStrByEncodingAndBom(str, vEncoding[i], vData[i], vLen[i]);
+				CPPUNIT_ASSERT(n == 4 + vCopiedOffset[i]);
+				CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("abc")) == 0);
+
+				n = CopyStrByEncodingAndBom(str, vEncoding[i], vData[i], 2);
+				CPPUNIT_ASSERT(n == 2 + vCopiedOffset[i]);
+				CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("ab")) == 0);
+			}
+		}
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseLrcTag);
+
+#endif // _CPPUNIT_TEST

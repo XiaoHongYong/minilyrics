@@ -21,6 +21,9 @@ FILE_ENCODING GetStrEncodingType(LPCVOID lpData)
 	// FF FE
 	if (szBuffer[0] == 0xFF && szBuffer[1] == 0xFE)
 		return FE_UCS2;
+	// FE FF
+	else if (szBuffer[0] == 0xFE && szBuffer[1] == 0xFF)
+		return FE_UCS2_BE;
 	// EF BB BF
 	else if (szBuffer[0] == 0xEF && szBuffer[1] == 0xBB && szBuffer[2] == 0xBF)
 		return FE_UTF8;
@@ -1190,7 +1193,7 @@ BOOL SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen)
 	return TRUE;
 }
 
-BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fileEncoding, int nCharEncodingID)
+BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, CHAR_ENCODING encoding)
 {
 	assert(nLen >= 0);
 
@@ -1201,13 +1204,9 @@ BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fi
 	if (fp == NULL)
 		return FALSE;
 
-	if (fileEncoding == FE_UCS2)
+	if (encoding == ED_UNICODE)
 	{
-		BYTE		byTag[2];
-		byTag[0] = 0xFF;
-		byTag[1] = 0xFE;
-
-		if (fwrite(byTag, 1, 2, fp) != 2)
+		if (fwrite(SZ_FE_UCS2, 1, 2, fp) != 2)
 		{
 			fclose(fp);
 			return FALSE;
@@ -1218,20 +1217,14 @@ BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fi
 			bRet = false;
 #else
 		wstringex	strW;
-		ConvertStr(szText, nLen, strW, nCharEncodingID);
+		TStringToUCS2(szText, nLen, strW, encoding);
 		if (fwrite(strW.c_str(), sizeof(WCHAR), strW.size(), fp) != strW.size())
 			bRet = false;
 #endif
 	}
-	else if (fileEncoding == FE_UTF8)
+	else if (encoding == ED_UTF8)
 	{
-		// EF BB BF
-		BYTE		byTag[3];
-		byTag[0] = 0xEF;
-		byTag[1] = 0xBB;
-		byTag[2] = 0xBF;
-
-		if (fwrite(byTag, 1, 3, fp) != 3)
+		if (fwrite(SZ_FE_UTF8, 1, 3, fp) != 3)
 		{
 			fclose(fp);
 			return FALSE;
@@ -1244,25 +1237,17 @@ BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, FILE_ENCODING fi
 			bRet = false;
 #else
 		stringex	str;
-		MbcsToUtf8(szText, nLen, str, nCharEncodingID);
+		TStringToUTF8(szText, nLen, str, encoding);
 		if (fwrite(str.c_str(), sizeof(char), str.size(), fp) != str.size())
 			bRet = false;
 #endif
 	}
 	else
 	{
-#ifdef _UNICODE
 		stringex	str;
-		ConvertStr(szText, nLen, str, nCharEncodingID);
+		TStringToMBCS(szText, nLen, str, encoding);
 		if (fwrite(str.c_str(), sizeof(char), str.size(), fp) != str.size())
-		{
-			fclose(fp);
-			return FALSE;
-		}
-#else
-		if (fwrite(szText, sizeof(TCHAR), nLen, fp) != nLen)
 			bRet = false;
-#endif
 	}
 
 	fclose(fp);

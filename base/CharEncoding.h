@@ -106,6 +106,9 @@ void MbcsToUCS2(const char *str, int nLen, wstring_t &strOut, int nEncodingID = 
 void Utf8ToMbcs(const char *str, int nLen, string &strOut, int nEncodingID = ED_SYSDEF);
 void Utf8ToUCS2(const char *str, int nLen, wstring_t &strOut);
 
+void UCS2BEToLE(WCHAR *str, int nLen);
+void UCS2LEToBE(WCHAR *str, int nLen);
+
 // ÅÐ¶Ï×Ö·û´®ÖÐÊÇ·ñ°üº¬·ÇANSI±àÂëµÄ×Ö·û
 bool IsAnsiStr(const WCHAR *szStr);
 bool IsAnsiStr(const char *szStr);
@@ -117,6 +120,10 @@ bool IsAnsiStr(const char *szStr);
 // 2) UTF8:    if UTF8 macro is defined
 // 3) MBCS:    if the above two macros are not defined, and it is default.
 //
+
+FILE_ENCODING CharEncodingToFileEncoding(CHAR_ENCODING encoding);
+
+CHAR_ENCODING FileEcodingToCharEncoding(FILE_ENCODING fileEncoding);
 
 template<class _tstring>
 inline void UCS2ToTString(const WCHAR *str, int nLen, _tstring &strOut, int nEncodingID = ED_SYSDEF)

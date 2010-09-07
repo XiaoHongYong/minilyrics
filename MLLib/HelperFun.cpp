@@ -7,7 +7,7 @@
 #include "mbstring.h"
 #endif
 #endif
-#include "LyricsTagReader.h"
+#include "LrcTag.h"
 
 
 /*
@@ -303,19 +303,13 @@ void ConvertToUtf8(const char *str, int nLen, stringex &strOut, CHAR_ENCODING nE
 
 BOOL IsEncryptedLyrics(LPCTSTR szFile)
 {
-	CLyricsTagReader<TCHAR>	lrcTagReader;
 	CCharBuffer		str;
 	tstringex		strKey;
 
 	if (!OpenFileToBuffer(szFile, str))
 		return FALSE;
 
-	lrcTagReader.m_pstrKey = &strKey;
-	if (lrcTagReader.ReadFromStr(str.c_str(), str.size(), false, false, ED_SYSDEF)
-		&& strKey.size())
-		return TRUE;
-
-	return FALSE;
+	return stristr(str.c_str(), "[key:") != NULL;
 }
 
 /*

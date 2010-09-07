@@ -26,14 +26,6 @@
 //////////////////////////////////////////////////////////////////////////
 // CID3v2FrameParserSynLyrics
 
-CID3v2FrameParserSynLyrics::CID3v2FrameParserSynLyrics()
-{
-}
-
-CID3v2FrameParserSynLyrics::~CID3v2FrameParserSynLyrics()
-{
-}
-
 int CID3v2FrameParserSynLyrics::ParseInfoOnly(CID3v2Frame *pFrame, ID3v2SynchLyrics &synchLyrics)
 {
 //     Text encoding        $xx
@@ -86,18 +78,7 @@ int CID3v2FrameParserSynLyrics::ParseInfoOnly(CID3v2Frame *pFrame, ID3v2SynchLyr
 	data += 6;
 	len -= 6;
 
-	if (synchLyrics.m_encodingType == IET_ANSI)
-	{
-		// ISO-8859-1
-		synchLyrics.m_strAnsiContentDesc.reserve(len);
-		strncpysz_safe(synchLyrics.m_strAnsiContentDesc.data(), synchLyrics.m_strAnsiContentDesc.capacity(), data, len);
-		synchLyrics.m_strAnsiContentDesc.resize(strlen(synchLyrics.m_strAnsiContentDesc.c_str()));
-	}
-	else
-	{
-		// Unicode
-		CopyUcs2StrByBom(synchLyrics.m_strUcs2ContentDesc, synchLyrics.m_encodingType, (const byte *)data, len);
-	}
+	CopyStrByEncodingAndBom(synchLyrics.m_strContentDesc, synchLyrics.m_encodingType, data, len, m_encoding);
 
 	return ERR_OK;
 }
@@ -154,89 +135,41 @@ int CID3v2FrameParserSynLyrics::Parse(CID3v2Frame *pFrame, ID3v2SynchLyrics &syn
 	data += 6;
 	len -= 6;
 
-	if (synchLyrics.m_encodingType == IET_ANSI)
+	int n = CopyStrByEncodingAndBom(synchLyrics.m_strContentDesc, synchLyrics.m_encodingType, data, len, m_encoding);
+
+	len -= n;
+	data += n;
+
+	while (len > 0)
 	{
-		// ISO-8859-1
-		synchLyrics.m_strAnsiContentDesc.reserve(len);
-		strncpysz_safe(synchLyrics.m_strAnsiContentDesc.data(), synchLyrics.m_strAnsiContentDesc.capacity(), data, len);
-		synchLyrics.m_strAnsiContentDesc.resize(strlen(synchLyrics.m_strAnsiContentDesc.c_str()));
+		LrcSyllable		syllable;
 
-		len -= synchLyrics.m_strAnsiContentDesc.size() + 1;
-		data += synchLyrics.m_strAnsiContentDesc.size() + 1;
-
-		while (len > 0)
+		while (data[0] == 0xA)
 		{
-			LrcSyllable<char>		syllable;
-
-			while (data[0] == 0xA)
-			{
-				syllable.bNewLine = true;
-				data++;
-				len--;
-				synchLyrics.m_vAnsiSynLyrics.push_back(syllable);
-				synchLyrics.m_bAllSyllableIsNewLine = false;
-			}
-
-			if (len < 5)
-			{
-				if (len != 0)
-					ERRLOG1(_T("Can't recognize all lyrics data, len: %d"), len);
-				return ERR_OK;
-			}
-
-			syllable.bNewLine = false;
-			syllable.strText = data;
-			data += syllable.strText.size() + 1;
-			len -= syllable.strText.size() + 1;
-
-			syllable.nTime = ByteDataToUInt((byte *)data, 4);
-			data += 4;
-			len -= 4;
-
-			synchLyrics.m_vAnsiSynLyrics.push_back(syllable);
+			syllable.bNewLine = true;
+			data++;
+			len--;
+			synchLyrics.m_vSynLyrics.push_back(syllable);
+			synchLyrics.m_bAllSyllableIsNewLine = false;
 		}
-	}
-	else
-	{
-		// Unicode
-		int		n;
-		n = CopyUcs2StrByBom(synchLyrics.m_strUcs2ContentDesc, synchLyrics.m_encodingType, (const byte *)data, len);
+
+		if (len < 5)
+		{
+			if (len != 0)
+				ERRLOG1(_T("Can't recognize all lyrics data, len: %d"), len);
+			return ERR_OK;
+		}
+
+		syllable.bNewLine = false;
+		n = CopyStrByEncodingAndBom(syllable.strText, synchLyrics.m_encodingType, data, len, m_encoding);
 		data += n;
 		len -= n;
 
-		const WCHAR		*wdata = (const WCHAR *)data;
-		int			wlen = len / sizeof(WCHAR);
-		while (wlen > 0)
-		{
-			LrcSyllable<WCHAR>		syllable;
+		syllable.nTime = ByteDataToUInt((byte *)data, 4);
+		data += 4;
+		len -= 4;
 
-			while (wdata[0] == 0xA)
-			{
-				syllable.bNewLine = true;
-				wdata++;
-				wlen--;
-				synchLyrics.m_vUcs2SynLyrics.push_back(syllable);
-				synchLyrics.m_bAllSyllableIsNewLine = false;
-			}
-
-			if (wlen < 3)
-			{
-				if (wlen != 0)
-					ERRLOG1(_T("Can't recognize all lyrics data, len: %d"), wlen);
-				return ERR_OK;
-			}
-
-			syllable.bNewLine = false;
-			n = CopyUcs2StrByBom(syllable.strText, synchLyrics.m_encodingType, (const byte *&)wdata, wlen * sizeof(WCHAR));
-			wdata += n / 2;
-			wlen -= n / 2;
-
-			syllable.nTime = ByteDataToUInt((byte *)wdata, 4);
-			wdata += 2;
-			wlen -= 2;
-
-			synchLyrics.m_vUcs2SynLyrics.push_back(syllable);
-		}
+		synchLyrics.m_vSynLyrics.push_back(syllable);
 	}
 
 	return ERR_OK;
@@ -262,51 +195,23 @@ int CID3v2FrameParserSynLyrics::ToFrameData(ID3v2SynchLyrics &synchLyrics, CID3v
 	buff += synchLyrics.m_byContentType;
 
 	//     Content descriptor   <textstring> $00 (00)
-	if (synchLyrics.m_encodingType == IET_ANSI)
+	AppendStrByEncodingAndBom(buff, synchLyrics.m_strContentDesc.c_str(), synchLyrics.m_encodingType, m_encoding);
+
+	byte		byTime[10];
+	for (ID3v2SynchLyrics::LIST_SYLRC::iterator it = synchLyrics.m_vSynLyrics.begin();
+		it != synchLyrics.m_vSynLyrics.end(); it++)
 	{
-		// ISO-8859-1
-		buff.append(synchLyrics.m_strAnsiContentDesc.c_str(), synchLyrics.m_strAnsiContentDesc.size() + 1);
-
-		byte		byTime[10];
-		for (ID3v2SynchLyrics::LIST_SYLRC::iterator it = synchLyrics.m_vAnsiSynLyrics.begin();
-			it != synchLyrics.m_vAnsiSynLyrics.end(); it++)
+		LrcSyllable		&syllable = *it;
+		if (syllable.bNewLine)
 		{
-			LrcSyllable<char>		&syllable = *it;
-			if (syllable.bNewLine)
-				buff += (char)0xA;
-			else
-			{
-				buff.append(syllable.strText.c_str(), syllable.strText.size() + 1);
-
-				ByteDataFromUInt(syllable.nTime, byTime, 4);
-				buff.append((const char *)byTime, 4);
-			}
+			buff += (char)0xA;
 		}
-	}
-	else
-	{
-		// Unicode
-		AppendUcs2Str(buff, synchLyrics.m_encodingType, synchLyrics.m_strUcs2ContentDesc.c_str(),
-			synchLyrics.m_strUcs2ContentDesc.size());
-
-		byte		byTime[10];
-		for (ID3v2SynchLyrics::LIST_SYLRC_W::iterator it = synchLyrics.m_vUcs2SynLyrics.begin();
-			it != synchLyrics.m_vUcs2SynLyrics.end(); it++)
+		else
 		{
-			LrcSyllable<WCHAR>		&syllable = *it;
-			if (syllable.bNewLine)
-			{
-				buff += (char)0xA;
-				buff += (char)0x0;
-			}
-			else
-			{
-				AppendUcs2Str(buff, synchLyrics.m_encodingType, syllable.strText.c_str(),
-					syllable.strText.size());
+			AppendStrByEncodingAndBom(buff, syllable.strText.c_str(), synchLyrics.m_encodingType, m_encoding);
 
-				ByteDataFromUInt(syllable.nTime, byTime, 4);
-				buff.append((const char *)byTime, 4);
-			}
+			ByteDataFromUInt(syllable.nTime, byTime, 4);
+			buff.append((const char *)byTime, 4);
 		}
 	}
 
@@ -330,14 +235,6 @@ bool CID3v2FrameParserSynLyrics::IsFrameLanguageSame(CID3v2Frame *pFrame, const 
 
 //////////////////////////////////////////////////////////////////////////
 // CID3v2FrameParserUnsynLyrics
-
-CID3v2FrameParserUnsynLyrics::CID3v2FrameParserUnsynLyrics()
-{
-}
-
-CID3v2FrameParserUnsynLyrics::~CID3v2FrameParserUnsynLyrics()
-{
-}
 
 int CID3v2FrameParserUnsynLyrics::ParseInfoOnly(CID3v2Frame *pFrame, ID3v2UnsynchLyrics &unsynchLyrics)
 {
@@ -364,18 +261,7 @@ int CID3v2FrameParserUnsynLyrics::ParseInfoOnly(CID3v2Frame *pFrame, ID3v2Unsync
 	data += 4;
 	len -= 4;
 
-	if (unsynchLyrics.m_encodingType == IET_ANSI)
-	{
-		// ISO-8859-1
-		unsynchLyrics.m_strAnsiContentDesc.reserve(len);
-		strncpysz_safe(unsynchLyrics.m_strAnsiContentDesc.data(), unsynchLyrics.m_strAnsiContentDesc.capacity(), data, len);
-		unsynchLyrics.m_strAnsiContentDesc.resize(strlen(unsynchLyrics.m_strAnsiContentDesc.c_str()));
-	}
-	else
-	{
-		// Unicode
-		CopyUcs2StrByBom(unsynchLyrics.m_strUcs2ContentDesc, unsynchLyrics.m_encodingType, (const byte *)data, len);
-	}
+	CopyStrByEncodingAndBom(unsynchLyrics.m_strContentDesc, unsynchLyrics.m_encodingType, data, len, m_encoding);
 	
 	return ERR_OK;
 }
@@ -405,36 +291,14 @@ int CID3v2FrameParserUnsynLyrics::Parse(CID3v2Frame *pFrame, ID3v2UnsynchLyrics 
 	data += 4;
 	len -= 4;
 
-	if (unsynchLyrics.m_encodingType == IET_ANSI)
-	{
-		// ISO-8859-1
+	int n = CopyStrByEncodingAndBom(unsynchLyrics.m_strContentDesc, unsynchLyrics.m_encodingType, data, len, m_encoding);
 
-		unsynchLyrics.m_strAnsiContentDesc.reserve(len);
-		strncpysz_safe(unsynchLyrics.m_strAnsiContentDesc.data(), unsynchLyrics.m_strAnsiContentDesc.capacity(), data, len);
-		unsynchLyrics.m_strAnsiContentDesc.resize(strlen(unsynchLyrics.m_strAnsiContentDesc.c_str()));
+	data += n;
+	len -= n;
 
-		data += unsynchLyrics.m_strAnsiContentDesc.size() + 1;
-		len -= unsynchLyrics.m_strAnsiContentDesc.size() + 1;
+	if (len > 0)
+		CopyStrByEncodingAndBom(unsynchLyrics.m_strLyrics, unsynchLyrics.m_encodingType, data, len, m_encoding);
 
-		if (len > 0)
-		{
-			unsynchLyrics.m_strAnsiLyrics.reserve(len);
-			strncpysz_safe(unsynchLyrics.m_strAnsiLyrics.data(), unsynchLyrics.m_strAnsiLyrics.capacity(), data, len);
-			unsynchLyrics.m_strAnsiLyrics.resize(strlen(unsynchLyrics.m_strAnsiLyrics.c_str()));
-		}
-	}
-	else
-	{
-		// Unicode
-		int		n;
-
-		n = CopyUcs2StrByBom(unsynchLyrics.m_strUcs2ContentDesc, unsynchLyrics.m_encodingType, (const byte *)data, len);
-		data += n;
-		len -= n;
-		if (len > 0)
-			CopyUcs2StrByBom(unsynchLyrics.m_strUcs2Lyrics, unsynchLyrics.m_encodingType, (const byte *)data, len);
-	}
-	
 	return ERR_OK;
 }
 
@@ -449,22 +313,9 @@ int CID3v2FrameParserUnsynLyrics::ToFrameData(ID3v2UnsynchLyrics &unsynchLyrics,
 	else
 		buff += unsynchLyrics.m_szLanguage;
 
-	if (unsynchLyrics.m_encodingType == IET_ANSI)
-	{
-		// ISO-8859-1
-		buff.append((const char *)unsynchLyrics.m_strAnsiContentDesc.c_str(), (unsynchLyrics.m_strAnsiContentDesc.size() + 1) * sizeof(char));
+	AppendStrByEncodingAndBom(buff, unsynchLyrics.m_strContentDesc.c_str(), unsynchLyrics.m_encodingType, m_encoding);
 
-		buff.append((const char *)unsynchLyrics.m_strAnsiLyrics.c_str(), (unsynchLyrics.m_strAnsiLyrics.size() + 1) * sizeof(char));
-	}
-	else
-	{
-		// Unicode
-		AppendUcs2Str(buff, unsynchLyrics.m_encodingType, unsynchLyrics.m_strUcs2ContentDesc.c_str(),
-			unsynchLyrics.m_strUcs2ContentDesc.size());
-
-		AppendUcs2Str(buff, unsynchLyrics.m_encodingType, unsynchLyrics.m_strUcs2Lyrics.c_str(),
-			unsynchLyrics.m_strUcs2Lyrics.size());
-	}
+	AppendStrByEncodingAndBom(buff, unsynchLyrics.m_strLyrics.c_str(), unsynchLyrics.m_encodingType, m_encoding);
 
 	return ERR_OK;
 }
@@ -487,17 +338,7 @@ bool CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(CID3v2Frame *pFrame, cons
 
 void ID3v2Text::SetValue(LPCTSTR szValue)
 {
-#ifdef _UNICODE
-	if (m_EncodingType == IET_ANSI)
-		ConvertStr(szValue, -1, m_strAnsi);
-	else
-		m_strUnicode = szValue;
-#else
-	if (m_EncodingType == IET_ANSI)
-		m_strAnsi = szValue;
-	else
-		ConvertStr(szValue, -1, m_strUnicode);
-#endif
+	m_str = szValue;
 }
 
 void ID3v2Text::SetValueAndOptimizeEncoding(LPCTSTR szValue)
@@ -509,44 +350,15 @@ void ID3v2Text::SetValueAndOptimizeEncoding(LPCTSTR szValue)
 
 LPCTSTR ID3v2Text::GetValue()
 {
-#ifdef _UNICODE
-	if (m_EncodingType == IET_ANSI)
-		ConvertStr(m_strAnsi.c_str(), m_strAnsi.size(), m_strUnicode);
-	return m_strUnicode.c_str();
-#else
-	if (m_EncodingType != IET_ANSI)
-		ConvertStr(m_strUnicode.c_str(), m_strUnicode.size(), m_strAnsi);
-	return m_strAnsi.c_str();
-#endif
+	return m_str.c_str();
 }
 
 //////////////////////////////////////////////////////////////////////////
 
 void ID3v2TextUserDefined::SetValue(LPCTSTR szDescription, LPCTSTR szValue)
 {
-#ifdef _UNICODE
-	if (m_EncodingType == IET_ANSI)
-	{
-		ConvertStr(szDescription, -1, m_strDescAnsi);
-		ConvertStr(szValue, -1, m_strValueAnsi);
-	}
-	else
-	{
-		m_strValueUCS2 = szDescription;
-		m_strDescUCS2 = szValue;
-	}
-#else
-	if (m_EncodingType == IET_ANSI)
-	{
-		m_strDescAnsi = szDescription;
-		m_strValueAnsi = szValue;
-	}
-	else
-	{
-		ConvertStr(szDescription, -1, m_strDescUCS2);
-		ConvertStr(szValue, -1, m_strValueUCS2);
-	}
-#endif
+	m_strValue = szValue;
+	m_strDesc = szDescription;
 }
 
 void ID3v2TextUserDefined::SetValueAndOptimizeEncoding(LPCTSTR szDescription, LPCTSTR szValue)
@@ -558,28 +370,12 @@ void ID3v2TextUserDefined::SetValueAndOptimizeEncoding(LPCTSTR szDescription, LP
 
 LPCTSTR ID3v2TextUserDefined::GetDescription()
 {
-#ifdef _UNICODE
-	if (m_EncodingType == IET_ANSI)
-		ConvertStr(m_strDescAnsi.c_str(), m_strDescAnsi.size(), m_strDescUCS2);
-	return m_strDescUCS2.c_str();
-#else
-	if (m_EncodingType != IET_ANSI)
-		ConvertStr(m_strDescUCS2.c_str(), m_strDescUCS2.size(), m_strDescAnsi);
-	return m_strDescAnsi.c_str();
-#endif
+	return m_strDesc.c_str();
 }
 
 LPCTSTR ID3v2TextUserDefined::GetValue()
 {
-#ifdef _UNICODE
-	if (m_EncodingType == IET_ANSI)
-		ConvertStr(m_strValueAnsi.c_str(), m_strValueAnsi.size(), m_strValueUCS2);
-	return m_strValueUCS2.c_str();
-#else
-	if (m_EncodingType != IET_ANSI)
-		ConvertStr(m_strValueUCS2.c_str(), m_strValueUCS2.size(), m_strValueAnsi);
-	return m_strValueAnsi.c_str();
-#endif
+	return m_strValue.c_str();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -594,19 +390,9 @@ int CID3v2FrameParserText::Parse(const CID3v2Frame *pFrame, ID3v2Text &text)
 		return ERR_INVALID_ID3V2_FRAME;
 
 	text.m_EncodingType = (ID3v2EncType)data[0];
+	data++;
 
-	if (text.m_EncodingType == IET_ANSI)
-	{
-		// ISO-8859-1
-		CopyAnsiStr(text.m_strAnsi, (const char *)(data + 1), len - 1);
-	}
-	else
-	{
-		// Unicode
-		data++;
-		len--;
-		CopyUcs2StrByBom(text.m_strUnicode, text.m_EncodingType, (const byte *)data, len);
-	}
+	CopyStrByEncodingAndBom(text.m_str, text.m_EncodingType, data, len, m_encoding);
 
 	return ERR_OK;
 }
@@ -617,17 +403,8 @@ int CID3v2FrameParserText::ToFrameData(ID3v2Text &text, CID3v2Frame *pFrame)
 
 	buff.clear();
 	buff += (char)text.m_EncodingType;
-	if (text.m_EncodingType == IET_ANSI)
-	{
-		// ANSI
-		AppendAnsiStr(buff, text.m_strAnsi);
-		// buff.append(text.m_strAnsi.clear(), (text.m_strAnsi.size() + 1) * sizeof(char));
-	}
-	else
-	{
-		// unicode
-		AppendUcs2Str(buff, text.m_EncodingType, text.m_strUnicode.c_str(), text.m_strUnicode.size());
-	}
+
+	AppendStrByEncodingAndBom(buff, text.m_str, text.m_EncodingType, m_encoding);
 
 	return ERR_OK;
 }
@@ -639,40 +416,23 @@ int CID3v2FrameParserTextUserDefined::Parse(const CID3v2Frame *pFrame, ID3v2Text
 {
 	const char *data = pFrame->m_frameData.c_str();
 	int		len = pFrame->m_frameData.size();
-	int		nBytesCopied;
 
 	if (len < 3)
 		return ERR_INVALID_ID3V2_FRAME;
 
 	text.m_EncodingType = (ID3v2EncType)data[0];
 
-	if (text.m_EncodingType == IET_ANSI)
-	{
-		// ISO-8859-1
-		data++;
-		len--;
+	data++;
+	len--;
 
-		nBytesCopied = CopyAnsiStr(text.m_strDescAnsi, data, len);
-		data += nBytesCopied;
-		len -= nBytesCopied;
+	int n = CopyStrByEncodingAndBom(text.m_strDesc, text.m_EncodingType, data, len, m_encoding);
+	data += n;
+	len -= n;
 
-		if (len <= 0)
-			return ERR_INVALID_ID3V2_FRAME;
+	if (len <= 0)
+		return ERR_INVALID_ID3V2_FRAME;
 
-		nBytesCopied = CopyAnsiStr(text.m_strValueAnsi, data, len);
-	}
-	else
-	{
-		// Unicode
-		data++;
-		len--;
-
-		nBytesCopied = CopyUcs2StrByBom(text.m_strDescUCS2, text.m_EncodingType, (const byte *)data, len);
-		data += nBytesCopied;
-		len -= nBytesCopied;
-
-		CopyUcs2StrByBom(text.m_strValueUCS2, text.m_EncodingType, (const byte *)data, len);
-	}
+	CopyStrByEncodingAndBom(text.m_strValue, text.m_EncodingType, data, len, m_encoding);
 
 	return ERR_OK;
 }
@@ -683,18 +443,9 @@ int CID3v2FrameParserTextUserDefined::ToFrameData(ID3v2TextUserDefined &text, CI
 
 	buff.clear();
 	buff += (char)text.m_EncodingType;
-	if (text.m_EncodingType == IET_ANSI)
-	{
-		// ANSI
-		AppendAnsiStr(buff, text.m_strDescAnsi);
-		AppendAnsiStr(buff, text.m_strValueAnsi);
-	}
-	else
-	{
-		// UNICODE
-		AppendUcs2Str(buff, text.m_EncodingType, text.m_strDescUCS2.c_str(), text.m_strDescUCS2.size());
-		AppendUcs2Str(buff, text.m_EncodingType, text.m_strValueUCS2.c_str(), text.m_strValueUCS2.size());
-	}
+
+	AppendStrByEncodingAndBom(buff, text.m_strDesc, text.m_EncodingType, m_encoding);
+	AppendStrByEncodingAndBom(buff, text.m_strValue, text.m_EncodingType, m_encoding);
 
 	return ERR_OK;
 }
@@ -716,21 +467,11 @@ int CID3v2FrameParserComment::Parse(const CID3v2Frame *pFrame)
 	m_szLanguage[3] = '\0';
 
 	nPos += 4;
-	if (m_EncodingType == IET_ANSI)
-	{
-		nPos += CopyAnsiStr(m_strAnsiShortDesc, data + nPos, pFrame->m_frameData.size() - nPos);
-		if (nPos >= pFrame->m_frameData.size())
-			return ERR_INVALID_ID3V2_FRAME;
-		CopyAnsiStr(m_strAnsiText, data + nPos, pFrame->m_frameData.size() - nPos);
-	}
-	else
-	{
-		// Unicode
-		nPos += CopyUcs2StrByBom(m_strUcs2ShortDesc, m_EncodingType, (const byte *)data + nPos, pFrame->m_frameData.size() - nPos);
-		if (nPos >= pFrame->m_frameData.size())
-			return ERR_INVALID_ID3V2_FRAME;
-		CopyUcs2StrByBom(m_strUcs2Text, m_EncodingType, (const byte *)data + nPos, pFrame->m_frameData.size() - nPos);
-	}
+
+	nPos += CopyStrByEncodingAndBom(m_strShortDesc, m_EncodingType, data + nPos, pFrame->m_frameData.size() - nPos, m_encoding);
+	if (nPos >= pFrame->m_frameData.size())
+		return ERR_INVALID_ID3V2_FRAME;
+	CopyStrByEncodingAndBom(m_strText, m_EncodingType, data + nPos, pFrame->m_frameData.size() - nPos, m_encoding);
 
 	return ERR_OK;
 }
@@ -742,39 +483,16 @@ int CID3v2FrameParserComment::ToFrame(CID3v2Frame *pFrame)
 	pFrame->m_frameData += char(m_EncodingType);
 	pFrame->m_frameData.append(m_szLanguage, 3);
 
-	if (m_EncodingType == IET_ANSI)
-	{
-		// ANSI
-		AppendAnsiStr(pFrame->m_frameData, m_strAnsiShortDesc);
-		AppendAnsiStr(pFrame->m_frameData, m_strAnsiText);
-	}
-	else
-	{
-		// unicode
-		AppendUcs2Str(pFrame->m_frameData, m_EncodingType, m_strUcs2ShortDesc.c_str(), m_strUcs2ShortDesc.size());
-		AppendUcs2Str(pFrame->m_frameData, m_EncodingType, m_strUcs2Text.c_str(), m_strUcs2Text.size());
-	}
+	AppendStrByEncodingAndBom(pFrame->m_frameData, m_strShortDesc.c_str(), m_EncodingType, m_encoding);
+	AppendStrByEncodingAndBom(pFrame->m_frameData, m_strText.c_str(), m_EncodingType, m_encoding);
 
 	return ERR_OK;
 }
 
 void CID3v2FrameParserComment::SetText(LPCTSTR szShortDesc, LPCTSTR szText)
 {
-	if (szShortDesc)
-	{
-		if (m_EncodingType == IET_ANSI)
-			ConvertStr(szShortDesc, -1, m_strAnsiShortDesc);
-		else
-			ConvertStr(szShortDesc, -1, m_strUcs2ShortDesc);
-	}
-
-	if (szText)
-	{
-		if (m_EncodingType == IET_ANSI)
-			ConvertStr(szText, -1, m_strAnsiText);
-		else
-			ConvertStr(szText, -1, m_strUcs2Text);
-	}
+	m_strText = szText;
+	m_strShortDesc = szShortDesc;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -811,15 +529,7 @@ int CID3v2FrameParserPic::Parse(CID3v2 *pid3v2, const CID3v2Frame *pFrame, ID3v2
 	nPos++;
 
 	//  Description        <text string according to encoding> $00 (00)
-	if (picture->m_text.m_EncodingType == IET_ANSI)
-	{
-		nPos += CopyAnsiStr(picture->m_text.m_strAnsi, data + nPos, pFrame->m_frameData.size() - nPos);
-	}
-	else
-	{
-		// Unicode
-		nPos += CopyUcs2StrByBom(picture->m_text.m_strUnicode, picture->m_text.m_EncodingType, (const byte *)data + nPos, pFrame->m_frameData.size() - nPos);
-	}
+	nPos += CopyStrByEncodingAndBom(picture->m_text.m_str, picture->m_text.m_EncodingType, data + nPos, pFrame->m_frameData.size() - nPos, m_encoding);
 	if (nPos > pFrame->m_frameData.size())
 		return ERR_INVALID_ID3V2_FRAME;
 
@@ -850,16 +560,7 @@ int CID3v2FrameParserPic::ToFrame(CID3v2 *pid3v2, CID3v2Frame *pFrame, ID3v2Pict
 
 	pFrame->m_frameData += char(picture->m_picType);
 
-	if (picture->m_text.m_EncodingType == IET_ANSI)
-	{
-		// ANSI
-		AppendAnsiStr(pFrame->m_frameData, picture->m_text.m_strAnsi);
-	}
-	else
-	{
-		// unicode
-		AppendUcs2Str(pFrame->m_frameData, picture->m_text.m_EncodingType, picture->m_text.m_strUnicode.c_str(), picture->m_text.m_strUnicode.size());
-	}
+	AppendStrByEncodingAndBom(pFrame->m_frameData, picture->m_text.m_str.c_str(), picture->m_text.m_EncodingType, m_encoding);
 
 	pFrame->m_frameData.append(picture->m_buffPic.c_str(), picture->m_buffPic.size());
 
@@ -878,15 +579,7 @@ int CID3v2FrameParserUserDefinedUrl::Parse(const CID3v2Frame *pFrame)
 	m_textDesc.m_EncodingType = (ID3v2EncType)data[0];
 
 	nPos++;
-	if (m_textDesc.m_EncodingType == IET_ANSI)
-	{
-		nPos += CopyAnsiStr(m_textDesc.m_strAnsi, data + nPos, pFrame->m_frameData.size() - nPos);
-	}
-	else
-	{
-		// Unicode
-		nPos += CopyUcs2StrByBom(m_textDesc.m_strUnicode, m_textDesc.m_EncodingType, (const byte *)data + nPos, pFrame->m_frameData.size() - nPos);
-	}
+	nPos += CopyStrByEncodingAndBom(m_textDesc.m_str, m_textDesc.m_EncodingType, data + nPos, pFrame->m_frameData.size() - nPos, m_encoding);
 	if (nPos >= pFrame->m_frameData.size())
 		return ERR_INVALID_ID3V2_FRAME;
 
@@ -901,16 +594,7 @@ int CID3v2FrameParserUserDefinedUrl::ToFrame(CID3v2Frame *pFrame)
 
 	pFrame->m_frameData += char(m_textDesc.m_EncodingType);
 
-	if (m_textDesc.m_EncodingType == IET_ANSI)
-	{
-		// ANSI
-		AppendAnsiStr(pFrame->m_frameData, m_textDesc.m_strAnsi);
-	}
-	else
-	{
-		// unicode
-		AppendUcs2Str(pFrame->m_frameData, m_textDesc.m_EncodingType, m_textDesc.m_strUnicode.c_str(), m_textDesc.m_strUnicode.size());
-	}
+	AppendStrByEncodingAndBom(pFrame->m_frameData, m_textDesc.m_str.c_str(), m_textDesc.m_EncodingType, m_encoding);
 
 	AppendAnsiStr(pFrame->m_frameData, m_strUrl);
 

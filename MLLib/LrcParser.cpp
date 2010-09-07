@@ -10,563 +10,14 @@
 #include "MLLib.h"
 #include "LyricsParser.h"
 #include "LrcParser.h"
-#include "LyricsTagReader.h"
+#include "LrcTag.h"
 #include "LyrScrollActionRecorder.h"
+#include "LrcParserHelper.h"
 
+IMPLEMENT_CPPUNIT_TEST_REG(LrcParser)
 
-#define	SZ_VERSION			"version:"
-#define	SZ_AR				"ar:"
-#define	SZ_TI				"ti:"
-#define	SZ_AL				"al:"
-#define	SZ_BY				"by:"
-#define	SZ_ENCODING			"Encoding:"
-#define	SZ_OFFSET			"offset:"
-#define	SZ_LENGTH			"length:"
 
-
-#define _IsCharBlank(ch) (ch == ' ' || ch == '	')
-
-#define _IsCharReturn(ch) (ch == 0xa || ch == 0xd)
-
-
-//////////////////////////////////////////////////////////////////////////
-int CLrcParserObj::Compile(LPVOID szLyric, int nLen, BOOL bConvertStr)
-{
-	if (nLen == 0)
-		return ERR_OK;
-
-	assert(nLen > 0);
-
-	m_pMLData->ClearLyrics();
-
-	// word analysis
-	tstringex		strValue;
-	CBuffWord		buffWords;
-	COMPILE_WORD	word;
-	TCHAR		szEmpty[1];
-	szEmpty[0] = '\0';
-
-	m_nLatestTime = 0;
-	
-	// lrc word analysis
-	CompileWordAnalysis(buffWords, (TCHAR *)szLyric);
-
-// #ifdef _DEBUG
-// 	// 在调试时，将词法分析的结构显示处理
-// 	buffWords.DbgOut();
-// #endif
-
-	CBuffWord	buffTimeTags;
-	PML_ROW		pFileRow = NULL;
-	int			nTagType;
-
-	// 词法分析完成，进行简单的语法“分析”
-
-	if (!buffWords.pop_read_front(word))
-		goto S_END;
-S_BEGIN:
-	if (word.nType == WORD_LRC_END)
-		goto S_END;
-	if (word.nType == WORD_LRC_STRING)
-	{
-		goto S_UNKNOW_TAG;
-	}
-	if (word.nType == WORD_LRC_TAG)
-	{
-		nTagType = GetTagType(word.szValue, word.nValLen);
-
-		if (nTagType == TAG_TIME)
-		{
-			goto S_TIME1;
-		}
-		else if (nTagType == TAG_UNKNOWN)
-		{
-			// insert as a invalid tag string
-			goto S_UNKNOW_TAG;
-		}
-		else
-		{
-			// other tags
-			goto S_OTHER_TAGS;
-		}
-	}
-	if (word.nType == WORD_LRC_NEWROW)
-	{
-		if (bConvertStr)	// Keep empty line in text lyrcs file.
-			AddStrTimeRow(_T(""), 0);
-		else
-		{
-			pFileRow = new ML_ROW;
-			pFileRow->nRowType = ML_ROW_NULL;	// TAG_NEWROW;
-			pFileRow->szContent = NULL;
-
-			AddFileRowsToMLData(pFileRow);
-		}
-
-		if (!buffWords.pop_read_front(word))
-			goto S_END;
-
-		goto S_BEGIN;
-	}
-
-	//other unknow WORD_?????
-	goto S_END;
-
-S_UNKNOW_TAG:
-	if (!ReadTxtTag(word.szValue, word.nValLen))
-	{
-		if (bConvertStr)
-		{
-			AddStrTimeRow(word.szValue, word.nValLen);
-		}
-		else
-		{
-			pFileRow = m_pMLData->NewMLRow(0, 0, word.szValue, word.nValLen, ML_ROW_UNKNOW);
-
-			AddFileRowsToMLData(pFileRow);
-		}
-	}
-	if (!buffWords.pop_read_front(word))
-		goto S_END;
-	if (word.nType == WORD_LRC_NEWROW)
-	{
-		// 因为这些属性标记后面的“新行NEWROW”标志应该去掉
-		if (!buffWords.pop_read_front(word))
-			goto S_END;
-	}
-
-	goto S_BEGIN;
-
-S_OTHER_TAGS:
-	strValue.clear();
-
-	GetOtherTagValue(word.szValue, word.nValLen, strValue);
-
-	if (nTagType == TAG_OFFSET)
-	{
-		// Get offset time
-		if (CLyrScrollActionRecorder::IsEventTag(strValue.c_str()))
-		{
-			// Set event tag.
-			m_pMLData->SetTxtLyrScrollEvents(strValue.c_str());
-		}
-		else
-			m_pMLData->SetOffsetTime(_ttoi(strValue.c_str()));
-	}
-	else if (nTagType == TAG_ARTIST)
-		m_pMLData->Properties().m_strArtist = strValue.c_str();
-	else if (nTagType == TAG_TITLE)
-		m_pMLData->Properties().m_strTitle = strValue.c_str();
-	else if (nTagType == TAG_BY)
-		m_pMLData->Properties().m_strBy = strValue.c_str();
-	else if (nTagType == TAG_AL)
-		m_pMLData->Properties().m_strAlbum = strValue.c_str();
-	else if (nTagType == TAG_LENGTH)
-		m_pMLData->Properties().m_strMediaLength = strValue.c_str();
-
-	if (!buffWords.pop_read_front(word))
-		goto S_END;
-	if (word.nType == WORD_LRC_NEWROW)
-	{
-		// 因为这些属性标记后面的“新行NEWROW”标志应该去掉
-		if (!buffWords.pop_read_front(word))
-			goto S_END;
-	}
-	
-	goto S_BEGIN;
-	
-S_TIME1:
-	COMPILE_WORD wordNext;
-
-	// read next error!
-	if (!buffWords.pop_read_front(wordNext))
-	{
-		AddTimeRow(&word, szEmpty, 0);
-		goto S_END;
-	}
-	
-	if (wordNext.nType == WORD_LRC_END)
-	{
-		AddTimeRow(&word, szEmpty, 0);
-		goto S_END;
-	}
-	
-	if (wordNext.nType == WORD_LRC_NEWROW)
-	{
-		AddTimeRow(&word, szEmpty, 0);
-
-		if (!buffWords.pop_read_front(word))
-			goto S_END;
-		goto S_BEGIN;
-	}
-	
-	// string
-	if (wordNext.nType == WORD_LRC_STRING)
-	{
-		AddTimeRow(&word, wordNext.szValue, wordNext.nValLen);
-
-		if (!buffWords.pop_read_front(word))
-			goto S_END;
-		// 去掉行尾的回车
-		if (word.nType == WORD_LRC_NEWROW)
-		{
-			if (!buffWords.pop_read_front(word))
-				goto S_END;
-		}
-		goto S_BEGIN;
-	}
-
-	// tag again?
-	if (wordNext.nType == WORD_LRC_TAG)
-	{
-		nTagType = GetTagType(wordNext.szValue, wordNext.nValLen);
-		if (nTagType == TAG_TIME)
-		{
-			buffTimeTags.clear();
-			buffTimeTags.push_back(word);
-			buffTimeTags.push_back(wordNext);
-			goto S_TIME2;
-		}
-		else if (nTagType == TAG_UNKNOWN)
-		{
-			// insert as a invalid tag string
-			AddTimeRow(&word, szEmpty, 0);
-
-			word = wordNext;
-			goto S_UNKNOW_TAG;
-		}
-		else
-		{
-			// other tags
-			AddTimeRow(&word, szEmpty, 0);
-
-			word = wordNext;
-			goto S_OTHER_TAGS;
-		}
-		// no more
-	}
-	
-	// no more
-	goto S_BEGIN;
-S_TIME2:
-	// read next error!
-	if (!buffWords.pop_read_front(word))
-	{
-		AddTimeRow(&buffTimeTags, szEmpty, 0);
-		goto S_END;
-	}
-	
-	if (word.nType == WORD_LRC_END)
-	{
-		AddTimeRow(&buffTimeTags, szEmpty, 0);
-		goto S_END;
-	}
-	
-	if (word.nType == WORD_LRC_NEWROW)
-	{
-		AddTimeRow(&buffTimeTags, szEmpty, 0);
-
-		if (!buffWords.pop_read_front(word))
-			goto S_END;
-		goto S_BEGIN;
-	}
-
-	// string
-	if (word.nType == WORD_LRC_STRING)
-	{
-		AddTimeRow(&buffTimeTags, word.szValue, word.nValLen);
-		
-		if (!buffWords.pop_read_front(word))
-			goto S_END;
-
-		// 去掉行尾的回车
-		if (word.nType == WORD_LRC_NEWROW)
-		{
-			if (!buffWords.pop_read_front(word))
-				goto S_END;
-		}
-		goto S_BEGIN;
-	}
-	
-	// tag again?
-	if (word.nType == WORD_LRC_TAG)
-	{
-		nTagType = GetTagType(word.szValue, word.nValLen);
-		if (nTagType == TAG_TIME)
-		{
-			buffTimeTags.push_back(word);
-			goto S_TIME2;
-		}
-		else if (nTagType == TAG_UNKNOWN)
-		{
-			// insert as a invalid tag string
-			AddTimeRow(&buffTimeTags, szEmpty, 0);
-
-			goto S_UNKNOW_TAG;
-		}
-		else
-		{
-			// other tags
-			AddTimeRow(&buffTimeTags, szEmpty, 0);
-
-			goto S_OTHER_TAGS;
-		}
-		// no more
-	}
-	
-	// no more
-	goto S_BEGIN;
-S_END:
-
-	// ended ok
-	return ERR_OK;
-}
-
-int CLrcParserObj::CompileWordAnalysis(CBuffWord &buffWords, TCHAR *szLyric)
-{
-	TCHAR		*szTagBegin = NULL;
-	TCHAR		*szWordBegin, *szCur;
-	COMPILE_WORD	word;
-	int				n;
-
-	szCur = szLyric;
-
-WORD_ANALYSIS_BEGIN:
-	// end 
-	if (*szCur == '\0')
-	{
-		word.nType = WORD_LRC_END;
-		word.szValue = NULL;
-		buffWords.push_back(word);
-		goto WORD_ANALYSIS_END;
-	}
-
-	// new row
-	if ((*szCur == '\r' && *(szCur + 1) == '\n') || *szCur == '\n' || *szCur == '\r')
-	{
-		word.nType = WORD_LRC_NEWROW;
-		word.szValue = NULL;
-		buffWords.push_back(word);
-
-		if (*szCur == '\r' && *(szCur + 1) == '\n')
-			szCur += 2;
-		else
-			szCur++;
-		goto WORD_ANALYSIS_BEGIN;
-	}
-	// others, continued to LRC_TAG_READ_BEGIN
-	szWordBegin = szCur;
-
-LRC_TAG_READ_BEGIN:
-	// search char '['
-	while (*szCur && *szCur != '[' && *szCur != '\r' && *szCur != '\n')
-		szCur++;
-	if (*szCur != '[')
-		goto NOT_LRC_TAG;
-	szTagBegin = szCur;
-	szCur++;
-
-	// read to char ':'
-	while ((*szCur) && (*szCur) != ':' && (*szCur) != ']' &&
-		(*szCur) != '[' && *szCur != '\r' && *szCur != '\n')
-		szCur++;
-	if (*szCur != ':')
-		goto NOT_LRC_TAG;
-	szCur++;
-
-	// read to char ']'
-	n = 0;
-	while ((*szCur) && *szCur != '\r' && *szCur != '\n')
-	{
-		if ((*szCur) == '[')
-			n++;
-		if ((*szCur) == ']')
-			n--;
-		if (n < 0)
-			break;
-		szCur++;
-	}
-	if (*szCur != ']')
-		goto NOT_LRC_TAG;
-
-	szCur ++;	// seek beyound ']'
-	// ok it is really a lrc tag
-
-	if (szWordBegin != szTagBegin)
-	{
-		word.szValue = szWordBegin;
-		word.nType = WORD_LRC_STRING;
-		word.nValLen = szTagBegin - szWordBegin;
-		buffWords.push_back(word);
-	}
-	word.nType = WORD_LRC_TAG;
-	word.szValue = szTagBegin;
-	word.nValLen = szCur - szTagBegin;
-	buffWords.push_back(word);
-	goto WORD_ANALYSIS_BEGIN;
-	
-NOT_LRC_TAG:
-	if (_IsCharReturn(*szCur) || (*szCur == 0))
-	{
-		word.nType = WORD_LRC_STRING;
-		word.szValue = szWordBegin;
-		word.nValLen = szCur - szWordBegin;
-		buffWords.push_back(word);
-		
-		goto WORD_ANALYSIS_BEGIN;
-	}
-
-	// must be other chars	'[', ':', ']'
-	// so re read lrc tags again
-	goto LRC_TAG_READ_BEGIN;
-
-WORD_ANALYSIS_END:
-	return ERR_OK;
-}
-
-
-// PURPOSE:
-//		Read tag type and set data
-// PARAMETER:
-//	szTag - input tag string, its format is like '[xxx:ooo]'
-int CLrcParserObj::GetTagType(TCHAR *szTag, int nLen)
-{
-	if (*szTag != '[')
-		goto S_ERROR;
-	szTag ++;
-
-	// ignore black space
-	while (_IsCharBlank(*szTag))
-		szTag++;
-	
-	if (IsTagStringMatch(szTag, SZ_VERSION, nLen))
-		return TAG_VERSION;
-	else if (IsTagStringMatch(szTag, SZ_AR, nLen))
-		return TAG_ARTIST;
-	else if (IsTagStringMatch(szTag, SZ_TI, nLen))
-		return TAG_TITLE;
-	else if (IsTagStringMatch(szTag, SZ_AL, nLen))
-		return TAG_AL;
-	else if (IsTagStringMatch(szTag, SZ_ENCODING, nLen))
-		return TAG_ENCODING;
-	else if (IsTagStringMatch(szTag, SZ_BY, nLen))
-		return TAG_BY;
-	else if (IsTagStringMatch(szTag, SZ_OFFSET, nLen))
-		return TAG_OFFSET;
-	else if (IsTagStringMatch(szTag, SZ_LENGTH, nLen))
-		return TAG_LENGTH;
-	else
-	{
-		// time tag ?
-		// seek to ':'
-		if (*szTag == '-')
-			szTag++;
-		while (IsDigit(*szTag))
-			szTag++;
-		while (_IsCharBlank(*szTag))
-			szTag++;
-
-		// ':'
-		if (*szTag != ':' && *szTag != '.')
-			goto S_ERROR;
-		szTag ++;
-
-		// number
-		while (_IsCharBlank(*szTag))
-			szTag ++;
-		if (*szTag == '-')
-			szTag++;
-		while (IsDigit(*szTag))
-			szTag ++;
-		while (_IsCharBlank(*szTag))
-			szTag ++;
-
-		if (*szTag == '.' || *szTag == ':')
-		{
-			szTag ++;
-			// new version of lrc file
-			while (_IsCharBlank(*szTag))
-				szTag ++;
-			if (*szTag == '-')
-				szTag++;
-			while (IsDigit(*szTag))
-				szTag ++;
-			while (_IsCharBlank(*szTag))
-				szTag ++;
-		}
-		if (*szTag != ']')
-			goto S_ERROR;
-
-		return TAG_TIME;
-	}
-
-S_ERROR:
-	return TAG_UNKNOWN;
-}
-
-bool ParseTxtLyrTag(LPCTSTR szText, int nLen, LPCTSTR szTag, tstring &strValue)
-{
-	int		nTagLen = _tcslen(szTag);
-	if (_tcsnicmp(szText, szTag, nTagLen) != 0)
-		return false;
-
-	// If value already exist, use existing.
-	if (strValue.size())
-		return true;
-
-	strValue.resize(0);
-	strValue.append(szText + nTagLen, nLen - nTagLen);
-	TrimStr(strValue);
-	return true;
-}
-
-bool CLrcParserObj::ReadTxtTag(TCHAR *szTag, int nLen)
-{
-	tstring			strValue;
-	LyricsProperties &prop = m_pMLData->Properties();
-
-	if (ParseTxtLyrTag(szTag, nLen, _T("Artist:"), prop.m_strArtist))
-		return true;
-	else if (ParseTxtLyrTag(szTag, nLen, _T("Album:"), prop.m_strAlbum))
-		return true;
-	else if (ParseTxtLyrTag(szTag, nLen, _T("Title:"), prop.m_strTitle))
-		return true;
-	else if (ParseTxtLyrTag(szTag, nLen, _T("encoding:"), strValue))
-	{
-		prop.SetEncoding(strValue.c_str());
-		return true;
-	}
-	else if (ParseTxtLyrTag(szTag, nLen, _T("By:"), prop.m_strBy))
-		return true;
-	else if (ParseTxtLyrTag(szTag, nLen, _T("Offset:"), prop.m_strTxtLyrScrollEvents))
-		return true;
-	else if (ParseTxtLyrTag(szTag, nLen, _T("Length:"), prop.m_strMediaLength))
-		return true;
-
-	return false;
-}
-
-//
-// Add text file lyrics row
-//
-void CLrcParserObj::AddStrTimeRow(const TCHAR *szLyric, int nLen)
-{
-	PLYRIC_FRAG		pFrag;
-	PML_ROW			pRow;
-
-	{
-		pFrag = m_pMLData->NewLyricFrag(m_nLatestTime, -1, szLyric, nLen, TRUE, TRUE);
-	//	m_nLatestTime += 10;
-
-		pRow = m_pMLData->NewMLRow(pFrag->nBegTime, pFrag->nEndTime, (const char *)NULL);
-		pRow->vFrags.push_back(pFrag);
-
-		AddFileRowsToMLData(pRow);
-	}
-}
-
-
-bool ReadIntValue(TCHAR *&szBeg, TCHAR *szEnd, int nSize, int &nValue)
+bool ReadIntValue(LPCTSTR &szBeg, LPCTSTR szEnd, int nSize, int &nValue)
 {
 	nValue = 0;
 	while (IsDigit(*szBeg) && nSize > 0 && szBeg < szEnd)
@@ -580,9 +31,10 @@ bool ReadIntValue(TCHAR *&szBeg, TCHAR *szEnd, int nSize, int &nValue)
 }
 
 // [mm:ss.xx]word 1<mm:ss.xx> word 2 <mm:ss.xx> ...
-TCHAR *CLrcParserObj::EatFrag(TCHAR *szLyricsBeg, TCHAR *szLyricsEnd, int &nEndTime, tstringex &buffLyrics)
+LPCTSTR EatFrag(LPCTSTR szLyricsBeg, int &nEndTime, tstringex &buffLyrics)
 {
-	TCHAR	*szPos;
+	LPCTSTR		szPos;
+	LPCTSTR		szLyricsEnd = szLyricsBeg + _tcslen(szLyricsBeg);
 
 	buffLyrics.clear();
 	szPos = szLyricsBeg;
@@ -591,7 +43,7 @@ TCHAR *CLrcParserObj::EatFrag(TCHAR *szLyricsBeg, TCHAR *szLyricsEnd, int &nEndT
 		if (*szPos == '<')
 		{
 			int			n;
-			TCHAR	*szTemp = szPos + 1;
+			LPCTSTR		szTemp = szPos + 1;
 			nEndTime = 0;
 			if (ReadIntValue(szTemp, szLyricsEnd, 2, n) && *szTemp == ':')
 			{
@@ -606,7 +58,6 @@ TCHAR *CLrcParserObj::EatFrag(TCHAR *szLyricsBeg, TCHAR *szLyricsEnd, int &nEndT
 						szTemp++;
 						nEndTime += n * 10;
 						buffLyrics.append(szLyricsBeg, int(szPos - szLyricsBeg));
-						m_pMLData->SetDefShowStyle(LSA_SHOW_KARAOKE);
 						return szTemp;
 					}
 				}
@@ -619,375 +70,142 @@ TCHAR *CLrcParserObj::EatFrag(TCHAR *szLyricsBeg, TCHAR *szLyricsEnd, int &nEndT
 	return szLyricsEnd;
 }
 
-//
-// add lrc lyrics row
-// [mm:ss.xx]word 1<mm:ss.xx> word 2 <mm:ss.xx> ...
-void CLrcParserObj::AddTimeRow(COMPILE_WORD *pCompFrag, TCHAR *szLyric, int nLen)
-{
-	PLYRIC_FRAG		pFrag;
-	PML_ROW			pRow;
-	int				nBegTime, nEndTime;
-	tstringex		buff;
-	TCHAR		*szLyricsBeg, *szLyricsEnd;
+//////////////////////////////////////////////////////////////////////////
 
-	szLyricsBeg = szLyric;
-	szLyricsEnd = szLyric + nLen;
-
-	nBegTime = GetTimeTagValue(pCompFrag->szValue, pCompFrag->nValLen);
-	pRow = m_pMLData->NewMLRow(nBegTime, -1, (const char *)NULL);
-
-	do
-	{
-		nEndTime = -1;
-		szLyricsBeg = EatFrag(szLyricsBeg, szLyricsEnd, nEndTime, buff);
-		pFrag = m_pMLData->NewLyricFrag(nBegTime, nEndTime, buff.c_str(), buff.size(), FALSE, TRUE);
-
-		pRow->vFrags.push_back(pFrag);
-
-		if (nEndTime != -1)
-			nBegTime = nEndTime;
-	}
-	while (szLyricsBeg < szLyricsEnd);
-
-	m_nLatestTime = nBegTime;
-
-	m_lyrContentType = LCT_LRC;
-
-	AddFileRowsToMLData(pRow);
-}
-
-void CLrcParserObj::AddTimeRow(CBuffWord *pbuffCompFrags, TCHAR *szLyric, int nLen)
-{
-	COMPILE_WORD	CompFrag;
-
-
-	while (pbuffCompFrags->pop_read_front(CompFrag))
-	{
-		// read ok
-		AddTimeRow(&CompFrag, szLyric, nLen);
-	}
-}
-
-int CLrcParserObj::GetTimeTagValue(TCHAR *szTag, int nLen)
-{
-	int		nTime;
-
-	nTime = 0;
-
-	if (*szTag != '[')
-		goto S_ERROR;
-
-	szTag++;
-	// time tag ?
-	// seek to ':'
-	while (_IsCharBlank(*szTag))
-		szTag ++;
-
-	nTime += _xtoi(szTag) * 60 * 1000;	// nTime += atoi(szTag) * 60s * 1000ms
-	if (*szTag == '-')
-		szTag++;
-	while (IsDigit(*szTag))
-		szTag ++;
-	while (_IsCharBlank(*szTag))
-		szTag ++;
-	
-	// ':'
-	if (*szTag != ':' && *szTag != '.')
-		goto S_ERROR;
-	szTag ++;
-	
-	// number
-	while (_IsCharBlank(*szTag))
-		szTag ++;
-
-	nTime += _xtoi(szTag) * 1000;	// nTime += atoi(szTag) * 1000ms
-	if (*szTag == '-')
-		szTag++;
-	while (IsDigit(*szTag))
-		szTag ++;
-	while (_IsCharBlank(*szTag))
-		szTag ++;
-
-	if (*szTag == '.' || *szTag == ':')
-	{
-		szTag ++;
-		// new version of lrc file
-		while (_IsCharBlank(*szTag))
-			szTag ++;
-
-		if (isdigit(szTag[1]))
-		{
-			// .000 or // .00
-			if (isdigit(szTag[2]))
-				nTime += _xtoi(szTag);
-			else
-				nTime += _xtoi(szTag) * 10;
-		}
-		else
-			nTime += _xtoi(szTag) * 100;	// .0
-		if (*szTag == '-')
-			szTag++;
-
-		while (IsDigit(*szTag))
-			szTag ++;
-		while (_IsCharBlank(*szTag))
-			szTag ++;
-	}
-	if (*szTag != ']')
-		goto S_ERROR;
-
-S_ERROR:
-	return nTime;
-}
-
-// COMMENT:
-//		
-// INPUT:
-//		[artist:xxoo]
-void CLrcParserObj::GetOtherTagValue(const TCHAR *szTag, int nLenTag, tstringex &strValue)
-{
-	int					i;
-	const TCHAR		*szBeg;
-
-	// EmptyStr(szValue);
-
-	for (i = 0; i < nLenTag; i++)
-	{
-		if (szTag[i] == ':')
-		{
-			szBeg = szTag + i + 1;
-			strValue.append(szBeg, nLenTag - (szBeg - szTag) - 1);
-			// strncpysz_safe(szValue, nSizeValue, szBeg, nLenTag - (szBeg - szTag) - 1);
-			return;
-		}
-	}
-}
-
-//void CLrcParserObj::GetOtherTagValue(const TCHAR *szTag, int nLenTag, TCHAR *szValue, int nSizeValue)
-//{
-//	int					i;
-//	const TCHAR		*szBeg;
-//
-//	EmptyStr(szValue);
-//
-//	for (i = 0; i < nLenTag; i++)
-//	{
-//		if (szTag[i] == ':')
-//		{
-//			szBeg = szTag + i + 1;
-//			strncpysz_safe(szValue, nSizeValue, szBeg, nLenTag - (szBeg - szTag) - 1);
-//			return;
-//		}
-//	}
-//}
-//
-void CLrcParserObj::AddFileRowsToMLData(PML_ROW pFileRow)
-{
-	m_pMLData->AddRowByTime(pFileRow);
-}
-
-bool CLrcParserObj::IsTagStringMatch(const TCHAR *szDest, const char *szTagName, int nLen1)
-{
-	int i, j;
-
-	// 0? or not match break
-	i = 0, j = 0;
-	while (i < nLen1 && szTagName[j] != '\0' &&
-		(szDest[i] - szTagName[j]) % ('a' - 'A') == 0)
-		i++, j++;
-	
-	if (szTagName[j] == '\0')
-		return true;
-
-	return false;
-}
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
-CLrcParser::CLrcParser(CMLData *pMLData) : CLyricsParser(pMLData)
+CLrcParser::CLrcParser(CMLData *pMLData, bool bToTxtFormatLrc) : CLyricsParser(pMLData)
 {
 	m_lyrContentType = LCT_LRC;
+	m_bToTxtFormat = bToTxtFormatLrc;
 }
 
 CLrcParser::~CLrcParser()
 {
-
 }
 
-int CLrcParser::Parse(bool bForceUseEncoding)
+int CLrcParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 {
-	stringex 		lyric;
+	stringex 		lyrics;
 
 	if (!IsFileExist(m_pMLData->GetLyricsFileName()))
 		return ERR_FILE_NOT_EXIST;
 
-	if (!OpenFileToBuffer(m_pMLData->GetLyricsFileName(), lyric))
+	if (!OpenFileToBuffer(m_pMLData->GetLyricsFileName(), lyrics))
 		return ERR_READ_FILE;
 
-	return ParseString(bForceUseEncoding, lyric.c_str(), lyric.size(), TRUE);
+	return ParseString((LPBYTE)lyrics.data(), lyrics.size(), false, bUseSpecifiedEncoding, encoding);
 }
 
-//
-// 解析字符串lrc格式的歌词
-int CLrcParser::ParseString(bool bForceUseEncoding, 
-	LPCVOID szLrc, int nLen, BOOL bStrict, BOOL bUnicode)
+int CLrcParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 {
-	int			nRet = ERR_OK;
-	BYTE		*szBuffer;
-	FILE_ENCODING	fileEncoding;
+	tstring		strData;
 
-	szBuffer = (BYTE *)szLrc;
-	fileEncoding = GetStrEncodingType(szBuffer);
+	ToString(strData, true);
 
-	if (!bForceUseEncoding)
+	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), newEncoding))
+		return ERR_WRITE_FILE;
+
+	return ERR_OK;
+}
+
+int CLrcParser::ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine)
+{
+	tstringex		strLine;
+	CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
+
+	if (IsEmptyString(szText))
+		return ERR_NOT_SUPPORT_FILE_FORMAT;
+
+	//
+	// Parse .lrc line by line
+	//
+	LPCTSTR szNextLine = szText;
+	while (szNextLine)
 	{
-		// 使用文件的编码
-		CLyricsTagReader<TCHAR>		lrctagReader;
+		szNextLine = ReadLine(szNextLine, strLine);
 
-		lrctagReader.ReadEncodingFromStr((const char *)szLrc, nLen, bUnicode != 0);
-		if (lrctagReader.m_strEncoding.size())
-			m_pMLData->SetEncoding(lrctagReader.m_strEncoding.c_str());
+		int	nNextPos, nTime;
+		vector<int>	vTimes;
+		LPCTSTR		szLine = strLine.c_str();
 
-#ifdef _WIN32_DESKTOP
-		if (fileEncoding != FE_UCS2)
+		szLine = IgnoreSpaces(szLine);
+
+		if (*szLine != '[')
 		{
-			if (strlen((const char *)szLrc) <= 3 && nLen >= 10)
+			// NOT lrc tag or time stamps.
+			if (bAddTimeStampForTextLine)
+				AddStrAsTimedLine(szLine);
+			else
+				AddStrAsUnknowLine(szLine);
+			continue;
+		}
+
+		while (ParseLrcTimeTag(szLine, nNextPos, nTime))
+		{
+			szLine += nNextPos;
+			vTimes.push_back(nTime);
+		}
+		if (vTimes.size())
+		{
+			// Time tag.
+			AddLyrLines(vTimes, szLine);
+			continue;
+		}
+
+		// Parse lrc tag.
+		int		nValBeg, nValEnd;
+		int		i;
+		for (i = 0; i < propNameValueMap.GetCount(); i++)
+		{
+			if (ParseLrcPropTag(szLine, _tcslen(szLine), 
+				propNameValueMap.GetLrcName(i), nValBeg, nValEnd))
 			{
-				int		nFlag = IS_TEXT_UNICODE_UNICODE_MASK;
-				bUnicode = IsTextUnicode((void *)szLrc, nLen, &nFlag);
+				propNameValueMap.SetValue(i, szLine + nValBeg, nValEnd - nValBeg);
+				break;
 			}
 		}
-#endif
+		if (i == propNameValueMap.GetCount())
+			AddStrAsUnknowLine(szLine);
 	}
 
-#ifdef _UNICODE
-	wstringex	strLyrics;
-	//
-	// for windows, uncode encoding...
-	//
-	if (!((fileEncoding == FE_UCS2 && !bForceUseEncoding) || bUnicode ||
-		(bForceUseEncoding && m_pMLData->GetEncodingIndex() == ED_UNICODE)))
+	if (m_pMLData->GetLyricRowCount() == 0 && !bAddTimeStampForTextLine)
 	{
-		// convert to unicode
-		if ((fileEncoding == FE_UTF8 && !bForceUseEncoding)
-			|| (bForceUseEncoding && m_pMLData->GetEncodingIndex() == ED_UTF8))
-		{
-			if (fileEncoding == FE_UTF8)
-			{
-				szBuffer += 3;
-				nLen -= 3;
-				m_pMLData->SetEncoding(_T(SZ_UTF8));
-			}
-			m_fileEncoding = FE_UTF8;
-		}
-		else
-			m_fileEncoding = FE_ANSI;
+		// .txt lyrics
+		m_pMLData->ClearLyrics();
 
-		ConvertStr((char*)szBuffer, nLen, strLyrics, m_pMLData->GetEncodingIndex());
-		if (strLyrics.empty() && nLen > 0)
-			ConvertStr((char*)szBuffer, nLen, strLyrics, ED_SYSDEF);
-		szBuffer = (BYTE*)strLyrics.c_str();
-		nLen = strLyrics.size() * sizeof(WCHAR);
+		// Parse as text lyrics
+		ParseString(szText, true);
+
+		// Parse text tags from lyrics text.
+		ParseTxtTagInLyrics();
+
+		m_lyrContentType = LCT_TXT;
+
+		FinalFixOnLyrics(bAddTimeStampForTextLine);
 	}
 	else
 	{
-		if (fileEncoding == FE_UCS2)
-		{
-			szBuffer += 2;
-			nLen -= 2;
-		}
+		m_lyrContentType = LCT_LRC;
 
-		m_fileEncoding = FE_UCS2;
+		FinalFixOnLyrics(bAddTimeStampForTextLine);
 	}
 
-	{
-		// UNICODE
-		CLrcParserObj	parser(m_pMLData);
+	return ERR_OK;
+}
 
-		nRet = parser.Compile(szBuffer, nLen, !bStrict);
-		if (m_pMLData->GetLyricRowCount() == 0)
-		{
-			//
-			// 可能是解析歌词错误！重新使用不太严格的方式解析
-			nRet = parser.Compile(szBuffer, nLen, TRUE);
-		}
-
-		m_lyrContentType = parser.GetLyrContentType();
-	}
-#else
-	stringex	strLyrics;
+void CLrcParser::FinalFixOnLyrics(bool bAddTimeStampForTextLine)
+{
 	//
-	// for linux, utf-8 encoding
+	// Extra fix or check on lyrics time tags.
 	//
-	if (bForceUseEncoding && bUnicode)
-	{
-		// internal use string buffer...
-	}
-	else if (fileEncoding != FE_UTF8 && m_pMLData->GetEncodingIndex() != ED_UTF8)
-	{
-		// convert to utf-8
-		if (fileEncoding == FE_UCS2)
-		{
-			szBuffer += 2;
-			nLen -= 2;
-
-			UCS2ToUtf8((WCHAR*)szBuffer, (nLen + 1) / sizeof(WCHAR), strLyrics);
-		}
-		else
-		{
-			MbcsToUtf8((const char*)szBuffer, nLen, strLyrics, m_pMLData->GetEncodingIndex());
-		}
-
-		szBuffer = (BYTE*)strLyrics.c_str();
-		nLen = strLyrics.size();
-	}
-	else
-	{
-		if (fileEncoding == FE_UCS2)
-		{
-			szBuffer += 2;
-			nLen -= 2;
-		}
-
-		m_fileEncoding = FE_UCS2;
-	}
-
-	{
-		// utf-8
-		CLrcParserObj	parser(m_pMLData);
-
-		nRet = parser.Compile(szBuffer, nLen, !bStrict);
-		if (m_pMLData->GetLyricRowCount() == 0)
-		{
-			//
-			// 可能是解析歌词错误！重新使用不太严格的方式解析
-			nRet = parser.Compile(szBuffer, nLen, TRUE);
-		}
-
-		m_lyrContentType = parser.GetLyrContentType();
-	}
-#endif
-
-
 	if (m_lyrContentType == LCT_TXT)
 	{
-		// 读取其中的标签.
-		CHAR_ENCODING			nEncodingID;
-		nEncodingID = m_pMLData->GetEncodingIndex();
-		if (bForceUseEncoding)
-			m_pMLData->SetEncoding(nEncodingID);
-
 		RemoveExtraBlankLinesOfTextLyr();
 
-		// 文本格式的歌词，需要重新设置歌词时间标签
 		FixTextLrcTimeTag();
-
-		return nRet;
+		return;
 	}
 
-	if (bStrict)
+	if (!bAddTimeStampForTextLine)
 	{
 		LRCCheckRowTime();
 	}
@@ -996,13 +214,10 @@ int CLrcParser::ParseString(bool bForceUseEncoding,
 		//
 		// 将未设置时间标签的歌词行的时间设置为－1，再调用CheckLyricsRowTime重新
 		// 校正时间。注意：不能调用LRCCheckRowTime()函数
-		int		nSize;
-		nSize = m_pMLData->GetLyricRowCount();
-		for (int	i = 0; i < nSize; i ++)
+		VLyrLines	&lyrLines = m_pMLData->GetRawLyrics();
+		for (int i = 0; i < (int)lyrLines.size(); i++)
 		{
-			PML_ROW			pRow;
-
-			pRow = m_pMLData->GetLyricsRow(i);
+			PML_ROW			pRow = lyrLines[i];
 			if (pRow->vFrags.size())
 			{
 				PLYRIC_FRAG		pFrag = pRow->vFrags[0];
@@ -1020,8 +235,353 @@ int CLrcParser::ParseString(bool bForceUseEncoding,
 	}
 
 	m_pMLData->FixExtendedLrcTimeStamps();
+}
 
-	return nRet;
+//
+// Parse .lrc or .txt lyrics text
+//
+int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLine, bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
+{
+	if (!bUseSpecifiedEncoding)
+		encoding = GetLyricsTextEncoding(szLrc, nLen);
+
+	wstringex	wstrBE;
+	if (encoding == ED_UNICODE_BIG_ENDIAN)
+	{
+		wstrBE.reserve(nLen / sizeof(WCHAR));
+		wstrBE.append((WCHAR *)szLrc, nLen / sizeof(WCHAR));
+		UCS2BEToLE(wstrBE.data(), wstrBE.size());
+		szLrc = (LPBYTE)wstrBE.data();
+	}
+
+	tstringex		strSysEncoding;
+	if (encoding == ED_UNICODE || encoding == ED_UNICODE_BIG_ENDIAN)
+	{
+#ifdef UTF8
+		UCS2ToUtf8((LPCWSTR)szLrc, nLen / sizeof(WCHAR), strSysEncoding);
+		szLrc = (LPBYTE)strSysEncoding.data();
+		nLen = strSysEncoding.size();
+#else
+		// Unicode
+		nLen = nLen / sizeof(WCHAR);
+#endif
+	}
+	else
+	{
+#ifdef UNICODE
+		ConvertStr((const char *)szLrc, nLen, strSysEncoding, encoding);
+		szLrc = (LPBYTE)strSysEncoding.data();
+		nLen = strSysEncoding.size();
+#endif
+#ifdef UTF8
+		if (encoding != ED_UTF8)
+		{
+			MbcsToUtf8(szLrc, nLen, strSysEncoding, encoding);
+			szLrc = (LPBYTE)strSysEncoding.data();
+			nLen = strSysEncoding.size();
+		}
+#endif
+	}
+
+	m_pMLData->Properties().SetEncoding(encoding);
+	ParseString((LPCTSTR)szLrc, bAddTimeStampForTextLine);
+
+	return ERR_OK;
+}
+
+void CLrcParser::ParseTxtTagInLyrics()
+{
+	CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
+	VLyrLines	&lyrLines = m_pMLData->GetRawLyrics();
+	for (int i = 0; i < (int)lyrLines.size(); i++)
+	{
+		PML_ROW		pRow = lyrLines[i];
+		ASSERT(pRow->vFrags.size() == 1);
+		PLYRIC_FRAG	pFrag = pRow->vFrags[0];
+		ASSERT(pFrag->IsTempBegTime());
+
+		// Parse Txt tag.
+		int		nValBeg, nValEnd;
+		for (int k = 0; k < propNameValueMap.GetCount(); k++)
+		{
+			if (ParseTxtPropTag(pFrag->szLyric, _tcslen(pFrag->szLyric), 
+				propNameValueMap.GetTxtName(k), nValBeg, nValEnd))
+			{
+				propNameValueMap.SetValue(k, pFrag->szLyric + nValBeg, nValEnd - nValBeg);
+				m_pMLData->RemoveLyricsRow(i);
+				i--;
+				break;
+			}
+		}
+	}
+}
+
+bool CLrcParser::ToString(tstring &str, bool bIncTags)
+{
+	if (m_bToTxtFormat)
+		return ToTxtString(str, bIncTags);
+	else
+		return ToLrcString(str, bIncTags);
+}
+
+bool CLrcParser::ToLrcString(tstring &str, bool bIncTags)
+{
+	// reserver 4k spaces for lyrics data.
+	str.reserve(1024 * 4);
+
+	if (bIncTags)
+	{
+		CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
+
+		for (int i = 0; i < propNameValueMap.GetCount(); i++)
+		{
+			tstring strValue = propNameValueMap.GetValue(i);
+			if (strValue.size())
+				str += propNameValueMap.GetLrcTagString(i);
+		}
+	}
+
+	//
+	// Save every lyrics line
+	tstringex		strBuff;
+	for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
+	{
+		PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
+		ASSERT(pRow);
+
+		if (LyricsRowToLrcString(pRow, strBuff))
+		{
+			str += strBuff;
+			str += _T("\r\n");
+		}
+	}
+
+	if (str.size() > 2 && str[str.size() - 1] == '\n')
+		str.resize(str.size() - 2);
+
+	return true;
+}
+
+bool CLrcParser::ToTxtString(tstring &str, bool bIncTags)
+{
+	// reserver 4k spaces for lyrics data.
+	str.reserve(1024 * 4);
+	tstring		strTagsAtEndOfFile;
+
+	if (bIncTags)
+	{
+		CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
+
+		for (int i = 0; i < propNameValueMap.GetCount(); i++)
+		{
+			tstring strValue = propNameValueMap.GetValue(i);
+			if (strValue.size() && propNameValueMap.GetLrcName(i).size())
+			{
+				tstring	strTagLine = propNameValueMap.GetTxtTagString(i);
+				if (IsTxtTagAtTailOfFile(propNameValueMap.GetTagType(i)))
+				{
+					strTagsAtEndOfFile += strTagLine;
+				}
+				else
+				{
+					str += strTagLine;
+				}
+			}
+		}
+	}
+
+	//
+	// Save every lyrics line
+	tstringex		strBuff;
+	for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
+	{
+		PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
+		ASSERT(pRow);
+
+		if (LyricsRowToTxtString(pRow, strBuff))
+		{
+			str += strBuff;
+			str += _T("\r\n");
+		}
+	}
+
+	if (strTagsAtEndOfFile.size())
+	{
+		if (str.size() && str[str.size() - 1] != '\n')
+			str += _T("\r\n");
+		str += strTagsAtEndOfFile;
+	}
+
+	if (str.size() > 2 && str[str.size() - 1] == '\n')
+		str.resize(str.size() - 2);
+
+	return true;
+}
+
+//
+bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, tstringex &strBuff)
+{
+	ASSERT(pRow);
+	strBuff.clear();
+
+	switch (pRow->nRowType)
+	{
+	case ML_ROW_UNKNOW:
+		assert(pRow->szContent);
+		strBuff = pRow->szContent;
+		break;
+	case ML_ROW_LYRICS:
+		{
+			if (pRow->vFrags.size() && !(pRow->vFrags[0]->dwAttrib & LSA_TEMP_TIME_BEG))
+			{
+				int		nMin, nSec, nMs;
+				int		nLen;
+
+				nMs = (pRow->nBegTime / 10) % 100;
+				nSec = (pRow->nBegTime / 1000) % 60;
+				nMin = pRow->nBegTime / (1000 * 60);
+
+				// _stprintf(szBuff, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
+				strBuff.reserve(100);
+				nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
+				strBuff.setSize(nLen);
+			}
+
+			TCHAR			szTime[64];
+			for (int i = 0; i < (int)pRow->vFrags.size(); i++)
+			{
+				PLYRIC_FRAG	pFrag = pRow->vFrags[i];
+				// Remove ad strings
+				if (IsTempLyricsFrag(pFrag->dwAttrib))
+				{
+					strBuff.clear();
+					return FALSE;
+				}
+
+				strBuff += pFrag->szLyric;
+
+				if (i + 1 < (int)pRow->vFrags.size())
+				{
+					pFrag = pRow->vFrags[i + 1];
+					if (!IsTempTimeBeg(pFrag->dwAttrib))
+					{
+						int		nMin, nSec, nMs;
+
+						nMs = (pFrag->nBegTime / 10) % 100;
+						nSec = (pFrag->nBegTime / 1000) % 60;
+						nMin = pFrag->nBegTime / (1000 * 60);
+						_stprintf_s(szTime, CountOf(szTime), _T("<%02d:%02d.%02d>"), nMin, nSec, nMs);
+						strBuff += szTime;
+					}
+				}
+			}
+			if (strBuff.empty())
+				return false;	// do not insert temp empty lyrics 
+		}
+		break;
+	default:
+		return FALSE;
+	}
+	return TRUE;
+}
+
+//
+bool CLrcParser::LyricsRowToTxtString(PML_ROW pRow, tstringex &strBuff)
+{
+	ASSERT(pRow);
+	strBuff.clear();
+
+	switch (pRow->nRowType)
+	{
+	case ML_ROW_UNKNOW:
+		assert(pRow->szContent);
+		strBuff = pRow->szContent;
+		break;
+	case ML_ROW_LYRICS:
+		{
+			for (int i = 0; i < (int)pRow->vFrags.size(); i++)
+			{
+				PLYRIC_FRAG	pFrag = pRow->vFrags[i];
+				// Remove ad strings
+				if (IsTempLyricsFrag(pFrag->dwAttrib))
+				{
+					strBuff.clear();
+					return FALSE;
+				}
+
+				strBuff += pFrag->szLyric;
+			}
+		}
+		break;
+	default:
+		return FALSE;
+	}
+	return TRUE;
+}
+
+//
+// Add lyrics lyrics line
+// [mm:ss.xx]word 1<mm:ss.xx> word 2 <mm:ss.xx> ...
+void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
+{
+	int				nBegTime, nEndTime;
+	tstringex		buff;
+
+	for (int i = 0; i < (int)vTimes.size(); i++)
+	{
+		PML_ROW			pRow;
+
+		nBegTime = vTimes[i];
+		pRow = m_pMLData->NewMLRow(nBegTime, -1);
+
+		LPCTSTR			szLyricsBeg = szLyrLine;
+		do
+		{
+			nEndTime = -1;
+			szLyricsBeg = EatFrag(szLyricsBeg, nEndTime, buff);
+			PLYRIC_FRAG	pFrag = m_pMLData->NewLyricFrag(nBegTime, nEndTime, buff.c_str(), buff.size(), FALSE, TRUE);
+
+			pRow->vFrags.push_back(pFrag);
+
+			if (nEndTime != -1)
+				nBegTime = nEndTime;
+		}
+		while (*szLyricsBeg);
+
+		m_nLatestTime = nBegTime;
+
+		if (pRow->vFrags.size() > 1)
+			m_pMLData->SetDefShowStyle(LSA_SHOW_KARAOKE);
+
+		m_pMLData->AddRowByTime(pRow);
+	}
+
+	m_lyrContentType = LCT_LRC;
+}
+
+
+//
+// Add text file lyrics row
+//
+void CLrcParser::AddStrAsTimedLine(const TCHAR *szLine)
+{
+	PLYRIC_FRAG		pFrag;
+	PML_ROW			pRow;
+
+	pFrag = m_pMLData->NewLyricFrag(m_nLatestTime, -1, szLine, _tcslen(szLine), TRUE, TRUE);
+	//	m_nLatestTime += 10;
+
+	pRow = m_pMLData->NewMLRow(pFrag->nBegTime, pFrag->nEndTime);
+	pRow->vFrags.push_back(pFrag);
+
+	m_pMLData->AddRowByTime(pRow);
+}
+
+void CLrcParser::AddStrAsUnknowLine(const TCHAR *szLine)
+{
+	// Unknown tag, just add it in the file.
+	PML_ROW pRow = m_pMLData->NewMLRow(0, 0, szLine, _tcslen(szLine), ML_ROW_UNKNOW);
+	m_pMLData->AddRow(pRow);
 }
 
 void CLrcParser::FixTextLrcTimeTag()
@@ -1244,172 +804,209 @@ void CLrcParser::LRCCheckRowTime()
 	}
 }
 
-int CLrcParser::SaveAsFile(LPCTSTR szFile, FILE_ENCODING fileEncoding)
+
+#ifdef _CPPUNIT_TEST
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+class CTestCaseLrcParser : public CppUnit::TestFixture
 {
-	tstring		strData;
+	CPPUNIT_TEST_SUITE(CTestCaseLrcParser);
+	CPPUNIT_TEST(Test_CLrcParser_Lrc);
+	CPPUNIT_TEST(Test_CLrcParser_Txt);
+	CPPUNIT_TEST_SUITE_END();
 
-	ToString(strData, true);
+protected:
 
-	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), fileEncoding, (CHAR_ENCODING)m_pMLData->GetEncodingIndex()))
-		return ERR_WRITE_FILE;
-
-	return ERR_OK;
-}
-
-
-BOOL CLrcParser::ToString(tstring &str, BOOL bIncTags)
-{
-	int			nCount;
-	tstringex	strBuff;
-	TCHAR		szBuff[1024];
-
-	if (bIncTags)
+public:
+	void setUp()
 	{
-		//
-		// 保存时间偏移值
-		if (m_pMLData->GetLyrContentType() == LCT_TXT)
-		{
-			if (!IsEmptyString(m_pMLData->GetTxtLyrScrollEvents()))
-			{
-				_stprintf_s(szBuff, CountOf(szBuff), _T("[offset:%s]\r\n"), m_pMLData->GetTxtLyrScrollEvents());
-				str += szBuff;
-			}
-		}
-		else if (m_pMLData->GetOffsetTime() != 0)
-		{
-			_stprintf_s(szBuff, CountOf(szBuff), _T("[offset:%d]\r\n"), m_pMLData->GetOffsetTime());
-			str += szBuff;
-		}
-
-		//
-		// 保存其他属性: 作者、标题等……
-		if (m_pMLData->Properties().m_strArtist.size())
-		{
-			_stprintf_s(szBuff, CountOf(szBuff), _T("[ar:%s]\r\n"), m_pMLData->Properties().m_strArtist.c_str());
-			str += szBuff;
-		}
-		if (m_pMLData->Properties().m_strTitle.size())
-		{
-			_stprintf_s(szBuff, CountOf(szBuff), _T("[ti:%s]\r\n"), m_pMLData->Properties().m_strTitle.c_str());
-			str += szBuff;
-		}
-		if (m_pMLData->Properties().m_strAlbum.size())
-		{
-			_stprintf_s(szBuff, CountOf(szBuff), _T("[al:%s]\r\n"), m_pMLData->Properties().m_strAlbum.c_str());
-			str += szBuff;
-		}
-		if (m_pMLData->Properties().m_strBy.size())
-		{
-			_stprintf_s(szBuff, CountOf(szBuff), _T("[by:%s]\r\n"), m_pMLData->Properties().m_strBy.c_str());
-			str += szBuff;
-		}
-		if (!IsEmptyString(m_pMLData->GetEncoding()))
-		{
-			_stprintf_s(szBuff, CountOf(szBuff), _T("[Encoding:%s]\r\n"), m_pMLData->GetEncoding());
-			str += szBuff;
-		}
-		if (m_pMLData->Properties().m_strMediaLength.size())
-		{
-			int nLength = _ttoi(m_pMLData->Properties().m_strMediaLength.c_str());
-			if (nLength != 0)
-			{
-				_stprintf_s(szBuff, CountOf(szBuff), _T("[length:%d]\r\n"), nLength);
-				str += szBuff;
-			}
-		}
+	}
+	void tearDown() 
+	{
 	}
 
-	//
-	// 保存歌词行
-	nCount = m_pMLData->m_arrFileRows.size();
-	for (int i = 0; i < nCount; i++)
+protected:
+	void Test_CLrcParser_Lrc()
 	{
-		PML_ROW		pRow;
+		LPCSTR	SZ_LYRICS_TEST = "[ar:artist]\n[ti:title]\n[encoding:big5]\n[00:01.02]L1\n[00:02.01]\n\n[00:03:01]L3\nL4\n\n";
+		LPCTSTR		valArtist = _T("artist");
+		LPCTSTR		valTitle = _T("title");
+		LPCTSTR		vLyrLines[] = { _T("L1"), _T(""), _T("L3") };
+		int			vTime[] = { 1 * 1000 + 20, 2 * 1000 + 10, 3 *1000 + 10 };
 
-		pRow = m_pMLData->m_arrFileRows[i];
+		wstringex	wStr;
+		ConvertStr(SZ_LYRICS_TEST, -1, wStr);
 
-		if (pRow)
+		wstringex	wLyrics;
+		wLyrics.append((const WCHAR *)SZ_FE_UCS2, 1);
+		wLyrics.append(wStr.c_str(), wStr.size());
+
+		wstringex	wLyricsBe;
+		wLyricsBe.append(wLyrics.c_str(), wLyrics.size());
+		UCS2LEToBE(wLyricsBe.data(), wLyricsBe.size());
+
+		stringex	utf8Lyrics;
+		utf8Lyrics.append(SZ_FE_UTF8);
+		utf8Lyrics.append(SZ_LYRICS_TEST);
+
+		LPBYTE		vLyrics[] = { (LPBYTE)SZ_LYRICS_TEST, (LPBYTE)wLyrics.c_str(),		(LPBYTE)wLyricsBe.c_str(),			(LPBYTE)utf8Lyrics.c_str(), };
+		int			vLen[] = { strlen(SZ_LYRICS_TEST),	wLyrics.size() * sizeof(WCHAR), wLyricsBe.size() * sizeof(WCHAR),	utf8Lyrics.size(), };
+		CHAR_ENCODING	vEncoding[] = { ED_BIG5,	ED_UNICODE,						ED_UNICODE_BIG_ENDIAN,				ED_UTF8, };
+
+
+		for (int i = 0; i < CountOf(vLyrics); i++)
 		{
-			// save row.
-			if (LyricsRowToText(pRow, strBuff))
+			CMLData			data;
+			CLrcParser		parser(&data);
+
+			int nRet = parser.ParseString(vLyrics[i], vLen[i], false, false);
+			CPPUNIT_ASSERT(nRet == ERR_OK);
+
+			CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strArtist.c_str(), valArtist) == 0);
+			CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strTitle.c_str(), valTitle) == 0);
+			CPPUNIT_ASSERT(data.Properties().GetEncodingIndex() == vEncoding[i]);
+
+			VLyrLines	&lyrLines = data.GetRawLyrics();
+
+			for (int k = 0; k < lyrLines.size(); k++)
 			{
-				str += strBuff;
-				str += _T("\r\n");
+				PML_ROW	pRow = lyrLines[k];
+
+				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+				CPPUNIT_ASSERT(k < CountOf(vLyrLines));
+				CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+				CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == vTime[k]);
 			}
-		}
-	}
+			CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 
-	return TRUE;
-}
+			//
+			// Cases on CLrcParser::ToString
+			//
+			tstring		strNewLyr;
+			CLrcParser		parser2(&data);
+			parser2.ToString(strNewLyr, true);
 
-// COMMENT:
-//		将输入的歌词行转换为LRC格式的字符串行
-BOOL CLrcParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
-{
-	strBuff.clear();
+			CMLData			data3;
+			CLrcParser		parser3(&data3);
+			data3.Properties().SetEncoding(vEncoding[i]);
+			parser3.ParseString(strNewLyr.c_str(), false);
 
-	switch (pRow->nRowType)
-	{
-	case ML_ROW_UNKNOW:		// 不能识别的行
-		assert(pRow->szContent);
-		strBuff = pRow->szContent;
-		break;
-	case ML_ROW_NULL:		// 空行
-		break;
-	case ML_ROW_LYRICS:		// 歌词行
-		{
-			if (pRow->vFrags.size() && !(pRow->vFrags[0]->dwAttrib & LSA_TEMP_TIME_BEG))
 			{
-				int		nMin, nSec, nMs;
-				int		nLen;
+				// Compare ToString data.
+				CLrcTag		tag(data.Properties(), data3.Properties());
+				CPPUNIT_ASSERT(!tag.IsTagChanged()); // data and data3 should be same.
 
-				nMs = (pRow->nBegTime / 10) % 100;
-				nSec = (pRow->nBegTime / 1000) % 60;
-				nMin = pRow->nBegTime / (1000 * 60);
+				CPPUNIT_ASSERT(_tcscmp(data3.Properties().m_strArtist.c_str(), valArtist) == 0);
+				CPPUNIT_ASSERT(_tcscmp(data3.Properties().m_strTitle.c_str(), valTitle) == 0);
+				CPPUNIT_ASSERT(data3.Properties().GetEncodingIndex() == vEncoding[i]);
 
-				// _stprintf(szBuff, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
-				strBuff.reserve(100);
-				nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
-				strBuff.setSize(nLen);
-			}
+				VLyrLines	&lyrLines = data3.GetRawLyrics();
 
-			int				nCount;
-			PLYRIC_FRAG		pFrag;
-			TCHAR			szTime[64];
-			nCount = pRow->vFrags.size();
-			for (int i = 0; i < nCount; i++)
-			{
-				pFrag = pRow->vFrags[i];
-				// 去掉插入的注册信息，广告信息等
-				if (IsTempLyricsFrag(pFrag->dwAttrib))
+				for (int k = 0; k < lyrLines.size(); k++)
 				{
-					strBuff.clear();
-					return FALSE;
+					PML_ROW	pRow = lyrLines[k];
+
+					CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+					CPPUNIT_ASSERT(k < CountOf(vLyrLines));
+					CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+					CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == vTime[k]);
 				}
-
-				strBuff += pFrag->szLyric;
-
-				if (i + 1 < nCount)
-				{
-					pFrag = pRow->vFrags[i + 1];
-					if (!IsTempTimeBeg(pFrag->dwAttrib))
-					{
-						int		nMin, nSec, nMs;
-
-						nMs = (pFrag->nBegTime / 10) % 100;
-						nSec = (pFrag->nBegTime / 1000) % 60;
-						nMin = pFrag->nBegTime / (1000 * 60);
-						_stprintf_s(szTime, CountOf(szTime), _T("<%02d:%02d.%02d>"), nMin, nSec, nMs);
-						strBuff += szTime;
-					}
-				}
+				CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 			}
-			if (strBuff.empty())
-				return false;	// do not insert temp empty lyrics 
 		}
-		break;
-	default:
-		return FALSE;
 	}
-	return TRUE;
-}
+
+	void Test_CLrcParser_Txt()
+	{
+		LPCSTR		SZ_LYRICS_TEST = "Artist:artist\nTitle: title\nEncoding:big5\nL1\n\n\nL3\nL4\n\nL6";
+		LPCTSTR		valArtist = _T("artist");
+		LPCTSTR		valTitle = _T("title");
+		LPCTSTR		vLyrLines[] = { _T("L1"), _T(""), _T(""), _T("L3"), _T("L4"), _T(""), _T("L6") };
+
+		wstringex	wStr;
+		ConvertStr(SZ_LYRICS_TEST, -1, wStr);
+
+		wstringex	wLyrics;
+		wLyrics.append((const WCHAR *)SZ_FE_UCS2, 1);
+		wLyrics.append(wStr.c_str(), wStr.size());
+
+		wstringex	wLyricsBe;
+		wLyricsBe.append(wLyrics.c_str(), wLyrics.size());
+		UCS2LEToBE(wLyricsBe.data(), wLyricsBe.size());
+
+		stringex	utf8Lyrics;
+		utf8Lyrics.append(SZ_FE_UTF8);
+		utf8Lyrics.append(SZ_LYRICS_TEST);
+
+		LPBYTE		vLyrics[] = { (LPBYTE)SZ_LYRICS_TEST, (LPBYTE)wLyrics.c_str(),		(LPBYTE)wLyricsBe.c_str(),			(LPBYTE)utf8Lyrics.c_str(), };
+		int			vLen[] = { strlen(SZ_LYRICS_TEST),	wLyrics.size() * sizeof(WCHAR), wLyricsBe.size() * sizeof(WCHAR),	utf8Lyrics.size(), };
+		CHAR_ENCODING	vEncoding[] = { ED_BIG5,	ED_UNICODE,						ED_UNICODE_BIG_ENDIAN,				ED_UTF8, };
+
+
+		for (int i = 0; i < CountOf(vLyrics); i++)
+		{
+			CMLData			data;
+			CLrcParser		parser(&data);
+
+			int nRet = parser.ParseString(vLyrics[i], vLen[i], false, false);
+			CPPUNIT_ASSERT(nRet == ERR_OK);
+
+			CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strArtist.c_str(), valArtist) == 0);
+			CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strTitle.c_str(), valTitle) == 0);
+			CPPUNIT_ASSERT(data.Properties().GetEncodingIndex() == vEncoding[i]);
+
+			VLyrLines	&lyrLines = data.GetRawLyrics();
+
+			for (int k = 0; k < lyrLines.size(); k++)
+			{
+				PML_ROW	pRow = lyrLines[k];
+
+				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+				CPPUNIT_ASSERT(k < CountOf(vLyrLines));
+				CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+			}
+			CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
+
+			//
+			// Cases on CLrcParser::ToString
+			//
+			tstring		strNewLyr;
+			CLrcParser		parser2(&data, true);
+			parser2.ToString(strNewLyr, true);
+
+			CMLData			data3;
+			CLrcParser		parser3(&data3);
+			parser3.ParseString(strNewLyr.c_str(), false);
+
+			{
+				// Compare ToString data.
+				CLrcTag		tag(data.Properties(), data3.Properties());
+				CPPUNIT_ASSERT(!tag.IsTagChanged()); // data and data3 should be same.
+
+				CPPUNIT_ASSERT(_tcscmp(data3.Properties().m_strArtist.c_str(), valArtist) == 0);
+				CPPUNIT_ASSERT(_tcscmp(data3.Properties().m_strTitle.c_str(), valTitle) == 0);
+				CPPUNIT_ASSERT(data3.Properties().GetEncodingIndex() == vEncoding[i]);
+
+				VLyrLines	&lyrLines = data3.GetRawLyrics();
+
+				for (int k = 0; k < CountOf(vLyrLines); k++)
+				{
+					PML_ROW	pRow = lyrLines[k];
+
+					CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+					CPPUNIT_ASSERT(k < lyrLines.size());
+					CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+				}
+				// New generated lyrics may increase 1 line by adding encoding.
+				// CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
+			}
+		}
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseLrcParser);
+
+#endif // _CPPUNIT_TEST

@@ -14,11 +14,12 @@
 class CID3v2FrameParserBase  
 {
 public:
-	CID3v2FrameParserBase() { }
+	CID3v2FrameParserBase(CHAR_ENCODING encoding) { m_encoding = encoding; }
 	virtual ~CID3v2FrameParserBase() { }
 
 //	virtual int Parse(CID3v2Frame *pFrame) = 0;
 //	virtual int ToFrameData(CID3v2Frame *pFrame) = 0;
+	CHAR_ENCODING		m_encoding;
 
 };
 
@@ -35,8 +36,8 @@ public:
 		CT_CHORD		= 5
 	};
 
-	CID3v2FrameParserSynLyrics();
-	virtual ~CID3v2FrameParserSynLyrics();
+	CID3v2FrameParserSynLyrics(CHAR_ENCODING encoding) : CID3v2FrameParserBase(encoding) { }
+	virtual ~CID3v2FrameParserSynLyrics() { }
 
 	virtual int ParseInfoOnly(CID3v2Frame *pFrame, ID3v2SynchLyrics &synchLyrics);
 	virtual int Parse(CID3v2Frame *pFrame, ID3v2SynchLyrics &synchLyrics);
@@ -53,8 +54,8 @@ protected:
 class CID3v2FrameParserUnsynLyrics : public CID3v2FrameParserBase
 {
 public:
-	CID3v2FrameParserUnsynLyrics();
-	virtual ~CID3v2FrameParserUnsynLyrics();
+	CID3v2FrameParserUnsynLyrics(CHAR_ENCODING encoding) : CID3v2FrameParserBase(encoding) { }
+	virtual ~CID3v2FrameParserUnsynLyrics() { }
 
 	virtual int ParseInfoOnly(CID3v2Frame *pFrame, ID3v2UnsynchLyrics &unsynchLyrics);
 	virtual int Parse(CID3v2Frame *pFrame, ID3v2UnsynchLyrics &unsynchLyrics);
@@ -70,7 +71,7 @@ protected:
 class CID3v2FrameParserText : public CID3v2FrameParserBase
 {
 public:
-	CID3v2FrameParserText() { }
+	CID3v2FrameParserText(CHAR_ENCODING encoding) : CID3v2FrameParserBase(encoding) { }
 	virtual ~CID3v2FrameParserText() { }
 
 	virtual int Parse(const CID3v2Frame *pFrame, ID3v2Text &text);
@@ -85,7 +86,7 @@ public:
 class CID3v2FrameParserTextUserDefined : public CID3v2FrameParserBase
 {
 public:
-	CID3v2FrameParserTextUserDefined() { }
+	CID3v2FrameParserTextUserDefined(CHAR_ENCODING encoding) : CID3v2FrameParserBase(encoding) { }
 	virtual ~CID3v2FrameParserTextUserDefined() { }
 
 	virtual int Parse(const CID3v2Frame *pFrame, ID3v2TextUserDefined &text);
@@ -101,7 +102,7 @@ public:
 class CID3v2FrameParserComment : public CID3v2FrameParserBase
 {
 public:
-	CID3v2FrameParserComment()
+	CID3v2FrameParserComment(CHAR_ENCODING encoding) : CID3v2FrameParserBase(encoding)
 	{
 		memset(m_szLanguage, 0, sizeof(m_szLanguage));
 		m_EncodingType = IET_ANSI;
@@ -114,8 +115,7 @@ public:
 public:
 	ID3v2EncType	m_EncodingType;
 	char			m_szLanguage[4];
-	string			m_strAnsiShortDesc, m_strAnsiText;
-	wstringex		m_strUcs2ShortDesc, m_strUcs2Text;
+	tstringex		m_strShortDesc, m_strText;
 
 };
 
@@ -137,7 +137,7 @@ public:
 class CID3v2FrameParserPic : public CID3v2FrameParserBase
 {
 public:
-	CID3v2FrameParserPic()
+	CID3v2FrameParserPic(CHAR_ENCODING encoding) : CID3v2FrameParserBase(encoding)
 	{
 	}
 	virtual int Parse(CID3v2 *pid3v2, const CID3v2Frame *pFrame, ID3v2Pictures::ITEM *picture);
@@ -153,6 +153,7 @@ public:
 class CID3v2FrameParserUserDefinedUrl : public CID3v2FrameParserBase
 {
 public:
+	CID3v2FrameParserUserDefinedUrl(CHAR_ENCODING encoding) : CID3v2FrameParserBase(encoding) { }
 	virtual int Parse(const CID3v2Frame *pFrame);
 	virtual int ToFrame(CID3v2Frame *pFrame);
 

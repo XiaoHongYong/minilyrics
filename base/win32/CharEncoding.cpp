@@ -14,6 +14,39 @@
 #endif
 
 
+CHAR_ENCODING FileEcodingToCharEncoding(FILE_ENCODING fileEncoding)
+{
+	switch (fileEncoding)
+	{
+	case FE_UCS2:
+		return ED_UNICODE;
+	case FE_UCS2_BE:
+		return ED_UNICODE_BIG_ENDIAN;
+	case FE_UTF8:
+		return ED_UTF8;
+	case FE_ANSI:
+		return ED_SYSDEF;
+	default:
+		ASSERT(0);
+		return ED_SYSDEF;
+	}
+}
+
+FILE_ENCODING CharEncodingToFileEncoding(CHAR_ENCODING encoding)
+{
+	switch (encoding)
+	{
+	case ED_UNICODE:
+		return FE_UCS2;
+	case ED_UNICODE_BIG_ENDIAN:
+		return FE_UCS2_BE;
+	case ED_UTF8:
+		return FE_UTF8;
+	default:
+		return FE_ANSI;
+	}
+}
+
 
 //
 // ED_XXX 的定义和 __encodingCodepage 的索引顺序是一直的。
@@ -421,6 +454,26 @@ bool IsAnsiStr(const char *szStr)
 	return true;
 }
 
+void UCS2BEToLE(WCHAR *str, int nLen)
+{
+	// Swap the char of every WCHAR.
+	if (nLen == -1)
+		nLen = wcslen(str);
+
+	byte	*p = (byte *)str;
+	int		lenBytes = nLen * sizeof(WCHAR);
+	for (int i = 0; i < lenBytes; i += 2)
+	{
+		byte t = p[i];
+		p[i] = p[i + 1];
+		p[i + 1] = t;
+	}
+}
+
+void UCS2LEToBE(WCHAR *str, int nLen)
+{
+	UCS2BEToLE(str, nLen);
+}
 
 /*
 

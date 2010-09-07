@@ -4,6 +4,9 @@
 
 #include "xstr.h"
 
+size_t strlen_safe(const char * str, size_t maxLength);
+size_t wcslen_safe(const WCHAR * str, size_t maxLength);
+
 // 安全的字符串拷贝，如果超出长度范围，则进行截断
 char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource);
 int	strncpy_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy);
@@ -16,11 +19,13 @@ int	wcsncpysz_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, i
 WCHAR * __cdecl wcscat_safe(WCHAR * dst, int Size, const WCHAR * src);
 
 #ifdef _UNICODE
+#define _tcslen_safe		wcslen_safe
 #define _tcscpy_safe		wcscpy_safe
 #define _tcsncpy_safe		wcsncpy_safe
 #define _tcsncpysz_safe		wcsncpysz_safe
 #define _tcscat_safe		wcscat_safe
 #else
+#define _tcslen_safe		strlen_safe
 #define _tcscpy_safe		strcpy_safe
 #define _tcsncpy_safe		strncpy_safe
 #define _tcsncpysz_safe		strncpysz_safe

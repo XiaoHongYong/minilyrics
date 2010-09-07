@@ -827,16 +827,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
 				break;
 			}
-			TCHAR		szMD5[64];
 			tstring		strUrl;
 
-			EmptyStr(szMD5);
-			if (g_mpApp.IsCachedMd5Lyrics())
-				_tcscpy_safe(szMD5, CountOf(szMD5), g_mpApp.m_strMd5Lyrics.c_str());
-			else
-				g_LyricData.GetLyricsFileServerMark(szMD5);
 			strUrl = GetStrName(SN_HTTP_RATE_LRC);
-			strUrl += szMD5;
+			strUrl += g_LyricData.Properties().m_strId;
 
 			// show rate dialog
 			CMPSkinDialog::ShowDialog(new CDlgRateLyrics(strUrl.c_str()), m_pSkinWnd);
@@ -1026,7 +1020,7 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 
 		// 以用户指定的编码重新打开歌词
 		ENCODING_CODEPAGE &encodingNew = GetCharEncodingByID(cmdIdCharset.nEncodingId);
-		ENCODING_CODEPAGE &encodingOld = GetCharEncodingByName(g_LyricData.GetEncoding());
+		ENCODING_CODEPAGE &encodingOld = GetCharEncodingByName(g_LyricData.Properties().GetEncoding());
 		if (encodingNew.nEncodingId != encodingOld.nEncodingId)
 		{
 			TCHAR		szEncoding[256];
@@ -1181,7 +1175,7 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 			return FALSE;
 		}
 		bool	bUseNewFileName;
-		int		nRet = g_LyricData.SaveAsFile(szFile, fileEncoding, bUseNewFileName);
+		int		nRet = g_LyricData.SaveAsFile(szFile, g_LyricData.Properties().GetEncodingIndex(), bUseNewFileName);
 		if (nRet != ERR_OK)
 		{
 			pWndParent->MessageOut(ERROR2STR_LOCAL(nRet));

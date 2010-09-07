@@ -20,6 +20,9 @@ enum ID3v2EncType
 	IET_UTF8			= 3,
 };
 
+CHAR_ENCODING ID3v2EncTypeToCharEncoding(ID3v2EncType encType);
+ID3v2EncType CharEncodingToID3v2EncType(CHAR_ENCODING encoding);
+
 enum ID3v2FrameAction
 {
 	IFA_NONE,
@@ -270,8 +273,7 @@ public:
 		m_EncodingType = IET_ANSI;
 	}
 	ID3v2EncType	m_EncodingType;
-	stringex	m_strAnsi;
-	wstringex	m_strUnicode;
+	tstringex		m_str;
 
 	void SetValue(LPCTSTR szValue);
 	void SetValueAndOptimizeEncoding(LPCTSTR szValue);
@@ -287,8 +289,7 @@ public:
 		m_EncodingType = IET_ANSI;
 	}
 	ID3v2EncType	m_EncodingType;
-	stringex		m_strValueAnsi, m_strDescAnsi;
-	wstringex		m_strValueUCS2, m_strDescUCS2;
+	tstringex		m_strValue, m_strDesc;
 
 	void SetValue(LPCTSTR szDescription, LPCTSTR szValue);
 	void SetValueAndOptimizeEncoding(LPCTSTR szDescription, LPCTSTR szValue);
@@ -300,7 +301,7 @@ public:
 class CID3v2
 {
 public:
-	CID3v2();
+	CID3v2(CHAR_ENCODING encoding);
 	virtual ~CID3v2();
 
 	bool IsID3v2_2() const { return m_id3v2Header.byMajorVer == ID3v2Header::ID3V2_V2; }
@@ -347,6 +348,7 @@ protected:
 	bool		m_bModify;
 	bool		m_bAttach;
 	FILE		*m_fp;
+	CHAR_ENCODING m_Encoding;
 
 	list<CID3v2Frame*>		m_listFrames;
 	// long		m_nNextFramePos;
@@ -358,7 +360,6 @@ protected:
 //
 // ID3v2 Lyrics
 //
-template <class XCHAR>
 class LrcSyllable
 {
 public:
@@ -366,11 +367,10 @@ public:
 	{
 		bNewLine = false;
 	}
-	typedef basic_string<XCHAR, char_traits<XCHAR>, allocator<XCHAR> > xstring;
 
 	int			nTime;
 	bool		bNewLine;
-	xstring		strText;
+	tstring		strText;
 };
 
 struct ID3v2SynchLyrics
@@ -399,14 +399,11 @@ struct ID3v2SynchLyrics
 	byte				m_byContentType;
 
 	char				m_szLanguage[10];
-	stringex			m_strAnsiContentDesc;
-	wstringex			m_strUcs2ContentDesc;
+	tstringex			m_strContentDesc;
 
-	typedef list< LrcSyllable<char> >		LIST_SYLRC;
-	typedef list< LrcSyllable<WCHAR> >	LIST_SYLRC_W;
+	typedef list< LrcSyllable >		LIST_SYLRC;
 
-	LIST_SYLRC			m_vAnsiSynLyrics;
-	LIST_SYLRC_W		m_vUcs2SynLyrics;
+	LIST_SYLRC			m_vSynLyrics;
 };
 
 struct ID3v2UnsynchLyrics
@@ -419,8 +416,7 @@ struct ID3v2UnsynchLyrics
 
 	ID3v2EncType		m_encodingType;
 	char				m_szLanguage[10];
-	stringex			m_strAnsiContentDesc, m_strAnsiLyrics;
-	wstringex			m_strUcs2ContentDesc, m_strUcs2Lyrics;
+	tstringex			m_strContentDesc, m_strLyrics;
 };
 
 #define SZ_ID3V2_LYR_USER_DEFINED		_T("LYRICS")
@@ -540,7 +536,7 @@ public:
 class CID3v2IF : public CID3v2
 {
 public:
-	CID3v2IF();
+	CID3v2IF(CHAR_ENCODING encoding);
 	~CID3v2IF();
 
 	// virtual int ReadUnsynchLyrics(bool bUnicode, tstringex &strContentDesc, tstringex &strText);

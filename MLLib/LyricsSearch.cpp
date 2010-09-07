@@ -131,7 +131,7 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 
 		if (bOnlyListAvailable)
 		{
-			if (plyrics->m_vAnsiSynLyrics.size() < 1 && plyrics->m_vUcs2SynLyrics.size() < 1)
+			if (plyrics->m_vSynLyrics.size() < 1)
 				continue;
 		}
 
@@ -156,7 +156,7 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 
 			if (bOnlyListAvailable)
 			{
-				if (plyrics->m_strAnsiLyrics.size() < MIN_EMBEDDED_LYR_SIZE && plyrics->m_strUcs2Lyrics.size() < MIN_EMBEDDED_LYR_SIZE)
+				if (plyrics->m_strLyrics.size() < MIN_EMBEDDED_LYR_SIZE)
 					continue;
 			}
 
@@ -174,8 +174,8 @@ void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLy
 		}
 	}
 
-	if ((lyricsInfo.m_lyricsUserDefined.m_strValueAnsi.size() || lyricsInfo.m_lyricsUserDefined.m_strValueUCS2.size())
-		&& (lyricsInfo.m_lyricsUserDefined.m_strDescAnsi.size() || lyricsInfo.m_lyricsUserDefined.m_strDescUCS2.size()))
+	if (lyricsInfo.m_lyricsUserDefined.m_strValue.size()
+		|| lyricsInfo.m_lyricsUserDefined.m_strDesc.size())
 	{
 		result.strUrl = SZ_SONG_ID3V2_LYRICS;
 		result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(SZ_SONG_ID3V2_LYRICS_DESC));
