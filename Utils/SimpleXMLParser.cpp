@@ -125,15 +125,6 @@ SimpleXMLParserError CSimpleXMLParser::ParseData(LPCVOID lpXmlData, size_t nLen,
 #else
 	if (fileEncoding == FE_ANSI)
 	{
-//
-// Asume the working envirnment is utf-8 encoding for none UNICODE.
-//
-// 		if (GetXMLTxtEncoding((LPCSTR)szBuffer, nLen) == ED_UTF8)
-// 		{
-// 			stringex	str;
-// 			Utf8ToMbcs((const char *)szBuffer, nLen, str);
-// 			Error = DoParse(str.c_str(), str.size(), xmlData);
-// 		}
 		Error = DoParse((const char *)szBuffer, nLen, xmlData);
 	}
 	else
@@ -143,14 +134,14 @@ SimpleXMLParserError CSimpleXMLParser::ParseData(LPCVOID lpXmlData, size_t nLen,
 		{
 			szBuffer += 3;
 			nLen -= 3;
-			Utf8ToMbcs((const char *)szBuffer, nLen, str);
+			UTF8ToTString((const char *)szBuffer, nLen, str);
 		}
 		else
 		{
 			// UNICODE
 			szBuffer += 2;
 			nLen += 2;
-			ConvertStr((const char *)szBuffer, nLen, str);
+			UCS2ToTString((const WCHAR *)szBuffer, nLen, str);
 		}
 		Error = DoParse(str.c_str(), str.size(), xmlData);
 	}

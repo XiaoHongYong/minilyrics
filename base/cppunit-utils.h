@@ -57,6 +57,14 @@ inline tstring GetUnitTestFolder()
 	return szPath;
 }
 
+#ifdef _WIN32
+void RedirectIOToConsole();
+#else
+void RedirectIOToConsole() { }
+#endif
+
+void RunUnitTest();
+
 #endif // _CPPUNIT_TEST
 
 #endif // __CPPUNIT_UTILS__

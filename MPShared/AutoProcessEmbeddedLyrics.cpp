@@ -237,8 +237,7 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 			nRet = lyricsData.SaveLyricsInSongOfID3v2(
 				Id3v2Uslt,
 				Id3v2Sylt,
-				bId3v2LyricsUserDefined,
-				lyricsData.Properties().GetEncodingIndex());
+				bId3v2LyricsUserDefined);
 			if (nRet != ERR_OK)
 				return nRet;
 		}

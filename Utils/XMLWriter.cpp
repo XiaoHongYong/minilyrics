@@ -47,17 +47,6 @@ void CXMLWriter::WriteStartDocument(LPCTSTR szEncoding)
 {
 	m_nEncodingID = GetCharEncodingID(szEncoding);
 
-// 	// 非UNICODE 环境
-// 	if (m_nEncodingID == ED_UNICODE)
-// 	{
-// 		// 增加unicode标志
-// 		BYTE		szTag[2];
-// 
-// 		szTag[0] = 0XFF;
-// 		szTag[1] = 0xFE;
-// 		m_strBuff.append((const char *)szTag, 2);
-// 	}
-
 	m_strBuff += "<?xml version=\"1.0\" encoding='";
 	WriteDirect(szEncoding);
 	m_strBuff += "'?>\r\n";

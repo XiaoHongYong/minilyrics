@@ -51,7 +51,6 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("ID_FORWARD_CUR_LINE"), CMD_FORWARD_CUR_LINE, IDC_FORWARD_CUR_LINE, _T("Forward the timestamp of this line 0.2s") },
 	{ _T("ID_BACKWARD_CUR_LINE"), CMD_BACKWARD_CUR_LINE, IDC_BACKWARD_CUR_LINE, _T("Backward the timestamp of this line 0.2s") },
 	{ _T("ID_AUTO_FILL_LYR_INFO"), CMD_AUTO_FILL_LYR_INFO, IDC_AUTO_FILL_LYRICS_INFO, _T("Auto fill artist, album and title info") },
-	{ _T("ID_EDIT_TAG"), CMD_EDIT_TAG, 0, _T("Lyrics Information") },
 	{ _T("ID_MENU_LYR_EDIT"), CMD_MENU_LYR_EDIT, 0, _T("More...") },
 	{ _T("ID_LYR_EDITOR"), CMD_LYR_EDITOR, IDC_LYR_EDITOR, _T("Lyrics Editor...") },
 	{ _T("ID_EXTERNAL_LYR_EDIT"), CMD_EXTERNAL_LYR_EDIT, IDC_EXTERNAL_LYR_EDIT, _T("Edit with external lyrics editor...") },

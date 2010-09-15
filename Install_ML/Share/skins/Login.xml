@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Container ID="CID_C_LOGIN" Name="Login" Rect="0,0,w,h" Visible="false">
+  <NormalText Rect="10,10,w-20,25" FontHeight="20" Text="Thank you for uploading lyrics." Align="AT_CENTER|AT_VCENTER"/>
+
+  <NormalText Rect="10,40,w-20," Text="Please login, so you could manage the uploaded lyrics."/>
+  
+  <NormalText Rect="10,70,w-20," Text="Login Name:"/>
+  <NormalEdit ID="CID_E_NAME" Rect="340,10,w-340-120,"/>
+
+  <NormalText Rect="10,70,w-20," Text="Password:"/>
+  <NormalEdit ID="CID_E_PASSWORD" Rect="340,10,w-340-120,"/>
+  <NormalCheckBox ID="CID_REMEMBER_PWD" Text="Remember password" Rect="45,160,w-70,"/>
+
+  <NormalLink ID="CID_GET_PLUG" Text="Sign up Free, if you don't have an account." Rect="" AlignText="AT_CENTER"/>
+
+  <NormalTextBt ID="CMD_OK" Text="OK" Rect="170,70,w-170-20,"/>
+  <NormalTextBt ID="CMD_CANCEL" Text="Cancel" Rect="170,70,w-170-20,"/>
+</Container>

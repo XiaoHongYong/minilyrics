@@ -199,17 +199,6 @@ LRC_SOURCE_TYPE GetLrcSourceType(LPCTSTR szLrcSource);
 // END 歌词数据的数据结构定义
 ///////////////////////////////////////////////////////////////////////////////
 
-
-// txt < lrc < karaoke
-// precision of timestamps is higher
-enum LYRICS_CONTENT_TYPE
-{
-	LCT_UNKNOWN,
-	LCT_TXT,
-	LCT_LRC,
-	LCT_KARAOKE,		// karaoke content, full synced.
-};
-
 MLFileType LyricsConentTypeToFileType(LYRICS_CONTENT_TYPE lyrContentType);
 
 #include "LyrScrollActionRecorder.h"
@@ -232,7 +221,7 @@ public:
 	
 	int SaveToTextFile(LPCTSTR szFile);
 #ifdef _ID3V2_SUPPORT
-	int SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLyr, CHAR_ENCODING encoding);
+	int SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLyr);
 	int SaveLyricsInSongOfLyrics3v2(CHAR_ENCODING encoding);
 #endif
 

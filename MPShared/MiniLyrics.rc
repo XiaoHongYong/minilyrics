@@ -612,7 +612,7 @@ IDI_F_LRC               ICON                    "res\\ico00001.ico"
 //
 
 IDD_LOGIN DIALOGEX 0, 0, 227, 119
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Login"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
@@ -625,7 +625,7 @@ BEGIN
     PUSHBUTTON      "Ignore",IDNO,88,98,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,152,98,50,14
     LTEXT           "Please login, so you could manage the uploaded lyrics.",IDC_STATIC,19,21,201,8
-    LTEXT           "Thank you for uploading lyrics.",IDC_STATIC,19,7,97,8
+    LTEXT           "Thank you for uploading lyrics.",IDC_STATIC,19,7,126,8
     PUSHBUTTON      "Sign up Free",IDC_APPLY_ACCOUNT,153,78,50,14
 END
 

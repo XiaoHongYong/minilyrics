@@ -907,8 +907,8 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 		if (nMediaLength != 0)
 		{
 			nPercent = nPos * 100 / nMediaLength;
-			FormatPlayTime(szPos, nPos);
-			FormatPlayTime(szLength, nMediaLength);
+			FormatPlayTime(nPos, szPos);
+			FormatPlayTime(nMediaLength, szLength);
 			g_eventDispather.DispatchInfoText(CStrPrintf(_T("%s %s/%s (%d%%)"), TOLOCAL(_T("Seek")),
 				szPos, szLength, nPercent).c_str(), _T("seek"));
 		}

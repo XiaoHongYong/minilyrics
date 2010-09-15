@@ -460,15 +460,15 @@ int CMLData::Save()
 	}
 	else if (m_lrcSourceType == LST_ID3V2_SYLT)
 	{
-		return SaveLyricsInSongOfID3v2(false, true, false, GetEncodingIndex());
+		return SaveLyricsInSongOfID3v2(false, true, false);
 	}
 	else if (m_lrcSourceType == LST_ID3V2_USLT)
 	{
-		return SaveLyricsInSongOfID3v2(true, false, false, GetEncodingIndex());
+		return SaveLyricsInSongOfID3v2(true, false, false);
 	}
 	else if (m_lrcSourceType == LST_ID3V2_LYRICS)
 	{
-		return SaveLyricsInSongOfID3v2(false, false, true, GetEncodingIndex());
+		return SaveLyricsInSongOfID3v2(false, false, true);
 	}
 	else
 #endif // #ifdef _ID3V2_SUPPORT
@@ -493,9 +493,9 @@ int CMLData::Save()
 }
 
 #ifdef _ID3V2_SUPPORT
-int CMLData::SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLyr, CHAR_ENCODING encoding)
+int CMLData::SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLyr)
 {
-	CID3v2IF		id3v2(encoding);
+	CID3v2IF		id3v2(m_lyrProperties.GetEncodingIndex());
 	int				nRet;
 
 	if (!bUslt && !bSylt && !bUserDefinedLyr)
@@ -504,6 +504,14 @@ int CMLData::SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLy
 	nRet = id3v2.Open(m_strSongFile.c_str(), true, true);
 	if (nRet != ERR_OK)
 		return nRet;
+
+	tstring			str;
+	CHAR_ENCODING	encoding = m_lyrProperties.GetEncodingIndex();
+	ToString(str, FT_LYRICS_TXT, TRUE);
+	if (IsAnsiStr(str.c_str()))
+		encoding = ED_SYSDEF;
+	else
+		encoding = ED_UNICODE;
 
 	if (bUslt)
 	{
@@ -1785,6 +1793,8 @@ void CMLData::CopyMLyrLines(CMLyrLines &lyrLines)
 	}
 }
 
+#define _CPPUNIT_TEST
+
 #ifdef _CPPUNIT_TEST
 
 //////////////////////////////////////////////////////////////////////////
@@ -1796,6 +1806,7 @@ class CTestCaseCMLData : public CppUnit::TestFixture
 	CPPUNIT_TEST(Test_CMLData_OpenLrcFile);
 	CPPUNIT_TEST(Test_CMLData_OpenSaveID3v2_USLT);
 	CPPUNIT_TEST(Test_CMLData_OpenSaveID3v2_SYLT);
+	CPPUNIT_TEST(Test_CMLData_OpenSaveLyrics3v2);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -1874,6 +1885,7 @@ protected:
 			m_strTestDataFolder + _T("lyr-usly.mp3"),
 			m_strTestDataFolder + _T("lyr(wmp-chs).mp3"),
 			m_strTestDataFolder + _T("lyr-usly(chs).mp3"),
+			m_strTestDataFolder + _T("lyrics3v2.mp3"),
 		};
 
 		for (int i = 0; i < (int)CountOf(vstrSongFile); i++)
@@ -1890,6 +1902,7 @@ protected:
 			m_strTestDataFolder + _T("lyr-usly.mp3"),
 			m_strTestDataFolder + _T("lyr(wmp-chs).mp3"),
 			m_strTestDataFolder + _T("lyr-usly(chs).mp3"),
+			m_strTestDataFolder + _T("lyrics3v2.mp3"),
 		};
 
 		for (int i = 0; i < (int)CountOf(vstrSongFile); i++)
@@ -2041,6 +2054,71 @@ protected:
 					data.Properties().m_strArtist = _T("artist");
 					data.Properties().m_strTitle = _T("title");
 					data.Properties().SetOffsetTime(-500);
+					CPPUNIT_ASSERT(data.Save() == ERR_OK);
+					vWriteTested[i] = true;
+				}
+				else
+				{
+					CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strArtist.c_str(), _T("artist")) == 0);
+					CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strTitle.c_str(), _T("title")) == 0);
+				}
+			}
+		}
+	}
+
+	void Test_CMLData_OpenSaveLyrics3v2()
+	{
+		int			nRet;
+		CMLData		data;
+
+		PrepareMediaFile();
+
+		tstring		strWorkingFolder = GetWorkingFolder();
+
+		tstring		vstrSongFileSylt[] = {
+			strWorkingFolder + _T("lyrics3v2.mp3"),
+		};
+		LPCTSTR		vLyrFileSylt[] = {
+			_T("song://lyrics3v2"),
+		};
+		bool		vWriteTested[] = { false };
+
+		for (int kk = 0; kk < 2; kk++)
+		{
+			// Loop twice, first for reading, second for writing.
+			int		nOffsetTime = 0;
+			if (kk == 1)
+				nOffsetTime = 500;
+
+			for (int i = 0; i < CountOf(vstrSongFileSylt); i++)
+			{
+				nRet = data.OpenLyrics(vstrSongFileSylt[i].c_str(), 60 * 1000, vLyrFileSylt[i]);
+				CPPUNIT_ASSERT(nRet == ERR_OK);
+
+				{
+					// Lyrics content ok?
+					LPCTSTR		vLyrLines[] = { _T("第一行"), _T("第二行"), _T("第三行") };
+					int			vTime[] = { 0, 1*1000+10, 1*1000+20 };
+
+					VLyrLines	&lyrLines = data.GetRawLyrics();
+
+					for (int k = 0; k < lyrLines.size(); k++)
+					{
+						PML_ROW	pRow = lyrLines[k];
+
+						CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+						CPPUNIT_ASSERT(k < CountOf(vLyrLines));
+						CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+						CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == vTime[k]);
+					}
+					CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
+				}
+
+				// Test on saving
+				if (!vWriteTested[i])
+				{
+					data.Properties().m_strArtist = _T("artist");
+					data.Properties().m_strTitle = _T("title");
 					CPPUNIT_ASSERT(data.Save() == ERR_OK);
 					vWriteTested[i] = true;
 				}

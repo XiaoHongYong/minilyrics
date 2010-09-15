@@ -45,6 +45,8 @@ void DirStringAddSlash(char *szDir);
 
 void DirStringAddSlash(tstring &strDir);
 
+tstring DirStringJoint(LPCTSTR szDir, LPCTSTR szSubFileDir);
+
 #define DirStringFormat		DirStringAddSlash
 
 void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int nRelatedPathLen);

@@ -434,17 +434,9 @@ bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, tstringex &strBuff)
 		{
 			if (pRow->vFrags.size() && !(pRow->vFrags[0]->dwAttrib & LSA_TEMP_TIME_BEG))
 			{
-				int		nMin, nSec, nMs;
-				int		nLen;
-
-				nMs = (pRow->nBegTime / 10) % 100;
-				nSec = (pRow->nBegTime / 1000) % 60;
-				nMin = pRow->nBegTime / (1000 * 60);
-
-				// _stprintf(szBuff, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
 				strBuff.reserve(100);
-				nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
-				strBuff.setSize(nLen);
+				int nLen = FormtLrcTimeTag(pRow->nBegTime, strBuff.data());
+				strBuff.resize(nLen);
 			}
 
 			TCHAR			szTime[64];
@@ -466,10 +458,11 @@ bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, tstringex &strBuff)
 					if (!IsTempTimeBeg(pFrag->dwAttrib))
 					{
 						int		nMin, nSec, nMs;
+						int		nTime = pFrag->nBegTime + 10 / 2;
 
-						nMs = (pFrag->nBegTime / 10) % 100;
-						nSec = (pFrag->nBegTime / 1000) % 60;
-						nMin = pFrag->nBegTime / (1000 * 60);
+						nMs = (nTime / 10) % 100;
+						nSec = (nTime / 1000) % 60;
+						nMin = nTime / (1000 * 60);
 						_stprintf_s(szTime, CountOf(szTime), _T("<%02d:%02d.%02d>"), nMin, nSec, nMs);
 						strBuff += szTime;
 					}

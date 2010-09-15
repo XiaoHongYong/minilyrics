@@ -295,6 +295,16 @@ void DirStringAddSlash(tstring &strDir)
 	}
 }
 
+tstring DirStringJoint(LPCTSTR szDir, LPCTSTR szSubFileDir)
+{
+	tstring		strFile = szDir;
+
+	DirStringAddSlash(strFile);
+	strFile += szSubFileDir;
+
+	return strFile;
+}
+
 // Dir: /temp/a/b/c		
 // Basedir: /temp/a
 // Return related dir: b/c

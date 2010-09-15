@@ -13,10 +13,27 @@ enum LyrTagType
 	LTT_MEDIA_LENGTH	= 1 << 5,
 	LTT_ID				= 1 << 6,
 	LTT_ENCODING		= 1 << 7,
+	LTT_CONTENT_TYPE	= 1 << 8,	// Check Time tag:[00:01.01], get LYRICS_CONTENT_TYPE
+	LTT_MD5				= 1 << 9,	// Get Md5 of lyrics content, NOT including properties.
+	LTT_ALL_TAG			= 0xFFFFFFFF & ~(LTT_CONTENT_TYPE | LTT_MD5),
 	LTT_ALL				= 0xFFFFFFFF,
 };
 
+// TXT < LRC < karaoke , precision of timestamps is higher
+enum LYRICS_CONTENT_TYPE
+{
+	LCT_UNKNOWN			= 0,
+	LCT_TXT				= 1 << 1,
+	LCT_LRC				= 1 << 2,
+	LCT_KARAOKE			= 1 << 4,		// karaoke content, full synced.
+
+	LCT_ALL				= LCT_TXT | LCT_LRC | LCT_KARAOKE,
+};
+
 bool IsTxtTagAtTailOfFile(LyrTagType tagType);
+
+int FormtLrcTimeTag(int nTime, TCHAR szBuff[]);
+void FormatPlayTime(int nmsTime, TCHAR szBuf[]);
 
 #define	SZ_LRC_AR				"ar:"
 #define	SZ_LRC_TI				"ti:"
@@ -41,6 +58,7 @@ struct LyricsProperties
 	{
 		m_nTimeOffset = 0;
 		m_nEncodingID = ED_SYSDEF;
+		m_lyrContentType = LCT_UNKNOWN;
 	}
 
 	bool Equal(const LyricsProperties &other) const;
@@ -60,6 +78,7 @@ struct LyricsProperties
 	LPCTSTR GetTxtLyrScrollEvents() { return m_strTimeOffset.c_str(); }
 
 	void SetMediaLength(int nMediaLength);
+	int GetMediaLengthInt() const;
 
 	tstring					m_strArtist;
 	tstring					m_strTitle;
@@ -67,6 +86,7 @@ struct LyricsProperties
 	tstring					m_strBy;
 	tstring					m_strMediaLength;
 	tstring					m_strId;
+	LYRICS_CONTENT_TYPE		m_lyrContentType;
 
 protected:
 	// Character encoding
@@ -82,7 +102,7 @@ protected:
 class CLyrTagNameValueMap
 {
 public:
-	CLyrTagNameValueMap(LyricsProperties &prop, uint32 tagMask = LTT_ALL);
+	CLyrTagNameValueMap(LyricsProperties &prop, uint32 tagMask = LTT_ALL_TAG);
 
 	int GetCount() const { return m_vItems.size(); }
 	LyrTagType GetTagType(int nIndex);
@@ -91,6 +111,14 @@ public:
 	void SetValue(int nIndex, LPCWSTR szValue, int nLen);
 	void SetValue(int nIndex, LPCSTR szValue, int nLen);
 	const tstring &GetValue(int nIndex);
+
+	bool ShouldReadLyrContentType()
+		{ return m_prop.m_lyrContentType == LCT_UNKNOWN && IsFlagSet(m_tagMask, LTT_CONTENT_TYPE); }
+	void SetLyrContentType(LYRICS_CONTENT_TYPE lyrContentType)
+		{ m_prop.m_lyrContentType = lyrContentType; }
+
+	bool ShouldReadMd5()
+		{ return IsFlagSet(m_tagMask, LTT_MD5); }
 
 	tstring GetLrcTagString(int nIndex, bool bIncLineRet = true);
 	tstring GetTxtTagString(int nIndex, bool bIncLineRet = true);
@@ -110,6 +138,7 @@ protected:
 	void OnSetValue(int nIndex);
 
 protected:
+	uint32				m_tagMask;
 	vector<Item>		m_vItems;
 	LyricsProperties	&m_prop;
 	CHAR_ENCODING		m_encoding;
@@ -120,10 +149,10 @@ protected:
 class CLrcTag : public LyricsProperties
 {
 public:
-	CLrcTag(uint32 tagMask = LTT_ALL) { m_tagMask = tagMask; }
+	CLrcTag(uint32 tagMask = LTT_ALL_TAG) { m_tagMask = tagMask; }
 
 	// Used for writing, compare for changed tags, and save them.
-	CLrcTag(LyricsProperties &orgProp, LyricsProperties &newProp, uint32 tagMask = LTT_ALL);
+	CLrcTag(LyricsProperties &orgProp, LyricsProperties &newProp, uint32 tagMask = LTT_ALL_TAG);
 
 	int ReadFromFile(LPCTSTR szFile);
 	bool ReadFromText(LPBYTE str, int nLen, bool bUseSpecifiedEncoding = false, CHAR_ENCODING encoding = ED_SYSDEF);
@@ -131,13 +160,15 @@ public:
 	bool ReadFromText(LPCWSTR str, int nLen);
 
 	int WriteToFile(LPCTSTR szFile, bool bLrcTag);
-	bool WriteToText(stringex &str, bool bLrcTag);
-	bool WriteToText(wstringex &str, bool bLrcTag);
+	void WriteToText(stringex &str, bool bLrcTag);
+	void WriteToText(wstringex &str, bool bLrcTag);
 
 	bool IsTagChanged() { return m_tagMask != 0; }
 
-protected:
+	LPCTSTR GetMD5() { return m_szMd5OfLyrContent; }
 
+protected:
+	TCHAR				m_szMd5OfLyrContent[MD5_STR_LEN];
 	uint32				m_tagMask;
 
 };

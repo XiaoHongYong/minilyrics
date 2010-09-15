@@ -129,7 +129,13 @@ template<class _tstring>
 inline void UCS2ToTString(const WCHAR *str, int nLen, _tstring &strOut, int nEncodingID = ED_SYSDEF)
 {
 #ifdef UNICODE
-	strOut = str;
+	if (nLen == -1)
+		strOut = str;
+	else
+	{
+		strOut.clear();
+		strOut.append(str, nLen);
+	}
 #elif defined(UTF8)
 	UCS2ToUtf8(str, nLen, strOut);
 #else
@@ -143,7 +149,13 @@ inline void UTF8ToTString(const char *str, int nLen, _tstring &strOut, int nEnco
 #ifdef UNICODE
 	Utf8ToUCS2(str, nLen, strOut);
 #elif defined(UTF8)
-	strOut = str;
+	if (nLen == -1)
+		strOut = str;
+	else
+	{
+		strOut.clear();
+		strOut.append(str, nLen);
+	}
 #else
 	Utf8ToMbcs(str, nLen, strOut, nEncodingID);
 #endif
@@ -157,7 +169,13 @@ inline void MBCSToTString(const char *str, int nLen, _tstring &strOut, int nEnco
 #elif defined(UTF8)
 	MbcsToUtf8(str, nLen, strOut);
 #else
-	strOut = str;
+	if (nLen == -1)
+		strOut = str;
+	else
+	{
+		strOut.clear();
+		strOut.append(str, nLen);
+	}
 #endif
 }
 
@@ -165,7 +183,13 @@ template<class _wstring>
 inline void TStringToUCS2(const TCHAR *str, int nLen, _wstring &strOut, int nEncodingID = ED_SYSDEF)
 {
 #ifdef UNICODE
-	strOut = str;
+	if (nLen == -1)
+		strOut = str;
+	else
+	{
+		strOut.clear();
+		strOut.append(str, nLen);
+	}
 #elif defined(UTF8)
 	Utf8ToUCS2(str, nLen, strOut);
 #else
@@ -179,7 +203,13 @@ inline void TStringToUTF8(const TCHAR *str, int nLen, _string &strOut, int nEnco
 #ifdef UNICODE
 	UCS2ToUtf8(str, nLen, strOut);
 #elif defined(UTF8)
-	strOut = str;
+	if (nLen == -1)
+		strOut = str;
+	else
+	{
+		strOut.clear();
+		strOut.append(str, nLen);
+	}
 #else
 	MbcsToUtf8(str, nLen, strOut, nEncodingID);
 #endif
@@ -193,7 +223,13 @@ inline void TStringToMBCS(const TCHAR *str, int nLen, _string &strOut, int nEnco
 #elif defined(UTF8)
 	Utf8ToMbcs(str, nLen, strOut, nEncodingID);
 #else
-	strOut = str;
+	if (nLen == -1)
+		strOut = str;
+	else
+	{
+		strOut.clear();
+		strOut.append(str, nLen);
+	}
 #endif
 }
 

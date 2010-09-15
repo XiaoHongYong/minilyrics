@@ -20,8 +20,6 @@ bool GetTimeTagOfLine(LPCTSTR szLine, tstring &strTimeTag);
 
 int GetTimeTagValue(const TCHAR *szTag, int nLen);
 
-void FormtLrcTimeTag(int nTime, TCHAR szBuff[]);
-
 CLyrEditSyntaxParser::CLyrEditSyntaxParser()
 {
 	m_pLyrEdit = NULL;
@@ -984,17 +982,6 @@ int GetTimeTagValue(const TCHAR *szTag, int nLen)
 
 S_ERROR:
 	return nTime;
-}
-
-void FormtLrcTimeTag(int nTime, TCHAR szBuff[])
-{
-	int		nMin, nSec, nMs;
-
-	nMs = (nTime / 10) % 100;
-	nSec = (nTime / 1000) % 60;
-	nMin = nTime / (1000 * 60);
-
-	_stprintf_s(szBuff, 32, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
 }
 
 //////////////////////////////////////////////////////////////////////

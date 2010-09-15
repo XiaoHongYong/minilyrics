@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "UndoMgr.h"
 
+#define MAX_ACTIONS			200
 
 //////////////////////////////////////////////////////////////////////////
 // CBatchUndoAction
@@ -224,6 +225,9 @@ void CUndoMgr::DoAddAction(CUndoAction *pAction)
 		}
 		m_listActions.erase(m_listActions.begin() + (m_nPosUndo + 1), m_listActions.end());
 	}
+
+	if (m_listActions.size() > MAX_ACTIONS)
+		m_listActions.erase(m_listActions.begin());
 
 	m_listActions.push_back(pAction);
 	m_nPosUndo = m_listActions.size() - 1;

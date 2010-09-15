@@ -30,8 +30,5 @@
     <NormalTextBt ID="ID_OK" Text="OK" Rect="w/2-100-20,h/2+15,100,"/>
     <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2+20,h/2+15,100,"/>
   </Container>
-  <Container ID="CID_WAIT" Name="Wait Message" Visible="false" Rect="0,0,w,h" visible="false">
-    <NormalText ID="CID_WAIT_INFO" Text="" Rect="15,h/2-20-20,w-30,40" AlignText="AT_CENTER"/>
-    <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2-45,h/2+15,90,"/>
-  </Container>
+  <include Name="Waiting.xml"/>
 </skinwnd>

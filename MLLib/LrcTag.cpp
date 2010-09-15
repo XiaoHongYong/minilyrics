@@ -6,9 +6,57 @@
 #include "LrcTag.h"
 #include "LrcParserHelper.h"
 
+void TStringToStr(LPCTSTR str, int nLen, wstringex &strOut, int nEncodingID)
+{
+	TStringToUCS2(str, nLen, strOut, nEncodingID);
+}
+
+void TStringToStr(LPCTSTR str, int nLen, stringex &strOut, int nEncodingID)
+{
+	TStringToMBCS(str, nLen, strOut, nEncodingID);
+}
+
+void StrToTString(LPCSTR str, int nLen, tstringex &strOut, int nEncodingID)
+{
+	MBCSToTString(str, nLen, strOut, nEncodingID);
+}
+
+void StrToTString(LPCWSTR str, int nLen, tstringex &strOut, int nEncodingID)
+{
+	UCS2ToTString(str, nLen, strOut, nEncodingID);
+}
+
 bool IsTxtTagAtTailOfFile(LyrTagType tagType)
 {
 	return (tagType & (LTT_OFFSET | LTT_MEDIA_LENGTH | LTT_ID | LTT_ENCODING)) != 0;
+}
+
+int FormtLrcTimeTag(int nTime, TCHAR szBuff[])
+{
+	int		nMin, nSec, nMs;
+	nTime += 10 / 2;
+
+	nMs = (nTime / 10) % 100;
+	nSec = (nTime / 1000) % 60;
+	nMin = nTime / (1000 * 60);
+
+	return _stprintf_s(szBuff, 16, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
+}
+
+void FormatPlayTime(int nmsTime, TCHAR szBuf[])
+{
+	int		nMinute, nSec, nHour;
+
+	nSec = nmsTime / 1000;
+	nMinute = nSec / 60;
+	nSec %= 60;
+	nHour = nMinute / 60;
+	nMinute %= 60;
+
+	if (nHour > 0)
+		_stprintf_s(szBuf, 32, _T("%d:%02d:%02d"), nHour, nMinute, nSec);
+	else
+		_stprintf_s(szBuf, 32, _T("%02d:%02d"), nMinute, nSec);
 }
 
 bool GetLRCTagValue(LPCSTR szLyrics, LPCSTR szTagPropName, tstring &strValue, CHAR_ENCODING encoding)
@@ -20,7 +68,7 @@ bool GetLRCTagValue(LPCSTR szLyrics, LPCSTR szTagPropName, tstring &strValue, CH
 		return false;
 
 	strValue.clear();
-	ConvertStr(szLyrics + nValPosBeg, nValPosEnd - nValPosBeg, strValue, encoding);
+	MBCSToTString(szLyrics + nValPosBeg, nValPosEnd - nValPosBeg, strValue, encoding);
 	// strValue.append(szLyrics + nValPosBeg, nValPosEnd - nValPosBeg);
 	return true;
 }
@@ -125,7 +173,7 @@ void LyricsProperties::SetEncoding(CHAR_ENCODING nEncodingID)
 	if (nEncodingID != ED_SYSDEF)
 	{
 		tstringex		str;
-		ConvertStr(GetCharEncodingByID(nEncodingID).szEncoding, -1, str);
+		MBCSToTString(GetCharEncodingByID(nEncodingID).szEncoding, -1, str);
 		m_strEncoding = str.c_str();
 	}
 }
@@ -144,16 +192,41 @@ void LyricsProperties::SetOffsetTime(int nOffsetTime)
 	m_strTimeOffset = CStrPrintf(_T("%d"), nOffsetTime).c_str();
 }
 
-void FormatPlayTime(TCHAR szBuf[], int nmsTime);
-
 void LyricsProperties::SetMediaLength(int nMediaLength)
 {
 	if (nMediaLength > 0)
 	{
 		TCHAR	szBuf[64] = { 0 };
-		FormatPlayTime(szBuf, nMediaLength * 1000);
+		FormatPlayTime(nMediaLength * 1000, szBuf);
 		m_strMediaLength = szBuf;
 	}
+}
+
+int LyricsProperties::GetMediaLengthInt() const
+{
+	if (m_strMediaLength.size() < 4)
+		return 0;
+
+	//_stprintf_s(szBuf, 32, _T("%d:%02d:%02d"), nHour, nMinute, nSec);
+	// _stprintf_s(szBuf, 32, _T("%02d:%02d"), nMinute, nSec);
+
+	int		n1, n2, n3;
+	LPCTSTR	p = m_strMediaLength.c_str();
+	p = ReadInt_t(p, n1);
+	if (*p != ':')
+		return 0;
+	p++;
+
+	p = ReadInt_t(p, n2);
+	if (*p == '\0')
+		return n1 * 60 +n2;
+
+	if (*p != ':')
+		return 0;
+	p++;
+	p = ReadInt_t(p, n3);
+
+	return (n1 * 60 + n2) * 60 + n3;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -161,9 +234,14 @@ void LyricsProperties::SetMediaLength(int nMediaLength)
 CLyrTagNameValueMap::CLyrTagNameValueMap(LyricsProperties &prop, uint32 tagMask)
 	: m_prop(prop)
 {
+	m_tagMask = tagMask;
 	m_strEncoding = prop.GetEncoding();
 	m_strOffset = prop.GetOffsetTimeStr();
 	m_encoding = prop.GetEncodingIndex();
+
+	// If offset is 0, don't write it.
+	if (_tcscmp(m_strOffset.c_str(), _T("0")) == 0)
+		m_strOffset.clear();
 
 	Item		vNames[] = {
 		{ SZ_LRC_AR,		SZ_TXT_AR,		LTT_ARTIST,		&(prop.m_strArtist) },
@@ -209,7 +287,7 @@ void CLyrTagNameValueMap::SetValue(int nIndex, LPCWSTR szValue, int nLen)
 	ASSERT(pValue);
 	if (pValue->empty())
 	{
-		ConvertStr(szValue, nLen, *pValue, m_encoding);
+		UCS2ToTString(szValue, nLen, *pValue, m_encoding);
 		OnSetValue(nIndex);
 	}
 }
@@ -221,7 +299,7 @@ void CLyrTagNameValueMap::SetValue(int nIndex, LPCSTR szValue, int nLen)
 	tstring *pValue = m_vItems[nIndex].pstrValue;
 	if (pValue->empty())
 	{
-		ConvertStr(szValue, nLen, *pValue, m_encoding);
+		MBCSToTString(szValue, nLen, *pValue, m_encoding);
 		OnSetValue(nIndex);
 	}
 }
@@ -255,7 +333,7 @@ tstring CLyrTagNameValueMap::GetLrcTagString(int nIndex, bool bIncLineRet)
 	tstring		strTag;
 	tstring		strName;
 
-	ConvertStr(m_vItems[nIndex].strLrcName.c_str(), m_vItems[nIndex].strLrcName.size(), strName);
+	MBCSToTString(m_vItems[nIndex].strLrcName.c_str(), m_vItems[nIndex].strLrcName.size(), strName);
 
 	strTag += _T("[");
 	strTag += strName;
@@ -275,7 +353,7 @@ tstring CLyrTagNameValueMap::GetTxtTagString(int nIndex, bool bIncLineRet)
 	tstring		strTag;
 	tstring		strName;
 
-	ConvertStr(m_vItems[nIndex].strTxtName.c_str(), m_vItems[nIndex].strTxtName.size(), strName);
+	MBCSToTString(m_vItems[nIndex].strTxtName.c_str(), m_vItems[nIndex].strTxtName.size(), strName);
 
 	strTag += strName;
 	strTag += _T(" ");
@@ -410,8 +488,7 @@ int CLrcTag::WriteToFile(LPCTSTR szFile, bool bLrcTag)
 		if (encoding == ED_UNICODE_BIG_ENDIAN)
 			UCS2BEToLE(strW.data(), strW.size());
 
-		if (!WriteToText(strW, bLrcTag))
-			return ERR_FALSE;
+		WriteToText(strW, bLrcTag);
 
 		if (encoding == ED_UNICODE_BIG_ENDIAN)
 			UCS2LEToBE(strW.data(), strW.size());
@@ -427,15 +504,13 @@ int CLrcTag::WriteToFile(LPCTSTR szFile, bool bLrcTag)
 	{
 		if (pData == (LPBYTE)lyrics.data())
 		{
-			if (!WriteToText(lyrics, bLrcTag))
-				return ERR_FALSE;
+			WriteToText(lyrics, bLrcTag);
 		}
 		else
 		{
 			stringex	str;
 			str.append((LPCSTR)pData, nLen);
-			if (!WriteToText(str, bLrcTag))
-				return ERR_FALSE;
+			WriteToText(str, bLrcTag);
 			lyrics.clear();
 			if (encoding == ED_UTF8)
 				lyrics.append(SZ_FE_UTF8, 3);
@@ -450,7 +525,21 @@ int CLrcTag::WriteToFile(LPCTSTR szFile, bool bLrcTag)
 }
 
 template<class _TCHAR>
-bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNameValueMap)
+void TrimAppend(stringex_t<_TCHAR> &strTarget, const _TCHAR *str, int nLen)
+{
+	while (nLen > 0 && (str[nLen - 1] == '\r' || str[nLen - 1] == '\n' || str[nLen - 1] == ' '))
+		nLen--;
+	while (nLen > 0 && (*str == '\r' || *str == '\n' || *str == ' '))
+	{
+		str++;
+		nLen--;
+	}
+
+	strTarget.append(str, nLen);
+}
+
+template<class _TCHAR>
+bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNameValueMap, stringex_t<_TCHAR> &strLyrContent)
 {
 	const _TCHAR *szLine = str;
 	bool	bFoundTag = false;
@@ -460,8 +549,13 @@ bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 		const _TCHAR * szNextLine = NextLine(szLine);
 
 		szLine = IgnoreSpaces(szLine);
-		if (*szLine == '[' && !IsDigit(szLine[1]))
+		if (*szLine == '[')
 		{
+			if (IsDigit(szLine[1]) && propNameValueMap.ShouldReadLyrContentType())
+			{
+				if (IsLrcTimeTag(szLine))
+					propNameValueMap.SetLyrContentType(LCT_LRC);
+			}
 			int nLineLen;
 			if (szNextLine)
 				nLineLen = int(szNextLine - szLine);
@@ -480,6 +574,8 @@ bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 					break;
 				}
 			}
+			if (propNameValueMap.ShouldReadMd5() && i == propNameValueMap.GetCount())
+				TrimAppend(strLyrContent, szLine, nLineLen);
 		}
 		szLine = szNextLine;
 	}
@@ -488,7 +584,7 @@ bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 }
 
 template<class _TCHAR>
-bool TxtTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNameValueMap)
+bool TxtTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNameValueMap, stringex_t<_TCHAR> &strLyrContent)
 {
 	const _TCHAR *szLine = str;
 	bool	bFoundTag = false;
@@ -498,27 +594,28 @@ bool TxtTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 		const _TCHAR * szNextLine = NextLine(szLine);
 
 		IgnoreSpaces(szLine);
-		if (IsCharAlpha(*szLine))
-		{
-			int nLineLen;
-			if (szNextLine)
-				nLineLen = int(szNextLine - szLine);
-			else
-				nLineLen = _xcslen(szLine);
 
-			int		nValBeg, nValEnd;
-			int		i;
-			for (i = 0; i < propNameValueMap.GetCount(); i++)
+		int nLineLen;
+		if (szNextLine)
+			nLineLen = int(szNextLine - szLine);
+		else
+			nLineLen = _xcslen(szLine);
+
+		int		nValBeg, nValEnd;
+		int		i;
+		for (i = 0; i < propNameValueMap.GetCount(); i++)
+		{
+			if (ParseTxtPropTag(szLine, nLineLen, 
+				propNameValueMap.GetTxtName(i), nValBeg, nValEnd))
 			{
-				if (ParseTxtPropTag(szLine, nLineLen, 
-					propNameValueMap.GetTxtName(i), nValBeg, nValEnd))
-				{
-					bFoundTag = true;
-					propNameValueMap.SetValue(i, szLine + nValBeg, nValEnd - nValBeg);
-					break;
-				}
+				bFoundTag = true;
+				propNameValueMap.SetValue(i, szLine + nValBeg, nValEnd - nValBeg);
+				break;
 			}
 		}
+		if (propNameValueMap.ShouldReadMd5() && i == propNameValueMap.GetCount())
+			TrimAppend(strLyrContent, szLine, nLineLen);
+
 		szLine = szNextLine;
 	}
 
@@ -529,22 +626,42 @@ bool CLrcTag::ReadFromText(const char *str, int nLen)
 {
 	CLyrTagNameValueMap	propNameValueMap(*this, m_tagMask);
 
-	if (LrcTagReadFromText(str, nLen, propNameValueMap))
-		return true;
-	return TxtTagReadFromText(str, nLen, propNameValueMap);
+	stringex	strLyrContent;
+	bool bFoundTag = LrcTagReadFromText(str, nLen, propNameValueMap, strLyrContent);
+	if (!bFoundTag)
+	{
+		if (propNameValueMap.ShouldReadLyrContentType())
+			propNameValueMap.SetLyrContentType(LCT_TXT);
+		bFoundTag = TxtTagReadFromText(str, nLen, propNameValueMap, strLyrContent);
+	}
+
+	if (propNameValueMap.ShouldReadMd5())
+		MD5Str((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(_TCHAR), m_szMd5OfLyrContent);
+
+	return bFoundTag;
 }
 
 bool CLrcTag::ReadFromText(LPCWSTR str, int nLen)
 {
 	CLyrTagNameValueMap	propNameValueMap(*this, m_tagMask);
 
-	if (LrcTagReadFromText(str, nLen, propNameValueMap))
-		return true;
-	return TxtTagReadFromText(str, nLen, propNameValueMap);
+	wstringex	strLyrContent;
+	bool bFoundTag = LrcTagReadFromText(str, nLen, propNameValueMap, strLyrContent);
+	if (!bFoundTag)
+	{
+		if (propNameValueMap.ShouldReadLyrContentType())
+			propNameValueMap.SetLyrContentType(LCT_TXT);
+		bFoundTag = TxtTagReadFromText(str, nLen, propNameValueMap, strLyrContent);
+	}
+
+	if (propNameValueMap.ShouldReadMd5())
+		MD5Str((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(_TCHAR), m_szMd5OfLyrContent);
+
+	return bFoundTag;
 }
 
 template<class _TCHAR>
-bool LrcTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameValueMap)
+void LrcTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameValueMap)
 {
 	typedef stringex_t<_TCHAR>	_tstringex;
 
@@ -587,7 +704,7 @@ bool LrcTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 					else
 					{
 						// Convert to current encoding string.
-						ConvertStr(tstrValue.c_str(), tstrValue.size(), strValue, propNameValueMap.GetEncoding());
+						TStringToStr(tstrValue.c_str(), tstrValue.size(), strValue, propNameValueMap.GetEncoding());
 						strValue.insert(0, SZ_SPACE, 1);
 
 						// Replace
@@ -613,15 +730,13 @@ bool LrcTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 	{
 		tstring	strTag = propNameValueMap.GetLrcTagString(i);
 
-		ConvertStr(strTag.c_str(), strTag.size(),
+		TStringToStr(strTag.c_str(), strTag.size(),
 			strValue, propNameValueMap.GetEncoding());
 
 		strTagsAtHead.append(strValue.c_str(), strValue.size());
 	}
 	if (strTagsAtHead.size())
 		str.insert(0, strTagsAtHead.c_str(), strTagsAtHead.size());
-
-	return bFoundTag;
 }
 
 template<class _TCHAR>
@@ -633,7 +748,7 @@ bool IsStrEndWithNewLine(stringex_t<_TCHAR> &str)
 }
 
 template<class _TCHAR>
-bool TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameValueMap)
+void TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameValueMap)
 {
 	typedef stringex_t<_TCHAR>	_tstringex;
 
@@ -650,7 +765,7 @@ bool TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 		const _TCHAR *szLineBeg = szLine;
 
 		IgnoreSpaces(szLine);
-		if (IsCharAlpha(*szLine))
+		if (IsCharAlpha((byte)*szLine))
 		{
 			int nLineLen;
 			if (szNextLine)
@@ -678,7 +793,7 @@ bool TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 					else
 					{
 						// Convert to current encoding string.
-						ConvertStr(tstrValue.c_str(), tstrValue.size(), strValue, propNameValueMap.GetEncoding());
+						TStringToStr(tstrValue.c_str(), tstrValue.size(), strValue, propNameValueMap.GetEncoding());
 						strValue.insert(0, SZ_SPACE, 1);
 
 						// Replace
@@ -705,7 +820,7 @@ bool TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 	{
 		tstring	strTag = propNameValueMap.GetTxtTagString(i);
 
-		ConvertStr(strTag.c_str(), strTag.size(),
+		TStringToStr(strTag.c_str(), strTag.size(),
 			strValue, propNameValueMap.GetEncoding());
 
 		if (IsTxtTagAtTailOfFile(propNameValueMap.GetTagType(i)))
@@ -721,28 +836,26 @@ bool TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 
 	if (strTagsAtHead.size())
 		str.insert(0, strTagsAtHead.c_str(), strTagsAtHead.size());
-
-	return bFoundTag;
 }
 
-bool CLrcTag::WriteToText(wstringex &str, bool bLrcTag)
+void CLrcTag::WriteToText(wstringex &str, bool bLrcTag)
 {
 	CLyrTagNameValueMap	propNameValueMap(*this, m_tagMask);
 
 	if (bLrcTag)
-		return LrcTagWriteToText(str, propNameValueMap);
+		LrcTagWriteToText(str, propNameValueMap);
 	else
-		return TxtTagWriteToText(str, propNameValueMap);
+		TxtTagWriteToText(str, propNameValueMap);
 }
 
-bool CLrcTag::WriteToText(stringex &str, bool bLrcTag)
+void CLrcTag::WriteToText(stringex &str, bool bLrcTag)
 {
 	CLyrTagNameValueMap	propNameValueMap(*this, m_tagMask);
 
 	if (bLrcTag)
-		return LrcTagWriteToText(str, propNameValueMap);
+		LrcTagWriteToText(str, propNameValueMap);
 	else
-		return TxtTagWriteToText(str, propNameValueMap);
+		TxtTagWriteToText(str, propNameValueMap);
 }
 
 #ifdef _CPPUNIT_TEST
@@ -1017,10 +1130,15 @@ protected:
 		prop.m_strTitle = _T("Title");
 		prop.m_strAlbum = _T("Album");
 		prop.m_strBy = _T("By");
-		prop.m_strMediaLength = _T("01:32");
 		prop.m_strId = _T("Id");
 		// prop.SetEncoding(ED_GB2312);
 		prop.SetOffsetTime(1000);
+
+		prop.m_strMediaLength = _T("01:32");
+		CPPUNIT_ASSERT(prop.GetMediaLengthInt() == 60 + 32);
+
+		prop.m_strMediaLength = _T("2:11:32");
+		CPPUNIT_ASSERT(prop.GetMediaLengthInt() == (2 * 60 + 11) * 60 + 32);
 
 		tstring					strEncoding = prop.GetEncoding(), strOffset = prop.GetOffsetTimeStr();
 		CLyrTagNameValueMap		nameValueMap(prop);
@@ -1060,12 +1178,15 @@ protected:
 					CPPUNIT_FAIL_T(CStrPrintf(_T("CLyrTagNameValueMap: case: %d, %d"), k, i).c_str());
 
 				tstring strLrcTag = nameValueMap.GetLrcTagString(i, false);
-				CStrPrintf	strLrcTag2(_T("[%S %s]"), vNames[i].strLrcName.c_str(), vNames[i].pstrValue->c_str());
+				tstring	strName;
+				MBCSToTString(vNames[i].strLrcName.c_str(), vNames[i].strLrcName.size(), strName);
+				CStrPrintf	strLrcTag2(_T("[%s %s]"), strName.c_str(), vNames[i].pstrValue->c_str());
 				if (_tcscmp(strLrcTag.c_str(), strLrcTag2.c_str()) != 0)
 					CPPUNIT_FAIL_T(CStrPrintf(_T("CLyrTagNameValueMap: case: %d, %d"), k, i).c_str());
 
 				tstring strTxtTag = nameValueMap.GetTxtTagString(i, false);
-				CStrPrintf	strTxtTag2(_T("%S %s"), vNames[i].strTxtName.c_str(), vNames[i].pstrValue->c_str());
+				MBCSToTString(vNames[i].strTxtName.c_str(), vNames[i].strTxtName.size(), strName);
+				CStrPrintf	strTxtTag2(_T("%s %s"), strName.c_str(), vNames[i].pstrValue->c_str());
 				if (_tcscmp(strTxtTag.c_str(), strTxtTag2.c_str()) != 0)
 					CPPUNIT_FAIL_T(CStrPrintf(_T("CLyrTagNameValueMap: case: %d, %d"), k, i).c_str());
 
@@ -1094,7 +1215,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		ConvertStr(SZ_LYRICS, -1, wStr);
+		TStringToUCS2(SZ_LYRICS, -1, wStr);
 
 		wstringex	wLyrics;
 		wLyrics.append((const WCHAR *)SZ_FE_UCS2, 1);
@@ -1114,12 +1235,13 @@ protected:
 
 		for (int i = 0; i < CountOf(vLyrics); i++)
 		{
-			CLrcTag		tag;
+			CLrcTag		tag(LTT_ALL);
 			CPPUNIT_ASSERT(tag.ReadFromText(vLyrics[i], vLen[i]));
 			{
 				CPPUNIT_ASSERT(_tcscmp(tag.m_strArtist.c_str(), valArtist) == 0);
 				CPPUNIT_ASSERT(_tcscmp(tag.m_strTitle.c_str(), valTitle) == 0);
 				CPPUNIT_ASSERT(tag.GetEncodingIndex() == vEncoding[i]);
+				CPPUNIT_ASSERT(tag.m_lyrContentType == LCT_LRC);
 			}
 		}
 
@@ -1136,7 +1258,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		ConvertStr(SZ_LYRICS, -1, wStr);
+		TStringToUCS2(SZ_LYRICS, -1, wStr);
 
 		stringex	ansiLyrics;
 		ansiLyrics.append(SZ_LYRICS);
@@ -1162,7 +1284,7 @@ protected:
 		{
 			// Write new
 			CLrcTag		tag(orgProp, newProp);
-			CPPUNIT_ASSERT(tag.WriteToText(ansiLyrics, true));
+			tag.WriteToText(ansiLyrics, true);
 
 			// Read new
 			CLrcTag		tagReader;
@@ -1176,7 +1298,7 @@ protected:
 
 			// Write old,
 			CLrcTag		tag2(newProp, orgProp);
-			CPPUNIT_ASSERT(tag2.WriteToText(ansiLyrics, true));
+			tag2.WriteToText(ansiLyrics, true);
 
 			// Is same with original?
 			CPPUNIT_ASSERT(strcmp(SZ_LYRICS, ansiLyrics.c_str()) == 0);
@@ -1188,7 +1310,7 @@ protected:
 		{
 			// Write new
 			CLrcTag		tag(orgProp, newProp);
-			CPPUNIT_ASSERT(tag.WriteToText(wLyrics, true));
+			tag.WriteToText(wLyrics, true);
 
 			// Read new
 			CLrcTag		tagReader;
@@ -1200,7 +1322,7 @@ protected:
 
 			// Write old,
 			CLrcTag		tag2(newProp, orgProp);
-			CPPUNIT_ASSERT(tag2.WriteToText(wLyrics, true));
+			tag2.WriteToText(wLyrics, true);
 
 			// Is same with org?
 			CPPUNIT_ASSERT(wcscmp(wStr.c_str(), wLyrics.c_str()) == 0);
@@ -1218,7 +1340,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		ConvertStr(SZ_LYRICS, -1, wStr);
+		TStringToUCS2(SZ_LYRICS, -1, wStr);
 
 		stringex	ansiLyrics;
 		ansiLyrics.append(SZ_LYRICS);
@@ -1285,7 +1407,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		ConvertStr(SZ_LYRICS, -1, wStr);
+		TStringToUCS2(SZ_LYRICS, -1, wStr);
 
 		wstringex	wLyrics;
 		wLyrics.append((const WCHAR *)SZ_FE_UCS2, 1);
@@ -1305,12 +1427,13 @@ protected:
 
 		for (int i = 0; i < CountOf(vLyrics); i++)
 		{
-			CLrcTag		tag;
+			CLrcTag		tag(LTT_ALL);
 			CPPUNIT_ASSERT(tag.ReadFromText(vLyrics[i], vLen[i]));
 			{
 				CPPUNIT_ASSERT(_tcscmp(tag.m_strArtist.c_str(), valArtist) == 0);
 				CPPUNIT_ASSERT(_tcscmp(tag.m_strTitle.c_str(), valTitle) == 0);
 				CPPUNIT_ASSERT(tag.GetEncodingIndex() == vEncoding[i]);
+				CPPUNIT_ASSERT(tag.m_lyrContentType == LCT_TXT);
 			}
 		}
 
@@ -1327,7 +1450,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		ConvertStr(SZ_LYRICS, -1, wStr);
+		TStringToUCS2(SZ_LYRICS, -1, wStr);
 
 		stringex	ansiLyrics;
 		ansiLyrics.append(SZ_LYRICS);
@@ -1354,7 +1477,7 @@ protected:
 		{
 			// Write new
 			CLrcTag		tag(orgProp, newProp);
-			CPPUNIT_ASSERT(tag.WriteToText(ansiLyrics, false));
+			tag.WriteToText(ansiLyrics, false);
 
 			// Read new
 			CLrcTag		tagReader;
@@ -1368,7 +1491,7 @@ protected:
 
 			// Write old,
 			CLrcTag		tag2(newProp, orgProp);
-			CPPUNIT_ASSERT(tag2.WriteToText(ansiLyrics, false));
+			tag2.WriteToText(ansiLyrics, false);
 
 			// Is same with org?
 			// CLrcTag may append \r\n at the end of lyrics, don't compare it
@@ -1382,7 +1505,7 @@ protected:
 		{
 			// Write new
 			CLrcTag		tag(orgProp, newProp);
-			CPPUNIT_ASSERT(tag.WriteToText(wLyrics, false));
+			tag.WriteToText(wLyrics, false);
 
 			// Read new
 			CLrcTag		tagReader;
@@ -1394,7 +1517,7 @@ protected:
 
 			// Write old,
 			CLrcTag		tag2(newProp, orgProp);
-			CPPUNIT_ASSERT(tag2.WriteToText(wLyrics, false));
+			tag2.WriteToText(wLyrics, false);
 
 			// Is same with org?
 			// CLrcTag may append \r\n at the end of lyrics, don't compare it

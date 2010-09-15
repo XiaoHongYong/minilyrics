@@ -160,17 +160,11 @@ CXMLMsgCmd::~CXMLMsgCmd()
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdLogin::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR		szValue;
-	szValue = pXmlNode->GetProperty(_T("user"));
-	strName = SURETEXT(szValue);
-	szValue = pXmlNode->GetProperty(_T("password"));
-	strPwd = SURETEXT(szValue);
-	szValue = pXmlNode->GetProperty(_T("client"));
-	strClient = SURETEXT(szValue);
-	szValue = pXmlNode->GetProperty(_T("protocolversion"));
-	strProtocolVer = SURETEXT(szValue);
-	szValue = pXmlNode->GetProperty(_T("regcode"));
-	strRegCode = SURETEXT(szValue);
+	strName = pXmlNode->GetPropertySafe(_T("user"));
+	strPwd = pXmlNode->GetPropertySafe(_T("password"));
+	strClient = pXmlNode->GetPropertySafe(_T("client"));
+	strProtocolVer = pXmlNode->GetPropertySafe(_T("protocolversion"));
+	strRegCode = pXmlNode->GetPropertySafe(_T("regcode"));
 
 	return ERR_OK;
 }
@@ -220,10 +214,8 @@ int MLMsgRetLogin::ToXML(CXMLWriter &xmlFile)
 //
 int MLRetMsg::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR		szValue;
-	szValue = pXmlNode->GetProperty(MZ_ORG_CMD);
-	strOrgCmd = SURETEXT(szValue);
-	szValue = pXmlNode->GetProperty(MZ_CMD_RESULT);
+	strOrgCmd = pXmlNode->GetPropertySafe(MZ_ORG_CMD);
+	LPCTSTR		szValue = pXmlNode->GetProperty(MZ_CMD_RESULT);
 	if (!szValue)
 		return ERR_CMD_PARAM;
 
@@ -274,32 +266,23 @@ int MLRetMsgDataBlock::FromData(CCharBuffer &buff)
 
 int MLFileInfo::FromXML(SXNode *pNode)
 {
-	LPCTSTR szValue = pNode->GetProperty(_T("artist"));
-	strArtist = SURETEXT(szValue);
+	strArtist = pNode->GetPropertySafe(_T("artist"));
 
-	szValue = pNode->GetProperty(_T("title"));
-	strTitle = SURETEXT(szValue);
+	strTitle = pNode->GetPropertySafe(_T("title"));
 
-	szValue = pNode->GetProperty(_T("album"));
-	strAlbum = SURETEXT(szValue);
+	strAlbum = pNode->GetPropertySafe(_T("album"));
 
-	szValue = pNode->GetProperty(_T("filename"));
-	strFileName = SURETEXT(szValue);
+	strFileName = pNode->GetPropertySafe(_T("filename"));
 
-	szValue = pNode->GetProperty(_T("uploader"));
-	strUploader = SURETEXT(szValue);
+	strUploader = pNode->GetPropertySafe(_T("uploader"));
 
-	szValue = pNode->GetProperty(_T("link"));
-	strLink = SURETEXT(szValue);
+	strLink = pNode->GetPropertySafe(_T("link"));
 
 	nMatchValue = pNode->GetPropertyInt(_T("matchvalue"));
 
 	nTimeLength = pNode->GetPropertyInt(_T("timelength"));
 
-	szValue = pNode->GetProperty(_T("encoding"));
-	strEncoding = SURETEXT(szValue);
-
-	szValue = pNode->GetProperty(_T("rate"));
+	LPCTSTR szValue = pNode->GetProperty(_T("rate"));
 	if (szValue)
 		_stscanf(szValue, _T("%f"), &fRate);
 	nRateCount = pNode->GetPropertyInt(_T("ratecount"));
@@ -330,8 +313,6 @@ int MLFileInfo::ToXML(CXMLWriter &xmlFile)
 		xmlFile.WriteAttribute(_T("matchvalue"), nMatchValue);
 	if (nTimeLength != 0)
 		xmlFile.WriteAttribute(_T("timelength"), nTimeLength);
-	if (!strEncoding.empty())
-		xmlFile.WriteAttribute(_T("encoding"), strEncoding.c_str());
 	if (fRate != 0.0)
 	{
 		TCHAR		szTemp[64];
@@ -350,25 +331,19 @@ int MLFileInfo::ToXML(CXMLWriter &xmlFile)
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR szValue = pXmlNode->GetProperty(_T("artist"));
-	strArtist = SURETEXT(szValue);
+	strArtist = pXmlNode->GetPropertySafe(_T("artist"));
 
-	szValue = pXmlNode->GetProperty(_T("title"));
-	strTitle = SURETEXT(szValue);
+	strTitle = pXmlNode->GetPropertySafe(_T("title"));
 
-	szValue = pXmlNode->GetProperty(_T("ProtoVer"));
-	strProtocolVer = SURETEXT(szValue);
+	strProtocolVer = pXmlNode->GetPropertySafe(_T("ProtoVer"));
 
-	szValue = pXmlNode->GetProperty(_T("client"));
-	strClient = SURETEXT(szValue);
+	strClient = pXmlNode->GetPropertySafe(_T("client"));
 
-	szValue = pXmlNode->GetProperty(_T("RegCode"));
-	strRegCode = SURETEXT(szValue);
+	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
 
-	szValue = pXmlNode->GetProperty(_T("ClientCharEncoding"));
-	strClientCharEncoding = SURETEXT(szValue);
+	strClientCharEncoding = pXmlNode->GetPropertySafe(_T("ClientCharEncoding"));
 
-	szValue = pXmlNode->GetProperty(_T("RequestPage"));
+	LPCTSTR szValue = pXmlNode->GetPropertySafe(_T("RequestPage"));
 	if (szValue)
 		nRequestPage = _ttoi(szValue);
 	else
@@ -418,8 +393,7 @@ int MLMsgRetSearch::FromXML(SXNode *pNode)
 	else
 		RegVerifyValue = RVV_OK;
 
-	szValue = pNode->GetProperty(_T("msg"));
-	strMessage = SURETEXT(szValue);
+	strMessage = pNode->GetPropertySafe(_T("msg"));
 
 	szValue = pNode->GetProperty(_T("PageCount"));
 	if (szValue)
@@ -476,11 +450,9 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 
 int MLSearchItem::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR szValue = pXmlNode->GetProperty(_T("ar"));
-	strArtist = SURETEXT(szValue);
+	strArtist = pXmlNode->GetPropertySafe(_T("ar"));
 
-	szValue = pXmlNode->GetProperty(_T("ti"));
-	strTitle = SURETEXT(szValue);
+	strTitle = pXmlNode->GetPropertySafe(_T("ti"));
 
 	nMediaLength = pXmlNode->GetPropertyInt(_T("length"));
 
@@ -508,17 +480,13 @@ MLMsgCmdBatchSearch::MLMsgCmdBatchSearch()
 
 int MLMsgCmdBatchSearch::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR szValue = pXmlNode->GetProperty(_T("ProtoVer"));
-	strProtocolVer = SURETEXT(szValue);
+	strProtocolVer = pXmlNode->GetPropertySafe(_T("ProtoVer"));
 
-	szValue = pXmlNode->GetProperty(_T("client"));
-	strClient = SURETEXT(szValue);
+	strClient = pXmlNode->GetPropertySafe(_T("client"));
 
-	szValue = pXmlNode->GetProperty(_T("RegCode"));
-	strRegCode = SURETEXT(szValue);
+	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
 
-	szValue = pXmlNode->GetProperty(_T("ClientCharEncoding"));
-	strClientCharEncoding = SURETEXT(szValue);
+	strClientCharEncoding = pXmlNode->GetPropertySafe(_T("ClientCharEncoding"));
 
 	listSearchItems.reserve(pXmlNode->listChildren.size());
 
@@ -562,8 +530,6 @@ int MLMsgCmdBatchSearch::ToXML(CXMLWriter &xmlFile)
 //////////////////////////////////////////////////////////////////////////
 int MLLyricsInfoLite::FromXML(SXNode *pXmlNode)
 {
-	// strArtist = pXmlNode->GetPropertySafe(_T("ar"));
-	// strTitle = pXmlNode->GetPropertySafe(_T("ti"));
 	strFile = pXmlNode->GetPropertySafe(_T("fn"));
 	nIndex = pXmlNode->GetPropertyInt(_T("index"));
 
@@ -574,8 +540,6 @@ int MLLyricsInfoLite::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_ITEM);
 
-	// xmlFile.WriteAttribute(_T("ar"), strArtist.c_str());
-	// xmlFile.WriteAttribute(_T("ti"), strTitle.c_str());
 	xmlFile.WriteAttribute(_T("fn"), FileGetName(strFile.c_str()));
 	xmlFile.WriteAttribute(_T("index"), nIndex);
 
@@ -658,29 +622,21 @@ int MLMsgRetBatchSearch::ToXML(CXMLWriter &xmlFile)
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdCanUpload::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR szValue = pXmlNode->GetProperty(_T("username"));
-	strLoginName = SURETEXT(szValue);
+	strLoginName = pXmlNode->GetPropertySafe(_T("username"));
 
-	szValue = pXmlNode->GetProperty(_T("artist"));
-	strArtist = SURETEXT(szValue);
+	strArtist = pXmlNode->GetPropertySafe(_T("artist"));
 
-	szValue = pXmlNode->GetProperty(_T("album"));
-	strAlbum = SURETEXT(szValue);
+	strAlbum = pXmlNode->GetPropertySafe(_T("album"));
 
-	szValue = pXmlNode->GetProperty(_T("title"));
-	strTitle = SURETEXT(szValue);
+	strTitle = pXmlNode->GetPropertySafe(_T("title"));
 
-	szValue = pXmlNode->GetProperty(_T("timelength"));
-	nTimeLength = _ttoi(SURETEXT(szValue));
+	nTimeLength = pXmlNode->GetPropertyInt(_T("timelength"));
 
-	szValue = pXmlNode->GetProperty(_T("filename"));
-	strFileName = SURETEXT(szValue);
+	strFileName = pXmlNode->GetPropertySafe(_T("filename"));
 
-	szValue = pXmlNode->GetProperty(_T("md5"));
-	strMD5 = SURETEXT(szValue);
+	strMD5 = pXmlNode->GetPropertySafe(_T("md5"));
 
-	szValue = pXmlNode->GetProperty(_T("ClientCharEncoding"));
-	strClientCharEncoding = SURETEXT(szValue);
+	strClientCharEncoding = pXmlNode->GetPropertySafe(_T("ClientCharEncoding"));
 
 	if (strArtist.empty() && strTitle.empty() || strMD5.empty())
 	{
@@ -714,40 +670,23 @@ int MLMsgCmdCanUpload::ToXML(CXMLWriter &xmlFile)
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
 {
-	LPCTSTR		szValue;
+	strLoginName = pXmlNode->GetPropertySafe(_T("username"));
 
-	szValue = pXmlNode->GetProperty(_T("username"));
-	strLoginName = SURETEXT(szValue);
+	strArtist = pXmlNode->GetPropertySafe(_T("artist"));
 
-	szValue = pXmlNode->GetProperty(_T("artist"));
-	strArtist = SURETEXT(szValue);
+	strAlbum = pXmlNode->GetPropertySafe(_T("album"));
 
-	szValue = pXmlNode->GetProperty(_T("album"));
-	strAlbum = SURETEXT(szValue);
+	strTitle = pXmlNode->GetPropertySafe(_T("title"));
 
-	szValue = pXmlNode->GetProperty(_T("title"));
-	strTitle = SURETEXT(szValue);
+	strContentEncoding = pXmlNode->GetProperty(_T("encoding"));
 
-	szValue = pXmlNode->GetProperty(_T("encoding"));
-	strContentEncoding = SURETEXT(szValue);
+	nTimeLength = pXmlNode->GetPropertyInt(_T("timelength"));
 
-	szValue = pXmlNode->GetProperty(_T("timelength"));
-	nTimeLength = _ttoi(SURETEXT(szValue));
+	strFileName = pXmlNode->GetPropertySafe(_T("filename"));
 
-	szValue = pXmlNode->GetProperty(_T("filename"));
-	strFileName = SURETEXT(szValue);
+	strMD5 = pXmlNode->GetPropertySafe(_T("md5"));
 
-	szValue = pXmlNode->GetProperty(_T("md5"));
-	strMD5 = SURETEXT(szValue);
-
-	szValue = pXmlNode->GetProperty(_T("FileData"));
-	strFileContentOld = SURETEXT(szValue);
-
-	szValue = pXmlNode->GetProperty(_T("FileDataB64"));
-	strFileContent = SURETEXT(szValue);
-
-	szValue = pXmlNode->GetProperty(_T("ClientCharEncoding"));
-	strClientCharEncoding = SURETEXT(szValue);
+	strFileContent = pXmlNode->GetPropertySafe(_T("FileDataB64"));
 
 	if (strArtist.empty() && strTitle.empty() || strMD5.empty())
 		return ERR_CMD_PARAM;
@@ -771,11 +710,84 @@ int MLMsgCmdUpload::ToXML(CXMLWriter &xmlFile)
 	xmlFile.WriteAttribute(_T("filename"), strFileName.c_str());
 	xmlFile.WriteAttribute(_T("md5"), strMD5.c_str());
 	xmlFile.WriteAttribute(_T("FileDataB64"), strFileContent.c_str());
-	if (strClientCharEncoding.size())
-		xmlFile.WriteAttribute(_T("ClientCharEncoding"), strClientCharEncoding.c_str());
 	xmlFile.WriteEndElement();
 	return ERR_OK;
 }
+
+//////////////////////////////////////////////////////////////////////////
+int MLMsgCmdUpload2::FromXML(SXNode *pXmlNode)
+{
+	strLoginName = pXmlNode->GetPropertySafe(_T("username"));
+
+	strPwdMask = pXmlNode->GetPropertySafe(_T("pwd"));
+
+	LPCTSTR szContent = pXmlNode->GetPropertySafe(_T("FileData"));
+	if (!szContent)
+		return ERR_BAD_FILE_CONTENT;
+
+	{
+		int		nContentLen = _tcslen(szContent);
+		// Convert FileData from base64
+		if (nContentLen < 6)
+			return ERR_BAD_FILE_CONTENT;
+
+		// Convert Base64 data >> UTF8
+		stringex		utf8Content;
+		if (!decodebase64(szContent, nContentLen, utf8Content))
+			return ERR_BAD_BASE64CONTENT;
+
+#ifdef UNICODE
+		UTF8ToTString(utf8Content.c_str(), utf8Content.size(), strFileContent);
+#else
+		strFileContent = utf8Content.c_str();
+#endif
+	}
+
+	return ERR_OK;
+}
+
+int MLMsgCmdUpload2::ToXML(CXMLWriter &xmlFile)
+{
+	xmlFile.WriteStartElement(MZ_UPLOAD);
+
+	xmlFile.WriteAttribute(_T("username"), strLoginName.c_str());
+	xmlFile.WriteAttribute(_T("pwd"), strPwdMask.c_str());
+
+	// Convert TString >> UTF8 >> Base64 data >> Base64(TString)
+	stringex	utf8Str, strB64;
+	TStringToUTF8(strFileContent.c_str(), strFileContent.size(), utf8Str);
+	encodeuu(utf8Str.c_str(), utf8Str.size(), strB64, true, false);
+	UTF8ToTString(strB64, strB64.size(), strFileContent);
+
+	xmlFile.WriteAttribute(_T("FileData"), strFileContent.c_str());
+	xmlFile.WriteEndElement();
+	return ERR_OK;
+}
+
+int MLMsgRetUpload2::FromXML(SXNode *pXmlNode)
+{
+	int nRet = MLRetMsg::FromXML(pXmlNode);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	strMessage = pXmlNode->GetPropertySafe(_T("message"));
+	strLyricsId = pXmlNode->GetPropertySafe(_T("LyricsId"));
+
+	return ERR_OK;
+}
+
+int MLMsgRetUpload2::ToXML(CXMLWriter &xmlFile)
+{
+	xmlFile.WriteStartElement(MZ_RETURN);
+	MLRetMsg::ToXMLAttribute(xmlFile);
+	if (strMessage.size())
+		xmlFile.WriteAttribute(_T("message"), strMessage.c_str());
+	if (strLyricsId.size())
+		xmlFile.WriteAttribute(_T("LyricsId"), strLyricsId.c_str());
+	xmlFile.WriteEndElement();
+	return ERR_OK;
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 //

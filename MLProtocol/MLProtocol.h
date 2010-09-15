@@ -31,7 +31,7 @@ enum ML_PROTOCAL_ERROR
 	ERR_UPLOAD_EXIST		= 1042,	// 上传的内容已经存在
 	ERR_USER_NOT_EXIST		= 1043,	// 用户不存在
 	ERR_USER_EXPIRED		= 1044,	// 用户已经过期
-	ERR_BAD_USERPWD			= 1045,		// 用户名或者密码错误
+	ERR_BAD_USERPWD			= 1045, // 用户名或者密码错误
 	ERR_BAD_CLIENT_VER		= 1047,	// 客户端版本不正确, 无法登陆
 	ERR_OBSOLETE_CLIENT_VER = 1048,	// 客户端版本太低, 无法登陆
 	ERR_ACCESS_DENIED		= 1051,	// 无权访问,被拒绝
@@ -45,6 +45,7 @@ enum ML_PROTOCAL_ERROR
 	ERR_NOT_AUTHORIZED		= 1061,	// 未经授权的行为
 	ERR_NOT_LOGIN			= 1062,	// 未登陆，请登陆
 	ERR_UPDATE_LRC_INFO_SHOULD_SAME	= 1063, // 更新歌词时，前后的歌词标题和作者必须一致
+	ERR_LYR_NO_TAG_FOUND	= 1064,	// No lyrics tag is found in content.
 };
 
 #define SERVER_PORT_BEGIN			8000
@@ -83,6 +84,7 @@ enum MLMsgCmd
 	MC_BATCH_SEARCH,		// Search lyrics by batch
 	MC_CAN_UPLOAD,			// 是否能够上传（歌词……），服务器返回结果，如果不能上传会返回具体的原因
 	MC_UPLOAD,				// 上传（歌词……）
+	MC_UPLOAD2,				// 上传（歌词……）
 	MC_POST_BUG,			// 发送Bug
 
 	//
@@ -189,9 +191,7 @@ public:
 	tstring		strTitle;
 	tstring		strAlbum;
 	tstring		strFileName;
-	tstring		strMD5;
 	tstring		strUploader;
-	tstring		strEncoding;
 	tstring		strLink;
 	int			nMatchValue;			// 搜索结果比较得分
 	int			nTimeLength;			// 歌曲（歌词）长度，单位s
@@ -401,9 +401,7 @@ public:
 	int			nTimeLength;			// 歌曲（歌词）长度，单位ms
 	tstring		strMD5;					// 文件的MD5值
 	tstring		strFileContent;			// 此字段有效，存储的文件内容
-	tstring		strFileContentOld;		// 此字段有效，存储的文件内容
 	tstring		strContentEncoding;
-	tstring		strClientCharEncoding;
 
 public:
 	virtual int FromXML(SXNode *pNode);
@@ -411,6 +409,38 @@ public:
 
 };
 typedef MLMsgRetSearch MLMsgRetUpload;
+
+// 客户端向服务器请求上传
+//
+// 返回值:
+//		ERR_OK			-	成功
+//		ERR_REDIRECT		-	重定向连接
+class MLMsgCmdUpload2 : public MLMsgCmdUpload
+{
+public:
+	tstring		strLoginName;
+	tstring		strPwdMask;
+	tstring		strFileContent;			// FileContentMust be in UTF-8 encoding, NO BOM.
+
+public:
+	virtual int FromXML(SXNode *pNode);
+	virtual int ToXML(CXMLWriter &xmlFile);
+
+};
+typedef MLMsgRetSearch MLMsgRetUpload;
+
+// New version of upload lyrics command (since 7.1 or later)
+class MLMsgRetUpload2 : public MLMsgRetUpload
+{
+public:
+	tstring					strMessage;
+	tstring					strLyricsId;	// Returned lyrics, this will be saved in the uploaded lyrics.
+
+public:
+	virtual int FromXML(SXNode *pNode);
+	virtual int ToXML(CXMLWriter &xmlFile);
+
+};
 
 
 // 客户端向服务器发送bug

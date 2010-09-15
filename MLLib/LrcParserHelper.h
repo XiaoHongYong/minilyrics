@@ -85,6 +85,67 @@ S_ERROR:
 }
 
 template<class _TCHAR>
+bool IsLrcTimeTag(const _TCHAR *str)
+{
+	const _TCHAR *szTag = str;
+
+	if (*szTag != '[')
+		goto S_ERROR;
+	szTag++;
+
+	// seek to ':'
+	while (_IsCharBlank(*szTag))
+		szTag ++;
+
+	if (*szTag == '-')
+		szTag++;
+	while (IsDigit(*szTag))
+		szTag ++;
+	while (_IsCharBlank(*szTag))
+		szTag ++;
+
+	// ':'
+	if (*szTag != ':' && *szTag != '.')
+		goto S_ERROR;
+	szTag ++;
+
+	// number
+	while (_IsCharBlank(*szTag))
+		szTag ++;
+
+	if (*szTag == '-')
+		szTag++;
+	while (IsDigit(*szTag))
+		szTag ++;
+	while (_IsCharBlank(*szTag))
+		szTag ++;
+
+	if (*szTag == '.' || *szTag == ':')
+	{
+		szTag ++;
+		// new version of lrc file
+		while (_IsCharBlank(*szTag))
+			szTag ++;
+
+		if (*szTag == '-')
+			szTag++;
+
+		while (IsDigit(*szTag))
+			szTag ++;
+		while (_IsCharBlank(*szTag))
+			szTag ++;
+	}
+	if (*szTag != ']')
+		goto S_ERROR;
+	szTag++;
+
+	return true;
+
+S_ERROR:
+	return false;
+}
+
+template<class _TCHAR>
 bool ParseLrcPropTag(const _TCHAR *szLine, int nLineLen, const string &strPropName,
 					 int &nValPosBeg, int &nValPosEnd)
 {

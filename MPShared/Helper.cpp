@@ -92,22 +92,6 @@ void ParseMLTextMacro(LPCTSTR szText, tstring &str)
 	strrep(str, _T("$$fullname$$"), strTitleFull.c_str());
 }
 
-void FormatPlayTime(TCHAR szBuf[], int nmsTime)
-{
-	int		nMinute, nSec, nHour;
-
-	nSec = nmsTime / 1000;
-	nMinute = nSec / 60;
-	nSec %= 60;
-	nHour = nMinute / 60;
-	nMinute %= 60;
-
-	if (nHour > 0)
-		_stprintf_s(szBuf, 32, _T("%d:%02d:%02d"), nHour, nMinute, nSec);
-	else
-		_stprintf_s(szBuf, 32, _T("%02d:%02d"), nMinute, nSec);
-}
-
 void GetAppNameLong(TCHAR szName[], int nLen)
 {
 #ifdef _MPLAYER

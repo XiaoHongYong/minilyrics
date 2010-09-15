@@ -39,8 +39,6 @@ void ParseMLTextMacro(LPCTSTR szText, tstring &str);
 
 void GetNotepadEditor(tstring &strEditor);
 
-void FormatPlayTime(TCHAR szBuf[], int nmsTime);
-
 void GetAppNameLong(TCHAR szName[], int nLen);
 
 uint32 GetSecCount();
