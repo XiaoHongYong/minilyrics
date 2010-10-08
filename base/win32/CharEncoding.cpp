@@ -422,7 +422,7 @@ void MbcsToUtf8(const char *str, int nLen, string &strOut, int nEncodingID)
 	UCS2ToUtf8(strW.c_str(), strW.size(), strOut);
 }
 
-void MbcsToUCS2(const char *str, int nLen, string &strOut, int nEncodingID)
+void MbcsToUCS2(const char *str, int nLen, wstring &strOut, int nEncodingID)
 {
 	ConvertStr(str, nLen, strOut, nEncodingID);
 }

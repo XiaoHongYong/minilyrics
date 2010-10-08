@@ -54,10 +54,6 @@ void MLFileInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, MLFileInfoList &
 	{
 		MLFileInfo		&file = *it;
 		LrcSearchResult		item;
-		TCHAR	szLyricsName[MAX_PATH];
-
-		_stprintf_s(szLyricsName, CountOf(szLyricsName), _T("%s - %s"), file.strArtist.c_str(), file.strTitle.c_str());
-		item.strSaveFileName = szLyricsName;
 		item.strUrl = file.strLink;
 		item.strSaveFileName = file.strFileName;
 		item.strArtist = file.strArtist;

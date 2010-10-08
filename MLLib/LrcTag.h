@@ -151,6 +151,8 @@ class CLrcTag : public LyricsProperties
 public:
 	CLrcTag(uint32 tagMask = LTT_ALL_TAG) { m_tagMask = tagMask; }
 
+	void SetTagMask(uint32 tagMask = LTT_ALL_TAG) { m_tagMask = tagMask; }
+
 	// Used for writing, compare for changed tags, and save them.
 	CLrcTag(LyricsProperties &orgProp, LyricsProperties &newProp, uint32 tagMask = LTT_ALL_TAG);
 

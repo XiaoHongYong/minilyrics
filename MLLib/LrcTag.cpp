@@ -432,8 +432,7 @@ int CLrcTag::ReadFromFile(LPCTSTR szFile)
 	if (!OpenFileToBuffer(szFile, lyrics))
 		return ERR_READ_FILE;
 
-	if (!ReadFromText((LPBYTE)lyrics.data(), lyrics.size(), false, ED_SYSDEF))
-		return ERR_FALSE;
+	ReadFromText((LPBYTE)lyrics.data(), lyrics.size(), false, ED_SYSDEF);
 
 	return ERR_OK;
 }
@@ -728,6 +727,9 @@ void LrcTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 	_tstringex	strTagsAtHead;
 	for (int i = propNameValueMap.GetCount() - 1; i >= 0; i--)
 	{
+		if (propNameValueMap.GetValue(i).empty())
+			continue;
+
 		tstring	strTag = propNameValueMap.GetLrcTagString(i);
 
 		TStringToStr(strTag.c_str(), strTag.size(),
@@ -813,29 +815,35 @@ void TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 		szLine = szNextLine;
 	}
 
-	_tstringex	strTagsAtHead;
+	_tstringex	strTagsAtHead, strTagsAtTail;
 
 	// For left properties, insert at the head or tail of file.
 	for (int i = propNameValueMap.GetCount() - 1; i >= 0; i--)
 	{
+		if (propNameValueMap.GetValue(i).empty())
+			continue;
+
 		tstring	strTag = propNameValueMap.GetTxtTagString(i);
 
 		TStringToStr(strTag.c_str(), strTag.size(),
 			strValue, propNameValueMap.GetEncoding());
 
 		if (IsTxtTagAtTailOfFile(propNameValueMap.GetTagType(i)))
-		{
-			// Append return if needed.
-			if (i == propNameValueMap.GetCount() - 1 && str.size() > 0 && IsStrEndWithNewLine(str))
-				str.append(SZ_RETURN);
-			str.append(strValue.c_str(), strValue.size());
-		}
+			strTagsAtTail.append(strValue.c_str(), strValue.size());
 		else
 			strTagsAtHead.append(strValue.c_str(), strValue.size());
 	}
 
 	if (strTagsAtHead.size())
 		str.insert(0, strTagsAtHead.c_str(), strTagsAtHead.size());
+
+	if (strTagsAtTail.size())
+	{
+		// Append return if needed.
+		if (IsStrEndWithNewLine(str))
+			str.append(SZ_RETURN);
+		str.append(strTagsAtTail.c_str(), strTagsAtTail.size());
+	}
 }
 
 void CLrcTag::WriteToText(wstringex &str, bool bLrcTag)
