@@ -1223,7 +1223,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		TStringToUCS2(SZ_LYRICS, -1, wStr);
+		MbcsToUCS2(SZ_LYRICS, -1, wStr);
 
 		wstringex	wLyrics;
 		wLyrics.append((const WCHAR *)SZ_FE_UCS2, 1);
@@ -1266,7 +1266,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		TStringToUCS2(SZ_LYRICS, -1, wStr);
+		MbcsToUCS2(SZ_LYRICS, -1, wStr);
 
 		stringex	ansiLyrics;
 		ansiLyrics.append(SZ_LYRICS);
@@ -1348,7 +1348,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		TStringToUCS2(SZ_LYRICS, -1, wStr);
+		MbcsToUCS2(SZ_LYRICS, -1, wStr);
 
 		stringex	ansiLyrics;
 		ansiLyrics.append(SZ_LYRICS);
@@ -1415,7 +1415,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		TStringToUCS2(SZ_LYRICS, -1, wStr);
+		MbcsToUCS2(SZ_LYRICS, -1, wStr);
 
 		wstringex	wLyrics;
 		wLyrics.append((const WCHAR *)SZ_FE_UCS2, 1);
@@ -1458,7 +1458,7 @@ protected:
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
-		TStringToUCS2(SZ_LYRICS, -1, wStr);
+		MbcsToUCS2(SZ_LYRICS, -1, wStr);
 
 		stringex	ansiLyrics;
 		ansiLyrics.append(SZ_LYRICS);

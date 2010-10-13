@@ -1793,8 +1793,6 @@ void CMLData::CopyMLyrLines(CMLyrLines &lyrLines)
 	}
 }
 
-#define _CPPUNIT_TEST
-
 #ifdef _CPPUNIT_TEST
 
 //////////////////////////////////////////////////////////////////////////

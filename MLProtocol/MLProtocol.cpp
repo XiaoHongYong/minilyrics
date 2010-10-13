@@ -486,8 +486,6 @@ int MLMsgCmdBatchSearch::FromXML(SXNode *pXmlNode)
 
 	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
 
-	strClientCharEncoding = pXmlNode->GetPropertySafe(_T("ClientCharEncoding"));
-
 	listSearchItems.reserve(pXmlNode->listChildren.size());
 
 	for (SXNode::LIST_CHILDREN::iterator it = pXmlNode->listChildren.begin();
@@ -515,8 +513,6 @@ int MLMsgCmdBatchSearch::ToXML(CXMLWriter &xmlFile)
 		xmlFile.WriteAttribute(_T("client"), strClient.c_str());
 	if (strRegCode.size())
 		xmlFile.WriteAttribute(_T("RegCode"), strRegCode.c_str());
-	if (strClientCharEncoding.size())
-		xmlFile.WriteAttribute(_T("ClientCharEncoding"), strClientCharEncoding.c_str());
 
 	for (MLListSearchItems::iterator it = listSearchItems.begin(); it != listSearchItems.end(); ++it)
 	{
@@ -732,13 +728,19 @@ int MLMsgCmdUpload2::FromXML(SXNode *pXmlNode)
 			return ERR_BAD_FILE_CONTENT;
 
 		// Convert Base64 data >> UTF8
+#ifdef UNICODE
+		stringex		ansiBase64;
+		ConvertStr(szContent, nContentLen, ansiBase64);
+
+		stringex		utf8Content;
+		if (!decodebase64(ansiBase64.c_str(), ansiBase64.size(), utf8Content))
+			return ERR_BAD_BASE64CONTENT;
+
+		UTF8ToTString(utf8Content.c_str(), utf8Content.size(), strFileContent);
+#else
 		stringex		utf8Content;
 		if (!decodebase64(szContent, nContentLen, utf8Content))
 			return ERR_BAD_BASE64CONTENT;
-
-#ifdef UNICODE
-		UTF8ToTString(utf8Content.c_str(), utf8Content.size(), strFileContent);
-#else
 		strFileContent = utf8Content.c_str();
 #endif
 	}
@@ -770,7 +772,6 @@ int MLMsgRetUpload2::FromXML(SXNode *pXmlNode)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	strMessage = pXmlNode->GetPropertySafe(_T("message"));
 	strLyricsId = pXmlNode->GetPropertySafe(_T("LyricsId"));
 
 	return ERR_OK;
@@ -780,8 +781,6 @@ int MLMsgRetUpload2::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
 	MLRetMsg::ToXMLAttribute(xmlFile);
-	if (strMessage.size())
-		xmlFile.WriteAttribute(_T("message"), strMessage.c_str());
 	if (strLyricsId.size())
 		xmlFile.WriteAttribute(_T("LyricsId"), strLyricsId.c_str());
 	xmlFile.WriteEndElement();

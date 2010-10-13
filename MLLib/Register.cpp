@@ -328,11 +328,11 @@ int RandCodeToNumber(char chRand, char chNumber)
 
 
 // 留以扩展的校验部分9, 11, 13, 16
+if (CharToNumber(g_szMLRegCode[14]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegCode[16]) + CharToNumber(g_szMLRegNameNew[3]) + CharToNumber(g_szMLRegCode[3]) + CharToNumber(AvgValue(g_szMLRegNameNew, strlen(g_szMLRegNameNew)))) / 5)
+return FALSE;
 if ((CharToNumber(g_szMLRegCode[9]) & 0x3) != (CharToNumber(g_szMLRegNameNew[0]) & 0x3))
 return FALSE;
 if ((CharToNumber(g_szMLRegCode[9]) & 0x1C) != (CharToNumber(g_szMLRegNameNew[1]) & 0x1C))
-return FALSE;
-if ((CharToNumber(g_szMLRegCode[11]) & 0x3) != (CharToNumber(g_szMLRegCode[2]) & 0x3))
 return FALSE;
 if ((CharToNumber(g_szMLRegCode[11]) & 0x1C) != (CharToNumber(g_szMLRegCode[3]) & 0x1C))
 return FALSE;
@@ -482,9 +482,10 @@ BOOL SimpleVerifyRegCode2()
 		return FALSE;
 	if (CharToNumber(g_szMLRegCode[15]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegNameNew[4]) + CharToNumber(g_szMLRegCode[4]) * CharToNumber(AvgValue(g_szMLRegNameNew, strlen(g_szMLRegNameNew)))) % MAX_REGCODE_CHARS)
 		return FALSE;
-	if (CharToNumber(g_szMLRegCode[14]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegCode[16]) + CharToNumber(g_szMLRegNameNew[3]) + CharToNumber(g_szMLRegCode[3]) + CharToNumber(AvgValue(g_szMLRegNameNew, strlen(g_szMLRegNameNew)))) / 5)
-		return FALSE;
 	if (CharToNumber(g_szMLRegCode[17]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegNameNew[5]) * CharToNumber(g_szMLRegCode[5])) % MAX_REGCODE_CHARS)
+		return FALSE;
+
+	if ((CharToNumber(g_szMLRegCode[11]) & 0x3) != (CharToNumber(g_szMLRegCode[2]) & 0x3))
 		return FALSE;
 
 	return TRUE;

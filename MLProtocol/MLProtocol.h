@@ -313,7 +313,6 @@ public:
 	tstring		strProtocolVer;
 	tstring		strClient;		// client name + client ver
 	tstring		strRegCode;
-	tstring		strClientCharEncoding;		// 客户的使用的字符编码，服务器用户将utf-8转换为客户端的编码，搜索mbcs的旧歌词
 	MLListSearchItems	listSearchItems;
 
 public:
@@ -433,7 +432,6 @@ typedef MLMsgRetSearch MLMsgRetUpload;
 class MLMsgRetUpload2 : public MLMsgRetUpload
 {
 public:
-	tstring					strMessage;
 	tstring					strLyricsId;	// Returned lyrics, this will be saved in the uploaded lyrics.
 
 public:
