@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginVLC", "PluginVLC.vcproj", "{9E88C98A-47BB-4544-B66B-AEA30A5F4ED5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{0721AD77-959D-402F-8157-F43F42826D24} = {0721AD77-959D-402F-8157-F43F42826D24}

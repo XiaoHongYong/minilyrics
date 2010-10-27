@@ -10,7 +10,6 @@
 #include <vlc/libvlc_media.h>
 #include <vlc/libvlc_media_player.h>
 // #include <vlc/libvlc_events.h>
-#include <vlc/mediacontrol.h>
 #include <vlc_common.h>
 
 #include <vlc_plugin.h>
@@ -278,8 +277,11 @@ void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
 
 void CPlayerImp::NotifyPlayerStatChanged(PLAYER_STATE newStat)
 {
-	m_stat = newStat;
-	g_wndInfoQuery.PostNotifyMsgToML(CPlayerInfoQueryWnd::WM_PLAYER_STAT_CHANGED);
+	if (newStat != m_stat)
+	{
+		m_stat = newStat;
+		g_wndInfoQuery.PostNotifyMsgToML(CPlayerInfoQueryWnd::WM_PLAYER_STAT_CHANGED);
+	}
 }
 
 void CPlayerImp::MediaChangedCheck()

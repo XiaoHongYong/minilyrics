@@ -6,14 +6,9 @@ VPATH = @srcdir@
 
 include $(DEPTH)/build/autodefs.mk
 
-XPIDL_INCLUDES = \
-                 $(NULL)
 XPIDL_SRCS = sbIMiniLyricsService.idl \
              $(NULL)
 
 XPIDL_MODULE = sbMLSongbird.xpt
-XPIDL_MODULE_TYPELIBS = $(XPIDL_SRCS:.idl=.xpt)
-
-LIBSONGBIRD_COMPONENT = sbMLSongbird
 
 include $(topsrcdir)/build/rules.mk

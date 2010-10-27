@@ -6,11 +6,9 @@ VPATH = @srcdir@
 
 include $(DEPTH)/build/autodefs.mk
 
-ifdef DEBUG
-target_name = sbMLSongbird_d
-else
-target_name = sbMLSongbird
-endif
+DISABLE_DEADLY_WARNINGS = 1
+
+DYNAMIC_LIB = sbMLSongbird
 
 CPP_SRCS = \
 		  sbMiniLyricsModule.cpp \
@@ -58,36 +56,19 @@ CPP_EXTRA_INCLUDES = $(DEPTH)/components/PluginSongbird/public \
                $(MOZSDK_INCLUDE_DIR)/xpconnect \
                $(NULL)
 
-DYNAMIC_LIB = $(target_name)$(DLL_SUFFIX)
+DYNAMIC_LIB_STATIC_IMPORTS = components/moz/strings/src/sbMozStringUtils \
+                             $(NULL)
 
-DYNAMIC_LIB_OBJS = $(CPP_SRCS:.cpp=$(OBJ_SUFFIX))
-
-DYNAMIC_LIB_EXTRA_IMPORTS = nspr4 \
-                            plds4 \
-                            unicharutil_external_s \
-                            xpcomglue_s \
-                            xpcom \
+DYNAMIC_LIB_EXTRA_IMPORTS = plds4  \
                             $(NULL)
 
-DYNAMIC_LIB_IMPORT_PATHS = $(MOZSDK_LIB_DIR)
-
-ifdef DEBUG
-moz_stringutils = sbMozStringUtils_d
-moz_threads = sbMozThreads_d
+ifeq (windows,$(SB_PLATFORM))
+   DYNAMIC_LIB_EXTRA_IMPORTS += js3250
 else
-moz_stringutils = sbMozStringUtils
-moz_threads = sbMozThreads
+   DYNAMIC_LIB_EXTRA_IMPORTS += mozjs
 endif
 
-DYNAMIC_LIB_STATIC_IMPORTS += \
-  $(SONGBIRD_OBJDIR)/components/moz/strings/src/$(moz_stringutils) \
-  $(SONGBIRD_OBJDIR)/components/moz/threads/src/$(moz_threads) \
-  $(NULL)
-
 IS_COMPONENT = 1
-
-SONGBIRD_JSMODULES = $(srcdir)/sbCoverHelper.jsm \
-                     $(NULL)
 
 include $(topsrcdir)/build/rules.mk
 

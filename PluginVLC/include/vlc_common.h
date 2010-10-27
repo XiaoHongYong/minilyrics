@@ -3,7 +3,7 @@
  * Collection of useful common types and macros definitions
  *****************************************************************************
  * Copyright (C) 1998-2005 the VideoLAN team
- * $Id: c138d891f0e8af160fae3fa6ab3ebdc3ae9fc582 $
+ * $Id: 6855d335d6262706c4291a9f35d8cc797fa93f9a $
  *
  * Authors: Samuel Hocevar <sam@via.ecp.fr>
  *          Vincent Seguin <seguin@via.ecp.fr>
@@ -80,7 +80,11 @@
 #     define LIBVLC_FORMAT(x,y) __attribute__ ((format(printf,x,y)))
 #   endif
 #   define LIBVLC_FORMAT_ARG(x) __attribute__ ((format_arg(x)))
-#   define LIBVLC_USED __attribute__ ((warn_unused_result))
+#   if __GNUC__ > 3 || (__GNUC__ == 3 && (__GNUC_MINOR__ >= 4))
+#     define LIBVLC_USED __attribute__ ((warn_unused_result))
+#   else
+#     define LIBVLC_USED
+#   endif
 #   define LIBVLC_MALLOC __attribute__ ((malloc))
 #else
 #   define LIBVLC_FORMAT(x,y)
@@ -856,10 +860,13 @@ VLC_EXPORT( void *, vlc_memset, ( void *, int, size_t ) );
  *****************************************************************************/
 VLC_EXPORT( char *, vlc_gettext, ( const char *msgid ) LIBVLC_FORMAT_ARG(1) );
 
+#define vlc_pgettext( ctx, id ) \
+        vlc_pgettext_aux( ctx "\004" id, id )
+
 LIBVLC_FORMAT_ARG(2)
-static inline const char *vlc_pgettext( const char *ctx, const char *id )
+static inline const char *vlc_pgettext_aux( const char *ctx, const char *id )
 {
-    const char *tr = vlc_gettext( id );
+    const char *tr = vlc_gettext( ctx );
     return (tr == ctx) ? id : tr;
 }
 
