@@ -475,7 +475,7 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		TrimStr(vRect, ' ');
 		if (vRect.size() != 4)
 		{
-			ASSERT(0);
+			ASSERT(0 && "Rect property should have 4 parameters.");
 			ERRLOG1(_T("Rect property should have 4 parameters: %s"), szValue);
 			return false;
 		}

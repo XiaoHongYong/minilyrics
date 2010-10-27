@@ -1005,6 +1005,9 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 		tstring	strReplaceWith = m_pSkin->GetUIObjectText(CID_E_REPLACE);
 		tstring strSel;
 
+		if (strFindWhat.empty())
+			return true;
+
 		SelectionToText(strSel);
 
 		if (strSel.size() && _tcscmp(strSel.c_str(), strFindWhat.c_str()) == 0)
@@ -1014,13 +1017,16 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 	else if (nId == CID_REPLACE_ALL)
 	{
 		// replace all
+		tstring	strFindWhat = m_pSkin->GetUIObjectText(CID_E_FIND);
+		tstring	strReplaceWith = m_pSkin->GetUIObjectText(CID_E_REPLACE);
+
+		if (strFindWhat.empty())
+			return true;
+
 		SetCaret(0, 0);
 		m_nBegSelCol = -1;
 
 		CAutoBatchUndo		autoBatchUndo(this);
-		tstring	strFindWhat = m_pSkin->GetUIObjectText(CID_E_FIND);
-		tstring	strReplaceWith = m_pSkin->GetUIObjectText(CID_E_REPLACE);
-
 		while (FindNext())
 			ReplaceSel(strReplaceWith.c_str());
 	}

@@ -120,8 +120,6 @@ public:
 	void CheckToolbarDefaultPage(LPCTSTR szToolbarId);
 
 protected:
-	int NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj);
-
 	void ClearOptions();
 
 protected:

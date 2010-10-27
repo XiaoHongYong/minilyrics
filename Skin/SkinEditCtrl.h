@@ -290,8 +290,7 @@ public:
 	{
 		S_MULTILINE			= 1,			// Multiple line editor
 		S_READ_ONLY			= 1 << 0x1,		// The text can't be modified if this flag is set.
-		// S_HSCROLLBAR		= 1 << 0x1,		// Has horizontal scroll bar
-		// S_VSCROLLBAR		= 1 << 0x2,		// Has vetical scroll bar
+		S_PASSWORD			= 1 << 0x2,
 	};
 
 	enum NewLineType
@@ -462,6 +461,7 @@ protected:
 
 	bool IsReadOnly() { return IsFlagSet(m_nEditorStyles, S_READ_ONLY); }
 	bool IsSingleLine() { return !IsFlagSet(m_nEditorStyles, S_MULTILINE); }
+	bool IsPassword() { return IsFlagSet(m_nEditorStyles, S_PASSWORD); }
 
 public:
 	//

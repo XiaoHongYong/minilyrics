@@ -425,18 +425,18 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			if (!GetRectValue(szValue, btimg->imgDisabled))
 				goto PARSE_VALUE_FAILED;
 		}
+		else if (_tcsicmp(szProperty, _T("IDCmd")) == 0)
+		{
+			if (m_vBtStatImg.size() == 0)
+				m_vBtStatImg.push_back(new BtStatImg);
+			m_vBtStatImg[0]->nIDCmd = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
+		}
 		else
 			return FALSE;
 	}
 	else if (_tcsicmp(szProperty, _T("Continuous")) == 0)
 	{
 		m_bContinuousCmd = IsTRUE(szValue);
-	}
-	else if (_tcsicmp(szProperty, _T("IDCmd")) == 0)
-	{
-		if (m_vBtStatImg.size() == 0)
-			m_vBtStatImg.push_back(new BtStatImg);
-		m_vBtStatImg[0]->nIDCmd = m_pSkin->GetSkinFactory()->GetIDByName(szValue);
 	}
 	else if (IsPropertyName(szProperty, _T("XMargin")))
 		m_xMargin = _ttoi(szValue);

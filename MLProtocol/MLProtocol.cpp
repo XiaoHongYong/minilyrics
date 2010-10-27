@@ -36,6 +36,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_NOT_AUTHORIZED, _T("Unauthorized action.") },
 	{ ERR_NOT_LOGIN, _T("Not signed in, please sign in.") },
 	{ ERR_UPDATE_LRC_INFO_SHOULD_SAME, _T("The newly updated and old lyrics must have the same title and artist info.") },
+	{ ERR_LYR_NO_TAG_FOUND, _T("No lyrics tag is found in the lyrics.") },
 
 	{ 0, NULL}
 };
@@ -78,8 +79,12 @@ ID_TO_STRING	__MlCmdIDStr[] =
 	{ MC_SEARCH, MZ_SEARCH },
 	{ MC_BATCH_SEARCH, MZ_BATCH_SEARCH },
 	{ MC_CAN_UPLOAD, MZ_CANUPLOAD},
+	{ MC_UPLOADV0, MZ_UPLOADV0 },
 	{ MC_UPLOAD, MZ_UPLOAD },
 	{ MC_POST_BUG, MZ_POST_BUG },
+	{ MC_GET_LYR_UPDATE, MZ_GET_LYR_UPDATE },
+	{ MC_SUBMIT_LYR_REVIEW, MZ_SUBMIT_LYR_REVIEW },
+	{ MC_EXE_SVR_CMD, MZ_EXE_SVR_CMD },
 	{ MC_UNKNOWN, NULL},
 //	{, },
 };
@@ -96,26 +101,28 @@ LPCTSTR MLMsgCmd2Str(MLMsgCmd msgCmd)
 
 ID_TO_STRING	__MlCmdResult2Str[] = 
 {
-	{ERR_OK, _T("OK") },								// 0
-	{ERR_FAILED, _T("FAILED") },						// 1035
-	{ERR_BAD_XMLREQUEST, _T("BAD_XML_REQUEST") },	// 1036
-	{ERR_REDIRECT, _T("REDIRECT") },					// 1038
-	{ERR_REG_EMAIL_EXIST, _T("EMAIL_EXIST") },		// 1040
-	{ERR_REG_USER_EXIST, _T("USER_EXIST") },			// 1041
-	{ERR_UPLOAD_EXIST, _T("UPLOAD_EXIST") },			// 1042
-	{ERR_USER_NOT_EXIST, _T("USER_NOT_FOUND") },		// 1043
-	{ERR_BAD_USERPWD, _T("BAD_USERPWD") },			// 1045
-	{ERR_BAD_CLIENT_VER, _T("BAD_CLIENT_VER") },		// 1047
-	{ERR_OBSOLETE_CLIENT_VER, _T("OBSOLETE_CLIENT_VER") },	// 1048
-	{ERR_NOT_FOUND, _T("NOT_FOUND") },				// 1049
-	// {ERR_TOO_BUSY, _T("SERVER_TOO_BUSY") },			// 1050
-	{ERR_ACCESS_DENIED, _T("ACCESS_DENIED") },		// 1051
-	{ERR_NOT_SUPPORT_CMD, _T("NOT_SUPPORT_CMD") },	// 1052	
-	{ERR_CMD_NOT_MATCH, _T("CMD_NOT_MATCH") },		// 1053	
-	{ERR_CMD_PARAM, _T("BAD_CMD_PARAM") },			// 1054	
-	{ERR_UPLOAD_FILETYPE, _T("UPLOAD_FILETYPE") },	// 1056	
-	{ERR_BAD_BASE64CONTENT, _T("BAD_BASE64CONTENT") },	// 1058
-	{ERR_BAD_FILE_CONTENT, _T("BAD_FILE_CONTENT") },	// 1059
+	{ ERR_OK, _T("OK") },								// 0
+	{ ERR_FAILED, _T("FAILED") },						// 1035
+	{ ERR_BAD_XMLREQUEST, _T("BAD_XML_REQUEST") },	// 1036
+	{ ERR_REDIRECT, _T("REDIRECT") },					// 1038
+	{ ERR_REG_EMAIL_EXIST, _T("EMAIL_EXIST") },		// 1040
+	{ ERR_REG_USER_EXIST, _T("USER_EXIST") },			// 1041
+	{ ERR_UPLOAD_EXIST, _T("UPLOAD_EXIST") },			// 1042
+	{ ERR_USER_NOT_EXIST, _T("USER_NOT_FOUND") },		// 1043
+	{ ERR_BAD_USERPWD, _T("BAD_USERPWD") },			// 1045
+	{ ERR_BAD_CLIENT_VER, _T("BAD_CLIENT_VER") },		// 1047
+	{ ERR_OBSOLETE_CLIENT_VER, _T("OBSOLETE_CLIENT_VER") },	// 1048
+	{ ERR_NOT_FOUND, _T("NOT_FOUND") },				// 1049
+	{ ERR_ACCESS_DENIED, _T("ACCESS_DENIED") },		// 1051
+	{ ERR_NOT_SUPPORT_CMD, _T("NOT_SUPPORT_CMD") },	// 1052	
+	{ ERR_CMD_NOT_MATCH, _T("CMD_NOT_MATCH") },		// 1053	
+	{ ERR_CMD_PARAM, _T("BAD_CMD_PARAM") },			// 1054	
+	{ ERR_UPLOAD_FILETYPE, _T("UPLOAD_FILETYPE") },	// 1056	
+	{ ERR_BAD_BASE64CONTENT, _T("BAD_BASE64CONTENT") },	// 1058
+	{ ERR_BAD_FILE_CONTENT, _T("BAD_FILE_CONTENT") },	// 1059
+	{ ERR_NOT_AUTHORIZED, _T("NOT_AUTHORIZED") },
+	{ ERR_NOT_LOGIN, _T("NOT_LOGIN") },
+	{ ERR_LYR_NO_TAG_FOUND, _T("LYR_NO_TAG_FOUND") },
 	{0, NULL},
 //	{, },
 };
@@ -191,7 +198,7 @@ int MLMsgRetLogin::FromXML(SXNode *pXmlNode)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	szValue = pXmlNode->GetProperty(_T("message"));
+	szValue = pXmlNode->GetPropertySafe(_T("message"));
 	strMessage = SURETEXT(szValue);
 
 	return ERR_OK;
@@ -557,8 +564,7 @@ int MLMsgRetBatchSearch::FromXML(SXNode *pXmlNode)
 	else
 		RegVerifyValue = RVV_OK;
 
-	szValue = pXmlNode->GetProperty(_T("msg"));
-	strMessage = SURETEXT(szValue);
+	strMessage = pXmlNode->GetPropertySafe(_T("msg"));
 
 	for (SXNode::LIST_CHILDREN::iterator it = pXmlNode->listChildren.begin();
 		it != pXmlNode->listChildren.end(); ++it)
@@ -664,7 +670,7 @@ int MLMsgCmdCanUpload::ToXML(CXMLWriter &xmlFile)
 
 
 //////////////////////////////////////////////////////////////////////////
-int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
+int MLMsgCmdUploadV0::FromXML(SXNode *pXmlNode)
 {
 	strLoginName = pXmlNode->GetPropertySafe(_T("username"));
 
@@ -674,7 +680,7 @@ int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
 
 	strTitle = pXmlNode->GetPropertySafe(_T("title"));
 
-	strContentEncoding = pXmlNode->GetProperty(_T("encoding"));
+	strContentEncoding = pXmlNode->GetPropertySafe(_T("encoding"));
 
 	nTimeLength = pXmlNode->GetPropertyInt(_T("timelength"));
 
@@ -690,9 +696,9 @@ int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
 	return ERR_OK;
 }
 
-int MLMsgCmdUpload::ToXML(CXMLWriter &xmlFile)
+int MLMsgCmdUploadV0::ToXML(CXMLWriter &xmlFile)
 {
-	xmlFile.WriteStartElement(MZ_UPLOAD);
+	xmlFile.WriteStartElement(MZ_UPLOADV0);
 
 	xmlFile.WriteAttribute(_T("username"), strLoginName.c_str());
 
@@ -711,7 +717,7 @@ int MLMsgCmdUpload::ToXML(CXMLWriter &xmlFile)
 }
 
 //////////////////////////////////////////////////////////////////////////
-int MLMsgCmdUpload2::FromXML(SXNode *pXmlNode)
+int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
 {
 	strLoginName = pXmlNode->GetPropertySafe(_T("username"));
 
@@ -748,7 +754,7 @@ int MLMsgCmdUpload2::FromXML(SXNode *pXmlNode)
 	return ERR_OK;
 }
 
-int MLMsgCmdUpload2::ToXML(CXMLWriter &xmlFile)
+int MLMsgCmdUpload::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_UPLOAD);
 
@@ -766,9 +772,9 @@ int MLMsgCmdUpload2::ToXML(CXMLWriter &xmlFile)
 	return ERR_OK;
 }
 
-int MLMsgRetUpload2::FromXML(SXNode *pXmlNode)
+int MLMsgRetUpload::FromXML(SXNode *pXmlNode)
 {
-	int nRet = MLRetMsg::FromXML(pXmlNode);
+	int nRet = MLMsgRetUploadV0::FromXML(pXmlNode);
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -777,7 +783,7 @@ int MLMsgRetUpload2::FromXML(SXNode *pXmlNode)
 	return ERR_OK;
 }
 
-int MLMsgRetUpload2::ToXML(CXMLWriter &xmlFile)
+int MLMsgRetUpload::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
 	MLRetMsg::ToXMLAttribute(xmlFile);
@@ -1271,8 +1277,6 @@ void CMLProtocol::SetProxy(BOOL bEnableProxy, LPCSTR szProxyServer, int nProxyPo
 // ERR_OK
 int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, BOOL *pbMLAgent)
 {
-//	TrackFunctionEx("CMLProtocol::ReadMsg");
-
 	int		nRet;
 
 	pMsgBuff->clear();

@@ -18,6 +18,8 @@
 const UINT g_msgTaskBarCreated = RegisterWindowMessage(_T("TaskBarCreated"));
 #endif
 
+const UINT g_msgMediaMonkeyEmbeder = RegisterWindowMessage(_T("MediaMonkeyEmbederToMiniLyrics"));
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -204,6 +206,18 @@ LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 			m_mlTrayIcon.UpdatePlayerSysTrayIcon();
 		}
 #endif
+		if (message == g_msgMediaMonkeyEmbeder)
+		{
+			CMPSkinMainWnd *pMainWnd = g_mpApp.GetMainWnd();
+			if (pMainWnd && pMainWnd->GetEnableTranslucencyLayered())
+				pMainWnd->EnableTranslucencyLayered(false);
+			g_mpApp.m_mlStartupFlags |= ML_EMBEDDED_WND_IMMOVABLE;
+			g_mpApp.m_mlStartupFlags &= ~(ML_EMBEDDED_SUPPORT_CLASSIC_SKINS | ML_SUPPORT_EMBEDDED);
+
+			pMainWnd->m_WndDrag.EnableDrag(false);
+			pMainWnd->m_wndResizer.FixedWidth(true);
+			pMainWnd->m_wndResizer.FixedHeight(true);
+		}
 		break;
 	}
 

@@ -15,6 +15,7 @@ UIOBJECT_CLASS_NAME_IMP(CSkinEditCtrl, _T("EditCtrl"))
 
 #define GLYPH_WIDTH_INVALID		0xFF
 
+#define PASSWORD_CHAR			_T("*")
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -944,7 +945,12 @@ void CSkinEditCtrl::Draw(CRawGraph *pGraph)
 					pGraph->SetTextColor(m_vClrTable[glyph.clrIndex]);
 			}
 			if (glyph.chGlyph != '\t')
-				pGraph->TextOut(x, y, glyph.chGlyph, glyph.chGlyph.size());
+			{
+				if (IsPassword())
+					pGraph->TextOut(x, y, PASSWORD_CHAR, 1);
+				else
+					pGraph->TextOut(x, y, glyph.chGlyph, glyph.chGlyph.size());
+			}
 			x += glyph.width;
 		}
 
@@ -1049,7 +1055,10 @@ void CSkinEditCtrl::DrawLine(CRawGraph *pGraph, COneLine *pLine, int x, int xMax
 
 		if (glyph.chGlyph != '\t')
 		{
-			pGraph->TextOut(x, y, glyph.chGlyph, glyph.chGlyph.size());
+			if (IsPassword())
+				pGraph->TextOut(x, y, PASSWORD_CHAR, 1);
+			else
+				pGraph->TextOut(x, y, glyph.chGlyph, glyph.chGlyph.size());
 		}
 		x += glyph.width;
 	}
@@ -1069,7 +1078,10 @@ void CSkinEditCtrl::UpdateWidthInfoOfLine(CRawGraph *pGraph, COneLine *pLine)
 		}
 		else
 		{
-			pGraph->GetTextExtentPoint32(glyph.chGlyph, glyph.chGlyph.size(), &size);
+			if (IsPassword())
+				pGraph->GetTextExtentPoint32(PASSWORD_CHAR, 1, &size);
+			else
+				pGraph->GetTextExtentPoint32(glyph.chGlyph, glyph.chGlyph.size(), &size);
 			glyph.width = (BYTE)size.cx;
 		}
 		x += glyph.width;
@@ -1735,12 +1747,6 @@ void CSkinEditCtrl::InsertChar(int nRow, int nCol, WCHAR chInsert)
 
 	pGraph = GetMemGraphics();
 
-// 	if (chInsert != '\t')
-// 	{
-// 		pGraph->GetTextExtentPoint32(&chInsert, 1, &size);
-// 		glyph.width = size.cx;
-// 	}
-// 	else
 	glyph.chGlyph = chInsert;
 	glyph.clrIndex = CN_TEXT;
 
@@ -1820,9 +1826,6 @@ void CSkinEditCtrl::InsertStr(int nRow, int nCol, LPCTSTR szText, int &nRowNext,
 		}
 		else
 		{
-// 			SIZE		size;
-// 			pGraph->GetTextExtentPoint32(&glyph.chGlyph, 1, &size);
-// 			glyph.width = size.cx;
 			glyph.width = GLYPH_WIDTH_INVALID;
 			pLine->push_back(glyph);
 		}
@@ -2741,6 +2744,14 @@ void CSkinEditCtrl::OnAction(Action action)
 	m_pEditNotification->OnTextChanged();
 }
 
+ID_TO_STRING __EditStyleText[] = 
+{
+	{ CSkinEditCtrl::S_MULTILINE, _T("MULTILINE") },
+	{ CSkinEditCtrl::S_PASSWORD, _T("PASSWORD") },
+	{ CSkinEditCtrl::S_READ_ONLY, _T("READ_ONLY") },
+	{ 0, NULL },
+};
+
 BOOL CSkinEditCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	if (CSkinScrollFrameCtrlBase::SetProperty(szProperty, szValue))
@@ -2752,6 +2763,8 @@ BOOL CSkinEditCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_xMargin = _ttoi(szValue);
 	else if (IsPropertyName(szProperty, _T("YMargin")))
 		m_yMargin = _ttoi(szValue);
+	else if (IsPropertyName(szProperty, _T("Style")))
+		m_nEditorStyles = GetCombinationValue(__EditStyleText, szValue);
 
 	return FALSE;
 }

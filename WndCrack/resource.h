@@ -15,6 +15,7 @@
 #define IDC_HWNDHANDLE                  1000
 #define IDC_HWND_CAPTURED               1000
 #define IDC_SENDMSG                     1001
+#define IDC_HWND_PARENT                 1001
 #define IDC_POSTMSG                     1002
 #define IDC_MSGWPARAM                   1003
 #define IDC_MSGLPARAM                   1004

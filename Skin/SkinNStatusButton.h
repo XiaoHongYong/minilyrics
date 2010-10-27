@@ -60,6 +60,7 @@ protected:
 
 	struct BtStatImg
 	{
+		BtStatImg() : nIDCmd(0) { }
 		tstring			strBkFile, strSelFile, strHoverFile, strDisabledFile;
 		CSFImage		imgBk, imgSel, imgHover, imgDisabled;
 		int				nIDCmd;

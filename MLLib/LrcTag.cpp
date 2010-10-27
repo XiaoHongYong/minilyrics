@@ -69,7 +69,25 @@ bool GetLRCTagValue(LPCSTR szLyrics, LPCSTR szTagPropName, tstring &strValue, CH
 
 	strValue.clear();
 	MBCSToTString(szLyrics + nValPosBeg, nValPosEnd - nValPosBeg, strValue, encoding);
-	// strValue.append(szLyrics + nValPosBeg, nValPosEnd - nValPosBeg);
+
+	TrimStr(strValue);
+
+	return true;
+}
+
+bool GetTxtTagValue(LPCSTR szLyrics, LPCSTR szTagPropName, tstring &strValue, CHAR_ENCODING encoding)
+{
+	const string	strPropName = szTagPropName;
+	int		nValPosBeg, nValPosEnd;
+
+	if (!SearchTxtPropTag(szLyrics, strPropName, nValPosBeg, nValPosEnd))
+		return false;
+
+	strValue.clear();
+	MBCSToTString(szLyrics + nValPosBeg, nValPosEnd - nValPosBeg, strValue, encoding);
+
+	TrimStr(strValue);
+
 	return true;
 }
 
@@ -98,7 +116,7 @@ CHAR_ENCODING GetLyricsTextEncoding(LPBYTE &szLrc, int &nLen)
 	}
 	else
 	{
-#ifdef _WIN32_DESKTOP
+#ifdef _WIN32
 		if (strlen((const char *)szLrc) <= 3 && nLen >= 10)
 		{
 			int		nFlag = IS_TEXT_UNICODE_UNICODE_MASK;
@@ -113,6 +131,8 @@ CHAR_ENCODING GetLyricsTextEncoding(LPBYTE &szLrc, int &nLen)
 		// ANSI text, Retrieve the encoding in lyrics.
 		tstring	strValue;
 		if (GetLRCTagValue((const char *)szLrc, SZ_LRC_ENCODING, strValue, ED_SYSDEF))
+			encoding = GetCharEncodingID(strValue.c_str());
+		else if (GetTxtTagValue((const char *)szLrc, SZ_TXT_ENCODING, strValue, ED_SYSDEF))
 			encoding = GetCharEncodingID(strValue.c_str());
 		else
 			encoding = ED_SYSDEF;
@@ -471,10 +491,20 @@ int CLrcTag::WriteToFile(LPCTSTR szFile, bool bLrcTag)
 	if (!OpenFileToBuffer(szFile, lyrics))
 		return ERR_READ_FILE;
 
-	BugFixOfExtraStrEnding(lyrics);
+	WriteToBuffer(lyrics, bLrcTag);
 
-	LPBYTE	pData = (LPBYTE)lyrics.c_str();
-	int		nLen = lyrics.size();
+	if (!SaveDataAsFile(szFile, lyrics.c_str(), lyrics.size()))
+		return ERR_OPEN_FILE;
+
+	return ERR_OK;
+}
+
+void CLrcTag::WriteToBuffer(CCharBuffer &bufData, bool bLrcTag)
+{
+	BugFixOfExtraStrEnding(bufData);
+
+	LPBYTE	pData = (LPBYTE)bufData.c_str();
+	int		nLen = bufData.size();
 
 	CHAR_ENCODING encoding = GetLyricsTextEncoding(pData, nLen);
 	SetEncoding(encoding);
@@ -492,35 +522,30 @@ int CLrcTag::WriteToFile(LPCTSTR szFile, bool bLrcTag)
 		if (encoding == ED_UNICODE_BIG_ENDIAN)
 			UCS2LEToBE(strW.data(), strW.size());
 
-		lyrics.clear();
+		bufData.clear();
 		if (encoding == ED_UNICODE_BIG_ENDIAN)
-			lyrics.append(SZ_FE_UCS2_BE, 2);
+			bufData.append(SZ_FE_UCS2_BE, 2);
 		else
-			lyrics.append(SZ_FE_UCS2, 2);
-		lyrics.append((LPCSTR)strW.c_str(), strW.size() * sizeof(WCHAR));
+			bufData.append(SZ_FE_UCS2, 2);
+		bufData.append((LPCSTR)strW.c_str(), strW.size() * sizeof(WCHAR));
 	}
 	else
 	{
-		if (pData == (LPBYTE)lyrics.data())
+		if (pData == (LPBYTE)bufData.data())
 		{
-			WriteToText(lyrics, bLrcTag);
+			WriteToText(bufData, bLrcTag);
 		}
 		else
 		{
 			stringex	str;
 			str.append((LPCSTR)pData, nLen);
 			WriteToText(str, bLrcTag);
-			lyrics.clear();
+			bufData.clear();
 			if (encoding == ED_UTF8)
-				lyrics.append(SZ_FE_UTF8, 3);
-			lyrics.append(str.c_str(), str.size());
+				bufData.append(SZ_FE_UTF8, 3);
+			bufData.append(str.c_str(), str.size());
 		}
 	}
-
-	if (!SaveDataAsFile(szFile, lyrics.c_str(), lyrics.size()))
-		return ERR_OPEN_FILE;
-
-	return ERR_OK;
 }
 
 template<class _TCHAR>
@@ -540,14 +565,18 @@ void TrimAppend(stringex_t<_TCHAR> &strTarget, const _TCHAR *str, int nLen)
 template<class _TCHAR>
 bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNameValueMap, stringex_t<_TCHAR> &strLyrContent)
 {
+	strLyrContent.clear();
+
 	const _TCHAR *szLine = str;
 	bool	bFoundTag = false;
 
 	while (szLine)
 	{
 		const _TCHAR * szNextLine = NextLine(szLine);
-
 		szLine = IgnoreSpaces(szLine);
+		int nLineLen = (szNextLine != NULL) ? int(szNextLine - szLine) : _xcslen(szLine);
+		LyrTagType tagType = LTT_UNKNOWN;
+
 		if (*szLine == '[')
 		{
 			if (IsDigit(szLine[1]) && propNameValueMap.ShouldReadLyrContentType())
@@ -555,11 +584,6 @@ bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 				if (IsLrcTimeTag(szLine))
 					propNameValueMap.SetLyrContentType(LCT_LRC);
 			}
-			int nLineLen;
-			if (szNextLine)
-				nLineLen = int(szNextLine - szLine);
-			else
-				nLineLen = _xcslen(szLine);
 
 			int		nValBeg, nValEnd;
 			int		i;
@@ -570,12 +594,15 @@ bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 				{
 					bFoundTag = true;
 					propNameValueMap.SetValue(i, szLine + nValBeg, nValEnd - nValBeg);
+					tagType = propNameValueMap.GetTagType(i);
 					break;
 				}
 			}
-			if (propNameValueMap.ShouldReadMd5() && i == propNameValueMap.GetCount())
-				TrimAppend(strLyrContent, szLine, nLineLen);
 		}
+
+		if (propNameValueMap.ShouldReadMd5() && tagType != LTT_ID)
+			TrimAppend(strLyrContent, szLine, nLineLen);
+
 		szLine = szNextLine;
 	}
 
@@ -585,34 +612,32 @@ bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 template<class _TCHAR>
 bool TxtTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNameValueMap, stringex_t<_TCHAR> &strLyrContent)
 {
+	strLyrContent.clear();
+
 	const _TCHAR *szLine = str;
 	bool	bFoundTag = false;
 
 	while (szLine)
 	{
 		const _TCHAR * szNextLine = NextLine(szLine);
-
 		IgnoreSpaces(szLine);
+		int nLineLen = (szNextLine != NULL) ? int(szNextLine - szLine) : _xcslen(szLine);
+		LyrTagType tagType = LTT_UNKNOWN;
 
-		int nLineLen;
-		if (szNextLine)
-			nLineLen = int(szNextLine - szLine);
-		else
-			nLineLen = _xcslen(szLine);
-
-		int		nValBeg, nValEnd;
-		int		i;
-		for (i = 0; i < propNameValueMap.GetCount(); i++)
+		for (int i = 0; i < propNameValueMap.GetCount(); i++)
 		{
+			int		nValBeg, nValEnd;
 			if (ParseTxtPropTag(szLine, nLineLen, 
 				propNameValueMap.GetTxtName(i), nValBeg, nValEnd))
 			{
 				bFoundTag = true;
 				propNameValueMap.SetValue(i, szLine + nValBeg, nValEnd - nValBeg);
+				tagType = propNameValueMap.GetTagType(i);
 				break;
 			}
 		}
-		if (propNameValueMap.ShouldReadMd5() && i == propNameValueMap.GetCount())
+
+		if (propNameValueMap.ShouldReadMd5() && tagType != LTT_ID)
 			TrimAppend(strLyrContent, szLine, nLineLen);
 
 		szLine = szNextLine;
@@ -881,6 +906,7 @@ class CTestCaseLrcTag : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestParseTxtPropTag);
 	CPPUNIT_TEST(TestReadLine);
 	CPPUNIT_TEST(TestSearchLrcPropTag);
+	CPPUNIT_TEST(TestSearchTxtPropTag);
 	CPPUNIT_TEST(TestGetLRCTagValue);
 	CPPUNIT_TEST(TestGetLyricsTextEncoding);
 	CPPUNIT_TEST(TestBugFixOfExtraStrEnding);
@@ -1052,6 +1078,34 @@ protected:
 		}
 	}
 
+	void TestSearchTxtPropTag()
+	{
+		// These are succeeded cases. encoding: iso-8859-15\r\nArtist: Alexandra Burke\r\nTitle: Candyman
+		LPCTSTR		vTestTag[] = { _T("Title:value\nArtist:val2\nTitle:title"), _T("   title:val ue"), _T("[xx]\n  Title:value\nArtist:val") };
+		LPCTSTR		vValue[] = { _T("value"), _T("val ue"), _T("value") };
+
+		string		strPropName = SZ_TXT_TI;
+		int			nValBegPos, nValEndPos;
+		for (int i = 0; i < CountOf(vTestTag); i++)
+		{
+			bool bRet = SearchTxtPropTag(vTestTag[i], strPropName, nValBegPos, nValEndPos);
+			if (!bRet)
+				CPPUNIT_FAIL_T(CStrPrintf(_T("SearchTxtPropTag: failed, case: %d, %s"), i, vTestTag[i]).c_str());
+
+			if (_tcsncmp(vValue[i], vTestTag[i] + nValBegPos, int(nValEndPos - nValBegPos)) != 0)
+				CPPUNIT_FAIL_T(CStrPrintf(_T("SearchTxtPropTag: Wrong Pos: %d, %d, case: %d, %s"), nValBegPos, nValEndPos, i, vTestTag[i]).c_str());
+		}
+
+		// Failed case
+		LPCTSTR		vTestTagFailed[] = { _T("Ti tle:value\nAr:val2"), _T("Title val ue") };
+		for (int i = 0; i < CountOf(vTestTagFailed); i++)
+		{
+			bool bRet = SearchTxtPropTag(vTestTagFailed[i], strPropName, nValBegPos, nValEndPos);
+			if (bRet)
+				CPPUNIT_FAIL_T(CStrPrintf(_T("SearchTxtPropTag(Failure test): failed, case: %d, %s"), i, vTestTagFailed[i]).c_str());
+		}
+	}
+
 	void TestGetLRCTagValue()
 	{
 		// These are succeeded cases.
@@ -1085,9 +1139,11 @@ protected:
 		{
 			// ANSI file testing...
 			LPCSTR		vTestTag[] = { "[ encoding:gb2312]\n[ar:val2]\n[ti:title]", "   [encoding:big5]", "[xx]\n  [encoding:utf-8]\n[ar:val]\n[ti:title]",
+				" encoding:gb2312\nArtist:val2\n[", "   encoding:big5", "[xx]\n  encoding:utf-8\n",
 				SZ_FE_UCS2 "abc", SZ_FE_UCS2_BE "abc", SZ_FE_UTF8 "abc", ""
 				};
 			CHAR_ENCODING	vEncoding[] = { ED_GB2312, ED_BIG5, ED_UTF8,
+				ED_GB2312, ED_BIG5, ED_UTF8,
 				ED_UNICODE, ED_UNICODE_BIG_ENDIAN, ED_UTF8, ED_SYSDEF
 				};
 

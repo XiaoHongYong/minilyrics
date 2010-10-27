@@ -49,6 +49,13 @@ void CSkinScrollFrameCtrlBase::OnCreate()
 
 void CSkinScrollFrameCtrlBase::OnSize(int cx, int cy)
 {
+	if (m_pObjFrame)
+	{
+		CSkinFrameCtrl *pFrameCtrl = (CSkinFrameCtrl *)m_pObjFrame;
+		int nBorderThick = pFrameCtrl->GetBorderThick();
+		m_rcObj.OffsetRect(-nBorderThick, -nBorderThick);
+	}
+
 	CSkinContainer::OnSize(cx, cy);
 
 	m_rcCtrl.left = m_rcObj.left + m_nLeftMargin;

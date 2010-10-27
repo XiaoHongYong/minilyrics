@@ -83,9 +83,14 @@ enum MLMsgCmd
 	MC_SEARCH,				// 搜索（歌词……）
 	MC_BATCH_SEARCH,		// Search lyrics by batch
 	MC_CAN_UPLOAD,			// 是否能够上传（歌词……），服务器返回结果，如果不能上传会返回具体的原因
+	MC_UPLOADV0,			// 上传（歌词……）
 	MC_UPLOAD,				// 上传（歌词……）
-	MC_UPLOAD2,				// 上传（歌词……）
 	MC_POST_BUG,			// 发送Bug
+
+	// Admin messages
+	MC_GET_LYR_UPDATE,
+	MC_SUBMIT_LYR_REVIEW,
+	MC_EXE_SVR_CMD,
 
 	//
 	// 从服务器发送到客户端的消息
@@ -100,8 +105,13 @@ MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 #define MZ_SEARCH			_T("search")
 #define MZ_BATCH_SEARCH		_T("batchsearch")		// MiniLyrics 7.1 or later
 #define MZ_CANUPLOAD		_T("canupload")
-#define MZ_UPLOAD			_T("upload")
+#define MZ_UPLOADV0			_T("upload")
+#define MZ_UPLOAD			_T("uploadV1")
 #define MZ_POST_BUG			_T("bug")
+
+#define MZ_GET_LYR_UPDATE	_T("GetLyrUpdate")
+#define MZ_SUBMIT_LYR_REVIEW _T("SubmitLyrReview")
+#define MZ_EXE_SVR_CMD		_T("ExeSvrCmd")
 
 #define MZ_FILEINFO			_T("fileinfo")
 #define MZ_ITEM				_T("item")
@@ -389,7 +399,8 @@ typedef MLMsgRetSearch MLMsgRetCanUpload;
 // 返回值:
 //		ERR_OK			-	成功
 //		ERR_REDIRECT		-	重定向连接
-class MLMsgCmdUpload : public CXMLMsgCmd
+//  7.0.615 and before.
+class MLMsgCmdUploadV0 : public CXMLMsgCmd
 {
 public:
 	tstring		strLoginName;
@@ -407,14 +418,14 @@ public:
 	virtual int ToXML(CXMLWriter &xmlFile);
 
 };
-typedef MLMsgRetSearch MLMsgRetUpload;
+typedef MLMsgRetSearch MLMsgRetUploadV0;
 
 // 客户端向服务器请求上传
 //
 // 返回值:
 //		ERR_OK			-	成功
 //		ERR_REDIRECT		-	重定向连接
-class MLMsgCmdUpload2 : public MLMsgCmdUpload
+class MLMsgCmdUpload : public CXMLMsgCmd
 {
 public:
 	tstring		strLoginName;
@@ -426,10 +437,10 @@ public:
 	virtual int ToXML(CXMLWriter &xmlFile);
 
 };
-typedef MLMsgRetSearch MLMsgRetUpload;
+typedef MLMsgRetSearch MLMsgRetUploadV0;
 
 // New version of upload lyrics command (since 7.1 or later)
-class MLMsgRetUpload2 : public MLMsgRetUpload
+class MLMsgRetUpload : public MLMsgRetUploadV0
 {
 public:
 	tstring					strLyricsId;	// Returned lyrics, this will be saved in the uploaded lyrics.

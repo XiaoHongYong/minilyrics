@@ -23,6 +23,7 @@ CWorkObjBase::~CWorkObjBase()
 void CWorkObjBase::CreateWorkThread(CBaseWnd *hWndNotify)
 {
 	m_hWndNotify = hWndNotify;
+	m_bJobCanceled = false;
 	m_threadWork.Create(WorkThread, this);
 }
 
@@ -45,16 +46,11 @@ void CWorkObjBase::WorkThread(LPVOID lpParam)
 //////////////////////////////////////////////////////////////////////
 
 
-CPageWaitMessage::CPageWaitMessage(bool bEndToClose) : CSkinPageHandler(GetPageID(),
+CPageWaitMessage::CPageWaitMessage(bool bEndToClose) : CSkinPageHandler(GetPageIdStr(),
 	NULL, _T("CID_AM_SHOW_WAIT"), NULL, _T("CID_AM_HIDE_WAIT"))
 {
 	m_bEndToClose = bEndToClose;
 	m_pWorkObj = NULL;
-}
-
-LPCTSTR CPageWaitMessage::GetPageID()
-{
-	return _T("CID_WAIT");
 }
 
 void CPageWaitMessage::StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase *pWorkObj)
@@ -65,7 +61,7 @@ void CPageWaitMessage::StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase
 	m_pWorkObj = pWorkObj;
 	ASSERT(pWorkObj);
 
-	m_pParent->SwitchToPage(GetPageID());
+	m_pParent->SwitchToPage(GetPageId());
 }
 
 void CPageWaitMessage::OnShow()
@@ -94,15 +90,18 @@ void CPageWaitMessage::OnCancel()
 	}
 }
 
+void CPageWaitMessage::OnWorkEnd()
+{
+	if (m_bEndToClose)
+		CSkinPageHandler::OnCancel();
+	else
+		m_pParent->SwitchToLastPage();
+}
+
 void CPageWaitMessage::OnUserMessage(int nMessageID, LPARAM param)
 {
 	if (nMessageID == UMSG_WORK_END)
-	{
-		if (m_bEndToClose)
-			CSkinPageHandler::OnCancel();
-		else
-			m_pParent->SwitchToLastPage();
-	}
+		OnWorkEnd();
 }
 
 //////////////////////////////////////////////////////////////////////

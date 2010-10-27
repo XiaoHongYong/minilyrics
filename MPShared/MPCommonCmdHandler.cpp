@@ -16,6 +16,7 @@
 //#include "DlgSelEncoding.h"
 //#include "LrcUploadDlg.h"
 //#include "LoginDlg.h"
+#include "DlgUpload.h"
 #include "AutoProcessEmbeddedLyrics.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
@@ -871,17 +872,25 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_SAVE_LYR_IN_SONG_FILE:
 		OnCommand(IDC_SAVE_LYRICS_TO_MP3);
 		break;
-/*	case CMD_UPLOAD_LYR:
+	case CMD_UPLOAD_LYR:
 		{
-			// 上传歌词
-			CLrcUploadDlg	dlg;
-
-			dlg.DoModal(m_pSkinWnd);
+			// show upload lyrics dialog
+			tstring	strLyrics;
+			if (g_LyricData.ToString(strLyrics, FT_LYRICS_LRC, true))
+			{
+				CMPSkinDialog::ShowDialog(
+					new CDlgUpload(strLyrics, 
+						g_LyricData.GetSongFileName(),
+						g_LyricData.GetLyricsFileName()), 
+					m_pSkinWnd);
+			}
+			else
+				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
 		}
-		break;*/
+		break;
 	case CMD_EXTERNAL_LYR_EDIT:
 		//
-		// 调用外部的编辑器编辑歌词
+		// Edit lyrics with external editor.
 		if (g_LyricData.GetLyricsSourceType() != LST_FILE)
 		{
 			m_pSkinWnd->MessageOut(TOLOCAL(_T("Embedded lyrics can not be edited with external editors.")));

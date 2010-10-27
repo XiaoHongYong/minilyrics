@@ -42,14 +42,9 @@ protected:
 
 class CPageWaitMessage : public CSkinPageHandler
 {
+	DECLARE_PAGE_HANDLER(_T("CID_WAIT"))
 public:
 	CPageWaitMessage(bool bEndToClose);
-
-	~CPageWaitMessage()
-	{
-	}
-
-	static LPCTSTR GetPageID();
 
 	void StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase *pWorkObj);
 
@@ -58,6 +53,8 @@ public:
 	void OnOK();
 
 	void OnCancel();
+
+	virtual void OnWorkEnd();
 
 	void OnUserMessage(int nMessageID, LPARAM param);
 

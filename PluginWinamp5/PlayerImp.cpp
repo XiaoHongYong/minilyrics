@@ -12,6 +12,9 @@
 
 bool g_bKmplayer = false;
 
+bool g_bMediaMonkey = false;
+const UINT g_msgMediaMonkeyEmbeder = RegisterWindowMessage(_T("MediaMonkeyEmbederToMiniLyrics"));
+
 UINT Get_WMCOMMAND_Id(UINT fallback)
 {
 	DWORD	dwVersion = 0;
@@ -384,19 +387,73 @@ void CheckMediaUpdate()
 	OnMediaChanged(szFile, szMediaTitle);
 }
 
+HWND FindMiniLyricsParentWnd(HWND hWndParent, HWND hWndMiniLyrics)
+{
+	HWND hWndNext = NULL;
+
+	while (1)
+	{
+		hWndNext = FindWindowEx(hWndParent, hWndNext, NULL, NULL);
+		if (!hWndNext)
+			break;
+		if (hWndNext == hWndMiniLyrics)
+			return hWndParent;
+		else
+		{
+			HWND hWnd = FindMiniLyricsParentWnd(hWndNext, hWndMiniLyrics);
+			if (hWnd)
+				return hWnd;
+		}
+	}
+
+	return NULL;
+}
+
+bool IsMLEmbeddedInMediaMonkey()
+{
+	HWND hWndMiniLyrics = g_MLService.GetMainWindow();
+	assert(hWndMiniLyrics);
+
+	static HWND hWndMiniLyricsParent = NULL;
+	if (hWndMiniLyricsParent
+		&& FindMiniLyricsParentWnd(hWndMiniLyricsParent, hWndMiniLyrics))
+		return true;
+
+	HWND	hWndMediaMonkey = NULL;
+	while (1)
+	{
+		hWndMediaMonkey = FindWindowEx(NULL, hWndMediaMonkey, _T("TFMainWindow"), NULL);
+		if (!hWndMediaMonkey)
+			break;
+		hWndMiniLyricsParent = FindMiniLyricsParentWnd(hWndMediaMonkey, hWndMiniLyrics);
+		if (hWndMiniLyricsParent)
+			return true;
+	}
+
+	return false;
+}
+
 class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
 {
 public:
+	enum
+	{
+		TIMER_MEDIA_MONKEY_EMBEDER = TIMER_NEXT + 1
+	};
 	void OnCreate()
 	{
 		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
 		SetTimer(m_hWnd, TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO, NULL);
+		if (g_bMediaMonkey)
+			SetTimer(m_hWnd, TIMER_MEDIA_MONKEY_EMBEDER, 5000, NULL);
 	}
 
 	void OnDestroy()
 	{
 		KillTimer(m_hWnd, TIMER_GETPOS);
 		KillTimer(m_hWnd, TIMER_CHECK_MEDIA);
+		if (g_bMediaMonkey)
+			KillTimer(m_hWnd, TIMER_MEDIA_MONKEY_EMBEDER);
 	}
 
 	void OnTimer(int nTimerID)
@@ -421,6 +478,15 @@ public:
 		}
 		else if (nTimerID == TIMER_CHECK_MEDIA)
 			CheckMediaUpdate();
+		else if (nTimerID == TIMER_MEDIA_MONKEY_EMBEDER)
+		{
+			if (IsMLEmbeddedInMediaMonkey())
+			{
+				// Has Embedded parent
+				PostMessage(g_MLService.GetMainWindow(), g_msgMediaMonkeyEmbeder, true, 0);
+				// KillTimer(m_hWnd, TIMER_MEDIA_MONKEY_EMBEDER);
+			}
+		}
 	}
 
 };
@@ -627,11 +693,9 @@ int init()
 	// now we can use other g_MLService functions.
 	char	szMsg[256];
 
-	wsprintf(szMsg, "Start Winamp2 Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
+	wsprintf(szMsg, "Start Winamp2 Player plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
 	g_MLService.Log(szMsg);
 
-	// don't load any further if the winamp window could not be created
-	// of the sublcass fails
 	return 0;
 }
 
@@ -909,7 +973,10 @@ int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
 			strcpy_safe(lpszBuffer, nBufSize, "Winamp2");
 	}
 	else if (strcmp(szExeName, "MediaMonkey.exe") == 0)
+	{
+		g_bMediaMonkey = true;
 		strcpy_safe(lpszBuffer, nBufSize, "MediaMonkey");
+	}
 	else if (strcmp(szExeName, "AIMP2.exe") == 0)
 		strcpy_safe(lpszBuffer, nBufSize, "AIMP2");
 	else if (strcmp(szExeName, "KMPlayer.exe") == 0)

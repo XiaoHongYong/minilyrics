@@ -455,6 +455,8 @@ void CWndCrackDlg::SetCapturedWnd(HWND hWndCap)
 	//
 	// 取得窗口的属性
 	//
+	sprintf(szBuffer, "%X", (DWORD)::GetParent(hWndCap));
+	SetDlgItemText(IDC_HWND_PARENT, szBuffer);
 
 	// 窗口标题
 	::SendMessage(hWndCap, WM_GETTEXT, 1024, (LPARAM)szBuffer);

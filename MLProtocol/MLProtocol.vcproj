@@ -629,6 +629,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\MLProtocolAdmin.cpp"
+				>
+			</File>
+			<File
 				RelativePath="MLUtils.cpp"
 				>
 				<FileConfiguration
@@ -869,6 +873,10 @@
 			</File>
 			<File
 				RelativePath="MLProtocol.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MLProtocolAdmin.h"
 				>
 			</File>
 			<File

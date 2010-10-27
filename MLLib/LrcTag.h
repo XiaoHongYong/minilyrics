@@ -5,6 +5,7 @@ DECLAR_CPPUNIT_TEST_REG(LrcTag)
 
 enum LyrTagType
 {
+	LTT_UNKNOWN			= 0,
 	LTT_ARTIST			= 1,
 	LTT_TITLE			= 1 << 1,
 	LTT_ALBUM			= 1 << 2,
@@ -149,7 +150,7 @@ protected:
 class CLrcTag : public LyricsProperties
 {
 public:
-	CLrcTag(uint32 tagMask = LTT_ALL_TAG) { m_tagMask = tagMask; }
+	CLrcTag(uint32 tagMask = LTT_ALL_TAG) { m_tagMask = tagMask; m_szMd5OfLyrContent[0] = '\0'; }
 
 	void SetTagMask(uint32 tagMask = LTT_ALL_TAG) { m_tagMask = tagMask; }
 
@@ -162,6 +163,7 @@ public:
 	bool ReadFromText(LPCWSTR str, int nLen);
 
 	int WriteToFile(LPCTSTR szFile, bool bLrcTag);
+	void WriteToBuffer(CCharBuffer &bufData, bool bLrcTag);
 	void WriteToText(stringex &str, bool bLrcTag);
 	void WriteToText(wstringex &str, bool bLrcTag);
 

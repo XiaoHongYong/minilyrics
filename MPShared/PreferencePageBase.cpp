@@ -20,11 +20,6 @@ CPagePfBase::CPagePfBase(LPCTSTR szIdPage, PreferPageID pfPageId, LPCTSTR szAsso
 
 void CPagePfBase::OnCreate()
 {
-	m_nAnimationShowFLeft = NewAnimationObj(_T("MoveFromLeft"), m_strPageId.c_str());
-	m_nAnimationShowFRight = NewAnimationObj(_T("MoveFromRight"), m_strPageId.c_str());
-	m_nAnimationHide2Left = NewAnimationObj(_T("MoveToLeft"), m_strPageId.c_str());
-	m_nAnimationHide2Right = NewAnimationObj(_T("MoveToRight"), m_strPageId.c_str());
-
 	CSkinPageHandler::OnCreate();
 }
 
@@ -272,19 +267,4 @@ void CPagePfBase::CheckToolbarDefaultPage(LPCTSTR szToolbarId)
 	}
 	else
 		ASSERT(0);
-}
-
-int CPagePfBase::NewAnimationObj(LPCTSTR szAnimationName, LPCTSTR szTargetUIObj)
-{
-	CSkinFactory	*pSkinFactory = m_pSkinWnd->GetSkinFactory();
-	CUIObject *pObj = pSkinFactory->CreateUIObject(m_pSkinWnd, CSkinAnimationObj::ClassName(), NULL);
-	if (!pObj)
-		return SKIN_UIOBJ_ID_UNDEFINE;
-
-	pObj->m_nId = pSkinFactory->AllocCustomID();
-	pObj->SetProperty(szAnimationName, szTargetUIObj);
-
-	m_pSkinWnd->GetRootContainer()->AddUIObject(pObj);
-
-	return pObj->m_nId;
 }

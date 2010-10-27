@@ -118,10 +118,6 @@ int CDownloadMgr::Init()
 
 	// 缺省下载路径
 	m_strDefSavePath = CMLProfile::GetDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""));
-	if (m_strDefSavePath.empty() || !CanWriteInDir(m_strDefSavePath.c_str()))
-	{
-		CreateDefaultLyricsDir(m_strDefSavePath);
-	}
 
 	// 自动下载
 	m_bAutoDownload = g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("EnableAuoDownload"), true);
@@ -796,6 +792,9 @@ int CDownloadMgr::SaveDownloadedFile(tstring &strFile, LPCVOID lpData, int nSize
 
 		if (!SaveDataAsFile(strFile.c_str(), lpData, nSize))
 		{
+			if (m_strDefSavePath.empty() || !CanWriteInDir(m_strDefSavePath.c_str()))
+				CreateDefaultLyricsDir(m_strDefSavePath);
+
 			// save in the default directory
 			tstring	strSaveFile = m_strDefSavePath;
 			DirStringFormat(strSaveFile);

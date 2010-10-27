@@ -224,13 +224,13 @@ public:
 		CID_PREV_PAGE = 0;
 		CID_NEXT_PAGE = 0;
 		CID_OPEN = 0;
+		CID_GOOGLE = 0;
 		CID_MORE = 0;
 		CID_CANCEL = 0;
 		CID_E_ARTIST = 0;
 		CID_E_TITLE = 0;
 		CID_SEARCH = 0;
 		CID_L_LYRICS = 0;
-		CID_SHOW_ERR_RESULT = 0;
 	}
 
 	~CPageSearchLyrics()
@@ -282,13 +282,13 @@ public:
 		GET_ID_BY_NAME(CID_PREV_PAGE);
 		GET_ID_BY_NAME(CID_NEXT_PAGE);
 		GET_ID_BY_NAME(CID_OPEN);
+		GET_ID_BY_NAME(CID_GOOGLE);
 		GET_ID_BY_NAME(CID_MORE);
 		GET_ID_BY_NAME(CID_CANCEL);
 		GET_ID_BY_NAME(CID_E_ARTIST);
 		GET_ID_BY_NAME(CID_E_TITLE);
 		GET_ID_BY_NAME(CID_SEARCH);
 		GET_ID_BY_NAME(CID_L_LYRICS);
-		GET_ID_BY_NAME(CID_SHOW_ERR_RESULT);
 
 		// Save current media info.
 		m_strSongFile = g_Player.GetSrcMedia();
@@ -594,7 +594,19 @@ public:
 		{
 			OnOK();
 		}
-		else if (nId == CID_SHOW_ERR_RESULT)
+		else if (nId == CID_GOOGLE)
+		{
+			//
+			tstring		strLink = _T("http://www.google.com/cse?cx=partner-pub-6917905549616855%3All7s7l-jge2&ie=ISO-8859-1&q=");
+			tstring strArtist = GetUIObjectText(CID_E_ARTIST);
+			tstring strTitle = GetUIObjectText(CID_E_TITLE);
+			strrep(strArtist, _T(" "), _T("+"));
+			strrep(strTitle, _T(" "), _T("+"));
+			strLink += strArtist + _T("+") + strTitle;
+			strLink += _T("&siteurl=viewlyrics.com%2Fsearch.htm");
+			OpenUrl(m_pSkinWnd, strLink.c_str());
+		}
+		else if (nId == CMD_SHOW_ERR_RESULT)
 		{
 			if (m_nErrResultToShow == ERR_NOT_FOUND)
 			{
@@ -716,7 +728,7 @@ protected:
 		else if (m_pSearchObj->m_nResult != ERR_OK && !m_pSearchObj->IsJobCanceled())
 		{
 			m_nErrResultToShow = m_pSearchObj->m_nResult;
-			m_pSkinWnd->PostCustomCommandMsg(CID_SHOW_ERR_RESULT);
+			m_pSkinWnd->PostCustomCommandMsg(CMD_SHOW_ERR_RESULT);
 		}
 
 		m_nCurPage = m_pSearchObj->m_nCurPage;
@@ -834,7 +846,7 @@ protected:
 		m_pSearchObj->m_pvSearchResult = &m_vResultsInet;
 		m_pSearchObj->m_nCurPage = m_nCurPage;
 
-		CPageWaitMessage	*pPageWait = (CPageWaitMessage *)m_pParent->GetPage(_T("CID_WAIT"));
+		CPageWaitMessage	*pPageWait = (CPageWaitMessage *)m_pParent->GetPage(CPageWaitMessage::GetPageIdStr());
 		ASSERT(pPageWait);
 		if (pPageWait)
 		{
@@ -974,8 +986,8 @@ protected:
 	}
 
 protected:
-	int			CID_PREV_PAGE, CID_NEXT_PAGE, CID_OPEN, CID_MORE, CID_CANCEL;
-	int			CID_E_ARTIST, CID_E_TITLE, CID_SEARCH, CID_L_LYRICS, CID_SHOW_ERR_RESULT;
+	int			CID_PREV_PAGE, CID_NEXT_PAGE, CID_OPEN, CID_GOOGLE, CID_MORE, CID_CANCEL;
+	int			CID_E_ARTIST, CID_E_TITLE, CID_SEARCH, CID_L_LYRICS;
 
 	V_LRCSEARCHRESULT	m_vResultsLocal;
 	V_LRCSEARCHRESULT	m_vResultsInet;

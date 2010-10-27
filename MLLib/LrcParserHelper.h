@@ -292,3 +292,35 @@ bool SearchLrcPropTag(const _TCHAR *szText, const string &strPropName,
 
 	return false;
 }
+
+template<class _TCHAR>
+bool SearchTxtPropTag(const _TCHAR *szText, const string &strPropName,
+					  int &nValPosBeg, int &nValPosEnd)
+{
+	const _TCHAR *szLine = szText;
+
+	while (szLine)
+	{
+		const _TCHAR * szNextLine = NextLine(szLine);
+
+		szLine = IgnoreSpaces(szLine);
+
+		int nLineLen;
+		if (szNextLine)
+			nLineLen = int(szNextLine - szLine);
+		else
+			nLineLen = _xcslen(szLine);
+		if (ParseTxtPropTag(szLine, nLineLen, strPropName, nValPosBeg, nValPosEnd))
+		{
+			// Got it.
+			int	nOffset = int(szLine - szText);
+			nValPosBeg += nOffset;
+			nValPosEnd += nOffset;
+			return true;
+		}
+
+		szLine = szNextLine;
+	}
+
+	return false;
+}
