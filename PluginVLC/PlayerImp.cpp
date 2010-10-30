@@ -325,6 +325,10 @@ void CPlayerImp::MediaChangedCheck()
 	wchar_t		wszTemp[260];
 	wstring		m_strArtist, m_strAlbum, m_strTitle, m_strSrcMedia;
 
+	static char szUriOld[MAX_PATH] = "";
+	if (strcmp(p_item->psz_uri, szUriOld) == 0)
+		return;
+	strcpy_safe(szUriOld, CountOf(szUriOld), p_item->psz_uri);
 
 	EmptyStr(wszTemp);
 	UTF8ToUCS2(p_item->psz_uri, -1, wszTemp, CountOf(wszTemp));
