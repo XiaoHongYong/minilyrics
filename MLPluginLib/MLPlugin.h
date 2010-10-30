@@ -2,64 +2,26 @@
 #define _ML_PLUGIN_HEADER_
 
 #include <windows.h>
+#include <assert.h>
+#include <tchar.h>
+
+#include <string>
+using namespace std;
+
+#include "PluginHelper.h"
 #include "MiniLyricsPlugin.h"
 #include "IPlayer.h"
-#include "assert.h"
-#include <string>
 #include "PlayerInfoQueryBaseWnd.h"
-
-using namespace std;
 
 extern HINSTANCE		g_hInstance;
 extern HMODULE			g_hModMiniLyrics;
 extern HWND				g_hwndPlayer;
 extern class CMLService	g_MLService;
-extern PlayerServiceEntry g_PlayerEntry;
-
-#define EmptyStr(str)	(str[0] = '\0')
-#define CountOf(arr)	(sizeof(arr) / sizeof(arr[0]))
-
-#define IsEmptyString(str)	(str[0] == '\0')
-
-int UTF8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen);
-
-BOOL GetProgramPath(char szPath[], HINSTANCE hInstance/* = NULL*/);
-
-LPCSTR UrlGetName(LPCSTR szFile);
-
-bool IsFileExist(LPCSTR szFileName);
-
-void DirStringFormat(LPSTR	szDir);
+extern IPlayer			*g_pPlayer;
 
 BOOL InitMiniLyricsPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlags = 0);
 
-BOOL WritePrivateProfileInt(
-							LPCSTR lpAppName,  // section name
-							LPCSTR lpKeyName,  // key name
-							int nValue,			// int to add
-							LPCSTR lpFileName  // initialization file
-							);
-
-char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource);
-char *strcat_safe(char * dst, int Size, const char * src);
-
-wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource);
-WCHAR * __cdecl wcscat_safe (
-        WCHAR * dst,
-		int	Size,
-        const WCHAR * src
-        );
-
-
-#ifdef _UNICODE
-#define _tcscpy_safe		wcscpy_safe
-#define _tcscat_safe		wcscat_safe
-#else
-#define _tcscpy_safe		strcpy_safe
-#define _tcscat_safe		strcat_safe
-#endif
-
-int MBCSToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage = CP_ACP);
+BOOL InitMiniLyricsMsgPlugin(HINSTANCE hInst, IPlayer *pPlayer, DWORD mlStartupFlags = 0);
 
 long PlayerImpService(int nCommand, MLPARAM Param1, MLPARAM Param2);
 
@@ -85,12 +47,17 @@ public:
 
 		if (pMLEntry->uVersion != ML_IF_VERSION)
 		{
-			MessageBoxA(NULL, "Unsupported minilyrics interface version!", "MiniLyrics", MB_OK);
+			MessageBoxA(NULL, "Unsupported MiniLyrics interface version!", "MiniLyrics", MB_OK);
 			return FALSE;
 		}
 
 		m_funMLService = pMLEntry->funMLService;
 		return TRUE;
+	}
+
+	void SetEntryPoint(FUNMLService funMLService)
+	{
+		m_funMLService = funMLService;
 	}
 
 	void AddWndCloseto(HWND hWnd, LPCSTR szWndClass, LPCSTR szWndName)

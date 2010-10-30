@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 9.00
-# Visual Studio 2005
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "base", "..\base\base.vcproj", "{CEF9924B-FD3B-4FCE-B54B-68EC523B5D29}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Utils", "..\Utils\Utils.vcproj", "{4FD91EED-050C-4F41-9D31-AB6B5FE92BBE}"

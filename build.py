@@ -92,8 +92,8 @@ if TargetML == 0 and TargetZP == 0:
 # Build MiniLyrics
 if TargetML:
 	# Create libvlccore.lib for PluginVLC
-	cmd = "lib /DEF:PluginVLC\\libvlccore.def /OUT:PluginVLC\\libvlccore.lib" 
-	ExecuteOnErrQuit(cmd)
+	# cmd = "lib /DEF:PluginVLC\\libvlccore.def /OUT:PluginVLC\\libvlccore.lib" 
+	# ExecuteOnErrQuit(cmd)
 
 	MLSolutions = [
 		[ " ZikiPlayer.sln", "\"Unicode Release|Win32\" /project MiniLyrics6" ],
@@ -116,6 +116,7 @@ if TargetML:
 		[ " PluginZune\\PluginZune.sln", "\"Release|Win32\"" ],
 		[ " PluginSpotify\\PluginSpotify.sln", "\"Release|Win32\"" ],
 		[ " PluginMPC\\PluginMPC.sln", "\"Unicode Release|Win32\"" ],
+		[ " PluginMiniLyrics\\PluginMiniLyrics.sln", "\"Release|Win32\"" ],
 		[ " MLEncrypt\\MLEncrypt.sln", "\"Release|Win32\"" ],
 		#[ " PluginYme\\PluginYme.sln", "\"Release|Win32\"" ],
 		[ " MLInstallOptions\\MLInstallOptions.sln", "\"Release|Win32\"" ]
@@ -134,6 +135,7 @@ if TargetML:
 
 	shutil.copy(r"bin\Installopt.dll", r"Install_ML\Installopt.dll")
 	shutil.copy(r"bin\MiniLyrics.dll", r"Install_ML\Share\MiniLyrics.dll")
+	shutil.copy(r"bin\PluginMiniLyrics.exe", r"Install_ML\Share\PluginMiniLyrics.exe")
 
 	# Create MLVersion.nsh
 	f = open(r"Install_ML\MLVersion.nsh", "w")

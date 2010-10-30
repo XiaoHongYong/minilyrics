@@ -14,6 +14,7 @@
 #define _WIN32_WINNT 0x0400
 #endif
 #define _ATL_APARTMENT_THREADED
+#define _WIN32_IE 0x0500
 
 #include <afxwin.h>
 #include <afxdisp.h>

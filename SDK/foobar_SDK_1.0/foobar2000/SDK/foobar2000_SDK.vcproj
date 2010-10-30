@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="foobar2000_SDK"
 	ProjectGUID="{E8091321-D79D-4575-86EF-064EA1A4A20D}"
 	RootNamespace="foobar2000_SDK"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform

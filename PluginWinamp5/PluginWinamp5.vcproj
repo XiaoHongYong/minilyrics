@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="C:\Program Files\MediaMonkey\Plugins\gen_MiniLyrics.dll"
+				OutputFile="C:\Program Files\Winamp2.95\Plugins\gen_MiniLyrics.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
@@ -161,7 +161,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="/mapinfo:lines /mapinfo:EXPORTS "
 				OutputFile="..\bin\gen_MiniLyrics.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"

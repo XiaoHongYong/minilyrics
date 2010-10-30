@@ -102,15 +102,11 @@ enum MLCommand
 
 	MLSwitchToEmbeddedSkin		= 20,	// switch to Embedded skin. param1 = 1 switch to embedded skin mode; param1 = 0 switch to MiniLyrics traditional skin. 
 
-	MLTitleChangedW				= 34,		// param1: const WCHAR * media title: artist - title, param2, unused
 	MLLogW						= 37,		// write log, param1: log message(LPCWSTR);
 
 	MLDestroyNotifyWnd			= 40,		// Destroy the hidden notification window of MiniLyrics.
 
 	MLMediaInfoChanged			= 41,		// Notify MiniLyrics that media info is changed. param1: MLMediaInfo *
-
-	// Deprecated, use MLMediaInfoChanged
-	MLTitleChanged				= 4,		// param1: const char * media title: artist - title, param2, unused
 
 };
 
@@ -182,28 +178,6 @@ enum PlayerIFCommand
 	notifyDetachedFromParentWnd	= 40,	// MiniLyrics window has been detached from parent window
 	cmdGetEmbeddedSkinName		= 41,	// param1: char *buffer; param2: buffer length
 	cmdGetSkinThemeColor		= 50,	// param1: color name(SKIN_CLR_NAME); param2: color value, type COLORREF
-
-	//
-	// Deprecated, use MLMediaInfoChanged
-	//
-
-	// some players support ucs2 encoding
-	// UCS2 cmd
-	cmdSetUcs2					= 60,	// The player should notify the message in UCS2 encoding
-	// param  : MiniLyrics would like receive: if param1 1, ucs2, 0: ansi
-	// return : player support encoding: if return 1, ucs2, 0: ansi
-
-	cmdGetSourceMedia			= 12,	// param1, char *buffer, param2, buffer length
-	cmdGetArtist				= 13,	// param1, char *buffer, param2, buffer length
-	// cmdGetFullTitle			= 14,	// param1, char *buffer, param2, buffer length
-	cmdGetTitle					= 15,	// param1, char *buffer, param2, buffer length
-	cmdGetAlbum					= 16,	// param1, char *buffer, param2, buffer length
-
-	cmdGetSourceMediaW			= 62,	// param1, const WCHAR *buffer, param2, buffer length
-	// cmdGetFullTitleW			= 64,	// param1, const WCHAR *buffer, param2, buffer length
-	cmdGetArtistW				= 65,	// param1, char *buffer, param2, buffer length
-	cmdGetTitleW				= 66,	// param1, char *buffer, param2, buffer length
-	cmdGetAlbumW				= 67,	// param1, char *buffer, param2, buffer length
 
 };
 

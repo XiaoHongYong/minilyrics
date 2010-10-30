@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="PluginWMPVis"
 	ProjectGUID="{B60236E3-8E10-485F-9C6E-CC58B097E3DF}"
 	RootNamespace="PluginWMPVis"
 	Keyword="AtlProj"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -83,6 +84,8 @@
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\../../Output/PlugWMPVis/Debug/PluginWMPVis.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../Output/PlugWMPVis/Debug/PluginWMPVis.lib"
 				TargetMachine="1"
 			/>
@@ -105,9 +108,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -180,6 +180,8 @@
 				ModuleDefinitionFile=".\PluginWMPVis.def"
 				ProgramDatabaseFile=".\../../Output/PlugWMPVis/Release/PluginWMPVis.pdb"
 				SubSystem="2"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=".\../../Output/PlugWMPVis/Release/PluginWMPVis.lib"
 				TargetMachine="1"
 			/>
@@ -202,9 +204,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

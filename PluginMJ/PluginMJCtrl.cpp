@@ -27,13 +27,16 @@ STDMETHODIMP CPluginMJCtrl::Init(LPDISPATCH pDisp)
 	g_Player.m_pMJ = pDisp;
 
 
-	if (!InitMiniLyricsPlugin(_Module.GetModuleInstance(), &g_Player))
+	if (!InitMiniLyricsMsgPlugin(_Module.GetModuleInstance(), &g_Player))
 		return S_OK;	// we must return 0!
 
+// 	if (!InitMiniLyricsPlugin(_Module.GetModuleInstance(), &g_Player))
+// 		return S_OK;	// we must return 0!
+// 
 	// now we can use other g_MLService functions.
 	char	szMsg[256];
 
-	wsprintfA(szMsg, "Start MJ Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
+	wsprintfA(szMsg, "Start MJ Player plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
 	g_MLService.Log(szMsg);
 
 	return S_OK;

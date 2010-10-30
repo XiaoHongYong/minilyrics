@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="gb2312"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="PluginRealone"
 	ProjectGUID="{F58C7E94-EAF5-4F2E-98EF-A808D7A44890}"
 	RootNamespace="PluginRealone"
+	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
 		<Platform
@@ -76,6 +77,8 @@
 				ModuleDefinitionFile=".\MLRealPlugin.def"
 				GenerateDebugInformation="true"
 				ProgramDatabaseFile=".\../output/PluginRealone/Debug/PluginRealone.pdb"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="1"
 			/>
@@ -98,9 +101,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -166,6 +166,8 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\MLRealPlugin.def"
+				RandomizedBaseAddress="1"
+				DataExecutionPrevention="0"
 				ImportLibrary=""
 				TargetMachine="1"
 			/>
@@ -188,9 +190,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"

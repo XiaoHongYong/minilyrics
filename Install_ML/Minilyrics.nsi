@@ -867,6 +867,7 @@ Section "Uninstall"
 
   Delete "$INSTDIR\readme-MiniLyrics.txt"
   Delete /REBOOTOK $INSTDIR\minilyrics.dll
+  Delete /REBOOTOK $INSTDIR\PluginMiniLyrics.exe
   Delete $INSTDIR\unicows.dll
   Delete $INSTDIR\MLPlugin.ini
   Delete $INSTDIR\help.chm
