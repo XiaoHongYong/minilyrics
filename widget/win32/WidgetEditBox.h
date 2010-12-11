@@ -1,9 +1,5 @@
-// ListCtrl.h: interface for the CListCtrl class.
-//
-//////////////////////////////////////////////////////////////////////
 
-#ifndef _ML_EDIT_CTRL_INC_
-#define _ML_EDIT_CTRL_INC_
+#pragma once
 
 #include "WidgetCtrlBase.h"
 
@@ -38,14 +34,12 @@ public:
 
 	void AppendText(LPCTSTR szText);
 
-	void SetFont(const CMLFont &font, const MLColor &clrText);
+	void SetFont(const CFontInfo &font, const MLColor &clrText);
 
 public:
 //	HWND		m_hWnd;
-	CGdiFont		m_gdifont;
+	//CGdiFont		m_gdifont;
 
 protected:
 
 };
-
-#endif // _ML_EDIT_CTRL_INC_

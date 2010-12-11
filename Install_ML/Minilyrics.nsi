@@ -31,7 +31,7 @@
   InstallDir "$PROGRAMFILES\Minilyrics"
 
   ;Request application privileges for Windows Vista
-  RequestExecutionLevel highest
+  RequestExecutionLevel admin
 
 ;--------------------------------
 ;Interface Settings
@@ -213,8 +213,11 @@ SectionIn 1 2
   SetOutPath $INSTDIR
   File Share\*.*
 
-  SetOutPath $INSTDIR\lang
+  SetOutPath $INSTDIR\Lang
   File Share\lang\*.*
+
+  SetOutPath $INSTDIR\Plugins
+  File ..\bin\mlp_G15.dll
 
   SetOutPath $INSTDIR\Patterns
   File Share\Patterns\*.*
@@ -868,6 +871,7 @@ Section "Uninstall"
   Delete "$INSTDIR\readme-MiniLyrics.txt"
   Delete /REBOOTOK $INSTDIR\minilyrics.dll
   Delete /REBOOTOK $INSTDIR\PluginMiniLyrics.exe
+  Delete /REBOOTOK $INSTDIR\Plugins\mlp_G15.dll
   Delete $INSTDIR\unicows.dll
   Delete $INSTDIR\MLPlugin.ini
   Delete $INSTDIR\help.chm
@@ -962,8 +966,6 @@ Section "Uninstall"
   Delete "$QUICKLAUNCH\MiniLyrics for Media Player Classic Home Cinema.lnk"
 
   ; remove directories used.
-;  RMDir "$SMPROGRAMS\√‘ƒ„∏Ë¥ "
-;  RMDir "$SMPROGRAMS\MiniLyrics"
   StrCpy $R0 $(un.MLDir)
   RMDir "$INSTDIR\Skins\Fantasy"
   RMDir "$INSTDIR\Skins\Fantasy (Transparent)"
@@ -993,6 +995,7 @@ Section "Uninstall"
   RMDir "$INSTDIR\ml-winamp5-skin"
   RMDir "$INSTDIR\Skins"
   RMDir "$INSTDIR\Patterns"
+  RMDir "$INSTDIR\Plugins"
   RMDir "$INSTDIR\ml-gen-embedded-skin"
   RMDir "$INSTDIR\ad"
   RMDir "$INSTDIR"

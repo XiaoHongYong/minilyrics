@@ -80,19 +80,21 @@ LRESULT CBaseDialog::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	case WM_PAINT:
-		PAINTSTRUCT		ps;
-		HDC				hdc;
-		hdc = BeginPaint(m_hWnd, &ps);
-		IMLGraphicsBase	*pGraph;
+		{
+			PAINTSTRUCT		ps;
+			HDC				hdc;
+			hdc = BeginPaint(m_hWnd, &ps);
+			CMLGraphics		*pGraph;
 
-		pGraph = CMLGraphicsFactory::CreateMLGraphics(hdc);
-		assert(pGraph);
+			pGraph = new CMLGraphics;
+			pGraph->Attach(hdc);
 
-		OnPaint(pGraph);
+			OnPaint(pGraph);
 
-		CMLGraphicsFactory::ReleaseMLGraphics(pGraph);
+			delete pGraph;
 
-		EndPaint(m_hWnd, &ps);
+			EndPaint(m_hWnd, &ps);
+		}
 		break;
 	case WM_DESTROY:
 		{
@@ -308,4 +310,132 @@ BOOL CBaseDialog::OnInitDialog()
 	}
 
 	return TRUE;
+}
+
+int CBaseDialog::ConvertWMNotifyMsg(LPARAM lParam)
+{
+	LPNMHDR		pHdr = (LPNMHDR)lParam;
+	if ((UINT)pHdr->code >=NM_LAST)
+	{
+		// generic to all controls
+		WIDGET_NOTIFY_INFO		info;
+		info.nCtrlID = pHdr->idFrom;
+		info.widgetType = WT_UNKNOWN;
+		if (pHdr->code == NM_DBLCLK)
+			info.nCode = WN_GEN_DBL_CLICK;
+		else
+			return 0;
+		OnNotify(&info);
+	}
+	else if ((UINT)pHdr->code >=LVN_LAST)
+	{
+		// listview
+		UINT	LvnFirst = LVN_FIRST;
+
+		if (pHdr->code == LVN_ITEMCHANGED)
+		{
+			NMLVDISPINFO	*pLvInfo = (NMLVDISPINFO *)lParam;
+			WIDGET_LISTVIEW_NOTIFY_INFO	info;
+			info.nCtrlID = pHdr->idFrom;
+			info.widgetType = WT_LIST_CTRL;
+			info.nCode = WN_LV_SELECTED;
+			info.nItem = pLvInfo->item.iItem;
+			info.nSubItem = pLvInfo->item.iSubItem;
+			OnNotify(&info);
+		}
+	}
+	else if ((UINT)pHdr->code >=HDN_LAST)
+	{
+		// header
+	}
+	else if ((UINT)pHdr->code >=TVN_LAST)
+	{
+		// treeview
+		NMTREEVIEW	*pInfo = (NMTREEVIEW *)lParam;
+		WIDGET_TREEVIEW_NOTIFY_INFO	info;
+
+		info.nCtrlID = pHdr->idFrom;
+		info.widgetType = WT_LIST_CTRL;
+
+		if (pHdr->code == TVN_SELCHANGEDW || pHdr->code == TVN_SELCHANGEDA)
+		{
+			info.nCode = WN_TV_UNSELECTED;
+			info.iter = pInfo->itemOld.hItem;
+			OnNotify(&info);
+
+			info.nCode = WN_TV_SELECTED;
+			info.iter = pInfo->itemNew.hItem;
+			OnNotify(&info);
+		}
+		else if (pHdr->code == TVN_ITEMEXPANDINGA || pHdr->code == TVN_ITEMEXPANDINGW)
+		{
+			info.nCode = WN_TV_EXPANDING;
+			info.iter = pInfo->itemNew.hItem;
+			OnNotify(&info);
+		}
+		else if (pHdr->code == TVN_ITEMEXPANDEDA || pHdr->code == TVN_ITEMEXPANDEDW)
+		{
+			info.nCode = WN_TV_EXPANDED;
+			info.iter = pInfo->itemNew.hItem;
+			OnNotify(&info);
+		}
+	}
+	else if ((UINT)pHdr->code >=TTN_LAST)
+	{
+		// tooltips
+	}
+	else if ((UINT)pHdr->code >=TCN_LAST)
+	{
+		// tab control
+		if (pHdr->code == TCN_SELCHANGE)
+		{
+			WIDGET_NOTIFY_INFO	info;
+			info.nCode = WN_TC_SELCHANGE;
+			info.nCtrlID = pHdr->idFrom;
+			info.widgetType = WT_TAB_CTRL;
+			OnNotify(&info);
+		}
+	}
+	else if ((UINT)pHdr->code >=CDN_LAST)
+	{
+		// common dialog (new)
+	}
+	else if ((UINT)pHdr->code >=TBN_LAST)
+	{
+		// toolbar
+	}
+	else if ((UINT)pHdr->code >=UDN_LAST)
+	{
+		// updown
+	}
+	else if ((UINT)pHdr->code >=MCN_LAST)
+	{
+		// monthcal
+	}
+	else if ((UINT)pHdr->code >=DTN_LAST)
+	{
+		// datetimepick
+	}
+	else if ((UINT)pHdr->code >=CBEN_LAST)
+	{
+		// combo box ex
+	}
+	else if ((UINT)pHdr->code >=RBN_LAST)
+	{
+		// rebar
+	}
+	else if ((UINT)pHdr->code >=IPN_LAST)
+	{
+		// internet address
+	}
+	else if ((UINT)pHdr->code >=SBN_LAST)
+	{
+		// status bar
+	}
+	else if ((UINT)pHdr->code >=PGN_LAST)
+	{
+		// Pager Control
+	}
+
+	return 0;
 }

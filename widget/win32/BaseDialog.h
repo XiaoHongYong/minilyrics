@@ -1,15 +1,7 @@
-// BaseDialog.h: interface for the CBaseDialog class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_BASEDIALOG_H__97C9A49F_2742_4A43_95A3_E25F59A568FF__INCLUDED_)
-#define AFX_BASEDIALOG_H__97C9A49F_2742_4A43_95A3_E25F59A568FF__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-#include "BaseWnd.h"
+#include "Widget.h"
+#include "WidgetLocalization.h"
 
 extern HWND		g_hWndActiveModeless;
 
@@ -27,6 +19,8 @@ public:
 	void OnCommand(UINT uID, UINT nNotifyCode);
 	virtual BOOL OnInitDialog();
 
+	virtual BOOL OnNotify(WIDGET_NOTIFY_INFO *info) { return true; }
+
 	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 //
 //	virtual void OnLButtonUp(UINT nFlags, CPoint point);
@@ -41,6 +35,8 @@ public:
 
 	DLGTEMPLATE *NewTemplate(LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, DWORD dwStyle, LPCTSTR szFont, int nFontSize);
 
+	int ConvertWMNotifyMsg(LPARAM lParam);
+
 public:
 	CBaseDialog(UINT nIDTemplate);
 	virtual ~CBaseDialog();
@@ -49,6 +45,7 @@ public:
 
 	UINT		m_nIDTemplate;
 
+	CLangDialogHelper	m_LangDlgHelper;
+
 };
 
-#endif // !defined(AFX_BASEDIALOG_H__97C9A49F_2742_4A43_95A3_E25F59A568FF__INCLUDED_)

@@ -16,22 +16,22 @@ public:
 	{
 		m_strMsg.clear();
 
-		g_session.Init(SZ_ML_VERSION);
+		g_sessionUpload.Init(SZ_ML_VERSION);
 
-		m_nResult = g_session.Connect();
+		m_nResult = g_sessionUpload.Connect();
 		if (m_nResult == ERR_OK)
 		{
-			g_session.SetLoginUserPwdMask(m_strName.c_str(), m_strPwdMask.c_str());
-			m_nResult = g_session.Login(m_strMsg);
+			g_sessionUpload.SetLoginUserPwdMask(m_strName.c_str(), m_strPwdMask.c_str());
+			m_nResult = g_sessionUpload.Login(m_strMsg);
 		}
-		g_session.Close();
+		g_sessionUpload.Close();
 
 		return CWorkObjBase::DoTheJob();
 	}
 
 	virtual void CancelJob()
 	{
-		g_session.Close();
+		g_sessionUpload.Close();
 
 		CWorkObjBase::CancelJob();
 	}
@@ -58,26 +58,26 @@ public:
 	{
 		m_strMsg.clear();
 
-		m_nResult = g_session.Connect();
+		m_nResult = g_sessionUpload.Connect();
 		if (m_nResult == ERR_OK)
 		{
-			if (!g_session.IsLogined())
+			if (!g_sessionUpload.IsLogined())
 			{
 				// Log in
 				ASSERT(m_strName.size() && m_strPwdMask.size());
-				g_session.SetLoginUserPwdMask(m_strName.c_str(), m_strPwdMask.c_str());
-				m_nResult = g_session.Login(m_strMsg);
+				g_sessionUpload.SetLoginUserPwdMask(m_strName.c_str(), m_strPwdMask.c_str());
+				m_nResult = g_sessionUpload.Login(m_strMsg);
 			}
 
 			// Upload
 			if (m_nResult == ERR_OK)
 			{
-				g_session.Close();
-				g_session.Connect();
-				m_nResult = g_session.Upload(m_strLyricsContent, m_strLyrId, m_strMsg, m_listExistFiles);
+				g_sessionUpload.Close();
+				g_sessionUpload.Connect();
+				m_nResult = g_sessionUpload.Upload(m_strLyricsContent, m_strLyrId, m_strMsg, m_listExistFiles);
 			}
 		}
-		g_session.Close();
+		g_sessionUpload.Close();
 
 		return CWorkObjBase::DoTheJob();
 	}
@@ -213,8 +213,8 @@ public:
 		CSkinPageHandler::OnShow();
 		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Upload Lyrics")));
 
-		ASSERT(g_session.IsLogined());
-		SetUIObjectText(_T("CID_ACCOUNT_NOTICE"), CStrPrintf(_T("Your lyrics will be uploaded under account: %s"), g_session.GetUser()).c_str(), false);
+		ASSERT(g_sessionUpload.IsLogined());
+		SetUIObjectText(_T("CID_ACCOUNT_NOTICE"), CStrPrintf(_T("Your lyrics will be uploaded under account: %s"), g_sessionUpload.GetUser()).c_str(), false);
 	}
 
 	void OnOK()
@@ -334,7 +334,7 @@ public:
 	{
 		if (m_pWorkObj->IsJobCanceled())
 		{
-			if (g_session.IsLogined())
+			if (g_sessionUpload.IsLogined())
 				m_pParent->SwitchToPage(CPageUploadNotice::GetPageIdStr(), true);
 			else
 				m_pParent->SwitchToPage(CPageLogin::GetPageIdStr(), true);
@@ -390,7 +390,7 @@ CDlgUpload::CDlgUpload(tstring &strLyricsContent, LPCTSTR szMediaSource, LPCTSTR
 	m_pageHandler.AddPage(new CPageUploadWaitMessage());
 	m_pageHandler.AddPage(new CPageUploadResult(m_pUploadWorkObj));
 
-	if (g_session.IsLogined())
+	if (g_sessionUpload.IsLogined())
 		m_pageHandler.SetDefaultPage(pPageUploadNotice->GetPageId());
 	else
 		m_pageHandler.SetDefaultPage(pPageLogin->GetPageId());

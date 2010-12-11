@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "BaseWnd.h"
+#include "Widget.h"
 #include "MLWndHelper.h"
 
 #ifdef _DEBUG

@@ -17,7 +17,7 @@ public:
 	// IEventHandler
 	virtual void OnEvent(const IEvent *pEvent);
 
-	virtual void OnCopyData(HWND hWnd, PCOPYDATASTRUCT pCopyData);
+	virtual void OnCopyData(WPARAM wParam, PCOPYDATASTRUCT pCopyData);
 
 	void UpdatePlayerSysTrayIcon() { m_mlTrayIcon.UpdatePlayerSysTrayIcon(); }
 

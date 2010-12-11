@@ -51,10 +51,22 @@ MPHotKeySection		g_vHotkeySections[] =
 	{ NULL, NULL }
 };
 
+#ifndef VK_MEDIA_NEXT_TRACK
+#define VK_MEDIA_NEXT_TRACK    0xB0
+#define VK_MEDIA_PREV_TRACK    0xB1
+#define VK_MEDIA_STOP          0xB2
+#define VK_MEDIA_PLAY_PAUSE    0xB3
+#endif
+
 CMPHotkey::CmdAccKey			g_vDefAccKey[] = 
 {
-	{ CMD_BACKWARD_LYRICS, true, VK_UP, MOD_CONTROL | MOD_SHIFT, 0 },
-	{ CMD_FORWARD_LYRICS, true, VK_DOWN, MOD_CONTROL | MOD_SHIFT, 0 },
+	{ CMD_PLAYPAUSE, true, VK_MEDIA_PLAY_PAUSE, 0, 0 },
+	{ CMD_STOP, true, VK_MEDIA_STOP, 0, 0 },
+	{ CMD_NEXT, true, VK_MEDIA_NEXT_TRACK, 0, 0 },
+	{ CMD_PREVIOUS, true, VK_MEDIA_PREV_TRACK, 0, 0 },
+
+	{ CMD_BACKWARD_LYRICS, false, VK_UP, MOD_CONTROL | MOD_SHIFT, 0 },
+	{ CMD_FORWARD_LYRICS, false, VK_DOWN, MOD_CONTROL | MOD_SHIFT, 0 },
 	{ CMD_TOPMOST, true, 'T', MOD_CONTROL | MOD_SHIFT, 0 },
 	{ CMD_TOGGLE_MP, true, 'M', MOD_CONTROL | MOD_ALT, 0 },
 
@@ -79,7 +91,6 @@ CMPHotkey::CmdAccKey			g_vDefAccKey[] =
 
 	{ CMD_FORWARD, false, VK_NEXT, MOD_CONTROL, 0 },
 	{ CMD_BACKWARD, false, VK_PRIOR, MOD_CONTROL, 0 },
-	{ CMD_PLAYPAUSE, false, 'P', MOD_CONTROL, 0 },
 
 	{ CMD_MINIMIZE, false, 'M', MOD_CONTROL, 0 },
 	{ CMD_TOPMOST, false, 'T', MOD_CONTROL, 0 },
@@ -115,7 +126,7 @@ CMPHotkey::~CMPHotkey()
 
 void CMPHotkey::Init()
 {
-	m_bGlobalHotkeyEnabled = g_Profile.GetProfileBool(_T("EnableGlobalHotkey"), false);
+	m_bGlobalHotkeyEnabled = g_Profile.GetProfileBool(_T("EnableGlobalHotkey"), true);
 
 	if (LoadSettings() != ERR_OK)
 	{

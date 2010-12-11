@@ -303,7 +303,7 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\MLMsgPlugin.cpp"
+				RelativePath=".\IPlayer.cpp"
 				>
 			</File>
 			<File
@@ -343,11 +343,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\MLPluginMsg.cpp"
-				>
-			</File>
-			<File
-				RelativePath=".\PlayerInfoQueryBaseWnd.cpp"
+				RelativePath=".\PlayerServiceWndBase.cpp"
 				>
 			</File>
 			<File
@@ -355,7 +351,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SharedMemmap.cpp"
+				RelativePath=".\TinyBaseWnd.cpp"
 				>
 			</File>
 		</Filter>
@@ -368,15 +364,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MiniLyricsPlugin.h"
+				>
+			</File>
+			<File
 				RelativePath="MLPlugin.h"
 				>
 			</File>
 			<File
-				RelativePath=".\MLPluginMsg.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PlayerInfoQueryBaseWnd.h"
+				RelativePath=".\PlayerServiceWndBase.h"
 				>
 			</File>
 			<File
@@ -384,11 +380,11 @@
 				>
 			</File>
 			<File
-				RelativePath=".\SharedMemmap.h"
+				RelativePath=".\StdAfx.h"
 				>
 			</File>
 			<File
-				RelativePath=".\StdAfx.h"
+				RelativePath=".\TinyBaseWnd.h"
 				>
 			</File>
 		</Filter>

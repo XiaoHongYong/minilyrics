@@ -3,8 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include "MLMenu.h"
-#include "BaseWnd.h"
+#include "Widget.h"
 #include "WidgetLocalization.h"
 
 #ifdef _WINCE_
@@ -13,92 +12,7 @@
 #define DEFAULT_GUI_FONT  SYSTEM_FONT
 #endif
 
-int GetMenuItemCount(HMENU hMenu)
-{
-	const int MAX_NUM_ITEMS = 256;
-	int  iPos, iCount;
-
-	MENUITEMINFO mii;
-	memset((char *)&mii, 0, sizeof(MENUITEMINFO));
-	mii.cbSize = sizeof(MENUITEMINFO);
-
-	iCount = 0;
-	for (iPos = 0; iPos < MAX_NUM_ITEMS; iPos++)
-	{
-		if(!GetMenuItemInfo(hMenu, (UINT)iPos, TRUE, &mii))
-			break;
-		iCount++;
-	}
-
-	return iCount;
-}
 #endif
-
-BOOL ToLocalMenu(CMLMenu *pMenu)
-{
-	return ToLocalMenu(pMenu->GetHandle());
-}
-
-BOOL ToLocalMenu(HMENU hMenu)
-{
-	if (g_LangTool.IsEnglish() && !g_LangTool.HasMacro())
-		return TRUE;
-
-	// int				nCount;
-	MENUITEMINFO	MenuItemInfo;
-	TCHAR			szString[256];
-	TCHAR			szAccKey[256];
-	LPCTSTR			szPos;
-
-	// don't use get menu item count, under win ce, it will cost a lot time
-	for (int i = 0; i < 256; i++)
-	{
-		memset(&MenuItemInfo, 0, sizeof(MenuItemInfo));
-
-		MenuItemInfo.cbSize = sizeof(MenuItemInfo);
-		MenuItemInfo.fMask = MIIM_TYPE | MIIM_SUBMENU | MIIM_DATA;
-		MenuItemInfo.dwTypeData = szString;
-		MenuItemInfo.cch = CountOf(szString);
-		szString[0] = '\0';
-
-		// get menu item by pos.
-		if (!GetMenuItemInfo(hMenu, i, TRUE, &MenuItemInfo))
-			break;
-
-		if (MenuItemInfo.hSubMenu != NULL)
-		{
-			ToLocalMenu(MenuItemInfo.hSubMenu);
-		}
-
-		if (IsEmptyString(szString))
-			continue;
-
-		//
-		// translate menu string
-		//
-		szPos = _tcschr(szString, '\t');
-		if (!szPos)
-			_tcscpy_safe(szString, CountOf(szString), TOLOCAL(szString));
-		else
-		{
-			_tcscpy_safe(szAccKey, CountOf(szAccKey), szPos);
-			szString[int(szPos - szString)] = '\0';
-			_tcscpy_safe(szString, CountOf(szString), TOLOCAL(szString));
-			_tcscat_safe(szString, CountOf(szString), szAccKey);
-		}
-
-		MenuItemInfo.cch = _tcslen(szString) + 1;
-		MenuItemInfo.fMask = MIIM_DATA | MIIM_TYPE;
-		if (!SetMenuItemInfo(hMenu, i, TRUE, &MenuItemInfo))
-		{
-			CWin32Error		Err;
-			ERRLOG1(_T("SetMenuItemInfo: %s"), Err);
-			continue;
-		}
-	}
-
-	return TRUE;
-}
 
 /////////////////////////////////////////////////////////////////////////////////
 // BEGIN OF CLangListCtrlHelper

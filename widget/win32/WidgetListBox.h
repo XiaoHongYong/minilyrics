@@ -9,14 +9,6 @@
 class CWidgetListBox : public CWidgetCtrlBase
 {
 public:
-	CWidgetListBox()
-	{
-	}
-	virtual ~CWidgetListBox()
-	{
-	}
-
-public:
 	int GetCount() const;
 	int GetCurSel();
 	int SetCurSel(int nSelect);

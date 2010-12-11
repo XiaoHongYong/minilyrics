@@ -1,8 +1,6 @@
 #include "../MLPluginLib/MLPlugin.h"
 #include "PlayerImp.h"
 #include "xmpdsp.h"
-#include <string>
-using namespace std;
 
 #define WM_WA_IPC WM_USER 
 #define SM_WINAMP_TIMEOUT 1000 
@@ -12,6 +10,90 @@ using namespace std;
 CPlayerImp		g_Player;
 DWORD			g_DdeInstID = 0;
 
+
+// get player state and song info
+PLAYER_STATE GetPlayerState()
+{
+	DWORD	dwRet = 0;
+
+	SendMessageTimeout(g_hWndPlayer, WM_WA_IPC, 0, IPC_ISPLAYING,
+		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwRet);
+
+	if (dwRet == 1)
+		return PS_PLAYING;
+	else if (dwRet == 3)
+		return PS_PAUSED;
+	else
+		return PS_STOPED;
+}
+
+DWORD GetPlayPos()
+{
+	DWORD	dwCurPos = 0;
+
+	SendMessageTimeout(g_hWndPlayer, WM_WA_IPC, 0, IPC_GETOUTPUTTIME,
+		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwCurPos);
+
+	return dwCurPos;
+}
+
+///////////////////////////////////////////////////////////////////////////////
+
+PLAYER_STATE	g_playerState = PS_STOPED;
+
+class CPlayerInfoQueryWnd : public CPlayerServiceWnd
+{
+public:
+	void OnCreate()
+	{
+		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
+	}
+
+	void OnDestroy()
+	{
+		KillTimer(m_hWnd, TIMER_GETPOS);
+	}
+
+	void OnTimer(int nTimerID)
+	{
+		if (!g_MLService.IsValid())
+			return;
+
+		// Check player status
+		static DWORD dwTimeLastCheck = GetTickCount();
+		DWORD dwTimeCur = GetTickCount();
+		static DWORD dwPosLastCheck = GetPlayPos();
+		DWORD dwPosCur = GetPlayPos();
+		if (dwTimeCur - dwTimeLastCheck >= 100)
+		{
+			// No changes, just return
+			if (g_playerState != PS_PLAYING && dwTimeCur == dwPosLastCheck)
+				return;
+
+			if (g_playerState == PS_PLAYING && dwPosCur <= dwPosLastCheck
+				|| g_playerState != PS_PLAYING && dwPosCur != dwPosLastCheck)
+			{
+				// Check player stat
+				PLAYER_STATE newState = GetPlayerState();
+				if (newState != g_playerState)
+				{
+					g_playerState = newState;
+					g_MLService.OnPlayStateChanged(g_playerState);
+					dwPosCur = GetPlayPos();
+				}
+			}
+			dwTimeLastCheck = dwTimeCur;
+			dwPosLastCheck = dwPosCur;
+		}
+
+		g_MLService.OnPlayPosChanged(dwPosCur);
+	}
+
+};
+
+CPlayerInfoQueryWnd	g_wndInfoQuery;
+
+//////////////////////////////////////////////////////////////////////////
 
 char * __cdecl stristr (
         const char * str1,
@@ -387,18 +469,11 @@ DWORD		g_dwThreadID = 0;
 
 DWORD WINAPI ThreadML(LPVOID lpParam)
 {
-	g_hwndPlayer = FindWindow("XMPLAY-MAIN", NULL);
+	g_hWndPlayer = FindWindow("XMPLAY-MAIN", NULL);
 
-	if (InitMiniLyricsPlugin(g_hInstance, &g_Player, ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS))
-	{
-		// now we can use other g_MLService functions.
-		char	szMsg[256];
+	g_wndInfoQuery.Create(g_hInstance);
 
-		wsprintf(szMsg, "Start XMPlay plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
-		g_MLService.Log(szMsg);
-	}
-
-	// if Init failed, Don't return, because "Restart MiniLyrics" function need the message loop below.
+	RunMiniLyrics(g_hInstance, &g_Player, g_wndInfoQuery.GetHandle());
 
 	MSG			msg;
 
@@ -409,7 +484,9 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 		DispatchMessage(&msg);
 	}
 
-	g_MLService.Quit();
+	g_MLService.OnDisconnected();
+
+	g_wndInfoQuery.Destroy();
 
 	return 0;
 }
@@ -466,14 +543,22 @@ static void WINAPI DSP_Reset(void *inst)
 {
 }
 
+char		g_szCurMediaUrl[MAX_PATH] = "";
+
 // new track has been opened (or closed if file=NULL)
 static void WINAPI DSP_NewTrack(void *inst, const char *file)
 {
 	if (!file)
 	{
-		g_MLService.OnMediaInfoChanged(NULL);
+		EmptyStr(g_szCurMediaUrl);
+		if (g_MLService.IsValid())
+			g_MLService.OnMediaInfoChanged(L"", NULL, NULL, NULL, 0);
 		return;
 	}
+	strcpy_safe(g_szCurMediaUrl, CountOf(g_szCurMediaUrl), file);
+
+	if (!g_MLService.IsValid())
+		return;
 
 	char		artist[MAX_PATH];
 	char		title[MAX_PATH];
@@ -492,20 +577,13 @@ static void WINAPI DSP_NewTrack(void *inst, const char *file)
 	UTF8ToUCS2(album, strlen(album) + 1, szAlbum, CountOf(szAlbum));
 	UTF8ToUCS2(title, strlen(title) + 1, szTitle, CountOf(szTitle));
 
-	MLMediaInfo		mediaInfo;
-	mediaInfo.szMediaUrl = szMediaUrl;
-	mediaInfo.szArtist = szArtist;
-	mediaInfo.szAlbum = szAlbum;
-	mediaInfo.szTitle = szTitle;
-
 	DWORD	dwLength = 0;
 
-	SendMessageTimeout(g_hwndPlayer, WM_WA_IPC, 1, IPC_GETOUTPUTTIME,
+	SendMessageTimeout(g_hWndPlayer, WM_WA_IPC, 1, IPC_GETOUTPUTTIME,
 		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwLength);
+	dwLength *= 1000;
 
-	mediaInfo.nMediaLength = dwLength * 1000;
-
-	g_MLService.OnMediaInfoChanged(&mediaInfo);
+	g_MLService.OnMediaInfoChanged(szMediaUrl, szArtist, szAlbum, szTitle, dwLength);
 }
 
 // set the sample format at start (or end if rate/chans=0) of playback
@@ -562,35 +640,6 @@ BOOL WINAPI DllMain(HANDLE hDLL, DWORD reason, LPVOID reserved)
 
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-
-class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
-{
-public:
-	void OnCreate()
-	{
-		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
-	}
-
-	void OnDestroy()
-	{
-		KillTimer(m_hWnd, TIMER_GETPOS);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
-	}
-
-};
-
-CPlayerInfoQueryWnd	g_wndInfoQuery;
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 CPlayerImp::CPlayerImp()
@@ -601,102 +650,22 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, "XMPlay");
 
-	return 1;
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
+{
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_SUPPORT_CLASSIC_SKINS;
+	playerInfo.hWndPlayer = g_hWndPlayer;
+	playerInfo.hWndPluginService = g_wndInfoQuery.GetHandle();
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"XMPlay");
+
+	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), playerInfo.playerName);
+	wcscat_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), L"'s Skin");
 }
 
-// get player state and song info
-DWORD CPlayerImp::GetPlayerState()
-{
-	DWORD	dwRet = 0;
-
-	SendMessageTimeout(g_hwndPlayer, WM_WA_IPC, 0, IPC_ISPLAYING,
-		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwRet);
-
-	if (dwRet == 1)
-		return PS_PLAYING;
-	else if (dwRet == 3)
-		return PS_PAUSED;
-	else
-		return PS_STOPED;
-}
-
-HWND CPlayerImp::GetMainWnd()
-{
-	return g_hwndPlayer;
-}
-
-// 歌曲播放的位置（单位ms)
-DWORD CPlayerImp::GetPlayPos()
-{
-	DWORD	dwCurPos = 0;
-
-	SendMessageTimeout(g_hwndPlayer, WM_WA_IPC, 0, IPC_GETOUTPUTTIME,
-		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwCurPos);
-
-	return dwCurPos;
-}
-
-// control player
-BOOL CPlayerImp::Play()
-{
-	if (GetPlayerState() != PS_PLAYING)
-		XMP_ExeCmd(XC_PLAYPAUSE);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Pause()
-{
-	if (GetPlayerState() == PS_PAUSED)
-		XMP_ExeCmd(XC_PLAYPAUSE);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::PlayPause()
-{
-	XMP_ExeCmd(XC_PLAYPAUSE);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Stop()
-{
-	if (GetPlayerState() != PS_STOPED)
-		XMP_ExeCmd(XC_STOP);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Prev()
-{
-	XMP_ExeCmd(XC_PREV);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Next()
-{
-	XMP_ExeCmd(XC_NEXT);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::SeekTo(int nMsPos)
-{
-// 	DWORD	nResult;
-// 
-// 	return SendMessageTimeout(g_hwndPlayer, WM_WA_IPC, nMsPos, IPC_JUMPTOTIME,
-// 		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, (LPDWORD)&nResult);
-	return FALSE;
-}
-
-BOOL CPlayerImp::Init()
+void CPlayerImp::OnConnect()
 {
 	UINT res = DdeInitialize(&g_DdeInstID, DdeCallback, APPCMD_CLIENTONLY |
 		MF_ERRORS | MF_LINKS | MF_CONV/* |
@@ -705,30 +674,71 @@ BOOL CPlayerImp::Init()
 	if (res != DMLERR_NO_ERROR)
 	{
 		g_MLService.Log("XMP_InitDde FAILED!");
-		return false;
+		return;
 	}
 
-	g_MLService.AddWndCloseto(NULL, "XMPLAY-MAIN", NULL);
-	g_MLService.AddWndCloseto(NULL, "XMPLAY-PANEL", NULL);
-	g_MLService.AddWndCloseto(NULL, "XMPLAY-INFO", NULL);
-
-	g_wndInfoQuery.Create(g_hInstance);
-
-	return TRUE;
+	g_MLService.AddWndCloseto(NULL, L"XMPLAY-MAIN", NULL);
+	g_MLService.AddWndCloseto(NULL, L"XMPLAY-PANEL", NULL);
+	g_MLService.AddWndCloseto(NULL, L"XMPLAY-INFO", NULL);
 }
 
-void CPlayerImp::Quit()
+void CPlayerImp::OnConnectedDone()
+{
+	// Update Media info
+	DSP_NewTrack(NULL, g_szCurMediaUrl);
+
+	// Update player state
+	g_MLService.OnPlayStateChanged(GetPlayerState());
+}
+
+void CPlayerImp::OnDisconnect()
 {
 	if (g_DdeInstID)
 	{
 		DdeUninitialize(g_DdeInstID);
 		g_DdeInstID = 0;
 	}
-
-	g_wndInfoQuery.Destroy();
 }
 
-void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
+// control player
+void CPlayerImp::Play()
 {
-	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
+	if (GetPlayerState() != PS_PLAYING)
+		XMP_ExeCmd(XC_PLAYPAUSE);
+}
+
+void CPlayerImp::Pause()
+{
+	if (GetPlayerState() == PS_PAUSED)
+		XMP_ExeCmd(XC_PLAYPAUSE);
+}
+
+void CPlayerImp::PlayPause()
+{
+	XMP_ExeCmd(XC_PLAYPAUSE);
+}
+
+void CPlayerImp::Stop()
+{
+	if (GetPlayerState() != PS_STOPED)
+		XMP_ExeCmd(XC_STOP);
+}
+
+void CPlayerImp::Prev()
+{
+	XMP_ExeCmd(XC_PREV);
+}
+
+void CPlayerImp::Next()
+{
+	XMP_ExeCmd(XC_NEXT);
+}
+
+void CPlayerImp::SeekTo(int nMsPos)
+{
+}
+
+HWND CPlayerImp::GetPluginServiceWnd()
+{
+	return g_wndInfoQuery.GetHandle();
 }

@@ -174,16 +174,16 @@ public:
 		MLMediaInfo		mediaInfo;
 		WCHAR			szMediaUrl[MAX_PATH], szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
 
-		wcscpy_safe(szMediaUrl, CountOf(szMediaUrl), (LPCWSTR)pTrackInfo->fileName + 1);
+		wcsncpy_safe(szMediaUrl, CountOf(szMediaUrl), (LPCWSTR)pTrackInfo->fileName + 1, pTrackInfo->fileName[0]);
 		TrimStr(szMediaUrl);
 
-		wcscpy_safe(szArtist, CountOf(szArtist), (LPCWSTR)pTrackInfo->artist + 1);
+		wcsncpy_safe(szArtist, CountOf(szArtist), (LPCWSTR)pTrackInfo->artist + 1, pTrackInfo->artist[0]);
 		TrimStr(szArtist);
 
-		wcscpy_safe(szAlbum, CountOf(szAlbum), (LPCWSTR)pTrackInfo->album + 1);
+		wcsncpy_safe(szAlbum, CountOf(szAlbum), (LPCWSTR)pTrackInfo->album + 1, pTrackInfo->album[0]);
 		TrimStr(szAlbum);
 
-		wcscpy_safe(szTitle, CountOf(szTitle), (LPCWSTR)pTrackInfo->name + 1);
+		wcsncpy_safe(szTitle, CountOf(szTitle), (LPCWSTR)pTrackInfo->name + 1, pTrackInfo->name[0]);
 		TrimStr(szTitle);
 
 		{

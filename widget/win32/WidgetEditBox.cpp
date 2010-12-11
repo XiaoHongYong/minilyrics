@@ -61,7 +61,7 @@ void CWidgetEditBox::SetMaxLength(int nMaxLen)
 	SendMessage(m_hWnd, EM_LIMITTEXT, nMaxLen, 0);
 }
 
-void CWidgetEditBox::SetFont(const CMLFont &font, const MLColor &clrText)
+void CWidgetEditBox::SetFont(const CFontInfo &font, const MLColor &clrText)
 {
 // 	return;
 // 	if (GetOperationSystemType() < OPS_WIN2000)
@@ -89,11 +89,11 @@ void CWidgetEditBox::SetFont(const CMLFont &font, const MLColor &clrText)
 // 			DBGLOG0(_T("EM_SETCHARFORMAT FAILED!"));
 // 	}
 //  	else
- 	{
-		m_gdifont.Create(font);
-
- 		SendMessage(m_hWnd, WM_SETFONT, (WPARAM)m_gdifont.GetHandle(), FALSE);
- 	}
+//  	{
+// 		m_gdifont.Create(font);
+// 
+//  		SendMessage(m_hWnd, WM_SETFONT, (WPARAM)m_gdifont.GetHandle(), FALSE);
+//  	}
 }
 
 void CWidgetEditBox::AppendText(LPCTSTR szText)

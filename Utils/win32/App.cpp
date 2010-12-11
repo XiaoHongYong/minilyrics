@@ -59,10 +59,10 @@ tstring GetInstallShareDir()
 	TCHAR		szFile[MAX_PATH];
 	if (GetModuleFileName(GetAppInstance(), szFile, CountOf(szFile)))
 	{
-		if (FileIsExtSame(szFile, _T(".exe")))
-			strShareDir += _T("..\\Install_ZP\\Share\\");
-		else
+		if (_tcsicmp(FileGetName(szFile), _T("MiniLyrics.exe")) == 0)
 			strShareDir += _T("..\\Install_ML\\Share\\");
+		else
+			strShareDir += _T("..\\Install_ZP\\Share\\");
 	}
 
 	return strShareDir;

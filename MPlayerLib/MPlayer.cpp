@@ -1265,12 +1265,11 @@ MLRESULT CMPlayer::LoadMediaTagInfo(IMedia *pMedia, bool bForceReload)
 	// Get artist, title from song file name.
 	if (artist.size() == 0 && title.size() == 0)
 	{
-		TCHAR		szArtist[MAX_PATH];
-		TCHAR		szTitle[MAX_PATH];
-		if (AnalysisLyricsFileNameEx(szArtist, CountOf(szArtist), szTitle, CountOf(szTitle), FileGetName(str.c_str())))
+		tstring		strArtist, strTitle;
+		if (AnalysisLyricsFileNameEx(strArtist, strTitle, FileGetName(str.c_str())))
 		{
-			pMedia->SetAttribute(MA_ARTIST, szArtist);
-			pMedia->SetAttribute(MA_TITLE, szTitle);
+			pMedia->SetAttribute(MA_ARTIST, strArtist.c_str());
+			pMedia->SetAttribute(MA_TITLE, strTitle.c_str());
 		}
 	}
 

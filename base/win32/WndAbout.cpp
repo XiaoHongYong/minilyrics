@@ -286,70 +286,6 @@ BOOL IsLayeredWndSupported()
 	return TRUE;
 }
 
-typedef BOOL (WINAPI *FNAlphaBlend)(
-  HDC,            // handle to destination DC
-  int,            // x-coord of upper-left corner
-  int,            // y-coord of upper-left corner
-  int,            // destination width
-  int,            // destination height
-  HDC,            // handle to source DC
-  int,            // x-coord of upper-left corner
-  int,            // y-coord of upper-left corner
-  int,            // source width
-  int,            // source height
-  BLENDFUNCTION   // alpha-blending function
-);
-
-BOOL WinAlphaBlend(
-  HDC hdcDest,                 // handle to destination DC
-  int nXOriginDest,            // x-coord of upper-left corner
-  int nYOriginDest,            // y-coord of upper-left corner
-  int nWidthDest,              // destination width
-  int nHeightDest,             // destination height
-  HDC hdcSrc,                  // handle to source DC
-  int nXOriginSrc,             // x-coord of upper-left corner
-  int nYOriginSrc,             // y-coord of upper-left corner
-  int nWidthSrc,               // source width
-  int nHeightSrc,              // source height
-  BLENDFUNCTION blendFunction  // alpha-blending function
-)
-{
-	FNAlphaBlend		fnAlphaBlend;
-	HMODULE				hModule;
-
-	hModule = GetModuleHandle(_T("Msimg32.dll"));
-	if (!hModule)
-		hModule = LoadLibrary(_T("Msimg32.dll"));
-	fnAlphaBlend = (FNAlphaBlend)GetProcAddress(hModule, "AlphaBlend");
-	if (fnAlphaBlend)
-	{
-		return (*fnAlphaBlend)(hdcDest, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest, hdcSrc, 
-			nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc, blendFunction);
-	}
-	else
-	{
-		return StretchBlt(hdcDest, nXOriginDest, nYOriginDest, nWidthDest, nHeightDest, hdcSrc, 
-			nXOriginSrc, nYOriginSrc, nWidthSrc, nHeightSrc, SRCCOPY);
-	}
-
-	return TRUE;	
-}
-
-// 定义SetLayeredWindowAttributes函数
-typedef BOOL (WINAPI *FNSetLayeredWindowAttributes)(HWND, COLORREF, BYTE, DWORD);
-
-typedef BOOL (WINAPI *FNUpdateLayeredWindow)(
-  HWND,             // handle to layered window
-  HDC,              // handle to screen DC
-  POINT *,          // new screen position
-  SIZE *,           // new size of the layered window
-  HDC,              // handle to surface DC
-  POINT *,          // layer position
-  COLORREF,         // color key
-  BLENDFUNCTION *,  // blend function
-  DWORD             // options
-);
-
 //	COMMENT:
 //		sets the opacity and transparency color key of a layered window
 //	INPUT:
@@ -363,8 +299,6 @@ typedef BOOL (WINAPI *FNUpdateLayeredWindow)(
 //					LWA_ALPHA Use bAlpha to determine the opacity of the layered window 
 BOOL SetLayeredWindow(HWND hWnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
 {
-	FNSetLayeredWindowAttributes		fnSetLayeredWindowAttributes;
-	HMODULE				hModule;
 	DWORD				dwStyle;
 
 	// 首先设置WS_EX_LAYERED属性
@@ -372,68 +306,7 @@ BOOL SetLayeredWindow(HWND hWnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
 	dwStyle |= WS_EX_LAYERED;
 	SetWindowLong(hWnd, GWL_EXSTYLE, dwStyle);
 
-	// 调用SetLayeredWindowAttributes设置透明色
-	hModule = GetModuleHandle(_T("user32.dll"));
-	fnSetLayeredWindowAttributes = (FNSetLayeredWindowAttributes)GetProcAddress(hModule, "SetLayeredWindowAttributes");
-	if (fnSetLayeredWindowAttributes)
-	{
-		return (*fnSetLayeredWindowAttributes)(hWnd, crKey, bAlpha, dwFlags);
-	}
-	else
-	{
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
-BOOL SetLayeredWindowAttributes(HWND hWnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
-{
-	FNSetLayeredWindowAttributes		fnSetLayeredWindowAttributes;
-	HMODULE				hModule;
-
-	// 调用SetLayeredWindowAttributes设置透明色
-	hModule = GetModuleHandle(_T("user32.dll"));
-	fnSetLayeredWindowAttributes = (FNSetLayeredWindowAttributes)GetProcAddress(hModule, "SetLayeredWindowAttributes");
-	if (fnSetLayeredWindowAttributes)
-	{
-		return (*fnSetLayeredWindowAttributes)(hWnd, crKey, bAlpha, dwFlags);
-	}
-	else
-	{
-		return FALSE;
-	}
-
-	return TRUE;
-}
-
-BOOL UpdateLayeredWindow(
-	HWND hwnd,             // handle to layered window
-	HDC hdcDst,            // handle to screen DC
-	POINT *pptDst,         // new screen position
-	SIZE *psize,           // new size of the layered window
-	HDC hdcSrc,            // handle to surface DC
-	POINT *pptSrc,         // layer position
-	COLORREF crKey,        // color key
-	BLENDFUNCTION *pblend, // blend function
-	DWORD dwFlags          // options
-)
-{
-	FNUpdateLayeredWindow		fnUpdateLayeredWindow;
-
-	HMODULE				hModule;
-
-	// 调用SetLayeredWindowAttributes设置透明色
-	hModule = GetModuleHandle(_T("user32.dll"));
-	fnUpdateLayeredWindow = (FNUpdateLayeredWindow)GetProcAddress(hModule, "UpdateLayeredWindow");
-	if (fnUpdateLayeredWindow)
-	{
-		return (*fnUpdateLayeredWindow)(hwnd, hdcDst, pptDst, psize, hdcSrc, pptSrc, crKey, pblend, dwFlags);
-	}
-	else
-		return FALSE;
-
-	return TRUE;
+	return SetLayeredWindowAttributes(hWnd, crKey, bAlpha, dwFlags);
 }
 
 void UnSetLayeredWindow(HWND hWnd)
@@ -453,6 +326,20 @@ BOOL IsChildWnd(HWND hWnd)
 
 	dwStyleEx = (DWORD)::GetWindowLong(hWnd, GWL_STYLE);
 	return (dwStyleEx & WS_CHILD) == WS_CHILD;
+}
+
+void SetParentByForce(HWND hWndChild, HWND hWndParent)
+{
+	DWORD	dwStyle;
+	dwStyle = GetWindowLong(hWndChild, GWL_STYLE);
+
+	if (hWndParent)
+		dwStyle |= WS_CHILD;
+	else
+		dwStyle &= ~WS_CHILD;
+
+	SetWindowLong(hWndChild, GWL_STYLE, dwStyle);
+	::SetParent(hWndChild, hWndParent);
 }
 
 BOOL HasCaption(HWND hWnd)

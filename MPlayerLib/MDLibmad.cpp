@@ -313,13 +313,13 @@ MLRESULT CMDLibmad::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia 
 		}
 		fclose(fp);
 
-		CID3v2IF	id3v2;
+		CID3v2IF	id3v2(ED_SYSDEF);
 
 		nRet = id3v2.Open(szSource, false, false);
 		if (nRet == ERR_OK)
 		{
 			nRet = id3v2.GetTags(artist,  title,  album,  comment,
-			track,  year,  genre,  composer);
+			track,  year,  genre);
 			if (nRet == ERR_OK)
 				bUpdate = true;
 		}

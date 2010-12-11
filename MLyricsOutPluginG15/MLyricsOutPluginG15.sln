@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SDK", "SDK\SDK.vcproj", "{F76BA04C-E947-4E43-9979-C640FC2944A0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLyricsOutPluginG15", "MLyricsOutPluginG15.vcproj", "{06EFBDF4-8084-462B-A20D-387124538B13}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F76BA04C-E947-4E43-9979-C640FC2944A0} = {F76BA04C-E947-4E43-9979-C640FC2944A0}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F76BA04C-E947-4E43-9979-C640FC2944A0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F76BA04C-E947-4E43-9979-C640FC2944A0}.Debug|Win32.Build.0 = Debug|Win32
+		{F76BA04C-E947-4E43-9979-C640FC2944A0}.Release|Win32.ActiveCfg = Release|Win32
+		{F76BA04C-E947-4E43-9979-C640FC2944A0}.Release|Win32.Build.0 = Release|Win32
+		{06EFBDF4-8084-462B-A20D-387124538B13}.Debug|Win32.ActiveCfg = Debug|Win32
+		{06EFBDF4-8084-462B-A20D-387124538B13}.Debug|Win32.Build.0 = Debug|Win32
+		{06EFBDF4-8084-462B-A20D-387124538B13}.Release|Win32.ActiveCfg = Release|Win32
+		{06EFBDF4-8084-462B-A20D-387124538B13}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

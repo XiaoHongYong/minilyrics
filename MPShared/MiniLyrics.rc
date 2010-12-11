@@ -46,6 +46,13 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_INSTALL_STAT        BITMAP                  "C:\\ZikiPlayer\\MiniLyrics\\win32\\InstallState.bmp"
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -64,7 +71,6 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Bitmap
 //
 
-IDB_ADV_PREFERENCE      BITMAP                  "Res\\AdvancedPref.bmp"
 IDB_LRC_TYPE            BITMAP                  "Res\\fileType.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -611,50 +617,6 @@ IDI_F_LRC               ICON                    "res\\ico00001.ico"
 // Dialog
 //
 
-IDD_LOGIN DIALOGEX 0, 0, 227, 119
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Login"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    LTEXT           "Login Name:",IDC_STATIC,33,39,52,8
-    EDITTEXT        IDC_E_USER,89,37,87,14,ES_AUTOHSCROLL
-    LTEXT           "Password:",IDC_STATIC,33,58,52,8
-    EDITTEXT        IDC_E_PWD,89,56,87,14,ES_PASSWORD | ES_AUTOHSCROLL
-    CONTROL         "Remember password",IDC_C_REMBERPWD,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,33,78,118,10
-    DEFPUSHBUTTON   "OK",IDOK,24,98,50,14
-    PUSHBUTTON      "Ignore",IDNO,88,98,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,152,98,50,14
-    LTEXT           "Please login, so you could manage the uploaded lyrics.",IDC_STATIC,19,21,201,8
-    LTEXT           "Thank you for uploading lyrics.",IDC_STATIC,19,7,126,8
-    PUSHBUTTON      "Sign up Free",IDC_APPLY_ACCOUNT,153,78,50,14
-END
-
-IDD_UPLOAD_LRC DIALOG  0, 0, 420, 239
-STYLE DS_SETFONT | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-CAPTION "Upload Lyrics"
-FONT 8, "MS Shell Dlg"
-BEGIN
-    PUSHBUTTON      "Browse",IDC_BROWSE,310,7,50,14
-    PUSHBUTTON      "Refresh",IDC_REFRESH,363,7,50,14
-    CONTROL         "List1",IDC_LIST_FILES,"SysListView32",LVS_REPORT | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,26,406,122
-    LTEXT           "File Name:",IDC_S_FILENAME,7,155,51,8
-    EDITTEXT        IDC_E_FILENAME,62,153,351,14,ES_AUTOHSCROLL
-    LTEXT           "Artist:",IDC_S_ARTIST,7,174,32,8
-    EDITTEXT        IDC_E_ARTIST,62,171,151,14,ES_AUTOHSCROLL
-    LTEXT           "Title:",IDC_S_TITLE,221,174,29,8
-    EDITTEXT        IDC_E_TITLE,262,171,151,14,ES_AUTOHSCROLL
-    LTEXT           "Album (Optional):",IDC_S_ALBUM,7,193,53,8
-    EDITTEXT        IDC_E_ALBUM,62,190,151,14,ES_AUTOHSCROLL
-    LTEXT           "Comment:",IDC_S_COMMENT,221,193,39,8,NOT WS_VISIBLE
-    EDITTEXT        IDC_E_COMMENT,262,190,151,14,ES_AUTOHSCROLL | NOT WS_VISIBLE
-    DEFPUSHBUTTON   "Upload",IDC_UPLOAD,95,218,50,14
-    PUSHBUTTON      "Help",IDC_MLHELP,155,218,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,275,218,50,14
-    LTEXT           "Directory:",IDC_STATIC,7,9,55,8
-    EDITTEXT        IDC_E_DIR,70,7,236,14,ES_AUTOHSCROLL | ES_READONLY
-    PUSHBUTTON      "Edit",IDC_EDIT,215,218,50,14
-END
-
 IDD_UPLOAD_EXIST DIALOG  0, 0, 351, 151
 STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 CAPTION "$Product$"
@@ -666,16 +628,16 @@ BEGIN
     DEFPUSHBUTTON   "OK",IDOK,147,130,50,14
 END
 
-IDD_MLSTART DIALOG  0, 0, 243, 191
-STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Restart $Product$"
-FONT 8, "MS Shell Dlg"
+IDD_MLSTART DIALOGEX 0, 0, 361, 190
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Start MiniLyrics"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,61,229,103
-    DEFPUSHBUTTON   "OK",IDOK,60,170,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,138,170,50,14
-    LTEXT           "If $Product$ was closed, please choose one of the listed items, and click OK to start $Product$.",IDC_STATIC,7,34,229,22
-    LTEXT           "If no items are listed below, please run your player, and $Product$ window should show up automatically.",IDC_STATIC,7,7,229,22
+    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,61,347,103
+    DEFPUSHBUTTON   "OK",IDOK,116,169,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,194,169,50,14
+    LTEXT           "If $Product$ was closed, please choose one of the listed items, and click OK to start $Product$.",IDC_STATIC,7,34,347,22
+    LTEXT           "If no items are listed below, please run your player, and $Product$ window should show up automatically.",IDC_STATIC,7,7,347,22
 END
 
 IDD_COPYSONGLYRICS DIALOG  0, 0, 279, 111
@@ -693,17 +655,6 @@ BEGIN
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,68,251,10
     DEFPUSHBUTTON   "OK",IDOK,75,90,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,154,90,50,14
-END
-
-IDD_NEW_VERSION_PROMPT DIALOGEX 0, 0, 281, 187
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "New version notice"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    DEFPUSHBUTTON   "&Visit website",IDC_VISITWEB,50,166,78,14
-    PUSHBUTTON      "&Close",IDCANCEL,152,166,78,14
-    CTEXT           "New Version Notice",IDC_STATIC,66,6,117,8
-    EDITTEXT        IDC_NEW_VERSION,7,24,267,133,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_NOHIDESEL | ES_READONLY | ES_WANTRETURN | WS_VSCROLL | WS_HSCROLL
 END
 
 IDD_CRASH_REPORT DIALOGEX 0, 0, 268, 129
@@ -747,27 +698,6 @@ BEGIN
     PUSHBUTTON      "Report Bug?",IDC_REPORT,226,153,65,14
 END
 
-IDD_WAITING DIALOGEX 0, 0, 253, 66
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Searching Lyrics"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    PUSHBUTTON      "Cancel",IDCANCEL,90,45,73,14,WS_DISABLED
-    LTEXT           "$Product$ is searching lyrics now, it may take a few seconds.",IDC_MSG,11,13,235,24
-END
-
-IDD_SEL_ENCODING DIALOGEX 0, 0, 293, 161
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Advanced Save Options"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    LTEXT           "&Encoding:",IDC_STATIC,7,10,55,10
-    COMBOBOX        IDC_CB_ENCODING,71,10,215,245,CBS_DROPDOWNLIST | CBS_AUTOHSCROLL | WS_VSCROLL | WS_TABSTOP
-    EDITTEXT        IDC_E_SAMPLE,7,29,279,105,ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL
-    DEFPUSHBUTTON   "OK",IDOK,169,140,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,236,140,50,14
-END
-
 IDD_RATE_LYR DIALOGEX 0, 0, 203, 90
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Rate these lyrics"
@@ -803,6 +733,17 @@ BEGIN
     LTEXT           "Press shortcut keys:",IDC_STATIC,6,11,178,12
 END
 
+IDD_SETUP DIALOGEX 0, 0, 486, 215
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "Setup Players"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    CONTROL         "List1",IDC_LIST_PLAYERS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,22,472,164
+    PUSHBUTTON      "Cancel",IDCANCEL,262,194,85,14
+    LTEXT           "MiniLyrics supports the players below, Please choose your favorite players to install.",-1,7,4,472,13
+    PUSHBUTTON      "&Install",IDOK,145,194,85,14
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -812,22 +753,6 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO 
 BEGIN
-    IDD_LOGIN, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 220
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 112
-    END
-
-    IDD_UPLOAD_LRC, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 413
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 232
-    END
-
     IDD_UPLOAD_EXIST, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -839,9 +764,9 @@ BEGIN
     IDD_MLSTART, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 236
+        RIGHTMARGIN, 354
         TOPMARGIN, 7
-        BOTTOMMARGIN, 184
+        BOTTOMMARGIN, 183
     END
 
     IDD_COPYSONGLYRICS, DIALOG
@@ -850,13 +775,6 @@ BEGIN
         RIGHTMARGIN, 272
         TOPMARGIN, 7
         BOTTOMMARGIN, 104
-    END
-
-    IDD_NEW_VERSION_PROMPT, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 274
-        BOTTOMMARGIN, 180
     END
 
     IDD_CRASH_REPORT, DIALOG
@@ -882,22 +800,6 @@ BEGIN
         BOTTOMMARGIN, 167
     END
 
-    IDD_WAITING, DIALOG
-    BEGIN
-        LEFTMARGIN, 6
-        RIGHTMARGIN, 246
-        TOPMARGIN, 1
-        BOTTOMMARGIN, 59
-    END
-
-    IDD_SEL_ENCODING, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 286
-        TOPMARGIN, 1
-        BOTTOMMARGIN, 154
-    END
-
     IDD_RATE_LYR, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -920,6 +822,14 @@ BEGIN
         RIGHTMARGIN, 184
         TOPMARGIN, 1
         BOTTOMMARGIN, 68
+    END
+
+    IDD_SETUP, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 479
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 208
     END
 END
 #endif    // APSTUDIO_INVOKED

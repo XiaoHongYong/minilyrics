@@ -502,7 +502,7 @@ class CPfItemBoolEnableGlobalHotkey : public CPfItemBool
 public:
 	CPfItemBoolEnableGlobalHotkey()
 		: CPfItemBool(RemovePrefixOfAcckey(ConnectToLocalStr(_T("Shortcut:"), _T("&Enable Global Hotkeys")).c_str()).c_str(),
-			ET_NULL, SZ_APP_NAME, _T("EnableGlobalHotkey"), false)
+			ET_NULL, SZ_APP_NAME, _T("EnableGlobalHotkey"), true)
 	{
 	}
 
@@ -622,11 +622,11 @@ public:
 
 					g_mpApp.GetHotkey().Remove(nUsedCmdIndex);
 
-					if (bGloal)
-						g_mpApp.GetHotkey().EnableGlobalHotkey(true);
-
 					m_pWndParent->UpdateValues();
 				}
+
+				if (bGloal)
+					g_mpApp.GetHotkey().EnableGlobalHotkey(true);
 
 				g_mpApp.GetHotkey().Add(m_nCmd, bGloal, dlg.m_nVirtualKey, dlg.m_fsModifiers);
 			}

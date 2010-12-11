@@ -461,11 +461,6 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 			map<DWORD, tstring>::iterator	it;
 			BOOL			bSaveToMp3 = FALSE;
 
-			// Get md5 of the lyrics, and remember it
-			TCHAR		szMD5[64];
-			if (MD5FileStr(pTask->m_strSaveFile.c_str(), szMD5))
-				g_mpApp.SetCachedLyricsMD5(pTask->strMediaKey.c_str(), szMD5);
-
 			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false)
 				&& FileIsExtSame(pTask->strMediaKey.c_str(), _T(".mp3")))
 			{

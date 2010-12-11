@@ -665,7 +665,7 @@ tstring CSkinFactory::GetStringOfID(int nID)
 	return _T("");
 }
 
-int CSkinFactory::OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir)
+int CSkinFactory::OpenSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir)
 {
 	TCHAR		szSkinFile[MAX_PATH];
 	tstring		strSkinDir;
@@ -699,11 +699,11 @@ int CSkinFactory::OpenSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	return OpenSkinFile(szSkinFile);
 }
 
-int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir, bool bLoadSkinColorTheme)
+int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir, bool bLoadSkinColorTheme)
 {
 	int		nRet;
 
-	nRet = OpenSkinEx(szSkinName, szSkinDir, szExtraDir);
+	nRet = OpenSkin(szSkinName, szSkinDir, szExtraDir);
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -788,31 +788,6 @@ int CSkinFactory::ChangeSkinEx(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR sz
 			nRet = CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str());
 		// delete pSkinWnd;
 	}
-
-	// Open other skin windows.
-/*	LIST_SKINWNDS::iterator	it;
-	SetTStrNCase::iterator itSet;
-	for (it = listToBeProcessed.begin(), itSet = setOpenedSkinWnds.begin();
-		it != listToBeProcessed.end() && itSet != setOpenedSkinWnds.end(); ++it, ++itSet)
-	{
-		CSkinWnd	*pSkinWnd = *it;
-		pSkinWnd->OpenSkin((*itSet).c_str());
-	}
-
-	// Destroy other skin window
-	for (; it != listToBeProcessed.end(); ++it)
-	{
-		CSkinWnd	*pSkinWnd = *it;
-		pSkinWnd->Destroy();
-		// delete pSkinWnd;
-	}
-
-	// Create other skin windows.
-	for (; itSet != setOpenedSkinWnds.end(); ++itSet)
-	{
-		nRet = CreateSkinWnd(false, _SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str());
-		// delete pSkinWnd;
-	}*/
 
 	return ERR_OK;
 }

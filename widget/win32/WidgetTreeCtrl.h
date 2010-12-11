@@ -5,6 +5,7 @@
 #pragma once
 
 #include "WidgetCtrlBase.h"
+#include "WidgetNotify.h"
 
 class CWidgetTreeCtrl : public CWidgetCtrlBase
 {

@@ -68,9 +68,9 @@ void SendCommandLine(HWND hWnd, LPCTSTR szCmdLine)
 {
 	COPYDATASTRUCT	copyData;
 
-	copyData.dwData = MC_OPEN_FILES;
+	copyData.dwData = ML_SEND_CMD_LINE;
 	copyData.lpData = (LPVOID)szCmdLine;
 	copyData.cbData = sizeof(TCHAR) * (_tcslen(szCmdLine) + 1);
 
-	SendMessage(hWnd, WM_COPYDATA, NULL, (LPARAM)&copyData);
+	SendMessage(hWnd, WM_COPYDATA, ML_SEND_CMD_LINE, (LPARAM)&copyData);
 }

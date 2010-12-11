@@ -10,7 +10,7 @@
 #ifdef _MPLAYER
 #include "MPPlaylistCmdHandler.h"
 #include "MPMediaLibCmdHandler.h"
-#include "MPCmdHandlerOfMediaGuide.h"
+//#include "MPCmdHandlerOfMediaGuide.h"
 #endif
 #include "SkinListCtrl.h"
 #include "SkinSeekCtrl.h"
@@ -1337,8 +1337,8 @@ void CMPSkinWnd::AddCmdHandler(LPCTSTR szName)
 		pHandler = new CMPPlaylistCmdHandler;
 	else if (_tcsicmp(szName, _T("ch_medialib_ppc")) == 0)
 		pHandler = new CMPMediaLibCmdHandler;
-	else if (_tcsicmp(szName, _T("ch_mediaguide")) == 0)
-		pHandler = new CMPCmdHandlerOfMediaGuide;
+//	else if (_tcsicmp(szName, _T("ch_mediaguide")) == 0)
+//		pHandler = new CMPCmdHandlerOfMediaGuide;
 #endif
 	else if (_tcsicmp(szName, _T("ch_floating_lyr")) == 0)
 		pHandler = new CMPCommonCmdHandler(true);

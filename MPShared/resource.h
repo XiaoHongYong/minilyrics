@@ -3,7 +3,6 @@
 // Used by MiniLyrics.rc
 //
 #define IDC_REPORT                      129
-#define IDC_MLHELP                      130
 #define IDI_MPLAYER                     132
 #define IDM_MENU                        134
 #define IDI_SAVE                        135
@@ -13,7 +12,6 @@
 #define IDI_PREV                        139
 #define IDI_NEXT                        140
 #define IDI_CRASH                       141
-#define IDD_LOGIN                       142
 #define IDI_F_TXT                       143
 #define IDI_F_LRC                       144
 #define IDB_LRC_TYPE                    145
@@ -24,23 +22,20 @@
 #define IDR_MENU_ID                     150
 #define IDR_MENU_OPEN_LRC_DLG           151
 #define IDR_MENU_ALBUMART               152
-#define IDD_NEW_VERSION_PROMPT          159
 #define IDD_CRASH_REPORT                163
-#define IDD_UPLOAD_LRC                  164
 #define IDD_UPLOAD_EXIST                165
 #define IDD_MSG                         166
 #define IDD_MLSTART                     167
 #define IDD_ERROR_RESOLVE               169
-#define IDD_WAITING                     172
 #define IDD_COPYSONGLYRICS              173
-#define IDD_SEL_ENCODING                174
 #define IDD_RATE_LYR                    180
 #define IDD_BATCH_EMBEDDED_LYR          181
 #define IDM_MOUSE_CLICK_THROUGH         190
 #define IDM_LYR_EDITOR                  192
-#define IDB_ADV_PREFERENCE              194
 #define IDD_SET_HOTKEY                  197
 #define IDM_PLAYER_MENU                 198
+#define IDD_MLSTART1                    198
+#define IDD_SETUP                       198
 #define IDM_MEDIA_INFO_PIC              199
 #define IDD_MEDIA_INFO_BASIC            200
 #define IDM_MAIN_WND                    201
@@ -54,48 +49,28 @@
 #define IDD_PG_MEDIA_ASSOCIATE          209
 #define IDI_MEDIATYPE2                  210
 #define IDR_MENU_STATIC_LYR             211
+#define IDB_INSTALL_STAT                211
 #define IDM_LYRICS_TOOL                 212
-#define IDC_E_PWD                       1000
 #define IDC_APPLY_ACCOUNT               1001
-#define IDC_E_SAMPLE                    1005
 #define IDC_HOTKEY                      1006
-#define IDC_E_TITLE                     1008
-#define IDC_E_ARTIST                    1009
-#define IDC_E_ALBUM                     1012
-#define IDC_E_DIR                       1015
-#define IDC_E_COMMENT                   1017
-#define IDC_LIST_FILES                  1029
 #define IDC_ADD_SONG_FILE               1045
-#define IDC_CB_ENCODING                 1056
 #define IDC_CB_RATING                   1057
 #define IDC_C_LYR_FONT                  1060
 #define IDC_C_LYR_STYLE                 1062
 #define IDC_C_LYR_BG_PIC                1064
 #define IDC_C_LYR_COLORS                1065
-#define IDC_C_REMBERPWD                 1066
 #define IDC_CLICK_THROUGH               1069
 #define IDC_C_COPYLYRICS                1072
 #define IDC_NO_PROMPT                   1080
 #define IDC_BROWSE                      1083
-#define IDC_REFRESH                     1084
 #define IDC_DEL_FILE                    1086
 #define IDC_RENAME                      1088
 #define IDC_REGISTER                    1091
-#define IDC_NEW_VERSION                 1093
-#define IDC_VISITWEB                    1094
-#define IDC_E_FILENAME                  1100
 #define IDC_PLAY                        1101
 #define IDC_STATIC1                     1103
-#define IDC_UPLOAD                      1104
-#define IDC_E_USER                      1105
 #define IDC_TAB                         1107
 #define IDC_LIST                        1108
 #define IDC_MSG                         1109
-#define IDC_S_FILENAME                  1112
-#define IDC_S_ARTIST                    1113
-#define IDC_S_TITLE                     1114
-#define IDC_S_ALBUM                     1115
-#define IDC_S_COMMENT                   1116
 #define IDC_ERROR                       1119
 #define IDC_RESOLVE                     1120
 #define IDC_SETUP_INET                  1122
@@ -103,7 +78,6 @@
 #define IDC_E_SRC                       1124
 #define IDC_E_TARGET                    1126
 #define IDC_NOT_MATCH                   1129
-#define IDC_EDIT                        1150
 #define IDC_SET_PIC                     1159
 #define IDC_CB_GENRE                    1160
 #define IDC_E_YEAR                      1161
@@ -132,6 +106,9 @@
 #define IDC_HIDE_RATE_LINK              1193
 #define IDC_INFO                        1198
 #define IDC_S_MSG                       1202
+#define IDC_LIST_PLAYERS                1209
+#define IDC_INSTALL_ALL                 1210
+#define IDC_COMBO1                      1212
 #define IDC_CLOSE                       40000
 #define IDC_SETTOPMOST                  40001
 #define IDC_STOP                        40002
@@ -323,9 +300,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        211
+#define _APS_NEXT_RESOURCE_VALUE        212
 #define _APS_NEXT_COMMAND_VALUE         40192
-#define _APS_NEXT_CONTROL_VALUE         1204
+#define _APS_NEXT_CONTROL_VALUE         1218
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

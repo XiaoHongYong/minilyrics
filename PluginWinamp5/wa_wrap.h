@@ -1,4 +1,4 @@
-#ifndef _WA_WRAP_H_
+#ifndef _WA_WRAP_H_	
 #define _WA_WRAP_H_
 
 
@@ -154,11 +154,14 @@ BOOL WAGetListLength(HWND hwndWinamp, DWORD &dwLength)
 }
 
 // #define IPC_GETSKIN 201
-BOOL WAGetSkin(HWND hwndWinamp, LPTSTR skinname_buffer)
+BOOL WAGetSkin(HWND hwndWinamp, LPWSTR skinname_buffer)
 {
 	DWORD	dwResult;
-	return SendMessageTimeout(hwndWinamp, WM_WA_IPC, (WPARAM)skinname_buffer, IPC_GETSKIN,
+	char	szSkin[MAX_PATH] = "";
+	BOOL bRet = SendMessageTimeout(hwndWinamp, WM_WA_IPC, (WPARAM)szSkin, IPC_GETSKIN,
 		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwResult);
+	MBCSToUCS2(szSkin, strlen(szSkin), skinname_buffer, MAX_PATH);
+	return bRet;
 }
 
 // #define IPC_GETPLAYLISTFILE 211

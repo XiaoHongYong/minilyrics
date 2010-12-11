@@ -30,6 +30,24 @@ CLyricsOutPluginMgr::~CLyricsOutPluginMgr()
 
 }
 
+void PromptForLogitechLCD(LPCTSTR szModuleName)
+{
+	if (_tcsicmp(FileGetName(szModuleName), _T("mlp_G15.dll")) != 0)
+		return;
+
+	if (g_Profile.GetProfileBool(_T("G15LCDPrompted"), false))
+		return;
+
+	g_Profile.WriteProfileInt(_T("G15LCDPrompted"), true);
+
+	tstring	strMsg = TOLOCAL(_T("You have Logitech LCD device installed, lyrics can be displayed on it."));
+	strMsg += _T("\r\n");
+	strMsg += TOLOCAL(_T("Do you want to visit our website for more information?"));
+	int nRet = g_mpApp.MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL);
+	if (nRet == IDOK)
+		OpenUrl(g_mpApp.GetMainWnd(), GetStrName(SN_HTTP_HELP_G15_LCD));
+}
+
 int CLyricsOutPluginMgr::Init()
 {
 	int				nRet;
@@ -75,7 +93,7 @@ int CLyricsOutPluginMgr::Init()
 			hModule = LoadLibrary(strPluginFile.c_str());
 			if (!hModule)
 			{
-				DBGLOG2(_T("Failed to Load plugin: %s, %s"), strPluginFile.c_str(), CWin32Error().Description());
+				ERRLOG2(_T("Failed to Load plugin: %s, %s"), strPluginFile.c_str(), CWin32Error().Description());
 				continue;
 			}
 
@@ -95,8 +113,12 @@ int CLyricsOutPluginMgr::Init()
 					plugin.hModule = hModule;
 					plugin.uNotifyFlag = 0;
 					plugin.bInitOK = plugin.plyricsOut->OnInit(&plugin.uNotifyFlag);
-					m_dwNotifyFlag |= plugin.uNotifyFlag;
-					m_vPlugins.push_back(plugin);
+					if (plugin.bInitOK)
+					{
+						m_dwNotifyFlag |= plugin.uNotifyFlag;
+						m_vPlugins.push_back(plugin);
+						PromptForLogitechLCD(strPluginFile.c_str());
+					}
 				}
 			}
 			else

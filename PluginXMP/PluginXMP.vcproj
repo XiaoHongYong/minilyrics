@@ -164,7 +164,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="H:\Tools\xmplay35\xmp-ml.dll"
+				OutputFile="C:\Software\xmplay35\xmp-ml.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\wmpLyrics.def"
@@ -229,6 +229,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\PluginWinamp5\Resource.rc"
+				>
+			</File>
+			<File
 				RelativePath="wmpLyrics.def"
 				>
 			</File>
@@ -241,11 +245,19 @@
 				RelativePath="PlayerImp.h"
 				>
 			</File>
+			<File
+				RelativePath="..\PluginWinamp5\resource.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath="..\PluginWinamp5\Resource.rc2"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

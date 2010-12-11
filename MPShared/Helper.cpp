@@ -97,9 +97,7 @@ void GetAppNameLong(TCHAR szName[], int nLen)
 #ifdef _MPLAYER
 	_tcscpy(szName, SZ_APP_NAME);
 #else
-	TCHAR		szPlayer[128];
-	g_Player.GetPlayerName(szPlayer, CountOf(szPlayer));
-	_stprintf_s(szName, nLen, _T("%s for %s"), SZ_APP_NAME, szPlayer);
+	_stprintf_s(szName, nLen, _T("%s for %s"), SZ_APP_NAME, g_Player.GetPlayerName());
 #endif
 }
 

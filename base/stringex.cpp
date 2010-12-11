@@ -924,6 +924,27 @@ int HexToInt(char chHex)
 		return 0;
 }
 
+uint32 HexToInt(LPCTSTR str)
+{
+	if (_tcsnicmp(str, _T("0x"), 2) == 0)
+		str += 2;
+
+	int len = _tcslen(str);
+	uint32	val = 0;
+
+	for (int i = 0; i < len; i++)
+	{
+		if ('0' <= str[i] && str[i] <= '9')
+			val = val * 16 + str[i] - '0';
+		else if ('a' <= str[i] && str[i] <= 'f')
+			val = val * 16 + str[i] - 'a' + 10;
+		else if ('A' <= str[i] && str[i] <= 'F')
+			val = val * 16 + str[i] - 'A' + 10;
+	}
+
+	return val;
+}
+
 // COMMENT:
 //		将%20等类似的名字转换为对应的字符
 void UriUnescape(const char *szInet, string &str)

@@ -18,7 +18,7 @@ public:
 
 	BOOL Attach(CBaseWnd *pParentWnd, UINT uChildId, LPCTSTR szUrl);
 
-	void OnPaint(IMLGraphicsBase *pGraph);
+	void OnPaint(CMLGraphics *pGraph);
 
 	void OnMouseMove(UINT nFlags, CPoint point);
 

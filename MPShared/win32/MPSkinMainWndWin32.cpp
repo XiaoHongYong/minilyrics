@@ -116,56 +116,56 @@ void CMPSkinMainWnd::OnEvent(const IEvent *pEvent)
 		CMPSkinMainWndBase::OnEvent(pEvent);
 }
 
-void CMPSkinMainWnd::OnCopyData(HWND hWnd, PCOPYDATASTRUCT pCopyData)
+void CMPSkinMainWnd::OnCopyData(WPARAM wParam, PCOPYDATASTRUCT pCopyData)
 {
 #ifdef _MPLAYER
 	vector<tstring> vCmdLine;
 	LPCTSTR			szCmdLine;
 	int				i;
 
-	if (pCopyData->dwData == MC_OPEN_FILES)
+	if (pCopyData->dwData != ML_SEND_CMD_LINE && wParam != ML_SEND_CMD_LINE)
+		return;
+
+	szCmdLine = (LPCTSTR)pCopyData->lpData;
+	CmdLineAnalysis(szCmdLine, vCmdLine);
+
+	// deal with option cmd line
+	for (i = 0; i < (int)vCmdLine.size(); i++)
 	{
-		szCmdLine = (LPCTSTR)pCopyData->lpData;
-		CmdLineAnalysis(szCmdLine, vCmdLine);
-
-		// deal with option cmd line
-		for (i = 0; i < (int)vCmdLine.size(); i++)
+		tstring		&str = vCmdLine[i];
+		if (str[0] == '/' || str[0] == '-')
 		{
-			tstring		&str = vCmdLine[i];
-			if (str[0] == '/' || str[0] == '-')
-			{
-				vCmdLine.erase(vCmdLine.begin() + i);
-				i--;
-			}
+			vCmdLine.erase(vCmdLine.begin() + i);
+			i--;
 		}
-
-		if (vCmdLine.empty())
-			return;
-
-		if (vCmdLine.size() == 1 && FileIsExtSame(vCmdLine[0].c_str(), _T(".m3u")))
-		{
-			// Open playlist
-			if (g_Player.m_bPlModified)
-				SaveCurrentPlaylist();
-
-			g_Player.m_strCurrentPlaylist = vCmdLine[0];
-			g_Player.SetPlaylistModified(false);
-		}
-		else
-		{
-			GetDefaultPlaylistName(g_Player.m_strCurrentPlaylist);
-			g_Player.SetPlaylistModified(true);
-		}
-
-		g_Player.ClearPlaylist();
-
-		for (i = 0; i < (int)vCmdLine.size(); i++)
-		{
-			g_Player.AddToPlaylist(vCmdLine[i].c_str());
-		}
-
-		g_Player.Play();
 	}
+
+	if (vCmdLine.empty())
+		return;
+
+	if (vCmdLine.size() == 1 && FileIsExtSame(vCmdLine[0].c_str(), _T(".m3u")))
+	{
+		// Open playlist
+		if (g_Player.m_bPlModified)
+			SaveCurrentPlaylist();
+
+		g_Player.m_strCurrentPlaylist = vCmdLine[0];
+		g_Player.SetPlaylistModified(false);
+	}
+	else
+	{
+		GetDefaultPlaylistName(g_Player.m_strCurrentPlaylist);
+		g_Player.SetPlaylistModified(true);
+	}
+
+	g_Player.ClearPlaylist();
+
+	for (i = 0; i < (int)vCmdLine.size(); i++)
+	{
+		g_Player.AddToPlaylist(vCmdLine[i].c_str());
+	}
+
+	g_Player.Play();
 #endif
 }
 
@@ -174,7 +174,7 @@ LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 	switch (message)
 	{
 	case WM_COPYDATA:
-		OnCopyData(NULL, (PCOPYDATASTRUCT)lParam);
+		OnCopyData(wParam, (PCOPYDATASTRUCT)lParam);
 		break;
 	case MPWM_TRAYICN:
 		m_mlTrayIcon.OnMyNotifyIcon(wParam, lParam);
@@ -206,18 +206,20 @@ LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 			m_mlTrayIcon.UpdatePlayerSysTrayIcon();
 		}
 #endif
+#ifndef _MPLAYER
 		if (message == g_msgMediaMonkeyEmbeder)
 		{
 			CMPSkinMainWnd *pMainWnd = g_mpApp.GetMainWnd();
 			if (pMainWnd && pMainWnd->GetEnableTranslucencyLayered())
 				pMainWnd->EnableTranslucencyLayered(false);
-			g_mpApp.m_mlStartupFlags |= ML_EMBEDDED_WND_IMMOVABLE;
-			g_mpApp.m_mlStartupFlags &= ~(ML_EMBEDDED_SUPPORT_CLASSIC_SKINS | ML_SUPPORT_EMBEDDED);
+			g_Player.m_playerInfo.startupFlags |= ML_EMBEDDED_WND_IMMOVABLE;
+			g_Player.m_playerInfo.startupFlags &= ~(ML_SUPPORT_CLASSIC_SKINS | ML_SUPPORT_EMBEDDED);
 
 			pMainWnd->m_WndDrag.EnableDrag(false);
 			pMainWnd->m_wndResizer.FixedWidth(true);
 			pMainWnd->m_wndResizer.FixedHeight(true);
 		}
+#endif
 		break;
 	}
 

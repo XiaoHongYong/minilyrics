@@ -209,7 +209,7 @@ protected:
 	Node					*m_pCurNode;
 
 };
-
+/*
 class CDropListCtrl : public CBaseWnd
 {
 public:
@@ -223,7 +223,7 @@ public:
 
 	void SetStyle(LPCTSTR szFontName, int nFontHeight, MLColor &clrText, MLColor &clrBg, MLColor &clrSelBg);
 
-	bool DropList(int x, int y, CBaseWnd *pWndParent, int nID, CImgList *pImageList, IDropListCtrlNotify *pNotify);
+	bool DropList(int x, int y, CBaseWnd *pWndParent, int nID, CSFImgList *pImageList, IDropListCtrlNotify *pNotify);
 
 	void Clear();
 	void Append(int nImageIndex, LPCTSTR szText);
@@ -237,7 +237,7 @@ public:
 	void OnLButtonUp(UINT nFlags, CPoint point);
 	void OnLButtonDown(UINT nFlags, CPoint point);
 
-	void OnPaint(IMLGraphicsBase *pGraph);
+	void OnPaint(CRawGraph *pGraph);
 
 	void OnDestroy();
 
@@ -246,7 +246,7 @@ public:
 #endif
 
 protected:
-	void Paint(IMLGraphicsBase *pGraph, bool bResize = false);
+	void Paint(CMLGraphics *pGraph, bool bResize = false);
 
 	void NotifySelChanged();
 
@@ -254,10 +254,9 @@ protected:
 	vector<Item>		m_vItems;
 	int					m_nID;
 	CBaseWnd			*m_pWndParent;
-	CImgList			*m_pImageList;
+	CSFImgList			*m_pImageList;
 
 	CFontInfo			m_font;
-	CMLBrush			m_brBg, m_brSelBg;
 	MLColor				m_clrText, m_clrBg, m_clrSelBg;
 
 	int					m_nLineHeight;
@@ -327,7 +326,7 @@ public:
 protected:
 	static LPCTSTR		ms_szClassName;
 
-	CImgList			m_imageList;
+	CSFImgList			m_imageList;
 	CDropListCtrl		m_droplist;
 
 	int					m_nImageIndex;
@@ -335,6 +334,6 @@ protected:
 	tstring				m_strImgListFile;
 	MLColor				m_clrSelBg;
 
-};
+};*/
 
 #endif // !defined(AFX_SKINDROPLISTCTRL_H__D9E4286C_5FAD_4DC4_A1BE_E6A36626E899__INCLUDED_)

@@ -92,8 +92,10 @@ inline bool __isascii(int c) { return c >= 0 && c <= 0x7F; }
 #endif
 
 
-int HexToInt(char chHex);
 BOOL IsHexChar(char ch);
+
+int HexToInt(char chHex);
+uint32 HexToInt(LPCTSTR str);
 
 // COMMENT:
 //		将汉字、' '、'	'等转换为 %20....等

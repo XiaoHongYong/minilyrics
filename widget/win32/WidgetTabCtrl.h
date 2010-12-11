@@ -1,9 +1,3 @@
-// WidgetTabCtrl.h: interface for the CWidgetTabCtrl class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_WIDGETTABCTRL_H__CC1D9E54_5039_4CC8_8330_9C3F504CE4BE__INCLUDED_)
-#define AFX_WIDGETTABCTRL_H__CC1D9E54_5039_4CC8_8330_9C3F504CE4BE__INCLUDED_
 
 #pragma once
 
@@ -48,4 +42,3 @@ public:
 
 };
 
-#endif // !defined(AFX_WIDGETTABCTRL_H__CC1D9E54_5039_4CC8_8330_9C3F504CE4BE__INCLUDED_)

@@ -221,7 +221,7 @@ public:
 		{
 			g_Profile.WriteProfileInt(_T("MPSkinMode"), false);
 			// 嵌入到player 中的skin
-			g_mpApp.SwitchToEmbeddedSkinMode(true);
+			g_mpApp.OnSwitchToEmbeddedSkinMode(true);
 		}
 		else
 #endif
@@ -275,10 +275,7 @@ public:
 		m_strEmbeddedSkinName = _T("");
 		if (g_mpApp.IsSupportEmbedded())
 		{
-			TCHAR		szName[256];
-
-			g_Player.GetEmbeddedSkinName(szName, CountOf(szName));
-			m_strEmbeddedSkinName = tstring(_T("<< ")) + szName + _T(" >>");
+			m_strEmbeddedSkinName = tstring(_T("<< ")) + g_Player.GetEmbeddedSkinName() + _T(" >>");
 			m_pSkinList->InsertItem(m_pSkinList->GetItemCount(), m_strEmbeddedSkinName.c_str());
 
 			if (g_mpApp.IsEmbeddedMode())

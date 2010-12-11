@@ -1,8 +1,8 @@
-#ifndef _ML_GEN_CTRL_INC_
-#define _ML_GEN_CTRL_INC_
+
+#pragma once
 
 #include "WidgetCtrlBase.h"
-#include "ScrollBarHandler.h"
+#include "../../WidgetLite/win32/ScrollBarHandler.h"
 
 typedef unsigned int uint;
 
@@ -109,5 +109,3 @@ protected:
 
 };
 
-
-#endif // _ML_GEN_CTRL_INC_

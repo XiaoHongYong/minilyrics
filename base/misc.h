@@ -41,6 +41,8 @@ void Sleep(DWORD dwMilliseconds);
 
 #ifdef WIN32
 
+BOOL ExecuteCmdAndWait(LPCTSTR szCmd, DWORD dwTimeOut = INFINITE, DWORD *pExitCode = NULL);
+
 BOOL GetModulePath(TCHAR szPath[], HINSTANCE hInstance = NULL);
 
 HWND

@@ -1,13 +1,5 @@
-// WndHelper.h: interface for the CWndHelper class.
-//
-//////////////////////////////////////////////////////////////////////
 
-#ifndef _MLWNDHELPER_INC_
-#define _MLWNDHELPER_INC_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 // using STL
 #pragma warning(disable:4786)
@@ -61,5 +53,3 @@ protected:
 	vector<ChildAlignCenter>	m_vAlignCenterWnds;
 
 };
-
-#endif // _MLWNDHELPER_INC_

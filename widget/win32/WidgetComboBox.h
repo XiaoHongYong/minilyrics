@@ -1,13 +1,4 @@
-// ComboBox.h: interface for the CWidgetComboBox class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_COMBOBOX_H__BC7A829B_7DBF_4BAA_96F8_8A00488A9A34__INCLUDED_)
-#define AFX_COMBOBOX_H__BC7A829B_7DBF_4BAA_96F8_8A00488A9A34__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "CommonWidget.h"
 
@@ -101,5 +92,3 @@ public:
 	void GetSelItemText(tstring &str);
 	
 };
-
-#endif // !defined(AFX_COMBOBOX_H__BC7A829B_7DBF_4BAA_96F8_8A00488A9A34__INCLUDED_)

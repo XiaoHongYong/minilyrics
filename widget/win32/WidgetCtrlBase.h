@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "BaseWnd.h"
+#include "../../WidgetLite/win32/BaseWnd.h"
 
 class CWidgetCtrlBase : public CBaseWnd
 {

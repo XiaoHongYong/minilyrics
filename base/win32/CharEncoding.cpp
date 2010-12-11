@@ -327,12 +327,24 @@ void ConvertStr2(const char *str, int nLen, WCHAR *strOut, int nOut, int nEncodi
 
 void ConvertStr2(const char *str, int nLen, char *strOut, int nOut, int nEncodingID)
 {
-	strcpy_safe(strOut, nLen, str);
+	if (nLen == -1)
+		strcpy_safe(strOut, nOut, str);
+	else
+	{
+		nLen = strlen(str);
+		strncpy_safe(strOut, nOut, str, nLen);
+	}
 }
 
 void ConvertStr2(const WCHAR *str, int nLen, WCHAR *strOut, int nOut, int nEncodingID)
 {
-	wcscpy_safe(strOut, nLen, str);
+	if (nLen == -1)
+		wcscpy_safe(strOut, nOut, str);
+	else
+	{
+		nLen = wcslen(str);
+		wcsncpy_safe(strOut, nOut, str, nLen);
+	}
 }
 
 void ConvertStr2(const WCHAR *str, int nLen, char *strOut, int nOut, int nEncodingID)

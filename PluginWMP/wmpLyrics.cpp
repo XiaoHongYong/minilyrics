@@ -51,7 +51,8 @@ HRESULT CWmpLyrics::FinalConstruct()
 void CWmpLyrics::FinalRelease()
 {
     ReleaseCore();
-	g_MLService.Quit();
+
+	WmpPluginQuit();
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -131,24 +132,13 @@ void CWmpLyrics::ReleaseCore()
 //#include "CPluginWindow.h"
 HRESULT CWmpLyrics::Create(HWND hwndParent, HWND *phwndWindow)
 {
-	g_hInstance = _Module.GetResourceInstance();
+	WmpPluginInit(_Module.GetResourceInstance());
 
-	g_hwndPlayer = FindWindow("WMPlayerApp", NULL);
+	return S_OK;
 
-	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
-		return FALSE;
+//	*phwndWindow = (HWND)1;//g_wndLyricShow.GetHWnd();
 
-	// now we can use other g_MLService functions.
-	char	szMsg[256];
-
-	wsprintf(szMsg, "Start Windows Media Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-	g_MLService.Log(szMsg);
-
-	return 0;
-
-	*phwndWindow = (HWND)1;//g_wndLyricShow.GetHWnd();
-
-    return S_OK;
+//    return S_OK;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -157,7 +147,7 @@ HRESULT CWmpLyrics::Create(HWND hwndParent, HWND *phwndWindow)
 
 HRESULT CWmpLyrics::Destroy()
 {
-	g_MLService.Quit();
+	WmpPluginQuit();
 
     return S_OK;
 }

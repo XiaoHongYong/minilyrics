@@ -1,7 +1,5 @@
 #pragma once
 
-extern class CPlayerImp		g_Player;
-
 class CPlayerImp : public IPlayer
 {
 public:
@@ -9,60 +7,43 @@ public:
 	virtual ~CPlayerImp();
 
 public:
-	// Init and destroy.
-	BOOL Init();
-	void Quit();
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	// Player Info
-	int GetPlayerName(char * lpszBuffer, int nBufSize);
-
-	// Get player skin path
-	int GetCurSkinPath(char * lpszBuffer, int nBufSize);
-
-	HWND GetMainWnd();
-
-	// get player state and song info
-	DWORD GetPlayerState();
-
-	DWORD GetPlayPos();
-	int HasVideo();
+	virtual void OnConnect();
+	virtual void OnConnectedDone();
+	virtual void OnDisconnect();
 
 	// control player
-	BOOL Play();
-	BOOL Pause();
-	BOOL PlayPause();
-	BOOL Stop();
-	BOOL Prev();
-	BOOL Next();
-	BOOL SeekTo(int nMsPos);
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
 
-	virtual int IsFeatureSupported(PlayerFeature feature)
-	{
-		if (feature == PF_MinimizeRestoreWithPlayer)
-			return PR_OK;
-		else
-			return IPlayer::IsFeatureSupported(feature);
-	}
-
-	virtual HWND GetAttachedParentWnd(RECT *prc);
-	virtual void OnNotifySkinLoaded();
-	virtual void OnNotifyDetachedFromParentWnd();
-	virtual int GetEmbeddedSkinName(TCHAR * lpszBuffer, int nBufSize);
-
-	virtual int GetSkinThemeColor(SKIN_CLR_NAME scn, COLORREF *clrValue);
-
-	virtual void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
-
-	BOOL IsWinamp5();
-
-	DWORD GetStartupFlags();
+	virtual void SwitchToEmbeddedSkin();
+	virtual void EndEmbeddedSkin();
 
 public:
-	DWORD			m_dwPlayerVer;
-	HWND			m_hwndPluginParent;
+	void SkinOfPlayerChanged();
 
-	bool			m_bWorking;
-	DWORD			m_dwShoutcastTitleChangedPos;
-	PLAYER_STATE	m_state;
+	void PrepareCurSkinInfo(PlayerSkinInfo &skinInfo);
+
+	int HasVideo();
+
+	HWND GetAttachedParentWnd();
+
+	BOOL IsWinamp5() { return m_bWinamp5; }
+	DWORD GetPlayPos();
+
+public:
+	bool				m_bWinamp5;
+	HWND				m_hWndPluginParent;
+	embedWindowState	*m_embeddedWndState;
+
+	bool				m_bWorking;
+	DWORD				m_dwShoutcastTitleChangedPos;
+	PLAYER_STATE		m_state;
 
 };

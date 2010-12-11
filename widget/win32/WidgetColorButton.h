@@ -14,7 +14,7 @@ public:
 	void GetColor(MLColor &clr);
 
 public:
-	void OnPaint(IMLGraphicsBase *pGraph);
+	void OnPaint(CMLGraphics *pGraph);
 
 	void OnLButtonUp(UINT nFlags, CPoint point);
 

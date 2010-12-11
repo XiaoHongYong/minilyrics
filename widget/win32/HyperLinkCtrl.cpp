@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "desktop.h"
+#include "Widget.h"
 #include "WidgetCtrlBase.h"
 #include "HyperLinkCtrl.h"
 #include "../MPShared/resource.h"
@@ -44,7 +44,7 @@ BOOL CHyperLinkCtrl::Attach(CBaseWnd *pParentWnd, UINT uChildId, LPCTSTR szUrl)
 	return TRUE;
 }
 
-void CHyperLinkCtrl::OnPaint(IMLGraphicsBase *pGraph)
+void CHyperLinkCtrl::OnPaint(CMLGraphics *pGraph)
 {
 	CRect		rc;
 	TCHAR		szText[256];

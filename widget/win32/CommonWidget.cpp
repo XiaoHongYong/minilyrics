@@ -46,11 +46,12 @@ bool CWidgetToggleButton::Create(LPCTSTR szText, CBaseWnd *pWndParent, int nID)
 
 bool CWidgetToggleButton::IsChecked()
 {
-	return true;
+	return SendMessage(m_hWnd, BM_GETCHECK, 0, 0) == BST_CHECKED;
 }
 
 void CWidgetToggleButton::SetCheck(bool bChecked)
 {
+	SendMessage(m_hWnd, BM_SETCHECK, bChecked ? BST_CHECKED: BST_UNCHECKED, 0);
 }
 
 //////////////////////////////////////////////////////////////////////////

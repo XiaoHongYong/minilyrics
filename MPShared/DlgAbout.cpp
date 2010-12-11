@@ -48,9 +48,7 @@ public:
 #ifdef _MPLAYER
 		_stprintf_s(szVersion, CountOf(szVersion), _T("%d.%d.%d"), MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
 #else
-		TCHAR		szPlayer[128] = _T("");
-		g_Player.GetPlayerName(szPlayer, CountOf(szPlayer));
-		_stprintf_s(szVersion, CountOf(szVersion), _T("%d.%d.%d for %s"), MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER, szPlayer);
+		_stprintf_s(szVersion, CountOf(szVersion), _T("%d.%d.%d for %s"), MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER, g_Player.GetPlayerName());
 #endif
 		m_pSkinWnd->SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, szVersion);
 

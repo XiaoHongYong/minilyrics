@@ -127,7 +127,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	case IDC_EMBEDDED_LYRICS:
 		{
 			// Load Embedded lyrics tool.
-			CMPSkinDialog::ShowDialog(new CDlgLyricsTool(), m_pSkinWnd);
+			RunLyricsTool(m_pSkinWnd);
 		}
 		break;
 // 	case IDC_ALIGN_LYRICS_LEFT:
@@ -451,10 +451,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_PAUSE:
-		if (g_Player.GetPlayerState() == PS_PLAYING)
-			g_Player.Pause();
-		else if (g_Player.GetPlayerState() == PS_PAUSED)
-			g_Player.Play();
+		g_Player.Pause();
 		break;
 	case CMD_PLAY:
 		g_Player.Play();
