@@ -3,6 +3,9 @@
 #include "../MLPluginLib/IPlayer.h"
 extern class CPlayerImp		g_Player;
 
+void WmpPluginInit(HINSTANCE hInstance);
+void WmpPluginQuit();
+
 class CPlayerImp : public IPlayer
 {
 public:
@@ -10,47 +13,38 @@ public:
 	virtual ~CPlayerImp();
 
 public:
-	// Init and destroy.
-	BOOL Init();
-	void Quit();
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	// Player Info
-	int GetPlayerName(char * lpszBuffer, int nBufSize);
+	virtual void OnConnect();
+	virtual void OnConnectedDone();
+	virtual void OnDisconnect();
 
-	HWND GetMainWnd();
+	// control player
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
 
+	virtual void SwitchToEmbeddedSkin();
+	virtual void EndEmbeddedSkin();
+
+public:
 	// get player state and song info
-	DWORD GetPlayerState();
+	PLAYER_STATE GetPlayerState();
 
 	DWORD GetPlayPos();
 
-	// control player
-	BOOL Play();
-	BOOL Pause();
-	BOOL PlayPause();
-	BOOL Stop();
-	BOOL Prev();
-	BOOL Next();
-	BOOL SeekTo(int nMsPos);
-
-	void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
-
-
-	virtual HWND GetAttachedParentWnd(RECT *prc);
-	virtual void OnNotifySkinLoaded();
-	virtual void OnNotifyDetachedFromParentWnd();
-	virtual int GetEmbeddedSkinName(TCHAR * lpszBuffer, int nBufSize);
-public:
-	HWND			m_hWndVis;
-
-public:
-	// for wmplayer
 	void OnMediaChanged();
 
 	void SetWMPCore(IWMPCore *pCore);
 	void ReleaseWMPCore();
 
 	int GetProperty(const WCHAR *szProperty, WCHAR *szValue, int nLen);
+
+	HWND					m_hWndVis;
 
 protected:
 	CComPtr<IWMPCore>		m_pCore;

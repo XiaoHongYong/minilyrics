@@ -77,7 +77,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="c:\Program Files\MiniLyrics\PluginWMPVis.dll"
+				OutputFile="../bin\PluginWMPVis.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\PluginWMPVis.def"

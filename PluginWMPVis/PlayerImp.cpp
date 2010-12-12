@@ -1,32 +1,37 @@
 #include "stdafx.h"
-#include "wmp.h"
+#include "wmpplug.h"
 #include "../MLPluginLib/MLPlugin.h"
 #include "PlayerImp.h"
 
 CPlayerImp		g_Player;
 
+int RegGetProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nDefault);
 
-class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
+class CPlayerServiceWnd : public CPlayerServiceWndBase
 {
 public:
-	void OnCreate()
+	void OnConnect()
 	{
-		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
+		SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	}
 
-	void OnDestroy()
+	void OnDisconnect()
 	{
-		KillTimer(m_hWnd, TIMER_GETPOS);
+		KillTimer(TIMER_GETPOS);
 	}
 
 	void OnTimer(int nTimerID)
 	{
-		g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
+		if (nTimerID == TIMER_GETPOS)
+		{
+			// update current play time.
+			g_MLService.OnPlayPosChanged(g_Player.GetPlayPos());
+		}
 	}
 
 };
 
-CPlayerInfoQueryWnd	g_wndInfoQuery;
+CPlayerServiceWnd	g_wndPlayerServiceWnd;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -41,16 +46,117 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, "Windows Media Player");
 
-	return 1;
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
+{
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.hWndPlayer = FindWindow("WMPlayerApp", NULL);
+	playerInfo.hWndPluginService = g_wndPlayerServiceWnd.GetHandle();
+	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
+
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
+}
+
+void CPlayerImp::OnConnect()
+{
+	assert(m_pCore);
+	if (!m_pCore || !m_pControl)
+		return;
+
+	g_wndPlayerServiceWnd.OnConnect();
+
+	g_MLService.AddWndCloseto(NULL, L"WMPlayerApp", NULL);
+	g_MLService.AddWndCloseto(NULL, L"WMP Skin Host", NULL);
+}
+
+void CPlayerImp::OnConnectedDone()
+{
+	SwitchToEmbeddedSkin();
+
+	// Update Media info
+	OnMediaChanged();
+
+	// Update player state
+	g_MLService.OnPlayStateChanged(GetPlayerState());
+}
+
+void CPlayerImp::OnDisconnect()
+{
+	g_wndPlayerServiceWnd.OnDisconnect();
+}
+
+// control player
+void CPlayerImp::Play()
+{
+	if (m_pControl)
+		m_pControl->play();
+}
+
+void CPlayerImp::Pause()
+{
+	if (m_pControl)
+		m_pControl->pause();
+}
+
+void CPlayerImp::PlayPause()
+{
+	if (m_pControl && m_pCore)
+	{
+		WMPPlayState	state;
+		if (SUCCEEDED(m_pCore->get_playState(&state)))
+		{
+			if (state == wmppsPlaying)
+				m_pControl->pause();
+			else
+				m_pControl->play();
+		}
+	}
+}
+
+void CPlayerImp::Stop()
+{
+	if (m_pControl)
+		m_pControl->stop();
+}
+
+void CPlayerImp::Prev()
+{
+	if (m_pControl)
+		m_pControl->previous();
+}
+
+void CPlayerImp::Next()
+{
+	if (m_pControl)
+		m_pControl->next();
+}
+
+void CPlayerImp::SeekTo(int nMsPos)
+{
+	if (m_pControl)
+		m_pControl->put_currentPosition(((double)nMsPos) / 1000);
+}
+
+void CPlayerImp::SwitchToEmbeddedSkin()
+{
+	PlayerSkinInfo	skinInfo;
+
+	memset(&skinInfo, 0, sizeof(skinInfo));
+	skinInfo.bEmbeddedSkin = true;
+	skinInfo.bClrThemeValid = false;
+	skinInfo.hWndToAttach = m_hWndVis;
+
+	g_MLService.SwitchToEmbeddedSkin(skinInfo);
+}
+
+void CPlayerImp::EndEmbeddedSkin()
+{
 }
 
 // get player state and song info
-DWORD CPlayerImp::GetPlayerState()
+PLAYER_STATE CPlayerImp::GetPlayerState()
 {
 	if (!m_pCore)
 		return PS_STOPED;
@@ -69,12 +175,6 @@ DWORD CPlayerImp::GetPlayerState()
 	return PS_STOPED;
 }
 
-HWND CPlayerImp::GetMainWnd()
-{
-	return g_hwndPlayer;
-}
-
-// 歌曲播放的位置（单位ms)
 DWORD CPlayerImp::GetPlayPos()
 {
 	double	dbTime = 0;
@@ -88,123 +188,23 @@ DWORD CPlayerImp::GetPlayPos()
 	return (DWORD)(dbTime * 1000);
 }
 
-// control player
-BOOL CPlayerImp::Play()
-{
-	if (m_pControl)
-		m_pControl->play();
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Pause()
-{
-	if (m_pControl)
-		m_pControl->pause();
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::PlayPause()
-{
-	if (m_pControl && m_pCore)
-	{
-		WMPPlayState	state;
-		if (SUCCEEDED(m_pCore->get_playState(&state)))
-		{
-			if (state == wmppsPlaying)
-				m_pControl->pause();
-			else
-				m_pControl->play();
-		}
-	}
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Stop()
-{
-	if (m_pControl)
-		m_pControl->stop();
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Prev()
-{
-	if (m_pControl)
-		m_pControl->previous();
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Next()
-{
-	if (m_pControl)
-		m_pControl->next();
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::SeekTo(int nMsPos)
-{
-	if (m_pControl)
-		m_pControl->put_currentPosition(((double)nMsPos) / 1000);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Init()
-{
-	HRESULT		hr;
-
-	assert(m_pCore);
-
-	if (!m_pCore)
-		return FALSE;
-
-	hr = m_pCore->get_controls(&m_pControl);
-
-	if (!SUCCEEDED(hr))
-	{
-		g_MLService.Log("Get WMP control interface FAILED!");
-		return FALSE;
-	}
-
-	g_MLService.AddWndCloseto(NULL, "WMPlayerApp", NULL);
-	g_MLService.AddWndCloseto(NULL, "WMP Skin Host", NULL);
-
-	g_wndInfoQuery.Create(g_hInstance);
-
-	OnMediaChanged();
-
-	return TRUE;
-}
-
-void CPlayerImp::Quit()
-{
-	g_wndInfoQuery.Destroy();
-
-	m_pControl.Release();
-}
-
 void CPlayerImp::OnMediaChanged()
 {
-	CComPtr<IWMPMedia>	pMedia;
+	if (!m_pControl || !g_MLService.IsValid())
+		return;
+
 	WCHAR		szSrcMedia[MAX_PATH];
 	WCHAR		szArtist[MAX_PATH];
 	WCHAR		szAlbum[MAX_PATH];
 	WCHAR		szTitle[MAX_PATH];
 	DWORD		dwSongLength = 0;
 
-	if (!m_pControl)
-		return;
-
 	EmptyStr(szSrcMedia);
 	EmptyStr(szArtist);
 	EmptyStr(szAlbum);
 	EmptyStr(szTitle);
 
+	CComPtr<IWMPMedia>	pMedia;
 	HRESULT hr = m_pControl->get_currentItem(&pMedia);
 	if (SUCCEEDED(hr) && pMedia)
 	{
@@ -249,21 +249,28 @@ void CPlayerImp::OnMediaChanged()
 		}
 	}
 
-	MLMediaInfo		mediaInfo;
-	mediaInfo.szMediaUrl = szSrcMedia;
-	mediaInfo.szArtist = szArtist;
-	mediaInfo.szAlbum = szAlbum;
-	mediaInfo.szTitle = szTitle;
-	mediaInfo.nMediaLength = dwSongLength;
-
-	g_MLService.OnMediaInfoChanged(&mediaInfo);
+	g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, dwSongLength);
 }
 
 void CPlayerImp::SetWMPCore(IWMPCore *pCore)
 {
 	ReleaseWMPCore();
 
+	if (!pCore)
+		return;
+
 	m_pCore = pCore;
+
+	HRESULT hr = m_pCore->get_controls(&m_pControl);
+	if (!SUCCEEDED(hr))
+	{
+		g_MLService.Log("Get WMP control interface FAILED!");
+		return;
+	}
+
+	// Get crossfade time:
+	// if (RegGetProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\Preferences\\EqualizerSettings"), _T("CrossFade"), 0))
+	//	m_nCrossFadeTime = RegGetProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\Preferences\\EqualizerSettings"), _T("CrossFadeWindow"), 0);
 }
 
 void CPlayerImp::ReleaseWMPCore()
@@ -271,35 +278,13 @@ void CPlayerImp::ReleaseWMPCore()
 	m_pCore.Release();
 }
 
-void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
+void WmpPluginInit(HINSTANCE hInstance)
 {
-	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
+	RunMiniLyrics(hInstance, FindWindow("WMPlayerApp", NULL),
+		&g_Player, &g_wndPlayerServiceWnd);
 }
 
-HWND CPlayerImp::GetAttachedParentWnd(RECT *prc)
+void WmpPluginQuit()
 {
-	return m_hWndVis;
+	DisconnectMiniLyrics();
 }
-
-void CPlayerImp::OnNotifySkinLoaded()
-{
-	HWND	hWnd = g_MLService.GetMainWindow();
-	RECT	rc;
-
-	if (GetClientRect(m_hWndVis, &rc))
-	{
-		MoveWindow(hWnd, 0, 0, rc.right - rc.left, rc.bottom - rc.top, TRUE);
-	}
-}
-
-void CPlayerImp::OnNotifyDetachedFromParentWnd()
-{
-
-}
-
-int CPlayerImp::GetEmbeddedSkinName(TCHAR * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, "Embedded in Windows Media Player");
-	return 1;
-}
-

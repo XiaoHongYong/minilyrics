@@ -37,6 +37,8 @@
 #define IDD_MLSTART1                    198
 #define IDD_SETUP                       198
 #define IDM_MEDIA_INFO_PIC              199
+#define IDD_START_PLAYER                199
+#define IDD_START_MINILYRICS            199
 #define IDD_MEDIA_INFO_BASIC            200
 #define IDM_MAIN_WND                    201
 #define IDD_MEDIA_INFO                  202
@@ -107,8 +109,6 @@
 #define IDC_INFO                        1198
 #define IDC_S_MSG                       1202
 #define IDC_LIST_PLAYERS                1209
-#define IDC_INSTALL_ALL                 1210
-#define IDC_COMBO1                      1212
 #define IDC_CLOSE                       40000
 #define IDC_SETTOPMOST                  40001
 #define IDC_STOP                        40002

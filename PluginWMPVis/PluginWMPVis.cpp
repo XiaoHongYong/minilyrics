@@ -8,44 +8,8 @@
 
 #include "stdafx.h"
 #include "PluginWMPVis.h"
-#include "PlayerImp.h"
 #include "../MLPluginLib/MLPlugin.h"
-
-
-//
-// Thread for MiniLyrics
-//
-HANDLE			g_hThread = NULL;
-DWORD			g_dwThreadID = 0;
-
-DWORD WINAPI ThreadML(LPVOID lpParam)
-{
-	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player, ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS))
-		return FALSE;
-
-	g_MLService.DestroyMLNotifyWnd();
-
-	g_MLService.SwitchToEmbeddedSkin(true);
-
-	// now we can use other g_MLService functions.
-	char	szMsg[256];
-
-	wsprintf(szMsg, "Start Windows Media Player Vis plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-	g_MLService.Log(szMsg);
-
-	MSG			msg;
-
-	// Main message loop:
-	while (GetMessage(&msg, NULL, 0, 0)) 
-	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	g_MLService.Quit();
-
-	return 0;
-}
+#include "PlayerImp.h"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -291,26 +255,10 @@ STDMETHODIMP CPluginWMPVis::SetCore(IWMPCore * pCore)
 STDMETHODIMP CPluginWMPVis::Create(HWND hwndParent)
 {
     m_hwndParent = hwndParent;
-	g_hInstance = _Module.GetResourceInstance();
-
-	g_hwndPlayer = FindWindow("WMPlayerApp", NULL);
 
 	g_Player.m_hWndVis = hwndParent;
 
-/*	g_hThread = CreateThread(NULL, 0, ThreadML, NULL, 0, &g_dwThreadID);
-*/
-	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player, ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS))
-		return FALSE;
-
-	g_MLService.DestroyMLNotifyWnd();
-
-	g_MLService.SwitchToEmbeddedSkin(true);
-
-	// now we can use other g_MLService functions.
-	char	szMsg[256];
-
-	wsprintf(szMsg, "Start Windows Media Player Vis plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-	g_MLService.Log(szMsg);
+	WmpPluginInit(_Module.GetResourceInstance());
 
 	return S_OK;
 }
@@ -323,13 +271,7 @@ STDMETHODIMP CPluginWMPVis::Create(HWND hwndParent)
 //////////////////////////////////////////////////////////////////////////////
 STDMETHODIMP CPluginWMPVis::Destroy()
 {
-/*	// g_MLService.Quit();
-	PostThreadMessage(g_dwThreadID, WM_QUIT, 0, 0);
-	//WaitForSingleObject(g_hThread, INFINITE);
-	CloseHandle(g_hThread);
-	g_hThread = NULL;*/
-
-	g_MLService.Quit();
+	WmpPluginQuit();
 
 	m_hwndParent = NULL;
 
