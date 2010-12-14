@@ -62,7 +62,7 @@ void CMLPlayerMgr::QueryRunningPlayerInfo()
 	}
 }
 
-void CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
+bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 {
 	if (wParam == ML_SEND_CMD_LINE && pcds->dwData == ML_SEND_CMD_LINE)
 	{
@@ -72,12 +72,12 @@ void CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 	{
 		ASSERT(sizeof(PlayerInfo) == pcds->cbData);
 		OnPlayerInfoReturned((PlayerInfo *)pcds->lpData);
-		return;
+		return true;
 	}
 	else if (wParam != (WPARAM)GetCurPluginServiceWnd())
 	{
 		DBGLOG1(_T("Unknown WM_COPYDATA verify code: %X"), wParam);
-		return;
+		return true;
 	}
 
 	// MessageToPlayer
@@ -262,5 +262,9 @@ void CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			}
 		}
 		break;
+	default:
+		return false;
 	}
+
+	return true;
 }

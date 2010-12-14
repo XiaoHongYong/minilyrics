@@ -16,7 +16,7 @@ public:
 	virtual void OnDestroy() { }
 	virtual void OnTimer(int nTimerID) { }
 
-	virtual void OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds) { }
+	virtual bool OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds) { return false; }
 
 	virtual void SetTimer(DWORD dwTimerID, UINT uElapse) { ::SetTimer(m_hWnd, dwTimerID, uElapse, NULL); }
 	virtual void KillTimer(DWORD dwTimerID) { ::KillTimer(m_hWnd, dwTimerID); }

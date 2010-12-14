@@ -39,8 +39,6 @@ public:
 	void SetWMPCore(IWMPCore *pCore);
 	void ReleaseWMPCore();
 
-	int GetProperty(const WCHAR *szProperty, WCHAR *szValue, int nLen);
-
 protected:
 	CComPtr<IWMPCore>		m_pCore;
 	CComPtr<IWMPControls>	m_pControl;

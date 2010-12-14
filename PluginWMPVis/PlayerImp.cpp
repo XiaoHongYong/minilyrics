@@ -10,7 +10,7 @@ int RegGetProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nDefau
 class CPlayerServiceWnd : public CPlayerServiceWndBase
 {
 public:
-	void OnConnect()
+	void OnConnectDone()
 	{
 		SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	}
@@ -65,8 +65,6 @@ void CPlayerImp::OnConnect()
 	if (!m_pCore || !m_pControl)
 		return;
 
-	g_wndPlayerServiceWnd.OnConnect();
-
 	g_MLService.AddWndCloseto(NULL, L"WMPlayerApp", NULL);
 	g_MLService.AddWndCloseto(NULL, L"WMP Skin Host", NULL);
 }
@@ -84,7 +82,6 @@ void CPlayerImp::OnConnectedDone()
 
 void CPlayerImp::OnDisconnect()
 {
-	g_wndPlayerServiceWnd.OnDisconnect();
 }
 
 // control player

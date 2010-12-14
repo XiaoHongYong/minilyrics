@@ -457,7 +457,7 @@ public:
 	{
 		TIMER_MEDIA_MONKEY_EMBEDER = TIMER_NEXT + 1
 	};
-	void OnConnect()
+	void OnConnectDone()
 	{
 		SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 		SetTimer(TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO);
@@ -743,8 +743,6 @@ void CPlayerImp::OnConnect()
 
 	m_state = (PLAYER_STATE)GetPlayerState();
 
-	g_wndPlayerServiceWnd.OnConnect();
-
 	if (dwPlayerVer >= 0x3000)
 	{
 		g_MLService.AddWndCloseto(NULL, L"BaseWindow_RootWnd", L"Playlist Editor");
@@ -783,8 +781,6 @@ void CPlayerImp::OnDisconnect()
 		g_pOrgWinampProc = NULL;
 	}
 	m_bWorking = false;
-
-	g_wndPlayerServiceWnd.OnDisconnect();
 
 	if (IsWindow(m_hWndPluginParent))
 	{
@@ -875,16 +871,9 @@ void CPlayerImp::PrepareCurSkinInfo(PlayerSkinInfo &skinInfo)
 	skinInfo.hWndToAttach = GetAttachedParentWnd();
 	WAGetSkin(GetPlayerWnd(), skinInfo.skinPath);
 
-	skinInfo.clrFontHighlight = WADlg_getColor(WADLG_ITEMFG);
-
-	COLORREF	clr1, clr2;
-	clr1 = WADlg_getColor(WADLG_WNDBG);
-	clr2 = WADlg_getColor(WADLG_ITEMFG);
-	skinInfo.clrFontLowlight = RGB((GetRValue(clr1) + GetRValue(clr2)) / 2, 
-		(GetGValue(clr1) + GetGValue(clr2)) / 2, 
-		(GetBValue(clr1) + GetBValue(clr2)) / 2);
-
 	skinInfo.clrBackground = WADlg_getColor(WADLG_ITEMBG);
+	skinInfo.clrFontHighlight = WADlg_getColor(WADLG_ITEMFG);
+	skinInfo.clrFontLowlight = AverageColor(skinInfo.clrBackground, skinInfo.clrFontHighlight);
 	skinInfo.clrCurLineBg = WADlg_getColor(WADLG_SELCOLOR);
 }
 

@@ -10,7 +10,7 @@ public:
 
 	bool Create();
 
-	void OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds);
+	bool OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds);
 
 	void OnPlayerInfoReturned(PlayerInfo *playerInfo);
 

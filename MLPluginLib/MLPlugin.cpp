@@ -8,15 +8,15 @@ IPlayer			*g_pPlayer = NULL;
 CPlayerServiceWndBase *g_pPlayerServiceWnd = NULL;
 
 
-BOOL Execute(LPCTSTR szCmd)
+BOOL Execute(LPCSTR szCmd)
 {
-	STARTUPINFO			startInfo;
+	STARTUPINFOA		startInfo;
 	PROCESS_INFORMATION	procInfo;
 
 	memset(&startInfo, 0, sizeof(startInfo));
 	memset(&procInfo, 0, sizeof(procInfo));
 
-	if (!CreateProcess(NULL, (LPTSTR)szCmd, NULL, NULL, false, 0, NULL, NULL, &startInfo, &procInfo))
+	if (!CreateProcessA(NULL, (LPSTR)szCmd, NULL, NULL, false, 0, NULL, NULL, &startInfo, &procInfo))
 		return FALSE;
 
 	CloseHandle(procInfo.hProcess);
