@@ -343,7 +343,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\PlayerServiceWndBase.cpp"
+				RelativePath=".\PlayerServiceBase.cpp"
 				>
 			</File>
 			<File
@@ -372,7 +372,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\PlayerServiceWndBase.h"
+				RelativePath=".\PlayerServiceBase.h"
 				>
 			</File>
 			<File

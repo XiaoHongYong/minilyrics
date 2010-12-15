@@ -46,11 +46,29 @@ void CMLPlayerMgr::SetCurPlayer(int nIndex)
 	PlayerInfo &playerInfo = m_listPlayers[nIndex];
 	m_hWndCurPlugin = playerInfo.hWndPluginService;
 	g_Player.Connect(playerInfo);
+
+	// Turn off not connected player agent.
+	for (int i = 0; i < (int)m_vPlayerPluginAgent.size(); i++)
+	{
+		IPlayerPluginAgent *pAgent = m_vPlayerPluginAgent[i];
+		if (!pAgent->IsConnected())
+			pAgent->TurnOff();
+	}
 }
 
 void CMLPlayerMgr::QueryRunningPlayerInfo()
 {
 	HWND	hWndPluginService = NULL;
+
+	// Turn on player agent, if it's running.
+	for (int i = 0; i < (int)m_vPlayerPluginAgent.size(); i++)
+	{
+		IPlayerPluginAgent *pAgent = m_vPlayerPluginAgent[i];
+		if (pAgent->IsPlayerRunning())
+			pAgent->TurnOn();
+		else
+			pAgent->TurnOff();
+	}
 
 	while (1)
 	{

@@ -1,6 +1,6 @@
 #pragma once
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
@@ -24,6 +24,14 @@ public:
 
 	virtual void SwitchToEmbeddedSkin();
 	virtual void EndEmbeddedSkin();
+
+public:
+	enum
+	{
+		TIMER_MEDIA_MONKEY_EMBEDER = TIMER_NEXT + 1
+	};
+
+	void OnTimer(int nTimerID);
 
 public:
 	void SkinOfPlayerChanged();

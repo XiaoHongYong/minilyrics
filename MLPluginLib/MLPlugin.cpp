@@ -4,8 +4,6 @@
 
 HINSTANCE		g_hInstance = NULL;
 CMLService		g_MLService;
-IPlayer			*g_pPlayer = NULL;
-CPlayerServiceWndBase *g_pPlayerServiceWnd = NULL;
 
 
 BOOL Execute(LPCSTR szCmd)
@@ -25,17 +23,14 @@ BOOL Execute(LPCSTR szCmd)
 	return TRUE;
 }
 
-BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, IPlayer *pPlayer, CPlayerServiceWndBase *pPlayerServiceWnd)
+BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayerService)
 {
 	ASSERT(hInst);
-	ASSERT(pPlayer);
-	ASSERT(pPlayerServiceWnd);
+	ASSERT(pPlayerService);
 
-	g_pPlayer = pPlayer;
 	g_hInstance = hInst;
-	g_pPlayerServiceWnd = pPlayerServiceWnd;
 
-	pPlayerServiceWnd->Create(hInst);
+	pPlayerService->Create(hInst);
 
 	// Launch "MiniLyrics.exe /Wnd 0xWNDHANDLE /Player "Winamp"" to start MiniLyrics
 
@@ -72,7 +67,7 @@ BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, IPlayer *pPlayer, CPlayerSe
 	}
 
 	char	szCmdLine[MAX_PATH];
-	sprintf_s(szCmdLine, CountOf(szCmdLine), "%s /Wnd 0x%X", szMiniLyricsExe, pPlayerServiceWnd->GetHandle());
+	sprintf_s(szCmdLine, CountOf(szCmdLine), "%s /Wnd 0x%X", szMiniLyricsExe, pPlayerService->GetHandle());
 	Execute(szCmdLine);
 
 	return TRUE;
@@ -90,9 +85,9 @@ INIT_FAILED:
 	return FALSE;
 }
 
-void DisconnectMiniLyrics()
+void DisconnectMiniLyrics(CPlayerServiceBase *pPlayerService)
 {
-	g_pPlayerServiceWnd->Destroy();
+	pPlayerService->Destroy();
 
 	if (g_MLService.IsValid())
 		g_MLService.OnDisconnected();

@@ -450,67 +450,8 @@ bool IsMLEmbeddedInMediaMonkey()
 	return false;
 }
 
-class CPlayerServiceWnd : public CPlayerServiceWndBase
-{
-public:
-	enum
-	{
-		TIMER_MEDIA_MONKEY_EMBEDER = TIMER_NEXT + 1
-	};
-	void OnConnectDone()
-	{
-		SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
-		SetTimer(TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO);
-		if (g_bMediaMonkey)
-			SetTimer(TIMER_MEDIA_MONKEY_EMBEDER, 5000);
-	}
-
-	void OnDisconnect()
-	{
-		KillTimer(TIMER_GETPOS);
-		KillTimer(TIMER_CHECK_MEDIA);
-		if (g_bMediaMonkey)
-			KillTimer(TIMER_MEDIA_MONKEY_EMBEDER);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		if (nTimerID == TIMER_GETPOS)
-		{
-			// update current play time.
-			DWORD			dwCurPos;
-			static DWORD	dwPosLast = 0;
-			if (WAGetCurSongPos(GetPlayerWnd(), dwCurPos))
-			{
-				dwCurPos -= g_Player.m_dwShoutcastTitleChangedPos;
-				if (dwCurPos < dwPosLast)
-				{
-					// 如果上次的时间比现在的时间还大，则，可能切换了歌曲。
-					dwPosLast = dwCurPos;
-					CheckMediaUpdate();
-				}
-				dwPosLast = dwCurPos;
-				g_MLService.OnPlayPosChanged(dwCurPos);
-			}
-		}
-		else if (nTimerID == TIMER_CHECK_MEDIA)
-			CheckMediaUpdate();
-		else if (nTimerID == TIMER_MEDIA_MONKEY_EMBEDER)
-		{
-			if (IsMLEmbeddedInMediaMonkey())
-			{
-				// Has Embedded parent
-				PostMessage(g_MLService.GetMainWindow(), g_msgMediaMonkeyEmbeder, true, 0);
-				// KillTimer(m_hWnd, TIMER_MEDIA_MONKEY_EMBEDER);
-			}
-		}
-	}
-
-};
 
 ////////////////////////////////////////////////////////////////////////////////////
-
-CPlayerServiceWnd	g_wndPlayerServiceWnd;
 
 LRESULT CALLBACK ProcWAPluginParentHook(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
 {
@@ -538,7 +479,7 @@ int init()
 {
 	AddRemoveMLItemInWinampMenu(true);
 
-	RunMiniLyrics(plugin.hDllInstance, plugin.hwndParent, &g_Player, &g_wndPlayerServiceWnd);
+	RunMiniLyrics(plugin.hDllInstance, plugin.hwndParent, &g_Player);
 
 	return 0;
 }
@@ -558,7 +499,7 @@ void quit()
 		g_Player.m_hWndPluginParent = NULL;
 	}
 
-	DisconnectMiniLyrics();
+	DisconnectMiniLyrics(&g_Player);
 }
 
 LRESULT CALLBACK HookWinampWnd(
@@ -573,7 +514,7 @@ LRESULT CALLBACK HookWinampWnd(
 		if (uMsg == WM_COMMAND && LOWORD(wParam) == ID_ML_MENU_ITEM)
 		{
 			// Open MiniLyrics
-			RunMiniLyrics(g_hInstance, plugin.hwndParent, &g_Player, &g_wndPlayerServiceWnd);
+			RunMiniLyrics(g_hInstance, plugin.hwndParent, &g_Player);
 			return 0;
 		}
 		return CallWindowProc(g_pOrgWinampProc, hWnd, uMsg, wParam, lParam);
@@ -712,7 +653,6 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	playerInfo.startupFlags |= ML_SUPPORT_MINIMIZE_RESTORE_WITH_PLAYER;
 	playerInfo.hWndPlayer = plugin.hwndParent;
-	playerInfo.hWndPluginService = g_wndPlayerServiceWnd.GetHandle();
 
 	GetPlayerName(playerInfo.playerName, CountOf(playerInfo.playerName));
 
@@ -763,6 +703,11 @@ void CPlayerImp::OnConnect()
 
 void CPlayerImp::OnConnectedDone()
 {
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+	SetTimer(TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO);
+	if (g_bMediaMonkey)
+		SetTimer(TIMER_MEDIA_MONKEY_EMBEDER, 5000);
+
 	// Update Media info
 	CheckMediaUpdate(true);
 
@@ -772,6 +717,11 @@ void CPlayerImp::OnConnectedDone()
 
 void CPlayerImp::OnDisconnect()
 {
+	KillTimer(TIMER_GETPOS);
+	KillTimer(TIMER_CHECK_MEDIA);
+	if (g_bMediaMonkey)
+		KillTimer(TIMER_MEDIA_MONKEY_EMBEDER);
+
 	CheckMLItemInWinampMenu(false);
 
 	// 恢复winamp窗口的窗口过程
@@ -925,4 +875,37 @@ int CPlayerImp::HasVideo()
 	}
 	else
 		return R_UNDETERMINED;
+}
+
+void CPlayerImp::OnTimer(int nTimerID)
+{
+	if (nTimerID == TIMER_GETPOS)
+	{
+		// update current play time.
+		DWORD			dwCurPos;
+		static DWORD	dwPosLast = 0;
+		if (WAGetCurSongPos(GetPlayerWnd(), dwCurPos))
+		{
+			dwCurPos -= g_Player.m_dwShoutcastTitleChangedPos;
+			if (dwCurPos < dwPosLast)
+			{
+				// 如果上次的时间比现在的时间还大，则，可能切换了歌曲。
+				dwPosLast = dwCurPos;
+				CheckMediaUpdate();
+			}
+			dwPosLast = dwCurPos;
+			g_MLService.OnPlayPosChanged(dwCurPos);
+		}
+	}
+	else if (nTimerID == TIMER_CHECK_MEDIA)
+		CheckMediaUpdate();
+	else if (nTimerID == TIMER_MEDIA_MONKEY_EMBEDER)
+	{
+		if (IsMLEmbeddedInMediaMonkey())
+		{
+			// Has Embedded parent
+			PostMessage(g_MLService.GetMainWindow(), g_msgMediaMonkeyEmbeder, true, 0);
+			// KillTimer(m_hWnd, TIMER_MEDIA_MONKEY_EMBEDER);
+		}
+	}
 }
