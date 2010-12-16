@@ -5,33 +5,6 @@
 
 CPlayerImp		g_Player;
 
-class CPlayerServiceWnd : public CPlayerServiceWndBase
-{
-public:
-	void OnConnectDone()
-	{
-		SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
-	}
-
-	void OnDisconnect()
-	{
-		KillTimer(TIMER_GETPOS);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		if (nTimerID == TIMER_GETPOS)
-		{
-			// update current play time.
-			g_MLService.OnPlayPosChanged(g_Player.GetPlayPos());
-		}
-	}
-
-};
-
-CPlayerServiceWnd	g_wndPlayerServiceWnd;
-
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -51,7 +24,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	// Initialize player information for MiniLyrics
 	//
 	playerInfo.hWndPlayer = FindWindow("WMPlayerApp", NULL);
-	playerInfo.hWndPluginService = g_wndPlayerServiceWnd.GetHandle();
+	playerInfo.hWndPluginService = GetHandle();
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
 }
@@ -68,6 +41,8 @@ void CPlayerImp::OnConnect()
 
 void CPlayerImp::OnConnectedDone()
 {
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+
 	// Update Media info
 	OnMediaChanged();
 
@@ -77,6 +52,7 @@ void CPlayerImp::OnConnectedDone()
 
 void CPlayerImp::OnDisconnect()
 {
+	KillTimer(TIMER_GETPOS);
 }
 
 // control player
@@ -151,7 +127,6 @@ PLAYER_STATE CPlayerImp::GetPlayerState()
 	return PS_STOPED;
 }
 
-// 歌曲播放的位置（单位ms)
 DWORD CPlayerImp::GetPlayPos()
 {
 	double	dbTime = 0;
@@ -167,7 +142,7 @@ DWORD CPlayerImp::GetPlayPos()
 
 void CPlayerImp::OnMediaChanged()
 {
-	if (!m_pControl)
+	if (!m_pControl || !g_MLService.IsValid())
 		return;
 
 	WCHAR		szSrcMedia[MAX_PATH];
@@ -255,13 +230,22 @@ void CPlayerImp::ReleaseWMPCore()
 	m_pCore.Release();
 }
 
+void CPlayerImp::OnTimer(int nTimerID)
+{
+	if (nTimerID == TIMER_GETPOS)
+	{
+		// update current play time.
+		g_MLService.OnPlayPosChanged(g_Player.GetPlayPos());
+	}
+}
+
 void WmpPluginInit(HINSTANCE hInstance)
 {
 	RunMiniLyrics(hInstance, FindWindow("WMPlayerApp", NULL),
-		&g_Player, &g_wndPlayerServiceWnd);
+		&g_Player);
 }
 
 void WmpPluginQuit()
 {
-	DisconnectMiniLyrics();
+	DisconnectMiniLyrics(&g_Player);
 }

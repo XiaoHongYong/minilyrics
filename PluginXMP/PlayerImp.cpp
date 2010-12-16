@@ -9,7 +9,7 @@
 
 CPlayerImp		g_Player;
 DWORD			g_DdeInstID = 0;
-
+HWND			g_hWndPlayer = NULL;
 
 // get player state and song info
 PLAYER_STATE GetPlayerState()
@@ -40,58 +40,6 @@ DWORD GetPlayPos()
 ///////////////////////////////////////////////////////////////////////////////
 
 PLAYER_STATE	g_playerState = PS_STOPED;
-
-class CPlayerInfoQueryWnd : public CPlayerServiceWnd
-{
-public:
-	void OnCreate()
-	{
-		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
-	}
-
-	void OnDestroy()
-	{
-		KillTimer(m_hWnd, TIMER_GETPOS);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		if (!g_MLService.IsValid())
-			return;
-
-		// Check player status
-		static DWORD dwTimeLastCheck = GetTickCount();
-		DWORD dwTimeCur = GetTickCount();
-		static DWORD dwPosLastCheck = GetPlayPos();
-		DWORD dwPosCur = GetPlayPos();
-		if (dwTimeCur - dwTimeLastCheck >= 100)
-		{
-			// No changes, just return
-			if (g_playerState != PS_PLAYING && dwTimeCur == dwPosLastCheck)
-				return;
-
-			if (g_playerState == PS_PLAYING && dwPosCur <= dwPosLastCheck
-				|| g_playerState != PS_PLAYING && dwPosCur != dwPosLastCheck)
-			{
-				// Check player stat
-				PLAYER_STATE newState = GetPlayerState();
-				if (newState != g_playerState)
-				{
-					g_playerState = newState;
-					g_MLService.OnPlayStateChanged(g_playerState);
-					dwPosCur = GetPlayPos();
-				}
-			}
-			dwTimeLastCheck = dwTimeCur;
-			dwPosLastCheck = dwPosCur;
-		}
-
-		g_MLService.OnPlayPosChanged(dwPosCur);
-	}
-
-};
-
-CPlayerInfoQueryWnd	g_wndInfoQuery;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -134,7 +82,6 @@ char * __cdecl stristr (
         return(NULL);
 }
 
-// 安全的字符串拷贝，如果超出长度范围，则进行截断
 int	strncpy_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy)
 {
 	if (nToCopy >= nLenMax)
@@ -169,7 +116,7 @@ static void WINAPI DSP_About(HWND win)
 		MessageBox(win, "MiniLyrics for XMPlay, 2009 Crintsoft.", "MiniLyrics for XMPlay", MB_OK);
 }
 
-static XMPDSP dsp={
+static XMPDSP dsp = {
 	0, // doesn't support multiple instances or have a tail
 	"MiniLyrics for XMPlay",
 	DSP_About,
@@ -471,9 +418,7 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 {
 	g_hWndPlayer = FindWindow("XMPLAY-MAIN", NULL);
 
-	g_wndInfoQuery.Create(g_hInstance);
-
-	RunMiniLyrics(g_hInstance, &g_Player, g_wndInfoQuery.GetHandle());
+	RunMiniLyrics(g_hInstance, g_hWndPlayer, &g_Player);
 
 	MSG			msg;
 
@@ -485,8 +430,6 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 	}
 
 	g_MLService.OnDisconnected();
-
-	g_wndInfoQuery.Destroy();
 
 	return 0;
 }
@@ -656,9 +599,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_SUPPORT_CLASSIC_SKINS;
 	playerInfo.hWndPlayer = g_hWndPlayer;
-	playerInfo.hWndPluginService = g_wndInfoQuery.GetHandle();
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"XMPlay");
 
 	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), playerInfo.playerName);
@@ -684,6 +625,8 @@ void CPlayerImp::OnConnect()
 
 void CPlayerImp::OnConnectedDone()
 {
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+
 	// Update Media info
 	DSP_NewTrack(NULL, g_szCurMediaUrl);
 
@@ -693,6 +636,8 @@ void CPlayerImp::OnConnectedDone()
 
 void CPlayerImp::OnDisconnect()
 {
+	KillTimer(TIMER_GETPOS);
+
 	if (g_DdeInstID)
 	{
 		DdeUninitialize(g_DdeInstID);
@@ -738,7 +683,37 @@ void CPlayerImp::SeekTo(int nMsPos)
 {
 }
 
-HWND CPlayerImp::GetPluginServiceWnd()
+void CPlayerImp::OnTimer(int nTimerID)
 {
-	return g_wndInfoQuery.GetHandle();
+	if (!g_MLService.IsValid())
+		return;
+
+	// Check player status
+	static DWORD dwTimeLastCheck = GetTickCount();
+	DWORD dwTimeCur = GetTickCount();
+	static DWORD dwPosLastCheck = GetPlayPos();
+	DWORD dwPosCur = GetPlayPos();
+	if (dwTimeCur - dwTimeLastCheck >= 100)
+	{
+		// No changes, just return
+		if (g_playerState != PS_PLAYING && dwTimeCur == dwPosLastCheck)
+			return;
+
+		if (g_playerState == PS_PLAYING && dwPosCur <= dwPosLastCheck
+			|| g_playerState != PS_PLAYING && dwPosCur != dwPosLastCheck)
+		{
+			// Check player stat
+			PLAYER_STATE newState = GetPlayerState();
+			if (newState != g_playerState)
+			{
+				g_playerState = newState;
+				g_MLService.OnPlayStateChanged(g_playerState);
+				dwPosCur = GetPlayPos();
+			}
+		}
+		dwTimeLastCheck = dwTimeCur;
+		dwPosLastCheck = dwPosCur;
+	}
+
+	g_MLService.OnPlayPosChanged(dwPosCur);
 }

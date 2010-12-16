@@ -2,7 +2,7 @@
 
 #include "../MLPluginLib/MiniLyricsPlugin.h"
 #include "../MLPluginLib/TinyBaseWnd.h"
-#include "IPlayerPluginAgent.h"
+#include "../MLPlayerPluginAgentLib/IPlayerPluginAgent.h"
 
 class CMLPlayerMgr : public CTinyBaseWnd
 {
@@ -25,13 +25,13 @@ public:
 
 	bool IsValid() { return m_hWnd != NULL; }
 
-	void RegisterPluginAgent(IPlayerPluginAgent *pluginAgent) { m_vPlayerPluginAgent.push_back(pluginAgent); }
+	// void RegisterPluginAgent(IPlayerPluginAgent *pluginAgent) { m_vPlayerPluginAgent.push_back(pluginAgent); }
 
 public:
 	typedef vector<PlayerInfo>	ListPlayerInfo;
 	ListPlayerInfo				m_listPlayers;
 	HWND						m_hWndCurPlugin;
-	vector<IPlayerPluginAgent*>	m_vPlayerPluginAgent;
+	VecPlayerPluginAgent		m_vPlayerPluginAgent;
 
 };
 

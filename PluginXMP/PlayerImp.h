@@ -1,6 +1,6 @@
 #pragma once
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
@@ -22,6 +22,6 @@ public:
 	virtual void Next();
 	virtual void SeekTo(int nMsPos);
 
-	virtual HWND GetPluginServiceWnd();
+	virtual void OnTimer(int nTimerID);
 
 };

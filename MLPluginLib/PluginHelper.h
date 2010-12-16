@@ -7,7 +7,7 @@
 #define IsEmptyString(str)	(str[0] == '\0')
 #endif
 
-int UTF8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen);
+int Utf8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen);
 
 BOOL GetProgramPath(char szPath[], HINSTANCE hInstance/* = NULL*/);
 
@@ -44,7 +44,7 @@ WCHAR * __cdecl wcscat_safe (
 #define _tcscat_safe		strcat_safe
 #endif
 
-int MBCSToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage = CP_ACP);
+int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage = CP_ACP);
 
 inline COLORREF AverageColor(COLORREF clr1, COLORREF clr2)
 {

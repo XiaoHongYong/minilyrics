@@ -12,7 +12,7 @@ using namespace std;
 
 #include "PluginHelper.h"
 #include "MiniLyricsPlugin.h"
-#include "IPlayer.h"
+#include "MLService.h"
 #include "TinyBaseWnd.h"
 #include "PlayerServiceBase.h"
 

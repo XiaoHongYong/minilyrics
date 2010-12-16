@@ -6,6 +6,8 @@
 #include "MPMsg.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
+#include "../MLPlayerPluginAgentLib/MLPlayerPluginAgentLib.h"
+
 
 CMLPlayerMgr			g_playerMgr;
 
@@ -13,6 +15,10 @@ bool ProcessCmdLine(bool bFirstRun, LPCTSTR szCmdLine);
 
 bool CMLPlayerMgr::Create()
 {
+	m_vPlayerPluginAgent.clear();
+
+	RegisteredPlayerPluginAgent(m_vPlayerPluginAgent);
+
 	return CTinyBaseWnd::Create(GetAppInstance(), SZ_MINILYRICS_SERVICE_CLASS_NAME);
 }
 

@@ -134,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib Winmm.lib comctl32.lib version.lib"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib Winmm.lib comctl32.lib version.lib psapi.lib"
 				OutputFile="../bin\$(ProjectName).exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"

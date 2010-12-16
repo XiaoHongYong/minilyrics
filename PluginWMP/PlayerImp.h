@@ -1,12 +1,11 @@
 #pragma once
 
-#include "../MLPluginLib/IPlayer.h"
 extern class CPlayerImp		g_Player;
 
 void WmpPluginInit(HINSTANCE hInstance);
 void WmpPluginQuit();
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
@@ -38,6 +37,8 @@ public:
 
 	void SetWMPCore(IWMPCore *pCore);
 	void ReleaseWMPCore();
+
+	virtual void OnTimer(int nTimerID);
 
 protected:
 	CComPtr<IWMPCore>		m_pCore;

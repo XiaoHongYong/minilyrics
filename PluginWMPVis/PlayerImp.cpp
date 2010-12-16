@@ -5,35 +5,6 @@
 
 CPlayerImp		g_Player;
 
-int RegGetProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nDefault);
-
-class CPlayerServiceWnd : public CPlayerServiceWndBase
-{
-public:
-	void OnConnectDone()
-	{
-		SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
-	}
-
-	void OnDisconnect()
-	{
-		KillTimer(TIMER_GETPOS);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		if (nTimerID == TIMER_GETPOS)
-		{
-			// update current play time.
-			g_MLService.OnPlayPosChanged(g_Player.GetPlayPos());
-		}
-	}
-
-};
-
-CPlayerServiceWnd	g_wndPlayerServiceWnd;
-
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -53,7 +24,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	// Initialize player information for MiniLyrics
 	//
 	playerInfo.hWndPlayer = FindWindow("WMPlayerApp", NULL);
-	playerInfo.hWndPluginService = g_wndPlayerServiceWnd.GetHandle();
+	playerInfo.hWndPluginService = GetHandle();
 	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
@@ -71,6 +42,8 @@ void CPlayerImp::OnConnect()
 
 void CPlayerImp::OnConnectedDone()
 {
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+
 	SwitchToEmbeddedSkin();
 
 	// Update Media info
@@ -82,6 +55,7 @@ void CPlayerImp::OnConnectedDone()
 
 void CPlayerImp::OnDisconnect()
 {
+	KillTimer(TIMER_GETPOS);
 }
 
 // control player
@@ -275,13 +249,22 @@ void CPlayerImp::ReleaseWMPCore()
 	m_pCore.Release();
 }
 
+void CPlayerImp::OnTimer(int nTimerID)
+{
+	if (nTimerID == TIMER_GETPOS)
+	{
+		// update current play time.
+		g_MLService.OnPlayPosChanged(g_Player.GetPlayPos());
+	}
+}
+
 void WmpPluginInit(HINSTANCE hInstance)
 {
 	RunMiniLyrics(hInstance, FindWindow("WMPlayerApp", NULL),
-		&g_Player, &g_wndPlayerServiceWnd);
+		&g_Player);
 }
 
 void WmpPluginQuit()
 {
-	DisconnectMiniLyrics();
+	DisconnectMiniLyrics(&g_Player);
 }
