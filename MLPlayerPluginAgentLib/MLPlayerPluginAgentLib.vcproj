@@ -224,11 +224,39 @@
 				>
 			</File>
 			<File
-				RelativePath=".\MPC\PlayerImp.cpp"
+				RelativePath=".\MPC\MpcPlayerService.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\MPC\PlayerImp.h"
+				RelativePath=".\MPC\MpcPlayerService.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="AlbumPlayer"
+			>
+			<File
+				RelativePath=".\AlbumPlayer\ApPlayerService.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AlbumPlayer\ApPlayerService.h"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="HMM"
+			>
+			<File
+				RelativePath=".\HMM\HMM_API.h"
+				>
+			</File>
+			<File
+				RelativePath=".\HMM\HmmPlayerService.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\HMM\HmmPlayerService.h"
 				>
 			</File>
 		</Filter>

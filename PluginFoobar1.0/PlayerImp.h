@@ -2,37 +2,31 @@
 
 #include "../SDK/foobar_SDK_1.0/foobar2000/SDK/foobar2000.h"
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
 	virtual ~CPlayerImp();
 
 public:
-	// Init and destroy.
-	BOOL Init();
-	void Quit();
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	// Player Info
-	int GetPlayerName(char * lpszBuffer, int nBufSize);
-
-	HWND GetMainWnd();
-
-	// get player state and song info
-	DWORD GetPlayerState();
-
-	DWORD GetPlayPos();
+	virtual void OnConnect();
+	virtual void OnConnectedDone();
+	virtual void OnDisconnect();
 
 	// control player
-	BOOL Play();
-	BOOL Pause();
-	BOOL PlayPause();
-	BOOL Stop();
-	BOOL Prev();
-	BOOL Next();
-	BOOL SeekTo(int nMsPos);
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
 
-	virtual void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
+public:
+	DWORD GetPlayPos();
+	void OnTimer(int nTimerID);
 
 public:
 	PLAYER_STATE	m_stat;

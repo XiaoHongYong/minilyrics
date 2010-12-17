@@ -6,16 +6,19 @@ class CPlayerServiceBase;
 class IPlayerPluginAgent
 {
 public:
+	IPlayerPluginAgent(CPlayerServiceBase *pPlayerServiceBase)
+		{ m_pPlayerService = pPlayerServiceBase; }
+	virtual ~IPlayerPluginAgent() { }
+
 	virtual bool IsPlayerRunning() = 0;
 
-	virtual bool TurnOn() = 0;
-	virtual void TurnOff() = 0;
+	virtual bool TurnOn();
+	virtual void TurnOff();
 
-	virtual bool IsConnected() = 0;
+	virtual bool IsConnected();
 
 protected:
-	bool OnTurnOn(CPlayerServiceBase *pPlayerService);
-	void OnTurnOff(CPlayerServiceBase *pPlayerService);
+	CPlayerServiceBase			*m_pPlayerService;
 
 };
 

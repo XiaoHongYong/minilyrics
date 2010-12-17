@@ -17,14 +17,12 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-
 void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 {
 	//
 	// Initialize player information for MiniLyrics
 	//
 	playerInfo.hWndPlayer = FindWindow("WMPlayerApp", NULL);
-	playerInfo.hWndPluginService = GetHandle();
 	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
@@ -126,7 +124,6 @@ void CPlayerImp::EndEmbeddedSkin()
 {
 }
 
-// get player state and song info
 PLAYER_STATE CPlayerImp::GetPlayerState()
 {
 	if (!m_pCore)

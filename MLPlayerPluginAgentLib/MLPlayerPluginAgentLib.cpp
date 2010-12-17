@@ -1,15 +1,13 @@
 #include "StdAfx.h"
 #include "MLPlayerPluginAgentLib.h"
 #include "../MLPluginLib/MLPlugin.h"
-#include "MPC\PlayerImp.h"
+#include "MPC\MpcPlayerService.h"
 
 CMLService		g_MLService;
 
-MPCAgent::CMPCPluginAgent		g_mpcPluginAgent;
-
 void RegisteredPlayerPluginAgent(VecPlayerPluginAgent &vAgent)
 {
-	vAgent.push_back(&g_mpcPluginAgent);
+	vAgent.push_back(new MPCAgent::CMPCPluginAgent());
 }
 
 int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage)

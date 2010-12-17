@@ -139,30 +139,6 @@ void ColorToStr(const MLColor &clr, tstring &strColor)
 	strColor = szValue;
 }
 
-
-// FgColor="#FFFFFF"
-UINT GetColorValue(LPCWSTR szColor, UINT nDefault)
-{
-	UINT		clr;
-	LPCWSTR p = ReadColorValue_t(szColor, clr);
-	if (*p != '\0')
-		return nDefault;
-	else
-		return clr;
-}
-
-
-// FgColor="#FFFFFF"
-UINT GetColorValue(LPCSTR szColor, UINT nDefault)
-{
-	UINT		clr;
-	LPCSTR p = ReadColorValue_t(szColor, clr);
-	if (*p != '\0')
-		return nDefault;
-	else
-		return clr;
-}
-
 // FgColor="#FFFFFF"
 void GetColorValue(MLColor &clr, LPCTSTR szColor)
 {
@@ -171,7 +147,6 @@ void GetColorValue(MLColor &clr, LPCTSTR szColor)
 	if (*p == '\0')
 		clr.set(uRet);
 }
-
 
 int GetMenuKey(LPCTSTR szText)
 {

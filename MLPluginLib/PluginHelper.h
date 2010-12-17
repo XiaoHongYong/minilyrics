@@ -52,3 +52,8 @@ inline COLORREF AverageColor(COLORREF clr1, COLORREF clr2)
 		(GetGValue(clr1) + GetGValue(clr2)) / 2, 
 		(GetBValue(clr1) + GetBValue(clr2)) / 2);
 }
+
+inline int _abs(int number)
+{
+	return (number >=0 ? number : -number);
+}

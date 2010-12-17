@@ -31,7 +31,6 @@ public:
 	virtual void EndEmbeddedSkin();
 
 public:
-	// get player state and song info
 	PLAYER_STATE GetPlayerState();
 
 	DWORD GetPlayPos();

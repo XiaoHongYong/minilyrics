@@ -1,45 +1,26 @@
 #include "../MLPluginLib/mlplugin.h"
 #include "PlayerImp.h"
-#include "../MLPluginLib/PlayerInfoQueryBaseWnd.h"
 
 #include "bsp.h"
 #include "bspplg.h"
 
 CPlayerImp			g_Player;
 
-class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
-{
-public:
-	void OnCreate()
-	{
-		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
-	}
-
-	void OnDestroy()
-	{
-		KillTimer(m_hWnd, TIMER_GETPOS);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		if (nTimerID == TIMER_GETPOS)
-		{
-			g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
-		}
-	}
-
-};
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-CPlayerInfoQueryWnd	g_wndInfoQuery;
 PpluginInfo			g_pInfo;
 
 #define DBGMSG(param)		MessageBox(NULL, param, "Message", MB_OK);
 
-bool SDMSG(UINT msg, WPARAM wParam, LPARAM lParam, DWORD &dwResult)
+BOOL SDMSG(UINT msg, WPARAM wParam, LPARAM lParam, DWORD &dwResult)
 {
 	return SendMessageTimeout(g_pInfo->hwndParent, msg, wParam, lParam, SMTO_ABORTIFHUNG | SMTO_NORMAL, 1000, (DWORD *)&dwResult);
+}
+
+BOOL SDMSG(UINT msg, WPARAM wParam)
+{
+	DWORD dwResult;
+	return SendMessageTimeout(g_pInfo->hwndParent, msg, wParam, 0, SMTO_ABORTIFHUNG | SMTO_NORMAL, 1000, (DWORD *)&dwResult);
 }
 
 
@@ -109,7 +90,7 @@ int __stdcall CallbackProc(const DWORD cmdID,void * param1, void * param2)
 {
 	switch (cmdID) {
 		case EV_UNLOAD:
-			g_MLService.Quit();
+			g_MLService.OnDisconnected();
 			break;
 		case EV_BEFORE_FILE_OPEN:
 			break;
@@ -125,15 +106,7 @@ int __stdcall CallbackProc(const DWORD cmdID,void * param1, void * param2)
 			break;
 		case EV_PLAY:
 			{
-				char		szMediaUrl[MAX_PATH];
-				DWORD		dwLength;
-
-				GetBSPPlayingMediaUrl(szMediaUrl, MAX_PATH);
-
-				if (!SDMSG(WM_BSP_CMD, BSP_GetMovLen, 0, dwLength))
-					dwLength = 0;
-
-				g_MLService.OnMediaInfoChanged(szMediaUrl, NULL, NULL, NULL, dwLength);
+				g_Player.OnMediaChanged();
 			}
 			break;
 /*		case EV_STOP:
@@ -156,19 +129,12 @@ extern "C" {
 
 	BOOL __stdcall pluginInit(PpluginInfo plgInfo)
 	{
-		strcpy(plgInfo->description, "MiniLyrics plug-in");
+		strcpy_safe(plgInfo->description, CountOf(plgInfo->description), "MiniLyrics plug-in");
 		plgInfo->plgCallback = CallbackProc;
 
 		g_pInfo = plgInfo;
 
-		if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
-			return TRUE;	// we must return 0!
-
-		// now we can use other g_MLService functions.
-		char	szMsg[256];
-
-		wsprintf(szMsg, "Start BSPlayer Player plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
-		g_MLService.Log(szMsg);
+		RunMiniLyrics(g_hInstance, plgInfo->hwndParent, &g_Player);
 
 		return TRUE;
 	}
@@ -190,21 +156,85 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 {
-	strcpy_safe(lpszBuffer, nBufSize, "BSPlayer");
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.hWndPlayer = g_pInfo->hwndParent;
 
-	return 1;
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"BSPlayer");
+}
+
+void CPlayerImp::OnConnect()
+{
+	g_MLService.AddWndCloseto(NULL, L"BSPVideoWindow", NULL);
+	g_MLService.AddWndCloseto(g_pInfo->hwndParent, NULL, NULL);
+}
+
+void CPlayerImp::OnConnectedDone()
+{
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+
+	// Update Media info
+	// OnMediaChanged();
+
+	// Update player state
+	g_MLService.OnPlayStateChanged(GetPlayerState());
+}
+
+void CPlayerImp::OnDisconnect()
+{
+	KillTimer(TIMER_GETPOS);
+}
+
+// control player
+void CPlayerImp::Play()
+{
+	SDMSG(WM_BSP_CMD, BSP_Play);
+}
+
+void CPlayerImp::Pause()
+{
+	SDMSG(WM_BSP_CMD, BSP_Pause);
+}
+
+void CPlayerImp::PlayPause()
+{
+	if (GetPlayerState() == PS_STOPED)
+		Play();
+	else
+		Pause();
+}
+
+void CPlayerImp::Stop()
+{
+	SDMSG(WM_BSP_CMD, BSP_Stop);
+}
+
+void CPlayerImp::Prev()
+{
+	SDMSG(WM_BSP_CMD, BSP_Prev);
+}
+
+void CPlayerImp::Next()
+{
+	SDMSG(WM_BSP_CMD, BSP_Next);
+}
+
+void CPlayerImp::SeekTo(int nMsPos)
+{
+	DWORD		dwValue;
+	SDMSG(WM_BSP_CMD, BSP_Seek, nMsPos, dwValue);
 }
 
 // get player state and song info
-DWORD CPlayerImp::GetPlayerState()
+PLAYER_STATE CPlayerImp::GetPlayerState()
 {
 	DWORD		dwValue;
 
 	if (!SDMSG(WM_BSP_CMD, BSP_GetStatus, 0, dwValue))
-		dwValue = 0;
+		return PS_STOPED;
 
 	// Return player status
 	// 0 - STOP
@@ -221,12 +251,6 @@ DWORD CPlayerImp::GetPlayerState()
 	return PS_STOPED;
 }
 
-HWND CPlayerImp::GetMainWnd()
-{
-	return g_hwndPlayer;
-}
-
-// 歌曲播放的位置（单位ms)
 DWORD CPlayerImp::GetPlayPos()
 {
 	DWORD		dwCurPos;
@@ -240,98 +264,23 @@ DWORD CPlayerImp::GetPlayPos()
 	return dwCurPos;
 }
 
-// control player
-BOOL CPlayerImp::Play()
+void CPlayerImp::OnMediaChanged()
 {
-	DWORD		dwValue;
+	char		szMediaUrl[MAX_PATH];
+	DWORD		dwLength;
 
-	if (!SDMSG(WM_BSP_CMD, BSP_Play, 0, dwValue))
-		dwValue = 0;
+	GetBSPPlayingMediaUrl(szMediaUrl, MAX_PATH);
 
-	return TRUE;
+	if (!SDMSG(WM_BSP_CMD, BSP_GetMovLen, 0, dwLength))
+		dwLength = 0;
+
+	g_MLService.OnMediaInfoChanged(szMediaUrl, NULL, NULL, NULL, dwLength);
 }
 
-BOOL CPlayerImp::Pause()
+void CPlayerImp::OnTimer(int nTimerID)
 {
-	DWORD		dwValue;
-
-	if (!SDMSG(WM_BSP_CMD, BSP_Pause, 0, dwValue))
-		dwValue = 0;
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::PlayPause()
-{
-	if (GetPlayerState() == PS_STOPED)
-		Play();
-	else
-		Pause();
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Stop()
-{
-	DWORD		dwValue;
-
-	if (!SDMSG(WM_BSP_CMD, BSP_Stop, 0, dwValue))
-		dwValue = 0;
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Prev()
-{
-	DWORD		dwValue;
-
-	if (!SDMSG(WM_BSP_CMD, BSP_Prev, 0, dwValue))
-		dwValue = 0;
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Next()
-{
-	DWORD		dwValue;
-
-	if (!SDMSG(WM_BSP_CMD, BSP_Next, 0, dwValue))
-		dwValue = 0;
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::SeekTo(int nMsPos)
-{
-	DWORD		dwValue;
-
-	return SDMSG(WM_BSP_CMD, BSP_Seek, nMsPos, dwValue);
-}
-
-BOOL CPlayerImp::Init()
-{
-	g_hwndPlayer = g_pInfo->hwndParent;
-
-	g_MLService.AddWndCloseto(NULL, "BSPVideoWindow", NULL);
-	g_MLService.AddWndCloseto(g_hwndPlayer, NULL, NULL);
-
-	g_wndInfoQuery.Create(g_hInstance);
-
-	return TRUE;
-}
-
-// COMMENT:
-void CPlayerImp::Quit()
-{
-	g_wndInfoQuery.Destroy();
-}
-
-int CPlayerImp::HasVideo()
-{
-	return -1;
-}
-
-void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
-{
-	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
+	if (nTimerID == TIMER_GETPOS)
+	{
+		g_MLService.OnPlayPosChanged(GetPlayPos());
+	}
 }

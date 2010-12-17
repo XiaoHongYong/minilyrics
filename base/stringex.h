@@ -228,6 +228,7 @@ bool Scan2IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2)
 
 void _itostr(int value, tstring &str, int base);
 
+// "#FFFFFF"
 template<class _TCHARPTR, class _int_t>
 _TCHARPTR ReadColorValue_t(_TCHARPTR szColor, _int_t &nClr)
 {
@@ -257,6 +258,9 @@ _TCHARPTR ReadColorValue_t(_TCHARPTR szColor, _int_t &nClr)
 
 	return szColor;
 }
+
+UINT GetColorValue(LPCSTR szColor, UINT nDefault);
+UINT GetColorValue(LPCWSTR szColor, UINT nDefault);
 
 void ColorToStr(COLORREF clr, char szStr[]);
 #ifdef _WIN32

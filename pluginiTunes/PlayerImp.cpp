@@ -4,6 +4,7 @@
 #include <shlobj.h>
 
 CPlayerImp		g_Player;
+HWND			g_hWndPlayer = NULL;
 
 //
 // Thread for MiniLyrics
@@ -21,16 +22,7 @@ LRESULT CALLBACK HookiTunesWnd(
 
 DWORD WINAPI ThreadML(LPVOID lpParam)
 {
-	if (InitMiniLyricsPlugin(g_hInstance, &g_Player, ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_EMBEDDED_SUPPORT_CLASSIC_SKINS))
-	{
-		// now we can use other g_MLService functions.
-		char	szMsg[256];
-
-		wsprintf(szMsg, "Start iTunes Player plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
-		g_MLService.Log(szMsg);
-	}
-
-	// if Init failed, Don't return, because "Restart MiniLyrics" function need the message loop below.
+	RunMiniLyrics(g_hInstance, g_hWndPlayer, &g_Player);
 
 	MSG			msg;
 
@@ -41,7 +33,7 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 		DispatchMessage(&msg);
 	}
 
-	g_MLService.Quit();
+	g_MLService.OnDisconnected();
 
 	return 0;
 }
@@ -86,178 +78,7 @@ protected:
 
 };
 
-
-//
-// 去掉字符串两端的空格
-void TrimStr(LPWSTR szString)
-{
-	int		nLen;
-	LPWSTR	szBeg;
-	szBeg = szString;
-
-	while (*szBeg == ' ')
-		szBeg++;
-
-	nLen = wcslen(szBeg);
-	if (nLen > 0)
-	{
-		while (szBeg[nLen - 1] == ' ')
-			nLen--;
-		szBeg[nLen] = '\0';
-	}
-
-	if (szBeg != szString)
-		memmove(szString, szBeg, sizeof(WCHAR) * (nLen + 1));
-}
-
 ///////////////////////////////////////////////////////////////////////////////
-
-
-class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
-{
-public:
-	enum 
-	{
-		TIMER_QUERYITUNES		= TIMER_NEXT + 1,
-		WM_SONG_CHANGED			= WM_USER + 1,
-		WM_U_ACTIVATEAPP		= WM_USER + 2,
-		WM_U_MIN_MAX			= WM_USER + 3
-	};
-
-	void OnCreate()
-	{
-		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
-		SetTimer(m_hWnd, TIMER_QUERYITUNES, 500, NULL);
-	}
-
-	void OnDestroy()
-	{
-		KillTimer(m_hWnd, TIMER_GETPOS);
-		KillTimer(m_hWnd, TIMER_QUERYITUNES);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		if (nTimerID == TIMER_GETPOS)
-		{
-			if (g_Player.m_bPlayerState == PS_PLAYING)
-			{
-				// 更新时间
-				g_Player.m_dwPos = GetTickCount() - g_Player.m_dwBegTickCount;
-				g_MLService.OnPlayTimeChanged(g_Player.m_dwPos);
-			}
-		}
-		else if (nTimerID == TIMER_QUERYITUNES)
-		{
-			g_hwndPlayer = FindWindow("iTunes", "iTunes");
-			if (g_hwndPlayer)
-			{
-				if (FindWindowEx(g_hwndPlayer, NULL, NULL, NULL) == NULL)
-				{
-					// No Child window, it is NOT iTunes' Window, try another one.
-					g_hwndPlayer = FindWindowEx(NULL, g_hwndPlayer, "iTunes", "iTunes");
-				}
-				if (g_hwndPlayer)
-				{
-					KillTimer(m_hWnd, TIMER_QUERYITUNES);
-
-					// Hook iTunes Window
-					if (g_pOrgiTunesProc == NULL)
-						g_pOrgiTunesProc = (WNDPROC)SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)HookiTunesWnd);
-				}
-			}
-		}
-	}
-
-	void OnMediaChanged(ITTrackInfo	*pTrackInfo)
-	{
-		MLMediaInfo		mediaInfo;
-		WCHAR			szMediaUrl[MAX_PATH], szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
-
-		wcsncpy_safe(szMediaUrl, CountOf(szMediaUrl), (LPCWSTR)pTrackInfo->fileName + 1, pTrackInfo->fileName[0]);
-		TrimStr(szMediaUrl);
-
-		wcsncpy_safe(szArtist, CountOf(szArtist), (LPCWSTR)pTrackInfo->artist + 1, pTrackInfo->artist[0]);
-		TrimStr(szArtist);
-
-		wcsncpy_safe(szAlbum, CountOf(szAlbum), (LPCWSTR)pTrackInfo->album + 1, pTrackInfo->album[0]);
-		TrimStr(szAlbum);
-
-		wcsncpy_safe(szTitle, CountOf(szTitle), (LPCWSTR)pTrackInfo->name + 1, pTrackInfo->name[0]);
-		TrimStr(szTitle);
-
-		{
-			CIiTunesPtr		iITunes;
-			HRESULT			nRes;
-
-			if (iITunes.IsValid())
-			{
-				// Get playing position
-				long			nPosSec;
-				nRes = iITunes->get_PlayerPosition(&nPosSec);
-				if (SUCCEEDED(nRes))
-					g_Player.m_dwBegTickCount = GetTickCount() - nPosSec * 1000;
-
-				// Get full path name of media.
-				IITTrack		*iTrack = NULL;
-				nRes = iITunes->get_CurrentTrack(&iTrack);
-				if (SUCCEEDED(nRes) && iTrack)
-				{
-					IITFileOrCDTrack	*iFileTrack = NULL;
-					nRes = iTrack->QueryInterface(IID_IITFileOrCDTrack, (LPVOID *)&iFileTrack);
-					if (SUCCEEDED(nRes) && iFileTrack)
-					{
-						BSTR	bstr = NULL;
-						nRes = iFileTrack->get_Location(&bstr);
-						if (SUCCEEDED(nRes) && bstr)
-						{
-							wcscpy_safe(szMediaUrl, CountOf(szMediaUrl), bstr);
-						}
-						iFileTrack->Release();
-					}
-					iTrack->Release();
-				}
-			}
-		}
-
-		mediaInfo.szMediaUrl = szMediaUrl;
-		mediaInfo.szArtist = szArtist;
-		mediaInfo.szAlbum = szAlbum;
-		mediaInfo.szTitle = szTitle;
-		mediaInfo.nMediaLength = pTrackInfo->totalTimeInMS;
-		g_MLService.OnMediaInfoChanged(&mediaInfo);
-
-		g_Player.m_bPlayerState = PS_PLAYING;
-		g_MLService.OnPlayStateChanged(g_Player.m_bPlayerState);
-	}
-
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		if (uMsg == WM_SONG_CHANGED)
-		{
-			ITTrackInfo		*pTrackInfo = (ITTrackInfo *)wParam;
-			assert(pTrackInfo);
-
-			OnMediaChanged(pTrackInfo);
-
-			delete pTrackInfo;
-		}
-		else if (uMsg == WM_U_ACTIVATEAPP)
-		{
-			g_MLService.OnNotifyPlayerActivate(wParam);
-		}
-		else if (uMsg == WM_U_MIN_MAX)
-		{
-			g_MLService.OnNotifyPlayerMinRestore(wParam);
-		}
-		else
-			return CPlayerInfoQueryBaseWnd::WndProc(uMsg, wParam, lParam);
-		return 1;
-	}
-
-};
-
-CPlayerInfoQueryWnd	g_wndInfoQuery;
 
 LRESULT CALLBACK HookiTunesWnd(
 							   HWND hwnd,      // handle to window
@@ -275,22 +96,21 @@ LRESULT CALLBACK HookiTunesWnd(
 		{
 			// g_MLService.Quit will set g_pOrgiTunesProc to NULL, so save g_pOrgProc.
 			WNDPROC pOrigProc = g_pOrgiTunesProc;
-			g_MLService.Quit();
+			g_MLService.OnDisconnected();
 			return CallWindowProc(pOrigProc, hwnd, uMsg, wParam, lParam); 
 		}
 		break;
 	case WM_ACTIVATEAPP:
-		::PostMessage(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryWnd::WM_U_ACTIVATEAPP, wParam, lParam);
+		::PostMessage(g_Player.GetHandle(), CPlayerImp::WM_U_ACTIVATEAPP, wParam, lParam);
 		break;
 	case WM_SIZE:
 		if (wParam == SIZE_MINIMIZED || wParam == SIZE_RESTORED)
-			::PostMessage(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryWnd::WM_U_MIN_MAX, wParam, lParam);
+			::PostMessage(g_Player.GetHandle(), CPlayerImp::WM_U_MIN_MAX, wParam, lParam);
 		break;
 	default:
 		break;
 	};
 
-	// Call Winamp Window Proc
 	return CallWindowProc(g_pOrgiTunesProc, hwnd, uMsg, wParam, lParam); 
 }
 
@@ -343,179 +163,238 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, "iTunes");
 
-	return PR_OK;
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
+{
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.hWndPlayer = g_hWndPlayer;
+	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
+	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), L"Embedded into iTunes Visual Area");
+
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"iTunes");
 }
 
-// get player state and song info
-DWORD CPlayerImp::GetPlayerState()
+void CPlayerImp::OnConnect()
 {
-	return m_bPlayerState;
+	m_bWorking = true;
+
+	g_MLService.AddWndCloseto(NULL, L"iTunes", L"iTunes");
 }
 
-HWND CPlayerImp::GetMainWnd()
+void CPlayerImp::OnConnectedDone()
 {
-	return g_hwndPlayer;
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+	if (g_hWndPlayer == NULL)
+		SetTimer(TIMER_QUERYITUNES, 500);
+
+	// SwitchToEmbeddedSkin();
+
+	// Update Media info
+	// OnMediaChanged();
+
+	// Update player state
+	// g_MLService.OnPlayStateChanged(GetPlayerState());
 }
 
-// 歌曲播放的位置（单位ms)
-DWORD CPlayerImp::GetPlayPos()
+void CPlayerImp::OnDisconnect()
 {
-	return m_dwPos;
+	m_bWorking = false;
+
+	KillTimer(TIMER_GETPOS);
+	KillTimer(TIMER_QUERYITUNES);
 }
 
 // control player
-BOOL CPlayerImp::Play()
+void CPlayerImp::Play()
 {
 	CIiTunesPtr		iITunes;
 	if (iITunes.IsValid())
-	{
-		HRESULT		hRes;
-		hRes = iITunes->Play();
-		if (FAILED(hRes))
-		{
-			g_MLService.Log("iITunes->Play() FAILED!");
-		}
-	}
-
-	return TRUE;
+		iITunes->Play();
 }
 
-BOOL CPlayerImp::Pause()
+void CPlayerImp::Pause()
 {
 	CIiTunesPtr		iITunes;
 	if (iITunes.IsValid())
 		iITunes->Pause();
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::PlayPause()
+void CPlayerImp::PlayPause()
 {
 	CIiTunesPtr		iITunes;
 	if (iITunes.IsValid())
 		iITunes->PlayPause();
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::Stop()
+void CPlayerImp::Stop()
 {
 	CIiTunesPtr		iITunes;
 	if (iITunes.IsValid())
 		iITunes->Stop();
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::Prev()
+void CPlayerImp::Prev()
 {
 	CIiTunesPtr		iITunes;
 	if (iITunes.IsValid())
 		iITunes->BackTrack();
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::Next()
+void CPlayerImp::Next()
 {
 	CIiTunesPtr		iITunes;
 	if (iITunes.IsValid())
 		iITunes->NextTrack();
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::SeekTo(int nMsPos)
+void CPlayerImp::SeekTo(int nMsPos)
 {
 	CIiTunesPtr		iITunes;
 	if (iITunes.IsValid())
 		iITunes->put_PlayerPosition(nMsPos / 1000);
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::Init()
+void CPlayerImp::SwitchToEmbeddedSkin()
 {
-	m_bWorking = true;
+	PlayerSkinInfo	skinInfo;
 
-	g_MLService.AddWndCloseto(NULL, "iTunes", "iTunes");
+	memset(&skinInfo, 0, sizeof(skinInfo));
+	skinInfo.bEmbeddedSkin = m_hWndiTunesVisual != NULL;
+	skinInfo.bClrThemeValid = true;
+	skinInfo.hWndToAttach = m_hWndiTunesVisual;
+	skinInfo.clrFontHighlight = RGB(0, 0, 0);
+	skinInfo.clrFontLowlight = RGB(0x84, 0x84, 0x84);
+	skinInfo.clrBackground = RGB(0xD6, 0xDB, 0xBD);
+	skinInfo.clrCurLineBg = RGB(0xE4, 0xE4, 0xE4);
 
-	g_wndInfoQuery.Create(g_hInstance);
+	g_MLService.SwitchToEmbeddedSkin(skinInfo);
 
-	return TRUE;
-}
-
-void CPlayerImp::Quit()
-{
-	m_bWorking = false;
-	g_wndInfoQuery.Destroy();
-}
-
-int CPlayerImp::HasVideo()
-{
-	return -1;
-}
-
-HWND CPlayerImp::GetAttachedParentWnd(RECT *prc)
-{
-	return m_hWndiTunesVisual;
-}
-
-void CPlayerImp::OnNotifySkinLoaded()
-{
-	if (m_hWndiTunesVisual)
+	if (m_hWndiTunesVisual && GetParent(g_MLService.GetMainWindow()) == m_hWndiTunesVisual)
 	{
-		if (GetParent(g_MLService.GetMainWindow()) == m_hWndiTunesVisual)
+		MoveWindow(g_MLService.GetMainWindow(), m_rciTunesVisual.left, m_rciTunesVisual.top, m_rciTunesVisual.right - m_rciTunesVisual.left, m_rciTunesVisual.bottom - m_rciTunesVisual.top, true);
+	}
+}
+
+void CPlayerImp::EndEmbeddedSkin()
+{
+}
+
+void CPlayerImp::OnTimer(int nTimerID)
+{
+	if (nTimerID == TIMER_GETPOS)
+	{
+		if (m_playerState == PS_PLAYING)
 		{
-			MoveWindow(g_MLService.GetMainWindow(), m_rciTunesVisual.left, m_rciTunesVisual.top, m_rciTunesVisual.right - m_rciTunesVisual.left, m_rciTunesVisual.bottom - m_rciTunesVisual.top, true);
+			m_dwPos = GetTickCount() - m_dwBegTickCount;
+			g_MLService.OnPlayPosChanged(m_dwPos);
+		}
+	}
+	else if (nTimerID == TIMER_QUERYITUNES)
+	{
+		g_hWndPlayer = FindWindow("iTunes", "iTunes");
+		if (g_hWndPlayer)
+		{
+			if (FindWindowEx(g_hWndPlayer, NULL, NULL, NULL) == NULL)
+			{
+				// No Child window, it is NOT iTunes' Window, try another one.
+				g_hWndPlayer = FindWindowEx(NULL, g_hWndPlayer, "iTunes", "iTunes");
+			}
+			if (g_hWndPlayer)
+			{
+				KillTimer(TIMER_QUERYITUNES);
+
+				// Hook iTunes Window
+				if (g_pOrgiTunesProc == NULL)
+					g_pOrgiTunesProc = (WNDPROC)SetWindowLong(g_hWndPlayer, GWL_WNDPROC, (LONG)HookiTunesWnd);
+			}
 		}
 	}
 }
 
-void CPlayerImp::OnNotifyDetachedFromParentWnd()
+void CPlayerImp::OnMediaChanged(ITTrackInfo	*pTrackInfo)
 {
-}
+	WCHAR			szMediaUrl[MAX_PATH], szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
 
-int CPlayerImp::GetEmbeddedSkinName(TCHAR * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, "Embedded into iTunes Visual Area");
-	return PR_OK;
-}
+	wcsncpy_safe(szMediaUrl, CountOf(szMediaUrl), (LPCWSTR)pTrackInfo->fileName + 1, pTrackInfo->fileName[0]);
 
-int CPlayerImp::GetSkinThemeColor(SKIN_CLR_NAME scn, COLORREF *clrValue)
-{
-	if (scn == SCN_FONT_HIGH)
-		*clrValue = RGB(0, 0, 0);
-	else if (scn == SCN_FONT_LOW)
+	wcsncpy_safe(szArtist, CountOf(szArtist), (LPCWSTR)pTrackInfo->artist + 1, pTrackInfo->artist[0]);
+
+	wcsncpy_safe(szAlbum, CountOf(szAlbum), (LPCWSTR)pTrackInfo->album + 1, pTrackInfo->album[0]);
+
+	wcsncpy_safe(szTitle, CountOf(szTitle), (LPCWSTR)pTrackInfo->name + 1, pTrackInfo->name[0]);
+
 	{
-		*clrValue = RGB(0x84, 0x84, 0x84);
+		CIiTunesPtr		iITunes;
+		HRESULT			nRes;
+
+		if (iITunes.IsValid())
+		{
+			// Get playing position
+			long			nPosSec;
+			nRes = iITunes->get_PlayerPosition(&nPosSec);
+			if (SUCCEEDED(nRes))
+				m_dwBegTickCount = GetTickCount() - nPosSec * 1000;
+
+			// Get full path name of media.
+			IITTrack		*iTrack = NULL;
+			nRes = iITunes->get_CurrentTrack(&iTrack);
+			if (SUCCEEDED(nRes) && iTrack)
+			{
+				IITFileOrCDTrack	*iFileTrack = NULL;
+				nRes = iTrack->QueryInterface(IID_IITFileOrCDTrack, (LPVOID *)&iFileTrack);
+				if (SUCCEEDED(nRes) && iFileTrack)
+				{
+					BSTR	bstr = NULL;
+					nRes = iFileTrack->get_Location(&bstr);
+					if (SUCCEEDED(nRes) && bstr)
+					{
+						wcscpy_safe(szMediaUrl, CountOf(szMediaUrl), bstr);
+					}
+					iFileTrack->Release();
+				}
+				iTrack->Release();
+			}
+		}
 	}
-	else if (scn == SCN_NORMAL_BG)
-		*clrValue = RGB(0xD6, 0xDB, 0xBD);
-	else if (scn == SCN_SEL_BG)
-		*clrValue = RGB(0xE4, 0xE4, 0xE4);
+
+	g_MLService.OnMediaInfoChanged(szMediaUrl, szArtist, szAlbum, szTitle, pTrackInfo->totalTimeInMS);
+
+	m_playerState = PS_PLAYING;
+	g_MLService.OnPlayStateChanged(m_playerState);
+}
+
+LRESULT CPlayerImp::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (uMsg == WM_SONG_CHANGED)
+	{
+		ITTrackInfo		*pTrackInfo = (ITTrackInfo *)wParam;
+		assert(pTrackInfo);
+
+		OnMediaChanged(pTrackInfo);
+
+		delete pTrackInfo;
+	}
+	else if (uMsg == WM_U_ACTIVATEAPP)
+	{
+		g_MLService.OnNotifyPlayerActivate(wParam);
+	}
+	else if (uMsg == WM_U_MIN_MAX)
+	{
+		g_MLService.OnNotifyPlayerMinRestore(wParam);
+	}
 	else
-	{
-		assert(0);
-		return -1;
-	}
+		return CPlayerServiceBase::WndProc(uMsg, wParam, lParam);
 
-	return PR_OK;
-}
-
-void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
-{
-	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
+	return 1;
 }
 
 void CPlayerImp::OniTunesChangeVisualWnd(HWND hWnd, const Rect *rc)
 {
 	m_hWndiTunesVisual = hWnd;
+
+	SwitchToEmbeddedSkin();
 
 	if (hWnd)
 	{
@@ -531,7 +410,6 @@ void CPlayerImp::OniTunesChangeVisualWnd(HWND hWnd, const Rect *rc)
 	}
 	else
 	{
-		
 	}
 }
 
@@ -616,9 +494,9 @@ void OnTrackChanged(ITTrackInfo *pTrackInfo)
 	if (!pTrackInfo)
 		return;
 
-	if (g_wndInfoQuery.m_hWnd)
+	if (g_Player.m_hWnd)
 	{
-		PostMessage(g_wndInfoQuery.m_hWnd, CPlayerInfoQueryWnd::WM_SONG_CHANGED, (WPARAM)new ITTrackInfo(*pTrackInfo), 0);
+		PostMessage(g_Player.m_hWnd, CPlayerImp::WM_SONG_CHANGED, (WPARAM)new ITTrackInfo(*pTrackInfo), 0);
 	}
 }
 
@@ -671,7 +549,6 @@ static OSStatus VisualPluginHandler(OSType message, VisualPluginMessageInfo *mes
 			g_Player.OniTunesChangeVisualWnd(messageInfo->u.showWindowMessage.window,
 										&messageInfo->u.showWindowMessage.drawRect);
 			RenderVisualPort(messageInfo->u.showWindowMessage.window, &messageInfo->u.showWindowMessage.drawRect);
-			g_MLService.SwitchToEmbeddedSkin(true);
 			break;
 			
 		/*
@@ -679,7 +556,6 @@ static OSStatus VisualPluginHandler(OSType message, VisualPluginMessageInfo *mes
 		*/
 		case kVisualPluginHideWindowMessage:
 			g_Player.OniTunesChangeVisualWnd(nil, nil);
-			g_MLService.SwitchToEmbeddedSkin(false);
 			break;
 		
 		/*
@@ -729,20 +605,20 @@ static OSStatus VisualPluginHandler(OSType message, VisualPluginMessageInfo *mes
 			Sent when the player stops.
 		*/
 		case kVisualPluginStopMessage:
-			g_Player.m_bPlayerState = PS_STOPED;
-			g_MLService.OnPlayStateChanged(g_Player.m_bPlayerState);
+			g_Player.m_playerState = PS_STOPED;
+			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
 			break;
 
 		/*
 			Sent when the player changes the track position.
 		*/
 		case kVisualPluginSetPositionMessage:
-			if (g_Player.m_bPlayerState == PS_PLAYING)
+			if (g_Player.m_playerState == PS_PLAYING)
 				g_Player.m_dwBegTickCount = GetTickCount() - messageInfo->u.setPositionMessage.positionTimeInMS;
 			else
 			{
 				g_Player.m_dwPos = messageInfo->u.setPositionMessage.positionTimeInMS;
-				g_MLService.OnPlayTimeChanged(g_Player.m_dwPos);
+				g_MLService.OnPlayPosChanged(g_Player.m_dwPos);
 			}
 			break;
 
@@ -751,8 +627,8 @@ static OSStatus VisualPluginHandler(OSType message, VisualPluginMessageInfo *mes
 			A pause in iTunes is handled by stopping and remembering the position.
 		*/
 		case kVisualPluginPauseMessage:
-			g_Player.m_bPlayerState = PS_PAUSED;
-			g_MLService.OnPlayStateChanged(g_Player.m_bPlayerState);
+			g_Player.m_playerState = PS_PAUSED;
+			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
 			break;
 			
 		/*
@@ -761,8 +637,8 @@ static OSStatus VisualPluginHandler(OSType message, VisualPluginMessageInfo *mes
 		*/
 		case kVisualPluginUnpauseMessage:
 			g_Player.m_dwBegTickCount = GetTickCount() + g_Player.m_dwPos;
-			g_Player.m_bPlayerState = PS_PLAYING;
-			g_MLService.OnPlayStateChanged(g_Player.m_bPlayerState);
+			g_Player.m_playerState = PS_PLAYING;
+			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
 			break;
 		
 		/*
@@ -855,8 +731,8 @@ IMPEXP OSStatus MAIN (OSType message, PluginMessageInfo *messageInfo, void *refC
 
 				status = RegisterVisualPlugin(messageInfo);
 
-				if (!g_hwndPlayer)
-					g_hwndPlayer = FindWindow("iTunes", "iTunes");
+				if (!g_hWndPlayer)
+					g_hWndPlayer = FindWindow("iTunes", "iTunes");
 
 				// Create a thread to pump the messages...
 				g_hThread = CreateThread(NULL, 0, ThreadML, NULL, 0, &g_dwThreadID);

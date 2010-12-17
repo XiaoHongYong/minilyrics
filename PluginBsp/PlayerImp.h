@@ -1,36 +1,33 @@
 #pragma once
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
 	virtual ~CPlayerImp();
 
 public:
-	// Init and destroy.
-	BOOL Init();
-	void Quit();
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	// Player Info
-	int GetPlayerName(char * lpszBuffer, int nBufSize);
-
-	HWND GetMainWnd();
-
-	// get player state and song info
-	DWORD GetPlayerState();
-
-	DWORD GetPlayPos();
-	int HasVideo();
+	virtual void OnConnect();
+	virtual void OnConnectedDone();
+	virtual void OnDisconnect();
 
 	// control player
-	BOOL Play();
-	BOOL Pause();
-	BOOL PlayPause();
-	BOOL Stop();
-	BOOL Prev();
-	BOOL Next();
-	BOOL SeekTo(int nMsPos);
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
 
-	virtual void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
+public:
+	// get player state and song info
+	PLAYER_STATE GetPlayerState();
+	DWORD GetPlayPos();
+	void OnMediaChanged();
+
+	void OnTimer(int nTimerID);
 
 };

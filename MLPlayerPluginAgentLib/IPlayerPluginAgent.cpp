@@ -2,15 +2,20 @@
 #include "../MLPluginLib/MLPlugin.h"
 #include "IPlayerPluginAgent.h"
 
-bool IPlayerPluginAgent::OnTurnOn(CPlayerServiceBase *pPlayerService)
+bool IPlayerPluginAgent::TurnOn()
 {
-	ASSERT(pPlayerService);
+	ASSERT(m_pPlayerService);
 
-	return pPlayerService->Create(GetAppInstance());
+	return m_pPlayerService->Create(GetAppInstance());
 }
 
-void IPlayerPluginAgent::OnTurnOff(CPlayerServiceBase *pPlayerService)
+void IPlayerPluginAgent::TurnOff()
 {
-	if (pPlayerService)
-		pPlayerService->Destroy();
+	if (m_pPlayerService)
+		m_pPlayerService->Destroy();
+}
+
+bool IPlayerPluginAgent::IsConnected()
+{
+	return g_MLService.m_hWndPlayerService == m_pPlayerService->GetHandle();
 }

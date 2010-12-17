@@ -1581,6 +1581,28 @@ void _itostr(int value, tstring &str, int base)
 	str = szBuff;
 }
 
+// FgColor="#FFFFFF"
+UINT GetColorValue(LPCWSTR szColor, UINT nDefault)
+{
+	UINT		clr;
+	LPCWSTR p = ReadColorValue_t(szColor, clr);
+	if (*p != '\0')
+		return nDefault;
+	else
+		return clr;
+}
+
+// FgColor="#FFFFFF"
+UINT GetColorValue(LPCSTR szColor, UINT nDefault)
+{
+	UINT		clr;
+	LPCSTR p = ReadColorValue_t(szColor, clr);
+	if (*p != '\0')
+		return nDefault;
+	else
+		return clr;
+}
+
 void ColorToStr(COLORREF clr, char szStr[])
 {
 	sprintf_s(szStr, 9, "#%02X%02X%02X", clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);

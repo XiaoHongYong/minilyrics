@@ -28,7 +28,6 @@ public:
 	virtual void SeekTo(int nMsPos);
 
 public:
-	// get player state and song info
 	PLAYER_STATE GetPlayerState();
 
 	DWORD GetPlayPos();

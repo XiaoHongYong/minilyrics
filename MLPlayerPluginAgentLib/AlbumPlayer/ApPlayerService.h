@@ -1,0 +1,64 @@
+#pragma once
+
+#include "IPlayerPluginAgent.h"
+
+namespace AlbumPlayerAgent
+{
+
+class CPlayerService : public CPlayerServiceBase
+{
+public:
+	CPlayerService();
+	virtual ~CPlayerService();
+
+public:
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
+
+	virtual void OnConnect();
+	virtual void OnConnectedDone();
+	virtual void OnDisconnect();
+
+	// control player
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
+
+	virtual void SwitchToEmbeddedSkin();
+	virtual void EndEmbeddedSkin();
+
+protected:
+	void OnCopyDataCheckSongTitle(COPYDATASTRUCT *pCopyDataStruct);
+	void SendAPCopyDataMsg(LPCSTR szXML);
+
+	void OnPlayTimeChanged(DWORD dwTimeCur);
+	DWORD GetPlayPos();
+
+	void OnPlayTimeChangeCheck();
+
+	void OnTimer(int nTimerID);
+	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+public:
+	DWORD			m_dwTimeBeg;
+
+	int				m_nPos, m_nPosNotify;
+
+	PLAYER_STATE	m_state;
+	PlayerSkinInfo	m_skinInfo;
+
+};
+
+class CApPluginAgent : public IPlayerPluginAgent
+{
+public:
+	CApPluginAgent();
+
+	virtual bool IsPlayerRunning();
+
+};
+
+}

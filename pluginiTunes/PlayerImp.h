@@ -1,51 +1,48 @@
 #pragma once
 
-#include "../MLPluginLib/IPlayer.h"
 #include "iTunesCOMInterface.h"
 #include "iTunesVisualAPI.h"
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
 	virtual ~CPlayerImp();
 
 public:
-	// Init and destroy.
-	BOOL Init();
-	void Quit();
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	// Player Info
-	int GetPlayerName(char * lpszBuffer, int nBufSize);
-
-	HWND GetMainWnd();
-
-	// get player state and song info
-	DWORD GetPlayerState();
-
-	DWORD GetPlayPos();
-	int HasVideo();
+	virtual void OnConnect();
+	virtual void OnConnectedDone();
+	virtual void OnDisconnect();
 
 	// control player
-	BOOL Play();
-	BOOL Pause();
-	BOOL PlayPause();
-	BOOL Stop();
-	BOOL Prev();
-	BOOL Next();
-	BOOL SeekTo(int nMsPos);
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
 
-	virtual HWND GetAttachedParentWnd(RECT *prc);
-	virtual void OnNotifySkinLoaded();
-	virtual void OnNotifyDetachedFromParentWnd();
-	virtual int GetEmbeddedSkinName(TCHAR * lpszBuffer, int nBufSize);
-
-	virtual int GetSkinThemeColor(SKIN_CLR_NAME scn, COLORREF *clrValue);
-
-	virtual void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
+	virtual void SwitchToEmbeddedSkin();
+	virtual void EndEmbeddedSkin();
 
 public:
+	void OnTimer(int nTimerID);
+	void OnMediaChanged(ITTrackInfo	*pTrackInfo);
+
+	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 	void OniTunesChangeVisualWnd(HWND hWnd, const Rect *rc);
+
+	enum 
+	{
+		TIMER_QUERYITUNES		= TIMER_NEXT + 1,
+		WM_SONG_CHANGED			= WM_USER + 1,
+		WM_U_ACTIVATEAPP		= WM_USER + 2,
+		WM_U_MIN_MAX			= WM_USER + 3
+	};
 
 	HWND			m_hWndiTunesVisual;
 	Rect			m_rciTunesVisual;
@@ -54,7 +51,7 @@ public:
 	DWORD			m_dwPos;
 	bool			m_bWorking;
 
-	PLAYER_STATE	m_bPlayerState;
+	PLAYER_STATE	m_playerState;
 	DWORD			m_dwBegTickCount;
 
 };
