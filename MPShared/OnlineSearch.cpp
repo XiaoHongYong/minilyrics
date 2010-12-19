@@ -351,6 +351,8 @@ BOOL COnlineSearch::Init()
 
 void COnlineSearch::Quit()
 {
+	m_threadSearch.Destroy();
+	m_threadSearch.Join();
 	m_dbSearchResult.Close();
 	m_dbSearchResultMem.Close();
 }

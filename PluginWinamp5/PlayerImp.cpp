@@ -8,20 +8,17 @@
 
 #include "PlayerImp.h"
 
-// ?? unimplemented:
-// 1. When MiniLyrics closes, Close Winamp ....
-// 2. Scroll bar isn't used the same color style.
-
+#define SZ_REG_MINILYRICS		_T("Software\\ZikiPlayer")
+#define SZ_MINILYRICS			_T("MiniLyrics")
 
 // function prototypes
 void config();
 void quit();
 int init();
 
-WNDPROC g_pOrgWaPluginWndProc = 0;
 WNDPROC	g_pOrgWinampProc = NULL;
 
-winampGeneralPurposePlugin plugin = {GPPHDR_VER, "MiniLyrics", init, config, quit, };
+winampGeneralPurposePlugin plugin = {GPPHDR_VER, SZ_MINILYRICS, init, config, quit, };
 
 CPlayerImp			g_Player;
 
@@ -53,7 +50,6 @@ UINT Get_WMCOMMAND_Id(UINT fallback)
 PLAYER_STATE GetPlayerState()
 {
 	int		nPlayState;
-
 	if (!WAIsPlaying(GetPlayerWnd(), nPlayState))
 		return PS_STOPED;
 
@@ -68,58 +64,74 @@ PLAYER_STATE GetPlayerState()
 	return PS_STOPED;
 }
 
-static UINT ID_ML_MENU_ITEM = 27562;
 
-void CheckMLItemInWinampMenu(bool bChecked)
+class CWinampMenu
 {
-	HMENU main_menu = (HMENU)SendMessage(GetPlayerWnd(), WM_WA_IPC, 0, IPC_GET_HMENU);
-	if (!main_menu)
-		return;
-
-	CheckMenuItem(main_menu, ID_ML_MENU_ITEM, MF_BYCOMMAND | (bChecked ? MF_CHECKED : MF_UNCHECKED));
-}
-
-void AddRemoveMLItemInWinampMenu(bool bAdd)
-{
-	static bool bGetMenuID = false;
-	if (!bGetMenuID)
-	{
-		bGetMenuID = true;
-		ID_ML_MENU_ITEM = Get_WMCOMMAND_Id(ID_ML_MENU_ITEM);
+public:
+	CWinampMenu() {
+		m_hMenuMain = (HMENU)SendMessage(GetPlayerWnd(), WM_WA_IPC, 0, IPC_GET_HMENU);
+		if (ID_ML_MENU_ITEM == 0)
+			ID_ML_MENU_ITEM = Get_WMCOMMAND_Id(27562);
 	}
 
-	HMENU main_menu = (HMENU)SendMessage(GetPlayerWnd(), WM_WA_IPC, 0, IPC_GET_HMENU);
-	if (!main_menu)
-		return;
+	void CheckMiniLyrics(bool bChecked) {
+		CheckMenuItem(m_hMenuMain, ID_ML_MENU_ITEM, MF_BYCOMMAND | (bChecked ? MF_CHECKED : MF_UNCHECKED));
+	}
 
-	if (bAdd)
-	{
+	int GetMiniLyricsItemCount() {
+		MENUITEMINFO	itemInfo;
+		TCHAR			szString[256];
+		int				count = 0;
+
+		for (int i = 0; i < 256; i++)
+		{
+			memset(&itemInfo, 0, sizeof(itemInfo));
+
+			itemInfo.cbSize = sizeof(itemInfo);
+			itemInfo.fMask = MIIM_TYPE;
+			itemInfo.dwTypeData = szString;
+			itemInfo.cch = CountOf(szString);
+			szString[0] = '\0';
+
+			// get menu item by pos.
+			if (!GetMenuItemInfo(m_hMenuMain, i, TRUE, &itemInfo))
+				break;
+
+			if (_tcsstr(szString, SZ_MINILYRICS) != NULL)
+				count++;
+		}
+
+		return count;
+	}
+
+	void AddMiniLyrics() {
 		int pos = 0, seperatorCount = 0;
 		for (; seperatorCount < 3 && pos < 50; pos++)
 		{
-			int prior_item = GetMenuItemID(main_menu, pos);
+			int prior_item = GetMenuItemID(m_hMenuMain, pos);
 			if (prior_item == 0)
 				seperatorCount++;
 		}
 
-		// now add the menu item using prior_item as the item to instert after
-		InsertMenu(main_menu, pos - 1, MF_BYPOSITION, ID_ML_MENU_ITEM, "MiniLyrics");
-		CheckMLItemInWinampMenu(g_Player.m_bWorking);
-	}
-	else
-	{
-		DeleteMenu(main_menu, ID_ML_MENU_ITEM, MF_BYCOMMAND);
+		// now add the menu item using prior_item as the item to insert after
+		InsertMenu(m_hMenuMain, pos - 1, MF_BYPOSITION, ID_ML_MENU_ITEM, SZ_MINILYRICS);
+		CheckMiniLyrics(g_Player.m_bWorking);
+
+		// SendMessage(GetPlayerWnd(), WM_WA_IPC, (bAdd ? 1 : -1), IPC_ADJUST_OPTIONSMENUPOS);
 	}
 
-	// SendMessage(GetPlayerWnd(), WM_WA_IPC, (bAdd ? 1 : -1), IPC_ADJUST_OPTIONSMENUPOS);
-}
+	void RemoveMiniLyrics() {
+		DeleteMenu(m_hMenuMain, ID_ML_MENU_ITEM, MF_BYCOMMAND);
+	}
 
-// #define IPC_GETPLAYLISTFILE 211
-BOOL WAGetPlayListFileW(HWND hWndWinamp, int index, LPWSTR &szFile)
-{
-	return SendMessageTimeout(hWndWinamp, WM_WA_IPC, index, IPC_GETPLAYLISTFILEW,
-		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, (LPDWORD)&szFile);
-}
+	static UINT ID_ML_MENU_ITEM;
+
+protected:
+	HMENU		m_hMenuMain;
+
+};
+
+UINT CWinampMenu::ID_ML_MENU_ITEM = 0;
 
 bool WAGetSourceMedia(wchar_t *wszUrl, int nBufSize)
 {
@@ -140,7 +152,7 @@ bool WAGetSourceMedia(wchar_t *wszUrl, int nBufSize)
 	char		*szSong = NULL;
 	if (WAGetPlayListFile(GetPlayerWnd(), dwIndex, szSong) && szSong)
 	{
-		MBCSToUCS2(szSong, -1, wszUrl, nBufSize, CP_ACP);
+		MbcsToUCS2(szSong, -1, wszUrl, nBufSize, CP_ACP);
 		return true;
 	}
 
@@ -157,21 +169,6 @@ bool IsShoutcastMedia(LPCWSTR szMedia)
 		return true;
 
 	return false;
-}
-
-int	wcsncpysz_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource, int nToCopy)
-{
-	if (nToCopy >= nLenMax)
-		nToCopy = nLenMax - 1;
-
-	int		org = nToCopy;
-
-	while (nToCopy && (*strDestination++ = *strSource++))    /* copy string */
-		nToCopy--;
-
-	*strDestination = '\0';
-
-	return org - nToCopy;
 }
 
 BOOL AnalysisMediaTitle(LPCWSTR szFullTitleNew, wchar_t szArtist[]/* out */, wchar_t szTitle[]/* out */)
@@ -198,7 +195,7 @@ BOOL AnalysisMediaTitle(LPCWSTR szFullTitleNew, wchar_t szArtist[]/* out */, wch
 	}
 	else
 	{
-		wcsncpysz_safe(szArtist, MAX_PATH, szFullTitleNew, int(szEndArtist - szFullTitleNew));
+		wcsncpy_safe(szArtist, MAX_PATH, szFullTitleNew, int(szEndArtist - szFullTitleNew));
 	}
 
 	wcscpy_safe(szTitle, MAX_PATH, szBegTitle);
@@ -273,9 +270,9 @@ bool GetMediaInfo(LPCWSTR szFile, wchar_t szArtist[], wchar_t szAlbum[], wchar_t
 	if (IsEmptyString(szArtistA) && IsEmptyString(szAlbumA) && IsEmptyString(szTitleA))
 		return false;
 
-	MBCSToUCS2(szArtistA, -1, szArtist, MAX_PATH);
-	MBCSToUCS2(szAlbumA, -1, szAlbum, MAX_PATH);
-	MBCSToUCS2(szTitleA, -1, szTitle, MAX_PATH);
+	MbcsToUCS2(szArtistA, -1, szArtist, MAX_PATH);
+	MbcsToUCS2(szAlbumA, -1, szAlbum, MAX_PATH);
+	MbcsToUCS2(szTitleA, -1, szTitle, MAX_PATH);
 
 	return true;
 }
@@ -345,65 +342,6 @@ void RemovePlayingStatInfoInMediaTitle(LPWSTR szMediaTitle)
 	}
 }
 
-void CheckMediaUpdate(bool bForceChanged = false)
-{
-	wchar_t			szFile[MAX_PATH] = L"";
-	wchar_t			szMediaTitle[MAX_PATH] = L"";
-	static wchar_t	szFileLatest[MAX_PATH] = L"";
-	static wchar_t	szMediaTitleLatest[MAX_PATH] = L"";
-	PLAYER_STATE	stateNew;
-	bool			bShoutcast;
-
-	memset(szFile, 0, sizeof(szFile));
-	WAGetSourceMedia(szFile, CountOf(szFile));
-
-	memset(szMediaTitle, 0, sizeof(szMediaTitle));
-	WAGetPlayingSongTitle(GetPlayerWnd(), szMediaTitle, CountOf(szMediaTitle));
-
-	stateNew = (PLAYER_STATE)GetPlayerState();
-	if (g_Player.m_state != stateNew)
-	{
-		g_Player.m_state = stateNew;
-		g_MLService.OnPlayStateChanged(stateNew);
-	}
-
-	if (IsShoutcastMedia(szFile))
-	{
-		bShoutcast = true;
-		// remove [buff %xx] in media title
-		RemovePlayingStatInfoInMediaTitle(szMediaTitle);
-	}
-	else
-		bShoutcast = false;
-
-	if (!bForceChanged && lstrcmpW(szFile, szFileLatest) == 0 && lstrcmpW(szMediaTitle, szMediaTitleLatest) == 0)
-		return;
-
-	if (bShoutcast)
-	{
-		// It is a stream audio
-		if (lstrcmpW(szFile, szFileLatest) == 0)
-		{
-			// Stream audio title changed, recount down the playing time.
-			WAGetCurSongPos(GetPlayerWnd(), g_Player.m_dwShoutcastTitleChangedPos);
-			g_Player.m_dwShoutcastTitleChangedPos += 2000;
-		}
-		else
-			g_Player.m_dwShoutcastTitleChangedPos = 0;
-	}
-
-	lstrcpyW(szFileLatest, szFile);
-	lstrcpyW(szMediaTitleLatest, szMediaTitle);
-
-	if (IsEmptyString(szFile) && IsEmptyString(szMediaTitle))
-	{
-		g_MLService.OnMediaInfoChanged(L"", NULL, NULL, NULL, 0);
-		return;
-	}
-
-	OnMediaChanged(szFile, szMediaTitle);
-}
-
 HWND FindMiniLyricsParentWnd(HWND hWndParent, HWND hWndMiniLyrics)
 {
 	HWND hWndNext = NULL;
@@ -453,55 +391,6 @@ bool IsMLEmbeddedInMediaMonkey()
 
 ////////////////////////////////////////////////////////////////////////////////////
 
-LRESULT CALLBACK ProcWAPluginParentHook(HWND hWnd, UINT msg, WPARAM wp, LPARAM lp)
-{
-	int ret;
-	
-	ret = CallWindowProc(g_pOrgWaPluginWndProc, hWnd, msg, wp, lp);
-
-	// unsublcass once the WM_DESTROY message has been processed for safety
-	if (msg == WM_DESTROY)
-	{
-		if (GetWindowLong(hWnd, GWL_WNDPROC) == (LONG)ProcWAPluginParentHook)
-		{
-			SetWindowLong(hWnd, GWL_WNDPROC, (LONG)g_pOrgWaPluginWndProc);
-		}
-
-		AddRemoveMLItemInWinampMenu(true);
-
-		g_Player.m_hWndPluginParent = NULL;
-	}
-
-	return ret;
-}
-
-int init()
-{
-	AddRemoveMLItemInWinampMenu(true);
-
-	RunMiniLyrics(plugin.hDllInstance, plugin.hwndParent, &g_Player);
-
-	return 0;
-}
-
-void config()
-{
-	g_MLService.Config(GetPlayerWnd());
-}
-
-void quit()
-{
-	AddRemoveMLItemInWinampMenu(false);
-
-	if (g_Player.m_hWndPluginParent)
-	{
-		DestroyWindow(g_Player.m_hWndPluginParent);
-		g_Player.m_hWndPluginParent = NULL;
-	}
-
-	DisconnectMiniLyrics(&g_Player);
-}
-
 LRESULT CALLBACK HookWinampWnd(
 							   HWND hWnd,      // handle to window
 							   UINT uMsg,      // message identifier
@@ -511,7 +400,7 @@ LRESULT CALLBACK HookWinampWnd(
 {
 	if (!g_Player.m_bWorking)
 	{
-		if (uMsg == WM_COMMAND && LOWORD(wParam) == ID_ML_MENU_ITEM)
+		if (uMsg == WM_COMMAND && LOWORD(wParam) == CWinampMenu::ID_ML_MENU_ITEM)
 		{
 			// Open MiniLyrics
 			RunMiniLyrics(g_hInstance, plugin.hwndParent, &g_Player);
@@ -541,12 +430,7 @@ LRESULT CALLBACK HookWinampWnd(
 
 				return nRet;
 			}
-// 			else if (LOWORD(wParam) == 0x9C53)
-// 			{
-// 				// 顶层窗口
-// 				// g_wndLyricShow.OnCommand(IDC_ALWAYS_ON_TOP);
-// 			}
-			else if (LOWORD(wParam) == ID_ML_MENU_ITEM)
+			else if (LOWORD(wParam) == CWinampMenu::ID_ML_MENU_ITEM)
 			{
 				// Open/close MiniLyrics
 				g_MLService.OnDisconnected();
@@ -588,6 +472,45 @@ LRESULT CALLBACK HookWinampWnd(
 
 	// Call Winamp Window Proc
 	return CallWindowProc(g_pOrgWinampProc, hWnd, uMsg, wParam, lParam); 
+}
+
+int init()
+{
+	// Hook Main Window
+	if (g_pOrgWinampProc == NULL)
+		g_pOrgWinampProc = (WNDPROC)SetWindowLong(GetPlayerWnd(), GWL_WNDPROC, (LONG)HookWinampWnd);
+
+	CWinampMenu	menu;
+	menu.AddMiniLyrics();
+
+	RunMiniLyrics(plugin.hDllInstance, plugin.hwndParent, &g_Player);
+
+	return 0;
+}
+
+void config()
+{
+	g_MLService.Config(GetPlayerWnd());
+}
+
+void quit()
+{
+	if (g_pOrgWinampProc && IsWindow(GetPlayerWnd()) && GetWindowLong(GetPlayerWnd(), GWL_WNDPROC) == (LONG)HookWinampWnd)
+	{
+		SetWindowLong(GetPlayerWnd(), GWL_WNDPROC, (LONG)g_pOrgWinampProc);
+		g_pOrgWinampProc = NULL;
+	}
+
+	CWinampMenu	menu;
+	menu.RemoveMiniLyrics();
+
+	if (g_Player.m_hWndPluginParent)
+	{
+		DestroyWindow(g_Player.m_hWndPluginParent);
+		g_Player.m_hWndPluginParent = NULL;
+	}
+
+	DisconnectMiniLyrics(&g_Player);
 }
 
 extern "C" {
@@ -659,10 +582,6 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), playerInfo.playerName);
 	wcscat_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), L"'s Skin");
 
-	DWORD dwPlayerVer;
-	WAGetVersion(GetPlayerWnd(), dwPlayerVer);
-	m_bWinamp5 = (dwPlayerVer >= 0x3000);
-
 	if (IsWinamp5())
 		playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE | ML_SUPPORT_CLASSIC_SKINS;
 	else
@@ -671,14 +590,9 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 
 void CPlayerImp::OnConnect()
 {
-	// PrepareCurSkinInfo(m_playerInfo.skinifo);
-
 	DWORD dwPlayerVer;
 	WAGetVersion(GetPlayerWnd(), dwPlayerVer);
 
-	// Hook Main Window
-	if (g_pOrgWinampProc == NULL)
-		g_pOrgWinampProc = (WNDPROC)SetWindowLong(GetPlayerWnd(), GWL_WNDPROC, (LONG)HookWinampWnd);
 	m_bWorking = true;
 
 	m_state = (PLAYER_STATE)GetPlayerState();
@@ -698,7 +612,9 @@ void CPlayerImp::OnConnect()
 	g_MLService.AddWndCloseto(NULL, L"Winamp PE", L"");
 	g_MLService.AddWndCloseto(NULL, L"Winamp MB", L"");
 
-	CheckMLItemInWinampMenu(true);
+	CWinampMenu	menu;
+	menu.CheckMiniLyrics(true);
+	SetTimer(TIMER_VERIFY_ML_IN_WINAMP_MENU, DURATION_VERIFY_MLIN_WINAMP_MENU);
 }
 
 void CPlayerImp::OnConnectedDone()
@@ -722,21 +638,20 @@ void CPlayerImp::OnDisconnect()
 	if (g_bMediaMonkey)
 		KillTimer(TIMER_MEDIA_MONKEY_EMBEDER);
 
-	CheckMLItemInWinampMenu(false);
-
-	// 恢复winamp窗口的窗口过程
-	if (g_pOrgWinampProc && IsWindow(GetPlayerWnd()) && GetWindowLong(GetPlayerWnd(), GWL_WNDPROC) == (LONG)HookWinampWnd)
-	{
-		SetWindowLong(GetPlayerWnd(), GWL_WNDPROC, (LONG)g_pOrgWinampProc);
-		g_pOrgWinampProc = NULL;
-	}
 	m_bWorking = false;
 
 	if (IsWindow(m_hWndPluginParent))
 	{
+		SaveAttachedParentWndSizePos();
 		DestroyWindow(m_hWndPluginParent);
 		m_hWndPluginParent = NULL;
 	}
+
+	CWinampMenu	menu;
+	menu.AddMiniLyrics();
+	menu.CheckMiniLyrics(false);
+
+	SetTimer(TIMER_VERIFY_ML_IN_WINAMP_MENU, DURATION_VERIFY_MLIN_WINAMP_MENU);
 }
 
 // control player
@@ -791,14 +706,20 @@ void CPlayerImp::SwitchToEmbeddedSkin()
 		return;
 
 	// here we set the window's title
-	SetWindowText(m_hWndPluginParent, "MiniLyrics");
+	SetWindowText(m_hWndPluginParent, SZ_MINILYRICS);
 
 	// shows the owner window and this dialog
 	ShowWindow(m_hWndPluginParent, SW_SHOWNORMAL);
+
+	SetTimer(TIMER_VERIFY_ML_IN_WINAMP_MENU, DURATION_VERIFY_MLIN_WINAMP_MENU);
 }
 
 void CPlayerImp::EndEmbeddedSkin()
 {
+	CWinampMenu	menu;
+	menu.AddMiniLyrics();
+
+	SaveAttachedParentWndSizePos();
 	DestroyWindow(m_hWndPluginParent);
 }
 
@@ -821,10 +742,14 @@ void CPlayerImp::PrepareCurSkinInfo(PlayerSkinInfo &skinInfo)
 	skinInfo.hWndToAttach = GetAttachedParentWnd();
 	WAGetSkin(GetPlayerWnd(), skinInfo.skinPath);
 
+	WADlg_init(plugin.hwndParent);
+
 	skinInfo.clrBackground = WADlg_getColor(WADLG_ITEMBG);
 	skinInfo.clrFontHighlight = WADlg_getColor(WADLG_ITEMFG);
 	skinInfo.clrFontLowlight = AverageColor(skinInfo.clrBackground, skinInfo.clrFontHighlight);
 	skinInfo.clrCurLineBg = WADlg_getColor(WADLG_SELCOLOR);
+
+	WADlg_close();
 }
 
 HWND CPlayerImp::GetAttachedParentWnd()
@@ -832,27 +757,43 @@ HWND CPlayerImp::GetAttachedParentWnd()
 	if (m_hWndPluginParent)
 		return m_hWndPluginParent;
 
-	if (g_Player.IsWinamp5())
+	if (IsWinamp5())
 	{
 		// this allocates the memory pointer so the structure can be accessed
 		// by winamp (otherwise it will crash)
 		if (!m_embeddedWndState)
 			m_embeddedWndState = (embedWindowState*)GlobalAlloc(GPTR, sizeof(embedWindowState));
 
-		m_embeddedWndState->r.left = m_embeddedWndState->r.top = 0;
-		m_embeddedWndState->r.right = m_embeddedWndState->r.bottom = 0;
+		ReadAttachedParentWndSizePos(m_embeddedWndState->r);
 
 		// parent needs to be shown
-		g_Player.m_hWndPluginParent = (HWND)SendMessage(plugin.hwndParent, WM_WA_IPC, (WPARAM)m_embeddedWndState, IPC_GET_EMBEDIF);
-		if (g_Player.m_hWndPluginParent)
-		{
-			g_pOrgWaPluginWndProc = (WNDPROC)SetWindowLong(g_Player.m_hWndPluginParent, GWL_WNDPROC, (LONG)ProcWAPluginParentHook);
-		}
+		m_hWndPluginParent = (HWND)SendMessage(plugin.hwndParent, WM_WA_IPC, (WPARAM)m_embeddedWndState, IPC_GET_EMBEDIF);
 	}
 
-	AddRemoveMLItemInWinampMenu(false);
-
 	return m_hWndPluginParent;
+}
+
+void CPlayerImp::SaveAttachedParentWndSizePos()
+{
+	if (!m_hWndPluginParent || !IsWindow(m_hWndPluginParent))
+		return;
+
+	RECT	rc;
+	if (!GetWindowRect(m_hWndPluginParent, &rc))
+		return;
+
+	RegWriteProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, _T("winamp5_rc_left"), rc.left);
+	RegWriteProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, _T("winamp5_rc_top"), rc.top);
+	RegWriteProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, _T("winamp5_rc_right"), rc.right);
+	RegWriteProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, _T("winamp5_rc_bottom"), rc.bottom);
+}
+
+void CPlayerImp::ReadAttachedParentWndSizePos(RECT &rc)
+{
+	rc.left = RegGetProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, _T("winamp5_rc_left"), 0);
+	rc.top = RegGetProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, _T("winamp5_rc_top"), 0);
+	rc.right = RegGetProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, _T("winamp5_rc_right"), 0);
+	rc.bottom = RegGetProfileInt(HKEY_LOCAL_MACHINE, SZ_REG_MINILYRICS, _T("winamp5_rc_bottom"), 0);
 }
 
 DWORD CPlayerImp::GetPlayPos()
@@ -862,6 +803,13 @@ DWORD CPlayerImp::GetPlayPos()
 	WAGetCurSongPos(GetPlayerWnd(), dwCurPos);
 
 	return dwCurPos - m_dwShoutcastTitleChangedPos;
+}
+
+BOOL CPlayerImp::IsWinamp5()
+{
+	DWORD dwPlayerVer;
+	WAGetVersion(GetPlayerWnd(), dwPlayerVer);
+	return dwPlayerVer >= 0x3000;
 }
 
 int CPlayerImp::HasVideo()
@@ -886,7 +834,7 @@ void CPlayerImp::OnTimer(int nTimerID)
 		static DWORD	dwPosLast = 0;
 		if (WAGetCurSongPos(GetPlayerWnd(), dwCurPos))
 		{
-			dwCurPos -= g_Player.m_dwShoutcastTitleChangedPos;
+			dwCurPos -= m_dwShoutcastTitleChangedPos;
 			if (dwCurPos < dwPosLast)
 			{
 				// 如果上次的时间比现在的时间还大，则，可能切换了歌曲。
@@ -908,4 +856,71 @@ void CPlayerImp::OnTimer(int nTimerID)
 			// KillTimer(m_hWnd, TIMER_MEDIA_MONKEY_EMBEDER);
 		}
 	}
+	else if (nTimerID == TIMER_VERIFY_ML_IN_WINAMP_MENU)
+	{
+		// For winamp "Modern" skin, there might have 2 MiniLyrics menu item.
+		CWinampMenu	menu;
+		if (menu.GetMiniLyricsItemCount() > 1)
+			menu.RemoveMiniLyrics();
+		KillTimer(nTimerID);
+	}
+}
+
+void CPlayerImp::CheckMediaUpdate(bool bForceChanged)
+{
+	wchar_t			szFile[MAX_PATH] = L"";
+	wchar_t			szMediaTitle[MAX_PATH] = L"";
+	static wchar_t	szFileLatest[MAX_PATH] = L"";
+	static wchar_t	szMediaTitleLatest[MAX_PATH] = L"";
+	PLAYER_STATE	stateNew;
+	bool			bShoutcast;
+
+	memset(szFile, 0, sizeof(szFile));
+	WAGetSourceMedia(szFile, CountOf(szFile));
+
+	memset(szMediaTitle, 0, sizeof(szMediaTitle));
+	WAGetPlayingSongTitle(GetPlayerWnd(), szMediaTitle, CountOf(szMediaTitle));
+
+	stateNew = (PLAYER_STATE)GetPlayerState();
+	if (m_state != stateNew)
+	{
+		m_state = stateNew;
+		g_MLService.OnPlayStateChanged(stateNew);
+	}
+
+	if (IsShoutcastMedia(szFile))
+	{
+		bShoutcast = true;
+		// remove [buff %xx] in media title
+		RemovePlayingStatInfoInMediaTitle(szMediaTitle);
+	}
+	else
+		bShoutcast = false;
+
+	if (!bForceChanged && lstrcmpW(szFile, szFileLatest) == 0 && lstrcmpW(szMediaTitle, szMediaTitleLatest) == 0)
+		return;
+
+	if (bShoutcast)
+	{
+		// It is a stream audio
+		if (lstrcmpW(szFile, szFileLatest) == 0)
+		{
+			// Stream audio title changed, recount down the playing time.
+			WAGetCurSongPos(GetPlayerWnd(), m_dwShoutcastTitleChangedPos);
+			m_dwShoutcastTitleChangedPos += 2000;
+		}
+		else
+			m_dwShoutcastTitleChangedPos = 0;
+	}
+
+	lstrcpyW(szFileLatest, szFile);
+	lstrcpyW(szMediaTitleLatest, szMediaTitle);
+
+	if (IsEmptyString(szFile) && IsEmptyString(szMediaTitle))
+	{
+		g_MLService.OnMediaInfoChanged(L"", NULL, NULL, NULL, 0);
+		return;
+	}
+
+	OnMediaChanged(szFile, szMediaTitle);
 }

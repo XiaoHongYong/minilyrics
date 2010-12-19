@@ -35,7 +35,6 @@ protected:
 	void SendAPCopyDataMsg(LPCSTR szXML);
 
 	void OnPlayTimeChanged(DWORD dwTimeCur);
-	DWORD GetPlayPos();
 
 	void OnPlayTimeChangeCheck();
 

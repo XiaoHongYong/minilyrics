@@ -62,6 +62,12 @@ BOOL WAGetPlayListTitleW(HWND hwndWinamp, int index, LPWSTR &szTitle)
 		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, (LPDWORD)&szTitle);
 }
 
+BOOL WAGetPlayListFileW(HWND hWndWinamp, int index, LPWSTR &szFile)
+{
+	return SendMessageTimeout(hWndWinamp, WM_WA_IPC, index, IPC_GETPLAYLISTFILEW,
+		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, (LPDWORD)&szFile);
+}
+
 /*
 ** int version = SendMessage(hwnd_winamp,WM_WA_IPC,0,IPC_GETVERSION);
 **
@@ -160,7 +166,7 @@ BOOL WAGetSkin(HWND hwndWinamp, LPWSTR skinname_buffer)
 	char	szSkin[MAX_PATH] = "";
 	BOOL bRet = SendMessageTimeout(hwndWinamp, WM_WA_IPC, (WPARAM)szSkin, IPC_GETSKIN,
 		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwResult);
-	MBCSToUCS2(szSkin, strlen(szSkin), skinname_buffer, MAX_PATH);
+	MbcsToUCS2(szSkin, strlen(szSkin), skinname_buffer, MAX_PATH);
 	return bRet;
 }
 
@@ -200,7 +206,7 @@ BOOL WAGetPlayingSongTitle(HWND hwndWinamp, wchar_t szTitleOut[], int nBuffLen)
 			LPSTR		szTitle = NULL;
 			if (WAGetPlayListTitle(hwndWinamp, dwPos, szTitle) && szTitle)
 			{
-				MBCSToUCS2(szTitle, -1, szTitleOut, nBuffLen, CP_ACP);
+				MbcsToUCS2(szTitle, -1, szTitleOut, nBuffLen, CP_ACP);
 				return TRUE;
 			}
 		}

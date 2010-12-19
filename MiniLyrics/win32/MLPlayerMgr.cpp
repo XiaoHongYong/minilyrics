@@ -38,6 +38,8 @@ void CMLPlayerMgr::OnPlayerInfoReturned(PlayerInfo *playerInfo)
 
 void CMLPlayerMgr::OnPlayerDisconnected()
 {
+	g_Player.Disconnect();
+
 	memset(&g_Player.m_playerInfo, 0, sizeof(g_Player.m_playerInfo));
 	CDlgLyricsTool *pLyricsTool = GetRunningLyricsToolWnd();
 	if (!pLyricsTool)

@@ -17,6 +17,10 @@ bool IsFileExist(LPCSTR szFileName);
 
 void DirStringFormat(LPSTR	szDir);
 
+int RegGetProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nDefault);
+
+BOOL RegWriteProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nValue);
+
 BOOL WritePrivateProfileInt(
 							LPCSTR lpAppName,  // section name
 							LPCSTR lpKeyName,  // key name

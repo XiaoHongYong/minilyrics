@@ -28,7 +28,9 @@ public:
 public:
 	enum
 	{
-		TIMER_MEDIA_MONKEY_EMBEDER = TIMER_NEXT + 1
+		TIMER_MEDIA_MONKEY_EMBEDER = TIMER_NEXT + 1,
+		TIMER_VERIFY_ML_IN_WINAMP_MENU,
+		DURATION_VERIFY_MLIN_WINAMP_MENU = 1500
 	};
 
 	void OnTimer(int nTimerID);
@@ -41,12 +43,15 @@ public:
 	int HasVideo();
 
 	HWND GetAttachedParentWnd();
+	void SaveAttachedParentWndSizePos();
+	void ReadAttachedParentWndSizePos(RECT &rc);
 
-	BOOL IsWinamp5() { return m_bWinamp5; }
+	BOOL IsWinamp5();
 	DWORD GetPlayPos();
 
+	void CheckMediaUpdate(bool bForceChanged = false);
+
 public:
-	bool				m_bWinamp5;
 	HWND				m_hWndPluginParent;
 	embedWindowState	*m_embeddedWndState;
 

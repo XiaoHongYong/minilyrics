@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "../../MLPluginLib/MLPlugin.h"
 #include "ApPlayerService.h"
-#include <MMSystem.h>
 
 namespace AlbumPlayerAgent
 {
@@ -29,19 +28,14 @@ namespace AlbumPlayerAgent
 // lparam = 2 	-> paused
 #define N_SETTINGS_CHANGE	20		// lparam = 0      -> preferences changed      lparam = 1      -> new skin applied
 
-
-
 #define SZ_AP_CREATE_PANEL		"<?xml version=\"1.0\" encoding=\"utf-8\"?><AlbumPlayerCommand id=\"CreatePluginPanel\"><Plugin name=\"MiniLyrics\"></Plugin></AlbumPlayerCommand>"
 #define SZ_AP_CLOSE_PANEL		"<?xml version=\"1.0\" encoding=\"utf-8\"?><AlbumPlayerCommand id=\"ClosePluginPanel\"><Plugin name=\"MiniLyrics\"></Plugin></AlbumPlayerCommand>"
 #define SZ_AP_GET_SONG_INFO		"<?xml version=\"1.0\" encoding=\"utf-8\"?><AlbumPlayerCommand id=\"GetNowPlayingInfo\" />"
 #define SZ_AP_GET_SETTINGS		"<AlbumPlayerCommand id=\"GetPluginSettings\"><Plugin name=\"MiniLyrics\"></Plugin></AlbumPlayerCommand>"
 
 CPlayerService		g_Player;
+HWND				g_hwndPlayer = NULL;
 
-HWND			g_hwndPlayer = NULL;
-
-///////////////////////////////////////////////////////////////////////////////
-// create window to get playback pos of player timely.
 
 static LPCTSTR SXNodeGetChildTextValue(SXNode *pParent, LPCTSTR szChildNodeName)
 {
@@ -79,119 +73,6 @@ void GetColorThemeValue(SXNode *pNode, PlayerSkinInfo &skinInfo)
 	skinInfo.bClrThemeValid = true;
 }
 
-void CPlayerService::OnCopyDataCheckSongTitle(COPYDATASTRUCT *pCopyDataStruct)
-{
-	LPCSTR		str;
-	CSimpleXML	xml;
-
-	str = (LPCSTR)pCopyDataStruct->lpData;
-	if (!str)
-		return;
-
-	if (!xml.ParseData((LPVOID)str, min(pCopyDataStruct->cbData, strlen(str))))
-		return;
-
-	/*	<AlbumPlayerReply id="GetCurrentPlaylist">
-		  <Name>Playlist Name</Name>
-		  <Track albumId="423" number="1">
-			<Name></Name>
-			<Artist></Artist>
-			<FileName></FileName>
-			<Length></Length>
-		  </Track>
-		</AlbumPlayerReply>
-
-		<AlbumPlayerReply id="CreatePluginPanel">
-		  <ChildWindowHandle>14731</ ChildWindowHandle>
-		  <BackgroundColor>0045E345</ BackgroundColor>
-		  <FontColor>00000000</ FontColor>
-		  <SelectedTextBackgroundColor>00345677</ SelectedTextBackgroundColor>
-		</AlbumPlayerReply> */
-	SXNode		*pNode;
-	LPCTSTR		szCmdID;
-
-	if (_tcscmp(xml.m_pRoot->strName.c_str(), _T("AlbumPlayerReply")) != 0)
-		return;
-
-	szCmdID = xml.m_pRoot->GetPropertySafe(_T("id"));
-	if (_tcscmp(szCmdID, _T("CreatePluginPanel")) == 0)
-	{
-		m_skinInfo.hWndToAttach = NULL;
-
-		GetColorThemeValue(xml.m_pRoot, m_skinInfo);
-
-		LPCTSTR str = SXNodeGetChildTextValue(xml.m_pRoot, _T("ChildWindowHandle"));
-		if (str)
-		{
-			m_skinInfo.hWndToAttach = (HWND)_ttoi(str);
-			g_MLService.OnNotifyPlayerSkinChanged(m_skinInfo);
-		}
-		return;
-	}
-
-	if (_tcscmp(szCmdID, _T("GetNowPlayingInfo")) == 0)
-	{
-		pNode = xml.m_pRoot->GetChild(_T("Track"));
-		if (!pNode)
-			return;
-
-		// WCHAR			szArtist[256], szTitle[256], szAlbum[256];
-		// WCHAR			szSrcMedia[MAX_PATH];
-		int				nMediaLength = 0;
-		LPCTSTR			szArtist, szTitle, szAlbum, szSrcMedia;
-
-#define READ_STR_FEILD(szFieldName, szValue)	\
-		szValue = SXNodeGetChildTextValue(pNode, szFieldName);	\
-		if (!szValue)											\
-			szValue = _T("");
-
-		READ_STR_FEILD(_T("FileName"), szSrcMedia);
-		READ_STR_FEILD(_T("Artist"), szArtist);
-		READ_STR_FEILD(_T("Album"), szAlbum);
-		READ_STR_FEILD(_T("Name"), szTitle);
-
-		LPCTSTR str = SXNodeGetChildTextValue(pNode, _T("Length"));
-		if (str)
-			nMediaLength = _ttoi(str);
-
-		// m_dwTimeBeg = GetTickCount() - m_nPosNotify;
-		m_dwTimeBeg = GetTickCount() - GetPlayPos();
-		g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, nMediaLength);
-
-		return;
-	}
-
-	/*
-	<AlbumPlayerReply id="GetPluginSettings">
-	  <BackgroundColor>FFFFFF</BackgroundColor>
-	  <FontColor>000000</FontColor>
-	  <SelectedTextBackgroundColor>888888</ SelectedTextBackgroundColor>
-	</AlbumPlayerReply>
-	*/
-	if (_tcscmp(szCmdID, _T("GetPluginSettings")) == 0)
-	{
-		m_skinInfo.hWndToAttach = NULL;
-
-		GetColorThemeValue(xml.m_pRoot, m_skinInfo);
-
-		g_MLService.OnNotifyPlayerSkinChanged(m_skinInfo);
-	}	
-}
-
-void CPlayerService::SendAPCopyDataMsg(LPCSTR szXML)
-{
-	COPYDATASTRUCT		data;
-	data.cbData = strlen(szXML) + 1;
-	data.lpData = (LPVOID)szXML;
-	data.dwData = 0;
-	SendMessage(g_hwndPlayer, WM_COPYDATA, (WPARAM)GetHandle(), (LPARAM)&data);
-}
-
-// End of GetPosWindow
-////////////////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 CPlayerService::CPlayerService()
@@ -213,11 +94,12 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	playerInfo.hWndPlayer = ::FindWindow(_T("TfrmPlayer"), NULL);
 	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
 
-	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"AlbumPlayer");
 }
 
 void CPlayerService::OnConnect()
 {
+	g_hwndPlayer = ::FindWindow(_T("TfrmPlayer"), NULL);
 	g_MLService.AddWndCloseto(NULL, L"TfrmPlayer", NULL);
 }
 
@@ -305,9 +187,112 @@ void CPlayerService::EndEmbeddedSkin()
 	SendAPCopyDataMsg(SZ_AP_CLOSE_PANEL);
 }
 
-DWORD CPlayerService::GetPlayPos()
+void CPlayerService::OnCopyDataCheckSongTitle(COPYDATASTRUCT *pCopyDataStruct)
 {
-	return m_nPos;
+	LPCSTR		str;
+	CSimpleXML	xml;
+
+	str = (LPCSTR)pCopyDataStruct->lpData;
+	if (!str)
+		return;
+
+	if (!xml.ParseData((LPVOID)str, min(pCopyDataStruct->cbData, strlen(str))))
+		return;
+
+	/*	<AlbumPlayerReply id="GetCurrentPlaylist">
+		  <Name>Playlist Name</Name>
+		  <Track albumId="423" number="1">
+			<Name></Name>
+			<Artist></Artist>
+			<FileName></FileName>
+			<Length></Length>
+		  </Track>
+		</AlbumPlayerReply>
+
+		<AlbumPlayerReply id="CreatePluginPanel">
+		  <ChildWindowHandle>14731</ ChildWindowHandle>
+		  <BackgroundColor>0045E345</ BackgroundColor>
+		  <FontColor>00000000</ FontColor>
+		  <SelectedTextBackgroundColor>00345677</ SelectedTextBackgroundColor>
+		</AlbumPlayerReply> */
+	SXNode		*pNode;
+	LPCTSTR		szCmdID;
+
+	if (_tcscmp(xml.m_pRoot->strName.c_str(), _T("AlbumPlayerReply")) != 0)
+		return;
+
+	szCmdID = xml.m_pRoot->GetPropertySafe(_T("id"));
+	if (_tcscmp(szCmdID, _T("CreatePluginPanel")) == 0)
+	{
+		m_skinInfo.hWndToAttach = NULL;
+
+		GetColorThemeValue(xml.m_pRoot, m_skinInfo);
+
+		LPCTSTR str = SXNodeGetChildTextValue(xml.m_pRoot, _T("ChildWindowHandle"));
+		if (str)
+		{
+			m_skinInfo.hWndToAttach = (HWND)_ttoi(str);
+			g_MLService.OnNotifyPlayerSkinChanged(m_skinInfo);
+		}
+		return;
+	}
+
+	if (_tcscmp(szCmdID, _T("GetNowPlayingInfo")) == 0)
+	{
+		pNode = xml.m_pRoot->GetChild(_T("Track"));
+		if (!pNode)
+			return;
+
+		// WCHAR			szArtist[256], szTitle[256], szAlbum[256];
+		// WCHAR			szSrcMedia[MAX_PATH];
+		int				nMediaLength = 0;
+		LPCTSTR			szArtist, szTitle, szAlbum, szSrcMedia;
+
+#define READ_STR_FEILD(szFieldName, szValue)	\
+		szValue = SXNodeGetChildTextValue(pNode, szFieldName);	\
+		if (!szValue)											\
+			szValue = _T("");
+
+		READ_STR_FEILD(_T("FileName"), szSrcMedia);
+		READ_STR_FEILD(_T("Artist"), szArtist);
+		READ_STR_FEILD(_T("Album"), szAlbum);
+		READ_STR_FEILD(_T("Name"), szTitle);
+
+		LPCTSTR str = SXNodeGetChildTextValue(pNode, _T("Length"));
+		if (str)
+			nMediaLength = _ttoi(str);
+
+		// m_dwTimeBeg = GetTickCount() - m_nPosNotify;
+		// m_dwTimeBeg = GetTickCount() - m_nPos;
+		g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, nMediaLength);
+
+		return;
+	}
+
+	/*
+	<AlbumPlayerReply id="GetPluginSettings">
+	  <BackgroundColor>FFFFFF</BackgroundColor>
+	  <FontColor>000000</FontColor>
+	  <SelectedTextBackgroundColor>888888</ SelectedTextBackgroundColor>
+	</AlbumPlayerReply>
+	*/
+	if (_tcscmp(szCmdID, _T("GetPluginSettings")) == 0)
+	{
+		m_skinInfo.hWndToAttach = NULL;
+
+		GetColorThemeValue(xml.m_pRoot, m_skinInfo);
+
+		g_MLService.OnNotifyPlayerSkinChanged(m_skinInfo);
+	}	
+}
+
+void CPlayerService::SendAPCopyDataMsg(LPCSTR szXML)
+{
+	COPYDATASTRUCT		data;
+	data.cbData = strlen(szXML) + 1;
+	data.lpData = (LPVOID)szXML;
+	data.dwData = 0;
+	SendMessage(g_hwndPlayer, WM_COPYDATA, (WPARAM)GetHandle(), (LPARAM)&data);
 }
 
 void CPlayerService::OnPlayTimeChanged(DWORD dwTimeCur)
@@ -316,11 +301,9 @@ void CPlayerService::OnPlayTimeChanged(DWORD dwTimeCur)
 	g_MLService.OnPlayPosChanged(dwTimeCur);
 }
 
-int _abs(
-        int number
-        )
+int _abs(int number)
 {
-        return( number>=0 ? number : -number );
+	return (number >= 0 ? number : -number);
 }
 
 void CPlayerService::OnPlayTimeChangeCheck()

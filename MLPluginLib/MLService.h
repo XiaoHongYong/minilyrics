@@ -63,7 +63,7 @@ public:
 	{
 		WCHAR	szMessageW[512];
 		szMessageW[0] = 0;
-		MultiByteToWideChar(CP_ACP, 0, szMessage, strlen(szMessage), szMessageW, CountOf(szMessageW));
+		MultiByteToWideChar(CP_ACP, 0, szMessage, strlen(szMessage) + 1, szMessageW, CountOf(szMessageW));
 		Log(szMessageW);
 	}
 

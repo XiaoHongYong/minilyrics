@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="C:\Program Files\Winamp\Plugins\gen_MiniLyrics.dll"
+				OutputFile="C:\Program Files\Winamp5\Plugins\gen_MiniLyrics.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
