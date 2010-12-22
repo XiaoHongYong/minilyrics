@@ -166,14 +166,11 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"BSPlayer");
 }
 
-void CPlayerImp::OnConnect()
+void CPlayerImp::OnConnectedDone()
 {
 	g_MLService.AddWndCloseto(NULL, L"BSPVideoWindow", NULL);
 	g_MLService.AddWndCloseto(g_pInfo->hwndParent, NULL, NULL);
-}
 
-void CPlayerImp::OnConnectedDone()
-{
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 
 	// Update Media info

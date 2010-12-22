@@ -588,7 +588,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 		playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_SUPPORT_CLASSIC_SKINS;
 }
 
-void CPlayerImp::OnConnect()
+void CPlayerImp::OnConnectedDone()
 {
 	DWORD dwPlayerVer;
 	WAGetVersion(GetPlayerWnd(), dwPlayerVer);
@@ -615,10 +615,7 @@ void CPlayerImp::OnConnect()
 	CWinampMenu	menu;
 	menu.CheckMiniLyrics(true);
 	SetTimer(TIMER_VERIFY_ML_IN_WINAMP_MENU, DURATION_VERIFY_MLIN_WINAMP_MENU);
-}
 
-void CPlayerImp::OnConnectedDone()
-{
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	SetTimer(TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO);
 	if (g_bMediaMonkey)
@@ -721,6 +718,8 @@ void CPlayerImp::EndEmbeddedSkin()
 
 	SaveAttachedParentWndSizePos();
 	DestroyWindow(m_hWndPluginParent);
+	m_hWndPluginParent = NULL;
+
 }
 
 //////////////////////////////////////////////////////////////////////////

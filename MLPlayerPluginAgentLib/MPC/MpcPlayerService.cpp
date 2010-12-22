@@ -147,15 +147,12 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Media Player Classic");
 }
 
-void CPlayerService::OnConnect()
+void CPlayerService::OnConnectedDone()
 {
 	g_MLService.AddWndCloseto(NULL, L"MediaPlayerClassicW", NULL);
 
 	ConnectToMpc();
-}
 
-void CPlayerService::OnConnectedDone()
-{
 	SetTimer(TIMER_CHECK_PLAYER, 15 * 1000);
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 

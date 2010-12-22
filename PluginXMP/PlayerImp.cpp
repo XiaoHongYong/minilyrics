@@ -606,7 +606,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscat_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), L"'s Skin");
 }
 
-void CPlayerImp::OnConnect()
+void CPlayerImp::OnConnectedDone()
 {
 	UINT res = DdeInitialize(&g_DdeInstID, DdeCallback, APPCMD_CLIENTONLY |
 		MF_ERRORS | MF_LINKS | MF_CONV/* |
@@ -621,10 +621,7 @@ void CPlayerImp::OnConnect()
 	g_MLService.AddWndCloseto(NULL, L"XMPLAY-MAIN", NULL);
 	g_MLService.AddWndCloseto(NULL, L"XMPLAY-PANEL", NULL);
 	g_MLService.AddWndCloseto(NULL, L"XMPLAY-INFO", NULL);
-}
 
-void CPlayerImp::OnConnectedDone()
-{
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 
 	// Update Media info

@@ -9,7 +9,6 @@ public:
 
 	virtual void OnGetInfo(PlayerInfo &playerInfo) = 0;
 
-	virtual void OnConnect() = 0;
 	virtual void OnConnectedDone() = 0;
 	virtual void OnDisconnect() = 0;
 

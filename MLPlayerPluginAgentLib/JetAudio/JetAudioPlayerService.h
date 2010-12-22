@@ -14,7 +14,6 @@ public:
 public:
 	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	virtual void OnConnect();
 	virtual void OnConnectedDone();
 	virtual void OnDisconnect();
 
@@ -37,6 +36,7 @@ public:
 	bool OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds);
 
 public:
+	string			m_strSrcMedia;
 	HWND			m_hWndPlayer;
 	DWORD			m_dwTimeBeg;
 

@@ -36,6 +36,10 @@ namespace AlbumPlayerAgent
 CPlayerService		g_Player;
 HWND				g_hwndPlayer = NULL;
 
+HWND GetPlayerWindow()
+{
+	return ::FindWindow(_T("TfrmPlayer"), NULL);
+}
 
 static LPCTSTR SXNodeGetChildTextValue(SXNode *pParent, LPCTSTR szChildNodeName)
 {
@@ -91,27 +95,24 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = ::FindWindow(_T("TfrmPlayer"), NULL);
+	playerInfo.hWndPlayer = GetPlayerWindow();
 	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"AlbumPlayer");
 }
 
-void CPlayerService::OnConnect()
-{
-	g_hwndPlayer = ::FindWindow(_T("TfrmPlayer"), NULL);
-	g_MLService.AddWndCloseto(NULL, L"TfrmPlayer", NULL);
-}
-
 void CPlayerService::OnConnectedDone()
 {
+	g_hwndPlayer = GetPlayerWindow();
+	g_MLService.AddWndCloseto(NULL, L"TfrmPlayer", NULL);
+
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 
 	if (g_hwndPlayer)
 	{
 		PostMessage(g_hwndPlayer, WM_SUBSCRIBE_FOR_NOTIFICATIONS, (WPARAM)m_hWnd, WM_AP_NOTIFY);
-		SendAPCopyDataMsg(SZ_AP_CREATE_PANEL);
-		SendAPCopyDataMsg(SZ_AP_CLOSE_PANEL);
+		// SendAPCopyDataMsg(SZ_AP_CREATE_PANEL);
+		// SendAPCopyDataMsg(SZ_AP_CLOSE_PANEL);
 	}
 
 	MSG			msg;
@@ -121,7 +122,7 @@ void CPlayerService::OnConnectedDone()
 		DispatchMessage(&msg);
 	}
 
-	SwitchToEmbeddedSkin();
+	// SwitchToEmbeddedSkin();
 
 	// Update Media info
 	SendAPCopyDataMsg(SZ_AP_GET_SONG_INFO);
@@ -175,9 +176,13 @@ void CPlayerService::SeekTo(int nMsPos)
 
 void CPlayerService::SwitchToEmbeddedSkin()
 {
-	SendAPCopyDataMsg(SZ_AP_CREATE_PANEL);
+	if (m_skinInfo.hWndToAttach != NULL)
+	{
+		SendAPCopyDataMsg(SZ_AP_CLOSE_PANEL);
+		m_skinInfo.hWndToAttach = NULL;
+	}
 
-	g_MLService.SwitchToEmbeddedSkin(m_skinInfo);
+	SendAPCopyDataMsg(SZ_AP_CREATE_PANEL);
 }
 
 void CPlayerService::EndEmbeddedSkin()
@@ -232,7 +237,8 @@ void CPlayerService::OnCopyDataCheckSongTitle(COPYDATASTRUCT *pCopyDataStruct)
 		if (str)
 		{
 			m_skinInfo.hWndToAttach = (HWND)_ttoi(str);
-			g_MLService.OnNotifyPlayerSkinChanged(m_skinInfo);
+			m_skinInfo.bEmbeddedSkin = true;
+			g_MLService.SwitchToEmbeddedSkin(m_skinInfo);
 		}
 		return;
 	}
@@ -278,8 +284,6 @@ void CPlayerService::OnCopyDataCheckSongTitle(COPYDATASTRUCT *pCopyDataStruct)
 	*/
 	if (_tcscmp(szCmdID, _T("GetPluginSettings")) == 0)
 	{
-		m_skinInfo.hWndToAttach = NULL;
-
 		GetColorThemeValue(xml.m_pRoot, m_skinInfo);
 
 		g_MLService.OnNotifyPlayerSkinChanged(m_skinInfo);
@@ -393,7 +397,7 @@ CPlayerPluginAgent::CPlayerPluginAgent() : IPlayerPluginAgent(&g_Player)
 
 bool CPlayerPluginAgent::IsPlayerRunning()
 {
-	HWND hWndPlayer = ::FindWindow(_T("TfrmPlayer"), NULL);
+	HWND hWndPlayer = GetPlayerWindow();
 	return hWndPlayer != NULL;
 }
 

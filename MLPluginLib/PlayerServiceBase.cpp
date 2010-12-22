@@ -48,7 +48,7 @@ bool CPlayerServiceBase::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 
 			g_MLService.m_hWndPlayerService = m_hWnd;
 
-			OnConnect();
+			// OnConnect();
 		}
 		break;
 	case M2P_CONNECTED_DONE:

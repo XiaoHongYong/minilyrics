@@ -27,7 +27,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
 }
 
-void CPlayerImp::OnConnect()
+void CPlayerImp::OnConnectedDone()
 {
 	assert(m_pCore);
 	if (!m_pCore || !m_pControl)
@@ -35,10 +35,7 @@ void CPlayerImp::OnConnect()
 
 	g_MLService.AddWndCloseto(NULL, L"WMPlayerApp", NULL);
 	g_MLService.AddWndCloseto(NULL, L"WMP Skin Host", NULL);
-}
 
-void CPlayerImp::OnConnectedDone()
-{
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 
 	// Update Media info

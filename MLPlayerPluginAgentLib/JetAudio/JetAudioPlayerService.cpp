@@ -37,17 +37,14 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"jetAudio");
 }
 
-void CPlayerService::OnConnect()
+void CPlayerService::OnConnectedDone()
 {
 	m_hWndPlayer = FindPlayerWnd();
 
 	g_MLService.AddWndCloseto(NULL, L"COWON Jet-Audio MainWnd Class", NULL);
 	g_MLService.AddWndCloseto(NULL, NULL, L"jetAudio Lyric Viewer");
 	g_MLService.AddWndCloseto(NULL, NULL, L"jetAudio Playlist");
-}
 
-void CPlayerService::OnConnectedDone()
-{
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	SetTimer(TIMER_CHECK_MEDIA, 1000);
 

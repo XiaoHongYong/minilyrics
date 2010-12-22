@@ -189,17 +189,14 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Foobar2000");
 }
 
-void CPlayerImp::OnConnect()
+void CPlayerImp::OnConnectedDone()
 {
 	assert(IsInMainThread());
 	static_api_ptr_t<play_callback_manager>	pcmgr;
 	pcmgr->register_callback(&ml_play_callback, play_callback::flag_on_playback_all, true);
 
 	g_MLService.AddWndCloseto(NULL, L"{97E27FAA-C0B3-4b8e-A693-ED7881E99FC1}", NULL);
-}
 
-void CPlayerImp::OnConnectedDone()
-{
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 
 	// Update Media info
