@@ -387,11 +387,11 @@ LRESULT CPlayerService::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////////////////////////////////////////
 
-CApPluginAgent::CApPluginAgent() : IPlayerPluginAgent(&g_Player)
+CPlayerPluginAgent::CPlayerPluginAgent() : IPlayerPluginAgent(&g_Player)
 {
 }
 
-bool CApPluginAgent::IsPlayerRunning()
+bool CPlayerPluginAgent::IsPlayerRunning()
 {
 	HWND hWndPlayer = ::FindWindow(_T("TfrmPlayer"), NULL);
 	return hWndPlayer != NULL;

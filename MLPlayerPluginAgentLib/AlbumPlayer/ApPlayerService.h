@@ -51,10 +51,10 @@ public:
 
 };
 
-class CApPluginAgent : public IPlayerPluginAgent
+class CPlayerPluginAgent : public IPlayerPluginAgent
 {
 public:
-	CApPluginAgent();
+	CPlayerPluginAgent();
 
 	virtual bool IsPlayerRunning();
 

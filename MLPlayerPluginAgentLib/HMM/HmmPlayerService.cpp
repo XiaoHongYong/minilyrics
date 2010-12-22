@@ -258,11 +258,11 @@ void CPlayerService::OnPlayTimeChangeCheck()
 
 //////////////////////////////////////////////////////////////////////////
 
-CMPCPluginAgent::CMPCPluginAgent() : IPlayerPluginAgent(&g_Player)
+CPlayerPluginAgent::CPlayerPluginAgent() : IPlayerPluginAgent(&g_Player)
 {
 }
 
-bool CMPCPluginAgent::IsPlayerRunning()
+bool CPlayerPluginAgent::IsPlayerRunning()
 {
 	HWND hWndPlayer = ::FindWindow(_T(HMM_WND_CLASS), NULL);
 	return hWndPlayer != NULL;

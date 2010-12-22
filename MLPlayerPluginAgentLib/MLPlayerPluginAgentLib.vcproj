@@ -260,6 +260,22 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="JetAudio"
+			>
+			<File
+				RelativePath=".\JetAudio\JetAudio6_API.h"
+				>
+			</File>
+			<File
+				RelativePath=".\JetAudio\JetAudioPlayerService.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\JetAudio\JetAudioPlayerService.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

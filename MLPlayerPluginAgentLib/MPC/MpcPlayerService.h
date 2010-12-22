@@ -50,10 +50,10 @@ public:
 
 };
 
-class CMPCPluginAgent : public IPlayerPluginAgent
+class CPlayerPluginAgent : public IPlayerPluginAgent
 {
 public:
-	CMPCPluginAgent();
+	CPlayerPluginAgent();
 	
 	virtual bool IsPlayerRunning();
 

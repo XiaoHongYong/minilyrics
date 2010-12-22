@@ -411,11 +411,11 @@ LRESULT CPlayerService::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 //////////////////////////////////////////////////////////////////////////
 
-CMPCPluginAgent::CMPCPluginAgent() : IPlayerPluginAgent(&g_Player)
+CPlayerPluginAgent::CPlayerPluginAgent() : IPlayerPluginAgent(&g_Player)
 {
 }
 
-bool CMPCPluginAgent::IsPlayerRunning()
+bool CPlayerPluginAgent::IsPlayerRunning()
 {
 	HWND hWndPlayer = ::FindWindow(L"MediaPlayerClassicW", NULL);
 	return hWndPlayer != NULL;
