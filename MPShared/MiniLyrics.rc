@@ -52,7 +52,7 @@ END
 // Bitmap
 //
 
-IDB_INSTALL_STAT        BITMAP                  "C:\\ZikiPlayer\\MiniLyrics\\win32\\InstallState.bmp"
+IDB_INSTALL_STAT        BITMAP                  "..\\MiniLyrics\\win32\\InstallState.bmp"
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 

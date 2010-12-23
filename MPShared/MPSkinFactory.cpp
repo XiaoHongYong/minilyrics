@@ -68,8 +68,6 @@
 
 CMPSkinFactory::CMPSkinFactory()
 {
-	m_strMainSkinWndClassName = SZ_APP_NAME;
-
 #ifdef _WIN32_DESKTOP
 	m_bClickThrough = false;
 #endif
@@ -482,9 +480,12 @@ int CMPSkinFactory::OpenSimpliestSkin()
 	if (nRet != ERR_OK)
 		return nRet;
 
-	nRet = CreateMainSkinWnd(SZ_APP_NAME, _T(""), _T(""));
-	if (nRet != ERR_OK)
-		return nRet;
+	ASSERT(m_listSkinWnds.size() > 0);
+	if (m_listSkinWnds.size() > 0)
+	{
+		CSkinWnd *pWnd = m_listSkinWnds.front();
+		pWnd->OpenSkin(_T("MiniLyrics"));
+	}
 
 	return ERR_OK;
 }

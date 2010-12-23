@@ -140,7 +140,7 @@ public:
 	CSkinFactory();
 	virtual ~CSkinFactory();
 
-	void SetStringIDMap(STRING_ID_MAP StringIdMap[]);
+	virtual int Init(STRING_ID_MAP stringIdMap[]);
 
 	int GetIDByName(LPCTSTR szId) { return GetIDByNameEx(szId, NULL); }
 	int GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip);
@@ -168,7 +168,6 @@ public:
 	virtual int ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
 	virtual int OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
 	virtual int CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
-	virtual int CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndNameDef, CSkinWnd **ppSkin = NULL);
 	virtual int OpenOrCloseSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, CSkinWnd **ppSkinWnd);
 
 	virtual void OnSkinWndCreate(CSkinWnd *pSkinWnd);
@@ -244,8 +243,6 @@ protected:
 	tstring						m_strSkinRootDir;
 	tstring						m_strSkinFileName;
 	tstring						m_strSkinName;
-
-	tstring						m_strMainSkinWndClassName;
 
 	CSkinFileXML				m_skinFile;
 

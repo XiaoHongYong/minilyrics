@@ -513,7 +513,6 @@ void CDynamicCmds::EnumAllCmds(V_Str &vstrCmds)
 
 CSkinFactory::CSkinFactory()
 {
-	m_strMainSkinWndClassName = _SZ_SKINWND_CLASS_NAME;
 	m_IdMap = NULL;
 	m_strSkinFileName = _SZ_SKIN_FILE_NAME;
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
@@ -526,12 +525,21 @@ CSkinFactory::~CSkinFactory()
 
 }
 
-
-void CSkinFactory::SetStringIDMap(STRING_ID_MAP StringIdMap[])
+int CSkinFactory::Init(STRING_ID_MAP stringIdMap[])
 {
-	assert(StringIdMap);
+	assert(stringIdMap);
+	m_IdMap = stringIdMap;
 
-	m_IdMap = StringIdMap;
+	CSkinWnd *pMainWnd = NewSkinWnd(_T("MiniLyrics"), true);
+
+	int nRet = pMainWnd->Create(_T("MiniLyrics"), _T("MiniLyrics"), this, _T(""), NULL, false, false);
+	ASSERT(nRet == ERR_OK);
+	if (nRet == ERR_OK)
+		pMainWnd->SetMainAppWnd(true);
+
+	m_listSkinWnds.push_back(pMainWnd);
+
+	return ERR_OK;
 }
 
 int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip)
@@ -748,19 +756,11 @@ int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	}
 
 	// Create or Open Main Window
-	if (m_listSkinWnds.empty())
-	{
-		nRet = CreateMainSkinWnd(_T("MiniLyrics"), strSkinWndName.c_str(), strSkinWndName.c_str());
-		if (nRet != ERR_OK)
-			return nRet;
-	}
-	else
-	{
-		CSkinWnd *pSkin = m_listSkinWnds.front();
-		nRet = pSkin->OpenSkin(strSkinWndName.c_str());
-		if (nRet != ERR_OK)
-			return nRet;
-	}
+	ASSERT(m_listSkinWnds.size() > 0);
+	CSkinWnd *pSkin = m_listSkinWnds.front();
+	nRet = pSkin->OpenSkin(strSkinWndName.c_str());
+	if (nRet != ERR_OK)
+		return nRet;
 
 	LIST_SKINWNDS		listToBeProcessed;
 
@@ -1062,33 +1062,6 @@ int CSkinFactory::CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCa
 	}
 	else
 		delete pSkin;
-
-	return nRet;
-}
-
-int CSkinFactory::CreateMainSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndNameDef, CSkinWnd **ppSkin)
-{
-	int			nRet;
-	tstring		strSkinWndName;
-	CSkinWnd		*pSkinWnd;
-
-	if (ppSkin)
-		*ppSkin = NULL;
-
-	nRet = m_skinFile.GetMainSkinWnd(strSkinWndName, szSkinWndNameDef);
-	if (nRet != ERR_OK)
-	{
-		ERRLOG1(_T("Can't get main window name: %s"), m_skinFile.GetFileName());
-		return nRet;
-	}
-
-	nRet = CreateSkinWnd(true, szClassName, szCaption, strSkinWndName.c_str(), &pSkinWnd);
-	if (nRet == ERR_OK)
-	{
-		pSkinWnd->SetMainAppWnd(true);
-		if (ppSkin)
-			*ppSkin = pSkinWnd;
-	}
 
 	return nRet;
 }
