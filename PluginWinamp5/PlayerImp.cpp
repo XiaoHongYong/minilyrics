@@ -588,7 +588,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 		playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_SUPPORT_CLASSIC_SKINS;
 }
 
-void CPlayerImp::OnConnectedDone()
+void CPlayerImp::OnConnected()
 {
 	DWORD dwPlayerVer;
 	WAGetVersion(GetPlayerWnd(), dwPlayerVer);

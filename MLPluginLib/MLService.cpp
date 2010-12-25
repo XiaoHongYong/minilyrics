@@ -94,8 +94,8 @@ void CMLService::OnMediaInfoChanged(LPCWSTR szMediaUrl, LPCWSTR szArtist, LPCWST
 
 void CMLService::SendMessage(MessageToML message, LPVOID param, size_t sizeParam)
 {
-	ASSERT(m_hWndMLService);
-	if (!m_hWndMLService)
+	ASSERT(m_mlInfo.hWndMLService);
+	if (!m_mlInfo.hWndMLService)
 		return;
 
 	COPYDATASTRUCT	cds;
@@ -103,10 +103,10 @@ void CMLService::SendMessage(MessageToML message, LPVOID param, size_t sizeParam
 	cds.dwData = message;
 	cds.lpData = param;
 	if (message == M2M_PLAYER_INFO)
-		::SendMessage(m_hWndMLService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds);
+		::SendMessage(m_mlInfo.hWndMLService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds);
 	else
 	{
 		ASSERT(m_hWndPlayerService != NULL);
-		::SendMessage(m_hWndMLService, WM_COPYDATA, (WPARAM)m_hWndPlayerService, (LPARAM)&cds);
+		::SendMessage(m_mlInfo.hWndMLService, WM_COPYDATA, (WPARAM)m_hWndPlayerService, (LPARAM)&cds);
 	}
 }

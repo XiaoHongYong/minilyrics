@@ -11,8 +11,7 @@ public:
 public:
 	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	virtual void OnConnect();
-	virtual void OnConnectedDone();
+	virtual void OnConnected();
 	virtual void OnDisconnect();
 
 	// control player

@@ -36,6 +36,8 @@ public:
 	~CSkinFileXML();
 
 public:
+	bool IsOpened() { return m_xml.m_pRoot != NULL; }
+
 	int Load(LPCTSTR szFile);
 
 	int Save(LPCTSTR szFile);
@@ -154,6 +156,8 @@ public:
 	int AllocCustomID();
 
 	tstring GetStringOfID(int nID);
+
+	bool IsOpened() { return m_skinFile.IsOpened(); }
 
 	virtual int OpenSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
 

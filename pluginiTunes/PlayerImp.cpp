@@ -176,15 +176,12 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"iTunes");
 }
 
-void CPlayerImp::OnConnect()
+void CPlayerImp::OnConnected()
 {
 	m_bWorking = true;
 
 	g_MLService.AddWndCloseto(NULL, L"iTunes", L"iTunes");
-}
 
-void CPlayerImp::OnConnectedDone()
-{
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	if (g_hWndPlayer == NULL)
 		SetTimer(TIMER_QUERYITUNES, 500);

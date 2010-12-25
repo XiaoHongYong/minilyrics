@@ -37,7 +37,7 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"jetAudio");
 }
 
-void CPlayerService::OnConnectedDone()
+void CPlayerService::OnConnected()
 {
 	m_hWndPlayer = FindPlayerWnd();
 

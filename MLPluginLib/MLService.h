@@ -7,7 +7,6 @@ class CMLService
 public:
 	CMLService()
 	{
-		m_hWndMLService = NULL;
 		memset(&m_mlInfo, 0, sizeof(m_mlInfo));
 		m_hWndPlayerService = NULL;
 	}
@@ -70,13 +69,12 @@ public:
 	void SendMessage(MessageToML message, LPVOID param, size_t sizeParam);
 
 	bool IsValid()
-		{ return m_hWndMLService != NULL; }
+		{ return m_mlInfo.hWndMLService != NULL; }
 
 	HWND GetMainWindow()
 		{ return m_mlInfo.hWndMain; }
 
 public:
-	HWND				m_hWndMLService;
 	MLInfo				m_mlInfo;
 
 	HWND				m_hWndPlayerService;

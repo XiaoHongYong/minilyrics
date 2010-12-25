@@ -56,7 +56,7 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Helium Music Manager");
 }
 
-void CPlayerService::OnConnectedDone()
+void CPlayerService::OnConnected()
 {
 	g_MLService.AddWndCloseto(NULL, _T(HMM_WND_CLASS), NULL);
 

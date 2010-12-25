@@ -276,6 +276,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Zune"
+			>
+			<File
+				RelativePath=".\Zune\ZunePlayerService.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\Zune\ZunePlayerService.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>

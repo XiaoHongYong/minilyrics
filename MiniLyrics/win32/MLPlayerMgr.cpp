@@ -6,12 +6,95 @@
 #include "MPMsg.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
+#include "DlgStartMiniLyrics.h"
 #include "../MLPlayerPluginAgentLib/MLPlayerPluginAgentLib.h"
 
 
 CMLPlayerMgr			g_playerMgr;
 
-bool ProcessCmdLine(bool bFirstRun, LPCTSTR szCmdLine);
+
+HWND GetMLSericeWindow()
+{
+	return g_playerMgr.GetHandle();
+}
+
+bool ProcessMLCmdLine(LPCTSTR szCmdLine)
+{
+	// Parse command line
+	V_Str		vCmdLine;
+
+	CmdLineAnalysis(szCmdLine, vCmdLine);
+
+	HWND	hWndPlayerService = NULL;
+	tstring	strPlayerName;
+	bool	bLyricsTool = false;
+
+	for (size_t i = 0; i < vCmdLine.size(); i++)
+	{
+		if (_tcsicmp(vCmdLine[i].c_str(), _T("/Wnd")) == 0 && i + 1 < vCmdLine.size())
+		{
+			hWndPlayerService = (HWND)HexToInt(vCmdLine[i + 1].c_str());
+			if (!IsWindow(hWndPlayerService))
+				hWndPlayerService = NULL;
+		}
+		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/Player")) == 0 && i + 1 < vCmdLine.size())
+			strPlayerName = vCmdLine[i + 1].c_str();
+		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/LyricsTool")) == 0)
+		{
+			bLyricsTool = true;
+			continue;
+		}
+		else
+			continue;
+		i++;
+	}
+
+	if (strPlayerName.size())
+	{
+		tstring		strAppIniFile = GetAppIniFile();
+		if (!GetPrivateProfileInt(_T("MiniLyrics"), strPlayerName.c_str(), TRUE, strAppIniFile.c_str()))
+			return false;
+	}
+
+	if (hWndPlayerService != NULL)
+	{
+		if (!g_playerMgr.IsValid())
+			g_playerMgr.Create();
+
+		CPlayer::QueryInfo(hWndPlayerService);
+		return true;
+	}
+
+	if (bLyricsTool)
+	{
+		// Run lyrics tool
+	}
+
+	return true;
+}
+
+bool MLConnectToPlayer()
+{
+	if (!g_playerMgr.IsValid() && !g_playerMgr.Create())
+		return false;
+
+	if (g_playerMgr.m_listPlayers.size() == 0)
+		g_playerMgr.QueryRunningPlayerInfo();
+
+	if (g_playerMgr.m_listPlayers.size() == 1)
+	{
+		g_playerMgr.SetCurPlayer(0);
+	}
+	else
+	{
+		// Popup and let user to choose the player.
+		CDlgStartMiniLyrics		dlg;
+		if (dlg.DoModal(NULL) != IDOK)
+			return false;
+	}
+
+	return true;
+}
 
 bool CMLPlayerMgr::Create()
 {
@@ -92,7 +175,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 {
 	if (wParam == ML_SEND_CMD_LINE && pcds->dwData == ML_SEND_CMD_LINE)
 	{
-		ProcessCmdLine(false, (LPCTSTR)pcds->lpData);
+		ProcessMLCmdLine((LPCTSTR)pcds->lpData);
 	}
 	else if (wParam == ML_MSG_VERSION && pcds->dwData == M2M_PLAYER_INFO)
 	{

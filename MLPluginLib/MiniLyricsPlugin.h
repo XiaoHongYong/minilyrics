@@ -12,7 +12,6 @@
 	2). MiniLyrics	>   Send M2P_QUERY_INFO, retrieve the player info.
 	3).	Plugin		>	Send M2M_PLAYER_INFO, send back the player info.
 	4). MiniLyrics	>   Send M2P_CONNECTED, tell Plugin, MiniLyrics connected to it.
-	5). MiniLyrics	>   Send M2P_CONNECT_DONE, tell Plugin, MiniLyrics has initialized OK.
 
 3. Quit
 	 Plugin		>	M2M_DISCONNECTED
@@ -30,7 +29,7 @@
 
 #define ML_MSG_VERSION			0xF20F4E57
 
-#define R_UNDETERMINED				(-1)
+#define R_UNDETERMINED			(-1)
 
 enum MessageToML
 {
@@ -64,8 +63,7 @@ enum MessageToML
 enum MessageToPlayer
 {
 	M2P_QUERY_INFO					= 1,		// HWND of MLService
-	M2P_CONNECTED					= 2,		// HWND of MLService
-	M2P_CONNECTED_DONE				= 3,		// Send MLInfo to player
+	M2P_CONNECTED					= 2,		// Send MLInfo to player
 	M2P_DISCONNECT					= 4,		// MiniLyrics disconnect to player.
 
 	M2P_PLAY						= 5,		
@@ -164,6 +162,7 @@ struct WndCloseToML
 struct MLInfo
 {
 	HWND				hWndMain;			// The main window of MiniLyrics
+	HWND				hWndMLService;
 };
 
 // The windows class name of MiniLyrics service

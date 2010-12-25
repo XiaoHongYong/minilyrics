@@ -530,6 +530,9 @@ int CSkinFactory::Init(STRING_ID_MAP stringIdMap[])
 	assert(stringIdMap);
 	m_IdMap = stringIdMap;
 
+	// Init SimpleJVM environment
+	CSjvmSkinSystem::Init(this);
+
 	CSkinWnd *pMainWnd = NewSkinWnd(_T("MiniLyrics"), true);
 
 	int nRet = pMainWnd->Create(_T("MiniLyrics"), _T("MiniLyrics"), this, _T(""), NULL, false, false);

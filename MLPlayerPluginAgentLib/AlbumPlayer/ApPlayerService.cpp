@@ -101,7 +101,7 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"AlbumPlayer");
 }
 
-void CPlayerService::OnConnectedDone()
+void CPlayerService::OnConnected()
 {
 	g_hwndPlayer = GetPlayerWindow();
 	g_MLService.AddWndCloseto(NULL, L"TfrmPlayer", NULL);
@@ -110,7 +110,7 @@ void CPlayerService::OnConnectedDone()
 
 	if (g_hwndPlayer)
 	{
-		PostMessage(g_hwndPlayer, WM_SUBSCRIBE_FOR_NOTIFICATIONS, (WPARAM)m_hWnd, WM_AP_NOTIFY);
+		SendMessage(g_hwndPlayer, WM_SUBSCRIBE_FOR_NOTIFICATIONS, (WPARAM)m_hWnd, WM_AP_NOTIFY);
 		// SendAPCopyDataMsg(SZ_AP_CREATE_PANEL);
 		// SendAPCopyDataMsg(SZ_AP_CLOSE_PANEL);
 	}

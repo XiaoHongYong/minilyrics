@@ -28,7 +28,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
 }
 
-void CPlayerImp::OnConnectedDone()
+void CPlayerImp::OnConnected()
 {
 	assert(m_pCore);
 	if (!m_pCore || !m_pControl)

@@ -4,6 +4,12 @@
 #include "../MLPluginLib/TinyBaseWnd.h"
 #include "../MLPlayerPluginAgentLib/IPlayerPluginAgent.h"
 
+HWND GetMLSericeWindow();
+
+bool ProcessMLCmdLine(LPCTSTR szCmdLine);
+
+bool MLConnectToPlayer();
+
 class CMLPlayerMgr : public CTinyBaseWnd
 {
 public:

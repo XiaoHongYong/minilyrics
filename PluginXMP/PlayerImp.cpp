@@ -606,7 +606,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscat_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), L"'s Skin");
 }
 
-void CPlayerImp::OnConnectedDone()
+void CPlayerImp::OnConnected()
 {
 	UINT res = DdeInitialize(&g_DdeInstID, DdeCallback, APPCMD_CLIENTONLY |
 		MF_ERRORS | MF_LINKS | MF_CONV/* |

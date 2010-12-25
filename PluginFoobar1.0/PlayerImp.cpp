@@ -189,7 +189,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Foobar2000");
 }
 
-void CPlayerImp::OnConnectedDone()
+void CPlayerImp::OnConnected()
 {
 	assert(IsInMainThread());
 	static_api_ptr_t<play_callback_manager>	pcmgr;

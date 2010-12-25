@@ -147,7 +147,7 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Media Player Classic");
 }
 
-void CPlayerService::OnConnectedDone()
+void CPlayerService::OnConnected()
 {
 	g_MLService.AddWndCloseto(NULL, L"MediaPlayerClassicW", NULL);
 

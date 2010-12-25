@@ -22,9 +22,9 @@ bool CPlayerServiceBase::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 		{
 			ASSERT(pcds->cbData == sizeof(HWND));
 
-			// Backup m_hWndMLService.
-			HWND	hWndMLServiceBackup = g_MLService.m_hWndMLService;
-			g_MLService.m_hWndMLService = *(HWND*)pcds->lpData;
+			// Backup m_mlInfo.hWndMLService.
+			HWND	hWndMLServiceBackup = g_MLService.m_mlInfo.hWndMLService;
+			g_MLService.m_mlInfo.hWndMLService = *(HWND*)pcds->lpData;
 
 			PlayerInfo playerInfo;
 			memset(&playerInfo, 0, sizeof(playerInfo));
@@ -34,34 +34,26 @@ bool CPlayerServiceBase::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			OnGetInfo(playerInfo);
 			g_MLService.SendPlayerInfo(playerInfo);
 
-			// Restore m_hWndMLService.
-			g_MLService.m_hWndMLService = hWndMLServiceBackup;
+			// Restore m_mlInfo.hWndMLService.
+			g_MLService.m_mlInfo.hWndMLService = hWndMLServiceBackup;
 		}
 		break;
 	case M2P_CONNECTED:
 		{
-			if (IsWindow(g_MLService.m_hWndMLService))
+			if (IsWindow(g_MLService.m_mlInfo.hWndMLService))
 				break;
 
-			ASSERT(pcds->cbData == sizeof(HWND));
-			g_MLService.m_hWndMLService = *(HWND*)pcds->lpData;
+			ASSERT(pcds->cbData == sizeof(MLInfo));
+			g_MLService.m_mlInfo = *(MLInfo*)pcds->lpData;
 
 			g_MLService.m_hWndPlayerService = m_hWnd;
 
 			// OnConnect();
-		}
-		break;
-	case M2P_CONNECTED_DONE:
-		{
-			ASSERT(pcds->cbData == sizeof(MLInfo));
-			g_MLService.m_mlInfo = *(MLInfo*)pcds->lpData;
-
 			OnConnectedDone();
 		}
 		break;
 	case M2P_DISCONNECT:
 		OnDisconnect();
-		g_MLService.m_hWndMLService = NULL;
 		memset(&g_MLService.m_mlInfo, 0, sizeof(g_MLService.m_mlInfo));
 		break;
 	case M2P_PLAY:
