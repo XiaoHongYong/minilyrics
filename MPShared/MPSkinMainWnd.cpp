@@ -34,8 +34,6 @@ bool CMPSkinMainWndBase::OnCreate()
 
 	g_eventDispather.RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 
-	SetTimer(TIMER_SHOW_REG, 500);
-
 	return true;
 }
 

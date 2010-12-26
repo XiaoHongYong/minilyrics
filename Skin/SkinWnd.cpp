@@ -242,17 +242,19 @@ CSkinWnd::~CSkinWnd()
 	CloseSkin();
 }
 
-int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow, bool bTopmost)
+int CSkinWnd::Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow, bool bTopmost, bool bVisible)
 {
 	m_pSkinFactory = pSkinFactory;
 	m_strSkinWndName = szSkinWndName;
 
-	DWORD	dwStyle = DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX | WS_VISIBLE;
+	DWORD	dwStyle = DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX;
 	DWORD	dwExStyle = 0;
 	if (bTopmost)
 		dwExStyle |= WS_EX_TOPMOST;
 	if (bToolWindow)
 		dwExStyle |= WS_EX_TOOLWINDOW;
+	if (bVisible)
+		dwStyle |= WS_VISIBLE;
 
 	OnPreCreate(dwStyle, dwExStyle);
 

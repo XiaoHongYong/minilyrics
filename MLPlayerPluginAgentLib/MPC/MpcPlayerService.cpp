@@ -13,6 +13,11 @@ HWND	g_hWndMPC = NULL;
 
 #define WM_ON_CONNECT	(WM_USER + 1)
 
+HWND GetPlayerWindow()
+{
+	return FindWindow(_T("MediaPlayerClassicW"), NULL);
+}
+
 LPCTSTR GetMPCCommandName(MPCAPI_COMMAND nCmd)
 {
 	switch (nCmd)
@@ -53,7 +58,7 @@ bool GetProcessName(TCHAR szFile[], DWORD nProcessId)
 
 bool GetMPCHCProcessName(TCHAR szFile[])
 {
-	HWND hWndPlayer = FindWindow(_T("MediaPlayerClassicW"), NULL);
+	HWND hWndPlayer = GetPlayerWindow();
 	if (hWndPlayer)
 	{
 		DWORD		dwProcessId = 0;
@@ -142,7 +147,7 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = FindWindow(L"MediaPlayerClassicW", NULL);
+	playerInfo.hWndPlayer = GetPlayerWindow();
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Media Player Classic");
 }
@@ -414,7 +419,7 @@ CPlayerPluginAgent::CPlayerPluginAgent() : IPlayerPluginAgent(&g_Player)
 
 bool CPlayerPluginAgent::IsPlayerRunning()
 {
-	HWND hWndPlayer = ::FindWindow(L"MediaPlayerClassicW", NULL);
+	HWND hWndPlayer = GetPlayerWindow();
 	return hWndPlayer != NULL;
 }
 

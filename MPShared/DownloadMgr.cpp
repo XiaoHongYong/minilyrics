@@ -13,8 +13,6 @@
 #include "OnlineSearch.h"
 #include "AutoProcessEmbeddedLyrics.h"
 
-void ShowRegisterNoticeSafely();
-
 #define SZ_USER_AGENT_IE5 _T("Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)")
 
 //	COMMENT:

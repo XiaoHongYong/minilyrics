@@ -41,40 +41,43 @@ HWND GetPlayerWindow()
 	return ::FindWindow(_T("TfrmPlayer"), NULL);
 }
 
-static LPCTSTR SXNodeGetChildTextValue(SXNode *pParent, LPCTSTR szChildNodeName)
+LPCTSTR SXNodeGetChildTextValue(SXNode *pParent, LPCTSTR szChildNodeName)
 {
 	SXNode		*pNodeVal;
-	LPCTSTR		str;
 	pNodeVal = pParent->GetChild(szChildNodeName);
-	if (!pNodeVal)
-		return NULL;
-	str = pNodeVal->strContent.c_str();
-	if (!str)
-		return NULL;
+	if (pNodeVal)
+		return pNodeVal->strContent.c_str();
 
-	return str;
+	return NULL;
+}
+
+bool GetColorValueEx(SXNode *pNode, LPCTSTR szName, COLORREF &clr)
+{
+	LPCTSTR str = SXNodeGetChildTextValue(pNode, szName);
+	if (!str)
+		return false;
+
+	if (str[0] == '0' && str[1] == '0' && _tcslen(str) == 8)
+		str += 2;
+	COLORREF c = GetColorValue(str, 0xFFFFFFFF);
+	if (c == 0xFFFFFFFF)
+		return false;
+
+	clr = RGB(GetBValue(c), GetGValue(c), GetRValue(c));
+	return true;
 }
 
 void GetColorThemeValue(SXNode *pNode, PlayerSkinInfo &skinInfo)
 {
 	skinInfo.bClrThemeValid = false;
 
-	LPCTSTR str = SXNodeGetChildTextValue(pNode, _T("BackgroundColor"));
-	if (!str)
-		return;
-	skinInfo.clrBackground = GetColorValue(str, skinInfo.clrBackground);
-
-	str = SXNodeGetChildTextValue(pNode, _T("FontColor"));
-	if (!str)
-		return;
-	skinInfo.clrFontHighlight = GetColorValue(str, skinInfo.clrFontHighlight);
-
-	str = SXNodeGetChildTextValue(pNode, _T("SelectedTextBackgroundColor"));
-	if (!str)
-		return;
-	skinInfo.clrCurLineBg = GetColorValue(str, skinInfo.clrCurLineBg);
-
-	skinInfo.bClrThemeValid = true;
+	if (GetColorValueEx(pNode, _T("BackgroundColor"), skinInfo.clrBackground)
+		&& GetColorValueEx(pNode, _T("FontColor"), skinInfo.clrFontHighlight)
+		&& GetColorValueEx(pNode, _T("SelectedTextBackgroundColor"), skinInfo.clrCurLineBg))
+	{
+		skinInfo.clrFontLowlight = AverageColor(skinInfo.clrBackground, skinInfo.clrFontHighlight);
+		skinInfo.bClrThemeValid = true;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////

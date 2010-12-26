@@ -11,6 +11,8 @@
 
 #include "MPSkinWnd.h"
 
+void ShowRegisterNoticeSafely();
+
 class CMPSkinMainWndBase : public CMPSkinWnd
 {
 public:

@@ -5,7 +5,12 @@
 namespace ZuneAgent
 {
 
-CPlayerImp		g_Player;
+CPlayerService		g_Player;
+
+HWND GetPlayerWindow()
+{
+	return FindWindow(_T("UIX Render Window"), _T("Zune"));
+}
 
 class CFakeMsnMessageWnd : public CTinyBaseWnd
 {
@@ -81,71 +86,71 @@ CFakeMsnMessageWnd		g_wndFakeMsnWnd;
 
 ///////////////////////////////////////////////////////////////////////////////
 
-CPlayerImp::CPlayerImp()
+CPlayerService::CPlayerService()
 {
 	m_dwBeginPlay = 0;
 }
 
-CPlayerImp::~CPlayerImp()
+CPlayerService::~CPlayerService()
 {
 }
 
-void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
+void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 {
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = FindWindow("WMPlayerApp", NULL);
+	playerInfo.hWndPlayer = GetPlayerWindow();
 	playerInfo.hWndPluginService = GetHandle();
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Zune");
 }
 
-void CPlayerImp::OnConnected()
+void CPlayerService::OnConnected()
 {
-	g_wndFakeMsnWnd.Create(g_hInstance, _T("MsnMsgrUIManager"), _T(""));
+	g_wndFakeMsnWnd.Create(GetAppInstance(), _T("MsnMsgrUIManager"), _T(""));
 
 	g_MLService.AddWndCloseto(NULL, L"UIX Render Window", L"Zune");
 
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 }
 
-void CPlayerImp::OnDisconnect()
+void CPlayerService::OnDisconnect()
 {
 	g_wndFakeMsnWnd.Destroy();
 	KillTimer(TIMER_GETPOS);
 }
 
 // control player
-void CPlayerImp::Play()
+void CPlayerService::Play()
 {
 }
 
-void CPlayerImp::Pause()
+void CPlayerService::Pause()
 {
 }
 
-void CPlayerImp::PlayPause()
+void CPlayerService::PlayPause()
 {
 }
 
-void CPlayerImp::Stop()
+void CPlayerService::Stop()
 {
 }
 
-void CPlayerImp::Prev()
+void CPlayerService::Prev()
 {
 }
 
-void CPlayerImp::Next()
+void CPlayerService::Next()
 {
 }
 
-void CPlayerImp::SeekTo(int nMsPos)
+void CPlayerService::SeekTo(int nMsPos)
 {
 }
 
-void CPlayerImp::OnTimer(int nTimerID)
+void CPlayerService::OnTimer(int nTimerID)
 {
 	if (nTimerID == TIMER_GETPOS)
 	{

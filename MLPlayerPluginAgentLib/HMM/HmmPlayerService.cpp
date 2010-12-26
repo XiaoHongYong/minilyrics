@@ -34,6 +34,11 @@ static void HMMCopyTabEndText(LPCSTR szText, CHAR szBuff[], int nBuffSize)
 	szBuff[i] = '\0';
 }
 
+HWND GetPlayerWindow()
+{
+	return FindWindow(_T(HMM_WND_CLASS), NULL);
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CPlayerService::CPlayerService()
@@ -51,7 +56,7 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = ::FindWindow(_T(HMM_WND_CLASS), NULL);;
+	playerInfo.hWndPlayer = GetPlayerWindow();
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Helium Music Manager");
 }
@@ -125,7 +130,7 @@ void CPlayerService::OnTimer(int nTimerID)
 	{
 		// update info.
 		if (!IsWindow(m_hWndPlayer))
-			m_hWndPlayer = ::FindWindow(_T(HMM_WND_CLASS), NULL);
+			m_hWndPlayer = GetPlayerWindow();
 		if (m_hWndPlayer)
 			::SendMessage(m_hWndPlayer, WM_HMM_IPC, (WPARAM)0, IPC_GET_CURRENT_TRACK);
 	}
@@ -261,7 +266,7 @@ CPlayerPluginAgent::CPlayerPluginAgent() : IPlayerPluginAgent(&g_Player)
 
 bool CPlayerPluginAgent::IsPlayerRunning()
 {
-	HWND hWndPlayer = ::FindWindow(_T(HMM_WND_CLASS), NULL);
+	HWND hWndPlayer = GetPlayerWindow();
 	return hWndPlayer != NULL;
 }
 

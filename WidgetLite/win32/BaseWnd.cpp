@@ -169,10 +169,7 @@ BOOL CBaseWnd::CreateEx(LPCTSTR szClassName, LPCTSTR szCaption, int x, int y, in
 		GetAppInstance(),		// hInstance
 		(LPVOID)this);			// this for window creation data
 
-	if (m_hWnd == NULL)
-		return FALSE;
-
-	return TRUE;
+	return m_hWnd != NULL;
 }
 
 bool CBaseWnd::Destroy()

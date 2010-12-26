@@ -859,9 +859,16 @@ void CPlayerImp::OnTimer(int nTimerID)
 	{
 		// For winamp "Modern" skin, there might have 2 MiniLyrics menu item.
 		CWinampMenu	menu;
-		if (menu.GetMiniLyricsItemCount() > 1)
+		int count = menu.GetMiniLyricsItemCount();
+		if (count > 1)
 			menu.RemoveMiniLyrics();
-		KillTimer(nTimerID);
+		else if (count == 0)
+			menu.AddMiniLyrics();
+
+		static int n = 0;
+		n++;
+		if (n % 4 == 0)
+			KillTimer(nTimerID);
 	}
 }
 

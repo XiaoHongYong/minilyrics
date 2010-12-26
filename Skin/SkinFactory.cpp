@@ -99,6 +99,10 @@ void CSkinFileXML::Close()
 
 int CSkinFileXML::GetSkinWndNode(LPCTSTR szSkinWndName, SXNode::iterator *itWnd)
 {
+	ASSERT(IsOpened());
+	if (!IsOpened())
+		return ERR_NOT_FOUND;
+
 	SXNode		*pNodeRoot;
 	pNodeRoot = m_xml.m_pRoot;
 	SXNode::iterator	it, itEnd;
@@ -135,6 +139,10 @@ SXNode *CSkinFileXML::GetSkinWndNode(LPCTSTR szSkinWndName)
 
 int CSkinFileXML::NewSkinWndNode(LPCTSTR szSkinWndName)
 {
+	ASSERT(IsOpened());
+	if (!IsOpened())
+		return ERR_NOT_FOUND;
+
 	SXNode::iterator	itWnd;
 	int		nRet;
 	SXNode	*pWndNode;
@@ -535,7 +543,7 @@ int CSkinFactory::Init(STRING_ID_MAP stringIdMap[])
 
 	CSkinWnd *pMainWnd = NewSkinWnd(_T("MiniLyrics"), true);
 
-	int nRet = pMainWnd->Create(_T("MiniLyrics"), _T("MiniLyrics"), this, _T(""), NULL, false, false);
+	int nRet = pMainWnd->Create(_T("MiniLyrics"), _T("MiniLyrics"), this, _T(""), NULL, false, false, false);
 	ASSERT(nRet == ERR_OK);
 	if (nRet == ERR_OK)
 		pMainWnd->SetMainAppWnd(true);
@@ -1079,6 +1087,10 @@ int CSkinFactory::OpenOrCloseSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPC
 		*ppSkinWnd = pWndOld;
 		return ERR_OK;
 	}
+
+	ASSERT(IsOpened());
+	if (!IsOpened())
+		return ERR_FAILED;
 
 	int nRet = (*ppSkinWnd)->Create(szClassName, szCaption, this, szSkinWndName, pWndParent);
 	if (nRet != ERR_OK)
