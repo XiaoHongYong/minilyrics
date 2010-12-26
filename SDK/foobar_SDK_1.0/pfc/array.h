@@ -40,6 +40,13 @@ namespace pfc {
 				m_size = p_size;
 			}
 		}
+		//! Warning: buffer pointer must not point to buffer allocated by this array (fixme).
+		template<typename t_source>
+		void set_data_fromptr(const t_source * p_buffer,t_size p_count) {
+			set_size_discard(p_count);
+			pfc::copy_array_loop_t(*this,p_buffer,p_count);
+		}
+
 		
 		t_size get_size() const {return m_size;}
 		const t_item * get_ptr() const {return m_array;}
@@ -92,6 +99,7 @@ namespace pfc {
 		template<typename t_source> const t_self & operator=(const t_source & p_source) {copy_array_t(*this,p_source); return *this;}
 		
 		void set_size(t_size p_size) {m_alloc.set_size(p_size);}
+		void set_size_discard(t_size p_size) {m_alloc.set_size(p_size);}
 		void set_count(t_size p_count) {m_alloc.set_size(p_count);}
 		t_size get_size() const {return m_alloc.get_size();}
 		t_size get_count() const {return m_alloc.get_size();}
@@ -103,7 +111,6 @@ namespace pfc {
 		//! Warning: buffer pointer must not point to buffer allocated by this array (fixme).
 		template<typename t_source>
 		void set_data_fromptr(const t_source * p_buffer,t_size p_count) {
-			
 			set_size(p_count);
 			pfc::copy_array_loop_t(*this,p_buffer,p_count);
 		}
@@ -258,7 +265,7 @@ namespace pfc {
 		const t_item & at(t_size i1, t_size i2) const {
 			return * _transformPtr(m_content.get_ptr(), i1, i2);
 		}
-		template<typename t_filler> void fill(const t_filler & p_filler) {m_content.fill(p_fillter);}
+		template<typename t_filler> void fill(const t_filler & p_filler) {m_content.fill(p_filler);}
 		void fill_null() {m_content.fill_null();}
 
 		t_item * rowPtr(t_size i1) {return _transformPtr(m_content.get_ptr(), i1, 0);}

@@ -311,6 +311,7 @@ DWORD CPlayerImp::GetPlayPos()
 //	{
 //		return g_wndInfoQuery.SendPlayerAPIMsg(PA_GET_POS);
 //	}
+	return 0;
 }
 
 void CPlayerImp::OnTimer(int nTimerID)

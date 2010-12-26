@@ -612,7 +612,10 @@ t_size scan_filename(const char * ptr)
 
 
 t_size string_find_first(const char * p_string,char p_tofind,t_size p_start) {
-	return string_find_first_ex(p_string,~0,&p_tofind,1,p_start);
+	for(t_size walk = p_start; p_string[walk]; ++walk) {
+		if (p_string[walk] == p_tofind) return walk;
+	}
+	return ~0;
 }
 t_size string_find_last(const char * p_string,char p_tofind,t_size p_start) {
 	return string_find_last_ex(p_string,~0,&p_tofind,1,p_start);
@@ -625,7 +628,10 @@ t_size string_find_last(const char * p_string,const char * p_tofind,t_size p_sta
 }
 
 t_size string_find_first_ex(const char * p_string,t_size p_string_length,char p_tofind,t_size p_start) {
-	return string_find_first_ex(p_string,p_string_length,&p_tofind,1,p_start);
+	for(t_size walk = p_start; walk < p_string_length && p_string[walk]; ++walk) {
+		if (p_string[walk] == p_tofind) return walk;
+	}
+	return ~0;
 }
 t_size string_find_last_ex(const char * p_string,t_size p_string_length,char p_tofind,t_size p_start) {
 	return string_find_last_ex(p_string,p_string_length,&p_tofind,1,p_start);
@@ -651,6 +657,23 @@ t_size string_find_last_ex(const char * p_string,t_size p_string_length,const ch
 	return ~0;
 }
 
+t_size string_find_first_nc(const char * p_string,t_size p_string_length,char c,t_size p_start) {
+	for(t_size walk = p_start; walk < p_string_length; walk++) {
+		if (p_string[walk] == c) return walk;
+	}
+	return ~0;
+}
+
+t_size string_find_first_nc(const char * p_string,t_size p_string_length,const char * p_tofind,t_size p_tofind_length,t_size p_start) {
+	if (p_string_length >= p_tofind_length) {
+		t_size max = p_string_length - p_tofind_length;
+		for(t_size walk = p_start; walk <= max; walk++) {
+			if (memcmp(p_string+walk, p_tofind, p_tofind_length) == 0) return walk;
+		}
+	}
+	return ~0;
+}
+
 
 bool string_is_numeric(const char * p_string,t_size p_length) throw() {
 	bool retval = false;
@@ -664,7 +687,11 @@ bool string_is_numeric(const char * p_string,t_size p_length) throw() {
 
 void string_base::fix_dir_separator(char p_char) {
 	t_size length = get_length();
-	if (length == 0 || get_ptr()[length-1] != p_char) add_byte(p_char);
+	if (!ends_with(p_char)) add_byte(p_char);
+}
+bool string_base::ends_with(char c) {
+	t_size length = get_length();
+	return length > 0 && get_ptr()[length-1] == c;
 }
 
 bool is_multiline(const char * p_string,t_size p_len) {

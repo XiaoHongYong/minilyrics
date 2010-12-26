@@ -105,7 +105,9 @@ private:
 	metadb_handle* m_cur_file;
 	void run_v2(dsp_chunk_list * p_list,const metadb_handle_ptr & p_cur_file,int p_flags,abort_callback & p_abort);
 protected:
-	bool get_cur_file(metadb_handle_ptr & p_out) {p_out = m_cur_file; return p_out.is_valid();}// call only from on_chunk / on_endoftrack (on_endoftrack will give info on track being finished); may return null !!
+	//! Call only from on_chunk / on_endoftrack (on_endoftrack will give info on track being finished).\n
+	//! May return false when there's no known track and the metadb_handle ptr will be empty/null.
+	bool get_cur_file(metadb_handle_ptr & p_out) {p_out = m_cur_file; return p_out.is_valid();}
 	
 	dsp_impl_base_t() : m_list(NULL), m_cur_file(NULL), m_chunk_ptr(0) {}
 	

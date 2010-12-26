@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
+	Version="9.00"
 	Name="foobar2000_component_client"
 	ProjectGUID="{71AD2674-065B-48F5-B8B0-E1F9D3892081}"
 	RootNamespace="foobar2000_component_client"

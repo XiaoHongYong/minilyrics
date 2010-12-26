@@ -613,6 +613,12 @@ extern "C" {
 	void SHARED_EXPORT PokeWindow(HWND p_wnd);
 };
 
+static bool ModalDialogPrologue() {
+	bool rv = ModalDialog_CanCreateNew();
+	if (!rv) ModalDialog_PokeExisting();
+	return rv;
+}
+
 //! The purpose of modal_dialog_scope is to help to avoid the modal dialog recursion problem. Current toplevel modal dialog handle is stored globally, so when creation of a new modal dialog is blocked, it can be activated to indicate the reason for the task being blocked.
 class modal_dialog_scope {
 public:
@@ -851,10 +857,5 @@ static void OverrideCrtAbort() {
 	for(size_t i=0; i<_countof(signals); i++) signal(signals[i], _OverrideCrtAbort_handler);
 	_set_abort_behavior(0, ~0);
 }
-
-#ifndef _DEBUG
-class OverrideCrtAbort_Trigger { public: OverrideCrtAbort_Trigger() {OverrideCrtAbort();} };
-__declspec(selectany) OverrideCrtAbort_Trigger g_OverrideCrtAbort_Trigger;
-#endif
 
 #endif //_SHARED_DLL__SHARED_H_

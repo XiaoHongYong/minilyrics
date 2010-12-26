@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="..\SDK\foobar_SDK_0.9\foobar2000\shared\shared.lib"
+				AdditionalDependencies="..\SDK\foobar_SDK_1.0\foobar2000\shared\shared.lib"
 				OutputFile="C:\Program Files\foobar2000\components\foo_ui_minilyrics.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
