@@ -340,7 +340,7 @@ int CID3v2::Open(LPCTSTR szFile, bool bModify, bool bCreate)
 
 	if (!m_fp)
 	{
-		SetCustomErrorDesc(CStrPrintf(_T("%s: %s"), szFile, (LPCTSTR)CWin32Error()).c_str());
+		SetCustomErrorDesc(CStrPrintf(_T("%s: %s"), (LPCTSTR)CWin32Error(), szFile).c_str());
 		return ERR_CUSTOM_ERROR;
 	}
 

@@ -10,63 +10,6 @@ inline bool IsInMainThread()
 	return GetCurrentThreadId() == g_dwThreadIDMain;
 }
 
-/*
-#define	MSG_PLAYER_API		(WM_USER + 1)
-
-enum PLAYER_API
-{
-//	PA_GET_STATE,
-	PA_GET_POS,
-};
-
-///////////////////////////////////////////////////////////////////////////////
-
-
-class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
-{
-public:
-	DWORD SendPlayerAPIMsg(PLAYER_API playerApi)
-	{
-		DWORD		dwResult;
-
-		if (SendMessageTimeout(m_hWnd, MSG_PLAYER_API, playerApi, 0, SMTO_BLOCK, 2000, &dwResult))
-			return dwResult;
-		else
-			return 0;
-	}
-
-	LRESULT OnMsgPlayerApi(PLAYER_API playerApi, LPARAM lParam)
-	{
-		assert(IsInMainThread());
-
-		switch (playerApi)
-		{
-		case PA_GET_POS:
-			{
-				double time = 0;
-				static_api_ptr_t<playback_control>	api_playback;
-				time = api_playback->playback_get_position();
-				return (DWORD)(time * 1000);
-			}
-			break;
-		}
-
-		return 0;
-	}
-
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		if (uMsg == MSG_PLAYER_API)
-		{
-			OnMsgPlayerApi(PLAYER_API(wParam), lParam);
-			return 1;
-		}
-		else
-			return CPlayerInfoQueryBaseWnd::WndProc(uMsg, wParam, lParam);
-	}
-
-};*/
-
 class initquit_ui : public initquit
 {
 	virtual void on_init()
@@ -215,14 +158,13 @@ void CPlayerImp::OnDisconnect()
 	pcmgr->unregister_callback(&ml_play_callback);
 }
 
-// control player
 void CPlayerImp::Play()
 {
 	assert(IsInMainThread());
 	if (IsInMainThread())
 	{
 		static_api_ptr_t<playback_control>	api_playback;
-		api_playback->play_start();//command(play_control::PLAYBACK_PLAY,0);
+		api_playback->play_start();
 	}
 }
 
@@ -307,11 +249,8 @@ DWORD CPlayerImp::GetPlayPos()
 		time = api_playback->playback_get_position();
 		return (DWORD)(time * 1000);
 	}
-//	else
-//	{
-//		return g_wndInfoQuery.SendPlayerAPIMsg(PA_GET_POS);
-//	}
-	return 0;
+	else
+		return 0;
 }
 
 void CPlayerImp::OnTimer(int nTimerID)
