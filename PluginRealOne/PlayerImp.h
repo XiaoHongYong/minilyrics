@@ -1,53 +1,32 @@
 #pragma once
 
-
 extern class CPlayerImp		g_Player;
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
 	virtual ~CPlayerImp();
 
 public:
-	// Init and destroy.
-	BOOL Init();
-	void Quit();
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	// Player Info
-	int GetPlayerName(char * lpszBuffer, int nBufSize);
+	virtual void OnConnected();
+	virtual void OnDisconnect();
 
-	HWND GetMainWnd();
-
-	// get player state and song info
-	DWORD GetPlayerState();
-
-	DWORD GetPlayPos();
-	int HasVideo();
-
-	// control player
-	BOOL Play();
-	BOOL Pause();
-	BOOL PlayPause();
-	BOOL Stop();
-	BOOL Prev();
-	BOOL Next();
-	BOOL SeekTo(int nMsPos);
-
-	virtual int IsFeatureSupported(PlayerFeature feature)
-	{
-		if (feature == PF_MinimizeRestoreWithPlayer)
-			return 1;
-		else
-			return IPlayer::IsFeatureSupported(feature);
-	}
-
-	void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
-
-	void OnMediaChanged();
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
 
 public:
-	PLAYER_STATE	m_bPlayerState;
+	void OnMediaChanged();
+	void OnTimer(int nTimerID);
+
+	PLAYER_STATE	m_playerState;
 	DWORD			m_dwLength;
 
 };

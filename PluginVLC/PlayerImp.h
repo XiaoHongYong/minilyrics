@@ -16,14 +16,12 @@ public:
 
 	HWND GetMainWnd();
 
-	// get player state and song info
 	DWORD GetPlayerState();
 
 	DWORD GetPlayPos();
 
 	virtual int HasVideo();
 
-	// control player
 	BOOL Play();
 	BOOL Pause();
 	BOOL PlayPause();

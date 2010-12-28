@@ -61,7 +61,6 @@ void CPlayerService::OnDisconnect()
 	KillTimer(TIMER_CHECK_MEDIA);
 }
 
-// control player
 void CPlayerService::Play()
 {
 	if (GetPlayerState() != PS_PLAYING)

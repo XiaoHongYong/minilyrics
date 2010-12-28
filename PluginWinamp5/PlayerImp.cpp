@@ -46,7 +46,6 @@ UINT Get_WMCOMMAND_Id(UINT fallback)
 	return fallback;
 }
 
-// get player state and song info
 PLAYER_STATE GetPlayerState()
 {
 	int		nPlayState;
@@ -651,7 +650,6 @@ void CPlayerImp::OnDisconnect()
 	SetTimer(TIMER_VERIFY_ML_IN_WINAMP_MENU, DURATION_VERIFY_MLIN_WINAMP_MENU);
 }
 
-// control player
 void CPlayerImp::Play()
 {
 	WAPlay(GetPlayerWnd());

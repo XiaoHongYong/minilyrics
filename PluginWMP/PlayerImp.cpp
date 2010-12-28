@@ -50,7 +50,6 @@ void CPlayerImp::OnDisconnect()
 	KillTimer(TIMER_GETPOS);
 }
 
-// control player
 void CPlayerImp::Play()
 {
 	if (m_pControl)

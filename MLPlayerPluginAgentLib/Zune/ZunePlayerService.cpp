@@ -121,7 +121,6 @@ void CPlayerService::OnDisconnect()
 	KillTimer(TIMER_GETPOS);
 }
 
-// control player
 void CPlayerService::Play()
 {
 }

@@ -17,7 +17,6 @@ public:
 	virtual void OnConnected();
 	virtual void OnDisconnect();
 
-	// control player
 	virtual void Play();
 	virtual void Pause();
 	virtual void PlayPause();

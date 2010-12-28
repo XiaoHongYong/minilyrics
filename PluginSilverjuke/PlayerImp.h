@@ -18,12 +18,10 @@ public:
 
 	HWND GetMainWnd();
 
-	// get player state and song info
 	DWORD GetPlayerState();
 
 	DWORD GetPlayPos();
 
-	// control player
 	BOOL Play();
 	BOOL Pause();
 	BOOL PlayPause();

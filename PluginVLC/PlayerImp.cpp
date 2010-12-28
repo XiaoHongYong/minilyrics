@@ -97,7 +97,6 @@ int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
 	return 1;
 }
 
-// get player state and song info
 DWORD CPlayerImp::GetPlayerState()
 {
 	return m_stat;
@@ -108,7 +107,6 @@ HWND CPlayerImp::GetMainWnd()
 	return g_hwndPlayer;
 }
 
-// 歌曲播放的位置（单位ms)
 DWORD CPlayerImp::GetPlayPos()
 {
 	if (!m_p_intf)
@@ -160,7 +158,6 @@ int CPlayerImp::HasVideo()
 	return PR_UNIMPLEMENTED;
 }
 
-// control player
 BOOL CPlayerImp::Play()
 {
 	if (!m_p_intf)

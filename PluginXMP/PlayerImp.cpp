@@ -11,7 +11,6 @@ CPlayerImp		g_Player;
 DWORD			g_DdeInstID = 0;
 HWND			g_hWndPlayer = NULL;
 
-// get player state and song info
 PLAYER_STATE GetPlayerState()
 {
 	DWORD	dwRet = 0;
@@ -593,7 +592,6 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-
 void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 {
 	//
@@ -601,9 +599,6 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	playerInfo.hWndPlayer = g_hWndPlayer;
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"XMPlay");
-
-	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), playerInfo.playerName);
-	wcscat_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), L"'s Skin");
 }
 
 void CPlayerImp::OnConnected()
@@ -642,7 +637,6 @@ void CPlayerImp::OnDisconnect()
 	}
 }
 
-// control player
 void CPlayerImp::Play()
 {
 	if (GetPlayerState() != PS_PLAYING)

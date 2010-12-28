@@ -141,7 +141,6 @@ void CPlayerService::OnDisconnect()
 	SendAPCopyDataMsg(SZ_AP_CLOSE_PANEL);
 }
 
-// control player
 void CPlayerService::Play()
 {
 	::PostMessage(g_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PLAY, 0);

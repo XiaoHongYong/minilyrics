@@ -78,14 +78,14 @@ CMLRMAClientAdviseSink::OnPostSeek(ULONG32		    ulOldTime,
 STDMETHODIMP
 CMLRMAClientAdviseSink::OnStop()
 {
-	g_Player.m_bPlayerState = PS_STOPED;
+	g_Player.m_playerState = PS_STOPED;
 	return PNR_OK;
 }
 
 STDMETHODIMP
 CMLRMAClientAdviseSink::OnPause(ULONG32		    ulTime)
 {
-	g_Player.m_bPlayerState = PS_PAUSED;
+	g_Player.m_playerState = PS_PAUSED;
 	return PNR_OK;
 }
 
@@ -95,7 +95,7 @@ CMLRMAClientAdviseSink::OnBegin(ULONG32 ulTime)
 	if (g_MLService.IsValid())		
 		g_Player.OnMediaChanged();
 
-	g_Player.m_bPlayerState = PS_PLAYING;
+	g_Player.m_playerState = PS_PLAYING;
 	return PNR_OK;
 }
 

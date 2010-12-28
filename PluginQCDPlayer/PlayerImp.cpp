@@ -8,6 +8,8 @@ CPlayerImp		g_Player;
 HANDLE			g_hThread = NULL;
 DWORD			g_dwThreadId = 0;
 bool			g_bCurMediaVideo = false;	// Is Video file?
+HWND			g_hwndPlayer = NULL;
+
 
 inline void QCDPlayerCommand(DWORD dwCmd)
 {
@@ -63,14 +65,8 @@ DWORD WINAPI ThreadMiniLyrics(
 						LPVOID lpParameter
 						)
 {
-	if (InitMiniLyricsPlugin(g_hInstance, &g_Player))
-	{
-		// now we can use other g_MLService functions.
-		char	szMsg[256];
-
-		wsprintf(szMsg, "Start QCD Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-		g_MLService.Log(szMsg);
-	}
+	ASSERT(g_hwndPlayer);
+	RunMiniLyrics(g_hInstance, g_hwndPlayer, &g_Player);
 
 	MSG msg;
 
@@ -81,7 +77,7 @@ DWORD WINAPI ThreadMiniLyrics(
 		DispatchMessage(&msg);
 	}
 
-	g_MLService.Quit();
+	g_MLService.OnDisconnected();
 
 	return 0;
 }
@@ -134,12 +130,12 @@ LRESULT CALLBACK HookQCDPWnd(
 			QCDCallbacks->Service(opGetTime, NULL, 0, 0), QCDCallbacks->Service(opGetTime, NULL, 1, 0), QCDCallbacks->Service(opGetTime, NULL, 2, 0));
 		g_MLService.Log(szMsg);
 		// DBGLOG2("Position Changed: %d, %d", wParam, lParam);*/
-		g_Player.OnPlayTimeChanged(g_bCurMediaVideo ? lParam : lParam * 10);
+		g_MLService.OnPlayPosChanged(g_bCurMediaVideo ? lParam : lParam * 10);
 		break;
 	case WM_PN_PLAYLISTCHANGED:
 		// 保证当播放列表变空时清空 MiniLyrics 的歌词显示内容：
 		if(QCDCallbacks->Service(opGetNumTracks, NULL, 0, 0) == 0)
-			g_MLService.OnMediaInfoChanged(NULL);
+			g_MLService.OnMediaInfoChanged(L"", NULL, NULL, NULL, 0);
 		break;
 	case WM_PN_INFOCHANGED:
 		// DBGLOG0("WM_PN_INFOCHANGED");
@@ -177,117 +173,89 @@ LRESULT CALLBACK HookQCDPWnd(
 
 CPlayerImp::CPlayerImp()
 {
-	m_dwPos = 0;
 }
 
 CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 {
-	strcpy_safe(lpszBuffer, nBufSize, "Quintessential Player");
-
-	return 1;
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.hWndPlayer = g_hwndPlayer;
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Quintessential Player");
 }
 
-// get player state and song info
-DWORD CPlayerImp::GetPlayerState()
+void CPlayerImp::OnConnected()
 {
-	return QCDCallbacks->Service(opGetPlayerState, NULL, 0, 0);
-}
-
-HWND CPlayerImp::GetMainWnd()
-{
-	return g_hwndPlayer;
-}
-
-DWORD CPlayerImp::GetPlayPos()
-{
-	return m_dwPos;
-}
-
-int CPlayerImp::HasVideo()
-{
-	return g_bCurMediaVideo;
-}
-
-void CPlayerImp::OnPlayTimeChanged(DWORD dwTimeCur)
-{
-	m_dwPos = dwTimeCur;
-	g_MLService.OnPlayTimeChanged(dwTimeCur);
-}
-
-// control player
-BOOL CPlayerImp::Play()
-{
-	QCDPlayerCommand(QCD_COMMAND_PLAY);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Pause()
-{
-	QCDPlayerCommand(QCD_COMMAND_PAUSE);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::PlayPause()
-{
-	QCDPlayerCommand(QCD_COMMAND_PAUSE);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Stop()
-{
-	QCDPlayerCommand(QCD_COMMAND_STOP);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Prev()
-{
-	QCDPlayerCommand(QCD_COMMAND_TRKBWD);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Next()
-{
-	QCDPlayerCommand(QCD_COMMAND_TRKFWD);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::SeekTo(int nMsPos)
-{
-	return QCDCallbacks->Service(opSetSeekPosition, NULL, nMsPos, 1);
-}
-
-BOOL CPlayerImp::Init()
-{
-	g_MLService.AddWndCloseto(NULL, "ExtPlayerCanvas", NULL);
-	g_MLService.AddWndCloseto(NULL, "PlayerCanvas", NULL);
+	g_MLService.AddWndCloseto(NULL, L"ExtPlayerCanvas", NULL);
+	g_MLService.AddWndCloseto(NULL, L"PlayerCanvas", NULL);
 
 	// Hook Main Window
- 	if (pOrigProc == NULL)
- 		pOrigProc = (WNDPROC)SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)HookQCDPWnd);
+	if (pOrigProc == NULL)
+		pOrigProc = (WNDPROC)SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)HookQCDPWnd);
+
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+	SetTimer(TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO);
+
+	// Update player state
+	g_MLService.OnPlayStateChanged(GetPlayerState());
 
 	UpdateMediaInfo();
-
-	return TRUE;
 }
 
-void CPlayerImp::Quit()
+void CPlayerImp::OnDisconnect()
 {
 	if (pOrigProc)
 	{
 		SetWindowLong(g_hwndPlayer, GWL_WNDPROC, (LONG)pOrigProc);
 		pOrigProc = NULL;
 	}
+
+	KillTimer(TIMER_GETPOS);
+	KillTimer(TIMER_CHECK_MEDIA);
+}
+
+void CPlayerImp::Play()
+{
+	QCDPlayerCommand(QCD_COMMAND_PLAY);
+}
+
+void CPlayerImp::Pause()
+{
+	QCDPlayerCommand(QCD_COMMAND_PAUSE);
+}
+
+void CPlayerImp::PlayPause()
+{
+	QCDPlayerCommand(QCD_COMMAND_PAUSE);
+}
+
+void CPlayerImp::Stop()
+{
+	QCDPlayerCommand(QCD_COMMAND_STOP);
+}
+
+void CPlayerImp::Prev()
+{
+	QCDPlayerCommand(QCD_COMMAND_TRKBWD);
+}
+
+void CPlayerImp::Next()
+{
+	QCDPlayerCommand(QCD_COMMAND_TRKFWD);
+}
+
+void CPlayerImp::SeekTo(int nMsPos)
+{
+	QCDCallbacks->Service(opSetSeekPosition, NULL, nMsPos, 1);
+}
+
+PLAYER_STATE CPlayerImp::GetPlayerState()
+{
+	return (PLAYER_STATE)QCDCallbacks->Service(opGetPlayerState, NULL, 0, 0);
 }
 
 void CPlayerImp::UpdateMediaInfo()
@@ -314,5 +282,5 @@ void CPlayerImp::UpdateMediaInfo()
 
 	DWORD	dwLength = QCDCallbacks->Service(opGetTrackLength, NULL, -1, 1);
 
-	g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, dwLength);
+	g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, dwLength, g_bCurMediaVideo);
 }

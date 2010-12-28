@@ -295,10 +295,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\PlayerInfoQueryWnd.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -318,10 +314,6 @@
 			</File>
 			<File
 				RelativePath="PlayerImp.h"
-				>
-			</File>
-			<File
-				RelativePath=".\PlayerInfoQueryWnd.h"
 				>
 			</File>
 		</Filter>

@@ -47,7 +47,6 @@ int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
 	return 1;
 }
 
-// get player state and song info
 DWORD CPlayerImp::GetPlayerState()
 {
 	IRMPPlayback	*pPlayBack;
@@ -75,7 +74,6 @@ HWND CPlayerImp::GetMainWnd()
 	return g_hwndPlayer;
 }
 
-// 歌曲播放的位置（单位ms)
 DWORD CPlayerImp::GetPlayPos()
 {
 	double			dbTime = 0;
@@ -91,7 +89,6 @@ DWORD CPlayerImp::GetPlayPos()
 	return (DWORD)(dbTime);
 }
 
-// control player
 BOOL CPlayerImp::Play()
 {
 /*

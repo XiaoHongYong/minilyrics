@@ -144,6 +144,8 @@ CMLRealPlugin::GetPluginInfo
 	return PNR_OK;
 }
 
+void InitRealOneML();
+
 /****************************************************************************
  *  IRMAPlugin::InitPlugin                                   ref:  rmaplugn.h
  *
@@ -203,16 +205,9 @@ CMLRealPlugin::InitPlugin(IUnknown* pRMACore)
 	}
 	else
 	{
-		if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
-			return PNR_OK;
+		InitRealOneML();
 
 		g_Inited = TRUE;
-
-		// now we can use other g_MLService functions.
-		char	szMsg[256];
-
-		wsprintf(szMsg, "Start RealPlayer plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-		g_MLService.Log(szMsg);
 	}
 
 	return PNR_OK;
@@ -253,7 +248,7 @@ CMLRealPlugin::Release(void)
 
 	if (g_Inited)
 	{
-		g_MLService.Quit();
+		g_MLService.OnDisconnected();
 		g_Inited = FALSE;
 	}
 	delete this;

@@ -6,7 +6,6 @@
 #include "rmapckts.h"
 
 #include "../MLPluginLib/MLPlugin.h"
-#include "PlayerInfoQueryWnd.h"
 
 #include "PlayerImp.h"
 
@@ -14,6 +13,15 @@ extern IRMAPlayer		*g_pRMPlayer;
 
 CPlayerImp		g_Player;
 
+HWND GetPlayerWindow()
+{
+	return FindWindow("GeminiWindowClass", NULL);
+}
+
+void InitRealOneML()
+{
+	RunMiniLyrics(g_hInstance, GetPlayerWindow(), &g_Player);
+}
 
 extern "C" BOOL WINAPI DllMain(
   HINSTANCE hinstDLL,  // handle to the DLL module
@@ -42,8 +50,6 @@ char * __cdecl strrep(char * str, char chSrc, char chDest)
 }
 
 //////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CPlayerImp::CPlayerImp()
 {
@@ -54,119 +60,79 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 {
-	strcpy_safe(lpszBuffer, nBufSize, "RealPlayer");
-
-	return 1;
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.hWndPlayer = GetPlayerWindow();
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"RealPlayer");
 }
 
-// get player state and song info
-DWORD CPlayerImp::GetPlayerState()
+void CPlayerImp::OnConnected()
 {
-	return m_bPlayerState;
+	g_MLService.AddWndCloseto(NULL, L"GeminiWindowClass", NULL);
+
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+
+	// Update player state
+	g_MLService.OnPlayStateChanged(m_playerState);
+
+	OnMediaChanged();
 }
 
-HWND CPlayerImp::GetMainWnd()
+void CPlayerImp::OnDisconnect()
 {
-	return g_hwndPlayer;
+	KillTimer(TIMER_GETPOS);
 }
 
-// 歌曲播放的位置（单位ms)
-DWORD CPlayerImp::GetPlayPos()
-{
-	if (g_pRMPlayer)
-		return g_pRMPlayer->GetCurrentPlayTime();
-	else
-		return 0;
-}
-
-// control player
-BOOL CPlayerImp::Play()
+void CPlayerImp::Play()
 {
 	if (g_pRMPlayer)
 		g_pRMPlayer->Begin();
-	return TRUE;
 }
 
-BOOL CPlayerImp::Pause()
+void CPlayerImp::Pause()
 {
 	if (g_pRMPlayer)
 		g_pRMPlayer->Pause();
-	return TRUE;
 }
 
-BOOL CPlayerImp::PlayPause()
+void CPlayerImp::PlayPause()
 {
 	if (g_pRMPlayer)
 	{
-		if (m_bPlayerState == PS_STOPED || m_bPlayerState == PS_PAUSED)
+		if (m_playerState == PS_STOPED || m_playerState == PS_PAUSED)
 		{
-			m_bPlayerState = PS_PLAYING;
+			m_playerState = PS_PLAYING;
 			g_pRMPlayer->Begin();
 		}
 		else
 		{
-			m_bPlayerState = PS_PAUSED;
+			m_playerState = PS_PAUSED;
 			g_pRMPlayer->Pause();
 		}
 	}
-	return TRUE;
 }
 
-BOOL CPlayerImp::Stop()
+void CPlayerImp::Stop()
 {
 	if (g_pRMPlayer)
 		g_pRMPlayer->Stop();
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::Prev()
+void CPlayerImp::Prev()
 {
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::Next()
+void CPlayerImp::Next()
 {
-
-	return TRUE;
 }
 
-BOOL CPlayerImp::SeekTo(int nMsPos)
+void CPlayerImp::SeekTo(int nMsPos)
 {
 	if (g_pRMPlayer)
 		g_pRMPlayer->Seek(nMsPos);
-
-	return 0;
-}
-
-BOOL CPlayerImp::Init()
-{
-	g_hwndPlayer = FindWindow("GeminiWindowClass", NULL);
-
-	g_MLService.AddWndCloseto(NULL, "GeminiWindowClass", NULL);
-
-	g_wndInfoQuery.Create(g_hInstance);
-
-	return TRUE;
-}
-
-void CPlayerImp::Quit()
-{
-	g_wndInfoQuery.Destroy();
-}
-
-int CPlayerImp::HasVideo()
-{
-	return -1;
-}
-
-void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
-{
-	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
 }
 
 void CPlayerImp::OnMediaChanged()
@@ -203,4 +169,10 @@ void CPlayerImp::OnMediaChanged()
 		g_MLService.OnMediaInfoChanged(szUrl, NULL, NULL, NULL, m_dwLength);
 
 	pstreamSource->Release();
+}
+
+void CPlayerImp::OnTimer(int nTimerID)
+{
+	if (g_pRMPlayer)
+		g_MLService.OnPlayPosChanged(g_pRMPlayer->GetCurrentPlayTime());
 }

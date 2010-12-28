@@ -203,7 +203,6 @@ void CPlayerImp::OnDisconnect()
 	KillTimer(TIMER_QUERYITUNES);
 }
 
-// control player
 void CPlayerImp::Play()
 {
 	CIiTunesPtr		iITunes;

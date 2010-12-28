@@ -185,7 +185,6 @@ void CPlayerImp::OnDisconnect()
 	KillTimer(TIMER_GETPOS);
 }
 
-// control player
 void CPlayerImp::Play()
 {
 	SDMSG(WM_BSP_CMD, BSP_Play);
@@ -225,7 +224,6 @@ void CPlayerImp::SeekTo(int nMsPos)
 	SDMSG(WM_BSP_CMD, BSP_Seek, nMsPos, dwValue);
 }
 
-// get player state and song info
 PLAYER_STATE CPlayerImp::GetPlayerState()
 {
 	DWORD		dwValue;

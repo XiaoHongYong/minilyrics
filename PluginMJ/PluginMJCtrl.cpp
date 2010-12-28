@@ -3,12 +3,14 @@
 #include "stdafx.h"
 #include "PluginMJ.h"
 #include "PluginMJCtrl.h"
-#include "PlayerImp.h"
+#include "../MLPluginLib/MLPlugin.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CPluginMJCtrl
 #define IDT_UPDATE				1
 #define EWX_FORCEIFHUNG			0x00000010
+
+void InitMJ(HINSTANCE hInstance, LPDISPATCH pDisp);
 
 CPluginMJCtrl::CPluginMJCtrl()
 {
@@ -24,27 +26,14 @@ STDMETHODIMP CPluginMJCtrl::Init(LPDISPATCH pDisp)
 {
 	AFX_MANAGE_STATE(AfxGetStaticModuleState())
 
-	g_Player.m_pMJ = pDisp;
-
-
-	if (!InitMiniLyricsMsgPlugin(_Module.GetModuleInstance(), &g_Player))
-		return S_OK;	// we must return 0!
-
-// 	if (!InitMiniLyricsPlugin(_Module.GetModuleInstance(), &g_Player))
-// 		return S_OK;	// we must return 0!
-// 
-	// now we can use other g_MLService functions.
-	char	szMsg[256];
-
-	wsprintfA(szMsg, "Start MJ Player plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
-	g_MLService.Log(szMsg);
+	InitMJ(_Module.GetModuleInstance(), pDisp);
 
 	return S_OK;
 }
 
 LRESULT CPluginMJCtrl::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
-	g_MLService.Quit();
+	g_MLService.OnDisconnected();
 
 	return 0;
 }

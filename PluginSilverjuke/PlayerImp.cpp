@@ -196,7 +196,6 @@ int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
 	return PR_OK;
 }
 
-// get player state and song info
 DWORD CPlayerImp::GetPlayerState()
 {
 	if (interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.isPlaying()", 0, 0))
@@ -211,13 +210,11 @@ HWND CPlayerImp::GetMainWnd()
 	return g_hwndPlayer;
 }
 
-// 歌曲播放的位置（单位ms)
 DWORD CPlayerImp::GetPlayPos()
 {
 	return interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.time", 0, 0);
 }
 
-// control player
 BOOL CPlayerImp::Play()
 {
 	interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.play()", 0, 0);

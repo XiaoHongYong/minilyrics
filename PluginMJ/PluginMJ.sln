@@ -8,13 +8,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginMJ", "PluginMJ.vcproj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPluginLib", "..\MLPluginLib\MLPluginLib.vcproj", "{0721AD77-959D-402F-8157-F43F42826D24}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginWinamp5", "..\PluginWinamp5\PluginWinamp5.vcproj", "{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}"
-	ProjectSection(ProjectDependencies) = postProject
-		{0721AD77-959D-402F-8157-F43F42826D24} = {0721AD77-959D-402F-8157-F43F42826D24}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginMiniLyrics", "..\PluginMiniLyrics\PluginMiniLyrics.vcproj", "{234FC57C-3FCA-45AE-B90E-A72E92ECE369}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -49,30 +42,6 @@ Global
 		{0721AD77-959D-402F-8157-F43F42826D24}.Unicode Debug|Win32.Build.0 = Unicode Debug|Win32
 		{0721AD77-959D-402F-8157-F43F42826D24}.Unicode Release|Win32.ActiveCfg = Unicode Release|Win32
 		{0721AD77-959D-402F-8157-F43F42826D24}.Unicode Release|Win32.Build.0 = Unicode Release|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Debug|Win32.ActiveCfg = Debug|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Debug|Win32.Build.0 = Debug|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.MFC Debug|Win32.ActiveCfg = Debug|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.MFC Debug|Win32.Build.0 = Debug|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.MFC Release|Win32.ActiveCfg = Release|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.MFC Release|Win32.Build.0 = Release|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Release|Win32.ActiveCfg = Release|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Release|Win32.Build.0 = Release|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Unicode Debug|Win32.ActiveCfg = Debug|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Unicode Debug|Win32.Build.0 = Debug|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Unicode Release|Win32.ActiveCfg = Release|Win32
-		{8CF7BDFA-8A35-4EB5-8A30-1F8FF87D44D8}.Unicode Release|Win32.Build.0 = Release|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.Debug|Win32.ActiveCfg = Debug|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.Debug|Win32.Build.0 = Debug|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.MFC Debug|Win32.ActiveCfg = Debug|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.MFC Debug|Win32.Build.0 = Debug|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.MFC Release|Win32.ActiveCfg = Release|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.MFC Release|Win32.Build.0 = Release|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.Release|Win32.ActiveCfg = Release|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.Release|Win32.Build.0 = Release|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.Unicode Debug|Win32.ActiveCfg = Debug|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.Unicode Debug|Win32.Build.0 = Debug|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.Unicode Release|Win32.ActiveCfg = Release|Win32
-		{234FC57C-3FCA-45AE-B90E-A72E92ECE369}.Unicode Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

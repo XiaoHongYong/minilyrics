@@ -174,7 +174,6 @@ void CPlayerService::OnDisconnect()
 	KillTimer(TIMER_CHECK_PLAYER);
 }
 
-// control player
 void CPlayerService::Play()
 {
 	SendMpcData(CMD_PLAYPAUSE);
