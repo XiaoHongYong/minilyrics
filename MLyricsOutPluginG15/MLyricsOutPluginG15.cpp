@@ -26,25 +26,25 @@ extern "C"
 
 #define PLAYER_POS_UPDATE_SPAN	500
 
-#include "PlayerInfoQueryBaseWnd.h"
+#include "TinyBaseWnd.h"
 
 
-class CG15TimerWnd : public CPlayerInfoQueryBaseWnd
+class CG15TimerWnd : public CTinyBaseWnd
 {
 public:
 	enum {
-		TIMER_SHOW_LOGO		= TIMER_NEXT + 1,
-		TIMER_CHECK_BTN		= TIMER_NEXT + 2,
-		TIMER_POS_UPDATE	= TIMER_NEXT + 3,
+		TIMER_SHOW_LOGO		= 1,
+		TIMER_CHECK_BTN		= 2,
+		TIMER_POS_UPDATE	= 3,
 
 		TIME_OUT_CHECK_BTN	= 50,
 		TIME_OUT_POS_UPDATE	= 500,
 	};
 
 	virtual void OnCreate() {
-		SetTimer(m_hWnd, TIMER_SHOW_LOGO, 3000, NULL);
-		// SetTimer(m_hWnd, TIMER_CHECK_BTN, TIME_OUT_CHECK_BTN, NULL);
-		SetTimer(m_hWnd, TIMER_POS_UPDATE, TIME_OUT_POS_UPDATE, NULL);
+		SetTimer(TIMER_SHOW_LOGO, 3000);
+		// SetTimer(TIMER_CHECK_BTN, TIME_OUT_CHECK_BTN);
+		SetTimer(TIMER_POS_UPDATE, TIME_OUT_POS_UPDATE);
 	}
 
 	virtual void OnDestroy() { }

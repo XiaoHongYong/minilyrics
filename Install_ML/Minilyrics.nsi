@@ -87,9 +87,6 @@
   
   !insertmacro MUI_RESERVEFILE_LANGDLL
 
-  ReserveFile "Installopt.dll"
-  ReserveFile "InstOpt.ini"
-
 ;--------------------------------
 ;Language Strings
 
@@ -212,6 +209,27 @@ SectionIn 1 2
   ; File to extract
   SetOutPath $INSTDIR
   File Share\*.*
+  File ..\bin\MiniLyrics.exe
+
+  ; SetOutPath $INSTDIR\Player-Plugins
+  File ..\bin\gen_MiniLyrics.dll
+  File ..\bin\foo_ui_minilyrics.dll
+  File ..\bin\PluginRealone.dll
+  File ..\bin\QCDMinilyrics.dll
+  File ..\bin\iTunesMinilyrics.dll
+  File ..\bin\MLPluginBsp.dll
+  File ..\bin\WMPLyrics.dll
+  File ..\bin\PluginWMPVis.dll
+  File foryme\PluginYme.dll
+  File ..\bin\PluginMJ.dll
+  File ..\bin\xmp-ml.dll
+  File ..\bin\libminilyrics_plugin.dll
+  File ..\bin\PluginSilverjuke.dll
+  File forSongbird\sbMLSongbird.dll
+  File forSongbird\sbMLSongbird.xpt
+
+  SetOutPath $INSTDIR\ml-winamp2-skin
+  File Share\ml-winamp2-skin\*.*
 
   SetOutPath $INSTDIR\Lang
   File Share\lang\*.*
@@ -252,348 +270,12 @@ SectionIn 1 2
 
   WriteRegStr HKCU MUI_LANGDLL_REGISTRY_KEY MUI_LANGDLL_REGISTRY_VALUENAME $LANGUAGE
 
-  ;winamp5
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5"
-  IntCmp ${TEMP1} 0 J_Winamp5End J_Winamp5End
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstWinamp5" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5Path"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstWinamp5Path" ${TEMP1}
-    
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-
-    SetOutPath ${TEMP1}Plugins
-    File ..\bin\gen_MiniLyrics.dll
-
-    SetOutPath $INSTDIR\ml-winamp2-skin
-    File Share\ml-winamp2-skin\*.*
-
-  J_Winamp5End:
-
-
-  ; foobar2000
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstFoobar"
-  IntCmp ${TEMP1} 0 J_FoobarEnd J_FoobarEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstFoobar" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstFoobarPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstFoobarPath" ${TEMP1}
-
-    WriteINIStr "${TEMP1}components\MLPlugin.ini" "MiniLyrics" "WorkingFolder" $INSTDIR
-
-    SetOutPath "${TEMP1}components\"
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "FoobarVer"
-    ;80
-    StrCmp ${TEMP1} "Foobar 0.8" 0 J_Foobar80
-      File "Foobar 0.8\foo_ui_minilyrics.dll"
-      GOTO J_FoobarEnd
-      J_Foobar80:
-    ;90
-    StrCmp ${TEMP1} "Foobar 0.9" 0 J_Foobar90
-      File "Foobar 0.9\foo_ui_minilyrics.dll"
-      GOTO J_FoobarEnd
-      J_Foobar90:
-    ;1.0
-    StrCmp ${TEMP1} "Foobar 1.0" 0 J_Foobar100
-      File "..\bin\foo_ui_minilyrics.dll"
-      GOTO J_FoobarEnd
-      J_Foobar100:
-    ;others
-    File "..\bin\foo_ui_minilyrics.dll"
-  J_FoobarEnd:
-
-
-  ; realone player
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstRealOne"
-  IntCmp ${TEMP1} 0 J_RealOneEnd J_RealOneEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstRealOne" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstRealOnePath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstRealOnePath" ${TEMP1}
-
-    SetOutPath ${TEMP1}
-    File ..\bin\PluginRealone.dll
-    
-    WriteINIStr ${TEMP1}MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_RealOneEnd:
-
-
-  ; qcd player
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstQCD"
-  IntCmp ${TEMP1} 0 J_QCDEnd J_QCDEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQCD" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstQCDPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQCDPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}Plugins
-    File ..\bin\QCDMinilyrics.dll
-
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_QCDEnd:
-
-
-  ; Quintessential Media Player
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstQMP"
-  IntCmp ${TEMP1} 0 J_QMPEnd J_QMPEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQMP" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstQMPPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstQMPPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}Plugins
-    File ..\bin\QCDMinilyrics.dll
-
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_QMPEnd:
-
-
-  ; iTunes
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstiTunes"
-  IntCmp ${TEMP1} 0 J_iTunesEnd J_iTunesEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstiTunes" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstiTunesPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstiTunesPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}Plug-ins
-    File ..\bin\iTunesMinilyrics.dll
-    
-    WriteINIStr ${TEMP1}Plug-ins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_iTunesEnd:
-
-  ; MediaMonkey
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMediaMonkey"
-  IntCmp ${TEMP1} 0 J_MediaMonkeyEnd J_MediaMonkeyEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMediaMonkey" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMediaMonkeyPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMediaMonkeyPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}Plugins
-    File ..\bin\gen_MiniLyrics.dll
-    
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "MediaMonkey"
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_MediaMonkeyEnd:
-
-  ; AIMP
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstAIMP"
-  IntCmp ${TEMP1} 0 J_AIMPEnd J_AIMPEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstAIMP" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstAIMPPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstAIMPPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}Plugins
-    File ..\bin\gen_MiniLyrics.dll
-    
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "AIMP2"
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_AIMPEnd:
-
-  ; KMPlayer
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstKMPlayer"
-  IntCmp ${TEMP1} 0 J_KMPlayerEnd J_KMPlayerEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstKMPlayer" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstKMPlayerPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstKMPlayerPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}Plugins
-    File ..\bin\gen_MiniLyrics.dll
-    
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "PlayerName" "KMPlayer"
-    WriteINIStr ${TEMP1}Plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_KMPlayerEnd:
-
-  ; BSPlayer
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstBSPlayer"
-  IntCmp ${TEMP1} 0 J_BSPlayerEnd J_BSPlayerEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstBSPlayer" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstBSPlayerPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstBSPlayerPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}plugins
-    File ..\bin\MLPluginBsp.dll
-
-    WriteINIStr ${TEMP1}plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_BSPlayerEnd:
-
-  ; widnows media player
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWMPlayer"
-  IntCmp ${TEMP1} 0 J_WMPEnd J_WMPEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstWMPlayer" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File ..\bin\WMPLyrics.dll
-    File ..\bin\PluginWMPVis.dll
-
-    ; register dll
-    RegDll $INSTDIR\WMPLyrics.dll
-    RegDll $INSTDIR\PluginWMPVis.dll
-  J_WMPEnd:
-
-
-  ; Yahoo! Music Engine
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstYME"
-  IntCmp ${TEMP1} 0 J_YMEEnd J_YMEEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstYME" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File foryme\PluginYme.dll
-
-    ; register dll
-    RegDll $INSTDIR\PluginYme.dll
-  J_YMEEnd:
-
-  ; Media JukeBox
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMJ"
-  IntCmp ${TEMP1} 0 J_MJEnd J_MJEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMJ" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File ..\bin\PluginMJ.dll
-
-    ; register dll
-    RegDll $INSTDIR\PluginMJ.dll
-  J_MJEnd:
-
-  ; JetAudio
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstJA"
-  IntCmp ${TEMP1} 0 J_JAEnd J_JAEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstJA" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File ..\bin\PluginJetaudio.exe
-  J_JAEnd:
-
-  ; XMPlay
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstXM"
-  IntCmp ${TEMP1} 0 J_XMEnd J_XMEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstXM" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstXMPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstXMPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}
-    File ..\bin\xmp-ml.dll
-
-    WriteINIStr ${TEMP1}MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_XMEnd:
-
-  ; AlbumPlayer
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstAP"
-  IntCmp ${TEMP1} 0 J_APEnd J_APEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstAP" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File ..\bin\PluginAP.exe
-  J_APEnd:
-
-  ; VLC Media Player
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstVLC"
-  IntCmp ${TEMP1} 0 J_VLCEnd J_VLCEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstVLC" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstVLCPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstVLCPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}plugins
-    File ..\bin\libminilyrics_plugin.dll
-
-    WriteINIStr ${TEMP1}plugins\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_VLCEnd:
-
-  ; Silverjuke
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSJ"
-  IntCmp ${TEMP1} 0 J_SJEnd J_SJEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSJ" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSJPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSJPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}
-    File ..\bin\PluginSilverjuke.dll
-
-    WriteINIStr ${TEMP1}\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_SJEnd:
-
-  ; Songbird
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSB"
-  IntCmp ${TEMP1} 0 J_SBEnd J_SBEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSB" ${TEMP1}
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSBPath"
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSBPath" ${TEMP1}
-
-    SetOutPath ${TEMP1}components
-    File forSongbird\sbMLSongbird.dll
-    File forSongbird\sbMLSongbird.xpt
-
-    WriteINIStr ${TEMP1}components\MLPlugin.ini "MiniLyrics" "WorkingFolder" $INSTDIR
-  J_SBEnd:
-
-  ; HMM
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstHMM"
-  IntCmp ${TEMP1} 0 J_HMMEnd J_HMMEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstHMM" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File ..\bin\PluginHMM.exe
-  J_HMMEnd:
-
-  ; Zune
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstZUNE"
-  IntCmp ${TEMP1} 0 J_ZUNEEnd J_ZUNEEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstZUNE" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File ..\bin\PluginZune.exe
-  J_ZUNEEnd:
-
-  ; Spotify
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstSpotify"
-  IntCmp ${TEMP1} 0 J_SpotifyEnd J_SpotifyEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstSpotify" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File ..\bin\PluginSpotify.exe
-  J_SpotifyEnd:
-
-  ; MPC-HC
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstMPC"
-  IntCmp ${TEMP1} 0 J_MPCEnd J_MPCEnd
-    WriteINIStr $INSTDIR\Install.ini "INSTALL" "InstMPC" ${TEMP1}
-
-    SetOutPath $INSTDIR
-    File ..\bin\PluginMPC.exe
-  J_MPCEnd:
-
   ; Shortcuts of desktop and quick lanuch
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
   IntCmp ${TEMP1} 0 J_ShortcutsDtEnd J_ShortcutsDtEnd
     StrCpy $R1 $(SecShortcut.MLStart)
-    CreateShortCut "$DESKTOP\$R1.lnk" "$INSTDIR\MLStart.exe"
+    CreateShortCut "$DESKTOP\$R1.lnk" "$INSTDIR\MiniLyrics.exe"
     CreateShortCut "$QUICKLAUNCH\$R1.lnk" "$INSTDIR\MLStart.exe"
-
-    IfFileExists "$INSTDIR\PluginJetaudio.exe" 0 J_JADesktopEnd
-      CreateShortCut "$DESKTOP\MiniLyrics for JetAudio.lnk" "$INSTDIR\PluginJetaudio.exe"
-      CreateShortCut "$QUICKLAUNCH\MiniLyrics for JetAudio.lnk" "$INSTDIR\PluginJetaudio.exe"
-    J_JADesktopEnd:
-
-    IfFileExists "$INSTDIR\PluginAP.exe" 0 J_APDesktopEnd
-      CreateShortCut "$DESKTOP\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe"
-      CreateShortCut "$QUICKLAUNCH\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe"
-    J_APDesktopEnd:
-
-    IfFileExists "$INSTDIR\PluginHMM.exe" 0 J_HMMDesktopEnd
-      CreateShortCut "$DESKTOP\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
-      CreateShortCut "$QUICKLAUNCH\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
-    J_HMMDesktopEnd:
-
-    IfFileExists "$INSTDIR\PluginZune.exe" 0 J_ZUNEDesktopEnd
-      CreateShortCut "$DESKTOP\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
-      CreateShortCut "$QUICKLAUNCH\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
-    J_ZUNEDesktopEnd:
-
-    IfFileExists "$INSTDIR\PluginSpotify.exe" 0 J_SpotifyDesktopEnd
-      CreateShortCut "$DESKTOP\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
-      CreateShortCut "$QUICKLAUNCH\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
-    J_SpotifyDesktopEnd:
-
-    IfFileExists "$INSTDIR\PluginMPC.exe" 0 J_MPCDesktopEnd
-      CreateShortCut "$DESKTOP\MiniLyrics for Media Player Classic Home Cinema.lnk" "$INSTDIR\PluginMPC.exe"
-      CreateShortCut "$QUICKLAUNCH\MiniLyrics for Media Player Classic Home Cinema.lnk" "$INSTDIR\PluginMPC.exe"
-    J_MPCDesktopEnd:
-
   J_ShortcutsDtEnd:
 
 SectionEnd
@@ -653,41 +335,11 @@ SectionIn 1
   StrCpy $R0 $(SecShortcut.MLDir)
   CreateDirectory "$SMPROGRAMS\$R0"
   StrCpy $R1 $(SecShortcut.MLStart)
-  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\MLStart.exe"
+  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\MiniLyrics.exe"
   StrCpy $R1 $(SecShortcut.MLUninst)
   CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\uninst-ml.exe"
   StrCpy $R1 $(SecShortcut.MLReadme)
   CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\readme-minilyrics.txt"
-  StrCpy $R1 $(SecShortcut.MLHelp)
-  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\help.chm"
-
-  IfFileExists "$INSTDIR\PluginJetaudio.exe" 0 J_JASEnd
-	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for JetAudio.lnk" "$INSTDIR\PluginJetaudio.exe"
-  J_JASEnd:
-
-  IfFileExists "$INSTDIR\PluginHMM.exe" 0 J_HMMSEnd
-	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Helium Music Manager.lnk" "$INSTDIR\PluginHMM.exe"
-  J_HMMSEnd:
-
-  IfFileExists "$INSTDIR\PluginZune.exe" 0 J_ZUNESEnd
-	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Zune software.lnk" "$INSTDIR\PluginZune.exe"
-  J_ZUNESEnd:
-
-  IfFileExists "$INSTDIR\PluginSpotify.exe" 0 J_SpotifySEnd
-	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Spotify.lnk" "$INSTDIR\PluginSpotify.exe"
-  J_SpotifySEnd:
-
-  IfFileExists "$INSTDIR\PluginMPC.exe" 0 J_MPCSEnd
-	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for Media Player Classic Home Cinema.lnk" "$INSTDIR\PluginMPC.exe"
-  J_MPCSEnd:
-
-  IfFileExists "$INSTDIR\PluginAP.exe" 0 J_APSEnd
-	  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics for AlbumPlayer.lnk" "$INSTDIR\PluginAP.exe" "" "$INSTDIR\PluginAP.exe" 0
-  J_APSEnd:
-
-;  CreateShortCut "$SMPROGRAMS\MiniLyrics\Uninstall MiniLyrics.lnk" "$INSTDIR\uninst-ml.exe"
-;  CreateShortCut "$SMPROGRAMS\MiniLyrics\readme.lnk" "$INSTDIR\readme-minilyrics.txt"
-;  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics help.lnk" "$INSTDIR\help.chm"
 SectionEnd
 
 Section "Avs Support for Winamp" SecAvs
@@ -869,7 +521,8 @@ Section "Uninstall"
   Delete /REBOOTOK $APPDATA\Minilyrics\log.txt
 
   Delete "$INSTDIR\readme-MiniLyrics.txt"
-  Delete /REBOOTOK $INSTDIR\minilyrics.dll
+  Delete /REBOOTOK $INSTDIR\miniLyrics.exe
+  Delete /REBOOTOK $INSTDIR\miniLyrics.dll
   Delete /REBOOTOK $INSTDIR\PluginMiniLyrics.exe
   Delete /REBOOTOK $INSTDIR\Plugins\mlp_G15.dll
   Delete $INSTDIR\unicows.dll
@@ -1054,11 +707,7 @@ Function .onInit
   !insertmacro MUI_LANGDLL_DISPLAY
 
   ;Extract InstallOptions files
-  InitPluginsDir
-  ;!insertmacro MUI_INSTALLOPTIONS_EXTRACT "Installopt.dll"
-  ;!insertmacro MUI_INSTALLOPTIONS_EXTRACT "instopt.ini"
-  File "/oname=$PLUGINSDIR\Installopt.dll" "Installopt.dll"
-  File "/oname=$PLUGINSDIR\instopt.ini" "instopt.ini"
+ ; InitPluginsDir
 
   Call GetMinilyricsInstPath
   Pop $0
@@ -1067,7 +716,6 @@ Function .onInit
 J_skip:
 
 FunctionEnd
-
 
 Function SetCustom
 

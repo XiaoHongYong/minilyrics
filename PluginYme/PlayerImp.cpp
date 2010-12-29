@@ -3,32 +3,6 @@
 
 CPlayerImp		g_Player;
 
-
-class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
-{
-public:
-	void OnCreate()
-	{
-		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
-	}
-
-	void OnDestroy()
-	{
-		KillTimer(m_hWnd, TIMER_GETPOS);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
-	}
-
-};
-
-CPlayerInfoQueryWnd	g_wndInfoQuery;
-
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 CPlayerImp::CPlayerImp()
@@ -39,12 +13,83 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 {
-	strcpy_safe(lpszBuffer, nBufSize, "Yahoo! Music Jukebox");
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.hWndPlayer = FindWindowA("YMPFrame", NULL);
 
-	return 1;
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Yahoo! Music Jukebox");
+}
+
+void CPlayerImp::OnConnected()
+{
+	g_MLService.AddWndCloseto(NULL, L"YMPFrame", NULL);
+
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+
+	// Update Media info
+	CheckMediaUpdate(true);
+
+	// Update player state
+	g_MLService.OnPlayStateChanged(GetPlayerState());
+}
+
+void CPlayerImp::OnDisconnect()
+{
+	KillTimer(TIMER_GETPOS);
+
+	// when you're done, call shutdown:
+	if (m_spRemote.GetInterfacePtr() != NULL)
+	{
+		m_spRemote->Shutdown(m_remoteCookie);
+		m_spRemote.Release();
+	}
+}
+
+void CPlayerImp::Play()
+{
+	if (MakeRemoteCtrlOK())
+		m_spRemote->Command(YRC_PLAY, _variant_t(), _variant_t());
+}
+
+void CPlayerImp::Pause()
+{
+	if (MakeRemoteCtrlOK())
+		m_spRemote->Command(YRC_PAUSE, _variant_t(), _variant_t());
+}
+
+void CPlayerImp::PlayPause()
+{
+	if (GetPlayerState() == PS_PLAYING)
+		Pause();
+	else
+		Play();
+}
+
+void CPlayerImp::Stop()
+{
+	if (MakeRemoteCtrlOK())
+		m_spRemote->Command(YRC_STOP, _variant_t(), _variant_t());
+}
+
+void CPlayerImp::Prev()
+{
+	if (MakeRemoteCtrlOK())
+		m_spRemote->Command(YRC_SKIP_FWD, _variant_t(), _variant_t());
+}
+
+void CPlayerImp::Next()
+{
+	if (MakeRemoteCtrlOK())
+		m_spRemote->Command(YRC_SKIP_REV, _variant_t(), _variant_t());
+}
+
+void CPlayerImp::SeekTo(int nMsPos)
+{
+	if (MakeRemoteCtrlOK())
+		m_spRemote->Command(YRC_SEEK, _variant_t(nMsPos), _variant_t());
 }
 
 DWORD CPlayerImp::GetPlayerState()
@@ -69,11 +114,6 @@ DWORD CPlayerImp::GetPlayerState()
 	return playState;
 }
 
-HWND CPlayerImp::GetMainWnd()
-{
-	return g_hwndPlayer;
-}
-
 DWORD CPlayerImp::GetPlayPos()
 {
 	double			dbTime = 0;
@@ -87,106 +127,6 @@ DWORD CPlayerImp::GetPlayPos()
 	}
 
 	return (DWORD)(dbTime);
-}
-
-BOOL CPlayerImp::Play()
-{
-/*
-	IRMPPlayback	*pPlayBack;
-	if (m_pMediaPlayer.p != NULL && SUCCEEDED(m_pMediaPlayer->get_Playback((IDispatch **)&pPlayBack)))
-	{
-		if (SUCCEEDED(pPlayBack->Pause(false)))
-		{
-		}
-		pPlayBack->Release();
-	}
-*/
-	// now use the remote...for example, tell YME to skip to the next song in the playlist:
-	if (MakeRemoteCtrlOK())
-		m_spRemote->Command(YRC_PLAY, _variant_t(), _variant_t());
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Pause()
-{
-/*
-	IRMPPlayback	*pPlayBack;
-	if (m_pMediaPlayer.p != NULL && SUCCEEDED(m_pMediaPlayer->get_Playback((IDispatch **)&pPlayBack)))
-	{
-		if (SUCCEEDED(pPlayBack->Pause(true)))
-		{
-		}
-		pPlayBack->Release();
-	}
-*/
-	if (MakeRemoteCtrlOK())
-		m_spRemote->Command(YRC_PAUSE, _variant_t(), _variant_t());
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::PlayPause()
-{
-	if (GetPlayerState() == PS_PLAYING)
-		Pause();
-	else
-		Play();
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Stop()
-{
-/*
-	IRMPPlayback	*pPlayBack;
-	if (m_pMediaPlayer.p != NULL && SUCCEEDED(m_pMediaPlayer->get_Playback((IDispatch **)&pPlayBack)))
-	{
-		if (SUCCEEDED(pPlayBack->Stop()))
-		{
-		}
-		pPlayBack->Release();
-	}
-*/
-	if (MakeRemoteCtrlOK())
-		m_spRemote->Command(YRC_STOP, _variant_t(), _variant_t());
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Prev()
-{
-	if (MakeRemoteCtrlOK())
-		m_spRemote->Command(YRC_SKIP_FWD, _variant_t(), _variant_t());
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Next()
-{
-	if (MakeRemoteCtrlOK())
-		m_spRemote->Command(YRC_SKIP_REV, _variant_t(), _variant_t());
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::SeekTo(int nMsPos)
-{
-/*
-	IRMPPlayback	*pPlayBack;
-	if (m_pMediaPlayer.p != NULL && SUCCEEDED(m_pMediaPlayer->get_Playback((IDispatch **)&pPlayBack)))
-	{
-		VARIANT_BOOL	bSucc;
-		if (SUCCEEDED(pPlayBack->Seek(double(nMsPos), &bSucc)))
-		{
-		}
-		pPlayBack->Release();
-	}
-*/
-	if (MakeRemoteCtrlOK())
-		m_spRemote->Command(YRC_SEEK, _variant_t(nMsPos), _variant_t());
-
-	return TRUE;
 }
 
 bool CPlayerImp::MakeRemoteCtrlOK()
@@ -204,29 +144,7 @@ bool CPlayerImp::MakeRemoteCtrlOK()
 	return m_spRemote.GetInterfacePtr() != NULL;
 }
 
-BOOL CPlayerImp::Init()
+void CPlayerImp::OnTimer(int nTimerID)
 {
-	g_hwndPlayer = FindWindowA("YMPFrame", NULL);
-	g_MLService.AddWndCloseto(NULL, "YMPFrame", NULL);
-
-	g_wndInfoQuery.Create(g_hInstance);
-
-	return TRUE;
-}
-
-void CPlayerImp::Quit()
-{
-	g_wndInfoQuery.Destroy();
-
-	// when you're done, call shutdown:
-	if (m_spRemote.GetInterfacePtr() != NULL)
-	{
-		m_spRemote->Shutdown(m_remoteCookie);
-		m_spRemote.Release();
-	}
-}
-
-void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
-{
-	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
+	g_MLService.OnPlayPosChanged(g_Player.GetPlayPos());
 }

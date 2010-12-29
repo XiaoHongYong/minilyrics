@@ -9,7 +9,6 @@
 #include <vlc/libvlc_structures.h>
 #include <vlc/libvlc_media.h>
 #include <vlc/libvlc_media_player.h>
-// #include <vlc/libvlc_events.h>
 #include <vlc_common.h>
 
 #include <vlc_plugin.h>
@@ -20,64 +19,16 @@ VLC_EXPORT(void, __pl_Release, (vlc_object_t *));
 
 #include <vlc_playlist.h>
 
-
 #include "../MLPluginLib/MLPlugin.h"
 #include "PlayerImp.h"
 #include <tchar.h>
 
 CPlayerImp		g_Player;
 
-
-class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
+HWND GetPlayerWindow()
 {
-public:
-	enum NotifyMessage
-	{
-		WM_PLAYER_STAT_CHANGED			= WM_USER + 1,
-		WM_PLAYER_NOW_PLAYING_CHANGED,
-	};
-
-	void PostNotifyMsgToML(NotifyMessage msg)
-	{
-		PostMessage(m_hWnd, msg, 0, 0);
-	}
-
-	void OnCreate()
-	{
-		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
-	}
-
-	void OnDestroy()
-	{
-		KillTimer(m_hWnd, TIMER_GETPOS);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		if (nTimerID == TIMER_GETPOS)
-			g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
-	}
-
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		switch (uMsg)
-		{
-		case WM_PLAYER_STAT_CHANGED:
-			g_MLService.OnPlayStateChanged(g_Player.m_stat);
-			break;
-		case WM_PLAYER_NOW_PLAYING_CHANGED:
-			g_Player.MediaChangedCheck();
-			break;
-		default:
-			return CPlayerInfoQueryBaseWnd::WndProc(uMsg, wParam, lParam);
-		}
-		return 1;
-	}
-
-};
-
-CPlayerInfoQueryWnd	g_wndInfoQuery;
-
+	return FindWindow(_T("QWidget"), NULL);
+}
 
 CPlayerImp::CPlayerImp()
 {
@@ -89,22 +40,119 @@ CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
-{
-	strcpy_safe(lpszBuffer, nBufSize, "VLC Media Player");
 
-	return 1;
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
+{
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.hWndPlayer = GetPlayerWindow();
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"VLC Media Player");
 }
 
-DWORD CPlayerImp::GetPlayerState()
+void CPlayerImp::OnConnected()
 {
-	return m_stat;
+	g_MLService.AddWndCloseto(NULL, L"XMPLAY-MAIN", NULL);
+	g_MLService.AddWndCloseto(NULL, L"XMPLAY-PANEL", NULL);
+	g_MLService.AddWndCloseto(NULL, L"XMPLAY-INFO", NULL);
+
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+
+	MediaChangedCheck();
+
+	// Update player state
+	g_MLService.OnPlayStateChanged(m_stat);
 }
 
-HWND CPlayerImp::GetMainWnd()
+void CPlayerImp::OnDisconnect()
 {
-	return g_hwndPlayer;
+	KillTimer(TIMER_GETPOS);
+}
+
+void CPlayerImp::Play()
+{
+	if (!m_p_intf)
+		return;
+
+	playlist_t *p_playlist = pl_Get(m_p_intf);
+
+	playlist_Play(p_playlist);
+}
+
+void CPlayerImp::Pause()
+{
+	if (!m_p_intf)
+		return;
+
+	playlist_t *p_playlist = pl_Get(m_p_intf);
+
+	playlist_Pause(p_playlist);
+}
+
+void CPlayerImp::PlayPause()
+{
+	if (!m_p_intf)
+		return;
+
+	playlist_t *p_playlist = pl_Get(m_p_intf);
+
+	if (m_stat != PS_PLAYING)
+		playlist_Play(p_playlist);
+	else
+		playlist_Pause(p_playlist);
+}
+
+void CPlayerImp::Stop()
+{
+	if (!m_p_intf)
+		return;
+
+	playlist_t *p_playlist = pl_Get(m_p_intf);
+
+	playlist_Stop(p_playlist);
+}
+
+void CPlayerImp::Prev()
+{
+	if (!m_p_intf)
+		return;
+
+	playlist_t *p_playlist = pl_Get(m_p_intf);
+
+	playlist_Prev(p_playlist);
+}
+
+void CPlayerImp::Next()
+{
+	if (!m_p_intf)
+		return;
+
+	playlist_t *p_playlist = pl_Get(m_p_intf);
+
+	playlist_Next(p_playlist);
+}
+
+void CPlayerImp::SeekTo(int nMsPos)
+{
+	if (!m_p_intf)
+		return;
+
+	input_thread_t *p_input;
+	playlist_t *p_playlist = pl_Get(m_p_intf);
+
+	p_input = playlist_CurrentInput(p_playlist);
+
+	if (!p_input || p_input->b_dead)
+		return;
+
+	input_Control(p_input, INPUT_SET_TIME, nMsPos * 1000);
+
+	vlc_object_release(p_input);
+}
+
+void CPlayerImp::OnTimer(int nTimerID)
+{
+	g_MLService.OnPlayPosChanged(GetPlayPos());
 }
 
 DWORD CPlayerImp::GetPlayPos()
@@ -118,9 +166,7 @@ DWORD CPlayerImp::GetPlayPos()
 	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
-	{
 		return 0;
-	}
 
 	int64_t		nPos = 0;
 
@@ -134,7 +180,7 @@ DWORD CPlayerImp::GetPlayPos()
 int CPlayerImp::HasVideo()
 {
 	if (!m_p_intf)
-		return 0;
+		return false;
 
 	input_thread_t *p_input;
 	playlist_t *p_playlist = pl_Get(m_p_intf);
@@ -142,9 +188,7 @@ int CPlayerImp::HasVideo()
 	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
-	{
-		return 0;
-	}
+		return false;
 
 	double	dbFps;
 
@@ -153,123 +197,9 @@ int CPlayerImp::HasVideo()
 	vlc_object_release(p_input);
 
 	if (ret == VLC_SUCCESS && dbFps > 0.0)
-		return PR_OK;
+		return true;
 
-	return PR_UNIMPLEMENTED;
-}
-
-BOOL CPlayerImp::Play()
-{
-	if (!m_p_intf)
-		return 0;
-
-	playlist_t *p_playlist = pl_Get(m_p_intf);
-
-	playlist_Play(p_playlist);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Pause()
-{
-	if (!m_p_intf)
-		return 0;
-
-	playlist_t *p_playlist = pl_Get(m_p_intf);
-
-	playlist_Pause(p_playlist);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::PlayPause()
-{
-	if (!m_p_intf)
-		return 0;
-
-	playlist_t *p_playlist = pl_Get(m_p_intf);
-
-	if (m_stat != PS_PLAYING)
-		playlist_Play(p_playlist);
-	else
-		playlist_Pause(p_playlist);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Stop()
-{
-	if (!m_p_intf)
-		return 0;
-
-	playlist_t *p_playlist = pl_Get(m_p_intf);
-
-	playlist_Stop(p_playlist);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Prev()
-{
-	if (!m_p_intf)
-		return 0;
-
-	playlist_t *p_playlist = pl_Get(m_p_intf);
-
-	playlist_Prev(p_playlist);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Next()
-{
-	if (!m_p_intf)
-		return 0;
-
-	playlist_t *p_playlist = pl_Get(m_p_intf);
-
-	playlist_Next(p_playlist);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::SeekTo(int nMsPos)
-{
-	if (!m_p_intf)
-		return 0;
-
-	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Get(m_p_intf);
-
-	p_input = playlist_CurrentInput(p_playlist);
-
-	if (!p_input || p_input->b_dead)
-	{
-		return 0;
-	}
-
-	input_Control(p_input, INPUT_SET_TIME, nMsPos * 1000);
-
-	vlc_object_release(p_input);
-
-	return TRUE;
-}
-
-BOOL CPlayerImp::Init()
-{
-	g_wndInfoQuery.Create(g_hInstance);
-
-	return TRUE;
-}
-
-void CPlayerImp::Quit()
-{
-	g_wndInfoQuery.Destroy();
-}
-
-void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
-{
-	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
+	return false;
 }
 
 void CPlayerImp::NotifyPlayerStatChanged(PLAYER_STATE newStat)
@@ -277,7 +207,7 @@ void CPlayerImp::NotifyPlayerStatChanged(PLAYER_STATE newStat)
 	if (newStat != m_stat)
 	{
 		m_stat = newStat;
-		g_wndInfoQuery.PostNotifyMsgToML(CPlayerInfoQueryWnd::WM_PLAYER_STAT_CHANGED);
+		g_MLService.OnPlayStateChanged(m_stat);
 	}
 }
 
@@ -328,7 +258,7 @@ void CPlayerImp::MediaChangedCheck()
 	strcpy_safe(szUriOld, CountOf(szUriOld), p_item->psz_uri);
 
 	EmptyStr(wszTemp);
-	UTF8ToUCS2(p_item->psz_uri, -1, wszTemp, CountOf(wszTemp));
+	Utf8ToUCS2(p_item->psz_uri, -1, wszTemp, CountOf(wszTemp));
 	m_strSrcMedia = wszTemp;
 
 	m_strArtist.resize(0);
@@ -338,14 +268,14 @@ void CPlayerImp::MediaChangedCheck()
 	psz_artist = input_item_GetArtist(p_item);
 	if (psz_artist)
 	{
-		UTF8ToUCS2(psz_artist, -1, wszTemp, CountOf(wszTemp));
+		Utf8ToUCS2(psz_artist, -1, wszTemp, CountOf(wszTemp));
 		m_strArtist = wszTemp;
 	}
 
 	psz_album = input_item_GetAlbum(p_item);
 	if (psz_album)
 	{
-		UTF8ToUCS2(psz_album, -1, wszTemp, CountOf(wszTemp));
+		Utf8ToUCS2(psz_album, -1, wszTemp, CountOf(wszTemp));
 		m_strAlbum = wszTemp;
 	}
 
@@ -354,22 +284,15 @@ void CPlayerImp::MediaChangedCheck()
 		psz_title = input_item_GetName(p_item);
 	if (psz_title)
 	{
-		UTF8ToUCS2(psz_title, -1, wszTemp, CountOf(wszTemp));
+		Utf8ToUCS2(psz_title, -1, wszTemp, CountOf(wszTemp));
 		m_strTitle = wszTemp;
 	}
 
-	MLMediaInfo		mediaInfo;
 	int64_t		nLength = 0;
-
 	int	nRet = input_Control(p_input, INPUT_GET_LENGTH, &nLength);
 
-	mediaInfo.szMediaUrl = m_strSrcMedia.c_str();
-	mediaInfo.szArtist = m_strArtist.c_str();
-	mediaInfo.szAlbum = m_strAlbum.c_str();
-	mediaInfo.szTitle = m_strTitle.c_str();
-	mediaInfo.nMediaLength = GetMediaLength();
-
-	g_MLService.OnMediaInfoChanged(&mediaInfo);
+	g_MLService.OnMediaInfoChanged(m_strSrcMedia.c_str(), m_strArtist.c_str(), m_strAlbum.c_str(),
+		m_strTitle.c_str(), GetMediaLength());
 
 	vlc_object_release(p_input);
 }
@@ -379,7 +302,6 @@ void CPlayerImp::MediaChangedCheck()
 //////////////////////////////////////////////////////////////////////////
 // VLC plugin functions.
 //
-
 
 #define N_(str) (str)
 
@@ -432,8 +354,6 @@ int  Open(vlc_object_t * p_this)
 	var_AddCallback(p_playlist, "item-current", ItemChange, p_intf);
 	PL_UNLOCK;
 
-	g_hwndPlayer = NULL;
-
 	p_intf->pf_run = Run;
 
 	g_hEventOK2Quit = CreateEvent(NULL, false, false, NULL);
@@ -471,16 +391,9 @@ void Run(intf_thread_t *p_intf)
 {
 	g_Player.m_p_intf = p_intf;
 
-	if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
-		return;
+	RunMiniLyrics(g_hInstance, GetPlayerWindow(), &g_Player);
 
 	g_dwMLThreadID = GetCurrentThreadId();
-
-	// now we can use other g_MLService functions.
-	char	szMsg[256];
-
-	wsprintfA(szMsg, "Start VLC Media Player plugin for minilyrics. HINSTANCE: %#X", g_hInstance);
-	g_MLService.Log(szMsg);
 
 	MSG			msg;
 
@@ -496,7 +409,7 @@ void Run(intf_thread_t *p_intf)
 		}
 	}
 
-	g_MLService.Quit();
+	g_MLService.OnDisconnected();
 
 	SetEvent(g_hEventOK2Quit);
 }
@@ -515,7 +428,7 @@ static int PlayingChange(vlc_object_t *p_this, const char *psz_var,
 	if (!p_sys->bMetaDataRead && newval.i_int >= PLAYING_S)
 	{
 		p_sys->bMetaDataRead = true;
-		g_wndInfoQuery.PostNotifyMsgToML(CPlayerInfoQueryWnd::WM_PLAYER_NOW_PLAYING_CHANGED);
+		g_Player.MediaChangedCheck();
 	}
 
 	if (newval.i_int >= END_S)
@@ -556,7 +469,7 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 		/* Not playing anything ... */
 		vlc_object_release(p_input);
 
-		g_MLService.OnMediaInfoChanged(NULL);
+		g_MLService.OnMediaInfoChanged(L"", NULL, NULL, NULL, 0);
 		return VLC_SUCCESS;
 	}
 
@@ -567,7 +480,7 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 	if (input_item_IsPreparsed(input_GetItem(p_input)))
 	{
 		p_sys->bMetaDataRead = true;
-		g_wndInfoQuery.PostNotifyMsgToML(CPlayerInfoQueryWnd::WM_PLAYER_NOW_PLAYING_CHANGED);
+		g_Player.MediaChangedCheck();
 	}
 
 	vlc_object_release(p_input);
@@ -586,8 +499,6 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	return TRUE;
 }
 
-
-// 歌曲的长度（单位ms）
 DWORD CPlayerImp::GetMediaLength()
 {
 	if (!m_p_intf)
@@ -599,9 +510,7 @@ DWORD CPlayerImp::GetMediaLength()
 	p_input = playlist_CurrentInput(p_playlist);
 
 	if (!p_input || p_input->b_dead)
-	{
 		return 0;
-	}
 
 	int64_t		nPos = 0;
 

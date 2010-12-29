@@ -4,12 +4,13 @@
 
 #include "sj_api.h"
 
-
 CPlayerImp		g_Player;
+SjInterface		interf;
 
-
-// some globals
-SjInterface interf;
+HWND GetPlayerWindow()
+{
+	return FindWindow(_T("wxWindowClass"), NULL);
+}
 
 // The main DLL entry point, may be needed for special purposes
 BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserved)
@@ -17,7 +18,6 @@ BOOL APIENTRY DllMain(HANDLE hModule, DWORD ul_reason_for_call, LPVOID lpReserve
 	g_hInstance = (HMODULE)hModule;
 	return TRUE;
 }
-
 
 // Receiving messages from Silverjuke
 LPARAM CALLBACK CallPlugin(SjInterface* interf, UINT msg, LPARAM param1, LPARAM param2, LPARAM param3)
@@ -47,20 +47,7 @@ LPARAM CALLBACK CallPlugin(SjInterface* interf, UINT msg, LPARAM param1, LPARAM 
 					"player.getTitleAtPos(player.queuePos)); } "
 				, 0, 0);
 
-			//
-			// Initial load MiniLyrics
-			//
-
-			g_hwndPlayer = FindWindow(_T("wxWindowClass"), NULL);
-
-			if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
-				return 1;
-
-			// now we can use other g_MLService functions.
-			char	szMsg[256];
-
-			wsprintf(szMsg, "Start Silverjuke plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
-			g_MLService.Log(szMsg);
+			RunMiniLyrics(g_hInstance, GetPlayerWindow(), &g_Player);
 		}
 		return 1; // success
 
@@ -68,7 +55,7 @@ LPARAM CALLBACK CallPlugin(SjInterface* interf, UINT msg, LPARAM param1, LPARAM 
 		// this is the "script to C" bridge
 		if( strcmp((char*)param1, "ID_ML_onAbout") == 0 && param2)
 		{
-			g_MLService.About(g_hwndPlayer);
+			g_MLService.About(GetPlayerWindow());
 		}
 		else if( strcmp((char*)param1, "ID_ML_onTrackChange") == 0 && param2)
 		{
@@ -85,7 +72,7 @@ LPARAM CALLBACK CallPlugin(SjInterface* interf, UINT msg, LPARAM param1, LPARAM 
 			wchar_t	szUCS2[1024];
 			LPWSTR	szData[I_COUNT], p;
 
-			UTF8ToUCS2((char*)param2, -1, szUCS2, CountOf(szUCS2));
+			Utf8ToUCS2((char*)param2, -1, szUCS2, CountOf(szUCS2));
 
 			// Split music tag, by *****
 			szData[0] = szUCS2;
@@ -109,23 +96,30 @@ LPARAM CALLBACK CallPlugin(SjInterface* interf, UINT msg, LPARAM param1, LPARAM 
 				szData[i + 1] = p;
 			}
 
-			MLMediaInfo		mediaInfo;
-			mediaInfo.szMediaUrl = szData[I_URL];
-			mediaInfo.szArtist = szData[I_ARTIST];
-			mediaInfo.szAlbum = szData[I_ALBUM];
-			mediaInfo.szTitle = szData[I_TITLE];
-			mediaInfo.nMediaLength = interf->CallMaster(interf, SJ_EXECUTE, (LPARAM)"player.duration", 0, 0);
-
-			g_MLService.OnMediaInfoChanged(&mediaInfo);
+			g_MLService.OnMediaInfoChanged(szData[I_URL], szData[I_ARTIST], szData[I_ALBUM], szData[I_TITLE],
+				interf->CallMaster(interf, SJ_EXECUTE, (LPARAM)"player.duration", 0, 0));
 		}
 		return 0;
 	case SJ_PLUGIN_EXIT:
-		g_MLService.Quit();
+		g_MLService.OnDisconnected();
 		return 1;
 	}
 	return 0;
 }
 
+DWORD GetPlayerState()
+{
+	if (interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.isPlaying()", 0, 0))
+		return PS_PLAYING;
+	else if (interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.isPaused()", 0, 0))
+		return PS_PAUSED;
+	return PS_STOPED;
+}
+
+DWORD GetPlayPos()
+{
+	return interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.time", 0, 0);
+}
 
 // The Silverjuke API entry point - this symbol needs to be exported
 SjInterface* SjGetInterface(void)
@@ -137,144 +131,90 @@ SjInterface* SjGetInterface(void)
 
 //////////////////////////////////////////////////////////////////////////
 
-class CPlayerInfoQueryWnd : public CPlayerInfoQueryBaseWnd
-{
-public:
-	enum { TIMER_QUERY_STAT = TIMER_NEXT + 1 };
-
-	void OnCreate()
-	{
-		SetTimer(m_hWnd, TIMER_GETPOS, TIME_OUT_UPDATE_POS, NULL);
-		SetTimer(m_hWnd, TIMER_QUERY_STAT, TIME_OUT_UPDATE_MEDIA_INFO, NULL);
-	}
-
-	void OnDestroy()
-	{
-		KillTimer(m_hWnd, TIMER_GETPOS);
-		KillTimer(m_hWnd, TIMER_QUERY_STAT);
-	}
-
-	void OnTimer(int nTimerID)
-	{
-		if (nTimerID == TIMER_GETPOS)
-			g_MLService.OnPlayTimeChanged(g_Player.GetPlayPos());
-		else if (nTimerID == TIMER_QUERY_STAT)
-		{
-			PLAYER_STATE	newState = (PLAYER_STATE)g_Player.GetPlayerState();
-			if (newState != m_state)
-			{
-				m_state = newState;
-				g_MLService.OnPlayStateChanged(newState);
-			}
-		}
-	}
-
-	PLAYER_STATE		m_state;
-
-};
-
-CPlayerInfoQueryWnd	g_wndInfoQuery;
-
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
 CPlayerImp::CPlayerImp()
 {
+	m_state = PS_STOPED;
 }
 
 CPlayerImp::~CPlayerImp()
 {
 }
 
-// Player Info
-int CPlayerImp::GetPlayerName(char * lpszBuffer, int nBufSize)
+void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 {
-	strcpy_safe(lpszBuffer, nBufSize, "Silverjuke");
-
-	return PR_OK;
+	//
+	// Initialize player information for MiniLyrics
+	//
+	playerInfo.hWndPlayer = GetPlayerWindow();
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Silverjuke");
 }
 
-DWORD CPlayerImp::GetPlayerState()
+void CPlayerImp::OnConnected()
 {
-	if (interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.isPlaying()", 0, 0))
-		return PS_PLAYING;
-	else if (interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.isPaused()", 0, 0))
-		return PS_PAUSED;
-	return PS_STOPED;
+	g_MLService.AddWndCloseto(GetPlayerWindow(), NULL, NULL);
+
+	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
+	SetTimer(TIMER_QUERY_STAT, TIME_OUT_UPDATE_MEDIA_INFO);
+
+	// Update player state
+	g_MLService.OnPlayStateChanged(GetPlayerState());
 }
 
-HWND CPlayerImp::GetMainWnd()
+void CPlayerImp::OnDisconnect()
 {
-	return g_hwndPlayer;
+	KillTimer(TIMER_GETPOS);
+	KillTimer(TIMER_QUERY_STAT);
 }
 
-DWORD CPlayerImp::GetPlayPos()
-{
-	return interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.time", 0, 0);
-}
-
-BOOL CPlayerImp::Play()
+void CPlayerImp::Play()
 {
 	interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.play()", 0, 0);
-	return TRUE;
 }
 
-BOOL CPlayerImp::Pause()
+void CPlayerImp::Pause()
 {
 	interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.pause()", 0, 0);
-	return TRUE;
 }
 
-BOOL CPlayerImp::PlayPause()
+void CPlayerImp::PlayPause()
 {
 	interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"if (player.isPlaying()) player.pause(); else player.play();", 0, 0);
-	return TRUE;
 }
 
-BOOL CPlayerImp::Stop()
+void CPlayerImp::Stop()
 {
 	interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.stop()", 0, 0);
-	return TRUE;
 }
 
-BOOL CPlayerImp::Prev()
+void CPlayerImp::Prev()
 {
 	interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.prev()", 0, 0);
-	return TRUE;
 }
 
-BOOL CPlayerImp::Next()
+void CPlayerImp::Next()
 {
 	interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)"player.next()", 0, 0);
-	return TRUE;
 }
 
-BOOL CPlayerImp::SeekTo(int nMsPos)
+void CPlayerImp::SeekTo(int nMsPos)
 {
 	char	szScript[256];
 
 	sprintf(szScript, "player.time=%d", nMsPos);
 	interf.CallMaster(&interf, SJ_EXECUTE, (LPARAM)szScript, 0, 0);
-	return TRUE;
 }
 
-BOOL CPlayerImp::Init()
+void CPlayerImp::OnTimer(int nTimerID)
 {
-	g_MLService.AddWndCloseto(NULL, "WMPlayerApp", NULL);
-
-	g_wndInfoQuery.Create(g_hInstance);
-
-	return TRUE;
-}
-
-void CPlayerImp::Quit()
-{
-	g_wndInfoQuery.Destroy();
-}
-
-void CPlayerImp::OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan)
-{
-	g_wndInfoQuery.SetUpdatePosTimer(nPlayPosUpdateSpan);
+	if (nTimerID == TIMER_GETPOS)
+		g_MLService.OnPlayPosChanged(GetPlayPos());
+	else if (nTimerID == TIMER_QUERY_STAT)
+	{
+		PLAYER_STATE	newState = (PLAYER_STATE)GetPlayerState();
+		if (newState != m_state)
+		{
+			m_state = newState;
+			g_MLService.OnPlayStateChanged(newState);
+		}
+	}
 }

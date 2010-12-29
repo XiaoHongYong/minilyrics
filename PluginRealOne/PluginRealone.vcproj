@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="d:\program files\common files\real\Plugins\PluginRealone.dll"
+				OutputFile="c:\program files\common files\real\Plugins\PluginRealone.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\MLRealPlugin.def"

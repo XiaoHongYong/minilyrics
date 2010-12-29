@@ -1,40 +1,30 @@
 #pragma once
 
-#include "../MLPluginLib/IPlayer.h"
 #include "../MLPluginLib/MLPlugin.h"
-extern class CPlayerImp		g_Player;
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
 	virtual ~CPlayerImp();
 
 public:
-	// Init and destroy.
-	BOOL Init();
-	void Quit();
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	// Player Info
-	int GetPlayerName(char * lpszBuffer, int nBufSize);
+	virtual void OnConnected();
+	virtual void OnDisconnect();
 
-	HWND GetMainWnd();
-
-	DWORD GetPlayerState();
-
-	DWORD GetPlayPos();
-
-	BOOL Play();
-	BOOL Pause();
-	BOOL PlayPause();
-	BOOL Stop();
-	BOOL Prev();
-	BOOL Next();
-	BOOL SeekTo(int nMsPos);
-
-	void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
 
 protected:
+	virtual void OnTimer(int nTimerID);
+
 	bool MakeRemoteCtrlOK();
 
 public:
@@ -49,3 +39,5 @@ public:
 	DWORD			m_dwSongLength;
 
 };
+
+extern CPlayerImp g_Player;

@@ -30,37 +30,29 @@
 
 #include <sbIDataRemote.h>
 
-class CPlayerImp : public IPlayer
+class CPlayerImp : public CPlayerServiceBase
 {
 public:
 	CPlayerImp();
 	virtual ~CPlayerImp();
 
 public:
-	// Init and destroy.
-	BOOL Init();
-	void Quit();
+	virtual void OnGetInfo(PlayerInfo &playerInfo);
 
-	// Player Info
-	int GetPlayerName(char * lpszBuffer, int nBufSize);
+	virtual void OnConnected();
+	virtual void OnDisconnect();
 
-	HWND GetMainWnd();
+	virtual void Play();
+	virtual void Pause();
+	virtual void PlayPause();
+	virtual void Stop();
+	virtual void Prev();
+	virtual void Next();
+	virtual void SeekTo(int nMsPos);
 
-	DWORD GetPlayerState();
-
-	DWORD GetPlayPos();
-
-	BOOL Play();
-	BOOL Pause();
-	BOOL PlayPause();
-	BOOL Stop();
-	BOOL Prev();
-	BOOL Next();
-	BOOL SeekTo(int nMsPos);
-
-	void OnPlayPosUpdateSpanChanged(int nPlayPosUpdateSpan);
-
+public:
 	BOOL DoCheckMediaChange();
+	virtual void OnTimer(int nTimerID);
 
 protected:
 	nsCOMPtr<nsIWeakReference> mMM;
@@ -75,8 +67,9 @@ protected:
 	nsCOMPtr<sbIDataRemote> mdrPosition;
 	nsCOMPtr<sbIDataRemote> mdrCurrentLength;
 
+	DWORD					m_dwTimeBeg, m_nPosQuery;
+
 	bool IsSBReady() { return mMM != NULL; }
 
 };
 
-extern CPlayerImp		g_Player;

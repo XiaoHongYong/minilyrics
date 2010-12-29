@@ -166,7 +166,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"BSPlayer");
 }
 
-void CPlayerImp::OnConnectedDone()
+void CPlayerImp::OnConnected()
 {
 	g_MLService.AddWndCloseto(NULL, L"BSPVideoWindow", NULL);
 	g_MLService.AddWndCloseto(g_pInfo->hwndParent, NULL, NULL);

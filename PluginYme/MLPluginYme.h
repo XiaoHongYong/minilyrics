@@ -179,14 +179,7 @@ public:
 		m_pMediaPlayer->get_PlaylistEngine( &playlistEngine ); // fetched...really should check return val here!
 		DispEventAdvise( playlistEngine ); // says that we want to be notified of events coming from the playlist engine
 
-		if (!InitMiniLyricsPlugin(g_hInstance, &g_Player))
-			return TRUE;	// we must return 0!
-
-		// now we can use other g_MLService functions.
-		char	szMsg[256];
-
-		wsprintfA(szMsg, "Start YMJ Player plugin v.2 for minilyrics. HINSTANCE: %#X", g_hInstance);
-		g_MLService.Log(szMsg);
+		RunMiniLyrics(g_hInstance, NULL, &g_Player);
 
 		return S_OK;
 	}

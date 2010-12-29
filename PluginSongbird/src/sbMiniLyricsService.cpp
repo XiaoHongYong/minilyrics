@@ -73,20 +73,11 @@ sbMiniLyricsService::Observe(nsISupports*     aSubject,
 HANDLE		g_hThread = NULL;
 DWORD		g_dwThreadID = 0;
 
+void InitSB();
+
 DWORD WINAPI ThreadML(LPVOID lpParam)
 {
-	g_hwndPlayer = NULL;
-
-	if (InitMiniLyricsPlugin(g_hInstance, &g_Player, 0))
-	{
-		// now we can use other g_MLService functions.
-		WCHAR	szMsg[256];
-
-		wsprintf(szMsg, L"Start Songbird plugin for MiniLyrics. HINSTANCE: %#X", g_hInstance);
-		g_MLService.LogW(szMsg);
-	}
-
-	// if Init failed, Don't return, because "Restart MiniLyrics" function need the message loop below.
+	InitSB();
 
 	MSG			msg;
 
@@ -97,7 +88,7 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 		DispatchMessage(&msg);
 	}
 
-	g_MLService.Quit();
+	g_MLService.OnDisconnected();
 
 	return 0;
 }

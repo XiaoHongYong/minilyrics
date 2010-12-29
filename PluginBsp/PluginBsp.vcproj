@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="F:\Program Files\Webteh\BSplayer\plugins/MLPluginBsp.dll"
+				OutputFile="c:\Program Files\Webteh\BSplayer\plugins/MLPluginBsp.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\sample_sub.def"
