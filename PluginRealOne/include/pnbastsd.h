@@ -147,7 +147,7 @@ PtrToShort(
 
 
 typedef long INT_PTR, *PINT_PTR;
-typedef unsigned long UINT_PTR, *PUINT_PTR;
+typedef unsigned int UINT_PTR, *PUINT_PTR;
 
 #define MAXINT_PTR (0x7fffffffL)
 #define MININT_PTR (0x80000000L)

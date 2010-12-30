@@ -785,4 +785,4 @@ Function un.onInit
   
 FunctionEnd
 
-ChangeUI all "${NSISDIR}\Contrib\UIs\modern-big.exe"
+ChangeUI all "${NSISDIR}\Contrib\UIs\modern.exe"

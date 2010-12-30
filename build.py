@@ -130,7 +130,7 @@ if TargetML:
 	#
 
 	#call MLEncrypt to set private encrypt signature.
-	ExecuteOnErrQuit(r"bin\MLEncrypt.exe MiniLyrics.dll search.crintsoft.com www.minilyrics.com")
+	ExecuteOnErrQuit(r"bin\MLEncrypt.exe MiniLyrics.exe search.crintsoft.com www.minilyrics.com")
 
 	# Create MLVersion.nsh
 	f = open(r"Install_ML\MLVersion.nsh", "w")
@@ -164,7 +164,6 @@ if TargetZP:
 
 	shutil.copy(r"bin-player\ZikiPlayer.exe", r"Install_ZP\Share\ZikiPlayer.exe")
 	shutil.copy(r"Install_ML\Share\Themes.xml", r"Install_ZP\Share\Themes.xml")
-	shutil.copy(r"Install_ML\Share\unicows.dll", r"Install_ZP\Share\unicows.dll")
 	# shutil.copytree(r"Install_ML\Share\Patterns", r"Install_ZP\Share\Patterns")
 	Execute(r"cmd /c xcopy /Y Install_ML\Share\Patterns\*.* Install_ZP\Share\Patterns\\")
 
@@ -194,10 +193,12 @@ ZipExe = '"' + ZipExe + '"'
 ZipExcludeExt = [ "", "rar", "ncb", "svn", "aps", "opt", "plg", "user", "scc", 
 	"tmp", "obj", "idb", "pdb", "lib", "pch", "res", "exp", "stt", "zip", 
 	"gz", "suo" ]
-ZipIncludeDir = ["",  "base", "gfx", "id3lib", "mllib", "mlprotocol", "mplayer",
-	"mplayerlib", "ourmfclib", "skin", "sqlite_cpp", "utils", "widget", 
+ZipIncludeDir = ["",  "base", "gfx", "GfxLite", "GfxRaw", "id3lib", "ImageLib", 
+	"MiniLyrics", "mllib", "MLPlayerPluginAgentLib", "MLPluginLib", "MLProtocol",
+	"MLServer", "mplayer", "MLyricsOutPluginG15",
+	"mplayerlib", "ourmfclib", "skin", "sqlite_cpp", "utils", "widget", "WidgetLite",
 	"MPShared", "MiniLyrics", "ImageLib", "SearchArith", "MLyricsOutPlugin", 
-	"MLPluginLib", "skinscript", "MLServer",
+	"MLPluginLib", "skinscript", "TagLib",
 	"MPlayer-Plugins\\MDAPE", "MPlayer-Plugins\\MDFlac",
 	"MPlayer-Plugins\\MDMP4", "MPlayer-Plugins\\MDVorbis", 
 	"MPlayer-Plugins\\MDWMA2" ]

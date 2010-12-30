@@ -514,10 +514,10 @@ static void WINAPI DSP_NewTrack(void *inst, const char *file)
 
 	WCHAR		szMediaUrl[MAX_PATH], szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
 
-	UTF8ToUCS2(file, strlen(file) + 1, szMediaUrl, CountOf(szMediaUrl));
-	UTF8ToUCS2(artist, strlen(artist) + 1, szArtist, CountOf(szArtist));
-	UTF8ToUCS2(album, strlen(album) + 1, szAlbum, CountOf(szAlbum));
-	UTF8ToUCS2(title, strlen(title) + 1, szTitle, CountOf(szTitle));
+	Utf8ToUCS2(file, strlen(file) + 1, szMediaUrl, CountOf(szMediaUrl));
+	Utf8ToUCS2(artist, strlen(artist) + 1, szArtist, CountOf(szArtist));
+	Utf8ToUCS2(album, strlen(album) + 1, szAlbum, CountOf(szAlbum));
+	Utf8ToUCS2(title, strlen(title) + 1, szTitle, CountOf(szTitle));
 
 	DWORD	dwLength = 0;
 
