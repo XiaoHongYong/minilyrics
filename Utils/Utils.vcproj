@@ -651,6 +651,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MLBinXMLParser.cpp"
+				>
+			</File>
+			<File
 				RelativePath="win32\Profile.cpp"
 				>
 				<FileConfiguration
@@ -1043,6 +1047,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\MiniDump.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MLBinXMLParser.h"
 				>
 			</File>
 			<File

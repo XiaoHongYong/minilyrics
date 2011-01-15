@@ -205,11 +205,10 @@ void CG15LCDLyricsOutPlugin::InitLCDObjectsColor()
 	m_lcd.SetText(m_mediaInfoColor, _T(""));
 	m_lcd.SetTextFontColor(m_mediaInfoColor, RGB(255, 255, 255));
 
-	m_lyricsLineColor = m_lcd.AddText(LG_SCROLLING_TEXT, LG_MEDIUM, DT_LEFT, LGLCD_QVGA_BMP_WIDTH - 20, 2);
-	m_lcd.SetOrigin(m_lyricsLineColor, 10, 100);
+	m_lyricsLineColor = m_lcd.AddText(LG_STATIC_TEXT, LG_MEDIUM, DT_LEFT, LGLCD_QVGA_BMP_WIDTH - 20, 2);
+	m_lcd.SetOrigin(m_lyricsLineColor, 10, 110);
 	m_lcd.SetText(m_lyricsLineColor, _T("MiniLyrics lyrics display for Logitech LCD."));
 	m_lcd.SetTextFontColor(m_lyricsLineColor, RGB(255, 255, 255));
-	m_lcd.SetTextBackground(m_lyricsLineColor, OPAQUE, RGB(255, 255, 255));
 
 	m_playingProgressColor = m_lcd.AddProgressBar(LG_FILLED);
 	m_lcd.SetProgressBarSize(m_playingProgressColor, LGLCD_QVGA_BMP_WIDTH - 20, 10);

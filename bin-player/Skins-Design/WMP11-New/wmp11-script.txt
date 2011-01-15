@@ -1,0 +1,56 @@
+// variable type:
+//	int, string, skinwnd_t, skinctrl_t
+//
+
+// Global variable
+// _curWnd, _skinFactory,
+
+Global string_t		_settings;
+
+Function bool TestFun(string_t param1)
+{
+}
+
+class shade_skinwnd : skinwnd_t
+{
+	OnLoad()
+	{
+		_settings = "xxxge";
+		AttachSkinCtrlClass("myctrl", myxx_ctrl);
+		TestFun("xx");
+	}
+
+	OnClose()
+	{
+		_settings = "";
+	}
+
+	OnScriptCommand(string_t cmdID)
+	{
+		if (cmdID == "ScriptCmd_SwitchLyrPlView")
+		{
+			string_t curStatus = SkinSystem.GetProfileValue("LyrPlViewStatus", "both");
+			if (curStatus == "both")
+			{
+				curStatus = "lyr";
+				skinctrl_t barFrame = _curWnd.GetCtrlByID("ID_FRAME");
+				barFrame.ShowBar("Lyrics");
+			}
+
+			SkinSystem.WriteProfileValue("LyrPlViewStatus", curStatus);
+		}
+	}
+};
+
+class wmpskin : SkinSystem
+{
+	OnLoad()
+	{
+		AttachSkinWndClass("shade", shade_skinwnd);
+	}
+
+	OnDestroy()
+	{
+	}
+
+};

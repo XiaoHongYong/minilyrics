@@ -28,6 +28,30 @@ enum FILE_ENCODING
 
 #define Tobool(bValue)		((bValue) != 0)
 
+inline uint32 NetbyteToUInt32(byte *byData)
+{
+	return byData[0] | (byData[1] << 8) | (byData[2] << 16) | (byData[3] << 24);
+}
+
+inline void NetbyteFromUInt32(uint32 nValue, byte *byData)
+{
+	byData[0] = nValue & 0xFF;
+	byData[1] = (nValue >> 8) & 0xFF;
+	byData[2] = (nValue >> 16) & 0xFF;
+	byData[3] = (nValue >> 24) & 0xFF;
+}
+
+inline uint16 NetbyteToUInt16(byte *byData)
+{
+	return byData[0] | (byData[1] << 8);
+}
+
+inline void NetbyteFromUInt16(uint16 nValue, byte *byData)
+{
+	byData[0] = nValue & 0xFF;
+	byData[1] = (nValue >> 8) & 0xFF;
+}
+
 template<class int_t1, class int_t2>
 int_t1 inline max_fun(int_t1 a, int_t2 b)
 {
@@ -60,6 +84,8 @@ int_t1 inline min_fun(int_t1 a, int_t2 b)
 #define CHAR_NULL		_T('\0')
 #define CHAR_COMMA		_T(',')
 #define CHAR_SEMICOLON	_T(';')
+
+#define SZ_RETURN		_T("\r\n")
 
 #ifndef _WIN32
 #define MAKEWORD(a, b)      ((WORD)(((BYTE)((a) & 0xff)) | ((WORD)((BYTE)((b) & 0xff))) << 8))

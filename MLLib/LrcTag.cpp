@@ -783,7 +783,7 @@ void TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 	bool	bFoundTag = false;
 	_tstringex	strValue;
 	_TCHAR SZ_SPACE[] = { ' ', 0 };
-	_TCHAR SZ_RETURN[] = { '\r', '\n', 0 };
+	_TCHAR _SZ_RETURN[] = { '\r', '\n', 0 };
 
 	// Find existing tag, and replace it.
 	while (szLine)
@@ -866,7 +866,7 @@ void TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 	{
 		// Append return if needed.
 		if (IsStrEndWithNewLine(str))
-			str.append(SZ_RETURN);
+			str.append(_SZ_RETURN);
 		str.append(strTagsAtTail.c_str(), strTagsAtTail.size());
 	}
 }

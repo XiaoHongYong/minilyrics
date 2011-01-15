@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding='utf-8'?>
+<skin defmainwnd="minilyrics" mainwnds="minilyrics,minimode">
+  <DynCmds>
+    <cmd ID="dyncmd_to_minimode" func="change_skin_wnd" param="minimode" />
+    <cmd ID="dyncmd_to_normalmode" func="change_skin_wnd" param="minilyrics" />
+    <cmd ID="dyncmd_open_playlist" func="create_skin_wnd" param="medialib" />
+  </DynCmds>
+  <DynControls>
+    <VScrollBar width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" />
+    <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13" />
+  </DynControls>
+  <skinwnd name="minimode" min_cx="150" min_cy="33" EnableResize="TRUE" Width="400" Height="200" BackgroundColor="#3169B5" FontColorHigh="#84D700" FontColorLow="#9CBEE7" EditRowColor="#214D84">
+    <WorkArea left="4" top="4" width="w - 18" height="h - 8" ID="ID_WORKAREA" />
+    <YScaleImage left="0" top="0" width="4" height="h" ID="ID_NONE" name="M Left Frame" image="MiniModeFrame.bmp" ImageRect="0,0,4,35" imageScaleYStart="5" imageScaleYEnd="30" />
+    <YScaleImage left="w - 16" top="0" width="16" height="h" ID="ID_NONE" name="M Right Frame" image="MiniModeFrame.bmp" ImageRect="184,0,16,35" imageScaleYStart="30" imageScaleYEnd="31" />
+    <Image left="4" top="0" width="w - 20" height="4" ID="ID_NONE" name="top Frame" image="MiniModeFrame.bmp" ImageRect="4,0,180,4" BltMode="stretch" />
+    <Image left="4" top="h - 4" width="w - 20" height="4" ID="ID_NONE" name="Bt Frame" image="MiniModeFrame.bmp" ImageRect="4,31,180,4" BltMode="stretch" />
+    <Button left="w - 12" top="3" width="9" height="9" ID="ID_QUIT" name="Close Button" CanCheck="FALSE" Checked="FALSE" image="MiniModeBtn.bmp" ImageRect="18,0,9,9" imageSel="MiniModeBtn.bmp" ImageSelRect="0,0,9,9" imageFocus="MiniModeBtn.bmp" ImageFocusRect="9,0,9,9" />
+    <Button left="w - 12" top="12" width="9" height="9" ID="ID_MINIMODESWITCH" name="MiniMode Button" CanCheck="FALSE" Checked="FALSE" image="MiniModeBtn.bmp" ImageRect="18,9,9,9" imageSel="MiniModeBtn.bmp" ImageSelRect="0,9,9,9" imageFocus="MiniModeBtn.bmp" ImageFocusRect="9,9,9,9" />
+    <Button left="w - 12" top="21" width="9" height="9" ID="ID_MINIMIZE" name="MiniMize Button" CanCheck="FALSE" Checked="FALSE" image="MiniModeBtn.bmp" ImageRect="18,18,9,9" imageSel="MiniModeBtn.bmp" ImageSelRect="0,18,9,9" imageFocus="MiniModeBtn.bmp" ImageFocusRect="9,18,9,9" />
+  </skinwnd>
+  <skinwnd name="minilyrics" name="minilyrics" region="" regionScaleX1="0" regionScaleX2="0" regionScaleY1="0" regionScaleY2="0" regionScaleHeightOrg="0" regionScaleWidthOrg="0" min_cx="240" min_cy="150" width="240" height="269" Cursor="" EnableResize="TRUE" WindowsAppearance="FALSE" enablebkcolor="TRUE" BgColor="4F586E" FgColor="000000" FontName="" FontHeight="0">
+    <CaptionImage ID="ID_NONE" left="0" top="0" width="w" height="23" name="Caption" tooltip="" image="caption.bmp" imageRect="0,0,275,23" image="caption.bmp" ImageFocusRect="0,0,275,23" CutPos="85,125,130,172">
+    </CaptionImage>
+    <Button ID="ID_MENU" left="7" top="4" width="16" height="16" name="Menu Button" tooltip="" CanCheck="FALSE" Checked="FALSE" image="cap-buttons.bmp" imageRect="0,60,16,16" imageSel="cap-buttons.bmp" ImageSelRect="17,60,16,16" imageFocus="" imageFocusRect="0,0,0,0" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <Button ID="ID_MINIMIZE" left="w-100" top="0" width="25" height="19" name="Minimize" tooltip="" CanCheck="FALSE" Checked="FALSE" image="cap-buttons.bmp" imageRect="0,0,25,19" imageSel="cap-buttons.bmp" ImageSelRect="0,20,25,19" imageFocus="cap-buttons.bmp" imageFocusRect="0,40,25,19" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <Button ID="ID_MINIMODESWITCH" left="w-75" top="0" width="25" height="19" name="minimode" tooltip="" CanCheck="FALSE" Checked="FALSE" image="cap-buttons.bmp" imageRect="25,0,25,19" imageSel="cap-buttons.bmp" ImageSelRect="25,20,25,19" imageFocus="cap-buttons.bmp" imageFocusRect="25,40,25,19" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <Button ID="ID_QUIT" left="w-50" top="0" width="43" height="19" name="Quit" tooltip="" CanCheck="FALSE" Checked="FALSE" image="cap-buttons.bmp" imageRect="50,0,43,19" imageSel="cap-buttons.bmp" ImageSelRect="50,20,43,19" imageFocus="cap-buttons.bmp" imageFocusRect="50,40,43,19" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <CaptionImage ID="ID_NONE" left="0" top="h-8" width="w" height="8" name="bottom" tooltip="" image="caption.bmp" imageRect="0,24,275,8" image="caption.bmp" ImageFocusRect="0,24,275,8" CutPos="85,125,130,172">
+    </CaptionImage>
+    <Image ID="ID_NONE" left="0" top="23" width="4" height="h-31" name="Left frame" tooltip="" image="caption.bmp" imageRect="276,0,4,23" BltMode="stretch">
+    </Image>
+    <Image ID="ID_NONE" left="w-4" top="23" width="4" height="h-31" name="Right frame" tooltip="" image="caption.bmp" imageRect="281,0,4,23" BltMode="stretch">
+    </Image>
+    <WorkArea ID="ID_WORKAREA" left="4" top="23" width="w-8" height="(h-56-23)" name="" tooltip="" DivideImage="title.bmp" DivideImageRect="0,38,240,2" DivideImageBltMode="stretch">
+    </WorkArea>
+    <CaptionImage ID="ID_NONE" left="0" top="h-56" width="w" height="56" name="Panel" tooltip="" image="panel.bmp" imageRect="0,0,240,56" image="panel.bmp" ImageFocusRect="0,0,240,56" CutPos="2,5,235,238">
+    </CaptionImage>
+    <SeekCtrl ID="ID_SEEK" left="55" top="h-56" width="w-95" height="10" name="Seek" tooltip="" EndWidth="5" ThumbWidth="16" TrackWidthLeft="20" TrackWidthRight="20" SeekCtrlHeight="10" image="seek.bmp">
+    </SeekCtrl>
+    <Button ID="ID_PLAYPAUSE" left="w/2-25" top="h-45" width="38" height="38" name="PlayPause" tooltip="" CanCheck="TRUE" Checked="FALSE" image="playpause.bmp" imageRect="0,0,38,38" imageSel="playpause.bmp" ImageSelRect="0,38,38,38" imageFocus="playpause.bmp" imageFocusRect="0,76,38,38" imageCheck="playpause.bmp" imageCheckRect="38,0,38,38" ImageCheckSel="playpause.bmp" ImageCheckSelRect="38,38,38,38" ImageCheckFocus="playpause.bmp" ImageCheckFocusRect="38,76,38,38" imageDisable="playpause.bmp" ImageDisableRect="0,114,38,38" dyncmd="">
+    </Button>
+    <Button ID="ID_SHUFFLE" left="w/2-119" top="h-35" width="19" height="19" name="Shuffle" tooltip="" CanCheck="TRUE" Checked="FALSE" image="buttons.bmp" imageRect="38,0,19,19" imageSel="buttons.bmp" ImageSelRect="38,19,19,19" imageFocus="buttons.bmp" imageFocusRect="38,38,19,19" imageCheck="buttons.bmp" imageCheckRect="57,0,19,19" ImageCheckSel="buttons.bmp" ImageCheckSelRect="57,19,19,19" ImageCheckFocus="buttons.bmp" ImageCheckFocusRect="57,19,19,19" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <NStatusButton ID="ID_LOOP" left="w/2-100" top="h-35" width="19" height="19" name="" tooltip="" CurStatus="0" S0_image="buttons.bmp" S0_imageRect="0,0,19,19" S0_imageSel="buttons.bmp" S0_ImageSelRect="0,19,19,19" S0_imageFocus="buttons.bmp" S0_ImageFocusRect="0,38,19,19" S1_image="buttons.bmp" S1_imageRect="19,0,19,19" S1_imageSel="buttons.bmp" S1_ImageSelRect="19,19,19,19" S1_imageFocus="buttons.bmp" S1_ImageFocusRect="19,38,19,19" S2_image="buttons.bmp" S2_imageRect="190,0,19,19" S2_imageSel="buttons.bmp" S2_ImageSelRect="190,19,19,19" S2_imageFocus="buttons.bmp" S2_ImageFocusRect="190,38,19,19" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </NStatusButton>
+    <Button ID="ID_STOP" left="w/2-76" top="h-35" width="19" height="19" name="Stop" tooltip="" CanCheck="FALSE" Checked="FALSE" image="buttons.bmp" imageRect="114,0,19,19" imageSel="buttons.bmp" ImageSelRect="114,19,19,19" imageFocus="buttons.bmp" imageFocusRect="114,38,19,19" imageDisable="buttons.bmp" ImageDisableRect="114,60,19,19" dyncmd="">
+    </Button>
+    <Button ID="ID_MUTE" left="w/2+44" top="h-35" width="19" height="19" name="Mute" tooltip="" CanCheck="TRUE" Checked="FALSE" image="buttons.bmp" imageRect="76,0,19,19" imageSel="buttons.bmp" ImageSelRect="76,19,19,19" imageFocus="buttons.bmp" imageFocusRect="76,38,19,19" imageCheck="buttons.bmp" imageCheckRect="95,0,19,19" ImageCheckSel="buttons.bmp" ImageCheckSelRect="95,19,19,19" ImageCheckFocus="buttons.bmp" ImageCheckFocusRect="95,38,19,19" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="dyncmd_open_playlist">
+    </Button>
+    <Button ID="ID_VOL_DEC" left="w/2+69" top="h-35" width="19" height="19" name="Increase Volume" tooltip="" CanCheck="FALSE" Checked="FALSE" image="buttons.bmp" imageRect="171,0,19,19" imageSel="buttons.bmp" ImageSelRect="171,19,19,19" imageFocus="buttons.bmp" imageFocusRect="171,38,19,19" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <Button ID="ID_VOL_INC" left="w/2+91" top="h-35" width="19" height="19" name="Decrease Volume" tooltip="" CanCheck="FALSE" Checked="FALSE" image="buttons.bmp" imageRect="152,0,19,19" imageSel="buttons.bmp" ImageSelRect="152,19,19,19" imageFocus="buttons.bmp" imageFocusRect="152,38,19,19" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <SeekCtrl ID="ID_VOLUME" left="w/2+68" top="h-33" width="45" height="12" name="Seek" tooltip="" EndWidth="2" ThumbWidth="9" TrackWidthLeft="21" TrackWidthRight="19" SeekCtrlHeight="12" image="volume.bmp">
+    </SeekCtrl>
+    <Button ID="ID_PREVIOUS" left="w/2-54" top="h-35" width="31" height="18" name="Prev" tooltip="" CanCheck="FALSE" Checked="FALSE" image="prevnext.bmp" imageRect="0,0,31,18" imageSel="prevnext.bmp" ImageSelRect="0,18,31,18" imageFocus="prevnext.bmp" imageFocusRect="0,36,31,18" imageDisable="prevnext.bmp" ImageDisableRect="0,54,31,18" dyncmd="">
+    </Button>
+    <Button ID="ID_NEXT" left="w/2+10" top="h-35" width="31" height="18" name="Prev" tooltip="" CanCheck="FALSE" Checked="FALSE" image="prevnext.bmp" imageRect="31,0,31,18" imageSel="prevnext.bmp" ImageSelRect="31,18,31,18" imageFocus="prevnext.bmp" imageFocusRect="31,36,31,18" imageDisable="prevnext.bmp" ImageDisableRect="31,54,31,18" dyncmd="">
+    </Button>
+    <Button ID="ID_SEARCH_LYRICS" left="5" top="h-53" width="13" height="13" name="" tooltip="" CanCheck="FALSE" Checked="FALSE" image="smallbt.bmp" imageRect="26,0,13,13" imageSel="smallbt.bmp" ImageSelRect="26,13,13,13" imageFocus="smallbt.bmp" imageFocusRect="26,26,13,13" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <Button ID="ID_BACKWARD_LYRICS" left="21" top="h-53" width="13" height="13" name="" tooltip="" CanCheck="FALSE" Checked="FALSE" image="smallbt.bmp" imageRect="0,0,13,13" imageSel="smallbt.bmp" ImageSelRect="0,13,13,13" imageFocus="smallbt.bmp" imageFocusRect="0,26,13,13" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <Button ID="ID_FORWARD_LYRICS" left="37" top="h-53" width="13" height="13" name="" tooltip="" CanCheck="FALSE" Checked="FALSE" image="smallbt.bmp" imageRect="13,0,13,13" imageSel="smallbt.bmp" ImageSelRect="13,13,13,13" imageFocus="smallbt.bmp" imageFocusRect="13,26,13,13" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <Button ID="ID_LP_SWITCH" left="w-34" top="h-53" width="13" height="13" name="lyrics playlist switch" tooltip="" CanCheck="FALSE" Checked="FALSE" image="smallbt.bmp" imageRect="39,0,13,13" imageSel="smallbt.bmp" ImageSelRect="39,13,13,13" imageFocus="smallbt.bmp" imageFocusRect="39,26,13,13" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+    <Button ID="ID_VOL_SWITCH" left="w-18" top="h-53" width="13" height="13" name="" tooltip="" CanCheck="FALSE" Checked="FALSE" image="smallbt.bmp" imageRect="52,0,13,13" imageSel="smallbt.bmp" ImageSelRect="52,13,13,13" imageFocus="smallbt.bmp" imageFocusRect="52,26,13,13" imageDisable="" ImageDisableRect="0,0,0,0" dyncmd="">
+    </Button>
+  </skinwnd>
+  <skinwnd name="medialib" name="medialib" region="" regionScaleX1="0" regionScaleX2="0" regionScaleY1="0" regionScaleY2="0" regionScaleHeightOrg="0" regionScaleWidthOrg="0" min_cx="240" min_cy="150" width="240" height="269" Cursor="" EnableResize="TRUE" WindowsAppearance="FALSE" enablebkcolor="TRUE" BgColor="4F586E" FgColor="FFFFFF" FontName="" FontHeight="14">
+  </skinwnd>
+  <skinwnd name="playlist" cmdhandler="ch_common,ch_player,ch_playlist" contextmenu="PlaylistMenu" min_cx="240" min_cy="150" EnableResize="TRUE" Width="240" Height="269">
+    <Text left="0" top="0" width="w" height="16" ID="ID_TXT_TITLE" name="title" image="title.bmp" ImageRect="0,24,240,16" BltMode="stretch" FontHeight="14" FontBold="1" TextColor="#366AB3" />
+    <Image left="0" top="15" width="w" height="2" ID="ID_NONE" name="caption" image="title.bmp" ImageRect="0,38,240,2" BltMode="stretch" />
+    <ListCtrl left="0" top="18" width="w" height="(h-24-18)" ID="ID_PLAYLIST" name="Playlist" BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13" />
+    <Image left="0" top="h-24" width="w" height="24" ID="ID_NONE" name="Panel" image="pl_panel.bmp" ImageRect="0,0,240,24" BltMode="stretch" />
+    <Button left="0" top="h-22" width="20" height="20" ID="ID_PL_UP" name="Up" CanCheck="FALSE" Checked="FALSE" image="pl_buttons.bmp" ImageRect="0,0,20,20" imageSel="pl_buttons.bmp" ImageSelRect="0,20,20,20" imageDisable="pl_buttons.bmp" ImageDisableRect="0,40,20,20" />
+    <Button left="24" top="h-22" width="20" height="20" ID="ID_PL_DOWN" name="Down" CanCheck="FALSE" Checked="FALSE" image="pl_buttons.bmp" ImageRect="20,0,20,20" imageSel="pl_buttons.bmp" ImageSelRect="20,20,20,20" imageDisable="pl_buttons.bmp" ImageDisableRect="20,40,20,20" />
+    <Button left="48" top="h-22" width="20" height="20" ID="ID_PL_ADD_FILE" name="Add" CanCheck="FALSE" Checked="FALSE" image="pl_buttons.bmp" ImageRect="40,0,20,20" imageSel="pl_buttons.bmp" ImageSelRect="40,20,20,20" imageDisable="pl_buttons.bmp" ImageDisableRect="40,40,20,20" />
+    <Button left="72" top="h-22" width="20" height="20" ID="ID_PL_DEL" name="Delete" CanCheck="FALSE" Checked="FALSE" image="pl_buttons.bmp" ImageRect="60,0,20,20" imageSel="pl_buttons.bmp" ImageSelRect="60,20,20,20" imageDisable="pl_buttons.bmp" ImageDisableRect="60,40,20,20" />
+  </skinwnd>
+</skin>

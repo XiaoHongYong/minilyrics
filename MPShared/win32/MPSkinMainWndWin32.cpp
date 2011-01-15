@@ -34,40 +34,6 @@ CMPSkinMainWnd::~CMPSkinMainWnd()
 
 bool CMPSkinMainWnd::OnCreate()
 {
-#if defined(_MPLAYER) && defined(_WIN32)
-	LPCTSTR			szCmdLine;
-
-	// get command line
-	szCmdLine = GetCommandLine();
-#ifndef _WIN32_WCE
-	szCmdLine = CmdLineNext(szCmdLine);
-#endif
-	if (IsEmptyString(szCmdLine))
-	{
-		// Load default playlist
-		tstring		strDefPlaylist;
-		tstring		strCurrentPlaylist;
-
-		NewPlaylistName(strDefPlaylist);
-		strCurrentPlaylist = g_Profile.GetProfileString(_T("Latest Playlist"), strDefPlaylist.c_str());
-		if (g_Player.LoadPlaylist(strCurrentPlaylist.c_str()))
-			g_Player.m_strCurrentPlaylist = strCurrentPlaylist;
-		else
-			g_Player.m_strCurrentPlaylist = strDefPlaylist;
-
-		int	nNowPlaying = g_Profile.GetProfileInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), 0);
-		g_Player.m_spPlayer->SetCurrentMediaInPlaylist(nNowPlaying);
-	}
-	else
-	{
-		// excute cmdline
-		SendCommandLine(m_hWnd, szCmdLine);
-	}
-
-	if (g_Profile.GetProfileBool(_T("StartPlayAtStartup"), false))
-		g_Player.Play();
-#endif
-
 	if (!CMPSkinMainWndBase::OnCreate())
 		return false;
 

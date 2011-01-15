@@ -12,6 +12,39 @@ typedef	WCHAR			UTCHAR;
 typedef	unsigned char	UTCHAR;
 #endif
 
+bool StrBeginWith(LPCSTR szText, LPCSTR szBeginWith)
+{
+	while (*szBeginWith == *szText && *szBeginWith && *szText)
+	{
+		szBeginWith++;
+		szBeginWith++;
+	}
+
+	return *szBeginWith == '\0';
+}
+
+bool StrBeginWith(LPCWSTR szText, LPCWSTR szBeginWith)
+{
+	while (*szBeginWith == *szText && *szBeginWith && *szText)
+	{
+		szBeginWith++;
+		szBeginWith++;
+	}
+
+	return *szBeginWith == '\0';
+}
+
+bool StrIBeginWith(LPCTSTR szText, LPCTSTR szBeginWith)
+{
+	while (CharLwr(*szBeginWith) == CharLwr(*szText) && *szBeginWith && *szText)
+	{
+		szBeginWith++;
+		szBeginWith++;
+	}
+
+	return *szBeginWith == '\0';
+}
+
 FILE_ENCODING GetStrEncodingType(LPCVOID lpData)
 {
 	BYTE						*szBuffer;
@@ -595,7 +628,7 @@ void TrimStr(tstring &str, TCHAR ch)
 void TrimStr(V_Str &vStr, TCHAR ch)
 {
 	for (size_t i = 0; i < vStr.size(); i++)
-		TrimStr(vStr[i]);
+		TrimStr(vStr[i], ch);
 }
 
 //

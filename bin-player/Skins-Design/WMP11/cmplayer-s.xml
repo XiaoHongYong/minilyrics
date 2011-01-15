@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding='utf-8'?>
+<skin defmainwnd="ZikiPlayer" mainwnds="ZikiPlayer">
+  <DynControls>
+    <VScrollBar width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
+    <HScrollBar height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
+  </DynControls>
+  <skinwnd Name="ZikiPlayer" MinWidth="340" MinHeight="360" Width="340" Height="320" PaintBg="FALSE" BgColor="#4F586E" FgColor="#FFFFFF" FontHeight="16" ContextMenu="MainMenu" CmdHandler="ch_common,ch_player">
+    <LyricsShow ID="ID_LYRICS_SHOW" Left="0" Top="0" Width="w" Height="h" BgColor="#4F586E" FgColor="#ECECEC" FgLowColor="#83949E" FocusLineBgColor="#404758" TagColor="#FF0000" EnableAutoResize="FALSE" />
+  </skinwnd>
+</skin>

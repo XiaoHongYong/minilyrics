@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding='utf-8'?>
+<skin defmainwnd="minilyrics" mainwnds="minilyrics,minimode">
+  <DynCmds>
+    <cmd ID="ID" func="Function" param="Parameter" />
+    <cmd ID="dyncmd_to_minimode" func="change_skin_wnd" param="minimode" />
+    <cmd ID="dyncmd_to_normalmode" func="change_skin_wnd" param="minilyrics" />
+    <cmd ID="dyncmd_open_playlist" func="create_skin_wnd" param="medialib" />
+  </DynCmds>
+  <DynControls>
+    <VScrollBar width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" />
+    <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13" />
+  </DynControls>
+  <skinwnd Name="minimode" Width="400" Height="200" PaintBg="FALSE" BgColor="#3169B5" FgColor="#FFFFFF">
+    <WorkArea ID="ID_WORKAREA" Left="4" Top="4" Width="w-18" Height="h-8" />
+    <VStretchImage Name="M Left Frame" ID="ID_NONE" Left="0" Top="0" Width="4" Height="h" Image="MiniModeFrame.bmp" ImageRect="0,0,4,35" StretchStartY="5" StretchEndY="30" />
+    <VStretchImage Name="M Right Frame" ID="ID_NONE" Left="w-16" Top="0" Width="16" Height="h" Image="MiniModeFrame.bmp" ImageRect="184,0,16,35" StretchStartY="30" StretchEndY="31" />
+    <Image Name="top Frame" ID="ID_NONE" Left="4" Top="0" Width="w-20" Height="4" Image="MiniModeFrame.bmp" ImageRect="4,0,180,4" BltMode="stretch" />
+    <Image Name="Bt Frame" ID="ID_NONE" Left="4" Top="h-4" Width="w-20" Height="4" Image="MiniModeFrame.bmp" ImageRect="4,31,180,4" BltMode="stretch" />
+    <Button Name="Close Button" ID="ID_QUIT" Left="w-12" Top="3" Width="9" Height="9" ToolTip="Close" Image="MiniModeBtn.bmp" ImageRect="18,0,9,9" ImageSel="MiniModeBtn.bmp" ImageSelRect="0,0,9,9" ImageFocus="MiniModeBtn.bmp" imageFocusRect="9,0,9,9" />
+    <Button Name="MiniMode Button" ID="ID_MINIMODESWITCH" Left="w-12" Top="12" Width="9" Height="9" ToolTip="MiniMode" Image="MiniModeBtn.bmp" ImageRect="18,9,9,9" ImageSel="MiniModeBtn.bmp" ImageSelRect="0,9,9,9" ImageFocus="MiniModeBtn.bmp" imageFocusRect="9,9,9,9" />
+    <Button Name="MiniMize Button" ID="ID_MINIMIZE" Left="w-12" Top="21" Width="9" Height="9" ToolTip="Minimize" Image="MiniModeBtn.bmp" ImageRect="18,18,9,9" ImageSel="MiniModeBtn.bmp" ImageSelRect="0,18,9,9" ImageFocus="MiniModeBtn.bmp" imageFocusRect="9,18,9,9" />
+  </skinwnd>
+  <skinwnd Name="minilyrics" Region="wmp11.tr2" Width="320" Height="320" MinWidth="320" MinHeight="360" PaintBg="FALSE" BgColor="#4F586E" FgColor="#FFFFFF" CmdHandler="ch_common, ch_player" ContextMenu="MainMenu" EnableVolumeSwitch="TRUE">
+    <CaptionImage Name="Caption" ID="ID_NONE" Left="0" Top="0" Width="w" Height="23" Image="caption.bmp" ImageRect="0,0,275,23" StretchStartX="85" StretchEndX="125" StretchStartX2="130" StretchEndX2="172" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" />
+    <Button Name="Menu" ID="ID_MENU" Left="7" Top="4" Width="16" Height="16" ToolTip="Menu" Image="cap-buttons.bmp" ImageRect="0,60,16,16" ImageSel="cap-buttons.bmp" ImageSelRect="17,60,16,16" />
+    <Button Name="Minimize" ID="ID_MINIMIZE" Left="w-100" Top="0" Width="25" Height="19" ToolTip="Minimize" Image="cap-buttons.bmp" ImageRect="0,0,25,19" ImageSel="cap-buttons.bmp" ImageSelRect="0,20,25,19" ImageFocus="cap-buttons.bmp" imageFocusRect="0,40,25,19" />
+    <Button Name="minimode" ID="ID_MINIMODESWITCH" Left="w-75" Top="0" Width="25" Height="19" ToolTip="MiniMode" Image="cap-buttons.bmp" ImageRect="25,0,25,19" ImageSel="cap-buttons.bmp" ImageSelRect="25,20,25,19" ImageFocus="cap-buttons.bmp" imageFocusRect="25,40,25,19" />
+    <Button Name="Quit" ID="ID_QUIT" Left="w-50" Top="0" Width="43" Height="19" ToolTip="Close" Image="cap-buttons.bmp" ImageRect="50,0,43,19" ImageSel="cap-buttons.bmp" ImageSelRect="50,20,43,19" ImageFocus="cap-buttons.bmp" imageFocusRect="50,40,43,19" />
+    <HStretchImage Name="InfoBg" ID="ID_NONE" Left="4" Top="23" Width="w-8" Height="58" Image="pannel-bg2.bmp" ImageRect="0,0,80,58" StretchStartX="5" StretchEndX="75" />
+    <PlayingTime Name="Time" ID="ID_PLAY_TIME" Left="10" Top="23+7" Width="78" Height="17" TextImage="numfont.bmp" ImageChars="0123456789:- " CharWidth="13" AlignText="AT_CENTER"/>
+    <Vis Name="Vis" ID="" Left="95" Top="23+4" Width="72" Height="25" Image="Vis.bmp" ImageRect="0,0,72,25" SpectrumColImage="Vis.bmp" SpectrumColRect="72,0,3,25" SpectrumColSpace="1" SpectrumUnitHeight="2" LeftMargin="0" RightMargin="0" TopMargin="0" BottomMargin="0" FgColor="#FFFFFF"/>
+    <Image Name="kbps" ID="ID_NONE" Left="175" Top="25" Width="43" Height="7" Image="songinfo.bmp" ImageRect="0,0,43,7" BltMode="copy" />
+    <Image Name="samplerate" ID="ID_NONE" Left="175" Top="35" Width="43" Height="7" Image="songinfo.bmp" ImageRect="0,7,43,7" BltMode="copy" />
+    <NumInfo Name="kbps" ID="ID_NONE" Left="175+24" Top="25+1" Width="16" Height="5" TextImage="numfont-s.bmp" ImageChars="0123456789:- " CharWidth="4" InfoType="kbps" AlignText="AT_CENTER"/>
+    <NumInfo Name="samplerate" ID="ID_NONE" Left="175+22" Top="35+1" Width="20" Height="5" TextImage="numfont-s.bmp" ImageChars="0123456789:- " CharWidth="4" InfoType="samplerate" AlignText="AT_CENTER"/>
+    <NStatusImage Name="stereo" ID="ID_STEREO_STAT" Left="175" Top="43" Width="43" Height="9" S0_Image="songinfo.bmp" S0_ImageRect="0,23,43,9" S1_Image="songinfo.bmp" S1_ImageRect="0,14,43,9" BltMode="copy" />
+    <RateButton left="w-8-85" top="30" width="85" height="17" ID="ID_RATE" name="rating" image="rate.bmp" ImageRect="0,0,34,17" BltMode="copy"/>
+    <InfoText Name="InfoText" ID="ID_INFO_TEXT" Left="15" Top="23+31" Width="w-19-15" Height="20" Image="pannel-bg2.bmp" ImageRect="4,31,50,20" BltMode="stretch" FontName="Tahoma" FontHeight="14" FontBold="TRUE" TextColor="#FFFFFF" LeftMargin="0"/>
+    <CaptionImage Name="bottom pannel" ID="ID_NONE" Left="0" Top="h-8" Width="w" Height="8" Image="caption.bmp" ImageRect="0,24,275,8" StretchStartX="85" StretchEndX="125" StretchStartX2="130" StretchEndX2="172" ImageFocus="caption.bmp" ImageFocusRect="0,24,275,8" />
+    <Image Name="left frame" ID="ID_NONE" Left="0" Top="23" Width="4" Height="h-31" Image="caption.bmp" ImageRect="276,0,4,23" BltMode="stretch" />
+    <Image Name="right frame" ID="ID_NONE" Left="w-4" Top="23" Width="4" Height="h-31" Image="caption.bmp" ImageRect="281,0,4,23" BltMode="stretch" />
+    <WorkArea ID="ID_WORKAREA" Left="4" Top="81" Width="w-8" Height="(h-56-81)" DivideImage="title.bmp" DivideImageRect="0,38,240,2" DivideImageBltMode="stretch" EnableAutoResize="false" BgColor="#4F586E" FgColor="#ECECEC" FgLowColor="#83949E" FocusLineBgColor="#404758" TagColor="#FF0000"/>
+    <CaptionImage Name="panel bg" ID="ID_NONE" Left="0" Top="h-56" Width="w" Height="56" Image="panel.bmp" ImageRect="0,0,290,56" StretchStartX="22" StretchEndX="28" StretchStartX2="262" StretchEndX2="268" ImageFocus="panel.bmp" ImageFocusRect="0,0,290,56" />
+    <SeekCtrl Name="Seek" ID="ID_SEEK" Left="55" Top="h-56" Width="w-95" Height="10" EndWidth="5" ThumbWidth="16" TrackWidthLeft="20" TrackWidthRight="20" SeekCtrlHeight="10" Image="seek.bmp" />
+    <Button Name="PlayPause" ID="ID_PLAYPAUSE" Left="w/2-25" Top="h-45" Width="38" Height="38" ToolTip="Play/Pause" CanCheck="TRUE" Checked="FALSE" Image="playpause.bmp" ImageRect="0,0,38,38" ImageSel="playpause.bmp" ImageSelRect="0,38,38,38" ImageFocus="playpause.bmp" imageFocusRect="0,76,38,38" ImageCheck="playpause.bmp" ImageCheckRect="38,0,38,38" ImageCheckSel="playpause.bmp" ImageCheckSelRect="38,38,38,38" ImageCheckFocus="playpause.bmp" ImageCheckFocusRect="38,76,38,38" ImageDisable="playpause.bmp" ImageDisableRect="0,114,38,38" />
+    <Button Name="Shuffle" ID="ID_SHUFFLE" Left="w/2-119" Top="h-35" Width="19" Height="19" CanCheck="TRUE" Checked="FALSE" Image="buttons.bmp" ImageRect="38,0,19,19" ImageSel="buttons.bmp" ImageSelRect="38,19,19,19" ImageFocus="buttons.bmp" imageFocusRect="38,38,19,19" ImageCheck="buttons.bmp" ImageCheckRect="57,0,19,19" ImageCheckSel="buttons.bmp" ImageCheckSelRect="57,19,19,19" ImageCheckFocus="buttons.bmp" ImageCheckFocusRect="57,19,19,19" />
+    <NStatusButton ID="ID_LOOP" Left="w/2-100" Top="h-35" Width="19" Height="19" CurStatus="0" S0_image="buttons.bmp" S0_imageRect="0,0,19,19" S0_imageSel="buttons.bmp" S0_ImageSelRect="0,19,19,19" S0_imageFocus="buttons.bmp" S0_ImageFocusRect="0,38,19,19" S1_image="buttons.bmp" S1_imageRect="19,0,19,19" S1_imageSel="buttons.bmp" S1_ImageSelRect="19,19,19,19" S1_imageFocus="buttons.bmp" S1_ImageFocusRect="19,38,19,19" S2_image="buttons.bmp" S2_imageRect="190,0,19,19" S2_imageSel="buttons.bmp" S2_ImageSelRect="190,19,19,19" S2_imageFocus="buttons.bmp" S2_ImageFocusRect="190,38,19,19" />
+    <Button Name="Stop" ID="ID_STOP" Left="w/2-76" Top="h-35" Width="19" Height="19" ToolTip="Stop" Image="buttons.bmp" ImageRect="114,0,19,19" ImageSel="buttons.bmp" ImageSelRect="114,19,19,19" ImageFocus="buttons.bmp" imageFocusRect="114,38,19,19" ImageDisable="buttons.bmp" ImageDisableRect="114,60,19,19" />
+    <Button Name="Mute" ID="ID_MUTE" Left="w/2+44" Top="h-35" Width="19" Height="19" CanCheck="TRUE" Checked="FALSE" Image="buttons.bmp" ImageRect="76,0,19,19" ImageSel="buttons.bmp" ImageSelRect="76,19,19,19" ImageFocus="buttons.bmp" imageFocusRect="76,38,19,19" ImageCheck="buttons.bmp" ImageCheckRect="95,0,19,19" ImageCheckSel="buttons.bmp" ImageCheckSelRect="95,19,19,19" ImageCheckFocus="buttons.bmp" ImageCheckFocusRect="95,38,19,19"/>
+    <Button Name="Increase Volume" ID="ID_VOL_DEC" Left="w/2+69" Top="h-35" Width="19" Height="19" Image="buttons.bmp" ImageRect="171,0,19,19" ImageSel="buttons.bmp" ImageSelRect="171,19,19,19" ImageFocus="buttons.bmp" imageFocusRect="171,38,19,19" />
+    <Button Name="Decrease Volume" ID="ID_VOL_INC" Left="w/2+91" Top="h-35" Width="19" Height="19" Image="buttons.bmp" ImageRect="152,0,19,19" ImageSel="buttons.bmp" ImageSelRect="152,19,19,19" ImageFocus="buttons.bmp" imageFocusRect="152,38,19,19" />
+    <SeekCtrl Name="Seek" ID="ID_VOLUME" Left="w/2+68" Top="h-33" Width="45" Height="12" EndWidth="2" ThumbWidth="9" TrackWidthLeft="21" TrackWidthRight="19" SeekCtrlHeight="12" Image="volume.bmp" />
+    <Button Name="prev" ID="ID_PREVIOUS" Left="w/2-54" Top="h-35" Width="31" Height="18" ToolTip="Previous" Image="prevnext.bmp" ImageRect="0,0,31,18" ImageSel="prevnext.bmp" ImageSelRect="0,18,31,18" ImageFocus="prevnext.bmp" imageFocusRect="0,36,31,18" ImageDisable="prevnext.bmp" ImageDisableRect="0,54,31,18" />
+    <Button Name="next" ID="ID_NEXT" Left="w/2+10" Top="h-35" Width="31" Height="18" ToolTip="Next" Image="prevnext.bmp" ImageRect="31,0,31,18" ImageSel="prevnext.bmp" ImageSelRect="31,18,31,18" ImageFocus="prevnext.bmp" imageFocusRect="31,36,31,18" ImageDisable="prevnext.bmp" ImageDisableRect="31,54,31,18" />
+    <Button ID="ID_SEARCH_LYRICS" Left="5" Top="h-53" Width="13" Height="13" ToolTip="Search Lyrics" Image="smallbt.bmp" ImageRect="26,0,13,13" ImageSel="smallbt.bmp" ImageSelRect="26,13,13,13" ImageFocus="smallbt.bmp" imageFocusRect="26,26,13,13" />
+    <Button ID="ID_BACKWARD_LYRICS" Left="21" Top="h-53" Width="13" Height="13" ToolTip="Lyrics Backward 0.5 Sec(Up)" Image="smallbt.bmp" ImageRect="0,0,13,13" ImageSel="smallbt.bmp" ImageSelRect="0,13,13,13" ImageFocus="smallbt.bmp" imageFocusRect="0,26,13,13" />
+    <Button ID="ID_FORWARD_LYRICS" Left="37" Top="h-53" Width="13" Height="13" ToolTip="Lyrics Forward 0.5 Sec(Down)" Image="smallbt.bmp" ImageRect="13,0,13,13" ImageSel="smallbt.bmp" ImageSelRect="13,13,13,13" ImageFocus="smallbt.bmp" imageFocusRect="13,26,13,13" />
+    <Button Name="lyrics playlist switch" ID="ID_LP_SWITCH" Left="w-34" Top="h-53" Width="13" Height="13" Image="smallbt.bmp" ImageRect="39,0,13,13" ImageSel="smallbt.bmp" ImageSelRect="39,13,13,13" ImageFocus="smallbt.bmp" imageFocusRect="39,26,13,13" />
+    <Button ID="ID_VOL_SWITCH" Left="w-18" Top="h-53" Width="13" Height="13" Image="smallbt.bmp" ImageRect="52,0,13,13" ImageSel="smallbt.bmp" ImageSelRect="52,13,13,13" ImageFocus="smallbt.bmp" imageFocusRect="52,26,13,13" />
+  </skinwnd>
+  <skinwnd Name="medialib" Region="wmp11.tr2" Width="320" Height="320" MinWidth="320" MinHeight="360" PaintBg="FALSE" BgColor="#4F586E" FgColor="#FFFFFF" CmdHandler="ch_common, ch_player" ContextMenu="medialib" FontHeight="14">
+    <CaptionImage Name="Caption" ID="ID_NONE" Left="0" Top="0" Width="w" Height="23" Image="caption.bmp" ImageRect="0,0,275,23" StretchStartX="85" StretchEndX="125" StretchStartX2="130" StretchEndX2="172" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" />
+    <Button Name="Menu" ID="ID_MENU" Left="7" Top="4" Width="16" Height="16" ToolTip="Menu" Image="cap-buttons.bmp" ImageRect="0,60,16,16" ImageSel="cap-buttons.bmp" ImageSelRect="17,60,16,16" />
+    <Button Name="Minimize" ID="ID_MINIMIZE" Left="w-100" Top="0" Width="25" Height="19" ToolTip="Minimize" Image="cap-buttons.bmp" ImageRect="0,0,25,19" ImageSel="cap-buttons.bmp" ImageSelRect="0,20,25,19" ImageFocus="cap-buttons.bmp" imageFocusRect="0,40,25,19" />
+    <Button Name="minimode" ID="ID_MINIMODESWITCH" Left="w-75" Top="0" Width="25" Height="19" ToolTip="MiniMode" Image="cap-buttons.bmp" ImageRect="25,0,25,19" ImageSel="cap-buttons.bmp" ImageSelRect="25,20,25,19" ImageFocus="cap-buttons.bmp" imageFocusRect="25,40,25,19" />
+    <Button Name="Quit" ID="ID_QUIT" Left="w-50" Top="0" Width="43" Height="19" ToolTip="Close" Image="cap-buttons.bmp" ImageRect="50,0,43,19" ImageSel="cap-buttons.bmp" ImageSelRect="50,20,43,19" ImageFocus="cap-buttons.bmp" imageFocusRect="50,40,43,19" />
+    <Image Name="caption" ID="ID_NONE" Left="0" Top="0" Width="w" Height="24" Image="title.bmp" ImageRect="0,16,240,24" BltMode="stretch" />
+    <Droplist Name="Media Guide" ID="ID_ML_GUIDE" Left="2" Top="4" Width="w-60" Height="20" Image="title.bmp" ImageRect="2,20,190,20" AlignText="AT_VCENTER" TextLeft="25" FgColor="#000000" ClrSelBg="#404758" ImageList="medialib_icons.bmp" />
+    <TextButton Name="Back" ID="ID_ML_BACK" Left="w-53" Top="4" Width="50" Height="16" Image="back-bt.bmp" ImageRect="0,0,50,16" ImageSel="back-bt.bmp" ImageSelRect="0,16,50,16" AlignText="AT_VCENTER" TextLeft="20" FgColor="#000000" />
+    <ListCtrl Name="MediaList" ID="ID_ML_MEDIA_LIST" Left="0" Top="26" Width="w" Height="(h-26)" BgColor="#4F586E" SelBgColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontName="MS Sans Serif" FontHeight="13" ImageList="medialib_icons.bmp" />
+  </skinwnd>
+  <skinwnd Name="playlist" Width="240" Height="269" PaintBg="FALSE" BgColor="#000000" FgColor="#FFFFFF" CmdHandler="ch_common,ch_player,ch_playlist" ContextMenu="PlaylistMenu">
+    <Text Name="title" ID="ID_TXT_TITLE" Left="0" Top="0" Width="w" Height="16" Image="title.bmp" ImageRect="0,24,240,16" BltMode="stretch" FontName="Tahoma" FontHeight="14" FontBold="1" TextColor="#366AB3" LeftMargin="2" />
+    <Image Name="caption" ID="ID_NONE" Left="0" Top="15" Width="w" Height="2" Image="title.bmp" ImageRect="0,38,240,2" BltMode="stretch" />
+    <ListCtrl Name="Playlist" ID="ID_PLAYLIST" Left="0" Top="18" Width="w" Height="(h-24-18)" BgColor="#4F586E" SelBgColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontName="MS Sans Serif" FontHeight="13" ImageList="" />
+    <Image Name="Panel" ID="ID_NONE" Left="0" Top="h-24" Width="w" Height="24" Image="pl_panel.bmp" ImageRect="0,0,240,24" BltMode="stretch" />
+    <Button Name="Up" ID="ID_PL_UP" Left="0" Top="h-22" Width="20" Height="20" Image="pl_buttons.bmp" ImageRect="0,0,20,20" ImageSel="pl_buttons.bmp" ImageSelRect="0,20,20,20" ImageDisable="pl_buttons.bmp" ImageDisableRect="0,40,20,20" />
+    <Button Name="Down" ID="ID_PL_DOWN" Left="24" Top="h-22" Width="20" Height="20" Image="pl_buttons.bmp" ImageRect="20,0,20,20" ImageSel="pl_buttons.bmp" ImageSelRect="20,20,20,20" ImageDisable="pl_buttons.bmp" ImageDisableRect="20,40,20,20" />
+    <Button Name="Add" ID="ID_PL_ADD_FILE" Left="48" Top="h-22" Width="20" Height="20" Image="pl_buttons.bmp" ImageRect="40,0,20,20" ImageSel="pl_buttons.bmp" ImageSelRect="40,20,20,20" ImageDisable="pl_buttons.bmp" ImageDisableRect="40,40,20,20" />
+    <Button Name="Delete" ID="ID_PL_DEL" Left="72" Top="h-22" Width="20" Height="20" Image="pl_buttons.bmp" ImageRect="60,0,20,20" ImageSel="pl_buttons.bmp" ImageSelRect="60,20,20,20" ImageDisable="pl_buttons.bmp" ImageDisableRect="60,40,20,20" />
+  </skinwnd>
+</skin>

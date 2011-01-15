@@ -6,6 +6,10 @@ DECLAR_CPPUNIT_TEST_REG(StringEx)
 
 FILE_ENCODING GetStrEncodingType(LPCVOID lpData);
 
+bool StrBeginWith(LPCSTR szText, LPCSTR szBeginWith);
+bool StrBeginWith(LPCWSTR szText, LPCWSTR szBeginWith);
+bool StrIBeginWith(LPCTSTR szText, LPCTSTR szBeginWith);
+
 const TCHAR * strignore(const TCHAR *str, const TCHAR *strIgnore);
 
 void strdel(char *szStr, char ch);
@@ -98,7 +102,6 @@ int HexToInt(char chHex);
 uint32 HexToInt(LPCTSTR str);
 
 // COMMENT:
-//		将汉字、' '、'	'等转换为 %20....等
 // rfc:  http://www.faqs.org/rfcs/rfc2396.html
 void UriEscape(const char *szLocal, string &strInet);
 void UriEscape(const char *szLocal, char *szInet, int nLenMax);
