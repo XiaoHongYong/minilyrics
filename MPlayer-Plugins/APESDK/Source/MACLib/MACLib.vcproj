@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -47,10 +47,10 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\../../../Output/MACLib/Debug/MACLib.pch"
-				AssemblerListingLocation=".\../../../Output/MACLib/Debug/"
-				ObjectFile=".\../../../Output/MACLib/Debug/"
-				ProgramDataBaseFileName=".\../../../Output/MACLib/Debug/"
+				PrecompiledHeaderFile="$(ProjectDir)/../../../../Output/MACLib/Debug/MACLib.pch"
+				AssemblerListingLocation="$(ProjectDir)/../../../../Output/MACLib/Debug/"
+				ObjectFile="$(ProjectDir)/../../../../Output/MACLib/Debug/"
+				ProgramDataBaseFileName="$(ProjectDir)/../../../../Output/MACLib/Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -70,7 +70,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\../../../Output/MACLib/Debug\MACLib.lib"
+				OutputFile="$(ProjectDir)/../../../../Output/MACLib/Debug\MACLib.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -82,7 +82,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../Output/MACLib/Debug/MACLib.bsc"
+				OutputFile="$(ProjectDir)/../../../../Output/MACLib/Debug/MACLib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -93,8 +93,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -125,10 +125,10 @@
 				AdditionalIncludeDirectories="..\Shared"
 				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;UNICODE"
 				RuntimeLibrary="0"
-				PrecompiledHeaderFile=".\../../../Output/Maclib/Release/MACLib.pch"
-				AssemblerListingLocation=".\../../../Output/Maclib/Release/"
-				ObjectFile=".\../../../Output/Maclib/Release/"
-				ProgramDataBaseFileName=".\../../../Output/Maclib/Release/"
+				PrecompiledHeaderFile="$(ProjectDir)/../../../../Output/Maclib/Release/MACLib.pch"
+				AssemblerListingLocation="$(ProjectDir)/../../../../Output/Maclib/Release/"
+				ObjectFile="$(ProjectDir)/../../../../Output/Maclib/Release/"
+				ProgramDataBaseFileName="$(ProjectDir)/../../../../Output/Maclib/Release/"
 				BrowseInformation="1"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
@@ -148,7 +148,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile=".\../../../Output/Maclib/Release\MACLib.lib"
+				OutputFile="$(ProjectDir)/../../../../Output/Maclib/Release\MACLib.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -160,7 +160,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../Output/Maclib/Release/MACLib.bsc"
+				OutputFile="$(ProjectDir)/../../../../Output/Maclib/Release/MACLib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

@@ -23,8 +23,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Pocket PC 2003 (ARMV4)"
-			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			>
@@ -248,8 +248,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Pocket PC 2003 (ARMV4)"
-			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			>

@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -52,7 +52,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../Output/gfx/UnicodeRelease/gfx.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../Output/gfx/UnicodeRelease/gfx.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\vc80.pdb"
@@ -84,7 +84,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/gfx/UnicodeRelease/gfx.bsc"
+				OutputFile="$(ProjectDir)/../Output/gfx/UnicodeRelease/gfx.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -95,8 +95,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -156,7 +156,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/gfx/UnicodeDebug/gfx.bsc"
+				OutputFile="$(ProjectDir)/../Output/gfx/UnicodeDebug/gfx.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -167,8 +167,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -240,8 +240,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -313,8 +313,8 @@
 		</Configuration>
 		<Configuration
 			Name="UNIT_TEST Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -374,7 +374,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/gfx/UnicodeDebug/gfx.bsc"
+				OutputFile="$(ProjectDir)/../Output/gfx/UnicodeDebug/gfx.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

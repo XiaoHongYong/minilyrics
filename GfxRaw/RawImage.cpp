@@ -625,6 +625,9 @@ bool CRawImage::MaskBlt(PRAW_IMAGE_DATA pImageDst, CRect &rcDst, int xSrc, int y
 
 bool CRawImage::GetOrginalSize(int &nWidth, int &nHeight)
 {
+	if (!m_hImage)
+		return false;
+
 	nWidth = m_cx = m_hImage->width;
 	nHeight = m_cy = m_hImage->height;
 

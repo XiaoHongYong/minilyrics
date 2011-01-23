@@ -18,11 +18,11 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
-			BuildLogFile="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)\BuildLog.htm"
+			BuildLogFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -81,12 +81,12 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
-			BuildLogFile="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)\BuildLog.htm"
+			BuildLogFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)\BuildLog.htm"
 			>
 			<Tool
 				Name="VCPreBuildEventTool"
@@ -142,8 +142,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			BuildLogFile="$(IntDir)/BuildLog.htm"
@@ -205,8 +205,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			CharacterSet="1"
 			WholeProgramOptimization="1"

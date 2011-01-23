@@ -15,8 +15,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -45,10 +45,10 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/Vorbis.pch"
-				AssemblerListingLocation="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
-				ObjectFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
-				ProgramDataBaseFileName="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
+				PrecompiledHeaderFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/Vorbis.pch"
+				AssemblerListingLocation="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
+				ObjectFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
+				ProgramDataBaseFileName="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -66,7 +66,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)\Vorbis.lib"
+				OutputFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)\Vorbis.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -78,7 +78,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/Vorbis.bsc"
+				OutputFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/Vorbis.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -89,8 +89,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -120,10 +120,10 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/Vorbis.pch"
-				AssemblerListingLocation="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
-				ObjectFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
-				ProgramDataBaseFileName="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
+				PrecompiledHeaderFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/Vorbis.pch"
+				AssemblerListingLocation="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
+				ObjectFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
+				ProgramDataBaseFileName="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -140,7 +140,7 @@
 			/>
 			<Tool
 				Name="VCLibrarianTool"
-				OutputFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)\Vorbis.lib"
+				OutputFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)\Vorbis.lib"
 				SuppressStartupBanner="true"
 			/>
 			<Tool
@@ -152,7 +152,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/Vorbis.bsc"
+				OutputFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/Vorbis.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

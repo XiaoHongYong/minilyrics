@@ -111,8 +111,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\../../output/imageprocess/Debug"
-			IntermediateDirectory=".\../../output/imageprocess/Debug"
+			OutputDirectory="$(ProjectDir)/../Output/imageprocess/Debug"
+			IntermediateDirectory="$(ProjectDir)/../Output/imageprocess/Debug"
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -137,7 +137,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\../../output/imageprocess/Debug/ImageProcess.tlb"
+				TypeLibraryName="$(ProjectDir)/../Output/imageprocess/Debug/ImageProcess.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -149,10 +149,10 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../output/imageprocess/Debug/ImageProcess.pch"
-				AssemblerListingLocation=".\../../output/imageprocess/Debug/"
-				ObjectFile=".\../../output/imageprocess/Debug/"
-				ProgramDataBaseFileName=".\../../output/imageprocess/Debug/"
+				PrecompiledHeaderFile="$(ProjectDir)/../Output/imageprocess/Debug/ImageProcess.pch"
+				AssemblerListingLocation="$(ProjectDir)/../Output/imageprocess/Debug/"
+				ObjectFile="$(ProjectDir)/../Output/imageprocess/Debug/"
+				ProgramDataBaseFileName="$(ProjectDir)/../Output/imageprocess/Debug/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -175,7 +175,7 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\../../output/imageprocess/Debug/ImageProcess.pdb"
+				ProgramDatabaseFile="$(ProjectDir)/../Output/imageprocess/Debug/ImageProcess.pdb"
 				SubSystem="2"
 				TargetMachine="1"
 			/>
@@ -191,7 +191,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../output/imageprocess/Debug/ImageProcess.bsc"
+				OutputFile="$(ProjectDir)/../Output/imageprocess/Debug/ImageProcess.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

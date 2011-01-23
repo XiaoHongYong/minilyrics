@@ -18,8 +18,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -47,7 +47,7 @@
 				PreprocessorDefinitions="_DEBUG"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\../../Output/PlugWMPVis/Debug/PluginWMPVis.tlb"
+				TypeLibraryName="$(ProjectDir)/../Output/PlugWMPVis/Debug/PluginWMPVis.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -82,11 +82,11 @@
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\PluginWMPVis.def"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile=".\../../Output/PlugWMPVis/Debug/PluginWMPVis.pdb"
+				ProgramDatabaseFile="$(ProjectDir)/../Output/PlugWMPVis/Debug/PluginWMPVis.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\../../Output/PlugWMPVis/Debug/PluginWMPVis.lib"
+				ImportLibrary="$(ProjectDir)/../Output/PlugWMPVis/Debug/PluginWMPVis.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -101,7 +101,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/PlugWMPVis/Debug/PluginWMPVis.bsc"
+				OutputFile="$(ProjectDir)/../Output/PlugWMPVis/Debug/PluginWMPVis.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -115,8 +115,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -144,7 +144,7 @@
 				PreprocessorDefinitions="NDEBUG"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\../../Output/PlugWMPVis/Release/PluginWMPVis.tlb"
+				TypeLibraryName="$(ProjectDir)/../Output/PlugWMPVis/Release/PluginWMPVis.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -178,11 +178,11 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\PluginWMPVis.def"
-				ProgramDatabaseFile=".\../../Output/PlugWMPVis/Release/PluginWMPVis.pdb"
+				ProgramDatabaseFile="$(ProjectDir)/../Output/PlugWMPVis/Release/PluginWMPVis.pdb"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\../../Output/PlugWMPVis/Release/PluginWMPVis.lib"
+				ImportLibrary="$(ProjectDir)/../Output/PlugWMPVis/Release/PluginWMPVis.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -197,7 +197,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/PlugWMPVis/Release/PluginWMPVis.bsc"
+				OutputFile="$(ProjectDir)/../Output/PlugWMPVis/Release/PluginWMPVis.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

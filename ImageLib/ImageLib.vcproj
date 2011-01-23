@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -52,7 +52,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../Output/ImageLib/Unicode_Release/ImageLib.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../Output/ImageLib/Unicode_Release/ImageLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\vc80.pdb"
@@ -84,7 +84,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/ImageLib/Unicode_Release/ImageLib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ImageLib/Unicode_Release/ImageLib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -95,8 +95,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -129,7 +129,7 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../output/ImageLib/Debug/ImageLib.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../Output/ImageLib/Debug/ImageLib.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -158,7 +158,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../output/ImageLib/Debug/ImageLib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ImageLib/Debug/ImageLib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -169,8 +169,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -230,7 +230,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/ImageLib/Unicode_Debug/ImageLib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ImageLib/Unicode_Debug/ImageLib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -241,8 +241,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -315,8 +315,8 @@
 		</Configuration>
 		<Configuration
 			Name="UNIT_TEST Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -376,7 +376,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/ImageLib/Unicode_Debug/ImageLib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ImageLib/Unicode_Debug/ImageLib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

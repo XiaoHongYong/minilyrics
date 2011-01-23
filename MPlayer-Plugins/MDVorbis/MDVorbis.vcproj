@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.tlb"
+				TypeLibraryName="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -53,10 +53,10 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.pch"
-				AssemblerListingLocation="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
-				ObjectFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
-				ProgramDataBaseFileName="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
+				PrecompiledHeaderFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.pch"
+				AssemblerListingLocation="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
+				ObjectFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
+				ProgramDataBaseFileName="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -78,8 +78,8 @@
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.pdb"
-				ImportLibrary="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.lib"
+				ProgramDatabaseFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.pdb"
+				ImportLibrary="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -94,7 +94,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.bsc"
+				OutputFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -111,8 +111,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -137,7 +137,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.tlb"
+				TypeLibraryName="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -149,10 +149,10 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.pch"
-				AssemblerListingLocation="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
-				ObjectFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
-				ProgramDataBaseFileName="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/"
+				PrecompiledHeaderFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.pch"
+				AssemblerListingLocation="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
+				ObjectFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
+				ProgramDataBaseFileName="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -172,8 +172,8 @@
 				OutputFile="../../bin-player/Plugins/MDVorbis.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
-				ProgramDatabaseFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.pdb"
-				ImportLibrary="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.lib"
+				ProgramDatabaseFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.pdb"
+				ImportLibrary="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -188,7 +188,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.bsc"
+				OutputFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDVorbis.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

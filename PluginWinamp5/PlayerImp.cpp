@@ -32,6 +32,14 @@ inline HWND GetPlayerWnd()
 	return plugin.hwndParent;
 }
 
+WNDPROC SetWindowProc(HWND hWnd, WNDPROC wndProc)
+{
+	if (IsWindowUnicode(hWnd))
+		return (WNDPROC)SetWindowLongW(hWnd, GWL_WNDPROC, (LONG)wndProc);
+	else
+		return (WNDPROC)SetWindowLongA(hWnd, GWL_WNDPROC, (LONG)wndProc);
+}
+
 UINT Get_WMCOMMAND_Id(UINT fallback)
 {
 	DWORD	dwVersion = 0;
@@ -477,7 +485,7 @@ int init()
 {
 	// Hook Main Window
 	if (g_pOrgWinampProc == NULL)
-		g_pOrgWinampProc = (WNDPROC)SetWindowLong(GetPlayerWnd(), GWL_WNDPROC, (LONG)HookWinampWnd);
+		g_pOrgWinampProc = SetWindowProc(GetPlayerWnd(), HookWinampWnd);
 
 	CWinampMenu	menu;
 	menu.AddMiniLyrics();
@@ -496,7 +504,7 @@ void quit()
 {
 	if (g_pOrgWinampProc && IsWindow(GetPlayerWnd()) && GetWindowLong(GetPlayerWnd(), GWL_WNDPROC) == (LONG)HookWinampWnd)
 	{
-		SetWindowLong(GetPlayerWnd(), GWL_WNDPROC, (LONG)g_pOrgWinampProc);
+		SetWindowProc(GetPlayerWnd(), g_pOrgWinampProc);
 		g_pOrgWinampProc = NULL;
 	}
 

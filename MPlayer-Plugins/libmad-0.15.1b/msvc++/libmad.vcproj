@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -48,7 +48,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\../../../../output/libmad/Unicode_Debug/libmad.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../../../Output/libmad/Unicode_Debug/libmad.pch"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 			/>
@@ -76,7 +76,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../output/libmad/Unicode_Debug/libmad.bsc"
+				OutputFile="$(ProjectDir)/../../../Output/libmad/Unicode_Debug/libmad.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -87,8 +87,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\../../../../Output/libmad/Debug"
-			IntermediateDirectory=".\../../../../Output/libmad/Debug"
+			OutputDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -118,7 +118,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\../../../../Output/libmad/Debug/libmad.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../../../Output/libmad/Debug/libmad.pch"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 			/>
@@ -146,7 +146,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../Output/libmad/Debug/libmad.bsc"
+				OutputFile="$(ProjectDir)/../../../Output/libmad/Debug/libmad.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -157,8 +157,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -227,8 +227,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -301,8 +301,8 @@
 		</Configuration>
 		<Configuration
 			Name="UNIT_TEST Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -333,7 +333,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile=".\../../../../output/libmad/Unicode_Debug/libmad.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../../../Output/libmad/Unicode_Debug/libmad.pch"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
 			/>
@@ -361,7 +361,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../../../output/libmad/Unicode_Debug/libmad.bsc"
+				OutputFile="$(ProjectDir)/../../../Output/libmad/Unicode_Debug/libmad.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

@@ -203,8 +203,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="../../Output/PluginYme/$(ConfigurationName)"
-			IntermediateDirectory="../../Output/PluginYme/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/PluginYme/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/PluginYme/$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfATL="2"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -296,8 +296,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="../../Output/PluginYme/$(ConfigurationName)"
-			IntermediateDirectory="../../Output/PluginYme/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/PluginYme/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/PluginYme/$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfATL="2"
 			ATLMinimizesCRunTimeLibraryUsage="false"

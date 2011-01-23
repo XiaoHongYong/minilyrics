@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -42,7 +42,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.tlb"
+				TypeLibraryName="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -56,7 +56,7 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.pch"
 				WarningLevel="3"
 				WarnAsError="false"
 				SuppressStartupBanner="true"
@@ -78,9 +78,9 @@
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
-				ProgramDatabaseFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.pdb"
+				ProgramDatabaseFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.pdb"
 				OptimizeForWindows98="1"
-				ImportLibrary="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.lib"
+				ImportLibrary="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -95,7 +95,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.bsc"
+				OutputFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -112,8 +112,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -138,7 +138,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.tlb"
+				TypeLibraryName="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -149,7 +149,7 @@
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
-				PrecompiledHeaderFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -172,8 +172,8 @@
 				SuppressStartupBanner="true"
 				AdditionalLibraryDirectories=""
 				GenerateDebugInformation="true"
-				ProgramDatabaseFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.pdb"
-				ImportLibrary="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.lib"
+				ProgramDatabaseFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.pdb"
+				ImportLibrary="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -188,7 +188,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile="$(SolutionDir)/../../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.bsc"
+				OutputFile="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)/MDFlac.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

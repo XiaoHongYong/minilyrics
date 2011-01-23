@@ -17,8 +17,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -43,7 +43,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\../../output/PluginiTunes/Release/PluginiTunes.tlb"
+				TypeLibraryName="$(ProjectDir)/../Output/PluginiTunes/Release/PluginiTunes.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -79,7 +79,7 @@
 				SubSystem="2"
 				RandomizedBaseAddress="1"
 				DataExecutionPrevention="0"
-				ImportLibrary=".\../../output/PluginiTunes/Release/iTunesMinilyrics.lib"
+				ImportLibrary="$(ProjectDir)/../Output/PluginiTunes/Release/iTunesMinilyrics.lib"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -94,7 +94,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../output/PluginiTunes/Release/PluginiTunes.bsc"
+				OutputFile="$(ProjectDir)/../Output/PluginiTunes/Release/PluginiTunes.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -108,8 +108,8 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(ProjectDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="2"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -134,7 +134,7 @@
 				MkTypLibCompatible="true"
 				SuppressStartupBanner="true"
 				TargetEnvironment="1"
-				TypeLibraryName=".\../../output/PluginiTunes/Debug/PluginiTunes.tlb"
+				TypeLibraryName="$(ProjectDir)/../Output/PluginiTunes/Debug/PluginiTunes.tlb"
 				HeaderFileName=""
 			/>
 			<Tool
@@ -183,7 +183,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../output/PluginiTunes/Debug/PluginiTunes.bsc"
+				OutputFile="$(ProjectDir)/../Output/PluginiTunes/Debug/PluginiTunes.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

@@ -16,8 +16,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\../../Output/ID3Lib/Debug"
-			IntermediateDirectory=".\../../Output/ID3Lib/Debug"
+			OutputDirectory="$(ProjectDir)/../Output/ID3Lib/Debug"
+			IntermediateDirectory="$(ProjectDir)/../Output/ID3Lib/Debug"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -49,7 +49,7 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../Output/ID3Lib/Debug/ID3Lib.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../Output/ID3Lib/Debug/ID3Lib.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -78,7 +78,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/ID3Lib/Debug/ID3Lib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ID3Lib/Debug/ID3Lib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -89,8 +89,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -150,7 +150,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../output/ID3Lib/UnicodeDebug/ID3Lib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ID3Lib/UnicodeDebug/ID3Lib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -161,8 +161,8 @@
 		</Configuration>
 		<Configuration
 			Name="Unicode Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -196,7 +196,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../output/ID3Lib/UnicodeRelease/ID3Lib.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../Output/ID3Lib/UnicodeRelease/ID3Lib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\vc80.pdb"
@@ -228,7 +228,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../output/ID3Lib/UnicodeRelease/ID3Lib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ID3Lib/UnicodeRelease/ID3Lib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -239,8 +239,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\../../Output/ID3Lib/Release"
-			IntermediateDirectory=".\../../Output/ID3Lib/Release"
+			OutputDirectory="$(ProjectDir)/../Output/ID3Lib/Release"
+			IntermediateDirectory="$(ProjectDir)/../Output/ID3Lib/Release"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -273,7 +273,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\../../Output/ID3Lib/Release/ID3Lib.pch"
+				PrecompiledHeaderFile="$(ProjectDir)/../Output/ID3Lib/Release/ID3Lib.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -301,7 +301,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../Output/ID3Lib/Release/ID3Lib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ID3Lib/Release/ID3Lib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
@@ -312,8 +312,8 @@
 		</Configuration>
 		<Configuration
 			Name="UNIT_TEST Unicode Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)/../../Output/$(ProjectName)/$(ConfigurationName)"
+			OutputDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
+			IntermediateDirectory="$(ProjectDir)/../Output/$(ProjectName)/$(ConfigurationName)"
 			ConfigurationType="4"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
@@ -373,7 +373,7 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile=".\../../output/ID3Lib/UnicodeDebug/ID3Lib.bsc"
+				OutputFile="$(ProjectDir)/../Output/ID3Lib/UnicodeDebug/ID3Lib.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
