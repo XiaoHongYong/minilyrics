@@ -81,7 +81,6 @@ ID_TO_STRING	__MlCmdIDStr[] =
 	{ MC_CAN_UPLOAD, MZ_CANUPLOAD},
 	{ MC_UPLOADV0, MZ_UPLOADV0 },
 	{ MC_UPLOAD, MZ_UPLOAD },
-	{ MC_POST_BUG, MZ_POST_BUG },
 	{ MC_GET_LYR_UPDATE, MZ_GET_LYR_UPDATE },
 	{ MC_SUBMIT_LYR_REVIEW, MZ_SUBMIT_LYR_REVIEW },
 	{ MC_EXE_SVR_CMD, MZ_EXE_SVR_CMD },
@@ -243,30 +242,6 @@ void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteAttribute(MZ_ORG_CMD, strOrgCmd.c_str());
 	xmlFile.WriteAttribute(MZ_CMD_RESULT, IDToString(__MlCmdResult2Str, result, _T("UNTRANSLATED")));
-}
-
-int MLRetMsgDataBlock::FromData(CCharBuffer &buff)
-{
-	CSimpleXML		xml;
-	size_t			nXmlLength = strlen_safe(buff.c_str(), buff.size());
-
-	if (nXmlLength > buff.size() - 2)
-		return ERR_CORRUPTTED_MSG;
-
-	const char *pDataBlock = buff.c_str() + nXmlLength;
-	while (*pDataBlock == '\0' && *pDataBlock != '$')
-		pDataBlock++;
-	if (*pDataBlock != '$')
-		return ERR_CORRUPTTED_MSG;
-	pDataBlock++;
-
-	if (!xml.ParseData(buff.c_str(), nXmlLength))
-		return ERR_PARSE_XML;
-
-	nXmlLength += 2;
-	dataBlock.append(pDataBlock, buff.size() - (int)(pDataBlock - buff.c_str()));
-
-	return FromXML(xml.m_pRoot);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -535,16 +510,33 @@ int MLLyricsInfoLite::FromXML(SXNode *pXmlNode)
 {
 	strFile = pXmlNode->GetPropertySafe(_T("fn"));
 	nIndex = pXmlNode->GetPropertyInt(_T("index"));
+	pXmlNode->GetPropertyBinData(_T("content"), bufLyrContent);
 
 	return ERR_OK;
 }
 
 int MLLyricsInfoLite::ToXML(CXMLWriter &xmlFile)
 {
+	CCharBuffer		bufFile;
+#ifdef UNICODE
+	if (!OpenFileToBuffer(strFile.c_str(), bufFile))
+		ERRLOG1(_T("Failed to open lyrics file: %s"), strFile.c_str());
+#else
+	wstringex		wstrFile;
+	Utf8ToUCS2(strFile.c_str(), strFile.size(), wstrFile);
+	if (!OpenFileToBuffer(wstrFile.c_str(), bufFile))
+		ERRLOG1(_T("Failed to open lyrics file: %s"), strFile.c_str());
+#endif
+
+	// If no file is opened, return.
+	if (bufFile.empty())
+		return ERR_OK;
+
 	xmlFile.WriteStartElement(MZ_ITEM);
 
 	xmlFile.WriteAttribute(_T("fn"), FileGetName(strFile.c_str()));
 	xmlFile.WriteAttribute(_T("index"), nIndex);
+	xmlFile.WriteAttribute(_T("content"), bufFile.c_str(), bufFile.size());
 
 	xmlFile.WriteEndElement();
 	return ERR_OK;
@@ -552,7 +544,7 @@ int MLLyricsInfoLite::ToXML(CXMLWriter &xmlFile)
 
 int MLMsgRetBatchSearch::FromXML(SXNode *pXmlNode)
 {
-	int nRet = MLRetMsgDataBlock::FromXML(pXmlNode);
+	int nRet = MLRetMsg::FromXML(pXmlNode);
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -583,32 +575,18 @@ int MLMsgRetBatchSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
 
-	MLRetMsgDataBlock::ToXMLAttribute(xmlFile);
+	MLRetMsg::ToXMLAttribute(xmlFile);
 
 	if (RegVerifyValue)
 		xmlFile.WriteAttribute(_T("badrc"), RegVerifyValue);
 	if (strMessage.size())
 		xmlFile.WriteAttribute(_T("msg"), strMessage.c_str());
 
-	wstringex		wstrFile;
-
 	for (ListLyricsInfoLite::iterator it = listLyricsInfo.begin();
 		it != listLyricsInfo.end(); ++it)
 	{
 		MLLyricsInfoLite &fi = *it;
-
-#ifndef _UNICODE
-		Utf8ToUCS2(fi.strFile.c_str(), fi.strFile.size(), wstrFile);
-		if (binContainer.AddFile(wstrFile.c_str()))
-			fi.ToXML(xmlFile);
-		else
-			ERRLOG1(_T("Failed to open lyrics file: %s"), fi.strFile.c_str());
-#else
-		if (binContainer.AddFile(fi.strFile.c_str()))
-			fi.ToXML(xmlFile);
-		else
-			ERRLOG1(_T("Failed to open lyrics file: %s"), fi.strFile.c_str());
-#endif
+		fi.ToXML(xmlFile);
 	}
 
 	xmlFile.WriteEndElement();
@@ -616,7 +594,6 @@ int MLMsgRetBatchSearch::ToXML(CXMLWriter &xmlFile)
 	// Append data block
 	CCharBuffer &buf = xmlFile.GetBuffer();
 	buf.append(SZ_DATA_BLOCK_SIGN, LEN_DATA_BLOCK_SIGN);
-	buf.append(dataBlock.c_str(), dataBlock.size());
 
 	return ERR_OK;
 }
@@ -735,19 +712,14 @@ int MLMsgCmdUpload::FromXML(SXNode *pXmlNode)
 
 		// Convert Base64 data >> UTF8
 #ifdef UNICODE
-		stringex		ansiBase64;
-		ConvertStr(szContent, nContentLen, ansiBase64);
-
-		stringex		utf8Content;
-		if (!decodebase64(ansiBase64.c_str(), ansiBase64.size(), utf8Content))
+		string		utf8Content;
+		if (!decodebase64(szContent, nContentLen, utf8Content))
 			return ERR_BAD_BASE64CONTENT;
 
 		UTF8ToTString(utf8Content.c_str(), utf8Content.size(), strFileContent);
 #else
-		stringex		utf8Content;
-		if (!decodebase64(szContent, nContentLen, utf8Content))
+		if (!decodebase64(szContent, nContentLen, strFileContent))
 			return ERR_BAD_BASE64CONTENT;
-		strFileContent = utf8Content.c_str();
 #endif
 	}
 
@@ -761,11 +733,10 @@ int MLMsgCmdUpload::ToXML(CXMLWriter &xmlFile)
 	xmlFile.WriteAttribute(_T("username"), strLoginName.c_str());
 	xmlFile.WriteAttribute(_T("pwd"), strPwdMask.c_str());
 
-	// Convert TString >> UTF8 >> Base64 data >> Base64(TString)
-	stringex	utf8Str, strB64;
+	// Convert TString >> UTF8 >> Base64 str
+	stringex	utf8Str;
 	TStringToUTF8(strFileContent.c_str(), strFileContent.size(), utf8Str);
-	encodeuu(utf8Str.c_str(), utf8Str.size(), strB64, true, false);
-	UTF8ToTString(strB64, strB64.size(), strFileContent);
+	encodeuu(utf8Str.c_str(), utf8Str.size(), strFileContent, true, false);
 
 	xmlFile.WriteAttribute(_T("FileData"), strFileContent.c_str());
 	xmlFile.WriteEndElement();
@@ -836,13 +807,7 @@ void CMLPacketAccountMgr::AddAccount(long nId, const char*szPwd)
 
 void CMLPacketAccountMgr::EraseAccount(long nId)
 {
-	MAP_ACCOUNT::iterator	it;
-
-	it = m_mapAccount.find(nId);
-	if (it == m_mapAccount.end())
-		return;
-	else
-		m_mapAccount.erase(it);
+	m_mapAccount.erase(nId);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -980,157 +945,92 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 //////////////////////////////////////////////////////////////////////////
 //
 
-#define ALLOC_BLOCK_LEN		(20 * 1024)
+#define ALLOC_BLOCK_LEN		(2 * 1024)
 
-
-//////////////////////////////////////////////////////////////////////////
-CMsgProtocol::CMsgProtocol()
-{
-	m_pNetFile = NULL;
-}
-
-CMsgProtocol::~CMsgProtocol()
-{
-}
-
-
-int CMsgProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, int nMaxBuff, BOOL *pbMLAgent)
+int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 {
 	ASSERT(m_pNetFile);
-	int		nDataLength;
-
-	nDataLength = 0;
-
-	int		nCapaLen;		// 可用容量
-	int		nRead;
-	char	*pszMsg;
-	int		nRet;
-
 	ASSERT(pMsgBuff->size() == 0);
-	if (m_buffMsg.size() > 0)
-	{
-		pMsgBuff->append(m_buffMsg.c_str(), m_buffMsg.size());
-		m_buffMsg.clear();
-	}
+	pMsgBuff->clear();
 
+	int		nRead;
+	int		nRet = m_pNetFile->Read(*pMsgBuff, ALLOC_BLOCK_LEN, &nRead);
+	if (nRet != ERR_OK)
+		return nRet;
 	if (pMsgBuff->size() < 4)
+		return ERR_BAD_MSG;
+
+	char	*pszMsg;
+	pszMsg = (char *)pMsgBuff->data();
+
+	if (StrIBeginWith(pszMsg, "HTTP"))
+		msgType = MT_HTTP_RET;
+	else if (StrIBeginWith(pszMsg, "GET"))
+		msgType = MT_HTTP_GET;
+	else if (StrIBeginWith(pszMsg, "POST"))
+		msgType = MT_HTTP_POST;
+	else
+		return ReadOldXmlMsg(msgType, pMsgBuff);
+
+	//
+	// HTTP protocol message
+	//
+	CHttpProtocol	*httpProtocol = NULL;
+
+	if (msgType == MT_HTTP_GET || msgType == MT_HTTP_POST)
+		httpProtocol = &m_httpRequest;
+	else if (msgType == MT_HTTP_RET)
+		httpProtocol = &m_httpReturn;
+	else
+		ASSERT(0);
+
+	httpProtocol->SetCacheData(pMsgBuff->data(), pMsgBuff->size());
+	httpProtocol->SetNetFile(m_pNetFile);
+	nRet = httpProtocol->ReadHead(TRUE);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	pMsgBuff->clear();
+	nRet = httpProtocol->ReadData(pMsgBuff, ML_MSG_MAX_LENGTH);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	// Is XML or Binary XML?
+	if ((msgType == MT_HTTP_POST && strcmp(m_httpRequest.GetUrl(), SZ_ML_POST_URL) == 0)
+		|| msgType == MT_HTTP_RET)
 	{
-		nCapaLen = pMsgBuff->capacity();
-		pszMsg = (char *)pMsgBuff->data();
-		pszMsg += pMsgBuff->size();
-		nRet = m_pNetFile->Read(pszMsg, nCapaLen - pMsgBuff->size(), &nRead);
+		nRet = m_packetWrapper.Unwrapp(*pMsgBuff);
 		if (nRet != ERR_OK)
 			return nRet;
 
-		pMsgBuff->setSize(pMsgBuff->size() + nRead);
-		if (pMsgBuff->size() < 4)
+		if (pMsgBuff->c_str()[0] == '<')
+			msgType = MT_HTTP_XML;
+		else if (pMsgBuff->c_str()[0] == 'M')
+			msgType = MT_HTTP_BIN_XML;
+		else
 			return ERR_BAD_MSG;
 	}
-	pszMsg = (char *)pMsgBuff->data();
-	if (_strnicmp(pszMsg, "POST", 4) == 0)
-	{
-		// HTTP 消息
-		m_httpRequest.SetCacheData(pMsgBuff->data(), pMsgBuff->size());
-		m_httpRequest.SetNetFile(m_pNetFile);
-		nRet = m_httpRequest.ReadHead(TRUE);
-		if (nRet != ERR_OK)
-			return nRet;
 
-		ASSERT(m_httpRequest.GetRequestType() == CHttpRequestProtocol::RQ_POST);
-		pMsgBuff->clear();
-		nRet = m_httpRequest.ReadData(pMsgBuff, nMaxBuff);
-		if (nRet != ERR_OK)
-			return nRet;
+	return ERR_OK;
+}
 
-		if (pbMLAgent)
-		{
-			if (_strnicmp("MiniLyrics", m_httpRequest.GetPropValue(CHttpRequestProtocol::RP_USER_AGENT), 10) == 0)
-				*pbMLAgent = TRUE;
-			else
-				*pbMLAgent = FALSE;
-		}
-
-		// continue...
-		msgType = MT_HTTP_POST;
-		return ERR_OK;
-	}
-	else if (_strnicmp(pszMsg, "HTTP", 4) == 0)
-	{
-		// HTTP 消息
-		m_httpReturn.SetCacheData(pMsgBuff->data(), pMsgBuff->size());
-		m_httpReturn.SetNetFile(m_pNetFile);
-		nRet = m_httpReturn.ReadHead(TRUE);
-		if (nRet != ERR_OK)
-			return nRet;
-
-		pMsgBuff->clear();
-		nRet = m_httpReturn.ReadData(pMsgBuff, nMaxBuff);
-		if (nRet != ERR_OK)
-			return nRet;
-
-		// continue...
-		msgType = MT_HTTP_RET;
-		return ERR_OK;
-	}
-	else if (_strnicmp(pszMsg, "GET", 3) == 0)
-	{
-		// HTTP 消息
-		m_httpRequest.SetCacheData(pMsgBuff->data(), pMsgBuff->size());
-		m_httpRequest.SetNetFile(m_pNetFile);
-		nRet = m_httpRequest.ReadHead(TRUE);
-		if (nRet != ERR_OK)
-			return nRet;
-
-		ASSERT(m_httpRequest.GetRequestType() == CHttpRequestProtocol::RQ_GET);
-		pMsgBuff->clear();
-		nRet = m_httpRequest.ReadData(pMsgBuff, nMaxBuff);
-		if (nRet != ERR_HTTP_GET_NODATA)
-			return nRet;
-
-/*
-		// continue...
-		m_httpReturn.SetNetFile(m_pNetFile);
-		m_httpReturn.SetAvailProp(CHttpReturnProtocol::RP_MIN_RET);
-		m_httpReturn.SetServer("MiniLyrics Server/1.1");
-		m_httpReturn.SetConnection("close");
-		m_httpReturn.WriteHead();
-		m_httpReturn.WriteData(SZ_ML_SERVER_HTTP, sizeof(SZ_ML_SERVER_HTTP));
-*/
-		msgType = MT_HTTP_GET;
-		return ERR_OK;
-
-		// return ERR_HTTP_401;
-	}
-
-	nCapaLen = pMsgBuff->capacity();
-	nDataLength = 0;
-	char	szMsgType[ML_MSG_XML_LEN + 1];
-	char	szMsgDataLen[ML_MSG_XML_DATA_LEN + 1];
+int CMLProtocol::ReadOldXmlMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
+{
+	int nCapaLen = pMsgBuff->capacity();
+	int nDataLength = 0;
+	LPCSTR pszMsg = NULL;
 
 	while (1)
 	{
-		// 需要继续接收
-//		if (pMsgBuff->GetLength() < 10)	// 每条消息的最小长度
-//		{
-//			DBGLOG0(_T("收到的消息长度小于最小长度 10 BYTE"));
-//			return FALSE;
-//		}
 		//
 		// 如果没有接收到数据长度，则继续接收
 		if (nDataLength == 0 && pMsgBuff->size() > ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN)
 		{
-			// DBGLOGDUMPS(pMsgBuff->GetBuffer(), pMsgBuff->GetLength());
-
-			//
-			// 读入数据长度和消息类型
-//			char	*szMsgHeader;
-			// 消息类型
-//			szMsgHeader = (char *)m_buffMsgHeader.GetBuffer();
-
 			pszMsg = pMsgBuff->data();
-			strncpy_safe(szMsgType, CountOf(szMsgType), pszMsg, ML_MSG_XML_LEN);
-			szMsgType[ML_MSG_XML_LEN] = '\0';
+			if (!StrBeginWith(pszMsg, ML_MSG_XML))
+				return ERR_BAD_MSG;
 
+			char	szMsgDataLen[ML_MSG_XML_DATA_LEN + 1];
 			strncpy_safe(szMsgDataLen, CountOf(szMsgDataLen), pszMsg + ML_MSG_XML_LEN, ML_MSG_XML_DATA_LEN);
 			szMsgDataLen[ML_MSG_XML_DATA_LEN] = '\0';
 
@@ -1156,69 +1056,42 @@ int CMsgProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, int nMaxBuf
 		{
 			//
 			// 已经读完了一条消息
-			if (nDataLength > (int)pMsgBuff->size())
-				m_buffMsg.append(pMsgBuff->data() + nDataLength, pMsgBuff->size() - nDataLength);
-			// pMsgBuff->Cut(ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN, pMsgBuff->GetLength() - ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN);
+			ASSERT(nDataLength <= (int)pMsgBuff->size());
 			break;
 		}
 
-		if (nCapaLen <= ALLOC_BLOCK_LEN + (int)pMsgBuff->size())
-		{
-			//
-			// 当前分配的空间太小
-			if (nCapaLen >= nMaxBuff)
-				return ERR_OUTOF_BUFF;
-			nCapaLen += ALLOC_BLOCK_LEN;
-			if (nCapaLen > nMaxBuff)
-				nCapaLen = nMaxBuff;
+		if (pMsgBuff->size() >= ML_MSG_MAX_LENGTH)
+			return ERR_OUTOF_BUFF;
 
-			pMsgBuff->reserve(nCapaLen);
-		}
-
-		pszMsg = (char *)pMsgBuff->data();
-		pszMsg += pMsgBuff->size();
-		nRet = m_pNetFile->Read(pszMsg, nCapaLen - pMsgBuff->size(), &nRead);
+		int nRead = 0;
+		int nRet = m_pNetFile->Read(*pMsgBuff, ALLOC_BLOCK_LEN, &nRead);
 		if (nRet == ERR_OK)
 		{
 			// 判断是否已经关闭socket
 			if (nRead == 0)
 				return ERR_NOT_RECIVED_ALL;
-			// 继续
-			pMsgBuff->setSize(pMsgBuff->size() + nRead);
 		}
 		else
 			return nRet;
 	}
 
-	if (strcmp(szMsgType, ML_MSG_XML) == 0)
-		msgType = MT_XML;
+	msgType = MT_XML;
 
 	return ERR_OK;
 }
-//
-//int CMsgProtocol::ContinueReadMsg(int nDataLength, CCharBuffer *pBuffer, int nMaxBuff)
-//{
-//	return ERR_OK;
-//}
 
-int CMsgProtocol::WriteMsg(const char *szMsgType, CCharBuffer *pMsgBuff)
+int CMLProtocol::WriteOldXmlMsg(CCharBuffer *pMsgBuff)
 {
 	char	szHeader[256];
-	char	szFormat[32];
 	int		nWrite;
 	int		nRet;
 
-	// %3s%6d
-	sprintf_s(szFormat, CountOf(szFormat), "%%%ds%%%dd", ML_MSG_XML_LEN, ML_MSG_XML_DATA_LEN);
-
-	sprintf_s(szHeader, CountOf(szHeader), szFormat, szMsgType, pMsgBuff->size());
+	sprintf_s(szHeader, CountOf(szHeader), ML_MSG_XML_FMT, pMsgBuff->size());
 
 	nRet = m_pNetFile->Write(szHeader, ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN, &nWrite);
 	if (nRet != ERR_OK)
 		return nRet;
 
-	// DBGLOG1("WriteMsg: %s", szHeader);
-	// DBGLOGDUMPS(pMsgBuff->GetBuffer(), pMsgBuff->GetLength());
 	nRet = m_pNetFile->Write(pMsgBuff->data(), pMsgBuff->size(), &nWrite);
 	if (nRet != ERR_OK)
 		return nRet;
@@ -1233,6 +1106,7 @@ int CMsgProtocol::WriteMsg(const char *szMsgType, CCharBuffer *pMsgBuff)
 CMLProtocol::CMLProtocol()
 {
 	m_bUseProxy = false;
+	m_pNetFile = NULL;
 }
 
 CMLProtocol::~CMLProtocol()
@@ -1275,34 +1149,6 @@ void CMLProtocol::SetProxy(BOOL bEnableProxy, LPCSTR szProxyServer, int nProxyPo
 }
 
 // ERR_OK
-int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, BOOL *pbMLAgent)
-{
-	int		nRet;
-
-	pMsgBuff->clear();
-	nRet = CMsgProtocol::ReadMsg(msgType, pMsgBuff, ML_MSG_MAX_LENGTH, pbMLAgent);
-	if (nRet == ERR_OK)
-	{
-#ifdef _DEBUG
-		if (g_Profile.GetProfileInt(_T("PrintMLRecv"), FALSE))
-			DBGLOGDUMPS(pMsgBuff->c_str(), pMsgBuff->size());
-#endif
-		if ((msgType == MT_HTTP_POST && strcmp(m_httpRequest.GetUrl(), SZ_ML_POST_URL) == 0)
-			 || msgType == MT_HTTP_RET)
-		{
-			// 在此对消息类型进行转换
-			msgType = MT_HTTP_XML;
-
-			nRet = m_packetWrapper.Unwrapp(*pMsgBuff);
-			if (nRet != ERR_OK)
-				return nRet;
-		}
-	}
-
-	return nRet;
-}
-
-// ERR_OK
 int CMLProtocol::WriteXMLMsg(MLMsgType msgType, CCharBuffer *pMsgBuff)
 {
 	int		nRet;
@@ -1331,27 +1177,12 @@ int CMLProtocol::WriteXMLMsg(MLMsgType msgType, CCharBuffer *pMsgBuff)
 	}
 	else
 	{
-		return WriteMsg(ML_MSG_XML, pMsgBuff);
+		return WriteOldXmlMsg(pMsgBuff);
 	}
 }
 
 int CMLProtocol::ParseXMLMsg(CCharBuffer *pMsgBuff, CSimpleXML &xml)
 {
-//	TrackFunctionEx("CMLProtocol::ParseXMLMsg");
-
-/*	char	szTempXmlFile[MAX_PATH];
-
-
-	if (!SaveBufferAsTempFile(szTempXmlFile, pMsgBuff->GetBuffer(), pMsgBuff->GetLength()))
-		return ERR_FALSE;
-
-	if (!ParseXmlFile(xml, szTempXmlFile))
-	{
-		DeleteFile(szTempXmlFile);
-		return ERR_FALSE;
-	}
-	DeleteFile(szTempXmlFile);
-*/
 	if (!xml.ParseData(pMsgBuff->data(), pMsgBuff->size()))
 		return ERR_PARSE_XML;
 

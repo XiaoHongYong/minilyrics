@@ -8,7 +8,8 @@ FILE_ENCODING GetStrEncodingType(LPCVOID lpData);
 
 bool StrBeginWith(LPCSTR szText, LPCSTR szBeginWith);
 bool StrBeginWith(LPCWSTR szText, LPCWSTR szBeginWith);
-bool StrIBeginWith(LPCTSTR szText, LPCTSTR szBeginWith);
+bool StrIBeginWith(LPCSTR szText, LPCSTR szBeginWith);
+bool StrIBeginWith(LPCWSTR szText, LPCWSTR szBeginWith);
 
 const TCHAR * strignore(const TCHAR *str, const TCHAR *strIgnore);
 
@@ -16,6 +17,8 @@ void strdel(char *szStr, char ch);
 void strdel(WCHAR *szStr, WCHAR ch);
 
 TCHAR * __cdecl strrep(TCHAR * str, TCHAR chSrc, TCHAR chDest);
+
+void strrep(tstring &str, TCHAR chSrc, TCHAR chDest);
 
 void strrep(tstring &str, const TCHAR *szSrc, const TCHAR *szDest);
 

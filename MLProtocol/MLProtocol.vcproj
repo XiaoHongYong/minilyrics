@@ -463,10 +463,6 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
-				RelativePath=".\BinContainer.cpp"
-				>
-			</File>
-			<File
 				RelativePath="HttpClient.cpp"
 				>
 				<FileConfiguration
@@ -859,10 +855,6 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
-			<File
-				RelativePath=".\BinContainer.h"
-				>
-			</File>
 			<File
 				RelativePath="HttpClient.h"
 				>

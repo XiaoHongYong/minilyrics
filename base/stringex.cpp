@@ -17,7 +17,7 @@ bool StrBeginWith(LPCSTR szText, LPCSTR szBeginWith)
 	while (*szBeginWith == *szText && *szBeginWith && *szText)
 	{
 		szBeginWith++;
-		szBeginWith++;
+		szText++;
 	}
 
 	return *szBeginWith == '\0';
@@ -28,18 +28,29 @@ bool StrBeginWith(LPCWSTR szText, LPCWSTR szBeginWith)
 	while (*szBeginWith == *szText && *szBeginWith && *szText)
 	{
 		szBeginWith++;
-		szBeginWith++;
+		szText++;
 	}
 
 	return *szBeginWith == '\0';
 }
 
-bool StrIBeginWith(LPCTSTR szText, LPCTSTR szBeginWith)
+bool StrIBeginWith(LPCSTR szText, LPCSTR szBeginWith)
 {
 	while (CharLwr(*szBeginWith) == CharLwr(*szText) && *szBeginWith && *szText)
 	{
 		szBeginWith++;
+		szText++;
+	}
+
+	return *szBeginWith == '\0';
+}
+
+bool StrIBeginWith(LPCWSTR szText, LPCWSTR szBeginWith)
+{
+	while (CharLwr(*szBeginWith) == CharLwr(*szText) && *szBeginWith && *szText)
+	{
 		szBeginWith++;
+		szText++;
 	}
 
 	return *szBeginWith == '\0';
@@ -166,6 +177,15 @@ TCHAR * __cdecl strrep(TCHAR * str, TCHAR chSrc, TCHAR chDest)
 	}
 
 	return str;
+}
+
+void strrep(tstring &str, TCHAR chSrc, TCHAR chDest)
+{
+	for (size_t i = 0; i < str.size(); i++)
+	{
+		if (str[i] == chSrc)
+			str.replace(i, 1, &chDest);
+	}
 }
 
 #ifndef WIN32
@@ -1754,6 +1774,8 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestReadColorValue_t);
 	CPPUNIT_TEST(TestTrimStrRight);
 	CPPUNIT_TEST(TestStrSplit);
+	CPPUNIT_TEST(TestStrReplace);
+	CPPUNIT_TEST(TestStrBeginWith);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -1852,6 +1874,34 @@ protected:
 		{
 			if (setStr.find(strResult[i]) == setStr.end())
 				CPPUNIT_FAIL_T(CStrPrintf(_T("StrSplit(Set) Test, case(Can't find): %d, %s"), i, strResult[i]).c_str());
+		}
+	}
+
+	void TestStrReplace()
+	{
+		LPCTSTR		szSrc[] = { _T("abca"), _T("baAcd"), _T("a") };
+		LPCTSTR		szDst[] = { _T("xbcx"), _T("bxAcd"), _T("x") };
+
+		for (int i = 0; i < CountOf(szSrc); i++)
+		{
+			tstring		str = szSrc[i];
+			strrep(str, 'a', 'x');
+			CPPUNIT_ASSERT(_tcscmp(szDst[i], str.c_str()) == 0);
+		}
+	}
+
+	void TestStrBeginWith()
+	{
+		LPCTSTR		szSrc[] = { _T("abca"), _T("baAcd"), _T("aXDegae"), _T("aXDegae") };
+		LPCTSTR		szBeg[] = { _T(""), _T("b"), _T("aXD"), _T("aXDegae") };
+		LPCTSTR		szIBeg[] = { _T(""), _T("B"), _T("axd"), _T("aXDegaE") };
+		LPCTSTR		szBegFalse[] = { _T("ac"), _T("bb"), _T("x"), _T("aXDegaeD") };
+
+		for (int i = 0; i < CountOf(szSrc); i++)
+		{
+			CPPUNIT_ASSERT(StrBeginWith(szSrc[i], szBeg[i]));
+			CPPUNIT_ASSERT(StrIBeginWith(szSrc[i], szIBeg[i]));
+			CPPUNIT_ASSERT(!StrBeginWith(szSrc[i], szBegFalse[i]));
 		}
 	}
 

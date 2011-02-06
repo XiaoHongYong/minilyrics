@@ -150,19 +150,6 @@ SimpleXMLParserError CSimpleXMLParser::ParseData(LPCVOID lpXmlData, size_t nLen,
 	return Error;
 }
 
-SimpleXMLParserError CSimpleXMLParser::ParseFile(LPCTSTR szFile, CSimpleXML &xmlData)
-{
-	CCharBuffer				str;
-	SimpleXMLParserError	Err;
-
-	if (!OpenFileToBuffer(szFile, str))
-		return SXPE_OPEN_FILE_FAILED;
-
-	Err = ParseData(str.data(), str.size(), xmlData);
-
-	return Err;
-}
-
 void CSimpleXMLParser::IgnoreSpace(int nPos, int &nPosNext)
 {
 	nPosNext = nPos;

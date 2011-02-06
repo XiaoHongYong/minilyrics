@@ -400,6 +400,43 @@ void MbcsToUCS2(const char *str, int nLen, wstringex &strOut, int nEncodingID)
 	ConvertStr(str, nLen, strOut, nEncodingID);
 }
 
+
+void AnsiToUCS2(const char *str, int nLen, wstring_t &strOut)
+{
+	if (nLen == -1)
+		nLen = strlen(str);
+
+	strOut.resize(nLen);
+	_xcsncpy((WCHAR *)strOut.c_str(), str, nLen);
+}
+
+void UCS2ToAnsi(const WCHAR *str, int nLen, string &strOut)
+{
+	if (nLen == -1)
+		nLen = wcslen(str);
+
+	strOut.resize(nLen);
+	_xcsncpy((char *)strOut.c_str(), str, nLen);
+}
+
+void AnsiToUCS2(const char *str, int nLen, wstringex &strOut)
+{
+	if (nLen == -1)
+		nLen = strlen(str);
+
+	strOut.resize(nLen);
+	_xcsncpy(strOut.data(), str, nLen);
+}
+
+void UCS2ToAnsi(const WCHAR *str, int nLen, stringex &strOut)
+{
+	if (nLen == -1)
+		nLen = wcslen(str);
+
+	strOut.resize(nLen);
+	_xcsncpy(strOut.data(), str, nLen);
+}
+
 //////////////////////////////////////////////////////////////////////////
 void UCS2ToUtf8(const WCHAR *str, int nLen, string &strOut)
 {
@@ -608,3 +645,47 @@ int UTF8ToMultibyte(unsigned char* text, char *szOut, int nOutBuffLen)
 	return WideCharToMultiByte(CP_ACP, 0, wchWideChar, -1, szOut, nOutBuffLen, NULL, NULL);
 }
 */
+
+#ifdef _CPPUNIT_TEST
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+IMPLEMENT_CPPUNIT_TEST_REG(CharEncoding)
+
+class CTestCaseCharEncoding : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseCharEncoding);
+	CPPUNIT_TEST(TestAnsiToUcs2);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+	void TestAnsiToUcs2()
+	{
+		const int bufLen = 256;
+		byte	buf[bufLen];
+
+		wstring_t	strUcs2;
+		AnsiToUCS2((const char *)buf, bufLen, strUcs2);
+		CPPUNIT_ASSERT(strUcs2.size() == bufLen);
+
+		string		strAnsi;
+		UCS2ToAnsi(strUcs2.c_str(), strUcs2.size(), strAnsi);
+		CPPUNIT_ASSERT(strAnsi.size() == bufLen);
+		CPPUNIT_ASSERT(memcmp(strAnsi.c_str(), buf, bufLen) == 0);
+
+		LPCSTR	strTest = "abcdefalsgeoie1123";
+		AnsiToUCS2(strTest, -1, strUcs2);
+		CPPUNIT_ASSERT(strUcs2.size() == strlen(strTest));
+
+		UCS2ToAnsi(strUcs2.c_str(), -1, strAnsi);
+		CPPUNIT_ASSERT(strAnsi.size() == strlen(strTest));
+		CPPUNIT_ASSERT(memcmp(strAnsi.c_str(), strTest, strlen(strTest) + 1) == 0);
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseCharEncoding);
+
+
+#endif // _CPPUNIT_TEST

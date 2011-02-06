@@ -249,7 +249,8 @@ bool CLyrSearchResultCacheDB::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword
 	n = 1;
 	sqlAdd.BindStaticText(n++, strUtf8.c_str(), strUtf8.size());
 	sqlAdd.BindInt(n++, GetCurDaysFrom2000());
-	sqlAdd.BindStaticText(n++, xml.GetData(), xml.GetLength());
+	CCharBuffer &buf = xml.GetBuffer();
+	sqlAdd.BindStaticText(n++, buf.c_str(), buf.size());
 
 	nRet = sqlAdd.Step();
 	if (nRet != ERR_OK)
@@ -310,7 +311,7 @@ bool CLyrSearchResultCacheMemDB::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyw
 		ITEM	&item = *it;
 		if (_tcscmp(item.strKeyword.c_str(), szFileAssociateKeyword) == 0)
 		{
-			item.strXml = xml.GetData();
+			item.strXml = xml.GetBuffer().c_str();
 			return true;
 		}
 	}
@@ -318,7 +319,7 @@ bool CLyrSearchResultCacheMemDB::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyw
 	ITEM	item;
 
 	item.strKeyword = szFileAssociateKeyword;
-	item.strXml = xml.GetData();
+	item.strXml = xml.GetBuffer().c_str();
 
 	m_listResults.push_back(item);
 
@@ -648,17 +649,14 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 		g_mpApp.MessageOut(retLyrics.strMessage.c_str());
 
 	int		nPos = 0;
-	size_t	length = 0;
 
 	for (ListLyricsInfoLite::iterator it = retLyrics.listLyricsInfo.begin();
 		it != retLyrics.listLyricsInfo.end(); ++it)
 	{
 		MLLyricsInfoLite &lyr = *it;
-		const char *data = retLyrics.binContainer.GetData(nPos, length);
-		ASSERT(data != NULL);
-		if (!data)
+		if (lyr.bufLyrContent.empty())
 		{
-			ERRLOG0(_T("Failed to get data form retLyrics.binContainer."));
+			ERRLOG0(_T("Empty lyrics content is returned."));
 			break;
 		}
 		if (lyr.nIndex >= (int)listSearch.size())
@@ -669,7 +667,7 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 		MLSearchItem	&search = listSearch[lyr.nIndex];
 		tstring			strFile = g_LyricsDownloader.GetSaveLyricsFile(search.strMediaFile.c_str(), lyr.strFile.c_str());
 
-		if (g_LyricsDownloader.SaveDownloadedFile(strFile, data, length) == ERR_OK)
+		if (g_LyricsDownloader.SaveDownloadedFile(strFile, lyr.bufLyrContent.c_str(), lyr.bufLyrContent.size()) == ERR_OK)
 			search.strLyrFile = strFile;
 	}
 

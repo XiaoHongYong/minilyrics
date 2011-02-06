@@ -19,7 +19,7 @@ int			g_nInQueue = 0;
 
 #ifdef _WIN32
 #define LOGSOCKERR(strMsg)		g_Log.WriteLog(LOG_LVL_DEBUG, _T(__FILE__), __LINE__, strMsg, WSAGetLastError())
-#define WSAError()			WSAGetLastError();
+#define WSAError()			WSAGetLastError()
 typedef int			socklen_t;
 #else
 #define LOGSOCKERR(strMsg)		g_Log.WriteLog(LOG_LVL_DEBUG, _T(__FILE__), __LINE__, strMsg, errno)
@@ -312,11 +312,47 @@ int CNetFile::Read(char *szBuffer, int nBufferLen, int *pnRead)
 	*pnRead = recv(m_s, szBuffer, nBufferLen, 0);
 	if (*pnRead == SOCKET_ERROR)
 	{
-		// DBGLOG0(CWin32Error().Description());
 		*pnRead = 0;
 		return WSAError();
 	}
-//	DBGLOGDUMPS(szBuffer, nBufferLen);
+	return ERR_OK;
+}
+
+int CNetFile::Read(CCharBuffer &buf, int nMaxToRead, int *pnRead)
+{
+	if (nMaxToRead == -1)
+	{
+		*pnRead = 0;
+
+		const int RESERVE_SPACE = 4096;
+		while (1)
+		{
+			if (buf.capacity() - buf.size() < RESERVE_SPACE)
+				buf.reserve(buf.size() + RESERVE_SPACE);
+
+			int n = recv(m_s, buf.data() + buf.size(), RESERVE_SPACE, 0);
+			if (n == SOCKET_ERROR)
+				return WSAError();
+			if (n == 0)
+				break;
+			buf.resize(buf.size() + n);
+			*pnRead += n;
+		}
+	}
+	else
+	{
+		if (buf.capacity() - buf.size() < nMaxToRead)
+			buf.reserve(buf.size() + nMaxToRead);
+
+		*pnRead = recv(m_s, buf.data() + buf.size(), nMaxToRead, 0);
+		if (*pnRead == SOCKET_ERROR)
+		{
+			*pnRead = 0;
+			return WSAError();
+		}
+		buf.resize(buf.size() + *pnRead);
+	}
+
 	return ERR_OK;
 }
 

@@ -109,19 +109,14 @@ protected:
 
 		if (strUser.size())
 		{
-			stringex	strBase64, strPwdUser;
+			stringex		strPwdUser;
 			TCHAR			szPwdUser[256];
 
 			_stprintf_s(szPwdUser, CountOf(szPwdUser), _T("%s:%s"), strUser.c_str(), strPwd.c_str());
 			ConvertStr(szPwdUser, -1, strPwdUser);
-			encodeuu(strPwdUser, strPwdUser.size(), strBase64, true);
-#ifdef _UNICODE
-			wstringex	strW;
-			ConvertStr(strBase64.c_str(), strBase64.size(), strW);
-			g_Profile.WriteProfileString(_T("Base64ProxyUserPass"), strW.c_str());
-#else
+			tstring		strBase64;
+			encodeuu(strPwdUser, strPwdUser.size(), strBase64, true, false);
 			g_Profile.WriteProfileString(_T("Base64ProxyUserPass"), strBase64.c_str());
-#endif
 		}
 	}
 

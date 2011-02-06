@@ -57,16 +57,21 @@ public:
 
 	int GetPropertyInt(LPCTSTR szPropName) { return _ttoi(GetPropertySafe(szPropName)); }
 
+	bool GetPropertyBinData(LPCTSTR szPropName, string &buf);
+	bool GetPropertyBase64Data(LPCTSTR szPropName, string &buf);
+
 	void AddProperty(LPCTSTR szPropName, LPCTSTR szPropValue);
 	void SetProperty(LPCTSTR szPropName, LPCTSTR szPropValue);
 
 	void EraseProperty(LPCTSTR szPropName);
 
-public:
 	// Get first child same with the node name
 	SXNode *GetChild(LPCTSTR szName);
 
 	void ToXML(CXMLWriter &xmlStream);
+
+protected:
+	LIST_PROPERTIES::iterator FindProperty(LPCTSTR szPropName);
 
 };
 

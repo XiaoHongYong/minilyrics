@@ -67,7 +67,7 @@ const char *trans_ptr = uu_base64;
 /* ENC is the basic 1 character encoding function to make a char printing.  */
 #define ENC(Char) (trans_ptr[(Char) & 077])
 
-void encodeuu(const char *strIn, int nLen, stringex &str, bool bBase64, bool bIncNewLine)
+void encodeuu(const char *strIn, int nLen, tstring &str, bool bBase64, bool bIncNewLine)
 {
 	int		n;
 	const char	*p, *p2;
@@ -138,7 +138,7 @@ void encodeuu(const char *strIn, int nLen, stringex &str, bool bBase64, bool bIn
     }
 }
 
-BOOL decodebase64(const char *szIn, int nLen, stringex &strOut)
+BOOL decodebase64(LPCTSTR szIn, int nLen, string &strOut)
 {
 	static const char b64_tab[256] =
 	{
@@ -177,12 +177,17 @@ BOOL decodebase64(const char *szIn, int nLen, stringex &strOut)
 	};
 
 	if (nLen < 0)
-		nLen = strlen(szIn);
+		nLen = _tcslen(szIn);
 
 	strOut.clear();
 
+#ifdef UNICODE
+	WCHAR *p, *pEnd;
+	p = (WCHAR *)szIn;
+#else
 	unsigned char *p, *pEnd;
 	p = (unsigned char *)szIn;
+#endif
 	pEnd = p + nLen;
 
 	unsigned char		b1, b2, b3, b4;
@@ -229,169 +234,17 @@ BOOL decodebase64(const char *szIn, int nLen, stringex &strOut)
 	return TRUE;
 }
 
-//
-//BOOL decodebase64(const char *szIn, int nLen, stringex &strOut)
-//{
-//	static const char b64_tab[256] =
-//	{
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*000-007*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*010-017*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*020-027*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*030-037*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*040-047*/
-//		'\177', '\177', '\177', '\76',  '\177', '\177', '\177', '\77',  /*050-057*/
-//		'\64',  '\65',  '\66',  '\67',  '\70',  '\71',  '\72',  '\73',  /*060-067*/
-//		'\74',  '\75',  '\177', '\177', '\177', '\100', '\177', '\177', /*070-077*/
-//		'\177', '\0',   '\1',   '\2',   '\3',   '\4',   '\5',   '\6',   /*100-107*/
-//		'\7',   '\10',  '\11',  '\12',  '\13',  '\14',  '\15',  '\16',  /*110-117*/
-//		'\17',  '\20',  '\21',  '\22',  '\23',  '\24',  '\25',  '\26',  /*120-127*/
-//		'\27',  '\30',  '\31',  '\177', '\177', '\177', '\177', '\177', /*130-137*/
-//		'\177', '\32',  '\33',  '\34',  '\35',  '\36',  '\37',  '\40',  /*140-147*/
-//		'\41',  '\42',  '\43',  '\44',  '\45',  '\46',  '\47',  '\50',  /*150-157*/
-//		'\51',  '\52',  '\53',  '\54',  '\55',  '\56',  '\57',  '\60',  /*160-167*/
-//		'\61',  '\62',  '\63',  '\177', '\177', '\177', '\177', '\177', /*170-177*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*200-207*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*210-217*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*220-227*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*230-237*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*240-247*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*250-257*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*260-267*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*270-277*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*300-307*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*310-317*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*320-327*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*330-337*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*340-347*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*350-357*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*360-367*/
-//		'\177', '\177', '\177', '\177', '\177', '\177', '\177', '\177', /*370-377*/
-//	};
-//	// char buf[2 * BUFSIZ];
-//
-//	strOut.clear();
-//
-//	unsigned char *p;
-//	p = (unsigned char *)szIn;
-//
-//	while (1)
-//    {
-//		int last_data = 0;
-////
-////		if (fgets (buf, sizeof(buf), stdin) == NULL)
-////		{
-////			error (0, 0, _("%s: Short file"), inname);
-////			return 1;
-////		}
-////		p = (unsigned char *) buf;
-//
-////		if (memcmp (p, "====", 4) == 0)
-////			return TRUE;
-//			// break;
-//
-//		if (*p == '\0')
-//			return TRUE;
-//
-//		if (last_data != 0)
-//		{
-//			// error (0, 0, _("%s: data following `=' padding character"), inname);
-//			return FALSE;
-//		}
-//
-//		/* The following implementation of the base64 decoding might look
-//		a bit clumsy but I only try to follow the POSIX standard:
-//		``All line breaks or other characters not found in the table
-//		[with base64 characters] shall be ignored by decoding
-//		software.''  */
-//		while (*p != '\n')
-//		{
-//			char c1, c2, c3;
-//
-//			while ((b64_tab[*p] & '\100') != 0)
-//			{
-//				if (*p == '\n' || *p++ == '=')
-//					break;
-//			}
-//			if (*p == '\n')
-//				/* This leaves the loop.  */
-//				continue;
-//			c1 = b64_tab[*p++];
-//			
-//			while ((b64_tab[*p] & '\100') != 0)
-//			{
-//				if (*p == '\n' || *p++ == '=')
-//				{
-//					// error (0, 0, _("%s: illegal line"), inname);
-//					return TRUE;
-//				}
-//			}
-//			c2 = b64_tab[*p++];
-//			
-//			while (b64_tab[*p] == '\177')
-//			{
-//				if (*p++ == '\n')
-//				{
-//					// error (0, 0, _("%s: illegal line"), inname);
-//					return TRUE;
-//				}
-//			}
-//			if (*p == '=')
-//			{
-//				strOut += c1 << 2 | c2 >> 4;
-//				// TRY_PUTCHAR (c1 << 2 | c2 >> 4);
-//				last_data = 1;
-//				break;
-//			}
-//			c3 = b64_tab[*p++];
-//			
-//			while (b64_tab[*p] == '\177')
-//			{
-//				if (*p++ == '\n')
-//				{
-//					// error (0, 0, _("%s: illegal line"), inname);
-//					return TRUE;
-//				}
-//			}
-//			strOut += c1 << 2 | c2 >> 4;
-//			strOut += c2 << 4 | c3 >> 2;
-//			// TRY_PUTCHAR (c1 << 2 | c2 >> 4);
-//			// TRY_PUTCHAR (c2 << 4 | c3 >> 2);
-//			if (*p == '=')
-//			{
-//				last_data = 1;
-//				break;
-//			}
-//			else
-//				strOut += c3 << 6 | b64_tab[*p++];
-//				// TRY_PUTCHAR (c3 << 6 | b64_tab[*p++]);
-//		}
-//		while (*p == '\n')
-//			p++;
-//    }
-//	
-//	return TRUE;
-//}
-
-/* Single character decode.  */
 #define	DEC(Char) (((Char) - ' ') & 077)
 
-BOOL decodestduu(const char *szIn, int nLen, stringex &strOut)
+BOOL decodestduu(LPCTSTR szIn, int nLen, string &strOut)
 {
 	// while (1)
 	strOut.clear();
 
     {
 		int n;
-		const char *p;
-		
-//		if (fgets ((char *) buf, sizeof(buf), stdin) == NULL)
-//		{
-//			error (0, 0, _("%s: Short file"), inname);
-//			return 1;
-//		}
-		p = szIn;
-		const char *pEnd;
-		pEnd = szIn + nLen;
+		LPCTSTR p = szIn;
+		LPCTSTR pEnd = szIn + nLen;
 		for (p = szIn; p < pEnd;)
 		{
 			/* N is used to avoid writing out all the characters at the end of

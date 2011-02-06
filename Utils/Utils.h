@@ -3,6 +3,7 @@
 
 #include "SimpleXML.h"
 #include "XMLWriter.h"
+#include "MLBinXMLParser.h"
 #include "UUEncode.h"
 #include "log.h"
 #include "Profile.h"

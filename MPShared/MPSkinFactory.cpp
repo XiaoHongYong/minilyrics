@@ -43,6 +43,7 @@
 #include "MPlaylistCtrl.h"
 #include "MPSkinMediaNumInfoCtrl.h"
 #include "MPlaylistSearchObj.h"
+#include "../MPlayer/SkinVideo.h"
 #ifdef _WIN32_WCE
 #include "win32/wce/WCEMainCmdBar.h"
 #endif
@@ -152,6 +153,8 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CMPSkinMediaNumInfoCtrl;
 	else if (_tcsicmp(szClassName, CMPlaylistSearchObj::ClassName()) == 0)
 		pObj = new CMPlaylistSearchObj;
+	else if (_tcsicmp(szClassName, CSkinVideo::ClassName()) == 0)
+		pObj = new CSkinVideo;
 #endif
 	else if (_tcsicmp(szClassName, CMediaInfoTextCtrl::ClassName()) == 0)
 		pObj = new CMediaInfoTextCtrl;

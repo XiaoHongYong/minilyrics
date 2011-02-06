@@ -760,24 +760,22 @@ LPCTSTR CProfile::GetDefAppName()
 //
 // support encrypt keyname and value
 //
-void EncryptStr(LPCTSTR szStr, tstringex &strOut)
+void EncryptStr(LPCTSTR szStr, tstring &strOut)
 {
-	stringex	strEncrypt;
-	stringex	strAnsi;
-	ConvertStr(szStr, -1, strAnsi);
-	encodeuu(strAnsi.c_str(), strAnsi.size(), strEncrypt, true, false);
-	_xcsrep(strEncrypt.data(), '=', '?');
-	ConvertStr(strEncrypt.c_str(), strEncrypt.size(), strOut);
+	stringex	strUtf8;
+	TStringToUTF8(szStr, -1, strUtf8);
+	encodeuu(strUtf8.c_str(), strUtf8.size(), strOut, true, false);
+	strrep(strOut, '=', '?');
 }
 
-void DecryptStr(LPCTSTR szStr, tstringex &strOut)
+void DecryptStr(LPCTSTR szStr, tstring &strOut)
 {
-	stringex	strDecrypt;
-	stringex	strAnsi;
-	ConvertStr(szStr, -1, strAnsi);
-	_xcsrep(strAnsi.data(), '?', '=');
-	decodebase64(strAnsi.c_str(), strAnsi.size(), strDecrypt);
-	ConvertStr(strDecrypt.c_str(), strDecrypt.size(), strOut);
+	tstring		str = szStr;
+	string		strUtf8;
+
+	strrep(str, '?', '=');
+	decodebase64(str.c_str(), str.size(), strUtf8);
+	UTF8ToTString(strUtf8.c_str(), strUtf8.size(), strOut);
 }
 /*
 void TestEnDecrypt()
@@ -808,7 +806,7 @@ DWORD CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LP
 		return 0;
 	}
 
-	tstringex	strKeyNameEncrypt, strValue;
+	tstring	strKeyNameEncrypt, strValue;
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 
 	if (m_hKeyRoot)
@@ -849,7 +847,7 @@ BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, L
 
 	DWORD		dwRet;
 	MAP_STRING::iterator	itKey;
-	tstringex	strKeyNameEncrypt, strValueEncrypt;
+	tstring		strKeyNameEncrypt, strValueEncrypt;
 
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 	EncryptStr(szValue, strValueEncrypt);

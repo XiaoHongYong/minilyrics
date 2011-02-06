@@ -5,8 +5,10 @@
 #include "stdafx.h"
 #include "SimpleXML.h"
 #include "SimpleXMLParser.h"
+#include "MLBinXMLParser.h"
 #include "XMLWriter.h"
 #include "App.h"
+#include "UUEncode.h"
 
 IMPLEMENT_CPPUNIT_TEST_REG(SimpleXML)
 
@@ -50,8 +52,7 @@ SXNode::~SXNode()
 	listProperties.clear();
 }
 
-// If not exists, NULL will be returned
-LPCTSTR SXNode::GetProperty(LPCTSTR szPropName)
+SXNode::LIST_PROPERTIES::iterator SXNode::FindProperty(LPCTSTR szPropName)
 {
 	LIST_PROPERTIES::iterator	it, itEnd;
 
@@ -61,12 +62,20 @@ LPCTSTR SXNode::GetProperty(LPCTSTR szPropName)
 	{
 		Property	&prop = *it;
 		if (_tcscmp(szPropName, prop.strName.c_str()) == 0)
-		{
-			return prop.strValue.c_str();
-		}
+			return it;
 	}
 
-	return NULL;
+	return listProperties.end();
+}
+
+// If not exists, NULL will be returned
+LPCTSTR SXNode::GetProperty(LPCTSTR szPropName)
+{
+	LIST_PROPERTIES::iterator	it = FindProperty(szPropName);
+	if (it == listProperties.end())
+		return NULL;
+
+	return (*it).strValue.c_str();
 }
 
 // If not exists, _T("") will be returned.
@@ -81,8 +90,32 @@ LPCTSTR SXNode::GetPropertySafe(LPCTSTR szPropName)
 		return _T("");
 }
 
+bool SXNode::GetPropertyBinData(LPCTSTR szPropName, string &buf)
+{
+	LIST_PROPERTIES::iterator	it = FindProperty(szPropName);
+	if (it == listProperties.end())
+		return false;
+
+	Property	&prop = *it;
+	TStringToAnsi(prop.strValue.c_str(), prop.strValue.size(), buf);
+	return true;
+}
+
+bool SXNode::GetPropertyBase64Data(LPCTSTR szPropName, string &buf)
+{
+	LIST_PROPERTIES::iterator	it = FindProperty(szPropName);
+	if (it == listProperties.end())
+		return false;
+
+	Property	&prop = *it;
+	decodebase64(prop.strValue.c_str(), prop.strValue.size(), buf);
+	return true;
+}
+
 void SXNode::AddProperty(LPCTSTR szPropName, LPCTSTR szPropValue)
 {
+	ASSERT(FindProperty(szPropName) == listProperties.end());
+
 	Property	prop;
 	prop.strName = szPropName;
 	prop.strValue = szPropValue;
@@ -91,39 +124,22 @@ void SXNode::AddProperty(LPCTSTR szPropName, LPCTSTR szPropValue)
 
 void SXNode::SetProperty(LPCTSTR szPropName, LPCTSTR szPropValue)
 {
-	LIST_PROPERTIES::iterator	it, itEnd;
-
-	itEnd = listProperties.end();
-
-	for (it = listProperties.begin(); it != itEnd; ++it)
+	LIST_PROPERTIES::iterator	it = FindProperty(szPropName);
+	if (it == listProperties.end())
+		AddProperty(szPropName, szPropValue);
+	else
 	{
 		Property	&prop = *it;
-		if (_tcscmp(szPropName, prop.strName.c_str()) == 0)
-		{
-			prop.strValue = szPropValue;
-			return;
-		}
+		prop.strValue = szPropValue;
 	}
-
-	AddProperty(szPropName, szPropValue);
 }
-
 
 void SXNode::EraseProperty(LPCTSTR szPropName)
 {
-	LIST_PROPERTIES::iterator	it;
-
-	for (it = listProperties.begin(); it != listProperties.end(); ++it)
-	{
-		Property	&prop = *it;
-		if (_tcscmp(szPropName, prop.strName.c_str()) == 0)
-		{
-			listProperties.erase(it);
-			return;
-		}
-	}
+	LIST_PROPERTIES::iterator	it = FindProperty(szPropName);
+	if (it != listProperties.end())
+		listProperties.erase(it);
 }
-
 
 // Get first child same with the node name
 SXNode *SXNode::GetChild(LPCTSTR szName)
@@ -224,41 +240,35 @@ void CSimpleXML::New(LPCTSTR szRootName)
 
 BOOL CSimpleXML::ParseFile(LPCTSTR szXmlFile, bool bNoProlog)
 {
-	CSimpleXMLParser		parser;
-	SimpleXMLParserError	ret;
+	stringex	buf;
 
-	Free();
-
-	parser.m_bNoProlog = bNoProlog;
-	ret = parser.ParseFile(szXmlFile, *this);
-
-	if (ret != SXPE_OK)
-	{
-		DBGLOG2(_T("parse xml file: %s FAILED at pos : %d"), szXmlFile, parser.nPosNext);
+	if (!OpenFileToBuffer(szXmlFile, buf))
 		return FALSE;
-	}
 
-	return TRUE;
+	return ParseData(buf.data(), buf.size(), bNoProlog);
 }
 
 BOOL CSimpleXML::ParseData(LPCVOID lpXmlData, size_t nLen, bool bNoProlog)
 {
-	CSimpleXMLParser		parser;
-	SimpleXMLParserError	ret;
-
 	Free();
 
-	parser.m_bNoProlog = bNoProlog;
-	ret = parser.ParseData(lpXmlData, nLen, *this);
-
-	if (ret != SXPE_OK)
+	if (CMLBinXMLParser::IsHeaderType((LPSTR)lpXmlData))
 	{
-		// ERRLOG2(_T("parse xml string:%s FAILED at pos : %d"), ((const char *)lpXmlData) + parser.nPosNext, parser.nPosNext);
-		// ERRLOGDUMPS(szXmlStr, nLen);
-		return FALSE;
-	}
+		CMLBinXMLParser			parser;
+		CMLBinXMLParser::MLBinXmlParseError	ret;
 
-	return TRUE;
+		ret = parser.ParseData(lpXmlData, nLen, *this);
+		return (ret == CMLBinXMLParser::E_OK);
+	}
+	else
+	{
+		CSimpleXMLParser		parser;
+		SimpleXMLParserError	ret;
+
+		parser.m_bNoProlog = bNoProlog;
+		ret = parser.ParseData(lpXmlData, nLen, *this);
+		return (ret == SXPE_OK);
+	}
 }
 
 BOOL CSimpleXML::SaveFile(LPCTSTR szXmlFile)
@@ -361,7 +371,8 @@ protected:
 		CSimpleXML		xml;
 
 		node.ToXML(xmlWriter);
-		CPPUNIT_ASSERT(xml.ParseData(xmlWriter.GetData(), xmlWriter.GetLength()));
+		CCharBuffer &buf = xmlWriter.GetBuffer();
+		CPPUNIT_ASSERT(xml.ParseData(buf.c_str(), buf.size()));
 
 		//
 		// compare two xml data struct...

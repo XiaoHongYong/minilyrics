@@ -83,7 +83,7 @@ void CSkinScrollText::Draw(CRawGraph *pGraph)
 	}
 
 	// kill timer
-	if (m_nWidthText < rc.Width() && m_nTimerIDScroll != 0)
+	if (m_nWidthText <= rc.Width() && m_nTimerIDScroll != 0)
 	{
 		m_pSkin->UnregisterTimerObject(this, m_nTimerIDScroll);
 		m_nTimerIDScroll = 0;

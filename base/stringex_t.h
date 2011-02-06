@@ -234,6 +234,16 @@ public:
 		return *this;
 	}
 
+	stringex_t<T> &append(const T c)
+	{
+		reserve(size() + 1);
+
+		m_szBuff[nLen] = c;
+		nLen++;
+
+		return *this;
+	}
+
 	void trim()
 	{
 		T		*szBeg;

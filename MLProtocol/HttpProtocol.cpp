@@ -9,7 +9,7 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-#define SZ_RETURN		"\r\n"
+#define SZ_RETURNA		"\r\n"
 
 #define CONST_STRLEN(str)	(CountOf(str) - 1)
 
@@ -142,12 +142,9 @@ int CHttpProtocol::ReadHead(BOOL bParseHead)
 		}
 		nLastPos = m_buffHead.size();
 
-		m_buffHead.reserve(m_buffHead.size() + READ_BLOCK_SIZE);
-		szData = m_buffHead.data() + m_buffHead.size();
-		nRet = m_pNetFile->Read(szData, m_buffHead.capacity() - m_buffHead.size() - 4, &nRead);
+		nRet = m_pNetFile->Read(m_buffHead, READ_BLOCK_SIZE, &nRead);
 		if (nRet == ERR_OK)
 		{
-			m_buffHead.resize(m_buffHead.size() + nRead);
 			if (nRead == 0)
 			{
 				// 接收完成，但是没有找到HTTP头结束标志
@@ -169,28 +166,6 @@ void CHttpProtocol::SetCacheData(LPVOID lpData, int nLen)
 	m_buffHead.append((const char *)lpData, nLen);
 }
 
-//
-//int CHttpProtocol::ReadData(CCharBuffer *pBuff, int nLen)
-//{
-//	if (m_buffHead.size() > m_nHeadEndPos)
-//		pBuff->Write(m_buffHead.GetBuffer() + m_nHeadEndPos, m_buffHead.size() - m_nHeadEndPos);
-//
-//	while (pBuff->GetLength() < m_dwContentLen)
-//	{
-//		char	*szData;
-//		int		nRead;
-//		int		nRet;
-//		szData = pBuff->AllocMemory(pBuff->GetLength() + READ_BLOCK_SIZE) + pBuff->GetLength();
-//		nRet = m_pNetFile->Read(szData, pBuff->GetCapaLength() - pBuff->GetLength() - 1, &nRead);
-//		if (nRet != ERR_OK)
-//		{
-//			return nRet;
-//		}
-//		pBuff->SetLength(pBuff->GetLength() + nRead);
-//	}
-//
-//	return ERR_OK;
-//}
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -421,14 +396,14 @@ int CHttpRequestProtocol::WriteHead()
 		m_buffHead += "\r\n";
 	}
 
-	m_buffHead += SZ_RETURN;
+	m_buffHead += SZ_RETURNA;
 
 	// DBGLOGDUMPS(m_buffHead.c_str(), m_buffHead.size());
 
 	return m_pNetFile->Write(m_buffHead.data(), m_buffHead.size(), NULL);
 }
 
-int CHttpRequestProtocol::ReadData(CCharBuffer *pBuff, int nLen)
+int CHttpRequestProtocol::ReadData(CCharBuffer *pBuff, int nLenMax)
 {
 	if (m_RequestType == RQ_POST)
 	{
@@ -437,16 +412,10 @@ int CHttpRequestProtocol::ReadData(CCharBuffer *pBuff, int nLen)
 
 		while (pBuff->size() < m_dwContentLen)
 		{
-			char	*szData;
 			int		nRead;
-			int		nRet;
-			pBuff->reserve(pBuff->size() + READ_BLOCK_SIZE);
-			szData = pBuff->data() + pBuff->size();
-			nRet = m_pNetFile->Read(szData, pBuff->capacity() - pBuff->size() - 4, &nRead);
+			int nRet = m_pNetFile->Read(*pBuff, READ_BLOCK_SIZE, &nRead);
 			if (nRet != ERR_OK)
-			{
 				return nRet;
-			}
 			if (nRead == 0)
 			{
 				if (m_dwContentLen == -1)
@@ -454,13 +423,13 @@ int CHttpRequestProtocol::ReadData(CCharBuffer *pBuff, int nLen)
 				else
 					return ERR_HTTP_DATA_NOT_FINISHED;
 			}
-			pBuff->setSize(pBuff->size() + nRead);
+
+			if (pBuff->size() > nLenMax)
+				return ERR_BAD_MSG;
 		}
 		if (pBuff->size() > m_dwContentLen)
 			pBuff->setSize(m_dwContentLen);
 	}
-	else
-		return ERR_HTTP_GET_NODATA;
 
 	return ERR_OK;
 }
@@ -496,7 +465,7 @@ int CHttpRequestProtocol::ParseHead()
 
 	//
 	// /a.rar HTTP/1.1
-	szEnd = strstr(szPos, SZ_RETURN);
+	szEnd = strstr(szPos, SZ_RETURNA);
 	if (szEnd == NULL)
 		return ERR_HTTP_BAD_FORMAT;
 	szEnd2 = strchr(szPos, 0x20);
@@ -521,7 +490,7 @@ int CHttpRequestProtocol::ParseHead()
 	if (m_httpVer != HTTP_V_UK)
 	{
 		szEnd2+=3;
-		if (strncmp(szEnd2, SZ_RETURN, 2) != 0)
+		if (strncmp(szEnd2, SZ_RETURNA, 2) != 0)
 			return ERR_HTTP_BAD_HTTP_PRO_TYPE;
 	}
 
@@ -530,9 +499,9 @@ int CHttpRequestProtocol::ParseHead()
 	szPos = szEnd + 2;
 	while (1)
 	{
-		if (strncmp(szPos, SZ_RETURN, 2) == 0)
+		if (strncmp(szPos, SZ_RETURNA, 2) == 0)
 			break;
-		szEnd = strstr(szPos, SZ_RETURN);
+		szEnd = strstr(szPos, SZ_RETURNA);
 		if (!szEnd)
 			return ERR_HTTP_BAD_FORMAT;
 		if (strncmp(szPos, "Host: ", 6) == 0)
@@ -955,7 +924,7 @@ BUFFER_TOO_SMALL:
 	return szBuffer;
 }
 
-int CHttpReturnProtocol::ReadData(CCharBuffer *pBuff, int nLen)
+int CHttpReturnProtocol::ReadData(CCharBuffer *pBuff, int nLenMax)
 {
 	if (m_bTransfEncChunked)
 	{
@@ -1077,13 +1046,8 @@ int CHttpReturnProtocol::ReadData(CCharBuffer *pBuff, int nLen)
 
 		while (pBuff->size() < m_dwContentLen)
 		{
-			char	*szData;
 			int		nRead;
-			int		nRet;
-
-			pBuff->reserve(pBuff->size() + READ_BLOCK_SIZE);
-			szData = pBuff->data() + pBuff->size();
-			nRet = m_pNetFile->Read(szData, pBuff->capacity() - pBuff->size() - 4, &nRead);
+			int		nRet = m_pNetFile->Read(*pBuff, READ_BLOCK_SIZE, &nRead);
 			if (nRet != ERR_OK)
 			{
 				return nRet;
@@ -1095,7 +1059,6 @@ int CHttpReturnProtocol::ReadData(CCharBuffer *pBuff, int nLen)
 				else
 					return ERR_HTTP_DATA_NOT_FINISHED;
 			}
-			pBuff->setSize(pBuff->size() + nRead);
 		}
 	}
 
@@ -1145,7 +1108,7 @@ int CHttpReturnProtocol::ParseHead()
 		}
 
 		szPos++;
-		szEnd = strstr(szPos, SZ_RETURN);
+		szEnd = strstr(szPos, SZ_RETURNA);
 		if (szEnd == NULL)
 			return ERR_HTTP_BAD_FORMAT;
 
@@ -1167,9 +1130,9 @@ int CHttpReturnProtocol::ParseHead()
 	szPos = szEnd + 2;
 	while (1)
 	{
-		if (strncmp(szPos, SZ_RETURN, 2) == 0 || *szPos == '\n')
+		if (strncmp(szPos, SZ_RETURNA, 2) == 0 || *szPos == '\n')
 			break;
-		szEnd = strstr(szPos, SZ_RETURN);
+		szEnd = strstr(szPos, SZ_RETURNA);
 		if (!szEnd)
 			szEnd = strchr(szPos, '\n');
 		if (!szEnd)

@@ -9,11 +9,11 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-void encodeuu(const char *strIn, int nLen, stringex &str, bool bBase64 = true, bool bIncNewLine = true);
+void encodeuu(const char *strIn, int nLen, tstring &str, bool bBase64 = true, bool bIncNewLine = false);
 
-BOOL decodebase64(const char *szIn, int nLen, stringex &strOut);
+BOOL decodebase64(LPCTSTR szIn, int nLen, string &strOut);
 
-BOOL decodestduu(const char *szIn, int nLen, stringex &strOut);
+BOOL decodestduu(LPCTSTR szIn, int nLen, string &strOut);
 
 
 #endif // !defined(AFX_UUENCODE_H__453AEFDC_3F0E_4933_9652_7D6722E27EBE__INCLUDED_)

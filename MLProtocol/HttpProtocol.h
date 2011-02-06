@@ -37,7 +37,7 @@ public:
 
 	virtual int ParseHead() = 0;
 
-	// virtual int ReadData(CCharBuffer *pBuff, int nLen);
+	virtual int ReadData(CCharBuffer *pBuff, int nLenMax) = 0;
 	virtual int WriteData(LPVOID pData, int nLen) = 0;
 
 	virtual int GetHttpVersion(HTTP_VER &ver) { ver = m_httpVer; return ERR_OK; }
@@ -125,7 +125,7 @@ public:
 	// virtual int ReadHead(BOOL bParseHead = TRUE);
 	virtual int WriteHead();
 
-	virtual int ReadData(CCharBuffer *pBuff, int nLen);
+	virtual int ReadData(CCharBuffer *pBuff, int nLenMax);
 	virtual int WriteData(LPVOID pData, int nLen);
 
 	virtual int ParseHead();
@@ -231,7 +231,7 @@ public:
 	// virtual int ReadHead(BOOL bParseHead = TRUE);
 	virtual int WriteHead();
 
-	virtual int ReadData(CCharBuffer *pBuff, int nLen);
+	virtual int ReadData(CCharBuffer *pBuff, int nLenMax);
 	virtual int WriteData(LPVOID pData, int nLen);
 
 	int ParseHead();

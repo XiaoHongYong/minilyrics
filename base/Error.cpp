@@ -56,7 +56,6 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_HTTP_BAD_REQUEST, _T("Invalid HTTP request.") },		// 无效的HTTP请求
 	{ ERR_HTTP_BAD_FORMAT, _T("Invalid Http format.") },		// 无效的HTTP格式
 	{ ERR_HTTP_BAD_HTTP_PRO_TYPE, _T("Unrecognized HTTP protocol type.") },		// 无法识别的HTTP协议类型
-	{ ERR_HTTP_GET_NODATA, _T("Can't read any data with HTTP GET command.") },		// HTTP 的GET命名是不能读取任何数据端的
 	{ ERR_HTTP_INVLIAD_TRUNK, _T("Invalid HTTP trunck size.") },		// 解析HTTP return 数据失败，无法识别的trunck大小
 	{ ERR_HTTP_BAD_URL, _T("Invalid HTTP URL format.") },		// 无效的HTTP URL格式
 	{ ERR_HTTP_CODE_ERROR, _T("NOT dealed HTTP return code.") },		// 未处理的HTTP return 代码

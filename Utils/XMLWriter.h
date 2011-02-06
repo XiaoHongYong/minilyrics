@@ -16,43 +16,44 @@ public:
 	virtual ~CXMLWriter();
 
 	// Writes: <?xml version=\"1.0\" encoding='"szEncoding"?>
-	void WriteStartDocument(LPCTSTR szEncoding);
+	virtual void WriteStartDocument(LPCTSTR szEncoding);
 
-	void WriteEndDocument();
+	virtual void WriteEndDocument();
 
 	// Begin xml element
-	void WriteStartElement(LPCTSTR szElement);
+	virtual void WriteStartElement(LPCTSTR szElement);
 
 	// Writes: szAttr="szValue"
-	void WriteAttribute(LPCTSTR szAttr, LPCTSTR szValue);
+	virtual void WriteAttribute(LPCTSTR szAttr, LPCTSTR szValue);
+
+	// Write binary data attribute
+	virtual void WriteAttribute(LPCTSTR szAttr, LPCVOID data, size_t lenData);
 
 	// Writes: szAttr="nValue"
-	void WriteAttribute(LPCTSTR szAttr, int nValue);
+	virtual void WriteAttribute(LPCTSTR szAttr, int nValue);
 
 	// Close xml element
-	void WriteEndElement();
+	virtual void WriteEndElement();
 
 	// Writes the given text content: <node>szString</node>
-	void WriteString(LPCTSTR szString);
+	virtual void WriteString(LPCTSTR szString);
 
 	// Writes: <szElement>szString</szElement>
-	void WriteElementString(LPCTSTR szElement, LPCTSTR szString);
+	virtual void WriteElementString(LPCTSTR szElement, LPCTSTR szString);
 
 	// Writes: <szElement>nValue</szElement>
-	void WriteElementInt(LPCTSTR szElement, int nValue);
+	virtual void WriteElementInt(LPCTSTR szElement, int nValue);
 
 	// Writes: <!-- szComment -->
-	void WriteComment(LPCTSTR szComment);
+	virtual void WriteComment(LPCTSTR szComment);
 
 	// Write Data directly, it's useful to joint/insert several xml node data.
-	void WriteData(const char *szData, int n);
+	virtual void WriteData(const char *szData, int n);
 
 	// Get xml data
-	LPCSTR GetData() { return m_strBuff.data(); }
-	size_t GetLength() { return m_strBuff.size(); }
-	CCharBuffer &GetBuffer() { return m_strBuff; }
+	virtual CCharBuffer &GetBuffer() { return m_strBuff; }
 
-	BOOL SaveAsFile(LPCTSTR szFile);
+	virtual BOOL SaveAsFile(LPCTSTR szFile);
 
 	void SetIndentStr(LPSTR szIndentStr) { m_strIndent = szIndentStr; }
 

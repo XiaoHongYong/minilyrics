@@ -190,6 +190,9 @@ typedef unsigned __int64 UINT64, *PUINT64;
 typedef ULONG_PTR DWORD_PTR, *PDWORD_PTR;
 typedef _W64 unsigned long HANDLE_PTR;
 
+typedef ULONG_PTR KAFFINITY;
+typedef KAFFINITY *PKAFFINITY;
+
 #ifdef __cplusplus
 }
 #endif

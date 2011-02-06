@@ -63,8 +63,6 @@ public:
 
 	SimpleXMLParserError ParseData(LPCVOID lpXmlData, size_t nLen, CSimpleXML &xmlData);
 
-	SimpleXMLParserError ParseFile(LPCTSTR szFile, CSimpleXML& xmlData);
-
 	int			nPos, nPosNext;
 	bool		m_bNoProlog;
 

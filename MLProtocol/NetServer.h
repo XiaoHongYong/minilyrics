@@ -58,6 +58,7 @@ public:
 	int SetTimeOut(int nTimeOut);
 
 	int Read(char *szBuffer, int nBufferLen, int *pnRead);
+	int Read(CCharBuffer &buf, int nMaxToRead, int *pnRead);
 	int Write(const char *szBuffer, int nLen, int *pnWrite);
 
 protected:

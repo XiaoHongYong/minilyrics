@@ -16,7 +16,6 @@ History of MLProtocol:
 #include "NetServer.h"
 #include "HttpProtocol.h"
 #include "MLUtils.h"
-#include "BinContainer.h"
 
 typedef list<tstring>		ListString;
 
@@ -64,7 +63,6 @@ enum MLMsgType
 {
 	MT_UNKNOWN,			// 未知格式
 	MT_XML,				// xml的消息格式
-	MT_BIN,				// 二进制的消息格式
 
 	MT_HTTP_GET,		// Http get request
 	MT_HTTP_POST,		// Http post request
@@ -72,6 +70,8 @@ enum MLMsgType
 
 	MT_HTTP_XML,		// Minilyrics 请求的HTTP tunnel的消息格式,
 						// translated from MT_HTTP_*
+	MT_HTTP_BIN_XML,	// Similar with MT_HTTP_XML, but it's binary xml format.
+						// See CMLBinXMLParser
 };
 
 enum MLMsgCmd
@@ -85,7 +85,6 @@ enum MLMsgCmd
 	MC_CAN_UPLOAD,			// 是否能够上传（歌词……），服务器返回结果，如果不能上传会返回具体的原因
 	MC_UPLOADV0,			// 上传（歌词……）
 	MC_UPLOAD,				// 上传（歌词……）
-	MC_POST_BUG,			// 发送Bug
 
 	// Admin messages
 	MC_GET_LYR_UPDATE,
@@ -107,7 +106,6 @@ MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 #define MZ_CANUPLOAD		_T("canupload")
 #define MZ_UPLOADV0			_T("upload")
 #define MZ_UPLOAD			_T("uploadV1")
-#define MZ_POST_BUG			_T("bug")
 
 #define MZ_GET_LYR_UPDATE	_T("GetLyrUpdate")
 #define MZ_SUBMIT_LYR_REVIEW _T("SubmitLyrReview")
@@ -141,19 +139,6 @@ public:
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
 	void ToXMLAttribute(CXMLWriter &xmlFile);
-
-};
-
-// <return .... />
-// $\0$
-// data block
-class MLRetMsgDataBlock : public MLRetMsg
-{
-public:
-	CCharBuffer dataBlock;		// The attached data block.
-
-public:
-	virtual int FromData(CCharBuffer &buff);
 
 };
 
@@ -338,6 +323,7 @@ class MLLyricsInfoLite
 public:
 	tstring			strFile; // strArtist, strTitle, 
 	int				nIndex;
+	string			bufLyrContent;
 
 public:
 	virtual int FromXML(SXNode *pXmlNode);
@@ -349,18 +335,15 @@ typedef list<MLLyricsInfoLite>		ListLyricsInfoLite;
 
 // The return message of batch search
 // <return .... />
-// \0$
-// data block
-class MLMsgRetBatchSearch : public MLRetMsgDataBlock
+class MLMsgRetBatchSearch : public MLRetMsg
 {
 public:
 	REGCODE_VERIFY_VALUE	RegVerifyValue;
 	tstring					strMessage;
-	CBinContainer			binContainer;		// Lyrics data
 	ListLyricsInfoLite		listLyricsInfo;		// Lyrics info: artist, title, file name
 
 public:
-	MLMsgRetBatchSearch() : binContainer(&dataBlock)
+	MLMsgRetBatchSearch()
 	{
 		RegVerifyValue = RVV_OK;
 	}
@@ -467,10 +450,13 @@ public:
 
 };
 
+// Old xml message
 #define ML_MSG_MAX_LENGTH		(1024 * 1024)
 #define ML_MSG_XML				"XML"
+#define ML_MSG_XML_FMT			"XML%6d"
 #define ML_MSG_XML_LEN			3
 #define ML_MSG_XML_DATA_LEN		6
+
 
 enum ML_PACK_VERSION
 {
@@ -487,7 +473,6 @@ struct MLEncodePacketV1
 	BYTE		byID[4];		// 客户端使用的MD5验证码ID
 								// nID = byID[0] | byID[1] << 8 | byID[2] << 16 | byID[3] << 24
 	BYTE		byMd5[16];		// 校验 消息包正确性的MD5值
-//	BYTE		byData[1];
 
 	void SetID(long nId)
 	{
@@ -562,32 +547,7 @@ protected:
 
 };
 
-class CMsgProtocol
-{
-public:
-	CMsgProtocol();
-	~CMsgProtocol();
-
-	int SetNetFile(CNetFile *pFile) { m_pNetFile = pFile; return ERR_OK; }
-
-	//
-	int ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, int nMaxBuff, BOOL *pbMLAgent = NULL);
-//	int ContinueReadMsg(int nDataLength, CCharBuffer *pBuffer, int nMaxBuff);
-
-	int WriteMsg(const char *szMsgType, CCharBuffer *pMsgBuff);
-
-protected:
-	CNetFile	*m_pNetFile;
-
-	CCharBuffer		m_buffMsg;
-
-public:
-	CHttpRequestProtocol	m_httpRequest;
-	CHttpReturnProtocol		m_httpReturn;
-
-};
-
-class CMLProtocol : public CMsgProtocol  
+class CMLProtocol
 {
 public:
 	CMLProtocol();
@@ -597,12 +557,15 @@ public:
 
 	int Init(CNetFile *pFile, LPCWSTR szHost, int nPort);
 
+	int SetNetFile(CNetFile *pFile) { m_pNetFile = pFile; return ERR_OK; }
+
 	void SetProxy(BOOL bEnableProxy, LPCSTR szProxyServer, int nProxyPort, LPCSTR szBase64ProxyUserPass = NULL);
 
-	// ERR_OK
-	int ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff, BOOL *pbMLAgent = NULL);
+	int ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff);
 
-	// ERR_OK
+	int ReadOldXmlMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff);
+	int WriteOldXmlMsg(CCharBuffer *pMsgBuff);
+
 	int WriteXMLMsg(MLMsgType msgType, CCharBuffer *pMsgBuff);
 
 	int ParseXMLMsg(CCharBuffer *pMsgBuff, CSimpleXML &xml);
@@ -617,15 +580,20 @@ public:
 protected:
 	//
 	// proxy
-	BOOL						m_bUseProxy;
-	tstring						m_strBase64ProxyUserPass;
+	BOOL					m_bUseProxy;
+	tstring					m_strBase64ProxyUserPass;
 
 	// 为了提高效率，而设置的缓存区
-	CHttpRequestProtocol		m_httpReqWriteXmlCache;
-	CHttpReturnProtocol			m_httpRetWriteXmlCache;
+	CHttpRequestProtocol	m_httpReqWriteXmlCache;
+	CHttpReturnProtocol		m_httpRetWriteXmlCache;
+
+	CNetFile				*m_pNetFile;
 
 public:
-	CMLPacketWrapper			m_packetWrapper;
+	CHttpRequestProtocol	m_httpRequest;
+	CHttpReturnProtocol		m_httpReturn;
+
+	CMLPacketWrapper		m_packetWrapper;
 
 };
 

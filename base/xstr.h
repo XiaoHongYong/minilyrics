@@ -33,6 +33,22 @@ T1 *_xcscpy(T1 *strDestination, const T2 *strSource)
     return (strDestination);
 }
 
+template<class T1, class T2>
+T1 *_xcsncpy(T1 *strDestination, const T2 *strSource, int nLen)
+{
+	T1	*cp = strDestination;
+
+	const T2 *sourceEnd = strSource + nLen;
+	for (; strSource <= sourceEnd; cp++, strSource++)
+	{
+		*cp = (T1)*strSource;
+	}
+
+	*cp = '\0';
+
+	return (strDestination);
+}
+
 template<class T>
 size_t _xcslen (
 					   const T * str

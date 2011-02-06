@@ -81,7 +81,10 @@ void CMPSkinInfoTextCtrl::OnTimer(int nId)
 
 void CMPSkinInfoTextCtrl::Draw(CRawGraph *pGraph)
 {
-	CSkinScrollText::Draw(pGraph);
+	if (IsFlagSet(m_dwAlignText, AT_CENTER))
+		CSkinStaticText::Draw(pGraph);
+	else
+		CSkinScrollText::Draw(pGraph);
 }
 
 void CMPSkinInfoTextCtrl::UpdateShowTrackInfo()

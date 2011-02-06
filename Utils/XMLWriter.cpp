@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "XMLWriter.h"
+#include "UUEncode.h"
 
 #ifdef _DEBUG
 void XMLWriterTest()
@@ -90,17 +91,17 @@ void CXMLWriter::WriteAttribute(LPCTSTR szAttr, LPCTSTR szValue)
 
 void CXMLWriter::WriteAttribute(LPCTSTR szAttr, int nValue)
 {
-	ASSERT(m_wp == WP_ELEMENT_HEAD);
+	TCHAR	szBuff[64];
+	_itot(nValue, szBuff, 10);
+	WriteAttribute(szAttr, szBuff);
+}
 
-	m_strBuff += " ";
-	WriteDirect(szAttr);
-	m_strBuff += "=\"";
-
-	char	szBuff[64];
-	_itoa_s(nValue, szBuff, CountOf(szBuff), 10);
-	m_strBuff += szBuff;
-
-	m_strBuff += "\"";
+void CXMLWriter::WriteAttribute(LPCTSTR szAttr, LPCVOID data, size_t lenData)
+{
+	// Convert: Bin >> Base64
+	tstring	strB64;
+	encodeuu((LPCSTR)data, lenData, strB64, true, false);
+	WriteAttribute(szAttr, strB64.c_str());
 }
 
 void CXMLWriter::WriteEndElement()
@@ -158,20 +159,9 @@ void CXMLWriter::WriteElementString(LPCTSTR szElement, LPCTSTR szString)
 
 void CXMLWriter::WriteElementInt(LPCTSTR szElement, int nValue)
 {
-	for (int i = 0; i < (int)m_vElementStack.size(); i++)
-		m_strBuff += m_strIndent.c_str();
-
-	m_strBuff += "<";
-	WriteDirect(szElement);
-	m_strBuff += ">";
-
-	char	szBuff[64];
-	_itoa_s(nValue, szBuff, CountOf(szBuff), 10);
-	m_strBuff += szBuff;
-
-	m_strBuff += "</";
-	WriteDirect(szElement);
-	m_strBuff += ">\r\n";
+	TCHAR		buf[16];
+	_itot(nValue, buf, 10);
+	WriteElementString(szElement, buf);
 }
 
 void CXMLWriter::WriteComment(LPCTSTR szComment)
@@ -191,7 +181,7 @@ void CXMLWriter::WriteData(const char *szData, int n)
 
 BOOL CXMLWriter::SaveAsFile(LPCTSTR szFile)
 {
-	return SaveDataAsFile(szFile, (LPVOID)GetData(), GetLength());
+	return SaveDataAsFile(szFile, (LPVOID)m_strBuff.c_str(), m_strBuff.size());
 }
 
 void CXMLWriter::WriteDirect(LPCTSTR szBuff)
