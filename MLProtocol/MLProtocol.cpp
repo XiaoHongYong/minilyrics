@@ -1016,16 +1016,29 @@ int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 
 int CMLProtocol::ReadOldXmlMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 {
-	int nCapaLen = pMsgBuff->capacity();
 	int nDataLength = 0;
-	LPCSTR pszMsg = NULL;
 
 	while (1)
 	{
+		int nRead = 0;
+		int nRet = m_pNetFile->Read(*pMsgBuff, ALLOC_BLOCK_LEN, &nRead);
+		if (nRet == ERR_OK)
+		{
+			if (nRead == 0)
+				return ERR_NOT_RECIVED_ALL;
+		}
+		else
+			return nRet;
+
 		//
 		// 如果没有接收到数据长度，则继续接收
-		if (nDataLength == 0 && pMsgBuff->size() > ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN)
+		if (pMsgBuff->size() < ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN)
+			continue;
+
+		if (nDataLength == 0)
 		{
+			// Read message header
+			LPCSTR pszMsg = NULL;
 			pszMsg = pMsgBuff->data();
 			if (!StrBeginWith(pszMsg, ML_MSG_XML))
 				return ERR_BAD_MSG;
@@ -1041,18 +1054,16 @@ int CMLProtocol::ReadOldXmlMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 
 			if (nDataLength > 0xFFFFFF || nDataLength <= 0)
 			{
-				// 收到的是非法的
 				pMsgBuff->clear();
-				LOG1(LOG_LVL_ERROR, _T("INVALID MSG!! Length: %d Invalid! CMGCPCom::OnRecieve(), Drop it!"), nDataLength);
+				DBGLOG1(_T("INVALID MSG!! Length: %d Invalid! CMGCPCom::OnRecieve(), Drop it!"), nDataLength);
 				return ERR_BAD_MSG;
 			}
 
-			// 去掉头部
-			pMsgBuff->erase(ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN, pMsgBuff->size() - (ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN));
+			// Erase header
+			pMsgBuff->erase(0, ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN);
 		}
 
-		// int		nCurMsgLen = ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN + nDataLength;
-		if (nDataLength > 0 && nDataLength <= (int)pMsgBuff->size())
+		if (nDataLength <= (int)pMsgBuff->size())
 		{
 			//
 			// 已经读完了一条消息
@@ -1062,20 +1073,11 @@ int CMLProtocol::ReadOldXmlMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 
 		if (pMsgBuff->size() >= ML_MSG_MAX_LENGTH)
 			return ERR_OUTOF_BUFF;
-
-		int nRead = 0;
-		int nRet = m_pNetFile->Read(*pMsgBuff, ALLOC_BLOCK_LEN, &nRead);
-		if (nRet == ERR_OK)
-		{
-			// 判断是否已经关闭socket
-			if (nRead == 0)
-				return ERR_NOT_RECIVED_ALL;
-		}
-		else
-			return nRet;
 	}
 
 	msgType = MT_XML;
+
+	m_packetWrapper.Unwrapp(*pMsgBuff);
 
 	return ERR_OK;
 }
@@ -1201,4 +1203,82 @@ MLMsgCmd CMLProtocol::GetMsgCommand(CSimpleXML &xml)
 	return MC_UNKNOWN;
 }
 
+
+#ifdef _CPPUNIT_TEST
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+IMPLEMENT_CPPUNIT_TEST_REG(CMLProtocol)
+
+
+#define CPPUNIT_ASSERT_STR_EQUAL(str1, str2)	CPPUNIT_ASSERT(_tcscmp(str1, str2) == 0)
+
+class CTestCaseCMLProtocol : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseCMLProtocol);
+	CPPUNIT_TEST(TestParseBinXml);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+	void TestParseBinXml()
+	{
+		MLMsgRetBatchSearch	msgRet;
+
+		msgRet.result = ERR_CMD_NOT_MATCH;
+		msgRet.strMessage = _T("Msg");
+		msgRet.RegVerifyValue = RVV_INVALID;
+
+		tstring	strFile = GetWorkingFolder();
+		strFile += _T("unittest_save.txt");
+		string bufContent = ";alskge\1,.zsm,ng\n;ea<>>\n";
+		CPPUNIT_ASSERT(SaveDataAsFile(strFile.c_str(), bufContent.c_str(), bufContent.size()));
+
+		{
+			MLLyricsInfoLite	lyrInfo;
+			lyrInfo.nIndex = 1;
+			lyrInfo.strFile = strFile;
+			msgRet.listLyricsInfo.push_back(lyrInfo);
+		}
+		MLLyricsInfoLite	lyrInfo;
+		lyrInfo.nIndex = 2;
+		lyrInfo.strFile = strFile;
+		msgRet.listLyricsInfo.push_back(lyrInfo);
+
+		CMLBinXMLWriter xmlStream;
+		int ret = msgRet.ToXML(xmlStream);
+		CPPUNIT_ASSERT(ret == ERR_OK);
+
+		DeleteFile(strFile.c_str());
+
+		CSimpleXML xml;
+		ret = xml.ParseData(xmlStream.GetBuffer().c_str(), xmlStream.GetBuffer().size());
+		CPPUNIT_ASSERT(ret != FALSE);
+		MLMsgRetBatchSearch	msgFrom;
+		ret = msgFrom.FromXML(xml.m_pRoot);
+		CPPUNIT_ASSERT(ret == ERR_OK);
+
+		CPPUNIT_ASSERT(msgFrom.result == msgRet.result);
+		CPPUNIT_ASSERT(msgFrom.strMessage == msgRet.strMessage);
+		CPPUNIT_ASSERT(msgFrom.RegVerifyValue == msgRet.RegVerifyValue);
+		CPPUNIT_ASSERT(msgFrom.listLyricsInfo.size() == msgRet.listLyricsInfo.size());
+		ListLyricsInfoLite::iterator itFrom = msgFrom.listLyricsInfo.begin();
+		for (ListLyricsInfoLite::iterator it = msgRet.listLyricsInfo.begin();
+			it != msgRet.listLyricsInfo.end(); ++it, ++itFrom)
+		{
+			MLLyricsInfoLite &lyr = *it;
+			MLLyricsInfoLite &lyrFrom = *itFrom;
+
+			CPPUNIT_ASSERT(lyr.nIndex == lyrFrom.nIndex);
+			CPPUNIT_ASSERT(FileGetName(lyr.strFile.c_str()) == lyrFrom.strFile);
+			CPPUNIT_ASSERT(bufContent.size() == lyrFrom.bufLyrContent.size());
+			CPPUNIT_ASSERT(memcmp(bufContent.c_str(), lyrFrom.bufLyrContent.c_str(), lyrFrom.bufLyrContent.size()) == 0);
+		}
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseCMLProtocol);
+
+#endif // _CPPUNIT_TEST
 

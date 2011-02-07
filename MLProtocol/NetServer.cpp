@@ -341,7 +341,7 @@ int CNetFile::Read(CCharBuffer &buf, int nMaxToRead, int *pnRead)
 	}
 	else
 	{
-		if (buf.capacity() - buf.size() < nMaxToRead)
+		if (buf.capacity() - buf.size() < (size_t)nMaxToRead)
 			buf.reserve(buf.size() + nMaxToRead);
 
 		*pnRead = recv(m_s, buf.data() + buf.size(), nMaxToRead, 0);

@@ -68,7 +68,7 @@ public:
 
 		const char *str = (const char *)pFirst;
 		const char *end = str + nLength / sizeof(char);
-		int n;
+		uint n;
 		for (n = 0; n < nCount && str < end; n++)
 		{
 			size_t len = strlen(str);
@@ -83,8 +83,8 @@ public:
 
 	tstring &GetStr(int nIndex) {
 		nIndex -= BX_ID_STR_START;
-		ASSERT(nIndex >= 0 && nIndex < m_vStr.size());
-		if (nIndex < 0 || nIndex >= m_vStr.size())
+		ASSERT(nIndex >= 0 && nIndex < (int)m_vStr.size());
+		if (nIndex < 0 || nIndex >= (int)m_vStr.size())
 			return m_emptyStr;
 
 		return m_vStr[nIndex];
@@ -121,8 +121,8 @@ public:
 	}
 
 	tstring &GetData(int nIndex) {
-		ASSERT(nIndex >= 0 && nIndex < m_vBinData.size());
-		if (nIndex < 0 || nIndex >= m_vBinData.size())
+		ASSERT(nIndex >= 0 && nIndex < (int)m_vBinData.size());
+		if (nIndex < 0 || nIndex >= (int)m_vBinData.size())
 			return m_emptyData;
 		return m_vBinData[nIndex];
 	}
@@ -557,7 +557,7 @@ void CMLBinXMLWriter::WriteStrTable()
 	vPStr.resize(m_mapStrTable.size());
 	for (MapStrIndex::iterator it = m_mapStrTable.begin(); it != m_mapStrTable.end(); ++it)
 	{
-		ASSERT((*it).second >= BX_ID_STR_START && (*it).second < BX_ID_STR_START + m_mapStrTable.size());
+		ASSERT((*it).second >= BX_ID_STR_START && (*it).second < BX_ID_STR_START + (int)m_mapStrTable.size());
 		vPStr[(*it).second - BX_ID_STR_START] = &((*it).first);
 	}
 
@@ -595,12 +595,12 @@ void CMLBinXMLWriter::WriteContentBlock(int indexSize)
 	byte *data = (byte *)m_strBuff.data() + start;
 	if (indexSize == sizeof(byte))
 	{
-		for (int i = 0; i < m_vContentBlock.size(); i++)
+		for (int i = 0; i < (int)m_vContentBlock.size(); i++)
 			data[i] = (byte)m_vContentBlock[i];
 	}
 	else if (indexSize == sizeof(uint16))
 	{
-		for (int i = 0; i < m_vContentBlock.size(); i++)
+		for (int i = 0; i < (int)m_vContentBlock.size(); i++)
 		{
 			NetbyteFromUInt16(m_vContentBlock[i], data);
 			data += sizeof(uint16);
@@ -608,7 +608,7 @@ void CMLBinXMLWriter::WriteContentBlock(int indexSize)
 	}
 	else if (indexSize == sizeof(uint32))
 	{
-		for (int i = 0; i < m_vContentBlock.size(); i++)
+		for (int i = 0; i < (int)m_vContentBlock.size(); i++)
 		{
 			NetbyteFromUInt32(m_vContentBlock[i], data);
 			data += sizeof(uint32);
@@ -616,10 +616,10 @@ void CMLBinXMLWriter::WriteContentBlock(int indexSize)
 	}
 }
 
-#ifdef _CPPUNIT_TEST
-
 //////////////////////////////////////////////////////////////////////////
 // CPPUnit test
+
+#ifdef _CPPUNIT_TEST
 
 IMPLEMENT_CPPUNIT_TEST_REG(CMLBinXMLParser)
 
@@ -713,6 +713,5 @@ protected:
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseCMLBinXMLParser);
-
 
 #endif // _CPPUNIT_TEST

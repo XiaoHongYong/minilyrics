@@ -17,6 +17,8 @@ History of MLProtocol:
 #include "HttpProtocol.h"
 #include "MLUtils.h"
 
+DECLAR_CPPUNIT_TEST_REG(CMLProtocol)
+
 typedef list<tstring>		ListString;
 
 enum ML_PROTOCAL_ERROR
