@@ -265,6 +265,8 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 	if (nLen < LEN_BIN_XML_MIN)
 		return E_INVALID_SIZE;
 
+	xmlData.m_strEncoding = _T(SZ_UTF8);
+
 	byte *data = (byte*)lpXmlData;
 	byte *dataEnd = data;
 

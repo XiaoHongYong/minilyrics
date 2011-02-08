@@ -55,7 +55,7 @@ public:
 	// If not exists, _T("") will be returned.
 	LPCTSTR GetPropertySafe(LPCTSTR szPropName);
 
-	int GetPropertyInt(LPCTSTR szPropName) { return _ttoi(GetPropertySafe(szPropName)); }
+	int GetPropertyInt(LPCTSTR szPropName);
 
 	bool GetPropertyBinData(LPCTSTR szPropName, string &buf);
 	bool GetPropertyBase64Data(LPCTSTR szPropName, string &buf);

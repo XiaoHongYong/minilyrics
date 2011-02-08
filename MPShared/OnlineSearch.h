@@ -82,11 +82,14 @@ public:
 		tstring		strTitle;
 		tstring		strArtist;
 		TCHAR		szAssociateKeyword[MAX_PATH];
+		bool		bOnlyMatched;
+
 		COnlineSearch	*pOnlineSearch;
 		COnlineSearchThreadParam()
 		{
 			EmptyStr(szAssociateKeyword);
 			pOnlineSearch = NULL;
+			bOnlyMatched = false;
 		}
 	};
 
@@ -106,7 +109,7 @@ public:
 
 protected:
 	int UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, RetLyrInfoList &fileList);
-	BOOL AddSearchJob(LPCTSTR szArtist, LPCTSTR szTitle);
+	BOOL AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle);
 	bool IsTitleExcludedFromAutoSearch(LPCTSTR szTitle);
 
 	static void ThreadSearchOnline(LPVOID lpParam);

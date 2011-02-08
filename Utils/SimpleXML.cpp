@@ -78,6 +78,15 @@ LPCTSTR SXNode::GetProperty(LPCTSTR szPropName)
 	return (*it).strValue.c_str();
 }
 
+int SXNode::GetPropertyInt(LPCTSTR szPropName)
+{
+	LIST_PROPERTIES::iterator	it = FindProperty(szPropName);
+	if (it == listProperties.end())
+		return 0;
+
+	return _ttoi((*it).strValue.c_str());
+}
+
 // If not exists, _T("") will be returned.
 LPCTSTR SXNode::GetPropertySafe(LPCTSTR szPropName)
 {

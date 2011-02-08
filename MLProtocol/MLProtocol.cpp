@@ -75,7 +75,6 @@ BOOL SaveBufferAsTempFile(LPTSTR szTempFile, LPVOID lpBuffer, int nLen)
 ID_TO_STRING	__MlCmdIDStr[] = 
 {
 	{ MC_LOGIN, MZ_LOGIN },
-	{ MC_RETURN, MZ_RETURN },
 	{ MC_SEARCH, MZ_SEARCH },
 	{ MC_BATCH_SEARCH, MZ_BATCH_SEARCH },
 	{ MC_CAN_UPLOAD, MZ_CANUPLOAD},
@@ -169,7 +168,6 @@ int MLMsgCmdLogin::FromXML(SXNode *pXmlNode)
 	strName = pXmlNode->GetPropertySafe(_T("user"));
 	strPwd = pXmlNode->GetPropertySafe(_T("password"));
 	strClient = pXmlNode->GetPropertySafe(_T("client"));
-	strProtocolVer = pXmlNode->GetPropertySafe(_T("protocolversion"));
 	strRegCode = pXmlNode->GetPropertySafe(_T("regcode"));
 
 	return ERR_OK;
@@ -181,7 +179,6 @@ int MLMsgCmdLogin::ToXML(CXMLWriter &xmlFile)
 	xmlFile.WriteAttribute(_T("user"), strName.c_str());
 	xmlFile.WriteAttribute(_T("password"), strPwd.c_str());
 	xmlFile.WriteAttribute(_T("client"), strClient.c_str());
-	xmlFile.WriteAttribute(_T("protocolversion"), strProtocolVer.c_str());
 	if (strRegCode.size())
 		xmlFile.WriteAttribute(_T("regcode"), strRegCode.c_str());
 	xmlFile.WriteEndElement();
@@ -313,8 +310,6 @@ int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 
 	strTitle = pXmlNode->GetPropertySafe(_T("title"));
 
-	strProtocolVer = pXmlNode->GetPropertySafe(_T("ProtoVer"));
-
 	strClient = pXmlNode->GetPropertySafe(_T("client"));
 
 	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
@@ -324,6 +319,8 @@ int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 		nRequestPage = _ttoi(szValue);
 	else
 		nRequestPage = 0;
+
+	bOnlyMatchedLyrics = Tobool(pXmlNode->GetPropertyInt(_T("OnlyMatched")));
 
 	if (strArtist.empty() && strTitle.empty())
 		return ERR_CMD_PARAM;
@@ -339,14 +336,15 @@ int MLMsgCmdSearch::ToXML(CXMLWriter &xmlFile)
 		xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
 	if (strTitle.size())
 		xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
-	if (strProtocolVer.size())
-		xmlFile.WriteAttribute(_T("ProtoVer"), strProtocolVer.c_str());
 	if (strClient.size())
 		xmlFile.WriteAttribute(_T("client"), strClient.c_str());
 	if (strRegCode.size())
 		xmlFile.WriteAttribute(_T("RegCode"), strRegCode.c_str());
 	if (nRequestPage != 0)
 		xmlFile.WriteAttribute(_T("RequestPage"), nRequestPage);
+
+	if (bOnlyMatchedLyrics)
+		xmlFile.WriteAttribute(_T("OnlyMatched"), bOnlyMatchedLyrics);
 
 	xmlFile.WriteEndElement();
 	return ERR_OK;
@@ -449,13 +447,10 @@ int MLSearchItem::ToXML(CXMLWriter &xmlFile)
 
 MLMsgCmdBatchSearch::MLMsgCmdBatchSearch()
 {
-	strProtocolVer = ML_PROTOCOL_VERION;
 }
 
 int MLMsgCmdBatchSearch::FromXML(SXNode *pXmlNode)
 {
-	strProtocolVer = pXmlNode->GetPropertySafe(_T("ProtoVer"));
-
 	strClient = pXmlNode->GetPropertySafe(_T("client"));
 
 	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
@@ -481,8 +476,6 @@ int MLMsgCmdBatchSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_BATCH_SEARCH);
 
-	if (strProtocolVer.size())
-		xmlFile.WriteAttribute(_T("ProtoVer"), strProtocolVer.c_str());
 	if (strClient.size())
 		xmlFile.WriteAttribute(_T("client"), strClient.c_str());
 	if (strRegCode.size())

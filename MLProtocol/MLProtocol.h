@@ -11,6 +11,7 @@ History of MLProtocol:
 ML 3.0:			Old XML message format, encoding: gb2312(system default).
 
 ML 3.1 ~ 3.9:	HTTP tunnel XML message format, encoding: gb2312(system default).
+				Deprecated: Protocol Version: "0.9"
 
 ML 4.0 ~ 7.0:	HTTP tunnel Encrypted XML message format, encoding: UTF-8
 
@@ -66,8 +67,6 @@ enum ML_PROTOCAL_ERROR
 
 #define ML_SERVER_PORT				1212
 
-#define ML_PROTOCOL_VERION_V8		_T("0.8")
-#define ML_PROTOCOL_VERION			_T("0.9")
 
 enum MLMsgType
 {
@@ -84,26 +83,23 @@ enum MLMsgType
 						// See CMLBinXMLParser
 };
 
+//
+// Command send from client to server
+//
 enum MLMsgCmd
 {
-	//
-	// 从客户端发送到服务器的消息
-	MC_UNKNOWN,				// 未知
-	MC_LOGIN,				// 登陆
-	MC_SEARCH,				// 搜索（歌词……）
+	MC_UNKNOWN,				// Unknown
+	MC_LOGIN,				// Log in
+	MC_SEARCH,				// Search lyrics
 	MC_BATCH_SEARCH,		// Search lyrics by batch
 	MC_CAN_UPLOAD,			// Deprecated command. return ERR_NOT_FOUND dirrectly.
 	MC_UPLOADV0,			// Old version of upload lyrics.
-	MC_UPLOAD,				// 上传（歌词……）
+	MC_UPLOAD,				// Upload lyrics command
 
 	// Admin messages
 	MC_GET_LYR_UPDATE,
 	MC_SUBMIT_LYR_REVIEW,
 	MC_EXE_SVR_CMD,
-
-	//
-	// 从服务器发送到客户端的消息
-	MC_RETURN,				// 服务器返回客户端的应答消息
 };
 
 MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
@@ -156,7 +152,6 @@ public:
 class MLMsgCmdLogin : public CXMLMsgCmd
 {
 public:
-	tstring		strProtocolVer;		// 使用的协议版本
 	tstring		strName;
 	tstring		strPwd;
 	tstring		strClient;
@@ -190,7 +185,7 @@ public:
 	tstring		strFileName;
 	tstring		strUploader;
 	tstring		strLink;
-	int			nTimeLength;			// 歌曲（歌词）长度，单位s
+	int			nTimeLength;			// Media Length in second
 	float		fRate;					// rate info of lyrics
 	int			nRateCount;				// 
 	int			nDownloads;				// total downloads of lyrics
@@ -223,17 +218,16 @@ class MLMsgCmdSearch : public CXMLMsgCmd
 public:
 	tstring		strArtist;
 	tstring		strTitle;
-	tstring		strProtocolVer;		// 使用的协议版本
 	tstring		strClient;			// client name + client ver
 	tstring		strRegCode;
 	int			nRequestPage;
-	bool		bReturnMatchedLyrics;
+	bool		bOnlyMatchedLyrics; // Return only matched lyrics
 
 public:
 	MLMsgCmdSearch()
 	{
 		nRequestPage = 0;
-		bReturnMatchedLyrics = false;
+		bOnlyMatchedLyrics = false;
 	}
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
@@ -292,7 +286,6 @@ typedef vector<MLSearchItem>		MLListSearchItems;
 class MLMsgCmdBatchSearch : public CXMLMsgCmd
 {
 public:
-	tstring		strProtocolVer;
 	tstring		strClient;		// client name + client ver
 	tstring		strRegCode;
 	MLListSearchItems	listSearchItems;

@@ -380,7 +380,7 @@ BOOL COnlineSearch::SearchCacheForCur(V_LRCSEARCHRESULT *pvResult, DWORD *pdwSea
 
 void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 {
-	int							nRet;
+	int						nRet;
 	CMLClientSession		session;
 	MLMsgRetSearch			retSearch;
 
@@ -405,7 +405,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		return;
 	}
 
-	nRet = session.Search(pSearchParam->strArtist.c_str(), pSearchParam->strTitle.c_str(), 0, retSearch);//listResult, bInvalidRegCode, strMsg);
+	nRet = session.Search(pSearchParam->bOnlyMatched, pSearchParam->strArtist.c_str(), pSearchParam->strTitle.c_str(), 0, retSearch);
 	session.Close();
 
 	if (retSearch.RegVerifyValue != RVV_OK)
@@ -448,7 +448,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 }
 
 // 创建一个线程搜索歌词，线程执行完毕之后会通知目标
-BOOL COnlineSearch::AddSearchJob(LPCTSTR szArtist, LPCTSTR szTitle)
+BOOL COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle)
 {
 	COnlineSearchThreadParam		*pParam;
 	DWORD							dwThreadId = 0;
@@ -466,6 +466,7 @@ BOOL COnlineSearch::AddSearchJob(LPCTSTR szArtist, LPCTSTR szTitle)
 	pParam->strTitle = szTitle;
 	g_mpApp.GetAssociateFileKeyword(pParam->szAssociateKeyword, CountOf(pParam->szAssociateKeyword));
 	pParam->pOnlineSearch = this;
+	pParam->bOnlyMatched = bOnlyMatched;
 
 	m_threadSearch.Create(ThreadSearchOnline, pParam);
 
@@ -565,7 +566,7 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	str += g_Player.GetFullTitle();
 	g_eventDispather.DispatchLongErrorText(str.c_str());
 
-	return AddSearchJob(szArtist, szTitle);
+	return AddSearchJob(true, szArtist, szTitle);
 }
 
 int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount)
@@ -583,7 +584,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 
 	MLMsgRetSearch	retSearch;
 
-	nRet = session.Search(szArtist, szTitle, nCurPage, retSearch);
+	nRet = session.Search(false, szArtist, szTitle, nCurPage, retSearch);
 	session.Close();
 
 	if (retSearch.RegVerifyValue != RVV_OK)
