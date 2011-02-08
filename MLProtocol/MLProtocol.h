@@ -7,7 +7,15 @@
 
 /***********************************************************************
 History of MLProtocol:
-2010.08(7.1 or later): support batch download
+
+ML 3.0:			Old XML message format, encoding: gb2312(system default).
+
+ML 3.1 ~ 3.9:	HTTP tunnel XML message format, encoding: gb2312(system default).
+
+ML 4.0 ~ 7.0:	HTTP tunnel Encrypted XML message format, encoding: UTF-8
+
+ML 7.1 ~ :		HTTP tunnel Encrypted Binary XML message format, encoding: UTF-8
+2011.03			support batch download, ML Binary XML message format
 
 /***********************************************************************/
 
@@ -84,8 +92,8 @@ enum MLMsgCmd
 	MC_LOGIN,				// 登陆
 	MC_SEARCH,				// 搜索（歌词……）
 	MC_BATCH_SEARCH,		// Search lyrics by batch
-	MC_CAN_UPLOAD,			// 是否能够上传（歌词……），服务器返回结果，如果不能上传会返回具体的原因
-	MC_UPLOADV0,			// 上传（歌词……）
+	MC_CAN_UPLOAD,			// Deprecated command. return ERR_NOT_FOUND dirrectly.
+	MC_UPLOADV0,			// Old version of upload lyrics.
 	MC_UPLOAD,				// 上传（歌词……）
 
 	// Admin messages
@@ -130,7 +138,7 @@ public:
 };
 
 
-// 命令请求的执行结果
+// Returned message
 class MLRetMsg : public CXMLMsgCmd
 {
 public:
@@ -144,19 +152,10 @@ public:
 
 };
 
-// 客户端登陆服务器
-//
-// 返回值：
-//		ERR_OK			-	成功
-//		ERR_REDIRECT		-	重定向连接
-//		ERR_USER_NOT_EXIST-	用户不存在
-//		ERR_BAD_USERPWD	-	用户名或者密码错误
-//		ERR_BAD_CLIENT_VER,
-//		ERR_OBSOLETE_CLIENT_VER,
+// Login command
 class MLMsgCmdLogin : public CXMLMsgCmd
 {
 public:
-	// 登陆时的信息
 	tstring		strProtocolVer;		// 使用的协议版本
 	tstring		strName;
 	tstring		strPwd;
@@ -169,6 +168,7 @@ public:
 
 };
 
+// Return of log in command
 class MLMsgRetLogin : public MLRetMsg
 {
 public:
@@ -180,8 +180,8 @@ public:
 
 };
 
-// 搜索结果，上传信息中的文件信息
-class MLFileInfo
+// Returned search result lyrics info
+class RetLyrInfo
 {
 public:
 	tstring		strArtist;
@@ -190,16 +190,14 @@ public:
 	tstring		strFileName;
 	tstring		strUploader;
 	tstring		strLink;
-	int			nMatchValue;			// 搜索结果比较得分
 	int			nTimeLength;			// 歌曲（歌词）长度，单位s
 	float		fRate;					// rate info of lyrics
 	int			nRateCount;				// 
 	int			nDownloads;				// total downloads of lyrics
 
 public:
-	MLFileInfo()
+	RetLyrInfo()
 	{
-		nMatchValue = 0;
 		nTimeLength = 0;
 		fRate = 0.0;
 		nRateCount = 0;
@@ -210,7 +208,7 @@ public:
 
 };
 
-typedef list<MLFileInfo>	MLFileInfoList;
+typedef list<RetLyrInfo>	RetLyrInfoList;
 
 enum ML_EDITION
 {
@@ -219,22 +217,15 @@ enum ML_EDITION
 	ME_CHINESE	= 2,
 };
 
-// 客户端向服务器请求搜索命令
-//
-// 返回值:
-//		ERR_OK			-	成功
-//		ERR_REDIRECT		-	重定向连接
-//		ERR_NOT_FOUND
-//		ERR_ACCESS_DENIED
+// Search lyrics command
 class MLMsgCmdSearch : public CXMLMsgCmd
 {
 public:
 	tstring		strArtist;
 	tstring		strTitle;
 	tstring		strProtocolVer;		// 使用的协议版本
-	tstring		strClient;	// client name + client ver
+	tstring		strClient;			// client name + client ver
 	tstring		strRegCode;
-	tstring		strClientCharEncoding;		// 客户的使用的字符编码，服务器用户将utf-8转换为客户端的编码，搜索mbcs的旧歌词
 	int			nRequestPage;
 	bool		bReturnMatchedLyrics;
 
@@ -256,7 +247,7 @@ enum REGCODE_VERIFY_VALUE
 	RVV_INVALID		= 2,
 };
 
-// 客户端向服务器请求搜索命令执行的结果
+// Return of search lyrics command
 class MLMsgRetSearch : public MLRetMsg
 {
 public:
@@ -264,12 +255,11 @@ public:
 	tstring					strMessage;
 	int						nPageCount, nCurPage;
 
-	list<MLFileInfo>		listResultFiles;
+	list<RetLyrInfo>		listResultFiles;
 
 public:
 	MLMsgRetSearch()
 	{
-		// bInvalidRegCode = FALSE;
 		RegVerifyValue = RVV_OK;
 		nPageCount = 1;
 		nCurPage = 0;
@@ -279,6 +269,7 @@ public:
 
 };
 
+// Batch lyrics search item
 class MLSearchItem
 {
 public:
@@ -297,13 +288,7 @@ public:
 };
 typedef vector<MLSearchItem>		MLListSearchItems;
 
-
 // Client sent to server to search lyrics by batch.
-//
-// Return:
-//		ERR_OK
-//		ERR_NOT_FOUND
-//		ERR_ACCESS_DENIED
 class MLMsgCmdBatchSearch : public CXMLMsgCmd
 {
 public:
@@ -320,6 +305,7 @@ public:
 
 };
 
+// Returned lyrics info for batch lyrics search.
 class MLLyricsInfoLite
 {
 public:
@@ -335,8 +321,7 @@ public:
 
 typedef list<MLLyricsInfoLite>		ListLyricsInfoLite;
 
-// The return message of batch search
-// <return .... />
+// The return message of batch lyrics search
 class MLMsgRetBatchSearch : public MLRetMsg
 {
 public:
@@ -354,49 +339,14 @@ public:
 
 };
 
-// 客户端向服务器请求判断是否能够上传
-//
-// 返回值:
-//		ERR_OK			-	成功
-//		ERR_REDIRECT		-	重定向连接
-class MLMsgCmdCanUpload : public CXMLMsgCmd
-{
-public:
-	tstring		strLoginName;
-	tstring		strArtist;
-	tstring		strAlbum;
-	tstring		strTitle;
-	int			nTimeLength;		// 歌曲（歌词）长度，单位ms
-	tstring		strFileName;
-	tstring		strMD5;				// 文件的MD5值
-	tstring		strClientCharEncoding;
 
-public:
-	virtual int FromXML(SXNode *pNode);
-	virtual int ToXML(CXMLWriter &xmlFile);
-
-};
-typedef MLMsgRetSearch MLMsgRetCanUpload;
-
-
-// 客户端向服务器请求上传
-//
-// 返回值:
-//		ERR_OK			-	成功
-//		ERR_REDIRECT		-	重定向连接
-//  7.0.615 and before.
+// Old lyrics upload command
+//  7.0 and before.
 class MLMsgCmdUploadV0 : public CXMLMsgCmd
 {
 public:
 	tstring		strLoginName;
-	tstring		strArtist;
-	tstring		strAlbum;
-	tstring		strTitle;
-	tstring		strFileName;
-	int			nTimeLength;			// 歌曲（歌词）长度，单位ms
-	tstring		strMD5;					// 文件的MD5值
-	tstring		strFileContent;			// 此字段有效，存储的文件内容
-	tstring		strContentEncoding;
+	tstring		strFileContent;			// Uploaded lyrics content, encoded in base64.
 
 public:
 	virtual int FromXML(SXNode *pNode);
@@ -405,11 +355,7 @@ public:
 };
 typedef MLMsgRetSearch MLMsgRetUploadV0;
 
-// 客户端向服务器请求上传
-//
-// 返回值:
-//		ERR_OK			-	成功
-//		ERR_REDIRECT		-	重定向连接
+// Upload lyrics command 7.1 or later
 class MLMsgCmdUpload : public CXMLMsgCmd
 {
 public:
@@ -436,23 +382,7 @@ public:
 
 };
 
-
-// 客户端向服务器发送bug
-//
-// 返回值:
-//		ERR_OK			-	成功
-//		ERR_REDIRECT		-	重定向连接
-class MLMsgCmdPostBug : public CXMLMsgCmd
-{
-public:
-	tstring		strBugType;			// 建议？一般问题？严重问题……
-	tstring		strBugComment;		// Bug描述
-	tstring		strBugProduce;		// 该bug如何重现？
-	tstring		strLoginName;
-
-};
-
-// Old xml message
+// Old xml message (3.0)
 #define ML_MSG_MAX_LENGTH		(1024 * 1024)
 #define ML_MSG_XML				"XML"
 #define ML_MSG_XML_FMT			"XML%6d"
@@ -522,8 +452,6 @@ public:
 	bool						m_bServer;				// 是否为服务器端
 
 	// 统计数据
-	long						m_nXmlPackCount;		// 未加密的Xml packet数
-	long						m_nV1PackCount;			// V1 packet 的数目
 	long						m_nInvalidV1PackCount;	// 无效的V1 packet 数目
 	long						m_nInvalidPackCount;	// 无效的 packet 数目
 
@@ -538,9 +466,9 @@ public:
 	int Unwrapp(CCharBuffer &buff);
 
 	void SetId(int nId)
-	{
-		m_nCurrentId = nId;
-	}
+		{ m_nCurrentId = nId; }
+
+	ML_PACK_VERSION GetPackVersion() { return m_packFlag; }
 
 protected:
 	long						m_nCurrentId;

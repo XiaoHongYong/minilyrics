@@ -246,7 +246,7 @@ void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
 
 //////////////////////////////////////////////////////////////////////////
 
-int MLFileInfo::FromXML(SXNode *pNode)
+int RetLyrInfo::FromXML(SXNode *pNode)
 {
 	strArtist = pNode->GetPropertySafe(_T("artist"));
 
@@ -260,8 +260,6 @@ int MLFileInfo::FromXML(SXNode *pNode)
 
 	strLink = pNode->GetPropertySafe(_T("link"));
 
-	nMatchValue = pNode->GetPropertyInt(_T("matchvalue"));
-
 	nTimeLength = pNode->GetPropertyInt(_T("timelength"));
 
 	LPCTSTR szValue = pNode->GetProperty(_T("rate"));
@@ -273,7 +271,7 @@ int MLFileInfo::FromXML(SXNode *pNode)
 	return ERR_OK;
 }
 
-int MLFileInfo::ToXML(CXMLWriter &xmlFile)
+int RetLyrInfo::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_FILEINFO);
 	// filetype must be set for old version of MiniLyrics (7.0.614 before).
@@ -291,8 +289,6 @@ int MLFileInfo::ToXML(CXMLWriter &xmlFile)
 		xmlFile.WriteAttribute(_T("uploader"), strUploader.c_str());
 	if (!strLink.empty())
 		xmlFile.WriteAttribute(_T("link"), strLink.c_str());
-	if (nMatchValue != 0)
-		xmlFile.WriteAttribute(_T("matchvalue"), nMatchValue);
 	if (nTimeLength != 0)
 		xmlFile.WriteAttribute(_T("timelength"), nTimeLength);
 	if (fRate != 0.0)
@@ -323,8 +319,6 @@ int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 
 	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
 
-	strClientCharEncoding = pXmlNode->GetPropertySafe(_T("ClientCharEncoding"));
-
 	LPCTSTR szValue = pXmlNode->GetPropertySafe(_T("RequestPage"));
 	if (szValue)
 		nRequestPage = _ttoi(szValue);
@@ -351,8 +345,6 @@ int MLMsgCmdSearch::ToXML(CXMLWriter &xmlFile)
 		xmlFile.WriteAttribute(_T("client"), strClient.c_str());
 	if (strRegCode.size())
 		xmlFile.WriteAttribute(_T("RegCode"), strRegCode.c_str());
-	if (strClientCharEncoding.size())
-		xmlFile.WriteAttribute(_T("ClientCharEncoding"), strClientCharEncoding.c_str());
 	if (nRequestPage != 0)
 		xmlFile.WriteAttribute(_T("RequestPage"), nRequestPage);
 
@@ -394,7 +386,7 @@ int MLMsgRetSearch::FromXML(SXNode *pNode)
 	itEnd = pNode->listChildren.end();
 	for (it = pNode->listChildren.begin(); it != itEnd; ++it)
 	{
-		MLFileInfo	Info;
+		RetLyrInfo	Info;
 		Info.FromXML(*it);
 		listResultFiles.push_back(Info);
 	}
@@ -420,7 +412,7 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 	if (nCurPage != 0)
 		xmlFile.WriteAttribute(_T("CurPage"), nCurPage);
 
-	for (list<MLFileInfo>::iterator it = listResultFiles.begin(); it != listResultFiles.end(); ++it)
+	for (list<RetLyrInfo>::iterator it = listResultFiles.begin(); it != listResultFiles.end(); ++it)
 	{
 		(*it).ToXML(xmlFile);
 	}
@@ -599,76 +591,11 @@ int MLMsgRetBatchSearch::ToXML(CXMLWriter &xmlFile)
 }
 
 //////////////////////////////////////////////////////////////////////////
-int MLMsgCmdCanUpload::FromXML(SXNode *pXmlNode)
-{
-	strLoginName = pXmlNode->GetPropertySafe(_T("username"));
-
-	strArtist = pXmlNode->GetPropertySafe(_T("artist"));
-
-	strAlbum = pXmlNode->GetPropertySafe(_T("album"));
-
-	strTitle = pXmlNode->GetPropertySafe(_T("title"));
-
-	nTimeLength = pXmlNode->GetPropertyInt(_T("timelength"));
-
-	strFileName = pXmlNode->GetPropertySafe(_T("filename"));
-
-	strMD5 = pXmlNode->GetPropertySafe(_T("md5"));
-
-	strClientCharEncoding = pXmlNode->GetPropertySafe(_T("ClientCharEncoding"));
-
-	if (strArtist.empty() && strTitle.empty() || strMD5.empty())
-	{
-		DBGLOG3(_T("Canupload command param error, Artist: %S, Title: %S, MD5: %S"),
-			strArtist.c_str(), strTitle.c_str(), strMD5.c_str());
-		return ERR_CMD_PARAM;
-	}
-
-	return ERR_OK;
-}
-
-int MLMsgCmdCanUpload::ToXML(CXMLWriter &xmlFile)
-{
-	xmlFile.WriteStartElement(MZ_CANUPLOAD);
-
-	xmlFile.WriteAttribute(_T("username"), strLoginName.c_str());
-
-	xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
-	xmlFile.WriteAttribute(_T("album"), strAlbum.c_str());
-	xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
-	xmlFile.WriteAttribute(_T("timelength"), nTimeLength);
-	xmlFile.WriteAttribute(_T("filename"), strFileName.c_str());
-	xmlFile.WriteAttribute(_T("md5"), strMD5.c_str());
-	if (strClientCharEncoding.size())
-		xmlFile.WriteAttribute(_T("ClientCharEncoding"), strClientCharEncoding.c_str());
-	xmlFile.WriteEndElement();
-	return ERR_OK;
-}
-
-
-//////////////////////////////////////////////////////////////////////////
 int MLMsgCmdUploadV0::FromXML(SXNode *pXmlNode)
 {
 	strLoginName = pXmlNode->GetPropertySafe(_T("username"));
 
-	strArtist = pXmlNode->GetPropertySafe(_T("artist"));
-
-	strAlbum = pXmlNode->GetPropertySafe(_T("album"));
-
-	strTitle = pXmlNode->GetPropertySafe(_T("title"));
-
-	strContentEncoding = pXmlNode->GetPropertySafe(_T("encoding"));
-
-	nTimeLength = pXmlNode->GetPropertyInt(_T("timelength"));
-
-	strFileName = pXmlNode->GetPropertySafe(_T("filename"));
-
-	strMD5 = pXmlNode->GetPropertySafe(_T("md5"));
-
 	strFileContent = pXmlNode->GetPropertySafe(_T("FileDataB64"));
-
-	if (strArtist.empty() && strTitle.empty() || strMD5.empty())
-		return ERR_CMD_PARAM;
 
 	return ERR_OK;
 }
@@ -679,15 +606,6 @@ int MLMsgCmdUploadV0::ToXML(CXMLWriter &xmlFile)
 
 	xmlFile.WriteAttribute(_T("username"), strLoginName.c_str());
 
-	xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
-	xmlFile.WriteAttribute(_T("album"), strAlbum.c_str());
-	xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
-	if (strContentEncoding.size())
-		xmlFile.WriteAttribute(_T("encoding"), strContentEncoding.c_str());
-	if (nTimeLength > 0)
-		xmlFile.WriteAttribute(_T("timelength"), nTimeLength);
-	xmlFile.WriteAttribute(_T("filename"), strFileName.c_str());
-	xmlFile.WriteAttribute(_T("md5"), strMD5.c_str());
 	xmlFile.WriteAttribute(_T("FileDataB64"), strFileContent.c_str());
 	xmlFile.WriteEndElement();
 	return ERR_OK;
@@ -774,8 +692,6 @@ CMLPacketAccountMgr::CMLPacketAccountMgr()
 {
 	m_packFlag = MPV_V1_MD5_ID;
 	m_bEnableXmlPack = true;
-	m_nXmlPackCount = 0;
-	m_nV1PackCount = 0;
 	m_nInvalidV1PackCount = 0;
 	m_nInvalidPackCount = 0;
 	m_bServer = true;
@@ -891,8 +807,6 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 		if (!m_pAccountMgr->m_bEnableXmlPack)
 			return ERR_DISABLE_PACK_XML;
 
-		m_pAccountMgr->m_nXmlPackCount++;
-
 		// 在服务器端，需要根据客户端发送的packet类型，转换到对应的packet类型
 		if (m_pAccountMgr->m_bServer)
 			m_packFlag = MPV_XML;
@@ -901,7 +815,6 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 
 	if (pHead->byVersion == MPV_V1_MD5_ID)
 	{
-		m_pAccountMgr->m_nV1PackCount++;
 		const char		*szPwd;
 		unsigned char	Md5[16];
 		int				i;
@@ -933,6 +846,11 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 			}
 		}
 		buff.erase(0, sizeof(MLEncodePacketV1));
+
+		// 在服务器端，需要根据客户端发送的packet类型，转换到对应的packet类型
+		if (m_pAccountMgr->m_bServer)
+			m_packFlag = MPV_V1_MD5_ID;
+
 		return ERR_OK;
 	}
 
@@ -1020,15 +938,15 @@ int CMLProtocol::ReadOldXmlMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 
 	while (1)
 	{
-		int nRead = 0;
-		int nRet = m_pNetFile->Read(*pMsgBuff, ALLOC_BLOCK_LEN, &nRead);
-		if (nRet == ERR_OK)
+		if (pMsgBuff->size() < ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN)
 		{
+			int nRead = 0;
+			int nRet = m_pNetFile->Read(*pMsgBuff, ALLOC_BLOCK_LEN, &nRead);
+			if (nRet != ERR_OK)
+				return nRet;
 			if (nRead == 0)
 				return ERR_NOT_RECIVED_ALL;
 		}
-		else
-			return nRet;
 
 		//
 		// 如果没有接收到数据长度，则继续接收
@@ -1077,7 +995,9 @@ int CMLProtocol::ReadOldXmlMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 
 	msgType = MT_XML;
 
-	m_packetWrapper.Unwrapp(*pMsgBuff);
+	int nRet = m_packetWrapper.Unwrapp(*pMsgBuff);
+	if (nRet != ERR_OK)
+		return nRet;
 
 	return ERR_OK;
 }

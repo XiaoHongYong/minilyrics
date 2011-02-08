@@ -379,6 +379,17 @@ void Utf8ToUCS2(const char *str, int nLen, wstringex &strOut)
 
 void Utf8ToMbcs(const char *str, int nLen, stringex &strOut, int nEncodingID)
 {
+	if (nEncodingID == ED_UTF8)
+	{
+		if (nLen == -1)
+			strOut = str;
+		else
+		{
+			strOut.clear();
+			strOut.append(str, nLen);
+		}
+	}
+
 	wstringex		strW;
 
 	Utf8ToUCS2(str, nLen, strW);
@@ -388,6 +399,17 @@ void Utf8ToMbcs(const char *str, int nLen, stringex &strOut, int nEncodingID)
 
 void MbcsToUtf8(const char *str, int nLen, stringex &strOut, int nEncodingID)
 {
+	if (nEncodingID == ED_UTF8)
+	{
+		if (nLen == -1)
+			strOut = str;
+		else
+		{
+			strOut.clear();
+			strOut.append(str, nLen);
+		}
+	}
+
 	wstringex		strW;
 
 	ConvertStr(str, nLen, strW, nEncodingID);
@@ -455,6 +477,17 @@ void Utf8ToUCS2(const char *str, int nLen, wstring_t &strOut)
 
 void Utf8ToMbcs(const char *str, int nLen, string &strOut, int nEncodingID)
 {
+	if (nEncodingID == ED_UTF8)
+	{
+		if (nLen == -1)
+			strOut = str;
+		else
+		{
+			strOut.clear();
+			strOut.append(str, nLen);
+		}
+	}
+
 	wstringex		strW;
 
 	Utf8ToUCS2(str, nLen, strW);
@@ -464,6 +497,17 @@ void Utf8ToMbcs(const char *str, int nLen, string &strOut, int nEncodingID)
 
 void MbcsToUtf8(const char *str, int nLen, string &strOut, int nEncodingID)
 {
+	if (nEncodingID == ED_UTF8)
+	{
+		if (nLen == -1)
+			strOut = str;
+		else
+		{
+			strOut.clear();
+			strOut.append(str, nLen);
+		}
+	}
+
 	wstringex		strW;
 
 	ConvertStr(str, nLen, strW, nEncodingID);

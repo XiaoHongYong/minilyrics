@@ -74,7 +74,7 @@ public:
 			{
 				g_sessionUpload.Close();
 				g_sessionUpload.Connect();
-				m_nResult = g_sessionUpload.Upload(m_strLyricsContent, m_strLyrId, m_strMsg, m_listExistFiles);
+				m_nResult = g_sessionUpload.Upload(m_strLyricsContent, m_strLyrId, m_strMsg);
 			}
 		}
 		g_sessionUpload.Close();
@@ -83,7 +83,6 @@ public:
 	}
 
 public:
-	list<MLFileInfo>		m_listExistFiles;
 	tstring					m_strLyricsContent;
 	tstring					m_strLyrSource;
 	tstring					m_strMediaSource, m_strLyrId;
