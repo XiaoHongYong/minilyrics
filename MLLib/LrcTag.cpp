@@ -31,18 +31,6 @@ bool IsTxtTagAtTailOfFile(LyrTagType tagType)
 	return (tagType & (LTT_OFFSET | LTT_MEDIA_LENGTH | LTT_ID | LTT_ENCODING)) != 0;
 }
 
-int FormtLrcTimeTag(int nTime, TCHAR szBuff[])
-{
-	int		nMin, nSec, nMs;
-	nTime += 10 / 2;
-
-	nMs = (nTime / 10) % 100;
-	nSec = (nTime / 1000) % 60;
-	nMin = nTime / (1000 * 60);
-
-	return _stprintf_s(szBuff, 16, _T("[%02d:%02d.%02d]"), nMin, nSec, nMs);
-}
-
 void FormatPlayTime(int nmsTime, TCHAR szBuf[])
 {
 	int		nMinute, nSec, nHour;
@@ -891,16 +879,340 @@ void CLrcTag::WriteToText(stringex &str, bool bLrcTag)
 		TxtTagWriteToText(str, propNameValueMap);
 }
 
-#ifdef _CPPUNIT_TEST
+int FormtLrcTimeTag(int nTime, bool bLongTimeFmt, char szBuff[])
+{
+	int		nMin, nSec, nMs;
+	if (bLongTimeFmt)
+		nTime += 10 / 2;
+	else
+		nTime += 1000 / 2;
 
-IMPLEMENT_CPPUNIT_TEST_REG(LrcTag)
+	nMs = (nTime / 10) % 100;
+	nSec = (nTime / 1000) % 60;
+	nMin = nTime / (1000 * 60);
+
+	if (bLongTimeFmt)
+		return sprintf_s(szBuff, 32, "[%02d:%02d.%02d]", nMin, nSec, nMs);
+	else
+		return sprintf_s(szBuff, 32, "[%02d:%02d]", nMin, nSec);
+}
+
+int FormtLrcTimeTag(int nTime, bool bLongTimeFmt, WCHAR szBuff[])
+{
+	int		nMin, nSec, nMs;
+	if (bLongTimeFmt)
+		nTime += 10 / 2;
+	else
+		nTime += 1000 / 2;
+
+	nMs = (nTime / 10) % 100;
+	nSec = (nTime / 1000) % 60;
+	nMin = nTime / (1000 * 60);
+
+	if (bLongTimeFmt)
+		return swprintf_s(szBuff, 32, L"[%02d:%02d.%02d]", nMin, nSec, nMs);
+	else
+		return swprintf_s(szBuff, 32, L"[%02d:%02d]", nMin, nSec);
+}
+
+template<class _TCHAR>
+class CLrcCompressor
+{
+public:
+	typedef basic_string<_TCHAR>	_tstring;
+	typedef stringex_t<_TCHAR>		_tstringex;
+	typedef const _TCHAR * _LPCTSTR;
+	typedef list<_tstring> _ListString;
+
+	struct Line
+	{
+		vector<int>		vTime;
+		_tstring		lyrics;
+	};
+	typedef list<Line>	ListLines;
+
+	int Parse(_LPCTSTR szText)
+	{
+		_tstringex		strLine;
+
+		//
+		// Parse .lrc line by line
+		//
+		_LPCTSTR szNextLine = szText;
+		while (szNextLine)
+		{
+			szNextLine = ReadLine(szNextLine, strLine);
+
+			int	nNextPos, nTime;
+			vector<int>	vTimes;
+			_LPCTSTR		szLine = strLine.c_str();
+
+			szLine = IgnoreSpaces(szLine);
+
+			if (*szLine != '[')
+			{
+				AddLine(szLine);
+				continue;
+			}
+
+			while (ParseLrcTimeTag(szLine, nNextPos, nTime))
+			{
+				szLine += nNextPos;
+				vTimes.push_back(nTime);
+			}
+			if (vTimes.size())
+			{
+				// Time tag.
+				AddLine(vTimes, szLine);
+				continue;
+			}
+
+			// Add tag
+			if (_xcschr(szLine, ':'))
+				m_listTags.push_back(szLine);
+			else
+				AddLine(szLine);
+		}
+
+		return ERR_OK;
+	}
+
+	bool IsLrcFormat()
+	{
+		int nLrcLineCount = 0;
+		int nTxtLineCount = 0;
+
+		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
+		{
+			Line &line = *it;
+			if (line.vTime.size())
+				nLrcLineCount += line.vTime.size();
+			else
+			{
+				if (line.lyrics.size())
+					nTxtLineCount++;
+			}
+		}
+
+		if (nTxtLineCount <= 2 && nLrcLineCount > 3)
+			return true;
+
+		if (nLrcLineCount > 10 && nLrcLineCount < nLrcLineCount * 2)
+			return true;
+
+		return nLrcLineCount > 20;
+	}
+
+	void Save(_tstring &str, bool bRemoveTextLine)
+	{
+		_TCHAR	szReturn[] = { '\r', '\n', '\0' };
+		str.reserve(1024 * 4);
+
+		// Tags
+		for (_ListString::iterator it = m_listTags.begin(); it != m_listTags.end(); ++it)
+		{
+			str.append(*it);
+			str.append(szReturn);
+		}
+
+		bool bLongTimeFormat = IsLongTimeFormat();
+		_TCHAR	szTime[64];
+
+		// Time
+		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
+		{
+			Line &line = *it;
+
+			if (bRemoveTextLine && line.vTime.empty() && line.lyrics.size())
+				continue;
+			for (uint i = 0; i < line.vTime.size(); i++)
+			{
+				FormtLrcTimeTag(line.vTime[i], bLongTimeFormat, szTime);
+				str.append(szTime);
+			}
+
+			str.append(line.lyrics);
+			str.append(szReturn);
+		}
+
+		// Remove end return
+		if (m_listLines.size() > 0)
+			str.resize(str.size() - _xcslen(szReturn));
+	}
+
+	bool IsLongTimeFormat()
+	{
+		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
+		{
+			Line &line = *it;
+			for (int i = 0; i < line.vTime.size(); i++)
+			{
+				if (line.vTime[i] % 1000 != 0)
+					return true;
+			}
+		}
+
+		return false;
+	}
+
+protected:
+	void AddLine(vector<int> &vTime, _LPCTSTR szLine)
+	{
+		_tstring str;
+		SetLine(str, szLine);
+
+		// Add to existed items
+		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
+		{
+			Line &line = *it;
+			if (!line.vTime.empty() && _xcscmp(line.lyrics.c_str(), str.c_str()) == 0)
+			{
+				line.vTime.insert(line.vTime.end(), vTime.begin(), vTime.end());
+				return;
+			}
+		}
+
+		m_listLines.push_back(Line());
+		Line &line = m_listLines.back();
+		line.vTime = vTime;
+		line.lyrics = str;
+	}
+
+	void AddLine(_LPCTSTR szLine)
+	{
+		m_listLines.push_back(Line());
+		Line &line = m_listLines.back();
+		SetLine(line.lyrics, szLine);
+	}
+
+	void SetLine(_tstring &str, _LPCTSTR line)
+	{
+		// Trim spaces
+		while (*line == ' ') line++;
+		int len = _xcslen(line);
+		while (len > 0 && line[len - 1] == ' ')
+			len--;
+
+		str.append(line, len);
+	}
+
+protected:
+	int				m_nNoTimedLines;
+	ListLines		m_listLines;
+	_ListString		m_listTags;
+
+};
+
+bool CompressLyrics(CCharBuffer &buf)
+{
+	// Append extra 0 to make sure it's \0 ended for ucs2
+	buf.append("\0\0", 2);
+	buf.resize(buf.size() - 2);
+
+	LPBYTE szLrc = (LPBYTE)buf.c_str();
+	int nLen = buf.size();
+	CHAR_ENCODING encoding = GetLyricsTextEncoding(szLrc, nLen);
+
+	if (encoding == ED_UNICODE_BIG_ENDIAN)
+		UCS2BEToLE((WCHAR*)szLrc, nLen / sizeof(WCHAR));
+
+	if (encoding == ED_UNICODE || encoding == ED_UNICODE_BIG_ENDIAN)
+	{
+		CLrcCompressor<WCHAR>	compressor;
+
+		compressor.Parse((WCHAR *)szLrc);
+
+		if (compressor.IsLrcFormat())
+		{
+			wstring_t str;
+			compressor.Save(str, true);
+			buf.clear();
+			buf.append(SZ_FE_UCS2);
+			buf.append((const char *)str.c_str(), str.size() * sizeof(WCHAR));
+			if (encoding == ED_UNICODE_BIG_ENDIAN)
+				UCS2LEToBE((WCHAR*)buf.data(), buf.size() / sizeof(WCHAR));
+			return true;
+		}
+	}
+	else
+	{
+		CLrcCompressor<char>	compressor;
+
+		compressor.Parse((char *)szLrc);
+
+		if (compressor.IsLrcFormat())
+		{
+			string str;
+			compressor.Save(str, true);
+			buf.clear();
+			if (encoding == ED_UTF8)
+				buf.append(SZ_FE_UTF8);
+			buf.append((const char *)str.c_str(), str.size());
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool ConvertUnicodeAnsiData(CCharBuffer &buf)
+{
+	buf.append("\0\0", 2);
+	buf.resize(buf.size() - 2);
+
+	LPCSTR szTxt = buf.c_str();
+	FILE_ENCODING	fe = GetStrEncodingType(szTxt);
+
+	if (fe == FE_UTF8)
+	{
+		szTxt += 3;
+		if (IsAnsiStr((const char*)szTxt))
+		{
+			buf.erase(0, 3);
+			return true;
+		}
+	}
+	else if (fe == FE_UCS2)
+	{
+		szTxt += 2;
+
+		if (IsAnsiStr((WCHAR*)szTxt))
+		{
+			string str;
+			UCS2ToAnsi((WCHAR*)szTxt, -1, str);
+			buf.clear();
+			buf = str.c_str();
+			return true;
+		}
+	}
+	else if (fe == FE_UCS2_BE)
+	{
+		szTxt += 2;
+		wstringex strw;
+		strw = (const WCHAR*)szTxt;
+		UCS2BEToLE(strw.data(), strw.size());
+		if (IsAnsiStr(strw.data()))
+		{
+			buf.clear();
+			UCS2ToAnsi(strw.c_str(), strw.size(), buf);
+			return true;
+		}
+	}
+
+	return false;
+}
 
 //////////////////////////////////////////////////////////////////////////
 // CPPUnit test
 
+#ifdef _CPPUNIT_TEST
+
+IMPLEMENT_CPPUNIT_TEST_REG(LrcTag)
+
 class CTestCaseLrcTag : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(CTestCaseLrcTag);
+	CPPUNIT_TEST(TestCLrcCompressor);
 	CPPUNIT_TEST(TestParseLrcTimeTag);
 	CPPUNIT_TEST(TestParseLrcPropTag);
 	CPPUNIT_TEST(TestParseTxtPropTag);
@@ -929,6 +1241,115 @@ public:
 	}
 
 protected:
+	void TestCLrcCompressor()
+	{
+		LPCTSTR		szLyrics[] = {
+			_T("[aa:tag]\n [00:01]  line1   \n [00:02][00:03]  line2\n[00:04]line1"),
+			_T("[aa:tag]\r\n[00:01][00:04]line1\r\n[00:02][00:03]line2"),
+
+			_T("a[aa:tag]\n[00:01]line1\nc\n[00:02]line2\n[00:03]line1\n[00:04]line2"),
+			_T("[00:01][00:03]line1\r\n[00:02][00:04]line2"),
+
+			_T("[aa:tag]\n[00:01]line1\n[00:02][00:03]line2\n[00:04]line3"),
+			_T("[aa:tag]\r\n[00:01]line1\r\n[00:02][00:03]line2\r\n[00:04]line3"),
+		};
+
+		for (int i = 0; i < CountOf(szLyrics[i]); i++)
+		{
+			CLrcCompressor<TCHAR>	compressor;
+
+			compressor.Parse(szLyrics[i]);
+
+			tstring str;
+			if (compressor.IsLrcFormat())
+				compressor.Save(str, true);
+
+			if (i % 2 == 0)
+				CPPUNIT_ASSERT(_tcscmp(str.c_str(), szLyrics[i + 1]) == 0);
+			else
+				CPPUNIT_ASSERT(_tcscmp(str.c_str(), szLyrics[i]) == 0);
+		}
+
+		for (int i = 0; i < CountOf(szLyrics[i]); i += 2)
+		{
+			CCharBuffer	buf;
+			CCharBuffer bufCmp;
+			string		strAnsi;
+
+			TStringToAnsi(szLyrics[i + 1], -1, strAnsi);
+
+			buf = strAnsi.c_str();
+			CPPUNIT_ASSERT(!ConvertUnicodeAnsiData(buf));
+
+			//
+			// Test Utf8
+			//
+			string strUtf8;
+			TStringToUTF8(szLyrics[i], -1, strUtf8);
+			buf.clear();
+			buf.append(SZ_FE_UTF8);
+			buf.append(strUtf8.c_str());
+			CPPUNIT_ASSERT(CompressLyrics(buf));
+
+			TStringToUTF8(szLyrics[i + 1], -1, strUtf8);
+			bufCmp.clear();
+			bufCmp.append(SZ_FE_UTF8);
+			bufCmp.append(strUtf8.c_str());
+
+			CPPUNIT_ASSERT(buf.size() == bufCmp.size());
+			CPPUNIT_ASSERT(memcmp(buf.c_str(), bufCmp.c_str(), buf.size()) == 0);
+
+			CPPUNIT_ASSERT(ConvertUnicodeAnsiData(buf));
+			CPPUNIT_ASSERT(buf.size() == strAnsi.size());
+			CPPUNIT_ASSERT(memcmp(buf.c_str(), strAnsi.c_str(), strAnsi.size()) == 0);
+
+			//
+			// Test Ucs2
+			//
+			wstring_t strUcs2;
+			TStringToUCS2(szLyrics[i], -1, strUcs2);
+			buf.clear();
+			buf.append(SZ_FE_UCS2);
+			buf.append((char *)strUcs2.c_str(), strUcs2.size() * sizeof(WCHAR));
+			CPPUNIT_ASSERT(CompressLyrics(buf));
+
+			TStringToUCS2(szLyrics[i + 1], -1, strUcs2);
+			bufCmp.clear();
+			bufCmp.append(SZ_FE_UCS2);
+			bufCmp.append((char *)strUcs2.c_str(), strUcs2.size() * sizeof(WCHAR));
+
+			CPPUNIT_ASSERT(buf.size() == bufCmp.size());
+			CPPUNIT_ASSERT(memcmp(buf.c_str(), bufCmp.c_str(), buf.size()) == 0);
+
+			CPPUNIT_ASSERT(ConvertUnicodeAnsiData(buf));
+			CPPUNIT_ASSERT(buf.size() == strAnsi.size());
+			CPPUNIT_ASSERT(memcmp(buf.c_str(), strAnsi.c_str(), strAnsi.size()) == 0);
+
+			//
+			// Test Ucs2 Big endian
+			//
+			TStringToUCS2(szLyrics[i], -1, strUcs2);
+			buf.clear();
+			buf.append(SZ_FE_UCS2_BE);
+			buf.append((char *)strUcs2.c_str(), strUcs2.size() * sizeof(WCHAR));
+			UCS2LEToBE((WCHAR *)buf.data() + 1, strUcs2.size());
+			CPPUNIT_ASSERT(CompressLyrics(buf));
+
+			TStringToUCS2(szLyrics[i + 1], -1, strUcs2);
+			bufCmp.clear();
+			bufCmp.append(SZ_FE_UCS2_BE);
+			bufCmp.append((char *)strUcs2.c_str(), strUcs2.size() * sizeof(WCHAR));
+			UCS2LEToBE((WCHAR *)bufCmp.data() + 1, strUcs2.size());
+
+			CPPUNIT_ASSERT(buf.size() == bufCmp.size());
+			CPPUNIT_ASSERT(memcmp(buf.c_str(), bufCmp.c_str(), buf.size()) == 0);
+
+			CPPUNIT_ASSERT(ConvertUnicodeAnsiData(buf));
+			CPPUNIT_ASSERT(buf.size() == strAnsi.size());
+			CPPUNIT_ASSERT(memcmp(buf.c_str(), strAnsi.c_str(), strAnsi.size()) == 0);
+		}
+	}
+
 	void TestParseLrcTimeTag()
 	{
 		// These are succeeded case.

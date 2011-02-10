@@ -36,6 +36,10 @@ bool IsTxtTagAtTailOfFile(LyrTagType tagType);
 int FormtLrcTimeTag(int nTime, TCHAR szBuff[]);
 void FormatPlayTime(int nmsTime, TCHAR szBuf[]);
 
+bool CompressLyrics(CCharBuffer &buf);
+
+bool ConvertUnicodeAnsiData(CCharBuffer &buf);
+
 #define	SZ_LRC_AR				"ar:"
 #define	SZ_LRC_TI				"ti:"
 #define	SZ_LRC_AL				"al:"

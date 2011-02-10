@@ -81,6 +81,21 @@ int _xcsncmp(
 }
 
 template<class T1, class T2>
+int _xcscmp(
+			 const T1 * first,
+			 const T2 * last
+			 )
+{
+	while (*first && *first == *last)
+	{
+		first++;
+		last++;
+	}
+
+	return( *(unsigned char *)first - *(unsigned char *)last );
+}
+
+template<class T1, class T2>
 T1 * _xcsistr (
         const T1 * str1,
         const T2 * str2
