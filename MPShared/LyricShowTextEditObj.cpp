@@ -1126,7 +1126,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 					else
 						nTime -= 200;
 
-					FormtLrcTimeTag(nTime, szTimeTagNew);
+					FormtLrcTimeTag(nTime, true, szTimeTagNew);
 
 					SetSelOfLine(i, 0, strTimeTag.size());
 					ReplaceSel(szTimeTagNew);
@@ -1620,7 +1620,7 @@ void CLyricShowTextEditObj::SyncTimeTag(bool bMoveToNextLine)
 			// This line wasn't synchronized yet,
 			if (nLine == nBegLine)
 			{
-				FormtLrcTimeTag(nPlayingPos, szTimeTagNew);
+				FormtLrcTimeTag(nPlayingPos, true, szTimeTagNew);
 
 				SetSelOfLine(nLine, 0, 0);
 				ReplaceSel(szTimeTagNew);
@@ -1641,7 +1641,7 @@ void CLyricShowTextEditObj::SyncTimeTag(bool bMoveToNextLine)
 			nTime -= nTimeDuarationOffset;
 
 		// Set new time
-		FormtLrcTimeTag(nTime, szTimeTagNew);
+		FormtLrcTimeTag(nTime, true, szTimeTagNew);
 
 		SetSelOfLine(nLine, 0, strTimeTag.size());
 		ReplaceSel(szTimeTagNew);
@@ -1707,7 +1707,7 @@ void CLyricShowTextEditObj::AdjustSyncTimeOfSelected(bool bIncreaseTime)
 			nTime -= 200;
 
 		// Set new time
-		FormtLrcTimeTag(nTime, szTimeTagNew);
+		FormtLrcTimeTag(nTime, true, szTimeTagNew);
 
 		SetSelOfLine(nLine, 0, strTimeTag.size());
 		ReplaceSel(szTimeTagNew);

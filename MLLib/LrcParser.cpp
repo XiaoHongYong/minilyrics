@@ -321,10 +321,10 @@ bool CLrcParser::ToString(tstring &str, bool bIncTags)
 	if (m_bToTxtFormat)
 		return ToTxtString(str, bIncTags);
 	else
-		return ToLrcString(str, bIncTags);
+		return ToLrcString(str, true, bIncTags);
 }
 
-bool CLrcParser::ToLrcString(tstring &str, bool bIncTags)
+bool CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
 {
 	// reserver 4k spaces for lyrics data.
 	str.reserve(1024 * 4);
@@ -341,6 +341,27 @@ bool CLrcParser::ToLrcString(tstring &str, bool bIncTags)
 		}
 	}
 
+	if (!bLongTimeFmt)
+	{
+		// Test whether is long time format
+		for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
+		{
+			PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
+			if (pRow->nRowType != ML_ROW_LYRICS
+				|| pRow->vFrags.empty())
+				continue;
+
+			if (!IsFlagSet(pRow->vFrags[0]->dwAttrib, LSA_TEMP_TIME_BEG))
+			{
+				if (pRow->nBegTime % 1000 != 0)
+				{
+					bLongTimeFmt = true;
+					break;
+				}
+			}
+		}
+	}
+
 	//
 	// Save every lyrics line
 	tstringex		strBuff;
@@ -349,7 +370,7 @@ bool CLrcParser::ToLrcString(tstring &str, bool bIncTags)
 		PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
 		ASSERT(pRow);
 
-		if (LyricsRowToLrcString(pRow, strBuff))
+		if (LyricsRowToLrcString(pRow, bLongTimeFmt, strBuff))
 		{
 			str += strBuff;
 			str += _T("\r\n");
@@ -419,7 +440,7 @@ bool CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 }
 
 //
-bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, tstringex &strBuff)
+bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, bool bLongTimeFmt, tstringex &strBuff)
 {
 	ASSERT(pRow);
 	strBuff.clear();
@@ -435,7 +456,7 @@ bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, tstringex &strBuff)
 			if (pRow->vFrags.size() && !(pRow->vFrags[0]->dwAttrib & LSA_TEMP_TIME_BEG))
 			{
 				strBuff.reserve(100);
-				int nLen = FormtLrcTimeTag(pRow->nBegTime, strBuff.data());
+				int nLen = FormtLrcTimeTag(pRow->nBegTime, bLongTimeFmt, strBuff.data());
 				strBuff.resize(nLen);
 			}
 

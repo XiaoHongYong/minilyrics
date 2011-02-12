@@ -30,10 +30,10 @@ public:
 	bool ToString(tstring &str, bool bIncTags = FALSE);
 
 protected:
-	bool ToLrcString(tstring &str, bool bIncTags);
+	bool ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt);
 	bool ToTxtString(tstring &str, bool bIncTags);
 
-	bool LyricsRowToLrcString(PML_ROW pRow, tstringex &strBuff);
+	bool LyricsRowToLrcString(PML_ROW pRow, bool bLongTimeFmt, tstringex &strBuff);
 	bool LyricsRowToTxtString(PML_ROW pRow, tstringex &strBuff);
 
 	void AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine);

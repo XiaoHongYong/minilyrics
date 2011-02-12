@@ -33,7 +33,8 @@ enum LYRICS_CONTENT_TYPE
 
 bool IsTxtTagAtTailOfFile(LyrTagType tagType);
 
-int FormtLrcTimeTag(int nTime, TCHAR szBuff[]);
+int FormtLrcTimeTag(int nTime, bool bLongTimeFmt, char szBuff[]);
+int FormtLrcTimeTag(int nTime, bool bLongTimeFmt, WCHAR szBuff[]);
 void FormatPlayTime(int nmsTime, TCHAR szBuf[]);
 
 bool CompressLyrics(CCharBuffer &buf);
