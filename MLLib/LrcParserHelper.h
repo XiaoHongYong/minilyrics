@@ -54,10 +54,10 @@ bool ParseLrcTimeTag(const _TCHAR *szLine, int &nNextPos, int &nTime)
 		while (_IsCharBlank(*szTag))
 			szTag ++;
 
-		if (isdigit(szTag[1]))
+		if (IsDigit(szTag[1]))
 		{
 			// .000 or // .00
-			if (isdigit(szTag[2]))
+			if (IsDigit(szTag[2]))
 				nTime += _xtoi(szTag);
 			else
 				nTime += _xtoi(szTag) * 10;
@@ -254,7 +254,7 @@ const _TCHAR *NextLine(const _TCHAR *szLine)
 template<class _TCHAR>
 const _TCHAR *IgnoreSpaces(const _TCHAR *szLine)
 {
-	while (_IsCharBlank(*szLine) || *szLine == '\r')
+	while (_IsCharBlank(*szLine))
 		szLine++;
 
 	return szLine;

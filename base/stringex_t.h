@@ -217,9 +217,13 @@ public:
 */
 	stringex_t<T> &append(const T * str, int n = -1)
 	{
-		if (n == -1)
+		assert(n >= -1);
+		if (n < 0)
+		{
+			if (n < -1) // -1 for copy all, others are error
+				return *this;
 			n = _xcslen(str);
-		assert(n >= 0);
+		}
 		reserve(size() + n);
 
 		T	*cp = m_szBuff + nLen;

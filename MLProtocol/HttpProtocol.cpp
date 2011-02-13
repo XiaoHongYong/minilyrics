@@ -876,7 +876,7 @@ LPSTR ReadTrunkSize(LPSTR szBuffer, int &nCount, int &nSize)
 	while (*szPos != ' ' && *szPos != '\r' && *szPos != '\n')
 	{
 		nSize *= 0x10;
-		if (isdigit(*szPos))
+		if (IsDigit(*szPos))
 		{
 			nSize += *szPos - '0';
 		}
@@ -1102,7 +1102,7 @@ int CHttpReturnProtocol::ParseHead()
 		m_dwResultCode = atoi(szPos);
 		for (int i = 0; i < 3; i++)
 		{
-			if (!isdigit(*szPos))
+			if (!IsDigit(*szPos))
 				return ERR_HTTP_BAD_FORMAT;
 			szPos++;
 		}

@@ -86,7 +86,7 @@ void WrapText(LPCTSTR szText, vector<tstring> &vOutput, int nLineSize)
 		szLastSpace = NULL;
 		while (*szPtr && *szPtr != '\n' && nCount <= nLineSize)
 		{
-			if ((*szPtr) > 255 || !(isalpha(*szPtr) || isdigit(*szPtr) || *szPtr == '_' || *szPtr == '-'))
+			if ((*szPtr) > 255 || !(IsDigit(*szPtr) || IsDigit(*szPtr) || *szPtr == '_' || *szPtr == '-'))
 				szLastSpace = szPtr;
 
 			if (unsigned(*szPtr) >= 0xFF)
@@ -1516,7 +1516,7 @@ int CMLData::FilterContents(void)
 						{
 							int		nNumb = 0;
 							int		x;
-							for (x = 0; x < 3 && isdigit(szNumb[x + 1]); x++)
+							for (x = 0; x < 3 && IsDigit(szNumb[x + 1]); x++)
 								nNumb = nNumb * 10 + (szNumb[x + 1] - '0');
 							if (nNumb > 0 && nNumb <= 0xFFF && szNumb[x + 1] == ';')
 							{

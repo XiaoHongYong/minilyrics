@@ -166,7 +166,7 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 		szBeg = szBuff;
 		if (state == PS_NUMBER)
 		{
-			while (isdigit(*szBeg))
+			while (IsDigit(*szBeg))
 				szBeg++;
 			while (*szBeg == '\r' || *szBeg == '\n' || *szBeg == ' ')
 				szBeg++;

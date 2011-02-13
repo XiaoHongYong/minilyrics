@@ -39,7 +39,7 @@ T1 *_xcsncpy(T1 *strDestination, const T2 *strSource, int nLen)
 	T1	*cp = strDestination;
 
 	const T2 *sourceEnd = strSource + nLen;
-	for (; strSource <= sourceEnd; cp++, strSource++)
+	for (; strSource < sourceEnd; cp++, strSource++)
 	{
 		*cp = (T1)*strSource;
 	}

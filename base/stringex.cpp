@@ -794,13 +794,13 @@ int FilterAllHTMLTags(LPTSTR szText)
 				{
 					// &#39;
 					LPTSTR		szTemp = szBeg;
-					if (szBeg[1] == '#' && isdigit(szBeg[2]))
+					if (szBeg[1] == '#' && IsDigit(szBeg[2]))
 					{
 						int		n = _ttoi(szBeg + 2);
 						if (n > 0 && n <= 255)
 						{
 							szBeg += 2;
-							while (isdigit(*szBeg))
+							while (IsDigit(*szBeg))
 								szBeg++;
 							if (*szBeg == ';')
 								szBeg++;
@@ -1776,6 +1776,7 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestStrSplit);
 	CPPUNIT_TEST(TestStrReplace);
 	CPPUNIT_TEST(TestStrBeginWith);
+	CPPUNIT_TEST(Test_xcsncpy);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -1902,6 +1903,26 @@ protected:
 			CPPUNIT_ASSERT(StrBeginWith(szSrc[i], szBeg[i]));
 			CPPUNIT_ASSERT(StrIBeginWith(szSrc[i], szIBeg[i]));
 			CPPUNIT_ASSERT(!StrBeginWith(szSrc[i], szBegFalse[i]));
+		}
+	}
+
+	void Test_xcsncpy()
+	{
+		LPCTSTR		szSrc[] = { _T("abca"), _T("baAcd"), _T("aXDegae"), _T("aXDegae") };
+		char		szTemp[64];
+		WCHAR		szTempW[64];
+
+		for (int i = 0; i < CountOf(szSrc); i++)
+		{
+			_xcsncpy(szTemp, szSrc[i], 1);
+			CPPUNIT_ASSERT(szTemp[0] == szSrc[i][0]);
+			CPPUNIT_ASSERT(szTemp[1] == 0);
+
+			_xcsncpy(szTemp, szSrc[i], _tcslen(szSrc[i]));
+			CPPUNIT_ASSERT(_xcscmp(szTemp, szSrc[i]) == 0);
+
+			_xcsncpy(szTempW, szSrc[i], _tcslen(szSrc[i]));
+			CPPUNIT_ASSERT(_xcscmp(szTempW, szSrc[i]) == 0);
 		}
 	}
 

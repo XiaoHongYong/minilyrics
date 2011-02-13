@@ -444,6 +444,76 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="UTF-8 Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="4"
+			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="false"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				InlineFunctionExpansion="1"
+				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
+				StringPooling="true"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				WarningLevel="3"
+				SuppressStartupBanner="true"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="NDEBUG"
+				Culture="2052"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLibrarianTool"
+				SuppressStartupBanner="true"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+				SuppressStartupBanner="true"
+				OutputFile="$(ProjectDir)/../Output/base/Release/base.bsc"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -513,6 +583,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cppunit-utils.cpp"
@@ -579,6 +658,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="Error.cpp"
@@ -639,6 +727,15 @@
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="2"
 						PrecompiledHeaderThrough="stdafx.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
@@ -703,6 +800,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="win32\fileapi.cpp"
@@ -763,6 +869,15 @@
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="2"
 						PrecompiledHeaderThrough="stdafx.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
@@ -827,6 +942,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="md5.cpp"
@@ -887,6 +1011,15 @@
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="2"
 						PrecompiledHeaderThrough="stdafx.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
@@ -951,6 +1084,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="misc.cpp"
@@ -1011,6 +1153,15 @@
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="2"
 						PrecompiledHeaderThrough="stdafx.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
@@ -1075,6 +1226,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="safestr.cpp"
@@ -1137,6 +1297,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="win32\Semaphore.cpp"
@@ -1197,6 +1366,15 @@
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="2"
 						PrecompiledHeaderThrough="stdafx.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
@@ -1264,6 +1442,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="stringex.cpp"
@@ -1324,6 +1511,15 @@
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="2"
 						PrecompiledHeaderThrough="stdafx.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
@@ -1388,6 +1584,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="win32\Thread.cpp"
@@ -1448,6 +1653,15 @@
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="2"
 						PrecompiledHeaderThrough="stdafx.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>
@@ -1512,6 +1726,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="win32\WndAbout.cpp"
@@ -1574,6 +1797,15 @@
 						PrecompiledHeaderThrough="stdafx.h"
 					/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="win32\WndHelper.cpp"
@@ -1634,6 +1866,15 @@
 						PreprocessorDefinitions=""
 						UsePrecompiledHeader="2"
 						PrecompiledHeaderThrough="stdafx.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="UTF-8 Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						AdditionalIncludeDirectories=""
+						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
 			</File>

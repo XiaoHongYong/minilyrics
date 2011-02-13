@@ -336,7 +336,7 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 	if (_tcsicmp(szProperty, _T("CurStatus")) == 0)
 		m_nCurStatus = _ttoi(szValue);
-	else if (szProperty[0] == 'S' && isdigit(szProperty[1]) && szProperty[2] == '_')
+	else if (szProperty[0] == 'S' && IsDigit(szProperty[1]) && szProperty[2] == '_')
 	{
 		LPCTSTR		szPropertyNew = szProperty + 3;
 		int		n = szProperty[1] - '0';

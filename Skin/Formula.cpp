@@ -438,14 +438,14 @@ void CFormula::SimpleOptimize()
 	szPos = szEnd = m_strFormula.c_str() + m_strFormula.size() - 1;
 	szBeg = m_strFormula.c_str();
 
-	while (szPos >= szBeg && (isdigit(*szPos) || *szPos == ' ' || *szPos == '+' || *szPos == '-' || *szPos == '	'))
+	while (szPos >= szBeg && (IsDigit(*szPos) || *szPos == ' ' || *szPos == '+' || *szPos == '-' || *szPos == '	'))
 		szPos--;
 
 	if (*szPos == '/' || *szPos == '*')
 	{
 		szPos++;
 		szPos = strignore(szPos, _T("\x20\t"));
-		if (!isdigit(*szPos))
+		if (!IsDigit(*szPos))
 			return;
 		szPos = IgnoreNumb(szPos);
 	}
@@ -462,7 +462,7 @@ void CFormula::SimpleOptimize()
 		szPos = strignore(szPos, _T("\x20\t"));
 		if (IsEmptyString(szPos))
 			return;
-		if (isdigit(*szPos))
+		if (IsDigit(*szPos))
 		{
 			nResult = _ttoi(szPos);
 			szPos = IgnoreNumb(szPos);
@@ -476,7 +476,7 @@ void CFormula::SimpleOptimize()
 		{
 			szPos++;
 			szPos = strignore(szPos, _T("\x20\t"));
-			if (isdigit(*szPos))
+			if (IsDigit(*szPos))
 				nResult += _ttoi(szPos);
 			else
 				return;
@@ -485,7 +485,7 @@ void CFormula::SimpleOptimize()
 		{
 			szPos++;
 			szPos = strignore(szPos, _T("\x20\t"));
-			if (isdigit(*szPos))
+			if (IsDigit(*szPos))
 				nResult -= _ttoi(szPos);
 			else
 				return;

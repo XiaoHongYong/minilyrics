@@ -1045,7 +1045,7 @@ public:
 		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
 		{
 			Line &line = *it;
-			for (int i = 0; i < line.vTime.size(); i++)
+			for (uint i = 0; i < line.vTime.size(); i++)
 			{
 				if (line.vTime[i] % 1000 != 0)
 					return true;
@@ -1181,7 +1181,7 @@ bool ConvertUnicodeAnsiData(CCharBuffer &buf)
 			string str;
 			UCS2ToAnsi((WCHAR*)szTxt, -1, str);
 			buf.clear();
-			buf = str.c_str();
+			buf.append(str.c_str(), str.size());
 			return true;
 		}
 	}
