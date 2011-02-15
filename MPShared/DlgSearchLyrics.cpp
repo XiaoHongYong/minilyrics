@@ -187,7 +187,7 @@ public:
 class CPageSearchLyrics : public CSkinPageHandler, public IUIObjNotifyHandler, public IEditNotification
 {
 public:
-	enum { COL_ARTIST, COL_TITLE, COL_RATING, COL_DOWNLOADS, COL_FROM, COL_ALBUM, COL_FILENAME, COL_URL};
+	enum { COL_ARTIST, COL_TITLE, COL_RATING, COL_DOWNLOADS, COL_FROM, COL_ALBUM, COL_URL};
 	enum
 	{
 		IMG_NONE = 0,
@@ -304,15 +304,15 @@ public:
 		SetUIObjectText(CID_E_ARTIST, m_strArtist.c_str(), false);
 		SetUIObjectText(CID_E_TITLE, m_strTitle.c_str(), false);
 
-		LPCTSTR		szHead[] = {_T("Artist"), _T("Title"), _T("Rating"), _T("Downloads"), _T("From"), _T("Album"), _T("File Name"), NULL};
-		int			arrWidth[] = {130,        160,         90,           68,              150,       150,         150,	            0};
+		LPCTSTR		szHead[] = {_T("Artist"), _T("Title"), _T("Rating"), _T("Downloads"), _T("From"), _T("Album"), NULL};
+		int			arrWidth[] = {130,        160,         90,           68,              150,       150,         0};
 
 		ProfileLoadIntArray(_T("OpenLyrics_ListColWidth"), arrWidth, CountOf(arrWidth));
 		ASSERT(CountOf(arrWidth) == CountOf(szHead));
 		for (int i = 0; szHead[i] != NULL; i++)
 			m_pLyricsList->AddColumn(TOLOCAL(szHead[i]), arrWidth[i]);
 		if (g_Profile.GetProfileInt(_T("ShowLink"), false))
-			m_pLyricsList->AddColumn(_T("URL"), 200);
+			m_pLyricsList->AddColumn(_T("URL"), 400);
 
 		m_menu.LoadPopupMenu(IDR_MENU_OPEN_LRC_DLG, 0);
 		ToLocalMenu(&m_menu);
@@ -419,7 +419,7 @@ public:
 			{
 				int			nSel = m_pLyricsList->GetNextSelectedItem(-1);
 
-				m_pLyricsList->SetItemText(nSel, COL_FILENAME, FileGetName(szFileNew));
+				m_pLyricsList->SetItemText(nSel, COL_FROM, szFileNew);
 			}
 		}
 
@@ -929,15 +929,11 @@ protected:
 		}
 
 		if (bLocalFile)
-		{
-			FileGetPath(szTemp, CountOf(szTemp), Item.strUrl.c_str());
-			m_pLyricsList->SetItemText(nItem, COL_FROM, szTemp, false);
-		}
+			m_pLyricsList->SetItemText(nItem, COL_FROM, Item.strUrl.c_str(), false);
 		else
 			m_pLyricsList->SetItemText(nItem, COL_FROM, Item.strUploader.c_str(), false);
 
 		m_pLyricsList->SetItemText(nItem, COL_ALBUM, Item.strAlbum.c_str(), false);
-		m_pLyricsList->SetItemText(nItem, COL_FILENAME, Item.strSaveFileName.c_str(), false);
 		m_pLyricsList->SetItemText(nItem, COL_URL, Item.strUrl.c_str(), false);
 	}
 

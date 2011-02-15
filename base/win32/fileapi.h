@@ -69,9 +69,8 @@ LPCTSTR FileGetExt(LPCTSTR szFile);
 
 BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt);
 
-void FileNameFilterInvalidChars(LPTSTR szFile);
 BOOL FileNameIsIncInvalidChars(LPCTSTR szFile);
-void FileNameFilterInvalidChars(LPCTSTR szFile, LPTSTR szNewFile, int nSizeMax);
+tstring FileNameFilterInvalidChars(LPCTSTR szFile);
 void FilePathFilterInvalidChars(LPTSTR szFile);
 
 #ifndef WIN32

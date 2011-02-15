@@ -21,11 +21,11 @@ public:
 	virtual bool IsOpened() = 0;
 
 	virtual bool SearchCache(LPCTSTR szFileAssociateKeyword, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT *pvResult, DWORD *pdwSearchTime) = 0;
-	virtual bool UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, RetLyrInfoList &fileList) = 0;
+	virtual bool UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch) = 0;
 
 protected:
-	void ResultToXML(RetLyrInfoList &fileList, CXMLWriter &xmlWriter);
-	void ResultFromXML(RetLyrInfoList &fileList, LPCSTR szXML);
+	void ResultToXML(MLMsgRetSearch &retSearch, CXMLWriter &xmlWriter);
+	void ResultFromXML(MLMsgRetSearch &retSearch, LPCSTR szXML);
 
 };
 
@@ -42,7 +42,7 @@ public:
 	virtual bool IsOpened() { return m_db.m_db != NULL; }
 
 	virtual bool SearchCache(LPCTSTR szFileAssociateKeyword, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT *pvResult, DWORD *pdwSearchTime);
-	virtual bool UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, RetLyrInfoList &fileList);
+	virtual bool UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch);
 
 protected:
 	CSqlite3		m_db;
@@ -59,7 +59,7 @@ public:
 	virtual bool IsOpened() { return true; }
 
 	virtual bool SearchCache(LPCTSTR szFileAssociateKeyword, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT *pvResult, DWORD *pdwSearchTime);
-	virtual bool UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, RetLyrInfoList &fileList);
+	virtual bool UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch);
 
 	static void Free();
 
@@ -108,7 +108,7 @@ public:
 	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, tstring &strMsg);
 
 protected:
-	int UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, RetLyrInfoList &fileList);
+	int UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch);
 	BOOL AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle);
 	bool IsTitleExcludedFromAutoSearch(LPCTSTR szTitle);
 

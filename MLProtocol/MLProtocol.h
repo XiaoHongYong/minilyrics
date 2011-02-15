@@ -90,9 +90,10 @@ enum MLMsgCmd
 {
 	MC_UNKNOWN,				// Unknown
 	MC_LOGIN,				// Log in
+	MC_SEARCH_V0,			// Old version of Search lyrics command. ML 7.1 before
 	MC_SEARCH,				// Search lyrics
 	MC_BATCH_SEARCH,		// Search lyrics by batch
-	MC_CAN_UPLOAD,			// Deprecated command. return ERR_NOT_FOUND dirrectly.
+	MC_CAN_UPLOAD,			// Deprecated command. return ERR_NOT_FOUND directly.
 	MC_UPLOADV0,			// Old version of upload lyrics.
 	MC_UPLOAD,				// Upload lyrics command
 
@@ -107,7 +108,8 @@ MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 
 #define MZ_LOGIN			_T("login")
 #define MZ_RETURN			_T("return")
-#define MZ_SEARCH			_T("search")
+#define MZ_SEARCH_V0		_T("search")
+#define MZ_SEARCH			_T("searchV1")
 #define MZ_BATCH_SEARCH		_T("batchsearch")		// MiniLyrics 7.1 or later
 #define MZ_CANUPLOAD		_T("canupload")
 #define MZ_UPLOADV0			_T("upload")
@@ -182,7 +184,6 @@ public:
 	tstring		strArtist;
 	tstring		strTitle;
 	tstring		strAlbum;
-	tstring		strFileName;
 	tstring		strUploader;
 	tstring		strLink;
 	int			nTimeLength;			// Media Length in second
@@ -198,8 +199,11 @@ public:
 		nRateCount = 0;
 		nDownloads = 0;
 	}
-	virtual int FromXML(SXNode *pNode);
-	virtual int ToXML(CXMLWriter &xmlFile);
+
+	virtual int FromXML(SXNode *pNode, LPCTSTR szServerUrl);
+	virtual int ToXML(CXMLWriter &xmlFile, tstring &strServerUrl, bool bV0Protocol);
+
+	tstring GetFileName();
 
 };
 
@@ -217,6 +221,7 @@ class MLMsgCmdSearch : public CXMLMsgCmd
 {
 public:
 	tstring		strArtist;
+	tstring		strAlbum;
 	tstring		strTitle;
 	tstring		strClient;			// client name + client ver
 	tstring		strRegCode;
@@ -251,12 +256,18 @@ public:
 
 	list<RetLyrInfo>		listResultFiles;
 
+	// For 7.1 above version, RetLyrInfo.strLink including full URL address
+	// After 7.1 only include related path, base URL is saved in strServerUrl.
+	bool					bV0Protocol;		// 7.1 before version of Protocol?
+	tstring					strServerUrl;
+
 public:
 	MLMsgRetSearch()
 	{
 		RegVerifyValue = RVV_OK;
 		nPageCount = 1;
 		nCurPage = 0;
+		bV0Protocol = false;
 	}
 	virtual int FromXML(SXNode *pNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
@@ -302,7 +313,7 @@ public:
 class MLLyricsInfoLite
 {
 public:
-	tstring			strFile; // strArtist, strTitle, 
+	tstring			strFile;
 	int				nIndex;
 	string			bufLyrContent;
 

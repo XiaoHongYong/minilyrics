@@ -55,7 +55,7 @@ void RetLyrInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, RetLyrInfoList &
 		RetLyrInfo		&file = *it;
 		LrcSearchResult		item;
 		item.strUrl = file.strLink;
-		item.strSaveFileName = file.strFileName;
+		item.strSaveFileName = file.GetFileName();
 		item.strArtist = file.strArtist;
 		item.strTitle = file.strTitle;
 		item.strAlbum = file.strAlbum;
@@ -96,19 +96,22 @@ void RetLyrInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, RetLyrInfoList &
 	vResult.Sort();
 }
 
-void ILyrSearchResultCacheDB::ResultToXML(RetLyrInfoList &fileList, CXMLWriter &xmlWriter)
+void ILyrSearchResultCacheDB::ResultToXML(MLMsgRetSearch &retSearch, CXMLWriter &xmlWriter)
 {
 	xmlWriter.WriteStartElement(_T("SearchResults"));
 
-	for (list<RetLyrInfo>::iterator it = fileList.begin(); it != fileList.end(); it++)
+	tstring		strEmptyServerUrl;
+	for (list<RetLyrInfo>::iterator it = retSearch.listResultFiles.begin(); 
+		it != retSearch.listResultFiles.end(); it++)
 	{
-		(*it).ToXML(xmlWriter);
+		ASSERT(StrIBeginWith((*it).strLink.c_str(), _T("http://")));
+		(*it).ToXML(xmlWriter, strEmptyServerUrl, true);
 	}
 
 	xmlWriter.WriteEndElement();
 }
 
-void ILyrSearchResultCacheDB::ResultFromXML(RetLyrInfoList &fileList, LPCSTR szXML)
+void ILyrSearchResultCacheDB::ResultFromXML(MLMsgRetSearch &retSearch, LPCSTR szXML)
 {
 	CSimpleXML	xml;
 	SXNode		*pNode;
@@ -121,11 +124,13 @@ void ILyrSearchResultCacheDB::ResultFromXML(RetLyrInfoList &fileList, LPCSTR szX
 		return;
 
 	SXNode::iterator	it;
+	tstring		strEmptyServerUrl;
 	for (it = pNode->listChildren.begin(); it != pNode->listChildren.end(); it++)
 	{
 		RetLyrInfo	Info;
-		Info.FromXML(*it);
-		fileList.push_back(Info);
+		Info.FromXML(*it, strEmptyServerUrl.c_str());
+		ASSERT(StrIBeginWith(Info.strLink.c_str(), _T("http://")));
+		retSearch.listResultFiles.push_back(Info);
 	}
 }
 
@@ -193,9 +198,6 @@ bool CLyrSearchResultCacheDB::SearchCache(LPCTSTR szFileAssociateKeyword, LPCTST
 	if (nRet != ERR_SL_OK_ROW)
 		return FALSE;
 
-	CSimpleXML		xml;
-	RetLyrInfoList	result;
-
 	if (pdwSearchTime)
 		*pdwSearchTime = sqlQuery.ColumnInt(1);
 
@@ -204,16 +206,17 @@ bool CLyrSearchResultCacheDB::SearchCache(LPCTSTR szFileAssociateKeyword, LPCTST
 		LPCSTR	str = sqlQuery.ColumnText(2);
 		if (str)
 		{
-			ResultFromXML(result, str);
+			MLMsgRetSearch retSearch;
+			ResultFromXML(retSearch, str);
 
-			RetLyrInfoListToVResult(szArtist, szTitle, result, *pvResult);
+			RetLyrInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, *pvResult);
 		}
 	}
 
 	return TRUE;
 }
 
-bool CLyrSearchResultCacheDB::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, RetLyrInfoList &fileList)
+bool CLyrSearchResultCacheDB::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch)
 {
 	int			nRet;
 	int			n = 1;
@@ -227,7 +230,7 @@ bool CLyrSearchResultCacheDB::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword
 #else
 	strUtf8 = szFileAssociateKeyword;
 #endif
-	ResultToXML(fileList, xml);
+	ResultToXML(retSearch, xml);
 
 	// delete old one
 	nRet = sqlDelete.Prepare(&m_db, SQL_DEL_SEARCHRESULT);
@@ -271,9 +274,6 @@ bool CLyrSearchResultCacheMemDB::SearchCache(LPCTSTR szFileAssociateKeyword, LPC
 		ITEM	&item = *it;
 		if (_tcscmp(item.strKeyword.c_str(), szFileAssociateKeyword) == 0)
 		{
-			CSimpleXML		xml;
-			RetLyrInfoList	result;
-
 			if (pdwSearchTime)
 				*pdwSearchTime = GetCurDaysFrom2000();
 
@@ -282,9 +282,10 @@ bool CLyrSearchResultCacheMemDB::SearchCache(LPCTSTR szFileAssociateKeyword, LPC
 				LPCSTR	str = item.strXml.c_str();
 				if (str)
 				{
-					ResultFromXML(result, str);
+					MLMsgRetSearch retSearch;
+					ResultFromXML(retSearch, str);
 
-					RetLyrInfoListToVResult(szArtist, szTitle, result, *pvResult);
+					RetLyrInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, *pvResult);
 				}
 			}
 
@@ -295,12 +296,12 @@ bool CLyrSearchResultCacheMemDB::SearchCache(LPCTSTR szFileAssociateKeyword, LPC
 	return false;
 }
 
-bool CLyrSearchResultCacheMemDB::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, RetLyrInfoList &fileList)
+bool CLyrSearchResultCacheMemDB::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch)
 {
 	LIST_ITEMS::iterator	it, itEnd;
 	CXMLWriter				xml;
 
-	ResultToXML(fileList, xml);
+	ResultToXML(retSearch, xml);
 
 	if (m_listResults.size() >= 5)
 		m_listResults.pop_front();
@@ -426,7 +427,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 
 	if (retSearch.listResultFiles.size() > 0 || nRet == ERR_NOT_FOUND)
 	{
-		pSearchParam->pOnlineSearch->UpdateSearchLrcInfo(pSearchParam->szAssociateKeyword, retSearch.listResultFiles);
+		pSearchParam->pOnlineSearch->UpdateSearchLrcInfo(pSearchParam->szAssociateKeyword, retSearch);
 
 		//
 		// 通知给调用者
@@ -608,7 +609,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 
 	if (retSearch.listResultFiles.size() > 0)
 	{
-		UpdateSearchLrcInfo(szKeyword, retSearch.listResultFiles);
+		UpdateSearchLrcInfo(szKeyword, retSearch);
 
 		RetLyrInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, vResult);
 
@@ -675,20 +676,20 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 	return nRet;
 }
 
-int COnlineSearch::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, RetLyrInfoList &fileList)
+int COnlineSearch::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch)
 {
 	if (IsEmptyString(szFileAssociateKeyword))
 		return ERR_NOT_FOUND;
 
 	CMutexAutolock	autolock(m_mutexDB);
 
-	m_dbSearchResultMem.UpdateSearchLrcInfo(szFileAssociateKeyword, fileList);
+	m_dbSearchResultMem.UpdateSearchLrcInfo(szFileAssociateKeyword, retSearch);
 
 	if (!m_dbSearchResult.IsOpened())
 		m_dbSearchResult.Open();
 
 	if (m_dbSearchResult.IsOpened())
-		m_dbSearchResult.UpdateSearchLrcInfo(szFileAssociateKeyword, fileList);
+		m_dbSearchResult.UpdateSearchLrcInfo(szFileAssociateKeyword, retSearch);
 
 	return ERR_OK;
 }

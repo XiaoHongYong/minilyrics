@@ -78,6 +78,7 @@ ID_TO_STRING	__MlCmdIDStr[] =
 	{ MC_SEARCH, MZ_SEARCH },
 	{ MC_BATCH_SEARCH, MZ_BATCH_SEARCH },
 	{ MC_CAN_UPLOAD, MZ_CANUPLOAD},
+	{ MC_SEARCH_V0, MZ_SEARCH_V0 },
 	{ MC_UPLOADV0, MZ_UPLOADV0 },
 	{ MC_UPLOAD, MZ_UPLOAD },
 	{ MC_GET_LYR_UPDATE, MZ_GET_LYR_UPDATE },
@@ -243,19 +244,17 @@ void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
 
 //////////////////////////////////////////////////////////////////////////
 
-int RetLyrInfo::FromXML(SXNode *pNode)
+int RetLyrInfo::FromXML(SXNode *pNode, LPCTSTR szServerUrl)
 {
+	ASSERT(szServerUrl);
+
 	strArtist = pNode->GetPropertySafe(_T("artist"));
-
 	strTitle = pNode->GetPropertySafe(_T("title"));
-
 	strAlbum = pNode->GetPropertySafe(_T("album"));
-
-	strFileName = pNode->GetPropertySafe(_T("filename"));
-
 	strUploader = pNode->GetPropertySafe(_T("uploader"));
 
-	strLink = pNode->GetPropertySafe(_T("link"));
+	strLink = szServerUrl;
+	strLink += pNode->GetPropertySafe(_T("link"));
 
 	nTimeLength = pNode->GetPropertyInt(_T("timelength"));
 
@@ -268,11 +267,22 @@ int RetLyrInfo::FromXML(SXNode *pNode)
 	return ERR_OK;
 }
 
-int RetLyrInfo::ToXML(CXMLWriter &xmlFile)
+int RetLyrInfo::ToXML(CXMLWriter &xmlFile, tstring &strServerUrl, bool bV0Protocol)
 {
+	if (!bV0Protocol)
+		ASSERT(strLink.size() && strServerUrl.size());
+
 	xmlFile.WriteStartElement(MZ_FILEINFO);
-	// filetype must be set for old version of MiniLyrics (7.0.614 before).
-	xmlFile.WriteAttribute(_T("filetype"), _T("lyrics"));
+
+	if (bV0Protocol)
+	{
+		xmlFile.WriteAttribute(_T("filetype"), _T("lyrics")); // This must be set for old version (7.0.614 before).
+		xmlFile.WriteAttribute(_T("link"), (strServerUrl + strLink).c_str());
+
+		xmlFile.WriteAttribute(_T("filename"), GetFileName().c_str());
+	}
+	else
+		xmlFile.WriteAttribute(_T("link"), strLink.c_str());
 
 	if (!strArtist.empty())
 		xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
@@ -280,12 +290,8 @@ int RetLyrInfo::ToXML(CXMLWriter &xmlFile)
 		xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
 	if (!strAlbum.empty())
 		xmlFile.WriteAttribute(_T("album"), strAlbum.c_str());
-	if (!strFileName.empty())
-		xmlFile.WriteAttribute(_T("filename"), strFileName.c_str());
 	if (!strUploader.empty())
 		xmlFile.WriteAttribute(_T("uploader"), strUploader.c_str());
-	if (!strLink.empty())
-		xmlFile.WriteAttribute(_T("link"), strLink.c_str());
 	if (nTimeLength != 0)
 		xmlFile.WriteAttribute(_T("timelength"), nTimeLength);
 	if (fRate != 0.0)
@@ -302,23 +308,32 @@ int RetLyrInfo::ToXML(CXMLWriter &xmlFile)
 	return ERR_OK;
 }
 
+tstring RetLyrInfo::GetFileName()
+{
+	ASSERT(strTitle.size());
+
+	// Combine file name
+	tstring	strFileName;
+	strFileName = strArtist;
+	if (strFileName.size())
+		strFileName += _T(" - ");
+	strFileName += strTitle;
+	strFileName = FileNameFilterInvalidChars(strFileName.c_str());
+	strFileName += FileGetExt(strLink.c_str());
+
+	return strFileName;
+}
 
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 {
 	strArtist = pXmlNode->GetPropertySafe(_T("artist"));
-
+	strAlbum = pXmlNode->GetPropertySafe(_T("album"));
 	strTitle = pXmlNode->GetPropertySafe(_T("title"));
 
 	strClient = pXmlNode->GetPropertySafe(_T("client"));
-
 	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
-
-	LPCTSTR szValue = pXmlNode->GetPropertySafe(_T("RequestPage"));
-	if (szValue)
-		nRequestPage = _ttoi(szValue);
-	else
-		nRequestPage = 0;
+	nRequestPage = pXmlNode->GetPropertyInt(_T("RequestPage"));
 
 	bOnlyMatchedLyrics = Tobool(pXmlNode->GetPropertyInt(_T("OnlyMatched")));
 
@@ -334,6 +349,8 @@ int MLMsgCmdSearch::ToXML(CXMLWriter &xmlFile)
 
 	if (strArtist.size())
 		xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
+	if (strTitle.size())
+		xmlFile.WriteAttribute(_T("album"), strAlbum.c_str());
 	if (strTitle.size())
 		xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
 	if (strClient.size())
@@ -359,25 +376,18 @@ int MLMsgRetSearch::FromXML(SXNode *pNode)
 	if (nRet != ERR_OK)
 		return nRet;
 
+	ASSERT(!bV0Protocol);
+
 	szValue = pNode->GetProperty(_T("badrc"));
 	if (szValue)
 		RegVerifyValue = (REGCODE_VERIFY_VALUE)_ttoi(szValue);
 	else
 		RegVerifyValue = RVV_OK;
 
+	strServerUrl = pNode->GetPropertySafe(_T("server_url"));
 	strMessage = pNode->GetPropertySafe(_T("msg"));
-
-	szValue = pNode->GetProperty(_T("PageCount"));
-	if (szValue)
-		nPageCount = _ttoi(szValue);
-	else
-		nPageCount = 1;
-
-	szValue = pNode->GetProperty(_T("CurPage"));
-	if (szValue)
-		nCurPage = _ttoi(szValue);
-	else
-		nCurPage = 0;
+	nPageCount = pNode->GetPropertyInt(_T("PageCount"));
+	nCurPage = pNode->GetPropertyInt(_T("CurPage"));
 
 	SXNode::iterator	it, itEnd;
 
@@ -385,7 +395,7 @@ int MLMsgRetSearch::FromXML(SXNode *pNode)
 	for (it = pNode->listChildren.begin(); it != itEnd; ++it)
 	{
 		RetLyrInfo	Info;
-		Info.FromXML(*it);
+		Info.FromXML(*it, strServerUrl.c_str());
 		listResultFiles.push_back(Info);
 	}
 
@@ -395,9 +405,15 @@ int MLMsgRetSearch::FromXML(SXNode *pNode)
 int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
+
+	ASSERT(strServerUrl.size());
+
+	if (bV0Protocol)
+		xmlFile.WriteAttribute(_T("filetype"), _T("lyrics")); // This should be set for old version (7.0.614 before).
+	else
+		xmlFile.WriteAttribute(_T("server_url"), strServerUrl.c_str());
+
 	MLRetMsg::ToXMLAttribute(xmlFile);
-	// filetype must be set for old version of MiniLyrics (7.0.614 before).
-	xmlFile.WriteAttribute(_T("filetype"), _T("lyrics"));
 
 	if (RegVerifyValue)
 		xmlFile.WriteAttribute(_T("badrc"), RegVerifyValue);
@@ -412,9 +428,11 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 
 	for (list<RetLyrInfo>::iterator it = listResultFiles.begin(); it != listResultFiles.end(); ++it)
 	{
-		(*it).ToXML(xmlFile);
+		(*it).ToXML(xmlFile, strServerUrl, bV0Protocol);
 	}
+
 	xmlFile.WriteEndElement();
+
 	return ERR_OK;
 }
 

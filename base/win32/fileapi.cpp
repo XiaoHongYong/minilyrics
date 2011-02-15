@@ -566,7 +566,11 @@ BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt)
 }
 
 // /:*?"<>|
+#ifdef _WIN32
 const TCHAR	_SZ_FILE_NAME_INVALID_CHARS[] = _T("/:*?\"<>|");
+#else
+const TCHAR	_SZ_FILE_NAME_INVALID_CHARS[] = _T("\\:*?\"<>|");
+#endif
 BOOL FileNameIsIncInvalidChars(LPCTSTR szFile)
 {
 	LPCTSTR		szBeg;
@@ -601,71 +605,21 @@ BOOL FileNameIsIncInvalidChars(LPCTSTR szFile)
 	return FALSE;
 }
 
-void FileNameFilterInvalidChars(LPCTSTR szFile, LPTSTR szNewFile, int nSizeMax)
+tstring FileNameFilterInvalidChars(LPCTSTR szFile)
 {
-	LPCTSTR		szBeg, szEnd;
-	LPTSTR		szNew;
-
-	szBeg = szFile;
-	szEnd = szFile + nSizeMax - 1;
-	szNew = szNewFile;
+	LPCTSTR		szBeg = szFile;
+	tstring		strNewName;
 
 #ifdef _WIN32_DESKTOP
 	// 忽略c:\\之类的字符
 	if (IsCharAlpha(*szBeg))
 	{
-		*szNew = *szBeg;
+		strNewName += *szBeg;
 		szBeg++;
-		szNew++;
-		if (*szBeg == ':')
+		if (*szBeg == ':' && *(szBeg + 1) == DIR_SLASH)
 		{
-			if (*(szBeg + 1) == DIR_SLASH)
-			{
-				*szNew = *szBeg;
-				szBeg++;
-				szNew++;
-
-				*szNew = *szBeg;
-				szBeg++;
-				szNew++;
-			}
-		}
-	}
-#endif // _WIN32_DESKTOP
-
-	while (*szBeg && szBeg < szEnd)
-	{
-		LPCTSTR		szInv;
-
-		szInv = _SZ_FILE_NAME_INVALID_CHARS;
-		while (*szInv && *szBeg != *szInv)
-			szInv++;
-		if (*szInv != '\0')
-			*szNew = '_';
-		else
-			*szNew = *szBeg;
-
-		szBeg++;
-		szNew++;
-	}
-	*szNew = '\0';
-}
-
-void FileNameFilterInvalidChars(LPTSTR szFile)
-{
-	LPTSTR		szBeg;
-
-	szBeg = szFile;
-
-#ifdef _WIN32_DESKTOP
-	// 忽略c:\\之类的字符
-	if (IsCharAlpha(*szBeg))
-	{
-		szBeg++;
-		if (*szBeg == ':')
-		{
-			if (*(szBeg + 1) == DIR_SLASH)
-				szBeg += 2;
+			strNewName.append(szBeg, 2);
+			szBeg += 2;
 		}
 	}
 #endif // _WIN32_DESKTOP
@@ -678,10 +632,14 @@ void FileNameFilterInvalidChars(LPTSTR szFile)
 		while (*szInv && *szBeg != *szInv)
 			szInv++;
 		if (*szInv != '\0')
-			*szBeg = '_';
+			strNewName += '_';
+		else
+			strNewName += *szBeg;
 
 		szBeg++;
 	}
+
+	return strNewName;
 }
 
 const TCHAR	_SZ_FILE_PATH_INVALID_CHARS[] = _T(":*?\"<>|")_T(SZ_DIR_SLASH);
@@ -880,6 +838,7 @@ class CTestCaseFileAPI : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestFileNameStr);
 	CPPUNIT_TEST(TestGetRelatedDir);
 	CPPUNIT_TEST(TestFileSetExt);
+	CPPUNIT_TEST(TestFileNameFilterInvalidChars);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -973,6 +932,22 @@ protected:
 
 			if (!(_tcscmp(FileGetExt(SZ_FILE[i]), SZ_EXT_OK[i]) == 0))
 				CPPUNIT_FAIL_T(CStrPrintf(_T("FileGetExt, case: %d, %s"), i, SZ_EXT_OK[i]).c_str());
+		}
+	}
+
+	void TestFileNameFilterInvalidChars()
+	{
+		// /:*?\"<>|
+		LPCTSTR		szFile[] = {
+			_T("c:\\aa?:!/<>|*.txt"), _T("c:\\aa__!____.txt"),
+			_T("c:\\bb\\cc\aa.txt"), _T("c:\\bb\\cc\aa.txt"),
+			_T("a?:a.txt"), _T("a__a.txt"),
+		};
+
+		for (int i = 0; i < CountOf(szFile); i += 2)
+		{
+			tstring strOut = FileNameFilterInvalidChars(szFile[i]);
+			CPPUNIT_ASSERT(_tcscmp(strOut.c_str(), szFile[i + 1]) == 0);
 		}
 	}
 

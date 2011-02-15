@@ -776,6 +776,8 @@ int CDownloadMgr::SaveDownloadedFile(tstring &strFile, LPCVOID lpData, int nSize
 		SetFileNoReadOnly(strFile.c_str());
 	}
 
+	strFile = FileNameFilterInvalidChars(strFile.c_str());
+
 	if (!SaveDataAsFile(strFile.c_str(), lpData, nSize))
 	{
 		TCHAR	szPath[MAX_PATH];
