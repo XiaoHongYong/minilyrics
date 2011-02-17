@@ -25,7 +25,6 @@
 #include <tchar.h>
 
 // TODO: reference additional headers your program requires here
-#include "../base/mlstdafx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"

@@ -2,7 +2,7 @@
 #define DSP_SUPEREQ_H
 #pragma once
 
-#include "mlstdafx.h"
+#include "base.h"
 #include "Error.h"
 #include "IMPlayer.h"
 

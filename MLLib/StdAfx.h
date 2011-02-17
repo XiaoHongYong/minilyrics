@@ -10,7 +10,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "../base/mlstdafx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"

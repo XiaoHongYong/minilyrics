@@ -4,7 +4,6 @@
 #include "filesystemmonitorwin32.h"
 #include <process.h>
 #include <winioctl.h>
-#include "mlstdafx.h"
 
 //#include "mutex.h"
 

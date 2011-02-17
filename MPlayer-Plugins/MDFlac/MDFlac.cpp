@@ -3,7 +3,6 @@
 //////////////////////////////////////////////////////////////////////
 
 
-#include "../../base/mlstdafx.h"
 #include "../../base/base.h"
 
 #include "playback.h"

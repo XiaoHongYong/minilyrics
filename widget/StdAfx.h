@@ -5,7 +5,6 @@
 #ifndef _WIDGET_INC_
 #define _WIDGET_INC_
 
-#include "../base/mlstdafx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"

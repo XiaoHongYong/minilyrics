@@ -10,6 +10,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "mlstdafx.h"
+#include "OsBaseInc.h"
 
 #endif // _OURLIB_HEADERS_2001_4_25_INCLUDED_

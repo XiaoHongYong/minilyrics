@@ -27,7 +27,6 @@
 
 #define WM_MOUSEWHEEL                   0x020A
 
-#include "../base/mlstdafx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 #include "../gfx/gfx.h"

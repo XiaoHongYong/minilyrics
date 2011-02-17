@@ -24,7 +24,6 @@
 **
 **/
 
-#include "../../base/mlstdafx.h"
 #include "../../base/base.h"
 #include "../../MPlayerLib/IMPlayer.h"
 #include <math.h>

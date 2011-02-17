@@ -1,7 +1,6 @@
 
 #include "stdafx.h"
 #include "FullDiskSearch.h"
-#include "mlstdafx.h"
 #include "base.h"
 #include <process.h>
 #include <winioctl.h>

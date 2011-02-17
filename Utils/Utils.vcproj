@@ -609,6 +609,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\digest.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\LocalizeTool.cpp"
 				>
 			</File>
@@ -678,6 +682,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\md5.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\win32\MiniDump.cpp"
@@ -1114,6 +1122,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\digest.h"
+				>
+			</File>
+			<File
 				RelativePath=".\LocalizeTool.h"
 				>
 			</File>
@@ -1127,6 +1139,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\MailFileTo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\md5.h"
 				>
 			</File>
 			<File

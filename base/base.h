@@ -2,11 +2,10 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef _BASE_INC_
-#define _BASE_INC_
+#pragma once
 
-////////////////////////////////////////////////////////////
-//
+#include "OsBaseInc.h"
+
 
 #include "StringIterator.h"
 
@@ -25,9 +24,6 @@
 #include "StrPrintf.h"
 
 #include "CharEncoding.h"
-
-// apis
-#include "digest.h"
 
 #ifdef _WIN32
 #include "win32/fileapi.h"
@@ -59,5 +55,3 @@
 #endif
 
 #include "misc.h"
-
-#endif // _BASE_INC_

@@ -52,7 +52,6 @@
 #endif // _WIN32_WCE
 
 
-#include "../base/mlstdafx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 

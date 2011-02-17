@@ -1,4 +1,3 @@
-#import "../../base/mlstdafx.h"
 #import "../../base/base.h"
 #import "../../Utils/Utils.h"
 #import "../../OurMFCLib/OurMFClib.h"

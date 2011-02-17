@@ -6,7 +6,6 @@
 #ifndef _GFX_STDAFX_INC_
 #define _GFX_STDAFX_INC_
 
-#include "../base/mlstdafx.h"
 #include "../base/base.h"
 #include "../Utils/Utils.h"
 

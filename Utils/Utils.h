@@ -10,6 +10,7 @@
 #include "App.h"
 #include "CSVFile.h"
 #include "UndoMgr.h"
+#include "digest.h"
 #ifdef _IPHONE
 #include "Mac/LocalizeTool.h"
 #else
