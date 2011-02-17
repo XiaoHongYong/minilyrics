@@ -939,7 +939,7 @@ protected:
 	{
 		// /:*?\"<>|
 		LPCTSTR		szFile[] = {
-			_T("c:\\aa?:!/<>|*.txt"), _T("c:\\aa__!____.txt"),
+			_T("c:\\aa?:!/<>|*.txt"), _T("c:\\aa__!_____.txt"),
 			_T("c:\\bb\\cc\aa.txt"), _T("c:\\bb\\cc\aa.txt"),
 			_T("a?:a.txt"), _T("a__a.txt"),
 		};

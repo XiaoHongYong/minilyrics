@@ -18,6 +18,8 @@
 #    include <cppunit/config-auto.h>
 #endif
 
+#define CPPUNIT_NO_STREAM
+
 // Version number of package
 #ifndef CPPUNIT_VERSION 
 #define CPPUNIT_VERSION  "1.12.0"

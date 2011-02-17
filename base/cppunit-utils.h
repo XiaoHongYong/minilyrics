@@ -58,9 +58,8 @@ inline tstring GetUnitTestFolder()
 }
 
 #ifdef _WIN32
-void RedirectIOToConsole();
+void CreateUnitResultWnd(HINSTANCE hInstance);
 #else
-void RedirectIOToConsole() { }
 #endif
 
 void RunUnitTest();

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "cppunit-utils.h"
 
+#ifdef _CPPUNIT_TEST
+
 #include <cppunit/CompilerOutputter.h>
 #include <cppunit/TestResult.h>
 #include <cppunit/TestResultCollector.h>
@@ -11,19 +13,72 @@
 #include <cppunit/extensions/TestFactoryRegistry.h>
 #include <stdexcept>
 #include <fstream>
+#include <cppunit/Portability/Stream.h>
 
-#ifdef _CPPUNIT_TEST
-
+using namespace CppUnit;
 
 #ifdef _WIN32
 
 #include <fcntl.h>
 #include <io.h>
 
-#define MAX_CONSOLE_LINES	500
 
+#define SZ_CLASSNAME _T("UnitTest")
+#define SZ_WNDNAME	_T("UnitTest")
+
+ATOM UnitTestRegisterClass(HINSTANCE hInstance)
+{
+	WNDCLASSEX wcex;
+
+	memset(&wcex, 0, sizeof(wcex));
+	wcex.cbSize = sizeof(WNDCLASSEX);
+	wcex.style			= CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc	= DefWindowProc;
+	wcex.hInstance		= hInstance;
+	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
+	wcex.lpszClassName	= SZ_CLASSNAME;
+
+	return RegisterClassEx(&wcex);
+}
+
+HWND g_hWndEdit = NULL;
+
+void LogToEdit(LPCSTR szStr)
+{
+	int	len = GetWindowTextLength(g_hWndEdit);
+	SendMessage(g_hWndEdit, EM_SETSEL, len, len+1);
+	SendMessage(g_hWndEdit, EM_REPLACESEL, FALSE, (WPARAM)szStr);
+}
+
+void CreateUnitResultWnd(HINSTANCE hInstance)
+{
+	UnitTestRegisterClass(hInstance);
+
+	HWND hWnd;
+
+	hWnd = CreateWindow(SZ_CLASSNAME, SZ_WNDNAME, WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+	if (!hWnd)
+		return;
+
+	RECT rc;
+	::GetClientRect(hWnd, &rc);
+
+	// Create Edit
+	DWORD	dwStyle = WS_CHILD | WS_VISIBLE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | WS_VSCROLL | WS_HSCROLL| ES_MULTILINE | ES_WANTRETURN;
+	g_hWndEdit = CreateWindow(_T("EDIT"), _T(""), dwStyle, 
+		0, 0, rc.right, rc.bottom, hWnd, NULL, hInstance, NULL);
+	//::SendMessage(g_hWndEdit, EM_LIMITTEXT, 2 * 100 * 1024, 0);
+	ShowWindow(g_hWndEdit, SW_SHOW);
+
+	ShowWindow(hWnd, SW_SHOW);
+	UpdateWindow(hWnd);
+}
+/*
 void RedirectIOToConsole()
 {
+#define MAX_CONSOLE_LINES	500
+
 	int hConHandle;
 	long lStdHandle;
 	CONSOLE_SCREEN_BUFFER_INFO coninfo;
@@ -60,8 +115,26 @@ void RedirectIOToConsole()
 	// make cout, wcout, cin, wcin, wcerr, cerr, wclog and clog 
 	// point to console as well
 	ios::sync_with_stdio();
+}*/
+#else
+void LogToEdit(LPCSTR str)
+{
+	printf(str);
 }
 #endif // _WIN32
+
+
+class LogStreamBuffer : public StreamBuffer
+{
+public:
+	virtual void write( const char *text, unsigned int length )
+	{
+		string	str;
+		str.append(text, length);
+		LogToEdit(str.c_str());
+	}
+
+};
 
 void RunUnitTest()
 {
@@ -81,18 +154,25 @@ void RunUnitTest()
 #endif
 	controller.addListener( &progress );      
 
+	LogStreamBuffer buf;
+	OStream streamLog(&buf);
+
+	stdCOut().setBuffer(&buf);
+
 	// Add the top suite to the test runner
 	CPPUNIT_NS::TestRunner runner;
 	runner.addTest( CPPUNIT_NS::TestFactoryRegistry::getRegistry().makeTest() );   
 	try
 	{
-		std::cout << "Running "  <<  testPath;
+		LogToEdit(("Running " + testPath).c_str());
+		// std::cout << "Running "  <<  testPath;
 		runner.run(controller, testPath);
 
-		std::cerr << std::endl;
+		LogToEdit("\r\n");
+		// std::cerr << std::endl;
 
 		// Print test in a compiler compatible format.
-		CPPUNIT_NS::CompilerOutputter outputter(&result, std::cerr);
+		CPPUNIT_NS::CompilerOutputter outputter(&result, streamLog);
 		outputter.write(); 
 
 		// Uncomment this for XML output
@@ -104,11 +184,16 @@ void RunUnitTest()
 	}
 	catch (std::invalid_argument &e)  // Test path not resolved
 	{
-		std::cerr  <<  std::endl  
-			<<  "ERROR: "  <<  e.what()
-			<< std::endl;
+		LogToEdit("\r\nERROR: ");
+		LogToEdit(e.what());
+		LogToEdit("\r\n");
+// 		std::cerr  <<  std::endl  
+// 			<<  "ERROR: "  <<  e.what()
+// 			<< std::endl;
 		return;
 	}
+
+	stdCOut().setBuffer(NULL);
 
 	result.wasSuccessful() ? 0 : 1;
 }
