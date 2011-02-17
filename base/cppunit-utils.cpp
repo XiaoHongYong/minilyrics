@@ -41,22 +41,20 @@ ATOM UnitTestRegisterClass(HINSTANCE hInstance)
 	return RegisterClassEx(&wcex);
 }
 
-HWND g_hWndEdit = NULL;
+HWND g_hWndLog = NULL;
 
-void LogToEdit(LPCSTR szStr)
+void LogUnitTestResult(LPCSTR szStr)
 {
-	int	len = GetWindowTextLength(g_hWndEdit);
-	SendMessage(g_hWndEdit, EM_SETSEL, len, len+1);
-	SendMessage(g_hWndEdit, EM_REPLACESEL, FALSE, (WPARAM)szStr);
+	int	len = GetWindowTextLength(g_hWndLog);
+	SendMessage(g_hWndLog, EM_SETSEL, len, len);
+	SendMessage(g_hWndLog, EM_REPLACESEL, FALSE, (WPARAM)szStr);
 }
 
 void CreateUnitResultWnd(HINSTANCE hInstance)
 {
 	UnitTestRegisterClass(hInstance);
 
-	HWND hWnd;
-
-	hWnd = CreateWindow(SZ_CLASSNAME, SZ_WNDNAME, WS_OVERLAPPEDWINDOW,
+	HWND hWnd = CreateWindow(SZ_CLASSNAME, SZ_WNDNAME, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
 	if (!hWnd)
 		return;
@@ -66,10 +64,10 @@ void CreateUnitResultWnd(HINSTANCE hInstance)
 
 	// Create Edit
 	DWORD	dwStyle = WS_CHILD | WS_VISIBLE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | WS_VSCROLL | WS_HSCROLL| ES_MULTILINE | ES_WANTRETURN;
-	g_hWndEdit = CreateWindow(_T("EDIT"), _T(""), dwStyle, 
+	g_hWndLog = CreateWindow(_T("EDIT"), _T(""), dwStyle, 
 		0, 0, rc.right, rc.bottom, hWnd, NULL, hInstance, NULL);
 	//::SendMessage(g_hWndEdit, EM_LIMITTEXT, 2 * 100 * 1024, 0);
-	ShowWindow(g_hWndEdit, SW_SHOW);
+	ShowWindow(g_hWndLog, SW_SHOW);
 
 	ShowWindow(hWnd, SW_SHOW);
 	UpdateWindow(hWnd);
@@ -117,7 +115,7 @@ void RedirectIOToConsole()
 	ios::sync_with_stdio();
 }*/
 #else
-void LogToEdit(LPCSTR str)
+void LogUnitTestResult(LPCSTR str)
 {
 	printf(str);
 }
@@ -131,7 +129,7 @@ public:
 	{
 		string	str;
 		str.append(text, length);
-		LogToEdit(str.c_str());
+		LogUnitTestResult(str.c_str());
 	}
 
 };
@@ -164,11 +162,11 @@ void RunUnitTest()
 	runner.addTest( CPPUNIT_NS::TestFactoryRegistry::getRegistry().makeTest() );   
 	try
 	{
-		LogToEdit(("Running " + testPath).c_str());
+		LogUnitTestResult(("Running " + testPath).c_str());
 		// std::cout << "Running "  <<  testPath;
 		runner.run(controller, testPath);
 
-		LogToEdit("\r\n");
+		LogUnitTestResult("\n");
 		// std::cerr << std::endl;
 
 		// Print test in a compiler compatible format.
@@ -184,9 +182,9 @@ void RunUnitTest()
 	}
 	catch (std::invalid_argument &e)  // Test path not resolved
 	{
-		LogToEdit("\r\nERROR: ");
-		LogToEdit(e.what());
-		LogToEdit("\r\n");
+		LogUnitTestResult("\nERROR: ");
+		LogUnitTestResult(e.what());
+		LogUnitTestResult("\n");
 // 		std::cerr  <<  std::endl  
 // 			<<  "ERROR: "  <<  e.what()
 // 			<< std::endl;

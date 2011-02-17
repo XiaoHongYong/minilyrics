@@ -5,6 +5,22 @@
 #include "StdAfx.h"
 #include "MLProtocol.h"
 
+
+/***********************************************************************
+History of MLProtocol:
+
+ML 3.0:			Old XML message format, encoding: gb2312(system default).
+
+ML 3.1 ~ 3.9:	HTTP tunnel XML message format, encoding: gb2312(system default).
+				Deprecated: Protocol Version: "0.9"
+
+ML 4.0 ~ 7.0:	HTTP tunnel Encrypted XML message format, encoding: UTF-8
+
+ML 7.1 ~ :		HTTP tunnel Encrypted Binary XML message format, encoding: UTF-8
+2011.03			support batch download, ML Binary XML message format
+
+/***********************************************************************/
+
 #define SZ_ML_POST_URL		"/searchlyrics.htm"
 
 #define SZ_DATA_BLOCK_SIGN		"\0$"
@@ -15,10 +31,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_UNKNOWN, _T("Unknown Error.")},			// 未翻译出来的结果
 	{ ERR_BAD_XMLREQUEST, _T("Invalid xml request.")},
 	{ ERR_CORRUPTTED_MSG, _T("The message is corrupted, maybe some data get currupted while receiving.")},
-	{ ERR_REDIRECT, _T("Redirect to other server.") },		// 重定向连接
 
-	{ ERR_REG_EMAIL_EXIST, _T("The email already exists.") },
-	{ ERR_REG_USER_EXIST, _T("The user already exists.") },	// 用户已经存在, 无法申请
 	{ ERR_UPLOAD_EXIST, _T("The uploaded lyrics already exist.") },	// 上传的内容已经存在
 	{ ERR_USER_NOT_EXIST, _T("User name doesn't exist.") },	// 用户不存在
 	{ ERR_BAD_USERPWD, _T("Wrong user name or password.") },		// 用户名或者密码错误
@@ -26,51 +39,19 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_OBSOLETE_CLIENT_VER, _T("Obsoleted client. please download the latest version.") },	// 客户端版本太低, 无法登陆
 	// { ERR_TOO_BUSY, _T("Server too busy, please try again later.") },		// 服务器太忙,暂时无法响应请求
 	{ ERR_ACCESS_DENIED, _T("Access denied.") },	// 无权访问,被拒绝
-	{ ERR_NOT_SUPPORT_CMD, _T("Not supported command.") },	// 还不支持的命令
 	{ ERR_CMD_NOT_MATCH, _T("Received return command not match.") },
 	{ ERR_CMD_PARAM, _T("Invalid message command parameter.") },
 	{ ERR_UPLOAD_FILETYPE, _T("The file type can not be uploaded.") },	// 上传的文件类型错误
 	{ ERR_BAD_BASE64CONTENT, _T("Incorrect base64 encoded content.") },
 	{ ERR_BAD_FILE_CONTENT, _T("The file format is incorrect or contains spam information.") },
-	{ ERR_REG_USER_NAME_SHORT, _T("The username must contain at least 3 characters.") },
 	{ ERR_NOT_AUTHORIZED, _T("Unauthorized action.") },
 	{ ERR_NOT_LOGIN, _T("Not signed in, please sign in.") },
-	{ ERR_UPDATE_LRC_INFO_SHOULD_SAME, _T("The newly updated and old lyrics must have the same title and artist info.") },
 	{ ERR_LYR_NO_TAG_FOUND, _T("No lyrics tag is found in the lyrics.") },
 
 	{ 0, NULL}
 };
 
 static RegErr2Str	__addErr2Str(__ErrID2Str);
-
-
-#ifdef WIN32
-UINT GetTempFileName(
-  LPTSTR lpTempFileName 
-                       // pointer to buffer that receives the new 
-                       // filename
-)
-{
-	int		nRet;
-	nRet = GetTempPath(MAX_PATH, lpTempFileName);
-	ASSERT(nRet > 0 && nRet <= MAX_PATH);
-	if (nRet == 0 || nRet > MAX_PATH)
-		return 0;
-
-	return GetTempFileName(lpTempFileName, _T("ML"), 0, lpTempFileName);
-}
-
-BOOL SaveBufferAsTempFile(LPTSTR szTempFile, LPVOID lpBuffer, int nLen)
-{
-	if (GetTempFileName(szTempFile) == 0)
-	{
-		LOG1(LOG_LVL_ERROR, _T("GetTempFileName() FAILED! LastError: %d"), GetLastError());
-		return FALSE;
-	}
-
-	return SaveStringAsFile(szTempFile, (LPCTSTR)lpBuffer, nLen / sizeof(TCHAR));
-}
-#endif
 
 ID_TO_STRING	__MlCmdIDStr[] = 
 {
@@ -85,7 +66,6 @@ ID_TO_STRING	__MlCmdIDStr[] =
 	{ MC_SUBMIT_LYR_REVIEW, MZ_SUBMIT_LYR_REVIEW },
 	{ MC_EXE_SVR_CMD, MZ_EXE_SVR_CMD },
 	{ MC_UNKNOWN, NULL},
-//	{, },
 };
 
 MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd)
@@ -103,9 +83,6 @@ ID_TO_STRING	__MlCmdResult2Str[] =
 	{ ERR_OK, _T("OK") },								// 0
 	{ ERR_FAILED, _T("FAILED") },						// 1035
 	{ ERR_BAD_XMLREQUEST, _T("BAD_XML_REQUEST") },	// 1036
-	{ ERR_REDIRECT, _T("REDIRECT") },					// 1038
-	{ ERR_REG_EMAIL_EXIST, _T("EMAIL_EXIST") },		// 1040
-	{ ERR_REG_USER_EXIST, _T("USER_EXIST") },			// 1041
 	{ ERR_UPLOAD_EXIST, _T("UPLOAD_EXIST") },			// 1042
 	{ ERR_USER_NOT_EXIST, _T("USER_NOT_FOUND") },		// 1043
 	{ ERR_BAD_USERPWD, _T("BAD_USERPWD") },			// 1045
@@ -113,7 +90,6 @@ ID_TO_STRING	__MlCmdResult2Str[] =
 	{ ERR_OBSOLETE_CLIENT_VER, _T("OBSOLETE_CLIENT_VER") },	// 1048
 	{ ERR_NOT_FOUND, _T("NOT_FOUND") },				// 1049
 	{ ERR_ACCESS_DENIED, _T("ACCESS_DENIED") },		// 1051
-	{ ERR_NOT_SUPPORT_CMD, _T("NOT_SUPPORT_CMD") },	// 1052	
 	{ ERR_CMD_NOT_MATCH, _T("CMD_NOT_MATCH") },		// 1053	
 	{ ERR_CMD_PARAM, _T("BAD_CMD_PARAM") },			// 1054	
 	{ ERR_UPLOAD_FILETYPE, _T("UPLOAD_FILETYPE") },	// 1056	
@@ -123,53 +99,30 @@ ID_TO_STRING	__MlCmdResult2Str[] =
 	{ ERR_NOT_LOGIN, _T("NOT_LOGIN") },
 	{ ERR_LYR_NO_TAG_FOUND, _T("LYR_NO_TAG_FOUND") },
 	{0, NULL},
-//	{, },
 };
-//
-//MLMsgCmdResultCode ErrorToMLCmdResult(int nErr)
-//{
-//	if (nErr == ERR_OK)
-//		return ERR_OK;
-//	else if (nErr < ERR_UNKNOWN)
-//		return ERR_FAILED;
-//	else
-//		return (MLMsgCmdResultCode)nErr;
-//}
-//
-//int MLCmdResultToError(MLMsgCmdResultCode result)
-//{
-//	return result;
-///*
-//	switch (result)
-//	{
-//	case ERR_OK: return ERR_OK;
-//	case ERR_UNKNOWN: return ERR_FALSE;
-//	case ERR_BAD_XMLREQUEST: return ERR_BAD_XMLREQUEST;
-////	case : return ;
-////	case : return ;
-////	case : return ;
-////	case : return ;
-////	case : return ;
-////	case : return ;
-//	default:
-//		return ERR_FALSE;
-//	}
-//	return ERR_FALSE;*/
-//
-//}
 
-
-CXMLMsgCmd::~CXMLMsgCmd()
+int CXMLMsgCmd::FromXML(SXNode *pXmlNode)
 {
+	strClient = pXmlNode->GetPropertySafe(_T("client"));
+	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
+
+	return ERR_OK;
+}
+
+void CXMLMsgCmd::ToXMLAttribute(CXMLWriter &xmlStream)
+{
+	xmlStream.WriteAttribute(_T("client"), strClient.c_str());
+	if (strRegCode.size())
+		xmlStream.WriteAttribute(_T("RegCode"), strRegCode.c_str());
 }
 
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdLogin::FromXML(SXNode *pXmlNode)
 {
+	CXMLMsgCmd::FromXML(pXmlNode);
+
 	strName = pXmlNode->GetPropertySafe(_T("user"));
 	strPwd = pXmlNode->GetPropertySafe(_T("password"));
-	strClient = pXmlNode->GetPropertySafe(_T("client"));
-	strRegCode = pXmlNode->GetPropertySafe(_T("regcode"));
 
 	return ERR_OK;
 }
@@ -179,37 +132,7 @@ int MLMsgCmdLogin::ToXML(CXMLWriter &xmlFile)
 	xmlFile.WriteStartElement(MZ_LOGIN);
 	xmlFile.WriteAttribute(_T("user"), strName.c_str());
 	xmlFile.WriteAttribute(_T("password"), strPwd.c_str());
-	xmlFile.WriteAttribute(_T("client"), strClient.c_str());
-	if (strRegCode.size())
-		xmlFile.WriteAttribute(_T("regcode"), strRegCode.c_str());
-	xmlFile.WriteEndElement();
-	return ERR_OK;
-}
-
-//////////////////////////////////////////////////////////////////////////
-int MLMsgRetLogin::FromXML(SXNode *pXmlNode)
-{
-	LPCTSTR		szValue;
-
-	int nRet = MLRetMsg::FromXML(pXmlNode);
-	if (nRet != ERR_OK)
-		return nRet;
-
-	szValue = pXmlNode->GetPropertySafe(_T("message"));
-	strMessage = SURETEXT(szValue);
-
-	return ERR_OK;
-}
-
-int MLMsgRetLogin::ToXML(CXMLWriter &xmlFile)
-{
-	xmlFile.WriteStartElement(MZ_RETURN);
-	MLRetMsg::ToXMLAttribute(xmlFile);
-
-	// 为了兼容之前的版本，需要返回 MZ_SESSIONID
-	xmlFile.WriteAttribute(MZ_SESSIONID, _T("1"));
-	if (strMessage.size())
-		xmlFile.WriteAttribute(_T("message"), strMessage.c_str());
+	CXMLMsgCmd::ToXMLAttribute(xmlFile);
 	xmlFile.WriteEndElement();
 	return ERR_OK;
 }
@@ -224,6 +147,10 @@ int MLRetMsg::FromXML(SXNode *pXmlNode)
 		return ERR_CMD_PARAM;
 
 	result = StringToID(__MlCmdResult2Str, szValue, ERR_UNKNOWN);
+
+	strMessage = pXmlNode->GetPropertySafe(_T("msg"));
+	if (strMessage.empty())
+		strMessage = pXmlNode->GetPropertySafe(_T("message"));
 
 	return ERR_OK;
 }
@@ -240,6 +167,12 @@ void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteAttribute(MZ_ORG_CMD, strOrgCmd.c_str());
 	xmlFile.WriteAttribute(MZ_CMD_RESULT, IDToString(__MlCmdResult2Str, result, _T("UNTRANSLATED")));
+
+	if (strMessage.size())
+	{
+		xmlFile.WriteAttribute(_T("msg"), strMessage.c_str());		// msg is for search and upload
+		xmlFile.WriteAttribute(_T("message"), strMessage.c_str());	// message is for login
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -327,14 +260,11 @@ tstring RetLyrInfo::GetFileName()
 //////////////////////////////////////////////////////////////////////////
 int MLMsgCmdSearch::FromXML(SXNode *pXmlNode)
 {
+	CXMLMsgCmd::FromXML(pXmlNode);
+
 	strArtist = pXmlNode->GetPropertySafe(_T("artist"));
-	strAlbum = pXmlNode->GetPropertySafe(_T("album"));
 	strTitle = pXmlNode->GetPropertySafe(_T("title"));
-
-	strClient = pXmlNode->GetPropertySafe(_T("client"));
-	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
 	nRequestPage = pXmlNode->GetPropertyInt(_T("RequestPage"));
-
 	bOnlyMatchedLyrics = Tobool(pXmlNode->GetPropertyInt(_T("OnlyMatched")));
 
 	if (strArtist.empty() && strTitle.empty())
@@ -347,16 +277,12 @@ int MLMsgCmdSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_SEARCH);
 
+	CXMLMsgCmd::ToXMLAttribute(xmlFile);
+
 	if (strArtist.size())
 		xmlFile.WriteAttribute(_T("artist"), strArtist.c_str());
 	if (strTitle.size())
-		xmlFile.WriteAttribute(_T("album"), strAlbum.c_str());
-	if (strTitle.size())
 		xmlFile.WriteAttribute(_T("title"), strTitle.c_str());
-	if (strClient.size())
-		xmlFile.WriteAttribute(_T("client"), strClient.c_str());
-	if (strRegCode.size())
-		xmlFile.WriteAttribute(_T("RegCode"), strRegCode.c_str());
 	if (nRequestPage != 0)
 		xmlFile.WriteAttribute(_T("RequestPage"), nRequestPage);
 
@@ -385,7 +311,6 @@ int MLMsgRetSearch::FromXML(SXNode *pNode)
 		RegVerifyValue = RVV_OK;
 
 	strServerUrl = pNode->GetPropertySafe(_T("server_url"));
-	strMessage = pNode->GetPropertySafe(_T("msg"));
 	nPageCount = pNode->GetPropertyInt(_T("PageCount"));
 	nCurPage = pNode->GetPropertyInt(_T("CurPage"));
 
@@ -406,6 +331,8 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
 
+	MLRetMsg::ToXMLAttribute(xmlFile);
+
 	ASSERT(strServerUrl.size());
 
 	if (bV0Protocol)
@@ -413,12 +340,8 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 	else
 		xmlFile.WriteAttribute(_T("server_url"), strServerUrl.c_str());
 
-	MLRetMsg::ToXMLAttribute(xmlFile);
-
 	if (RegVerifyValue)
 		xmlFile.WriteAttribute(_T("badrc"), RegVerifyValue);
-	if (strMessage.size())
-		xmlFile.WriteAttribute(_T("msg"), strMessage.c_str());
 
 	if (nPageCount != 1)
 		xmlFile.WriteAttribute(_T("PageCount"), nPageCount);
@@ -441,7 +364,7 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 int MLSearchItem::FromXML(SXNode *pXmlNode)
 {
 	strArtist = pXmlNode->GetPropertySafe(_T("ar"));
-
+	strAlbum = pXmlNode->GetPropertySafe(_T("al"));
 	strTitle = pXmlNode->GetPropertySafe(_T("ti"));
 
 	nMediaLength = pXmlNode->GetPropertyInt(_T("length"));
@@ -455,6 +378,8 @@ int MLSearchItem::ToXML(CXMLWriter &xmlFile)
 
 	if (strArtist.size())
 		xmlFile.WriteAttribute(_T("ar"), strArtist.c_str());
+	if (strAlbum.size())
+		xmlFile.WriteAttribute(_T("al"), strAlbum.c_str());
 	xmlFile.WriteAttribute(_T("ti"), strTitle.c_str());
 	if (nMediaLength > 0)
 		xmlFile.WriteAttribute(_T("length"), nMediaLength);
@@ -469,9 +394,7 @@ MLMsgCmdBatchSearch::MLMsgCmdBatchSearch()
 
 int MLMsgCmdBatchSearch::FromXML(SXNode *pXmlNode)
 {
-	strClient = pXmlNode->GetPropertySafe(_T("client"));
-
-	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
+	CXMLMsgCmd::FromXML(pXmlNode);
 
 	listSearchItems.reserve(pXmlNode->listChildren.size());
 
@@ -494,10 +417,7 @@ int MLMsgCmdBatchSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_BATCH_SEARCH);
 
-	if (strClient.size())
-		xmlFile.WriteAttribute(_T("client"), strClient.c_str());
-	if (strRegCode.size())
-		xmlFile.WriteAttribute(_T("RegCode"), strRegCode.c_str());
+	CXMLMsgCmd::ToXMLAttribute(xmlFile);
 
 	for (MLListSearchItems::iterator it = listSearchItems.begin(); it != listSearchItems.end(); ++it)
 	{
@@ -559,8 +479,6 @@ int MLMsgRetBatchSearch::FromXML(SXNode *pXmlNode)
 	else
 		RegVerifyValue = RVV_OK;
 
-	strMessage = pXmlNode->GetPropertySafe(_T("msg"));
-
 	for (SXNode::LIST_CHILDREN::iterator it = pXmlNode->listChildren.begin();
 		it != pXmlNode->listChildren.end(); ++it)
 	{
@@ -582,8 +500,6 @@ int MLMsgRetBatchSearch::ToXML(CXMLWriter &xmlFile)
 
 	if (RegVerifyValue)
 		xmlFile.WriteAttribute(_T("badrc"), RegVerifyValue);
-	if (strMessage.size())
-		xmlFile.WriteAttribute(_T("msg"), strMessage.c_str());
 
 	for (ListLyricsInfoLite::iterator it = listLyricsInfo.begin();
 		it != listLyricsInfo.end(); ++it)

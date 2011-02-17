@@ -2,24 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_MLPROTOCOL_H__BB1B1F2A_F36F_47C4_B264_AA43E755E09C__INCLUDED_)
-#define AFX_MLPROTOCOL_H__BB1B1F2A_F36F_47C4_B264_AA43E755E09C__INCLUDED_
-
-/***********************************************************************
-History of MLProtocol:
-
-ML 3.0:			Old XML message format, encoding: gb2312(system default).
-
-ML 3.1 ~ 3.9:	HTTP tunnel XML message format, encoding: gb2312(system default).
-				Deprecated: Protocol Version: "0.9"
-
-ML 4.0 ~ 7.0:	HTTP tunnel Encrypted XML message format, encoding: UTF-8
-
-ML 7.1 ~ :		HTTP tunnel Encrypted Binary XML message format, encoding: UTF-8
-2011.03			support batch download, ML Binary XML message format
-
-/***********************************************************************/
-
 #pragma once
 
 #include "NetServer.h"
@@ -28,33 +10,24 @@ ML 7.1 ~ :		HTTP tunnel Encrypted Binary XML message format, encoding: UTF-8
 
 DECLAR_CPPUNIT_TEST_REG(CMLProtocol)
 
-typedef list<tstring>		ListString;
-
 enum ML_PROTOCAL_ERROR
 {
 	ERR_UNKNOWN				= 1035, // 未翻译出来的结果
 	ERR_BAD_XMLREQUEST		= 1036,
 	ERR_CORRUPTTED_MSG		= 1037,	// The message is corrupted
-	ERR_REDIRECT			= 1038,	// 重定向连接
-	ERR_REG_EMAIL_EXIST		= 1040,
-	ERR_REG_USER_EXIST		= 1041,
 	ERR_UPLOAD_EXIST		= 1042,	// 上传的内容已经存在
 	ERR_USER_NOT_EXIST		= 1043,	// 用户不存在
-	ERR_USER_EXPIRED		= 1044,	// 用户已经过期
 	ERR_BAD_USERPWD			= 1045, // 用户名或者密码错误
 	ERR_BAD_CLIENT_VER		= 1047,	// 客户端版本不正确, 无法登陆
 	ERR_OBSOLETE_CLIENT_VER = 1048,	// 客户端版本太低, 无法登陆
 	ERR_ACCESS_DENIED		= 1051,	// 无权访问,被拒绝
-	ERR_NOT_SUPPORT_CMD		= 1052,	// 还不支持的命令
 	ERR_CMD_NOT_MATCH		= 1053,	// 命令不匹配
 	ERR_CMD_PARAM			= 1054,	// 参数错误
 	ERR_UPLOAD_FILETYPE		= 1056,	// 上传的文件类型错误
 	ERR_BAD_BASE64CONTENT	= 1058,	// Base64 编码错误
 	ERR_BAD_FILE_CONTENT	= 1059,	// 文件内容有错误，或者包含不允许的内容
-	ERR_REG_USER_NAME_SHORT	= 1060,	// 用户名太短
 	ERR_NOT_AUTHORIZED		= 1061,	// 未经授权的行为
 	ERR_NOT_LOGIN			= 1062,	// 未登陆，请登陆
-	ERR_UPDATE_LRC_INFO_SHOULD_SAME	= 1063, // 更新歌词时，前后的歌词标题和作者必须一致
 	ERR_LYR_NO_TAG_FOUND	= 1064,	// No lyrics tag is found in content.
 };
 
@@ -123,15 +96,20 @@ MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 #define MZ_ITEM				_T("item")
 #define MZ_ORG_CMD			_T("orgcmd")
 #define MZ_CMD_RESULT		_T("result")
-#define MZ_SESSIONID		_T("sessionid")
 
 class CXMLMsgCmd
 {
 public:
-	virtual ~CXMLMsgCmd();
+	virtual ~CXMLMsgCmd() { }
 
-	virtual int FromXML(SXNode *pXmlNode) = 0;
+	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile) = 0;
+
+	void ToXMLAttribute(CXMLWriter &xmlStream);
+
+public:
+	tstring		strClient;			// MiniLyrics for Winamp2 7.0.xxx
+	tstring		strRegCode;
 
 };
 
@@ -140,12 +118,14 @@ public:
 class MLRetMsg : public CXMLMsgCmd
 {
 public:
-	tstring		strOrgCmd;		// 原来的请求命令
+	tstring		strOrgCmd;		// Original command
+	tstring		strMessage;		// Message to client
 	int			result;
 
 public:
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
+
 	void ToXMLAttribute(CXMLWriter &xmlFile);
 
 };
@@ -156,8 +136,6 @@ class MLMsgCmdLogin : public CXMLMsgCmd
 public:
 	tstring		strName;
 	tstring		strPwd;
-	tstring		strClient;
-	tstring		strRegCode;
 
 public:
 	virtual int FromXML(SXNode *pXmlNode);
@@ -166,16 +144,7 @@ public:
 };
 
 // Return of log in command
-class MLMsgRetLogin : public MLRetMsg
-{
-public:
-	tstring		strMessage;				// 消息
-
-public:
-	virtual int FromXML(SXNode *pXmlNode);
-	virtual int ToXML(CXMLWriter &xmlFile);
-
-};
+typedef MLRetMsg MLMsgRetLogin;
 
 // Returned search result lyrics info
 class RetLyrInfo
@@ -221,10 +190,7 @@ class MLMsgCmdSearch : public CXMLMsgCmd
 {
 public:
 	tstring		strArtist;
-	tstring		strAlbum;
 	tstring		strTitle;
-	tstring		strClient;			// client name + client ver
-	tstring		strRegCode;
 	int			nRequestPage;
 	bool		bOnlyMatchedLyrics; // Return only matched lyrics
 
@@ -251,7 +217,6 @@ class MLMsgRetSearch : public MLRetMsg
 {
 public:
 	REGCODE_VERIFY_VALUE	RegVerifyValue;
-	tstring					strMessage;
 	int						nPageCount, nCurPage;
 
 	list<RetLyrInfo>		listResultFiles;
@@ -283,7 +248,7 @@ public:
 	int FromXML(SXNode *pXmlNode);
 	int ToXML(CXMLWriter &xmlFile);
 
-	tstring		strArtist, strTitle;
+	tstring		strArtist, strAlbum, strTitle;
 	int			nMediaLength;			// in seconds
 
 	// Fields below are used on in CLIENT of MiniLyrics.
@@ -297,8 +262,6 @@ typedef vector<MLSearchItem>		MLListSearchItems;
 class MLMsgCmdBatchSearch : public CXMLMsgCmd
 {
 public:
-	tstring		strClient;		// client name + client ver
-	tstring		strRegCode;
 	MLListSearchItems	listSearchItems;
 
 public:
@@ -330,7 +293,6 @@ class MLMsgRetBatchSearch : public MLRetMsg
 {
 public:
 	REGCODE_VERIFY_VALUE	RegVerifyValue;
-	tstring					strMessage;
 	ListLyricsInfoLite		listLyricsInfo;		// Lyrics info: artist, title, file name
 
 public:
@@ -536,5 +498,3 @@ class CMLServerProtocol : public CMLProtocol
 public:
 
 };
-
-#endif // !defined(AFX_MLPROTOCOL_H__BB1B1F2A_F36F_47C4_B264_AA43E755E09C__INCLUDED_)

@@ -50,6 +50,5 @@ public:
 
 	static bool IsMediaTypeSupported(LPCTSTR szFile);
 
-
 };
 
