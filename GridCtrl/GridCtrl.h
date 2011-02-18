@@ -3,8 +3,8 @@
 //
 // MFC Grid Control - main header
 //
-// Written by Chris Maunder <cmaunder@mail.com>
-// Copyright (c) 1998-2002. All Rights Reserved.
+// Written by Chris Maunder <chris@codeproject.com>
+// Copyright (c) 1998-2005. All Rights Reserved.
 //
 // This code may be used in compiled form in any way you desire. This
 // file may be redistributed unmodified by any means PROVIDING it is 
@@ -32,6 +32,7 @@
 #include "CellRange.h"
 #include "GridCell.h"
 #include <afxtempl.h>
+#include <vector>
 
 
 ///////////////////////////////////////////////////////////////////////////////////
@@ -179,6 +180,8 @@ class CGridCtrl;
 
 /////////////////////////////////////////////////////////////////////////////
 // CGridCtrl window
+
+typedef bool (*PVIRTUALCOMPARE)(int, int);
 
 class CGridCtrl : public CWnd
 {
@@ -563,6 +566,7 @@ protected:
     CCellID GetTopleftNonFixedCell(BOOL bForceRecalculation = FALSE);
     CCellRange GetUnobstructedNonFixedCellRange(BOOL bForceRecalculation = FALSE);
     CCellRange GetVisibleNonFixedCellRange(LPRECT pRect = NULL, BOOL bForceRecalculation = FALSE);
+    CCellRange GetVisibleFixedCellRange(LPRECT pRect = NULL, BOOL bForceRecalculation = FALSE);
 
     BOOL IsVisibleVScroll() { return ( (m_nBarState & GVL_VERT) > 0); } 
     BOOL IsVisibleHScroll() { return ( (m_nBarState & GVL_HORZ) > 0); }
@@ -677,7 +681,7 @@ protected:
     CPoint      m_LeftClickDownPoint, m_LastMousePoint;
     CCellID     m_LeftClickDownCell, m_SelectionStartCell;
     CCellID     m_idCurrentCell, m_idTopLeftCell;
-    int         m_nTimerID;
+    INT_PTR     m_nTimerID;
     int         m_nTimerInterval;
     int         m_nResizeCaptureRange;
     BOOL        m_bAllowRowResize, m_bAllowColumnResize;
@@ -783,6 +787,34 @@ protected:
                        MOUSE_PREPARE_DRAG, MOUSE_DRAGGING
 #endif
     };
+//      for sort in virtual mode, and column order, save and load layer
+public:
+	typedef std::vector<int> intlist;
+	void Reorder(int From, int To);
+	void SetVirtualCompare(PVIRTUALCOMPARE VirtualCompare) { m_pfnVirtualCompare = VirtualCompare;}
+	int m_CurCol;
+	void AllowReorderColumn(bool b=true) { m_AllowReorderColumn = b;}
+	void EnableDragRowMode(bool b=true) { m_bDragRowMode = b; if(b) EnableDragAndDrop(); } // to change row order
+	int GetLayer(int** pLayer); //  gives back the number of ints of the area (do not forget to delete *pLayer)
+	void SetLayer(int* pLayer); // coming from a previous GetLayer (ignored if not same number of column, or the same revision number)
+	void ForceQuitFocusOnTab(bool b=true) { m_QuitFocusOnTab = b;} // use only if GetParent() is a CDialog
+	void AllowSelectRowInFixedCol(bool b=true) { m_AllowSelectRowInFixedCol = b;} // 
+//    allow acces?
+	intlist m_arRowOrder, m_arColOrder;
+	static CGridCtrl* m_This;
+protected:
+	virtual void AddSubVirtualRow(int Num, int Nb);
+	bool m_bDragRowMode;
+	int m_CurRow;
+private:
+	void ResetVirtualOrder();
+	PVIRTUALCOMPARE m_pfnVirtualCompare;
+	static bool NotVirtualCompare(int c1, int c2);
+	bool m_InDestructor;
+	bool m_AllowReorderColumn;
+	bool m_QuitFocusOnTab;
+	bool m_AllowSelectRowInFixedCol;
+
 };
 
 // Returns the default cell implementation for the given grid region
@@ -821,12 +853,18 @@ inline CGridCellBase* CGridCtrl::GetCell(int nRow, int nCol) const
         if (nRow < GetFixedRowCount())    gvdi.item.nState |= (GVIS_FIXED | GVIS_FIXEDROW);
         if (nCol < GetFixedColumnCount()) gvdi.item.nState |= (GVIS_FIXED | GVIS_FIXEDCOL);
         if (GetFocusCell() == CCellID(nRow, nCol)) gvdi.item.nState |= GVIS_FOCUSED;
-        
-        if (m_pfnCallback)
-            m_pfnCallback(&gvdi, m_lParam);
-        else
-            SendDisplayRequestToParent(&gvdi);
+		if(!m_InDestructor)
+		{
+			gvdi.item.row = m_arRowOrder[nRow];
+			gvdi.item.col = m_arColOrder[nCol];
 
+			if (m_pfnCallback)
+				m_pfnCallback(&gvdi, m_lParam);
+			else
+				SendDisplayRequestToParent(&gvdi);
+			gvdi.item.row = nRow;        
+			gvdi.item.col = nCol;
+		}
         static CGridCell cell;
         cell.SetState(gvdi.item.nState);
         cell.SetFormat(gvdi.item.nFormat);
@@ -844,7 +882,7 @@ inline CGridCellBase* CGridCtrl::GetCell(int nRow, int nCol) const
 
     GRID_ROW* pRow = m_RowData[nRow];
     if (!pRow) return NULL;
-    return pRow->GetAt(nCol);
+    return pRow->GetAt(m_arColOrder[nCol]);
 }
 
 inline BOOL CGridCtrl::SetCell(int nRow, int nCol, CGridCellBase* pCell)

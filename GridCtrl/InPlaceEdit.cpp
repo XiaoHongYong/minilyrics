@@ -100,9 +100,9 @@ CInPlaceEdit::CInPlaceEdit(CWnd* pParent, CRect& rect, DWORD dwStyle, UINT nID,
     // Added by KiteFly. When entering DBCS chars into cells the first char was being lost
     // SenMessage changed to PostMessage (John Lagerquist)
     if( nFirstChar < 0x80)
-        SendMessage(WM_CHAR, nFirstChar);   
+        PostMessage(WM_CHAR, nFirstChar);   
     else
-        SendMessage(WM_IME_CHAR, nFirstChar);
+        PostMessage(WM_IME_CHAR, nFirstChar);
 }
 
 CInPlaceEdit::~CInPlaceEdit()

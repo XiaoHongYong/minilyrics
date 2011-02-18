@@ -7,8 +7,8 @@
 // implementations of drawing, printingetc provided. MUST be derived
 // from to be used.
 //
-// Written by Chris Maunder <cmaunder@mail.com>
-// Copyright (c) 1998-2002. All Rights Reserved.
+// Written by Chris Maunder <chris@codeproject.com>
+// Copyright (c) 1998-2005. All Rights Reserved.
 //
 // This code may be used in compiled form in any way you desire. This
 // file may be redistributed unmodified by any means PROVIDING it is 
@@ -30,6 +30,7 @@
 // C Maunder     - 29 Aug 2000 - operator= checks for NULL font before setting (Martin Richter)
 // C Maunder     - 15 Oct 2000 - GetTextExtent fixed (Martin Richter)
 // C Maunder     -  1 Jan 2001 - Added ValidateEdit
+// Yogurt        - 13 Mar 2004 - GetCellExtent fixed
 //
 // NOTES: Each grid cell should take care of it's own drawing, though the Draw()
 //        method takes an "erase background" paramter that is called if the grid
@@ -205,7 +206,7 @@ BOOL CGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEraseB
             rect.bottom--;
         }
 
-		rect.DeflateRect(0,1,1,1); 
+		//rect.DeflateRect(0,1,1,1);  - Removed by Yogurt
     }
     else if ((GetState() & GVIS_SELECTED))
     {
@@ -277,6 +278,9 @@ BOOL CGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEraseB
     }
 
     rect.DeflateRect(GetMargin(), 0);
+	//rect.DeflateRect(GetMargin(), GetMargin());    
+    rect.right++;    
+    rect.bottom++;
 
     if (pGrid->GetImageList() && GetImage() >= 0)
     {
@@ -284,7 +288,7 @@ BOOL CGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEraseB
         if (pGrid->GetImageList()->GetImageInfo(GetImage(), &Info))
         {
             //  would like to use a clipping region but seems to have issue
-            //  working with CGCMemDC directly.  Instead, don't display image
+            //  working with CMemDC directly.  Instead, don't display image
             //  if any part of it cut-off
             //
             // CRgn rgn;
@@ -292,14 +296,21 @@ BOOL CGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEraseB
             // pDC->SelectClipRgn(&rgn);
             // rgn.DeleteObject();
 
+            /*
+            // removed by Yogurt
             int nImageWidth = Info.rcImage.right-Info.rcImage.left+1;
             int nImageHeight = Info.rcImage.bottom-Info.rcImage.top+1;
-
             if( nImageWidth + rect.left <= rect.right + (int)(2*GetMargin())
                 && nImageHeight + rect.top <= rect.bottom + (int)(2*GetMargin())  )
             {
                 pGrid->GetImageList()->Draw(pDC, GetImage(), rect.TopLeft(), ILD_NORMAL);
             }
+            */
+            // Added by Yogurt
+            int nImageWidth = Info.rcImage.right-Info.rcImage.left;            
+            int nImageHeight = Info.rcImage.bottom-Info.rcImage.top;            
+            if ((nImageWidth + rect.left <= rect.right) && (nImageHeight + rect.top <= rect.bottom))                
+                pGrid->GetImageList()->Draw(pDC, GetImage(), rect.TopLeft(), ILD_NORMAL);
 
             //rect.left += nImageWidth+GetMargin();
         }
@@ -325,7 +336,8 @@ BOOL CGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEraseB
         BOOL bVertical = (GetFont()->lfEscapement == 900);
 
         // Only draw if it'll fit!
-        if (size.cx + rect.left < rect.right + (int)(2*GetMargin()))
+        //if (size.cx + rect.left < rect.right + (int)(2*GetMargin())) - changed / Yogurt
+        if (size.cx + rect.left < rect.right)
         {
             int nTriangleBase = rect.bottom - nOffset - size.cy;    // Triangle bottom right
             //int nTriangleBase = (rect.top + rect.bottom - size.cy)/2; // Triangle middle right
@@ -383,6 +395,9 @@ BOOL CGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEraseB
 
     // We want to see '&' characters so use DT_NOPREFIX
     GetTextRect(rect);
+    rect.right++;    
+    rect.bottom++;
+
     DrawText(pDC->m_hDC, GetText(), -1, rect, GetFormat() | DT_NOPREFIX);
 
     pDC->RestoreDC(nSavedDC);
@@ -532,16 +547,17 @@ CSize CGridCellBase::GetTextExtent(LPCTSTR szText, CDC* pDC /*= NULL*/)
         size = rect.Size();
     }
     else
-        size = pDC->GetTextExtent(szText, _tcslen(szText));
+        size = pDC->GetTextExtent(szText, (int)_tcslen(szText));
 
-    TEXTMETRIC tm;
-    pDC->GetTextMetrics(&tm);
-    size.cx += (tm.tmOverhang);
+    // Removed by Yogurt
+    //TEXTMETRIC tm;
+    //pDC->GetTextMetrics(&tm);
+    //size.cx += (tm.tmOverhang);
 
     if (pOldFont)
         pDC->SelectObject(pOldFont);
     
-    size += CSize(4*GetMargin(), 2*GetMargin());
+    size += CSize(2*GetMargin(), 2*GetMargin());
 
     // Kludge for vertical text
     LOGFONT *pLF = GetFont();
@@ -559,27 +575,35 @@ CSize CGridCellBase::GetTextExtent(LPCTSTR szText, CDC* pDC /*= NULL*/)
     return size;
 }
 
+
 CSize CGridCellBase::GetCellExtent(CDC* pDC)
-{
-    CSize size = GetTextExtent(GetText(), pDC);
-    CSize ImageSize(0,0);
-
-    int nImage = GetImage();
-    if (nImage >= 0) 
-    {
-        CGridCtrl* pGrid = GetGrid();
-        ASSERT(pGrid);
-
-        if (pGrid->GetImageList()) 
-        {
-            IMAGEINFO Info;
-            if (pGrid->GetImageList()->GetImageInfo(nImage, &Info))
-                ImageSize = CSize(Info.rcImage.right-Info.rcImage.left+1, 
-                                  Info.rcImage.bottom-Info.rcImage.top+1);
-        }
-    }
+{    
+    CSize size = GetTextExtent(GetText(), pDC);    
+    CSize ImageSize(0,0);    
     
-    return CSize(size.cx + ImageSize.cx, max(size.cy, ImageSize.cy));
+    int nImage = GetImage();    
+    if (nImage >= 0)    
+    {        
+        CGridCtrl* pGrid = GetGrid();        
+        ASSERT(pGrid);        
+        IMAGEINFO Info;        
+        if (pGrid->GetImageList() && pGrid->GetImageList()->GetImageInfo(nImage, &Info))         
+        {            
+            ImageSize = CSize(Info.rcImage.right-Info.rcImage.left,                                 
+                Info.rcImage.bottom-Info.rcImage.top);            
+            if (size.cx > 2*(int)GetMargin ())                
+                ImageSize.cx += GetMargin();            
+            ImageSize.cy += 2*(int)GetMargin ();        
+        }    
+    }    
+    size.cx += ImageSize.cx + 1;    
+    size.cy = max(size.cy, ImageSize.cy) + 1;    
+    if (IsFixed())    
+    {        
+        size.cx++;        
+        size.cy++;    
+    }    
+    return size;
 }
 
 // EFW - Added to print cells so that grids that use different colors are
