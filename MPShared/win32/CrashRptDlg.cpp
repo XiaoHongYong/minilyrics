@@ -51,7 +51,7 @@ void CCrashRptDlg::OnOK()
 	CMailFileTo		mail;
 	tstring			strSubjet;
 
-	strSubjet = SZ_ML_VERSION;
+	strSubjet = GetAppNameLong();
 	strSubjet += _T(" Minidumps");
 
 	CBaseDialog::OnOK();

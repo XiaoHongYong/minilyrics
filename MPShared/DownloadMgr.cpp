@@ -654,7 +654,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		nPort = g_nPortDownloadServer;
 	}
 
-	httpClient.SetUserAgent(SZ_ML_VERSION);
+	httpClient.SetUserAgent(GetAppNameLong().c_str());
 	nRet = httpClient.Init(szHost, szUri, NULL, nPort);
 
 #ifdef _UNICODE

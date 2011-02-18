@@ -195,7 +195,6 @@ void CPlayerImp::OnMusicChangeCheck()
 					return;
 
 				// song changed.
-
 				wcscpy(m_szSrcMedia, filename);
 
 				_bstr_t	title, artist, album;
@@ -207,7 +206,6 @@ void CPlayerImp::OnMusicChangeCheck()
 
 				m_nPlaybackPosBeg = GetPlayPos();
 				m_dwTimeBeg = GetTickCount();
-
 			}
 		}
 	}

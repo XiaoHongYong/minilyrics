@@ -115,7 +115,7 @@ void CMLTrayIcon::UpdateShowIconPos()
 		strCaption += SZ_APP_NAME;
 	}
 	else
-		strCaption = SZ_ML_VERSION;
+		strCaption = GetAppNameLong();
 
 	switch (showIconOn)
 	{

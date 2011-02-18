@@ -65,7 +65,7 @@ void CMPSkinMainWnd::OnEvent(const IEvent *pEvent)
 		if (g_Player.IsMediaOpened())
 			_stprintf_s(szCaption, CountOf(szCaption), _T("%s - %s"), g_Player.GetFullTitle(), SZ_APP_NAME);
 		else
-			_tcscpy_safe(szCaption, CountOf(szCaption), SZ_ML_VERSION);
+			_tcscpy_safe(szCaption, CountOf(szCaption), GetAppNameLong().c_str());
 
 		SetWindowText(szCaption);
 

@@ -16,7 +16,7 @@ public:
 	{
 		m_strMsg.clear();
 
-		g_sessionUpload.Init(SZ_ML_VERSION);
+		g_sessionUpload.Init(GetAppNameLong().c_str());
 
 		m_nResult = g_sessionUpload.Connect();
 		if (m_nResult == ERR_OK)
@@ -57,6 +57,8 @@ public:
 	virtual DWORD DoTheJob()
 	{
 		m_strMsg.clear();
+
+		g_sessionUpload.Init(GetAppNameLong().c_str());
 
 		m_nResult = g_sessionUpload.Connect();
 		if (m_nResult == ERR_OK)

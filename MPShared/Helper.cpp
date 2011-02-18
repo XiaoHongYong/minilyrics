@@ -92,15 +92,6 @@ void ParseMLTextMacro(LPCTSTR szText, tstring &str)
 	strrep(str, _T("$$fullname$$"), strTitleFull.c_str());
 }
 
-void GetAppNameLong(TCHAR szName[], int nLen)
-{
-#ifdef _MPLAYER
-	_tcscpy(szName, SZ_APP_NAME);
-#else
-	_stprintf_s(szName, nLen, _T("%s for %s"), SZ_APP_NAME, g_Player.GetPlayerName());
-#endif
-}
-
 /*
 bool StatisticAnsiChar(const char *szStr)
 {

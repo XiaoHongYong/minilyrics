@@ -390,7 +390,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 
 	pSearchParam->pOnlineSearch->m_bRunning = true;
 
-	session.Init(SZ_ML_VERSION);
+	session.Init(GetAppNameLong().c_str());
 
 	nRet = session.Connect();
 	if (nRet != ERR_OK)
@@ -577,7 +577,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 
 	g_mpApp.GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
 
-	session.Init(SZ_ML_VERSION);
+	session.Init(GetAppNameLong().c_str());
 
 	nRet = session.Connect();
 	if (nRet != ERR_OK)
@@ -623,7 +623,7 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 {
 	int					nRet;
 
-	session.Init(SZ_ML_VERSION);
+	session.Init(GetAppNameLong().c_str());
 
 	nRet = session.Connect();
 	if (nRet != ERR_OK)
