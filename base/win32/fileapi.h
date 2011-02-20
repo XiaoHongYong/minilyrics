@@ -104,6 +104,9 @@ public:
 	bool IsCurDir()
 		{ return IsFlagSet(FindData.dwFileAttributes, FILE_ATTRIBUTE_DIRECTORY); }
 
+	uint32 GetFileSize()
+		{ return FindData.nFileSizeLow; }
+
 protected:
 	HANDLE				hFileFind;
 	WIN32_FIND_DATA		FindData;
