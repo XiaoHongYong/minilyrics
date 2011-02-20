@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "LyricShowAgentObj.h"
-#include "SkinToolBar.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

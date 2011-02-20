@@ -6,7 +6,6 @@
 #include "MPlayerApp.h"
 #include "MLCmd.h"
 #include "LyricShowTextEditObj.h"
-#include "SkinToolBar.h"
 #include "LyricShowObj.h"
 #include "SkinBarFrame.h"
 

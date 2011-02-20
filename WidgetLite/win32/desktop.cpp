@@ -3,6 +3,11 @@
 #include "desktop.h"
 
 
+void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
+{
+	ShellExecute(pWnd->GetHandle(), _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
+}
+
 bool IsKeyPressed(int nKey)
 {
 	return (GetKeyState(nKey) & 0x8000) == 0x8000;

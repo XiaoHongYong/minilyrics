@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include "MLSkin.h"
+#include "Skin.h"
 #include "SkinNStatusButton.h"
 
 #define FADE_BUTTON_TIME_OUT		300

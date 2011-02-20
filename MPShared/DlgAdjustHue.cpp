@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "DlgAdjustHue.h"
-#include "SkinSeekCtrl.h"
 
 
 class CPageAdjustHue : public CSkinPageHandler, public IScrollNotify

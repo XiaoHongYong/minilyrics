@@ -10,7 +10,6 @@
 #include "MPlayerApp.h"
 #include "LyricShowObj.h"
 #include "LyricShowAgentObj.h"
-#include "DlgRateLyrics.h"
 
 
 PRAW_IMAGE_DATA AutoFitImageToRect(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst, int nBitCount)
@@ -1672,7 +1671,12 @@ bool CLyricShowObj::OnLButtonDown(UINT nFlags, CPoint point)
 				{
 #ifndef _MPLAYER
 					// show rate dialog
-					CMPSkinDialog::ShowDialog(new CDlgRateLyrics(ads.strLink.c_str() + _tcslen(_T("cmd://rate/"))), m_pSkin);
+					CMLMenu	menu;
+					menu.LoadPopupMenu(IDR_MENU_RATE, 0);
+
+					CPoint	pt;
+					MLWidget::GetCursorPos(&pt);
+					menu.TrackPopupMenu(pt.x, pt.y, m_pSkin);
 #endif
 				}
 				else

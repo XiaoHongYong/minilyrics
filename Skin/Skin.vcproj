@@ -341,7 +341,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./;../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;UNICODE;_CPPUNIT_TEST"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;UNICODE;_CPPUNIT_TEST;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -557,6 +557,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SkinComboBox.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SkinContainer.cpp"
 				>
 				<FileConfiguration
@@ -679,6 +683,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinListCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinMenu.cpp"
 				>
 			</File>
@@ -793,6 +801,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinSeekCtrl.cpp"
+				>
+			</File>
+			<File
 				RelativePath="SkinSquare.cpp"
 				>
 				<FileConfiguration
@@ -840,7 +852,27 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\SkinStaticText.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinTabButton.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinTextButton.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinToggleCtrlContainer.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinToolBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinTxtLink.cpp"
 				>
 			</File>
 			<File
@@ -1058,10 +1090,6 @@
 				>
 			</File>
 			<File
-				RelativePath="MLSkin.h"
-				>
-			</File>
-			<File
 				RelativePath=".\PopupSkinListWnd.h"
 				>
 			</File>
@@ -1082,6 +1110,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Skin.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinAnimationObj.h"
 				>
 			</File>
@@ -1091,6 +1123,10 @@
 			</File>
 			<File
 				RelativePath="SkinCaption.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinComboBox.h"
 				>
 			</File>
 			<File
@@ -1130,6 +1166,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinListCtrl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinMenu.h"
 				>
 			</File>
@@ -1158,11 +1198,35 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinSeekCtrl.h"
+				>
+			</File>
+			<File
 				RelativePath="SkinSquare.h"
 				>
 			</File>
 			<File
+				RelativePath=".\SkinStaticText.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinTabButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinTextButton.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinToggleCtrlContainer.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinToolBar.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinTxtLink.h"
 				>
 			</File>
 			<File
@@ -1198,10 +1262,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="Readme.txt"
-			>
-		</File>
 		<File
 			RelativePath=".\script\skin.java"
 			>

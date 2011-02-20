@@ -7,7 +7,7 @@
 *********************************************************************/
 
 #include "StdAfx.h"
-#include "MLSkin.h"
+#include "Skin.h"
 #include "SkinScaleImage.h"
 
 UIOBJECT_CLASS_NAME_IMP(CSkinXScaleImage, _T("HStretchImage"))

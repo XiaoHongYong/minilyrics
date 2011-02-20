@@ -1,5 +1,5 @@
-#include "stdafx.h"
-#include "MLSkin.h"
+#include "StdAfx.h"
+#include "Skin.h"
 
 #include "SjvmSkinSystem.h"
 #include "../SimpleJVM/SjvmLib.h"

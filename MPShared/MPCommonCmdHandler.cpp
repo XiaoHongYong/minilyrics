@@ -9,19 +9,14 @@
 #include "LyricShowAgentObj.h"
 #include "LyricShowTextEditObj.h"
 #include "CharsetEncoding.h"
-#include "SkinSeekCtrl.h"
 #include "SkinRateCtrl.h"
 #include "DlgSearchLyrics.h"
 #include "../WidgetLite/win32/FileOpenDlg.h"
-//#include "DlgSelEncoding.h"
-//#include "LrcUploadDlg.h"
-//#include "LoginDlg.h"
 #include "DlgUpload.h"
 #include "AutoProcessEmbeddedLyrics.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
 #include "MPMsgWnd.h"
-#include "DlgRateLyrics.h"
 #include "MPSkinMenu.h"
 #include "LyricsTool.h"
 #ifdef _WIN32
@@ -80,6 +75,29 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
 #endif
+	case IDC_RATE_LYR_1:
+	case IDC_RATE_LYR_2:
+	case IDC_RATE_LYR_3:
+	case IDC_RATE_LYR_4:
+	case IDC_RATE_LYR_5:
+		{
+			int nRate;
+			if (nID == IDC_RATE_LYR_2) nRate = 2;
+			else if (nID == IDC_RATE_LYR_3) nRate = 3;
+			else if (nID == IDC_RATE_LYR_4) nRate = 4;
+			else if (nID == IDC_RATE_LYR_5) nRate = 5;
+			else nRate = 1;
+
+			tstring		strUrl;
+
+			strUrl = GetStrName(SN_HTTP_RATE_LRC);
+			strUrl += g_LyricData.Properties().m_strId;
+
+			strUrl += CStrPrintf(_T("&rating=%d"), nRate).c_str();
+			OpenUrl(m_pSkinWnd, strUrl.c_str());
+		}
+		break;
+
 	case IDC_SL_CLEAR_TIME_STAMP:
 		{
 			if (g_LyricData.GetLyrContentType() == LCT_TXT)
@@ -825,13 +843,13 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
 				break;
 			}
-			tstring		strUrl;
 
-			strUrl = GetStrName(SN_HTTP_RATE_LRC);
-			strUrl += g_LyricData.Properties().m_strId;
+			CMLMenu	menu;
+			menu.LoadPopupMenu(IDR_MENU_RATE, 0);
 
-			// show rate dialog
-			CMPSkinDialog::ShowDialog(new CDlgRateLyrics(strUrl.c_str()), m_pSkinWnd);
+			CPoint	pt;
+			MLWidget::GetCursorPos(&pt);
+			menu.TrackPopupMenu(pt.x, pt.y, m_pSkinWnd);
 		}
 		break;
 	case CMD_RELOAD_LYR:

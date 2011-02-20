@@ -68,7 +68,7 @@
 #include "../OurMFCLib/OurMFClib.h"
 #include "../GfxLite/GfxLite.h"
 #include "../WidgetLite/WidgetLite.h"
-#include "../Skin/MLSkin.h"
+#include "../Skin/Skin.h"
 #include "../MLLib/MLLib.h"
 
 // Local Header Files

@@ -1,8 +1,6 @@
 #pragma once
 
 
-#include "SkinListCtrl.h"
-#include "SkinComboBox.h"
 #include "LyricShowObj.h"
 
 class CLyrDisplayClrListWnd : public IPopupSkinWndNotify

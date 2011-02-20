@@ -2,8 +2,8 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include "MLSkin.h"
+#include "StdAfx.h"
+#include "Skin.h"
 #include "SplashScreenWnd.h"
 
 CSplashScreenWnd::CSplashScreenWnd()

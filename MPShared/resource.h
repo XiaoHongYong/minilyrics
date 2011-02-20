@@ -53,6 +53,8 @@
 #define IDR_MENU_STATIC_LYR             211
 #define IDB_INSTALL_STAT                211
 #define IDM_LYRICS_TOOL                 212
+#define IDR_MENU1                       213
+#define IDR_MENU_RATE                   213
 #define IDC_APPLY_ACCOUNT               1001
 #define IDC_HOTKEY                      1006
 #define IDC_ADD_SONG_FILE               1045
@@ -295,13 +297,19 @@
 #define IDC_EDITOR_LYR_COLOR            40189
 #define IDC_EDITOR_HIGH_COLOR           40190
 #define IDC_EDITOR_BG_COLOR             40191
+#define IDC_RATE_1                      40192
+#define IDC_RATE_LYR_1                  40193
+#define IDC_RATE_LYR_2                  40194
+#define IDC_RATE_LYR_3                  40195
+#define IDC_RATE_LYR_4                  40196
+#define IDC_RATE_LYR_5                  40197
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        212
-#define _APS_NEXT_COMMAND_VALUE         40192
+#define _APS_NEXT_RESOURCE_VALUE        214
+#define _APS_NEXT_COMMAND_VALUE         40198
 #define _APS_NEXT_CONTROL_VALUE         1218
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

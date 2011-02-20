@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "MLSkin.h"
+#include "Skin.h"
 #include "SkinImage.h"
 
 CSFImage::CSFImage(void)

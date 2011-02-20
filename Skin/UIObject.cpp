@@ -7,7 +7,7 @@
 *********************************************************************/
 
 #include "StdAfx.h"
-#include "MLSkin.h"
+#include "Skin.h"
 #include "UIObject.h"
 
 

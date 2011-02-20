@@ -45,32 +45,6 @@ BOOL ExecuteCmdAndWait(LPCTSTR szCmd, DWORD dwTimeOut = INFINITE, DWORD *pExitCo
 
 BOOL GetModulePath(TCHAR szPath[], HINSTANCE hInstance = NULL);
 
-HWND
-WINAPI
-HtmlHelpOurA(
-    HWND hwndCaller,
-    LPCSTR pszFile,
-    UINT uCommand,
-    LPVOID dwData
-    );
-
-HWND
-WINAPI
-HtmlHelpOurW(
-    HWND hwndCaller,
-    LPWSTR pszFile,
-    UINT uCommand,
-    LPVOID dwData
-    );
-
-#ifdef _UNICODE
-#define HtmlHelpOur		HtmlHelpOurW
-#else
-#define HtmlHelpOur		HtmlHelpOurA
-#endif
-
-BOOL InitRichEdit();
-
 void GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict);
 
 void CenterWindowToMonitor(HWND hWnd);

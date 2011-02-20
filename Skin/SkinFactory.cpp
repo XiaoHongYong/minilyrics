@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include "MLSkin.h"
+#include "Skin.h"
 #include "SkinFactory.h"
 #include "SkinWndResizeObj.h"
 #include "SkinFadeArea.h"
@@ -1207,13 +1207,9 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	CUIObject *pObj = NULL;
 
 	if (_tcsicmp(szClassName, CSkinButton::ClassName()) == 0)
-	{
 		pObj = new CSkinButton;
-	}
 	if (_tcsicmp(szClassName, CSkinActiveButton::ClassName()) == 0)
-	{
 		pObj = new CSkinActiveButton;
-	}
 	else if (IsPropertyName(szClassName, CSkinImageButton::ClassName()))
 		pObj = new CSkinImageButton;
 	else if (_tcsicmp(szClassName, CSkinImage::ClassName()) == 0)
@@ -1276,6 +1272,22 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CSkinFrameCtrl;
 	else if (IsPropertyName(szClassName, CSkinHoverActionButton::ClassName()))
 		pObj = new CSkinHoverActionButton;
+	else if (IsPropertyName(szClassName, CSkinComboBox::ClassName()))
+		pObj = new CSkinComboBox;
+	else if (IsPropertyName(szClassName, CSkinListCtrl::ClassName()))
+		pObj = new CSkinListCtrl;
+	else if (IsPropertyName(szClassName, CSkinSeekCtrl::ClassName()))
+		pObj = new CSkinSeekCtrl;
+	else if (IsPropertyName(szClassName, CSkinStaticText::ClassName()))
+		pObj = new CSkinStaticText;
+	else if (IsPropertyName(szClassName, CSkinTabButton::ClassName()))
+		pObj = new CSkinTabButton;
+	else if (IsPropertyName(szClassName, CSkinTextButton::ClassName()))
+		pObj = new CSkinTextButton;
+	else if (IsPropertyName(szClassName, CSkinToolbar::ClassName()))
+		pObj = new CSkinToolbar;
+	else if (IsPropertyName(szClassName, CSkinTxtLink::ClassName()))
+		pObj = new CSkinTxtLink;
 
 	if (pObj)
 	{

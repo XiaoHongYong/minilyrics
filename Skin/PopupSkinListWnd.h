@@ -2,7 +2,7 @@
 #pragma once
 
 #include "PopupSkinWnd.h"
-#include "../MPShared/SkinListCtrl.h"
+#include "SkinListCtrl.h"
 
 class CPopupSkinListWnd : public CPopupSkinWnd
 {

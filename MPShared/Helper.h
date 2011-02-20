@@ -15,8 +15,6 @@
 
 int CanOpenFileForWrite(LPCTSTR szFile, bool bMustExist = true);
 
-void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl);
-
 void Execute(CBaseWnd *pWnd, LPCTSTR szExe, LPCTSTR szParam);
 
 bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText);

@@ -7,7 +7,7 @@
 *********************************************************************/
 
 #include "StdAfx.h"
-#include "MLSkin.h"
+#include "Skin.h"
 
 UIOBJECT_CLASS_NAME_IMP(CSkinNStatusImage, _T("NStatusImage"))
 

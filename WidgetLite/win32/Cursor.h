@@ -33,6 +33,7 @@ public:
 		C_SIZEWE		= (int)(int64)IDC_SIZEWE,
 		C_NO			= (int)(int64)IDC_NO,
 		C_IBEAM			= (int)(int64)IDC_IBEAM,
+		C_HAND			= (int)(int64)IDC_HAND,
 	};
 
 	CCursor(void);

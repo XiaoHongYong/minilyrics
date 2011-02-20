@@ -14,13 +14,8 @@
 #include "LyricShowVobSub.h"
 #include "LyricShowAgentObj.h"
 #include "LyricShowTextEditObj.h"
-#include "SkinTextButton.h"
-#include "SkinStaticText.h"
-#include "SkinSeekCtrl.h"
-#include "SkinListCtrl.h"
 #include "SkinListCtrlEx.h"
 #include "SkinRateCtrl.h"
-#include "SkinToolBar.h"
 #include "SkinTabHeader.h"
 #include "SkinBarFrame.h"
 #include "SkinContainerBar.h"
@@ -33,9 +28,6 @@
 #include "MPMsgWnd.h"
 #include "SkinFilterCtrl.h"
 #include "MPSkinInfoTextCtrlEx.h"
-#include "SkinTxtLink.h"
-#include "SkinTabButton.h"
-#include "SkinComboBox.h"
 
 #ifdef _MPLAYER
 #include "SkinTreeCtrl.h"
@@ -112,16 +104,6 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 //		pObj = new CLyricShowPreviewObj;
 	else if (_tcsicmp(szClassName, CSkinRateCtrl::ClassName()) == 0)
 		pObj = new CSkinRateCtrl;
-	else if (_tcsicmp(szClassName, CSkinToolbar::ClassName()) == 0)
-		pObj = new CSkinToolbar;
-	else if (_tcsicmp(szClassName, CSkinStaticText::ClassName()) == 0)
-		pObj = new CSkinStaticText;
-	else if (_tcsicmp(szClassName, CSkinTextButton::ClassName()) == 0)
-		pObj = new CSkinTextButton;
-	else if (_tcsicmp(szClassName, CSkinSeekCtrl::ClassName()) == 0)
-		pObj = new CSkinSeekCtrl;
-	else if (_tcsicmp(szClassName, CSkinListCtrl::ClassName()) == 0)
-		pObj = new CSkinListCtrl;
 	else if (_tcsicmp(szClassName, CSkinBarFrame::ClassName()) == 0)
 		pObj = new CSkinBarFrame;
 	else if (_tcsicmp(szClassName, CSkinContainerBar::ClassName()) == 0)
@@ -160,12 +142,6 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 		pObj = new CMediaInfoTextCtrl;
 	else if (_tcsicmp(szClassName, CMediaAlbumArtCtrl::ClassName()) == 0)
 		pObj = new CMediaAlbumArtCtrl;
-	else if (_tcsicmp(szClassName, CSkinTxtLink::ClassName()) == 0)
-		pObj = new CSkinTxtLink;
-	else if (_tcsicmp(szClassName, CSkinTabButton::ClassName()) == 0)
-		pObj = new CSkinTabButton;
-	else if (IsPropertyName(szClassName, CSkinComboBox::ClassName()))
-		pObj = new CSkinComboBox;
 	else
 		return NULL;
 

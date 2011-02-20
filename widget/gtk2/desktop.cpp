@@ -3,6 +3,10 @@
 #include "desktop.h"
 
 
+void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
+{
+}
+
 void GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict)
 {
 	rcRestrict.left = 0;

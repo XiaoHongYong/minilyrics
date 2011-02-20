@@ -36,11 +36,6 @@ int CanOpenFileForWrite(LPCTSTR szFile, bool bMustExist)
 	return ERR_OK;
 }
 
-void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
-{
-	ShellExecute(pWnd->GetHandle(), _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
-}
-
 void Execute(CBaseWnd *pWnd, LPCTSTR szExe, LPCTSTR szParam)
 {
 	ShellExecute(pWnd->GetHandle(), _T("open"), 

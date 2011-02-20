@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "PreferencePageBase.h"
-#include "SkinComboBox.h"
 
 //////////////////////////////////////////////////////////////////////
 

@@ -12,10 +12,7 @@
 #include "MPMediaLibCmdHandler.h"
 //#include "MPCmdHandlerOfMediaGuide.h"
 #endif
-#include "SkinListCtrl.h"
-#include "SkinSeekCtrl.h"
 #include "SkinRateCtrl.h"
-#include "SkinToolBar.h"
 #include "LyricShowObj.h"
 #include "LyricShowTextEditObj.h"
 #include "LyricShowAgentObj.h"

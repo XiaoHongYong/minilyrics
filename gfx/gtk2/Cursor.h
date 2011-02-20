@@ -34,6 +34,7 @@ public:
 		C_SIZEWE		= (int)GDK_SB_H_DOUBLE_ARROW,
 		C_NO			= (int)GDK_TREK,
 		C_IBEAM			= (int)GDK_XTERM,
+		C_HAND			= (int)GDK_ARROW,
 	};
 
 	CCursor(void);

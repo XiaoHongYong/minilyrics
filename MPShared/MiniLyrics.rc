@@ -53,6 +53,24 @@ END
 //
 
 IDB_INSTALL_STAT        BITMAP                  "..\\MiniLyrics\\win32\\InstallState.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU_RATE MENU 
+BEGIN
+    POPUP "Rate"
+    BEGIN
+        MENUITEM "Rate these lyrics: 1 (Low)",  IDC_RATE_LYR_1
+        MENUITEM "Rate these lyrics: 2",        IDC_RATE_LYR_2
+        MENUITEM "Rate these lyrics: 3",        IDC_RATE_LYR_3
+        MENUITEM "Rate these lyrics: 4",        IDC_RATE_LYR_4
+        MENUITEM "Rate these lyrics: 5 (High)", IDC_RATE_LYR_5
+    END
+END
+
 #endif    // Chinese (P.R.C.) resources
 /////////////////////////////////////////////////////////////////////////////
 

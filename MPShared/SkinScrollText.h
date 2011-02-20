@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "SkinStaticText.h"
 
 class CSkinScrollText : public CSkinStaticText  
 {

@@ -40,6 +40,8 @@ class CBaseWnd;
 
 #include "BaseWnd.h"
 
+void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl);
+
 void GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict);
 
 bool IsKeyPressed(int nKey);

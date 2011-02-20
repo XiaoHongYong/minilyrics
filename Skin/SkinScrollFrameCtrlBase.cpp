@@ -1,8 +1,8 @@
 #include "StdAfx.h"
-#include "MLSkin.h"
+#include "Skin.h"
 #include "SkinScrollFrameCtrlBase.h"
 #include "SkinFrameCtrl.h"
-#include "../MPShared/SkinListCtrl.h"
+#include "SkinListCtrl.h"
 
 CSkinScrollFrameCtrlBase::CSkinScrollFrameCtrlBase()
 {

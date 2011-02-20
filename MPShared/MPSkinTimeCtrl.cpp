@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include "Player.h"
 #include "MPSkinTimeCtrl.h"
-#include "SkinStaticText.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

@@ -2,7 +2,6 @@
 #include "MPlayerApp.h"
 #include "PreferPageLyrics.h"
 #include "DownloadMgr.h"
-#include "SkinListCtrl.h"
 
 #ifdef _WIN32
 #include "win32/LyricsOutPluginMgr.h"

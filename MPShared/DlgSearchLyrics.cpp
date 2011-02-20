@@ -11,7 +11,6 @@
 #include "WaitingDlg.h"
 #include "Helper.h"
 #include "ErrorResolveDlg.h"
-#include "SkinListCtrl.h"
 #include "AutoProcessEmbeddedLyrics.h"
 
 bool IsHttpUrl(LPCTSTR szUrl)

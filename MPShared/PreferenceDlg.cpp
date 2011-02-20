@@ -14,7 +14,6 @@
 #include "PreferPageLyrics.h"
 #include "PreferPageTheme.h"
 #include "PreferPageAdvanced.h"
-#include "SkinToolBar.h"
 
 #ifdef _MPLAYER
 #include "PreferPageAssociation.h"

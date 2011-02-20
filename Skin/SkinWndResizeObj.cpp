@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "MLSkin.h"
+#include "Skin.h"
 #include "SkinWndResizeObj.h"
 
 UIOBJECT_CLASS_NAME_IMP(CSkinWndResizeObj, _T("WndResizer"));

@@ -19,10 +19,6 @@ int CanOpenFileForWrite(LPCTSTR szFile, bool bMustExist)
 	return ERR_OK;
 }
 
-void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
-{
-}
-
 void Execute(CBaseWnd *pWnd, LPCTSTR szExe, LPCTSTR szParam)
 {
 }

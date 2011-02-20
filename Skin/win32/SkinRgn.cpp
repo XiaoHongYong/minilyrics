@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "StdAfx.h"
 #include "../SkinRgn.h"
 
 #define MAX_RGN_FILE_SIZE (1024 * 20)
