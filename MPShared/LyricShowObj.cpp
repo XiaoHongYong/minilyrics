@@ -652,10 +652,10 @@ CLyricShowObj::CLyricShowObj()
 
 CLyricShowObj::~CLyricShowObj()
 {
-	g_eventDispather.UnregisterHanlder(m_etDispSettings, this);
-	g_eventDispather.UnregisterHanlder(ET_LYRICS_CHANGED, this);
-	g_eventDispather.UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(m_etDispSettings, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	g_Profile.WriteProfileInt(_T("NextPicInFolder"), m_nNextPicInFolder);
 	m_pSkin->UnregisterTimerObject(this);
 }
@@ -678,10 +678,10 @@ void CLyricShowObj::OnCreate()
 
 	LoadAllSettings();
 
-	g_eventDispather.RegisterHanlder(m_etDispSettings, this);
-	g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
-	g_eventDispather.RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(m_etDispSettings, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	if (m_bUseBgImg)
 		m_pSkin->RegisterTimerObject(this, g_Profile.GetProfileInt(_T("SlideDelayTime"), 10) * 1000);
 
@@ -1504,11 +1504,11 @@ void CLyricShowObj::OnKeyDown(UINT nChar, UINT nFlags)
 	{
 	case VK_UP:
 		m_pMLData->SetOffsetTime(m_pMLData->GetOffsetTime() - SET_SPEED_SPAN);
-		g_eventDispather.DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
+		CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 		break;
 	case VK_DOWN:
 		m_pMLData->SetOffsetTime(m_pMLData->GetOffsetTime() + SET_SPEED_SPAN);
-		g_eventDispather.DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
+		CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 		break;
 	case 'D':
 		m_pSkin->OnCustomCommand(CMD_OPEN_LRC);

@@ -392,6 +392,14 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\win32\EventsDispatcher.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\EventsDispatcherBase.cpp"
+				>
+			</File>
+			<File
 				RelativePath="Formula.cpp"
 				>
 				<FileConfiguration
@@ -460,6 +468,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinAnimationObj.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinApp.cpp"
 				>
 			</File>
 			<File
@@ -1086,6 +1098,14 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\win32\EventsDispatcher.h"
+				>
+			</File>
+			<File
+				RelativePath=".\EventsDispatcherBase.h"
+				>
+			</File>
+			<File
 				RelativePath="Formula.h"
 				>
 			</File>
@@ -1115,6 +1135,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinAnimationObj.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinApp.h"
 				>
 			</File>
 			<File

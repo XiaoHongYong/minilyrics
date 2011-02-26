@@ -8,7 +8,6 @@
 #include "MPCommonCmdHandler.h"
 #include "LyricShowAgentObj.h"
 #include "LyricShowTextEditObj.h"
-#include "CharsetEncoding.h"
 #include "SkinRateCtrl.h"
 #include "DlgSearchLyrics.h"
 #include "../WidgetLite/win32/FileOpenDlg.h"
@@ -16,7 +15,6 @@
 #include "AutoProcessEmbeddedLyrics.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
-#include "MPMsgWnd.h"
 #include "MPSkinMenu.h"
 #include "LyricsTool.h"
 #ifdef _WIN32
@@ -235,10 +233,10 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		break;
 // 	case IDC_MINIMIZE:
 // #if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
-// 		if (::GetParent(g_mpApp.GetMainWnd()->GetHandle()))
+// 		if (::GetParent(CMPlayerAppBase::GetMainWnd()->GetHandle()))
 // 			break;
 // #endif
-// 		g_mpApp.GetSkinFactory()->MinizeAll();
+// 		CMPlayerAppBase::GetMPSkinFactory()->MinizeAll();
 // 		break;
 /*	case IDC_LOGIN:
 		{
@@ -271,13 +269,13 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 // 		break;
 #ifdef _WIN32_WCE
 	case IDC_MEDIALIB:
-		g_mpApp.GetSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Media Library"), _T("medialib"));
+		CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Media Library"), _T("medialib"));
 		break;
 	case IDC_PLAYLIST:
-		g_mpApp.GetSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Playlist"), _T("Playlist"));
+		CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Playlist"), _T("Playlist"));
 		break;
 	case IDC_LYRICS_VIEWER:
-		g_mpApp.GetSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Lyrics"), _T("lyrics"));
+		CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Lyrics"), _T("lyrics"));
 		break;
 #endif
 #ifdef _WIN32
@@ -290,9 +288,9 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	case IDC_ABOUT:
 		{
 /*			CSkinWnd	*pWnd = new CDlgAbout();
-			int nRet = g_mpApp.GetSkinFactory()->OpenOrCloseSkinWnd(_T("about_box"),
+			int nRet = CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(_T("about_box"),
 				_T("AboutBox"),
-				_T("AboutBox.xml"), g_mpApp.GetMainWnd(), &pWnd);*/
+				_T("AboutBox.xml"), CMPlayerAppBase::GetMainWnd(), &pWnd);*/
 			CMPSkinDialog::ShowDialog(new CDlgAbout(), m_pSkinWnd);
 		}
 		break;
@@ -322,7 +320,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 
 			CopyFile(dlg.GetOpenFile(), strAlbumArtFileName.c_str(), false);
 
-			g_eventDispather.DispatchSyncEvent(ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
+			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
 		}
 		break;
 	case IDC_HELP_STATIC_LYR:
@@ -453,7 +451,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_LYR_EDITOR:
-		g_mpApp.GetSkinFactory()->ActiveOrCreateSkinWnd(false,
+		CMPlayerAppBase::GetMPSkinFactory()->ActiveOrCreateSkinWnd(false,
 			_T("LyrEditor"), TOLOCAL(_T("Lyrics Editor")), _T("LyricsEditor.xml"));
 		break;
 	case CMD_EDIT_HELP:
@@ -532,7 +530,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 					if (vol > MP_VOLUME_MAX)
 						vol = MP_VOLUME_MAX;
 					g_Player.SetVolume(vol);
-					g_eventDispather.DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
+					CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
 				}
 			}
 		}
@@ -549,7 +547,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 					if (vol < 0)
 						vol = 0;
 					g_Player.SetVolume(vol);
-					g_eventDispather.DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
+					CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
 				}
 			}
 		}
@@ -559,7 +557,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			bool		bMute = !g_Player.IsMute();
 			if (g_Player.SetMute(bMute))
 			{
-				g_eventDispather.DispatchInfoText(TOLOCAL(bMute ? _T("Mute On") : _T("Mute Off")));
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bMute ? _T("Mute On") : _T("Mute Off")));
 			}
 		}
 		break;
@@ -568,7 +566,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			bool		bShuffle = !g_Player.IsShuffle();
 			if (g_Player.SetShuffle(bShuffle))
 			{
-				g_eventDispather.DispatchInfoText(TOLOCAL(bShuffle ? _T("Shuffle On") : _T("Shuffle Off")));
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bShuffle ? _T("Shuffle On") : _T("Shuffle Off")));
 			}
 		}
 		break;
@@ -585,7 +583,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				else
 					str =  _T("Repeat All");
 
-				g_eventDispather.DispatchInfoText(str.c_str());
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(str.c_str());
 			}
 		}
 		break;
@@ -627,7 +625,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		//
 	case CMD_NEW_LRC:
 		{
-			g_mpApp.NewLyrics();
+			CMPlayerAppBase::GetInstance()->NewLyrics();
 		}
 		break;
 	case CMD_OPEN_LRC:
@@ -655,7 +653,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			// notify to save...
 			IEvent		*pEvent = new IEvent;
 			pEvent->eventType = ET_LYRICS_ON_SAVE_EDIT;
-			g_eventDispather.DispatchSyncEvent(pEvent);
+			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(pEvent);
 
 			if (g_LyricData.DoesChooseNewFileName())
 			{
@@ -686,7 +684,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			// notify to save...
 			IEvent		*pEvent = new IEvent;
 			pEvent->eventType = ET_LYRICS_ON_SAVE_EDIT;
-			g_eventDispather.DispatchSyncEvent(pEvent);
+			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(pEvent);
 
 			SaveAsLyricsFile(m_pSkinWnd,
 				LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false);
@@ -704,11 +702,11 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			else
 			{
 				g_LyricData.SetOffsetTime(g_LyricData.GetOffsetTime() + SET_SPEED_SPAN);
-				g_eventDispather.DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
+				CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 
-				g_eventDispather.DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
+				CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
 
-				// g_eventDispather.DispatchInfoText(TOLOCAL(_T("Lyrics Forward 0.5 Sec")));
+				// CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(_T("Lyrics Forward 0.5 Sec")));
 			}
 		}
 		break;
@@ -725,11 +723,11 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			else
 			{
 				g_LyricData.SetOffsetTime(g_LyricData.GetOffsetTime() - SET_SPEED_SPAN);
-				g_eventDispather.DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
+				CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 
-				g_eventDispather.DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
+				CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
 
-				// g_eventDispather.DispatchInfoText(TOLOCAL(_T("Lyrics Backward 0.5 Sec")));
+				// CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(_T("Lyrics Backward 0.5 Sec")));
 			}
 		}
 		break;
@@ -767,7 +765,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_CLR_PREV_HUE:
 	case CMD_CLR_NEXT_HUE:
 		{
-			float hue = (float)(g_Profile.GetProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), 0));
+			float hue = (float)(g_Profile.GetProfileInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), 0));
 
 			if (nID == CMD_CLR_NEXT_HUE)
 				hue += 30;
@@ -776,8 +774,8 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			if (hue >= 360)   hue -= 360;
 			else if (hue < 0) hue += 360;
 
-			g_Profile.WriteProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
-			g_mpApp.GetSkinFactory()->AdjustHue(hue);
+			g_Profile.WriteProfileInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
+			CMPlayerAppBase::GetMPSkinFactory()->AdjustHue(hue);
 		}
 		break;
 	case CMD_LYR_HIGH_CLR_LIST:
@@ -818,7 +816,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_QUIT:
-		g_mpMsgWnd.PostQuitMPMessage();
+		CMPlayerAppBase::GetInstance()->PostQuitMessage();
 		break;
 	case CMD_OK:
 	case CMD_CANCEL:
@@ -853,7 +851,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_RELOAD_LYR:
-		g_mpApp.ResearchLyrics();
+		CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 		break;
 	case CMD_J_PREV_LINE:
 	case CMD_J_NEXT_LINE:
@@ -914,7 +912,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 		if (g_LyricData.HasLyricsOpened())
 		{
-			if (!g_mpApp.OnLyricsChangingSavePrompt())
+			if (!CMPlayerAppBase::GetInstance()->OnLyricsChangingSavePrompt())
 				break;
 
 			tstring		strEditor;
@@ -1022,42 +1020,42 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 	// #else _ANSI
 	//  设置UNICODE 歌词的编码，并重新打开，同时设置字体的编码
 
-	_CMDID_ENCODING		&cmdIdCharset = CmdIdToEncoding(nCmdId);
-	if (cmdIdCharset.nCmdId != -1)
-	{
-		if (!g_LyricData.HasLyricsOpened())
-			return true;
+	int nEncodingId = CmdIdToEncoding(nCmdId);
+	if (nEncodingId == -1)
+		return false;
 
-		//
-		// if (修改了歌词)
-		//		提示需要重新加载歌词，提示用户是否继续
-		if (g_LyricData.IsContentModified())
-		{
-			tstringex		str;
-
-			str += TOLOCAL(_T("Change character encoding must reload lyrics, and your modification will be lost."));
-			str += _T("\r\n");
-			str += TOLOCAL(_T("Do you want to continue?"));
-			if (m_pSkinWnd->MessageOut(str.c_str(), MB_ICONINFORMATION | MB_YESNO) != IDYES)
-				return true;
-		}
-
-		// 以用户指定的编码重新打开歌词
-		ENCODING_CODEPAGE &encodingNew = GetCharEncodingByID(cmdIdCharset.nEncodingId);
-		ENCODING_CODEPAGE &encodingOld = GetCharEncodingByName(g_LyricData.Properties().GetEncoding());
-		if (encodingNew.nEncodingId != encodingOld.nEncodingId)
-		{
-			TCHAR		szEncoding[256];
-			_xcscpy(szEncoding, encodingNew.szEncoding);
-
-			g_LyricData.ReopenLyrics(TRUE, 
-				GetCharEncodingID(encodingNew.szEncoding));
-
-			g_mpApp.DispatchLyricsChangedSyncEvent();
-		}
+	if (!g_LyricData.HasLyricsOpened())
 		return true;
+
+	//
+	// if (修改了歌词)
+	//		提示需要重新加载歌词，提示用户是否继续
+	if (g_LyricData.IsContentModified())
+	{
+		tstringex		str;
+
+		str += TOLOCAL(_T("Change character encoding must reload lyrics, and your modification will be lost."));
+		str += _T("\r\n");
+		str += TOLOCAL(_T("Do you want to continue?"));
+		if (m_pSkinWnd->MessageOut(str.c_str(), MB_ICONINFORMATION | MB_YESNO) != IDYES)
+			return true;
 	}
-	return false;
+
+	// 以用户指定的编码重新打开歌词
+	ENCODING_CODEPAGE &encodingNew = GetCharEncodingByID((CHAR_ENCODING)nEncodingId);
+	ENCODING_CODEPAGE &encodingOld = GetCharEncodingByName(g_LyricData.Properties().GetEncoding());
+	if (encodingNew.nEncodingId != encodingOld.nEncodingId)
+	{
+		TCHAR		szEncoding[256];
+		_xcscpy(szEncoding, encodingNew.szEncoding);
+
+		g_LyricData.ReopenLyrics(TRUE, 
+			GetCharEncodingID(encodingNew.szEncoding));
+
+		CMPlayerAppBase::GetInstance()->DispatchLyricsChangedSyncEvent();
+	}
+
+	return true;
 }
 
 // COMMENT:

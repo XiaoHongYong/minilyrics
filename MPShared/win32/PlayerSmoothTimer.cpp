@@ -55,7 +55,7 @@ void CPlayerSmoothTimer::AdjustTimer(int nTimePos)
 
 			g_LyricData.SetPlayElapsedTime(nTimePos);
 
-			g_eventDispather.DispatchUnsyncEvent(ET_LYRICS_DRAW_UPDATE);
+			CMPlayerAppBase::GetEventsDispatcher()->DispatchUnsyncEvent(ET_LYRICS_DRAW_UPDATE);
 		}
 	}
 	m_nTimePosOld = nTimePos;
@@ -81,6 +81,6 @@ void CPlayerSmoothTimer::ThreadTimer(LPVOID lpParam)
 
 		g_LyricData.SetPlayElapsedTime(n);
 
-		g_eventDispather.DispatchUnsyncEvent(ET_LYRICS_DRAW_UPDATE);
+		CMPlayerAppBase::GetEventsDispatcher()->DispatchUnsyncEvent(ET_LYRICS_DRAW_UPDATE);
 	}
 }

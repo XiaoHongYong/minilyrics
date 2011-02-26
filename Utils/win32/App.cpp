@@ -61,6 +61,8 @@ tstring GetInstallShareDir()
 	{
 		if (_tcsicmp(FileGetName(szFile), _T("MiniLyrics.exe")) == 0)
 			strShareDir += _T("..\\Install_ML\\Share\\");
+		else if (_tcsicmp(FileGetName(szFile), _T("iPodLyricsDownloader.exe")) == 0)
+			strShareDir += _T("..\\Install_iPodLyricsDownloader\\Share\\");
 		else
 			strShareDir += _T("..\\Install_ZP\\Share\\");
 	}

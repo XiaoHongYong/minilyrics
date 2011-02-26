@@ -19,12 +19,10 @@ enum ML_CUSTOM_COMMAND
 	// ¿Ø¼þµÄÃüÁîID
 	CMD_CLOSE,
 	CMD_QUIT,
-	CMD_WND_TITLE,
 	CMD_MINIMIZE,
 	CMD_MAXIMIZE,
 	CMD_TOPMOST,
 	CMD_CLICK_THROUGH,
-	ID_WORK_AREA,
 	CMD_RATE_LYR,
 	CMD_MENU,
 
@@ -173,7 +171,7 @@ extern STRING_ID_MAP g_StringIdMap[];
 #ifdef _WIN32_WCE
 
 //
-// Command Accerlate key for wce
+// Command Accerate key for wce
 //
 struct MLCmdAccKey
 {

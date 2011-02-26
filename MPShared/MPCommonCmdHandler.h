@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "EventsDispatcher.h"
+#include "MPEventsDispatcher.h"
 #include "LyrDisplayClrListWnd.h"
 
 class CMPCommonCmdHandler : public ISkinCmdHandler  

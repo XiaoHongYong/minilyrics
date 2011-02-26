@@ -20,22 +20,10 @@ class CSkinMenu;
 class CMPSkinFactory : public CSkinFactory  
 {
 public:
-	CMPSkinFactory();
+	CMPSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[]);
 	virtual ~CMPSkinFactory();
 
-	virtual void Quit();
-
 	virtual CSkinWnd *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
-
-	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu);
-
-	virtual CSkinMenu *LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu);
-
-	virtual void OnLanguageChanged();
-
-	virtual void OnSkinWndActivate(CSkinWnd *pWnd);
-
-	virtual void OnMainSkinWndDestory(CSkinWnd *pSkinWnd);
 
 	void TopmostAll(bool bTopmost);
 	void MinizeAll(bool bSilently = false);
@@ -76,6 +64,8 @@ protected:
 #endif
 
 protected:
+	virtual CSkinMenu *LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu);
+
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 
 	virtual CUIObject * NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);

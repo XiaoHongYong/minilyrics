@@ -193,7 +193,7 @@ public:
 					g_LyricSearch.SetFolder(szPath, TRUE);
 
 					// update lyric
-					g_mpApp.ResearchLyrics();
+					CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 					g_LyricSearch.SaveLyricFolderCfg();
 				}
 			}
@@ -210,7 +210,7 @@ public:
 			g_LyricSearch.RemoveFolder(nIndex);
 			g_LyricSearch.SaveLyricFolderCfg();
 
-			g_mpApp.ResearchLyrics();
+			CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 		}
 	}
 
@@ -314,7 +314,7 @@ public:
 	virtual void SetIntValue(int nValue)
 	{
 		CPfItemInt::SetIntValue(nValue);
-		g_mpApp.GetSkinFactory()->AllUpdateTransparent();
+		CMPlayerAppBase::GetMPSkinFactory()->AllUpdateTransparent();
 	}
 
 };
@@ -341,7 +341,7 @@ public:
 
 		g_SysTrayIconCmd[nPlayerCtrlIndex].bEnable = Tobool(nValue);
 
-		g_mpApp.GetMainWnd()->UpdatePlayerSysTrayIcon();
+		CMPlayerAppBase::GetMainWnd()->UpdatePlayerSysTrayIcon();
 	}
 
 	int			nPlayerCtrlIndex;
@@ -508,7 +508,7 @@ public:
 
 	virtual void SetIntValue(int nValue)
 	{
-		g_mpApp.GetHotkey().EnableGlobalHotkey(Tobool(nValue));
+		CMPlayerAppBase::GetHotkey().EnableGlobalHotkey(Tobool(nValue));
 		CPfItemBool::SetIntValue(nValue);
 	}
 
@@ -557,11 +557,11 @@ public:
 		CMPHotkey::CmdAccKey	*pCmdKey;
 		while (1)
 		{
-			nIndex = g_mpApp.GetHotkey().GetByCmd(m_nCmd, nIndex);
+			nIndex = CMPlayerAppBase::GetHotkey().GetByCmd(m_nCmd, nIndex);
 			if (nIndex == -1)
 				break;
 
-			pCmdKey = g_mpApp.GetHotkey().Get(nIndex);
+			pCmdKey = CMPlayerAppBase::GetHotkey().Get(nIndex);
 			if (pCmdKey)
 			{
 				Hotkey		hotkey;
@@ -602,17 +602,17 @@ public:
 			{
 				// Is this hotkey already being used?
 				int			nUsedCmdIndex;
-				nUsedCmdIndex = g_mpApp.GetHotkey().GetByKey(dlg.m_nVirtualKey, dlg.m_fsModifiers);
+				nUsedCmdIndex = CMPlayerAppBase::GetHotkey().GetByKey(dlg.m_nVirtualKey, dlg.m_fsModifiers);
 				if (nUsedCmdIndex != -1)
 				{
 					tstring		strCmd;
 					tstring		strMsg;
 
 					// Same one is self?
-					if (g_mpApp.GetHotkey().Get(nUsedCmdIndex)->cmd == m_nCmd)
+					if (CMPlayerAppBase::GetHotkey().Get(nUsedCmdIndex)->cmd == m_nCmd)
 						return;
 
-					strCmd = GetCmdIDDescription(g_mpApp.GetHotkey().Get(nUsedCmdIndex)->cmd);
+					strCmd = GetCmdIDDescription(CMPlayerAppBase::GetHotkey().Get(nUsedCmdIndex)->cmd);
 
 					strMsg = CStrPrintf(TOLOCAL(_T("This hotkey is currently used by action: %s.")), TOLOCAL(strCmd.c_str())).c_str();
 					strMsg += _T("\r\n");
@@ -620,15 +620,15 @@ public:
 					if (m_pWndParent->GetSkinWnd()->MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_YESNO) != IDYES)
 						return;
 
-					g_mpApp.GetHotkey().Remove(nUsedCmdIndex);
+					CMPlayerAppBase::GetHotkey().Remove(nUsedCmdIndex);
 
 					m_pWndParent->UpdateValues();
 				}
 
 				if (bGloal)
-					g_mpApp.GetHotkey().EnableGlobalHotkey(true);
+					CMPlayerAppBase::GetHotkey().EnableGlobalHotkey(true);
 
-				g_mpApp.GetHotkey().Add(m_nCmd, bGloal, dlg.m_nVirtualKey, dlg.m_fsModifiers);
+				CMPlayerAppBase::GetHotkey().Add(m_nCmd, bGloal, dlg.m_nVirtualKey, dlg.m_fsModifiers);
 			}
 		}
 		else
@@ -637,22 +637,22 @@ public:
 			int			nShortcutIndex = -1;
 			for (int i = 2; i <= nIndex; i++)
 			{
-				nShortcutIndex = g_mpApp.GetHotkey().GetByCmd(m_nCmd, nShortcutIndex);
+				nShortcutIndex = CMPlayerAppBase::GetHotkey().GetByCmd(m_nCmd, nShortcutIndex);
 				if (nShortcutIndex == -1)
 					break;
 
 				if (i == nIndex)
-					g_mpApp.GetHotkey().Remove(nShortcutIndex);
+					CMPlayerAppBase::GetHotkey().Remove(nShortcutIndex);
 			}
 		}
 	}
 
 	virtual bool IsDefault() {
-		return g_mpApp.GetHotkey().IsDefaultKey(m_nCmd);
+		return CMPlayerAppBase::GetHotkey().IsDefaultKey(m_nCmd);
 	}
 
 	virtual void Reset() {
-		return g_mpApp.GetHotkey().RestoreDefaultKey(m_nCmd);
+		return CMPlayerAppBase::GetHotkey().RestoreDefaultKey(m_nCmd);
 	}
 
 	CPagePfAdvanced		*m_pWndParent;

@@ -40,7 +40,7 @@ CLyricShowTxtObj::CLyricShowTxtObj()
 
 CLyricShowTxtObj::~CLyricShowTxtObj()
 {
-	g_eventDispather.UnregisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
 
 	if (m_pObjScrollBar)
 		m_pSkin->RemoveUIObject(m_pObjScrollBar, true);
@@ -347,7 +347,7 @@ void CLyricShowTxtObj::OnCreate()
 {
 	CLyricShowMultiRowObj::OnCreate();
 
-	g_eventDispather.RegisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
 
 	m_bRecordScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrRecordSAEnabled"), true);
 	m_bReplayScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrReplaySAEnabled"), true);

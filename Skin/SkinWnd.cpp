@@ -208,6 +208,7 @@ CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
 
 	m_nWidth = 0;
 	m_nHeight = 0;
+	m_bRememberSizePos = true;
 
 	m_nNextUIObjIDAlloc = UIOBJ_ID_BEGIN_ALLOC;
 
@@ -314,6 +315,10 @@ void CSkinWnd::CloseSkin()
 	if (!m_bSkinOpened)
 		return;
 
+	// the skin was opened before, so save latest settings.
+	if (m_bRememberSizePos)
+		SaveWndPos();
+
 	KillTimer(TIMER_ID_ANIMATION);
 	m_listAnimations.clear();
 
@@ -396,6 +401,7 @@ void CSkinWnd::CloseSkin()
 
 	m_nWidth = 0;
 	m_nHeight = 0;
+	m_bRememberSizePos = true;
 
 	m_fontProperty.Create(_T("Tohama"), _T(""), 14, FW_NORMAL, false, false);
 
@@ -725,6 +731,12 @@ void CSkinWnd::OnKeyUp(UINT nChar, UINT nFlags)
 	CUIObject	*pObjFocus = GetFocusUIObj();
 	if (pObjFocus && pObjFocus->WantMsgKey())
 		pObjFocus->OnKeyUp(nChar, nFlags);
+}
+
+void CSkinWnd::OnContexMenu(int xPos, int yPos)
+{
+	if (m_rootConainter.GetMenu())
+		m_rootConainter.GetMenu()->TrackPopupMenu(xPos, yPos, this);
 }
 
 void CSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
@@ -1419,6 +1431,8 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 // 			m_rcReal.bottom = m_rcReal.top + (long)(m_rcBoundBox.Height() * m_dbScale);
 // 		}
 	}
+	else if (IsPropertyName(szProperty, _T("RememberSizePos")))
+		m_bRememberSizePos = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("Cursor")) == 0)
 	{
 		m_cursor.Destroy();
@@ -1926,6 +1940,9 @@ void CSkinWnd::OnActivate(bool bActived)
 		if (m_pSjvmNotifyEvent)
 			m_pSjvmNotifyEvent->onActivate(bActived);
 	}
+
+	if (bActived && !IsIconic())
+		m_pSkinFactory->OnSkinWndActivate(this);
 }
 
 void CSkinWnd::AddWndCloseto(CBaseWnd *pWnd, LPCTSTR szWndClass, LPCTSTR szWndName)
@@ -2401,25 +2418,6 @@ void CSkinWnd::OnSkinLoaded()
 		m_pSjvmNotifyEvent->onCreate(this);
 }
 
-void CSkinWnd::OnLoadWndSizePos()
-{
-	CRect		rcNew;
-
-	rcNew = m_rcReal;
-	if (m_wndResizer.IsFixedWidth())
-		rcNew.right = rcNew.left + (long)(m_nWidth * m_dbScale);
-	if (m_wndResizer.IsFixedHeight())
-		rcNew.bottom = rcNew.top + (long)(m_nHeight * m_dbScale);
-
-	if (rcNew.Width() < m_wndResizer.GetMinCx())
-		rcNew.right = rcNew.left + m_wndResizer.GetMinCx();
-	if (rcNew.Height() < m_wndResizer.GetMinCy())
-		rcNew.bottom = rcNew.top + m_wndResizer.GetMinCy();
-
-	if (rcNew.Width() != m_rcReal.Width() || rcNew.Height() != m_rcReal.Height())
-		MoveWindow(rcNew);
-}
-
 bool CSkinWnd::OnCustomCommand(int nId)
 {
 	if (m_pSjvmNotifyEvent && m_pSjvmNotifyEvent->onCommand(nId))
@@ -2655,7 +2653,8 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	SetProperies(pXmlNode->listProperties);
 
 	// load window size of skin
-	OnLoadWndSizePos();
+	if (m_bRememberSizePos)
+		OnLoadWndSizePos();
 
 	// Create UIObjects defined in Extends window
 	CSkinContainer	*pContainterClientArea = NULL;
@@ -2836,4 +2835,149 @@ void CSkinWnd::OnTimerAnimation()
 
 	if (m_listAnimations.empty())
 		KillTimer(TIMER_ID_ANIMATION);
+}
+
+/*void CSkinWnd::OnLoadWndSizePos()
+{
+	CRect		rcNew;
+
+	rcNew = m_rcReal;
+	if (m_wndResizer.IsFixedWidth())
+		rcNew.right = rcNew.left + (long)(m_nWidth * m_dbScale);
+	if (m_wndResizer.IsFixedHeight())
+		rcNew.bottom = rcNew.top + (long)(m_nHeight * m_dbScale);
+
+	if (rcNew.Width() < m_wndResizer.GetMinCx())
+		rcNew.right = rcNew.left + m_wndResizer.GetMinCx();
+	if (rcNew.Height() < m_wndResizer.GetMinCy())
+		rcNew.bottom = rcNew.top + m_wndResizer.GetMinCy();
+
+	if (rcNew.Width() != m_rcReal.Width() || rcNew.Height() != m_rcReal.Height())
+		MoveWindow(rcNew);
+}*/
+
+void CSkinWnd::OnLoadWndSizePos()
+{
+#ifdef _WIN32_WCE
+// 	rcWnd.left = CW_USEDEFAULT;
+// 	rcWnd.right =  CW_USEDEFAULT;
+// 	rcWnd.top = 26;
+// 	rcWnd.bottom = 294;
+#else
+#ifdef _WIN32
+	if (::GetParent(m_hWnd))
+		return;
+#endif
+
+	// WndSizeMode		sizeMode;
+	CRect			rcNew;
+	DWORD			dwShowFlag = 0;
+	bool			bCenterWnd = true;
+
+	if (IsZoomed())
+		ShowWindow(SW_RESTORE);
+		// dwShowFlag = SW_RESTORE;
+
+	GetWindowRect(&m_rcReal);
+
+	rcNew = m_rcReal;
+
+	if (m_bRememberSizePos)
+	{
+		rcNew.left = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_left"), rcNew.left);
+		rcNew.top = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_top"), rcNew.top);
+		rcNew.right = rcNew.left + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_width"), m_nWidth);
+		rcNew.bottom = rcNew.top + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_height"), m_nHeight);
+		// if (!rcNew.EqualRect(&m_rcReal))
+		//	bCenterWnd = false;
+		bCenterWnd = false;
+
+		if (m_wndResizer.IsFixedWidth())
+			rcNew.right = long(rcNew.left + m_nWidth * m_dbScale);
+		if (m_wndResizer.IsFixedHeight())
+			rcNew.bottom = long(rcNew.top + m_nHeight * m_dbScale);
+	}
+	else
+	{
+		rcNew.right = long(rcNew.left + m_nWidth * m_dbScale);
+		rcNew.bottom = long(rcNew.top + m_nHeight * m_dbScale);
+	}
+
+	if (rcNew.Width() < m_wndResizer.GetMinCx())
+		rcNew.right = rcNew.left + m_wndResizer.GetMinCx();
+	if (rcNew.Height() < m_wndResizer.GetMinCy())
+		rcNew.bottom = rcNew.top + m_wndResizer.GetMinCy();
+
+	if (bCenterWnd)
+	{
+		CRect	rcScreen;
+		int		w = rcNew.Width(), h = rcNew.Height();
+
+		GetMonitorRestrictRect(rcNew, rcScreen);
+		rcNew.left = (rcScreen.left + rcScreen.right - w) / 2;
+		rcNew.top = (rcScreen.top + rcScreen.bottom - h) / 2;
+		rcNew.right = rcNew.left + w;
+		rcNew.bottom = rcNew.top + h;
+	}
+
+	if (!rcNew.EqualRect(&m_rcReal))
+		MoveWindowSafely(rcNew.left, rcNew.top, rcNew.Width(), rcNew.Height(), true);
+
+/*	if (!m_wndResizer.IsFixedWidth() && !m_wndResizer.IsFixedHeight())
+	{
+// 		sizeMode = (WndSizeMode)g_Profile.GetProfileInt(GetSkinWndName(), _T("SizeMode"), WndSizeMode_Normal);
+// 		if (sizeMode == WndSizeMode_Maximized)
+// 			dwShowFlag = SW_MAXIMIZE;
+// 			// ShowWindow(SW_MAXIMIZE);
+// 		else if (sizeMode == WndSizeMode_Minimized)
+// 			dwShowFlag = SW_MINIMIZE;
+			// ShowWindow(SW_MINIMIZE);
+	}*/
+
+/*	WINDOWPLACEMENT		wp;
+	memset(&wp, 0, sizeof(wp));
+	wp.length = sizeof(wp);
+	wp.flags = 0;
+	wp.ptMaxPosition.y = wp.ptMaxPosition.x = -1;
+	wp.ptMinPosition.y = wp.ptMinPosition.x = -1;
+	wp.rcNormalPosition = rcNew;
+	wp.showCmd = dwShowFlag;
+	SetWindowPlacement(GetHandle(), &wp);*/
+#endif
+}
+
+// COMMENT:
+//		save current skin window size pos.
+void CSkinWnd::SaveWndPos()
+{
+#ifdef _WIN32_DESKTOP
+	if (::GetParent(m_hWnd))
+		return;
+
+	WINDOWPLACEMENT	wp;
+	CRect			rcToSave;
+
+	wp.length = sizeof(wp);
+	if (GetWindowPlacement(m_hWnd, &wp))
+	{
+		rcToSave = wp.rcNormalPosition;
+	}
+	else
+		rcToSave = m_rcReal;
+
+	WndSizeMode		sizeMode;
+	if (IsFlagSet(wp.showCmd, SW_SHOWMAXIMIZED))
+		sizeMode = WndSizeMode_Maximized;
+	else if (IsFlagSet(wp.showCmd, SW_SHOWMINIMIZED))
+		sizeMode = WndSizeMode_Minimized;
+	else
+		sizeMode = WndSizeMode_Normal;
+
+	g_Profile.WriteProfileInt(GetSkinWndName(), _T("SizeMode"), sizeMode);
+
+	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_left"), rcToSave.left);
+	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_top"), rcToSave.top);
+	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_width"), rcToSave.Width());
+	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_height"), rcToSave.Height());
+#endif
 }

@@ -35,5 +35,7 @@ class CSkinWnd;
 #include "SkinToolBar.h"
 #include "SkinTxtLink.h"
 #include "SkinTabButton.h"
+#include "EventsDispatcherBase.h"
+#include "SkinApp.h"
 
 #endif // __DX_SKIN_INC_

@@ -25,7 +25,6 @@
 #include "MPSkinInfoTextCtrl.h"
 #include "MediaInfoTextCtrl.h"
 #include "MediaAlbumArtCtrl.h"
-#include "MPMsgWnd.h"
 #include "SkinFilterCtrl.h"
 #include "MPSkinInfoTextCtrlEx.h"
 
@@ -59,7 +58,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMPSkinFactory::CMPSkinFactory()
+CMPSkinFactory::CMPSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[])
+	: CSkinFactory(pApp, stringIdMap)
 {
 #ifdef _WIN32_DESKTOP
 	m_bClickThrough = false;
@@ -69,11 +69,6 @@ CMPSkinFactory::CMPSkinFactory()
 CMPSkinFactory::~CMPSkinFactory()
 {
 
-}
-
-void CMPSkinFactory::Quit()
-{
-	Close(true);
 }
 
 CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
@@ -159,25 +154,6 @@ CSkinWnd *CMPSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
 		return new CMPSkinWnd;
 }
 
-SXNode *CMPSkinFactory::GetMenuOfMenus(SXNode *pNodeMenus, LPCTSTR szMenuName)
-{
-	SXNode::iterator it, itEnd;
-	itEnd = pNodeMenus->listChildren.end();
-	for (it = pNodeMenus->listChildren.begin(); it != itEnd; ++it)
-	{
-		SXNode		*pNode = *it;
-
-		// OK, found the contorl
-		if (_tcsicmp(pNode->strName.c_str(), _T("Menu")) == 0)
-		{
-			if (_tcsicmp(pNode->GetPropertySafe(_T("Name")), szMenuName) == 0)
-				return pNode;
-		}
-	}
-
-	return NULL;
-}
-
 CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 {
 	CSkinMenu		*pSkinMenu = NULL;
@@ -254,117 +230,6 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 	return pSkinMenu;
 }
 
-bool CMPSkinFactory::LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu)
-{
-	CSkinMenu	*pSkinMenu = NULL;
-	SXNode		*pNodeMenus = NULL, *pNode = NULL;
-
-	*ppMenu = NULL;
-
-	// Load menu from xml
-	pNodeMenus = m_skinFile.GetMenusNode();
-	if (pNodeMenus)
-	{
-		pNode = GetMenuOfMenus(pNodeMenus, szMenu);
-		if (pNode)
-		{
-			LPCTSTR szFromMenu = pNode->GetProperty(_T("From"));
-			if (szFromMenu)
-				pSkinMenu = LoadPresetMenu(pWnd, szFromMenu);
-
-			if (!pSkinMenu)
-				pSkinMenu = new CSkinMenu(this);
-
-			pSkinMenu->FromXML(pNode, pSkinMenu->GetOrgAppendPos());
-		}
-	}
-
-	if (!pSkinMenu)
-	{
-		// is this a preset menu?
-		pSkinMenu = LoadPresetMenu(pWnd, szMenu);
-		if (pSkinMenu)
-		{
-			*ppMenu = pSkinMenu;
-			return true;
-		}
-	}
-
-	*ppMenu = pSkinMenu;
-
-	return pSkinMenu != NULL;
-}
-
-void CMPSkinFactory::OnLanguageChanged()
-{
-	LIST_SKINWNDS::iterator	it, itEnd;
-	itEnd = m_listSkinWnds.end();
-	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
-	{
-		CSkinWnd	*pWnd = *it;
-		pWnd->OnLanguageChanged();
-	}
-}
-
-//
-// Bring all the skin windows to the top
-//
-void CMPSkinFactory::OnSkinWndActivate(CSkinWnd *pWndActive)
-{
-#ifdef _WIN32
-	LIST_SKINWNDS::iterator	it, itEnd;
-
-	HWND		hWndPrev, hWndNext, hWndActive;
-	HDWP		hWindowPosInfo;
-	vector<HWND>	vToBring;
-
-	if (pWndActive)
-		hWndActive = pWndActive->GetHandle();
-	else
-		hWndActive = GetForegroundWindow();
-
-	if (IsTopmostWindow(hWndActive))
-		vToBring.push_back(HWND_TOP);
-	else
-		vToBring.push_back(hWndActive);
-
-	hWndPrev = hWndNext = hWndActive;
-	hWndNext = GetWindow(hWndNext, GW_HWNDNEXT);
-	while (hWndNext)
-	{
-		itEnd = m_listSkinWnds.end();
-		for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
-		{
-			if ((*it)->GetHandle() == hWndNext && hWndNext != hWndActive)
-			{
-				if (!IsTopmostWindow(hWndNext) && !::IsIconic(hWndNext))
-				{
-					vToBring.push_back(hWndNext);
-					hWndPrev = hWndNext;
-				}
-				break;
-			}
-		}
-		hWndNext = GetWindow(hWndNext, GW_HWNDNEXT);
-	}
-	hWindowPosInfo = BeginDeferWindowPos(vToBring.size());
-	for (int i = 1; i < (int)vToBring.size(); i++)
-		DeferWindowPos(hWindowPosInfo, vToBring[i], vToBring[i - 1], 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
-	EndDeferWindowPos(hWindowPosInfo);
-
-	// DBGLOG1(_T("OnSkinWndActivate: %s"), pWndActive->GetSkinWndName());
-#endif
-}
-
-
-void CMPSkinFactory::OnMainSkinWndDestory(CSkinWnd *pSkinWnd)
-{
-// #ifdef _MPLAYER
-// 	CSkinFactory::OnMainSkinWndDestory(pSkinWnd);
-// #endif
-	g_mpMsgWnd.PostQuitMPMessage();
-}
-
 void CMPSkinFactory::TopmostAll(bool bTopmost)
 {
 	LIST_SKINWNDS::iterator	it, itEnd;
@@ -420,7 +285,7 @@ int CMPSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 
 	tstring		strHotkey;
 
-	if (g_mpApp.GetHotkey().GetHotkeyText(nID, strHotkey))
+	if (CMPlayerAppBase::GetHotkey().GetHotkeyText(nID, strHotkey))
 	{
 		strToolTip += _T(" (");
 		strToolTip += strHotkey;
@@ -438,7 +303,7 @@ void CMPSkinFactory::GetTooltip(int nId, tstring &strToolTip)
 	{
 		tstring		strHotkey;
 
-		if (g_mpApp.GetHotkey().GetHotkeyText(nId, strHotkey))
+		if (CMPlayerAppBase::GetHotkey().GetHotkeyText(nId, strHotkey))
 		{
 			strToolTip += _T(" (");
 			strToolTip += strHotkey;
@@ -546,7 +411,7 @@ void CMPSkinFactory::AllUpdateTransparent()
 		return;
 
 #ifndef _MPLAYER
-	if (::GetParent(g_mpApp.GetMainWnd()->GetHandle()))
+	if (::GetParent(CMPlayerAppBase::GetMainWnd()->GetHandle()))
 		return;
 #endif
 
@@ -580,7 +445,7 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 		if (nShowPos == SHOW_ICON_ON_NONE || nShowPos == SHOW_ICON_ON_TASKBAR)
 		{
 			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_BAR_TRAY);
-			g_mpApp.GetMainWnd()->GetTrayIcon().UpdateShowIconPos();
+			CMPlayerAppBase::GetMainWnd()->GetTrayIcon().UpdateShowIconPos();
 		}
 	}
 

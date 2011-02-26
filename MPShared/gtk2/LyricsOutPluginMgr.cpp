@@ -114,8 +114,8 @@ bool CLyricsOutPluginMgr::GetMediaFile(TCHAR szFile[], int nBuffLen)
 #ifdef _WIN32
 HWND CLyricsOutPluginMgr::GetMainWnd()
 {
-	if (g_mpApp.GetMainWnd())
-		return g_mpApp.GetMainWnd()->GetHandle();
+	if (CMPlayerAppBase::GetMainWnd())
+		return CMPlayerAppBase::GetMainWnd()->GetHandle();
 	else
 		return NULL;
 }

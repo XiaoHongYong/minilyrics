@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "MPlayerAppBase.h"
 #include "Player.h"
-#include "EventsDispatcher.h"
 #include "MediaAlbumArtCtrl.h"
 
 PRAW_IMAGE_DATA ConvertTo32BppRawImage(PRAW_IMAGE_DATA src);
@@ -67,8 +67,8 @@ CMediaAlbumArtCtrl::CMediaAlbumArtCtrl()
 
 CMediaAlbumArtCtrl::~CMediaAlbumArtCtrl()
 {
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 
 	m_pSkin->UnregisterTimerObject(this);
 }
@@ -77,8 +77,8 @@ void CMediaAlbumArtCtrl::OnCreate()
 {
 	CUIObject::OnCreate();
 
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 
 	m_pSkin->RegisterTimerObject(this, 20 * 1000);
 

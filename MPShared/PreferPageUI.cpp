@@ -25,7 +25,7 @@ public:
 
 #ifdef _WIN32_DESKTOP
 		// Click though...
-		CStrPrintf str(_T("%d"), g_mpApp.GetSkinFactory()->GetClickThrough());
+		CStrPrintf str(_T("%d"), CMPlayerAppBase::GetMPSkinFactory()->GetClickThrough());
 		SetUIObjectProperty(_T("CID_C_CLICK_THROUGH"), _T("CurStatus"), str.c_str());
 #endif
 
@@ -40,12 +40,12 @@ public:
 		{
 			bool	bValue = IsButtonChecked(nId);
 			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bValue);
-			g_mpApp.GetSkinFactory()->TopmostAll(bValue);
+			CMPlayerAppBase::GetMPSkinFactory()->TopmostAll(bValue);
 		}
 #ifdef _WIN32_DESKTOP
 		else if (nId == GetIDByName(_T("CID_C_CLICK_THROUGH")))
 		{
-			g_mpApp.GetSkinFactory()->SetClickThrough(IsButtonChecked(nId));
+			CMPlayerAppBase::GetMPSkinFactory()->SetClickThrough(IsButtonChecked(nId));
 		}
 #endif
 		else if (nId == GetIDByName(_T("CID_SEL_LANGUAGE")))
@@ -107,7 +107,7 @@ public:
 
 			g_Profile.WriteProfileString(_T("Language"), m_vTransFiles[nId - _CMD_ID_LANGUANG_BEGIN].strFileName.c_str());
 
-			g_mpApp.OnLanguageChanged();
+			CMPlayerAppBase::GetInstance()->OnLanguageChanged();
 
 			UpdateLanguageInfo();
 
@@ -220,18 +220,18 @@ public:
 		{
 			g_Profile.WriteProfileInt(_T("MPSkinMode"), false);
 			// 嵌入到player 中的skin
-			g_mpApp.OnSwitchToEmbeddedSkinMode(true);
+			CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode(true);
 		}
 		else
 #endif
 		{
 #ifndef _MPLAYER
-			if (g_mpApp.IsEmbeddedMode())
+			if (CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
 				g_Profile.WriteProfileInt(_T("MPSkinMode"), true);
-			g_mpApp.EndEmbeddedSkin();
+			CMPlayerAppBase::GetInstance()->EndEmbeddedSkin();
 #endif
 			g_Profile.WriteProfileString(_T("DefaultSkin"), strSkinName.c_str());
-			g_mpApp.ChangeSkin(strSkinName.c_str(), true);
+			CMPlayerAppBase::GetInstance()->ChangeSkin(strSkinName.c_str(), true);
 		}
 
 		// UpdateSkinComment(strSkinName.c_str());
@@ -272,19 +272,19 @@ public:
 
 #if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
 		m_strEmbeddedSkinName = _T("");
-		if (g_mpApp.IsSupportEmbedded())
+		if (CMPlayerAppBase::GetInstance()->IsSupportEmbedded())
 		{
 			m_strEmbeddedSkinName = tstring(_T("<< ")) + g_Player.GetEmbeddedSkinName() + _T(" >>");
 			m_pSkinList->InsertItem(m_pSkinList->GetItemCount(), m_strEmbeddedSkinName.c_str());
 
-			if (g_mpApp.IsEmbeddedMode())
+			if (CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
 				m_pSkinList->SetItemSelectionState(0, true);
 		}
 #endif
 
 		// 查找所有的Skin，并且添加到菜单中
 		vector<tstring>		vSkins;
-		if (g_mpApp.GetSkinFactory()->EnumAllSkins(vSkins))
+		if (CMPlayerAppBase::GetMPSkinFactory()->EnumAllSkins(vSkins))
 		{
 			for (UINT i = 0; i < vSkins.size(); i++)
 			{
@@ -304,7 +304,7 @@ public:
 		tstringex	str;
 
 		// 设置Skin的说明
-		if (g_mpApp.GetSkinFactory()->GetResourceMgr()->GetResourcePathName(szReadme, CountOf(szReadme), _T("Readme.txt"))
+		if (CMPlayerAppBase::GetMPSkinFactory()->GetResourceMgr()->GetResourcePathName(szReadme, CountOf(szReadme), _T("Readme.txt"))
 			&& OpenFileToTString(szReadme, str))
 		{
 			SetUIObjectText(_T("CID_SKIN_INFO"), str.c_str(), true);

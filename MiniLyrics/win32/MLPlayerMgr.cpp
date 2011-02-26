@@ -2,7 +2,6 @@
 #include "MPlayerApp.h"
 #include "MLPlayerMgr.h"
 #include "LyricsTool.h"
-#include "MPMsgWnd.h"
 #include "MPMsg.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
@@ -126,7 +125,7 @@ void CMLPlayerMgr::OnPlayerDisconnected()
 	memset(&g_Player.m_playerInfo, 0, sizeof(g_Player.m_playerInfo));
 	CDlgLyricsTool *pLyricsTool = GetRunningLyricsToolWnd();
 	if (!pLyricsTool)
-		g_mpMsgWnd.PostQuitMPMessage();
+		CMPlayerAppBase::GetInstance()->PostQuitMessage();
 }
 
 void CMLPlayerMgr::SetCurPlayer(int nIndex)
@@ -204,7 +203,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			CEventPlayerStatusChanged	*pEvent = new CEventPlayerStatusChanged();
 			pEvent->eventType = ET_PLAYER_STATUS_CHANGED;
 			g_Player.m_playerState = pEvent->status = (PLAYER_STATE) *(DWORD*)pcds->lpData;
-			g_eventDispather.DispatchUnsyncEvent(pEvent);
+			CMPlayerAppBase::GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
 		}
 		break;
 	case M2M_PLAY_POS_CHANGED:
@@ -223,7 +222,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			{
 				g_LyricData.SetPlayElapsedTime(playPos);
 
-				g_eventDispather.DispatchUnsyncEvent(ET_LYRICS_DRAW_UPDATE);
+				CMPlayerAppBase::GetEventsDispatcher()->DispatchUnsyncEvent((EventType)ET_LYRICS_DRAW_UPDATE);
 
 				DispatchPlayPosEvent(playPos);
 			}
@@ -234,7 +233,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 		{
 			ASSERT(sizeof(HWND) == pcds->cbData);
 			HWND	hWnd = *(HWND*)pcds->lpData;
-			if (!g_mpApp.IsRunning())
+			if (!CMPlayerAppBase::GetInstance()->IsRunning())
 			{
 				MessageBox(hWnd, _T("Sorry, MiniLyrics window is closed, can't configure it now."), SZ_APP_NAME, MB_ICONINFORMATION | MB_OK);
 				break;
@@ -242,7 +241,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 
 			CBaseWnd *pWndParent;
 			if (hWnd == NULL)
-				pWndParent = g_mpApp.GetMainWnd();
+				pWndParent = CMPlayerAppBase::GetMainWnd();
 			else
 				pWndParent = CBaseWnd::FromHandle(hWnd);
 
@@ -254,12 +253,12 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			ASSERT(sizeof(HWND) == pcds->cbData);
 			HWND	hWnd = *(HWND*)pcds->lpData;
 
-			if (!g_mpApp.IsRunning())
+			if (!CMPlayerAppBase::GetInstance()->IsRunning())
 				break;
 
 			CBaseWnd *pWndParent;
 			if (hWnd == NULL)
-				pWndParent = g_mpApp.GetMainWnd();
+				pWndParent = CMPlayerAppBase::GetMainWnd();
 			else
 				pWndParent = CBaseWnd::FromHandle(hWnd);
 
@@ -279,13 +278,13 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			ASSERT(sizeof(WndCloseToML) == pcds->cbData);
 			WndCloseToML	*closeTo = (WndCloseToML*)pcds->lpData;
 			if (closeTo->hWndCloseTo)
-				g_mpApp.GetSkinFactory()->AddWndCloseto(CBaseWnd::FromHandle(closeTo->hWndCloseTo), NULL, NULL);
+				CMPlayerAppBase::GetMPSkinFactory()->AddWndCloseto(CBaseWnd::FromHandle(closeTo->hWndCloseTo), NULL, NULL);
 			else
 			{
 				TCHAR		szClass[256], szWndName[256];
 				ConvertStr2(closeTo->className, -1, szClass, CountOf(szClass));
 				ConvertStr2(closeTo->wndName, -1, szWndName, CountOf(szWndName));
-				g_mpApp.GetSkinFactory()->AddWndCloseto(NULL, szWndName, szClass);
+				CMPlayerAppBase::GetMPSkinFactory()->AddWndCloseto(NULL, szWndName, szClass);
 			}
 		}
 		break;
@@ -295,7 +294,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			ASSERT(sizeof(BOOL) == pcds->cbData);
 			BOOL bActivate = *(BOOL*)pcds->lpData;
 			if (bActivate)
-				g_mpApp.GetSkinFactory()->OnSkinWndActivate(NULL);
+				CMPlayerAppBase::GetMPSkinFactory()->OnSkinWndActivate(NULL);
 		}
 		break;
 	case M2M_PLAYER_MINRESTORE:
@@ -304,14 +303,14 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			ASSERT(sizeof(DWORD) == pcds->cbData);
 			DWORD state = *(DWORD*)pcds->lpData;
 			if (SIZE_MINIMIZED == state)
-				g_mpApp.GetSkinFactory()->MinizeAll();
+				CMPlayerAppBase::GetMPSkinFactory()->MinizeAll();
 			else if (SIZE_RESTORED == state)
 			{
 				if (!g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true)
 					|| !g_Player.HasVideo())
 				{
-					g_mpApp.GetSkinFactory()->RestoreAll();
-					g_mpApp.GetSkinFactory()->OnSkinWndActivate(NULL);
+					CMPlayerAppBase::GetMPSkinFactory()->RestoreAll();
+					CMPlayerAppBase::GetMPSkinFactory()->OnSkinWndActivate(NULL);
 				}
 			}
 		}
@@ -335,14 +334,14 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 					k++;
 				}
 			}
-			g_mpApp.GetSkinFactory()->BeforeTrackMoveWith(pWndTrackChain + 1, k - 1, pWndTrackChain[0]);
+			CMPlayerAppBase::GetMPSkinFactory()->BeforeTrackMoveWith(pWndTrackChain + 1, k - 1, pWndTrackChain[0]);
 		}
 		break;
 	case M2M_TRACK_MOVE:
 		{
 			ASSERT(sizeof(DWORD) == pcds->cbData);
 			DWORD	dwXY = *(DWORD*)pcds->lpData;
-			g_mpApp.GetSkinFactory()->TrackMoveWith(
+			CMPlayerAppBase::GetMPSkinFactory()->TrackMoveWith(
 				CBaseWnd::FromHandle(g_Player.GetMainWnd()),
 				LOWORD(dwXY), HIWORD(dwXY));
 		}
@@ -353,8 +352,8 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			ASSERT(sizeof(PlayerSkinInfo) == pcds->cbData);
 			PlayerSkinInfo *skinInfo = (PlayerSkinInfo *)pcds->lpData;
 			g_Player.m_skinInfo = *skinInfo;
-			if (g_mpApp.IsRunning() && g_mpApp.IsEmbeddedMode())
-				g_mpApp.OnSwitchToEmbeddedSkinMode(true);
+			if (CMPlayerAppBase::GetInstance()->IsRunning() && CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
+				CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode(true);
 		}
 		break;
 	case M2M_SWITCH_2_EMBEDDED_SKIN:
@@ -362,12 +361,12 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			ASSERT(sizeof(PlayerSkinInfo) == pcds->cbData);
 			PlayerSkinInfo *skinInfo = (PlayerSkinInfo *)pcds->lpData;
 			g_Player.m_skinInfo = *skinInfo;
-			if (g_mpApp.IsRunning() && skinInfo->bEmbeddedSkin != g_mpApp.IsEmbeddedMode())
+			if (CMPlayerAppBase::GetInstance()->IsRunning() && skinInfo->bEmbeddedSkin != CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
 			{
 				if (skinInfo->bEmbeddedSkin)
-					g_mpApp.OnSwitchToEmbeddedSkinMode(true);
+					CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode(true);
 				else
-					g_mpApp.EndEmbeddedSkin();
+					CMPlayerAppBase::GetInstance()->EndEmbeddedSkin();
 			}
 		}
 		break;

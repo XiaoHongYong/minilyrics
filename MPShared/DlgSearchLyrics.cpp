@@ -293,7 +293,7 @@ public:
 		m_strSongFile = g_Player.GetSrcMedia();
 		m_strArtist = g_Player.GetArtist();
 		m_strTitle = g_Player.GetTitle();
-		g_mpApp.GetAssociateFileKeyword(m_szAssociateKeyword, CountOf(m_szAssociateKeyword));
+		CMPlayerAppBase::GetAssociateFileKeyword(m_szAssociateKeyword, CountOf(m_szAssociateKeyword));
 
 		m_pLyricsList = (CSkinListCtrl *)m_pSkinWnd->GetUIObjectById(CID_L_LYRICS, CSkinListCtrl::ClassName());
 		ASSERT(m_pLyricsList);
@@ -362,7 +362,7 @@ public:
 			// Associate lyrics file
 			if (g_LyricSearch.AssociateLyrics(m_szAssociateKeyword, pSel->strUrl.c_str()))
 			{
-				g_mpApp.ResearchLyrics();
+				CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 			}
 		}
 
@@ -461,7 +461,7 @@ public:
 					break;
 
 				g_LyricSearch.AssociateLyrics(m_szAssociateKeyword, NONE_LYRCS);
-				g_mpApp.ResearchLyrics();
+				CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 				PostDestroy();
 			}
 			break;
@@ -569,7 +569,7 @@ public:
 					strFile = dlg.GetOpenFile();
 					if (g_LyricSearch.AssociateLyrics(m_szAssociateKeyword, strFile.c_str()))
 					{
-						g_mpApp.ResearchLyrics();
+						CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 						CSkinPageHandler::OnOK();
 					}
 				}

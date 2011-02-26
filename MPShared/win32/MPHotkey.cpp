@@ -196,8 +196,8 @@ void CMPHotkey::OnHotKey(int nId, UINT fuModifiers, UINT uVirtKey)
 		if (cmdKey.bGlobal && nId == cmdKey.idHotKey)
 		{
 			// execute cmd
-			if (g_mpApp.GetSkinFactory()->GetMainWnd())
-				g_mpApp.GetSkinFactory()->GetMainWnd()->OnCustomCommand(cmdKey.cmd);
+			if (CMPlayerAppBase::GetMPSkinFactory()->GetMainWnd())
+				CMPlayerAppBase::GetMPSkinFactory()->GetMainWnd()->OnCustomCommand(cmdKey.cmd);
 			return;
 		}
 	}

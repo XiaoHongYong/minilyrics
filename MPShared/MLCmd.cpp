@@ -10,14 +10,12 @@
 // ID 的字符串与数值的映射表
 STRING_ID_MAP g_StringIdMap[] = 
 {
-	{ _T("ID_WND_TITLE"), CMD_WND_TITLE, 0, NULL },
 	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, 0, _T("Minimize") },
 	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, 0, _T("Maximize") },
 	{ _T("ID_TOPMOST"), CMD_TOPMOST, IDC_SETTOPMOST, _T("Toggle always on top") },
 	{ _T("ID_CLICK_THROUGH"), CMD_CLICK_THROUGH, IDC_CLICK_THROUGH, _T("Mouse click through") },
 	{ _T("ID_CLOSE"), CMD_CLOSE, IDC_CLOSE, _T("Close") },
 	{ _T("ID_QUIT"), CMD_QUIT, IDC_EXIT, _T("Quit") },
-	{ _T("ID_WORK_AREA"), ID_WORK_AREA, 0, NULL },
 	{ _T("ID_TOOLBAR"), ID_TOOLBAR, 0, NULL },
 	{ _T("ID_RATE_LYR"), CMD_RATE_LYR, IDC_RATE_LYRICS, _T("Rate these lyrics") },
 	{ _T("ID_MENU"), CMD_MENU, 0, _T("Menu") },

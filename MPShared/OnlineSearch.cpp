@@ -363,7 +363,7 @@ BOOL COnlineSearch::SearchCacheForCur(V_LRCSEARCHRESULT *pvResult, DWORD *pdwSea
 {
 	TCHAR		szKeyword[MAX_PATH];
 
-	g_mpApp.GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
+	CMPlayerAppBase::GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
 
 	CMutexAutolock	autolock(m_mutexDB);
 
@@ -399,7 +399,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		str += TOLOCAL(_T("Failed to search lyrics with error:"));
 		str += _T(" ");
 		str += LPCTSTR(ERROR2STR_LOCAL(nRet));
-		g_eventDispather.DispatchLongErrorText(str.c_str());
+		CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 
 		pSearchParam->pOnlineSearch->m_bRunning = false;
 		delete pSearchParam;
@@ -422,8 +422,8 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
 	}
 
-	if (retSearch.strMessage.size() && g_mpApp.GetMainWnd())
-		g_mpApp.MessageOut(retSearch.strMessage.c_str());
+	if (retSearch.strMessage.size() && CMPlayerAppBase::GetMainWnd())
+		CMPlayerAppBase::GetInstance()->MessageOut(retSearch.strMessage.c_str());
 
 	if (retSearch.listResultFiles.size() > 0 || nRet == ERR_NOT_FOUND)
 	{
@@ -433,7 +433,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		// 通知给调用者
 		IEvent		*pEvent = new IEvent;
 		pEvent->eventType = ET_LYRICS_SEARCH_END;
-		g_eventDispather.DispatchUnsyncEvent(pEvent);
+		CMPlayerAppBase::GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
 	}
 	else
 	{
@@ -441,7 +441,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		str += TOLOCAL(_T("Failed to search lyrics with error:"));
 		str += _T(" ");
 		str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
-		g_eventDispather.DispatchLongErrorText(str.c_str());
+		CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 	}
 
 	pSearchParam->pOnlineSearch->m_bRunning = false;
@@ -465,7 +465,7 @@ BOOL COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR sz
 	pParam = new COnlineSearchThreadParam;
 	pParam->strArtist = szArtist;
 	pParam->strTitle = szTitle;
-	g_mpApp.GetAssociateFileKeyword(pParam->szAssociateKeyword, CountOf(pParam->szAssociateKeyword));
+	CMPlayerAppBase::GetAssociateFileKeyword(pParam->szAssociateKeyword, CountOf(pParam->szAssociateKeyword));
 	pParam->pOnlineSearch = this;
 	pParam->bOnlyMatched = bOnlyMatched;
 
@@ -528,7 +528,7 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 // 			str = str2.c_str();
 // 			str += _T(" ");
 // 			str += TOLOCAL(_T("Auto search canceled."));
-// 			g_eventDispather.DispatchLongErrorText(str.c_str());
+// 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 			return FALSE;
 		}
 	}
@@ -565,7 +565,7 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	str = TOLOCAL(_T("Searching lyrics:"));
 	str += _T(" ");
 	str += g_Player.GetFullTitle();
-	g_eventDispather.DispatchLongErrorText(str.c_str());
+	CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 
 	return AddSearchJob(true, szArtist, szTitle);
 }
@@ -575,7 +575,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	int					nRet;
 	TCHAR				szKeyword[MAX_PATH];
 
-	g_mpApp.GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
+	CMPlayerAppBase::GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
 
 	session.Init(GetAppNameLong().c_str());
 
@@ -601,8 +601,8 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
 	}
 
-	if (retSearch.strMessage.size() && g_mpApp.GetMainWnd())
-		g_mpApp.MessageOut(retSearch.strMessage.c_str());
+	if (retSearch.strMessage.size() && CMPlayerAppBase::GetMainWnd())
+		CMPlayerAppBase::GetInstance()->MessageOut(retSearch.strMessage.c_str());
 
 	nCurPage = retSearch.nCurPage;
 	nPageCount = retSearch.nPageCount;
@@ -647,8 +647,8 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
 	}
 
-	if (retLyrics.strMessage.size() && g_mpApp.GetMainWnd())
-		g_mpApp.MessageOut(retLyrics.strMessage.c_str());
+	if (retLyrics.strMessage.size() && CMPlayerAppBase::GetMainWnd())
+		CMPlayerAppBase::GetInstance()->MessageOut(retLyrics.strMessage.c_str());
 
 	int		nPos = 0;
 

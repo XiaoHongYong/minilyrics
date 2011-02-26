@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "MPlayerApp.h"
-#include "EventsDispatcher.h"
 #include "MPSkinWnd.h"
 #include "MPCommonCmdHandler.h"
 #ifdef _MPLAYER
@@ -119,7 +118,7 @@ public:
 	virtual void AddPlayPauseUpdater(IUIStateUpdater *pUpdater)
 	{
 		if (m_listStatePlaypause.empty())
-			g_eventDispather.RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+			CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 		m_listStatePlaypause.Add(pUpdater);
 	}
 
@@ -127,7 +126,7 @@ public:
 	{
 		m_listStatePlaypause.Del(hObj);
 		if (m_listStatePlaypause.empty())
-			g_eventDispather.UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+			CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 	}
 
 	LIST_UISTATE_UPDATER		m_listStatePlaypause;
@@ -158,12 +157,12 @@ public:
 		m_pShuffle = pShuffle;
 		if (g_Player.IsShuffle() != Tobool(m_pShuffle->GetStatus()))
 			pShuffle->SetStatus(g_Player.IsShuffle() ? 1 : 0);
-		g_eventDispather.RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 protected:
@@ -193,12 +192,12 @@ public:
 		m_pLoop = pLoopBt;
 		if ((int)g_Player.GetLoop() != pLoopBt->GetStatus())
 			m_pLoop->SetStatus(g_Player.GetLoop());
-		g_eventDispather.RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 protected:
@@ -228,12 +227,12 @@ public:
 		m_pVolume = pVolume;
 		g_Player.GetVolume(nVolume);
 		m_pVolume->SetScrollInfo(0, MP_VOLUME_MAX, 0, nVolume);
-		g_eventDispather.RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 protected:
@@ -265,16 +264,16 @@ public:
 	{
 		m_pSeekCtrl = pSeekCtrl;
 		pSeekCtrl->SetScrollInfo(0, g_Player.GetMediaLength(), 0, 0);
-		g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-		g_eventDispather.RegisterHanlder(ET_PLAYER_POS_UPDATE, this);
-		g_eventDispather.RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_POS_UPDATE, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_POS_UPDATE, this);
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_POS_UPDATE, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 	}
 
 protected:
@@ -310,12 +309,12 @@ public:
 		{
 			m_pButtn->SetStatus(bCheck);
 		}
-		g_eventDispather.RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 	}
 
 protected:
@@ -351,12 +350,12 @@ public:
 		{
 			m_pToolbar->SetCheck(CMD_PLAYPAUSE, bCheck, false);
 		}
-		g_eventDispather.RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
 	}
 
 protected:
@@ -395,12 +394,12 @@ public:
 		if (g_Player.GetLoop() != m_pToolbar->GetBtStatus(CMD_LOOP))
 			m_pToolbar->SetBtStatus(CMD_LOOP, g_Player.GetLoop(), false);
 
-		g_eventDispather.RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
 protected:
@@ -447,12 +446,12 @@ public:
 			else
 				m_pStereoStatusCtrl->SetPropertyInt(_T("CurStatus"), 0);
 		}
-		g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	}
 
 protected:
@@ -487,14 +486,14 @@ public:
 			pMedia->GetAttribute(MA_RATING, &nRating);
 			m_pRateCtrl->SetRating(nRating);
 		}
-		g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-		g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 	}
 
 protected:
@@ -537,14 +536,14 @@ public:
 			plistCtrl->m_pContainer->RecalculateUIObjSizePos(plistCtrl);
 		}
 		UpdatePlaylist();
-		g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
-		g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	}
 
 	void Unregister()
 	{
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	}
 
 	void UpdatePlaylist(CEventPlaylistChanged *pEventPlaylistChanged = NULL)
@@ -640,8 +639,6 @@ protected:
 CMPSkinWnd::CMPSkinWnd()
 {
 	m_autoSwitchToLyrShow.m_pSkinWnd = this;
-
-	m_bRememberSizePos = true;
 }
 
 CMPSkinWnd::~CMPSkinWnd()
@@ -657,9 +654,6 @@ void CMPSkinWnd::OnActivate(bool bActived)
 #endif
 
 	CSkinWnd::OnActivate(bActived);
-
-	if (bActived && !IsIconic())
-		g_mpApp.GetSkinFactory()->OnSkinWndActivate(this);
 }
 
 void CMPSkinWnd::OnPreCreate(DWORD &dwStyle, DWORD &dwExStyle)
@@ -688,12 +682,6 @@ bool CMPSkinWnd::OnCreate()
 void CMPSkinWnd::OnEvent(const IEvent *pEvent)
 {
 	m_autoSwitchToLyrShow.OnEvent(pEvent);
-}
-
-void CMPSkinWnd::OnContexMenu(int xPos, int yPos)
-{
-	if (m_rootConainter.GetMenu())
-		m_rootConainter.GetMenu()->TrackPopupMenu(xPos, yPos, this);
 }
 
 void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
@@ -782,9 +770,6 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 		if (pHandler->OnCommand(uID))
 			return;
 	}
-
-	if (m_rootConainter.OnCommand(uID))
-		return;
 }
 
 bool CMPSkinWnd::OnCustomCommand(int nId)
@@ -834,10 +819,10 @@ void CMPSkinWnd::OnUIObjNotify(IUIObjNotify *pNotify)
 
 void CMPSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 {
-	CMPSkinMainWnd		*pMainWnd = g_mpApp.GetMainWnd();
+	CMPSkinMainWnd		*pMainWnd = CMPlayerAppBase::GetMainWnd();
 	if (pMainWnd)
 	{
-		if (g_mpApp.GetHotkey().OnKeyDown(this, nChar, nFlags))
+		if (CMPlayerAppBase::GetHotkey().OnKeyDown(this, nChar, nFlags))
 			return;
 	}
 
@@ -892,7 +877,7 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 		g_Player.SetVolume(pScrollBar->GetScrollPos());
 		g_Player.GetVolume(vol);
 
-		g_eventDispather.DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
+		CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
 	}
 	else if (pScrollBar->GetID() == CMD_SEEK)
 	{
@@ -906,7 +891,7 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 			nPercent = nPos * 100 / nMediaLength;
 			FormatPlayTime(nPos, szPos);
 			FormatPlayTime(nMediaLength, szLength);
-			g_eventDispather.DispatchInfoText(CStrPrintf(_T("%s %s/%s (%d%%)"), TOLOCAL(_T("Seek")),
+			CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %s/%s (%d%%)"), TOLOCAL(_T("Seek")),
 				szPos, szLength, nPercent).c_str(), _T("seek"));
 		}
 
@@ -949,96 +934,6 @@ void CMPSkinWnd::OnSkinLoaded()
 		pBt->SetStatus(1);
 
 	m_autoSwitchToLyrShow.OnCreate(this);
-}
-
-void CMPSkinWnd::OnLoadWndSizePos()
-{
-#ifdef _WIN32_WCE
-// 	rcWnd.left = CW_USEDEFAULT;
-// 	rcWnd.right =  CW_USEDEFAULT;
-// 	rcWnd.top = 26;
-// 	rcWnd.bottom = 294;
-#else
-#ifdef _WIN32
-	if (::GetParent(m_hWnd))
-		return;
-#endif
-
-	// WndSizeMode		sizeMode;
-	CRect			rcNew;
-	DWORD			dwShowFlag = 0;
-	bool			bCenterWnd = true;
-
-	if (IsZoomed())
-		ShowWindow(SW_RESTORE);
-		// dwShowFlag = SW_RESTORE;
-
-	GetWindowRect(&m_rcReal);
-
-	rcNew = m_rcReal;
-
-	if (m_bRememberSizePos)
-	{
-		rcNew.left = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_left"), rcNew.left);
-		rcNew.top = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_top"), rcNew.top);
-		rcNew.right = rcNew.left + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_width"), m_nWidth);
-		rcNew.bottom = rcNew.top + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_height"), m_nHeight);
-		// if (!rcNew.EqualRect(&m_rcReal))
-		//	bCenterWnd = false;
-		bCenterWnd = false;
-
-		if (m_wndResizer.IsFixedWidth())
-			rcNew.right = long(rcNew.left + m_nWidth * m_dbScale);
-		if (m_wndResizer.IsFixedHeight())
-			rcNew.bottom = long(rcNew.top + m_nHeight * m_dbScale);
-	}
-	else
-	{
-		rcNew.right = long(rcNew.left + m_nWidth * m_dbScale);
-		rcNew.bottom = long(rcNew.top + m_nHeight * m_dbScale);
-	}
-
-	if (rcNew.Width() < m_wndResizer.GetMinCx())
-		rcNew.right = rcNew.left + m_wndResizer.GetMinCx();
-	if (rcNew.Height() < m_wndResizer.GetMinCy())
-		rcNew.bottom = rcNew.top + m_wndResizer.GetMinCy();
-
-	if (bCenterWnd)
-	{
-		CRect	rcScreen;
-		int		w = rcNew.Width(), h = rcNew.Height();
-
-		GetMonitorRestrictRect(rcNew, rcScreen);
-		rcNew.left = (rcScreen.left + rcScreen.right - w) / 2;
-		rcNew.top = (rcScreen.top + rcScreen.bottom - h) / 2;
-		rcNew.right = rcNew.left + w;
-		rcNew.bottom = rcNew.top + h;
-	}
-
-	if (!rcNew.EqualRect(&m_rcReal))
-		MoveWindowSafely(rcNew.left, rcNew.top, rcNew.Width(), rcNew.Height(), true);
-
-/*	if (!m_wndResizer.IsFixedWidth() && !m_wndResizer.IsFixedHeight())
-	{
-// 		sizeMode = (WndSizeMode)g_Profile.GetProfileInt(GetSkinWndName(), _T("SizeMode"), WndSizeMode_Normal);
-// 		if (sizeMode == WndSizeMode_Maximized)
-// 			dwShowFlag = SW_MAXIMIZE;
-// 			// ShowWindow(SW_MAXIMIZE);
-// 		else if (sizeMode == WndSizeMode_Minimized)
-// 			dwShowFlag = SW_MINIMIZE;
-			// ShowWindow(SW_MINIMIZE);
-	}*/
-
-/*	WINDOWPLACEMENT		wp;
-	memset(&wp, 0, sizeof(wp));
-	wp.length = sizeof(wp);
-	wp.flags = 0;
-	wp.ptMaxPosition.y = wp.ptMaxPosition.x = -1;
-	wp.ptMinPosition.y = wp.ptMinPosition.x = -1;
-	wp.rcNormalPosition = rcNew;
-	wp.showCmd = dwShowFlag;
-	SetWindowPlacement(GetHandle(), &wp);*/
-#endif
 }
 
 void CMPSkinWnd::OnAddUIObj(CUIObject *pObj)
@@ -1197,8 +1092,6 @@ BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_strCmdHandler = szValue;
 	}
-	else if (IsPropertyName(szProperty, _T("RememberSizePos")))
-		m_bRememberSizePos = IsTRUE(szValue);
 	else
 		return CSkinWnd::SetProperty(szProperty, szValue);
 
@@ -1207,15 +1100,12 @@ BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 void CMPSkinWnd::CloseSkin()
 {
-	if (m_bSkinOpened)
-	{
-		// the skin was opened before, so save latest settings.
-		SaveWndPos();
-
-		m_autoSwitchToLyrShow.OnClose();
-	}
+	if (!m_bSkinOpened)
+		return;
 
 	CSkinWnd::CloseSkin();
+
+	m_autoSwitchToLyrShow.OnClose();
 
 	LIST_SKINCMDHANDLER::iterator	it, itEnd;
 
@@ -1227,8 +1117,6 @@ void CMPSkinWnd::CloseSkin()
 	}
 	m_listSkinCmdHandler.clear();
 	m_strCmdHandler.resize(0);
-
-	m_bRememberSizePos = true;
 }
 
 // IUICheckStatus interface
@@ -1364,9 +1252,9 @@ void CMPSkinWnd::OnDropFiles(HDROP hDrop)
 		if (FileIsExtSame(szFile, _T(".lrc")) || FileIsExtSame(szFile, _T(".txt"))
 			|| FileIsExtSame(szFile, _T(".srt")))
 		{
-			g_mpApp.GetAssociateFileKeyword(szAssociateKeyWord, MAX_PATH);
+			CMPlayerAppBase::GetAssociateFileKeyword(szAssociateKeyWord, MAX_PATH);
 			g_LyricSearch.AssociateLyrics(szAssociateKeyWord, szFile);
-			g_mpApp.ResearchLyrics();
+			CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
 			DragFinish(hDrop);
 			return;
@@ -1393,42 +1281,6 @@ void CMPSkinWnd::OnDropFiles(HDROP hDrop)
 	DragFinish(hDrop);
 }
 #endif
-
-// COMMENT:
-//		save current skin window size pos.
-void CMPSkinWnd::SaveWndPos()
-{
-#ifdef _WIN32_DESKTOP
-	if (::GetParent(m_hWnd))
-		return;
-
-	WINDOWPLACEMENT	wp;
-	CRect			rcToSave;
-
-	wp.length = sizeof(wp);
-	if (GetWindowPlacement(m_hWnd, &wp))
-	{
-		rcToSave = wp.rcNormalPosition;
-	}
-	else
-		rcToSave = m_rcReal;
-
-	WndSizeMode		sizeMode;
-	if (IsFlagSet(wp.showCmd, SW_SHOWMAXIMIZED))
-		sizeMode = WndSizeMode_Maximized;
-	else if (IsFlagSet(wp.showCmd, SW_SHOWMINIMIZED))
-		sizeMode = WndSizeMode_Minimized;
-	else
-		sizeMode = WndSizeMode_Normal;
-
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("SizeMode"), sizeMode);
-
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_left"), rcToSave.left);
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_top"), rcToSave.top);
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_width"), rcToSave.Width());
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_height"), rcToSave.Height());
-#endif
-}
 
 void CMPSkinWnd::SetTopmost(bool bTopmost)
 {
@@ -1465,7 +1317,7 @@ int CMPSkinWnd::SettingGetOpaquePercent()
 
 bool CMPSkinWnd::SettingGetClickThrough()
 {
-	return g_mpApp.GetSkinFactory()->GetClickThrough();
+	return CMPlayerAppBase::GetMPSkinFactory()->GetClickThrough();
 }
 
 void CMPSkinWnd::SettingReverseTopmost()
@@ -1473,16 +1325,16 @@ void CMPSkinWnd::SettingReverseTopmost()
 	bool		bTopmost = !IsTopmost();
 
 	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bTopmost);
-	g_mpApp.GetSkinFactory()->TopmostAll(bTopmost);
+	CMPlayerAppBase::GetMPSkinFactory()->TopmostAll(bTopmost);
 }
 
 void CMPSkinWnd::SettingSetOpaquePercent(int nPercent)
 {
 	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), nPercent);
-	g_mpApp.GetSkinFactory()->AllUpdateTransparent();
+	CMPlayerAppBase::GetMPSkinFactory()->AllUpdateTransparent();
 }
 
 void CMPSkinWnd::SettingReverseClickThrough()
 {
-	g_mpApp.GetSkinFactory()->SetClickThrough(!g_mpApp.GetSkinFactory()->GetClickThrough());
+	CMPlayerAppBase::GetMPSkinFactory()->SetClickThrough(!CMPlayerAppBase::GetMPSkinFactory()->GetClickThrough());
 }

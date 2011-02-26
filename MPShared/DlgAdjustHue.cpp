@@ -32,15 +32,15 @@ public:
 
 	void UpdateAdjustHue(float hue)
 	{
-		g_Profile.WriteProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
-		g_mpApp.GetSkinFactory()->AdjustHue(hue);
+		g_Profile.WriteProfileInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
+		CMPlayerAppBase::GetMPSkinFactory()->AdjustHue(hue);
 	}
 
 	void OnCreate()
 	{
 		CSkinPageHandler::OnCreate();
 
-		m_hueOld = (float)(g_Profile.GetProfileInt(g_mpApp.GetSkinFactory()->GetSkinName(), _T("Hue"), 0));
+		m_hueOld = (float)(g_Profile.GetProfileInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), 0));
 
 		CSkinSeekCtrl *pSeek = (CSkinSeekCtrl*)GetUIObjectById(_T("CID_HUE"), CSkinSeekCtrl::ClassName());
 		if (pSeek)

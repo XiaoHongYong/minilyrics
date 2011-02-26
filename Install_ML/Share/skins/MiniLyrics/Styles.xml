@@ -158,6 +158,28 @@
     <HScrollBar Height="15" PushBtWidth="15" ThumbWidth="20" TrackWidth="20" ScrollBarHeight="15" Image="s_hscrollbar.png" ScalableThumb="TRUE" />
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
 
+    <InfoPrompt Extends="Container" ID="CID_INFO_PROMPT" Rect="0,26,w,50" TranslucencyWithSkin="FALSE">
+      <Animation ID="CID_AM_HIDE_INFO_PROMPT" FadeOut="CID_INFO_PROMPT"/>
+      <Animation ID="CID_AM_SHOW_INFO_PROMPT" FadeIn="CID_INFO_PROMPT"/>
+      <Container Name="Save Prompt" ID="ID_LYR_SAVE_PROMPT" Rect="0,0,w,w" Visible="true">
+        <Image Name="bg" Rect="0,0,w,50" Image="info_prompt_bg.png" BltMode="tile" />
+        <NormalText Text="The Lyrics have changed, do you want to save the changes?"
+                    Rect="10,0,w-80*2-10*3-30,25" FontHeight="16" AlignText="AT_VCENTER"
+                    TextColor="#000000"/>
+        <NormalCheckBox ID="ID_LYR_SAVE_NO_ASK" Text="Use as default setting, don't prompt any more"
+                        Rect="10,26,w-80*2-10*3-30," FontHeight="16"/>
+        <NormalTextBt ID="ID_LYR_SAVE_YES" Text="&amp;Yes" Rect="w-80*2-10*2-30,12,80,"/>
+        <NormalTextBt ID="ID_LYR_SAVE_NO" Text="&amp;NO" Rect="w-80-10-25,12,80,"/>
+        <Button ID="ID_LYR_SAVE_CANCEL" Rect="w-20,9,9,9" Name="Close" Image="info_prompt_close.png"
+                ImageSize="9,9" ImagePos="0,0" ImageSelPos="0,9" ImageFocusPos="0,18" />
+      </Container>
+      <Container Name="Info text" ID="CID_INFO_TEXT" Rect="0,0,w,26" Visible="false">
+        <Image Name="bg" Rect="0,0,w,26" Image="info_prompt_bg.png" ImageRect="0,24,60,26" BltMode="tile" />
+        <InfoText Rect="10,0,w-20,26" UseSkinBg="true" FontName="Verdana" FontHeight="18"
+                  TextColor="#000000" AlignText="AT_VCENTER|AT_CENTER"/>
+      </Container>
+    </InfoPrompt>
+
     <LyricShowTxtContainer Extends="DecorativeContainer">
       <LyricShowTxt Rect="0,0,w,h"/>
       <Button Rect="w-55,h/2-28-5-28/2,28,28" ID="ID_LYR_SCROLL_ENABLE_RECORD" TranslucencyWithSkin="TRUE"

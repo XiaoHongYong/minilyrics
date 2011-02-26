@@ -8,6 +8,8 @@
 class CSkinWnd;
 class CMLMenu;
 class CSkinFactory;
+class CSkinApp;
+class CSkinMenu;
 
 #include "SkinResMgr.h"
 #include "SkinWndDrag.h"
@@ -139,10 +141,11 @@ protected:
 class CSkinFactory : public ISkinWndDragHost
 {
 public:
-	CSkinFactory();
+	CSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[]);
 	virtual ~CSkinFactory();
 
-	virtual int Init(STRING_ID_MAP stringIdMap[]);
+	virtual int Init();
+	virtual void Quit();
 
 	int GetIDByName(LPCTSTR szId) { return GetIDByNameEx(szId, NULL); }
 	int GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip);
@@ -218,7 +221,7 @@ public:
 	SXNode *GetExtendSkinWndStyle(LPCTSTR szExtendsSkinWnd) const;
 
 	// resource
-	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu) { *ppMenu = NULL; return false; };
+	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu);
 
 	virtual int OnDynamicCmd(int nCmdID, CSkinWnd *pSkinWnd);
 
@@ -227,6 +230,10 @@ public:
 	void GetAdjustedHueResult(MLColor &clr);
 	void GetAdjustedHueResult(COLORREF &clr);
 
+	virtual void OnLanguageChanged();
+
+	virtual void OnSkinWndActivate(CSkinWnd *pWnd);
+
 public:
 	// ISkinWndDragHost
 	virtual void GetWndDragAutoCloseTo(vector<CBaseWnd *> &vWnd);
@@ -234,6 +241,9 @@ public:
 
 protected:
 	virtual int OpenSkinFile(LPCTSTR szSkinFile);
+
+	virtual CSkinMenu *LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
+		{ return NULL; }
 
 	void ExpandIncludeNode(SXNode *pNodeRoot);
 
@@ -282,6 +292,7 @@ protected:
 	LIST_SKINWNDS				m_listSkinWnds;
 	Mutex						m_mutex;
 
+	CSkinApp					*m_pApp;
 
 };
 

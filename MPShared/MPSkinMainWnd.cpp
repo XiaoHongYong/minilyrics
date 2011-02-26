@@ -12,7 +12,7 @@
 
 void ShowRegisterNoticeSafely()
 {
-	g_mpApp.GetMainWnd()->SetTimer(TIMER_SHOW_REG, 500);
+	CMPlayerAppBase::GetMainWnd()->SetTimer(TIMER_SHOW_REG, 500);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -32,14 +32,14 @@ bool CMPSkinMainWndBase::OnCreate()
 	if (!CMPSkinWnd::OnCreate())
 		return false;
 
-	g_eventDispather.RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 
 	return true;
 }
 
 void CMPSkinMainWndBase::OnDestroy()
 {
-	g_eventDispather.UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 
 	if (IsMainAppWnd() && m_strSkinWndName.size())
 		g_Profile.WriteProfileString(_T("DefaultSkinWnd"), GetSkinWndName());
@@ -57,7 +57,7 @@ void CMPSkinMainWndBase::OnEvent(const IEvent *pEvent)
 	if (pEvent->eventType == ET_UI_SETTINGS_CHANGED)
 	{
 		if (IsPropertyName(pEvent->strName.c_str(), _T("topmost")))
-			g_mpApp.GetSkinFactory()->TopmostAll(IsTRUE(pEvent->strValue.c_str()));
+			CMPlayerAppBase::GetMPSkinFactory()->TopmostAll(IsTRUE(pEvent->strValue.c_str()));
 		else
 			CMPSkinWnd::OnEvent(pEvent);
 	}

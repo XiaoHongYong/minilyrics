@@ -25,8 +25,8 @@ CLyricShowAgentObj::CLyricShowAgentObj()
 
 CLyricShowAgentObj::~CLyricShowAgentObj()
 {
-	g_eventDispather.UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
-	g_eventDispather.UnregisterHanlder(ET_LYRICS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_CHANGED, this);
 	if (m_pLyricsShow)
 		m_pSkin->RemoveUIObject(m_pLyricsShow, true);
 }
@@ -81,8 +81,8 @@ void CLyricShowAgentObj::OnCreate()
 		m_strLyrDisplayStylePropName.c_str(),
 		m_strLyrDisplayStyleDefault.c_str());
 
-	g_eventDispather.RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
-	g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_CHANGED, this);
 
 	if (m_bEnableToolbar && !g_Profile.GetProfileBool(_T("HideToolbar"), false))
 	{

@@ -198,13 +198,13 @@ void CMLTrayIcon::OnMyNotifyIcon(WPARAM wParam, LPARAM lParam)
 			// show popup menu
 			POINT pt;
 			GetCursorPos(&pt);
-			g_mpApp.GetMainWnd()->SetForeground();
-			g_mpApp.GetMainWnd()->OnContexMenu(pt.x, pt.y);
+			CMPlayerAppBase::GetMainWnd()->SetForeground();
+			CMPlayerAppBase::GetMainWnd()->OnContexMenu(pt.x, pt.y);
 		}
 		else if (lParam == WM_LBUTTONDBLCLK || lParam == WM_LBUTTONUP)
 		{
 #ifndef _MPLAYER
-			if (g_mpApp.IsEmbeddedMode()
+			if (CMPlayerAppBase::GetInstance()->IsEmbeddedMode()
 				&& g_Player.GetPlayerType() == P_WINAMP5)
 			{
 				// buf fix for winamp5
@@ -212,17 +212,17 @@ void CMLTrayIcon::OnMyNotifyIcon(WPARAM wParam, LPARAM lParam)
 				if (::IsIconic(hWnd))
 				{
 					::ShowWindow(hWnd, SW_RESTORE);
-					if (g_mpApp.GetMainWnd()->IsTopmost())
-						g_mpApp.GetMainWnd()->Topmost(g_mpApp.GetMainWnd()->IsTopmost());
+					if (CMPlayerAppBase::GetMainWnd()->IsTopmost())
+						CMPlayerAppBase::GetMainWnd()->Topmost(CMPlayerAppBase::GetMainWnd()->IsTopmost());
 				}
 			}
-			g_mpApp.GetMainWnd()->Activate();
+			CMPlayerAppBase::GetMainWnd()->Activate();
 #else
-			ActivateWindow(g_mpApp.GetMainWnd()->GetHandle());
+			ActivateWindow(CMPlayerAppBase::GetMainWnd()->GetHandle());
 #endif
 
 			// Show cancel transparent with mouse click menu.
-			if (g_mpApp.GetMainWnd()->m_bClickThrough)
+			if (CMPlayerAppBase::GetMainWnd()->m_bClickThrough)
 			{
 				CMLMenu		menu;
 				if (menu.LoadPopupMenu(IDM_MOUSE_CLICK_THROUGH, 0))
@@ -230,7 +230,7 @@ void CMLTrayIcon::OnMyNotifyIcon(WPARAM wParam, LPARAM lParam)
 					POINT pt;
 					GetCursorPos(&pt);
 					menu.CheckItem(IDC_CLICK_THROUGH, true);
-					menu.TrackPopupMenu(pt.x, pt.y, g_mpApp.GetMainWnd());
+					menu.TrackPopupMenu(pt.x, pt.y, CMPlayerAppBase::GetMainWnd());
 				}
 			}
 		}
@@ -255,7 +255,7 @@ void CMLTrayIcon::OnMyNotifyIcon(WPARAM wParam, LPARAM lParam)
 			}
 			else if (lParam == WM_LBUTTONUP)
 			{
-				g_mpApp.GetMainWnd()->OnCustomCommand(g_SysTrayIconCmd[i].dwCmd);
+				CMPlayerAppBase::GetMainWnd()->OnCustomCommand(g_SysTrayIconCmd[i].dwCmd);
 			}
 			else if (lParam == WM_LBUTTONDBLCLK)
 			{

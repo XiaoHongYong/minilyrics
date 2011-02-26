@@ -189,7 +189,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 			str = TOLOCAL(_T("Failed to get searching lyrics results."));
 			str += _T(" ");
 			str += TOLOCAL(_T("Please contact us to report this issue."));
-			g_eventDispather.DispatchLongErrorText(str.c_str());
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 		}
 		return FALSE;
 	}
@@ -200,7 +200,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		{
 			tstring		str;
 			str = TOLOCAL(_T("Search returned no results."));
-			g_eventDispather.DispatchLongErrorText(str.c_str());
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 		}
 		return FALSE;
 	}
@@ -226,7 +226,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 			if (FileIsExtSame(result.strUrl.c_str(), _T(".txt"))
 				&& g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false))
 			{
-				g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
 				return TRUE;
 			}
 
@@ -236,14 +236,14 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 				&& result.nMatchValue < MATCH_VALUE_BETTER)
 				return TRUE;
 
-			g_mpApp.GetAssociateFileKeyword(szAssociateKeyword, MAX_PATH);
+			CMPlayerAppBase::GetAssociateFileKeyword(szAssociateKeyword, MAX_PATH);
 
 			// 就下载它了
 			tstring		str;
 			str = TOLOCAL(_T("Downloading lyrics:"));
 			str += _T(" ");
 			str += result.strSaveFileName.c_str();
-			g_eventDispather.DispatchLongErrorText(str.c_str());
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 
 			DownloadLyrics(szAssociateKeyword, g_Player.GetSrcMedia(), result.strUrl.c_str(), result.strSaveFileName.c_str());
 			return TRUE;
@@ -261,24 +261,24 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		if (g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false)
 			&& vLrcSearchResult.IsAllTxtLyrics())
 		{
-			g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
 			return true;
 		}
 
 		if (bShowInfoText)
 		{
-			g_eventDispather.DispatchLongErrorText(
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(
 				TOLOCAL(_T("Found lyrics, please select the lyrics in the popup dialog.")));
 		}
 
-		g_mpApp.GetMainWnd()->OnCustomCommand(CMD_OPEN_LRC);
+		CMPlayerAppBase::GetMainWnd()->OnCustomCommand(CMD_OPEN_LRC);
 		return TRUE;
 	}
 	else
 	{
 		if (bShowInfoText)
 		{
-			g_eventDispather.DispatchLongErrorText(
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(
 				TOLOCAL(_T("Found some similar lyrics, please choose them in 'Search Lyrics' window.")));
 		}
 	}
@@ -435,7 +435,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 			pEvent->eventType = ET_DOWNLOAD_END;
 			pEvent->pTask = pTask;
 			pEvent->downloadType = CEventDownloadEnd::DT_DL_LRC_FAILED;
-			g_eventDispather.DispatchSyncEventByNoUIThread(pEvent);
+			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEventByNoUIThread(pEvent);
 		}
 		else if (pTask->taskType == DTT_CHECK_VERSION_NOUI
 			|| pTask->taskType == DTT_CHECK_VERSION)
@@ -444,7 +444,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 			pEvent->eventType = ET_DOWNLOAD_END;
 			pEvent->pTask = pTask;
 			pEvent->downloadType = CEventDownloadEnd::DT_DL_CHECK_NEW_VERSION_OK;
-			g_eventDispather.DispatchSyncEventByNoUIThread(pEvent);
+			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEventByNoUIThread(pEvent);
 		}
 		return;
 	}
@@ -476,7 +476,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 
 			g_LyricSearch.AssociateLyrics(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str());
 
-			g_mpApp.ResearchLyrics();
+			CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
 #ifdef _WIN32
 			if (!IsRegistered())
@@ -488,7 +488,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 				if (dwDownloadedCount % 6 == 1 || bShowRegNoticeNext)
 				{
 					// Show registration dialog every xxx time.
-					if (::GetForegroundWindow() == g_mpApp.GetMainWnd()->GetHandle())
+					if (::GetForegroundWindow() == CMPlayerAppBase::GetMainWnd()->GetHandle())
 					{
 						ShowRegisterNoticeSafely();
 						bShowRegNoticeNext = false;
@@ -507,7 +507,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 			pEvent->eventType = ET_DOWNLOAD_END;
 			pEvent->pTask = pTask;
 			pEvent->downloadType = CEventDownloadEnd::DT_DL_CHECK_NEW_VERSION_OK;
-			g_eventDispather.DispatchSyncEventByNoUIThread(pEvent);
+			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEventByNoUIThread(pEvent);
 		}
 		break;
 	default:
@@ -641,7 +641,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	{
 		CStrPrintf	str(_T("Invalid http url: %s"),pTask->m_strURL.c_str());
 		if (pTask->taskType == DTT_LYRICS)
-			g_eventDispather.DispatchLongErrorText(str.c_str());
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 		ERRLOG1(_T("%s"), str.c_str());
 		nRet = ERR_HTTP_BAD_REQUEST;
 		nHttpCode = 0;
@@ -673,7 +673,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			//
 			// Wait for 10 sec to try again
 			if (pTask->taskType == DTT_LYRICS)
-				g_eventDispather.DispatchLongErrorText(TOLOCAL(_T("Wait 10 seconds and retry.")));
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(TOLOCAL(_T("Wait 10 seconds and retry.")));
 
 			if (m_eventShutDown.Acquire(10 * 1000))
 				break;
@@ -690,7 +690,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)
-				g_eventDispather.DispatchLongErrorText(str.c_str());
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 			DBGLOG1(_T("%s"), str.c_str());
 
 			continue;
@@ -707,7 +707,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)
-				g_eventDispather.DispatchLongErrorText(str.c_str());
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
 			continue;
@@ -724,7 +724,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)
-				g_eventDispather.DispatchLongErrorText(str.c_str());
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
 			continue;
@@ -742,7 +742,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			strBuff.resize(_tcslen(strBuff.c_str()));
 
 			CStrPrintf	str(_T("Url: %s\r\nHttp %d error!\r\n%s"), pTask->m_strURL.c_str(), nHttpCode, strBuff.c_str());
-			g_eventDispather.DispatchLongErrorText(str.c_str());
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 			ERRLOG1(_T("%s"), str.c_str());
 			break;
 		}

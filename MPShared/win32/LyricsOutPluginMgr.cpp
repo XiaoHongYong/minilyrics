@@ -43,9 +43,9 @@ void PromptForLogitechLCD(LPCTSTR szModuleName)
 	tstring	strMsg = TOLOCAL(_T("You have Logitech LCD device installed, lyrics can be displayed on it."));
 	strMsg += _T("\r\n");
 	strMsg += TOLOCAL(_T("Do you want to visit our website for more information?"));
-	int nRet = g_mpApp.MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL);
+	int nRet = CMPlayerAppBase::GetInstance()->MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL);
 	if (nRet == IDOK)
-		OpenUrl(g_mpApp.GetMainWnd(), GetStrName(SN_HTTP_HELP_G15_LCD));
+		OpenUrl(CMPlayerAppBase::GetMainWnd(), GetStrName(SN_HTTP_HELP_G15_LCD));
 }
 
 int CLyricsOutPluginMgr::Init()
@@ -105,7 +105,7 @@ int CLyricsOutPluginMgr::Init()
 				if (nRet != ML_LYR_OUT_VERSION || plugin.plyricsOut == NULL)
 				{
 					FreeLibrary(hModule);
-					g_mpApp.MessageOut(CStrPrintf(_T("Init lyrics output plugin: %s FAILED!\r\nMaybe incorrect plugin version!"), strPluginFile.c_str()).c_str());
+					CMPlayerAppBase::GetInstance()->MessageOut(CStrPrintf(_T("Init lyrics output plugin: %s FAILED!\r\nMaybe incorrect plugin version!"), strPluginFile.c_str()).c_str());
 				}
 				else
 				{
@@ -132,9 +132,9 @@ int CLyricsOutPluginMgr::Init()
 	m_bActive = !m_vPlugins.empty();
 	if (m_bActive)
 	{
-		g_eventDispather.RegisterHanlder(ET_LYRICS_CHANGED, this);
-		g_eventDispather.RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-		g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	}
 
 	return ERR_OK;
@@ -146,9 +146,9 @@ void CLyricsOutPluginMgr::Quit()
 
 	if (m_bActive)
 	{
-		g_eventDispather.UnregisterHanlder(ET_LYRICS_CHANGED, this);
-		g_eventDispather.UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-		g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_CHANGED, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	}
 
 	itEnd = m_vPlugins.end();
@@ -425,8 +425,8 @@ bool CLyricsOutPluginMgr::GetMediaFile(TCHAR szFile[], int nBuffLen)
 #ifdef _WIN32
 HWND CLyricsOutPluginMgr::GetMainWnd()
 {
-	if (g_mpApp.GetMainWnd())
-		return g_mpApp.GetMainWnd()->GetHandle();
+	if (CMPlayerAppBase::GetMainWnd())
+		return CMPlayerAppBase::GetMainWnd()->GetHandle();
 	else
 		return NULL;
 }

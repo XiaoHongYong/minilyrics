@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "MPlayerAppBase.h"
 #include "Player.h"
-#include "EventsDispatcher.h"
 #include "MPSkinInfoTextCtrl.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -24,18 +24,18 @@ CMPSkinInfoTextCtrl::~CMPSkinInfoTextCtrl()
 	if (m_nTimerIDHideInfo != 0)
 		m_pSkin->UnregisterTimerObject(this, m_nTimerIDHideInfo);
 
-	g_eventDispather.UnregisterHanlder(ET_UI_INFO_TEXT, this);
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_INFO_TEXT, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 }
 
 void CMPSkinInfoTextCtrl::OnCreate()
 {
 	CSkinScrollText::OnCreate();
 
-	g_eventDispather.RegisterHanlder(ET_UI_INFO_TEXT, this);
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_INFO_TEXT, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 
 	UpdateShowTrackInfo();
 }

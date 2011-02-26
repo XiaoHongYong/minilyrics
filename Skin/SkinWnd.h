@@ -192,6 +192,8 @@ public:
 	virtual void OnDestroy();
 	virtual void OnPaint(CMLGraphics *pGraph);
 
+	virtual void OnContexMenu(int xPos, int yPos);
+
 	virtual void OnCommand(UINT uID, UINT nNotifyCode);
 
 	// normal input message
@@ -220,7 +222,6 @@ public:
 	// messages to process
 	virtual void OnWindowSizeChanged();
 	virtual void OnSkinLoaded();
-	virtual void OnLoadWndSizePos();
 
 	virtual BOOL MoveWindow(int X, int Y, int nWidth, int nHeight, BOOL bRepaint = TRUE);
 	virtual BOOL MoveWindow(RECT &rc, BOOL bRepaint = TRUE);
@@ -361,6 +362,9 @@ protected:
 
 	void OnSwitchChildFocus(CUIObject *pUIObjFocusOld, CUIObject *pUIObjFocusNew);
 
+	virtual void OnLoadWndSizePos();
+	void SaveWndPos();
+
 	friend class CSkinContainer;
 	friend class CUIObject;
 	friend class CSjvmSkinWnd;
@@ -404,6 +408,7 @@ public:
 
 	// default width and height
 	int				m_nWidth, m_nHeight;
+	bool			m_bRememberSizePos;
 
 protected:
 	bool			m_bFreeOnDestory;

@@ -519,9 +519,12 @@ void CDynamicCmds::EnumAllCmds(V_Str &vstrCmds)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSkinFactory::CSkinFactory()
+CSkinFactory::CSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[])
 {
-	m_IdMap = NULL;
+	m_pApp = pApp;
+	assert(stringIdMap);
+	m_IdMap = stringIdMap;
+
 	m_strSkinFileName = _SZ_SKIN_FILE_NAME;
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
 	m_nMenuIDNext = MENU_ID_CUSTOM_BASE;
@@ -533,11 +536,8 @@ CSkinFactory::~CSkinFactory()
 
 }
 
-int CSkinFactory::Init(STRING_ID_MAP stringIdMap[])
+int CSkinFactory::Init()
 {
-	assert(stringIdMap);
-	m_IdMap = stringIdMap;
-
 	// Init SimpleJVM environment
 	CSjvmSkinSystem::Init(this);
 
@@ -551,6 +551,11 @@ int CSkinFactory::Init(STRING_ID_MAP stringIdMap[])
 	m_listSkinWnds.push_back(pMainWnd);
 
 	return ERR_OK;
+}
+
+void CSkinFactory::Quit()
+{
+	Close(true);
 }
 
 int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip)
@@ -589,6 +594,8 @@ int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip)
 void CSkinFactory::GetTooltip(int nId, tstring &strToolTip)
 {
 	strToolTip.resize(0);
+	if (!m_IdMap)
+		return;
 
 	for (int i = 0; m_IdMap[i].szId != 0; i++)
 	{
@@ -604,7 +611,7 @@ void CSkinFactory::GetTooltip(int nId, tstring &strToolTip)
 int CSkinFactory::GetMenuIDByUID(int nUID)
 {
 	ASSERT(m_IdMap);
-	if (nUID == UID_INVALID)
+	if (nUID == UID_INVALID || m_IdMap == NULL)
 		return 0;
 
 	for (int i = 0; m_IdMap[i].szId != 0; i++)
@@ -633,7 +640,7 @@ int CSkinFactory::GetMenuIDByUID(int nUID)
 int CSkinFactory::GetUIDByMenuID(int nMenuID)
 {
 	ASSERT(m_IdMap);
-	if (nMenuID == 0)
+	if (nMenuID == 0 || m_IdMap == NULL)
 		return UID_INVALID;
 
 	for (int i = 0; m_IdMap[i].szId != 0; i++)
@@ -1141,9 +1148,7 @@ void CSkinFactory::OnSkinWndDestory(CSkinWnd *pSkinWnd)
 
 void CSkinFactory::OnMainSkinWndDestory(CSkinWnd *pSkinWnd)
 {
-#ifdef _WIN32
-	PostQuitMessage(0);
-#endif
+	m_pApp->PostQuitMessage();
 }
 
 // methods for skin window
@@ -1448,6 +1453,66 @@ SXNode *CSkinFactory::GetExtendSkinWndStyle(LPCTSTR szExtendsSkinWnd) const
 	return m_skinStyle.GetClassNode(szExtendsSkinWnd);
 }
 
+static SXNode *GetMenuOfMenus(SXNode *pNodeMenus, LPCTSTR szMenuName)
+{
+	SXNode::iterator it, itEnd;
+	itEnd = pNodeMenus->listChildren.end();
+	for (it = pNodeMenus->listChildren.begin(); it != itEnd; ++it)
+	{
+		SXNode		*pNode = *it;
+
+		// OK, found the contorl
+		if (_tcsicmp(pNode->strName.c_str(), _T("Menu")) == 0)
+		{
+			if (_tcsicmp(pNode->GetPropertySafe(_T("Name")), szMenuName) == 0)
+				return pNode;
+		}
+	}
+
+	return NULL;
+}
+
+bool CSkinFactory::LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu)
+{
+	CSkinMenu	*pSkinMenu = NULL;
+	SXNode		*pNodeMenus = NULL, *pNode = NULL;
+
+	*ppMenu = NULL;
+
+	// Load menu from xml
+	pNodeMenus = m_skinFile.GetMenusNode();
+	if (pNodeMenus)
+	{
+		pNode = GetMenuOfMenus(pNodeMenus, szMenu);
+		if (pNode)
+		{
+			LPCTSTR szFromMenu = pNode->GetProperty(_T("From"));
+			if (szFromMenu)
+				pSkinMenu = LoadPresetMenu(pWnd, szFromMenu);
+
+			if (!pSkinMenu)
+				pSkinMenu = new CSkinMenu(this);
+
+			pSkinMenu->FromXML(pNode, pSkinMenu->GetOrgAppendPos());
+		}
+	}
+
+	if (!pSkinMenu)
+	{
+		// is this a preset menu?
+		pSkinMenu = LoadPresetMenu(pWnd, szMenu);
+		if (pSkinMenu)
+		{
+			*ppMenu = pSkinMenu;
+			return true;
+		}
+	}
+
+	*ppMenu = pSkinMenu;
+
+	return pSkinMenu != NULL;
+}
+
 int CSkinFactory::OnDynamicCmd(int nCmdID, CSkinWnd *pSkinWnd)
 {
 	int			nRet = ERR_NOT_FOUND;
@@ -1699,6 +1764,17 @@ void CSkinFactory::GetAdjustedHueResult(COLORREF &clr)
 		AdjustColorHue(clr, H);
 }
 
+void CSkinFactory::OnLanguageChanged()
+{
+	LIST_SKINWNDS::iterator	it, itEnd;
+	itEnd = m_listSkinWnds.end();
+	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+	{
+		CSkinWnd	*pWnd = *it;
+		pWnd->OnLanguageChanged();
+	}
+}
+
 void CSkinFactory::ApplyDefaultThemeOfSkin()
 {
 	TCHAR	szThemeFile[MAX_PATH];
@@ -1732,4 +1808,54 @@ void CSkinFactory::ApplyDefaultThemeOfSkin()
 				pNodeValue->strName.c_str(), pNodeValue->strContent.c_str());
 		}
 	}
+}
+
+//
+// Bring all the skin windows to the top
+//
+void CSkinFactory::OnSkinWndActivate(CSkinWnd *pWndActive)
+{
+#ifdef _WIN32
+	LIST_SKINWNDS::iterator	it, itEnd;
+
+	HWND		hWndPrev, hWndNext, hWndActive;
+	HDWP		hWindowPosInfo;
+	vector<HWND>	vToBring;
+
+	if (pWndActive)
+		hWndActive = pWndActive->GetHandle();
+	else
+		hWndActive = GetForegroundWindow();
+
+	if (IsTopmostWindow(hWndActive))
+		vToBring.push_back(HWND_TOP);
+	else
+		vToBring.push_back(hWndActive);
+
+	hWndPrev = hWndNext = hWndActive;
+	hWndNext = GetWindow(hWndNext, GW_HWNDNEXT);
+	while (hWndNext)
+	{
+		itEnd = m_listSkinWnds.end();
+		for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
+		{
+			if ((*it)->GetHandle() == hWndNext && hWndNext != hWndActive)
+			{
+				if (!IsTopmostWindow(hWndNext) && !::IsIconic(hWndNext))
+				{
+					vToBring.push_back(hWndNext);
+					hWndPrev = hWndNext;
+				}
+				break;
+			}
+		}
+		hWndNext = GetWindow(hWndNext, GW_HWNDNEXT);
+	}
+	hWindowPosInfo = BeginDeferWindowPos(vToBring.size());
+	for (int i = 1; i < (int)vToBring.size(); i++)
+		DeferWindowPos(hWindowPosInfo, vToBring[i], vToBring[i - 1], 0, 0, 0, 0, SWP_NOSIZE | SWP_NOMOVE | SWP_NOACTIVATE);
+	EndDeferWindowPos(hWindowPosInfo);
+
+	// DBGLOG1(_T("OnSkinWndActivate: %s"), pWndActive->GetSkinWndName());
+#endif
 }

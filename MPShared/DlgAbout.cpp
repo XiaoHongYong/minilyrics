@@ -11,12 +11,12 @@ public:
 		_T("CID_AM_SHOW_ABOUT_F_LEFT"), _T("CID_AM_SHOW_ABOUT_F_RIGHT"),
 		_T("CID_AM_HIDE_ABOUT_2_LEFT"), NULL)
 	{
-		g_eventDispather.RegisterHanlder(ET_DOWNLOAD_END, this);
+		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_DOWNLOAD_END, this);
 	}
 
 	~CPageAbout()
 	{
-		g_eventDispather.UnregisterHanlder(ET_DOWNLOAD_END, this);
+		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_DOWNLOAD_END, this);
 	}
 
 	void UpdateLicenseInfo()

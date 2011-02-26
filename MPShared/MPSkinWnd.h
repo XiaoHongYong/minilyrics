@@ -37,8 +37,6 @@ public:
 	// IEventHandler
 	virtual void OnEvent(const IEvent *pEvent);
 
-	virtual void OnContexMenu(int xPos, int yPos);
-
 	void OnCommand(UINT uID, UINT nNotifyCode);
 
 	bool OnCustomCommand(int nId);
@@ -52,7 +50,6 @@ public:
 	void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 
 	virtual void OnSkinLoaded();
-	virtual void OnLoadWndSizePos();
 
 	virtual void OnAddUIObj(CUIObject *pObj);
 
@@ -88,8 +85,6 @@ protected:
 
 	void AddCmdHandler(LPCTSTR szName);
 
-	void SaveWndPos();
-
 	void SetTopmost(bool bTopmost);
 	CBaseWnd *GetParentOrSelf();
 
@@ -111,8 +106,6 @@ protected:
 	LIST_SKINCMDHANDLER		m_listSkinCmdHandler;
 
 	MAP_EVENT_HANDLER		m_mapEventHandlers;
-
-	bool					m_bRememberSizePos;
 
 	//
 	// Window status and properties

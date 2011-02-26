@@ -33,7 +33,7 @@ bool CMiniDumperNotify::OnDumpFinished(HMODULE hCrashMod, LPCTSTR szDumpFileToSa
 	dlg.m_strDumpFile = szDumpFileToSave;
 
 	// Show error report dialog
-	dlg.DoModal(g_mpApp.GetMainWnd());
+	dlg.DoModal(CMPlayerAppBase::GetMainWnd());
 
 	return true;
 }

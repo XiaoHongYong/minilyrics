@@ -123,10 +123,10 @@ void CAutoProcessEmbeddedLyrics::OnQuit()
 	if (!m_listJobs.empty())
 	{
 		// Show a dialog to let users choose.
-		// g_mpApp.GetMainWnd()->MessageOut(_T("CAutoProcessEmbeddedLyrics quit!"));
+		// CMPlayerAppBase::GetMainWnd()->MessageOut(_T("CAutoProcessEmbeddedLyrics quit!"));
 		CDlgBatchProcessEmbeddedLyrics	dlg;
 
-		dlg.DoModal(g_mpApp.GetMainWnd());
+		dlg.DoModal(CMPlayerAppBase::GetMainWnd());
 	}
 #endif*/
 

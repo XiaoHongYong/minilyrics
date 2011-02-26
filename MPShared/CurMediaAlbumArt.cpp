@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "Player.h"
-#include "EventsDispatcher.h"
 
 static LPCTSTR		SZ_SUPPORTED_IMG_EXT[] = { _T(".jpg"), _T(".gif"), _T(".bmp"), _T(".png") };
 

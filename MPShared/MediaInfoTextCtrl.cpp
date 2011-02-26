@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "MPlayerAppBase.h"
 #include "Player.h"
-#include "EventsDispatcher.h"
 #include "MediaInfoTextCtrl.h"
 
 ID_TO_STRING __mediaInfoType[] = 
@@ -56,16 +56,16 @@ CMediaInfoTextCtrl::CMediaInfoTextCtrl()
 CMediaInfoTextCtrl::~CMediaInfoTextCtrl()
 {
 	m_pSkin->UnregisterTimerObject(this);
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 }
 
 void CMediaInfoTextCtrl::OnCreate()
 {
 	CSkinScrollText::OnCreate();
 
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 
 	if (m_vInfoType.size() > 1)
 		m_nIDTimerUpdateTrackInfo = m_pSkin->RegisterTimerObject(this, m_nSwitchTime);

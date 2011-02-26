@@ -37,8 +37,8 @@ bool CMPSkinMainWnd::OnCreate()
 	if (!CMPSkinMainWndBase::OnCreate())
 		return false;
 
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	g_eventDispather.RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 
 	m_mlTrayIcon.Init(this);
 
@@ -47,8 +47,8 @@ bool CMPSkinMainWnd::OnCreate()
 
 void CMPSkinMainWnd::OnDestroy()
 {
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	g_eventDispather.UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 	m_mlTrayIcon.Quit();
 
 	CMPSkinMainWndBase::OnDestroy();
@@ -147,14 +147,14 @@ LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_HOTKEY:
 		// OnHotKey(int nId, UINT fuModifiers, UINT uVirtKey)
-		g_mpApp.GetHotkey().OnHotKey((int)wParam, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam));
+		CMPlayerAppBase::GetHotkey().OnHotKey((int)wParam, (UINT)LOWORD(lParam), (UINT)HIWORD(lParam));
 		return 0;
 #ifndef _MPLAYER
 	case WM_SYSCOMMAND:
 		if (wParam == SC_RESTORE)
 		{
 			if (IsIconic())
-				g_mpApp.GetSkinFactory()->RestoreAll();
+				CMPlayerAppBase::GetMPSkinFactory()->RestoreAll();
 		}
 		break;
 	case WM_MM_NOTIFY:
@@ -175,7 +175,7 @@ LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 #ifndef _MPLAYER
 		if (message == g_msgMediaMonkeyEmbeder)
 		{
-			CMPSkinMainWnd *pMainWnd = g_mpApp.GetMainWnd();
+			CMPSkinMainWnd *pMainWnd = CMPlayerAppBase::GetMainWnd();
 			if (pMainWnd && pMainWnd->GetEnableTranslucencyLayered())
 				pMainWnd->EnableTranslucencyLayered(false);
 			g_Player.m_playerInfo.startupFlags |= ML_EMBEDDED_WND_IMMOVABLE;
