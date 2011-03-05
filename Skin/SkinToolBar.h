@@ -82,7 +82,7 @@ public:
 
 	virtual void SetVisible(bool bVisible);
 
-	virtual int FromXML(CSkinContainer *pContainer, SXNode *pXmlNode);
+	virtual int FromXML(SXNode *pXmlNode);
 
 	bool IsCheck(int nCmdID);
 	void SetCheck(int nCmdID, bool bCheck, bool bRedraw = true);

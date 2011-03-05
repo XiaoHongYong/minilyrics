@@ -335,7 +335,7 @@ CUIObject::CUIObject()
 	m_pContainer = NULL;
 
 //	m_nType = 0;
-	m_nId = SKIN_UIOBJ_ID_UNDEFINE;
+	m_nId = UID_INVALID;
 	m_nAutoUniID = 0;
 	
 	m_nMsgWant = 0;
@@ -365,7 +365,7 @@ CUIObject::~CUIObject()
 			m_pSkin->ReleaseCaptureMouse(this);
 		}
 
-		if (m_strTooltip.size() > 0 && m_nId != SKIN_UIOBJ_ID_UNDEFINE)
+		if (m_strTooltip.size() > 0 && m_nId != UID_INVALID)
 			m_pSkin->DelTool(m_nAutoUniID);
 
 		m_pSkin->UnregisterTimerObject(this);
@@ -441,7 +441,7 @@ BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion)
 
 	OnSize(m_rcObj.Width(), m_rcObj.Height());
 
-	if (!m_strTooltip.empty()/* && m_nId != SKIN_UIOBJ_ID_UNDEFINE*/)
+	if (!m_strTooltip.empty()/* && m_nId != UID_INVALID*/)
 	{
 		m_pSkin->DelTool(m_nAutoUniID);
 		m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
@@ -671,7 +671,7 @@ void CUIObject::EnumProperties(CUIObjProperties &listProperties)
 {
 	listProperties.AddPropStr(SZ_PN_NAME, m_strName.c_str(), !m_strName.empty());
 
-	listProperties.AddPropID(SZ_PN_ID, m_pSkin->GetSkinFactory()->GetStringOfID(m_nId).c_str(), m_nId != SKIN_UIOBJ_ID_UNDEFINE);
+	listProperties.AddPropID(SZ_PN_ID, m_pSkin->GetSkinFactory()->GetStringOfID(m_nId).c_str(), m_nId != UID_INVALID);
 
 	listProperties.AddPropVar(SZ_PN_LEFT, m_formLeft);
 	listProperties.AddPropVar(SZ_PN_TOP, m_formTop);
@@ -689,19 +689,8 @@ void CUIObject::EnumProperties(CUIObjProperties &listProperties)
 }
 #endif // _SKIN_EDITOR_
 
-int CUIObject::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
+int CUIObject::FromXML(SXNode *pXmlNode)
 {
-// 	if (pXmlNode->GetName())
-// 	{
-// 		if (!IsKindOf(pXmlNode->GetName()))
-// 		{
-// 			ASSERT(0);
-// 			return ERR_FAILED;
-// 		}
-// 	}
-
-	m_pContainer = pContainer;
-
 	SXNode::iterProperties	it, itEnd;
 
 	itEnd = pXmlNode->listProperties.end();

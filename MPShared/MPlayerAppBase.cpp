@@ -588,7 +588,7 @@ CEventsDispatcher *CMPlayerAppBase::NewEventPatcher()
 
 CSkinFactory *CMPlayerAppBase::NewSkinFactory()
 {
-	return new CMPSkinFactory(this, g_StringIdMap);
+	return new CMPSkinFactory(this, g_uidDefinition);
 }
 
 void CMPlayerAppBase::OnMediaChanged()

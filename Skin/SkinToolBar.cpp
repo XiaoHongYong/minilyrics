@@ -68,7 +68,7 @@ CSkinToolbar::~CSkinToolbar()
 
 CSkinToolbar::Button::Button()
 {
-	nID = SKIN_UIOBJ_ID_UNDEFINE;
+	nID = UID_INVALID;
 	nWidth = 1;
 	nWidthImage = 1;
 	bSeperator = false;
@@ -167,7 +167,7 @@ void CSkinToolbar::Button::ToXML(CSkinToolbar *pToolbar, CXMLWriter &xml)
 	{
 		xml.WriteStartElement(_T("button"));
 
-		if (nID != SKIN_UIOBJ_ID_UNDEFINE)
+		if (nID != UID_INVALID)
 			xml.WriteAttribute(SZ_PN_ID, pToolbar->m_pSkin->GetSkinFactory()->GetStringOfID(nID).c_str());
 
 		if (bCanCheck)
@@ -282,7 +282,7 @@ bool CSkinToolbar::OnLButtonUp(UINT nFlags, CPoint point)
 
 			InvalidateButton(m_nCurButton);
 
-			if (bt.nID != SKIN_UIOBJ_ID_UNDEFINE)
+			if (bt.nID != UID_INVALID)
 				m_pSkin->PostCustomCommandMsg(bt.nID);
 		}
 	}
@@ -307,7 +307,7 @@ void CSkinToolbar::OnTimer(int nId)
 
 		if (m_nCurButton != -1)
 		{
-			if (m_vButtons[m_nCurButton].nID != SKIN_UIOBJ_ID_UNDEFINE)
+			if (m_vButtons[m_nCurButton].nID != UID_INVALID)
 				m_pSkin->PostCustomCommandMsg(m_vButtons[m_nCurButton].nID);
 		}
 
@@ -668,11 +668,11 @@ void CSkinToolbar::EnumProperties(CUIObjProperties &listProperties)
 }
 #endif // _SKIN_EDITOR_
 
-int CSkinToolbar::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
+int CSkinToolbar::FromXML(SXNode *pXmlNode)
 {
 	int		nRet;
 
-	nRet = CUIObject::FromXML(pContainer, pXmlNode);
+	nRet = CUIObject::FromXML(pXmlNode);
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -733,9 +733,12 @@ int CSkinToolbar::GetCurButton(POINT pt)
 	for (int i = 0; i < (int)m_vButtons.size(); i++)
 	{
 		Button		&bt = m_vButtons[i];
-		x += bt.nWidth + m_nBtSpacesCX;
+		x += bt.nWidth;
 		if (pt.x < x)
 			return i;
+		x += m_nBtSpacesCX;
+		if (pt.x < x)
+			return -1;
 	}
 
 	return -1;

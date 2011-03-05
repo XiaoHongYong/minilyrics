@@ -20,7 +20,7 @@ class CSkinMenu;
 class CMPSkinFactory : public CSkinFactory  
 {
 public:
-	CMPSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[]);
+	CMPSkinFactory(CSkinApp *pApp, UIObjectIDDefinition uidDefinition[]);
 	virtual ~CMPSkinFactory();
 
 	virtual CSkinWnd *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
@@ -68,7 +68,7 @@ protected:
 
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 
-	virtual CUIObject * NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
+	virtual CUIObject * NewUIObject(CSkinWnd *pSkin, CSkinContainer *pContainer, LPCTSTR szClassName);
 
 	SXNode *GetMenuOfMenus(SXNode *pNodeMenus, LPCTSTR szMenuName);
 

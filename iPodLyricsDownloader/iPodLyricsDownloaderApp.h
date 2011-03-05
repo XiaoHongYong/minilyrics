@@ -4,15 +4,8 @@
 
 enum LyricsDownloaderCustomCommand
 {
-	CMD_CLOSE,
-	CMD_QUIT,
-	CMD_MINIMIZE,
-	CMD_MAXIMIZE,
-	CMD_MENU,
-	CMD_FILE_LIST,
+	CMD_FILE_LIST = CMD_BASE_END,
 };
-
-extern STRING_ID_MAP g_StringIdMap[];
 
 class CiPodLyricsDownloaderApp : public CSkinApp
 {

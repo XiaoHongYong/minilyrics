@@ -35,7 +35,7 @@ public:
 
 	void Draw(CRawGraph *pGraph);
 
-	int FromXML(CSkinContainer *pContainer, SXNode *pXmlNode);
+	int FromXML(SXNode *pXmlNode);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_

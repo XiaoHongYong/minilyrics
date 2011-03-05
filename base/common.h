@@ -17,6 +17,9 @@ enum FILE_ENCODING
 #define SZ_FE_UCS2_BE		"\xFE\xFF"
 #define SZ_FE_UTF8			"\xEF\xBB\xBF"
 
+template<int n> struct __sizeof_at_compile_helper;
+#define sizeof_at_compile(obj)	__sizeof_at_compile_helper<sizeof(obj)> v
+
 #define CountOf(arr)		(sizeof(arr) / sizeof(arr[0]))
 
 #define IsEmptyString(str)	((str)[0] == '\0')

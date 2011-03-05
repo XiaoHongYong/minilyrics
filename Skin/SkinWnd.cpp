@@ -1311,7 +1311,7 @@ void CSkinWnd::CreateUIObjects(SXNode *pSkinWndNode, CSkinContainer *pParentCont
 		pObj = m_pSkinFactory->CreateUIObject(this, pNode->strName.c_str(), pParentContainer);
 		if (pObj)
 		{
-			pObj->FromXML(pParentContainer, pNode);
+			pObj->FromXML(pNode);
 
 			pParentContainer->AddUIObject(pObj);
 		}

@@ -11,7 +11,7 @@ CSkinScrollFrameCtrlBase::CSkinScrollFrameCtrlBase()
 
 	m_pObjVertScrollBar = NULL;
 	m_pObjHorzScrollBar = NULL;
-	m_nHorzScrollBarId = m_nVertScrollBarId = SKIN_UIOBJ_ID_UNDEFINE;
+	m_nHorzScrollBarId = m_nVertScrollBarId = UID_INVALID;
 	m_pVertScrollBar = NULL;
 	m_pHorzScrollBar = NULL;
 	m_pObjFrame = NULL;
@@ -22,12 +22,12 @@ CSkinScrollFrameCtrlBase::CSkinScrollFrameCtrlBase()
 
 CSkinScrollFrameCtrlBase::~CSkinScrollFrameCtrlBase()
 {
-	if (m_nVertScrollBarId == SKIN_UIOBJ_ID_UNDEFINE && m_pObjVertScrollBar)
+	if (m_nVertScrollBarId == UID_INVALID && m_pObjVertScrollBar)
 	{
 		m_pSkin->RemoveUIObject(m_pObjVertScrollBar, true);
 		m_pObjVertScrollBar = NULL;
 	}
-	if (m_nHorzScrollBarId == SKIN_UIOBJ_ID_UNDEFINE && m_pObjHorzScrollBar)
+	if (m_nHorzScrollBarId == UID_INVALID && m_pObjHorzScrollBar)
 	{
 		m_pSkin->RemoveUIObject(m_pObjHorzScrollBar, true);
 		m_pObjHorzScrollBar = NULL;
@@ -139,7 +139,7 @@ void CSkinScrollFrameCtrlBase::CreateFrameCtrl()
 
 void CSkinScrollFrameCtrlBase::CreateVertScrollbar()
 {
-	if (m_nVertScrollBarId != SKIN_UIOBJ_ID_UNDEFINE)
+	if (m_nVertScrollBarId != UID_INVALID)
 	{
 		m_pObjVertScrollBar = m_pSkin->GetUIObjectById(m_nVertScrollBarId, CSkinVScrollBar::ClassName());
 		if (m_pObjVertScrollBar)
@@ -153,7 +153,7 @@ void CSkinScrollFrameCtrlBase::CreateVertScrollbar()
 	}
 
 	// Create Scrollbar
-	m_pObjVertScrollBar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(this, CSkinVScrollBar::ClassName(), SKIN_UIOBJ_ID_UNDEFINE, NULL, NULL, NULL, NULL);
+	m_pObjVertScrollBar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(this, CSkinVScrollBar::ClassName(), UID_INVALID, NULL, NULL, NULL, NULL);
 	ASSERT(m_pObjVertScrollBar);
 	if (!m_pObjVertScrollBar)
 		return;
@@ -179,7 +179,7 @@ void CSkinScrollFrameCtrlBase::CreateVertScrollbar()
 
 void CSkinScrollFrameCtrlBase::CreateHorzScrollbar()
 {
-	if (m_nHorzScrollBarId != SKIN_UIOBJ_ID_UNDEFINE)
+	if (m_nHorzScrollBarId != UID_INVALID)
 	{
 		m_pObjHorzScrollBar = m_pSkin->GetUIObjectById(m_nHorzScrollBarId, CSkinHScrollBar::ClassName());
 		if (m_pObjHorzScrollBar)
@@ -193,7 +193,7 @@ void CSkinScrollFrameCtrlBase::CreateHorzScrollbar()
 	}
 
 	// Create Scrollbar
-	m_pObjHorzScrollBar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(this, CSkinHScrollBar::ClassName(), SKIN_UIOBJ_ID_UNDEFINE, NULL, NULL, NULL, NULL);
+	m_pObjHorzScrollBar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(this, CSkinHScrollBar::ClassName(), UID_INVALID, NULL, NULL, NULL, NULL);
 	ASSERT(m_pObjHorzScrollBar);
 	if (!m_pObjHorzScrollBar)
 		return;

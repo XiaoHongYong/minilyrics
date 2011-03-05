@@ -37,9 +37,9 @@ CSkinTabHeader::~CSkinTabHeader()
 
 CSkinTabHeader::Button::Button()
 {
-	nID = SKIN_UIOBJ_ID_UNDEFINE;
-	nAutoUniID = SKIN_UIOBJ_ID_UNDEFINE;
-	nIDAssociatedObj = SKIN_UIOBJ_ID_UNDEFINE;
+	nID = UID_INVALID;
+	nAutoUniID = UID_INVALID;
+	nIDAssociatedObj = UID_INVALID;
 	bTempToolTip = true;
 	nImageStartPos = 0;
 	nImageWidth = 0;
@@ -99,7 +99,7 @@ void CSkinTabHeader::Button::ToXML(CSkinTabHeader *pTabHeader, CXMLWriter &xml)
 {
 	xml.WriteStartElement(_T("button"));
 
-	if (nID != SKIN_UIOBJ_ID_UNDEFINE)
+	if (nID != UID_INVALID)
 		xml.WriteAttribute(SZ_PN_ID, pTabHeader->m_pSkin->GetSkinFactory()->GetStringOfID(nID).c_str());
 
 	xml.WriteAttribute(_T("width"), nWidth);
@@ -188,7 +188,7 @@ bool CSkinTabHeader::OnLButtonUp(UINT nFlags, CPoint point)
 	{
 		Button		&bt = m_vButtons[nNewCurButton];
 
-		if (bt.nID != SKIN_UIOBJ_ID_UNDEFINE)
+		if (bt.nID != UID_INVALID)
 			m_pSkin->PostCustomCommandMsg(bt.nID);
 
 		// Hide old tab, show this tab.
@@ -411,11 +411,11 @@ void CSkinTabHeader::EnumProperties(CUIObjProperties &listProperties)
 #endif // _SKIN_EDITOR_
 
 
-int CSkinTabHeader::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
+int CSkinTabHeader::FromXML(SXNode *pXmlNode)
 {
 	int		nRet;
 
-	nRet = CUIObject::FromXML(pContainer, pXmlNode);
+	nRet = CUIObject::FromXML(pXmlNode);
 	if (nRet != ERR_OK)
 		return nRet;
 

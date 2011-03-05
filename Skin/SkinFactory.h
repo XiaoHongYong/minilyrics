@@ -15,17 +15,43 @@ class CSkinMenu;
 #include "SkinWndDrag.h"
 
 // UIObject ID text to int
-typedef struct STRING_ID_MAP
+struct UIObjectIDDefinition
 {
 	const TCHAR		*szId;
 	uint16			nId;
 	uint16			nIdMenu;
 	const TCHAR		*szToolTip;
-}STRING_ID_MAP;
+};
 
+class UIObjectIDDefinitionLessCmp
+{
+public:
+	bool operator()(UIObjectIDDefinition *l1, UIObjectIDDefinition *l2) const
+	{
+		return _tcscmp(l1->szId, l2->szId) < 0;
+	}
+};
+
+typedef set<UIObjectIDDefinition *, UIObjectIDDefinitionLessCmp>	SetUIObjectIDDefinition;
+
+enum UIObjectId
+{
+	UID_INVALID = 0,
+	CMD_MINIMIZE = 1,
+	CMD_MAXIMIZE,
+	CMD_CLOSE,
+	CMD_QUIT,
+	CMD_MENU,
+
+	// Skin Dialog
+	CMD_OK,
+	CMD_CANCEL,
+
+	CMD_BASE_END,
+	CMD_ID_CUSTOM_BASE = 1000
+};
 
 // system alloc id begins from here
-#define CMD_ID_CUSTOM_BASE		1000
 
 #define _SZ_SKINWND_CLASS_NAME	_T("CMPSkin")
 
@@ -141,7 +167,7 @@ protected:
 class CSkinFactory : public ISkinWndDragHost
 {
 public:
-	CSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[]);
+	CSkinFactory(CSkinApp *pApp, UIObjectIDDefinition uidDefinition[]);
 	virtual ~CSkinFactory();
 
 	virtual int Init();
@@ -194,7 +220,7 @@ public:
 	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName, CSkinContainer *pContainer);
 
 	// 
-	virtual CUIObject *CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, int nIDAssign = SKIN_UIOBJ_ID_UNDEFINE, LPCTSTR szLeft = NULL, LPCTSTR szTop = NULL, LPCTSTR szWidth = NULL, LPCTSTR szHeight = NULL);
+	virtual CUIObject *CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR szClassName, int nIDAssign = UID_INVALID, LPCTSTR szLeft = NULL, LPCTSTR szTop = NULL, LPCTSTR szWidth = NULL, LPCTSTR szHeight = NULL);
 
 	//
 	// Skin root dir, and extra dir. resource files search order: SkinDir > SkinRootDir > Extra Dir
@@ -249,7 +275,7 @@ protected:
 
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
 
-	virtual CUIObject *NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName);
+	virtual CUIObject *NewUIObject(CSkinWnd *pSkin, CSkinContainer *pContainer, LPCTSTR szClassName);
 
 	void ApplyDefaultThemeOfSkin();
 
@@ -270,20 +296,8 @@ protected:
 	// Dynamic commands define
 	CDynamicCmds				m_dynamicCmds;
 
-	// ID 的字符串与数值的映射表结构定义
-	STRING_ID_MAP				*m_IdMap;
-	struct UID_MenuID {
-		uint16		nUID;
-		uint16		nMenuID;
-		UID_MenuID(uint16 nUID, uint16 nMenuID)
-		{
-			this->nUID = nUID;
-			this->nMenuID = nMenuID;
-		}
-		UID_MenuID() { }
-	};
-	typedef map<tstring, UID_MenuID>	MAP_STRID;
-	MAP_STRID					m_mapCmdStrId;
+	SetUIObjectIDDefinition		m_setUIDDefinition;
+	COnlyAllocator				m_allocator;
 	int							m_nCustomCmdIDNext;
 	int							m_nMenuIDNext;
 

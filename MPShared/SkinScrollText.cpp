@@ -28,7 +28,7 @@ CSkinScrollText::~CSkinScrollText()
 // 	if (!m_bEnable)
 // 		return false;
 // 
-// 	if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
+// 	if (m_nId != UID_INVALID)
 // 		m_pSkin->OnCustomCommand(m_nId);
 // 
 // 	return true;

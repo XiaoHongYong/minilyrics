@@ -1095,6 +1095,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\OnlyAllocator.cpp"
+				>
+			</File>
+			<File
 				RelativePath="safestr.cpp"
 				>
 				<FileConfiguration
@@ -1795,6 +1799,10 @@
 			</File>
 			<File
 				RelativePath="win32\Mutex.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OnlyAllocator.h"
 				>
 			</File>
 			<File

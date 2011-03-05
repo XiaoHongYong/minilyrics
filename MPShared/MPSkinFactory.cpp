@@ -58,8 +58,8 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CMPSkinFactory::CMPSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[])
-	: CSkinFactory(pApp, stringIdMap)
+CMPSkinFactory::CMPSkinFactory(CSkinApp *pApp, UIObjectIDDefinition uidDefinition[])
+	: CSkinFactory(pApp, uidDefinition)
 {
 #ifdef _WIN32_DESKTOP
 	m_bClickThrough = false;
@@ -71,11 +71,11 @@ CMPSkinFactory::~CMPSkinFactory()
 
 }
 
-CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
+CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, CSkinContainer *pContainer, LPCTSTR szClassName)
 {
 	CUIObject		*pObj;
 
-	pObj = CSkinFactory::NewUIObject(pSkin, szClassName);
+	pObj = CSkinFactory::NewUIObject(pSkin, pContainer, szClassName);
 	if (pObj)
 		return pObj;
 
@@ -140,8 +140,7 @@ CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	else
 		return NULL;
 
-	pObj->m_pSkin = pSkin;
-	pObj->m_pContainer = pSkin->GetRootContainer();
+	pObj->SetParent(pSkin, pContainer);
 
 	return pObj;
 }
@@ -280,7 +279,7 @@ void CMPSkinFactory::RestoreAll()
 int CMPSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 {
 	int		nID = CSkinFactory::GetIDByNameEx(szId, strToolTip);
-	if (nID == SKIN_UIOBJ_ID_UNDEFINE)
+	if (nID == UID_INVALID)
 		return nID;
 
 	tstring		strHotkey;

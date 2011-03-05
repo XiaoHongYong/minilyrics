@@ -218,7 +218,6 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 	m_pLyricsShow->m_formHeight.SetFormula(strLyrHeight.c_str());
 	m_pLyricsShow->SetProperties(m_vProperties);
 
-	m_pLyricsShow->m_pContainer = m_pContainer;
 	m_pContainer->InsertUIObjectAt(this, m_pLyricsShow);
 
 	if (bRedraw)

@@ -84,12 +84,12 @@ void CSkinNStatusButton::OnTimer(int nId)
 
 		if (IsMouseHitBt(pt))
 		{
-			if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
+			if (m_nId != UID_INVALID)
 				m_pSkin->PostCustomCommandMsg(m_nId);
 
 			if (m_nCurStatus >= 0 && m_nCurStatus < (int)m_vBtStatImg.size())
 			{
-				if (m_vBtStatImg[m_nCurStatus]->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE)
+				if (m_vBtStatImg[m_nCurStatus]->nIDCmd != UID_INVALID)
 					m_pSkin->PostCustomCommandMsg(m_vBtStatImg[m_nCurStatus]->nIDCmd);
 			}
 		}
@@ -505,7 +505,7 @@ void CSkinNStatusButton::EnumProperties(CUIObjProperties &listProperties)
 		strNameRect = strPrefix + _T("ImageDisabledRect");
 		listProperties.AddPropImage(strName.c_str(), strNameRect.c_str(), btimg->strDisabledFile.c_str(), btimg->imgDisabled, !btimg->strDisabledFile.empty());
 
-		listProperties.AddPropID(_T("IDCmd"), m_pSkin->GetSkinFactory()->GetStringOfID(btimg->nIDCmd).c_str(), btimg->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE);
+		listProperties.AddPropID(_T("IDCmd"), m_pSkin->GetSkinFactory()->GetStringOfID(btimg->nIDCmd).c_str(), btimg->nIDCmd != UID_INVALID);
 	}
 
 	listProperties.AddPropBoolStr(_T("Continuous"), m_bContinuousCmd, m_bContinuousCmd);
@@ -591,10 +591,10 @@ void CSkinNStatusButton::ButtonUpAction()
 
 	Invalidate();
 
-	if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
+	if (m_nId != UID_INVALID)
 		m_pSkin->PostCustomCommandMsg(m_nId);
 
-	if (m_vBtStatImg[m_nCurStatus]->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE)
+	if (m_vBtStatImg[m_nCurStatus]->nIDCmd != UID_INVALID)
 		m_pSkin->PostCustomCommandMsg(m_vBtStatImg[m_nCurStatus]->nIDCmd);
 }
 

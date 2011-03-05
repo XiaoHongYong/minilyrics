@@ -448,8 +448,8 @@ int CMPHotkey::LoadSettings()
 			continue;
 
 		// Cmd
-		cmdKey.cmd = MPCMDStrToID(str.c_str());
-		if (cmdKey.cmd == SKIN_UIOBJ_ID_UNDEFINE)
+		cmdKey.cmd = CMPlayerAppBase::GetMPSkinFactory()->GetIDByName(str.c_str());
+		if (cmdKey.cmd == UID_INVALID)
 			continue;
 
 		// Global flag
@@ -494,7 +494,7 @@ int CMPHotkey::SaveSettings()
 	for (int i = 0; i < (int)m_vAccKey.size(); i++)
 	{
 		CmdAccKey	&cmdKey = m_vAccKey[i];
-		LPCTSTR		szID = MPCMDIDToStr(cmdKey.cmd);
+		LPCTSTR		szID = CMPlayerAppBase::GetMPSkinFactory()->GetStringOfID(cmdKey.cmd);
 
 		if (!szID)
 			continue;

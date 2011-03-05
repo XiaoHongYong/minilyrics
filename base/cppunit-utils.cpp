@@ -47,7 +47,13 @@ void LogUnitTestResult(LPCSTR szStr)
 {
 	int	len = GetWindowTextLength(g_hWndLog);
 	SendMessage(g_hWndLog, EM_SETSEL, len, len);
+#ifdef _UNICODE
+	wstringex	strW;
+	ConvertStr(szStr, -1, strW);
+	SendMessage(g_hWndLog, EM_REPLACESEL, FALSE, (WPARAM)strW.c_str());
+#else
 	SendMessage(g_hWndLog, EM_REPLACESEL, FALSE, (WPARAM)szStr);
+#endif
 }
 
 void CreateUnitResultWnd(HINSTANCE hInstance)
@@ -166,7 +172,7 @@ void RunUnitTest()
 		// std::cout << "Running "  <<  testPath;
 		runner.run(controller, testPath);
 
-		LogUnitTestResult("\n");
+		LogUnitTestResult("\r\n");
 		// std::cerr << std::endl;
 
 		// Print test in a compiler compatible format.
@@ -182,9 +188,9 @@ void RunUnitTest()
 	}
 	catch (std::invalid_argument &e)  // Test path not resolved
 	{
-		LogUnitTestResult("\nERROR: ");
+		LogUnitTestResult("\r\nERROR: ");
 		LogUnitTestResult(e.what());
-		LogUnitTestResult("\n");
+		LogUnitTestResult("\r\n");
 // 		std::cerr  <<  std::endl  
 // 			<<  "ERROR: "  <<  e.what()
 // 			<< std::endl;

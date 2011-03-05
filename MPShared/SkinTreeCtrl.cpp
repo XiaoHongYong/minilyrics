@@ -802,7 +802,7 @@ void CSkinTreeCtrl::OnCreate()
 		return;
 
 	// Create Scrollbar
-	m_pObjScrollBar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(m_pContainer, CSkinVScrollBar::ClassName(), SKIN_UIOBJ_ID_UNDEFINE, NULL, NULL, NULL, NULL);
+	m_pObjScrollBar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(m_pContainer, CSkinVScrollBar::ClassName(), UID_INVALID, NULL, NULL, NULL, NULL);
 	ASSERT(m_pObjScrollBar);
 	if (!m_pObjScrollBar)
 		return;

@@ -116,10 +116,10 @@ bool CSkinTabButton::OnMenuKey(UINT nChar, UINT nFlags)
 {
 // 	if (CharUpr(m_chMenuKey) == CharUpr(nChar))
 // 	{
-// 		if (m_nId != SKIN_UIOBJ_ID_UNDEFINE)
+// 		if (m_nId != UID_INVALID)
 // 			m_pSkin->PostCustomCommandMsg(m_nId);
 // 
-// 		if (m_vBtStatImg[m_nCurStatus]->nIDCmd != SKIN_UIOBJ_ID_UNDEFINE)
+// 		if (m_vBtStatImg[m_nCurStatus]->nIDCmd != UID_INVALID)
 // 			m_pSkin->PostCustomCommandMsg(m_vBtStatImg[m_nCurStatus]->nIDCmd);
 // 		return true;
 // 	}

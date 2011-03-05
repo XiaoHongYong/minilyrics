@@ -7,18 +7,12 @@
 #include "MLCmd.h"
 
 
-// ID 的字符串与数值的映射表
-STRING_ID_MAP g_StringIdMap[] = 
+UIObjectIDDefinition g_uidDefinition[] = 
 {
-	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, 0, _T("Minimize") },
-	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, 0, _T("Maximize") },
 	{ _T("ID_TOPMOST"), CMD_TOPMOST, IDC_SETTOPMOST, _T("Toggle always on top") },
 	{ _T("ID_CLICK_THROUGH"), CMD_CLICK_THROUGH, IDC_CLICK_THROUGH, _T("Mouse click through") },
-	{ _T("ID_CLOSE"), CMD_CLOSE, IDC_CLOSE, _T("Close") },
-	{ _T("ID_QUIT"), CMD_QUIT, IDC_EXIT, _T("Quit") },
 	{ _T("ID_TOOLBAR"), ID_TOOLBAR, 0, NULL },
 	{ _T("ID_RATE_LYR"), CMD_RATE_LYR, IDC_RATE_LYRICS, _T("Rate these lyrics") },
-	{ _T("ID_MENU"), CMD_MENU, 0, _T("Menu") },
 	{ _T("ID_PLAY"), CMD_PLAY, IDC_PLAY, _T("Play") },
 	{ _T("ID_PLAYPAUSE"), CMD_PLAYPAUSE, IDC_PLAYPAUSE, _T("Play/Pause") },
 	{ _T("ID_PAUSE"), CMD_PAUSE, IDC_PAUSE, _T("Pause") },
@@ -138,9 +132,6 @@ STRING_ID_MAP g_StringIdMap[] =
 
 	{ _T("ID_ALBUMART"), ID_ALBUMART, 0, NULL },
 
-	{ _T("ID_OK"), CMD_OK, IDOK, NULL },
-	{ _T("ID_CANCEL"), CMD_CANCEL, IDCANCEL, NULL },
-
 	{ _T("CMD_TOGGLE_MP"), CMD_TOGGLE_MP, 0, _T("Bring to front/Hide $Product$") },
 	{ _T("CMD_PREFERENCES"), CMD_PREFERENCES, IDC_PREFERENCE, _T("Preferences") },
 	{ _T("CMD_COPY_SONG_FILE_LYR"), CMD_COPY_SONG_FILE_LYR, IDC_COPYTO, _T("Copy song file and lyrics to...") },
@@ -149,68 +140,3 @@ STRING_ID_MAP g_StringIdMap[] =
 	{ _T("CMD_FLOATING_LYRICS"), CMD_FLOATING_LYRICS, IDC_FLOATING_LYRICS, _T("Floating Lyrics") },
 	{ NULL, 0, 0, NULL },
 };
-
-#ifdef _WIN32_WCE
-
-MLCmdAccKey		g_mlCmdAccKey[] = 
-{
-	{ CMD_PLAYPAUSE, VK_RETURN, 0, VK_RETURN, 0 },
-	{ CMD_PLAYPAUSE, 0, 0, 0, 0 },
-	{ CMD_STOP, 0, 0, 0 },
-	{ CMD_PLAY, 0, 0, 0 },
-	{ CMD_PAUSE, 0, 0, 0 },
-	{ CMD_PREVIOUS, VK_LEFT, 0, VK_LEFT, 0 },
-	{ CMD_NEXT, VK_RIGHT, 0, VK_RIGHT, 0 },
-	{ CMD_VOL_INC, VK_UP, 0, VK_UP, 0 },
-	{ CMD_VOL_DEC, VK_DOWN, 0, VK_DOWN, 0 },
-	{ CMD_BACKWARD, 0, 0, 0, 0 },
-	{ CMD_FORWARD, 0, 0, 0, 0 },
-	{ CMD_MUTE, '#', 0, '#', 0 },
-	{ CMD_BACKWARD_LYRICS, 0, 0 , 0, 0 },
-	{ CMD_FORWARD_LYRICS, 0, 0, 0, 0 },
-	{ CMD_TOGGLE_SCREEEN, 0, 0, 0, 0 },
-	{ CMD_SHUFFLE, 0, 0, 0, 0 },
-	{ CMD_LOOP, 0, 0, 0, 0 },
-};
-
-int				g_mlCmdAccKeyCount = CountOf(g_mlCmdAccKey) - 1;
-
-#else
-
-ML_CUSTOM_COMMAND MPCMDStrToID(LPCTSTR szID)
-{
-	STRING_ID_MAP		*p = g_StringIdMap;
-	for (; p->szId != NULL; p++)
-	{
-		if (_tcsicmp(p->szId, szID) == 0)
-			return (ML_CUSTOM_COMMAND)p->nId;
-	}
-
-	return (ML_CUSTOM_COMMAND)SKIN_UIOBJ_ID_UNDEFINE;
-}
-
-LPCTSTR MPCMDIDToStr(int nCmd)
-{
-	STRING_ID_MAP		*p = g_StringIdMap;
-	for (; p->szId != NULL; p++)
-	{
-		if (p->nId == nCmd)
-			return p->szId;
-	}
-
-	return NULL;
-}
-
-LPCTSTR MPCMDIDToToolTip(int nCmd)
-{
-	STRING_ID_MAP		*p = g_StringIdMap;
-	for (; p->szId != NULL; p++)
-	{
-		if (p->nId == nCmd)
-			return p->szToolTip;
-	}
-
-	return NULL;
-}
-
-#endif

@@ -15,18 +15,22 @@ class CSkinListCtrl;
 class CSkinListCtrlEventNotify : public IUIObjNotify
 {
 public:
-	CSkinListCtrlEventNotify(CUIObject *pObject) : IUIObjNotify(pObject) { cmd = C_CLICK; }
+	CSkinListCtrlEventNotify(CUIObject *pObject, int nClickedRow, int nClickedCol) : IUIObjNotify(pObject)
+		{ cmd = C_CLICK; this->nClickOnRow = nClickedRow; this->nClickOnCol = nClickedCol; }
+
 	enum Command
 	{
-		C_CLICK,
-		C_RBTN_CLICK,
+		C_CLICK,			// Left button click
+		C_CLICK_CMD,		// Left button click at a cell, and the cell will trigger special command
+		C_RBTN_CLICK,		// Right mouse button click
 		C_DBL_CLICK,
 		C_SEL_CHANGED,
-		C_ENTER,
-		C_KEY_DELETE,
+		C_ENTER,			// Enter key pressed
+		C_KEY_DELETE,		// delete key pressed
 	};
 
 	Command				cmd;
+	int					nClickOnRow, nClickOnCol;
 
 };
 
@@ -42,9 +46,10 @@ public:
 	class CColHeader
 	{
 	public:
-		CColHeader(LPCTSTR szTitle, int nWidth) {
+		CColHeader(LPCTSTR szTitle, int nWidth, bool bClickable = false) {
 			strTitle = szTitle;
 			this->nWidth = nWidth;
+			this->bClickable = bClickable;
 			colType = LCCT_STRING;
 		}
 		virtual ~CColHeader() { }
@@ -52,13 +57,15 @@ public:
 		virtual LC_ITEM *NewLCItem() { return new LC_ITEM(); }
 
 		tstring			strTitle;
-		int				nWidth;
+		int16			nWidth;
+		bool			bClickable;
 		ListCtrlColType	colType;
 	};
 public:
 	LC_ITEM() { }
 	virtual ~LC_ITEM() { }
 
+	virtual bool IsClickedOn(CColHeader *pHeader, int x, int y) { return true; }
 	virtual void Draw(CSkinListCtrl *pListCtrl, int nRow, int nClrNameDefault, CRect &rcItem, CRawGraph *pGraph);
 
 public:
@@ -72,7 +79,7 @@ public:
 	class CImageColHeader : public CColHeader
 	{
 	public:
-		CImageColHeader(LPCTSTR szTitle, int nWidth) : CColHeader(szTitle, nWidth) {
+		CImageColHeader(LPCTSTR szTitle, int nWidth, bool bClickable = false) : CColHeader(szTitle, nWidth, bClickable) {
 			colType = LCCT_IMAGE;
 		}
 		virtual ~CImageColHeader() { }
@@ -81,6 +88,7 @@ public:
 	};
 
 public:
+	virtual bool IsClickedOn(CColHeader *pHeader, int x, int y);
 	virtual void Draw(CSkinListCtrl *pListCtrl, int nRow, int nClrNameDefault, CRect &rcItem, CRawGraph *pGraph);
 
 public:
@@ -182,7 +190,7 @@ public:
 	MLColor & GetColor(int nColorName);
 
 	virtual void AddColumn(LPCTSTR szCol, int nWidth);
-	void AddImageColumn(LPCTSTR szCol, int nWidth);
+	void AddImageColumn(LPCTSTR szCol, int nWidth, bool bClickable = false);
 
 	int GetColumnCount() const { return m_vHeading.size(); }
 	int GetColumnWidth(int nCol) const;
@@ -300,8 +308,9 @@ protected:
 protected:
 	virtual LC_ITEM *NewLCItem(int nCol);
 
-	int GetRowAtPoint(int y, bool bRestrict = true);
-	int GetColAtPoint(int x);
+	void GetRowColAtPoint(POINT pt, int &row, int &col, POINT *ptAtItemCell = NULL, bool *bItemClickable = NULL);
+
+	void SetClickCursor();
 
 	bool ClearAllSelMark();
 
@@ -318,7 +327,7 @@ protected:
 
 	void SetHorzScrollInfo(bool bRedraw = true);
 
-	void SendNotifyEvent(CSkinListCtrlEventNotify::Command cmd);
+	void SendNotifyEvent(CSkinListCtrlEventNotify::Command cmd, int nClickedRow = -1, int nClickedCol = -1);
 
 	HitTestArea HitTest(POINT &point, int &nColumnIndex);
 
@@ -396,6 +405,7 @@ protected:
 	int						m_nResizingCol;
 	POINT					m_ptStartDrag;					// 鼠标上一次的位置
 	CCursor					m_curResizeCol;
+	CCursor					m_curHand;
 
 };
 

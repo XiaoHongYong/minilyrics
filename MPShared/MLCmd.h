@@ -2,29 +2,16 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_MLCMD_H__0F4EFB09_839A_4E3C_A964_F096D1441949__INCLUDED_)
-#define AFX_MLCMD_H__0F4EFB09_839A_4E3C_A964_F096D1441949__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-///////////////////////////////////////////////////////////////////////////////
+//
 // Command ID of UIObject in SkinWnd:
+//
 enum ML_CUSTOM_COMMAND
 {
-	CMD_UNDEFINE	= UID_INVALID,
-
-	///////////////
-	// 控件的命令ID
-	CMD_CLOSE,
-	CMD_QUIT,
-	CMD_MINIMIZE,
-	CMD_MAXIMIZE,
-	CMD_TOPMOST,
+	CMD_TOPMOST = CMD_BASE_END,
 	CMD_CLICK_THROUGH,
 	CMD_RATE_LYR,
-	CMD_MENU,
 
 	ID_TOOLBAR,
 
@@ -149,10 +136,6 @@ enum ML_CUSTOM_COMMAND
 
 	ID_ALBUMART,		// album art control
 
-	// Skin Dialog
-	CMD_OK,
-	CMD_CANCEL,
-
 	// other cmd
 	CMD_TOGGLE_MP,
 	CMD_PREFERENCES,
@@ -165,32 +148,4 @@ enum ML_CUSTOM_COMMAND
 	CMD_SHOW_ERR_RESULT,
 };
 
-// ID 的字符串与数值的映射表
-extern STRING_ID_MAP g_StringIdMap[];
-
-#ifdef _WIN32_WCE
-
-//
-// Command Accerate key for wce
-//
-struct MLCmdAccKey
-{
-	ML_CUSTOM_COMMAND		cmd;
-	uint16					button;
-	uint16					fsModifiers;
-	uint16					buttonDef;
-	uint16					fsModifiersDef;
-};
-
-extern MLCmdAccKey		g_mlCmdAccKey[];
-extern int				g_mlCmdAccKeyCount;
-
-#endif
-
-LPCTSTR MPCMDIDToStr(int nCmd);
-
-ML_CUSTOM_COMMAND MPCMDStrToID(LPCTSTR szID);
-
-LPCTSTR MPCMDIDToToolTip(int nCmd);
-
-#endif // !defined(AFX_MLCMD_H__0F4EFB09_839A_4E3C_A964_F096D1441949__INCLUDED_)
+UIObjectIDDefinition g_uidDefinition[];

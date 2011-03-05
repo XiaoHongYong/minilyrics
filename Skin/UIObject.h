@@ -153,10 +153,6 @@ enum
 
 #define SZ_PN_LINK			_T("Link")
 
-#define SKIN_UIOBJ_ID_UNDEFINE		0 // decrepted.
-
-#define UID_INVALID					0 // UID = UIObject ID
-
 //
 // declare GetClassName, IsKindOf, ClassName of classes derived from CUIObject
 //
@@ -186,6 +182,9 @@ public:
 	virtual ~CUIObject();
 
 public:
+	void SetParent(CSkinWnd *pSkinWnd, CSkinContainer *pContainer)
+		{ m_pSkin = pSkinWnd; m_pContainer = pContainer; }
+
 	// modify CUIObject's property
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 	virtual BOOL SetPropertyInt(LPCTSTR szProperty, int nValue);
@@ -196,6 +195,7 @@ public:
 	virtual void Invalidate();
 
 	CSkinContainer *GetParent() const { return m_pContainer; }
+	CSkinWnd *GetSkinWnd() const { return m_pSkin; }
 
 	// window messages
 	virtual void OnCreate() { }
@@ -269,7 +269,7 @@ public:
 	virtual void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
 
-	virtual int FromXML(CSkinContainer *pContainer, SXNode *pXmlNode);
+	virtual int FromXML(SXNode *pXmlNode);
 #ifdef _SKIN_EDITOR_
 	virtual void ToXML(CXMLWriter &xmlStream);
 #endif // _SKIN_EDITOR_
@@ -311,9 +311,6 @@ public:
 
 	CRect		m_rcObj;
 
-	CSkinWnd		*m_pSkin;
-	CSkinContainer	*m_pContainer;
-
 	// auto allocated uni-ID by CSkinWnd.
 	int			m_nAutoUniID;
 
@@ -337,11 +334,14 @@ public:
 protected:
 	static LPCTSTR		ms_szClassName;
 
-	tstring		m_strTooltip;
-	bool		m_bTempTooltip;
+	tstring			m_strTooltip;
+	bool			m_bTempTooltip;
+
+	CSkinWnd		*m_pSkin;
+	CSkinContainer	*m_pContainer;
 
 private:
-	bool		m_bCreated;
+	bool			m_bCreated;
 
 friend class CSkinWnd;
 friend class CSkinContainer;

@@ -24,6 +24,20 @@
 
 #define MENU_ID_CUSTOM_BASE		46000
 
+
+UIObjectIDDefinition g_uidBaseDefinition[] = 
+{
+	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, 0, _T("Minimize") },
+	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, 0, _T("Maximize") },
+	{ _T("ID_CLOSE"), CMD_CLOSE, 0, _T("Close") },
+	{ _T("ID_QUIT"), CMD_QUIT, 0, _T("Quit") },
+	{ _T("ID_MENU"), CMD_MENU, 0, _T("Menu") },
+	{ _T("ID_OK"), CMD_OK, IDOK, NULL },
+	{ _T("ID_CANCEL"), CMD_CANCEL, IDCANCEL, NULL },
+
+	{ NULL, 0, 0, NULL },
+};
+
 /*
    <DynControls>
      <VScrollBar width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp"/>
@@ -519,16 +533,27 @@ void CDynamicCmds::EnumAllCmds(V_Str &vstrCmds)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CSkinFactory::CSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[])
+CSkinFactory::CSkinFactory(CSkinApp *pApp, UIObjectIDDefinition uidDefinition[])
 {
 	m_pApp = pApp;
-	assert(stringIdMap);
-	m_IdMap = stringIdMap;
 
 	m_strSkinFileName = _SZ_SKIN_FILE_NAME;
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
 	m_nMenuIDNext = MENU_ID_CUSTOM_BASE;
 	m_dynamicCmds.Init(this);
+
+	assert(uidDefinition);
+	for (int i = 0; uidDefinition[i].szId != 0; i++)
+	{
+		ASSERT(m_setUIDDefinition.find(uidDefinition + i) == m_setUIDDefinition.end());
+		m_setUIDDefinition.insert(uidDefinition + i);
+	}
+
+	for (int i = 0; g_uidBaseDefinition[i].szId != 0; i++)
+	{
+		ASSERT(m_setUIDDefinition.find(g_uidBaseDefinition + i) == m_setUIDDefinition.end());
+		m_setUIDDefinition.insert(g_uidBaseDefinition + i);
+	}
 }
 
 CSkinFactory::~CSkinFactory()
@@ -561,77 +586,58 @@ void CSkinFactory::Quit()
 int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip)
 {
 	assert(szId);
-	assert(m_IdMap);
-	if (!m_IdMap || IsEmptyString(szId))
-		return SKIN_UIOBJ_ID_UNDEFINE;
+	if (IsEmptyString(szId))
+		return UID_INVALID;
 
 	if (pstrToolTip)
 		pstrToolTip->resize(0);
 
-	for (int i = 0; m_IdMap[i].szId != 0; i++)
-	{
-		if (_tcsicmp(szId, m_IdMap[i].szId) == 0)
-		{
-			if (m_IdMap[i].szToolTip && pstrToolTip)
-				*pstrToolTip = TOLOCAL(m_IdMap[i].szToolTip);
+	UIObjectIDDefinition uidDef;
+	uidDef.szId = szId;
 
-			return m_IdMap[i].nId;
-		}
-	}
-
-	MAP_STRID::iterator it = m_mapCmdStrId.find(szId);
-	if (it != m_mapCmdStrId.end())
-	{
-		return (*it).second.nUID;
-	}
+	SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.find(&uidDef);
+	if (it != m_setUIDDefinition.end())
+		return (*it)->nId;
 
 	m_nCustomCmdIDNext++;
 
-	m_mapCmdStrId[szId] = UID_MenuID(m_nCustomCmdIDNext, 0);
+	UIObjectIDDefinition *p = (UIObjectIDDefinition *)m_allocator.allocate(sizeof(UIObjectIDDefinition));
+	p->szId = m_allocator.allocate(szId);
+	p->nIdMenu = 0;
+	p->szToolTip = NULL;
+	p->nId = m_nCustomCmdIDNext;
+	m_setUIDDefinition.insert(p);
+
 	return m_nCustomCmdIDNext;
 }
 
 void CSkinFactory::GetTooltip(int nId, tstring &strToolTip)
 {
-	strToolTip.resize(0);
-	if (!m_IdMap)
-		return;
-
-	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
+		it != m_setUIDDefinition.end(); ++it)
 	{
-		if (nId == m_IdMap[i].nId)
+		UIObjectIDDefinition *p = *it;
+		if (p->nId == nId)
 		{
-			if (m_IdMap[i].szToolTip)
-				strToolTip = TOLOCAL(m_IdMap[i].szToolTip);
+			strToolTip = p->szToolTip;
 			return;
 		}
 	}
+
+	strToolTip.resize(0);
 }
 
 int CSkinFactory::GetMenuIDByUID(int nUID)
 {
-	ASSERT(m_IdMap);
-	if (nUID == UID_INVALID || m_IdMap == NULL)
+	if (nUID == UID_INVALID)
 		return 0;
 
-	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
+		it != m_setUIDDefinition.end(); ++it)
 	{
-		if (m_IdMap[i].nId == nUID)
-			return m_IdMap[i].nIdMenu;
-	}
-
-	MAP_STRID::iterator it;
-	for (it = m_mapCmdStrId.begin(); it != m_mapCmdStrId.end(); ++it)
-	{
-		if ((*it).second.nUID == nUID)
-		{
-			if ((*it).second.nMenuID == 0)
-			{
-				(*it).second.nMenuID = m_nMenuIDNext;
-				m_nMenuIDNext++;
-			}
-			return (*it).second.nMenuID;
-		}
+		UIObjectIDDefinition *p = *it;
+		if (p->nId == nUID)
+			return p->nIdMenu;
 	}
 
 	return 0;
@@ -639,21 +645,15 @@ int CSkinFactory::GetMenuIDByUID(int nUID)
 
 int CSkinFactory::GetUIDByMenuID(int nMenuID)
 {
-	ASSERT(m_IdMap);
-	if (nMenuID == 0 || m_IdMap == NULL)
+	if (nMenuID == 0)
 		return UID_INVALID;
 
-	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
+		it != m_setUIDDefinition.end(); ++it)
 	{
-		if (m_IdMap[i].nIdMenu == nMenuID)
-			return m_IdMap[i].nId;
-	}
-
-	MAP_STRID::iterator it;
-	for (it = m_mapCmdStrId.begin(); it != m_mapCmdStrId.end(); ++it)
-	{
-		if ((*it).second.nMenuID == nMenuID)
-			return (*it).second.nUID;
+		UIObjectIDDefinition *p = *it;
+		if (p->nIdMenu == nMenuID)
+			return p->nId;
 	}
 
 	return UID_INVALID;
@@ -671,21 +671,12 @@ int CSkinFactory::AllocCustomID()
 
 tstring CSkinFactory::GetStringOfID(int nID)
 {
-	assert(m_IdMap);
-	if (!m_IdMap)
-		return _T("");
-
-	for (int i = 0; m_IdMap[i].szId != 0; i++)
+	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
+		it != m_setUIDDefinition.end(); ++it)
 	{
-		if (nID == m_IdMap[i].nId)
-			return m_IdMap[i].szId;
-	}
-
-	MAP_STRID::iterator it;
-	for (it = m_mapCmdStrId.begin(); it != m_mapCmdStrId.end(); ++it)
-	{
-		if ((*it).second.nUID == nID)
-			return (*it).first;
+		UIObjectIDDefinition *p = *it;
+		if (p->nId == nID)
+			return p->szId;
 	}
 
 	return _T("");
@@ -980,7 +971,6 @@ void CSkinFactory::Close(bool bQuit)
 
 	m_resourceMgr.OnClose();
 
-	m_mapCmdStrId.clear();
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
 	m_nMenuIDNext = MENU_ID_CUSTOM_BASE;
 
@@ -1192,22 +1182,22 @@ CUIObject * CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName, C
 {
 	SXNode *pNode = m_skinStyle.GetClassNode(szClassName);
 	if (!pNode)
-		return NewUIObject(pSkin, szClassName);
+		return NewUIObject(pSkin, pContainer, szClassName);
 
 	LPCTSTR szExtends = pNode->GetProperty(SZ_PN_EXTENDS);
 	if (szExtends)
 		szClassName = szExtends;
 
-	CUIObject *pObj = NewUIObject(pSkin, szClassName);
+	CUIObject *pObj = NewUIObject(pSkin, pContainer, szClassName);
 
 	// Set styled properties of Extends from
 	if (pObj)
-		pObj->FromXML(pContainer, pNode);
+		pObj->FromXML(pNode);
 
 	return pObj;
 }
 
-CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
+CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, CSkinContainer *pContainer, LPCTSTR szClassName)
 {
 	CUIObject *pObj = NULL;
 
@@ -1218,39 +1208,25 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 	else if (IsPropertyName(szClassName, CSkinImageButton::ClassName()))
 		pObj = new CSkinImageButton;
 	else if (_tcsicmp(szClassName, CSkinImage::ClassName()) == 0)
-	{
 		pObj = new CSkinImage;
-	}
 	else if (_tcsicmp(szClassName, CSkinNStatusImage::ClassName()) == 0)
-	{
 		pObj = new CSkinNStatusImage;
-	}
 	else if (_tcsicmp(szClassName, CSkinActiveImage::ClassName()) == 0)
-	{
 		pObj = new CSkinActiveImage;
-	}
 	else if (_tcsicmp(szClassName, CSkinXScaleImage::ClassName()) == 0 ||
 		_tcsicmp(szClassName, _T("XScaleImage")) == 0)
-	{
 		pObj = new CSkinXScaleImage;
-	}
 	else if (_tcsicmp(szClassName, CSkinYScaleImage::ClassName()) == 0 ||
 		_tcsicmp(szClassName, _T("YScaleImage")) == 0)
-	{
 		pObj = new CSkinYScaleImage;
-	}
 	else if (_tcsicmp(szClassName, CSkinVScrollBar::ClassName()) == 0
 		|| IsPropertyName(szClassName, _T("VScrollBarOSStyle")))
-	{
 		pObj = new CSkinVScrollBar;
-	}
 	else if (_tcsicmp(szClassName, CSkinHScrollBar::ClassName()) == 0
 		|| IsPropertyName(szClassName, _T("HScrollBarOSStyle")))
 		pObj = new CSkinHScrollBar;
 	else if (_tcsicmp(szClassName, CSkinCaption::ClassName()) == 0)
-	{
 		pObj = new CSkinCaption;
-	}
 	else if (_tcsicmp(szClassName, CSkinNStatusButton::ClassName()) == 0)
 		pObj = new CSkinNStatusButton;
 	else if (_tcsicmp(szClassName, CSkinContainer::ClassName()) == 0)
@@ -1296,8 +1272,7 @@ CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
 
 	if (pObj)
 	{
-		pObj->m_pSkin = pSkin;
-		pObj->m_pContainer = pSkin->GetRootContainer();
+		pObj->SetParent(pSkin, pContainer);
 	}
 
 	return pObj;
@@ -1308,14 +1283,12 @@ CUIObject *CSkinFactory::CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR s
 	CUIObject			*pObj = NULL;
 
 	// Create the control
-	pObj = pContainer->m_pSkin->GetSkinFactory()->CreateUIObject(pContainer->m_pSkin, szClassName, pContainer);
+	pObj = CreateUIObject(pContainer->GetSkinWnd(), szClassName, pContainer);
 	assert(pObj);
 	if (pObj)
 	{
-		pObj->m_pContainer = pContainer;
-
-		if (nIDAssign == SKIN_UIOBJ_ID_UNDEFINE)
-			nIDAssign = pContainer->m_pSkin->AllocUIObjID();
+		if (nIDAssign == UID_INVALID)
+			nIDAssign = pContainer->GetSkinWnd()->AllocUIObjID();
 		pObj->m_nId =  nIDAssign;
 
 		//

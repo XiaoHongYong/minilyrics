@@ -13,13 +13,8 @@
 #define SZ_COMPANY_NAME			_T("CrintSoft")
 #define SZ_DEFSKIN				_T("Default")
 
-STRING_ID_MAP g_StringIdMap[] = 
+UIObjectIDDefinition g_uidDefinition[] = 
 {
-	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, 0, _T("Minimize") },
-	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, 0, _T("Maximize") },
-	{ _T("ID_CLOSE"), CMD_CLOSE, IDC_CLOSE, _T("Close") },
-	{ _T("ID_QUIT"), CMD_QUIT, IDC_EXIT, _T("Quit") },
-	{ _T("ID_MENU"), CMD_MENU, 0, _T("Menu") },
 	{ _T("ID_FILE_LIST"), CMD_FILE_LIST, 0, NULL },
 	{ NULL, 0, 0, NULL },
 };
@@ -75,16 +70,16 @@ bool CiPodLyricsDownloaderApp::Init()
 	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
 	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
 
-	if (!CSkinApp::Init())
-		return false;
-
-	m_pSkinFactory->SetSkinFileName(_T("iPodLyricsDownloader.xml"));
-
 #ifdef _CPPUNIT_TEST
 	CreateUnitResultWnd(GetAppInstance());
 
 	RunUnitTest();
 #endif
+
+	if (!CSkinApp::Init())
+		return false;
+
+	m_pSkinFactory->SetSkinFileName(_T("iPodLyricsDownloader.xml"));
 
 	int nRet = LoadDefaultSkin(SZ_DEFSKIN);
 	if (nRet != ERR_OK)
@@ -102,5 +97,5 @@ void CiPodLyricsDownloaderApp::Quit()
 
 CSkinFactory *CiPodLyricsDownloaderApp::NewSkinFactory()
 {
-	return new CLDSkinFactory(this, g_StringIdMap);
+	return new CLDSkinFactory(this, g_uidDefinition);
 }

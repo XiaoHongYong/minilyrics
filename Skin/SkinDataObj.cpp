@@ -36,6 +36,6 @@ void CSkinDataObj::EnumProperties(CUIObjProperties &listProperties)
 {
 	listProperties.AddPropStr(SZ_PN_NAME, m_strName.c_str(), !m_strName.empty());
 
-	listProperties.AddPropID(SZ_PN_ID, m_pSkin->GetSkinFactory()->GetStringOfID(m_nId).c_str(), m_nId != SKIN_UIOBJ_ID_UNDEFINE);
+	listProperties.AddPropID(SZ_PN_ID, m_pSkin->GetSkinFactory()->GetStringOfID(m_nId).c_str(), m_nId != UID_INVALID);
 }
 #endif // _SKIN_EDITOR_

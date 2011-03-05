@@ -23,6 +23,11 @@ void LC_ITEM::Draw(CSkinListCtrl *pListCtrl, int nRow, int nClrNameDefault, CRec
 	}
 }
 
+bool LC_IMAGE_ITEM::IsClickedOn(CColHeader *pHeader, int x, int y)
+{
+	return x >= 0 && x < image.m_cx && y >= 0 && y < image.m_cy;
+}
+
 void LC_IMAGE_ITEM::Draw(CSkinListCtrl *pListCtrl, int nRow, int nClrNameDefault, CRect &rcItem, CRawGraph *pGraph)
 {
 	if (image.IsValid())
@@ -399,9 +404,9 @@ void CSkinListCtrl::AddColumn(LPCTSTR szCol, int nWidth)
 	SetHorzScrollInfo(false);
 }
 
-void CSkinListCtrl::AddImageColumn(LPCTSTR szCol, int nWidth)
+void CSkinListCtrl::AddImageColumn(LPCTSTR szCol, int nWidth, bool bClickable)
 {
-	m_vHeading.push_back(new LC_IMAGE_ITEM::CImageColHeader(szCol, nWidth));
+	m_vHeading.push_back(new LC_IMAGE_ITEM::CImageColHeader(szCol, nWidth, bClickable));
 
 	SetHorzScrollInfo(false);
 }
@@ -786,40 +791,61 @@ LC_ITEM *CSkinListCtrl::NewLCItem(int nCol)
 	return m_vHeading[nCol]->NewLCItem();
 }
 
-int CSkinListCtrl::GetRowAtPoint(int y, bool bRestrict)
+void CSkinListCtrl::GetRowColAtPoint(POINT pt, int &row, int &col, POINT *ptAtItemCell, bool *bItemClickable)
 {
-	int		yContentTop = m_rcCtrl.top;
-	if (m_bDrawHeader)
-		yContentTop += m_nHeaderHeight;
-	if (bRestrict)
+	row = col = -1;
+	if (bItemClickable)
+		*bItemClickable = false;
+
+	// Col
+	pt.x -= m_rcCtrl.left + m_nXMargin;
+
+	if (pt.x >= 0 && pt.x <= m_rcCtrl.Width())
 	{
-		if (y >= yContentTop && y <= m_rcCtrl.bottom)
+		if (m_pHorzScrollBar && m_pHorzScrollBar->IsEnabled())
+			pt.x += m_pHorzScrollBar->GetScrollPos();
+		for (int i = 0; i < m_vHeading.size(); i++)
 		{
-			int		n = m_nFirstVisibleRow + (y - yContentTop) / m_nLineHeight;
-			if (n < (int)m_vRows.size())
-				return n;
+			if (pt.x < m_vHeading[i]->nWidth)
+			{
+				if (ptAtItemCell)
+					ptAtItemCell->x = pt.x;
+				col = i;
+			}
+			pt.x -= m_vHeading[i]->nWidth;
 		}
-
-		return -1;
 	}
-	else
+
+	// Row
+	pt.y -= m_rcCtrl.top;
+	if (m_bDrawHeader)
+		pt.y -= m_nHeaderHeight;
+
+	if (pt.y >= 0 && pt.y <= m_rcCtrl.Height())
 	{
-		int n = m_nFirstVisibleRow + (y - yContentTop) / m_nLineHeight;
-		if (n < 0)
-			n = 0;
-		else if (n >= (int)m_vRows.size())
-			n = m_vRows.size() - 1;
+		int		n = m_nFirstVisibleRow + pt.y / m_nLineHeight;
+		if (ptAtItemCell)
+			ptAtItemCell->y = pt.y % m_nLineHeight;
+		if (n < (int)m_vRows.size())
+			row = n;
+	}
 
-		return n;
+	if (bItemClickable && col != -1 && row != -1
+		&& m_vHeading[col]->bClickable)
+	{
+		LC_ITEM		*item = m_vRows[row]->GetSubItem(col);
+		if (item && item->IsClickedOn(m_vHeading[col], ptAtItemCell->x, ptAtItemCell->y))
+			*bItemClickable = true;
 	}
 }
 
-
-int CSkinListCtrl::GetColAtPoint(int x)
+void CSkinListCtrl::SetClickCursor()
 {
-	return 0;
-}
+	if (!m_curHand.IsValid())
+		m_curHand.LoadStdCursor(CCursor::C_HAND);
 
+	MLWidget::SetCursor(m_curHand);
+}
 
 bool CSkinListCtrl::ClearAllSelMark()
 {
@@ -1037,9 +1063,9 @@ void CSkinListCtrl::SetHorzScrollInfo(bool bRedraw)
 }
 
 
-void CSkinListCtrl::SendNotifyEvent(CSkinListCtrlEventNotify::Command cmd)
+void CSkinListCtrl::SendNotifyEvent(CSkinListCtrlEventNotify::Command cmd, int nClickedRow, int nClickedCol)
 {
-	CSkinListCtrlEventNotify	event(this);
+	CSkinListCtrlEventNotify	event(this, nClickedRow, nClickedCol);
 
 	event.cmd = cmd;
 	m_pSkin->DispatchUIObjNotify(&event);
@@ -1323,7 +1349,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 			break;
 	}
 
-	// DrawBorder
+	// Draw Border
 	if (m_bDrawBorder)
 	{
 		pGraph->Rectangle(m_rcCtrl.left, m_rcCtrl.top, m_rcCtrl.Width(), m_rcCtrl.Height());
@@ -1336,7 +1362,6 @@ bool CSkinListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	if (CSkinScrollFrameCtrlBase::OnLButtonDown(nFlags, point))
 		return true;
 
-	// ²¶×½Êó±êÊäÈë
 	int			nColumnIndex;
 	HitTestArea	hta = HitTest(point, nColumnIndex);
 	if (hta == HTA_HEADER_SPLIT)
@@ -1356,7 +1381,17 @@ bool CSkinListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	CPaintUpdater		updater(this);
 	CSelChangedCheck	selChecher(this);
 
-	m_nEndSelRow = GetRowAtPoint(point.y);
+	POINT ptAtItemCell;
+	int nClickedRow = -1, nClickedCol = -1;
+	bool bItemClickable;
+	GetRowColAtPoint(point, nClickedRow, nClickedCol, &ptAtItemCell, &bItemClickable);
+	if (bItemClickable)
+	{
+		SetClickCursor();
+		return true;
+	}
+
+	m_nEndSelRow = nClickedRow;
 	if (nFlags & MK_SHIFT)
 		SelectRangeRow(m_nBegSelRow, m_nEndSelRow);
 	else
@@ -1371,7 +1406,7 @@ bool CSkinListCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	if (selChecher.IsSelectChanged())
 	{
 		updater.SetUpdateFlag(true);
-		SendNotifyEvent(CSkinListCtrlEventNotify::C_SEL_CHANGED);
+		SendNotifyEvent(CSkinListCtrlEventNotify::C_SEL_CHANGED, nClickedRow, nClickedCol);
 	}
 
 	return true;
@@ -1388,7 +1423,8 @@ bool CSkinListCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 	if (hta != HTA_ROW)
 		return true;
 
-	int		nClickedRow = GetRowAtPoint(point.y);
+	int nClickedRow = -1, nClickedCol = -1;
+	GetRowColAtPoint(point, nClickedRow, nClickedCol);
 	if (nClickedRow != -1)
 	{
 		if (IsRowSelected(nClickedRow))
@@ -1408,7 +1444,7 @@ bool CSkinListCtrl::OnRButtonDown(UINT nFlags, CPoint point)
 	if (selChecher.IsSelectChanged())
 	{
 		updater.SetUpdateFlag(true);
-		SendNotifyEvent(CSkinListCtrlEventNotify::C_SEL_CHANGED);
+		SendNotifyEvent(CSkinListCtrlEventNotify::C_SEL_CHANGED, nClickedRow, nClickedCol);
 	}
 
 	return false;
@@ -1434,7 +1470,9 @@ bool CSkinListCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 	CPaintUpdater		updater(this);
 	CSelChangedCheck	selChecher(this);
 
-	m_nEndSelRow = GetRowAtPoint(point.y);
+	int nClickedRow = -1, nClickedCol = -1;
+	GetRowColAtPoint(point, nClickedRow, nClickedCol);
+	m_nEndSelRow = nClickedRow;
 
 	m_nBegSelRow = m_nEndSelRow;
 	ReverseSelectStatOfRow((nFlags & MK_CONTROL) != MK_CONTROL, m_nEndSelRow);
@@ -1444,7 +1482,7 @@ bool CSkinListCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 	if (m_nEndSelRow != -1)
 		MakeSureRowVisible(m_nEndSelRow);
 
-	SendNotifyEvent(CSkinListCtrlEventNotify::C_DBL_CLICK);
+	SendNotifyEvent(CSkinListCtrlEventNotify::C_DBL_CLICK, nClickedRow, nClickedCol);
 
 	return true;
 }
@@ -1664,9 +1702,6 @@ void CSkinListCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 
 bool CSkinListCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	if (CSkinScrollFrameCtrlBase::OnLButtonUp(nFlags, point))
-		return true;
-
 	if (m_bAdjustColWidth)
 	{
 		m_pSkin->ReleaseCaptureMouse(this);
@@ -1676,12 +1711,29 @@ bool CSkinListCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 		return true;
 	}
 
+	if (CSkinScrollFrameCtrlBase::OnLButtonUp(nFlags, point))
+		return true;
+
 	Invalidate();
 
 	if (m_bClickBtDown)
 	{
 		m_bClickBtDown = false;
-		SendNotifyEvent(CSkinListCtrlEventNotify::C_CLICK);
+
+		POINT ptAtItemCell;
+		int nClickedRow = -1, nClickedCol = -1;
+		bool bItemClickable;
+		GetRowColAtPoint(point, nClickedRow, nClickedCol, &ptAtItemCell, &bItemClickable);
+		if (bItemClickable)
+		{
+			SetClickCursor();
+
+			CSkinListCtrlEventNotify	event(this, nClickedRow, nClickedCol);
+			event.cmd = CSkinListCtrlEventNotify::C_CLICK_CMD;
+			m_pSkin->DispatchUIObjNotify(&event);
+		}
+		else
+			SendNotifyEvent(CSkinListCtrlEventNotify::C_CLICK, nClickedRow, nClickedCol);
 	}
 
 	return true;
@@ -1690,9 +1742,6 @@ bool CSkinListCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 
 bool CSkinListCtrl::OnMouseMove(UINT nFlags, CPoint point)
 {
-	if (CSkinScrollFrameCtrlBase::OnMouseMove(nFlags, point))
-		return true;
-
 	if (m_bAdjustColWidth && (nFlags & MK_LBUTTON) && m_nResizingCol < (int)m_vHeading.size())
 	{
 		MLWidget::SetCursor(m_curResizeCol);
@@ -1715,30 +1764,44 @@ bool CSkinListCtrl::OnMouseMove(UINT nFlags, CPoint point)
 			SetHorzScrollInfo(true);
 			Invalidate();
 		}
+
+		return true;
+	}
+
+	if (CSkinScrollFrameCtrlBase::OnMouseMove(nFlags, point))
+		return true;
+
+	int			nColumnIndex;
+	HitTestArea	hta = HitTest(point, nColumnIndex);
+	if (hta == HTA_HEADER_SPLIT)
+	{
+		// Set cursor of resize column width.
+		MLWidget::SetCursor(m_curResizeCol);
+	}
+	else if (hta == HTA_ROW && m_bHoverMouseSel)
+	{
+		// Mouse hover to change selected.
+		CSelChangedCheck	selChecher(this);
+
+		int nClickedRow = -1, nClickedCol = -1;
+		GetRowColAtPoint(point, nClickedRow, nClickedCol, NULL);
+		m_nBegSelRow = m_nEndSelRow = nClickedRow;
+		SelectRangeRow(m_nBegSelRow, m_nEndSelRow);
+
+		if (selChecher.IsSelectChanged())
+		{
+			SendNotifyEvent(CSkinListCtrlEventNotify::C_SEL_CHANGED);
+			Invalidate();
+		}
 	}
 	else
 	{
-		int			nColumnIndex;
-		HitTestArea	hta = HitTest(point, nColumnIndex);
-		if (hta == HTA_HEADER_SPLIT)
-		{
-			// Set cursor of resize column width.
-			MLWidget::SetCursor(m_curResizeCol);
-		}
-		else if (hta == HTA_ROW && m_bHoverMouseSel)
-		{
-			// Mouse hover to change selected.
-			CSelChangedCheck	selChecher(this);
-
-			m_nBegSelRow = m_nEndSelRow = GetRowAtPoint(point.y);
-			SelectRangeRow(m_nBegSelRow, m_nEndSelRow);
-
-			if (selChecher.IsSelectChanged())
-			{
-				SendNotifyEvent(CSkinListCtrlEventNotify::C_SEL_CHANGED);
-				Invalidate();
-			}
-		}
+		int nClickedRow = -1, nClickedCol = -1;
+		POINT ptAtItemCell;
+		bool bItemClickable;
+		GetRowColAtPoint(point, nClickedRow, nClickedCol, &ptAtItemCell, &bItemClickable);
+		if (bItemClickable)
+			SetClickCursor();
 	}
 
 	return true;

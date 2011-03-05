@@ -75,7 +75,7 @@ void CSkinMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap
 		for (it = m_listItems.begin(); it != itEnd; ++it)
 		{
 			Item	&item = *it;
-			if (item.nIDCmdIsChecked != SKIN_UIOBJ_ID_UNDEFINE && item.bCanCheck)
+			if (item.nIDCmdIsChecked != UID_INVALID && item.bCanCheck)
 			{
 				nRet = m_pSkinFactory->OnDynamicCmd(item.nIDCmdIsChecked, (CSkinWnd *)pWnd);
 				CheckItem(item.nMenuID, nRet == ERR_OK);
@@ -97,7 +97,7 @@ void CSkinMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RE
 		for (it = m_listItems.begin(); it != itEnd; ++it)
 		{
 			Item	&item = *it;
-			if (item.nIDCmdIsChecked != SKIN_UIOBJ_ID_UNDEFINE && item.bCanCheck)
+			if (item.nIDCmdIsChecked != UID_INVALID && item.bCanCheck)
 			{
 				nRet = m_pSkinFactory->OnDynamicCmd(item.nIDCmdIsChecked, (CSkinWnd *)pWnd);
 				CheckItem(item.nMenuID, nRet == ERR_OK);

@@ -64,7 +64,7 @@ public:
 	void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
 
-	virtual int FromXML(CSkinContainer *pContainer, SXNode *pXmlNode);
+	virtual int FromXML(SXNode *pXmlNode);
 
 #ifdef _SKIN_EDITOR_
 	// Write Button in XML

@@ -478,8 +478,9 @@ protected:
 
 static tstring GetCmdIDDescription(int nCmd)
 {
-	LPCTSTR		szTooltip = MPCMDIDToToolTip(nCmd);
-	if (!szTooltip)
+	tstring strTooltip;
+	CMPlayerAppBase::GetMPSkinFactory()->GetTooltip(nCmd, strTooltip);
+	if (strTooltip.empty())
 		return _T("");
 
 	MPHotKeySection		*pSect = g_vHotkeySections;
@@ -489,12 +490,12 @@ static tstring GetCmdIDDescription(int nCmd)
 		{
 			if (pSect->vHotkeys[k] == nCmd)
 			{
-				return tstring(TOLOCAL(pSect->szName)) + _T(" ") + TOLOCAL(szTooltip);
+				return tstring(TOLOCAL(pSect->szName)) + _T(" ") + TOLOCAL(strTooltip.c_str());
 			}
 		}
 	}
 
-	return szTooltip;
+	return strTooltip;
 }
 
 class CPfItemBoolEnableGlobalHotkey : public CPfItemBool
@@ -753,14 +754,15 @@ void CPagePfAdvanced::OnInitialUpdate()
 	{
 		for (int k = 0; pSect->vHotkeys[k] != 0; k++)
 		{
-			LPCTSTR		szID = MPCMDIDToToolTip(pSect->vHotkeys[k]);
-			if (!szID)
+			tstring strTooltip;
+			CMPlayerAppBase::GetMPSkinFactory()->GetTooltip(pSect->vHotkeys[k], strTooltip);
+			if (strTooltip.empty())
 				continue;
 
 			m_vPreferItems.push_back(new CPfItemShortcut(
 				this,
 				(tstring(TOLOCAL(_T("Shortcut:"))) + _T(" ")
-				+ TOLOCAL(pSect->szName) + _T(" ") + TOLOCAL(szID)).c_str(),
+				+ TOLOCAL(pSect->szName) + _T(" ") + TOLOCAL(strTooltip.c_str())).c_str(),
 				pSect->vHotkeys[k]));
 		}
 	}

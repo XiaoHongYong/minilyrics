@@ -392,12 +392,13 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 		pGraph->ResetClipBoundBox(rc);
 }
 
-int CSkinContainer::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
+int CSkinContainer::FromXML(SXNode *pXmlNode)
 {
-	CUIObject::FromXML(pContainer, pXmlNode);
+	CUIObject::FromXML(pXmlNode);
 
 	// recalculate position before create children.
-	pContainer->RecalculateUIObjSizePos(this);
+	ASSERT(m_pContainer);
+	m_pContainer->RecalculateUIObjSizePos(this);
 
 	// Create child CUIObject
 	SXNode::iterator	it, itEnd;
@@ -414,7 +415,7 @@ int CSkinContainer::FromXML(CSkinContainer *pContainer, SXNode *pXmlNode)
 		if (pObj)
 		{
 			// 创建成功，首先设置它的属性
-			pObj->FromXML(this, pNode);
+			pObj->FromXML(pNode);
 
 			// 添加到数组中
 			AddUIObject(pObj);
@@ -504,7 +505,7 @@ CUIObject *CSkinContainer::GetUIObjectById(int nId, LPCTSTR szClassName)
 {
 	int nCount;
 
-	if (nId == SKIN_UIOBJ_ID_UNDEFINE)
+	if (nId == UID_INVALID)
 		return NULL;
 	
 	// send mouse move message to every ui objects that want to process
@@ -562,7 +563,7 @@ bool CSkinContainer::RemoveUIObject(CUIObject *pObj, bool bFree)
 
 CUIObject *CSkinContainer::RemoveUIObjectById(int nId)
 {
-	if (nId == SKIN_UIOBJ_ID_UNDEFINE)
+	if (nId == UID_INVALID)
 		return NULL;
 
 	for (int i = 0; i < (int)m_vUIObjs.size(); i++)

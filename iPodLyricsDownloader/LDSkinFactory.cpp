@@ -4,8 +4,8 @@
 #include "LDSkinWnd.h"
 #include "LDSkinWndMain.h"
 
-CLDSkinFactory::CLDSkinFactory(CSkinApp *pApp, STRING_ID_MAP stringIdMap[]) :
-	CSkinFactory(pApp, stringIdMap)
+CLDSkinFactory::CLDSkinFactory(CSkinApp *pApp, UIObjectIDDefinition uidDefinition[]) :
+	CSkinFactory(pApp, uidDefinition)
 {
 }
 
@@ -21,11 +21,11 @@ CSkinWnd *CLDSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
 		return new CLDSkinWnd();
 }
 
-CUIObject *CLDSkinFactory::NewUIObject(CSkinWnd *pSkin, LPCTSTR szClassName)
+CUIObject *CLDSkinFactory::NewUIObject(CSkinWnd *pSkin, CSkinContainer *pContainer, LPCTSTR szClassName)
 {
 	CUIObject		*pObj;
 
-	pObj = CSkinFactory::NewUIObject(pSkin, szClassName);
+	pObj = CSkinFactory::NewUIObject(pSkin, pContainer, szClassName);
 	if (pObj)
 		return pObj;
 
