@@ -36,3 +36,20 @@ void CLDSkinWndMain::OnDestroy()
 
 	CLDSkinWnd::OnDestroy();
 }
+
+void CLDSkinWndMain::OnCommand(UINT uID, UINT nNotifyCode)
+{
+	switch (uID)
+	{
+	case ID_IMPORT_ITUNES_LIB:
+		break;
+	case ID_ADD_DIR:
+		break;
+	case ID_ADD_FILES:
+		break;
+	case ID_CLEAR_LIST:
+		break;
+	}
+
+	CLDSkinWnd::OnCommand(uID, nNotifyCode);
+}

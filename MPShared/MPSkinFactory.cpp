@@ -71,78 +71,39 @@ CMPSkinFactory::~CMPSkinFactory()
 
 }
 
-CUIObject *CMPSkinFactory::NewUIObject(CSkinWnd *pSkin, CSkinContainer *pContainer, LPCTSTR szClassName)
+int CMPSkinFactory::Init()
 {
-	CUIObject		*pObj;
-
-	pObj = CSkinFactory::NewUIObject(pSkin, pContainer, szClassName);
-	if (pObj)
-		return pObj;
-
-	if (_tcsicmp(szClassName, CLyricShowMultiRowObj::ClassName()) == 0)
-		pObj = new CLyricShowMultiRowObj;
-	else if (_tcsicmp(szClassName, CLyricShowTxtObj::ClassName()) == 0)
-		pObj = new CLyricShowTxtObj;
-	else if (_tcsicmp(szClassName, CLyricShowTwoRowObj::ClassName()) == 0)
-		pObj = new CLyricShowTwoRowObj;
-	else if (_tcsicmp(szClassName, CLyricShowHorzScrollObj::ClassName()) == 0)
-		pObj = new CLyricShowHorzScrollObj;
-	else if (_tcsicmp(szClassName, CLyricShowSingleRowObj::ClassName()) == 0)
-		pObj = new CLyricShowSingleRowObj;
-	else if (_tcsicmp(szClassName, CLyricShowVobSub::ClassName()) == 0)
-		pObj = new CLyricShowVobSub;
-	else if (_tcsicmp(szClassName, CLyricShowTextEditObj::ClassName()) == 0)
-		pObj = new CLyricShowTextEditObj;
-	else if (_tcsicmp(szClassName, CLyricShowAgentObj::ClassName()) == 0)
-		pObj = new CLyricShowAgentObj;
-//	else if (_tcsicmp(szClassName, CLyricShowPreviewObj::ClassName()) == 0)
-//		pObj = new CLyricShowPreviewObj;
-	else if (_tcsicmp(szClassName, CSkinRateCtrl::ClassName()) == 0)
-		pObj = new CSkinRateCtrl;
-	else if (_tcsicmp(szClassName, CSkinBarFrame::ClassName()) == 0)
-		pObj = new CSkinBarFrame;
-	else if (_tcsicmp(szClassName, CSkinContainerBar::ClassName()) == 0)
-		pObj = new CSkinContainerBar;
-	else if (_tcsicmp(szClassName, CSkinBarFrameClientArea::ClassName()) == 0)
-		pObj = new CSkinBarFrameClientArea;
-	else if (_tcsicmp(szClassName, CSkinPicText::ClassName()) == 0)
-		pObj = new CSkinPicText;
-	else if (_tcsicmp(szClassName, CMPSkinTimeCtrl<CSkinPicText>::ClassName()) == 0)
-		pObj = new CMPSkinTimeCtrl<CSkinPicText>;
-	else if (_tcsicmp(szClassName, CMPSkinTimeCtrl<CSkinStaticText>::ClassName()) == 0)
-		pObj = new CMPSkinTimeCtrl<CSkinStaticText>;
-	else if (_tcsicmp(szClassName, CMPSkinInfoTextCtrl::ClassName()) == 0)
-		pObj = new CMPSkinInfoTextCtrl;
-	else if (_tcsicmp(szClassName, CMPSkinInfoTextCtrlEx::ClassName()) == 0)
-		pObj = new CMPSkinInfoTextCtrlEx;
-	else if (_tcsicmp(szClassName, CSkinTabHeader::ClassName()) == 0)
-		pObj = new CSkinTabHeader;
-	else if (_tcsicmp(szClassName, CSkinFilterCtrl::ClassName()) == 0)
-		pObj = new CSkinFilterCtrl;
+	AddUIObjNewer(CLyricShowMultiRowObj);
+	AddUIObjNewer(CLyricShowTxtObj);
+	AddUIObjNewer(CLyricShowTwoRowObj);
+	AddUIObjNewer(CLyricShowHorzScrollObj);
+	AddUIObjNewer(CLyricShowSingleRowObj);
+	AddUIObjNewer(CLyricShowVobSub);
+	AddUIObjNewer(CLyricShowTextEditObj);
+	AddUIObjNewer(CLyricShowAgentObj);
+	AddUIObjNewer(CSkinRateCtrl);
+	AddUIObjNewer(CSkinBarFrame);
+	AddUIObjNewer(CSkinContainerBar);
+	AddUIObjNewer(CSkinBarFrameClientArea);
+	AddUIObjNewer(CSkinPicText);
+	AddUIObjNewer(CMPSkinTimeCtrl<CSkinPicText>);
+	AddUIObjNewer(CMPSkinTimeCtrl<CSkinStaticText>);
+	AddUIObjNewer(CMPSkinInfoTextCtrl);
+	AddUIObjNewer(CMPSkinInfoTextCtrlEx);
+	AddUIObjNewer(CSkinTabHeader);
+	AddUIObjNewer(CSkinFilterCtrl);
 #ifdef _MPLAYER
-	else if (_tcsicmp(szClassName, CSkinTreeCtrl::ClassName()) == 0)
-		pObj = new CSkinTreeCtrl;
-	else if (_tcsicmp(szClassName, CMPSkinVis::ClassName()) == 0)
-		pObj = new CMPSkinVis;
-	else if (_tcsicmp(szClassName, CSkinListCtrlEx::ClassName()) == 0)
-		pObj = new CSkinListCtrlEx;
-	else if (_tcsicmp(szClassName, CMPSkinMediaNumInfoCtrl::ClassName()) == 0)
-		pObj = new CMPSkinMediaNumInfoCtrl;
-	else if (_tcsicmp(szClassName, CMPlaylistSearchObj::ClassName()) == 0)
-		pObj = new CMPlaylistSearchObj;
-	else if (_tcsicmp(szClassName, CSkinVideo::ClassName()) == 0)
-		pObj = new CSkinVideo;
+	AddUIObjNewer(CSkinTreeCtrl);
+	AddUIObjNewer(CMPSkinVis);
+	AddUIObjNewer(CSkinListCtrlEx);
+	AddUIObjNewer(CMPSkinMediaNumInfoCtrl);
+	AddUIObjNewer(CMPlaylistSearchObj);
+	AddUIObjNewer(CSkinVideo);
 #endif
-	else if (_tcsicmp(szClassName, CMediaInfoTextCtrl::ClassName()) == 0)
-		pObj = new CMediaInfoTextCtrl;
-	else if (_tcsicmp(szClassName, CMediaAlbumArtCtrl::ClassName()) == 0)
-		pObj = new CMediaAlbumArtCtrl;
-	else
-		return NULL;
+	AddUIObjNewer(CMediaInfoTextCtrl);
+	AddUIObjNewer(CMediaAlbumArtCtrl);
 
-	pObj->SetParent(pSkin, pContainer);
-
-	return pObj;
+	return CSkinFactory::Init();
 }
 
 CSkinWnd *CMPSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)

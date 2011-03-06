@@ -13,10 +13,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "MPSkinDialog.h"
 #include "PreferencePageBase.h"
 
-class CPreferenceDlg : public CMPSkinDialog
+class CPreferenceDlg : public CSkinDialog
 {
 public:
 	CPreferenceDlg(bool bFloatingLyrMode = false, PreferPageID defaultPage = PAGE_UI);

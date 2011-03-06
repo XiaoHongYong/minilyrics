@@ -74,7 +74,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////
 
-CDlgAdjustHue::CDlgAdjustHue() : CMPSkinDialog(_T("AdjustHue.xml"))
+CDlgAdjustHue::CDlgAdjustHue() : CSkinDialog(_T("AdjustHue.xml"))
 {
 	m_pageHandler.AddPage(new CPageAdjustHue());
 

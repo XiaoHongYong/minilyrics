@@ -563,6 +563,43 @@ CSkinFactory::~CSkinFactory()
 
 int CSkinFactory::Init()
 {
+	AddUIObjNewer(CSkinButton);
+	AddUIObjNewer(CSkinActiveButton);
+	AddUIObjNewer(CSkinImageButton);
+	AddUIObjNewer(CSkinImage);
+	AddUIObjNewer(CSkinNStatusImage);
+	AddUIObjNewer(CSkinActiveImage);
+	AddUIObjNewer(CSkinXScaleImage);
+	m_mapUIObjNewer[_T("XScaleImage")] = new CUIObjectNewer<CSkinXScaleImage>();
+	AddUIObjNewer(CSkinYScaleImage);
+	m_mapUIObjNewer[_T("YScaleImage")] = new CUIObjectNewer<CSkinYScaleImage>();
+	AddUIObjNewer(CSkinVScrollBar);
+	AddUIObjNewer(CSkinHScrollBar);
+	m_mapUIObjNewer[_T("VScrollBarOSStyle")] = new CUIObjectNewer<CSkinVScrollBar>();
+	m_mapUIObjNewer[_T("HScrollBarOSStyle")] = new CUIObjectNewer<CSkinHScrollBar>();
+	AddUIObjNewer(CSkinCaption);
+	AddUIObjNewer(CSkinNStatusButton);
+	AddUIObjNewer(CSkinContainer);
+	AddUIObjNewer(CSkinDecorativeContainer);
+	AddUIObjNewer(CSkinMenuBar);
+	AddUIObjNewer(CSkinWndResizeObj);
+	AddUIObjNewer(CSkinEditCtrl);
+	AddUIObjNewer(CSkinSquare);
+	AddUIObjNewer(CSkinFadeArea);
+	AddUIObjNewer(CSkinToggleCtrlContainer);
+	AddUIObjNewer(CSkinClientArea);
+	AddUIObjNewer(CSkinAnimationObj);
+	AddUIObjNewer(CSkinFrameCtrl);
+	AddUIObjNewer(CSkinHoverActionButton);
+	AddUIObjNewer(CSkinComboBox);
+	AddUIObjNewer(CSkinListCtrl);
+	AddUIObjNewer(CSkinSeekCtrl);
+	AddUIObjNewer(CSkinStaticText);
+	AddUIObjNewer(CSkinTabButton);
+	AddUIObjNewer(CSkinTextButton);
+	AddUIObjNewer(CSkinToolbar);
+	AddUIObjNewer(CSkinTxtLink);
+
 	// Init SimpleJVM environment
 	CSjvmSkinSystem::Init(this);
 
@@ -580,6 +617,11 @@ int CSkinFactory::Init()
 
 void CSkinFactory::Quit()
 {
+	for (MapUIObjNewer::iterator it = m_mapUIObjNewer.begin();
+		it != m_mapUIObjNewer.end(); ++it)
+		delete (*it).second;
+	m_mapUIObjNewer.clear();
+
 	Close(true);
 }
 
@@ -1199,81 +1241,13 @@ CUIObject * CSkinFactory::CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName, C
 
 CUIObject *CSkinFactory::NewUIObject(CSkinWnd *pSkin, CSkinContainer *pContainer, LPCTSTR szClassName)
 {
-	CUIObject *pObj = NULL;
+	MapUIObjNewer::iterator it = m_mapUIObjNewer.find(szClassName);
+	if (it == m_mapUIObjNewer.end())
+		return NULL;
 
-	if (_tcsicmp(szClassName, CSkinButton::ClassName()) == 0)
-		pObj = new CSkinButton;
-	if (_tcsicmp(szClassName, CSkinActiveButton::ClassName()) == 0)
-		pObj = new CSkinActiveButton;
-	else if (IsPropertyName(szClassName, CSkinImageButton::ClassName()))
-		pObj = new CSkinImageButton;
-	else if (_tcsicmp(szClassName, CSkinImage::ClassName()) == 0)
-		pObj = new CSkinImage;
-	else if (_tcsicmp(szClassName, CSkinNStatusImage::ClassName()) == 0)
-		pObj = new CSkinNStatusImage;
-	else if (_tcsicmp(szClassName, CSkinActiveImage::ClassName()) == 0)
-		pObj = new CSkinActiveImage;
-	else if (_tcsicmp(szClassName, CSkinXScaleImage::ClassName()) == 0 ||
-		_tcsicmp(szClassName, _T("XScaleImage")) == 0)
-		pObj = new CSkinXScaleImage;
-	else if (_tcsicmp(szClassName, CSkinYScaleImage::ClassName()) == 0 ||
-		_tcsicmp(szClassName, _T("YScaleImage")) == 0)
-		pObj = new CSkinYScaleImage;
-	else if (_tcsicmp(szClassName, CSkinVScrollBar::ClassName()) == 0
-		|| IsPropertyName(szClassName, _T("VScrollBarOSStyle")))
-		pObj = new CSkinVScrollBar;
-	else if (_tcsicmp(szClassName, CSkinHScrollBar::ClassName()) == 0
-		|| IsPropertyName(szClassName, _T("HScrollBarOSStyle")))
-		pObj = new CSkinHScrollBar;
-	else if (_tcsicmp(szClassName, CSkinCaption::ClassName()) == 0)
-		pObj = new CSkinCaption;
-	else if (_tcsicmp(szClassName, CSkinNStatusButton::ClassName()) == 0)
-		pObj = new CSkinNStatusButton;
-	else if (_tcsicmp(szClassName, CSkinContainer::ClassName()) == 0)
-		pObj = new CSkinContainer;
-	else if (_tcsicmp(szClassName, CSkinDecorativeContainer::ClassName()) == 0)
-		pObj = new CSkinDecorativeContainer;
-	else if (_tcsicmp(szClassName, CSkinMenuBar::ClassName()) == 0)
-		pObj = new CSkinMenuBar;
-	else if (_tcsicmp(szClassName, CSkinWndResizeObj::ClassName()) == 0)
-		pObj = new CSkinWndResizeObj;
-	else if (_tcsicmp(szClassName, CSkinEditCtrl::ClassName()) == 0)
-		pObj = new CSkinEditCtrl;
-	else if (_tcsicmp(szClassName, CSkinSquare::ClassName()) == 0)
-		pObj = new CSkinSquare;
-	else if (IsPropertyName(szClassName, CSkinFadeArea::ClassName()))
-		pObj = new CSkinFadeArea;
-	else if (IsPropertyName(szClassName, CSkinToggleCtrlContainer::ClassName()))
-		pObj = new CSkinToggleCtrlContainer;
-	else if (IsPropertyName(szClassName, CSkinClientArea::ClassName()))
-		pObj = new CSkinClientArea;
-	else if (IsPropertyName(szClassName, CSkinAnimationObj::ClassName()))
-		pObj = new CSkinAnimationObj;
-	else if (IsPropertyName(szClassName, CSkinFrameCtrl::ClassName()))
-		pObj = new CSkinFrameCtrl;
-	else if (IsPropertyName(szClassName, CSkinHoverActionButton::ClassName()))
-		pObj = new CSkinHoverActionButton;
-	else if (IsPropertyName(szClassName, CSkinComboBox::ClassName()))
-		pObj = new CSkinComboBox;
-	else if (IsPropertyName(szClassName, CSkinListCtrl::ClassName()))
-		pObj = new CSkinListCtrl;
-	else if (IsPropertyName(szClassName, CSkinSeekCtrl::ClassName()))
-		pObj = new CSkinSeekCtrl;
-	else if (IsPropertyName(szClassName, CSkinStaticText::ClassName()))
-		pObj = new CSkinStaticText;
-	else if (IsPropertyName(szClassName, CSkinTabButton::ClassName()))
-		pObj = new CSkinTabButton;
-	else if (IsPropertyName(szClassName, CSkinTextButton::ClassName()))
-		pObj = new CSkinTextButton;
-	else if (IsPropertyName(szClassName, CSkinToolbar::ClassName()))
-		pObj = new CSkinToolbar;
-	else if (IsPropertyName(szClassName, CSkinTxtLink::ClassName()))
-		pObj = new CSkinTxtLink;
-
-	if (pObj)
-	{
-		pObj->SetParent(pSkin, pContainer);
-	}
+	CUIObject *pObj = (*it).second->New();
+	ASSERT(pObj);
+	pObj->SetParent(pSkin, pContainer);
 
 	return pObj;
 }

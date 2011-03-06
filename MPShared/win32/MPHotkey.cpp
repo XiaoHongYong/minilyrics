@@ -494,12 +494,12 @@ int CMPHotkey::SaveSettings()
 	for (int i = 0; i < (int)m_vAccKey.size(); i++)
 	{
 		CmdAccKey	&cmdKey = m_vAccKey[i];
-		LPCTSTR		szID = CMPlayerAppBase::GetMPSkinFactory()->GetStringOfID(cmdKey.cmd);
+		tstring strId = CMPlayerAppBase::GetMPSkinFactory()->GetStringOfID(cmdKey.cmd);
 
-		if (!szID)
+		if (strId.empty())
 			continue;
 
-		file.WriteFieldString(szID);
+		file.WriteFieldString(strId.c_str());
 		file.WriteFieldInt(cmdKey.bGlobal);
 		file.WriteFieldInt(cmdKey.button);
 		file.WriteFieldInt(cmdKey.fsModifiers);

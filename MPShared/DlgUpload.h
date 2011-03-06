@@ -1,8 +1,6 @@
 #pragma once
 
-#include "MPSkinDialog.h"
-
-class CDlgUpload : public CMPSkinDialog
+class CDlgUpload : public CSkinDialog
 {
 public:
 	CDlgUpload(tstring &strLyricsContent, LPCTSTR szMediaSource, LPCTSTR szLyrSource);

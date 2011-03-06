@@ -628,6 +628,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinEditCtrl.cpp"
 				>
 			</File>
@@ -752,6 +756,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\SkinPageHandler.cpp"
+				>
 			</File>
 			<File
 				RelativePath="SkinResMgr.cpp"
@@ -1166,6 +1174,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinDialog.h"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinEditCtrl.h"
 				>
 			</File>
@@ -1203,6 +1215,10 @@
 			</File>
 			<File
 				RelativePath="SkinNStatusButton.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinPageHandler.h"
 				>
 			</File>
 			<File

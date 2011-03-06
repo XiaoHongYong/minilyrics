@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include "MPSkinDialog.h"
-
-class CDlgOpenLyrics : public CMPSkinDialog
+class CDlgOpenLyrics : public CSkinDialog
 {
 public:
 	CDlgOpenLyrics();

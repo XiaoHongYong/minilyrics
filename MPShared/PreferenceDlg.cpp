@@ -20,7 +20,7 @@
 #endif
 
 CPreferenceDlg::CPreferenceDlg(bool bFloatingLyrMode, PreferPageID defaultPage)
-	: CMPSkinDialog(_T("Preferences.xml"))
+	: CSkinDialog(_T("Preferences.xml"))
 {
 	m_bFloatingLyrMode = bFloatingLyrMode;
 	m_defaultPage = defaultPage;
@@ -50,7 +50,7 @@ void CPreferenceDlg::OnSkinLoaded()
 
 	m_pageHandler.SetDefaultPage(nDefaultRootPage);
 
-	CMPSkinDialog::OnSkinLoaded();
+	CSkinDialog::OnSkinLoaded();
 
 	CSkinToolbar*pToolbar = (CSkinToolbar *)GetUIObjectById(GetIDByName(_T("CID_TB_PREFERENCE")),
 		CSkinToolbar::ClassName());
@@ -65,7 +65,7 @@ void CPreferenceDlg::OnSkinLoaded()
 
 bool CPreferenceDlg::OnCustomCommand(int nId)
 {
-	if (CMPSkinDialog::OnCustomCommand(nId))
+	if (CSkinDialog::OnCustomCommand(nId))
 		return true;
 
 	CSkinPageHandler::ListPageHandler::iterator it, itEnd = m_pageHandler.ChildEnd();

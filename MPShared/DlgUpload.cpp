@@ -377,7 +377,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-CDlgUpload::CDlgUpload(tstring &strLyricsContent, LPCTSTR szMediaSource, LPCTSTR szLyrSource) : CMPSkinDialog(_T("UploadLyrics.xml"))
+CDlgUpload::CDlgUpload(tstring &strLyricsContent, LPCTSTR szMediaSource, LPCTSTR szLyrSource) : CSkinDialog(_T("UploadLyrics.xml"))
 {
 	m_pUploadWorkObj = new CUploadWorkObj();
 	m_pUploadWorkObj->m_strLyricsContent = strLyricsContent;

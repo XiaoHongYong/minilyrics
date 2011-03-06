@@ -23,6 +23,8 @@ public:
 	CMPSkinFactory(CSkinApp *pApp, UIObjectIDDefinition uidDefinition[]);
 	virtual ~CMPSkinFactory();
 
+	virtual int Init();
+
 	virtual CSkinWnd *NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd);
 
 	void TopmostAll(bool bTopmost);
@@ -67,8 +69,6 @@ protected:
 	virtual CSkinMenu *LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu);
 
 	virtual int ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd);
-
-	virtual CUIObject * NewUIObject(CSkinWnd *pSkin, CSkinContainer *pContainer, LPCTSTR szClassName);
 
 	SXNode *GetMenuOfMenus(SXNode *pNodeMenus, LPCTSTR szMenuName);
 

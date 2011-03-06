@@ -245,7 +245,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			else
 				pWndParent = CBaseWnd::FromHandle(hWnd);
 
-			CMPSkinDialog::ShowDialog(new CPreferenceDlg(false), pWndParent);
+			CSkinDialog::ShowDialog(new CPreferenceDlg(false), pWndParent);
 		}
 		break;
 	case M2M_ABOUT:
@@ -262,7 +262,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			else
 				pWndParent = CBaseWnd::FromHandle(hWnd);
 
-			CMPSkinDialog::ShowDialog(new CDlgAbout(), pWndParent);
+			CSkinDialog::ShowDialog(new CDlgAbout(), pWndParent);
 		}
 		break;
 

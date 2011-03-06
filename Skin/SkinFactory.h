@@ -48,10 +48,44 @@ enum UIObjectId
 	CMD_CANCEL,
 
 	CMD_BASE_END,
-	CMD_ID_CUSTOM_BASE = 1000
+	CMD_ID_CUSTOM_BASE = 1000,		// system alloc id begins from here
+
 };
 
-// system alloc id begins from here
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+//
+// Define the map of new UIObject.
+//
+class IUIObjNewer
+{
+public:
+	virtual CUIObject *New() = 0;
+
+};
+
+template<class _CUIObj_t>
+class CUIObjectNewer : public IUIObjNewer
+{
+public:
+	virtual ~CUIObjectNewer() { }
+	virtual CUIObject *New() { return new _CUIObj_t(); }
+
+};
+
+class CUIObjectNewerLessCmp
+{
+public:
+	bool operator()(LPCTSTR s1, LPCTSTR s2) const
+		{ return _tcsicmp(s1, s2) < 0; }
+
+};
+
+typedef map<LPCTSTR, IUIObjNewer *, CUIObjectNewerLessCmp>		MapUIObjNewer;
+
+#define AddUIObjNewer(_uiobj_class)		m_mapUIObjNewer[_uiobj_class::ClassName()] = new CUIObjectNewer< _uiobj_class >()
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 #define _SZ_SKINWND_CLASS_NAME	_T("CMPSkin")
 
@@ -300,6 +334,8 @@ protected:
 	COnlyAllocator				m_allocator;
 	int							m_nCustomCmdIDNext;
 	int							m_nMenuIDNext;
+
+	MapUIObjNewer				m_mapUIObjNewer;
 
 	typedef	list<CSkinWnd*>		LIST_SKINWNDS;
 

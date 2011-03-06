@@ -126,7 +126,7 @@ void CErrorResolveDlg::OnCommand(UINT uID, UINT nNotifyCode)
 
 		OnOK();
 
-		CMPSkinDialog::ShowDialog(new CPreferenceDlg(false, PAGE_INET), this);
+		CSkinDialog::ShowDialog(new CPreferenceDlg(false, PAGE_INET), this);
 	}
 	else if (IDC_COPYTOCLIPBOARD == uID)
 	{

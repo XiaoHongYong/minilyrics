@@ -9,8 +9,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "MPSkinDialog.h"
-
 #define UMSG_WORK_END		1
 
 class CWorkObjBase

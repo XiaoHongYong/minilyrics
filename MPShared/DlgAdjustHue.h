@@ -7,9 +7,7 @@
 
 #pragma once
 
-#include "MPSkinDialog.h"
-
-class CDlgAdjustHue : public CMPSkinDialog
+class CDlgAdjustHue : public CSkinDialog
 {
 public:
 	CDlgAdjustHue();

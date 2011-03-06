@@ -281,7 +281,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #ifdef _WIN32
 	case IDC_ADJUST_HUE:
 		{
-			CMPSkinDialog::ShowDialog(new CDlgAdjustHue(), m_pSkinWnd);
+			CSkinDialog::ShowDialog(new CDlgAdjustHue(), m_pSkinWnd);
 		}
 		break;
 #endif
@@ -291,7 +291,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			int nRet = CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(_T("about_box"),
 				_T("AboutBox"),
 				_T("AboutBox.xml"), CMPlayerAppBase::GetMainWnd(), &pWnd);*/
-			CMPSkinDialog::ShowDialog(new CDlgAbout(), m_pSkinWnd);
+			CSkinDialog::ShowDialog(new CDlgAbout(), m_pSkinWnd);
 		}
 		break;
 	case IDC_BR_ALBUM_ART:
@@ -339,62 +339,11 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	return true;
 }
 
-#ifdef _WIN32_DESKTOP
-BOOL ShowAsAppWindowNoRefresh(HWND hWnd)
-{
-	DWORD dwStyleEx;
-	dwStyleEx = (DWORD)GetWindowLong(hWnd, GWL_EXSTYLE);
-	if (IsFlagSet(dwStyleEx, WS_EX_TOOLWINDOW) || IsFlagSet(dwStyleEx, WS_EX_PALETTEWINDOW))
-	{
-		dwStyleEx &= ~(WS_EX_TOOLWINDOW | WS_EX_PALETTEWINDOW);
-		dwStyleEx |= WS_EX_APPWINDOW;
-		SetWindowLong(hWnd, GWL_EXSTYLE, dwStyleEx);
-		return TRUE;
-	}
-	return FALSE;
-}
-
-BOOL ShowAsToolWindowNoRefresh(HWND hWnd)
-{
-	DWORD dwStyleEx;
-	dwStyleEx = (DWORD)GetWindowLong(hWnd, GWL_EXSTYLE);
-	if (!IsFlagSet(dwStyleEx, WS_EX_TOOLWINDOW) && !IsFlagSet(dwStyleEx, WS_EX_PALETTEWINDOW))
-	{
-		dwStyleEx |= WS_EX_TOOLWINDOW;// | WS_EX_PALETTEWINDOW;
-		dwStyleEx &= ~WS_EX_APPWINDOW;
-		SetWindowLong(hWnd, GWL_EXSTYLE, dwStyleEx);
-		return TRUE;
-	}
-	return FALSE;
-}
-#endif // #ifdef _WIN32_DESKTOP
-
 bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 {
 	switch (nID)
 	{
 #ifdef _WIN32_DESKTOP
-	case CMD_MINIMIZE:
-		if (m_pSkinWnd->IsToolWindow())
-			m_pSkinWnd->ShowWindow(SW_HIDE);
-		else
-			m_pSkinWnd->ShowWindow(SW_SHOWMINIMIZED);
-		break;
-	case CMD_MAXIMIZE:
-		if (m_pSkinWnd->IsZoomed())
-			m_pSkinWnd->ShowWindow(SW_RESTORE);
-		else
-		{
-			bool	bToolWindow = Tobool(IsToolWindow(m_pSkinWnd->GetHandle()));
-			if (bToolWindow)
-				ShowAsAppWindowNoRefresh(m_pSkinWnd->GetHandle());
-
-			m_pSkinWnd->ShowWindow(SW_SHOWMAXIMIZED);
-
-			if (bToolWindow)
-				ShowAsToolWindowNoRefresh(m_pSkinWnd->GetHandle());
-		}
-		break;
 	case CMD_TOGGLE_MP:
 		{
 			if (m_pSkinWnd->IsIconic() || ::GetForegroundWindow() != m_pSkinWnd->GetHandle())
@@ -408,11 +357,11 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_PREFERENCES:
-		CMPSkinDialog::ShowDialog(new CPreferenceDlg(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS), m_pSkinWnd);
+		CSkinDialog::ShowDialog(new CPreferenceDlg(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS), m_pSkinWnd);
 		// g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case CMD_DISPLAY_OPT:
-		CMPSkinDialog::ShowDialog(new CPreferenceDlg(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS, PAGE_LYR_DISPLAY), m_pSkinWnd);
+		CSkinDialog::ShowDialog(new CPreferenceDlg(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS, PAGE_LYR_DISPLAY), m_pSkinWnd);
 		// g_wndPreference.Create(m_pSkinWnd, PAGE_LYR_DISPLAY, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case CMD_FLOATING_LYRICS:
@@ -637,7 +586,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			{
 				g_bInModalDlLrcSelDlg = TRUE;
 
-				CMPSkinDialog::ShowDialog(new CDlgOpenLyrics(), m_pSkinWnd);
+				CSkinDialog::ShowDialog(new CDlgOpenLyrics(), m_pSkinWnd);
 
 // 				CDlgSearchLyrics		LyricsDownSelDlg;
 // 
@@ -807,22 +756,8 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 
-	case CMD_MENU:
-		{
-			CPoint	pt;
-
-			MLWidget::GetCursorPos(&pt);
-			m_pSkinWnd->OnContexMenu(pt.x, pt.y);
-		}
-		break;
-	case CMD_QUIT:
-		CMPlayerAppBase::GetInstance()->PostQuitMessage();
-		break;
 	case CMD_OK:
 	case CMD_CANCEL:
-	case CMD_CLOSE:
-		m_pSkinWnd->PostDestroy();
-		break;
 	case ID_ALBUMART:
 		{
 			// album art
@@ -891,7 +826,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			tstring	strLyrics;
 			if (g_LyricData.ToString(strLyrics, FT_LYRICS_LRC, true))
 			{
-				CMPSkinDialog::ShowDialog(
+				CSkinDialog::ShowDialog(
 					new CDlgUpload(strLyrics, 
 						g_LyricData.GetSongFileName(),
 						g_LyricData.GetLyricsFileName()), 

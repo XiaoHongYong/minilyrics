@@ -1009,6 +1009,8 @@ void CMPlayerAppBase::RunUnitTest()
 	if (!g_Profile.GetProfileBool(_T("RunUnitTest"), true))
 		return;
 
+	CreateUnitResultWnd(GetAppInstance());
+
 	::RunUnitTest();
 }
 

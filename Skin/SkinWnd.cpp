@@ -2418,6 +2418,36 @@ void CSkinWnd::OnSkinLoaded()
 		m_pSjvmNotifyEvent->onCreate(this);
 }
 
+#ifdef _WIN32_DESKTOP
+BOOL ShowAsAppWindowNoRefresh(HWND hWnd)
+{
+	DWORD dwStyleEx;
+	dwStyleEx = (DWORD)GetWindowLong(hWnd, GWL_EXSTYLE);
+	if (IsFlagSet(dwStyleEx, WS_EX_TOOLWINDOW) || IsFlagSet(dwStyleEx, WS_EX_PALETTEWINDOW))
+	{
+		dwStyleEx &= ~(WS_EX_TOOLWINDOW | WS_EX_PALETTEWINDOW);
+		dwStyleEx |= WS_EX_APPWINDOW;
+		SetWindowLong(hWnd, GWL_EXSTYLE, dwStyleEx);
+		return TRUE;
+	}
+	return FALSE;
+}
+
+BOOL ShowAsToolWindowNoRefresh(HWND hWnd)
+{
+	DWORD dwStyleEx;
+	dwStyleEx = (DWORD)GetWindowLong(hWnd, GWL_EXSTYLE);
+	if (!IsFlagSet(dwStyleEx, WS_EX_TOOLWINDOW) && !IsFlagSet(dwStyleEx, WS_EX_PALETTEWINDOW))
+	{
+		dwStyleEx |= WS_EX_TOOLWINDOW;// | WS_EX_PALETTEWINDOW;
+		dwStyleEx &= ~WS_EX_APPWINDOW;
+		SetWindowLong(hWnd, GWL_EXSTYLE, dwStyleEx);
+		return TRUE;
+	}
+	return FALSE;
+}
+#endif // #ifdef _WIN32_DESKTOP
+
 bool CSkinWnd::OnCustomCommand(int nId)
 {
 	if (m_pSjvmNotifyEvent && m_pSjvmNotifyEvent->onCommand(nId))
@@ -2427,10 +2457,53 @@ bool CSkinWnd::OnCustomCommand(int nId)
 		return true;
 
 	int		nRet = m_pSkinFactory->OnDynamicCmd(nId, this);
-	if (nRet == ERR_NOT_FOUND)
-		return false;
-	else if (nRet != ERR_OK)
+	if (nRet != ERR_NOT_FOUND && nRet != ERR_OK)
 		ERRLOG2(_T("Execute Dynamic Command failed: %s, %s"), m_pSkinFactory->GetStringOfID(nId).c_str(), (LPCTSTR)Error2Str(nRet));
+
+	switch (nId)
+	{
+	case CMD_CLOSE:
+		PostDestroy();
+		break;
+	case CMD_QUIT:
+		CSkinApp::GetInstance()->PostQuitMessage();
+		break;
+	case CMD_MINIMIZE:
+		if (IsToolWindow())
+			ShowWindow(SW_HIDE);
+		else
+			ShowWindow(SW_SHOWMINIMIZED);
+		break;
+	case CMD_MAXIMIZE:
+		if (IsZoomed())
+			ShowWindow(SW_RESTORE);
+		else
+		{
+#ifdef _WIN32
+			bool	bToolWindow = Tobool(IsToolWindow());
+			if (bToolWindow)
+				ShowAsAppWindowNoRefresh(GetHandle());
+
+			ShowWindow(SW_SHOWMAXIMIZED);
+
+			if (bToolWindow)
+				ShowAsToolWindowNoRefresh(GetHandle());
+#else
+			ShowWindow(SW_SHOWMAXIMIZED);
+#endif
+		}
+		break;
+	case CMD_MENU:
+		{
+			CPoint	pt;
+
+			MLWidget::GetCursorPos(&pt);
+			OnContexMenu(pt.x, pt.y);
+		}
+		break;
+	default:
+		return false;
+	}
 
 	return true;
 }

@@ -10,6 +10,8 @@ public:
 
 	virtual void OnSkinLoaded();
 
+	virtual void OnCommand(UINT uID, UINT nNotifyCode);
+
 private:
 	CSkinListCtrl		*m_pFileListCtrl;
 

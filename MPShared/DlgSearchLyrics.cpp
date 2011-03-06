@@ -1013,7 +1013,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 
 
-CDlgOpenLyrics::CDlgOpenLyrics() : CMPSkinDialog(_T("OpenLyrics.xml"))
+CDlgOpenLyrics::CDlgOpenLyrics() : CSkinDialog(_T("OpenLyrics.xml"))
 {
 	m_pageHandler.AddPage(new CPageSearchLyrics());
 	m_pageHandler.AddPage(new CPageWaitMessage(false));

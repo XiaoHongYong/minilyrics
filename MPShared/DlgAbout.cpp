@@ -237,7 +237,7 @@ protected:
 
 //////////////////////////////////////////////////////////////////////////
 
-CDlgAbout::CDlgAbout() : CMPSkinDialog(_T("AboutBox.xml"))
+CDlgAbout::CDlgAbout() : CSkinDialog(_T("AboutBox.xml"))
 {
 	m_pageHandler.AddPage(new CPageAbout());
 	m_pageHandler.AddPage(new CPageEnterCode(false));
@@ -296,10 +296,10 @@ public:
 };
 
 
-class CDlgRegistration : public CMPSkinDialog
+class CDlgRegistration : public CSkinDialog
 {
 public:
-	CDlgRegistration() : CMPSkinDialog(_T("Registration.xml"))
+	CDlgRegistration() : CSkinDialog(_T("Registration.xml"))
 	{
 		m_pageHandler.AddPage(new CPageNotice());
 		m_pageHandler.AddPage(new CPageEnterCode(true));
@@ -326,5 +326,5 @@ void ShowRegisterNotice(CBaseWnd *pWnd, BOOL bForceShow)
 	//			return;
 	//	}
 
-	CMPSkinDialog::ShowDialog(new CDlgRegistration(), pWnd);
+	CSkinDialog::ShowDialog(new CDlgRegistration(), pWnd);
 }
