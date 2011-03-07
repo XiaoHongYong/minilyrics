@@ -146,10 +146,7 @@ public:
 
 		for (int i = 0; i < g_LyricSearch.GetSearchFolerCount(); i++)
 		{
-			CLyricsLocalSearch::SearchFolder	*psf;
-
-			psf = g_LyricSearch.GetFolder(i);
-			strValue += psf->strFolder;
+			strValue += g_LyricSearch.GetFolder(i);
 			strValue += _T("; ");
 		}
 
@@ -164,10 +161,7 @@ public:
 
 		for (int i = 0; i < g_LyricSearch.GetSearchFolerCount(); i++)
 		{
-			CLyricsLocalSearch::SearchFolder	*psf;
-
-			psf = g_LyricSearch.GetFolder(i);
-			vString.push_back(tstring(TOLOCAL(_T("Remove folder:"))) + _T(" ") + psf->strFolder);
+			vString.push_back(tstring(TOLOCAL(_T("Remove folder:"))) + _T(" ") + g_LyricSearch.GetFolder(i));
 		}
 	}
 
@@ -188,10 +182,8 @@ public:
 				_tcscpy_safe(szPath, CountOf(szPath), dlg.GetFolder());
 				g_Profile.WriteProfileString(_T("LastSelectFolder"), szPath);
 
-				if (! g_LyricSearch.IsFolderAdded(szPath))
+				if (g_LyricSearch.SetFolder(szPath))
 				{
-					g_LyricSearch.SetFolder(szPath, TRUE);
-
 					// update lyric
 					CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 					g_LyricSearch.SaveLyricFolderCfg();

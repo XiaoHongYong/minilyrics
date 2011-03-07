@@ -18,31 +18,12 @@ void AnalysisSongTitle(TCHAR szTitle[]/* out */, BOOL &bTitleIgnoreNumb/* out */
 // 歌词关连定义
 typedef map<tstring, tstring> SONG_LYRIC_MAP;
 
-/*
-// 歌曲相关联的歌词
-typedef struct MATCHED_LYRICS
-{
-	tstring		strLyric;
-	int			nLyricFileType;
-	int			nMatchValue;
-}MATCHED_LYRICS;
-typedef vector<MATCHED_LYRICS>	VECTOR_MATCH_LYRICS;
-*/
-
 //
 // 本地歌词搜索
 //
 class CLyricsLocalSearch
 {
 public:
-
-	// 歌词搜索目录结构定义
-	typedef struct SearchFolder
-	{
-		BOOL	bIncludeSub;
-		tstring	strFolder;
-	}SearchFolder;
-
 	void Init();
 	void Quit();
 
@@ -69,12 +50,9 @@ public:
 	// search folder
 	//
 	int GetSearchFolerCount();
-	BOOL IsFolderAdded(LPCTSTR szFolder);
 	BOOL RemoveFolder(int nIndex);
-	BOOL RemoveFolder(TCHAR *szFolder);
-	SearchFolder * GetFolder(int nIndex);
-	LPCTSTR  GetFolder(BOOL &bIncludeSub, int nIndex);
-	BOOL SetFolder(LPCTSTR szFolder, BOOL bIncludeSub);
+	tstring GetFolder(int nIndex);
+	BOOL SetFolder(LPCTSTR szFolder);
 	void SaveLyricFolderCfg();
 
 	static int SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable = false);
@@ -108,7 +86,7 @@ public:
 	virtual ~CLyricsLocalSearch();
 
 public:
-	vector<SearchFolder>	m_vLyricsFolders;
+	V_Str	m_vLyricsFolders;
 
 	//
 	// Lyrics association map:

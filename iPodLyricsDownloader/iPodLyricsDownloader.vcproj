@@ -135,6 +135,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				OutputFile="../bin-iPodLyricsDownloader\$(ProjectName).exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"

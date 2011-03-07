@@ -269,19 +269,14 @@ void CLyricsLocalSearch::LoadLyricFolderCfg()
 	for (int i = 0; ; i ++)
 	{
 		TCHAR	szKeyName[MAX_PATH];
-		SearchFolder	LyricsFolder;
-		
+
 		// get folder name
 		_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), SZ_FOLDER_PREFIX, i);
-		LyricsFolder.strFolder = CMLProfile::GetDir(SZ_SECT_SEARCH_FOLDER, szKeyName, _T(""));
-		if (LyricsFolder.strFolder.empty())
+		tstring strFolder = CMLProfile::GetDir(SZ_SECT_SEARCH_FOLDER, szKeyName, _T(""));
+		if (strFolder.size())
+			m_vLyricsFolders.push_back(strFolder);
+		else
 			break;
-
-		// get 'includesub' value
-		_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), _T("IncluedSub"), i);
-		LyricsFolder.bIncludeSub = g_Profile.GetProfileInt(SZ_SECT_SEARCH_FOLDER, szKeyName, 0);
-
-		m_vLyricsFolders.push_back(LyricsFolder);
 	}
 }
 
@@ -290,18 +285,15 @@ void CLyricsLocalSearch::SaveLyricFolderCfg()
 	if (m_bSaved)
 		return;
 
+	m_bSaved = true;
+
 	TCHAR	szKeyName[MAX_PATH];
 
-	for (int i = m_vLyricsFolders.size() - 1; i >= 0; i --)
+	for (uint i = 0; i < m_vLyricsFolders.size(); i++)
 	{
-		SearchFolder	&LyricsFolder = m_vLyricsFolders[i];
-
 		// SAVE folder settings
 		_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), SZ_FOLDER_PREFIX, i);
-		CMLProfile::WriteDir(SZ_SECT_SEARCH_FOLDER, szKeyName, LyricsFolder.strFolder.c_str());
-
-		_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), _T("IncluedSub"), i);
-		g_Profile.WriteProfileInt(SZ_SECT_SEARCH_FOLDER, szKeyName, LyricsFolder.bIncludeSub);
+		CMLProfile::WriteDir(SZ_SECT_SEARCH_FOLDER, szKeyName, m_vLyricsFolders[i].c_str());
 	}
 
 	// Set end positions.
@@ -425,12 +417,10 @@ BOOL CLyricsLocalSearch::SearchLyrics(LPCTSTR szSongFile, LPCTSTR szTitle, BOOL 
 	//
 	for (int i = GetSearchFolerCount() - 1; i >= 0; i --)
 	{
-		SearchFolder	&LyricsFolder = m_vLyricsFolders[i];
+		strDir = m_vLyricsFolders[i].c_str();
+		DirStringAddSlash(strDir);
 
-		strDir = LyricsFolder.strFolder.c_str();
-		DirStringFormat(strDir);
-
-		SearchMatchLyricsInDir(strDir.c_str(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, pvLyrics, LyricsFolder.bIncludeSub);
+		SearchMatchLyricsInDir(strDir.c_str(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, pvLyrics, true);
 	}
 
 	return TRUE;
@@ -528,58 +518,26 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSour
 	return ERR_OK;
 }
 
-BOOL CLyricsLocalSearch::SetFolder(LPCTSTR szFolder, BOOL bIncludeSub)
+tstring CLyricsLocalSearch::GetFolder(int nIndex)
+{
+	if (nIndex >= 0 && nIndex < m_vLyricsFolders.size())
+		return m_vLyricsFolders[nIndex];
+	else
+		return _T("");
+}
+
+BOOL CLyricsLocalSearch::SetFolder(LPCTSTR szFolder)
 {
 	for (int i = GetSearchFolerCount() - 1; i >= 0; i --)
 	{
-		SearchFolder	&LyricsFolder = m_vLyricsFolders[i];
-
-		if (_tcsicmp(LyricsFolder.strFolder.c_str(), szFolder) == 0)
-		{
-			LyricsFolder.bIncludeSub = bIncludeSub;
-			m_bSaved = FALSE;
-
-			return TRUE;
-		}
+		if (_tcsicmp(m_vLyricsFolders[i].c_str(), szFolder) == 0)
+			return FALSE;
 	}
 
-	// new 
-	SearchFolder	LyricsFolder;
-	LyricsFolder.bIncludeSub = bIncludeSub;
-	LyricsFolder.strFolder = szFolder;
-
-	m_vLyricsFolders.push_back(LyricsFolder);
+	m_bSaved = false;
+	m_vLyricsFolders.push_back(szFolder);
 
 	return TRUE;
-}
-
-BOOL CLyricsLocalSearch::RemoveFolder(TCHAR *szFolder)
-{
-	for (int i = GetSearchFolerCount() - 1; i >= 0; i --)
-	{
-		SearchFolder	&LyricsFolder = m_vLyricsFolders[i];
-		
-		if (_tcsicmp(LyricsFolder.strFolder.c_str(), szFolder) == 0)
-		{
-			m_vLyricsFolders.erase(m_vLyricsFolders.begin() + i);
-
-			m_bSaved = FALSE;
-			return TRUE;
-		}
-	}
-	return FALSE;
-}
-
-LPCTSTR  CLyricsLocalSearch::GetFolder(BOOL &bIncludeSub, int nIndex)
-{
-	if (nIndex >= GetSearchFolerCount() || nIndex < 0)
-		return NULL;
-
-
-	SearchFolder	&LyricsFolder = m_vLyricsFolders[nIndex];
-
-	bIncludeSub = LyricsFolder.bIncludeSub;
-	return LyricsFolder.strFolder.c_str();
 }
 
 int CLyricsLocalSearch::GetSearchFolerCount()
@@ -589,37 +547,14 @@ int CLyricsLocalSearch::GetSearchFolerCount()
 
 BOOL CLyricsLocalSearch::RemoveFolder(int nIndex)
 {
-	m_bSaved = FALSE;
-
 	if (nIndex >= GetSearchFolerCount() || nIndex < 0)
 		return FALSE;
+
+	m_bSaved = FALSE;
 
 	m_vLyricsFolders.erase(m_vLyricsFolders.begin() + nIndex);
 
 	return TRUE;
-}
-
-CLyricsLocalSearch::SearchFolder *CLyricsLocalSearch::GetFolder(int nIndex)
-{
-	if (nIndex >= GetSearchFolerCount() || nIndex < 0)
-		return NULL;
-
-	return &(m_vLyricsFolders[nIndex]);
-}
-
-BOOL CLyricsLocalSearch::IsFolderAdded(LPCTSTR szFolder)
-{
-	for (int i = GetSearchFolerCount() - 1; i >= 0; i --)
-	{
-		SearchFolder	&LyricsFolder = m_vLyricsFolders[i];
-		
-		if (_tcsicmp(LyricsFolder.strFolder.c_str(), szFolder) == 0)
-		{
-			return TRUE;
-		}
-	}
-
-	return FALSE;
 }
 
 void CLyricsLocalSearch::Init()

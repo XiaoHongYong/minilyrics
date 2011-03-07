@@ -533,7 +533,7 @@ public:
 		if (plistCtrl->GetColumnCount() == 0)
 		{
 			plistCtrl->AddColumn(_T("Music"), 230);
-			plistCtrl->m_pContainer->RecalculateUIObjSizePos(plistCtrl);
+			plistCtrl->GetParent()->RecalculateUIObjSizePos(plistCtrl);
 		}
 		UpdatePlaylist();
 		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
