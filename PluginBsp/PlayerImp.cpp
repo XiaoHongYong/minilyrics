@@ -71,7 +71,7 @@ BOOL APIENTRY DllMain( HANDLE hModule,
 void GetBSPPlayingMediaUrl(char szMediaUrl[], int nLen)
 {
 	COPYDATASTRUCT	cds;
-	char			buf[MAX_PATH];
+	char			buf[MAX_PATH] = "";
 	void			*adr;
 	DWORD			dwResult;
 
@@ -81,7 +81,7 @@ void GetBSPPlayingMediaUrl(char szMediaUrl[], int nLen)
 	cds.lpData = &adr;
 	cds.cbData = sizeof(buf);
 
-	SendMessageTimeout(g_pInfo->hwndParent, WM_COPYDATA, (WPARAM)g_MLService.GetMainWindow(), (LPARAM)&cds, SMTO_ABORTIFHUNG | SMTO_NORMAL, 1000, &dwResult);
+	SendMessageTimeout(g_pInfo->hwndParent, WM_COPYDATA, (WPARAM)g_Player.GetHandle(), (LPARAM)&cds, SMTO_ABORTIFHUNG | SMTO_NORMAL, 2000, &dwResult);
 
 	strcpy_safe(szMediaUrl, nLen, buf);
 }

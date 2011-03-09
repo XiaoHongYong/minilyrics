@@ -256,10 +256,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\CECommandBar.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\CurMediaAlbumArt.cpp"
 				>
 			</File>
@@ -623,10 +619,6 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\AutoProcessEmbeddedLyrics.h"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\win32\CECommandBar.h"
 				>
 			</File>
 			<File

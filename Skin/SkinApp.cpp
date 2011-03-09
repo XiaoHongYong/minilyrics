@@ -44,7 +44,7 @@ bool CSkinApp::Init()
 }
 
 
-int CSkinApp::LoadDefaultSkin(LPCTSTR szDefaultSkin)
+int CSkinApp::LoadDefaultSkin(LPCTSTR szDefaultSkin, bool bCreateSkinWnd)
 {
 	tstring		strSkin;
 	bool		bLoadSkinTheme = false;
@@ -57,7 +57,7 @@ int CSkinApp::LoadDefaultSkin(LPCTSTR szDefaultSkin)
 		g_Profile.WriteProfileString(_T("DefaultSkin"), strSkin.c_str());
 	}
 
-	return m_pSkinFactory->ChangeSkin(strSkin.c_str(), _T(""), _T(""), bLoadSkinTheme);
+	return m_pSkinFactory->ChangeSkin(strSkin.c_str(), _T(""), _T(""), bLoadSkinTheme, bCreateSkinWnd);
 }
 
 template <class _T>

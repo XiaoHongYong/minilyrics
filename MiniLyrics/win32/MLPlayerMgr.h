@@ -6,7 +6,7 @@
 
 HWND GetMLSericeWindow();
 
-bool ProcessMLCmdLine(LPCTSTR szCmdLine);
+bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp);
 
 bool MLConnectToPlayer();
 

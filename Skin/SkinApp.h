@@ -22,7 +22,7 @@ public:
 
 	virtual void PostQuitMessage();
 
-	virtual int LoadDefaultSkin(LPCTSTR szDefaultSkin);
+	virtual int LoadDefaultSkin(LPCTSTR szDefaultSkin, bool bCreateSkinWnd = true);
 
 	CEventsDispatcherBase *GetEventPatcher() { return m_pEventDispatcher; }
 	CSkinFactory *GetSkinFactory() { return m_pSkinFactory; }

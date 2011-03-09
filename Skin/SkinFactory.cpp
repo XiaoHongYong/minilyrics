@@ -603,15 +603,6 @@ int CSkinFactory::Init()
 	// Init SimpleJVM environment
 	CSjvmSkinSystem::Init(this);
 
-	CSkinWnd *pMainWnd = NewSkinWnd(_T("MiniLyrics"), true);
-
-	int nRet = pMainWnd->Create(_T("MiniLyrics"), _T("MiniLyrics"), this, _T(""), NULL, false, false, false);
-	ASSERT(nRet == ERR_OK);
-	if (nRet == ERR_OK)
-		pMainWnd->SetMainAppWnd(true);
-
-	m_listSkinWnds.push_back(pMainWnd);
-
 	return ERR_OK;
 }
 
@@ -758,7 +749,7 @@ int CSkinFactory::OpenSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtr
 	return OpenSkinFile(szSkinFile);
 }
 
-int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir, bool bLoadSkinColorTheme)
+int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szExtraDir, bool bLoadSkinColorTheme, bool bCreateSkinWnd)
 {
 	int		nRet;
 
@@ -780,6 +771,9 @@ int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	else if (hue > 360)
 		hue = 360;
 	m_resourceMgr.AdjustHue((float)hue, 0.5, 0.5);
+
+	if (!bCreateSkinWnd)
+		return ERR_OK;
 
 	// change the skins of existed windows.
 	tstring		strSkinWndDef;
@@ -807,11 +801,24 @@ int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	}
 
 	// Create or Open Main Window
-	ASSERT(m_listSkinWnds.size() > 0);
-	CSkinWnd *pSkin = m_listSkinWnds.front();
-	nRet = pSkin->OpenSkin(strSkinWndName.c_str());
+	CSkinWnd *pMainWnd = NULL;
+	if (m_listSkinWnds.empty())
+	{
+		pMainWnd = NewSkinWnd(_T("MiniLyrics"), true);
+
+		int nRet = pMainWnd->Create(_T("MiniLyrics"), _T("MiniLyrics"), this, _T(""), NULL, false, false, false);
+		ASSERT(nRet == ERR_OK);
+		if (nRet == ERR_OK)
+			pMainWnd->SetMainAppWnd(true);
+
+		m_listSkinWnds.push_back(pMainWnd);
+	}
+	else
+		pMainWnd = m_listSkinWnds.front();
+	nRet = pMainWnd->OpenSkin(strSkinWndName.c_str());
 	if (nRet != ERR_OK)
 		return nRet;
+	pMainWnd->ShowWindow(SW_SHOW);
 
 	LIST_SKINWNDS		listToBeProcessed;
 

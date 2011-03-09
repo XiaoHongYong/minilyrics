@@ -62,9 +62,11 @@ enum MessageToML
 
 enum MessageToPlayer
 {
-	M2P_QUERY_INFO					= 1,		// HWND of MLService
+	M2P_QUERY_INFO					= 1,		// Send HWND of MLService
 	M2P_CONNECTED					= 2,		// Send MLInfo to player
-	M2P_DISCONNECT					= 4,		// MiniLyrics disconnect to player.
+	M2P_DISCONNECT					= 3,		// MiniLyrics disconnect to player.
+
+	M2P_MAINWND_HANDLE				= 4,		// Send MiniLyrics Main Window handle to player
 
 	M2P_PLAY						= 5,		
 	M2P_PAUSE						= 6,
@@ -161,7 +163,6 @@ struct WndCloseToML
 
 struct MLInfo
 {
-	HWND				hWndMain;			// The main window of MiniLyrics
 	HWND				hWndMLService;
 };
 

@@ -41,6 +41,18 @@ CMLClientSession		g_sessionUpload;
 
 CLyricsLocalSearch		g_LyricSearch;
 
+#ifdef _CPPUNIT_TEST
+void MLRunUnitTest()
+{
+	if (!g_Profile.GetProfileBool(_T("RunUnitTest"), true))
+		return;
+
+	CreateUnitResultWnd(GetAppInstance());
+
+	::RunUnitTest();
+}
+#endif // _CPPUNIT_TEST
+
 tstring GetAppNameLong()
 {
 #ifdef _MPLAYER
@@ -384,7 +396,77 @@ void InitEdition()
 #endif
 }
 
-bool CMPlayerAppBase::Init()
+bool CMPlayerAppBase::InitLyricsPlayer()
+{
+#ifndef _MPLAYER
+	if (!MLConnectToPlayer())
+		return false;
+#endif
+
+	// Init player.
+	g_Player.OnInit();
+
+	if (!InitLoadSkin())
+		return false;
+
+	OnMediaChanged();
+
+	m_hotKey.Init();
+
+	m_hotKey.SetEventWnd(GetMainWnd());
+
+#ifndef _WIN32_WCE
+	// Restore iconic status
+	if (g_Profile.GetProfileBool(_T("Minimized"), false))
+	{
+		if (GetMainWnd()->IsToolWindow())
+			GetMainWnd()->ShowWindow(SW_HIDE);
+		GetMainWnd()->ShowWindow(SW_SHOWMINNOACTIVE);
+	}
+#endif
+
+#ifdef _WIN32_DESKTOP
+	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("ClickThrough"), false))
+		GetMPSkinFactory()->SetClickThrough(true);
+#endif
+
+#ifndef _MPLAYER
+	g_Player.SendMainWndHandle();
+
+	if (g_Profile.GetProfileBool(_T("FloatingLyr"), false))
+		g_wndFloatingLyr.Create();
+#endif
+
+	g_lyrOutPlguinMgr.Init();
+
+	ShowRegisterNoticeSafely();
+
+	return true;
+}
+
+#include "LyricsTool.h"
+
+bool CMPlayerAppBase::InitLyricsTool()
+{
+	m_pSkinFactory->SetSkinFileName(_T("minilyrics.xml"));
+	int nRet = LoadDefaultSkin(SZ_DEFSKIN, false);
+
+	RunLyricsTool(m_pSkinFactory->GetMainWnd());
+
+	return true;
+}
+
+bool CMPlayerAppBase::InitiPodLyricsDownloader()
+{
+	m_pSkinFactory->SetSkinFileName(_T("minilyrics.xml"));
+	int nRet = LoadDefaultSkin(SZ_DEFSKIN, false);
+
+	RunLyricsTool(m_pSkinFactory->GetMainWnd());
+
+	return true;
+}
+
+bool CMPlayerAppBase::Init(StartApp startApp)
 {
 	CLanguageTool::SetTransFilePrefix(SZ_TRANS_PREFIX);
 
@@ -398,13 +480,8 @@ bool CMPlayerAppBase::Init()
 	if (!CSkinApp::Init())
 		return false;
 
-#ifndef _MPLAYER
-	if (!MLConnectToPlayer())
-		return false;
-#endif
-
 #ifdef _CPPUNIT_TEST
-	RunUnitTest();
+	MLRunUnitTest();
 #endif // _CPPUNIT_TEST
 
 	int			nRet = 0;
@@ -421,49 +498,22 @@ bool CMPlayerAppBase::Init()
 	m_pEventDispatcher->RegisterHanlder(ET_LYRICS_SEARCH_END, this);
 	m_pEventDispatcher->RegisterHanlder(ET_DOWNLOAD_END, this);
 
-	// Init player.
-	g_Player.OnInit();
-
-	m_hotKey.Init();
-
-	if (!InitLoadSkin())
-		return false;
-
-	OnMediaChanged();
-
-	GetMainWnd()->ShowWindow(SW_SHOW);
-
-	m_hotKey.SetEventWnd(GetMainWnd());
-
-#ifndef _WIN32_WCE
-	// Restore iconic status
-	if (g_Profile.GetProfileBool(_T("Minimized"), false))
-	{
-		if (GetMainWnd()->IsToolWindow())
-			GetMainWnd()->ShowWindow(SW_HIDE);
-		GetMainWnd()->ShowWindow(SW_SHOWMINNOACTIVE);
-	}
-#endif
-
-#ifdef _WIN32_DESKTOP
-	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("ClickThrough"), false))
-	{
-		GetMPSkinFactory()->SetClickThrough(true);
-	}
-#endif
-
-#ifndef _MPLAYER
-	if (g_Profile.GetProfileBool(_T("FloatingLyr"), false))
-		g_wndFloatingLyr.Create();
-#endif
-
 	//
 	// 检查是否注册以及过期
 	//
 	if (IsRegisterOK())
 		g_LicenseType = LT_REGISTERED;
 
-	ShowRegisterNoticeSafely();
+	// Initialize MiniLyrics/ZikiPlayer
+	bool bRet = false;
+	if (startApp == SA_LYRICS_TOOL)
+		bRet = InitLyricsTool();
+	else if (startApp == SA_IPOD_LYRICS_DOWNLOADER)
+		bRet = InitiPodLyricsDownloader();
+	else
+		bRet = InitLyricsPlayer();
+	if (!bRet)
+		return false;
 
 	// 检查升级
 	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("CheckNewVer"), true))
@@ -471,8 +521,6 @@ bool CMPlayerAppBase::Init()
 		CVersionUpdate		VerUp;
 		VerUp.CheckNewVersion();
 	}
-
-	g_lyrOutPlguinMgr.Init();
 
 	return true;
 }
@@ -1000,18 +1048,3 @@ void CMPlayerAppBase::SetDefaultSettings()
 
 	g_Profile.SetDefaultIfNotExist(SZ_SECT_FLOATING_LYR, _T("FgLowColor"), _T("#FF8040"));
 }
-
-
-#ifdef _CPPUNIT_TEST
-
-void CMPlayerAppBase::RunUnitTest()
-{
-	if (!g_Profile.GetProfileBool(_T("RunUnitTest"), true))
-		return;
-
-	CreateUnitResultWnd(GetAppInstance());
-
-	::RunUnitTest();
-}
-
-#endif // _CPPUNIT_TEST

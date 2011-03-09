@@ -21,18 +21,15 @@
 #include "resource.h"
 
 #ifdef _WIN32_DESKTOP
-#include "win32/CECommandBar.h"
 #include "win32/DlgChooseFont.h"
 #endif
 
 #ifdef _WIN32_WCE
 #include "win32/wce/wce.h"
-#include "win32/wce/CECommandBar.h"
 #include "win32/wce/DlgChooseFont.h"
 #endif
 
 #ifdef _LINUX_GTK2
-#include "gtk2/CECommandBar.h"
 #include "gtk2/DlgChooseFont.h"
 #endif
 
@@ -109,6 +106,13 @@ enum STR_NAME
 	SN_WEBHOME,
 };
 
+enum StartApp
+{
+	SA_LYRICS_PLAYER,
+	SA_IPOD_LYRICS_DOWNLOADER,
+	SA_LYRICS_TOOL,
+};
+
 tstring GetAppNameLong();
 
 LPCTSTR GetStrName(STR_NAME nameId);
@@ -134,7 +138,7 @@ public:
 	CMPlayerAppBase();
 	virtual ~CMPlayerAppBase();
 
-	virtual bool Init();
+	virtual bool Init(StartApp startApp);
 	virtual void Quit();
 
 	virtual void OnEvent(const IEvent *pEvent);
@@ -142,6 +146,10 @@ public:
 protected:
 	virtual CEventsDispatcher *NewEventPatcher();
 	virtual CSkinFactory *NewSkinFactory();
+
+	bool InitLyricsPlayer();
+	bool InitLyricsTool();
+	bool InitiPodLyricsDownloader();
 
 public:
 	static CMPlayerApp *GetInstance();
@@ -187,11 +195,6 @@ public:
 
 protected:
 	void SetDefaultSettings();
-
-public:
-#ifdef _CPPUNIT_TEST
-	void RunUnitTest();
-#endif // _CPPUNIT_TEST
 
 protected:
 	CMPHotkey				m_hotKey;

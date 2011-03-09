@@ -64,12 +64,13 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 		return 1;
 	}
 
+	StartApp	startApp = SA_LYRICS_PLAYER;
 #ifndef _MPLAYER
-	if (!ProcessMLCmdLine(lpCmdLine))
+	if (!ProcessMLCmdLine(lpCmdLine, startApp))
 		return 0;
 #endif
 
-	if (!CMPlayerAppBase::GetInstance()->Init())
+	if (!CMPlayerAppBase::GetInstance()->Init(startApp))
 		return 0;
 
 	// Main message loop:
@@ -109,7 +110,7 @@ bool CMPlayerApp::SetRunningFlag()
 	return true;
 }
 
-bool CMPlayerApp::Init()
+bool CMPlayerApp::Init(StartApp startApp)
 {
 #if defined(_DEBUG) && defined(_MEM_LEAK_CHECK)
 	InitAllocCheck(ACOutput_XML);
@@ -153,7 +154,7 @@ bool CMPlayerApp::Init()
 		GfxRaw::EnableAntialiasFont(TRUE);
 #endif
 
-	return CMPlayerAppBase::Init();
+	return CMPlayerAppBase::Init(startApp);
 }
 
 void CMPlayerApp::Quit()

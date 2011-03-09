@@ -17,16 +17,16 @@ HWND GetMLSericeWindow()
 	return g_playerMgr.GetHandle();
 }
 
-bool ProcessMLCmdLine(LPCTSTR szCmdLine)
+bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 {
 	// Parse command line
 	V_Str		vCmdLine;
+	startApp = SA_LYRICS_PLAYER;
 
 	CmdLineAnalysis(szCmdLine, vCmdLine);
 
 	HWND	hWndPlayerService = NULL;
 	tstring	strPlayerName;
-	bool	bLyricsTool = false;
 
 	for (size_t i = 0; i < vCmdLine.size(); i++)
 	{
@@ -40,7 +40,12 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine)
 			strPlayerName = vCmdLine[i + 1].c_str();
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/LyricsTool")) == 0)
 		{
-			bLyricsTool = true;
+			startApp = SA_LYRICS_TOOL;
+			continue;
+		}
+		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/iPodLyricsDownloader")) == 0)
+		{
+			startApp = SA_IPOD_LYRICS_DOWNLOADER;
 			continue;
 		}
 		else
@@ -62,11 +67,6 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine)
 
 		CPlayer::QueryInfo(hWndPlayerService);
 		return true;
-	}
-
-	if (bLyricsTool)
-	{
-		// Run lyrics tool
 	}
 
 	return true;
@@ -174,7 +174,8 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 {
 	if (wParam == ML_SEND_CMD_LINE && pcds->dwData == ML_SEND_CMD_LINE)
 	{
-		ProcessMLCmdLine((LPCTSTR)pcds->lpData);
+		StartApp startApp;
+		ProcessMLCmdLine((LPCTSTR)pcds->lpData, startApp);
 	}
 	else if (wParam == ML_MSG_VERSION && pcds->dwData == M2M_PLAYER_INFO)
 	{

@@ -55,6 +55,10 @@ bool CPlayerServiceBase::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 		OnDisconnect();
 		memset(&g_MLService.m_mlInfo, 0, sizeof(g_MLService.m_mlInfo));
 		break;
+	case M2P_MAINWND_HANDLE:
+		ASSERT(pcds->cbData == sizeof(HWND));
+		g_MLService.m_hWndMiniLyrics = *(HWND*)pcds->lpData;
+		break;
 	case M2P_PLAY:
 		Play();
 		break;

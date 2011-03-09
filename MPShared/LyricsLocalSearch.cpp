@@ -322,9 +322,6 @@ BOOL CLyricsLocalSearch::SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szSong
 		//
 		// 搜索本地建立的歌词库
 		//
-#ifdef USE_SEARCH_CACHE_FILE
-		m_lsFileLocal.GetMatchLyrics(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, vLyrics);
-#endif
 	}
 
 	if (vLyrics.size() == 0 && !IsEmptyString(szSongFile))
@@ -340,9 +337,6 @@ BOOL CLyricsLocalSearch::SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szSong
 			//
 			// 搜索本地建立的歌词库
 			//
-#ifdef USE_SEARCH_CACHE_FILE
-			m_lsFileLocal.GetMatchLyrics(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, vLyrics);
-#endif
 		}
 	}
 
@@ -562,25 +556,12 @@ void CLyricsLocalSearch::Init()
 	LoadLyricFolderCfg();
 
 	LoadLyricsAssociation();
-
-#ifdef USE_SEARCH_CACHE_FILE
-	m_strLocalDBFile = GetAppDataDir();
-	m_strLocalDBFile += _T("LocalLrcDb.ds");
-
-	if (IsFileExist(m_strLocalDBFile.c_str()))
-		m_lsFileLocal.Open(m_strLocalDBFile.c_str());
-#endif
 }
 
 // 关闭歌词搜索模块
 void CLyricsLocalSearch::Quit()
 {
 	SaveLyricFolderCfg();
-
-//	SaveLyricsAssociation();
-#ifdef USE_SEARCH_CACHE_FILE
-	m_lsFileLocal.Close();
-#endif
 	m_vLyricsFolders.clear();
 }
 
@@ -1080,10 +1061,6 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 		bTitleIgnoreNumb = IsIgnoreNumber(szTitle);
 		bArtIgnoreNumb = IsIgnoreNumber(szArtist);
 
-#ifdef USE_SEARCH_CACHE_FILE
-		m_lsFileLocal.GetMatchLyrics(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, vLyrics);
-#endif
-
 		SearchLyrics(szSongFile, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, &vLyrics);
 		V_LRCSEARCHRESULT::iterator itBest = vLyrics.GetTheBestMatchLyrics(TRUE);
 		if (itBest != vLyrics.end())
@@ -1111,9 +1088,6 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 
 		if (!IsEmptyString(szTitle))
 		{
-#ifdef USE_SEARCH_CACHE_FILE
-			m_lsFileLocal.GetMatchLyrics(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, vLyrics);
-#endif
 			SearchLyrics(szSongFile, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, &vLyrics);
 			V_LRCSEARCHRESULT::iterator itBest = vLyrics.GetTheBestMatchLyrics(TRUE);
 			if (itBest != vLyrics.end())

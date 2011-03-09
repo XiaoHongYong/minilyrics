@@ -224,7 +224,7 @@ public:
 
 	virtual int OpenSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""));
 
-	virtual int ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""), bool bLoadSkinColorTheme = false);
+	virtual int ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir = _T(""), LPCTSTR szExtraDir = _T(""), bool bLoadSkinColorTheme = false, bool bCreateSkinWnd = true);
 
 	virtual int SaveSkinFile(LPCTSTR szFile);
 	virtual void Close(bool bQuit = false);

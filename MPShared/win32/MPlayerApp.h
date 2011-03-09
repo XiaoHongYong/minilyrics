@@ -20,7 +20,7 @@ public:
 
 	bool SetRunningFlag();
 
-	virtual bool Init();
+	virtual bool Init(StartApp startApp);
 	virtual void Quit();
 
 	BOOL IsRunning() { return m_hMutexRuning != NULL; }

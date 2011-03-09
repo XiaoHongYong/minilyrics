@@ -9,6 +9,7 @@ public:
 	{
 		memset(&m_mlInfo, 0, sizeof(m_mlInfo));
 		m_hWndPlayerService = NULL;
+		m_hWndMiniLyrics = NULL;
 	}
 
 	void SendPlayerInfo(PlayerInfo &playerInfo)
@@ -72,11 +73,11 @@ public:
 		{ return m_mlInfo.hWndMLService != NULL; }
 
 	HWND GetMainWindow()
-		{ return m_mlInfo.hWndMain; }
+		{ return m_hWndMiniLyrics; }
 
 public:
 	MLInfo				m_mlInfo;
-
+	HWND				m_hWndMiniLyrics;
 	HWND				m_hWndPlayerService;
 
 };
