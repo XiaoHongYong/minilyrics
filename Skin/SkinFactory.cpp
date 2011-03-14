@@ -1187,7 +1187,16 @@ void CSkinFactory::OnSkinWndDestory(CSkinWnd *pSkinWnd)
 
 void CSkinFactory::OnMainSkinWndDestory(CSkinWnd *pSkinWnd)
 {
-	m_pApp->PostQuitMessage();
+	int nMainAppWnd = 0;
+	for (LIST_SKINWNDS::iterator it = m_listSkinWnds.begin();
+		it != m_listSkinWnds.end(); ++it)
+	{
+		CSkinWnd *p = *it;
+		if (p->IsMainAppWnd())
+			nMainAppWnd++;
+	}
+	if (nMainAppWnd <= 1)
+		m_pApp->PostQuitMessage();
 }
 
 // methods for skin window
@@ -1396,10 +1405,15 @@ bool CSkinFactory::EnumAllSkins(vector<tstring> &vSkins)
 
 CSkinWnd *CSkinFactory::GetMainWnd()
 {
-	if (!m_listSkinWnds.empty())
-		return m_listSkinWnds.front();
-	else
-		return NULL;
+	for (LIST_SKINWNDS::iterator it = m_listSkinWnds.begin();
+		it != m_listSkinWnds.end(); ++it)
+	{
+		CSkinWnd *p = *it;
+		if (p->IsMainAppWnd())
+			return p;
+	}
+
+	return NULL;
 }
 
 SXNode *CSkinFactory::GetExtendSkinWndStyle(LPCTSTR szExtendsSkinWnd) const

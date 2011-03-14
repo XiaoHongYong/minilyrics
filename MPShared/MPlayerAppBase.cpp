@@ -453,6 +453,10 @@ bool CMPlayerAppBase::InitLyricsTool()
 
 	RunLyricsTool(m_pSkinFactory->GetMainWnd());
 
+#ifdef _WIN32
+	ShowAsAppWindow(GetRunningLyricsToolWnd()->GetHandle());
+#endif
+
 	return true;
 }
 
@@ -462,6 +466,10 @@ bool CMPlayerAppBase::InitiPodLyricsDownloader()
 	int nRet = LoadDefaultSkin(SZ_DEFSKIN, false);
 
 	RunLyricsTool(m_pSkinFactory->GetMainWnd());
+
+#ifdef _WIN32
+	ShowAsAppWindow(GetRunningLyricsToolWnd()->GetHandle());
+#endif
 
 	return true;
 }

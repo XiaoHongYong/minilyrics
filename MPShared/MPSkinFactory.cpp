@@ -155,6 +155,12 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		pSkinMenu = pMenu;
 		pSkinMenu->LoadMenu(IDM_LYRICS_TOOL);
 	}
+	else if (_tcsicmp(szMenu, _T("iPodLyricsDownloader")) == 0)
+	{
+		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		pSkinMenu = pMenu;
+		pSkinMenu->LoadMenu(IDM_IPOD_LYR_DOWNLOADER);
+	}
 #ifdef _MPLAYER
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{

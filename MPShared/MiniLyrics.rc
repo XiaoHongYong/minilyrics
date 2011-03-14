@@ -581,11 +581,13 @@ IDM_LYRICS_TOOL MENU
 BEGIN
     POPUP "&Media Files"
     BEGIN
+        MENUITEM "Import &iTunes Library",      IDC_IMPORT_ITUNES_LIB
+        MENUITEM SEPARATOR
         MENUITEM "&Add Media Files...\tCtrl+A", IDC_ADD_FILES
         MENUITEM "Add &Folder...",              IDC_ADD_FOLDER
         MENUITEM SEPARATOR
         MENUITEM "&Clear File List",            IDC_CLEAR_LIST
-        MENUITEM "&Remove Selected Files",      IDC_REMOVE_SELECTED
+        MENUITEM "&Remove Selected from List",  IDC_REMOVE_SELECTED
         MENUITEM SEPARATOR
         MENUITEM "Cop&y Media Files and Lyrics Files To...", IDC_COPYTO
         MENUITEM SEPARATOR
@@ -593,10 +595,38 @@ BEGIN
     END
     POPUP "&Lyrics"
     BEGIN
-        MENUITEM "&Download Lyrics for All Media Files...", IDC_DOWNLOAD_ALL_LYRICS
+        MENUITEM "&Download All Lyrics",        IDC_DOWNLOAD_ALL_LYRICS
         MENUITEM SEPARATOR
         MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
         MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
+    END
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "A&bout $Product$...",         IDC_ABOUT
+        MENUITEM "$Product$ &Help",             IDC_ML_HELP
+        MENUITEM SEPARATOR
+        MENUITEM "&Register...",                IDC_REGISTER
+        MENUITEM SEPARATOR
+        MENUITEM "$Product$ &Website",          IDC_WEBHOME
+    END
+END
+
+IDM_IPOD_LYR_DOWNLOADER MENU 
+BEGIN
+    POPUP "&Media Files"
+    BEGIN
+        MENUITEM "Import &iTunes Library",      IDC_IMPORT_ITUNES_LIB
+        MENUITEM SEPARATOR
+        MENUITEM "&Add Media Files...\tCtrl+A", IDC_ADD_FILES
+        MENUITEM "Add &Folder...",              IDC_ADD_FOLDER
+        MENUITEM SEPARATOR
+        MENUITEM "&Clear File List",            IDC_CLEAR_LIST
+        MENUITEM SEPARATOR
+        MENUITEM "E&xit",                       IDC_EXIT
+    END
+    POPUP "&Lyrics"
+    BEGIN
+        MENUITEM "&Download All Lyrics for iPod", IDC_DOWNLOAD_ALL_LYR_FOR_IPOD
     END
     POPUP "&Help"
     BEGIN

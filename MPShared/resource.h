@@ -53,8 +53,8 @@
 #define IDR_MENU_STATIC_LYR             211
 #define IDB_INSTALL_STAT                211
 #define IDM_LYRICS_TOOL                 212
-#define IDR_MENU1                       213
 #define IDR_MENU_RATE                   213
+#define IDM_IPOD_LYR_DOWNLOADER         214
 #define IDC_APPLY_ACCOUNT               1001
 #define IDC_HOTKEY                      1006
 #define IDC_ADD_SONG_FILE               1045
@@ -303,13 +303,15 @@
 #define IDC_RATE_LYR_3                  40195
 #define IDC_RATE_LYR_4                  40196
 #define IDC_RATE_LYR_5                  40197
+#define IDC_IMPORT_ITUNES_LIB           40199
+#define IDC_DOWNLOAD_ALL_LYR_FOR_IPOD   40201
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        214
-#define _APS_NEXT_COMMAND_VALUE         40198
+#define _APS_NEXT_COMMAND_VALUE         40202
 #define _APS_NEXT_CONTROL_VALUE         1218
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
