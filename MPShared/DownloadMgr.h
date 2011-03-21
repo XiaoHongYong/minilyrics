@@ -33,7 +33,7 @@ public:
 	DownloadTaskType	taskType;
 	tstring				m_strURL;
 	tstring				strMediaKey;
-	tstring				m_strSaveFile;
+	tstring				m_strLyrFileName;
 	CCharBuffer			buffContent;
 
 	MLRESULT			m_errResult;
@@ -67,9 +67,11 @@ public:
 
 	tstring GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName);
 
-	int SaveDownloadedFile(tstring &strFile, LPCVOID lpData, int nSize);
+	int SaveDownloadedLyrics(LPCTSTR szMediaFile, LPCTSTR szLyrFileName, LPCVOID lpData, int nSize, uint32 nLyrSaveFlag = LST_NONE);
 
 protected:
+	int SaveDownloadedLyrAsFile(tstring &strFile, LPCVOID lpData, int nSize);
+
 	void AddTask(CDownloadTask *pTask);
 
 	bool IsTaskExist(LPCTSTR szURL);

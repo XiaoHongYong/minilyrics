@@ -18,21 +18,6 @@
 #define VER_FILE			_T("mlver.xml")
 #endif
 
-BOOL CVersion::From(LPCTSTR szVersion)
-{
-	int		nRet;
-	nRet = _stscanf(szVersion, _T("%d.%d.%d"), &nVerMajor, &nVerMinor, &nVerBuild);
-	if (nRet == 2)
-		nVerBuild = 0;
-	else if (nRet <= 1)
-		return FALSE;
-
-	return TRUE;
-}
-
-CVersionInfo::CVersionInfo()
-{
-}
 
 //////////////////////////////////////////////////////////////////////////
 // 从服务器取得VER_FILE的版本控制信息，根据此文件进行更新
@@ -65,12 +50,11 @@ int CVersionInfo::FromXML(SXNode *pNodeVer)
 	//
 	// new version
 	szTemp = pNode->GetPropertySafe(_T("version"));
-	if (!verNew.From(szTemp))
+	verNew = VersionNumFrom(szTemp);
+	if (verNew == 0)
 		return ERR_FALSE;
 
-	szTemp = pNode->GetProperty(_T("upgradedate"));
-	if (szTemp)
-		strNewVerDate = szTemp;
+	strNewVerDate = pNode->GetPropertySafe(_T("upgradedate"));
 
 	//
 	// new feature
@@ -168,8 +152,7 @@ void CVersionUpdate::OnDownloadOK(CDownloadTask *pTask)
 	if (nRet != ERR_OK)
 		return;
 
-	CVersion		verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
-	if (verCur < versionInfo.verNew)
+	if (g_version < versionInfo.verNew)
 	{
 		tstring		strMessage = versionInfo.strFeature;
 		strMessage += _T("\r\n\r\n");
@@ -178,10 +161,6 @@ void CVersionUpdate::OnDownloadOK(CDownloadTask *pTask)
 		{
 			OpenUrl(CMPlayerAppBase::GetMainWnd(), GetStrName(SN_HTTP_DOMAIN));
 		}
-		/*CVersionUpdateDlg	dlg;
-
-		dlg.m_szVersionDesc = versionInfo.strFeature.c_str();
-		dlg.DoModal(CMPlayerAppBase::GetMainWnd());*/
 	}
 }
 
@@ -211,10 +190,7 @@ int CVersionUpdate::GetUpdateInfo(CDownloadTask *pTask, CVersionInfo &versionInf
 	}
 
 	if (versionInfo.FromXML(xml.m_pRoot) != ERR_OK)
-	{
-		ERRLOG1(_T("xml file data error: %s"), pTask->m_strSaveFile.c_str());
 		return ERR_PARSE_XML;
-	}
 
 	return ERR_OK;
 }
@@ -248,3 +224,4 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 
 	g_LyricsDownloader.DownloadVersionFile(GetStrName(SN_HTTP_ML_VER), !bAutoCheck);
 }
+

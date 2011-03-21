@@ -30,8 +30,9 @@
 
 enum DOWN_SAVE_DIR
 {
-	DOWN_SAVE_IN_SONG_DIR	= 0,		// 保存在歌曲所在目录
-	DOWN_SAVE_IN_CUSTOM_DIR	= 1,		// 保存在用户指定的目录
+	DOWN_SAVE_IN_SONG_DIR	= 0,		// Save lyrics in the song file folder
+	DOWN_SAVE_IN_CUSTOM_DIR	= 1,		// Save lyrics in specified directory
+	DOWN_SAVE_NO_FILE		= 10,		// Do not save lyrics as file
 	// DOWN_SAVE_TO_MP3		= 3			// 保存为和歌曲相同的名字
 };
 

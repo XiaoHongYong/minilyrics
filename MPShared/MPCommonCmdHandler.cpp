@@ -596,37 +596,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_SAVE_LRC:
-		{
-			int			nRet;
-
-			// notify to save...
-			IEvent		*pEvent = new IEvent;
-			pEvent->eventType = ET_LYRICS_ON_SAVE_EDIT;
-			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(pEvent);
-
-			if (g_LyricData.DoesChooseNewFileName())
-			{
-				SaveAsLyricsFile(m_pSkinWnd, 
-					LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false);
-			}
-			else
-			{
-				nRet = g_LyricData.Save();
-				if (nRet != ERR_OK)
-				{
-					if (g_LyricData.GetLyricsSourceType() != LST_FILE)
-					{
-						tstring		str;
-						if (g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE))
-						{
-							g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(g_LyricData.GetSongFileName(), 
-							_T(""), str.c_str(), g_LyricData.GetLyricsSourceType());
-						}
-					}
-					m_pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics."))).c_str());
-				}
-			}
-		}
+		SaveCurrentLyrics(m_pSkinWnd, true);
 		break;
 	case CMD_SAVE_LRC_AS:
 		{
@@ -1145,6 +1115,47 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 		return FALSE;
 
 	return TRUE;
+}
+
+bool CMPCommonCmdHandler::SaveCurrentLyrics(CSkinWnd *pSkinWnd, bool bDispatchOnSave)
+{
+	int			nRet;
+
+	if (bDispatchOnSave)
+	{
+		// Dispatch on save lyrics message.
+		IEvent		*pEvent = new IEvent;
+		pEvent->eventType = ET_LYRICS_ON_SAVE_EDIT;
+		CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(pEvent);
+	}
+
+	if (g_LyricData.DoesChooseNewFileName())
+	{
+		if (!SaveAsLyricsFile(pSkinWnd, 
+			LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false))
+			return false;
+	}
+	else
+	{
+		nRet = g_LyricData.Save();
+		if (nRet != ERR_OK)
+		{
+			if (g_LyricData.GetLyricsSourceType() != LST_FILE)
+			{
+				tstring		str;
+				if (g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE))
+				{
+					CCharBuffer bufLyrics;
+					TStringToProperFileData(str.c_str(), bufLyrics);
+					g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(g_LyricData.GetSongFileName(), 
+						NULL, &bufLyrics, g_LyricData.GetLyricsSourceType());
+				}
+			}
+			pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics, $Product$ will auto try again later."))).c_str());
+		}
+	}
+
+	return true;
 }
 
 VLyrLines &CMPCommonCmdHandler::GetDisplayLyrics()

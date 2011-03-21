@@ -17,12 +17,11 @@ public:
 		tstring				m_strSongFile;
 		UINT				m_uEmbeddedLyrType;		// LST_ID3V2_SYLT, LST_ID3V2_USLT, LST_LYRICS3V2
 		bool				m_bRemove;		// true: remove, false: add.
-		bool				m_bTryFailed;
+		byte				m_nTryFailed;
 		bool				m_bDealOK;
 
 		// save embedded lyrics
-		tstring				m_strLyricsFile;
-		tstring				m_strLyrics;		// if m_strLyricsFile.empty(), this is available.
+		CCharBuffer			m_strLyrics;
 
 		// remove embedded lyrics
 		vector<string>		m_vSyncLang, m_vUnsyncLang;
@@ -30,7 +29,7 @@ public:
 		Item()
 		{
 			m_bDealOK = false;
-			m_bTryFailed = false;
+			m_nTryFailed = 0;
 			m_uEmbeddedLyrType = 0;
 		}
 	};
@@ -39,11 +38,11 @@ public:
 	CAutoProcessEmbeddedLyrics();
 	virtual ~CAutoProcessEmbeddedLyrics();
 
-	int SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, LPCTSTR szLyrics, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
+	int SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
 	int RemoveEmbeddedLyrics(LPCTSTR szSongFile, vector<string> &vSyncLang, vector<string> &vUnsyncLang, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
 	void RemoveJob(LPCTSTR szSongFile);
 
-	void OnQuit();
+	bool OnQuit();
 	void OnSongChanged();
 
 protected:

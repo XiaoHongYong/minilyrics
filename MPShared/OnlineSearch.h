@@ -77,6 +77,15 @@ protected:
 class COnlineSearch  
 {
 public:
+	class INotifyEvent
+	{
+	public:
+		virtual void OnErrorSaveLyrics(int nIndex, LPCTSTR szMessage) = 0;
+		virtual void OnLyricsReturned(int nIndex, string &bufLyrics) = 0;
+		virtual void OnNoLyricsReturned(int nIndex) = 0;
+
+	};
+
 	struct COnlineSearchThreadParam
 	{
 		tstring		strTitle;
@@ -105,7 +114,7 @@ public:
 	BOOL AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle);
 
 	int SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount);
-	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, tstring &strMsg);
+	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, uint32 nLyrSaveFlag, tstring &strMsg, INotifyEvent *pNotify);
 
 protected:
 	int UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch);

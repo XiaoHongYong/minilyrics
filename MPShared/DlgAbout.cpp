@@ -44,13 +44,13 @@ public:
 	{
 		CSkinPageHandler::OnCreate();
 
-		TCHAR	szVersion[256] = _T("");
+		tstring		strVer;
 #ifdef _MPLAYER
-		_stprintf_s(szVersion, CountOf(szVersion), _T("%d.%d.%d"), MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
+		strVer = VersionNumToStr(g_version);
 #else
-		_stprintf_s(szVersion, CountOf(szVersion), _T("%d.%d.%d for %s"), MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER, g_Player.GetPlayerName());
+		strVer = CStrPrintf(_T("%s for %s"), VersionNumToStr(g_version).c_str(), g_Player.GetPlayerName()).c_str();
 #endif
-		m_pSkinWnd->SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, szVersion);
+		m_pSkinWnd->SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, strVer.c_str());
 
 		m_pSkinWnd->SetUIObjectProperty(_T("CID_COPYRIGHT"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));
 
@@ -101,13 +101,12 @@ public:
 					nRet = verCheck.GetUpdateInfo(pDlEvt->pTask, versionInfo);
 					if (nRet == ERR_OK)
 					{
-						CVersion		verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
-						if (verCur < versionInfo.verNew)
+						if (g_version < versionInfo.verNew)
 						{
 							// New version
 							tstring		strNewVersion = TOLOCAL(_T("New version of $Product$ is available"));
 							strNewVersion += _T(" ");
-							strNewVersion += versionInfo.verNew.To();
+							strNewVersion += VersionNumToStr(versionInfo.verNew);
 
 							SetUIObjectProperty(_T("CID_NEW_VERSION"), SZ_PN_TEXT, strNewVersion.c_str());
 							SetUIObjectProperty(_T("CID_NEW_VERSION"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));

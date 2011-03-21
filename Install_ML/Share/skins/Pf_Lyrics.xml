@@ -8,15 +8,15 @@
   <Container Name="Content" Rect="10,0,w-20,h" ClipChildren="true">
     <Container ID="CID_C_LYR_DOWNLOAD" Name="Lyrics Download" Rect="0,30,w,h-30-10">
       <NormalFrame Rect="10,10,w-20,210" Text="Save downloaded lyrics in:"/>
-      <NormalRadioBt ID="CID_C_SAVE_IN_SONG_DIR" Text="&amp;Save lyrics in the song's directory" Rect="25,40,w-50,"/>
-      <NormalRadioBt ID="CID_C_SAVE_IN_DIR" Text="&amp;Save lyrics in:" Rect="25,70,140,"/>
+      <NormalCheckBox ID="CID_C_SAVE_IN_SONG_DIR" Text="&amp;Save lyrics in the song's directory" Rect="25,40,w-50,"/>
+      <NormalCheckBox ID="CID_C_SAVE_IN_DIR" Text="&amp;Save lyrics in:" Rect="25,70,140,"/>
       <NormalTextBt ID="CID_DOWN_DIR" Text="Choose the directory" Rect="170,70,w-170-20,"/>
       <NormalCheckBox ID="CID_C_SAVE_IN_MP3" Text="&amp;Save lyrics in mp3 file" Rect="25,100,w-50,"/>
-      <NormalCheckBox ID="CID_C_ID3V2_SYLT" Text="ID3v2 synchronized Lyrics (Support Windows Media player)"
+      <NormalCheckBox ID="CID_C_ID3V2_SYLT" Text="ID3v2 synchronized Lyrics (For MiniLyrics, Windows Media player)"
                       Rect="45,130,w-70,"/>
-      <NormalCheckBox ID="CID_C_ID3V2_USLT" Text="ID3v2 unsynchronized Lyrics (Support iTunes, WMP)"
+      <NormalCheckBox ID="CID_C_ID3V2_USLT" Text="ID3v2 unsynchronized Lyrics (For iTunes, iPod, Windows Media Player, etc)"
                       Rect="45,160,w-70,"/>
-      <NormalCheckBox ID="CID_C_LYR3V2" Text="Lyrics3v2 lyrics (Few players support this format)"
+      <NormalCheckBox ID="CID_C_LYR3V2" Text="Lyrics3v2 lyrics (For MiniLyrics)"
                       Rect="45,190,w-70,"/>
       <NormalFrame Rect="10,230,w-20,90" Text="Rename the downloaded lyrics file name"/>
       <NormalRadioBt ID="CID_C_KEEP_FILENAME" Text="Keep the file name" Rect="25,260,w-50,"/>

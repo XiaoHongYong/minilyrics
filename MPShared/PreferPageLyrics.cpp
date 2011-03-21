@@ -66,11 +66,13 @@ public:
 			EnableUIObject(CID_DOWN_DIR, false, false);
 			CheckButton(CID_C_SAVE_IN_SONG_DIR, true);
 		}
-		else
+		else if (DownSaveDir == DOWN_SAVE_IN_CUSTOM_DIR)
 		{
 			EnableUIObject(CID_DOWN_DIR, true, false);
 			CheckButton(CID_C_SAVE_IN_DIR, true);
 		}
+		else
+			EnableUIObject(CID_DOWN_DIR, false, false);
 
 		if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
 			CheckButton(_T("CID_C_SAVE_IN_MP3"), true);
@@ -90,15 +92,20 @@ public:
 			|| nId == CID_C_SAVE_IN_DIR)
 		{
 			DOWN_SAVE_DIR		DownSaveDir;
-			if (nId == CID_C_SAVE_IN_SONG_DIR)
-			{
-				DownSaveDir = DOWN_SAVE_IN_SONG_DIR;
-				CheckButton(CID_C_SAVE_IN_DIR, false);
-			}
+			if (!IsButtonChecked(nId))
+				DownSaveDir = DOWN_SAVE_NO_FILE;
 			else
 			{
-				DownSaveDir = DOWN_SAVE_IN_CUSTOM_DIR;
-				CheckButton(CID_C_SAVE_IN_SONG_DIR, false);
+				if (nId == CID_C_SAVE_IN_SONG_DIR)
+				{
+					DownSaveDir = DOWN_SAVE_IN_SONG_DIR;
+					CheckButton(CID_C_SAVE_IN_DIR, false);
+				}
+				else
+				{
+					DownSaveDir = DOWN_SAVE_IN_CUSTOM_DIR;
+					CheckButton(CID_C_SAVE_IN_SONG_DIR, false);
+				}
 			}
 
 			EnableUIObject(CID_DOWN_DIR, DownSaveDir == DOWN_SAVE_IN_CUSTOM_DIR);

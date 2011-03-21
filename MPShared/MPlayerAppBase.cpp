@@ -13,6 +13,7 @@
 #include "OnlineSearch.h"
 #include "ErrorResolveDlg.h"
 #include "LyricShowObj.h"
+#include "MlVersion.h"
 
 #ifdef _LINUX_GTK2
 #include "../Skin/gtk2/SplashScreenWnd.h"
@@ -40,6 +41,16 @@ CDownloadMgr			g_LyricsDownloader;
 CMLClientSession		g_sessionUpload;
 
 CLyricsLocalSearch		g_LyricSearch;
+
+
+//
+// 版本定义
+//
+#ifdef _MPLAYER
+	VersionNumber g_version = VersionNumMake(ZP_MAJOR_VERSION, ZP_MINOR_VERSION, AUTO_BUILD_NUM);
+#else
+	VersionNumber g_version = VersionNumMake(ML_MAJOR_VERSION, ML_MINOR_VERSION, AUTO_BUILD_NUM);
+#endif
 
 #ifdef _CPPUNIT_TEST
 void MLRunUnitTest()
@@ -580,11 +591,11 @@ void CMPlayerAppBase::Quit()
 {
 	OnLyricsChangingSavePrompt();
 
-	g_autoProcessEmbeddedLyrics.OnQuit();
+	if (!g_autoProcessEmbeddedLyrics.OnQuit())
+		return;
 
 	g_LyricSearch.Quit();
 	g_LyricsDownloader.Quit();
-
 
 	g_lyrOutPlguinMgr.Quit();
 	g_OnlineSearch.Quit();
@@ -930,39 +941,9 @@ bool CMPlayerAppBase::OnLyricsChangingSavePrompt()
 		else
 			nRet = SaveDialogBox(GetMainWnd());
 		if (nRet == IDYES)
-		{
-			if (g_LyricData.DoesChooseNewFileName())
-			{
-				nRet = CMPCommonCmdHandler::SaveAsLyricsFile(GetMainWnd(),
-					LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false);
-
-				// 如果保存失败（或用户选择取消），则不改变歌词。
-				if (!nRet)
-					return false;
-			}
-			else
-			{
-				nRet = g_LyricData.Save();
-				if (nRet != ERR_OK)
-				{
-					if (g_LyricData.GetLyricsSourceType() != LST_FILE)
-					{
-						tstring		str;
-						if (g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE))
-						{
-							g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(g_LyricData.GetSongFileName(), 
-							_T(""), str.c_str(), g_LyricData.GetLyricsSourceType());
-						}
-					}
-					if (GetMainWnd())
-						GetMainWnd()->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics, $Product$ will auto try again later."))).c_str());
-				}
-			}
-		}
+			return CMPCommonCmdHandler::SaveCurrentLyrics(GetMainWnd(), false);
 		else if (nRet == IDCANCEL)
-		{
 			return false;
-		}
 	}
 
 	return true;

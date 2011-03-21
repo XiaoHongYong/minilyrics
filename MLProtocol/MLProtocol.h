@@ -252,7 +252,7 @@ public:
 	int			nMediaLength;			// in seconds
 
 	// Fields below are used on in CLIENT of MiniLyrics.
-	tstring		strMediaFile, strLyrFile;
+	tstring		strMediaFile;
 	int			nIndex;
 
 };
@@ -277,7 +277,6 @@ class MLLyricsInfoLite
 {
 public:
 	tstring			strFile;
-	int				nIndex;
 	string			bufLyrContent;
 
 public:

@@ -234,27 +234,34 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 		nRet = OpenLyricsFile(szLrcSource, bUseSpecifiedEncoding, encodingSpecified);
 	}
 
-	if (m_arrLyricsRows.size())
-		m_bHasLyricsOpened = true;
-
 	m_nMediaLength = nMediaLength;
 
 	m_strSongFile = szSongFile;
 	m_strLrcSource = szLrcSource;
 	m_lrcSourceType = lrcSourceType;
 
-	FilterContents();
-
-	ResetModificationFlag();
-
-	if (GetLyrContentType() == LCT_TXT)
-	{
-		m_lyrScrollActionRecorder.EventsDataFromString(
-			GetTxtLyrScrollEvents(), 
-			GetRawLyrics());
-	}
+	OnLyricsOpened();
 
 	return nRet;
+}
+
+int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPBYTE szLrc, int nLen)
+{
+	CLrcParser		parser(this);
+
+	int nRet = parser.ParseString(szLrc, nLen, false);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	m_lyrConentType = parser.GetLyrContentType();
+
+	m_strSongFile = szSongFile;
+	m_nMediaLength = nMediaLength;
+	m_lrcSourceType = LST_ID3V2_USLT;
+
+	OnLyricsOpened();
+
+	return ERR_OK;
 }
 
 #ifdef _IPHONE
@@ -268,19 +275,8 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrConte
 	if (nRet != ERR_OK)
 		return nRet;
 
-	if (m_arrLyricsRows.size())
-		m_bHasLyricsOpened = true;
-
-	FilterContents();
-	
-	ResetModificationFlag();
-	
-	if (GetLyrContentType() == LCT_TXT)
-	{
-		m_lyrScrollActionRecorder.EventsDataFromString(
-													   GetTxtLyrScrollEvents(),
-													   GetRawLyrics());
-	}
+	OnLyricsOpened();
+}
 	
 	return ERR_OK;
 }
@@ -442,6 +438,25 @@ int CMLData::OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bUseS
 	return nRet;
 }
 #endif // #ifdef _ID3V2_SUPPORT
+
+void CMLData::OnLyricsOpened()
+{
+	ResetModificationFlag();
+
+	if (m_arrLyricsRows.empty())
+		return;
+
+	m_bHasLyricsOpened = true;
+
+	FilterContents();
+
+	if (GetLyrContentType() == LCT_TXT)
+	{
+		m_lyrScrollActionRecorder.EventsDataFromString(
+			GetTxtLyrScrollEvents(), 
+			GetRawLyrics());
+	}
+}
 
 int CMLData::Save()
 {

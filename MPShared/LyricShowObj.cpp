@@ -2558,7 +2558,7 @@ void ReverseString(LPTSTR str, int n)
 
 bool inline isStrArab(WCHAR c)
 {
-	return (c >= 0x590 && c <= 0x6ff) || (c >= 0x0E00 && c <= 0x0E7F);
+	return (c >= 0x590 && c <= 0x6ff);// || (c >= 0x0E00 && c <= 0x0E7F);
 }
 
 void GetStrArab(LPCTSTR str, bool &bIsArabStr, int &nLen)

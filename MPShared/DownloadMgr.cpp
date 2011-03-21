@@ -142,37 +142,13 @@ void CDownloadMgr::Quit()
 	m_mutexAccess.Release();
 }
 
-// COMMENT:
-//		根据条件判断是否需要到歌词服务器上搜索新的歌词.
 void CDownloadMgr::OnSongChanged()
 {
-	// LOG0(LOG_LVL_EVENT_IMP, _T("Enter auto download proc"));
-
-	// 用户选择了自动下载?
-	if (!m_bAutoDownload)
-	{
-		// LOG0(LOG_LVL_EVENT_IMP, _T("Auto download is disabled."));
+	if (!m_bAutoDownload || g_LyricData.HasLyricsOpened())
 		return;
-	}
-
-	//
-	// 如果当前状态下打开有歌词，则不再下载
-	//
-	if (_tcslen(g_LyricData.GetLyricsFileName()) != 0)
-	{
-		// LOG1(LOG_LVL_EVENT_IMP, _T("Lyrics: %s was opened, quit auto download."), g_LyricData.GetLyricsFileName());
-		return;
-	}
 
 	if (!SearchInCacheResult(false))
-	{
-		// 使用在线检索，搜索歌词
 		g_OnlineSearch.AutoSearch(g_Player.GetArtist(), g_Player.GetTitle());
-	}
-	else
-	{
-		// LOG0(LOG_LVL_EVENT_IMP, _T("Lyrics in cached data were returned, quit auto search."));
-	}
 }
 
 BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
@@ -290,7 +266,7 @@ void CDownloadMgr::DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szSongFile, LPCTST
 {
 	CDownloadTask *pTask = new CDownloadTask(DTT_LYRICS, szUrl);
 	pTask->strMediaKey = szMediaKey;
-	pTask->m_strSaveFile = GetSaveLyricsFile(szSongFile, szFileName);
+	pTask->m_strLyrFileName = szFileName;
 
 	AddTask(pTask);
 }
@@ -456,27 +432,9 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 		// 本地链接下载任务完成时的处理
 		//
 		{
-			map<DWORD, tstring>::iterator	it;
-			BOOL			bSaveToMp3 = FALSE;
-
-			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false)
-				&& FileIsExtSame(pTask->strMediaKey.c_str(), _T(".mp3")))
-			{
-				UINT			uEmbeddedLyrics = 0;
-
-				if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Sylt"), true))
-					uEmbeddedLyrics |= LST_ID3V2_SYLT;
-				if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Uslt"), true))
-					uEmbeddedLyrics |= LST_ID3V2_USLT;
-				if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveLyrics3v2"), false))
-					uEmbeddedLyrics |= LST_LYRICS3V2;
-
-				g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str(), _T(""), uEmbeddedLyrics);
-			}
-
-			g_LyricSearch.AssociateLyrics(pTask->strMediaKey.c_str(), pTask->m_strSaveFile.c_str());
-
-			CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
+			if (SaveDownloadedLyrics(pTask->strMediaKey.c_str(), pTask->m_strLyrFileName.c_str(), 
+				pTask->buffContent.c_str(), pTask->buffContent.size()) == ERR_OK)
+				CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
 #ifdef _WIN32
 			if (!IsRegistered())
@@ -755,21 +713,68 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 RETURN_END:
 	pTask->m_nHttpRetCode = nHttpCode;
 	pTask->m_errResult = nRet;
-	if (nRet == ERR_OK && nHttpCode == 200)
-	{
-		if (pTask->taskType == DTT_LYRICS)
-			SaveDownloadedFile(pTask->m_strSaveFile, buffRet.data(), buffRet.size());
-	}
-	else
-	{
+	if (!(nRet == ERR_OK && nHttpCode == 200))
 		DBGLOG3(_T("Downloaded Failed, Error: %d, httpcode: %d, %s"), nRet, nHttpCode, pTask->m_strURL.c_str());
-	}
 
 	return ERR_OK;
 }
 
+int CDownloadMgr::SaveDownloadedLyrics(LPCTSTR szMediaFile, LPCTSTR szLyrFileName, LPCVOID lpData, int nSize, uint32 nLyrSaveFlag)
+{
+	ASSERT(lpData && nSize > 0 && nSize < 1024 * 200);
 
-int CDownloadMgr::SaveDownloadedFile(tstring &strFile, LPCVOID lpData, int nSize)
+	if (nLyrSaveFlag == LST_NONE)
+	{
+		// Load default settings
+
+		// Save as file?
+		if (g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR)
+			!= DOWN_SAVE_NO_FILE)
+			nLyrSaveFlag = LST_FILE;
+
+		// Save as embedded lyrics?
+		if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
+		{
+			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Sylt"), true))
+				nLyrSaveFlag |= LST_ID3V2_SYLT;
+			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Uslt"), true))
+				nLyrSaveFlag |= LST_ID3V2_USLT;
+			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveLyrics3v2"), false))
+				nLyrSaveFlag |= LST_LYRICS3V2;
+		}
+	}
+
+	bool	bLrcSaved = false;
+	int		nRet = ERR_OK;
+
+	if (nLyrSaveFlag & (LST_ID3V2_USLT | LST_ID3V2_SYLT | LST_LYRICS3V2)
+		&& FileIsExtSame(szMediaFile, _T(".mp3")))
+	{
+		CCharBuffer bufLyrics;
+		bufLyrics.append((LPCSTR)lpData, nSize);
+		nRet = g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(szMediaFile, NULL, &bufLyrics, nLyrSaveFlag);
+		if (nRet == ERR_OK)
+		{
+			if (nLyrSaveFlag & (LST_ID3V2_SYLT | LST_LYRICS3V2))
+				bLrcSaved = true;
+			if (!bLrcSaved && FileIsExtSame(szLyrFileName, _T(".txt")))
+				bLrcSaved = true;
+		}
+	}
+
+	if (nLyrSaveFlag & LST_FILE || !bLrcSaved)
+	{
+		tstring strLyrFile = GetSaveLyricsFile(szMediaFile, szLyrFileName);
+		DBGLOG1(_T("Save downloaded lyrics: %s"), strLyrFile.c_str());
+		nRet = SaveDownloadedLyrAsFile(strLyrFile, lpData, nSize);
+		if (nRet == ERR_OK)
+			g_LyricSearch.AssociateLyrics(szMediaFile, strLyrFile.c_str());
+	}
+
+	return nRet;
+}
+
+int CDownloadMgr::SaveDownloadedLyrAsFile(tstring &strFile, LPCVOID lpData, int nSize)
 {
 	if (IsFileExist(strFile.c_str()))
 	{

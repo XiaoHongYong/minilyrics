@@ -209,8 +209,8 @@ public:
 	CMLData();
 	virtual ~CMLData();
 
-	// 打开歌词文件
 	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSource, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
+	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPBYTE szLrc, int nLen);
 #ifdef _IPHONE
 	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent);
 #endif
@@ -343,6 +343,8 @@ protected:
 	int OpenLyricsInSongOfID3v2USLT(ID3v2UnsynchLyrics &lyrics, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 	int OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 	int OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
+
+	void OnLyricsOpened();
 
 	bool ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encoding);
 	bool ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING encoding);

@@ -85,6 +85,7 @@ BOOL IsDiskIdle(const TCHAR* disk);
 void GetLogicalDrives(V_Str &vDrives);
 #endif
 
+void TStringToProperFileData(LPCTSTR str, CCharBuffer &bufData);
 
 class CMLFileFind
 {

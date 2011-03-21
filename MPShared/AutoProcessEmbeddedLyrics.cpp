@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "MPlayerApp.h"
+#include "LyricsTool.h"
 #include "AutoProcessEmbeddedLyrics.h"
 
 CAutoProcessEmbeddedLyrics		g_autoProcessEmbeddedLyrics;
@@ -22,9 +23,46 @@ CAutoProcessEmbeddedLyrics::~CAutoProcessEmbeddedLyrics()
 
 }
 
-int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, LPCTSTR szLyrics, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
+int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
 {
+	ASSERT(szLyricsFile || pBufLyrics);
+
 	CMutexAutolock		autolock(m_mutex);
+
+	CCharBuffer		bufLyrFile;
+
+	// Open lyrics file to bufLyrFile
+	if (szLyricsFile && !IsEmptyString(szLyricsFile))
+	{
+		LRC_SOURCE_TYPE	lst = GetLrcSourceType(szLyricsFile);
+		if (lst == LST_LYRICS3V2 || lst == LST_ID3V2_SYLT || lst == LST_ID3V2_LYRICS)
+		{
+			uEmbeddedLyrType &= ~lst; // Don't save itself.
+
+			CMLData		lyrics;
+			int nRet = lyrics.OpenLyrics(szSongFile, 0, szLyricsFile);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			tstring str;
+			lyrics.ToString(str, FT_LYRICS_LRC, true);
+			TStringToProperFileData(str.c_str(), bufLyrFile);
+		}
+		else if (lst == LST_ID3V2_USLT)
+		{
+			// For ID3v2 unsync lyrics, It can't be converted to other(sync) embedded lyrics.
+			DBGLOG2(_T("ID3v2 unsync lyrics, It can't be converted to other(sync) embedded lyrics: %s, %s"), szSongFile, szLyricsFile);
+			return ERR_OK;
+		}
+		else if (lst == LST_FILE)
+		{
+			if (!OpenFileToBuffer(szLyricsFile, bufLyrFile))
+				return ERR_OPEN_FILE;
+		}
+	}
+
+	if (bufLyrFile.empty() && (pBufLyrics == NULL || pBufLyrics->empty()))
+		return ERR_NOLYRICS_OPENED;
 
 	LIST_ITEMS::iterator	it, itEnd;
 	int		nRet;
@@ -35,10 +73,12 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 		if (_tcscmp(szSongFile, item.m_strSongFile.c_str()) == 0)
 		{
 			item.m_bRemove = false;
-			item.m_strLyricsFile = szLyricsFile;
-			item.m_strLyrics = szLyrics;
+			if (bufLyrFile.size())
+				item.m_strLyrics = bufLyrFile;
+			else
+				item.m_strLyrics = *pBufLyrics;
 			item.m_uEmbeddedLyrType	= uEmbeddedLyrType;
-			item.m_bTryFailed = false;
+			item.m_nTryFailed = 0;
 			nRet = DealEmbeddedLyrics(item);
 			if (nRet == ERR_OK)
 				m_listJobs.erase(it);
@@ -49,10 +89,12 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 	Item	newItem;
 	newItem.m_strSongFile = szSongFile;
 	newItem.m_bRemove = false;
-	newItem.m_strLyricsFile = szLyricsFile;
-	newItem.m_strLyrics = szLyrics;
+	if (bufLyrFile.size())
+		newItem.m_strLyrics = bufLyrFile;
+	else
+		newItem.m_strLyrics = *pBufLyrics;
 	newItem.m_uEmbeddedLyrType = uEmbeddedLyrType;
-	newItem.m_bTryFailed = false;
+	newItem.m_nTryFailed = 0;
 	nRet = DealEmbeddedLyrics(newItem);
 	if (nRet != ERR_OK && bAddToQueueOnFailed)
 		m_listJobs.push_back(newItem);
@@ -76,7 +118,7 @@ int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, vector<
 			item.m_vSyncLang = vSyncLang;
 			item.m_vUnsyncLang = vUnsyncLang;
 			item.m_uEmbeddedLyrType	= uEmbeddedLyrType;
-			item.m_bTryFailed = false;
+			item.m_nTryFailed = 0;
 			nRet = DealEmbeddedLyrics(item);
 			if (nRet == ERR_OK)
 				m_listJobs.erase(it);
@@ -88,7 +130,7 @@ int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, vector<
 	newItem.m_strSongFile = szSongFile;
 	newItem.m_bRemove = true;
 	newItem.m_uEmbeddedLyrType = uEmbeddedLyrType;
-	newItem.m_bTryFailed = false;
+	newItem.m_nTryFailed = 0;
 	newItem.m_vSyncLang = vSyncLang;
 	newItem.m_vUnsyncLang = vUnsyncLang;
 	nRet = DealEmbeddedLyrics(newItem);
@@ -115,22 +157,16 @@ void CAutoProcessEmbeddedLyrics::RemoveJob(LPCTSTR szSongFile)
 	}
 }
 
-void CAutoProcessEmbeddedLyrics::OnQuit()
+bool CAutoProcessEmbeddedLyrics::OnQuit()
 {
 	OnSongChanged();
 
-/*#ifndef _WIN32_WCE
-	if (!m_listJobs.empty())
-	{
-		// Show a dialog to let users choose.
-		// CMPlayerAppBase::GetMainWnd()->MessageOut(_T("CAutoProcessEmbeddedLyrics quit!"));
-		CDlgBatchProcessEmbeddedLyrics	dlg;
+	if (m_listJobs.empty())
+		return true;
 
-		dlg.DoModal(CMPlayerAppBase::GetMainWnd());
-	}
-#endif*/
-
-	m_listJobs.clear();
+	// Show lyrics tool window to let user save.
+	RunLyricsTool(NULL);
+	return false;
 }
 
 //
@@ -145,26 +181,24 @@ void CAutoProcessEmbeddedLyrics::OnSongChanged()
 
 	strSongFileCur = g_Player.GetSrcMedia();
 
-	for (it = m_listJobs.begin(); it != m_listJobs.end(); ++it)
+	for (it = m_listJobs.begin(); it != m_listJobs.end(); )
 	{
 		Item		&item = *it;
-		if (!item.m_bTryFailed && _tcscmp(strSongFileCur.c_str(), item.m_strSongFile.c_str()) != 0)
+
+		const int MAX_RETRY_COUNT = 3;
+		if (item.m_nTryFailed <= MAX_RETRY_COUNT
+			&& _tcscmp(strSongFileCur.c_str(), item.m_strSongFile.c_str()) != 0)
 		{
 			if (DealEmbeddedLyrics(item) == ERR_OK)
 			{
-				// remove successfull job
-				m_listJobs.erase(it);
-
-				// From start
-				if (m_listJobs.empty())
-					return;
-				it = m_listJobs.begin();
+				// remove succeeded job
+				it = m_listJobs.erase(it);
+				continue;
 			}
 			else
-			{
-				item.m_bTryFailed = true;
-			}
+				item.m_nTryFailed++;
 		}
+		++it;
 	}
 }
 
@@ -202,33 +236,7 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 		// save lyrics as id3v2 sylt and uslt
 		CMLData		lyricsData;
 
-		nRet = ERR_FAILED;
-		if (!item.m_strLyricsFile.empty())
-		{
-			nRet = lyricsData.OpenLyrics(item.m_strSongFile.c_str(), 0, 
-				item.m_strLyricsFile.c_str(), false);
-		}
-		else
-		{
-			// save lyrics as temp lyrics file, then open it
-			TCHAR		szFile[MAX_PATH];
-
-			GetAppDataDir(szFile);
-			_tcscat_safe(szFile, CountOf(szFile), _T("TempSaveEmbeddedLyrics.lrc"));
-			if (SaveDataAsFile(szFile, item.m_strLyrics.c_str(), item.m_strLyrics.size() * sizeof(TCHAR)))
-			{
-				CHAR_ENCODING	nEncodingID;
-#ifdef UNICODE
-				nEncodingID = ED_UNICODE;
-#else
-				nEncodingID = ED_SYSDEF;
-#endif
-				nRet = lyricsData.OpenLyrics(item.m_strSongFile.c_str(), 0, 
-					szFile, TRUE, nEncodingID);
-
-				DeleteFile(szFile);
-			}
-		}
+		nRet = lyricsData.OpenLyrics(item.m_strSongFile.c_str(), 0, (LPBYTE)item.m_strLyrics.c_str(), item.m_strLyrics.size());
 		if (nRet == ERR_OK)
 		{
 			if (lyricsData.GetLyrContentType() != LCT_LRC)
@@ -247,25 +255,12 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 	{
 		// save lyrics as id3v2 uslt
 		CLyrics3v2		lyrics3v2;
-		stringex	str;
 
-		if (!item.m_strLyricsFile.empty())
-			OpenFileToBuffer(item.m_strLyricsFile.c_str(), str);
-		else
-		{
-#ifdef UNICODE
-			str += (TCHAR)0xFF;
-			str += (TCHAR)0xFE;
-#endif
-			str.append((const char *)item.m_strLyrics.c_str(), item.m_strLyrics.size() * sizeof(TCHAR));
-		}
-
-		if (!str.empty())
-		{
-			nRet = lyrics3v2.WriteLyrcsInfo(item.m_strSongFile.c_str(), str.c_str(), str.size(), TRUE);
-			if (nRet != ERR_OK)
-				return nRet;
-		}
+		ASSERT(item.m_strLyrics.size());
+		nRet = lyrics3v2.WriteLyrcsInfo(item.m_strSongFile.c_str(), 
+			item.m_strLyrics.c_str(), item.m_strLyrics.size(), TRUE);
+		if (nRet != ERR_OK)
+			return nRet;
 	}
 
 	if (Id3v2Sylt || bLyrics3v2)

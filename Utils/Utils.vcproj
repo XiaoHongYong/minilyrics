@@ -1042,6 +1042,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\VersionNumber.cpp"
+				>
+			</File>
+			<File
 				RelativePath="XMLWriter.cpp"
 				>
 				<FileConfiguration
@@ -1179,6 +1183,10 @@
 			</File>
 			<File
 				RelativePath="UUEncode.h"
+				>
+			</File>
+			<File
+				RelativePath=".\VersionNumber.h"
 				>
 			</File>
 			<File

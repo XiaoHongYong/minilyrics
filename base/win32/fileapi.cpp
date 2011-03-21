@@ -826,6 +826,24 @@ BOOL IsDiskIdle(const TCHAR* disk)
 	return (0 == data.QueueDepth);
 }
 
+// Convert UTF-8 lyrics content to most proper file content, add FILE BOM
+void TStringToProperFileData(LPCTSTR str, CCharBuffer &bufData)
+{
+	if (IsAnsiStr(str))
+		TStringToAnsi(str, -1, bufData);
+	else
+	{
+		TStringToUTF8(str, -1, bufData);
+		if (bufData.size() < _tcslen(str) * sizeof(TCHAR))
+			bufData.insert(0, SZ_FE_UTF8, strlen(SZ_FE_UTF8));
+		else
+		{
+			bufData.clear();
+			bufData.append(SZ_FE_UCS2);
+			bufData.append((LPCSTR)str, _tcslen(str) * sizeof(TCHAR));
+		}
+	}
+}
 
 #ifdef _CPPUNIT_TEST
 

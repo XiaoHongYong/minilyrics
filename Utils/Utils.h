@@ -11,6 +11,8 @@
 #include "CSVFile.h"
 #include "UndoMgr.h"
 #include "digest.h"
+#include "VersionNumber.h"
+
 #ifdef _IPHONE
 #include "Mac/LocalizeTool.h"
 #else

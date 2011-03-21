@@ -27,6 +27,7 @@ public:
 	virtual bool GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked);
 
 	static BOOL SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefFileType, bool bAdvancedSaveOpt);
+	static bool SaveCurrentLyrics(CSkinWnd *pSkinWnd, bool bDispatchOnSave);
 
 protected:
 	bool OnCommandCharEncoding(int nCmdId);

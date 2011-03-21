@@ -619,7 +619,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	return nRet;
 }
 
-int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, tstring &strMsg)
+int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, uint32 nLyrSaveFlag, tstring &strMsg, INotifyEvent *pNotify)
 {
 	int					nRet;
 
@@ -636,7 +636,7 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 
 	if (retLyrics.RegVerifyValue != RVV_OK)
 	{
-		// ×¢²áÂëÎÞÐ§
+		// Invalid reg code
 		if (retLyrics.RegVerifyValue == RVV_TRIAL)
 			g_LicenseType = LT_TRIAL;
 		else
@@ -650,27 +650,35 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 	if (retLyrics.strMessage.size() && CMPlayerAppBase::GetMainWnd())
 		CMPlayerAppBase::GetInstance()->MessageOut(retLyrics.strMessage.c_str());
 
-	int		nPos = 0;
-
-	for (ListLyricsInfoLite::iterator it = retLyrics.listLyricsInfo.begin();
-		it != retLyrics.listLyricsInfo.end(); ++it)
+	if (listSearch.size() != retLyrics.listLyricsInfo.size())
 	{
+		ASSERT(0 && "Invalid protocol.");
+		return ERR_BAD_MSG;
+	}
+
+	int i = 0;
+	for (ListLyricsInfoLite::iterator it = retLyrics.listLyricsInfo.begin();
+		it != retLyrics.listLyricsInfo.end() && i < listSearch.size(); ++it, i++)
+	{
+		MLSearchItem	&search = listSearch[i];
 		MLLyricsInfoLite &lyr = *it;
 		if (lyr.bufLyrContent.empty())
 		{
-			ERRLOG0(_T("Empty lyrics content is returned."));
-			break;
-		}
-		if (lyr.nIndex >= (int)listSearch.size())
-		{
-			ASSERT(0 && "Returned result is out of index");
-			break;
-		}
-		MLSearchItem	&search = listSearch[lyr.nIndex];
-		tstring			strFile = g_LyricsDownloader.GetSaveLyricsFile(search.strMediaFile.c_str(), lyr.strFile.c_str());
+			if (pNotify)
+				pNotify->OnNoLyricsReturned(i);
 
-		if (g_LyricsDownloader.SaveDownloadedFile(strFile, lyr.bufLyrContent.c_str(), lyr.bufLyrContent.size()) == ERR_OK)
-			search.strLyrFile = strFile;
+			g_LyricSearch.AssociateLyrics(search.strMediaFile.c_str(), NONE_LYRCS);
+		}
+		else
+		{
+			int nRet = g_LyricsDownloader.SaveDownloadedLyrics(search.strMediaFile.c_str(), lyr.strFile.c_str(), lyr.bufLyrContent.c_str(), lyr.bufLyrContent.size());
+			if (pNotify)
+			{
+				pNotify->OnLyricsReturned(i, lyr.bufLyrContent);
+				if (nRet != ERR_OK)
+					pNotify->OnErrorSaveLyrics(i, ERROR2STR_LOCAL(nRet));
+			}
+		}
 	}
 
 	return nRet;

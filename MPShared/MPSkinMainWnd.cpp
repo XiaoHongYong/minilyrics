@@ -74,10 +74,6 @@ void CMPSkinMainWndBase::OnTimer(UINT nIDEvent)
 		if (g_Player.HasVideo())
 			return;
 
-		//
-		// 检查是否过期
-		CVersion		verCur(MAJOR_VERSION, MINOR_VERSION, BUILD_NUMBER);
-
 		ShowRegisterNotice(this, false);
 	}
 	else

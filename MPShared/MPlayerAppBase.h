@@ -76,9 +76,7 @@ extern CMLClientSession			g_sessionUpload;
 // Local lyrics search
 extern CLyricsLocalSearch		g_LyricSearch;
 
-extern DWORD		MAJOR_VERSION;
-extern DWORD		MINOR_VERSION;
-extern DWORD		BUILD_NUMBER;
+extern VersionNumber			g_version;
 
 enum STR_NAME
 {
