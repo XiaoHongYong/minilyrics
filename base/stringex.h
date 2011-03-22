@@ -140,6 +140,37 @@ int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr);
 int StrSplit(LPCTSTR szStr, TCHAR chSeperator, SetTStrNCase &containerStr);
 #define StrBreak	StrSplit
 
+template<class _iterator>
+tstring StrJoin(_iterator first, _iterator end, LPCTSTR szFormat, LPCTSTR szSeperator)
+{
+	CStrPrintf	strFormat;
+	tstring		str;
+	for (; first != end; ++first)
+	{
+		if (str.size())
+			str += szSeperator;
+		strFormat.printf(szFormat, *first);
+		str += strFormat.c_str();
+	}
+
+	return str;
+}
+
+template<class _iterator>
+tstring StrJoin(_iterator first, _iterator end, LPCTSTR szSeperator)
+{
+	CStrPrintf	strFormat;
+	tstring		str;
+	for (; first != end; ++first)
+	{
+		if (str.size())
+			str += szSeperator;
+		str += *first;
+	}
+
+	return str;
+}
+
 #define ReadInt(szBeg, nValue)\
 {\
 	bool		bNegative;\

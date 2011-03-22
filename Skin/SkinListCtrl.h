@@ -173,6 +173,9 @@ public:
 	CSkinListCtrl();
 	virtual ~CSkinListCtrl();
 
+	void LoadColumnWidth(LPCTSTR szProperty);
+	void SaveColumnWidth(LPCTSTR szProperty);
+
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);

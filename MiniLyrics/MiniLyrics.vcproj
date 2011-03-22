@@ -312,6 +312,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\win32\iTunesLibrary.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\LrcUploadDB.cpp"
 				>
 			</File>
@@ -683,6 +687,10 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\win32\HotkeyCtrlEx.h"
+				>
+			</File>
+			<File
+				RelativePath=".\win32\iTunesLibrary.h"
 				>
 			</File>
 			<File

@@ -1774,6 +1774,7 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestReadColorValue_t);
 	CPPUNIT_TEST(TestTrimStrRight);
 	CPPUNIT_TEST(TestStrSplit);
+	CPPUNIT_TEST(TestStrJoin);
 	CPPUNIT_TEST(TestStrReplace);
 	CPPUNIT_TEST(TestStrBeginWith);
 	CPPUNIT_TEST(Test_xcsncpy);
@@ -1876,6 +1877,22 @@ protected:
 			if (setStr.find(strResult[i]) == setStr.end())
 				CPPUNIT_FAIL_T(CStrPrintf(_T("StrSplit(Set) Test, case(Can't find): %d, %s"), i, strResult[i]).c_str());
 		}
+	}
+
+	void TestStrJoin()
+	{
+		tstring		str;
+
+		int vInt[] = { 1, 2, 3, 4 };
+		str = StrJoin(vInt, vInt + CountOf(vInt), _T("%d"), _T(","));
+		CPPUNIT_ASSERT(str == _T("1,2,3,4"));
+
+		V_Str		vStr;
+		vStr.push_back(_T("1"));
+		vStr.push_back(_T("2"));
+		vStr.push_back(_T("3"));
+		str = StrJoin(vStr.begin(), vStr.end(), _T(","));
+		CPPUNIT_ASSERT(str == _T("1,2,3"));
 	}
 
 	void TestStrReplace()

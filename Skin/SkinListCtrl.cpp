@@ -111,6 +111,26 @@ CSkinListCtrl::~CSkinListCtrl()
 		delete m_vHeading[i];
 }
 
+void CSkinListCtrl::LoadColumnWidth(LPCTSTR szProperty)
+{
+	VecString vWidth;
+	StrSplit(g_Profile.GetProfileString(szProperty, _T("")), ',', vWidth);
+	for (int i = 0; i < vWidth.size(); i++)
+	{
+		if (vWidth[i].empty())
+			continue;
+		SetColumnWidth(i, _ttoi(vWidth[i].c_str()));
+	}
+}
+
+void CSkinListCtrl::SaveColumnWidth(LPCTSTR szProperty)
+{
+	VecInt	vWidth;
+	for (int i = 0; i < GetColumnCount(); i++)
+		vWidth.push_back(GetColumnWidth(i));
+	tstring str = StrJoin(vWidth.begin(), vWidth.end(), _T("%d"), _T(","));
+	g_Profile.WriteProfileString(szProperty, str.c_str());
+}
 
 void CSkinListCtrl::OnCreate()
 {
