@@ -30,43 +30,6 @@ void GetID3v2LrcSourceLang(LPCTSTR szLrcSource, char szLang[], int len)
 	EmptyStr(szLang);
 }
 
-void ListSupportedEmbeddedFormat(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyricsFormat)
-{
-	LrcSearchResult				result;
-	V_LRCSEARCHRESULT::iterator	it;
-	bool						bAddSylt = true, bAddUslt = true;
-
-	for (it = vLyricsFormat.begin(); it != vLyricsFormat.end(); it++)
-	{
-		LrcSearchResult			&result = *it;
-		if (_tcsnicmp(result.strUrl.c_str(), SZ_SONG_ID3V2_SYLT, _tcslen(SZ_SONG_ID3V2_SYLT)) == 0)
-			bAddSylt = false;
-		if (_tcsnicmp(result.strUrl.c_str(), SZ_SONG_ID3V2_USLT, _tcslen(SZ_SONG_ID3V2_USLT)) == 0)
-			bAddUslt = false;
-	}
-
-	if (bAddSylt)
-	{
-		result.strUrl = SZ_SONG_ID3V2_SYLT;
-		result.strSaveFileName = SZ_SONG_ID3V2_SYLT_DESC;
-		result.nMatchValue = -1;
-		vLyricsFormat.AddResult(result);
-	}
-
-	result.strUrl = SZ_SONG_LYRICS3V2;
-	result.strSaveFileName = SZ_SONG_LYRICS3V2_DESC;
-	result.nMatchValue = -1;
-	vLyricsFormat.AddResult(result);
-
-	if (bAddUslt)
-	{
-		result.strUrl = SZ_SONG_ID3V2_USLT;
-		result.strSaveFileName = SZ_SONG_ID3V2_USLT_DESC;
-		result.nMatchValue = -1;
-		vLyricsFormat.AddResult(result);
-	}
-}
-
 bool ID3v2LyricsInfoGetSynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2SynchLyrics *&plyrics)
 {
 	tstringex			str;

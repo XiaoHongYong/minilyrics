@@ -114,8 +114,6 @@ public:
 #ifdef _ID3V2_SUPPORT
 void GetID3v2LrcSourceLang(LPCTSTR szLrcSource, char szLang[], int len);
 
-void ListSupportedEmbeddedFormat(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyricsFormat);
-
 bool ID3v2LyricsInfoGetSynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2SynchLyrics *&plyrics);
 bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2UnsynchLyrics *&plyrics);
 

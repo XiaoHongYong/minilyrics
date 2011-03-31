@@ -20,48 +20,6 @@ bool IsHttpUrl(LPCTSTR szUrl)
 	return _tcsnicmp(szUrl, SZ_HTTP_HEADER, _tcslen(SZ_HTTP_HEADER)) == 0;
 }
 
-// szValue format: %d,%d
-template<class TCHARDEF, class _int_t>
-bool ScanNIntX(TCHARDEF szValue, _int_t arr[], size_t nCount)
-{
-	if (IsEmptyString(szValue))
-		return false;
-
-	size_t	i;
-	for (i = 0; i < nCount; i++)
-	{
-		szValue = ReadInt_t(szValue, arr[i]);
-		if (*szValue != ',')
-			break;
-		szValue++;
-		while (*szValue == ' ')
-			szValue++;
-	}
-
- 	return i + 1 >= nCount;
-}
-
-bool ProfileLoadIntArray(LPCTSTR szValueName, int vArr[], int nCount)
-{
-	return ScanNIntX(g_Profile.GetProfileString(szValueName, _T("")), vArr, nCount);
-}
-
-void ProfileSaveSkinListCtrlColumnWidth(LPCTSTR szValueName, CSkinListCtrl *pListCtrl)
-{
-	tstring		strValue;
-	CStrPrintf	str;
-
-	for (int i = 0; i < pListCtrl->GetColumnCount(); i++)
-	{
-		str.printf(_T("%d"), pListCtrl->GetColumnWidth(i));
-		if (i > 0)
-			strValue += _T(",");
-		strValue += str.c_str();
-	}
-
-	g_Profile.WriteProfileString(szValueName, strValue.c_str());
-}
-
 void UpdateLyrResultArtistTitle(V_LRCSEARCHRESULT &vResultsLocal)
 {
 	V_LRCSEARCHRESULT::iterator	it;
@@ -76,36 +34,6 @@ void UpdateLyrResultArtistTitle(V_LRCSEARCHRESULT &vResultsLocal)
 		}
 	}
 }
-
-/*
-struct CLyricsResultSortCmp
-{
-public:
-	bool operator()(const LrcSearchResult &item1, const LrcSearchResult &item2)
-	{
-		return _tcsicmp(item1.strTitle.c_str(), item2.strTitle.c_str()) < 0;
-	}
-};
-
-template<class _Cont, class _It, class _Pr>
-inline void sort_insert(_Cont &_Container, _It _First, _It _Last, _Pr _Pred)
-{
-	for (; _First != _Last; ++_First)
-	{
-		_Cont::iterator it;
-
-		for (it = _Container.begin(); it != _Container.end(); ++it)
-		{
-			if (!_Pred(*it, *_First))
-			{
-				_Container.insert(it, *_First);
-				break;
-			}
-		}
-		if (it == _Container.end())
-			_Container.push_back(*_First);
-	}
-}*/
 
 class CPageRename : public CSkinPageHandler
 {
@@ -306,12 +234,12 @@ public:
 		LPCTSTR		szHead[] = {_T("Artist"), _T("Title"), _T("Rating"), _T("Downloads"), _T("From"), _T("Album"), NULL};
 		int			arrWidth[] = {130,        160,         90,           68,              150,       150,         0};
 
-		ProfileLoadIntArray(_T("OpenLyrics_ListColWidth"), arrWidth, CountOf(arrWidth));
 		ASSERT(CountOf(arrWidth) == CountOf(szHead));
 		for (int i = 0; szHead[i] != NULL; i++)
 			m_pLyricsList->AddColumn(TOLOCAL(szHead[i]), arrWidth[i]);
 		if (g_Profile.GetProfileInt(_T("ShowLink"), false))
 			m_pLyricsList->AddColumn(_T("URL"), 400);
+		m_pLyricsList->LoadColumnWidth(_T("OpenLyrics_ListColWidth"));
 
 		m_menu.LoadPopupMenu(IDR_MENU_OPEN_LRC_DLG, 0);
 		ToLocalMenu(&m_menu);
@@ -330,14 +258,15 @@ public:
 		{
 			pEdit->SetEditNotification(this);
 			pEdit = (CSkinEditCtrl*)m_pSkinWnd->GetUIObjectById(CID_E_TITLE, CSkinEditCtrl::ClassName());
-			pEdit->SetEditNotification(this);
+			if (pEdit)
+				pEdit->SetEditNotification(this);
 		}
 	}
 
 	void OnDestroy()
 	{
 		m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
-		ProfileSaveSkinListCtrlColumnWidth(_T("OpenLyrics_ListColWidth"), m_pLyricsList);
+		m_pLyricsList->SaveColumnWidth(_T("OpenLyrics_ListColWidth"));
 	}
 
 	void OnOK()
@@ -416,8 +345,15 @@ public:
 			}
 			else
 			{
-				int			nSel = m_pLyricsList->GetNextSelectedItem(-1);
+				// Change lyrics association, if necessary.
+				TCHAR	szAssociateLyr[MAX_PATH];
+				if (g_LyricSearch.GetAssociateLyrics(m_szAssociateKeyword, szAssociateLyr, CountOf(szAssociateLyr))
+					&& _tcscmp(szAssociateLyr, pSel->strUrl.c_str()) == 0)
+					g_LyricSearch.AssociateLyrics(m_szAssociateKeyword, szFileNew);
 
+				pSel->strUrl = szFileNew;
+
+				int			nSel = m_pLyricsList->GetNextSelectedItem(-1);
 				m_pLyricsList->SetItemText(nSel, COL_FROM, szFileNew);
 			}
 		}

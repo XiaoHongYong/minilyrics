@@ -619,20 +619,26 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	return nRet;
 }
 
-int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, uint32 nLyrSaveFlag, tstring &strMsg, INotifyEvent *pNotify)
+int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, MLMsgRetBatchSearch &retLyrics)
 {
-	int					nRet;
-
 	session.Init(GetAppNameLong().c_str());
 
-	nRet = session.Connect();
+	int nRet = session.Connect();
 	if (nRet != ERR_OK)
 		return nRet;
 
-	MLMsgRetBatchSearch	retLyrics;
-
 	nRet = session.BatchSearch(listSearch, retLyrics);
 	session.Close();
+
+	return nRet;
+}
+
+int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, uint32 nLyrSaveFlag, tstring &strMsg, INotifyEvent *pNotify)
+{
+	MLMsgRetBatchSearch	retLyrics;
+	int	nRet = BatchSearch(session, listSearch, retLyrics);
+	if (nRet != ERR_OK)
+		return nRet;
 
 	if (retLyrics.RegVerifyValue != RVV_OK)
 	{

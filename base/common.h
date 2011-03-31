@@ -230,5 +230,30 @@ public:
 	T* p;
 };
 
+#ifdef _WIN32
+
+// Simplified bstr
+class bstr_s
+{
+public:
+	bstr_s() { m_str = NULL; }
+	virtual ~bstr_s() { free(); }
+
+	void free() { if (m_str) { SysFreeString(m_str); m_str = NULL; } }
+	BSTR c_str() const { return m_str; }
+	operator BSTR() const { return m_str; }
+
+	BSTR* operator&()
+	{
+		ASSERT(m_str == NULL);
+		return &m_str;
+	}
+
+protected:
+	BSTR		m_str;
+
+};
+
+#endif
 
 #endif // _ML_COMMON_INC_
