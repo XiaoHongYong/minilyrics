@@ -21,6 +21,8 @@ public:
 
 	virtual void OnDestroy();
 
+	virtual void OnKeyUp(UINT nChar, UINT nFlags);
+	virtual void OnKeyDown(UINT nChar, UINT nFlags);
 	virtual bool OnMouseMove(UINT nFlags, CPoint point);
 	virtual bool OnLButtonDown(UINT nFlags, CPoint point);
 	virtual bool OnLButtonDblClk(UINT nFlags, CPoint point);
@@ -50,6 +52,10 @@ public:
 
 	CUIObject *GetUIObjectByClassName(LPCTSTR szClassName);
 	CUIObject *GetUIObjectById(int nId, LPCTSTR szClassName);
+	CUIObject *GetFocusUIObject();
+	void SetFocusChild(CUIObject *pObj);
+	int FocusToNext();
+	int FocusToPrev();
 
 	bool RemoveUIObject(CUIObject *pObj, bool bFree);
 
@@ -71,9 +77,6 @@ public:
 	//
 	// CSkinContainer API
 	//
-	CUIObjectIterator ChildBegin() { CUIObjectIterator it(this); it.Begin(); return it; }
-	CUIObjectIterator ChildEnd() { CUIObjectIterator it(this); it.End(); return it; }
-
 	bool IsChild(CUIObject *pObj);
 
 	virtual void InvalidateUIObject(CUIObject *pObj);
@@ -101,13 +104,13 @@ protected:
 #endif // _SKIN_EDITOR_
 
 	friend class CSkinWnd;
-	friend class CUIObjectIterator;
 
 protected:
 	// All the children UIObject
 	typedef vector<CUIObject *>		V_UIOBJECT;
 
 	V_UIOBJECT			m_vUIObjs;
+	int					m_nFocusUIObj;
 
 	bool				m_bClipChildren;
 	tstring				m_strContextMenu;

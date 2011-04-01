@@ -46,8 +46,6 @@ CSkinNStatusButton::~CSkinNStatusButton()
 
 bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	// m_pSkin->SetFocusUIObject(this);
-
 	assert(m_pSkin);
 
 	if (!IsMouseHitBt(point))

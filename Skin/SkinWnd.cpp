@@ -164,7 +164,7 @@ int GetMenuKey(LPCTSTR szText)
 
 //////////////////////////////////////////////////////////////////////
 
-CSkinWnd::CSkinWnd() : m_itFocusUIObject(&m_rootConainter)
+CSkinWnd::CSkinWnd()
 {
 	m_bFreeOnDestory = false;
 	m_bManageBySkinFactory = true;
@@ -368,7 +368,6 @@ void CSkinWnd::CloseSkin()
 	m_pUIObjHandleContextMenuCmd = NULL;
 
 	m_pUIObjCapMouse = NULL;
-	m_itFocusUIObject.End();
 
 	m_rootConainter.OnDestroy();
 	m_rootConainter.Destroy();
@@ -678,8 +677,6 @@ void CSkinWnd::OnRButtonUp(UINT nFlags, CPoint point)
 void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 {
 	CUIObject	*pObjFocus = GetFocusUIObj();
-
-	// let focus uiobject to process key message
 	if (pObjFocus && pObjFocus->WantMsgAllKeys())
 	{
 		pObjFocus->OnKeyDown(nChar, nFlags);
@@ -699,13 +696,9 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 #endif
 		// shift + VK_TAB
 		if (bShitDown)
-		{
-			FocusPrevUIObject();
-		}
+			m_rootConainter.FocusToPrev();
 		else
-		{
-			FocusNextUIObject();
-		}
+			m_rootConainter.FocusToNext();
 
 		// Ignore '\t' WM_CHAR message.
 		m_bIgnoreNextOnCharMsg = true;
@@ -713,16 +706,7 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 		return;
 	}
 
-	if (nChar == VK_RETURN)
-	{
-		// let focus uiobject to process key message
-		if (pObjFocus && pObjFocus->WantMsgEnterKey())
-			pObjFocus->OnKeyDown(nChar, nFlags);
-	}
-
-	// let focus uiobject to process key message
-	if (pObjFocus && pObjFocus->WantMsgKey())
-		pObjFocus->OnKeyDown(nChar, nFlags);
+	m_rootConainter.OnKeyDown(nChar, nFlags);
 }
 
 void CSkinWnd::OnKeyUp(UINT nChar, UINT nFlags)
@@ -1612,126 +1596,6 @@ bool CSkinWnd::GetUnprocessedProperty(LPCTSTR szProperty, tstring &strValue)
 	return false;
 }
 
-// 
-// BOOL CSkinWnd::AddUIObject(CUIObject *pObj)
-// {
-// 	return m_rootConainter.AddUIObject(pObj);
-// }
-// 
-// BOOL CSkinWnd::AddUIObjectToFront(CUIObject *pObj)
-// {
-// 	return m_rootConainter.AddUIObjectToFront(pObj);
-// }
-
-void CSkinWnd::FocusPrevUIObject()
-{
-	CUIObject			*pObjFocusOld;
-
-	pObjFocusOld = m_itFocusUIObject.Get();
-	if (!pObjFocusOld)
-	{
-		m_itFocusUIObject.End();
-		m_itFocusUIObject--;
-	}
-	else
-		m_itFocusUIObject--;
-
-	int	nLoopCount = 0;
-	while (nLoopCount < 2)
-	{
-		CUIObject			*pObj = m_itFocusUIObject.Get();
-
-		if (pObj && pObj->WantMsgKey() && pObj->IsEnable()
-			&& pObj->IsVisible() && pObj->IsParentVisible())
-		{
-			OnSwitchChildFocus(pObjFocusOld, pObj);
-			return;
-		}
-
-		// Does loop backup to start?
-		if (pObj == pObjFocusOld)
-			break;
-
-		if (m_itFocusUIObject.IsBegin())
-		{
-			nLoopCount++;
-			m_itFocusUIObject.End();
-		}
-		else
-			m_itFocusUIObject--;
-	}
-
-	m_itFocusUIObject.End();
-}
-
-
-void CSkinWnd::FocusNextUIObject()
-{
-	CUIObject			*pObjFocusOld;
-
-	pObjFocusOld = m_itFocusUIObject.Get();
-	if (!pObjFocusOld)
-		m_itFocusUIObject.Begin();
-	else
-		m_itFocusUIObject++;
-
-	int	nLoopCount = 0;
-	while (nLoopCount < 2)
-	{
-		CUIObject			*pObj = m_itFocusUIObject.Get();
-
-		if (pObj && pObj->WantMsgKey() && pObj->IsEnable()
-			&& pObj->IsVisible() && pObj->IsParentVisible())
-		{
-			OnSwitchChildFocus(pObjFocusOld, pObj);
-			return;
-		}
-
-		// Does loop backup to start?
-		if (pObj == pObjFocusOld)
-			break;
-
-		if (m_itFocusUIObject.IsEnd())
-		{
-			nLoopCount++;
-			m_itFocusUIObject.Begin();
-		}
-		else
-			m_itFocusUIObject++;
-	}
-
-	m_itFocusUIObject.End();
-
-	OnSwitchChildFocus(pObjFocusOld, NULL);
-}
-
-
-void CSkinWnd::VerifyFocusUIObject()
-{
-	CUIObject		*pObj = m_itFocusUIObject.Get();
-
-	if (pObj && pObj->WantMsgKey())
-		return;
-
-	FocusNextUIObject();
-}
-
-
-void CSkinWnd::SetFocusUIObject(CUIObject *pObj)
-{
-	ASSERT(pObj);
-
-	CUIObject		*pObjFocusOld = m_itFocusUIObject.Get();
-
-	if (pObjFocusOld == pObj)
-		return;
-
-	m_itFocusUIObject.From(pObj);
-	if (pObjFocusOld)
-		pObjFocusOld->OnKillFocus();
-	pObj->OnSetFocus();
-}
-
 void CSkinWnd::SetFocusUIObject(LPCTSTR szId)
 {
 	CUIObject *pObj = GetUIObjectById(m_pSkinFactory->GetIDByName(szId), NULL);
@@ -1741,7 +1605,12 @@ void CSkinWnd::SetFocusUIObject(LPCTSTR szId)
 		return;
 	}
 
-	SetFocusUIObject(pObj);
+	pObj->SetFocus();
+}
+
+CUIObject *CSkinWnd::GetFocusUIObj()
+{
+	return m_rootConainter.GetFocusUIObject();
 }
 
 bool CSkinWnd::EnableUIObject(int nId, bool bEnable, bool bRedraw)
@@ -2409,7 +2278,7 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
 void CSkinWnd::OnSkinLoaded()
 {
 	if (GetFocusUIObj() == NULL)
-		FocusNextUIObject();
+		m_rootConainter.FocusToNext();
 
 	if (m_bManageBySkinFactory)
 		CSjvmSkinSystem::OnSkinWndCreate(this);
@@ -2533,9 +2402,9 @@ void CSkinWnd::OnAddUIObj(CUIObject *pObj)
 			pObj->OnCreate();
 		}
 
-		if (m_itFocusUIObject.Get() == NULL && pObj->WantMsgKey() && pObj->IsEnable()
+		if (GetFocusUIObj() == NULL && pObj->WantMsgKey() && pObj->IsEnable()
 			&& pObj->IsVisible() && pObj->IsParentVisible())
-			m_itFocusUIObject.From(pObj);
+			pObj->SetFocus();
 	}
 }
 

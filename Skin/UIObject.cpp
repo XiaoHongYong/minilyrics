@@ -604,20 +604,19 @@ void CUIObject::SetVisible(bool bVisible)
 		if (pObjFocus == NULL)
 		{
 			// try to set focus to one UIObject
-			m_pSkin->FocusNextUIObject();
+			m_pSkin->GetRootContainer()->FocusToNext();
 		}
 	}
 	else
 	{
-		// Will focus UIObject be hide by this call?
-		if (!pObjFocus || !pObjFocus->IsVisible() || !pObjFocus->IsParentVisible())
+		// Hidden this, Will focus UIObject be hide by this call?
+		if (pObjFocus && (!pObjFocus->IsVisible() || !pObjFocus->IsParentVisible()))
 		{
 			// Change focus UIObject.
-			m_pSkin->FocusNextUIObject();
+			m_pSkin->GetRootContainer()->FocusToNext();
 		}
 	}
 }
-
 
 bool CUIObject::IsParentVisible()
 {
@@ -642,12 +641,15 @@ void CUIObject::SetText(LPCTSTR szText)
 
 void CUIObject::SetFocus()
 {
-	m_pSkin->SetFocusUIObject(this);
+	ASSERT(WantMsgKey() && IsVisible() && IsParentVisible());
+
+	if (m_pContainer)
+		m_pContainer->SetFocusChild(this);
 }
 
 bool CUIObject::IsOnFocus()
 {
-	return m_pSkin->GetFocusUIObj() == this;
+	return m_pContainer->GetFocusUIObject() == this;
 }
 
 bool CUIObject::IsPtIn(POINT pt)

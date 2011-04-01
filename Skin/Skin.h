@@ -11,7 +11,6 @@ class CSkinWnd;
 #include "SFImgList.h"
 #include "SkinRgn.h"
 #include "UIObject.h"
-#include "UIObjectIterator.h"
 #include "SkinContainer.h"
 #include "SkinVScrollBar.h"
 #include "SkinFactory.h"

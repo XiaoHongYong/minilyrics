@@ -100,18 +100,10 @@ public:
 	CUIObject * GetUIObjectById(int nId, LPCTSTR szClassName = NULL);
 	CUIObject *RemoveUIObjectById(int nId);
 	bool RemoveUIObject(CUIObject *pObj, bool bFree = false);
-// 	BOOL AddUIObject(CUIObject *pObj);
-// 	BOOL AddUIObjectToFront(CUIObject *pObj);
 
-	void FocusPrevUIObject();
-	void FocusNextUIObject();
-
-	void VerifyFocusUIObject();
-
-	void SetFocusUIObject(CUIObject *pObj);
 	void SetFocusUIObject(LPCTSTR szId);
 
-	CUIObject *GetFocusUIObj() { return m_itFocusUIObject.Get(); }
+	CUIObject *GetFocusUIObj();
 
 	CSkinContainer *GetRootContainer() { return &m_rootConainter; }
 
@@ -488,8 +480,6 @@ protected:
 
 	// root skin uiobject container
 	CSkinContainer	m_rootConainter;
-
-	CUIObjectIterator	m_itFocusUIObject;
 
 	// only one ui object can capture the mouse at any time
 	CUIObject		*m_pUIObjCapMouse;

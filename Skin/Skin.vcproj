@@ -1096,10 +1096,6 @@
 					/>
 				</FileConfiguration>
 			</File>
-			<File
-				RelativePath=".\UIObjectIterator.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -1295,10 +1291,6 @@
 			</File>
 			<File
 				RelativePath="UIObject.h"
-				>
-			</File>
-			<File
-				RelativePath=".\UIObjectIterator.h"
 				>
 			</File>
 		</Filter>

@@ -1959,7 +1959,7 @@ bool CSkinEditCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 	m_bInMouseSel = false;
 
-	m_pSkin->SetFocusUIObject(this);
+	SetFocus();
 
 	if (control)
 	{
@@ -2021,7 +2021,7 @@ bool CSkinEditCtrl::OnLButtonDblClk(UINT nFlags, CPoint point)
 
 	m_bInMouseSel = true;
 
-	m_pSkin->SetFocusUIObject(this);
+	SetFocus();
 
 	// Select the word of cursor
 	SetCaretToPos(point.x, point.y);
