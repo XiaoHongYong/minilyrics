@@ -1,17 +1,7 @@
-// DlgSearchLyrics.h: interface for the CDlgSearchLyrics class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(_DLGSEARCHLYRICS_H_)
-#define _DLGSEARCHLYRICS_H_
 
 #pragma once
 
-class CDlgOpenLyrics : public CSkinDialog
-{
-public:
-	CDlgOpenLyrics();
 
-};
+void ShowSearchLyricsDialog(CSkinWnd *pParent);
 
-#endif // _DLGSEARCHLYRICS_H_
+void RegisterSearchLyricsPage(CSkinFactory *pSkinFactory);

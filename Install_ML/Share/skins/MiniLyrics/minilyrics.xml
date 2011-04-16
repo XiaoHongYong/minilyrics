@@ -24,10 +24,6 @@
     <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
   </DynCmds>
-  <AdjustHue>
-    <ImageFile file="frame.png"/>
-    <ImageFile file="frame-focus.png"/>
-  </AdjustHue>
   <skinwnd Name="minilyrics" EnableTranslucency="true"
        TranslucencyAlpha="0" TranslucencyAlphaOnHover="228" TranslucencyAlphaOnActive="228"
        MinWidth="330" MinHeight="190" Width="640" Height="240" 

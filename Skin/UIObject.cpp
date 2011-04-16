@@ -354,6 +354,10 @@ CUIObject::CUIObject()
 	m_nOpacity = 255;
 
 	m_bCreated = false;
+	m_bInitialUpdated = false;
+
+	m_animateType = AT_UNKNOWN;
+	m_animateDuration = 0;
 }
 
 CUIObject::~CUIObject()
@@ -370,11 +374,6 @@ CUIObject::~CUIObject()
 
 		m_pSkin->UnregisterTimerObject(this);
 	}
-}
-
-void CUIObject::Draw(CRawGraph *pGraph)
-{
-//	pGraph->Rectangle(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height());
 }
 
 void CUIObject::UpdateTranslucencyWithSkin(CRawGraph *pGraph)
@@ -414,7 +413,16 @@ int CUIObject::GetOpacity()
 		return m_nOpacity;
 }
 
-BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion)
+void CUIObject::OnSize()
+{
+	if (!m_strTooltip.empty() && m_bVisible)
+	{
+		m_pSkin->DelTool(m_nAutoUniID);
+		m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
+	}
+}
+
+BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])
 {
 	int	nValue;
 
@@ -436,16 +444,7 @@ BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion)
 	if (m_formHeight.CalCualteValue(vars, nValue))
 		m_rcObj.bottom = m_rcObj.top + nValue;
 
-	if (pMotion)
-		pMotion->Animate(this);
-
-	OnSize(m_rcObj.Width(), m_rcObj.Height());
-
-	if (!m_strTooltip.empty()/* && m_nId != UID_INVALID*/)
-	{
-		m_pSkin->DelTool(m_nAutoUniID);
-		m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
-	}
+	OnSize();
 
 	return TRUE;
 }
@@ -529,6 +528,17 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		if (!GetRectValue(szValue, m_imgMask))
 			ERRLOG2(_T("Analysis Value: %s = %s FAILED."), szProperty, szValue);
 	}
+	else if (IsPropertyName(szProperty, _T("TabFocus")))
+	{
+		if (IsTRUE(szValue))
+			m_nMsgWant |= UO_MSG_WANT_KEY;
+		else
+			m_nMsgWant &= ~UO_MSG_WANT_KEY;
+	}
+	else if (IsPropertyName(szProperty, _T("Animate")))
+		m_animateType = AnimateTypeFromString(szValue);
+	else if (IsPropertyName(szProperty, _T("AnimateDuration")))
+		m_animateDuration = _ttoi(szValue);
 	else
 		return FALSE;
 
@@ -543,12 +553,6 @@ BOOL CUIObject::SetPropertyInt(LPCTSTR szProperty, int nValue)
 	return SetProperty(szProperty, szBuffer);
 }
 
-/*
-LPCTSTR CUIObject::GetClassName()
-{
-
-}*/
-
 void CUIObject::Invalidate()
 {
 	assert(m_pSkin);
@@ -562,18 +566,13 @@ void CUIObject::Invalidate()
 		m_pSkin->InvalidateUIObject(this);
 }
 
-// COMMENT:
-//		TIMER ??
-void CUIObject::OnTimer(int nId)
+CSkinFactory *CUIObject::GetSkinFactory() const
 {
-
+	if (m_pSkin)
+		return m_pSkin->GetSkinFactory();
+	else
+		return NULL;
 }
-
-void CUIObject::OnSize(int cx, int cy)
-{
-
-}
-
 
 bool CUIObject::IsVisible()
 {
@@ -581,23 +580,21 @@ bool CUIObject::IsVisible()
 		&& (!m_bHideIfMouseInactive || m_pSkin->IsMouseActive());
 }
 
-
-void CUIObject::SetVisible(bool bVisible)
+void CUIObject::SetVisible(bool bVisible, bool bRedraw)
 {
-	if (m_bVisible != bVisible)
+	if (m_bVisible == bVisible)
+		return;
+
+	m_bVisible = bVisible;
+	if (m_strTooltip.size())
 	{
-		m_bVisible = bVisible;
-		if (m_strTooltip.size())
-		{
-			if (bVisible)
-				m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
-			else
-				m_pSkin->DelTool(m_nAutoUniID);
-		}
+		if (bVisible)
+			m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
+		else
+			m_pSkin->DelTool(m_nAutoUniID);
 	}
 
 	CUIObject	*pObjFocus;
-
 	pObjFocus = m_pSkin->GetFocusUIObj();
 	if (bVisible)
 	{
@@ -615,6 +612,37 @@ void CUIObject::SetVisible(bool bVisible)
 			// Change focus UIObject.
 			m_pSkin->GetRootContainer()->FocusToNext();
 		}
+	}
+
+	if (!bVisible)
+	{
+		// Release capture mouse
+		CUIObject *pUIObjCaptureMouse = m_pSkin->GetCaptureMouse();
+		if (pUIObjCaptureMouse 
+			&& (!pUIObjCaptureMouse->IsVisible() || !pUIObjCaptureMouse->IsParentVisible()))
+		{
+			m_pSkin->ReleaseCaptureMouse(pUIObjCaptureMouse);
+		}
+	}
+
+	if (bRedraw)
+	{
+		if (bVisible)
+			Invalidate();
+		else if (m_pContainer)
+			m_pContainer->Invalidate();
+	}
+}
+
+void CUIObject::SetVisibleEx(bool bVisible, bool bAnimation, AnimateDirection animateDirection)
+{
+	if (!bAnimation)
+		SetVisible(bVisible);
+	else
+	{
+		bool bHide = !bVisible;
+		m_pSkin->StopAnimation(this);
+		m_pSkin->StartAnimation(this, NewAnimate(GetAnimationType(), bHide, this, animateDirection), GetAnimationDuration());
 	}
 }
 
@@ -701,6 +729,12 @@ int CUIObject::FromXML(SXNode *pXmlNode)
 		SXNode::Property	&prop = *it;
 		if (!SetProperty(prop.strName.c_str(), prop.strValue.c_str()))
 		{
+#ifdef _DEBUG
+			if (!IsPropertyName(prop.strName.c_str(), SZ_PN_EXTENDS))
+				DBGLOG3(_T("%s - Unknown property: %s=%s"), 
+					(tstring(GetClassName()) + pXmlNode->GetPropertySafe(SZ_PN_ID)).c_str(),
+					prop.strName.c_str(), prop.strValue.c_str());
+#endif
 		}
 	}
 
@@ -727,6 +761,20 @@ void CUIObject::ToXML(CXMLWriter &xmlStream)
 	xmlStream.WriteEndElement();
 }
 #endif // _SKIN_EDITOR_
+
+AnimateType CUIObject::GetAnimationType() const
+{
+	if (m_animateType == AT_UNKNOWN)
+		return m_pSkin->GetAnimationType();
+	return m_animateType;
+}
+
+int CUIObject::GetAnimationDuration() const
+{
+	if (m_animateDuration > 0)
+		return m_animateDuration;
+	return m_pSkin->GetAnimationDuration();
+}
 
 UINT CUIObject::GetProfileInt(LPCTSTR szKeyName, int nDefault)
 {

@@ -15,7 +15,7 @@ public:
 	void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
 
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 protected:
 	uint				m_nResizeDirection;

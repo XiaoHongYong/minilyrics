@@ -45,7 +45,7 @@ public:
 	virtual bool HandleScrollCode(UINT nSBCode, int nPos) { return true; }
 
 public:
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	bool OnLButtonUp(UINT nFlags, CPoint point);

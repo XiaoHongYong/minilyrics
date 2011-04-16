@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Container ID="CID_C_THEME_ROOT" Name="Theme" Visible="false" Rect="0,65,w,h-65">
+<PreferPage.ThemeRoot Name="Theme" Visible="false" Rect="0,65,w,h-65">
   <NormalFrame Rect="10,10,w-20,h-20"/>
   <NormalTabButton ID="CID_TOOLBAR_THEME"  Rect="30,10,w-30,">
     <button ID="CMD_THEME_THEME" Text="Themes"/>
@@ -7,7 +7,7 @@
     <button ID="CMD_THEME_LYR_BG_PIC" Text="Lyrics Background Picture"/>
   </NormalTabButton>
   <Container Name="Content" Rect="10,0,w-20,h" ClipChildren="true">
-    <Container ID="CID_C_THEME" Name="Themes" Rect="0,30,w,h-30-20">
+    <PreferPage.Theme Name="Themes" Visible="false" Rect="0,30,w,h-30-20">
       <NormalText Rect="10,10,w-20,80" Text="Preset themes:"/>
       <NormalListCtrl ID="CID_THME_LIST" Rect="10,35,w-25,180" EnableHorzScrollBar="false"/>
       <NormalText Rect="10,230,120," Text="Theme name:"/>
@@ -15,8 +15,8 @@
       <NormalTextBt ID="CID_LOAD_THEME" Text="&amp;Load Theme" Rect="w/2-110-110/2-30,260,110,"/>
       <NormalTextBt ID="CID_SAVE_THEME" Text="&amp;Save Theme" Rect="w/2-110/2,260,110,"/>
       <NormalTextBt ID="CID_DELETE_THEME" Text="&amp;Delete Theme" Rect="w/2+110/2+30,260,110,"/>
-    </Container>
-    <Container ID="CID_C_THEME_DISPLAY_STYLE" Name="Lyrics Display" Visible="false" Rect="0,30,w,h-30-20">
+    </PreferPage.Theme>
+    <PreferPage.LyrDisplayStyle Name="Lyrics Display" Visible="false" Rect="0,30,w,h-30-20">
       <NormalComboBox ID="CID_DS_MODE" Text="Display Mode" Rect="10,10,w-20,"/>
 
       <NormalFrame Rect="10,35,w-20,90" Text="Font of lyrics text"/>
@@ -42,8 +42,8 @@
       <NormalText Rect="25,340,w/4-25," Text="Align lyrics at:"/>
       <NormalComboBox ID="CID_DS_ALIGN" Text="Align" Rect="w/4,340,w/4-20,"/>
       <NormalCheckBox ID="CID_C_KARAOKE" Text="&amp;Karaoke" Rect="w/2,340,w/2-20,"/>
-    </Container>
-    <Container ID="CID_C_THEME_LYR_BG" Name="Lyrics Background" Visible="false" Rect="0,30,w,h-30-20">
+    </PreferPage.LyrDisplayStyle>
+    <PreferPage.LyrBgPic Name="Lyrics Background" Visible="false" Rect="0,30,w,h-30-20">
       <NormalCheckBox ID="CID_C_USE_ALBUM_ART_AS_BG" Text="Use album art picture if possible" Rect="10,10,w-20,"/>
       <NormalCheckBox ID="CID_C_DARKEN_LYR_BG" Text="Darken background of lyrics" Rect="10,40,w-20,"/>
       <NormalCheckBox ID="CID_C_ENABLE_BG_IMAGE" Text="Enable background picture" Rect="10,70,w-20,"/>
@@ -55,6 +55,8 @@
       <NormalText Rect="10,130,w-10-110," Text="Picture show delay time (seconds):"/>
       <NormalEdit ID="CID_E_DELAY_TIME" Text="" Rect="w-100-20,130,100,"/>
 
-    </Container>
+    </PreferPage.LyrBgPic>
+  
+  
   </Container>
-</Container>
+</PreferPage.ThemeRoot>

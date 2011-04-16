@@ -71,6 +71,7 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 		if (pObj)
 		{
 			// m_pSkin->RedrawBackground(pGraph, m_rcObj);
+			pObj->TryToCallInitialUpdate();
 			pObj->Draw(pGraph);
 		}
 		int			nOpaque;
@@ -87,6 +88,7 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 			if (m_bUseSkinBg || pObj->IsUseSkinBg())
 				m_pSkin->RedrawBackground(&m_memGraph, m_rcObj);
 			CRawGraph::COpacityBlendAutoRecovery opacityAR(&m_memGraph, pObj->GetOpacity());
+			pObj->TryToCallInitialUpdate();
 			pObj->Draw(&m_memGraph);
 			opacityAR.Recover();
 

@@ -123,7 +123,7 @@ void CMLPlayerMgr::OnPlayerDisconnected()
 	g_Player.Disconnect();
 
 	memset(&g_Player.m_playerInfo, 0, sizeof(g_Player.m_playerInfo));
-	CDlgLyricsTool *pLyricsTool = GetRunningLyricsToolWnd();
+	CMPSkinWnd *pLyricsTool = GetRunningLyricsToolWnd();
 	if (!pLyricsTool)
 		CMPlayerAppBase::GetInstance()->PostQuitMessage();
 }
@@ -240,13 +240,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 				break;
 			}
 
-			CBaseWnd *pWndParent;
-			if (hWnd == NULL)
-				pWndParent = CMPlayerAppBase::GetMainWnd();
-			else
-				pWndParent = CBaseWnd::FromHandle(hWnd);
-
-			CSkinDialog::ShowDialog(new CPreferenceDlg(false), pWndParent);
+			ShowPreferenceDialog(CMPlayerAppBase::GetMainWnd());
 		}
 		break;
 	case M2M_ABOUT:
@@ -263,7 +257,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			else
 				pWndParent = CBaseWnd::FromHandle(hWnd);
 
-			CSkinDialog::ShowDialog(new CDlgAbout(), pWndParent);
+			ShowAboutDialog(pWndParent);
 		}
 		break;
 

@@ -10,12 +10,13 @@ class CSkinWnd;
 #include "SFImage.h"
 #include "SFImgList.h"
 #include "SkinRgn.h"
+#include "SkinAnimation.h"
 #include "UIObject.h"
 #include "SkinContainer.h"
 #include "SkinVScrollBar.h"
 #include "SkinFactory.h"
 #include "SkinFontProperty.h"
-#include "SkinAnimationObj.h"
+#include "SkinAnimationUIObj.h"
 #include "SkinWnd.h"
 #include "SkinNStatusButton.h"
 #include "SkinButton.h"
@@ -36,7 +37,5 @@ class CSkinWnd;
 #include "SkinTabButton.h"
 #include "EventsDispatcherBase.h"
 #include "SkinApp.h"
-#include "SkinPageHandler.h"
-#include "SkinDialog.h"
 
 #endif // __DX_SKIN_INC_

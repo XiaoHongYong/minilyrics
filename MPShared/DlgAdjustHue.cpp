@@ -7,18 +7,10 @@
 #include "DlgAdjustHue.h"
 
 
-class CPageAdjustHue : public CSkinPageHandler, public IScrollNotify
+class CPageAdjustHue : public CSkinContainer, public IScrollNotify
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
-	CPageAdjustHue() : CSkinPageHandler(_T("CID_C_ADJUST_HUE"), 
-		NULL, NULL, NULL, NULL)
-	{
-	}
-
-	~CPageAdjustHue()
-	{
-	}
-
 	// IScrollNotify
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 	{
@@ -38,7 +30,7 @@ public:
 
 	void OnCreate()
 	{
-		CSkinPageHandler::OnCreate();
+		CSkinContainer::OnCreate();
 
 		m_hueOld = (float)(g_Profile.GetProfileInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), 0));
 
@@ -55,16 +47,19 @@ public:
 		if (nId == GetIDByName(_T("CID_RESET")))
 		{
 			UpdateAdjustHue(0.0);
+			CSkinSeekCtrl *pSeek = (CSkinSeekCtrl*)GetUIObjectById(GetIDByName(_T("CID_HUE")), CSkinSeekCtrl::ClassName());
+			if (pSeek)
+				pSeek->SetScrollPos(0);
 			return true;
 		}
 
-		return CSkinPageHandler::OnCustomCommand(nId);
+		return CSkinContainer::OnCustomCommand(nId);
 	}
 
-	void OnCancel()
+	bool OnCancel()
 	{
 		UpdateAdjustHue(m_hueOld);
-		CSkinPageHandler::OnCancel();
+		return CSkinContainer::OnCancel();
 	}
 
 protected:
@@ -72,17 +67,17 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPageAdjustHue, _T("Container.AdjustHue"))
+
 //////////////////////////////////////////////////////////////////////
 
-CDlgAdjustHue::CDlgAdjustHue() : CSkinDialog(_T("AdjustHue.xml"))
+void ShowAdjustHueDialog(CSkinWnd *pParent)
 {
-	m_pageHandler.AddPage(new CPageAdjustHue());
-
-	m_pageHandler.SetDefaultPage(_T("CID_C_ADJUST_HUE"));
+	CSkinApp::GetInstance()->ShowDialog(pParent, _T("AdjustHue.xml"));
 }
 
-CDlgAdjustHue::~CDlgAdjustHue()
+void RegisterAdjustHuePage(CSkinFactory *pSkinFactory)
 {
-
+	AddUIObjNewer2(pSkinFactory, CPageAdjustHue);
 }
 

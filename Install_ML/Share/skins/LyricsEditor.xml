@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skinwnd Extends="MenuWindowFrame" Name="LyricsEditor.xml" Caption="Lyrics Editor" CmdHandler="ch_common"
          MinWidth="640" MinHeight="300" Width="640" Height="400" ContextMenu="NormalMode" Menu="LyrEditorMenu"
-         OnCreateCommand="dyncmd_load_toolbar_state">
+         OnCreateCommand="dyncmd_load_toolbar_state" IsDialog="false">
   <Toolbar Left="0" Top="0" Width="22*4+10" Height="26" Image="lyr-tb.bmp"
            enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22" 
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3">

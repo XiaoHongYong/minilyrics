@@ -27,6 +27,8 @@ public:
 	CEventsDispatcherBase *GetEventPatcher() { return m_pEventDispatcher; }
 	CSkinFactory *GetSkinFactory() { return m_pSkinFactory; }
 
+	int ShowDialog(CBaseWnd *pWndParent, LPCTSTR szDialogName);
+
 protected:
 	virtual CEventsDispatcher *NewEventPatcher();
 	virtual CSkinFactory *NewSkinFactory();

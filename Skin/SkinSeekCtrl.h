@@ -25,6 +25,7 @@ public:
 
 class CSkinSeekCtrl : public CUIObject, public IScrollBar
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
 public:
 	enum PUSH_DOWN_POS
 	{
@@ -53,8 +54,7 @@ public:
 	virtual void DisableScrollBar() { }
 	virtual bool HandleScrollCode(UINT nSBCode, int nPos) { return true; }
 
-	LPCTSTR GetClassName();
-
+	void OnKeyDown(UINT nChar, UINT nFlags);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	bool OnMouseMove(UINT nFlags, CPoint point);
@@ -62,7 +62,7 @@ public:
 
 	void OnVScroll(UINT nSBCode);
 
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	void Draw(CRawGraph *pGraph);
 
@@ -86,11 +86,6 @@ protected:
 
 	void NotifyEvent(CSkinSeekCtrlEventNotify::Command cmd);
 
-public:
-	static LPCTSTR ClassName() { return ms_szClassName; }
-	BOOL IsKindOf(LPCTSTR szClassName);
-	static LPCTSTR	ms_szClassName;
-
 protected:
 	// 基本设置
 	int		m_nWidthEnd;		// 两边端点的宽度
@@ -102,6 +97,7 @@ protected:
 	int		m_nVirtualMin;		// 最小的值
 	int		m_nVirtualMax;		// 最大的值
 	int		m_nVirtualLine;
+	int		m_nVirtualPage;
 	int		m_nVirtualCurPos;		// 滚动一行的值，缺省为1
 
 	int				m_nXCursorToThumbBeg;	// 鼠标点下位置距拖动ThumbBox 距离: point.y - m_rcObj.top - m_nHeightEnd;

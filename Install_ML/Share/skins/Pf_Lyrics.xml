@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Container ID="CID_C_LYR_ROOT" Name="Lyrics" Rect="0,65,w,h-65" Visible="false">
+<PreferPage.LyricsRoot ID="CID_C_LYR_ROOT" Name="Lyrics" Rect="0,65,w,h-65" Visible="false">
   <NormalFrame Rect="10,10,w-20,h-20"/>
   <NormalTabButton ID="CID_TOOLBAR_LYR"  Rect="30,10,w-30,">
     <button ID="CMD_LYR_DOWNLOAD" Text="Lyrics Download"/>
     <button ID="CMD_LYR_OUTPUT_PLUGIN" Text="Lyrics Output Plug-ins"/>
   </NormalTabButton>
   <Container Name="Content" Rect="10,0,w-20,h" ClipChildren="true">
-    <Container ID="CID_C_LYR_DOWNLOAD" Name="Lyrics Download" Rect="0,30,w,h-30-10">
+    <PreferPage.LyrDownload ID="CID_C_LYR_DOWNLOAD" Visible="false" Name="Lyrics Download" Rect="0,30,w,h-30-10">
       <NormalFrame Rect="10,10,w-20,210" Text="Save downloaded lyrics in:"/>
       <NormalCheckBox ID="CID_C_SAVE_IN_SONG_DIR" Text="&amp;Save lyrics in the song's directory" Rect="25,40,w-50,"/>
       <NormalCheckBox ID="CID_C_SAVE_IN_DIR" Text="&amp;Save lyrics in:" Rect="25,70,140,"/>
@@ -21,8 +21,8 @@
       <NormalFrame Rect="10,230,w-20,90" Text="Rename the downloaded lyrics file name"/>
       <NormalRadioBt ID="CID_C_KEEP_FILENAME" Text="Keep the file name" Rect="25,260,w-50,"/>
       <NormalRadioBt ID="CID_C_AS_SONG_NAME" Text="As the same name as the song" Rect="25,290,w-50,"/>
-    </Container>
-    <Container ID="CID_C_LYR_OUTPUT_PLUGIN" Name="Lyrics Output Plug-ins" Visible="false" Rect="0,30,w,h-30-10">
+    </PreferPage.LyrDownload>
+    <PreferPage.LyrOutputPlugin ID="CID_C_LYR_OUTPUT_PLUGIN" Name="Lyrics Output Plug-ins" Visible="false" Rect="0,30,w,h-30-10">
       <NormalText Rect="10,10,w-20,60" Text="$Product$ will use the plug-ins below for lyrics output. You can select a plug-in and configure, view about boxes, or uninstall them."/>
       <NormalListCtrl ID="CID_LO_PLUGIN_LIST" Rect="10,70,w-20,h-70-50"
                       EnableHorzScrollBar="false" EnableVertScrollBar="false"/>
@@ -30,6 +30,6 @@
       <NormalTextBt ID="CID_ABOUT" Text="About" Rect="10+(w-20)/4,h-40,(w-20)/4-20,"/>
       <NormalTextBt ID="CID_UNINST_PLUG" Text="Uninstall plug-in" Rect="10+(w-20)/2,h-40,(w-20)/4-20,"/>
       <NormalLink ID="CID_GET_PLUG" Text="Get plug-ins" Rect="10+(w-20)*3/4,h-40,(w-20)/4-20," AlignText="AT_CENTER"/>
-   </Container>
+   </PreferPage.LyrOutputPlugin>
   </Container>
-</Container>
+</PreferPage.LyricsRoot>

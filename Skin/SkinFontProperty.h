@@ -76,7 +76,7 @@ public:
 
 	void OnSkinFontChanged();
 
-	void OnAdjustHue(float hue, float saturation, float luminance);
+	void OnAdjustHue(CSkinWnd *pSkinwnd, float hue, float saturation, float luminance);
 
 protected:
 	inline bool IsPropertySet(uint32 fontProperty) { return IsFlagSet(m_nFlagProperties, fontProperty); }

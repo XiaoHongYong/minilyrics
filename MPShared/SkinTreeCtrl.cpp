@@ -830,9 +830,9 @@ void CSkinTreeCtrl::OnCreate()
 	m_pScrollBar->SetScrollNotify(this);
 }
 
-void CSkinTreeCtrl::OnSize(int cx, int cy)
+void CSkinTreeCtrl::OnSize()
 {
-	CUIObject::OnSize(cx, cy);
+	CUIObject::OnSize();
 
 	UpdateVScrollBar();
 }

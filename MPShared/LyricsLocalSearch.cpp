@@ -579,31 +579,32 @@ LPTSTR GetDiskImageFileExtEnd(LPCTSTR szFile)
 	return NULL;
 }
 
-void CLyricsLocalSearch::GetAssociateFileKeyword(LPCTSTR szSongFile, LPCTSTR szFulltitle, LPTSTR szAssociateFileKeyword, int nMaxLen)
+tstring CLyricsLocalSearch::GetAssociateFileKeyword(LPCTSTR szSongFile, LPCTSTR szFulltitle)
 {
+	tstring		strAssociateKey;
+
 	if (IsEmptyString(szSongFile))
-	{
-		_tcscpy_safe(szAssociateFileKeyword, nMaxLen, szFulltitle);
-		return;
-	}
+		return szFulltitle;
 
-	_tcscpy_safe(szAssociateFileKeyword, nMaxLen, szSongFile);
+	strAssociateKey = szSongFile;
 
-	LPTSTR szEndPos = GetDiskImageFileExtEnd(szAssociateFileKeyword);
+	LPTSTR szEndPos = GetDiskImageFileExtEnd(szSongFile);
 	if (szEndPos)
 	{
 		// to associate a .cue, .tak track correctly, the title will be appended to it.
 		if (_tcscmp(szEndPos, _T(" - ")) == 0
 			|| _tcscmp(szEndPos, _T(",")) == 0)
 			*szEndPos = '\0';
-		_tcscat_safe(szAssociateFileKeyword, nMaxLen, szFulltitle);
+		strAssociateKey += szFulltitle;
 	}
 	else if (IsShoutcastMedia(szSongFile))
 	{
 		// to associate a shoutcast track correctly, the title will be appended to it.
-		_tcscat_safe(szAssociateFileKeyword, nMaxLen, _T("/[shoutcast]"));
-		_tcscat_safe(szAssociateFileKeyword, nMaxLen, szFulltitle);
+		strAssociateKey += _T("/[shoutcast]");
+		strAssociateKey += szFulltitle;
 	}
+
+	return strAssociateKey;
 }
 
 // COMMENT:
@@ -686,11 +687,7 @@ BOOL CLyricsLocalSearch::IsAssociatedWithNoneLyrics(LPCTSTR szAssociateKeyword)
 
 BOOL CLyricsLocalSearch::IsAssociatedLyrics(LPCTSTR szSongFile, LPCTSTR szFullTitle)
 {
-	TCHAR				szKey[MAX_PATH];
-
-	GetAssociateFileKeyword(szSongFile, szFullTitle, szKey, CountOf(szKey));
-
-	return IsAssociatedLyrics(szKey);
+	return IsAssociatedLyrics(GetAssociateFileKeyword(szSongFile, szFullTitle).c_str());
 }
 
 inline bool FilePathIsBeginWithDriver(LPCTSTR szFile)
@@ -1003,7 +1000,6 @@ void CLyricsLocalSearch::SaveLyricsAssociation()
 //		szLyricFile	-	匹配的歌曲文件
 BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, TCHAR *szLyricFile)
 {
-	TCHAR			szKeyword[MAX_PATH];
 	TCHAR			szFullTitle[MAX_PATH];
 	TCHAR			szEmbeddedLyrics[MAX_PATH];
 
@@ -1012,10 +1008,8 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 	_tcscat_safe(szFullTitle, CountOf(szFullTitle), _T(" - "));
 	_tcscat_safe(szFullTitle, CountOf(szFullTitle), szTitle);
 
-	GetAssociateFileKeyword(szSongFile, szFullTitle, szKeyword, CountOf(szKeyword));
-
 	// 首先到关连表中搜索.
-	if (GetAssociateLyrics(szKeyword, szLyricFile, MAX_PATH))
+	if (GetAssociateLyrics(GetAssociateFileKeyword(szSongFile, szFullTitle).c_str(), szLyricFile, MAX_PATH))
 		return TRUE;
 
 	V_LRCSEARCHRESULT		vLyrics;

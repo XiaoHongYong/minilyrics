@@ -1,13 +1,7 @@
-// PreferencePageBase.h: interface for the CPreferencePageBase class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_PREFERENCEPAGEBASE_H__DE19C916_8F60_4132_B485_4D82DC5491B8__INCLUDED_)
-#define AFX_PREFERENCEPAGEBASE_H__DE19C916_8F60_4132_B485_4D82DC5491B8__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+#define SZ_EX_POOL_PF_FLOATING_LYR		_T("FloatingLyr")
+#define SZ_EX_POOL_PF_DEFAULT_PAGE		_T("DefaultPage")
 
 enum PreferPageID
 {
@@ -34,8 +28,9 @@ enum PreferPageID
 	PAGE_ADVANCED,
 };
 
-class CPagePfBase : public CSkinPageHandler, public IUIObjNotifyHandler
+class CPagePfBase : public CSkinContainer, public IUIObjNotifyHandler
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
 	struct OptBase
 	{
@@ -93,9 +88,9 @@ public:
 	typedef	list<OptRadioInt>		VOptRadioInt;
 
 public:
-	CPagePfBase(LPCTSTR szIdPage, PreferPageID pfPageId, LPCTSTR szAssociateTabButtonId);
+	CPagePfBase(PreferPageID pfPageId, LPCTSTR szAssociateTabButtonId);
 
-	void OnCreate();
+	void OnInitialUpdate();
 
 	void OnDestroy();
 
@@ -111,12 +106,13 @@ public:
 
 	PreferPageID GetPfPageID() const { return m_pfPageId; }
 	int GetAssociateTabButtonId() const { return m_nAssociateTabButtonId; }
-	bool SetDefaultPreferPage(PreferPageID pfPageIdDefault);
+	bool SetDefaultPreferPage(CSkinContainer *pContainer, PreferPageID pfPageIdDefault);
 
 	void CheckToolbarDefaultPage(LPCTSTR szToolbarId);
 
 protected:
 	void ClearOptions();
+	bool OnSwitchToPageCmd(int nId);
 
 protected:
 	VOptBool			m_vOptBool;
@@ -126,6 +122,6 @@ protected:
 	PreferPageID		m_pfPageId;
 	int					m_nAssociateTabButtonId;
 
-};
+	int					m_nDefaultPageAssociateTabButtonId;
 
-#endif // !defined(AFX_PREFERENCEPAGEBASE_H__DE19C916_8F60_4132_B485_4D82DC5491B8__INCLUDED_)
+};

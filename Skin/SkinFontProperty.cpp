@@ -378,20 +378,25 @@ void CSkinFontProperty::OnSkinFontChanged()
 }
 
 
-void CSkinFontProperty::OnAdjustHue(float hue, float saturation, float luminance)
+void CSkinFontProperty::OnAdjustHue(CSkinWnd *pSkinwnd, float hue, float saturation, float luminance)
 {
-	ASSERT(m_pSkin);
-	if (!m_pSkin)
-		return;
+	if (IsPropertySet(FP_TEXT_CLR))
+	{
+		m_clrText = m_clrTextOrg;
+		pSkinwnd->GetSkinFactory()->GetAdjustedHueResult(m_clrText);
+	}
 
-	m_clrText = m_clrTextOrg;
-	m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrText);
+	if (IsPropertySet(FP_DISABLED_TEXT_CLR))
+	{
+		m_clrTextDisbled = m_clrTextDisbledOrg;
+		pSkinwnd->GetSkinFactory()->GetAdjustedHueResult(m_clrTextDisbled);
+	}
 
-	m_clrTextDisbled = m_clrTextDisbledOrg;
-	m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrTextDisbled);
-
-	m_clrOutlined = m_clrOutlinedOrg;
-	m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrOutlined);
+	if (IsPropertySet(FP_OUTLINED_CLR))
+	{
+		m_clrOutlined = m_clrOutlinedOrg;
+		pSkinwnd->GetSkinFactory()->GetAdjustedHueResult(m_clrOutlined);
+	}
 }
 
 

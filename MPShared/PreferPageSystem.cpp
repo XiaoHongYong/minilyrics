@@ -7,17 +7,16 @@
 
 class CPagePfInternet : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfInternet() : CPagePfBase(GetPageID(), PAGE_INET, _T("CMD_SYSTEM_INTERNET"))
+	CPagePfInternet() : CPagePfBase(PAGE_INET, _T("CMD_SYSTEM_INTERNET"))
 	{
+		m_bInitailed = false;
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_INTERNET"); }
 
 	void OnInitialUpdate()
 	{
 		CPagePfBase::OnInitialUpdate();
-
 
 		//
 		// HTTP ´úÀíÉèÖÃ
@@ -40,6 +39,8 @@ public:
 		if (IsEmptyString(szPwd))
 			g_Profile.GetProfileString(_T("ProxyPass"), _T(""), szPwd, CountOf(szPwd));
 		SetUIObjectText(_T("CID_PASS"), szPwd);
+
+		m_bInitailed = true;
 	}
 
 	void OnDestroy()
@@ -91,7 +92,7 @@ public:
 protected:
 	void SaveProxyServerUserPwd()
 	{
-		if (!IsInitialUpdated())
+		if (!m_bInitailed)
 			return;
 
 		g_Profile.WriteProfileString(_T("ProxyServer"), 
@@ -120,7 +121,11 @@ protected:
 		}
 	}
 
+	bool		m_bInitailed;
+
 };
+
+UIOBJECT_CLASS_NAME_IMP(CPagePfInternet, _T("Container.Inet"))
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -144,28 +149,25 @@ int   _idWmp = 0;
 
 class CPagePfStartup: public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfStartup() : CPagePfBase(GetPageID(), PAGE_STARTUP, _T("CMD_SYSTEM_STARTUP"))
+	CPagePfStartup() : CPagePfBase(PAGE_STARTUP, _T("CMD_SYSTEM_STARTUP"))
 	{
+		m_bInitailed = false;
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_STARTUP"); }
 
 	void OnInitialUpdate()
 	{
 		CPagePfBase::OnInitialUpdate();
+
+		m_bInitailed = true;
 
 		AddOptBool(ET_NULL, SZ_SECT_UI, _T("CheckNewVer"), true, _T("CID_C_CHECK_NEW_VERSION"));
 
 		InitCheckButtons();
 
 #ifndef _MPLAYER
-		CSkinContainer *pContainer = (CSkinContainer *)GetUIObjectById(GetPageID(), CSkinContainer::ClassName());
-		ASSERT(pContainer);
-		if (!pContainer)
-			return;
-
-		CUIObject *pObjFrame = GetUIObjectById(_T("CID_STARTUP_FRAME"));
+		CUIObject *pObjFrame = GetUIObjectById(_T("CID_STARTUP_FRAME"), NULL);
 		ASSERT(pObjFrame);
 		if (!pObjFrame)
 			return;
@@ -184,13 +186,13 @@ public:
 			bool bLeft = (i % 2 == 0);
 
 			if (_id2strPlayers[i].dwId == 0)
-				_id2strPlayers[i].dwId = m_pSkinWnd->GetSkinFactory()->AllocCustomID();
+				_id2strPlayers[i].dwId = m_pSkin->GetSkinFactory()->AllocCustomID();
 
 			if (_tcscmp(_id2strPlayers[i].szId, _T("Windows Media Player")) == 0)
 				_idWmp = _id2strPlayers[i].dwId;
 
-			CSkinNStatusButton *pButton = (CSkinNStatusButton*)m_pSkinWnd->GetSkinFactory()->CreateDynamicCtrl(
-				pContainer, _T("NormalCheckBox"), _id2strPlayers[i].dwId,
+			CSkinNStatusButton *pButton = (CSkinNStatusButton*)m_pSkin->GetSkinFactory()->CreateDynamicCtrl(
+				this, _T("NormalCheckBox"), _id2strPlayers[i].dwId,
 				bLeft ? strP1Left.c_str() : strP2Left.c_str(), formTop.GetFormula(), strWidth.c_str());
 			if (pButton)
 			{
@@ -226,7 +228,7 @@ public:
 	void OnDestroy()
 	{
 #ifndef _MPLAYER
-		if (IsInitialUpdated())
+		if (m_bInitailed)
 		{
 			ASSERT(_idWmp != UID_INVALID);
 			RegWriteProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\UIPlugins\\{46B5EE7F-3B6B-4079-A756-5EFC10B1F50B}"), 
@@ -238,20 +240,18 @@ public:
 	}
 
 protected:
+	bool		m_bInitailed;
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPagePfStartup, _T("Container.Startup"))
+
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfSystemRoot::CPagePfSystemRoot() : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T("CMD_ROOT_SYSTEM"))
-{
-	AddPage(new CPagePfInternet());
-	AddPage(new CPagePfStartup());
-}
+UIOBJECT_CLASS_NAME_IMP(CPagePfSystemRoot, _T("PreferPage.SystemRoot"))
 
-LPCTSTR CPagePfSystemRoot::GetPageID()
+CPagePfSystemRoot::CPagePfSystemRoot() : CPagePfBase(PAGE_UNKNOWN, _T("CMD_ROOT_SYSTEM"))
 {
-	return _T("CID_C_SYSTEM_ROOT");
 }
 
 void CPagePfSystemRoot::OnInitialUpdate()
@@ -261,15 +261,10 @@ void CPagePfSystemRoot::OnInitialUpdate()
 	CheckToolbarDefaultPage(_T("CID_TOOLBAR_SYSTEM"));
 }
 
-/*
-bool CPagePfSystemRoot::OnCustomCommand(int nId)
+void RegisterPfSystemPages(CSkinFactory *pSkinFactory)
 {
-	if (nId == GetIDByName(_T("CMD_SYSTEM_INTERNET")))
-		SwitchToPage(CPagePfInternet::GetPageID());
-	else if (nId == GetIDByName(_T("CMD_SYSTEM_STARTUP")))
-		SwitchToPage(CPagePfStartup::GetPageID());
-	else
-		return CPagePfBase::OnCustomCommand(nId);
+	AddUIObjNewer2(pSkinFactory, CPagePfInternet);
+	AddUIObjNewer2(pSkinFactory, CPagePfStartup);
+	AddUIObjNewer2(pSkinFactory, CPagePfSystemRoot);
+}
 
-	return true;
-}*/

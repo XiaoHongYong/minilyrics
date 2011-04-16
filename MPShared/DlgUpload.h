@@ -1,13 +1,5 @@
 #pragma once
 
-class CDlgUpload : public CSkinDialog
-{
-public:
-	CDlgUpload(tstring &strLyricsContent, LPCTSTR szMediaSource, LPCTSTR szLyrSource);
-	~CDlgUpload();
+void ShowUploadLyrDialog(CSkinWnd *pParent, tstring &strLyricsContent, LPCTSTR szMediaSource, LPCTSTR szLyrSource);
 
-protected:
-	class CUploadWorkObj		*m_pUploadWorkObj;
-
-};
-
+void RegisterUploadLyrPage(CSkinFactory *pSkinFactory);

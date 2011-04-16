@@ -1,35 +1,7 @@
-/********************************************************************
-	Created  :	2002/01/04	21:41
-	FileName :	PreferenceDlg.h
-	Author   :	xhy
-	
-	Purpose  :	
-*********************************************************************/
-
-#if !defined(AFX_PREFERENCEDLG_H__C764EAD4_A895_4986_9757_463182BE40A4__INCLUDED_)
-#define AFX_PREFERENCEDLG_H__C764EAD4_A895_4986_9757_463182BE40A4__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "PreferencePageBase.h"
 
-class CPreferenceDlg : public CSkinDialog
-{
-public:
-	CPreferenceDlg(bool bFloatingLyrMode = false, PreferPageID defaultPage = PAGE_UI);
+void ShowPreferenceDialog(CSkinWnd *pParent, bool bFloatingLyr = false, PreferPageID preferPageId = PAGE_UI);
 
-	virtual void OnSkinLoaded();
-
-	virtual bool OnCustomCommand(int nId);
-
-protected:
-	friend class CPagePfSkin;
-
-	PreferPageID	m_defaultPage;
-	bool			m_bFloatingLyrMode;
-
-};
-
-#endif // !defined(AFX_PREFERENCEDLG_H__C764EAD4_A895_4986_9757_463182BE40A4__INCLUDED_)
+void RegisterPreferencePage(CSkinFactory *pSkinFactory);

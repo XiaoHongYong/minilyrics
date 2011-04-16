@@ -1063,14 +1063,10 @@ void CMPSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 	CSkinWnd::OnRemoveUIObj(pObj);
 }
 
-BOOL CMPSkinWnd::SetProperty(SXNode *pXmlNode)
+BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
 {
-	LPCTSTR		szName = pXmlNode->GetPropertySafe(SZ_PN_NAME);
-	ASSERT(szName);
-	if (!szName)
-		return FALSE;
-
-	if (IsPropertyName(szName, _T("LyrAutoSwitch")))
+	ASSERT(szProperty);
+	if (IsPropertyName(szProperty, _T("LyrAutoSwitch")))
 	{
 		m_autoSwitchToLyrShow.m_bEnabled = true;
 		m_autoSwitchToLyrShow.m_nCmdShowLyr = m_pSkinFactory->GetIDByName(
@@ -1083,7 +1079,7 @@ BOOL CMPSkinWnd::SetProperty(SXNode *pXmlNode)
 		return TRUE;
 	}
 
-	return CSkinWnd::SetProperty(pXmlNode);
+	return CSkinWnd::SetProperty(szProperty, pXmlNode);
 }
 
 BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -1242,7 +1238,6 @@ void CMPSkinWnd::OnDropFiles(HDROP hDrop)
 {
 	TCHAR		szFile[MAX_PATH];
 	int			n;
-	TCHAR		szAssociateKeyWord[MAX_PATH];
 
 	n = DragQueryFile(hDrop, (UINT)-1, szFile, CountOf(szFile));
 
@@ -1252,8 +1247,7 @@ void CMPSkinWnd::OnDropFiles(HDROP hDrop)
 		if (FileIsExtSame(szFile, _T(".lrc")) || FileIsExtSame(szFile, _T(".txt"))
 			|| FileIsExtSame(szFile, _T(".srt")))
 		{
-			CMPlayerAppBase::GetAssociateFileKeyword(szAssociateKeyWord, MAX_PATH);
-			g_LyricSearch.AssociateLyrics(szAssociateKeyWord, szFile);
+			g_LyricSearch.AssociateLyrics(CMPlayerAppBase::GetAssociateFileKeyword().c_str(), szFile);
 			CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
 			DragFinish(hDrop);

@@ -1,24 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skinwnd Extends="WindowFrame" Name="AboutBox.xml" Caption="About $Product$"
-         FixedWidth="true" FixedHeight="true" Width="360" Height="340" RememberSizePos="false">
-  <Animation ID="CID_AM_SHOW_ABOUT_F_RIGHT" MoveFromRight="CID_BRANDING,CID_VERSION,CID_COPYRIGHT,CID_EMAIL,CID_LICENSE,CID_LICENSE_TO,CID_UNREGISTERED"
-      MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_CHECK_VERSION"/>
-  <Animation ID="CID_AM_HIDE_ABOUT_2_LEFT" MoveToLeft="CID_C_ABOUT" MoveToBottom="CID_BUYNOW,CID_ENTER_CODE,CID_CHECK_VERSION"/>
-  <Animation ID="CID_AM_SHOW_ABOUT_F_LEFT" MoveFromLeft="CID_C_ABOUT"
-      MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_CHECK_VERSION" ResizeWnd="360,340"/>
-  <Container ID="CID_C_ABOUT" Name="About" Rect="0,0,w,h">
-    <NormalText ID="CID_BRANDING" Text="MiniLyrics" Rect="(w-160)/2,30,160,35" FontHeight="30" AlignText="AT_CENTER"/>
-    <NormalText ID="CID_VERSION" Text="Version" Rect="(w-250)/2,65,250,15" AlignText="AT_CENTER"/>
-    <NormalLink ID="CID_COPYRIGHT" Text="Copyright 2001-2010 Crintsoft" Rect="30,100,w-60,15" AlignText="AT_CENTER"/>
-    <NormalLink ID="CID_EMAIL" Text="support@crintsoft.com" Rect="30,120,w-60,15" AlignText="AT_CENTER"/>
-    <NormalText ID="CID_LICENSE" Text="This Product is licensed to:" Rect="30,150,w-60,25" FontHeight="18" AlignText="AT_CENTER"/>
-    <NormalText ID="CID_LICENSE_TO" Text="" Rect="30,180,w-60,25" FontHeight="18" AlignText="AT_CENTER"/>
+         FixedWidth="true" FixedHeight="true" Width="380" Height="340" RememberSizePos="false"
+         DefaultPage="Container.About" ExPool.EnterCode.Close="false">
+  <Container.About Visible="false" Name="About" Rect="0,0,w,h">
+    <NormalText ID="CID_BRANDING" Text="MiniLyrics" Rect="20,20,w-40,35" FontHeight="30" AlignText="AT_LEFT"/>
+    <NormalText ID="CID_VERSION" Text="Version" Rect="20,55,w-40,15" AlignText="AT_LEFT"/>
+    <NormalLink ID="CID_NEW_VERSION" Visible="false" Text="" Rect="20,75,w-20-20,15" AlignText="AT_LEFT"/>
+    <NormalText ID="CID_CHECK_VERSION" Text="Checking for updates..." Rect="20,75,260,15"/>
+    <NormalLink ID="CID_COPYRIGHT" Text="Copyright 2001-2010 Crintsoft" Rect="20,120,w-40,15" AlignText="AT_LEFT"/>
+    <NormalLink ID="CID_EMAIL" Text="support@crintsoft.com" Rect="20,140,w-40,15" AlignText="AT_LEFT"/>
+    <NormalText ID="CID_LICENSE" Text="This Product is licensed to:" Rect="30,190,w-60,25" FontHeight="16" AlignText="AT_RIGHT"/>
+    <NormalText ID="CID_LICENSE_TO" Text="" Rect="30,210,w-60,25" FontHeight="20" AlignText="AT_RIGHT"/>
     <NormalText ID="CID_UNREGISTERED" Visible="false" Text="***  UNREGISTERED, TRIAL VERSION  ***"
-        Rect="(w-300)/2,165,300,25" FontHeight="16" AlignText="AT_CENTER"/>
-    <NormalTextBt ID="CID_BUYNOW" Text="&amp;Buy Now" Rect="w/2 - 130,220,110,"/>
-    <NormalTextBt ID="CID_ENTER_CODE" Text="&amp;Enter code" Rect="w/2 + 20,220,110,"/>
-    <NormalText ID="CID_CHECK_VERSION" Text="Checking for updates..." Rect="30,260,260,15"/>
-    <NormalLink ID="CID_NEW_VERSION" Visible="false" Text="" Rect="20,260,w-20-20,15" AlignText="AT_CENTER"/>
-  </Container>
+        Rect="(w-300)/2,195,300,25" FontHeight="16" AlignText="AT_RIGHT"/>
+    <NormalTextBt ID="CID_BUYNOW" Text="&amp;Buy Now" Rect="w/2 - 130,h-40,110,"/>
+    <NormalTextBt ID="CID_ENTER_CODE" Text="&amp;Enter code" Rect="w/2 + 20,h-40,110,"/>
+  </Container.About>
   <include Name="EnterCode.xml"/>
 </skinwnd>

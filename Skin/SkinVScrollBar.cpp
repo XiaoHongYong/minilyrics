@@ -121,9 +121,9 @@ void CSkinSrollBarBase::DisableScrollBar()
 	}
 }
 
-void CSkinSrollBarBase::OnSize(int cx, int cy)
+void CSkinSrollBarBase::OnSize()
 {
-	CUIObject::OnSize(cx, cy);
+	CUIObject::OnSize();
 
 	AdjustThumbSize();
 

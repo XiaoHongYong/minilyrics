@@ -90,13 +90,12 @@ public:
 	{
 		tstring		strTitle;
 		tstring		strArtist;
-		TCHAR		szAssociateKeyword[MAX_PATH];
+		tstring		strAssociateMediaKey;
 		bool		bOnlyMatched;
 
 		COnlineSearch	*pOnlineSearch;
 		COnlineSearchThreadParam()
 		{
-			EmptyStr(szAssociateKeyword);
 			pOnlineSearch = NULL;
 			bOnlyMatched = false;
 		}

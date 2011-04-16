@@ -196,8 +196,6 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		nValueMax = result.nMatchValue;
 		if (nValueMax >= MATCH_VALUE_OK)
 		{
-			TCHAR		szAssociateKeyword[MAX_PATH] = _T("");
-
 			// Do not download .txt lyrics
 			if (FileIsExtSame(result.strUrl.c_str(), _T(".txt"))
 				&& g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false))
@@ -212,8 +210,6 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 				&& result.nMatchValue < MATCH_VALUE_BETTER)
 				return TRUE;
 
-			CMPlayerAppBase::GetAssociateFileKeyword(szAssociateKeyword, MAX_PATH);
-
 			// 就下载它了
 			tstring		str;
 			str = TOLOCAL(_T("Downloading lyrics:"));
@@ -221,7 +217,8 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 			str += result.strSaveFileName.c_str();
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 
-			DownloadLyrics(szAssociateKeyword, g_Player.GetSrcMedia(), result.strUrl.c_str(), result.strSaveFileName.c_str());
+			DownloadLyrics(CMPlayerAppBase::GetAssociateFileKeyword().c_str(),
+				g_Player.GetSrcMedia(), result.strUrl.c_str(), result.strSaveFileName.c_str());
 			return TRUE;
 		}
 	}

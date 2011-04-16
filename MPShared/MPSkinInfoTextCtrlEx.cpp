@@ -105,10 +105,8 @@ void CMPSkinInfoTextCtrlEx::OnPlayTimeChangedUpdate()
 
 }
 
-void CMPSkinInfoTextCtrlEx::OnSize(int cx, int cy)
+void CMPSkinInfoTextCtrlEx::OnSize()
 {
-	CUIObject::OnSize(cx, cy);
-
 	WrapInfoText();
 }
 

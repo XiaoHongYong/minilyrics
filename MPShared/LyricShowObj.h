@@ -159,7 +159,7 @@ protected:
 
 	void UpdateBgImage();
 
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	virtual void OnLyrDrawContextChanged();
 	virtual int GetAutoHeightLines() { return 0; }

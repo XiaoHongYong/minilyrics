@@ -26,7 +26,7 @@ void CSkinFrameCtrl::OnCreate()
 
 void CSkinFrameCtrl::OnAdjustHue(float hue, float saturation, float luminance)
 {
-	m_font.OnAdjustHue(hue, saturation, luminance);
+	m_font.OnAdjustHue(m_pSkin, hue, saturation, luminance);
 }
 
 void CSkinFrameCtrl::Draw(CRawGraph *pGraph)

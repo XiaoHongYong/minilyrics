@@ -65,7 +65,6 @@ CSkinToolbar::~CSkinToolbar()
 	DelTooltip();
 }
 
-
 CSkinToolbar::Button::Button()
 {
 	nID = UID_INVALID;
@@ -207,7 +206,7 @@ void CSkinToolbar::OnCreate()
 
 void CSkinToolbar::OnAdjustHue(float hue, float saturation, float luminance)
 {
-	m_font.OnAdjustHue(hue, saturation, luminance);
+	m_font.OnAdjustHue(m_pSkin, hue, saturation, luminance);
 }
 
 bool CSkinToolbar::OnLButtonDown(UINT nFlags, CPoint point)
@@ -288,6 +287,18 @@ bool CSkinToolbar::OnLButtonUp(UINT nFlags, CPoint point)
 	}
 
 	return true;
+}
+
+void CSkinToolbar::OnSize()
+{
+	// The whole toolbar can't have the tooltip
+	if (m_strTooltip.size())
+		m_strTooltip.resize(0);
+
+	CUIObject::OnSize();
+
+	if (m_bVisible)
+		AddTooltip();
 }
 
 void CSkinToolbar::OnTimer(int nId)
@@ -563,20 +574,6 @@ void CSkinToolbar::Draw(CRawGraph *pGraph)
 		if (m_imageBg.IsValid())
 			m_imageBg.XTileBlt(pGraph, x, m_rcObj.top, m_rcObj.right - x, m_rcObj.Height());
 	}
-}
-
-BOOL CSkinToolbar::ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion)
-{
-	// The whole toolbar can't have the tooltip
-	if (!m_strTooltip.empty())
-		m_strTooltip.resize(0);
-
-	CUIObject::ReCalculatePos(vars, pMotion);
-
-	if (m_bVisible)
-		AddTooltip();
-
-	return TRUE;
 }
 
 void CSkinToolbar::SetVisible(bool bVisible)

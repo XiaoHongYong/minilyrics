@@ -6,21 +6,19 @@
 
 //////////////////////////////////////////////////////////////////////////
 const int	_CMD_ID_LANGUANG_BEGIN	= 3000;
-#define TIMER_ID_SKIN_SEL_CHANGED		1
-
 
 class CPagePfUI : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfUI() : CPagePfBase(GetPageID(), PAGE_UI, _T("CMD_UI"))
+	CPagePfUI() : CPagePfBase(PAGE_UI, _T("CMD_UI"))
 	{
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_UI_LANGUAGE"); }
 
 	void OnInitialUpdate()
 	{
 		CPagePfBase::OnInitialUpdate();
+
 		AddOptBool(ET_NULL, SZ_SECT_UI, _T("topmost"), true, _T("CID_C_ON_TOP"));
 
 #ifdef _WIN32_DESKTOP
@@ -76,9 +74,9 @@ public:
 			}
 
 			if (GetUIObjectRect(GetIDByName(_T("CID_SEL_LANGUAGE")), rc))
-				m_pSkinWnd->ClientToScreen(rc);
+				m_pSkin->ClientToScreen(rc);
 
-			m_menuLang.TrackPopupMenu(rc.left, rc.top, m_pSkinWnd);
+			m_menuLang.TrackPopupMenu(rc.left, rc.top, m_pSkin);
 		}
 		else
 			return CPagePfBase::OnCustomCommand(nId);
@@ -111,7 +109,7 @@ public:
 
 			UpdateLanguageInfo();
 
-			InvalidateRect();
+			Invalidate();
 
 			return true;
 		}
@@ -152,19 +150,21 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPagePfUI, _T("PreferPage.UI"))
+
 //////////////////////////////////////////////////////////////////////////
 
 class CPagePfSkin : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfSkin() : CPagePfBase(GetPageID(), PAGE_SKINS, _T("CMD_SKINS"))
+	CPagePfSkin() : CPagePfBase(PAGE_SKINS, _T("CMD_SKINS"))
 	{
 		m_pSkinList = NULL;
 		m_bIgnoreSkinListNotify = false;
 		CID_SKIN_LIST = 0;
+		TIMER_ID_SKIN_SEL_CHANGED = 0;
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_UI_SKIN"); }
 
 	void OnInitialUpdate()
 	{
@@ -173,7 +173,7 @@ public:
 		m_bIgnoreSkinListNotify = true;
 
 		CID_SKIN_LIST = GetIDByName(_T("CID_SKIN_LIST"));
-		m_pSkinWnd->RegisterUIObjNotifyHandler(CID_SKIN_LIST, this);
+		m_pSkin->RegisterUIObjNotifyHandler(CID_SKIN_LIST, this);
 		m_pSkinList = (CSkinListCtrl *)GetUIObjectById(CID_SKIN_LIST, CSkinListCtrl::ClassName());
 		if (m_pSkinList)
 			m_pSkinList->AddColumn(_T("Skins"), 200);
@@ -185,7 +185,7 @@ public:
 
 	void OnDestroy()
 	{
-		m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
+		m_pSkin->UnregisterUIObjNotifyHandler(this);
 
 		CPagePfBase::OnDestroy();
 	}
@@ -195,26 +195,24 @@ public:
 		return CPagePfBase::OnCustomCommand(nId);
 	}
 
-	bool OnTimer(UINT nTimerId)
+	void OnTimer(int nId)
 	{
-		if (nTimerId != TIMER_ID_SKIN_SEL_CHANGED)
-			return false;
+		if (nId != TIMER_ID_SKIN_SEL_CHANGED)
+			return;
 
-		m_pSkinWnd->KillTimer(TIMER_ID_SKIN_SEL_CHANGED);
+		m_pSkin->UnregisterTimerObject(this, TIMER_ID_SKIN_SEL_CHANGED);
 
 		if (!m_pSkinList)
-			return true;
+			return;
 
 		int nSel = m_pSkinList->GetNextSelectedItem();
 		if (nSel == -1)
-			return true;
+			return;
 
 		tstring		strSkinName;
 		m_pSkinList->GetItemText(nSel, 0, strSkinName);
 
 		// Set default page, when skin changes.
-		((CPreferenceDlg *)m_pSkinWnd)->m_defaultPage = PAGE_SKINS;
-
 #ifndef _MPLAYER
 		if (_tcsicmp(strSkinName.c_str(), m_strEmbeddedSkinName.c_str()) == 0)
 		{
@@ -233,10 +231,6 @@ public:
 			g_Profile.WriteProfileString(_T("DefaultSkin"), strSkinName.c_str());
 			CMPlayerAppBase::GetInstance()->ChangeSkin(strSkinName.c_str(), true);
 		}
-
-		// UpdateSkinComment(strSkinName.c_str());
-
-		return true;
 	}
 
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify)
@@ -249,9 +243,9 @@ public:
 			CSkinListCtrlEventNotify	*pListCtrlNotify = (CSkinListCtrlEventNotify*)pNotify;
 			if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_SEL_CHANGED)
 			{
-				m_pSkinWnd->KillTimer(TIMER_ID_SKIN_SEL_CHANGED);
+				m_pSkin->UnregisterTimerObject(this, TIMER_ID_SKIN_SEL_CHANGED);
 				// 设置延时时间为300ms，即在300ms后，用户的选择才会生效
-				m_pSkinWnd->SetTimer(TIMER_ID_SKIN_SEL_CHANGED, 300);
+				TIMER_ID_SKIN_SEL_CHANGED = m_pSkin->RegisterTimerObject(this, 300);
 			}
 		}
 	}
@@ -320,20 +314,18 @@ protected:
 	CSkinListCtrl	*m_pSkinList;
 	tstring			m_strEmbeddedSkinName;
 	bool			m_bIgnoreSkinListNotify;
+	int				TIMER_ID_SKIN_SEL_CHANGED;
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPagePfSkin, _T("PreferPage.Skin"))
+
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfUIRoot::CPagePfUIRoot() : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T("CMD_ROOT_UI"))
-{
-	AddPage(new CPagePfUI());
-	AddPage(new CPagePfSkin());
-}
+UIOBJECT_CLASS_NAME_IMP(CPagePfUIRoot, _T("PreferPage.UIRoot"))
 
-LPCTSTR CPagePfUIRoot::GetPageID()
+CPagePfUIRoot::CPagePfUIRoot() : CPagePfBase(PAGE_UNKNOWN, _T("CMD_ROOT_UI"))
 {
-	return _T("CID_C_UIROOT");
 }
 
 void CPagePfUIRoot::OnInitialUpdate()
@@ -342,3 +334,11 @@ void CPagePfUIRoot::OnInitialUpdate()
 
 	CheckToolbarDefaultPage(_T("CID_TOOLBAR_UI"));
 }
+
+void RegisterPfUIPages(CSkinFactory *pSkinFactory)
+{
+	AddUIObjNewer2(pSkinFactory, CPagePfUIRoot);
+	AddUIObjNewer2(pSkinFactory, CPagePfUI);
+	AddUIObjNewer2(pSkinFactory, CPagePfSkin);
+}
+

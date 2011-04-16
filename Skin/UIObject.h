@@ -13,7 +13,10 @@ class CFormula;
 class CSFImage;
 class CSkinContainer;
 class CUIObject;
-class CSkinAnimateMotion;
+class CSkinAnimation;
+
+typedef vector<CUIObject *>		VecUIObjects;
+typedef list<CUIObject *>		ListUIObjects;
 
 enum BLT_MODE
 {
@@ -191,13 +194,16 @@ public:
 	virtual void SetProperties(vector<tstring> &vProperties);
 
 	// when CSkinWnd's size is changed, call every CUIObject's RecalclulatePos to change pos
-	virtual BOOL ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion = NULL);
+	virtual BOOL ReCalculatePos(FORMULA_VAR vars[]);
 	virtual void Invalidate();
 
 	CSkinContainer *GetParent() const { return m_pContainer; }
 	CSkinWnd *GetSkinWnd() const { return m_pSkin; }
+	CSkinFactory *GetSkinFactory() const;
 
-	// window messages
+
+	// UIObject messages
+	virtual void OnInitialUpdate() { }
 	virtual void OnCreate() { }
 	virtual void OnDestroy() { }
 	virtual void OnKeyUp(UINT nChar, UINT nFlags) { }
@@ -214,10 +220,12 @@ public:
 
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }
 
-	virtual bool OnCommand(UINT uID) { return false; }
+	virtual bool OnCommand(int nId) { return false; }
 	virtual bool OnCustomCommand(int nId) { return false; }
 
-	virtual void Draw(CRawGraph *pGraph);
+	virtual void OnAnimate(CSkinAnimation *pAnimation) { }
+
+	virtual void Draw(CRawGraph *pGraph) { }
 
 
 	// Keep translucency with skin, when skin window changes its translucency.
@@ -228,8 +236,8 @@ public:
 	virtual void OnKillFocus() { }
 	virtual void OnSetFocus() { }
 
-	virtual void OnTimer(int nId);
-	virtual void OnSize(int cx, int cy);
+	virtual void OnTimer(int nId) { }
+	virtual void OnSize();
 
 	virtual void OnAdjustHue(float hue, float saturation, float luminance) { }
 	virtual void OnSkinFontChanged() { }
@@ -246,7 +254,8 @@ public:
 	inline bool WantMsgCustomCmd()	{ return (m_nMsgWant & UO_MSG_WANT_CUSTOM_CMD) != 0; }
 
 	bool IsVisible();
-	virtual void SetVisible(bool bVisible);
+	virtual void SetVisible(bool bVisible, bool bRedraw = false);
+	virtual void SetVisibleEx(bool bVisible, bool bAnimation, AnimateDirection animateDirection);
 	bool IsParentVisible();
 
 	inline bool IsEnable() { return m_bEnable; }
@@ -261,7 +270,7 @@ public:
 	void SetFocus();
 	bool IsOnFocus();
 
-	inline int GetID() { return m_nId; }
+	inline int GetID() const { return m_nId; }
 
 	virtual bool IsPtIn(POINT pt);
 
@@ -273,6 +282,9 @@ public:
 #ifdef _SKIN_EDITOR_
 	virtual void ToXML(CXMLWriter &xmlStream);
 #endif // _SKIN_EDITOR_
+
+	AnimateType GetAnimationType() const;
+	int GetAnimationDuration() const;
 
 	virtual LPCTSTR GetClassName() { return ms_szClassName; }
 	virtual BOOL IsKindOf(LPCTSTR szClassName) { return _tcsicmp(szClassName, ms_szClassName) == 0; }
@@ -296,9 +308,12 @@ public:
 	virtual bool IsContainer() const { return false; }
 	virtual CSkinContainer *GetContainerIf() { return NULL; }
 
+	void TryToCallInitialUpdate()
+	{ if (!m_bInitialUpdated) { m_bInitialUpdated = true; OnInitialUpdate(); } }
+
 protected:
 #ifdef _SKIN_EDITOR_
-	// 在导出到xml时，写完属性，写内容时调用
+	// For Skin Editor to port child.
 	virtual bool HasXMLChild() { return false; }
 	virtual void OnToXMLChild(CXMLWriter &xmlStream) {}
 #endif // _SKIN_EDITOR_
@@ -337,11 +352,15 @@ protected:
 	tstring			m_strTooltip;
 	bool			m_bTempTooltip;
 
+	AnimateType		m_animateType;
+	int				m_animateDuration;
+
 	CSkinWnd		*m_pSkin;
 	CSkinContainer	*m_pContainer;
 
-private:
+protected:
 	bool			m_bCreated;
+	bool			m_bInitialUpdated;
 
 friend class CSkinWnd;
 friend class CSkinContainer;

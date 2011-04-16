@@ -27,6 +27,11 @@
 #include "MediaAlbumArtCtrl.h"
 #include "SkinFilterCtrl.h"
 #include "MPSkinInfoTextCtrlEx.h"
+#include "DlgAbout.h"
+#include "DlgSearchLyrics.h"
+#include "PreferenceDlg.h"
+#include "DlgUpload.h"
+#include "DlgAdjustHue.h"
 
 #ifdef _MPLAYER
 #include "SkinTreeCtrl.h"
@@ -102,6 +107,12 @@ int CMPSkinFactory::Init()
 #endif
 	AddUIObjNewer(CMediaInfoTextCtrl);
 	AddUIObjNewer(CMediaAlbumArtCtrl);
+
+	RegisterAboutPage(this);
+	RegisterSearchLyricsPage(this);
+	RegisterPreferencePage(this);
+	RegisterUploadLyrPage(this);
+	RegisterAdjustHuePage(this);
 
 	return CSkinFactory::Init();
 }

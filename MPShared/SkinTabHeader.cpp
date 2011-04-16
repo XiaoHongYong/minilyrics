@@ -171,6 +171,41 @@ bool CSkinTabHeader::OnLButtonDblClk(UINT nFlags, CPoint point)
 	return false;
 }
 
+void CSkinTabHeader::OnSize()
+{
+	// The whole toolbar can't have the tooltip
+	if (m_strTooltip.size())
+		m_strTooltip.resize(0);
+
+	CUIObject::OnSize();
+
+	CRect	rcBt;
+	int		i;
+
+	// Add tooltip of all the buttons.
+	rcBt.left = m_rcObj.left;
+	rcBt.top = m_rcObj.top;
+	rcBt.bottom = m_rcObj.bottom;
+
+	for (i = 0; i < (int)m_vButtons.size(); i++)
+	{
+		Button		&bt = m_vButtons[i];
+		if (bt.strTooltip.size())
+		{
+			if (rcBt.left + bt.nWidth < m_rcObj.right)
+				rcBt.right = rcBt.left + bt.nWidth;
+			else
+				rcBt.right = m_rcObj.right;
+
+			m_pSkin->DelTool(bt.nAutoUniID);
+			m_pSkin->AddTool(TOLOCAL(bt.strTooltip.c_str()), &rcBt, bt.nAutoUniID);
+		}
+
+		rcBt.left += bt.nWidth;
+		if (rcBt.left >= m_rcObj.right)
+			break;
+	}
+}
 
 bool CSkinTabHeader::OnLButtonUp(UINT nFlags, CPoint point)
 {
@@ -324,46 +359,6 @@ void CSkinTabHeader::Draw(CRawGraph *pGraph)
 		DrawTabButton(pGraph, m_vButtons[m_nActiveButton], rcButton, true);
 	}
 }
-
-
-BOOL CSkinTabHeader::ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion)
-{
-	CRect	rcBt;
-	int		i;
-
-	// The whole toolbar can't have the tooltip
-	if (!m_strTooltip.empty())
-		m_strTooltip.resize(0);
-
-	CUIObject::ReCalculatePos(vars, pMotion);
-
-	// Add tooltip of all the buttons.
-	rcBt.left = m_rcObj.left;
-	rcBt.top = m_rcObj.top;
-	rcBt.bottom = m_rcObj.bottom;
-
-	for (i = 0; i < (int)m_vButtons.size(); i++)
-	{
-		Button		&bt = m_vButtons[i];
-		if (bt.strTooltip.size())
-		{
-			if (rcBt.left + bt.nWidth < m_rcObj.right)
-				rcBt.right = rcBt.left + bt.nWidth;
-			else
-				rcBt.right = m_rcObj.right;
-
-			m_pSkin->DelTool(bt.nAutoUniID);
-			m_pSkin->AddTool(TOLOCAL(bt.strTooltip.c_str()), &rcBt, bt.nAutoUniID);
-		}
-
-		rcBt.left += bt.nWidth;
-		if (rcBt.left >= m_rcObj.right)
-			break;
-	}
-
-	return TRUE;
-}
-
 
 BOOL CSkinTabHeader::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {

@@ -7,15 +7,14 @@
 
 class CPagePfLyricsRoot : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
 	CPagePfLyricsRoot();
 
-	static LPCTSTR GetPageID();
-
 	void OnInitialUpdate();
 
-	// bool OnCustomCommand(int nId);
-
 };
+
+void RegisterPfLyricsPages(CSkinFactory *pSkinFactory);
 
 #endif // _PREFER_PAGE_LYRICS_H_

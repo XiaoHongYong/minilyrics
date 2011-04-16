@@ -2,23 +2,26 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_SKINCONTAINER_H__C8C49C75_1237_4E52_A4AC_72AFC3907E3E__INCLUDED_)
-#define AFX_SKINCONTAINER_H__C8C49C75_1237_4E52_A4AC_72AFC3907E3E__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+#include <stack>
 
 class CMLMenu;
-
 
 class CSkinContainer : public CUIObject
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
 public:
+	enum ResultCode
+	{
+		RESULT_OK = 0,
+		RESULT_CANCELD = 1,
+	};
+
 	CSkinContainer();
 	virtual ~CSkinContainer();
 
+	virtual void OnInitialUpdate();
 	virtual void OnDestroy();
 
 	virtual void OnKeyUp(UINT nChar, UINT nFlags);
@@ -33,13 +36,28 @@ public:
 
 	virtual bool OnMenuKey(UINT nChar, UINT nFlags);
 
-	virtual void OnSize(int cx, int cy);
+	virtual void OnSize();
+
+	virtual bool OnCommand(int nID);
+	virtual bool OnCustomCommand(int nId);
+
+	virtual void OnSwitchTo() { }
+
+	// For default result code, please see ResultCode definition.
+	virtual void OnPageViewResult(int nRequestCodeOfPage, int nResultCode) { }
+
+	virtual bool OnUserMessage(int nMessageID, LPARAM param);
+
+	virtual bool OnClose();	// Return false, if don't want to be closed.
+	virtual bool OnOK();
+	virtual bool OnCancel();
 
 	void Draw(CRawGraph *pGraph);
 
 	int FromXML(SXNode *pXmlNode);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode) { return FALSE; }
 #ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
@@ -52,6 +70,39 @@ public:
 
 	CUIObject *GetUIObjectByClassName(LPCTSTR szClassName);
 	CUIObject *GetUIObjectById(int nId, LPCTSTR szClassName);
+	CUIObject *GetUIObjectById(LPCTSTR szId, LPCTSTR szClassName);
+
+	bool EnableUIObject(int nId, bool bEnable = true, bool bRedraw = true);
+	bool EnableUIObject(LPCTSTR szId, bool bEnable = true, bool bRedraw = true);
+
+	bool SetUIObjectProperty(int nId, LPCTSTR szProperty, LPCTSTR szValue);
+	bool SetUIObjectProperty(LPCTSTR szId, LPCTSTR szProperty, LPCTSTR szValue);
+
+	void SetUIObjectVisible(int nId, bool bVisible, bool bRedraw = true);
+	void SetUIObjectVisible(LPCTSTR szId, bool bVisible, bool bRedraw = true);
+
+	void InvalidateUIObject(int nId);
+	void InvalidateUIObject(LPCTSTR szId);
+
+	tstring GetUIObjectText(int nId);
+	tstring GetUIObjectText(LPCTSTR szId);
+
+	bool GetUIObjectRect(int nId, CRect &rc);
+	bool GetUIObjectRect(LPCTSTR szId, CRect &rc);
+
+	void SetUIObjectText(int nId, LPCTSTR szText, bool bRedraw = true);
+	void SetUIObjectText(LPCTSTR szId, LPCTSTR szText, bool bRedraw = true);
+
+	void CheckButton(int nId, bool bCheck);
+	void CheckButton(LPCTSTR szId, bool bCheck);
+	bool IsButtonChecked(int nId);
+	bool IsButtonChecked(LPCTSTR szId);
+
+	void CheckToolbarButton(int nToolbarId, int nButtonId, bool bCheck);
+	void CheckToolbarButton(LPCTSTR szToolbarId, LPCTSTR szButtonId, bool bCheck);
+
+	void SetFocusUIObject(LPCTSTR szId);
+	void SetFocusUIObject(int nId);
 	CUIObject *GetFocusUIObject();
 	void SetFocusChild(CUIObject *pObj);
 	int FocusToNext();
@@ -63,16 +114,11 @@ public:
 
 	bool AddUIObject(CUIObject *pObj);
 	bool InsertUIObjectAt(CUIObject *pObjWhere, CUIObject *pObj);
-	bool AddUIObjectToFront(CUIObject *pObj);
-	
-	void RecalculateSizePos();
-	void RecalculateUIObjSizePos(CUIObject *pObj, CSkinAnimateMotion *pMotion = NULL);
+
+	void RecalculateUIObjSizePos(CUIObject *pObj);
 	BOOL RecalculateVarValue(CFormula &form, int &nRetValue);
 
 	CMLMenu *GetMenu() { return m_pMenu; }
-
-	virtual bool OnCommand(int nID);
-	virtual bool OnCustomCommand(int nId);
 
 	//
 	// CSkinContainer API
@@ -87,6 +133,8 @@ public:
 	CUIObject *GetChildByIndex(int nIndex)
 		{ if (nIndex >= 0 && nIndex < (int)m_vUIObjs.size()) return m_vUIObjs[nIndex]; else return NULL; }
 
+	CUIObject *GetChildByClass(LPCTSTR szClassName);
+
 	virtual bool IsContainer() const { return true; }
 	virtual CSkinContainer *GetContainerIf() { return this; }
 
@@ -96,6 +144,28 @@ public:
 	virtual CRawGraph *GetMemGraph();
 
 	void DispatchOnCreateMsg();
+
+	// Page view APIs
+	// void SwitchToPage(int nIdPage, bool bWaitResultOfNextPage, int nRequestCodeOfNextPage, bool bAnimation);
+	void SwitchToPage(LPCTSTR szPageClass, bool bWaitResultOfNextPage, int nRequestCodeOfNextPage, bool bAnimation);
+	void SwitchToLastPage(int nResultCodeOfPage, bool bAnimation);
+	bool HasActivePage() const { return m_vStackPageView.size() > 0; }
+
+	void SetExPool(LPCTSTR szProperty, LPCTSTR szValue);
+	void SetExPool(LPCTSTR szProperty, int nValue);
+
+	tstring GetExPoolStr(LPCTSTR szProperty, LPCTSTR szDefault = _T(""));
+	int GetExPoolInt(LPCTSTR szProperty, int nDefault = 0);
+	bool GetExPoolBool(LPCTSTR szProperty, bool bDefault = false);
+
+#ifdef _DEBUG
+	void DumpUIObject(int &nDeep);
+#endif
+
+protected:
+	bool IsPageAtLeft(CSkinContainer *pPage, CSkinContainer *pPage2);
+
+	void OnAdd(CUIObject *pObj);
 
 protected:
 #ifdef _SKIN_EDITOR_
@@ -107,14 +177,30 @@ protected:
 
 protected:
 	// All the children UIObject
-	typedef vector<CUIObject *>		V_UIOBJECT;
 
-	V_UIOBJECT			m_vUIObjs;
+	VecUIObjects		m_vUIObjs;
 	int					m_nFocusUIObj;
 
 	bool				m_bClipChildren;
 	tstring				m_strContextMenu;
 	CMLMenu				*m_pMenu;
+
+	// Status for Page view
+	struct PageViewItem
+	{
+		bool				bWaitResultOfNextPage;
+		int					nRequestCodeOfNextPage;
+		CSkinContainer		*pContainerPage;
+		PageViewItem(CSkinContainer *pContainerPage, bool bWaitResultOfNextPage, int nRequestCodeOfNextPage)
+		{
+			this->bWaitResultOfNextPage = bWaitResultOfNextPage;
+			this->nRequestCodeOfNextPage = nRequestCodeOfNextPage;
+			this->pContainerPage = pContainerPage;
+		}
+	};
+	typedef std::stack<PageViewItem>	VecStackPageView;
+	VecStackPageView	m_vStackPageView;
+	tstring				m_strDefaultPageClass;
 
 };
 
@@ -122,5 +208,3 @@ class CSkinClientArea : public CSkinContainer
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 };
-
-#endif // !defined(AFX_SKINCONTAINER_H__C8C49C75_1237_4E52_A4AC_72AFC3907E3E__INCLUDED_)

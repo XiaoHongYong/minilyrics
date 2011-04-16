@@ -41,7 +41,7 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUI
 	CRect			rcClipBoxOrg;
 
 	// Check for UIObject overlay, and redraw them?
-	for (V_UIOBJECT::iterator it = m_vUIObjs.begin(); it != m_vUIObjs.end(); ++it)
+	for (VecUIObjects::iterator it = m_vUIObjs.begin(); it != m_vUIObjs.end(); ++it)
 	{
 		CUIObject		*pObj = *it;
 		CRect			rc;
@@ -63,6 +63,7 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUI
 
 			CRawGraph::COpacityBlendAutoRecovery opacityAR(pGraphMem, pObj->GetOpacity());
 
+			pObj->TryToCallInitialUpdate();
 			pObj->Draw(pGraphMem);
 		}
 	}

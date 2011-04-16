@@ -29,11 +29,11 @@ BOOL CSkinWndResizeObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		return true;
 
 	if (IsPropertyName(szProperty, _T("Direction")))
-	{
 		m_nResizeDirection = GetCombinationValue(__idszResizeDirection, szValue);
-	}
+	else
+		return false;
 
-	return false;
+	return true;
 }
 
 #ifdef _SKIN_EDITOR_
@@ -49,9 +49,9 @@ void CSkinWndResizeObj::EnumProperties(CUIObjProperties &listProperties)
 }
 #endif // _SKIN_EDITOR_
 
-void CSkinWndResizeObj::OnSize(int cx, int cy)
+void CSkinWndResizeObj::OnSize()
 {
-	CUIObject::OnSize(cx, cy);
+	CUIObject::OnSize();
 
 	m_pSkin->m_wndResizer.SetResizeArea(m_nAutoUniID, m_nResizeDirection, m_rcObj);
 }

@@ -54,10 +54,7 @@ bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 	if (m_bHover)
 		m_bHover = false;
 	else
-	{
-		// 捕捉鼠标输入
 		m_pSkin->SetCaptureMouse(this);
-	}
 
 	ButtonDownAction();
 
@@ -109,7 +106,6 @@ void CSkinNStatusButton::OnTimer(int nId)
 
 bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	// 释放鼠标输入
 	m_pSkin->ReleaseCaptureMouse(this);
 
 	if (!m_bLBtDown)
@@ -134,16 +130,13 @@ bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 			if (m_bHover)
 				m_bHover = false;
 			else
-			{
 				m_pSkin->SetCaptureMouse(this);
-			}
 
 			bStatusChanged = true;
 		}
 		else if (!m_bLBtDown && m_bEnableHover && !m_bHover)
 		{
 			m_bHover = true;
-
 			m_pSkin->SetCaptureMouse(this);
 
 			bStatusChanged = true;
@@ -211,14 +204,14 @@ void CSkinNStatusButton::OnKillFocus()
 	Invalidate();
 }
 
-void CSkinNStatusButton::OnSize(int cx, int cy)
+void CSkinNStatusButton::OnSize()
 {
 	m_rcObj.left -= m_xMargin;
 	m_rcObj.right += m_xMargin;
 	m_rcObj.top -= m_yMargin;
 	m_rcObj.bottom += m_yMargin;
 
-	CUIObject::OnSize(cx, cy);
+	CUIObject::OnSize();
 }
 
 void CSkinNStatusButton::Draw(CRawGraph *pGraph)
@@ -455,13 +448,6 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	else if (IsPropertyName(szProperty, _T("Fadein")))
 	{
 		m_bFadein = IsTRUE(szValue);
-	}
-	else if (IsPropertyName(szProperty, _T("TabFocus")))
-	{
-		if (IsTRUE(szValue))
-			m_nMsgWant |= UO_MSG_WANT_KEY;
-		else
-			m_nMsgWant &= ~UO_MSG_WANT_KEY;
 	}
 	else
 		return FALSE;

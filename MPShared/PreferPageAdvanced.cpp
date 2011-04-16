@@ -2,6 +2,7 @@
 #include "MPlayerApp.h"
 #include "PreferPageAdvanced.h"
 #include "DownloadMgr.h"
+#include "../widget/widget.h"
 
 #ifdef _WIN32
 #include "win32/HotkeyCtrlEx.h"
@@ -433,10 +434,10 @@ public:
 
 };
 
-class CDlgShortcutKey// : public CBaseDialog
+class CDlgShortcutKey : public CBaseDialog
 {
 public:
-	CDlgShortcutKey(LPCTSTR szCaption)// : CBaseDialog(IDD_SET_HOTKEY)
+	CDlgShortcutKey(LPCTSTR szCaption) : CBaseDialog(IDD_SET_HOTKEY)
 	{
 		m_strCaption = szCaption;
 		m_nVirtualKey = 0;
@@ -444,25 +445,25 @@ public:
 	}
 	BOOL OnInitDialog()
 	{
-		// CBaseDialog::OnInitDialog();
+		CBaseDialog::OnInitDialog();
 
-		// m_hotkey.Init(this, IDC_HOTKEY);
-		// SetWindowText(m_strCaption.c_str());
+		m_hotkey.Init(this, IDC_HOTKEY);
+		SetWindowText(m_strCaption.c_str());
 
 		return TRUE;
 	}
 
 	void OnOK()
 	{
-		// m_hotkey.GetHotkey(m_nVirtualKey, m_fsModifiers);
+		m_hotkey.GetHotkey(m_nVirtualKey, m_fsModifiers);
 
-		// CBaseDialog::OnOK();
+		CBaseDialog::OnOK();
 	}
 
 	UINT				m_nVirtualKey, m_fsModifiers;
 
 protected:
-	// CHotkeyCtrlEx		m_hotkey;
+	CHotkeyCtrlEx		m_hotkey;
 	tstring				m_strCaption;
 
 };
@@ -655,7 +656,9 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfAdvanced::CPagePfAdvanced() : CPagePfBase(GetPageID(), PAGE_ADVANCED, _T("CMD_ROOT_ADVANCED"))
+UIOBJECT_CLASS_NAME_IMP(CPagePfAdvanced, _T("PreferPage.Advanced"))
+
+CPagePfAdvanced::CPagePfAdvanced() : CPagePfBase(PAGE_ADVANCED, _T("CMD_ROOT_ADVANCED"))
 {
 	m_nMenuIdEnd = m_nMenuIdStart = 0;
 	m_bIgnoreSettingListNotify = false;
@@ -672,11 +675,6 @@ CPagePfAdvanced::~CPagePfAdvanced()
 	m_vPreferItems.clear();
 }
 
-LPCTSTR CPagePfAdvanced::GetPageID()
-{
-	return _T("CID_C_ADVANCED");
-}
-
 void CPagePfAdvanced::OnInitialUpdate()
 {
 	CPagePfBase::OnInitialUpdate();
@@ -689,7 +687,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 	if (!m_pListItems)
 		return;
 
-	m_pSkinWnd->RegisterUIObjNotifyHandler(CID_LIST_SETTINGS, this);
+	m_pSkin->RegisterUIObjNotifyHandler(CID_LIST_SETTINGS, this);
 
 	m_pListItems->AddColumn(TOLOCAL(_T("Option")), 450);
 	m_pListItems->AddColumn(TOLOCAL(_T("Value")), 150);
@@ -724,8 +722,8 @@ void CPagePfAdvanced::OnInitialUpdate()
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Try to download synchronized lyrics (.lrc) even if having local unsynchronized (.txt) lyrics")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true));
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Pop up lyrics searching dialog when lyrics are found")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Save downloaded lyrics in the a, b, c... folder of downloaded folder")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
-	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(m_pSkinWnd));
-	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(m_pSkinWnd));
+	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(m_pSkin));
+	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(m_pSkin));
 
 	//
 	// Tray Icon controls
@@ -769,7 +767,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 
 void CPagePfAdvanced::OnDestroy()
 {
-	m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
+	m_pSkin->UnregisterUIObjNotifyHandler(this);
 
 	CPagePfBase::OnDestroy();
 }
@@ -799,8 +797,8 @@ void CPagePfAdvanced::OnUIObjNotify(IUIObjNotify *pNotify)
 // Edit control notification
 void CPagePfAdvanced::OnTextChanged()
 {
-	m_pSkinWnd->KillTimer(TIMER_ID_SEARCH);
-	m_pSkinWnd->SetTimer(TIMER_ID_SEARCH, DURATION_SEARCH);
+	m_pSkin->KillTimer(TIMER_ID_SEARCH);
+	m_pSkin->SetTimer(TIMER_ID_SEARCH, DURATION_SEARCH);
 }
 
 bool CPagePfAdvanced::OnTimer(UINT nTimerId)
@@ -808,7 +806,7 @@ bool CPagePfAdvanced::OnTimer(UINT nTimerId)
 	if (nTimerId != TIMER_ID_SEARCH)
 		return false;
 
-	m_pSkinWnd->KillTimer(TIMER_ID_SEARCH);
+	m_pSkin->KillTimer(TIMER_ID_SEARCH);
 
 	tstring		strKey;
 
@@ -865,7 +863,7 @@ bool CPagePfAdvanced::OnCustomCommand(int nId)
 		CRect		rc;
 
 		GetUIObjectRect(nId, rc);
-		m_pSkinWnd->ClientToScreen(rc);
+		m_pSkin->ClientToScreen(rc);
 
 		ShowCustomizeMenu(rc.left, rc.top);
 	}
@@ -1001,7 +999,7 @@ void CPagePfAdvanced::ShowCustomizeMenu(int x, int y)
 	if (nRadio != -1)
 		menu.CheckRadioItem(m_nMenuIdStart + nRadio, m_nMenuIdStart, m_nMenuIdEnd - 1);
 
-	menu.TrackPopupMenu(x, y, m_pSkinWnd);
+	menu.TrackPopupMenu(x, y, m_pSkin);
 }
 
 void CPagePfAdvanced::ListAllItems()

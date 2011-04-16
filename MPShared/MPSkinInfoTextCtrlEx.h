@@ -20,7 +20,7 @@ public:
 
 	void OnPlayTimeChangedUpdate();
 
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	void ReloadThemeOfSkin(bool bSavetoProfile) { }
 

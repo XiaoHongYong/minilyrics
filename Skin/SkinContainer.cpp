@@ -6,6 +6,8 @@
 #include "Skin.h"
 #include "SkinContainer.h"
 
+#define SZ_EX_POOL		_T("ExPool.")
+#define LEN_EX_POOL		(CountOf(SZ_EX_POOL) - 1)
 
 //////////////////////////////////////////////////////////////////////
 
@@ -26,12 +28,12 @@ CSkinContainer::~CSkinContainer()
 
 bool CSkinContainer::OnCommand(int nID)
 {
-	int		nCount;
-
-	nCount = (int)m_vUIObjs.size();
-	for (int i = 0; i < nCount; i++)
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		CUIObject	*pObj = m_vUIObjs[i];
+
+		if (!pObj->IsVisible())
+			continue;
 
 		if (pObj->IsContainer() || pObj->WantMsgMenuCmd())
 		{
@@ -45,12 +47,12 @@ bool CSkinContainer::OnCommand(int nID)
 
 bool CSkinContainer::OnCustomCommand(int nId)
 {
-	int		nCount;
-
-	nCount = (int)m_vUIObjs.size();
-	for (int i = 0; i < nCount; i++)
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		CUIObject	*pObj = m_vUIObjs[i];
+
+		if (!pObj->IsVisible())
+			continue;
 
 		if (pObj->IsContainer() || pObj->WantMsgCustomCmd())
 		{
@@ -62,8 +64,68 @@ bool CSkinContainer::OnCustomCommand(int nId)
 	return false;
 }
 
+bool CSkinContainer::OnUserMessage(int nMessageID, LPARAM param)
+{
+	for (uint i = 0; i < m_vUIObjs.size(); i++)
+	{
+		CUIObject *pObj = m_vUIObjs[i];
+		if (!pObj->IsContainer())
+			continue;
+		if (pObj->GetContainerIf()->OnUserMessage(nMessageID, param))
+			return true;
+	}
+
+	return false;
+}
+
+bool CSkinContainer::OnClose()
+{
+	for (uint i = 0; i < m_vUIObjs.size(); i++)
+	{
+		CUIObject *pObj = m_vUIObjs[i];
+		if (!pObj->IsVisible() || !pObj->IsContainer())
+			continue;
+		if (!pObj->GetContainerIf()->OnClose())
+			return false;
+	}
+
+	return true;
+}
+
+bool CSkinContainer::OnOK()
+{
+	for (uint i = 0; i < m_vUIObjs.size(); i++)
+	{
+		CUIObject *pObj = m_vUIObjs[i];
+		if (!pObj->IsVisible() || !pObj->IsContainer())
+			continue;
+		if (!pObj->GetContainerIf()->OnOK())
+			return false;
+	}
+
+	return true;
+}
+
+bool CSkinContainer::OnCancel()
+{
+	for (uint i = 0; i < m_vUIObjs.size(); i++)
+	{
+		CUIObject *pObj = m_vUIObjs[i];
+		if (!pObj->IsVisible() || !pObj->IsContainer())
+			continue;
+		if (!pObj->GetContainerIf()->OnCancel())
+			return false;
+	}
+
+	return true;
+}
+
 void CSkinContainer::DispatchOnCreateMsg()
 {
+	if (m_bCreated)
+		return;
+	m_bCreated = true;
+
 	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		CUIObject		*pObj = m_vUIObjs[i];
@@ -80,8 +142,27 @@ void CSkinContainer::DispatchOnCreateMsg()
 		}
 	}
 
-	m_bCreated = true;
 	OnCreate();
+}
+
+void CSkinContainer::OnInitialUpdate()
+{
+	if (m_strDefaultPageClass.empty())
+		return;
+
+	CSkinContainer *pToActivate = (CSkinContainer *)GetChildByClass(m_strDefaultPageClass.c_str());
+	if (pToActivate)
+	{
+		PageViewItem pvToActivate(pToActivate, false, 0);
+		m_vStackPageView.push(pvToActivate);
+		pToActivate->OnSwitchTo();
+		pToActivate->SetVisible(true, false);
+	}
+	else
+	{
+		ERRLOG1(_T("Inexistant default Page: %s"), m_strDefaultPageClass);
+		return;
+	}
 }
 
 void CSkinContainer::OnDestroy()
@@ -96,6 +177,11 @@ void CSkinContainer::OnDestroy()
 			pObj->m_bCreated = false;
 		}
 	}
+
+	Destroy();
+
+	m_bCreated = false;
+	m_bInitialUpdated = false;
 }
 
 void CSkinContainer::OnKeyUp(UINT nChar, UINT nFlags)
@@ -109,16 +195,29 @@ void CSkinContainer::OnKeyDown(UINT nChar, UINT nFlags)
 {
 	CUIObject *pFocusObj = GetFocusUIObject();
 	if (pFocusObj)
+	{
+		if (m_pSkin->IsDialogWnd() && !pFocusObj->WantMsgEnterKey())
+		{
+			if (nChar == VK_RETURN)
+			{
+				m_pSkin->OnOK();
+				return;
+			}
+			else if (nChar == VK_ESCAPE)
+			{
+				m_pSkin->OnCancel();
+				return;
+			}
+		}
 		pFocusObj->OnKeyDown(nChar, nFlags);
+	}
 }
 
 bool CSkinContainer::OnMouseMove(UINT nFlags, CPoint point) 
 {
-	int		nCount;
 	bool	bMsgProceed = false;
 
-	nCount = (int)m_vUIObjs.size();
-	for (int i = 0; i < nCount; i++)
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		CUIObject	*pObj;
 		pObj = m_vUIObjs[i];
@@ -323,10 +422,24 @@ bool CSkinContainer::OnMenuKey(UINT nChar, UINT nFlags)
 	return false;
 }
 
-
-void CSkinContainer::OnSize(int cx, int cy)
+void CSkinContainer::OnSize()
 {
-	RecalculateSizePos();
+	CUIObject::OnSize();
+
+	// recalculate all UIObjects' position
+	int nCount;
+	FORMULA_VAR 	vars[] = {
+		{'w', m_rcObj.Width()},
+		{'h', m_rcObj.Height()},
+		{0, 0}
+	};
+
+	// recalculate every UIObjects' position on back buffer one by one
+	nCount = (int)m_vUIObjs.size();
+	for (int i = 0; i < nCount; i++)
+	{
+		m_vUIObjs[i]->ReCalculatePos(vars);
+	}
 }
 
 void CSkinContainer::OnLanguageChanged()
@@ -344,6 +457,18 @@ void CSkinContainer::OnLanguageChanged()
 	{
 		m_vUIObjs[i]->OnLanguageChanged();
 	}
+}
+
+CUIObject *CSkinContainer::GetChildByClass(LPCTSTR szClassName)
+{
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
+	{
+		CUIObject	*pObj = m_vUIObjs[i];
+		if (pObj->IsKindOf(szClassName))
+			return pObj;
+	}
+
+	return NULL;
 }
 
 void CSkinContainer::OnAdjustHue(float hue, float saturation, float luminance)
@@ -399,6 +524,7 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 
 			CRawGraph::COpacityBlendAutoRecovery opacityAR(pGraph, pObj->GetOpacity());
 
+			pObj->TryToCallInitialUpdate();
 			pObj->Draw(pGraph);
 		}
 	}
@@ -416,25 +542,32 @@ int CSkinContainer::FromXML(SXNode *pXmlNode)
 	m_pContainer->RecalculateUIObjSizePos(this);
 
 	// Create child CUIObject
-	SXNode::iterator	it, itEnd;
-
-	itEnd = pXmlNode->listChildren.end();
-	for (it = pXmlNode->listChildren.begin(); it != itEnd; ++it)
+	for (SXNode::iterator it = pXmlNode->listChildren.begin();
+		it != pXmlNode->listChildren.end(); ++it)
 	{
 		SXNode			*pNode = *it;
-		CUIObject		*pObj;
 
-		pObj = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, pNode->strName.c_str(), this);
-		// assert(pObj);
+		/* No property node now for SkinContainer.
+		if (IsPropertyName(pNode->strName.c_str(), SZ_PN_PROPERTY))
+		{
+			// Is it a property node?
+			LPCTSTR szPropName = pNode->GetPropertySafe(SZ_PN_NAME);
+			if (!IsEmptyString(szPropName) && !SetProperty(szPropName, pNode))
+				DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), szPropName);
+			continue;
+		}*/
 
+		CUIObject *pObj = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, pNode->strName.c_str(), this);
 		if (pObj)
 		{
-			// 创建成功，首先设置它的属性
+			// Set its properties
 			pObj->FromXML(pNode);
 
-			// 添加到数组中
+			// Add to child list
 			AddUIObject(pObj);
 		}
+		else
+			DBGLOG1(_T("Failed to create UIObject: %s"), pNode->strName.c_str());
 	}
 
 	return ERR_OK;
@@ -459,6 +592,15 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (IsPropertyName(szProperty, _T("ClipChildren")))
 		m_bClipChildren = IsTRUE(szValue);
+	else if (IsPropertyName(szProperty, _T("DefaultPage")))
+		m_strDefaultPageClass = szValue;
+	else if (StrBeginWith(szProperty, SZ_EX_POOL))
+	{
+		ASSERT(LEN_EX_POOL == _tcslen(SZ_EX_POOL));
+		szProperty += LEN_EX_POOL;
+		if (!IsEmptyString(szProperty))
+			m_pSkin->m_mapExchangePool[szProperty] = szValue;
+	}
 	else
 		return FALSE;
 
@@ -496,11 +638,7 @@ void CSkinContainer::Destroy()
 // functions for CSkinWnd
 CUIObject *CSkinContainer::GetUIObjectByClassName(LPCTSTR szClassName)
 {
-	int nCount;
-
-	// send mouse move message to every ui objects that want to process
-	nCount = (int)m_vUIObjs.size();
-	for (int i = 0; i < nCount; i++)
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		CUIObject	*pObj = m_vUIObjs[i];
 		if (pObj->IsKindOf(szClassName))
@@ -543,6 +681,191 @@ CUIObject *CSkinContainer::GetUIObjectById(int nId, LPCTSTR szClassName)
 	}
 
 	return NULL;
+}
+
+CUIObject *CSkinContainer::GetUIObjectById(LPCTSTR szId, LPCTSTR szClassName)
+{
+	return GetUIObjectById(GetIDByName(szId), szClassName);
+}
+
+bool CSkinContainer::EnableUIObject(int nId, bool bEnable, bool bRedraw)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
+		return false;
+	}
+
+	if (Tobool(pObj->m_bEnable) != bEnable)
+	{
+		pObj->m_bEnable = bEnable;
+
+		if (bRedraw)
+			pObj->Invalidate();
+	}
+
+	return true;
+}
+
+bool CSkinContainer::EnableUIObject(LPCTSTR szId, bool bEnable, bool bRedraw)
+{
+	return EnableUIObject(GetIDByName(szId), bEnable, bRedraw);
+}
+
+bool CSkinContainer::SetUIObjectProperty(int nId, LPCTSTR szProperty, LPCTSTR szValue)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
+		return false;
+	}
+
+	return Tobool(pObj->SetProperty(szProperty, szValue));
+}
+
+bool CSkinContainer::SetUIObjectProperty(LPCTSTR szId, LPCTSTR szProperty, LPCTSTR szValue)
+{
+	return SetUIObjectProperty(GetSkinFactory()->GetIDByName(szId), szProperty, szValue);
+}
+
+void CSkinContainer::SetUIObjectVisible(int nId, bool bVisible, bool bRedraw)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
+		return;
+	}
+
+	pObj->SetVisible(bVisible, bRedraw);
+}
+
+void CSkinContainer::SetUIObjectVisible(LPCTSTR szId, bool bVisible, bool bRedraw)
+{
+	SetUIObjectVisible(GetSkinFactory()->GetIDByName(szId), bVisible, bRedraw);
+}
+
+void CSkinContainer::InvalidateUIObject(int nId)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
+		return;
+	}
+
+	InvalidateUIObject(pObj);
+}
+
+void CSkinContainer::InvalidateUIObject(LPCTSTR szId)
+{
+	InvalidateUIObject(GetSkinFactory()->GetIDByName(szId));
+}
+
+tstring CSkinContainer::GetUIObjectText(int nId)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
+		return _T("");
+	}
+
+	return pObj->GetText();
+}
+
+tstring CSkinContainer::GetUIObjectText(LPCTSTR szId)
+{
+	return GetUIObjectText(GetSkinFactory()->GetIDByName(szId));
+}
+
+bool CSkinContainer::GetUIObjectRect(int nId, CRect &rc)
+{
+	CUIObject		*p = GetUIObjectById(nId, NULL);
+	if (!p)
+		return false;
+
+	rc = p->m_rcObj;
+	return true;
+}
+
+bool CSkinContainer::GetUIObjectRect(LPCTSTR szId, CRect &rc)
+{
+	return GetUIObjectRect(GetIDByName(szId), rc);
+}
+
+void CSkinContainer::SetUIObjectText(int nId, LPCTSTR szText, bool bRedraw)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (!pObj)
+	{
+		DBGLOG1(_T("UIObject: %s doesn't exist."), GetSkinFactory()->GetStringOfID(nId).c_str());
+		return;
+	}
+
+	pObj->SetProperty(SZ_PN_TEXT, szText);
+	if (bRedraw)
+		pObj->Invalidate();
+}
+
+void CSkinContainer::SetUIObjectText(LPCTSTR szId, LPCTSTR szText, bool bRedraw)
+{
+	SetUIObjectText(GetSkinFactory()->GetIDByName(szId), szText, bRedraw);
+}
+
+void CSkinContainer::CheckButton(int nId, bool bCheck)
+{
+	CSkinNStatusButton *pButton = (CSkinNStatusButton*)GetUIObjectById(nId, CSkinNStatusButton::ClassName());
+	if (pButton)
+		pButton->SetStatus(bCheck);
+}
+
+void CSkinContainer::CheckButton(LPCTSTR szId, bool bCheck)
+{
+	CheckButton(GetIDByName(szId), bCheck);
+}
+
+bool CSkinContainer::IsButtonChecked(int nId)
+{
+	CSkinNStatusButton *pButton = (CSkinNStatusButton*)GetUIObjectById(nId, CSkinNStatusButton::ClassName());
+	if (pButton)
+	{
+		return Tobool(pButton->GetStatus());
+	}
+
+	return false;
+}
+
+bool CSkinContainer::IsButtonChecked(LPCTSTR szId)
+{
+	return IsButtonChecked(GetIDByName(szId));
+}
+
+void CSkinContainer::CheckToolbarButton(LPCTSTR szToolbarId, LPCTSTR szButtonId, bool bCheck)
+{
+	CheckToolbarButton(GetIDByName(szToolbarId), GetIDByName(szButtonId), bCheck);
+}
+
+void CSkinContainer::CheckToolbarButton(int nToolbarId, int nButtonId, bool bCheck)
+{
+	CSkinToolbar *pToolbar = (CSkinToolbar*)GetUIObjectById(
+		nToolbarId, CSkinToolbar::ClassName());
+	if (pToolbar)
+		pToolbar->SetCheck(nButtonId, bCheck);
+}
+
+void CSkinContainer::SetFocusUIObject(int nId)
+{
+	CUIObject *pObj = GetUIObjectById(nId, NULL);
+	if (pObj)
+		pObj->SetFocus();
+}
+
+void CSkinContainer::SetFocusUIObject(LPCTSTR szId)
+{
+	SetFocusUIObject(GetIDByName(szId));
 }
 
 CUIObject *CSkinContainer::GetFocusUIObject()
@@ -773,8 +1096,7 @@ bool CSkinContainer::AddUIObject(CUIObject *pObj)
 	pObj->m_nAutoUniID = m_pSkin->AllocAutoUniID();
 	m_vUIObjs.push_back(pObj);
 
-	RecalculateUIObjSizePos(pObj);
-	m_pSkin->OnAddUIObj(pObj);
+	OnAdd(pObj);
 
 	return TRUE;
 }
@@ -785,35 +1107,17 @@ bool CSkinContainer::InsertUIObjectAt(CUIObject *pObjWhere, CUIObject *pObj)
 	if (pObj == NULL)
 		return FALSE;
 
-	V_UIOBJECT::iterator	it;
+	VecUIObjects::iterator	it;
 
 	pObj->m_nAutoUniID = m_pSkin->AllocAutoUniID();
 	for (it = m_vUIObjs.begin(); it != m_vUIObjs.end(); ++it)
 	{
 		if (*it == pObjWhere)
-		{
 			break;
-		}
 	}
 	m_vUIObjs.insert(it, pObj);
 
-	if (m_bCreated)
-		RecalculateUIObjSizePos(pObj);
-	m_pSkin->OnAddUIObj(pObj);
-
-	return TRUE;
-}
-
-bool CSkinContainer::AddUIObjectToFront(CUIObject *pObj)
-{
-	assert(pObj);
-	if (pObj == NULL)
-		return FALSE;
-
-	pObj->m_nAutoUniID = m_pSkin->AllocAutoUniID();
-	m_vUIObjs.insert(m_vUIObjs.begin(), pObj);
-
-	m_pSkin->OnAddUIObj(pObj);
+	OnAdd(pObj);
 
 	return TRUE;
 }
@@ -829,25 +1133,7 @@ BOOL CSkinContainer::RecalculateVarValue(CFormula &form, int &nRetValue)
 	return form.CalCualteValue(vars, nRetValue);
 }
 
-void CSkinContainer::RecalculateSizePos()
-{
-	// recalcuate all ui objects' position
-	int nCount;
-	FORMULA_VAR 	vars[] = {
-		{'w', m_rcObj.Width()},
-		{'h', m_rcObj.Height()},
-		{0, 0}
-	};
-
-	// recalculate every ui objects' position on back buffer one by one
-	nCount = (int)m_vUIObjs.size();
-	for (int i = 0; i < nCount; i++)
-	{
-		m_vUIObjs[i]->ReCalculatePos(vars);
-	}
-}
-
-void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj, CSkinAnimateMotion *pMotion)
+void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj)
 {
 	// recalculate all ui objects' position
 	FORMULA_VAR 	vars[] = {
@@ -857,7 +1143,7 @@ void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj, CSkinAnimateMotion
 	};
 
 	// recalculate every ui objects' position on back buffer one by one
-	pObj->ReCalculatePos(vars, pMotion);
+	pObj->ReCalculatePos(vars);
 }
 
 bool CSkinContainer::IsChild(CUIObject *pObj)
@@ -893,6 +1179,159 @@ void CSkinContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pO
 		m_pContainer->UpdateMemGraphicsToScreen(lpRect, this);
 	else
 		m_pSkin->UpdateMemGraphicsToScreen(lpRect);
+}
+
+void CSkinContainer::SwitchToPage(LPCTSTR szPageClass, bool bWaitResultOfNextPage, int nRequestCodeOfNextPage, bool bAnimation)
+{
+	if (m_vStackPageView.size() > 100)
+	{
+		DBGLOG1(_T("Stack of Page View is too large, clear it: %d"), m_vStackPageView.size());
+		m_vStackPageView.empty();
+	}
+
+	PageViewItem pvToHide(NULL, false, 0);
+	if (!m_vStackPageView.empty())
+		pvToHide = m_vStackPageView.top();
+
+	CSkinContainer *pToActivate = (CSkinContainer *)GetChildByClass(szPageClass);
+	if (!pToActivate)
+	{
+		ERRLOG1(_T("Switch to an inexistant Page: %s"), szPageClass);
+		return;
+	}
+
+	PageViewItem pvToActivate(pToActivate, bWaitResultOfNextPage, nRequestCodeOfNextPage);
+	m_vStackPageView.push(pvToActivate);
+
+	bool bIsNewPageAtLeft = IsPageAtLeft(pToActivate, pvToHide.pContainerPage);
+	if (pvToHide.pContainerPage)
+
+		pvToHide.pContainerPage->SetVisibleEx(false, bAnimation, bIsNewPageAtLeft ? AD_RIGHT: AD_LEFT);
+	pToActivate->OnSwitchTo();
+	pToActivate->SetVisibleEx(true, bAnimation, bIsNewPageAtLeft ? AD_LEFT : AD_RIGHT);
+}
+
+void CSkinContainer::SwitchToLastPage(int nResultCodeOfPage, bool bAnimation)
+{
+	if (m_vStackPageView.size() >= 2)
+	{
+		PageViewItem pvToHide = m_vStackPageView.top();
+		m_vStackPageView.pop();
+		PageViewItem pvToActivate = m_vStackPageView.top();
+
+		bool bIsNewPageAtLeft = IsPageAtLeft(pvToActivate.pContainerPage, pvToHide.pContainerPage);
+
+		// Hide page from !bIsNewPageAtLeft
+		pvToHide.pContainerPage->SetVisibleEx(false, bAnimation, bIsNewPageAtLeft ? AD_RIGHT : AD_LEFT);
+
+		if (pvToActivate.bWaitResultOfNextPage)
+			pvToActivate.pContainerPage->OnPageViewResult(pvToActivate.nRequestCodeOfNextPage, nResultCodeOfPage);
+		pvToActivate.pContainerPage->OnSwitchTo();
+		pvToActivate.pContainerPage->SetVisibleEx(true, bAnimation, bIsNewPageAtLeft ? AD_LEFT : AD_RIGHT);
+	}
+}
+
+void CSkinContainer::SetExPool(LPCTSTR szProperty, LPCTSTR szValue)
+{
+	m_pSkin->m_mapExchangePool[szProperty] = szValue;
+}
+
+void CSkinContainer::SetExPool(LPCTSTR szProperty, int nValue)
+{
+	m_pSkin->m_mapExchangePool[szProperty] = CStrPrintf(_T("%d"), nValue).c_str();
+}
+
+tstring CSkinContainer::GetExPoolStr(LPCTSTR szProperty, LPCTSTR szDefault)
+{
+	CSkinWnd::MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
+	if (it != m_pSkin->m_mapExchangePool.end())
+		return (*it).second;
+	else
+		return szDefault;
+}
+
+int CSkinContainer::GetExPoolInt(LPCTSTR szProperty, int nDefault)
+{
+	CSkinWnd::MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
+	if (it != m_pSkin->m_mapExchangePool.end())
+		return _ttoi((*it).second.c_str());
+	else
+		return nDefault;
+}
+
+bool CSkinContainer::GetExPoolBool(LPCTSTR szProperty, bool bDefault)
+{
+	CSkinWnd::MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
+	if (it != m_pSkin->m_mapExchangePool.end())
+		return IsTRUE((*it).second.c_str());
+	else
+		return bDefault;
+}
+
+#ifdef _DEBUG
+void CSkinContainer::DumpUIObject(int &nDeep)
+{
+	tstring		strDeep;
+	strDeep.resize(nDeep * 2, ' ');
+	nDeep++;
+
+	for (uint i = 0; i < m_vUIObjs.size(); i++)
+	{
+		CUIObject	*p = m_vUIObjs[i];
+		CStrPrintf str(_T("%s id=%s, name=%s visible=%d rc=%d,%d,%d,%d"), + p->GetClassName(), 
+			m_pSkin->GetSkinFactory()->GetStringOfID(p->GetID()).c_str(),
+			p->m_strName.c_str(), p->m_bVisible, p->m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height());
+		DBGLOG2(_T("%s%s"), strDeep.c_str(), str.c_str());
+		if (p->IsContainer())
+			p->GetContainerIf()->DumpUIObject(nDeep);
+	}
+
+	nDeep--;
+}
+#endif
+
+bool CSkinContainer::IsPageAtLeft(CSkinContainer *pPage, CSkinContainer *pPage2)
+{
+	if (pPage2 == NULL)
+		return false;
+
+	int		nPos = -1, nPos2 = m_vUIObjs.size();
+	int		i = 0;
+
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
+	{
+		if (m_vUIObjs[i] == pPage)
+			nPos = i;
+		else if (m_vUIObjs[i] == pPage2)
+			nPos2 = i;
+	}
+
+	return nPos < nPos2;
+}
+
+void CSkinContainer::OnAdd(CUIObject *pObj)
+{
+	m_pSkin->OnAddUIObj(pObj);
+
+	if (!m_bCreated)
+		return;
+
+	// Only when parent is opened, OnCreate will be called.
+
+	RecalculateUIObjSizePos(pObj);
+
+	if (pObj->IsContainer())
+		pObj->GetContainerIf()->DispatchOnCreateMsg();
+	else
+	{
+		ASSERT(!pObj->m_bCreated);
+		pObj->m_bCreated = true;
+		pObj->OnCreate();
+	}
+
+	if (m_pSkin->GetFocusUIObj() == NULL && pObj->WantMsgKey() && pObj->IsEnable()
+		&& pObj->IsVisible() && pObj->IsParentVisible())
+		pObj->SetFocus();
 }
 
 #ifdef _SKIN_EDITOR_

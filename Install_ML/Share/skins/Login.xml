@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Container ID="CID_C_LOGIN" Name="Login" Rect="0,20,w,h-20" Visible="false">
+<Container.Login ID="CID_C_LOGIN" Name="Login" Rect="0,20,w,h-20" Visible="false">
   <Animation ID="CID_AM_SHOW_LOGIN_F_RIGHT" MoveFromRight="CID_C_LOGIN"/>
   <Animation ID="CID_AM_HIDE_LOGIN_2_LEFT" MoveToLeft="CID_C_LOGIN"/>
   <Animation ID="CID_AM_SHOW_LOGIN_F_LEFT" MoveFromLeft="CID_C_LOGIN"/>
@@ -20,4 +20,4 @@
 
   <NormalTextBt ID="ID_OK" Text="OK" Rect="w/2-100-10,200,100,"/>
   <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2+10,200,100,"/>
-</Container>
+</Container.Login>

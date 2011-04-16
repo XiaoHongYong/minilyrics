@@ -41,8 +41,6 @@ public:
 
 	PRAW_IMAGE_DATA LoadBitmap(LPCTSTR szBmp);
 
-	void AdjustHueInfoFromXML(SXNode *pNodeAdjustHue);
-
 	void AdjustHue(float hue, float saturation, float luminance);
 
 	void GetAdjustHueParam(float &hue, float &saturation, float &luminance);
@@ -51,14 +49,10 @@ public:
 	void DbgOutLoadedImages();
 #endif
 protected:
-	bool ShouldHueOfImageBeAdjusted(LPCTSTR szFile);
 
 protected:
 	map<tstring, RES_COUNTER>		m_mapBitmap;
 	map<tstring, PRAW_IMAGE_DATA>	m_mapFastBmp;
-
-	// files whose hue and saturation can adjusted.
-	V_Str							m_vAdjustHueOfImages;
 
 	V_Str							m_vResSearchDirs;
 

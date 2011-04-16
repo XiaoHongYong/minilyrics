@@ -6,69 +6,21 @@
 #include "LyrDisplayClrListWnd.h"
 
 //////////////////////////////////////////////////////////////////////////
-/*
-class CPagePfThemeItems : public CPagePfBase
-{
-public:
-	CPagePfThemeItems() : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T(""))
-	{
-	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_THEME_ITEMS"); }
-
-	void OnOK()
-	{
-		m_pParent->SetProperty(_T("ThemeItemsActionResult"), IDOK);
-		m_pParent->SwitchToLastPage();
-	}
-
-	void OnCancel()
-	{
-		m_pParent->SetProperty(_T("ThemeItemsActionResult"), IDCANCEL);
-		m_pParent->SwitchToLastPage();
-	}
-
-	void OnShow()
-	{
-		CPagePfBase::OnShow();
-
-		if (m_pParent->GetPropertyInt(_T("ThemeItemsLoadAction")))
-		{
-			// Load theme
-			SetUIObjectText(_T("CID_THEME_ITEMS_INFO"), 
-				_T("Please choose the theme items to load:"), false);
-		}
-		else
-		{
-			// Save theme
-			SetUIObjectText(_T("CID_THEME_ITEMS_INFO"), 
-				_T("Please choose the theme items to save:"), false);
-		}
-	}
-
-	bool OnCustomCommand(int nId)
-	{
-		return CPagePfBase::OnCustomCommand(nId);
-	}
-
-protected:
-
-};*/
-
-//////////////////////////////////////////////////////////////////////////
 
 class CPagePfLyricsBgPic : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfLyricsBgPic() : CPagePfBase(GetPageID(), PAGE_LYR_BG, _T("CMD_THEME_LYR_BG_PIC"))
+	CPagePfLyricsBgPic() : CPagePfBase(PAGE_LYR_BG, _T("CMD_THEME_LYR_BG_PIC"))
 	{
+		m_bIntialized = false;
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_THEME_LYR_BG"); }
 
 	void OnInitialUpdate()
 	{
 		CPagePfBase::OnInitialUpdate();
+
+		m_bIntialized = true;
 
 		AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), false, _T("CID_C_USE_ALBUM_ART_AS_BG"));
 
@@ -88,7 +40,7 @@ public:
 
 	void OnDestroy()
 	{
-		if (IsInitialUpdated())
+		if (m_bIntialized)
 		{
 			int		nDelayTime;
 			tstring strDelayTime = GetUIObjectText(_T("CID_E_DELAY_TIME"));
@@ -130,7 +82,7 @@ public:
 		CFolderDialog	dlg;
 
 		dlg.SetInitFolder(CMLProfile::GetDir(SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), _T("")).c_str());
-		if (dlg.DoBrowse(m_pSkinWnd))
+		if (dlg.DoBrowse(m_pSkin))
 		{
 			CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), SZ_TRUE);
 			CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("BgPicFolder"), dlg.GetFolder());
@@ -139,13 +91,17 @@ public:
 	}
 
 protected:
+	bool		m_bIntialized;
 
 };
+
+UIOBJECT_CLASS_NAME_IMP(CPagePfLyricsBgPic, _T("PreferPage.LyrBgPic"))
 
 //////////////////////////////////////////////////////////////////////////
 
 class CPagePfDisplayStyle : public CPagePfBase, public IPopupSkinWndNotify
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 protected:
 	enum COLOR_SET_TYPE
 	{
@@ -182,12 +138,8 @@ public:
 	}
 
 public:
-	CPagePfDisplayStyle(bool bFloatingLyrMode) : CPagePfBase(GetPageID(), PAGE_LYR_DISPLAY, _T("CMD_THEME_LYR_DISPLAY"))
+	CPagePfDisplayStyle() : CPagePfBase(PAGE_LYR_DISPLAY, _T("CMD_THEME_LYR_DISPLAY"))
 	{
- 		if (bFloatingLyrMode)
- 			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
- 		else
-			m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
 		CID_DS_MODE = 0;
 		CID_DS_STYLE = 0;
 		CID_DS_FADEOUT = 0;
@@ -196,13 +148,17 @@ public:
 		CID_DS_LOAD_OTHER_FONT = 0;
 		CID_DS_CLR_HIGH = 0;
 		CID_DS_CLR_LOW = 0;
+		m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_THEME_DISPLAY_STYLE"); }
 
 	void OnInitialUpdate()
 	{
 		CPagePfBase::OnInitialUpdate();
+
+		if (GetExPoolBool(_T("FloatingLyrMode"), false))
+			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
+		else
+			m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
 
 		GET_ID_BY_NAME(CID_DS_MODE);
 		GET_ID_BY_NAME(CID_DS_STYLE);
@@ -224,7 +180,7 @@ public:
 			else
 				m_pcbMode->SetCurSel(0);
 
-			m_pSkinWnd->RegisterUIObjNotifyHandler(CID_DS_MODE, this);
+			m_pSkin->RegisterUIObjNotifyHandler(CID_DS_MODE, this);
 		}
 
 		SetSettingType(m_eventType == ET_LYRICS_FLOATING_SETTINGS ? ST_FLOATING_LYR : ST_NORMAL_LYR);
@@ -263,7 +219,7 @@ public:
 
 			CDlgChooseFont		chooser;
 
-			nRet = chooser.DoModal(m_pSkinWnd, bLatin9 ? strFaceNameLatin9.c_str() : strFaceNameOthers.c_str(), 
+			nRet = chooser.DoModal(m_pSkin, bLatin9 ? strFaceNameLatin9.c_str() : strFaceNameOthers.c_str(), 
 				nHeight, nWeight, byItalic != 0);
 			if (nRet == IDOK)
 			{
@@ -281,10 +237,10 @@ public:
 			CRect	rc;
 			GetUIObjectRect(nId, rc);
 
-			m_pSkinWnd->ClientToScreen(rc);
+			m_pSkin->ClientToScreen(rc);
 
 			// Popup list window
-			m_popupHighClrListWnd.Create(m_pSkinWnd, rc,
+			m_popupHighClrListWnd.Create(m_pSkin, rc,
 				nId == CID_DS_CLR_HIGH, m_eventType == ET_LYRICS_FLOATING_SETTINGS, this);
 		}
 		else
@@ -458,7 +414,7 @@ protected:
 		CreateLOBXlightBmp(true);
 		CreateLOBXlightBmp(false);
 
-		m_pSkinWnd->InvalidateRect();
+		m_pSkin->InvalidateRect();
 	}
 
 	void CreateLOBXlightBmp(bool bHilight)
@@ -512,17 +468,18 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPagePfDisplayStyle, _T("PreferPage.LyrDisplayStyle"))
+
 //////////////////////////////////////////////////////////////////////////
 
 class CPagePfTheme : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfTheme() : CPagePfBase(GetPageID(), PAGE_THEMES, _T("CMD_THEME_THEME"))
+	CPagePfTheme() : CPagePfBase(PAGE_THEMES, _T("CMD_THEME_THEME"))
 	{
 		m_nThemeListID = 0;
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_THEME"); }
 
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify)
 	{
@@ -545,7 +502,7 @@ public:
 		CPagePfBase::OnInitialUpdate();
 
 		m_nThemeListID = GetIDByName(_T("CID_THME_LIST"));
-		m_pSkinWnd->RegisterUIObjNotifyHandler(m_nThemeListID, this);
+		m_pSkin->RegisterUIObjNotifyHandler(m_nThemeListID, this);
 
 		m_pThemeList = (CSkinListCtrl *)GetUIObjectById(m_nThemeListID, CSkinListCtrl::ClassName());
 		ASSERT(m_pThemeList);
@@ -558,7 +515,7 @@ public:
 
 	void OnDestroy()
 	{
-		m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
+		m_pSkin->UnregisterUIObjNotifyHandler(this);
 
 		CPagePfBase::OnDestroy();
 	}
@@ -567,22 +524,11 @@ public:
 	{
 		if (nId == GetIDByName(_T("CID_LOAD_THEME")))
 		{
-// 			m_pParent->SetProperty(_T("ThemeItemsLoadAction"), true);
-// 			m_pParent->SwitchToPage(CPagePfThemeItems::GetPageID());
 			LoadTheme();
 		}
 		else if (nId == GetIDByName(_T("CID_SAVE_THEME")))
 		{
 			SaveTheme();
-// 			tstring strThemeName = GetUIObjectText(_T("CID_E_THEMENAME"));
-// 			if (strThemeName.empty())
-// 			{
-// 				m_pSkinWnd->MessageOut(TOLOCAL(_T("Please enter the theme name.")));
-// 				return true;
-// 			}
-// 
-// 			m_pParent->SetProperty(_T("ThemeItemsLoadAction"), false);
-// 			m_pParent->SwitchToPage(CPagePfThemeItems::GetPageID());
 		}
 		else if (nId == GetIDByName(_T("CID_DELETE_THEME")))
 		{
@@ -603,7 +549,7 @@ protected:
 		nSel = m_pThemeList->GetNextSelectedItem(-1);
 		if (nSel == -1)
 		{
-			m_pSkinWnd->MessageOut(TOLOCAL(_T("Please select the theme from list.")));
+			m_pSkin->MessageOut(TOLOCAL(_T("Please select the theme from list.")));
 			return;
 		}
 
@@ -625,7 +571,7 @@ protected:
 		tstring strThemeName = GetUIObjectText(_T("CID_E_THEMENAME"));
 		if (strThemeName.empty())
 		{
-			m_pSkinWnd->MessageOut(TOLOCAL(_T("Please enter the theme name.")));
+			m_pSkin->MessageOut(TOLOCAL(_T("Please enter the theme name.")));
 			return;
 		}
 
@@ -645,7 +591,7 @@ protected:
 		nSel = m_pThemeList->GetNextSelectedItem(-1);
 		if (nSel == -1)
 		{
-			m_pSkinWnd->MessageOut(TOLOCAL(_T("Please select the theme from list.")));
+			m_pSkin->MessageOut(TOLOCAL(_T("Please select the theme from list.")));
 			return;
 		}
 
@@ -696,19 +642,14 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPagePfTheme, _T("PreferPage.Theme"))
+
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfThemeRoot::CPagePfThemeRoot(bool bFloatingLyrMode) : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T("CMD_ROOT_THEME"))
-{
-	AddPage(new CPagePfTheme());
-	AddPage(new CPagePfDisplayStyle(bFloatingLyrMode));
-	AddPage(new CPagePfLyricsBgPic());
-	// AddPage(new CPagePfThemeItems());
-}
+UIOBJECT_CLASS_NAME_IMP(CPagePfThemeRoot, _T("PreferPage.ThemeRoot"))
 
-LPCTSTR CPagePfThemeRoot::GetPageID()
+CPagePfThemeRoot::CPagePfThemeRoot() : CPagePfBase(PAGE_UNKNOWN, _T("CMD_ROOT_THEME"))
 {
-	return _T("CID_C_THEME_ROOT");
 }
 
 void CPagePfThemeRoot::OnInitialUpdate()
@@ -718,17 +659,10 @@ void CPagePfThemeRoot::OnInitialUpdate()
 	CheckToolbarDefaultPage(_T("CID_TOOLBAR_THEME"));
 }
 
-/*
-bool CPagePfThemeRoot::OnCustomCommand(int nId)
+void RegisterPfThemePages(CSkinFactory *pSkinFactory)
 {
-	if (nId == GetIDByName(_T("CMD_THEME_THEME")))
-		SwitchToPage(CPagePfTheme::GetPageID());
-	else if (nId == GetIDByName(_T("CMD_THEME_LYR_DISPLAY")))
-		SwitchToPage(CPagePfDisplayStyle::GetPageID());
-	else if (nId == GetIDByName(_T("CMD_THEME_LYR_BG_PIC")))
-		SwitchToPage(CPagePfLyricsBgPic::GetPageID());
-	else
-		return CPagePfBase::OnCustomCommand(nId);
-
-	return true;
-}*/
+	AddUIObjNewer2(pSkinFactory, CPagePfThemeRoot);
+	AddUIObjNewer2(pSkinFactory, CPagePfTheme);
+	AddUIObjNewer2(pSkinFactory, CPagePfDisplayStyle);
+	AddUIObjNewer2(pSkinFactory, CPagePfLyricsBgPic);
+}

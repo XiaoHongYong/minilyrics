@@ -11,7 +11,7 @@ public:
 
 	void OnCreate();
 
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	virtual void OnKillFocus();
 	virtual void OnSetFocus();

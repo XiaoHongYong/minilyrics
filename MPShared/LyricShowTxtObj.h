@@ -31,7 +31,7 @@ public:
 
 	void OnCreate();
 	void OnEvent(const IEvent *pEvent);
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	void OnTimer(int nId);
 

@@ -1,6 +1,3 @@
-#ifndef _PREFER_PAGE_SYSTEM_H_
-#define _PREFER_PAGE_SYSTEM_H_
-
 #pragma once
 
 #include "PreferencePageBase.h"
@@ -8,10 +5,9 @@
 
 class CPagePfSystemRoot : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
 	CPagePfSystemRoot();
-
-	static LPCTSTR GetPageID();
 
 	void OnInitialUpdate();
 
@@ -19,4 +15,4 @@ public:
 
 };
 
-#endif // _PREFER_PAGE_SYSTEM_H_
+void RegisterPfSystemPages(CSkinFactory *pSkinFactory);

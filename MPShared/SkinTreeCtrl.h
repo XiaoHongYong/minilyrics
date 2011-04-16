@@ -190,7 +190,7 @@ public:
 	void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 
 	void OnCreate();
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);

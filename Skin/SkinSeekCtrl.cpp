@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////
 
 // set classname
-LPCTSTR CSkinSeekCtrl::ms_szClassName = _T("SeekCtrl");
+UIOBJECT_CLASS_NAME_IMP(CSkinSeekCtrl, _T("SeekCtrl"));
 
 CSkinSeekCtrl::CSkinSeekCtrl()
 {
@@ -24,6 +24,7 @@ CSkinSeekCtrl::CSkinSeekCtrl()
 	m_nVirtualMin = 0;		// 最小的值
 	m_nVirtualMax = 10;		// 最大的值
 	m_nVirtualLine = 1;
+	m_nVirtualPage = 10;
 	m_nVirtualCurPos = m_nVirtualMin;
 
 	m_nMsgWant = UO_MSG_WANT_LBUTTON | UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_MOUSEWHEEL;
@@ -37,6 +38,20 @@ CSkinSeekCtrl::CSkinSeekCtrl()
 
 CSkinSeekCtrl::~CSkinSeekCtrl()
 {
+}
+
+void CSkinSeekCtrl::OnKeyDown(UINT nChar, UINT nFlags)
+{
+	if (nChar == VK_UP)
+		SetScrollPos(GetScrollPos() - m_nVirtualLine);
+	else if (nChar == VK_DOWN)
+		SetScrollPos(GetScrollPos() + m_nVirtualLine);
+	else if (nChar == VK_LEFT || nChar == VK_PRIOR)
+		SetScrollPos(GetScrollPos() - m_nVirtualPage);
+	else if (nChar == VK_RIGHT || nChar == VK_NEXT)
+		SetScrollPos(GetScrollPos() + m_nVirtualPage);
+
+	OnVScroll(SB_THUMBPOSITION);
 }
 
 bool CSkinSeekCtrl::OnLButtonDown(UINT nFlags, CPoint point)
@@ -251,11 +266,6 @@ void CSkinSeekCtrl::ThumbOnMouseMove(UINT nFlags, CPoint point)
 	Invalidate();
 }
 
-LPCTSTR CSkinSeekCtrl::GetClassName()
-{
-	return ms_szClassName;
-}
-
 void CSkinSeekCtrl::Draw(CRawGraph *pGraph)
 {
 	if (m_imgSimple.IsValid())
@@ -396,6 +406,7 @@ void CSkinSeekCtrl::SetScrollInfo(int nMin, int nMax, int nPage, int nPos, int n
 	m_nVirtualMin = nMin;
 	m_nVirtualMax = nMax;
 	m_nVirtualLine = nLine;
+	m_nVirtualPage = nPage;
 
 	m_nVirtualCurPos = nPos;
 
@@ -478,17 +489,9 @@ void CSkinSeekCtrl::OnVScroll(UINT nSBCode)
 		m_pSkin->OnVScroll(nSBCode, GetScrollPos(), this);
 }
 
-BOOL CSkinSeekCtrl::IsKindOf(LPCTSTR szClassName)
+void CSkinSeekCtrl::OnSize()
 {
-	if (CUIObject::IsKindOf(szClassName))
-		return TRUE;
-
-	return _tcsicmp(szClassName, ms_szClassName) == 0;
-}
-
-void CSkinSeekCtrl::OnSize(int cx, int cy)
-{
-	CUIObject::OnSize(cx, cy);
+	CUIObject::OnSize();
 
 	m_nPosThumb = VirtualPosToObjectPos(m_nVirtualCurPos);
 }

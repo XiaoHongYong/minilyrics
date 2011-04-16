@@ -42,7 +42,6 @@ CSkinResMgr::~CSkinResMgr()
 
 void CSkinResMgr::OnClose()
 {
-	m_vAdjustHueOfImages.clear();
 	m_bAdjustHue = false;
 	m_hue = 0;
 	m_saturation = 0;
@@ -125,7 +124,7 @@ PRAW_IMAGE_DATA CSkinResMgr::LoadBitmap(LPCTSTR szBmp)
 		ResBmp.nCount = 1;
 		m_mapBitmap[szFile] = ResBmp;
 
-		if (ShouldHueOfImageBeAdjusted(szFile) && m_hue != 0.0)
+		if (m_hue != 0.0)
 			AdjustImageHue(ResBmp.hHandle, m_hue);
 
 		return (PRAW_IMAGE_DATA)ResBmp.hHandle;
@@ -247,24 +246,6 @@ BOOL CSkinResMgr::GetResourcePathName(LPTSTR szPathName, int nSizePathName, LPCT
 	return FALSE;
 }
 
-void CSkinResMgr::AdjustHueInfoFromXML(SXNode *pNodeAdjustHue)
-{
-	ASSERT(pNodeAdjustHue);
-
-	SXNode::iterator	it, itEnd;
-
-	itEnd = pNodeAdjustHue->listChildren.end();
-	for (it = pNodeAdjustHue->listChildren.begin(); it != itEnd; ++it)
-	{
-		SXNode		*pNode = *it;
-
-		if (_tcsicmp(pNode->strName.c_str(), _T("ImageFile")) == 0)
-		{
-			m_vAdjustHueOfImages.push_back(pNode->GetPropertySafe(_T("file")));
-		}
-	}
-}
-
 void CSkinResMgr::AdjustHue(float hue, float saturation, float luminance)
 {
 	if (hue == m_hue)
@@ -282,20 +263,17 @@ void CSkinResMgr::AdjustHue(float hue, float saturation, float luminance)
 		RES_COUNTER		&item = (*it).second;
 		LPCTSTR			szFile = (*it).first.c_str();
 
-		if (ShouldHueOfImageBeAdjusted(szFile))
-		{
-			PRAW_IMAGE_DATA	hImage;
+		PRAW_IMAGE_DATA	hImage;
 
-			hImage = LoadRawImageDataFromFile(szFile); // LoadBitmapFromFile(szFile);
-			if (hImage == NULL)
-				continue;
+		hImage = LoadRawImageDataFromFile(szFile); // LoadBitmapFromFile(szFile);
+		if (hImage == NULL)
+			continue;
 
-			item.hHandle->Switch(hImage);
-			FreeRawImage(hImage);
+		item.hHandle->Switch(hImage);
+		FreeRawImage(hImage);
 
-			if (hue != 0)
-				AdjustImageHue(item.hHandle, hue);
-		}
+		if (hue != 0)
+			AdjustImageHue(item.hHandle, hue);
 	}
 }
 
@@ -335,22 +313,3 @@ void CSkinResMgr::DbgOutLoadedImages()
 	}
 }
 #endif
-
-bool CSkinResMgr::ShouldHueOfImageBeAdjusted(LPCTSTR szFile)
-{
-	int		nLen;
-
-	nLen = _tcslen(szFile);
-
-	for (int i = 0; i < (int)m_vAdjustHueOfImages.size(); i++)
-	{
-		if ((int)m_vAdjustHueOfImages[i].size() > nLen)
-			continue;
-
-		LPCTSTR		str = szFile + nLen - m_vAdjustHueOfImages[i].size();
-		if (_tcsicmp(m_vAdjustHueOfImages[i].c_str(), str) == 0)
-			return true;
-	}
-
-	return false;
-}

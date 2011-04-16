@@ -55,3 +55,5 @@
 #endif
 
 #include "misc.h"
+
+#include "auto_free_list.h"

@@ -59,12 +59,11 @@ public:
 	CSkinToolbar();
 	virtual ~CSkinToolbar();
 
-	virtual BOOL ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion = NULL);
-
 	void OnCreate();
 
 	void OnAdjustHue(float hue, float saturation, float luminance);
 
+	void OnSize();
 	void OnTimer(int nId);
 
 	bool OnMouseMove(UINT nFlags, CPoint point);

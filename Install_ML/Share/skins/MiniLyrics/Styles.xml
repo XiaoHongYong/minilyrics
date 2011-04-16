@@ -4,7 +4,7 @@
     <WindowFrame EnableTranslucency="true" TranslucencyAlpha="255"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
          PaintBg="TRUE" BgColor="#FFFFFF" FgColor="#282828" EnableClickThrough="false"
-         FontName="Verdana" FontHeight="14" TextColor="#000000">
+         FontName="Verdana" FontHeight="14" TextColor="#000000" IsDialog="true">
 
       <Image Name="Left border" Rect="0,31,5,h-31-15" Image="frame.png" ImageRect="0,31,5,54"
              BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
@@ -39,7 +39,7 @@
     <MenuWindowFrame EnableTranslucency="true" TranslucencyAlpha="255"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
          PaintBg="TRUE" BgColor="#FFFFFF" FgColor="#282828" EnableClickThrough="false"
-         FontName="Verdana" FontHeight="14" TextColor="#000000">
+         FontName="Verdana" FontHeight="14" TextColor="#000000" IsDialog="true">
 
       <Property Name="BgImage" Image="frame.png"
                 HorzExtendPos="15,85" VertExtendPos="31,85"/>
@@ -130,8 +130,7 @@
           S1_Image="s_radio_button.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
     <NormalEdit Extends="EditCtrl" Height="28" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
-          XMargin="5" YMargin="0" ExtendPos="20,50" ImageFrame="s_edit_box.png" ImageFrameSize="70,30"
-          ImageFramePos="0,30" ImageFrameFocusPos="0,0"/>
+          XMargin="5" YMargin="0"/>
     <NormalListCtrl Extends="ListCtrl" BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 
           NowPlayBgColor="#5478CA" TextColor="#000000" SelTextColor="#FFFFFF" 
           NowPlayTextColor="#FFFFFF" FontName="Verdana" FontHeight="14"

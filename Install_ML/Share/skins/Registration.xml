@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<skinwnd Extends="WindowFrame" Name="Registration.xml" Caption="$Product$ (Trial Version)"
+<skinwnd Extends="WindowFrame" Name="Registration.xml" Caption="$Product$ (Trial Version)" DefaultPage="Container.RegNotice"
          FixedWidth="true" FixedHeight="true" Width="430" Height="290" RememberSizePos="false">
-  <Animation ID="CID_AM_SHOW_NOTICE_F_RIGHT" MoveFromRight="CID_C_NOTICE"
-      MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_NOTICE_OK"/>
-  <Animation ID="CID_AM_HIDE_NOTICE_2_LEFT" MoveToLeft="CID_C_NOTICE"
-      MoveToBottom="CID_BUYNOW,CID_ENTER_CODE,CID_NOTICE_OK"/>
-  <Animation ID="CID_AM_SHOW_NOTICE_F_LEFT" MoveFromLeft="CID_C_NOTICE"
-      MoveFromBottom="CID_BUYNOW,CID_ENTER_CODE,CID_NOTICE_OK" ResizeWnd="330,340"/>
-  <Container ID="CID_C_NOTICE" Name="Notice" Rect="0,0,w,h">
+  <Container.RegNotice ID="CID_C_NOTICE" Visible="false" Name="Notice" Rect="0,0,w,h">
     <NormalText Text="Do you think MiniLyrics is valuable to you? If yes, you may purchase it."
                 Rect="30,25,w-60,40" FontHeight="16"/>
     <NormalText Text="You could support the development of MiniLyrics by purchasing it, and we will make MiniLyrics better."
@@ -17,6 +11,6 @@
     <NormalTextBt ID="CID_BUYNOW" Text="&amp;Buy Now" Left="w/2 - 110 - 110/2 - 20" Top="210" Width="110"/>
     <NormalTextBt ID="CID_ENTER_CODE" Text="&amp;Enter code" Left="w/2 - 110/2" Top="210" Width="110"/>
     <NormalTextBt ID="CID_NOTICE_OK" Text="&amp;Close" Left="w/2 + 110/2 + 20" Top="210" Width="110"/>
-  </Container>
+  </Container.RegNotice>
   <include Name="EnterCode.xml"/>
 </skinwnd>

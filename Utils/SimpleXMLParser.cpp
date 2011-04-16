@@ -258,11 +258,12 @@ ElementType CSimpleXMLParser::ReadElemnt(ElementType desireType, _tstringex &str
 			int		i = nPos;
 			strElemnt.clear();
 
-			if (IsAlpha(m_szData[i]))
+			if (IsAlpha(m_szData[i]) || m_szData[i] == '_')
 			{
 				strElemnt += m_szData[i];
 				i++;
-				while (IsAlpha(m_szData[i]) || IsDigit(m_szData[i]) || m_szData[i] == '_' || m_szData[i] == '-')
+				while (IsAlpha(m_szData[i]) || IsDigit(m_szData[i]) || m_szData[i] == '_'
+					|| m_szData[i] == '-' || m_szData[i] == '.' || m_szData[i] == ':')
 				{
 					strElemnt += m_szData[i];
 					i++;

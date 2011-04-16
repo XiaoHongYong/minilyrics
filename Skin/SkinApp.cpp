@@ -84,6 +84,14 @@ void CSkinApp::PostQuitMessage()
 	::PostQuitMessage(0);
 }
 
+int CSkinApp::ShowDialog(CBaseWnd *pWndParent, LPCTSTR szDialogName)
+{
+	SkinWndStartupInfo skinWndStartupInfo(_SZ_SKINWND_CLASS_NAME, _SZ_SKINWND_CLASS_NAME, 
+		szDialogName, pWndParent);
+
+	return GetSkinFactory()->ActiveOrCreateSkinWnd(skinWndStartupInfo);
+}
+
 CEventsDispatcher *CSkinApp::NewEventPatcher()
 {
 	return new CEventsDispatcher();

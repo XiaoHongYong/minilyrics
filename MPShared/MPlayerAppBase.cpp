@@ -679,20 +679,18 @@ void CMPlayerAppBase::OnMediaChanged()
 	}
 
 	TCHAR	szLyricFile[MAX_PATH];
-	TCHAR	szAssociateKeyword[MAX_PATH];
 	BOOL	bLyricsOpened = FALSE;
 	BOOL	bAssociateNone = FALSE;
 	int		nRet;
 
-	GetAssociateFileKeyword(szAssociateKeyword, CountOf(szAssociateKeyword));
-
-	if (g_LyricSearch.IsAssociatedWithNoneLyrics(szAssociateKeyword))
+	tstring strAssociateMediaKey = GetAssociateFileKeyword();
+	if (g_LyricSearch.IsAssociatedWithNoneLyrics(strAssociateMediaKey.c_str()))
 		bAssociateNone = TRUE;
 	else
 	{
 		if (g_LyricSearch.GetBestMatchLyrics(g_Player.GetSrcMedia(), g_Player.GetArtist(), g_Player.GetTitle(), szLyricFile))
 		{
-			nRet = OpenLyrics(szAssociateKeyword, szLyricFile);
+			nRet = OpenLyrics(strAssociateMediaKey.c_str(), szLyricFile);
 			if (nRet == ERR_OK)
 				bLyricsOpened = TRUE;
 			else
@@ -882,9 +880,9 @@ void CMPlayerAppBase::OnDownloadLyricsFailed(CDownloadTask *pTask)
 }
 
 // 取得关联时的关键信息
-void CMPlayerAppBase::GetAssociateFileKeyword(LPTSTR szAssociateFileKeyword, int nMaxLen)
+tstring CMPlayerAppBase::GetAssociateFileKeyword()
 {
-	CLyricsLocalSearch::GetAssociateFileKeyword(g_Player.GetSrcMedia(), g_Player.GetFullTitle(), szAssociateFileKeyword, nMaxLen);
+	return CLyricsLocalSearch::GetAssociateFileKeyword(g_Player.GetSrcMedia(), g_Player.GetFullTitle());
 }
 
 void CMPlayerAppBase::NewLyrics()

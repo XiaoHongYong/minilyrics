@@ -42,7 +42,7 @@ void CSkinStaticText::OnCreate()
 
 void CSkinStaticText::OnAdjustHue(float hue, float saturation, float luminance)
 {
-	m_font.OnAdjustHue(hue, saturation, luminance);
+	m_font.OnAdjustHue(m_pSkin, hue, saturation, luminance);
 }
 
 bool CSkinStaticText::OnLButtonUp(UINT nFlags, CPoint point)

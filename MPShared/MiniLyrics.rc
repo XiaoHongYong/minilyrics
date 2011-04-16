@@ -137,13 +137,19 @@ BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         POPUP "&Lyrics"
         BEGIN
-            MENUITEM "Ra&te These Lyrics...",       IDC_RATE_LYRICS
+            POPUP "Ra&te These Lyrics..."
+            BEGIN
+                MENUITEM "Rate these lyrics: 1 (Low)",  IDC_RATE_LYR_1
+                MENUITEM "Rate these lyrics: 2",        IDC_RATE_LYR_2
+                MENUITEM "Rate these lyrics: 3",        IDC_RATE_LYR_3
+                MENUITEM "Rate these lyrics: 4",        IDC_RATE_LYR_4
+                MENUITEM "Rate these lyrics: 5 (High)", IDC_RATE_LYR_5
+            END
             MENUITEM SEPARATOR
             MENUITEM "Embedded Lyrics in &Mp3 file", IDC_EMBEDDED_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
             MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
-            MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
             MENUITEM SEPARATOR
             POPUP "&Upload Lyrics..."
             BEGIN

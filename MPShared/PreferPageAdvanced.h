@@ -24,11 +24,10 @@ typedef vector<CPreferItem *>		VecPreferItems;
 
 class CPagePfAdvanced : public CPagePfBase, public IEditNotification
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
 	CPagePfAdvanced();
 	~CPagePfAdvanced();
-
-	static LPCTSTR GetPageID();
 
 	void OnInitialUpdate();
 

@@ -43,7 +43,7 @@ public:
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 
-	virtual void OnSize(int cx, int cy);
+	virtual void OnSize();
 	virtual void OnSetFocus();
 
 	void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);

@@ -14,8 +14,9 @@
 
 class CPagePfLyrDownload : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfLyrDownload() : CPagePfBase(GetPageID(), PAGE_LYR_DOWNLOAD, _T("CMD_LYR_DOWNLOAD"))
+	CPagePfLyrDownload() : CPagePfBase(PAGE_LYR_DOWNLOAD, _T("CMD_LYR_DOWNLOAD"))
 	{
 		CID_DOWN_DIR = 0;
 		CID_C_SAVE_IN_SONG_DIR = 0;
@@ -25,8 +26,6 @@ public:
 		CID_C_ID3V2_USLT = 0;
 		CID_C_LYR3V2 = 0;
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_LYR_DOWNLOAD"); }
 
 	void OnInitialUpdate()
 	{
@@ -131,7 +130,7 @@ public:
 			strDownSaveDir = g_LyricsDownloader.GetDefSavePath();
 
 			dlg.SetInitFolder(strDownSaveDir.c_str());
-			if (dlg.DoBrowse(m_pSkinWnd))
+			if (dlg.DoBrowse(m_pSkin))
 			{
 				if (_tcsicmp(strDownSaveDir.c_str(), dlg.GetFolder()) != 0)
 				{
@@ -139,7 +138,7 @@ public:
 					DirStringFormat(strDownSaveDir);
 
 					if (!CanWriteInDir(strDownSaveDir.c_str()))
-						m_pSkinWnd->MessageOut(_T("Can't save lyrics in the selected folder."));
+						m_pSkin->MessageOut(_T("Can't save lyrics in the selected folder."));
 					else
 					{
 						CMLProfile::WriteDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), strDownSaveDir.c_str());
@@ -162,18 +161,19 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPagePfLyrDownload, _T("PreferPage.LyrDownload"))
+
 //////////////////////////////////////////////////////////////////////////
 
 class CPagePfLyrOutputPlugin : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfLyrOutputPlugin() : CPagePfBase(GetPageID(), PAGE_LYR_OUTPUT_PLUGINS, _T("CMD_LYR_OUTPUT_PLUGIN"))
+	CPagePfLyrOutputPlugin() : CPagePfBase(PAGE_LYR_OUTPUT_PLUGINS, _T("CMD_LYR_OUTPUT_PLUGIN"))
 	{
 		m_pListPlugins = NULL;
 		CID_LO_PLUGIN_LIST = 0;
 	}
-
-	static LPCTSTR GetPageID() { return _T("CID_C_LYR_OUTPUT_PLUGIN"); }
 
 	void OnInitialUpdate()
 	{
@@ -181,9 +181,9 @@ public:
 
 		GET_ID_BY_NAME(CID_LO_PLUGIN_LIST);
 
-		m_pSkinWnd->SetUIObjectProperty(_T("CID_GET_PLUG"), SZ_PN_LINK, GetStrName(SN_HTTP_DLPLUGIN));
+		m_pSkin->SetUIObjectProperty(_T("CID_GET_PLUG"), SZ_PN_LINK, GetStrName(SN_HTTP_DLPLUGIN));
 
-		m_pSkinWnd->RegisterUIObjNotifyHandler(CID_LO_PLUGIN_LIST, this);
+		m_pSkin->RegisterUIObjNotifyHandler(CID_LO_PLUGIN_LIST, this);
 
 		m_pListPlugins = (CSkinListCtrl *)GetUIObjectById(CID_LO_PLUGIN_LIST, CSkinListCtrl::ClassName());
 		if (!m_pListPlugins)
@@ -210,19 +210,19 @@ public:
 		{
 			int		n = m_pListPlugins->GetNextSelectedItem();
 			if (n != -1)
-				g_lyrOutPlguinMgr.UninstPlugin(n, m_pSkinWnd);
+				g_lyrOutPlguinMgr.UninstPlugin(n, m_pSkin);
 		}
 		else if (nId == GetIDByName(_T("CID_CONFIGURE")))
 		{
 			int		n = m_pListPlugins->GetNextSelectedItem();
 			if (n != -1)
-				g_lyrOutPlguinMgr.ConfigurePlugin(n, m_pSkinWnd);
+				g_lyrOutPlguinMgr.ConfigurePlugin(n, m_pSkin);
 		}
 		else if (nId == GetIDByName(_T("CID_ABOUT")))
 		{
 			int		n = m_pListPlugins->GetNextSelectedItem();
 			if (n != -1)
-				g_lyrOutPlguinMgr.AboutPlugin(n, m_pSkinWnd);
+				g_lyrOutPlguinMgr.AboutPlugin(n, m_pSkin);
 		}
 		else
 			return CPagePfBase::OnCustomCommand(nId);
@@ -256,17 +256,14 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPagePfLyrOutputPlugin, _T("PreferPage.LyrOutputPlugin"))
+
 //////////////////////////////////////////////////////////////////////////
 
-CPagePfLyricsRoot::CPagePfLyricsRoot() : CPagePfBase(GetPageID(), PAGE_UNKNOWN, _T("CMD_ROOT_LYRICS"))
-{
-	AddPage(new CPagePfLyrDownload());
-	AddPage(new CPagePfLyrOutputPlugin());
-}
+UIOBJECT_CLASS_NAME_IMP(CPagePfLyricsRoot, _T("PreferPage.LyricsRoot"))
 
-LPCTSTR CPagePfLyricsRoot::GetPageID()
+CPagePfLyricsRoot::CPagePfLyricsRoot() : CPagePfBase(PAGE_UNKNOWN, _T("CMD_ROOT_LYRICS"))
 {
-	return _T("CID_C_LYR_ROOT");
 }
 
 void CPagePfLyricsRoot::OnInitialUpdate()
@@ -275,15 +272,11 @@ void CPagePfLyricsRoot::OnInitialUpdate()
 
 	CheckToolbarDefaultPage(_T("CID_TOOLBAR_LYR"));
 }
-/*
-bool CPagePfLyricsRoot::OnCustomCommand(int nId)
-{
-	if (nId == GetIDByName(_T("CMD_LYR_DOWNLOAD")))
-		SwitchToPage(CPagePfLyrDownload::GetPageID());
-	else if (nId == GetIDByName(_T("CMD_LYR_OUTPUT_PLUGIN")))
-		SwitchToPage(CPagePfLyrOutputPlugin::GetPageID());
-	else
-		return CPagePfBase::OnCustomCommand(nId);
 
-	return true;
-}*/
+void RegisterPfLyricsPages(CSkinFactory *pSkinFactory)
+{
+	AddUIObjNewer2(pSkinFactory, CPagePfLyrDownload);
+	AddUIObjNewer2(pSkinFactory, CPagePfLyrOutputPlugin);
+	AddUIObjNewer2(pSkinFactory, CPagePfLyricsRoot);
+}
+

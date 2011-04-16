@@ -58,9 +58,9 @@ CMPCommonCmdHandler::~CMPCommonCmdHandler()
 }
 
 // if the command id is processed, return true.
-bool CMPCommonCmdHandler::OnCommand(UINT nID)
+bool CMPCommonCmdHandler::OnCommand(int nId)
 {
-	switch (nID)
+	switch (nId)
 	{
 #ifdef _MPLAYER
 	case IDC_REPEAT_OFF:
@@ -80,10 +80,10 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 	case IDC_RATE_LYR_5:
 		{
 			int nRate;
-			if (nID == IDC_RATE_LYR_2) nRate = 2;
-			else if (nID == IDC_RATE_LYR_3) nRate = 3;
-			else if (nID == IDC_RATE_LYR_4) nRate = 4;
-			else if (nID == IDC_RATE_LYR_5) nRate = 5;
+			if (nId == IDC_RATE_LYR_2) nRate = 2;
+			else if (nId == IDC_RATE_LYR_3) nRate = 3;
+			else if (nId == IDC_RATE_LYR_4) nRate = 4;
+			else if (nId == IDC_RATE_LYR_5) nRate = 5;
 			else nRate = 1;
 
 			tstring		strUrl;
@@ -116,13 +116,13 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			MLColor				clr(RGB(0, 0, 0));
 			LPCTSTR				szColorValueName = NULL;
 
-			if (nID == IDC_EDITOR_LYR_COLOR)
+			if (nId == IDC_EDITOR_LYR_COLOR)
 				szColorValueName = _T("Ed_LowColor");
-			else if (nID == IDC_EDITOR_HIGH_COLOR)
+			else if (nId == IDC_EDITOR_HIGH_COLOR)
 				szColorValueName = _T("Ed_HighColor");
-			else if (nID == IDC_TAG_COLOR)
+			else if (nId == IDC_TAG_COLOR)
 				szColorValueName = _T("Ed_TagColor");
-			else if (nID == IDC_EDITOR_BG_COLOR)
+			else if (nId == IDC_EDITOR_BG_COLOR)
 				szColorValueName = _T("Ed_BgColor");
 			else
 				szColorValueName = _T("Ed_FocusLineBgColor");
@@ -152,11 +152,11 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 // 		{
 // 			tstring		strAlign;
 // 
-// 			if (nID == IDC_ALIGN_LYRICS_LEFT)
+// 			if (nId == IDC_ALIGN_LYRICS_LEFT)
 // 				strAlign = _T("left");
-// 			else if (nID == IDC_ALIGN_LYRICS_CENTER)
+// 			else if (nId == IDC_ALIGN_LYRICS_CENTER)
 // 				strAlign = _T("center");
-// 			else if (nID == IDC_ALIGN_LYRICS_RIGHT)
+// 			else if (nId == IDC_ALIGN_LYRICS_RIGHT)
 // 				strAlign = _T("right");
 // 			else
 // 				ASSERT(0 && _T("Invalid ID."));
@@ -175,11 +175,11 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		{
 			DISPLAY_OPTIONS	displayOpt;
 
-			if (nID == IDC_LDO_NORMAL)
+			if (nId == IDC_LDO_NORMAL)
 				displayOpt = DO_NORMAL;
-			else if (nID == IDC_LDO_FADE_IN)
+			else if (nId == IDC_LDO_FADE_IN)
 				displayOpt = DO_FADEOUT_LOWCOLOR;
-			else if (nID == IDC_LDO_FADEOUT_BG)
+			else if (nId == IDC_LDO_FADEOUT_BG)
 				displayOpt = DO_FADEOUT_BG;
 			else
 				return false;
@@ -281,7 +281,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 #ifdef _WIN32
 	case IDC_ADJUST_HUE:
 		{
-			CSkinDialog::ShowDialog(new CDlgAdjustHue(), m_pSkinWnd);
+			ShowAdjustHueDialog(m_pSkinWnd);
 		}
 		break;
 #endif
@@ -291,7 +291,7 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 			int nRet = CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(_T("about_box"),
 				_T("AboutBox"),
 				_T("AboutBox.xml"), CMPlayerAppBase::GetMainWnd(), &pWnd);*/
-			CSkinDialog::ShowDialog(new CDlgAbout(), m_pSkinWnd);
+			ShowAboutDialog(m_pSkinWnd);
 		}
 		break;
 	case IDC_BR_ALBUM_ART:
@@ -328,9 +328,9 @@ bool CMPCommonCmdHandler::OnCommand(UINT nID)
 		break;
 	default:
 		{
-			if (OnCommandCharEncoding(nID))
+			if (OnCommandCharEncoding(nId))
 				break;
-			if (OnCommandSkin(nID))
+			if (OnCommandSkin(nId))
 				break;
 			return false;
 		}
@@ -357,12 +357,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_PREFERENCES:
-		CSkinDialog::ShowDialog(new CPreferenceDlg(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS), m_pSkinWnd);
-		// g_wndPreference.Create(m_pSkinWnd, PAGE_THEMES, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS);
 		break;
 	case CMD_DISPLAY_OPT:
-		CSkinDialog::ShowDialog(new CPreferenceDlg(m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS, PAGE_LYR_DISPLAY), m_pSkinWnd);
-		// g_wndPreference.Create(m_pSkinWnd, PAGE_LYR_DISPLAY, m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS);
+		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS, PAGE_LYR_DISPLAY);
 		break;
 	case CMD_FLOATING_LYRICS:
 		{
@@ -400,8 +398,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 	case CMD_LYR_EDITOR:
-		CMPlayerAppBase::GetMPSkinFactory()->ActiveOrCreateSkinWnd(false,
-			_T("LyrEditor"), TOLOCAL(_T("Lyrics Editor")), _T("LyricsEditor.xml"));
+		{
+			SkinWndStartupInfo skinWndStartupInfo(_T("LyrEditor"), TOLOCAL(_T("Lyrics Editor")), _T("LyricsEditor.xml"), NULL);
+			CMPlayerAppBase::GetMPSkinFactory()->ActiveOrCreateSkinWnd(skinWndStartupInfo);
+		}
 		break;
 	case CMD_EDIT_HELP:
 		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_HELP_EDIT_LYR));
@@ -586,11 +586,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			{
 				g_bInModalDlLrcSelDlg = TRUE;
 
-				CSkinDialog::ShowDialog(new CDlgOpenLyrics(), m_pSkinWnd);
-
-// 				CDlgSearchLyrics		LyricsDownSelDlg;
-// 
-// 				LyricsDownSelDlg.DoModal(m_pSkinWnd);
+				ShowSearchLyricsDialog(m_pSkinWnd);
 				g_bInModalDlLrcSelDlg = FALSE;
 			}
 		}
@@ -796,11 +792,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			tstring	strLyrics;
 			if (g_LyricData.ToString(strLyrics, FT_LYRICS_LRC, true))
 			{
-				CSkinDialog::ShowDialog(
-					new CDlgUpload(strLyrics, 
+				ShowUploadLyrDialog(m_pSkinWnd, 
+						strLyrics, 
 						g_LyricData.GetSongFileName(),
-						g_LyricData.GetLyricsFileName()), 
-					m_pSkinWnd);
+						g_LyricData.GetLyricsFileName());
 			}
 			else
 				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));

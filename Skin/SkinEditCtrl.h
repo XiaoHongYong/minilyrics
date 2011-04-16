@@ -473,7 +473,7 @@ public:
 	void Draw(CRawGraph *pGraph);
 
 	// rc is the destination rectangle to draw the edit
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	virtual void OnSetFocus();
 	virtual void OnKillFocus();
@@ -488,9 +488,11 @@ public:
 	virtual void OnChar(UINT nChar);
 
 	virtual void OnContexMenu(int xPos, int yPos);
-	virtual bool OnCommand(UINT uID);
+	virtual bool OnCommand(int nId);
 
 	virtual void OnTimer(int nId);
+
+	virtual void OnAdjustHue(float hue, float saturation, float luminance);
 
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);

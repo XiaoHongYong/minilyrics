@@ -19,7 +19,7 @@ public:
 	virtual ~CMPCommonCmdHandler();
 
 	// if the command id is processed, return true.
-	virtual bool OnCommand(UINT nID);
+	virtual bool OnCommand(int nId);
 	virtual bool OnCustomCommand(int nID);
 	virtual bool OnUIObjNotify(IUIObjNotify *pNotify);
 

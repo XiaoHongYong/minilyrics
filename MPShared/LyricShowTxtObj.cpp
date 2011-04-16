@@ -404,9 +404,9 @@ void CLyricShowTxtObj::OnEvent(const IEvent *pEvent)
 		CLyricShowMultiRowObj::OnEvent(pEvent);
 }
 
-void CLyricShowTxtObj::OnSize(int cx, int cy)
+void CLyricShowTxtObj::OnSize()
 {
-	CLyricShowMultiRowObj::OnSize(cx, cy);
+	CLyricShowMultiRowObj::OnSize();
 
 	SetScrollInfo();
 

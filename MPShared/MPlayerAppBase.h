@@ -155,7 +155,7 @@ public:
 	static CMPSkinFactory *GetMPSkinFactory();
 	static CEventsDispatcherBase *GetEventsDispatcher();
 
-	static void GetAssociateFileKeyword(LPTSTR szAssociateFileKeyword, int nMaxLen);
+	static tstring GetAssociateFileKeyword();
 	static CMPSkinMainWnd *GetMainWnd();
 	static CMPHotkey &GetHotkey();
 

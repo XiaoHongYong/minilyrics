@@ -30,7 +30,7 @@ public:
 	virtual void OnSetFocus();
 	virtual void OnKillFocus();
 
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	void Draw(CRawGraph *pGraph);
 

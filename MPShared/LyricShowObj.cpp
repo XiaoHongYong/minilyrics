@@ -2101,8 +2101,10 @@ void CLyricShowObj::OnTimer(int nId)
 	Invalidate();
 }
 
-void CLyricShowObj::OnSize(int cx, int cy)
+void CLyricShowObj::OnSize()
 {
+	CUIObject::OnSize();
+
 	if (m_bUseBgImg || m_bUseAlbumArtAsBg)
 		LoadNextBgImage();
 

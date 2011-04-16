@@ -26,7 +26,7 @@ public:
 
 	void OnTimer(int nId);
 
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	void Draw(CRawGraph *pGraph);
 

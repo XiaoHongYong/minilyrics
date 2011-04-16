@@ -59,7 +59,7 @@ public:
 
 	virtual void CloseSkin();
 
-	virtual BOOL SetProperty(SXNode *pXmlNode);
+	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
 #ifdef _MPLAYER
 	virtual void OnLButtonUp(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonUp(nFlags, point); }
 	// virtual void OnLButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonDown(nFlags, point); }

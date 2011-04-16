@@ -277,9 +277,9 @@ void CSkinListCtrl::EnumProperties(CUIObjProperties &listProperties)
 }
 #endif // _SKIN_EDITOR_
 
-void CSkinListCtrl::OnSize(int cx, int cy)
+void CSkinListCtrl::OnSize()
 {
-	CSkinScrollFrameCtrlBase::OnSize(cx, cy);
+	CSkinScrollFrameCtrlBase::OnSize();
 
 	SetScrollInfo(false);
 	SetHorzScrollInfo(false);
@@ -317,6 +317,8 @@ void CSkinListCtrl::OnAdjustHue(float hue, float saturation, float luminance)
 
 	for (size_t i = 0; i < m_vColors.size(); i++)
 		m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_vColors[i]);
+
+	m_font.OnAdjustHue(m_pSkin, hue, saturation, luminance);
 }
 
 void CSkinListCtrl::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)

@@ -8,46 +8,104 @@
 
 //////////////////////////////////////////////////////////////////////
 
+UIOBJECT_CLASS_NAME_IMP(CPagePfBase, _T("PagePfBase"))
 
-CPagePfBase::CPagePfBase(LPCTSTR szIdPage, PreferPageID pfPageId, LPCTSTR szAssociateTabButtonId) :
-	CSkinPageHandler(szIdPage, NULL, NULL, 
-				 NULL, NULL)
+CPagePfBase::CPagePfBase(PreferPageID pfPageId, LPCTSTR szAssociateTabButtonId)
 {
-	m_strPageId = szIdPage;
 	m_pfPageId = pfPageId;
-	m_nAssociateTabButtonId = GetIDByName(szAssociateTabButtonId);
+	m_nAssociateTabButtonId = CSkinApp::GetInstance()->GetSkinFactory()->GetIDByName(szAssociateTabButtonId);
+	m_nDefaultPageAssociateTabButtonId = UID_INVALID;
 }
 
-void CPagePfBase::OnCreate()
+CSkinContainer *GetChildPreferPageParent(CSkinContainer *pContainer)
 {
-	CSkinPageHandler::OnCreate();
+	for (int i = 0; i < pContainer->GetChildrenCount(); i++)
+	{
+		CUIObject *p = pContainer->GetChildByIndex(i);
+		if (p->IsContainer())
+		{
+			if (p->IsKindOf(CPagePfBase::ClassName()))
+				return pContainer;
+			else
+			{
+				CSkinContainer *pParent = GetChildPreferPageParent(p->GetContainerIf());
+				if (pParent)
+					return pParent;
+			}
+		}
+	}
+
+	return NULL;
+}
+
+void CPagePfBase::OnInitialUpdate()
+{
+	CSkinContainer::OnInitialUpdate();
+
+	// Retrieve the default associate tab button id
+	CSkinContainer *pPfPageParent = GetChildPreferPageParent(this);
+	if (pPfPageParent)
+	{
+		for (int i = 0; i < pPfPageParent->GetChildrenCount(); i++)
+		{
+			CUIObject *p = pPfPageParent->GetChildByIndex(i);
+			if (p->IsContainer() && p->IsKindOf(CPagePfBase::ClassName()))
+			{
+				CPagePfBase *pPfPage = (CPagePfBase *)p;
+				m_nDefaultPageAssociateTabButtonId = pPfPage->GetAssociateTabButtonId();
+				if (!pPfPageParent->HasActivePage())
+					pPfPageParent->SwitchToPage(p->GetClassName(), false, 0, false);
+				break;
+			}
+		}
+	}
 }
 
 void CPagePfBase::OnDestroy()
 {
-	m_pSkinWnd->UnregisterUIObjNotifyHandler(this);
+	m_pSkin->UnregisterUIObjNotifyHandler(this);
 
 	ClearOptions();
 
-	CSkinPageHandler::OnDestroy();
+	CSkinContainer::OnDestroy();
+}
+
+bool CPagePfBase::OnSwitchToPageCmd(int nId)
+{
+	CSkinContainer *pPfPageParent = GetChildPreferPageParent(this);
+	if (pPfPageParent)
+	{
+		for (int i = 0; i < pPfPageParent->GetChildrenCount(); i++)
+		{
+			CUIObject *p = pPfPageParent->GetChildByIndex(i);
+			if (p->IsContainer() && p->IsKindOf(CPagePfBase::ClassName()))
+			{
+				CPagePfBase *pPfPage = (CPagePfBase *)p;
+				if (pPfPage->GetAssociateTabButtonId() == nId)
+				{
+					pPfPageParent->SwitchToPage(pPfPage->GetClassName(), false, 0, true);
+					if (pPfPage->GetPfPageID() != PAGE_UNKNOWN)
+					{
+						// Write default page in exchange pool data
+						SetExPool(SZ_EX_POOL_PF_DEFAULT_PAGE, pPfPage->GetPfPageID());
+					}
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
 }
 
 bool CPagePfBase::OnCustomCommand(int nId)
 {
-	if (CSkinPageHandler::OnCustomCommand(nId))
+	if (CSkinContainer::OnCustomCommand(nId))
 		return true;
 
 	// Toolbar(Tab) check command
-	for (ListPageHandler::iterator it = m_listPageHandler.begin();
-		it != m_listPageHandler.end(); ++it)
-	{
-		CPagePfBase	*pPageChild = (CPagePfBase *)*it;
-		if (pPageChild->GetAssociateTabButtonId() == nId)
-		{
-			SwitchToPage(pPageChild->GetPageId());
-			return true;
-		}
-	}
+	if (OnSwitchToPageCmd(nId))
+		return true;
 
 	{
 		// Bool
@@ -129,11 +187,11 @@ void CPagePfBase::InitCheckButtons()
 		for (it = m_vOptComboStr.begin(); it != itEnd; ++it)
 		{
 			OptComboStr		&opt = *it;
-			CSkinComboBox	*pCombBox = (CSkinComboBox *)m_pSkinWnd->GetUIObjectById(opt.nIDWidgetCombo, CSkinComboBox::ClassName());
+			CSkinComboBox	*pCombBox = (CSkinComboBox *)m_pSkin->GetUIObjectById(opt.nIDWidgetCombo, CSkinComboBox::ClassName());
 			if (!pCombBox)
 				continue;
 
-			m_pSkinWnd->RegisterUIObjNotifyHandler(opt.nIDWidgetCombo, this);
+			m_pSkin->RegisterUIObjNotifyHandler(opt.nIDWidgetCombo, this);
 
 			strValue = g_Profile.GetProfileString(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.strDefaultValue.c_str());
 			if (strValue.empty())
@@ -167,7 +225,7 @@ void CPagePfBase::InitCheckButtons()
 			if (pButton)
 				pButton->SetStatus(bValue);
 			else
-				ERRLOG1(_T("Control: %s is NOT defined in skin."), m_pSkinWnd->GetSkinFactory()->GetStringOfID(opt.nCtrl));
+				ERRLOG1(_T("Control: %s is NOT defined in skin."), m_pSkin->GetSkinFactory()->GetStringOfID(opt.nCtrl));
 		}
 	}
 
@@ -238,19 +296,28 @@ void CPagePfBase::ClearOptions()
 	m_vOptRadioInt.clear();
 }
 
-bool CPagePfBase::SetDefaultPreferPage(PreferPageID pfPageIdDefault)
+bool CPagePfBase::SetDefaultPreferPage(CSkinContainer *pContainer, PreferPageID pfPageIdDefault)
 {
 	if (m_pfPageId == pfPageIdDefault)
 		return true;
 
-	for (ListPageHandler::iterator it = m_listPageHandler.begin();
-		it != m_listPageHandler.end(); ++it)
+	for (int i = 0; i < pContainer->GetChildrenCount(); i++)
 	{
-		CPagePfBase	*pPageChild = (CPagePfBase *)*it;
-		if (pPageChild->SetDefaultPreferPage(pfPageIdDefault))
+		CUIObject *p = pContainer->GetChildByIndex(i);
+		if (p->IsContainer())
 		{
-			m_nIdPageDefault = pPageChild->GetPageId();
-			return true;
+			if (p->IsKindOf(CPagePfBase::ClassName()))
+			{
+				CPagePfBase	*pPageChild = (CPagePfBase *)p;
+				if (pPageChild->SetDefaultPreferPage(pPageChild, pfPageIdDefault))
+				{
+					pPageChild->GetParent()->SwitchToPage(pPageChild->GetClassName(), false, 0, false);
+					m_nDefaultPageAssociateTabButtonId = pPageChild->GetAssociateTabButtonId();
+					return true;
+				}
+			}
+			else if (SetDefaultPreferPage(p->GetContainerIf(), pfPageIdDefault))
+				return true;
 		}
 	}
 
@@ -259,12 +326,6 @@ bool CPagePfBase::SetDefaultPreferPage(PreferPageID pfPageIdDefault)
 
 void CPagePfBase::CheckToolbarDefaultPage(LPCTSTR szToolbarId)
 {
-	CPagePfBase *pPage = (CPagePfBase *)GetPage(m_nIdPageDefault);
-	if (pPage)
-	{
-		CheckToolbarButton(szToolbarId, 
-			pPage->GetAssociateTabButtonId(), true);
-	}
-	else
-		ASSERT(0);
+	if (m_nDefaultPageAssociateTabButtonId != UID_INVALID)
+		CheckToolbarButton(GetIDByName(szToolbarId), m_nDefaultPageAssociateTabButtonId, true);
 }

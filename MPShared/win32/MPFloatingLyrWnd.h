@@ -22,8 +22,6 @@ public:
 	virtual bool OnCustomCommand(int nId);
 
 protected:
-	virtual int OpenDefaultSkin();
-
 	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 	//

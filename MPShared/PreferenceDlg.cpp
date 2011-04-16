@@ -19,66 +19,48 @@
 #include "PreferPageAssociation.h"
 #endif
 
-CPreferenceDlg::CPreferenceDlg(bool bFloatingLyrMode, PreferPageID defaultPage)
-	: CSkinDialog(_T("Preferences.xml"))
+class CPagePfRoot : public CPagePfBase
 {
-	m_bFloatingLyrMode = bFloatingLyrMode;
-	m_defaultPage = defaultPage;
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
+public:
+	CPagePfRoot();
+
+	void OnInitialUpdate();
+
+};
+
+UIOBJECT_CLASS_NAME_IMP(CPagePfRoot, _T("PreferPage.Root"))
+
+CPagePfRoot::CPagePfRoot() : CPagePfBase(PAGE_UNKNOWN, _T("CMD_ROOT_UI"))
+{
 }
 
-void CPreferenceDlg::OnSkinLoaded()
+void CPagePfRoot::OnInitialUpdate()
 {
-	m_pageHandler.AddPage(new CPagePfUIRoot());
-	m_pageHandler.AddPage(new CPagePfThemeRoot(m_bFloatingLyrMode));
-	m_pageHandler.AddPage(new CPagePfSystemRoot());
-	m_pageHandler.AddPage(new CPagePfLyricsRoot());
-	m_pageHandler.AddPage(new CPagePfAdvanced());
+	CPagePfBase::OnInitialUpdate();
 
-	int				nDefaultRootPage = UID_INVALID;
-
-	// find default page.
-	CSkinPageHandler::ListPageHandler::iterator it, itEnd = m_pageHandler.ChildEnd();
-	for (it = m_pageHandler.ChildBegin(); it != itEnd; ++it)
-	{
-		CPagePfBase	*pPageRoot = (CPagePfBase *)*it;
-		if (pPageRoot->SetDefaultPreferPage(m_defaultPage))
-		{
-			nDefaultRootPage = pPageRoot->GetPageId();
-			break;
-		}
-	}
-
-	m_pageHandler.SetDefaultPage(nDefaultRootPage);
-
-	CSkinDialog::OnSkinLoaded();
-
-	CSkinToolbar*pToolbar = (CSkinToolbar *)GetUIObjectById(GetIDByName(_T("CID_TB_PREFERENCE")),
-		CSkinToolbar::ClassName());
-	if (pToolbar)
-	{
-		CPagePfBase	*pPageRoot = (CPagePfBase *)m_pageHandler.GetPage(nDefaultRootPage);
-		ASSERT(pPageRoot);
-		if (pPageRoot)
-			pToolbar->SetCheck(pPageRoot->GetAssociateTabButtonId(), true, false);
-	}
+	SetDefaultPreferPage(this, (PreferPageID)GetExPoolInt(SZ_EX_POOL_PF_DEFAULT_PAGE));
+	CheckToolbarDefaultPage(_T("CID_TB_PREFERENCE"));
 }
 
-bool CPreferenceDlg::OnCustomCommand(int nId)
+void ShowPreferenceDialog(CSkinWnd *pParent, bool bFloatingLyr, PreferPageID preferPageId)
 {
-	if (CSkinDialog::OnCustomCommand(nId))
-		return true;
+	ASSERT(preferPageId != PAGE_UNKNOWN);
+	SkinWndStartupInfo skinWndStartupInfo(_SZ_SKINWND_CLASS_NAME, _SZ_SKINWND_CLASS_NAME, 
+		_T("Preferences.xml"), pParent);
 
-	CSkinPageHandler::ListPageHandler::iterator it, itEnd = m_pageHandler.ChildEnd();
-	for (it = m_pageHandler.ChildBegin(); it != itEnd; ++it)
-	{
-		CPagePfBase	*pPageRoot = (CPagePfBase *)*it;
-		if (pPageRoot->GetAssociateTabButtonId() == nId)
-		{
-			m_pageHandler.SwitchToPage(pPageRoot->GetPageId());
-			return true;
-		}
-	}
+	skinWndStartupInfo.mapExchangePool[SZ_EX_POOL_PF_FLOATING_LYR] = BOOLTOSTR(bFloatingLyr);
+	skinWndStartupInfo.mapExchangePool[SZ_EX_POOL_PF_DEFAULT_PAGE] = CStrPrintf(_T("%d"), preferPageId).c_str();
 
-	return false;
+	CSkinApp::GetInstance()->GetSkinFactory()->ActiveOrCreateSkinWnd(skinWndStartupInfo);
 }
 
+void RegisterPreferencePage(CSkinFactory *pSkinFactory)
+{
+	RegisterPfUIPages(pSkinFactory);
+	RegisterPfThemePages(pSkinFactory);
+	RegisterPfSystemPages(pSkinFactory);
+	RegisterPfLyricsPages(pSkinFactory);
+	AddUIObjNewer2(pSkinFactory, CPagePfAdvanced);
+	AddUIObjNewer2(pSkinFactory, CPagePfRoot);
+}

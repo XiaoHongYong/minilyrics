@@ -29,7 +29,9 @@ int CMPFloatingLyrWnd::Create()
 	m_rcReal.right = m_rcReal.left + g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("wnd_width"), m_rcReal.Width());
 	m_rcReal.bottom = m_rcReal.top + g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("wnd_height"), m_rcReal.Height());
 
-	CMPSkinWnd::Create(_T("FloatingLyr"), _T("Floating Lyrics"), CMPlayerAppBase::GetMPSkinFactory(), SZ_SECT_FLOATING_LYR, NULL);
+	SkinWndStartupInfo skinWndStartupInfo(_T("FloatingLyr"), _T("Floating Lyrics"), 
+		_T("floatinglyr.xml"), NULL);
+	CMPSkinWnd::Create(skinWndStartupInfo, CMPlayerAppBase::GetMPSkinFactory());
 
 	m_cursor.LoadCursorFromRes(IDC_MLHAND);
 
@@ -42,31 +44,6 @@ bool CMPFloatingLyrWnd::OnCustomCommand(int nId)
 		g_Profile.WriteProfileInt(_T("FloatingLyr"), false);
 
 	return CMPSkinWnd::OnCustomCommand(nId);
-}
-
-int CMPFloatingLyrWnd::OpenDefaultSkin()
-{
-	CloseSkin();
-
-	CSimpleXML	xml;
-	TCHAR		szFloatingLyrXML[MAX_PATH];
-
-	//
-	// Load floating lyrics window xml file.
-	//
-	if (!CMPlayerAppBase::GetMPSkinFactory()->GetResourceMgr()->GetResourcePathName(
-		szFloatingLyrXML, CountOf(szFloatingLyrXML), _T("floatinglyr.xml")))
-		return ERR_NOT_FOUND;
-
-	if (xml.ParseFile(szFloatingLyrXML))
-	{
-		return FromXML(xml.m_pRoot);
-	}
-	else
-	{
-		ERRLOG1(_T("Failed to load floating lyrics: %s"), szFloatingLyrXML);
-		return ERR_PARSE_XML;
-	}
 }
 
 LRESULT CMPFloatingLyrWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)

@@ -130,8 +130,10 @@ void CMediaAlbumArtCtrl::OnTimer(int nId)
 	}
 }
 
-void CMediaAlbumArtCtrl::OnSize(int cx, int cy)
+void CMediaAlbumArtCtrl::OnSize()
 {
+	CUIObject::OnSize();
+
 	if (!IsMaskImageUsed())
 		ResizeAlbumArt();
 }

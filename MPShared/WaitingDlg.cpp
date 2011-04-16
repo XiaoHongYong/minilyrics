@@ -44,33 +44,32 @@ void CWorkObjBase::WorkThread(LPVOID lpParam)
 }
 
 //////////////////////////////////////////////////////////////////////
+UIOBJECT_CLASS_NAME_IMP(CPageWaitMessage, _T("Container.WaitMsg"))
 
 
-CPageWaitMessage::CPageWaitMessage(bool bEndToClose) : CSkinPageHandler(GetPageIdStr(),
-	NULL, _T("CID_AM_SHOW_WAIT"), NULL, _T("CID_AM_HIDE_WAIT"))
+CPageWaitMessage::CPageWaitMessage()
 {
-	m_bEndToClose = bEndToClose;
 	m_pWorkObj = NULL;
 }
 
 void CPageWaitMessage::StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase *pWorkObj)
 {
-	m_pSkinWnd->SetCaptionText(szCaption);
-	m_pSkinWnd->SetUIObjectText(_T("CID_WAIT_INFO"), szInfo, true);
+	m_pSkin->SetCaptionText(szCaption);
+	SetUIObjectText(_T("CID_WAIT_INFO"), szInfo, true);
 
 	m_pWorkObj = pWorkObj;
 	ASSERT(pWorkObj);
 
-	m_pParent->SwitchToPage(GetPageId());
+	m_pContainer->SwitchToPage(ClassName(), false, 0, true);
 }
 
-void CPageWaitMessage::OnShow()
+void CPageWaitMessage::OnSwitchTo()
 {
-	CSkinPageHandler::OnShow();
+	CSkinContainer::OnSwitchTo();
 
 	if (m_pWorkObj)
 	{
-		m_pWorkObj->CreateWorkThread(m_pSkinWnd);
+		m_pWorkObj->CreateWorkThread(m_pSkin);
 		if (m_pWorkObj->IsCancelEnabled())
 			EnableUIObject(CMD_CANCEL, true);
 		else
@@ -78,30 +77,34 @@ void CPageWaitMessage::OnShow()
 	}
 }
 
-void CPageWaitMessage::OnOK()
+bool CPageWaitMessage::OnOK()
 {
+	return false;
 }
 
-void CPageWaitMessage::OnCancel()
+bool CPageWaitMessage::OnCancel()
 {
 	if (m_pWorkObj && m_pWorkObj->IsCancelEnabled())
-	{
 		m_pWorkObj->CancelJob();
-	}
+
+	return false;
 }
 
 void CPageWaitMessage::OnWorkEnd()
 {
-	if (m_bEndToClose)
-		CSkinPageHandler::OnCancel();
-	else
-		m_pParent->SwitchToLastPage();
+	m_pWorkObj = NULL;
+	m_pContainer->SwitchToLastPage(0, true);
 }
 
-void CPageWaitMessage::OnUserMessage(int nMessageID, LPARAM param)
+bool CPageWaitMessage::OnUserMessage(int nMessageID, LPARAM param)
 {
 	if (nMessageID == UMSG_WORK_END)
+	{
 		OnWorkEnd();
+		return true;
+	}
+	else
+		return CSkinContainer::OnUserMessage(nMessageID, param);
 }
 
 //////////////////////////////////////////////////////////////////////

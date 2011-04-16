@@ -1,22 +1,15 @@
-#ifndef _PREFER_PAGE_THEME_H_
-#define _PREFER_PAGE_THEME_H_
-
 #pragma once
 
 #include "PreferencePageBase.h"
 
 class CPagePfThemeRoot : public CPagePfBase
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
 public:
-	CPagePfThemeRoot(bool bFloatingLyrMode);
-
-	static LPCTSTR GetPageID();
+	CPagePfThemeRoot();
 
 	void OnInitialUpdate();
 
-	// bool OnCustomCommand(int nId);
-
 };
 
-
-#endif // _PREFER_PAGE_THEME_H_
+void RegisterPfThemePages(CSkinFactory *pSkinFactory);

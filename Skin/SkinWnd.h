@@ -85,7 +85,7 @@ public:
 	virtual ~CSkinWnd();
 
 public:
-	virtual int Create(LPCTSTR szClassName, LPCTSTR szCaption, CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, bool bToolWindow = true, bool bTopmost = false, bool bVisible = true);
+	virtual int Create(SkinWndStartupInfo &skinWndStartupInfo, CSkinFactory *pSkinFactory, bool bToolWindow = true, bool bTopmost = false, bool bVisible = true);
 
 	virtual bool Destroy();
 
@@ -101,7 +101,7 @@ public:
 	CUIObject *RemoveUIObjectById(int nId);
 	bool RemoveUIObject(CUIObject *pObj, bool bFree = false);
 
-	void SetFocusUIObject(LPCTSTR szId);
+	void SetFocusUIObject(int nId);
 
 	CUIObject *GetFocusUIObj();
 
@@ -130,8 +130,10 @@ public:
 		{ SetUIObjectText(m_pSkinFactory->GetIDByName(szId), szText, bRedraw); }
 
 	void CheckButton(int nId, bool bCheck);
-
 	bool IsButtonChecked(int nId);
+
+	void CheckToolbarButton(int nToolbarId, int nButtonId, bool bCheck);
+	void CheckToolbarButton(LPCTSTR szToolbarId, LPCTSTR szButtonId, bool bCheck);
 
 	// register special messages
 	void SetCaptureMouse(CUIObject *pUIObj);
@@ -161,6 +163,7 @@ public:
 
 	void SetMainAppWnd(bool bMainAppWnd);
 	bool IsMainAppWnd() const { return m_bMainAppWnd; }
+	bool IsDialogWnd() const { return m_bDialogWnd; }
 
 	bool IsInEditorMode() const { return m_bInEditorMode; }
 
@@ -187,6 +190,9 @@ public:
 	virtual void OnContexMenu(int xPos, int yPos);
 
 	virtual void OnCommand(UINT uID, UINT nNotifyCode);
+
+	virtual void OnOK();
+	virtual void OnCancel();
 
 	// normal input message
 	virtual void OnKeyDown(UINT nChar, UINT nFlags);
@@ -220,6 +226,8 @@ public:
 
 	virtual bool OnCustomCommand(int nId);
 	virtual void PostCustomCommandMsg(int nId);
+
+	virtual void OnUserMessage(int nMessageID, LPARAM param);
 
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify) { }
 
@@ -282,10 +290,8 @@ public:
 
 
 public:
-	void CreateUIObjects(SXNode *pSkinWndNode, CSkinContainer *pParentContainer);
-
 	void SetProperies(SXNode::LIST_PROPERTIES &listProperties);
-	virtual BOOL SetProperty(SXNode *pXmlNode);
+	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_
 	virtual void EnumProperties(CUIObjProperties &listProperties);
@@ -332,8 +338,6 @@ public:
 
 	void TrackMove(CBaseWnd *pWnd, int x, int y);
 
-	void RecalculateSizePos();
-
 	BOOL AddTool(LPCTSTR szText = LPSTR_TEXTCALLBACK, LPCRECT lpRectTool = NULL, UINT nIDTool = 0);
 	void DelTool(UINT nIDTool);
 
@@ -344,6 +348,8 @@ public:
 	void DispatchUIObjNotify(IUIObjNotify *pNotify);
 
 protected:
+	void RootContainerFromXml(SXNode *pSkinWndNode, CSkinContainer *pRootContainer);
+
 	virtual int FromXML(SXNode *pXmlNode);
 
 	CRawGraph *GetMemGraphics();
@@ -427,6 +433,7 @@ protected:
 	//
 	bool			m_bActived;		// 当前窗口是否为激活状态Focus?
 	bool			m_bMainAppWnd;	// true: when the Window is closed, exit process.
+	bool			m_bDialogWnd;	// For dialog Skin: Enter key = OK, Escape key = cancel.
 
 	double			m_dbScale;		// 窗口是否进行缩放
 	CRect			m_rcReal;		// 窗口的实际大小
@@ -505,6 +512,10 @@ protected:
 	typedef vector<UIObjNotifyHandlerInfo>	VecUIObjNotifyHandlers;
 	VecUIObjNotifyHandlers		m_vUIObjNotifyHandlers;
 
+	// Exchange Pool is used to exchange data between pages.
+	typedef map<tstring, tstring> MapString;
+	MapString				m_mapExchangePool;
+
 	//
 	// Skin script message delivery
 	//
@@ -518,17 +529,23 @@ protected:
 	// Skin animation object
 	//
 public:
-	void StartAnimation(int nIDAnimation);
+	void StartAnimation(int nUIDAnimation);
+	void StartAnimation(CUIObject *pObjTarget, int nAnimateId, int nDurationTime);
+	void StartAnimation(CUIObject *pObjTarget, CAnimationMotion *pAnimation, int nDurationTime);
 	void StopAnimation(int nIDAnimation);
+	void StopAnimation(CUIObject *pObjTarget);
 
-	bool IsInAnimation();
+	AnimateType GetAnimationType() const;
+	int GetAnimationDuration() const;
 
 protected:
-	typedef list<CSkinAnimationObj *>	ListAnimationObj;
-	ListAnimationObj		m_listAnimations;
+	typedef auto_free_list<CSkinAnimation>	ListAnimation;
+	ListAnimation					m_listAnimations;
+
+	AnimateType						m_animateType;
+	int								m_animateDuration;
 
 	void OnTimerAnimation();
-	virtual void OnAnimationDone(int nID) { }
 
 };
 

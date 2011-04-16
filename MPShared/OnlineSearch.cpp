@@ -361,20 +361,20 @@ void COnlineSearch::Quit()
 
 BOOL COnlineSearch::SearchCacheForCur(V_LRCSEARCHRESULT *pvResult, DWORD *pdwSearchTime)
 {
-	TCHAR		szKeyword[MAX_PATH];
-
-	CMPlayerAppBase::GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
+	tstring strAssociateMediaKey = CMPlayerAppBase::GetAssociateFileKeyword();
 
 	CMutexAutolock	autolock(m_mutexDB);
 
-	if (m_dbSearchResultMem.SearchCache(szKeyword, g_Player.GetArtist(), g_Player.GetTitle(), pvResult, pdwSearchTime))
+	if (m_dbSearchResultMem.SearchCache(strAssociateMediaKey.c_str(),
+		g_Player.GetArtist(), g_Player.GetTitle(), pvResult, pdwSearchTime))
 		return true;
 
 	if (!m_dbSearchResult.IsOpened())
 		m_dbSearchResult.Open();
 
 	if (m_dbSearchResult.IsOpened())
-		return m_dbSearchResult.SearchCache(szKeyword, g_Player.GetArtist(), g_Player.GetTitle(), pvResult, pdwSearchTime);
+		return m_dbSearchResult.SearchCache(strAssociateMediaKey.c_str(),
+		g_Player.GetArtist(), g_Player.GetTitle(), pvResult, pdwSearchTime);
 
 	return FALSE;
 }
@@ -427,7 +427,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 
 	if (retSearch.listResultFiles.size() > 0 || nRet == ERR_NOT_FOUND)
 	{
-		pSearchParam->pOnlineSearch->UpdateSearchLrcInfo(pSearchParam->szAssociateKeyword, retSearch);
+		pSearchParam->pOnlineSearch->UpdateSearchLrcInfo(pSearchParam->strAssociateMediaKey.c_str(), retSearch);
 
 		//
 		// 通知给调用者
@@ -465,7 +465,7 @@ BOOL COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR sz
 	pParam = new COnlineSearchThreadParam;
 	pParam->strArtist = szArtist;
 	pParam->strTitle = szTitle;
-	CMPlayerAppBase::GetAssociateFileKeyword(pParam->szAssociateKeyword, CountOf(pParam->szAssociateKeyword));
+	pParam->strAssociateMediaKey = CMPlayerAppBase::GetAssociateFileKeyword();
 	pParam->pOnlineSearch = this;
 	pParam->bOnlyMatched = bOnlyMatched;
 
@@ -573,9 +573,8 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount)
 {
 	int					nRet;
-	TCHAR				szKeyword[MAX_PATH];
 
-	CMPlayerAppBase::GetAssociateFileKeyword(szKeyword, CountOf(szKeyword));
+	tstring strAssociateMediaKey = CMPlayerAppBase::GetAssociateFileKeyword();
 
 	session.Init(GetAppNameLong().c_str());
 
@@ -609,7 +608,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 
 	if (retSearch.listResultFiles.size() > 0)
 	{
-		UpdateSearchLrcInfo(szKeyword, retSearch);
+		UpdateSearchLrcInfo(strAssociateMediaKey.c_str(), retSearch);
 
 		RetLyrInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, vResult);
 

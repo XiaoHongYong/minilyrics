@@ -351,7 +351,7 @@ public:
 	bool OnMouseMove(UINT nFlags, CPoint point);
 
 	void OnCreate();
-	void OnSize(int cx, int cy);
+	void OnSize();
 
 	virtual void OnAdjustHue(float hue, float saturation, float luminance);
 

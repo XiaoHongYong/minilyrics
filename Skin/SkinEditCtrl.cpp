@@ -1910,9 +1910,9 @@ void CSkinEditCtrl::UpdateScrollInfo(bool bHorz, bool bVert)
 //
 //////////////////////////////////////////////////////////////////////////
 
-void CSkinEditCtrl::OnSize(int cx, int cy)
+void CSkinEditCtrl::OnSize()
 {
-	CSkinScrollFrameCtrlBase::OnSize(cx, cy);
+	CSkinScrollFrameCtrlBase::OnSize();
 
 	m_caret.SetOffset(m_rcCtrl.left, m_rcCtrl.top);
 
@@ -2639,9 +2639,9 @@ void CSkinEditCtrl::OnTimer(int nId)
 		CSkinScrollFrameCtrlBase::OnTimer(nId);
 }
 
-bool CSkinEditCtrl::OnCommand(UINT uID)
+bool CSkinEditCtrl::OnCommand(int nId)
 {
-	switch (uID)
+	switch (nId)
 	{
 	case IDC_EDIT_UNDO:
 		OnCmdUndo();
@@ -2666,6 +2666,13 @@ bool CSkinEditCtrl::OnCommand(UINT uID)
 	}
 
 	return true;
+}
+
+void CSkinEditCtrl::OnAdjustHue(float hue, float saturation, float luminance)
+{
+	CSkinScrollFrameCtrlBase::OnAdjustHue(hue, saturation, luminance);
+
+	m_font.OnAdjustHue(m_pSkin, hue, saturation, luminance);
 }
 
 void CSkinEditCtrl::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
@@ -2756,7 +2763,7 @@ BOOL CSkinEditCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	if (CSkinScrollFrameCtrlBase::SetProperty(szProperty, szValue))
 		return TRUE;
-	
+
 	if (m_font.SetProperty(szProperty, szValue))
 		return TRUE;
 	else if (IsPropertyName(szProperty, _T("XMargin")))
@@ -2765,8 +2772,10 @@ BOOL CSkinEditCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_yMargin = _ttoi(szValue);
 	else if (IsPropertyName(szProperty, _T("Style")))
 		m_nEditorStyles = GetCombinationValue(__EditStyleText, szValue);
+	else
+		return FALSE;
 
-	return FALSE;
+	return true;
 }
 
 tstring &CSkinEditCtrl::GetText()

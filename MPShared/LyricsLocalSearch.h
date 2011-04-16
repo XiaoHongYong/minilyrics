@@ -37,7 +37,7 @@ public:
 	// song://lyrics3v2
 	// song://id3v2/sylt/xxx
 	// song://id3v2/uslt/xxx
-	static void GetAssociateFileKeyword(LPCTSTR szSongFile, LPCTSTR szFulltitle, LPTSTR szAssociateFileKeyword, int nMaxLen);
+	static tstring GetAssociateFileKeyword(LPCTSTR szSongFile, LPCTSTR szFulltitle);
 	BOOL GetAssociateLyrics(LPCTSTR szAssociateFileKeyword, LPTSTR szLyricFile, int nMaxBuff);
 	BOOL IsAssociatedLyrics(LPCTSTR szAssociateFileKeyword);
 	BOOL IsAssociatedWithNoneLyrics(LPCTSTR szAssociateKeyword);

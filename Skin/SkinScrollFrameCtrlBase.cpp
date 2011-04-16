@@ -47,16 +47,17 @@ void CSkinScrollFrameCtrlBase::OnCreate()
 		CreateHorzScrollbar();
 }
 
-void CSkinScrollFrameCtrlBase::OnSize(int cx, int cy)
+void CSkinScrollFrameCtrlBase::OnSize()
 {
 	if (m_pObjFrame)
 	{
 		CSkinFrameCtrl *pFrameCtrl = (CSkinFrameCtrl *)m_pObjFrame;
 		int nBorderThick = pFrameCtrl->GetBorderThick();
 		m_rcObj.OffsetRect(-nBorderThick, -nBorderThick);
+		m_rcObj.right += nBorderThick * 2;
 	}
 
-	CSkinContainer::OnSize(cx, cy);
+	CSkinContainer::OnSize();
 
 	m_rcCtrl.left = m_rcObj.left + m_nLeftMargin;
 	m_rcCtrl.top = m_rcObj.top + m_nTopMargin;

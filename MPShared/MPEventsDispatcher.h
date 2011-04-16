@@ -117,7 +117,7 @@ public:
 	virtual void Init(CSkinWnd *pSkinWnd) { m_pSkinWnd = pSkinWnd; }
 
 	// if the command id is processed, return true.
-	virtual bool OnCommand(UINT nID) = 0;
+	virtual bool OnCommand(int nId) = 0;
 	virtual bool OnCustomCommand(int nId) = 0;
 	virtual bool OnUIObjNotify(IUIObjNotify *pNotify) = 0;
 

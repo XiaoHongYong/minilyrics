@@ -38,54 +38,27 @@ protected:
 };
 
 
-class CPageWaitMessage : public CSkinPageHandler
+class CPageWaitMessage : public CSkinContainer
 {
-	DECLARE_PAGE_HANDLER(_T("CID_WAIT"))
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
-	CPageWaitMessage(bool bEndToClose);
+	CPageWaitMessage();
 
 	void StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase *pWorkObj);
 
-	void OnShow();
+	void OnSwitchTo();
 
-	void OnOK();
+	bool OnOK();
 
-	void OnCancel();
+	bool OnCancel();
 
 	virtual void OnWorkEnd();
 
-	void OnUserMessage(int nMessageID, LPARAM param);
+	bool OnUserMessage(int nMessageID, LPARAM param);
 
 protected:
-	bool			m_bEndToClose;
 	CWorkObjBase	*m_pWorkObj;
 
 };
-
-/*
-//
-//
-class CWaitingDlg : public CBaseDialog  
-{
-public:
-	CWaitingDlg();
-	virtual ~CWaitingDlg();
-
-	BOOL OnInitDialog();
-
-	virtual void OnCancel();
-	virtual void OnOK();
-
-	int ShowWaitingDlg(CBaseWnd *pWndParent, CWorkObjBase *pWorkObj, LPCTSTR szTitle, LPCTSTR szMsg);
-
-
-	virtual void OnUserMessage(int nMessageID, LPARAM param);
-
-protected:
-	CWorkObjBase	*m_pWorkObj;
-
-	tstring			m_strTitle, m_strMsg;
-
-};*/
 
 #endif // !defined(AFX_WAITINGDLG_H__8E8BBE95_0587_4DEB_9DAF_7B3769589439__INCLUDED_)

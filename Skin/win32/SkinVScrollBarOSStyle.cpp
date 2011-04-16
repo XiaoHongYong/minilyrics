@@ -18,9 +18,9 @@ CSkinScrollBarOSStyleBase::~CSkinScrollBarOSStyleBase()
 	m_scrollbar.Destroy();
 }
 
-void CSkinScrollBarOSStyleBase::OnSize(int cx, int cy)
+void CSkinScrollBarOSStyleBase::OnSize()
 {
-	CUIObject::OnSize(cx, cy);
+	CUIObject::OnSize();
 	m_scrollbar.MoveWindow(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), TRUE);
 }
 

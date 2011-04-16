@@ -14,6 +14,21 @@ class CSkinMenu;
 #include "SkinResMgr.h"
 #include "SkinWndDrag.h"
 
+typedef map<tstring, tstring> MapExchangePool;
+
+struct SkinWndStartupInfo
+{
+	tstring			strClassName, strCaptionText;
+	tstring			strSkinWnd;
+	bool			bMainWnd;
+	CSkinWnd		*pSkinWnd;
+	CBaseWnd		*pWndParent;
+	MapExchangePool	mapExchangePool;
+
+	SkinWndStartupInfo(LPCTSTR szClassName, LPCTSTR szCaptionText, LPCTSTR szSkinWnd,
+		CBaseWnd *pWndParent, bool bMainWnd = false);
+};
+
 // UIObject ID text to int
 struct UIObjectIDDefinition
 {
@@ -84,6 +99,7 @@ public:
 typedef map<LPCTSTR, IUIObjNewer *, CUIObjectNewerLessCmp>		MapUIObjNewer;
 
 #define AddUIObjNewer(_uiobj_class)		m_mapUIObjNewer[_uiobj_class::ClassName()] = new CUIObjectNewer< _uiobj_class >()
+#define AddUIObjNewer2(_skinFactory, _uiobj_class)		_skinFactory->RegisterUIObjNewer(_uiobj_class::ClassName(), new CUIObjectNewer< _uiobj_class >())
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,12 +141,6 @@ public:
 
 	SXNode *GetDynamicCmdsNode();
 	int SetDynamicCmdsNode(SXNode *pNode);
-
-	SXNode *GetAdjustHueNode();
-	int SetAdjustHueNode(SXNode *pNode);
-
-	// int UpdateSkinWnd(LPCTSTR szSkinWndName, CXMLWriter &xmlStream);
-	// int DelSkinWnd(LPCTSTR szSkinWndName);
 
 	LPCTSTR GetFileName() const { return m_strFile.c_str(); }
 
@@ -232,10 +242,9 @@ public:
 	CSkinWnd *FindSkinWnd(LPCTSTR szSkinWndName);
 	bool IsValidSkinWnd(CSkinWnd *pWnd);
 
-	virtual int ActiveOrCreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
-	virtual int OpenOrCloseSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
-	virtual int CreateSkinWnd(bool bMainWnd, LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CSkinWnd **ppSkin = NULL);
-	virtual int OpenOrCloseSkinWnd(LPCTSTR szClassName, LPCTSTR szCaption, LPCTSTR szSkinWndName, CBaseWnd *pWndParent, CSkinWnd **ppSkinWnd);
+	virtual int ActiveOrCreateSkinWnd(SkinWndStartupInfo &skinWndStartupInfo);
+	virtual int OpenOrCloseSkinWnd(SkinWndStartupInfo &skinWndStartupInfo);
+	virtual int CreateSkinWnd(SkinWndStartupInfo &skinWndStartupInfo);
 
 	virtual void OnSkinWndCreate(CSkinWnd *pSkinWnd);
 	virtual void OnSkinWndDestory(CSkinWnd *pSkinWnd);
@@ -249,6 +258,8 @@ public:
 
 	int LoadAppResSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml);
 	bool IsAppResSkinWnd(LPCTSTR szSkinWndName);
+
+	void RegisterUIObjNewer(LPCTSTR szClassName, IUIObjNewer *pObjNewer);
 
 	// create new uiobject by class name
 	virtual CUIObject * CreateUIObject(CSkinWnd *pSkin, LPCTSTR szClassName, CSkinContainer *pContainer);

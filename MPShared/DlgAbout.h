@@ -1,13 +1,7 @@
 #pragma once
 
-void ShowRegisterNotice(CBaseWnd *pWnd, BOOL bForceShow = FALSE);
+void ShowAboutDialog(CBaseWnd *pWndParent);
 
+void ShowRegisterNotice(CBaseWnd *pWndParent, BOOL bForceShow = FALSE);
 
-class CDlgAbout : public CSkinDialog
-{
-public:
-	CDlgAbout();
-	~CDlgAbout();
-
-};
-
+void RegisterAboutPage(CSkinFactory *pSkinFactory);

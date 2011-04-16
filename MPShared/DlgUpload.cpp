@@ -93,18 +93,54 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-class CPageLogin : public CSkinPageHandler
+class CSkinWndUploadLyr : public CMPSkinWnd
 {
-	DECLARE_PAGE_HANDLER(_T("CID_C_LOGIN"))
 public:
-	CPageLogin(CLoginWorkObj *pLoginObj) : CSkinPageHandler(GetPageIdStr())
+	CSkinWndUploadLyr()
 	{
-		m_pLoginObj = pLoginObj;
+		m_pUploadWorkObj = new CUploadWorkObj();
+	}
+
+	~CSkinWndUploadLyr()
+	{
+		if (m_pUploadWorkObj)
+			delete m_pUploadWorkObj;
+	}
+
+	void OnSkinLoaded()
+	{
+		CMPSkinWnd::OnSkinLoaded();
+
+		LPCTSTR szSwitchToPage = g_sessionUpload.IsLogined() ? _T("Container.UploadLyrNotice") : _T("Container.Login");
+		CUIObject *pToPage = m_rootConainter.GetUIObjectByClassName(szSwitchToPage);
+		if (pToPage)
+			pToPage->GetParent()->SwitchToPage(szSwitchToPage, false, 0, false);
+	}
+
+	CUploadWorkObj *GetUploadWorkObj() const { return m_pUploadWorkObj; }
+
+protected:
+	CUploadWorkObj		*m_pUploadWorkObj;
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class CPageLogin : public CSkinContainer
+{
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
+public:
+	CPageLogin()
+	{
+		m_pLoginObj = NULL;
 	}
 
 	void OnCreate()
 	{
-		CSkinPageHandler::OnCreate();
+		CSkinContainer::OnCreate();
+
+		m_pLoginObj = ((CSkinWndUploadLyr *)m_pSkin)->GetUploadWorkObj();
+		ASSERT(m_pLoginObj);
 
 		GET_ID_BY_NAME(CID_E_NAME);
 		GET_ID_BY_NAME(CID_REMEMBER_PWD);
@@ -119,25 +155,25 @@ public:
 		CheckButton(CID_REMEMBER_PWD, bRememberPwd);
 	}
 
-	void OnShow()
+	void OnSwitchTo()
 	{
-		CSkinPageHandler::OnShow();
-		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Log in")));
+		CSkinContainer::OnSwitchTo();
+		m_pSkin->SetCaptionText(TOLOCAL(_T("Log in")));
 
 		if (m_pLoginObj)
 		{
 			if (m_pLoginObj->m_strMsg.size())
-				m_pSkinWnd->MessageOut(m_pLoginObj->m_strMsg.c_str());
+				m_pSkin->MessageOut(m_pLoginObj->m_strMsg.c_str());
 
 			if (m_pLoginObj->m_nResult != ERR_OK && !m_pLoginObj->IsJobCanceled())
 			{
-				m_pSkinWnd->MessageOut(ERROR2STR_LOCAL(m_pLoginObj->m_nResult));
+				m_pSkin->MessageOut(ERROR2STR_LOCAL(m_pLoginObj->m_nResult));
 				return;
 			}
 		}
 	}
 
-	void OnOK()
+	bool OnOK()
 	{
 		tstring strName = GetUIObjectText(CID_E_NAME);
 		tstring strPwd = GetUIObjectText(CID_E_PASSWORD);
@@ -145,8 +181,8 @@ public:
 
 		if (strName.empty() || strPwd.empty())
 		{
-			m_pSkinWnd->MessageOut(TOLOCAL(_T("Please input user name and password!")));
-			return;
+			m_pSkin->MessageOut(TOLOCAL(_T("Please input user name and password!")));
+			return true;
 		}
 
 		bool bPwdChanged = _tcscmp(strPwd.c_str(), g_Profile.GetProfileString(_T("LoginPwdMask"), _T(""))) != 0;
@@ -170,7 +206,7 @@ public:
 		m_pLoginObj->m_strName = strName;
 		m_pLoginObj->m_strPwdMask = strPwd;
 
-		CPageWaitMessage	*pPageWait = (CPageWaitMessage *)m_pParent->GetPage(CPageWaitMessage::GetPageIdStr());
+		CPageWaitMessage *pPageWait = (CPageWaitMessage *)m_pContainer->GetChildByClass(CPageWaitMessage::ClassName());
 		ASSERT(pPageWait);
 		if (pPageWait)
 		{
@@ -178,11 +214,14 @@ public:
 				TOLOCAL(_T("Processing login, It may take a few seconds.")),
 				m_pLoginObj);
 		}
+
+		return false;
 	}
 
-	void OnCancel()
+	bool OnCancel()
 	{
-		m_pParent->SwitchToLastPage();
+		m_pContainer->SwitchToLastPage(0, true);
+		return true;
 	}
 
 protected:
@@ -191,36 +230,42 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPageLogin, _T("Container.Login"))
+
 //////////////////////////////////////////////////////////////////////////
 
-class CPageUploadNotice : public CSkinPageHandler
+class CPageUploadNotice : public CSkinContainer
 {
-	DECLARE_PAGE_HANDLER(_T("CID_C_UPLOAD_NOTICE"))
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
-	CPageUploadNotice(CUploadWorkObj *pUploadObj) : CSkinPageHandler(GetPageIdStr())
+	CPageUploadNotice()
 	{
-		m_pUploadObj = pUploadObj;
+		m_pUploadObj = NULL;
 	}
 
 	void OnCreate()
 	{
-		CSkinPageHandler::OnCreate();
+		CSkinContainer::OnCreate();
+
+		m_pUploadObj = ((CSkinWndUploadLyr *)m_pSkin)->GetUploadWorkObj();
+		ASSERT(m_pUploadObj);
 
 		GET_ID_BY_NAME(CID_CHANGE_ACCOUNT);
 	}
 
-	void OnShow()
+	void OnSwitchTo()
 	{
-		CSkinPageHandler::OnShow();
-		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Upload Lyrics")));
+		CSkinContainer::OnSwitchTo();
+
+		m_pSkin->SetCaptionText(TOLOCAL(_T("Upload Lyrics")));
 
 		ASSERT(g_sessionUpload.IsLogined());
 		SetUIObjectText(_T("CID_ACCOUNT_NOTICE"), CStrPrintf(_T("Your lyrics will be uploaded under account: %s"), g_sessionUpload.GetUser()).c_str(), false);
 	}
 
-	void OnOK()
+	bool OnOK()
 	{
-		CPageWaitMessage	*pPageWait = (CPageWaitMessage *)m_pParent->GetPage(CPageWaitMessage::GetPageIdStr());
+		CPageWaitMessage *pPageWait = (CPageWaitMessage *)m_pContainer->GetChildByClass(CPageWaitMessage::ClassName());
 		ASSERT(pPageWait);
 		if (pPageWait)
 		{
@@ -228,14 +273,15 @@ public:
 				TOLOCAL(_T("MiniLyrics is uploading lyrics, It may take a few seconds.")),
 				m_pUploadObj);
 		}
+		return true;
 	}
 
 	bool OnCustomCommand(int nId)
 	{
 		if (nId == CID_CHANGE_ACCOUNT)
-			m_pParent->SwitchToPage(_T("CID_C_LOGIN"), true);
+			m_pContainer->SwitchToPage(CPageLogin::ClassName(), false, 0, true);
 		else
-			return CSkinPageHandler::OnCommand(nId);
+			return CSkinContainer::OnCommand(nId);
 
 		return true;
 	}
@@ -246,33 +292,34 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPageUploadNotice, _T("Container.UploadLyrNotice"))
+
 //////////////////////////////////////////////////////////////////////////
 
-class CPageUploadResult : public CSkinPageHandler
+class CPageUploadResult : public CSkinContainer
 {
-	DECLARE_PAGE_HANDLER(_T("CID_UPLOAD_RESULT"))
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
-	CPageUploadResult(CUploadWorkObj *pUploadWorkObj) : CSkinPageHandler(GetPageIdStr())
+	CPageUploadResult()
 	{
-		m_pUploadWorkObj = pUploadWorkObj;
-	}
-
-	~CPageUploadResult()
-	{
+		m_pUploadWorkObj = NULL;
 	}
 
 	void OnCreate()
 	{
-		CSkinPageHandler::OnCreate();
+		CSkinContainer::OnCreate();
+
+		m_pUploadWorkObj = ((CSkinWndUploadLyr *)m_pSkin)->GetUploadWorkObj();
+		ASSERT(m_pUploadWorkObj);
 
 		GET_ID_BY_NAME(CID_TRY_AGAIN);
 	}
 
-	void OnShow()
+	void OnSwitchTo()
 	{
-		CSkinPageHandler::OnShow();
+		CSkinContainer::OnSwitchTo();
 
-		m_pSkinWnd->SetCaptionText(TOLOCAL(_T("Uploading")));
+		m_pSkin->SetCaptionText(TOLOCAL(_T("Uploading")));
 		if (m_pUploadWorkObj)
 		{
 			bool	bUploadOK = (m_pUploadWorkObj->m_nResult == ERR_OK);
@@ -282,7 +329,7 @@ public:
 				SetUIObjectText(_T("CID_RESULT"), CStrPrintf(_T("%s"), ERROR2STR_LOCAL(m_pUploadWorkObj->m_nResult)).c_str(), false);
 
 			if (m_pUploadWorkObj->m_strMsg.size())
-				m_pSkinWnd->PostCustomCommandMsg(CMD_SHOW_ERR_RESULT);
+				m_pSkin->PostCustomCommandMsg(CMD_SHOW_ERR_RESULT);
 
 			// Save lyrics id.
 		}
@@ -293,11 +340,11 @@ public:
 		if (nId == CMD_SHOW_ERR_RESULT)
 		{
 			if (m_pUploadWorkObj && m_pUploadWorkObj->m_strMsg.size())
-				m_pSkinWnd->MessageOut(m_pUploadWorkObj->m_strMsg.c_str());
+				m_pSkin->MessageOut(m_pUploadWorkObj->m_strMsg.c_str());
 		}
 		else if (nId == CID_TRY_AGAIN)
 		{
-			CPageWaitMessage	*pPageWait = (CPageWaitMessage *)m_pParent->GetPage(CPageWaitMessage::GetPageIdStr());
+			CPageWaitMessage *pPageWait = (CPageWaitMessage *)m_pContainer->GetChildByClass(CPageWaitMessage::ClassName());
 			ASSERT(pPageWait);
 			if (pPageWait)
 			{
@@ -307,7 +354,7 @@ public:
 			}
 		}
 		else
-			return CSkinPageHandler::OnCustomCommand(nId);
+			return CSkinContainer::OnCustomCommand(nId);
 
 		return true;
 	}
@@ -318,27 +365,22 @@ protected:
 
 };
 
+UIOBJECT_CLASS_NAME_IMP(CPageUploadResult, _T("Container.UploadLyrResult"))
+
 //////////////////////////////////////////////////////////////////////////
 
 class CPageUploadWaitMessage : public CPageWaitMessage
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
-	CPageUploadWaitMessage() : CPageWaitMessage(false)
-	{
-		m_nAnimationShowFRight = UID_INVALID;
-		m_nAnimationShowFLeft = UID_INVALID;
-		m_nAnimationHide2Left = UID_INVALID;
-		m_nAnimationHide2Right = UID_INVALID;
-	}
-
 	virtual void OnWorkEnd()
 	{
 		if (m_pWorkObj->IsJobCanceled())
 		{
 			if (g_sessionUpload.IsLogined())
-				m_pParent->SwitchToPage(CPageUploadNotice::GetPageIdStr(), true);
+				m_pContainer->SwitchToPage(CPageUploadNotice::ClassName(), false, 0, true);
 			else
-				m_pParent->SwitchToPage(CPageLogin::GetPageIdStr(), true);
+				m_pContainer->SwitchToPage(CPageLogin::ClassName(), false, 0, true);
 		}
 		else
 		{
@@ -367,38 +409,28 @@ public:
 					}
 				}
 			}
-			m_pParent->SwitchToPage(CPageUploadResult::GetPageIdStr(), true);
+			m_pContainer->SwitchToPage(CPageUploadResult::ClassName(), false, 0, true);
 		}
 	}
 
-protected:
-
 };
+
+UIOBJECT_CLASS_NAME_IMP(CPageUploadWaitMessage, _T("Container.UploadLyrWaitMsg"))
 
 //////////////////////////////////////////////////////////////////////////
 
-CDlgUpload::CDlgUpload(tstring &strLyricsContent, LPCTSTR szMediaSource, LPCTSTR szLyrSource) : CSkinDialog(_T("UploadLyrics.xml"))
+void ShowUploadLyrDialog(CSkinWnd *pParent, tstring &strLyricsContent, LPCTSTR szMediaSource, LPCTSTR szLyrSource)
 {
-	m_pUploadWorkObj = new CUploadWorkObj();
-	m_pUploadWorkObj->m_strLyricsContent = strLyricsContent;
-	m_pUploadWorkObj->m_strMediaSource = szMediaSource;
-	m_pUploadWorkObj->m_strLyrSource = szLyrSource;
-
-	CSkinPageHandler	*pPageLogin = new CPageLogin(m_pUploadWorkObj);
-	CSkinPageHandler	*pPageUploadNotice = new CPageUploadNotice(m_pUploadWorkObj);
-	m_pageHandler.AddPage(pPageUploadNotice);
-	m_pageHandler.AddPage(pPageLogin);
-	m_pageHandler.AddPage(new CPageUploadWaitMessage());
-	m_pageHandler.AddPage(new CPageUploadResult(m_pUploadWorkObj));
-
-	if (g_sessionUpload.IsLogined())
-		m_pageHandler.SetDefaultPage(pPageUploadNotice->GetPageId());
-	else
-		m_pageHandler.SetDefaultPage(pPageLogin->GetPageId());
+	SkinWndStartupInfo skinWndStartupInfo(_SZ_SKINWND_CLASS_NAME, _SZ_SKINWND_CLASS_NAME, 
+		_T("UploadLyrics.xml"), pParent);
+	skinWndStartupInfo.pSkinWnd = new CSkinWndUploadLyr();
+	CSkinApp::GetInstance()->GetSkinFactory()->ActiveOrCreateSkinWnd(skinWndStartupInfo);
 }
 
-CDlgUpload::~CDlgUpload()
+void RegisterUploadLyrPage(CSkinFactory *pSkinFactory)
 {
-	if (m_pUploadWorkObj)
-		delete m_pUploadWorkObj;
+	AddUIObjNewer2(pSkinFactory, CPageLogin);
+	AddUIObjNewer2(pSkinFactory, CPageUploadNotice);
+	AddUIObjNewer2(pSkinFactory, CPageUploadWaitMessage);
+	AddUIObjNewer2(pSkinFactory, CPageUploadResult);
 }

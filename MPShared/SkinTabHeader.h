@@ -55,9 +55,9 @@ public:
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	bool OnLButtonDblClk(UINT nFlags, CPoint point);
 
-	void Draw(CRawGraph *pGraph);
+	void OnSize();
 
-	BOOL ReCalculatePos(FORMULA_VAR vars[], CSkinAnimateMotion *pMotion = NULL);
+	void Draw(CRawGraph *pGraph);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_
