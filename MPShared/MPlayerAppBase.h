@@ -70,9 +70,6 @@ extern CMLData					g_LyricData;
 // lyrics download manager
 extern CDownloadMgr				g_LyricsDownloader;
 
-// Session of lyrics upload and login
-extern CMLClientSession			g_sessionUpload;
-
 // Local lyrics search
 extern CLyricsLocalSearch		g_LyricSearch;
 

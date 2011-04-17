@@ -86,6 +86,7 @@
       <button ID="ID_HELP" Left="7"/>
     </NormalToolbar>
     <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#FFFFFF"/>
+    <TitleText Extends="Text" Height="25" UseSkinBg="true" FontName="Verdana" FontHeight="20" TextColor="#FFFFFF" AlignText="AT_CENTER"/>
     <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#FFFF00"/>
     <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" TabFocus="true"
           Height="22" XMargin="5" YMargin="3" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"

@@ -64,6 +64,12 @@ bool CSkinContainer::OnCustomCommand(int nId)
 	return false;
 }
 
+void CSkinContainer::OnSwitchTo()
+{
+	if (m_strText.size())
+		m_pSkin->SetCaptionText(TOLOCAL(m_strText.c_str()));
+}
+
 bool CSkinContainer::OnUserMessage(int nMessageID, LPARAM param)
 {
 	for (uint i = 0; i < m_vUIObjs.size(); i++)
@@ -186,30 +192,19 @@ void CSkinContainer::OnDestroy()
 
 void CSkinContainer::OnKeyUp(UINT nChar, UINT nFlags)
 {
-	CUIObject *pFocusObj = GetFocusUIObject();
-	if (pFocusObj)
-		pFocusObj->OnKeyUp(nChar, nFlags);
+	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < m_vUIObjs.size())
+	{
+		CUIObject *pObj = m_vUIObjs[m_nFocusUIObj];
+		pObj->OnKeyUp(nChar, nFlags);
+	}
 }
 
 void CSkinContainer::OnKeyDown(UINT nChar, UINT nFlags)
 {
-	CUIObject *pFocusObj = GetFocusUIObject();
-	if (pFocusObj)
+	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < m_vUIObjs.size())
 	{
-		if (m_pSkin->IsDialogWnd() && !pFocusObj->WantMsgEnterKey())
-		{
-			if (nChar == VK_RETURN)
-			{
-				m_pSkin->OnOK();
-				return;
-			}
-			else if (nChar == VK_ESCAPE)
-			{
-				m_pSkin->OnCancel();
-				return;
-			}
-		}
-		pFocusObj->OnKeyDown(nChar, nFlags);
+		CUIObject *pObj = m_vUIObjs[m_nFocusUIObj];
+		pObj->OnKeyDown(nChar, nFlags);
 	}
 }
 

@@ -661,7 +661,7 @@ void CSkinFactory::GetTooltip(int nId, tstring &strToolTip)
 	strToolTip.resize(0);
 }
 
-int CSkinFactory::GetMenuIDByUID(int nUID)
+int CSkinFactory::GetMenuIDByUID(int nUID, bool bAllocIfInexistence)
 {
 	if (nUID == UID_INVALID)
 		return 0;
@@ -671,7 +671,11 @@ int CSkinFactory::GetMenuIDByUID(int nUID)
 	{
 		UIObjectIDDefinition *p = *it;
 		if (p->nId == nUID)
+		{
+			if (p->nIdMenu == 0)
+				p->nIdMenu = ++m_nMenuIDNext;
 			return p->nIdMenu;
+		}
 	}
 
 	return 0;

@@ -106,6 +106,7 @@
       <button ID="ID_HELP" Left="7"/>
     </NormalToolbar>
     <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
+    <TitleText Extends="Text" Height="25" UseSkinBg="true" FontName="Verdana" FontHeight="20" TextColor="#000000" AlignText="AT_CENTER"/>
     <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#0000FF"/>
     <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
           Height="22" XMargin="5" YMargin="3" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
@@ -158,8 +159,6 @@
     <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
 
     <InfoPrompt Extends="Container" ID="CID_INFO_PROMPT" Rect="0,26,w,50" TranslucencyWithSkin="FALSE">
-      <Animation ID="CID_AM_HIDE_INFO_PROMPT" FadeOut="CID_INFO_PROMPT"/>
-      <Animation ID="CID_AM_SHOW_INFO_PROMPT" FadeIn="CID_INFO_PROMPT"/>
       <Container Name="Save Prompt" ID="ID_LYR_SAVE_PROMPT" Rect="0,0,w,w" Visible="true">
         <Image Name="bg" Rect="0,0,w,50" Image="info_prompt_bg.png" BltMode="tile" />
         <NormalText Text="The Lyrics have changed, do you want to save the changes?"

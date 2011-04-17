@@ -114,6 +114,7 @@ public:
 	CPageAbout()
 	{
 		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_DOWNLOAD_END, this);
+		m_strText = TOLOCAL_MARK(_T("About $Product$"));
 	}
 
 	~CPageAbout()
@@ -166,7 +167,6 @@ public:
 	{
 		CSkinContainer::OnSwitchTo();
 
-		m_pSkin->SetCaptionText(TOLOCAL(_T("About $Product$")));
 		UpdateLicenseInfo();
 	}
 

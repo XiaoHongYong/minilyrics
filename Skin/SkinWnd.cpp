@@ -698,10 +698,27 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 #endif
 
 	CUIObject	*pObjFocus = GetFocusUIObj();
-	if (pObjFocus && pObjFocus->WantMsgAllKeys())
+	if (pObjFocus)
 	{
-		pObjFocus->OnKeyDown(nChar, nFlags);
-		return;
+		if (pObjFocus->WantMsgAllKeys())
+		{
+			pObjFocus->OnKeyDown(nChar, nFlags);
+			return;
+		}
+
+		if (IsDialogWnd())
+		{
+			if (nChar == VK_ESCAPE)
+			{
+				OnCancel();
+				return;
+			}
+			else if (nChar == VK_RETURN && !pObjFocus->WantMsgEnterKey())
+			{
+				OnOK();
+				return;
+			}
+		}
 	}
 
 	// tab key to switch between uiobject
@@ -732,10 +749,12 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 
 void CSkinWnd::OnKeyUp(UINT nChar, UINT nFlags)
 {
-	// let focus uiobject to process key message
+	// Let focus UIObject to process key message
 	CUIObject	*pObjFocus = GetFocusUIObj();
 	if (pObjFocus && pObjFocus->WantMsgKey())
 		pObjFocus->OnKeyUp(nChar, nFlags);
+	else
+		m_rootConainter.OnKeyUp(nChar, nFlags);
 }
 
 void CSkinWnd::OnContexMenu(int xPos, int yPos)

@@ -41,7 +41,7 @@ public:
 	virtual bool OnCommand(int nID);
 	virtual bool OnCustomCommand(int nId);
 
-	virtual void OnSwitchTo() { }
+	virtual void OnSwitchTo();
 
 	// For default result code, please see ResultCode definition.
 	virtual void OnPageViewResult(int nRequestCodeOfPage, int nResultCode) { }

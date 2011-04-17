@@ -60,7 +60,7 @@ void CPageWaitMessage::StartWork(LPCTSTR szCaption, LPCTSTR szInfo, CWorkObjBase
 	m_pWorkObj = pWorkObj;
 	ASSERT(pWorkObj);
 
-	m_pContainer->SwitchToPage(ClassName(), false, 0, true);
+	m_pContainer->SwitchToPage(GetClassName(), false, 0, true);
 }
 
 void CPageWaitMessage::OnSwitchTo()

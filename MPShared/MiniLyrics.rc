@@ -154,7 +154,6 @@ BEGIN
             POPUP "&Upload Lyrics..."
             BEGIN
                 MENUITEM "&Upload Lyrics...",           IDC_UPLOAD_LYRICS
-                MENUITEM "Sign &in...",                 IDC_LOGIN
                 MENUITEM "Sign in Via &Web Browser...", IDC_LOGIN_VIA_IE
                 MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
             END
@@ -370,7 +369,6 @@ BEGIN
         POPUP "&Upload Lyrics..."
         BEGIN
             MENUITEM "&Upload Lyrics...",           IDC_UPLOAD_LYRICS
-            MENUITEM "Sign &in...",                 IDC_LOGIN
             MENUITEM "Sign in Via &Web Browser...", IDC_LOGIN_VIA_IE
             MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
         END

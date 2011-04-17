@@ -38,8 +38,6 @@ CMLData					g_LyricData;
 
 CDownloadMgr			g_LyricsDownloader;
 
-CMLClientSession		g_sessionUpload;
-
 CLyricsLocalSearch		g_LyricSearch;
 
 
@@ -67,10 +65,9 @@ void MLRunUnitTest()
 tstring GetAppNameLong()
 {
 #ifdef _MPLAYER
-	return SZ_APP_NAME;
+	return tstring(SZ_APP_NAME) + _T(" ") + VersionNumToStr(g_version);
 #else
-	// ASSERT(!IsEmptyString(g_Player.GetPlayerName()));
-	return tstring(SZ_APP_NAME) + tstring(_T(" for ")) + g_Player.GetPlayerName();
+	return CStrPrintf(SZ_APP_NAME _T("%s for %s"), VersionNumToStr(g_version).c_str(), g_Player.GetPlayerName()).c_str();
 #endif
 }
 

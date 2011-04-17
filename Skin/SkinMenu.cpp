@@ -32,14 +32,14 @@ int CSkinMenu::Item::FromXML(CSkinFactory *pSkinFactory, SXNode *pNode)
 		{
 			action = A_INSERT_BY_ID;
 			nPos = pSkinFactory->GetIDByName(pNode->GetPropertySafe(_T("Position")));
-			nPos = pSkinFactory->GetMenuIDByUID(nPos);
+			nPos = pSkinFactory->GetMenuIDByUID(nPos, false);
 		}
 
 		strName = pNode->GetPropertySafe(_T("Name"));
 		bCanCheck = IsTRUE(pNode->GetPropertySafe(_T("CanCheck")));
 		nIDCmd = pSkinFactory->GetIDByName(pNode->GetPropertySafe(_T("IDCmd")));
 		nIDCmdIsChecked = pSkinFactory->GetIDByName(pNode->GetPropertySafe(_T("IsCheckedCmd")));
-		nMenuID = pSkinFactory->GetMenuIDByUID(nIDCmd);
+		nMenuID = pSkinFactory->GetMenuIDByUID(nIDCmd, true);
 	}
 	else if (_tcsicmp(szValue, _T("Remove")) == 0)
 	{

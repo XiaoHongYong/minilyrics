@@ -223,7 +223,7 @@ public:
 		{ return GetIDByNameEx(szId, &strToolTip); }
 	virtual void GetTooltip(int nId, tstring &strToolTip);
 
-	virtual int GetMenuIDByUID(int nUID);
+	virtual int GetMenuIDByUID(int nUID, bool bAllocIfInexistence = false);
 	virtual int GetUIDByMenuID(int nMenuID);
 
 	int AllocCustomID();

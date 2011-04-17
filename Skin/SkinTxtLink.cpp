@@ -101,42 +101,28 @@ void CSkinTxtLink::OnCreate()
 
 bool CSkinTxtLink::OnLButtonUp(UINT nFlags, CPoint point)
 {
-	CRect	rc;
-
-//	GetImageDrawRect(rc);
-
-//	if (rc.PtInRect(point))
+	if (m_strLink.size())
 	{
 		OpenUrl(m_pSkin, m_strLink.c_str());
 		MLWidget::SetCursor(m_Cursor);
 	}
+
+	if (m_nId != UID_INVALID)
+		m_pSkin->PostCustomCommandMsg(m_nId);
+
 	return true;
 }
 
 bool CSkinTxtLink::OnLButtonDown(UINT nFlags, CPoint point)
 {
-	CRect	rc;
-
-//	GetImageDrawRect(rc);
-
-//	if (rc.PtInRect(point))
-	{
-		MLWidget::SetCursor(m_Cursor);
-	}
+	MLWidget::SetCursor(m_Cursor);
 
 	return true;
 }
 
 bool CSkinTxtLink::OnMouseMove(UINT nFlags, CPoint point)
 {
-	CRect	rc;
-
-//	GetImageDrawRect(rc);
-
-//	if (rc.PtInRect(point))
-	{
-		MLWidget::SetCursor(m_Cursor);
-	}
+	MLWidget::SetCursor(m_Cursor);
 
 	return true;
 }

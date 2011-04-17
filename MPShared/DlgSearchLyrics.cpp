@@ -154,15 +154,9 @@ public:
 		m_pLyricsList = NULL;
 		m_pSearchObj = NULL;
 
-		CID_PREV_PAGE = 0;
-		CID_NEXT_PAGE = 0;
-		CID_GOOGLE = 0;
-		CID_MORE = 0;
-		CID_E_ARTIST = 0;
-		CID_E_TITLE = 0;
-		CID_SEARCH = 0;
-		CID_OPEN = 0;
-		CID_L_LYRICS = 0;
+		CID_PREV_PAGE = CID_NEXT_PAGE = CID_GOOGLE = CID_MORE = CID_E_ARTIST = 0;
+		CID_E_TITLE = CID_SEARCH = CID_OPEN = CID_L_LYRICS = 0;
+		m_strTitle = TOLOCAL_MARK(_T("Search lyrics"));
 	}
 
 	~CPageSearchLyrics()
@@ -320,8 +314,6 @@ public:
 		CSkinContainer::OnSwitchTo();
 
 		CSkinWnd::CAutoRedrawLock	redrawLock(m_pSkin);
-
-		m_pSkin->SetCaptionText(TOLOCAL(_T("Search lyrics")));
 
 		if (m_pSearchObj)
 		{
