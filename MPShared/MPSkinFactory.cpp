@@ -69,6 +69,8 @@ CMPSkinFactory::CMPSkinFactory(CSkinApp *pApp, UIObjectIDDefinition uidDefinitio
 #ifdef _WIN32_DESKTOP
 	m_bClickThrough = false;
 #endif
+
+	SetMenuIDByUID(CMD_QUIT, IDC_EXIT);
 }
 
 CMPSkinFactory::~CMPSkinFactory()

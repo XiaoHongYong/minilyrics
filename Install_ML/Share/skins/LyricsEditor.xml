@@ -50,14 +50,14 @@
         <NormalTextBt ID="CID_FIND_PREV" Text="Find &amp;Previous" Rect="10,10,100,"/>
         <NormalTextBt ID="CID_FIND_NEXT" Text="Find &amp;Next" Rect="130,10,100,"/>
         <NormalText Text="Find what:" Rect="230,15,100," AlignText="AT_RIGHT | AT_VCENTER"/>
-        <NormalEdit ID="CID_E_FIND" Rect="340,10,w-340-120,"/>
-        <NormalCheckBox ID="CID_MATCHCASE" Text="Match &amp;case" Rect="w-110,15,90,"/>
+        <NormalEdit ID="CID_E_FIND" Rect="340,13,w-340-120,"/>
+        <NormalCheckBox ID="CID_MATCHCASE" Text="Match &amp;case" Rect="w-110,13,90,"/>
       </Container>
       <Container Name="Replace" ID="CID_C_REPLACE" Rect="0,35,w,35">
         <NormalTextBt ID="CID_REPLACE" Text="&amp;Replace" Rect="10,10,100,"/>
         <NormalTextBt ID="CID_REPLACE_ALL" Text="Replace &amp;All" Rect="130,10,100,"/>
         <NormalText Text="Replace with:" Rect="230,15,100," AlignText="AT_RIGHT | AT_VCENTER"/>
-        <NormalEdit ID="CID_E_REPLACE" Rect="340,10,w-340-120,"/>
+        <NormalEdit ID="CID_E_REPLACE" Rect="340,13,w-340-120,"/>
       </Container>
     </ContainerBar>
     <BarFrameClientArea Name="Editor" ID="CID_C_EDITOR" MinWidth="220" MinHeight="104">

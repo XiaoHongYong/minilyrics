@@ -111,7 +111,6 @@
 #define IDC_INFO                        1198
 #define IDC_S_MSG                       1202
 #define IDC_LIST_PLAYERS                1209
-#define IDC_CLOSE                       40000
 #define IDC_SETTOPMOST                  40001
 #define IDC_STOP                        40002
 #define IDC_EXIT                        40003

@@ -217,17 +217,22 @@ public:
 	virtual int Init();
 	virtual void Quit();
 
+	//
+	// UID = UIObject ID
+	//
 	int GetIDByName(LPCTSTR szId) { return GetIDByNameEx(szId, NULL); }
 	int GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip);
 	virtual int GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 		{ return GetIDByNameEx(szId, &strToolTip); }
-	virtual void GetTooltip(int nId, tstring &strToolTip);
+	virtual void GetTooltip(int nUID, tstring &strToolTip);
 
-	virtual int GetMenuIDByUID(int nUID, bool bAllocIfInexistence = false);
-	virtual int GetUIDByMenuID(int nMenuID);
+	int GetMenuIDByUID(int nUID, bool bAllocIfInexistence = false);
+	bool SetMenuIDByUID(int nUID, int nMenuId);
+	int GetUIDByMenuID(int nMenuID);
 
-	int AllocCustomID();
+	UIObjectIDDefinition *GetUidDef(int nUID);
 
+	int AllocUID();
 	tstring GetStringOfID(int nID);
 
 	bool IsOpened() { return m_skinFile.IsOpened(); }

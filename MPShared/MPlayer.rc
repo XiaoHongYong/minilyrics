@@ -937,7 +937,7 @@ BEGIN
             MENUITEM "Vietnamese",                  IDC_ENC_VIETNAMESE
         END
         MENUITEM SEPARATOR
-        MENUITEM "&Close",                      IDC_CLOSE
+        MENUITEM "&Close",                      IDCLOSE
     END
     POPUP "&Play"
     BEGIN

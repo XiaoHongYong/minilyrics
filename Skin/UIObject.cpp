@@ -641,7 +641,13 @@ void CUIObject::SetVisibleEx(bool bVisible, bool bAnimation, AnimateDirection an
 	else
 	{
 		bool bHide = !bVisible;
+		// Stop the old animation
 		m_pSkin->StopAnimation(this);
+
+		// Recalculate the size position, old Animation may mess it up.
+		m_pContainer->RecalculateUIObjSizePos(this);
+
+		// Start new animation
 		m_pSkin->StartAnimation(this, NewAnimate(GetAnimationType(), bHide, this, animateDirection), GetAnimationDuration());
 	}
 }

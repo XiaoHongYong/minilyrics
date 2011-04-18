@@ -139,11 +139,11 @@ BEGIN
         BEGIN
             POPUP "Ra&te These Lyrics..."
             BEGIN
-                MENUITEM "Rate these lyrics: 1 (Low)",  IDC_RATE_LYR_1
-                MENUITEM "Rate these lyrics: 2",        IDC_RATE_LYR_2
-                MENUITEM "Rate these lyrics: 3",        IDC_RATE_LYR_3
-                MENUITEM "Rate these lyrics: 4",        IDC_RATE_LYR_4
-                MENUITEM "Rate these lyrics: 5 (High)", IDC_RATE_LYR_5
+                MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
+                MENUITEM "2",                           IDC_RATE_LYR_2
+                MENUITEM "3",                           IDC_RATE_LYR_3
+                MENUITEM "4",                           IDC_RATE_LYR_4
+                MENUITEM "5 (High)",                    IDC_RATE_LYR_5
             END
             MENUITEM SEPARATOR
             MENUITEM "Embedded Lyrics in &Mp3 file", IDC_EMBEDDED_LYRICS
@@ -240,7 +240,7 @@ BEGIN
             MENUITEM "A&bout $Product$...",         IDC_ABOUT
             MENUITEM "$Product$ &Help",             IDC_ML_HELP
             MENUITEM SEPARATOR
-            MENUITEM "&Register...",                IDC_REGISTER
+            MENUITEM "&Activate $Product$...",                IDC_REGISTER
             MENUITEM SEPARATOR
             MENUITEM "$Product$ &Website",          IDC_WEBHOME
             MENUITEM "&Report to Author",           IDC_EMAIL
@@ -317,7 +317,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "A&bout $Product$...",         IDC_ABOUT
         MENUITEM SEPARATOR
-        MENUITEM "&Close",                      IDC_CLOSE
+        MENUITEM "&Close",                      IDCLOSE
     END
     POPUP "Lyrics Editor"
     BEGIN
@@ -418,7 +418,7 @@ BEGIN
             MENUITEM "Vietnamese",                  IDC_ENC_VIETNAMESE
         END
         MENUITEM SEPARATOR
-        MENUITEM "&Close",                      IDC_CLOSE
+        MENUITEM "&Close",                      IDCLOSE
     END
     POPUP "&Play"
     BEGIN
@@ -490,7 +490,14 @@ BEGIN
     BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         MENUITEM SEPARATOR
-        MENUITEM "Ra&te These Lyrics...",       IDC_RATE_LYRICS
+        POPUP "Ra&te These Lyrics..."
+        BEGIN
+            MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
+            MENUITEM "2",                           IDC_RATE_LYR_2
+            MENUITEM "3",                           IDC_RATE_LYR_3
+            MENUITEM "4",                           IDC_RATE_LYR_4
+            MENUITEM "5 (High)",                    IDC_RATE_LYR_5
+        END
         MENUITEM SEPARATOR
         MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
         MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
@@ -565,7 +572,7 @@ BEGIN
         MENUITEM "A&bout $Product$...",         IDC_ABOUT
         MENUITEM "$Product$ &Help",             IDC_ML_HELP
         MENUITEM SEPARATOR
-        MENUITEM "&Register...",                IDC_REGISTER
+        MENUITEM "&Activate $Product$...",                IDC_REGISTER
         MENUITEM SEPARATOR
         MENUITEM "$Product$ &Website",          IDC_WEBHOME
     END
@@ -609,7 +616,7 @@ BEGIN
         MENUITEM "A&bout $Product$...",         IDC_ABOUT
         MENUITEM "$Product$ &Help",             IDC_ML_HELP
         MENUITEM SEPARATOR
-        MENUITEM "&Register...",                IDC_REGISTER
+        MENUITEM "&Activate $Product$...",                IDC_REGISTER
         MENUITEM SEPARATOR
         MENUITEM "$Product$ &Website",          IDC_WEBHOME
     END
@@ -637,7 +644,7 @@ BEGIN
         MENUITEM "A&bout $Product$...",         IDC_ABOUT
         MENUITEM "$Product$ &Help",             IDC_ML_HELP
         MENUITEM SEPARATOR
-        MENUITEM "&Register...",                IDC_REGISTER
+        MENUITEM "&Activate $Product$...",                IDC_REGISTER
         MENUITEM SEPARATOR
         MENUITEM "$Product$ &Website",          IDC_WEBHOME
     END

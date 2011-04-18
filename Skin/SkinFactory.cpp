@@ -40,7 +40,7 @@ UIObjectIDDefinition g_uidBaseDefinition[] =
 {
 	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, 0, _T("Minimize") },
 	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, 0, _T("Maximize") },
-	{ _T("ID_CLOSE"), CMD_CLOSE, 0, _T("Close") },
+	{ _T("ID_CLOSE"), CMD_CLOSE, IDCLOSE, _T("Close") },
 	{ _T("ID_QUIT"), CMD_QUIT, 0, _T("Quit") },
 	{ _T("ID_MENU"), CMD_MENU, 0, _T("Menu") },
 	{ _T("ID_OK"), CMD_OK, IDOK, NULL },
@@ -645,40 +645,35 @@ int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip)
 	return m_nCustomCmdIDNext;
 }
 
-void CSkinFactory::GetTooltip(int nId, tstring &strToolTip)
+void CSkinFactory::GetTooltip(int nUID, tstring &strToolTip)
 {
-	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
-		it != m_setUIDDefinition.end(); ++it)
-	{
-		UIObjectIDDefinition *p = *it;
-		if (p->nId == nId)
-		{
-			strToolTip = p->szToolTip;
-			return;
-		}
-	}
-
-	strToolTip.resize(0);
+	UIObjectIDDefinition *p = GetUidDef(nUID);
+	if (p)
+		strToolTip = p->szToolTip;
+	else
+		strToolTip.resize(0);
 }
 
 int CSkinFactory::GetMenuIDByUID(int nUID, bool bAllocIfInexistence)
 {
-	if (nUID == UID_INVALID)
+	UIObjectIDDefinition *p = GetUidDef(nUID);
+	if (!p)
 		return 0;
 
-	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
-		it != m_setUIDDefinition.end(); ++it)
-	{
-		UIObjectIDDefinition *p = *it;
-		if (p->nId == nUID)
-		{
-			if (p->nIdMenu == 0)
-				p->nIdMenu = ++m_nMenuIDNext;
-			return p->nIdMenu;
-		}
-	}
+	if (p->nIdMenu == 0)
+		p->nIdMenu = ++m_nMenuIDNext;
+	return p->nIdMenu;
+}
 
-	return 0;
+bool CSkinFactory::SetMenuIDByUID(int nUID, int nMenuId)
+{
+	UIObjectIDDefinition *p = GetUidDef(nUID);
+	if (!p)
+		return false;
+
+	ASSERT(p->nIdMenu == 0 || p->nIdMenu == nMenuId);
+	p->nIdMenu = nMenuId;
+	return true;
 }
 
 int CSkinFactory::GetUIDByMenuID(int nMenuID)
@@ -697,7 +692,23 @@ int CSkinFactory::GetUIDByMenuID(int nMenuID)
 	return UID_INVALID;
 }
 
-int CSkinFactory::AllocCustomID()
+UIObjectIDDefinition *CSkinFactory::GetUidDef(int nUID)
+{
+	if (nUID == UID_INVALID)
+		return NULL;
+
+	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
+		it != m_setUIDDefinition.end(); ++it)
+	{
+		UIObjectIDDefinition *p = *it;
+		if (p->nId == nUID)
+			return p;
+	}
+
+	return NULL;
+}
+
+int CSkinFactory::AllocUID()
 {
 	m_nCustomCmdIDNext++;
 	ASSERT(m_nCustomCmdIDNext <= uint16(-1));

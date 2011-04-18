@@ -88,6 +88,13 @@ LPCTSTR GetRegnowBuyLink()
 
 LPCTSTR GetStrName(STR_NAME nameId)
 {
+	switch (nameId)
+	{
+	case SN_HTTP_SIGNUP:	return _T("http://www.viewlyrics.com/user/signup.aspx");
+	case SN_HTTP_LOGIN:		return _T("http://www.viewlyrics.com/user/Login.aspx");
+	case SN_HTTP_RATE_LRC:	return _T("http://viewlyrics.com/lyrics/rate.aspx?lid=");
+	}
+
 #ifdef _MPLAYER
 	switch (nameId)
 	{
@@ -109,12 +116,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 	case SN_HTTP_ML_VER:	return _T("http://www.zikiplayer.com/zpppcver.xml");
 #else
 	case SN_HTTP_ML_VER:	return _T("http://www.zikiplayer.com/zpver.xml");
-	case SN_HTTP_USER_REG:	return _T("http://search.crintsoft.com/signup.htm");
 	case SN_HTTP_GDIPLUS:	return _T("http://www.zikiplayer.com/gdiplus/");
-//	case SN_HTTP_AD:		return _T("http://www.zikiplayer.com/mlad2.xml");
-	case SN_HTTP_SIGNUP:	return _T("http://search.crintsoft.com/eng/signup.htm");
-	case SN_HTTP_LOGIN:		return _T("http://search.crintsoft.com/eng/login.htm");
-	case SN_HTTP_RATE_LRC:	return _T("http://viewlyrics.com/lyrics/rate.aspx?fid=");
 	case SN_HTTP_HELP:				return _T("http://www.zikiplayer.com/help.htm");
 	case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.zikiplayer.com/mlfaq-embedlyrics.htm");
 	case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.zikiplayer.com/mlfaq-upload.htm");
@@ -152,12 +154,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 		case SN_HTTP_ML_VER:	return _T("http://viewlyrics.com/mlppcver.xml");
 #else
 		case SN_HTTP_ML_VER:	return _T("http://viewlyrics.com/mlver.xml");
-		case SN_HTTP_USER_REG:	return _T("http://search.crintsoft.com/signup.htm");
 		case SN_HTTP_GDIPLUS:	return _T("http://viewlyrics.com/gdiplus/");
-//		case SN_HTTP_AD:		return _T("http://viewlyrics.com/mlad2.xml");
-		case SN_HTTP_SIGNUP:	return _T("http://search.crintsoft.com/eng/signup.htm");
-		case SN_HTTP_LOGIN:		return _T("http://search.crintsoft.com/eng/login.htm");
-		case SN_HTTP_RATE_LRC:	return _T("http://viewlyrics.com/lyrics/rate.aspx?fid=");
 		case SN_HTTP_HELP:				return _T("http://www.crintsoft.com/help.htm");
 		case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.crintsoft.com/mlfaq-embedlyrics.htm");
 		case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.crintsoft.com/mlfaq-upload.htm");
@@ -172,32 +169,6 @@ LPCTSTR GetStrName(STR_NAME nameId)
 		default: ASSERT(0);		return _T("");
 		}
 	}
-/*	else
-	{
-		switch (nameId)
-		{
-		case SN_HTTP_DOMAIN:	return _T("http://www.minilyrics.com");
-		case SN_HTTP_REGISTER:	return _T("http://www.minilyrics.com/buy.htm");
-		case SN_HTTP_DLSKIN:	return _T("http://www.minilyrics.com");
-		case SN_HTTP_BBS:		return _T("http://bbs.minilyrics.com");
-#ifdef _WIN32_WCE
-		case SN_HTTP_ML_VER:	return _T("http://www.minilyrics.com/mlppcverchs.xml");
-#else
-		case SN_HTTP_ML_VER:	return _T("http://www.minilyrics.com/mlverchs.xml");
-		case SN_HTTP_USER_REG:	return _T("http://www.minilyrics.com/bbs/");
-		case SN_HTTP_GDIPLUS:	return _T("http://www.minilyrics.com/gdiplus/");
-		case SN_HTTP_AD:		return _T("http://www.minilyrics.com/mlad2.xml");
-		case SN_HTTP_SIGNUP:	return _T("http://www.minilyrics.com:1212/chs/signup.htm");
-		case SN_HTTP_LOGIN:		return _T("http://www.minilyrics.com:1212/chs/login.htm");
-		case SN_HTTP_RATE_LRC:	return _T("http://www.minilyrics.com/lyrics/rate.aspx?fid=");
-		case SN_HTTP_DLPLUGIN:	return _T("http://www.minilyrics.com");
-#endif
-		case SN_EMAIL:			return _T("mailto:minilyrics@163.com");
-		case SN_SUPPORT_MAIL:	return _T("minilyrics@163.com");
-		case SN_WEBHOME:		return _T("www.minilyrics.com");
-		default: ASSERT(0);		return _T("");
-		}
-	}*/
 #endif // _MPLAYER
 }
 

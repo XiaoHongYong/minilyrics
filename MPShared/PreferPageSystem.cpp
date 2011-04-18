@@ -186,7 +186,7 @@ public:
 			bool bLeft = (i % 2 == 0);
 
 			if (_id2strPlayers[i].dwId == 0)
-				_id2strPlayers[i].dwId = m_pSkin->GetSkinFactory()->AllocCustomID();
+				_id2strPlayers[i].dwId = m_pSkin->GetSkinFactory()->AllocUID();
 
 			if (_tcscmp(_id2strPlayers[i].szId, _T("Windows Media Player")) == 0)
 				_idWmp = _id2strPlayers[i].dwId;
