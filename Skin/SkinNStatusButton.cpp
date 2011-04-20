@@ -63,7 +63,7 @@ bool CSkinNStatusButton::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CSkinNStatusButton::OnTimer(int nId)
 {
-	if (m_dwBeginFadeinTime != 0)
+	if (m_nTimerIdFadein != 0)
 	{
 		// In fade in, just redraw
 		Invalidate();
@@ -541,7 +541,8 @@ void CSkinNStatusButton::ButtonDownAction()
 	{
 		StartFadeDrawTimer(false, true);
 	}
-	else if (m_bContinuousCmd)
+
+	if (m_bContinuousCmd)
 	{
 		m_bContinuousBegin = true;
 		m_nTimerIdContinuous = m_pSkin->RegisterTimerObject(this, 500);
