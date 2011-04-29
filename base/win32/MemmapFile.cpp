@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "base.h"
 #include "fileapi.h"
 #include "MemmapFile.h"
 

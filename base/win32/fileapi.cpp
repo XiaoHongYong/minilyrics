@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "base.h"
 #include "safestr.h"
 #include "fileapi.h"
 
