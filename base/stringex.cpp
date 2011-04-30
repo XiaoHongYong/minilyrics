@@ -56,6 +56,22 @@ bool StrIBeginWith(LPCWSTR szText, LPCWSTR szBeginWith)
 	return *szBeginWith == '\0';
 }
 
+bool IsStrEndWith(LPCTSTR szText, LPCTSTR szEndWith)
+{
+	int lenText = _tcslen(szText), lenEndWith = _tcslen(szEndWith);
+	if (lenText < lenEndWith)
+		return false;
+	return _tcscmp(szText + lenText - lenEndWith, szEndWith) == 0;
+}
+
+bool IsStrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
+{
+	int lenText = _tcslen(szText), lenEndWith = _tcslen(szEndWith);
+	if (lenText < lenEndWith)
+		return false;
+	return _tcsicmp(szText + lenText - lenEndWith, szEndWith) == 0;
+}
+
 FILE_ENCODING GetStrEncodingType(LPCVOID lpData)
 {
 	BYTE						*szBuffer;
@@ -621,6 +637,28 @@ WCHAR * __cdecl strnstr(
 	}
 
 	return(NULL);
+}
+
+void TrimStr(tstring &str, LPCTSTR szChars)
+{
+	tstring::iterator	it;
+	int		i;
+
+	for (i = str.size() - 1; i >= 0; i--)
+	{
+		if (!_tcschr(szChars, str[i]))
+			break;
+	}
+	if (i != str.size() - 1)
+		str.erase(str.begin() + 1 + i, str.end());
+
+	for (it = str.begin(); it != str.end(); it++)
+	{
+		if (!_tcschr(szChars, *it))
+			break;
+	}
+	if (it != str.begin())
+		str.erase(str.begin(), it);
 }
 
 void TrimStr(tstring &str, TCHAR ch)
