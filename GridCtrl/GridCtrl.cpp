@@ -2392,7 +2392,8 @@ COleDataSource* CGridCtrl::CopyTextFromGrid()
         if (row != Selection.GetMaxRow()) 
             str += _T("\r\n");
         
-        sf.Write(T2A(str.GetBuffer(1)), str.GetLength());
+		LPCSTR	szMbcs = T2A(str.GetBuffer());
+        sf.Write(szMbcs, strlen(szMbcs));
         str.ReleaseBuffer();
     }
     
