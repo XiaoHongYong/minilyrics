@@ -68,14 +68,10 @@ void RetLyrInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, RetLyrInfoList &
 		else
 			item.nMatchValue = (float)CalLyricsMatchValue(MLGetFileType(item.strSaveFileName.c_str()), item.strTitle.c_str(), item.strArtist.c_str(), szTitle, bIgnoreTitleNumb, szArtist, bIgnoreArtistNumb);
 		// DBGLOG2(_T("file: %s, value: %d"), item.strSaveFileName.c_str(), item.nMatchValue);
-		if (g_bEngEdition)
-		{
-			// Sort English result before other language.
-			if (IsAnsiStr(item.strSaveFileName.c_str()))
-			{
-				item.nMatchValue++;
-			}
-		}
+
+		// Sort English result before other language.
+		if (IsAnsiStr(item.strSaveFileName.c_str()))
+			item.nMatchValue += 0.5;
 
 		// increase rating
 		if (item.nRateCount > 0)
@@ -409,19 +405,6 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	nRet = session.Search(pSearchParam->bOnlyMatched, pSearchParam->strArtist.c_str(), pSearchParam->strTitle.c_str(), 0, retSearch);
 	session.Close();
 
-	if (retSearch.RegVerifyValue != RVV_OK)
-	{
-		// 注册码无效
-		if (retSearch.RegVerifyValue == RVV_TRIAL)
-			g_LicenseType = LT_TRIAL;
-		else
-			g_LicenseType = LT_CRACK;
-		TCHAR		szRegCode[MAX_PATH];
-		g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
-		g_Profile.EncryptWriteProfileString(SZ_INVALID_RC, szRegCode);
-		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
-	}
-
 	if (retSearch.strMessage.size() && CMPlayerAppBase::GetMainWnd())
 		CMPlayerAppBase::GetInstance()->MessageOut(retSearch.strMessage.c_str());
 
@@ -511,9 +494,7 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	//
 	// 检查上次自动搜索相隔时间小于1个月才搜索
 	DWORD		dwLatestSearchTime;
-	bool		bAdvVersion = false;
-	if (g_bEngEdition || IsRegistered())
-		bAdvVersion = true;
+	bool		bAdvVersion = g_licenseManager.IsLicenseValid();
 	if (SearchCacheForCur(NULL, &dwLatestSearchTime))
 	{
 		int			nNextSearch = 30;
@@ -587,19 +568,6 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	nRet = session.Search(false, szArtist, szTitle, nCurPage, retSearch);
 	session.Close();
 
-	if (retSearch.RegVerifyValue != RVV_OK)
-	{
-		// 注册码无效
-		if (retSearch.RegVerifyValue == RVV_TRIAL)
-			g_LicenseType = LT_TRIAL;
-		else
-			g_LicenseType = LT_CRACK;
-		TCHAR		szRegCode[MAX_PATH];
-		g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
-		g_Profile.EncryptWriteProfileString(SZ_INVALID_RC, szRegCode);
-		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
-	}
-
 	if (retSearch.strMessage.size() && CMPlayerAppBase::GetMainWnd())
 		CMPlayerAppBase::GetInstance()->MessageOut(retSearch.strMessage.c_str());
 
@@ -629,6 +597,9 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 	nRet = session.BatchSearch(listSearch, retLyrics);
 	session.Close();
 
+	// Save License status result
+	g_licenseManager.SaveActivateResult(retLyrics);
+
 	return nRet;
 }
 
@@ -638,19 +609,6 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 	int	nRet = BatchSearch(session, listSearch, retLyrics);
 	if (nRet != ERR_OK)
 		return nRet;
-
-	if (retLyrics.RegVerifyValue != RVV_OK)
-	{
-		// Invalid reg code
-		if (retLyrics.RegVerifyValue == RVV_TRIAL)
-			g_LicenseType = LT_TRIAL;
-		else
-			g_LicenseType = LT_CRACK;
-		TCHAR		szRegCode[MAX_PATH];
-		g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
-		g_Profile.EncryptWriteProfileString(SZ_INVALID_RC, szRegCode);
-		g_Profile.EncryptWriteProfileString(SZ_REGCODE, _T(""));
-	}
 
 	if (retLyrics.strMessage.size() && CMPlayerAppBase::GetMainWnd())
 		CMPlayerAppBase::GetInstance()->MessageOut(retLyrics.strMessage.c_str());

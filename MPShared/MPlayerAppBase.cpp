@@ -339,42 +339,6 @@ CEventsDispatcherBase *CMPlayerAppBase::GetEventsDispatcher()
 	return m_pInstance->GetEventPatcher();
 }
 
-void InitEdition()
-{
-	//
-	// 检查版本
-	//
-#ifdef _DEBUG
-	CProfile	file;
-	tstring		strEng;
-	file.Init(_T("install.ini"), _T("INSTALL"));
-	strEng = file.GetProfileString(_T("Edition"), _T(""));
-	if (_tcscmp(strEng.c_str(), _T("english")) == 0)
-		g_bEngEdition = TRUE;
-	else if (_tcscmp(strEng.c_str(), _T("chinese")) == 0)
-		g_bEngEdition = FALSE;
-	else 
-#endif
-#if defined(_WIN32)
-	{
-		// 根据 location 来设置中英文版本差别
-		LCID	lcid;
-		TCHAR	szBuff[32];
-
-		g_bEngEdition = TRUE;
-		lcid = GetUserDefaultLCID();
-		if (GetLocaleInfo(lcid, LOCALE_ICOUNTRY, szBuff, CountOf(szBuff)) > 0)
-		{
-			if (_tcscmp(szBuff, _T("86")) == 0)
-				g_bEngEdition = FALSE;
-		}
-	}
-#else
-	{
-	}
-#endif
-}
-
 bool CMPlayerAppBase::InitLyricsPlayer()
 {
 #ifndef _MPLAYER
@@ -462,7 +426,7 @@ bool CMPlayerAppBase::Init(StartApp startApp)
 
 	SetDefaultSettings();
 
-	InitEdition();
+	g_licenseManager.Init();
 
 	if (!CSkinApp::Init())
 		return false;
@@ -484,12 +448,6 @@ bool CMPlayerAppBase::Init(StartApp startApp)
 	m_pEventDispatcher->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	m_pEventDispatcher->RegisterHanlder(ET_LYRICS_SEARCH_END, this);
 	m_pEventDispatcher->RegisterHanlder(ET_DOWNLOAD_END, this);
-
-	//
-	// 检查是否注册以及过期
-	//
-	if (IsRegisterOK())
-		g_LicenseType = LT_REGISTERED;
 
 	// Initialize MiniLyrics/ZikiPlayer
 	bool bRet = false;

@@ -62,6 +62,7 @@ ID_TO_STRING	__MlCmdIDStr[] =
 	{ MC_SEARCH_V0, MZ_SEARCH_V0 },
 	{ MC_UPLOADV0, MZ_UPLOADV0 },
 	{ MC_UPLOAD, MZ_UPLOAD },
+	{ MC_ACTIVATE, MZ_ACTIVATE },
 	{ MC_GET_LYR_UPDATE, MZ_GET_LYR_UPDATE },
 	{ MC_SUBMIT_LYR_REVIEW, MZ_SUBMIT_LYR_REVIEW },
 	{ MC_EXE_SVR_CMD, MZ_EXE_SVR_CMD },
@@ -105,6 +106,10 @@ int CXMLMsgCmd::FromXML(SXNode *pXmlNode)
 {
 	strClient = pXmlNode->GetPropertySafe(_T("client"));
 	strRegCode = pXmlNode->GetPropertySafe(_T("RegCode"));
+	strDeviceID = pXmlNode->GetPropertySafe(_T("did"));
+	bOnlineVerified = Tobool(pXmlNode->GetPropertyInt(_T("ov")));
+	nProductId = pXmlNode->GetPropertyInt(_T("pid"), PRODUCT_ID_MINILYRICS);
+	ASSERT(nProductId != PRODUCT_ID_INVALID);
 
 	return ERR_OK;
 }
@@ -114,6 +119,12 @@ void CXMLMsgCmd::ToXMLAttribute(CXMLWriter &xmlStream)
 	xmlStream.WriteAttribute(_T("client"), strClient.c_str());
 	if (strRegCode.size())
 		xmlStream.WriteAttribute(_T("RegCode"), strRegCode.c_str());
+	if (strDeviceID.size())
+		xmlStream.WriteAttribute(_T("did"), strDeviceID.c_str());
+	if (bOnlineVerified)
+		xmlStream.WriteAttribute(_T("ov"), bOnlineVerified);
+	if (nProductId != PRODUCT_ID_MINILYRICS)
+		xmlStream.WriteAttribute(_T("pid"), nProductId);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -152,6 +163,14 @@ int MLRetMsg::FromXML(SXNode *pXmlNode)
 	if (strMessage.empty())
 		strMessage = pXmlNode->GetPropertySafe(_T("message"));
 
+	licenseStatus = (LicenseStatus)pXmlNode->GetPropertyInt(_T("badrc"), LS_TRIAL);
+	if (licenseStatus != LS_TRIAL)
+	{
+		strCodeStartDate = pXmlNode->GetPropertySafe(_T("ls_sd"));
+		nLicensedUser = pXmlNode->GetPropertyInt(_T("ls_lu"), 1);
+		nCodeDurationDays = pXmlNode->GetPropertyInt(_T("ls_dd"), LICENSE_DURATION_PERPETUAL);
+	}
+
 	return ERR_OK;
 }
 
@@ -173,7 +192,48 @@ void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
 		xmlFile.WriteAttribute(_T("msg"), strMessage.c_str());		// msg is for search and upload
 		xmlFile.WriteAttribute(_T("message"), strMessage.c_str());	// message is for login
 	}
+
+	if (licenseStatus != LS_TRIAL)
+		xmlFile.WriteAttribute(_T("badrc"), licenseStatus);
+	if (licenseStatus == LS_ACTIVE)
+	{
+		if (strCodeStartDate.size())
+			xmlFile.WriteAttribute(_T("ls_sd"), strCodeStartDate.c_str());
+		if (nLicensedUser > 1)
+			xmlFile.WriteAttribute(_T("ls_lu"), nLicensedUser);
+		if (nCodeDurationDays != LICENSE_DURATION_PERPETUAL)
+			xmlFile.WriteAttribute(_T("ls_dd"), nCodeDurationDays);
+	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// 
+int MLMsgCmdActivateLicense::ToXML(CXMLWriter &xmlFile)
+{
+	xmlFile.WriteStartElement(MZ_ACTIVATE);
+
+	CXMLMsgCmd::ToXMLAttribute(xmlFile);
+
+	xmlFile.WriteEndElement();
+	return ERR_OK;
+
+}
+
+// int MLMsgRetActivateLicense::FromXML(SXNode *pXmlNode)
+// {
+// 	int nRet = MLRetMsg::FromXML(pXmlNode);
+// 	if (nRet != ERR_OK)
+// 		return nRet;
+// 
+// 
+// 	return ERR_OK;
+// }
+// 
+// void MLMsgRetActivateLicense::ToXMLAttribute(CXMLWriter &xmlFile)
+// {
+// 	MLRetMsg::ToXMLAttribute(xmlFile);
+// 
+// }
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -296,19 +356,11 @@ int MLMsgCmdSearch::ToXML(CXMLWriter &xmlFile)
 //////////////////////////////////////////////////////////////////////////
 int MLMsgRetSearch::FromXML(SXNode *pNode)
 {
-	LPCTSTR		szValue;
-
 	int nRet = MLRetMsg::FromXML(pNode);
 	if (nRet != ERR_OK)
 		return nRet;
 
 	ASSERT(!bV0Protocol);
-
-	szValue = pNode->GetProperty(_T("badrc"));
-	if (szValue)
-		RegVerifyValue = (REGCODE_VERIFY_VALUE)_ttoi(szValue);
-	else
-		RegVerifyValue = RVV_OK;
 
 	strServerUrl = pNode->GetPropertySafe(_T("server_url"));
 	nPageCount = pNode->GetPropertyInt(_T("PageCount"));
@@ -339,9 +391,6 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 		xmlFile.WriteAttribute(_T("filetype"), _T("lyrics")); // This should be set for old version (7.0.614 before).
 	else
 		xmlFile.WriteAttribute(_T("server_url"), strServerUrl.c_str());
-
-	if (RegVerifyValue)
-		xmlFile.WriteAttribute(_T("badrc"), RegVerifyValue);
 
 	if (nPageCount != 1)
 		xmlFile.WriteAttribute(_T("PageCount"), nPageCount);
@@ -464,14 +513,6 @@ int MLMsgRetBatchSearch::FromXML(SXNode *pXmlNode)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	LPCTSTR		szValue;
-
-	szValue = pXmlNode->GetProperty(_T("badrc"));
-	if (szValue)
-		RegVerifyValue = (REGCODE_VERIFY_VALUE)_ttoi(szValue);
-	else
-		RegVerifyValue = RVV_OK;
-
 	for (SXNode::LIST_CHILDREN::iterator it = pXmlNode->listChildren.begin();
 		it != pXmlNode->listChildren.end(); ++it)
 	{
@@ -490,9 +531,6 @@ int MLMsgRetBatchSearch::ToXML(CXMLWriter &xmlFile)
 	xmlFile.WriteStartElement(MZ_RETURN);
 
 	MLRetMsg::ToXMLAttribute(xmlFile);
-
-	if (RegVerifyValue)
-		xmlFile.WriteAttribute(_T("badrc"), RegVerifyValue);
 
 	for (ListLyricsInfoLite::iterator it = listLyricsInfo.begin();
 		it != listLyricsInfo.end(); ++it)
@@ -592,14 +630,11 @@ int MLMsgRetUpload::FromXML(SXNode *pXmlNode)
 	return ERR_OK;
 }
 
-int MLMsgRetUpload::ToXML(CXMLWriter &xmlFile)
+void MLMsgRetUpload::ToXMLAttribute(CXMLWriter &xmlFile)
 {
-	xmlFile.WriteStartElement(MZ_RETURN);
 	MLRetMsg::ToXMLAttribute(xmlFile);
 	if (strLyricsId.size())
 		xmlFile.WriteAttribute(_T("LyricsId"), strLyricsId.c_str());
-	xmlFile.WriteEndElement();
-	return ERR_OK;
 }
 
 
@@ -1058,6 +1093,7 @@ class CTestCaseCMLProtocol : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(CTestCaseCMLProtocol);
 	CPPUNIT_TEST(TestParseBinXml);
+	CPPUNIT_TEST(TestMLMsgCmdSearch);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -1067,7 +1103,10 @@ protected:
 
 		msgRet.result = ERR_CMD_NOT_MATCH;
 		msgRet.strMessage = _T("Msg");
-		msgRet.RegVerifyValue = RVV_INVALID;
+		msgRet.licenseStatus = LS_ACTIVE;
+		msgRet.nCodeDurationDays = 10;
+		msgRet.nLicensedUser = 2;
+		msgRet.strCodeStartDate = _T("2011-12-11");
 
 		tstring	strFile = GetWorkingFolder();
 		strFile += _T("unittest_save.txt");
@@ -1098,7 +1137,10 @@ protected:
 
 		CPPUNIT_ASSERT(msgFrom.result == msgRet.result);
 		CPPUNIT_ASSERT(msgFrom.strMessage == msgRet.strMessage);
-		CPPUNIT_ASSERT(msgFrom.RegVerifyValue == msgRet.RegVerifyValue);
+		CPPUNIT_ASSERT(msgFrom.licenseStatus == msgRet.licenseStatus);
+		CPPUNIT_ASSERT(msgFrom.strCodeStartDate == msgRet.strCodeStartDate);
+		CPPUNIT_ASSERT(msgFrom.nLicensedUser == msgRet.nLicensedUser);
+		CPPUNIT_ASSERT(msgFrom.nCodeDurationDays == msgRet.nCodeDurationDays);
 		CPPUNIT_ASSERT(msgFrom.listLyricsInfo.size() == msgRet.listLyricsInfo.size());
 		ListLyricsInfoLite::iterator itFrom = msgFrom.listLyricsInfo.begin();
 		for (ListLyricsInfoLite::iterator it = msgRet.listLyricsInfo.begin();
@@ -1111,6 +1153,39 @@ protected:
 			CPPUNIT_ASSERT(bufContent.size() == lyrFrom.bufLyrContent.size());
 			CPPUNIT_ASSERT(memcmp(bufContent.c_str(), lyrFrom.bufLyrContent.c_str(), lyrFrom.bufLyrContent.size()) == 0);
 		}
+	}
+
+	void TestMLMsgCmdSearch()
+	{
+		MLMsgCmdSearch	msgSearch;
+
+		msgSearch.bOnlineVerified = false;
+		msgSearch.nProductId = PRODUCT_ID_MINILYRICS;
+		msgSearch.nRequestPage = 1;
+		msgSearch.strArtist = _T("ar");
+		msgSearch.strClient = _T("client xxx");
+		msgSearch.strDeviceID = _T("did");
+		msgSearch.strRegCode = _T("Regcode");
+		msgSearch.strTitle = _T("title");
+
+		CMLBinXMLWriter xmlStream;
+		int ret = msgSearch.ToXML(xmlStream);
+		CPPUNIT_ASSERT(ret == ERR_OK);
+
+		CSimpleXML xml;
+		ret = xml.ParseData(xmlStream.GetBuffer().c_str(), xmlStream.GetBuffer().size());
+		CPPUNIT_ASSERT(ret != FALSE);
+		MLMsgCmdSearch	msgFrom;
+		ret = msgFrom.FromXML(xml.m_pRoot);
+		CPPUNIT_ASSERT(ret == ERR_OK);
+
+		CPPUNIT_ASSERT(msgFrom.bOnlineVerified == msgSearch.bOnlineVerified);
+		CPPUNIT_ASSERT(msgFrom.nRequestPage == msgSearch.nRequestPage);
+		CPPUNIT_ASSERT(msgFrom.strArtist == msgSearch.strArtist);
+		CPPUNIT_ASSERT(msgFrom.strClient == msgSearch.strClient);
+		CPPUNIT_ASSERT(msgFrom.strDeviceID == msgSearch.strDeviceID);
+		CPPUNIT_ASSERT(msgFrom.strRegCode == msgSearch.strRegCode);
+		CPPUNIT_ASSERT(msgFrom.strTitle == msgSearch.strTitle);
 	}
 
 };

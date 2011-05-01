@@ -434,7 +434,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 				CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
 #ifdef _WIN32
-			if (!IsRegistered())
+			if (!g_licenseManager.IsLicenseValid())
 			{
 				static int	dwDownloadedCount = 0;
 				static bool bShowRegNoticeNext = false;

@@ -122,18 +122,16 @@ public:
 	//	only keyname is encrypted in cache
 	//  vlaue does not encrypted in cache, and value only encrypted in file.
 	//
-	DWORD EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize);
+	tstring EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault);
 	BOOL EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
 
 	// 无需输入 szAppName 的函数
-	DWORD EncryptGetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
-	{
-		return EncryptGetProfileString(m_strDefAppName.c_str(), szKeyName, szDefault, szReturnedString, nSize);
-	}
+	tstring EncryptGetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault)
+		{ return EncryptGetProfileString(m_strDefAppName.c_str(), szKeyName, szDefault); }
 	BOOL EncryptWriteProfileString(LPCTSTR szKeyName, LPCTSTR szValue)
-	{
-		return EncryptWriteProfileString(m_strDefAppName.c_str(), szKeyName, szValue);
-	}
+		{ return EncryptWriteProfileString(m_strDefAppName.c_str(), szKeyName, szValue); }
+	int EncryptGetProfileInt(LPCTSTR szKeyName, int nValue);
+	void EncryptWriteProfileInt(LPCTSTR szKeyName, int nValue);
 
 };
 

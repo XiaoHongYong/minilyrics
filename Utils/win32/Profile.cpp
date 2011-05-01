@@ -794,17 +794,15 @@ void TestEnDecrypt()
 }
 */
 
-DWORD CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
+tstring CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
 {
 	assert(!m_strProfile.empty());
+	ASSERT(szDefault);
 
 	DWORD		dwRet;
 
 	if (szKeyName[0] == '\0')
-	{
-		EmptyStr(szReturnedString);
-		return 0;
-	}
+		return szDefault;
 
 	tstring	strKeyNameEncrypt, strValue;
 	EncryptStr(szKeyName, strKeyNameEncrypt);
@@ -816,29 +814,33 @@ DWORD CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LP
 		strSubKey = m_strProfile + szAppName;
 
 		EncryptStr(szDefault, strValue);
-		dwRet = RegGetProfileString(m_hKeyRoot, strSubKey.c_str(), strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, nSize);
-		DecryptStr(szReturnedString, strValue);
-		_tcscpy_safe(szReturnedString, nSize, strValue.c_str());
 
-		return strValue.size();
+		m_nCurRetStr++;
+		if (m_nCurRetStr >= RET_STR_MAX)
+			m_nCurRetStr = 0;
+		dwRet = RegGetProfileString(m_hKeyRoot, strSubKey.c_str(), strKeyNameEncrypt.c_str(), strValue.c_str(), m_szRetString[m_nCurRetStr], RET_STR_LEN);
+
+		DecryptStr(m_szRetString[m_nCurRetStr], strValue);
+
+		return strValue;
 	}
 
 	MAP_STRING::iterator	itKey;
 
+	TCHAR	szReturnedString[1024];
 	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itKey))
 	{
 		EncryptStr(szDefault, strValue);
-		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, nSize, m_strProfile.c_str());
+		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, 1024, m_strProfile.c_str());
 		AddKeys(szAppName, strKeyNameEncrypt.c_str(), szReturnedString);
 	}
 	else
 	{
-		_tcscpy_safe(szReturnedString, nSize, (*itKey).second.c_str());
+		_tcscpy_safe(szReturnedString, 1024, (*itKey).second.c_str());
 	}
 	DecryptStr(szReturnedString, strValue);
-	_tcscpy_safe(szReturnedString, nSize, strValue.c_str());
 
-	return _tcslen(szReturnedString);
+	return strValue;
 }
 
 BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
@@ -871,4 +873,18 @@ BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, L
 		(*itKey).second = strValueEncrypt;
 
 	return dwRet;
+}
+
+int CProfile::EncryptGetProfileInt(LPCTSTR szKeyName, int nValue)
+{
+	tstring	str = EncryptGetProfileString(szKeyName, _T(""));
+	if (str.empty())
+		return nValue;
+	else
+		return _ttoi(str.c_str());
+}
+
+void CProfile::EncryptWriteProfileInt(LPCTSTR szKeyName, int nValue)
+{
+	EncryptWriteProfileString(szKeyName, CStrPrintf(_T("%d"), nValue).c_str());
 }

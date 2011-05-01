@@ -3,47 +3,48 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
-#include "MLLib.h"
 #include "Register.h"
-#include "MLGenRegV4.h"
 
-BOOL GetRegCode(const char *szName, const char *szDate, char *szRegCode);
-BOOL VerifyRegCode1(const char *szName, const char *szRegCode);
+/*
+// 留以扩展的校验部分9, 11, 13, 16
+if ((CharToNumber(g_szMLRegCode[9]) & 0x3) != (CharToNumber(g_szMLRegNameNew[0]) & 0x3))
+return FALSE;
+if ((CharToNumber(g_szMLRegCode[9]) & 0x1C) != (CharToNumber(g_szMLRegNameNew[1]) & 0x1C))
+return FALSE;
+if ((CharToNumber(g_szMLRegCode[11]) & 0x3) != (CharToNumber(g_szMLRegCode[2]) & 0x3))
+return FALSE;
+if ((CharToNumber(g_szMLRegCode[11]) & 0x1C) != (CharToNumber(g_szMLRegCode[3]) & 0x1C))
+return FALSE;
+if ((CharToNumber(g_szMLRegCode[13]) & 0x3) != (CharToNumber(g_szMLRegCode[4]) & 0x3))
+return FALSE;
+if ((CharToNumber(g_szMLRegCode[13]) & 0x1C) != (CharToNumber(g_szMLRegCode[5]) & 0x1C))
+return FALSE;
+if ((CharToNumber(g_szMLRegCode[16]) & 0x3) != (CharToNumber(g_szMLRegCode[6]) & 0x3))
+return FALSE;
+if ((CharToNumber(g_szMLRegCode[16]) & 0x1C) != (CharToNumber(g_szMLRegCode[7]) & 0x1C))
+return FALSE;
+
+return TRUE;
+*/
+#define		REG_VERIFY_CODE_1		\
+{\
+	if (g_nMLRegCodeVer == 2 && g_LicenseStatus == LS_ACTIVE)\
+{\
+	if ((CharToNumber(g_szMLRegCode[9]) & 0x3) != (CharToNumber(g_szMLRegNameNew[0]) & 0x3))\
+	VERIFY_FAILED_EXIT();\
+}\
+}
+
+#define		REG_VERIFY_CODE_2		\
+{\
+if (g_nMLRegCodeVer == 2 && g_LicenseStatus == LS_ACTIVE)\
+{\
+if ((CharToNumber(g_szMLRegCode[9]) & 0x1C) != (CharToNumber(g_szMLRegNameNew[1]) & 0x1C))\
+VERIFY_FAILED_EXIT();\
+}\
+}
 
 int CharToNumber(char ch);
-
-//
-//BOOL IsRegistered()
-//{
-//#ifdef _ENG_EDITION
-//	return g_LicenseType != LT_CRACK && g_LicenseType != LT_EXPIRED;
-//#else
-//	return g_LicenseType == LT_REGISTERED;
-//#endif
-//}
-
-BOOL IsRegisterOK()
-{
-	TCHAR			szName[256];
-	TCHAR			szRegCode[256], szRegCodeInvalid[256];
-
-	g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""), szName, sizeof(szName));
-	g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, sizeof(szName));
-	g_Profile.EncryptGetProfileString(SZ_INVALID_RC, _T(""), szRegCodeInvalid, CountOf(szRegCodeInvalid));
-
-	if (_tcscmp(szRegCodeInvalid, szRegCode) == 0)
-	{
-		g_LicenseType = LT_TRIAL;
-		return FALSE;
-	}
-
-	return IsRegisterOK(szName, szRegCode);
-}
-
-BOOL IsRegisterOK(LPCTSTR szName, LPCTSTR szRegCode)
-{
-	return MLVerifyRegCode(szName, szRegCode);
-}
 
 ///////////////////////////////////////////////////////////////
 // 注册部分代码
@@ -67,7 +68,6 @@ void ByteToHexStr(char *szStr, BYTE byValue)
 	szStr[1] = szTemp[1];
 }
 
-// char N2ChTable[16][256];
 static const char N2ChTable[256] = 
 {
 	'L', 'G', 'T', 'G', '1', 'B', 'O', 'S', '4', 'J', '8', '8', 'H', 'C', 'O', 
@@ -173,25 +173,14 @@ static int HexStrToByte(const char *str)
 {
 	return HexToInt(str[0]) * 16 + HexToInt(str[1]);
 }
-//
-//static BOOL VerifyDate(const char *szRegCode)
-//{
-//	int			n = HexStrToByte(szRegCode + 2);
-//	int			x = AvgValue(&(szRegCode[6]), 4) / 3;
-//
-//	if (n != (BYTE)(x + szRegCode[6] / 2))
-//		return FALSE;
-//	else
-//		return TRUE;
-//}
 
-BOOL VerifyRegCode1(const char *szName, const char *szRegCode)
+bool VerifyRegCode1(const char *szName, const char *szRegCode)
 {
 	char		szCodeTemp[256];
 	char		szNameNew[256];
 	char		szVersion[10];
 	int			i;
-	BOOL		bRet = TRUE;;
+	bool		bRet = TRUE;;
 	BYTE		byVersion;
 	BYTE		byVerRand;
 
@@ -214,9 +203,6 @@ BOOL VerifyRegCode1(const char *szName, const char *szRegCode)
 		byVerRand = szCodeTemp[15] - '0';
 
 	byVersion = (BYTE)String2HexUINT(szVersion) - byVerRand - (AvgValue(szNameNew, strlen(szNameNew)) + szNameNew[0]) % (0x7F - ('Z' - 'A' + '9' - '0' + 2));
-
-//	if (byVersion != TreeItemIter)
-//		return FALSE;
 
 	//static BOOL VerifyDate(const char *szRegCode)
 	{
@@ -365,33 +351,14 @@ VERIFY_FAILED_EXIT;\
 }\
 }*/
 
-BOOL SimpleVerifyRegCode2();
-
-BOOL MLVerifyRegCode(const WCHAR *szName, const WCHAR *szRegCode)
-{
-	stringex		strName, strRegCode;
-
-	ConvertStr(szName, -1, strName);
-	ConvertStr(szRegCode, -1, strRegCode);
-
-	return MLVerifyRegCode(strName.c_str(), strRegCode.c_str());
-}
+bool SimpleVerifyRegCode2();
 
 //
 // 验证迷你歌词的注册码
-BOOL MLVerifyRegCode(const char *szName, const char *szRegCode)
+bool MLVerifyRegCodeV7Before(const char *szName, const char *szRegCode)
 {
 	int		nLen;
-//  
-// 	SYSTEMTIME Date;
-// 	GetSystemTime(&Date);
-// 
-//  	if (strcmp(szName, "cpcw") == 0 && Date.wYear < 2008)
-//  	{
-//  		return true;
-//  	}
 
-	// g_MiniLyricsMain.m_bRegistered = FALSE;
 	nLen = (int)strlen(szRegCode);
 	if (nLen >= 64)
 		return FALSE;
@@ -402,20 +369,6 @@ BOOL MLVerifyRegCode(const char *szName, const char *szRegCode)
 	// 将szRegCode复制到g_szMLRegCode中，并且去掉 '-'
 	strcpy_safe(g_szMLRegCode, CountOf(g_szMLRegCode), szRegCode);
 	strdel(g_szMLRegCode, '-');
-/*	const char	*szPos;
-	char	*szPos2;
-	szPos = szRegCode;
-	szPos2 = g_szMLRegCode;
-	while (*szPos)
-	{
-		if (*szPos != '-')
-		{
-			*szPos2 = *szPos;
-			szPos2++;
-		}
-		szPos++;
-	}
-	*szPos2 = '\0';*/
 
 	//
 	// 复制注册名
@@ -446,21 +399,23 @@ BOOL MLVerifyRegCode(const char *szName, const char *szRegCode)
 			return SimpleVerifyRegCode2();
 		}
 	}
-	else if (nLen == 20)
-	{
-		// 4.0
-		if (strlen(szName) < 1)
-			return FALSE;
-
-		return SimpleVerifyRegCodeV4();
-	}
 
 	return FALSE;
 }
 
+bool MLVerifyRegCodeV7Before(const WCHAR *szName, const WCHAR *szRegCode)
+{
+	stringex		strName, strRegCode;
+
+	ConvertStr(szName, -1, strName);
+	ConvertStr(szRegCode, -1, strRegCode);
+
+	return MLVerifyRegCodeV7Before(strName.c_str(), strRegCode.c_str());
+}
+
 //
 // version == 2
-BOOL SimpleVerifyRegCode2()
+bool SimpleVerifyRegCode2()
 {
 	//
 	// 复制g_szMLRegNameNew

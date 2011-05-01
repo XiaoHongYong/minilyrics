@@ -56,6 +56,7 @@ public:
 	LPCTSTR GetPropertySafe(LPCTSTR szPropName);
 
 	int GetPropertyInt(LPCTSTR szPropName);
+	int GetPropertyInt(LPCTSTR szPropName, int nValueIfInexist);
 
 	bool GetPropertyBinData(LPCTSTR szPropName, string &buf);
 	bool GetPropertyBase64Data(LPCTSTR szPropName, string &buf);

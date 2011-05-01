@@ -2367,6 +2367,7 @@ void CSkinWnd::OnAddUIObj(CUIObject *pObj)
 void CSkinWnd::OnLanguageChanged()
 {
 	m_rootConainter.OnLanguageChanged();
+	InvalidateRect(NULL, true);
 }
 
 void CSkinWnd::OnAdjustHue(float hue, float saturation, float luminance)

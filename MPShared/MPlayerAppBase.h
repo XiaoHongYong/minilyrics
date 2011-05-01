@@ -111,13 +111,6 @@ tstring GetAppNameLong();
 
 LPCTSTR GetStrName(STR_NAME nameId);
 
-inline bool IsRegistered()
-{
-	TCHAR		szRegCode[MAX_PATH];
-	g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
-	return (g_LicenseType == LT_REGISTERED && !IsEmptyString(szRegCode));
-}
-
 LPCTSTR GetAppDataDir();
 
 void GetAppDataDir(TCHAR *szAppDir);

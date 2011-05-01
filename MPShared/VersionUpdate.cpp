@@ -199,7 +199,6 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 {
 	if (bAutoCheck)
 	{
-		TCHAR		szCheckVerTime[256];
 		int			wYear, wMonth, wDay;
 		time_t		lTime;
 		tm			*curtime;
@@ -208,8 +207,8 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 
 		curtime = localtime(&lTime);
 
-		g_Profile.EncryptGetProfileString(_T("CheckVerTime"), _T(""), szCheckVerTime, CountOf(szCheckVerTime));
-		if (_stscanf(szCheckVerTime, _T("%d-%d-%d"), &wYear, &wMonth, &wDay) < 3)
+		tstring strCheckVerTime = g_Profile.EncryptGetProfileString(_T("CheckVerTime"), _T(""));
+		if (_stscanf(strCheckVerTime.c_str(), _T("%d-%d-%d"), &wYear, &wMonth, &wDay) < 3)
 		{
 			// no process
 		}
@@ -218,8 +217,8 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 		if (abs(GetCurDaysFrom2000() - GetDaysFrom2000(wMonth, wDay, wYear)) <= 7)
 			return;
 
-		_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
-		g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
+		CStrPrintf strNewTime(_T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
+		g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), strNewTime.c_str());
 	}
 
 	g_LyricsDownloader.DownloadVersionFile(GetStrName(SN_HTTP_ML_VER), !bAutoCheck);

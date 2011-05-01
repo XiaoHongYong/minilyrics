@@ -13,14 +13,12 @@ public:
 	{
 		CSkinContainer::OnSwitchTo();
 
-		TCHAR			szName[256];
-		TCHAR			szRegCode[256];
+		CLicenseManager::LicenseInfo	licenseInfo;
 
-		g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""), szName, CountOf(szName));
-		g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCode, CountOf(szRegCode));
+		g_licenseManager.GetLicenseInfo(licenseInfo);
 
-		SetUIObjectText(_T("CID_E_NAME"), szName, false);
-		SetUIObjectText(_T("CID_E_CODE"), szRegCode, false);
+		SetUIObjectText(_T("CID_E_NAME"), licenseInfo.strName.c_str(), false);
+		SetUIObjectText(_T("CID_E_CODE"), licenseInfo.strCode.c_str(), false);
 
 		m_pSkin->SetCaptionText(TOLOCAL(_T("Activate MiniLyrics")));
 	}
@@ -39,28 +37,29 @@ public:
 			return false;
 		}
 
-		if (g_LicenseType == LT_REGISTERED)
+		CLicenseManager::LicenseInfo	licenseInfo;
+
+		g_licenseManager.GetLicenseInfo(licenseInfo);
+		if (licenseInfo.licenseStatus == LS_ACTIVE && licenseInfo.bOnlineVerified)
 		{
-			TCHAR	szRegCodeOrg[256];
-			g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""), szRegCodeOrg, CountOf(szRegCodeOrg));
-			if (_tcscmp(strCode.c_str(), szRegCodeOrg) == 0)
+			if (_tcscmp(strCode.c_str(), licenseInfo.strCode.c_str()) == 0)
 				return true;
 		}
 
 		tstring		strMsg;
 
-		if (MLVerifyRegCode(strName.c_str(), strCode.c_str()))
+		if (g_licenseManager.VerifyCode(strName.c_str(), strCode.c_str(), TRUE))
 		{
-			g_Profile.EncryptWriteProfileString(SZ_REGNAME, strName.c_str());
-			g_Profile.EncryptWriteProfileString(SZ_REGCODE, strCode.c_str());
+			// Activate license code online.
+			CMLClientSession	session;
+			MLMsgRetActivateLicense retActivation;
+			int nRet = session.ActivateLicense(strMsg, retActivation);
 
 			strMsg = TOLOCAL(_T("Your MiniLyrics has been activated now."));
 			strMsg += _T("\n");
 			strMsg += TOLOCAL(_T("Thank you for supporting the development of MiniLyrics."));
 
 			m_pSkin->MessageOut(strMsg.c_str());
-
-			g_LicenseType = LT_REGISTERED;
 			return true;
 		}
 		else
@@ -122,27 +121,6 @@ public:
 		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_DOWNLOAD_END, this);
 	}
 
-	void UpdateLicenseInfo()
-	{
-		TCHAR			szName[256];
-		bool			bHasLicense = false;
-
-		//
-		// ×¢²áÐÅÏ¢
-		if (g_LicenseType == LT_REGISTERED)
-		{
-			g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""), szName, sizeof(szName));
-			SetUIObjectProperty(_T("CID_LICENSE_TO"), SZ_PN_TEXT, szName);
-			bHasLicense = true;
-		}
-
-		SetUIObjectVisible(_T("CID_LICENSE"), bHasLicense, false);
-		SetUIObjectVisible(_T("CID_LICENSE_TO"), bHasLicense, false);
-		SetUIObjectVisible(_T("CID_UNREGISTERED"), !bHasLicense, false);
-
-		Invalidate();
-	}
-
 	void OnCreate()
 	{
 		CSkinContainer::OnCreate();
@@ -167,7 +145,15 @@ public:
 	{
 		CSkinContainer::OnSwitchTo();
 
-		UpdateLicenseInfo();
+		CLicenseManager::LicenseInfo	licenseInfo;
+		g_licenseManager.GetLicenseInfo(licenseInfo);
+
+		if (licenseInfo.licenseStatus == LS_ACTIVE)
+			SetUIObjectProperty(_T("CID_LICENSE_TO"), SZ_PN_TEXT, licenseInfo.strName.c_str());
+
+		SetUIObjectVisible(_T("CID_LICENSE"), licenseInfo.licenseStatus == LS_ACTIVE, false);
+		SetUIObjectVisible(_T("CID_LICENSE_TO"), licenseInfo.licenseStatus == LS_ACTIVE, false);
+		SetUIObjectVisible(_T("CID_UNREGISTERED"), licenseInfo.licenseStatus != LS_ACTIVE, false);
 	}
 
 	bool OnCustomCommand(int nId)
@@ -244,7 +230,7 @@ public:
 	{
 		CSkinContainer::OnSwitchTo();
 
-		if (g_LicenseType == LT_REGISTERED)
+		if (g_licenseManager.IsLicenseValid())
 			m_pSkin->SetCaptionText(TOLOCAL(_T("$Product$ (Registered Version)")));
 		else
 			m_pSkin->SetCaptionText(TOLOCAL(_T("$Product$ (Evaluation Version)")));
@@ -282,8 +268,7 @@ void ShowAboutDialog(CBaseWnd *pWndParent)
 
 void ShowRegisterNotice(CBaseWnd *pWndParent, BOOL bForceShow)
 {
-	if (!bForceShow 
-		&& (g_LicenseType == LT_REGISTERED || !g_bEngEdition))
+	if (!bForceShow && g_licenseManager.IsLicenseValid())
 		return;
 
 #ifdef _MPLAYER

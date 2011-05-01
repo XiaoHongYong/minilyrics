@@ -123,9 +123,6 @@ bool CMPlayerApp::Init(StartApp startApp)
 	SetWorkingFolder(szWorkingFolder);
 
 	tstring		strMLIniFile =GetAppIniFile();
-	if (!IsFileExist(strMLIniFile.c_str()))
-		g_bEngEdition = true;
-
 	tstring		strMLLogFile = GetAppDataDir();
 	strMLLogFile += _T("log.txt");
 	InitBaseFrameWork(GetAppInstance(), strMLLogFile.c_str(), strMLIniFile.c_str(), SZ_SECT_UI);

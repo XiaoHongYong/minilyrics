@@ -69,6 +69,7 @@ enum MLMsgCmd
 	MC_CAN_UPLOAD,			// Deprecated command. return ERR_NOT_FOUND directly.
 	MC_UPLOADV0,			// Old version of upload lyrics.
 	MC_UPLOAD,				// Upload lyrics command
+	MC_ACTIVATE,			// Activate product
 
 	// Admin messages
 	MC_GET_LYR_UPDATE,
@@ -87,6 +88,7 @@ MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 #define MZ_CANUPLOAD		_T("canupload")
 #define MZ_UPLOADV0			_T("upload")
 #define MZ_UPLOAD			_T("uploadV1")
+#define MZ_ACTIVATE			_T("activate")
 
 #define MZ_GET_LYR_UPDATE	_T("GetLyrUpdate")
 #define MZ_SUBMIT_LYR_REVIEW _T("SubmitLyrReview")
@@ -97,9 +99,25 @@ MLMsgCmd MLMsgStr2Cmd(LPCTSTR szMLMsgCmd);
 #define MZ_ORG_CMD			_T("orgcmd")
 #define MZ_CMD_RESULT		_T("result")
 
+enum LicenseStatus
+{
+	LS_UNKNOWN		= 100,		// This only exist on server side, it means the server didn't process the verify/activate license
+	LS_ACTIVE		= 0,
+	LS_TRIAL		= 1,
+	LS_EXPIRED		= 2,
+	LS_REVOKED		= 3,
+	LS_TRANSFERED	= 4,		// The license is transfered to another device.
+};
+
+#define LICENSE_DURATION_PERPETUAL		0
+
+#define PRODUCT_ID_INVALID				0
+#define PRODUCT_ID_MINILYRICS			1
+
 class CXMLMsgCmd
 {
 public:
+	CXMLMsgCmd() { nProductId = PRODUCT_ID_INVALID; }
 	virtual ~CXMLMsgCmd() { }
 
 	virtual int FromXML(SXNode *pXmlNode);
@@ -108,29 +126,70 @@ public:
 	void ToXMLAttribute(CXMLWriter &xmlStream);
 
 public:
-	tstring		strClient;			// MiniLyrics for Winamp2 7.0.xxx
-	tstring		strRegCode;
+	tstring			strClient;						// MiniLyrics for Winamp2 7.0.xxx
+	tstring			strRegCode, strDeviceID;		// Client shall send code and license state.
+	int				nProductId;						// See PRODUCT_ID_MINILYRICS
+	bool			bOnlineVerified;
 
 };
 
-
 // Returned message
-class MLRetMsg : public CXMLMsgCmd
+class MLRetMsg
 {
 public:
 	tstring		strOrgCmd;		// Original command
 	tstring		strMessage;		// Message to client
 	int			result;
 
+	// Activate license message result
+	LicenseStatus			licenseStatus;
+	tstring					strCodeStartDate;	// 2011-12-03
+	int						nCodeDurationDays;	// In days, 0: Perpetual license; 1: Auto renewal; Others is fixed license days.
+	int						nLicensedUser;		// n user license.
+
 public:
+	MLRetMsg()
+	{
+		licenseStatus = LS_UNKNOWN;
+		nCodeDurationDays = 1;
+		nLicensedUser = 1;
+	}
+
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
 
-	void ToXMLAttribute(CXMLWriter &xmlFile);
+	virtual void ToXMLAttribute(CXMLWriter &xmlFile);
 
 };
 
+//////////////////////////////////////////////////////////////////////////
+//
+// Activate license message definition
+//
+class MLMsgCmdActivateLicense : public CXMLMsgCmd
+{
+public:
+	virtual int ToXML(CXMLWriter &xmlFile);
+
+};
+
+typedef MLRetMsg		MLMsgRetActivateLicense;
+
+// class MLMsgRetActivateLicense : public MLRetMsg
+// {
+// public:
+// 
+// 	virtual int FromXML(SXNode *pXmlNode);
+// 	virtual int ToXML(CXMLWriter &xmlFile);
+// 
+// 	void ToXMLAttribute(CXMLWriter &xmlFile);
+// 
+// };
+
+//////////////////////////////////////////////////////////////////////////
+//
 // Login command
+//
 class MLMsgCmdLogin : public CXMLMsgCmd
 {
 public:
@@ -205,18 +264,10 @@ public:
 
 };
 
-enum REGCODE_VERIFY_VALUE
-{
-	RVV_OK			= 0,
-	RVV_TRIAL		= 1,
-	RVV_INVALID		= 2,
-};
-
 // Return of search lyrics command
 class MLMsgRetSearch : public MLRetMsg
 {
 public:
-	REGCODE_VERIFY_VALUE	RegVerifyValue;
 	int						nPageCount, nCurPage;
 
 	list<RetLyrInfo>		listResultFiles;
@@ -229,7 +280,7 @@ public:
 public:
 	MLMsgRetSearch()
 	{
-		RegVerifyValue = RVV_OK;
+		licenseStatus = LS_UNKNOWN;
 		nPageCount = 1;
 		nCurPage = 0;
 		bV0Protocol = false;
@@ -239,6 +290,8 @@ public:
 
 };
 
+//////////////////////////////////////////////////////////////////////////
+//
 // Batch lyrics search item
 class MLSearchItem
 {
@@ -291,14 +344,9 @@ typedef list<MLLyricsInfoLite>		ListLyricsInfoLite;
 class MLMsgRetBatchSearch : public MLRetMsg
 {
 public:
-	REGCODE_VERIFY_VALUE	RegVerifyValue;
 	ListLyricsInfoLite		listLyricsInfo;		// Lyrics info: artist, title, file name
 
 public:
-	MLMsgRetBatchSearch()
-	{
-		RegVerifyValue = RVV_OK;
-	}
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
 
@@ -343,7 +391,7 @@ public:
 
 public:
 	virtual int FromXML(SXNode *pNode);
-	virtual int ToXML(CXMLWriter &xmlFile);
+	virtual void ToXMLAttribute(CXMLWriter &xmlFile);
 
 };
 

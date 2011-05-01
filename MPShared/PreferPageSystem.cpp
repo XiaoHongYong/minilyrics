@@ -34,11 +34,10 @@ public:
 
 		// Proxy user name and password
 		SetUIObjectText(_T("CID_USER"), g_Profile.GetProfileString(_T("ProxyUser"), _T("")));
-		TCHAR	szPwd[256];
-		g_Profile.EncryptGetProfileString(_T("ProxyPassEnc"), _T(""), szPwd, CountOf(szPwd));
-		if (IsEmptyString(szPwd))
-			g_Profile.GetProfileString(_T("ProxyPass"), _T(""), szPwd, CountOf(szPwd));
-		SetUIObjectText(_T("CID_PASS"), szPwd);
+		tstring strPwd = g_Profile.EncryptGetProfileString(_T("ProxyPassEnc"), _T(""));
+		if (strPwd.empty())
+			strPwd = g_Profile.GetProfileString(_T("ProxyPass"), _T(""));
+		SetUIObjectText(_T("CID_PASS"), strPwd.c_str());
 
 		m_bInitailed = true;
 	}

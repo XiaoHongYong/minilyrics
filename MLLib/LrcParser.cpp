@@ -321,7 +321,7 @@ bool CLrcParser::ToString(tstring &str, bool bIncTags)
 	if (m_bToTxtFormat)
 		return ToTxtString(str, bIncTags);
 	else
-		return ToLrcString(str, true, bIncTags);
+		return ToLrcString(str, bIncTags, true);
 }
 
 bool CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
