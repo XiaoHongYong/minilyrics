@@ -338,7 +338,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			DWORD	dwXY = *(DWORD*)pcds->lpData;
 			CMPlayerAppBase::GetMPSkinFactory()->TrackMoveWith(
 				CBaseWnd::FromHandle(g_Player.GetMainWnd()),
-				LOWORD(dwXY), HIWORD(dwXY));
+				(short)LOWORD(dwXY), (short)HIWORD(dwXY));
 		}
 		break;
 

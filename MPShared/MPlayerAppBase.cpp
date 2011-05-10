@@ -267,6 +267,42 @@ void DispatchPlayPosEvent(int nPlayPos)
 	}
 }
 
+class CDlgSaveLyrPrompt : public CBaseDialog
+{
+public:
+	CDlgSaveLyrPrompt(LPCTSTR szInfo) : CBaseDialog(IDD_MSG) { m_strInfo = szInfo; }
+
+	BOOL OnInitDialog()
+	{
+		if (!CBaseDialog::OnInitDialog())
+			return FALSE;
+
+		SetDlgItemText(IDC_MSG, m_strInfo.c_str());
+
+		return TRUE;
+	}
+
+	void OnCommand(UINT uID, UINT nNotifyCode)
+	{
+		switch (uID)
+		{
+		case IDC_NO_PROMPT:
+			break;
+		case IDYES:
+		case IDNO:
+			if (IsButtonChecked(IDC_NO_PROMPT))
+				g_Profile.WriteProfileInt(_T("SaveLyrPrompt"), uID);
+		case IDCANCEL:
+			EndDialog(m_hWnd, uID);
+			break;
+		}
+	}
+
+protected:
+	tstring			m_strInfo;
+
+};
+
 int SaveDialogBox(CBaseWnd *pWnd)
 {
 	static bool bInModal = FALSE;
@@ -274,13 +310,17 @@ int SaveDialogBox(CBaseWnd *pWnd)
 	{
 		bInModal = TRUE;
 
-		tstring		strMessage = CStrPrintf(TOLOCAL(_T("The lyrics of the %s file have changed.")), 
-			FileGetName(g_LyricData.GetSongFileName())).c_str();
-		strMessage += _T("\r\n\r\n");
-		strMessage += TOLOCAL(_T("Do you want to save the changes?"));
+		int nRet = g_Profile.GetProfileInt(_T("SaveLyrPrompt"), IDCANCEL);
+		if (nRet == IDCANCEL)
+		{
+			tstring		strMessage = CStrPrintf(TOLOCAL(_T("The lyrics of the %s file have changed.")), 
+				FileGetName(g_LyricData.GetSongFileName())).c_str();
+			strMessage += _T("\r\n\r\n");
+			strMessage += TOLOCAL(_T("Do you want to save the changes?"));
 
-		int nRet = pWnd->MessageOut(strMessage.c_str(), MB_YESNOCANCEL | MB_ICONINFORMATION,
-			TOLOCAL(_T("Confirm to save the lyrics file")));
+			CDlgSaveLyrPrompt dlg(strMessage.c_str());
+			nRet = dlg.DoModal(pWnd);
+		}
 
 		bInModal = FALSE;
 		return nRet;

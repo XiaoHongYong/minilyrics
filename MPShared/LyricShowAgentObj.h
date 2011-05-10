@@ -16,10 +16,11 @@
 #include "LyricShowHorzScrollObj.h"
 #include "LyricShowSingleRowObj.h"
 #include "LyricShowVobSub.h"
+#include "../Skin/SkinLinearContainer.h"
 
-class CLyricShowAgentObj : public CUIObject, IEventHandler  
+class CLyricShowAgentObj : public CSkinLinearContainer, IEventHandler  
 {
-	UIOBJECT_CLASS_NAME_DECLARE(CUIObject)
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinLinearContainer)
 public:
 	CLyricShowAgentObj();
 	virtual ~CLyricShowAgentObj();
@@ -37,15 +38,18 @@ public:
 	static void SetLyrDispStyleSettings(CSkinWnd *pSkinWnd, LPCTSTR szLyrStyle);
 
 protected:
+	void ToggleActivateButton();
+
 	void ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, bool bRedraw = true);
 
 	void LoadToolbar();
 
-	CUIObject		*m_pToolbar;
-	tstring			m_strTBHeight;
-	bool			m_bEnableToolbar;
-
 protected:
+	CUIObject		*m_pToolbar;
+	bool			m_bEnableToolbar;
+	CUIObject		*m_pActivateButton;
+	int				m_nIdActivateNoticeOverlappedCtrl;
+
 	bool			m_bFloatingLyr;
 	tstring			m_strLyrDisplayStylePropName;
 	tstring			m_strLyrDisplayStyleDefault;

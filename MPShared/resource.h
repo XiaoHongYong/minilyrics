@@ -23,12 +23,10 @@
 #define IDR_MENU_OPEN_LRC_DLG           151
 #define IDR_MENU_ALBUMART               152
 #define IDD_CRASH_REPORT                163
-#define IDD_UPLOAD_EXIST                165
 #define IDD_MSG                         166
 #define IDD_MLSTART                     167
 #define IDD_ERROR_RESOLVE               169
 #define IDD_COPYSONGLYRICS              173
-#define IDD_RATE_LYR                    180
 #define IDD_BATCH_EMBEDDED_LYR          181
 #define IDM_MOUSE_CLICK_THROUGH         190
 #define IDM_LYR_EDITOR                  192
@@ -58,7 +56,6 @@
 #define IDC_APPLY_ACCOUNT               1001
 #define IDC_HOTKEY                      1006
 #define IDC_ADD_SONG_FILE               1045
-#define IDC_CB_RATING                   1057
 #define IDC_C_LYR_FONT                  1060
 #define IDC_C_LYR_STYLE                 1062
 #define IDC_C_LYR_BG_PIC                1064
@@ -71,7 +68,6 @@
 #define IDC_RENAME                      1088
 #define IDC_REGISTER                    1091
 #define IDC_PLAY                        1101
-#define IDC_STATIC1                     1103
 #define IDC_TAB                         1107
 #define IDC_LIST                        1108
 #define IDC_MSG                         1109
@@ -107,7 +103,6 @@
 #define IDC_LIST_MEDIA_TYPE             1181
 #define IDC_CHECK_ALL                   1182
 #define IDC_CLEAR_ALL                   1183
-#define IDC_HIDE_RATE_LINK              1193
 #define IDC_INFO                        1198
 #define IDC_S_MSG                       1202
 #define IDC_LIST_PLAYERS                1209

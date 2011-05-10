@@ -422,7 +422,6 @@ void CSkinContainer::OnSize()
 	CUIObject::OnSize();
 
 	// recalculate all UIObjects' position
-	int nCount;
 	FORMULA_VAR 	vars[] = {
 		{'w', m_rcObj.Width()},
 		{'h', m_rcObj.Height()},
@@ -430,10 +429,10 @@ void CSkinContainer::OnSize()
 	};
 
 	// recalculate every UIObjects' position on back buffer one by one
-	nCount = (int)m_vUIObjs.size();
-	for (int i = 0; i < nCount; i++)
+	for (uint i = 0; i < m_vUIObjs.size(); i++)
 	{
-		m_vUIObjs[i]->ReCalculatePos(vars);
+		m_vUIObjs[i]->OnMeasureSizePos(vars);
+		m_vUIObjs[i]->OnSize();
 	}
 }
 
@@ -1137,8 +1136,9 @@ void CSkinContainer::RecalculateUIObjSizePos(CUIObject *pObj)
 		{0, 0}
 	};
 
-	// recalculate every ui objects' position on back buffer one by one
-	pObj->ReCalculatePos(vars);
+	// recalculate every UIObjects' position on back buffer one by one
+	pObj->OnMeasureSizePos(vars);
+	pObj->OnSize();
 }
 
 bool CSkinContainer::IsChild(CUIObject *pObj)

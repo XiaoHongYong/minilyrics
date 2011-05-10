@@ -5,9 +5,8 @@
 #include "stdafx.h"
 #include "MPlayerApp.h"
 #include "LyricShowAgentObj.h"
+#include "SkinActivateCtrl.h"
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 UIOBJECT_CLASS_NAME_IMP(CLyricShowAgentObj, _T("LyricsShow"))
@@ -21,14 +20,13 @@ CLyricShowAgentObj::CLyricShowAgentObj()
 	m_bEnableToolbar = true;
 	m_pToolbar = NULL;
 	m_bFloatingLyr = false;
+	m_pActivateButton = NULL;
+	m_nIdActivateNoticeOverlappedCtrl = UID_INVALID;
 }
 
 CLyricShowAgentObj::~CLyricShowAgentObj()
 {
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_CHANGED, this);
-	if (m_pLyricsShow)
-		m_pSkin->RemoveUIObject(m_pLyricsShow, true);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(this);
 }
 
 void CLyricShowAgentObj::GetLyrDispStylePropName(CSkinWnd *pSkinWnd, bool &bFloatingLyr, tstring &strLyrStylePropName)
@@ -72,7 +70,7 @@ void CLyricShowAgentObj::SetLyrDispStyleSettings(CSkinWnd *pSkinWnd, LPCTSTR szL
 
 void CLyricShowAgentObj::OnCreate()
 {
-	CUIObject::OnCreate();
+	CSkinLinearContainer::OnCreate();
 
 	GetLyrDispStylePropName(m_pSkin, m_bFloatingLyr, m_strLyrDisplayStylePropName);
 
@@ -83,6 +81,7 @@ void CLyricShowAgentObj::OnCreate()
 
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_ACTIVATE_NOTICE, this);
 
 	if (m_bEnableToolbar && !g_Profile.GetProfileBool(_T("HideToolbar"), false))
 	{
@@ -91,6 +90,8 @@ void CLyricShowAgentObj::OnCreate()
 	}
 
 	ChangeLyricsDisplayStyle(m_strLyrDisplayStyleDefault.c_str(), false);
+
+	ToggleActivateButton();
 }
 
 void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
@@ -113,21 +114,14 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 				if (m_pToolbar)
 				{
 					// destroy toolbar
-					m_pContainer->RemoveUIObject(m_pToolbar, true);
+					this->RemoveUIObject(m_pToolbar, true);
 					m_pToolbar = NULL;
-
-					// reposition lyrics show obj
-					if (m_pLyricsShow)
-					{
-						m_pLyricsShow->m_formTop = m_formTop;
-						m_pLyricsShow->m_formHeight = m_formHeight;
-						m_pContainer->RecalculateUIObjSizePos(m_pLyricsShow);
-						m_pLyricsShow->Invalidate();
-					}
 				}
 			}
 			else
 				LoadToolbar();
+
+			m_pContainer->RecalculateUIObjSizePos(this);
 		}
 	}
 	else if (pEvent->eventType == ET_LYRICS_CHANGED && m_bEnableStaticTextStyle)
@@ -139,6 +133,14 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 			strNewStyle = SZ_TXT_LYR_CONTAINER;
 
 		ChangeLyricsDisplayStyle(strNewStyle.c_str());
+
+		m_pContainer->RecalculateUIObjSizePos(this);
+	}
+	else if (pEvent->eventType == ET_UI_ACTIVATE_NOTICE)
+	{
+		ToggleActivateButton();
+		m_pContainer->RecalculateUIObjSizePos(this);
+		Invalidate();
 	}
 }
 
@@ -147,7 +149,7 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (m_pLyricsShow)
 		m_pLyricsShow->SetProperty(szProperty, szValue);
 
-	if (CUIObject::SetProperty(szProperty, szValue))
+	if (CSkinLinearContainer::SetProperty(szProperty, szValue))
 		return TRUE;
 
 	if (IsPropertyName(szProperty, _T("LyrDisplayStyle"))
@@ -157,6 +159,8 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bEnableStaticTextStyle = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("EnableToolbar")))
 		m_bEnableToolbar = IsTRUE(szValue);
+	else if (IsPropertyName(szProperty, _T("ActivateNoticeOverlappedCtrl")))
+		m_nIdActivateNoticeOverlappedCtrl = GetIDByName(szValue);
 	else
 	{
 		m_vProperties.push_back(szProperty);
@@ -164,6 +168,35 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 
 	return TRUE;
+}
+
+void CLyricShowAgentObj::ToggleActivateButton()
+{
+	if (g_licenseManager.IsLicenseValid())
+	{
+		if (m_pActivateButton)
+		{
+			RemoveUIObject(m_pActivateButton, true);
+			m_pActivateButton = NULL;
+		}
+	}
+	else
+	{
+		if (!m_pActivateButton)
+		{
+			m_pActivateButton = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, 
+				CSkinActivateCtrl::ClassName(), this);
+			ASSERT(m_pActivateButton);
+			m_pActivateButton->SetProperty(SZ_PN_RECT, _T("0,0,w,25"));
+			if (m_nIdActivateNoticeOverlappedCtrl == UID_INVALID)
+				this->AddUIObject(m_pActivateButton);
+			else
+			{
+				this->InsertUIObjectAt(m_pLyricsShow, m_pActivateButton);
+				m_pSkin->SetUIObjectVisible(m_nIdActivateNoticeOverlappedCtrl, false, false);
+			}
+		}
+	}
 }
 
 void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, bool bRedraw)
@@ -191,37 +224,15 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 
 	m_strLyrDisplayStyleCurrent = szLyrDispalyStyle;
 
-	m_pLyricsShow = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, szLyrDispalyStyle, m_pContainer);
+	m_pLyricsShow = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, szLyrDispalyStyle, this);
 	if (!m_pLyricsShow)
 		return;
 
-	tstring		strLyrTop, strLyrHeight;
-
-	if (m_pToolbar)
-	{
-		strLyrTop = m_formTop.GetFormula();
-		strLyrTop += _T("+");
-		strLyrTop += m_strTBHeight;
-		strLyrHeight = m_formHeight.GetFormula();
-		strLyrHeight += _T("-");
-		strLyrHeight += m_strTBHeight;
-	}
-	else
-	{
-		strLyrTop = m_formTop.GetFormula();
-		strLyrHeight = m_formHeight.GetFormula();
-	}
-
-	m_pLyricsShow->m_formLeft = m_formLeft;
-	m_pLyricsShow->m_formTop.SetFormula(strLyrTop.c_str());
-	m_pLyricsShow->m_formWidth = m_formWidth;
-	m_pLyricsShow->m_formHeight.SetFormula(strLyrHeight.c_str());
+	m_pLyricsShow->SetProperty(SZ_PN_RECT, _T("0,0,w,0"));
+	m_pLyricsShow->SetProperty(SZ_PN_WEIGHT, _T("1"));
 	m_pLyricsShow->SetProperties(m_vProperties);
 
-	m_pContainer->InsertUIObjectAt(this, m_pLyricsShow);
-
-	if (bRedraw)
-		m_pContainer->RecalculateUIObjSizePos(m_pLyricsShow);
+	this->AddUIObject(m_pLyricsShow);
 
 	if (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), SZ_TXT_LYR_CONTAINER) == 0)
 	{
@@ -244,37 +255,12 @@ void CLyricShowAgentObj::LoadToolbar()
 		return;
 
 	if (m_pToolbar)
-		m_pContainer->RemoveUIObject(m_pToolbar, true);
+		this->RemoveUIObject(m_pToolbar, true);
 
-	m_pToolbar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(m_pContainer, _T("NormalToolbar"), ID_TOOLBAR, m_formLeft.GetFormula(), m_formTop.GetFormula(), m_formWidth.GetFormula(), NULL);
-	if (!m_pToolbar)
+	m_pToolbar = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, _T("NormalToolbar"), this);
+	if (m_pToolbar)
 	{
-		m_strTBHeight = _T("0");
-		return;
-	}
-	else
-		m_pContainer->RecalculateUIObjSizePos(m_pToolbar);
-
-	m_pToolbar->Invalidate();
-
-	m_strTBHeight = m_pToolbar->m_formHeight.GetFormula();
-
-	// reposition lyrics show object
-	if (m_pLyricsShow)
-	{
-		tstring		strLyrTop, strLyrHeight;
-
-		strLyrTop = m_formTop.GetFormula();
-		strLyrTop += _T("+");
-		strLyrTop += m_strTBHeight;
-		strLyrHeight = m_formHeight.GetFormula();
-		strLyrHeight += _T("-");
-		strLyrHeight += m_strTBHeight;
-
-		m_pLyricsShow->m_formTop.SetFormula(strLyrTop.c_str());
-		m_pLyricsShow->m_formHeight.SetFormula(strLyrHeight.c_str());
-
-		m_pContainer->RecalculateUIObjSizePos(m_pLyricsShow);
-		m_pLyricsShow->Invalidate();
+		m_pToolbar->SetProperty(SZ_PN_RECT, _T("0,0,w,"));
+		this->InsertUIObjectAt(m_pLyricsShow, m_pToolbar);
 	}
 }

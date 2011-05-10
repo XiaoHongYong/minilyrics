@@ -30,6 +30,7 @@ public:
 
 	virtual void RegisterHanlder(EventType eventType, IEventHandler *pHandler);
 	virtual void UnregisterHanlder(EventType eventType, IEventHandler *pHandler);
+	virtual void UnregisterHanlder(IEventHandler *pHandler);
 
 	// CEventsDispatcher will delete pEvent, after pass through it to all handlers.
 	void DispatchSyncEvent(IEvent *pEvent);

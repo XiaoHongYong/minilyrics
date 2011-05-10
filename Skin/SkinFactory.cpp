@@ -12,6 +12,7 @@
 #include "SkinMenuBar.h"
 #include "SkinFrameCtrl.h"
 #include "SkinEditCtrl.h"
+#include "SkinLinearContainer.h"
 
 #define _SZ_SKINWND				_T("skinwnd")
 #define _SZ_MENUS				_T("Menus")
@@ -600,6 +601,7 @@ int CSkinFactory::Init()
 	AddUIObjNewer(CSkinTextButton);
 	AddUIObjNewer(CSkinToolbar);
 	AddUIObjNewer(CSkinTxtLink);
+	AddUIObjNewer(CSkinLinearContainer);
 
 	// Init SimpleJVM environment
 	CSjvmSkinSystem::Init(this);

@@ -68,6 +68,27 @@ void CEventsDispatcherBase::UnregisterHanlder(EventType eventType, IEventHandler
 	}
 }
 
+void CEventsDispatcherBase::UnregisterHanlder(IEventHandler *pHandler)
+{
+	CMutexAutolock		lock(m_mutex);
+
+	for (int i = 0; i < m_vListEventHandler.size(); i++)
+	{
+		LIST_EVENTHANDLER	&listHandler = m_vListEventHandler[i];
+		LIST_EVENTHANDLER::iterator	it, itEnd;
+
+		itEnd = listHandler.end();
+		for (it = listHandler.begin(); it != itEnd; ++it)
+		{
+			if (*it == pHandler)
+			{
+				listHandler.erase(it);
+				break;
+			}
+		}
+	}
+}
+
 void CEventsDispatcherBase::DispatchSyncEvent(IEvent *pEvent)
 {
 	EventType	eventType = pEvent->eventType;

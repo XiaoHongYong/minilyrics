@@ -695,6 +695,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinLinearContainer.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinListCtrl.cpp"
 				>
 			</File>
@@ -1187,6 +1191,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinImage.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinLinearContainer.h"
 				>
 			</File>
 			<File

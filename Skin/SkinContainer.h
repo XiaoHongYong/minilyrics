@@ -115,7 +115,7 @@ public:
 	bool AddUIObject(CUIObject *pObj);
 	bool InsertUIObjectAt(CUIObject *pObjWhere, CUIObject *pObj);
 
-	void RecalculateUIObjSizePos(CUIObject *pObj);
+	virtual void RecalculateUIObjSizePos(CUIObject *pObj);
 	BOOL RecalculateVarValue(CFormula &form, int &nRetValue);
 
 	CMLMenu *GetMenu() { return m_pMenu; }

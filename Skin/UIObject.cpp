@@ -1,5 +1,5 @@
 /********************************************************************
-	Created  :	2001?12?15? 0:28:39
+	Created  :	2001/12/15 0:28:39
 	FileName :	UIObject.cpp
 	Author   :	xhy
 	
@@ -10,6 +10,18 @@
 #include "Skin.h"
 #include "UIObject.h"
 
+ID_TO_STRING	__idszLayoutParams[] = 
+{
+	{ LAYOUT_WIDTH_MATCH_PARENT, _T("match_parent_width") },
+	{ LAYOUT_WIDTH_WRAP_CONENT, _T("wrap_content_width") },
+	{ LAYOUT_HEIGHT_MATCH_PARENT, _T("match_parent_height") },
+	{ LAYOUT_HEIGHT_WRAP_CONENT, _T("wrap_content_height") },
+	{ LAYOUT_ALIN_HORZ_CENTER, _T("align_horz_center") },
+	{ LAYOUT_ALIN_VERT_CENTER, _T("align_vert_center") },
+	{ LAYOUT_ALIN_BOTTOM, _T("align_bottom") },
+	{ LAYOUT_ALIN_RIGHT, _T("align_right") },
+	{ 0, NULL }
+};
 
 ID_TO_STRING	__idszBltMode[] = 
 {
@@ -322,8 +334,29 @@ bool CUIObjProperties::IsPropExist(LPCTSTR szName)
 	return false;
 }
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+void ReadMarginValue(LPCTSTR szValue, CRect &rc)
+{
+	V_Str		vRect;
+	StrSplit(szValue, ',', vRect);
+	TrimStr(vRect, ' ');
+	if (vRect.size() == 1)
+		rc.left = rc.top = rc.right = rc.bottom = _ttoi(vRect[0].c_str());
+	else if (vRect.size() == 2)
+	{
+		rc.left = rc.right = _ttoi(vRect[0].c_str());
+		rc.top = rc.bottom = _ttoi(vRect[1].c_str());
+	}
+	else if (vRect.size() == 4)
+	{
+		rc.left = _ttoi(vRect[0].c_str());
+		rc.top = _ttoi(vRect[1].c_str());
+		rc.right = _ttoi(vRect[2].c_str());
+		rc.bottom = _ttoi(vRect[3].c_str());
+	}
+	else
+		DBGLOG1(_T("Maring/Padding value isn't correct: %s."), szValue);
+}
+
 //////////////////////////////////////////////////////////////////////
 
 
@@ -334,13 +367,17 @@ CUIObject::CUIObject()
 	m_pSkin = NULL;
 	m_pContainer = NULL;
 
-//	m_nType = 0;
 	m_nId = UID_INVALID;
 	m_nAutoUniID = 0;
 	
 	m_nMsgWant = 0;
 
+	m_layoutParams = 0;
+	m_nWeight = 0;
 	m_rcObj.SetRect(0, 0, 50, 30);
+	m_rcContent.SetRect(0, 0, 0, 0);
+	m_rcMargin.SetRect(0, 0, 0, 0);
+	m_rcPadding.SetRect(0, 0, 0, 0);
 
 	m_bTempTooltip = false;
 
@@ -422,15 +459,19 @@ void CUIObject::OnSize()
 	}
 }
 
-BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])
+void CUIObject::OnMeasureSizePos(FORMULA_VAR vars[])
 {
 	int	nValue;
 
 	if (m_formLeft.CalCualteValue(vars, nValue))
 		m_rcObj.left = nValue;
+	else
+		DBGLOG1(_T("Failed to calculate value: %s"), m_formLeft.GetFormula());
 
 	if (m_formTop.CalCualteValue(vars, nValue))
 		m_rcObj.top = nValue;
+	else
+		DBGLOG1(_T("Failed to calculate value: %s"), m_formLeft.GetFormula());
 
 	if (m_pContainer)
 	{
@@ -440,13 +481,22 @@ BOOL CUIObject::ReCalculatePos(FORMULA_VAR vars[])
 
 	if (m_formWidth.CalCualteValue(vars, nValue))
 		m_rcObj.right = m_rcObj.left + nValue;
+	else
+		DBGLOG1(_T("Failed to calculate value: %s"), m_formLeft.GetFormula());
 
 	if (m_formHeight.CalCualteValue(vars, nValue))
 		m_rcObj.bottom = m_rcObj.top + nValue;
+	else
+		DBGLOG1(_T("Failed to calculate value: %s"), m_formLeft.GetFormula());
 
-	OnSize();
+	if (m_layoutParams & (LAYOUT_HEIGHT_WRAP_CONENT | LAYOUT_WIDTH_WRAP_CONENT))
+		OnMeasureSizeByContent();
 
-	return TRUE;
+	// Expanding UIObject size by padding area.
+	m_rcObj.left -= m_rcPadding.left;
+	m_rcObj.top -= m_rcPadding.top;
+	m_rcObj.right += m_rcPadding.right;
+	m_rcObj.bottom += m_rcPadding.bottom;
 }
 
 void CUIObject::SetProperties(vector<tstring> &vProperties)
@@ -484,6 +534,14 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		if (vRect[2].size()) m_formWidth.SetFormula(vRect[2].c_str());
 		if (vRect[3].size()) m_formHeight.SetFormula(vRect[3].c_str());
 	}
+	else if (IsPropertyName(szProperty, SZ_PN_MARGIN))
+		ReadMarginValue(szValue, m_rcMargin);
+	else if (IsPropertyName(szProperty, SZ_PN_PADDING))
+		ReadMarginValue(szValue, m_rcPadding);
+	else if (IsPropertyName(szProperty, SZ_PN_LAYOUT_PARAMS))
+		m_layoutParams = GetCombinationValue(__idszLayoutParams, szValue);
+	else if (IsPropertyName(szProperty, SZ_PN_WEIGHT))
+		m_nWeight = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_ID) == 0)
 	{
 		if (m_strTooltip.empty())

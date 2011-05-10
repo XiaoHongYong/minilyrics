@@ -2,7 +2,6 @@
 #include "MPlayerApp.h"
 #include "PreferPageAdvanced.h"
 #include "DownloadMgr.h"
-#include "../widget/widget.h"
 
 #ifdef _WIN32
 #include "win32/HotkeyCtrlEx.h"

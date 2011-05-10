@@ -1,13 +1,4 @@
-/********************************************************************
-	Created  :	2002/07/06
-	FileName :	UIObject.h
-	Author   :	xhy
-	
-	Purpose  :	
-*********************************************************************/
-
-#if !defined(AFX_UIOBJECT_H__A1FDC398_7098_11D5_9E04_02608CAD9330__INCLUDED_)
-#define AFX_UIOBJECT_H__A1FDC398_7098_11D5_9E04_02608CAD9330__INCLUDED_
+#pragma once
 
 class CFormula;
 class CSFImage;
@@ -17,6 +8,23 @@ class CSkinAnimation;
 
 typedef vector<CUIObject *>		VecUIObjects;
 typedef list<CUIObject *>		ListUIObjects;
+
+enum LayoutParams
+{
+	// For both
+	LAYOUT_WIDTH_WRAP_CONENT		= 1 << 0,
+	LAYOUT_HEIGHT_WRAP_CONENT		= 1 << 1,
+
+	// Only for vertical linear container
+	LAYOUT_WIDTH_MATCH_PARENT		= 1 << 2,
+	LAYOUT_ALIN_HORZ_CENTER			= 1 << 3,
+	LAYOUT_ALIN_RIGHT				= 1 << 4,
+
+	// Only for horizontal linear container
+	LAYOUT_HEIGHT_MATCH_PARENT		= 1 << 5,
+	LAYOUT_ALIN_VERT_CENTER			= 1 << 6,
+	LAYOUT_ALIN_BOTTOM				= 1 << 7,
+};
 
 enum BLT_MODE
 {
@@ -135,6 +143,7 @@ enum
 #define SZ_TRUE				_T("TRUE")
 #define SZ_FALSE			_T("FALSE")
 
+// PN = Property Name
 #define SZ_PN_NAME			_T("Name")
 #define SZ_PN_TEXT			_T("Text")
 #define SZ_PN_ID			_T("ID")
@@ -153,6 +162,10 @@ enum
 #define SZ_PN_IMAGERECT		_T("ImageRect")
 
 #define SZ_PN_RECT			_T("Rect")
+#define SZ_PN_MARGIN		_T("Margin")
+#define SZ_PN_PADDING		_T("Padding")
+#define SZ_PN_LAYOUT_PARAMS	_T("LayoutParams")
+#define SZ_PN_WEIGHT		_T("Weight")
 
 #define SZ_PN_LINK			_T("Link")
 
@@ -193,8 +206,16 @@ public:
 	virtual BOOL SetPropertyInt(LPCTSTR szProperty, int nValue);
 	virtual void SetProperties(vector<tstring> &vProperties);
 
+	uint32 GetLayoutParams() const { return m_layoutParams; }
+	uint GetWeight() const { return m_nWeight; }
+	uint GetMinHeight() const { return m_rcObj.Height(); }
+	uint GetMinWidth() const { return m_rcObj.Width(); }
+	void OnMeasureSizePos(FORMULA_VAR vars[]);
+	virtual void OnMeasureSizeByContent() { }
+	const CRect &GetMargin() const { return m_rcMargin; }
+	const CRect &GetPadding() const { return m_rcPadding; }
+
 	// when CSkinWnd's size is changed, call every CUIObject's RecalclulatePos to change pos
-	virtual BOOL ReCalculatePos(FORMULA_VAR vars[]);
 	virtual void Invalidate();
 
 	CSkinContainer *GetParent() const { return m_pContainer; }
@@ -324,7 +345,15 @@ public:
 	CFormula	m_formWidth;
 	CFormula	m_formHeight;
 
-	CRect		m_rcObj;
+	uint32		m_layoutParams;
+	uint		m_nWeight;
+
+	CRect		m_rcObj;		// The whole area of the UIObject, including its border.
+	CRect		m_rcContent;	// The content area of the UIObject, for example: for TextButton, it's the text area.
+
+	// For differences between margin and padding: http://stackoverflow.com/questions/4619899/difference-between-a-views-padding-and-margin
+	CRect		m_rcMargin;		// The margin of UIObject (left, top, right, bottom)
+	CRect		m_rcPadding;	// The padding of UIObject (left, top, right, bottom)
 
 	// auto allocated uni-ID by CSkinWnd.
 	int			m_nAutoUniID;
@@ -366,5 +395,3 @@ friend class CSkinWnd;
 friend class CSkinContainer;
 
 };
-
-#endif // !defined(AFX_UIOBJECT_H__A1FDC398_7098_11D5_9E04_02608CAD9330__INCLUDED_)

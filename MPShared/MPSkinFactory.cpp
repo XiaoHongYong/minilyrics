@@ -21,6 +21,7 @@
 #include "SkinContainerBar.h"
 #include "SkinBarFrameClientArea.h"
 #include "SkinPicText.h"
+#include "SkinActivateCtrl.h"
 #include "MPSkinTimeCtrl.h"
 #include "MPSkinInfoTextCtrl.h"
 #include "MediaInfoTextCtrl.h"
@@ -109,6 +110,7 @@ int CMPSkinFactory::Init()
 #endif
 	AddUIObjNewer(CMediaInfoTextCtrl);
 	AddUIObjNewer(CMediaAlbumArtCtrl);
+	AddUIObjNewer(CSkinActivateCtrl);
 
 	RegisterAboutPage(this);
 	RegisterSearchLyricsPage(this);

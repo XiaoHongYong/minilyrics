@@ -87,14 +87,14 @@
       <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Lyrics" Rect="0,0,w,h" >
         <Container ID="CID_LYRICS" Rect="0,0,w,h">
           <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE"
-              EnableAutoResize="FALSE"/>
+              EnableAutoResize="FALSE" ActivateNoticeOverlappedCtrl="CID_TOP_CTRL_PARENT"/>
         </Container>
         <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" UseSkinBg="TRUE" Visible="false"/>
       </ToggleCtrlContainer>
       <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
       <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
 
-      <InfoPrompt/>
+      <Container Name="Top control parent" ID="CID_TOP_CTRL_PARENT" Rect="0,0,w,26" >
       <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,26" TranslucencyWithSkin="TRUE">
         <Image Name="Top-ctrl-bg" Rect="0,0,w,26" Image="top-ctrl-bg.png" BltMode="tile" />
         <Toolbar Rect="20,0,70,22" UseSkinBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
@@ -118,6 +118,7 @@
           <button ID="ID_FONT_SIZE_DEC" Left="9"/>
           <button ID="ID_LYR_HIGH_CLR_LIST" Left="14" />
         </Toolbar>
+      </Container>
       </Container>
 
       <Container ID="CID_PLAY_CTRL" Rect="0,h-26,w,32" TranslucencyWithSkin="TRUE">

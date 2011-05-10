@@ -70,6 +70,7 @@
 #include "../WidgetLite/WidgetLite.h"
 #include "../Skin/Skin.h"
 #include "../MLLib/MLLib.h"
+#include "../widget/widget.h"
 
 // Local Header Files
 

@@ -240,7 +240,7 @@ BEGIN
             MENUITEM "A&bout $Product$...",         IDC_ABOUT
             MENUITEM "$Product$ &Help",             IDC_ML_HELP
             MENUITEM SEPARATOR
-            MENUITEM "&Activate $Product$...",                IDC_REGISTER
+            MENUITEM "&Activate $Product$...",      IDC_REGISTER
             MENUITEM SEPARATOR
             MENUITEM "$Product$ &Website",          IDC_WEBHOME
             MENUITEM "&Report to Author",           IDC_EMAIL
@@ -572,7 +572,7 @@ BEGIN
         MENUITEM "A&bout $Product$...",         IDC_ABOUT
         MENUITEM "$Product$ &Help",             IDC_ML_HELP
         MENUITEM SEPARATOR
-        MENUITEM "&Activate $Product$...",                IDC_REGISTER
+        MENUITEM "&Activate $Product$...",      IDC_REGISTER
         MENUITEM SEPARATOR
         MENUITEM "$Product$ &Website",          IDC_WEBHOME
     END
@@ -616,7 +616,7 @@ BEGIN
         MENUITEM "A&bout $Product$...",         IDC_ABOUT
         MENUITEM "$Product$ &Help",             IDC_ML_HELP
         MENUITEM SEPARATOR
-        MENUITEM "&Activate $Product$...",                IDC_REGISTER
+        MENUITEM "&Activate $Product$...",      IDC_REGISTER
         MENUITEM SEPARATOR
         MENUITEM "$Product$ &Website",          IDC_WEBHOME
     END
@@ -644,7 +644,7 @@ BEGIN
         MENUITEM "A&bout $Product$...",         IDC_ABOUT
         MENUITEM "$Product$ &Help",             IDC_ML_HELP
         MENUITEM SEPARATOR
-        MENUITEM "&Activate $Product$...",                IDC_REGISTER
+        MENUITEM "&Activate $Product$...",      IDC_REGISTER
         MENUITEM SEPARATOR
         MENUITEM "$Product$ &Website",          IDC_WEBHOME
     END
@@ -675,17 +675,6 @@ IDI_F_LRC               ICON                    "res\\ico00001.ico"
 //
 // Dialog
 //
-
-IDD_UPLOAD_EXIST DIALOG  0, 0, 351, 151
-STYLE DS_SETFONT | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
-CAPTION "$Product$"
-FONT 8, "MS Shell Dlg"
-BEGIN
-    LTEXT           "The lyrics exists on the server, your upload action doesn't take effect.",IDC_STATIC,8,10,296,8
-    LTEXT           "Existed lyrics on the server:",IDC_STATIC,7,23,114,8
-    CONTROL         "List1",IDC_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | WS_BORDER | WS_TABSTOP,7,36,337,87
-    DEFPUSHBUTTON   "OK",IDOK,147,130,50,14
-END
 
 IDD_MLSTART DIALOGEX 0, 0, 361, 190
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
@@ -729,18 +718,17 @@ BEGIN
     LTEXT           "Please click 'Send' button, a new mail will be generated, then send this mail to us. It will be very helpful to solve this error.",IDC_STATIC,20,70,230,33
 END
 
-IDD_MSG DIALOG  0, 0, 268, 85
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "$Product$"
-FONT 8, "MS Shell Dlg"
+IDD_MSG DIALOGEX 0, 0, 268, 85
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Confirm to save the lyrics file"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    LTEXT           "Your messages here!",IDC_MSG,27,17,226,21
+    LTEXT           "message",IDC_MSG,27,17,226,21
     CONTROL         "Use as default setting, don't prompt any more",IDC_NO_PROMPT,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,45,196,10
-    PUSHBUTTON      "YES",IDYES,100,64,50,14,NOT WS_VISIBLE
-    PUSHBUTTON      "NO",IDNO,155,64,50,14,NOT WS_VISIBLE
-    DEFPUSHBUTTON   "Cancel",IDCANCEL,210,64,50,14,NOT WS_VISIBLE
-    PUSHBUTTON      "OK",IDOK,100,64,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "YES",IDYES,80,64,50,14
+    PUSHBUTTON      "NO",IDNO,137,64,50,14
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,211,64,50,14
 END
 
 IDD_ERROR_RESOLVE DIALOG  0, 0, 300, 174
@@ -755,19 +743,6 @@ BEGIN
     PUSHBUTTON      "Setup Connection",IDC_SETUP_INET,80,153,65,14
     PUSHBUTTON      "Help",IDC_ML_HELP,153,153,65,14
     PUSHBUTTON      "Report Bug?",IDC_REPORT,226,153,65,14
-END
-
-IDD_RATE_LYR DIALOGEX 0, 0, 203, 90
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Rate these lyrics"
-FONT 8, "MS Shell Dlg", 0, 0, 0x0
-BEGIN
-    LTEXT           "rating:",IDC_STATIC1,7,8,55,8
-    PUSHBUTTON      "Rate!",IDOK,72,70,58,14,BS_CENTER
-    COMBOBOX        IDC_CB_RATING,65,7,130,93,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-    CONTROL         "Hide the link of rating lyrics",IDC_HIDE_RATE_LINK,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,29,162,10
-    LTEXT           "$Product$ will open a web page to submit the rating result.",IDC_STATIC,7,42,188,24
 END
 
 IDD_BATCH_EMBEDDED_LYR DIALOG  0, 0, 384, 228
@@ -823,14 +798,6 @@ END
 #ifdef APSTUDIO_INVOKED
 GUIDELINES DESIGNINFO 
 BEGIN
-    IDD_UPLOAD_EXIST, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 344
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 144
-    END
-
     IDD_MLSTART, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -868,14 +835,6 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 293
         BOTTOMMARGIN, 167
-    END
-
-    IDD_RATE_LYR, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 195
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 83
     END
 
     IDD_BATCH_EMBEDDED_LYR, DIALOG

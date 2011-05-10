@@ -49,7 +49,7 @@ public:
 
 	void OnNotifyTrackMove(int x, int y)
 	{
-		DWORD		dwXY = MAKELONG((WORD)x, (WORD)y);
+		DWORD		dwXY = MAKELONG((short)x, (short)y);
 		SendMessage(M2M_TRACK_MOVE, &dwXY, sizeof(dwXY));
 	}
 
