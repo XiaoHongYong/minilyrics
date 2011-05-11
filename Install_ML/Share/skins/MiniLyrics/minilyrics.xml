@@ -86,8 +86,12 @@
     <DecorativeContainer Name="Body" Rect="5,31,w-10,h-33-9" UseSkinBg="TRUE">
       <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Lyrics" Rect="0,0,w,h" >
         <Container ID="CID_LYRICS" Rect="0,0,w,h">
-          <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE"
-              EnableAutoResize="FALSE" ActivateNoticeOverlappedCtrl="CID_TOP_CTRL_PARENT"/>
+          <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE">
+            <Property Name="ActivateNotice"
+              FontName="Verdana" FontHeight="18" FontBold="false" FontItalic="1"
+              OverlappedCtrl="CID_TOP_CTRL_PARENT" TextColor="#FFFFFF"
+              Height="30" BgColors="#FE8713,#FFDE00,#FF5400,#FFA780"/>
+          </LyricsShow>
         </Container>
         <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" UseSkinBg="TRUE" Visible="false"/>
       </ToggleCtrlContainer>

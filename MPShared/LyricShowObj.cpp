@@ -235,78 +235,111 @@ void AlphaBlendColor(MLColor &clr1, MLColor &clr2, int nAlpha, MLColor &clrOut)
 		(clr1.b() * nPart1 + clr2.b() * nAlpha) / 255);
 }
 
-void GradientFillImage24bpp(PRAW_IMAGE_DATA pImage, CRect &rc, MLColor clrGradient[3])
+void GradientFillImageVert(PRAW_IMAGE_DATA pImage, CRect &rc, MLColor clrGradient[], int nClrCount)
 {
 	ASSERT(pImage->bitCount == 24 || pImage->bitCount == 32);
+	ASSERT(nClrCount >= 2);
 
 	int		nPixCount = 3;
 	if (pImage->bitCount == 24)
 		nPixCount = 3;
 	else if (pImage->bitCount == 32)
 		nPixCount = 4;
-//	agg::rendering_buffer	buff(pImageData->buff, pImageData->width, pImageData->height, pImageData->stride);
 
 	if (rc.right > pImage->width)
 		rc.right = pImage->width;
 	if (rc.bottom > pImage->height)
 		rc.bottom = pImage->height;
 
-	int		r0 = clrGradient[0].r(), g0 = clrGradient[0].g(), b0 = clrGradient[0].b();
-	int		r1 = clrGradient[1].r(), g1 = clrGradient[1].g(), b1 = clrGradient[1].b();
-	int		r2 = clrGradient[2].r(), g2 = clrGradient[2].g(), b2 = clrGradient[2].b();
-	int		nMiddle;
-	float	dr, dg, db, rN, gN, bN;
-	uint8	*row, *pixl;
-	int		x, y;
-
-	nMiddle = rc.bottom / 2;
-
-	// fill top
-	dr = float(r1 - r0) / nMiddle;
-	dg = float(g1 - g0) / nMiddle;
-	db = float(b1 - b0) / nMiddle;
-
-	rN = (float)(r0 + 0.5); gN = (float)(g0 + 0.5); bN = (float)(b0 + 0.5);
-	row = pImage->PixPtr(rc.left, rc.top);
-	for (y = rc.top; y < nMiddle; y++)
+	float block = (float)rc.Height() / (nClrCount - 1);
+	int y = rc.top;
+	for (int i = 0; i + 2 <= nClrCount; i++)
 	{
-		pixl = row;
-		for (x = rc.left; x < rc.right; x++)
+		int		r0 = clrGradient[i].r(), g0 = clrGradient[i].g(), b0 = clrGradient[i].b();
+		int		r1 = clrGradient[i + 1].r(), g1 = clrGradient[i + 1].g(), b1 = clrGradient[i + 1].b();
+
+		float	dr, dg, db;
+		dr = float(r1 - r0) / block;
+		dg = float(g1 - g0) / block;
+		db = float(b1 - b0) / block;
+
+		float	rN, gN, bN;
+		rN = (float)(r0 + 0.5); gN = (float)(g0 + 0.5); bN = (float)(b0 + 0.5);
+		uint8	*row = pImage->PixPtr(rc.left, y);
+		int yEnd = rc.top + rc.Height() * (i + 1) / (nClrCount - 1);
+		for (; y < yEnd; y++)
 		{
-			pixl[0] = (uint8)bN;
-			pixl[1] = (uint8)gN;
-			pixl[2] = (uint8)rN;
-			pixl += nPixCount;
+			uint8	*pixl = row;
+			for (int x = rc.left; x < rc.right; x++)
+			{
+				pixl[0] = (uint8)bN;
+				pixl[1] = (uint8)gN;
+				pixl[2] = (uint8)rN;
+				pixl += nPixCount;
+			}
+
+			bN += db; gN += dg; rN += dr;
+			row += pImage->stride;
 		}
-
-		bN += db; gN += dg; rN += dr;
-		row += pImage->stride;
-	}
-
-	// fill bottom
-	dr = float(r2 - r1) / nMiddle;
-	dg = float(g2 - g1) / nMiddle;
-	db = float(b2 - b1) / nMiddle;
-
-	rN = (float)(r1 + 0.5); gN = (float)(g1 + 0.5); bN = (float)(b1 + 0.5);
-	row = pImage->PixPtr(rc.left, nMiddle);
-	for (y = nMiddle; y < rc.bottom; y++)
-	{
-		pixl = row;
-		for (x = rc.left; x < rc.right; x++)
-		{
-			pixl[0] = (uint8)bN;
-			pixl[1] = (uint8)gN;
-			pixl[2] = (uint8)rN;
-			pixl += nPixCount;
-		}
-
-		bN += db; gN += dg; rN += dr;
-		row += pImage->stride;
 	}
 }
 
-void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, MLColor clrGradient[3])
+void GradientFillImageHorz(PRAW_IMAGE_DATA pImage, CRect &rc, MLColor clrGradient[], int nClrCount)
+{
+	ASSERT(pImage->bitCount == 24 || pImage->bitCount == 32);
+	ASSERT(nClrCount >= 1);
+
+	if (nClrCount == 1)
+	{
+		FillRect(pImage, rc.left, rc.top, rc.right, rc.bottom, clrGradient[0], BPM_COPY, 255);
+		return;
+	}
+
+	int		nPixCount = 3;
+	if (pImage->bitCount == 24)
+		nPixCount = 3;
+	else if (pImage->bitCount == 32)
+		nPixCount = 4;
+
+	if (rc.right > pImage->width)
+		rc.right = pImage->width;
+	if (rc.bottom > pImage->height)
+		rc.bottom = pImage->height;
+
+	float block = (float)rc.Width() / (nClrCount - 1);
+	int x = rc.left;
+	for (int i = 0; i + 2 <= nClrCount; i++)
+	{
+		int		r0 = clrGradient[i].r(), g0 = clrGradient[i].g(), b0 = clrGradient[i].b();
+		int		r1 = clrGradient[i + 1].r(), g1 = clrGradient[i + 1].g(), b1 = clrGradient[i + 1].b();
+
+		float	dr, dg, db;
+		dr = float(r1 - r0) / block;
+		dg = float(g1 - g0) / block;
+		db = float(b1 - b0) / block;
+
+		float	rN, gN, bN;
+		rN = (float)(r0 + 0.5); gN = (float)(g0 + 0.5); bN = (float)(b0 + 0.5);
+		uint8	*col = pImage->PixPtr(x, rc.top);
+		int xEnd = rc.left + rc.Width() * (i + 1) / (nClrCount - 1);
+		for (; x < xEnd; x++)
+		{
+			uint8	*pixl = col;
+			for (int y = rc.top; y < rc.bottom; y++)
+			{
+				pixl[0] = (uint8)bN;
+				pixl[1] = (uint8)gN;
+				pixl[2] = (uint8)rN;
+				pixl += pImage->stride;
+			}
+
+			bN += db; gN += dg; rN += dr;
+			col += nPixCount;
+		}
+	}
+}
+
+void CreateGradientFillImage(CRawImage &image, int nHeight, MLColor clrGradient[3])
 {
 	PRAW_IMAGE_DATA		pImage = image.GetHandle();
 	image.Detach();
@@ -331,43 +364,9 @@ void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, MLColor clrGrad
 	if (pImage)
 	{
 		CRect	rc(0, 0, pImage->width, pImage->height);
-		GradientFillImage24bpp(pImage, rc, clrGradient);
+		GradientFillImageVert(pImage, rc, clrGradient, 3);
 		image.Attach(pImage);
 	}
-}
-
-void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, MLColor clrSimpGradient)
-{
-	MLColor		clrGradient[3];
-
-#define		PATTERN_COLOR_RANGE			100
-	int		r = clrSimpGradient.r(), g = clrSimpGradient.g(), b = clrSimpGradient.b();
-	int		r1, g1, b1;
-
-	if (r + b + g >= 128 * 3)
-	{
-		r1 = r - PATTERN_COLOR_RANGE;
-		g1 = g - PATTERN_COLOR_RANGE;
-		b1 = b - PATTERN_COLOR_RANGE;
-		if (r1 < 0) r1 = 0;
-		if (g1 < 0) g1 = 0;
-		if (b1 < 0) b1 = 0;
-	}
-	else
-	{
-		r1 = r + PATTERN_COLOR_RANGE;
-		g1 = g + PATTERN_COLOR_RANGE;
-		b1 = b + PATTERN_COLOR_RANGE;
-		if (r1 > 255) r1 = 255;
-		if (g1 > 255) g1 = 255;
-		if (b1 > 255) b1 = 255;
-	}
-
-	clrGradient[0].set(r1, g1, b1);
-	clrGradient[1] = clrSimpGradient;
-	clrGradient[2].set(r1, g1, b1);
-
-	CreateGradientFillImage24bpp(image, nHeight, clrGradient);
 }
 
 ID_TO_STRING g_idsLyrDisplayOpt[] = 
@@ -473,7 +472,7 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_GRADIENT2], szSectName, pFieledName[CLyricShowObj::TCI_GRADIENT2]);
 		ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_GRADIENT3], szSectName, pFieledName[CLyricShowObj::TCI_GRADIENT3]);
 
-		CreateGradientFillImage24bpp(tob.imgPattern, nGradientPatternHeight, tob.clr + CLyricShowObj::TCI_GRADIENT1);
+		CreateGradientFillImage(tob.imgPattern, nGradientPatternHeight, tob.clr + CLyricShowObj::TCI_GRADIENT1);
 	}
 	else
 	{
@@ -505,7 +504,7 @@ void CreateLyrOverlayBlendingPattern(CLyricShowObj::TextOverlayBlending &tob, in
 	}
 	else if (tob.obm == OBM_GRADIENT_COLOR)
 	{
-		CreateGradientFillImage24bpp(tob.imgPattern, nGradientPatternHeight, tob.clr + CLyricShowObj::TCI_GRADIENT1);
+		CreateGradientFillImage(tob.imgPattern, nGradientPatternHeight, tob.clr + CLyricShowObj::TCI_GRADIENT1);
 	}
 	else
 		tob.imgPattern.Destroy();

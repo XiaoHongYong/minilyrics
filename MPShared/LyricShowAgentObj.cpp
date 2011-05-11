@@ -144,6 +144,19 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 	}
 }
 
+BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
+{
+	if (IsPropertyName(szProperty, _T("ActivateNotice")))
+	{
+		m_activateButtonProperties = pXmlNode->listProperties;
+		m_nIdActivateNoticeOverlappedCtrl = GetIDByName(pXmlNode->GetPropertySafe(_T("OverlappedCtrl")));
+	}
+	else
+		return FALSE;
+
+	return true;
+}
+
 BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	if (m_pLyricsShow)
@@ -159,8 +172,6 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bEnableStaticTextStyle = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("EnableToolbar")))
 		m_bEnableToolbar = IsTRUE(szValue);
-	else if (IsPropertyName(szProperty, _T("ActivateNoticeOverlappedCtrl")))
-		m_nIdActivateNoticeOverlappedCtrl = GetIDByName(szValue);
 	else
 	{
 		m_vProperties.push_back(szProperty);
@@ -168,6 +179,28 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 
 	return TRUE;
+}
+
+tstring GetRandomActivateNoticeText()
+{
+	LPCTSTR	vNoticeText[] = {
+		_T("These lyrics are very nice, right?"),
+		_T("Do you think MiniLyrics is useful for you?"),
+		_T("We love to make MiniLyrics better, how about you?"),
+	};
+
+	LPCTSTR	vNoticeText2[] = {
+		_T("Buy Now"),
+		_T("Support us"),
+	};
+
+	srand(GetTickCount());
+
+	tstring str = vNoticeText[rand() % CountOf(vNoticeText)];
+	str += _T("  -  ");
+	str += vNoticeText2[rand() % CountOf(vNoticeText2)];
+
+	return str;
 }
 
 void CLyricShowAgentObj::ToggleActivateButton()
@@ -187,7 +220,14 @@ void CLyricShowAgentObj::ToggleActivateButton()
 			m_pActivateButton = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, 
 				CSkinActivateCtrl::ClassName(), this);
 			ASSERT(m_pActivateButton);
-			m_pActivateButton->SetProperty(SZ_PN_RECT, _T("0,0,w,25"));
+			m_pActivateButton->SetProperty(SZ_PN_RECT, _T("0,0,w,"));
+			for (SXNode::iterProperties it = m_activateButtonProperties.begin();
+				it != m_activateButtonProperties.end(); ++it)
+			{
+				m_pActivateButton->SetProperty((*it).strName.c_str(), (*it).strValue.c_str());
+			}
+			m_pActivateButton->SetProperty(SZ_PN_TEXT, GetRandomActivateNoticeText().c_str());
+
 			if (m_nIdActivateNoticeOverlappedCtrl == UID_INVALID)
 				this->AddUIObject(m_pActivateButton);
 			else

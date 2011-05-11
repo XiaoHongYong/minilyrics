@@ -776,57 +776,16 @@ void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *s
 	}
 }
 
-/* Test CPU optimizing code for inline funcitions.
-void FillRectCopyRGB(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, uint8 *srcPixel)
+void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, const MLColor &clrFill, BlendPixMode bpm, int nOpacityFill)
 {
-	byte		*p, *pEnd, *pRow;
-	int			nStrideModify;
-	int			nPixSize;
-	
-	if (pImage->bitCount == 32)
-		nPixSize = 4;
-	else if (pImage->bitCount == 24)
-		nPixSize = 3;
-	else
-	{
-		ASSERT(0);
-		return;
-	}
-	
-	nStrideModify = (xMax - x) * nPixSize;
-	pRow = pImage->PixPtr(x, y);
-	
-	for (; y < yMax; y++)
-	{
-		pEnd = pRow + nStrideModify;
-		for (p = pRow; p < pEnd; p += nPixSize)
-		{
-			p[PIX_B] = srcPixel[PIX_B];
-			p[PIX_G] = srcPixel[PIX_G];
-			p[PIX_R] = srcPixel[PIX_R];
-		}
-		pRow += pImage->stride;
-	}
-}*/
+	ASSERT(pImage);
+	ASSERT(pImage->width >= xMax && pImage->height >= yMax);
 
-void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMode bpm)
-{
-	ASSERT(m_imageData.bitCount == 32 || m_imageData.bitCount == 24);
-
-	int			x, y, xMax, yMax;
 	uint8		srcPixel[4];
-
 	srcPixel[PIX_R] = clrFill.r() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_G] = clrFill.g() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_B] = clrFill.b() * clrFill.getAlpha() / 255;
 	srcPixel[PIX_A] = clrFill.getAlpha();
-
-	ClipAndMapRect(lpRect, x, y, xMax, yMax);
-	if (y >= yMax || x >= xMax)
-		return;
-
-	if (!m_bAlphaChannelEnabled)
-		bpm &= ~BPM_CHANNEL_ALPHA;
 
 	if (IsFlagSet(bpm, BPM_OP_BLEND))
 	{
@@ -834,14 +793,14 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 		if (IsFlagSet(bpm, BPM_CHANNEL_RGB))
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<blend_rgb, blend_alpha, blend_rgb_opacity, blend_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				::FillRect<blend_rgb, blend_alpha, blend_rgb_opacity, blend_alpha_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
 			else
-				::FillRect<blend_rgb, blend_copy_none, blend_rgb_opacity, blend_copy_none_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				::FillRect<blend_rgb, blend_copy_none, blend_rgb_opacity, blend_copy_none_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
 		}
 		else
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<blend_copy_none, blend_alpha, blend_copy_none_opacity, blend_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				::FillRect<blend_copy_none, blend_alpha, blend_copy_none_opacity, blend_alpha_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
 		}
 	}
 	else if (IsFlagSet(bpm, BPM_OP_MULTIPLY))
@@ -850,14 +809,14 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 		if (IsFlagSet(bpm, BPM_CHANNEL_RGB))
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<multiply_rgb, multiply_alpha, multiply_rgb_opacity, multiply_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				::FillRect<multiply_rgb, multiply_alpha, multiply_rgb_opacity, multiply_alpha_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
 			else
-				::FillRect<multiply_rgb, blend_copy_none, multiply_rgb_opacity, blend_copy_none_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				::FillRect<multiply_rgb, blend_copy_none, multiply_rgb_opacity, blend_copy_none_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
 		}
 		else
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<blend_copy_none, multiply_alpha, blend_copy_none_opacity, multiply_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				::FillRect<blend_copy_none, multiply_alpha, blend_copy_none_opacity, multiply_alpha_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
 		}
 	}
 	else
@@ -866,19 +825,34 @@ void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMod
 		if (IsFlagSet(bpm, BPM_CHANNEL_RGB))
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<copy_rgb, copy_alpha, copy_rgb_opacity, copy_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				::FillRect<copy_rgb, copy_alpha, copy_rgb_opacity, copy_alpha_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
 			else
 			{
-				::FillRect<copy_rgb, blend_copy_none, copy_rgb_opacity, blend_copy_none_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
-				// FillRectCopyRGB(&m_imageData, x, y, xMax, yMax, srcPixel);
+				::FillRect<copy_rgb, blend_copy_none, copy_rgb_opacity, blend_copy_none_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
+				// FillRectCopyRGB(pImage, x, y, xMax, yMax, srcPixel);
 			}
 		}
 		else
 		{
 			if (IsFlagSet(bpm, BPM_CHANNEL_ALPHA))
-				::FillRect<blend_copy_none, copy_alpha, blend_copy_none_opacity, copy_alpha_opacity>(&m_imageData, x, y, xMax, yMax, srcPixel, m_nOpacityPainting);
+				::FillRect<blend_copy_none, copy_alpha, blend_copy_none_opacity, copy_alpha_opacity>(pImage, x, y, xMax, yMax, srcPixel, nOpacityFill);
 		}
 	}
+}
+
+void CRawGraph::FillRect(const RECT *lpRect, const MLColor &clrFill, BlendPixMode bpm)
+{
+	ASSERT(m_imageData.bitCount == 32 || m_imageData.bitCount == 24);
+
+	int			x, y, xMax, yMax;
+	ClipAndMapRect(lpRect, x, y, xMax, yMax);
+	if (y >= yMax || x >= xMax)
+		return;
+
+	if (!m_bAlphaChannelEnabled)
+		bpm &= ~BPM_CHANNEL_ALPHA;
+
+	::FillRect(&m_imageData, x, y, xMax, yMax, clrFill, bpm, m_nOpacityPainting);
 }
 
 POINT CRawGraph::SetOrigin(const POINT &ptOrg)

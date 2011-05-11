@@ -30,6 +30,8 @@ public:
 	// IEventHandler
 	virtual void OnEvent(const IEvent *pEvent);
 
+	BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
+
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 
 public:
@@ -48,6 +50,9 @@ protected:
 	CUIObject		*m_pToolbar;
 	bool			m_bEnableToolbar;
 	CUIObject		*m_pActivateButton;
+
+	SXNode::LIST_PROPERTIES m_activateButtonProperties;
+
 	int				m_nIdActivateNoticeOverlappedCtrl;
 
 	bool			m_bFloatingLyr;

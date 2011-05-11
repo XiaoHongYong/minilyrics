@@ -11,6 +11,8 @@ class CRawGraph;
 
 bool BltRawImage(PRAW_IMAGE_DATA pImageDst, CRect &rcDst, PRAW_IMAGE_DATA pImageSrc, int xSrc, int ySrc, BlendPixMode bpm, int nOpacitySrc);
 
+void FillRect(PRAW_IMAGE_DATA pImage, int x, int y, int xMax, int yMax, const MLColor &clrFill, BlendPixMode bpm, int nOpacityFill);
+
 //
 //
 //

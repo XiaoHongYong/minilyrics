@@ -541,7 +541,6 @@ int CSkinContainer::FromXML(SXNode *pXmlNode)
 	{
 		SXNode			*pNode = *it;
 
-		/* No property node now for SkinContainer.
 		if (IsPropertyName(pNode->strName.c_str(), SZ_PN_PROPERTY))
 		{
 			// Is it a property node?
@@ -549,7 +548,7 @@ int CSkinContainer::FromXML(SXNode *pXmlNode)
 			if (!IsEmptyString(szPropName) && !SetProperty(szPropName, pNode))
 				DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), szPropName);
 			continue;
-		}*/
+		}
 
 		CUIObject *pObj = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, pNode->strName.c_str(), this);
 		if (pObj)

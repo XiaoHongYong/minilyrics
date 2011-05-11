@@ -3,7 +3,7 @@
 #include "LyrDisplayClrListWnd.h"
 
 
-void CreateGradientFillImage24bpp(CRawImage &image, int nHeight, MLColor clrGradient[3]);
+void CreateGradientFillImage(CRawImage &image, int nHeight, MLColor clrGradient[3]);
 
 tstring GetPatternDir()
 {
@@ -233,7 +233,7 @@ void CLyrDisplayClrListWnd::AddGradientColor(COLORREF clr0, COLORREF clr1, COLOR
 	clr[1].set(clr1);
 	clr[2].set(clr2);
 
-	CreateGradientFillImage24bpp(image, HEIGHT_COLOR, clr);
+	CreateGradientFillImage(image, HEIGHT_COLOR, clr);
 
 	if (image.IsValid())
 	{
