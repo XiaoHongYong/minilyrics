@@ -740,9 +740,6 @@ protected:
 		if (m_strArtistLastSearch.empty() && m_strTitleLastSearch.empty())
 			return;
 
-		if (m_strTitleLastSearch.empty())
-			ShowRegisterNotice(m_pSkin, false);
-
 		m_pLyricsList->DeleteAllItems();
 
 		ASSERT(!m_pSearchObj);

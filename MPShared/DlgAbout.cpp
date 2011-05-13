@@ -75,29 +75,9 @@ public:
 	bool OnOK()
 	{
 		if (OnCheckRegCode())
-		{
-			if (IsEndToClose())
-				return true;
-			else
-				m_pContainer->SwitchToLastPage(RESULT_OK, true);
-		}
-
-		return false;
-	}
-
-	bool OnCancel()
-	{
-		if (IsEndToClose())
 			return true;
-		else
-			m_pContainer->SwitchToLastPage(RESULT_CANCELD, true);
-		return false;
-	}
 
-protected:
-	bool IsEndToClose()
-	{
-		return GetExPoolBool(_T("EnterCode.Close"), false);
+		return false;
 	}
 
 };
@@ -222,59 +202,13 @@ UIOBJECT_CLASS_NAME_IMP(CPageAbout, _T("Container.About"));
 
 //////////////////////////////////////////////////////////////////////////
 
-class CPageNotice : public CSkinContainer
-{
-	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
-public:
-	void OnSwitchTo()
-	{
-		CSkinContainer::OnSwitchTo();
-
-		if (g_licenseManager.IsLicenseValid())
-			m_pSkin->SetCaptionText(TOLOCAL(_T("$Product$ (Registered Version)")));
-		else
-			m_pSkin->SetCaptionText(TOLOCAL(_T("$Product$ (Evaluation Version)")));
-	}
-
-	bool OnCustomCommand(int nId)
-	{
-		if (nId == GetIDByName(_T("CID_BUYNOW")))
-		{
-			OpenUrl(m_pSkin, GetStrName(SN_HTTP_REGISTER));
-			m_pSkin->PostDestroy();
-			return true;
-		}
-		else if (nId == GetIDByName(_T("CID_ENTER_CODE")))
-		{
-			m_pContainer->SwitchToPage(CPageEnterCode::ClassName(), false, 0, true);
-		}
-		else if (nId == GetIDByName(_T("CID_NOTICE_OK")))
-		{
-			m_pSkin->PostDestroy();
-		}
-		return false;
-	}
-
-};
-
-UIOBJECT_CLASS_NAME_IMP(CPageNotice, _T("Container.RegNotice"))
-
-//////////////////////////////////////////////////////////////////////////
-
 void ShowAboutDialog(CBaseWnd *pWndParent)
 {
 	CSkinApp::GetInstance()->ShowDialog(pWndParent, _T("AboutBox.xml"));
 }
 
-void ShowRegisterNotice(CBaseWnd *pWndParent, BOOL bForceShow)
+void ShowActivateDialog(CBaseWnd *pWndParent)
 {
-	if (!bForceShow && g_licenseManager.IsLicenseValid())
-		return;
-
-#ifdef _MPLAYER
-	return;
-#endif
-
 	CSkinApp::GetInstance()->ShowDialog(pWndParent, _T("Registration.xml"));
 }
 
@@ -284,5 +218,4 @@ void RegisterAboutPage(CSkinFactory *pSkinFactory)
 {
 	AddUIObjNewer2(pSkinFactory, CPageAbout);
 	AddUIObjNewer2(pSkinFactory, CPageEnterCode);
-	AddUIObjNewer2(pSkinFactory, CPageNotice);
 }

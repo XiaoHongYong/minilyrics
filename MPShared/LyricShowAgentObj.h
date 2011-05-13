@@ -30,6 +30,8 @@ public:
 	// IEventHandler
 	virtual void OnEvent(const IEvent *pEvent);
 
+	void OnTimer(int nId);
+
 	BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
@@ -40,7 +42,7 @@ public:
 	static void SetLyrDispStyleSettings(CSkinWnd *pSkinWnd, LPCTSTR szLyrStyle);
 
 protected:
-	void ToggleActivateButton();
+	void ToggleActivateButton(int nDuration);
 
 	void ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, bool bRedraw = true);
 
@@ -49,11 +51,10 @@ protected:
 protected:
 	CUIObject		*m_pToolbar;
 	bool			m_bEnableToolbar;
-	CUIObject		*m_pActivateButton;
+	class CSkinActivateCtrl	*m_pActivateButton;
+	int				m_nTimerShowActivateBtn;
 
 	SXNode::LIST_PROPERTIES m_activateButtonProperties;
-
-	int				m_nIdActivateNoticeOverlappedCtrl;
 
 	bool			m_bFloatingLyr;
 	tstring			m_strLyrDisplayStylePropName;

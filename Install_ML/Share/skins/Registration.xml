@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<skinwnd Extends="WindowFrame" Name="Registration.xml" Caption="$Product$ (Trial Version)" DefaultPage="Container.RegNotice"
-         FixedWidth="true" FixedHeight="true" Width="430" Height="290" RememberSizePos="false">
-  <Container.RegNotice ID="CID_C_NOTICE" Visible="false" Name="Notice" Rect="0,0,w,h">
-    <NormalText Text="Do you think MiniLyrics is valuable to you? If yes, you may purchase it."
-                Rect="30,25,w-60,40" FontHeight="16"/>
-    <NormalText Text="You could support the development of MiniLyrics by purchasing it, and we will make MiniLyrics better."
-                Rect="30,90,w-60,40" FontHeight="16"/>
-    <NormalText Text="This reminder window will be removed permanently after you enter the registration code."
-                Rect="30,150,w-60,40" FontHeight="16"/>
-    <NormalTextBt ID="CID_BUYNOW" Text="&amp;Buy Now" Left="w/2 - 110 - 110/2 - 20" Top="210" Width="110"/>
-    <NormalTextBt ID="CID_ENTER_CODE" Text="&amp;Enter code" Left="w/2 - 110/2" Top="210" Width="110"/>
-    <NormalTextBt ID="CID_NOTICE_OK" Text="&amp;Close" Left="w/2 + 110/2 + 20" Top="210" Width="110"/>
-  </Container.RegNotice>
+<skinwnd Extends="WindowFrame" Name="Registration.xml" Caption="$Product$ (Trial Version)" DefaultPage="Container.EnterCode"
+         FixedWidth="true" FixedHeight="true" Width="450" Height="320" RememberSizePos="false">
   <include Name="EnterCode.xml"/>
 </skinwnd>

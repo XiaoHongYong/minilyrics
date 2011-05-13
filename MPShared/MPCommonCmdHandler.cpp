@@ -229,7 +229,7 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 		}
 		break;
 	case IDC_REGISTER:
-		ShowRegisterNotice(m_pSkinWnd, TRUE);
+		ShowActivateDialog(m_pSkinWnd);
 		break;
 // 	case IDC_MINIMIZE:
 // #if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)

@@ -8,15 +8,6 @@
 #include "DlgAbout.h"
 #include "VersionUpdate.h"
 
-#define TIMER_SHOW_REG				1
-
-void ShowRegisterNoticeSafely()
-{
-	CMPlayerAppBase::GetMainWnd()->SetTimer(TIMER_SHOW_REG, 500);
-}
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 CMPSkinMainWndBase::CMPSkinMainWndBase()
@@ -63,19 +54,4 @@ void CMPSkinMainWndBase::OnEvent(const IEvent *pEvent)
 	}
 	else
 		CMPSkinWnd::OnEvent(pEvent);
-}
-
-void CMPSkinMainWndBase::OnTimer(UINT nIDEvent)
-{
-	if (nIDEvent == TIMER_SHOW_REG)
-	{
-		KillTimer(nIDEvent);
-
-		if (g_Player.HasVideo())
-			return;
-
-		ShowRegisterNotice(this, false);
-	}
-	else
-		CMPSkinWnd::OnTimer(nIDEvent);
 }

@@ -433,26 +433,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 				pTask->buffContent.c_str(), pTask->buffContent.size()) == ERR_OK)
 				CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
-#ifdef _WIN32
-			if (!g_licenseManager.IsLicenseValid())
-			{
-				static int	dwDownloadedCount = 0;
-				static bool bShowRegNoticeNext = false;
-
-				dwDownloadedCount++;
-				if (dwDownloadedCount % 6 == 1 || bShowRegNoticeNext)
-				{
-					// Show registration dialog every xxx time.
-					if (::GetForegroundWindow() == CMPlayerAppBase::GetMainWnd()->GetHandle())
-					{
-						ShowRegisterNoticeSafely();
-						bShowRegNoticeNext = false;
-					}
-					else
-						bShowRegNoticeNext = true;
-				}
-			}
-#endif
+			CSkinApp::GetInstance()->GetEventPatcher()->DispatchUnsyncEvent(ET_UI_ACTIVATE_NOTICE);
 		}
 		break;
 	case DTT_CHECK_VERSION:

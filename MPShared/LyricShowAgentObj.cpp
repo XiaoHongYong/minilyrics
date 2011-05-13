@@ -21,7 +21,6 @@ CLyricShowAgentObj::CLyricShowAgentObj()
 	m_pToolbar = NULL;
 	m_bFloatingLyr = false;
 	m_pActivateButton = NULL;
-	m_nIdActivateNoticeOverlappedCtrl = UID_INVALID;
 }
 
 CLyricShowAgentObj::~CLyricShowAgentObj()
@@ -91,7 +90,10 @@ void CLyricShowAgentObj::OnCreate()
 
 	ChangeLyricsDisplayStyle(m_strLyrDisplayStyleDefault.c_str(), false);
 
-	ToggleActivateButton();
+	ToggleActivateButton(30);
+
+	if (!g_licenseManager.IsLicenseValid())
+		m_nTimerShowActivateBtn = m_pSkin->RegisterTimerObject(this, 1000 * 60 * 60 * 3);
 }
 
 void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
@@ -138,19 +140,26 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 	}
 	else if (pEvent->eventType == ET_UI_ACTIVATE_NOTICE)
 	{
-		ToggleActivateButton();
+		ToggleActivateButton(5);
 		m_pContainer->RecalculateUIObjSizePos(this);
 		Invalidate();
 	}
 }
 
+void CLyricShowAgentObj::OnTimer(int nId)
+{
+	if (nId != m_nTimerShowActivateBtn)
+		return;
+
+	ToggleActivateButton(15);
+	m_pContainer->RecalculateUIObjSizePos(this);
+	Invalidate();
+}
+
 BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
 {
 	if (IsPropertyName(szProperty, _T("ActivateNotice")))
-	{
 		m_activateButtonProperties = pXmlNode->listProperties;
-		m_nIdActivateNoticeOverlappedCtrl = GetIDByName(pXmlNode->GetPropertySafe(_T("OverlappedCtrl")));
-	}
 	else
 		return FALSE;
 
@@ -185,7 +194,7 @@ tstring GetRandomActivateNoticeText()
 {
 	LPCTSTR	vNoticeText[] = {
 		_T("These lyrics are very nice, right?"),
-		_T("Do you think MiniLyrics is useful for you?"),
+		_T("Do you think MiniLyrics is useful to you?"),
 		_T("We love to make MiniLyrics better, how about you?"),
 	};
 
@@ -203,37 +212,51 @@ tstring GetRandomActivateNoticeText()
 	return str;
 }
 
-void CLyricShowAgentObj::ToggleActivateButton()
+void CLyricShowAgentObj::ToggleActivateButton(int nDuration)
 {
 	if (g_licenseManager.IsLicenseValid())
 	{
 		if (m_pActivateButton)
 		{
+			if (m_pActivateButton->GetOverlappedCtrl() != UID_INVALID)
+				m_pSkin->SetUIObjectVisible(m_pActivateButton->GetOverlappedCtrl(), true, false);
 			RemoveUIObject(m_pActivateButton, true);
 			m_pActivateButton = NULL;
 		}
 	}
 	else
 	{
-		if (!m_pActivateButton)
+		if (m_pActivateButton)
 		{
-			m_pActivateButton = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, 
+			m_pActivateButton->SetVisible(true, false);
+			m_pSkin->SetUIObjectVisible(m_pActivateButton->GetOverlappedCtrl(), false, false);
+		}
+		else
+		{
+			m_pActivateButton = (CSkinActivateCtrl*)m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, 
 				CSkinActivateCtrl::ClassName(), this);
 			ASSERT(m_pActivateButton);
 			m_pActivateButton->SetProperty(SZ_PN_RECT, _T("0,0,w,"));
+			m_pActivateButton->SetProperty(_T("TextColor"), _T("#FFFFFF"));
+			m_pActivateButton->SetProperty(_T("FontName"), _T("Verdana"));
+			m_pActivateButton->SetProperty(_T("FontHeight"), _T("14"));
+			m_pActivateButton->SetProperty(_T("FontBold"), _T("true"));
+			m_pActivateButton->SetProperty(_T("FontItalic"), _T("1"));
+			m_pActivateButton->SetProperty(_T("BgColors"), _T("#FE8713,#FFDE00,#FF5400,#FFA780"));
 			for (SXNode::iterProperties it = m_activateButtonProperties.begin();
 				it != m_activateButtonProperties.end(); ++it)
 			{
 				m_pActivateButton->SetProperty((*it).strName.c_str(), (*it).strValue.c_str());
 			}
 			m_pActivateButton->SetProperty(SZ_PN_TEXT, GetRandomActivateNoticeText().c_str());
+			m_pActivateButton->SetProperty(_T("Duration"), CStrPrintf(_T("%d"), nDuration).c_str());
 
-			if (m_nIdActivateNoticeOverlappedCtrl == UID_INVALID)
+			if (m_pActivateButton->GetOverlappedCtrl() == UID_INVALID)
 				this->AddUIObject(m_pActivateButton);
 			else
 			{
 				this->InsertUIObjectAt(m_pLyricsShow, m_pActivateButton);
-				m_pSkin->SetUIObjectVisible(m_nIdActivateNoticeOverlappedCtrl, false, false);
+				m_pSkin->SetUIObjectVisible(m_pActivateButton->GetOverlappedCtrl(), false, false);
 			}
 		}
 	}

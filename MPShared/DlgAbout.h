@@ -2,6 +2,6 @@
 
 void ShowAboutDialog(CBaseWnd *pWndParent);
 
-void ShowRegisterNotice(CBaseWnd *pWndParent, BOOL bForceShow = FALSE);
+void ShowActivateDialog(CBaseWnd *pWndParent);
 
 void RegisterAboutPage(CSkinFactory *pSkinFactory);

@@ -102,13 +102,12 @@ void CSkinTxtLink::OnCreate()
 bool CSkinTxtLink::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	if (m_strLink.size())
-	{
 		OpenUrl(m_pSkin, m_strLink.c_str());
-		MLWidget::SetCursor(m_Cursor);
-	}
 
 	if (m_nId != UID_INVALID)
 		m_pSkin->PostCustomCommandMsg(m_nId);
+
+	MLWidget::SetCursor(m_Cursor);
 
 	return true;
 }

@@ -11,8 +11,6 @@
 
 #include "MPSkinWnd.h"
 
-void ShowRegisterNoticeSafely();
-
 class CMPSkinMainWndBase : public CMPSkinWnd
 {
 public:
@@ -24,10 +22,6 @@ public:
 
 	// IEventHandler
 	virtual void OnEvent(const IEvent *pEvent);
-
-	void OnTimer(UINT nIDEvent);
-
-protected:
 
 };
 

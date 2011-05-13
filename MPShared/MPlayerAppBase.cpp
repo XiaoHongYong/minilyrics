@@ -422,8 +422,6 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 
 	g_lyrOutPlguinMgr.Init();
 
-	ShowRegisterNoticeSafely();
-
 	return true;
 }
 
