@@ -326,11 +326,6 @@ class CPageUploadResult : public CSkinContainer
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
-	CPageUploadResult()
-	{
-		m_strText = TOLOCAL_MARK(_T("Uploading"));
-	}
-
 	void OnCreate()
 	{
 		CSkinContainer::OnCreate();

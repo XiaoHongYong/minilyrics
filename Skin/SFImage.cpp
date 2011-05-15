@@ -79,7 +79,11 @@ bool CSFImage::LoadFromSRM(CSkinFactory *pskinFactory, LPCTSTR szResName)
 	hImage = m_pSkinFactory->GetResourceMgr()->LoadBitmap(szResName);
 
 	if (hImage)
+	{
 		Attach(hImage);
+		if (0 == m_cx && 0 == m_cy)
+			GetOrginalSize(m_cx, m_cy);
+	}
 	else
 		ERRLOG1(_T("Load Bitmap: %s, FAILED."), szResName);
 

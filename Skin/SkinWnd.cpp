@@ -688,10 +688,20 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 #ifdef WIN32
 	{
 		// Dump UIObject
-		if (((GetKeyState(VK_CONTROL) & 0x8000) == 0x8000) && nChar == VK_F1)
+		if (((GetKeyState(VK_CONTROL) & 0x8000) == 0x8000))
 		{
-			int nDeep = 0;
-			m_rootConainter.DumpUIObject(nDeep);
+			if (nChar == VK_F1)
+			{
+				int nDeep = 0;
+				m_rootConainter.DumpUIObject(nDeep);
+			}
+			else if (nChar == VK_F2)
+			{
+				POINT pt;
+				MLWidget::GetCursorPos(&pt);
+				ScreenToClient(pt);
+				DBGLOG2(_T("Current Pos: %d, %d"), pt.x, pt.y);
+			}
 		}
 	}
 #endif
@@ -2536,35 +2546,6 @@ void CSkinWnd::DispatchUIObjNotify(IUIObjNotify *pNotify)
 	OnUIObjNotify(pNotify);
 }
 
-void CSkinWnd::RootContainerFromXml(SXNode *pSkinWndNode, CSkinContainer *pRootContainer)
-{
-	SXNode::iterator	it, itEnd;
-
-	itEnd = pSkinWndNode->listChildren.end();
-	for (it = pSkinWndNode->listChildren.begin(); it != itEnd; ++it)
-	{
-		SXNode			*pNode = *it;
-		CUIObject		*pObj;
-
-		if (IsPropertyName(pNode->strName.c_str(), SZ_PN_PROPERTY))
-		{
-			// Is it a property node?
-			LPCTSTR szPropName = pNode->GetPropertySafe(SZ_PN_NAME);
-			if (!IsEmptyString(szPropName) && !SetProperty(szPropName, pNode))
-				DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), szPropName);
-			continue;
-		}
-
-		pObj = m_pSkinFactory->CreateUIObject(this, pNode->strName.c_str(), pRootContainer);
-		if (pObj)
-		{
-			pObj->FromXML(pNode);
-
-			pRootContainer->AddUIObject(pObj);
-		}
-	}
-}
-
 int CSkinWnd::FromXML(SXNode *pXmlNode)
 {
 	m_bTranslucencyLayered = false;
@@ -2594,7 +2575,7 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	CSkinContainer	*pContainterClientArea = NULL;
 	if (pNodeExtends)
 	{
-		RootContainerFromXml(pNodeExtends, &m_rootConainter);
+		m_rootConainter.CreateChild(pNodeExtends);
 		pContainterClientArea = (CSkinContainer*)m_rootConainter.GetUIObjectByClassName(CSkinClientArea::ClassName());
 
 		// Set properties to client area.
@@ -2606,7 +2587,7 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	if (pContainterClientArea == NULL)
 		pContainterClientArea = &m_rootConainter;
 
-	RootContainerFromXml(pXmlNode, pContainterClientArea);
+	pContainterClientArea->CreateChild(pXmlNode);
 
 	m_bSkinOpened = true;
 

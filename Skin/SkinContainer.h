@@ -55,6 +55,7 @@ public:
 	void Draw(CRawGraph *pGraph);
 
 	int FromXML(SXNode *pXmlNode);
+	void CreateChild(SXNode *pXmlNode);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode) { return FALSE; }
@@ -207,4 +208,9 @@ protected:
 class CSkinClientArea : public CSkinContainer
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
+public:
+	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
+	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
+		{ return CSkinContainer::SetProperty(szProperty, szValue); }
+
 };

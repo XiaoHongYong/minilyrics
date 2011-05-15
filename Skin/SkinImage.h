@@ -20,6 +20,8 @@ public:
 	virtual ~CSkinNStatusImage();
 
 public:
+	void OnCreate();
+
 	void Draw(CRawGraph *pGraph);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PlaceHolder>
+  <Container.EnterCode Name="Enter Code" Visible="false" Rect="0,0,w,h">
+    <Image Image="earth.png" Rect="15,15,,"/>
+    <NormalText ID="CID_CODE_INFO" Text="Enter the following information exactly as what are shown in your received activation code message."
+                Rect="90,30,w-105,40"/>
+    <NormalText ID="CID_NAME" Text="Name:" Rect="20,90,w/2-80,15" AlignText="AT_RIGHT"/>
+    <NormalEdit ID="CID_E_NAME" Text="Name" Rect="w/2-50,90,w/2+10,"/>
+    <NormalText ID="CID_CODE" Text="Activation Code:" Rect="20,120,w/2-80,15" AlignText="AT_RIGHT"/>
+    <NormalEdit ID="CID_E_CODE" Text="Code" Rect="w/2-50,120,w/2+10,"/>
+
+    <NormalText ID="CID_REG_INFO" Text="If you haven't activation code, please visit our website to purchase."
+                Rect="15,h-115,w-30,40" AlignText="AT_VCENTER"/>
+
+    <NormalLink ID="CID_REG_INFO" Text="http://www.crintsoft.com/" Link="http://www.crintsoft.com/buy.htm"
+                Rect="15,h-70,w-30,40"/>
+
+    <NormalTextBt ID="ID_OK" Text="Activate" Rect="w/2 - 110,h-40,90,"/>
+    <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2 + 20,h-40,90,"/>
+  </Container.EnterCode>
+  <Container.ActivateWaitMsg Name="Wait Message" Visible="false" Rect="0,0,w,h" visible="false">
+    <NormalText ID="CID_WAIT_INFO" Text="" Rect="15,h/2-20-20,w-30,40" AlignText="AT_CENTER"/>
+    <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2-45,h/2+15,90,"/>
+  </Container.ActivateWaitMsg>
+  <Container.ActivateResult Name="Activation Result" Rect="0,20,w,h-20" Visible="false">
+    <Container ID="CID_C_ACTIVATION_OK" Name="Activation OK" Rect="0,20,w,h-20" Visible="true">
+      <TitleText Rect="20,10,w-40,25" Text="Activation was successful."/>
+      <Image Rect="w/2-24,45,," Image="success.png"/>
+      <NormalText Rect="20,130,w-40,50" Text="Thank you for supporting the development of MiniLyrics."
+                  AlignText="AT_CENTER"/>
+      <NormalTextBt ID="ID_OK" Text="OK" Rect="w/2-100/2,h-40,100,"/>
+    </Container>
+    <Container ID="CID_C_ACTIVATION_FAILED" Name="Activation failed" Rect="0,20,w,h-20" Visible="false">
+      <TitleText Rect="20,10,w-40,25" Text="Activation was failed."/>
+
+      <Image Rect="w/2-24,45,," Image="warning.png"/>
+      <NormalText ID="CID_RESULT" Rect="20,130,w-40,50" Text="Upload Result" AlignText="AT_CENTER"/>
+
+      <NormalTextBt ID="ID_OK" Text="OK" Rect="w/2-100-10,h-40,100,"/>
+      <NormalTextBt ID="CID_TRY_AGAIN" Text="Try Again" Rect="w/2+10,h-40,100,"/>
+    </Container>
+  </Container.ActivateResult>
+</PlaceHolder>

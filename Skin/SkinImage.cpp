@@ -16,11 +16,26 @@ CSkinNStatusImage::CSkinNStatusImage()
 	m_BltMode = BLT_COPY;
 	m_nCurStatus = 0;
 	m_bpm = BPM_BLEND;
+	m_rcObj.SetRect(0, 0, 0, 0);
 }
 
 CSkinNStatusImage::~CSkinNStatusImage()
 {
 	Destroy();
+}
+
+void CSkinNStatusImage::OnCreate()
+{
+	CUIObject::OnCreate();
+
+	if (m_vStImages.size() > 0)
+	{
+		CSFImage &img = m_vStImages[0]->img;
+		if (m_formWidth.Empty())
+			m_formWidth.SetFormula(img.m_cx);
+		if (m_formHeight.Empty())
+			m_formHeight.SetFormula(img.m_cy);
+	}
 }
 
 void CSkinNStatusImage::Draw(CRawGraph *pGraph)

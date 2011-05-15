@@ -117,7 +117,7 @@ enum LicenseStatus
 class CXMLMsgCmd
 {
 public:
-	CXMLMsgCmd() { nProductId = PRODUCT_ID_INVALID; }
+	CXMLMsgCmd() { nProductId = PRODUCT_ID_INVALID; bOnlineVerified = false; }
 	virtual ~CXMLMsgCmd() { }
 
 	virtual int FromXML(SXNode *pXmlNode);

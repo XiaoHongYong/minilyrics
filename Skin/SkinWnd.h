@@ -319,6 +319,7 @@ public:
 	LPCTSTR GetCaptionText() { return m_strCaption.c_str(); }
 	void SetCaptionText(LPCTSTR szCaption, bool bRedraw = false) {
 		ASSERT(szCaption); m_strCaption = szCaption;
+		SetWindowText(m_strCaption.c_str());
 		if (bRedraw) InvalidateRect();
 	}
 
@@ -486,7 +487,7 @@ protected:
 
 
 	// root skin uiobject container
-	CSkinContainer	m_rootConainter;
+	CSkinClientArea	m_rootConainter;
 
 	// only one ui object can capture the mouse at any time
 	CUIObject		*m_pUIObjCapMouse;

@@ -16,5 +16,5 @@
     <NormalTextBt ID="CID_BUYNOW" Text="&amp;Buy Now" Rect="w/2 - 130,h-40,110,"/>
     <NormalTextBt ID="CID_ENTER_CODE" Text="&amp;Enter code" Rect="w/2 + 20,h-40,110,"/>
   </Container.About>
-  <include Name="EnterCode.xml"/>
+  <include Name="Activate.xml"/>
 </skinwnd>

@@ -535,6 +535,13 @@ int CSkinContainer::FromXML(SXNode *pXmlNode)
 	ASSERT(m_pContainer);
 	m_pContainer->RecalculateUIObjSizePos(this);
 
+	CreateChild(pXmlNode);
+
+	return ERR_OK;
+}
+
+void CSkinContainer::CreateChild(SXNode *pXmlNode)
+{
 	// Create child CUIObject
 	for (SXNode::iterator it = pXmlNode->listChildren.begin();
 		it != pXmlNode->listChildren.end(); ++it)
@@ -547,6 +554,11 @@ int CSkinContainer::FromXML(SXNode *pXmlNode)
 			LPCTSTR szPropName = pNode->GetPropertySafe(SZ_PN_NAME);
 			if (!IsEmptyString(szPropName) && !SetProperty(szPropName, pNode))
 				DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), szPropName);
+			continue;
+		}
+		else if (IsPropertyName(pNode->strName.c_str(), _T("PlaceHolder")))
+		{
+			CreateChild(pNode);
 			continue;
 		}
 
@@ -562,8 +574,6 @@ int CSkinContainer::FromXML(SXNode *pXmlNode)
 		else
 			DBGLOG1(_T("Failed to create UIObject: %s"), pNode->strName.c_str());
 	}
-
-	return ERR_OK;
 }
 
 
@@ -1345,3 +1355,10 @@ void CSkinContainer::OnToXMLChild(CXMLWriter &xmlStream)
 
 UIOBJECT_CLASS_NAME_IMP(CSkinClientArea, _T("ClientArea"))
 
+BOOL CSkinClientArea::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
+{
+	if (m_pSkin->SetProperty(szProperty, pXmlNode))
+		return TRUE;
+
+	return CSkinContainer::SetProperty(szProperty, pXmlNode);
+}
