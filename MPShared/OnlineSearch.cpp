@@ -92,6 +92,14 @@ void RetLyrInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, RetLyrInfoList &
 	vResult.Sort();
 }
 
+int GetCurDaysFrom2000()
+{
+	CBaseDate dateNow = CBaseDate::GetCurrentDate();
+	CBaseDate date2000(2000, 1, 1);
+
+	return (dateNow.GetTime() - date2000.GetTime()) / CBaseDate::MILLIS_IN_ONE_DAY;
+}
+
 void ILyrSearchResultCacheDB::ResultToXML(MLMsgRetSearch &retSearch, CXMLWriter &xmlWriter)
 {
 	xmlWriter.WriteStartElement(_T("SearchResults"));

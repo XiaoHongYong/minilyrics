@@ -22,22 +22,21 @@
     <NormalText ID="CID_WAIT_INFO" Text="" Rect="15,h/2-20-20,w-30,40" AlignText="AT_CENTER"/>
     <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2-45,h/2+15,90,"/>
   </Container.ActivateWaitMsg>
-  <Container.ActivateResult Name="Activation Result" Rect="0,20,w,h-20" Visible="false">
-    <Container ID="CID_C_ACTIVATION_OK" Name="Activation OK" Rect="0,20,w,h-20" Visible="true">
-      <TitleText Rect="20,10,w-40,25" Text="Activation was successful."/>
-      <Image Rect="w/2-24,45,," Image="success.png"/>
+  <Container.ActivateResult Name="Activation Result" Rect="0,0,w,h" Visible="false">
+    <Container ID="CID_C_ACTIVATION_OK" Name="Activation OK" Rect="0,0,w,h" Visible="true">
+      <Image Rect="40,40,," Image="success.png"/>
+      <TitleText Rect="80,70,w-130," Text="Activation was successful."/>
       <NormalText Rect="20,130,w-40,50" Text="Thank you for supporting the development of MiniLyrics."
                   AlignText="AT_CENTER"/>
-      <NormalTextBt ID="ID_OK" Text="OK" Rect="w/2-100/2,h-40,100,"/>
+      <NormalTextBt ID="ID_OK" Text="OK" Rect="w/2-100/2,h-50,100,"/>
     </Container>
-    <Container ID="CID_C_ACTIVATION_FAILED" Name="Activation failed" Rect="0,20,w,h-20" Visible="false">
-      <TitleText Rect="20,10,w-40,25" Text="Activation was failed."/>
-
-      <Image Rect="w/2-24,45,," Image="warning.png"/>
+    <Container ID="CID_C_ACTIVATION_FAILED" Name="Activation failed" Rect="0,0,w,h" Visible="false">
+      <Image Rect="40,40,," Image="warning.png"/>
+      <TitleText Rect="80,70,w-130," Text="Activation was failed."/>
       <NormalText ID="CID_RESULT" Rect="20,130,w-40,50" Text="Upload Result" AlignText="AT_CENTER"/>
 
-      <NormalTextBt ID="ID_OK" Text="OK" Rect="w/2-100-10,h-40,100,"/>
-      <NormalTextBt ID="CID_TRY_AGAIN" Text="Try Again" Rect="w/2+10,h-40,100,"/>
+      <NormalTextBt ID="CID_TRY_AGAIN" Text="Try Again" Rect="w/2-100-10,h-50,100,"/>
+      <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2+10,h-50,100,"/>
     </Container>
   </Container.ActivateResult>
 </PlaceHolder>

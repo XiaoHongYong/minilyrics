@@ -199,26 +199,16 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 {
 	if (bAutoCheck)
 	{
-		int			wYear, wMonth, wDay;
-		time_t		lTime;
-		tm			*curtime;
-
-		time(&lTime);
-
-		curtime = localtime(&lTime);
-
 		tstring strCheckVerTime = g_Profile.EncryptGetProfileString(_T("CheckVerTime"), _T(""));
-		if (_stscanf(strCheckVerTime.c_str(), _T("%d-%d-%d"), &wYear, &wMonth, &wDay) < 3)
-		{
-			// no process
-		}
+		CBaseDate dateLastCheck;
+		dateLastCheck.FromString(strCheckVerTime.c_str());
 
 		// 如果日期相隔7天，则检查更新
-		if (abs(GetCurDaysFrom2000() - GetDaysFrom2000(wMonth, wDay, wYear)) <= 7)
+		CBaseDate dateNow = CBaseDate::GetCurrentDate();
+		if (abs(dateNow.GetTime() - dateLastCheck.GetTime()) <= 7 * CBaseDate::MILLIS_IN_ONE_DAY)
 			return;
 
-		CStrPrintf strNewTime(_T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
-		g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), strNewTime.c_str());
+		g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), dateNow.ToUtcDateString().c_str());
 	}
 
 	g_LyricsDownloader.DownloadVersionFile(GetStrName(SN_HTTP_ML_VER), !bAutoCheck);

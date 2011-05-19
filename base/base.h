@@ -25,6 +25,8 @@
 
 #include "CharEncoding.h"
 
+#include "BaseDate.h"
+
 #ifdef _WIN32
 #include "win32/fileapi.h"
 #include "win32/WndAbout.h"

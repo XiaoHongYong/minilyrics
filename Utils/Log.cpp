@@ -211,28 +211,14 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	TCHAR		szBuffer[MAX_MSG_LEN] = _T("");
 	int			nLen = 0;
 
-#ifdef _WIN32_WCE
-	SYSTEMTIME	time;
-
-	GetLocalTime(&time);
-#else
-	time_t		ltime;
-	tm			*ptm;
-
-	time(&ltime);
-	ptm = localtime(&ltime);
-#endif
+	CBaseDate time = CBaseDate::GetCurrentDate();
 
 #if defined(_WIN32_DESKTOP)
 	__try
 #endif
 	{
 		nLen = _stprintf_s(szBuffer, CountOf(szBuffer), _T("|T%d-%d %d:%d:%d|F%s|L%d|E%d|M"), 
-#ifdef _WINCE_
-			time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond,
-#else
-			ptm->tm_mon + 1, ptm->tm_mday,ptm->tm_hour, ptm->tm_min, ptm->tm_sec,
-#endif
+			time.month, time.day, time.hour, time.minute, time.second,
 			szFile, nLine, byLevel);
 
 		// 格式化日志
@@ -280,11 +266,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 		if (OpenLogFile())
 		{
 			WriteLog(LOG_LVL_EVENT_IMP, _T(__FILE__), __LINE__, _T("Log File is NOT opened, Open it At %d-%d-%d %d:%d:%d. LOG STARTED:)\n"), 
-#ifdef _WIN32_WCE
-				time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
-#else
-				ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-#endif
+				time.year, time.month, time.day, time.hour, time.minute, time.second);
 		}
 	}
 
@@ -319,23 +301,10 @@ void CLog::Init(LPCTSTR szLogFileName)
 	if (!OpenLogFile())
 		return;
 
-#ifdef _WIN32
-	SYSTEMTIME	time;
-
-	GetLocalTime(&time);
+	CBaseDate time = CBaseDate::GetCurrentDate();
 
 	WriteLog(LOG_LVL_EVENT_IMP, _T(__FILE__), __LINE__, _T("Started Log : %s At %d-%d-%d %d:%d:%d. LOG STARTED:)"), szLogFileName, 
-		time.wYear, time.wMonth, time.wDay, time.wHour, time.wMinute, time.wSecond);
-#else
-	time_t		ltime;
-	tm			*ptm;
-
-	time(&ltime);
-	ptm = localtime(&ltime);
-
-	WriteLog(LOG_LVL_EVENT_IMP, _T(__FILE__), __LINE__, _T("Started Log : %s At %d-%d-%d %d:%d:%d. LOG STARTED:)"), szLogFileName, 
-		ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec);
-#endif
+		time.year, time.month, time.day, time.hour, time.minute, time.second);
 }
 
 void CLog::Close()

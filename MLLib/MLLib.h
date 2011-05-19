@@ -4,8 +4,6 @@
 #include "Lyrics3v2.h"
 #include "LyricsSearch.h"
 
-#include "OurDate.h"
-
 #include "Register.h"
 #include "MLProfile.h"
 

@@ -122,7 +122,7 @@ public:
 			if (pPageWait)
 			{
 				pPageWait->StartWork(TOLOCAL(_T("Activate MiniLyrics")), 
-					TOLOCAL(_T("MiniLyrics is being activated, it may take a few seconds.")),
+					TOLOCAL(_T("The activation code is being verified, it may take a few seconds.")),
 					m_pActivateWorkObj);
 			}
 		}
@@ -227,7 +227,7 @@ public:
 
 		SetUIObjectProperty(_T("CID_COPYRIGHT"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));
 
-		SetUIObjectProperty(_T("CID_EMAIL"), SZ_PN_LINK, GetStrName(SN_EMAIL));
+		SetUIObjectProperty(_T("CID_FEEDBACK"), SZ_PN_LINK, GetStrName(SN_HTTP_FEEDBACK));
 
 		CVersionUpdate	verUpdate;
 		verUpdate.CheckNewVersion(false);
@@ -240,12 +240,48 @@ public:
 		CLicenseManager::LicenseInfo	licenseInfo;
 		g_licenseManager.GetLicenseInfo(licenseInfo);
 
-		if (licenseInfo.licenseStatus == LS_ACTIVE)
-			SetUIObjectProperty(_T("CID_LICENSE_TO"), SZ_PN_TEXT, licenseInfo.strName.c_str());
+
+		tstring	strLicense = licenseInfo.strName;
+
+		if (licenseInfo.bOnlineVerified)
+		{
+			strLicense += _T("\n");
+			if (licenseInfo.nLicensedUser > 1)
+				strLicense += CStrPrintf(TOLOCAL_T("%d Users"), licenseInfo.nLicensedUser).c_str();
+			else
+				strLicense += TOLOCAL_T("Single User");
+			if (licenseInfo.nDurationDays > 0)
+			{
+				strLicense += _T(", ");
+				strLicense += CStrPrintf(TOLOCAL_T("%d Days"), licenseInfo.nDurationDays).c_str();
+				strLicense += _T(" "); strLicense += TOLOCAL_T("License");
+
+				if (licenseInfo.strStartDate.size())
+				{
+					strLicense += _T("\n"); strLicense += TOLOCAL_T("Start Date:"); strLicense += _T(" "); 
+					strLicense += licenseInfo.strStartDate;
+				}
+				if (licenseInfo.strExpireDate.size())
+				{
+					strLicense += _T("\n"); strLicense += TOLOCAL_T("Expiration Date:"); strLicense += _T(" "); 
+					strLicense += licenseInfo.strExpireDate;
+				}
+			}
+			else
+			{
+				strLicense += _T(" ");
+				strLicense += TOLOCAL_T("License");
+			}
+		}
+
+		SetUIObjectProperty(_T("CID_LICENSE_TO"), SZ_PN_TEXT, strLicense.c_str());
 
 		SetUIObjectVisible(_T("CID_LICENSE"), licenseInfo.licenseStatus == LS_ACTIVE, false);
 		SetUIObjectVisible(_T("CID_LICENSE_TO"), licenseInfo.licenseStatus == LS_ACTIVE, false);
 		SetUIObjectVisible(_T("CID_UNREGISTERED"), licenseInfo.licenseStatus != LS_ACTIVE, false);
+
+		if (licenseInfo.bOnlineVerified)
+			SetUIObjectVisible(_T("CID_ENTER_CODE"), false, false);
 	}
 
 	bool OnCustomCommand(int nId)
@@ -333,9 +369,15 @@ void CPageActivateWaitMessage::OnWorkEnd()
 				strMsg = TOLOCAL_T("Thank you for supporting the development of MiniLyrics.");
 			}
 			else if (pActivateWork->m_retMsg.licenseStatus == LS_TRIAL)
-				strMsg = TOLOCAL_T("Your copy of MiniLyric is trial version.");
+			{
+				strMsg = TOLOCAL_T("Your activation code is invalid.");
+				strMsg += _T("\n");
+				strMsg += TOLOCAL_T("If you have purchased MiniLyrics, please contact us.");
+			}
 			else if (pActivateWork->m_retMsg.licenseStatus == LS_EXPIRED)
-				strMsg = TOLOCAL_T("Your code has been expired.");
+			{
+				strMsg = TOLOCAL_T("Your activation code has get expired.");
+			}
 			else if (pActivateWork->m_retMsg.licenseStatus == LS_REVOKED)
 				strMsg = TOLOCAL_T("Your code has been revoked.");
 			else if (pActivateWork->m_retMsg.licenseStatus == LS_TRANSFERED)

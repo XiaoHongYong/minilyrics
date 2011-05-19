@@ -177,7 +177,18 @@ DWORD CanWriteInDir(LPCTSTR szDir)
 	if (dwAttr == 0xFFFFFFFF)
 		return FALSE;
 
-	return SetFileAttributes(szDir, dwAttr);
+	if (!SetFileAttributes(szDir, dwAttr))
+		return FALSE;
+
+	// Try to create a file in the folder, then delete it.
+	tstring strFile = szDir;
+	DirStringAddSlash(strFile);
+	strFile += _T("temp.txt");
+	if (!SaveDataAsFile(strFile.c_str(), "abc", 3))
+		return FALSE;
+	DeleteFile(strFile.c_str());
+
+	return TRUE;
 }
 
 BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath)

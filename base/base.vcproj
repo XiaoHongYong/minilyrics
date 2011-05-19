@@ -523,6 +523,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\BaseDate.cpp"
+				>
+			</File>
+			<File
 				RelativePath="win32\CharEncoding.cpp"
 				>
 				<FileConfiguration
@@ -1747,6 +1751,10 @@
 			>
 			<File
 				RelativePath="base.h"
+				>
+			</File>
+			<File
+				RelativePath=".\BaseDate.h"
 				>
 			</File>
 			<File

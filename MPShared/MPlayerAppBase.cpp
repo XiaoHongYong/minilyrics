@@ -126,6 +126,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 
 	case SN_HTTP_DLPLUGIN:	return _T("http://www.zikiplayer.com/plugins.htm");
 #endif
+	case SN_HTTP_FEEDBACK:	return _T("http://www.zikiplayer.com/contactus.htm");
 	case SN_EMAIL:			return _T("mailto:support@zikiplayer.com");
 	case SN_SUPPORT_MAIL:	return _T("support@zikiplayer.com");
 	case SN_WEBHOME:		return _T("www.zikiplayer.com");
@@ -163,6 +164,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 		case SN_HTTP_DLPLUGIN:	return _T("http://www.crintsoft.com/mlplugin.htm");
 		case SN_HTTP_HELP_G15_LCD:	return _T("http://www.crintsoft.com/help-logitech-lcd.htm");
 #endif
+		case SN_HTTP_FEEDBACK:	return _T("http://www.crintsoft.com/contactus.htm");
 		case SN_EMAIL:			return _T("mailto:support@crintsoft.com");
 		case SN_SUPPORT_MAIL:	return _T("support@crintsoft.com");
 		case SN_WEBHOME:		return _T("www.crintsoft.com");

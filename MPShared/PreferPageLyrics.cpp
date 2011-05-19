@@ -126,7 +126,6 @@ public:
 			CFolderDialog		dlg;
 			tstring				strDownSaveDir;
 
-			// 取得原来的Skin目录
 			strDownSaveDir = g_LyricsDownloader.GetDefSavePath();
 
 			dlg.SetInitFolder(strDownSaveDir.c_str());
