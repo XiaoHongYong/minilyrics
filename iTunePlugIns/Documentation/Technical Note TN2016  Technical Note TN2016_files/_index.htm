@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<!-- saved from url=(0099)http://developer.apple.com/library/mac/technotes/tn2016/_index.html#//apple_ref/doc/uid/DTS10003055 -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Technical Note TN2016: Technical Note TN2016</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=7">
+    
+    <meta id="book-resource-type" name="book-resource-type" content="Technical Note">
+    <script>String.prototype.cleanUpURL=function(){var c,b="",a=this;if(this.match("#")){b="#"+this.split("#")[1];a=this.split("#")[0]}a=a.replace(/\/\.\/|([^:])\/\//g,"$1/");if(a==="./"){return""+b}while(a!==c){c=a;a=a.replace(/[\/][^\/]+\/+\.\.\//,"/")}a=a.replace(/^.[^\/]+\/+\.\.\//,"");return a+b};(function(){var a="../../";var c=window.location.pathname;var b=(c.slice(0,c.lastIndexOf("/"))+"/"+a).cleanUpURL();if(top.location.href==window.location.href){if("createTouch" in document){if(document.getElementById("book-resource-type").content!=="Standalone"){switch(navigator.platform){case"iPad":window.location.replace(a+"ipad/#"+c.replace(b,"")+window.location.hash);break;case"iPhone":break}}}else{window.location.replace(a+(window.location.protocol=="file:"?"index.html":"")+"#"+c.replace(b,"")+window.location.hash)}}})();</script>
+    <meta scheme="apple_ref" id="identifier" name="identifier" content="//apple_ref/doc/uid/DTS10003055">
+    <meta id="date" name="date" content="2007-11-13">
+    <meta id="description" name="description" content="TN2016: Describes the APIs used by iTunes and its Visual plug-ins to communicate back and forth.">
+    <meta id="book-title" name="book-title" content="iTunes Visual Plug-ins">
+    <meta id="book-root" name="book-root" content="./">
+    <meta id="book-json" name="book-json" content="book.json">
+    <meta id="book-assignments" name="book-assignments" content="{Type/Technical Note}, {Topic/Apple Applications/iTunes}">
+    
+    
+    <meta id="generator" name="generator" content="Gutenberg 27050">
+    <meta name="numbat" content="aa879094b666337fdcde744b62fbff30">
+    <meta id="copyright" name="copyright" content="Copyright 2011 Apple Inc. All Rights Reserved.">
+    <meta name="viewport" content="width = device-width">
+    <meta id="xcode-display" name="xcode-display" content="render">
+    <meta id="IndexTitle" name="IndexTitle" content="Technical Note TN2016">
+    <meta id="resources-uri" name="resources-uri" content="../../Resources/551">
+    <link id="book-index-page" rel="Start" title="iTunes Visual Plug-ins" type="text/html" href="http://developer.apple.com/library/mac/technotes/tn2016/index.html">
+    <link id="next-page" rel="Next" type="text/html" href="">
+    <link id="previous-page" rel="Prev" type="text/html" href="">
+    <link rel="stylesheet" type="text/css" href="./Technical Note TN2016  Technical Note TN2016_files/ac_media.css" charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./Technical Note TN2016  Technical Note TN2016_files/devpubs.css" charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="./Technical Note TN2016  Technical Note TN2016_files/docs.css" charset="utf-8">
+    <!--[if IE]><link rel="stylesheet" type="text/css" href="../../Resources/551/CSS/ie.css"><![endif]-->
+    
+</head>    
+<body id=""><a name="//apple_ref/doc/uid/DTS10003055" title="Technical Note TN2016"></a>
+    <article id="contents" tabindex="0" role="main" class="dts_doc">
+        <!-- CONTENTS -->
+        <div id="pageNavigationLinks_top" class="pageNavigationLinks">
+            
+        </div>
+        <a id="top" name="top"></a>
+        <a id="INDEX" href="http://developer.apple.com/library/mac/technotes/tn2016/index.html" style="display:none;"></a>
+        
+        <a name="//apple_ref/doc/uid/DTS10003055-CH1-DontLinkElementID_2" title="Technical Note TN2016"></a><div class="dtsDocNumber">Technical Note TN2016</div><h1 id="pageTitle">iTunes Visual Plug-ins</h1><p>This note is directed at application developers who want to create visual plug-ins for iTunes version 7.4 on Mac OS X 10.3.9 and later, and iTunes version 7.4 on Windows XP &amp; Vista.</p><p>If you received this documentation as part of the iTunes Visual plug-ins SDK package, you should check the <span class="content_text"><a href="http://developer.apple.com/sdk/" class="browserLink" target="_top">Apple Development Kits web page</a></span> for an updated version.</p><p>All of the code described in this documentation can also be found in the iTunes Visual plug-ins SDK, which is available to all registered ADC members (visit the <span class="content_text"><a href="http://developer.apple.com/products/" class="browserLink" target="_top">Apple Developer Connection Membership page</a></span> to learn how to become an ADC member).</p><p>We'd like to hear about your finished Visual plug-in. Send information about it, and the Visual plug-in itself if you like, to <span class="content_text"><a href="mailto:itunesvisuals@mac.com" class="urlLink" rel="external" target="_blank">itunesvisuals@mac.com</a></span>.</p>
+<!-- Two level deep mini TOC -->
+   
+    <div class="outerMiniTOC">
+
+        
+			
+            <div>
+                <a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#//apple_ref/doc/uid/DTS10003055-CH1-SECTION1">Overview</a>
+                
+                
+                
+            </div>
+            
+        
+			
+            <div>
+                <a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#//apple_ref/doc/uid/DTS10003055-CH1-SECTION2">Plug-in discovery and registration</a>
+                
+                
+                
+            </div>
+            
+        
+			
+            <div>
+                <a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#//apple_ref/doc/uid/DTS10003055-CH1-SECTION3">Messages in Detail</a>
+                
+                
+                
+                    <div class="nestedMiniTOC">
+                    
+                        
+                        <div>
+                            <a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#//apple_ref/doc/uid/DTS10003055-CH1-SUBSECTION3">1. Plug-in main entry point messages</a>
+                            
+                        </div>
+                        
+                    
+                        
+                        <div>
+                            <a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#//apple_ref/doc/uid/DTS10003055-CH1-SUBSECTION5">2. Visual plug-in messages</a>
+                            
+                        </div>
+                        
+                    
+                    </div>
+                
+            </div>
+            
+        
+			
+            <div>
+                <a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#//apple_ref/doc/uid/DTS10003055-CH1-SECTION24">Callback APIs</a>
+                
+                
+                
+            </div>
+            
+        
+			
+            <div>
+                <a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#//apple_ref/doc/uid/DTS10003055-RevisionHistory-DontLinkElementID_1">Document Revision History</a>
+                
+                
+                
+            </div>
+            
+        
+    </div>
+
+<section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SECTION1" title="Overview"></a><h2 class="jump">Overview</h2><p>When the user selects the Turn On Visualizer menu item in the View menu in iTunes, custom visual special effects appear.</p><figure class="figure"><a name="//apple_ref/doc/uid/DTS10003055-CH1-FIGURE1" title="Figure 1Turn On Visualizer menu item"></a><figcaption><strong class="caption_number">Figure 1</strong>&nbsp;&nbsp;Turn On Visualizer menu item</figcaption><img src="./Technical Note TN2016  Technical Note TN2016_files/tn2016_001.jpg" alt="" width="218" height="144"></figure><p>iTunes plug-ins are implemented on Mac OS X as shared libraries, and on Windows as Dynamic Link Libraries (DLLs). For ease of implementation across different architectures, iTunes plug-ins export a single entry point. In addition, plug-ins do not link against the iTunes application. Instead, a callback function pointer is provided to your plug-in during initialization, and the iTunes API calls are implemented via that function. </p><p>iTunes sends messages to your plug-in to tell it when to initialize and clean up, when the user turns visual effects on and off, when the window is resized, when the user starts or stops playing music, etc. When visual effects are on, iTunes will forward keyboard, mouse, and update events for the visual effects window to your plug-in. Messages are described in more detail below. </p><p>While music is playing, iTunes sends render messages that include waveform data (sound samples) corresponding to the music that is currently playing, and a spectrum analysis of the samples. During registration, your plug-in indicates the number of channels of waveform and spectrum data it wants, and how often it wants to receive render messages. </p><p>During registration, your plug-in indicates if it wants to receive idle messages. Idle messages are sent periodically whether music is playing or not. When the music stops, you can draw in response to idle messages to fade out your visual effects smoothly. </p><p>Your plug-in can have preferences that get stored in the iTunes preferences file. The iTunes API includes functions to access your plug-in's preferences. iTunes sends the configure message when the user clicks on the options button to tell you to show your settings dialog. </p><div class="back_to_top"><a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#top">Back to Top</a></div></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SECTION2" title="Plug-in discovery and registration"></a><h2 class="jump">Plug-in discovery and registration</h2><p>On Windows, iTunes recursively scans the folder named "Plug-Ins", which is located beside the iTunes.exe application itself, for visual plug-in files having the .dll extension.</p><p>On Mac OS X, iTunes recursively scans the plug-ins folder which is located at ~/Library/iTunes/iTunes Plug-ins/ (and /Library/iTunes/iTunes Plug-ins/ if that directory exists), and only that folder, for plug-ins. On Mac OS X, iTunes recognizes plug-ins packaged as bundles with <code>CFBundlePackageType</code> 'hvpl'. We recommend using iTunes' creator "hook" as the file or bundle signature so it gets an icon and kind string consistent with the other iTunes plug-ins. </p><p>A visual plug-in sample code is provided for both Windows and Mac OS X formats in the iTunes Visual Plug-in SDK. </p><p>A plug-in library exports a single entry point. The name of the exported function depends on how the plug-in is packaged. </p><p>For Windows plug-in DLLs, the name of the main entry point must be "iTunesPluginMain".</p><p>For Mac OS X plug-in shared libraries, the name of the entry point must be "iTunesPluginMainMachO". </p><p>For each plug-in found, iTunes sends a <code>kPluginInitMessage</code> message to the entry point mentioned above, which is referred to as the plug-in "main" entry point in this SDK. A single plug-in file can contain multiple plug-ins. To support this, the plug-in main entry point must register each of the contained plug-ins when it receives the <code>kPluginInitMessage</code>, which will be sent only once. </p><p>To register a visual plug-in, you call <code>PlayerRegisterVisualPlugin</code>, passing a pointer to your visual plug-in message handler function. All <code>kVisualPlugin...</code> messages are sent to this handler function, starting with <code>kVisualPluginInitMessage</code>, which is sent immediately upon registration. </p><p>It is not necessary to unregister visual plug-ins. When it's time to shut down, a <code>kVisualPluginCleanupMessage</code> will be sent to your visual plug-in message handler, and then a <code>kPluginCleanupMessage</code> will be sent your plug-in's main entry point. </p><p>For compatibility with future versions of iTunes, if your plug-in receives a message it does not recognize, it should return <code>unimpErr</code>. </p><div class="back_to_top"><a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#top">Back to Top</a></div></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SECTION3" title="Messages in Detail"></a><h2 class="jump">Messages in Detail</h2><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSECTION3" title="1. Plug-in main entry point messages"></a><h3 class="jump">1. Plug-in main entry point messages</h3><p>These messages are sent to your plug-in main entry point, which has the following signature: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE1"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus main(OSType message, PluginMessageInfo * messageInfo, void * refCon);<span></span></pre></td></tr></tbody></table></div><p><code>message</code></p><p>what message is being sent </p><p><code>messageInfo</code></p><p>a pointer to additional parameters, if any. </p><p><code>refCon</code></p><p>the value you returned in <code>PluginInitMessage.refCon</code> will be passed back in this parameter. </p><p>This table lists the plug-in main entry point messages and corresponding <code>PluginMessageInfo</code> variants. Messages that have no additional parameters are listed as "n/a"; you should ignore <code>messageInfo</code> for those messages. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-TABLE1" title="Table 1Plug-in main entry point messages"></a><div class="tableholder"><table class="graybox" border="0" cellspacing="0" cellpadding="5"><caption class="tablecaption"><strong class="caption_number">Table 1</strong>&nbsp;&nbsp;Plug-in main entry point messages</caption><tbody><tr><th scope="col" class="TableHeading_TableRow_TableCell"><p>
+message 
+</p></th><th scope="col" class="TableHeading_TableRow_TableCell"><p>
+messageInfo-&gt;u 
+</p></th></tr><tr><td scope="row"><p>
+kPluginInitMessage 
+</p></td><td><p>
+PluginInitMessage 
+</p></td></tr><tr><td scope="row"><p>
+kPluginCleanupMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kPluginIdleMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+ kPluginPrepareToQuitMessage  
+</p></td><td><p>
+n/a 
+</p></td></tr></tbody></table></div><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION3" title="kPluginInitMessage"></a><h4 class="jump">kPluginInitMessage</h4><p>This message is sent to your plug-in library at launch time. You should register your plug-ins by calling <code>PlayerRegisterVisualPlugin</code>, described below, when you get this message. Then fill in the <code>options</code> and <code>refCon</code> fields of the <code>PluginInitMessage</code> before returning. </p><p><code>messageInfo-&gt;u </code>is a<code> PluginInitMessage</code>:</p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE2"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>enum {
+    /* PluginInitMessage.options */
+
+    /* Send idle messages to plugin main */
+    kPluginWantsIdleMessages        = (1L &lt;&lt; 1),
+
+    /* Don't close this plugin just because it didn't register anyone */
+    kPluginWantsToBeLeftOpen        = (1L &lt;&lt; 2),
+
+    /* The plugin wants to be notified when volumes are mounted/unmounted/renamed */
+    kPluginWantsVolumeMessages      = (1L &lt;&lt; 3),
+
+    /* The plugin wants to know when the display depth/size changes */
+    kPluginWantsDisplayNotification = (1L &lt;&lt; 5)
+};
+
+struct PluginInitMessage {
+ UInt32       majorVersion; /* Input */
+ UInt32       minorVersion; /* Input */
+
+ void *       appCookie; /* Input */
+ ITAppProcPtr appProc; /* Input */
+
+ OptionBits   options; /* Output */
+ void *       refCon; /* Output */
+};<span></span></pre></td></tr></tbody></table></div><p><code>majorVersion minorVersion</code></p><p>the version of the iTunes API implemented by the iTunes application. </p><p><code>appCookie appProc</code></p><p>parameters to be passed to the callback APIs </p><p><code>options</code></p><p>return options parameters (see flags above) to specify whether you want to receive idle messages, know about display depth/size changes, and so on.</p><p><code>refCon</code></p><p>the value you return here will be passed back as the <code>refCon</code> parameter in future calls to your main entry point </p><p><code>kPluginIdleMessage</code></p><p>This message is intended for use by device plug-ins. Visual plug-ins that want idle time register for <code>kVisualPluginIdleMessage</code>, described below. </p><p><code>kPluginCleanupMessage</code></p><p>This message is sent to your plug-in when iTunes is about to quit. </p></section></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSECTION5" title="2. Visual plug-in messages"></a><h3 class="jump">2. Visual plug-in messages</h3><p>A visual plug-in message handler has the following signature: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE3"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus VisualPluginHandler(OSType message,   VisualPluginMessageInfo * messageInfo, void * refCon);<span></span></pre></td></tr></tbody></table></div><p><code>message</code></p><p>what message is being sent. </p><p><code>messageInfo</code></p><p>a pointer to additional parameters, if any. </p><p><code>refCon</code></p><p>the value you returned in <code>VisualPluginInitMessage.refCon</code> will be passed back in this parameter. </p><p>This table lists the visual plug-in messages and corresponding <code>VisualPluginMessageInfo</code> variants. Messages that have no additional parameters are listed as "n/a", you should ignore <code>messageInfo</code> for those messages. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-TABLE2" title="Table 2Visual plug-in messages"></a><div class="tableholder"><table class="graybox" border="0" cellspacing="0" cellpadding="5"><caption class="tablecaption"><strong class="caption_number">Table 2</strong>&nbsp;&nbsp;Visual plug-in messages</caption><tbody><tr><th scope="col" class="TableHeading_TableRow_TableCell"><p>
+message 
+</p></th><th scope="col" class="TableHeading_TableRow_TableCell"><p>
+messageInfo-&gt;u 
+</p></th></tr><tr><td scope="row"><p>
+kVisualPluginInitMessage 
+</p></td><td><p>
+VisualPluginInitMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginCleanupMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginIdleMessage 
+</p></td><td><p>
+VisualPluginIdleMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginConfigureMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginEnableMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginDisableMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginShowWindowMessage 
+</p></td><td><p>
+VisualPluginShowWindowMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginHideWindowMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginSetWindowMessage 
+</p></td><td><p>
+VisualPluginSetWindowMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginRenderMessage 
+</p></td><td><p>
+VisualPluginRenderMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginUpdateMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginPlayMessage 
+</p></td><td><p>
+VisualPluginPlayMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginChangeTrackMessage 
+</p></td><td><p>
+VisualPluginChangeTrackMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginStopMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginSetPositionMessage 
+</p></td><td><p>
+VisualPluginSetPositionMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginPauseMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginUnpauseMessage 
+</p></td><td><p>
+n/a 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginEventMessage 
+</p></td><td><p>
+VisualPluginEventMessage 
+</p></td></tr><tr><td scope="row"><p>
+kVisualPluginDisplayChangedMessage 
+</p></td><td><p>
+VisualPluginDisplayChangedMessage 
+</p></td></tr></tbody></table></div><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION5" title="kVisualPluginInitMessage"></a><h4 class="jump">kVisualPluginInitMessage</h4><p>This message is sent right after you register your plug-in with <code>PlayerRegisterVisualPlugin</code>. For this message only, the <code>refCon</code> parameter will be the value you returned in <code>PlayerRegisterVisualPluginMessage.registerRefCon</code>. Fill in the <code>options</code> and <code>refCon</code> fields of the <code>VisualPluginInitMessage</code> before returning. </p><p><code>messageInfo-&gt;u.visualPluginInitMessage</code> is a <code>VisualPluginInitMessage</code>: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE4"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>enum {
+    /* Initialize options */
+
+    /* monitor will not resolution switch in fullscreen mode */
+    kVisualDoesNotNeedResolutionSwitch      = (1L &lt;&lt; 0),    /* Added in 7.0 */
+
+    /* iTunes will not erase Visualizer background to black. Visualizer
+    plugin must do it. */
+    kVisualDoesNotNeedErase                 = (1L &lt;&lt; 1) /* Added in 7.0 */
+};
+
+struct VisualPluginInitMessage {
+ UInt32       messageMajorVersion; /* Input */
+ UInt32       messageMinorVersion; /* Input */
+ NumVersion   appVersion; /* Input */
+
+ void *       appCookie; /* Input */
+ ITAppProcPtr appProc; /* Input */
+
+ OptionBits   options; /* Output */
+ void *       refCon; /* Output */
+};<span></span></pre></td></tr></tbody></table></div><p><code>messageMajorVersion  messageMinorVersion</code></p><p>the version of the iTunes API implemented by the iTunes application. </p><p><code>appVersion</code></p><p>the version of iTunes that is running. </p><p><code>appCookie  appProc</code></p><p>The plug-in should copy these two fields into its private data since it will need to pass them as parameters to all the iTunes APIs described below. </p><p><code>options</code></p><p>return options here (see flags above) to prevent monitor resolution switch in fullscreen mode and erasing of the Visualizer background to black.</p><p><code>refCon</code></p><p>the value returned in this field will be passed as the <code>refCon</code> parameter in subsequent calls to the visual plug-in handler. Your plug-in can use this for anything it chooses, typically to store a pointer to data which is allocated in the init message. The sample code uses this technique to recover the pointer to its private data in its visual plug-in handler. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION6" title="kVisualPluginCleanupMessage"></a><h4 class="jump">kVisualPluginCleanupMessage</h4><p>This message is sent when iTunes is about to quit. You should free any resources allocated by your visual plug-in at this time. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION7" title="kVisualPluginIdleMessage"></a><h4 class="jump">kVisualPluginIdleMessage</h4><p>This message is sent periodically if the plug-in requests idle messages. Do this by setting the <code>kVisualWantsIdleMessages</code> option in the <code>PlayerRegisterVisualPluginMessage.options</code> field. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION8" title="kVisualPluginConfigureMessage"></a><h4 class="jump">kVisualPluginConfigureMessage</h4><p>This message is sent when the user clicks on the Options button at the top right of the iTunes window. Enable the Options button (and this message) by setting the <code>kVisualWantsConfigure</code> option in the <code>PlayerRegisterVisualPluginMessage.options</code> field. The sample code shows how to implement a settings dialog for configuration, incuding when to call <code>PlayerHandleMacOSEvent</code> to handle events. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION9" title="kVisualPluginEnableMessage"></a><h4 class="jump">kVisualPluginEnableMessage</h4></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION10" title="kVisualPluginDisableMessage"></a><h4 class="jump">kVisualPluginDisableMessage</h4><p>iTunes currently enables all loaded visual plug-ins. Your plug-in should simply return <code>noErr</code> for these messages. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION11" title="kVisualPluginShowWindowMessage"></a><h4 class="jump">kVisualPluginShowWindowMessage</h4><p>Sent when visual effects are turned on. At this point, the plug-in should allocate any large buffers it needs. </p><p><code>messageInfo-&gt;u.showWindowMessage</code> is a <code>VisualPluginShowWindowMessage</code>:</p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE5"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>struct VisualPluginShowWindowMessage {
+    GRAPHICS_DEVICE                 GRAPHICS_DEVICE_NAME; /* Input */
+    Rect                            drawRect; /* Input */
+    OptionBits                      options; /* Input */
+    Rect                            totalVisualizerRect; /* Input -- Added in 7.0 */
+};<span></span></pre></td></tr></tbody></table></div><p><code> GRAPHICS_DEVICE_NAME </code></p><p>the graphics device to draw into. The plug-in should remember this since it is not sent with render or update messages. </p><p><code>drawRect</code></p><p>the rect to draw into. The plug-in should remember this since it is not sent with render or update messages. </p><p><code>options</code></p><p>the only option currently defined is <code>kWindowIsFullScreen</code>, it's set when you are in full screen mode. </p><p><code> totalVisualizerRect </code></p><p>the total rect the visualizer is running in. The drawRect (see above) will always be smaller than or equal in size to this rect, and the ratio of these two rects is controlled by the user's "Visualizer Size" setting in the iTunes preferences.</p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION12" title="kVisualPluginHideWindowMessage"></a><h4 class="jump">kVisualPluginHideWindowMessage</h4><p>This message is sent when visual effects are turned off. Your plug-in should free any large buffers allocated in the course of rendering here. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION13" title="kVisualPluginSetWindowMessage"></a><h4 class="jump">kVisualPluginSetWindowMessage</h4><p>This message is sent when the user resizes the iTunes window or toggles full screen mode. It is conceptually the same as a <code>kVisualPluginHideWindowMessage</code> followed by a <code>kVisualPluginShowWindowMessage</code> with the new window info, but your plug-in may be able to handle this combined message more efficiently. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION14" title="kVisualPluginRenderMessage"></a><h4 class="jump">kVisualPluginRenderMessage</h4><p>This message is sent periodically when music is playing, at a rate specified during registration. </p><p><code>messageInfo-&gt;renderMessage</code> is a <code> VisualPluginRenderMessage </code>: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE6"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>struct VisualPluginRenderMessage {
+    RenderVisualData *              renderData; /* Input */
+    UInt32                          timeStampID; /* Input */
+    UInt32                          currentPositionInMS; /* Input */
+};
+
+struct RenderVisualData {
+ UInt8 numWaveformChannels;
+ UInt8 waveformData[kVisualMaxDataChannels][kVisualNumWaveformEntries];
+
+ UInt8 numSpectrumChannels;
+ UInt8 spectrumData[kVisualMaxDataChannels][kVisualNumSpectrumEntries];
+};<span></span></pre></td></tr></tbody></table></div><p><code>renderData-&gt;numWaveformChannels</code></p><p>The number of channels of waveform data included. This will be the number you requested during registration. </p><p><code>renderData-&gt;waveformData</code></p><p>The most significant 8 bits of the sound samples that are currently playing. The values range from 0 to 255, where 128 is the midpoint (AC zero value). </p><p><code>renderData-&gt;numSpectrumChannels</code></p><p>The number of channels of spectrum data included. This will be the number you requested during registration. </p><p><code>renderData-&gt;spectrumData</code></p><p>This is a 512-point Fast Fourier Transform of the waveform data. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION15" title="kVisualPluginUpdateMessage"></a><h4 class="jump">kVisualPluginUpdateMessage</h4><p>This message is sent in response to an update event. The visual plug-in should update into its remembered port. This will only be sent if the plug-in's window is showing, i.e. in between <code>kVisualPluginShowWindowMessage</code> and <code>kVisualPluginHideWindowMessage</code> messages. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION16" title="kVisualPluginPlayMessage"></a><h4 class="jump">kVisualPluginPlayMessage</h4><p>This message is sent when iTunes starts playing a track. Your plug-in should copy any track info it wants to display. Also, when streaming an internet radio station the track info contains the name (and meta data) for the radio station, and the song name (and its meta data) is in the <code>ITStreamInfo</code> field.</p><p><code>messageInfo-&gt;u.playMessage</code> is a <code>VisualPluginPlayMessage</code>: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE7"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>struct VisualPluginPlayMessage {
+    ITTrackInfoV1 *                 trackInfo; /* Input */
+    ITStreamInfoV1 *                streamInfo; /* Input */
+    SInt32                          volume; /* Input */
+
+    UInt32                          bitRate; /* Input */
+
+    SoundComponentData              oldSoundFormat; /* Input */
+    ITTrackInfo *                   trackInfoUnicode; /* Input */
+    ITStreamInfo *                  streamInfoUnicode; /* Input */
+    AudioStreamBasicDescription     audioFormat; /* Input -- added in 7.1 */
+};<span></span></pre></td></tr></tbody></table></div></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION17" title="kVisualPluginChangeTrackMessage"></a><h4 class="jump">kVisualPluginChangeTrackMessage</h4><p>This message is sent when the information about a track changes, e.g., when the user edits track info, or when iTunes begins playing a different track. Your plug-in should copy any track info it wants to display. Also, when streaming an internet radio station the track info contains the name (and meta data) for the radio station, and the song name (and its meta data) is in the <code>ITStreamInfo</code> field.</p><p><code>messageInfo-&gt;u.changeTrackMessage</code> is a <code>VisualPluginChangeTrackMessage</code>: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE8"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>struct VisualPluginChangeTrackMessage {
+    ITTrackInfoV1 *                 trackInfo; /* Input */
+    ITStreamInfoV1 *                streamInfo; /* Input */
+    ITTrackInfo *                   trackInfoUnicode; /* Input */
+    ITStreamInfo *                  streamInfoUnicode; /* Input */
+};<span></span></pre></td></tr></tbody></table></div></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION18" title="kVisualPluginStopMessage"></a><h4 class="jump">kVisualPluginStopMessage</h4><p>This message is sent when the music stops playing. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION19" title="kVisualPluginSetPositionMessage"></a><h4 class="jump">kVisualPluginSetPositionMessage</h4><p>This message is sent when iTunes changes the elapsed time position within a track. A plug-in that shows the elapsed time would use this. </p><p><code>messageInfo-&gt;u.setPositionMessage</code> is a <code>VisualPluginSetPositionMessage</code>: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE9"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>struct VisualPluginSetPositionMessage {  UInt32 positionTimeInMS; /* Input */ };<span></span></pre></td></tr></tbody></table></div><p><code>kVisualPluginPauseMessage kVisualPluginUnpauseMessage </code></p><p>iTunes does not currently use pause or unpause. A pause in iTunes is handled by stopping and remembering the position. Your plug-in should simply return <code>noErr</code> for these messages. </p></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION20" title="kVisualPluginEventMessage"></a><h4 class="jump">kVisualPluginEventMessage</h4><p>This message is sent when the user generates an event that could be handled by your plug-in. If your plug-in handles the event, it should return <code>noErr</code>. Otherwise it should return <code>unimpErr</code>. </p><p><code>messageInfo-&gt;u.eventMessage</code> is a <code>VisualPluginEventMessage</code>: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE10"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>struct VisualPluginEventMessage {  EventRecord * event; /* Input */ };<span></span></pre></td></tr></tbody></table></div></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SUBSUBSECTION21" title="kVisualPluginDisplayChangedMessage"></a><h4 class="jump">kVisualPluginDisplayChangedMessage</h4><p>This message is sent when something about the display environment (bit depth, for example) has changed. If your plugin handles the event it should return <code>noErr</code>. Otherwise it should return <code>unimpErr</code>. </p><p><code>messageInfo-&gt;u.displayChangedMessage</code> is a <code> VisualPluginDisplayChangedMessage </code>: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE11"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>enum {
+    kVisualDisplayDepthChanged  = 1 &lt;&lt; 0,                   /* the display's depth has changed */
+    kVisualDisplayRectChanged   = 1 &lt;&lt; 1,                   /* the display's location changed */
+    kVisualWindowMovedMoved     = 1 &lt;&lt; 2,                   /* the window has moved location */ 
+    kVisualDisplayConfigChanged = 1 &lt;&lt; 3,                   /* something else about the display changed */
+};
+
+struct VisualPluginDisplayChangedMessage {
+    UInt32							flags; /* Input */
+};<span></span></pre></td></tr></tbody></table></div></section></section><div class="back_to_top"><a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#top">Back to Top</a></div></section><section><a name="//apple_ref/doc/uid/DTS10003055-CH1-SECTION24" title="Callback APIs"></a><h2 class="jump">Callback APIs</h2><p>As mentioned in the overview, plug-ins do not link against iTunes. Instead, the first two parameters of all of the iTunes APIs are a cookie and a callback function pointer. These are provided to your plug-in in the init messages. The glue code in iTunesAPI.c takes care of marshaling parameters and calling iTunes for you, so you don't have to worry about the details. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE12"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerRegisterVisualPlugin (void *appCookie, ITAppProcPtr appProc,    PlayerMessageInfo *messageInfo);<span></span></pre></td></tr></tbody></table></div><p>Register your visual plug-in with <code>PlayerRegisterVisualPlugin</code> when you receive <code>kPluginInitMessage</code>. Pass a <code>PlayerRegisterVisualPluginMessage</code> variant of <code>PlayerMessageInfo</code> as the <code>messageInfo</code> parameter. The fields are explained in the comments below: </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE13"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre> /* PlayerRegisterVisualPluginMessage.options */
+
+enum {
+        /* set to enable kVisualPluginIdleMessage */
+    kVisualWantsIdleMessages = (1L &lt;&lt; 3),
+
+        /* set to enable kVisualPluginConfigureMessage */
+    kVisualWantsConfigure    = (1L &lt;&lt; 5),
+
+        /* set to enable unicodeName */
+    kVisualProvidesUnicodeName  = (1L &lt;&lt; 6)
+};
+
+
+struct PlayerRegisterVisualPluginMessage {
+    /* Input from plugin */
+
+    /* Displayed in the Visual menu -- may be empty if options include kVisualProvidesUnicodeName */
+    Str63                           name; 
+
+    OptionBits                      options; /* See above */
+
+    OSType                          creator; /* Identifies the plugin */
+
+    NumVersion                      pluginVersion; /* Version number of the plugin */
+
+    VisualPluginProcPtr             handler; /* Handler for the plugin's messages */
+    void *                          registerRefCon; /* RefCon for the plugin's handler */
+
+    /* How often to call the plugin (0xFFFFFFFF = as often as possible) */
+    UInt32                          timeBetweenDataInMS; 
+    UInt32                          numWaveformChannels; /* 0-2 waveforms requested */
+    UInt32                          numSpectrumChannels; /* 0-2 spectrums requested */
+
+    SInt16                          minWidth; /* Minimum resizeable width */
+    SInt16                          minHeight; /* Minimum resizeable height */
+
+    SInt16                          maxWidth; /* Maximum resizeable width */
+    SInt16                          maxHeight; /* Maximum resizeable height */
+
+    UInt16                          minFullScreenBitDepth; /* 0 = Any */
+    UInt16                          maxFullScreenBitDepth; /* 0 = Any */
+
+    UInt16                          windowAlignmentInBytes; /* Reserved (should be zero) */
+
+    /* options must include kVisualProvidesUnicodeName for this to be used.
+       Developers are strongly encouraged to provide a Unicode name to ensure 
+       their name will localize properly for other languages. */
+    ITUniStr255                     unicodeName; 
+};<span></span></pre></td></tr></tbody></table></div><p>Your plug-in should call <code>PlayerIdle</code> to give time to iTunes if it engages in a lengthy process. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE14"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerIdle (     void *appCookie,     ITAppProcPtr appProc);<span></span></pre></td></tr></tbody></table></div><p>Show the "About iTunes" window. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE15"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>void PlayerShowAbout(     void *appCookie,     ITAppProcPtr appProc);<span></span></pre></td></tr></tbody></table></div><p>Tell iTunes to open a URL. The <code>urlString</code> parameter is not a Pascal string or a C string; its length is specified by the <code>length</code> parameter. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE16"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>void PlayerOpenURL (     void *appCookie,     ITAppProcPtr appProc,     SInt8 * urlString,     UInt32 length);<span></span></pre></td></tr></tbody></table></div><p>Read data identified by your plug-in's name from the iTunes preferences file. This can be used to store your plug-in's preferences as a single block of data. Your plug-in's name is specified in <code>PlayerRegisterVisualPluginMessage.name</code>. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE17"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerGetPluginData (     void *appCookie,     ITAppProcPtr appProc,     void *dataPtr,     UInt32 dataBufferSize,     UInt32 *dataSize);<span></span></pre></td></tr></tbody></table></div><p>Save data identified by your plug-in's name from the iTunes preferences file. This can be used to store your plug-in's preferences as a single block of data. Your plug-in's name is specified in <code>PlayerRegisterVisualPluginMessage.name</code>. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE18"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerSetPluginData (     void *appCookie,     ITAppProcPtr appProc,     void *dataPtr,     UInt32 dataSize);<span></span></pre></td></tr></tbody></table></div><p>Read data identified by <code>dataName</code> and your plug-in's name from the iTunes preferences file. This can be used to store your plug-in's preferences, with each preference field stored separately. Your plug-in's name is specified in <code>PlayerRegisterVisualPluginMessage.name</code>. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE19"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerGetPluginNamedData (     void *appCookie,     ITAppProcPtr appProc,     ConstStringPtr dataName,     void *dataPtr,     UInt32 dataBufferSize,     UInt32 *dataSize);<span></span></pre></td></tr></tbody></table></div><p>Save data identified by <code>dataName</code> and your plug-in's name from the iTunes preferences file. This can be used to store your plug-in's preferences, with each preference field stored separately. Your plug-in's name is specified in <code>PlayerRegisterVisualPluginMessage.name</code>. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE20"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerSetPluginNamedData (     void *appCookie,     ITAppProcPtr appProc,     ConstStringPtr dataName,     void *dataPtr,     UInt32 dataSize);<span></span></pre></td></tr></tbody></table></div><p>Ask iTunes to handle an event. The sample code uses this in its <code>SettingsDialogFilterProc</code>. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE21"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerHandleMacOSEvent (     void *appCookie,     ITAppProcPtr appProc,     const EventRecord *theEvent,     Boolean *eventHandled);<span></span></pre></td></tr></tbody></table></div><p>Return your plug-in's <code>FSSpec</code> (Macintosh only). For bundled plug-ins, this will be the <code>FSSpec</code> of the bundle. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE22"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerGetPluginFileSpec(     void *appCookie,     ITAppProcPtr appProc,     FSSpec *pluginFileSpec);<span></span></pre></td></tr></tbody></table></div><p>Tell iTunes to enter or exit full screen mode. If your plug-in wants to behave like a screen saver it could use this. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE23"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerSetFullScreen (     void *appCookie,     ITAppProcPtr appProc,     Boolean fullScreen);<span></span></pre></td></tr></tbody></table></div><p>Specify bit depth and resolution for subsequent uses of full screen mode. If your plug-in has a user interface for setting these options, call this to update the values from what you specified in <code>PlayerRegisterVisualPluginMessage</code>. </p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE24"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerSetFullScreenOptions (
+    void *appCookie,
+    ITAppProcPtr appProc,
+    SInt16 minBitDepth,
+    SInt16 maxBitDepth,
+    SInt16 preferredBitDepth,
+    SInt16 desiredWidth,
+    SInt16 desiredHeight);<span></span></pre></td></tr></tbody></table></div><p>Return the track cover art for the currently playing song.</p><a name="//apple_ref/doc/uid/DTS10003055-CH1-SOURCECODE25"></a><div class="codesample clear"><table><tbody><tr><td scope="row"><pre>OSStatus PlayerGetCurrentTrackCoverArt (     void *appCookie,      ITAppProcPtr appProc,      Handle *coverArt,      OSType *coverArtFormat);<span></span></pre></td></tr></tbody></table></div><div class="back_to_top"><a href="http://developer.apple.com/library/mac/technotes/tn2016/_index.html#top">Back to Top</a></div></section><br><hr><a name="//apple_ref/doc/uid/DTS10003055-CH1-DontLinkElementID_1" title="Document Revision History"></a><a name="//apple_ref/doc/uid/DTS10003055-RevisionHistory-DontLinkElementID_1" title="Document Revision History"></a><h4>Document Revision History</h4><br><table class="graybox revision-history" border="0" cellspacing="0" cellpadding="5"><colgroup span="1"><col width="145"></colgroup><tbody><tr><th scope="col" align="left"><strong>Date</strong></th><th scope="col" align="left"><strong>Notes</strong></th></tr><tr><td scope="row">2007-11-13</td><td><p>Update to version 7.4 interfaces</p></td></tr><tr><td scope="row">2001-06-26</td><td><p>New document that 
+					describes the APIs used by iTunes and its Visual plug-ins to communicate back and forth.</p></td></tr></tbody></table><br>
+        <div id="pageNavigationLinks_bottom" class="pageNavigationLinks">
+            
+        </div><br>
+        <div class="copyright"><br><hr><div align="center"><p class="content_text" lang="en" dir="ltr"> © 2007 Apple Inc. All Rights Reserved. (Last updated: 2007-11-13)</p></div></div>
+
+        <div id="feedbackForm" class="hideOnPrint" style="margin-left: auto; margin-right: auto; width: 38em; margin-bottom: 15px; margin-top: 15px; font-weight: bold; color: #333333; background: #d9d9d9; padding: 5px 10px 5px 10px; height: 15px; text-align: center; -webkit-border-radius: 12px; -moz-border-radius: 12px; vertical-align: middle;">
+    Did this document help you?
+    <span class="tooltip" data-abstract="&lt;b&gt;Yes:&lt;/b&gt; Tell us what works for you.">
+       <a href="http://developer.apple.com/feedback/?v=1" class="urlLink" target="_blank">Yes</a>
+    </span>
+    <span class="tooltip" data-abstract="&lt;b&gt;It&#39;s good, but:&lt;/b&gt; Report typos, inaccuracies, and so forth.">
+        <a href="http://developer.apple.com/feedback/?v=2" class="urlLink" target="_blank">It's good, but...</a>
+    </span>
+    <span class="tooltip" data-abstract="&lt;b&gt;Not helpful:&lt;/b&gt; Tell us what would have helped.">
+        <a href="http://developer.apple.com/feedback/?v=3" class="urlLink" target="_blank">Not helpful...</a>
+    </span>
+</div>
+        <div id="globalfooter" class="hideInXcode hideOnPrint">
+    <p class="gf-buy">Shop the <a href="http://www.apple.com/store/" target="_top">Apple Online Store</a> (1-800-MY-APPLE), visit an <a href="http://www.apple.com/retail/" target="_top">Apple Retail Store</a>, or find a <a href="http://www.apple.com/buy/locator/" target="_top">reseller</a>.</p>
+
+<ul class="gf-links piped">
+	<li><a class="first" href="http://lists.apple.com/" target="_top">Mailing Lists</a></li>
+	<li><a href="http://developer.apple.com/rss/" target="_top">RSS Feeds</a></li>
+</ul>
+
+<div class="gf-sosumi">
+    <p>Copyright © 2010 Apple Inc. All rights reserved.</p>
+    <ul class="piped">
+    <li><a href="http://www.apple.com/legal/terms/site.html" class="first" target="_top">Terms of Use</a></li>
+    <li><a href="http://www.apple.com/legal/privacy/" target="_top">Privacy Policy</a></li>
+    </ul>
+</div>
+    </div><!--/globalfooter-->
+        <!-- /CONTENTS -->
+    </article>
+
+<script charset="utf-8" src="./Technical Note TN2016  Technical Note TN2016_files/prototype.js"></script>
+<!-- Media player includes -->
+<script charset="utf-8" src="./Technical Note TN2016  Technical Note TN2016_files/scriptaculous.js"></script>
+<script charset="utf-8" src="./Technical Note TN2016  Technical Note TN2016_files/event_mixins.js"></script>
+<script charset="utf-8" src="./Technical Note TN2016  Technical Note TN2016_files/browserdetect.js"></script>
+<script charset="utf-8" src="./Technical Note TN2016  Technical Note TN2016_files/ac_media.js"></script>
+<!-- /Media player includes -->
+<script charset="utf-8" src="./Technical Note TN2016  Technical Note TN2016_files/devpubs.js"></script>
+<script charset="utf-8" src="./Technical Note TN2016  Technical Note TN2016_files/book.js"></script>
+<script charset="utf-8" src="./Technical Note TN2016  Technical Note TN2016_files/tasks.js"></script>
+<script type="text/javascript" src="./Technical Note TN2016  Technical Note TN2016_files/pagetracker.js"></script>
+<script type="text/javascript">
+if(typeof PageTracker !== 'undefined') {
+  if(window.addEventListener) {
+    window.addEventListener("load", function(){PageTracker.logPageLoad()},false);
+  } else if(window.attachEvent) {
+    window.attachEvent("onload",function(){PageTracker.logPageLoad()});
+  }
+}
+</script>
+<div id="pediaWindow"><div id="pediaHeader"></div><div id="pediaBody"></div></div></body></html>
