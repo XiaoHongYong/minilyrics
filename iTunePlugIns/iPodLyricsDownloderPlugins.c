@@ -52,7 +52,7 @@
 
 	// Windows headers
 #include <windows.h>
-
+#include <shellapi.h>
 #include "iTunesVisualAPI.h"
 
 
@@ -79,126 +79,51 @@
 #define	kSampleVisualPluginReleaseStage		0x80
 #define	kSampleVisualPluginNonFinalRelease	0
 
-enum
-{
-	kSettingsDialogResID	= 1000,
-	
-	kSettingsDialogOKButton	= 1,
-	kSettingsDialogCancelButton,
-	
-	kSettingsDialogCheckBox1,
-	kSettingsDialogCheckBox2,
-	kSettingsDialogCheckBox3
-};
-
-struct VisualPluginData {
-	void *				appCookie;
-	ITAppProcPtr		appProc;
-
-#if TARGET_OS_MAC
-	ITFileSpec			pluginFileSpec;
-#endif
-	
-	GRAPHICS_DEVICE		destPort;
-	Rect				destRect;
-	OptionBits			destOptions;
-	UInt32				destBitDepth;
-
-	RenderVisualData	renderData;
-	UInt32				renderTimeStampID;
-	
-	SInt8				waveformData[kVisualMaxDataChannels][kVisualNumWaveformEntries];
-	
-	UInt8				level[kVisualMaxDataChannels];		/* 0-128 */
-	
-	ITTrackInfoV1		trackInfo;
-	ITStreamInfoV1		streamInfo;
-
-	Boolean				playing;
-	Boolean				padding[3];
-
-/*
-	Plugin-specific data
-*/
-#if TARGET_OS_MAC
-	GWorldPtr			offscreen;
-#endif
-};
-typedef struct VisualPluginData VisualPluginData;
-
 // ClearMemory
 //
-static void ClearMemory (LogicalAddress dest, SInt32 length)
-{
-	register unsigned char	*ptr;
+#define UM_ITUNE_LAUNCHED	(WM_USER	+ 0x2314)
+#define UM_ITUNE_DESTORYED	(WM_USER	+ 0x2315)
 
-	ptr = (unsigned char *) dest;
-	
-	if( length > 16 )
-	{
-		register unsigned long	*longPtr;
-		
-		while( ((unsigned long) ptr & 3) != 0 )
-		{
-			*ptr++ = 0;
-			--length;
-		}
-		
-		longPtr = (unsigned long *) ptr;
-		
-		while( length >= 4 )
-		{
-			*longPtr++ 	= 0;
-			length		-= 4;
-		}
-		
-		ptr = (unsigned char *) longPtr;
-	}
-	
-	while( --length >= 0 )
-	{
-		*ptr++ = 0;
-	}
+void onITuneLaunch(void)
+{
+	SHELLEXECUTEINFO info;
+	info.cbSize			= sizeof(SHELLEXECUTEINFO);
+	info.fMask			= 0;
+	info.hwnd			= NULL;
+	info.lpVerb			= NULL;
+	info.lpFile			= "D:\\@project\\zikiplayer\\trunk\\bin-iPodLyricsDownloader\\iPodLyricsDownloader.exe";
+	info.lpParameters	= NULL;
+	info.lpDirectory	= NULL;
+	info.nShow			= SW_SHOW;
+	info.hInstApp		= NULL;
+
+	ShellExecuteEx(&info);
+
+
+	HWND h = FindWindow("", "");
+	if(h) SendMessage(h, UM_ITUNE_LAUNCHED, 0, 0);
+}
+void onITuneDestroy(void)
+{
+	HWND h = ::FindWindow("", "");
+	if(h) ::SendMessage(h, UM_ITUNE_DESTORYED, 0, 0);
 }
 
-
-void SendMsg2App(unsigned int msg)
-{
-	
-	STARTUPINFO				siStartupInfo;
-	ZeroMemory( &siStartupInfo, sizeof(siStartupInfo));
-	siStartupInfo.cb = sizeof(siStartupInfo);
-
-	SECURITY_ATTRIBUTES		saProcess'
-	saProcess.nLength = sizeof(saProcess);
-	saProcess.lpSecurityDescriptor = NULL;
-	saProcess.bInheritHandle = true;
-
-	SECURITY_ATTRIBUTES		saThread;
-	saThread.nLength = sizeof(saThread);
-	saThread.lpSecurityDescriptor = NULL;
-	saThread.bInheritHandle = true; 
-
-	PROCESS_INFORMATION		piProcInfoGPS;
-	::CreateProcess(NULL,"c:\\test.exe",&saProcess,&saThread,false,CREATE_DEFAULT_ERROR_MODE,NULL,NULL,&siStartupInfo,&piProcInfoGPS);
-}
 /*
 	MAIN
 */
 IMPEXP OSStatus MAIN (OSType message, PluginMessageInfo *messageInfo, void *refCon)
 {
-	OSStatus		status;
-	
-	(void) refCon;
+	OSStatus		status = noErr; // or unimpErr;
 	
 	switch (message)
 	{
 		case kPluginInitMessage:
-			status = RegisterVisualPlugin(messageInfo);
+			onITuneLaunch();
 			break;
 			
 		case kPluginCleanupMessage:
-			status = noErr;
+			onITuneDestroy();
 			break;
 			
 		default:

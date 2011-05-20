@@ -41,8 +41,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CPPUNIT_TEST;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="&quot;D:\@project\cppunit-1.12.1\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib "
+				AdditionalDependencies="ws2_32.lib cppunit.lib"
 				OutputFile="../bin-iPodLyricsDownloader/iPodLyricsDownloader.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
@@ -263,6 +263,10 @@
 				>
 			</File>
 		</Filter>
+		<File
+			RelativePath=".\ClassDiagram1.cd"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
