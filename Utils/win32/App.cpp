@@ -63,6 +63,8 @@ tstring GetInstallShareDir()
 			strShareDir += _T("..\\Install_ML\\Share\\");
 		else if (_tcsicmp(FileGetName(szFile), _T("iPodLyricsDownloader.exe")) == 0)
 			strShareDir += _T("..\\Install_iPodLyricsDownloader\\Share\\");
+		else if (_tcsicmp(FileGetName(szFile), _T("WPOnline.exe")) == 0)
+			strShareDir += _T("..\\Install_WP\\Share\\");
 		else
 			strShareDir += _T("..\\Install_ZP\\Share\\");
 	}
