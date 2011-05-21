@@ -8,6 +8,61 @@
 #define SZ_EX_POOL_MSG		_T("Activate.Msg")
 #define SZ_EX_POOL_SUCCEED	_T("Activate.Succeed")
 
+tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
+{
+	tstring strMsg;
+	if (licenseInfo.licenseStatus == LS_ACTIVE)
+	{
+		if (licenseInfo.bOnlineVerified)
+		{
+			strMsg = TOLOCAL_T("You MiniLyrics was activated successfully.");
+			strMsg += _T("\n");
+			strMsg += TOLOCAL_T("Thank you for supporting the development of MiniLyrics.");
+		}
+		else
+		{
+			strMsg = TOLOCAL_T("You activation code is verified OK.");
+			strMsg += _T("\n");
+			strMsg += TOLOCAL_T("Please click 'Activate' button to activate your MiniLyrics.");
+		}
+	}
+	else if (licenseInfo.licenseStatus == LS_TRIAL)
+	{
+		if (licenseInfo.strCode.size())
+		{
+			strMsg = TOLOCAL_T("Your activation code is invalid.");
+			strMsg += _T("\n");
+			strMsg += TOLOCAL_T("If you have purchased MiniLyrics, please contact us.");
+		}
+		else
+		{
+			strMsg = TOLOCAL_T("*** TRIAL VERSION ***");
+			strMsg += _T("\n");
+			strMsg += TOLOCAL_T("Please activate MiniLyrics.");
+		}
+	}
+	else if (licenseInfo.licenseStatus == LS_EXPIRED)
+	{
+		strMsg = TOLOCAL_T("Your license has get expired.");
+		strMsg += _T("\n");
+		strMsg += TOLOCAL_T("Please renew your license.");
+	}
+	else if (licenseInfo.licenseStatus == LS_REVOKED)
+	{
+		strMsg = TOLOCAL_T("Your activation code has been revoked.");
+		strMsg += _T("\n");
+		strMsg += TOLOCAL_T("Maybe your refund your order.");
+	}
+	else if (licenseInfo.licenseStatus == LS_TRANSFERED)
+	{
+		strMsg = TOLOCAL_T("Your activation code has been transfered to another computer.");
+		strMsg += _T("\n");
+		strMsg += CStrPrintf(TOLOCAL_T("Your code can be used on %d PCs."), licenseInfo.nLicensedUser).c_str();
+	}
+
+	return strMsg;
+}
+
 class CActivateWorkObj : public CWorkObjBase
 {
 public:
@@ -241,11 +296,13 @@ public:
 		g_licenseManager.GetLicenseInfo(licenseInfo);
 
 
-		tstring	strLicense = licenseInfo.strName;
+		tstring	strLicensedTo = TOLOCAL_T("Licensed to: ");
+		strLicensedTo += licenseInfo.strName;
 
+		tstring strLicense;
 		if (licenseInfo.bOnlineVerified)
 		{
-			strLicense += _T("\n");
+			strLicense = TOLOCAL_T("License: ");
 			if (licenseInfo.nLicensedUser > 1)
 				strLicense += CStrPrintf(TOLOCAL_T("%d Users"), licenseInfo.nLicensedUser).c_str();
 			else
@@ -254,7 +311,6 @@ public:
 			{
 				strLicense += _T(", ");
 				strLicense += CStrPrintf(TOLOCAL_T("%d Days"), licenseInfo.nDurationDays).c_str();
-				strLicense += _T(" "); strLicense += TOLOCAL_T("License");
 
 				if (licenseInfo.strStartDate.size())
 				{
@@ -267,21 +323,18 @@ public:
 					strLicense += licenseInfo.strExpireDate;
 				}
 			}
-			else
-			{
-				strLicense += _T(" ");
-				strLicense += TOLOCAL_T("License");
-			}
 		}
 
-		SetUIObjectProperty(_T("CID_LICENSE_TO"), SZ_PN_TEXT, strLicense.c_str());
+		SetUIObjectText(_T("CID_LICENSE_TO"), strLicensedTo.c_str());
+		SetUIObjectText(_T("CID_LICENSE"), strLicense.c_str());
 
-		SetUIObjectVisible(_T("CID_LICENSE"), licenseInfo.licenseStatus == LS_ACTIVE, false);
-		SetUIObjectVisible(_T("CID_LICENSE_TO"), licenseInfo.licenseStatus == LS_ACTIVE, false);
-		SetUIObjectVisible(_T("CID_UNREGISTERED"), licenseInfo.licenseStatus != LS_ACTIVE, false);
+		SetUIObjectVisible(_T("CID_LICENSE"), !strLicense.empty(), false);
+		SetUIObjectVisible(_T("CID_LICENSE_TO"), !strLicensedTo.empty(), false);
 
-		if (licenseInfo.bOnlineVerified)
-			SetUIObjectVisible(_T("CID_ENTER_CODE"), false, false);
+		SetUIObjectText(_T("CID_ACT_NOTICE"), LicenseStatusToStr(licenseInfo).c_str());
+		bool bActivateNotice = !licenseInfo.bOnlineVerified || licenseInfo.licenseStatus != LS_ACTIVE;
+		SetUIObjectVisible(_T("CID_ACT_NOTICE"), bActivateNotice, false);
+		SetUIObjectVisible(_T("CID_ENTER_CODE"), bActivateNotice, false);
 	}
 
 	bool OnCustomCommand(int nId)
@@ -363,25 +416,14 @@ void CPageActivateWaitMessage::OnWorkEnd()
 		CActivateWorkObj *pActivateWork = (CActivateWorkObj *)m_pWorkObj;
 		if (pActivateWork->m_nResult == ERR_OK)
 		{
+			CLicenseManager::LicenseInfo licenseInfo;
+			g_licenseManager.GetLicenseInfo(licenseInfo);
+			ASSERT(licenseInfo.licenseStatus == pActivateWork->m_retMsg.licenseStatus);
+
 			if (pActivateWork->m_retMsg.licenseStatus == LS_ACTIVE)
-			{
 				bSucceed = true;
-				strMsg = TOLOCAL_T("Thank you for supporting the development of MiniLyrics.");
-			}
-			else if (pActivateWork->m_retMsg.licenseStatus == LS_TRIAL)
-			{
-				strMsg = TOLOCAL_T("Your activation code is invalid.");
-				strMsg += _T("\n");
-				strMsg += TOLOCAL_T("If you have purchased MiniLyrics, please contact us.");
-			}
-			else if (pActivateWork->m_retMsg.licenseStatus == LS_EXPIRED)
-			{
-				strMsg = TOLOCAL_T("Your activation code has get expired.");
-			}
-			else if (pActivateWork->m_retMsg.licenseStatus == LS_REVOKED)
-				strMsg = TOLOCAL_T("Your code has been revoked.");
-			else if (pActivateWork->m_retMsg.licenseStatus == LS_TRANSFERED)
-				strMsg = TOLOCAL_T("Your code has been transfered to another computer.");
+
+			strMsg = LicenseStatusToStr(licenseInfo);
 		}
 		else
 			strMsg = ERROR2STR_LOCAL(pActivateWork->m_nResult);

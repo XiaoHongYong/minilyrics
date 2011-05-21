@@ -40,6 +40,53 @@ void CSkinStaticText::OnCreate()
 	m_font.OnCreate(m_pSkin);
 }
 
+int CountOfChar(LPCTSTR str, TCHAR ch)
+{
+	int count = 0;
+	while (*str)
+	{
+		if (*str == ch)
+			count++;
+		str++;
+	}
+	return count;
+}
+
+void CSkinStaticText::OnMeasureSizeByContent()
+{
+	CRawGraph *pGraph = m_pContainer->GetMemGraph();
+
+	if (m_font.IsGood())
+		pGraph->SetFont(m_font.GetFont());
+
+	if (m_layoutParams & (LAYOUT_HEIGHT_WRAP_CONENT | LAYOUT_WIDTH_WRAP_CONENT))
+	{
+		int nLines = CountOfChar(m_strText.c_str(), '\n') + 1;
+		const int TEXT_MARGIN = 8;
+		SIZE size = { 0 };
+		if (nLines > 1 && IsFlagSet(m_layoutParams, LAYOUT_WIDTH_WRAP_CONENT))
+		{
+			int widthMax = 0;
+			V_Str vLines;
+			StrSplit(m_strText.c_str(), '\n', vLines);
+			for (uint i = 0; i < vLines.size(); i++)
+			{
+				if (pGraph->GetTextExtentPoint32(vLines[i].c_str(), vLines[i].size(), &size)
+					&& size.cx > widthMax)
+					widthMax = size.cx;
+			}
+		}
+		else
+			pGraph->GetTextExtentPoint32(m_strText.c_str(), m_strText.size(), &size);
+
+		if (m_layoutParams & LAYOUT_HEIGHT_WRAP_CONENT)
+			m_rcObj.bottom = m_rcObj.top + (size.cy + 2) * nLines + TEXT_MARGIN / 2;
+
+		if (m_layoutParams & LAYOUT_WIDTH_WRAP_CONENT)
+			m_rcObj.right = m_rcObj.left + size.cx + TEXT_MARGIN;
+	}
+}
+
 void CSkinStaticText::OnAdjustHue(float hue, float saturation, float luminance)
 {
 	m_font.OnAdjustHue(m_pSkin, hue, saturation, luminance);

@@ -90,7 +90,7 @@ void CLyricShowAgentObj::OnCreate()
 
 	ChangeLyricsDisplayStyle(m_strLyrDisplayStyleDefault.c_str(), false);
 
-	ToggleActivateButton(30);
+	ToggleActivateButton(15);
 
 	if (!g_licenseManager.IsLicenseValid())
 		m_nTimerShowActivateBtn = m_pSkin->RegisterTimerObject(this, 1000 * 60 * 60 * 3);
@@ -233,6 +233,10 @@ void CLyricShowAgentObj::ToggleActivateButton(int nDuration)
 		}
 		else
 		{
+			if (!IsPropertyName(m_strLyrDisplayStylePropName.c_str(), _T("LyrDisplayStyle"))
+				|| m_bFloatingLyr || m_pSkin->m_bClickThrough)
+				return;
+
 			m_pActivateButton = (CSkinActivateCtrl*)m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, 
 				CSkinActivateCtrl::ClassName(), this);
 			ASSERT(m_pActivateButton);

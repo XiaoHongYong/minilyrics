@@ -48,6 +48,7 @@ void CSkinTxtLink::Draw(CRawGraph *pGraph)
 		}
 		else
 			m_rcObj.right = m_rcObj.left + size.cx + TEXT_MARGIN;
+		m_rcObj.bottom = m_rcObj.top + size.cy + TEXT_MARGIN / 2;
 	}
 
 	pGraph->SetTextColor(m_font.GetTextColor(m_bEnable));

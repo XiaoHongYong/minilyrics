@@ -107,6 +107,7 @@
     </NormalToolbar>
     <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
     <TitleText Extends="Text" Height="25" UseSkinBg="true" FontName="Verdana" FontHeight="20" TextColor="#000000" AlignText="AT_CENTER"/>
+    <ErrorText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#FF0000"/>
     <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#0000FF"/>
     <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
           Height="22" XMargin="5" YMargin="3" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"

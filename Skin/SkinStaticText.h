@@ -26,6 +26,8 @@ public:
 
 	void OnCreate();
 
+	void OnMeasureSizeByContent();
+
 	void OnAdjustHue(float hue, float saturation, float luminance);
 
 	bool OnLButtonUp(UINT nFlags, CPoint point);

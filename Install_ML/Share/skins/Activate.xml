@@ -33,7 +33,7 @@
     <Container ID="CID_C_ACTIVATION_FAILED" Name="Activation failed" Rect="0,0,w,h" Visible="false">
       <Image Rect="40,40,," Image="warning.png"/>
       <TitleText Rect="80,70,w-130," Text="Activation was failed."/>
-      <NormalText ID="CID_RESULT" Rect="20,130,w-40,50" Text="Upload Result" AlignText="AT_CENTER"/>
+      <ErrorText ID="CID_RESULT" Rect="20,130,w-40,50" AlignText="AT_CENTER"/>
 
       <NormalTextBt ID="CID_TRY_AGAIN" Text="Try Again" Rect="w/2-100-10,h-50,100,"/>
       <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2+10,h-50,100,"/>

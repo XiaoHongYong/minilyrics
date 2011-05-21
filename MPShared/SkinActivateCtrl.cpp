@@ -20,7 +20,7 @@ CSkinActivateCtrl::CSkinActivateCtrl()
 	m_clrTxt.set(0xFFFFFF);
 
 	m_formHeight.SetFormula(_T("25"));
-	m_nDuration = 30;
+	m_nDuration = 15;
 	m_nIdOverlappedCtrl = UID_INVALID;
 }
 
@@ -36,7 +36,7 @@ void CSkinActivateCtrl::OnCreate()
 
 	m_pCloseBtn = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, CSkinButton::ClassName(), this);
 	m_pCloseBtn->SetProperty(SZ_PN_RECT, _T("w-20,9,9,9"));
-	m_pCloseBtn->SetProperty(SZ_PN_IMAGE, _T("info_prompt_close.png"));
+	m_pCloseBtn->SetProperty(SZ_PN_IMAGE, _T("close_small.png"));
 	m_pCloseBtn->SetProperty(SZ_PN_IMAGE_SIZE, _T("9,9"));
 	m_pCloseBtn->SetProperty(SZ_PN_IMAGE_POS, _T("0,0"));
 	m_pCloseBtn->SetProperty(_T("ImageSelPos"), _T("0,9"));
@@ -55,7 +55,7 @@ void CSkinActivateCtrl::OnCreate()
 	AddUIObject(m_pTimerText);
 
 	m_nIdTimerText = m_pSkin->RegisterTimerObject(this, 1000);
-	m_nCountDown = 30;
+	m_nCountDown = m_nDuration;
 
 	m_Cursor.LoadStdCursor(CCursor::C_HAND);
 }

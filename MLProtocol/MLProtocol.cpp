@@ -194,9 +194,8 @@ void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
 	}
 
 	if (licenseStatus != LS_TRIAL)
-		xmlFile.WriteAttribute(_T("badrc"), licenseStatus);
-	if (licenseStatus == LS_ACTIVE)
 	{
+		xmlFile.WriteAttribute(_T("badrc"), licenseStatus);
 		if (strCodeStartDate.size())
 			xmlFile.WriteAttribute(_T("ls_sd"), strCodeStartDate.c_str());
 		if (nLicensedUser > 1)
