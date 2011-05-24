@@ -77,7 +77,7 @@ DWORD RegGetProfileString(HKEY hRoot, LPCTSTR szItem, LPCTSTR szKeyName, LPCTSTR
 			if (nSizeRet >= nSize)
 				nSizeRet = nSize - 1;
 			szReturnedString[nSizeRet] = '\0';
-			if (dwType != REG_SZ)
+			if (dwType != REG_SZ && dwType != REG_EXPAND_SZ)
 			{
 				if (dwType == REG_DWORD)
 				{

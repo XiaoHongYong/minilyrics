@@ -2,7 +2,7 @@
 #pragma once
 
 #include "../widget/widget.h"
-#include "WidgetListCtrlEx.h"
+#include "PlayerPluginInstaller.h"
 
 class CDlgStartMiniLyrics : public CBaseDialog  
 {
@@ -14,13 +14,44 @@ public:
 
 	void OnSize(int cx, int cy);
 
-	void OnOK();
-
-	enum { COL_PLAYER, COL_INFORMATION };
+	void OnCommand(UINT uID, UINT nNotifyCode);
 
 protected:
-	CWidgetListCtrl			m_listPlayers;
-	HIMAGELIST				m_hImageList;
+	struct PlayerItem
+	{
+		HWND			hWndPluginService;		// PluginService (MiniLyrics) for player
+		tstring			strPlayerName;
+		int				nIndexOfPlayerInstaller;
+
+		PlayerItem(LPCTSTR szPlayerName, HWND hWndPluginService) {
+			strPlayerName = szPlayerName;
+			this->hWndPluginService = hWndPluginService;
+			nIndexOfPlayerInstaller = 0;
+		}
+
+		PlayerItem(LPCTSTR szPlayerName, int nIndexOfPlayerInstaller) {
+			hWndPluginService = NULL;
+			strPlayerName = szPlayerName;
+			this->nIndexOfPlayerInstaller = nIndexOfPlayerInstaller;
+		}
+	};
+	typedef vector<PlayerItem>	VecPlayerItems;
+
+	void OnClickPlayer(CPlayerPluginInstaller::Player *p);
+
+	void ShowInstalledPlayers();
+	void ShowAllSupportedPlayers();
+
+	void UpdatePlayersToView();
+
+protected:
 	CWndHelper				m_wndHelper;
+	bool					m_bShowInstalledPlayers;
+	bool					m_bShowAllSupportedPlayers;
+
+	VecPlayerItems			m_vPlayerItems;
+	int						m_nCurPage;
+
+	CPlayerPluginInstaller	m_installer;
 
 };

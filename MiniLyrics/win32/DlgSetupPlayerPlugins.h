@@ -2,7 +2,6 @@
 #pragma once
 
 #include "../widget/widget.h"
-#include "PlayerPluginListCtrl.h"
 #include "PlayerPluginInstaller.h"
 
 class CDlgSetupPlayerPlugins : public CBaseDialog  
@@ -12,22 +11,21 @@ public:
 	virtual ~CDlgSetupPlayerPlugins();
 
 	virtual BOOL OnInitDialog();
-	void OnDestroy();
 
 	void OnSize(int cx, int cy);
 
-	void OnOK();
 	void OnCommand(UINT uID, UINT nNotifyCode);
 
 protected:
-	void RefreshStatus();
+	void ShowAllSupportedPlayers();
 
-	void UpdatePlayers();
+	void UpdatePlayersToView();
 
 protected:
-	CPlayerPluginListCtrl	m_listPlayers;
-	CPlayerPluginInstaller	m_pluginInstaller;
-	HIMAGELIST				m_hImageList;
+	CPlayerPluginInstaller	m_installer;
 	CWndHelper				m_wndHelper;
+
+	bool					m_bShowAllSupportedPlayers;
+	vector<int>				m_vPlayerItems;
 
 };

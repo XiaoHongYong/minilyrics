@@ -72,29 +72,6 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 	return true;
 }
 
-bool MLConnectToPlayer()
-{
-	if (!g_playerMgr.IsValid() && !g_playerMgr.Create())
-		return false;
-
-	if (g_playerMgr.m_listPlayers.size() == 0)
-		g_playerMgr.QueryRunningPlayerInfo();
-
-	if (g_playerMgr.m_listPlayers.size() == 1)
-	{
-		g_playerMgr.SetCurPlayer(0);
-	}
-	else
-	{
-		// Popup and let user to choose the player.
-		CDlgStartMiniLyrics		dlg;
-		if (dlg.DoModal(NULL) != IDOK)
-			return false;
-	}
-
-	return true;
-}
-
 bool CMLPlayerMgr::Create()
 {
 	m_vPlayerPluginAgent.clear();
@@ -102,6 +79,28 @@ bool CMLPlayerMgr::Create()
 	RegisteredPlayerPluginAgent(m_vPlayerPluginAgent);
 
 	return CTinyBaseWnd::Create(GetAppInstance(), SZ_MINILYRICS_SERVICE_CLASS_NAME);
+}
+
+bool CMLPlayerMgr::ConnectToPlayer()
+{
+	if (!IsValid())
+	{
+		if (!Create())
+			return false;
+	}
+
+	QueryRunningPlayerInfo();
+
+	if (m_listPlayers.size() == 1)
+	{
+		return ConnectToPlayer(m_listPlayers.front().hWndPluginService);
+	}
+	else
+	{
+		// Popup and let user to choose the player.
+		CDlgStartMiniLyrics		dlg;
+		return dlg.DoModal(NULL) == IDOK;
+	}
 }
 
 void CMLPlayerMgr::OnPlayerInfoReturned(PlayerInfo *playerInfo)
@@ -128,12 +127,19 @@ void CMLPlayerMgr::OnPlayerDisconnected()
 		CMPlayerAppBase::GetInstance()->PostQuitMessage();
 }
 
-void CMLPlayerMgr::SetCurPlayer(int nIndex)
+bool CMLPlayerMgr::ConnectToPlayer(HWND hWndPluginService)
 {
-	if (nIndex < 0 || nIndex >= (int)m_listPlayers.size())
-		return;
+	ListPlayerInfo::iterator it = m_listPlayers.begin();
+	for (; it != m_listPlayers.end(); ++it)
+	{
+		if ((*it).hWndPluginService == hWndPluginService)
+			break;
+	}
 
-	PlayerInfo &playerInfo = m_listPlayers[nIndex];
+	if (it == m_listPlayers.end())
+		return false;
+
+	PlayerInfo &playerInfo = *it;
 	m_hWndCurPlugin = playerInfo.hWndPluginService;
 	g_Player.Connect(playerInfo);
 
@@ -144,11 +150,15 @@ void CMLPlayerMgr::SetCurPlayer(int nIndex)
 		if (!pAgent->IsConnected())
 			pAgent->TurnOff();
 	}
+
+	return true;
 }
 
 void CMLPlayerMgr::QueryRunningPlayerInfo()
 {
 	HWND	hWndPluginService = NULL;
+
+	m_listPlayers.clear();
 
 	// Turn on player agent, if it's running.
 	for (int i = 0; i < (int)m_vPlayerPluginAgent.size(); i++)

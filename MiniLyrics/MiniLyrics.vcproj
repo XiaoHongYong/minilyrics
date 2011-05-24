@@ -472,10 +472,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\win32\PlayerPluginListCtrl.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\win32\PlayerSmoothTimer.cpp"
 				>
 			</File>
@@ -866,10 +862,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\win32\PlayerPluginListCtrl.h"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\win32\PlayerSmoothTimer.h"
 				>
 			</File>
@@ -1000,15 +992,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\ML6\Res\AdvancedPref.bmp"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\applicat.ico"
+				RelativePath="..\ML6\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
@@ -1016,7 +1004,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\dragafte.ico"
+				RelativePath="..\ML6\Res\applicat.ico"
 				>
 			</File>
 			<File
@@ -1024,11 +1012,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragbefo.ico"
+				RelativePath="..\ML6\Res\dragafte.ico"
 				>
 			</File>
 			<File
 				RelativePath="..\ML6\Res\dragbefo.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\Res\dragbefo.ico"
 				>
 			</File>
 			<File
@@ -1040,15 +1032,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\hand.cur"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\hand.cur"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\ico00001.ico"
+				RelativePath="..\MPShared\Res\hand.cur"
 				>
 			</File>
 			<File
@@ -1056,11 +1044,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\icon-tga.ico"
+				RelativePath="..\ML6\Res\ico00001.ico"
 				>
 			</File>
 			<File
 				RelativePath="..\ML6\Res\icon-tga.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\Res\icon-tga.ico"
 				>
 			</File>
 			<File
@@ -1076,15 +1068,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\next.ICO"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\next.ICO"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\open.ICO"
+				RelativePath="..\MPShared\Res\next.ICO"
 				>
 			</File>
 			<File
@@ -1092,11 +1080,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\play.ICO"
+				RelativePath="..\MPShared\Res\open.ICO"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\play.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\play.ICO"
 				>
 			</File>
 			<File
@@ -1108,15 +1100,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\save.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\save.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\selcolor.cur"
+				RelativePath="..\ML6\Res\save.ico"
 				>
 			</File>
 			<File
@@ -1124,11 +1112,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\stop.ICO"
+				RelativePath="..\MPShared\Res\selcolor.cur"
 				>
 			</File>
 			<File
 				RelativePath="..\ML6\Res\stop.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\Res\stop.ICO"
 				>
 			</File>
 		</Filter>

@@ -8,14 +8,16 @@ HWND GetMLSericeWindow();
 
 bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp);
 
-bool MLConnectToPlayer();
-
 class CMLPlayerMgr : public CTinyBaseWnd
 {
 public:
+	typedef vector<PlayerInfo>	ListPlayerInfo;
+
 	CMLPlayerMgr() : m_hWndCurPlugin(NULL) { }
 
 	bool Create();
+
+	bool ConnectToPlayer();
 
 	bool OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds);
 
@@ -24,17 +26,15 @@ public:
 	void OnPlayerDisconnected();
 
 	void QueryRunningPlayerInfo();
+	const ListPlayerInfo &GetRunningPlayers() const { return m_listPlayers; }
 
 	HWND GetCurPluginServiceWnd() { return m_hWndCurPlugin; }
 
-	void SetCurPlayer(int nIndex);
+	bool ConnectToPlayer(HWND hWndPluginService);
 
 	bool IsValid() { return m_hWnd != NULL; }
 
-	// void RegisterPluginAgent(IPlayerPluginAgent *pluginAgent) { m_vPlayerPluginAgent.push_back(pluginAgent); }
-
-public:
-	typedef vector<PlayerInfo>	ListPlayerInfo;
+protected:
 	ListPlayerInfo				m_listPlayers;
 	HWND						m_hWndCurPlugin;
 	VecPlayerPluginAgent		m_vPlayerPluginAgent;

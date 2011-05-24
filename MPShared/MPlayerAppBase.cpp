@@ -384,7 +384,7 @@ CEventsDispatcherBase *CMPlayerAppBase::GetEventsDispatcher()
 bool CMPlayerAppBase::InitLyricsPlayer()
 {
 #ifndef _MPLAYER
-	if (!MLConnectToPlayer())
+	if (!g_playerMgr.ConnectToPlayer())
 		return false;
 #endif
 

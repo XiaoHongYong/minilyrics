@@ -1,5 +1,7 @@
 #pragma once
 
+tstring GetProgramFilesPath();
+
 class CPlayerPluginInstaller
 {
 public:
@@ -47,11 +49,15 @@ public:
 		void DetectPlayerPathByRegistry();
 
 		bool CheckPlayerInstalled(bool bClearPathIfNotInstalled = true);
-		bool RefreshPluginInstallationStatus(tstring &strErr);
+		bool CheckPluginInstalled(tstring &strErr);
+
 		void SetToInstallPlugin(bool bInstall);
 		bool IsToInstallPlugin() { return IsFlagSet(pExtraInfo->status, S_PG_TO_INSTALL); }
 		bool IsPluginInstalled() { return IsFlagSet(pExtraInfo->status, S_PG_INSTALLED); }
 		bool IsPlayerRunning() { return pExtraInfo->dwProcessId != 0; }
+		bool IsPluginServiceRunning() { return pExtraInfo->hWndPluginService != NULL; }
+
+		tstring GetPlayerExeFile();
 
 		bool Install(tstring &strErr);
 		bool Uninstall(tstring &strErr);
@@ -65,13 +71,11 @@ public:
 
 	bool Init();
 
-	bool DetectRunningPlayers();
-
-	void RefreshPluginInstallationStatus();
-
 	bool Install(tstring &strErr);
 
-	Player *GetPlayers();
+	void RefreshRunningPlayers();
+	void RefreshRunningPluginService();
+
 	Player *GetPlayerByIndex(int i);
 
 };

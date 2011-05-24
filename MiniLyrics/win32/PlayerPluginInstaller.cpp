@@ -248,8 +248,6 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("InstAP"),
 		_T("PluginAP.exe"),
 	},
-
-	{	NULL, }
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -307,7 +305,7 @@ void UpdatePlayerPath(LPCTSTR szFile, DWORD dwProcessId)
 {
 	LPCTSTR	szFileName = FileGetName(szFile);
 
-	for (int i = 0; g_playersPlugin[i].szPlayerName != NULL; i++)
+	for (int i = 0; i < CountOf(g_playersPlugin); i++)
 	{
 		CPlayerPluginInstaller::Player &item = g_playersPlugin[i];
 		if (item.szExeName && _tcsicmp(szFileName, item.szExeName) == 0)
@@ -320,33 +318,9 @@ void UpdatePlayerPath(LPCTSTR szFile, DWORD dwProcessId)
 	}
 }
 
-bool FindRunningPlayersPath()
-{
-	CProcessEnum	processEnum;
-
-	DWORD aProcesses[1024], cbNeeded;
-	if (!processEnum.Enum(aProcesses, sizeof(aProcesses), &cbNeeded))
-		return false;
-
-	for (int i = cbNeeded / sizeof(DWORD) - 1; i >= 0; i--)
-	{
-		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, aProcesses[i]);
-		// ASSERT(hProcess);
-		if (hProcess)
-		{
-			TCHAR	szFile[MAX_PATH];
-			int n = processEnum.GetModuleFileNameEx(hProcess, NULL, szFile, CountOf(szFile));
-			if (n > 0)
-				UpdatePlayerPath(szFile, aProcesses[i]);
-		}
-	}
-
-	return true;
-}
-
 bool UpdatePluginService(HWND hWndPluginService, DWORD dwProcessId)
 {
-	for (int i = 0; g_playersPlugin[i].szPlayerName != NULL; i++)
+	for (int i = 0; i < CountOf(g_playersPlugin); i++)
 	{
 		CPlayerPluginInstaller::Player &item = g_playersPlugin[i];
 		if (dwProcessId == item.pExtraInfo->dwProcessId)
@@ -361,26 +335,6 @@ bool UpdatePluginService(HWND hWndPluginService, DWORD dwProcessId)
 	return false;
 }
 
-void FindRunningPluginService()
-{
-	HWND	hWndPluginService = NULL;
-
-	while (1)
-	{
-		hWndPluginService = FindWindowEx(NULL, hWndPluginService, SZ_PLUGIN_SERVICE_CLASS_NAME, NULL);
-		if (hWndPluginService == NULL)
-			break;
-
-		DWORD	dwProcessId = 0;
-		GetWindowThreadProcessId(hWndPluginService, &dwProcessId);
-		if (dwProcessId != 0)
-		{
-			if (!UpdatePluginService(hWndPluginService, dwProcessId))
-				ERRLOG0(_T("Failed to UpdatePluginService"));
-		}
-	}
-}
-
 //////////////////////////////////////////////////////////////////////////
 
 CPlayerPluginInstaller::CPlayerPluginInstaller(void)
@@ -389,7 +343,7 @@ CPlayerPluginInstaller::CPlayerPluginInstaller(void)
 
 CPlayerPluginInstaller::~CPlayerPluginInstaller(void)
 {
-	for (int i = 0; g_playersPlugin[i].szPlayerName != NULL; i++)
+	for (int i = 0; i < CountOf(g_playersPlugin); i++)
 	{
 		if (g_playersPlugin[i].pExtraInfo)
 		{
@@ -418,7 +372,7 @@ bool CPlayerPluginInstaller::Init()
 
 	profile.Init(strFileInstCfg.c_str(), _T("INSTALL"));
 
-	for (int i = 0; g_playersPlugin[i].szPlayerName != NULL; i++)
+	for (int i = 0; i < CountOf(g_playersPlugin); i++)
 	{
 		Player &item = g_playersPlugin[i];
 		if (!item.pExtraInfo)
@@ -442,20 +396,65 @@ bool CPlayerPluginInstaller::Init()
 	}
 
 	// Update running player path
-	FindRunningPlayersPath();
+	RefreshRunningPlayers();
 
 	// Update running plugin service
-	FindRunningPluginService();
+	RefreshRunningPluginService();
 
 	return true;
 }
 
-void CPlayerPluginInstaller::RefreshPluginInstallationStatus()
+void CPlayerPluginInstaller::RefreshRunningPluginService()
 {
-	for (int i = 0; g_playersPlugin[i].szPlayerName != NULL; i++)
+	for (int i = 0; i < CountOf(g_playersPlugin); i++)
 	{
 		Player &item = g_playersPlugin[i];
-		item.RefreshPluginInstallationStatus(item.pExtraInfo->strMsg);
+		item.pExtraInfo->hWndPluginService = NULL;
+	}
+
+	HWND	hWndPluginService = NULL;
+
+	while (1)
+	{
+		hWndPluginService = FindWindowEx(NULL, hWndPluginService, SZ_PLUGIN_SERVICE_CLASS_NAME, NULL);
+		if (hWndPluginService == NULL)
+			break;
+
+		DWORD	dwProcessId = 0;
+		GetWindowThreadProcessId(hWndPluginService, &dwProcessId);
+		if (dwProcessId != 0)
+		{
+			if (!UpdatePluginService(hWndPluginService, dwProcessId))
+				ERRLOG0(_T("Failed to UpdatePluginService"));
+		}
+	}
+}
+
+void CPlayerPluginInstaller::RefreshRunningPlayers()
+{
+	for (int i = 0; i < CountOf(g_playersPlugin); i++)
+	{
+		Player &item = g_playersPlugin[i];
+		item.pExtraInfo->dwProcessId = 0;
+	}
+
+	CProcessEnum	processEnum;
+
+	DWORD aProcesses[1024], cbNeeded;
+	if (!processEnum.Enum(aProcesses, sizeof(aProcesses), &cbNeeded))
+		return;
+
+	for (int i = cbNeeded / sizeof(DWORD) - 1; i >= 0; i--)
+	{
+		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, aProcesses[i]);
+		// ASSERT(hProcess);
+		if (hProcess)
+		{
+			TCHAR	szFile[MAX_PATH];
+			int n = processEnum.GetModuleFileNameEx(hProcess, NULL, szFile, CountOf(szFile));
+			if (n > 0)
+				UpdatePlayerPath(szFile, aProcesses[i]);
+		}
 	}
 }
 
@@ -473,7 +472,7 @@ bool RegisterDll(LPCTSTR szDll, tstring &strErr)
 	tstring		strCmd = _T("regsvr32 /s \"");
 	strCmd += szDll;
 	strCmd += _T("\"");
-	if (ExecuteCmdAndWait(strCmd.c_str(), 20 * 1000, &dwExitCode) && dwExitCode == 0)
+	if (ExecuteCmdAndWait(strCmd.c_str(), 5 * 1000, &dwExitCode) && dwExitCode == 0)
 		return true;
 
 	strErr = _T("Failed to register dll: ");
@@ -545,6 +544,22 @@ bool CPlayerPluginInstaller::Player::CheckPlayerInstalled(bool bClearPathIfNotIn
 
 	pExtraInfo->status |= CPlayerPluginInstaller::S_PLAYER_INSTALLED;
 	return true;
+}
+
+tstring CPlayerPluginInstaller::Player::GetPlayerExeFile()
+{
+	if (szExeName != NULL)
+	{
+		ASSERT(pExtraInfo && szExeName);
+
+		DirStringAddSlash(pExtraInfo->strPlayerPath);
+
+		tstring		strExeFile = DirStringJoint(pExtraInfo->strPlayerPath.c_str(), szExeName);
+		if (IsFileExist(strExeFile.c_str()))
+			return strExeFile;
+	}
+
+	return _T("");
 }
 
 class PluginInstaller
@@ -696,7 +711,21 @@ bool Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 	return true;
 }
 
-bool CPlayerPluginInstaller::Player::RefreshPluginInstallationStatus(tstring &strErr)
+bool CPlayerPluginInstaller::Player::Install(tstring &strErr)
+{
+	ASSERT(IsFlagSet(pExtraInfo->status, S_PG_TO_INSTALL));
+	ASSERT(IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED));
+
+	if (!::Install<PluginInstaller>(*this, strErr))
+		return false;
+
+	pExtraInfo->status |= S_PG_INSTALLED;
+
+	return true;
+}
+
+
+bool CPlayerPluginInstaller::Player::CheckPluginInstalled(tstring &strErr)
 {
 	pExtraInfo->status &= ~(S_PG_VER_NOT_MATCH | S_PG_MDT_NOT_MATCH | S_PG_INSTALL_ERROR);
 
@@ -709,89 +738,6 @@ bool CPlayerPluginInstaller::Player::RefreshPluginInstallationStatus(tstring &st
 	pExtraInfo->status |= S_PG_INSTALLED;
 
 	return true;
-}
-
-bool CPlayerPluginInstaller::Player::Install(tstring &strErr)
-{
-	ASSERT(IsFlagSet(pExtraInfo->status, S_PG_TO_INSTALL));
-	ASSERT(IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED));
-
-	if (!::Install<PluginInstaller>(*this, strErr))
-		return false;
-
-	pExtraInfo->status |= S_PG_INSTALLED;
-
-	return true;
-/*	ASSERT(szPlayerPath);
-	ASSERT(IsFlagSet(status, S_PG_TO_INSTALL));
-	ASSERT(IsFlagSet(status, S_PLAYER_INSTALLED));
-
-	if (!IsFlagSet(status, S_PLAYER_INSTALLED))
-		return false;
-
-	tstring	strDirTarg;
-	if (szPluginDirOfPlayer)
-	{
-		strDirTarg = szPlayerPath;
-		strDirTarg += szPluginDirOfPlayer;
-	}
-
-	V_Str	vFiles;
-	StrSplit(szPluginFiles, ';', vFiles);
-
-	for (int i = 0; i < (int)vFiles.size(); i++)
-	{
-		tstring		strFileSrc = GetWorkingFolder();
-		strFileSrc += vFiles[i];
-
-		tstring		strFileTarg;
-		if (szPluginDirOfPlayer)
-			strFileTarg = strDirTarg + vFiles[i];
-		else
-			strFileTarg = strFileSrc;
-
-		if (IsFlagSet(dwInstallFlags, INST_COPY_2_PLAYER_PLUGIN_DIR))
-		{
-			ASSERT(strFileSrc != strFileTarg);
-			DBGLOG2(_T(""))
-			if (!CopyFile(strFileSrc.c_str(), strFileTarg.c_str(), false))
-			{
-				int nErr = GetLastError();
-				strErr = CStrPrintf(_T("Failed to copy file: %s to file: %s."), strFileSrc.c_str(), strFileTarg.c_str()).c_str();
-				strErr += CWin32Error(nErr).Description();
-				return false;
-			}
-		}
-
-		if (IsFlagSet(dwInstallFlags, INST_REG_DLL))
-		{
-			if (!RegisterDll(strErr))
-				return false;
-		}
-	}
-
-	if (IsFlagSet(dwInstallFlags, INST_CREATE_MLPLUGIN_INI))
-	{
-		ASSERT(strFileSrc != strFileTarg);
-		tstring		strIniFile = strDirTarg + SZ_MLPLUGIN_INI;
-
-		string		strIniContent = "[MiniLyrics]\r\nWorkingFolder=";
-		string		strWorkingFolder;
-		TStringToMBCS(GetWorkingFolder(), -1, strWorkingFolder);
-		strIniContent += strWorkingFolder + "\r\n";
-
-		if (!SaveDataAsFile(strIniFile.c_str(), strIniContent.c_str(), strIniContent.size()))
-			return false;
-	}
-
-
-	// CProfile	file;
-	// file.Init(strIniFile.c_str(), _T("MiniLyrics"));
-	// file.WriteProfileString(_T("WorkingFolder"), GetWorkingFolder());
-
-	status |= S_PG_INSTALLED;
-
-	return true;*/
 }
 
 bool CPlayerPluginInstaller::Player::Uninstall(tstring &strErr)
@@ -818,7 +764,7 @@ bool CPlayerPluginInstaller::Install(tstring &strErr)
 {
 	bool	bRet = true;
 
-	for (int i = 0; g_playersPlugin[i].szPlayerName != NULL; i++)
+	for (int i = 0; i < CountOf(g_playersPlugin); i++)
 	{
 		Player &item = g_playersPlugin[i];
 
@@ -830,11 +776,6 @@ bool CPlayerPluginInstaller::Install(tstring &strErr)
 	}
 
 	return bRet;
-}
-
-CPlayerPluginInstaller::Player *CPlayerPluginInstaller::GetPlayers()
-{
-	return g_playersPlugin;
 }
 
 CPlayerPluginInstaller::Player *CPlayerPluginInstaller::GetPlayerByIndex(int i)
