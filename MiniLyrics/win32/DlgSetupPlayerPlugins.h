@@ -14,9 +14,11 @@ public:
 
 	void OnSize(int cx, int cy);
 
+	void OnOK();
 	void OnCommand(UINT uID, UINT nNotifyCode);
 
 protected:
+	void OnClickedCheckBtn(CPlayerPluginInstaller::Player *p, int nCheckBtnId);
 	void OnClickedInstallBtn(CPlayerPluginInstaller::Player *p);
 	void OnClickedBrowsePathBtn(CPlayerPluginInstaller::Player *p);
 	void OnPathEditChanged(CPlayerPluginInstaller::Player *p);
@@ -32,6 +34,8 @@ protected:
 	bool					m_bShowAllSupportedPlayers;
 	int						m_nCurPage;
 	vector<int>				m_vPlayerItems;
+
+	tstring					m_strBuiltInPlayers;
 
 	CPlayerPluginInstaller	m_installer;
 

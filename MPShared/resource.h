@@ -157,6 +157,14 @@
 #define IDC_SL8                         1108
 #define IDC_E_PLAYER8                   1109
 #define IDC_BR_PLAYER8                  1110
+#define IDC_C_PLAYER1                   1111
+#define IDC_C_PLAYER2                   1112
+#define IDC_C_PLAYER3                   1113
+#define IDC_C_PLAYER4                   1114
+#define IDC_C_PLAYER5                   1115
+#define IDC_C_PLAYER6                   1116
+#define IDC_C_PLAYER7                   1117
+#define IDC_C_PLAYER8                   1118
 #define IDC_SETTOPMOST                  40001
 #define IDC_STOP                        40002
 #define IDC_EXIT                        40003
@@ -357,7 +365,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        180
 #define _APS_NEXT_COMMAND_VALUE         40194
-#define _APS_NEXT_CONTROL_VALUE         1110
+#define _APS_NEXT_CONTROL_VALUE         1120
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

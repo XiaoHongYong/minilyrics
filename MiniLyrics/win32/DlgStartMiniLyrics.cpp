@@ -163,20 +163,20 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 		tstring strMsg = TOLOCAL_T("MiniLyrics can't detect the player's path.");
 		strMsg += _T("\n");
 		strMsg += TOLOCAL_T("Do you want to specify the player's installation path manually?");
-		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) == IDOK)
+		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
+			return;
+
+		CFolderDialog	dlg;
+
+		dlg.SetInitFolder(GetProgramFilesPath().c_str());
+		if (!dlg.DoBrowse(this))
+			return;
+
+		p->pExtraInfo->strPlayerPath = dlg.GetFolder();
+		if (!p->CheckPlayerInstalled(false))
 		{
-			CFolderDialog	dlg;
-
-			dlg.SetInitFolder(GetProgramFilesPath().c_str());
-			if (!dlg.DoBrowse(this))
-				return;
-
-			p->pExtraInfo->strPlayerPath = dlg.GetFolder();
-			if (!p->CheckPlayerInstalled(false))
-			{
-				MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed do NOT have file: %s"), p->szExeName).c_str());
-				return;
-			}
+			MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed do NOT have file: %s"), p->szExeName).c_str());
+			return;
 		}
 	}
 

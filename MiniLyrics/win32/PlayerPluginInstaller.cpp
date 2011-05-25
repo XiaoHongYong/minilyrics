@@ -145,7 +145,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("Silverjuke\\"), _T("Silverjuke.exe"),
 		_T(""),
 		_T("InstSJ"),
-		_T("sbMLSongbird.dll;sbMLSongbird.xpt")
+		_T("PluginSilverjuke.dll")
 	},
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
@@ -568,8 +568,10 @@ public:
 	{
 		if (!IsFileExist(szTarg))
 		{
-			item.pExtraInfo->strMsg = _T("File does not exist. ");
+			item.pExtraInfo->strMsg = _T("File does not exist.");
+			item.pExtraInfo->strMsg += _T("\n");
 			item.pExtraInfo->strMsg += szTarg;
+			strErr = item.pExtraInfo->strMsg;
 			return false;
 		}
 		if (item.verMajor == 0)
@@ -586,7 +588,7 @@ public:
 			item.pExtraInfo->status |= CPlayerPluginInstaller::S_PG_VER_NOT_MATCH;
 			item.pExtraInfo->strMsg = TOLOCAL(_T("File version doesn't match the current version."));
 			item.pExtraInfo->strMsg += _T("\r\n");
-			item.pExtraInfo->strMsg += szSrc;
+			item.pExtraInfo->strMsg += szTarg;
 			strErr = item.pExtraInfo->strMsg;
 			return false;
 		}

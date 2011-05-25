@@ -296,7 +296,7 @@ protected:
 		CPPUNIT_ASSERT(t2.month = t.month);
 		CPPUNIT_ASSERT(t2.GetTime() == t.GetTime());
 
-		for (int year = 1990; year < 2001; year++)
+		for (int year = 1999; year < 2001; year++)
 		{
 			CBaseDate	date(year, 1, 1);
 			uint32 time = date.GetTime();
