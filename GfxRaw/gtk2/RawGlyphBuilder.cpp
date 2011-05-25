@@ -42,7 +42,7 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 	m_nWidthGraph = GetHeightBitmap() * 2;
 }
 
-Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
+Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 {
 	PangoLayout *layout;
 	PangoFontDescription *desc;

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "base.h"
 #include "safestr.h"
+#include "base.h"
 #include "fileapi.h"
 
 IMPLEMENT_CPPUNIT_TEST_REG(FileAPI)

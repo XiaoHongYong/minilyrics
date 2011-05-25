@@ -29,6 +29,74 @@ inline byte RGBToGray(int r, int g, int b)
 	return (r * 3 + g * 6 + b + 5) / 10;
 }
 
+bool inline isCharComposed(WCHAR c)
+{
+	return (c >= 0x590 && c <= 0x6ff) || (c >= 0x0E00 && c <= 0x0E7F);
+}
+
+// Right to left string iterator
+class RtlStringIterator
+{
+public:
+	typedef tstring		CharType;
+
+	RtlStringIterator(LPCTSTR szText)
+	{
+		m_szText = szText;
+		m_nPos = 0;
+		ReadCurChar();
+	}
+
+	void operator = (LPCTSTR szText)
+	{
+		m_szText = szText;
+		m_nPos = 0;
+		ReadCurChar();
+	}
+
+	// Is end of string
+	bool IsEOS() { return m_szText[m_nPos] == 0; }
+
+	CharType &CurChar()
+	{
+		return m_ch;
+	}
+
+	void operator ++()
+	{
+		m_nPos += m_ch.size();
+		ReadCurChar();
+	}
+
+	int GetPos() { return m_nPos; }
+	void SetPos(int nPos) { m_nPos = nPos; m_ch = m_szText + m_nPos; }
+
+private:
+	void ReadCurChar()
+	{
+		m_ch.clear();
+
+		int n = m_nPos;
+		m_ch += m_szText[n];
+		if (isCharComposed(m_szText[n]))
+		{
+			n++;
+			while (isCharComposed(m_szText[n]))
+			{
+				m_ch += m_szText[n];
+				n++;
+			}
+		}
+	}
+
+protected:
+	LPCTSTR			m_szText;
+	int				m_nPos;
+	CharType		m_ch;
+
+};
+
+
 template<class pixfmt>
 void CopyBitmpDataFromGraphBuffer_t(Glyph *pGlyph, pixfmt &bufGraph)
 {
@@ -426,7 +494,7 @@ bool CRawGlyphSet::Create(const CFontInfo &font)
 	return true;
 }
 
-GfxRaw::Glyph *CRawGlyphSet::GetGlyph(StringIterator::CharType ch)
+GfxRaw::Glyph *CRawGlyphSet::GetGlyph(tstring &ch)
 {
 	MAP_GLYPH::iterator		it;
 	GfxRaw::Glyph		*glyph = NULL;
@@ -456,14 +524,14 @@ GfxRaw::Glyph *CRawGlyphSet::GetGlyph(StringIterator::CharType ch)
 		}
 	}
 
-	it = m_mapGlyph.find(ch.GetIntValue());
+	it = m_mapGlyph.find(ch);
 	if (it == m_mapGlyph.end())
 	{
 		glyph = m_rawGlyphBuilder.BuildGlyph(ch);
 		ASSERT(glyph);
 		if (!glyph)
 			return NULL;
-		m_mapGlyph[ch.GetIntValue()] = glyph;
+		m_mapGlyph[ch] = glyph;
 	}
 	else
 	{
@@ -1367,7 +1435,7 @@ bool CRawBmpFont::DrawText(CRawGraph *pGraph, int x, int y, int width, int xLeft
 	if (x + width + m_marginOutlined / 2 < rcClip.right)
 		rcClip.right = x + width + m_marginOutlined / 2;
 
-	StringIterator	strIterator(szText);
+	RtlStringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
 		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
@@ -1487,7 +1555,7 @@ bool CRawBmpFont::OutlinedDrawText(CRawGraph *pGraph, int x, int y, int width, i
 	if (x + width + m_marginOutlined / 2 < rcClip.right)
 		rcClip.right = x + width + m_marginOutlined / 2;
 
-	StringIterator	strIterator(szText);
+	RtlStringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
 		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
@@ -1593,7 +1661,7 @@ void CRawBmpFont::SplitToMultiLine(LPRECT lpRect, LPCTSTR szText, int nLen, UINT
 	GfxRaw::Glyph	*glyph;
 	int		nWidthMax = lpRect->right - lpRect->left;
 
-	StringIterator	strIterator(szText);
+	RtlStringIterator	strIterator(szText);
 	tstring			str;
 	int				nBegin = 0, nLastWordSplitPos = 0;
 	for (; strIterator.GetPos() < nLen; ++strIterator)
@@ -1602,10 +1670,10 @@ void CRawBmpFont::SplitToMultiLine(LPRECT lpRect, LPCTSTR szText, int nLen, UINT
 		if (!glyph)
 			continue;
 
-		if (IsWordSplitChar(glyph->ch))
+		if (IsWordSplitChar(glyph->ch.c_str()))
 			nLastWordSplitPos = strIterator.GetPos();
 
-		if (glyph->ch == '\r' || glyph->ch == '\n')
+		if (glyph->ch[0] == '\r' || glyph->ch[0] == '\n')
 			w = nWidthMax + 1;
 		w += glyph->nWidth;
 		if (w > nWidthMax)
@@ -1642,7 +1710,7 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 	int		w = 0;
 	GfxRaw::Glyph	*glyph;
 
-	StringIterator	strIterator(szText);
+	RtlStringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
 		glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
@@ -1660,7 +1728,7 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 	int			wMax;
 	nLen = strIterator.GetPos();
 
-	glyph = m_prawGlyphSet->GetGlyph((int)'.');
+	glyph = m_prawGlyphSet->GetGlyph(tstring(_T(".")));
 	if (!glyph)
 		return false;
 	wMax = nWidthMax - glyph->nWidth * 3;
@@ -1676,7 +1744,7 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 		if (w > wMax)
 			break;
 
-		strEllipsis += (LPCTSTR)glyph->ch;
+		strEllipsis += glyph->ch;
 	}
 	strEllipsis += _T("...");
 
@@ -1691,14 +1759,14 @@ bool CRawBmpFont::ShouldDrawTextPrefix(LPCTSTR szText, int nLen, tstring &strPrf
 	nXPrefix = 0;
 	nWidthPrefix = 0;
 
-	StringIterator	strIterator(szText);
+	RtlStringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
 		glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());
 		if (!glyph)
 			continue;
 
-		if (glyph->ch == StringIterator::CharType('&'))
+		if (glyph->ch[0] == '&')
 		{
 			break;
 		}
@@ -1713,7 +1781,7 @@ bool CRawBmpFont::ShouldDrawTextPrefix(LPCTSTR szText, int nLen, tstring &strPrf
 
 	if (strIterator.GetPos() < (int)strPrfix.size())
 	{
-		StringIterator strIteratorNew(strPrfix.c_str());
+		RtlStringIterator strIteratorNew(strPrfix.c_str());
 		strIteratorNew.SetPos(strIterator.GetPos());
 
 		glyph = m_prawGlyphSet->GetGlyph(strIteratorNew.CurChar());
@@ -1729,7 +1797,7 @@ int CRawBmpFont::GetTextWidth(LPCTSTR szText, int nLen)
 {
 	int		w = 0;
 
-	StringIterator	strIterator(szText);
+	RtlStringIterator	strIterator(szText);
 	for (; strIterator.GetPos() < nLen; ++strIterator)
 	{
 		GfxRaw::Glyph		*glyph = m_prawGlyphSet->GetGlyph(strIterator.CurChar());

@@ -16,9 +16,10 @@ public:
 
 	void Destroy();
 
-	Glyph *BuildGlyph(StringIterator::CharType ch);
+	Glyph *BuildGlyph(tstring &ch);
 
 protected:
+	void CreateMemGraph(int nWidthGraph);
 	int GetHeightBitmap() { return m_font.GetHeight() + MARGIN_BITMAP * 2; }
 
 protected:

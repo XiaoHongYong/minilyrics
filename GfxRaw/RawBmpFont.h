@@ -68,7 +68,7 @@ struct Glyph
 	int WidthBytes() const { return widthBitmap * G_PIX_SIZE; }
 	int WidthBytesOutlined() const { return (widthBitmap + marginOutlined) * G_PIX_SIZE; }
 
-	StringIterator::CharType	ch;
+	tstring		ch;
 	byte		nWidth;					// Width of char
 
 	byte		leftOffset, topOffset;	// Left and top offset of bitmap.
@@ -107,7 +107,7 @@ public:
 
 	virtual bool Create(const CFontInfo &font);
 
-	Glyph *GetGlyph(StringIterator::CharType ch);
+	Glyph *GetGlyph(tstring &ch);
 
 	void ClearGlyph();
 
@@ -116,7 +116,7 @@ protected:
 
 protected:
 	friend class CRawGlyphSetMgr;
-	typedef map<int, Glyph*>		MAP_GLYPH;
+	typedef map<tstring, Glyph*>		MAP_GLYPH;
 
 	MAP_GLYPH				m_mapGlyph;
 

@@ -29,25 +29,28 @@ CRawGlyphBuilder::~CRawGlyphBuilder()
 
 void CRawGlyphBuilder::Init(const CFontInfo &font)
 {
+	if (m_pmemGraph && m_font.IsSame(font))
+		return;
+
+	m_font.Create(font);
+
+	CreateMemGraph(GetHeightBitmap() * 2);
+}
+
+void CRawGlyphBuilder::CreateMemGraph(int nWidthGraph)
+{
+	nWidthGraph = (nWidthGraph + 3 % 4) * 4;
+	m_memGraph.Destroy();
 	if (m_pmemGraph)
 	{
-		if (m_font.IsSame(font))
-			return;
 		delete m_pmemGraph;
 		m_pmemGraph = NULL;
 	}
 
-	m_memGraph.Destroy();
-
-	m_font.Create(font);
-
 	CMLGraphics		graphScreen;
 	HDC				hdcScreen;
-
 	hdcScreen = GetDC(NULL);
 	graphScreen.Attach(hdcScreen);
-
-	int		nWidthGraph = GetHeightBitmap() * 2;
 
 	m_memGraph.Create(nWidthGraph, GetHeightBitmap(), &graphScreen, MEM_GRAPH_BITS);
 
@@ -88,7 +91,7 @@ void CRawGlyphBuilder::Destroy()
 
 void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgb24 &bufGraph);
 
-Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
+Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 {
 	SIZE			size;
 
@@ -97,8 +100,11 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 
 	ASSERT(m_pmemGraph);
 
-	if (!m_pmemGraph->GetTextExtentPoint32(ch, ch.size(), &size))
+	if (!m_pmemGraph->GetTextExtentPoint32(ch.c_str(), ch.size(), &size))
 		return NULL;
+
+	if (size.cx > m_memGraph.Width() + MARGIN_BITMAP * 2)
+		CreateMemGraph(size.cx + GetHeightBitmap());
 
 	int nHeightBitmap = GetHeightBitmap();
 
@@ -109,7 +115,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(StringIterator::CharType ch)
 		pRowSrc += bufGraph.stride();
 	}
 
-	if (!m_pmemGraph->TextOut(MARGIN_BITMAP, MARGIN_BITMAP, ch, ch.size()))
+	if (!m_pmemGraph->TextOut(MARGIN_BITMAP, MARGIN_BITMAP, ch.c_str(), ch.size()))
 		return NULL;
 
 	Glyph		*glyph = new Glyph;
