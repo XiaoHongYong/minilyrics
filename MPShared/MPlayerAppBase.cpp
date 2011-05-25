@@ -29,6 +29,7 @@
 #include "win32/MPFloatingLyrWnd.h"
 #ifndef _MPLAYER
 #include "../MiniLyrics/win32/MLPlayerMgr.h"
+#include "../MiniLyrics/win32/DlgSetupPlayerPlugins.h"
 #endif
 #else
 #include "MPFloatingLyrWnd.h"
@@ -495,6 +496,11 @@ bool CMPlayerAppBase::Init(StartApp startApp)
 		bRet = InitLyricsTool();
 	else if (startApp == SA_IPOD_LYRICS_DOWNLOADER)
 		bRet = InitiPodLyricsDownloader();
+	else if (startApp == SA_SETUP)
+	{
+		CDlgSetupPlayerPlugins	dlg;
+		dlg.DoModal(NULL);
+	}
 	else
 		bRet = InitLyricsPlayer();
 	if (!bRet)

@@ -20,11 +20,12 @@ protected:
 	struct PlayerItem
 	{
 		HWND			hWndPluginService;		// PluginService (MiniLyrics) for player
-		tstring			strPlayerName;
+		tstring			strPlayerName, strPlayerExe;
 		int				nIndexOfPlayerInstaller;
 
-		PlayerItem(LPCTSTR szPlayerName, HWND hWndPluginService) {
+		PlayerItem(LPCTSTR szPlayerName, HWND hWndPluginService, LPCTSTR szPlayerExe) {
 			strPlayerName = szPlayerName;
+			strPlayerExe = szPlayerExe;
 			this->hWndPluginService = hWndPluginService;
 			nIndexOfPlayerInstaller = 0;
 		}
@@ -43,6 +44,8 @@ protected:
 	void ShowAllSupportedPlayers();
 
 	void UpdatePlayersToView();
+
+	int GetMaxPagesCount();
 
 protected:
 	CWndHelper				m_wndHelper;

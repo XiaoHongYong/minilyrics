@@ -3,6 +3,7 @@
 #include "../MLPluginLib/MiniLyricsPlugin.h"
 #include "MLVersion.h"
 #include "FileVersionInfo.h"
+#include "ProcessEnum.h"
 
 enum InstallFlag
 {
@@ -171,7 +172,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		0,
-		_T("Media Player Classic Home Cinema"),
+		_T("Media Player Classic HC"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\mpc-hc.exe\\"),
 		_T("K-Lite Codec Pack\\Media Player Classic\\"), _T("mpc-hc.exe"),
 		NULL,
@@ -269,37 +270,6 @@ bool IsFileSame(LPCTSTR szFile1, LPCTSTR szFile2)
 }
 
 //////////////////////////////////////////////////////////////////////////
-
-typedef BOOL (WINAPI *EnumProcessesFunc) (DWORD * lpidProcess, DWORD cb, LPDWORD lpcbNeeded);
-typedef DWORD (WINAPI *GetModuleFileNameExWFunc)(HANDLE hProcess, HMODULE hModule, LPWSTR lpFilename, DWORD nSize);
-
-class CProcessEnum
-{
-public:
-	CProcessEnum() {
-		m_funcEnum = NULL; m_funcGetModuleFileNameEx = NULL;
-
-		m_hPsApi = LoadLibrary(_T("psapi.dll"));
-		ASSERT(m_hPsApi);
-		if (!m_hPsApi)
-			return;
-
-		m_funcEnum = (EnumProcessesFunc)GetProcAddress(m_hPsApi, "EnumProcesses");
-		m_funcGetModuleFileNameEx = (GetModuleFileNameExWFunc)GetProcAddress(m_hPsApi, "GetModuleFileNameExW");
-	}
-	~CProcessEnum() { FreeLibrary(m_hPsApi); }
-
-	BOOL Enum(DWORD * lpidProcess, DWORD cb, LPDWORD lpcbNeeded)
-		{ if (m_funcEnum) return m_funcEnum(lpidProcess, cb, lpcbNeeded); else return false; }
-	DWORD GetModuleFileNameEx(HANDLE hProcess, HMODULE hModule, LPWSTR lpFilename, DWORD nSize)
-		{ if (m_funcGetModuleFileNameEx) return m_funcGetModuleFileNameEx(hProcess, hModule, lpFilename, nSize); else return 0; }
-
-protected:
-	HMODULE						m_hPsApi;
-	EnumProcessesFunc			m_funcEnum;
-	GetModuleFileNameExWFunc	m_funcGetModuleFileNameEx;
-
-};
 
 void UpdatePlayerPath(LPCTSTR szFile, DWORD dwProcessId)
 {
@@ -446,15 +416,9 @@ void CPlayerPluginInstaller::RefreshRunningPlayers()
 
 	for (int i = cbNeeded / sizeof(DWORD) - 1; i >= 0; i--)
 	{
-		HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, aProcesses[i]);
-		// ASSERT(hProcess);
-		if (hProcess)
-		{
-			TCHAR	szFile[MAX_PATH];
-			int n = processEnum.GetModuleFileNameEx(hProcess, NULL, szFile, CountOf(szFile));
-			if (n > 0)
-				UpdatePlayerPath(szFile, aProcesses[i]);
-		}
+		tstring strFile = processEnum.GetProcessFileName(aProcesses[i]);
+		if (strFile.size())
+			UpdatePlayerPath(strFile.c_str(), aProcesses[i]);
 	}
 }
 
@@ -608,26 +572,23 @@ public:
 			item.pExtraInfo->strMsg += szTarg;
 			return false;
 		}
-		/* if (!IsFileSame(szSrc, szTarg))
-		{
-			item.pExtraInfo->strMsg = TOLOCAL(_T("File not same and match: %"));
-			return false;
-		}*/
+		if (item.verMajor == 0)
+			return true;
 
 		// Is version match?
 		CFileVersionInfo	fileVer;
+		int nMajor = 0, nMinor = 0, nBuild = 0, nRevision = 0;
 		if (fileVer.Open(szTarg))
-		{
-			int nMajor, nMinor, nBuild, nRevision;
 			fileVer.GetFileVersion(nMajor, nMinor, nBuild, nRevision);
-			if (nMajor != item.verMajor || nMinor != item.verMinor || nRevision != item.verRevision)
-			{
-				item.pExtraInfo->status |= CPlayerPluginInstaller::S_PG_VER_NOT_MATCH;
-				item.pExtraInfo->strMsg = TOLOCAL(_T("File version isn't match the current version."));
-				item.pExtraInfo->strMsg += _T("\r\n");
-				item.pExtraInfo->strMsg += szSrc;
-				return false;
-			}
+
+		if (nMajor != item.verMajor || nMinor != item.verMinor || nRevision != item.verRevision)
+		{
+			item.pExtraInfo->status |= CPlayerPluginInstaller::S_PG_VER_NOT_MATCH;
+			item.pExtraInfo->strMsg = TOLOCAL(_T("File version doesn't match the current version."));
+			item.pExtraInfo->strMsg += _T("\r\n");
+			item.pExtraInfo->strMsg += szSrc;
+			strErr = item.pExtraInfo->strMsg;
+			return false;
 		}
 
 		return true;
@@ -713,7 +674,6 @@ bool Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 
 bool CPlayerPluginInstaller::Player::Install(tstring &strErr)
 {
-	ASSERT(IsFlagSet(pExtraInfo->status, S_PG_TO_INSTALL));
 	ASSERT(IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED));
 
 	if (!::Install<PluginInstaller>(*this, strErr))

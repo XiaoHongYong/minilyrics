@@ -106,6 +106,7 @@ enum StartApp
 	SA_LYRICS_PLAYER,
 	SA_IPOD_LYRICS_DOWNLOADER,
 	SA_LYRICS_TOOL,
+	SA_SETUP,
 };
 
 tstring GetAppNameLong();

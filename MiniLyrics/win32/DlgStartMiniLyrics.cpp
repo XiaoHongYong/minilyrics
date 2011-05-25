@@ -2,6 +2,9 @@
 #include "MPlayerApp.h"
 #include "DlgStartMiniLyrics.h"
 #include "MLPlayerMgr.h"
+#include "ProcessEnum.h"
+
+TOLOCAL_SECTION("MiniLyrics setup")
 
 struct PlayerCtrl
 {
@@ -24,6 +27,7 @@ PlayerCtrl	__vPlayerCtrl[] = {
 	{ IDC_PLAYER5, IDC_PLAYER_INFO5, IDC_SL5 },
 	{ IDC_PLAYER6, IDC_PLAYER_INFO6, IDC_SL6 },
 	{ IDC_PLAYER7, IDC_PLAYER_INFO7, IDC_SL7 },
+	{ IDC_PLAYER8, IDC_PLAYER_INFO8, IDC_SL8 },
 };
 
 #define COUNT_PER_PAGE CountOf(__vPlayerCtrl)
@@ -63,13 +67,17 @@ BOOL CDlgStartMiniLyrics::OnInitDialog()
 		return FALSE;
 
 	// Show running players
+	CProcessEnum	processEnum;
 	g_playerMgr.QueryRunningPlayerInfo();
 	CMLPlayerMgr::ListPlayerInfo listPlayers = g_playerMgr.GetRunningPlayers();
 	for (CMLPlayerMgr::ListPlayerInfo::iterator it = listPlayers.begin(); it != listPlayers.end(); ++it)
 	{
 		PlayerInfo &info = *it;
 
-		m_vPlayerItems.push_back(PlayerItem(info.playerName, info.hWndPluginService));
+		DWORD dwProcessId = 0;
+		GetWindowThreadProcessId(info.hWndPlayer, &dwProcessId);
+		tstring strFile = processEnum.GetProcessFileName(dwProcessId);
+		m_vPlayerItems.push_back(PlayerItem(info.playerName, info.hWndPluginService, strFile.c_str()));
 	}
 
 	if (m_vPlayerItems.empty())
@@ -99,10 +107,7 @@ void CDlgStartMiniLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 	}
 	else if (uID == IDC_NEXT)
 	{
-		int nMaxItems = m_vPlayerItems.size();
-		if (!m_bShowAllSupportedPlayers || !m_bShowInstalledPlayers)
-			nMaxItems++;
-		if (m_nCurPage < (nMaxItems + COUNT_PER_PAGE - 1) / COUNT_PER_PAGE)
+		if (m_nCurPage < GetMaxPagesCount())
 		{
 			m_nCurPage++;
 			UpdatePlayersToView();
@@ -144,12 +149,13 @@ void CDlgStartMiniLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			OnClickPlayer(p);
 		}
 	}
-
 }
 
 void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 {
 	ASSERT(p);
+
+	m_installer.RefreshRunningPlayers();
 
 	// Is player installed?
 	if (!p->IsInstalled())
@@ -179,23 +185,32 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 	if (!p->CheckPluginInstalled(strError) || !p->IsPluginInstalled())
 	{
 		tstring strMsg = strError;
-		strMsg += _T("\n");
-		strMsg += _T("MiniLyrics plugin for this player may NOT being installed properly.");
+		strMsg += _T("\n\n");
+		strMsg += TOLOCAL_T("MiniLyrics plugin for this player was NOT installed properly.");
 		strMsg += _T("\n");
 		strMsg += TOLOCAL_T("Do you want to install the plugin for this player again?");
-		if (MessageOut(strMsg.c_str(), MB_OKCANCEL) == IDOK)
+		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) == IDOK)
 		{
+			if (p->IsPlayerRunning())
+			{
+				strMsg = TOLOCAL_T("The player is running.");
+				strMsg += _T("\n");
+				strMsg += p->GetPlayerExeFile();
+				strMsg += _T("\n\n");
+				strMsg += TOLOCAL_T("Please close it, then click 'OK' to continue.");
+				MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OK);
+			}
+
 			tstring strErr;
 			if (!p->Install(strErr))
 			{
-				MessageOut(strErr.c_str());
+				MessageOut(strErr.c_str(), MB_ICONINFORMATION);
 				return;
 			}
 		}
 	}
 
 	// Is Player running?
-	m_installer.RefreshRunningPlayers();
 	if (!p->IsPlayerRunning())
 	{
 		// Run this player
@@ -228,7 +243,7 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 		tstring strMsg = _T("MiniLyrics plugin for this player may NOT being installed properly.");
 		strMsg += _T("\n");
 		strMsg += TOLOCAL_T("Do you want to install the plugin for this player again?");
-		if (MessageOut(strMsg.c_str(), MB_OKCANCEL) == IDOK)
+		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) == IDOK)
 		{
 			tstring strErr;
 			if (!p->Install(strErr))
@@ -238,7 +253,7 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 				strMsg += TOLOCAL_T("Failed to install the plugin for this player.");
 				strMsg += _T("\n");
 				strMsg += TOLOCAL_T("Please close the player, and click 'Install' again.");
-				MessageOut(strMsg.c_str());
+				MessageOut(strMsg.c_str(), MB_ICONINFORMATION);
 			}
 		}
 	}
@@ -285,6 +300,9 @@ void CDlgStartMiniLyrics::ShowAllSupportedPlayers()
 
 void CDlgStartMiniLyrics::UpdatePlayersToView()
 {
+	EnableDlgItem(IDC_PREV, m_nCurPage != 0);
+	EnableDlgItem(IDC_NEXT, m_nCurPage < GetMaxPagesCount() - 1);
+
 	uint nEndItem = (m_nCurPage + 1) * COUNT_PER_PAGE;
 	if (nEndItem > m_vPlayerItems.size())
 		nEndItem = m_vPlayerItems.size();
@@ -292,8 +310,17 @@ void CDlgStartMiniLyrics::UpdatePlayersToView()
 	for (uint i = m_nCurPage * COUNT_PER_PAGE; i < nEndItem; i++)
 	{
 		PlayerCtrl &ctrl = __vPlayerCtrl[i - m_nCurPage * COUNT_PER_PAGE];
-		SetDlgItemText(ctrl.nStartBt, m_vPlayerItems[i].strPlayerName.c_str());
-		SetDlgItemText(ctrl.nInfoId, _T(""));
+		PlayerItem &item = m_vPlayerItems[i];
+
+		SetDlgItemText(ctrl.nStartBt, item.strPlayerName.c_str());
+		SetDlgItemText(ctrl.nInfoId, item.strPlayerExe.c_str());
+
+		if (item.hWndPluginService == NULL)
+		{
+			CPlayerPluginInstaller::Player *p = m_installer.GetPlayerByIndex(item.nIndexOfPlayerInstaller);
+			if (p)
+				SetDlgItemText(ctrl.nInfoId, p->GetPlayerExeFile().c_str());
+		}
 		ctrl.SetVisible(this, true);
 	}
 	if (nEndItem % COUNT_PER_PAGE == 0 && nEndItem < m_vPlayerItems.size())
@@ -307,16 +334,26 @@ void CDlgStartMiniLyrics::UpdatePlayersToView()
 		PlayerCtrl &ctrl = __vPlayerCtrl[nEndCtrlIndex];
 		SetDlgItemText(ctrl.nStartBt, TOLOCAL_T("&More ..."));
 		if (!m_bShowInstalledPlayers)
-			SetDlgItemText(ctrl.nInfoId, TOLOCAL_T("Show more players installed on your computer"));
-		if (!m_bShowAllSupportedPlayers)
+			SetDlgItemText(ctrl.nInfoId, TOLOCAL_T("Show more players installed on your PC"));
+		else if (!m_bShowAllSupportedPlayers)
 			SetDlgItemText(ctrl.nInfoId, TOLOCAL_T("Show more players that MiniLyrics supports"));
 		nEndCtrlIndex++;
 		ctrl.SetVisible(this, true);
 	}
 
+	// Set other items invisible.
 	for (int i = nEndCtrlIndex; i < COUNT_PER_PAGE; i++)
 	{
 		PlayerCtrl &ctrl = __vPlayerCtrl[i];
 		ctrl.SetVisible(this, false);
 	}
+}
+
+int CDlgStartMiniLyrics::GetMaxPagesCount()
+{
+	int nMaxItems = m_vPlayerItems.size();
+	if (!m_bShowAllSupportedPlayers || !m_bShowInstalledPlayers)
+		nMaxItems++;
+
+	return (nMaxItems + COUNT_PER_PAGE - 1) / COUNT_PER_PAGE;
 }

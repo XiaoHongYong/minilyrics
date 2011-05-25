@@ -6,6 +6,7 @@
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
 #include "DlgStartMiniLyrics.h"
+#include "DlgSetupPlayerPlugins.h"
 #include "../MLPlayerPluginAgentLib/MLPlayerPluginAgentLib.h"
 
 
@@ -46,6 +47,11 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/iPodLyricsDownloader")) == 0)
 		{
 			startApp = SA_IPOD_LYRICS_DOWNLOADER;
+			continue;
+		}
+		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/Setup")) == 0)
+		{
+			startApp = SA_SETUP;
 			continue;
 		}
 		else
@@ -89,7 +95,8 @@ bool CMLPlayerMgr::ConnectToPlayer()
 			return false;
 	}
 
-	QueryRunningPlayerInfo();
+	if (m_listPlayers.size() == 0)
+		QueryRunningPlayerInfo();
 
 	if (m_listPlayers.size() == 1)
 	{
@@ -186,6 +193,20 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 	{
 		StartApp startApp;
 		ProcessMLCmdLine((LPCTSTR)pcds->lpData, startApp);
+		switch (startApp)
+		{
+		case SA_SETUP:
+			{
+				CDlgSetupPlayerPlugins	dlg;
+				dlg.DoModal(NULL);
+			}
+			break;
+		case SA_IPOD_LYRICS_DOWNLOADER:
+			break;
+		default:
+			ASSERT(0);
+			break;
+		}
 	}
 	else if (wParam == ML_MSG_VERSION && pcds->dwData == M2M_PLAYER_INFO)
 	{

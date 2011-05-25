@@ -17,15 +17,22 @@ public:
 	void OnCommand(UINT uID, UINT nNotifyCode);
 
 protected:
+	void OnClickedInstallBtn(CPlayerPluginInstaller::Player *p);
+	void OnClickedBrowsePathBtn(CPlayerPluginInstaller::Player *p);
+	void OnPathEditChanged(CPlayerPluginInstaller::Player *p);
+
 	void ShowAllSupportedPlayers();
 
 	void UpdatePlayersToView();
+	int GetMaxPagesCount();
 
 protected:
-	CPlayerPluginInstaller	m_installer;
 	CWndHelper				m_wndHelper;
 
 	bool					m_bShowAllSupportedPlayers;
+	int						m_nCurPage;
 	vector<int>				m_vPlayerItems;
+
+	CPlayerPluginInstaller	m_installer;
 
 };

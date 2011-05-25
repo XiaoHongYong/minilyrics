@@ -66,6 +66,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 
 	StartApp	startApp = SA_LYRICS_PLAYER;
 #ifndef _MPLAYER
+	DBGLOG1(_T("MiniLyrics command line: %s"), lpCmdLine);
 	if (!ProcessMLCmdLine(lpCmdLine, startApp))
 		return 0;
 #endif
