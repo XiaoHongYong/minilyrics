@@ -11,7 +11,6 @@
 #include "gtk2/HotkeyCtrlEx.h"
 #endif
 
-#define TIMER_ID_SEARCH		2
 #define DURATION_SEARCH		500
 
 #define SZ_YES			TOLOCAL(_T("Yes"))
@@ -663,6 +662,7 @@ CPagePfAdvanced::CPagePfAdvanced() : CPagePfBase(PAGE_ADVANCED, _T("CMD_ROOT_ADV
 	m_bIgnoreSettingListNotify = false;
 	CID_LIST_SETTINGS = 0;
 	CID_E_ADV_SEARCH = 0;
+	m_nTimerIdSearch = 0;
 }
 
 CPagePfAdvanced::~CPagePfAdvanced()
@@ -796,22 +796,24 @@ void CPagePfAdvanced::OnUIObjNotify(IUIObjNotify *pNotify)
 // Edit control notification
 void CPagePfAdvanced::OnTextChanged()
 {
-	m_pSkin->KillTimer(TIMER_ID_SEARCH);
-	m_pSkin->SetTimer(TIMER_ID_SEARCH, DURATION_SEARCH);
+	if (m_nTimerIdSearch != 0)
+		m_pSkin->UnregisterTimerObject(this, m_nTimerIdSearch);
+	m_nTimerIdSearch = m_pSkin->RegisterTimerObject(this, DURATION_SEARCH);
 }
 
-bool CPagePfAdvanced::OnTimer(UINT nTimerId)
+void CPagePfAdvanced::OnTimer(int nId)
 {
-	if (nTimerId != TIMER_ID_SEARCH)
-		return false;
+	if (nId != m_nTimerIdSearch)
+		return;
 
-	m_pSkin->KillTimer(TIMER_ID_SEARCH);
+	m_pSkin->UnregisterTimerObject(this, m_nTimerIdSearch);
+	m_nTimerIdSearch = 0;
 
 	tstring		strKey;
 
 	strKey = GetUIObjectText(CID_E_ADV_SEARCH);
 	if (_tcsicmp(strKey.c_str(), m_strLastSearch.c_str()) == 0)
-		return true;
+		return;
 
 	m_strLastSearch = strKey;
 
@@ -821,7 +823,7 @@ bool CPagePfAdvanced::OnTimer(UINT nTimerId)
 	if (vKeyWords.empty() || (vKeyWords.size() == 1 && vKeyWords[0].empty()))
 	{
 		ListAllItems();
-		return true;
+		return;
 	}
 
 	m_pListItems->DeleteAllItems();
@@ -851,8 +853,6 @@ bool CPagePfAdvanced::OnTimer(UINT nTimerId)
 	}
 
 	m_pListItems->Invalidate();
-
-	return true;
 }
 
 bool CPagePfAdvanced::OnCustomCommand(int nId)

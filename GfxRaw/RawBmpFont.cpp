@@ -69,7 +69,12 @@ public:
 	}
 
 	int GetPos() { return m_nPos; }
-	void SetPos(int nPos) { m_nPos = nPos; m_ch = m_szText + m_nPos; }
+	void SetPos(int nPos)
+	{
+		ASSERT((uint)nPos <= _tcslen(m_szText));
+		m_nPos = nPos;
+		ReadCurChar();
+	}
 
 private:
 	void ReadCurChar()

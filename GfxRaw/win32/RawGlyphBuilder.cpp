@@ -95,9 +95,6 @@ Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 {
 	SIZE			size;
 
-	PRAW_IMAGE_DATA			rawBuff = m_memGraph.GetRawBuff();
-	agg::rendering_buffer	bufGraph(rawBuff->buff, rawBuff->width, rawBuff->height, rawBuff->stride);
-
 	ASSERT(m_pmemGraph);
 
 	if (!m_pmemGraph->GetTextExtentPoint32(ch.c_str(), ch.size(), &size))
@@ -105,6 +102,9 @@ Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 
 	if (size.cx > m_memGraph.Width() + MARGIN_BITMAP * 2)
 		CreateMemGraph(size.cx + GetHeightBitmap());
+
+	PRAW_IMAGE_DATA			rawBuff = m_memGraph.GetRawBuff();
+	agg::rendering_buffer	bufGraph(rawBuff->buff, rawBuff->width, rawBuff->height, rawBuff->stride);
 
 	int nHeightBitmap = GetHeightBitmap();
 

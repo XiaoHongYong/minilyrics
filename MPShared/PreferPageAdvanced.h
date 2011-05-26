@@ -38,7 +38,7 @@ public:
 	bool OnCommand(int nId);
 	bool OnCustomCommand(int nId);
 
-	bool OnTimer(UINT nTimerId);
+	void OnTimer(int nId);
 
 	void OnTextChanged();
 
@@ -62,8 +62,9 @@ protected:
 	CSkinListCtrl				*m_pListItems;
 	tstring						m_strLastSearch;
 
-	int				CID_LIST_SETTINGS, CID_E_ADV_SEARCH;
-	bool			m_bIgnoreSettingListNotify;
+	int							CID_LIST_SETTINGS, CID_E_ADV_SEARCH;
+	bool						m_bIgnoreSettingListNotify;
+	int							m_nTimerIdSearch;
 
 };
 

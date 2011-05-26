@@ -164,7 +164,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		INST_REG_DLL,
 		_T("Windows Media Player"),
 		NULL,
-		NULL, NULL,
+		_T("Windows Media Player\\"), _T("wmplayer.exe"),
 		NULL,
 		_T("InstWMPlayer"),
 		_T("PluginWMPVis.dll;WMPLyrics.dll"),
