@@ -50,8 +50,6 @@
 ;Pages
 
   !insertmacro MUI_PAGE_LICENSE "license.txt"
-  Page custom SetCustom
-  Page custom CustomCreateShortCuts
   !insertmacro MUI_PAGE_COMPONENTS
   !insertmacro MUI_PAGE_DIRECTORY
   !insertmacro MUI_PAGE_INSTFILES
@@ -95,29 +93,14 @@
   LangString DESC_SecSkins ${LANG_ENGLISH} "Multiple selectable Skin support"
   LangString DESC_SecUninst ${LANG_ENGLISH} "Create uninstallation program"
   LangString DESC_SecShortcut ${LANG_ENGLISH} "Create start menu"
-  LangString DESC_SecAvs ${LANG_ENGLISH} "Avs Support for winamp2 and winamp5"
   LangString SecShortcut.MLDir ${LANG_ENGLISH} "MiniLyrics"
-  LangString SecShortcut.MLStart ${LANG_ENGLISH} "Restart MiniLyrics"
   LangString SecShortcut.MLUninst ${LANG_ENGLISH} "Uninstall MiniLyrics"
   LangString SecShortcut.MLReadme ${LANG_ENGLISH} "Readme"
-  LangString SecShortcut.MLHelp ${LANG_ENGLISH} "MiniLyrics Help"
-
-  LangString LS_ShortcutsSettings ${LANG_ENGLISH} "Shortcuts and settings"
-  LangString LS_ShortcutsSettingsDesc ${LANG_ENGLISH} "Create shortcuts and personal settings."
-
-  LangString LS_SelectPlayer ${LANG_ENGLISH} "Select Supporting Players"
-  LangString LS_SelectPlayerDesc ${LANG_ENGLISH} "Please select players that you want MiniLyrics to support."
 
   LangString LS_PersonalSetting ${LANG_ENGLISH} "Save MiniLyrics settings in each user's personal folder"
   LangString LS_ShortcutOnDesktop ${LANG_ENGLISH} "Create shortcut on desktop"
   LangString LS_ShortcutOnQuickLannch ${LANG_ENGLISH} "Create shortcut on quick launch bar"
-  LangString LS_Support ${LANG_ENGLISH} "Support %s"
-  LangString LS_SelInstPath ${LANG_ENGLISH} "Please select %s's installation path"
-  LangString LS_SelInstPathWarning ${LANG_ENGLISH} "Please Choose the correct installation path of %s"
-  LangString LS_SelAtLeast1Player ${LANG_ENGLISH} "Please choose at least one player that you want MiniLyrics to support."
-  LangString LS_MorePlayerNextPage ${LANG_ENGLISH} "More players are listed in next page."
 
-  LangString un.MLStart ${LANG_ENGLISH} "Restart MiniLyrics"
   LangString un.MLDir ${LANG_ENGLISH} "MiniLyrics"
   LangString un.MsgUnstMLRuning ${LANG_ENGLISH} "MiniLyrics is Running, please close your player, and running uninstall program again."
   LangString un.MsgRemovelAll ${LANG_ENGLISH} "Remove All files in your MiniLyrics directory(Including some setting files)?"
@@ -152,6 +135,52 @@ InstType "Base"
 Section "Base" SecBasic
 SectionIn 1 2
   SetShellVarContext All
+  ; Remove all old links
+  Delete "$DESKTOP\Restart MiniLyrics.lnk"
+  Delete "$QUICKLAUNCH\Restart MiniLyrics.lnk"
+  Delete "$DESKTOP\MiniLyrics for JetAudio.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for JetAudio.lnk"
+  Delete "$DESKTOP\MiniLyrics for AlbumPlayer.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for AlbumPlayer.lnk"
+  Delete "$DESKTOP\MiniLyrics for Helium Music Manager.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for Helium Music Manager.lnk"
+  Delete "$DESKTOP\MiniLyrics for Zune software.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for Zune software.lnk"
+  Delete "$DESKTOP\MiniLyrics for Spotify.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for Spotify.lnk"
+  Delete "$DESKTOP\MiniLyrics for Media Player Classic Home Cinema.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics for Media Player Classic Home Cinema.lnk"
+
+  ; Remove old files
+  Delete $INSTDIR\MLSetup.exe
+  Delete $INSTDIR\MLStart.exe
+  Delete /REBOOTOK $INSTDIR\miniLyrics.dll
+  Delete $INSTDIR\unicows.dll
+  Delete $INSTDIR\help.chm
+  Delete $INSTDIR\PluginJetaudio.exe
+  Delete $INSTDIR\PluginHMM.exe
+  Delete $INSTDIR\PluginZune.exe
+  Delete $INSTDIR\PluginSpotify.exe
+  Delete $INSTDIR\PluginMPC.exe
+  Delete $INSTDIR\PluginAP.exe
+
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWinamp2Path"
+  StrCmp ${TEMP1} "" J_WINAMP2_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+    Delete "${TEMP1}Plugins\avs\Minilyrics\*.*"
+    Delete "${TEMP1}Plugins\avs\WvsLyrics.ape"
+    RMDir "${TEMP1}Plugins\avs\Minilyrics"
+  J_WINAMP2_UE:
+
+  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWinamp5Path"
+  StrCmp ${TEMP1} "" J_WINAMP5_UE
+    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
+    Delete ${TEMP1}Plugins\MLPlugin.ini
+    Delete "${TEMP1}Plugins\avs\Minilyrics\*.*"
+    Delete "${TEMP1}Plugins\avs\WvsLyrics.ape"
+    RMDir "${TEMP1}Plugins\avs\Minilyrics"
+  J_WINAMP5_UE:
 
   ; remove all skin files.
   Delete "$INSTDIR\Skins\Fantasy\*.*"
@@ -273,9 +302,8 @@ SectionIn 1 2
   ; Shortcuts of desktop and quick lanuch
   ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
   IntCmp ${TEMP1} 0 J_ShortcutsDtEnd J_ShortcutsDtEnd
-    StrCpy $R1 $(SecShortcut.MLStart)
-    CreateShortCut "$DESKTOP\$R1.lnk" "$INSTDIR\MiniLyrics.exe"
-    CreateShortCut "$QUICKLAUNCH\$R1.lnk" "$INSTDIR\MLStart.exe"
+    CreateShortCut "$DESKTOP\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
+    CreateShortCut "$QUICKLAUNCH\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
   J_ShortcutsDtEnd:
 
 SectionEnd
@@ -334,25 +362,11 @@ Section "Start Menu Shortcuts" SecShortcut
 SectionIn 1
   StrCpy $R0 $(SecShortcut.MLDir)
   CreateDirectory "$SMPROGRAMS\$R0"
-  StrCpy $R1 $(SecShortcut.MLStart)
-  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\MiniLyrics.exe"
+  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
   StrCpy $R1 $(SecShortcut.MLUninst)
   CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\uninst-ml.exe"
   StrCpy $R1 $(SecShortcut.MLReadme)
   CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\readme-minilyrics.txt"
-SectionEnd
-
-Section "Avs Support for Winamp" SecAvs
-SectionIn 1
-
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5"
-  IntCmp ${TEMP1} 0 J_Winamp5End J_Winamp5End
-    ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "InstWinamp5Path"
-    SetOutPath ${TEMP1}Plugins\avs\Minilyrics
-    File Share\avs\Minilyrics\*.*
-    SetOutPath ${TEMP1}Plugins\avs
-    File Share\avs\WvsLyrics.ape
-  J_Winamp5End:
 SectionEnd
 
 Section "Create Uninstallation" SecUninst
@@ -383,135 +397,6 @@ Section "Uninstall"
   DeleteRegKey HKLM "SOFTWARE\MiniLyrics"
   DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics"
 
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWinamp2Path"
-  StrCmp ${TEMP1} "" J_WINAMP2_UE
-    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
-    Delete ${TEMP1}Plugins\MLPlugin.ini
-    Delete "${TEMP1}Plugins\avs\Minilyrics\*.*"
-    Delete "${TEMP1}Plugins\avs\WvsLyrics.ape"
-    RMDir "${TEMP1}Plugins\avs\Minilyrics"
-  J_WINAMP2_UE:
-
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWinamp5Path"
-  StrCmp ${TEMP1} "" J_WINAMP5_UE
-    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
-    Delete ${TEMP1}Plugins\MLPlugin.ini
-    Delete "${TEMP1}Plugins\avs\Minilyrics\*.*"
-    Delete "${TEMP1}Plugins\avs\WvsLyrics.ape"
-    RMDir "${TEMP1}Plugins\avs\Minilyrics"
-  J_WINAMP5_UE:
-  
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstFoobarPath"
-  StrCmp ${TEMP1} "" J_FOOBAR_UE
-    Delete /REBOOTOK ${TEMP1}components\foo_ui_minilyrics.dll
-    Delete ${TEMP1}components\MLPlugin.ini
-  J_FOOBAR_UE:
-  
-  ; realone player
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstRealOnePath"
-  StrCmp ${TEMP1} "" J_RealOne_UE
-    Delete /REBOOTOK ${TEMP1}PluginRealone.dll
-    Delete ${TEMP1}MLPlugin.ini
-  J_RealOne_UE:
-  
-  ; qcd player
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstQCDPath"
-  StrCmp ${TEMP1} "" J_QCD_UE
-    Delete /REBOOTOK ${TEMP1}Plugins\QCDMinilyrics.dll
-    Delete ${TEMP1}Plugins\MLPlugin.ini
-  J_QCD_UE:
-  
-  ; qmplayer
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstQMPPath"
-  StrCmp ${TEMP1} "" J_QMP_UE
-    Delete /REBOOTOK ${TEMP1}Plugins\QMPMinilyrics.dll
-    Delete ${TEMP1}Plugins\MLPlugin.ini
-  J_QMP_UE:
-
-  ; iTunes
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstiTunesPath"
-  StrCmp ${TEMP1} "" J_iTunes_UE
-    Delete /REBOOTOK ${TEMP1}iTunesMinilyrics.dll
-    Delete ${TEMP1}MLPlugin.ini
-  J_iTunes_UE:
-
-  ; MediaMonkey
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstMediaMonkeyPath"
-  StrCmp ${TEMP1} "" J_MediaMonkey_UE
-    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
-    Delete ${TEMP1}Plugins\MLPlugin.ini
-  J_MediaMonkey_UE:
-
-  ; AIMP
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstAIMPPath"
-  StrCmp ${TEMP1} "" J_AIMP_UE
-    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
-    Delete ${TEMP1}Plugins\MLPlugin.ini
-  J_AIMP_UE:
-
-  ; KMPlayer
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstKMPlayerPath"
-  StrCmp ${TEMP1} "" J_KMPlayer_UE
-    Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
-    Delete ${TEMP1}Plugins\MLPlugin.ini
-  J_KMPlayer_UE:
-
-  ; BSPlayer
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstBSPlayerPath"
-  StrCmp ${TEMP1} "" J_BSPlayer_UE
-    Delete /REBOOTOK ${TEMP1}plugins\MLPluginBsp.dll
-    Delete ${TEMP1}plugins\MLPlugin.ini
-  J_BSPlayer_UE:
-
-  ; XMPlay
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstXMPath"
-  StrCmp ${TEMP1} "" J_XM_UE
-    Delete /REBOOTOK ${TEMP1}xmp-ml.dll
-    Delete ${TEMP1}MLPlugin.ini
-  J_XM_UE:
-
-  ; Silverjuke
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstSJ"
-  StrCmp ${TEMP1} "" J_SJ_UE
-    Delete /REBOOTOK ${TEMP1}PluginSilverjuke.dll
-    Delete ${TEMP1}MLPlugin.ini
-  J_SJ_UE:
-
-  ; SBPlay
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstSBPath"
-  StrCmp ${TEMP1} "" J_SB_UE
-    Delete /REBOOTOK ${TEMP1}components\sbMLSongbird.dll
-    Delete /REBOOTOK ${TEMP1}components\sbMLSongbird.xpt
-    Delete ${TEMP1}components\MLPlugin.ini
-  J_SB_UE:
-
-  ; VLC Media Player
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstVLCPath"
-  StrCmp ${TEMP1} "" J_VLC_UE
-    Delete /REBOOTOK ${TEMP1}plugins\libminilyrics_plugin.dll
-    Delete ${TEMP1}plugins\MLPlugin.ini
-  J_VLC_UE:
-
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWMPlayer"
-  IntCmp ${TEMP1} 0 J_WMP_UE J_WMP_UE
-    UnRegDll $INSTDIR\WMPLyrics.dll
-    Delete /REBOOTOK "$INSTDIR\WMPLyrics.dll"
-    UnRegDll $INSTDIR\PluginWMPVis.dll
-    Delete /REBOOTOK "$INSTDIR\PluginWMPVis.dll"
-  J_WMP_UE:
-
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstYME"
-  IntCmp ${TEMP1} 0 J_YME_UE J_YME_UE
-    UnRegDll $INSTDIR\PluginYme.dll
-    Delete /REBOOTOK "$INSTDIR\PluginYme.dll"
-  J_YME_UE:
-
-  ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstMJ"
-  IntCmp ${TEMP1} 0 J_MJ_UE J_MJ_UE
-    UnRegDll $INSTDIR\PluginMJ.dll
-    Delete /REBOOTOK "$INSTDIR\PluginMJ.dll"
-  J_MJ_UE:
-
   MessageBox MB_YESNO|MB_ICONQUESTION $(un.MsgRemovelAll) IDYES RemoveAllFiles
 
   Delete /REBOOTOK $APPDATA\Minilyrics\ad.dat
@@ -522,14 +407,9 @@ Section "Uninstall"
 
   Delete "$INSTDIR\readme-MiniLyrics.txt"
   Delete /REBOOTOK $INSTDIR\miniLyrics.exe
-  Delete /REBOOTOK $INSTDIR\miniLyrics.dll
   Delete /REBOOTOK $INSTDIR\PluginMiniLyrics.exe
   Delete /REBOOTOK $INSTDIR\Plugins\mlp_G15.dll
-  Delete $INSTDIR\unicows.dll
   Delete $INSTDIR\MLPlugin.ini
-  Delete $INSTDIR\help.chm
-  Delete $INSTDIR\MLSetup.exe
-  Delete $INSTDIR\MLStart.exe
   Delete $INSTDIR\mlver.xml
   Delete $INSTDIR\mlverchs.xml
   Delete $INSTDIR\config.ini
@@ -549,12 +429,6 @@ Section "Uninstall"
   Delete $INSTDIR\log.txt_3.txt
   Delete $INSTDIR\log_3.txt
   Delete $INSTDIR\db*.db
-  Delete $INSTDIR\PluginJetaudio.exe
-  Delete $INSTDIR\PluginHMM.exe
-  Delete $INSTDIR\PluginZune.exe
-  Delete $INSTDIR\PluginSpotify.exe
-  Delete $INSTDIR\PluginMPC.exe
-  Delete $INSTDIR\PluginAP.exe
 
   ; MUST REMOVE UNINSTALLER, too
   Delete $INSTDIR\uninst-ml.exe
@@ -602,21 +476,8 @@ Section "Uninstall"
   StrCpy $R0 $(un.MLDir)
   Delete "$SMPROGRAMS\$R0\*.*"
 
-  StrCpy $R0 $(un.MLStart)
-  Delete "$DESKTOP\$R0.lnk"
-  Delete "$QUICKLAUNCH\$R0.lnk"
-  Delete "$DESKTOP\MiniLyrics for JetAudio.lnk"
-  Delete "$QUICKLAUNCH\MiniLyrics for JetAudio.lnk"
-  Delete "$DESKTOP\MiniLyrics for AlbumPlayer.lnk"
-  Delete "$QUICKLAUNCH\MiniLyrics for AlbumPlayer.lnk"
-  Delete "$DESKTOP\MiniLyrics for Helium Music Manager.lnk"
-  Delete "$QUICKLAUNCH\MiniLyrics for Helium Music Manager.lnk"
-  Delete "$DESKTOP\MiniLyrics for Zune software.lnk"
-  Delete "$QUICKLAUNCH\MiniLyrics for Zune software.lnk"
-  Delete "$DESKTOP\MiniLyrics for Spotify.lnk"
-  Delete "$QUICKLAUNCH\MiniLyrics for Spotify.lnk"
-  Delete "$DESKTOP\MiniLyrics for Media Player Classic Home Cinema.lnk"
-  Delete "$QUICKLAUNCH\MiniLyrics for Media Player Classic Home Cinema.lnk"
+  Delete "$DESKTOP\MiniLyrics.lnk"
+  Delete "$QUICKLAUNCH\MiniLyrics.lnk"
 
   ; remove directories used.
   StrCpy $R0 $(un.MLDir)
@@ -717,45 +578,6 @@ J_skip:
 
 FunctionEnd
 
-Function SetCustom
-
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Save MiniLyrics settings in each user's personal folder" $(LS_PersonalSetting)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Create shortcut on desktop" $(LS_ShortcutOnDesktop)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Create shortcut on quick launch bar" $(LS_ShortcutOnQuickLannch)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Support %s" $(LS_Support)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please select %s's installation path" $(LS_SelInstPath)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please Choose the correct installation path of %s" $(LS_SelInstPathWarning)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "Please choose at least one player that you want MiniLyrics to support." $(LS_SelAtLeast1Player)
-  WriteINIStr "$PLUGINSDIR\InstOpt.ini" "INSTALL" "More players are listed in next page." $(LS_MorePlayerNextPage)
-
-  !insertmacro MUI_HEADER_TEXT $(LS_SelectPlayer) $(LS_SelectPlayerDesc)
-
-  ;Display the InstallOptions dialog
-  
-	;Push ${TEMP1}
-	Push "$PLUGINSDIR\InstOpt.ini"
-    CallInstDLL "$PLUGINSDIR\Installopt.dll" dialog
-    Pop ${TEMP1}
-
-  Pop ${TEMP1}
-
-FunctionEnd
-
-Function CustomCreateShortCuts
-
-  !insertmacro MUI_HEADER_TEXT $(LS_ShortcutsSettings) $(LS_ShortcutsSettingsDesc)
-
-  ;Display the InstallOptions dialog
-
-	;Push ${TEMP1}
-	Push "$PLUGINSDIR\InstOpt.ini"
-    CallInstDLL "$PLUGINSDIR\Installopt.dll" dialogShortcutsCfg
-    Pop ${TEMP1}
-
-  Pop ${TEMP1}
-
-FunctionEnd
-
 Function .onSelChange
 FunctionEnd
 
@@ -763,6 +585,7 @@ Function .onVerifyInstDir
 FunctionEnd
 
 Function .onInstSuccess
+  Exec "$INSTDIR\MiniLyrics.exe /Setup"
 FunctionEnd
 
 ;--------------------------------
@@ -773,7 +596,6 @@ FunctionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecSkins} $(DESC_SecSkins)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecUninst} $(DESC_SecUninst)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecShortcut} $(DESC_SecShortcut)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecAvs} $(DESC_SecAvs)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;--------------------------------

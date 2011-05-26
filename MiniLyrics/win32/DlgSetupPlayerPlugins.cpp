@@ -105,8 +105,6 @@ CDlgSetupPlayerPlugins::~CDlgSetupPlayerPlugins()
 
 BOOL CDlgSetupPlayerPlugins::OnInitDialog()
 {
-	m_wndHelper.Init(m_hWnd);
-
 	if (!CBaseDialog::OnInitDialog())
 		return FALSE;
 
@@ -138,12 +136,11 @@ BOOL CDlgSetupPlayerPlugins::OnInitDialog()
 void CDlgSetupPlayerPlugins::OnSize(int cx, int cy)
 {
 	CBaseDialog::OnSize(cx, cy);
-
-	m_wndHelper.OnResize();
 }
 
 void CDlgSetupPlayerPlugins::OnOK()
 {
+	int nInstalledCount = 0;
 	bool bHasError = false;
 	for (uint i = 0; i < m_vPlayerItems.size(); i++)
 	{
@@ -159,13 +156,20 @@ void CDlgSetupPlayerPlugins::OnOK()
 				bHasError = true;
 				MessageOut(strErr.c_str(), MB_ICONINFORMATION);
 			}
+			else
+				nInstalledCount++;
 		}
 	}
 
 	if (!bHasError)
 	{
-		MessageOut(TOLOCAL_T("MiniLyrics plug-ins are installed successfully."), MB_ICONINFORMATION);
-		CBaseDialog::OnOK();
+		if (nInstalledCount > 0)
+		{
+			MessageOut(TOLOCAL_T("MiniLyrics plug-ins are installed successfully."), MB_ICONINFORMATION);
+			CBaseDialog::OnOK();
+		}
+		else
+			MessageOut(TOLOCAL_T("Please choose at least one players."), MB_ICONINFORMATION);
 	}
 }
 
@@ -259,14 +263,19 @@ void CDlgSetupPlayerPlugins::OnCommand(UINT uID, UINT nNotifyCode)
 
 void CDlgSetupPlayerPlugins::OnClickedCheckBtn(CPlayerPluginInstaller::Player *p, int nCheckBtnId)
 {
+	p->DetectPlayerPath();
+
 	bool bChecked = IsButtonChecked(nCheckBtnId);
 	if (bChecked)
 	{
 		if (!p->CheckPlayerInstalled(false))
 		{
-			MessageOut(TOLOCAL_T("Can't detect the player installed in the specified folder."), MB_OK | MB_ICONINFORMATION);
-			bChecked = false;
-			CheckButton(nCheckBtnId, false);
+			if (!BrowsePlayerFolder(p))
+			{
+				bChecked = false;
+				CheckButton(nCheckBtnId, false);
+				return;
+			}
 		}
 	}
 	p->SetToInstallPlugin(bChecked);
@@ -281,24 +290,8 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 	// Is player installed?
 	if (!p->IsInstalled())
 	{
-		tstring strMsg = TOLOCAL_T("MiniLyrics can't detect the player's path.");
-		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Do you want to specify the player's installation path manually?");
-		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
+		if (!BrowsePlayerFolder(p))
 			return;
-
-		CFolderDialog	dlg;
-
-		dlg.SetInitFolder(GetProgramFilesPath().c_str());
-		if (!dlg.DoBrowse(this))
-			return;
-
-		p->pExtraInfo->strPlayerPath = dlg.GetFolder();
-		if (!p->CheckPlayerInstalled(false))
-		{
-			MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed do NOT have file: %s"), p->szExeName).c_str());
-			return;
-		}
 	}
 
 	// Is plugin installed?
@@ -357,6 +350,30 @@ void CDlgSetupPlayerPlugins::OnPathEditChanged(CPlayerPluginInstaller::Player *p
 
 }
 
+bool CDlgSetupPlayerPlugins::BrowsePlayerFolder(CPlayerPluginInstaller::Player *p)
+{
+	tstring strMsg = TOLOCAL_T("MiniLyrics can't detect the player's path.");
+	strMsg += _T("\n");
+	strMsg += TOLOCAL_T("Do you want to specify the player's installation path manually?");
+	if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
+		return false;
+
+	CFolderDialog	dlg;
+
+	dlg.SetInitFolder(GetProgramFilesPath().c_str());
+	if (!dlg.DoBrowse(this))
+		return false;
+
+	p->pExtraInfo->strPlayerPath = dlg.GetFolder();
+	if (!p->CheckPlayerInstalled(false))
+	{
+		MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed do NOT have file: %s"), p->szExeName).c_str());
+		return false;
+	}
+
+	return true;
+}
+
 void CDlgSetupPlayerPlugins::ShowAllSupportedPlayers()
 {
 	// Show only NOT installed players
@@ -393,7 +410,7 @@ void CDlgSetupPlayerPlugins::UpdatePlayersToView()
 
 	for (uint i = m_nCurPage * COUNT_PER_PAGE; i < nEndItem; i++)
 	{
-		SetupPlayerCtrl &ctrl = __vSetupPlayerCtrl[i - m_nCurPage * COUNT_PER_PAGE];
+		SetupPlayerCtrl &ctrl = __vSetupPlayerCtrl[i % COUNT_PER_PAGE];
 
 		if (m_vPlayerItems[i] == INDEX_BUILT_IN_PLUGIN)
 		{
@@ -416,7 +433,7 @@ void CDlgSetupPlayerPlugins::UpdatePlayersToView()
 			ctrl.SetVisible(this, true);
 		}
 	}
-	if (nEndItem % COUNT_PER_PAGE == 0 && nEndItem < m_vPlayerItems.size())
+	if (nEndItem >= (m_nCurPage + 1) * COUNT_PER_PAGE)
 		return;
 
 	int nEndCtrlIndex = nEndItem % COUNT_PER_PAGE;

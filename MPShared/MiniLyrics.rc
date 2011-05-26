@@ -498,6 +498,12 @@ BEGIN
             MENUITEM "4",                           IDC_RATE_LYR_4
             MENUITEM "5 (High)",                    IDC_RATE_LYR_5
         END
+        POPUP "&Upload Lyrics..."
+        BEGIN
+            MENUITEM "&Upload Lyrics...",           IDC_UPLOAD_LYRICS
+            MENUITEM "Sign in Via &Web Browser...", IDC_LOGIN_VIA_IE
+            MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
+        END
         MENUITEM SEPARATOR
         MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
         MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
@@ -774,7 +780,7 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     LTEXT           "MiniLyrics supports the players below, Please choose your favorite players and click install.",IDC_STATIC,7,3,427,12
     PUSHBUTTON      "Install",IDC_INSTALL1,7,22,50,14
-    LTEXT           "Player Name",IDC_PLAYER1,64,23,80,10
+    LTEXT           "Player Name",IDC_PLAYER1,64,24,80,10
     CONTROL         "Player",IDC_C_PLAYER1,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,7,23,136,12
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,7,18,425,1
     EDITTEXT        IDC_E_PLAYER1,148,22,267,14,ES_AUTOHSCROLL
@@ -824,7 +830,7 @@ BEGIN
     CONTROL         "",IDC_SL8,"Static",SS_ETCHEDHORZ,7,201,420,1
     PUSHBUTTON      "<<",IDC_PREV,7,209,18,14
     PUSHBUTTON      ">>",IDC_NEXT,39,209,18,14
-    PUSHBUTTON      "&Install",IDOK,330,209,50,14,BS_BITMAP
+    PUSHBUTTON      "Install",IDOK,329,209,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,385,209,50,14
 END
 

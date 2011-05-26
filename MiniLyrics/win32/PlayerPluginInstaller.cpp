@@ -100,11 +100,21 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
-		_T("AIMP"),
+		_T("AIMP2"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\AIMP2\\UninstallString"),
 		_T("AIMP2\\"), _T("AIMP2.exe"),
 		_T("Plugins"),
 		_T("InstAIMP"),
+		_T("gen_MiniLyrics.dll"),
+	},
+	{
+		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
+		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
+		_T("AIMP3"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\AIMP3\\UninstallString"),
+		_T("AIMP3\\"), _T("AIMP3.exe"),
+		_T("Plugins"),
+		_T("InstAIMP3"),
 		_T("gen_MiniLyrics.dll"),
 	},
 	{
@@ -362,7 +372,7 @@ bool CPlayerPluginInstaller::Init()
 
 		// Get Player path from registry
 		if (!item.CheckPlayerInstalled())
-			item.DetectPlayerPathByRegistry();
+			item.DetectPlayerPath();
 	}
 
 	// Update running player path
@@ -444,35 +454,52 @@ bool RegisterDll(LPCTSTR szDll, tstring &strErr)
 	return false;
 }
 
-void CPlayerPluginInstaller::Player::DetectPlayerPathByRegistry()
+void CPlayerPluginInstaller::Player::DetectPlayerPath()
 {
-	if (!szPathRegKeys || IsEmptyString(szPathRegKeys))
-		return;
-
 	pExtraInfo->strPlayerPath.clear();
 
-	LPCTSTR szValueName = _tcsrchr(szPathRegKeys, '\\');
-	if (szValueName)
+	if (szPathRegKeys && !IsEmptyString(szPathRegKeys))
 	{
-		tstring		strKey;
-		strKey.append(szPathRegKeys, szValueName);
-		szValueName++;
+		// Detect player by registry key
+		LPCTSTR szValueName = _tcsrchr(szPathRegKeys, '\\');
+		if (szValueName)
+		{
+			tstring		strKey;
+			strKey.append(szPathRegKeys, szValueName);
+			szValueName++;
 
-		TCHAR	szPath[MAX_PATH];
-		RegGetProfileString(HKEY_LOCAL_MACHINE, strKey.c_str(), szValueName, _T(""), szPath, MAX_PATH);
+			TCHAR	szPath[MAX_PATH];
+			RegGetProfileString(HKEY_LOCAL_MACHINE, strKey.c_str(), szValueName, _T(""), szPath, MAX_PATH);
 
-		TrimStr(szPath, '"');
-		if (!IsEmptyString(szPath))
-			FileGetPath(szPath, pExtraInfo->strPlayerPath);
+			TrimStr(szPath, '"');
+			if (!IsEmptyString(szPath))
+				FileGetPath(szPath, pExtraInfo->strPlayerPath);
+		}
 	}
-	if (!CheckPlayerInstalled())
+
+	if (CheckPlayerInstalled())
+		return;
+
+	// Detect player by check program files folder
+	pExtraInfo->strPlayerPath = DirStringJoint(GetProgramFilesPath().c_str(), szDefaultProgramFilesDir);
+	DirStringAddSlash(pExtraInfo->strPlayerPath);
+	if (CheckPlayerInstalled(false))
+		return;
+
+	DWORD dwDriveMask = GetLogicalDrives();
+	TCHAR chDrive = 'A';
+	for (int i = 0; i < 6; i++)
 	{
-		pExtraInfo->strPlayerPath = GetProgramFilesPath();
-		DirStringAddSlash(pExtraInfo->strPlayerPath);
-		pExtraInfo->strPlayerPath += szDefaultProgramFilesDir;
-		DirStringAddSlash(pExtraInfo->strPlayerPath);
-		CheckPlayerInstalled();
+		if (dwDriveMask & (1 << i))
+		{
+			pExtraInfo->strPlayerPath[0] = chDrive;
+			if (CheckPlayerInstalled(false))
+				return;
+		}
+		chDrive++;
 	}
+
+	pExtraInfo->strPlayerPath.clear();
 }
 
 void CPlayerPluginInstaller::Player::SetToInstallPlugin(bool bInstall)
@@ -535,6 +562,7 @@ public:
 		{
 			int nErr = GetLastError();
 			strErr = CStrPrintf(_T("Failed to copy file: %s to file: %s."), szSrc, szTarg).c_str();
+			strErr += _T("\n");
 			strErr += CWin32Error(nErr).Description();
 			return false;
 		}

@@ -46,7 +46,7 @@ public:
 
 		bool IsInstalled() { return IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED); }
 
-		void DetectPlayerPathByRegistry();
+		void DetectPlayerPath();
 
 		bool CheckPlayerInstalled(bool bClearPathIfNotInstalled = true);
 		bool CheckPluginInstalled(tstring &strErr);

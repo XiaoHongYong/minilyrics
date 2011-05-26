@@ -23,14 +23,14 @@ protected:
 	void OnClickedBrowsePathBtn(CPlayerPluginInstaller::Player *p);
 	void OnPathEditChanged(CPlayerPluginInstaller::Player *p);
 
+	bool BrowsePlayerFolder(CPlayerPluginInstaller::Player *p);
+
 	void ShowAllSupportedPlayers();
 
 	void UpdatePlayersToView();
 	int GetMaxPagesCount();
 
 protected:
-	CWndHelper				m_wndHelper;
-
 	bool					m_bShowAllSupportedPlayers;
 	int						m_nCurPage;
 	vector<int>				m_vPlayerItems;
