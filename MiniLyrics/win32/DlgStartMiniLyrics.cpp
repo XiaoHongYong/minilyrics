@@ -3,6 +3,7 @@
 #include "DlgStartMiniLyrics.h"
 #include "MLPlayerMgr.h"
 #include "ProcessEnum.h"
+#include "DlgSetupPlayerPlugins.h"
 
 TOLOCAL_SECTION("MiniLyrics setup")
 
@@ -112,6 +113,11 @@ void CDlgStartMiniLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 			m_nCurPage++;
 			UpdatePlayersToView();
 		}
+	}
+	else if (uID == IDC_SETUP)
+	{
+		CDlgSetupPlayerPlugins	dlg(false);
+		dlg.DoModal(this);
 	}
 	else
 	{
@@ -323,7 +329,7 @@ void CDlgStartMiniLyrics::UpdatePlayersToView()
 		}
 		ctrl.SetVisible(this, true);
 	}
-	if (nEndItem % COUNT_PER_PAGE == 0 && nEndItem < m_vPlayerItems.size())
+	if (nEndItem >= (m_nCurPage + 1) * COUNT_PER_PAGE)
 		return;
 
 	int nEndCtrlIndex = nEndItem % COUNT_PER_PAGE;

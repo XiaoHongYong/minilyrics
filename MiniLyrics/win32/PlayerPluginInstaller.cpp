@@ -212,7 +212,17 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_REG_DLL,
-		_T("J. River Media Jukebox and Media Center"),
+		_T("J. River Media Jukebox"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Center 14\\UninstallString"),
+		_T("J River\\Media Center 14\\"), _T("Media Center 14.exe"),
+		NULL,
+		_T("InstMJ"),
+		_T("PluginMJ.dll"),
+	},
+	{
+		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
+		INST_REG_DLL,
+		_T("J. River Media Center"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Center 14\\UninstallString"),
 		_T("J River\\Media Center 14\\"), _T("Media Center 14.exe"),
 		NULL,
@@ -317,18 +327,36 @@ bool UpdatePluginService(HWND hWndPluginService, DWORD dwProcessId)
 
 //////////////////////////////////////////////////////////////////////////
 
+static int __nInstance = 0;
+
 CPlayerPluginInstaller::CPlayerPluginInstaller(void)
 {
+	if (__nInstance == 0)
+	{
+		// Alloc pExtraInfo
+		for (int i = 0; i < CountOf(g_playersPlugin); i++)
+		{
+			Player &item = g_playersPlugin[i];
+			if (!item.pExtraInfo)
+				item.pExtraInfo = new PlayerExtraInfo();
+		}
+	}
+	__nInstance++;
 }
 
 CPlayerPluginInstaller::~CPlayerPluginInstaller(void)
 {
-	for (int i = 0; i < CountOf(g_playersPlugin); i++)
+	__nInstance--;
+	if (__nInstance == 0)
 	{
-		if (g_playersPlugin[i].pExtraInfo)
+		// Free pExtraInfo
+		for (int i = 0; i < CountOf(g_playersPlugin); i++)
 		{
-			delete g_playersPlugin[i].pExtraInfo;
-			g_playersPlugin[i].pExtraInfo = NULL;
+			if (g_playersPlugin[i].pExtraInfo)
+			{
+				delete g_playersPlugin[i].pExtraInfo;
+				g_playersPlugin[i].pExtraInfo = NULL;
+			}
 		}
 	}
 }
@@ -355,8 +383,6 @@ bool CPlayerPluginInstaller::Init()
 	for (int i = 0; i < CountOf(g_playersPlugin); i++)
 	{
 		Player &item = g_playersPlugin[i];
-		if (!item.pExtraInfo)
-			item.pExtraInfo = new PlayerExtraInfo();
 
 #ifdef _DEBUG
 		if (IsFlagSet(item.dwInstallFlags, INST_REG_DLL))
@@ -450,6 +476,23 @@ bool RegisterDll(LPCTSTR szDll, tstring &strErr)
 		return true;
 
 	strErr = _T("Failed to register dll: ");
+	strErr += szDll;
+	return false;
+}
+
+bool UnregisterDll(LPCTSTR szDll, tstring &strErr)
+{
+	if (!IsFileExist(szDll))
+		return true;
+
+	DWORD		dwExitCode = -1;
+	tstring		strCmd = _T("regsvr32 /s /u \"");
+	strCmd += szDll;
+	strCmd += _T("\"");
+	if (ExecuteCmdAndWait(strCmd.c_str(), 5 * 1000, &dwExitCode) && dwExitCode == 0)
+		return true;
+
+	strErr = _T("Failed to unregister dll: ");
 	strErr += szDll;
 	return false;
 }
@@ -582,7 +625,55 @@ public:
 		strIniContent += strWorkingFolder + "\r\n";
 
 		if (!SaveDataAsFile(szFile, strIniContent.c_str(), strIniContent.size()))
+		{
+			int nErr = GetLastError();
+			strErr = CStrPrintf(_T("Failed to save file: %s."), szFile).c_str();
+			strErr += _T("\n");
+			strErr += CWin32Error(nErr).Description();
 			return false;
+		}
+
+		return true;
+	}
+
+};
+
+class PluginUninstaller
+{
+public:
+	static bool CopyFile(LPCTSTR szSrc, LPCTSTR szTarg, tstring &strErr, CPlayerPluginInstaller::Player &item)
+	{
+		if (_tcsicmp(szSrc, szTarg) != 0)
+		{
+			if (!DeleteFile(szTarg))
+			{
+				int nErr = GetLastError();
+				strErr = CStrPrintf(_T("Failed to delete file: %s."), szTarg).c_str();
+				strErr += _T("\n");
+				strErr += CWin32Error(nErr).Description();
+				return false;
+			}
+		}
+		else
+			ASSERT(0);
+		return true;
+	}
+
+	static bool RegisterDll(LPCTSTR szFile, tstring &strErr)
+	{
+		return ::UnregisterDll(szFile, strErr);
+	}
+
+	static bool WriteMLPluginIni(LPCTSTR szFile, tstring &strErr)
+	{
+		if (!DeleteFile(szFile))
+		{
+			int nErr = GetLastError();
+			strErr = CStrPrintf(_T("Failed to delete file: %s."), szFile).c_str();
+			strErr += _T("\n");
+			strErr += CWin32Error(nErr).Description();
+			return false;
+		}
 
 		return true;
 	}
@@ -732,7 +823,14 @@ bool CPlayerPluginInstaller::Player::CheckPluginInstalled(tstring &strErr)
 
 bool CPlayerPluginInstaller::Player::Uninstall(tstring &strErr)
 {
-	return false;
+	ASSERT(IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED));
+
+	if (!::Install<PluginUninstaller>(*this, strErr))
+		return false;
+
+	pExtraInfo->status &= ~S_PG_INSTALLED;
+
+	return true;
 }
 
 int CPlayerPluginInstaller::Player::GetStatusImage()

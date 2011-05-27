@@ -4,9 +4,11 @@
 #include "DlgSetupPlayerPlugins.h"
 #include "PreferenceDlg.h"
 
+TOLOCAL_SECTION("MiniLyrics setup")
+
 #define INDEX_BUILT_IN_PLUGIN		-1
 
-bool g_bFirstSetup = false;
+bool g_bFirstSetup = true;
 
 enum SetupCmdType
 {
@@ -93,8 +95,9 @@ int CmdId2Index(int nId, SetupCmdType &type)
 
 //////////////////////////////////////////////////////////////////////
 
-CDlgSetupPlayerPlugins::CDlgSetupPlayerPlugins() : CBaseDialog(IDD_SETUP)
+CDlgSetupPlayerPlugins::CDlgSetupPlayerPlugins(bool bFirstSetup) : CBaseDialog(IDD_SETUP)
 {
+	g_bFirstSetup = bFirstSetup;
 	m_bShowAllSupportedPlayers = false;
 	m_nCurPage = 0;
 }
@@ -108,7 +111,12 @@ BOOL CDlgSetupPlayerPlugins::OnInitDialog()
 	if (!CBaseDialog::OnInitDialog())
 		return FALSE;
 
-	g_bFirstSetup = true;
+	if (!g_bFirstSetup)
+	{
+		ShowDlgItem(IDOK, SW_HIDE);
+		// ShowDlgItem(IDCANCEL, SW_HIDE);
+	}
+
 	m_installer.Init();
 
 	// Show only installed players.
@@ -121,6 +129,8 @@ BOOL CDlgSetupPlayerPlugins::OnInitDialog()
 		if (p->dwInstallFlags != 0 && p->IsInstalled())
 		{
 			p->SetToInstallPlugin(true);
+			tstring strError;
+			p->CheckPluginInstalled(strError);
 			m_vPlayerItems.push_back(i);
 		}
 	}
@@ -150,6 +160,12 @@ void CDlgSetupPlayerPlugins::OnOK()
 
 		if (p->IsToInstallPlugin())
 		{
+			if (!p->CheckPlayerInstalled(false))
+			{
+				if (!BrowsePlayerFolder(p))
+					return;
+			}
+
 			tstring strErr;
 			if (!p->Install(strErr))
 			{
@@ -293,36 +309,51 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 		if (!BrowsePlayerFolder(p))
 			return;
 	}
-
-	// Is plugin installed?
-	tstring strError;
-	if (!p->CheckPluginInstalled(strError) || !p->IsPluginInstalled())
+	else if (p->IsPluginInstalled())
 	{
-		tstring strMsg = strError;
-		strMsg += _T("\n\n");
-		strMsg += TOLOCAL_T("MiniLyrics plugin for this player was NOT installed properly.");
-		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Do you want to install the plugin for this player again?");
-		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) == IDOK)
-		{
-			if (p->IsPlayerRunning())
-			{
-				strMsg = TOLOCAL_T("The player is running.");
-				strMsg += _T("\n");
-				strMsg += p->GetPlayerExeFile();
-				strMsg += _T("\n\n");
-				strMsg += TOLOCAL_T("Please close it, then click 'OK' to continue.");
-				MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OK);
-			}
+		// Uninstall plugin
+		tstring strMsg = CStrPrintf(TOLOCAL_T("Are you sure that you want to uninstall MiniLyrics plugin for %s."), p->szPlayerName).c_str();
+		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
+			return;
 
-			tstring strErr;
-			if (!p->Install(strErr))
-			{
-				MessageOut(strErr.c_str(), MB_ICONINFORMATION);
-				return;
-			}
+		tstring strErr;
+		if (!p->Uninstall(strErr))
+		{
+			tstring strMsg = CStrPrintf(TOLOCAL_T("Failed to uninstall MiniLyrics plugin for %s"), p->szPlayerName).c_str();
+			strMsg += _T("\n\n");
+			strMsg += strErr;
+			MessageOut(strMsg.c_str(), MB_ICONWARNING | MB_OK);
 		}
+		else
+		{
+			p->CheckPluginInstalled(strErr);
+			UpdatePlayersToView();
+		}
+		return;
 	}
+
+	// Is player running?
+	if (p->IsPlayerRunning())
+	{
+		tstring strMsg = TOLOCAL_T("The player is running.");
+		strMsg += _T("\n");
+		strMsg += p->GetPlayerExeFile();
+		strMsg += _T("\n\n");
+		strMsg += TOLOCAL_T("Please close it, then click 'OK' to continue.");
+		MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OK);
+	}
+
+	tstring strErr;
+	if (!p->Install(strErr))
+	{
+		MessageOut(strErr.c_str(), MB_ICONINFORMATION);
+		return;
+	}
+
+	MessageOut(CStrPrintf(TOLOCAL_T("MiniLyrics plugin was installed for %s."), p->szPlayerName).c_str(),
+		MB_ICONINFORMATION | MB_OK);
+
+	UpdatePlayersToView();
 }
 
 void CDlgSetupPlayerPlugins::OnClickedBrowsePathBtn(CPlayerPluginInstaller::Player *p)
@@ -343,6 +374,8 @@ void CDlgSetupPlayerPlugins::OnClickedBrowsePathBtn(CPlayerPluginInstaller::Play
 	}
 	else
 		MessageOut(TOLOCAL_T("Can't detect the player installed in the specified folder."), MB_OK | MB_ICONINFORMATION);
+
+	UpdatePlayersToView();
 }
 
 void CDlgSetupPlayerPlugins::OnPathEditChanged(CPlayerPluginInstaller::Player *p)
@@ -352,9 +385,9 @@ void CDlgSetupPlayerPlugins::OnPathEditChanged(CPlayerPluginInstaller::Player *p
 
 bool CDlgSetupPlayerPlugins::BrowsePlayerFolder(CPlayerPluginInstaller::Player *p)
 {
-	tstring strMsg = TOLOCAL_T("MiniLyrics can't detect the player's path.");
-	strMsg += _T("\n");
-	strMsg += TOLOCAL_T("Do you want to specify the player's installation path manually?");
+	tstring strMsg = CStrPrintf(TOLOCAL_T("MiniLyrics can't detect the path of %s."), p->szPlayerName).c_str();
+	strMsg += _T("\n\n");
+	strMsg += TOLOCAL_T("Do you want to specify its installation path manually?");
 	if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
 		return false;
 

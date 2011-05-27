@@ -7,7 +7,7 @@
 class CDlgSetupPlayerPlugins : public CBaseDialog  
 {
 public:
-	CDlgSetupPlayerPlugins();
+	CDlgSetupPlayerPlugins(bool bFirstSetup = true);
 	virtual ~CDlgSetupPlayerPlugins();
 
 	virtual BOOL OnInitDialog();

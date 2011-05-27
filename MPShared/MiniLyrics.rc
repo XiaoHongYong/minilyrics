@@ -834,39 +834,40 @@ BEGIN
     PUSHBUTTON      "Cancel",IDCANCEL,385,209,50,14
 END
 
-IDD_START_MINILYRICS DIALOGEX 0, 0, 424, 234
+IDD_START_MINILYRICS DIALOGEX 0, 0, 424, 242
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Start MiniLyrics"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    LTEXT           "MiniLyrics has detected the players are running or installed, please click it to start.",IDC_STATIC,7,4,410,10
-    CONTROL         "",IDC_SL0,"Static",SS_ETCHEDHORZ,7,16,410,1
-    PUSHBUTTON      "&Player",IDC_PLAYER1,7,20,113,14
-    LTEXT           "Static",IDC_PLAYER_INFO1,128,23,289,10
-    CONTROL         "",IDC_SL1,"Static",SS_ETCHEDHORZ,7,39,410,1
-    PUSHBUTTON      "&Player",IDC_PLAYER2,7,44,113,14
-    LTEXT           "Static",IDC_PLAYER_INFO2,128,47,289,10
-    CONTROL         "",IDC_SL2,"Static",SS_ETCHEDHORZ,7,63,410,1
-    PUSHBUTTON      "&Player",IDC_PLAYER3,7,68,113,14
-    LTEXT           "Static",IDC_PLAYER_INFO3,128,71,289,10
-    CONTROL         "",IDC_SL3,"Static",SS_ETCHEDHORZ,7,87,410,1
-    PUSHBUTTON      "&Player",IDC_PLAYER4,7,92,113,14
-    LTEXT           "Static",IDC_PLAYER_INFO4,128,95,289,10
-    CONTROL         "",IDC_SL4,"Static",SS_ETCHEDHORZ,7,111,410,1
-    PUSHBUTTON      "&Player",IDC_PLAYER5,7,116,113,14
-    LTEXT           "Static",IDC_PLAYER_INFO5,128,119,289,10
-    CONTROL         "",IDC_SL5,"Static",SS_ETCHEDHORZ,7,135,409,1
-    PUSHBUTTON      "&Player",IDC_PLAYER6,7,140,113,14
-    LTEXT           "Static",IDC_PLAYER_INFO6,128,143,289,10
-    CONTROL         "",IDC_SL6,"Static",SS_ETCHEDHORZ,7,159,409,1
-    PUSHBUTTON      "&Player",IDC_PLAYER7,7,164,113,14
-    LTEXT           "Static",IDC_PLAYER_INFO7,128,167,289,10
-    CONTROL         "",IDC_SL7,"Static",SS_ETCHEDHORZ,7,183,409,1
-    PUSHBUTTON      "<<",IDC_PREV,7,213,21,14
-    PUSHBUTTON      ">>",IDC_NEXT,36,213,21,14
-    PUSHBUTTON      "&Player",IDC_PLAYER8,7,188,113,14
-    LTEXT           "Static",IDC_PLAYER_INFO8,128,191,289,10
-    CONTROL         "",IDC_SL8,"Static",SS_ETCHEDHORZ,7,207,408,1
+    LTEXT           "MiniLyrics has detected the players are running or installed, please click it to start.",IDC_STATIC,7,7,410,12
+    CONTROL         "",IDC_SL0,"Static",SS_ETCHEDHORZ,7,25,410,1
+    PUSHBUTTON      "&Player",IDC_PLAYER1,7,29,113,14
+    LTEXT           "Static",IDC_PLAYER_INFO1,128,32,289,10
+    CONTROL         "",IDC_SL1,"Static",SS_ETCHEDHORZ,7,48,410,1
+    PUSHBUTTON      "&Player",IDC_PLAYER2,7,53,113,14
+    LTEXT           "Static",IDC_PLAYER_INFO2,128,56,289,10
+    CONTROL         "",IDC_SL2,"Static",SS_ETCHEDHORZ,7,72,410,1
+    PUSHBUTTON      "&Player",IDC_PLAYER3,7,77,113,14
+    LTEXT           "Static",IDC_PLAYER_INFO3,128,80,289,10
+    CONTROL         "",IDC_SL3,"Static",SS_ETCHEDHORZ,7,96,410,1
+    PUSHBUTTON      "&Player",IDC_PLAYER4,7,101,113,14
+    LTEXT           "Static",IDC_PLAYER_INFO4,128,104,289,10
+    CONTROL         "",IDC_SL4,"Static",SS_ETCHEDHORZ,7,120,410,1
+    PUSHBUTTON      "&Player",IDC_PLAYER5,7,125,113,14
+    LTEXT           "Static",IDC_PLAYER_INFO5,128,128,289,10
+    CONTROL         "",IDC_SL5,"Static",SS_ETCHEDHORZ,7,144,409,1
+    PUSHBUTTON      "&Player",IDC_PLAYER6,7,149,113,14
+    LTEXT           "Static",IDC_PLAYER_INFO6,128,152,289,10
+    CONTROL         "",IDC_SL6,"Static",SS_ETCHEDHORZ,7,168,409,1
+    PUSHBUTTON      "&Player",IDC_PLAYER7,7,173,113,14
+    LTEXT           "Static",IDC_PLAYER_INFO7,128,176,289,10
+    CONTROL         "",IDC_SL7,"Static",SS_ETCHEDHORZ,7,192,409,1
+    PUSHBUTTON      "<<",IDC_PREV,7,221,21,14
+    PUSHBUTTON      ">>",IDC_NEXT,36,221,21,14
+    PUSHBUTTON      "&Player",IDC_PLAYER8,7,197,113,14
+    LTEXT           "Static",IDC_PLAYER_INFO8,128,200,289,10
+    CONTROL         "",IDC_SL8,"Static",SS_ETCHEDHORZ,7,216,408,1
+    PUSHBUTTON      "Setup",IDC_SETUP,367,221,50,14
 END
 
 
@@ -946,7 +947,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 417
         TOPMARGIN, 7
-        BOTTOMMARGIN, 227
+        BOTTOMMARGIN, 235
     END
 END
 #endif    // APSTUDIO_INVOKED
