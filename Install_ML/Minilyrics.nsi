@@ -374,9 +374,9 @@ SectionIn 1
   ; Write the installation path into the registry
   ; WriteRegStr HKLM SOFTWARE\MiniLyrics "ForWa2InstallDir" "$INSTDIR"
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "Minilyrics(remove only)"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "Minilyrics"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "UninstallString" '"$INSTDIR\uninst-ml.exe"'
-  WriteUninstaller "$INSTDIR\uninst-ml.exe"
+  ; WriteUninstaller "$INSTDIR\uninst-ml.exe"
 SectionEnd
 
 ;--------------------------------
@@ -388,6 +388,8 @@ Section "Uninstall"
   ; –∂‘ÿ√‘ƒ„∏Ë¥ 
 
   SetShellVarContext All
+
+  Exec "$INSTDIR\MiniLyrics.exe /Uninstall"
 
   FindWindow $R0 "MiniLyrics" "" 0
   StrCmp $R0 "0" +3

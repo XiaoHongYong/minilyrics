@@ -47,6 +47,7 @@ public:
 		bool IsInstalled() { return IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED); }
 
 		void DetectPlayerPath();
+		void SavePlayerPath();
 
 		bool CheckPlayerInstalled(bool bClearPathIfNotInstalled = true);
 		bool CheckPluginInstalled(tstring &strErr);
@@ -71,7 +72,7 @@ public:
 
 	bool Init();
 
-	bool Install(tstring &strErr);
+	bool Uninstall(tstring &strErr);
 
 	void RefreshRunningPlayers();
 	void RefreshRunningPluginService();

@@ -241,16 +241,6 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	},
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
-		INST_REG_DLL,
-		_T("Yahoo! Music Engine"),
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Yahoo! Music Engine\\UninstallString"),
-		_T("Yahoo!\\Yahoo! Music Engine\\"), _T("YahooMusicEngine.exe"),
-		NULL,
-		_T("InstYME"),
-		_T("PluginYme.dll"),
-	},
-	{
-		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		0,
 		_T("JetAudio"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{DF8195AF-8E6F-4487-A0EE-196F7E3F4B8A}\\InstallLocation"),
@@ -393,8 +383,10 @@ bool CPlayerPluginInstaller::Init()
 #endif
 
 		// Get Player path from config file
-		// profile.GetProfileBool(item.szConfigName, false);
-		item.pExtraInfo->strPlayerPath = profile.GetProfileString((item.szConfigName + tstring(_T("Path"))).c_str(), _T(""));
+		tstring strCfgName = item.szConfigName + tstring(_T("Path"));
+		item.pExtraInfo->strPlayerPath = g_Profile.GetProfileString(strCfgName.c_str(), _T(""));
+		if (item.pExtraInfo->strPlayerPath.empty())
+			item.pExtraInfo->strPlayerPath = profile.GetProfileString(strCfgName.c_str(), _T(""));
 
 		// Get Player path from registry
 		if (!item.CheckPlayerInstalled())
@@ -543,6 +535,11 @@ void CPlayerPluginInstaller::Player::DetectPlayerPath()
 	}
 
 	pExtraInfo->strPlayerPath.clear();
+}
+
+void CPlayerPluginInstaller::Player::SavePlayerPath()
+{
+	g_Profile.WriteProfileString((szConfigName + tstring(_T("Path"))).c_str(), pExtraInfo->strPlayerPath.c_str());
 }
 
 void CPlayerPluginInstaller::Player::SetToInstallPlugin(bool bInstall)
@@ -848,7 +845,7 @@ int CPlayerPluginInstaller::Player::GetStatusImage()
 		return 2;
 }
 
-bool CPlayerPluginInstaller::Install(tstring &strErr)
+bool CPlayerPluginInstaller::Uninstall(tstring &strErr)
 {
 	bool	bRet = true;
 
@@ -856,10 +853,10 @@ bool CPlayerPluginInstaller::Install(tstring &strErr)
 	{
 		Player &item = g_playersPlugin[i];
 
-		if (!IsFlagSet(item.pExtraInfo->status, S_PG_TO_INSTALL | S_PLAYER_INSTALLED))
-			continue;
+		// if (!IsFlagSet(item.pExtraInfo->status, S_PG_INSTALLED | S_PLAYER_INSTALLED))
+		//	continue;
 
-		if (!item.Install(strErr))
+		if (!item.Uninstall(strErr))
 			bRet = false;
 	}
 

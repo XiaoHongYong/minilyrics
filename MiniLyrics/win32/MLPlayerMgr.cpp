@@ -54,6 +54,11 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 			startApp = SA_SETUP;
 			continue;
 		}
+		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/Uninstall")) == 0)
+		{
+			startApp = SA_UNINSTALL;
+			continue;
+		}
 		else
 			continue;
 		i++;

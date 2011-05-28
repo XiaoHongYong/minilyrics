@@ -107,6 +107,7 @@ enum StartApp
 	SA_IPOD_LYRICS_DOWNLOADER,
 	SA_LYRICS_TOOL,
 	SA_SETUP,
+	SA_UNINSTALL,
 };
 
 tstring GetAppNameLong();

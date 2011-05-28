@@ -8,6 +8,7 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "afxres.h"
+#include "../MPShared/MLResource.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -41,6 +42,8 @@ END
 3 TEXTINCLUDE DISCARDABLE 
 BEGIN
     "1 TYPELIB ""PluginMJ.tlb""\r\n"
+    "#include ""../MPShared/MLResource.h""\r\n"
+    "#include ""../MPShared/Resource.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "\0"
 END
 
@@ -91,6 +94,8 @@ END
 //
 1 TYPELIB "PluginMJ.tlb"
 
+
+#include "../PluginWinamp5/Resource.rc2"  // non-Microsoft Visual C++ edited resources
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
 

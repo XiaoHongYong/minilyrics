@@ -203,6 +203,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\PluginWinamp5\Resource.rc"
+				>
+			</File>
+			<File
 				RelativePath="sample_sub.def"
 				>
 			</File>
@@ -228,6 +232,10 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath="..\PluginWinamp5\Resource.rc2"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -184,6 +184,8 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 			MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed do NOT have file: %s"), p->szExeName).c_str());
 			return;
 		}
+		else
+			p->SavePlayerPath();
 	}
 
 	// Is plugin installed?

@@ -167,13 +167,16 @@ void CDlgSetupPlayerPlugins::OnOK()
 			}
 
 			tstring strErr;
-			if (!p->Install(strErr))
+			if (p->Install(strErr))
+			{
+				p->SavePlayerPath();
+				nInstalledCount++;
+			}
+			else
 			{
 				bHasError = true;
 				MessageOut(strErr.c_str(), MB_ICONINFORMATION);
 			}
-			else
-				nInstalledCount++;
 		}
 	}
 
@@ -349,6 +352,8 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 		MessageOut(strErr.c_str(), MB_ICONINFORMATION);
 		return;
 	}
+
+	p->SavePlayerPath();
 
 	MessageOut(CStrPrintf(TOLOCAL_T("MiniLyrics plugin was installed for %s."), p->szPlayerName).c_str(),
 		MB_ICONINFORMATION | MB_OK);

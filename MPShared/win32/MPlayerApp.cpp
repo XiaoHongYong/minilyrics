@@ -15,6 +15,7 @@
 #ifdef _WIN32_DESKTOP
 #ifndef _MPLAYER
 #include "../MiniLyrics/win32/MLPlayerMgr.h"
+#include "../MiniLyrics/win32/PlayerPluginInstaller.h"
 #endif
 #endif
 
@@ -129,6 +130,16 @@ bool CMPlayerApp::Init(StartApp startApp)
 	InitBaseFrameWork(GetAppInstance(), strMLLogFile.c_str(), strMLIniFile.c_str(), SZ_SECT_UI);
 
 	// InitMiniDumper();
+
+	if (startApp == SA_UNINSTALL)
+	{
+		// Uninstall MiniLyrics plugins for players.
+		CPlayerPluginInstaller	installer;
+		installer.Init();
+		tstring strErr;
+		installer.Uninstall(strErr);
+		return false;
+	}
 
 	LOG1(LOG_LVL_EVENT_IMP, _T("Start %s."), GetAppNameLong().c_str());
 
