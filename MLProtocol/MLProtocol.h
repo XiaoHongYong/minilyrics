@@ -154,6 +154,7 @@ public:
 		nCodeDurationDays = 1;
 		nLicensedUser = 1;
 	}
+	virtual ~MLRetMsg() { }
 
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile);
@@ -270,7 +271,7 @@ class MLMsgRetSearch : public MLRetMsg
 public:
 	int						nPageCount, nCurPage;
 
-	list<RetLyrInfo>		listResultFiles;
+	RetLyrInfoList			listResultFiles;
 
 	// For 7.1 above version, RetLyrInfo.strLink including full URL address
 	// After 7.1 only include related path, base URL is saved in strServerUrl.
