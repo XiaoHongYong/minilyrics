@@ -207,6 +207,12 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			}
 			break;
 		case SA_IPOD_LYRICS_DOWNLOADER:
+		case SA_LYRICS_TOOL:
+			break;
+		case SA_LYRICS_PLAYER:
+			CDlgStartMiniLyrics::OnPlayerStarted();
+			break;
+		case SA_UNINSTALL:
 			break;
 		default:
 			ASSERT(0);

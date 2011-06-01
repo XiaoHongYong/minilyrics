@@ -68,7 +68,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("libminilyrics_plugin.dll"),
 	},
 	{
-		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
+		0, 0, 0, 0,
 		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
 		_T("Songbird"),
 		_T(""),
@@ -187,7 +187,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("K-Lite Codec Pack\\Media Player Classic\\"), _T("mpc-hc.exe"),
 		NULL,
 		_T("InstMPC"),
-		_T("PluginMPC.exe"),
+		NULL,
 	},
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
@@ -197,7 +197,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("Zune\\"), _T("Zune.exe"),
 		NULL,
 		_T("InstZUNE"),
-		_T("PluginZune.exe"),
+		NULL,
 	},
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
@@ -207,14 +207,14 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("Spotify\\"), _T("Spotify.exe"),
 		NULL,
 		_T("InstSpotify"),
-		_T("PluginSpotify.exe"),
+		NULL,
 	},
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_REG_DLL,
 		_T("J. River Media Jukebox"),
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Center 14\\UninstallString"),
-		_T("J River\\Media Center 14\\"), _T("Media Center 14.exe"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Jukebox 14\\UninstallString"),
+		_T("J River\\Media Jukebox 14\\"), _T("Media Jukebox 14.exe"),
 		NULL,
 		_T("InstMJ"),
 		_T("PluginMJ.dll"),
@@ -223,8 +223,8 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_REG_DLL,
 		_T("J. River Media Center"),
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Center 14\\UninstallString"),
-		_T("J River\\Media Center 14\\"), _T("Media Center 14.exe"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Center 16\\UninstallString"),
+		_T("J River\\Media Center 16\\"), _T("Media Center 16.exe"),
 		NULL,
 		_T("InstMJ"),
 		_T("PluginMJ.dll"),
@@ -237,7 +237,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("Intermedia Design\\Helium 2007\\"), _T("helium2007.exe"),
 		NULL,
 		_T("InstHMM"),
-		_T("PluginHMM.exe"),
+		NULL,
 	},
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
@@ -247,7 +247,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("JetAudio\\"), _T("JetAudio.exe"),
 		NULL,
 		_T("InstJA"),
-		_T("PluginJetaudio.exe"),
+		NULL,
 	},
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
@@ -257,7 +257,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("AlbumPlayer\\"), _T("AlbumPlayer.exe"),
 		NULL,
 		_T("InstAP"),
-		_T("PluginAP.exe"),
+		NULL,
 	},
 };
 
@@ -523,9 +523,11 @@ void CPlayerPluginInstaller::Player::DetectPlayerPath()
 
 	DWORD dwDriveMask = GetLogicalDrives();
 	TCHAR chDrive = 'A';
+	TCHAR szDrive[] = _T("C:\\");
 	for (int i = 0; i < 6; i++)
 	{
-		if (dwDriveMask & (1 << i))
+		szDrive[0] = chDrive;
+		if (GetDriveType(szDrive) == DRIVE_FIXED && dwDriveMask & (1 << i))
 		{
 			pExtraInfo->strPlayerPath[0] = chDrive;
 			if (CheckPlayerInstalled(false))
@@ -736,6 +738,9 @@ bool Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 {
 	if (!IsFlagSet(item.pExtraInfo->status, CPlayerPluginInstaller::S_PLAYER_INSTALLED))
 		return false;
+
+	if (item.szPluginFiles == NULL)
+		return true;
 
 	tstring	strDirTarg;
 	if (item.szPluginDirOfPlayer)

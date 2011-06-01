@@ -56,7 +56,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 		{
 			PostMessage(hwndMain, WM_MM_NOTIFY, MM_WAKEUP, 0);
 
-#ifndef _WIN32_WCE
+#ifdef _WIN32_WCE
 			lpCmdLine = (LPTSTR)CmdLineNext(lpCmdLine);
 #endif
 			if (!IsEmptyString(lpCmdLine))

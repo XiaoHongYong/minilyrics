@@ -15,7 +15,10 @@ CPP_SRCS = \
 		  sbMiniLyricsService.cpp \
 		  PlayerImp.cpp \
 		  MLPlugin.cpp \
-		  PlayerInfoQueryBaseWnd.cpp \
+		  MLService.cpp \
+		  PlayerServiceBase.cpp \
+		  PluginHelper.cpp \
+		  TinyBaseWnd.cpp \
 		  $(NULL)
 
 CPP_EXTRA_INCLUDES = $(DEPTH)/components/PluginSongbird/public \

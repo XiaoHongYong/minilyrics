@@ -49,6 +49,23 @@ void InitSB()
 	RunMiniLyrics(g_hInstance, NULL, &g_Player);
 }
 
+inline HWND GetPlayerWindow()
+{
+	DWORD dwCurProcessId = GetCurrentProcessId();
+
+	HWND hWnd = NULL;
+	while (1)
+	{
+		hWnd = FindWindowEx(NULL, hWnd, L"MozillaUIWindowClass", NULL);
+		if (!hWnd)
+			return NULL;
+		DWORD dwProcessId;
+		GetWindowThreadProcessId(hWnd, &dwProcessId);
+		if (dwProcessId == dwCurProcessId)
+			return hWnd;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CPlayerImp::CPlayerImp()
@@ -68,16 +85,19 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Songbird");
 }
 
+#define NS_ENSURE_SUCCESS_NO_RET(rv)	\
+	 if (NS_FAILED(rv)) return;		\
+
 void CPlayerImp::OnConnected()
 {
 	nsresult rv;
 
 	nsCOMPtr<nsISupportsWeakReference> weakRef = 
 		do_GetService(SB_MEDIACOREMANAGER_CONTRACTID, &rv);
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
 	rv = weakRef->GetWeakReference(getter_AddRefs(mMM));
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
 	g_MLService.AddWndCloseto(GetPlayerWindow(), NULL, NULL);
 
@@ -115,29 +135,29 @@ void CPlayerImp::Play()
 	{
 		nsCOMPtr<sbIMediacoreManager> manager = 
 			do_QueryReferent(mMM, &rv);
-		NS_ENSURE_SUCCESS(rv, rv);
+		NS_ENSURE_SUCCESS_NO_RET(rv);
 
 		nsCOMPtr<sbIMediacorePlaybackControl> playbackControl;
 		rv = manager->GetPlaybackControl(getter_AddRefs(playbackControl));
-		NS_ENSURE_SUCCESS(rv, rv);
+		NS_ENSURE_SUCCESS_NO_RET(rv);
 
 		if ( playbackControl ) {
 			rv = playbackControl->Play();
-			NS_ENSURE_SUCCESS(rv, rv);
+			NS_ENSURE_SUCCESS_NO_RET(rv);
 		}
 	}
 	else
 	{
 		nsCOMPtr<sbIMediacoreManager> manager = 
 			do_QueryReferent(mMM, &rv);
-		NS_ENSURE_SUCCESS(rv, rv);
+		NS_ENSURE_SUCCESS_NO_RET(rv);
 
 		nsCOMPtr<sbIMediacoreSequencer> sequencer;
 		rv = manager->GetSequencer(getter_AddRefs(sequencer));
-		NS_ENSURE_SUCCESS(rv, rv);
+		NS_ENSURE_SUCCESS_NO_RET(rv);
 
 		rv = sequencer->Play();
-		NS_ENSURE_SUCCESS( rv, rv );
+		NS_ENSURE_SUCCESS_NO_RET(rv);
 	}
 }
 
@@ -150,15 +170,15 @@ void CPlayerImp::Pause()
 
 	nsCOMPtr<sbIMediacoreManager> manager = 
 		do_QueryReferent(mMM, &rv);
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
 	nsCOMPtr<sbIMediacorePlaybackControl> playbackControl;
 	rv = manager->GetPlaybackControl(getter_AddRefs(playbackControl));
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
 	if ( playbackControl ) {
 		rv = playbackControl->Pause();
-		NS_ENSURE_SUCCESS(rv, rv);
+		NS_ENSURE_SUCCESS_NO_RET(rv);
 	}
 }
 
@@ -179,15 +199,15 @@ void CPlayerImp::Stop()
 
 	nsCOMPtr<sbIMediacoreManager> manager = 
 		do_QueryReferent(mMM, &rv);
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
 	nsCOMPtr<sbIMediacorePlaybackControl> playbackControl;
 	rv = manager->GetPlaybackControl(getter_AddRefs(playbackControl));
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
 	if ( playbackControl ) {
 		rv = playbackControl->Stop();
-		NS_ENSURE_SUCCESS(rv, rv);
+		NS_ENSURE_SUCCESS_NO_RET(rv);
 	}
 }
 
@@ -200,15 +220,14 @@ void CPlayerImp::Prev()
 
 	nsCOMPtr<sbIMediacoreManager> manager = 
 		do_QueryReferent(mMM, &rv);
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
 	nsCOMPtr<sbIMediacoreSequencer> sequencer;
 	rv = manager->GetSequencer(getter_AddRefs(sequencer));
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
-	rv = sequencer->Previous();
-	NS_ENSURE_SUCCESS( rv, rv );
-*/
+	rv = sequencer->Previous(true);
+	NS_ENSURE_SUCCESS_NO_RET(rv);*/
 }
 
 void CPlayerImp::Next()
@@ -220,20 +239,19 @@ void CPlayerImp::Next()
 
 	nsCOMPtr<sbIMediacoreManager> manager = 
 		do_QueryReferent(mMM, &rv);
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
 	nsCOMPtr<sbIMediacoreSequencer> sequencer;
 	rv = manager->GetSequencer(getter_AddRefs(sequencer));
-	NS_ENSURE_SUCCESS(rv, rv);
+	NS_ENSURE_SUCCESS_NO_RET(rv);
 
-	rv = sequencer->Next();
-	NS_ENSURE_SUCCESS( rv, rv );
-*/
+	rv = sequencer->Next(true);
+	NS_ENSURE_SUCCESS_NO_RET(rv );*/
 }
 
 void CPlayerImp::SeekTo(int nMsPos)
 {
-/*	if (!IsSBReady())
+	if (!IsSBReady())
 		return;
 
 	nsresult rv;
@@ -241,14 +259,13 @@ void CPlayerImp::SeekTo(int nMsPos)
 	if (!mdrPosition) {
 		nsresult rv;
 		mdrPosition = do_CreateInstance( "@songbirdnest.com/Songbird/DataRemote;1", &rv );
-		NS_ENSURE_SUCCESS( rv, rv );
+		NS_ENSURE_SUCCESS_NO_RET(rv );
 		rv = mdrPosition->Init( NS_LITERAL_STRING("metadata.position"), SB_PREFS_ROOT );
-		NS_ENSURE_SUCCESS( rv, rv );
+		NS_ENSURE_SUCCESS_NO_RET(rv );
 	}
 	PRInt64	nPosition = nMsPos;
 	rv = mdrPosition->SetIntValue(nPosition);
-	NS_ENSURE_SUCCESS( rv, rv );
-*/
+	NS_ENSURE_SUCCESS_NO_RET(rv );
 }
 
 void CPlayerImp::OnTimer(int nTimerID)
@@ -329,8 +346,6 @@ DWORD CPlayerImp::GetPlayPos()
 	if (!IsSBReady())
 		return 0;
 
-	nsresult rv;
-
 	if (!mdrPosition) {
 		nsresult rv;
 		mdrPosition = do_CreateInstance( "@songbirdnest.com/Songbird/DataRemote;1", &rv );
@@ -369,7 +384,7 @@ BOOL CPlayerImp::DoCheckMediaChange()
 	{
 		if (!IsEmptyString(szMediaPathOld))
 		{
-			g_MLService.OnMediaInfoChanged(NULL);
+			g_MLService.OnMediaInfoChanged(L"", NULL, NULL, NULL, 0);
 			EmptyStr(szMediaPathOld);
 		}
 		return TRUE;
@@ -427,7 +442,7 @@ BOOL CPlayerImp::DoCheckMediaChange()
 	PRInt64		nLength = 0;
 	mdrCurrentLength->GetIntValue(&nLength);
 
-	g_MLService.OnMediaInfoChanged(szMediaUrl, szArtist, szAlbum, szTitle, nLength);
+	g_MLService.OnMediaInfoChanged(szMediaUrl, szArtist, szAlbum, szTitle, (long)nLength);
 
 	return TRUE;
 }

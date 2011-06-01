@@ -12,9 +12,9 @@ public:
 
 	virtual BOOL OnInitDialog();
 
-	void OnSize(int cx, int cy);
-
 	void OnCommand(UINT uID, UINT nNotifyCode);
+
+	static void OnPlayerStarted();
 
 protected:
 	struct PlayerItem
@@ -48,7 +48,6 @@ protected:
 	int GetMaxPagesCount();
 
 protected:
-	CWndHelper				m_wndHelper;
 	bool					m_bShowInstalledPlayers;
 	bool					m_bShowAllSupportedPlayers;
 

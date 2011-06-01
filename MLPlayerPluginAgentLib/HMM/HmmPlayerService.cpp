@@ -45,6 +45,7 @@ CPlayerService::CPlayerService()
 {
 	m_dwTimeBeg = 0;
 	m_hWndPlayer = NULL;
+	m_playerStateOld = m_playerState = PS_STOPED;
 }
 
 CPlayerService::~CPlayerService()
@@ -63,19 +64,20 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 
 void CPlayerService::OnConnected()
 {
+	m_hWndPlayer = GetPlayerWindow();
+
 	g_MLService.AddWndCloseto(NULL, _T(HMM_WND_CLASS), NULL);
 
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	SetTimer(TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO);
 
 	::SendMessage(m_hWndPlayer, WM_HMM_IPC, (WPARAM)m_hWnd, IPC_SET_CALLBACK_HWND);
-	::SendMessage(m_hWndPlayer, WM_HMM_IPC, (WPARAM)0, IPC_GET_CURRENT_TRACK);
 
 	// Update Media info
-	// OnMediaChanged();
+	::SendMessage(m_hWndPlayer, WM_HMM_IPC, (WPARAM)0, IPC_GET_CURRENT_TRACK);
 
 	// Update player state
-	// g_MLService.OnPlayStateChanged(GetPlayerState());
+	UpdatePlayerState();
 }
 
 void CPlayerService::OnDisconnect()
@@ -124,14 +126,24 @@ void CPlayerService::SeekTo(int nMsPos)
 void CPlayerService::OnTimer(int nTimerID)
 {
 	if (nTimerID == TIMER_GETPOS)
-		OnPlayTimeChangeCheck();
+	{
+		if (m_playerState == PS_PAUSED || m_playerState == PS_STOPED)
+			return;
+
+		g_MLService.OnPlayPosChanged(GetTickCount() - m_dwTimeBeg);
+	}
 	else if (nTimerID == TIMER_CHECK_MEDIA)
 	{
 		// update info.
 		if (!IsWindow(m_hWndPlayer))
-			m_hWndPlayer = GetPlayerWindow();
-		if (m_hWndPlayer)
+			g_MLService.OnDisconnected();
+		else
+		{
 			::SendMessage(m_hWndPlayer, WM_HMM_IPC, (WPARAM)0, IPC_GET_CURRENT_TRACK);
+
+			// Call GetPlayerState to update the state.
+			UpdatePlayerState();
+		}
 	}
 }
 
@@ -188,7 +200,11 @@ bool CPlayerService::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			else
 				EmptyStr(szSrcMedia);
 
-			m_dwTimeBeg = GetTickCount() - GetPlayPos();
+			// Is changed?
+			if (strcmp(m_strSrcMedia.c_str(), szSrcMedia) == 0)
+				break;
+			m_strSrcMedia = szSrcMedia;
+
 			unsigned long nMediaLength = ::SendMessage(m_hWndPlayer, WM_HMM_IPC, (WPARAM)0, IPC_GET_DURATION) * 1000;
 
 			g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, nMediaLength);
@@ -222,39 +238,17 @@ DWORD CPlayerService::GetPlayPos()
 	return ::SendMessage(m_hWndPlayer, WM_HMM_IPC, (WPARAM)0, IPC_GET_POSITION) * 1000;
 }
 
-void CPlayerService::OnPlayTimeChangeCheck()
+void CPlayerService::UpdatePlayerState()
 {
-	DWORD		nPos, nPosQuery;
-	DWORD		dwTimeNew;
+	m_playerState = GetPlayerState();
 
-	static		bool bPauseCheck = false;
-	static		DWORD nPosOld = 0;
-
-	dwTimeNew = GetTickCount();
-	nPos = dwTimeNew - m_dwTimeBeg;
-	nPosQuery = GetPlayPos();
-
-	if (bPauseCheck)
+	if (m_playerStateOld != m_playerState)
 	{
-		if (nPosQuery != nPosOld)
-		{
-			bPauseCheck = false;
-			m_dwTimeBeg = dwTimeNew - nPosQuery;
-			g_MLService.OnPlayPosChanged(nPosQuery);
-		}
-		return;
+		m_dwTimeBeg = GetTickCount() - GetPlayPos();
+		m_playerStateOld = m_playerState;
+		g_MLService.OnPlayStateChanged(m_playerState);
+		g_MLService.OnPlayPosChanged(GetTickCount() - m_dwTimeBeg);
 	}
-
-	if (_abs(nPos - nPosQuery) > 1500 || nPosQuery == 0)
-	{
-		// use Seek or pause? let's adjust it.
-		m_dwTimeBeg = dwTimeNew - nPosQuery;
-		g_MLService.OnPlayPosChanged(nPosQuery);
-		nPosOld = nPosQuery;
-		bPauseCheck = true;
-	}
-	else
-		g_MLService.OnPlayPosChanged(nPos);
 }
 
 //////////////////////////////////////////////////////////////////////////

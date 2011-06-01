@@ -89,6 +89,7 @@ CFakeMsnMessageWnd		g_wndFakeMsnWnd;
 CPlayerService::CPlayerService()
 {
 	m_dwBeginPlay = 0;
+	m_hWndPlayer = NULL;
 }
 
 CPlayerService::~CPlayerService()
@@ -100,7 +101,7 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = GetPlayerWindow();
+	playerInfo.hWndPlayer = m_hWndPlayer = GetPlayerWindow();
 	playerInfo.hWndPluginService = GetHandle();
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Zune");
@@ -154,6 +155,8 @@ void CPlayerService::OnTimer(int nTimerID)
 	if (nTimerID == TIMER_GETPOS)
 	{
 		g_MLService.OnPlayPosChanged(GetTickCount() - m_dwBeginPlay);
+		if (!::IsWindow(m_hWndPlayer))
+			g_MLService.OnDisconnected();
 	}
 }
 

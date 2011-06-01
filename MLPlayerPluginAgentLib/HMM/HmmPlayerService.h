@@ -25,18 +25,20 @@ public:
 	virtual void Next();
 	virtual void SeekTo(int nMsPos);
 
-public:
+protected:
 	void OnTimer(int nTimerID);
 	bool OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds);
 
 	PLAYER_STATE GetPlayerState();
 	DWORD GetPlayPos();
 
-	void OnPlayTimeChangeCheck();
+	void UpdatePlayerState();
 
-public:
+protected:
+	string			m_strSrcMedia;
 	DWORD			m_dwTimeBeg;
 	HWND			m_hWndPlayer;
+	PLAYER_STATE	m_playerState, m_playerStateOld;
 
 };
 

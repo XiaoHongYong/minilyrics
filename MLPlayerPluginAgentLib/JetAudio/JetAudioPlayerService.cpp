@@ -9,7 +9,7 @@ namespace JetAudioAgent
 
 CPlayerService		g_Player;
 
-HWND FindPlayerWnd()
+HWND GetPlayerWindow()
 {
 	return ::FindWindow(_T("COWON Jet-Audio Remocon Class"), _T("Jet-Audio Remote Control"));
 }
@@ -20,39 +20,41 @@ HWND FindPlayerWnd()
 
 CPlayerService::CPlayerService()
 {
+	m_dwTimeBeg = 0;
+	m_hWndPlayer = NULL;
+	m_playerStateOld = m_playerState = PS_STOPED;
 }
 
 CPlayerService::~CPlayerService()
 {
 }
 
-
 void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 {
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = FindPlayerWnd();
+	playerInfo.hWndPlayer = GetPlayerWindow();
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"jetAudio");
 }
 
 void CPlayerService::OnConnected()
 {
-	m_hWndPlayer = FindPlayerWnd();
+	m_hWndPlayer = GetPlayerWindow();
 
 	g_MLService.AddWndCloseto(NULL, L"COWON Jet-Audio MainWnd Class", NULL);
 	g_MLService.AddWndCloseto(NULL, NULL, L"jetAudio Lyric Viewer");
 	g_MLService.AddWndCloseto(NULL, NULL, L"jetAudio Playlist");
 
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
-	SetTimer(TIMER_CHECK_MEDIA, 1000);
+	SetTimer(TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO);
 
 	// Update Media info
 	// OnMediaChanged();
 
 	// Update player state
-	g_MLService.OnPlayStateChanged(GetPlayerState());
+	UpdatePlayerState();
 }
 
 void CPlayerService::OnDisconnect()
@@ -98,73 +100,27 @@ void CPlayerService::SeekTo(int nMsPos)
 	::SendMessage(m_hWndPlayer, WM_REMOCON_SENDCOMMAND, 0, MAKELPARAM(JRC_ID_SEEK, nMsPos / 1000));
 }
 
-PLAYER_STATE CPlayerService::GetPlayerState()
-{
-	int			n;
-	n = ::SendMessage(m_hWndPlayer, WM_REMOCON_GETSTATUS, (WPARAM)m_hWnd, GET_STATUS_STATUS);
-	if (n == MCI_MODE_PLAY)
-		return PS_PLAYING;
-	else if (n == MCI_MODE_PAUSE)
-		return PS_PAUSED;
-	else
-		return PS_STOPED;
-}
-
-DWORD CPlayerService::GetPlayPos()
-{
-	return ::SendMessage(m_hWndPlayer, WM_REMOCON_GETSTATUS, (WPARAM)m_hWnd, GET_STATUS_CUR_TIME);
-}
-
-void CPlayerService::OnPlayTimeChangeCheck()
-{
-	DWORD		nPos, nPosQuery;
-	DWORD		dwTimeNew;
-
-	static		bool bPauseCheck = false;
-	static		DWORD nPosOld = 0;
-
-	dwTimeNew = GetTickCount();
-	nPos = dwTimeNew - m_dwTimeBeg;
-	nPosQuery = GetPlayPos();
-
-	if (bPauseCheck)
-	{
-		if (nPosQuery != nPosOld)
-		{
-			bPauseCheck = false;
-			m_dwTimeBeg = dwTimeNew - nPosQuery;
-			g_MLService.OnPlayPosChanged(nPosQuery);
-		}
-		return;
-	}
-
-	if (_abs(nPos - nPosQuery) > 500 || nPosQuery == 0)
-	{
-		// use Seek or pause? let's adjust it.
-		m_dwTimeBeg = dwTimeNew - nPosQuery;
-		g_MLService.OnPlayPosChanged(nPosQuery);
-		nPosOld = nPosQuery;
-		bPauseCheck = true;
-	}
-	else
-		g_MLService.OnPlayPosChanged(nPos);
-}
-
 void CPlayerService::OnTimer(int nTimerID)
 {
 	if (nTimerID == TIMER_GETPOS)
-		OnPlayTimeChangeCheck();
+	{
+		if (m_playerState == PS_PAUSED || m_playerState == PS_STOPED)
+			return;
+
+		g_MLService.OnPlayPosChanged(GetTickCount() - m_dwTimeBeg);
+	}
 	else if (nTimerID == TIMER_CHECK_MEDIA)
 	{
 		// update info.
 		if (!IsWindow(m_hWndPlayer))
-			m_hWndPlayer = FindPlayerWnd();
-		if (m_hWndPlayer)
+			g_MLService.OnDisconnected();
+		else
 		{
 			::SendMessage(m_hWndPlayer, WM_REMOCON_GETSTATUS, (WPARAM)m_hWnd, GET_STATUS_TRACK_INFO);
+
+			// Call GetPlayerState to update the state.
+			UpdatePlayerState();
 		}
-		else
-			g_MLService.OnMediaInfoChanged(L"", NULL, NULL, NULL, 0);
 	}
 }
 
@@ -204,13 +160,45 @@ bool CPlayerService::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 	return true;
 }
 
+PLAYER_STATE CPlayerService::GetPlayerState()
+{
+	int			n;
+	n = ::SendMessage(m_hWndPlayer, WM_REMOCON_GETSTATUS, (WPARAM)m_hWnd, GET_STATUS_STATUS);
+	if (n == MCI_MODE_PLAY)
+		return PS_PLAYING;
+	else if (n == MCI_MODE_PAUSE)
+		return PS_PAUSED;
+	else
+		return PS_STOPED;
+}
+
+DWORD CPlayerService::GetPlayPos()
+{
+	return ::SendMessage(m_hWndPlayer, WM_REMOCON_GETSTATUS, (WPARAM)m_hWnd, GET_STATUS_CUR_TIME);
+}
+
+void CPlayerService::UpdatePlayerState()
+{
+	m_playerState = GetPlayerState();
+
+	if (m_playerStateOld != m_playerState)
+	{
+		m_dwTimeBeg = GetTickCount() - GetPlayPos();
+		m_playerStateOld = m_playerState;
+		g_MLService.OnPlayStateChanged(m_playerState);
+		g_MLService.OnPlayPosChanged(GetTickCount() - m_dwTimeBeg);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+
 CPlayerPluginAgent::CPlayerPluginAgent() : IPlayerPluginAgent(&g_Player)
 {
 }
 
 bool CPlayerPluginAgent::IsPlayerRunning()
 {
-	HWND hWndPlayer = FindPlayerWnd();
+	HWND hWndPlayer = GetPlayerWindow();
 	return hWndPlayer != NULL;
 }
 

@@ -65,10 +65,16 @@ void MLRunUnitTest()
 
 tstring GetAppNameLong()
 {
+	tstring	strName = tstring(SZ_APP_NAME) + _T(" ") + VersionNumToStr(g_version);
 #ifdef _MPLAYER
-	return tstring(SZ_APP_NAME) + _T(" ") + VersionNumToStr(g_version);
+	return strName;
 #else
-	return CStrPrintf(SZ_APP_NAME _T("%s for %s"), VersionNumToStr(g_version).c_str(), g_Player.GetPlayerName()).c_str();
+	if (!IsEmptyString(g_Player.GetPlayerName()))
+	{
+		strName += _T(" for ");
+		strName += g_Player.GetPlayerName();
+	}
+	return strName;
 #endif
 }
 

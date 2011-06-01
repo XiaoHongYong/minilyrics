@@ -41,6 +41,7 @@ protected:
 
 public:
 	DWORD			m_dwTimeBeg;
+	HWND			m_hwndPlayer;
 
 	int				m_nPos, m_nPosNotify;
 

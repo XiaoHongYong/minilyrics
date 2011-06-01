@@ -1,6 +1,5 @@
 #pragma once
 
-#include "IPlayer.h"
 #include "MLPlugin.h"
 
 #include <nsAutoPtr.h>
@@ -54,6 +53,9 @@ public:
 	BOOL DoCheckMediaChange();
 	virtual void OnTimer(int nTimerID);
 
+	DWORD GetPlayerState();
+	DWORD GetPlayPos();
+
 protected:
 	nsCOMPtr<nsIWeakReference> mMM;
 
@@ -69,7 +71,7 @@ protected:
 
 	DWORD					m_dwTimeBeg, m_nPosQuery;
 
-	bool IsSBReady() { return mMM != NULL; }
+	BOOL IsSBReady() { return mMM != NULL; }
 
 };
 

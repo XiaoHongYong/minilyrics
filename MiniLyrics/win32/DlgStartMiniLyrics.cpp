@@ -7,6 +7,8 @@
 
 TOLOCAL_SECTION("MiniLyrics setup")
 
+static HWND	__hWndDlgStartMiniLyrics = NULL;
+
 struct PlayerCtrl
 {
 	int		nStartBt, nInfoId, nSeperatorLineId;
@@ -54,18 +56,15 @@ CDlgStartMiniLyrics::CDlgStartMiniLyrics() : CBaseDialog(IDD_START_MINILYRICS)
 
 CDlgStartMiniLyrics::~CDlgStartMiniLyrics()
 {
+	__hWndDlgStartMiniLyrics = NULL;
 }
 
 BOOL CDlgStartMiniLyrics::OnInitDialog()
 {
-	m_wndHelper.Init(m_hWnd);
-
-	m_wndHelper.AddAlignRightBottom(IDC_LIST_PLAYERS, false, false);
-	m_wndHelper.AddAlignRightBottom(IDC_PREV, true, true);
-	m_wndHelper.AddAlignRightBottom(IDC_NEXT, true, true);
-
 	if (!CBaseDialog::OnInitDialog())
 		return FALSE;
+
+	__hWndDlgStartMiniLyrics = m_hWnd;
 
 	// Show running players
 	CProcessEnum	processEnum;
@@ -87,13 +86,6 @@ BOOL CDlgStartMiniLyrics::OnInitDialog()
 	UpdatePlayersToView();
 
 	return TRUE;
-}
-
-void CDlgStartMiniLyrics::OnSize(int cx, int cy)
-{
-	CBaseDialog::OnSize(cx, cy);
-
-	m_wndHelper.OnResize();
 }
 
 void CDlgStartMiniLyrics::OnCommand(UINT uID, UINT nNotifyCode)
@@ -241,6 +233,18 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 
 	// Player may just start running again, so query running player info again
 	g_playerMgr.QueryRunningPlayerInfo();
+	if (p->pExtraInfo->hWndPluginService == NULL)
+	{
+		CMLPlayerMgr::ListPlayerInfo listPlayers = g_playerMgr.GetRunningPlayers();
+		if (listPlayers.size() == 1)
+		{
+			DWORD dwProcessId = 0;
+			GetWindowThreadProcessId(listPlayers.front().hWndPlayer, &dwProcessId);
+			if (dwProcessId == p->pExtraInfo->dwProcessId)
+				p->pExtraInfo->hWndPluginService = listPlayers.front().hWndPluginService;
+		}
+	}
+
 	if (g_playerMgr.ConnectToPlayer(p->pExtraInfo->hWndPluginService))
 	{
 		// Connected to the player. So, just close this dialog
@@ -364,4 +368,19 @@ int CDlgStartMiniLyrics::GetMaxPagesCount()
 		nMaxItems++;
 
 	return (nMaxItems + COUNT_PER_PAGE - 1) / COUNT_PER_PAGE;
+}
+
+void CDlgStartMiniLyrics::OnPlayerStarted()
+{
+	if (::IsWindow(__hWndDlgStartMiniLyrics))
+	{
+		if (g_playerMgr.GetRunningPlayers().empty())
+			return;
+
+		if (g_playerMgr.ConnectToPlayer(g_playerMgr.GetRunningPlayers().front().hWndPluginService))
+		{
+			// Connected to the player. So, just close this dialog
+			EndDialog(__hWndDlgStartMiniLyrics, IDOK);
+		}
+	}
 }

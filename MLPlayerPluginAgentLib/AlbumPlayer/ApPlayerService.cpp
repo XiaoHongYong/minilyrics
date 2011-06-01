@@ -34,7 +34,6 @@ namespace AlbumPlayerAgent
 #define SZ_AP_GET_SETTINGS		"<AlbumPlayerCommand id=\"GetPluginSettings\"><Plugin name=\"MiniLyrics\"></Plugin></AlbumPlayerCommand>"
 
 CPlayerService		g_Player;
-HWND				g_hwndPlayer = NULL;
 
 HWND GetPlayerWindow()
 {
@@ -87,6 +86,7 @@ CPlayerService::CPlayerService()
 	m_state = PS_STOPED;
 	memset(&m_skinInfo, 0, sizeof(m_skinInfo));
 	m_nPosNotify = 0;
+	m_hwndPlayer = NULL;
 }
 
 CPlayerService::~CPlayerService()
@@ -106,14 +106,14 @@ void CPlayerService::OnGetInfo(PlayerInfo &playerInfo)
 
 void CPlayerService::OnConnected()
 {
-	g_hwndPlayer = GetPlayerWindow();
+	m_hwndPlayer = GetPlayerWindow();
 	g_MLService.AddWndCloseto(NULL, L"TfrmPlayer", NULL);
 
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 
-	if (g_hwndPlayer)
+	if (m_hwndPlayer)
 	{
-		SendMessage(g_hwndPlayer, WM_SUBSCRIBE_FOR_NOTIFICATIONS, (WPARAM)m_hWnd, WM_AP_NOTIFY);
+		SendMessage(m_hwndPlayer, WM_SUBSCRIBE_FOR_NOTIFICATIONS, (WPARAM)m_hWnd, WM_AP_NOTIFY);
 		// SendAPCopyDataMsg(SZ_AP_CREATE_PANEL);
 		// SendAPCopyDataMsg(SZ_AP_CLOSE_PANEL);
 	}
@@ -143,37 +143,37 @@ void CPlayerService::OnDisconnect()
 
 void CPlayerService::Play()
 {
-	::PostMessage(g_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PLAY, 0);
+	::PostMessage(m_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PLAY, 0);
 }
 
 void CPlayerService::Pause()
 {
-	::PostMessage(g_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PAUSE, 0);
+	::PostMessage(m_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PAUSE, 0);
 }
 
 void CPlayerService::PlayPause()
 {
-	::PostMessage(g_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PLAYPAUSE, 0);
+	::PostMessage(m_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PLAYPAUSE, 0);
 }
 
 void CPlayerService::Stop()
 {
-	::PostMessage(g_hwndPlayer, WM_REMOTE_CONTROL, RCMD_STOP, 0);
+	::PostMessage(m_hwndPlayer, WM_REMOTE_CONTROL, RCMD_STOP, 0);
 }
 
 void CPlayerService::Prev()
 {
-	::PostMessage(g_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PREV, 0);
+	::PostMessage(m_hwndPlayer, WM_REMOTE_CONTROL, RCMD_PREV, 0);
 }
 
 void CPlayerService::Next()
 {
-	::PostMessage(g_hwndPlayer, WM_REMOTE_CONTROL, RCMD_NEXT, 0);
+	::PostMessage(m_hwndPlayer, WM_REMOTE_CONTROL, RCMD_NEXT, 0);
 }
 
 void CPlayerService::SeekTo(int nMsPos)
 {
-	::PostMessage(g_hwndPlayer, WM_REMOTE_CONTROL, RCMD_SEEK, nMsPos);
+	::PostMessage(m_hwndPlayer, WM_REMOTE_CONTROL, RCMD_SEEK, nMsPos);
 }
 
 void CPlayerService::SwitchToEmbeddedSkin()
@@ -189,7 +189,7 @@ void CPlayerService::SwitchToEmbeddedSkin()
 
 void CPlayerService::EndEmbeddedSkin()
 {
-	ActivateWindow(g_hwndPlayer);
+	ActivateWindow(m_hwndPlayer);
 
 	SendAPCopyDataMsg(SZ_AP_CLOSE_PANEL);
 }
@@ -298,7 +298,7 @@ void CPlayerService::SendAPCopyDataMsg(LPCSTR szXML)
 	data.cbData = strlen(szXML) + 1;
 	data.lpData = (LPVOID)szXML;
 	data.dwData = 0;
-	SendMessage(g_hwndPlayer, WM_COPYDATA, (WPARAM)GetHandle(), (LPARAM)&data);
+	SendMessage(m_hwndPlayer, WM_COPYDATA, (WPARAM)GetHandle(), (LPARAM)&data);
 }
 
 void CPlayerService::OnPlayTimeChanged(DWORD dwTimeCur)
@@ -352,6 +352,9 @@ void CPlayerService::OnTimer(int nTimerID)
 	if (nTimerID == TIMER_GETPOS)
 	{
 		OnPlayTimeChangeCheck();
+
+		if (!::IsWindow(m_hwndPlayer))
+			g_MLService.OnDisconnected();
 	}
 }
 

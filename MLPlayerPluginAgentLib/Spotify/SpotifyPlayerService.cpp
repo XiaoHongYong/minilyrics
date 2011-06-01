@@ -111,7 +111,7 @@ void CPlayerService::OnTimer(int nTimerID)
 			g_hwndPlayer = FindWindow(_T("SpotifyMainWindow"), NULL);
 		if (!g_hwndPlayer)
 		{
-			OnNoMedia();
+			g_MLService.OnDisconnected();
 			return;
 		}
 

@@ -30,6 +30,7 @@ public:
 
 public:
 	DWORD			m_dwBeginPlay;
+	HWND			m_hWndPlayer;
 
 };
 

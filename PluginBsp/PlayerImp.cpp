@@ -90,7 +90,7 @@ int __stdcall CallbackProc(const DWORD cmdID,void * param1, void * param2)
 {
 	switch (cmdID) {
 		case EV_UNLOAD:
-			g_MLService.OnDisconnected();
+			DisconnectMiniLyrics(&g_Player);
 			break;
 		case EV_BEFORE_FILE_OPEN:
 			break;
@@ -105,9 +105,8 @@ int __stdcall CallbackProc(const DWORD cmdID,void * param1, void * param2)
 		case EV_LOAD_SUB:
 			break;
 		case EV_PLAY:
-			{
+			if (g_MLService.IsValid())
 				g_Player.OnMediaChanged();
-			}
 			break;
 /*		case EV_STOP:
 			break;

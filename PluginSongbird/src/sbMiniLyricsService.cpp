@@ -12,6 +12,9 @@
 #include <prprf.h>
 #include <Windows.h>
 
+#include <assert.h>
+#define ASSERT assert
+
 //------------------------------------------------------------------------------
 //
 // nsISupports implementation.
