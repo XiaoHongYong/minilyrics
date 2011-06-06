@@ -3,16 +3,11 @@
   LangString DESC_SecSkins ${LANG_DANISH} "Multiple selectable Skin support"
   LangString DESC_SecUninst ${LANG_DANISH} "Create uninstallation program"
   LangString DESC_SecShortcut ${LANG_DANISH} "Create start menu"
-  LangString SecShortcut.MLDir ${LANG_DANISH} "MiniLyrics"
+  LangString DESC_SecDesktopShortcut ${LANG_DANISH} "Create Shortcut on desktop and quick lanuch bar"
+  LangString DESC_SecSettingPersonal ${LANG_DANISH} "Save MiniLyrics settings in each user's personal folder"
   LangString SecShortcut.MLUninst ${LANG_DANISH} "Uninstall MiniLyrics"
   LangString SecShortcut.MLReadme ${LANG_DANISH} "Readme"
-
-  LangString LS_ShortcutsSettings ${LANG_DANISH} "Shortcuts and settings"
-  LangString LS_ShortcutsSettingsDesc ${LANG_DANISH} "Create shortcuts and personal settings."
-
-  LangString LS_SelectPlayer ${LANG_DANISH} "Select Supporting Players"
-  LangString LS_SelectPlayerDesc ${LANG_DANISH} "Please select players that you want MiniLyrics to support."
-
+  LangString SecShortcut.Homepage ${LANG_DANISH} "MiniLyrics' Hopepage"
 
   LangString un.MLDir ${LANG_DANISH} "MiniLyrics"
   LangString un.MsgUnstMLRuning ${LANG_DANISH} "MiniLyrics is Running, please close your player, and running uninstall program again."

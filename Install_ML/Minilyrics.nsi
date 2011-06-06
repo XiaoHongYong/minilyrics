@@ -67,7 +67,6 @@
   !insertmacro MUI_LANGUAGE "SimpChinese"
   !insertmacro MUI_LANGUAGE "TradChinese"
   !insertmacro MUI_LANGUAGE "Japanese"
-  !insertmacro MUI_LANGUAGE "Korean"
   !insertmacro MUI_LANGUAGE "Italian"
   !insertmacro MUI_LANGUAGE "Dutch"
   !insertmacro MUI_LANGUAGE "Danish"
@@ -93,15 +92,11 @@
   LangString DESC_SecSkins ${LANG_ENGLISH} "Multiple selectable Skin support"
   LangString DESC_SecUninst ${LANG_ENGLISH} "Create uninstallation program"
   LangString DESC_SecShortcut ${LANG_ENGLISH} "Create start menu"
-  LangString SecShortcut.MLDir ${LANG_ENGLISH} "MiniLyrics"
+  LangString DESC_SecDesktopShortcut ${LANG_ENGLISH} "Create Shortcut on desktop and quick lanuch bar"
+  LangString DESC_SecSettingPersonal ${LANG_ENGLISH} "Save MiniLyrics settings in each user's personal folder"
   LangString SecShortcut.MLUninst ${LANG_ENGLISH} "Uninstall MiniLyrics"
-  LangString SecShortcut.MLReadme ${LANG_ENGLISH} "Readme"
+  LangString SecShortcut.Homepage ${LANG_ENGLISH} "MiniLyrics' Hopepage"
 
-  LangString LS_PersonalSetting ${LANG_ENGLISH} "Save MiniLyrics settings in each user's personal folder"
-  LangString LS_ShortcutOnDesktop ${LANG_ENGLISH} "Create shortcut on desktop"
-  LangString LS_ShortcutOnQuickLannch ${LANG_ENGLISH} "Create shortcut on quick launch bar"
-
-  LangString un.MLDir ${LANG_ENGLISH} "MiniLyrics"
   LangString un.MsgUnstMLRuning ${LANG_ENGLISH} "MiniLyrics is Running, please close your player, and running uninstall program again."
   LangString un.MsgRemovelAll ${LANG_ENGLISH} "Remove All files in your MiniLyrics directory(Including some setting files)?"
 
@@ -112,7 +107,6 @@
   !include "InstLangFiles\LangGerman.nsh"
   !include "InstLangFiles\LangItalian.nsh"
   !include "InstLangFiles\LangJapanese.nsh"
-  !include "InstLangFiles\LangKorean.nsh"
   !include "InstLangFiles\LangNorwegian.nsh"
   !include "InstLangFiles\LangPortuguese.nsh"
   !include "InstLangFiles\LangSimpChinese.nsh"
@@ -284,27 +278,9 @@ SectionIn 1 2
   SetOutPath $INSTDIR\ml-gen-embedded-skin
   File Share\ml-gen-embedded-skin\*.*
 
-;  SetOutPath $INSTDIR\ad
-;  File Share\ad\*.*
-
-  ; Write settings in Install.ini
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "PerUserSettings"
-  WriteINIStr $INSTDIR\Install.ini "INSTALL" "PerUserSettings" ${TEMP1}
-
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
-  WriteINIStr $INSTDIR\Install.ini "INSTALL" "ShortcutOnDesktop" ${TEMP1}
-
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnQuickLanuch"
-  WriteINIStr $INSTDIR\Install.ini "INSTALL" "ShortcutOnQuickLanuch" ${TEMP1}
+  WriteINIStr $INSTDIR\Install.ini "INSTALL" "PerUserSettings" "0"
 
   WriteRegStr HKCU MUI_LANGDLL_REGISTRY_KEY MUI_LANGDLL_REGISTRY_VALUENAME $LANGUAGE
-
-  ; Shortcuts of desktop and quick lanuch
-  ReadINIStr ${TEMP1} "$PLUGINSDIR\InstOpt.ini" "INSTALL" "ShortcutOnDesktop"
-  IntCmp ${TEMP1} 0 J_ShortcutsDtEnd J_ShortcutsDtEnd
-    CreateShortCut "$DESKTOP\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
-    CreateShortCut "$QUICKLAUNCH\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
-  J_ShortcutsDtEnd:
 
 SectionEnd
 
@@ -360,13 +336,24 @@ SectionEnd
 
 Section "Start Menu Shortcuts" SecShortcut
 SectionIn 1
-  StrCpy $R0 $(SecShortcut.MLDir)
-  CreateDirectory "$SMPROGRAMS\$R0"
-  CreateShortCut "$SMPROGRAMS\$R0\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
+  CreateDirectory "$SMPROGRAMS\MiniLyrics"
+  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
   StrCpy $R1 $(SecShortcut.MLUninst)
-  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\uninst-ml.exe"
-  StrCpy $R1 $(SecShortcut.MLReadme)
-  CreateShortCut "$SMPROGRAMS\$R0\$R1.lnk" "$INSTDIR\readme-minilyrics.txt"
+  CreateShortCut "$SMPROGRAMS\MiniLyrics\$R1.lnk" "$INSTDIR\uninst-ml.exe"
+  StrCpy $R1 $(SecShortcut.Homepage)
+  ; CreateShortCut "$SMPROGRAMS\MiniLyrics\$R1.lnk" "$INSTDIR\MiniLyrics' Homepage.url"
+  WriteINIStr "$SMPROGRAMS\MiniLyrics\$R1.url" "InternetShortcut" "URL" "http://www.crintsoft.com"
+SectionEnd
+
+Section "Desktop and Quick Launch Shortcuts" SecDesktopShortcut
+SectionIn 1
+  CreateShortCut "$DESKTOP\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
+  CreateShortCut "$QUICKLAUNCH\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
+SectionEnd
+
+Section "Portable Settings" SecSettingPersonal
+SectionIn 1
+  WriteINIStr $INSTDIR\Install.ini "INSTALL" "PerUserSettings" "1"
 SectionEnd
 
 Section "Create Uninstallation" SecUninst
@@ -376,7 +363,7 @@ SectionIn 1
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "Minilyrics"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "UninstallString" '"$INSTDIR\uninst-ml.exe"'
-  ; WriteUninstaller "$INSTDIR\uninst-ml.exe"
+  WriteUninstaller "$INSTDIR\uninst-ml.exe"
 SectionEnd
 
 ;--------------------------------
@@ -407,8 +394,9 @@ Section "Uninstall"
   Delete /REBOOTOK $APPDATA\Minilyrics\log_3.txt
   Delete /REBOOTOK $APPDATA\Minilyrics\log.txt
 
+  Delete "$INSTDIR\MiniLyrics' Homepage.url"
   Delete "$INSTDIR\readme-MiniLyrics.txt"
-  Delete /REBOOTOK $INSTDIR\miniLyrics.exe
+  Delete /REBOOTOK $INSTDIR\MiniLyrics.exe
   Delete /REBOOTOK $INSTDIR\PluginMiniLyrics.exe
   Delete /REBOOTOK $INSTDIR\Plugins\mlp_G15.dll
   Delete $INSTDIR\MLPlugin.ini
@@ -431,6 +419,9 @@ Section "Uninstall"
   Delete $INSTDIR\log.txt_3.txt
   Delete $INSTDIR\log_3.txt
   Delete $INSTDIR\db*.db
+  Delete $INSTDIR\*.dll
+  Delete "$INSTDIR\MiniLyrics' Homepage.url.url"
+  Delete $INSTDIR\sbMLSongbird.xpt
 
   ; MUST REMOVE UNINSTALLER, too
   Delete $INSTDIR\uninst-ml.exe
@@ -475,18 +466,16 @@ Section "Uninstall"
   Delete "$INSTDIR\ad\*.*"
 
   ; remove shortcuts, if any.
-  StrCpy $R0 $(un.MLDir)
-  Delete "$SMPROGRAMS\$R0\*.*"
+  Delete "$SMPROGRAMS\MiniLyrics\*.*"
 
   Delete "$DESKTOP\MiniLyrics.lnk"
   Delete "$QUICKLAUNCH\MiniLyrics.lnk"
 
   ; remove directories used.
-  StrCpy $R0 $(un.MLDir)
   RMDir "$INSTDIR\Skins\Fantasy"
   RMDir "$INSTDIR\Skins\Fantasy (Transparent)"
   RMDir "$INSTDIR\Skins\iTunes Mode"
-  RMDir "$SMPROGRAMS\$R0"
+  RMDir "$SMPROGRAMS\MiniLyrics"
   RMDir "$INSTDIR\Skins\Aimp2"
   RMDir "$INSTDIR\Skins\MiniLyrics"
   RMDir "$INSTDIR\Skins\Modern"
@@ -598,6 +587,8 @@ FunctionEnd
   !insertmacro MUI_DESCRIPTION_TEXT ${SecSkins} $(DESC_SecSkins)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecUninst} $(DESC_SecUninst)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecShortcut} $(DESC_SecShortcut)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopShortcut} $(DESC_SecDesktopShortcut)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecSettingPersonal} $(DESC_SecSettingPersonal)
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ;--------------------------------
@@ -609,4 +600,4 @@ Function un.onInit
   
 FunctionEnd
 
-ChangeUI all "${NSISDIR}\Contrib\UIs\modern.exe"
+;ChangeUI all "${NSISDIR}\Contrib\UIs\modern.exe"

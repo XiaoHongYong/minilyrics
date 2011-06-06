@@ -863,8 +863,8 @@ bool CPlayerPluginInstaller::Uninstall(tstring &strErr)
 	{
 		Player &item = g_playersPlugin[i];
 
-		// if (!IsFlagSet(item.pExtraInfo->status, S_PG_INSTALLED | S_PLAYER_INSTALLED))
-		//	continue;
+		if (!IsFlagSet(item.pExtraInfo->status, S_PLAYER_INSTALLED))
+			continue;
 
 		if (!item.Uninstall(strErr))
 			bRet = false;
