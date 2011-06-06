@@ -77,7 +77,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("InstSB"),
 		_T("sbMLSongbird.dll;sbMLSongbird.xpt")
 	},
-	{
+/*	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
 		_T("RealPlayer"),
@@ -86,7 +86,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T(""),
 		_T("InstRealOne"),
 		_T("PluginRealone.dll"),
-	},
+	},*/
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
@@ -598,7 +598,7 @@ tstring CPlayerPluginInstaller::Player::GetPlayerExeFile()
 class PluginInstaller
 {
 public:
-	static bool CopyFile(LPCTSTR szSrc, LPCTSTR szTarg, tstring &strErr, CPlayerPluginInstaller::Player &item)
+	static int CopyFile(LPCTSTR szSrc, LPCTSTR szTarg, tstring &strErr, CPlayerPluginInstaller::Player &item)
 	{
 		if (!::CopyFile(szSrc, szTarg, false))
 		{
@@ -606,9 +606,10 @@ public:
 			strErr = CStrPrintf(_T("Failed to copy file: %s to file: %s."), szSrc, szTarg).c_str();
 			strErr += _T("\n");
 			strErr += CWin32Error(nErr).Description();
-			return false;
+			return nErr;
 		}
-		return true;
+
+		return ERR_OK;
 	}
 
 	static bool RegisterDll(LPCTSTR szFile, tstring &strErr)
@@ -682,7 +683,7 @@ public:
 class PluginInstallerVerify
 {
 public:
-	static bool CopyFile(LPCTSTR szSrc, LPCTSTR szTarg, tstring &strErr, CPlayerPluginInstaller::Player &item)
+	static int CopyFile(LPCTSTR szSrc, LPCTSTR szTarg, tstring &strErr, CPlayerPluginInstaller::Player &item)
 	{
 		if (!IsFileExist(szTarg))
 		{
@@ -690,10 +691,10 @@ public:
 			item.pExtraInfo->strMsg += _T("\n");
 			item.pExtraInfo->strMsg += szTarg;
 			strErr = item.pExtraInfo->strMsg;
-			return false;
+			return ERR_FILE_NOT_EXIST;
 		}
 		if (item.verMajor == 0)
-			return true;
+			return ERR_OK;
 
 		// Is version match?
 		CFileVersionInfo	fileVer;
@@ -708,10 +709,10 @@ public:
 			item.pExtraInfo->strMsg += _T("\r\n");
 			item.pExtraInfo->strMsg += szTarg;
 			strErr = item.pExtraInfo->strMsg;
-			return false;
+			return ERR_FALSE;
 		}
 
-		return true;
+		return ERR_OK;
 	}
 
 	static bool RegisterDll(LPCTSTR szFile, tstring &strErr)
@@ -734,13 +735,13 @@ public:
 };
 
 template<class _Installer>
-bool Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
+int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 {
 	if (!IsFlagSet(item.pExtraInfo->status, CPlayerPluginInstaller::S_PLAYER_INSTALLED))
-		return false;
+		return ERR_FALSE;
 
 	if (item.szPluginFiles == NULL)
-		return true;
+		return ERR_OK;
 
 	tstring	strDirTarg;
 	if (item.szPluginDirOfPlayer)
@@ -768,20 +769,21 @@ bool Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 			if (strFileTarg.empty())
 			{
 				ERRLOG1(_T("No targ file is specified for player: %s"), item.szPlayerName);
-				return false;
+				return ERR_FALSE;
 			}
 
 			ASSERT(strFileSrc != strFileTarg);
 			DBGLOG2(_T("CopyFile: %s, to: %s"), strFileSrc.c_str(), strFileTarg.c_str());
-			if (!_Installer::CopyFile(strFileSrc.c_str(), strFileTarg.c_str(), strErr, item))
-				return false;
+			int nRet = _Installer::CopyFile(strFileSrc.c_str(), strFileTarg.c_str(), strErr, item);
+			if (nRet != ERR_OK)
+				return nRet;
 		}
 
 		if (IsFlagSet(item.dwInstallFlags, INST_REG_DLL))
 		{
 			DBGLOG1(_T("RegisterDll: %s"), strFileSrc.c_str());
 			if (!_Installer::RegisterDll(strFileSrc.c_str(), strErr))
-				return false;
+				return ERR_FALSE;
 		}
 	}
 
@@ -789,17 +791,18 @@ bool Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 	{
 		tstring		strIniFile = strDirTarg + SZ_MLPLUGIN_INI;
 		if (!_Installer::WriteMLPluginIni(strIniFile.c_str(), strErr))
-			return false;
+			return ERR_FALSE;
 	}
 
-	return true;
+	return ERR_OK;
 }
 
-bool CPlayerPluginInstaller::Player::Install(tstring &strErr)
+bool CPlayerPluginInstaller::Player::Install(tstring &strErr, int &err)
 {
 	ASSERT(IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED));
 
-	if (!::Install<PluginInstaller>(*this, strErr))
+	err = ::Install<PluginInstaller>(*this, strErr);
+	if (err != ERR_OK)
 		return false;
 
 	pExtraInfo->status |= S_PG_INSTALLED;
@@ -812,7 +815,8 @@ bool CPlayerPluginInstaller::Player::CheckPluginInstalled(tstring &strErr)
 {
 	pExtraInfo->status &= ~(S_PG_VER_NOT_MATCH | S_PG_MDT_NOT_MATCH | S_PG_INSTALL_ERROR);
 
-	if (!::Install<PluginInstallerVerify>(*this, strErr))
+	int nRet = ::Install<PluginInstallerVerify>(*this, strErr);
+	if (nRet != ERR_OK)
 	{
 		pExtraInfo->status &= ~S_PG_INSTALLED;
 		return false;
@@ -827,7 +831,8 @@ bool CPlayerPluginInstaller::Player::Uninstall(tstring &strErr)
 {
 	ASSERT(IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED));
 
-	if (!::Install<PluginUninstaller>(*this, strErr))
+	int nRet = ::Install<PluginUninstaller>(*this, strErr);
+	if (nRet != ERR_OK)
 		return false;
 
 	pExtraInfo->status &= ~S_PG_INSTALLED;

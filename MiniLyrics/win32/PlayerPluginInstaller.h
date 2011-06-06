@@ -60,7 +60,7 @@ public:
 
 		tstring GetPlayerExeFile();
 
-		bool Install(tstring &strErr);
+		bool Install(tstring &strErr, int &err);
 		bool Uninstall(tstring &strErr);
 
 		int GetStatusImage();

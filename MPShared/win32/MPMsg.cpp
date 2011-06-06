@@ -74,3 +74,14 @@ void SendCommandLine(HWND hWnd, LPCTSTR szCmdLine)
 
 	SendMessage(hWnd, WM_COPYDATA, ML_SEND_CMD_LINE, (LPARAM)&copyData);
 }
+
+void SendActivateMainWnd(HWND hWnd)
+{
+	COPYDATASTRUCT	copyData;
+
+	copyData.dwData = ML_ACTIVATE;
+	copyData.lpData = "";
+	copyData.cbData = 1;
+
+	SendMessage(hWnd, WM_COPYDATA, ML_ACTIVATE, (LPARAM)&copyData);
+}

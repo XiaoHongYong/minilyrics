@@ -157,15 +157,10 @@ void CPlayerService::OnConnected()
 	g_MLService.AddWndCloseto(NULL, L"MediaPlayerClassicW", NULL);
 
 	ConnectToMpc();
+	m_dwTimeBeg = GetTickCount();
 
-	SetTimer(TIMER_CHECK_PLAYER, 15 * 1000);
+	SetTimer(TIMER_CHECK_PLAYER, 1000);
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
-
-	// Update Media info
-	// OnMediaChanged();
-
-	// Update player state
-	// g_MLService.OnPlayStateChanged(GetPlayerState());
 }
 
 void CPlayerService::OnDisconnect()
@@ -302,8 +297,8 @@ bool CPlayerService::ConnectToMpc()
 
 	wsprintf(szCmd, _T("%s  /slave %d"), szFile, GetHandle());
 
-	memset (&StartupInfo,		0, sizeof(StartupInfo));
-	StartupInfo.cb			= sizeof(StartupInfo);
+	memset(&StartupInfo, 0, sizeof(StartupInfo));
+	StartupInfo.cb = sizeof(StartupInfo);
 	GetStartupInfo(&StartupInfo);
 	if (CreateProcess(NULL, (LPTSTR)szCmd, NULL, NULL, FALSE, 0, NULL, NULL, &StartupInfo, &ProcessInfo))
 	{
@@ -323,11 +318,8 @@ void CPlayerService::OnTimer(int nTimerID)
 	}
 	else if (nTimerID == TIMER_CHECK_PLAYER)
 	{
-		if (g_hWndMPC == NULL || !IsWindow(g_hWndMPC))
-		{
-			g_hWndMPC = NULL;
-			ConnectToMpc();
-		}
+		if (g_hWndMPC != NULL && !IsWindow(g_hWndMPC))
+			g_MLService.OnDisconnected();
 	}
 }
 
@@ -338,11 +330,7 @@ bool CPlayerService::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 
 	LPCTSTR		szData = (LPCTSTR)pcds->lpData;
 
-	/*TCHAR	szMsg[512];
-
-	wsprintf(szMsg, _T("%s : %s"), GetMPCCommandName ((MPCAPI_COMMAND)pcds->dwData), (LPCTSTR)szData);
-
-	g_MLService.LogW(szMsg);*/
+	DBGLOG3(_T("MPC command: %s(%X), %s"), GetMPCCommandName((MPCAPI_COMMAND)pcds->dwData), pcds->dwData, (LPCTSTR)szData);
 
 	switch (pcds->dwData)
 	{
@@ -361,9 +349,7 @@ bool CPlayerService::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 	// Send when playing, pausing or closing file
 	// Par 1 : current play mode (see MPC_PLAYSTATE enum)
 	case CMD_PLAYMODE:
-		{
-			OnPlayStateChanged(_ttoi(szData));
-		}
+		OnPlayStateChanged(_ttoi(szData));
 		break;
 
 	case CMD_NOWPLAYING:

@@ -2,22 +2,13 @@
 
 #include "../MPlayerAppBase.h"
 
-///////////////////////////////////////////////////////////////////////////////
-// Messages to wake up Main Wnd
-const int	WM_MM_NOTIFY		= WM_USER;
-
-// WM_MM_NOTIFY消息的子消息的定义
-enum WM_MM_NOTIFY_SUB_MSG
-{
-	MM_WAKEUP				= 4,
-};
-
 class CMPlayerApp : public CMPlayerAppBase
 {
 public:
 	CMPlayerApp();
 	virtual ~CMPlayerApp();
 
+	bool IsAnotherInstanceRunning();
 	bool SetRunningFlag();
 
 	virtual bool Init(StartApp startApp);

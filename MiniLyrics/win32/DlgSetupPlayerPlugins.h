@@ -4,6 +4,8 @@
 #include "../widget/widget.h"
 #include "PlayerPluginInstaller.h"
 
+BOOL ShowElevatedDialog(CBaseWnd *pWnd);
+
 class CDlgSetupPlayerPlugins : public CBaseDialog  
 {
 public:

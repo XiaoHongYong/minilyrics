@@ -195,19 +195,19 @@ tstring GetRandomActivateNoticeText()
 	LPCTSTR	vNoticeText[] = {
 		_T("These lyrics are very nice, right?"),
 		_T("Do you think MiniLyrics is useful to you?"),
-		_T("We love to make MiniLyrics better, how about you?"),
+		_T("We love to make MiniLyrics better, will you help us?"),
 	};
 
-	LPCTSTR	vNoticeText2[] = {
+/*	LPCTSTR	vNoticeText2[] = {
 		_T("Buy Now"),
 		_T("Support us"),
-	};
+	};*/
 
 	srand(GetTickCount());
 
 	tstring str = vNoticeText[rand() % CountOf(vNoticeText)];
-	str += _T("  -  ");
-	str += vNoticeText2[rand() % CountOf(vNoticeText2)];
+//	str += _T("  -  ");
+//	str += vNoticeText2[rand() % CountOf(vNoticeText2)];
 
 	return str;
 }

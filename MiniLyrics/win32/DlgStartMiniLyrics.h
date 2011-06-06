@@ -13,6 +13,7 @@ public:
 	virtual BOOL OnInitDialog();
 
 	void OnCommand(UINT uID, UINT nNotifyCode);
+	void OnTimer(UINT nIDEvent);
 
 	static void OnPlayerStarted();
 

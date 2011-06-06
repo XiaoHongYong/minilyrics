@@ -3,6 +3,7 @@
 #include "../widget/widget.h"
 #include "DlgSetupPlayerPlugins.h"
 #include "PreferenceDlg.h"
+#include "UACTool.h"
 
 TOLOCAL_SECTION("MiniLyrics setup")
 
@@ -93,6 +94,34 @@ int CmdId2Index(int nId, SetupCmdType &type)
 	return -1;
 }
 
+BOOL ShowElevatedDialog(CBaseWnd *pWnd)
+{
+	tstring	str = TOLOCAL_T("To install MiniLyrics plugin, you will be asked to run MiniLyrics as administrator.");
+	str += _T("\n\n");
+	str += TOLOCAL_T("Do you want to restart MiniLyrics to continue the setup?");
+	int nRet = pWnd->MessageOut(str.c_str(), MB_ICONINFORMATION | MB_OKCANCEL);
+	if (nRet == IDOK)
+	{
+		TCHAR szPath[MAX_PATH];
+		::GetModuleFileName(NULL, szPath, MAX_PATH);
+		BOOL bSuccess = RunElevated(pWnd->GetHandle(), szPath);
+		if (!bSuccess)
+		{
+			int nErr = GetLastError();
+			str = TOLOCAL_T("Failed to elevate the privilege of MiniLyrics.");
+			str += _T("\n");
+			str += CWin32Error(nErr).Description();
+			pWnd->MessageOut(str.c_str(), MB_ICONSTOP | MB_OK);
+		}
+		else
+			PostQuitMessage(0);
+
+		return TRUE;
+	}
+	else
+		return FALSE;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CDlgSetupPlayerPlugins::CDlgSetupPlayerPlugins(bool bFirstSetup) : CBaseDialog(IDD_SETUP)
@@ -114,6 +143,7 @@ BOOL CDlgSetupPlayerPlugins::OnInitDialog()
 	if (!g_bFirstSetup)
 	{
 		ShowDlgItem(IDOK, SW_HIDE);
+		SetDlgItemText(IDCANCEL, TOLOCAL_T("Close"));
 		// ShowDlgItem(IDCANCEL, SW_HIDE);
 	}
 
@@ -167,7 +197,8 @@ void CDlgSetupPlayerPlugins::OnOK()
 			}
 
 			tstring strErr;
-			if (p->Install(strErr))
+			int err;
+			if (p->Install(strErr, err))
 			{
 				p->SavePlayerPath();
 				nInstalledCount++;
@@ -176,6 +207,9 @@ void CDlgSetupPlayerPlugins::OnOK()
 			{
 				bHasError = true;
 				MessageOut(strErr.c_str(), MB_ICONINFORMATION);
+
+				if (err == ERROR_ACCESS_DENIED)
+					ShowElevatedDialog(this);
 			}
 		}
 	}
@@ -347,9 +381,12 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 	}
 
 	tstring strErr;
-	if (!p->Install(strErr))
+	int err;
+	if (!p->Install(strErr, err))
 	{
 		MessageOut(strErr.c_str(), MB_ICONINFORMATION);
+		if (err == ERROR_ACCESS_DENIED)
+			ShowElevatedDialog(this);
 		return;
 	}
 

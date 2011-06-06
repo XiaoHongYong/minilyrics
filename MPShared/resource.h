@@ -2,6 +2,7 @@
 // Microsoft Visual C++ generated include file.
 // Used by MiniLyrics.rc
 //
+#define IDR_RT_MANIFEST                 1
 #define IDC_REPORT                      129
 #define IDI_MPLAYER                     130
 #define IDM_MENU                        131
@@ -364,7 +365,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        180
+#define _APS_NEXT_RESOURCE_VALUE        183
 #define _APS_NEXT_COMMAND_VALUE         40194
 #define _APS_NEXT_CONTROL_VALUE         1121
 #define _APS_NEXT_SYMED_VALUE           101

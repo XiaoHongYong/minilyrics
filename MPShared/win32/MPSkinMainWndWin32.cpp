@@ -157,12 +157,6 @@ LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 				CMPlayerAppBase::GetMPSkinFactory()->RestoreAll();
 		}
 		break;
-	case WM_MM_NOTIFY:
-		{
-			if (wParam == MM_WAKEUP)
-				Activate();
-		}
-		return 0;
 #endif
 	default:
 #ifndef _WIN32_WCE

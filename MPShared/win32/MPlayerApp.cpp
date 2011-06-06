@@ -16,6 +16,7 @@
 #ifndef _MPLAYER
 #include "../MiniLyrics/win32/MLPlayerMgr.h"
 #include "../MiniLyrics/win32/PlayerPluginInstaller.h"
+#include "../MiniLyrics/win32/DlgSetupPlayerPlugins.h"
 #endif
 #endif
 
@@ -40,42 +41,35 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 					 LPTSTR    lpCmdLine,
 					 int       nCmdShow)
 {
-	MSG msg;
-
 	SetAppInstance(hInstance);
+	CMPlayerApp *pApp = CMPlayerAppBase::GetInstance();
 
-	if (!CMPlayerAppBase::GetInstance()->SetRunningFlag())
+	DBGLOG1(_T("MiniLyrics command line: %s"), lpCmdLine);
+
+	if (pApp->IsAnotherInstanceRunning())
 	{
-		HWND		hwndMain;
-#ifdef _MPLAYER
-		hwndMain = FindWindow(SZ_MAINWND_CLASSNAME, NULL);
-#else
-		hwndMain = FindWindow(SZ_MINILYRICS_SERVICE_CLASS_NAME, NULL);
-#endif
+		DBGLOG0(_T("Another Instance is running, send command line to it."));
+		HWND		hwndMain = FindWindow(SZ_MINILYRICS_SERVICE_CLASS_NAME, NULL);
 		if (hwndMain)
 		{
-			PostMessage(hwndMain, WM_MM_NOTIFY, MM_WAKEUP, 0);
+			SendActivateMainWnd(hwndMain);
 
-#ifdef _WIN32_WCE
-			lpCmdLine = (LPTSTR)CmdLineNext(lpCmdLine);
-#endif
 			if (!IsEmptyString(lpCmdLine))
 				SendCommandLine(hwndMain, lpCmdLine);
 		}
-		return 1;
+		return 0;
 	}
 
 	StartApp	startApp = SA_LYRICS_PLAYER;
-#ifndef _MPLAYER
-	DBGLOG1(_T("MiniLyrics command line: %s"), lpCmdLine);
+
 	if (!ProcessMLCmdLine(lpCmdLine, startApp))
-		return 0;
-#endif
+		return 1;
 
 	if (!CMPlayerAppBase::GetInstance()->Init(startApp))
-		return 0;
+		return 1;
 
 	// Main message loop:
+	MSG msg;
 	while (GetMessage(&msg, NULL, 0, 0)) 
 	{
 		TranslateMessage(&msg);
@@ -95,6 +89,17 @@ CMPlayerApp::CMPlayerApp()
 
 CMPlayerApp::~CMPlayerApp()
 {
+}
+
+bool CMPlayerApp::IsAnotherInstanceRunning()
+{
+	ASSERT(!m_hMutexRuning);
+	HANDLE hMutexRuning = CreateMutex(NULL, TRUE, SZ_MUTEX_RUNNING);
+	int nLastErr = GetLastError();
+
+	CloseHandle(hMutexRuning);
+
+	return nLastErr == ERROR_ALREADY_EXISTS;
 }
 
 bool CMPlayerApp::SetRunningFlag()
@@ -129,6 +134,11 @@ bool CMPlayerApp::Init(StartApp startApp)
 	strMLLogFile += _T("log.txt");
 	InitBaseFrameWork(GetAppInstance(), strMLLogFile.c_str(), strMLIniFile.c_str(), SZ_SECT_UI);
 
+	CLanguageTool::SetTransFilePrefix(SZ_TRANS_PREFIX);
+
+	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
+	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
+
 	// InitMiniDumper();
 
 	if (startApp == SA_UNINSTALL)
@@ -162,6 +172,13 @@ bool CMPlayerApp::Init(StartApp startApp)
 	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("Antialias"), FALSE))
 		GfxRaw::EnableAntialiasFont(TRUE);
 #endif
+
+	if (startApp == SA_SETUP)
+	{
+		CDlgSetupPlayerPlugins	dlg;
+		dlg.DoModal(NULL);
+		return 0;
+	}
 
 	return CMPlayerAppBase::Init(startApp);
 }

@@ -20,14 +20,13 @@ HWND GetMLSericeWindow()
 
 bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 {
-	// Parse command line
-	V_Str		vCmdLine;
 	startApp = SA_LYRICS_PLAYER;
 
+	// Parse command line
+	V_Str		vCmdLine;
 	CmdLineAnalysis(szCmdLine, vCmdLine);
 
 	HWND	hWndPlayerService = NULL;
-	tstring	strPlayerName;
 
 	for (size_t i = 0; i < vCmdLine.size(); i++)
 	{
@@ -37,8 +36,6 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 			if (!IsWindow(hWndPlayerService))
 				hWndPlayerService = NULL;
 		}
-		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/Player")) == 0 && i + 1 < vCmdLine.size())
-			strPlayerName = vCmdLine[i + 1].c_str();
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/LyricsTool")) == 0)
 		{
 			startApp = SA_LYRICS_TOOL;
@@ -62,13 +59,6 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 		else
 			continue;
 		i++;
-	}
-
-	if (strPlayerName.size())
-	{
-		tstring		strAppIniFile = GetAppIniFile();
-		if (!GetPrivateProfileInt(_T("MiniLyrics"), strPlayerName.c_str(), TRUE, strAppIniFile.c_str()))
-			return false;
 	}
 
 	if (hWndPlayerService != NULL)
@@ -100,13 +90,24 @@ bool CMLPlayerMgr::ConnectToPlayer()
 			return false;
 	}
 
-	if (m_listPlayers.size() == 0)
+	if (m_listPlayers.size() == 1)
+	{
+		// Player info is specified in the command line, 
+		// Check whether MiniLyrics shall start with it?
+		PlayerInfo &playerInfo = m_listPlayers.front();
+
+		if (!IsEmptyString(playerInfo.playerName))
+		{
+			if (!g_Profile.GetProfileBool(playerInfo.playerName, true))
+				return false;
+		}
+	}
+
+	if (m_listPlayers.empty())
 		QueryRunningPlayerInfo();
 
 	if (m_listPlayers.size() == 1)
-	{
 		return ConnectToPlayer(m_listPlayers.front().hWndPluginService);
-	}
 	else
 	{
 		// Popup and let user to choose the player.
@@ -218,6 +219,15 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			ASSERT(0);
 			break;
 		}
+	}
+	else if (wParam == ML_ACTIVATE && pcds->dwData == ML_ACTIVATE)
+	{
+		CMPSkinMainWnd *pWnd = CMPlayerAppBase::GetMainWnd();
+		if (pWnd)
+			pWnd->Activate();
+		else
+			ERRLOG0(_T("MiniLyrics main window hasn't been started yet, can't activate it."));
+		return true;
 	}
 	else if (wParam == ML_MSG_VERSION && pcds->dwData == M2M_PLAYER_INFO)
 	{

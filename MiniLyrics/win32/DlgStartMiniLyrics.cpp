@@ -7,6 +7,8 @@
 
 TOLOCAL_SECTION("MiniLyrics setup")
 
+#define TIMER_ID_CHECK_ML_RUNNING		1
+
 static HWND	__hWndDlgStartMiniLyrics = NULL;
 
 struct PlayerCtrl
@@ -149,6 +151,19 @@ void CDlgStartMiniLyrics::OnCommand(UINT uID, UINT nNotifyCode)
 	}
 }
 
+void CDlgStartMiniLyrics::OnTimer(UINT nIDEvent)
+{
+	// Check whether MiniLyrics is started.
+	ASSERT(nIDEvent == TIMER_ID_CHECK_ML_RUNNING);
+
+	if (CMPlayerAppBase::GetInstance()->IsAnotherInstanceRunning())
+	{
+		// If MiniLyrics starts with player, close this instance.
+		OnCancel();
+		return;
+	}
+}
+
 void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 {
 	ASSERT(p);
@@ -202,9 +217,12 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 			}
 
 			tstring strErr;
-			if (!p->Install(strErr))
+			int err;
+			if (!p->Install(strErr, err))
 			{
 				MessageOut(strErr.c_str(), MB_ICONINFORMATION);
+				if (err == ERROR_ACCESS_DENIED)
+					ShowElevatedDialog(this);
 				return;
 			}
 		}
@@ -218,6 +236,8 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 		if (strPlayerExeFile.size())
 		{
 			ExecuteCmdAndWait(strPlayerExeFile.c_str(), 0, NULL);
+			SetTimer(TIMER_ID_CHECK_ML_RUNNING, 1000);
+			ASSERT(!CMPlayerAppBase::GetInstance()->IsAnotherInstanceRunning());
 		}
 		else
 			MessageOut(_T("MiniLyrics can't get the player program, please start it manually."));
@@ -258,14 +278,18 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) == IDOK)
 		{
 			tstring strErr;
-			if (!p->Install(strErr))
+			int err;
+			if (!p->Install(strErr, err))
 			{
-				tstring strMsg = strErr;
-				strMsg += _T("\n");
-				strMsg += TOLOCAL_T("Failed to install the plugin for this player.");
+				tstring strMsg = TOLOCAL_T("Failed to install the plugin for this player.");
 				strMsg += _T("\n");
 				strMsg += TOLOCAL_T("Please close the player, and click 'Install' again.");
-				MessageOut(strMsg.c_str(), MB_ICONINFORMATION);
+				strMsg += _T("\n");
+				strMsg += strErr;
+				MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OK);
+
+				if (err == ERROR_ACCESS_DENIED)
+					ShowElevatedDialog(this);
 			}
 		}
 	}

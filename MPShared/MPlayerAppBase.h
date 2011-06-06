@@ -50,6 +50,7 @@
 #define SZ_TRANS_PREFIX		_T("zp")
 #define SZ_MUTEX_RUNNING	_T("ZikiPlayerRunning")
 #define SZ_MAINWND_CLASSNAME	_T("ZikiPlayer")
+#define SZ_MINILYRICS_SERVICE_CLASS_NAME	SZ_MAINWND_CLASSNAME
 #else
 #define SZ_PROFILE_NAME		_T("MiniLyric.ini")
 #define SZ_TRANS_PREFIX		_T("ml")

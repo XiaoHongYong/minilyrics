@@ -428,7 +428,7 @@ DWORD WINAPI ThreadML(LPVOID lpParam)
 		DispatchMessage(&msg);
 	}
 
-	g_MLService.OnDisconnected();
+	DisconnectMiniLyrics(&g_Player);
 
 	return 0;
 }

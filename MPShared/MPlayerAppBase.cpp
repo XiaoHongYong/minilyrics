@@ -29,7 +29,6 @@
 #include "win32/MPFloatingLyrWnd.h"
 #ifndef _MPLAYER
 #include "../MiniLyrics/win32/MLPlayerMgr.h"
-#include "../MiniLyrics/win32/DlgSetupPlayerPlugins.h"
 #endif
 #else
 #include "MPFloatingLyrWnd.h"
@@ -466,11 +465,6 @@ bool CMPlayerAppBase::InitiPodLyricsDownloader()
 
 bool CMPlayerAppBase::Init(StartApp startApp)
 {
-	CLanguageTool::SetTransFilePrefix(SZ_TRANS_PREFIX);
-
-	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
-	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
-
 	SetDefaultSettings();
 
 	g_licenseManager.Init();
@@ -502,14 +496,12 @@ bool CMPlayerAppBase::Init(StartApp startApp)
 		bRet = InitLyricsTool();
 	else if (startApp == SA_IPOD_LYRICS_DOWNLOADER)
 		bRet = InitiPodLyricsDownloader();
-	else if (startApp == SA_SETUP)
-	{
-		CDlgSetupPlayerPlugins	dlg;
-		dlg.DoModal(NULL);
-	}
 	else
 		bRet = InitLyricsPlayer();
 	if (!bRet)
+		return false;
+
+	if (!GetInstance()->SetRunningFlag())
 		return false;
 
 	// ¼ì²éÉı¼¶

@@ -1,5 +1,6 @@
-#pragma warning (disable: 4311)
+// Code based upon modules\misc\notify\msn.c
 
+#pragma warning (disable: 4311)
 #pragma warning (disable: 4996)
 
 #define _WIN32_WINNT  0x0500
@@ -222,8 +223,6 @@ void CPlayerImp::MediaChangedCheck()
 	char *psz_artist = NULL;
 	char *psz_album = NULL;
 
-	intf_sys_t          *p_sys = m_p_intf->p_sys;
-
 	p_playlist = pl_Get(m_p_intf);
 	PL_LOCK;
 	p_input = playlist_CurrentInput(p_playlist);
@@ -305,10 +304,7 @@ void CPlayerImp::MediaChangedCheck()
 
 #define N_(str) (str)
 
-struct intf_sys_t
-{
-	bool		bMetaDataRead;
-};
+bool		g_bMetaDataRead;
 
 
 int  Open(vlc_object_t *);
@@ -344,15 +340,9 @@ int  Open(vlc_object_t * p_this)
 	intf_thread_t *p_intf = (intf_thread_t *)p_this;
 	playlist_t *p_playlist;
 
-	p_intf->p_sys = new (intf_sys_t);
-	if( !p_intf->p_sys )
-		return VLC_ENOMEM;
-
 	p_playlist = pl_Get(p_intf);
-	PL_LOCK;
 	var_AddCallback( p_playlist, "item-change", ItemChange, p_intf );
 	var_AddCallback(p_playlist, "item-current", ItemChange, p_intf);
-	PL_UNLOCK;
 
 	p_intf->pf_run = Run;
 
@@ -382,9 +372,6 @@ void Close(vlc_object_t * p_this)
 	PostThreadMessage(g_dwMLThreadID, WM_QUIT, 0, 0);
 	WaitForSingleObject(g_hEventOK2Quit, INFINITE);
 	CloseHandle(g_hEventOK2Quit);
-
-	/* Destroy structure */
-	delete p_intf->p_sys;
 }
 
 void Run(intf_thread_t *p_intf)
@@ -409,7 +396,10 @@ void Run(intf_thread_t *p_intf)
 		}
 	}
 
-	g_MLService.OnDisconnected();
+
+	DisconnectMiniLyrics(&g_Player);
+
+	g_Player.m_p_intf = NULL;
 
 	SetEvent(g_hEventOK2Quit);
 }
@@ -421,13 +411,12 @@ static int PlayingChange(vlc_object_t *p_this, const char *psz_var,
 						 vlc_value_t oldval, vlc_value_t newval, void *p_data)
 {
 	intf_thread_t   *p_intf = (intf_thread_t*) p_data;
-	intf_sys_t      *p_sys  = p_intf->p_sys;
 
 	VLC_UNUSED(p_this); VLC_UNUSED(psz_var);
 
-	if (!p_sys->bMetaDataRead && newval.i_int >= PLAYING_S)
+	if (!g_bMetaDataRead && newval.i_int >= PLAYING_S)
 	{
-		p_sys->bMetaDataRead = true;
+		g_bMetaDataRead = true;
 		g_Player.MediaChangedCheck();
 	}
 
@@ -455,11 +444,8 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 {
 	(void)psz_var;    (void)oldval;    (void)newval;
 	intf_thread_t *p_intf = (intf_thread_t *)param;
-	input_thread_t *p_input;
-	playlist_t *p_playlist = pl_Get(p_this);
-	intf_sys_t          *p_sys = p_intf->p_sys;
 
-	p_input = playlist_CurrentInput(p_playlist);
+    input_thread_t *p_input =  playlist_CurrentInput( (playlist_t *) p_this );
 
 	if (!p_input)
 		return VLC_SUCCESS;
@@ -475,11 +461,11 @@ static int ItemChange(vlc_object_t *p_this, const char *psz_var,
 
 	var_AddCallback(p_input, "intf-event", PlayingChange, p_intf);
 
-	p_sys->bMetaDataRead = false;
+	g_bMetaDataRead = false;
 	/* Playing something ... */
 	if (input_item_IsPreparsed(input_GetItem(p_input)))
 	{
-		p_sys->bMetaDataRead = true;
+		g_bMetaDataRead = true;
 		g_Player.MediaChangedCheck();
 	}
 

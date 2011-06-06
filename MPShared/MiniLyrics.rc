@@ -8,10 +8,28 @@
 // Generated from the TEXTINCLUDE 2 resource.
 //
 #include "afxres.h"
-#include "MLResource.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#ifdef _WIN32
+LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
+#pragma code_page(936)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// RT_MANIFEST
+//
+
+IDR_RT_MANIFEST         RT_MANIFEST             "win32\\Exe.manifest"
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
 
 /////////////////////////////////////////////////////////////////////////////
 // English (U.S.) resources
@@ -55,6 +73,7 @@ END
 //
 
 IDB_INSTALL_STAT        BITMAP                  "..\\MiniLyrics\\win32\\InstallState.bmp"
+IDB_LRC_TYPE            BITMAP                  "Res\\fileType.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -72,31 +91,6 @@ BEGIN
         MENUITEM "Rate these lyrics: 5 (High)", IDC_RATE_LYR_5
     END
 END
-
-#endif    // ChineseEnglish (U.S.) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_LRC_TYPE            BITMAP                  "Res\\fileType.bmp"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Menu
-//
 
 IDR_MENU_ID MENU 
 BEGIN
@@ -972,9 +966,8 @@ IDC_SELCOLOR            CURSOR                  "Res\\selcolor.cur"
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
+#include "../MPShared/MLResource.h"
 #include "../PluginWinamp5/Resource.rc2"  // non-Microsoft Visual C++ edited resources
-
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED

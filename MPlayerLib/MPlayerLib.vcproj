@@ -4,6 +4,7 @@
 	Version="9.00"
 	Name="MPlayerLib"
 	ProjectGUID="{4B62933E-FF11-4068-A288-21B7CAE14930}"
+	RootNamespace="MPlayerLib"
 	TargetFrameworkVersion="131072"
 	>
 	<Platforms>
@@ -122,7 +123,6 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile=".\Debug/MPlayerLib.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -195,7 +195,6 @@
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
-				PrecompiledHeaderFile=".\Release/MPlayerLib.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
