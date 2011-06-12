@@ -590,6 +590,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LyrTimeStamp.cpp"
+				>
+			</File>
+			<File
 				RelativePath="MLClientSession.cpp"
 				>
 				<FileConfiguration
@@ -962,6 +966,10 @@
 			</File>
 			<File
 				RelativePath=".\LyrScrollActionRecorder.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LyrTimeStamp.h"
 				>
 			</File>
 			<File

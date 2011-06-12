@@ -115,6 +115,16 @@ void WrapText(LPCTSTR szText, vector<tstring> &vOutput, int nLineSize)
 #endif
 }
 
+void ML_ROW::SetContent(LPCTSTR szContent, int nLen)
+{
+	if (this->szContent != NULL)
+		delete[] this->szContent;
+
+	this->szContent = new TCHAR[nLen + 1];
+	_tcsncpysz_safe(this->szContent, nLen + 1, szContent, nLen);
+}
+
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -141,7 +151,6 @@ CMLData::CMLData()
 		m_szLyrContentMd5Org);
 
 	m_dwDefShowStyle = LSA_SHOW_DEFAULT;
-	m_lyrConentTypeOrg = m_lyrConentType = LCT_UNKNOWN;
 
 	m_lrcSourceType = LST_FILE;
 
@@ -253,7 +262,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPBYTE szLrc, int 
 	if (nRet != ERR_OK)
 		return nRet;
 
-	m_lyrConentType = parser.GetLyrContentType();
+	SetLyrContentType(parser.GetLyrContentType());
 
 	m_strSongFile = szSongFile;
 	m_nMediaLength = nMediaLength;
@@ -324,7 +333,7 @@ int CMLData::OpenLyricsFile(LPCTSTR szFile, bool bUseSpecifiedEncoding, CHAR_ENC
 	nRet = pParser->ParseFile(bUseSpecifiedEncoding, encodingSpecified);
 	if (nRet == ERR_OK)
 	{
-		m_lyrConentType = pParser->GetLyrContentType();
+		SetLyrContentType(pParser->GetLyrContentType());
 	}
 
 	delete pParser;
@@ -397,7 +406,7 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bUseSpec
 
 	m_lyrProperties = lrcTag;
 	m_lyrProperties.SetOffsetTime(0);
-	m_lyrConentType = LCT_LRC;
+	SetLyrContentType(LCT_LRC);
 
 	CheckLyricsRowTime();
 
@@ -429,7 +438,7 @@ int CMLData::OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bUseS
 	nRet = parser.ParseString((LPBYTE)buffer, len, false, bUseSpecifiedEncoding, encodingSpecified);
 	if (nRet == ERR_OK)
 	{
-		m_lyrConentType = parser.GetLyrContentType();
+		SetLyrContentType(parser.GetLyrContentType());
 		m_lrcSourceType = LST_LYRICS3V2;
 
 		FilterContents();
@@ -567,7 +576,7 @@ int CMLData::SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLy
 	if (nRet == ERR_OK)
 	{
 		if ((bUslt && m_lrcSourceType == LST_ID3V2_USLT
-			&& m_lyrConentType == m_lyrConentTypeOrg) ||
+			&& m_lyrProperties.m_lyrContentType == m_lyrPropertiesOrg.m_lyrContentType) ||
 			(bSylt && m_lrcSourceType == LST_ID3V2_SYLT))
 		{
 			ResetModificationFlag();
@@ -616,14 +625,14 @@ int CMLData::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNew
 	{
 		pParser = new CLrcParser(this);
 		NewFileType = FT_LYRICS_LRC;
-		if (m_lyrConentType <= LCT_LRC)
+		if (GetLyrContentType() <= LCT_LRC)
 			bUseNewFileName = true;
 	}
 	else if (FileIsExtSame(szFile, _T(".txt")) )
 	{
-		pParser = new CLrcParser(this, true);
+		pParser = new CLrcParser(this);
 		NewFileType = FT_LYRICS_TXT;
-		if (m_lyrConentType <= LCT_TXT)
+		if (GetLyrContentType() <= LCT_TXT)
 			bUseNewFileName = true;
 	}
 #ifndef _IPHONE
@@ -655,19 +664,6 @@ int CMLData::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNew
 	return nRet;
 }
 
-// COMMENT:
-//		将CMLData中的数据保存为文件szFile，文件的类型，由szFile的扩展名决定。
-int CMLData::SaveToTextFile(LPCTSTR szFile)
-{
-	if (!HasLyricsOpened())
-		return ERR_NOLYRICS_OPENED;
-
-	// 基类接口
-	CLrcParser	Parser(this, true);
-
-	return Parser.SaveAsFile(szFile, m_lyrProperties.GetEncodingIndex());
-}
-
 #ifdef _ID3V2_SUPPORT
 int CMLData::UpdateTagToID3v2DescTxt()
 {
@@ -692,7 +688,7 @@ BOOL CMLData::SaveTag()
 
 	CLrcTag		lrcTag(m_lyrPropertiesOrg, m_lyrProperties);
 
-	if (lrcTag.WriteToFile(m_strLrcSource.c_str(), m_lyrConentType != LCT_TXT) != ERR_OK)
+	if (lrcTag.WriteToFile(m_strLrcSource.c_str(), GetLyrContentType() != LCT_TXT) != ERR_OK)
 		return false;
 
 	m_lyrPropertiesOrg = m_lyrProperties;
@@ -705,7 +701,6 @@ void CMLData::ResetModificationFlag()
 	tstring		strContent;
 
 	m_lyrPropertiesOrg = m_lyrProperties;
-	m_lyrConentTypeOrg = m_lyrConentType;
 	ToString(strContent, FT_LYRICS_LRC, false);
 	MD5Str((const char *)strContent.c_str(), strContent.size() * sizeof(TCHAR),
 		m_szLyrContentMd5Org);
@@ -905,7 +900,6 @@ void CMLData::Close()
 	m_nTimeElapsed = 0;
 
 	m_dwDefShowStyle = LSA_SHOW_DEFAULT;
-	m_lyrConentTypeOrg = m_lyrConentType = LCT_UNKNOWN;
 
 	m_lrcSourceType = LST_FILE;
 	m_strSongFile.resize(0);;
@@ -1076,7 +1070,7 @@ int CMLData::GetCurPlayLine(const VLyrLines &lyrLines)
 
 bool CMLData::DoesChooseNewFileName()
 {
-	return (m_strLrcSource.empty() || m_lyrConentType != m_lyrConentTypeOrg);
+	return (m_strLrcSource.empty() || GetLyrContentType() != m_lyrPropertiesOrg.m_lyrContentType);
 }
 
 BOOL CMLData::IsModified()
@@ -1631,10 +1625,9 @@ BOOL CMLData::ToString(tstring &str, MLFileType lrcFormat, bool bIncTags)
 {
 	bool	bToLrcFormat = (lrcFormat == FT_LYRICS_LRC && GetLyrContentType() != LCT_TXT);
 
-	// 转换为 LRC 格式的字符串
-	CLrcParser		parser(this, !bToLrcFormat);
+	CLrcParser		parser(this);
 
-	return parser.ToString(str, bIncTags);
+	return parser.ToString(str, bIncTags, !bToLrcFormat);
 }
 
 /*int CMLData::FromString(LPCVOID lpLrc, int nLen, bool bAddTimeStampForTextLine, bool bUseSpecifiedEncoding, CHAR_ENCODING encodingSpecified)
@@ -1653,7 +1646,7 @@ BOOL CMLData::ToString(tstring &str, MLFileType lrcFormat, bool bIncTags)
 	nRet = parser.ParseString((LPBYTE)lpLrc, nLen, bAddTimeStampForTextLine, bUseSpecifiedEncoding, encodingSpecified);
 	if (nRet == ERR_OK)
 	{
-		m_lyrConentType = parser.GetLyrContentType();
+		SetLyrContentType(parser.GetLyrContentType());
 
 		FilterContents();
 	}
@@ -1671,7 +1664,7 @@ int CMLData::FromString(LPCTSTR szLyrics)
 	nRet = parser.ParseString(szLyrics, false);
 	if (nRet == ERR_OK)
 	{
-		m_lyrConentType = parser.GetLyrContentType();
+		SetLyrContentType(parser.GetLyrContentType());
 
 		FilterContents();
 	}
@@ -1738,15 +1731,7 @@ PML_ROW CMLData::NewMLRow(int nBegTime, int nEndTime,
 	pRow->nRowType = rowType;
 
 	if (szContent)
-	{
-		tstringex	str;
-
-		ConvertStr(szContent, nLen, str, GetEncodingIndex());
-
-		pRow->szContent = new TCHAR[str.size() + 1];
-		_tcsncpysz_safe(pRow->szContent, str.size() + 1, str.c_str(), str.size());
-		// _tcscpy(pRow->szContent, str.c_str());
-	}
+		pRow->SetContent(szContent, nLen);
 
 	return pRow;
 }
@@ -1785,11 +1770,6 @@ PML_ROW CMLData::CopyMLRow(PML_ROW pRowSrc)
 	}
 
 	return pRow;
-}
-
-VLyrLines &CMLData::GetRawLyrics()
-{
-	return m_arrLyricsRows;
 }
 
 void CMLData::CopyMLyrLines(CMLyrLines &lyrLines)

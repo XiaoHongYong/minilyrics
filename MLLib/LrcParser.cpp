@@ -13,6 +13,7 @@
 #include "LrcTag.h"
 #include "LyrScrollActionRecorder.h"
 #include "LrcParserHelper.h"
+#include "LyrTimeStamp.h"
 
 IMPLEMENT_CPPUNIT_TEST_REG(LrcParser)
 
@@ -72,10 +73,9 @@ LPCTSTR EatFrag(LPCTSTR szLyricsBeg, int &nEndTime, tstringex &buffLyrics)
 
 //////////////////////////////////////////////////////////////////////////
 
-CLrcParser::CLrcParser(CMLData *pMLData, bool bToTxtFormatLrc) : CLyricsParser(pMLData)
+CLrcParser::CLrcParser(CMLData *pMLData) : CLyricsParser(pMLData)
 {
 	m_lyrContentType = LCT_LRC;
-	m_bToTxtFormat = bToTxtFormatLrc;
 }
 
 CLrcParser::~CLrcParser()
@@ -99,7 +99,8 @@ int CLrcParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 {
 	tstring		strData;
 
-	ToString(strData, true);
+	bool bToTxtFormat = Tobool(FileIsExtSame(szFile, _T(".txt")));
+	ToString(strData, true, bToTxtFormat);
 
 	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), newEncoding))
 		return ERR_WRITE_FILE;
@@ -179,6 +180,14 @@ int CLrcParser::ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine)
 		ParseTxtTagInLyrics();
 
 		m_lyrContentType = LCT_TXT;
+
+		// Does text tag including time stamps.
+		tstring strTimeStamps = m_pMLData->GetTxtLyrScrollEvents();
+		if (CLyrTimeStamp::IsTimeStamps(strTimeStamps.c_str()))
+		{
+			if (CLyrTimeStamp::Parse(strTimeStamps.c_str(), m_pMLData))
+				m_lyrContentType = LCT_LRC;
+		}
 
 		FinalFixOnLyrics(bAddTimeStampForTextLine);
 	}
@@ -316,9 +325,9 @@ void CLrcParser::ParseTxtTagInLyrics()
 	}
 }
 
-bool CLrcParser::ToString(tstring &str, bool bIncTags)
+bool CLrcParser::ToString(tstring &str, bool bIncTags, bool bToTxtFormat)
 {
-	if (m_bToTxtFormat)
+	if (bToTxtFormat)
 		return ToTxtString(str, bIncTags);
 	else
 		return ToLrcString(str, bIncTags, true);
@@ -391,23 +400,36 @@ bool CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 
 	if (bIncTags)
 	{
+		int		nLrcOffsetTime = 0;
+		if (m_pMLData->GetLyrContentType() == LCT_LRC)
+		{
+			// Convert to timestamps.
+			tstring		strTimeStamps;
+			CLyrTimeStamp::ToString(strTimeStamps, m_pMLData);
+			nLrcOffsetTime = m_pMLData->Properties().GetOffsetTime();
+			m_pMLData->Properties().SetTxtLyrScrollEvents(strTimeStamps.c_str());
+		}
+
 		CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
 
 		for (int i = 0; i < propNameValueMap.GetCount(); i++)
 		{
 			tstring strValue = propNameValueMap.GetValue(i);
-			if (strValue.size() && propNameValueMap.GetLrcName(i).size())
+			if (strValue.size() && propNameValueMap.GetTxtName(i).size())
 			{
 				tstring	strTagLine = propNameValueMap.GetTxtTagString(i);
 				if (IsTxtTagAtTailOfFile(propNameValueMap.GetTagType(i)))
-				{
 					strTagsAtEndOfFile += strTagLine;
-				}
 				else
-				{
 					str += strTagLine;
-				}
 			}
+		}
+
+		// Recover offset time.
+		if (m_pMLData->GetLyrContentType() == LCT_LRC)
+		{
+			m_pMLData->Properties().SetTxtLyrScrollEvents(_T(""));
+			m_pMLData->Properties().SetOffsetTime(nLrcOffsetTime);
 		}
 	}
 
@@ -419,11 +441,16 @@ bool CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 		PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
 		ASSERT(pRow);
 
-		if (LyricsRowToTxtString(pRow, strBuff))
+		if (pRow->nRowType == ML_ROW_LYRICS)
+			LyricsRowToTxtString(pRow, strBuff);
+		else
 		{
-			str += strBuff;
-			str += _T("\r\n");
+			ASSERT(pRow->nRowType == ML_ROW_UNKNOW);
+			strBuff = pRow->szContent;
 		}
+
+		str += strBuff;
+		str += _T("\r\n");
 	}
 
 	if (strTagsAtEndOfFile.size())
@@ -500,37 +527,23 @@ bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, bool bLongTimeFmt, tstringex
 }
 
 //
-bool CLrcParser::LyricsRowToTxtString(PML_ROW pRow, tstringex &strBuff)
+void CLrcParser::LyricsRowToTxtString(PML_ROW pRow, tstringex &strBuff)
 {
-	ASSERT(pRow);
+	ASSERT(pRow->nRowType == ML_ROW_LYRICS);
 	strBuff.clear();
 
-	switch (pRow->nRowType)
+	for (int i = 0; i < (int)pRow->vFrags.size(); i++)
 	{
-	case ML_ROW_UNKNOW:
-		assert(pRow->szContent);
-		strBuff = pRow->szContent;
-		break;
-	case ML_ROW_LYRICS:
+		PLYRIC_FRAG	pFrag = pRow->vFrags[i];
+		// Remove ad strings
+		if (IsTempLyricsFrag(pFrag->dwAttrib))
 		{
-			for (int i = 0; i < (int)pRow->vFrags.size(); i++)
-			{
-				PLYRIC_FRAG	pFrag = pRow->vFrags[i];
-				// Remove ad strings
-				if (IsTempLyricsFrag(pFrag->dwAttrib))
-				{
-					strBuff.clear();
-					return FALSE;
-				}
-
-				strBuff += pFrag->szLyric;
-			}
+			strBuff.clear();
+			return;
 		}
-		break;
-	default:
-		return FALSE;
+
+		strBuff += pFrag->szLyric;
 	}
-	return TRUE;
 }
 
 //
@@ -824,31 +837,41 @@ void CLrcParser::LRCCheckRowTime()
 //////////////////////////////////////////////////////////////////////////
 // CPPUnit test
 
+void EncodeTimeStamps(int duration, tstring &timeStamps);
+
+LPCTSTR DecodeTimeStamps(LPCTSTR szTimeStamps, int &duration);
+
 class CTestCaseLrcParser : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(CTestCaseLrcParser);
+	CPPUNIT_TEST(Test_EncodeTimeStamps);
 	CPPUNIT_TEST(Test_CLrcParser_Lrc);
 	CPPUNIT_TEST(Test_CLrcParser_Txt);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
-
-public:
-	void setUp()
+	void Test_EncodeTimeStamps()
 	{
-	}
-	void tearDown() 
-	{
+		for (int nDuration = -22 * 1000; nDuration < 1000 * 30; nDuration += 100)
+		{
+			tstring timeStamps;
+			int nDuration2 = 0;
+
+			EncodeTimeStamps(nDuration, timeStamps);
+
+			LPCTSTR szRet = DecodeTimeStamps(timeStamps.c_str(), nDuration2);
+			CPPUNIT_ASSERT(IsEmptyString(szRet));
+			CPPUNIT_ASSERT(nDuration2 == nDuration);
+		}
 	}
 
-protected:
 	void Test_CLrcParser_Lrc()
 	{
-		LPCSTR	SZ_LYRICS_TEST = "[ar:artist]\n[ti:title]\n[encoding:big5]\n[00:01.02]L1\n[00:02.01]\n\n[00:03:01]L3\nL4\n\n";
+		LPCSTR	SZ_LYRICS_TEST = "[ar:artist]\n[ti:title]\n[encoding:big5]\n[offset:-500]\n[00:01.12]L1\n[00:02.01]\nDummy Line\n[00:03:01]L3\nL4\n\n";
 		LPCTSTR		valArtist = _T("artist");
 		LPCTSTR		valTitle = _T("title");
 		LPCTSTR		vLyrLines[] = { _T("L1"), _T(""), _T("L3") };
-		int			vTime[] = { 1 * 1000 + 20, 2 * 1000 + 10, 3 *1000 + 10 };
+		int			vTime[] = { 1 * 1000 + 120, 2 * 1000 + 10, 3 *1000 + 10 };
 
 		wstringex	wStr;
 		ConvertStr(SZ_LYRICS_TEST, -1, wStr);
@@ -877,6 +900,7 @@ protected:
 
 			int nRet = parser.ParseString(vLyrics[i], vLen[i], false, false);
 			CPPUNIT_ASSERT(nRet == ERR_OK);
+			data.Properties().m_lyrContentType = parser.GetLyrContentType();
 
 			CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strArtist.c_str(), valArtist) == 0);
 			CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strTitle.c_str(), valTitle) == 0);
@@ -900,7 +924,7 @@ protected:
 			//
 			tstring		strNewLyr;
 			CLrcParser		parser2(&data);
-			parser2.ToString(strNewLyr, true);
+			parser2.ToString(strNewLyr, true, false);
 
 			CMLData			data3;
 			CLrcParser		parser3(&data3);
@@ -929,6 +953,34 @@ protected:
 				}
 				CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 			}
+
+			//
+			// Case: Convert to text including timestamps
+			//
+			tstring			strTxtLyr;
+			CLrcParser		parserTxt(&data);
+			parserTxt.ToString(strTxtLyr, true, true);
+
+			CMLData			data5;
+			CLrcParser		parser5(&data5);
+			data5.Properties().SetEncoding(vEncoding[i]);
+			parser5.ParseString(strTxtLyr.c_str(), false);
+
+			// The new parsed data5 shall be same with previous data.
+			CPPUNIT_ASSERT(data5.Properties().GetOffsetTime() == data.GetOffsetTime());
+
+			// Compare line by line
+			VLyrLines	&lyrLines2 = data5.GetRawLyrics();
+			for (int k = 0; k < lyrLines2.size(); k++)
+			{
+				PML_ROW	pRow = lyrLines2[k];
+
+				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+				CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+				// 100 = TIME UNIT (TIME_STAMP_UNIT) in timestamps.
+				CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == (vTime[k] + 50) / 100 * 100);
+			}
+
 		}
 	}
 
@@ -987,8 +1039,8 @@ protected:
 			// Cases on CLrcParser::ToString
 			//
 			tstring		strNewLyr;
-			CLrcParser		parser2(&data, true);
-			parser2.ToString(strNewLyr, true);
+			CLrcParser		parser2(&data);
+			parser2.ToString(strNewLyr, true, true);
 
 			CMLData			data3;
 			CLrcParser		parser3(&data3);

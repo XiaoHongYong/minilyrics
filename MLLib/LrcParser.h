@@ -15,7 +15,7 @@ DECLAR_CPPUNIT_TEST_REG(LrcParser)
 class CLrcParser : public CLyricsParser
 {
 public:
-	CLrcParser(CMLData *pMLData, bool bToTxtFormatLrc = false);
+	CLrcParser(CMLData *pMLData);
 	virtual ~CLrcParser();
 
 public:
@@ -27,14 +27,14 @@ public:
 	int ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine = false);
 	int ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLine = false, bool bUseSpecifiedEncoding = false, CHAR_ENCODING encoding = ED_SYSDEF);
 
-	bool ToString(tstring &str, bool bIncTags = FALSE);
+	bool ToString(tstring &str, bool bIncTags, bool bToTxtFormat);
 
 protected:
 	bool ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt);
 	bool ToTxtString(tstring &str, bool bIncTags);
 
 	bool LyricsRowToLrcString(PML_ROW pRow, bool bLongTimeFmt, tstringex &strBuff);
-	bool LyricsRowToTxtString(PML_ROW pRow, tstringex &strBuff);
+	void LyricsRowToTxtString(PML_ROW pRow, tstringex &strBuff);
 
 	void AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine);
 	void AddStrAsTimedLine(const TCHAR *szLine);
@@ -55,6 +55,5 @@ protected:
 
 	// 上一次添加的歌词行的时间，用于添加没有时间标签的文本歌词行
 	int						m_nLatestTime;
-	bool					m_bToTxtFormat;
 
 };

@@ -117,6 +117,8 @@ public:
 	// int					nLen;			// length of szContent
 	TCHAR					*szContent;		// content of the row
 
+	void SetContent(LPCTSTR szContent, int nLen);
+
 	bool IsTempBegTime()
 	{
 		if (vFrags.size())
@@ -218,8 +220,7 @@ public:
 
 	int SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNewFileName);
 	int Save();
-	
-	int SaveToTextFile(LPCTSTR szFile);
+
 #ifdef _ID3V2_SUPPORT
 	int SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLyr);
 	int SaveLyricsInSongOfLyrics3v2(CHAR_ENCODING encoding);
@@ -237,7 +238,8 @@ public:
 
 	int GetLyricRowCount() { return m_arrLyricsRows.size(); }
 	PML_ROW GetLyricsRow(int nRow);
-	VLyrLines &GetRawLyrics();
+	VLyrLines &GetRawLyrics() { return m_arrLyricsRows; }
+	VLyrLines &GetFileRows() { return m_arrFileRows; }
 
 	void CopyMLyrLines(CMLyrLines &lyrLines);
 
@@ -321,7 +323,8 @@ public:
 
 	LRC_SOURCE_TYPE GetLyricsSourceType() { return m_lrcSourceType; }
 
-	LYRICS_CONTENT_TYPE GetLyrContentType() { return m_lyrConentType; }
+	LYRICS_CONTENT_TYPE GetLyrContentType() { return m_lyrProperties.m_lyrContentType; }
+	void SetLyrContentType(LYRICS_CONTENT_TYPE lyrContentType) { m_lyrProperties.m_lyrContentType = lyrContentType; }
 
 	bool DoesChooseNewFileName();
 
@@ -375,7 +378,7 @@ public:
 
 protected:
 	// Only lyrics lines are saved here, it's just a sub copy of m_arrFileRows.
-	CMLyrLines				m_arrLyricsRows;
+	VLyrLines				m_arrLyricsRows;
 	bool					m_bHasLyricsOpened;
 
 protected:
@@ -405,12 +408,8 @@ protected:
 	// lyrics properties: tag(artist, title...)
 	LyricsProperties		m_lyrProperties;
 
-	// lyrics content type: txt, lrc, kar?
-	LYRICS_CONTENT_TYPE		m_lyrConentType;
-
 	// original lyrics info.
 	TCHAR					m_szLyrContentMd5Org[33];	// used for lyrics modification compare.
-	LYRICS_CONTENT_TYPE		m_lyrConentTypeOrg;
 	LyricsProperties		m_lyrPropertiesOrg;
 
 	// lyrics display style

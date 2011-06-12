@@ -181,7 +181,7 @@ void LyricsProperties::SetEncoding(CHAR_ENCODING nEncodingID)
 	if (nEncodingID != ED_SYSDEF)
 	{
 		tstringex		str;
-		MBCSToTString(GetCharEncodingByID(nEncodingID).szEncoding, -1, str);
+		AnsiToTString(GetCharEncodingByID(nEncodingID).szEncoding, -1, str);
 		m_strEncoding = str.c_str();
 	}
 }
@@ -341,7 +341,7 @@ tstring CLyrTagNameValueMap::GetLrcTagString(int nIndex, bool bIncLineRet)
 	tstring		strTag;
 	tstring		strName;
 
-	MBCSToTString(m_vItems[nIndex].strLrcName.c_str(), m_vItems[nIndex].strLrcName.size(), strName);
+	AnsiToTString(m_vItems[nIndex].strLrcName.c_str(), m_vItems[nIndex].strLrcName.size(), strName);
 
 	strTag += _T("[");
 	strTag += strName;
@@ -361,7 +361,7 @@ tstring CLyrTagNameValueMap::GetTxtTagString(int nIndex, bool bIncLineRet)
 	tstring		strTag;
 	tstring		strName;
 
-	MBCSToTString(m_vItems[nIndex].strTxtName.c_str(), m_vItems[nIndex].strTxtName.size(), strName);
+	AnsiToTString(m_vItems[nIndex].strTxtName.c_str(), m_vItems[nIndex].strTxtName.size(), strName);
 
 	strTag += strName;
 	strTag += _T(" ");
@@ -1664,13 +1664,13 @@ protected:
 
 				tstring strLrcTag = nameValueMap.GetLrcTagString(i, false);
 				tstring	strName;
-				MBCSToTString(vNames[i].strLrcName.c_str(), vNames[i].strLrcName.size(), strName);
+				AnsiToTString(vNames[i].strLrcName.c_str(), vNames[i].strLrcName.size(), strName);
 				CStrPrintf	strLrcTag2(_T("[%s %s]"), strName.c_str(), vNames[i].pstrValue->c_str());
 				if (_tcscmp(strLrcTag.c_str(), strLrcTag2.c_str()) != 0)
 					CPPUNIT_FAIL_T(CStrPrintf(_T("CLyrTagNameValueMap: case: %d, %d"), k, i).c_str());
 
 				tstring strTxtTag = nameValueMap.GetTxtTagString(i, false);
-				MBCSToTString(vNames[i].strTxtName.c_str(), vNames[i].strTxtName.size(), strName);
+				AnsiToTString(vNames[i].strTxtName.c_str(), vNames[i].strTxtName.size(), strName);
 				CStrPrintf	strTxtTag2(_T("%s %s"), strName.c_str(), vNames[i].pstrValue->c_str());
 				if (_tcscmp(strTxtTag.c_str(), strTxtTag2.c_str()) != 0)
 					CPPUNIT_FAIL_T(CStrPrintf(_T("CLyrTagNameValueMap: case: %d, %d"), k, i).c_str());
