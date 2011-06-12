@@ -139,12 +139,6 @@ void CSkinLinearContainer::OnSizeForVert()
 			p->m_rcObj.right = m_rcObj.left + width;
 		}
 
-		// Set content area
-		p->m_rcContent.left = p->m_rcObj.left + p->GetPadding().left;
-		p->m_rcContent.top = p->m_rcObj.top + p->GetPadding().top;
-		p->m_rcContent.right = p->m_rcObj.right - p->GetPadding().right;
-		p->m_rcContent.bottom = p->m_rcObj.bottom - p->GetPadding().bottom;
-
 		p->OnSize();
 	}
 }

@@ -611,10 +611,6 @@
 				RelativePath="..\MPShared\WaitingDlg.cpp"
 				>
 			</File>
-			<File
-				RelativePath=".\win32\WidgetListCtrlEx.cpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -993,14 +989,6 @@
 				RelativePath="..\MPShared\WaitingDlg.h"
 				>
 			</File>
-			<File
-				RelativePath="..\MPShared\win32\WidgetGradientCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath=".\win32\WidgetListCtrlEx.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -1008,15 +996,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\applicat.ico"
+				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
@@ -1024,11 +1008,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\res\bin00001.bin"
+				RelativePath="..\MPShared\Res\applicat.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragafte.ico"
+				RelativePath="..\MPShared\res\bin00001.bin"
 				>
 			</File>
 			<File
@@ -1036,7 +1020,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragbefo.ico"
+				RelativePath="..\MPShared\Res\dragafte.ico"
 				>
 			</File>
 			<File
@@ -1044,11 +1028,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\fileType.bmp"
+				RelativePath="..\MPShared\Res\dragbefo.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\win32\Exe.manifest"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\fileType.bmp"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\fileType.bmp"
 				>
 			</File>
 			<File
@@ -1060,19 +1052,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\ico00001.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\ico00001.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\icon-tga.ico"
+				RelativePath="..\ML6\Res\ico00001.ico"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\icon-tga.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\icon-tga.ico"
 				>
 			</File>
 			<File
@@ -1088,11 +1080,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\next.ICO"
+				RelativePath="..\ML6\Res\next.ICO"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\next.ICO"
+				RelativePath="..\MPShared\Res\next.ICO"
 				>
 			</File>
 			<File
@@ -1112,11 +1104,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\prev.ico"
+				RelativePath="..\ML6\Res\prev.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\prev.ico"
+				RelativePath="..\MPShared\Res\prev.ico"
 				>
 			</File>
 			<File
@@ -1124,15 +1116,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\save.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\save.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\selcolor.cur"
+				RelativePath="..\MPShared\Res\save.ico"
 				>
 			</File>
 			<File
@@ -1140,18 +1128,18 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\stop.ICO"
+				RelativePath="..\MPShared\Res\selcolor.cur"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\stop.ICO"
 				>
 			</File>
+			<File
+				RelativePath="..\ML6\Res\stop.ICO"
+				>
+			</File>
 		</Filter>
-		<File
-			RelativePath="..\MPShared\win32\Exe.manifest"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

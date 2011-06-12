@@ -606,7 +606,8 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 	session.Close();
 
 	// Save License status result
-	g_licenseManager.SaveActivateResult(retLyrics);
+	if (nRet == ERR_OK)
+		g_licenseManager.SaveActivateResult(retLyrics);
 
 	return nRet;
 }

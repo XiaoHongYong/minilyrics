@@ -38,7 +38,6 @@ protected:
 	CUIObject				*m_pObjFrame;
 
 	// The size and position of control area
-	int						m_nLeftMargin, m_nTopMargin, m_nRightMargin, m_nBottomMargin;
-	CRect					m_rcCtrl;
+	int						m_nWidthVertScrollBar, m_nHeightHorzScrollBar;
 
 };

@@ -18,7 +18,6 @@ CSkinNStatusButton::CSkinNStatusButton()
 {
 	m_nMsgWant = UO_MSG_WANT_MOUSEMOVE | UO_MSG_WANT_LBUTTON | UO_MSG_WANT_ENTER_KEY;
 
-	m_xMargin = m_yMargin = 0;
 	m_xExtendStart = m_xExtendEnd = -1;
 	m_bTile = true;
 
@@ -202,16 +201,6 @@ void CSkinNStatusButton::OnKillFocus()
 
 	m_bHover = false;
 	Invalidate();
-}
-
-void CSkinNStatusButton::OnSize()
-{
-	m_rcObj.left -= m_xMargin;
-	m_rcObj.right += m_xMargin;
-	m_rcObj.top -= m_yMargin;
-	m_rcObj.bottom += m_yMargin;
-
-	CUIObject::OnSize();
 }
 
 void CSkinNStatusButton::Draw(CRawGraph *pGraph)
@@ -429,10 +418,6 @@ BOOL CSkinNStatusButton::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_bContinuousCmd = IsTRUE(szValue);
 	}
-	else if (IsPropertyName(szProperty, _T("XMargin")))
-		m_xMargin = _ttoi(szValue);
-	else if (IsPropertyName(szProperty, _T("YMargin")))
-		m_yMargin = _ttoi(szValue);
 	else if (IsPropertyName(szProperty, _T("ExtendPos")))
 	{
 		Scan2IntX(szValue, m_xExtendStart, m_xExtendEnd);
@@ -613,11 +598,15 @@ void CSkinNStatusButton::Destroy()
 
 bool CSkinNStatusButton::IsMouseHitBt(POINT &pt)
 {
-	if (m_xMargin == 0 && m_yMargin == 0)
+	if (m_rcPadding.left == 0 && m_rcPadding.top == 0
+		&& m_rcPadding.right == 0 && m_rcPadding.bottom == 0)
 		return Tobool(m_rcObj.PtInRect(pt));
 
 	CRect	rc = m_rcObj;
 
-	rc.DeflateRect(m_xMargin, m_yMargin);
+	rc.left -= m_rcPadding.left;
+	rc.top -= m_rcPadding.top;
+	rc.right += m_rcPadding.right;
+	rc.bottom += m_rcPadding.bottom;
 	return Tobool(rc.PtInRect(pt));
 }

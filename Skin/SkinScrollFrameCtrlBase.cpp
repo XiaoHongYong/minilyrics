@@ -16,8 +16,7 @@ CSkinScrollFrameCtrlBase::CSkinScrollFrameCtrlBase()
 	m_pHorzScrollBar = NULL;
 	m_pObjFrame = NULL;
 
-	m_nLeftMargin = m_nTopMargin = m_nRightMargin = m_nBottomMargin = 0;
-	m_rcCtrl.SetRect(0, 0, 0, 0);
+	m_nWidthVertScrollBar = m_nHeightHorzScrollBar = 0;
 }
 
 CSkinScrollFrameCtrlBase::~CSkinScrollFrameCtrlBase()
@@ -49,20 +48,16 @@ void CSkinScrollFrameCtrlBase::OnCreate()
 
 void CSkinScrollFrameCtrlBase::OnSize()
 {
-	if (m_pObjFrame)
-	{
-		CSkinFrameCtrl *pFrameCtrl = (CSkinFrameCtrl *)m_pObjFrame;
-		int nBorderThick = pFrameCtrl->GetBorderThick();
-		m_rcObj.OffsetRect(-nBorderThick, -nBorderThick);
-		m_rcObj.right += nBorderThick * 2;
-	}
-
 	CSkinContainer::OnSize();
 
-	m_rcCtrl.left = m_rcObj.left + m_nLeftMargin;
-	m_rcCtrl.top = m_rcObj.top + m_nTopMargin;
-	m_rcCtrl.right = m_rcObj.right - m_nRightMargin;
-	m_rcCtrl.bottom = m_rcObj.bottom - m_nBottomMargin;
+	m_rcContent = m_rcObj;
+	m_rcContent.left += m_rcPadding.left;
+	m_rcContent.top += m_rcPadding.top;
+	m_rcContent.right -= m_rcPadding.right;
+	m_rcContent.bottom -= m_rcPadding.bottom;
+
+	m_rcContent.right -= m_nWidthVertScrollBar;
+	m_rcContent.bottom -= m_nHeightHorzScrollBar;
 }
 
 void CSkinScrollFrameCtrlBase::OnKillFocus()
@@ -134,7 +129,7 @@ void CSkinScrollFrameCtrlBase::CreateFrameCtrl()
 
 		pFrameCtrl->SetFocusIndicator(this);
 
-		m_nLeftMargin = m_nTopMargin = m_nRightMargin = m_nBottomMargin = nBorderThick;
+		m_rcPadding.left = m_rcPadding.top = m_rcPadding.right = m_rcPadding.bottom = nBorderThick;
 	}
 }
 
@@ -161,11 +156,11 @@ void CSkinScrollFrameCtrlBase::CreateVertScrollbar()
 
 	int nWidth = 14;
 	m_pObjVertScrollBar->m_formWidth.CalCualteValue(nWidth);
-	m_nRightMargin += nWidth;
+	m_nWidthVertScrollBar = nWidth;
 
-	m_pObjVertScrollBar->m_formLeft.SetFormula(CStrPrintf(_T("w-%d"), m_nRightMargin).c_str());
-	m_pObjVertScrollBar->m_formTop.SetFormula(m_nTopMargin);
-	m_pObjVertScrollBar->m_formHeight.SetFormula(CStrPrintf(_T("h-%d"), m_nTopMargin + m_nBottomMargin).c_str());
+	m_pObjVertScrollBar->m_formLeft.SetFormula(CStrPrintf(_T("w-%d"), m_nWidthVertScrollBar + m_rcPadding.right).c_str());
+	m_pObjVertScrollBar->m_formTop.SetFormula(m_rcPadding.top);
+	m_pObjVertScrollBar->m_formHeight.SetFormula(CStrPrintf(_T("h-%d"), m_rcPadding.top + m_rcPadding.bottom + m_nHeightHorzScrollBar).c_str());
 	if (m_pObjHorzScrollBar)
 	{
 		// Horizontal scroll bar is created first, decrease its width now.
@@ -176,6 +171,8 @@ void CSkinScrollFrameCtrlBase::CreateVertScrollbar()
 
 	m_pVertScrollBar = (CSkinVScrollBar*)m_pObjVertScrollBar;
 	m_pVertScrollBar->SetScrollNotify(this);
+
+	m_rcContent.right -= m_nWidthVertScrollBar;
 }
 
 void CSkinScrollFrameCtrlBase::CreateHorzScrollbar()
@@ -201,11 +198,11 @@ void CSkinScrollFrameCtrlBase::CreateHorzScrollbar()
 
 	int nHeight = 14;
 	m_pObjHorzScrollBar->m_formHeight.CalCualteValue(nHeight);
-	m_nBottomMargin += nHeight;
+	m_nHeightHorzScrollBar = nHeight;
 
-	m_pObjHorzScrollBar->m_formLeft.SetFormula(m_nLeftMargin);
-	m_pObjHorzScrollBar->m_formTop.SetFormula(CStrPrintf(_T("h-%d"), m_nBottomMargin).c_str());
-	m_pObjHorzScrollBar->m_formWidth.SetFormula(CStrPrintf(_T("w-%d"), m_nLeftMargin + m_nRightMargin).c_str());
+	m_pObjHorzScrollBar->m_formLeft.SetFormula(m_rcPadding.left);
+	m_pObjHorzScrollBar->m_formTop.SetFormula(CStrPrintf(_T("h-%d"), m_rcPadding.bottom + m_nHeightHorzScrollBar).c_str());
+	m_pObjHorzScrollBar->m_formWidth.SetFormula(CStrPrintf(_T("w-%d"), m_rcPadding.left + m_rcPadding.right + m_nWidthVertScrollBar).c_str());
 	if (m_pObjVertScrollBar)
 	{
 		// Vertical scroll bar is created first, decrease its height now.
@@ -216,4 +213,6 @@ void CSkinScrollFrameCtrlBase::CreateHorzScrollbar()
 
 	m_pHorzScrollBar = (CSkinVScrollBar*)m_pObjHorzScrollBar;
 	m_pHorzScrollBar->SetScrollNotify(this);
+
+	m_rcContent.bottom -= m_nHeightHorzScrollBar;
 }

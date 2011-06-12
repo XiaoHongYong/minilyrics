@@ -26,6 +26,17 @@ using namespace CppUnit;
 #define SZ_CLASSNAME _T("UnitTest")
 #define SZ_WNDNAME	_T("UnitTest")
 
+LRESULT CALLBACK LogWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (uMsg == WM_TIMER)
+	{
+		DestroyWindow(hWnd);
+		return 0;
+	}
+	else
+		return DefWindowProc(hWnd, uMsg, wParam, lParam);
+}
+
 ATOM UnitTestRegisterClass(HINSTANCE hInstance)
 {
 	WNDCLASSEX wcex;
@@ -33,7 +44,7 @@ ATOM UnitTestRegisterClass(HINSTANCE hInstance)
 	memset(&wcex, 0, sizeof(wcex));
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style			= CS_HREDRAW | CS_VREDRAW;
-	wcex.lpfnWndProc	= DefWindowProc;
+	wcex.lpfnWndProc	= LogWndProc;
 	wcex.hInstance		= hInstance;
 	wcex.hbrBackground	= (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszClassName	= SZ_CLASSNAME;
@@ -41,18 +52,19 @@ ATOM UnitTestRegisterClass(HINSTANCE hInstance)
 	return RegisterClassEx(&wcex);
 }
 
-HWND g_hWndLog = NULL;
+HWND g_hWndLogEdit = NULL;
+HWND g_hWndLog =  NULL;
 
 void LogUnitTestResult(LPCSTR szStr)
 {
-	int	len = GetWindowTextLength(g_hWndLog);
-	SendMessage(g_hWndLog, EM_SETSEL, len, len);
+	int	len = GetWindowTextLength(g_hWndLogEdit);
+	SendMessage(g_hWndLogEdit, EM_SETSEL, len, len);
 #ifdef _UNICODE
 	wstringex	strW;
 	ConvertStr(szStr, -1, strW);
-	SendMessage(g_hWndLog, EM_REPLACESEL, FALSE, (WPARAM)strW.c_str());
+	SendMessage(g_hWndLogEdit, EM_REPLACESEL, FALSE, (WPARAM)strW.c_str());
 #else
-	SendMessage(g_hWndLog, EM_REPLACESEL, FALSE, (WPARAM)szStr);
+	SendMessage(g_hWndLogEdit, EM_REPLACESEL, FALSE, (WPARAM)szStr);
 #endif
 }
 
@@ -60,23 +72,21 @@ void CreateUnitResultWnd(HINSTANCE hInstance)
 {
 	UnitTestRegisterClass(hInstance);
 
-	HWND hWnd = CreateWindow(SZ_CLASSNAME, SZ_WNDNAME, WS_OVERLAPPEDWINDOW,
+	g_hWndLog = CreateWindow(SZ_CLASSNAME, SZ_WNDNAME, WS_OVERLAPPEDWINDOW,
 		CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
-	if (!hWnd)
+	if (!g_hWndLog)
 		return;
 
 	RECT rc;
-	::GetClientRect(hWnd, &rc);
+	::GetClientRect(g_hWndLog, &rc);
 
 	// Create Edit
 	DWORD	dwStyle = WS_CHILD | WS_VISIBLE | ES_AUTOVSCROLL | ES_AUTOHSCROLL | WS_VSCROLL | WS_HSCROLL| ES_MULTILINE | ES_WANTRETURN;
-	g_hWndLog = CreateWindow(_T("EDIT"), _T(""), dwStyle, 
-		0, 0, rc.right, rc.bottom, hWnd, NULL, hInstance, NULL);
-	//::SendMessage(g_hWndEdit, EM_LIMITTEXT, 2 * 100 * 1024, 0);
-	ShowWindow(g_hWndLog, SW_SHOW);
+	g_hWndLogEdit = CreateWindow(_T("EDIT"), _T(""), dwStyle, 
+		0, 0, rc.right, rc.bottom, g_hWndLog, NULL, hInstance, NULL);
 
-	ShowWindow(hWnd, SW_SHOW);
-	UpdateWindow(hWnd);
+	ShowWindow(g_hWndLog, SW_SHOW);
+	UpdateWindow(g_hWndLog);
 }
 /*
 void RedirectIOToConsole()
@@ -199,7 +209,8 @@ void RunUnitTest()
 
 	stdCOut().setBuffer(NULL);
 
-	result.wasSuccessful() ? 0 : 1;
+	if (result.wasSuccessful())
+		SetTimer(g_hWndLog, 0, 1000, NULL);
 }
 
 #endif // _CPPUNIT_TEST

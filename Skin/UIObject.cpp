@@ -452,6 +452,12 @@ int CUIObject::GetOpacity()
 
 void CUIObject::OnSize()
 {
+	// Set content area
+	m_rcContent.left = m_rcObj.left + m_rcPadding.left;
+	m_rcContent.top = m_rcObj.top + m_rcPadding.top;
+	m_rcContent.right = m_rcObj.right - m_rcPadding.right;
+	m_rcContent.bottom = m_rcObj.bottom - m_rcPadding.bottom;
+
 	if (!m_strTooltip.empty() && m_bVisible)
 	{
 		m_pSkin->DelTool(m_nAutoUniID);

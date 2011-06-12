@@ -317,7 +317,7 @@ protected:
 
 	bool ClearAllSelMark();
 
-	int GetLinesOfPerPage() const { return m_rcCtrl.Height() / m_nLineHeight; }
+	int GetLinesOfPerPage() const { return m_rcContent.Height() / m_nLineHeight; }
 
 	int GetLastVisibleRow() const;
 

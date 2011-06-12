@@ -79,6 +79,8 @@ public:
 		}
 		else if (as == AS_INIT)
 		{
+			pObj->GetParent()->RecalculateUIObjSizePos(pObj);
+
 			if (m_animateDirection == AD_LEFT || m_animateDirection == AD_RIGHT)
 			{
 				if (m_animateDirection == AD_LEFT)
@@ -281,7 +283,7 @@ public:
 
 	virtual void Animate(AnimateState as, int nMotionPercent, CUIObject *pObj)
 	{
-		if (as == AS_MOVE)
+		if (as == AS_MOVE || as == AS_DONE)
 		{
 			CRect	rc;
 			int		nValue;
@@ -319,7 +321,7 @@ public:
 				pObj->m_formWidth.SetFormula(formWidth.GetFormula());
 			if (!formHeight.Empty())
 				pObj->m_formHeight.SetFormula(formHeight.GetFormula());
-			pObj->GetParent()->RecalculateUIObjSizePos(pObj);
+			// pObj->GetParent()->RecalculateUIObjSizePos(pObj);
 		}
 	}
 

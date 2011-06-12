@@ -110,28 +110,28 @@
     <ErrorText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#FF0000"/>
     <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#0000FF"/>
     <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
-          Height="22" XMargin="5" YMargin="3" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
+          Height="22" Padding="5,3" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
           Image="s_txt_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalImageBt Extends="ImageButton" ContentMarginX="9" ContentMarginY="7"
-          Height="20" XMargin="5" YMargin="4" UseSkinBg="true" TabFocus="true"
+          Height="20" Padding="5,4" UseSkinBg="true" TabFocus="true"
           Image="s_image_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
     <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080"
-          Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
+          Height="20" Padding="3,2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
           CheckBox="true" TabFocus="true"
           Image="s_checkbox.png" ImageSize="20,20"
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_checkbox.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
     <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080"
-          Height="20" XMargin="3" YMargin="2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
+          Height="20" Padding="3,2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
            Radio="true" TabFocus="true"
           Image="s_radio_button.png" ImageSize="20,20"
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_radio_button.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
-    <NormalEdit Extends="EditCtrl" Height="28" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
+    <NormalEdit Extends="EditCtrl" Height="18" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
           XMargin="5" YMargin="0"/>
     <NormalListCtrl Extends="ListCtrl" BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 
           NowPlayBgColor="#5478CA" TextColor="#000000" SelTextColor="#FFFFFF" 
@@ -143,7 +143,7 @@
           Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
           MarginX="0" MarginY="0" />
     <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
-          Height="22" XMargin="5" YMargin="4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
+          Height="22" Padding="5,4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
           UseSkinBg="true" Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"

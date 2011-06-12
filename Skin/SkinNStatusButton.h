@@ -30,8 +30,6 @@ public:
 	virtual void OnSetFocus();
 	virtual void OnKillFocus();
 
-	void OnSize();
-
 	void Draw(CRawGraph *pGraph);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
@@ -70,7 +68,6 @@ protected:
 
 	V_BTSTATIMG		m_vBtStatImg;
 
-	int				m_xMargin, m_yMargin;
 	int				m_xExtendStart, m_xExtendEnd;
 	bool			m_bTile;
 

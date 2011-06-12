@@ -39,7 +39,7 @@ void CSkinComboBox::ButtonDownAction()
 
 	CRect	rcPopup = m_rcObj;
 
-	rcPopup.DeflateRect(m_xMargin, m_yMargin);
+	rcPopup.DeflateRect(m_rcPadding.left, m_rcPadding.right);
 
 	m_pSkin->ClientToScreen(rcPopup);
 

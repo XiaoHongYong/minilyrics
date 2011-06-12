@@ -491,7 +491,7 @@ void CLyricShowTextEditObj::Draw(CRawGraph *pGraph)
 
 void CLyricShowTextEditObj::FastDraw(CRawGraph *pGraph, CRect *prcUpdate/* = NULL*/)
 {
-	CRect	rc = m_rcCtrl;
+	CRect	rc = m_rcContent;
 	pGraph->SetFont(m_font.GetFont());
 
 	if (prcUpdate)
@@ -599,7 +599,7 @@ void CLyricShowTextEditObj::ReDraw(CRawGraph *pGraph)
 {
 	CSkinScrollFrameCtrlBase::Draw(pGraph);
 
-	CRect &rc = m_rcCtrl;
+	CRect &rc = m_rcContent;
 
 	int		y, xStart, xMax, yMax;
 	int		i;
@@ -1477,7 +1477,7 @@ void CLyricShowTextEditObj::OnPlayTimeChangedUpdate()
 
 		CRect	rcClip;
 
-		rc = m_rcCtrl;
+		rc = m_rcContent;
 		rcClip.SetRect(rc.left + m_xMargin, rc.top + m_yMargin, rc.right - m_xMargin, rc.bottom - m_yMargin);
 
 		CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);

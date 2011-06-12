@@ -287,7 +287,7 @@ void CSkinListCtrl::OnSize()
 	if (m_vHeading.size() == 0)
 		return;
 
-	int		w = m_rcCtrl.Width() - m_nXMargin * 2;
+	int		w = m_rcContent.Width() - m_nXMargin * 2;
 
 	if (m_vHeading.size() == 1)
 	{
@@ -820,9 +820,9 @@ void CSkinListCtrl::GetRowColAtPoint(POINT pt, int &row, int &col, POINT *ptAtIt
 		*bItemClickable = false;
 
 	// Col
-	pt.x -= m_rcCtrl.left + m_nXMargin;
+	pt.x -= m_rcContent.left + m_nXMargin;
 
-	if (pt.x >= 0 && pt.x <= m_rcCtrl.Width())
+	if (pt.x >= 0 && pt.x <= m_rcContent.Width())
 	{
 		if (m_pHorzScrollBar && m_pHorzScrollBar->IsEnabled())
 			pt.x += m_pHorzScrollBar->GetScrollPos();
@@ -839,11 +839,11 @@ void CSkinListCtrl::GetRowColAtPoint(POINT pt, int &row, int &col, POINT *ptAtIt
 	}
 
 	// Row
-	pt.y -= m_rcCtrl.top;
+	pt.y -= m_rcContent.top;
 	if (m_bDrawHeader)
 		pt.y -= m_nHeaderHeight;
 
-	if (pt.y >= 0 && pt.y <= m_rcCtrl.Height())
+	if (pt.y >= 0 && pt.y <= m_rcContent.Height())
 	{
 		int		n = m_nFirstVisibleRow + pt.y / m_nLineHeight;
 		if (ptAtItemCell)
@@ -1081,7 +1081,7 @@ void CSkinListCtrl::SetHorzScrollInfo(bool bRedraw)
 		nWidth += m_vHeading[i]->nWidth;
 
 	if (m_pHorzScrollBar)
-		m_pHorzScrollBar->SetScrollInfo(0, nWidth, m_rcCtrl.Width(), m_pHorzScrollBar->GetScrollPos(), 10, bRedraw);
+		m_pHorzScrollBar->SetScrollInfo(0, nWidth, m_rcContent.Width(), m_pHorzScrollBar->GetScrollPos(), 10, bRedraw);
 }
 
 
@@ -1100,9 +1100,9 @@ CSkinListCtrl::HitTestArea CSkinListCtrl::HitTest(POINT &point, int &nColumnInde
 	if (!IsPtIn(point))
 		return HTA_NONE;
 
-	if (m_bDrawHeader && point.y - m_rcCtrl.top < m_nHeaderHeight)
+	if (m_bDrawHeader && point.y - m_rcContent.top < m_nHeaderHeight)
 	{
-		int		x = point.x - m_rcCtrl.left;
+		int		x = point.x - m_rcContent.left;
 		if (m_pHorzScrollBar)
 			x += m_pHorzScrollBar->GetScrollPos();
 
@@ -1152,8 +1152,8 @@ CSkinListCtrl::HitTestArea CSkinListCtrl::HitTest(POINT &point, int &nColumnInde
 
 void CSkinListCtrl::DrawHeader(CRawGraph *pGraph)
 {
-	int		x = m_rcCtrl.left, xMax = m_rcCtrl.Width();
-	int		y = m_rcCtrl.top;
+	int		x = m_rcContent.left, xMax = m_rcContent.Width();
+	int		y = m_rcContent.top;
 
 	if (m_pHorzScrollBar)
 		x -= m_pHorzScrollBar->GetScrollPos();
@@ -1164,7 +1164,7 @@ void CSkinListCtrl::DrawHeader(CRawGraph *pGraph)
 		if (pColHeader->nWidth <= 0)
 			continue;
 
-		if (x + pColHeader->nWidth < m_rcCtrl.left)
+		if (x + pColHeader->nWidth < m_rcContent.left)
 		{
 			x += pColHeader->nWidth;
 			continue;
@@ -1196,7 +1196,7 @@ void CSkinListCtrl::DrawHeader(CRawGraph *pGraph)
 		pGraph->DrawText(pColHeader->strTitle.c_str(), pColHeader->strTitle.size(), &rc, DT_VCENTER);
 
 		x += pColHeader->nWidth;
-		if (x > m_rcCtrl.right)
+		if (x > m_rcContent.right)
 			break;
 
 		// Draw line
@@ -1204,10 +1204,10 @@ void CSkinListCtrl::DrawHeader(CRawGraph *pGraph)
 	}
 
 	// Draw background image.
-	if (m_imageHeader.IsValid() && x < m_rcCtrl.right)
-		m_imageHeader.StretchBlt(pGraph, x, y, m_rcCtrl.right - x, m_nHeaderHeight);
+	if (m_imageHeader.IsValid() && x < m_rcContent.right)
+		m_imageHeader.StretchBlt(pGraph, x, y, m_rcContent.right - x, m_nHeaderHeight);
 
-	pGraph->Line(m_rcCtrl.left, y + m_nHeaderHeight - 1, m_rcCtrl.right, y + m_nHeaderHeight - 1);
+	pGraph->Line(m_rcContent.left, y + m_nHeaderHeight - 1, m_rcContent.right, y + m_nHeaderHeight - 1);
 }
 
 void CSkinListCtrl::InvalidateItem(int nItem)
@@ -1233,13 +1233,13 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 	pGraph->SetTextColor(m_font.GetTextColor(m_bEnable));
 
 	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
-	pGraph->SetClipBoundBox(m_rcCtrl);
+	pGraph->SetClipBoundBox(m_rcContent);
 
 	pGraph->SetPen(m_penLine);
 
 	// Draw background color
 	if (m_bUseSkinBg)
-		m_pSkin->RedrawBackground(pGraph, &m_rcCtrl);
+		m_pSkin->RedrawBackground(pGraph, &m_rcContent);
 	else
 	{
 		int			alpha;
@@ -1256,12 +1256,12 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 		clrBg2 = GetColor(CN_ALTER_BG);
 		clrBg2.setAlpha(alpha);
 
-		rcItem = m_rcCtrl;
+		rcItem = m_rcContent;
 		if (m_bDrawHeader)
 			rcItem.top += m_nHeaderHeight;
 		rcItem.bottom = rcItem.top + m_nLineHeight;
 		bool		bFlag = true;
-		while (rcItem.top < m_rcCtrl.bottom)
+		while (rcItem.top < m_rcContent.bottom)
 		{
 			if (bFlag)
 				pGraph->FillRect(&rcItem, clrBg1);
@@ -1273,7 +1273,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 		}
 	}
 
-	rc = m_rcCtrl;
+	rc = m_rcContent;
 	rc.left += m_nXMargin;
 	rc.right -= m_nXMargin;
 
@@ -1299,7 +1299,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 
 		if (row->IsSelected())
 		{
-			CRect		rc(m_rcCtrl.left, y, m_rcCtrl.left + m_rcCtrl.Width(), y + m_nLineHeight);
+			CRect		rc(m_rcContent.left, y, m_rcContent.left + m_rcContent.Width(), y + m_nLineHeight);
 			int			alpha;
 			MLColor		clr = GetColor(CN_SEL_BG);
 
@@ -1315,7 +1315,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 		}
 		else if (i == m_nPlayingRow)
 		{
-			CRect		rc(m_rcCtrl.left, y, m_rcCtrl.left + m_rcCtrl.Width(), y + m_nLineHeight);
+			CRect		rc(m_rcContent.left, y, m_rcContent.left + m_rcContent.Width(), y + m_nLineHeight);
 			int			alpha;
 			MLColor		clr = GetColor(CN_PLAYING_BG);
 
@@ -1352,7 +1352,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 					rcItem.left += nImageCx + m_imageListRightSpace;
 				}
 			}
-			if (rcItem.right < m_rcCtrl.left)
+			if (rcItem.right < m_rcContent.left)
 			{
 				rcItem.left = rcItem.right;
 				continue;
@@ -1374,7 +1374,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 	// Draw Border
 	if (m_bDrawBorder)
 	{
-		pGraph->Rectangle(m_rcCtrl.left, m_rcCtrl.top, m_rcCtrl.Width(), m_rcCtrl.Height());
+		pGraph->Rectangle(m_rcContent.left, m_rcContent.top, m_rcContent.Width(), m_rcContent.Height());
 	}
 }
 

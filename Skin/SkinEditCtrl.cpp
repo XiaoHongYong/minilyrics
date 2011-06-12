@@ -828,9 +828,9 @@ void CSkinEditCtrl::Draw(CRawGraph *pGraph)
 
 	pGraph->SetFont(m_font.GetFont());
 
-	FillGraph(pGraph, &m_rcCtrl, CN_BG);
+	FillGraph(pGraph, &m_rcContent, CN_BG);
 
-	CRect	rc = m_rcCtrl;
+	CRect	rc = m_rcContent;
 	rc.DeflateRect(m_xMargin, m_yMargin);
 
 	int		nBegSelRow, nEndSelRow;
@@ -1234,15 +1234,14 @@ void CSkinEditCtrl::ShowCaret()
 		m_nCaretY = m_yMargin + (m_nCaretRow - m_nTopVisibleLine) * GetLineDy();
 	else
 	{
-		CRect rc = m_rcCtrl;
-		m_nCaretY = (rc.Height() - GetFontHeight()) / 2;
+		m_nCaretY = (m_rcContent.Height() - GetFontHeight()) / 2;
 	}
 	ShowCaret(m_nCaretX, m_nCaretY, 2, GetFontHeight());
 }
 
 void CSkinEditCtrl::MakeCaretInSight()
 {
-	CRect		rc = m_rcCtrl;
+	CRect		rc = m_rcContent;
 
 	if (m_nCaretRow < 0 || m_nCaretRow >= (int)m_vLines.size())
 	{
@@ -1345,8 +1344,8 @@ void CSkinEditCtrl::SetCaretToPos(int x, int y)
 	COneLine		*pLine;
 	int				i;
 
-	x -= m_rcCtrl.left;
-	y -= m_rcCtrl.top;
+	x -= m_rcContent.left;
+	y -= m_rcContent.top;
 
 	m_nCaretRow = m_nTopVisibleLine + (y - m_yMargin)/ GetLineDy();
 	ASSERT(!m_vLines.empty());
@@ -1847,7 +1846,7 @@ void CSkinEditCtrl::InsertStr(int nRow, int nCol, LPCTSTR szText, int &nRowNext,
 
 void CSkinEditCtrl::UpdateScrollInfo(bool bHorz, bool bVert)
 {
-	CRect			rc = m_rcCtrl;
+	CRect			rc = m_rcContent;
 
 	rc.DeflateRect(m_xMargin, m_yMargin);
 
@@ -1914,11 +1913,11 @@ void CSkinEditCtrl::OnSize()
 {
 	CSkinScrollFrameCtrlBase::OnSize();
 
-	m_caret.SetOffset(m_rcCtrl.left, m_rcCtrl.top);
+	m_caret.SetOffset(m_rcContent.left, m_rcContent.top);
 
 	UpdateScrollInfo();
 
-	CRect		rc = m_rcCtrl;
+	CRect		rc = m_rcContent;
 
 	rc.DeflateRect(m_xMargin, m_yMargin);
 
@@ -1928,7 +1927,7 @@ void CSkinEditCtrl::OnSize()
 
 void CSkinEditCtrl::OnSetFocus()
 {
-	CRect		rc = m_rcCtrl;
+	CRect		rc = m_rcContent;
 
 	rc.DeflateRect(m_xMargin, m_yMargin);
 
@@ -2369,7 +2368,7 @@ void CSkinEditCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 			if (m_nCaretRow > 0)
 			{
 				bRecoverCaretMaxXLatestOrg = true;
-				SetCaretToPos(m_rcCtrl.left + m_nCaretMaxXLatest, m_rcCtrl.top + m_nCaretY - GetLineDy());
+				SetCaretToPos(m_rcContent.left + m_nCaretMaxXLatest, m_rcContent.top + m_nCaretY - GetLineDy());
 			}
 			break;
 		}
@@ -2379,7 +2378,7 @@ void CSkinEditCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 			if (m_nCaretRow < (int)m_vLines.size() - 1)
 			{
 				bRecoverCaretMaxXLatestOrg = true;
-				SetCaretToPos(m_rcCtrl.left + m_nCaretMaxXLatest, m_rcCtrl.top + m_nCaretY + GetLineDy());
+				SetCaretToPos(m_rcContent.left + m_nCaretMaxXLatest, m_rcContent.top + m_nCaretY + GetLineDy());
 			}
 			break;
 		}
@@ -2389,7 +2388,7 @@ void CSkinEditCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 			if (m_nCaretRow > 0 && m_pVertScrollBar&& m_pVertScrollBar->IsEnabled())
 			{
 				bRecoverCaretMaxXLatestOrg = true;
-				SetCaretToPos(m_rcCtrl.left + m_nCaretMaxXLatest, m_rcCtrl.top + m_nCaretY - GetLineDy() * (m_pVertScrollBar->GetPage() - 1));
+				SetCaretToPos(m_rcContent.left + m_nCaretMaxXLatest, m_rcContent.top + m_nCaretY - GetLineDy() * (m_pVertScrollBar->GetPage() - 1));
 				m_nTopVisibleLine -= m_pVertScrollBar->GetPage() - 1;
 				if (m_nTopVisibleLine < 0)
 					m_nTopVisibleLine = 0;
@@ -2402,7 +2401,7 @@ void CSkinEditCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 			if (m_nCaretRow < (int)m_vLines.size() && m_pVertScrollBar && m_pVertScrollBar->IsEnabled())
 			{
 				bRecoverCaretMaxXLatestOrg = true;
-				SetCaretToPos(m_rcCtrl.left + m_nCaretMaxXLatest, m_rcCtrl.top + m_nCaretY + GetLineDy() * (m_pVertScrollBar->GetPage() - 1));
+				SetCaretToPos(m_rcContent.left + m_nCaretMaxXLatest, m_rcContent.top + m_nCaretY + GetLineDy() * (m_pVertScrollBar->GetPage() - 1));
 				m_nTopVisibleLine += m_pVertScrollBar->GetPage() - 1;
 				if (m_nTopVisibleLine > m_pVertScrollBar->GetMax())
 				{
