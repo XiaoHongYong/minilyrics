@@ -33,6 +33,7 @@
 #include "PreferenceDlg.h"
 #include "DlgUpload.h"
 #include "DlgAdjustHue.h"
+#include "LyricsTool.h"
 
 #ifdef _MPLAYER
 #include "SkinTreeCtrl.h"
@@ -117,6 +118,7 @@ int CMPSkinFactory::Init()
 	RegisterPreferencePage(this);
 	RegisterUploadLyrPage(this);
 	RegisterAdjustHuePage(this);
+	RegisterLyricsToolPage(this);
 
 	return CSkinFactory::Init();
 }

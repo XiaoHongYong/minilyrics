@@ -360,13 +360,14 @@
 #define IDC_RATE_LYR_5                  40191
 #define IDC_IMPORT_ITUNES_LIB           40192
 #define IDC_DOWNLOAD_ALL_LYR_FOR_IPOD   40193
+#define IDC_IPOD_LYRICS_DOWNLOADER      40194
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        183
-#define _APS_NEXT_COMMAND_VALUE         40194
+#define _APS_NEXT_COMMAND_VALUE         40195
 #define _APS_NEXT_CONTROL_VALUE         1121
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

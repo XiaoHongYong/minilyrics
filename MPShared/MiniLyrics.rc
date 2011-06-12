@@ -227,6 +227,7 @@ BEGIN
         END
         MENUITEM "&Preferences...\tCtrl+P",     IDC_PREFERENCE
         MENUITEM SEPARATOR
+        MENUITEM "&iPod Lyrics Downloader",     IDC_IPOD_LYRICS_DOWNLOADER
         MENUITEM "&Floating Lyrics...",         IDC_FLOATING_LYRICS
         MENUITEM "Lyrics &Editor...",           IDC_LYR_EDITOR
         MENUITEM "INSERT_NEW_MENU_POS",         IDC_NEW_MENU_POS
@@ -549,6 +550,7 @@ BEGIN
     END
     POPUP "&View"
     BEGIN
+        MENUITEM "&iPod Lyrics Downloader",     IDC_IPOD_LYRICS_DOWNLOADER
         MENUITEM "Lyrics &Editor...",           IDC_LYR_EDITOR
         MENUITEM "&Floating Lyrics...",         IDC_FLOATING_LYRICS
         MENUITEM "&Preferences...\tCtrl+P",     IDC_PREFERENCE

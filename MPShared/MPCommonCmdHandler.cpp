@@ -141,29 +141,9 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 		break;
 
 	case IDC_EMBEDDED_LYRICS:
-		{
-			// Load Embedded lyrics tool.
-			RunLyricsTool(m_pSkinWnd);
-		}
+	case IDC_IPOD_LYRICS_DOWNLOADER:
+		RunLyricsTool(m_pSkinWnd);
 		break;
-// 	case IDC_ALIGN_LYRICS_LEFT:
-// 	case IDC_ALIGN_LYRICS_CENTER:
-// 	case IDC_ALIGN_LYRICS_RIGHT:
-// 		{
-// 			tstring		strAlign;
-// 
-// 			if (nId == IDC_ALIGN_LYRICS_LEFT)
-// 				strAlign = _T("left");
-// 			else if (nId == IDC_ALIGN_LYRICS_CENTER)
-// 				strAlign = _T("center");
-// 			else if (nId == IDC_ALIGN_LYRICS_RIGHT)
-// 				strAlign = _T("right");
-// 			else
-// 				ASSERT(0 && _T("Invalid ID."));
-// 
-// 			CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("LyrAlign"), strAlign.c_str());
-// 		}
-// 		break;
 
 	case IDC_LDO_KARAOKE:
 		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("Karaoke"), 
