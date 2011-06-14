@@ -1057,8 +1057,10 @@ int CID3v2IF::RemoveSynchLyrics(const char *szLanguage)
 		{
 			if (szLanguage == NULL
 				|| CID3v2FrameParserSynLyrics::IsFrameLanguageSame(pFrame, szLanguage, CID3v2FrameParserSynLyrics::CT_LYRICS))
+			{
 				FrameRemove(it);
-			return ERR_OK;
+				return ERR_OK;
+			}
 		}
 	}
 
@@ -1088,8 +1090,10 @@ int CID3v2IF::RemoveUnsynchLyrics(const char *szLanguage)
 		{
 			if (szLanguage == NULL
 				|| CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(pFrame, szLanguage))
+			{
 				FrameRemove(it);
-			return ERR_OK;
+				return ERR_OK;
+			}
 		}
 	}
 

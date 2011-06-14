@@ -134,6 +134,8 @@ public:
 
 	virtual void OnEvent(const IEvent *pEvent);
 
+	virtual void PostQuitMessage();
+
 protected:
 	virtual CEventsDispatcher *NewEventPatcher();
 	virtual CSkinFactory *NewSkinFactory();

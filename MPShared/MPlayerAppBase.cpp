@@ -484,6 +484,8 @@ bool CMPlayerAppBase::Init(StartApp startApp)
 
 	g_LyricData.m_nGlobalOffsetTime = g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("LyrDelayTime"), 0);
 
+	g_autoProcessEmbeddedLyrics.Init();
+
 	g_OnlineSearch.Init();
 
 	m_pEventDispatcher->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
@@ -559,11 +561,6 @@ bool CMPlayerAppBase::InitLoadSkin()
 
 void CMPlayerAppBase::Quit()
 {
-	OnLyricsChangingSavePrompt();
-
-	if (!g_autoProcessEmbeddedLyrics.OnQuit())
-		return;
-
 	g_LyricSearch.Quit();
 	g_LyricsDownloader.Quit();
 
@@ -616,6 +613,16 @@ void CMPlayerAppBase::OnEvent(const IEvent *pEvent)
 			verCheck.OnDownloadOK(pDlEvt->pTask);
 		}
 	}
+}
+
+void CMPlayerAppBase::PostQuitMessage()
+{
+	OnLyricsChangingSavePrompt();
+
+	if (!g_autoProcessEmbeddedLyrics.OnPostQuit())
+		return;
+
+	CSkinApp::PostQuitMessage();
 }
 
 CEventsDispatcher *CMPlayerAppBase::NewEventPatcher()

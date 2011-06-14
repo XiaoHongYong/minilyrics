@@ -1,13 +1,6 @@
-// AutoProcessEmbeddedLyrics.h: interface for the CAutoProcessEmbeddedLyrics class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_AutoProcessEmbeddedLyrics_H__D17BD83B_4582_495C_AECC_FB2CE67E4E19__INCLUDED_)
-#define AFX_AutoProcessEmbeddedLyrics_H__D17BD83B_4582_495C_AECC_FB2CE67E4E19__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+DECLAR_CPPUNIT_TEST_REG(CAutoProcessEmbeddedLyrics)
 
 class CAutoProcessEmbeddedLyrics  
 {
@@ -23,15 +16,15 @@ public:
 		// save embedded lyrics
 		CCharBuffer			m_strLyrics;
 
-		// remove embedded lyrics
-		vector<string>		m_vSyncLang, m_vUnsyncLang;
-
 		Item()
 		{
 			m_bDealOK = false;
 			m_nTryFailed = 0;
 			m_uEmbeddedLyrType = 0;
 		}
+
+		bool FromXML(SXNode *pNode);
+		void ToXML(CXMLWriter &xmlWriter);
 	};
 	typedef list<Item>		LIST_ITEMS;
 
@@ -39,18 +32,24 @@ public:
 	virtual ~CAutoProcessEmbeddedLyrics();
 
 	int SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
-	int RemoveEmbeddedLyrics(LPCTSTR szSongFile, vector<string> &vSyncLang, vector<string> &vUnsyncLang, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
+	int RemoveEmbeddedLyrics(LPCTSTR szSongFile, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
 	void RemoveJob(LPCTSTR szSongFile);
 
-	bool OnQuit();
+	void Init();
+
+	bool OnPostQuit();
 	void OnSongChanged();
 
 protected:
 	friend class CDlgBatchProcessEmbeddedLyrics;
+	friend class CTestCaseCAutoProcessEmbeddedLyrics;
 
 	int DealEmbeddedLyrics(Item &item);
 	int DealSaveEmbeddedLyrics(Item &item);
 	int DealRemoveEmbeddedLyrics(Item &item);
+
+	void SaveJobs();
+	void LoadJobs(bool bDeleteFile);
 
 	LIST_ITEMS				m_listJobs;
 	Mutex					m_mutex;
@@ -58,5 +57,3 @@ protected:
 };
 
 extern CAutoProcessEmbeddedLyrics		g_autoProcessEmbeddedLyrics;
-
-#endif // !defined(AFX_AutoProcessEmbeddedLyrics_H__D17BD83B_4582_495C_AECC_FB2CE67E4E19__INCLUDED_)

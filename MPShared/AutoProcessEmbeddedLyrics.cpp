@@ -6,11 +6,14 @@
 #include "MPlayerApp.h"
 #include "LyricsTool.h"
 #include "AutoProcessEmbeddedLyrics.h"
+#include "DlgBatchProcessEmbeddedLyrics.h"
 
 CAutoProcessEmbeddedLyrics		g_autoProcessEmbeddedLyrics;
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+#define SZ_JOB_FILE_NAME		_T("process_embedded_lyrics.bxml")
+#define VERSION_CUR				_T("1")
+#define SZ_VERSION				_T("version")
+
 //////////////////////////////////////////////////////////////////////
 
 CAutoProcessEmbeddedLyrics::CAutoProcessEmbeddedLyrics()
@@ -21,6 +24,47 @@ CAutoProcessEmbeddedLyrics::CAutoProcessEmbeddedLyrics()
 CAutoProcessEmbeddedLyrics::~CAutoProcessEmbeddedLyrics()
 {
 
+}
+
+#ifdef UNICODE
+static void StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<string> &vAnsiStr)
+{
+	V_Str vStr;
+	StrSplit(szStr, chSeperator, vStr);
+	for (int i = 0; i < vStr.size(); i++)
+	{
+		string str;
+		TStringToAnsi(vStr[i].c_str(), vStr[i].size(), str);
+		vAnsiStr.push_back(str);
+	}
+}
+#endif
+
+bool CAutoProcessEmbeddedLyrics::Item::FromXML(SXNode *pNode)
+{
+	m_strSongFile = pNode->GetPropertySafe(_T("song_file"));
+	m_uEmbeddedLyrType = pNode->GetPropertyInt(_T("embedded_lyr_type"), 0);
+	m_bRemove = Tobool(pNode->GetPropertyInt(_T("remove"), false));
+	m_nTryFailed = pNode->GetPropertyInt(_T("try_failed"), 0);
+
+	string	binLyrics;
+	if (pNode->GetPropertyBinData(_T("bin_lyrics"), binLyrics))
+		m_strLyrics.insert(0, binLyrics.c_str(), binLyrics.size());
+
+	return m_strSongFile.size() > 0;
+}
+
+void CAutoProcessEmbeddedLyrics::Item::ToXML(CXMLWriter &xmlWriter)
+{
+	xmlWriter.WriteStartElement(_T("item"));
+
+	xmlWriter.WriteAttribute(_T("song_file"), m_strSongFile.c_str());
+	xmlWriter.WriteAttribute(_T("embedded_lyr_type"), m_uEmbeddedLyrType);
+	xmlWriter.WriteAttribute(_T("remove"), m_bRemove);
+	xmlWriter.WriteAttribute(_T("try_failed"), m_nTryFailed);
+	xmlWriter.WriteAttribute(_T("bin_lyrics"), m_strLyrics.c_str(), m_strLyrics.size());
+
+	xmlWriter.WriteEndElement();
 }
 
 int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
@@ -102,7 +146,7 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 	return nRet;
 }
 
-int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, vector<string> &vSyncLang, vector<string> &vUnsyncLang, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
+int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
 {
 	CMutexAutolock		autolock(m_mutex);
 
@@ -115,8 +159,6 @@ int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, vector<
 		if (_tcscmp(szSongFile, item.m_strSongFile.c_str()) == 0)
 		{
 			item.m_bRemove = true;
-			item.m_vSyncLang = vSyncLang;
-			item.m_vUnsyncLang = vUnsyncLang;
 			item.m_uEmbeddedLyrType	= uEmbeddedLyrType;
 			item.m_nTryFailed = 0;
 			nRet = DealEmbeddedLyrics(item);
@@ -131,8 +173,6 @@ int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, vector<
 	newItem.m_bRemove = true;
 	newItem.m_uEmbeddedLyrType = uEmbeddedLyrType;
 	newItem.m_nTryFailed = 0;
-	newItem.m_vSyncLang = vSyncLang;
-	newItem.m_vUnsyncLang = vUnsyncLang;
 	nRet = DealEmbeddedLyrics(newItem);
 	if (nRet != ERR_OK && bAddToQueueOnFailed)
 		m_listJobs.push_back(newItem);
@@ -157,15 +197,21 @@ void CAutoProcessEmbeddedLyrics::RemoveJob(LPCTSTR szSongFile)
 	}
 }
 
-bool CAutoProcessEmbeddedLyrics::OnQuit()
+void CAutoProcessEmbeddedLyrics::Init()
+{
+	LoadJobs(true);
+}
+
+bool CAutoProcessEmbeddedLyrics::OnPostQuit()
 {
 	OnSongChanged();
 
 	if (m_listJobs.empty())
 		return true;
 
-	// Show lyrics tool window to let user save.
-	RunLyricsTool(NULL);
+	CDlgBatchProcessEmbeddedLyrics	dlg;
+	dlg.DoModal(NULL);
+
 	return false;
 }
 
@@ -294,40 +340,15 @@ int CAutoProcessEmbeddedLyrics::DealRemoveEmbeddedLyrics(Item &item)
 		return ERR_OK;
 
 	CID3v2IF		id3v2(ED_SYSDEF);
-	int				i;
 	nRet = id3v2.Open(item.m_strSongFile.c_str(), true, false);
 	if (nRet != ERR_OK)
 		return nRet;
 
 	if (Id3v2Uslt)
-	{
-		if (item.m_vUnsyncLang.empty())
-			nRet = id3v2.RemoveUnsynchLyrics(NULL);
-		else
-		{
-			for (i = 0; i < (int)item.m_vUnsyncLang.size(); i++)
-			{
-				nRet = id3v2.RemoveUnsynchLyrics(item.m_vUnsyncLang[i].c_str());
-				if (nRet != ERR_OK)
-					return nRet;
-			}
-		}
-	}
+		nRet = id3v2.RemoveUnsynchLyrics(NULL);
 
 	if (Id3v2Sylt)
-	{
-		if (item.m_vSyncLang.empty())
-			nRet = id3v2.RemoveSynchLyrics(NULL);
-		else
-		{
-			for (i = 0; i < (int)item.m_vSyncLang.size(); i++)
-			{
-				nRet = id3v2.RemoveSynchLyrics(item.m_vSyncLang[i].c_str());
-				if (nRet != ERR_OK)
-					return nRet;
-			}
-		}
-	}
+		nRet = id3v2.RemoveSynchLyrics(NULL);
 
 	if (bId3v2LyricsUserDefined)
 		nRet = id3v2.RemoveUserDefinedTextFrameByDesc(SZ_ID3V2_LYR_USER_DEFINED);
@@ -339,3 +360,129 @@ int CAutoProcessEmbeddedLyrics::DealRemoveEmbeddedLyrics(Item &item)
 
 	return ERR_OK;
 }
+
+void CAutoProcessEmbeddedLyrics::SaveJobs()
+{
+	CMLBinXMLWriter		xmlWriter;
+	CMutexAutolock		autolock(m_mutex);
+
+	xmlWriter.WriteStartElement(_T("embedded_lyr_jobs"));
+	xmlWriter.WriteAttribute(SZ_VERSION, VERSION_CUR);
+
+	for (LIST_ITEMS::iterator it = m_listJobs.begin(); it != m_listJobs.end(); ++it)
+	{
+		Item		&item = *it;
+		if (!item.m_bDealOK)
+			item.ToXML(xmlWriter);
+	}
+
+	xmlWriter.WriteEndElement();
+
+	tstring	strFile = GetWorkingFolder();
+	strFile += SZ_JOB_FILE_NAME;
+	xmlWriter.SaveAsFile(strFile.c_str());
+}
+
+void CAutoProcessEmbeddedLyrics::LoadJobs(bool bDeleteFile)
+{
+	tstring	strFile = GetWorkingFolder();
+	strFile += SZ_JOB_FILE_NAME;
+
+	m_listJobs.clear();
+
+	if (!IsFileExist(strFile.c_str()))
+		return;
+
+	CSimpleXML	xml;
+	if (xml.ParseFile(strFile.c_str())
+		&& _tcscmp(xml.m_pRoot->GetProperty(SZ_VERSION), VERSION_CUR) == 0)
+	{
+		for (SXNode::LIST_CHILDREN::iterator it = xml.m_pRoot->listChildren.begin();
+			it != xml.m_pRoot->listChildren.end(); ++it)
+		{
+			SXNode	*pNode = *it;
+			if (_tcscmp(pNode->strName.c_str(), _T("item")) != 0)
+				continue;
+
+			Item item;
+			if (item.FromXML(pNode))
+				m_listJobs.push_back(item);
+		}
+	}
+
+	if (bDeleteFile)
+		DeleteFile(strFile.c_str());
+}
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+#ifdef _CPPUNIT_TEST
+
+IMPLEMENT_CPPUNIT_TEST_REG(CAutoProcessEmbeddedLyrics)
+
+class CTestCaseCAutoProcessEmbeddedLyrics : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseCAutoProcessEmbeddedLyrics);
+	CPPUNIT_TEST(Test_AutoProcessEmbeddedLyricsLoad);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+
+	void Test_AutoProcessEmbeddedLyricsLoad()
+	{
+		tstring	strFile = GetWorkingFolder();
+		strFile += SZ_JOB_FILE_NAME;
+
+		// Only run this test when the file doesn't exist.
+		if (IsFileExist(strFile.c_str()))
+			return;
+
+		CAutoProcessEmbeddedLyrics	embedded_lyr_process;
+		CAutoProcessEmbeddedLyrics::Item	item;
+
+		item.m_strSongFile = _T("C:\\abc.mp3");
+		item.m_strLyrics.append(";lksjd;gioew1230$/;%^&*");
+		item.m_uEmbeddedLyrType = 2308273;
+		item.m_bRemove = true;
+		item.m_bDealOK = false;
+		item.m_nTryFailed = 2;
+		embedded_lyr_process.m_listJobs.push_back(item);
+
+		item.m_strSongFile = _T("C:\\abcd.mp3");
+		item.m_strLyrics.append(";lksjd;gssgeeggioew1230$/;%^&*");
+		item.m_uEmbeddedLyrType = 21308273;
+		item.m_bRemove = false;
+		item.m_bDealOK = false;
+		item.m_nTryFailed = 0;
+		embedded_lyr_process.m_listJobs.push_back(item);
+
+		CAutoProcessEmbeddedLyrics::LIST_ITEMS	listJobs = embedded_lyr_process.m_listJobs;
+
+		embedded_lyr_process.SaveJobs();
+		embedded_lyr_process.LoadJobs(true);
+
+		CPPUNIT_ASSERT(listJobs.size() == embedded_lyr_process.m_listJobs.size());
+
+		CAutoProcessEmbeddedLyrics::LIST_ITEMS::iterator it1 = embedded_lyr_process.m_listJobs.begin();
+		for (CAutoProcessEmbeddedLyrics::LIST_ITEMS::iterator it2 = listJobs.begin(); 
+			it2 != listJobs.end(); ++it1, ++it2)
+		{
+			CAutoProcessEmbeddedLyrics::Item &i1 = *it1;
+			CAutoProcessEmbeddedLyrics::Item &i2 = *it2;
+
+			CPPUNIT_ASSERT(i1.m_strSongFile == i2.m_strSongFile);
+			CPPUNIT_ASSERT(i1.m_uEmbeddedLyrType == i2.m_uEmbeddedLyrType);
+			CPPUNIT_ASSERT(i1.m_bRemove == i2.m_bRemove);
+			CPPUNIT_ASSERT(i1.m_nTryFailed == i2.m_nTryFailed);
+
+			CPPUNIT_ASSERT(i1.m_strLyrics.size() == i2.m_strLyrics.size());
+			CPPUNIT_ASSERT(memcmp(i1.m_strLyrics.c_str(), i2.m_strLyrics.c_str(), i1.m_strLyrics.size()) == 0);
+		}
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseCAutoProcessEmbeddedLyrics);
+
+#endif // _CPPUNIT_TEST

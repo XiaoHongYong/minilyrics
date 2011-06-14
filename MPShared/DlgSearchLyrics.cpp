@@ -448,8 +448,7 @@ public:
 				}
 				else
 				{
-					vector<string> vSyncLang, vUnsyncLang;
-					int nRet = g_autoProcessEmbeddedLyrics.RemoveEmbeddedLyrics(m_strSongFile.c_str(), vSyncLang, vUnsyncLang, lst, true);
+					int nRet = g_autoProcessEmbeddedLyrics.RemoveEmbeddedLyrics(m_strSongFile.c_str(), lst, true);
 					if (nRet == ERR_OK)
 						bDeleted = true;
 					else
