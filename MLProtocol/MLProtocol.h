@@ -29,6 +29,7 @@ enum ML_PROTOCAL_ERROR
 	ERR_NOT_AUTHORIZED		= 1061,	// 未经授权的行为
 	ERR_NOT_LOGIN			= 1062,	// 未登陆，请登陆
 	ERR_LYR_NO_TAG_FOUND	= 1064,	// No lyrics tag is found in content.
+	ERR_REQUIRE_ACTIVE_LICENSE	= 1065,	// No lyrics tag is found in content.
 };
 
 #define SERVER_PORT_BEGIN			8000
@@ -317,6 +318,7 @@ class MLMsgCmdBatchSearch : public CXMLMsgCmd
 {
 public:
 	MLListSearchItems	listSearchItems;
+	bool				bOnlyActiveCanDownload;
 
 public:
 	MLMsgCmdBatchSearch();

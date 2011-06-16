@@ -47,6 +47,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_NOT_AUTHORIZED, _T("Unauthorized action.") },
 	{ ERR_NOT_LOGIN, _T("Not signed in, please sign in.") },
 	{ ERR_LYR_NO_TAG_FOUND, _T("No lyrics tag is found in the lyrics.") },
+	{ ERR_REQUIRE_ACTIVE_LICENSE, _T("An active license is required.") },
 
 	{ 0, NULL}
 };
@@ -99,6 +100,7 @@ ID_TO_STRING	__MlCmdResult2Str[] =
 	{ ERR_NOT_AUTHORIZED, _T("NOT_AUTHORIZED") },
 	{ ERR_NOT_LOGIN, _T("NOT_LOGIN") },
 	{ ERR_LYR_NO_TAG_FOUND, _T("LYR_NO_TAG_FOUND") },
+	{ ERR_REQUIRE_ACTIVE_LICENSE, _T("REQUIRE_ACTIVE_LICENSE") },
 	{0, NULL},
 };
 
@@ -438,11 +440,14 @@ int MLSearchItem::ToXML(CXMLWriter &xmlFile)
 
 MLMsgCmdBatchSearch::MLMsgCmdBatchSearch()
 {
+	bOnlyActiveCanDownload = false;
 }
 
 int MLMsgCmdBatchSearch::FromXML(SXNode *pXmlNode)
 {
 	CXMLMsgCmd::FromXML(pXmlNode);
+
+	bOnlyActiveCanDownload = Tobool(pXmlNode->GetPropertyInt(_T("oncd"), false));
 
 	listSearchItems.reserve(pXmlNode->listChildren.size());
 
@@ -464,6 +469,9 @@ int MLMsgCmdBatchSearch::FromXML(SXNode *pXmlNode)
 int MLMsgCmdBatchSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_BATCH_SEARCH);
+
+	if (bOnlyActiveCanDownload)
+		xmlFile.WriteAttribute(_T("oncd"), bOnlyActiveCanDownload);
 
 	CXMLMsgCmd::ToXMLAttribute(xmlFile);
 

@@ -979,7 +979,7 @@ int CID3v2IF::UpdateSynchLyricsFrame(ID3v2SynchLyrics *psynchLyrics)
 		if (pFrame->m_framehdr.nFrameID == nFrameID)
 		{
 			if (CID3v2FrameParserSynLyrics::IsFrameLanguageSame(pFrame, psynchLyrics->m_szLanguage, CID3v2FrameParserSynLyrics::CT_LYRICS)
-				|| (psynchLyrics->frameUID != -1 && psynchLyrics->frameUID == pFrame->m_framehdr.frameUID))
+				|| (psynchLyrics->frameUID != -1 || psynchLyrics->frameUID == pFrame->m_framehdr.frameUID))
 				break;
 		}
 	}
@@ -1018,7 +1018,7 @@ int CID3v2IF::UpdateUnsynchLyricsFrame(ID3v2UnsynchLyrics *punsynchLyrics)
 		if (pFrame->m_framehdr.nFrameID == nFrameID)
 		{
 			if (CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(pFrame, punsynchLyrics->m_szLanguage)
-				|| (punsynchLyrics->frameUID != -1 && punsynchLyrics->frameUID == pFrame->m_framehdr.frameUID))
+				|| (punsynchLyrics->frameUID != -1 || punsynchLyrics->frameUID == pFrame->m_framehdr.frameUID))
 				break;
 		}
 	}

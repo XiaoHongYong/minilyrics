@@ -144,6 +144,7 @@ SectionIn 1 2
   Delete "$QUICKLAUNCH\MiniLyrics for Spotify.lnk"
   Delete "$DESKTOP\MiniLyrics for Media Player Classic Home Cinema.lnk"
   Delete "$QUICKLAUNCH\MiniLyrics for Media Player Classic Home Cinema.lnk"
+  Delete "$SMPROGRAMS\MiniLyrics\*.*"
 
   ; Remove old files
   Delete $INSTDIR\MLSetup.exe
@@ -337,7 +338,13 @@ SectionEnd
 Section "Start Menu Shortcuts" SecShortcut
 SectionIn 1
   CreateDirectory "$SMPROGRAMS\MiniLyrics"
-  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
+  CreateShortCut "$SMPROGRAMS\MiniLyrics\iPod Lyrics Downloader.lnk" "$INSTDIR\MiniLyrics.exe" \
+	"/iPodLyricsDownloader"
+
+  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe" \
+	"" "" "" "" \
+	ALT|CONTROL|M ""
+
   StrCpy $R1 $(SecShortcut.MLUninst)
   CreateShortCut "$SMPROGRAMS\MiniLyrics\$R1.lnk" "$INSTDIR\uninst-ml.exe"
   StrCpy $R1 $(SecShortcut.Homepage)

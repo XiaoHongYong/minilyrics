@@ -21,7 +21,7 @@ tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
 		}
 		else
 		{
-			strMsg = TOLOCAL_T("You activation code is verified OK.");
+			strMsg = TOLOCAL_T("Your activation code is verified OK.");
 			strMsg += _T("\n");
 			strMsg += TOLOCAL_T("Please click 'Activate' button to activate your MiniLyrics.");
 		}
@@ -51,13 +51,13 @@ tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
 	{
 		strMsg = TOLOCAL_T("Your activation code has been revoked.");
 		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Maybe your refund your order.");
+		strMsg += TOLOCAL_T("Maybe you have refund your order.");
 	}
 	else if (licenseInfo.licenseStatus == LS_TRANSFERED)
 	{
-		strMsg = TOLOCAL_T("Your activation code has been transfered to another computer.");
+		strMsg = TOLOCAL_T("Your activation code has been transferred to another devices.");
 		strMsg += _T("\n");
-		strMsg += CStrPrintf(TOLOCAL_T("Your code can be used on %d PCs."), licenseInfo.nLicensedUser).c_str();
+		strMsg += CStrPrintf(TOLOCAL_T("Your code can be used on %d devices."), licenseInfo.nLicensedUser).c_str();
 	}
 
 	return strMsg;
@@ -281,6 +281,7 @@ public:
 		SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, strVer.c_str());
 
 		SetUIObjectProperty(_T("CID_COPYRIGHT"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));
+		SetUIObjectText(_T("CID_COPYRIGHT"), CStrPrintf(_T("%s  2001-2011 Crintsoft MiniLyrics"), TOLOCAL_T("Copyright")).c_str());
 
 		SetUIObjectProperty(_T("CID_FEEDBACK"), SZ_PN_LINK, GetStrName(SN_HTTP_FEEDBACK));
 
@@ -319,7 +320,7 @@ public:
 				}
 				if (licenseInfo.strExpireDate.size())
 				{
-					strLicense += _T("\n"); strLicense += TOLOCAL_T("Expiration Date:"); strLicense += _T(" "); 
+					strLicense += _T("\n"); strLicense += TOLOCAL_T("Expiration Date:"); strLicense += _T(" ");
 					strLicense += licenseInfo.strExpireDate;
 				}
 			}
