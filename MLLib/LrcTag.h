@@ -117,6 +117,7 @@ public:
 	void SetValue(int nIndex, LPCWSTR szValue, int nLen);
 	void SetValue(int nIndex, LPCSTR szValue, int nLen);
 	const tstring &GetValue(int nIndex);
+	void ClearValue(int nIndex);
 
 	bool ShouldReadLyrContentType()
 		{ return m_prop.m_lyrContentType == LCT_UNKNOWN && IsFlagSet(m_tagMask, LTT_CONTENT_TYPE); }
@@ -128,6 +129,12 @@ public:
 
 	tstring GetLrcTagString(int nIndex, bool bIncLineRet = true);
 	tstring GetTxtTagString(int nIndex, bool bIncLineRet = true);
+
+	// Return value is the index of tag, -1, if no tag found.
+	int ParseTxtTag(LPCSTR szText, int nLen);
+	int ParseTxtTag(LPCWSTR szText, int nLen);
+	int ParseLrcTag(LPCSTR szText, int nLen);
+	int ParseLrcTag(LPCWSTR szText, int nLen);
 
 	void Remove(int nIndex);
 	CHAR_ENCODING GetEncoding() { return m_encoding; }

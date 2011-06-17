@@ -50,7 +50,6 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile="$(ProjectDir)/../Output/mllib/Release/MLLib.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 			/>
@@ -196,7 +195,6 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile="$(ProjectDir)/../Output/MLLib/UnicodeRelease/MLLib.pch"
 				AssemblerListingLocation="$(IntDir)\"
 				ObjectFile="$(IntDir)\"
 				ProgramDataBaseFileName="$(IntDir)\vc80.pdb"
@@ -271,7 +269,6 @@
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderThrough="stdafx.h"
-				PrecompiledHeaderFile="$(ProjectDir)/../Output/mllib/Debug/MLLib.pch"
 				WarningLevel="3"
 				SuppressStartupBanner="true"
 				DebugInformationFormat="4"
@@ -641,7 +638,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="MLData.cpp"
+				RelativePath=".\MLData.cpp"
 				>
 				<FileConfiguration
 					Name="Release|Win32"

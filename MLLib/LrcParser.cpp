@@ -153,18 +153,8 @@ int CLrcParser::ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine)
 		}
 
 		// Parse lrc tag.
-		int		nValBeg, nValEnd;
-		int		i;
-		for (i = 0; i < propNameValueMap.GetCount(); i++)
-		{
-			if (ParseLrcPropTag(szLine, _tcslen(szLine), 
-				propNameValueMap.GetLrcName(i), nValBeg, nValEnd))
-			{
-				propNameValueMap.SetValue(i, szLine + nValBeg, nValEnd - nValBeg);
-				break;
-			}
-		}
-		if (i == propNameValueMap.GetCount())
+		int propIndex = propNameValueMap.ParseLrcTag(szLine, _tcslen(szLine));
+		if (propIndex == -1)
 			AddStrAsUnknowLine(szLine);
 	}
 
@@ -302,6 +292,13 @@ void CLrcParser::ParseTxtTagInLyrics()
 {
 	CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
 	VLyrLines	&lyrLines = m_pMLData->GetRawLyrics();
+
+	// For some duplicated tags (lyrics file are not well written, 
+	// we need to filter those tags).
+
+	//
+	// Parse text tags in the file header.
+	//
 	for (int i = 0; i < (int)lyrLines.size(); i++)
 	{
 		PML_ROW		pRow = lyrLines[i];
@@ -310,17 +307,40 @@ void CLrcParser::ParseTxtTagInLyrics()
 		ASSERT(pFrag->IsTempBegTime());
 
 		// Parse Txt tag.
-		int		nValBeg, nValEnd;
-		for (int k = 0; k < propNameValueMap.GetCount(); k++)
+		int propIndex = propNameValueMap.ParseTxtTag(pFrag->szLyric, _tcslen(pFrag->szLyric));
+		if (propIndex != -1)
 		{
-			if (ParseTxtPropTag(pFrag->szLyric, _tcslen(pFrag->szLyric), 
-				propNameValueMap.GetTxtName(k), nValBeg, nValEnd))
+			if (IsTxtTagAtTailOfFile(propNameValueMap.GetTagType(propIndex)))
 			{
-				propNameValueMap.SetValue(k, pFrag->szLyric + nValBeg, nValEnd - nValBeg);
+				// Encoding tag is very special, it may be defined by String BOM.
+				if (propNameValueMap.GetTagType(propIndex) != LTT_ENCODING)
+					propNameValueMap.ClearValue(propIndex);
+			}
+			else
+			{
+				propNameValueMap.Remove(propIndex);
 				m_pMLData->RemoveLyricsRow(i);
 				i--;
-				break;
 			}
+		}
+	}
+
+	//
+	// Parse text tags at the end of file.
+	//
+	for (int i = (int)lyrLines.size() - 1; i >= 0; i--)
+	{
+		PML_ROW		pRow = lyrLines[i];
+		ASSERT(pRow->vFrags.size() == 1);
+		PLYRIC_FRAG	pFrag = pRow->vFrags[0];
+		ASSERT(pFrag->IsTempBegTime());
+
+		// Parse Txt tag.
+		int propIndex = propNameValueMap.ParseTxtTag(pFrag->szLyric, _tcslen(pFrag->szLyric));
+		if (propIndex != -1)
+		{
+			propNameValueMap.Remove(propIndex);
+			m_pMLData->RemoveLyricsRow(i);
 		}
 	}
 }
@@ -396,22 +416,52 @@ bool CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 {
 	// reserver 4k spaces for lyrics data.
 	str.reserve(1024 * 4);
-	tstring		strTagsAtEndOfFile;
+
+	//
+	// Convert and remove lyrics line which is text lyrics tag.
+	//
+	tstring		strBuff;
+	VLyrLines	lyrLines;
+	LyricsProperties properties;
+	CLyrTagNameValueMap	propNameValueMap(properties);
+
+	for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
+	{
+		PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
+		if (pRow->nRowType == ML_ROW_LYRICS)
+		{
+			LyricsRowToTxtString(pRow, strBuff);
+			if (propNameValueMap.ParseTxtTag(strBuff.c_str(), strBuff.size()) == -1)
+			{
+				lyrLines.push_back(pRow);
+				str += strBuff;
+				str += _T("\r\n");
+			}
+		}
+		else
+		{
+			lyrLines.push_back(pRow);
+			ASSERT(pRow->nRowType == ML_ROW_UNKNOW);
+			// Only append blank spaces, not "pRow->szContent";
+			str += _T("\r\n");
+		}
+	}
 
 	if (bIncTags)
 	{
-		int		nLrcOffsetTime = 0;
+		// Make a new copy of lyrics properties, we may modify it and do not want to save it.
+		LyricsProperties properties = m_pMLData->Properties();
 		if (m_pMLData->GetLyrContentType() == LCT_LRC)
 		{
 			// Convert to timestamps.
 			tstring		strTimeStamps;
-			CLyrTimeStamp::ToString(strTimeStamps, m_pMLData);
-			nLrcOffsetTime = m_pMLData->Properties().GetOffsetTime();
-			m_pMLData->Properties().SetTxtLyrScrollEvents(strTimeStamps.c_str());
+			CLyrTimeStamp::ToString(strTimeStamps, m_pMLData->GetOffsetTime(), lyrLines);
+			properties.SetTxtLyrScrollEvents(strTimeStamps.c_str());
 		}
 
-		CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
+		CLyrTagNameValueMap	propNameValueMap(properties);
 
+		tstring		strTagsAtEndOfFile, strTagsAtBeginOfFile;
 		for (int i = 0; i < propNameValueMap.GetCount(); i++)
 		{
 			tstring strValue = propNameValueMap.GetValue(i);
@@ -421,46 +471,22 @@ bool CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 				if (IsTxtTagAtTailOfFile(propNameValueMap.GetTagType(i)))
 					strTagsAtEndOfFile += strTagLine;
 				else
-					str += strTagLine;
+					strTagsAtBeginOfFile += strTagLine;
 			}
 		}
 
-		// Recover offset time.
-		if (m_pMLData->GetLyrContentType() == LCT_LRC)
+		if (strTagsAtBeginOfFile.size())
+			str.insert(0, strTagsAtBeginOfFile.c_str());
+
+		if (strTagsAtEndOfFile.size())
 		{
-			m_pMLData->Properties().SetTxtLyrScrollEvents(_T(""));
-			m_pMLData->Properties().SetOffsetTime(nLrcOffsetTime);
+			if (str.size() && str[str.size() - 1] != '\n')
+				str += _T("\r\n");
+			str += strTagsAtEndOfFile;
 		}
 	}
 
-	//
-	// Save every lyrics line
-	tstringex		strBuff;
-	for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
-	{
-		PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
-		ASSERT(pRow);
-
-		if (pRow->nRowType == ML_ROW_LYRICS)
-			LyricsRowToTxtString(pRow, strBuff);
-		else
-		{
-			ASSERT(pRow->nRowType == ML_ROW_UNKNOW);
-			strBuff = pRow->szContent;
-		}
-
-		str += strBuff;
-		str += _T("\r\n");
-	}
-
-	if (strTagsAtEndOfFile.size())
-	{
-		if (str.size() && str[str.size() - 1] != '\n')
-			str += _T("\r\n");
-		str += strTagsAtEndOfFile;
-	}
-
-	if (str.size() > 2 && str[str.size() - 1] == '\n')
+	if (str.size() > 2 && str[str.size() - 2] == '\r' && str[str.size() - 1] == '\n')
 		str.resize(str.size() - 2);
 
 	return true;
@@ -527,7 +553,7 @@ bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, bool bLongTimeFmt, tstringex
 }
 
 //
-void CLrcParser::LyricsRowToTxtString(PML_ROW pRow, tstringex &strBuff)
+void CLrcParser::LyricsRowToTxtString(PML_ROW pRow, tstring &strBuff)
 {
 	ASSERT(pRow->nRowType == ML_ROW_LYRICS);
 	strBuff.clear();

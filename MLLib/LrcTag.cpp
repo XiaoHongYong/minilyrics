@@ -291,7 +291,8 @@ void CLyrTagNameValueMap::SetValue(int nIndex, LPCWSTR szValue, int nLen)
 {
 	ASSERT(nIndex >= 0 && nIndex < (int)m_vItems.size());
 
-	tstring *pValue = m_vItems[nIndex].pstrValue;
+	Item &item = m_vItems[nIndex];
+	tstring *pValue = item.pstrValue;
 	ASSERT(pValue);
 	if (pValue->empty())
 	{
@@ -334,6 +335,13 @@ const tstring &CLyrTagNameValueMap::GetValue(int nIndex)
 	return *pValue;
 }
 
+void CLyrTagNameValueMap::ClearValue(int nIndex)
+{
+	ASSERT(nIndex >= 0 && nIndex < (int)m_vItems.size());
+
+	m_vItems[nIndex].pstrValue->clear();
+}
+
 tstring CLyrTagNameValueMap::GetLrcTagString(int nIndex, bool bIncLineRet)
 {
 	ASSERT(nIndex >= 0 && nIndex < (int)m_vItems.size());
@@ -369,6 +377,60 @@ tstring CLyrTagNameValueMap::GetTxtTagString(int nIndex, bool bIncLineRet)
 	if (bIncLineRet)
 		strTag += _T("\r\n");
 	return strTag;
+}
+
+template<class _TCHAR>
+int ParseTxtTag(CLyrTagNameValueMap &tagNameValueMap, const _TCHAR *szText, int nLen)
+{
+	int	nValBeg, nValEnd;
+
+	for (uint k = 0; k < tagNameValueMap.GetCount(); k++)
+	{
+		if (ParseTxtPropTag(szText, nLen, tagNameValueMap.GetTxtName(k), nValBeg, nValEnd))
+		{
+			tagNameValueMap.SetValue(k, szText + nValBeg, nValEnd - nValBeg);
+			return k;
+		}
+	}
+
+	return -1;
+}
+
+int CLyrTagNameValueMap::ParseTxtTag(LPCSTR szText, int nLen)
+{
+	return ::ParseTxtTag(*this, szText, nLen);
+}
+
+int CLyrTagNameValueMap::ParseTxtTag(LPCWSTR szText, int nLen)
+{
+	return ::ParseTxtTag(*this, szText, nLen);
+}
+
+template<class _TCHAR>
+int ParseLrcTag(CLyrTagNameValueMap &tagNameValueMap, const _TCHAR *szText, int nLen)
+{
+	int	nValBeg, nValEnd;
+
+	for (uint k = 0; k < tagNameValueMap.GetCount(); k++)
+	{
+		if (ParseLrcPropTag(szText, nLen, tagNameValueMap.GetLrcName(k), nValBeg, nValEnd))
+		{
+			tagNameValueMap.SetValue(k, szText + nValBeg, nValEnd - nValBeg);
+			return k;
+		}
+	}
+
+	return -1;
+}
+
+int CLyrTagNameValueMap::ParseLrcTag(LPCSTR szText, int nLen)
+{
+	return ::ParseLrcTag(*this, szText, nLen);
+}
+
+int CLyrTagNameValueMap::ParseLrcTag(LPCWSTR szText, int nLen)
+{
+	return ::ParseLrcTag(*this, szText, nLen);
 }
 
 void CLyrTagNameValueMap::Remove(int nIndex)
@@ -573,18 +635,11 @@ bool LrcTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 					propNameValueMap.SetLyrContentType(LCT_LRC);
 			}
 
-			int		nValBeg, nValEnd;
-			int		i;
-			for (i = 0; i < propNameValueMap.GetCount(); i++)
+			int propIndex = propNameValueMap.ParseLrcTag(szLine, nLineLen);
+			if (propIndex != -1)
 			{
-				if (ParseLrcPropTag(szLine, nLineLen, 
-					propNameValueMap.GetLrcName(i), nValBeg, nValEnd))
-				{
-					bFoundTag = true;
-					propNameValueMap.SetValue(i, szLine + nValBeg, nValEnd - nValBeg);
-					tagType = propNameValueMap.GetTagType(i);
-					break;
-				}
+				bFoundTag = true;
+				tagType = propNameValueMap.GetTagType(propIndex);
 			}
 		}
 
@@ -612,17 +667,11 @@ bool TxtTagReadFromText(const _TCHAR *str, int nLen, CLyrTagNameValueMap &propNa
 		int nLineLen = (szNextLine != NULL) ? int(szNextLine - szLine) : _xcslen(szLine);
 		LyrTagType tagType = LTT_UNKNOWN;
 
-		for (int i = 0; i < propNameValueMap.GetCount(); i++)
+		int propIndex = propNameValueMap.ParseTxtTag(szLine, nLineLen);
+		if (propIndex != -1)
 		{
-			int		nValBeg, nValEnd;
-			if (ParseTxtPropTag(szLine, nLineLen, 
-				propNameValueMap.GetTxtName(i), nValBeg, nValEnd))
-			{
-				bFoundTag = true;
-				propNameValueMap.SetValue(i, szLine + nValBeg, nValEnd - nValBeg);
-				tagType = propNameValueMap.GetTagType(i);
-				break;
-			}
+			bFoundTag = true;
+			tagType = propNameValueMap.GetTagType(propIndex);
 		}
 
 		if (propNameValueMap.ShouldReadMd5() && tagType != LTT_ID)

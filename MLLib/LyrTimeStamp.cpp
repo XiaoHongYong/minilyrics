@@ -28,7 +28,7 @@ void EncodeTimeStamps(int duration, tstring &timeStamps)
 	if (duration > 10 * 60 * 1000)
 		duration = 6 * 1000;
 
-	duration = (duration + TIME_STAMP_UNIT / 2) / TIME_STAMP_UNIT;
+	duration /= TIME_STAMP_UNIT;
 
 	while (duration >= 0)
 	{
@@ -123,31 +123,28 @@ bool CLyrTimeStamp::Parse(LPCTSTR szTimeStamps, CMLData *pMLData)
 	return true;
 }
 
-void CLyrTimeStamp::ToString(tstring &strTimeStamps, CMLData *pMLData)
+void CLyrTimeStamp::ToString(tstring &strTimeStamps, int nOffsetTime, VLyrLines &lyrLines)
 {
-	ASSERT(pMLData->GetLyrContentType() == LCT_LRC);
-
 	// Header
 	strTimeStamps.clear();
 	strTimeStamps += HEADER_TIME_STAMP_V0;
 
 	// Offset time
-	EncodeTimeStamps(pMLData->Properties().GetOffsetTime(), strTimeStamps);
+	EncodeTimeStamps(nOffsetTime, strTimeStamps);
 
 	// Time of every line
 	int nTimeAboveLine = 0;
-	VLyrLines &lines = pMLData->GetFileRows();
-	for (uint i = 0; i < lines.size(); i++)
+	for (uint i = 0; i < lyrLines.size(); i++)
 	{
-		PML_ROW pRow = lines[i];
+		PML_ROW pRow = lyrLines[i];
 		if (pRow->nRowType == ML_ROW_LYRICS)
 		{
-			EncodeTimeStamps(pRow->nBegTime - nTimeAboveLine, strTimeStamps);
-			nTimeAboveLine = pRow->nBegTime;
+			int duration = pRow->nBegTime - nTimeAboveLine + TIME_STAMP_UNIT / 2;
+			EncodeTimeStamps(duration, strTimeStamps);
+			// Round the above line.
+			nTimeAboveLine += duration / TIME_STAMP_UNIT * TIME_STAMP_UNIT;
 		}
 		else
-		{
 			strTimeStamps += CHAR_NO_TIME_STAMP;
-		}
 	}
 }

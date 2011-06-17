@@ -9,7 +9,6 @@
 #include "StdAfx.h"
 #include "MLLib.h"
 #include "MLData.h"
-#include "LyricsParser.h"
 #include "LyricsSearch.h"
 #include "HelperFun.h"
 #include "LrcParser.h"
