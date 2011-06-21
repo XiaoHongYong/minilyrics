@@ -741,11 +741,9 @@ int CID3v2::FrameAdd(CID3v2Frame *pFrame)
 	return ERR_OK;
 }
 
-int CID3v2::FrameRemove(FrameIterator itToRemove)
+CID3v2::FrameIterator CID3v2::FrameRemove(FrameIterator itToRemove)
 {
-	m_listFrames.erase(itToRemove);
-
-	return ERR_OK;
+	return m_listFrames.erase(itToRemove);
 }
 
 CID3v2Frame *CID3v2::FindFrame(UINT nFrameID)
@@ -1039,68 +1037,62 @@ int CID3v2IF::UpdateUnsynchLyricsFrame(ID3v2UnsynchLyrics *punsynchLyrics)
 
 int CID3v2IF::RemoveSynchLyrics(const char *szLanguage)
 {
-	CID3v2Frame			*pFrame = NULL;
-	UINT				nFrameID;
-	FrameIterator		it, itEnd;
+	UINT nFrameID = IsID3v2_2() ? ID3V2_2_SYLT : ID3V2_3_SYLT;
 
-	if (IsID3v2_2())
-		nFrameID = ID3V2_2_SYLT;
-	else
-		nFrameID = ID3V2_3_SYLT;
-
-	itEnd = FrameEnd();
-	for (it = FrameBegin(); it != itEnd; ++it)
+	bool				bRemoved = false;
+	for (FrameIterator it = FrameBegin(); it != FrameEnd(); )
 	{
-		pFrame = *it;
-
-		if (pFrame->m_framehdr.nFrameID == nFrameID)
+		CID3v2Frame *pFrame = *it;
+		if (pFrame->m_framehdr.nFrameID != nFrameID)
 		{
-			if (szLanguage == NULL
-				|| CID3v2FrameParserSynLyrics::IsFrameLanguageSame(pFrame, szLanguage, CID3v2FrameParserSynLyrics::CT_LYRICS))
-			{
-				FrameRemove(it);
-				return ERR_OK;
-			}
+			++it;
+			continue;
 		}
+
+		if (szLanguage == NULL || IsEmptyString(szLanguage)
+			|| CID3v2FrameParserSynLyrics::IsFrameLanguageSame(pFrame, szLanguage, CID3v2FrameParserSynLyrics::CT_LYRICS))
+		{
+			it = FrameRemove(it);
+			bRemoved = true;
+		}
+		else
+			++it;
 	}
 
-	if (szLanguage)
-		return ERR_NOT_FOUND;
-	else
+	if (bRemoved)
 		return ERR_OK;
+	else
+		return ERR_NOT_FOUND;
 }
 
 int CID3v2IF::RemoveUnsynchLyrics(const char *szLanguage)
 {
-	CID3v2Frame			*pFrame = NULL;
-	UINT				nFrameID;
-	FrameIterator		it, itEnd;
+	UINT nFrameID = IsID3v2_2() ? ID3V2_2_USLT : ID3V2_3_USLT;
 
-	if (IsID3v2_2())
-		nFrameID = ID3V2_2_USLT;
-	else
-		nFrameID = ID3V2_3_USLT;
-
-	itEnd = FrameEnd();
-	for (it = FrameBegin(); it != itEnd; ++it)
+	bool				bRemoved = false;
+	for (FrameIterator it = FrameBegin(); it != FrameEnd(); )
 	{
-		pFrame = *it;
-
-		if (pFrame->m_framehdr.nFrameID == nFrameID)
+		CID3v2Frame *pFrame = *it;
+		if (pFrame->m_framehdr.nFrameID != nFrameID)
 		{
-			if (szLanguage == NULL
-				|| CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(pFrame, szLanguage))
-			{
-				FrameRemove(it);
-				return ERR_OK;
-			}
+			++it;
+			continue;
 		}
+
+		if (szLanguage == NULL || IsEmptyString(szLanguage)
+			|| CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(pFrame, szLanguage))
+		{
+			it = FrameRemove(it);
+			bRemoved = true;
+		}
+		else
+			++it;
 	}
 
-	if (szLanguage)
-		return ERR_NOT_FOUND;
-	else
+	if (bRemoved)
 		return ERR_OK;
+	else
+		return ERR_NOT_FOUND;
 }
 
 // TCOM	: Composer

@@ -748,6 +748,8 @@ int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 	{
 		strDirTarg = item.pExtraInfo->strPlayerPath;
 		strDirTarg += item.szPluginDirOfPlayer;
+		if (!IsDirExist(strDirTarg.c_str()))
+			CreateDirectoryAll(strDirTarg.c_str());
 		DirStringAddSlash(strDirTarg);
 	}
 

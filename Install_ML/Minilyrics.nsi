@@ -89,9 +89,7 @@
 
   ;Descriptions
   LangString DESC_SecBasic ${LANG_ENGLISH} "Basic installation for running MiniLyrics"
-  LangString DESC_SecSkins ${LANG_ENGLISH} "Multiple selectable Skin support"
-  LangString DESC_SecUninst ${LANG_ENGLISH} "Create uninstallation program"
-  LangString DESC_SecShortcut ${LANG_ENGLISH} "Create start menu"
+  LangString DESC_SecShortcut ${LANG_ENGLISH} "Create start menu and uninstallation program"
   LangString DESC_SecDesktopShortcut ${LANG_ENGLISH} "Create Shortcut on desktop and quick lanuch bar"
   LangString DESC_SecSettingPersonal ${LANG_ENGLISH} "Save MiniLyrics settings in each user's personal folder"
   LangString SecShortcut.MLUninst ${LANG_ENGLISH} "Uninstall MiniLyrics"
@@ -126,8 +124,8 @@ InstType "Base"
 ;--------------------------------
 ;Installer Sections
 
-Section "Base" SecBasic
-SectionIn 1 2
+Section "MiniLyrics Core Files (Required)" SecBasic
+SectionIn RO
   SetShellVarContext All
   ; Remove all old links
   Delete "$DESKTOP\Restart MiniLyrics.lnk"
@@ -230,6 +228,10 @@ SectionIn 1 2
   RMDir "$INSTDIR\ml-winamp2-skin"
   RMDir "$INSTDIR\ml-winamp5-skin"
 
+  WriteINIStr $INSTDIR\Install.ini "INSTALL" "PerUserSettings" "0"
+
+  WriteRegStr HKCU MUI_LANGDLL_REGISTRY_KEY MUI_LANGDLL_REGISTRY_VALUENAME $LANGUAGE
+
   ; File to extract
   SetOutPath $INSTDIR
   File Share\*.*
@@ -279,21 +281,8 @@ SectionIn 1 2
   SetOutPath $INSTDIR\ml-gen-embedded-skin
   File Share\ml-gen-embedded-skin\*.*
 
-  WriteINIStr $INSTDIR\Install.ini "INSTALL" "PerUserSettings" "0"
-
-  WriteRegStr HKCU MUI_LANGDLL_REGISTRY_KEY MUI_LANGDLL_REGISTRY_VALUENAME $LANGUAGE
-
-SectionEnd
-
-;--------------------------------
-; Skins µÄ°²×°
-Section "Skins" SecSkins
-SectionIn 1
   SetOutPath $INSTDIR\Skins\Aimp2
   File Share\Skins\Aimp2\*.*
-
-;  SetOutPath $INSTDIR\Skins\base
-;  File Share\Skins\base\*.*
 
   SetOutPath $INSTDIR\Skins\Plain
   File Share\Skins\Plain\*.*
@@ -313,12 +302,6 @@ SectionIn 1
   SetOutPath $INSTDIR\Skins\Modern
   File Share\Skins\Modern\*.*
 
-;  SetOutPath "$INSTDIR\Skins\Quintessential Player"
-;  File "Share\Skins\Quintessential Player\*.*"
-
-;  SetOutPath "$INSTDIR\Skins\RealPlayer"
-;  File "Share\Skins\RealPlayer\*.*"
-
   SetOutPath $INSTDIR\Skins\TCPort
   File Share\Skins\TCPort\*.*
 
@@ -335,11 +318,13 @@ SectionIn 1
   File "Share\Skins\Windows 7\*.*"
 SectionEnd
 
-Section "Start Menu Shortcuts" SecShortcut
+Section "Start Menu Shortcuts & Uninstallation" SecShortcut
 SectionIn 1
   CreateDirectory "$SMPROGRAMS\MiniLyrics"
   CreateShortCut "$SMPROGRAMS\MiniLyrics\iPod Lyrics Downloader.lnk" "$INSTDIR\MiniLyrics.exe" \
 	"/iPodLyricsDownloader"
+  CreateShortCut "$SMPROGRAMS\MiniLyrics\Setup.lnk" "$INSTDIR\MiniLyrics.exe" \
+	"/Setup"
 
   CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe" \
 	"" "" "" "" \
@@ -350,6 +335,13 @@ SectionIn 1
   StrCpy $R1 $(SecShortcut.Homepage)
   ; CreateShortCut "$SMPROGRAMS\MiniLyrics\$R1.lnk" "$INSTDIR\MiniLyrics' Homepage.url"
   WriteINIStr "$SMPROGRAMS\MiniLyrics\$R1.url" "InternetShortcut" "URL" "http://www.crintsoft.com"
+  
+  ; Write the installation path into the registry
+  ; WriteRegStr HKLM SOFTWARE\MiniLyrics "ForWa2InstallDir" "$INSTDIR"
+  ; Write the uninstall keys for Windows
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "Minilyrics"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "UninstallString" '"$INSTDIR\uninst-ml.exe"'
+  WriteUninstaller "$INSTDIR\uninst-ml.exe"
 SectionEnd
 
 Section "Desktop and Quick Launch Shortcuts" SecDesktopShortcut
@@ -358,19 +350,8 @@ SectionIn 1
   CreateShortCut "$QUICKLAUNCH\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
 SectionEnd
 
-Section "Portable Settings" SecSettingPersonal
-SectionIn 1
+Section "Per-User Settings" SecSettingPersonal
   WriteINIStr $INSTDIR\Install.ini "INSTALL" "PerUserSettings" "1"
-SectionEnd
-
-Section "Create Uninstallation" SecUninst
-SectionIn 1
-  ; Write the installation path into the registry
-  ; WriteRegStr HKLM SOFTWARE\MiniLyrics "ForWa2InstallDir" "$INSTDIR"
-  ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "Minilyrics"
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "UninstallString" '"$INSTDIR\uninst-ml.exe"'
-  WriteUninstaller "$INSTDIR\uninst-ml.exe"
 SectionEnd
 
 ;--------------------------------
@@ -591,8 +572,6 @@ FunctionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecBasic} $(DESC_SecBasic)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecSkins} $(DESC_SecSkins)
-  !insertmacro MUI_DESCRIPTION_TEXT ${SecUninst} $(DESC_SecUninst)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecShortcut} $(DESC_SecShortcut)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopShortcut} $(DESC_SecDesktopShortcut)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecSettingPersonal} $(DESC_SecSettingPersonal)
@@ -608,3 +587,6 @@ Function un.onInit
 FunctionEnd
 
 ;ChangeUI all "${NSISDIR}\Contrib\UIs\modern.exe"
+  
+  Icon "${NSISDIR}\contrib\graphics\icons\Minilyrics.ico"
+  UninstallIcon "${NSISDIR}\contrib\graphics\icons\Minilyrics.ico"

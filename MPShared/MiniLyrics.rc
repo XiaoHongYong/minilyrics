@@ -636,12 +636,14 @@ BEGIN
         MENUITEM "Add &Folder...",              IDC_ADD_FOLDER
         MENUITEM SEPARATOR
         MENUITEM "&Clear File List",            IDC_CLEAR_LIST
+        MENUITEM "&Remove Selected from List",  IDC_REMOVE_SELECTED
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDC_EXIT
     END
     POPUP "&Lyrics"
     BEGIN
         MENUITEM "&Download All Lyrics for iPod", IDC_DOWNLOAD_ALL_LYR_FOR_IPOD
+        MENUITEM "&Remove All Embedded Lyrics", IDC_REMOVE_LRC_IN_MP3
     END
     POPUP "&Help"
     BEGIN

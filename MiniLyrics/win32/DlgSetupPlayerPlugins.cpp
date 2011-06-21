@@ -140,6 +140,8 @@ BOOL CDlgSetupPlayerPlugins::OnInitDialog()
 	if (!CBaseDialog::OnInitDialog())
 		return FALSE;
 
+	SetTopmost(true);
+
 	if (!g_bFirstSetup)
 	{
 		ShowDlgItem(IDOK, SW_HIDE);

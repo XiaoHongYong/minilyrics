@@ -320,7 +320,7 @@ public:
 	FrameIterator FrameEnd() { return m_listFrames.end(); }
 
 	int FrameAdd(CID3v2Frame *pFrame);
-	int FrameRemove(FrameIterator itToRemove);
+	FrameIterator FrameRemove(FrameIterator itToRemove);
 
 	CID3v2Frame *FindFrame(UINT nFrameID);
 	CID3v2Frame *FindFrameByUID(ID3v2FrameUID_t frameUID, UINT nFrameID);
