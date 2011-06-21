@@ -630,7 +630,7 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 
 	int i = 0;
 	for (ListLyricsInfoLite::iterator it = retLyrics.listLyricsInfo.begin();
-		it != retLyrics.listLyricsInfo.end() && i < listSearch.size(); ++it, i++)
+		it != retLyrics.listLyricsInfo.end() && i < (int)listSearch.size(); ++it, i++)
 	{
 		MLSearchItem	&search = listSearch[i];
 		MLLyricsInfoLite &lyr = *it;

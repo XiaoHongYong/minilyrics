@@ -264,7 +264,7 @@ void CDlgSetupPlayerPlugins::OnCommand(UINT uID, UINT nNotifyCode)
 					ShowAllSupportedPlayers();
 				return;
 			}
-			else if (n >= m_vPlayerItems.size())
+			else if (n >= (int)m_vPlayerItems.size())
 				return;
 
 			if (m_vPlayerItems[n] == INDEX_BUILT_IN_PLUGIN)

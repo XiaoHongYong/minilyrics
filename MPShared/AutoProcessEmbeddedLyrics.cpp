@@ -31,7 +31,7 @@ static void StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<string> &vAnsiStr)
 {
 	V_Str vStr;
 	StrSplit(szStr, chSeperator, vStr);
-	for (int i = 0; i < vStr.size(); i++)
+	for (uint i = 0; i < vStr.size(); i++)
 	{
 		string str;
 		TStringToAnsi(vStr[i].c_str(), vStr[i].size(), str);
