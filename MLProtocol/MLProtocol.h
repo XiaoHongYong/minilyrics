@@ -332,7 +332,9 @@ public:
 class MLLyricsInfoLite
 {
 public:
-	tstring			strFile;
+	// For client side, strFile == strSaveName.
+	// For server side, strFile is the file path name of lyrics, strSaveName is the file name to save.
+	tstring			strFile, strSaveName;
 	string			bufLyrContent;
 
 public:

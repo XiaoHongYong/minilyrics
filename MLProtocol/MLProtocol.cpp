@@ -263,9 +263,6 @@ int RetLyrInfo::FromXML(SXNode *pNode, LPCTSTR szServerUrl)
 
 int RetLyrInfo::ToXML(CXMLWriter &xmlFile, tstring &strServerUrl, bool bV0Protocol)
 {
-	if (!bV0Protocol)
-		ASSERT(strLink.size() && strServerUrl.size());
-
 	xmlFile.WriteStartElement(MZ_FILEINFO);
 
 	if (bV0Protocol)
@@ -386,8 +383,6 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 
 	MLRetMsg::ToXMLAttribute(xmlFile);
 
-	ASSERT(strServerUrl.size());
-
 	if (bV0Protocol)
 		xmlFile.WriteAttribute(_T("filetype"), _T("lyrics")); // This should be set for old version (7.0.614 before).
 	else
@@ -487,7 +482,7 @@ int MLMsgCmdBatchSearch::ToXML(CXMLWriter &xmlFile)
 //////////////////////////////////////////////////////////////////////////
 int MLLyricsInfoLite::FromXML(SXNode *pXmlNode)
 {
-	strFile = pXmlNode->GetPropertySafe(_T("fn"));
+	strSaveName = strFile = pXmlNode->GetPropertySafe(_T("fn"));
 	pXmlNode->GetPropertyBinData(_T("content"), bufLyrContent);
 
 	return ERR_OK;
@@ -503,7 +498,7 @@ int MLLyricsInfoLite::ToXML(CXMLWriter &xmlFile)
 
 		if (OpenFileToBuffer(strFile.c_str(), bufFile) && bufFile.size())
 		{
-			xmlFile.WriteAttribute(_T("fn"), FileGetName(strFile.c_str()));
+			xmlFile.WriteAttribute(_T("fn"), FileGetName(strSaveName.c_str()));
 			xmlFile.WriteAttribute(_T("content"), bufFile.c_str(), bufFile.size());
 		}
 		else
@@ -1123,10 +1118,12 @@ protected:
 		{
 			MLLyricsInfoLite	lyrInfo;
 			lyrInfo.strFile = strFile;
+			lyrInfo.strSaveName = _T("artist - title.txt");
 			msgRet.listLyricsInfo.push_back(lyrInfo);
 		}
 		MLLyricsInfoLite	lyrInfo;
 		lyrInfo.strFile = strFile;
+		lyrInfo.strSaveName = _T("artist - title2.txt");
 		msgRet.listLyricsInfo.push_back(lyrInfo);
 
 		CMLBinXMLWriter xmlStream;
@@ -1156,7 +1153,8 @@ protected:
 			MLLyricsInfoLite &lyr = *it;
 			MLLyricsInfoLite &lyrFrom = *itFrom;
 
-			CPPUNIT_ASSERT(FileGetName(lyr.strFile.c_str()) == lyrFrom.strFile);
+			CPPUNIT_ASSERT(lyr.strSaveName == lyrFrom.strSaveName);
+			CPPUNIT_ASSERT(lyr.strSaveName == lyrFrom.strFile);
 			CPPUNIT_ASSERT(bufContent.size() == lyrFrom.bufLyrContent.size());
 			CPPUNIT_ASSERT(memcmp(bufContent.c_str(), lyrFrom.bufLyrContent.c_str(), lyrFrom.bufLyrContent.size()) == 0);
 		}

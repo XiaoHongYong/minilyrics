@@ -5,15 +5,14 @@
   <include Name="Login.xml"/>
   <Container.UploadLyrNotice Name="Upload lyrics" Rect="0,20,w,h-20" Visible="false">
     <TitleText Rect="20,10,w-40,25" Text="Thank you for uploading lyrics."/>
-    <Image Rect="15,60,," Image="information.png"/>
-    <NormalText Rect="80,70,w-100,50" Text="You are going to upload the lyrics to the lyrics server of MiniLyrics, and share your lyrics with other people."/>
+    <Image Rect="10,60,," Image="information.png"/>
+    <NormalText Rect="90,70,w-110,50" Text="You are going to upload the lyrics to the lyrics server of MiniLyrics, and share your lyrics with other people."/>
 
-    <NormalText ID="CID_ACCOUNT_NOTICE" Rect="80,150,w-100,50" Text=""/>
+    <NormalText ID="CID_ACCOUNT_NOTICE" Rect="90,150,w-100,50" Text=""/>
+    <NormalLink ID="CID_CHANGE_ACCOUNT" Rect="90,175,w-100," Text="If you want to use another account, please click here"/>
 
-    <NormalLink ID="CID_CHANGE_ACCOUNT" Rect="80,175,w-100," Text="If you want to use another account, please click here"/>
-
-    <NormalTextBt ID="ID_OK" Text="Continue" Rect="w/2-100,h-30,100,"/>
-    <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w-100-20,h-30,100,"/>
+    <NormalTextBt ID="ID_OK" Text="Continue" Rect="w/2-50,h-40,100,"/>
+    <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w-100-20,h-40,100,"/>
   </Container.UploadLyrNotice>
 
   <Container.UploadLyrWaitMsg Name="Wait Message" Visible="false" Rect="0,0,w,h" visible="false">

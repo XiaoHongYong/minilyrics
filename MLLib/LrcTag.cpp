@@ -384,7 +384,7 @@ int ParseTxtTag(CLyrTagNameValueMap &tagNameValueMap, const _TCHAR *szText, int 
 {
 	int	nValBeg, nValEnd;
 
-	for (uint k = 0; k < tagNameValueMap.GetCount(); k++)
+	for (int k = 0; k < tagNameValueMap.GetCount(); k++)
 	{
 		if (ParseTxtPropTag(szText, nLen, tagNameValueMap.GetTxtName(k), nValBeg, nValEnd))
 		{
@@ -411,7 +411,7 @@ int ParseLrcTag(CLyrTagNameValueMap &tagNameValueMap, const _TCHAR *szText, int 
 {
 	int	nValBeg, nValEnd;
 
-	for (uint k = 0; k < tagNameValueMap.GetCount(); k++)
+	for (int k = 0; k < tagNameValueMap.GetCount(); k++)
 	{
 		if (ParseLrcPropTag(szText, nLen, tagNameValueMap.GetLrcName(k), nValBeg, nValEnd))
 		{

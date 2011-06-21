@@ -55,7 +55,7 @@ tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
 	}
 	else if (licenseInfo.licenseStatus == LS_TRANSFERED)
 	{
-		strMsg = TOLOCAL_T("Your activation code has been transferred to another devices.");
+		strMsg = TOLOCAL_T("Your activation code has been transferred to another device.");
 		strMsg += _T("\n");
 		strMsg += CStrPrintf(TOLOCAL_T("Your code can be used on %d devices."), licenseInfo.nLicensedUser).c_str();
 	}
