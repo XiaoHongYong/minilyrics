@@ -15,7 +15,7 @@ tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
 	{
 		if (licenseInfo.bOnlineVerified)
 		{
-			strMsg = TOLOCAL_T("You MiniLyrics was activated successfully.");
+			strMsg = TOLOCAL_T("Your MiniLyrics was activated successfully.");
 			strMsg += _T("\n");
 			strMsg += TOLOCAL_T("Thank you for supporting the development of MiniLyrics.");
 		}
@@ -23,7 +23,7 @@ tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
 		{
 			strMsg = TOLOCAL_T("Your activation code is verified OK.");
 			strMsg += _T("\n");
-			strMsg += TOLOCAL_T("Please click 'Activate' button to activate your MiniLyrics.");
+			strMsg += TOLOCAL_T("Please click the 'Activate' button to activate MiniLyrics.");
 		}
 	}
 	else if (licenseInfo.licenseStatus == LS_TRIAL)
@@ -43,7 +43,7 @@ tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
 	}
 	else if (licenseInfo.licenseStatus == LS_EXPIRED)
 	{
-		strMsg = TOLOCAL_T("Your license has get expired.");
+		strMsg = TOLOCAL_T("Your license has expired.");
 		strMsg += _T("\n");
 		strMsg += TOLOCAL_T("Please renew your license.");
 	}
@@ -51,7 +51,7 @@ tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
 	{
 		strMsg = TOLOCAL_T("Your activation code has been revoked.");
 		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Maybe you have refund your order.");
+		strMsg += TOLOCAL_T("Maybe you have revoked your order.");
 	}
 	else if (licenseInfo.licenseStatus == LS_TRANSFERED)
 	{
