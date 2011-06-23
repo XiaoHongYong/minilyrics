@@ -134,8 +134,6 @@ bool CMPlayerApp::Init(StartApp startApp)
 	strMLLogFile += _T("log.txt");
 	InitBaseFrameWork(GetAppInstance(), strMLLogFile.c_str(), strMLIniFile.c_str(), SZ_SECT_UI);
 
-	CLanguageTool::SetTransFilePrefix(SZ_TRANS_PREFIX);
-
 	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
 	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
 

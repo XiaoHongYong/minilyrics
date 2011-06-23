@@ -46,8 +46,6 @@ public:
 	static bool GetCurrentLanguageFile(tstring &strLanguageFile);
 
 	static bool ListTransFiles(LPCTSTR szDir, V_TRANSFILEINFO &vTransFiles);
-	static void SetTransFilePrefix(LPCTSTR szPrefix);
-	static TCHAR		m_szTransFilePrefix[16];
 
 	// Replace $ProductName$, $CompanyName$ to actual value.
 	void SetMacro(LPCTSTR szName, LPCTSTR szValue);

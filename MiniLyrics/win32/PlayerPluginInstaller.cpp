@@ -758,7 +758,8 @@ int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 
 	for (int i = 0; i < (int)vFiles.size(); i++)
 	{
-		tstring		strFileSrc = GetWorkingFolder();
+		// Plugin for players are saved in MiniLyrics "Player-Plugins" dir.
+		tstring		strFileSrc = DirStringJoint(GetWorkingFolder(), _T("Player-Plugins\\"));
 		strFileSrc += vFiles[i];
 
 		tstring		strFileTarg;

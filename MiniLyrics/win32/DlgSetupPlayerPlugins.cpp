@@ -220,7 +220,7 @@ void CDlgSetupPlayerPlugins::OnOK()
 	{
 		if (nInstalledCount > 0)
 		{
-			MessageOut(TOLOCAL_T("MiniLyrics plug-ins are installed successfully."), MB_ICONINFORMATION);
+			MessageOut(TOLOCAL_T("MiniLyrics plug-ins were installed successfully."), MB_ICONINFORMATION);
 			CBaseDialog::OnOK();
 		}
 		else
@@ -318,14 +318,20 @@ void CDlgSetupPlayerPlugins::OnCommand(UINT uID, UINT nNotifyCode)
 
 void CDlgSetupPlayerPlugins::OnClickedCheckBtn(CPlayerPluginInstaller::Player *p, int nCheckBtnId)
 {
-	p->DetectPlayerPath();
+	if (!p->IsInstalled())
+		p->DetectPlayerPath();
 
 	bool bChecked = IsButtonChecked(nCheckBtnId);
 	if (bChecked)
 	{
 		if (!p->CheckPlayerInstalled(false))
 		{
-			if (!BrowsePlayerFolder(p))
+			if (BrowsePlayerFolder(p))
+			{
+				p->SetToInstallPlugin(true);
+				UpdatePlayersToView();
+			}
+			else
 			{
 				bChecked = false;
 				CheckButton(nCheckBtnId, false);

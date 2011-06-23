@@ -427,8 +427,6 @@ LPCTSTR CLanguageFile::GetTranslation(LPCTSTR szString)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-TCHAR		CLanguageTool::m_szTransFilePrefix[16] = _T("ml");
-
 CLanguageTool::CLanguageTool()
 {
 	m_bEnglish = true;
@@ -510,10 +508,8 @@ bool CLanguageTool::ListTransFiles(LPCTSTR szDir, V_TRANSFILEINFO &vTransFiles)
 	item.strLanguageCodeFull = _T("English");
 	vTransFiles.push_back(item);
 
-	strFilter = m_szTransFilePrefix;
-	strFilter += _T("*.ini");
-	strEngTransFileName = m_szTransFilePrefix;
-	strEngTransFileName += _T("eng.ini");
+	strFilter = _T("*.ini");
+	strEngTransFileName = _T("eng.ini");
 
 	if (!find.OpenDir(strLangDir.c_str(), strFilter.c_str()))
 		return false;
@@ -541,11 +537,6 @@ bool CLanguageTool::ListTransFiles(LPCTSTR szDir, V_TRANSFILEINFO &vTransFiles)
 	}
 
 	return true;
-}
-
-void CLanguageTool::SetTransFilePrefix(LPCTSTR szPrefix)
-{
-	_tcscpy_safe(m_szTransFilePrefix, CountOf(m_szTransFilePrefix), szPrefix);
 }
 
 // COMMENT:

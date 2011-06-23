@@ -145,10 +145,12 @@ SectionIn RO
   Delete "$SMPROGRAMS\MiniLyrics\*.*"
 
   ; Remove old files
+  Delete "$INSTDIR\Player-Plugins\*.*"
+  Delete /REBOOTOK $INSTDIR\*.dll
   Delete $INSTDIR\MLSetup.exe
   Delete $INSTDIR\MLStart.exe
   Delete /REBOOTOK $INSTDIR\miniLyrics.dll
-  Delete $INSTDIR\unicows.dll
+  Delete $INSTDIR\PluginMiniLyrics.exe
   Delete $INSTDIR\help.chm
   Delete $INSTDIR\PluginJetaudio.exe
   Delete $INSTDIR\PluginHMM.exe
@@ -237,7 +239,7 @@ SectionIn RO
   File Share\*.*
   File ..\bin\MiniLyrics.exe
 
-  ; SetOutPath $INSTDIR\Player-Plugins
+  SetOutPath $INSTDIR\Player-Plugins
   File ..\bin\gen_MiniLyrics.dll
   File ..\bin\foo_ui_minilyrics.dll
   File ..\bin\PluginRealone.dll
@@ -246,7 +248,6 @@ SectionIn RO
   File ..\bin\MLPluginBsp.dll
   File ..\bin\WMPLyrics.dll
   File ..\bin\PluginWMPVis.dll
-  File foryme\PluginYme.dll
   File ..\bin\PluginMJ.dll
   File ..\bin\xmp-ml.dll
   File ..\bin\libminilyrics_plugin.dll
@@ -385,7 +386,7 @@ Section "Uninstall"
   Delete "$INSTDIR\MiniLyrics' Homepage.url"
   Delete "$INSTDIR\readme-MiniLyrics.txt"
   Delete /REBOOTOK $INSTDIR\MiniLyrics.exe
-  Delete /REBOOTOK $INSTDIR\PluginMiniLyrics.exe
+  Delete $INSTDIR\PluginMiniLyrics.exe
   Delete /REBOOTOK $INSTDIR\Plugins\mlp_G15.dll
   Delete $INSTDIR\MLPlugin.ini
   Delete $INSTDIR\mlver.xml
@@ -422,6 +423,9 @@ Section "Uninstall"
   Delete "$INSTDIR\*.*"
   SetShellVarContext all
   EndRemoveAllFiles:
+  
+  Delete "$INSTDIR\Player-Plugins\*.*"
+  RMDir "$INSTDIR\Player-Plugins"
 
   Delete $INSTDIR\lang\*.*
   RMDir $INSTDIR\lang

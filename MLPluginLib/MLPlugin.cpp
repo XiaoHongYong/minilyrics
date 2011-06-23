@@ -23,6 +23,7 @@ BOOL Execute(LPCSTR szCmd)
 	return TRUE;
 }
 
+// Launch "MiniLyrics.exe /Wnd 0xWNDHANDLE /Player "Winamp"" to start MiniLyrics
 BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayerService)
 {
 	ASSERT(hInst);
@@ -58,10 +59,18 @@ BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayer
 		if (!IsFileExist(szMiniLyricsExe))
 		{
 			// Is MiniLyrics in Plugin directory?
-			if (!IsFileExist("MiniLyrics.exe"))
+			GetProgramPath(szMiniLyricsExe, g_hInstance);
+			strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), "MiniLyrics.exe");
+			if (!IsFileExist(szMiniLyricsExe))
 			{
-				strcpy_safe(szMsg, CountOf(szMsg), "Can't find MiniLyrics.exe, Please reinstall MiniLyrics.");
-				goto INIT_FAILED;
+				// Is MiniLyrics in Plugin parent directory?
+				GetProgramPath(szMiniLyricsExe, g_hInstance);
+				strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), "..\\MiniLyrics.exe");
+				if (!IsFileExist(szMiniLyricsExe))
+				{
+					strcpy_safe(szMsg, CountOf(szMsg), "Can't find MiniLyrics.exe, Please reinstall MiniLyrics.");
+					goto INIT_FAILED;
+				}
 			}
 		}
 	}
