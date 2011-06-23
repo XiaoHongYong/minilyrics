@@ -5,9 +5,9 @@
     <NormalText ID="CID_CODE_INFO" Text="Enter the following information exactly as what are shown in your received activation code message."
                 Rect="90,30,w-105,40"/>
     <NormalText ID="CID_NAME" Text="Name:" Rect="20,90,w/2-80,15" AlignText="AT_RIGHT"/>
-    <NormalEdit ID="CID_E_NAME" Text="Name" Rect="w/2-50,90,w/2+10,"/>
+    <NormalEdit ID="CID_E_NAME" Rect="w/2-50,90,w/2+10,"/>
     <NormalText ID="CID_CODE" Text="Activation Code:" Rect="20,120,w/2-80,15" AlignText="AT_RIGHT"/>
-    <NormalEdit ID="CID_E_CODE" Text="Code" Rect="w/2-50,120,w/2+10,"/>
+    <NormalEdit ID="CID_E_CODE" Rect="w/2-50,120,w/2+10,"/>
 
     <NormalText ID="CID_REG_INFO" Text="If you haven't activation code, please visit our website to purchase."
                 Rect="15,h-115,w-30,40" AlignText="AT_VCENTER"/>
@@ -23,7 +23,7 @@
     <NormalTextBt ID="ID_CANCEL" Text="Cancel" Rect="w/2-45,h/2+15,90,"/>
   </Container.ActivateWaitMsg>
   <Container.ActivateResult Name="Activation Result" Rect="0,0,w,h" Visible="false">
-    <Container ID="CID_C_ACTIVATION_OK" Name="Activation OK" Rect="0,0,w,h" Visible="true">
+    <Container ID="CID_C_ACTIVATION_OK" Name="Activation was successful" Rect="0,0,w,h" Visible="true">
       <Image Rect="40,40,," Image="success.png"/>
       <TitleText Rect="80,70,w-130," Text="Activation was successful."/>
       <NormalText Rect="20,130,w-40,50" Text="Thank you for supporting the development of MiniLyrics."
@@ -32,7 +32,7 @@
     </Container>
     <Container ID="CID_C_ACTIVATION_FAILED" Name="Activation failed" Rect="0,0,w,h" Visible="false">
       <Image Rect="40,40,," Image="warning.png"/>
-      <TitleText Rect="80,70,w-130," Text="Activation was failed."/>
+      <TitleText Rect="80,70,w-130," Text="Activation failed."/>
       <ErrorText ID="CID_RESULT" Rect="20,130,w-40,50" AlignText="AT_CENTER"/>
 
       <NormalTextBt ID="CID_TRY_AGAIN" Text="Try Again" Rect="w/2-100-10,h-50,100,"/>

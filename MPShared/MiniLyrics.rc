@@ -258,7 +258,6 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
             MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
-            MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
             MENUITEM SEPARATOR
             POPUP "&Character Encoding"
             BEGIN
@@ -371,8 +370,6 @@ BEGIN
         END
         MENUITEM SEPARATOR
         MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
-        MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
-        MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
         MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
         MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
@@ -502,9 +499,6 @@ BEGIN
             MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
         END
         MENUITEM SEPARATOR
-        MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
-        MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
-        MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
         MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
         MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
@@ -598,7 +592,7 @@ BEGIN
     BEGIN
         MENUITEM "Import &iTunes Library",      IDC_IMPORT_ITUNES_LIB
         MENUITEM SEPARATOR
-        MENUITEM "&Add Media Files...\tCtrl+A", IDC_ADD_FILES
+        MENUITEM "&Add Media Files...",         IDC_ADD_FILES
         MENUITEM "Add &Folder...",              IDC_ADD_FOLDER
         MENUITEM SEPARATOR
         MENUITEM "&Clear File List",            IDC_CLEAR_LIST
@@ -632,7 +626,7 @@ BEGIN
     BEGIN
         MENUITEM "Import &iTunes Library",      IDC_IMPORT_ITUNES_LIB
         MENUITEM SEPARATOR
-        MENUITEM "&Add Media Files...\tCtrl+A", IDC_ADD_FILES
+        MENUITEM "&Add Media Files...",         IDC_ADD_FILES
         MENUITEM "Add &Folder...",              IDC_ADD_FOLDER
         MENUITEM SEPARATOR
         MENUITEM "&Clear File List",            IDC_CLEAR_LIST
