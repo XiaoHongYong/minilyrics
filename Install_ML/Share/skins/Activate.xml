@@ -9,7 +9,7 @@
     <NormalText ID="CID_CODE" Text="Activation Code:" Rect="20,120,w/2-80,15" AlignText="AT_RIGHT"/>
     <NormalEdit ID="CID_E_CODE" Rect="w/2-50,120,w/2+10,"/>
 
-    <NormalText ID="CID_REG_INFO" Text="If you haven't activation code, please visit our website to purchase."
+    <NormalText ID="CID_REG_INFO" Text="If you haven't an activation code, please visit our website to purchase one."
                 Rect="15,h-115,w-30,40" AlignText="AT_VCENTER"/>
 
     <NormalLink ID="CID_REG_INFO" Text="http://www.crintsoft.com/" Link="http://www.crintsoft.com/buy.htm"

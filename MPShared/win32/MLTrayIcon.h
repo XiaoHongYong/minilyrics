@@ -40,8 +40,6 @@ public:
 	void Init(CBaseWnd *pWnd);
 	void Quit();
 
-	void OnLanguageChanged();
-
 	void UpdateShowIconPos();
 	void UpdatePlayerSysTrayIcon();
 

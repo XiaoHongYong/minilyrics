@@ -95,10 +95,6 @@ void CMLTrayIcon::Quit()
 	}
 }
 
-void CMLTrayIcon::OnLanguageChanged()
-{
-}
-
 void CMLTrayIcon::UpdateShowIconPos()
 {
 	tstring		strCaption;

@@ -312,6 +312,11 @@ BOOL CBaseDialog::OnInitDialog()
 	return TRUE;
 }
 
+void CBaseDialog::OnLanguageChanged()
+{
+	m_LangDlgHelper.ToLocal();
+}
+
 int CBaseDialog::ConvertWMNotifyMsg(LPARAM lParam)
 {
 	LPNMHDR		pHdr = (LPNMHDR)lParam;

@@ -373,7 +373,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
         MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
-        MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
         MENUITEM SEPARATOR
         POPUP "&Character Encoding"
         BEGIN
@@ -501,7 +500,6 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
         MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
-        MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
         MENUITEM SEPARATOR
         POPUP "&Character Encoding"
         BEGIN
@@ -833,7 +831,7 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "Start MiniLyrics"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    LTEXT           "MiniLyrics has detected the players are running or installed, please click it to start.",IDC_STATIC,7,7,410,12
+    LTEXT           "MiniLyrics has detected that the players below are running or installed, please click it to start.",IDC_STATIC,7,7,410,12
     CONTROL         "",IDC_SL0,"Static",SS_ETCHEDHORZ,7,25,410,1
     PUSHBUTTON      "&Player",IDC_PLAYER1,7,29,113,14
     LTEXT           "Static",IDC_PLAYER_INFO1,128,32,289,10

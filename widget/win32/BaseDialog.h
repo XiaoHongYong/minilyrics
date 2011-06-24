@@ -18,6 +18,7 @@ public:
 
 	void OnCommand(UINT uID, UINT nNotifyCode);
 	virtual BOOL OnInitDialog();
+	void OnLanguageChanged();
 
 	virtual BOOL OnNotify(WIDGET_NOTIFY_INFO *info) { return true; }
 

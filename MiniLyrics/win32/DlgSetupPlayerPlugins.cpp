@@ -224,7 +224,7 @@ void CDlgSetupPlayerPlugins::OnOK()
 			CBaseDialog::OnOK();
 		}
 		else
-			MessageOut(TOLOCAL_T("Please choose at least one players."), MB_ICONINFORMATION);
+			MessageOut(TOLOCAL_T("Please choose at least one player."), MB_ICONINFORMATION);
 	}
 }
 
@@ -357,7 +357,7 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 	else if (p->IsPluginInstalled())
 	{
 		// Uninstall plugin
-		tstring strMsg = CStrPrintf(TOLOCAL_T("Are you sure that you want to uninstall MiniLyrics plugin for %s."), p->szPlayerName).c_str();
+		tstring strMsg = CStrPrintf(TOLOCAL_T("Are you sure that you want to uninstall MiniLyrics plugin for %s?"), p->szPlayerName).c_str();
 		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
 			return;
 
@@ -450,7 +450,7 @@ bool CDlgSetupPlayerPlugins::BrowsePlayerFolder(CPlayerPluginInstaller::Player *
 	p->pExtraInfo->strPlayerPath = dlg.GetFolder();
 	if (!p->CheckPlayerInstalled(false))
 	{
-		MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed do NOT have file: %s"), p->szExeName).c_str());
+		MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed does NOT have file: %s"), p->szExeName).c_str());
 		return false;
 	}
 
@@ -525,8 +525,8 @@ void CDlgSetupPlayerPlugins::UpdatePlayersToView()
 	{
 		// Show "More ..." button
 		SetupPlayerCtrl &ctrl = __vSetupPlayerCtrl[nEndCtrlIndex];
-		SetDlgItemText(ctrl.nInstallBt, TOLOCAL_T("&More ..."));
-		SetDlgItemText(ctrl.nPlayerNameId, TOLOCAL_T("More players ..."));
+		SetDlgItemText(ctrl.nInstallBt, TOLOCAL_T("&More..."));
+		SetDlgItemText(ctrl.nPlayerNameId, TOLOCAL_T("More players..."));
 		nEndCtrlIndex++;
 		ctrl.SetVisibleForMoreBtn(this);
 	}
