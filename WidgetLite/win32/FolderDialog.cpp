@@ -124,11 +124,11 @@ BOOL CFolderDialog::DoBrowse(CBaseWnd *pWndParent)
 #ifdef _WINCE_
 	static char		__szPath[MAX_PATH];
 	bInfo.pszDisplayName = __szPath;
-	bInfo.lpszTitle = "Select Folder";	// STRING
+	bInfo.lpszTitle = "Choose Folder";	// STRING
 #else
 	bInfo.pszDisplayName = m_szPath;
 	if (m_strTitle.empty())
-		bInfo.lpszTitle = _T("Select Folder");	// STRING
+		bInfo.lpszTitle = TOLOCAL_T("Choose Folder");	// STRING
 #endif
 
 #ifndef BIF_NEWDIALOGSTYLE

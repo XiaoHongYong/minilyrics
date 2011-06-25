@@ -761,6 +761,10 @@ int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 		// Plugin for players are saved in MiniLyrics "Player-Plugins" dir.
 		tstring		strFileSrc = DirStringJoint(GetWorkingFolder(), _T("Player-Plugins\\"));
 		strFileSrc += vFiles[i];
+#ifdef _DEBUG
+		if (!IsFileExist(strFileSrc.c_str()))
+			strFileSrc = DirStringJoint(GetWorkingFolder(), vFiles[i].c_str());
+#endif
 
 		tstring		strFileTarg;
 		if (item.szPluginDirOfPlayer)

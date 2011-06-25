@@ -633,7 +633,12 @@ int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip)
 
 	SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.find(&uidDef);
 	if (it != m_setUIDDefinition.end())
-		return (*it)->nId;
+	{
+		UIObjectIDDefinition *p = *it;
+		if (pstrToolTip && p->szToolTip)
+			*pstrToolTip = p->szToolTip;
+		return p->nId;
+	}
 
 	m_nCustomCmdIDNext++;
 
