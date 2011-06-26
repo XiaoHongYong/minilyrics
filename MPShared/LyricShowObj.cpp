@@ -341,6 +341,9 @@ void GradientFillImageHorz(PRAW_IMAGE_DATA pImage, CRect &rc, MLColor clrGradien
 
 void CreateGradientFillImage(CRawImage &image, int nHeight, MLColor clrGradient[3])
 {
+	// Raw font will add the Margin, we need to add it too.
+	nHeight += GfxRaw::MARGIN_BITMAP * 2;
+
 	PRAW_IMAGE_DATA		pImage = image.GetHandle();
 	image.Detach();
 	if (pImage)
