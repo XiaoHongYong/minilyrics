@@ -192,8 +192,6 @@ BEGIN
             END
             MENUITEM SEPARATOR
             MENUITEM "&Edit with External Lyrics Editor\tCtrl+Alt+E", IDC_EXTERNAL_LYR_EDIT
-            MENUITEM SEPARATOR
-            MENUITEM "Cop&y Song File and Lyrics To...\tF12", IDC_COPYTO
         END
         MENUITEM SEPARATOR
         POPUP "S&kins"
@@ -297,8 +295,6 @@ BEGIN
             END
             MENUITEM SEPARATOR
             MENUITEM "&Edit with External Lyrics Editor\tCtrl+Alt+E", IDC_EXTERNAL_LYR_EDIT
-            MENUITEM SEPARATOR
-            MENUITEM "Cop&y Song File and Lyrics To...\tF12", IDC_COPYTO
         END
         MENUITEM SEPARATOR
         MENUITEM "Dis&play Options...",         IDC_LYR_DISPLAY_OPT

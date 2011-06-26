@@ -895,7 +895,7 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	int	xSrc = 0, ySrc = 0;
 
 	xDst -= MARGIN_BITMAP;
-	// yDst -= MARGIN_BITMAP;
+	yDst -= MARGIN_BITMAP;
 
 	xDst += pGlyph->leftOffset;
 	yDst += pGlyph->topOffset;
@@ -1047,7 +1047,7 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	int			xDstEnd, yDstEnd, xSrc, ySrc;
 
 	xDst -= MARGIN_BITMAP;
-	// yDst -= MARGIN_BITMAP;
+	yDst -= MARGIN_BITMAP;
 
 	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 
@@ -1139,7 +1139,7 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	int			xDstEnd, yDstEnd, xSrc, ySrc;
 
 	xDst -= MARGIN_BITMAP;
-	// yDst -= MARGIN_BITMAP;
+	yDst -= MARGIN_BITMAP;
 
 	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 
@@ -1231,7 +1231,7 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	int			xDstEnd, yDstEnd, xSrc, ySrc;
 
 	xDst -= MARGIN_BITMAP;
-	// yDst -= MARGIN_BITMAP;
+	yDst -= MARGIN_BITMAP;
 
 	GetDrawGlyphClipPos(xDst, yDst, xDstEnd, yDstEnd, xSrc, ySrc, pGlyph, rcClip);
 
@@ -1412,8 +1412,8 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 
 	GetDrawTextExPosition(szText, nLen, lpRect, uFormat, x, y, width, xLeftClipOffset);
 
-	x -= 2;
-	y -= 2;
+	x -= 1;
+	y -= 1;
 
 	return DrawText(pGraph, x, y, width, xLeftClipOffset, clrText, szText, nLen, bDrawAlphaChannel);
 }
@@ -1531,8 +1531,8 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 
 	GetDrawTextExPosition(szText, nLen, lpRect, uFormat, x, y, width, xLeftClipOffset);
 
-	x -= 2;
-	y -= 2;
+	x -= 1;
+	y -= 1;
 
 	return OutlinedDrawText(pGraph, x, y, width, xLeftClipOffset, clrText, clrBorder, szText, nLen, bDrawAlphaChannel);
 }
