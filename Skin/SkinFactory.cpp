@@ -655,7 +655,7 @@ int CSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring *pstrToolTip)
 void CSkinFactory::GetTooltip(int nUID, tstring &strToolTip)
 {
 	UIObjectIDDefinition *p = GetUidDef(nUID);
-	if (p)
+	if (p && p->szToolTip)
 		strToolTip = p->szToolTip;
 	else
 		strToolTip.resize(0);

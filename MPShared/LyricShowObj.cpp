@@ -140,7 +140,7 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 			}
 
 			unsigned int c = strIterator.CurChar()[0];
-			if (c >= 127 || !(isalpha(c) || IsDigit(c)
+			if (c >= 127 || !(IsCharAlphaNumeric(c)
 				|| c == '\'' || c == '\"' || c == '_' || c == '-'))
 				nLastBreak = strIterator.GetPos();
 		}
