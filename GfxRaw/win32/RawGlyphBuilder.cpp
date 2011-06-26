@@ -120,7 +120,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 
 	Glyph		*glyph = new Glyph;
 	glyph->ch = ch;
-	glyph->nWidth = (byte)size.cx;
+	glyph->nWidth = (uint16)size.cx;
 
 	agg::pixfmt_rgb24		pixf(bufGraph);
 	CopyBitmpDataFromGraphBuffer(glyph, pixf);

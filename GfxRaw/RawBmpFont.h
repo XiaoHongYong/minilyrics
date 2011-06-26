@@ -48,7 +48,8 @@ struct Glyph
 {
 	Glyph()
 	{
-		leftOffset = topOffset = nWidth = widthBitmap = heightBitmap = marginOutlined = 0;
+		leftOffset = topOffset = heightBitmap = marginOutlined = 0;
+		widthBitmap = nWidth = 0;
 		bitmap = NULL;
 		bitmapOutlined = NULL;
 		nLastUsedTime = GetTickCount();
@@ -69,10 +70,11 @@ struct Glyph
 	int WidthBytesOutlined() const { return (widthBitmap + marginOutlined) * G_PIX_SIZE; }
 
 	tstring		ch;
-	byte		nWidth;					// Width of char
+	uint16		nWidth;					// Width of char
 
 	byte		leftOffset, topOffset;	// Left and top offset of bitmap.
-	byte		widthBitmap, heightBitmap;			// Width of bitmap
+	uint16		widthBitmap;
+	byte		heightBitmap;			// Width of bitmap
 	byte		marginOutlined;
 	bool		freed;
 

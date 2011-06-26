@@ -155,6 +155,7 @@ bool LyricsProperties::Equal(const LyricsProperties &other) const
 		m_strTitle == other.m_strTitle &&
 		m_strAlbum == other.m_strAlbum &&
 		m_strBy == other.m_strBy &&
+		m_strId == other.m_strId &&
 		m_strTimeOffset == other.m_strTimeOffset &&
 		m_strMediaLength == other.m_strMediaLength &&
 		m_nEncodingID == other.m_nEncodingID; 
@@ -170,6 +171,7 @@ void LyricsProperties::clear()
 	m_nTimeOffset = 0;
 	m_strTimeOffset.resize(0);
 	m_strMediaLength.resize(0);
+	m_strId.resize(0);
 	m_nEncodingID = ED_SYSDEF;
 }
 
