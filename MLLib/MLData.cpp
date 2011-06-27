@@ -144,7 +144,6 @@ void CMLData::ID3v2LyricsSaveCacheInfo::clear()
 
 CMLData::CMLData()
 {
-	m_bHasLyricsOpened = false;
 	EmptyStr(m_szLyrContentMd5Org);
 	MD5Str((const char *)_T(""), 0,
 		m_szLyrContentMd5Org);
@@ -251,6 +250,16 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 	OnLyricsOpened();
 
 	return nRet;
+}
+
+int CMLData::NewLyrics(LPCTSTR szSongFile, int nMediaLength)
+{
+	Close();
+
+	m_strSongFile = szSongFile;
+	m_nMediaLength = nMediaLength;
+
+	return ERR_OK;
 }
 
 int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPBYTE szLrc, int nLen)
@@ -454,8 +463,6 @@ void CMLData::OnLyricsOpened()
 	if (m_arrLyricsRows.empty())
 		return;
 
-	m_bHasLyricsOpened = true;
-
 	FilterContents();
 
 	if (GetLyrContentType() == LCT_TXT)
@@ -469,9 +476,7 @@ void CMLData::OnLyricsOpened()
 int CMLData::Save()
 {
 	if (!HasLyricsOpened())
-	{
-		return ERR_FALSE;
-	}
+		return ERR_NOLYRICS_OPENED;
 
 	if (!IsModified())
 		return ERR_OK;
@@ -890,7 +895,6 @@ void CMLData::ClearLyrics()
 
 void CMLData::Close()
 {
-	m_bHasLyricsOpened = false;
 	m_lyrPropertiesOrg.clear();
 	m_lyrProperties.clear();
 	EmptyStr(m_szLyrContentMd5Org);
@@ -912,7 +916,7 @@ void CMLData::Close()
 
 BOOL CMLData::HasLyricsOpened()
 {
-	return m_bHasLyricsOpened;
+	return m_arrFileRows.size() > 0;
 }
 
 void CMLData::AddRow(PML_ROW pFileRow)

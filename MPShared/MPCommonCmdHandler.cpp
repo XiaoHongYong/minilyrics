@@ -554,6 +554,23 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		//
 	case CMD_NEW_LRC:
 		{
+			CMPlayerAppBase::GetInstance()->GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_ON_SAVE_EDIT);
+
+			if (g_LyricData.IsContentModified())
+			{
+				tstring		strMessage = CStrPrintf(TOLOCAL(_T("The lyrics of the %s file have changed.")), 
+					FileGetName(g_LyricData.GetSongFileName())).c_str();
+				strMessage += _T("\r\n\r\n");
+				strMessage += TOLOCAL(_T("Do you want to save the changes?"));
+				int nRet = m_pSkinWnd->MessageOut(strMessage.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL);
+				if (nRet == IDCANCEL)
+					break;
+				else if (nRet == IDYES)
+				{
+					if (!CMPCommonCmdHandler::SaveCurrentLyrics(m_pSkinWnd, false))
+						break;
+				}
+			}
 			CMPlayerAppBase::GetInstance()->NewLyrics();
 		}
 		break;

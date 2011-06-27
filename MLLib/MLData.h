@@ -211,6 +211,8 @@ public:
 	CMLData();
 	virtual ~CMLData();
 
+	int NewLyrics(LPCTSTR szSongFile, int nMediaLength);
+
 	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSource, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPBYTE szLrc, int nLen);
 #ifdef _IPHONE
@@ -379,7 +381,6 @@ public:
 protected:
 	// Only lyrics lines are saved here, it's just a sub copy of m_arrFileRows.
 	VLyrLines				m_arrLyricsRows;
-	bool					m_bHasLyricsOpened;
 
 protected:
 	CLyrScrollActionRecorder	m_lyrScrollActionRecorder;

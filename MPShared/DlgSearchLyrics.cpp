@@ -506,10 +506,9 @@ public:
 				{
 					strFile = dlg.GetOpenFile();
 					if (g_LyricSearch.AssociateLyrics(m_strMediaKey.c_str(), strFile.c_str()))
-					{
 						CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
-						CSkinContainer::OnOK();
-					}
+
+					m_pSkin->PostDestroy();
 				}
 			}
 			break;

@@ -289,6 +289,7 @@ void CMPSkinFactory::GetTooltip(int nId, tstring &strToolTip)
 
 		if (CMPlayerAppBase::GetHotkey().GetHotkeyText(nId, strHotkey))
 		{
+			strToolTip = TOLOCAL(strToolTip.c_str());
 			strToolTip += _T(" (");
 			strToolTip += strHotkey;
 			strToolTip += _T(")");

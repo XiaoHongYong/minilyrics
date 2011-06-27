@@ -365,6 +365,7 @@ BEGIN
             MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
         END
         MENUITEM SEPARATOR
+        MENUITEM "&New Lyrics",                 IDC_NEW_LYRICS
         MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
         MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS

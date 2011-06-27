@@ -644,7 +644,7 @@ void CMPlayerAppBase::OnMediaChanged()
 	// auto save embedded lyrics
 	g_autoProcessEmbeddedLyrics.OnSongChanged();
 
-	g_LyricData.Close();
+	g_LyricData.NewLyrics(GetAssociateFileKeyword().c_str(), g_Player.GetMediaLength());
 
 	//
 	// 没有歌曲信息
@@ -868,7 +868,7 @@ void CMPlayerAppBase::NewLyrics()
 	if (!OnLyricsChangingSavePrompt())
 		return;
 
-	g_LyricData.Close();
+	g_LyricData.NewLyrics(GetAssociateFileKeyword().c_str(), g_Player.GetMediaLength());
 
 	DispatchLyricsChangedSyncEvent();
 }

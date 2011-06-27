@@ -65,7 +65,7 @@ UIObjectIDDefinition g_uidDefinition[] =
 	{ _T("CMD_CAPITALIZE_LEADING_LETTER"), CMD_CAPITALIZE_LEADING_LETTER, IDC_CAPITALIZE_LEADING_LETTER, _T("Capitalize the Leading Letter of All Lines") },
 	{ _T("CMD_LYRICS_TO_LOWERCASE"), CMD_LYRICS_TO_LOWERCASE, IDC_TO_LOWER_CASE, _T("Convert All Lyrics Characters to Lower Case") },
 
-	{ _T("ID_NEW_LRC"), CMD_NEW_LRC, 0, _T("New") },
+	{ _T("ID_NEW_LRC"), CMD_NEW_LRC, IDC_NEW_LYRICS, _T("New") },
 	{ _T("ID_OPEN_LRC"), CMD_OPEN_LRC, IDC_OPEN_LYRICS, _T("Open lyrics") },
 	{ _T("ID_SAVE_LRC"), CMD_SAVE_LRC, IDC_SAVE_LYRICS, _T("Save lyrics") },
 	{ _T("ID_SAVE_LRC_AS"), CMD_SAVE_LRC_AS, IDC_SAVE_LYRICS_AS, _T("Save lyrics as") },
