@@ -287,8 +287,13 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 			else
 				strAlbumArtFileName += g_Player.GetAlbum();
 
-			CFileOpenDlg		dlg(TOLOCAL(_T("Browse album art picture file")), _T(""), 
-				_T("All Picture Files\0*.jpg;*.gif;*.bmp;*.png\0JPEG (*.jpg)\0*.jpg\0Bitmap files (*.bmp)\0*.bmp\0PNG (*.png)\0*.png\0\0"), 0);
+			CFileDlgExtFilter		strFileExt;
+			strFileExt.AddExtention(TOLOCAL_T("All Picture Files"), _T("*.jpg;*.gif;*.bmp;*.png"));
+			strFileExt.AddExtention(TOLOCAL_T("JPEG (*.jpg)"), _T("*.jpg"));
+			strFileExt.AddExtention(TOLOCAL_T("PNG (*.png)"), _T("*.png"));
+			strFileExt.AddExtention(TOLOCAL_T("Bitmap files (*.bmp)"), _T("*.bmp"));
+			CFileOpenDlg		dlg(TOLOCAL_T("Browse album art picture file"), _T(""), 
+				strFileExt.c_str(), 0);
 
 			if (dlg.DoModal(m_pSkinWnd) != IDOK)
 				break;

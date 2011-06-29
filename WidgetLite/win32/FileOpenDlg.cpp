@@ -1,7 +1,3 @@
-// FileOpenDlg.cpp: implementation of the CFileOpenDlg class.
-//
-//////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #ifndef _NO_WIGET_LIB
 #include "BaseWnd.h"
@@ -9,8 +5,16 @@
 #include "FileOpenDlg.h"
 #include <CdErr.h>
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+
+void CFileDlgExtFilter::AddExtention(LPCTSTR szDesc, LPCTSTR szExt)
+{
+	append(szDesc);
+	append(1, TCHAR('\0'));
+
+	append(szExt);
+	append(1, TCHAR('\0'));
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CFileOpenDlg::CFileOpenDlg(LPCTSTR szTitle, LPCTSTR szFile, LPCTSTR szFilter, int nDefFileType, bool bAllowMultiSel)

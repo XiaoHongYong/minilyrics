@@ -1,13 +1,12 @@
-// FileOpenDlg.h: interface for the CFileOpenDlg class.
-//
-//////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_FILEOPENDLG_H__ACA8E71F_C3AE_48EC_BE68_10498B2F5270__INCLUDED_)
-#define AFX_FILEOPENDLG_H__ACA8E71F_C3AE_48EC_BE68_10498B2F5270__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+class CFileDlgExtFilter : public tstring
+{
+public:
+	void AddExtention(LPCTSTR szDesc, LPCTSTR szExt);
+
+};
 
 class CFileOpenDlg  
 {
@@ -32,5 +31,3 @@ public:
 	bool			m_bAllowMultiSel;
 
 };
-
-#endif // !defined(AFX_FILEOPENDLG_H__ACA8E71F_C3AE_48EC_BE68_10498B2F5270__INCLUDED_)

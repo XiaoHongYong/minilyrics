@@ -84,11 +84,11 @@ IDR_MENU_RATE MENU
 BEGIN
     POPUP "Rate"
     BEGIN
-        MENUITEM "Rate these lyrics: 1 (Low)",  IDC_RATE_LYR_1
-        MENUITEM "Rate these lyrics: 2",        IDC_RATE_LYR_2
-        MENUITEM "Rate these lyrics: 3",        IDC_RATE_LYR_3
-        MENUITEM "Rate these lyrics: 4",        IDC_RATE_LYR_4
-        MENUITEM "Rate these lyrics: 5 (High)", IDC_RATE_LYR_5
+        MENUITEM "Rate These Lyrics: 1 (Low)",  IDC_RATE_LYR_1
+        MENUITEM "Rate These Lyrics: 2",        IDC_RATE_LYR_2
+        MENUITEM "Rate These Lyrics: 3",        IDC_RATE_LYR_3
+        MENUITEM "Rate These Lyrics: 4",        IDC_RATE_LYR_4
+        MENUITEM "Rate These Lyrics: 5 (High)", IDC_RATE_LYR_5
     END
 END
 
@@ -133,16 +133,16 @@ BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         POPUP "&Lyrics"
         BEGIN
-            POPUP "Ra&te These Lyrics..."
+            POPUP "Ra&te These Lyrics"
             BEGIN
-                MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
-                MENUITEM "2",                           IDC_RATE_LYR_2
-                MENUITEM "3",                           IDC_RATE_LYR_3
-                MENUITEM "4",                           IDC_RATE_LYR_4
                 MENUITEM "5 (High)",                    IDC_RATE_LYR_5
+                MENUITEM "4",                           IDC_RATE_LYR_4
+                MENUITEM "3",                           IDC_RATE_LYR_3
+                MENUITEM "2",                           IDC_RATE_LYR_2
+                MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
             END
             MENUITEM SEPARATOR
-            MENUITEM "Embedded Lyrics in &Mp3 file", IDC_EMBEDDED_LYRICS
+            MENUITEM "Save Lyrics in &MP3 file", IDC_EMBEDDED_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
             MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
@@ -250,9 +250,16 @@ BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         POPUP "&Lyrics"
         BEGIN
-            MENUITEM "Ra&te These Lyrics...",       IDC_RATE_LYRICS
+            POPUP "Ra&te These Lyrics"
+            BEGIN
+                MENUITEM "5 (High)",                    IDC_RATE_LYR_5
+                MENUITEM "4",                           IDC_RATE_LYR_4
+                MENUITEM "3",                           IDC_RATE_LYR_3
+                MENUITEM "2",                           IDC_RATE_LYR_2
+                MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
+            END
             MENUITEM SEPARATOR
-            MENUITEM "Embedded Lyrics in &Mp3 file", IDC_EMBEDDED_LYRICS
+            MENUITEM "Save Lyrics in &MP3 file", IDC_EMBEDDED_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
             MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
@@ -480,13 +487,13 @@ BEGIN
     BEGIN
         MENUITEM "&Search Lyrics...\tD",        IDC_OPEN_LYRICS
         MENUITEM SEPARATOR
-        POPUP "Ra&te These Lyrics..."
+        POPUP "Ra&te These Lyrics"
         BEGIN
-            MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
-            MENUITEM "2",                           IDC_RATE_LYR_2
-            MENUITEM "3",                           IDC_RATE_LYR_3
-            MENUITEM "4",                           IDC_RATE_LYR_4
             MENUITEM "5 (High)",                    IDC_RATE_LYR_5
+            MENUITEM "4",                           IDC_RATE_LYR_4
+            MENUITEM "3",                           IDC_RATE_LYR_3
+            MENUITEM "2",                           IDC_RATE_LYR_2
+            MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
         END
         POPUP "&Upload Lyrics..."
         BEGIN
@@ -601,8 +608,8 @@ BEGIN
     BEGIN
         MENUITEM "&Download All Lyrics",        IDC_DOWNLOAD_ALL_LYRICS
         MENUITEM SEPARATOR
-        MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
-        MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
+        MENUITEM "Save Lyrics in &MP3 file",    IDC_SAVE_LYRICS_TO_MP3
+        MENUITEM "&Remove Lyrics in MP3 File",  IDC_REMOVE_LRC_IN_MP3
     END
     POPUP "&Help"
     BEGIN

@@ -11,7 +11,7 @@
       <NormalCheckBox ID="CID_C_SAVE_IN_SONG_DIR" Text="&amp;Save lyrics in the song's directory" Rect="25,40,w-50,"/>
       <NormalCheckBox ID="CID_C_SAVE_IN_DIR" Text="&amp;Save lyrics in:" Rect="25,70,140,"/>
       <NormalTextBt ID="CID_DOWN_DIR" Text="Choose the directory" Rect="170,70,w-170-20,"/>
-      <NormalCheckBox ID="CID_C_SAVE_IN_MP3" Text="&amp;Save lyrics in mp3 file" Rect="25,100,w-50,"/>
+      <NormalCheckBox ID="CID_C_SAVE_IN_MP3" Text="&amp;Save lyrics in MP3 file" Rect="25,100,w-50,"/>
       <NormalCheckBox ID="CID_C_ID3V2_SYLT" Text="ID3v2 synchronized Lyrics (For MiniLyrics, Windows Media player)"
                       Rect="45,130,w-70,"/>
       <NormalCheckBox ID="CID_C_ID3V2_USLT" Text="ID3v2 unsynchronized Lyrics (For iTunes, iPod, Windows Media Player, etc)"
