@@ -160,6 +160,16 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
+		_T("MusicBee"),
+		_T(""),
+		_T("MusicBee\\"), _T("MusicBee.exe"),
+		_T("Plugins"),
+		_T("InstMB"),
+		_T("MB_MiniLyrics.dll")
+	},
+	{
+		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
+		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
 		_T("BSPlayer"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\BSPlayer1\\UninstallString"),
 		_T("Webteh\\BSplayer\\"), _T("bsplayer.exe"),

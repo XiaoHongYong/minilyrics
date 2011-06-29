@@ -1,0 +1,10 @@
+LIBRARY "TestDll" 
+EXPORTS   
+    Initialise @1 
+    Configure @2
+    Close @3
+    Uninstall @4
+    ReceiveNotification	@5
+    RetrieveLyrics @6
+    RetrieveArtwork @7
+    SaveSettings @8

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MLPluginLib", "..\MLPluginLib\MLPluginLib.vcproj", "{0721AD77-959D-402F-8157-F43F42826D24}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PluginMusicBee", "PluginMusicBee.vcproj", "{2DF13F79-83C6-4706-B350-E142BAB182CC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0721AD77-959D-402F-8157-F43F42826D24} = {0721AD77-959D-402F-8157-F43F42826D24}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0721AD77-959D-402F-8157-F43F42826D24}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Debug|Win32.Build.0 = Debug|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Release|Win32.ActiveCfg = Release|Win32
+		{0721AD77-959D-402F-8157-F43F42826D24}.Release|Win32.Build.0 = Release|Win32
+		{2DF13F79-83C6-4706-B350-E142BAB182CC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2DF13F79-83C6-4706-B350-E142BAB182CC}.Debug|Win32.Build.0 = Debug|Win32
+		{2DF13F79-83C6-4706-B350-E142BAB182CC}.Release|Win32.ActiveCfg = Release|Win32
+		{2DF13F79-83C6-4706-B350-E142BAB182CC}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
