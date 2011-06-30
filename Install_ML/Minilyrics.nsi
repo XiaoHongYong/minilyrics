@@ -250,6 +250,7 @@ SectionIn RO
   File ..\bin\PluginWMPVis.dll
   File ..\bin\PluginMJ.dll
   File ..\bin\xmp-ml.dll
+  File ..\bin\MB_MiniLyrics.dll
   File ..\bin\libminilyrics_plugin.dll
   File ..\bin\PluginSilverjuke.dll
   File forSongbird\sbMLSongbird.dll

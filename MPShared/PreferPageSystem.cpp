@@ -136,7 +136,7 @@ ID_TO_STRING		_id2strPlayers[] = { { 0, _T("Winamp2") }, { 0, _T("Winamp5") },
 	{ 0, _T("iTunes") }, { 0, _T("Silverjuke") },
 	{ 0, _T("MediaMonkey") }, { 0, _T("KMPlayer") }, 
 	{ 0, _T("JetAudio") }, { 0, _T("Yahoo! Music Jukebox") }, 
-	{ 0, _T("Bsplayer") }, { 0, _T("Media Jukebox") }, 
+	{ 0, _T("BSPlayer") }, { 0, _T("Media Jukebox") }, 
 	{ 0, _T("XMPlay") }, { 0, _T("AIMP2") },
 	{ 0, _T("VLC Media Player") },
 	{ 0, NULL }
