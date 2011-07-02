@@ -2492,139 +2492,101 @@ void CLyricShowObj::LoadAllSettings()
 	}
 }
 
-/*
-void ReverseString(LPTSTR str, int n)
-{
-	for (int i = n / 2; i >= 0; i--)
-	{
-		wchar_t	c = str[n - 1 - i];
-		str[n - 1 - i] = str[i];
-		str[i] = c;
-	}
-}
-
-void GetStrArab(LPCTSTR str, bool &bIsArabStr, int &nLen)
-{
-	nLen = 0;
-	if (*str == 0)
-		return;
-
-	// chars in range of 0x590-0x6ff are Hebrew & Arabic
-
-	bIsArabStr = (*str >= 0x590 && *str <= 0x6ff);
-	nLen++;
-	str++;
-
-	while (*str)
-	{
-		if ((*str >= 0x590 && *str <= 0x6ff) != bIsArabStr)
-			break;
-		nLen++;
-		str++;
-	}
-}
-
-void ReverseStringForRightToLeftLanguage(LPTSTR szText)
-{
-	int		nLen;
-	bool	bArab;
-
-	while (*szText)
-	{
-		GetStrArab(szText, bArab, nLen);
-		if (bArab)
-			ReverseString(szText, nLen);
-		szText += nLen;
-	}
-}*/
-
-void ReverseString(LPTSTR str, int n)
-{
-
-	LPCTSTR parentheses = L"()[]{}";
-	LPCTSTR inverseParentheses = L")(][}{";
-	LPCTSTR parLoc;
-
-	for (int i = 0; i < n / 2; i++)
-	{
-
-		wchar_t c = str[n - 1 - i];
-		if (parLoc = wcsrchr(parentheses, str[i]))
-			str[i] = inverseParentheses[parLoc - parentheses];
-
-		str[n - 1 - i] = str[i];
-		if (parLoc = wcsrchr(parentheses, c))
-			c = inverseParentheses[parLoc - parentheses];
-
-		str[i] = c;
-	}
-}
-
-bool inline isStrArab(WCHAR c)
+bool inline isArabic(WCHAR c)
 {
 	return (c >= 0x590 && c <= 0x6ff);// || (c >= 0x0E00 && c <= 0x0E7F);
 }
 
-void GetStrArab(LPCTSTR str, bool &bIsArabStr, int &nLen)
+bool inline isStrArabic(LPCTSTR str)
 {
-	nLen = 0;
-
-	if (*str == 0)
-		return;
-
-	bIsArabStr = isStrArab(*str);
-
-	nLen++;
-	str++;
-
 	while (*str)
 	{
-		if (isStrArab(*str) != bIsArabStr)
-			break;
-
-		nLen++;
+		if (isArabic(*str))
+			return true;
 		str++;
 	}
+
+	return false;
+}
+
+void strreverse(LPTSTR str, int len)
+{
+	for (int i = len / 2; i >= 0; i--)
+	{
+		TCHAR c = str[len - 1 - i];
+		str[len - 1 - i] = str[i];
+		str[i] = c;
+	}
+}
+
+inline bool IsNoneAlpha(TCHAR c)
+{
+	return (uint)c < 0x7F && !IsAlpha(c) && !IsDigit(c);
 }
 
 void ReverseStringForRightToLeftLanguage(LPTSTR szText)
 {
-	int         nLen;
-	bool		bArab;
-	WCHAR		seps[4];
-	LPTSTR      tok, next_tok = NULL;
+	LPCTSTR		p = szText;
+	LPCTSTR		szStart = szText;
+	LPCTSTR		szNoneAlpha = NULL;
 
-	for (LPTSTR tmpText = szText; *tmpText; tmpText++)
+	tstring		str;
+
+	while (*p)
 	{
-		if (isStrArab(*tmpText))
+		szNoneAlpha = NULL;
+		while (*p && !isArabic(*p))
 		{
-
-			// if Arab found reverse the whole line
-			ReverseString(szText, wcslen(szText));
-
-			// now reverse non-arab words back
-			swprintf(seps, 4, L" \t\n%c", 0x2028 /* ls */);
-
-			tmpText = szText;
-			tok = wcstok_s(tmpText, seps, &next_tok);
-
-			while (tok)
+			if (IsNoneAlpha(*p))
 			{
-				GetStrArab(tok, bArab, nLen);
-
-				if (!bArab)
-					ReverseString(tok, nLen);
-
-				tok = wcstok_s(NULL, seps, &next_tok);
-
-				//if not eol return the space wcstok_s ommited
-				if (tok)
-					*(LPTSTR)(tok - 1) = L' ';
+				if (szNoneAlpha == NULL)
+					szNoneAlpha = p;
 			}
+			else
+				szNoneAlpha = NULL;
+			p++;
+		}
 
+		if (*p && szNoneAlpha != NULL)
+		{
+			// Reverse none alpha char
+			strreverse((LPTSTR)szNoneAlpha, int(p - szNoneAlpha));
+
+			// Insert alpha str
+			str.insert(0, szStart, int(szNoneAlpha - szStart));
+
+			// Insert none alpha
+			str.insert(0, szNoneAlpha, int(p - szNoneAlpha));
+		}
+		else
+			str.insert(0, szStart, int(p - szStart));
+		szStart = p;
+
+		if (!*p)
 			break;
+
+		while (isArabic(*p))
+			p++;
+
+		str.insert(0, szStart, int(p - szStart));
+		szStart = p;
+
+		while (*p && IsNoneAlpha(*p) && !isArabic(*p))
+			p++;
+
+		if (p != szStart)
+		{
+			// Reverse none alpha char
+			strreverse((LPTSTR)szStart, int(p - szStart));
+
+			// Insert none alpha
+			str.insert(0, szStart, int(p - szStart));
+			szStart = p;
 		}
 	}
+
+	ASSERT(str.size() == _tcslen(szText));
+	_tcscpy(szText, str.c_str());
 }
 
 void CLyricShowObj::ReverseLyricsForRightToLeftLanguage()
@@ -2636,7 +2598,8 @@ void CLyricShowObj::ReverseLyricsForRightToLeftLanguage()
 		{
 			PLYRIC_FRAG	pFrag = pRow->vFrags[k];
 
-			ReverseStringForRightToLeftLanguage(pFrag->szLyric);
+			if (isStrArabic(pFrag->szLyric))
+				ReverseStringForRightToLeftLanguage(pFrag->szLyric);
 		}
 	}
 }
