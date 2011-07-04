@@ -112,7 +112,7 @@ public:
 
 	BOOL AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle);
 
-	int SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount);
+	int SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szMediaKey, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount);
 	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, uint32 nLyrSaveFlag, tstring &strMsg, INotifyEvent *pNotify);
 
 	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, MLMsgRetBatchSearch &retLyrics);

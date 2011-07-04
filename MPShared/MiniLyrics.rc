@@ -142,7 +142,7 @@ BEGIN
                 MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
             END
             MENUITEM SEPARATOR
-            MENUITEM "Save Lyrics in &MP3 file", IDC_EMBEDDED_LYRICS
+            MENUITEM "Save Lyrics in &MP3 file",    IDC_EMBEDDED_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
             MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
@@ -259,7 +259,7 @@ BEGIN
                 MENUITEM "1 (Low)",                     IDC_RATE_LYR_1
             END
             MENUITEM SEPARATOR
-            MENUITEM "Save Lyrics in &MP3 file", IDC_EMBEDDED_LYRICS
+            MENUITEM "Save Lyrics in &MP3 file",    IDC_EMBEDDED_LYRICS
             MENUITEM SEPARATOR
             MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
             MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
@@ -720,17 +720,17 @@ BEGIN
     LTEXT           "Please click 'Send' button, a new mail will be generated, then send this mail to us. It will be very helpful to solve this error.",IDC_STATIC,20,70,230,33
 END
 
-IDD_MSG DIALOGEX 0, 0, 268, 89
+IDD_MSG DIALOGEX 0, 0, 268, 94
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Confirm to save the lyrics file"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    LTEXT           "message",IDC_MSG,27,10,226,25
+    PUSHBUTTON      "YES",IDYES,80,73,50,14
+    PUSHBUTTON      "NO",IDNO,137,73,50,14
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,211,73,50,14
+    LTEXT           "message",IDC_MSG,27,9,226,41
     CONTROL         "Use as default setting, don't prompt any more",IDC_NO_PROMPT,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,49,196,10
-    PUSHBUTTON      "YES",IDYES,80,68,50,14
-    PUSHBUTTON      "NO",IDNO,137,68,50,14
-    DEFPUSHBUTTON   "Cancel",IDCANCEL,211,68,50,14
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,54,196,10
 END
 
 IDD_ERROR_RESOLVE DIALOG  0, 0, 300, 174
@@ -904,7 +904,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 261
         TOPMARGIN, 1
-        BOTTOMMARGIN, 82
+        BOTTOMMARGIN, 87
     END
 
     IDD_ERROR_RESOLVE, DIALOG

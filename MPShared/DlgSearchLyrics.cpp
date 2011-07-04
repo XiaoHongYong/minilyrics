@@ -91,7 +91,8 @@ public:
 
 		m_strMsg = _T("");
 
-		m_nResult = g_OnlineSearch.SearchOnline(m_session, m_strArtist.c_str(), m_strTitle.c_str(), *m_pvSearchResult, m_strMsg, m_nCurPage, m_nPageCount);
+		ASSERT(m_strMediaKey.size() > 0);
+		m_nResult = g_OnlineSearch.SearchOnline(m_session, m_strArtist.c_str(), m_strTitle.c_str(), m_strMediaKey.c_str(), *m_pvSearchResult, m_strMsg, m_nCurPage, m_nPageCount);
 
 		return CWorkObjBase::DoTheJob();
 	}
@@ -110,7 +111,7 @@ public:
 	int						m_nResult;
 	CMLClientSession		m_session;
 
-	tstring					m_strArtist, m_strTitle;
+	tstring					m_strArtist, m_strTitle, m_strMediaKey;
 
 };
 
@@ -745,6 +746,7 @@ protected:
 
 		m_pSearchObj->m_strArtist = m_strArtistLastSearch;
 		m_pSearchObj->m_strTitle = m_strTitleLastSearch;
+		m_pSearchObj->m_strMediaKey = m_strMediaKey;
 		m_pSearchObj->m_pvSearchResult = &m_vResultsInet;
 		m_pSearchObj->m_nCurPage = m_nCurPage;
 

@@ -559,11 +559,11 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	return AddSearchJob(true, szArtist, szTitle);
 }
 
-int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount)
+int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szMediaKey, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount)
 {
 	int					nRet;
 
-	tstring strAssociateMediaKey = CMPlayerAppBase::GetAssociateFileKeyword();
+	tstring strAssociateMediaKey = szMediaKey;
 
 	session.Init(GetAppNameLong().c_str());
 

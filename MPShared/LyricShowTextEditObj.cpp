@@ -1389,6 +1389,7 @@ void CLyricShowTextEditObj::OnSaveLyrics()
 	GetText(strEdit);
 
 	CHAR_ENCODING	nEncodingID = g_LyricData.Properties().GetEncodingIndex();
+	tstring strId = g_LyricData.Properties().m_strId;
 	g_LyricData.Properties().clear();
 	g_LyricData.Properties().SetEncoding(nEncodingID);
 	g_LyricData.FromString(strEdit.c_str());
@@ -1410,6 +1411,7 @@ void CLyricShowTextEditObj::OnSaveLyrics()
 	SET_PROP(prop.m_strMediaLength, CID_E_MEDIA_LENGTH);
 	if (strOffset.size())
 		prop.SetOffsetTime(strOffset.c_str());
+	prop.m_strId = strId;
 };
 
 void CLyricShowTextEditObj::OnLyricsChanged()

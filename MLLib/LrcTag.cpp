@@ -168,11 +168,12 @@ void LyricsProperties::clear()
 	m_strAlbum.resize(0);
 	m_strBy.resize(0);
 	m_strEncoding.resize(0);
-	m_nTimeOffset = 0;
 	m_strTimeOffset.resize(0);
 	m_strMediaLength.resize(0);
 	m_strId.resize(0);
+	m_nTimeOffset = 0;
 	m_nEncodingID = ED_SYSDEF;
+	m_lyrContentType = LCT_UNKNOWN;
 }
 
 void LyricsProperties::SetEncoding(CHAR_ENCODING nEncodingID)

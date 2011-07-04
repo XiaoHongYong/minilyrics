@@ -463,6 +463,8 @@ void CMLData::OnLyricsOpened()
 	if (m_arrLyricsRows.empty())
 		return;
 
+	ASSERT(GetLyrContentType() != LCT_UNKNOWN);
+
 	FilterContents();
 
 	if (GetLyrContentType() == LCT_TXT)
@@ -897,6 +899,7 @@ void CMLData::Close()
 {
 	m_lyrPropertiesOrg.clear();
 	m_lyrProperties.clear();
+	ASSERT(GetLyrContentType() == LCT_UNKNOWN);
 	EmptyStr(m_szLyrContentMd5Org);
 	MD5Str((const char *)_T(""), 0,
 		m_szLyrContentMd5Org);
@@ -916,7 +919,7 @@ void CMLData::Close()
 
 BOOL CMLData::HasLyricsOpened()
 {
-	return m_arrFileRows.size() > 0;
+	return GetLyrContentType() != LCT_UNKNOWN;
 }
 
 void CMLData::AddRow(PML_ROW pFileRow)
