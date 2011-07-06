@@ -137,6 +137,8 @@ void CLyricShowTextEditObj::OnCreate()
 	GET_ID_BY_NAME(CID_E_BY);
 	GET_ID_BY_NAME(CID_E_OFFSET);
 	GET_ID_BY_NAME(CID_E_MEDIA_LENGTH);
+	GET_ID_BY_NAME4(CID_RERESH_ARTIST, CID_RERESH_ALBUM, CID_RERESH_TITLE, CID_RERESH_BY);
+	GET_ID_BY_NAME(CID_RERESH_MEDIA_LENGTH);
 
 	OnLyricsChanged();
 
@@ -1028,6 +1030,24 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 		CAutoBatchUndo		autoBatchUndo(this);
 		while (FindNext())
 			ReplaceSel(strReplaceWith.c_str());
+	}
+	else if (nId == CID_RERESH_ARTIST)
+		m_pSkin->SetUIObjectText(CID_E_ARTIST, g_Player.GetArtist());
+	else if (nId == CID_RERESH_TITLE)
+		m_pSkin->SetUIObjectText(CID_E_TITLE, g_Player.GetTitle());
+	else if (nId == CID_RERESH_ALBUM)
+		m_pSkin->SetUIObjectText(CID_E_ALBUM, g_Player.GetAlbum());
+	else if (nId == CID_RERESH_BY)
+	{
+		tstring		strLogName = g_Profile.GetProfileString(_T("LoginName"), _T(""));
+		if (strLogName.size())
+			m_pSkin->SetUIObjectText(CID_E_BY, strLogName.c_str());
+	}
+	else if (nId == CID_RERESH_MEDIA_LENGTH)
+	{
+		LyricsProperties &prop = g_LyricData.Properties();
+		prop.SetMediaLength(g_Player.GetMediaLength() / 1000);
+		m_pSkin->SetUIObjectText(CID_E_MEDIA_LENGTH, prop.m_strMediaLength.c_str());
 	}
 
 	switch (nId)

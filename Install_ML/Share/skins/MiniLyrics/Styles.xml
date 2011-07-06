@@ -102,6 +102,7 @@
       <button ID="ID_NEXT" Left="4"/>
       <button ID="ID_HELP" Left="7"/>
     </NormalToolbar>
+	<RefreshButton Extends="Button" Width="16" Height="16" Image="refresh.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16" ImageFocusPos="0,32" UseSkinBg="TRUE"/>
     <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
     <TitleText Extends="Text" Height="25" UseSkinBg="true" FontName="Verdana" FontHeight="20" TextColor="#000000" AlignText="AT_CENTER"/>
     <ErrorText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#FF0000"/>

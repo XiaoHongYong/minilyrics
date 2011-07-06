@@ -64,18 +64,23 @@
       <LyricShowTextEdit Rect="0,0,w,h" />
     </BarFrameClientArea>
   </BarFrame>
-  <NormalText Text="Artist:" Rect="10,h-95+5,70," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_ARTIST" Rect="90,h-95,w/2-90,"/>
-  <NormalText Text="Edited by:" Rect="w/2,h-95+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_BY" Rect="w/2+130,h-95,w/2-140,"/>
+  <NormalText Text="Artist:" Rect="10,h-95+2,70," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <RefreshButton ID="CID_RERESH_ARTIST" Rect="85,h-95,,"/>
+  <NormalEdit ID="CID_E_ARTIST" Rect="110,h-95,w/2-110,"/>
+  <NormalText Text="Edited by:" Rect="w/2,h-95+2,120," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <RefreshButton ID="CID_RERESH_BY" Rect="w/2+125,h-95,,"/>
+  <NormalEdit ID="CID_E_BY" Rect="w/2+150,h-95,w/2-160,"/>
   
-  <NormalText Text="Title:" Rect="10,h-65+5,70," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_TITLE" Rect="90,h-65,w/2-90,"/>
-  <NormalText Text="Delay time (ms):" Rect="w/2,h-65+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_OFFSET" Rect="w/2+130,h-65,w/2-140,"/>
+  <NormalText Text="Title:" Rect="10,h-65+2,70," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <RefreshButton ID="CID_RERESH_TITLE" Rect="85,h-65,,"/>
+  <NormalEdit ID="CID_E_TITLE" Rect="110,h-65,w/2-110,"/>
+  <NormalText Text="Media length:" Rect="w/2,h-65+2,120," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <RefreshButton ID="CID_RERESH_MEDIA_LENGTH" Rect="w/2+125,h-65,,"/>
+  <NormalEdit ID="CID_E_MEDIA_LENGTH" Rect="w/2+150,h-65,w/2-160,"/>
   
-  <NormalText Text="Album:" Rect="5,h-35+5,75," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_ALBUM" Rect="90,h-35,w/2-90,"/>
-  <NormalText Text="Media length:" Rect="w/2,h-35+5,120," AlignText="AT_RIGHT | AT_VCENTER"/>
-  <NormalEdit ID="CID_E_MEDIA_LENGTH" Rect="w/2+130,h-35,w/2-140,"/>
+  <NormalText Text="Album:" Rect="5,h-35+2,75," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <RefreshButton ID="CID_RERESH_ALBUM" Rect="85,h-35,,"/>
+  <NormalEdit ID="CID_E_ALBUM" Rect="110,h-35,w/2-110,"/>
+  <NormalText Text="Delay time (ms):" Rect="w/2,h-35+2,120," AlignText="AT_RIGHT | AT_VCENTER"/>
+  <NormalEdit ID="CID_E_OFFSET" Rect="w/2+150,h-35,w/2-160,"/>
 </skinwnd>
