@@ -1,9 +1,10 @@
-MiniLyrics 7.1.759
-New: iPod Lyrics Downloader, download embedded lyrics in bulk. iPod/iPhone can display it.
-New: Displaying lyrics in Arabic (right-to-left) and Tailand languages.
+MiniLyrics 7.1.774
+New: iPod Lyrics Downloader, download embedded lyrics in bulk.
+New: Displaying lyrics in Arabic (right-to-left) and Thai languages.
+New: MusicBee support
 Improved: MiniLyrics installation program, install MiniLyrics plugin more easily.
-Fixed: Continuing to skip to next song in J.R Media Center.
-
+Fixed: Skip to next song in J.R Media Center when MiniLyrics skin is applied.
+Fixed: Some crash issues.
 
 MiniLyrics 7.0.643
 Fixed: Drawing issue of embedded MiniLyrics in MediaMonkey.

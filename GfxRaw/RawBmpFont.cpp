@@ -31,7 +31,8 @@ inline byte RGBToGray(int r, int g, int b)
 
 bool inline isCharComposed(WCHAR c)
 {
-	return (c >= 0x590 && c <= 0x6ff) || (c >= 0x0E00 && c <= 0x0E7F);
+	// The Unicode range for Devanagari is U+0900 .. U+097F.
+	return (c >= 0x590 && c <= 0x6ff) || (c >= 0x0E00 && c <= 0x0E7F) || (c >= 0x0900 && c <= 0x097F);
 }
 
 // Right to left string iterator
