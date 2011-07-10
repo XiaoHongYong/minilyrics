@@ -18,13 +18,15 @@ CFileIndexBase::CFileIndexBase()
 
 CFileIndexBase::~CFileIndexBase()
 {
-
+	Close();
 }
 
 BOOL CFileIndexBase::Init(LPCTSTR szFile, int nBinIdxCount, BOOL bItemSizeSame, BYTE byVerCustom)
 {
 	size_t		nHeaderSize;
 	nHeaderSize = sizeof(FileHeader) + sizeof(CAVLTree<CFileSpaceAllocator>) * (nBinIdxCount - 1);
+
+	Close();
 
 	if (m_FileSpaceAllocator.Open(szFile, nHeaderSize) != ERR_OK)
 		return FALSE;

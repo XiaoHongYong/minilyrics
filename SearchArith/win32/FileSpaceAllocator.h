@@ -1,20 +1,14 @@
-// FileSpaceAllocator.h: interface for the CFileSpaceAllocator class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_FILESPACEALLOCATOR_H__257B3499_7A6E_4DD0_8067_DB30E42AA407__INCLUDED_)
-#define AFX_FILESPACEALLOCATOR_H__257B3499_7A6E_4DD0_8067_DB30E42AA407__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
+
+#include "../base/win32/MemmapFile.h"
 
 class CFileSpaceAllocator// : public IAllocator  
 {
 public:
-	void Close();
-	int ReSize(size_t nSize);
 	int Open(LPCTSTR szFile, int nRemainSize);
+	void Close();
+
+	int ReSize(size_t nSize);
 	int Initialize();
 
 	int PreAlloc(int nSize);
@@ -22,7 +16,7 @@ public:
 	LPVOID Alloc(size_t nSize);
 	int Free(DB_POS pos);
 
-	inline BOOL IsValid() { return m_lpFile != NULL; }
+	inline BOOL IsValid() { return m_lpRemainDataPtr != NULL; }
 
 	inline LPVOID PosToAddr(DB_POS pos)
 	{
@@ -44,7 +38,7 @@ public:
 
 	inline LPBYTE GetRemainDataPtr()
 	{
-		return (LPBYTE)m_lpFile;
+		return (LPBYTE)m_lpRemainDataPtr;
 	}
 
 	CFileSpaceAllocator();
@@ -60,17 +54,14 @@ protected:
 		unsigned int	m_nLen;			// 已使用的空间
 	};
 
-	tstring		m_strFile;			// 文件名
+	CMemmapFile	m_memMapFile;
 
-	HANDLE		m_hFile;			// 文件句柄
-	HANDLE		m_hFilemap;			// 文件映射句柄
-	DWORD		m_nFileSize;		// 文件大小
+	LPBYTE		m_lpData;
+	LPBYTE		m_lpRemainDataPtr;
 	int			m_nRemainSize;
-	LPBYTE		m_lpData;			// 数据段的内容，不包括文件头
-	LPBYTE		m_lpFile;			// 文件映射之后的文件内容
+
+	int			m_nCapacity;
 
 	Head		*m_pHead;
 
 };
-
-#endif // !defined(AFX_FILESPACEALLOCATOR_H__257B3499_7A6E_4DD0_8067_DB30E42AA407__INCLUDED_)

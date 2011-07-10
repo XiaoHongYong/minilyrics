@@ -7,12 +7,6 @@
 #include "fileapi.h"
 #include "MemmapFile.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -71,6 +65,53 @@ bool CMemmapFile::Open(LPCTSTR szFile, int nSizeMin, bool bMustExist)
 		CloseHandle(m_hFile);
 		m_hFile = NULL;
 		CloseHandle(m_hFilemap);
+		m_hFilemap = NULL;
+		return false;
+	}
+
+	return true;
+}
+
+bool CMemmapFile::Resize(size_t nSize)
+{
+	if (m_lpFile == NULL)
+		return false;
+
+	if (nSize < 1024)
+		nSize = 1024;
+
+	// m_nFileSize = (DWORD)(m_nFileSize * FI_FREE_RATE);
+	m_nFileSize = nSize + sizeof(int);
+	m_nFileSize -= m_nFileSize % sizeof(int);
+
+	if (m_lpFile)
+	{
+		UnmapViewOfFile(m_lpFile);
+		m_lpFile = NULL;
+	}
+
+	if (m_hFilemap)
+	{
+		CloseHandle(m_hFilemap);
+		m_hFilemap = NULL;
+	}
+
+	m_hFilemap = CreateFileMapping(m_hFile, NULL, PAGE_READWRITE, 0, m_nFileSize, NULL);
+	ASSERT(m_hFilemap);
+	if (!m_hFilemap)
+	{
+		CloseHandle(m_hFile);
+		m_lpFile = NULL;
+		return false;
+	}
+
+	m_lpFile = (LPBYTE)MapViewOfFile(m_hFilemap, FILE_MAP_READ | FILE_MAP_WRITE, 0, 0, m_nFileSize);
+	ASSERT(m_lpFile);
+	if (!m_lpFile)
+	{
+		CloseHandle(m_hFile);
+		CloseHandle(m_hFilemap);
+		m_lpFile = NULL;
 		m_hFilemap = NULL;
 		return false;
 	}

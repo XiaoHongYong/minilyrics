@@ -1,13 +1,4 @@
-// MemmapFile.h: interface for the CMemmapFile class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_MEMMAPFILE_H__B225B484_E3D9_43C4_9331_869F82768C0F__INCLUDED_)
-#define AFX_MEMMAPFILE_H__B225B484_E3D9_43C4_9331_869F82768C0F__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 class CMemmapFile  
 {
@@ -17,9 +8,13 @@ public:
 
 	bool Open(LPCTSTR szFile, int nSizeMin, bool bMustExist = false);
 
+	bool Resize(size_t nSize);
+
 	int GetSize() { return m_nFileSize; }
 
 	void Close();
+
+	bool IsValid() const { return m_lpFile != NULL; }
 
 	LPBYTE GetPtr()
 	{
@@ -33,5 +28,3 @@ protected:
 	LPBYTE		m_lpFile;			// 文件映射之后的文件内容
 
 };
-
-#endif // !defined(AFX_MEMMAPFILE_H__B225B484_E3D9_43C4_9331_869F82768C0F__INCLUDED_)

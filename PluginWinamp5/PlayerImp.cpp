@@ -767,7 +767,10 @@ HWND CPlayerImp::GetAttachedParentWnd()
 		// this allocates the memory pointer so the structure can be accessed
 		// by winamp (otherwise it will crash)
 		if (!m_embeddedWndState)
+		{
 			m_embeddedWndState = (embedWindowState*)GlobalAlloc(GPTR, sizeof(embedWindowState));
+			memset(m_embeddedWndState, 0, sizeof(embedWindowState));
+		}
 
 		ReadAttachedParentWndSizePos(m_embeddedWndState->r);
 
