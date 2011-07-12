@@ -153,5 +153,12 @@ int CFileSpaceAllocator::Initialize()
 
 void CFileSpaceAllocator::Close()
 {
-	m_memMapFile.Close();
+	if (m_memMapFile.IsValid())
+		m_memMapFile.Close();
+	else
+		HeapFree(GetProcessHeap(), 0, m_lpRemainDataPtr);
+	m_lpRemainDataPtr = NULL;
+	m_nCapacity = 0;
+	m_lpData = NULL;
+	m_pHead = NULL;
 }

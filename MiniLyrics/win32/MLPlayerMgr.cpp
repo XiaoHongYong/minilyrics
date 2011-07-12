@@ -408,7 +408,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			ASSERT(sizeof(PlayerSkinInfo) == pcds->cbData);
 			PlayerSkinInfo *skinInfo = (PlayerSkinInfo *)pcds->lpData;
 			g_Player.m_skinInfo = *skinInfo;
-			if (CMPlayerAppBase::GetInstance()->IsRunning() && skinInfo->bEmbeddedSkin != CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
+			if (skinInfo->bEmbeddedSkin != CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
 			{
 				if (skinInfo->bEmbeddedSkin)
 					CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode(true);
