@@ -1,3 +1,9 @@
+MiniLyrics 7.1.779
+Fixed: Can't load MiniLyrics on Windows Media Player Visuliazation Area.
+
+MiniLyrics 7.1.778
+Fixed: Failed to start with Winamp, if Winamp's skin is applied.
+
 MiniLyrics 7.1.774
 New: iPod Lyrics Downloader, download embedded lyrics in bulk.
 New: Displaying lyrics in Arabic (right-to-left) and Thai languages.

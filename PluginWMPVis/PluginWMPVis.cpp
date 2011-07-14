@@ -299,7 +299,7 @@ STDMETHODIMP CPluginWMPVis::OnWindowMessage(UINT msg, WPARAM WParam, LPARAM LPar
 {
     // return S_OK only if the plugin has handled the window message
     // return S_FALSE to let the defWindowProc handle the message
-    return S_FALSE;
+    return S_OK;
 }
 
 //////////////////////////////////////////////////////////////////////////////

@@ -390,6 +390,8 @@ CEventsDispatcherBase *CMPlayerAppBase::GetEventsDispatcher()
 bool CMPlayerAppBase::InitLyricsPlayer()
 {
 #ifndef _MPLAYER
+	m_pSkinFactory->SetSkinFileName(_T("minilyrics.xml"));
+
 	if (!g_playerMgr.ConnectToPlayer())
 		return false;
 #endif
@@ -522,15 +524,12 @@ bool CMPlayerAppBase::InitLoadSkin()
 
 	// create main skin window.
 #ifndef _MPLAYER
-	m_pSkinFactory->SetSkinFileName(_T("minilyrics.xml"));
 	bool bMPSkinMode = g_Profile.GetProfileBool(_T("MPSkinMode"), true);
 	if (!bMPSkinMode)
 	{
 		nRet = g_Player.SwitchToEmbeddedSkin();
-		if (!m_pSkinFactory->IsOpened())
-		{
-
-		}
+		if (m_pSkinFactory->GetMainWnd() == NULL)
+			nRet = LoadDefaultSkin(SZ_DEFSKIN);
 	}
 	else
 		nRet = LoadDefaultSkin(SZ_DEFSKIN);

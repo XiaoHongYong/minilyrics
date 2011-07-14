@@ -66,6 +66,9 @@ void CPluginWMPVis::OpenStateChange( long NewState )
 
 void CPluginWMPVis::PlayStateChange( long NewState )
 {
+	if (!g_MLService.IsValid())
+		return;
+
     switch (NewState)
     {
     case wmppsUndefined:

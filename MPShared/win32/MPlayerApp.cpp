@@ -241,14 +241,16 @@ int CMPlayerApp::OnSwitchToEmbeddedSkinMode(bool bReloadTheme)
 
 	g_Profile.WriteProfileInt(_T("MPSkinMode"), false);
 
-	m_bMPSkinMode = false;
-
+	int nRet;
 	if (g_Player.GetPlayerType() == P_WINAMP2)
-		return LoadWinamp2Skin(bReloadTheme);
+		nRet = LoadWinamp2Skin(bReloadTheme);
 	else
-	{
-		return LoadGeneralEmbeddedSkin(bReloadTheme);
-	}
+		nRet = LoadGeneralEmbeddedSkin(bReloadTheme);
+
+	if (nRet == ERR_OK)
+		m_bMPSkinMode = false;
+
+	return nRet;
 }
 
 #ifdef _DEBUG
