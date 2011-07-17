@@ -1010,15 +1010,16 @@ void CSkinFactory::Close(bool bQuit)
 	m_dynamicCmds.Free();
 	m_skinFile.Close();
 
-	LIST_SKINWNDS::iterator	it;
-
 	// Save opened window name, and close it.
 	tstring		strOpenedSkinWnds;
-	LIST_SKINWNDS	listSkinWnds;
-	listSkinWnds = m_listSkinWnds;
-	for (it = listSkinWnds.begin(); it != listSkinWnds.end(); ++it)
+	LIST_SKINWNDS	listSkinWnds = m_listSkinWnds;
+	for (LIST_SKINWNDS::iterator it = listSkinWnds.begin(); it != listSkinWnds.end(); ++it)
 	{
 		CSkinWnd	*pSkin = *it;
+
+		// If the skin window has been destroyed, ignore it.
+		if (find(m_listSkinWnds.begin(), m_listSkinWnds.end(), *it) == m_listSkinWnds.end())
+			continue;
 
 		if (pSkin->IsMainAppWnd())
 			g_Profile.WriteProfileString(_T("DefaultSkinWnd"), pSkin->GetSkinWndName());

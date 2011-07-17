@@ -226,6 +226,10 @@ void CLyricShowAgentObj::ToggleActivateButton(int nDuration)
 	}
 	else
 	{
+		// Do NOT display activation notice, if there's no lyrics opened.
+		if (!g_LyricData.HasLyricsOpened())
+			return;
+
 		if (m_pActivateButton)
 		{
 			m_pActivateButton->SetVisible(true, false);

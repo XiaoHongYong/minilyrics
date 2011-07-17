@@ -204,6 +204,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\MediaMonkey.cpp"
+				>
+			</File>
+			<File
 				RelativePath="PlayerImp.cpp"
 				>
 				<FileConfiguration
@@ -238,6 +242,10 @@
 			</File>
 			<File
 				RelativePath="Gen.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MediaMonkey.h"
 				>
 			</File>
 			<File

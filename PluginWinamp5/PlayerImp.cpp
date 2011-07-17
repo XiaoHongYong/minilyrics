@@ -7,6 +7,7 @@
 #include "wa_wrap.h"
 
 #include "PlayerImp.h"
+#include "MediaMonkey.h"
 
 #define SZ_REG_MINILYRICS		_T("Software\\ZikiPlayer")
 #define SZ_MINILYRICS			_T("MiniLyrics")
@@ -142,6 +143,9 @@ UINT CWinampMenu::ID_ML_MENU_ITEM = 0;
 
 bool WAGetSourceMedia(wchar_t *wszUrl, int nBufSize)
 {
+	if (g_bMediaMonkey && CMediaMonkey::GetCurrentMedia(wszUrl))
+		return true;
+
 	DWORD		dwIndex;
 
 	EmptyStr(wszUrl);
@@ -212,6 +216,9 @@ BOOL AnalysisMediaTitle(LPCWSTR szFullTitleNew, wchar_t szArtist[]/* out */, wch
 
 bool GetMediaInfoW(LPCWSTR szFile, wchar_t szArtist[], wchar_t szAlbum[], wchar_t szTitle[])
 {
+	if (g_bMediaMonkey && CMediaMonkey::GetCurrentMediaInfo(szArtist, szAlbum, szTitle))
+		return true;
+
 	extendedFileInfoStructW	info;
 	int						nRet;
 
@@ -656,6 +663,8 @@ void CPlayerImp::OnDisconnect()
 	menu.CheckMiniLyrics(false);
 
 	SetTimer(TIMER_VERIFY_ML_IN_WINAMP_MENU, DURATION_VERIFY_MLIN_WINAMP_MENU);
+
+	CMediaMonkey::Close();
 }
 
 void CPlayerImp::Play()
