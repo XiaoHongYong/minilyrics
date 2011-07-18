@@ -1,3 +1,9 @@
+MiniLyrics 7.1.782
+Fixed: Support MediaMonkey unicode API (Can display none-English lyrics now).
+Fixed: Support for Windows Media Player Visualization.
+Fixed: Set shortcut key bug.
+New: Add setting of not showing MiniLyrics on taskbar or system tray.
+
 MiniLyrics 7.1.779
 Fixed: Can't load MiniLyrics on Windows Media Player Visuliazation Area.
 

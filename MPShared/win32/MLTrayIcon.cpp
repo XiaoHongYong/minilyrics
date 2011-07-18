@@ -102,7 +102,7 @@ void CMLTrayIcon::UpdateShowIconPos()
 	bool		bToolWindow = false;
 	bool		bAddTrayIcon = true;
 
-	showIconOn = (SHOW_ICON_ON)g_Profile.GetProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_BAR_TRAY);
+	showIconOn = (SHOW_ICON_ON)g_Profile.GetProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_TASKBAR);
 
 	if (!IsEmptyString(g_Player.GetFullTitle()))
 	{
@@ -179,7 +179,7 @@ void CMLTrayIcon::UpdateTrayIconText(LPCTSTR szText)
 {
 	int			nShowPos;
 
-	nShowPos = g_Profile.GetProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_BAR_TRAY);
+	nShowPos = g_Profile.GetProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_TASKBAR);
 
 	if (nShowPos == SHOW_ICON_ON_BAR_TRAY || nShowPos == SHOW_ICON_ON_SYSTRAY)
 		CShellNotifyIcon::ModifyIcon(m_pWnd, IDN_MINILYRICS, szText, NULL);

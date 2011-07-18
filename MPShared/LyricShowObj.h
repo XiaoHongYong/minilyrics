@@ -194,11 +194,13 @@ protected:
 
 	void OnTimer(int nId);
 
-	int GetFontHeight() const { return m_nFontHeight + (m_bOutlineLyrics ? 2 : 0); }
+	bool IsOutlineLyrics() const { return m_bOutlineLyrics || m_img.IsValid(); }
 
-	int GetPatternFontHeight() const { return m_nFontHeight + GfxRaw::MARGIN_BITMAP; }
+	int GetFontHeight() const { return m_nFontHeight + (IsOutlineLyrics() ? GfxRaw::MARGIN_BITMAP * 2 : 0); }
 
-	int GetLineHeight() const { return m_nFontHeight + (m_bOutlineLyrics ? 2 : 0) + m_nLineSpacing; }
+	int GetPatternFontHeight() const { return m_nFontHeight + GfxRaw::MARGIN_BITMAP * 2; }
+
+	int GetLineHeight() const { return m_nFontHeight + (IsOutlineLyrics() ? GfxRaw::MARGIN_BITMAP * 2 : 0) + m_nLineSpacing; }
 
 	inline MLColor &GetHighlightColor() { return m_tobHilight.clr[TCI_FILL]; }
 	inline MLColor &GetLowlightColor() { return m_tobLowlight.clr[TCI_FILL]; }

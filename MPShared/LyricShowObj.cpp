@@ -1069,10 +1069,10 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				pGraphics->SetOpacityPainting(nAlpha);
 			}
 
-			if (m_bOutlineLyrics || m_img.IsValid())
+			if (IsOutlineLyrics())
 			{
 				// Draw lyrics text outlined
-				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
+				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
 			}
 			else
 			{
@@ -1141,10 +1141,10 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 		else
 #endif*/
 		{
-			if (m_bOutlineLyrics || m_img.IsValid())
+			if (IsOutlineLyrics())
 			{
 				// Draw lyrics text outlined
-				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
+				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
 			}
 			else
 			{
@@ -1222,10 +1222,10 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 			else
 				m_font.SetOverlayPattern(&m_tobHilight.imgPattern);
 
-			if (m_bOutlineLyrics || m_img.IsValid())
+			if (IsOutlineLyrics())
 			{
 				// Draw lyrics text outlined
-				pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
+				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pFrag->szLyric, pFrag->nLen, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
 			}
 			else
 			{
@@ -1282,7 +1282,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 			else
 				m_font.SetOverlayPattern(&m_tobLowlight.imgPattern);
 
-			if (m_bOutlineLyrics)
+			if (IsOutlineLyrics())
 			{
 				pGraphics->DrawTextClipOutlined(pFrag->szLyric, pFrag->nLen, &rcText, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER], nKaraokePos);
 			}
@@ -1301,7 +1301,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		else
 			m_font.SetOverlayPattern(&m_tobHilight.imgPattern);
 
-		if (m_bOutlineLyrics)
+		if (IsOutlineLyrics())
 		{
 			// Draw lyrics text outlined
 			pGraphics->DrawTextClipOutlined(pFrag->szLyric, pFrag->nLen, &rcText, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
@@ -1328,10 +1328,10 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 		pFrag = pLyricRow->vFrags[nCurPos];
 
 		// draw text border
-		if (m_bOutlineLyrics || m_img.IsValid())
+		if (IsOutlineLyrics())
 		{
 			// Draw lyrics text outlined
-			pGraphics->TextOutOutlined(x, y, pFrag->szLyric, pFrag->nLen, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER]);
+			pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pFrag->szLyric, pFrag->nLen, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER]);
 		}
 		else
 		{

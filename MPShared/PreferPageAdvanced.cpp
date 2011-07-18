@@ -339,21 +339,21 @@ public:
 
 };
 
-LPCTSTR		g_szSysTrayOpt[] = { _T("&Taskbar only"), _T("S&ystem tray only"), _T("T&askbar and system tray") };
+LPCTSTR		g_szSysTrayOpt[] = { _T("&Taskbar only"), _T("S&ystem tray only"), _T("T&askbar and system tray"), _T("&None") };
 
 class CPfItemSystemTrayIcon : public CPfItemInt
 {
 public:
 	CPfItemSystemTrayIcon() 
 		: CPfItemInt(_T("Show $Product$ in System tray and taskbar"), 
-		ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_BAR_TRAY)
+		ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_TASKBAR)
 	{
 	}
 
 	virtual tstring GetValue() {
 		int	n = GetIntValue();
 		if (n < 0 || n >= CountOf(g_szSysTrayOpt))
-			n = SHOW_ICON_ON_BAR_TRAY;
+			n = SHOW_ICON_ON_TASKBAR;
 		return RemovePrefixOfAcckey(TOLOCAL(g_szSysTrayOpt[n]));
 	}
 
@@ -590,7 +590,7 @@ public:
 			CDlgShortcutKey		dlg(m_strName.c_str());
 			bool				bGloal = (nIndex == 1);
 
-			// if (dlg.DoModal(m_pWndParent->GetSkinWnd()) == IDOK)
+			if (dlg.DoModal(m_pWndParent->GetSkinWnd()) == IDOK)
 			{
 				// Is this hotkey already being used?
 				int			nUsedCmdIndex;
