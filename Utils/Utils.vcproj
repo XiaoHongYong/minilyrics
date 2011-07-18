@@ -296,7 +296,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile="$(ProjectDir)/../Output/Utils/UnicodeDebug/Utils.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"

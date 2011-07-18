@@ -145,6 +145,7 @@ SectionIn RO
   Delete "$SMPROGRAMS\MiniLyrics\*.*"
 
   ; Remove old files
+  Delete "$INSTDIR\Lang\*.*"
   Delete "$INSTDIR\Player-Plugins\*.*"
   Delete /REBOOTOK $INSTDIR\*.dll
   Delete $INSTDIR\MLSetup.exe
@@ -428,8 +429,8 @@ Section "Uninstall"
   Delete "$INSTDIR\Player-Plugins\*.*"
   RMDir "$INSTDIR\Player-Plugins"
 
-  Delete $INSTDIR\lang\*.*
-  RMDir $INSTDIR\lang
+  Delete $INSTDIR\Lang\*.*
+  RMDir $INSTDIR\Lang
   Delete "$INSTDIR\Skins\Fantasy\*.*"
   Delete "$INSTDIR\Skins\Fantasy (Transparent)\*.*"
   Delete "$INSTDIR\Skins\iTunes Mode\*.*"

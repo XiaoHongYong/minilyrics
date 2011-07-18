@@ -78,7 +78,6 @@
 			<Tool
 				Name="VCBscMakeTool"
 				SuppressStartupBanner="true"
-				OutputFile="$(ProjectDir)/../Output/base/UnicodeDebug/base.bsc"
 			/>
 			<Tool
 				Name="VCFxCopTool"
