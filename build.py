@@ -126,6 +126,9 @@ if TargetML:
 		cmd = DevEnvExe + solution[0] + " " + BuildAction + " " + solution[1]
 		ExecuteOnErrQuit(cmd)
 		
+	if BuildAction == "/clean":
+		sys.exit(0, "All projects have been cleaned.")
+		
 	#
 	# Create installation pack for MiniLyrics
 	#
@@ -159,6 +162,9 @@ if TargetZP:
 		print(cmd)
 		ExecuteOnErrQuit(cmd)
 		
+	if BuildAction == "/clean":
+		sys.exit(0, "All projects have been cleaned.")
+
 	#
 	# Create installation pack for MiniLyrics
 	#

@@ -296,15 +296,16 @@ public:
 
 	stringex_t<T> &operator = (const stringex_t<T> &obj)
 	{
-		if (nSizeMax < obj.nSizeMax)
+		if (nSizeMax < obj.nLen + 1)
 		{
 			if (m_szBuff)
 				free(m_szBuff);
-			nSizeMax = obj.nSizeMax;
+			nSizeMax = obj.nLen + 4;
 			m_szBuff = (T *)malloc(nSizeMax * sizeof(T));
 		}
-		memcpy(m_szBuff, obj.m_szBuff, nSizeMax);
+
 		nLen = obj.nLen;
+		memcpy(m_szBuff, obj.m_szBuff, (nLen + 1) * sizeof(T));
 
 		return *this;
 	}
