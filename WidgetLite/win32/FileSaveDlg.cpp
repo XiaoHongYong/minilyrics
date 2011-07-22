@@ -62,9 +62,9 @@ UINT_PTR CALLBACK MyOFNHookProc(
 				if (lpOfNotify->lpOFN->nFilterIndex > 1 && szNewExt)
 				{
 
-					GetDlgItemText(lpOfNotify->hdr.hwndFrom, edt1, szFileName, MAX_PATH);
+					GetDlgItemText(lpOfNotify->hdr.hwndFrom, cmb13, szFileName, MAX_PATH);
 					FileSetExt(szFileName, CountOf(szFileName), szNewExt);
-					SetDlgItemText(lpOfNotify->hdr.hwndFrom, edt1, szFileName);
+					SetDlgItemText(lpOfNotify->hdr.hwndFrom, cmb13, szFileName);
 				}
 			}
 			return 1;

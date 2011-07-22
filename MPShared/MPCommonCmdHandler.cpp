@@ -970,103 +970,50 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 //		FALSE	-	用户选择取消，或者保存失败;
 BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefFileType, bool bAdvancedSaveOpt)
 {
-	TCHAR			szFile[MAX_PATH] = _T("");
-	TCHAR			szTitle[MAX_PATH] = _T("");
-	tstring			strLyrics;
-	FILE_ENCODING	fileEncoding = FE_UCS2;
-
 	if (!g_LyricData.HasLyricsOpened())
 	{
 		pWndParent->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
 		return TRUE;
 	}
 
-	g_LyricData.ToString(strLyrics, FT_LYRICS_TXT, TRUE);
-
-/*	if (bAdvancedSaveOpt)
+	tstring strFile = g_LyricData.GetLyricsFileName();
+	if (strFile.empty() || !IsFileExist(strFile.c_str()))
 	{
-		CDlgSelEncoding	dlgEncoding;
+		DOWN_SAVE_DIR downSaveDir = (DOWN_SAVE_DIR)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
+		if (downSaveDir == DOWN_SAVE_IN_SONG_DIR)
+			FileGetPath(g_LyricData.GetSongFileName(), strFile);
 
-		dlgEncoding.m_encoding = g_LyricData.GetEncodingIndex();
-		if (g_LyricData.GetFileEncoding() == FE_UCS2)
-			dlgEncoding.m_encoding = ED_UNICODE;
-		else if (g_LyricData.GetFileEncoding() == FE_UTF8)
-			dlgEncoding.m_encoding = ED_UTF8;
-		dlgEncoding.m_strLyrics = strLyrics;
-
-		if (dlgEncoding.DoModal(pWndParent) != IDOK)
-			return FALSE;
-
-		g_LyricData.SetEncoding(dlgEncoding.m_encoding);
-		if (dlgEncoding.m_encoding == ED_UNICODE)
-			fileEncoding = FE_UCS2;
-		else if (dlgEncoding.m_encoding == ED_UTF8)
-			fileEncoding = FE_UTF8;
-		else
-			fileEncoding = FE_ANSI;
-	}
-	else*/
-	{
-		if (IsAnsiStr(strLyrics.c_str()))
-			fileEncoding = FE_ANSI;
-		else
-			fileEncoding = FE_UCS2;
-	}
-
-	// 设置新的文件名
-	_tcscpy_safe(szFile, CountOf(szFile), g_LyricData.GetLyricsFileName());
-	// make sure the dialog will be displayed.
-	if (!IsFileExist(szFile))
-	{
-		EmptyStr(szFile);
-		if (!g_LyricData.Properties().m_strArtist.empty())
+		DOWN_SAVE_NAME downSaveName = (DOWN_SAVE_NAME)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveName"), DOWN_SAVE_NAME_KEEP);
+		if (downSaveName == DOWN_SAVE_NAME_AS_SONG_NAME)
 		{
-			_tcscpy_safe(szFile, CountOf(szFile), g_LyricData.Properties().m_strArtist.c_str());
-			_tcscat_safe(szFile, CountOf(szFile), _T(" - "));
+			// Uses media file title.
+			tstring strTitle;
+			FileGetTitle(g_LyricData.GetSongFileName(), strTitle);
+			strFile += strTitle;
+		}
+		else
+		{
+			// Uses artist - title
+			if (!g_LyricData.Properties().m_strArtist.empty())
+			{
+				strFile += g_LyricData.Properties().m_strArtist;
+				strFile += _T(" - ");
+			}
+
+			strFile += g_LyricData.Properties().m_strTitle;
 		}
 
-		_tcscat_safe(szFile, CountOf(szFile), g_LyricData.Properties().m_strTitle.c_str());
-
-		FileNameFilterInvalidChars(szFile);
+		strFile += _T(".lrc");
+		strFile = FileNameFilterInvalidChars(strFile.c_str());
 	}
 
-	// set saved file extention
+	// set saved file extension
 	if (DefFileType == FT_LYRICS_LRC)
-		FileSetExt(szFile, CountOf(szFile), _T(".lrc"));
+		FileSetExt(strFile, _T(".lrc"));
 	else if (DefFileType == FT_LYRICS_TXT)
-		FileSetExt(szFile, CountOf(szFile), _T(".txt"));
+		FileSetExt(strFile, _T(".txt"));
 	else if (DefFileType == FT_LYRICS_SNC)
-		FileSetExt(szFile, CountOf(szFile), _T(".snc"));
-
-	if (!IsFileExist(szFile))
-	{
-		// save as new file...
-		// Is save in song file dir with song file name?
-		DOWN_SAVE_DIR		DownSaveDir;
-		DOWN_SAVE_NAME		DownSaveName;
-		TCHAR				szDir[MAX_PATH] = _T("");
-		TCHAR				szName[MAX_PATH] = _T("");
-		TCHAR				szExt[MAX_PATH];
-
-		FileGetPath(szDir, CountOf(szDir), szFile);
-		FileGetTitle(szName, CountOf(szName), szFile);
-		_tcscpy_safe(szExt, CountOf(szExt), FileGetExt(szFile));
-
-		DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
-		if (DownSaveDir == DOWN_SAVE_IN_SONG_DIR)
-		{
-			FileGetPath(szDir, CountOf(szDir), g_Player.GetSrcMedia());
-		}
-
-		DownSaveName = (DOWN_SAVE_NAME)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveName"), DOWN_SAVE_NAME_KEEP);
-		if (DownSaveName == DOWN_SAVE_NAME_AS_SONG_NAME)
-		{
-			FileGetTitle(szName, CountOf(szName), g_Player.GetSrcMedia());
-		}
-		_tcscpy_safe(szFile, CountOf(szFile), szDir);
-		_tcscat_safe(szFile, CountOf(szFile), szName);
-		_tcscat_safe(szFile, CountOf(szFile), szExt);
-	}
+		FileSetExt(strFile, _T(".snc"));
 
 	TCHAR		szWndTitle[256];
 	int			nFileExtIndex;
@@ -1080,26 +1027,34 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 		nFileExtIndex = 1;
 
 	_tcscpy_safe(szWndTitle, CountOf(szWndTitle), TOLOCAL(_T("Save As")));
-	CFileSaveDlg		dlg(szWndTitle, szFile,
+	CFileSaveDlg		dlg(szWndTitle, strFile.c_str(),
 		_T("All supported files (*.lrc; *.txt; *.snc)\0*.lrc;*.txt;*.snc\0LRC Lyrics File (*.lrc)\0*.lrc\0Text File (*.txt)\0*.txt\0Snc File (*.snc)\0*.snc\0\0"),
 		nFileExtIndex);
 
 	if (dlg.DoModal(pWndParent) == IDOK)
 	{
-		_tcscpy_safe(szFile, CountOf(szFile), dlg.GetSaveFile());
-		if (IsEmptyString(FileGetExt(szFile)))
+		strFile = dlg.GetSaveFile();
+		if (IsEmptyString(FileGetExt(strFile.c_str())))
 		{
 			// Set file extend name as the user selected.
-			FileSetExt(szFile, CountOf(szFile), dlg.GetSelectedExt());
+			FileSetExt(strFile, dlg.GetSelectedExt());
 		}
-		MLFileType	fileType = MLGetFileType(szFile);
+		MLFileType	fileType = MLGetFileType(strFile.c_str());
 		if (fileType != FT_LYRICS_LRC && fileType != FT_LYRICS_TXT
 			&& fileType != FT_LYRICS_SNC)
-		{
 			return FALSE;
-		}
+
+		tstring			strLyrics;
+		g_LyricData.ToString(strLyrics, FT_LYRICS_TXT, TRUE);
+
+		CHAR_ENCODING	fileEncoding = ED_UNICODE;
+		if (IsAnsiStr(strLyrics.c_str()))
+			fileEncoding = ED_SYSDEF;
+		else
+			fileEncoding = ED_UNICODE;
+
 		bool	bUseNewFileName;
-		int		nRet = g_LyricData.SaveAsFile(szFile, g_LyricData.Properties().GetEncodingIndex(), bUseNewFileName);
+		int		nRet = g_LyricData.SaveAsFile(strFile.c_str(), fileEncoding, bUseNewFileName);
 		if (nRet != ERR_OK)
 		{
 			pWndParent->MessageOut(ERROR2STR_LOCAL(nRet));

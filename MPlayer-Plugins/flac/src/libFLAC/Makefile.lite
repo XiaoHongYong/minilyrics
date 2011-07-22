@@ -1,5 +1,5 @@
 #  libFLAC - Free Lossless Audio Codec library
-#  Copyright (C) 2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2001,2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -35,24 +35,27 @@
 topdir = ../..
 
 LIB_NAME = libFLAC
-ifeq ($(DARWIN_BUILD),yes)
+ifeq ($(OS),Darwin)
 DEFINES = -DFLAC__CPU_PPC -DFLAC__USE_ALTIVEC -DFLAC__ALIGN_MALLOC_DATA
 else
-ifeq ($(SOLARIS_BUILD),yes)
+ifeq ($(OS),Solaris)
 DEFINES = -DFLAC__NO_ASM -DFLAC__ALIGN_MALLOC_DATA
 else
+ifeq ($(PROC),i386)
 DEFINES = -DFLAC__CPU_IA32 -DFLAC__USE_3DNOW -DFLAC__HAS_NASM -DFLAC__ALIGN_MALLOC_DATA
+else
+DEFINES = -DFLAC__ALIGN_MALLOC_DATA
+endif
 endif
 endif
 INCLUDES = -I./include -I$(topdir)/include -I$(OGG_INCLUDE_DIR)
 DEBUG_CFLAGS = -DFLAC__OVERFLOW_DETECT
 
-ifeq ($(DARWIN_BUILD),yes)
+ifeq ($(OS),Darwin)
 SRCS_S = \
 	ppc/as/lpc_asm.s
 else
-ifeq ($(SOLARIS_BUILD),yes)
-else
+ifeq ($(PROC),i386)
 SRCS_NASM = \
 	ia32/bitreader_asm.nasm \
 	ia32/cpu_asm.nasm \

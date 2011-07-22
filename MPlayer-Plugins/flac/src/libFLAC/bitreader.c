@@ -1,5 +1,5 @@
 /* libFLAC - Free Lossless Audio Codec library
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
@@ -36,13 +36,16 @@
 #include <stdlib.h> /* for malloc() */
 #include <string.h> /* for memcpy(), memset() */
 #ifdef _MSC_VER
-#include <winsock.h> /* for ntohl() */
+# include <winsock.h> /* for ntohl() */
+# if _MSC_VER >= 1310
+#  include <winsock2.h> /* for ntohl(), sometimes it is not in winsock.h */
+# endif
 #elif defined FLAC__SYS_DARWIN
-#include <machine/endian.h> /* for ntohl() */
+# include <machine/endian.h> /* for ntohl() */
 #elif defined __MINGW32__
-#include <winsock.h> /* for ntohl() */
+# include <winsock.h> /* for ntohl() */
 #else
-#include <netinet/in.h> /* for ntohl() */
+# include <netinet/in.h> /* for ntohl() */
 #endif
 #include "private/bitmath.h"
 #include "private/bitreader.h"
@@ -151,11 +154,14 @@ struct FLAC__BitReader {
 
 #ifdef _MSC_VER
 /* OPT: an MSVC built-in would be better */
+/* OPT: use _byteswap_ulong intrinsic? */
 static _inline FLAC__uint32 local_swap32_(FLAC__uint32 x)
 {
 	x = ((x<<8)&0xFF00FF00) | ((x>>8)&0x00FF00FF);
 	return (x>>16) | (x<<16);
 }
+#ifdef _WIN64
+#else
 static void local_swap32_block_(FLAC__uint32 *start, FLAC__uint32 len)
 {
 	__asm {
@@ -173,6 +179,7 @@ loop1:
 done1:
 	}
 }
+#endif
 #endif
 
 static FLaC__INLINE void crc16_update_word_(FLAC__BitReader *br, brword word)
@@ -263,7 +270,7 @@ FLAC__bool bitreader_read_from_client_(FLAC__BitReader *br)
 #if WORDS_BIGENDIAN
 #else
 	end = (br->words*FLAC__BYTES_PER_WORD + br->bytes + bytes + (FLAC__BYTES_PER_WORD-1)) / FLAC__BYTES_PER_WORD;
-# if defined(_MSC_VER) && (FLAC__BYTES_PER_WORD == 4)
+# if defined(_MSC_VER) && !defined(_WIN64) && (FLAC__BYTES_PER_WORD == 4)
 	if(br->cpu_info.type == FLAC__CPUINFO_TYPE_IA32 && br->cpu_info.data.ia32.bswap) {
 		start = br->words;
 		local_swap32_block_(br->buffer + start, end - start);
@@ -694,7 +701,7 @@ FLAC__bool FLAC__bitreader_read_byte_block_aligned_no_crc(FLAC__BitReader *br, F
 	return true;
 }
 
-FLaC__INLINE FLAC__bool FLAC__bitreader_read_unary_unsigned(FLAC__BitReader *br, unsigned *val)
+FLAC__bool FLAC__bitreader_read_unary_unsigned(FLAC__BitReader *br, unsigned *val)
 #if 0 /* slow but readable version */
 {
 	unsigned bit;
@@ -751,7 +758,7 @@ FLaC__INLINE FLAC__bool FLAC__bitreader_read_unary_unsigned(FLAC__BitReader *br,
 		 * us data a byte at a time (unlikely), br->consumed_bits may not
 		 * be zero.
 		 */
-		if(br->bytes) {
+		if(br->bytes*8 > br->consumed_bits) {
 			const unsigned end = br->bytes * 8;
 			brword b = (br->buffer[br->consumed_words] & (FLAC__WORD_ALL_ONES << (FLAC__BITS_PER_WORD-end))) << br->consumed_bits;
 			if(b) {
@@ -764,7 +771,7 @@ FLaC__INLINE FLAC__bool FLAC__bitreader_read_unary_unsigned(FLAC__BitReader *br,
 			}
 			else {
 				*val += end - br->consumed_bits;
-				br->consumed_bits += end;
+				br->consumed_bits = end;
 				FLAC__ASSERT(br->consumed_bits < FLAC__BITS_PER_WORD);
 				/* didn't find stop bit yet, have to keep going... */
 			}
@@ -874,7 +881,7 @@ FLAC__bool FLAC__bitreader_read_rice_signed_block(FLAC__BitReader *br, int vals[
 			 * us data a byte at a time (unlikely), br->consumed_bits may not
 			 * be zero.
 			 */
-			if(br->bytes) {
+			if(br->bytes*8 > cbits) {
 				const unsigned end = br->bytes * 8;
 				brword b = (br->buffer[cwords] & (FLAC__WORD_ALL_ONES << (FLAC__BITS_PER_WORD-end))) << cbits;
 				if(b) {
@@ -888,7 +895,7 @@ FLAC__bool FLAC__bitreader_read_rice_signed_block(FLAC__BitReader *br, int vals[
 				}
 				else {
 					uval += end - cbits;
-					cbits += end;
+					cbits = end;
 					FLAC__ASSERT(cbits < FLAC__BITS_PER_WORD);
 					/* didn't find stop bit yet, have to keep going... */
 				}
@@ -1057,7 +1064,7 @@ break2:
 			 * us data a byte at a time (unlikely), br->consumed_bits may not
 			 * be zero.
 			 */
-			if(br->bytes) {
+			if(br->bytes*8 > cbits) {
 				const unsigned end = br->bytes * 8;
 				brword b = (br->buffer[cwords] & ~(FLAC__WORD_ALL_ONES >> end)) << cbits;
 				if(b) {
@@ -1070,7 +1077,7 @@ break2:
 				}
 				else {
 					uval += end - cbits;
-					cbits += end;
+					cbits = end;
 					FLAC__ASSERT(cbits < FLAC__BITS_PER_WORD);
 					/* didn't find stop bit yet, have to keep going... */
 				}

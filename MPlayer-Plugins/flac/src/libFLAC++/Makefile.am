@@ -1,5 +1,5 @@
 #  libFLAC++ - Free Lossless Audio Codec library
-#  Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+#  Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions
@@ -46,7 +46,7 @@ EXTRA_DIST = \
 	libFLAC++.m4
 
 # see 'http://www.gnu.org/software/libtool/manual.html#Libtool-versioning' for numbering convention
-libFLAC___la_LDFLAGS = -version-info 8:0:2
+libFLAC___la_LDFLAGS = -version-info 8:0:2 @LT_NO_UNDEFINED@
 libFLAC___la_LIBADD = ../libFLAC/libFLAC.la
 
 libFLAC___la_SOURCES = \

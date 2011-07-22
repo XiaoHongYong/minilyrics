@@ -1,5 +1,5 @@
 /* flac - Command-line FLAC encoder/decoder
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,6 +26,8 @@
 #include "FLAC/ordinals.h"
 #include "FLAC/format.h" /* for FLAC__StreamMetadata_CueSheet */
 #include <stdio.h> /* for FILE */
+
+typedef enum { FORMAT_RAW, FORMAT_WAVE, FORMAT_WAVE64, FORMAT_RF64, FORMAT_AIFF, FORMAT_AIFF_C, FORMAT_FLAC, FORMAT_OGGFLAC } FileFormat;
 
 typedef struct {
 	FLAC__bool is_relative; /* i.e. specification string started with + or - */

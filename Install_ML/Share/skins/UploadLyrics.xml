@@ -6,7 +6,7 @@
   <Container.UploadLyrNotice Name="Upload lyrics" Rect="0,20,w,h-20" Visible="false">
     <TitleText Rect="20,10,w-40,25" Text="Thank you for uploading lyrics."/>
     <Image Rect="10,60,," Image="information.png"/>
-    <NormalText Rect="90,70,w-110,50" Text="You are going to upload the lyrics to the lyrics server of MiniLyrics, and share your lyrics with other people."/>
+    <NormalText Rect="90,70,w-110,50" Text="You are going to upload the lyrics to the lyrics server of MiniLyrics, and share them with other people."/>
 
     <NormalText ID="CID_ACCOUNT_NOTICE" Rect="90,150,w-100,50" Text=""/>
     <NormalLink ID="CID_CHANGE_ACCOUNT" Rect="90,175,w-100," Text="If you want to use another account, please click here"/>

@@ -1,5 +1,5 @@
 /* flac - Command-line FLAC encoder/decoder
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -55,7 +55,7 @@ static FLAC__bool local__parse_timecode_(const char *s, double *value)
 {
 	double ret;
 	unsigned i;
-	char c;
+	char c, *endptr;
 
 	/* parse [0-9][0-9]*: */
 	c = *s++;
@@ -74,12 +74,9 @@ static FLAC__bool local__parse_timecode_(const char *s, double *value)
 	/* parse [0-9]*[.,]?[0-9]* i.e. a sign-less rational number (. or , OK for fractional seconds, to support different locales) */
 	if(strspn(s, "1234567890.,") != strlen(s))
 		return false;
-	{
-		const char *p = strpbrk(s, ".,");
-		if(p && 0 != strpbrk(++p, ".,"))
-			return false;
-	}
-	ret += atof(s);
+	ret += strtod(s, &endptr);
+	if (endptr == s || *endptr)
+		return false;
 
 	*value = ret;
 	return true;
@@ -152,6 +149,11 @@ void flac__utils_printf(FILE *stream, int level, const char *format, ...)
 		(void) vfprintf(stream, format, args);
 
 		va_end(args);
+
+#ifdef _MSC_VER
+		if(stream == stderr)
+			fflush(stream); /* for some reason stderr is buffered in at least some if not all MSC libs */
+#endif
 	}
 }
 

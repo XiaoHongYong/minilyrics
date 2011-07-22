@@ -1,5 +1,5 @@
 /* replaygain_synthesis - Routines for applying ReplayGain to a signal
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -43,10 +43,6 @@
 #include "private/fast_float_math_hack.h"
 #include "replaygain_synthesis.h"
 #include "FLAC/assert.h"
-
-#ifndef FLaC__INLINE
-#define FLaC__INLINE
-#endif
 
 /* adjust for compilers that can't understand using LL suffix for int64_t literals */
 #ifdef _MSC_VER
@@ -236,7 +232,7 @@ void FLAC__replaygain_synthesis__init_dither_context(DitherContext *d, int bits,
  * the following is based on parts of wavegain.c
  */
 
-static FLaC__INLINE FLAC__int64 dither_output_(DitherContext *d, FLAC__bool do_dithering, int shapingtype, int i, double Sum, int k)
+static FLAC__int64 dither_output_(DitherContext *d, FLAC__bool do_dithering, int shapingtype, int i, double Sum, int k)
 {
 	union {
 		double d;

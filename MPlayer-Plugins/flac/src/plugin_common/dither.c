@@ -1,5 +1,5 @@
 /* plugin_common - Routines common to several plugins
- * Copyright (C) 2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
  *
  * dithering routine derived from (other GPLed source):
  * mad - MPEG audio decoder
@@ -54,7 +54,7 @@ typedef struct {
 	FLAC__int32 random;
 } dither_state;
 
-static FLaC__INLINE FLAC__int32 linear_dither(unsigned source_bps, unsigned target_bps, FLAC__int32 sample, dither_state *dither, const FLAC__int32 MIN, const FLAC__int32 MAX)
+static FLAC__int32 linear_dither(unsigned source_bps, unsigned target_bps, FLAC__int32 sample, dither_state *dither, const FLAC__int32 MIN, const FLAC__int32 MAX)
 {
 	unsigned scalebits;
 	FLAC__int32 output, mask, random;

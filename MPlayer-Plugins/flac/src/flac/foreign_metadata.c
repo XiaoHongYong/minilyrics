@@ -1,5 +1,5 @@
 /* flac - Command-line FLAC encoder/decoder
- * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007  Josh Coalson
+ * Copyright (C) 2000,2001,2002,2003,2004,2005,2006,2007,2008,2009  Josh Coalson
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,7 +41,7 @@
 #define min(x,y) ((x)<(y)?(x):(y))
 
 
-static const char *FLAC__FOREIGN_METADATA_APPLICATION_ID[2] = { "aiff" , "riff" };
+static const char *FLAC__FOREIGN_METADATA_APPLICATION_ID[3] = { "aiff" , "riff", "w64 " };
 
 static FLAC__uint32 unpack32be_(const FLAC__byte *b)
 {
@@ -53,9 +53,15 @@ static FLAC__uint32 unpack32le_(const FLAC__byte *b)
 	return (FLAC__uint32)b[0] + ((FLAC__uint32)b[1]<<8) + ((FLAC__uint32)b[2]<<16) + ((FLAC__uint32)b[3]<<24);
 }
 
+static FLAC__uint64 unpack64le_(const FLAC__byte *b)
+{
+	return (FLAC__uint64)b[0] + ((FLAC__uint64)b[1]<<8) + ((FLAC__uint64)b[2]<<16) + ((FLAC__uint64)b[3]<<24) + ((FLAC__uint64)b[4]<<32) + ((FLAC__uint64)b[5]<<40) + ((FLAC__uint64)b[6]<<48) + ((FLAC__uint64)b[7]<<56);
+}
+
+/* copies 'size' bytes from file 'fin' to 'fout', filling in *error with 'read_error' or 'write_error' as necessary */
 static FLAC__bool copy_data_(FILE *fin, FILE *fout, size_t size, const char **error, const char * const read_error, const char * const write_error)
 {
-	static FLAC__byte buffer[4096];
+	FLAC__byte buffer[4096];
 	size_t left;
 	for(left = size; left > 0; ) {
 		size_t need = min(sizeof(buffer), left);
@@ -100,7 +106,7 @@ static FLAC__bool read_from_aiff_(foreign_metadata_t *fm, FILE *f, const char **
 	}
 	if(!append_block_(fm, offset, 12, error))
 		return false;
-	eof_offset = 8 + unpack32be_(buffer+4);
+	eof_offset = (off_t)8 + (off_t)unpack32be_(buffer+4);
 	while(!feof(f)) {
 		FLAC__uint32 size;
 		if((offset = ftello(f)) < 0) {
@@ -148,9 +154,15 @@ static FLAC__bool read_from_aiff_(foreign_metadata_t *fm, FILE *f, const char **
 				if(error) *error = "invalid AIFF file: seek error (010)";
 				return false;
 			}
+			/* WATCHOUT: For SSND we ignore the blockSize and are not saving any
+			 * unaligned part at the end of the chunk.  In retrospect it is pretty
+			 * pointless to save the unaligned data before the PCM but now it is
+			 * done and cast in stone.
+			 */
 		}
 		if(!append_block_(fm, offset, 8 + (memcmp(buffer, "SSND", 4)? size : 8 + fm->ssnd_offset_size), error))
 			return false;
+		/* skip to next chunk */
 		if(fseeko(f, size, SEEK_CUR) < 0) {
 			if(error) *error = "invalid AIFF file: seek error (011)";
 			return false;
@@ -174,18 +186,25 @@ static FLAC__bool read_from_aiff_(foreign_metadata_t *fm, FILE *f, const char **
 static FLAC__bool read_from_wave_(foreign_metadata_t *fm, FILE *f, const char **error)
 {
 	FLAC__byte buffer[12];
-	off_t offset, eof_offset;
+	off_t offset, eof_offset = -1, ds64_data_size = -1;
 	if((offset = ftello(f)) < 0) {
 		if(error) *error = "ftello() error (001)";
 		return false;
 	}
-	if(fread(buffer, 1, 12, f) < 12 || memcmp(buffer, "RIFF", 4) || memcmp(buffer+8, "WAVE", 4)) {
+	if(fread(buffer, 1, 12, f) < 12 || (memcmp(buffer, "RIFF", 4) && memcmp(buffer, "RF64", 4)) || memcmp(buffer+8, "WAVE", 4)) {
 		if(error) *error = "unsupported RIFF layout (002)";
+		return false;
+	}
+	if(!memcmp(buffer, "RF64", 4))
+		fm->is_rf64 = true;
+	if(fm->is_rf64 && sizeof(off_t) < 8) {
+		if(error) *error = "RF64 is not supported on this compile (r00)";
 		return false;
 	}
 	if(!append_block_(fm, offset, 12, error))
 		return false;
-	eof_offset = 8 + unpack32le_(buffer+4);
+	if(!fm->is_rf64 || unpack32le_(buffer+4) != 0xffffffffu)
+		eof_offset = (off_t)8 + (off_t)unpack32le_(buffer+4);
 	while(!feof(f)) {
 		FLAC__uint32 size;
 		if((offset = ftello(f)) < 0) {
@@ -223,13 +242,76 @@ static FLAC__bool read_from_wave_(foreign_metadata_t *fm, FILE *f, const char **
 				return false;
 			}
 			fm->audio_block = fm->num_blocks;
+			if(fm->is_rf64 && fm->num_blocks < 2) {
+				if(error) *error = "invalid RF64 file: \"data\" chunk before \"ds64\" chunk (r01)";
+				return false;
+			}
 		}
 		if(!append_block_(fm, offset, 8 + (memcmp(buffer, "data", 4)? size : 0), error))
 			return false;
-		if(fseeko(f, size, SEEK_CUR) < 0) {
-			if(error) *error = "invalid WAVE file: seek error (009)";
-			return false;
+		/* parse ds64 chunk if necessary */
+		if(fm->is_rf64 && fm->num_blocks == 2) {
+			FLAC__byte buffer2[7*4];
+			if(memcmp(buffer, "ds64", 4)) {
+				if(error) *error = "invalid RF64 file: \"ds64\" chunk does not immediately follow \"WAVE\" marker (r02)";
+				return false;
+			}
+			/* unpack the size again since we don't want the padding byte effect */
+			size = unpack32le_(buffer+4);
+			if(size < sizeof(buffer2)) {
+				if(error) *error = "invalid RF64 file: \"ds64\" chunk size is < 28 (r03)";
+				return false;
+			}
+			if(size > sizeof(buffer2)) {
+				if(error) *error = "RF64 file has \"ds64\" chunk with extra size table, which is not currently supported (r04)";
+				return false;
+			}
+			if(fread(buffer2, 1, sizeof(buffer2), f) < sizeof(buffer2)) {
+				if(error) *error = "unexpected EOF reading \"ds64\" chunk data in RF64 file (r05)";
+				return false;
+			}
+			ds64_data_size = (off_t)unpack64le_(buffer2+8);
+			if(ds64_data_size == (off_t)(-1)) {
+				if(error) *error = "RF64 file has \"ds64\" chunk with data size == -1 (r08)";
+				return false;
+			}
+			/* check if pad byte needed */
+			if(ds64_data_size & 1)
+				ds64_data_size++;
+			/* @@@ [2^63 limit] */
+			if(ds64_data_size < 0) {
+				if(error) *error = "RF64 file too large (r09)";
+				return false;
+			}
+			if(unpack32le_(buffer2+24)) {
+				if(error) *error = "RF64 file has \"ds64\" chunk with extra size table, which is not currently supported (r06)";
+				return false;
+			}
+			eof_offset = (off_t)8 + (off_t)unpack64le_(buffer2);
+			/* @@@ [2^63 limit] */
+			if((off_t)unpack64le_(buffer2) < 0 || eof_offset < 0) {
+				if(error) *error = "RF64 file too large (r07)";
+				return false;
+			}
 		}
+		else { /* skip to next chunk */
+			if(fm->is_rf64 && !memcmp(buffer, "data", 4) && unpack32le_(buffer+4) == 0xffffffffu) {
+				if(fseeko(f, ds64_data_size, SEEK_CUR) < 0) {
+					if(error) *error = "invalid RF64 file: seek error (r10)";
+					return false;
+				}
+			}
+			else {
+				if(fseeko(f, size, SEEK_CUR) < 0) {
+					if(error) *error = "invalid WAVE file: seek error (009)";
+					return false;
+				}
+			}
+		}
+	}
+	if(fm->is_rf64 && eof_offset == (off_t)(-1)) {
+		if(error) *error = "invalid RF64 file: all RIFF sizes are -1 (r11)";
+		return false;
 	}
 	if(eof_offset != ftello(f)) {
 		if(error) *error = "invalid WAVE file: unexpected EOF (010)";
@@ -241,6 +323,94 @@ static FLAC__bool read_from_wave_(foreign_metadata_t *fm, FILE *f, const char **
 	}
 	if(!fm->audio_block) {
 		if(error) *error = "invalid WAVE file: missing \"data\" chunk (012)";
+		return false;
+	}
+	return true;
+}
+
+static FLAC__bool read_from_wave64_(foreign_metadata_t *fm, FILE *f, const char **error)
+{
+	FLAC__byte buffer[40];
+	off_t offset, eof_offset = -1;
+	if((offset = ftello(f)) < 0) {
+		if(error) *error = "ftello() error (001)";
+		return false;
+	}
+	if(
+		fread(buffer, 1, 40, f) < 40 ||
+		/* RIFF GUID 66666972-912E-11CF-A5D6-28DB04C10000 */
+		memcmp(buffer, "\x72\x69\x66\x66\x2E\x91\xCF\x11\xD6\xA5\x28\xDB\x04\xC1\x00\x00", 16) ||
+		/* WAVE GUID 65766177-ACF3-11D3-8CD1-00C04F8EDB8A */
+		memcmp(buffer+24, "\x77\x61\x76\x65\xF3\xAC\xD3\x11\xD1\x8C\x00\xC0\x4F\x8E\xDB\x8A", 16)
+	) {
+		if(error) *error = "unsupported Wave64 layout (002)";
+		return false;
+	}
+	if(sizeof(off_t) < 8) {
+		if(error) *error = "Wave64 is not supported on this compile (r00)";
+		return false;
+	}
+	if(!append_block_(fm, offset, 40, error))
+		return false;
+	eof_offset = (off_t)unpack64le_(buffer+16); /*@@@ [2^63 limit] */
+	while(!feof(f)) {
+		FLAC__uint64 size;
+		if((offset = ftello(f)) < 0) {
+			if(error) *error = "ftello() error (003)";
+			return false;
+		}
+		if((size = fread(buffer, 1, 24, f)) < 24) {
+			if(size == 0 && feof(f))
+				break;
+			if(error) *error = "invalid Wave64 file (004)";
+			return false;
+		}
+		size = unpack64le_(buffer+16);
+		/* check if pad bytes needed */
+		if(size & 7)
+			size = (size+7) & (~((FLAC__uint64)7));
+		/* fmt GUID 20746D66-ACF3-11D3-8CD1-00C04F8EDB8A */
+		if(!memcmp(buffer, "\x66\x6D\x74\x20\xF3\xAC\xD3\x11\xD1\x8C\x00\xC0\x4F\x8E\xDB\x8A", 16)) {
+			if(fm->format_block) {
+				if(error) *error = "invalid Wave64 file: multiple \"fmt \" chunks (005)";
+				return false;
+			}
+			if(fm->audio_block) {
+				if(error) *error = "invalid Wave64 file: \"data\" chunk before \"fmt \" chunk (006)";
+				return false;
+			}
+			fm->format_block = fm->num_blocks;
+		}
+		/* data GUID 61746164-ACF3-11D3-8CD1-00C04F8EDB8A */
+		else if(!memcmp(buffer, "\x64\x61\x74\x61\xF3\xAC\xD3\x11\xD1\x8C\x00\xC0\x4F\x8E\xDB\x8A", 16)) {
+			if(fm->audio_block) {
+				if(error) *error = "invalid Wave64 file: multiple \"data\" chunks (007)";
+				return false;
+			}
+			if(!fm->format_block) {
+				if(error) *error = "invalid Wave64 file: \"data\" chunk before \"fmt \" chunk (008)";
+				return false;
+			}
+			fm->audio_block = fm->num_blocks;
+		}
+		if(!append_block_(fm, offset, memcmp(buffer, "\x64\x61\x74\x61\xF3\xAC\xD3\x11\xD1\x8C\x00\xC0\x4F\x8E\xDB\x8A", 16)? (FLAC__uint32)size : 16+8, error))
+			return false;
+		/* skip to next chunk */
+		if(fseeko(f, size-24, SEEK_CUR) < 0) {
+			if(error) *error = "invalid Wave64 file: seek error (009)";
+			return false;
+		}
+	}
+	if(eof_offset != ftello(f)) {
+		if(error) *error = "invalid Wave64 file: unexpected EOF (010)";
+		return false;
+	}
+	if(!fm->format_block) {
+		if(error) *error = "invalid Wave64 file: missing \"fmt \" chunk (011)";
+		return false;
+	}
+	if(!fm->audio_block) {
+		if(error) *error = "invalid Wave64 file: missing \"data\" chunk (012)";
 		return false;
 	}
 	return true;
@@ -306,7 +476,7 @@ static FLAC__bool read_from_flac_(foreign_metadata_t *fm, FILE *f, FLAC__Metadat
 {
 	FLAC__byte id[4], buffer[12];
 	off_t offset;
-	FLAC__bool type_found = false;
+	FLAC__bool type_found = false, ds64_found = false;
 
 	FLAC__ASSERT(FLAC__STREAM_METADATA_APPLICATION_ID_LEN == sizeof(id)*8);
 
@@ -314,7 +484,7 @@ static FLAC__bool read_from_flac_(foreign_metadata_t *fm, FILE *f, FLAC__Metadat
 		if(FLAC__metadata_simple_iterator_get_block_type(it) != FLAC__METADATA_TYPE_APPLICATION)
 			continue;
 		if(!FLAC__metadata_simple_iterator_get_application_id(it, id)) {
-			if(error) *error = "FLAC__metadata_simple_iterator_get_application_id() error (003)";
+			if(error) *error = "FLAC__metadata_simple_iterator_get_application_id() error (002)";
 			return false;
 		}
 		if(memcmp(id, FLAC__FOREIGN_METADATA_APPLICATION_ID[fm->type], sizeof(id)))
@@ -325,15 +495,18 @@ static FLAC__bool read_from_flac_(foreign_metadata_t *fm, FILE *f, FLAC__Metadat
 		offset += sizeof(id);
 		/* look for format or audio blocks */
 		if(fseek(f, offset, SEEK_SET) < 0) {
-			if(error) *error = "seek error (004)";
+			if(error) *error = "seek error (003)";
 			return false;
 		}
 		if(fread(buffer, 1, 4, f) != 4) {
-			if(error) *error = "read error (005)";
+			if(error) *error = "read error (004)";
 			return false;
 		}
-		if(fm->num_blocks == 0) {
-			if(fm->type == FOREIGN_BLOCK_TYPE__RIFF && 0 == memcmp(buffer, "RIFF", 4))
+		if(fm->num_blocks == 0) { /* first block? */
+			fm->is_rf64 = 0 == memcmp(buffer, "RF64", 4);
+			if(fm->type == FOREIGN_BLOCK_TYPE__RIFF && (0 == memcmp(buffer, "RIFF", 4) || fm->is_rf64))
+				type_found = true;
+			else if(fm->type == FOREIGN_BLOCK_TYPE__WAVE64 && 0 == memcmp(buffer, "riff", 4)) /* use first 4 bytes instead of whole GUID */
 				type_found = true;
 			else if(fm->type == FOREIGN_BLOCK_TYPE__AIFF && 0 == memcmp(buffer, "FORM", 4))
 				type_found = true;
@@ -371,32 +544,63 @@ static FLAC__bool read_from_flac_(foreign_metadata_t *fm, FILE *f, FLAC__Metadat
 				}
 				fm->audio_block = fm->num_blocks;
 			}
+			else if(fm->is_rf64 && fm->num_blocks == 1) {
+				if(memcmp(buffer, "ds64", 4)) {
+					if(error) *error = "invalid RF64 metadata: second chunk is not \"ds64\" (011)";
+					return false;
+				}
+				ds64_found = true;
+			}
+		}
+		else if(fm->type == FOREIGN_BLOCK_TYPE__WAVE64) {
+			if(!memcmp(buffer, "fmt ", 4)) { /* use first 4 bytes instead of whole GUID */
+				if(fm->format_block) {
+					if(error) *error = "invalid Wave64 metadata: multiple \"fmt \" chunks (012)";
+					return false;
+				}
+				if(fm->audio_block) {
+					if(error) *error = "invalid Wave64 metadata: \"data\" chunk before \"fmt \" chunk (013)";
+					return false;
+				}
+				fm->format_block = fm->num_blocks;
+			}
+			else if(!memcmp(buffer, "data", 4)) { /* use first 4 bytes instead of whole GUID */
+				if(fm->audio_block) {
+					if(error) *error = "invalid Wave64 metadata: multiple \"data\" chunks (014)";
+					return false;
+				}
+				if(!fm->format_block) {
+					if(error) *error = "invalid Wave64 metadata: \"data\" chunk before \"fmt \" chunk (015)";
+					return false;
+				}
+				fm->audio_block = fm->num_blocks;
+			}
 		}
 		else if(fm->type == FOREIGN_BLOCK_TYPE__AIFF) {
 			if(!memcmp(buffer, "COMM", 4)) {
 				if(fm->format_block) {
-					if(error) *error = "invalid AIFF metadata: multiple \"COMM\" chunks (011)";
+					if(error) *error = "invalid AIFF metadata: multiple \"COMM\" chunks (016)";
 					return false;
 				}
 				if(fm->audio_block) {
-					if(error) *error = "invalid AIFF metadata: \"SSND\" chunk before \"COMM\" chunk (012)";
+					if(error) *error = "invalid AIFF metadata: \"SSND\" chunk before \"COMM\" chunk (017)";
 					return false;
 				}
 				fm->format_block = fm->num_blocks;
 			}
 			else if(!memcmp(buffer, "SSND", 4)) {
 				if(fm->audio_block) {
-					if(error) *error = "invalid AIFF metadata: multiple \"SSND\" chunks (013)";
+					if(error) *error = "invalid AIFF metadata: multiple \"SSND\" chunks (018)";
 					return false;
 				}
 				if(!fm->format_block) {
-					if(error) *error = "invalid AIFF metadata: \"SSND\" chunk before \"COMM\" chunk (014)";
+					if(error) *error = "invalid AIFF metadata: \"SSND\" chunk before \"COMM\" chunk (019)";
 					return false;
 				}
 				fm->audio_block = fm->num_blocks;
 				/* read SSND offset size */
 				if(fread(buffer+4, 1, 8, f) != 8) {
-					if(error) *error = "read error (015)";
+					if(error) *error = "read error (020)";
 					return false;
 				}
 				fm->ssnd_offset_size = unpack32be_(buffer+8);
@@ -405,22 +609,34 @@ static FLAC__bool read_from_flac_(foreign_metadata_t *fm, FILE *f, FLAC__Metadat
 		else {
 			FLAC__ASSERT(0);
 			/* double protection: */
-			if(error) *error = "unsupported foreign metadata found, may need newer FLAC decoder (016)";
+			if(error) *error = "unsupported foreign metadata found, may need newer FLAC decoder (021)";
 			return false;
 		}
 		if(!append_block_(fm, offset, FLAC__metadata_simple_iterator_get_block_length(it)-sizeof(id), error))
 			return false;
 	}
 	if(!type_found) {
-		if(error) *error = "no foreign metadata found (017)";
+		if(error) *error = "no foreign metadata found (022)";
+		return false;
+	}
+	if(fm->is_rf64 && !ds64_found) {
+		if(error) *error = "invalid RF64 file: second chunk is not \"ds64\" (023)";
 		return false;
 	}
 	if(!fm->format_block) {
-		if(error) *error = fm->type==FOREIGN_BLOCK_TYPE__RIFF? "invalid WAVE file: missing \"fmt \" chunk (018)" : "invalid AIFF file: missing \"COMM\" chunk (018)";
+		if(error)
+			*error =
+				fm->type==FOREIGN_BLOCK_TYPE__RIFF? "invalid WAVE file: missing \"fmt \" chunk (024)" :
+				fm->type==FOREIGN_BLOCK_TYPE__WAVE64? "invalid Wave64 file: missing \"fmt \" chunk (025)" :
+				"invalid AIFF file: missing \"COMM\" chunk (026)";
 		return false;
 	}
 	if(!fm->audio_block) {
-		if(error) *error = fm->type==FOREIGN_BLOCK_TYPE__RIFF? "invalid WAVE file: missing \"data\" chunk (019)" : "invalid AIFF file: missing \"SSND\" chunk (019)";
+		if(error)
+			*error =
+				fm->type==FOREIGN_BLOCK_TYPE__RIFF? "invalid WAVE file: missing \"data\" chunk (027)" :
+				fm->type==FOREIGN_BLOCK_TYPE__WAVE64? "invalid Wave64 file: missing \"data\" chunk (028)" :
+				"invalid AIFF file: missing \"SSND\" chunk (029)";
 		return false;
 	}
 	return true;
@@ -433,7 +649,8 @@ static FLAC__bool write_to_iff_(foreign_metadata_t *fm, FILE *fin, FILE *fout, o
 		if(error) *error = "seek failed in WAVE/AIFF file (002)";
 		return false;
 	}
-	for(i = 1; i < fm->format_block; i++) {
+	/* don't write first (RIFF/RF64/FORM) chunk, or ds64 chunk in the case of RF64 */
+	for(i = fm->is_rf64?2:1; i < fm->format_block; i++) {
 		if(fseeko(fin, fm->blocks[i].offset, SEEK_SET) < 0) {
 			if(error) *error = "seek failed in FLAC file (003)";
 			return false;
@@ -470,9 +687,12 @@ static FLAC__bool write_to_iff_(foreign_metadata_t *fm, FILE *fin, FILE *fout, o
 
 foreign_metadata_t *flac__foreign_metadata_new(foreign_block_type_t type)
 {
+	/* calloc() to zero all the member variables */
 	foreign_metadata_t *x = (foreign_metadata_t*)calloc(sizeof(foreign_metadata_t), 1);
-	if(x)
+	if(x) {
 		x->type = type;
+		x->is_rf64 = false;
+	}
 	return x;
 }
 
@@ -507,6 +727,19 @@ FLAC__bool flac__foreign_metadata_read_from_wave(foreign_metadata_t *fm, const c
 		return false;
 	}
 	ok = read_from_wave_(fm, f, error);
+	fclose(f);
+	return ok;
+}
+
+FLAC__bool flac__foreign_metadata_read_from_wave64(foreign_metadata_t *fm, const char *filename, const char **error)
+{
+	FLAC__bool ok;
+	FILE *f = fopen(filename, "rb");
+	if(!f) {
+		if(error) *error = "can't open Wave64 file for reading (000)";
+		return false;
+	}
+	ok = read_from_wave64_(fm, f, error);
 	fclose(f);
 	return ok;
 }
