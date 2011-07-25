@@ -22,18 +22,20 @@ CMediaMonkey::~CMediaMonkey(void)
 
 bool CMediaMonkey::GetCurrentMedia(LPWSTR szFile)
 {
+	EmptyStr(szFile);
+
 	if (!MakeSureInterfaceOK())
 		return false;
 
 	CMPAutoPtr<ISDBPlayer> player;
 
 	HRESULT hr = m_app->get_Player(&player);
-	if (FAILED(hr))
+	if (FAILED(hr) || player == NULL)
 		return false;
 
 	CMPAutoPtr<ISDBSongData> curSong;
 	hr = player->get_CurrentSong(&curSong);
-	if (FAILED(hr))
+	if (FAILED(hr) || curSong == NULL)
 		return false;
 
 	bstr_s path;
@@ -55,12 +57,12 @@ bool CMediaMonkey::GetCurrentMediaInfo(wchar_t szArtist[], wchar_t szAlbum[], wc
 	CMPAutoPtr<ISDBPlayer> player;
 
 	HRESULT hr = m_app->get_Player(&player);
-	if (FAILED(hr))
+	if (FAILED(hr) || player == NULL)
 		return false;
 
 	CMPAutoPtr<ISDBSongData> curSong;
 	hr = player->get_CurrentSong(&curSong);
-	if (FAILED(hr))
+	if (FAILED(hr) || curSong == NULL)
 		return false;
 
 	bstr_s artist, title, album;
@@ -124,7 +126,7 @@ bool CMediaMonkey::MakeSureInterfaceOK()
 	{
 		g_MLService.Log("Before MakeSureInterfaceOK!");
 		HRESULT hr = ::CoCreateInstance(__uuidof(SDBApplication), NULL, CLSCTX_LOCAL_SERVER, __uuidof(ISDBApplication), (PVOID *)&m_app);
-		if (FAILED(hr))
+		if (FAILED(hr) || m_app == NULL)
 		{
 			g_MLService.Log("CoCreateInstance of MediaMonkey FAILED!");
 			return false;
