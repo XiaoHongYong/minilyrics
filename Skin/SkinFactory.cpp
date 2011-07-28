@@ -1319,6 +1319,7 @@ LPCTSTR CSkinFactory::GetSkinRootDir()
 		if (!IsDirExist(m_strSkinRootDir.c_str()))
 		{
 			m_strSkinRootDir = GetInstallShareDir();
+
 			m_strSkinRootDir += _T("skins\\");
 		}
 #endif
@@ -1330,6 +1331,14 @@ LPCTSTR CSkinFactory::GetSkinRootDir()
 void CSkinFactory::SetSkinFileName(LPCTSTR szSkinFileName)
 {
 	m_strSkinFileName = szSkinFileName;
+
+#if defined (_DEBUG) && defined (_WIN32)
+	if (_tcsicmp(m_strSkinFileName.c_str(), _T("iPodLyricsDownloader.xml")) == 0)
+	{
+		m_strSkinRootDir = GetWorkingFolder();
+		m_strSkinRootDir += _T("..\\Install_iPodLyricsDownloader\\Share\\skins\\");
+	}
+#endif
 }
 
 // Ã¶¾Ù skin

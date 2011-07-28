@@ -530,10 +530,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				CMPAutoPtr<IMediaLibrary>	pMediaLib;
 				CMPAutoPtr<IMedia>			pMedia;
 
-				if (g_Player.m_spPlayer->GetMediaLibrary(&pMediaLib) != ERR_OK)
+				if (g_Player.GetMediaLibrary(&pMediaLib) != ERR_OK)
 					break;
 
-				if (g_Player.m_spPlayer->GetCurrentMedia(&pMedia) == ERR_OK)
+				if (g_Player.GetCurrentMedia(&pMedia) == ERR_OK)
 				{
 					pMediaLib->Rate(pMedia, pRateCtrl->GetRating());
 				}

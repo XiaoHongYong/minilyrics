@@ -421,7 +421,7 @@ public:
 		if (pEvent->eventType == ET_PLAYER_CUR_MEDIA_CHANGED)
 		{
 			CMPAutoPtr<IMedia>			pMedia;
-			if (g_Player.m_spPlayer->GetCurrentMedia(&pMedia) == ERR_OK)
+			if (g_Player.GetCurrentMedia(&pMedia) == ERR_OK)
 			{
 				int		nChannels;
 				pMedia->GetAttribute(MA_CHANNELS, &nChannels);
@@ -437,7 +437,7 @@ public:
 	{
 		m_pStereoStatusCtrl = pCtrl;
 		CMPAutoPtr<IMedia>			pMedia;
-		if (g_Player.m_spPlayer->GetCurrentMedia(&pMedia) == ERR_OK)
+		if (g_Player.GetCurrentMedia(&pMedia) == ERR_OK)
 		{
 			int		nChannels;
 			pMedia->GetAttribute(MA_CHANNELS, &nChannels);
@@ -467,7 +467,7 @@ public:
 		if (pEvent->eventType == ET_PLAYER_CUR_MEDIA_CHANGED || pEvent->eventType == ET_PLAYER_CUR_MEDIA_INFO_CHANGED)
 		{
 			CMPAutoPtr<IMedia>			pMedia;
-			if (g_Player.m_spPlayer->GetCurrentMedia(&pMedia) == ERR_OK)
+			if (g_Player.GetCurrentMedia(&pMedia) == ERR_OK)
 			{
 				int		nRating = 0;
 				pMedia->GetAttribute(MA_RATING, &nRating);
@@ -480,7 +480,7 @@ public:
 	{
 		m_pRateCtrl = pRateCtrl;
 		CMPAutoPtr<IMedia>			pMedia;
-		if (g_Player.m_spPlayer->GetCurrentMedia(&pMedia) == ERR_OK)
+		if (g_Player.GetCurrentMedia(&pMedia) == ERR_OK)
 		{
 			int		nRating = 0;
 			pMedia->GetAttribute(MA_RATING, &nRating);
@@ -517,7 +517,7 @@ public:
 			m_plistCtrl->SetPlayingNow(g_Player.GetCurrentMediaIndex());
 			CMPAutoPtr<IMedia>	media;
 			tstring				strTitle;
-			if (g_Player.m_spPlayer->GetCurrentMedia(&media) == ERR_OK)
+			if (g_Player.GetCurrentMedia(&media) == ERR_OK)
 			{
 				g_Player.FormatMediaTitle(media, strTitle);
 				m_plistCtrl->SetItemText(g_Player.GetCurrentMediaIndex(), 0, strTitle.c_str());
@@ -552,7 +552,7 @@ public:
 		long					nCount;
 		CMPAutoPtr<IPlaylist>	playlist;
 
-		if (g_Player.m_spPlayer->GetCurrentPlaylist(&playlist) != ERR_OK)
+		if (g_Player.GetCurrentPlaylist(&playlist) != ERR_OK)
 			return;
 
 		if (pEventPlaylistChanged == NULL || pEventPlaylistChanged->action == IMPEvent::PCA_FULL_UPDATE)

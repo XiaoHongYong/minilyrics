@@ -267,7 +267,7 @@ void CMPEventsDispatcher::Quit()
 #ifdef _MPLAYER
 	if (m_pVisAdapter)
 	{
-		g_Player.m_spPlayer->UnregisterVis(m_pVisAdapter);
+		g_Player.UnregisterVis(m_pVisAdapter);
 		m_pVisAdapter->Release();
 		m_pVisAdapter = NULL;
 	}
@@ -290,7 +290,7 @@ void CMPEventsDispatcher::RegisterHanlder(EventType eventType, IEventHandler *pH
 			ASSERT(m_pVisAdapter == NULL);
 			m_pVisAdapter = new CMPVisAdapter;
 			m_pVisAdapter->AddRef();
-			g_Player.m_spPlayer->RegisterVis(m_pVisAdapter);
+			g_Player.RegisterVis(m_pVisAdapter);
 		}
 	}
 #endif
@@ -310,7 +310,7 @@ void CMPEventsDispatcher::UnregisterHanlder(EventType eventType, IEventHandler *
 		if (listHandler.size() == 0)
 		{
 			ASSERT(m_pVisAdapter != NULL);
-			g_Player.m_spPlayer->UnregisterVis(m_pVisAdapter);
+			g_Player.UnregisterVis(m_pVisAdapter);
 			m_pVisAdapter->Release();
 			m_pVisAdapter = NULL;
 		}
