@@ -271,8 +271,6 @@ CMediaLibrary::~CMediaLibrary()
 	Close();
 }
 
-OBJ_REFERENCE_IMP(CMediaLibrary)
-
 MLRESULT CMediaLibrary::GetAllArtist(IVXStr **ppvArtist)
 {
 	return QueryVStr("select artist from medialib group by artist", ppvArtist);

@@ -482,8 +482,6 @@ CRawGlyphSet::CRawGlyphSet()
 	m_nLastCleanTime = GetTickCount();
 }
 
-OBJ_REFERENCE_IMP(CRawGlyphSet)
-
 CRawGlyphSet::~CRawGlyphSet()
 {
 	ClearGlyph();

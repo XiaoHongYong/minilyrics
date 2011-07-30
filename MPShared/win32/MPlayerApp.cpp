@@ -62,8 +62,10 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 
 	StartApp	startApp = SA_LYRICS_PLAYER;
 
+#ifndef _MPLAYER
 	if (!ProcessMLCmdLine(lpCmdLine, startApp))
 		return 1;
+#endif
 
 	if (!CMPlayerAppBase::GetInstance()->Init(startApp))
 		return 1;
@@ -139,6 +141,7 @@ bool CMPlayerApp::Init(StartApp startApp)
 
 	// InitMiniDumper();
 
+#ifndef _MPLAYER
 	if (startApp == SA_UNINSTALL)
 	{
 		// Uninstall MiniLyrics plugins for players.
@@ -148,6 +151,7 @@ bool CMPlayerApp::Init(StartApp startApp)
 		installer.Uninstall(strErr);
 		return false;
 	}
+#endif
 
 	LOG1(LOG_LVL_EVENT_IMP, _T("Start %s."), GetAppNameLong().c_str());
 
@@ -171,12 +175,14 @@ bool CMPlayerApp::Init(StartApp startApp)
 		GfxRaw::EnableAntialiasFont(TRUE);
 #endif
 
+#ifndef _MPLAYER
 	if (startApp == SA_SETUP)
 	{
 		CDlgSetupPlayerPlugins	dlg;
 		dlg.DoModal(NULL);
 		return 0;
 	}
+#endif
 
 	return CMPlayerAppBase::Init(startApp);
 }

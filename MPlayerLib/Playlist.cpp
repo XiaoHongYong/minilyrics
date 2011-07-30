@@ -39,8 +39,6 @@ CMedia::~CMedia()
 {
 }
 
-OBJ_REFERENCE_IMP(CMedia)
-
 long CMedia::GetID()
 {
 	return m_nID;
@@ -264,8 +262,6 @@ CPlaylist::~CPlaylist()
 	if (m_pPlayer)
 		m_pPlayer->Release();
 }
-
-OBJ_REFERENCE_IMP(CPlaylist)
 
 uint32 CPlaylist::GetCount()
 {

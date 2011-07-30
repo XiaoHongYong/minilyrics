@@ -123,25 +123,21 @@ inline int InterlockedDecrement(long *nReference)
 
 #define OBJ_REFERENCE_DECL	\
 public:\
-	virtual void AddRef();\
-	virtual void Release();\
+	virtual void AddRef() {\
+		InterlockedIncrement(&m_nReference);\
+	}\
+	virtual void Release() {\
+		if (InterlockedDecrement(&m_nReference) == 0)\
+			delete this;\
+	}\
 protected:\
 	long			m_nReference;
 
 #define OBJ_REFERENCE_INIT	\
 	m_nReference = 0;
 
-#define OBJ_REFERENCE_IMP(class)	\
-void class::AddRef()\
-{\
-	InterlockedIncrement(&m_nReference);\
-}\
-void class::Release()\
-{\
-	if (InterlockedDecrement(&m_nReference) <= 0)\
-		delete this;\
-}\
-
+#define NEW_OBJ_REFERENCE(_class)\
+	{ _class *p = new _class(); p->AddRef() }\
 
 template <class T>
 class CMPAutoPtr

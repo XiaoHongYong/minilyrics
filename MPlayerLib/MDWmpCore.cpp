@@ -1,0 +1,328 @@
+#include "StdAfx.h"
+#include "../MPlayerLib/IMPlayer.h"
+#include "MDWmpCore.h"
+
+class CWmpEventsSink : 
+	public IWMPEvents
+{
+public:
+	CWmpEventsSink(CMDWmpCore *pMDWmpCore)
+	{
+		m_mdWmpCore = pMDWmpCore;
+		m_nReference = 0;
+	}
+
+	virtual HRESULT STDMETHODCALLTYPE QueryInterface( 
+		/* [in] */ REFIID riid,
+		/* [annotation][iid_is][out] */ 
+		__RPC__deref_out  void **ppvObject)
+	{
+		if (memcmp(&riid, &__uuidof(IWMPEvents), sizeof(UUID)) == 0)
+			*ppvObject = (IWMPEvents *)this;
+		else if (memcmp(&riid, &__uuidof(IUnknown), sizeof(UUID)) == 0)
+			*ppvObject = (IUnknown *)this;
+		else
+		{
+			*ppvObject = NULL;
+			return S_FALSE;
+		}
+		return S_OK;
+	}
+
+	virtual ULONG STDMETHODCALLTYPE AddRef(void)
+	{
+		return InterlockedIncrement(&m_nReference);
+	}
+
+	virtual ULONG STDMETHODCALLTYPE Release(void)
+	{
+		long n = InterlockedDecrement(&m_nReference);
+		if (n == 0)
+			delete this;
+		return n;
+	}
+
+	long			m_nReference;
+
+public:
+	void STDMETHODCALLTYPE OpenStateChange( long NewState ) { }
+	void STDMETHODCALLTYPE PlayStateChange( long NewState );
+	void STDMETHODCALLTYPE AudioLanguageChange( long LangID ) { }
+	void STDMETHODCALLTYPE StatusChange() { }
+	void STDMETHODCALLTYPE ScriptCommand( BSTR scType, BSTR Param ) { }
+	void STDMETHODCALLTYPE NewStream() { }
+	void STDMETHODCALLTYPE Disconnect( long Result ) { }
+	void STDMETHODCALLTYPE Buffering( VARIANT_BOOL Start ) { }
+	void STDMETHODCALLTYPE Error() { }
+	void STDMETHODCALLTYPE Warning( long WarningType, long Param, BSTR Description ) { }
+	void STDMETHODCALLTYPE EndOfStream( long Result );
+	void STDMETHODCALLTYPE PositionChange( double oldPosition, double newPosition) { }
+	void STDMETHODCALLTYPE MarkerHit( long MarkerNum ) { }
+	void STDMETHODCALLTYPE DurationUnitChange( long NewDurationUnit ) { }
+	void STDMETHODCALLTYPE CdromMediaChange( long CdromNum ) { }
+	void STDMETHODCALLTYPE PlaylistChange( IDispatch * Playlist, WMPPlaylistChangeEventType change ) { }
+	void STDMETHODCALLTYPE CurrentPlaylistChange( WMPPlaylistChangeEventType change ) { }
+	void STDMETHODCALLTYPE CurrentPlaylistItemAvailable( BSTR bstrItemName ) { }
+	void STDMETHODCALLTYPE MediaChange( IDispatch * Item ) { }
+	void STDMETHODCALLTYPE CurrentMediaItemAvailable( BSTR bstrItemName ) { }
+	void STDMETHODCALLTYPE CurrentItemChange( IDispatch *pdispMedia) { }
+	void STDMETHODCALLTYPE MediaCollectionChange() { }
+	void STDMETHODCALLTYPE MediaCollectionAttributeStringAdded( BSTR bstrAttribName,  BSTR bstrAttribVal ) { }
+	void STDMETHODCALLTYPE MediaCollectionAttributeStringRemoved( BSTR bstrAttribName,  BSTR bstrAttribVal ) { }
+	void STDMETHODCALLTYPE MediaCollectionAttributeStringChanged( BSTR bstrAttribName, BSTR bstrOldAttribVal, BSTR bstrNewAttribVal) { }
+	void STDMETHODCALLTYPE PlaylistCollectionChange() { }
+	void STDMETHODCALLTYPE PlaylistCollectionPlaylistAdded( BSTR bstrPlaylistName) { }
+	void STDMETHODCALLTYPE PlaylistCollectionPlaylistRemoved( BSTR bstrPlaylistName) { }
+	void STDMETHODCALLTYPE PlaylistCollectionPlaylistSetAsDeleted( BSTR bstrPlaylistName, VARIANT_BOOL varfIsDeleted) { }
+	void STDMETHODCALLTYPE ModeChange( BSTR ModeName, VARIANT_BOOL NewValue) { }
+	void STDMETHODCALLTYPE MediaError( IDispatch * pMediaObject) { }
+	void STDMETHODCALLTYPE OpenPlaylistSwitch( IDispatch *pItem ) { }
+	void STDMETHODCALLTYPE DomainChange( BSTR strDomain) { }
+	void STDMETHODCALLTYPE SwitchedToPlayerApplication() { }
+	void STDMETHODCALLTYPE SwitchedToControl() { }
+	void STDMETHODCALLTYPE PlayerDockedStateChange() { }
+	void STDMETHODCALLTYPE PlayerReconnect() { }
+	void STDMETHODCALLTYPE Click( short nButton, short nShiftState, long fX, long fY ) { }
+	void STDMETHODCALLTYPE DoubleClick( short nButton, short nShiftState, long fX, long fY ) { }
+	void STDMETHODCALLTYPE KeyDown( short nKeyCode, short nShiftState ) { }
+	void STDMETHODCALLTYPE KeyPress( short nKeyAscii ) { }
+	void STDMETHODCALLTYPE KeyUp( short nKeyCode, short nShiftState ) { }
+	void STDMETHODCALLTYPE MouseDown( short nButton, short nShiftState, long fX, long fY ) { }
+	void STDMETHODCALLTYPE MouseMove( short nButton, short nShiftState, long fX, long fY ) { }
+	void STDMETHODCALLTYPE MouseUp( short nButton, short nShiftState, long fX, long fY ) { }
+
+protected:
+	CMPAutoPtr<CMDWmpCore>		m_mdWmpCore;
+
+};
+
+void CWmpEventsSink::PlayStateChange( long NewState )
+{
+	switch (NewState)
+	{
+	case wmppsUndefined:
+		break;
+	case wmppsStopped:
+		if (m_mdWmpCore->m_mplayer)
+			m_mdWmpCore->m_mplayer->NotifyEod(m_mdWmpCore, ERR_OK);
+		break;
+	case wmppsPaused:
+		break;
+	case wmppsPlaying:
+		break;
+	case wmppsScanForward:
+		break;
+	case wmppsScanReverse:
+		break;
+	case wmppsBuffering:
+		break;
+	case wmppsWaiting:
+		break;
+	case wmppsMediaEnded:
+		if (m_mdWmpCore->m_mplayer)
+			m_mdWmpCore->m_mplayer->NotifyEod(m_mdWmpCore, ERR_OK);
+		break;
+	case wmppsTransitioning:
+		break;
+	case wmppsReady:
+		break;
+	case wmppsReconnecting:
+		break;
+	case wmppsLast:
+		break;
+	default:
+		break;
+	}
+}
+
+void CWmpEventsSink::EndOfStream( long Result )
+{
+	if (m_mdWmpCore->m_mplayer)
+		m_mdWmpCore->m_mplayer->NotifyEod(m_mdWmpCore, ERR_OK);
+}
+
+//////////////////////////////////////////////////////////////////////////
+
+CMDWmpCore::CMDWmpCore(void)
+{
+	OBJ_REFERENCE_INIT;
+
+	m_dwAdviseCookie = 0;
+	Init();
+}
+
+CMDWmpCore::~CMDWmpCore(void)
+{
+	if (m_pConnectionPoint)
+	{
+		if (0 != m_dwAdviseCookie)
+		{
+			m_pConnectionPoint->Unadvise(m_dwAdviseCookie);
+			m_dwAdviseCookie = 0;
+		}
+		m_pConnectionPoint = NULL;
+	}
+}
+
+MLRESULT HResultToMLResult(HRESULT hr)
+{
+	if (FAILED(hr))
+		return ERR_FALSE;
+	return ERR_OK;
+}
+
+LPCXSTR CMDWmpCore::GetDescription()
+{
+	return _T("Windows Media Player Core");
+}
+
+// get supported file's extentions. exm: mp3;mp3 files;mp2;mp2 files;
+LPCXSTR CMDWmpCore::GetFileExtentions()
+{
+	return _T(".mp3\0mp3 files\0.wma\0wma files\0.mp3\0mp3 files\0");
+}
+
+MLRESULT CMDWmpCore::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)
+{
+	return ERR_OK;
+}
+
+//
+// decode media file related methods
+//
+
+bool CMDWmpCore::IsSeekable()
+{
+	return true;
+}
+
+bool CMDWmpCore::IsUseOutputPlug()
+{
+	return false;
+}
+
+MLRESULT CMDWmpCore::Play(IMPlayer *pPlayer, IMediaInput *pInput)
+{
+	m_mplayer = pPlayer;
+
+	CMPAutoPtr<IWMPMedia>	media;
+	HRESULT hr = m_collection->add((BSTR)pInput->GetSource(), &media);
+	if (FAILED(hr))
+		return HResultToMLResult(hr);
+
+	m_controls->stop();
+	m_playlist->clear();
+	m_playlist->appendItem(media);
+	m_controls->put_currentItem(media);
+
+	m_controls->playItem(media);
+
+	return ERR_OK;
+}
+
+MLRESULT CMDWmpCore::Pause()
+{
+	HRESULT hr = m_controls->pause();
+
+	return HResultToMLResult(hr);
+}
+
+MLRESULT CMDWmpCore::Unpause()
+{
+	WMPPlayState	state;
+	HRESULT hr = m_player->get_playState(&state);
+	if (FAILED(hr))
+		return HResultToMLResult(hr);
+
+	if (state == wmppsPaused)
+		m_controls->play();
+
+	return ERR_OK;
+}
+
+MLRESULT CMDWmpCore::Stop()
+{
+	HRESULT hr = m_controls->stop();
+	return HResultToMLResult(hr);
+}
+
+uint32 CMDWmpCore::GetLength()
+{
+	CMPAutoPtr<IWMPMedia>	media;
+	HRESULT hr = m_controls->get_currentItem(&media);
+	if (FAILED(hr))
+		return 0;
+
+	double duration = 0;
+	hr = media->get_duration(&duration);
+	if (FAILED(hr))
+		return 0;
+
+	return uint32(duration * 1000);
+}
+
+MLRESULT CMDWmpCore::Seek(uint32 nPos)
+{
+	double pos = (double)nPos / 1000;
+	HRESULT hr = m_controls->put_currentPosition(pos);
+	return HResultToMLResult(hr);
+}
+
+uint32 CMDWmpCore::GetPos()
+{
+	double pos = 0;
+	HRESULT hr = m_controls->get_currentPosition(&pos);
+	if (FAILED(hr))
+		return 0;
+
+	return (uint32)(pos * 1000);
+}
+
+MLRESULT CMDWmpCore::SetVolume(int nVolume, int nBanlance)
+{
+	CMPAutoPtr<IWMPSettings>	settings;
+
+	HRESULT hr = m_player->get_settings(&settings);
+	if (FAILED(hr))
+		return HResultToMLResult(hr);
+
+	hr = settings->put_volume(nVolume);
+
+	return ERR_OK;
+}
+
+bool CMDWmpCore::Init()
+{
+	HRESULT hr = CoCreateInstance(__uuidof(WindowsMediaPlayer), NULL, CLSCTX_INPROC_SERVER, __uuidof(IWMPPlayer), (LPVOID*)&m_player);
+	if (FAILED(hr))
+		return false;
+
+	CMPAutoPtr<IConnectionPointContainer> connectionPointContainer;
+	hr = m_player->QueryInterface(__uuidof(IConnectionPointContainer), (LPVOID*)&connectionPointContainer);
+	if (FAILED(hr))
+		return false;
+
+	hr = connectionPointContainer->FindConnectionPoint(__uuidof(IWMPEvents), &m_pConnectionPoint);
+	if (FAILED(hr))
+		return false;
+
+	CWmpEventsSink *pSink = new CWmpEventsSink(this);
+	pSink->AddRef();
+	hr = m_pConnectionPoint->Advise(pSink, &m_dwAdviseCookie);
+	if ((FAILED(hr)) || (0 == m_dwAdviseCookie))
+		m_pConnectionPoint = NULL;
+
+	hr = m_player->get_controls(&m_controls);
+	if (FAILED(hr))
+		return false;
+
+	hr = m_player->get_currentPlaylist(&m_playlist);
+	if (FAILED(hr))
+		return false;
+
+	hr = m_player->get_mediaCollection(&m_collection);
+	if (FAILED(hr))
+		return false;
+
+	return true;
+}

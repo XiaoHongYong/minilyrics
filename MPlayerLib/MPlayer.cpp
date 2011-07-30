@@ -10,6 +10,7 @@
 
 #ifdef _WIN32
 #include "win32/MOSoundCard.h"
+#include "MDWmpCore.h"
 #endif
 
 #ifdef _LINUX
@@ -136,8 +137,6 @@ CMemAllocator::~CMemAllocator()
 	ASSERT(m_listFree.size() == 0);
 }
 
-OBJ_REFERENCE_IMP(CMemAllocator)
-
 void CMemAllocator::Quit()
 {
 	LIST_BUF::iterator	it;
@@ -206,8 +205,6 @@ CMOAgent::CMOAgent()
 CMOAgent::~CMOAgent()
 {
 }
-
-OBJ_REFERENCE_IMP(CMOAgent)
 
 LPCXSTR CMOAgent::GetDescription()
 {
@@ -320,9 +317,13 @@ MLRESULT CMPluginManagerAgent::DetectPlugins()
 	//
 	IMediaDecode	*pDecoder;
 
-	pDecoder = new CMDLibmad;
+	pDecoder = new CMDWmpCore;
 	OnInternalDecoderRegister(pDecoder);
 	pDecoder->Release();
+
+//	pDecoder = new CMDLibmad;
+//	OnInternalDecoderRegister(pDecoder);
+//	pDecoder->Release();
 
 	pDecoder = new CMDWave;
 	OnInternalDecoderRegister(pDecoder);
@@ -396,7 +397,8 @@ MLRESULT CMPluginManagerAgent::NewDecoder(IMediaInput *pInput, IMediaDecode **pp
 	LPCXSTR szMediaUrl = pInput->GetSource();
 
 	if (FileIsExtSame(szMediaUrl, _T(".mp3")))
-		*ppDecoder = new CMDLibmad;
+		*ppDecoder = new CMDWmpCore;
+		// *ppDecoder = new CMDLibmad;
 	else if (FileIsExtSame(szMediaUrl, _T(".wav")))
 		*ppDecoder = new CMDWave;
 	else if (FileIsExtSame(szMediaUrl, _T(".raw")))
@@ -476,8 +478,6 @@ MLRESULT CMPluginManagerAgent::GetActiveVis(IVector *pvVis)
 //////////////////////////////////////////////////////////////////////
 
 CMPlayer		*CMPlayer::m_spPlayer = NULL;
-
-OBJ_REFERENCE_IMP(CMPlayer)
 
 CMPlayer::CMPlayer()
 {

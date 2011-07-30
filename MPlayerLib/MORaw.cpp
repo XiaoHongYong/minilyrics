@@ -31,8 +31,6 @@ CMORaw::~CMORaw()
 {
 }
 
-OBJ_REFERENCE_IMP(CMORaw)
-
 LPCXSTR CMORaw::GetDescription()
 {
 	return _T("MPlayer Raw file output 1.0");

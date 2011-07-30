@@ -48,8 +48,6 @@ CXStr::~CXStr()
 
 }
 
-OBJ_REFERENCE_IMP(CXStr)
-
 LPXSTR CXStr::data()
 {
 	return m_str.data();
@@ -124,8 +122,6 @@ CVXStr::~CVXStr()
 
 }
 
-OBJ_REFERENCE_IMP(CVXStr)
-
 size_t CVXStr::size()
 {
 	return m_vstr.size();
@@ -177,8 +173,6 @@ CVInt::~CVInt()
 
 }
 
-OBJ_REFERENCE_IMP(CVInt)
-
 size_t CVInt::size()
 {
 	return m_vInt.size();
@@ -218,5 +212,3 @@ void CVInt::insert(int index, int nData)
 	else
 		m_vInt.push_back(nData);
 }
-
-OBJ_REFERENCE_IMP(CVector)

@@ -27,8 +27,6 @@ CMDAgent::~CMDAgent()
 
 }
 
-OBJ_REFERENCE_IMP(CMDAgent)
-
 LPCXSTR CMDAgent::GetDescription()
 {
 	if (m_pMediaDecode.p)

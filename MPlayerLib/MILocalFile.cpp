@@ -22,8 +22,6 @@ CMILocalFile::~CMILocalFile()
 	Close();
 }
 
-OBJ_REFERENCE_IMP(CMILocalFile)
-
 MLRESULT CMILocalFile::Open(LPCXSTR szSourceMedia)
 {
 	m_fp = _tfopen(szSourceMedia, _T("rb"));

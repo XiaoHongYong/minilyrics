@@ -256,7 +256,7 @@ void CMLTrayIcon::OnMyNotifyIcon(WPARAM wParam, LPARAM lParam)
 			else if (lParam == WM_LBUTTONDBLCLK)
 			{
 				// ¼¤»î²¥·ÅÆ÷´°¿Ú
-				::ActivateWindow(g_Player.GetMainWnd());
+				ActivateWindow(CMPlayerAppBase::GetMainWnd()->GetHandle());
 			}
 		}
 	}

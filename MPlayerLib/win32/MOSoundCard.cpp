@@ -88,8 +88,6 @@ CMOSoundCard::~CMOSoundCard()
 	}
 }
 
-OBJ_REFERENCE_IMP(CMOSoundCard)
-
 LPCXSTR CMOSoundCard::GetDescription()
 {
 	return _T("MPlayer soundcard output 1.0");

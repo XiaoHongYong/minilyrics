@@ -43,8 +43,6 @@ CMDRow::~CMDRow()
 	}
 }
 
-OBJ_REFERENCE_IMP(CMDRow)
-
 LPCXSTR CMDRow::GetDescription()
 {
 	return _T("Raw File decoder");

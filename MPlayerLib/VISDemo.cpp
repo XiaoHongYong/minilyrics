@@ -21,8 +21,6 @@ CVISDemo::~CVISDemo()
 
 }
 
-OBJ_REFERENCE_IMP(CVISDemo)
-
 MLRESULT CVISDemo::Init(IMPlayer *pPlayer)
 {
 	m_pPlayer = pPlayer;

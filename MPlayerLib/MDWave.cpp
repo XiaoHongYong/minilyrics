@@ -45,8 +45,6 @@ CMDWave::~CMDWave()
 	}
 }
 
-OBJ_REFERENCE_IMP(CMDWave)
-
 LPCXSTR CMDWave::GetDescription()
 {
 	return _T("Wave File decoder");

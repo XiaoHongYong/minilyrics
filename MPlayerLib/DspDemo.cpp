@@ -9,8 +9,6 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-OBJ_REFERENCE_IMP(CDspDemo)
-
 CDspDemo::CDspDemo()
 {
 	OBJ_REFERENCE_INIT;

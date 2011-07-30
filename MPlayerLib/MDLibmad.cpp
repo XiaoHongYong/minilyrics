@@ -250,8 +250,6 @@ CMDLibmad::~CMDLibmad()
 		delete[] m_pnToc;
 }
 
-OBJ_REFERENCE_IMP(CMDLibmad)
-
 LPCXSTR CMDLibmad::GetDescription()
 {
 	return _T("Mp3 file decoder");
