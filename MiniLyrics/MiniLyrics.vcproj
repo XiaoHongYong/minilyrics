@@ -73,6 +73,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(ProjectDir)..\MPShared\win32\Exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -148,6 +149,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(ProjectDir)..\MPShared\win32\Exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -225,6 +227,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(ProjectDir)..\MPShared\win32\Exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -300,6 +303,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(ProjectDir)..\MPShared\win32\Exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -377,6 +381,7 @@
 			/>
 			<Tool
 				Name="VCManifestTool"
+				AdditionalManifestFiles="$(ProjectDir)..\MPShared\win32\Exe.manifest"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -586,6 +591,26 @@
 			<File
 				RelativePath="..\MPShared\win32\MPHotkey.cpp"
 				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPlayer.rc"
+				>
+				<FileConfiguration
+					Name="UNIT_TEST Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCResourceCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\MPShared\win32\MPlayerApp.cpp"

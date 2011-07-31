@@ -15,17 +15,12 @@
 #define IDI_CRASH                       138
 #define IDI_F_TXT                       139
 #define IDI_F_LRC                       140
-#define IDB_LRC_TYPE                    141
 #define IDC_MLHAND                      142
-#define IDI_DRAGAFTER                   143
-#define IDI_DRAGBEFORE                  144
-#define IDC_SELCOLOR                    145
 #define IDR_MENU_ID                     146
 #define IDR_MENU_OPEN_LRC_DLG           147
 #define IDR_MENU_ALBUMART               148
 #define IDD_CRASH_REPORT                149
 #define IDD_MSG                         150
-#define IDD_MLSTART                     151
 #define IDD_ERROR_RESOLVE               152
 #define IDD_COPYSONGLYRICS              153
 #define IDD_BATCH_EMBEDDED_LYR          154
@@ -50,7 +45,6 @@
 #define IDD_PG_MEDIA_ASSOCIATE          173
 #define IDI_MEDIATYPE2                  174
 #define IDR_MENU_STATIC_LYR             175
-#define IDB_INSTALL_STAT                176
 #define IDM_LYRICS_TOOL                 177
 #define IDR_MENU_RATE                   178
 #define IDM_IPOD_LYR_DOWNLOADER         179

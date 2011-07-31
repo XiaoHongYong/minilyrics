@@ -202,7 +202,7 @@ ZipExcludeExt = [ "", "rar", "ncb", "svn", "aps", "opt", "plg", "user", "scc",
 	"gz", "suo" ]
 ZipIncludeDir = ["",  "base", "gfx", "GfxLite", "GfxRaw", "id3lib", "ImageLib", 
 	"MiniLyrics", "mllib", "MLPlayerPluginAgentLib", "MLPluginLib", "MLProtocol",
-	"MLServer", "mplayer", "MLyricsOutPluginG15",
+	"MLServer", "MLyricsOutPluginG15",
 	"mplayerlib", "ourmfclib", "skin", "sqlite_cpp", "utils", "widget", "WidgetLite",
 	"MPShared", "SearchArith", "MLyricsOutPlugin", 
 	"skinscript", "TagLib",

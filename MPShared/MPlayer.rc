@@ -13,12 +13,12 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Chinese (P.R.C.) resources
+// English (U.S.) resources
 
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
-LANGUAGE LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED
-#pragma code_page(936)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
 #endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
@@ -40,37 +40,30 @@ END
 
 3 TEXTINCLUDE 
 BEGIN
-    "\r\n"
+    "#include ""../MPShared/MLResource.h""\r\n"
+    "#include ""../PluginWinamp5/Resource.rc2""  // non-Microsoft Visual C++ edited resources\r\n"
     "\0"
 END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Chinese (P.R.C.) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Bitmap
-//
-
-IDB_ADV_PREFERENCE      BITMAP                  "Res\\AdvancedPref.bmp"
-IDB_LRC_TYPE            BITMAP                  "Res\\fileType.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
+
+IDR_MENU_RATE MENU 
+BEGIN
+    POPUP "Rate"
+    BEGIN
+        MENUITEM "Rate These Lyrics: 1 (Low)",  IDC_RATE_LYR_1
+        MENUITEM "Rate These Lyrics: 2",        IDC_RATE_LYR_2
+        MENUITEM "Rate These Lyrics: 3",        IDC_RATE_LYR_3
+        MENUITEM "Rate These Lyrics: 4",        IDC_RATE_LYR_4
+        MENUITEM "Rate These Lyrics: 5 (High)", IDC_RATE_LYR_5
+    END
+END
 
 IDR_MENU_ID MENU 
 BEGIN
@@ -887,18 +880,15 @@ BEGIN
         POPUP "&Upload Lyrics..."
         BEGIN
             MENUITEM "&Upload Lyrics...",           IDC_UPLOAD_LYRICS
-            MENUITEM "Sign &in...",                 IDC_LOGIN
             MENUITEM "Sign in Via &Web Browser...", IDC_LOGIN_VIA_IE
             MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
         END
         MENUITEM SEPARATOR
+        MENUITEM "&New Lyrics",                 IDC_NEW_LYRICS
         MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
-        MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
-        MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
         MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
         MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
-        MENUITEM "&Advanced Save Lyrics Options...", IDC_ADVANCED_SAVE_LYR
         MENUITEM SEPARATOR
         POPUP "&Character Encoding"
         BEGIN
@@ -987,10 +977,11 @@ BEGIN
     END
     POPUP "&Options"
     BEGIN
+        MENUITEM "&Lyrics Color...",            IDC_EDITOR_LYR_COLOR
+        MENUITEM "&Highlight Lyrics Color...",  IDC_EDITOR_HIGH_COLOR
         MENUITEM "&Tag Color...",               IDC_TAG_COLOR
         MENUITEM "&Background Color of Edited Line...", IDC_EDIT_LINE_COLOR
-        MENUITEM SEPARATOR
-        MENUITEM "&Preferences...",             IDC_LYR_DISPLAY_OPT
+        MENUITEM "Back&ground Color...",        IDC_EDITOR_BG_COLOR
     END
     POPUP "&Help"
     BEGIN
@@ -1019,8 +1010,6 @@ IDI_OPEN                ICON                    "Res\\open.ICO"
 IDI_PREV                ICON                    "Res\\prev.ico"
 IDI_NEXT                ICON                    "Res\\next.ICO"
 IDI_CRASH               ICON                    "Res\\applicat.ico"
-IDI_DRAGAFTER           ICON                    "Res\\dragafte.ico"
-IDI_DRAGBEFORE          ICON                    "Res\\dragbefo.ico"
 IDI_F_TXT               ICON                    "res\\icon-tga.ico"
 IDI_F_LRC               ICON                    "res\\ico00001.ico"
 
@@ -1040,6 +1029,19 @@ BEGIN
     ICON            IDI_CRASH,IDC_STATIC,226,16,21,20,SS_REALSIZEIMAGE
     LTEXT           "We have created an error report that you can send to us.  We will treat this report as confidential and anonymous.",IDC_STATIC,20,45,230,20
     LTEXT           "Please click 'Send' button, a new mail will be generated, then send this mail to us. It will be very helpful to solve this error.",IDC_STATIC,20,70,230,33
+END
+
+IDD_MSG DIALOGEX 0, 0, 268, 94
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Confirm to save the lyrics file"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
+BEGIN
+    PUSHBUTTON      "YES",IDYES,80,73,50,14
+    PUSHBUTTON      "NO",IDNO,137,73,50,14
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,211,73,50,14
+    LTEXT           "message",IDC_MSG,27,9,226,41
+    CONTROL         "Use as default setting, don't prompt any more",IDC_NO_PROMPT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,54,196,10
 END
 
 IDD_ERROR_RESOLVE DIALOG  0, 0, 300, 174
@@ -1155,6 +1157,14 @@ BEGIN
         BOTTOMMARGIN, 121
     END
 
+    IDD_MSG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 261
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 87
+    END
+
     IDD_ERROR_RESOLVE, DIALOG
     BEGIN
         LEFTMARGIN, 7
@@ -1167,14 +1177,6 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 277
         TOPMARGIN, 7
-    END
-
-    IDD_RATE_LYR, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 195
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 83
     END
 
     IDD_MEDIA_INFO, DIALOG
@@ -1237,7 +1239,6 @@ END
 //
 
 IDC_MLHAND              CURSOR                  "Res\\hand.cur"
-IDC_SELCOLOR            CURSOR                  "Res\\selcolor.cur"
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 
@@ -1248,7 +1249,8 @@ IDC_SELCOLOR            CURSOR                  "Res\\selcolor.cur"
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
-
+#include "../MPShared/MLResource.h"
+#include "../PluginWinamp5/Resource.rc2"  // non-Microsoft Visual C++ edited resources
 
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
