@@ -3,8 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#include "Player.h"
-#include "EventsDispatcher.h"
+#include "MPlayerAppBase.h"
 #include "MPSkinMediaNumInfoCtrl.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -74,7 +73,7 @@ void CMPSkinMediaNumInfoCtrl::UpdateShowTrackInfo()
 	int			nValue = 0;
 	TCHAR		szText[64];
 
-	if (g_Player.m_spPlayer->GetCurrentMedia(&pMedia) != ERR_OK)
+	if (g_Player.GetCurrentMedia(&pMedia) != ERR_OK)
 	{
 		SetText(_T(""));
 		return;

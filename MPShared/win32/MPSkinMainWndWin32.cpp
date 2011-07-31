@@ -112,8 +112,7 @@ void CMPSkinMainWnd::OnCopyData(WPARAM wParam, PCOPYDATASTRUCT pCopyData)
 	if (vCmdLine.size() == 1 && FileIsExtSame(vCmdLine[0].c_str(), _T(".m3u")))
 	{
 		// Open playlist
-		if (g_Player.m_bPlModified)
-			SaveCurrentPlaylist();
+		SaveCurrentPlaylist();
 
 		g_Player.m_strCurrentPlaylist = vCmdLine[0];
 		g_Player.SetPlaylistModified(false);

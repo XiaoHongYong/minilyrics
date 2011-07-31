@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "MPlayerAppBase.h"
-#include "Player.h"
 #include "MediaAlbumArtCtrl.h"
 
 PRAW_IMAGE_DATA ConvertTo32BppRawImage(PRAW_IMAGE_DATA src);

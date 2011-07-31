@@ -30,6 +30,7 @@ enum Error
 //	ERR_PARAM_ERROR,
 	ERR_NO_MEM				= 3,
 	ERR_OUTOF_BUFF			= 4,
+	ERR_NOT_IMPLEMENTED		= 5,
 
 	ERR_EOF					= 6,
 	ERR_BAD_MSG				= 7,

@@ -567,41 +567,6 @@ CMPlayer::~CMPlayer()
 	}
 }
 
-LPCXSTR CMPlayer::MediaAttributeName(MediaAttribute mediaAttri)
-{
-	static LPCXSTR		_szMediaAttrName[] = 
-	{
-		_T("Artist"),
-		_T("Album"),
-		_T("Title"),
-		_T("Track number"),
-		_T("Year"),
-		_T("Genre"),
-		_T("Comment"),
-		_T("Length"),
-		_T("File size"),
-		_T("Time added"),
-		_T("Last played"),
-		_T("Rating"),
-		_T("Auto rating"),
-		_T("Times played"),
-		_T("Times play skipped"),
-		_T("Lyrics file"),
-		_T("Format"),
-		_T("Is Vbr"),
-		_T("Bitrate"),
-		_T("BPS"),
-		_T("Channels"),
-		_T("Sample rate"),
-		_T("Extra Info"),
-	};
-
-	if (mediaAttri >= 0 && mediaAttri < CountOf(_szMediaAttrName))
-		return _szMediaAttrName[mediaAttri];
-	else
-		return _T("Undefined Name");
-}
-
 MLRESULT CMPlayer::SetPluginManager(IMPluginManager *pPluginMgr)
 {
 	if (m_pluginMgrAgent.m_pluginMgr)
@@ -835,13 +800,13 @@ MLRESULT CMPlayer::Seek(uint32 dwPos)
 		return ERR_PLAYER_INVALID_STATE;
 }
 
-MLRESULT CMPlayer::NewMedia(IMedia **ppMedia, LPCXSTR szString)
+MLRESULT CMPlayer::NewMedia(IMedia **ppMedia, LPCXSTR szUrl)
 {
 	ASSERT(ppMedia);
 
 	int			nRet;
 
-	nRet = m_pMediaLib->GetMediaByUrl(szString, ppMedia);
+	nRet = m_pMediaLib->GetMediaByUrl(szUrl, ppMedia);
 	if (nRet != ERR_OK)
 	{
 		*ppMedia = new CMedia;
@@ -849,7 +814,7 @@ MLRESULT CMPlayer::NewMedia(IMedia **ppMedia, LPCXSTR szString)
 			return ERR_NO_MEM;
 
 		(*ppMedia)->AddRef();
-		(*ppMedia)->SetSourceUrl(szString);
+		(*ppMedia)->SetSourceUrl(szUrl);
 	}
 
 	return ERR_OK;

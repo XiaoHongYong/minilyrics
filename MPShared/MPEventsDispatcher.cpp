@@ -239,25 +239,6 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 
 */
 
-#ifndef _MPLAYER
-LRESULT CMPEventsDispatcher::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
-{
-	if (message == MM_MIXM_CONTROL_CHANGE)
-	{
-		// Volume changed message.
-		CEventPlayerSettingChanged	*pEvent = new CEventPlayerSettingChanged();
-		pEvent->eventType = ET_PLAYER_SETTING_CHANGED;
-		pEvent->settingType = IMPEvent::MPS_VOLUME;
-		g_Player.GetVolume(pEvent->nValue);
-
-		DispatchUnsyncEvent(pEvent);
-	}
-
-	return CEventsDispatcher::WndProc(message, wParam, lParam);
-}
-#endif
-
-
 //////////////////////////////////////////////////////////////////////////
 
 void CMPEventsDispatcher::Quit()

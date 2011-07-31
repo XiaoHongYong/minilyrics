@@ -223,10 +223,8 @@ public:
 
 	void Register(CSkinSeekCtrl *pVolume)
 	{
-		long		nVolume = 0;
 		m_pVolume = pVolume;
-		g_Player.GetVolume(nVolume);
-		m_pVolume->SetScrollInfo(0, MP_VOLUME_MAX, 0, nVolume);
+		m_pVolume->SetScrollInfo(0, MP_VOLUME_MAX, 0, g_Player.GetVolume());
 		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
 	}
 
@@ -871,11 +869,9 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 {
 	if (pScrollBar->GetID() == CMD_VOLUME)
 	{
-		long		vol = 0;
-
 		// set volume
 		g_Player.SetVolume(pScrollBar->GetScrollPos());
-		g_Player.GetVolume(vol);
+		long vol = g_Player.GetVolume();
 
 		CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
 	}

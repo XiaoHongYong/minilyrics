@@ -20,6 +20,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_INITDB_FAILED, _T("Init Database FAILED.") },
 	{ ERR_NO_MEM, _T("Can't allocate more memory.") },
 	{ ERR_OUTOF_BUFF, _T("Insufficient buffer.") },
+	{ ERR_NOT_IMPLEMENTED, _T("Not implemented.") },
 	{ ERR_EOF, _T("Reached the end of the file.") },
 	{ ERR_BAD_MSG, _T("Corrupted message.") },
 	{ ERR_PARSE_XML, _T("Parse xml FAILED.") },

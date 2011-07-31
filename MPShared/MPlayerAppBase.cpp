@@ -397,7 +397,7 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 #endif
 
 	// Init player.
-	g_Player.OnInit();
+	g_Player.OnInit(false);
 
 	if (!InitLoadSkin())
 		return false;
@@ -453,13 +453,25 @@ bool CMPlayerAppBase::InitLyricsTool()
 
 bool CMPlayerAppBase::InitiPodLyricsDownloader()
 {
-	m_pSkinFactory->SetSkinFileName(_T("minilyrics.xml"));
-	int nRet = LoadDefaultSkin(SZ_DEFSKIN, false);
+	m_pSkinFactory->SetSkinFileName(_T("iPodLyricsDownloader.xml"));
+	int nRet = LoadDefaultSkin(_T("Default"), true);
+	if (nRet != ERR_OK)
+	{
+#ifndef _MPLAYER
+		m_bMPSkinMode = true;
+		g_Profile.WriteProfileInt(_T("MPSkinMode"), true);
+#endif
+		g_Profile.WriteProfileString(_T("DefaultSkin"), _T("Default"));
+		g_Profile.GetProfileString(_T("DefaultSkinWnd"), _T(""));
+		nRet = LoadDefaultSkin(_T("Default"));
+		if (nRet != ERR_OK)
+			return false;
+	}
 
-	RunLyricsTool(m_pSkinFactory->GetMainWnd());
+	//RunLyricsTool(m_pSkinFactory->GetMainWnd());
 
 #ifdef _WIN32
-	ShowAsAppWindow(GetRunningLyricsToolWnd()->GetHandle());
+	//ShowAsAppWindow(GetRunningLyricsToolWnd()->GetHandle());
 #endif
 
 	return true;

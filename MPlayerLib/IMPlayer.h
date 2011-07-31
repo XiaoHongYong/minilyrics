@@ -439,8 +439,6 @@ interface IMPlayer
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
-	virtual LPCXSTR MediaAttributeName(MediaAttribute mediaAttri) = 0;
-
 	virtual MLRESULT SetPluginManager(IMPluginManager *pPluginMgr) = 0;
 
 	virtual MLRESULT QueryInterface(MPInterfaceType interfaceType, LPVOID *lpInterface) = 0;
@@ -456,7 +454,7 @@ interface IMPlayer
 	virtual MLRESULT Next() = 0;
 	virtual MLRESULT Seek(uint32 dwPos) = 0;
 
-	virtual MLRESULT NewMedia(IMedia **ppMedia, LPCXSTR szString) = 0;
+	virtual MLRESULT NewMedia(IMedia **ppMedia, LPCXSTR szUrl) = 0;
 	virtual MLRESULT NewPlaylist(IPlaylist **ppPlaylist) = 0;
 
 	virtual MLRESULT GetMediaLibrary(IMediaLibrary **ppMediaLib) = 0;

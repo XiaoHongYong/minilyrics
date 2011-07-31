@@ -71,6 +71,7 @@
 #include "../Skin/Skin.h"
 #include "../MLLib/MLLib.h"
 #include "../widget/widget.h"
+#include "../MPlayerLib/IMPlayer.h"
 
 // Local Header Files
 

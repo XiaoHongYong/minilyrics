@@ -1,0 +1,592 @@
+#include "stdafx.h"
+#include "MPlayerAppBase.h"
+#include "DlgMediaInfo.h"
+#include "../ID3Lib/ID3v1.h"
+#include "SkinImageListCtrl.h"
+
+UINT GetSupportedMTTByExt(LPCTSTR szMedia)
+{
+	LPCTSTR	szExt = FileGetExt(szMedia);
+
+	if (_tcscmp(szExt, _T(".mp3")) == 0)
+		return MTT_ID3V1 | MTT_ID3V2;
+
+	return 0;
+}
+
+class CDlgMediaInfoPage : public CSkinContainer
+{
+public:
+	CDlgMediaInfoPage(LPCTSTR szPageId, LPCTSTR szAssociateTabButtonId) : CSkinContainer()
+	{
+		m_nAssociateTabButtonId = GetIDByName(szAssociateTabButtonId);
+		m_bModified = false;
+	}
+
+	virtual void SetParent(CDlgMediaInfo *pParent) { m_pDlgMediaInfo = pParent; }
+	virtual void OnUpdateView(bool bRedraw = true) { }
+	virtual void OnSave() { }
+
+	void OnInitialUpdate()
+	{
+		CSkinContainer::OnInitialUpdate();
+
+		OnUpdateView(false);
+	}
+
+	void GetFeildNewValue(int nID, tstring &strValue)
+	{
+		tstring		str;
+
+		str = GetUIObjectText(nID);
+		if (_tcscmp(str.c_str(), strValue.c_str()) != 0)
+		{
+			m_bModified = true;
+			strValue = str;
+		}
+	}
+
+	bool IsModified() { return m_bModified; }
+
+	int GetAssociateTabButtonId() const { return m_nAssociateTabButtonId; }
+
+protected:
+	CDlgMediaInfo		*m_pDlgMediaInfo;
+	bool				m_bModified;
+	int					m_nAssociateTabButtonId;
+
+};
+
+class CDlgMediaInfoPageBasic : public CDlgMediaInfoPage  
+{
+public:
+	CDlgMediaInfoPageBasic() : CDlgMediaInfoPage(_T("CID_C_MI_BASIC"), _T("CMD_MI_BASIC"))
+	{
+	}
+
+	void OnCreate()
+	{
+		CDlgMediaInfoPage::OnCreate();
+
+		GET_ID_BY_NAME3(CID_E_ARTIST, CID_E_ALBUM, CID_E_TITLE);
+		GET_ID_BY_NAME4(CID_E_TRACK, CID_E_YEAR, CID_CB_GENRE, CID_E_COMMENT);
+
+		CSkinComboBox		*pcbGenre;
+		pcbGenre = (CSkinComboBox *)GetUIObjectById(CID_CB_GENRE, CSkinComboBox::ClassName());
+		if (pcbGenre)
+		{
+			LPCSTR *szGenre = CID3v1::GetAllGenreDescription();
+			int		n = CID3v1::GetGenreCount();
+			for (int i = 0; i < n; i++)
+			{
+				tstringex	str;
+				MBCSToTString(szGenre[i], -1, str);
+				pcbGenre->AddString(str.c_str());
+			}
+		}
+	}
+
+	void OnUpdateView(bool bRedraw = true)
+	{
+		m_bModified = false;
+
+		SetUIObjectText(CID_E_ARTIST, m_pDlgMediaInfo->m_artist.c_str(), bRedraw);
+		SetUIObjectText(CID_E_ALBUM, m_pDlgMediaInfo->m_album.c_str(), bRedraw);
+		SetUIObjectText(CID_E_TITLE, m_pDlgMediaInfo->m_title.c_str(), bRedraw);
+		SetUIObjectText(CID_E_TRACK, m_pDlgMediaInfo->m_track.c_str(), bRedraw);
+		SetUIObjectText(CID_E_YEAR, m_pDlgMediaInfo->m_year.c_str(), bRedraw);
+		SetUIObjectText(CID_CB_GENRE, m_pDlgMediaInfo->m_genre.c_str(), bRedraw);
+		SetUIObjectText(CID_E_COMMENT, m_pDlgMediaInfo->m_comment.c_str(), bRedraw);
+	}
+
+	virtual void OnSave()
+	{
+		GetFeildNewValue(CID_E_ARTIST, m_pDlgMediaInfo->m_artist);
+		GetFeildNewValue(CID_E_ALBUM, m_pDlgMediaInfo->m_album);
+		GetFeildNewValue(CID_E_TITLE, m_pDlgMediaInfo->m_title);
+		GetFeildNewValue(CID_E_TRACK, m_pDlgMediaInfo->m_track);
+		GetFeildNewValue(CID_E_YEAR, m_pDlgMediaInfo->m_year);
+		GetFeildNewValue(CID_CB_GENRE, m_pDlgMediaInfo->m_genre);
+		GetFeildNewValue(CID_E_COMMENT, m_pDlgMediaInfo->m_comment);
+		m_pDlgMediaInfo->m_bBasicInfoModified = m_bModified;
+	}
+
+	int				CID_E_ARTIST, CID_E_ALBUM, CID_E_TITLE;
+	int				CID_E_TRACK, CID_E_YEAR, CID_CB_GENRE, CID_E_COMMENT;
+
+};
+
+class CDlgMediaInfoPageDetail : public CDlgMediaInfoPage  
+{
+public:
+	CDlgMediaInfoPageDetail() : CDlgMediaInfoPage(_T("CID_C_MI_DETAIL"), _T("CMD_MI_DETAIL"))
+	{
+	}
+
+	void OnCreate()
+	{
+		CDlgMediaInfoPage::OnCreate();
+
+		GET_ID_BY_NAME3(CID_E_COMPOSER, CID_E_COPYRIGHT, CID_E_ENCODED);
+		GET_ID_BY_NAME4(CID_E_URL, CID_E_ORIG_ARTIST, CID_E_PUBLISHER, CID_E_BPM);
+	}
+
+	void OnUpdateView(bool bRedraw = true)
+	{
+		m_bModified = false;
+
+		SetUIObjectText(CID_E_COMPOSER, m_pDlgMediaInfo->m_composer.c_str(), bRedraw);
+		SetUIObjectText(CID_E_COPYRIGHT, m_pDlgMediaInfo->m_copyRight.c_str(), bRedraw);
+		SetUIObjectText(CID_E_ENCODED, m_pDlgMediaInfo->m_encoded.c_str(), bRedraw);
+		SetUIObjectText(CID_E_URL, m_pDlgMediaInfo->m_url.c_str(), bRedraw);
+		SetUIObjectText(CID_E_ORIG_ARTIST, m_pDlgMediaInfo->m_origArtist.c_str(), bRedraw);
+		SetUIObjectText(CID_E_PUBLISHER, m_pDlgMediaInfo->m_publisher.c_str(), bRedraw);
+		SetUIObjectText(CID_E_BPM, m_pDlgMediaInfo->m_bpm.c_str(), bRedraw);
+	}
+
+	virtual void OnSave()
+	{
+		GetFeildNewValue(CID_E_COMPOSER, m_pDlgMediaInfo->m_composer);
+		GetFeildNewValue(CID_E_COPYRIGHT, m_pDlgMediaInfo->m_copyRight);
+		GetFeildNewValue(CID_E_ENCODED, m_pDlgMediaInfo->m_encoded);
+		GetFeildNewValue(CID_E_URL, m_pDlgMediaInfo->m_url);
+		GetFeildNewValue(CID_E_ORIG_ARTIST, m_pDlgMediaInfo->m_origArtist);
+		GetFeildNewValue(CID_E_PUBLISHER, m_pDlgMediaInfo->m_publisher);
+		GetFeildNewValue(CID_E_BPM, m_pDlgMediaInfo->m_bpm);
+		m_pDlgMediaInfo->m_bDetailInfoModified = m_bModified;
+	}
+
+protected:
+	int			CID_E_COMPOSER, CID_E_COPYRIGHT, CID_E_ENCODED;
+	int			CID_E_URL, CID_E_ORIG_ARTIST, CID_E_PUBLISHER, CID_E_BPM;
+
+};
+
+class CDlgMediaInfoPageLyrics : public CDlgMediaInfoPage  
+{
+public:
+	CDlgMediaInfoPageLyrics() : CDlgMediaInfoPage(_T("CID_C_MI_LYRICS"), _T("CMD_MI_LYRICS"))
+	{
+	}
+
+	void OnCreate()
+	{
+		CDlgMediaInfoPage::OnCreate();
+
+		GET_ID_BY_NAME(CID_E_LYRICS);
+	}
+
+	void OnUpdateView(bool bRedraw = true)
+	{
+		m_bModified = false;
+
+		if (!m_pDlgMediaInfo->m_lyricsInfo.m_unsynchLyrics.empty())
+		{
+			ID3v2UnsynchLyrics		*unsyncLyrics = m_pDlgMediaInfo->m_lyricsInfo.m_unsynchLyrics.front();
+
+			SetUIObjectText(CID_E_LYRICS, unsyncLyrics->m_strLyrics.c_str());
+		}
+	}
+
+	virtual void OnSave()
+	{
+		tstring		strLyrics;
+		strLyrics = GetUIObjectText(CID_E_LYRICS);
+		if (m_pDlgMediaInfo->m_lyricsInfo.m_unsynchLyrics.empty())
+		{
+			TrimStr(strLyrics);
+			if (strLyrics.empty())
+				return;
+
+			// add new unsync lyrics.
+			ID3v2UnsynchLyrics		*unsyncLyrics = m_pDlgMediaInfo->m_lyricsInfo.AddNewUnsyncLyrics();
+			unsyncLyrics->action = IFA_ADD;
+			unsyncLyrics->m_strLyrics = strLyrics.c_str();
+		}
+		else
+		{
+			// modify existing...
+			ID3v2UnsynchLyrics		*unsyncLyrics = m_pDlgMediaInfo->m_lyricsInfo.m_unsynchLyrics.front();
+			if (strLyrics.empty())
+				unsyncLyrics->action = IFA_DEL;
+			else
+			{
+				if (_tcscmp(strLyrics.c_str(), unsyncLyrics->m_strLyrics.c_str()) != 0)
+				{
+					unsyncLyrics->m_strLyrics = strLyrics.c_str();
+					unsyncLyrics->action = IFA_MODIFY;
+				}
+			}
+		}
+
+		if (m_pDlgMediaInfo->m_lyricsInfo.IsUnsyncLyricsModified())
+			m_bModified = true;
+		m_pDlgMediaInfo->m_bUnsyncLyricsModified = m_bModified;
+	}
+
+protected:
+	int					CID_E_LYRICS;
+
+};
+
+//////////////////////////////////////////////////////////////////////////
+
+class CDlgMediaInfoPagePictures : public CDlgMediaInfoPage  
+{
+public:
+	CDlgMediaInfoPagePictures() : CDlgMediaInfoPage(_T("CID_C_MI_PICTURES"), _T("CMD_MI_PICTURES"))
+	{
+	}
+
+	void OnCreate()
+	{
+		CDlgMediaInfoPage::OnCreate();
+
+		GET_ID_BY_NAME3(CID_ADD_PIC, CID_DEL_PIC, CID_SAVE_PIC_AS);
+
+		m_pPicList = (CSkinImageListCtrl*)GetUIObjectById(_T("CID_LIST_PICS"), CSkinImageListCtrl::ClassName());
+	}
+
+	bool OnCustomCommand(int nId)
+	{
+		if (nId == CID_ADD_PIC)
+		{
+			// add picture
+			CFileOpenDlg	dlg(TOLOCAL(_T("Browse picture file")),
+				_T(""), _T("All picture files (*.bmp; *.jpg; *.gif; *.png)\0*.bmp;*.jpg;*.gif;*.png\0\0"), 1);
+
+			if (dlg.DoModal(m_pSkin) != IDOK)
+				return true;
+
+			ID3v2Pictures::ITEM	*pic;
+
+			pic = m_pDlgMediaInfo->m_pictures.AppendNewPic();
+			pic->action = IFA_ADD;
+			pic->m_picType = ID3v2Pictures::PT_COVER_FRONT;
+			pic->SetImageFile(dlg.GetOpenFile());
+		}
+		else if (nId == CID_DEL_PIC)
+		{
+			// delete picture
+		}
+		else if (nId == CID_SAVE_PIC_AS)
+		{
+			int nPos = -1;
+
+			while (1)
+			{
+				nPos = m_pPicList->GetNextSelectedItem(nPos);
+				if (nPos == -1)
+					break;
+
+				ASSERT(nPos < m_pDlgMediaInfo->m_pictures.m_vItems.size());
+				ASSERT(m_pPicList->GetItemCount() == m_pDlgMediaInfo->m_pictures.m_vItems.size());
+
+				ID3v2Pictures::ITEM *pic = m_pDlgMediaInfo->m_pictures.m_vItems[nPos];
+				char	szExtA[4];
+				TCHAR	szFile[MAX_PATH];
+				tstringex str;
+				tstring	strExt;
+
+				pic->MimeToPicExt(szExtA);
+				CFileSaveDlg	dlg(TOLOCAL(_T("Save picture as...")),
+					_T(""), _T("All picture files (*.bmp; *.jpg; *.gif; *.png)\0*.bmp;*.jpg;*.gif;*.png\0\0"), 1);
+
+				if (dlg.DoModal(m_pSkin) != IDOK)
+					break;
+				_tcscpy_safe(szFile, CountOf(szFile), dlg.GetSaveFile());
+				strExt = _T(".");
+				ConvertStr(szExtA, -1, str);
+				strExt += str.c_str();
+				FileSetExt(szFile, CountOf(szFile), strExt.c_str());
+
+				SaveDataAsFile(szFile, pic->m_buffPic.data(), pic->m_buffPic.size());
+			}
+		}
+		else
+			return CSkinContainer::OnCustomCommand(nId);
+
+		return true;
+	}
+
+	void OnUpdateView(bool bRedraw = true)
+	{
+		m_bModified = false;
+
+	}
+
+	virtual void OnSave()
+	{
+		if (m_pDlgMediaInfo->m_pictures.IsModified())
+			m_bModified = true;
+		m_pDlgMediaInfo->m_bPicturesModified = m_bModified;
+	}
+
+protected:
+	int					CID_ADD_PIC, CID_DEL_PIC, CID_SAVE_PIC_AS;
+	CSkinImageListCtrl	*m_pPicList;
+
+};
+
+
+//////////////////////////////////////////////////////////////////////////
+
+CDlgMediaInfo::CDlgMediaInfo(IMedia *pMedia) : CMPSkinWnd()
+{
+	m_pOldPage = NULL;
+	m_pMedia = pMedia;
+
+	m_vInfoPages.push_back(new CDlgMediaInfoPageBasic());
+	m_vInfoPages.push_back(new CDlgMediaInfoPageDetail());
+	m_vInfoPages.push_back(new CDlgMediaInfoPageLyrics());
+	m_vInfoPages.push_back(new CDlgMediaInfoPagePictures());
+	for (int i = 0; i < (int)m_vInfoPages.size(); i++)
+		m_vInfoPages[i]->SetParent(this);
+
+}
+
+CDlgMediaInfo::~CDlgMediaInfo(void)
+{
+}
+
+void CDlgMediaInfo::OnSkinLoaded()
+{
+	CMPSkinWnd::OnSkinLoaded();
+
+	ReloadMediaInfo();
+
+	CSkinToolbar*pToolbar = (CSkinToolbar *)GetUIObjectById(m_pSkinFactory->GetIDByName(_T("CID_TB_MEDIAINFO")),
+		CSkinToolbar::ClassName());
+	if (pToolbar)
+	{
+		pToolbar->SetCheck(m_pSkinFactory->GetIDByName(_T("CMD_MI_BASIC")), true, false);
+	}
+}
+
+void CDlgMediaInfo::OnDestroy()
+{
+	if (m_pMedia)
+		m_pMedia.Release();
+
+	CMPSkinWnd::OnDestroy();
+}
+
+void ConverID3v1Tag(char szTag[], int nLen, LPCTSTR szValue, int nEncoding)
+{
+	char		str[256];
+
+	ConvertStr2(szValue, nLen, str, CountOf(str), nEncoding);
+	strcpy_safe(szTag, nLen, str);
+}
+
+void CDlgMediaInfo::OnOK()
+{
+	bool		bModified = false;
+	int			nRet;
+
+	for (int i = 0; i < (int)m_vInfoPages.size(); i++)
+	{
+		m_vInfoPages[i]->OnSave();
+		if (m_vInfoPages[i]->IsModified())
+			bModified = true;
+	}
+
+	if (!bModified)
+		return;
+
+	//
+	// update media info.
+	//
+
+	// update id3v1 tag
+	if (m_bBasicInfoModified && (m_nSupportedMediaTagType & MTT_ID3V1))
+	{
+		CID3v1		id3v1;
+		ID3V1		id3v1Info;
+		stringex	strGenreA;
+
+		memset(&id3v1Info, 0, sizeof(id3v1Info));
+
+		ConverID3v1Tag(id3v1Info.szTitle, CountOf(id3v1Info.szTitle), m_title.c_str(), m_nEncodingOfConvertAnsi);
+		ConverID3v1Tag(id3v1Info.szArtist, CountOf(id3v1Info.szArtist), m_artist.c_str(), m_nEncodingOfConvertAnsi);
+		ConverID3v1Tag(id3v1Info.szAlbum, CountOf(id3v1Info.szAlbum), m_album.c_str(), m_nEncodingOfConvertAnsi);
+		ConverID3v1Tag(id3v1Info.szComment, CountOf(id3v1Info.szComment), m_comment.c_str(), m_nEncodingOfConvertAnsi);
+		ConverID3v1Tag(id3v1Info.szYear, CountOf(id3v1Info.szYear), m_year.c_str(), m_nEncodingOfConvertAnsi);
+		id3v1Info.byTrack = _ttoi(m_track.c_str());
+		ConvertStr(m_genre.c_str(), m_genre.size(), strGenreA);
+		id3v1Info.byGenre = CID3v1::GetGenreIndex(strGenreA.c_str());
+		nRet = id3v1.SaveTag(m_strMediaFile.c_str(), &id3v1Info);
+		if (nRet != ERR_OK)
+		{
+			MessageOut(ERROR2STR_LOCAL(nRet));
+			return;
+		}
+	}
+
+	// update id3v2 tag
+	if (m_bDetailInfoModified || 
+		m_bUnsyncLyricsModified ||
+		m_bPicturesModified ||
+		(m_bBasicInfoModified && (m_nSupportedMediaTagType & MTT_ID3V2)))
+	{
+		CID3v2IF		id3v2(m_nEncodingOfConvertAnsi);
+
+		nRet = id3v2.Open(m_strMediaFile.c_str(), true, true);
+		if (nRet == ERR_OK)
+		{
+			// ID3v2 general tags
+			if (m_bBasicInfoModified || m_bDetailInfoModified)
+			{
+				nRet = id3v2.SetTags(m_artist.c_str(), m_title.c_str(), m_album.c_str(), m_comment.c_str(),
+					m_track.c_str(), m_year.c_str(), m_genre.c_str());
+				//nRet = id3v2.SetExtraTags(m_composer.c_str(), m_encoded.c_str(), m_url.c_str(), m_copyRight.c_str(),
+				//	m_origArtist.c_str(), m_publisher.c_str(), m_bpm.c_str());
+				if (nRet != ERR_OK)
+					goto ERR_MSG_OUT_RET;
+			}
+
+			// Id3v2 lyrics
+			if (m_bUnsyncLyricsModified)
+			{
+				nRet = id3v2.UpdateLyrics(m_lyricsInfo);
+				if (nRet != ERR_OK)
+					goto ERR_MSG_OUT_RET;
+			}
+
+			// id3v2 pictures
+			if (m_bPicturesModified)
+			{
+				nRet = id3v2.UpdatePictures(m_pictures);
+				if (nRet != ERR_OK)
+					goto ERR_MSG_OUT_RET;
+			}
+		}
+		nRet = id3v2.Save();
+		if (nRet != ERR_OK)
+			goto ERR_MSG_OUT_RET;
+	}
+
+	CMPSkinWnd::OnOK();
+	return;
+
+ERR_MSG_OUT_RET:
+	MessageOut(ERROR2STR_LOCAL(nRet));
+}
+
+void CDlgMediaInfo::Clear()
+{	
+	m_artist.resize(0);
+	m_title.resize(0);
+	m_album.resize(0);
+	m_comment.resize(0);
+	m_track.resize(0);
+	m_year.resize(0);
+	m_genre.resize(0);
+	m_composer.resize(0);
+	m_encoded.resize(0);
+	m_url.resize(0);
+	m_copyRight.resize(0);
+	m_origArtist.resize(0);
+	m_publisher.resize(0);
+	m_bpm.resize(0);
+
+	m_bBasicInfoModified = false;
+	m_bDetailInfoModified = false;
+	m_bUnsyncLyricsModified = false;
+	m_bSyncLyricsModified = false;
+	m_bPicturesModified = false;
+
+	m_lyricsInfo.m_synchLyrics.clear();
+	m_lyricsInfo.m_unsynchLyrics.clear();
+}
+
+#define IfNotEmptyThenSet(strSrc, strTarg)	if (!strSrc.empty())	strTarg = strSrc
+
+void CDlgMediaInfo::ReloadMediaInfo()
+{
+	//
+	// Get Media file name and info
+	//
+	CXStr		strMedia;
+	MLRESULT	nRet;
+
+	Clear();
+
+	if (!m_pMedia)
+		return;
+
+	m_nSupportedMediaTagType = 0;
+	nRet = m_pMedia->GetSourceUrl(&strMedia);
+	if (nRet != ERR_OK)
+		return;
+
+	m_strMediaFile = strMedia.c_str();
+	m_nSupportedMediaTagType = GetSupportedMTTByExt(m_strMediaFile.c_str());
+
+	// load id3v1 tag
+	if (m_nSupportedMediaTagType & MTT_ID3V1)
+	{
+		CID3v1		id3v1;
+		ID3V1		id3v1Info;
+		nRet = id3v1.GetTag(m_strMediaFile.c_str(), &id3v1Info);
+		if (nRet == ERR_OK)
+		{
+			ConvertStr(id3v1Info.szArtist, -1, m_artist, m_nEncodingOfConvertAnsi);
+			ConvertStr(id3v1Info.szTitle, -1, m_title, m_nEncodingOfConvertAnsi);
+			ConvertStr(id3v1Info.szAlbum, -1, m_album, m_nEncodingOfConvertAnsi);
+			ConvertStr(id3v1Info.szComment, -1, m_comment, m_nEncodingOfConvertAnsi);
+			ConvertStr(id3v1Info.szYear, -1, m_year, m_nEncodingOfConvertAnsi);
+
+			m_track = CStrPrintf(_T("%d"), id3v1Info.byTrack).c_str();
+			LPCSTR	szGenre;
+			szGenre = CID3v1::GetGenreDescription(id3v1Info.byGenre);
+			if (szGenre)
+				ConvertStr(szGenre, -1, m_genre, m_nEncodingOfConvertAnsi);			
+		}
+	}
+
+	// load id3v2 tag
+	if (m_nSupportedMediaTagType & MTT_ID3V2)
+	{
+		CID3v2IF		id3v2(m_nEncodingOfConvertAnsi);
+
+		nRet = id3v2.Open(m_strMediaFile.c_str(), false, false);
+		if (nRet == ERR_OK)
+		{
+			tstring  artist,  title,  album,  comment;
+			tstring  track,  year,  genre;
+
+			// ID3v2 general tags
+			nRet = id3v2.GetTags(artist, title, album, comment,
+				track, year, genre);//, m_composer,
+				//m_encoded, m_url, m_copyRight, m_origArtist, m_publisher, m_bpm);
+			if (nRet == ERR_OK)
+			{
+				IfNotEmptyThenSet(artist, m_artist);
+				IfNotEmptyThenSet(title, m_title);
+				IfNotEmptyThenSet(album, m_album);
+				IfNotEmptyThenSet(comment, m_comment);
+				IfNotEmptyThenSet(track, m_track);
+				IfNotEmptyThenSet(year, m_year);
+				IfNotEmptyThenSet(genre, m_genre);
+			}
+
+			// Id3v2 lyrics
+			nRet = id3v2.GetLyrics(m_lyricsInfo);
+
+			// id3v2 pictures
+			nRet = id3v2.GetPictures(m_pictures);
+		}
+	}
+}
+
+void ShowMediaInfoDialog(CSkinWnd *pParent, IMedia *pMedia)
+{
+	SkinWndStartupInfo skinWndStartupInfo(_SZ_SKINWND_CLASS_NAME, _SZ_SKINWND_CLASS_NAME, 
+		_T("MediaInfo.xml"), pParent);
+
+	CDlgMediaInfo *pWndMediaInfo = new CDlgMediaInfo(pMedia);
+	skinWndStartupInfo.pSkinWnd = pWndMediaInfo;
+
+	CSkinApp::GetInstance()->GetSkinFactory()->ActiveOrCreateSkinWnd(skinWndStartupInfo);
+}

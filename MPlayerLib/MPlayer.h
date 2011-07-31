@@ -1,13 +1,4 @@
-// MPlayer.h: interface for the CMPlayer class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_MPLAYER_H__ABA216A2_D18C_4216_BE25_D6C90B3F8BDA__INCLUDED_)
-#define AFX_MPLAYER_H__ABA216A2_D18C_4216_BE25_D6C90B3F8BDA__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "IMPlayer.h"
 #include "Playlist.h"
@@ -140,8 +131,6 @@ public:
 	virtual ~CMPlayer();
 	// IMPlayer
 
-	LPCXSTR MediaAttributeName(MediaAttribute mediaAttri);
-
 	virtual MLRESULT SetPluginManager(IMPluginManager *pPluginMgr);
 
 	virtual MLRESULT QueryInterface(MPInterfaceType interfaceType, LPVOID *lpInterface);
@@ -157,7 +146,7 @@ public:
 	virtual MLRESULT Next();
 	virtual MLRESULT Seek(uint32 dwPos);
 
-	virtual MLRESULT NewMedia(IMedia **ppMedia, LPCXSTR szString);
+	virtual MLRESULT NewMedia(IMedia **ppMedia, LPCXSTR szUrl);
 	virtual MLRESULT NewPlaylist(IPlaylist **ppPlaylist);
 
 	virtual MLRESULT GetMediaLibrary(IMediaLibrary **ppMediaLib);
@@ -330,5 +319,3 @@ protected:
 	virtual void AddVisData(IFBuffer *pBuf, int nBps, int nChannels, int nSampleRate);
 
 };
-
-#endif // !defined(AFX_MPLAYER_H__ABA216A2_D18C_4216_BE25_D6C90B3F8BDA__INCLUDED_)

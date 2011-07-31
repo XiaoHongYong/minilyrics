@@ -248,7 +248,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 		OnPlayerDisconnected();
 		break;
 	case M2M_MEDIA_CHANGED:
-		g_Player.OnMediaInfoChanged((MLMediaInfo *)pcds->lpData);
+		g_Player.OnMediaInfoChangedOfMiniLyrics((MLMediaInfo *)pcds->lpData);
 		break;
 	case M2M_PLAYER_STAT_CHANGED:
 		{

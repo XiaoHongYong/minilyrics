@@ -9,7 +9,6 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "../MPlayerLib/IMPlayer.h"
 #include "MPlayerAppBase.h"
 
 class CMPVisAdapter;
@@ -138,11 +137,6 @@ public:
 
 	virtual void RegisterHanlder(EventType eventType, IEventHandler *pHandler);
 	virtual void UnregisterHanlder(EventType eventType, IEventHandler *pHandler);
-
-protected:
-#ifndef _MPLAYER
-	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
-#endif
 
 protected:
 #ifdef _MPLAYER

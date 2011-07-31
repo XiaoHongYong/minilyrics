@@ -3,7 +3,6 @@
 
 #include "Helper.h"
 #include "MPSkinFactory.h"
-#include "../MPlayerLib/IMPlayer.h"
 #include "MPEventsDispatcher.h"
 #include "Player.h"
 #include "MLCmd.h"

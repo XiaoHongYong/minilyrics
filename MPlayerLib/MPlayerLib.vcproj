@@ -720,6 +720,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\Media.cpp"
+				>
+			</File>
+			<File
 				RelativePath="MediaLibrary.cpp"
 				>
 				<FileConfiguration
@@ -1142,6 +1146,10 @@
 			</File>
 			<File
 				RelativePath=".\MDWmpCore.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Media.h"
 				>
 			</File>
 			<File

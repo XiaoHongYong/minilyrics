@@ -1,13 +1,4 @@
-// MPHelper.h: interface for the CMPHelper class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_MPHELPER_H__C910ABDB_E887_461F_8A57_5F8CCCC6045C__INCLUDED_)
-#define AFX_MPHELPER_H__C910ABDB_E887_461F_8A57_5F8CCCC6045C__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "IMPlayer.h"
 
@@ -99,5 +90,3 @@ protected:
 	vector<LPVOID>			m_vData;
 
 };
-
-#endif // !defined(AFX_MPHELPER_H__C910ABDB_E887_461F_8A57_5F8CCCC6045C__INCLUDED_)

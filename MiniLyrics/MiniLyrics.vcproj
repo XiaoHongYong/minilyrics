@@ -242,6 +242,158 @@
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
+		<Configuration
+			Name="ZikiPlayer UNIT_TEST Unicode Debug|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				AdditionalIncludeDirectories="./;../SDK/cppunit/include;../MPShared;../MPShared/win32"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MPLAYER;_CRT_SECURE_NO_WARNINGS;_CPPUNIT_TEST"
+				MinimalRebuild="true"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="2"
+				WarningLevel="3"
+				DebugInformationFormat="4"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib Winmm.lib comctl32.lib version.lib psapi.lib"
+				OutputFile="../bin\$(ProjectName).exe"
+				LinkIncremental="2"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				EntryPointSymbol=""
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
+		<Configuration
+			Name="ZikiPlayer Unicode Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="1"
+			WholeProgramOptimization="1"
+			>
+			<Tool
+				Name="VCPreBuildEventTool"
+			/>
+			<Tool
+				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+			/>
+			<Tool
+				Name="VCMIDLTool"
+			/>
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
+				AdditionalIncludeDirectories="./;../SDK/cppunit/include;../MPShared;../MPShared/win32"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MPLAYER;_CRT_SECURE_NO_WARNINGS"
+				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
+				UsePrecompiledHeader="2"
+				WarningLevel="3"
+				DebugInformationFormat="3"
+			/>
+			<Tool
+				Name="VCManagedResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCResourceCompilerTool"
+			/>
+			<Tool
+				Name="VCPreLinkEventTool"
+			/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib Winmm.lib comctl32.lib version.lib psapi.lib"
+				OutputFile="../bin\$(ProjectName).exe"
+				LinkIncremental="1"
+				GenerateDebugInformation="true"
+				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				TargetMachine="1"
+			/>
+			<Tool
+				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
+			/>
+			<Tool
+				Name="VCXDCMakeTool"
+			/>
+			<Tool
+				Name="VCBscMakeTool"
+			/>
+			<Tool
+				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCPostBuildEventTool"
+			/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>
@@ -276,6 +428,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\DlgMediaInfo.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\DlgSearchLyrics.cpp"
 				>
 			</File>
@@ -285,6 +441,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\DlgStartMiniLyrics.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\DlgUpdateLibrary.cpp"
 				>
 			</File>
 			<File
@@ -380,6 +540,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\MediaDetectionService.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\MediaInfoTextCtrl.cpp"
 				>
 			</File>
@@ -416,6 +580,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\MPHelper.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\win32\MPHotkey.cpp"
 				>
 			</File>
@@ -428,7 +596,31 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\MPlaylistCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPlaylistSearchObj.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPluginManager.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPMediaLibCmdHandler.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPMediaTree.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\win32\MPMsg.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPPlaylistCmdHandler.cpp"
 				>
 			</File>
 			<File
@@ -460,7 +652,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\MPSkinVis.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\MPSkinWnd.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPVisAdapter.cpp"
 				>
 			</File>
 			<File
@@ -468,7 +668,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Player.cpp"
+				RelativePath="..\MPShared\Player.cpp"
 				>
 			</File>
 			<File
@@ -477,6 +677,10 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\win32\PlayerSmoothTimer.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\PlayListFile.cpp"
 				>
 			</File>
 			<File
@@ -490,6 +694,26 @@
 			<File
 				RelativePath="..\MPShared\PreferPageAdvanced.cpp"
 				>
+			</File>
+			<File
+				RelativePath="..\MPShared\win32\PreferPageAssociation.cpp"
+				>
+				<FileConfiguration
+					Name="UNIT_TEST Unicode Debug|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Unicode Release|Win32"
+					ExcludedFromBuild="true"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+					/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\MPShared\PreferPageLyrics.cpp"
@@ -533,6 +757,10 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\SkinFilterCtrl.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\SkinImageListCtrl.cpp"
 				>
 			</File>
 			<File
@@ -584,6 +812,22 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Unicode Release|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ZikiPlayer UNIT_TEST Unicode Debug|Win32"
+					>
+					<Tool
+						Name="VCCLCompilerTool"
+						UsePrecompiledHeader="1"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="ZikiPlayer Unicode Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -662,6 +906,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\DlgMediaInfo.h"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\DlgSearchLyrics.h"
 				>
 			</File>
@@ -671,6 +919,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\DlgStartMiniLyrics.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\DlgUpdateLibrary.h"
 				>
 			</File>
 			<File
@@ -770,6 +1022,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\MediaDetectionService.h"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\MediaInfoTextCtrl.h"
 				>
 			</File>
@@ -802,6 +1058,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\MPHelper.h"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\win32\MPHotkey.h"
 				>
 			</File>
@@ -814,7 +1074,31 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\MPlaylistCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPlaylistSearchObj.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPluginManager.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPMediaLibCmdHandler.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPMediaTree.h"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\win32\MPMsg.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPPlaylistCmdHandler.h"
 				>
 			</File>
 			<File
@@ -850,7 +1134,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\MPSkinVis.h"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\MPSkinWnd.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MPVisAdapter.h"
 				>
 			</File>
 			<File
@@ -862,7 +1154,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\Player.h"
+				RelativePath="..\MPShared\Player.h"
 				>
 			</File>
 			<File
@@ -871,6 +1163,10 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\win32\PlayerSmoothTimer.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\PlayListFile.h"
 				>
 			</File>
 			<File
@@ -931,6 +1227,10 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\SkinFilterCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\SkinImageListCtrl.h"
 				>
 			</File>
 			<File
@@ -1000,15 +1300,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\applicat.ico"
+				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
@@ -1016,11 +1312,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\res\bin00001.bin"
+				RelativePath="..\MPShared\Res\applicat.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragafte.ico"
+				RelativePath="..\MPShared\res\bin00001.bin"
 				>
 			</File>
 			<File
@@ -1028,7 +1324,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragbefo.ico"
+				RelativePath="..\MPShared\Res\dragafte.ico"
 				>
 			</File>
 			<File
@@ -1036,11 +1332,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\Exe.manifest"
+				RelativePath="..\MPShared\Res\dragbefo.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\fileType.bmp"
+				RelativePath="..\MPShared\win32\Exe.manifest"
 				>
 			</File>
 			<File
@@ -1048,7 +1344,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\hand.cur"
+				RelativePath="..\ML6\Res\fileType.bmp"
 				>
 			</File>
 			<File
@@ -1056,7 +1352,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\ico00001.ico"
+				RelativePath="..\ML6\Res\hand.cur"
 				>
 			</File>
 			<File
@@ -1064,11 +1360,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\icon-tga.ico"
+				RelativePath="..\ML6\Res\ico00001.ico"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\icon-tga.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\icon-tga.ico"
 				>
 			</File>
 			<File
@@ -1084,15 +1384,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\next.ICO"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\next.ICO"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\open.ICO"
+				RelativePath="..\MPShared\Res\next.ICO"
 				>
 			</File>
 			<File
@@ -1100,11 +1396,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\play.ICO"
+				RelativePath="..\ML6\Res\open.ICO"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\play.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\play.ICO"
 				>
 			</File>
 			<File
@@ -1120,15 +1420,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\save.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\save.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\selcolor.cur"
+				RelativePath="..\MPShared\Res\save.ico"
 				>
 			</File>
 			<File
@@ -1136,11 +1432,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\stop.ICO"
+				RelativePath="..\MPShared\Res\selcolor.cur"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\stop.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\stop.ICO"
 				>
 			</File>
 		</Filter>

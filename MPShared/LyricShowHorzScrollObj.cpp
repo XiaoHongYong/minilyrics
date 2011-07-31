@@ -20,12 +20,12 @@ CLyricShowHorzScrollObj::CLyricShowHorzScrollObj()
 	m_nDarkenTopArea = float(0.65);
 	m_nDarkenBottomArea = float(0.65);
 
-	g_Player.SetTimeUpdateFreq(2);
+	g_Player.SetLyrDrawUpdateFast(true);
 }
 
 CLyricShowHorzScrollObj::~CLyricShowHorzScrollObj()
 {
-	g_Player.SetTimeUpdateFreq(1);
+	g_Player.SetLyrDrawUpdateFast(false);
 }
 
 // OUTPUT:

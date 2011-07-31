@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "MPlayerAppBase.h"
-#include "Player.h"
 #include "MPSkinInfoTextCtrl.h"
 
 //////////////////////////////////////////////////////////////////////
