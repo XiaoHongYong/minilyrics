@@ -138,6 +138,9 @@ void AnalysisSongTitle(TCHAR szTitle[]/* out */, BOOL &bTitleIgnoreNumb/* out */
 //		pvLyrics	-	所有找到的歌词列表
 void SearchMatchLyricsInDir(LPCTSTR szDir, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb, V_LRCSEARCHRESULT *pvLyrics, BOOL bIncludeSub)
 {
+	if (IsEmptyString(szDir))
+		return;
+
 	TCHAR				szFileName[MAX_FILE_NAME];
 	TCHAR				szFindDir[MAX_FILE_NAME];
 	CMLFileFind			finder;

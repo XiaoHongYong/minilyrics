@@ -23,7 +23,6 @@ public:
 	//
 
 	virtual LPCXSTR GetDescription();
-	// get supported file's extentions. exm: mp3;mp3 files;mp2;mp2 files;
 	virtual LPCXSTR GetFileExtentions();
 	virtual MLRESULT GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia);
 
@@ -58,7 +57,7 @@ public:
 	virtual MLRESULT Init(CMPlayer *pPlayer);
 	virtual MLRESULT DoDecode(IMedia *pMedia);
 
-	void NotifyEod(IMediaDecode *pDecoder, MLRESULT nError);
+	virtual void NotifyEod(IMediaDecode *pDecoder, MLRESULT nError);
 
 protected:
 	CMPAutoPtr<IMedia>				m_pMedia;

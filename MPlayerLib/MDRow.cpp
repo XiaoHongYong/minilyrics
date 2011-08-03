@@ -48,10 +48,9 @@ LPCXSTR CMDRow::GetDescription()
 	return _T("Raw File decoder");
 }
 
-// get supported file's extentions.
 LPCXSTR CMDRow::GetFileExtentions()
 {
-	return _T(".raw\0raw files\0");
+	return _T(".raw|raw files");
 }
 
 MLRESULT CMDRow::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)

@@ -455,70 +455,61 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_VOL_INC:
 		{
 			long		vol;
-			if (g_Player.GetVolume(vol))
+			vol = g_Player.GetVolume();
+			if (vol < MP_VOLUME_MAX)
 			{
-				if (vol < MP_VOLUME_MAX)
-				{
-					vol += 5;
-					vol -= vol % 5;
-					if (vol > MP_VOLUME_MAX)
-						vol = MP_VOLUME_MAX;
-					g_Player.SetVolume(vol);
-					CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
-				}
+				vol += 5;
+				vol -= vol % 5;
+				if (vol > MP_VOLUME_MAX)
+					vol = MP_VOLUME_MAX;
+				g_Player.SetVolume(vol);
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
 			}
 		}
 		break;
 	case CMD_VOL_DEC:
 		{
 			long		vol;
-			if (g_Player.GetVolume(vol))
+			vol = g_Player.GetVolume();
+			if (vol > 0)
 			{
-				if (vol > 0)
-				{
-					vol -= 5;
-					vol -= vol % 5;
-					if (vol < 0)
-						vol = 0;
-					g_Player.SetVolume(vol);
-					CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
-				}
+				vol -= 5;
+				vol -= vol % 5;
+				if (vol < 0)
+					vol = 0;
+				g_Player.SetVolume(vol);
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
 			}
 		}
 		break;
 	case CMD_MUTE:
 		{
 			bool		bMute = !g_Player.IsMute();
-			if (g_Player.SetMute(bMute))
-			{
-				CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bMute ? _T("Mute On") : _T("Mute Off")));
-			}
+			g_Player.SetMute(bMute);
+			CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bMute ? _T("Mute On") : _T("Mute Off")));
 		}
 		break;
 	case CMD_SHUFFLE:
 		{
 			bool		bShuffle = !g_Player.IsShuffle();
-			if (g_Player.SetShuffle(bShuffle))
-			{
-				CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bShuffle ? _T("Shuffle On") : _T("Shuffle Off")));
-			}
+			g_Player.SetShuffle(bShuffle);
+			CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bShuffle ? _T("Shuffle On") : _T("Shuffle Off")));
 		}
 		break;
 	case CMD_LOOP:
 		{
-			if (g_Player.SetToNextLoopMode())
-			{
-				tstring		str;
-				MP_LOOP_MODE loopMode = g_Player.GetLoop();
-				if (loopMode == MP_LOOP_OFF)
-					str = _T("Repeat Off");
-				else if (loopMode == MP_LOOP_TRACK)
-					str =  _T("Repeat Track");
-				else
-					str =  _T("Repeat All");
+			g_Player.SetToNextLoopMode();
 
-				CMPlayerAppBase::GetInstance()->DispatchInfoText(str.c_str());
-			}
+			tstring		str;
+			MP_LOOP_MODE loopMode = g_Player.GetLoop();
+			if (loopMode == MP_LOOP_OFF)
+				str = _T("Repeat Off");
+			else if (loopMode == MP_LOOP_TRACK)
+				str =  _T("Repeat Track");
+			else
+				str =  _T("Repeat All");
+
+			CMPlayerAppBase::GetInstance()->DispatchInfoText(str.c_str());
 		}
 		break;
 	case CMD_RATE:

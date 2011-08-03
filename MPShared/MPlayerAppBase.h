@@ -48,7 +48,9 @@
 #define SZ_PROFILE_NAME		_T("ZikiPlayer.ini")
 #define SZ_MUTEX_RUNNING	_T("ZikiPlayerRunning")
 #define SZ_MAINWND_CLASSNAME	_T("ZikiPlayer")
+#ifndef SZ_MINILYRICS_SERVICE_CLASS_NAME
 #define SZ_MINILYRICS_SERVICE_CLASS_NAME	SZ_MAINWND_CLASSNAME
+#endif
 #else
 #define SZ_PROFILE_NAME		_T("MiniLyric.ini")
 #define SZ_MUTEX_RUNNING	_T("MiniLyricsRunning")

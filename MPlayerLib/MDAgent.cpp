@@ -35,7 +35,6 @@ LPCXSTR CMDAgent::GetDescription()
 		return _T("MDAgen: no decoder was specified.");
 }
 
-// get supported file's extentions. exm: mp3;mp3 files;mp2;mp2 files;
 LPCXSTR CMDAgent::GetFileExtentions()
 {
 	if (m_pMediaDecode.p)
@@ -46,10 +45,18 @@ LPCXSTR CMDAgent::GetFileExtentions()
 
 MLRESULT CMDAgent::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)
 {
-	if (m_pMediaDecode.p)
-		return m_pMediaDecode->GetMediaInfo(pPlayer, pInput, pMedia);
-	else
-		return ERR_NO_DEVICE;
+	MLRESULT				nRet;
+
+	CMPAutoPtr<IMediaDecode>	pDecode;
+	nRet = m_pPlayer->m_pluginMgrAgent.NewDecoder(pInput, &pDecode);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	nRet = pDecode->GetMediaInfo(m_pPlayer, pInput, pMedia);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	return ERR_OK;
 }
 
 

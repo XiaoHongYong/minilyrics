@@ -1,8 +1,9 @@
 #pragma once
 
 #include "../PluginWMP/wmp.h"
+#include "MDAgent.h"
 
-class CMDWmpCore: public IMediaDecode
+class CMDWmpCore: public CMDAgent
 {
 	OBJ_REFERENCE_DECL
 public:
@@ -15,7 +16,6 @@ public:
 
 	virtual LPCXSTR GetDescription();
 
-	// get supported file's extentions. exm: mp3;mp3 files;mp2;mp2 files;
 	virtual LPCXSTR GetFileExtentions();
 	virtual MLRESULT GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia);
 
@@ -45,6 +45,11 @@ public:
 
 protected:
 	bool Init();
+
+	virtual MLRESULT Init(CMPlayer *pPlayer) { return CMDAgent::Init(pPlayer); }
+	virtual MLRESULT DoDecode(IMedia *pMedia);
+
+	virtual void NotifyEod(IMediaDecode *pDecoder, MLRESULT nError) { }
 
 protected:
 	friend class CWmpEventsSink;

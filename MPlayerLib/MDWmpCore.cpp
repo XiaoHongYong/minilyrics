@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "../MPlayerLib/IMPlayer.h"
 #include "MDWmpCore.h"
+#include "MPTime.h"
+#include "MPlayer.h"
 
 class CWmpEventsSink : 
 	public IWMPEvents
@@ -176,10 +178,9 @@ LPCXSTR CMDWmpCore::GetDescription()
 	return _T("Windows Media Player Core");
 }
 
-// get supported file's extentions. exm: mp3;mp3 files;mp2;mp2 files;
 LPCXSTR CMDWmpCore::GetFileExtentions()
 {
-	return _T(".mp3\0mp3 files\0.wma\0wma files\0.mp3\0mp3 files\0");
+	return _T(".mp3|MP3 files|.wma|WMA files|.mp2|MP2 files");
 }
 
 MLRESULT CMDWmpCore::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)
@@ -325,4 +326,60 @@ bool CMDWmpCore::Init()
 		return false;
 
 	return true;
+}
+
+MLRESULT CMDWmpCore::DoDecode(IMedia *pMedia)
+{
+	MLRESULT					nRet;
+	CXStr						strMedia;
+	CMPAutoPtr<IMediaInput>		pInput;
+	CMPTime		timePlayed;
+
+	nRet = pMedia->GetSourceUrl(&strMedia);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	nRet = m_pPlayer->m_pluginMgrAgent.NewInput(strMedia.c_str(), &pInput);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	GetMediaInfo(m_pPlayer, pInput, pMedia);
+
+	nRet = Play(m_pPlayer, pInput);
+	if (nRet != ERR_OK)
+	{
+		if (nRet == ERR_MI_NOT_FOUND && pMedia->GetID() != MEDIA_ID_INVALID)
+		{
+			// the source can't be opened, set it as deleted.
+			m_pPlayer->m_pMediaLib->SetDeleted(&pMedia);
+		}
+		goto R_FAILED;
+	}
+
+	if (m_pPlayer->m_nVolume != -1)
+	{
+		if (m_pPlayer->m_bMute)
+			SetVolume(0, 0);
+		else
+			SetVolume(m_pPlayer->m_nVolume, m_pPlayer->m_nBalance);
+	}
+
+	// set the play time
+	timePlayed.GetCurrentTime();
+	pMedia->SetAttribute(MA_TIME_PLAYED, timePlayed.m_time);
+
+	if (pMedia->GetID() == MEDIA_ID_INVALID && m_pPlayer->IsAutoAddToMediaLib())
+		m_pPlayer->m_pMediaLib->Add(pMedia);
+
+	// If media info in media library isn't up to date,
+	// update to media library.
+	if (pMedia->GetID() != MEDIA_ID_INVALID && !pMedia->IsInfoUpdatedToMediaLib())
+	{
+		m_pPlayer->m_pMediaLib->UpdateMediaInfo(pMedia);
+	}
+
+	return ERR_OK;
+
+R_FAILED:
+	return nRet;
 }

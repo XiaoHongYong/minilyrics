@@ -23,18 +23,6 @@ void calc_freq(unsigned char *dest, unsigned char *src)
 		dest[i] = (unsigned char)(((int)sqrt(tmp_out[i + 1])) >> 4);
 }
 
-LPCTSTR MultiStrNext(LPCTSTR szText)
-{
-	while (*szText)
-		szText++;
-	szText++;
-
-	if (*szText == '\0')
-		return NULL;
-
-	return szText;
-}
-
 //////////////////////////////////////////////////////////////////////////
 // class CXStr
 

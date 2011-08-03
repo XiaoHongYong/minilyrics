@@ -4,8 +4,6 @@
 
 void calc_freq(unsigned char *dest, unsigned char *src);
 
-LPCTSTR MultiStrNext(LPCTSTR szText);
-
 class CXStr : public IXStr
 {
 OBJ_REFERENCE_DECL

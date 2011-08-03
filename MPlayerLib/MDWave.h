@@ -23,7 +23,7 @@ public:
 	//
 
 	virtual LPCXSTR GetDescription();
-	virtual LPCXSTR GetFileExtentions();	// get supported file's extentions.
+	virtual LPCXSTR GetFileExtentions();
 	virtual MLRESULT GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia);
 
 	//

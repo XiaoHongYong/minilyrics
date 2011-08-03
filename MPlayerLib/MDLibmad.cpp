@@ -255,10 +255,9 @@ LPCXSTR CMDLibmad::GetDescription()
 	return _T("Mp3 file decoder");
 }
 
-// get supported file's extentions.
 LPCXSTR CMDLibmad::GetFileExtentions()
 {
-	return _T(".mp3\0mp3 files\0");
+	return _T(".mp3|mp3 files");
 }
 
 MLRESULT CMDLibmad::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)

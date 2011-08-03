@@ -1,13 +1,4 @@
-// PreferPageAssociation.h: interface for the CPreferPageAssociation class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_PREFERPAGEASSOCIATION_H__E28F2CD8_AABF_44E9_8983_4522DE2A5FEE__INCLUDED_)
-#define AFX_PREFERPAGEASSOCIATION_H__E28F2CD8_AABF_44E9_8983_4522DE2A5FEE__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "PreferencePageBase.h"
 
@@ -44,5 +35,3 @@ public:
 
 };
 #endif
-
-#endif // !defined(AFX_PREFERPAGEASSOCIATION_H__E28F2CD8_AABF_44E9_8983_4522DE2A5FEE__INCLUDED_)

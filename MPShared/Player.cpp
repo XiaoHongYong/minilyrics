@@ -243,7 +243,9 @@ void CPlayer::OnQuit()
 // For MiniLyrics
 //
 
-HWND GetMLSericeWindow();
+#ifdef _MPLAYER
+HWND GetMLSericeWindow() { return NULL; }
+#endif
 
 void CPlayer::OnInitOfMiniLyrics()
 {
@@ -946,14 +948,7 @@ void CPlayer::GetSupportedExtentions(vector<tstring> &vExtentions) const
 	for (it = listDecoder.begin(); it != itEnd; ++it)
 	{
 		const DecoderInfo		&item = *it;
-		LPCTSTR		szNext;
-		szNext = item.strExt.c_str();
-		while (szNext)
-		{
-			if (!IsEmptyString(szNext))
-				vExtentions.push_back(szNext);
-			szNext = MultiStrNext(szNext);
-		}
+		vExtentions.insert(vExtentions.end(), item.vExt.begin(), item.vExt.end());
 	}
 
 	vExtentions.push_back(_T(".m3u"));
@@ -971,20 +966,17 @@ bool CPlayer::IsExtAudioFile(LPCTSTR szExt)
 	if (!m_spPlayer)
 		return false;
 
+	tstring strExtLowerCase = ToLower(szExt);
+
 	const ListDecodersInfo		&listDecoder = m_pPluginMgr->GetDecodersInfo();
 	ListDecodersInfo::const_iterator	it;
 
 	for (it = listDecoder.begin(); it != listDecoder.end(); ++it)
 	{
 		const DecoderInfo		&item = *it;
-		LPCTSTR		szNext;
-		szNext = item.strExt.c_str();
-		while (szNext)
-		{
-			if (_tcsicmp(szNext, szExt) == 0)
-				return true;
-			szNext = MultiStrNext(szNext);
-		}
+
+		if (find(item.vExt.begin(), item.vExt.end(), strExtLowerCase) != item.vExt.end())
+			return true;
 	}
 
 	return false;

@@ -246,6 +246,7 @@ public:
 
 protected:
 	friend class CMDAgent;
+	friend class CMDWmpCore;
 
 	bool				m_bAutoPlayNext;
 	PLAYER_STATE		m_state;

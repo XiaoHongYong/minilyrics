@@ -4,8 +4,7 @@
 
 struct DecoderInfo
 {
-	tstring		strExt;
-	tstring		strExtDesc;
+	V_Str		vExt, vExtDesc;		// Supported file extension and descriptions.
 	tstring		strDesc;
 	tstring		strFileName;
 	int			nIFIndex;			// index in ZikiPlayerQueryPluginIF

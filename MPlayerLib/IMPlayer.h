@@ -650,7 +650,6 @@ interface IMediaDecodeSimple
 	//
 
 	virtual LPCXSTR GetDescription() = 0;
-	// get supported file's extentions. exm: mp3;mp3 files;mp2;mp2 files;
 	virtual LPCXSTR GetFileExtentions() = 0;
 	virtual MLRESULT GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia) = 0;
 
@@ -684,7 +683,7 @@ interface IMediaDecode// : IUnknown
 	//
 
 	virtual LPCXSTR GetDescription() = 0;
-	// get supported file's extentions. exm: mp3;mp3 files;mp2;mp2 files;
+	// Get supported file extensions. Example: .mp3|MP3 files|.mp2|MP2 files
 	virtual LPCXSTR GetFileExtentions() = 0;
 	virtual MLRESULT GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia) = 0;
 

@@ -41,7 +41,6 @@
 #include "MPlaylistCtrl.h"
 #include "MPSkinMediaNumInfoCtrl.h"
 #include "MPlaylistSearchObj.h"
-#include "../MPlayer/SkinVideo.h"
 #ifdef _WIN32_WCE
 #include "win32/wce/WCEMainCmdBar.h"
 #endif
@@ -107,7 +106,6 @@ int CMPSkinFactory::Init()
 	AddUIObjNewer(CSkinListCtrlEx);
 	AddUIObjNewer(CMPSkinMediaNumInfoCtrl);
 	AddUIObjNewer(CMPlaylistSearchObj);
-	AddUIObjNewer(CSkinVideo);
 #endif
 	AddUIObjNewer(CMediaInfoTextCtrl);
 	AddUIObjNewer(CMediaAlbumArtCtrl);

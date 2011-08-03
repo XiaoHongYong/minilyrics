@@ -485,7 +485,7 @@ CMPlayer::CMPlayer()
 
 	m_state = PS_STOPED;
 
-	m_pMDAgent = new CMDAgent;
+	m_pMDAgent = new CMDWmpCore;//CMDAgent;
 	m_pMDAgent->Init(this);
 
 	m_pMOAgent = new CMOAgent;
@@ -1197,28 +1197,19 @@ MLRESULT CMPlayer::MakeOutputReadyForDecode()
 MLRESULT CMPlayer::LoadMediaTagInfo(IMedia *pMedia, bool bForceReload)
 {
 	MLRESULT				nRet;
+	CXStr		url;
 
-// 	if (pMedia->GetAttributeCount() > 0 && !bForceReload)
-// 		return ERR_OK;
-
-	CXStr		str;
-
-	nRet = pMedia->GetSourceUrl(&str);
+	nRet = pMedia->GetSourceUrl(&url);
 	if (nRet != ERR_OK)
 		return ERR_OK;
 
-	CMPAutoPtr<IMediaDecode>	pDecode;
 	CMPAutoPtr<IMediaInput>		pInput;
 
-	nRet = m_pluginMgrAgent.NewInput(str.c_str(), &pInput);
+	nRet = m_pluginMgrAgent.NewInput(url.c_str(), &pInput);
 	if (nRet != ERR_OK)
 		return nRet;
 
-	nRet = m_pluginMgrAgent.NewDecoder(pInput, &pDecode);
-	if (nRet != ERR_OK)
-		return nRet;
-
-	nRet = pDecode->GetMediaInfo(this, pInput, pMedia);
+	nRet = m_pMDAgent->GetMediaInfo(this, pInput, pMedia);
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -1231,7 +1222,7 @@ MLRESULT CMPlayer::LoadMediaTagInfo(IMedia *pMedia, bool bForceReload)
 	if (artist.size() == 0 && title.size() == 0)
 	{
 		tstring		strArtist, strTitle;
-		if (AnalysisLyricsFileNameEx(strArtist, strTitle, FileGetName(str.c_str())))
+		if (AnalysisLyricsFileNameEx(strArtist, strTitle, FileGetName(url.c_str())))
 		{
 			pMedia->SetAttribute(MA_ARTIST, strArtist.c_str());
 			pMedia->SetAttribute(MA_TITLE, strTitle.c_str());

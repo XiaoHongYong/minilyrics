@@ -194,29 +194,26 @@ MLRESULT CMPluginManager::NewDecoder(IMediaInput *pInput, IMediaDecode **ppDecod
 	if (IsEmptyString(szExt))
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
+	tstring strExtLower = ToLower(szExt);
+
 	for (it = m_listDecoders.begin(); it != m_listDecoders.end(); ++it)
 	{
 		DecoderInfo		&info = *it;
-		LPCTSTR			szNext;
 
-		szNext = info.strExt.c_str();
-		while (szNext)
+		if (find(info.vExt.begin(), info.vExt.end(), strExtLower) != info.vExt.end())
 		{
-			if (_tcsicmp(szNext, szExt) == 0)
-			{
-				CZikiPlayerPlugin	plugin;
-				MPInterfaceType		mpit;
+			CZikiPlayerPlugin	plugin;
+			MPInterfaceType		mpit;
 
-				if (!plugin.Open(info.strFileName.c_str()))
-					break;	// Try next plugin
+			if (!plugin.Open(info.strFileName.c_str()))
+				break;	// Try next plugin
 
-				if (plugin.ZikiPlayerQueryPluginIF(info.nIFIndex, &mpit, NULL, (LPVOID *)ppDecoder) != ERR_OK)
-					break;	// Try next plugin
-				plugin.Detach();
+			if (plugin.ZikiPlayerQueryPluginIF(info.nIFIndex, &mpit, NULL, (LPVOID *)ppDecoder) != ERR_OK)
+				break;	// Try next plugin
+			plugin.Detach();
+			ASSERT(mpit == MPIT_DECODE);
 
-				return ERR_OK;
-			}
-			szNext = MultiStrNext(szNext);
+			return ERR_OK;
 		}
 	}
 
@@ -242,34 +239,13 @@ MLRESULT CMPluginManager::GetActiveVis(IVector *pvVis)
 	return ERR_NOT_SUPPORT;
 }
 
-
 MLRESULT CMPluginManager::RegisterDecoder(IMediaDecode *pDecoder, LPCTSTR szModuleFileName, int nIFIndex)
 {
 	DecoderInfo		decoderInfo;
-	vector<tstring>	vStrExt;
-	LPCTSTR			szExt, szExtDesc;
 
-	szExt = pDecoder->GetFileExtentions();
-	while (szExt)
-	{
-		szExtDesc = MultiStrNext(szExt);
-		if (szExtDesc)
-		{
-			decoderInfo.strExt.append(szExt);
-			decoderInfo.strExt.insert(decoderInfo.strExt.end(), '\0');
-
-			decoderInfo.strExtDesc.append(szExtDesc);
-			decoderInfo.strExtDesc.insert(decoderInfo.strExtDesc.end(), '\0');
-
-			szExt = MultiStrNext(szExtDesc);
-		}
-		else
-			break;
-	}
 	decoderInfo.strDesc = pDecoder->GetDescription();
 	decoderInfo.strFileName = szModuleFileName;
 	decoderInfo.nIFIndex = nIFIndex;
-
 
 	// Is this decoder registered?
 	for (ListDecodersInfo::iterator it = m_listDecoders.begin(); it != m_listDecoders.end(); ++it)
@@ -283,6 +259,19 @@ MLRESULT CMPluginManager::RegisterDecoder(IMediaDecode *pDecoder, LPCTSTR szModu
 			return true;
 		}
 	}
+
+	vector<tstring>	vStrExt;
+	StrSplit(pDecoder->GetFileExtentions(), '|', vStrExt);
+	for (int i = 0; i < vStrExt.size() - 1; i+= 2)
+	{
+		if (vStrExt[i].empty())
+			continue;
+
+		// Ext is in lower case, for later compare.
+		decoderInfo.vExt.push_back(ToLower(vStrExt[i].c_str()));
+		decoderInfo.vExtDesc.push_back(vStrExt[i + 1]);
+	}
+
 	m_listDecoders.push_back(decoderInfo);
 
 	return true;

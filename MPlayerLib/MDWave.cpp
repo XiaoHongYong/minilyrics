@@ -50,10 +50,9 @@ LPCXSTR CMDWave::GetDescription()
 	return _T("Wave File decoder");
 }
 
-// get supported file's extentions.
 LPCXSTR CMDWave::GetFileExtentions()
 {
-	return _T(".wav\0wave files\0");
+	return _T(".wav|wave files");
 }
 
 MLRESULT CMDWave::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)

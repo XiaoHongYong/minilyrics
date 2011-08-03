@@ -394,10 +394,12 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 
 	if (!g_playerMgr.ConnectToPlayer())
 		return false;
-#endif
 
 	// Init player.
+	g_Player.OnInit(true);
+#else
 	g_Player.OnInit(false);
+#endif
 
 	if (!InitLoadSkin())
 		return false;
@@ -453,6 +455,9 @@ bool CMPlayerAppBase::InitLyricsTool()
 
 bool CMPlayerAppBase::InitiPodLyricsDownloader()
 {
+	// Init player.
+	g_Player.OnInit(false);
+
 	m_pSkinFactory->SetSkinFileName(_T("iPodLyricsDownloader.xml"));
 	int nRet = LoadDefaultSkin(_T("Default"), true);
 	if (nRet != ERR_OK)
@@ -473,6 +478,14 @@ bool CMPlayerAppBase::InitiPodLyricsDownloader()
 #ifdef _WIN32
 	//ShowAsAppWindow(GetRunningLyricsToolWnd()->GetHandle());
 #endif
+
+	OnMediaChanged();
+
+	m_hotKey.Init();
+
+	m_hotKey.SetEventWnd(GetMainWnd());
+
+	g_lyrOutPlguinMgr.Init();
 
 	return true;
 }

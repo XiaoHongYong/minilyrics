@@ -116,6 +116,8 @@ int CDownloadMgr::Init()
 
 	// 缺省下载路径
 	m_strDefSavePath = CMLProfile::GetDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""));
+	if (IsEmptyString(m_strDefSavePath))
+		CreateDefaultLyricsDir(m_strDefSavePath);
 
 	// 自动下载
 	m_bAutoDownload = g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("EnableAuoDownload"), true);
