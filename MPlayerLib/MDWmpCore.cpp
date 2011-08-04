@@ -185,6 +185,36 @@ LPCXSTR CMDWmpCore::GetFileExtentions()
 
 MLRESULT CMDWmpCore::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)
 {
+	CMPAutoPtr<IWMPMedia>	media;
+	HRESULT hr = m_collection->add((BSTR)pInput->GetSource(), &media);
+	if (FAILED(hr))
+		return HResultToMLResult(hr);
+
+	double duration;
+	hr = media->get_duration(&duration);
+	if (SUCCEEDED(hr))
+		pMedia->SetAttribute(MA_DURATION, (int)(duration * 1000));
+
+	bstr_s	artist, album, title;
+
+	BSTR	pbstrItemName = SysAllocString(L"Artist");
+	hr = media->getItemInfo(pbstrItemName, &artist);
+	SysFreeString(pbstrItemName);
+	if (SUCCEEDED(hr))
+		pMedia->SetAttribute(MA_ARTIST, artist.c_str());
+
+	pbstrItemName = SysAllocString(L"Album");
+	hr = media->getItemInfo(pbstrItemName, &album);
+	SysFreeString(pbstrItemName);
+	if (SUCCEEDED(hr))
+		pMedia->SetAttribute(MA_ALBUM, album.c_str());
+
+	pbstrItemName = SysAllocString(L"Title");
+	hr = media->getItemInfo(pbstrItemName, &title);
+	SysFreeString(pbstrItemName);
+	if (SUCCEEDED(hr))
+		pMedia->SetAttribute(MA_TITLE, title.c_str());
+
 	return ERR_OK;
 }
 

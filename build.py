@@ -149,7 +149,7 @@ if TargetML:
 # Build ZikiPlayer
 if TargetZP:
 	ZPSolutions = [
-		[ " ZikiPlayer.sln", "\"Unicode Release|Win32\" /project MPlayer" ],
+		[ " ZikiPlayer.sln", "\"ZikiPlayer Unicode Release|Win32\" /project MiniLyrics" ],
 		[ " MPlayer-Plugins\\MDAPE\\MDAPE.sln", "\"Release|Win32\"" ],
 		[ " MPlayer-Plugins\\MDFlac\\MDFlac.sln", "\"Release|Win32\"" ],
 		[ " MPlayer-Plugins\\MDMP4\\MDMP4.sln", "\"Release|Win32\"" ],

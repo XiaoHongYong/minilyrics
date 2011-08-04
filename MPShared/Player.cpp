@@ -245,6 +245,8 @@ void CPlayer::OnQuit()
 
 #ifdef _MPLAYER
 HWND GetMLSericeWindow() { return NULL; }
+#else
+HWND GetMLSericeWindow();
 #endif
 
 void CPlayer::OnInitOfMiniLyrics()
@@ -1351,9 +1353,7 @@ void CPlayer::OnMediaChangedOfZikiPlayer()
 
 		nRet = media->GetArtist(&str);
 		if (nRet == ERR_OK)
-		{
 			_tcscpy_safe(m_szArtist, CountOf(m_szArtist), str.c_str());
-		}
 
 		nRet = media->GetTitle(&str);
 		if (nRet == ERR_OK)
@@ -1362,6 +1362,8 @@ void CPlayer::OnMediaChangedOfZikiPlayer()
 		nRet = media->GetAlbum(&str);
 		if (nRet == ERR_OK)
 			_tcscpy_safe(m_szAlbum, CountOf(m_szAlbum), str.c_str());
+
+		m_nMediaLength = media->GetDuration();
 
 		tstring			strFullTitle;
 		FormatFullTitle(m_szArtist, m_szTitle, m_szSrcMedia, strFullTitle);

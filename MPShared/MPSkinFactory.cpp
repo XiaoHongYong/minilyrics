@@ -34,6 +34,7 @@
 #include "DlgUpload.h"
 #include "DlgAdjustHue.h"
 #include "LyricsTool.h"
+#include "MPlaylistCtrl.h"
 
 #ifdef _MPLAYER
 #include "SkinTreeCtrl.h"
@@ -110,6 +111,7 @@ int CMPSkinFactory::Init()
 	AddUIObjNewer(CMediaInfoTextCtrl);
 	AddUIObjNewer(CMediaAlbumArtCtrl);
 	AddUIObjNewer(CSkinActivateCtrl);
+	AddUIObjNewer(CMPlaylistCtrl);
 
 	RegisterAboutPage(this);
 	RegisterSearchLyricsPage(this);
