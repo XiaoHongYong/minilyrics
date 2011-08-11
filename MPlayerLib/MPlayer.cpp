@@ -683,10 +683,12 @@ MLRESULT CMPlayer::Play()
 			}
 
 			return nRet;
-			// return DecodeEx(pMedia);
 		}
 		else
+		{
+			NotifyPlayStateChanged();
 			return ERR_EMPTY_PLAYLIST;
+		}
 	}
 	else
 	{

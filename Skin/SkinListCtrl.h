@@ -330,7 +330,7 @@ protected:
 
 	void SetHorzScrollInfo(bool bRedraw = true);
 
-	void SendNotifyEvent(CSkinListCtrlEventNotify::Command cmd, int nClickedRow = -1, int nClickedCol = -1);
+	virtual void SendNotifyEvent(CSkinListCtrlEventNotify::Command cmd, int nClickedRow = -1, int nClickedCol = -1);
 
 	HitTestArea HitTest(POINT &point, int &nColumnIndex);
 

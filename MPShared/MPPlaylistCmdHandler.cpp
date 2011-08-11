@@ -7,6 +7,7 @@
 #include "MPPlaylistCmdHandler.h"
 #include "MPHelper.h"
 #include "DlgMediaInfo.h"
+#include "MPlaylistCtrl.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -50,74 +51,6 @@ bool CMPPlaylistCmdHandler::OnCommand(int nId)
 	return true;
 }
 
-
-bool DeleteSelectedItemsInPlaylist(IPlaylist *playlist, vector<int> &vSelIndex)
-{
-	MLRESULT	nRet;
-	long		n;
-	long		count = 0;
-
-	ASSERT(vSelIndex.size() > 0);
-	if (vSelIndex.size() == 0)
-		return false;
-
-	sort(vSelIndex.begin(), vSelIndex.end());
-
-	count = playlist->GetCount();
-	if (count == 0)
-		return false;
-
-	for (n = 0; n < (long)vSelIndex.size(); n++)
-	{
-		ASSERT(vSelIndex[n] < count && vSelIndex[n] >= 0);
-		nRet = playlist->RemoveItem(vSelIndex[n]);
-		if (nRet != ERR_OK)
-			break;
-	}
-
-	return nRet == ERR_OK;
-}
-
-bool OffsetAllSelectedRowInPlaylist(IPlaylist *playlist, vector<int> &vSelIndex, bool bDown)
-{
-	MLRESULT	nRet = ERR_OK;
-	long		n;
-	long		count = 0;
-
-	ASSERT(vSelIndex.size() > 0);
-	if (vSelIndex.size() == 0)
-		return false;
-
-	sort(vSelIndex.begin(), vSelIndex.end());
-
-	count = playlist->GetCount();
-	if (count == 0)
-		return false;
-
-	if (bDown)
-	{
-		for (n = (long)vSelIndex.size() - 1; n >= 0; n--)
-		{
-			ASSERT(vSelIndex[n] < count && vSelIndex[n] >= 0);
-			nRet = playlist->MoveItem(vSelIndex[n], vSelIndex[n] + 1);
-			if (nRet != ERR_OK)
-				break;
-		}
-	}
-	else
-	{
-		for (n = 0; n < (long)vSelIndex.size(); n++)
-		{
-			ASSERT(vSelIndex[n] < count && vSelIndex[n] >= 0);
-			nRet = playlist->MoveItem(vSelIndex[n], vSelIndex[n] - 1);
-			if (nRet != ERR_OK)
-				break;
-		}
-	}
-
-	return nRet == ERR_OK;
-}
-
 bool CMPPlaylistCmdHandler::OnCustomCommand(int nID)
 {
 	switch (nID)
@@ -141,78 +74,28 @@ bool CMPPlaylistCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_PL_DEL:
 		{
-			vector<int>		vSelItems;
-			int				nItem = -1;
-			CSkinListCtrl	*plCtrl;
-
-			plCtrl = (CSkinListCtrl*)m_pSkinWnd->GetUIObjectById(ID_PLAYLIST, CSkinListCtrl::ClassName());
+			CMPlaylistCtrl	*plCtrl = (CMPlaylistCtrl*)m_pSkinWnd->GetUIObjectByClassName(CMPlaylistCtrl::ClassName());
 			if (!plCtrl)
 				break;
-
-			while ((nItem = plCtrl->GetNextSelectedItem(nItem)) != -1)
-				vSelItems.push_back(nItem);
-
-			if (vSelItems.empty())
-				break;
-
-			// plCtrl->DeleteSelectedItems();
-
-			CMPAutoPtr<IPlaylist>	playlist;
-
-			if (g_Player.GetCurrentPlaylist(&playlist) == ERR_OK)
-			{
-				if (DeleteSelectedItemsInPlaylist(playlist, vSelItems))
-				{
-					nItem = vSelItems[0];
-					if (nItem >= plCtrl->GetItemCount())
-						nItem = plCtrl->GetItemCount() - 1;
-					if (nItem >= 0)
-						plCtrl->SetItemSelectionState(nItem, true);
-					g_Player.SetPlaylistModified(true);
-				}
-			}
+			plCtrl->DeleteSelectedItems();
 		}
 		break;
 	case CMD_PL_UP:
 	case CMD_PL_DOWN:
 		{
-			bool		bDown;
-			CSkinListCtrl	*plCtrl;
-
-			plCtrl = (CSkinListCtrl*)m_pSkinWnd->GetUIObjectById(ID_PLAYLIST, CSkinListCtrl::ClassName());
+			CMPlaylistCtrl	*plCtrl = (CMPlaylistCtrl*)m_pSkinWnd->GetUIObjectByClassName(CMPlaylistCtrl::ClassName());
 			if (!plCtrl)
 				break;
 
-			if (nID == CMD_PL_UP)
-				bDown = false;
-			else
-				bDown = true;
-
-			vector<int>		vSelItems;
-			int				nItem = -1;
-
-			while ((nItem = plCtrl->GetNextSelectedItem(nItem)) != -1)
-				vSelItems.push_back(nItem);
-
-			CMPAutoPtr<IPlaylist>	playlist;
-
-			if (g_Player.GetCurrentPlaylist(&playlist) == ERR_OK)
-			{
-				if (OffsetAllSelectedRowInPlaylist(playlist, vSelItems, bDown))
-				{
-					// UpdateButtonState();
-					g_Player.SetPlaylistModified(true);
-				}
-			}
+			plCtrl->OffsetAllSelectedItems(nID == CMD_PL_DOWN);
 		}
 		break;
 	case CMD_PL_PROPERTY:
 		{
-			CSkinListCtrl	*plCtrl;
 			CMPAutoPtr<IPlaylist>	playlist;
 			CMPAutoPtr<IMedia>		media;
 
-			plCtrl = (CSkinListCtrl*)m_pSkinWnd->GetUIObjectById(ID_PLAYLIST, CSkinListCtrl::ClassName());
+			CMPlaylistCtrl	*plCtrl = (CMPlaylistCtrl*)m_pSkinWnd->GetUIObjectByClassName(CMPlaylistCtrl::ClassName());
 			if (plCtrl && plCtrl->IsVisible() && plCtrl->IsParentVisible())
 			{
 				int				nSel;
@@ -292,58 +175,4 @@ bool CMPPlaylistCmdHandler::OnCustomCommand(int nID)
 	}
 
 	return true;
-}
-
-bool CMPPlaylistCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
-{
-	if (pNotify->nID == ID_PLAYLIST && pNotify->pUIObject->IsKindOf(CSkinListCtrl::ClassName()))
-	{
-		CSkinListCtrlEventNotify	*pListCtrlNotify = (CSkinListCtrlEventNotify *)pNotify;
-		if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_DBL_CLICK ||
-			pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_ENTER || 
-			pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_KEY_DELETE)
-		{
-			CSkinListCtrl	*pCtrlPlaylist;
-
-			pCtrlPlaylist = (CSkinListCtrl*)pNotify->pUIObject;
-			ASSERT(pCtrlPlaylist);
-			if (!pCtrlPlaylist)
-				return true;
-
-			if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_KEY_DELETE)
-			{
-				//
-				// Remove selected items
-				//
-				int				n = pCtrlPlaylist->GetNextSelectedItem(-1);
-				vector<int>		vItems;
-				CMPAutoPtr<IPlaylist>	playlist;
-				MLRESULT		nRet;
-				nRet = g_Player.GetCurrentPlaylist(&playlist);
-				if (nRet == ERR_OK)
-				{
-					while (n != -1)
-					{
-						vItems.push_back(n);
-						n = pCtrlPlaylist->GetNextSelectedItem(n);
-					}
-					for (int i = vItems.size() - 1; i >= 0; i--)
-					{
-						playlist->RemoveItem(vItems[i]);
-					}
-				}
-			}
-			else
-			{
-				// play selected items
-				int		n = pCtrlPlaylist->GetNextSelectedItem(-1);
-				if (n != -1)
-					g_Player.PlayMedia(n);
-			}
-		}
-
-		return true;
-	}
-
-	return false;
 }

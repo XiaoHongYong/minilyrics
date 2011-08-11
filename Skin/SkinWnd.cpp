@@ -252,6 +252,7 @@ int CSkinWnd::Create(SkinWndStartupInfo &skinWndStartupInfo, CSkinFactory *pSkin
 	m_pSkinFactory = pSkinFactory;
 	m_strSkinWndName = skinWndStartupInfo.strSkinWnd;
 	m_mapExchangePool = skinWndStartupInfo.mapExchangePool;
+	m_bMainAppWnd = skinWndStartupInfo.bMainWnd;
 
 	DWORD	dwStyle = DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX;
 	DWORD	dwExStyle = 0;

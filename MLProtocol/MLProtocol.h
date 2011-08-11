@@ -124,7 +124,7 @@ public:
 	virtual int FromXML(SXNode *pXmlNode);
 	virtual int ToXML(CXMLWriter &xmlFile) = 0;
 
-	void ToXMLAttribute(CXMLWriter &xmlStream);
+	virtual void ToXMLAttribute(CXMLWriter &xmlStream);
 
 public:
 	tstring			strClient;						// MiniLyrics for Winamp2 7.0.xxx

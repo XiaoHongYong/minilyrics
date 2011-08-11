@@ -35,13 +35,12 @@
 #include "DlgAdjustHue.h"
 #include "LyricsTool.h"
 #include "MPlaylistCtrl.h"
+#include "MPSkinMediaNumInfoCtrl.h"
+#include "MPlaylistSearchObj.h"
 
 #ifdef _MPLAYER
 #include "SkinTreeCtrl.h"
 #include "MPSkinVis.h"
-#include "MPlaylistCtrl.h"
-#include "MPSkinMediaNumInfoCtrl.h"
-#include "MPlaylistSearchObj.h"
 #ifdef _WIN32_WCE
 #include "win32/wce/WCEMainCmdBar.h"
 #endif
@@ -104,10 +103,10 @@ int CMPSkinFactory::Init()
 #ifdef _MPLAYER
 	AddUIObjNewer(CSkinTreeCtrl);
 	AddUIObjNewer(CMPSkinVis);
+#endif
 	AddUIObjNewer(CSkinListCtrlEx);
 	AddUIObjNewer(CMPSkinMediaNumInfoCtrl);
 	AddUIObjNewer(CMPlaylistSearchObj);
-#endif
 	AddUIObjNewer(CMediaInfoTextCtrl);
 	AddUIObjNewer(CMediaAlbumArtCtrl);
 	AddUIObjNewer(CSkinActivateCtrl);

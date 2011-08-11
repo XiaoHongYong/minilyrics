@@ -36,6 +36,9 @@ CSkinScrollText::~CSkinScrollText()
 
 void CSkinScrollText::Draw(CRawGraph *pGraph)
 {
+	CRawGraph::CClipBoxAutoRecovery clipRecover(pGraph);
+	pGraph->SetClipBoundBox(m_rcObj);
+
 	if (m_imgBk.IsValid())
 	{
 		if (m_BltMode == BLT_COPY)
@@ -66,6 +69,8 @@ void CSkinScrollText::Draw(CRawGraph *pGraph)
 	SIZE		size;
 
 	rc.left += m_nLeftMargin;
+	rc.top = m_rcObj.top + (m_rcObj.Height() - m_font.GetHeight()) / 2;
+	rc.bottom = rc.top + m_font.GetHeight();
 
 	pGraph->GetTextExtentPoint32(m_strText.c_str(), m_strText.size(), &size);
 	size.cx += 3;

@@ -1282,8 +1282,8 @@ void CSkinContainer::DumpUIObject(int &nDeep)
 	for (uint i = 0; i < m_vUIObjs.size(); i++)
 	{
 		CUIObject	*p = m_vUIObjs[i];
-		CStrPrintf str(_T("%s id=%s, name=%s visible=%d rc=%d,%d,%d,%d"), + p->GetClassName(), 
-			m_pSkin->GetSkinFactory()->GetStringOfID(p->GetID()).c_str(),
+		CStrPrintf str(_T("%s id=%s(%d), name=%s visible=%d rc=%d,%d,%d,%d"), + p->GetClassName(), 
+			m_pSkin->GetSkinFactory()->GetStringOfID(p->GetID()).c_str(), p->GetID(),
 			p->m_strName.c_str(), p->m_bVisible, p->m_rcObj.left, p->m_rcObj.top, p->m_rcObj.Width(), p->m_rcObj.Height());
 		DBGLOG2(_T("%s%s"), strDeep.c_str(), str.c_str());
 		if (p->IsContainer())

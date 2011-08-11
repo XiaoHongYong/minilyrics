@@ -115,7 +115,7 @@ void CSkinListCtrl::LoadColumnWidth(LPCTSTR szProperty)
 {
 	VecString vWidth;
 	StrSplit(g_Profile.GetProfileString(szProperty, _T("")), ',', vWidth);
-	for (int i = 0; i < vWidth.size(); i++)
+	for (int i = 0; i < vWidth.size() && i < m_vHeading.size(); i++)
 	{
 		if (vWidth[i].empty())
 			continue;

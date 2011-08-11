@@ -381,11 +381,11 @@ int MLMsgRetSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
 
-	MLRetMsg::ToXMLAttribute(xmlFile);
+	ToXMLAttribute(xmlFile);
 
 	if (bV0Protocol)
 		xmlFile.WriteAttribute(_T("filetype"), _T("lyrics")); // This should be set for old version (7.0.614 before).
-	else
+	else if (strServerUrl.size() > 0)
 		xmlFile.WriteAttribute(_T("server_url"), strServerUrl.c_str());
 
 	if (nPageCount != 1)
@@ -532,7 +532,7 @@ int MLMsgRetBatchSearch::ToXML(CXMLWriter &xmlFile)
 {
 	xmlFile.WriteStartElement(MZ_RETURN);
 
-	MLRetMsg::ToXMLAttribute(xmlFile);
+	ToXMLAttribute(xmlFile);
 
 	for (ListLyricsInfoLite::iterator it = listLyricsInfo.begin();
 		it != listLyricsInfo.end(); ++it)
@@ -1096,6 +1096,7 @@ class CTestCaseCMLProtocol : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE(CTestCaseCMLProtocol);
 	CPPUNIT_TEST(TestParseBinXml);
 	CPPUNIT_TEST(TestMLMsgCmdSearch);
+	CPPUNIT_TEST(TestMLMsgCmdUploadResult);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -1191,6 +1192,36 @@ protected:
 		CPPUNIT_ASSERT(msgFrom.strDeviceID == msgSearch.strDeviceID);
 		CPPUNIT_ASSERT(msgFrom.strRegCode == msgSearch.strRegCode);
 		CPPUNIT_ASSERT(msgFrom.strTitle == msgSearch.strTitle);
+	}
+
+	void TestMLMsgCmdUploadResult()
+	{
+		MLMsgRetUpload	retUpload;
+
+		retUpload.bV0Protocol = false;
+		retUpload.licenseStatus = LS_TRANSFERED;
+		retUpload.nCodeDurationDays = 0;
+		retUpload.strLyricsId = _T("lyrics_id");
+		retUpload.strMessage = _T("msg");
+		retUpload.strOrgCmd = _T("org");
+
+		CMLBinXMLWriter xmlStream;
+		int ret = retUpload.ToXML(xmlStream);
+		CPPUNIT_ASSERT(ret == ERR_OK);
+
+		CSimpleXML xml;
+		ret = xml.ParseData(xmlStream.GetBuffer().c_str(), xmlStream.GetBuffer().size());
+		CPPUNIT_ASSERT(ret != FALSE);
+		MLMsgRetUpload	retUpload2;
+		ret = retUpload2.FromXML(xml.m_pRoot);
+		CPPUNIT_ASSERT(ret == ERR_OK);
+
+		CPPUNIT_ASSERT(retUpload2.bV0Protocol == retUpload.bV0Protocol);
+		CPPUNIT_ASSERT(retUpload2.licenseStatus == retUpload.licenseStatus);
+		CPPUNIT_ASSERT(retUpload2.nCodeDurationDays == retUpload.nCodeDurationDays);
+		CPPUNIT_ASSERT(retUpload2.strLyricsId == retUpload.strLyricsId);
+		CPPUNIT_ASSERT(retUpload2.strMessage == retUpload.strMessage);
+		CPPUNIT_ASSERT(retUpload2.strOrgCmd == retUpload.strOrgCmd);
 	}
 
 };

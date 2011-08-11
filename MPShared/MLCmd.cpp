@@ -85,13 +85,11 @@ UIObjectIDDefinition g_uidDefinition[] =
 	{ _T("ID_VOL_DEC"), CMD_VOL_DEC, 0, _T("Decrease Volume") },
 	{ _T("ID_VOLUME"), CMD_VOLUME, 0, _T("Volume") },
 	{ _T("ID_MUTE"), CMD_MUTE, 0, _T("Mute") },
-#ifdef _MPLAYER
 	{ _T("ID_PLAYLIST"), ID_PLAYLIST, 0, NULL },
 	{ _T("ID_SHUFFLE"), CMD_SHUFFLE, IDC_SHUFFLE, _T("Toggle Shuffle") },
 	{ _T("ID_LOOP"), CMD_LOOP, 0, _T("Toggle Repeat") },
 	{ _T("ID_EQ"), CMD_EQ, IDC_EQ, _T("Equalizer") },
 	{ _T("ID_RATE"), CMD_RATE, 0, _T("Rate this song") },
-#endif
 	{ _T("ID_TXT_TITLE"), CMD_TXT_TITLE, 0, NULL },
 	{ _T("ID_TXT_POS"), CMD_TXT_POS, 0, NULL },
 	{ _T("ID_TXT_VOL"), CMD_TXT_VOL, 0, NULL },

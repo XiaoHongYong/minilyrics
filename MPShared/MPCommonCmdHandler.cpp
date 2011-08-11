@@ -21,9 +21,7 @@
 #include "DlgAdjustHue.h"
 #endif
 
-#ifdef _MPLAYER
 #include "MPHelper.h"
-#endif
 
 #ifdef _WIN32_DESKTOP
 #include "win32/MPFloatingLyrWnd.h"
@@ -62,7 +60,6 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 {
 	switch (nId)
 	{
-#ifdef _MPLAYER
 	case IDC_REPEAT_OFF:
 		g_Player.SetLoop(MP_LOOP_OFF);
 		break;
@@ -72,7 +69,6 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 	case IDC_REPEAT_TRACK:
 		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
-#endif
 	case IDC_RATE_LYR_1:
 	case IDC_RATE_LYR_2:
 	case IDC_RATE_LYR_3:
@@ -218,12 +214,6 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 // #endif
 // 		CMPlayerAppBase::GetMPSkinFactory()->MinizeAll();
 // 		break;
-/*	case IDC_LOGIN:
-		{
-			CLoginDlg		dlg;
-			dlg.DoModal(m_pSkinWnd);
-		}
-		break;*/
 	case IDC_APPLY_ACCOUNT:
 		{
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_SIGNUP));
@@ -451,7 +441,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			g_Player.SeekTo(dwCurPos);
 		}
 		break;
-#ifdef _MPLAYER
 	case CMD_VOL_INC:
 		{
 			long		vol;
@@ -543,7 +532,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_PL_ADD_DIR:
 		OnSongOpenDirCmd(m_pSkinWnd, false);
 		break;
-#endif
 
 		//
 		// Lyrics ....

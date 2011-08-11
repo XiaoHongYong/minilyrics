@@ -6,8 +6,73 @@
 #include "MPlayerAppBase.h"
 #include "MPlaylistCtrl.h"
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+bool DeleteSelectedItemsInPlaylist(IPlaylist *playlist, vector<int> &vSelIndex)
+{
+	MLRESULT	nRet;
+	long		n;
+	long		count = 0;
+
+	ASSERT(vSelIndex.size() > 0);
+	if (vSelIndex.size() == 0)
+		return false;
+
+	sort(vSelIndex.begin(), vSelIndex.end());
+
+	count = playlist->GetCount();
+	if (count == 0)
+		return false;
+
+	for (n = 0; n < (long)vSelIndex.size(); n++)
+	{
+		ASSERT(vSelIndex[n] < count && vSelIndex[n] >= 0);
+		nRet = playlist->RemoveItem(vSelIndex[n]);
+		if (nRet != ERR_OK)
+			break;
+	}
+
+	return nRet == ERR_OK;
+}
+
+bool OffsetAllSelectedRowInPlaylist(IPlaylist *playlist, vector<int> &vSelIndex, bool bDown)
+{
+	MLRESULT	nRet = ERR_OK;
+	long		n;
+	long		count = 0;
+
+	ASSERT(vSelIndex.size() > 0);
+	if (vSelIndex.size() == 0)
+		return false;
+
+	sort(vSelIndex.begin(), vSelIndex.end());
+
+	count = playlist->GetCount();
+	if (count == 0)
+		return false;
+
+	if (bDown)
+	{
+		for (n = (long)vSelIndex.size() - 1; n >= 0; n--)
+		{
+			ASSERT(vSelIndex[n] < count && vSelIndex[n] >= 0);
+			nRet = playlist->MoveItem(vSelIndex[n], vSelIndex[n] + 1);
+			if (nRet != ERR_OK)
+				break;
+		}
+	}
+	else
+	{
+		for (n = 0; n < (long)vSelIndex.size(); n++)
+		{
+			ASSERT(vSelIndex[n] < count && vSelIndex[n] >= 0);
+			nRet = playlist->MoveItem(vSelIndex[n], vSelIndex[n] - 1);
+			if (nRet != ERR_OK)
+				break;
+		}
+	}
+
+	return nRet == ERR_OK;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 UIOBJECT_CLASS_NAME_IMP(CMPlaylistCtrl, _T("Playlist"))
@@ -28,7 +93,7 @@ void CMPlaylistCtrl::OnCreate()
 	CSkinListCtrl::OnCreate();
 
 	if (GetColumnCount() == 0)
-		AddColumn(_T("Music"), 230);
+		AddColumn(TOLOCAL_T("Media Files"), 230);
 
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
@@ -53,6 +118,87 @@ void CMPlaylistCtrl::OnEvent(const IEvent *pEvent)
 		}
 
 		Invalidate();
+	}
+}
+
+void CMPlaylistCtrl::OnKeyDown(UINT nChar, UINT nFlags)
+{
+	if (m_vRows.empty())
+		return;
+
+	if (nChar == VK_RETURN)
+	{
+		int n = GetNextSelectedItem(-1);
+		if (n != -1)
+			g_Player.PlayMedia(n);
+	}
+	else if (nChar == VK_DELETE)
+	{
+		DeleteSelectedItems();
+		return;
+	}
+	if (nChar == VK_UP || nChar == VK_DOWN)
+	{
+		bool ctrl = IsKeyPressed(VK_CONTROL);
+		if (ctrl)
+			OffsetAllSelectedItems(nChar == VK_DOWN);
+	}
+
+	CSkinListCtrl::OnKeyDown(nChar, nFlags);
+}
+
+void CMPlaylistCtrl::SendNotifyEvent(CSkinListCtrlEventNotify::Command cmd, int nClickedRow, int nClickedCol)
+{
+	if (cmd == CSkinListCtrlEventNotify::C_DBL_CLICK)
+		g_Player.PlayMedia(nClickedRow);
+
+	CSkinListCtrl::SendNotifyEvent(cmd, nClickedRow, nClickedCol);
+}
+
+void CMPlaylistCtrl::DeleteSelectedItems()
+{
+	int				nItem = -1;
+	vector<int>		vSelItems;
+
+	while ((nItem = GetNextSelectedItem(nItem)) != -1)
+		vSelItems.push_back(nItem);
+
+	if (vSelItems.empty())
+		return;
+
+	CMPAutoPtr<IPlaylist>	playlist;
+
+	if (g_Player.GetCurrentPlaylist(&playlist) == ERR_OK)
+	{
+		if (DeleteSelectedItemsInPlaylist(playlist, vSelItems))
+		{
+			nItem = vSelItems[0];
+			if (nItem >= GetItemCount())
+				nItem = GetItemCount() - 1;
+			if (nItem >= 0)
+				SetItemSelectionState(nItem, true);
+			g_Player.SetPlaylistModified(true);
+		}
+	}
+}
+
+void CMPlaylistCtrl::OffsetAllSelectedItems(bool bMoveDown)
+{
+	vector<int>		vSelItems;
+	int				nItem = -1;
+
+	while ((nItem = GetNextSelectedItem(nItem)) != -1)
+		vSelItems.push_back(nItem);
+
+	CMPAutoPtr<IPlaylist>	playlist;
+
+	if (g_Player.GetCurrentPlaylist(&playlist) == ERR_OK)
+	{
+		if (OffsetAllSelectedRowInPlaylist(playlist, vSelItems, bMoveDown))
+		{
+			// UpdateButtonState();
+			g_Player.SetPlaylistModified(true);
+		}
 	}
 }
 
@@ -98,19 +244,12 @@ void CMPlaylistCtrl::UpdatePlaylist(CEventPlaylistChanged *pEventPlaylistChanged
 	{
 		int			nIndex = pEventPlaylistChanged->nIndex;
 		int			nIndexOld = pEventPlaylistChanged->nIndexOld;
-		bool		bSelected = IsRowSelected(nIndexOld);
 		if (nIndex >= 0 && nIndex < GetItemCount()
 			&& nIndexOld >= 0 && nIndexOld < GetItemCount())
 		{
-			CMPAutoPtr<IMedia>	pMedia;
-			if (playlist->GetItem(nIndex, &pMedia) == ERR_OK)
-			{
-				DeleteItem(nIndexOld, false);
-				g_Player.FormatMediaTitle(pMedia, str);
-				InsertItem(nIndex, str.c_str());
-				if (bSelected)
-					SetItemSelectionState(nIndex, bSelected);
-			}
+			LC_ROW *temp = m_vRows[nIndex];
+			m_vRows[nIndex] = m_vRows[nIndexOld];
+			m_vRows[nIndexOld] = temp;
 		}
 		Invalidate();
 	}
@@ -128,7 +267,11 @@ void CMPlaylistCtrl::UpdatePlaylist(CEventPlaylistChanged *pEventPlaylistChanged
 			if (nSel >= GetItemCount())
 				nSel = GetItemCount() - 1;
 			if (nSel != -1)
+			{
+				m_pSkin->EnterInDrawUpdate();
 				SetItemSelectionState(nSel, true);
+				m_pSkin->LeaveInDrawUpdate();
+			}
 		}
 	}
 	else
