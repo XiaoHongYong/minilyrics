@@ -97,6 +97,22 @@ void CMPlaylistCtrl::OnCreate()
 
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+
+	CMPAutoPtr<IPlaylist> playlist;
+	int nRet = g_Player.GetCurrentPlaylist(&playlist);
+	if (nRet != ERR_OK)
+		return;
+
+	for (int i = 0; i < playlist->GetCount(); i++)
+	{
+		CMPAutoPtr<IMedia>	media;
+		tstring				strTitle;
+		if (playlist->GetItem(i, &media) == ERR_OK)
+		{
+			g_Player.FormatMediaTitle(media, strTitle);
+			InsertItem(i, strTitle.c_str(), 0);
+		}
+	}
 }
 
 void CMPlaylistCtrl::OnEvent(const IEvent *pEvent)

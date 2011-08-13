@@ -95,6 +95,9 @@ void CMPSkinMainWnd::OnCopyData(WPARAM wParam, PCOPYDATASTRUCT pCopyData)
 	szCmdLine = (LPCTSTR)pCopyData->lpData;
 	CmdLineAnalysis(szCmdLine, vCmdLine);
 
+	if (vCmdLine.empty())
+		return;
+
 	// deal with option cmd line
 	for (i = 0; i < (int)vCmdLine.size(); i++)
 	{
@@ -105,9 +108,6 @@ void CMPSkinMainWnd::OnCopyData(WPARAM wParam, PCOPYDATASTRUCT pCopyData)
 			i--;
 		}
 	}
-
-	if (vCmdLine.empty())
-		return;
 
 	if (vCmdLine.size() == 1 && FileIsExtSame(vCmdLine[0].c_str(), _T(".m3u")))
 	{

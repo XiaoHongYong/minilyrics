@@ -455,9 +455,6 @@ bool CMPlayerAppBase::InitLyricsTool()
 
 bool CMPlayerAppBase::InitiPodLyricsDownloader()
 {
-	// Init player.
-	g_Player.OnInit(false);
-
 	m_pSkinFactory->SetSkinFileName(_T("MiniLyrics.xml"));
 	int nRet = LoadDefaultSkin(_T("Default"), false);
 	if (nRet != ERR_OK)
@@ -472,6 +469,9 @@ bool CMPlayerAppBase::InitiPodLyricsDownloader()
 		if (nRet != ERR_OK)
 			return false;
 	}
+
+	// Init player.
+	g_Player.OnInit(false);
 
 	RunLyricsTool(m_pSkinFactory->GetMainWnd());
 

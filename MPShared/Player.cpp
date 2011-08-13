@@ -662,14 +662,13 @@ void CPlayer::OnInitOfZikiPlayer()
 
 	// AddDirToPlaylist(_T("H:\\Mp3\\Britney Spears04¾«Ñ¡¼¯"), true);
 	// latest playlist and latest playing song file will loaded while main window is created.
-#if defined(_MPLAYER) && defined(_WIN32)
 	LPCTSTR			szCmdLine;
 
 	// get command line
 	szCmdLine = GetCommandLine();
-#ifndef _WIN32_WCE
 	szCmdLine = CmdLineNext(szCmdLine);
-#endif
+	if (_tcsicmp(szCmdLine, _T("/iPodLyricsDownloader")) == 0)
+		szCmdLine = _T("");
 	if (IsEmptyString(szCmdLine))
 	{
 		// Load default playlist
@@ -690,7 +689,6 @@ void CPlayer::OnInitOfZikiPlayer()
 
 	if (g_Profile.GetProfileBool(_T("StartPlayAtStartup"), false))
 		Play();
-#endif
 }
 
 void CPlayer::OnQuitOfZikiPlayer()
