@@ -121,7 +121,7 @@ void CSkinStaticText::Draw(CRawGraph *pGraph)
 	}
 	else
 	{
-		if (m_bPaintBg && !m_bUseSkinBg)
+		if (m_bPaintBg && !m_bUseParentBg)
 			pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_clrBg);
 	}
 

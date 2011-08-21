@@ -3,7 +3,7 @@
   <style>
     <WindowFrame EnableTranslucency="true" TranslucencyAlpha="255"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
-         PaintBg="TRUE" BgColor="#576C91" FgColor="#282828" EnableClickThrough="false"
+         BgColor="#576C91" EnableClickThrough="false"
          FontName="Verdana" FontHeight="14" TextColor="#FFFFFF" IsDialog="true">
       <Image Name="TopLeftCorner" Left="0" Top="0" Width="20" Height="20" Image="frame.png" ImageRect="0, 0, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 0, 20, 20" BlendPixMode="copy"/>
       <Image Name="LeftBottomCorner" Left="0" Top="h-20" Width="20" Height="20" Image="frame.png" ImageRect="0, 55, 20, 20" ImageMask="frame-mask.png" ImageMaskRect="0, 55, 20, 20" BlendPixMode="copy"/>
@@ -143,7 +143,7 @@
     <WndFrameCaption Extends="Text" ID="ID_CAPTION" Rect="30,4,w-60,20" Text="About MiniLyrics" FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
     <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
-    <ListCtrl BkColor="#4F586E" SelBkColor="#D9D9D9" NowPlayBkColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
+    <ListCtrl BgColor="#4F586E" SelBgColor="#D9D9D9" NowPlayBgColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
 
     <LyricShowTxtContainer Extends="DecorativeContainer">
       <LyricShowTxt Rect="0,0,w,h"/>

@@ -154,11 +154,7 @@ void CSkinListCtrl::OnCreate()
 
 BOOL CSkinListCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
-	if (CSkinScrollFrameCtrlBase::SetProperty(szProperty, szValue))
-		return TRUE;
-
-	if (_tcsicmp(szProperty, _T("BgColor")) == 0 ||
-		_tcsicmp(szProperty, _T("BkColor")) == 0)
+	if (IsPropertyName(szProperty, _T("BgColor")))
 	{
 		V_Str	vColor;
 		StrSplit(szValue, ',', vColor);
@@ -169,14 +165,20 @@ BOOL CSkinListCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			GetColorValue(GetColor(CN_ALTER_BG), vColor[1].c_str());
 		else
 			GetColor(CN_ALTER_BG) = GetColor(CN_BG);
+
+		m_clrBg = GetColor(CN_BG);
+		m_bDrawBg = true;
+		return true;
 	}
-	else if (_tcsicmp(szProperty, _T("SelBgColor")) == 0 || 
-		_tcsicmp(szProperty, _T("SelBkColor")) == 0)
+
+	if (CSkinScrollFrameCtrlBase::SetProperty(szProperty, szValue))
+		return TRUE;
+
+	if (_tcsicmp(szProperty, _T("SelBgColor")) == 0)
 	{
 		GetColorValue(GetColor(CN_SEL_BG), szValue);
 	}
-	else if (_tcsicmp(szProperty, _T("NowPlayBkColor")) == 0
-		|| IsPropertyName(szProperty, _T("NowPlayBgColor")))
+	else if (IsPropertyName(szProperty, _T("NowPlayBgColor")))
 	{
 		GetColorValue(GetColor(CN_PLAYING_BG), szValue);
 	}
@@ -263,7 +265,7 @@ void CSkinListCtrl::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropColor(_T("BgColor"), GetColor(CN_BG));
 	listProperties.AddPropColor(_T("SelBgColor"), GetColor(CN_SEL_BG));
-	listProperties.AddPropColor(_T("NowPlayBkColor"), GetColor(CN_PLAYING_BG));
+	listProperties.AddPropColor(_T("NowPlayBgColor"), GetColor(CN_PLAYING_BG));
 	listProperties.AddPropColor(_T("SelTextColor"), GetColor(CN_SEL_TEXT));
 	listProperties.AddPropColor(_T("NowPlayTextColor"), GetColor(CN_PLAYING_TEXT));
 	m_font.EnumProperties(listProperties);
@@ -1238,8 +1240,8 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 	pGraph->SetPen(m_penLine);
 
 	// Draw background color
-	if (m_bUseSkinBg)
-		m_pSkin->RedrawBackground(pGraph, &m_rcContent);
+	if (m_bUseParentBg)
+		m_pContainer->RedrawBackground(pGraph, m_rcContent);
 	else
 	{
 		int			alpha;

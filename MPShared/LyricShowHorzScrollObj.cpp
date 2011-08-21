@@ -160,7 +160,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 			pGraphics->HorzAlphaFadeOut(&rc, true);
 		else
-			pGraphics->HorzFadeOut(&rc, m_pSkin->GetBgColor(), true);
+			pGraphics->HorzFadeOut(&rc, m_pContainer->GetBgColor(), true);
 
 		rc.right = m_rcObj.right;
 		rc.left = m_rcObj.right - 30;
@@ -169,7 +169,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 			pGraphics->HorzAlphaFadeOut(&rc, false);
 		else
-			pGraphics->HorzFadeOut(&rc, m_pSkin->GetBgColor(), false);
+			pGraphics->HorzFadeOut(&rc, m_pContainer->GetBgColor(), false);
 	}
 #endif
 

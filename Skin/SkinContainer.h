@@ -57,8 +57,8 @@ public:
 	int FromXML(SXNode *pXmlNode);
 	void CreateChild(SXNode *pXmlNode);
 
-	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
-	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode) { return FALSE; }
+	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
+	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
 #ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
@@ -144,6 +144,11 @@ public:
 
 	virtual CRawGraph *GetMemGraph();
 
+	MLColor GetBgColor() const;
+	bool IsDrawBgImage() const;
+
+	void RedrawBackground(CRawGraph *pGraph, const RECT &rc);
+
 	void DispatchOnCreateMsg();
 
 	// Page view APIs
@@ -185,6 +190,14 @@ protected:
 	bool				m_bClipChildren;
 	tstring				m_strContextMenu;
 	CMLMenu				*m_pMenu;
+
+	// Background color
+	MLColor				m_clrBg, m_clrBgOrg;
+	bool				m_bDrawBg;
+
+	// Background images
+	CScaleImagePainter	m_bgImagePainter;
+	CSFImage		m_imageBg, m_imageBgMask;
 
 	// Status for Page view
 	struct PageViewItem

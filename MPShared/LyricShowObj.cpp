@@ -1357,7 +1357,7 @@ void CLyricShowObj::DrawCurrentRow(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos, int yDrawLyrEndPos)
 {
 #ifdef _WIN32_DESKTOP
-	if ((!m_pSkin->IsBgImageUsed() && !m_img.IsValid()) || m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+	if ((!m_pContainer->IsDrawBgImage() && !m_img.IsValid()) || m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 	{
 		CRect	rc;
 
@@ -1367,7 +1367,7 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 				pGraphics->VertAlphaFadeOut(&rc, true);
 			else
-				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), true);
+				pGraphics->VertFadeOut(&rc, m_pContainer->GetBgColor(), true);
 		}
 
 		rc.bottom = m_rcObj.bottom - m_nYMargin;
@@ -1377,7 +1377,7 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
 				pGraphics->VertAlphaFadeOut(&rc, false);
 			else
-				pGraphics->VertFadeOut(&rc, m_pSkin->GetBgColor(), false);
+				pGraphics->VertFadeOut(&rc, m_pContainer->GetBgColor(), false);
 		}
 	}
 #endif
@@ -1417,7 +1417,7 @@ void CLyricShowObj::UpdateLyricDrawBufferBackground(CRawGraph *pGraphics, CRect 
 	else
 	{
 		ASSERT(rc.bottom <= m_rcObj.bottom);
-		m_pSkin->RedrawBackground(pGraphics, &rc);
+		m_pContainer->RedrawBackground(pGraphics, rc);
 		// pGraphics->FillRect(rc.left, rc.top, rc.Width(), rc.Height(), &m_brBg);
 	}
 

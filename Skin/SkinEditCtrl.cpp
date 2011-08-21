@@ -976,7 +976,7 @@ void CSkinEditCtrl::Draw(CRawGraph *pGraph)
 MLColor & CSkinEditCtrl::GetColor(int nColorName)
 {
 	ASSERT(m_vClrTable.size() >= CN_CUSTOMIZED_START);
-	/*if (nColorName == CN_BG && m_bUseSkinBg)
+	/*if (nColorName == CN_BG && m_bUseParentBg)
 		return m_pSkin->GetBgColor();
 	else */
 	if (nColorName < 0 || nColorName >= (int)m_vClrTable.size())

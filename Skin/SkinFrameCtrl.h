@@ -23,8 +23,9 @@ public:
 
 protected:
 	CSFImage			m_image, m_imageFocus;
-	int					m_nRoundWidth;
-	int					m_nThickWidth;
+	BlendPixMode		m_bpm;
+	int16				m_nRoundWidthTop, m_nRoundWidthBottom;
+	int16				m_nThickWidth;
 	int16				m_xBorder, m_yBorder;
 	CSkinFontProperty	m_font;
 	CUIObject			*m_pObjFocusIndicator;

@@ -176,11 +176,6 @@ CSkinWnd::CSkinWnd()
 	m_bWindowsAppearance = false;
 	m_bAeroGlass = false;
 
-	m_bPaintBg = false;
-	m_clrBgOrg.set(0, 0, 0);
-	m_clrBgOrg.setAlpha(255);
-	m_clrFg.set(255, 255, 255);
-
 	m_bActived = FALSE;
 	m_bMainAppWnd = false;
 	m_bDialogWnd = false;
@@ -387,10 +382,6 @@ void CSkinWnd::CloseSkin()
 	ASSERT(m_nInRedrawUpdate == 0);
 	m_nInRedrawUpdate = 0;
 	m_bSkinOpened = false;
-	m_bPaintBg = false;
-	m_clrBgOrg.set(0, 0, 0);
-	m_clrBgOrg.setAlpha(255);
-	m_clrFg.set(255, 255, 255);
 
 	m_listUnprocessedProperties.clear();
 
@@ -400,9 +391,6 @@ void CSkinWnd::CloseSkin()
 	m_strRgn.resize(0);
 	// Remember skin window name, it can be used to reload it.
 	// m_strSkinWndName.resize(0);
-
-	m_imageBg.Destroy();
-	m_imageBgMask.Destroy();
 
 	m_nWidth = 0;
 	m_nHeight = 0;
@@ -450,7 +438,7 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 	//
 	// Change translucency on hover?
 	//
-	if (m_bTranslucencyLayered && m_bPaintBg
+	if (m_bTranslucencyLayered
 		&& m_translucencyStatus == TS_NORMAL
 		&& !m_bActived)
 	{
@@ -895,10 +883,10 @@ bool CSkinWnd::UpdateSkinProperty()
 			// Failed to set to Aero mode
 			m_bAeroGlass = false;
 		}
+		if (m_bAeroGlass)
+			m_rootConainter.m_clrBg.setAlpha(0);
 	}
 #endif // #ifdef _WIN32_DESKTOP
-
-	RecreateBrush();
 
 	// init 
 	OnWindowSizeChanged();
@@ -914,12 +902,6 @@ void CSkinWnd::OnPaint(CMLGraphics *pGraph)
 	CRawGraph		*pMemGraph;
 
 	pMemGraph = GetMemGraphics();
-
-	if (m_bPaintBg)
-	{
-		// pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
-		RedrawBackground(pMemGraph, NULL);
-	}
 
 	// draw every ui objects on back buffer one by one
 	m_rootConainter.Draw(pMemGraph);
@@ -955,29 +937,22 @@ bool CSkinWnd::RecreateMemGraphics()
 	pMemGraph->Create(m_rcBoundBox.Width(), m_rcBoundBox.Height(), pGraph);
 	m_pmemGraph = pMemGraph;
 
-	if (m_bPaintBg)
-	{
-		// m_pmemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
-		RedrawBackground(m_pmemGraph, NULL);
-	}
-
 	ReleaseGraphics(pGraph);
 
 	return true;
 }
 
-void CSkinWnd::RecreateBrush()
+MLColor CSkinWnd::GetTranslucencyColor(const MLColor &clr) const
 {
-	m_clrBg = m_clrBgOrg;
-#ifdef _WIN32_DESKTOP
-	if (m_bAeroGlass)
-		m_clrBg.setAlpha(0);
 	if (m_bTranslucencyLayered)
 	{
-		m_clrBg.setAlpha((byte)m_nTranslucencyAlphaDynamic);
-		PreMultiplyColor(m_clrBg, (byte)m_nTranslucencyAlphaDynamic);
+		MLColor clrNew = clr;
+		clrNew.setAlpha((byte)m_nTranslucencyAlphaDynamic);
+		PreMultiplyColor(clrNew, (byte)m_nTranslucencyAlphaDynamic);
+		return clrNew;
 	}
-#endif
+	else
+		return clr;
 }
 
 void CSkinWnd::OnWindowSizeChanged()
@@ -1020,10 +995,11 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	if (!m_pmemGraph)
 		return;	// SkinWnd isn't created yet.
 
-	if (pObj->IsUseSkinBg() && m_bPaintBg)
+	if (pObj->IsUseParentBg())
 	{
-		// redraw background ?
-		RedrawBackground(m_pmemGraph, pObj->m_rcObj);
+		// Redraw background
+		ASSERT(pObj->GetParent() != NULL);
+		pObj->GetParent()->RedrawBackground(m_pmemGraph, pObj->m_rcObj);
 	}
 
 	CRawGraph::CClipBoxAutoRecovery	autoCBR(m_pmemGraph);
@@ -1067,78 +1043,6 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	}
 
 	ReleaseGraphics(pGraphics);
-}
-
-void CSkinWnd::RedrawBackground(CRawGraph *pGraph, RECT *prc)
-{
-	if (!pGraph)
-		return;
-
-	RECT	rc;
-
-	if (prc)
-	{
-		rc = *prc;
-		if (rc.left < 0)
-			rc.left = 0;
-		if (rc.top < 0)
-			rc.top = 0;
-		if (rc.bottom > m_rcBoundBox.Height())
-			rc.bottom = m_rcBoundBox.Height();
-		if (rc.right > m_rcBoundBox.Width())
-			rc.right = m_rcBoundBox.Width();
-	}
-	else
-	{
-		rc.left = rc.top = 0;
-		rc.right = m_rcBoundBox.Width();
-		rc.bottom = m_rcBoundBox.Height();
-	}
-
-	CRect	rcClip, rcNewClip;
-	pGraph->GetClipBoundBox(rcClip);
-
-	rcNewClip.IntersectRect(&rcClip, &rc);
-
-	if (m_nTranslucencyAlphaDynamic == 0)
-	{
-		// Speed optimize for totoally transparent background
-		MLColor	clr(RGB(0, 0, 0));
-		clr.setAlpha(0);
-		pGraph->FillRect(&rcNewClip, clr);
-		return;
-	}
-
-	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
-	pGraph->SetClipBoundBox(rcNewClip);
-
-	if (m_imageBg.IsValid())
-	{
-		// Draw Bg with color
-		CDrawImageFunMask	funcDraw(pGraph, &m_imageBg, NULL, BPM_COPY);
-
-		if (m_imageBgMask.IsValid())
-			funcDraw.m_pImageMask = &m_imageBgMask;
-
-		// Fill background
- 		if (m_imageBgMask.IsValid())
-		{
-			pGraph->FillRect(&rcNewClip, m_clrBg);
-		}
-		else if (m_nTranslucencyAlphaDynamic != 255)
-		{
-			MLColor	clr(RGB(0, 0, 0));
-			clr.setAlpha(0);
-			pGraph->FillRect(&rcNewClip, clr);
-		}
-
-		m_bgImagePainter.Blt(0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), funcDraw);
-
-		if (m_nTranslucencyAlphaDynamic != 255)
-			pGraph->MultiplyAlpha(m_nTranslucencyAlphaDynamic, &rcNewClip);
-	}
-	else
-		pGraph->FillRect(&rcNewClip, m_clrBg);
 }
 
 void CSkinWnd::EnterInDrawUpdate()
@@ -1351,37 +1255,6 @@ void CSkinWnd::SetProperies(SXNode::LIST_PROPERTIES &listProperties)
 	}
 }
 
-BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
-{
-	ASSERT(szProperty);
-
-	if (IsPropertyName(szProperty, _T("BgImage")))
-	{
-		// Set background image
-		m_imageBg.LoadFromSRM(m_pSkinFactory, pXmlNode->GetPropertySafe(SZ_PN_IMAGE));
-		m_imageBgMask.LoadFromSRM(m_pSkinFactory, pXmlNode->GetPropertySafe(_T("ImageMask")));
-
-		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBg);
-		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBgMask);
-
-		LPCTSTR	szValue = pXmlNode->GetPropertySafe(_T("HorzExtendPos"));
-		Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd);
-
-		szValue = pXmlNode->GetPropertySafe(_T("VertExtendPos"));
-		Scan2IntX(szValue, m_bgImagePainter.nSrcVertExtendStart, m_bgImagePainter.nSrcVertExtendEnd);
-
-		m_bgImagePainter.nSrcX = m_imageBg.m_x;
-		m_bgImagePainter.nSrcY = m_imageBg.m_y;
-		m_bgImagePainter.nSrcWidth = m_imageBg.m_cx;
-		m_bgImagePainter.nSrcHeight = m_imageBg.m_cy;
-		m_bgImagePainter.bDrawCenterArea = !m_imageBgMask.IsValid();
-
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
 BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	assert(IsWindow());
@@ -1455,22 +1328,6 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_wndResizer.FixedWidth(IsTRUE(szValue));
 	else if (_tcsicmp(szProperty, _T("FixedHeight")) == 0)
 		m_wndResizer.FixedHeight(IsTRUE(szValue));
-	else if (_tcsicmp(szProperty, _T("PaintBg")) == 0)
-	{
-		m_bPaintBg = IsTRUE(szValue);
-		if (m_bPaintBg)
-			RecreateBrush();
-	}
-	else if (_tcsicmp(szProperty, _T("BgColor")) == 0 || _tcsicmp(szProperty, _T("BkColor")) == 0
-		|| _tcsicmp(szProperty, _T("BackgroundColor")) == 0)
-	{
-		GetColorValue(m_clrBgOrg, szValue);
-		RecreateBrush();
-	}
-	else if (_tcsicmp(szProperty, _T("FgColor")) == 0)
-	{
-		GetColorValue(m_clrFg, szValue);
-	}
 	else if (_tcsicmp(szProperty, SZ_PN_NAME) == 0)
 	{
 		m_strSkinWndName = szValue;
@@ -1531,7 +1388,6 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			m_nTranslucencyAlphaOnHover = m_nTranslucencyAlpha;
 		if (m_bSkinOpened)
 			StartTranslucencyFade();
-		RecreateBrush();
 	}
 	else if (IsPropertyName(szProperty, _T("TranslucencyAlphaOnActive")))
 	{
@@ -1540,15 +1396,10 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			m_nTranslucencyAlpha = m_nTranslucencyAlphaOnActive;
 		if (m_bSkinOpened)
 			StartTranslucencyFade();
-		RecreateBrush();
 	}
 	else if (IsPropertyName(szProperty, _T("TranslucencyAlphaOnHover")))
 	{
 		m_nTranslucencyAlphaOnHover = _ttoi(szValue);
-	}
-	else if (IsPropertyName(szProperty, _T("BgImage.Image")))
-	{
-		m_imageBg.LoadFromSRM(m_pSkinFactory, szValue);
 	}
 #endif
 	else if (IsPropertyName(szProperty, _T("IsDialog")))
@@ -1592,11 +1443,6 @@ void CSkinWnd::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropFile(_T("Cursor"), m_strCusor.c_str(), _T("*.cur"), !m_strCusor.empty());
 	listProperties.AddPropBoolStr(_T("FixedWidth"), m_wndResizer.IsFixedWidth(), m_wndResizer.IsFixedWidth());
 	listProperties.AddPropBoolStr(_T("FixedHeight"), m_wndResizer.IsFixedHeight(), m_wndResizer.IsFixedHeight());
-
-	listProperties.AddPropBoolStr(_T("PaintBg"), m_bPaintBg);
-	listProperties.AddPropColor(_T("BgColor"), m_clrBgOrg);
-
-	listProperties.AddPropColor(_T("FgColor"), m_clrFg);
 
 	m_fontProperty.EnumProperties(listProperties);
 
@@ -2032,12 +1878,6 @@ void CSkinWnd::InvalidateRectOfLayeredWindow(const RECT* lpRect)
 	if (lpRect)
 		pMemGraph->SetClipBoundBox(*lpRect);
 
-	if (m_bPaintBg)
-	{
-		// pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), m_clrBg);
-		RedrawBackground(pMemGraph, NULL);
-	}
-
 	// draw every ui objects on back buffer one by one
 	m_rootConainter.Draw(pMemGraph);
 
@@ -2167,7 +2007,7 @@ BOOL CSkinWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
 
 void CSkinWnd::StartTranslucencyFade()
 {
-	if (m_bTranslucencyLayered && m_bPaintBg)
+	if (m_bTranslucencyLayered)
 	{
 		m_dwTransFadeinBegTime = GetTickCount();
 		m_nTransAlphaBeg = m_nTranslucencyAlphaDynamic;
@@ -2229,7 +2069,6 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 		m_nTranslucencyAlphaDynamic = nAlphaNew;
 		ASSERT(m_nTranslucencyAlphaDynamic >= 0 && m_nTranslucencyAlphaDynamic <= 255);
 
-		RecreateBrush();
 		InvalidateRect();
 	}
 }
@@ -2387,9 +2226,6 @@ void CSkinWnd::OnAdjustHue(float hue, float saturation, float luminance)
 		return;
 
 	m_fontProperty.OnAdjustHue(this, hue, saturation, luminance);
-
-	m_clrBg = m_clrBgOrg;
-	m_pSkinFactory->GetAdjustedHueResult(m_clrBg);
 
 	m_rootConainter.OnAdjustHue(hue, saturation, luminance);
 }

@@ -42,7 +42,7 @@
     <seperator/>
     <button ID="ID_EDIT_HELP" Left="24" />
   </Toolbar>
-  <BarFrame Name="EditorFrame" ID="CID_EDITOR_FRAME" Rect="0,26,w,h-26-110" XBorder="0" YBorder="0">
+  <BarFrame Name="EditorFrame" ID="CID_EDITOR_FRAME" Rect="5,26+5,w-10,h-26-5-110" XBorder="0" YBorder="0">
     <ContainerBar Name="FindReplace" ID="CID_C_FIND_REPLACE" Visible="false" Width="w" Height="40"
                   MinWidth="w" MinHeight="30" FixedHeight="TRUE" RememberSizePos="false"
                   FixedWidth="TRUE" Align="Top" PaintBg="FALSE">

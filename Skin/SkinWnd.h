@@ -153,13 +153,11 @@ public:
 	// update draw of UIObject
 	virtual void InvalidateUIObject(CUIObject *pObj);
 
-	void RedrawBackground(CRawGraph *pGraph, RECT *prc);
-
 	void EnterInDrawUpdate();
 	void LeaveInDrawUpdate();
 	void CancelDrawUpdate() { m_nInRedrawUpdate--; ASSERT(m_nInRedrawUpdate >= 0); }
 
-	CSkinFactory *GetSkinFactory() { return m_pSkinFactory; }
+	CSkinFactory *GetSkinFactory() const { return m_pSkinFactory; }
 
 	void SetMainAppWnd(bool bMainAppWnd);
 	bool IsMainAppWnd() const { return m_bMainAppWnd; }
@@ -251,8 +249,11 @@ public:
 	// window alpha and transparent features
 	//
 	void SetTransparent(BYTE nAlpha, bool bClickThrough);
-	bool GetEnableTranslucencyLayered() const { return m_bTranslucencyLayered; }
+	inline bool GetEnableTranslucencyLayered() const { return m_bTranslucencyLayered; }
 	void EnableTranslucencyLayered(bool bTranslucencyLayered);
+	inline int GetCurrentTranslucency() const { return m_nTranslucencyAlphaDynamic; }
+
+	MLColor GetTranslucencyColor(const MLColor &clr) const;
 
 #ifdef _WIN32_DESKTOP
 	virtual BOOL InvalidateRect(const RECT* lpRect = NULL, BOOL bErase = FALSE);
@@ -291,7 +292,7 @@ public:
 
 public:
 	void SetProperies(SXNode::LIST_PROPERTIES &listProperties);
-	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
+	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode) { return false; }
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_
 	virtual void EnumProperties(CUIObjProperties &listProperties);
@@ -306,11 +307,6 @@ public:
 	bool UpdateSkinProperty();
 
 	bool IsWndActive();
-
-	bool IsBgImageUsed() { return m_imageBg.IsValid(); }
-
-	MLColor &GetFgColor() { return m_clrFg; }
-	MLColor &GetBgColor() { return m_clrBg; }
 
 	CSkinFontProperty *GetFontProperty() { return &m_fontProperty; }
 	CRawBmpFont *GetRawFont() { return m_fontProperty.GetFont(); }
@@ -456,15 +452,6 @@ protected:
 									// 当不使用region，它是skin的矩形。
 
 	CSkinFontProperty	m_fontProperty;	// Default font property.
-
-	MLColor			m_clrFg;		// foreground color
-	MLColor			m_clrBg;		// background color
-	MLColor			m_clrBgOrg;
-	bool			m_bPaintBg;		// Should Paint background?
-
-	// Background images
-	CScaleImagePainter	m_bgImagePainter;
-	CSFImage		m_imageBg, m_imageBgMask;
 
 	// Unprocessed properties
 	SXNode::LIST_PROPERTIES	m_listUnprocessedProperties;

@@ -385,7 +385,7 @@ CUIObject::CUIObject()
 	m_bVisible = true;
 	m_bHideIfWndInactive = false;
 	m_bHideIfMouseInactive = false;
-	m_bUseSkinBg = false;
+	m_bUseParentBg = false;
 
 	m_bTranslucencyWithSkin = false;
 	m_nOpacity = 255;
@@ -569,8 +569,8 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bHideIfWndInactive = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("HideIfMouseInactive")) == 0)
 		m_bHideIfMouseInactive = IsTRUE(szValue);
-	else if (_tcsicmp(szProperty, _T("UseSkinBg")) == 0)
-		m_bUseSkinBg = IsTRUE(szValue);
+	else if (IsPropertyName(szProperty, _T("UseParentBg")))
+		m_bUseParentBg = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("TranslucencyWithSkin")) == 0)
 		m_bTranslucencyWithSkin = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_TOOLTIP) == 0)
@@ -780,7 +780,7 @@ void CUIObject::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropBoolStr(_T("Visible"), m_bVisible, !m_bVisible);
 	listProperties.AddPropBoolStr(_T("HideIfWndInactive"), m_bHideIfWndInactive, m_bHideIfWndInactive);
-	listProperties.AddPropBoolStr(_T("UseSkinBg"), m_bUseSkinBg, m_bUseSkinBg);
+	listProperties.AddPropBoolStr(_T("UseParentBg"), m_bUseParentBg, m_bUseParentBg);
 	listProperties.AddPropBoolStr(_T("TranslucencyWithSkin"), m_bTranslucencyWithSkin, m_bTranslucencyWithSkin);
 
 	listProperties.AddPropStr(SZ_PN_TOOLTIP, m_strTooltip.c_str(), !m_strTooltip.empty() && !m_bTempTooltip);

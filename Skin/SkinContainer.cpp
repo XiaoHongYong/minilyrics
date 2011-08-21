@@ -19,6 +19,7 @@ CSkinContainer::CSkinContainer()
 	m_pMenu = NULL;
 	m_bClipChildren = false;
 	m_nFocusUIObj = -1;
+	m_bDrawBg = false;
 }
 
 CSkinContainer::~CSkinContainer()
@@ -467,6 +468,9 @@ CUIObject *CSkinContainer::GetChildByClass(LPCTSTR szClassName)
 
 void CSkinContainer::OnAdjustHue(float hue, float saturation, float luminance)
 {
+	m_clrBg = m_clrBgOrg;
+	m_pSkin->GetSkinFactory()->GetAdjustedHueResult(m_clrBg);
+
 	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		CUIObject	*pObj = m_vUIObjs[i];
@@ -493,6 +497,85 @@ CRawGraph *CSkinContainer::GetMemGraph()
 		return m_pSkin->GetMemGraphics();
 }
 
+MLColor CSkinContainer::GetBgColor() const
+{
+	if (m_bDrawBg && !m_imageBg.IsValid())
+		return m_pSkin->GetTranslucencyColor(m_clrBg);
+
+	if (m_pContainer)
+		return m_pContainer->GetBgColor();
+
+	return m_clrBg;
+}
+
+bool CSkinContainer::IsDrawBgImage() const
+{
+	if (m_imageBg.IsValid())
+		return true;
+
+	if (m_pContainer)
+		return m_pContainer->IsDrawBgImage();
+
+	return false;
+}
+
+void CSkinContainer::RedrawBackground(CRawGraph *pGraph, const RECT &rc)
+{
+	ASSERT(pGraph);
+	if (!pGraph)
+		return;
+
+	if (!m_bDrawBg)
+	{
+		if (m_pContainer)
+			m_pContainer->RedrawBackground(pGraph, rc);
+		return;
+	}
+
+	MLColor clrBg = m_pSkin->GetTranslucencyColor(m_clrBg);
+
+	CRect	rcClip, rcNewClip;
+	pGraph->GetClipBoundBox(rcClip);
+	rcNewClip.IntersectRect(&rcClip, &rc);
+
+	if (m_pSkin->GetCurrentTranslucency() == 0)
+	{
+		// Optimize for totally transparent background
+		MLColor	clr(RGB(0, 0, 0));
+		clr.setAlpha(0);
+		pGraph->FillRect(&rcNewClip, clr);
+		return;
+	}
+
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
+	pGraph->SetClipBoundBox(rcNewClip);
+
+	if (m_imageBg.IsValid())
+	{
+		// Draw Background with image
+		CDrawImageFunMask	funcDraw(pGraph, &m_imageBg, NULL, BPM_COPY);
+
+		if (m_imageBgMask.IsValid())
+			funcDraw.m_pImageMask = &m_imageBgMask;
+
+		// Fill background
+		if (m_imageBgMask.IsValid())
+			pGraph->FillRect(&rcNewClip, clrBg);
+		else if (m_pSkin->GetCurrentTranslucency() != 255)
+		{
+			MLColor	clr(RGB(0, 0, 0));
+			clr.setAlpha(0);
+			pGraph->FillRect(&rcNewClip, clr);
+		}
+
+		m_bgImagePainter.Blt(0, 0, m_rcObj.Width(), m_rcObj.Height(), funcDraw);
+
+		if (m_pSkin->GetCurrentTranslucency() != 255)
+			pGraph->MultiplyAlpha(m_pSkin->GetCurrentTranslucency(), &rcNewClip);
+	}
+	else
+		pGraph->FillRect(&rcNewClip, clrBg);
+}
 
 void CSkinContainer::Draw(CRawGraph *pGraph)
 {
@@ -504,12 +587,15 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 		pGraph->SetClipBoundBox(m_rcObj);
 	}
 
+	if (m_bDrawBg)
+		RedrawBackground(pGraph, m_rcObj);
+
 	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
 		CUIObject		*pObj = m_vUIObjs[i];
 		if (pObj->IsVisible())
 		{
-/*			if (pObj->IsUseSkinBg() && pObj->IsUpdateTranslucencyWithSkin()
+/*			if (pObj->IsUseParentBg() && pObj->IsUpdateTranslucencyWithSkin()
 				&& m_pSkin->m_nTranslucencyAlphaDynamic != m_pSkin->m_nTranslucencyAlphaOnActive)
 			{
 				// Redraw background
@@ -597,6 +683,16 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bClipChildren = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("DefaultPage")))
 		m_strDefaultPageClass = szValue;
+	else if (IsPropertyName(szProperty, _T("BgColor")))
+	{
+		m_bDrawBg = true;
+		GetColorValue(m_clrBg, szValue);
+		m_clrBgOrg = m_clrBg;
+	}
+	else if (IsPropertyName(szProperty, _T("BgImage.Image")))
+	{
+		m_imageBg.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
+	}
 	else if (StrBeginWith(szProperty, SZ_EX_POOL))
 	{
 		ASSERT(LEN_EX_POOL == _tcslen(SZ_EX_POOL));
@@ -608,6 +704,41 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		return FALSE;
 
 	return true;
+}
+
+BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
+{
+	if (m_pSkin->SetProperty(szProperty, pXmlNode))
+		return TRUE;
+
+	if (IsPropertyName(szProperty, _T("BgImage")))
+	{
+		// Set background image
+		m_imageBg.LoadFromSRM(m_pSkin->GetSkinFactory(), pXmlNode->GetPropertySafe(SZ_PN_IMAGE));
+		m_imageBgMask.LoadFromSRM(m_pSkin->GetSkinFactory(), pXmlNode->GetPropertySafe(_T("ImageMask")));
+
+		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBg);
+		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBgMask);
+
+		LPCTSTR	szValue = pXmlNode->GetPropertySafe(_T("HorzExtendPos"));
+		Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd);
+
+		szValue = pXmlNode->GetPropertySafe(_T("VertExtendPos"));
+		Scan2IntX(szValue, m_bgImagePainter.nSrcVertExtendStart, m_bgImagePainter.nSrcVertExtendEnd);
+
+		m_bgImagePainter.nSrcX = m_imageBg.m_x;
+		m_bgImagePainter.nSrcY = m_imageBg.m_y;
+		m_bgImagePainter.nSrcWidth = m_imageBg.m_cx;
+		m_bgImagePainter.nSrcHeight = m_imageBg.m_cy;
+		m_bgImagePainter.bDrawCenterArea = !m_imageBgMask.IsValid();
+
+		if (m_imageBg.IsValid())
+			m_bDrawBg = true;
+
+		return true;
+	}
+
+	return false;
 }
 
 #ifdef _SKIN_EDITOR_

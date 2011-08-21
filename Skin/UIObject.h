@@ -282,8 +282,8 @@ public:
 	inline bool IsEnable() { return m_bEnable; }
 	inline void SetEnable(bool bEnable) { m_bEnable = bEnable; } 
 
-	inline bool IsUseSkinBg() { return m_bUseSkinBg; }
-	inline void SetUseSkinBg(bool bUseSkinBg) { m_bUseSkinBg = bUseSkinBg; }
+	inline bool IsUseParentBg() { return m_bUseParentBg; }
+	inline void SetUseParentBg(bool bUseSkinBg) { m_bUseParentBg = bUseSkinBg; }
 
 	virtual void SetText(LPCTSTR szText);
 	virtual tstring &GetText() { return m_strText; }
@@ -367,7 +367,7 @@ public:
 	bool		m_bVisible;
 	bool		m_bHideIfWndInactive;
 	bool		m_bHideIfMouseInactive;
-	bool		m_bUseSkinBg;	// Invalidate call will update background, if m_bUseSkinBg is true
+	bool		m_bUseParentBg;	// Invalidate call will update background, if m_bUseParentBg is true
 
 	bool		m_bTranslucencyWithSkin;	// Set the alpha of UIObject to the skin, if this flag is set.
 	int16		m_nOpacity;

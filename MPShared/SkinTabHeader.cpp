@@ -518,24 +518,26 @@ void CSkinTabHeader::DrawTabButton(CRawGraph *pGraph, Button &bt, CRect &rcButto
 		rcMask.right = m_img.width();
 		rcMask.bottom = rcMask.top + m_nTabHeight;
 
+		MLColor clrBg = m_pContainer->GetBgColor();
+
 		// Fill left border
 		rc = rcButton;
 		rc.right = rc.left + m_nButtonBorderSize;
-		pGraph->FillRect(&rc, m_img.GetHandle(), &rcMask, m_pSkin->GetBgColor());
+		pGraph->FillRect(&rc, m_img.GetHandle(), &rcMask, clrBg);
 
 		// Button face
 		rc.left = rc.right;
 		rc.right = rcButton.right;
 		rcMask.left += m_nButtonBorderSize;
 		rcMask.right -= m_nButtonBorderSize;
-		TillFill(pGraph, &rc, m_img.GetHandle(), &rcMask, m_pSkin->GetBgColor());
+		TillFill(pGraph, &rc, m_img.GetHandle(), &rcMask, clrBg);
 
 		// Fill right border
 		rc.left = rc.right;
 		rc.right = rc.left + m_nButtonBorderSize;
 		rcMask.left = rcMask.right;
 		rcMask.right += m_nButtonBorderSize;
-		pGraph->FillRect(&rc, m_img.GetHandle(), &rcMask, m_pSkin->GetBgColor());
+		pGraph->FillRect(&rc, m_img.GetHandle(), &rcMask, clrBg);
 	}
 	else
 		nYPosTabButton = TIP_INACTIVE * m_nTabHeight;

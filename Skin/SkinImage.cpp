@@ -47,9 +47,6 @@ void CSkinNStatusImage::Draw(CRawGraph *pGraph)
 
 	StatImg		*si = m_vStImages[m_nCurStatus];
 
-	if (m_bpm == BPM_BLEND_ALPHA)
-		m_pSkin->RedrawBackground(pGraph, &m_rcObj);
-
 	if (m_BltMode == BLT_STRETCH)
 	{
 		si->img.StretchBlt(pGraph, m_rcObj.left, m_rcObj.top,
