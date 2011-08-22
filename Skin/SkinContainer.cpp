@@ -568,7 +568,7 @@ void CSkinContainer::RedrawBackground(CRawGraph *pGraph, const RECT &rc)
 			pGraph->FillRect(&rcNewClip, clr);
 		}
 
-		m_bgImagePainter.Blt(0, 0, m_rcObj.Width(), m_rcObj.Height(), funcDraw);
+		m_bgImagePainter.Blt(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), funcDraw);
 
 		if (m_pSkin->GetCurrentTranslucency() != 255)
 			pGraph->MultiplyAlpha(m_pSkin->GetCurrentTranslucency(), &rcNewClip);

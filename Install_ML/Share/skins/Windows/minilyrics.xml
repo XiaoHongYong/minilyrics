@@ -3,21 +3,21 @@
   <style>
     <WindowFrame WindowsAppearance="TRUE"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
-         PaintBg="TRUE" BgColor="#ece9d8" FgColor="#282828" EnableClickThrough="false"
+         BgColor="#ece9d8" EnableClickThrough="false"
          FontName="Verdana" FontHeight="14" TextColor="#000000">
       <ClientArea Rect="0,0,w,h" ClipChildren="true"/>
     </WindowFrame>
 
     <MenuWindowFrame WindowsAppearance="TRUE"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
-         PaintBg="TRUE" BgColor="#ece9d8" FgColor="#282828" EnableClickThrough="false"
+         BgColor="#ece9d8" EnableClickThrough="false"
          FontName="Verdana" FontHeight="14" TextColor="#000000">
 
       <DecorativeContainer Name="Menu bar" Rect="0,0,w,23">
         <Image Name="Menu Bg" Rect="0,0,w,23" Image="menu_bg.png"
                BltMode="tile" BlendPixMode="copy"/>
         <MenuBar Rect="0,2,w-90-150,20" Name="Menu"
-                 UseSkinBg="true" TranslucencyWithSkin="TRUE"
+                 UseParentBg="true" TranslucencyWithSkin="TRUE"
            FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
            TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
            TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"

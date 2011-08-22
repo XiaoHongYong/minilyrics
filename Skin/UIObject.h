@@ -131,9 +131,8 @@ enum
 	UO_MSG_WANT_ALL			= 0xFFFFFFFF
 };
 
-#define GetTRUE(szValue)		(_tcsicmp(_T("TRUE"), szValue) == 0)
-#define IsTRUE(szValue)			(_tcsicmp(_T("TRUE"), szValue) == 0 || _tcsicmp(_T("1"), szValue) == 0)
-#define GetFALSE(szValue)		(_tcsicmp(_T("FALSE"), szValue) == 0)
+bool IsTRUE(LPCTSTR szValue);
+
 #define BOOLTOSTR(bValue)		(bValue ? _T("TRUE") : _T("FALSE"))
 
 #define GET_ID_BY_NAME(_id)		_id = GetIDByName(_T(#_id))

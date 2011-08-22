@@ -173,12 +173,9 @@ BOOL CSkinStaticText::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (m_font.SetProperty(szProperty, szValue))
 		return TRUE;
-	else if (_tcsicmp(szProperty, _T("PaintBg")) == 0)
-	{
-		m_bPaintBg = IsTRUE(szValue);
-	}
 	else if (_tcsicmp(szProperty, _T("BgColor")) == 0)
 	{
+		m_bPaintBg = true;
 		GetColorValue(m_clrBg, szValue);
 	}
 	else if (_tcsicmp(szProperty, _T("LeftMargin")) == 0)
@@ -208,7 +205,6 @@ void CSkinStaticText::EnumProperties(CUIObjProperties &listProperties)
 	m_font.EnumProperties(listProperties);
 	listProperties.AddPropInt(_T("LeftMargin"), m_nLeftMargin);
 	listProperties.AddPropStr(_T("Text"), m_strText.c_str(), !m_strText.empty());
-	listProperties.AddPropBoolStr(_T("PaintBg"), m_bPaintBg, m_bPaintBg);
 	listProperties.AddPropColor(_T("BgColor"), m_clrBg, m_bPaintBg || m_clrBg.get() != 0);
 
 	tstring		str;

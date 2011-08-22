@@ -236,6 +236,7 @@ protected:
 
 	// basic colors
 	MLColor					m_clrBg;
+	bool					m_bSetSkinBg;
 
 	//
 	// blending lyrics options:

@@ -357,6 +357,11 @@ void ReadMarginValue(LPCTSTR szValue, CRect &rc)
 		DBGLOG1(_T("Maring/Padding value isn't correct: %s."), szValue);
 }
 
+bool IsTRUE(LPCTSTR szValue)
+{
+	return (_tcsicmp(_T("TRUE"), szValue) == 0 || _tcsicmp(_T("1"), szValue) == 0);
+}
+
 //////////////////////////////////////////////////////////////////////
 
 

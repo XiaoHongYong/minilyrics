@@ -3,7 +3,7 @@
   <include Name="Styles.xml"/>
   <style>
     <WindowFrame Region="Modern.tr2" MinWidth="275" MinHeight="250" Width="640" Height="450"
-         PaintBg="TRUE" BgColor="#ece9d8" FontName="Verdana" FontHeight="14" TextColor="#000000">
+         BgColor="#ece9d8" FontName="Verdana" FontHeight="14" TextColor="#000000">
       <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="23">
         <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption-frame.png" ImageRect="0,24,275,23" ImageFocus="caption-frame.png" ImageFocusRect="0,0,275,23" CutPos="25,78,196,225"/>
         <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_CLOSE" Name="quit" Image="buttons.bmp" ImageRect="33,0,11,10" ImageSel="buttons.bmp" ImageSelRect="33,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="33,10,11,10"/>
@@ -17,7 +17,7 @@
       <HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.bmp" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
     </WindowFrame>
     <MenuWindowFrame Region="Modern.tr2" MinWidth="275" MinHeight="250" Width="640" Height="450"
-         PaintBg="TRUE" BgColor="#ece9d8" FontName="Verdana" FontHeight="14" TextColor="#000000">
+         BgColor="#ece9d8" FontHeight="14" TextColor="#000000">
       <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="40">
         <CaptionImage Left="0" Top="0" Width="w" Height="40" Name="Caption" EnableDblClick="true" Image="menu-caption.png" ImageRect="0,45,275,40" ImageFocus="menu-caption.png" ImageFocusRect="0,0,275,40" CutPos="25,78,196,225"/>
         <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,11,10" ImageSel="buttons.bmp" ImageSelRect="0,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="0,10,11,10"/>

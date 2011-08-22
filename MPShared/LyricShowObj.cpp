@@ -606,6 +606,7 @@ CLyricShowObj::CLyricShowObj()
 	m_hue = 0.0;
 
 	m_clrBg.set(RGB(79, 88, 110));
+	m_bSetSkinBg = true;
 
 	m_tobHilight.obm = OBM_COLOR;
 	m_tobHilight.clr[TCI_FILL].set(RGB(255, 255, 255));
@@ -2174,9 +2175,9 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_LyricsDisplayOpt = DisplayOptFromStr(szValue);
 	}
 	else if (_tcsicmp(szProperty, _T("BgColor")) == 0)
-	{
 		SetBgColor(szValue);
-	}
+	else if (_tcsicmp(szProperty, _T("SetSkinBg")) == 0)
+		m_bSetSkinBg = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("UseBgImage")) == 0)
 	{
 		m_bUseBgImg = IsTRUE(szValue);
@@ -2412,7 +2413,7 @@ void CLyricShowObj::SetBgColor(LPCTSTR szValue)
 
 	GetColorValue(m_clrBg, szValue);
 
-	if (m_pSkin)
+	if (m_pSkin && m_bSetSkinBg)
 		m_pSkin->SetProperty(_T("BgColor"), szValue);
 }
 

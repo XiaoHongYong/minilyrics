@@ -5,7 +5,7 @@ class CSkinFactory;
 
 /************************************************************************
 
-The image with --- is extendable
+The image with --- is expandable
 
 ********---****
 ********---****
@@ -50,7 +50,7 @@ public:
 
 		// Draw area A
 		blter(nDstX, nDstY,
-			nDstHorzExtendStart - nDstX, nSrcVertExtendStart - nDstY,
+			nDstHorzExtendStart - nDstX, nSrcVertExtendStart - nSrcY,
 			nSrcX, nSrcY);
 
 		// Draw area B

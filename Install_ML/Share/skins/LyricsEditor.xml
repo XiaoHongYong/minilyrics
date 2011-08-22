@@ -45,7 +45,7 @@
   <BarFrame Name="EditorFrame" ID="CID_EDITOR_FRAME" Rect="5,26+5,w-10,h-26-5-110" XBorder="0" YBorder="0">
     <ContainerBar Name="FindReplace" ID="CID_C_FIND_REPLACE" Visible="false" Width="w" Height="40"
                   MinWidth="w" MinHeight="30" FixedHeight="TRUE" RememberSizePos="false"
-                  FixedWidth="TRUE" Align="Top" PaintBg="FALSE">
+                  FixedWidth="TRUE" Align="Top">
       <Container Name="Find" ID="CID_C_FIND" Rect="0,0,w,35">
         <NormalTextBt ID="CID_FIND_PREV" Text="Find &amp;Previous" Rect="10,10,100,"/>
         <NormalTextBt ID="CID_FIND_NEXT" Text="Find &amp;Next" Rect="130,10,100,"/>

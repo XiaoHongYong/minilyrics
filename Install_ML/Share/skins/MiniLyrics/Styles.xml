@@ -3,7 +3,7 @@
   <style>
     <WindowFrame EnableTranslucency="true" TranslucencyAlpha="255"
          MinWidth="100" MinHeight="100" Width="330" Height="400"
-         PaintBg="TRUE" BgColor="#FFFFFF" FgColor="#282828" EnableClickThrough="false"
+         BgColor="#FFFFFF" EnableClickThrough="false"
          FontName="Verdana" FontHeight="14" TextColor="#000000" IsDialog="true">
 
       <Image Name="Left border" Rect="0,31,5,h-31-15" Image="frame.png" ImageRect="0,31,5,54"
@@ -23,7 +23,7 @@
 
         <Text ID="ID_CAPTION" Rect="24,8,w-80,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
         <Toolbar ID="CID_TB_SYSBT" Rect="w-10-20,10,20,16" TranslucencyWithSkin="TRUE"
-             UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+             UseParentBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
              blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
              MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
           <button ID="ID_CLOSE" Left="4" />
@@ -35,7 +35,7 @@
 
     <MenuWindowFrame EnableTranslucency="true" TranslucencyAlpha="255" BgColor="#EBEBEB"
          MinWidth="100" MinHeight="100" Width="330" Height="400" EnableClickThrough="false"
-         FontName="Verdana" FontHeight="14" TextColor="#000000" IsDialog="true">
+         FontName="Verdana" FontHeight="14" TextColor="#000000" IsDialog="true" >
 
 	  <Frame Rect="0,0,w,h" Image="frame.png" ImageFocus="frame-focus.png" RoundWidthTop="31" RoundWidthBottom="6" ThickWidth="5"
 		BlendPixMode="copy"/>
@@ -45,7 +45,7 @@
           ImageFocus="frame-foucs.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
 
         <MenuBar Rect="13,8,w/2-10,20" Name="Menu"
-                 UseSkinBg="true" TranslucencyWithSkin="TRUE" FontName="Verdana"
+                 UseParentBg="true" TranslucencyWithSkin="TRUE" FontName="Verdana"
            FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
            TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
            TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
@@ -53,7 +53,7 @@
 		  
         <Text ID="ID_CAPTION" Rect="w/2,8,w/2-10-60-10,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
         <Toolbar ID="CID_TB_SYSBT" Rect="w-10-60,10,60,16" TranslucencyWithSkin="TRUE"
-             UseSkinBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+             UseParentBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
              blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
              MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
 	        <button ID="ID_MINIMIZE" Left="1" />
@@ -62,12 +62,12 @@
         </Toolbar>
       </DecorativeContainer>
       
-      <ClientArea Rect="5,31,w-10,h-31-5" ClipChildren="true"/>
+      <ClientArea Rect="5,31,w-10,h-31-6" ClipChildren="true"/>
     </MenuWindowFrame>
 
     <PopupWndFrame EnableTranslucency="true" TranslucencyAlpha="255"
          FixedWidth="true" FixedHeight="true"
-         PaintBg="TRUE" BgColor="#ece9d8" FgColor="#282828" EnableClickThrough="false">
+         BgColor="#ece9d8" EnableClickThrough="false">
       <XScaleImage Left="0" Top="0" Width="w" Height="5" Name="Top border"
                    Image="menu_frame.png" ImageRect="0,0,50,5"
                    ImageScaleXStart="10" ImageScaleXEnd="40" BlendPixMode="copy"/>
@@ -94,34 +94,34 @@
       <button ID="ID_NEXT" Left="4"/>
       <button ID="ID_HELP" Left="7"/>
     </NormalToolbar>
-	<RefreshButton Extends="Button" Width="16" Height="16" Image="refresh.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16" ImageFocusPos="0,32" UseSkinBg="TRUE"/>
-    <NormalText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
-    <TitleText Extends="Text" Height="25" UseSkinBg="true" FontName="Verdana" FontHeight="20" TextColor="#000000" AlignText="AT_CENTER"/>
-    <ErrorText Extends="Text" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#FF0000"/>
-    <NormalLink Extends="TxtLink" Height="15" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#0000FF"/>
+	<RefreshButton Extends="Button" Width="16" Height="16" Image="refresh.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16" ImageFocusPos="0,32" UseParentBg="TRUE"/>
+    <NormalText Extends="Text" Height="15" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
+    <TitleText Extends="Text" Height="25" UseParentBg="true" FontName="Verdana" FontHeight="20" TextColor="#000000" AlignText="AT_CENTER"/>
+    <ErrorText Extends="Text" Height="15" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#FF0000"/>
+    <NormalLink Extends="TxtLink" Height="15" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#0000FF"/>
     <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
-          Height="22" Padding="5,3" UseSkinBg="true" TextLeftMargin="8" TextRightMargin="8"
+          Height="22" Padding="5,3" UseParentBg="true" TextLeftMargin="8" TextRightMargin="8"
           Image="s_txt_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalImageBt Extends="ImageButton" ContentMarginX="9" ContentMarginY="7"
-          Height="20" Padding="5,4" UseSkinBg="true" TabFocus="true"
+          Height="20" Padding="5,4" UseParentBg="true" TabFocus="true"
           Image="s_image_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
     <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080"
-          Height="20" Padding="3,2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
+          Height="20" Padding="3,2" UseParentBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
           CheckBox="true" TabFocus="true"
           Image="s_checkbox.png" ImageSize="20,20"
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_checkbox.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
     <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080"
-          Height="20" Padding="3,2" UseSkinBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
+          Height="20" Padding="3,2" UseParentBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
            Radio="true" TabFocus="true"
           Image="s_radio_button.png" ImageSize="20,20"
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_radio_button.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
-    <NormalEdit Extends="EditCtrl" Height="18" UseSkinBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
+    <NormalEdit Extends="EditCtrl" Height="18" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
           XMargin="5" YMargin="0"/>
     <NormalListCtrl Extends="ListCtrl" BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 
           NowPlayBgColor="#5478CA" TextColor="#000000" SelTextColor="#FFFFFF" 
@@ -133,13 +133,13 @@
           NowPlayTextColor="#FFFFFF" FontName="Verdana" FontHeight="14"
           HeaderHeight="17" LineColor="#808080" ImageSortedHeader="s_listctrl_sorted_header.png"
           ImageHeader="s_listctrl_header.png" ImageSortFlag="s_listctrl_sort_flag.png"/>
-    <NormalTabButton Extends="TabButton" Height="22" UseSkinBg="TRUE"
+    <NormalTabButton Extends="TabButton" Height="22" UseParentBg="TRUE"
           FontName="Verdana" FontHeight="14" TextColor="#000000"
           Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
           MarginX="0" MarginY="0" />
     <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
           Height="22" Padding="5,4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
-          UseSkinBg="true" Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
+          UseParentBg="true" Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"
           XBorder="0" YBorder="10" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
