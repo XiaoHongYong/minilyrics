@@ -23,6 +23,9 @@ public:
 	// IEventHandler
 	virtual void OnEvent(const IEvent *pEvent);
 
+protected:
+	void UpdateCaptionText();
+
 };
 
 #ifdef _WIN32

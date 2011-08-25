@@ -31,48 +31,29 @@
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
               CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
 
-    <Image Name="Left top border" Rect="0,0,15,15" Image="frame.png" ImageRect="0,0,15,15"
-           BlendPixMode="alpha_mask" ImageMask="frame-mask.png"/>
-    <Image Name="Right top border" Rect="w-15,0,15,15" Image="frame.png" ImageRect="85,0,15,15"
-           BlendPixMode="alpha_mask" ImageMask="frame-mask.png"/>
-    <Image Name="Top border" Rect="15,0,w-30,5" Image="frame.png" ImageRect="15,0,70,5"
-           BltMode="tile" BlendPixMode="alpha_mask"/>
-    <Image Name="Left border" Rect="0,15,5,h-15-15" Image="frame.png" ImageRect="0,31,5,54"
-           BltMode="tile" BlendPixMode="alpha_mask"/>
-    <Image Name="Right border" Rect="w-5,15,5,h-15-15" Image="frame.png" ImageRect="95,31,5,54"
-           BltMode="tile" BlendPixMode="alpha_mask"/>
-    <Image Name="Bottom border" Rect="15,h-5,w-30,h-5" Image="frame.png" ImageRect="15,95,70,5"
-           BltMode="tile" BlendPixMode="alpha_mask"/>
-    <Image Name="Left Bottom border" Rect="0,h-15,15,15" Image="frame.png" ImageRect="0,85,15,15"
-           BlendPixMode="alpha_mask"/>
-    <Image Name="Right Bottom border" Rect="w-15,h-15,15,15" Image="frame.png" ImageRect="85,85,15,15"
-           BlendPixMode="alpha_mask"/>
+	<Frame Rect="0,0,w,h" Image="frame.png" ImageFocus="frame-focus.png" RoundWidthTop="31" RoundWidthBottom="6" ThickWidth="5"
+		BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
 
-    <Image Name="Left border" Rect="0,31,5,h-31-15" Image="frame.png" ImageRect="0,31,5,54"
-           BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
-    <Image Name="Right border" Rect="w-5,31,5,h-31-15" Image="frame.png" ImageRect="95,31,5,54"
-           BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
-    <Image Name="Bottom border" Rect="15,h-5,w-30,h-5" Image="frame.png" ImageRect="15,95,70,5"
-           BltMode="tile" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
-    <Image Name="Left Bottom border" Rect="0,h-15,15,15" Image="frame.png" ImageRect="0,85,15,15"
-           BlendPixMode="copy" TranslucencyWithSkin="TRUE" ImageMask="frame-mask.png"/>
-    <Image Name="Right Bottom border" Rect="w-15,h-15,15,15" Image="frame.png" ImageRect="85,85,15,15"
-           BlendPixMode="copy" TranslucencyWithSkin="TRUE" ImageMask="frame-mask.png"/>
+	<Frame Rect="0,0,w,h" Image="frame.png" RoundWidthTop="31" RoundWidthBottom="6" ThickWidth="5"
+		BlendPixMode="alpha_mask" TranslucencyWithSkin="TRUE"/>
 
     <DecorativeContainer Name="Caption bar" Rect="0,0,w,31" TranslucencyWithSkin="TRUE">
       <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
-        ImageFocus="frame-foucs.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
+        ImageFocus="frame-focus.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
 
       <Button Rect="15,9,16,16" ID="ID_MENU" Name="Menu"
         Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
         ImageFocusPos="0,32" />
-      <Image Name="Brand" Rect="44,8,81,20" Image="name.png"/>
-      <MenuBar Rect="150,9,w-75-150,18" Name="Menu" Menu="MainWndMenu" FontName="Verdana"
+      <MenuBar Rect="40,8,w/2-40,20" Name="Menu" Menu="MainWndMenu" FontName="Verdana"
          FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
          TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
          TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
          BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
 
+	  <Text ID="ID_CAPTION" Rect="w/2,8,w/2-10-60-10,20" CaptionText="true" 
+		FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" 
+		TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
+		 
       <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16" TranslucencyWithSkin="TRUE"
            Image="caption_btn.png" enablehover="TRUE" units_x="16"
            blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"

@@ -49,16 +49,14 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 	else
 		xTextStart += rcFrame.left;
 
-	CSFImage *pImage = NULL;
+	CSFImage *pImage = &m_image;
 	if (m_pObjFocusIndicator)
 	{
 		if (m_imageFocus.IsValid() && m_pSkin->GetFocusUIObj() == m_pObjFocusIndicator)
 			pImage = &m_imageFocus;
-		else
-			pImage = &m_image;
 	}
-	else
-		pImage = &m_image;
+	else if (m_imageFocus.IsValid() && m_pSkin->IsWndActive())
+		pImage = &m_imageFocus;
 
 	// Draw top left corner.
 	pImage->Blt(pGraph, rcFrame.left, rcFrame.top, m_nRoundWidthTop, m_nRoundWidthTop, 0, 0, m_bpm);

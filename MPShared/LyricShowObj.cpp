@@ -1358,28 +1358,39 @@ void CLyricShowObj::DrawCurrentRow(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos, int yDrawLyrEndPos)
 {
 #ifdef _WIN32_DESKTOP
-	if ((!m_pContainer->IsDrawBgImage() && !m_img.IsValid()) || m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+	if (m_pSkin->m_nTranslucencyAlphaDynamic > 0)
 	{
-		CRect	rc;
+		if (m_bSetSkinBg && m_pContainer->IsDrawBgImage())
+			return;
 
-		rc.SetRect(m_rcObj.left, m_rcObj.top + m_nYMargin, m_rcObj.right, m_rcObj.top + m_nYMargin + m_nFontHeight);
-		if (rc.bottom > yDrawLyrStartPos)
-		{
-			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-				pGraphics->VertAlphaFadeOut(&rc, true);
-			else
-				pGraphics->VertFadeOut(&rc, m_pContainer->GetBgColor(), true);
-		}
+		if (m_img.IsValid())
+			return;
+	}
 
-		rc.bottom = m_rcObj.bottom - m_nYMargin;
-		rc.top = m_rcObj.bottom - m_nYMargin - m_nFontHeight;
-		if (rc.top < yDrawLyrEndPos)
-		{
-			if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-				pGraphics->VertAlphaFadeOut(&rc, false);
-			else
-				pGraphics->VertFadeOut(&rc, m_pContainer->GetBgColor(), false);
-		}
+	MLColor clrBg;
+	if (m_bSetSkinBg)
+		clrBg = m_pContainer->GetBgColor();
+	else
+		clrBg = m_clrBg;
+
+	CRect	rc;
+	rc.SetRect(m_rcObj.left, m_rcObj.top + m_nYMargin, m_rcObj.right, m_rcObj.top + m_nYMargin + m_nFontHeight);
+	if (rc.bottom > yDrawLyrStartPos)
+	{
+		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+			pGraphics->VertAlphaFadeOut(&rc, true);
+		else
+			pGraphics->VertFadeOut(&rc, clrBg, true);
+	}
+
+	rc.bottom = m_rcObj.bottom - m_nYMargin;
+	rc.top = m_rcObj.bottom - m_nYMargin - m_nFontHeight;
+	if (rc.top < yDrawLyrEndPos)
+	{
+		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+			pGraphics->VertAlphaFadeOut(&rc, false);
+		else
+			pGraphics->VertFadeOut(&rc, clrBg, false);
 	}
 #endif
 }
@@ -1415,12 +1426,14 @@ void CLyricShowObj::UpdateLyricDrawBufferBackground(CRawGraph *pGraphics, CRect 
 		if (m_bDarkenLyrBgOnImg)
 			DarkenLyricsBg(pGraphics, rc);
 	}
-	else
+	else if (m_bSetSkinBg)
 	{
 		ASSERT(rc.bottom <= m_rcObj.bottom);
 		m_pContainer->RedrawBackground(pGraphics, rc);
 		// pGraphics->FillRect(rc.left, rc.top, rc.Width(), rc.Height(), &m_brBg);
 	}
+	else
+		pGraphics->FillRect(&rc, m_clrBg);
 
 /*#ifndef _WIN32_WCE
 	if (m_bHasAd)
@@ -1779,7 +1792,7 @@ void CLyricShowObj::OnAdjustHue(float hue, float saturation, float luminance)
 
 	tstring		strColor;
 	ColorToStr(m_clrBg, strColor);
-	if (m_pSkin)
+	if (m_pSkin && m_bSetSkinBg)
 		m_pSkin->SetProperty(_T("BgColor"), strColor.c_str());
 
 	for (TOBColorIndex i = TCI_START; i < TCI_COUNT; i = (TOBColorIndex)(i + 1))

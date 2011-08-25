@@ -19,7 +19,7 @@
 
       <DecorativeContainer Name="Caption bar" Rect="0,0,w,31" TranslucencyWithSkin="TRUE">
         <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
-          ImageFocus="frame-foucs.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
+          ImageFocus="frame-focus.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
 
         <Text ID="ID_CAPTION" Rect="24,8,w-80,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
         <Toolbar ID="CID_TB_SYSBT" Rect="w-10-20,10,20,16" TranslucencyWithSkin="TRUE"
@@ -42,7 +42,7 @@
 
       <DecorativeContainer Name="Caption bar" Rect="0,0,w,31" TranslucencyWithSkin="TRUE">
         <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
-          ImageFocus="frame-foucs.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
+          ImageFocus="frame-focus.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
 
         <MenuBar Rect="13,8,w/2-10,20" Name="Menu"
                  UseParentBg="true" TranslucencyWithSkin="TRUE" FontName="Verdana"
@@ -62,7 +62,7 @@
         </Toolbar>
       </DecorativeContainer>
       
-      <ClientArea Rect="5,31,w-10,h-31-6" ClipChildren="true"/>
+      <ClientArea Rect="6,31,w-12,h-31-6" ClipChildren="true"/>
     </MenuWindowFrame>
 
     <PopupWndFrame EnableTranslucency="true" TranslucencyAlpha="255"

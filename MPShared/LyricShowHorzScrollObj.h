@@ -13,6 +13,7 @@
 
 class CLyricShowHorzScrollObj : public CLyricShowObj  
 {
+	UIOBJECT_CLASS_NAME_DECLARE(CLyricShowObj)
 public:
 	CLyricShowHorzScrollObj();
 	virtual ~CLyricShowHorzScrollObj();
@@ -23,17 +24,12 @@ public:
 	int GetLyricRightRowAlignPos(CRawGraph *pGraphics, PML_ROW pLyricRow);
 	int GetLyricLeftRowAlignPos(CRawGraph *pGraphics, PML_ROW pLyricRow);
 
-	static LPCTSTR ClassName() { return ms_szClassName; }
-	BOOL IsKindOf(LPCTSTR szClassName);
-	LPCTSTR GetClassName();
-
 protected:
 	void OnLyrDrawContextChanged();
 	void CalculateAccelerate();
 	virtual int GetAutoHeightLines() { return 1; }
 
-public:
-	static LPCTSTR		ms_szClassName;
+	void FadeOutHorzBorder(CRawGraph *pGraphics);
 
 	//
 	// lyrics move accelerately ...

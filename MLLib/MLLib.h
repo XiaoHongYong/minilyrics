@@ -8,8 +8,6 @@
 #include "MLProfile.h"
 
 #include "MLData.h"
-#include "LicenseManager.h"
-#include "MLClientSession.h"
 
 
 #define NONE_LYRCS	_T("")

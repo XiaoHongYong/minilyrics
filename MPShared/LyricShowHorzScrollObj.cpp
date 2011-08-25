@@ -6,12 +6,8 @@
 #include "MPlayerApp.h"
 #include "LyricShowHorzScrollObj.h"
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
-// set classname
-LPCTSTR CLyricShowHorzScrollObj::ms_szClassName = _T("LyricShowHorzScroll");
+UIOBJECT_CLASS_NAME_IMP(CLyricShowHorzScrollObj, _T("LyricShowHorzScroll"))
 
 CLyricShowHorzScrollObj::CLyricShowHorzScrollObj()
 {
@@ -149,44 +145,48 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 		nRow++;
 	}
 
-#ifdef _WIN32_DESKTOP
-	// if (m_pSkin->GetEnableTranslucencyLayered())
-	{
-		CRect	rc;
-
-		rc.SetRect(m_rcObj.left, m_rcObj.top, m_rcObj.left + 30, m_rcObj.bottom);
-		if (rc.right > m_rcObj.right)
-			rc.right = m_rcObj.right;
-		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-			pGraphics->HorzAlphaFadeOut(&rc, true);
-		else
-			pGraphics->HorzFadeOut(&rc, m_pContainer->GetBgColor(), true);
-
-		rc.right = m_rcObj.right;
-		rc.left = m_rcObj.right - 30;
-		if (rc.left < m_rcObj.left)
-			rc.left = m_rcObj.left;
-		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
-			pGraphics->HorzAlphaFadeOut(&rc, false);
-		else
-			pGraphics->HorzFadeOut(&rc, m_pContainer->GetBgColor(), false);
-	}
-#endif
+	FadeOutHorzBorder(pGraphics);
 
 	autoCBR.Recover();
 }
 
-LPCTSTR CLyricShowHorzScrollObj::GetClassName()
-{
-	return ms_szClassName;
-}
 
-BOOL CLyricShowHorzScrollObj::IsKindOf(LPCTSTR szClassName)
+void CLyricShowHorzScrollObj::FadeOutHorzBorder(CRawGraph *pGraphics)
 {
-	if (CLyricShowObj::IsKindOf(szClassName))
-		return TRUE;
+#ifdef _WIN32_DESKTOP
+	if (m_pSkin->m_nTranslucencyAlphaDynamic > 0)
+	{
+		if (m_bSetSkinBg && m_pContainer->IsDrawBgImage())
+			return;
 
-	return _tcsicmp(szClassName, ms_szClassName) == 0;
+		if (m_img.IsValid())
+			return;
+	}
+
+	MLColor clrBg;
+	if (m_bSetSkinBg)
+		clrBg = m_pContainer->GetBgColor();
+	else
+		clrBg = m_clrBg;
+
+	CRect	rc;
+	rc.SetRect(m_rcObj.left, m_rcObj.top, m_rcObj.left + 30, m_rcObj.bottom);
+	if (rc.right > m_rcObj.right)
+		rc.right = m_rcObj.right;
+	if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+		pGraphics->HorzAlphaFadeOut(&rc, true);
+	else
+		pGraphics->HorzFadeOut(&rc, clrBg, true);
+
+	rc.right = m_rcObj.right;
+	rc.left = m_rcObj.right - 30;
+	if (rc.left < m_rcObj.left)
+		rc.left = m_rcObj.left;
+	if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+		pGraphics->HorzAlphaFadeOut(&rc, false);
+	else
+		pGraphics->HorzFadeOut(&rc, clrBg, false);
+#endif
 }
 
 void CLyricShowHorzScrollObj::OnLyrDrawContextChanged()

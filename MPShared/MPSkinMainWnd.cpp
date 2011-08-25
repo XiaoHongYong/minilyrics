@@ -24,6 +24,9 @@ bool CMPSkinMainWndBase::OnCreate()
 		return false;
 
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LICENSE_CHANGED, this);
+
+	UpdateCaptionText();
 
 	return true;
 }
@@ -31,6 +34,7 @@ bool CMPSkinMainWndBase::OnCreate()
 void CMPSkinMainWndBase::OnDestroy()
 {
 	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LICENSE_CHANGED, this);
 
 	if (IsMainAppWnd() && m_strSkinWndName.size())
 		g_Profile.WriteProfileString(_T("DefaultSkinWnd"), GetSkinWndName());
@@ -52,6 +56,19 @@ void CMPSkinMainWndBase::OnEvent(const IEvent *pEvent)
 		else
 			CMPSkinWnd::OnEvent(pEvent);
 	}
+	if (pEvent->eventType == ET_LICENSE_CHANGED)
+		UpdateCaptionText();
 	else
 		CMPSkinWnd::OnEvent(pEvent);
+}
+
+void CMPSkinMainWndBase::UpdateCaptionText()
+{
+	if (g_licenseManager.IsLicenseValid())
+		SetCaptionText(SZ_APP_NAME);
+	else
+	{
+		CStrPrintf strCaption(_T("%s (%s)"), SZ_APP_NAME, TOLOCAL_T("Unactivated"));
+		SetCaptionText(strCaption.c_str());
+	}
 }

@@ -513,6 +513,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\LicenseManager.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\LrcUploadDB.cpp"
 				>
 			</File>
@@ -607,6 +611,10 @@
 						Name="VCResourceCompilerTool"
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\MPShared\MLClientSession.cpp"
+				>
 			</File>
 			<File
 				RelativePath="..\MPShared\MLCmd.cpp"
@@ -799,20 +807,6 @@
 			<File
 				RelativePath="..\MPShared\PreferencePageBase.cpp"
 				>
-				<FileConfiguration
-					Name="ZikiPlayer UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="ZikiPlayer Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-					/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\MPShared\PreferPageAdvanced.cpp"
@@ -1089,6 +1083,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\LicenseManager.h"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\LoginDlg.h"
 				>
 			</File>
@@ -1170,6 +1168,10 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\MediaSource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\MLClientSession.h"
 				>
 			</File>
 			<File
@@ -1439,15 +1441,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\applicat.ico"
+				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
@@ -1455,11 +1453,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\res\bin00001.bin"
+				RelativePath="..\MPShared\Res\applicat.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragafte.ico"
+				RelativePath="..\MPShared\res\bin00001.bin"
 				>
 			</File>
 			<File
@@ -1467,7 +1465,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragbefo.ico"
+				RelativePath="..\MPShared\Res\dragafte.ico"
 				>
 			</File>
 			<File
@@ -1475,11 +1473,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\Exe.manifest"
+				RelativePath="..\MPShared\Res\dragbefo.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\fileType.bmp"
+				RelativePath="..\MPShared\win32\Exe.manifest"
 				>
 			</File>
 			<File
@@ -1487,7 +1485,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\hand.cur"
+				RelativePath="..\ML6\Res\fileType.bmp"
 				>
 			</File>
 			<File
@@ -1495,7 +1493,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\ico00001.ico"
+				RelativePath="..\ML6\Res\hand.cur"
 				>
 			</File>
 			<File
@@ -1503,11 +1501,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\icon-tga.ico"
+				RelativePath="..\ML6\Res\ico00001.ico"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\icon-tga.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\icon-tga.ico"
 				>
 			</File>
 			<File
@@ -1523,15 +1525,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\next.ICO"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\next.ICO"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\open.ICO"
+				RelativePath="..\MPShared\Res\next.ICO"
 				>
 			</File>
 			<File
@@ -1539,11 +1537,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\play.ICO"
+				RelativePath="..\ML6\Res\open.ICO"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\play.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\play.ICO"
 				>
 			</File>
 			<File
@@ -1559,15 +1561,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\save.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\save.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\selcolor.cur"
+				RelativePath="..\MPShared\Res\save.ico"
 				>
 			</File>
 			<File
@@ -1575,11 +1573,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\stop.ICO"
+				RelativePath="..\MPShared\Res\selcolor.cur"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\stop.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\stop.ICO"
 				>
 			</File>
 		</Filter>

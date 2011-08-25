@@ -1,6 +1,9 @@
 
 #pragma once
 
+#include "LicenseManager.h"
+#include "MLClientSession.h"
+
 #include "Helper.h"
 #include "MPSkinFactory.h"
 #include "MPEventsDispatcher.h"

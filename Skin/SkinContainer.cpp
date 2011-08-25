@@ -510,8 +510,13 @@ MLColor CSkinContainer::GetBgColor() const
 
 bool CSkinContainer::IsDrawBgImage() const
 {
+	// Draw with background image
 	if (m_imageBg.IsValid())
 		return true;
+
+	// Draw with background color?
+	if (m_bDrawBg)
+		return false;
 
 	if (m_pContainer)
 		return m_pContainer->IsDrawBgImage();
