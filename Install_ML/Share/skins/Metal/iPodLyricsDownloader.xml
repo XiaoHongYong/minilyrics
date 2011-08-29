@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<skinwnd Name="iPodLyricsDownloader.xml" Caption="iPod Lyrics Downloader"EnableClickThrough="false"
+         MinWidth="640" MinHeight="480" Width="700" Height="400" Menu="iPodLyricsDownloader" DefaultPage="Container.LyricsTool"
+		 ContextMenu="NormalMode" IsDialog="true" EnableTranslucency="true" TranslucencyAlpha="255">
+
+	<Image Name="left frame" Rect="0,100,2,h-100-32" Image="frame.png" ImageRect="0,10,2,100" BltMode="tile"/>
+	<Image Name="Right frame" Rect="w-2,100,2,h-100-32" Image="frame.png" ImageRect="423,10,2,100" BltMode="tile"/>
+
+	<Container Name="Caption" Rect="0,0,w,118" TranslucencyWithSkin="FALSE">
+		<Property Name="BgImage" Image="frame.png" ImageRect="0,0,425,118" HorzExtendPos="7,418" BlendPixMode="copy"/>
+
+        <MenuBar Rect="13,8,w/2-10,20" Name="Menu"
+                 UseParentBg="true" FontName="Verdana"
+           FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
+           TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
+           TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
+           BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+
+		<Text ID="ID_CAPTION" Rect="w/2,8,w/2-10-60-10,20" CaptionText="true" FontName="Verdana"
+			FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" 
+			TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
+        <Toolbar ID="CID_TB_SYSBT" Rect="w-10-60,10,60,16" 
+             UseParentBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+             blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
+             MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
+	        <button ID="ID_MINIMIZE" Left="1" />
+	        <button ID="ID_MAXIMIZE" Left="2" CanCheck="TRUE" checked_left="3"/>
+          <button ID="ID_CLOSE" Left="4" />
+        </Toolbar>
+		
+		<Container Rect="5,40,300,100" Name="PlayControl" >
+			<Button Rect="10,10,40,40" ID="ID_PREVIOUS" ImageMask="prev_next.png" ImageMaskRect="0,0,40,40"
+				Image="prev_next.png" ImageSize="40,40" ImagePos="0,0" ImageSelPos="0,80"
+				ImageFocusPos="0,40" UseParentBg="true" />
+
+			<Button Rect="60,3,55,55" ID="ID_PLAYPAUSE" ImageMask="playpause.png" ImageMaskRect="0,0,55,55"
+				S0_Image="playpause.png" S0_ImageSize="55,55" S0_ImagePos="0,0" S0_ImageSelPos="0,110" S0_ImageFocusPos="0,55"
+				S1_Image="playpause.png" S1_ImageSize="55,55" S1_ImagePos="55,0" S1_ImageSelPos="55,110" S1_ImageFocusPos="55,55"
+				UseParentBg="true" />
+
+			<Button Rect="125,10,40,40" ID="ID_NEXT" ImageMask="prev_next.png" ImageMaskRect="40,0,40,40"
+				Image="prev_next.png" ImageSize="40,40" ImagePos="40,0" ImageSelPos="40,80"
+				ImageFocusPos="40,40" UseParentBg="true" />
+				
+			<Image Name="Volume" Rect="180,25,14,14" Image="volume.png" UseParentBg="TRUE" />
+			<SeekCtrl Name="Volume" ID="ID_VOLUME" UseParentBg="TRUE" 
+					  Rect="200,26,100,12" EndWidth="3" ImageThumb="seek_thumb.png"
+					  ImageTrack="seek_track.png"/>
+		</Container>
+
+		<Container Rect="320,35,w-315-15,70" Name="Media Info" BgColor="#000000" >
+			<Property Name="BgImage" Image="media_info_bg.png" HorzExtendPos="5,45" BlendPixMode="alpha_blend"/>
+
+			<MediaInfoText Name="Title" Rect="10,5,w-20,20" UseParentBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Title" ShowTitle="false"/>
+			<MediaInfoText Name="Artist - Album" Rect="10,27,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="false" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Artist - Album" ShowTitle="false"/>
+
+			<PlayingTime Rect="10,50,50,11" UseParentBg="true"
+				AlignText="AT_CENTER" CharWidth="8" TextImage="shade-numfont.png" ImageChars="0123456789 -:" />
+			<SeekCtrl Name="Seek" ID="ID_SEEK" UseParentBg="TRUE" 
+					  Rect="65,50,w-65-10,12" EndWidth="3" ImageThumb="seek_thumb.png"
+					  ImageTrack="seek_track.png"/>
+		</Container>
+
+    </Container>
+
+	<Animation ID="CID_AM_SHOW_WORKING" MoveFromBottom="CID_S_STATUS,CID_PROGRESS,ID_CANCEL"
+			 ResizeCtrl="CID_LIST_FILES,,,,h-10-70" Duration="300"/>
+	<Animation ID="CID_AM_HIDE_WORKING" MoveToBottom="CID_S_STATUS,CID_PROGRESS,ID_CANCEL"
+			 ResizeCtrl="CID_LIST_FILES,,,,h-10-10" Duration="300"/>
+	<Animation ID="CID_AM_SHOW_EMBEDDED_LYR" FadeIn="CID_C_EMBEDDED_LYR_TYPE" FadeOut="CID_C_LYRICS_TOOL"
+			 Duration="300"/>
+	<Animation ID="CID_AM_HIDE_EMBEDDED_LYR" FadeOut="CID_C_EMBEDDED_LYR_TYPE" FadeIn="CID_C_LYRICS_TOOL"
+			 Duration="300"/>
+
+	<BarFrame Name="Client" Rect="2,118,w-4,h-118-32" XBorder="0" YBorder="0" BgColor="#000000">
+		<ContainerBar Name="Playlist" ID="CCMD_ALBUMART" Width="108+10" MinWidth="200" MinHeight="108" Align="Top">
+			<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"
+				ImageList="Pf_AdvancedIcon.png"/>
+			<NormalText ID="CID_STATUS" Text="" Visible="false" Rect="0,h-30-20,w,"/>
+			<Progress ID="CID_PROGRESS" Visible="false" Rect="10,h-23,w-110-20,"/>
+			<NormalTextBt ID="CID_CANCEL_WORK" Visible="false" Text="Cancel" Rect="w-110-10,h-20,110,"/>
+		</ContainerBar>
+		<ContainerBar Name="MediaInfo" ID="CCMD_MEDIAINFO" Width="200" Height="108" MinWidth="200" MinHeight="108" Align="Top">
+			<LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" SetSkinBg="false"
+			  EnableToolbar="FALSE" EnableAutoResize="FALSE" />
+		</ContainerBar>
+	</BarFrame>
+	
+	<Container Name="Bottom" Rect="0,h-32,w,32" TranslucencyWithSkin="FALSE">
+		<Property Name="BgImage" Image="frame.png" ImageRect="0,118,425,32" HorzExtendPos="7,418" BlendPixMode="copy"/>
+	</Container>
+
+</skinwnd>

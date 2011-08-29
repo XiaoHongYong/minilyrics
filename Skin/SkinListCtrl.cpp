@@ -425,6 +425,13 @@ void CSkinListCtrl::AddColumn(LPCTSTR szCol, int nWidth)
 {
 	m_vHeading.push_back(new LC_ITEM::CColHeader(szCol, nWidth));
 
+	// Alloc column for existed rows.
+	for (int i = 0; i < (int)m_vRows.size(); i++)
+	{
+		LC_ROW *row = m_vRows[i];
+		row->listItems.push_back(NewLCItem(m_vHeading.size() - 1));
+	}
+
 	SetHorzScrollInfo(false);
 }
 
@@ -637,9 +644,8 @@ int CSkinListCtrl::InsertItem(int nItem, LPCTSTR lpszItem, int nImageIndex, UINT
 		return -1;
 
 	LC_ROW		*row = new LC_ROW(nImageIndex, nItemData);
-	LC_ITEM		*item = NULL;
 
-	item = NewLCItem(0);
+	LC_ITEM *item = NewLCItem(0);
 	item->strText = lpszItem;
 	row->listItems.push_back(item);
 

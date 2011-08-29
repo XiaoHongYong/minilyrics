@@ -464,11 +464,14 @@ void CSkinAnimationUIObj::OnAnimate(CSkinAnimation *pAnimation)
 		it != m_listObjAnimation.end(); ++it)
 	{
 		CAnimationMotion	*pMotion = *it;
-		CUIObject *pObj = NULL;
 		if (pMotion->m_nId != UID_INVALID)
-			pObj = m_pSkin->GetUIObjectById(pMotion->m_nId);
-
-		pMotion->Animate(pAnimation->GetState(), pAnimation->GetMotionPercent(), pObj);
+		{
+			CUIObject *pObj = m_pSkin->GetUIObjectById(pMotion->m_nId);
+			if (pObj)
+				pMotion->Animate(pAnimation->GetState(), pAnimation->GetMotionPercent(), pObj);
+			else
+				DBGLOG1(_T("Failed to get UIObject: %s"), m_pSkin->GetSkinFactory()->GetStringOfID(pMotion->m_nId).c_str());
+		}
 	}
 }
 

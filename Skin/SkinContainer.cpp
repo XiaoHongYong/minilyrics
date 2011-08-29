@@ -20,6 +20,8 @@ CSkinContainer::CSkinContainer()
 	m_bClipChildren = false;
 	m_nFocusUIObj = -1;
 	m_bDrawBg = false;
+
+	m_BgBpm = BPM_COPY;
 }
 
 CSkinContainer::~CSkinContainer()
@@ -558,7 +560,7 @@ void CSkinContainer::RedrawBackground(CRawGraph *pGraph, const RECT &rc)
 	if (m_imageBg.IsValid())
 	{
 		// Draw Background with image
-		CDrawImageFunMask	funcDraw(pGraph, &m_imageBg, NULL, BPM_COPY);
+		CDrawImageFunMask	funcDraw(pGraph, &m_imageBg, NULL, m_BgBpm);
 
 		if (m_imageBgMask.IsValid())
 			funcDraw.m_pImageMask = &m_imageBgMask;
@@ -600,13 +602,6 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 		CUIObject		*pObj = m_vUIObjs[i];
 		if (pObj->IsVisible())
 		{
-/*			if (pObj->IsUseParentBg() && pObj->IsUpdateTranslucencyWithSkin()
-				&& m_pSkin->m_nTranslucencyAlphaDynamic != m_pSkin->m_nTranslucencyAlphaOnActive)
-			{
-				// Redraw background
-				m_pSkin->RedrawBackground(pGraph, &pObj->m_rcObj, true);
-			}*/
-
 			CRawGraph::COpacityBlendAutoRecovery opacityAR(pGraph, pObj->GetOpacity());
 
 			pObj->TryToCallInitialUpdate();
@@ -720,16 +715,25 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
 	{
 		// Set background image
 		m_imageBg.LoadFromSRM(m_pSkin->GetSkinFactory(), pXmlNode->GetPropertySafe(SZ_PN_IMAGE));
-		m_imageBgMask.LoadFromSRM(m_pSkin->GetSkinFactory(), pXmlNode->GetPropertySafe(_T("ImageMask")));
+		LPCTSTR szValue = pXmlNode->GetProperty(_T("ImageMask"));
+		if (szValue)
+			m_imageBgMask.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 
 		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBg);
-		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBgMask);
+		if (m_imageBgMask.IsValid())
+			GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBgMask);
 
-		LPCTSTR	szValue = pXmlNode->GetPropertySafe(_T("HorzExtendPos"));
-		Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd);
+		szValue = pXmlNode->GetPropertySafe(_T("HorzExtendPos"));
+		if (!Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd))
+			m_bgImagePainter.nSrcHorzExtendStart = m_bgImagePainter.nSrcHorzExtendEnd = m_imageBg.m_x + m_imageBg.m_cx;
 
 		szValue = pXmlNode->GetPropertySafe(_T("VertExtendPos"));
-		Scan2IntX(szValue, m_bgImagePainter.nSrcVertExtendStart, m_bgImagePainter.nSrcVertExtendEnd);
+		if (!Scan2IntX(szValue, m_bgImagePainter.nSrcVertExtendStart, m_bgImagePainter.nSrcVertExtendEnd))
+			m_bgImagePainter.nSrcVertExtendStart = m_bgImagePainter.nSrcVertExtendEnd = m_imageBg.m_y + m_imageBg.m_cy;
+
+		szValue = pXmlNode->GetProperty(_T("BlendPixMode"));
+		if (szValue)
+			m_BgBpm = BlendPixModeFromStr(szValue);
 
 		m_bgImagePainter.nSrcX = m_imageBg.m_x;
 		m_bgImagePainter.nSrcY = m_imageBg.m_y;

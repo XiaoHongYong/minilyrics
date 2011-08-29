@@ -133,10 +133,7 @@ public:
 template<class _DrawImageFun>
 void TileBltT(int xDest, int yDest, int nWidthDest, int nHeightDest, int xSrc, int ySrc, int cxSrcUnit, int cySrcUnit, _DrawImageFun &drawFunc)
 {
-	assert(cySrcUnit);
-	assert(cxSrcUnit);
-
-	if (cySrcUnit == 0 || cxSrcUnit == 0)
+	if (cySrcUnit <= 0 || cxSrcUnit <= 0)
 		return;
 
 	int			x, y;
@@ -265,10 +262,7 @@ protected:
 	template<class _DrawImageFun>
 	void TileBltExT(CRawGraph *pGraphics, int xOrg, int yOrg, int xDest, int yDest, int nWidthDest, int nHeightDest, _DrawImageFun &drawFunc)
 	{
-		assert(m_cy);
-		assert(m_cx);
-
-		if (m_cy == 0 || m_cx == 0)
+		if (m_cy <= 0 || m_cx <= 0)
 			return;
 
 		int			xSrc, ySrc, x, y;

@@ -418,35 +418,6 @@ CUIObject::~CUIObject()
 	}
 }
 
-void CUIObject::UpdateTranslucencyWithSkin(CRawGraph *pGraph)
-{
-#ifdef _WIN32
-	if (!IsUpdateTranslucencyWithSkin())
-		return;
-
-	if (m_pSkin->m_nTranslucencyAlphaDynamic == 255)
-		return;
-	if (m_pSkin->m_nTranslucencyAlphaDynamic == 0)
-	{
-		MLColor	clr(RGB(0, 0, 0));
-		clr.setAlpha(0);
-		pGraph->FillRect(&m_rcObj, clr);
-		return;
-	}
-
-	MLColor		clrAlpha;
-	clrAlpha.setAlpha((byte)m_pSkin->m_nTranslucencyAlphaDynamic);
-	if (m_imgMask.IsValid())
-	{
-		CRect	rcMask;
-		rcMask.SetRect(m_imgMask.m_x, m_imgMask.m_y, m_imgMask.m_x + m_imgMask.m_cx, m_imgMask.m_y + m_imgMask.m_cy);
-		pGraph->FillRect(&m_rcObj, m_imgMask.GetHandle(), &rcMask, clrAlpha, BPM_MULTIPLY);
-	}
-	else
-		pGraph->FillRect(&m_rcObj, clrAlpha, BPM_MULTIPLY);
-#endif
-}
-
 int CUIObject::GetOpacity()
 {
 	if (m_bTranslucencyWithSkin)

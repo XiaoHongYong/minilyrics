@@ -247,10 +247,6 @@ public:
 
 	virtual void Draw(CRawGraph *pGraph) { }
 
-
-	// Keep translucency with skin, when skin window changes its translucency.
-	virtual bool IsUpdateTranslucencyWithSkin() { return m_bTranslucencyWithSkin; }
-	virtual void UpdateTranslucencyWithSkin(CRawGraph *pGraph);
 	int GetOpacity();
 
 	virtual void OnKillFocus() { }

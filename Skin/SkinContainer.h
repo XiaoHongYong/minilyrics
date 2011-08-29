@@ -197,7 +197,8 @@ protected:
 
 	// Background images
 	CScaleImagePainter	m_bgImagePainter;
-	CSFImage		m_imageBg, m_imageBgMask;
+	CSFImage			m_imageBg, m_imageBgMask;
+	BlendPixMode		m_BgBpm;
 
 	// Status for Page view
 	struct PageViewItem

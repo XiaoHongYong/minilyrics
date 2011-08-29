@@ -358,8 +358,6 @@ public:
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar);
 
-	virtual bool IsUpdateTranslucencyWithSkin() { return false; }
-
 protected:
 	typedef vector<LC_ROW *>				V_ROWS;
 	typedef vector<LC_ITEM::CColHeader *>	V_COLUMNS;

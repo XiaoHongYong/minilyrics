@@ -1189,22 +1189,14 @@ SXNode *CSkinFactory::GetSkinWndNode(LPCTSTR szSkinWndName)
 	return m_skinFile.GetSkinWndNode(szSkinWndName);
 }
 
-static tstring	GetAppResSkinWndFile(CSkinFactory *pFactory, LPCTSTR szSkinWndName)
-{
-	tstring		strFile = pFactory->GetSkinRootDir();
-	strFile += szSkinWndName;
-
-	return strFile;
-}
-
 int CSkinFactory::LoadAppResSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml)
 {
-	tstring		strFile = GetAppResSkinWndFile(this, szSkinWndName);
+	TCHAR	szFile[MAX_PATH];
 
-	if (!IsFileExist(strFile.c_str()))
+	if (!m_resourceMgr.GetResourcePathName(szFile, CountOf(szFile), szSkinWndName))
 		return ERR_NOT_FOUND;
 
-	if (!xml.ParseFile(strFile.c_str()))
+	if (!xml.ParseFile(szFile))
 		return ERR_PARSE_XML;
 
 	ExpandIncludeNode(xml.m_pRoot);
@@ -1214,9 +1206,12 @@ int CSkinFactory::LoadAppResSkinWndXml(LPCTSTR szSkinWndName, CSimpleXML &xml)
 
 bool CSkinFactory::IsAppResSkinWnd(LPCTSTR szSkinWndName)
 {
-	tstring		strFile = GetAppResSkinWndFile(this, szSkinWndName);
+	TCHAR	szFile[MAX_PATH];
 
-	return IsFileExist(strFile.c_str());
+	if (m_resourceMgr.GetResourcePathName(szFile, CountOf(szFile), szSkinWndName))
+		return true;
+
+	return false;
 }
 
 void CSkinFactory::RegisterUIObjNewer(LPCTSTR szClassName, IUIObjNewer *pObjNewer)
