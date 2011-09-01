@@ -57,6 +57,7 @@ UIObjectIDDefinition g_uidDefinition[] =
 	{ _T("ID_EDIT_FIND"), CMD_EDIT_FIND, IDC_EDIT_FIND, _T("Find") },
 	{ _T("ID_EDIT_FINDNEXT"), CMD_EDIT_FINDNEXT, 0, _T("Find Next") },
 	{ _T("ID_EDIT_REPLACE"), CMD_EDIT_REPLACE, IDC_EDIT_REPLACE, _T("Replace") },
+	{ _T("ID_EDIT_LYR_TAG"), CMD_EDIT_LYR_TAG, IDC_EDIT_LYR_TAG, _T("Edit Lyrics Tag") },
 
 	{ _T("CMD_REMOVE_ALL_TAG"), CMD_REMOVE_ALL_TAG, IDC_REMOVE_ALL_TAG, _T("Remove All Timestamps") },
 	{ _T("CMD_REMOVE_BLANK_LINE"), CMD_REMOVE_BLANK_LINE, IDC_REMOVE_BLANK_LINE, _T("Remove All Blank Lines") },

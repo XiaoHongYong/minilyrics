@@ -356,13 +356,15 @@
 #define IDC_DOWNLOAD_ALL_LYR_FOR_IPOD   40193
 #define IDC_IPOD_LYRICS_DOWNLOADER      40194
 #define IDC_NEW_LYRICS                  40196
+#define ID_OPTIONS_DISPLAYLYRICSTAG     40197
+#define IDC_EDIT_LYR_TAG                40198
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        183
-#define _APS_NEXT_COMMAND_VALUE         40197
+#define _APS_NEXT_COMMAND_VALUE         40199
 #define _APS_NEXT_CONTROL_VALUE         1121
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

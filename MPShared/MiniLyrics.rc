@@ -443,6 +443,8 @@ BEGIN
         MENUITEM "&Tag Color...",               IDC_TAG_COLOR
         MENUITEM "&Background Color of Edited Line...", IDC_EDIT_LINE_COLOR
         MENUITEM "Back&ground Color...",        IDC_EDITOR_BG_COLOR
+        MENUITEM SEPARATOR
+        MENUITEM "Edit Lyrics &Tag",            IDC_EDIT_LYR_TAG
     END
     POPUP "&Help"
     BEGIN

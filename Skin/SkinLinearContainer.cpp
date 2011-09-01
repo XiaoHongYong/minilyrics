@@ -219,7 +219,7 @@ void CSkinLinearContainer::ResizeFromItemsToUIObjsForVert(VecItems &vItems, VecU
 	// Calculate size position for every UIObject
 	int pos = startPos;
 	VecItems::iterator itItem = vItems.begin();
-	for (VecUIObjects::iterator it = itBeg; it != itEnd && itItem != vItems.end(); ++it)
+	for (VecUIObjects::iterator it = itBeg; it != itEnd; ++it)
 	{
 		CUIObject *p = *it;
 		if (!p->IsVisible())
@@ -231,6 +231,12 @@ void CSkinLinearContainer::ResizeFromItemsToUIObjsForVert(VecItems &vItems, VecU
 			height = p->m_rcObj.Height();
 		else
 		{
+			if (itItem == vItems.end())
+			{
+				ASSERT(0);
+				DBGLOG0(_T("vItems shall NOT end now."));
+				break;
+			}
 			Item &item = *itItem;
 			height = item.size;
 			++itItem;

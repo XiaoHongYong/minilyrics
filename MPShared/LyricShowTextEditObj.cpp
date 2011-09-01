@@ -7,7 +7,6 @@
 #include "MLCmd.h"
 #include "LyricShowTextEditObj.h"
 #include "LyricShowObj.h"
-#include "SkinBarFrame.h"
 
 #define TIMER_SPAN_LYR_PREVIEW_UPDATE	500
 
@@ -139,6 +138,14 @@ void CLyricShowTextEditObj::OnCreate()
 	GET_ID_BY_NAME(CID_E_MEDIA_LENGTH);
 	GET_ID_BY_NAME4(CID_RERESH_ARTIST, CID_RERESH_ALBUM, CID_RERESH_TITLE, CID_RERESH_BY);
 	GET_ID_BY_NAME(CID_RERESH_MEDIA_LENGTH);
+
+	CUIObject *pTagEditor = m_pSkin->GetUIObjectById(GetIDByName(_T("CID_C_LYR_TAG")));
+	if (pTagEditor)
+	{
+		bool bVisible = g_Profile.GetProfileBool(_T("LyrTagEdit"), true);
+		if (!bVisible)
+			pTagEditor->SetVisible(false, false);
+	}
 
 	OnLyricsChanged();
 
@@ -1396,6 +1403,21 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 			}
 		}
 		break;
+	case CMD_EDIT_LYR_TAG:
+		{
+			CUIObject *pEditorFrame = m_pSkin->GetUIObjectById(GetIDByName(_T("CID_EDITOR_FRAME")));
+			CUIObject *pTagEditor = m_pSkin->GetUIObjectById(GetIDByName(_T("CID_C_LYR_TAG")));
+			if (!pTagEditor || !pEditorFrame)
+				break;
+
+			bool bVisible = !pTagEditor->IsVisible();
+			pTagEditor->SetVisible(bVisible);
+			g_Profile.WriteProfileInt(_T("LyrTagEdit"), bVisible);
+
+			pEditorFrame->GetParent()->RecalculateUIObjSizePos(pEditorFrame);
+			pEditorFrame->Invalidate();
+		}
+		break;
 	default:
 		return FALSE;
 	}
@@ -1740,48 +1762,49 @@ void CLyricShowTextEditObj::AdjustSyncTimeOfSelected(bool bIncreaseTime)
 
 void CLyricShowTextEditObj::ShowFindDialog(bool bFind)
 {
-	CSkinBarFrame		*barFrameFindReplace;
+	CUIObject *pFind = m_pSkin->GetUIObjectById(GetIDByName(_T("CID_C_FIND")));
+	CUIObject *pReplace = m_pSkin->GetUIObjectById(GetIDByName(_T("CID_C_REPLACE")));
+	CUIObject *pEditorFrame = m_pSkin->GetUIObjectById(GetIDByName(_T("CID_EDITOR_FRAME")));
 
-	barFrameFindReplace = (CSkinBarFrame *)m_pSkin->GetUIObjectById(
-		GetIDByName(_T("CID_EDITOR_FRAME")),
-		CSkinBarFrame::ClassName());
-	ASSERT(barFrameFindReplace);
-	if (barFrameFindReplace)
+	if (!pFind || !pReplace || !pEditorFrame)
+		return;
+
+	if (bFind && m_findReplaceStatus == FRS_FIND
+		|| !bFind && m_findReplaceStatus == FRS_REPLACE)
 	{
-		int		CID_C_FIND_REPLACE = GetIDByName(_T("CID_C_FIND_REPLACE"));
-
-		if (bFind && m_findReplaceStatus == FRS_FIND
-			|| !bFind && m_findReplaceStatus == FRS_REPLACE)
-		{
-			// Hide
-			m_findReplaceStatus = FRS_NONE;
-			barFrameFindReplace->ShowBar(CID_C_FIND_REPLACE, false);
-			return;
-		}
-
-		if (m_findReplaceStatus == FRS_NONE)
-		{
-			tstring		strFindWhat;
-			SelectionToText(strFindWhat);
-			if (strFindWhat.size())
-				m_pSkin->SetUIObjectText(CID_E_FIND, strFindWhat.c_str(), false);
-		}
-
-		// Show
-		if (bFind)
-		{
-			m_findReplaceStatus = FRS_FIND;
-			barFrameFindReplace->SetTopBarHeight(35, false);
-		}
-		else
-		{
-			m_findReplaceStatus = FRS_REPLACE;
-			barFrameFindReplace->SetTopBarHeight(70, false);
-		}
-		m_pSkin->SetUIObjectVisible(_T("CID_C_REPLACE"), !bFind, false);
-
-		barFrameFindReplace->ShowBar(CID_C_FIND_REPLACE, true);
+		// Hide
+		m_findReplaceStatus = FRS_NONE;
+		pFind->SetVisible(false, false);
+		pReplace->SetVisible(false, false);
+		pEditorFrame->GetParent()->RecalculateUIObjSizePos(pEditorFrame);
+		pEditorFrame->Invalidate();
+		return;
 	}
+
+	if (m_findReplaceStatus == FRS_NONE)
+	{
+		tstring		strFindWhat;
+		SelectionToText(strFindWhat);
+		if (strFindWhat.size())
+			m_pSkin->SetUIObjectText(CID_E_FIND, strFindWhat.c_str(), false);
+	}
+
+	// Show
+	if (bFind)
+	{
+		m_findReplaceStatus = FRS_FIND;
+		pFind->SetVisible(true, false);
+		pReplace->SetVisible(false, false);
+	}
+	else
+	{
+		m_findReplaceStatus = FRS_REPLACE;
+		pFind->SetVisible(true, false);
+		pReplace->SetVisible(true, false);
+	}
+
+	pEditorFrame->GetParent()->RecalculateUIObjSizePos(pEditorFrame);
+	m_pSkin->InvalidateRect();
 }
 
 bool CLyricShowTextEditObj::FindNext(bool bSearchDown)

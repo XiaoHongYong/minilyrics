@@ -17,9 +17,6 @@
 #include "SkinListCtrlEx.h"
 #include "SkinRateCtrl.h"
 #include "SkinTabHeader.h"
-#include "SkinBarFrame.h"
-#include "SkinContainerBar.h"
-#include "SkinBarFrameClientArea.h"
 #include "SkinPicText.h"
 #include "SkinActivateCtrl.h"
 #include "MPSkinTimeCtrl.h"
@@ -90,9 +87,6 @@ int CMPSkinFactory::Init()
 	AddUIObjNewer(CLyricShowTextEditObj);
 	AddUIObjNewer(CLyricShowAgentObj);
 	AddUIObjNewer(CSkinRateCtrl);
-	AddUIObjNewer(CSkinBarFrame);
-	AddUIObjNewer(CSkinContainerBar);
-	AddUIObjNewer(CSkinBarFrameClientArea);
 	AddUIObjNewer(CSkinPicText);
 	AddUIObjNewer(CMPSkinTimeCtrl<CSkinPicText>);
 	AddUIObjNewer(CMPSkinTimeCtrl<CSkinStaticText>);
@@ -437,51 +431,3 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 }
 
 #endif // _WIN32_DESKTOP
-
-int CMPSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *pSkinWnd)
-{
-	if (cmd.strFunction == _T("openclose_framebar_bar"))
-	{
-		int		nIDFrame, nIDBar;
-		V_Str	vStrParam;
-
-		StrBreak(cmd.strParam.c_str(), ',', vStrParam);
-		if (vStrParam.size() != 2)
-			return ERR_FALSE;
-		for (int i = 0; i < (int)vStrParam.size(); i++)
-			TrimStr(vStrParam[i]);
-
-		nIDFrame = GetIDByName(vStrParam[0].c_str());
-		nIDBar = GetIDByName(vStrParam[1].c_str());
-
-		CSkinBarFrame	*pFrame = (CSkinBarFrame*)pSkinWnd->GetUIObjectById(nIDFrame, CSkinBarFrame::ClassName());
-
-		if (pFrame)
-			pFrame->ShowBar(nIDBar, !pFrame->IsBarVisible(nIDBar));
-	}
-	else if (cmd.strFunction == _T("is_framebar_bar_visible"))
-	{
-		int		nIDFrame, nIDBar;
-		V_Str	vStrParam;
-
-		StrBreak(cmd.strParam.c_str(), ',', vStrParam);
-		if (vStrParam.size() != 2)
-			return ERR_FALSE;
-		for (int i = 0; i < (int)vStrParam.size(); i++)
-			TrimStr(vStrParam[i]);
-
-		nIDFrame = GetIDByName(vStrParam[0].c_str());
-		nIDBar = GetIDByName(vStrParam[1].c_str());
-
-		CSkinBarFrame	*pFrame = (CSkinBarFrame*)pSkinWnd->GetUIObjectById(nIDFrame, CSkinBarFrame::ClassName());
-
-		if (pFrame && pFrame->IsBarVisible(nIDBar))
-			return ERR_OK;
-		else
-			return ERR_FALSE;
-	}
-	else
-		return CSkinFactory::ExeDynamicCmd(cmd, pSkinWnd);
-
-	return ERR_OK;
-}

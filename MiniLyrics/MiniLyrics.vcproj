@@ -877,18 +877,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\SkinBarFrame.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\SkinBarFrameClientArea.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\SkinContainerBar.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\SkinFilterCtrl.cpp"
 				>
 			</File>
@@ -1352,18 +1340,6 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\SkinActivateCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\SkinBarFrame.h"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\SkinBarFrameClientArea.h"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\SkinContainerBar.h"
 				>
 			</File>
 			<File
