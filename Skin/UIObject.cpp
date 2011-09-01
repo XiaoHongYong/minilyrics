@@ -860,6 +860,13 @@ void CUIObject::WriteProfileInt(LPCTSTR szKeyName, int nValue)
 		nValue);
 }
 
+void CUIObject::WriteProfileString(LPCTSTR szKeyName, LPCTSTR szValue)
+{
+	g_Profile.WriteProfileString(m_pSkin->GetSkinFactory()->GetSkinName(),
+		GetProfileKeyName(szKeyName).c_str(), 
+		szValue);
+}
+
 tstring CUIObject::GetProfileKeyName(LPCTSTR szSubKeyName)
 {
 	tstring		strKeyName;

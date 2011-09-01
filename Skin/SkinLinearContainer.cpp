@@ -89,9 +89,13 @@ void CSkinLinearContainer::OnSize()
 	int totalMinSize = 0, totalFixedSize = 0, totalSize = 0;
 	UIObjsToItems(m_vUIObjs.begin(), m_vUIObjs.end(), vItems, totalMinSize, totalSize, totalFixedSize);
 
-	int nSize = m_rcObj.Height() - totalFixedSize;
+	int size;
+	if (m_bVertical)
+		size = m_rcObj.Height() - totalFixedSize;
+	else
+		size = m_rcObj.Width() - totalFixedSize;
 
-	ZoomWeightable(vItems, nSize);
+	ZoomWeightable(vItems, size);
 
 	ResizeFromItemsToUIObjs(vItems, m_vUIObjs.begin(), m_vUIObjs.end(), 
 		m_bVertical ? m_rcContent.top : m_rcContent.left);
@@ -104,7 +108,7 @@ BOOL CSkinLinearContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 	if (IsPropertyName(szProperty, _T("Orientation")))
 		m_bVertical = IsPropertyName(szValue, _T("Vertical"));
-	if (IsPropertyName(szProperty, _T("SeparatorThickness")))
+	else if (IsPropertyName(szProperty, _T("SeparatorThickness")))
 		m_nSeparatorThickness = _ttoi(szValue);
 	else
 		return FALSE;
@@ -269,7 +273,59 @@ void CSkinLinearContainer::ResizeFromItemsToUIObjsForVert(VecItems &vItems, VecU
 
 void CSkinLinearContainer::ResizeFromItemsToUIObjsForHorz(VecItems &vItems, VecUIObjects::iterator itBeg, VecUIObjects::iterator itEnd, int startPos)
 {
+	// Calculate size position for every UIObject
+	int pos = startPos;
+	VecItems::iterator itItem = vItems.begin();
+	for (VecUIObjects::iterator it = itBeg; it != itEnd && itItem != vItems.end(); ++it)
+	{
+		CUIObject *p = *it;
+		if (!p->IsVisible())
+			continue;
 
+		// Calculate width
+		int width;
+		if (p->IsFixedWidth())
+			width = p->m_rcObj.Width();
+		else
+		{
+			Item &item = *itItem;
+			width = item.size;
+			++itItem;
+			// Set the size value back to UIObject
+			p->m_formWidth.SetFormula(width);
+		}
+		p->m_rcObj.left = pos + p->GetMargin().left;
+		p->m_rcObj.right = p->m_rcObj.left + width;
+		pos = p->m_rcObj.right + p->GetMargin().right;
+
+		// Calculate height
+		int height;
+		if (p->GetLayoutParams() & LAYOUT_HEIGHT_MATCH_PARENT)
+			height = m_rcObj.Height() - p->GetMargin().top - p->GetMargin().bottom;
+		else
+			height = p->m_rcObj.Height();
+
+		// Calculate left and right
+		if (p->GetLayoutParams() & LAYOUT_ALIN_BOTTOM)
+		{
+			p->m_rcObj.bottom = m_rcObj.bottom - p->GetMargin().bottom;
+			p->m_rcObj.top = p->m_rcObj.bottom - height - p->GetMargin().top;
+		}
+		else if (p->GetLayoutParams() & LAYOUT_ALIN_VERT_CENTER)
+		{
+			p->m_rcObj.top = (m_rcObj.top + m_rcObj.bottom - height) / 2;
+			p->m_rcObj.bottom += p->m_rcObj.top + height;
+		}
+		else
+		{
+			p->m_rcObj.top = m_rcObj.top + p->GetMargin().bottom;
+			p->m_rcObj.bottom = m_rcObj.top + height;
+		}
+
+		p->OnSize();
+
+		pos += m_nSeparatorThickness;
+	}
 }
 
 #ifdef _CPPUNIT_TEST

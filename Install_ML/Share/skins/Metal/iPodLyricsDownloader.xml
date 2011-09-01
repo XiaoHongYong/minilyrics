@@ -72,15 +72,15 @@
 	<Animation ID="CID_AM_HIDE_EMBEDDED_LYR" FadeOut="CID_C_EMBEDDED_LYR_TYPE" FadeIn="CID_C_LYRICS_TOOL"
 			 Duration="300"/>
 
-	<ResizableLinearContainer Name="Client" Rect="2,118,w-4,h-118-32" BgColor="#000000" SeparatorThickness="4" Orientation="Vertical">
-		<Container Name="Playlist" Width="108+10" Height="108+10" MinWidth="200" MinHeight="108" LayoutParams="match_parent_width" Weight="1">
+	<ResizableLinearContainer Name="Client" Rect="2,118,w-4,h-118-32" BgColor="#000000" SeparatorThickness="4" Orientation="Horizontal">
+		<Container Name="Playlist" Width="108+10" Height="108" MinWidth="200" MinHeight="108" LayoutParams="match_parent_height" Weight="1">
 			<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"
 				ImageList="Pf_AdvancedIcon.png"/>
 			<NormalText ID="CID_STATUS" Text="" Visible="false" Rect="0,h-30-20,w,"/>
 			<Progress ID="CID_PROGRESS" Visible="false" Rect="10,h-23,w-110-20,"/>
 			<NormalTextBt ID="CID_CANCEL_WORK" Visible="false" Text="Cancel" Rect="w-110-10,h-20,110,"/>
 		</Container>
-		<Container Name="MediaInfo" Width="200" Height="108" MinWidth="200" MinHeight="108" LayoutParams="match_parent_width">
+		<Container Name="MediaInfo" Width="200" Height="108" MinWidth="200" MinHeight="108" LayoutParams="match_parent_height">
 			<LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" SetSkinBg="false"
 			  EnableToolbar="FALSE" EnableAutoResize="FALSE" />
 		</Container>

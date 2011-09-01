@@ -11,7 +11,9 @@ public:
 	virtual bool OnLButtonDown(UINT nFlags, CPoint point);
 	virtual bool OnLButtonUp(UINT nFlags, CPoint point);
 
-	void OnSize();
+	virtual void OnCreate();
+	virtual void OnDestroy();
+	virtual void OnSize();
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 

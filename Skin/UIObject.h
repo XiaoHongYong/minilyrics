@@ -319,6 +319,7 @@ public:
 	bool GetProfileBool(LPCTSTR szKeyName, bool bDefault) { return GetProfileInt(szKeyName, bDefault) != 0; }
 	tstring GetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault);
 	void WriteProfileInt(LPCTSTR szKeyName, int nValue);
+	void WriteProfileString(LPCTSTR szKeyName, LPCTSTR szValue);
 	tstring GetProfileKeyName(LPCTSTR szSubKeyName);
 
 	virtual void OnLanguageChanged();

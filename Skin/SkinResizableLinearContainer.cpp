@@ -110,7 +110,12 @@ int CSkinResizableLinearContainer::HitTestResizer(CPoint pt)
 				return -1;
 		}
 		else
-			ASSERT(0);
+		{
+			if (pt.x < p->m_rcObj.left + p->GetMargin().left)
+				return i - 1;
+			else if (pt.x < p->m_rcObj.right + p->GetMargin().right)
+				return -1;
+		}
 	}
 
 	return -1;
@@ -165,6 +170,56 @@ void CSkinResizableLinearContainer::DragResizer(int &offset)
 		m_bVertical ? m_rcContent.top : m_rcContent.left);
 
 	Invalidate();
+}
+
+void CSkinResizableLinearContainer::OnCreate()
+{
+	CSkinLinearContainer::OnCreate();
+
+	int totalMinSize = 0, totalFixedSize = 0, totalSizeStart = 0;
+	VecItems vItems;
+	UIObjsToItems(m_vUIObjs.begin(), m_vUIObjs.end(), vItems, totalMinSize, totalSizeStart, totalFixedSize);
+
+	// Reload sizes of children
+	VecString vSize;
+	StrSplit(GetProfileString(_T("ChildrenSize"), _T("")).c_str(), ',', vSize);
+	if (vSize.size() == vItems.size())
+	{
+		int i = 0;
+		for (VecItems::iterator it = vItems.begin();
+			i < vSize.size() && it != vItems.end(); i++, ++it)
+		{
+			if (vSize[i].empty())
+				continue;
+			int size = _ttoi(vSize[i].c_str());
+			(*it).size = size;
+		}
+
+		ResizeFromItemsToUIObjs(vItems, m_vUIObjs.begin(), m_vUIObjs.end(), 
+			m_bVertical ? m_rcContent.top : m_rcContent.left);
+	}
+}
+
+void CSkinResizableLinearContainer::OnDestroy()
+{
+	int totalMinSize = 0, totalFixedSize = 0, totalSizeStart = 0;
+	VecItems vItems;
+	UIObjsToItems(m_vUIObjs.begin(), m_vUIObjs.end(), vItems, totalMinSize, totalSizeStart, totalFixedSize);
+
+	// Save sizes of children
+	CStrPrintf	strFormat;
+	tstring		strSizes;
+	for (VecItems::iterator it = vItems.begin(); it != vItems.end(); ++it)
+	{
+		if (strSizes.size())
+			strSizes += ',';
+		strFormat.printf(_T("%d"), (*it).size);
+		strSizes += strFormat.c_str();
+	}
+
+	WriteProfileString(_T("ChildrenSize"), strSizes.c_str());
+
+	CSkinLinearContainer::OnDestroy();
 }
 
 void CSkinResizableLinearContainer::OnSize()
