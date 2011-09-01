@@ -165,6 +165,10 @@ bool IsTRUE(LPCTSTR szValue);
 #define SZ_PN_PADDING		_T("Padding")
 #define SZ_PN_LAYOUT_PARAMS	_T("LayoutParams")
 #define SZ_PN_WEIGHT		_T("Weight")
+#define SZ_PN_MIN_WIDTH		_T("MinWidth")
+#define SZ_PN_MIN_HEIGHT	_T("MinHeight")
+#define SZ_PN_FIXED_WIDTH	_T("FixedWidth")
+#define SZ_PN_FIXED_HEIGHT	_T("FixedHeight")
 
 #define SZ_PN_LINK			_T("Link")
 
@@ -207,10 +211,14 @@ public:
 
 	uint32 GetLayoutParams() const { return m_layoutParams; }
 	uint GetWeight() const { return m_nWeight; }
-	uint GetMinHeight() const { return m_rcObj.Height(); }
-	uint GetMinWidth() const { return m_rcObj.Width(); }
+	uint GetMinHeight() const;
+	uint GetMinWidth() const;
+	bool IsFixedWidth() const { return m_bFixedWidth; }
+	bool IsFixedHeight() const { return m_bFixedHeight; }
+
 	void OnMeasureSizePos(FORMULA_VAR vars[]);
 	virtual void OnMeasureSizeByContent() { }
+
 	const CRect &GetMargin() const { return m_rcMargin; }
 	const CRect &GetPadding() const { return m_rcPadding; }
 
@@ -341,7 +349,9 @@ public:
 	CFormula	m_formHeight;
 
 	uint32		m_layoutParams;
-	uint		m_nWeight;
+	uint16		m_nWeight;
+	uint16		m_nMinWidth, m_nMinHeight;	// The minimum width and height
+	bool		m_bFixedWidth, m_bFixedHeight;
 
 	CRect		m_rcObj;		// The whole area of the UIObject, including its border.
 	CRect		m_rcContent;	// The content area of the UIObject, for example: for TextButton, it's the text area.
@@ -386,7 +396,7 @@ protected:
 	bool			m_bCreated;
 	bool			m_bInitialUpdated;
 
-friend class CSkinWnd;
-friend class CSkinContainer;
+	friend class CSkinWnd;
+	friend class CSkinContainer;
 
 };

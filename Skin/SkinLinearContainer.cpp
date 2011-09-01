@@ -9,6 +9,7 @@ UIOBJECT_CLASS_NAME_IMP(CSkinLinearContainer, _T("LinearContainer"))
 CSkinLinearContainer::CSkinLinearContainer()
 {
 	m_bVertical = true;
+	m_nSeparatorThickness = 0;
 }
 
 CSkinLinearContainer::~CSkinLinearContainer()
@@ -28,8 +29,8 @@ void CSkinLinearContainer::OnMeasureSizeByContent()
 		{0, 0}
 	};
 
-	uint totalHeightMin = 0;
-	uint totalWidthMin = 0;
+	uint requestedHeight = 0;
+	uint requestedWidth = 0;
 	for (uint i = 0; i < m_vUIObjs.size(); i++)
 	{
 		CUIObject *p = m_vUIObjs[i];
@@ -42,36 +43,39 @@ void CSkinLinearContainer::OnMeasureSizeByContent()
 
 		if (m_bVertical)
 		{
-			totalHeightMin += p->GetMinHeight();
-			totalHeightMin += p->GetMargin().top + p->GetMargin().bottom;
+			requestedHeight += p->m_rcObj.Height();
+			requestedHeight += p->GetMargin().top + p->GetMargin().bottom;
+
+			int w = p->m_rcObj.Width() + p->GetMargin().left + p->GetMargin().right;
+			if (w > requestedWidth)
+				requestedWidth = w;
 		}
 		else
 		{
-			totalWidthMin += p->GetMinWidth();
-			totalWidthMin += p->GetMargin().left + p->GetMargin().right;
+			requestedWidth += p->m_rcObj.Width();
+			requestedWidth += p->GetMargin().left + p->GetMargin().right;
+
+			int h = p->m_rcObj.Height() + p->GetMargin().top + p->GetMargin().bottom;
+			if (h > requestedHeight)
+				requestedHeight = h;
 		}
 	}
+
+	m_rcObj.right = m_rcObj.left + requestedWidth;
+	m_rcObj.bottom = m_rcObj.top + requestedHeight;
 }
 
 void CSkinLinearContainer::OnSize()
 {
-	if (m_bVertical)
-		OnSizeForVert();
-	else
-		OnSizeForHorz();
-}
+	CUIObject::OnSize();
 
-void CSkinLinearContainer::OnSizeForVert()
-{
 	FORMULA_VAR 	vars[] = {
 		{'w', m_rcObj.Width()},
 		{'h', m_rcObj.Height()},
 		{0, 0}
 	};
 
-	// Calculate total weight and total fixed height.
-	uint totalFixedHeight = 0;
-	uint totalWeight = 0;
+	// Measure child size position
 	for (uint i = 0; i < m_vUIObjs.size(); i++)
 	{
 		CUIObject *p = m_vUIObjs[i];
@@ -79,54 +83,172 @@ void CSkinLinearContainer::OnSizeForVert()
 			continue;
 
 		p->OnMeasureSizePos(vars);
-		if (p->GetWeight() > 0)
-			totalWeight += p->GetWeight();
-		else
-			totalFixedHeight += p->GetMinHeight();
-		totalFixedHeight += p->GetMargin().top + p->GetMargin().bottom;
 	}
 
-	// Calculate size position for every UIObject
-	int y =  m_rcObj.top;
-	for (uint i = 0; i < m_vUIObjs.size(); i++)
+	VecItems vItems;
+	int totalMinSize = 0, totalFixedSize = 0, totalSize = 0;
+	UIObjsToItems(m_vUIObjs.begin(), m_vUIObjs.end(), vItems, totalMinSize, totalSize, totalFixedSize);
+
+	int nSize = m_rcObj.Height() - totalFixedSize;
+
+	ZoomWeightable(vItems, nSize);
+
+	ResizeFromItemsToUIObjs(vItems, m_vUIObjs.begin(), m_vUIObjs.end(), 
+		m_bVertical ? m_rcContent.top : m_rcContent.left);
+}
+
+BOOL CSkinLinearContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
+{
+	if (CSkinContainer::SetProperty(szProperty, szValue))
+		return TRUE;
+
+	if (IsPropertyName(szProperty, _T("Orientation")))
+		m_bVertical = IsPropertyName(szValue, _T("Vertical"));
+	if (IsPropertyName(szProperty, _T("SeparatorThickness")))
+		m_nSeparatorThickness = _ttoi(szValue);
+	else
+		return FALSE;
+
+	return TRUE;
+}
+
+void CSkinLinearContainer::ZoomWeightable(VecItems &vItems, int nSize)
+{
+	if (vItems.size() == 0)
+		return;
+
+	int totalWeight = 0;
+	int sizeToAlloc = nSize;
+	for (VecItems::iterator it = vItems.begin(); it != vItems.end(); ++it)
 	{
-		CUIObject *p = m_vUIObjs[i];
+		Item &item = *it;
+		if (item.weight > 0)
+		{
+			totalWeight += item.weight;
+			sizeToAlloc -= item.minSize;
+		}
+		else
+			sizeToAlloc -= item.size;
+	}
+
+	for (VecItems::iterator it = vItems.begin(); it != vItems.end(); ++it)
+	{
+		Item &item = *it;
+		if (item.weight > 0)
+		{
+			item.size = item.minSize + sizeToAlloc * item.weight / totalWeight;
+			if (item.size < 0)
+				item.size = 0;
+		}
+	}
+}
+
+void CSkinLinearContainer::UIObjsToItems(VecUIObjects::iterator itBeg, VecUIObjects::iterator itEnd, VecItems &vItems, int &totalMinSize, int &totalSize, int &totalFixedSize)
+{
+	totalMinSize = 0;
+	totalFixedSize = 0;
+	totalSize = 0;
+
+	for (VecUIObjects::iterator it = itBeg; it != itEnd; ++it)
+	{
+		CUIObject *p = *it;
+		if (!p->IsVisible())
+			continue;
+
+		totalFixedSize += m_nSeparatorThickness;
+
+		// Calculate totalFixedSize
+		if (m_bVertical)
+		{
+			if (p->IsFixedHeight())
+			{
+				totalFixedSize += p->m_rcObj.Height() + p->GetMargin().top + p->GetMargin().bottom;
+				continue;
+			}
+		}
+		else
+		{
+			if (p->IsFixedWidth())
+			{
+				totalFixedSize += p->m_rcObj.Width() + p->GetMargin().left + p->GetMargin().right;
+				continue;
+			}
+		}
+
+		Item item;
+
+		item.weight = p->GetWeight();
+		if (m_bVertical)
+		{
+			item.minSize = p->GetMinHeight();
+			item.size = p->m_rcObj.Height();
+			totalFixedSize += p->GetMargin().top + p->GetMargin().bottom;
+		}
+		else
+		{
+			item.minSize = p->GetMinWidth();
+			item.size = p->m_rcObj.Width();
+			totalFixedSize += p->GetMargin().left + p->GetMargin().right;
+		}
+
+		totalMinSize += item.minSize;
+		totalSize += item.size;
+
+		vItems.push_back(item);
+	}
+
+	// Decrease the extra item.
+	totalFixedSize -= m_nSeparatorThickness;
+}
+
+void CSkinLinearContainer::ResizeFromItemsToUIObjs(VecItems &vItems, VecUIObjects::iterator itBeg, VecUIObjects::iterator itEnd, int startPos)
+{
+	// Calculate size position for every UIObject
+	if (m_bVertical)
+		ResizeFromItemsToUIObjsForVert(vItems, itBeg, itEnd, startPos);
+	else
+		ResizeFromItemsToUIObjsForHorz(vItems, itBeg, itEnd, startPos);
+}
+
+void CSkinLinearContainer::ResizeFromItemsToUIObjsForVert(VecItems &vItems, VecUIObjects::iterator itBeg, VecUIObjects::iterator itEnd, int startPos)
+{
+	// Calculate size position for every UIObject
+	int pos = startPos;
+	VecItems::iterator itItem = vItems.begin();
+	for (VecUIObjects::iterator it = itBeg; it != itEnd && itItem != vItems.end(); ++it)
+	{
+		CUIObject *p = *it;
 		if (!p->IsVisible())
 			continue;
 
 		// Calculate height
 		int height;
-		if (p->GetWeight() != 0)
-		{
-			height = (m_rcObj.Height() - totalFixedHeight) * p->GetWeight() / totalWeight;
-			if (height < p->GetMinHeight())
-			{
-				totalFixedHeight -= (p->GetMinHeight() - height);
-				height = p->GetMinHeight();
-			}
-		}
+		if (p->IsFixedHeight())
+			height = p->m_rcObj.Height();
 		else
-			height = p->GetMinHeight();
-		p->m_rcObj.top = y + p->GetMargin().top;
+		{
+			Item &item = *itItem;
+			height = item.size;
+			++itItem;
+			// Set the size value back to UIObject
+			p->m_formHeight.SetFormula(height);
+		}
+		p->m_rcObj.top = pos + p->GetMargin().top;
 		p->m_rcObj.bottom = p->m_rcObj.top + height;
-		y = p->m_rcObj.bottom + p->GetMargin().bottom;
+		pos = p->m_rcObj.bottom + p->GetMargin().bottom;
 
 		// Calculate width
 		int width;
 		if (p->GetLayoutParams() & LAYOUT_WIDTH_MATCH_PARENT)
 			width = m_rcObj.Width() - p->GetMargin().left - p->GetMargin().right;
 		else
-		{
-			width = p->GetMinWidth();
-			if (width > m_rcObj.Width() - p->GetMargin().left - p->GetMargin().right)
-				width = m_rcObj.Width() - p->GetMargin().left - p->GetMargin().right;
-		}
+			width = p->m_rcObj.Width();
 
 		// Calculate left and right
 		if (p->GetLayoutParams() & LAYOUT_ALIN_RIGHT)
 		{
 			p->m_rcObj.right = m_rcObj.right - p->GetMargin().right;
-			p->m_rcObj.left = m_rcObj.right - p->GetMinWidth();
+			p->m_rcObj.left = p->m_rcObj.right - width - p->GetMargin().left;
 		}
 		else if (p->GetLayoutParams() & LAYOUT_ALIN_HORZ_CENTER)
 		{
@@ -140,23 +262,65 @@ void CSkinLinearContainer::OnSizeForVert()
 		}
 
 		p->OnSize();
+
+		pos += m_nSeparatorThickness;
 	}
 }
 
-void CSkinLinearContainer::OnSizeForHorz()
+void CSkinLinearContainer::ResizeFromItemsToUIObjsForHorz(VecItems &vItems, VecUIObjects::iterator itBeg, VecUIObjects::iterator itEnd, int startPos)
 {
 
 }
 
-BOOL CSkinLinearContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
+#ifdef _CPPUNIT_TEST
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+IMPLEMENT_CPPUNIT_TEST_REG(CSkinLinearContainer)
+
+class CTestCaseCSkinLinearContainer : public CppUnit::TestFixture
 {
-	if (CSkinContainer::SetProperty(szProperty, szValue))
-		return TRUE;
+	CPPUNIT_TEST_SUITE(CTestCaseCSkinLinearContainer);
+	CPPUNIT_TEST(TestZoomFromWeightable);
+	CPPUNIT_TEST_SUITE_END();
 
-	if (IsPropertyName(szProperty, _T("Orientation")))
-		m_bVertical = IsPropertyName(szValue, _T("Vertical"));
-	else
-		return FALSE;
+protected:
+	void TestZoomFromWeightable()
+	{
+		CSkinLinearContainer::VecItems items;
+		CSkinLinearContainer::Item item;
 
-	return TRUE;
-}
+		item.Set(80, 100, 0);
+		items.push_back(item);
+
+		item.Set(50, 50, 1);
+		items.push_back(item);
+
+		item.Set(50, 50, 0);
+		items.push_back(item);
+
+		// Zoom out
+		CSkinLinearContainer::ZoomWeightable(items, 250);
+		CPPUNIT_ASSERT(items[0].size == 100);
+		CPPUNIT_ASSERT(items[1].size = 100);
+		CPPUNIT_ASSERT(items[2].size = 50);
+
+		// Zoom to minimum
+		CSkinLinearContainer::ZoomWeightable(items, 200);
+		CPPUNIT_ASSERT(items[0].size == 100);
+		CPPUNIT_ASSERT(items[1].size = 50);
+		CPPUNIT_ASSERT(items[2].size = 50);
+
+		// Zoom to less than minimum
+		CSkinLinearContainer::ZoomWeightable(items, 100);
+		CPPUNIT_ASSERT(items[0].size == 100);
+		CPPUNIT_ASSERT(items[1].size = 50);
+		CPPUNIT_ASSERT(items[2].size = 50);
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseCSkinLinearContainer);
+
+#endif // _CPPUNIT_TEST

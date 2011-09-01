@@ -379,6 +379,9 @@ CUIObject::CUIObject()
 
 	m_layoutParams = 0;
 	m_nWeight = 0;
+	m_nMinWidth = m_nMinHeight = 0;
+	m_bFixedWidth = m_bFixedHeight = false;
+
 	m_rcObj.SetRect(0, 0, 50, 30);
 	m_rcContent.SetRect(0, 0, 0, 0);
 	m_rcMargin.SetRect(0, 0, 0, 0);
@@ -441,19 +444,25 @@ void CUIObject::OnSize()
 	}
 }
 
+uint CUIObject::GetMinHeight() const
+{
+	return m_nMinHeight;
+}
+
+uint CUIObject::GetMinWidth() const
+{
+	return m_nMinWidth;
+}
+
 void CUIObject::OnMeasureSizePos(FORMULA_VAR vars[])
 {
 	int	nValue;
 
 	if (m_formLeft.CalCualteValue(vars, nValue))
 		m_rcObj.left = nValue;
-	else
-		DBGLOG1(_T("Failed to calculate value: %s"), m_formLeft.GetFormula());
 
 	if (m_formTop.CalCualteValue(vars, nValue))
 		m_rcObj.top = nValue;
-	else
-		DBGLOG1(_T("Failed to calculate value: %s"), m_formLeft.GetFormula());
 
 	if (m_pContainer)
 	{
@@ -463,13 +472,9 @@ void CUIObject::OnMeasureSizePos(FORMULA_VAR vars[])
 
 	if (m_formWidth.CalCualteValue(vars, nValue))
 		m_rcObj.right = m_rcObj.left + nValue;
-	else
-		DBGLOG1(_T("Failed to calculate value: %s"), m_formLeft.GetFormula());
 
 	if (m_formHeight.CalCualteValue(vars, nValue))
 		m_rcObj.bottom = m_rcObj.top + nValue;
-	else
-		DBGLOG1(_T("Failed to calculate value: %s"), m_formLeft.GetFormula());
 
 	if (m_layoutParams & (LAYOUT_HEIGHT_WRAP_CONENT | LAYOUT_WIDTH_WRAP_CONENT))
 		OnMeasureSizeByContent();
@@ -524,6 +529,14 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_layoutParams = GetCombinationValue(__idszLayoutParams, szValue);
 	else if (IsPropertyName(szProperty, SZ_PN_WEIGHT))
 		m_nWeight = _ttoi(szValue);
+	else if (IsPropertyName(szProperty, SZ_PN_MIN_WIDTH))
+		m_nMinWidth = _ttoi(szValue);
+	else if (IsPropertyName(szProperty, SZ_PN_MIN_HEIGHT))
+		m_nMinHeight = _ttoi(szValue);
+	else if (IsPropertyName(szProperty, SZ_PN_FIXED_WIDTH))
+		m_bFixedWidth = IsTRUE(szValue);
+	else if (IsPropertyName(szProperty, SZ_PN_FIXED_HEIGHT))
+		m_bFixedHeight = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_ID) == 0)
 	{
 		if (m_strTooltip.empty())

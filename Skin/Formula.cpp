@@ -278,6 +278,9 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 			goto FAILED;
 	}
 FAILED:
+	if (m_strFormula.size() > 0)
+		DBGLOG1(_T("Failed to calculate value: %s"), m_strFormula.c_str());
+
 	bRet = FALSE;
 	goto END;
 SUCEED:
