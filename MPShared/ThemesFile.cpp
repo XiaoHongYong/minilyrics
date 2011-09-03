@@ -226,11 +226,13 @@ void CThemesXML::LyrSettingsToTheme(bool bFloatingLyr, SXNode *pNode)
 {
 	ASSERT(m_pRoot);
 
-	LPCTSTR		szSection = bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY;
+	tstring strSectName;
+	EventType etDispSettings;
+	CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(bFloatingLyr, strSectName, etDispSettings);
 
 	for (int i = 0; i < g_themeItemsCount; i++)
 	{
-		AddSubPropNode(pNode, szSection, g_themeItems[i].szName, 
+		AddSubPropNode(pNode, strSectName.c_str(), g_themeItems[i].szName, 
 			g_themeItems[i].vProperties, g_themeItems[i].nPropertiesCount);
 	}
 }
@@ -239,24 +241,24 @@ void CThemesXML::ThemeToLyrSettings(bool bFloatingLyr, SXNode *pNode)
 {
 	ASSERT(m_pRoot);
 
-	LPCTSTR		szSection = bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY;
-	EventType	et = bFloatingLyr ? ET_LYRICS_FLOATING_SETTINGS : ET_LYRICS_DISPLAY_SETTINGS;
-
+	tstring strSectName;
+	EventType etDispSettings;
+	CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(bFloatingLyr, strSectName, etDispSettings);
 
 	for (int i = 0; i < g_themeItemsCount; i++)
 	{
 		if (!g_themeItems[i].bValid)
 			continue;
 
-		SXNode		*pNodeChild = pNode->GetChild(g_themeItems[i].szName);
-		if (pNodeChild)
+		SXNode *pNodeChild = pNode->GetChild(g_themeItems[i].szName);
+		if (!pNodeChild)
+			continue;
+
+		for (SXNode::iterator it = pNodeChild->listChildren.begin(); it != pNodeChild->listChildren.end(); ++it)
 		{
-			for (SXNode::iterator it = pNodeChild->listChildren.begin(); it != pNodeChild->listChildren.end(); ++it)
-			{
-				SXNode	*pProperty = *it;
-				CMPlayerSettings::SetSettings(et, szSection, 
-					pProperty->strName.c_str(), pProperty->strContent.c_str());
-			}
+			SXNode	*pProperty = *it;
+			CMPlayerSettings::SetSettings(etDispSettings, strSectName.c_str(), 
+				pProperty->strName.c_str(), pProperty->strContent.c_str());
 		}
 	}
 }

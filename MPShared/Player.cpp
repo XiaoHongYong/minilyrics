@@ -9,6 +9,10 @@
 #include "MPMsg.h"
 #endif
 
+#ifndef _MPLAYER
+#include "../MiniLyrics/win32/MLPlayerMgr.h"
+#endif
+
 CPlayer			g_Player;
 
 void FormatFullTitle(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szUri, tstring &strFullTitle)
@@ -53,7 +57,7 @@ public:
 
 	bool Create()
 	{
-		return CBaseWnd::Create(_T("PlayerEventWnd"), 0, 0, 1, 1, NULL, 0) != FALSE;
+		return CBaseWnd::CreateEx(MSG_WND_CLASS_NAME, _T("PlayerEventWnd"), 0, 0, 1, 1, NULL, 0) != FALSE;
 	}
 
 	void SetLyrDrawUpdateFast(bool bFast)
@@ -98,10 +102,38 @@ public:
 		DispatchPlayPosEvent(nPlayPos);
 	}
 
+
+	void OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
+	{
+		if (wParam == ML_ACTIVATE && pcds->dwData == ML_ACTIVATE)
+		{
+			CMPSkinMainWnd *pWnd = CMPlayerAppBase::GetMainWnd();
+			if (pWnd)
+				pWnd->Activate();
+			else
+				ERRLOG0(_T("MiniLyrics main window hasn't been started yet, can't activate it."));
+		}
+		else if (wParam == ML_SEND_CMD_LINE && pcds->dwData == ML_SEND_CMD_LINE)
+		{
 #ifndef _MPLAYER
+			AppMode appMode = SA_UNKNOWN;
+			ProcessCmdLine((LPCTSTR)pcds->lpData, appMode);
+			if (appMode == SA_IPOD_LYRICS_DOWNLOADER && appMode != CMPlayerApp::GetInstance()->GetCurrentAppMode())
+			{
+				// Change to another app mode
+				CMPlayerApp::GetInstance()->RestartToAppMode(appMode);
+			}
+#endif
+		}
+	}
+
+#ifdef _WIN32
 	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 	{
-		if (message == MM_MIXM_CONTROL_CHANGE)
+		if (message == WM_COPYDATA)
+			OnCopyData(wParam, (COPYDATASTRUCT *)lParam);
+#ifndef _MPLAYER
+		else if (message == MM_MIXM_CONTROL_CHANGE)
 		{
 			// Volume changed message.
 			CEventPlayerSettingChanged	*pEvent = new CEventPlayerSettingChanged();
@@ -111,6 +143,7 @@ public:
 
 			CMPlayerApp::GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
 		}
+#endif
 
 		return CBaseWnd::WndProc(message, wParam, lParam);
 	}

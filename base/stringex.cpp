@@ -72,6 +72,28 @@ bool IsStrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 	return _tcsicmp(szText + lenText - lenEndWith, szEndWith) == 0;
 }
 
+bool StrEndWith(LPCTSTR szText, LPCTSTR szEndWith)
+{
+	int lenText = _tcslen(szText);
+	int lenEndWith = _tcslen(szEndWith);
+
+	if (lenText < lenEndWith)
+		return false;
+
+	return _tcscmp(szText + lenText - lenEndWith, szEndWith) == 0;
+}
+
+bool StrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
+{
+	int lenText = _tcslen(szText);
+	int lenEndWith = _tcslen(szEndWith);
+
+	if (lenText < lenEndWith)
+		return false;
+
+	return _tcsicmp(szText + lenText - lenEndWith, szEndWith) == 0;
+}
+
 FILE_ENCODING GetStrEncodingType(LPCVOID lpData)
 {
 	BYTE						*szBuffer;

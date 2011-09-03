@@ -36,9 +36,6 @@ void CMPSkinMainWndBase::OnDestroy()
 	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
 	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LICENSE_CHANGED, this);
 
-	if (IsMainAppWnd() && m_strSkinWndName.size())
-		g_Profile.WriteProfileString(_T("DefaultSkinWnd"), GetSkinWndName());
-
 #ifndef _WIN32_WCE
 	// Save iconic status
 	g_Profile.WriteProfileInt(_T("Minimized"), IsIconic());

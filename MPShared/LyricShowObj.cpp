@@ -646,9 +646,6 @@ CLyricShowObj::CLyricShowObj()
 	m_nVertLineOffset = 0;
 #endif
 
-	m_etDispSettings = ET_LYRICS_DISPLAY_SETTINGS;
-	m_strSectName = SZ_SECT_LYR_DISPLAY;
-
 	m_nLeftAdjust = 0;
 	m_nLeftOrg = 0;
 }
@@ -672,11 +669,7 @@ void CLyricShowObj::OnCreate()
 		bool		bFloatingLyr = false;
 		tstring		strLyrStylePropName;
 		CLyricShowAgentObj::GetLyrDispStylePropName(m_pSkin, bFloatingLyr, strLyrStylePropName);
-		if (bFloatingLyr)
-		{
-			m_etDispSettings = ET_LYRICS_FLOATING_SETTINGS;
-			m_strSectName = SZ_SECT_FLOATING_LYR;
-		}
+		CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(bFloatingLyr, m_strSectName, m_etDispSettings);
 	}
 
 	LoadAllSettings();

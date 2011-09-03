@@ -11,7 +11,7 @@ public:
 	bool IsAnotherInstanceRunning();
 	bool SetRunningFlag();
 
-	virtual bool Init(StartApp startApp);
+	virtual bool Init();
 	virtual void Quit();
 
 	BOOL IsRunning() { return m_hMutexRuning != NULL; }
@@ -29,6 +29,12 @@ public:
 
 	int LoadGeneralEmbeddedSkin(bool bLoadSkinColorTheme = true);
 	int LoadWinamp2Skin(bool bLoadSkinColorTheme = true);
+
+	void RestartToAppMode(AppMode appMode);
+
+protected:
+	AppMode					m_appModeQuitToStart;
+
 #endif
 
 protected:

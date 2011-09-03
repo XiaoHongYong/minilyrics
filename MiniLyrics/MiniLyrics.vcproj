@@ -865,10 +865,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\win32\ProcessEnum.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\win32\ShellNotifyIcon.cpp"
 				>
 			</File>
@@ -1324,10 +1320,6 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\PreferPageUI.h"
-				>
-			</File>
-			<File
-				RelativePath=".\win32\ProcessEnum.h"
 				>
 			</File>
 			<File

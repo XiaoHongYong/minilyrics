@@ -38,16 +38,7 @@ const int SET_SPEED_SPAN = 500;
 
 CMPCommonCmdHandler::CMPCommonCmdHandler(bool bFloatingLyr)
 {
-	if (bFloatingLyr)
-	{
-		m_strSectName = SZ_SECT_FLOATING_LYR;
-		m_etDispSettings = ET_LYRICS_FLOATING_SETTINGS;
-	}
-	else
-	{
-		m_strSectName = SZ_SECT_LYR_DISPLAY;
-		m_etDispSettings = ET_LYRICS_DISPLAY_SETTINGS;
-	}
+	CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(bFloatingLyr, m_strSectName, m_etDispSettings);
 }
 
 CMPCommonCmdHandler::~CMPCommonCmdHandler()
@@ -138,7 +129,7 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 
 	case IDC_EMBEDDED_LYRICS:
 	case IDC_IPOD_LYRICS_DOWNLOADER:
-		RunLyricsTool(m_pSkinWnd);
+		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
 		break;
 
 	case IDC_LDO_KARAOKE:

@@ -11,6 +11,9 @@ bool StrBeginWith(LPCWSTR szText, LPCWSTR szBeginWith);
 bool StrIBeginWith(LPCSTR szText, LPCSTR szBeginWith);
 bool StrIBeginWith(LPCWSTR szText, LPCWSTR szBeginWith);
 
+bool StrEndWith(LPCTSTR szText, LPCTSTR szEndWith);
+bool StrIEndWith(LPCTSTR szText, LPCTSTR szEndWith);
+
 const TCHAR * strignore(const TCHAR *str, const TCHAR *strIgnore);
 
 void strdel(char *szStr, char ch);

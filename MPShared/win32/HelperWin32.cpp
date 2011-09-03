@@ -38,7 +38,7 @@ int CanOpenFileForWrite(LPCTSTR szFile, bool bMustExist)
 
 void Execute(CBaseWnd *pWnd, LPCTSTR szExe, LPCTSTR szParam)
 {
-	ShellExecute(pWnd->GetHandle(), _T("open"), 
+	ShellExecute(pWnd != NULL ? pWnd->GetHandle() : NULL, _T("open"), 
 		szExe,
 		szParam, NULL, SW_SHOWNORMAL);
 }

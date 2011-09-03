@@ -804,8 +804,8 @@ int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	tstring		strOpenedSkinWnds;
 	SetTStrNCase	setOpenedSkinWnds;
 
-	strOpenedSkinWnds = g_Profile.GetProfileString(_T("LatestOpenedSkinWnds"), _T(""));
-	strSkinWndDef = g_Profile.GetProfileString(_T("DefaultSkinWnd"), _T(""));
+	strOpenedSkinWnds = g_Profile.GetProfileString(GetSkinFileName(), _T("LatestOpenedSkinWnds"), _T(""));
+	strSkinWndDef = g_Profile.GetProfileString(GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
 
 	StrSplit(strOpenedSkinWnds.c_str(), ',', setOpenedSkinWnds);
 
@@ -905,7 +905,10 @@ int CSkinFactory::OpenSkinFile(LPCTSTR szSkinFile)
 
 	nRet = m_skinFile.Load(szSkinFile);
 	if (nRet != ERR_OK)
+	{
+		ERRLOG1(_T("Failed to parse skin file(xml): %s"), szSkinFile);
 		return nRet;
+	}
 
 	// Extra resource folder can be muliple folder, seperated with ','.
 	LPCTSTR szExtraResouceFolder = m_skinFile.GetSkinProperty(_T("ExtraResouceFolder"));
@@ -1024,7 +1027,7 @@ void CSkinFactory::Close(bool bQuit)
 			continue;
 
 		if (pSkin->IsMainAppWnd())
-			g_Profile.WriteProfileString(_T("DefaultSkinWnd"), pSkin->GetSkinWndName());
+			g_Profile.WriteProfileString(GetSkinFileName(), _T("DefaultSkinWnd"), pSkin->GetSkinWndName());
 		else
 		{
 			if (!strOpenedSkinWnds.empty())
@@ -1038,7 +1041,7 @@ void CSkinFactory::Close(bool bQuit)
 			pSkin->CloseSkin();
 	}
 	if (listSkinWnds.size() > 0)
-		g_Profile.WriteProfileString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
+		g_Profile.WriteProfileString(GetSkinFileName(), _T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
 
 	// ASSERT(m_listSkinWnds.size() <= 1);
 
@@ -1330,11 +1333,11 @@ void CSkinFactory::SetSkinFileName(LPCTSTR szSkinFileName)
 	m_strSkinFileName = szSkinFileName;
 
 #if defined (_DEBUG) && defined (_WIN32)
-	if (_tcsicmp(m_strSkinFileName.c_str(), _T("iPodLyricsDownloader.xml")) == 0)
-	{
-		m_strSkinRootDir = GetWorkingFolder();
-		m_strSkinRootDir += _T("..\\Install_iPodLyricsDownloader\\Share\\skins\\");
-	}
+// 	if (_tcsicmp(m_strSkinFileName.c_str(), _T("iPodLyricsDownloader.xml")) == 0)
+// 	{
+// 		m_strSkinRootDir = GetWorkingFolder();
+// 		m_strSkinRootDir += _T("..\\Install_iPodLyricsDownloader\\Share\\skins\\");
+// 	}
 #endif
 }
 
@@ -1748,11 +1751,10 @@ void CSkinFactory::ApplyDefaultThemeOfSkin()
 {
 	TCHAR	szThemeFile[MAX_PATH];
 
-	if (!m_resourceMgr.GetResourcePathName(szThemeFile, CountOf(szThemeFile), _T("Theme.xml")))
-		return;
-
-
-	if (!IsFileExist(szThemeFile))
+	tstring strThemeName;
+	FileGetTitle(GetSkinFileName(), strThemeName);
+	strThemeName += _T("_theme.xml");
+	if (!m_resourceMgr.GetResourcePathName(szThemeFile, CountOf(szThemeFile), strThemeName.c_str()))
 		return;
 
 	CSimpleXML xml;

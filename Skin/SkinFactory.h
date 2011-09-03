@@ -293,6 +293,7 @@ public:
 	CSkinFileXML *GetSkinFile() { return &m_skinFile; }
 
 	LPCTSTR GetSkinName() const { return m_strSkinName.c_str(); }
+	LPCTSTR GetSkinFileName() const { return m_strSkinFileName.c_str(); }
 
 	SXNode *GetExtendSkinWndStyle(LPCTSTR szExtendsSkinWnd) const;
 

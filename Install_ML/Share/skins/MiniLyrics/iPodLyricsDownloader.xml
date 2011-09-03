@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<skin defmainwnd="iPodLyricsDownloader" mainwnds="iPodLyricsDownloader">
+	<include Name="Styles.xml"/>
+
+	<skinwnd Name="iPodLyricsDownloader" Extends="MenuWindowFrame" Caption="iPod Lyrics Downloader" EnableTranslucency="true"
+		TranslucencyAlpha="255" MinWidth="640" MinHeight="480" Width="700" Height="400" EnableClickThrough="false"
+		Menu="iPodLyricsDownloader" DefaultPage="Container.LyricsTool" ContextMenu="NormalMode">
+
+		<Frame Image="panel-frame.png" Rect="0,0,320,135" RoundWidth="5" ThickWidth="5"
+			  XBorder="0" YBorder="0"/>
+		<Frame Image="panel-frame.png" Rect="320,0,w-320,200" RoundWidth="5" ThickWidth="5"
+			  XBorder="0" YBorder="0"/>
+		<Frame Image="panel-frame.png" Rect="0,200,w,h-200" RoundWidth="5" ThickWidth="5"
+			  XBorder="0" YBorder="0"/>
+		
+		<Image Name="Seperator" Rect="5,200-1,w-10,2" Image="seperator-h.png" BltMode="tile" />
+		<Image Name="Seperator" Rect="320-1,5,2,125" Image="seperator-v.png" BltMode="tile" />
+
+		<Container Rect="5,5,310,125" Name="Media Info" BgColor="#000000" >
+
+			<Property Name="BgImage" Image="media_info_bg.png" HorzExtendPos="1,4" VertExtendPos="100,121"/>
+		
+			<MediaInfoText Name="Title" Rect="10,10,w-20,20" UseParentBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Title" ShowTitle="false"/>
+			<HStretchImage Name="TitleLine" Rect="8,35,w-16,6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
+			<MediaInfoText Name="Artist" Rect="10,50,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Artist" ShowTitle="false"/>
+			<MediaInfoText Name="Album" Rect="10,70,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Album" ShowTitle="false"/>
+
+			<PlayingTime Rect="10,100,50,11" UseParentBg="true"
+				AlignText="AT_CENTER" CharWidth="8" TextImage="shade-numfont.png" ImageChars="0123456789 -:" />
+			<PlayingTimeText Visible="false" Name="PlayingTime" Rect="10,100,50,18" AlignText="AT_CENTER | AT_VCENTER"
+			   FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#FFFFFF"
+			   TextOutlinedColor="#000000" LeftMargin="0" Text=""/>
+			<SeekCtrl Name="Seek" ID="ID_SEEK" UseParentBg="TRUE" 
+					  Rect="10+50+8,100,w-10-50-10-8,12" EndWidth="3" ImageThumb="seek_thumb.png"
+					  ImageTrack="seek_track.png"/>
+		</Container>
+
+		<Container Rect="5,135,310,60" Name="PlayControl" >
+			<Button Rect="10,10,40,40" ID="ID_PREVIOUS"
+				Image="prev_next.png" ImageSize="40,40" ImagePos="0,0" ImageSelPos="0,80"
+				ImageFocusPos="0,40" UseParentBg="true" TranslucencyWithSkin="TRUE"/>
+
+			<Button Rect="60,3,55,55" ID="ID_PLAYPAUSE"
+				S0_Image="playpause.png" S0_ImageSize="55,55" S0_ImagePos="0,0" S0_ImageSelPos="0,110" S0_ImageFocusPos="0,55"
+				S1_Image="playpause.png" S1_ImageSize="55,55" S1_ImagePos="55,0" S1_ImageSelPos="55,110" S1_ImageFocusPos="55,55"
+				UseParentBg="true" TranslucencyWithSkin="TRUE"/>
+
+			<Button Rect="125,10,40,40" ID="ID_NEXT"
+				Image="prev_next.png" ImageSize="40,40" ImagePos="40,0" ImageSelPos="40,80"
+				ImageFocusPos="40,40" UseParentBg="true" TranslucencyWithSkin="TRUE"/>
+				
+			<Image Name="Volume" Rect="w-110-14-5,25,14,14" Image="volume.png" UseParentBg="TRUE" />
+			<SeekCtrl Name="Volume" ID="ID_VOLUME" UseParentBg="TRUE" 
+					  Rect="w-110,26,100,12" EndWidth="3" ImageThumb="seek_thumb.png"
+					  ImageTrack="seek_track.png"/>
+		</Container>
+
+		<Container Rect="325,5,w-320-10,190" Name="Lyrics" >
+			<LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" SetSkinBg="false"
+			  EnableToolbar="FALSE" EnableAutoResize="FALSE" />
+		</Container>
+
+		<Animation ID="CID_AM_SHOW_WORKING" MoveFromBottom="CID_S_STATUS,CID_PROGRESS,ID_CANCEL"
+				 ResizeCtrl="CID_LIST_FILES,,,,h-10-70" Duration="300"/>
+		<Animation ID="CID_AM_HIDE_WORKING" MoveToBottom="CID_S_STATUS,CID_PROGRESS,ID_CANCEL"
+				 ResizeCtrl="CID_LIST_FILES,,,,h-10-10" Duration="300"/>
+		<Animation ID="CID_AM_SHOW_EMBEDDED_LYR" FadeIn="CID_C_EMBEDDED_LYR_TYPE" FadeOut="CID_C_LYRICS_TOOL"
+				 Duration="300"/>
+		<Animation ID="CID_AM_HIDE_EMBEDDED_LYR" FadeOut="CID_C_EMBEDDED_LYR_TYPE" FadeIn="CID_C_LYRICS_TOOL"
+				 Duration="300"/>
+
+		<Container.LyricsTool ID="CID_C_LYRICS_TOOL" Name="Lyrics Tool" Rect="5,205,w-10,h-200-10">
+			<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"
+				ImageList="Pf_AdvancedIcon.png"/>
+			<NormalText ID="CID_STATUS" Text="" Visible="false" Rect="0,h-30-20,w,"/>
+			<Progress ID="CID_PROGRESS" Visible="false" Rect="10,h-23,w-110-20,"/>
+			<NormalTextBt ID="CID_CANCEL_WORK" Visible="false" Text="Cancel" Rect="w-110-10,h-20,110,"/>
+		</Container.LyricsTool>
+	</skinwnd>
+</skin>

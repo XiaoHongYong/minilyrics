@@ -282,16 +282,7 @@ protected:
 	{
 		ClearOptions();
 
-		if (settingType == ST_FLOATING_LYR)
-		{
-			m_eventType = ET_LYRICS_FLOATING_SETTINGS;
-			m_strSectName = SZ_SECT_FLOATING_LYR;
-		}
-		else
-		{
-			m_eventType = ET_LYRICS_DISPLAY_SETTINGS;
-			m_strSectName = SZ_SECT_LYR_DISPLAY;
-		}
+		CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(settingType == ST_FLOATING_LYR, m_strSectName, m_eventType);
 
 		{
 			// Lyrics border colors and background

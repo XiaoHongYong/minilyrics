@@ -2,7 +2,7 @@
 #include "MPlayerApp.h"
 #include "DlgStartMiniLyrics.h"
 #include "MLPlayerMgr.h"
-#include "ProcessEnum.h"
+#include "../../base/win32/ProcessEnum.h"
 #include "DlgSetupPlayerPlugins.h"
 
 TOLOCAL_SECTION("MiniLyrics setup")
@@ -65,6 +65,8 @@ BOOL CDlgStartMiniLyrics::OnInitDialog()
 {
 	if (!CBaseDialog::OnInitDialog())
 		return FALSE;
+
+	SetTopmost(true);
 
 	__hWndDlgStartMiniLyrics = m_hWnd;
 

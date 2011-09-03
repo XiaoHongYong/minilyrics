@@ -50,7 +50,7 @@ void CLyricShowAgentObj::GetLyrDispStyleSettings(CSkinWnd *pSkinWnd, tstring &st
 	GetLyrDispStylePropName(pSkinWnd, bFloatingLyr, strLyrStylePropName);
 
 	strLyrStyle = g_Profile.GetProfileString(
-		bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY,
+		CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(bFloatingLyr),
 		strLyrStylePropName.c_str(),
 		strLyrStyle.c_str());
 }
@@ -63,7 +63,7 @@ void CLyricShowAgentObj::SetLyrDispStyleSettings(CSkinWnd *pSkinWnd, LPCTSTR szL
 	GetLyrDispStylePropName(pSkinWnd, bFloatingLyr, strLyrStylePropName);
 
 	CMPlayerSettings::SetSettings(ET_UI_SETTINGS_CHANGED, 
-		bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY, 
+		CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(bFloatingLyr), 
 		strLyrStylePropName.c_str(), szLyrStyle);
 }
 
@@ -74,7 +74,7 @@ void CLyricShowAgentObj::OnCreate()
 	GetLyrDispStylePropName(m_pSkin, m_bFloatingLyr, m_strLyrDisplayStylePropName);
 
 	m_strLyrDisplayStyleDefault = g_Profile.GetProfileString(
-		m_bFloatingLyr ? SZ_SECT_FLOATING_LYR : SZ_SECT_LYR_DISPLAY,
+		CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(m_bFloatingLyr),
 		m_strLyrDisplayStylePropName.c_str(),
 		m_strLyrDisplayStyleDefault.c_str());
 

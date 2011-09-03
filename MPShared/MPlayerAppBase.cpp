@@ -234,7 +234,7 @@ LPCTSTR GetAppDataDir()
 					CreateDirectory(g_szAppDataDir, NULL);
 
 					LPCTSTR		szToMoveFiles[] = { _T("MiniLyric.ini"), _T("MLLyrics.S2L"), _T("FontColorCustom.the"), 
-						_T("dbSearchCache.db"), _T("dbLyrUpload.db"), _T("LocalLrcDb.ds") };
+						_T("dbSearchCache.db"), _T("dbLyrUpload.db") };
 					tstring		strMLIniOld, strMLIniNew;
 
 					for (int i = 0; i < CountOf(szToMoveFiles); i++)
@@ -367,6 +367,7 @@ CMPlayerAppBase::CMPlayerAppBase()
 {
 #ifndef _MPLAYER
 	m_bMPSkinMode = true;
+	m_appMode = SA_LYRICS_PLAYER;
 #endif
 }
 
@@ -455,29 +456,21 @@ bool CMPlayerAppBase::InitLyricsTool()
 
 bool CMPlayerAppBase::InitiPodLyricsDownloader()
 {
-	m_pSkinFactory->SetSkinFileName(_T("MiniLyrics.xml"));
-	int nRet = LoadDefaultSkin(_T("Default"), false);
+	m_pSkinFactory->SetSkinFileName(_T("iPodLyricsDownloader.xml"));
+	int nRet = LoadDefaultSkin(_T("Metal"), true);
 	if (nRet != ERR_OK)
 	{
-#ifndef _MPLAYER
-		m_bMPSkinMode = true;
-		g_Profile.WriteProfileInt(_T("MPSkinMode"), false);
-#endif
-		g_Profile.WriteProfileString(_T("DefaultSkin"), _T("Default"));
-		g_Profile.GetProfileString(_T("DefaultSkinWnd"), _T(""));
-		nRet = LoadDefaultSkin(_T("Default"));
+		g_Profile.WriteProfileString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
+		nRet = ChangeSkinByUserCmd(_T("Metal"));
 		if (nRet != ERR_OK)
+		{
+			MessageOut(_T("Failed to open skin, please perform full uninstallation to solve this issue."));
 			return false;
+		}
 	}
 
 	// Init player.
 	g_Player.OnInit(false);
-
-	RunLyricsTool(m_pSkinFactory->GetMainWnd());
-
-#ifdef _WIN32
-	//ShowAsAppWindow(GetRunningLyricsToolWnd()->GetHandle());
-#endif
 
 	OnMediaChanged();
 
@@ -490,7 +483,7 @@ bool CMPlayerAppBase::InitiPodLyricsDownloader()
 	return true;
 }
 
-bool CMPlayerAppBase::Init(StartApp startApp)
+bool CMPlayerAppBase::Init()
 {
 	SetDefaultSettings();
 
@@ -521,19 +514,16 @@ bool CMPlayerAppBase::Init(StartApp startApp)
 
 	// Initialize MiniLyrics/ZikiPlayer
 	bool bRet = false;
-	if (startApp == SA_LYRICS_TOOL)
-		bRet = InitLyricsTool();
-	else if (startApp == SA_IPOD_LYRICS_DOWNLOADER)
+	if (m_appMode == SA_IPOD_LYRICS_DOWNLOADER)
 		bRet = InitiPodLyricsDownloader();
 	else
 		bRet = InitLyricsPlayer();
 	if (!bRet)
 		return false;
 
-	if (!GetInstance()->SetRunningFlag())
-		return false;
+	GetInstance()->SetRunningFlag();
 
-	// ¼ì²éÉý¼¶
+	// Checker for new version
 	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("CheckNewVer"), true))
 	{
 		CVersionUpdate		VerUp;
@@ -564,13 +554,8 @@ bool CMPlayerAppBase::InitLoadSkin()
 
 	if (nRet != ERR_OK)
 	{
-#ifndef _MPLAYER
-		m_bMPSkinMode = true;
-		g_Profile.WriteProfileInt(_T("MPSkinMode"), true);
-#endif
-		g_Profile.WriteProfileString(_T("DefaultSkin"), SZ_DEFSKIN);
-		g_Profile.GetProfileString(_T("DefaultSkinWnd"), _T(""));
-		nRet = LoadDefaultSkin(SZ_DEFSKIN);
+		g_Profile.WriteProfileString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
+		nRet = ChangeSkinByUserCmd(SZ_DEFSKIN);
 		if (nRet != ERR_OK)
 		{
 			MessageOut(TOLOCAL(_T("$Product$ can't open latest skin, please try other skins.")), MB_OK | MB_ICONERROR);
@@ -963,9 +948,51 @@ int CMPlayerAppBase::MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption)
 	return pWnd->MessageOut(lpText, uType, lpCaption);
 }
 
-int CMPlayerAppBase::ChangeSkin(LPCTSTR szSkin, bool bLoadSkinColorTheme)
+int CMPlayerAppBase::ChangeSkinByUserCmd(LPCTSTR szSkin)
 {
-	return m_pSkinFactory->ChangeSkin(szSkin, _T(""), _T(""), bLoadSkinColorTheme);
+	// Set default page, when skin changes.
+#ifndef _MPLAYER
+	if (CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
+		g_Profile.WriteProfileInt(_T("MPSkinMode"), true);
+
+	CMPlayerAppBase::GetInstance()->EndEmbeddedSkin();
+#endif
+
+	WriteDefaultSkin(szSkin);
+
+	return m_pSkinFactory->ChangeSkin(szSkin, _T(""), _T(""), true);
+}
+
+void CMPlayerAppBase::GetCurLyrDisplaySettingName(bool bFloatingLyr, tstring &strSectionName, EventType &etDispSettings)
+{
+	if (bFloatingLyr)
+	{
+		strSectionName = SZ_SECT_FLOATING_LYR;
+		etDispSettings = ET_LYRICS_FLOATING_SETTINGS;
+	}
+	else
+	{
+		if (m_appMode == SA_IPOD_LYRICS_DOWNLOADER)
+			strSectionName = _T("iPodLyricsDwonloader");
+		else
+			strSectionName = SZ_SECT_LYR_DISPLAY;
+		etDispSettings = ET_LYRICS_DISPLAY_SETTINGS;
+	}
+}
+
+LPCTSTR CMPlayerAppBase::GetCurLyrDisplaySettingName(bool bFloatingLyr)
+{
+	if (bFloatingLyr)
+	{
+		return SZ_SECT_FLOATING_LYR;
+	}
+	else
+	{
+		if (m_appMode == SA_IPOD_LYRICS_DOWNLOADER)
+			return _T("iPodLyricsDwonloader");
+		else
+			return SZ_SECT_LYR_DISPLAY;
+	}
 }
 
 void CMPlayerAppBase::SetDefaultSettings()

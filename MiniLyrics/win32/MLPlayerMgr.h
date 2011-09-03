@@ -6,7 +6,7 @@
 
 HWND GetMLSericeWindow();
 
-bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp);
+bool ProcessCmdLine(LPCTSTR szCmdLine, AppMode &appMode);
 
 class CMLPlayerMgr : public CTinyBaseWnd
 {

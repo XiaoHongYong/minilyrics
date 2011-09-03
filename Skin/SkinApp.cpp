@@ -46,18 +46,27 @@ bool CSkinApp::Init()
 
 int CSkinApp::LoadDefaultSkin(LPCTSTR szDefaultSkin, bool bCreateSkinWnd)
 {
-	tstring		strSkin;
 	bool		bLoadSkinTheme = false;
 
-	strSkin = g_Profile.GetProfileString(_T("DefaultSkin"), _T(""));
+	tstring strSkin = GetDefaultSkin();
 	if (strSkin.empty())
 	{
 		strSkin = szDefaultSkin;
 		bLoadSkinTheme = true;
-		g_Profile.WriteProfileString(_T("DefaultSkin"), strSkin.c_str());
+		WriteDefaultSkin(szDefaultSkin);
 	}
 
 	return m_pSkinFactory->ChangeSkin(strSkin.c_str(), _T(""), _T(""), bLoadSkinTheme, bCreateSkinWnd);
+}
+
+tstring CSkinApp::GetDefaultSkin()
+{
+	return g_Profile.GetProfileString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkin"), _T(""));
+}
+
+void CSkinApp::WriteDefaultSkin(LPCTSTR szDefaultSkin)
+{
+	g_Profile.WriteProfileString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkin"), szDefaultSkin);
 }
 
 template <class _T>

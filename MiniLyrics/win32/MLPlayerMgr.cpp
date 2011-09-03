@@ -18,10 +18,8 @@ HWND GetMLSericeWindow()
 	return g_playerMgr.GetHandle();
 }
 
-bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
+bool ProcessCmdLine(LPCTSTR szCmdLine, AppMode &appMode)
 {
-	startApp = SA_LYRICS_PLAYER;
-
 	// Parse command line
 	V_Str		vCmdLine;
 	CmdLineAnalysis(szCmdLine, vCmdLine);
@@ -35,30 +33,26 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 			hWndPlayerService = (HWND)HexToInt(vCmdLine[i + 1].c_str());
 			if (!IsWindow(hWndPlayerService))
 				hWndPlayerService = NULL;
-		}
-		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/LyricsTool")) == 0)
-		{
-			startApp = SA_LYRICS_TOOL;
-			continue;
+			i++;
 		}
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/iPodLyricsDownloader")) == 0)
-		{
-			startApp = SA_IPOD_LYRICS_DOWNLOADER;
-			continue;
-		}
+			appMode = SA_IPOD_LYRICS_DOWNLOADER;
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/Setup")) == 0)
 		{
-			startApp = SA_SETUP;
-			continue;
+			CDlgSetupPlayerPlugins	dlg;
+			return dlg.DoModal(NULL) == IDOK;
 		}
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/Uninstall")) == 0)
 		{
-			startApp = SA_UNINSTALL;
-			continue;
+			// Uninstall MiniLyrics plugins for players.
+			CPlayerPluginInstaller	installer;
+			installer.Init();
+			tstring strErr;
+			installer.Uninstall(strErr);
+
+			PostQuitMessage(0);
+			return false;
 		}
-		else
-			continue;
-		i++;
 	}
 
 	if (hWndPlayerService != NULL)
@@ -67,7 +61,6 @@ bool ProcessMLCmdLine(LPCTSTR szCmdLine, StartApp &startApp)
 			g_playerMgr.Create();
 
 		CPlayer::QueryInfo(hWndPlayerService);
-		return true;
 	}
 
 	return true;
@@ -195,41 +188,7 @@ void CMLPlayerMgr::QueryRunningPlayerInfo()
 
 bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 {
-	if (wParam == ML_SEND_CMD_LINE && pcds->dwData == ML_SEND_CMD_LINE)
-	{
-		StartApp startApp;
-		ProcessMLCmdLine((LPCTSTR)pcds->lpData, startApp);
-		switch (startApp)
-		{
-		case SA_SETUP:
-			{
-				CDlgSetupPlayerPlugins	dlg;
-				dlg.DoModal(NULL);
-			}
-			break;
-		case SA_IPOD_LYRICS_DOWNLOADER:
-		case SA_LYRICS_TOOL:
-			break;
-		case SA_LYRICS_PLAYER:
-			CDlgStartMiniLyrics::OnPlayerStarted();
-			break;
-		case SA_UNINSTALL:
-			break;
-		default:
-			ASSERT(0);
-			break;
-		}
-	}
-	else if (wParam == ML_ACTIVATE && pcds->dwData == ML_ACTIVATE)
-	{
-		CMPSkinMainWnd *pWnd = CMPlayerAppBase::GetMainWnd();
-		if (pWnd)
-			pWnd->Activate();
-		else
-			ERRLOG0(_T("MiniLyrics main window hasn't been started yet, can't activate it."));
-		return true;
-	}
-	else if (wParam == ML_MSG_VERSION && pcds->dwData == M2M_PLAYER_INFO)
+	if (wParam == ML_MSG_VERSION && pcds->dwData == M2M_PLAYER_INFO)
 	{
 		ASSERT(sizeof(PlayerInfo) == pcds->cbData);
 		OnPlayerInfoReturned((PlayerInfo *)pcds->lpData);

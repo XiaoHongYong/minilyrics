@@ -104,13 +104,11 @@ enum STR_NAME
 	SN_WEBHOME,
 };
 
-enum StartApp
+enum AppMode
 {
+	SA_UNKNOWN,
 	SA_LYRICS_PLAYER,
 	SA_IPOD_LYRICS_DOWNLOADER,
-	SA_LYRICS_TOOL,
-	SA_SETUP,
-	SA_UNINSTALL,
 };
 
 tstring GetAppNameLong();
@@ -131,7 +129,7 @@ public:
 	CMPlayerAppBase();
 	virtual ~CMPlayerAppBase();
 
-	virtual bool Init(StartApp startApp);
+	virtual bool Init();
 	virtual void Quit();
 
 	virtual void OnEvent(const IEvent *pEvent);
@@ -180,13 +178,18 @@ public:
 
 	int MessageOut(LPCTSTR lpText, UINT uType = MB_ICONINFORMATION | MB_OK, LPCTSTR lpCaption = NULL);
 
-	int ChangeSkin(LPCTSTR szSkin, bool bLoadSkinColorTheme);
-
-public:
+	int ChangeSkinByUserCmd(LPCTSTR szSkin);
 
 #ifndef _MPLAYER
+public:
+	AppMode GetCurrentAppMode() const { return m_appMode; }
+
 	bool					m_bMPSkinMode;
+	AppMode					m_appMode;
 #endif
+
+	void GetCurLyrDisplaySettingName(bool bFloatingLyr, tstring &strSectionName, EventType &etDispSettings);
+	LPCTSTR GetCurLyrDisplaySettingName(bool bFloatingLyr);
 
 protected:
 	void SetDefaultSettings();

@@ -24,6 +24,9 @@ public:
 
 	virtual int LoadDefaultSkin(LPCTSTR szDefaultSkin, bool bCreateSkinWnd = true);
 
+	tstring GetDefaultSkin();
+	void WriteDefaultSkin(LPCTSTR szDefaultSkin);
+
 	CEventsDispatcherBase *GetEventPatcher() { return m_pEventDispatcher; }
 	CSkinFactory *GetSkinFactory() { return m_pSkinFactory; }
 

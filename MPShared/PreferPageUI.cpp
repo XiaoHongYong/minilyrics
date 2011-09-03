@@ -223,13 +223,7 @@ public:
 		else
 #endif
 		{
-#ifndef _MPLAYER
-			if (CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
-				g_Profile.WriteProfileInt(_T("MPSkinMode"), true);
-			CMPlayerAppBase::GetInstance()->EndEmbeddedSkin();
-#endif
-			g_Profile.WriteProfileString(_T("DefaultSkin"), strSkinName.c_str());
-			CMPlayerAppBase::GetInstance()->ChangeSkin(strSkinName.c_str(), true);
+			CMPlayerAppBase::GetInstance()->ChangeSkinByUserCmd(strSkinName.c_str());
 		}
 	}
 
@@ -259,10 +253,7 @@ public:
 
 		m_pSkinList->DeleteAllItems(false);
 
-		TCHAR		szSkinDef[MAX_PATH];
-
-		// 取得上次加载的Skin
-		g_Profile.GetProfileString(_T("DefaultSkin"), _T(""), szSkinDef, CountOf(szSkinDef));
+		tstring strDefaultSkin = CSkinApp::GetInstance()->GetDefaultSkin();
 
 #if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
 		m_strEmbeddedSkinName = _T("");
@@ -283,10 +274,10 @@ public:
 			for (UINT i = 0; i < vSkins.size(); i++)
 			{
 				m_pSkinList->InsertItem(m_pSkinList->GetItemCount(), vSkins[i].c_str());
-				if (_tcscmp(szSkinDef, vSkins[i].c_str()) == 0)
+				if (_tcscmp(strDefaultSkin.c_str(), vSkins[i].c_str()) == 0)
 					m_pSkinList->SetItemSelectionState(m_pSkinList->GetItemCount() - 1, true);
 			}
-			UpdateSkinComment(szSkinDef);
+			UpdateSkinComment(strDefaultSkin.c_str());
 		}
 
 		m_bIgnoreSkinListNotify = false;

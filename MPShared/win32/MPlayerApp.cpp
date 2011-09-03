@@ -13,6 +13,7 @@
 #include "../../GfxLite/win32/GdiplusGraphicsLite.h"
 
 #ifdef _WIN32_DESKTOP
+#include "../base/win32/ProcessEnum.h"
 #ifndef _MPLAYER
 #include "../MiniLyrics/win32/MLPlayerMgr.h"
 #include "../MiniLyrics/win32/PlayerPluginInstaller.h"
@@ -32,9 +33,40 @@
 #include "Stackwalker.h"
 #endif
 
-#ifndef _MPLAYER
-bool MiniLyricsInit(LPCTSTR szCmdLine);
-#endif
+bool TerminateAnotherInstance()
+{
+	CProcessEnum	processEnum;
+	DWORD			vProcessID[1024];
+	DWORD			nSizeReturned;
+
+	if (!processEnum.Enum(vProcessID, sizeof(vProcessID), &nSizeReturned))
+		return false;
+
+	TCHAR	szSelfName[MAX_PATH] = _T("");
+	GetModuleFileName(NULL, szSelfName, CountOf(szSelfName));
+	DWORD dwCurrentPID = GetCurrentProcessId();
+
+	nSizeReturned /= sizeof(DWORD);
+	for (int i = 0; i < nSizeReturned; i++)
+	{
+		if (vProcessID[i] == dwCurrentPID)
+			continue;
+		tstring strFile = processEnum.GetProcessFileName(vProcessID[i]);
+		if (_tcscmp(strFile.c_str(), szSelfName) == 0)
+		{
+			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, false, vProcessID[i]);
+			if (hProcess != NULL)
+			{
+				ERRLOG0(_T("Terminate another running instance."));
+				TerminateProcess(hProcess, 0);
+				CloseHandle(hProcess);
+				return true;
+			}
+		}
+	}
+
+	return false;
+}
 
 int WINAPI _tWinMain(HINSTANCE hInstance,
 					 HINSTANCE hPrevInstance,
@@ -42,32 +74,31 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 					 int       nCmdShow)
 {
 	SetAppInstance(hInstance);
-	CMPlayerApp *pApp = CMPlayerAppBase::GetInstance();
 
 	DBGLOG1(_T("MiniLyrics command line: %s"), lpCmdLine);
 
+	// Only allow one copy of MiniLyrics.exe running, iPod Lyrics Downloader and MiniLyrics can't be running at same time.
+
+	CMPlayerApp *pApp = CMPlayerAppBase::GetInstance();
 	if (pApp->IsAnotherInstanceRunning())
 	{
-		DBGLOG0(_T("Another Instance is running, send command line to it."));
-		HWND		hwndMain = FindWindow(SZ_MINILYRICS_SERVICE_CLASS_NAME, NULL);
-		if (hwndMain)
+		HWND		hWndMsg = FindWindow(MSG_WND_CLASS_NAME, NULL);
+		if (hWndMsg)
 		{
-			SendActivateMainWnd(hwndMain);
+			SendActivateMainWnd(hWndMsg);
 
 			if (!IsEmptyString(lpCmdLine))
-				SendCommandLine(hwndMain, lpCmdLine);
+			{
+				DBGLOG0(_T("Another Instance is running, send command line to it."));
+				SendCommandLine(hWndMsg, lpCmdLine);
+			}
+			return 0;
 		}
-		return 0;
+		else
+			TerminateAnotherInstance();
 	}
 
-	StartApp	startApp = SA_LYRICS_PLAYER;
-
-#ifndef _MPLAYER
-	if (!ProcessMLCmdLine(lpCmdLine, startApp))
-		return 1;
-#endif
-
-	if (!CMPlayerAppBase::GetInstance()->Init(startApp))
+	if (!CMPlayerAppBase::GetInstance()->Init())
 		return 1;
 
 	// Main message loop:
@@ -119,8 +150,28 @@ bool CMPlayerApp::SetRunningFlag()
 	return true;
 }
 
-bool CMPlayerApp::Init(StartApp startApp)
+bool CMPlayerApp::Init()
 {
+	LPCTSTR lpCmdLine = GetCommandLine();
+
+	if (IsAnotherInstanceRunning())
+	{
+		HWND hWndMsg = FindWindow(MSG_WND_CLASS_NAME, NULL);
+		if (hWndMsg)
+		{
+			SendActivateMainWnd(hWndMsg);
+
+			if (!IsEmptyString(lpCmdLine))
+			{
+				DBGLOG0(_T("Another Instance is running, send command line to it."));
+				SendCommandLine(hWndMsg, lpCmdLine);
+			}
+			return false;
+		}
+		else
+			TerminateAnotherInstance();
+	}
+
 #if defined(_DEBUG) && defined(_MEM_LEAK_CHECK)
 	InitAllocCheck(ACOutput_XML);
 #endif
@@ -139,20 +190,6 @@ bool CMPlayerApp::Init(StartApp startApp)
 	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
 	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
 
-	// InitMiniDumper();
-
-#ifndef _MPLAYER
-	if (startApp == SA_UNINSTALL)
-	{
-		// Uninstall MiniLyrics plugins for players.
-		CPlayerPluginInstaller	installer;
-		installer.Init();
-		tstring strErr;
-		installer.Uninstall(strErr);
-		return false;
-	}
-#endif
-
 	LOG1(LOG_LVL_EVENT_IMP, _T("Start %s."), GetAppNameLong().c_str());
 
 	// Init Winsock, Ole, Common Controls, gdiplus
@@ -166,25 +203,21 @@ bool CMPlayerApp::Init(StartApp startApp)
  	InitCommonControlsEx(&initData);
 
 	// Init gdiplus
-#ifdef _WIN32_DESKTOP
 	OleInitialize(NULL);
 
 	CGdiplusGraphicsLite::Startup();
 
 	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("Antialias"), FALSE))
 		GfxRaw::EnableAntialiasFont(TRUE);
-#endif
 
 #ifndef _MPLAYER
-	if (startApp == SA_SETUP)
-	{
-		CDlgSetupPlayerPlugins	dlg;
-		dlg.DoModal(NULL);
-		return 0;
-	}
+	m_appModeQuitToStart = SA_UNKNOWN;
+
+	if (!ProcessCmdLine(lpCmdLine, m_appMode))
+		return false;
 #endif
 
-	return CMPlayerAppBase::Init(startApp);
+	return CMPlayerAppBase::Init();
 }
 
 void CMPlayerApp::Quit()
@@ -203,7 +236,21 @@ void CMPlayerApp::Quit()
 	CGdiplusGraphicsLite::Shutdown();
 
 	OleUninitialize();
-#endif	
+#endif
+
+#ifndef _MPLAYER
+	if (m_appModeQuitToStart != SA_UNKNOWN)
+	{
+		TCHAR	szAppExe[MAX_PATH];
+
+		GetModuleFileName(NULL, szAppExe, CountOf(szAppExe));
+
+		if (m_appModeQuitToStart == SA_IPOD_LYRICS_DOWNLOADER)
+			Execute(NULL, szAppExe, _T("/iPodLyricsDownloader"));
+		else if (m_appModeQuitToStart == SA_LYRICS_PLAYER)
+			Execute(NULL, szAppExe, NULL);
+	}
+#endif
 }
 
 #ifndef _MPLAYER
@@ -369,7 +416,7 @@ int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
 	if (IsEmptyString(szWaSkinPath))
 	{
 		// 使用 minilyrics 的基本skin
-		return CMPlayerAppBase::ChangeSkin(SZ_DEFSKIN, true);
+		return m_pSkinFactory->ChangeSkin(SZ_DEFSKIN, _T(""), _T(""), true);
 	}
 	else
 	{
@@ -381,7 +428,7 @@ int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
 		_tcscat_safe(szTestFile, CountOf(szTestFile), _T("titlebar.bmp"));
 		if (!IsFileExist(szTestFile))
 		{
-			return CMPlayerAppBase::ChangeSkin(SZ_DEFSKIN, true);
+			return m_pSkinFactory->ChangeSkin(SZ_DEFSKIN, _T(""), _T(""), true);
 		}
 		else
 		{
@@ -450,4 +497,12 @@ int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
 
 	return nRet;
 }
+
+void CMPlayerApp::RestartToAppMode(AppMode appMode)
+{
+	m_appModeQuitToStart = appMode;
+
+	PostQuitMessage();
+}
+
 #endif
