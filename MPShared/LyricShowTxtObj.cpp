@@ -41,9 +41,6 @@ CLyricShowTxtObj::CLyricShowTxtObj()
 CLyricShowTxtObj::~CLyricShowTxtObj()
 {
 	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
-
-	if (m_pObjScrollBar)
-		m_pSkin->RemoveUIObject(m_pObjScrollBar, true);
 }
 
 void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
@@ -261,7 +258,8 @@ void CLyricShowTxtObj::OnLyricsChanged()
 	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_ENABLE_RECORD, bVisible, false);
 	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_ENABLE_REPLAY, bVisible, false);
 	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_MENU, bVisible, false);
-	m_pObjScrollBar->SetVisible(bVisible);
+	if (m_pObjScrollBar)
+		m_pObjScrollBar->SetVisible(bVisible);
 
 	m_nCurLine = 0;
 	m_nCurLineNew = 0;
@@ -352,39 +350,8 @@ void CLyricShowTxtObj::OnCreate()
 	m_bRecordScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrRecordSAEnabled"), true);
 	m_bReplayScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrReplaySAEnabled"), true);
 
-	//
-	// Create Scrollbar
-	//
-	m_pObjScrollBar = m_pSkin->GetSkinFactory()->CreateDynamicCtrl(m_pContainer, 
-		CSkinVScrollBar::ClassName(),
-		UID_INVALID, NULL, NULL, NULL, NULL);
-	ASSERT(m_pObjScrollBar);
-	if (!m_pObjScrollBar)
-		return;
-
-	m_pObjScrollBar->SetProperty(_T("LinesPerWheel"), _T("1"));
-
-	TCHAR		szTemp[MAX_PATH];
-
-	// set left
-	_stprintf_s(szTemp, CountOf(szTemp), _T("%s+%s-%s"), m_formLeft.GetFormula(), m_formWidth.GetFormula(),
-		m_pObjScrollBar->m_formWidth.GetFormula());
-	m_pObjScrollBar->SetProperty(SZ_PN_LEFT, szTemp);
-
-	// top
-	m_pObjScrollBar->SetProperty(SZ_PN_TOP, m_formTop.GetFormula());
-
-	// width of this
-	_stprintf_s(szTemp, CountOf(szTemp), _T("%s-%s"), m_formWidth.GetFormula(), m_pObjScrollBar->m_formWidth.GetFormula());
-	m_formWidth.SetFormula(szTemp);
-
-	// height.
-	m_pObjScrollBar->SetProperty(SZ_PN_HEIGHT, m_formHeight.GetFormula());
-
-	if (m_pContainer)
-		m_pContainer->RecalculateUIObjSizePos(m_pObjScrollBar);
-
-	if (m_pObjScrollBar->IsKindOf(CSkinVScrollBar::ClassName()))
+	m_pObjScrollBar = m_pContainer->GetUIObjectByClassName(CSkinVScrollBar::ClassName());
+	if (m_pObjScrollBar)
 		m_pScrollBar = (CSkinVScrollBar*)m_pObjScrollBar;
 
 	if (m_pScrollBar)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding='UTF-8'?>
-<skin defmainwnd="iPodLyricsDownloader" mainwnds="iPodLyricsDownloader" ExtraResouceFolder="MiniLyrics">
+<skin defmainwnd="iPodLyricsDownloader" mainwnds="iPodLyricsDownloader" ExtraResouceFolder="MiniLyrics" Script="iPodLyricsDownloader.java">
 	<include Name="Styles.xml"/>
 
 	<skinwnd Name="iPodLyricsDownloader" Caption="iPod Lyrics Downloader" EnableClickThrough="false"
@@ -12,7 +12,7 @@
 		<Container Name="Caption" Rect="0,0,w,118" TranslucencyWithSkin="FALSE">
 			<Property Name="BgImage" Image="frame.png" ImageRect="0,0,425,118" HorzExtendPos="7,418" BlendPixMode="copy"/>
 
-			<MenuBar Rect="13,8,w/2-10,20" Name="Menu"
+			<MenuBar Rect="13,8,w/2-25,20" Name="Menu"
 					 UseParentBg="true" FontName="Verdana"
 			   FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
 			   TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
@@ -55,7 +55,7 @@
 				<Property Name="BgImage" Image="media_info_bg.png" HorzExtendPos="5,45" BlendPixMode="alpha_blend"/>
 
 				<MediaInfoText Name="Title" Rect="10,5,w-20,20" UseParentBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Title" ShowTitle="false"/>
-				<MediaInfoText Name="Artist - Album" Rect="10,27,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="false" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Artist - Album" ShowTitle="false"/>
+				<MediaInfoText Name="Artist|Album" Rect="10,27,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="false" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Artist|Album" ShowTitle="false"/>
 
 				<PlayingTime Rect="10,50,50,11" UseParentBg="true"
 					AlignText="AT_CENTER" CharWidth="8" TextImage="shade-numfont.png" ImageChars="0123456789 -:" />
@@ -78,16 +78,32 @@
 		<ResizableLinearContainer Name="Client" Rect="2,118,w-4,h-118-32" BgColor="#7F7F7F" SeparatorThickness="2" Orientation="Horizontal">
 			<Container Name="Playlist" Width="108+10" Height="108" MinWidth="200" MinHeight="108" LayoutParams="match_parent_height" Weight="1">
 				<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"
-					ImageList="Pf_AdvancedIcon.png"/>
+					ImageList="playlist_icon.png"/>
 				<NormalText ID="CID_STATUS" Text="" Visible="false" Rect="0,h-30-20,w,"/>
 				<Progress ID="CID_PROGRESS" Visible="false" Rect="10,h-23,w-110-20,"/>
 				<NormalTextBt ID="CID_CANCEL_WORK" Visible="false" Text="Cancel" Rect="w-110-10,h-20,110,"/>
 			</Container>
-			<Container Name="MediaInfo" Width="200" Height="108" MinWidth="200" MinHeight="108" LayoutParams="match_parent_height">
+			<DecorativeContainer Name="MediaInfo" Width="200" Height="108" MinWidth="200" MinHeight="108" LayoutParams="match_parent_height">
 				<LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" SetSkinBg="false"
 				  EnableToolbar="FALSE" EnableAutoResize="FALSE" />
-			</Container>
+
+				<Container ID="CID_LYR_TOOL_BAR" Rect="10,h-40,90,30">
+					<HStretchImage Name="bg" Rect="0,0,w,30" Image="lyr_ctrl_bg.png" ImageScaleXStart="8" ImageScaleXEnd="22"/>
+
+					<Toolbar Rect="12,4,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+							units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
+							MarginX="0" MarginY="0" FullStatusImage="TRUE">
+						<button ID="ID_SEARCH_LYRICS" Left="5" />
+						<button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
+						<button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
+					</Toolbar>
+				</Container>
+
+			</DecorativeContainer>
 		</ResizableLinearContainer>
+
+		<Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_LYR_TOOL_BAR"/>
+		<Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_LYR_TOOL_BAR"/>
 		
 		<Container Name="Bottom" Rect="0,h-32,w,32" TranslucencyWithSkin="FALSE">
 			<Property Name="BgImage" Image="frame.png" ImageRect="0,118,425,32" HorzExtendPos="7,418" BlendPixMode="copy"/>

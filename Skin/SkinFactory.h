@@ -311,6 +311,9 @@ public:
 
 	virtual void OnSkinWndActivate(CSkinWnd *pWnd);
 
+	void EnterInDrawUpdate();
+	void LeaveInDrawUpdate();
+
 public:
 	// ISkinWndDragHost
 	virtual void GetWndDragAutoCloseTo(vector<CBaseWnd *> &vWnd);

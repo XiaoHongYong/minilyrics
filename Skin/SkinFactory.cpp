@@ -1830,3 +1830,21 @@ void CSkinFactory::OnSkinWndActivate(CSkinWnd *pWndActive)
 	// DBGLOG1(_T("OnSkinWndActivate: %s"), pWndActive->GetSkinWndName());
 #endif
 }
+
+void CSkinFactory::EnterInDrawUpdate()
+{
+	for (LIST_SKINWNDS::iterator it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
+	{
+		CSkinWnd	*pWnd = *it;
+		pWnd->EnterInDrawUpdate();
+	}
+}
+
+void CSkinFactory::LeaveInDrawUpdate()
+{
+	for (LIST_SKINWNDS::iterator it = m_listSkinWnds.begin(); it != m_listSkinWnds.end(); ++it)
+	{
+		CSkinWnd	*pWnd = *it;
+		pWnd->LeaveInDrawUpdate();
+	}
+}

@@ -79,7 +79,7 @@ UIOBJECT_CLASS_NAME_IMP(CMPlaylistCtrl, _T("Playlist"))
 
 CMPlaylistCtrl::CMPlaylistCtrl()
 {
-
+	m_nNowPlaying = -1;
 }
 
 CMPlaylistCtrl::~CMPlaylistCtrl()
@@ -124,7 +124,8 @@ void CMPlaylistCtrl::OnEvent(const IEvent *pEvent)
 	}
 	else if (pEvent->eventType == ET_PLAYER_CUR_MEDIA_CHANGED)
 	{
-		SetPlayingNow(g_Player.GetCurrentMediaIndex());
+		SetNowPlaying();
+
 		CMPAutoPtr<IMedia>	media;
 		tstring				strTitle;
 		if (g_Player.GetCurrentMedia(&media) == ERR_OK)
@@ -242,7 +243,9 @@ void CMPlaylistCtrl::UpdatePlaylist(CEventPlaylistChanged *pEventPlaylistChanged
 				InsertItem(i, str.c_str());
 			}
 		}
-		SetPlayingNow(g_Player.GetCurrentMediaIndex());
+
+		SetNowPlaying();
+
 		Invalidate();
 	}
 	else if (pEventPlaylistChanged->action == IMPEvent::PCA_CLEAR)
@@ -292,4 +295,48 @@ void CMPlaylistCtrl::UpdatePlaylist(CEventPlaylistChanged *pEventPlaylistChanged
 	}
 	else
 		ASSERT(0);
+}
+
+
+int CMPlaylistCtrl::GetItemImageIndex(int nItem)
+{
+	ASSERT(nItem >= 0 && nItem < (int)m_vRows.size());
+	if (nItem >= 0 && nItem < (int)m_vRows.size())
+	{
+		LC_ROW		*row = m_vRows[nItem];
+		return row->nImageIndex;
+	}
+
+	return -1;
+}
+
+void CMPlaylistCtrl::SetNowPlaying()
+{
+	// Clear the old now playing item status.
+	bool bOldStatusCleared = false;
+	if (m_nNowPlaying >= 0 && m_nNowPlaying < (int)m_vRows.size())
+	{
+		LC_ROW *row = m_vRows[m_nNowPlaying];
+		if (row->nImageIndex == IMAGE_NOW_PLAYING)
+		{
+			row->nImageIndex = IMAGE_NONE;
+			bOldStatusCleared = true;
+		}
+	}
+
+	if (!bOldStatusCleared)
+	{
+		for (int i = 0; i < (int)m_vRows.size(); i++)
+		{
+			LC_ROW *row = m_vRows[i];
+			if (row->nImageIndex == IMAGE_NOW_PLAYING)
+			{
+				row->nImageIndex = IMAGE_NONE;
+				break;
+			}
+		}
+	}
+
+	SetItemImageIndex(g_Player.GetCurrentMediaIndex(), IMAGE_NOW_PLAYING, false);
+
 }

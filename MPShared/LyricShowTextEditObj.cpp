@@ -1197,7 +1197,8 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 			prop.m_strTitle = g_Player.GetTitle();
 			prop.m_strArtist = g_Player.GetArtist();
 			prop.m_strAlbum = g_Player.GetAlbum();
-			prop.SetMediaLength(g_Player.GetMediaLength() / 1000);
+			if (g_Player.GetMediaLength() > 0)
+				prop.SetMediaLength(g_Player.GetMediaLength() / 1000);
 			tstring		strLogName = g_Profile.GetProfileString(_T("LoginName"), _T(""));
 			if (strLogName.size())
 				prop.m_strBy = strLogName;

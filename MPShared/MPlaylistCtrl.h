@@ -17,7 +17,19 @@ public:
 	void DeleteSelectedItems();
 	void OffsetAllSelectedItems(bool bMoveDown);
 
+	void SetNowPlaying();
+
+	enum
+	{
+		IMAGE_NONE			= 0,
+		IMAGE_NOW_PLAYING	= 1,
+	};
+
 protected:
 	void UpdatePlaylist(CEventPlaylistChanged *pEventPlaylistChanged = NULL);
+
+	int GetItemImageIndex(int nItem);
+
+	int			m_nNowPlaying;
 
 };

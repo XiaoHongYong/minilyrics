@@ -113,8 +113,6 @@ public:
 		CN_TEXT,
 		CN_SEL_BG,
 		CN_SEL_TEXT,
-		CN_PLAYING_BG,
-		CN_PLAYING_TEXT,
 		CN_CUSTOMIZED_START,
 
 		CN_MAX = 255
@@ -184,10 +182,8 @@ public:
 public:
 	void SetBkColor(const MLColor &clrBk);
 	void SetSelRowBkColor(const MLColor &clrBk);
-	void SetSelPlayBkColor(const MLColor &clrBk);
 	void SetFont(const CFontInfo &font);
 	void SetTextColor(const MLColor &clrText);
-	void SetPlayingTextColor(const MLColor &clrText);
 
 	void SetColor(int nColorName, const MLColor &clr);
 	MLColor & GetColor(int nColorName);
@@ -227,7 +223,6 @@ public:
 	bool CanOffsetSelectedRow(bool bDown = true);
 	bool OffsetAllSelectedRow(bool bDown = true);
 
-	void SetPlayingNow(int nIndex);
 	void SetItemSelectionState(int nIndex, bool bSelected);
 
 	void MakeSureRowVisible(int nRow);
@@ -399,7 +394,6 @@ protected:
 	int						m_nLineHeight, m_nLineHeightOrg;
 	int						m_nXMargin;
 	int						m_nFirstVisibleRow;
-	int						m_nPlayingRow;
 
 	// Drag to adjust the width of columns
 	bool					m_bAdjustColWidth;

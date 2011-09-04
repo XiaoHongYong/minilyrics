@@ -103,10 +103,8 @@ void CEventsDispatcherBase::DispatchSyncEvent(IEvent *pEvent)
 
 	CMutexAutolock		lock(m_mutex);
 	LIST_EVENTHANDLER		&listHandler = m_vListEventHandler[eventType];
-	LIST_EVENTHANDLER::iterator	it, itEnd;
 
-	itEnd = listHandler.end();
-	for (it = listHandler.begin(); it != itEnd; ++it)
+	for (LIST_EVENTHANDLER::iterator it = listHandler.begin(); it != listHandler.end(); ++it)
 	{
 		IEventHandler	*pHandler = *it;
 		pHandler->OnEvent(pEvent);

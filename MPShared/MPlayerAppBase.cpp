@@ -469,14 +469,14 @@ bool CMPlayerAppBase::InitiPodLyricsDownloader()
 		}
 	}
 
-	// Init player.
+	CSkinWnd *pMainWnd = GetMainWnd();
+	pMainWnd->EnterInDrawUpdate();
 	g_Player.OnInit(false);
-
-	OnMediaChanged();
+	pMainWnd->LeaveInDrawUpdate();
 
 	m_hotKey.Init();
 
-	m_hotKey.SetEventWnd(GetMainWnd());
+	m_hotKey.SetEventWnd(pMainWnd);
 
 	g_lyrOutPlguinMgr.Init();
 

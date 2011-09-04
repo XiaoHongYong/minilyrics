@@ -14,8 +14,9 @@
 #endif // _MSC_VER > 1000
 
 #include "LyricShowMultiRowObj.h"
+#include "LyricShowTxtContainer.h"
 
-#define SZ_TXT_LYR_CONTAINER _T("LyricShowTxtContainer")
+#define SZ_TXT_LYR_CONTAINER CLyricShowTxtContainer::ClassName()
 
 class CLyricShowTxtObj : public CLyricShowMultiRowObj, IScrollNotify
 {

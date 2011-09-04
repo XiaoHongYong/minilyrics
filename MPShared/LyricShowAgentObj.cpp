@@ -308,7 +308,7 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 	if (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), SZ_TXT_LYR_CONTAINER) == 0)
 	{
 		// Set the stat of record scrolling lyrics buttons
-		CLyricShowTxtObj *pObj = (CLyricShowTxtObj*)m_pSkin->GetUIObjectByClassName(CLyricShowTxtObj::ClassName());
+		CLyricShowTxtObj *pObj = (CLyricShowTxtObj*)GetUIObjectByClassName(CLyricShowTxtObj::ClassName());
 		if (pObj)
 		{
 			m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_RECORD,

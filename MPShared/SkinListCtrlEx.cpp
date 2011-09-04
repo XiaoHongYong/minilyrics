@@ -19,10 +19,7 @@ void LC_ITEMEX::Draw(CSkinListCtrl *pListCtrl, int nRow, int nClrNameDefault, CR
 		if (i >= vTextColor.size())
 		{
 			nLen = strText.size() - nPos;
-			if (nRow == pListCtrl->m_nPlayingRow)
-				nClrName = CSkinListCtrl::CN_PLAYING_TEXT;
-			else
-				nClrName = nClrNameDefault;
+			nClrName = nClrNameDefault;
 		}
 		else
 		{

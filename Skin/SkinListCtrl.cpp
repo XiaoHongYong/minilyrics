@@ -66,9 +66,7 @@ CSkinListCtrl::CSkinListCtrl()
 	// SetBkColor(MLColor(GetSysColor(COLOR_WINDOW)));
 	SetBkColor(MLColor(RGB(192, 192, 192)));
 	SetSelRowBkColor(MLColor(RGB(128, 128, 128)));
-	SetSelPlayBkColor(MLColor(RGB(0, 255, 0)));
 	m_vColors[CN_SEL_TEXT].set(RGB(255, 255, 255));
-	m_vColors[CN_PLAYING_TEXT].set(RGB(0, 0, 255));
 
 	m_nLineHeightOrg = -1;
 	m_nLineHeight = 16;
@@ -93,8 +91,6 @@ CSkinListCtrl::CSkinListCtrl()
 	m_nFirstVisibleRow = 0;
 	m_nBegSelRow = -1;
 	m_nEndSelRow = -1;
-
-	m_nPlayingRow = -1;
 }
 
 
@@ -178,17 +174,9 @@ BOOL CSkinListCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		GetColorValue(GetColor(CN_SEL_BG), szValue);
 	}
-	else if (IsPropertyName(szProperty, _T("NowPlayBgColor")))
-	{
-		GetColorValue(GetColor(CN_PLAYING_BG), szValue);
-	}
 	else if (_tcsicmp(szProperty, _T("SelTextColor")) == 0)
 	{
 		GetColorValue(GetColor(CN_SEL_TEXT), szValue);
-	}
-	else if (_tcsicmp(szProperty, _T("NowPlayTextColor")) == 0)
-	{
-		GetColorValue(GetColor(CN_PLAYING_TEXT), szValue);
 	}
 	else if (*szProperty == 'C' && _tcsnicmp(szProperty, SZ_CUSTOMIZED_CLR, _tcslen(SZ_CUSTOMIZED_CLR)) == 0)
 	{
@@ -265,9 +253,7 @@ void CSkinListCtrl::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropColor(_T("BgColor"), GetColor(CN_BG));
 	listProperties.AddPropColor(_T("SelBgColor"), GetColor(CN_SEL_BG));
-	listProperties.AddPropColor(_T("NowPlayBgColor"), GetColor(CN_PLAYING_BG));
 	listProperties.AddPropColor(_T("SelTextColor"), GetColor(CN_SEL_TEXT));
-	listProperties.AddPropColor(_T("NowPlayTextColor"), GetColor(CN_PLAYING_TEXT));
 	m_font.EnumProperties(listProperties);
 	listProperties.AddPropImageFile(_T("ImageList"), m_strImageList.c_str());
 
@@ -355,12 +341,6 @@ void CSkinListCtrl::SetSelRowBkColor(const MLColor &clrBk)
 }
 
 
-void CSkinListCtrl::SetSelPlayBkColor(const MLColor &clrBk)
-{
-	GetColor(CN_PLAYING_BG) = clrBk;
-}
-
-
 void CSkinListCtrl::SetFont(const CFontInfo &font)
 {
 	m_font.Create(font);
@@ -377,13 +357,6 @@ void CSkinListCtrl::SetTextColor(const MLColor &clrText)
 	ColorToStr(clrText, strColor);
 	m_font.SetProperty(_T("TextColor"), strColor.c_str());
 }
-
-
-void CSkinListCtrl::SetPlayingTextColor(const MLColor &clrText)
-{
-	GetColor(CN_PLAYING_TEXT) = clrText;
-}
-
 
 void CSkinListCtrl::SetColor(int nColorName, const MLColor &clr)
 {
@@ -683,8 +656,6 @@ BOOL CSkinListCtrl::DeleteItem(int nItem, bool bRedraw)
 		LC_ROW		*row = m_vRows[nItem];
 		m_vRows.erase(m_vRows.begin() + nItem);
 		delete row;
-		if (m_nPlayingRow == nItem)
-			m_nPlayingRow = -1;
 
 		if (bRedraw)
 			Invalidate();
@@ -705,8 +676,6 @@ BOOL CSkinListCtrl::DeleteSelectedItems(bool bRedraw)
 		{
 			delete row;
 			m_vRows.erase(m_vRows.begin() + i);
-			if (m_nPlayingRow == i)
-				m_nPlayingRow = -1;
 		}
 	}
 
@@ -726,7 +695,6 @@ BOOL CSkinListCtrl::DeleteAllItems(bool bRedraw)
 	}
 	m_vRows.clear();
 
-	m_nPlayingRow = -1;
 	m_nEndSelRow = -1;
 	m_nBegSelRow = -1;
 
@@ -747,14 +715,6 @@ BOOL CSkinListCtrl::DeleteAllItems(bool bRedraw)
 
 	return TRUE;
 }
-
-
-void CSkinListCtrl::SetPlayingNow(int nIndex)
-{
-	m_nPlayingRow = nIndex;
-	MakeSureRowVisible(m_nPlayingRow);
-}
-
 
 void CSkinListCtrl::SetItemSelectionState(int nIndex, bool bSelected)
 {
@@ -937,9 +897,6 @@ bool CSkinListCtrl::OffsetAllSelectedRow(bool bDown)
 				rowTemp = m_vRows[i + 1];
 				m_vRows[i + 1] = m_vRows[i];
 				m_vRows[i] = rowTemp;
-
-				if (m_nPlayingRow == i)
-					m_nPlayingRow += 1;
 			}
 		}
 	}
@@ -958,9 +915,6 @@ bool CSkinListCtrl::OffsetAllSelectedRow(bool bDown)
 				rowTemp = m_vRows[i - 1];
 				m_vRows[i - 1] = m_vRows[i];
 				m_vRows[i] = rowTemp;
-
-				if (m_nPlayingRow == i)
-					m_nPlayingRow -= 1;
 			}
 		}
 	}
@@ -1321,22 +1275,6 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 			pGraph->FillRect(&rc, clr);
 			nClrName = CN_SEL_TEXT;
 		}
-		else if (i == m_nPlayingRow)
-		{
-			CRect		rc(m_rcContent.left, y, m_rcContent.left + m_rcContent.Width(), y + m_nLineHeight);
-			int			alpha;
-			MLColor		clr = GetColor(CN_PLAYING_BG);
-
-			if (m_bTranslucencyWithSkin)
-				alpha = (int)m_pSkin->m_nTranslucencyAlphaDynamic;
-			else
-				alpha = 255;
-
-			clr.setAlpha(alpha);
-
-			pGraph->FillRect(&rc, clr);
-			nClrName = CN_PLAYING_TEXT;
-		}
 		else
 			nClrName = CN_TEXT;
 
@@ -1355,8 +1293,8 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 				// Draw icon.
 				if (nImageCx > 0 && rcItem.Width() > 0)
 				{
-					m_imageList.Draw(pGraph, row->nImageIndex, x, y + (m_nLineHeight - m_imageList.GetIconCy()) / 2,
-						rcItem.Width(), rcItem.Height());
+					if (row->nImageIndex >= 0)
+						m_imageList.Draw(pGraph, row->nImageIndex, x, y + (m_nLineHeight - m_imageList.GetIconCy()) / 2);
 					rcItem.left += nImageCx + m_imageListRightSpace;
 				}
 			}

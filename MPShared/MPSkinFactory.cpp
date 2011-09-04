@@ -14,6 +14,7 @@
 #include "LyricShowVobSub.h"
 #include "LyricShowAgentObj.h"
 #include "LyricShowTextEditObj.h"
+#include "LyricShowTxtContainer.h"
 #include "SkinListCtrlEx.h"
 #include "SkinRateCtrl.h"
 #include "SkinTabHeader.h"
@@ -85,6 +86,7 @@ int CMPSkinFactory::Init()
 	AddUIObjNewer(CLyricShowSingleRowObj);
 	AddUIObjNewer(CLyricShowVobSub);
 	AddUIObjNewer(CLyricShowTextEditObj);
+	AddUIObjNewer(CLyricShowTxtContainer);
 	AddUIObjNewer(CLyricShowAgentObj);
 	AddUIObjNewer(CSkinRateCtrl);
 	AddUIObjNewer(CSkinPicText);

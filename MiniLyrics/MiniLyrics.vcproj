@@ -553,6 +553,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\LyricShowTxtContainer.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\LyricShowTxtObj.cpp"
 				>
 			</File>
@@ -1108,6 +1112,10 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\LyricShowTwoRowObj.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\LyricShowTxtContainer.h"
 				>
 			</File>
 			<File

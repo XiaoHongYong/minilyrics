@@ -42,16 +42,8 @@ void CLyrDisplayClrListWnd::Create(CSkinWnd *pWnd, CRect &rc, bool bHighLight, b
 		m_bInitialized = true;
 	}
 
-	if (bFloatingLyr)
-	{
-		m_et = ET_LYRICS_FLOATING_SETTINGS;
-		m_strSectName = SZ_SECT_FLOATING_LYR;
-	}
-	else
-	{
-		m_et = ET_LYRICS_DISPLAY_SETTINGS;
-		m_strSectName = SZ_SECT_LYR_DISPLAY;
-	}
+	CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(bFloatingLyr, m_strSectName, m_et);
+
 	m_bHilight = bHighLight;
 
 	m_nWidthMax = 0;

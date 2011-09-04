@@ -3,7 +3,7 @@
 #include "../MLPluginLib/MiniLyricsPlugin.h"
 #include "MLVersion.h"
 #include "FileVersionInfo.h"
-#include "ProcessEnum.h"
+#include "../../base/win32/ProcessEnum.h"
 
 enum InstallFlag
 {

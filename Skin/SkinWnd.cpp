@@ -171,6 +171,7 @@ CSkinWnd::CSkinWnd()
 
 	m_bSkinOpened = false;
 	m_nInRedrawUpdate = 0;
+	m_bNeedRedraw = false;
 	m_bInEditorMode = false;
 
 	m_bWindowsAppearance = false;
@@ -259,6 +260,8 @@ int CSkinWnd::Create(SkinWndStartupInfo &skinWndStartupInfo, CSkinFactory *pSkin
 		dwStyle |= WS_VISIBLE;
 
 	OnPreCreate(dwStyle, dwExStyle);
+
+	CAutoRedrawLock drawLock(this);
 
 	// WS_THICKFRAME will cause window flashing on vista
 	if (!CreateEx(skinWndStartupInfo.strClassName.c_str(), skinWndStartupInfo.strCaptionText.c_str(),
@@ -381,6 +384,7 @@ void CSkinWnd::CloseSkin()
 
 	ASSERT(m_nInRedrawUpdate == 0);
 	m_nInRedrawUpdate = 0;
+	m_bNeedRedraw = false;
 	m_bSkinOpened = false;
 
 	m_listUnprocessedProperties.clear();
@@ -986,8 +990,14 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 {
 	assert(pObj);
 
-	if (m_nInRedrawUpdate > 0 || !IsVisible() || IsIconic())
+	if (!IsVisible() || IsIconic())
 		return;
+
+	if (m_nInRedrawUpdate > 0)
+	{
+		m_bNeedRedraw = true;
+		return;
+	}
 
 	if (!pObj->IsVisible() || !pObj->IsParentVisible())
 		return;
@@ -1047,8 +1057,6 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 
 void CSkinWnd::EnterInDrawUpdate()
 {
-// 	if (m_nInRedrawUpdate > 0)
-// 		ASSERT(m_nInRedrawUpdate == 0);
 	m_nInRedrawUpdate++;
 }
 
@@ -1057,7 +1065,10 @@ void CSkinWnd::LeaveInDrawUpdate()
 	m_nInRedrawUpdate--;
 	ASSERT(m_nInRedrawUpdate >= 0);
 	if (m_nInRedrawUpdate == 0)
-		InvalidateRect();
+	{
+		if (m_bNeedRedraw)
+			InvalidateRect();
+	}
 }
 
 void CSkinWnd::SetMainAppWnd(bool bMainAppWnd)
@@ -1640,8 +1651,14 @@ void CSkinWnd::TrackMove(CBaseWnd *pWnd, int x, int y)
 
 void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
 {
-	if (m_nInRedrawUpdate > 0 || !IsVisible() || IsIconic())
+	if (!IsVisible() || IsIconic())
 		return;
+
+	if (m_nInRedrawUpdate > 0)
+	{
+		m_bNeedRedraw = true;
+		return;
+	}
 
 #ifdef _WIN32
 	if (GetEnableTranslucencyLayered())
@@ -1857,8 +1874,14 @@ void CSkinWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
 
 BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 {
-	if (m_nInRedrawUpdate > 0 || !IsVisible() || IsIconic())
+	if (!IsVisible() || IsIconic())
 		return FALSE;
+
+	if (m_nInRedrawUpdate > 0)
+	{
+		m_bNeedRedraw = true;
+		return false;
+	}
 
 	if (!m_bTranslucencyLayered)
 		return CBaseWnd::InvalidateRect(lpRect, bErase);
