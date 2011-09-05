@@ -16,11 +16,6 @@
     <cmd ID="dyncmd_is_frame_hide" func="get_profile_bool" param="HideFrameOnLostFocus,1"/>
     <cmd ID="dyncmd_is_mouse_hover_show_frame" func="get_profile_bool" param="ShowFrameOnMouseHover,1"/>
 
-    <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
-    <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
-
     <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
   </DynCmds>

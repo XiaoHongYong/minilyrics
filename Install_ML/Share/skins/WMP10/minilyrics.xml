@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <skin defmainwnd="minilyrics" mainwnds="minilyrics,lyrbar,floatinglyr" ExtraResouceFolder="MiniLyrics">
   <include Name="Styles.xml"/>
-  <style>
-    <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
-    <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
-  </style>
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
       <Item Action="Append" Type="item" Name="&amp;Floating Lyrics Mode" IDCmd="dyncmd_change_to_floatinglyr"/>
@@ -23,15 +19,9 @@
     <cmd ID="dyncmd_change_to_bar" func="change_skin_wnd" param="lyrbar"/>
     <cmd ID="dyncmd_change_to_floatinglyr" func="change_skin_wnd" param="floatinglyr"/>
     <cmd ID="dyncmd_change_to_normal" func="change_skin_wnd" param="minilyrics"/>
-    <cmd ID="dyncmd_openclose_albumart_bar" func="openclose_framebar_bar" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
-    <cmd ID="dyncmd_is_albumart_bar_visible" func="is_framebar_bar_visible" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
-    <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
-    <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="33" Width="400" Height="200" BgColor="#3169B5" FgColor="#FFFFFF" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
+  <skinwnd Name="lyrbar" MinWidth="150" MinHeight="33" Width="400" Height="200" BgColor="#3169B5" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow Left="4" Top="4" Width="w - 18" Height="h - 8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="4" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,4,35" ImageScaleYStart="5" ImageScaleYEnd="30"/>
     <YScaleImage Left="w - 16" Top="0" Width="16" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="184,0,16,35" ImageScaleYStart="30" ImageScaleYEnd="31"/>
@@ -39,7 +29,7 @@
     <Image Left="4" Top="h - 4" Width="w - 20" Height="4" Name="bottom frame" Image="lyr-bar-frame.bmp" ImageRect="4,31,180,4" BltMode="stretch"/>
     <Button Left="w - 12" Top="h/2-4" Width="9" Height="9" ID="ID_CLOSE" Name="Close" Image="lyr-bar-bt.bmp" ImageRect="18,0,9,9" ImageSel="lyr-bar-bt.bmp" ImageSelRect="0,0,9,9" ImageFocus="lyr-bar-bt.bmp" ImageFocusRect="9,0,9,9"/>
   </skinwnd>
-  <skinwnd Name="minilyrics" Region="wmp10.tr2" MinWidth="275" MinHeight="116" Width="295" Height="116" BgColor="#3169B5" FgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common">
+  <skinwnd Name="minilyrics" Region="wmp10.tr2" MinWidth="275" MinHeight="116" Width="295" Height="116" BgColor="#3169B5" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="4" Top="23" Width="w-8" Height="h-31"/>
     <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption.bmp" ImageRect="0,0,275,23" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" CutPos="75,125,130,220"/>
     <Button Left="5" Top="4" Width="17" Height="18" ID="ID_MENU" Name="Menu" Image="cap-bt.bmp" ImageRect="0,0,17,18" ImageSel="cap-bt.bmp" ImageSelRect="0,18,17,18"/>

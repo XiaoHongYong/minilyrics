@@ -7,11 +7,11 @@
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3">
 		<button ID="ID_INSERTTAG_DOWN" Left="12" Width="2" />
 		<button ID="ID_INSERTTAG" Left="14" />
-		<button ID="dyncmd_toggle_toolbarex_visible" Left="23" ToolTip="Toggle Extended Toolbar Visible"/>
+		<button ID="ID_TOGGLE_LYR_EDIT_TOOLBAR" Left="23"/>
 	</Toolbar>
 	<Image Left="22*4+10" Top="0" Width="w-(22*4+10)" Height="26" Name="Toolbar Bg"
          Image="lyr-tb.bmp" ImageRect="858,0,22,26" BltMode="tile"/>
-	<Toolbar ID="ID_TOOLBAR" Left="22*4+10" Top="0" Width="w-(22*4+10)" Height="26"
+	<Toolbar ID="ID_TB_LYR_EDIT" Left="22*4+10" Top="0" Width="w-(22*4+10)" Height="26"
            Image="lyr-tb.bmp" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3" Visible="false">
 		<seperator/>

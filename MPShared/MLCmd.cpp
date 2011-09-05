@@ -11,7 +11,6 @@ UIObjectIDDefinition g_uidDefinition[] =
 {
 	{ _T("ID_TOPMOST"), CMD_TOPMOST, IDC_SETTOPMOST, _T("Toggle always on top") },
 	{ _T("ID_CLICK_THROUGH"), CMD_CLICK_THROUGH, IDC_CLICK_THROUGH, _T("Mouse click through") },
-	{ _T("ID_TOOLBAR"), ID_TOOLBAR, 0, NULL },
 	{ _T("ID_RATE_LYR"), CMD_RATE_LYR, IDC_RATE_LYRICS, _T("Rate these lyrics") },
 	{ _T("ID_PLAY"), CMD_PLAY, IDC_PLAY, _T("Play") },
 	{ _T("ID_PLAYPAUSE"), CMD_PLAYPAUSE, IDC_PLAYPAUSE, _T("Play/Pause") },
@@ -33,6 +32,11 @@ UIObjectIDDefinition g_uidDefinition[] =
 	{ _T("ID_LYR_SCROLL_ENABLE_REPLAY"), 	CMD_LYR_SCROLL_ENABLE_REPLAY, 0, _T("Enable/Disable replay lyrics scrolling actions") },
 	{ _T("ID_LYR_SCROLL_MENU"), 	CMD_LYR_SCROLL_MENU, 0, _T("Menu") },
 
+	{ _T("ID_TB_LYR_SYNC"), ID_TB_LYR_SYNC, 0, NULL },
+	{ _T("ID_TB_LYR_TXT"), ID_TB_LYR_TXT, 0, NULL },
+	{ _T("ID_TB_LYR_EDIT"), ID_TB_LYR_EDIT, 0, NULL },
+
+	{ _T("ID_TOGGLE_LYR_EDIT_TOOLBAR"), CMD_TOGGLE_LYR_EDIT_TOOLBAR, 0, _T("Toggle Extended Toolbar Visible") },
 	{ _T("ID_INSERTTAG"), CMD_INSERTTAG, IDC_INSERT_TAG, _T("Synchronize the current line") },
 	{ _T("ID_DEL_TAG"), CMD_DEL_TAG, 0, _T("Remove Timestamp of the current line") },
 	{ _T("ID_INSERTTAG_DOWN"), CMD_INSERTTAG_DOWN, IDC_INSERT_TAG_AND_MOVE_DOWN, _T("Synchronize the current line and move to next line") },

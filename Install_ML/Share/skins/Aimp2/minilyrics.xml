@@ -23,13 +23,9 @@
     <cmd ID="dyncmd_change_to_bar" func="change_skin_wnd" param="lyrbar"/>
     <cmd ID="dyncmd_change_to_floatinglyr" func="change_skin_wnd" param="floatinglyr"/>
     <cmd ID="dyncmd_change_to_normal" func="change_skin_wnd" param="minilyrics"/>
-    <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
-    <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
   </DynCmds>
   <include Name="FloatingLyrMode.xml"/>
-  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="21" Width="250" Height="21" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
+  <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="21" Width="250" Height="21" BgColor="#E7E7E7" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow Left="4" Top="4" Width="w-8-30" Height="h-8" EnableToolbar="FALSE"
        LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
     <YScaleImage Left="0" Top="0" Width="4" Height="h" Name="left frame" Image="lyr-bar.bmp" ImageRect="0,0,4,21" ImageScaleYStart="4" ImageScaleYEnd="18"/>
@@ -39,7 +35,7 @@
     <Button Left="w-30" Top="4" Width="13" Height="13" ID="ID_SEARCH_LYRICS" Name="search lyrics" Image="lyr-bar.bmp" ImageRect="72,1,13,13" ImageSel="lyr-bar.bmp" ImageSelRect="100,1,13,13" ImageFocus="lyr-bar.bmp" ImageFocusRect="127,1,13,13"/>
     <Button Left="w-16" Top="4" Width="12" Height="12" ID="ID_CLOSE" Name="Quit" Image="caption.bmp" ImageRect="36,0,12,12" ImageSel="caption.bmp" ImageSelRect="36,24,12,12" ImageFocus="caption.bmp" ImageFocusRect="36,12,12,12"/>
   </skinwnd>
-  <skinwnd Name="MiniLyrics" Region="caption.tr2" MinWidth="275" MinHeight="116" Width="275" Height="100" BgColor="#E7E7E7" FgColor="#313131" ContextMenu="NormalMode" CmdHandler="ch_common">
+  <skinwnd Name="MiniLyrics" Region="caption.tr2" MinWidth="275" MinHeight="116" Width="275" Height="100" BgColor="#E7E7E7" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="12" Top="25" Width="w-24" Height="h-38" EnableAutoResize="TRUE" />
     <CaptionImage Left="0" Top="0" Width="w" Height="25" Name="Caption" Image="caption.bmp" ImageRect="48,25,349,25" ImageFocus="caption.bmp" ImageFocusRect="48,0,349,25" CutPos="80,170,245,350"/>
     <Button Left="w-29" Top="4" Width="12" Height="12" ID="ID_QUIT" Name="Quit" Image="caption.bmp" ImageRect="36,0,12,12" ImageSel="caption.bmp" ImageSelRect="36,24,12,12" ImageFocus="caption.bmp" ImageFocusRect="36,12,12,12"/>

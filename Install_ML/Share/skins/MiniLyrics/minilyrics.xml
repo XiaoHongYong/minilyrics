@@ -16,11 +16,6 @@
     <cmd ID="dyncmd_is_frame_hide" func="get_profile_bool" param="HideFrameOnLostFocus,1"/>
     <cmd ID="dyncmd_is_mouse_hover_show_frame" func="get_profile_bool" param="ShowFrameOnMouseHover,1"/>
 
-    <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
-    <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
-
     <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
   </DynCmds>
@@ -81,13 +76,23 @@
       <Container Name="Top control parent" ID="CID_TOP_CTRL_PARENT" Rect="0,0,w,26" >
       <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,26" TranslucencyWithSkin="TRUE">
         <Image Name="Top-ctrl-bg" Rect="0,0,w,26" Image="top-ctrl-bg.png" BltMode="tile" />
-        <Toolbar Rect="20,0,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
-             units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
-             MarginX="0" MarginY="0" FullStatusImage="TRUE">
-          <button ID="ID_SEARCH_LYRICS" Left="5" />
-          <button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
-          <button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
-        </Toolbar>
+
+		<Toolbar ID="ID_TB_LYR_SYNC" Rect="20,1,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+				units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
+				MarginX="0" MarginY="0" FullStatusImage="TRUE">
+			<button ID="ID_SEARCH_LYRICS" Left="5" />
+			<button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
+			<button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
+		</Toolbar>
+
+		<Toolbar ID="ID_TB_LYR_TXT" Rect="20,2,70,20" UseParentBg="TRUE" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
+				units_x="20" blank_x="-1" blank_cx="20" seperator_x="-1" seperator_cx="20" ButtonSpacesCX="3"
+				MarginX="0" MarginY="0" FullStatusImage="TRUE" Visible="false">
+			<button ID="ID_LYR_SCROLL_ENABLE_RECORD" Left="0" CanCheck="TRUE" checked_left="1"/>
+			<button ID="ID_LYR_SCROLL_ENABLE_REPLAY" Left="2" CanCheck="TRUE" checked_left="3"/>
+			<button ID="ID_LYR_SCROLL_MENU" Left="4"/>
+		</Toolbar>
+
         <PlayingTimeText Name="PlayingTime" Rect="85,4,50,18" AlignText="AT_CENTER | AT_VCENTER"
            FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#FFFFFF"
            TextOutlinedColor="#000000" LeftMargin="0" Text=""/>
@@ -95,7 +100,7 @@
                   Rect="137,8,w-137-90,12" EndWidth="3" ImageThumb="seek_thumb.png"
                   ImageTrack="seek_track.png"/>
 
-        <Toolbar Rect="w-85,0,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+        <Toolbar Rect="w-85,1,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
                  units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
                  MarginX="0" MarginY="0" FullStatusImage="TRUE">
           <button ID="ID_FONT_SIZE_INC" Left="8"/>

@@ -87,15 +87,23 @@
 				<LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" SetSkinBg="false"
 				  EnableToolbar="FALSE" EnableAutoResize="FALSE" />
 
-				<Container ID="CID_LYR_TOOL_BAR" Rect="10,h-40,90,30">
-					<HStretchImage Name="bg" Rect="0,0,w,30" Image="lyr_ctrl_bg.png" ImageScaleXStart="8" ImageScaleXEnd="22"/>
+				<Container ID="CID_LYR_TOOL_BAR" Rect="10,h-40,94,30">
+					<Property Name="BgImage" Image="lyr_ctrl_bg.png" HorzExtendPos="8,22" BlendPixMode="alpha_blend"/>
 
-					<Toolbar Rect="12,4,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
-							units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
+					<Toolbar ID="ID_TB_LYR_SYNC" Rect="12,4,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+							units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" ButtonSpacesCX="2"
 							MarginX="0" MarginY="0" FullStatusImage="TRUE">
 						<button ID="ID_SEARCH_LYRICS" Left="5" />
 						<button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
 						<button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
+					</Toolbar>
+
+					<Toolbar ID="ID_TB_LYR_TXT" Rect="12,5,70,20" UseParentBg="TRUE" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
+							units_x="20" blank_x="-1" blank_cx="20" seperator_x="-1" seperator_cx="20" ButtonSpacesCX="5"
+							MarginX="0" MarginY="0" FullStatusImage="TRUE" Visible="false">
+						<button ID="ID_LYR_SCROLL_ENABLE_RECORD" Left="0" CanCheck="TRUE" checked_left="1"/>
+						<button ID="ID_LYR_SCROLL_ENABLE_REPLAY" Left="2" CanCheck="TRUE" checked_left="3"/>
+						<button ID="ID_LYR_SCROLL_MENU" Left="4"/>
 					</Toolbar>
 				</Container>
 

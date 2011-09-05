@@ -79,7 +79,7 @@ public:
 	void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
 
-	virtual void SetVisible(bool bVisible);
+	virtual void SetVisible(bool bVisible, bool bRedraw = false);
 
 	virtual int FromXML(SXNode *pXmlNode);
 

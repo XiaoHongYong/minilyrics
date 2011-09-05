@@ -576,9 +576,9 @@ void CSkinToolbar::Draw(CRawGraph *pGraph)
 	}
 }
 
-void CSkinToolbar::SetVisible(bool bVisible)
+void CSkinToolbar::SetVisible(bool bVisible, bool bRedraw)
 {
-	CUIObject::SetVisible(bVisible);
+	CUIObject::SetVisible(bVisible, bRedraw);
 
 	if (bVisible)
 		AddTooltip();
@@ -732,7 +732,11 @@ int CSkinToolbar::GetCurButton(POINT pt)
 		Button		&bt = m_vButtons[i];
 		x += bt.nWidth;
 		if (pt.x < x)
+		{
+			if (bt.bSeperator)
+				return -1;
 			return i;
+		}
 		x += m_nBtSpacesCX;
 		if (pt.x < x)
 			return -1;

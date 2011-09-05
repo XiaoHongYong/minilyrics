@@ -305,17 +305,24 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 
 	this->AddUIObject(m_pLyricsShow);
 
-	if (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), SZ_TXT_LYR_CONTAINER) == 0)
+	// Switch to proper lyrics toolbar
+	CUIObject *pToolbarLyrSync = m_pSkin->GetUIObjectById(ID_TB_LYR_SYNC);
+	CSkinToolbar *pToolbarLyrTxt = (CSkinToolbar*)m_pSkin->GetUIObjectById(ID_TB_LYR_TXT, CSkinToolbar::ClassName());
+	if (pToolbarLyrSync && pToolbarLyrTxt)
 	{
-		// Set the stat of record scrolling lyrics buttons
-		CLyricShowTxtObj *pObj = (CLyricShowTxtObj*)GetUIObjectByClassName(CLyricShowTxtObj::ClassName());
-		if (pObj)
-		{
-			m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_RECORD,
-				pObj->IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
+		bool bTxtStyle = (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), SZ_TXT_LYR_CONTAINER) == 0);
+		pToolbarLyrSync->SetVisible(!bTxtStyle, false);
+		pToolbarLyrTxt->SetVisible(bTxtStyle, false);
 
-			m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_REPLAY,
-				pObj->IsReplayScrollingActionsEnabled());
+		if (bTxtStyle)
+		{
+			CLyricShowTxtObj *pTxtObj = (CLyricShowTxtObj *)m_pSkin->GetUIObjectByClassName(CLyricShowTxtObj::ClassName());
+			if (pTxtObj)
+			{
+				pToolbarLyrTxt->SetCheck(CMD_LYR_SCROLL_ENABLE_RECORD, 
+					pTxtObj->IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
+				pToolbarLyrTxt->SetCheck(CMD_LYR_SCROLL_ENABLE_REPLAY, pTxtObj->IsReplayScrollingActionsEnabled());
+			}
 		}
 	}
 }

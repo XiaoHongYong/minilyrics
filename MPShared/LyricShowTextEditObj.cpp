@@ -164,6 +164,10 @@ void CLyricShowTextEditObj::OnCreate()
 	// If there's no lyrics opened, fill media info.
 	if (!g_LyricData.HasLyricsOpened())
 		OnCustomCommand(CMD_AUTO_FILL_LYR_INFO);
+
+	CUIObject *pToolbar = m_pSkin->GetUIObjectById(ID_TB_LYR_EDIT);
+	if (pToolbar)
+		pToolbar->SetVisible(g_Profile.GetProfileBool(_T("LyrEditorTB_Visible"), false), false);
 }
 
 void CLyricShowTextEditObj::OnDestroy()
@@ -1118,6 +1122,16 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 			return TRUE;
 		}
 		break;
+	case CMD_TOGGLE_LYR_EDIT_TOOLBAR:
+		{
+			CUIObject *pToolbar = m_pSkin->GetUIObjectById(ID_TB_LYR_EDIT);
+			if (pToolbar)
+			{
+				pToolbar->SetVisible(!pToolbar->IsVisible(), true);
+				g_Profile.WriteProfileInt(_T("LyrEditorTB_Visible"), pToolbar->IsVisible());
+			}
+			break;
+		}
 	case CMD_INSERTTAG:
 		SyncTimeTag(false);
 		break;
@@ -1478,7 +1492,7 @@ void CLyricShowTextEditObj::OnLyricsChanged()
 
 	CSkinToolbar		*pToolBar;
 
-	pToolBar = (CSkinToolbar *)m_pSkin->GetUIObjectById(ID_TOOLBAR, CSkinToolbar::ClassName());
+	pToolBar = (CSkinToolbar *)m_pSkin->GetUIObjectById(ID_TB_LYR_EDIT, CSkinToolbar::ClassName());
 	if (pToolBar)
 	{
 		pToolBar->EnableBt(CMD_EDIT_REDO, CanRedo());
@@ -1558,7 +1572,7 @@ void CLyricShowTextEditObj::OnStatusChanged(IEditNotification::Status status, bo
 {
 	CSkinToolbar		*pToolBar;
 
-	pToolBar = (CSkinToolbar *)m_pSkin->GetUIObjectById(ID_TOOLBAR, CSkinToolbar::ClassName());
+	pToolBar = (CSkinToolbar *)m_pSkin->GetUIObjectById(ID_TB_LYR_EDIT, CSkinToolbar::ClassName());
 	if (pToolBar)
 	{
 		if (status == IEditNotification::S_CAN_REDO)

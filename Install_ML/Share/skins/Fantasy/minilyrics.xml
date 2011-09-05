@@ -18,10 +18,6 @@
     <cmd ID="dyncmd_change_to_normal" func="change_skin_wnd" param="minilyrics"/>
     <cmd ID="dyncmd_openclose_albumart_bar" func="openclose_framebar_bar" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
     <cmd ID="dyncmd_is_albumart_bar_visible" func="is_framebar_bar_visible" param="CCMD_MAINFRAME,CCMD_ALBUMART" />
-    <cmd ID="dyncmd_toggle_toolbarex_visible" func="multi_cmd" param="dyncmd_do_toggle_toolbarex_visible,dyncmd_save_toolbar_state" />
-    <cmd ID="dyncmd_do_toggle_toolbarex_visible" func="toggle_ctrl_visible" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_load_toolbar_state" func="load_ctrl_visible_state" param="ID_TOOLBAR" />
-    <cmd ID="dyncmd_save_toolbar_state" func="save_ctrl_visible_state" param="ID_TOOLBAR" />
 
     <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
     <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
@@ -72,15 +68,28 @@
         <HStretchImage Left="-2" Top="25" Width="w+2" Height="6" Name="TitleLine" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
         <MediaInfoText Name="Artist" Left="0" Top="33" Width="w" Height="16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Artist" ShowTitle="false"/>
         <MediaInfoText Name="Album" Left="0" Top="58" Width="w" Height="16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="0" Text="" MediaInfoType="Album" ShowTitle="false"/>
-        <Toolbar Left="0" Top="78" Width="160" Height="22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
+        <Toolbar Rect="0,78,80,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
           <button ID="ID_PREVIOUS" Left="0" />
           <button ID="ID_PLAYPAUSE" Left="1" CanCheck="TRUE" checked_left="2"/>
           <button ID="ID_NEXT" Left="3" />
           <seperator/>
-          <button ID="ID_SEARCH_LYRICS" Left="5" />
-          <button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
-          <button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
         </Toolbar>
+		<Toolbar ID="ID_TB_LYR_SYNC" Rect="80,78,92,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+				units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
+				MarginX="0" MarginY="0" FullStatusImage="TRUE">
+			<button ID="ID_SEARCH_LYRICS" Left="5" />
+			<button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
+			<button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
+			<button ID="ID_RATE_LYR" Left="15"/>
+		</Toolbar>
+
+		<Toolbar ID="ID_TB_LYR_TXT" Rect="80,79,70,20" UseParentBg="TRUE" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
+				units_x="20" blank_x="-1" blank_cx="20" seperator_x="-1" seperator_cx="20" ButtonSpacesCX="3"
+				MarginX="0" MarginY="0" FullStatusImage="TRUE" Visible="false">
+			<button ID="ID_LYR_SCROLL_ENABLE_RECORD" Left="0" CanCheck="TRUE" checked_left="1"/>
+			<button ID="ID_LYR_SCROLL_ENABLE_REPLAY" Left="2" CanCheck="TRUE" checked_left="3"/>
+			<button ID="ID_LYR_SCROLL_MENU" Left="4"/>
+		</Toolbar>
 	  </Container>
     </LinearContainer>
 
