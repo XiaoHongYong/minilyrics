@@ -472,6 +472,14 @@ void CMLData::OnLyricsOpened()
 		m_lyrScrollActionRecorder.EventsDataFromString(
 			GetTxtLyrScrollEvents(), 
 			GetRawLyrics());
+
+		if (!m_lyrScrollActionRecorder.HasActions() && m_nMediaLength > 0)
+		{
+			// We need to the simple actions to make it scroll.
+			m_lyrScrollActionRecorder.InitCreateAutoEvents(m_arrLyricsRows);
+			m_lyrScrollActionRecorder.ScrollToLine(m_arrLyricsRows, 0, 10 * 1000, false);
+			m_lyrScrollActionRecorder.ScrollToLine(m_arrLyricsRows, m_arrLyricsRows.size(), m_nMediaLength, true);
+		}
 	}
 }
 
@@ -1082,7 +1090,7 @@ bool CMLData::DoesChooseNewFileName()
 BOOL CMLData::IsModified()
 {
 	// No lyrics opened.
-	if (m_arrFileRows.size() == 0 && !IsContentModified())
+	if (!HasLyricsOpened())
 		return false;
 
 	return !m_lyrProperties.Equal(m_lyrPropertiesOrg) || IsContentModified();

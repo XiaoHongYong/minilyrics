@@ -347,7 +347,7 @@ void CLyricShowTxtObj::OnCreate()
 
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
 
-	m_bRecordScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrRecordSAEnabled"), true);
+	m_bRecordScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrRecordSAEnabled"), false);
 	m_bReplayScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrReplaySAEnabled"), true);
 
 	m_pObjScrollBar = m_pContainer->GetUIObjectByClassName(CSkinVScrollBar::ClassName());
@@ -364,7 +364,7 @@ void CLyricShowTxtObj::OnEvent(const IEvent *pEvent)
 {
 	if (pEvent->eventType == ET_LYRICS_ON_SAVE_EDIT)
 	{
-		if (g_LyricData.GetLyrContentType() == LCT_TXT && m_bRecordScrollingActionsEnabled)
+		if (g_LyricData.GetLyrContentType() == LCT_TXT)
 			g_LyricData.LyrScrollActionsToTag();
 	}
 	else
@@ -405,6 +405,9 @@ int CLyricShowTxtObj::GetLinesPerPage()
 
 void CLyricShowTxtObj::StartScrollAnimation(int nCurLineNew)
 {
+	if (!m_bRecordScrollingActionsEnabled)
+		m_bReplayDisabledTemp = true;
+
 	if (g_LyricData.GetLyrContentType() == LCT_TXT && m_bRecordScrollingActionsEnabled)
 		g_LyricData.LyrScrollToLine(m_lyrLines, nCurLineNew, g_LyricData.GetPlayElapsedTime(), true);
 
