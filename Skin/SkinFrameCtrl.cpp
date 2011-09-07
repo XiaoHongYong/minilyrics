@@ -59,13 +59,13 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 		pImage = &m_imageFocus;
 
 	// Draw top left corner.
-	pImage->Blt(pGraph, rcFrame.left, rcFrame.top, m_nRoundWidthTop, m_nRoundWidthTop, 0, 0, m_bpm);
+	pImage->Blt(pGraph, rcFrame.left, rcFrame.top, m_nRoundWidthTop, m_nRoundWidthTop, pImage->m_x, pImage->m_y, m_bpm);
 
 	if (sizeText.cx > 0)
 	{
 		// Draw top border left
 		pImage->XTileBlt(pGraph, rcFrame.left + m_nRoundWidthTop, rcFrame.top, 
-			xTextStart - rcFrame.left, m_nThickWidth, m_nRoundWidthTop, 0,
+			xTextStart - rcFrame.left, m_nThickWidth, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
 			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickWidth, m_bpm);
 
 
@@ -80,43 +80,44 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 
 		// Draw top border right
 		pImage->XTileBlt(pGraph, rcText.right, rcFrame.top, 
-			rcFrame.right - rcText.right - m_nRoundWidthTop, m_nThickWidth, m_nRoundWidthTop, 0,
+			rcFrame.right - rcText.right - m_nRoundWidthTop, m_nThickWidth, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
 			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickWidth, m_bpm);
 	}
 	else
 	{
 		// Draw top border
 		pImage->XTileBlt(pGraph, rcFrame.left + m_nRoundWidthTop, rcFrame.top, 
-			rcFrame.Width() - m_nRoundWidthTop * 2, m_nThickWidth, m_nRoundWidthTop, 0,
+			rcFrame.Width() - m_nRoundWidthTop * 2, m_nThickWidth, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
 			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickWidth, m_bpm);
 	}
 
 	// Draw top right corner
 	pImage->Blt(pGraph, rcFrame.right - m_nRoundWidthTop, rcFrame.top,
-		m_nRoundWidthTop, m_nRoundWidthTop, pImage->m_cx - m_nRoundWidthTop, 0, m_bpm);
+		m_nRoundWidthTop, m_nRoundWidthTop, pImage->m_x + pImage->m_cx - m_nRoundWidthTop, pImage->m_y, m_bpm);
 
 	// Draw left border
 	pImage->YTileBlt(pGraph, rcFrame.left, rcFrame.top + m_nRoundWidthTop,
 		m_nThickWidth, rcFrame.Height() - m_nRoundWidthTop - m_nRoundWidthBottom,
-		0, m_nRoundWidthTop, m_nThickWidth, pImage->m_cy - m_nRoundWidthTop - m_nRoundWidthBottom, m_bpm);
+		pImage->m_x, pImage->m_y + m_nRoundWidthTop, m_nThickWidth, pImage->m_cy - m_nRoundWidthTop - m_nRoundWidthBottom, m_bpm);
 
 	// Draw right border
 	pImage->YTileBlt(pGraph, rcFrame.right - m_nThickWidth, rcFrame.top + m_nRoundWidthTop,
 		m_nThickWidth, rcFrame.Height() - m_nRoundWidthTop - m_nRoundWidthBottom,
-		pImage->m_cx - m_nThickWidth, m_nRoundWidthTop, m_nThickWidth, pImage->m_cy - m_nRoundWidthTop - m_nRoundWidthBottom, m_bpm);
+		pImage->m_x + pImage->m_cx - m_nThickWidth, pImage->m_y + m_nRoundWidthTop, m_nThickWidth, pImage->m_cy - m_nRoundWidthTop - m_nRoundWidthBottom, m_bpm);
 
 	// Draw left bottom corner.
 	pImage->Blt(pGraph, rcFrame.left, rcFrame.bottom - m_nRoundWidthBottom,
-		m_nRoundWidthBottom, m_nRoundWidthBottom, 0, pImage->m_cy - m_nRoundWidthBottom, m_bpm);
+		m_nRoundWidthBottom, m_nRoundWidthBottom, pImage->m_x, pImage->m_y + pImage->m_cy - m_nRoundWidthBottom, m_bpm);
 
 	// Draw bottom border
 	pImage->XTileBlt(pGraph, rcFrame.left + m_nRoundWidthBottom, rcFrame.bottom - m_nThickWidth, 
-		rcFrame.Width() - m_nRoundWidthBottom * 2, m_nThickWidth, m_nRoundWidthBottom, pImage->m_cy - m_nThickWidth,
+		rcFrame.Width() - m_nRoundWidthBottom * 2, m_nThickWidth, pImage->m_x + m_nRoundWidthBottom, pImage->m_y + pImage->m_cy - m_nThickWidth,
 		pImage->m_cx - m_nRoundWidthBottom * 2, m_nThickWidth, m_bpm);
 
 	// Draw right bottom corner
 	pImage->Blt(pGraph, rcFrame.right - m_nRoundWidthBottom, rcFrame.bottom - m_nRoundWidthBottom,
-		m_nRoundWidthBottom, m_nRoundWidthBottom, pImage->m_cx - m_nRoundWidthBottom, pImage->m_cy - m_nRoundWidthBottom, m_bpm);
+		m_nRoundWidthBottom, m_nRoundWidthBottom, 
+		pImage->m_x + pImage->m_cx - m_nRoundWidthBottom, pImage->m_y + pImage->m_cy - m_nRoundWidthBottom, m_bpm);
 }
 
 BOOL CSkinFrameCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -126,6 +127,8 @@ BOOL CSkinFrameCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 	if (IsPropertyName(szProperty, SZ_PN_IMAGE))
 		m_image.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
+	if (IsPropertyName(szProperty, SZ_PN_IMAGERECT))
+		GetRectValue(szValue, m_image);
 	else if (IsPropertyName(szProperty, _T("ImageFocus")))
 		m_imageFocus.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 	else if (IsPropertyName(szProperty, _T("BlendPixMode")))

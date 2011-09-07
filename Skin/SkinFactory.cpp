@@ -1563,7 +1563,7 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		{
 			TrimStr(vStrParam[i]);
 
-			pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[0].c_str()));
+			pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[i].c_str()));
 			if (pObj)
 				pObj->WriteProfileInt(_T("VisibleState"), pObj->IsVisible());
 		}
@@ -1617,6 +1617,14 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		pSkinWnd->InvalidateRect();
 
 		return ERR_OK;
+	}
+	else if (cmd.strFunction == _T("is_ctrl_visible"))
+	{
+		CUIObject *pObj = pSkinWnd->GetUIObjectById(GetIDByName(cmd.strParam.c_str()));
+		if (pObj && pObj->IsVisible())
+				return ERR_OK;
+
+		return ERR_FALSE;
 	}
 	else if (cmd.strFunction == _T("set_property"))
 	{

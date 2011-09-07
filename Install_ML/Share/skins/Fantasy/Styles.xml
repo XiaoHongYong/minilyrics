@@ -51,7 +51,6 @@
          TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
          BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
       <ClientArea Rect="10,60,w-30,h-50-30" ClipChildren="true"/>
-      <ListCtrlFrame Rect="10-4,60-4,w-30+8,h-50-30+8"/>
       <WndResizer Name="Bottom" Left="0" Top="h-20" Width="w-20" Height="20" Direction="bottom"/>
       <WndResizer Name="Right" Left="w-20" Top="0" Width="20" Height="h-20" Direction="right"/>
       <WndResizer Name="RightBottom" Left="w-20" Top="h-20" Width="20" Height="20" Direction="right|bottom"/>

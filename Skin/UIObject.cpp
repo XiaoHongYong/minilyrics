@@ -678,6 +678,8 @@ void CUIObject::SetVisible(bool bVisible, bool bRedraw)
 		}
 	}
 
+	m_pContainer->OnSetChildVisible(this, bVisible, bRedraw);
+
 	if (bRedraw)
 	{
 		if (bVisible)

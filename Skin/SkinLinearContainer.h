@@ -43,6 +43,8 @@ protected:
 	void ResizeFromItemsToUIObjsForVert(VecItems &vItems, VecUIObjects::iterator itBeg, VecUIObjects::iterator itEnd, int startPos);
 	void ResizeFromItemsToUIObjsForHorz(VecItems &vItems, VecUIObjects::iterator itBeg, VecUIObjects::iterator itEnd, int startPos);
 
+	virtual void OnSetChildVisible(CUIObject *pChild, bool bVisible, bool bRedraw);
+
 protected:
 	friend class CTestCaseCSkinLinearContainer;
 

@@ -6,11 +6,13 @@
 			 MinWidth="640" MinHeight="480" Width="700" Height="400" Menu="iPodLyricsDownloader" DefaultPage="Container.LyricsTool"
 			 ContextMenu="NormalMode" IsDialog="true" EnableTranslucency="true" TranslucencyAlpha="255">
 
-		<Image Name="left frame" Rect="0,100,2,h-100-32" Image="frame.png" ImageRect="0,10,2,100" BltMode="tile"/>
-		<Image Name="Right frame" Rect="w-2,100,2,h-100-32" Image="frame.png" ImageRect="423,10,2,100" BltMode="tile"/>
+		<Frame Name="Frame" Rect="0,110,w,h-110" Image="frame.png" ImageRect="0,110,425,40"
+			RoundWidthTop="8" RoundWidthBottom="8" ThickWidth="8" BlendPixMode="copy"/>
+		<Frame Name="Inner frame" Rect="8,118,w-16,h-118-8" Image="inner_frame.png" ImageRect="0,0,20,20" 
+			RoundWidthTop="1" RoundWidthBottom="1" ThickWidth="1" BlendPixMode="copy"/>
 
-		<Container Name="Caption" Rect="0,0,w,118" TranslucencyWithSkin="FALSE">
-			<Property Name="BgImage" Image="frame.png" ImageRect="0,0,425,118" HorzExtendPos="7,418" BlendPixMode="copy"/>
+		<Container Name="Caption" Rect="0,0,w,110" TranslucencyWithSkin="FALSE">
+			<Property Name="BgImage" Image="frame.png" ImageRect="0,0,425,110" HorzExtendPos="7,418" BlendPixMode="copy"/>
 
 			<MenuBar Rect="13,8,w/2-25,20" Name="Menu"
 					 UseParentBg="true" FontName="Verdana"
@@ -75,7 +77,7 @@
 		<Animation ID="CID_AM_HIDE_EMBEDDED_LYR" FadeOut="CID_C_EMBEDDED_LYR_TYPE" FadeIn="CID_C_LYRICS_TOOL"
 				 Duration="300"/>
 
-		<ResizableLinearContainer Name="Client" Rect="2,118,w-4,h-118-32" BgColor="#7F7F7F" SeparatorThickness="2" Orientation="Horizontal">
+		<ResizableLinearContainer Name="Client" Rect="9,119,w-18,h-119-8" BgColor="#7F7F7F" SeparatorThickness="2" Orientation="Horizontal">
 			<Container Name="Playlist" Width="108+10" Height="108" MinWidth="200" MinHeight="108" LayoutParams="match_parent_height" Weight="1">
 				<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"
 					ImageList="playlist_icon.png"/>
@@ -112,10 +114,6 @@
 
 		<Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_LYR_TOOL_BAR"/>
 		<Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_LYR_TOOL_BAR"/>
-		
-		<Container Name="Bottom" Rect="0,h-32,w,32" TranslucencyWithSkin="FALSE">
-			<Property Name="BgImage" Image="frame.png" ImageRect="0,118,425,32" HorzExtendPos="7,418" BlendPixMode="copy"/>
-		</Container>
 
 	</skinwnd>
 </skin>

@@ -142,6 +142,8 @@ public:
 	virtual void OnAdjustHue(float hue, float saturation, float luminance);
 	virtual void OnSkinFontChanged();
 
+	virtual void OnSetChildVisible(CUIObject *pChild, bool bVisible, bool bRedraw) { }
+
 	virtual CRawGraph *GetMemGraph();
 
 	MLColor GetBgColor() const;

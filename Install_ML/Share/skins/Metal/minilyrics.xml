@@ -1,125 +1,71 @@
 <?xml version="1.0" encoding='UTF-8'?>
 <skin defmainwnd="minilyrics" mainwnds="minilyrics"
       ExtraResouceFolder="MiniLyrics">
-  <include Name="Styles.xml"/>
-  <Menus>
-    <Menu Name="MainWndMenu" From="MainWndMenu" >
-      <Item Action="InsertByID" Type="item" Position="ID_CLICK_THROUGH"
-            Name="Hide Background on Lost Focus" IDCmd="ID_HIDE_WND_FRAME"
-            CanCheck="true" IsCheckedCmd="dyncmd_is_frame_hide" />
-      <Item Action="InsertByID" Type="item" Position="ID_CLICK_THROUGH"
-            Name="Display Background on Mouse Hover" IDCmd="ID_MOUSE_HOVER_SHOW_WND"
-            CanCheck="true" IsCheckedCmd="dyncmd_is_mouse_hover_show_frame" />
-    </Menu>
-  </Menus>
-  <DynCmds>
-    <cmd ID="dyncmd_is_frame_hide" func="get_profile_bool" param="HideFrameOnLostFocus,1"/>
-    <cmd ID="dyncmd_is_mouse_hover_show_frame" func="get_profile_bool" param="ShowFrameOnMouseHover,1"/>
+	<include Name="Styles.xml"/>
+	<skinwnd Name="minilyrics" EnableTranslucency="true"
+			TranslucencyAlpha="255" MinWidth="400" MinHeight="250" Width="480" Height="330"
+			ContextMenu="NormalMode">
 
-    <cmd ID="CMD_SHOW_LYR"             func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_LYRICS" />
-    <cmd ID="CMD_SHOW_INFO_TEXT"       func="set_ctrl_property"    param="CID_TOGGLE_LYR_PL,CmdToggle,CID_INFOTEXT" />
-  </DynCmds>
-  <skinwnd Name="minilyrics" EnableTranslucency="true"
-       TranslucencyAlpha="0" TranslucencyAlphaOnHover="228" TranslucencyAlphaOnActive="228"
-       MinWidth="330" MinHeight="190" Width="640" Height="240" 
-       BgColor="#576C91" ContextMenu="NormalMode" CmdHandler="ch_common">
-    <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
-              CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
+		<Frame Name="Frame" Rect="0,114,w,h-114" Image="frame.png" ImageRect="0,114,425,36"
+			RoundWidthTop="4" RoundWidthBottom="4" ThickWidth="4" BlendPixMode="copy"/>
+		<Frame Name="Inner frame" Rect="4,118,w-8,h-118-4" Image="inner_frame.png" ImageRect="0,0,20,20" 
+			RoundWidthTop="1" RoundWidthBottom="1" ThickWidth="1" BlendPixMode="copy"/>
 
-	<Frame Rect="0,0,w,h" Image="frame.png" ImageFocus="frame-focus.png" RoundWidthTop="31" RoundWidthBottom="6" ThickWidth="5"
-		BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+		<Container Name="Caption" Rect="0,0,w,114" TranslucencyWithSkin="FALSE">
+			<Property Name="BgImage" Image="frame.png" ImageRect="0,0,425,114" HorzExtendPos="7,418" BlendPixMode="copy"/>
 
-	<Frame Rect="0,0,w,h" Image="frame.png" RoundWidthTop="31" RoundWidthBottom="6" ThickWidth="5"
-		BlendPixMode="alpha_mask" TranslucencyWithSkin="TRUE"/>
+			<MenuBar Rect="119,8,w/2-25,20" Name="Menu" Menu="MainWndMenu"
+					 UseParentBg="true" FontName="Verdana"
+			   FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
+			   TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
+			   TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
+			   BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
 
-    <DecorativeContainer Name="Caption bar" Rect="0,0,w,31" TranslucencyWithSkin="TRUE">
-      <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
-        ImageFocus="frame-focus.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
+			<Text ID="ID_CAPTION" Rect="w/2,8,w/2-10-60-10,20" CaptionText="true" FontName="Verdana"
+				FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" 
+				TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER" Visible="false"/>
+			<Toolbar ID="CID_TB_SYSBT" Rect="w-10-60,10,60,16" 
+				 UseParentBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+				 blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
+				 MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
+				<button ID="ID_MINIMIZE" Left="1" />
+				<button ID="ID_MAXIMIZE" Left="2" CanCheck="TRUE" checked_left="3"/>
+			  <button ID="ID_CLOSE" Left="4" />
+			</Toolbar>
 
-      <Button Rect="15,9,16,16" ID="ID_MENU" Name="Menu"
-        Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
-        ImageFocusPos="0,32" />
-      <MenuBar Rect="40,8,w/2-40,20" Name="Menu" Menu="MainWndMenu" FontName="Verdana"
-         FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
-         TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
-         TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
-         BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+			<AlbumArt Name="AlbumArt" Rect="5,5,108,108" ID="ID_ALBUMART" UseParentBg="TRUE" Image="AlbumArt.png"
+				FrameMask="albumart-mask.png" FrameMaskRectPos="4,4,100,100"/>
+			<Container Name="MediaInfo" ID="CCMD_MEDIAINFO" Rect="123,28,w-123-15,80" MinWidth="108" MinHeight="108" FixedHeight="TRUE" Weight="1">
+				<MediaInfoText Name="Title" Rect="0,8,w,18" UseParentBg="TRUE" FontName="Arial" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="2" Text="" MediaInfoType="Title" ShowTitle="false"/>
+				<HStretchImage Left="-2" Top="25" Width="w+2" Height="6" Name="TitleLine" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
+				<MediaInfoText Name="Artist - album" Left="0" Top="33" Width="w" Height="16" UseParentBg="TRUE" FontName="Arial" FontHeight="14" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="2" Text="" MediaInfoType="Artist" ShowTitle="false"/>
+				<Toolbar Rect="0,58,80,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
+					<button ID="ID_PREVIOUS" Left="0" />
+					<button ID="ID_PLAYPAUSE" Left="1" CanCheck="TRUE" checked_left="2"/>
+					<button ID="ID_NEXT" Left="3" />
+					<seperator/>
+				</Toolbar>
+				<Toolbar ID="ID_TB_LYR_SYNC" Rect="80,58,92,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+						units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
+						MarginX="0" MarginY="0" FullStatusImage="TRUE">
+					<button ID="ID_SEARCH_LYRICS" Left="5" />
+					<button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
+					<button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
+					<button ID="ID_RATE_LYR" Left="15"/>
+				</Toolbar>
 
-	  <Text ID="ID_CAPTION" Rect="w/2,8,w/2-10-60-10,20" CaptionText="true" 
-		FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" 
-		TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
-		 
-      <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16" TranslucencyWithSkin="TRUE"
-           Image="caption_btn.png" enablehover="TRUE" units_x="16"
-           blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
-           MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
-        <button ID="ID_MINIMIZE" Left="1" />
-        <button ID="ID_CLOSE" Left="4" />
-      </Toolbar>
-    </DecorativeContainer>
+				<Toolbar ID="ID_TB_LYR_TXT" Rect="80,59,70,20" UseParentBg="TRUE" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
+						units_x="20" blank_x="-1" blank_cx="20" seperator_x="-1" seperator_cx="20" ButtonSpacesCX="3"
+						MarginX="0" MarginY="0" FullStatusImage="TRUE" Visible="false">
+					<button ID="ID_LYR_SCROLL_ENABLE_RECORD" Left="0" CanCheck="TRUE" checked_left="1"/>
+					<button ID="ID_LYR_SCROLL_ENABLE_REPLAY" Left="2" CanCheck="TRUE" checked_left="3"/>
+					<button ID="ID_LYR_SCROLL_MENU" Left="4"/>
+				</Toolbar>
+			</Container>
 
-    <DecorativeContainer Name="Body" Rect="5,31,w-10,h-33-9" UseParentBg="TRUE">
-      <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Lyrics" Rect="0,0,w,h" >
-        <Container ID="CID_LYRICS" Rect="0,0,w,h">
-          <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE">
-            <Property Name="ActivateNotice"
-              FontName="Verdana" FontHeight="18" FontBold="false" FontItalic="1"
-              OverlappedCtrl="CID_TOP_CTRL_PARENT" TextColor="#FFFFFF"
-              Height="30" BgColors="#FE8713,#FFDE00,#FF5400,#FFA780"/>
-          </LyricsShow>
-        </Container>
-        <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" UseParentBg="TRUE" Visible="false"/>
-      </ToggleCtrlContainer>
-      <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
-      <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
-
-      <Container Name="Top control parent" ID="CID_TOP_CTRL_PARENT" Rect="0,0,w,26" >
-      <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,26" TranslucencyWithSkin="TRUE">
-        <Image Name="Top-ctrl-bg" Rect="0,0,w,26" Image="top-ctrl-bg.png" BltMode="tile" />
-        <Toolbar Rect="20,0,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
-             units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
-             MarginX="0" MarginY="0" FullStatusImage="TRUE">
-          <button ID="ID_SEARCH_LYRICS" Left="5" />
-          <button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
-          <button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
-        </Toolbar>
-        <PlayingTimeText Name="PlayingTime" Rect="85,4,50,18" AlignText="AT_CENTER | AT_VCENTER"
-           FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#FFFFFF"
-           TextOutlinedColor="#000000" LeftMargin="0" Text=""/>
-        <SeekCtrl Name="Seek" ID="ID_SEEK"
-                  Rect="137,8,w-137-90,12" EndWidth="3" ImageThumb="seek_thumb.png"
-                  ImageTrack="seek_track.png"/>
-
-        <Toolbar Rect="w-85,0,70,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
-                 units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
-                 MarginX="0" MarginY="0" FullStatusImage="TRUE">
-          <button ID="ID_FONT_SIZE_INC" Left="8"/>
-          <button ID="ID_FONT_SIZE_DEC" Left="9"/>
-          <button ID="ID_LYR_HIGH_CLR_LIST" Left="14" />
-        </Toolbar>
-      </Container>
-      </Container>
-
-      <Container ID="CID_PLAY_CTRL" Rect="0,h-26,w,32" TranslucencyWithSkin="TRUE">
-        <HStretchImage Name="bg" Rect="0,0,w,32" Image="bottom-ctrl-bg.png" ImageScaleXStart="12" ImageScaleXEnd="48"/>
-        <Toolbar Name="PlayControl" Rect="w/2-120,5,100,22"
-                 Image="buttons.png" enablehover="TRUE"
-                 units_x="22" blank_x="-1" blank_cx="22" seperator_x="176"
-                 seperator_cx="12" ButtonSpacesCX="14" FullStatusImage="true">
-          <button ID="ID_PREVIOUS"  left="1"/>
-          <button ID="ID_PLAYPAUSE" left="2"  left_of_status_1="3"/>
-          <button ID="ID_NEXT"      left="4"/>
-        </Toolbar>
-        <Image Name="Volume" Rect="w/2+12,h/2-7,14,14" Image="volume.png"/>
-        <SeekCtrl Name="Seek" ID="ID_VOLUME"
-                  Rect="w/2+30,h/2-6,100,12" EndWidth="3" ImageThumb="seek_thumb.png"
-                  ImageTrack="seek_track.png"/>
-      </Container>
-    </DecorativeContainer>
-
-    <WndResizer Name="Bottom" Rect="0,h-20,w-20,20" Direction="bottom"/>
-    <WndResizer Name="Right" Rect="w-20,0,20,h-20" Direction="right"/>
-    <WndResizer Name="RightBottom" Rect="w-20,h-20,20,20" Direction="right|bottom"/>
-  
-</skinwnd>
+		</Container>
+		
+		<LyricsShow ID="ID_LYRICS_SHOW" Rect="5,119,w-10,h-119-5" SetSkinBg="false"
+			EnableToolbar="FALSE" EnableAutoResize="FALSE" />
+	</skinwnd>
 </skin>

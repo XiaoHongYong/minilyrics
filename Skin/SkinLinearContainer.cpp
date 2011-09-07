@@ -334,6 +334,12 @@ void CSkinLinearContainer::ResizeFromItemsToUIObjsForHorz(VecItems &vItems, VecU
 	}
 }
 
+void CSkinLinearContainer::OnSetChildVisible(CUIObject *pChild, bool bVisible, bool bRedraw)
+{
+	// Recalculate the size position.
+	m_pContainer->RecalculateUIObjSizePos(this);
+}
+
 #ifdef _CPPUNIT_TEST
 
 //////////////////////////////////////////////////////////////////////////

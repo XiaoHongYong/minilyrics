@@ -307,9 +307,6 @@ void CLyricShowTxtObj::EnableRecordScrollingActions(bool bEnable)
 		m_bRecordScrollingActionsEnabled = bEnable;
 		g_Profile.WriteProfileInt(_T("LyrRecordSAEnabled"), bEnable);
 	}
-	else
-		m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_RECORD,
-			IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
 }
 
 void CLyricShowTxtObj::EnableReplayScrollingActions(bool bEnable)

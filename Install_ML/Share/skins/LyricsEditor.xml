@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <skinwnd Extends="MenuWindowFrame" Name="LyricsEditor.xml" Caption="Lyrics Editor" CmdHandler="ch_common"
          MinWidth="640" MinHeight="300" Width="640" Height="400" ContextMenu="NormalMode" Menu="LyrEditorMenu"
-         OnCreateCommand="dyncmd_load_toolbar_state" IsDialog="false">
-	<Toolbar Left="0" Top="0" Width="22*4+10" Height="26" Image="lyr-tb.bmp"
-           enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22" 
+         IsDialog="false">
+	<Toolbar Rect="0,3,22*4+5,26" UseParentBg="true" Image="lyr-tb.png"
+           enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3">
 		<button ID="ID_INSERTTAG_DOWN" Left="12" Width="2" />
 		<button ID="ID_INSERTTAG" Left="14" />
 		<button ID="ID_TOGGLE_LYR_EDIT_TOOLBAR" Left="23"/>
 	</Toolbar>
-	<Image Left="22*4+10" Top="0" Width="w-(22*4+10)" Height="26" Name="Toolbar Bg"
-         Image="lyr-tb.bmp" ImageRect="858,0,22,26" BltMode="tile"/>
-	<Toolbar ID="ID_TB_LYR_EDIT" Left="22*4+10" Top="0" Width="w-(22*4+10)" Height="26"
-           Image="lyr-tb.bmp" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
+	<Toolbar ID="ID_TB_LYR_EDIT" Rect="22*4+5,3,w-(22*4+5),26" UseParentBg="true"
+           Image="lyr-tb.png" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3" Visible="false">
 		<seperator/>
 		<button ID="ID_SEARCH_LYRICS" Left="20" />
@@ -58,7 +56,9 @@
 		</Container>
 	
 		<Container Name="Editor" ID="CID_C_EDITOR" MinWidth="220" MinHeight="104" Width="200" LayoutParams="match_parent_width" Weight="1">
-		  <LyricShowTextEdit Rect="0,0,w,h" />
+			<Frame Name="Inner frame" Rect="0,0,w,h" Image="inner_frame.png" ImageRect="0,0,20,20" 
+				RoundWidthTop="1" RoundWidthBottom="1" ThickWidth="1" BlendPixMode="copy"/>
+			<LyricShowTextEdit Rect="1,1,w-2,h-2"/>
 		</Container>
 	
 		<Container Name="Lyrics Tag" ID="CID_C_LYR_TAG" Height="95" Width="200" LayoutParams="match_parent_width" FixedHeight="TRUE" UseParentBg="true">
