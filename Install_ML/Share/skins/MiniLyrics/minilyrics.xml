@@ -22,34 +22,29 @@
   <skinwnd Name="minilyrics" EnableTranslucency="true"
        TranslucencyAlpha="0" TranslucencyAlphaOnHover="228" TranslucencyAlphaOnActive="228"
        MinWidth="330" MinHeight="190" Width="640" Height="240" 
-       BgColor="#576C91" ContextMenu="NormalMode" CmdHandler="ch_common">
+       BgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common">
+
     <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
               CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
 
-	<Frame Rect="0,0,w,h" Image="frame.png" ImageFocus="frame-focus.png" RoundWidthTop="31" RoundWidthBottom="6" ThickWidth="5"
-		BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+	<Frame Rect="0,0,w,h" Image="frame.png" ImageRect="0,0,95,95" ImageFocus="frame-focus.png" ImageFocusRect="0,0,95,95" 
+		RoundWidthTop="14" RoundWidthBottom="5" ThickWidth="4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
 
-	<Frame Rect="0,0,w,h" Image="frame.png" RoundWidthTop="31" RoundWidthBottom="6" ThickWidth="5"
-		BlendPixMode="alpha_mask" TranslucencyWithSkin="TRUE"/>
+    <DecorativeContainer Name="Caption bar" Rect="0,0,w,30" TranslucencyWithSkin="TRUE">
+      <CaptionImage Rect="0,0,w,30" Name="Caption Bg" Image="frame.png" ImageRect="0,0,95,30"
+        ImageFocus="frame-focus.png" ImageFocusRect="0,0,95,30" CutPos="20,50,50,80" BlendPixMode="copy"/>
 
-    <DecorativeContainer Name="Caption bar" Rect="0,0,w,31" TranslucencyWithSkin="TRUE">
-      <CaptionImage Rect="0,0,w,31" Name="Caption Bg" Image="frame.png" ImageRect="0,0,100,31"
-        ImageFocus="frame-focus.png" ImageFocusRect="0,0,100,31" CutPos="20,50,50,80" BlendPixMode="copy"/>
-
-      <Button Rect="15,9,16,16" ID="ID_MENU" Name="Menu"
-        Image="caption_btn.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16"
-        ImageFocusPos="0,32" />
-      <MenuBar Rect="40,8,w/2-40,20" Name="Menu" Menu="MainWndMenu" FontName="Verdana"
+      <MenuBar Rect="5,5,w/2-20,20" Name="Menu" Menu="MainWndMenu" FontName="Verdana"
          FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
          TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
          TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
-         BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
+         BgColorPressed="#D0D0D0" BgPressedAlpha="127" UseParentBg="true"/>
 
-	  <Text ID="ID_CAPTION" Rect="w/2,8,w/2-10-60-10,20" CaptionText="true" 
+	  <Text ID="ID_CAPTION" Rect="w/2,5,w/2-10-60-10,20" CaptionText="true" UseParentBg="true"
 		FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" 
 		TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
 		 
-      <Toolbar ID="CID_TB_SYSBT" Rect="w-50,10,40,16" TranslucencyWithSkin="TRUE"
+      <Toolbar ID="CID_TB_SYSBT" Rect="w-50,7,40,16" TranslucencyWithSkin="TRUE" UseParentBg="true"
            Image="caption_btn.png" enablehover="TRUE" units_x="16"
            blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
            MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
@@ -58,7 +53,7 @@
       </Toolbar>
     </DecorativeContainer>
 
-    <DecorativeContainer Name="Body" Rect="5,31,w-10,h-33-9" UseParentBg="TRUE">
+    <DecorativeContainer Name="Body" Rect="1,30,w-5,h-30-5" UseParentBg="TRUE">
       <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Lyrics" Rect="0,0,w,h" >
         <Container ID="CID_LYRICS" Rect="0,0,w,h">
           <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE">
@@ -110,7 +105,7 @@
       </Container>
       </Container>
 
-      <Container ID="CID_PLAY_CTRL" Rect="0,h-26,w,32" TranslucencyWithSkin="TRUE">
+      <Container ID="CID_PLAY_CTRL" Rect="0,h-31,w,32" TranslucencyWithSkin="TRUE">
         <HStretchImage Name="bg" Rect="0,0,w,32" Image="bottom-ctrl-bg.png" ImageScaleXStart="12" ImageScaleXEnd="48"/>
         <Toolbar Name="PlayControl" Rect="w/2-120,5,100,22"
                  Image="buttons.png" enablehover="TRUE"

@@ -570,15 +570,15 @@ void CSkinContainer::RedrawBackground(CRawGraph *pGraph, const RECT &rc)
 			pGraph->FillRect(&rcNewClip, clrBg);
 		else if (m_pSkin->GetCurrentTranslucency() != 255)
 		{
-			MLColor	clr(RGB(0, 0, 0));
-			clr.setAlpha(0);
-			pGraph->FillRect(&rcNewClip, clr);
+// 			MLColor	clr(RGB(0, 0, 0));
+// 			clr.setAlpha(0);
+// 			pGraph->FillRect(&rcNewClip, clr);
 		}
 
 		m_bgImagePainter.Blt(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), funcDraw);
 
-		if (m_pSkin->GetCurrentTranslucency() != 255)
-			pGraph->MultiplyAlpha(m_pSkin->GetCurrentTranslucency(), &rcNewClip);
+//		if (m_pSkin->GetCurrentTranslucency() != 255)
+//			pGraph->MultiplyAlpha(m_pSkin->GetCurrentTranslucency(), &rcNewClip);
 	}
 	else
 		pGraph->FillRect(&rcNewClip, clrBg);
@@ -719,9 +719,14 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
 		if (szValue)
 			m_imageBgMask.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 
-		GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBg);
-		if (m_imageBgMask.IsValid())
-			GetRectValue(pXmlNode->GetPropertySafe(SZ_PN_IMAGERECT), m_imageBgMask);
+		// Image Rect
+		szValue = pXmlNode->GetProperty(SZ_PN_IMAGERECT);
+		if (szValue)
+		{
+			GetRectValue(szValue, m_imageBg);
+			if (m_imageBgMask.IsValid())
+				GetRectValue(szValue, m_imageBgMask);
+		}
 
 		szValue = pXmlNode->GetPropertySafe(_T("HorzExtendPos"));
 		if (!Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd))

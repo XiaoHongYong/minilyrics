@@ -131,6 +131,8 @@ BOOL CSkinFrameCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		GetRectValue(szValue, m_image);
 	else if (IsPropertyName(szProperty, _T("ImageFocus")))
 		m_imageFocus.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
+	else if (IsPropertyName(szProperty, _T("ImageFocusRect")))
+		GetRectValue(szValue, m_imageFocus);
 	else if (IsPropertyName(szProperty, _T("BlendPixMode")))
 		m_bpm = BlendPixModeFromStr(szValue);
 	else if (IsPropertyName(szProperty, _T("RoundWidth")))

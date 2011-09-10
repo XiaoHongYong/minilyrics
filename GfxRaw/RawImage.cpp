@@ -188,7 +188,8 @@ bool BltRawImage(PRAW_IMAGE_DATA pImageDst, CRect &rcDst, PRAW_IMAGE_DATA pImage
 
 		return XBltRawImage<blend_rgb, blend_alpha, copy_rgb, copy_alpha, copy_alpha_255, blend_copy_none, multiply_rgb, multiply_alpha>(blter, pImageDst, pImageSrc, bpm);
 	}
-	else
+	else if (nOpacitySrc == 0)
+		return true;
 	{
 		CBuffBitBlterOpacity	blter;
 
@@ -218,6 +219,8 @@ bool StretchBlt(PRAW_IMAGE_DATA pImageSrc, PRAW_IMAGE_DATA pImageDst, CRect &rcD
 
 		return XBltRawImage<blend_rgb, blend_alpha, copy_rgb, copy_alpha, copy_alpha_255, blend_copy_none, multiply_rgb, multiply_alpha>(blter, pImageDst, pImageSrc, bpm);
 	}
+	else if (nOpacitySrc == 0)
+		return true;
 	else
 	{
 		CBuffStretchBitBlterOpacity	blter;
@@ -407,6 +410,9 @@ bool CRawImage::Blt(CRawImage *pImage, int xDest, int yDest, int widthDest, int 
 {
 	if (!m_hImage || !pImage->m_hImage)
 		return false;
+
+	if (nOpacitySrc == 0)
+		return true;
 
 	CRect	rcDst(xDest, yDest, widthDest + xDest, heightDest + yDest);
 
@@ -607,6 +613,8 @@ bool CRawImage::MaskBlt(PRAW_IMAGE_DATA pImageDst, CRect &rcDst, int xSrc, int y
 
 		return XBltRawImage<mask_blend_rgb, mask_blend_alpha, mask_copy_rgb, mask_copy_alpha, mask_copy_alpha_255, mask_blend_copy_none, mask_multiply_rgb, mask_multiply_alpha>(blter, pImageDst, m_hImage, bpm);
 	}
+	else if (nOpacitySrc == 0)
+		return true;
 	else
 	{
 		CBuffMaskBlterOpacity	blter;
