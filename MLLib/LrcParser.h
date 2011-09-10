@@ -27,11 +27,11 @@ public:
 	int ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine = false);
 	int ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLine = false, bool bUseSpecifiedEncoding = false, CHAR_ENCODING encoding = ED_SYSDEF);
 
-	bool ToString(tstring &str, bool bIncTags, bool bToTxtFormat);
+	void ToString(tstring &str, bool bIncTags, bool bToTxtFormat);
 
 protected:
-	bool ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt);
-	bool ToTxtString(tstring &str, bool bIncTags);
+	void ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt);
+	void ToTxtString(tstring &str, bool bIncTags);
 
 	bool LyricsRowToLrcString(PML_ROW pRow, bool bLongTimeFmt, tstringex &strBuff);
 	void LyricsRowToTxtString(PML_ROW pRow, tstring &strBuff);

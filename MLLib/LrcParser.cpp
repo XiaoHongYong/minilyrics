@@ -345,15 +345,15 @@ void CLrcParser::ParseTxtTagInLyrics()
 	}
 }
 
-bool CLrcParser::ToString(tstring &str, bool bIncTags, bool bToTxtFormat)
+void CLrcParser::ToString(tstring &str, bool bIncTags, bool bToTxtFormat)
 {
 	if (bToTxtFormat)
-		return ToTxtString(str, bIncTags);
+		ToTxtString(str, bIncTags);
 	else
-		return ToLrcString(str, bIncTags, true);
+		ToLrcString(str, bIncTags, true);
 }
 
-bool CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
+void CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
 {
 	// reserver 4k spaces for lyrics data.
 	str.reserve(1024 * 4);
@@ -408,11 +408,9 @@ bool CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
 
 	if (str.size() > 2 && str[str.size() - 1] == '\n')
 		str.resize(str.size() - 2);
-
-	return true;
 }
 
-bool CLrcParser::ToTxtString(tstring &str, bool bIncTags)
+void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 {
 	// reserver 4k spaces for lyrics data.
 	str.reserve(1024 * 4);
@@ -488,8 +486,6 @@ bool CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 
 	if (str.size() > 2 && str[str.size() - 2] == '\r' && str[str.size() - 1] == '\n')
 		str.resize(str.size() - 2);
-
-	return true;
 }
 
 //

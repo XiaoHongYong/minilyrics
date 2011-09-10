@@ -141,7 +141,6 @@ protected:
 	virtual CSkinFactory *NewSkinFactory();
 
 	bool InitLyricsPlayer();
-	bool InitLyricsTool();
 	bool InitiPodLyricsDownloader();
 
 public:

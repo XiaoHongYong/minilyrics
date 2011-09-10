@@ -76,6 +76,7 @@ extern CLanguageTool			g_LangTool;
 #define TOLOCAL_SECTION(szString)
 #define TOLOCAL2(szString, comments)	(g_LangTool.ToLocalString(szString))
 #define TOLOCAL_MARK(szString)	szString
+#define TOLOCAL_MARK_T(szString)	_T(szString)
 #define TOLOCAL(szString)	(g_LangTool.ToLocalString(szString))
 #define TOLOCAL_T(szString)	(g_LangTool.ToLocalString(_T(szString)))
 

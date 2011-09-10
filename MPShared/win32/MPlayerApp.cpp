@@ -215,6 +215,11 @@ bool CMPlayerApp::Init()
 
 	if (!ProcessCmdLine(lpCmdLine, m_appMode))
 		return false;
+
+	TCHAR szFile[MAX_PATH];
+	GetModuleFileName(NULL, szFile, MAX_PATH);
+	if (_tcsicmp(FileGetName(szFile), _T("iPodLyricsDownloader")) == 0)
+		m_appMode = SA_IPOD_LYRICS_DOWNLOADER;
 #endif
 
 	return CMPlayerAppBase::Init();

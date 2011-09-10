@@ -136,6 +136,7 @@ bool IsTRUE(LPCTSTR szValue);
 #define BOOLTOSTR(bValue)		(bValue ? _T("TRUE") : _T("FALSE"))
 
 #define GET_ID_BY_NAME(_id)		_id = GetIDByName(_T(#_id))
+#define GET_ID_BY_NAME2(_id1, _id2)		{ _id1 = GetIDByName(_T(#_id1)); _id2 = GetIDByName(_T(#_id2)); }
 #define GET_ID_BY_NAME3(_id1, _id2, _id3)		{ _id1 = GetIDByName(_T(#_id1)); _id2 = GetIDByName(_T(#_id2)); _id3 = GetIDByName(_T(#_id3)); }
 #define GET_ID_BY_NAME4(_id1, _id2, _id3, _id4)		{ _id1 = GetIDByName(_T(#_id1)); _id2 = GetIDByName(_T(#_id2)); _id3 = GetIDByName(_T(#_id3)); _id4 = GetIDByName(_T(#_id4)); }
 

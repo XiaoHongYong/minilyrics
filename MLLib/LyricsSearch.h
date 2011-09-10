@@ -106,13 +106,12 @@ public:
 #define SZ_SONG_LYRICS3V2		_T("song://lyrics3v2")
 #define SZ_SONG_ID3V2_LYRICS	_T("song://id3v2/lyrics(nonstandard)")
 
-#define SZ_SONG_ID3V2_SYLT_DESC	_T("ID3v2 synchronized Lyrics (For MiniLyrics, Windows Media player)")
-#define SZ_SONG_ID3V2_USLT_DESC	_T("ID3v2 unsynchronized Lyrics (For iTunes, iPod, Windows Media Player, etc)")
-#define SZ_SONG_LYRICS3V2_DESC	_T("Lyrics3v2 lyrics (For MiniLyrics)")
+#define SZ_SONG_ID3V2_SYLT_DESC	_T("Embedded lyrics for Windows Media player (ID3v2 synchronized lyrics)")
+#define SZ_SONG_ID3V2_USLT_DESC	_T("Embedded lyrics for iTunes, iPod (ID3v2 unsynchronized lyrics)")
+#define SZ_SONG_LYRICS3V2_DESC	_T("Embedded lyrics for MiniLyrics (Lyrics3v2 lyrics)")
 #define SZ_SONG_ID3V2_LYRICS_DESC	_T("Embedded ID3v2 lyrics (Nonstandard)")
 
 #ifdef _ID3V2_SUPPORT
-void GetID3v2LrcSourceLang(LPCTSTR szLrcSource, char szLang[], int len);
 
 bool ID3v2LyricsInfoGetSynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2SynchLyrics *&plyrics);
 bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2UnsynchLyrics *&plyrics);

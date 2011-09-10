@@ -13,6 +13,7 @@
 #include "../WidgetLite/win32/FileOpenDlg.h"
 #include "DlgUpload.h"
 #include "AutoProcessEmbeddedLyrics.h"
+#include "DlgSaveEmbeddedLyrics.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
 #include "MPSkinMenu.h"
@@ -128,6 +129,17 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 		break;
 
 	case IDC_EMBEDDED_LYRICS:
+		{
+			if (!g_LyricData.HasLyricsOpened())
+			{
+				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+				break;
+			}
+
+			CDlgSaveEmbeddedLyrics dlg;
+			dlg.DoModal(m_pSkinWnd);
+		}
+		break;
 	case IDC_IPOD_LYRICS_DOWNLOADER:
 		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
 		break;
@@ -760,17 +772,16 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_UPLOAD_LYR:
 		{
+			if (!g_LyricData.HasLyricsOpened())
+				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+
 			// show upload lyrics dialog
 			tstring	strLyrics;
-			if (g_LyricData.ToString(strLyrics, FT_LYRICS_LRC, true))
-			{
-				ShowUploadLyrDialog(m_pSkinWnd, 
-						strLyrics, 
-						g_LyricData.GetSongFileName(),
-						g_LyricData.GetLyricsFileName());
-			}
-			else
-				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+			g_LyricData.ToString(strLyrics, FT_LYRICS_LRC, true);
+			ShowUploadLyrDialog(m_pSkinWnd, 
+					strLyrics, 
+					g_LyricData.GetSongFileName(),
+					g_LyricData.GetLyricsFileName());
 		}
 		break;
 	case CMD_EXTERNAL_LYR_EDIT:
@@ -1065,13 +1076,12 @@ bool CMPCommonCmdHandler::SaveCurrentLyrics(CSkinWnd *pSkinWnd, bool bDispatchOn
 			if (g_LyricData.GetLyricsSourceType() != LST_FILE)
 			{
 				tstring		str;
-				if (g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE))
-				{
-					CCharBuffer bufLyrics;
-					TStringToProperFileData(str.c_str(), bufLyrics);
-					g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(g_LyricData.GetSongFileName(), 
-						NULL, &bufLyrics, g_LyricData.GetLyricsSourceType());
-				}
+				g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE);
+
+				CCharBuffer bufLyrics;
+				TStringToProperFileData(str.c_str(), bufLyrics);
+				g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(g_LyricData.GetSongFileName(), 
+					NULL, &bufLyrics, g_LyricData.GetLyricsSourceType());
 			}
 			pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics, $Product$ will auto try again later."))).c_str());
 		}

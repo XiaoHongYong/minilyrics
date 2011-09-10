@@ -1635,13 +1635,13 @@ bool CMLData::ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING enc
 }
 #endif // #ifdef _ID3V2_SUPPORT
 
-BOOL CMLData::ToString(tstring &str, MLFileType lrcFormat, bool bIncTags)
+void CMLData::ToString(tstring &str, MLFileType lrcFormat, bool bIncTags)
 {
 	bool	bToLrcFormat = (lrcFormat == FT_LYRICS_LRC && GetLyrContentType() != LCT_TXT);
 
 	CLrcParser		parser(this);
 
-	return parser.ToString(str, bIncTags, !bToLrcFormat);
+	parser.ToString(str, bIncTags, !bToLrcFormat);
 }
 
 /*int CMLData::FromString(LPCVOID lpLrc, int nLen, bool bAddTimeStampForTextLine, bool bUseSpecifiedEncoding, CHAR_ENCODING encodingSpecified)

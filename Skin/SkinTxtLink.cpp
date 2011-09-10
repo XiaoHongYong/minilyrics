@@ -1,30 +1,21 @@
-// SkinTxtLink.cpp: implementation of the CSkinTxtLink class.
-//
-//////////////////////////////////////////////////////////////////////
 
 #include "StdAfx.h"
 #include "Skin.h"
 #include "SkinTxtLink.h"
 
-LPCTSTR CSkinTxtLink::ms_szClassName = _T("TxtLink");
+UIOBJECT_CLASS_NAME_IMP(CSkinTxtLink, _T("TxtLink"))
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 CSkinTxtLink::CSkinTxtLink()
 {
 	m_nMsgWant = UO_MSG_WANT_LBUTTON | UO_MSG_WANT_MOUSEMOVE;
 	m_dwAlignText = 0;
+	m_bNeedResize = true;
 }
 
 CSkinTxtLink::~CSkinTxtLink()
 {
-}
-
-LPCTSTR CSkinTxtLink::GetClassName()
-{
-	return ms_szClassName;
 }
 
 void CSkinTxtLink::Draw(CRawGraph *pGraph)
@@ -34,21 +25,35 @@ void CSkinTxtLink::Draw(CRawGraph *pGraph)
 	if (m_font.IsGood())
 		pGraph->SetFont(m_font.GetFont());
 
-	// Resize control by content size.
-	SIZE size;
-	if (pGraph->GetTextExtentPoint32(m_strText.c_str(), m_strText.size(), &size))
+	if (m_bNeedResize)
 	{
-		const int TEXT_MARGIN	= 8;
-		if (IsFlagSet(m_dwAlignText, DT_RIGHT))
-			m_rcObj.left = m_rcObj.right - size.cx - TEXT_MARGIN;
-		else if (IsFlagSet(m_dwAlignText, DT_CENTER))
+		m_bNeedResize = false;
+
+		// Resize control by content size.
+		SIZE size;
+		if (pGraph->GetTextExtentPoint32(m_strText.c_str(), m_strText.size(), &size))
 		{
-			m_rcObj.left = (m_rcObj.left + m_rcObj.right - size.cx - TEXT_MARGIN) / 2;
-			m_rcObj.right = m_rcObj.left + size.cx + TEXT_MARGIN;
+			const int TEXT_MARGIN	= 8;
+			if (IsFlagSet(m_dwAlignText, DT_RIGHT))
+				m_rcObj.left = m_rcObj.right - size.cx - TEXT_MARGIN;
+			else if (IsFlagSet(m_dwAlignText, DT_CENTER))
+			{
+				m_rcObj.left = (m_rcObj.left + m_rcObj.right - size.cx - TEXT_MARGIN) / 2;
+				m_rcObj.right = m_rcObj.left + size.cx + TEXT_MARGIN;
+			}
+			else
+				m_rcObj.right = m_rcObj.left + size.cx + TEXT_MARGIN;
+
+			if (IsFlagSet(m_dwAlignText, DT_BOTTOM))
+				m_rcObj.top = m_rcObj.bottom - size.cy - TEXT_MARGIN;
+			else if (IsFlagSet(m_dwAlignText, DT_VCENTER))
+			{
+				m_rcObj.top = (m_rcObj.top + m_rcObj.bottom - size.cy - 4) / 2;
+				m_rcObj.bottom = m_rcObj.top + size.cy + 4;
+			}
+			else
+				m_rcObj.bottom = m_rcObj.top + size.cy + 4 / 2;
 		}
-		else
-			m_rcObj.right = m_rcObj.left + size.cx + TEXT_MARGIN;
-		m_rcObj.bottom = m_rcObj.top + size.cy + TEXT_MARGIN / 2;
 	}
 
 	pGraph->SetTextColor(m_font.GetTextColor(m_bEnable));
@@ -64,16 +69,12 @@ BOOL CSkinTxtLink::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (CUIObject::SetProperty(szProperty, szValue))
 		return TRUE;
 
-	if (_tcsicmp(szProperty, _T("Link")) == 0)
-	{
+	if (_tcsicmp(szProperty, SZ_PN_LINK) == 0)
 		m_strLink = szValue;
-	}
 	else if (m_font.SetProperty(szProperty, szValue))
 		return TRUE;
 	else if (_tcsicmp(szProperty, _T("AlignText")) == 0)
-	{
 		m_dwAlignText = AlignTextFromStr(szValue);
-	}
 	else
 		return FALSE;
 
@@ -85,7 +86,7 @@ void CSkinTxtLink::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
 
-	listProperties.AddPropStr(_T("Link"), m_strLink.c_str());
+	listProperties.AddPropStr(SZ_PN_LINK, m_strLink.c_str());
 	m_font.EnumProperties(listProperties);
 }
 #endif // _SKIN_EDITOR_
@@ -100,10 +101,26 @@ void CSkinTxtLink::OnCreate()
 	m_Cursor.LoadStdCursor(CCursor::C_HAND);
 }
 
+void CSkinTxtLink::OnSize()
+{
+	CUIObject::OnSize();
+
+	m_bNeedResize = true;
+}
+
 bool CSkinTxtLink::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	if (m_strLink.size())
-		OpenUrl(m_pSkin, m_strLink.c_str());
+	{
+		LPCTSTR SZ_CMD = _T("cmd://");
+		if (StrBeginWith(m_strLink.c_str(), SZ_CMD))
+		{
+			int nId = m_pSkin->GetSkinFactory()->GetIDByName(m_strLink.c_str() + _tcslen(SZ_CMD));
+			m_pSkin->OnCustomCommand(nId);
+		}
+		else
+			OpenUrl(m_pSkin, m_strLink.c_str());
+	}
 
 	if (m_nId != UID_INVALID)
 		m_pSkin->PostCustomCommandMsg(m_nId);

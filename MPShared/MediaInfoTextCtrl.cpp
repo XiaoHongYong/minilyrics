@@ -49,7 +49,7 @@ CMediaInfoTextCtrl::CMediaInfoTextCtrl()
 	m_nSwitchTime = 5000;
 	m_nCurrentItem = 0;
 	m_nIDTimerUpdateTrackInfo = 0;
-	m_bShowTitle = true;
+	m_bShowTitle = false;
 }
 
 CMediaInfoTextCtrl::~CMediaInfoTextCtrl()
@@ -66,7 +66,7 @@ void CMediaInfoTextCtrl::OnCreate()
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 
-	if (m_vInfoType.size() > 1)
+	if (m_vInfoType.size() > 1 && m_strCombineWith.empty())
 		m_nIDTimerUpdateTrackInfo = m_pSkin->RegisterTimerObject(this, m_nSwitchTime);
 
 	UpdateShowTrackInfo();
@@ -105,13 +105,16 @@ BOOL CMediaInfoTextCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		V_Str		vStr;
 
 		m_vInfoType.clear();
-		StrBreak(szValue, '|', vStr);
+		StrSplit(szValue, '|', vStr);
+
 		for (int i = 0; i < (int)vStr.size(); i++)
 		{
 			TrimStr(vStr[i]);
 			m_vInfoType.push_back((MediaAttribute)StringToID(__mediaInfoType, vStr[i].c_str(), MA_TITLE));
 		}
 	}
+	else if (_tcsicmp(szProperty, _T("CombineWith")) == 0)
+		m_strCombineWith = szValue;
 	else if (_tcsicmp(szProperty, _T("SwitchTime")) == 0)
 		m_nSwitchTime = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, _T("ShowTitle")) == 0)
@@ -154,48 +157,60 @@ void CMediaInfoTextCtrl::UpdateShowTrackInfo()
 	if (m_vInfoType.empty())
 		return;
 
-	if (m_nCurrentItem < 0 || m_nCurrentItem >= (int)m_vInfoType.size())
-		m_nCurrentItem = 0;
+	tstring		strText;
 
-	MediaAttribute		infoType = m_vInfoType[m_nCurrentItem];
-	tstring				strValue;
-	tstring				strText;
-
-	if (m_bShowTitle)
+	if (m_strCombineWith.empty())
 	{
-		strText = TOLOCAL(IDToString(__mediaInfoType, infoType, _T("")));
-		strText += _T(": ");
+		// Display media information timely
+		if (m_nCurrentItem < 0 || m_nCurrentItem >= (int)m_vInfoType.size())
+			m_nCurrentItem = 0;
+
+		if (m_bShowTitle)
+		{
+			strText = TOLOCAL(IDToString(__mediaInfoType, m_vInfoType[m_nCurrentItem], _T("")));
+			strText += _T(": ");
+		}
+		strText += GetMediaAttrInfo(m_vInfoType[m_nCurrentItem]);
 	}
+	else
+	{
+		for (uint i = 0; i < m_vInfoType.size(); i++)
+		{
+			if (strText.size() > 0)
+				strText += m_strCombineWith;
+			strText += GetMediaAttrInfo(m_vInfoType[i]);
+		}
+	}
+
+	SetText(strText.c_str());
+}
+
+tstring CMediaInfoTextCtrl::GetMediaAttrInfo(MediaAttribute infoType)
+{
+	tstring				strValue;
 
 	g_Player.GetCurMediaAttribute(infoType, strValue);
 	if (infoType == MA_CHANNELS)
 	{
-		// Channel info should be dealed specially
+		// Channel info should be deal specially
 		int			nChannels = _ttoi(strValue.c_str());
 		if (nChannels == 1)
 			strValue = TOLOCAL(_T("Mono"));
 		else
 			strValue = TOLOCAL(_T("Stereo"));
 	}
-    else if (infoType == MA_BITRATE)
-    {
-        // Convert bitrate to kbps
-        FormatFloatStr(_ttoi(strValue.c_str()) / 1000.0,
-                             1,
-                             strValue);
-        strValue += _T("Kbps");
-    }
+	else if (infoType == MA_BITRATE)
+	{
+		// Convert bitrate to Kbps
+		FormatFloatStr(_ttoi(strValue.c_str()) / 1000.0, 1, strValue);
+		strValue += _T("Kbps");
+	}
 	else if (infoType == MA_FILESIZE)
 	{
 		// Convert file size to MB
-        FormatFloatStr(_ttoi(strValue.c_str()) / (1024.0 * 1024),
-                             1,
-                             strValue);
-        strValue += _T("M");
+		FormatFloatStr(_ttoi(strValue.c_str()) / (1024.0 * 1024), 1, strValue);
+		strValue += _T("M");
 	}
 
-	strText += strValue;
-
-	SetText(strText.c_str());
+	return strValue;
 }
-

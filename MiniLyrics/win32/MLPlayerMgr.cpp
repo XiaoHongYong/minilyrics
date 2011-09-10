@@ -128,9 +128,7 @@ void CMLPlayerMgr::OnPlayerDisconnected()
 	g_Player.Disconnect();
 
 	memset(&g_Player.m_playerInfo, 0, sizeof(g_Player.m_playerInfo));
-	CMPSkinWnd *pLyricsTool = GetRunningLyricsToolWnd();
-	if (!pLyricsTool)
-		CMPlayerAppBase::GetInstance()->PostQuitMessage();
+	CMPlayerAppBase::GetInstance()->PostQuitMessage();
 }
 
 bool CMLPlayerMgr::ConnectToPlayer(HWND hWndPluginService)

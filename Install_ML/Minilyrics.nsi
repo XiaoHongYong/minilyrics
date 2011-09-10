@@ -200,6 +200,7 @@ SectionIn RO
   Delete "$INSTDIR\Skins\RealPlayer\*.*"
   Delete "$INSTDIR\Skins\WMP10\*.*"
   Delete "$INSTDIR\Skins\WMP11\*.*"
+  Delete "$INSTDIR\Skins\Metal\*.*"
   Delete "$INSTDIR\Skins\*.*"
   Delete "$INSTDIR\ml-gen-embedded-skin\*.*"
   Delete "$INSTDIR\ml-winamp2-skin\*.*"
@@ -228,6 +229,7 @@ SectionIn RO
   RMDir "$INSTDIR\Skins\WMP11"
   RMDir "$INSTDIR\Skins\iTunes6"
   RMDir "$INSTDIR\Skins\iTunes_5"
+  RMDir "$INSTDIR\Skins\Metal"
   RMDir "$INSTDIR\ml-winamp2-skin"
   RMDir "$INSTDIR\ml-winamp5-skin"
 
@@ -314,8 +316,8 @@ SectionIn RO
   SetOutPath "$INSTDIR\Skins\WMP11"
   File "Share\Skins\WMP11\*.*"
 
-  SetOutPath $INSTDIR\Skins\Windows
-  File Share\Skins\Windows\*.*
+  SetOutPath $INSTDIR\Skins\Metal
+  File Share\Skins\Metal\*.*
 
   SetOutPath "$INSTDIR\Skins\Windows 7"
   File "Share\Skins\Windows 7\*.*"
@@ -452,6 +454,7 @@ Section "Uninstall"
   Delete "$INSTDIR\Skins\RealPlayer\*.*"
   Delete "$INSTDIR\Skins\WMP10\*.*"
   Delete "$INSTDIR\Skins\WMP11\*.*"
+  Delete "$INSTDIR\Skins\Metal\*.*"
   Delete "$INSTDIR\Skins\*.*"
   Delete "$INSTDIR\Patterns\*.*"
   Delete "$INSTDIR\ml-gen-embedded-skin\*.*"
@@ -490,6 +493,7 @@ Section "Uninstall"
   RMDir "$INSTDIR\Skins\WMP11"
   RMDir "$INSTDIR\Skins\iTunes6"
   RMDir "$INSTDIR\Skins\iTunes_5"
+  RMDir "$INSTDIR\Skins\Metal"
   RMDir "$INSTDIR\ml-winamp2-skin"
   RMDir "$INSTDIR\ml-winamp5-skin"
   RMDir "$INSTDIR\Skins"

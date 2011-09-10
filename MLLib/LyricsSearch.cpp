@@ -9,26 +9,6 @@
 
 
 #ifdef _ID3V2_SUPPORT
-void GetID3v2LrcSourceLang(LPCTSTR szLrcSource, char szLang[], int len)
-{
-	int		nLen;
-
-	nLen = _tcslen(SZ_SONG_ID3V2_SYLT);
-	if (_tcsnicmp(szLrcSource, SZ_SONG_ID3V2_SYLT, nLen) == 0)
-	{
-		ConvertStr2(szLrcSource + nLen, -1, szLang, len);
-		return;
-	}
-
-	nLen = _tcslen(SZ_SONG_ID3V2_USLT);
-	if (_tcsnicmp(szLrcSource, SZ_SONG_ID3V2_USLT, nLen) == 0)
-	{
-		ConvertStr2(szLrcSource + nLen, -1, szLang, len);
-		return;
-	}
-
-	EmptyStr(szLang);
-}
 
 bool ID3v2LyricsInfoGetSynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2SynchLyrics *&plyrics)
 {

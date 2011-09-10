@@ -228,7 +228,7 @@ public:
 	int SaveLyricsInSongOfLyrics3v2(CHAR_ENCODING encoding);
 #endif
 
-	BOOL ToString(tstring &str, MLFileType lrcFormat = FT_LYRICS_LRC, bool bIncTags = FALSE);
+	void ToString(tstring &str, MLFileType lrcFormat = FT_LYRICS_LRC, bool bIncTags = FALSE);
 	// int FromString(LPCVOID lpLrc, int nLen, bool bAddTimeStampForTextLine = false, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 	int FromString(LPCTSTR szLyrics);
 

@@ -13,26 +13,31 @@
 		<Frame Image="panel-frame.png" Rect="0,200,w,h-200" RoundWidth="5" ThickWidth="5"
 			  XBorder="0" YBorder="0"/>
 		
-		<Image Name="Seperator" Rect="324,200-1,w-10,2" Image="seperator-h.png" BltMode="tile" />
+		<Image Name="Seperator" Rect="324,200-1,w-5-324,2" Image="seperator-h.png" BltMode="tile" />
 		<Image Name="Seperator" Rect="320-1,5,2,125" Image="seperator-v.png" BltMode="tile" />
 
 		<Container Rect="5,5,310,125" Name="Media Info" BgColor="#000000" >
 
 			<Property Name="BgImage" Image="media_info_bg.png" HorzExtendPos="1,4" VertExtendPos="100,121"/>
-		
-			<MediaInfoText Name="Title" Rect="10,10,w-20,20" UseParentBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Title" ShowTitle="false"/>
-			<HStretchImage Name="TitleLine" Rect="8,35,w-16,6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
-			<MediaInfoText Name="Artist" Rect="10,50,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Artist" ShowTitle="false"/>
-			<MediaInfoText Name="Album" Rect="10,70,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Album" ShowTitle="false"/>
 
-			<PlayingTime Rect="10,100,50,11" UseParentBg="true"
-				AlignText="AT_CENTER" CharWidth="8" TextImage="shade-numfont.png" ImageChars="0123456789 -:" />
-			<PlayingTimeText Visible="false" Name="PlayingTime" Rect="10,100,50,18" AlignText="AT_CENTER | AT_VCENTER"
-			   FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#FFFFFF"
-			   TextOutlinedColor="#000000" LeftMargin="0" Text=""/>
-			<SeekCtrl Name="Seek" ID="ID_SEEK" UseParentBg="TRUE" 
-					  Rect="10+50+8,100,w-10-50-10-8,12" EndWidth="3" ImageThumb="seek_thumb.png"
-					  ImageTrack="seek_track.png"/>
+			<NormalLink Rect="0,0,w,h" ID="UID_INSTRUCTION" Text="Please click here to add media files." Link="cmd://CMD_ADD_FILES"
+				Visible="false" TextSize="22" FontBold="true" TextColor="#FFFFFF" AlignText="AT_CENTER|AT_VCENTER"/>
+			
+			<Container Rect="0,0,w,h" ID="UID_MEDIA_INFO" Name="Info">
+				<MediaInfoText Name="Title" Rect="10,10,w-20,20" UseParentBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Title" ShowTitle="false"/>
+				<HStretchImage Name="TitleLine" Rect="8,35,w-16,6" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
+				<MediaInfoText Name="Artist" Rect="10,50,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Artist" ShowTitle="false"/>
+				<MediaInfoText Name="Album" Rect="10,70,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Album" ShowTitle="false"/>
+
+				<PlayingTime Rect="10,100,50,11" UseParentBg="true"
+					AlignText="AT_CENTER" CharWidth="8" TextImage="shade-numfont.png" ImageChars="0123456789 -:" />
+				<PlayingTimeText Visible="false" Name="PlayingTime" Rect="10,100,50,18" AlignText="AT_CENTER | AT_VCENTER"
+				   FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#FFFFFF"
+				   TextOutlinedColor="#000000" LeftMargin="0" Text=""/>
+				<SeekCtrl Name="Seek" ID="ID_SEEK" UseParentBg="TRUE" 
+						  Rect="10+50+8,100,w-10-50-10-8,12" EndWidth="3" ImageThumb="seek_thumb.png"
+						  ImageTrack="seek_track.png"/>
+			</Container>
 		</Container>
 
 		<Container Rect="5,135,310,60" Name="PlayControl" >

@@ -440,20 +440,6 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 
 #include "LyricsTool.h"
 
-bool CMPlayerAppBase::InitLyricsTool()
-{
-	m_pSkinFactory->SetSkinFileName(_T("minilyrics.xml"));
-	int nRet = LoadDefaultSkin(SZ_DEFSKIN, false);
-
-	RunLyricsTool(m_pSkinFactory->GetMainWnd());
-
-#ifdef _WIN32
-	ShowAsAppWindow(GetRunningLyricsToolWnd()->GetHandle());
-#endif
-
-	return true;
-}
-
 bool CMPlayerAppBase::InitiPodLyricsDownloader()
 {
 	m_pSkinFactory->SetSkinFileName(_T("iPodLyricsDownloader.xml"));

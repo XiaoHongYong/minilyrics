@@ -569,13 +569,7 @@ void FileSetExt(tstring &strFile, LPCTSTR szExt)
 // 判断文件的扩展名是否匹配
 BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt)
 {
-	int len1 = _tcslen(szFile);
-	int len2 = _tcslen(szExt);
-
-	if (len1 < len2)
-		return false;
-
-	return _tcsicmp(szFile + len1 - len2, szExt) == 0;
+	return StrIEndWith(szFile, szExt);
 }
 
 // /:*?"<>|
