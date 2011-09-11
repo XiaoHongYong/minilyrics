@@ -751,6 +751,8 @@ void CPlayer::ClearPlaylist()
 	if (!m_spPlayer)
 		return;
 
+	SetPlaylistModified(true);
+
 	CMPAutoPtr<IPlaylist>	playlist;
 	if (m_spPlayer->GetCurrentPlaylist(&playlist) == ERR_OK)
 		playlist->Clear();
@@ -899,7 +901,9 @@ bool CPlayer::LoadPlaylist(LPCTSTR szFile, bool bClear)
 	if (m_spPlayer->NewPlaylist(&playlist) != ERR_OK)
 		return false;
 
-	if (!bClear)
+	if (bClear)
+		m_strCurrentPlaylist = szFile;
+	else
 	{
 		nRet = m_spPlayer->GetCurrentPlaylist(&curPlaylist);
 		if (nRet == ERR_OK)
@@ -907,8 +911,6 @@ bool CPlayer::LoadPlaylist(LPCTSTR szFile, bool bClear)
 			CopyPlaylist(curPlaylist, playlist);
 		}
 	}
-	else
-		m_strCurrentPlaylist = szFile;
 
 	if (!::LoadPlaylist(m_spPlayer, playlist, szFile))
 		return false;

@@ -1112,9 +1112,7 @@ void CMPSkinWnd::OnDropFiles(HDROP hDrop)
 		}
 	}
 
-#ifdef _MPLAYER
 	g_Player.ClearPlaylist();
-	g_Player.SetPlaylistModified(true);
 
 	for (int i = 0; i < n; ++i)
 	{
@@ -1127,7 +1125,6 @@ void CMPSkinWnd::OnDropFiles(HDROP hDrop)
 	}
 
 	g_Player.Play();
-#endif
 
 	DragFinish(hDrop);
 }

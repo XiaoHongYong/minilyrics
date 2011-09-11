@@ -85,7 +85,7 @@
 			<Container.LyricsTool Rect=",,200,108" MinWidth="200" MinHeight="108"
 					LayoutParams="match_parent_height" Weight="1">
 				<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"
-					ImageList="Pf_AdvancedIcon.png"/>
+					ImageList="playlist_icon.png"/>
 				<NormalText ID="CID_STATUS" Text="" Visible="false" Rect="0,h-30-20,w,"/>
 				<Progress ID="CID_PROGRESS" Visible="false" Rect="10,h-23,w-110-20,"/>
 				<NormalTextBt ID="CID_CANCEL_WORK" Visible="false" Text="Cancel" Rect="w-110-10,h-20,110,"/>

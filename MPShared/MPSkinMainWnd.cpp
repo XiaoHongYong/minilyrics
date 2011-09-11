@@ -61,11 +61,17 @@ void CMPSkinMainWndBase::OnEvent(const IEvent *pEvent)
 
 void CMPSkinMainWndBase::UpdateCaptionText()
 {
+	LPCTSTR szAppName;
+	if (CMPlayerApp::GetInstance()->GetCurrentAppMode() == SA_IPOD_LYRICS_DOWNLOADER)
+		szAppName = TOLOCAL_MARK_T("Lyrics Downloader for iPod");
+	else
+		szAppName = SZ_APP_NAME;
+
 	if (g_licenseManager.IsLicenseValid())
-		SetCaptionText(SZ_APP_NAME);
+		SetCaptionText(TOLOCAL(szAppName));
 	else
 	{
-		CStrPrintf strCaption(_T("%s (%s)"), SZ_APP_NAME, TOLOCAL_T("Unactivated"));
+		CStrPrintf strCaption(_T("%s (%s)"), TOLOCAL(szAppName), TOLOCAL_T("Unactivated"));
 		SetCaptionText(strCaption.c_str());
 	}
 }

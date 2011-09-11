@@ -76,7 +76,7 @@
 
 		<Container.LyricsTool ID="CID_C_LYRICS_TOOL" Name="Lyrics Tool" Rect="5,205,w-10,h-200-10">
 			<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"
-				ImageList="Pf_AdvancedIcon.png"/>
+				ImageList="playlist_icon.png"/>
 			<NormalText ID="CID_STATUS" Text="" Visible="false" Rect="0,h-30-20,w,"/>
 			<Progress ID="CID_PROGRESS" Visible="false" Rect="10,h-23,w-110-20,"/>
 			<NormalTextBt ID="CID_CANCEL_WORK" Visible="false" Text="Cancel" Rect="w-110-10,h-20,110,"/>

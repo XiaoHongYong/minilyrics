@@ -32,17 +32,11 @@ bool CMPPlaylistCmdHandler::OnCommand(int nId)
 		{
 			CFileOpenDlg		dlg(_T("Open Playlist"), g_Player.GetCurrentPlaylistFile().c_str(), _T("M3u file\0*.m3u\0All Files\0*.*\0\0"), 0);
 			if (dlg.DoModal(m_pSkinWnd) == IDOK)
-			{
-				g_Player.ClearPlaylist();
-				g_Player.LoadPlaylist(dlg.GetOpenFile());
-			}
+				g_Player.LoadPlaylist(dlg.GetOpenFile(), true);
 		}
 		break;
 	case IDC_CLEAR:
-		{
-			g_Player.ClearPlaylist();
-			g_Player.SetPlaylistModified(true);
-		}
+		g_Player.ClearPlaylist();
 		break;
 	default:
 		return false;

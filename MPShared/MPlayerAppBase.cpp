@@ -442,6 +442,8 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 
 bool CMPlayerAppBase::InitiPodLyricsDownloader()
 {
+	g_Player.OnInit(false);
+
 	m_pSkinFactory->SetSkinFileName(_T("iPodLyricsDownloader.xml"));
 	int nRet = LoadDefaultSkin(_T("Metal"), true);
 	if (nRet != ERR_OK)
@@ -455,14 +457,9 @@ bool CMPlayerAppBase::InitiPodLyricsDownloader()
 		}
 	}
 
-	CSkinWnd *pMainWnd = GetMainWnd();
-	pMainWnd->EnterInDrawUpdate();
-	g_Player.OnInit(false);
-	pMainWnd->LeaveInDrawUpdate();
-
 	m_hotKey.Init();
 
-	m_hotKey.SetEventWnd(pMainWnd);
+	m_hotKey.SetEventWnd(GetMainWnd());
 
 	g_lyrOutPlguinMgr.Init();
 

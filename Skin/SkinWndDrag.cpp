@@ -6,8 +6,6 @@
 #include "SkinWndDrag.h"
 
 //////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 BOOL IsStickedWindows(CBaseWnd *pWnd1, CBaseWnd *pWnd2);
 void RectCloseToRect(CRect &rcs, CRect &rcd, int &offx, int &offy, int nCloseExt);
@@ -328,12 +326,12 @@ void CSkinWndResizer::AutoCloseToWindows(int &nOffx, int &nOffy)
 		vRcToClosedTo.push_back(rc);
 	}
 
-	if (m_bAtBottom || m_bAtTop)
+	if (m_ResizeDirection & (RD_BOTTOM | RD_TOP))
 	{
 		// top or bottom line close to vWnds
 		int		y;
 
-		if (m_bAtTop)
+		if (m_ResizeDirection & RD_TOP)
 			y = m_rcResizing.top;
 		else
 			y = m_rcResizing.bottom;
@@ -345,7 +343,7 @@ void CSkinWndResizer::AutoCloseToWindows(int &nOffx, int &nOffy)
 				nOffy = nOffYTemp;
 			if (nOffy != 0)
 			{
-				if (m_bAtTop)
+				if (m_ResizeDirection & RD_TOP)
 					m_rcResizing.top += nOffy;
 				else
 					m_rcResizing.bottom += nOffy;
@@ -354,12 +352,12 @@ void CSkinWndResizer::AutoCloseToWindows(int &nOffx, int &nOffy)
 		}
 	}
 
-	if (m_bAtLeft || m_bAtRight)
+	if (m_ResizeDirection & (RD_LEFT | RD_RIGHT))
 	{
 		// top or bottom line close to vWnds
 		int		x;
 
-		if (m_bAtLeft)
+		if (m_ResizeDirection & RD_LEFT)
 			x = m_rcResizing.left;
 		else
 			x = m_rcResizing.right;
@@ -371,7 +369,7 @@ void CSkinWndResizer::AutoCloseToWindows(int &nOffx, int &nOffy)
 				nOffx = nOffXTemp;
 			if (nOffx != 0)
 			{
-				if (m_bAtLeft)
+				if (m_ResizeDirection & RD_LEFT)
 					m_rcResizing.left += nOffx;
 				else
 					m_rcResizing.right += nOffx;

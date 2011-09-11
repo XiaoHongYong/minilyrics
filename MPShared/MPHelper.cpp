@@ -28,14 +28,7 @@ bool OnSongOpenFileCmd(CBaseWnd *pWndParent, bool bOpen)
 		dlg.GetOpenFile(vFiles);
 
 		if (bOpen)
-		{
-			if (vFiles.size() == 1 && FileIsExtSame(vFiles[0].c_str(), _T(".m3u")))
-				g_Player.SaveCurrentPlaylistAs(vFiles[0].c_str());
-			else
-				g_Player.SetPlaylistModified(true);
-
 			g_Player.ClearPlaylist();
-		}
 		else
 			g_Player.SetPlaylistModified(true);
 
@@ -76,8 +69,9 @@ bool OnSongOpenDirCmd(CBaseWnd *pWndParent, bool bOpen)
 
 		if (bOpen)
 			g_Player.ClearPlaylist();
+		else
+			g_Player.SetPlaylistModified(true);
 
-		g_Player.SetPlaylistModified(true);
 		g_Player.AddDirToPlaylist(strFolder.c_str(), bIncSubfolder);
 		g_Player.SaveCurrentPlaylist();
 		if (bOpen)

@@ -36,7 +36,6 @@ public:
 	void Init(CBaseWnd *pWnd);
 
 	void OnMouseMessage(UINT fwKeys, POINT pt);
-	void SetSizeCursor(POINT pt);
 
 	bool IsSizing();
 
@@ -69,25 +68,22 @@ protected:
 
 	virtual void AutoCloseToWindows(int &nOffx, int &nOffy);
 
-	bool HitTestResizeArea(POINT &pt, ResizeArea &ra);
+	uint32 HitTestResizeArea(POINT &pt, const RECT &rc);
+
+	void SetCursor();
 
 protected:
 	ListResizeArea	m_listResizeArea;
 
 	bool			m_bFixedWidth, m_bFixedHeight;
-
 	bool			m_bInstanceResizing;
-
-	bool			m_bResizing;		// 是否在拖动窗口
-
-	bool			m_bAtLeft, m_bAtTop, m_bAtRight, m_bAtBottom;	// 是否在调整左/上/右/下边
-
-	CRect			m_rcResizing;					// 调整中的矩形的大小
-
-	POINT			m_ptOld;					// 鼠标上一次的位置
-
 	bool            m_bResizingAutoCloseto;		// 是否在调整大小时, 自动靠近指定窗口
 
+	bool			m_bResizing;		// 是否在拖动窗口
+	uint32			m_ResizeDirection;
+	CRect			m_rcResizing;					// 调整中的矩形的大小
+
+	POINT			m_ptOld;
 	CBaseWnd		*m_pWnd;				// 窗口
 
 	int				m_nMincx;		// 窗口最小宽度
