@@ -22,7 +22,7 @@ public:
 	enum
 	{
 		IMAGE_NONE			= 0,
-		IMAGE_NOW_PLAYING	= 1,
+		IMAGE_NOW_PLAYING	= 5,
 	};
 
 protected:

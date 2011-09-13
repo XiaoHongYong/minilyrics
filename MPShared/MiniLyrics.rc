@@ -614,6 +614,7 @@ BEGIN
     POPUP "&Lyrics"
     BEGIN
         MENUITEM "&Download All Lyrics for iPod", IDC_DOWNLOAD_ALL_LYR_FOR_IPOD
+        MENUITEM SEPARATOR
         MENUITEM "&Remove All Embedded Lyrics", IDC_REMOVE_LRC_IN_MP3
     END
     POPUP "&Help"

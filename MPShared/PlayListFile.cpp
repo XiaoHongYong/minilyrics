@@ -226,10 +226,8 @@ bool LoadPlsPlaylist(IMPlayer *player, IPlaylist *playList, LPCTSTR szFile)
 		_stprintf(szkey, _T("File%d"), i);
 
 		tstring		strFile;
-
 		strFile = file.GetProfileString(szkey, _T(""));
-
-		if (IsEmptyString(strFile))
+		if (strFile.empty())
 			continue;
 
 		AppendMediaToList(player, playList, strFile.c_str(), szPath);

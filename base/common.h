@@ -22,7 +22,7 @@ template<int n> struct __sizeof_at_compile_helper;
 
 #define CountOf(arr)		(sizeof(arr) / sizeof(arr[0]))
 
-#define IsEmptyString(str)	((str)[0] == '\0')
+#define IsEmptyString(str)	((str) == NULL || (str)[0] == '\0')
 
 #define EmptyStr(str)	((str)[0] = '\0')
 

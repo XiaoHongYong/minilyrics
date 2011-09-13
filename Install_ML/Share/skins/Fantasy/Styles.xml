@@ -130,13 +130,13 @@
     <NormalEdit Extends="EditCtrl" Height="18" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
           XMargin="5" YMargin="0"/>
     <NormalListCtrl Extends="ListCtrl" BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 
-          NowPlayBgColor="#5478CA" TextColor="#000000" SelTextColor="#FFFFFF" 
-          NowPlayTextColor="#FFFFFF" FontName="Verdana" FontHeight="14"
+          TextColor="#000000" SelTextColor="#FFFFFF" 
+          FontName="Verdana" FontHeight="14"
           HeaderHeight="17" LineColor="#808080" ImageSortedHeader="s_listctrl_sorted_header.png"
           ImageHeader="s_listctrl_header.png" ImageSortFlag="s_listctrl_sort_flag.png"/>
     <NormalPlaylist Extends="Playlist" ID="ID_PLAYLIST" BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 
-          NowPlayBgColor="#5478CA" TextColor="#000000" SelTextColor="#FFFFFF" 
-          NowPlayTextColor="#FFFFFF" FontName="Verdana" FontHeight="14"
+          TextColor="#000000" SelTextColor="#FFFFFF" FontName="Verdana" FontHeight="14" 
+          ImageList="imagelist.png" 
           HeaderHeight="17" LineColor="#808080" ImageSortedHeader="s_listctrl_sorted_header.png"
           ImageHeader="s_listctrl_header.png" ImageSortFlag="s_listctrl_sort_flag.png"/>
     <NormalTabButton Extends="TabButton" Height="22" UseParentBg="TRUE"
@@ -158,6 +158,6 @@
     <WndFrameCaption Extends="Text" ID="ID_CAPTION" Rect="30,4,w-60,20" Text="About MiniLyrics" FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
     <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
     <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
-    <ListCtrl BgColor="#4F586E" SelBgColor="#D9D9D9" NowPlayBgColor="#5478CA" TextColor="#FFFFFF" SelTextColor="#4F586E" NowPlayTextColor="#FFFFFF" FontHeight="13"/>
+    <ListCtrl BgColor="#4F586E" SelBgColor="#D9D9D9" TextColor="#FFFFFF" SelTextColor="#4F586E" FontHeight="13"/>
   </style>
 </styles>

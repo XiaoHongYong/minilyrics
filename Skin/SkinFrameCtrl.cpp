@@ -127,7 +127,7 @@ BOOL CSkinFrameCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 	if (IsPropertyName(szProperty, SZ_PN_IMAGE))
 		m_image.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
-	if (IsPropertyName(szProperty, SZ_PN_IMAGERECT))
+	else if (IsPropertyName(szProperty, SZ_PN_IMAGERECT))
 		GetRectValue(szValue, m_image);
 	else if (IsPropertyName(szProperty, _T("ImageFocus")))
 		m_imageFocus.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);

@@ -4,6 +4,6 @@
   <NormalText Rect="20,40,100," Text="Search:" AlignText="AT_LEFT"/>
   <NormalEdit ID="CID_E_ADV_SEARCH" Text="" Rect="130,40,w-160,"/>
   <NormalListCtrl ID="CID_LIST_SETTINGS" Rect="20,70,w-40,h-70-10-40" DrawHeader="true"
-      ImageList="Pf_AdvancedIcon.png"/>
+      ImageList="imagelist.png"/>
   <NormalTextBt ID="CID_CUSTOMIZE" Text="Customize >>" Rect="20,h-20-20,120,"/>
 </PreferPage.Advanced>

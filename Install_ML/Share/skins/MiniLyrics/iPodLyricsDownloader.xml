@@ -10,8 +10,6 @@
 			  XBorder="0" YBorder="0"/>
 		<Frame Image="panel-frame.png" Rect="320,0,w-320,200" RoundWidth="5" ThickWidth="5"
 			  XBorder="0" YBorder="0"/>
-		<Frame Image="panel-frame.png" Rect="0,200,w,h-200" RoundWidth="5" ThickWidth="5"
-			  XBorder="0" YBorder="0"/>
 		
 		<Image Name="Seperator" Rect="324,200-1,w-5-324,2" Image="seperator-h.png" BltMode="tile" />
 		<Image Name="Seperator" Rect="320-1,5,2,125" Image="seperator-v.png" BltMode="tile" />
@@ -21,7 +19,7 @@
 			<Property Name="BgImage" Image="media_info_bg.png" HorzExtendPos="1,4" VertExtendPos="100,121"/>
 
 			<NormalLink Rect="0,0,w,h" ID="UID_INSTRUCTION" Text="Please click here to add media files." Link="cmd://CMD_ADD_FILES"
-				Visible="false" TextSize="22" FontBold="true" TextColor="#FFFFFF" AlignText="AT_CENTER|AT_VCENTER"/>
+				Visible="false" FontHeight="22" FontBold="true" TextColor="#FFFFFF" AlignText="AT_CENTER|AT_VCENTER"/>
 			
 			<Container Rect="0,0,w,h" ID="UID_MEDIA_INFO" Name="Info">
 				<MediaInfoText Name="Title" Rect="10,10,w-20,20" UseParentBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Title" ShowTitle="false"/>
@@ -65,21 +63,21 @@
 			  EnableToolbar="FALSE" EnableAutoResize="FALSE" />
 		</Container>
 
-		<Animation ID="CID_AM_SHOW_WORKING" MoveFromBottom="CID_S_STATUS,CID_PROGRESS,ID_CANCEL"
-				 ResizeCtrl="CID_LIST_FILES,,,,h-10-70" Duration="300"/>
-		<Animation ID="CID_AM_HIDE_WORKING" MoveToBottom="CID_S_STATUS,CID_PROGRESS,ID_CANCEL"
-				 ResizeCtrl="CID_LIST_FILES,,,,h-10-10" Duration="300"/>
-		<Animation ID="CID_AM_SHOW_EMBEDDED_LYR" FadeIn="CID_C_EMBEDDED_LYR_TYPE" FadeOut="CID_C_LYRICS_TOOL"
-				 Duration="300"/>
-		<Animation ID="CID_AM_HIDE_EMBEDDED_LYR" FadeOut="CID_C_EMBEDDED_LYR_TYPE" FadeIn="CID_C_LYRICS_TOOL"
-				 Duration="300"/>
+		<Animation ID="CID_AM_SHOW_WORKING" MoveFromBottom="CID_WORKING"
+				 ResizeCtrl="CID_PLAYLIST,,,,h-200-60" Duration="300"/>
+		<Animation ID="CID_AM_HIDE_WORKING" MoveToBottom="CID_WORKING"
+				 ResizeCtrl="CID_PLAYLIST,,,,h-200" Duration="300"/>
 
-		<Container.LyricsTool ID="CID_C_LYRICS_TOOL" Name="Lyrics Tool" Rect="5,205,w-10,h-200-10">
-			<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"
-				ImageList="playlist_icon.png"/>
-			<NormalText ID="CID_STATUS" Text="" Visible="false" Rect="0,h-30-20,w,"/>
-			<Progress ID="CID_PROGRESS" Visible="false" Rect="10,h-23,w-110-20,"/>
-			<NormalTextBt ID="CID_CANCEL_WORK" Visible="false" Text="Cancel" Rect="w-110-10,h-20,110,"/>
+		<Container.LyricsTool ID="CID_PLAYLIST" Name="Lyrics Tool" Rect="0,200,w,h-200">
+			<Frame Image="panel-frame.png" Rect="0,0,w,h" RoundWidth="5" ThickWidth="5"
+				  XBorder="0" YBorder="0"/>
+			<NormalPlaylist Rect="5,5,w-10,h-10" DrawHeader="true" EnableBorder="false" />
 		</Container.LyricsTool>
+		
+		<Container ID="CID_WORKING" Rect="0,h-60,w,60" Name="Lyrics" Visible="false" >
+			<NormalText ID="CID_STATUS" Text="" Rect="15,5,w-10,h"/>
+			<Progress ID="CID_PROGRESS" Rect="10,30,w-110-40,"/>
+			<NormalTextBt ID="CID_CANCEL_WORK" Text="Cancel" Rect="w-110-15,28,110,"/>
+		</Container>
 	</skinwnd>
 </skin>

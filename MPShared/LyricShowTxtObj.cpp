@@ -251,15 +251,13 @@ void CLyricShowTxtObj::OnLyricsChanged()
 
 	m_bReplayDisabledTemp = false;
 
-	m_pSkin->CheckButton(CMD_LYR_SCROLL_ENABLE_RECORD,
-		IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
-
-	bool bVisible = Tobool(g_LyricData.HasLyricsOpened());
-	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_ENABLE_RECORD, bVisible, false);
-	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_ENABLE_REPLAY, bVisible, false);
-	m_pSkin->SetUIObjectVisible(CMD_LYR_SCROLL_MENU, bVisible, false);
-	if (m_pObjScrollBar)
-		m_pObjScrollBar->SetVisible(bVisible);
+	CSkinToolbar *pToolbarLyrTxt = (CSkinToolbar*)m_pSkin->GetUIObjectById(ID_TB_LYR_TXT, CSkinToolbar::ClassName());
+	if (pToolbarLyrTxt)
+	{
+		pToolbarLyrTxt->SetCheck(CMD_LYR_SCROLL_ENABLE_RECORD,
+			IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
+		pToolbarLyrTxt->SetCheck(CMD_LYR_SCROLL_ENABLE_REPLAY, IsReplayScrollingActionsEnabled());
+	}
 
 	m_nCurLine = 0;
 	m_nCurLineNew = 0;

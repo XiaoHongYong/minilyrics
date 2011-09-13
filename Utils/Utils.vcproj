@@ -675,6 +675,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\Looper.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\md5.cpp"
 				>
 			</File>
@@ -1130,6 +1134,10 @@
 			</File>
 			<File
 				RelativePath="LogAlias.h"
+				>
+			</File>
+			<File
+				RelativePath=".\Looper.h"
 				>
 			</File>
 			<File
