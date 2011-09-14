@@ -5,6 +5,7 @@
 #include "StdAfx.h"
 #include "MPlayerApp.h"
 #include "MLClientSession.h"
+#include "../MLLib/MLEncrypt.h"
 
 
 #define CUR_ACCOUNT_ID		4

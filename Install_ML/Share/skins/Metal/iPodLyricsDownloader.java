@@ -19,15 +19,15 @@ public class iPodLyricsDownloaderWndEvent extends SkinWndEvent {
 	{
 		if (bActived)
 		{
-			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_HIDE_PLAY);
-			mSkinWnd.startAnimation(MiniLyrics.CID_AM_SHOW_PLAY);
-			// UnitTest.message("CID_AM_SHOW_PLAY");
+			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_HIDE_LYR_TB);
+			mSkinWnd.startAnimation(MiniLyrics.CID_AM_SHOW_LYR_TB);
+			// UnitTest.message("CID_AM_SHOW_LYR_TB");
 		}
 		else
 		{
-			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_SHOW_PLAY);
-			mSkinWnd.startAnimation(MiniLyrics.CID_AM_HIDE_PLAY);
-			// UnitTest.message("CID_AM_HIDE_PLAY");
+			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_SHOW_LYR_TB);
+			mSkinWnd.startAnimation(MiniLyrics.CID_AM_HIDE_LYR_TB);
+			// UnitTest.message("CID_AM_HIDE_LYR_TB");
 		}
 	}
 
@@ -35,15 +35,15 @@ public class iPodLyricsDownloaderWndEvent extends SkinWndEvent {
 	{
 		if (bMouseActive)
 		{
-			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_HIDE_PLAY);
-			mSkinWnd.startAnimation(MiniLyrics.CID_AM_SHOW_PLAY);
-			// UnitTest.message("CID_AM_SHOW_PLAY");
+			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_HIDE_LYR_TB);
+			mSkinWnd.startAnimation(MiniLyrics.CID_AM_SHOW_LYR_TB);
+			// UnitTest.message("CID_AM_SHOW_LYR_TB");
 		}
 		else
 		{
-			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_SHOW_PLAY);
-			mSkinWnd.startAnimation(MiniLyrics.CID_AM_HIDE_PLAY);
-			// UnitTest.message("CID_AM_HIDE_PLAY");
+			mSkinWnd.stopAnimation(MiniLyrics.CID_AM_SHOW_LYR_TB);
+			mSkinWnd.startAnimation(MiniLyrics.CID_AM_HIDE_LYR_TB);
+			// UnitTest.message("CID_AM_HIDE_LYR_TB");
 		}
 	}
 
@@ -51,15 +51,15 @@ public class iPodLyricsDownloaderWndEvent extends SkinWndEvent {
 
 public class MiniLyrics
 {
-	public static int CID_AM_HIDE_PLAY;
-	public static int CID_AM_SHOW_PLAY;
+	public static int CID_AM_HIDE_LYR_TB;
+	public static int CID_AM_SHOW_LYR_TB;
 
 	public static void main()
 	{
 		// UnitTest.message("MiniLyrics main()");
 
-		CID_AM_HIDE_PLAY = SkinSystem.getCommandID("CID_AM_HIDE_PLAY");
-		CID_AM_SHOW_PLAY = SkinSystem.getCommandID("CID_AM_SHOW_PLAY");
+		CID_AM_HIDE_LYR_TB = SkinSystem.getCommandID("CID_AM_HIDE_LYR_TB");
+		CID_AM_SHOW_LYR_TB = SkinSystem.getCommandID("CID_AM_SHOW_LYR_TB");
 
 		static iPodLyricsDownloaderWndEvent	skinWndEvent = new iPodLyricsDownloaderWndEvent();
 

@@ -132,15 +132,10 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 
 	if (_tcsicmp(szMenu, _T("MainMenu")) == 0)
 	{
-#ifdef _WIN32_WCE
-		CWCEMainCmdBar *pMenu = new CWCEMainCmdBar;
-		pMenu->Create(pWnd, IDM_MENU);
-#else
 		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
-#endif
 	}
 	else if (_tcsicmp(szMenu, _T("LyricsMenu")) == 0)
 	{
@@ -161,11 +156,13 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadMenu(IDM_MAIN_WND);
 	}
-	else if (_tcsicmp(szMenu, _T("LyricsTool")) == 0)
+	else if (_tcsicmp(szMenu, _T("LyrDlCtxMenu")) == 0)
 	{
 		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
 		pSkinMenu = pMenu;
-		pSkinMenu->LoadMenu(IDM_LYRICS_TOOL);
+		pMenu->AddUICheckStatusIf(pWnd);
+		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		pMenu->RemoveItem(7); // 7 is Lyrics Downloader for iPod
 	}
 	else if (_tcsicmp(szMenu, _T("iPodLyricsDownloader")) == 0)
 	{

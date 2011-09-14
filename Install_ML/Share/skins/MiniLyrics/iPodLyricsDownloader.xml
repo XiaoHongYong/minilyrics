@@ -2,9 +2,9 @@
 <skin defmainwnd="iPodLyricsDownloader" mainwnds="iPodLyricsDownloader">
 	<include Name="Styles.xml"/>
 
-	<skinwnd Name="iPodLyricsDownloader" Extends="MenuWindowFrame" Caption="iPod Lyrics Downloader" EnableTranslucency="true"
+	<skinwnd Name="iPodLyricsDownloader" Extends="MenuWindowFrame" EnableTranslucency="true"
 		TranslucencyAlpha="255" MinWidth="640" MinHeight="480" Width="700" Height="400" EnableClickThrough="false"
-		Menu="iPodLyricsDownloader" DefaultPage="Container.LyricsTool" ContextMenu="NormalMode">
+		Menu="iPodLyricsDownloader" DefaultPage="Container.LyricsTool" ContextMenu="LyrDlCtxMenu">
 
 		<Frame Image="panel-frame.png" Rect="0,0,320,135" RoundWidth="5" ThickWidth="5"
 			  XBorder="0" YBorder="0"/>
@@ -18,8 +18,8 @@
 
 			<Property Name="BgImage" Image="media_info_bg.png" HorzExtendPos="1,4" VertExtendPos="100,121"/>
 
-			<NormalLink Rect="0,0,w,h" ID="UID_INSTRUCTION" Text="Please click here to add media files." Link="cmd://CMD_ADD_FILES"
-				Visible="false" FontHeight="22" FontBold="true" TextColor="#FFFFFF" AlignText="AT_CENTER|AT_VCENTER"/>
+			<NormalLink Rect="0,0,w,h" ID="UID_INSTRUCTION" Text="Please click here to add media files." Link="cmd://CMD_IMPORT"
+				Visible="false" FontHeight="16" FontBold="true" TextColor="#FF8040" AlignText="AT_CENTER|AT_VCENTER"/>
 			
 			<Container Rect="0,0,w,h" ID="UID_MEDIA_INFO" Name="Info">
 				<MediaInfoText Name="Title" Rect="10,10,w-20,20" UseParentBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Title" ShowTitle="false"/>

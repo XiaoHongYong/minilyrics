@@ -46,7 +46,6 @@
 #define IDD_PG_MEDIA_ASSOCIATE          173
 #define IDI_MEDIATYPE2                  174
 #define IDR_MENU_STATIC_LYR             175
-#define IDM_LYRICS_TOOL                 177
 #define IDR_MENU_RATE                   178
 #define IDM_IPOD_LYR_DOWNLOADER         179
 #define IDC_APPLY_ACCOUNT               1000
@@ -227,9 +226,7 @@
 #define IDC_CHECK_UPDATE                40060
 #define IDC_ANTIAlIAS                   40061
 #define IDC_LOAD_LYRICS_FROM_MP3        40062
-#define IDC_SAVE_LYRICS_TO_MP3          40063
 #define IDC_COPYTOCLIPBOARD             40064
-#define IDC_COPYTO                      40065
 #define IDC_WEBHOME                     40066
 #define IDC_EMAIL                       40067
 #define IDC_SET_OPAQUE_100              40068
@@ -346,7 +343,6 @@
 #define IDC_ADD_FOLDER                  40179
 #define IDC_CLEAR_LIST                  40180
 #define IDC_REMOVE_SELECTED             40181
-#define IDC_DOWNLOAD_ALL_LYRICS         40182
 #define IDC_EDITOR_LYR_COLOR            40183
 #define IDC_EDITOR_HIGH_COLOR           40184
 #define IDC_EDITOR_BG_COLOR             40185

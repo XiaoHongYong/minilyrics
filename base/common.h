@@ -233,6 +233,7 @@ class bstr_s
 {
 public:
 	bstr_s() { m_str = NULL; }
+	bstr_s(const OLECHAR * psz) { m_str = SysAllocString(psz); }
 	virtual ~bstr_s() { free(); }
 
 	void free() { if (m_str) { SysFreeString(m_str); m_str = NULL; } }

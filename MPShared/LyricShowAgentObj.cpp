@@ -193,7 +193,6 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 tstring GetRandomActivateNoticeText()
 {
 	LPCTSTR	vNoticeText[] = {
-		_T("These lyrics are very nice, right?"),
 		_T("Do you think MiniLyrics is useful to you?"),
 		_T("We love to make MiniLyrics better, will you help us?"),
 	};

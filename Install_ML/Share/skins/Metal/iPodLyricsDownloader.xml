@@ -2,9 +2,9 @@
 <skin defmainwnd="iPodLyricsDownloader" mainwnds="iPodLyricsDownloader" ExtraResouceFolder="MiniLyrics" Script="iPodLyricsDownloader.java">
 	<include Name="Styles.xml"/>
 
-	<skinwnd Name="iPodLyricsDownloader" Caption="iPod Lyrics Downloader" EnableClickThrough="false"
+	<skinwnd Name="iPodLyricsDownloader" EnableClickThrough="false"
 			 MinWidth="640" MinHeight="480" Width="700" Height="400" Menu="iPodLyricsDownloader" DefaultPage="Container.LyricsTool"
-			 ContextMenu="NormalMode" IsDialog="true" EnableTranslucency="true" TranslucencyAlpha="255">
+			 ContextMenu="LyrDlCtxMenu" IsDialog="true" EnableTranslucency="true" TranslucencyAlpha="255">
 
 		<Frame Name="Frame" Rect="0,110,w,h-110" Image="frame.png" ImageRect="0,110,425,40"
 			RoundWidthTop="8" RoundWidthBottom="8" ThickWidth="8" BlendPixMode="copy"/>
@@ -54,8 +54,8 @@
 			<Container Rect="330,35,w-330-15,70" Name="Media Info">
 				<Property Name="BgImage" Image="media_info_bg.png" HorzExtendPos="5,45" BlendPixMode="alpha_blend"/>
 
-				<NormalLink Rect="0,0,w,h" ID="UID_INSTRUCTION" Text="Please click here to add media files." Link="cmd://CMD_ADD_FILES"
-					Visible="false" FontHeight="22" FontBold="true" TextColor="#FFFFFF" AlignText="AT_CENTER|AT_VCENTER"/>
+				<NormalLink Rect="0,0,w,h" ID="UID_INSTRUCTION" Text="Please click here to add media files." Link="cmd://CMD_IMPORT"
+					Visible="false" FontHeight="16" FontBold="true" TextColor="#FF8040" AlignText="AT_CENTER|AT_VCENTER"/>
 				<Container Rect="0,0,w,h" ID="UID_MEDIA_INFO" Name="Info">
 					<MediaInfoText Name="Title" Rect="10,5,w-20,20" UseParentBg="TRUE" FontName="Tahoma" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Title"/>
 					<MediaInfoText Name="Artist - Album" Rect="10,27,w-20,16" UseParentBg="TRUE" FontName="Tahoma" FontHeight="13" FontBold="false" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" Text="" MediaInfoType="Artist|Album" CombineWith=" - "/>
@@ -121,8 +121,8 @@
 		<Animation ID="CID_AM_HIDE_WORKING" MoveToBottom="CID_WORKING"
 				 ResizeCtrl="CID_BODY,,,,h-118-8" Duration="300"/>
 
-		<Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_LYR_TOOL_BAR"/>
-		<Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_LYR_TOOL_BAR"/>
+		<Animation ID="CID_AM_HIDE_LYR_TB" FadeOut="CID_LYR_TOOL_BAR"/>
+		<Animation ID="CID_AM_SHOW_LYR_TB" FadeIn="CID_LYR_TOOL_BAR"/>
 
 	</skinwnd>
 </skin>

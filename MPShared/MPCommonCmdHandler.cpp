@@ -767,9 +767,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		SaveAsLyricsFile(m_pSkinWnd,
 			LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), true);
 		break;
-	case CMD_SAVE_LYR_IN_SONG_FILE:
-		OnCommand(IDC_SAVE_LYRICS_TO_MP3);
-		break;
 	case CMD_UPLOAD_LYR:
 		{
 			if (!g_LyricData.HasLyricsOpened())

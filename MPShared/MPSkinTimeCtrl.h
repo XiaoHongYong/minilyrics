@@ -20,6 +20,7 @@ public:
 	{
 		_CSkinText::m_nMsgWant = UO_MSG_WANT_LBUTTON;
 		m_nTimeOld = -1;
+		m_bShowElapsedTime = true;
 	}
 
 	virtual ~CMPSkinTimeCtrl()

@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "base.h"
 #include "ProcessEnum.h"
 
 CProcessEnum::CProcessEnum()
@@ -11,7 +12,11 @@ CProcessEnum::CProcessEnum()
 		return;
 
 	m_funcEnum = (EnumProcessesFunc)GetProcAddress(m_hPsApi, "EnumProcesses");
+#ifdef UNICODE
 	m_funcGetModuleFileNameEx = (GetModuleFileNameExWFunc)GetProcAddress(m_hPsApi, "GetModuleFileNameExW");
+#else
+	m_funcGetModuleFileNameEx = (GetModuleFileNameExWFunc)GetProcAddress(m_hPsApi, "GetModuleFileNameExA");
+#endif
 }
 CProcessEnum::~CProcessEnum()
 {
@@ -26,7 +31,7 @@ BOOL CProcessEnum::Enum(DWORD * lpidProcess, DWORD cb, LPDWORD lpcbNeeded)
 		return false;
 }
 
-DWORD CProcessEnum::GetModuleFileNameEx(HANDLE hProcess, HMODULE hModule, LPWSTR lpFilename, DWORD nSize)
+DWORD CProcessEnum::GetModuleFileNameEx(HANDLE hProcess, HMODULE hModule, LPTSTR lpFilename, DWORD nSize)
 {
 	if (m_funcGetModuleFileNameEx)
 		return m_funcGetModuleFileNameEx(hProcess, hModule, lpFilename, nSize);
