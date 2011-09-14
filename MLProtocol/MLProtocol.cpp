@@ -32,7 +32,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_BAD_XMLREQUEST, _T("Invalid xml request.")},
 	{ ERR_CORRUPTTED_MSG, _T("The message is corrupted, maybe some data get currupted while receiving.")},
 
-	{ ERR_UPLOAD_EXIST, _T("The uploaded lyrics already exist.") },	// 上传的内容已经存在
+	{ ERR_UPLOAD_EXIST, _T("The uploaded lyrics already exist, or other users have uploaded them already.") },	// 上传的内容已经存在
 	{ ERR_USER_NOT_EXIST, _T("User name doesn't exist.") },	// 用户不存在
 	{ ERR_BAD_USERPWD, _T("Wrong user name or password.") },		// 用户名或者密码错误
 	{ ERR_BAD_CLIENT_VER, _T("Invliad client version.") },	// 客户端版本不正确, 无法登陆
