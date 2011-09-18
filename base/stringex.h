@@ -1,6 +1,6 @@
-// stringex.h
-#ifndef _STRING_EX_H_
-#define _STRING_EX_H_
+#pragma once
+
+#include "StrPrintf.h"
 
 DECLAR_CPPUNIT_TEST_REG(StringEx)
 
@@ -331,4 +331,16 @@ WCHAR * __cdecl wcschr (
 
 #endif
 
-#endif // _STRING_EX_H_
+
+inline void EnsureInputStrLen(const WCHAR *str, int &nLen)
+{
+	if (nLen == -1)
+		nLen = wcslen(str);
+}
+
+inline void EnsureInputStrLen(const char *str, int &nLen)
+{
+	if (nLen == -1)
+		nLen = strlen(str);
+}
+

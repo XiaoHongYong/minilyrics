@@ -11,23 +11,24 @@ public:
 	auto_free_list() { }
 
 	typedef list<_Ty *>		Parent;
-
+    typedef _List_iterator<_Ty*>                        iterator;
+    
 	~auto_free_list()
 	{
 		clear();
 	}
 
-	iterator erase(const_iterator _Where)
+	iterator erase(iterator _Where)
 	{
-		if (_Where != end())
+		if (_Where != Parent::end())
 			delete (*_Where);
 
 		return Parent::erase(_Where);
 	}
 
-	iterator erase(const_iterator _First, const_iterator _Last)
+	iterator erase(iterator _First, iterator _Last)
 	{
-		for (const_iterator it = _First; it != _Last; ++it)
+		for (iterator it = _First; it != _Last; ++it)
 			delete (*it);
 
 		return Parent::erase(_First, _Last);
@@ -35,7 +36,7 @@ public:
 
 	void clear()
 	{
-		for (const_iterator it = begin(); it != end(); ++it)
+		for (iterator it = Parent::begin(); it != Parent::end(); ++it)
 			delete (*it);
 
 		Parent::clear();

@@ -274,14 +274,3 @@ inline void TStringToAnsi(const TCHAR *str, int nLen, _string &strOut)
 #endif
 }
 
-inline void VerifyInputStrLen(const WCHAR *str, int &nLen)
-{
-	if (nLen == -1)
-		nLen = wcslen(str);
-}
-
-inline void VerifyInputStrLen(const char *str, int &nLen)
-{
-	if (nLen == -1)
-		nLen = strlen(str);
-}

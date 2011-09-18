@@ -151,9 +151,9 @@ public:
 			m_osError.doFormatMessage(nErr);
 	}
 
-	LPCTSTR c_str() const;
+	LPCTSTR c_str();
 
-    operator LPCTSTR () const
+    operator LPCTSTR ()
 		{ return c_str(); }
 
 };

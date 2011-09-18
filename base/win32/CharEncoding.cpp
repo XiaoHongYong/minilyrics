@@ -74,7 +74,7 @@ int UCS2ToMbcs(const WCHAR *str, int nLen, char *strOut, int nOut, int encodingI
 	if (encodingID >= __MaxEncodings || encodingID < 0)
 		encodingID = 0;
 
-	VerifyInputStrLen(str, nLen);
+	EnsureInputStrLen(str, nLen);
 	EmptyStr(strOut);
 
 	int n = WideCharToMultiByte(__encodingCodepage[encodingID].nCodePage, 0,
@@ -134,7 +134,7 @@ int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int encodingI
 	if (encodingID >= __MaxEncodings || encodingID < 0)
 		encodingID = 0;
 
-	VerifyInputStrLen(str, nLen);
+	EnsureInputStrLen(str, nLen);
 	EmptyStr(strOut);
 
 	int n = MultiByteToWideChar(__encodingCodepage[encodingID].nCodePage, 0,

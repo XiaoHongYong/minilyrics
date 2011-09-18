@@ -122,7 +122,7 @@ RegErr2Str::~RegErr2Str()
 	}
 }
 
-LPCTSTR Error2Str::c_str() const
+LPCTSTR Error2Str::c_str()
 {
 	if (m_nError == ERR_CUSTOM_ERROR)
 		return g_szCustomErrorDesc;

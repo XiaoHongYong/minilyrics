@@ -6,6 +6,7 @@
 #include "base.h"
 #include "fileapi.h"
 #include "MemmapFile.h"
+#include <sys/mman.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

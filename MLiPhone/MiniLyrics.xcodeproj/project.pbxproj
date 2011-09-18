@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 45;
+	objectVersion = 46;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -37,8 +37,6 @@
 		5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
 		5FB56C4C11C11088000E68A1 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56C4B11C11088000E68A1 /* helper.cpp */; };
 		5FB56D0111C12D35000E68A1 /* MLApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56D0011C12D35000E68A1 /* MLApp.mm */; };
-		5FBBF02011BC938D0008D709 /* libGfxRaw.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBBF01511BC934A0008D709 /* libGfxRaw.a */; };
-		5FBBF02111BC938D0008D709 /* libgfx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBBF00F11BC932A0008D709 /* libgfx.a */; };
 		5FBEDFF811D979A000E01391 /* HttpProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */; };
 		5FC0B1BB11C51C59000C6537 /* LyricsDownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */; };
 		5FC0B1BC11C51C59000C6537 /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */; };
@@ -80,7 +78,6 @@
 		5FC122BE12177E6B003D9B42 /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C601210FCA1009F23BD /* MainWindow.xib */; };
 		5FC122BF12177E6B003D9B42 /* MusicTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C611210FCA1009F23BD /* MusicTableView.xib */; };
 		5FC122C012177E6B003D9B42 /* play_ctrl_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FC1212D1214DF5F003D9B42 /* play_ctrl_bg.png */; };
-		5FC122C212177E6B003D9B42 /* libImageLibiPhone.a in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */; };
 		5FC122C312177E6B003D9B42 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; };
 		5FC122C412177E6B003D9B42 /* MiniLyricsAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* MiniLyricsAppDelegate.m */; };
 		5FC122C512177E6B003D9B42 /* MusicTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580748710FAA6E1600373EAF /* MusicTableViewController.m */; };
@@ -102,9 +99,6 @@
 		5FC122D512177E6B003D9B42 /* LyricsSearchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */; };
 		5FC122D612177E6B003D9B42 /* CMLApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */; };
 		5FC122D712177E6B003D9B42 /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
-		5FC122D912177E6B003D9B42 /* libImageLibiPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */; };
-		5FC122DA12177E6B003D9B42 /* libGfxRaw.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBBF01511BC934A0008D709 /* libGfxRaw.a */; };
-		5FC122DB12177E6B003D9B42 /* libgfx.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBBF00F11BC932A0008D709 /* libgfx.a */; };
 		5FC122DC12177E6B003D9B42 /* libMLLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0A11AC099000312E83 /* libMLLib.a */; };
 		5FC122DD12177E6B003D9B42 /* libUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0111AC097200312E83 /* libUtils.a */; };
 		5FC122DE12177E6B003D9B42 /* libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEEF411AC094600312E83 /* libbase.a */; };
@@ -152,8 +146,6 @@
 		5FCB8C631210FCA1009F23BD /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C601210FCA1009F23BD /* MainWindow.xib */; };
 		5FCB8C641210FCA1009F23BD /* MusicTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C611210FCA1009F23BD /* MusicTableView.xib */; };
 		5FE7EA0511F1375500CECD89 /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
-		5FE7ECF011F6D2AB00CECD89 /* libImageLibiPhone.a in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */; };
-		5FE7ECF311F6D2C500CECD89 /* libImageLibiPhone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,110 +170,47 @@
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = MLLib;
 		};
-		5FBBF00E11BC932A0008D709 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = gfx;
-		};
-		5FBBF01411BC934A0008D709 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = GfxRaw;
-		};
-		5FC122F012178029003D9B42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* gfx */;
-			remoteInfo = gfx;
-		};
-		5FC122F212178029003D9B42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* GfxRaw */;
-			remoteInfo = GfxRaw;
-		};
 		5FC122F412178029003D9B42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5F9DEEEC11AC094500312E83 /* base.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* base */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = base;
-		};
-		5FC122F612178029003D9B42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* ImageLibiPhone */;
-			remoteInfo = ImageLibiPhone;
 		};
 		5FC122F812178029003D9B42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* MLLib */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = MLLib;
 		};
 		5FC122FA12178029003D9B42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5F9DEEF911AC097200312E83 /* Utils.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* Utils */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = Utils;
-		};
-		5FC122FE12178052003D9B42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* gfx */;
-			remoteInfo = gfx;
-		};
-		5FC1230012178052003D9B42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* GfxRaw */;
-			remoteInfo = GfxRaw;
 		};
 		5FC1230212178052003D9B42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5F9DEEEC11AC094500312E83 /* base.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* base */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = base;
-		};
-		5FC1230412178052003D9B42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* ImageLibiPhone */;
-			remoteInfo = ImageLibiPhone;
 		};
 		5FC1230612178052003D9B42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* MLLib */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = MLLib;
 		};
 		5FC1230812178052003D9B42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5F9DEEF911AC097200312E83 /* Utils.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D /* Utils */;
+			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = Utils;
-		};
-		5FE7ECCB11F6D0CD00CECD89 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = ImageLibiPhone;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -335,8 +264,6 @@
 		5FB56C4B11C11088000E68A1 /* helper.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cpp; sourceTree = "<group>"; };
 		5FB56CFF11C12D35000E68A1 /* MLApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLApp.h; sourceTree = "<group>"; };
 		5FB56D0011C12D35000E68A1 /* MLApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MLApp.mm; sourceTree = "<group>"; };
-		5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = gfx.xcodeproj; path = ../gfx/gfx.xcodeproj; sourceTree = SOURCE_ROOT; };
-		5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GfxRaw.xcodeproj; path = ../GfxRaw/GfxRaw.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HttpProtocol.cpp; path = ../MLProtocol/HttpProtocol.cpp; sourceTree = SOURCE_ROOT; };
 		5FBEDFF711D979A000E01391 /* HttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HttpProtocol.h; path = ../MLProtocol/HttpProtocol.h; sourceTree = SOURCE_ROOT; };
 		5FC0B1B311C51C59000C6537 /* IMLAppNotify.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = IMLAppNotify.h; sourceTree = "<group>"; };
@@ -388,7 +315,6 @@
 		5FCB8C611210FCA1009F23BD /* MusicTableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MusicTableView.xib; path = Resources/MusicTableView.xib; sourceTree = "<group>"; };
 		5FE7EA0311F1375500CECD89 /* LyrStaticTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrStaticTextView.h; sourceTree = "<group>"; };
 		5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrStaticTextView.mm; sourceTree = "<group>"; };
-		5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImageLibiPhone.xcodeproj; path = /Users/showbrave/ZikiPlayer/ImageLib/ImageLibiPhone.xcodeproj; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -396,9 +322,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FE7ECF311F6D2C500CECD89 /* libImageLibiPhone.a in Frameworks */,
-				5FBBF02011BC938D0008D709 /* libGfxRaw.a in Frameworks */,
-				5FBBF02111BC938D0008D709 /* libgfx.a in Frameworks */,
 				5F9DEF0B11AC099800312E83 /* libMLLib.a in Frameworks */,
 				5F9DEF0C11AC099800312E83 /* libUtils.a in Frameworks */,
 				5F9DEEF811AC095900312E83 /* libbase.a in Frameworks */,
@@ -418,9 +341,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FC1235D12179521003D9B42 /* iAd.framework in Frameworks */,
-				5FC122D912177E6B003D9B42 /* libImageLibiPhone.a in Frameworks */,
-				5FC122DA12177E6B003D9B42 /* libGfxRaw.a in Frameworks */,
-				5FC122DB12177E6B003D9B42 /* libgfx.a in Frameworks */,
 				5FC122DC12177E6B003D9B42 /* libMLLib.a in Frameworks */,
 				5FC122DD12177E6B003D9B42 /* libUtils.a in Frameworks */,
 				5FC122DE12177E6B003D9B42 /* libbase.a in Frameworks */,
@@ -487,9 +407,6 @@
 			isa = PBXGroup;
 			children = (
 				5F70B85F11D8E9EC009D0254 /* MLProtocol */,
-				5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */,
-				5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */,
-				5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */,
 				5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */,
 				5F9DEEF911AC097200312E83 /* Utils.xcodeproj */,
 				5F9DEEEC11AC094500312E83 /* base.xcodeproj */,
@@ -619,30 +536,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5FBBF00B11BC932A0008D709 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5FBBF00F11BC932A0008D709 /* libgfx.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		5FBBF01111BC934A0008D709 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5FBBF01511BC934A0008D709 /* libGfxRaw.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		5FE7ECC711F6D0CD00CECD89 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -657,10 +550,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				5FC122FF12178052003D9B42 /* PBXTargetDependency */,
-				5FC1230112178052003D9B42 /* PBXTargetDependency */,
 				5FC1230312178052003D9B42 /* PBXTargetDependency */,
-				5FC1230512178052003D9B42 /* PBXTargetDependency */,
 				5FC1230712178052003D9B42 /* PBXTargetDependency */,
 				5FC1230912178052003D9B42 /* PBXTargetDependency */,
 			);
@@ -680,10 +570,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				5FC122F112178029003D9B42 /* PBXTargetDependency */,
-				5FC122F312178029003D9B42 /* PBXTargetDependency */,
 				5FC122F512178029003D9B42 /* PBXTargetDependency */,
-				5FC122F712178029003D9B42 /* PBXTargetDependency */,
 				5FC122F912178029003D9B42 /* PBXTargetDependency */,
 				5FC122FB12178029003D9B42 /* PBXTargetDependency */,
 			);
@@ -697,8 +584,12 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0410;
+			};
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "MiniLyrics" */;
-			compatibilityVersion = "Xcode 3.1";
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -714,18 +605,6 @@
 				{
 					ProductGroup = 5F9DEEED11AC094500312E83 /* Products */;
 					ProjectRef = 5F9DEEEC11AC094500312E83 /* base.xcodeproj */;
-				},
-				{
-					ProductGroup = 5FBBF00B11BC932A0008D709 /* Products */;
-					ProjectRef = 5FBBF00A11BC932A0008D709 /* gfx.xcodeproj */;
-				},
-				{
-					ProductGroup = 5FBBF01111BC934A0008D709 /* Products */;
-					ProjectRef = 5FBBF01011BC934A0008D709 /* GfxRaw.xcodeproj */;
-				},
-				{
-					ProductGroup = 5FE7ECC711F6D0CD00CECD89 /* Products */;
-					ProjectRef = 5FE7ECC611F6D0CD00CECD89 /* ImageLibiPhone.xcodeproj */;
 				},
 				{
 					ProductGroup = 5F9DEF0311AC098F00312E83 /* Products */;
@@ -764,27 +643,6 @@
 			fileType = archive.ar;
 			path = libMLLib.a;
 			remoteRef = 5F9DEF0911AC099000312E83 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5FBBF00F11BC932A0008D709 /* libgfx.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libgfx.a;
-			remoteRef = 5FBBF00E11BC932A0008D709 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5FBBF01511BC934A0008D709 /* libGfxRaw.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libGfxRaw.a;
-			remoteRef = 5FBBF01411BC934A0008D709 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		5FE7ECCC11F6D0CD00CECD89 /* libImageLibiPhone.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libImageLibiPhone.a;
-			remoteRef = 5FE7ECCB11F6D0CD00CECD89 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -885,7 +743,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FE7ECF011F6D2AB00CECD89 /* libImageLibiPhone.a in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* MiniLyricsAppDelegate.m in Sources */,
 				580748730FAA6E1600373EAF /* MusicTableViewController.m in Sources */,
@@ -914,7 +771,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FC122C212177E6B003D9B42 /* libImageLibiPhone.a in Sources */,
 				5FC122C312177E6B003D9B42 /* main.m in Sources */,
 				5FC122C412177E6B003D9B42 /* MiniLyricsAppDelegate.m in Sources */,
 				5FC122C512177E6B003D9B42 /* MusicTableViewController.m in Sources */,
@@ -942,25 +798,10 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5FC122F112178029003D9B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = gfx;
-			targetProxy = 5FC122F012178029003D9B42 /* PBXContainerItemProxy */;
-		};
-		5FC122F312178029003D9B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = GfxRaw;
-			targetProxy = 5FC122F212178029003D9B42 /* PBXContainerItemProxy */;
-		};
 		5FC122F512178029003D9B42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = base;
 			targetProxy = 5FC122F412178029003D9B42 /* PBXContainerItemProxy */;
-		};
-		5FC122F712178029003D9B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ImageLibiPhone;
-			targetProxy = 5FC122F612178029003D9B42 /* PBXContainerItemProxy */;
 		};
 		5FC122F912178029003D9B42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -972,25 +813,10 @@
 			name = Utils;
 			targetProxy = 5FC122FA12178029003D9B42 /* PBXContainerItemProxy */;
 		};
-		5FC122FF12178052003D9B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = gfx;
-			targetProxy = 5FC122FE12178052003D9B42 /* PBXContainerItemProxy */;
-		};
-		5FC1230112178052003D9B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = GfxRaw;
-			targetProxy = 5FC1230012178052003D9B42 /* PBXContainerItemProxy */;
-		};
 		5FC1230312178052003D9B42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = base;
 			targetProxy = 5FC1230212178052003D9B42 /* PBXContainerItemProxy */;
-		};
-		5FC1230512178052003D9B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ImageLibiPhone;
-			targetProxy = 5FC1230412178052003D9B42 /* PBXContainerItemProxy */;
 		};
 		5FC1230712178052003D9B42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -1026,6 +852,7 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1043,6 +870,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1066,6 +894,7 @@
 					_IPHONE,
 					_FREE,
 				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Free-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1087,6 +916,7 @@
 					_IPHONE,
 					_FREE,
 				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Free-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1108,6 +938,7 @@
 					_IPHONE,
 					_FREE,
 				);
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Free-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1133,9 +964,8 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				MACOSX_DEPLOYMENT_TARGET = "";
-				PREBINDING = NO;
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "6FF320E2-34D2-48A4-A2EC-F78E33E226F9";
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Distribution;
@@ -1147,6 +977,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
+				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1173,8 +1004,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				MACOSX_DEPLOYMENT_TARGET = "";
 				ONLY_ACTIVE_ARCH = YES;
-				PREBINDING = NO;
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -1194,8 +1024,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 4.0;
 				MACOSX_DEPLOYMENT_TARGET = "";
-				PREBINDING = NO;
-				SDKROOT = iphoneos4.0;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

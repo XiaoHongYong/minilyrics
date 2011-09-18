@@ -4,6 +4,7 @@
 #include "stringex_t.h"
 #include "CharEncoding.h"
 #include "stringex.h"
+#include "FileApiBase.h"
 
 bool IsFileExist(LPCTSTR szFileName)
 {
@@ -144,7 +145,7 @@ bool CMLFileFind::FindNext()
 	while (m_dirp && m_dirp->d_name[0] == '.')
 	{
 		if (!(m_dirp->d_name[1] == '\0'
-			|| m_dirp->d_name[1] == '.' && m_dirp->d_name[2] == '\0'))
+			|| (m_dirp->d_name[1] == '.' && m_dirp->d_name[2] == '\0')))
 			break;
 		m_dirp = readdir(m_dp);
 	}
@@ -170,7 +171,7 @@ bool CMLFileFind::GetCurStat()
 
 	TCHAR		szFile[MAX_PATH];
 	_tcscpy(szFile, m_szDir);
-	DirStringFormat(m_szDir);
+	DirStringAddSlash(m_szDir);
 	_tcscat(szFile, m_dirp->d_name);
 
 	memset(&m_stat, 0, sizeof(m_stat));
