@@ -38,18 +38,13 @@ public:
 			m_logFontLatin9.lfItalic == (BYTE)font.GetItalic() &&
 			m_logFontLatin9.lfUnderline == (BYTE)font.IsUnderline())
 		{
-#ifdef _WINCE_
-			if (_tcscmp(font.GetName(), m_logFontLatin9.lfFaceName) == 0
-				&& _tcscmp(font.GetNameOthers(), m_logFontOthers.lfFaceName) == 0)
+			string strLatin, strOthers;
+			TStringToMBCS(font.GetName(), -1, strLatin);
+			TStringToMBCS(font.GetNameOthers(), -1, strOthers);
+
+			if (strcmp(strLatin.c_str(), m_logFontLatin9.lfFaceName) == 0
+				&& strcmp(strOthers.c_str(), m_logFontOthers.lfFaceName) == 0)
 				return;
-#else
-			CHAR szLatin[LF_FACESIZE], szOthers[LF_FACESIZE];
-			ConvertStr2(font.GetName(), -1, szLatin, CountOf(szLatin));
-			ConvertStr2(font.GetNameOthers(), -1, szOthers, CountOf(szOthers));
-			if (strcmp(szLatin, m_logFontLatin9.lfFaceName) == 0
-				&& strcmp(szOthers, m_logFontOthers.lfFaceName) == 0)
-				return;
-#endif
 		}
 
 		Destroy();

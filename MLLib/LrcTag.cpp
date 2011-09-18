@@ -700,7 +700,7 @@ bool CLrcTag::ReadFromText(const char *str, int nLen)
 	}
 
 	if (propNameValueMap.ShouldReadMd5())
-		MD5Str((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(_TCHAR), m_szMd5OfLyrContent);
+		MD5ToString((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(_TCHAR), m_szMd5OfLyrContent);
 
 	return bFoundTag;
 }
@@ -719,7 +719,7 @@ bool CLrcTag::ReadFromText(LPCWSTR str, int nLen)
 	}
 
 	if (propNameValueMap.ShouldReadMd5())
-		MD5Str((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(_TCHAR), m_szMd5OfLyrContent);
+		MD5ToString((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(_TCHAR), m_szMd5OfLyrContent);
 
 	return bFoundTag;
 }

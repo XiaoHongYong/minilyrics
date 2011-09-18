@@ -145,7 +145,7 @@ void CMLData::ID3v2LyricsSaveCacheInfo::clear()
 CMLData::CMLData()
 {
 	EmptyStr(m_szLyrContentMd5Org);
-	MD5Str((const char *)_T(""), 0,
+	MD5ToString((const char *)_T(""), 0,
 		m_szLyrContentMd5Org);
 
 	m_dwDefShowStyle = LSA_SHOW_DEFAULT;
@@ -716,7 +716,7 @@ void CMLData::ResetModificationFlag()
 
 	m_lyrPropertiesOrg = m_lyrProperties;
 	ToString(strContent, FT_LYRICS_LRC, false);
-	MD5Str((const char *)strContent.c_str(), strContent.size() * sizeof(TCHAR),
+	MD5ToString((const char *)strContent.c_str(), strContent.size() * sizeof(TCHAR),
 		m_szLyrContentMd5Org);
 }
 
@@ -909,7 +909,7 @@ void CMLData::Close()
 	m_lyrProperties.clear();
 	ASSERT(GetLyrContentType() == LCT_UNKNOWN);
 	EmptyStr(m_szLyrContentMd5Org);
-	MD5Str((const char *)_T(""), 0,
+	MD5ToString((const char *)_T(""), 0,
 		m_szLyrContentMd5Org);
 	m_nTimeElapsed = 0;
 
@@ -1119,7 +1119,7 @@ BOOL CMLData::IsContentModified()
 	TCHAR		szLyrContentMd5[33];
 
 	ToString(strContent, FT_LYRICS_LRC, false);
-	MD5Str((const char *)strContent.c_str(), strContent.size() * sizeof(TCHAR),
+	MD5ToString((const char *)strContent.c_str(), strContent.size() * sizeof(TCHAR),
 		szLyrContentMd5);
 
 	return _tcscmp(szLyrContentMd5, m_szLyrContentMd5Org) != 0;

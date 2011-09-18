@@ -20,7 +20,7 @@ int CanOpenFileForWrite(LPCTSTR szFile, bool bMustExist)
 	hFile = CreateFile(szFile, GENERIC_READ | GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, 0, NULL);
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		SetCustomErrorDesc(CWin32Error().Description());
+		SetCustomErrorDesc(OSError().Description());
 		return ERR_CUSTOM_ERROR;
 	}
 	CloseHandle(hFile);

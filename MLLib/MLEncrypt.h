@@ -10,7 +10,7 @@ bool MLEncriptV2(LPCTSTR szFile, LPCSTR szData1, LPCSTR szData2, stringex &strDa
 	const int		LEN_DATA2_MAX = 19;
 	const int		POS_MZ_TXT_BEG = 0x4E;
 	stringex		str;
-	char			szMD5[64];
+	TCHAR			szMD5[64];
 	char			szOrgData[LEN_DATA_MAX+1];
 	const char *	SZ_MZ_TXT = "This program cannot be run in DOS mode.";
 
@@ -38,7 +38,8 @@ bool MLEncriptV2(LPCTSTR szFile, LPCSTR szData1, LPCSTR szData2, stringex &strDa
 		return false;
 	}
 
-	MD5Str(str.c_str() + 0x100, (int)str.size() - 0x100, szMD5);
+	memset(szMD5, 0, sizeof(szMD5));
+	MD5ToString(str.c_str() + 0x100, (int)str.size() - 0x100, szMD5);
 
 	for (int i = 0; i < LEN_DATA_MAX; i++)
 		szOrgData[i] = szOrgData[i] ^ szMD5[i % 32];
@@ -69,7 +70,7 @@ bool MLDecriptV2(LPCTSTR szFile, string &strData1, string &strData2)
 	const int		LEN_DATA2_MAX = 19;
 	const int		POS_MZ_TXT_BEG = 0x4E;
 	stringex		str;
-	char			szMD5[64];
+	TCHAR			szMD5[64];
 	char			szOrgData[LEN_DATA_MAX+1];
 
 	memset(szOrgData, 0, sizeof(szOrgData));
@@ -77,7 +78,8 @@ bool MLDecriptV2(LPCTSTR szFile, string &strData1, string &strData2)
 	if (!OpenFileToBuffer(szFile, str))
 		return false;
 
-	MD5Str(str.c_str() + 0x100, (int)str.size() - 0x100, szMD5);
+	memset(szMD5, 0, sizeof(szMD5));
+	MD5ToString(str.c_str() + 0x100, (int)str.size() - 0x100, szMD5);
 
 	strncpy_safe(szOrgData, CountOf(szOrgData), str.c_str() + POS_MZ_TXT_BEG, LEN_DATA_MAX);
 

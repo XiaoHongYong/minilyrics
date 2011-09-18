@@ -57,6 +57,12 @@ HWND g_hWndLog =  NULL;
 
 void LogUnitTestResult(LPCSTR szStr)
 {
+	if (g_hWndLogEdit == NULL)
+	{
+		printf(szStr);
+		return;
+	}
+
 	int	len = GetWindowTextLength(g_hWndLogEdit);
 	SendMessage(g_hWndLogEdit, EM_SETSEL, len, len);
 #ifdef _UNICODE

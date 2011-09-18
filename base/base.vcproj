@@ -45,7 +45,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;UNICODE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;UNICODE"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -115,7 +115,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -187,7 +187,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;UNICODE;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;UNICODE"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -260,7 +260,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -331,7 +331,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;UNICODE;_CPPUNIT_TEST;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;UNICODE;_CPPUNIT_TEST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -402,7 +402,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CPPUNIT_TEST;UTF8;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_LIB;_CPPUNIT_TEST;UTF8"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -472,7 +472,7 @@
 				Optimization="2"
 				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="./,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;NDEBUG;_LIB;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_LIB"
 				StringPooling="true"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
@@ -595,6 +595,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\CharEncodingBase.cpp"
+				>
 			</File>
 			<File
 				RelativePath=".\cppunit-utils.cpp"
@@ -812,6 +816,10 @@
 						PreprocessorDefinitions=""
 					/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\FileApiBase.cpp"
+				>
 			</File>
 			<File
 				RelativePath="idstring.cpp"
@@ -1099,6 +1107,10 @@
 			</File>
 			<File
 				RelativePath=".\OnlyAllocator.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\win32\OSError.cpp"
 				>
 			</File>
 			<File
@@ -1535,77 +1547,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="win32\Win32Error.cpp"
-				>
-				<FileConfiguration
-					Name="Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Unicode Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						UsePrecompiledHeader="2"
-						PrecompiledHeaderThrough="stdafx.h"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST Unicode Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UNIT_TEST UTF8 Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						UsePrecompiledHeader="2"
-						PrecompiledHeaderThrough="stdafx.h"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="UTF-8 Release|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-					/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="win32\WndAbout.cpp"
 				>
 				<FileConfiguration
@@ -1789,6 +1730,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FileApiBase.h"
+				>
+			</File>
+			<File
 				RelativePath="idstring.h"
 				>
 			</File>
@@ -1801,10 +1746,6 @@
 				>
 			</File>
 			<File
-				RelativePath="mlstdafx.h"
-				>
-			</File>
-			<File
 				RelativePath="mltypes.h"
 				>
 			</File>
@@ -1814,6 +1755,10 @@
 			</File>
 			<File
 				RelativePath=".\OnlyAllocator.h"
+				>
+			</File>
+			<File
+				RelativePath=".\OsBaseInc.h"
 				>
 			</File>
 			<File
@@ -1846,10 +1791,6 @@
 			</File>
 			<File
 				RelativePath="win32\Thread.h"
-				>
-			</File>
-			<File
-				RelativePath="win32\Win32Error.h"
 				>
 			</File>
 			<File

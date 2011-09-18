@@ -116,7 +116,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\;../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;_MPLAYER;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;_MPLAYER"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -336,7 +336,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories=".\;../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;_MPLAYER;_CPPUNIT_TEST;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;UNICODE;_LIB;_MPLAYER;_CPPUNIT_TEST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -916,6 +916,10 @@
 			</File>
 			<File
 				RelativePath="MLData.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MLEncrypt.h"
 				>
 			</File>
 			<File

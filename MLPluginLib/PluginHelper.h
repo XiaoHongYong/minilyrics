@@ -48,7 +48,7 @@ WCHAR * __cdecl wcscat_safe (
 #define _tcscat_safe		strcat_safe
 #endif
 
-int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage = CP_ACP);
+int MbcsToWideChar(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage = CP_ACP);
 
 inline COLORREF AverageColor(COLORREF clr1, COLORREF clr2)
 {

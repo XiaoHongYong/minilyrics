@@ -1,13 +1,4 @@
-// XMLWriter.h: interface for the CXMLWriter class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_XMLWRITER_H__763FEC52_F9EE_4CC5_9682_C79A601FE98E__INCLUDED_)
-#define AFX_XMLWRITER_H__763FEC52_F9EE_4CC5_9682_C79A601FE98E__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 class CXMLWriter  
 {
@@ -82,5 +73,3 @@ protected:
 	WritePos			m_wp;
 
 };
-
-#endif // !defined(AFX_XMLWRITER_H__763FEC52_F9EE_4CC5_9682_C79A601FE98E__INCLUDED_)

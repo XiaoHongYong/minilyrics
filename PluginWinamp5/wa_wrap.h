@@ -166,7 +166,7 @@ BOOL WAGetSkin(HWND hwndWinamp, LPWSTR skinname_buffer)
 	char	szSkin[MAX_PATH] = "";
 	BOOL bRet = SendMessageTimeout(hwndWinamp, WM_WA_IPC, (WPARAM)szSkin, IPC_GETSKIN,
 		SMTO_ABORTIFHUNG | SMTO_NORMAL, SM_WINAMP_TIMEOUT, &dwResult);
-	MbcsToUCS2(szSkin, strlen(szSkin), skinname_buffer, MAX_PATH);
+	MbcsToWideChar(szSkin, strlen(szSkin), skinname_buffer, MAX_PATH);
 	return bRet;
 }
 
@@ -206,7 +206,7 @@ BOOL WAGetPlayingSongTitle(HWND hwndWinamp, wchar_t szTitleOut[], int nBuffLen)
 			LPSTR		szTitle = NULL;
 			if (WAGetPlayListTitle(hwndWinamp, dwPos, szTitle) && szTitle)
 			{
-				MbcsToUCS2(szTitle, -1, szTitleOut, nBuffLen, CP_ACP);
+				MbcsToWideChar(szTitle, -1, szTitleOut, nBuffLen, CP_ACP);
 				return TRUE;
 			}
 		}

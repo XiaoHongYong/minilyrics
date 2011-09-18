@@ -1,6 +1,6 @@
 #pragma once
 
-typedef int		EventType;
+typedef uint		EventType;
 
 class IEvent
 {

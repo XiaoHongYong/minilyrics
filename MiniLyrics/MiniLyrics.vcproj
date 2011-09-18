@@ -42,7 +42,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./;../SDK/cppunit/include;../MPShared;../MPShared/win32"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -117,7 +117,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./;../SDK/cppunit/include;../MPShared;../MPShared/win32"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS;_CPPUNIT_TEST"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CPPUNIT_TEST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -195,7 +195,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="./;../SDK/cppunit/include;../MPShared;../MPShared/win32"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -271,7 +271,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="./;../SDK/cppunit/include;../MPShared;../MPShared/win32"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MPLAYER;_CRT_SECURE_NO_WARNINGS;_CPPUNIT_TEST"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_MPLAYER;_CPPUNIT_TEST"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
@@ -349,7 +349,7 @@
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="./;../SDK/cppunit/include;../MPShared;../MPShared/win32"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MPLAYER;_CRT_SECURE_NO_WARNINGS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MPLAYER"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
@@ -1421,15 +1421,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\ML6\Res\AdvancedPref.bmp"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\applicat.ico"
+				RelativePath="..\ML6\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
@@ -1437,11 +1433,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\res\bin00001.bin"
+				RelativePath="..\ML6\Res\applicat.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\dragafte.ico"
+				RelativePath="..\MPShared\res\bin00001.bin"
 				>
 			</File>
 			<File
@@ -1449,7 +1445,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\dragbefo.ico"
+				RelativePath="..\ML6\Res\dragafte.ico"
 				>
 			</File>
 			<File
@@ -1457,11 +1453,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\Exe.manifest"
+				RelativePath="..\ML6\Res\dragbefo.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\fileType.bmp"
+				RelativePath="..\MPShared\win32\Exe.manifest"
 				>
 			</File>
 			<File
@@ -1469,7 +1465,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\hand.cur"
+				RelativePath="..\MPShared\Res\fileType.bmp"
 				>
 			</File>
 			<File
@@ -1477,7 +1473,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\ico00001.ico"
+				RelativePath="..\MPShared\Res\hand.cur"
 				>
 			</File>
 			<File
@@ -1485,11 +1481,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\icon-tga.ico"
+				RelativePath="..\MPShared\Res\ico00001.ico"
 				>
 			</File>
 			<File
 				RelativePath="..\ML6\Res\icon-tga.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\Res\icon-tga.ico"
 				>
 			</File>
 			<File
@@ -1505,15 +1505,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\next.ICO"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\next.ICO"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\open.ICO"
+				RelativePath="..\ML6\Res\next.ICO"
 				>
 			</File>
 			<File
@@ -1521,11 +1517,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\play.ICO"
+				RelativePath="..\MPShared\Res\open.ICO"
 				>
 			</File>
 			<File
 				RelativePath="..\ML6\Res\play.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\Res\play.ICO"
 				>
 			</File>
 			<File
@@ -1541,15 +1541,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\save.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\save.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\selcolor.cur"
+				RelativePath="..\ML6\Res\save.ico"
 				>
 			</File>
 			<File
@@ -1557,11 +1553,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\stop.ICO"
+				RelativePath="..\ML6\Res\selcolor.cur"
 				>
 			</File>
 			<File
 				RelativePath="..\ML6\Res\stop.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\Res\stop.ICO"
 				>
 			</File>
 		</Filter>

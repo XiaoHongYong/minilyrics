@@ -445,11 +445,11 @@ BOOL COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR sz
 	COnlineSearchThreadParam		*pParam;
 	DWORD							dwThreadId = 0;
 
-	// LOG0(LOG_LVL_EVENT_IMP, _T("Enter Add search job proc"));
+	// LOG0(LOG_LVL_INFO, _T("Enter Add search job proc"));
 
 	if (m_bRunning)
 	{
-		// LOG0(LOG_LVL_EVENT_IMP, _T("Another search job is running, quit."));
+		// LOG0(LOG_LVL_INFO, _T("Another search job is running, quit."));
 		return FALSE;
 	}
 
@@ -484,18 +484,18 @@ bool IsTextWidthExceed(LPCTSTR sztext, int nWidth)
 
 BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 {
-	// LOG0(LOG_LVL_EVENT_IMP, _T("Enter auto search proc"));
+	// LOG0(LOG_LVL_INFO, _T("Enter auto search proc"));
 
 	// 歌词为空, 小于3个字符
 	if (_tcslen(szTitle) < 3)
 	{
-		// LOG1(LOG_LVL_EVENT_IMP, _T("Title is : %s, quit."), sztitleNew);
+		// LOG1(LOG_LVL_INFO, _T("Title is : %s, quit."), sztitleNew);
 		return FALSE;
 	}
 
 	if (IsTitleExcludedFromAutoSearch(szTitle))
 	{
-		// LOG1(LOG_LVL_EVENT_IMP, _T("Title is : %s, quit."), sztitleNew);
+		// LOG1(LOG_LVL_INFO, _T("Title is : %s, quit."), sztitleNew);
 		return FALSE;
 	}
 
@@ -528,7 +528,7 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	if (int(GetSecCount() - dwLastSearch) < 
 		(bAdvVersion ? 2 : 10))
 	{
-		// LOG1(LOG_LVL_EVENT_IMP, _T("Lastest auto search is about :%d s ago, quit."), GetSecCount() - dwLastSearch);
+		// LOG1(LOG_LVL_INFO, _T("Lastest auto search is about :%d s ago, quit."), GetSecCount() - dwLastSearch);
 		return FALSE;
 	}
 
@@ -540,7 +540,7 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 		static DWORD		dwSearchCount = 0;
 		if (GetSecCount() - dwStartCall >= 10 * 60 && dwSearchCount / (((double)(GetSecCount() - dwStartCall)) / (60 * 60)) > 40)
 		{
-			// LOG1(LOG_LVL_EVENT_IMP, _T("Auto search is too frequent: %d"), dwSearchCount);
+			// LOG1(LOG_LVL_INFO, _T("Auto search is too frequent: %d"), dwSearchCount);
 			return FALSE;
 		}
 		// 增加搜索次数

@@ -190,12 +190,12 @@ bool CMPlayerApp::Init()
 	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
 	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
 
-	LOG1(LOG_LVL_EVENT_IMP, _T("Start %s."), GetAppNameLong().c_str());
+	LOG1(LOG_LVL_INFO, _T("Start %s."), GetAppNameLong().c_str());
 
 	// Init Winsock, Ole, Common Controls, gdiplus
 	WSADATA		WsaData;
 	if (WSAStartup(0x0101, &WsaData) != 0)
-		ERRLOG1(_T("WSAStartup FAILED: %s"), CWin32Error().Description());
+		ERRLOG1(_T("WSAStartup FAILED: %s"), OSError().Description());
 
  	INITCOMMONCONTROLSEX	initData;
  	initData.dwSize = sizeof(initData);

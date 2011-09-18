@@ -63,13 +63,13 @@ void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR s
 	EmptyStr(wszTitle);
 
 	if (szMediaUrl)
-		MbcsToUCS2(szMediaUrl, -1, wszMediaUrl, CountOf(wszMediaUrl), CP_ACP);
+		MbcsToWideChar(szMediaUrl, -1, wszMediaUrl, CountOf(wszMediaUrl), CP_ACP);
 	if (szArtist)
-		MbcsToUCS2(szArtist, -1, wszArtist, CountOf(wszArtist), CP_ACP);
+		MbcsToWideChar(szArtist, -1, wszArtist, CountOf(wszArtist), CP_ACP);
 	if (szAlbum)
-		MbcsToUCS2(szAlbum, -1, wszAlbum, CountOf(wszAlbum), CP_ACP);
+		MbcsToWideChar(szAlbum, -1, wszAlbum, CountOf(wszAlbum), CP_ACP);
 	if (szTitle)
-		MbcsToUCS2(szTitle, -1, wszTitle, CountOf(wszTitle), CP_ACP);
+		MbcsToWideChar(szTitle, -1, wszTitle, CountOf(wszTitle), CP_ACP);
 
 	OnMediaInfoChanged(wszMediaUrl, wszArtist, wszAlbum, wszTitle, nMediaLength, hasVideo);
 }

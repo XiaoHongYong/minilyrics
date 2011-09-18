@@ -195,7 +195,7 @@ void CSkinContainer::OnDestroy()
 
 void CSkinContainer::OnKeyUp(UINT nChar, UINT nFlags)
 {
-	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < m_vUIObjs.size())
+	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < (int)m_vUIObjs.size())
 	{
 		CUIObject *pObj = m_vUIObjs[m_nFocusUIObj];
 		pObj->OnKeyUp(nChar, nFlags);
@@ -204,7 +204,7 @@ void CSkinContainer::OnKeyUp(UINT nChar, UINT nFlags)
 
 void CSkinContainer::OnKeyDown(UINT nChar, UINT nFlags)
 {
-	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < m_vUIObjs.size())
+	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < (int)m_vUIObjs.size())
 	{
 		CUIObject *pObj = m_vUIObjs[m_nFocusUIObj];
 		pObj->OnKeyDown(nChar, nFlags);
@@ -1018,7 +1018,7 @@ void CSkinContainer::SetFocusUIObject(LPCTSTR szId)
 
 CUIObject *CSkinContainer::GetFocusUIObject()
 {
-	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < m_vUIObjs.size())
+	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < (int)m_vUIObjs.size())
 	{
 		CUIObject *pObj = m_vUIObjs[m_nFocusUIObj];
 		if (pObj->WantMsgKey())
@@ -1034,7 +1034,7 @@ CUIObject *CSkinContainer::GetFocusUIObject()
 void CSkinContainer::SetFocusChild(CUIObject *pNewFocusObj)
 {
 	CUIObject *pOldFocusObj = NULL;
-	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < m_vUIObjs.size())
+	if (m_nFocusUIObj >= 0 && m_nFocusUIObj < (int)m_vUIObjs.size())
 		pOldFocusObj = m_vUIObjs[m_nFocusUIObj];
 
 	if (pOldFocusObj == pNewFocusObj)
@@ -1089,7 +1089,7 @@ int CSkinContainer::FocusToNext()
 	}
 
 	int i = m_nFocusUIObj;
-	if (m_nFocusUIObj < 0 || m_nFocusUIObj >= m_vUIObjs.size())
+	if (m_nFocusUIObj < 0 || m_nFocusUIObj >= (int)m_vUIObjs.size())
 		i = 0;
 	else if (m_vUIObjs[m_nFocusUIObj]->WantMsgKey())
 		i++;
@@ -1132,7 +1132,7 @@ int CSkinContainer::FocusToPrev()
 	}
 
 	int i = m_nFocusUIObj;
-	if (m_nFocusUIObj < 0 || m_nFocusUIObj >= m_vUIObjs.size())
+	if (m_nFocusUIObj < 0 || m_nFocusUIObj >= (int)m_vUIObjs.size())
 		i = 0;
 	else if (m_vUIObjs[m_nFocusUIObj]->WantMsgKey())
 		i--;

@@ -121,7 +121,7 @@ bool GetMLEncriptyData(stringex &strData)
 	if (!OpenFileToBuffer(szFile, str))
 		return false;
 
-	MD5Str(str.c_str() + 0x100, str.size() - 0x100, szMD5);
+	MD5ToString(str.c_str() + 0x100, str.size() - 0x100, szMD5);
 
 	// 0x51 ~ 0x78
 	// decodebase64(str.c_str() + 0x51, 0x78 - 0x51, strData);

@@ -153,7 +153,7 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 	fp = _tfopen(m_pMLData->GetLyricsFileName(), _T("rt"));
 	if (!fp)
 	{
-		SetCustomErrorDesc(CWin32Error());
+		SetCustomErrorDesc(OSError());
 		ERRLOG1(_T("Open file: %s FAILED!"), m_pMLData->GetLyricsFileName());
 		return ERR_CUSTOM_ERROR;
 	}

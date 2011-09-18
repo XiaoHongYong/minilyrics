@@ -20,7 +20,7 @@ void RegisteredPlayerPluginAgent(VecPlayerPluginAgent &vAgent)
 	vAgent.push_back(new SpotifyAgent::CPlayerPluginAgent());
 }
 
-int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage)
+int MbcsToWideChar(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage)
 {
 	int		n;
 

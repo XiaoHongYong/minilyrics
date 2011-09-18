@@ -922,15 +922,10 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 	}
 
 	// 以用户指定的编码重新打开歌词
-	ENCODING_CODEPAGE &encodingNew = GetCharEncodingByID((CHAR_ENCODING)nEncodingId);
-	ENCODING_CODEPAGE &encodingOld = GetCharEncodingByName(g_LyricData.Properties().GetEncoding());
-	if (encodingNew.nEncodingId != encodingOld.nEncodingId)
+	CHAR_ENCODING encodingOld = GetCharEncodingID(g_LyricData.Properties().GetEncoding());
+	if (nEncodingId != encodingOld)
 	{
-		TCHAR		szEncoding[256];
-		_xcscpy(szEncoding, encodingNew.szEncoding);
-
-		g_LyricData.ReopenLyrics(TRUE, 
-			GetCharEncodingID(encodingNew.szEncoding));
+		g_LyricData.ReopenLyrics(TRUE, (CHAR_ENCODING)nEncodingId);
 
 		CMPlayerAppBase::GetInstance()->DispatchLyricsChangedSyncEvent();
 	}

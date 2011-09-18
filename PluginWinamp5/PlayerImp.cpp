@@ -163,7 +163,7 @@ bool WAGetSourceMedia(wchar_t *wszUrl, int nBufSize)
 	char		*szSong = NULL;
 	if (WAGetPlayListFile(GetPlayerWnd(), dwIndex, szSong) && szSong)
 	{
-		MbcsToUCS2(szSong, -1, wszUrl, nBufSize, CP_ACP);
+		MbcsToWideChar(szSong, -1, wszUrl, nBufSize, CP_ACP);
 		return true;
 	}
 
@@ -284,9 +284,9 @@ bool GetMediaInfo(LPCWSTR szFile, wchar_t szArtist[], wchar_t szAlbum[], wchar_t
 	if (IsEmptyString(szArtistA) && IsEmptyString(szAlbumA) && IsEmptyString(szTitleA))
 		return false;
 
-	MbcsToUCS2(szArtistA, -1, szArtist, MAX_PATH);
-	MbcsToUCS2(szAlbumA, -1, szAlbum, MAX_PATH);
-	MbcsToUCS2(szTitleA, -1, szTitle, MAX_PATH);
+	MbcsToWideChar(szArtistA, -1, szArtist, MAX_PATH);
+	MbcsToWideChar(szAlbumA, -1, szAlbum, MAX_PATH);
+	MbcsToWideChar(szTitleA, -1, szTitle, MAX_PATH);
 
 	return true;
 }

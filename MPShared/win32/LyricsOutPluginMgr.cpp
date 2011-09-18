@@ -93,7 +93,7 @@ int CLyricsOutPluginMgr::Init()
 			hModule = LoadLibrary(strPluginFile.c_str());
 			if (!hModule)
 			{
-				ERRLOG2(_T("Failed to Load plugin: %s, %s"), strPluginFile.c_str(), CWin32Error().Description());
+				ERRLOG2(_T("Failed to Load plugin: %s, %s"), strPluginFile.c_str(), OSError().Description());
 				continue;
 			}
 

@@ -373,10 +373,10 @@ void CDlgMediaInfo::OnDestroy()
 
 void ConverID3v1Tag(char szTag[], int nLen, LPCTSTR szValue, int nEncoding)
 {
-	char		str[256];
+	string strMbcs;
+	TStringToMBCS(szValue, -1, strMbcs, nEncoding);
 
-	ConvertStr2(szValue, nLen, str, CountOf(str), nEncoding);
-	strcpy_safe(szTag, nLen, str);
+	strcpy_safe(szTag, nLen, strMbcs.c_str());
 }
 
 void CDlgMediaInfo::OnOK()

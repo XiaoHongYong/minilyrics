@@ -111,7 +111,7 @@ void CSkinListCtrl::LoadColumnWidth(LPCTSTR szProperty)
 {
 	VecString vWidth;
 	StrSplit(g_Profile.GetProfileString(szProperty, _T("")), ',', vWidth);
-	for (int i = 0; i < vWidth.size() && i < m_vHeading.size(); i++)
+	for (uint i = 0; i < vWidth.size() && i < m_vHeading.size(); i++)
 	{
 		if (vWidth[i].empty())
 			continue;
@@ -794,7 +794,7 @@ void CSkinListCtrl::GetRowColAtPoint(POINT pt, int &row, int &col, POINT *ptAtIt
 	{
 		if (m_pHorzScrollBar && m_pHorzScrollBar->IsEnabled())
 			pt.x += m_pHorzScrollBar->GetScrollPos();
-		for (int i = 0; i < m_vHeading.size(); i++)
+		for (uint i = 0; i < m_vHeading.size(); i++)
 		{
 			if (pt.x < m_vHeading[i]->nWidth)
 			{

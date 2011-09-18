@@ -280,10 +280,10 @@ bool IsFileSame(LPCTSTR szFile1, LPCTSTR szFile2)
 
 	byte	digist1[MD5_LEN], digist2[MD5_LEN];
 
-	if (!MDFile(szFile1, digist1))
+	if (!MD5FileToBinary(szFile1, digist1))
 		return false;
 
-	if (!MDFile(szFile2, digist2))
+	if (!MD5FileToBinary(szFile2, digist2))
 		return false;
 
 	return memcmp(digist1, digist2, MD5_LEN) == 0;
@@ -615,7 +615,7 @@ public:
 			int nErr = GetLastError();
 			strErr = CStrPrintf(TOLOCAL_T("Failed to copy file: %s to: %s."), szSrc, szTarg).c_str();
 			strErr += _T("\n");
-			strErr += CWin32Error(nErr).Description();
+			strErr += OSError(nErr).Description();
 			return nErr;
 		}
 
@@ -639,7 +639,7 @@ public:
 			int nErr = GetLastError();
 			strErr = CStrPrintf(TOLOCAL_T("Failed to save file: %s."), szFile).c_str();
 			strErr += _T("\n");
-			strErr += CWin32Error(nErr).Description();
+			strErr += OSError(nErr).Description();
 			return false;
 		}
 
@@ -660,7 +660,7 @@ public:
 				int nErr = GetLastError();
 				strErr = CStrPrintf(TOLOCAL_T("Failed to delete file: %s."), szTarg).c_str();
 				strErr += _T("\n");
-				strErr += CWin32Error(nErr).Description();
+				strErr += OSError(nErr).Description();
 				return false;
 			}
 		}
@@ -681,7 +681,7 @@ public:
 			int nErr = GetLastError();
 			strErr = CStrPrintf(TOLOCAL_T("Failed to delete file: %s."), szFile).c_str();
 			strErr += _T("\n");
-			strErr += CWin32Error(nErr).Description();
+			strErr += OSError(nErr).Description();
 			return false;
 		}
 

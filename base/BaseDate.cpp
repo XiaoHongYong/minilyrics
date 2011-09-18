@@ -279,7 +279,7 @@ protected:
 		time(&timeCur);
 		tm *tmCur = gmtime(&timeCur);
 		CBaseDate t;
-		t.FromTime(timeCur);
+		t.FromTime((uint32)timeCur);
 
 		CPPUNIT_ASSERT(tmCur->tm_year + 1900 == t.year);
 		CPPUNIT_ASSERT(tmCur->tm_mon + 1 == t.month);

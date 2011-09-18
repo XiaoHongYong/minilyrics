@@ -424,7 +424,7 @@ int CHttpRequestProtocol::ReadData(CCharBuffer *pBuff, int nLenMax)
 					return ERR_HTTP_DATA_NOT_FINISHED;
 			}
 
-			if (pBuff->size() > nLenMax)
+			if ((int)pBuff->size() > nLenMax)
 				return ERR_BAD_MSG;
 		}
 		if (pBuff->size() > m_dwContentLen)

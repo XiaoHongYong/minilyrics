@@ -27,8 +27,9 @@
 
 #include "BaseDate.h"
 
+#include "FileApiBase.h"
+
 #ifdef _WIN32
-#include "win32/fileapi.h"
 #include "win32/WndAbout.h"
 #include "win32/WndHelper.h"
 
@@ -39,8 +40,6 @@
 #endif
 
 #ifdef _LINUX
-#include "linux/fileapi.h"
-
 #include "linux/Event.h"
 #include "linux/Mutex.h"
 #include "linux/Semaphore.h"
@@ -48,8 +47,6 @@
 #endif
 
 #ifdef _MAC
-#include "Mac/fileapi.h"
-
 #include "Mac/Event.h"
 #include "Mac/Mutex.h"
 #include "Mac/Semaphore.h"

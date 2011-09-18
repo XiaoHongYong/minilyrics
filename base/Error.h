@@ -1,24 +1,6 @@
-#ifndef _OURLIB_ERROR_H
-#define _OURLIB_ERROR_H
 
-#ifdef _WIN32
-#include "win32/Win32Error.h"
-#include <winsock2.h>
-#else
-#define WSABASEERR 10000
-#endif
+#pragma once
 
-#ifdef _LINUX
-#include "linux/Win32Error.h"
-#endif
-
-#ifdef _MAC
-#include "Mac/Win32Error.h"
-#endif
-
-//
-//	GetLastError()可能的返回值
-//
 enum Error
 {
 	ERR_OK					= 0,
@@ -26,8 +8,6 @@ enum Error
 	ERR_FALSE				= 1,
 	ERR_FAILED				= ERR_FALSE,
 	ERR_INITDB_FAILED		= 2,
-//	ERR_SEND_ERROR,
-//	ERR_PARAM_ERROR,
 	ERR_NO_MEM				= 3,
 	ERR_OUTOF_BUFF			= 4,
 	ERR_NOT_IMPLEMENTED		= 5,
@@ -90,15 +70,19 @@ enum Error
 	ERR_HTTP_407,		// MLERR_HTTP_UNATHORIZED
 	ERR_HTTP_500,
 	
-	// ml protocal command error code
+	// MiniLyrics protocol command error code
 	ERR_MLPROTOCAL_ERROR_BASE	= 1035,
 
 	ERR_PLAYER_ERROR_BASE		= 2000,
 
 	ERR_C_ERRNO_BASE			= 3000,	// C error code
+
+	ERR_MAX						= 4000,
 };
 
 void SetCustomErrorDesc(LPCTSTR szErrorDesc);
+
+//////////////////////////////////////////////////////////////////////////
 
 class RegErr2Str
 {
@@ -110,37 +94,66 @@ public:
 	RegErr2Str				*m_pNext;
 };
 
-class Error2Str
+//////////////////////////////////////////////////////////////////////////
+
+class OSError
 {
-protected:
-	int m_nError;
-#ifdef _WIN32
-	CWin32Error		m_win32Error;
-#endif
 public:
-	Error2Str(int nErr) : m_nError(0)
-#ifdef _WIN32
-	, m_win32Error(-1)
-#endif
+	OSError() : m_szErrMsg(NULL), m_dwErrCode(0)
 	{
-		m_nError = nErr;
-#ifdef _WIN32
-		if (m_nError >= WSABASEERR)
-			m_win32Error.doFormatMessage((unsigned int )nErr);
-#endif
+		doFormatMessage(GetLastError());
 	}
 
-    operator LPCTSTR () const;
-//    {
-//		if (m_nError >= WSABASEERR)
-//		{
-//			m_win32Error.doFormatMessage(m_nError);
-//			return m_win32Error.Description();
-//		}
-//		else
-//			return IDToString(__ErrID2Str, nErr, "Unknown error!");
-//    }
+	OSError(uint32 dwLastError)
+		: m_szErrMsg(NULL), m_dwErrCode(0)
+	{
+		if (dwLastError != -1)
+			doFormatMessage(dwLastError);
+	}
+
+	~OSError();
+
+	const TCHAR* Description() const
+	{
+		if (m_szErrMsg)
+			return m_szErrMsg;
+		else
+			return _T("Can't FormatMessage!");
+	}
+
+	operator LPCTSTR () const
+		{ return Description(); }
+
+	void doFormatMessage(unsigned int dwLastErr);
+
+private:
+	uint32 GetLastError();
+
+private:
+	TCHAR	*m_szErrMsg;
+	uint32	m_dwErrCode;
 
 };
 
-#endif // _OURLIB_ERROR_H
+//////////////////////////////////////////////////////////////////////////
+
+class Error2Str
+{
+protected:
+	int			m_nError;
+	OSError		m_osError;
+
+public:
+	Error2Str(int nErr) : m_nError(0), m_osError(-1)
+	{
+		m_nError = nErr;
+		if (m_nError >= ERR_MAX)
+			m_osError.doFormatMessage(nErr);
+	}
+
+	LPCTSTR c_str() const;
+
+    operator LPCTSTR () const
+		{ return c_str(); }
+
+};

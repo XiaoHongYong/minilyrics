@@ -110,7 +110,7 @@ BOOL ShowElevatedDialog(CBaseWnd *pWnd)
 			int nErr = GetLastError();
 			str = TOLOCAL_T("Failed to elevate the privilege of MiniLyrics.");
 			str += _T("\n");
-			str += CWin32Error(nErr).Description();
+			str += OSError(nErr).Description();
 			pWnd->MessageOut(str.c_str(), MB_ICONSTOP | MB_OK);
 		}
 		else

@@ -691,7 +691,7 @@ void CMLPacketAccountMgr::EraseAccount(long nId)
 //			帐户 ID 和 Pwd 一一对应在服务器中
 //			1、字段参考 MLEncodePacketV1
 //			2、byXor 的生成： byDataOrg 的平均值 ^ 0x9D
-//			3、byMd5 的生成： MD5String（byDataOrg + 用户Pwd）
+//			3、byMd5 的生成： MD5ToString（byDataOrg + 用户Pwd）
 //			4、byData --> byDataOrg: 逐字节与byXor进行XOR运算
 //			服务器或者客户端可以根据MD5 值来校验通讯数据的真伪
 
@@ -731,7 +731,7 @@ int CMLPacketWrapper::Wrapp(CCharBuffer &buff)
 		nSizeOld = buff.size();
 		buff += szPwd;
 		assert(sizeof(head.byMd5) >= 16);
-		MDString(buff.c_str(), buff.size(), head.byMd5);
+		MD5ToBinary(buff.c_str(), buff.size(), head.byMd5);
 		buff.setSize(nSizeOld);
 
 		for (i = 0; i < buff.size(); i++)
@@ -790,7 +790,7 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 
 		int nSizeOld = buff.size();
 		buff += szPwd;
-		MDString(buff.c_str() + sizeof(MLEncodePacketV1), buff.size() - sizeof(MLEncodePacketV1), Md5);
+		MD5ToBinary(buff.c_str() + sizeof(MLEncodePacketV1), buff.size() - sizeof(MLEncodePacketV1), Md5);
 		buff.resize(nSizeOld);
 
 		for (i = 0; i < CountOf(pHead->byMd5); i++)

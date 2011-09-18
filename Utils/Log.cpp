@@ -265,7 +265,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 		// 没有打开日志文件，试着重新打开日志文件
 		if (OpenLogFile())
 		{
-			WriteLog(LOG_LVL_EVENT_IMP, _T(__FILE__), __LINE__, _T("Log File is NOT opened, Open it At %d-%d-%d %d:%d:%d. LOG STARTED:)\n"), 
+			WriteLog(LOG_LVL_INFO, _T(__FILE__), __LINE__, _T("Log File is NOT opened, Open it At %d-%d-%d %d:%d:%d. LOG STARTED:)\n"), 
 				time.year, time.month, time.day, time.hour, time.minute, time.second);
 		}
 	}
@@ -303,7 +303,7 @@ void CLog::Init(LPCTSTR szLogFileName)
 
 	CBaseDate time = CBaseDate::GetCurrentDate();
 
-	WriteLog(LOG_LVL_EVENT_IMP, _T(__FILE__), __LINE__, _T("Started Log : %s At %d-%d-%d %d:%d:%d. LOG STARTED:)"), szLogFileName, 
+	WriteLog(LOG_LVL_INFO, _T(__FILE__), __LINE__, _T("Started Log : %s At %d-%d-%d %d:%d:%d. LOG STARTED:)"), szLogFileName, 
 		time.year, time.month, time.day, time.hour, time.minute, time.second);
 }
 

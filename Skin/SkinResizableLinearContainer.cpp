@@ -132,7 +132,7 @@ void CSkinResizableLinearContainer::SetResizerCursor()
 void CSkinResizableLinearContainer::DragResizer(int &offset)
 {
 	ASSERT(m_nCurrentResizerArea != -1);
-	if (m_nCurrentResizerArea < 0 || m_nCurrentResizerArea >= m_vUIObjs.size())
+	if (m_nCurrentResizerArea < 0 || m_nCurrentResizerArea >= (int)m_vUIObjs.size())
 	{
 		offset = 0;
 		return;
@@ -187,7 +187,7 @@ void CSkinResizableLinearContainer::OnCreate()
 	{
 		int i = 0;
 		for (VecItems::iterator it = vItems.begin();
-			i < vSize.size() && it != vItems.end(); i++, ++it)
+			i < (int)vSize.size() && it != vItems.end(); i++, ++it)
 		{
 			if (vSize[i].empty())
 				continue;
@@ -268,7 +268,7 @@ void CSkinResizableLinearContainer::OnSize()
 	if (nSizeToDecrease > 0)
 	{
 		// The requested height is bigger than LinearCtrl height. We have to decrease it.
-		if (totalReqSizeOfHasWeight - totalMinSizeOfHasWeight < nSizeToDecrease)
+		if ((int)(totalReqSizeOfHasWeight - totalMinSizeOfHasWeight) < nSizeToDecrease)
 			ZoomAll(vItems, nSize);
 		else
 			ZoomWeightable(vItems, nSize);

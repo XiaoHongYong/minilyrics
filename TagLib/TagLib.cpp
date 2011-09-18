@@ -41,7 +41,7 @@ int CTagLib::GetTagFast(LPCTSTR szFile, tstring *pArtist, tstring *pTitle, tstri
 	fp = _tfopen(szFile, _T("rb"));
 	if (!fp)
 	{
-		SetCustomErrorDesc(CStrPrintf(_T("%s: %s"), (LPCTSTR)CWin32Error(), szFile).c_str());
+		SetCustomErrorDesc(CStrPrintf(_T("%s: %s"), OSError().Description(), szFile).c_str());
 		return ERR_CUSTOM_ERROR;
 	}
 

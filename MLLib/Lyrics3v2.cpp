@@ -219,7 +219,7 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 	fp = _tfopen(szMp3File, _T("r+b"));
 	if (!fp)
 	{
-		SetCustomErrorDesc(CWin32Error());
+		SetCustomErrorDesc(OSError().Description());
 		ERR_GOTO_FAILED(ERR_CUSTOM_ERROR);
 	}
 

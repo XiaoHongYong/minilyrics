@@ -343,7 +343,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../SDK/Agg/include,../SDK/cppunit/include"
-				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;UNICODE;SKIN_EDITOR;_MPLAYER;_CRT_SECURE_NO_WARNINGS;_CRT_NON_CONFORMING_SWPRINTFS"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;UNICODE;SKIN_EDITOR;_MPLAYER;_CRT_NON_CONFORMING_SWPRINTFS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"

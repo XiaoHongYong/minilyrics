@@ -91,8 +91,8 @@ BOOL ToLocalMenu(HMENU hMenu)
 		MenuItemInfo.fMask = MIIM_DATA | MIIM_TYPE;
 		if (!SetMenuItemInfo(hMenu, i, TRUE, &MenuItemInfo))
 		{
-			CWin32Error		Err;
-			ERRLOG1(_T("SetMenuItemInfo: %s"), Err);
+			OSError		Err;
+			ERRLOG1(_T("SetMenuItemInfo: %s"), Err.Description());
 			continue;
 		}
 	}

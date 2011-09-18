@@ -158,7 +158,7 @@ DWORD WINAPI  CClientCom::ThreadRecv(LPVOID lpParam)
 	int		nLastErr = WSAGetLastError();
 
 //	DBGLOG1(_T("CClientCom::ThreadRecv() Exited. LastError: %d"), nLastErr);
-	// LOG0(LOG_LVL_EVENT_IMP, _T("CClientCom::ThreadRecv() Exited. Not Release merory and resource!!!!!!!!!"));
+	// LOG0(LOG_LVL_INFO, _T("CClientCom::ThreadRecv() Exited. Not Release merory and resource!!!!!!!!!"));
 	return ERR_OK;
 }*/
 
@@ -556,7 +556,7 @@ int CNetServer::CreateSrvice(int nPort, LPCTSTR szServer)
 	if (pService->thread.Create(ThreadServerAccept, pService))
 	{
 		m_vServerPort.push_back(pService);
-		LOG1(LOG_LVL_EVENT_IMP, _T("Server Started At Port: %d"), nPort);
+		LOG1(LOG_LVL_INFO, _T("Server Started At Port: %d"), nPort);
 		return ERR_OK;
 	}
 	else

@@ -2,7 +2,7 @@
 #include "PluginHelper.h"
 
 
-int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage)
+int MbcsToWideChar(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage)
 {
 	int		n;
 
@@ -22,7 +22,7 @@ int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage
 
 int Utf8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen)
 {
-	return MbcsToUCS2(text, length, ucs2, ubuflen, CP_UTF8);
+	return MbcsToWideChar(text, length, ucs2, ubuflen, CP_UTF8);
 }
 
 BOOL GetProgramPath(char szPath[], HINSTANCE hInstance)

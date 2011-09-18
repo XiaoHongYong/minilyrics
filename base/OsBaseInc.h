@@ -77,6 +77,7 @@
 // using STL
 #pragma warning(disable:4786)
 #pragma warning(disable:4503)
+#pragma warning(disable:4996)
 #include <algorithm>
 #include <string>
 #include <vector>

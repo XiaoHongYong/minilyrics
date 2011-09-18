@@ -572,8 +572,8 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	bUseProxy = CMLProfile::InetGetProxy(szProxyServer, nProxyPort);
 	szProxyPwd = CMLProfile::InetGetBase64ProxyUserPass();
 
-	// LOG1(LOG_LVL_EVENT_IMP, _T("Enter lyrics download thread: %s"), pTask->m_strURL.c_str());
-	// LOG2(LOG_LVL_EVENT_IMP, _T("Proxy settings: %d, %s"), bUseProxy, szProxyPwd);
+	// LOG1(LOG_LVL_INFO, _T("Enter lyrics download thread: %s"), pTask->m_strURL.c_str());
+	// LOG2(LOG_LVL_INFO, _T("Proxy settings: %d, %s"), bUseProxy, szProxyPwd);
 
 	if (!AnalysisHttpUrl(pTask->m_strURL.c_str(), szHost, CountOf(szHost), nPort, szUri, CountOf(szUri)))
 	{

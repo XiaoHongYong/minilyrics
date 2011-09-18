@@ -10,7 +10,7 @@ enum
 {
 	LOG_LVL_ERROR				= 2,
 	LOG_LVL_WARNING				= 3,
-	LOG_LVL_EVENT_IMP			= 4,
+	LOG_LVL_INFO				= 4,
 	LOG_LVL_DEBUG				= 5,
 };
 

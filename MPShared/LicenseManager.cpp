@@ -42,7 +42,7 @@ tstring CreateDeviceID()
 	if (status == RPC_S_OK)
 	{
 		TCHAR szDeviceId[64];
-		MD5Str((LPCSTR)&guid, sizeof(guid), szDeviceId);
+		MD5ToString((LPCSTR)&guid, sizeof(guid), szDeviceId);
 		if (!g_Profile.EncryptWriteProfileString(SZ_DEVICE_ID, szDeviceId))
 		{
 			ERRLOG1(_T("Failed to write ID: %s"), szDeviceId);

@@ -67,21 +67,6 @@ void LoadServerInfo()
 	}
 }
 
-void MD5Gen16(LPCWSTR szSource, WCHAR szMD5[])
-{
-	stringex	strSource;
-	wstringex	strMd5;
-	char			szTemp[128];
-
-	ConvertStr(szSource, -1, strSource);
-
-	MD5Gen16(strSource.c_str(), szTemp);
-
-	ConvertStr(szTemp, -1, strMd5);
-
-	wcscpy_safe(szMD5, 64, strMd5.c_str());
-}
-
 //////////////////////////////////////////////////////////////////////
 
 CMLClientSession::CMLClientSession()
@@ -184,12 +169,12 @@ void CMLClientSession::SetUploader(LPCTSTR szUser, LPCTSTR szPwd, bool bSavePwd)
 	if (_tcscmp(szPwd, m_strPwdMask.c_str()) != 0
 		|| _tcscmp(szUser, m_strLoginName.c_str()) != 0)
 	{
-		char		szPwdMaskAnsi[50];
+		TCHAR		szPwdMask[50];
 		stringex	strPwdAnsi;
 		TStringToAnsi(szPwd, -1, strPwdAnsi);
-		MD5Gen16(strPwdAnsi.c_str(), szPwdMaskAnsi);
-		AnsiToTString(szPwdMaskAnsi, -1, m_strPwdMask);
+		MD5ToString16(strPwdAnsi.c_str(), szPwdMask);
 
+		m_strPwdMask = szPwdMask;
 		m_strLoginName = szUser;
 	}
 

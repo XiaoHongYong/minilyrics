@@ -47,7 +47,7 @@ void CSkinLinearContainer::OnMeasureSizeByContent()
 			requestedHeight += p->GetMargin().top + p->GetMargin().bottom;
 
 			int w = p->m_rcObj.Width() + p->GetMargin().left + p->GetMargin().right;
-			if (w > requestedWidth)
+			if (w > (int)requestedWidth)
 				requestedWidth = w;
 		}
 		else
@@ -56,7 +56,7 @@ void CSkinLinearContainer::OnMeasureSizeByContent()
 			requestedWidth += p->GetMargin().left + p->GetMargin().right;
 
 			int h = p->m_rcObj.Height() + p->GetMargin().top + p->GetMargin().bottom;
-			if (h > requestedHeight)
+			if (h > (int)requestedHeight)
 				requestedHeight = h;
 		}
 	}
