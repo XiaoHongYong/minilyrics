@@ -700,7 +700,7 @@ bool CLrcTag::ReadFromText(const char *str, int nLen)
 	}
 
 	if (propNameValueMap.ShouldReadMd5())
-		MD5ToString((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(_TCHAR), m_szMd5OfLyrContent);
+		MD5ToString((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(TCHAR), m_szMd5OfLyrContent);
 
 	return bFoundTag;
 }
@@ -719,7 +719,7 @@ bool CLrcTag::ReadFromText(LPCWSTR str, int nLen)
 	}
 
 	if (propNameValueMap.ShouldReadMd5())
-		MD5ToString((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(_TCHAR), m_szMd5OfLyrContent);
+		MD5ToString((LPCSTR)strLyrContent.c_str(), strLyrContent.size() * sizeof(TCHAR), m_szMd5OfLyrContent);
 
 	return bFoundTag;
 }
@@ -832,7 +832,7 @@ void TxtTagWriteToText(stringex_t<_TCHAR> &str, CLyrTagNameValueMap &propNameVal
 		const _TCHAR *szLineBeg = szLine;
 
 		IgnoreSpaces(szLine);
-		if (IsCharAlpha((byte)*szLine))
+		if (IsAlpha((byte)*szLine))
 		{
 			int nLineLen;
 			if (szNextLine)
@@ -951,6 +951,7 @@ int FormtLrcTimeTag(int nTime, bool bLongTimeFmt, char szBuff[])
 
 int FormtLrcTimeTag(int nTime, bool bLongTimeFmt, WCHAR szBuff[])
 {
+#ifdef _WIN32
 	int		nMin, nSec, nMs;
 	if (bLongTimeFmt)
 		nTime += 10 / 2;
@@ -965,7 +966,15 @@ int FormtLrcTimeTag(int nTime, bool bLongTimeFmt, WCHAR szBuff[])
 		return swprintf_s(szBuff, 32, L"[%02d:%02d.%02d]", nMin, nSec, nMs);
 	else
 		return swprintf_s(szBuff, 32, L"[%02d:%02d]", nMin, nSec);
+#else
+    char    buf[32];
+    int n = FormtLrcTimeTag(nTime, bLongTimeFmt, buf);
+    _xcscpy(szBuff, buf);
+    return n;
+#endif
 }
+
+#ifndef _MAC
 
 template<class _TCHAR>
 class CLrcCompressor
@@ -1206,6 +1215,8 @@ bool CompressLyrics(CCharBuffer &buf)
 
 	return false;
 }
+
+#endif
 
 bool ConvertUnicodeAnsiData(CCharBuffer &buf)
 {

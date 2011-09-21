@@ -7,7 +7,6 @@
 //
 
 #import "LyrStaticTextView.h"
-#import "LyricsVerticalScrollGraph.h"
 #import "MLApp.h"
 #import "CMLApp.h"
 
@@ -63,17 +62,17 @@
 
 - (void) reloadFontSettings
 {
-	{
+	/*{
 		int			nFontHeight;
 		int			nWeight;
 		BYTE		byItalic;
 		tstring		strFaceName, strFaceNameOthers;
 		
-		ProfileGetLyricsFont(SZ_SECT_LYR_DISPLAY, nFontHeight, nWeight, byItalic, strFaceName, strFaceNameOthers);
+		// ProfileGetLyricsFont(SZ_SECT_LYR_DISPLAY, nFontHeight, nWeight, byItalic, strFaceName, strFaceNameOthers);
 		
 		UIFont *font = [UIFont boldSystemFontOfSize:(float)nFontHeight];
 		[self setFont:font];
-	}
+	}*/
 }
 
 @end

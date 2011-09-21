@@ -1,10 +1,8 @@
 #import "../../base/base.h"
 #import "../../Utils/Utils.h"
-#import "../../OurMFCLib/OurMFClib.h"
-#import "../../gfx/gfx.h"
 #import "../../MLLib/MLLib.h"
 #import "CMLApp.h"
-#import "LyricsShowGraphBase.h"
+#import "helper.h"
 
 CMLApp			*CMLApp::m_pAppInstance = NULL;
 
@@ -96,7 +94,7 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 	if (m_localLyrSearch.GetBestMatchLyrics(szMediaKey, szArtist, szTitle, szLyricFile))
 	{
 		// Open lyrics and return.
-		int nRet = m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szLyricFile);
+		int nRet = m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szLyricFile, false, ED_SYSDEF);
 		if (nRet == ERR_OK)
 		{
 			PostNotifyLyricsChanged();
@@ -175,7 +173,7 @@ void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
 
 bool CMLApp::SearchCacheForCurrentMedia(V_LRCSEARCHRESULT &vLrcSearchResult)
 {
-	return m_onlineLyrSearch.SearchCache(m_strCurMediaKey.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), &vLrcSearchResult);
+	return m_onlineLyrSearch.SearchCache(m_strCurMediaKey.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), vLrcSearchResult);
 }
 
 void CMLApp::DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szUrl, LPCTSTR szFileName)
@@ -201,7 +199,7 @@ void CMLApp::OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
 		if (m_lyrData.HasLyricsOpened() && m_lyrData.IsModified())
 			m_lyrData.Save();
 
-		m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szFile);
+		m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szFile, false, ED_SYSDEF);
 		PostNotifyLyricsChanged();
 	}
 }
@@ -210,7 +208,7 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 {
 	V_LRCSEARCHRESULT		vLrcSearchResult;
 
-	if (!m_onlineLyrSearch.SearchCache(m_strCurMediaKey.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), &vLrcSearchResult))
+	if (!m_onlineLyrSearch.SearchCache(m_strCurMediaKey.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), vLrcSearchResult))
 	{
 		static	int nFailedCount = 0;
 		nFailedCount++;
@@ -283,28 +281,4 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 
 void CMLApp::SetDefaultSettings()
 {
-	//if (g_Profile.GetProfileInt(_T("Initialized"), false))
-	//	return;
-	//g_Profile.WriteProfileInt(_T("Initialized"), true);
-
-	// This won't write to profile, so these value must be set 
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("Font"), _T(", 18, bold, 0, 0, "));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgColor"), _T("#FFFFFF"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FgLowColor"), _T("#929292"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("BgColor"), _T("#404040"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("FocusLineBgColor"), _T("#8A94AA"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("TagColor"), _T("#FF8242"));
-
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightBorderColor"), _T("#000000"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightBorderColor"), _T("#000000"));
-	
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightOBM"), OBM_COLOR);
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightGradient1"), _T("#FFFF80"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightGradient2"), _T("#FF2D2D"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("HilightGradient3"), _T("#AE0000"));
-
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightOBM"), OBM_COLOR);
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightGradient1"), _T("#0000A0"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightGradient2"), _T("#0080FF"));
-	g_Profile.SetDefaultIfNotExist(SZ_SECT_LYR_DISPLAY, _T("LowlightGradient3"), _T("#0000FF"));
 }

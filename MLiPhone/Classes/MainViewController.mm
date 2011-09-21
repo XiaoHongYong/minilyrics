@@ -3,11 +3,8 @@
 #import <Foundation/Foundation.h>
 #import "LyricsSearchViewController.h"
 
-#import "../../base/mlstdafx.h"
 #import "../../base/base.h"
 #import "../../Utils/Utils.h"
-#import "../../OurMFCLib/OurMFClib.h"
-#import "../../gfx/gfx.h"
 #import "../../MLLib/MLLib.h"
 
 #import "CMLApp.h"
@@ -723,7 +720,22 @@ extern "C" NSString *formatPlayingTime(int n);
 	}
 }
 
-bool ScaleLyricsFont(float scale);
+
+bool ScaleLyricsFont(float scale)
+{
+	int nHeight, nWeight;
+	BYTE byItalic;
+	tstring strFaceNameLatin9, strFaceNameOthers;
+	//ProfileGetLyricsFont(SZ_SECT_LYR_DISPLAY, nHeight, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
+	
+	nHeight = (int)(nHeight * scale);
+	if (nHeight < 12 || nHeight > 35)
+		return false;
+	
+	//ProfileWriteLyricsFont(SZ_SECT_LYR_DISPLAY, nHeight, nWeight, byItalic, strFaceNameLatin9.c_str(), strFaceNameOthers.c_str());
+	
+	return true;
+}
 
 // scale the piece by the current scale
 // reset the gesture recognizer's rotation to 0 after applying so the next callback is a delta from the current scale

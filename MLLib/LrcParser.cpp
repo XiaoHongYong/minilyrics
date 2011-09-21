@@ -275,7 +275,7 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 #ifdef UTF8
 		if (encoding != ED_UTF8)
 		{
-			MbcsToUtf8(szLrc, nLen, strSysEncoding, encoding);
+			MbcsToUtf8((LPCSTR)szLrc, nLen, strSysEncoding, encoding);
 			szLrc = (LPBYTE)strSysEncoding.data();
 			nLen = strSysEncoding.size();
 		}

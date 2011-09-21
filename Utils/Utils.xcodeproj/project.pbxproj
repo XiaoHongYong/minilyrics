@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5FB4FE5B142A30E800D1DDA4 /* digest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE56142A30E700D1DDA4 /* digest.cpp */; };
+		5FB4FE5C142A30E800D1DDA4 /* digest.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB4FE57142A30E700D1DDA4 /* digest.h */; };
+		5FB4FE5D142A30E800D1DDA4 /* md5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE58142A30E700D1DDA4 /* md5.cpp */; };
+		5FB4FE5E142A30E800D1DDA4 /* MLBinXMLParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE59142A30E700D1DDA4 /* MLBinXMLParser.cpp */; };
+		5FB4FE5F142A30E800D1DDA4 /* MLBinXMLParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB4FE5A142A30E700D1DDA4 /* MLBinXMLParser.h */; };
 		5FCB8CE31211813D009F23BD /* LocalizeTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FCB8CE21211813D009F23BD /* LocalizeTool.h */; };
 		5FE7E8AC11F0427600CECD89 /* App.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E89011F0427600CECD89 /* App.h */; };
 		5FE7E8AD11F0427600CECD89 /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7E89111F0427600CECD89 /* CSVFile.cpp */; };
@@ -30,6 +35,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5FB4FE56142A30E700D1DDA4 /* digest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = digest.cpp; sourceTree = "<group>"; };
+		5FB4FE57142A30E700D1DDA4 /* digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = digest.h; sourceTree = "<group>"; };
+		5FB4FE58142A30E700D1DDA4 /* md5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = md5.cpp; sourceTree = "<group>"; };
+		5FB4FE59142A30E700D1DDA4 /* MLBinXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLBinXMLParser.cpp; sourceTree = "<group>"; };
+		5FB4FE5A142A30E700D1DDA4 /* MLBinXMLParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLBinXMLParser.h; sourceTree = "<group>"; };
 		5FCB8CE21211813D009F23BD /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.c.h; path = LocalizeTool.h; sourceTree = "<group>"; };
 		5FE7E89011F0427600CECD89 /* App.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = "<group>"; };
 		5FE7E89111F0427600CECD89 /* CSVFile.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = CSVFile.cpp; sourceTree = "<group>"; };
@@ -77,6 +87,11 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FB4FE56142A30E700D1DDA4 /* digest.cpp */,
+				5FB4FE57142A30E700D1DDA4 /* digest.h */,
+				5FB4FE58142A30E700D1DDA4 /* md5.cpp */,
+				5FB4FE59142A30E700D1DDA4 /* MLBinXMLParser.cpp */,
+				5FB4FE5A142A30E700D1DDA4 /* MLBinXMLParser.h */,
 				5FE7E89011F0427600CECD89 /* App.h */,
 				5FE7E89111F0427600CECD89 /* CSVFile.cpp */,
 				5FE7E89211F0427600CECD89 /* CSVFile.h */,
@@ -143,6 +158,8 @@
 				5FE7E8C311F0427600CECD89 /* UUEncode.h in Headers */,
 				5FE7E8C511F0427600CECD89 /* XMLWriter.h in Headers */,
 				5FCB8CE31211813D009F23BD /* LocalizeTool.h in Headers */,
+				5FB4FE5C142A30E800D1DDA4 /* digest.h in Headers */,
+				5FB4FE5F142A30E800D1DDA4 /* MLBinXMLParser.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +220,9 @@
 				5FE7E8BC11F0427600CECD89 /* SimpleXMLParser.cpp in Sources */,
 				5FE7E8C211F0427600CECD89 /* UUEncode.cpp in Sources */,
 				5FE7E8C411F0427600CECD89 /* XMLWriter.cpp in Sources */,
+				5FB4FE5B142A30E800D1DDA4 /* digest.cpp in Sources */,
+				5FB4FE5D142A30E800D1DDA4 /* md5.cpp in Sources */,
+				5FB4FE5E142A30E800D1DDA4 /* MLBinXMLParser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

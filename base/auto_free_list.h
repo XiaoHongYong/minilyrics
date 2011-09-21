@@ -11,8 +11,10 @@ public:
 	auto_free_list() { }
 
 	typedef list<_Ty *>		Parent;
-    typedef _List_iterator<_Ty*>                        iterator;
-    
+#ifdef _MAC
+    typedef _List_iterator<_Ty>                        iterator;
+#endif
+
 	~auto_free_list()
 	{
 		clear();

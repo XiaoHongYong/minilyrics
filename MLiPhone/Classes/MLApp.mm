@@ -7,25 +7,13 @@
 //
 
 #import "MLApp.h"
-#import "../../base/mlstdafx.h"
 #import "../../base/base.h"
 #import "../../Utils/Utils.h"
-#import "../../OurMFCLib/OurMFClib.h"
-#import "../../gfx/gfx.h"
 #import "../../MLProtocol/MLProtocol.h"
 #import "../../MLProtocol/HttpClient.h"
 #import "../../MLLib/MLLib.h"
 
-#import "LyricsShowGraphBase.h"
-
-#define MLAPP_NOTIFY_NAME	@"ConverterAdded"
-
-enum MLNotifyType {
-	MLNT_LYRICS_SEARCH_END,
-	MLNT_LYRICS_DOWNLOADED,
-	MLNT_MESSAGE,
-	MLNT_LYRICS_CHANGED,
-};
+#import "MLAppNotifyParam.h"
 
 LPCTSTR TOLOCAL(LPCTSTR szString)
 {
@@ -170,107 +158,6 @@ int ConvertWideCharToMultiByte(int nEncodingID, const WCHAR *lpWideStr, int nSiz
 	return strlen(lpByteStr);
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////
-
-@interface MLAppNotifyParam : NSObject
-
-MLNotifyType		type;
-
-// Online Search End
-int					searchEndResult;
-
-// Lyrics downloaded parameter
-tstring				mediaKey;
-tstring				lyricsFile;
-
-// Message parameter
-tstring				message;
-bool				showActivityIndicator;
-bool				infoMsg;
-
-
-@property(nonatomic)	MLNotifyType		type;
-
-@property(nonatomic)	int					searchEndResult;
-
-@property(nonatomic)	bool				showActivityIndicator;
-@property(nonatomic)	bool				infoMsg;
-
-- (LPCTSTR) mediaKey;
-- (void) setMediaKey: (LPCTSTR) newmediaKey;
-
-- (LPCTSTR) lyricsFile;
-- (void) setLyricsFile: (LPCTSTR) file;
-
-- (LPCTSTR) message;
-- (void) setMessage: (LPCTSTR) msg;
-
-@end
-
-@implementation MLAppNotifyParam
-
-@synthesize type;
-@synthesize searchEndResult;
-@synthesize showActivityIndicator;
-@synthesize infoMsg;
-
-- (id) initWithSearchEndResult:(int) result
-{
-	if (self = [super init]) {
-		self.searchEndResult = result;
-		self.type = MLNT_LYRICS_SEARCH_END;
-	}
-	return self;
-}
-
-- (id) initWithLyrDownloadEnd:(LPCTSTR)szMediaKey file:(LPCTSTR)szFile
-{
-	if (self = [super init]) {
-		self.type = MLNT_LYRICS_DOWNLOADED;
-		[self setMediaKey:szMediaKey];
-		[self setLyricsFile:szFile];
-	}
-	return self;
-}
-
-- (id) initWithMessage:(LPCTSTR)msg showActivityIndicator:(bool)bShow infoMsg:(bool)bInfoMsg
-{
-	if (self = [super init]) {
-		self.type = MLNT_MESSAGE;
-		self.showActivityIndicator = bShow;
-		self.infoMsg = bInfoMsg;
-		tstring	str = msg;
-		str += _T("\n\n\n\n");
-		[self setMessage:str.c_str()];
-	}
-	return self;
-}
-
-- (id) initWithLyrChanged
-{
-	if (self = [super init]) {
-		self.type = MLNT_LYRICS_CHANGED;
-	}
-	return self;
-}
-
-- (void) postNoification
-{
-	[[NSNotificationCenter defaultCenter] postNotificationName:MLAPP_NOTIFY_NAME object:self];
-}
-
-- (LPCTSTR) mediaKey { return mediaKey.c_str(); }
-- (void) setMediaKey: (LPCTSTR) newmediaKey { mediaKey = newmediaKey; }
-
-- (LPCTSTR) lyricsFile { return lyricsFile.c_str(); }
-- (void) setLyricsFile: (LPCTSTR) file { lyricsFile = file; }
-
-- (LPCTSTR) message { return message.c_str(); }
-- (void) setMessage: (LPCTSTR) msg { message = msg; }
-
-@end
-//////////////////////////////////////////////////////////////////////////////////////////
-
 #import "CMLApp.h"
 
 void PostNotifySearchEnd(int nResult)
@@ -355,7 +242,7 @@ UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, in
 			[delegate onPopupLyrSearchView];
 	}
 	else if (param.type == MLNT_LYRICS_DOWNLOADED) {
-		CMLApp::GetInstance()->OnLyricsDownloaded(param.mediaKey, param.lyricsFile);
+		CMLApp::GetInstance()->OnLyricsDownloaded([param mediaKey], [param lyricsFile]);
 	}
 	else if (param.type == MLNT_MESSAGE) {
 		NSString	*msg = [[NSString alloc] initWithUTF8String:[param message]];

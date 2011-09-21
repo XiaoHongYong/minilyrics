@@ -17,6 +17,7 @@
 		5FB4FE411426244C00D1DDA4 /* Mutex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE3E1426244C00D1DDA4 /* Mutex.cpp */; };
 		5FB4FE421426244C00D1DDA4 /* OSError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE3F1426244C00D1DDA4 /* OSError.cpp */; };
 		5FB4FE431426244C00D1DDA4 /* Semaphore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE401426244C00D1DDA4 /* Semaphore.cpp */; };
+		5FB4FE451428D6D300D1DDA4 /* auto_free_list.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB4FE441428D6D300D1DDA4 /* auto_free_list.h */; };
 		5FE7E4B311EF111B00CECD89 /* base.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E49711EF111B00CECD89 /* base.h */; };
 		5FE7E4B411EF111B00CECD89 /* CharEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E49811EF111B00CECD89 /* CharEncoding.h */; };
 		5FE7E4B511EF111B00CECD89 /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7E49911EF111B00CECD89 /* common.h */; };
@@ -66,6 +67,7 @@
 		5FB4FE3E1426244C00D1DDA4 /* Mutex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Mutex.cpp; path = Mac/Mutex.cpp; sourceTree = "<group>"; };
 		5FB4FE3F1426244C00D1DDA4 /* OSError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OSError.cpp; path = Mac/OSError.cpp; sourceTree = "<group>"; };
 		5FB4FE401426244C00D1DDA4 /* Semaphore.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Semaphore.cpp; path = Mac/Semaphore.cpp; sourceTree = "<group>"; };
+		5FB4FE441428D6D300D1DDA4 /* auto_free_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = auto_free_list.h; sourceTree = "<group>"; };
 		5FE7E49711EF111B00CECD89 /* base.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = "<group>"; };
 		5FE7E49811EF111B00CECD89 /* CharEncoding.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = CharEncoding.h; sourceTree = "<group>"; };
 		5FE7E49911EF111B00CECD89 /* common.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
@@ -129,6 +131,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FB4FE441428D6D300D1DDA4 /* auto_free_list.h */,
 				5FB4FE3E1426244C00D1DDA4 /* Mutex.cpp */,
 				5FB4FE3F1426244C00D1DDA4 /* OSError.cpp */,
 				5FB4FE401426244C00D1DDA4 /* Semaphore.cpp */,
@@ -227,6 +230,7 @@
 				5FB029891422461100FE2F1A /* OsBaseInc.h in Headers */,
 				5FB4FE3B1426240E00D1DDA4 /* BaseDate.h in Headers */,
 				5FB4FE3D1426240E00D1DDA4 /* FileApiBase.h in Headers */,
+				5FB4FE451428D6D300D1DDA4 /* auto_free_list.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "OnlyAllocator.h"
+#include "base.h"
 
 COnlyAllocator::COnlyAllocator(size_t nBlockSize)
 {

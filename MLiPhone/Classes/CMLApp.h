@@ -1,5 +1,8 @@
 #pragma once
 
+#import "../../base/base.h"
+#import "../../Utils/Utils.h"
+#import "../../MLLib/MLLib.h"
 #import "IMLAppNotify.h"
 #import "LyricsLocalSearch.h"
 #import "OnlineSearch.h"

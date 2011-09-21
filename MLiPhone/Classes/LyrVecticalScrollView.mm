@@ -7,22 +7,15 @@
 //
 
 #import "LyrVecticalScrollView.h"
-#import "../../base/mlstdafx.h"
 #import "../../base/base.h"
 #import "../../Utils/Utils.h"
-#import "../../gfx/gfx.h"
-#import "../../GfxRaw/GfxRaw.h"
 #import "../../MLLib/MLLib.h"
 #import "CMLApp.h"
 #import <CoreText/CoreText.h>
 #import <CoreFoundation/CFDictionary.h>
 
-#import "LyricsVerticalScrollGraph.h"
-
 
 UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, int height);
-
-PRAW_IMAGE_DATA RawImageDataFromCGImage(CGImageRef cgimage);
 
 @implementation LyrVecticalScrollView
 
@@ -31,16 +24,9 @@ PRAW_IMAGE_DATA RawImageDataFromCGImage(CGImageRef cgimage);
 @synthesize inSeekingLyrics;
 
 
-CRawGraph m_memGraph;
-CMLFont		m_font;
-CRawBmpFont	m_bmpFont;
-
-CLyricsVerticalScrollGraph	m_lyrGraph;
-
 - (id)initWithFrame:(CGRect)frame {
     if (self = [super initWithFrame:frame]) {
         // Initialization code
-		m_memGraph.Create(frame.size.width, frame.size.height, NULL, 32);
     }
     return self;
 }
@@ -48,10 +34,8 @@ CLyricsVerticalScrollGraph	m_lyrGraph;
 - (void) InitLyrView
 {
 	UIImage *logo = [UIImage imageNamed: @"logo.png"];
-	PRAW_IMAGE_DATA pRawImage = RawImageDataFromCGImage([logo CGImage]);
 	[logo release];
 
-	m_lyrGraph.Init(self.frame.size.width, self.frame.size.height, &CMLApp::GetInstance()->GetLyricsData(), pRawImage);
 	self.inSeekingLyrics = NO;
 
 	[self setLyrDisplayTimer: [NSTimer scheduledTimerWithTimeInterval: 0.07
@@ -87,20 +71,15 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 
 -(void) onLyricsChanged
 {
-	PRAW_IMAGE_DATA pRawImage = nil;
 	UIImage *image = getAlbumArtWithSize(self.musicPlayer, self.frame.size.width, self.frame.size.height);
 	if (image) {
-		pRawImage = RawImageDataFromCGImage([image CGImage]);
 	}
 	else {
 		//image = [UIImage imageNamed: @"logo.png"];
 		//pRawImage = RawImageDataFromCGImage([image CGImage]);
 		//[image release];	
 	}
-	
-	m_lyrGraph.OnLyricsChanged(pRawImage);
-	CRect	rcUpdate;
-	m_lyrGraph.UpdateGraph(rcUpdate);
+
 	[self setNeedsDisplay];
 }
 
@@ -118,7 +97,7 @@ CTFontRef CreateFont(CTFontDescriptorRef iFontDescriptor, CGFloat iSize);
 CTFontDescriptorRef CreateFontDescriptorFromFamilyAndTraits(CFStringRef iFamilyName,
 															CTFontSymbolicTraits iTraits, CGFloat iSize);
 
-/*
+
 CTFontDescriptorRef CreateFontDescriptorFromFamilyAndTraits(CFStringRef iFamilyName,
 															CTFontSymbolicTraits iTraits, CGFloat iSize)
 {
@@ -171,7 +150,7 @@ CTFontRef CreateFont(CTFontDescriptorRef iFontDescriptor, CGFloat iSize)
     // NULL for the matrix parameter to use the default matrix (identity).
 	
     return CTFontCreateWithFontDescriptor(iFontDescriptor, iSize, NULL);
-}*/
+}
 
 void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 {
@@ -214,18 +193,9 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 
 	// [super drawRect:rect];
 	CGRect	frame = [self frame];
-	CMLGraphics		graph;
 	CGContextRef	context = UIGraphicsGetCurrentContext();
-	graph.Attach(context);
 	
-	// Draw in memGraph
-	ASSERT(m_lyrGraph.GetGraph().IsValid());
-	{
-		// m_memGraph.Create(frame.size.width, frame.size.height, NULL, 32);
-		// m_font.Create("Helvetica", "Helvetica", 20, FW_NORMAL, 0);
-		// m_bmpFont.Create("Helvetica", "Helvetica", 50, FW_NORMAL, 0);
-	}
-
+	//[self DrawText:context 10, 10, 100];
 	// CRect rc(rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
 /*	for (int i = 0; i < 10; i++)
 	{
@@ -234,8 +204,6 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 		clr.setAlpha(128);
 		m_lyrGraph.GetGraph().FillRect(&rc, clr, BPM_BLEND);
 	}*/
-	m_lyrGraph.GetGraph().DrawToGraphics(&graph, rect.origin.x, rect.origin.y, rect.size.width, rect.size.height,
-										 rect.origin.x, rect.origin.y);
 /*	{
 		CRect rc(10, 200, 10 + 100, 200 + 10);
 		MLColor clr(RGB(255, 0, 0));
@@ -299,8 +267,6 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 
 - (void) reloadFontSettings
 {
-	m_lyrGraph.Invalidate();
-	m_lyrGraph.ReloadFontSettings();
 	[self onUpdateLyrDisplay];
 }
 
@@ -311,7 +277,6 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 		lyrData.SetPlayElapsedTime(int([musicPlayer currentPlaybackTime] * 1000));
 
 	CRect	rcUpdate;
-	m_lyrGraph.UpdateGraph(rcUpdate);
 	if (rcUpdate.IsRectEmpty())
 		return;
 

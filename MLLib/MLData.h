@@ -349,13 +349,14 @@ protected:
 	int OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 	int OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 
-	void OnLyricsOpened();
-
 	bool ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encoding);
 	bool ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING encoding);
 
 	int UpdateTagToID3v2DescTxt();
 #endif // #ifdef _ID3V2_SUPPORT
+    
+	void OnLyricsOpened();
+    
 	BOOL SaveTag();
 
 	void ResetModificationFlag();

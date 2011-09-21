@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5FB4FE481428D90200D1DDA4 /* LrcParserHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */; };
+		5FB4FE491428D90200D1DDA4 /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */; };
 		5FCB8D3F1212331D009F23BD /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FCB8D3E1212331D009F23BD /* LyricsSearch.cpp */; };
 		5FE7ED5F11F6D74700CECD89 /* HelperFun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED3A11F6D74700CECD89 /* HelperFun.cpp */; };
 		5FE7ED6011F6D74700CECD89 /* HelperFun.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED3B11F6D74700CECD89 /* HelperFun.h */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LrcParserHelper.h; sourceTree = "<group>"; };
+		5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LrcTag.cpp; sourceTree = "<group>"; };
 		5FCB8D3E1212331D009F23BD /* LyricsSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsSearch.cpp; sourceTree = "<group>"; };
 		5FE7ED3A11F6D74700CECD89 /* HelperFun.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = HelperFun.cpp; sourceTree = "<group>"; };
 		5FE7ED3B11F6D74700CECD89 /* HelperFun.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = HelperFun.h; sourceTree = "<group>"; };
@@ -67,6 +71,8 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */,
+				5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */,
 				5FCB8D3E1212331D009F23BD /* LyricsSearch.cpp */,
 				5FE7ED3A11F6D74700CECD89 /* HelperFun.cpp */,
 				5FE7ED3B11F6D74700CECD89 /* HelperFun.h */,
@@ -117,6 +123,7 @@
 				5FE7ED7311F6D74700CECD89 /* MLLib.h in Headers */,
 				5FE7ED7511F6D74700CECD89 /* MLProfile.h in Headers */,
 				5FE7ED8011F6D74700CECD89 /* StdAfx.h in Headers */,
+				5FB4FE481428D90200D1DDA4 /* LrcParserHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -175,6 +182,7 @@
 				5FE7ED6D11F6D74700CECD89 /* MLData.cpp in Sources */,
 				5FE7ED7411F6D74700CECD89 /* MLProfile.cpp in Sources */,
 				5FCB8D3F1212331D009F23BD /* LyricsSearch.cpp in Sources */,
+				5FB4FE491428D90200D1DDA4 /* LrcTag.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

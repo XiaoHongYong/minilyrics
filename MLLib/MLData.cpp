@@ -293,7 +293,6 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrConte
 		return nRet;
 
 	OnLyricsOpened();
-}
 	
 	return ERR_OK;
 }
