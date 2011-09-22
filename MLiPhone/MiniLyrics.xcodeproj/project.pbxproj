@@ -28,7 +28,6 @@
 		5F70B87211D8EA46009D0254 /* MLUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86611D8EA46009D0254 /* MLUtils.cpp */; };
 		5F70B87311D8EA46009D0254 /* NetSDK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86811D8EA46009D0254 /* NetSDK.cpp */; };
 		5F70B87411D8EA46009D0254 /* NetServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86A11D8EA46009D0254 /* NetServer.cpp */; };
-		5F9DEEF811AC095900312E83 /* libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEEF411AC094600312E83 /* libbase.a */; };
 		5F9DEF0B11AC099800312E83 /* libMLLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0A11AC099000312E83 /* libMLLib.a */; };
 		5F9DEF0C11AC099800312E83 /* libUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0111AC097200312E83 /* libUtils.a */; };
 		5F9DEFC911AC101100312E83 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEFC811AC101100312E83 /* libiconv.dylib */; };
@@ -39,6 +38,48 @@
 		5FB4FE55142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE53142A2C0000D1DDA4 /* MLAppNotifyParam.mm */; };
 		5FB56C4C11C11088000E68A1 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56C4B11C11088000E68A1 /* helper.cpp */; };
 		5FB56D0111C12D35000E68A1 /* MLApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56D0011C12D35000E68A1 /* MLApp.mm */; };
+		5FBE628F142B8E78005A50B6 /* BaseDate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE625A142B8E78005A50B6 /* BaseDate.cpp */; };
+		5FBE6290142B8E78005A50B6 /* CharEncodingBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE625D142B8E78005A50B6 /* CharEncodingBase.cpp */; };
+		5FBE6291142B8E78005A50B6 /* cppunit-utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6260142B8E78005A50B6 /* cppunit-utils.cpp */; };
+		5FBE6292142B8E78005A50B6 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6262142B8E78005A50B6 /* Error.cpp */; };
+		5FBE6293142B8E78005A50B6 /* FileApiBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6264142B8E78005A50B6 /* FileApiBase.cpp */; };
+		5FBE6294142B8E78005A50B6 /* idstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6266142B8E78005A50B6 /* idstring.cpp */; };
+		5FBE6296142B8E78005A50B6 /* CharEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */; };
+		5FBE6297142B8E78005A50B6 /* CharEncoding.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626B142B8E78005A50B6 /* CharEncoding.mm */; };
+		5FBE6298142B8E78005A50B6 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626C142B8E78005A50B6 /* Event.cpp */; };
+		5FBE6299142B8E78005A50B6 /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626E142B8E78005A50B6 /* fileapi.cpp */; };
+		5FBE629A142B8E78005A50B6 /* MemmapFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6270142B8E78005A50B6 /* MemmapFile.cpp */; };
+		5FBE629C142B8E78005A50B6 /* MutexIP.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6274142B8E78005A50B6 /* MutexIP.mm */; };
+		5FBE629D142B8E78005A50B6 /* OSError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6275142B8E78005A50B6 /* OSError.cpp */; };
+		5FBE629F142B8E78005A50B6 /* Semaphore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6278142B8E78005A50B6 /* Semaphore.mm */; };
+		5FBE62A0142B8E78005A50B6 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6279142B8E78005A50B6 /* Thread.cpp */; };
+		5FBE62A2142B8E78005A50B6 /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627C142B8E78005A50B6 /* misc.cpp */; };
+		5FBE62A3142B8E78005A50B6 /* OnlyAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */; };
+		5FBE62A4142B8E78005A50B6 /* safestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6282142B8E78005A50B6 /* safestr.cpp */; };
+		5FBE62A5142B8E78005A50B6 /* stringex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6286142B8E78005A50B6 /* stringex.cpp */; };
+		5FBE62A6142B8E78005A50B6 /* StrPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6289142B8E78005A50B6 /* StrPrintf.cpp */; };
+		5FBE62A9142B8ECA005A50B6 /* base.h in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6258142B8E78005A50B6 /* base.h */; };
+		5FBE62AA142B8ECA005A50B6 /* BaseDate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE625A142B8E78005A50B6 /* BaseDate.cpp */; };
+		5FBE62AD142B8ECA005A50B6 /* CharEncodingBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE625D142B8E78005A50B6 /* CharEncodingBase.cpp */; };
+		5FBE62B0142B8ECA005A50B6 /* cppunit-utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6260142B8E78005A50B6 /* cppunit-utils.cpp */; };
+		5FBE62B2142B8ECA005A50B6 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6262142B8E78005A50B6 /* Error.cpp */; };
+		5FBE62B3142B8ECA005A50B6 /* Error.h in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6263142B8E78005A50B6 /* Error.h */; };
+		5FBE62B4142B8ECA005A50B6 /* FileApiBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6264142B8E78005A50B6 /* FileApiBase.cpp */; };
+		5FBE62B6142B8ECA005A50B6 /* idstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6266142B8E78005A50B6 /* idstring.cpp */; };
+		5FBE62B8142B8ECA005A50B6 /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627C142B8E78005A50B6 /* misc.cpp */; };
+		5FBE62BB142B8ECA005A50B6 /* OnlyAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */; };
+		5FBE62BE142B8ECA005A50B6 /* safestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6282142B8E78005A50B6 /* safestr.cpp */; };
+		5FBE62C2142B8ECA005A50B6 /* stringex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6286142B8E78005A50B6 /* stringex.cpp */; };
+		5FBE62C5142B8ECA005A50B6 /* StrPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6289142B8E78005A50B6 /* StrPrintf.cpp */; };
+		5FBE62C9142B8F49005A50B6 /* CharEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */; };
+		5FBE62CA142B8F49005A50B6 /* CharEncoding.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626B142B8E78005A50B6 /* CharEncoding.mm */; };
+		5FBE62CB142B8F49005A50B6 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626C142B8E78005A50B6 /* Event.cpp */; };
+		5FBE62CC142B8F49005A50B6 /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626E142B8E78005A50B6 /* fileapi.cpp */; };
+		5FBE62CD142B8F49005A50B6 /* MemmapFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6270142B8E78005A50B6 /* MemmapFile.cpp */; };
+		5FBE62CF142B8F49005A50B6 /* MutexIP.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6274142B8E78005A50B6 /* MutexIP.mm */; };
+		5FBE62D0142B8F49005A50B6 /* OSError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6275142B8E78005A50B6 /* OSError.cpp */; };
+		5FBE62D2142B8F49005A50B6 /* Semaphore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6278142B8E78005A50B6 /* Semaphore.mm */; };
+		5FBE62D3142B8F49005A50B6 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6279142B8E78005A50B6 /* Thread.cpp */; };
 		5FBEDFF811D979A000E01391 /* HttpProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */; };
 		5FC0B1BB11C51C59000C6537 /* LyricsDownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */; };
 		5FC0B1BC11C51C59000C6537 /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */; };
@@ -101,7 +142,6 @@
 		5FC122D712177E6B003D9B42 /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
 		5FC122DC12177E6B003D9B42 /* libMLLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0A11AC099000312E83 /* libMLLib.a */; };
 		5FC122DD12177E6B003D9B42 /* libUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0111AC097200312E83 /* libUtils.a */; };
-		5FC122DE12177E6B003D9B42 /* libbase.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEEF411AC094600312E83 /* libbase.a */; };
 		5FC122DF12177E6B003D9B42 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		5FC122E012177E6B003D9B42 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		5FC122E112177E6B003D9B42 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
@@ -149,13 +189,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		5F9DEEF311AC094600312E83 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5F9DEEEC11AC094500312E83 /* base.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC046055464E500DB518D;
-			remoteInfo = base;
-		};
 		5F9DEF0011AC097200312E83 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5F9DEEF911AC097200312E83 /* Utils.xcodeproj */;
@@ -170,13 +203,6 @@
 			remoteGlobalIDString = D2AAC046055464E500DB518D;
 			remoteInfo = MLLib;
 		};
-		5FC122F412178029003D9B42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5F9DEEEC11AC094500312E83 /* base.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
-			remoteInfo = base;
-		};
 		5FC122F812178029003D9B42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */;
@@ -190,13 +216,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = D2AAC045055464E500DB518D;
 			remoteInfo = Utils;
-		};
-		5FC1230212178052003D9B42 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 5F9DEEEC11AC094500312E83 /* base.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = D2AAC045055464E500DB518D;
-			remoteInfo = base;
 		};
 		5FC1230612178052003D9B42 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -250,7 +269,6 @@
 		5F70B86C11D8EA46009D0254 /* sockadapt.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = sockadapt.h; path = ../MLProtocol/sockadapt.h; sourceTree = SOURCE_ROOT; };
 		5F70B86D11D8EA46009D0254 /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = StdAfx.h; path = ../MLProtocol/StdAfx.h; sourceTree = SOURCE_ROOT; };
 		5F70B8BF11D8EB00009D0254 /* MLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = MLProtocol.h; path = ../MLProtocol/MLProtocol.h; sourceTree = SOURCE_ROOT; };
-		5F9DEEEC11AC094500312E83 /* base.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = base.xcodeproj; path = ../base/base.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5F9DEEF911AC097200312E83 /* Utils.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Utils.xcodeproj; path = ../Utils/Utils.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLLib.xcodeproj; path = ../MLLib/MLLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		5F9DEFC811AC101100312E83 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
@@ -264,6 +282,54 @@
 		5FB56C4B11C11088000E68A1 /* helper.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = helper.cpp; sourceTree = "<group>"; };
 		5FB56CFF11C12D35000E68A1 /* MLApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLApp.h; sourceTree = "<group>"; };
 		5FB56D0011C12D35000E68A1 /* MLApp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MLApp.mm; sourceTree = "<group>"; };
+		5FBE6254142B8E78005A50B6 /* auto_free_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = auto_free_list.h; path = ../base/auto_free_list.h; sourceTree = "<group>"; };
+		5FBE6258142B8E78005A50B6 /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = base.h; path = ../base/base.h; sourceTree = "<group>"; };
+		5FBE625A142B8E78005A50B6 /* BaseDate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = BaseDate.cpp; path = ../base/BaseDate.cpp; sourceTree = "<group>"; };
+		5FBE625B142B8E78005A50B6 /* BaseDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BaseDate.h; path = ../base/BaseDate.h; sourceTree = "<group>"; };
+		5FBE625C142B8E78005A50B6 /* CharEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CharEncoding.h; path = ../base/CharEncoding.h; sourceTree = "<group>"; };
+		5FBE625D142B8E78005A50B6 /* CharEncodingBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CharEncodingBase.cpp; path = ../base/CharEncodingBase.cpp; sourceTree = "<group>"; };
+		5FBE625E142B8E78005A50B6 /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = ../base/common.h; sourceTree = "<group>"; };
+		5FBE625F142B8E78005A50B6 /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = config.h; path = ../base/config.h; sourceTree = "<group>"; };
+		5FBE6260142B8E78005A50B6 /* cppunit-utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = "cppunit-utils.cpp"; path = "../base/cppunit-utils.cpp"; sourceTree = "<group>"; };
+		5FBE6261142B8E78005A50B6 /* cppunit-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "cppunit-utils.h"; path = "../base/cppunit-utils.h"; sourceTree = "<group>"; };
+		5FBE6262142B8E78005A50B6 /* Error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Error.cpp; path = ../base/Error.cpp; sourceTree = "<group>"; };
+		5FBE6263142B8E78005A50B6 /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Error.h; path = ../base/Error.h; sourceTree = "<group>"; };
+		5FBE6264142B8E78005A50B6 /* FileApiBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = FileApiBase.cpp; path = ../base/FileApiBase.cpp; sourceTree = "<group>"; };
+		5FBE6265142B8E78005A50B6 /* FileApiBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileApiBase.h; path = ../base/FileApiBase.h; sourceTree = "<group>"; };
+		5FBE6266142B8E78005A50B6 /* idstring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = idstring.cpp; path = ../base/idstring.cpp; sourceTree = "<group>"; };
+		5FBE6267142B8E78005A50B6 /* idstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = idstring.h; path = ../base/idstring.h; sourceTree = "<group>"; };
+		5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharEncoding.cpp; sourceTree = "<group>"; };
+		5FBE626B142B8E78005A50B6 /* CharEncoding.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CharEncoding.mm; sourceTree = "<group>"; };
+		5FBE626C142B8E78005A50B6 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
+		5FBE626D142B8E78005A50B6 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		5FBE626E142B8E78005A50B6 /* fileapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileapi.cpp; sourceTree = "<group>"; };
+		5FBE626F142B8E78005A50B6 /* fileapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileapi.h; sourceTree = "<group>"; };
+		5FBE6270142B8E78005A50B6 /* MemmapFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemmapFile.cpp; sourceTree = "<group>"; };
+		5FBE6271142B8E78005A50B6 /* MemmapFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemmapFile.h; sourceTree = "<group>"; };
+		5FBE6273142B8E78005A50B6 /* Mutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mutex.h; sourceTree = "<group>"; };
+		5FBE6274142B8E78005A50B6 /* MutexIP.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MutexIP.mm; sourceTree = "<group>"; };
+		5FBE6275142B8E78005A50B6 /* OSError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OSError.cpp; sourceTree = "<group>"; };
+		5FBE6277142B8E78005A50B6 /* Semaphore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Semaphore.h; sourceTree = "<group>"; };
+		5FBE6278142B8E78005A50B6 /* Semaphore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Semaphore.mm; sourceTree = "<group>"; };
+		5FBE6279142B8E78005A50B6 /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Thread.cpp; sourceTree = "<group>"; };
+		5FBE627A142B8E78005A50B6 /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
+		5FBE627C142B8E78005A50B6 /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = misc.cpp; path = ../base/misc.cpp; sourceTree = "<group>"; };
+		5FBE627D142B8E78005A50B6 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = misc.h; path = ../base/misc.h; sourceTree = "<group>"; };
+		5FBE627E142B8E78005A50B6 /* mltypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mltypes.h; path = ../base/mltypes.h; sourceTree = "<group>"; };
+		5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OnlyAllocator.cpp; path = ../base/OnlyAllocator.cpp; sourceTree = "<group>"; };
+		5FBE6280142B8E78005A50B6 /* OnlyAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnlyAllocator.h; path = ../base/OnlyAllocator.h; sourceTree = "<group>"; };
+		5FBE6281142B8E78005A50B6 /* OsBaseInc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OsBaseInc.h; path = ../base/OsBaseInc.h; sourceTree = "<group>"; };
+		5FBE6282142B8E78005A50B6 /* safestr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = safestr.cpp; path = ../base/safestr.cpp; sourceTree = "<group>"; };
+		5FBE6283142B8E78005A50B6 /* safestr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = safestr.h; path = ../base/safestr.h; sourceTree = "<group>"; };
+		5FBE6284142B8E78005A50B6 /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdafx.h; path = ../base/stdafx.h; sourceTree = "<group>"; };
+		5FBE6285142B8E78005A50B6 /* stringex_t.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stringex_t.h; path = ../base/stringex_t.h; sourceTree = "<group>"; };
+		5FBE6286142B8E78005A50B6 /* stringex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stringex.cpp; path = ../base/stringex.cpp; sourceTree = "<group>"; };
+		5FBE6287142B8E78005A50B6 /* stringex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stringex.h; path = ../base/stringex.h; sourceTree = "<group>"; };
+		5FBE6288142B8E78005A50B6 /* StringIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StringIterator.h; path = ../base/StringIterator.h; sourceTree = "<group>"; };
+		5FBE6289142B8E78005A50B6 /* StrPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StrPrintf.cpp; path = ../base/StrPrintf.cpp; sourceTree = "<group>"; };
+		5FBE628A142B8E78005A50B6 /* StrPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrPrintf.h; path = ../base/StrPrintf.h; sourceTree = "<group>"; };
+		5FBE628B142B8E78005A50B6 /* wintypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wintypes.h; path = ../base/wintypes.h; sourceTree = "<group>"; };
+		5FBE628C142B8E78005A50B6 /* xstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xstr.h; path = ../base/xstr.h; sourceTree = "<group>"; };
 		5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HttpProtocol.cpp; path = ../MLProtocol/HttpProtocol.cpp; sourceTree = SOURCE_ROOT; };
 		5FBEDFF711D979A000E01391 /* HttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HttpProtocol.h; path = ../MLProtocol/HttpProtocol.h; sourceTree = SOURCE_ROOT; };
 		5FC0B1B311C51C59000C6537 /* IMLAppNotify.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = IMLAppNotify.h; sourceTree = "<group>"; };
@@ -324,7 +390,6 @@
 			files = (
 				5F9DEF0B11AC099800312E83 /* libMLLib.a in Frameworks */,
 				5F9DEF0C11AC099800312E83 /* libUtils.a in Frameworks */,
-				5F9DEEF811AC095900312E83 /* libbase.a in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
@@ -343,7 +408,6 @@
 				5FC1235D12179521003D9B42 /* iAd.framework in Frameworks */,
 				5FC122DC12177E6B003D9B42 /* libMLLib.a in Frameworks */,
 				5FC122DD12177E6B003D9B42 /* libUtils.a in Frameworks */,
-				5FC122DE12177E6B003D9B42 /* libbase.a in Frameworks */,
 				5FC122DF12177E6B003D9B42 /* Foundation.framework in Frameworks */,
 				5FC122E012177E6B003D9B42 /* UIKit.framework in Frameworks */,
 				5FC122E112177E6B003D9B42 /* CoreGraphics.framework in Frameworks */,
@@ -406,10 +470,10 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				5FBE6253142B8E43005A50B6 /* base */,
 				5F70B85F11D8E9EC009D0254 /* MLProtocol */,
 				5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */,
 				5F9DEEF911AC097200312E83 /* Utils.xcodeproj */,
-				5F9DEEEC11AC094500312E83 /* base.xcodeproj */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -512,14 +576,6 @@
 			name = MLProtocol;
 			sourceTree = "<group>";
 		};
-		5F9DEEED11AC094500312E83 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5F9DEEF411AC094600312E83 /* libbase.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		5F9DEEFA11AC097200312E83 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -536,6 +592,70 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		5FBE6253142B8E43005A50B6 /* base */ = {
+			isa = PBXGroup;
+			children = (
+				5FBE6254142B8E78005A50B6 /* auto_free_list.h */,
+				5FBE6258142B8E78005A50B6 /* base.h */,
+				5FBE625A142B8E78005A50B6 /* BaseDate.cpp */,
+				5FBE625B142B8E78005A50B6 /* BaseDate.h */,
+				5FBE625C142B8E78005A50B6 /* CharEncoding.h */,
+				5FBE625D142B8E78005A50B6 /* CharEncodingBase.cpp */,
+				5FBE625E142B8E78005A50B6 /* common.h */,
+				5FBE625F142B8E78005A50B6 /* config.h */,
+				5FBE6260142B8E78005A50B6 /* cppunit-utils.cpp */,
+				5FBE6261142B8E78005A50B6 /* cppunit-utils.h */,
+				5FBE6262142B8E78005A50B6 /* Error.cpp */,
+				5FBE6263142B8E78005A50B6 /* Error.h */,
+				5FBE6264142B8E78005A50B6 /* FileApiBase.cpp */,
+				5FBE6265142B8E78005A50B6 /* FileApiBase.h */,
+				5FBE6266142B8E78005A50B6 /* idstring.cpp */,
+				5FBE6267142B8E78005A50B6 /* idstring.h */,
+				5FBE6268142B8E78005A50B6 /* Mac */,
+				5FBE627C142B8E78005A50B6 /* misc.cpp */,
+				5FBE627D142B8E78005A50B6 /* misc.h */,
+				5FBE627E142B8E78005A50B6 /* mltypes.h */,
+				5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */,
+				5FBE6280142B8E78005A50B6 /* OnlyAllocator.h */,
+				5FBE6281142B8E78005A50B6 /* OsBaseInc.h */,
+				5FBE6282142B8E78005A50B6 /* safestr.cpp */,
+				5FBE6283142B8E78005A50B6 /* safestr.h */,
+				5FBE6284142B8E78005A50B6 /* stdafx.h */,
+				5FBE6285142B8E78005A50B6 /* stringex_t.h */,
+				5FBE6286142B8E78005A50B6 /* stringex.cpp */,
+				5FBE6287142B8E78005A50B6 /* stringex.h */,
+				5FBE6288142B8E78005A50B6 /* StringIterator.h */,
+				5FBE6289142B8E78005A50B6 /* StrPrintf.cpp */,
+				5FBE628A142B8E78005A50B6 /* StrPrintf.h */,
+				5FBE628B142B8E78005A50B6 /* wintypes.h */,
+				5FBE628C142B8E78005A50B6 /* xstr.h */,
+			);
+			name = base;
+			sourceTree = "<group>";
+		};
+		5FBE6268142B8E78005A50B6 /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */,
+				5FBE626B142B8E78005A50B6 /* CharEncoding.mm */,
+				5FBE626C142B8E78005A50B6 /* Event.cpp */,
+				5FBE626D142B8E78005A50B6 /* Event.h */,
+				5FBE626E142B8E78005A50B6 /* fileapi.cpp */,
+				5FBE626F142B8E78005A50B6 /* fileapi.h */,
+				5FBE6270142B8E78005A50B6 /* MemmapFile.cpp */,
+				5FBE6271142B8E78005A50B6 /* MemmapFile.h */,
+				5FBE6273142B8E78005A50B6 /* Mutex.h */,
+				5FBE6274142B8E78005A50B6 /* MutexIP.mm */,
+				5FBE6275142B8E78005A50B6 /* OSError.cpp */,
+				5FBE6277142B8E78005A50B6 /* Semaphore.h */,
+				5FBE6278142B8E78005A50B6 /* Semaphore.mm */,
+				5FBE6279142B8E78005A50B6 /* Thread.cpp */,
+				5FBE627A142B8E78005A50B6 /* Thread.h */,
+			);
+			name = Mac;
+			path = ../base/Mac;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -550,7 +670,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				5FC1230312178052003D9B42 /* PBXTargetDependency */,
 				5FC1230712178052003D9B42 /* PBXTargetDependency */,
 				5FC1230912178052003D9B42 /* PBXTargetDependency */,
 			);
@@ -570,7 +689,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				5FC122F512178029003D9B42 /* PBXTargetDependency */,
 				5FC122F912178029003D9B42 /* PBXTargetDependency */,
 				5FC122FB12178029003D9B42 /* PBXTargetDependency */,
 			);
@@ -603,10 +721,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 5F9DEEED11AC094500312E83 /* Products */;
-					ProjectRef = 5F9DEEEC11AC094500312E83 /* base.xcodeproj */;
-				},
-				{
 					ProductGroup = 5F9DEF0311AC098F00312E83 /* Products */;
 					ProjectRef = 5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */;
 				},
@@ -624,13 +738,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		5F9DEEF411AC094600312E83 /* libbase.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libbase.a;
-			remoteRef = 5F9DEEF311AC094600312E83 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		5F9DEF0111AC097200312E83 /* libUtils.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -743,6 +850,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FBE62C9142B8F49005A50B6 /* CharEncoding.cpp in Sources */,
+				5FBE62CA142B8F49005A50B6 /* CharEncoding.mm in Sources */,
+				5FBE62CB142B8F49005A50B6 /* Event.cpp in Sources */,
+				5FBE62CC142B8F49005A50B6 /* fileapi.cpp in Sources */,
+				5FBE62CD142B8F49005A50B6 /* MemmapFile.cpp in Sources */,
+				5FBE62CF142B8F49005A50B6 /* MutexIP.mm in Sources */,
+				5FBE62D0142B8F49005A50B6 /* OSError.cpp in Sources */,
+				5FBE62D2142B8F49005A50B6 /* Semaphore.mm in Sources */,
+				5FBE62D3142B8F49005A50B6 /* Thread.cpp in Sources */,
+				5FBE62A9142B8ECA005A50B6 /* base.h in Sources */,
+				5FBE62AA142B8ECA005A50B6 /* BaseDate.cpp in Sources */,
+				5FBE62AD142B8ECA005A50B6 /* CharEncodingBase.cpp in Sources */,
+				5FBE62B0142B8ECA005A50B6 /* cppunit-utils.cpp in Sources */,
+				5FBE62B2142B8ECA005A50B6 /* Error.cpp in Sources */,
+				5FBE62B3142B8ECA005A50B6 /* Error.h in Sources */,
+				5FBE62B4142B8ECA005A50B6 /* FileApiBase.cpp in Sources */,
+				5FBE62B6142B8ECA005A50B6 /* idstring.cpp in Sources */,
+				5FBE62B8142B8ECA005A50B6 /* misc.cpp in Sources */,
+				5FBE62BB142B8ECA005A50B6 /* OnlyAllocator.cpp in Sources */,
+				5FBE62BE142B8ECA005A50B6 /* safestr.cpp in Sources */,
+				5FBE62C2142B8ECA005A50B6 /* stringex.cpp in Sources */,
+				5FBE62C5142B8ECA005A50B6 /* StrPrintf.cpp in Sources */,
 				1D60589B0D05DD56006BFB54 /* main.m in Sources */,
 				1D3623260D0F684500981E51 /* MiniLyricsAppDelegate.m in Sources */,
 				580748730FAA6E1600373EAF /* MusicTableViewController.m in Sources */,
@@ -792,17 +921,32 @@
 				5FC122D712177E6B003D9B42 /* LyrStaticTextView.mm in Sources */,
 				5FB4FE511428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */,
 				5FB4FE55142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */,
+				5FBE628F142B8E78005A50B6 /* BaseDate.cpp in Sources */,
+				5FBE6290142B8E78005A50B6 /* CharEncodingBase.cpp in Sources */,
+				5FBE6291142B8E78005A50B6 /* cppunit-utils.cpp in Sources */,
+				5FBE6292142B8E78005A50B6 /* Error.cpp in Sources */,
+				5FBE6293142B8E78005A50B6 /* FileApiBase.cpp in Sources */,
+				5FBE6294142B8E78005A50B6 /* idstring.cpp in Sources */,
+				5FBE6296142B8E78005A50B6 /* CharEncoding.cpp in Sources */,
+				5FBE6297142B8E78005A50B6 /* CharEncoding.mm in Sources */,
+				5FBE6298142B8E78005A50B6 /* Event.cpp in Sources */,
+				5FBE6299142B8E78005A50B6 /* fileapi.cpp in Sources */,
+				5FBE629A142B8E78005A50B6 /* MemmapFile.cpp in Sources */,
+				5FBE629C142B8E78005A50B6 /* MutexIP.mm in Sources */,
+				5FBE629D142B8E78005A50B6 /* OSError.cpp in Sources */,
+				5FBE629F142B8E78005A50B6 /* Semaphore.mm in Sources */,
+				5FBE62A0142B8E78005A50B6 /* Thread.cpp in Sources */,
+				5FBE62A2142B8E78005A50B6 /* misc.cpp in Sources */,
+				5FBE62A3142B8E78005A50B6 /* OnlyAllocator.cpp in Sources */,
+				5FBE62A4142B8E78005A50B6 /* safestr.cpp in Sources */,
+				5FBE62A5142B8E78005A50B6 /* stringex.cpp in Sources */,
+				5FBE62A6142B8E78005A50B6 /* StrPrintf.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		5FC122F512178029003D9B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = base;
-			targetProxy = 5FC122F412178029003D9B42 /* PBXContainerItemProxy */;
-		};
 		5FC122F912178029003D9B42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = MLLib;
@@ -812,11 +956,6 @@
 			isa = PBXTargetDependency;
 			name = Utils;
 			targetProxy = 5FC122FA12178029003D9B42 /* PBXContainerItemProxy */;
-		};
-		5FC1230312178052003D9B42 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = base;
-			targetProxy = 5FC1230212178052003D9B42 /* PBXContainerItemProxy */;
 		};
 		5FC1230712178052003D9B42 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -854,11 +993,7 @@
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../base/base/build/Debug\"",
-					"\"$(SRCROOT)/../base/base/build/Debug-iphoneos\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;
 			};
 			name = Debug;
@@ -872,11 +1007,7 @@
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../base/base/build/Debug\"",
-					"\"$(SRCROOT)/../base/base/build/Debug-iphoneos\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;
 			};
 			name = Release;
@@ -896,11 +1027,7 @@
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Free-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\\\"$(SRCROOT)/../base/base/build/Debug\\\"",
-					"\\\"$(SRCROOT)/../base/base/build/Debug-iphoneos\\\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "MiniLyrics Free";
 			};
 			name = Debug;
@@ -918,11 +1045,7 @@
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Free-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\\\"$(SRCROOT)/../base/base/build/Debug\\\"",
-					"\\\"$(SRCROOT)/../base/base/build/Debug-iphoneos\\\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "MiniLyrics Free";
 			};
 			name = Release;
@@ -940,11 +1063,7 @@
 				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Free-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\\\"$(SRCROOT)/../base/base/build/Debug\\\"",
-					"\\\"$(SRCROOT)/../base/base/build/Debug-iphoneos\\\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "MiniLyrics Free";
 			};
 			name = Distribution;
@@ -979,11 +1098,7 @@
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../base/base/build/Debug\"",
-					"\"$(SRCROOT)/../base/base/build/Debug-iphoneos\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;
 			};
 			name = Distribution;

@@ -32,6 +32,9 @@ public:
 			free(m_szBuff);
 	}
 
+	typedef T&	    reference;
+	typedef const T&  const_reference;
+
 	void erase(int nOffset, int n)
 	{
 		assert(n >= 0);

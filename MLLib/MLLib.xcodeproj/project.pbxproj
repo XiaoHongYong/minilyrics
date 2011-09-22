@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F020293142AB3050070D3DD /* LyrTimeStamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F020292142AB3050070D3DD /* LyrTimeStamp.cpp */; };
 		5FB4FE481428D90200D1DDA4 /* LrcParserHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */; };
 		5FB4FE491428D90200D1DDA4 /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */; };
 		5FCB8D3F1212331D009F23BD /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FCB8D3E1212331D009F23BD /* LyricsSearch.cpp */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F020292142AB3050070D3DD /* LyrTimeStamp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyrTimeStamp.cpp; sourceTree = "<group>"; };
 		5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LrcParserHelper.h; sourceTree = "<group>"; };
 		5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LrcTag.cpp; sourceTree = "<group>"; };
 		5FCB8D3E1212331D009F23BD /* LyricsSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsSearch.cpp; sourceTree = "<group>"; };
@@ -71,6 +73,7 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5F020292142AB3050070D3DD /* LyrTimeStamp.cpp */,
 				5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */,
 				5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */,
 				5FCB8D3E1212331D009F23BD /* LyricsSearch.cpp */,
@@ -183,6 +186,7 @@
 				5FE7ED7411F6D74700CECD89 /* MLProfile.cpp in Sources */,
 				5FCB8D3F1212331D009F23BD /* LyricsSearch.cpp in Sources */,
 				5FB4FE491428D90200D1DDA4 /* LrcTag.cpp in Sources */,
+				5F020293142AB3050070D3DD /* LyrTimeStamp.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,8 +199,11 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = MLLib;
@@ -208,7 +215,10 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
 				GCC_MODEL_TUNING = G5;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INSTALL_PATH = /usr/local/lib;
 				PRODUCT_NAME = MLLib;
@@ -220,6 +230,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
@@ -235,6 +247,8 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_C_LANGUAGE_STANDARD = c99;
+				GCC_ENABLE_CPP_EXCEPTIONS = NO;
+				GCC_ENABLE_CPP_RTTI = NO;
 				GCC_INLINES_ARE_PRIVATE_EXTERN = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = _IPHONE;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
