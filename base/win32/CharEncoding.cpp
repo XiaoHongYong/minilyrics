@@ -95,9 +95,15 @@ int Utf8ToMbcs(const char *str, int nLen, char *strOut, int nOut, int encodingID
 	if (encodingID == ED_UTF8)
 	{
 		if (nLen == -1)
+		{
 			strcpy_safe(strOut, nOut, str);
+			return strlen(strOut);
+		}
 		else
+		{
 			strncpysz_safe(strOut, nOut, str, nLen);
+			return nLen;
+		}
 	}
 
 	// Convert to UCS2
@@ -113,9 +119,15 @@ int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID
 	if (encodingID == ED_UTF8)
 	{
 		if (nLen == -1)
+		{
 			strcpy_safe(strOut, nOut, str);
+			return strlen(strOut);
+		}
 		else
+		{
 			strncpysz_safe(strOut, nOut, str, nLen);
+			return nLen;
+		}
 	}
 
 	// Convert to UCS2

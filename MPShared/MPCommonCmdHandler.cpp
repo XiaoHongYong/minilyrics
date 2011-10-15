@@ -128,18 +128,6 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 		}
 		break;
 
-	case IDC_EMBEDDED_LYRICS:
-		{
-			if (!g_LyricData.HasLyricsOpened())
-			{
-				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
-				break;
-			}
-
-			CDlgSaveEmbeddedLyrics dlg;
-			dlg.DoModal(m_pSkinWnd);
-		}
-		break;
 	case IDC_IPOD_LYRICS_DOWNLOADER:
 		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
 		break;
@@ -587,6 +575,18 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 			SaveAsLyricsFile(m_pSkinWnd,
 				LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false);
+		}
+		break;
+	case CMD_SAVE_LYR_IN_SONG_FILE:
+		{
+			if (!g_LyricData.HasLyricsOpened())
+			{
+				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+				break;
+			}
+
+			CDlgSaveEmbeddedLyrics dlg;
+			dlg.DoModal(m_pSkinWnd);
 		}
 		break;
 	case CMD_FORWARD_LYRICS:

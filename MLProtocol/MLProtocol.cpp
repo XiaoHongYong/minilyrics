@@ -761,13 +761,8 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 
 	if (pHead->byVersion == MPV_XML)
 	{
-		if (!m_pAccountMgr->m_bEnableXmlPack)
-			return ERR_DISABLE_PACK_XML;
-
-		// 在服务器端，需要根据客户端发送的packet类型，转换到对应的packet类型
-		if (m_pAccountMgr->m_bServer)
-			m_packFlag = MPV_XML;
-		return ERR_OK;
+		// We doesn't support old XML Packet now.
+		return ERR_DISABLE_PACK_XML;
 	}
 
 	if (pHead->byVersion == MPV_V1_MD5_ID)

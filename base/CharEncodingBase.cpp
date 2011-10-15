@@ -121,7 +121,6 @@ int UCS2ToUtf8(const WCHAR *str, int nLen, char *strOut, int nOut)
 
 			strOut[nOutPos] = (BYTE)*wchBegin;
 			nOutPos++;
-			wchBegin++;
 		}
 		else if (*wchBegin < 0x0800)
 		{
@@ -144,8 +143,8 @@ int UCS2ToUtf8(const WCHAR *str, int nLen, char *strOut, int nOut)
 			nOutPos++;
 			strOut[nOutPos] = (BYTE)((*wchBegin & 0x3F) | 0x80);
 			nOutPos++;
-			wchBegin ++;
 		}
+		wchBegin++;
 	}
 	strOut[nOutPos] = '\0';
 
@@ -554,6 +553,18 @@ protected:
 			wstring_t strInputNew;
 			MbcsToUCS2(out.c_str(), out.size(), strInputNew, ED_UTF8);
 			CPPUNIT_ASSERT(strInputNew == input);
+
+			input = L"cosMo@±©×ßP¡Á¥Ç¥Ã¥É¥Ü©`¥ëP feat.³õÒô¥ß¥¯";
+			UCS2ToUtf8(input, -1, out);
+
+			// Use MbcsToUCS2 with ED_UTF8 encoding to convert.
+			strInputNew;
+			MbcsToUCS2(out.c_str(), out.size(), strInputNew, ED_UTF8);
+			CPPUNIT_ASSERT(strInputNew == input);
+
+			wstring_t strOutW;
+			Utf8ToUCS2(out.c_str(), out.length(), strOutW);
+			CPPUNIT_ASSERT(strOutW == strInputNew);
 		}
 	}
 

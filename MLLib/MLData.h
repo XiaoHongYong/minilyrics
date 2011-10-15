@@ -5,11 +5,7 @@
 	Purpose :	各种歌词格式的歌词数据存储方式
 *********************************************************************/
 
-#if !defined(AFX_MLDATA_H__89324577_421C_48B2_B812_3D645089F044__INCLUDED_)
-#define AFX_MLDATA_H__89324577_421C_48B2_B812_3D645089F044__INCLUDED_
-
 #pragma once
-
 
 DECLAR_CPPUNIT_TEST_REG(CMLData)
 
@@ -27,7 +23,7 @@ DECLAR_CPPUNIT_TEST_REG(CMLData)
 
 ///////////////////////////////////////////////////////////////////////////////
 // BEGIN 歌词数据的数据结构定义
-typedef enum LYRIC_FRAG_ATTRIBUTE
+enum LYRIC_FRAG_ATTRIBUTE
 {
 	// LYRIC_FRAG::dwAttrib 的值的描述
 
@@ -45,9 +41,8 @@ typedef enum LYRIC_FRAG_ATTRIBUTE
 	// 第6位为临时歌词位：如插入的广告、注册提示等临时信息
 	LSA_TEMP_FRAG		= 0x1 << 5,
 	// 第7位为提示信息标志位
-	LSA_ERROR_INFO		= 0x1 << 6,
 	LSA_AD_FRAG			= 0x1 << 7,
-}LYRIC_FRAG_ATTRIBUTE;
+};
 
 #define GetShowStyle(dwAttrib)		(dwAttrib & 0x7)
 
@@ -61,7 +56,7 @@ typedef enum LYRIC_FRAG_ATTRIBUTE
 
 #define IsTempLyricsFrag(dwAttrib)		((dwAttrib & LSA_TEMP_FRAG) == LSA_TEMP_FRAG)
 
-typedef struct LYRIC_FRAG
+LYRIC_FRAG
 {
 	DWORD				dwAttrib;		// 属性，表示此段数据的信息LYRIC_FRAG_ATTRIBUTE
 	int					nBegTime;		// begin time
@@ -78,15 +73,18 @@ typedef struct LYRIC_FRAG
 	bool IsTempFrag() { return IsTempLyricsFrag(dwAttrib); }
 	bool IsTempBegTime() { return IsTempTimeBeg(dwAttrib); }
 
-}LYRIC_FRAG, *PLYRIC_FRAG, *LPLYRIC_FRAG;
+};
+
+typedef LYRIC_FRAG *PLYRIC_FRAG;
+typedef LYRIC_FRAG *LPLYRIC_FRAG;
 
 typedef vector<LPLYRIC_FRAG>		V_FRAG;
 
-typedef enum ML_ROW_TYPE
+enum ML_ROW_TYPE
 {
 	ML_ROW_LYRICS,		// 歌词行
 	ML_ROW_UNKNOW,		// 不能识别的行
-}ML_ROW_TYPE;
+};
 
 // 歌词中的每一行，在 ML 文件中，它表示歌词中的一行
 class ML_ROW
@@ -424,5 +422,3 @@ protected:
 	int						m_nMediaLength;
 
 };
-
-#endif // !defined(AFX_MLDATA_H__89324577_421C_48B2_B812_3D645089F044__INCLUDED_)
