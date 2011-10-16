@@ -6,9 +6,11 @@
 #ifdef _MPLAYER
 #define COMPANY_NAME	"ZikiPlayer"
 #define PRODUCT_NAME	"ZikiPlayer"
+#define PRODUCT_DESC	"ZikiPlayer - an amazing lyrics player"
 #define COPYRIGHT		"Copyright (C) 2010 ZikiPlayer"
 #else
 #define COMPANY_NAME	"Crintsoft"
 #define PRODUCT_NAME	"MiniLyrics"
+#define PRODUCT_DESC	"MiniLyrics - Display lyrics automatically"
 #define COPYRIGHT		"Copyright (C) 2010 Crintsoft"
 #endif

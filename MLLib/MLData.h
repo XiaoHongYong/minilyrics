@@ -56,7 +56,7 @@ enum LYRIC_FRAG_ATTRIBUTE
 
 #define IsTempLyricsFrag(dwAttrib)		((dwAttrib & LSA_TEMP_FRAG) == LSA_TEMP_FRAG)
 
-LYRIC_FRAG
+struct LYRIC_FRAG
 {
 	DWORD				dwAttrib;		// 属性，表示此段数据的信息LYRIC_FRAG_ATTRIBUTE
 	int					nBegTime;		// begin time

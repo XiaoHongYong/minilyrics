@@ -541,7 +541,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Ra&te These Lyrics...",        IDC_RATE_LYRICS
         MENUITEM SEPARATOR
-        MENUITEM "Save Lyrics in &Mp3 file",    IDC_SAVE_LYRICS_TO_MP3
+        MENUITEM "Save Lyrics in &Mp3 file",    IDC_EMBEDDED_LYRICS
         MENUITEM "&Remove Lyrics in Mp3 File",  IDC_REMOVE_LRC_IN_MP3
         MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS

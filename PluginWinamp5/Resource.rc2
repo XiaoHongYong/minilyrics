@@ -37,6 +37,7 @@ BEGIN
             VALUE "FileVersion", ML_VERSION_STR
             VALUE "LegalCopyright", COPYRIGHT
             VALUE "ProductName", PRODUCT_NAME
+            VALUE "FileDescription", PRODUCT_DESC
             VALUE "ProductVersion", ML_VERSION_STR
         END
     END
