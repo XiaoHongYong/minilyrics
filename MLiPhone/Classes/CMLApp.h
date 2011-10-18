@@ -7,6 +7,7 @@
 #import "LyricsLocalSearch.h"
 #import "OnlineSearch.h"
 #import "LyricsDownloadMgr.h"
+#import "LyricsAssociation.h"
 
 class CMLApp
 {

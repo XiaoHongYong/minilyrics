@@ -87,7 +87,10 @@ int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID
 	
 	NSString *temp = initNSString(str, nLen, encodingID);
 	if (temp)
+	{
 		strcpy_safe(strOut, nOut, [temp UTF8String]);
+		[temp release];
+	}
 	
 	return strlen(strOut);
 }
@@ -99,11 +102,14 @@ int Utf8ToMbcs(const char *str, int nLen, char *strOut, int nOut, int encodingID
 	NSString	*temp;
 	temp = [NSString stringWithUTF8String:str];
 	if (temp)
+	{
 		[temp getCString:strOut
 			  maxLength:nOut
 			   encoding:CFStringConvertEncodingToNSStringEncoding(
 																  GetCharEncodingByID((CHAR_ENCODING)encodingID).nCFStringEncoding)];
-	
+		[temp release];
+	}
+
 	return strlen(strOut);	
 }
 
@@ -118,8 +124,10 @@ int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int encodingI
 			nOut = [temp length];
 		[temp getCharacters:(unichar *)strOut range: NSMakeRange(0, nOut)];
 		strOut[nOut] = '\0';
+
+		[temp release];
 	}
-	
+
 	return wcslen(strOut);
 }
 
@@ -134,6 +142,7 @@ int UCS2ToMbcs(const WCHAR *str, int nLen, char *strOut, int nOut, int encodingI
 			  maxLength:nOut
 			   encoding:CFStringConvertEncodingToNSStringEncoding(
 																  GetCharEncodingByID((CHAR_ENCODING)encodingID).nCFStringEncoding)];
+		[temp release];
 	}
 	
 	return strlen(strOut);

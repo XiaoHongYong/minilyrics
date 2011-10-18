@@ -25,5 +25,7 @@
 - (void) onLyricsChanged;
 - (void) InitLyrView;
 - (void) reloadFontSettings;
+- (void) onPlaybackStateChanged:(MPMusicPlaybackState)state;
+- (void) onUpdateLyrDisplay;
 
 @end

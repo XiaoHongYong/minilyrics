@@ -27,7 +27,6 @@
 @synthesize repeatButton;
 @synthesize shuffleButton;
 @synthesize playingSlider;
-@synthesize volumeSlider;
 @synthesize playedTimeLable;
 @synthesize leftTimeLable;
 @synthesize playingProgressTimer;
@@ -41,6 +40,7 @@
 @synthesize	playPauseButton;
 
 @synthesize mlApp;
+@synthesize threadInit;
 
 #ifdef _FREE
 @synthesize banner;
@@ -156,11 +156,6 @@ extern "C" NSString *formatPlayingTime(int n);
 	[self updatePlaybackTime:playbackTime / 1000];
 }
 
-- (IBAction)	volumeSeek:				(id) sender
-{
-	[musicPlayer setVolume: [volumeSlider value]];
-}
-
 - (IBAction)	forwardLyrics:			(id) sender
 {
 	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
@@ -181,6 +176,10 @@ extern "C" NSString *formatPlayingTime(int n);
 	{
 		MPMediaPickerController *picker =
 		[[MPMediaPickerController alloc] initWithMediaTypes: MPMediaTypeMusic];
+		if (picker == nil) {
+			ERRLOG0("Failed to alloc MPMediaPickerController");
+			return;
+		}
 		
 		picker.delegate						= self;
 		picker.allowsPickingMultipleItems	= YES;
@@ -294,6 +293,8 @@ extern "C" NSString *formatPlayingTime(int n);
 	
 	[archiver finishEncoding];
 	BOOL sucess = [data writeToFile:mediaFile atomically:YES];
+	if (!sucess)
+		ERRLOG0("Failed to save playlist.");
 	[archiver release];
 	[data release];
 
@@ -407,12 +408,6 @@ extern "C" NSString *formatPlayingTime(int n);
 	[lyrVerticalView onPlaybackStateChanged:playbackState];
 }
 
-// When volume is changed
-- (void) handle_VolumeChanged: (id) notification {
-	
-	[volumeSlider setValue: [musicPlayer volume]];
-}
-
 - (void) handle_iPodLibraryChanged: (id) notification {
 
 	// Implement this method to update cached collections of media items when the 
@@ -450,11 +445,6 @@ extern "C" NSString *formatPlayingTime(int n);
 	[notificationCenter addObserver: self
 						   selector: @selector (handle_PlaybackStateChanged:)
 							   name: MPMusicPlayerControllerPlaybackStateDidChangeNotification
-							 object: musicPlayer];
-
-	[notificationCenter addObserver: self
-						   selector: @selector (handle_VolumeChanged:)
-							   name: MPMusicPlayerControllerVolumeDidChangeNotification
 							 object: musicPlayer];
 
 /*
@@ -574,6 +564,13 @@ extern "C" NSString *formatPlayingTime(int n);
 
 #endif // #ifdef _FREE
 
+- (void) initThreadRoute {
+	// Instantiate the music player. If you specied the iPod music player in the Settings app,
+	//		honor the current state of the built-in iPod app.
+	[self setMusicPlayer: [MPMusicPlayerController iPodMusicPlayer]];
+	
+	[self performSelectorOnMainThread:@selector(onInitThreadDone) withObject:nil waitUntilDone:false];
+}
 
 // Configure the application.
 - (void) viewDidLoad {
@@ -587,18 +584,21 @@ extern "C" NSString *formatPlayingTime(int n);
 	[artistLabel setText:@""];
 	[albumLabel setText:@""];
 	[titleLabel setText:@""];
+	
+	// threadInit = [[NSThread alloc] initWithTarget:self selector:@selector(initThreadRoute) object:nil];
+	// [threadInit start];
+	[self initThreadRoute];
+}
 
+- (void) onInitThreadDone {
 	[self setPlayingProgressTimer: [NSTimer scheduledTimerWithTimeInterval: 0.5
 															   target: self
 															 selector: @selector (onUpdatePlayingProgress)
 															 userInfo: nil
 															  repeats: YES]];	
-	
+
 	[self setPlayedMusicOnce: NO];
 
-	// Instantiate the music player. If you specied the iPod music player in the Settings app,
-	//		honor the current state of the built-in iPod app.
-	[self setMusicPlayer: [MPMusicPlayerController iPodMusicPlayer]];	
 	if ([musicPlayer nowPlayingItem]) {
 		// Update the UI to reflect the now-playing item. 
 		[self handle_NowPlayingItemChanged: nil];
@@ -621,13 +621,14 @@ extern "C" NSString *formatPlayingTime(int n);
 	//
 	[staticLyrView InitLyrView];
 	[staticLyrView onLyricsChanged];
-	[staticLyrView setHidden:TRUE];
+	[staticLyrView setHidden:FALSE];
 
 	//
 	// Init set vertical lyrics view.
 	//
 	[lyrVerticalView setMusicPlayer:self.musicPlayer];
 	[lyrVerticalView InitLyrView];
+	[lyrVerticalView setHidden:TRUE];
 
 	//
 	// Register Gesture Recognizer
@@ -675,7 +676,7 @@ extern "C" NSString *formatPlayingTime(int n);
 	[repeatButton setImage:imgRepeat forState:UIControlStateNormal];
 	
 	//
-	// Set volume slider images
+	// Set seekbar slider images
 	//
 	playingSlider.backgroundColor = [UIColor clearColor];	
 	UIImage *stetchLeftTrack = [[UIImage imageNamed:@"playing_slider_left.png"]
@@ -690,16 +691,6 @@ extern "C" NSString *formatPlayingTime(int n);
 	[playingSlider setMinimumTrackImage:stetchLeftTrack forState:UIControlStateNormal];
 	[playingSlider setMaximumTrackImage:stetchRightTrack forState:UIControlStateNormal];
 
-	[volumeSlider setThumbImage: sliderBall forState:UIControlStateNormal];
-	[volumeSlider setThumbImage: sliderBallPressed forState:UIControlStateHighlighted];
-	[volumeSlider setThumbImage: sliderBallPressed forState:UIControlStateSelected];
-	[volumeSlider setMinimumTrackImage:stetchLeftTrack forState:UIControlStateNormal];
-	[volumeSlider setMaximumTrackImage:stetchRightTrack forState:UIControlStateNormal];	
-	
-	[volumeSlider setMinimumValue: 0.0];
-	[volumeSlider setMaximumValue: 1.0];
-	[volumeSlider setValue: [musicPlayer volume]];
-
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,
 														 NSUserDomainMask, YES);
 	NSString *documentPath = [paths objectAtIndex:0];
@@ -712,6 +703,8 @@ extern "C" NSString *formatPlayingTime(int n);
 		//MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
 		[musicPlayer setQueueWithItemCollection: userMediaItemCollection];
 		//[musicPlayer setNowPlayingItem:currentItem];
+		[unarchiver release];
+		[data release];
 	}
 
 	if (self.userMediaItemCollection) {
@@ -869,28 +862,32 @@ CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
 	[messageLabel setHidden:YES];
 	
 	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
-	if (lyrData.HasLyricsOpened() && lyrData.GetLyrContentType() == LCT_TXT)
+	// if (lyrData.HasLyricsOpened() && lyrData.GetLyrContentType() == LCT_TXT)
 	{
 		// Static lyrics
 		[staticLyrView onLyricsChanged];
 
 		UIImage *imageDark = nil;
 		UIImage *image = getAlbumArtWithSize(self.musicPlayer, albumArtImage.frame.size.width, albumArtImage.frame.size.height);
-		if (image)
-			imageDark = [self createDarkImage:image];
+		if (image) {
+			NSLog(@"AlbumArt image is set.");
+			if (lyrData.HasLyricsOpened())
+				image = [self createDarkImage:image];
+			imageDark = image;
+		}
 		[albumArtImage setImage:imageDark];
 		[albumArtImage setHidden:NO];
 
 		[lyrVerticalView setHidden:YES];
 		[staticLyrView setHidden:NO];
 	}
-	else
+/*	else
 	{
 		[lyrVerticalView onLyricsChanged];
 		[albumArtImage setHidden:YES];
 		[staticLyrView setHidden:YES];
 		[lyrVerticalView setHidden:NO];
-	}
+	}*/
 }
 
 - (void)onMessage:(NSString*)msg showActivityIndicator:(bool)bShow infoMsg:(bool)bInfoMsg
@@ -984,10 +981,11 @@ CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
 	[repeatButton release];
 	[shuffleButton release];
 	[playingSlider release];
-	[volumeSlider release];
 	[playedTimeLable release];
 	[leftTimeLable release];
 	[playingProgressTimer release];
+	
+	[threadInit release];
 
 #ifdef _FREE
     [banner release];

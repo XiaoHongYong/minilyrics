@@ -83,7 +83,7 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	[self setNeedsDisplay];
 }
 
--(void) onPlaybackStateChanged:(MPMusicPlaybackState)state
+- (void) onPlaybackStateChanged:(MPMusicPlaybackState)state
 {
 /*	if (state == MPMusicPlaybackStatePaused || state == MPMusicPlaybackStateStopped) {
 		[lyrDisplayTimer invalidate];

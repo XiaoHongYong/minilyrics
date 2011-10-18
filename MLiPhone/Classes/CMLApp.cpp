@@ -29,12 +29,9 @@ int CMLApp::Init()
 	vArgv[0] = (LPTSTR)strAppDirDir.c_str();
 
 	InitBaseFrameWork(1, vArgv, NULL, _T("MiniLyrics.ini"), _T("MiniLyrics"));
-	
-	g_Profile.DoCache();
-	
-	SetDefaultSettings();
 
 	m_localLyrSearch.Init();
+	g_lyricsAssociation.Init();
 	m_onlineLyrSearch.Init();
 	m_lyrDownloadMgr.Init();
 
@@ -44,6 +41,7 @@ int CMLApp::Init()
 void CMLApp::Quit()
 {
 	m_localLyrSearch.Quit();
+	g_lyricsAssociation.Quit();
 	m_onlineLyrSearch.Quit();
 	m_lyrDownloadMgr.Quit();
 }
@@ -83,18 +81,17 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 		return;
 	}
 
-	if (m_localLyrSearch.IsAssociatedWithNoneLyrics(m_strCurMediaKey.c_str()))
+	tstring strLyrics;
+	if (m_localLyrSearch.GetBestMatchLyrics(szMediaKey, szArtist, szTitle, strLyrics))
 	{
-		AddMediaInfo();
-		PostNotifyLyricsChanged();
-		return;
-	}
-
-	TCHAR	szLyricFile[MAX_PATH];
-	if (m_localLyrSearch.GetBestMatchLyrics(szMediaKey, szArtist, szTitle, szLyricFile))
-	{
-		// Open lyrics and return.
-		int nRet = m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szLyricFile, false, ED_SYSDEF);
+		// Open lyrics
+		if (_tcsicmp(strLyrics.c_str(), NONE_LYRICS) == 0)
+		{
+			AddMediaInfo();
+			PostNotifyLyricsChanged();
+			return;
+		}
+		int nRet = m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, strLyrics.c_str(), false, ED_SYSDEF);
 		if (nRet == ERR_OK)
 		{
 			PostNotifyLyricsChanged();
@@ -102,30 +99,13 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 		}
 	}
 
-/*	if (g_LyricData.GetLyrContentType() == LCT_TXT &&
-		!m_localLyrSearch.IsAssociatedLyrics(g_Player.GetSrcMedia(), g_Player.GetFullTitle()))
-	{
-		//
-		// continue to search online .lrc, if .txt lyrics is opened
-		//
-		if (!g_LyricsDownloader.SearchInCacheResult(false))
-			g_OnlineSearch.AutoSearch(g_Player.GetArtist(), g_Player.GetTitle());
-	}*/
-
 	AddMediaInfo();
 
-	if (m_strTitle.size() >= 3)
+	if (g_lyricsAssociation.canAutoSearchOnline(szMediaKey))
 	{
-		// title at least 3 char long
-		if (!SearchInCacheResult(false))
-		{
-			// 使用在线检索，搜索歌词
-			m_onlineLyrSearch.AutoSearch(szMediaKey, szArtist, szTitle);
-		}
+		// Search online
+		m_onlineLyrSearch.AutoSearch(szMediaKey, szArtist, szTitle);
 	}
-	
-	if (!IsEmptyString(szEmbeddedLyr))
-		m_lyrData.OpenLyrics(m_strCurMediaKey.c_str(), m_nMediaLength, szEmbeddedLyr, FE_UTF8);
 
 	PostNotifyLyricsChanged();
 }
@@ -151,7 +131,8 @@ void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
 		bPopupSearchWnd = false;
 	
 		// Lyrics are opened already?
-		if (m_localLyrSearch.IsAssociatedLyrics(m_strCurMediaKey.c_str()))
+		tstring strLyrics;
+		if (g_lyricsAssociation.getAssociatedLyrics(m_strCurMediaKey.c_str(), strLyrics))
 			return;
 
 		// Got lyrics search result, so search it.
@@ -190,7 +171,7 @@ void CMLApp::DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szUrl, LPCTSTR szFileNam
 void CMLApp::OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
 {
 	// Associate lyrics
-	m_localLyrSearch.AssociateLyrics(szMediaKey, szFile);
+	g_lyricsAssociation.AssociateLyrics(szMediaKey, szFile);
 
 	// Open Lyrics
 	if (_tcscmp(szMediaKey, m_strCurMediaKey.c_str()) == 0)
@@ -246,14 +227,6 @@ BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
 		nValueMax = result.nMatchValue;
 		if (nValueMax >= MATCH_VALUE_OK)
 		{
-			// Do not download .txt lyrics
-			if (FileIsExtSame(result.strUrl.c_str(), _T(".txt"))
-				&& g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false))
-			{
-				PostNotifyMessage(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")), false, true);
-				return TRUE;
-			}
-
 			// If current lyrics is text lyrics, and the match lyrics is also text
 			// lyrics, do NOT download it.
 			if (m_lyrData.GetLyrContentType() != LCT_UNKNOWN

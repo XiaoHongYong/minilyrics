@@ -39,7 +39,6 @@
 	IBOutlet UIButton			*repeatButton;
 	IBOutlet UIButton			*shuffleButton;
 	IBOutlet UISlider			*playingSlider;
-	IBOutlet UISlider			*volumeSlider;
 	IBOutlet UILabel			*playedTimeLable;
 	IBOutlet UILabel			*leftTimeLable;
 	IBOutlet UIImageView		*albumArtImage;
@@ -76,7 +75,6 @@
 @property (nonatomic, retain)	UIButton				*repeatButton;
 @property (nonatomic, retain)	UIButton				*shuffleButton;
 @property (nonatomic, retain)	UISlider				*playingSlider;
-@property (nonatomic, retain)	UISlider				*volumeSlider;
 @property (nonatomic, retain)	UILabel					*playedTimeLable;
 @property (nonatomic, retain)	UILabel					*leftTimeLable;
 @property (nonatomic, retain)	NSTimer					*playingProgressTimer;
@@ -93,6 +91,7 @@
 @property (nonatomic, retain)	MPMusicPlayerController	*musicPlayer;
 
 @property (nonatomic, retain)	MLApp					*mlApp;
+@property (nonatomic, retain)	NSThread				*threadInit;
 
 #ifdef _FREE
 @property (nonatomic, retain)	ADBannerView			*banner;
@@ -106,11 +105,14 @@
 - (IBAction)	shuffle:				(id) sender;
 - (IBAction)	repeat:					(id) sender;
 - (IBAction)	playingPosSeek:			(id) sender;
-- (IBAction)	volumeSeek:				(id) sender;
 - (IBAction)	beginSeek:				(id) sender;
 - (IBAction)	endSeek:				(id) sender;
 
 - (IBAction)	forwardLyrics:			(id) sender;
 - (IBAction)	backwardLyrics:			(id) sender;
+
+- (void) initThreadRoute;
+- (void) onInitThreadDone;
+- (void) onUpdatePlayingProgress;
 
 @end

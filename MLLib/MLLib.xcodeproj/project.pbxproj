@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		5F020293142AB3050070D3DD /* LyrTimeStamp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F020292142AB3050070D3DD /* LyrTimeStamp.cpp */; };
+		5FB0531E143855FE000B0653 /* LrcTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0531C143855FE000B0653 /* LrcTag.h */; };
+		5FB0531F143855FE000B0653 /* LyrTimeStamp.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB0531D143855FE000B0653 /* LyrTimeStamp.h */; };
 		5FB4FE481428D90200D1DDA4 /* LrcParserHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */; };
 		5FB4FE491428D90200D1DDA4 /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */; };
 		5FCB8D3F1212331D009F23BD /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FCB8D3E1212331D009F23BD /* LyricsSearch.cpp */; };
@@ -22,13 +24,14 @@
 		5FE7ED6D11F6D74700CECD89 /* MLData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED4911F6D74700CECD89 /* MLData.cpp */; };
 		5FE7ED6E11F6D74700CECD89 /* MLData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4A11F6D74700CECD89 /* MLData.h */; };
 		5FE7ED7311F6D74700CECD89 /* MLLib.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED4F11F6D74700CECD89 /* MLLib.h */; };
-		5FE7ED7411F6D74700CECD89 /* MLProfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7ED5011F6D74700CECD89 /* MLProfile.cpp */; };
 		5FE7ED7511F6D74700CECD89 /* MLProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5111F6D74700CECD89 /* MLProfile.h */; };
 		5FE7ED8011F6D74700CECD89 /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FE7ED5C11F6D74700CECD89 /* StdAfx.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		5F020292142AB3050070D3DD /* LyrTimeStamp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyrTimeStamp.cpp; sourceTree = "<group>"; };
+		5FB0531C143855FE000B0653 /* LrcTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LrcTag.h; sourceTree = "<group>"; };
+		5FB0531D143855FE000B0653 /* LyrTimeStamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrTimeStamp.h; sourceTree = "<group>"; };
 		5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LrcParserHelper.h; sourceTree = "<group>"; };
 		5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LrcTag.cpp; sourceTree = "<group>"; };
 		5FCB8D3E1212331D009F23BD /* LyricsSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147486000; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsSearch.cpp; sourceTree = "<group>"; };
@@ -43,7 +46,6 @@
 		5FE7ED4911F6D74700CECD89 /* MLData.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = MLData.cpp; sourceTree = "<group>"; };
 		5FE7ED4A11F6D74700CECD89 /* MLData.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLData.h; sourceTree = "<group>"; };
 		5FE7ED4F11F6D74700CECD89 /* MLLib.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLLib.h; sourceTree = "<group>"; };
-		5FE7ED5011F6D74700CECD89 /* MLProfile.cpp */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.cpp.cpp; path = MLProfile.cpp; sourceTree = "<group>"; };
 		5FE7ED5111F6D74700CECD89 /* MLProfile.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = MLProfile.h; sourceTree = "<group>"; };
 		5FE7ED5C11F6D74700CECD89 /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 2147483673; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = "<group>"; };
 		D2AAC046055464E500DB518D /* libMLLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMLLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -73,6 +75,8 @@
 		08FB7795FE84155DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FB0531C143855FE000B0653 /* LrcTag.h */,
+				5FB0531D143855FE000B0653 /* LyrTimeStamp.h */,
 				5F020292142AB3050070D3DD /* LyrTimeStamp.cpp */,
 				5FB4FE461428D90200D1DDA4 /* LrcParserHelper.h */,
 				5FB4FE471428D90200D1DDA4 /* LrcTag.cpp */,
@@ -88,7 +92,6 @@
 				5FE7ED4911F6D74700CECD89 /* MLData.cpp */,
 				5FE7ED4A11F6D74700CECD89 /* MLData.h */,
 				5FE7ED4F11F6D74700CECD89 /* MLLib.h */,
-				5FE7ED5011F6D74700CECD89 /* MLProfile.cpp */,
 				5FE7ED5111F6D74700CECD89 /* MLProfile.h */,
 				5FE7ED5C11F6D74700CECD89 /* StdAfx.h */,
 			);
@@ -127,6 +130,8 @@
 				5FE7ED7511F6D74700CECD89 /* MLProfile.h in Headers */,
 				5FE7ED8011F6D74700CECD89 /* StdAfx.h in Headers */,
 				5FB4FE481428D90200D1DDA4 /* LrcParserHelper.h in Headers */,
+				5FB0531E143855FE000B0653 /* LrcTag.h in Headers */,
+				5FB0531F143855FE000B0653 /* LyrTimeStamp.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,7 +188,6 @@
 				5FE7ED6111F6D74700CECD89 /* LrcParser.cpp in Sources */,
 				5FE7ED6911F6D74700CECD89 /* LyrScrollActionRecorder.cpp in Sources */,
 				5FE7ED6D11F6D74700CECD89 /* MLData.cpp in Sources */,
-				5FE7ED7411F6D74700CECD89 /* MLProfile.cpp in Sources */,
 				5FCB8D3F1212331D009F23BD /* LyricsSearch.cpp in Sources */,
 				5FB4FE491428D90200D1DDA4 /* LrcTag.cpp in Sources */,
 				5F020293142AB3050070D3DD /* LyrTimeStamp.cpp in Sources */,

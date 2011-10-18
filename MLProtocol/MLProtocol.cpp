@@ -714,7 +714,7 @@ int CMLPacketWrapper::Wrapp(CCharBuffer &buff)
 	{
 		const char *szPwd;
 		MLEncodePacketV1	head;
-		long		n = 0;
+		int			n = 0;
 		size_t		nSizeOld;
 		uint		i;
 

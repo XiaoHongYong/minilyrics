@@ -32,6 +32,10 @@
 		5F9DEF0C11AC099800312E83 /* libUtils.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEF0111AC097200312E83 /* libUtils.a */; };
 		5F9DEFC911AC101100312E83 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9DEFC811AC101100312E83 /* libiconv.dylib */; };
 		5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
+		5FAF93F5144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */; };
+		5FAF93F6144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */; };
+		5FAF93F8144DB65D00E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F7144DB65D00E998BC /* libsqlite3.dylib */; };
+		5FAF93FA144DB67800E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F9144DB67800E998BC /* libsqlite3.dylib */; };
 		5FB4FE501428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */; };
 		5FB4FE511428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */; };
 		5FB4FE54142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE53142A2C0000D1DDA4 /* MLAppNotifyParam.mm */; };
@@ -274,6 +278,10 @@
 		5F9DEFC811AC101100312E83 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		5FAB7BA911B2013700C9395C /* LyrVecticalScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrVecticalScrollView.h; sourceTree = "<group>"; };
 		5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrVecticalScrollView.mm; sourceTree = "<group>"; };
+		5FAF93F3144DAE6100E998BC /* LyricsAssociation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsAssociation.h; sourceTree = "<group>"; };
+		5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsAssociation.cpp; sourceTree = "<group>"; };
+		5FAF93F7144DB65D00E998BC /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		5FAF93F9144DB67800E998BC /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLClientSession.cpp; sourceTree = "<group>"; };
 		5FB4FE4F1428E3A900D1DDA4 /* MLClientSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLClientSession.h; sourceTree = "<group>"; };
 		5FB4FE52142A2BFF00D1DDA4 /* MLAppNotifyParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLAppNotifyParam.h; sourceTree = "<group>"; };
@@ -388,6 +396,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FAF93F8144DB65D00E998BC /* libsqlite3.dylib in Frameworks */,
 				5F9DEF0B11AC099800312E83 /* libMLLib.a in Frameworks */,
 				5F9DEF0C11AC099800312E83 /* libUtils.a in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
@@ -405,6 +414,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FAF93FA144DB67800E998BC /* libsqlite3.dylib in Frameworks */,
 				5FC1235D12179521003D9B42 /* iAd.framework in Frameworks */,
 				5FC122DC12177E6B003D9B42 /* libMLLib.a in Frameworks */,
 				5FC122DD12177E6B003D9B42 /* libUtils.a in Frameworks */,
@@ -430,6 +440,8 @@
 				5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */,
 				5F1B47F111DC171B00AAF8E4 /* CMLApp.h */,
 				5FC0B1B311C51C59000C6537 /* IMLAppNotify.h */,
+				5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */,
+				5FAF93F3144DAE6100E998BC /* LyricsAssociation.h */,
 				5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */,
 				5FC0B1B511C51C59000C6537 /* LyricsDownloadMgr.h */,
 				5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */,
@@ -470,6 +482,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				5FAF93F9144DB67800E998BC /* libsqlite3.dylib */,
+				5FAF93F7144DB65D00E998BC /* libsqlite3.dylib */,
 				5FBE6253142B8E43005A50B6 /* base */,
 				5F70B85F11D8E9EC009D0254 /* MLProtocol */,
 				5F9DEF0211AC098F00312E83 /* MLLib.xcodeproj */,
@@ -893,6 +907,7 @@
 				5FE7EA0511F1375500CECD89 /* LyrStaticTextView.mm in Sources */,
 				5FB4FE501428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */,
 				5FB4FE54142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */,
+				5FAF93F5144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -941,6 +956,7 @@
 				5FBE62A4142B8E78005A50B6 /* safestr.cpp in Sources */,
 				5FBE62A5142B8E78005A50B6 /* stringex.cpp in Sources */,
 				5FBE62A6142B8E78005A50B6 /* StrPrintf.cpp in Sources */,
+				5FAF93F6144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
