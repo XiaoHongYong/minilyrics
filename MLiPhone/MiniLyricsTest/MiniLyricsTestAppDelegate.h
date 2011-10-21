@@ -1,0 +1,15 @@
+//
+//  MiniLyricsTestAppDelegate.h
+//  MiniLyricsTest
+//
+//  Created by Hongyong Xiao on 10/20/11.
+//  Copyright 2011 __MyCompanyName__. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+@interface MiniLyricsTestAppDelegate : NSObject <UIApplicationDelegate>
+
+@property (nonatomic, retain) IBOutlet UIWindow *window;
+
+@end
