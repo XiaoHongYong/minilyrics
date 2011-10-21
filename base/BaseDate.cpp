@@ -312,7 +312,6 @@ protected:
 		for (int i = 0; i < CountOf(vYear); i++)
 		{
 			int year = vYear[i];
-			int month = 1;
 			for (int month = 1; month <= 12; month++)
 			{
 				int dayToMonthStart = GetDaysToMonth(year, month);

@@ -282,7 +282,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPBYTE szLrc, int 
 }
 
 #ifdef _IPHONE
-int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent)
+int CMLData::OpenLyricsContent(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent)
 {
 	m_strSongFile = szSongFile;
 	m_nMediaLength = nMediaLength;
@@ -1809,16 +1809,19 @@ void CMLData::CopyMLyrLines(CMLyrLines &lyrLines)
 class CTestCaseCMLData : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(CTestCaseCMLData);
+#ifndef _IPHONE
 	CPPUNIT_TEST(Test_CMLData_OpenLrcFile);
 	CPPUNIT_TEST(Test_CMLData_OpenSaveID3v2_USLT);
 	CPPUNIT_TEST(Test_CMLData_OpenSaveID3v2_SYLT);
 	CPPUNIT_TEST(Test_CMLData_OpenSaveLyrics3v2);
+#endif // #ifndef _IPHONE
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
 	tstring			m_strTestDataFolder;
 
 public:
+#ifndef _IPHONE
 	void setUp()
 	{
 		FileGetPath(_T(__FILE__), m_strTestDataFolder);
@@ -2136,6 +2139,7 @@ protected:
 			}
 		}
 	}
+#endif // #ifndef _IPHONE
 
 };
 

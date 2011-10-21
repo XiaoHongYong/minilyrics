@@ -67,11 +67,6 @@ int_t1 inline min_fun(int_t1 a, int_t2 b)
 	return (((a) < (b)) ? (a) : (b));
 }
 
-#ifndef min
-#define max(a,b)    (((a) > (b)) ? (a) : (b))
-#define min(a,b)    (((a) < (b)) ? (a) : (b))
-#endif
-
 #ifdef _WIN32
 #define DIR_SLASH		'\\'
 #define SZ_DIR_SLASH	"\\"

@@ -681,12 +681,20 @@ protected:
 
 	void TestFileNameFilterInvalidChars()
 	{
+#ifdef _WIN32
 		// /:*?\"<>|
 		LPCTSTR		szFile[] = {
 			_T("c:\\aa?:!/<>|*.txt"), _T("c:\\aa__!_____.txt"),
 			_T("c:\\bb\\cc\aa.txt"), _T("c:\\bb\\cc\aa.txt"),
 			_T("a?:a.txt"), _T("a__a.txt"),
 		};
+#else
+		LPCTSTR		szFile[] = {
+			_T("/aa?:!\\<>|*.txt"), _T("/aa__!_____.txt"),
+			_T("/bb/cc/aa.txt"), _T("/bb/cc/aa.txt"),
+			_T("a?:a.txt"), _T("a__a.txt"),
+		};
+#endif
 
 		for (int i = 0; i < CountOf(szFile); i += 2)
 		{

@@ -116,6 +116,8 @@ int CLrcParser::ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine)
 	if (IsEmptyString(szText))
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
+	m_pMLData->Properties().SetEncoding(DEFAULT_ENCODING);
+
 	//
 	// Parse .lrc line by line
 	//
@@ -244,6 +246,10 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 	if (!bUseSpecifiedEncoding)
 		encoding = GetLyricsTextEncoding(szLrc, nLen);
 
+	//
+	// Convert lyrics to the current encoding
+	//
+	
 	wstringex	wstrBE;
 	if (encoding == ED_UNICODE_BIG_ENDIAN)
 	{
@@ -282,8 +288,11 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 #endif
 	}
 
-	m_pMLData->Properties().SetEncoding(encoding);
+	// Parse lyrics with current encoding.
 	ParseString((LPCTSTR)szLrc, bAddTimeStampForTextLine);
+
+	// Save the encoding information in lyrics data.
+	m_pMLData->Properties().SetEncoding(encoding);
 
 	return ERR_OK;
 }
@@ -950,8 +959,8 @@ protected:
 
 			CMLData			data3;
 			CLrcParser		parser3(&data3);
-			data3.Properties().SetEncoding(vEncoding[i]);
 			parser3.ParseString(strNewLyr.c_str(), false);
+			data3.Properties().SetEncoding(vEncoding[i]);
 
 			{
 				// Compare ToString data.
@@ -985,8 +994,8 @@ protected:
 
 			CMLData			data5;
 			CLrcParser		parser5(&data5);
-			data5.Properties().SetEncoding(vEncoding[i]);
 			parser5.ParseString(strTxtLyr.c_str(), false);
+			data5.Properties().SetEncoding(vEncoding[i]);
 
 			// The new parsed data5 shall be same with previous data.
 			CPPUNIT_ASSERT(data5.Properties().GetOffsetTime() == data.GetOffsetTime());
@@ -1067,6 +1076,7 @@ protected:
 			CMLData			data3;
 			CLrcParser		parser3(&data3);
 			parser3.ParseString(strNewLyr.c_str(), false);
+			data3.Properties().SetEncoding(vEncoding[i]);
 
 			{
 				// Compare ToString data.

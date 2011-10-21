@@ -36,8 +36,6 @@
 #include "CharEncoding.h"
 
 
-BOOL GetModulePath(TCHAR szPath[], HINSTANCE hInstance);
-
 
 /** Fails with the specified message.
 * \ingroup Assertions
@@ -48,6 +46,10 @@ BOOL GetModulePath(TCHAR szPath[], HINSTANCE hInstance);
 	strAnsi.c_str() ),         \
 	CPPUNIT_SOURCELINE() ); }
 
+
+#ifdef _WIN32
+BOOL GetModulePath(TCHAR szPath[], HINSTANCE hInstance);
+
 inline tstring GetUnitTestFolder()
 {
 	TCHAR		szPath[MAX_PATH];
@@ -57,9 +59,15 @@ inline tstring GetUnitTestFolder()
 	return szPath;
 }
 
-#ifdef _WIN32
 void CreateUnitResultWnd(HINSTANCE hInstance);
 #else
+
+inline tstring GetUnitTestFolder()
+{
+	// For linux like system, return sytem tmp directory
+	return "/tmp/";
+}
+
 #endif
 
 void RunUnitTest();

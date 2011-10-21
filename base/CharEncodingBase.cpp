@@ -512,7 +512,8 @@ protected:
 		stringex outx;
 		char szOut[256];
 
-		LPCWSTR		input = L"Test String abc";
+		WCHAR		input[255];
+		_xcscpy(input, "Test String abc");
 
 		// Test with full length: -1
 		UCS2ToUtf8(input, -1, out);
@@ -544,9 +545,9 @@ protected:
 		CPPUNIT_ASSERT(strlen(szOut) == nLen);
 		CPPUNIT_ASSERT(_xcsncmp(szOut, input, nLen) == 0);
 
-		// if (IsChsOS())
+#ifdef _WIN32
 		{
-			input = L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试";
+			wcscpy(input, L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试");
 			UCS2ToUtf8(input, -1, out);
 
 			// Use MbcsToUCS2 with ED_UTF8 encoding to convert.
@@ -554,11 +555,10 @@ protected:
 			MbcsToUCS2(out.c_str(), out.size(), strInputNew, ED_UTF8);
 			CPPUNIT_ASSERT(strInputNew == input);
 
-			input = L"cosMo@暴走P×デッドボールP feat.初音ミク";
+			wcscpy(input, L"cosMo@暴走P×デッドボールP feat.初音ミク");
 			UCS2ToUtf8(input, -1, out);
 
 			// Use MbcsToUCS2 with ED_UTF8 encoding to convert.
-			strInputNew;
 			MbcsToUCS2(out.c_str(), out.size(), strInputNew, ED_UTF8);
 			CPPUNIT_ASSERT(strInputNew == input);
 
@@ -566,6 +566,7 @@ protected:
 			Utf8ToUCS2(out.c_str(), out.length(), strOutW);
 			CPPUNIT_ASSERT(strOutW == strInputNew);
 		}
+#endif
 	}
 
 	void TestUcs2ToMbcs()
@@ -574,7 +575,8 @@ protected:
 		stringex outx;
 		char szOut[256];
 
-		LPCWSTR		input = L"Test String abc";
+		WCHAR		input[255];
+		_xcscpy(input, "Test String abc");
 
 		// Test with full length: -1
 		UCS2ToMbcs(input, -1, out);
@@ -606,9 +608,9 @@ protected:
 		CPPUNIT_ASSERT(strlen(szOut) == nLen);
 		CPPUNIT_ASSERT(_xcsncmp(szOut, input, nLen) == 0);
 
-		// if (IsChsOS())
+#ifdef _WIN32
 		{
-			input = L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试";
+			wcscpy(input, L"中文测试中文测试中文测试中文测试中文测试中文测试中文测试");
 			UCS2ToMbcs(input, -1, out);
 			CPPUNIT_ASSERT(out.size() == wcslen(input));
 
@@ -616,6 +618,7 @@ protected:
 			MbcsToUCS2(out.c_str(), out.size(), strInputNew);
 			CPPUNIT_ASSERT(strInputNew == input);
 		}
+#endif
 	}
 
 	void TestMbcsToUcs2()
@@ -695,15 +698,16 @@ protected:
 		CPPUNIT_ASSERT(strlen(szOut) == nLen);
 		CPPUNIT_ASSERT(_xcsncmp(szOut, input, nLen) == 0);
 
-		// if (IsChsOS())
+#ifdef _WIN32
 		{
-			input = "中文测试中文测试中文测试中文测试中文测试中文测试中文测试";
+			wcscpy(input, "中文测试中文测试中文测试中文测试中文测试中文测试中文测试");
 			MbcsToUtf8(input, -1, out);
 
 			string strInputNew;
 			Utf8ToMbcs(out.c_str(), out.size(), strInputNew);
 			CPPUNIT_ASSERT(strInputNew == input);
 		}
+#endif
 	}
 
 	void TestUtf8ToMbcs()
@@ -805,11 +809,6 @@ protected:
 		UCS2ToAnsi(strUcs2.c_str(), -1, strAnsi);
 		CPPUNIT_ASSERT(strAnsi.size() == strlen(strTest));
 		CPPUNIT_ASSERT(memcmp(strAnsi.c_str(), strTest, strlen(strTest) + 1) == 0);
-	}
-
-	bool IsChsOS()
-	{
-		return GetACP() == 936;
 	}
 
 };

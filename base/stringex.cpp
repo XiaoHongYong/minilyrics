@@ -222,7 +222,7 @@ void strrep(tstring &str, TCHAR chSrc, TCHAR chDest)
 	for (size_t i = 0; i < str.size(); i++)
 	{
 		if (str[i] == chSrc)
-			str.replace(i, 1, &chDest);
+			str.replace(i, 1, 1, chDest);
 	}
 }
 

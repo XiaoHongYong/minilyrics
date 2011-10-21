@@ -108,6 +108,14 @@ void LogTrace(LPVOID lpData, int nSize)
 	g_print("%s\n", (const char*)lpData);
 }
 #endif
+
+#ifdef _IPHONE
+void LogTrace(LPVOID lpData, int nSize)
+{
+	printf("%s\n", (const char*)lpData);
+}
+#endif
+
 /*
 |F%s|L%d|E%d|M%s
 D: Date

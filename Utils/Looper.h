@@ -1,7 +1,7 @@
 
 #pragma once
 
-interface IRunnable
+class IRunnable
 {
 public:
 	IRunnable() { m_bFreeAfterRun = false; }

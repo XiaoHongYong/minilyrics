@@ -1306,6 +1306,8 @@ public:
 protected:
 	void TestCLrcCompressor()
 	{
+#ifndef _MAC
+		
 		LPCTSTR		szLyrics[] = {
 			_T("[aa:tag]\n [00:01]  line1   \n [00:02][00:03]  line2\n[00:04]line1"),
 			_T("[aa:tag]\r\n[00:01][00:04]line1\r\n[00:02][00:03]line2"),
@@ -1411,6 +1413,7 @@ protected:
 			CPPUNIT_ASSERT(buf.size() == strAnsi.size());
 			CPPUNIT_ASSERT(memcmp(buf.c_str(), strAnsi.c_str(), strAnsi.size()) == 0);
 		}
+#endif // #ifndef _MAC
 	}
 
 	void TestParseLrcTimeTag()
@@ -1803,8 +1806,6 @@ protected:
 #undef SZ_LYRICS
 #define SZ_LYRICS	"[ti: title]\r\n\r\n[00:01.20]\r\n[encoding: gb2312]sxx\r\n[ar: artist]"
 
-		LPCTSTR		valArtist = _T("artist");
-		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
 		MbcsToUCS2(SZ_LYRICS, -1, wStr);
 
@@ -1862,7 +1863,7 @@ protected:
 
 			// Read new
 			CLrcTag		tagReader;
-			CPPUNIT_ASSERT(tagReader.ReadFromText((LPBYTE)wLyrics.c_str(), wLyrics.size() * sizeof(WCHAR)));
+			CPPUNIT_ASSERT(tagReader.ReadFromText(wLyrics.c_str(), wLyrics.size()));
 
 			// Is same?
 			CPPUNIT_ASSERT(tagReader.m_strArtist == newProp.m_strArtist);
@@ -1885,8 +1886,6 @@ protected:
 #undef SZ_LYRICS
 #define SZ_LYRICS	"[ti: title]\r\n\r\n[00:01.20]\r\n[encoding: gb2312]sxx\r\n[ar: artist]"
 
-		LPCTSTR		valArtist = _T("artist");
-		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
 		MbcsToUCS2(SZ_LYRICS, -1, wStr);
 
@@ -1995,8 +1994,6 @@ protected:
 #undef SZ_LYRICS
 #define SZ_LYRICS	"Title: title\r\n\r\nabc\r\nEncoding: gb2312\r\nArtist: artist"
 
-		LPCTSTR		valArtist = _T("artist");
-		LPCTSTR		valTitle = _T("title");
 		wstringex	wStr;
 		MbcsToUCS2(SZ_LYRICS, -1, wStr);
 
@@ -2029,7 +2026,7 @@ protected:
 
 			// Read new
 			CLrcTag		tagReader;
-			CPPUNIT_ASSERT(tagReader.ReadFromText((LPBYTE)ansiLyrics.c_str(), ansiLyrics.size()));
+			CPPUNIT_ASSERT(tagReader.ReadFromText(ansiLyrics.c_str(), ansiLyrics.size()));
 
 			// Is same?
 			CLrcTag		tagCmp(tagReader, newProp);
@@ -2057,7 +2054,7 @@ protected:
 
 			// Read new
 			CLrcTag		tagReader;
-			CPPUNIT_ASSERT(tagReader.ReadFromText((LPBYTE)wLyrics.c_str(), wLyrics.size() * sizeof(WCHAR)));
+			CPPUNIT_ASSERT(tagReader.ReadFromText(wLyrics.c_str(), wLyrics.size()));
 
 			// Is same?
 			CPPUNIT_ASSERT(tagReader.m_strArtist == newProp.m_strArtist);

@@ -214,7 +214,7 @@ public:
 	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSource, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPBYTE szLrc, int nLen);
 #ifdef _IPHONE
-	int OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent);
+	int OpenLyricsContent(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLyrContent);
 #endif
 	int ReopenLyrics(bool bUseSpecifiedEncoding, CHAR_ENCODING encodingSpecified);
 

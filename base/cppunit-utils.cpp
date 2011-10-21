@@ -139,7 +139,7 @@ void RedirectIOToConsole()
 #else
 void LogUnitTestResult(LPCSTR str)
 {
-	printf(str);
+	printf("%s", str);
 }
 #endif // _WIN32
 
@@ -215,8 +215,10 @@ void RunUnitTest()
 
 	stdCOut().setBuffer(NULL);
 
+#ifdef _WIN32
 	if (result.wasSuccessful())
 		SetTimer(g_hWndLog, 0, 1000, NULL);
+#endif
 }
 
 #endif // _CPPUNIT_TEST

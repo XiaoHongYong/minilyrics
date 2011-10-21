@@ -19,7 +19,7 @@ ML 4.0 ~ 7.0:	HTTP tunnel Encrypted XML message format, encoding: UTF-8
 ML 7.1 ~ :		HTTP tunnel Encrypted Binary XML message format, encoding: UTF-8
 2011.03			support batch download, ML Binary XML message format
 
-/***********************************************************************/
+\***********************************************************************/
 
 #define SZ_ML_POST_URL		"/searchlyrics.htm"
 

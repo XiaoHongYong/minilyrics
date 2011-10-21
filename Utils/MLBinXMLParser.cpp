@@ -540,8 +540,10 @@ int CMLBinXMLWriter::GetStrIndex(LPCTSTR str)
 	MapStrIndex::iterator it = m_mapStrTable.find(str);
 	if (it == m_mapStrTable.end())
 	{
-		m_mapStrTable[str] = m_mapStrTable.size() + BX_ID_STR_START;
-		return m_mapStrTable.size() - 1 + BX_ID_STR_START;
+		int n = m_mapStrTable.size() + BX_ID_STR_START;
+		m_mapStrTable[str] = n;
+		ASSERT(n + 1 - BX_ID_STR_START == m_mapStrTable.size());
+		return n;
 	}
 	else
 	{

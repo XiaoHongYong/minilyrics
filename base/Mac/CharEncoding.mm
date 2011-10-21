@@ -83,6 +83,20 @@ NSString *initNSString(const char *str, int nLen, int encodingID)
 
 int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID)
 {
+	if (encodingID == ED_UTF8)
+	{
+		if (nLen == -1)
+		{
+			strcpy_safe(strOut, nOut, str);
+			return strlen(strOut);
+		}
+		else
+		{
+			strncpysz_safe(strOut, nOut, str, nLen);
+			return nLen;
+		}
+	}
+
 	EmptyStr(strOut);
 	
 	NSString *temp = initNSString(str, nLen, encodingID);
@@ -97,6 +111,20 @@ int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID
 
 int Utf8ToMbcs(const char *str, int nLen, char *strOut, int nOut, int encodingID)
 {
+	if (encodingID == ED_UTF8)
+	{
+		if (nLen == -1)
+		{
+			strcpy_safe(strOut, nOut, str);
+			return strlen(strOut);
+		}
+		else
+		{
+			strncpysz_safe(strOut, nOut, str, nLen);
+			return nLen;
+		}
+	}
+
 	EmptyStr(strOut);
 	
 	NSString	*temp;

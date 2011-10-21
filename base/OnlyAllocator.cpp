@@ -95,18 +95,18 @@ protected:
 
 		COnlyAllocator		allocator;
 		LPCSTR	str[] = { ";alkge", "sldjglea", "" };
-		LPCWSTR	strw[] = { L";alkge", L"sldjglea", L"" };
 
 		LPCSTR	astr[CountOf(str)];
 		LPCWSTR	astrw[CountOf(str)];
 
 		allocator.allocate(1024);
 
-		ASSERT(CountOf(str) == CountOf(strw));
 		for (int i = 0; i < CountOf(str); i++)
 		{
 			astr[i] = allocator.allocate(str[i]);
-			astrw[i] = allocator.allocate(strw[i]);
+			WCHAR tmp[255];
+			_xcscpy(tmp, str[i]);
+			astrw[i] = allocator.allocate(tmp);
 		}
 
 		allocator.allocate(512);
@@ -115,7 +115,7 @@ protected:
 		for (int i = 0; i < CountOf(str); i++)
 		{
 			CPPUNIT_ASSERT(strcmp(astr[i], str[i]) == 0);
-			CPPUNIT_ASSERT(wcscmp(astrw[i], strw[i]) == 0);
+			CPPUNIT_ASSERT(_xcscmp(astrw[i], str[i]) == 0);
 		}
 	}
 
