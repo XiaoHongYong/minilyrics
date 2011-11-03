@@ -17,6 +17,10 @@ LRESULT CALLBACK TinyBaseWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 			pWnd->m_hWnd = hWnd;
 		SetWindowLong(hWnd, GWL_USERDATA, (LONG)(cs->lpCreateParams));
 	}
+	else if (uMsg == WM_PAINT)
+	{
+		ShowWindow(hWnd, SW_HIDE);
+	}
 
 	// pass the messages into the BaseWnd
 	CTinyBaseWnd	*pBaseWnd = (CTinyBaseWnd *)GetWindowLong(hWnd, GWL_USERDATA);

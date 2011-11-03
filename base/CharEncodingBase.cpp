@@ -700,7 +700,7 @@ protected:
 
 #ifdef _WIN32
 		{
-			wcscpy(input, "中文测试中文测试中文测试中文测试中文测试中文测试中文测试");
+			input = "中文测试中文测试中文测试中文测试中文测试中文测试中文测试";
 			MbcsToUtf8(input, -1, out);
 
 			string strInputNew;

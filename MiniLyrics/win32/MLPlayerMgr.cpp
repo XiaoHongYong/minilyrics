@@ -370,7 +370,10 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 				if (skinInfo->bEmbeddedSkin)
 					CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode(true);
 				else
+				{
 					CMPlayerAppBase::GetInstance()->EndEmbeddedSkin();
+					CMPlayerAppBase::GetInstance()->GetSkinFactory()->ChangeSkin(SZ_DEFSKIN);
+				}
 			}
 		}
 		break;

@@ -258,7 +258,7 @@ void CPlayerImp::SwitchToEmbeddedSkin()
 
 	memset(&skinInfo, 0, sizeof(skinInfo));
 	skinInfo.bEmbeddedSkin = m_hWndiTunesVisual != NULL;
-	skinInfo.bClrThemeValid = true;
+	skinInfo.bClrThemeValid = false;
 	skinInfo.hWndToAttach = m_hWndiTunesVisual;
 	skinInfo.clrFontHighlight = RGB(0, 0, 0);
 	skinInfo.clrFontLowlight = RGB(0x84, 0x84, 0x84);
@@ -403,9 +403,6 @@ void CPlayerImp::OniTunesChangeVisualWnd(HWND hWnd, const Rect *rc)
 				MoveWindow(g_MLService.GetMainWindow(), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, true);
 			}
 		}
-	}
-	else
-	{
 	}
 }
 

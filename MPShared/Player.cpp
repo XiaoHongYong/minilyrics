@@ -87,6 +87,11 @@ public:
 		return true;
 	}
 
+	void OnPaint(CMLGraphics *pGraph)
+	{
+		ShowWindow(SW_HIDE);
+	}
+
 	void OnTimer(UINT nIDEvent)
 	{
 		ASSERT(nIDEvent == TIMER_LYR_DRAW_UPDATE);
