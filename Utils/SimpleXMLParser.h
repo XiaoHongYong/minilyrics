@@ -17,6 +17,7 @@ enum SimpleXMLParserError
 	SXPE_READ_FILE_FAILED,
 	SXPE_NOT_XML_FORMAT,
 	SXPE_FORMAT_ERROR,
+	SXPE_ONE_ROOT_ENTITY_ALLOWED,
 };
 
 enum ElementType
@@ -26,15 +27,17 @@ enum ElementType
 	ET_ANY,
 	ET_L_BRACKET,		// <
 	ET_R_BRACKET,		// >
+	ET_COMMENTS,		// <!-- -->
+	ET_CDATA,			// <![CDATA[
 	ET_EL_BRACKET,		// </
 	ET_ER_BRACKET,		// />
 	ET_L_XML_DECL,		// <?xml
 	ET_R_XML_DECL,		// ?>
 	ET_TEXT_VALUE,		// <name>text value<??>
 	ET_SPACE,
-	ET_NAME,			// Ãû³Æ
-	ET_EQ,
-	ET_VALUE,			// 
+	ET_NAME,			// Property name
+	ET_EQ,				// Property assign
+	ET_VALUE,			// Property value
 };
 
 class CSimpleXMLParser

@@ -1,3 +1,11 @@
+MiniLyrics 7.2.814
+New: new UI of Lyrics Downloader for iPod.
+New: Skin "Metal"
+Fixed: Bug of saving lyrics via iTunes.
+Fixed: Recover the original feature of saving embedded in MiniLyrics.
+Optimized: The lyrics display for text lyrics (no timestamps lyrics).
+Fixed: Some other small issues.
+
 MiniLyrics 7.1.782
 Fixed: Support MediaMonkey unicode API (Can display none-English lyrics now).
 Fixed: Support for Windows Media Player Visualization.

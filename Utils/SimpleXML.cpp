@@ -327,19 +327,21 @@ class CTestCaseSimpleXML : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(CTestCaseSimpleXML);
 	CPPUNIT_TEST(TestSXNode);
+	CPPUNIT_TEST(TestParseCDATA);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
-
-public:
-	void setUp()
+	void TestParseCDATA()
 	{
-	}
-	void tearDown() 
-	{
+		CSimpleXML		xml;
+		LPCSTR			SZ_XML = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
+			"<root><![CDATA[value]]><![CDATA[value]]></root>";
+
+		CPPUNIT_ASSERT(xml.ParseData(SZ_XML, strlen(SZ_XML)));
+		CPPUNIT_ASSERT(xml.m_pRoot->strName == _T("root"));
+		CPPUNIT_ASSERT(xml.m_pRoot->strContent == _T("valuevalue"));
 	}
 
-protected:
 	void TestSXNode()
 	{
 		SXNode		node;

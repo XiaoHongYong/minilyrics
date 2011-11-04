@@ -245,7 +245,6 @@ SectionIn RO
   SetOutPath $INSTDIR\Player-Plugins
   File ..\bin\gen_MiniLyrics.dll
   File ..\bin\foo_ui_minilyrics.dll
-  File ..\bin\PluginRealone.dll
   File ..\bin\QCDMinilyrics.dll
   File ..\bin\iTunesMinilyrics.dll
   File ..\bin\MLPluginBsp.dll

@@ -163,6 +163,12 @@ void CSimpleXMLParser::IgnoreSpace(int nPos, int &nPosNext)
 #define SZ_L_XML_DECL	"<?xml"
 #define LEN_L_XML_DECL	5
 
+#define SZ_CDATA_START	"<![CDATA["
+#define LEN_CDATA_START	9
+
+#define SZ_CDATA_END	"]]>"
+#define LEN_CDATA_END	3
+
 LPCSTR	__szEsc[] = { "lt;", "gt;", "amp;", "quot;", "apos;", NULL };
 int		__nLen[]  = { 3,     3,     4,       5,       5      };
 char	__chOrg[] = { '<',   '>',   '&',     '\"',    '\''   };
@@ -190,6 +196,25 @@ ElementType CSimpleXMLParser::ReadElemnt(ElementType desireType, _tstringex &str
 		{
 			retType = desireType;
 			nPosNext = nPos + 1;
+		}
+		break;
+	case ET_CDATA:		// <![CDATA[
+		retType = ET_UNKNOWN;
+		if (_xcsncmp(m_szData + nPos, SZ_CDATA_START, LEN_CDATA_START) == 0)
+		{
+			nPos += LEN_CDATA_START;
+			for (nPosNext = nPos; nPosNext + 2 < m_nLen; nPosNext++)
+			{
+				if (m_szData[nPosNext] == ']' && m_szData[nPosNext + 1] == ']' && m_szData[nPosNext + 2] == '>')
+				{
+					// Found end tag of CDATA.
+					strElemnt.clear();
+					strElemnt.append(m_szData + nPos, nPosNext - nPos);
+					nPosNext += LEN_CDATA_END;
+					retType = desireType;
+					break;
+				}
+			}
 		}
 		break;
 	case ET_R_BRACKET:		// >
@@ -351,7 +376,7 @@ ElementType CSimpleXMLParser::ReadElemnt(ElementType desireType, _tstringex &str
 					i++;
 				}
 			}
-			if (m_szData[i] == '<')
+			if (m_szData[i] == '<' && i > nPos)
 			{
 				retType = ET_TEXT_VALUE;
 				nPosNext = i;
@@ -379,6 +404,16 @@ ElementType CSimpleXMLParser::ReadElemnt(ElementType desireType, _tstringex &str
 			{
 				if (m_szData[i + 1] == '/')
 					return ReadElemnt(ET_EL_BRACKET, strElemnt, nPos, nPosNext);
+				else if (m_szData[i + 1] == '!' && m_szData[i + 2] == '[')
+				{
+					ElementType etRet = ReadElemnt(ET_CDATA, strElemnt, nPos, nPosNext);
+					if (etRet == ET_CDATA)
+						return ET_TEXT_VALUE;	// Change CData to ET_VALUE.
+					else
+						return etRet;
+				}
+				else if (m_szData[i + 1] == '!' && m_szData[i + 2] == '-' && m_szData[i + 3] == '-')
+					return ReadElemnt(ET_COMMENTS, strElemnt, nPos, nPosNext);
 				else
 					return ReadElemnt(ET_L_BRACKET, strElemnt, nPos, nPosNext);
 			}
@@ -411,7 +446,6 @@ ElementType CSimpleXMLParser::ReadElemnt(ElementType desireType, _tstringex &str
 
 SimpleXMLParserError CSimpleXMLParser::DoParse(const TCHAR *szData, int nLen, CSimpleXML &xmlData)
 {
-	string					strElement;
 	SimpleXMLParserError	Error;
 
 	m_szData = szData;
@@ -426,9 +460,22 @@ SimpleXMLParserError CSimpleXMLParser::DoParse(const TCHAR *szData, int nLen, CS
 
 	nPos = nPosNext;
 	m_nDeepth = 0;
+	// Parse root entity
 	Error = ParseEntity(nPos, nPosNext, &node);
 	if (Error != SXPE_OK)
 		return Error;
+	nPos = nPosNext;
+
+	// Ignore space
+	IgnoreSpace(nPos, nPosNext);
+	nPos = nPosNext;
+
+	// Make sure there's no other elements
+	_tstringex	strElement;
+	ElementType desireType = ET_EOF_FILE;
+	ElementType retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+	if (retType != desireType)
+		return SXPE_ONE_ROOT_ENTITY_ALLOWED;
 
 	ASSERT(node.listChildren.size() == 1);
 	if (node.listChildren.size() != 1)
@@ -537,173 +584,169 @@ SimpleXMLParserError CSimpleXMLParser::ParseEntity(int nPos, int &nPosNext, SXNo
 	_tstringex		strNodeName;
 	_tstringex		strPropName, strValue;
 
-	while (1)
+	ElementType		retType;
+	ElementType		desireType;
+	SXNode			*pNewNode;
+
+	IgnoreSpace(nPos, nPosNext);
+	nPos = nPosNext;
+
+	// <
+	desireType = ET_L_BRACKET;
+	retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+	if (retType != desireType)
+		return SXPE_FORMAT_ERROR;
+	nPos = nPosNext;
+
+	// <name
+	desireType = ET_NAME;
+	retType = ReadElemnt(desireType, strNodeName, nPos, nPosNext);
+	if (retType != desireType)
+		return SXPE_FORMAT_ERROR;
+	nPos = nPosNext;
+
+	pNewNode = new SXNode;
+	pNewNode->strName = strNodeName.c_str();
+	pNode->listChildren.push_back(pNewNode);
+
+	// <name property, or <name> or <name/>
+	desireType = ET_ANY;
+	retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+	nPos = nPosNext;
+	if (retType == ET_SPACE)
 	{
-		ElementType		retType;
-		ElementType		desireType;
-		SXNode			*pNewNode;
-
-		IgnoreSpace(nPos, nPosNext);
-		nPos = nPosNext;
-
-		// <
-		desireType = ET_L_BRACKET;
-		retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
-		if (retType != desireType)
-			return SXPE_FORMAT_ERROR;
-		nPos = nPosNext;
-
-		// <name
-		desireType = ET_NAME;
-		retType = ReadElemnt(desireType, strNodeName, nPos, nPosNext);
-		if (retType != desireType)
-			return SXPE_FORMAT_ERROR;
-		nPos = nPosNext;
-
-		pNewNode = new SXNode;
-		pNewNode->strName = strNodeName.c_str();
-		pNode->listChildren.push_back(pNewNode);
-
-		// <name property, or <name> or <name/>
-		desireType = ET_ANY;
-		retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
-		nPos = nPosNext;
-		if (retType == ET_SPACE)
+		// <name property
+		while (1)
 		{
-			// <name property
-			while (1)
-			{
-				IgnoreSpace(nPos, nPosNext);
-				nPos = nPosNext;
-
-				desireType = ET_NAME;
-				retType = ReadElemnt(desireType, strPropName, nPos, nPosNext);
-				if (retType != desireType)
-					return SXPE_FORMAT_ERROR;
-				nPos = nPosNext;
-
-				IgnoreSpace(nPos, nPosNext);
-				nPos = nPosNext;
-
-				desireType = ET_EQ;
-				retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
-				if (retType != desireType)
-					return SXPE_FORMAT_ERROR;
-				nPos = nPosNext;
-
-				IgnoreSpace(nPos, nPosNext);
-				nPos = nPosNext;
-
-				// value
-				desireType = ET_VALUE;
-				retType = ReadElemnt(desireType, strValue, nPos, nPosNext);
-				if (retType != desireType)
-					return SXPE_FORMAT_ERROR;
-				nPos = nPosNext;
-
-				pNewNode->AddProperty(strPropName.c_str(), strValue.c_str());
-
-				IgnoreSpace(nPos, nPosNext);
-				nPos = nPosNext;
-
-				// />
-				desireType = ET_ER_BRACKET;
-				retType = ReadElemnt(desireType, strValue, nPos, nPosNext);
-				if (retType == desireType)
-				{
-					nPos = nPosNext;
-					break;
-				}
-
-				// ><...></name>
-				desireType = ET_R_BRACKET;
-				retType = ReadElemnt(desireType, strValue, nPos, nPosNext);
-				if (retType == desireType)
-				{
-					// break 之后，由下面的代码接着处理:D
-					nPos = nPosNext;
-//					Error = ParseEntity(nPos, nPosNext, pNewNode);
-//					if (Error != SXPE_OK)
-//						return Error;
-//					nPos = nPosNext;
-//
-//					// </name>
-//					desireType = ET_EL_BRACKET;
-//					retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
-//					if (retType != desireType)
-//						return SXPE_FORMAT_ERROR;
-					break;
-				}
-			}
-		}
-
-		if (retType == ET_R_BRACKET)
-		{
-			// <name>
-			desireType = ET_TEXT_VALUE;
-			retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
-			if (retType == ET_TEXT_VALUE)
-			{
-				nPos = nPosNext;
-				pNewNode->strContent = strElement.c_str();
-				TrimStr(pNewNode->strContent);
-			}
-
-			desireType = ET_ANY;
-			retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
-			if (retType == ET_L_BRACKET)
-			{
-				// <....>...
-				// nPos = nPosNext;
-				Error = ParseEntity(nPos, nPosNext, pNewNode);
-				if (Error != SXPE_OK)
-					return Error;
-//				nPos = nPosNext;
-//				desireType = ET_ANY;
-//				retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
-			}
-			else if (retType != ET_EL_BRACKET)
-				return SXPE_FORMAT_ERROR;
+			IgnoreSpace(nPos, nPosNext);
 			nPos = nPosNext;
 
 			desireType = ET_NAME;
+			retType = ReadElemnt(desireType, strPropName, nPos, nPosNext);
+			if (retType != desireType)
+				return SXPE_FORMAT_ERROR;
+			nPos = nPosNext;
+
+			IgnoreSpace(nPos, nPosNext);
+			nPos = nPosNext;
+
+			desireType = ET_EQ;
 			retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
 			if (retType != desireType)
 				return SXPE_FORMAT_ERROR;
 			nPos = nPosNext;
 
-			if (strElement != strNodeName)
-				return SXPE_FORMAT_ERROR;
+			IgnoreSpace(nPos, nPosNext);
+			nPos = nPosNext;
 
-			desireType = ET_R_BRACKET;
-			retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+			// value
+			desireType = ET_VALUE;
+			retType = ReadElemnt(desireType, strValue, nPos, nPosNext);
 			if (retType != desireType)
 				return SXPE_FORMAT_ERROR;
 			nPos = nPosNext;
-		}
-		else if (retType == ET_ER_BRACKET)
-		{
-			// <name/>
-			// no property, no children
-		}
 
-		IgnoreSpace(nPos, nPosNext);
-		nPos = nPosNext;
+			pNewNode->AddProperty(strPropName.c_str(), strValue.c_str());
 
-		// </
-		desireType = ET_EL_BRACKET;
-		retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
-		if (retType == desireType)
-			break;
+			IgnoreSpace(nPos, nPosNext);
+			nPos = nPosNext;
 
-		if (m_nDeepth == 1)
-		{
-			desireType = ET_EOF_FILE;
-			retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+			// />
+			desireType = ET_ER_BRACKET;
+			retType = ReadElemnt(desireType, strValue, nPos, nPosNext);
 			if (retType == desireType)
+			{
+				nPos = nPosNext;
 				break;
+			}
+
+			// ><...></name>
+			desireType = ET_R_BRACKET;
+			retType = ReadElemnt(desireType, strValue, nPos, nPosNext);
+			if (retType == desireType)
+			{
+				// break
+				nPos = nPosNext;
+				break;
+			}
 		}
 	}
+
+	if (retType == ET_ER_BRACKET)
+	{
+		// <name/>
+		// no property, no children
+	}
+	else if (retType == ET_R_BRACKET)
+	{
+		// Has value and children
+
+		// value
+		desireType = ET_TEXT_VALUE;
+		retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+		if (retType == ET_TEXT_VALUE)
+		{
+			nPos = nPosNext;
+			pNewNode->strContent = strElement.c_str();
+			TrimStr(pNewNode->strContent);
+		}
+
+		while (1)
+		{
+			// Parse all child values, entities, etc.
+			desireType = ET_ANY;
+			retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+			if (retType == ET_TEXT_VALUE)
+				pNewNode->strContent += strElement.c_str();
+			else if (retType == ET_COMMENTS)
+			{
+				// Just ignore comments
+			}
+			else if (retType == ET_L_BRACKET)
+			{
+				Error = ParseEntity(nPos, nPosNext, pNewNode);
+				if (Error != SXPE_OK)
+					return Error;
+			}
+			else
+			{
+				nPos = nPosNext;
+				break;
+			}
+			nPos = nPosNext;
+		}
+
+		// End of Entity: </name>
+		if (retType != ET_EL_BRACKET)
+			return SXPE_FORMAT_ERROR;
+
+		desireType = ET_NAME;
+		retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+		if (retType != desireType)
+			return SXPE_FORMAT_ERROR;
+		nPos = nPosNext;
+
+		if (strElement != strNodeName)
+			return SXPE_FORMAT_ERROR;
+
+		desireType = ET_R_BRACKET;
+		retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+		if (retType != desireType)
+			return SXPE_FORMAT_ERROR;
+		nPos = nPosNext;
+
+		return SXPE_OK;
+	}
+
+	IgnoreSpace(nPos, nPosNext);
+	nPos = nPosNext;
+
+	// </
+	desireType = ET_EL_BRACKET;
+	retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
+	if (retType == desireType)
+		return SXPE_FORMAT_ERROR;
+	nPos = nPosNext;
 
 	return SXPE_OK;
 }
