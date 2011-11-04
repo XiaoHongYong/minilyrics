@@ -169,6 +169,12 @@ void CSimpleXMLParser::IgnoreSpace(int nPos, int &nPosNext)
 #define SZ_CDATA_END	"]]>"
 #define LEN_CDATA_END	3
 
+#define SZ_COMMENTS_START	"<!--"
+#define LEN_COMMENTS_START	4
+
+#define SZ_COMMENTS_END	"-->"
+#define LEN_COMMENTS_END	3
+
 LPCSTR	__szEsc[] = { "lt;", "gt;", "amp;", "quot;", "apos;", NULL };
 int		__nLen[]  = { 3,     3,     4,       5,       5      };
 char	__chOrg[] = { '<',   '>',   '&',     '\"',    '\''   };
@@ -211,6 +217,25 @@ ElementType CSimpleXMLParser::ReadElemnt(ElementType desireType, _tstringex &str
 					strElemnt.clear();
 					strElemnt.append(m_szData + nPos, nPosNext - nPos);
 					nPosNext += LEN_CDATA_END;
+					retType = desireType;
+					break;
+				}
+			}
+		}
+		break;
+	case ET_COMMENTS:		// <!-- -->
+		retType = ET_UNKNOWN;
+		if (_xcsncmp(m_szData + nPos, SZ_COMMENTS_START, LEN_COMMENTS_START) == 0)
+		{
+			nPos += LEN_COMMENTS_START;
+			for (nPosNext = nPos; nPosNext + 2 < m_nLen; nPosNext++)
+			{
+				if (m_szData[nPosNext] == '-' && m_szData[nPosNext + 1] == '-' && m_szData[nPosNext + 2] == '>')
+				{
+					// Found end tag of COMMENTS.
+					strElemnt.clear();
+					strElemnt.append(m_szData + nPos, nPosNext - nPos);
+					nPosNext += LEN_COMMENTS_END;
 					retType = desireType;
 					break;
 				}
@@ -676,6 +701,7 @@ SimpleXMLParserError CSimpleXMLParser::ParseEntity(int nPos, int &nPosNext, SXNo
 	{
 		// <name/>
 		// no property, no children
+		return SXPE_OK;
 	}
 	else if (retType == ET_R_BRACKET)
 	{
@@ -693,6 +719,9 @@ SimpleXMLParserError CSimpleXMLParser::ParseEntity(int nPos, int &nPosNext, SXNo
 
 		while (1)
 		{
+			IgnoreSpace(nPos, nPosNext);
+			nPos = nPosNext;
+
 			// Parse all child values, entities, etc.
 			desireType = ET_ANY;
 			retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
