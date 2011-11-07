@@ -11,6 +11,7 @@
 
 
 CMLPlayerMgr			g_playerMgr;
+HWND					g_hWndPlayerServiceOnStartup = NULL;
 
 
 HWND GetMLSericeWindow()
@@ -24,15 +25,16 @@ bool ProcessCmdLine(LPCTSTR szCmdLine, AppMode &appMode)
 	V_Str		vCmdLine;
 	CmdLineAnalysis(szCmdLine, vCmdLine);
 
-	HWND	hWndPlayerService = NULL;
+	DBGLOG1(_T("Enter ProcessCmdLine: %s"), szCmdLine);
 
 	for (size_t i = 0; i < vCmdLine.size(); i++)
 	{
 		if (_tcsicmp(vCmdLine[i].c_str(), _T("/Wnd")) == 0 && i + 1 < vCmdLine.size())
 		{
-			hWndPlayerService = (HWND)HexToInt(vCmdLine[i + 1].c_str());
-			if (!IsWindow(hWndPlayerService))
-				hWndPlayerService = NULL;
+			g_hWndPlayerServiceOnStartup = (HWND)HexToInt(vCmdLine[i + 1].c_str());
+			if (!IsWindow(g_hWndPlayerServiceOnStartup)) {
+				g_hWndPlayerServiceOnStartup = NULL;
+			}
 			i++;
 		}
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/iPodLyricsDownloader")) == 0)
@@ -55,12 +57,12 @@ bool ProcessCmdLine(LPCTSTR szCmdLine, AppMode &appMode)
 		}
 	}
 
-	if (hWndPlayerService != NULL)
+	if (g_hWndPlayerServiceOnStartup != NULL)
 	{
 		if (!g_playerMgr.IsValid())
 			g_playerMgr.Create();
 
-		CPlayer::QueryInfo(hWndPlayerService);
+		CPlayer::QueryInfo(g_hWndPlayerServiceOnStartup);
 	}
 
 	return true;
@@ -103,6 +105,11 @@ bool CMLPlayerMgr::ConnectToPlayer()
 		return ConnectToPlayer(m_listPlayers.front().hWndPluginService);
 	else
 	{
+		// Give a second chance to check g_hWndPlayerServiceOnStartup
+		if (IsWindow(g_hWndPlayerServiceOnStartup)
+			&& ConnectToPlayer(g_hWndPlayerServiceOnStartup))
+			return true;
+
 		// Popup and let user to choose the player.
 		CDlgStartMiniLyrics		dlg;
 		return dlg.DoModal(NULL) == IDOK;
@@ -117,7 +124,7 @@ void CMLPlayerMgr::OnPlayerInfoReturned(PlayerInfo *playerInfo)
 	{
 		PlayerInfo &item = *it;
 		if (item.hWndPluginService == playerInfo->hWndPluginService)
-			break;
+			return;
 	}
 	if (it == m_listPlayers.end())
 		m_listPlayers.push_back(*playerInfo);
