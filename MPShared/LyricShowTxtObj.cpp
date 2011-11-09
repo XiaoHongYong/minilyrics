@@ -51,9 +51,6 @@ void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
 		return;
 	}
 
-	if (!m_bRecordScrollingActionsEnabled)
-		m_bReplayDisabledTemp = true;
-
 	BOOL	bProcessed = FALSE;
 	int		nCurLineNew = m_nCurLineNew;
 
@@ -98,6 +95,9 @@ void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
 
 	if (bProcessed)
 	{
+		if (!m_bRecordScrollingActionsEnabled)
+			m_bReplayDisabledTemp = true;
+
 		if (nCurLineNew < 0)
 			nCurLineNew = 0;
 

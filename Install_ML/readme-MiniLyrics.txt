@@ -1,3 +1,8 @@
+MiniLyrics 7.2.861
+Fixed: Choosing player window may pop up when starting MediaMonkey, Winamp.
+Fixed: Lyrics scrolling status for text lyrics files.
+Some other minor issues.
+
 MiniLyrics 7.2.814
 New: new UI of Lyrics Downloader for iPod.
 New: Skin "Metal"
