@@ -213,6 +213,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/OPT:REF"
 				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib Winmm.lib comctl32.lib version.lib psapi.lib"
 				OutputFile="../bin\$(ProjectName).exe"
 				LinkIncremental="1"
@@ -367,6 +368,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="/OPT:REF"
 				AdditionalDependencies="odbc32.lib odbccp32.lib ws2_32.lib Winmm.lib comctl32.lib version.lib psapi.lib"
 				OutputFile="../bin\ZikiPlayer.exe"
 				LinkIncremental="1"
@@ -1421,15 +1423,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\applicat.ico"
+				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
 				>
 			</File>
 			<File
@@ -1437,11 +1435,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\res\bin00001.bin"
+				RelativePath="..\MPShared\Res\applicat.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragafte.ico"
+				RelativePath="..\MPShared\res\bin00001.bin"
 				>
 			</File>
 			<File
@@ -1449,7 +1447,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\dragbefo.ico"
+				RelativePath="..\MPShared\Res\dragafte.ico"
 				>
 			</File>
 			<File
@@ -1457,11 +1455,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\Exe.manifest"
+				RelativePath="..\MPShared\Res\dragbefo.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\fileType.bmp"
+				RelativePath="..\MPShared\win32\Exe.manifest"
 				>
 			</File>
 			<File
@@ -1469,7 +1467,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\hand.cur"
+				RelativePath="..\ML6\Res\fileType.bmp"
 				>
 			</File>
 			<File
@@ -1477,7 +1475,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\ico00001.ico"
+				RelativePath="..\ML6\Res\hand.cur"
 				>
 			</File>
 			<File
@@ -1485,11 +1483,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\icon-tga.ico"
+				RelativePath="..\ML6\Res\ico00001.ico"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\icon-tga.ico"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\icon-tga.ico"
 				>
 			</File>
 			<File
@@ -1505,15 +1507,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\next.ICO"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\next.ICO"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\open.ICO"
+				RelativePath="..\MPShared\Res\next.ICO"
 				>
 			</File>
 			<File
@@ -1521,11 +1519,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\play.ICO"
+				RelativePath="..\ML6\Res\open.ICO"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\play.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\play.ICO"
 				>
 			</File>
 			<File
@@ -1541,15 +1543,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\save.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\ML6\Res\save.ico"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\Res\selcolor.cur"
+				RelativePath="..\MPShared\Res\save.ico"
 				>
 			</File>
 			<File
@@ -1557,11 +1555,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\stop.ICO"
+				RelativePath="..\MPShared\Res\selcolor.cur"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\stop.ICO"
+				>
+			</File>
+			<File
+				RelativePath="..\ML6\Res\stop.ICO"
 				>
 			</File>
 		</Filter>
