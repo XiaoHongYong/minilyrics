@@ -313,6 +313,10 @@ void CLyricShowTxtObj::EnableReplayScrollingActions(bool bEnable)
 		m_bReplayDisabledTemp = false;
 	m_bReplayScrollingActionsEnabled = bEnable;
 	g_Profile.WriteProfileInt(_T("LyrReplaySAEnabled"), bEnable);
+
+	CSkinToolbar *pToolbarLyrTxt = (CSkinToolbar*)m_pSkin->GetUIObjectById(ID_TB_LYR_TXT, CSkinToolbar::ClassName());
+	if (pToolbarLyrTxt)
+		pToolbarLyrTxt->SetCheck(CMD_LYR_SCROLL_ENABLE_REPLAY, IsReplayScrollingActionsEnabled());
 }
 
 void CLyricShowTxtObj::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
@@ -400,16 +404,17 @@ int CLyricShowTxtObj::GetLinesPerPage()
 
 void CLyricShowTxtObj::StartScrollAnimation(int nCurLineNew)
 {
-	if (!m_bRecordScrollingActionsEnabled)
+	bool bMultipleLineScrolled = (abs(nCurLineNew - m_nCurLine) > 1);
+
+	if (!m_bRecordScrollingActionsEnabled || bMultipleLineScrolled)
 		m_bReplayDisabledTemp = true;
 
-	if (g_LyricData.GetLyrContentType() == LCT_TXT && m_bRecordScrollingActionsEnabled)
+	if (g_LyricData.GetLyrContentType() == LCT_TXT && m_bRecordScrollingActionsEnabled
+		&& !bMultipleLineScrolled)
 		g_LyricData.LyrScrollToLine(m_lyrLines, nCurLineNew, g_LyricData.GetPlayElapsedTime(), true);
 
 	if (m_bInScrollingToNewLine)
-	{
 		m_yOffsetScroll = m_yCurLineLatest - GetLineVertAlignPos();
-	}
 	else
 		m_yOffsetScroll = 0;
 

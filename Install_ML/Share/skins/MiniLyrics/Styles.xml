@@ -72,26 +72,27 @@
 		  <ClientArea Rect="1, 5, w-2, h-5-5"/>
 		</PopupWndFrame>
 
-		<NormalToolbar Extends="Container" Height="24" >
-			<Toolbar ID="ID_TB_LYR_SYNC" Rect="8,1,78,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+		<NormalToolbar Extends="LinearContainer" Orientation="Horizontal" Height="24" >
+			<Toolbar ID="ID_TB_LYR_SYNC" Rect="8,1,72,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
 					units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" ButtonSpacesCX="1"
-					MarginX="0" MarginY="0" FullStatusImage="TRUE">
+					Margin="8,1,0,0" MarginX="0" MarginY="0" FullStatusImage="TRUE">
 				<button ID="ID_SEARCH_LYRICS" Left="5" />
 				<button ID="ID_BACKWARD_LYRICS" Left="6" Continuous="TRUE"/>
 				<button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
 			</Toolbar>
 
-			<Toolbar ID="ID_TB_LYR_TXT" Rect="8,2,78,20" UseParentBg="TRUE" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
+			<Toolbar ID="ID_TB_LYR_TXT" Rect="8,2,94,20" UseParentBg="TRUE" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
 					units_x="20" blank_x="-1" blank_cx="20" seperator_x="-1" seperator_cx="20" ButtonSpacesCX="4"
-					MarginX="0" MarginY="0" FullStatusImage="TRUE" Visible="false">
+					Margin="8,2,0,0" MarginX="0" MarginY="0" FullStatusImage="TRUE" Visible="false">
+				<button ID="ID_SEARCH_LYRICS" Left="5" />
 				<button ID="ID_LYR_SCROLL_ENABLE_RECORD" Left="0" CanCheck="TRUE" checked_left="1"/>
 				<button ID="ID_LYR_SCROLL_ENABLE_REPLAY" Left="2" CanCheck="TRUE" checked_left="3"/>
 				<button ID="ID_LYR_SCROLL_MENU" Left="4"/>
 			</Toolbar>
 
-			<Toolbar Rect="86,1,w-88,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+			<Toolbar Rect="86,1,w-88,22" Weight="1" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
 					units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" ButtonSpacesCX="1"
-					MarginX="0" MarginY="0" FullStatusImage="TRUE">
+					Margin="0,1,0,0" MarginX="0" MarginY="0" FullStatusImage="TRUE">
 				<seperator/>
 				<button ID="ID_FONT_SIZE_INC" Left="8"/>
 				<button ID="ID_FONT_SIZE_DEC" Left="9"/>

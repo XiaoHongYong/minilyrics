@@ -1,16 +1,6 @@
-#ifndef __MINIDUMPER_H_
-#define __MINIDUMPER_H_
-
 #pragma once
 
-#if _MSC_VER < 1300
-#define DECLSPEC_DEPRECATED
-// VC6: change this path to your Platform SDK headers
-#include "M:\\dev7\\vs\\devtools\\common\\win32sdk\\include\\dbghelp.h"			// must be XP version of file
-#else
-// VC7: ships with updated headers
 #include "dbghelp.h"
-#endif
 
 class IMiniDumperNotify
 {
@@ -30,8 +20,6 @@ typedef BOOL (WINAPI *MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hF
 class CMiniDumper
 {
 public:
-	CMiniDumper();
-
 	static void Init(IMiniDumperNotify *pDumpNotify);
 
 private:
@@ -39,9 +27,4 @@ private:
 
 	static BOOL GetModuleByAddress(PVOID addr, LPTSTR szModule, int nLen, HMODULE &hModule);
 
-protected:
-	static IMiniDumperNotify			*m_pDumpNotify;
-
 };
-
-#endif // __MINIDUMPER_H_

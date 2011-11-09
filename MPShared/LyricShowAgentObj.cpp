@@ -310,19 +310,19 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 	if (pToolbarLyrSync && pToolbarLyrTxt)
 	{
 		bool bTxtStyle = (_tcsicmp(m_strLyrDisplayStyleCurrent.c_str(), SZ_TXT_LYR_CONTAINER) == 0);
-		pToolbarLyrSync->SetVisible(!bTxtStyle, false);
-		pToolbarLyrTxt->SetVisible(bTxtStyle, false);
-
 		if (bTxtStyle)
 		{
 			CLyricShowTxtObj *pTxtObj = (CLyricShowTxtObj *)m_pSkin->GetUIObjectByClassName(CLyricShowTxtObj::ClassName());
 			if (pTxtObj)
 			{
 				pToolbarLyrTxt->SetCheck(CMD_LYR_SCROLL_ENABLE_RECORD, 
-					pTxtObj->IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT);
-				pToolbarLyrTxt->SetCheck(CMD_LYR_SCROLL_ENABLE_REPLAY, pTxtObj->IsReplayScrollingActionsEnabled());
+					pTxtObj->IsRecordScrollingActionsEnabled() && g_LyricData.GetLyrContentType() == LCT_TXT, false);
+				pToolbarLyrTxt->SetCheck(CMD_LYR_SCROLL_ENABLE_REPLAY, pTxtObj->IsReplayScrollingActionsEnabled(), false);
 			}
 		}
+
+		pToolbarLyrSync->SetVisible(!bTxtStyle, true);
+		pToolbarLyrTxt->SetVisible(bTxtStyle, true);
 	}
 }
 

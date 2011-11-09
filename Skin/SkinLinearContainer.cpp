@@ -338,6 +338,8 @@ void CSkinLinearContainer::OnSetChildVisible(CUIObject *pChild, bool bVisible, b
 {
 	// Recalculate the size position.
 	m_pContainer->RecalculateUIObjSizePos(this);
+	if (bRedraw)
+		Invalidate();
 }
 
 #ifdef _CPPUNIT_TEST

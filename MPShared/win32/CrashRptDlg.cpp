@@ -14,13 +14,7 @@ CMiniDumperNotify	dumpNotify;
 
 bool CMiniDumperNotify::OnBeginDump(HMODULE hCrashMod, TCHAR szDumpFileToSave[], int nLen)
 {
-#ifndef _MPLAYER
-	// Only except occurs in our module, send this bug report.
-	if (hCrashMod != GetAppInstance() && hCrashMod != g_Player.GetPlayerPlugInstance())
-		return false;
-#endif
-
-	GetWorkingFolder(szDumpFileToSave);
+	GetAppDataDir(szDumpFileToSave);
 	_tcscat_safe(szDumpFileToSave, nLen, SZ_APP_NAME _T("_crash.dmp"));
 
 	return true;

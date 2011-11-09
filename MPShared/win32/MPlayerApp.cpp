@@ -12,14 +12,14 @@
 #include "LyricShowObj.h"
 #include "../../GfxLite/win32/GdiplusGraphicsLite.h"
 
-#ifdef _WIN32_DESKTOP
 #include "../base/win32/ProcessEnum.h"
 #ifndef _MPLAYER
 #include "../MiniLyrics/win32/MLPlayerMgr.h"
 #include "../MiniLyrics/win32/PlayerPluginInstaller.h"
 #include "../MiniLyrics/win32/DlgSetupPlayerPlugins.h"
 #endif
-#endif
+
+#include "CrashRptDlg.h"
 
 #include "MPMsg.h"
 
@@ -74,6 +74,8 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 					 int       nCmdShow)
 {
 	SetAppInstance(hInstance);
+
+	InitMiniDumper();
 
 	DBGLOG1(_T("MiniLyrics command line: %s"), lpCmdLine);
 

@@ -3,7 +3,7 @@
 #include "App.h"
 #include "MiniDump.h"
 
-IMiniDumperNotify	*CMiniDumper::m_pDumpNotify = NULL;
+static IMiniDumperNotify			*m_pDumpNotify = NULL;
 
 void null_invalid_parameter(
 						const wchar_t * expression,
@@ -12,10 +12,6 @@ void null_invalid_parameter(
 						int line,
 						uintptr_t pReserved
 						)
-{
-}
-
-CMiniDumper::CMiniDumper()
 {
 }
 

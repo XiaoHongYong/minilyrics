@@ -30,10 +30,7 @@ class CCrashRptDlg : public CBaseDialog
 public:
 	BOOL OnInitDialog();
 	void OnOK();
-	CCrashRptDlg(): CBaseDialog(IDD_CRASH_REPORT){
-	}
-	virtual ~CCrashRptDlg(){
-	}
+	CCrashRptDlg(): CBaseDialog(IDD_CRASH_REPORT) { }
 
 public:
 	void UpdateListBoxHorzExtent(LPCTSTR szStrInsert);

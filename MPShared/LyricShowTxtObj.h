@@ -46,7 +46,7 @@ public:
 	void EnableRecordScrollingActions(bool bEnable);
 
 	bool IsReplayScrollingActionsEnabled()
-		const { return m_bReplayScrollingActionsEnabled && m_bReplayDisabledTemp; };
+		const { return m_bReplayScrollingActionsEnabled && !m_bReplayDisabledTemp; };
 	void EnableReplayScrollingActions(bool bEnable);
 
 protected:

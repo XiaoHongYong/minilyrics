@@ -1983,13 +1983,14 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 int CLyricShowObj::GetAlpha(PML_ROW pRow)
 {
 	int				nTime;
+	const int		FADE_DURATION = 1500;
 
 	if (pRow->nBegTime > m_pMLData->GetPlayElapsedTime())
 	{
 		nTime = pRow->nBegTime - m_pMLData->GetPlayElapsedTime();
-		if (nTime <= 1000 && nTime >= -1000)
+		if (nTime <= FADE_DURATION && nTime >= -FADE_DURATION)
 		{
-			return (1000 - nTime) * 255 / 1000;
+			return (FADE_DURATION - nTime) * 255 / FADE_DURATION;
 		}
 		else
 			return 0;
@@ -1997,10 +1998,10 @@ int CLyricShowObj::GetAlpha(PML_ROW pRow)
 	else
 	{
 		nTime = m_pMLData->GetPlayElapsedTime() - pRow->nEndTime;
-		if (nTime >= 1000)
+		if (nTime >= FADE_DURATION)
 			return 0;
 		else if (nTime > 0)
-			return (1000 - nTime) * 255 / 1000;
+			return (FADE_DURATION - nTime) * 255 / FADE_DURATION;
 		else
 			return 255;
 	}
