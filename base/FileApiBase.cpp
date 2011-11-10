@@ -317,7 +317,7 @@ void FileGetTitle(LPCTSTR szFile, tstring &strFileTitle)
 void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile)
 {
 	int ilen = _tcslen(szFile);
-	ilen --;
+	ilen -= 2;
 	while (ilen >= 0)
 	{
 		if (szFile[ilen] == DIR_SLASH)
@@ -333,7 +333,7 @@ void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile)
 void FileGetPath(LPCTSTR szFile, tstring &strPath)
 {
 	int ilen = _tcslen(szFile);
-	ilen --;
+	ilen -= 2;
 	while (ilen >= 0)
 	{
 		if (szFile[ilen] == DIR_SLASH)
