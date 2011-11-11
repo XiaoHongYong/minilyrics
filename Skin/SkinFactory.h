@@ -230,6 +230,10 @@ public:
 	bool SetMenuIDByUID(int nUID, int nMenuId);
 	int GetUIDByMenuID(int nMenuID);
 
+#ifdef _DEBUG
+	void DumpUID();
+#endif
+
 	UIObjectIDDefinition *GetUidDef(int nUID);
 
 	int AllocUID();

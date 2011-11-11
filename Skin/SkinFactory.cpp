@@ -701,6 +701,27 @@ int CSkinFactory::GetUIDByMenuID(int nMenuID)
 	return UID_INVALID;
 }
 
+#ifdef _DEBUG
+void CSkinFactory::DumpUID()
+{
+	typedef map<int, tstring>	MapString;
+
+	MapString mapUID;
+
+	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
+		it != m_setUIDDefinition.end(); ++it)
+	{
+		UIObjectIDDefinition *p = *it;
+		MapString::iterator i = mapUID.find(p->nId);
+		// ASSERT(i == mapUID.end());
+		mapUID[p->nId] = tstring(p->szId);
+	}
+
+	for (MapString::iterator it = mapUID.begin(); it != mapUID.end(); ++it)
+		DBGLOG2(_T("UID: %04X, %s"), (*it).first, (*it).second.c_str());
+}
+#endif
+
 UIObjectIDDefinition *CSkinFactory::GetUidDef(int nUID)
 {
 	if (nUID == UID_INVALID)
@@ -1047,8 +1068,18 @@ void CSkinFactory::Close(bool bQuit)
 
 	m_resourceMgr.OnClose();
 
+	// Recover the orginal UIDs.
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
 	m_nMenuIDNext = MENU_ID_CUSTOM_BASE;
+	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
+		it != m_setUIDDefinition.end();)
+	{
+		UIObjectIDDefinition *p = *it;
+		if (p->nId >= CMD_ID_CUSTOM_BASE)
+			it = m_setUIDDefinition.erase(it);
+		else
+			++it;
+	}
 
 	CSjvmSkinSystem::CloseScript();
 }

@@ -695,6 +695,10 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 				ScreenToClient(pt);
 				DBGLOG2(_T("Current Pos: %d, %d"), pt.x, pt.y);
 			}
+			else if (nChar == VK_F3)
+			{
+				m_pSkinFactory->DumpUID();
+			}
 		}
 	}
 #endif
