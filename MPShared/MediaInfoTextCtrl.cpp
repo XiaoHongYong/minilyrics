@@ -55,16 +55,13 @@ CMediaInfoTextCtrl::CMediaInfoTextCtrl()
 CMediaInfoTextCtrl::~CMediaInfoTextCtrl()
 {
 	m_pSkin->UnregisterTimerObject(this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 }
 
 void CMediaInfoTextCtrl::OnCreate()
 {
 	CSkinScrollText::OnCreate();
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_MEDIA_CHANGED, ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
 
 	if (m_vInfoType.size() > 1 && m_strCombineWith.empty())
 		m_nIDTimerUpdateTrackInfo = m_pSkin->RegisterTimerObject(this, m_nSwitchTime);

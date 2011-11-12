@@ -66,9 +66,6 @@ CMediaAlbumArtCtrl::CMediaAlbumArtCtrl()
 
 CMediaAlbumArtCtrl::~CMediaAlbumArtCtrl()
 {
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
-
 	m_pSkin->UnregisterTimerObject(this);
 }
 
@@ -76,8 +73,7 @@ void CMediaAlbumArtCtrl::OnCreate()
 {
 	CUIObject::OnCreate();
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_MEDIA_CHANGED, ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
 
 	m_pSkin->RegisterTimerObject(this, 20 * 1000);
 

@@ -652,10 +652,6 @@ CLyricShowObj::CLyricShowObj()
 
 CLyricShowObj::~CLyricShowObj()
 {
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(m_etDispSettings, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 	g_Profile.WriteProfileInt(_T("NextPicInFolder"), m_nNextPicInFolder);
 	m_pSkin->UnregisterTimerObject(this);
 }
@@ -674,10 +670,7 @@ void CLyricShowObj::OnCreate()
 
 	LoadAllSettings();
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(m_etDispSettings, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), m_etDispSettings, ET_LYRICS_CHANGED, ET_LYRICS_DRAW_UPDATE, ET_PLAYER_CUR_MEDIA_CHANGED);
 	if (m_bUseBgImg)
 		m_pSkin->RegisterTimerObject(this, g_Profile.GetProfileInt(_T("SlideDelayTime"), 10) * 1000);
 

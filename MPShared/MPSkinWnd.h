@@ -12,14 +12,7 @@
 class ISkinCmdHandler;
 
 
-class IEventHandlerEx : public IEventHandler
-{
-public:
-	virtual void Unregister() = 0;
-
-};
-
-typedef map<CUIObject *, IEventHandlerEx *>		MAP_EVENT_HANDLER;
+typedef map<CUIObject *, IEventHandler *>		MAP_EVENT_HANDLER;
 
 
 class CMPSkinWnd : public CSkinWnd, public IEventHandler

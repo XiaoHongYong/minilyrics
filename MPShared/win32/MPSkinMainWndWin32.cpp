@@ -37,8 +37,7 @@ bool CMPSkinMainWnd::OnCreate()
 	if (!CMPSkinMainWndBase::OnCreate())
 		return false;
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_MEDIA_CHANGED, ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
 
 	m_mlTrayIcon.Init(this);
 
@@ -47,8 +46,6 @@ bool CMPSkinMainWnd::OnCreate()
 
 void CMPSkinMainWnd::OnDestroy()
 {
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 	m_mlTrayIcon.Quit();
 
 	CMPSkinMainWndBase::OnDestroy();

@@ -259,13 +259,8 @@ class CPageAbout : public CSkinContainer, public IEventHandler
 public:
 	CPageAbout()
 	{
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_DOWNLOAD_END, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_DOWNLOAD_END);
 		m_strText = TOLOCAL_MARK(_T("About $Product$"));
-	}
-
-	~CPageAbout()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_DOWNLOAD_END, this);
 	}
 
 	void OnCreate()

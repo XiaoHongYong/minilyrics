@@ -132,9 +132,7 @@ int CLyricsOutPluginMgr::Init()
 	m_bActive = !m_vPlugins.empty();
 	if (m_bActive)
 	{
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_CHANGED, this);
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_LYRICS_CHANGED, ET_LYRICS_DRAW_UPDATE, ET_PLAYER_CUR_MEDIA_CHANGED);
 	}
 
 	return ERR_OK;
@@ -145,11 +143,7 @@ void CLyricsOutPluginMgr::Quit()
 	V_PLUGINS::iterator		it, itEnd;
 
 	if (m_bActive)
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_CHANGED, this);
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	}
+		IEventHandler::UnregisterHandler();
 
 	itEnd = m_vPlugins.end();
 	for (it = m_vPlugins.begin(); it != itEnd; ++it)

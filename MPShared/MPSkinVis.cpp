@@ -33,7 +33,7 @@ CMPSkinVis::CMPSkinVis()
 CMPSkinVis::~CMPSkinVis()
 {
 #ifndef SKIN_EDITOR
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_VIS_DRAW_UPDATE, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnRegisterHandler(ET_VIS_DRAW_UPDATE, this);
 #endif
 }
 
@@ -42,7 +42,7 @@ void CMPSkinVis::OnCreate()
 {
 	CUIObject::OnCreate();
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_VIS_DRAW_UPDATE, this);
+	CMPlayerAppBase::GetEventsDispatcher()->RegisterHandler(ET_VIS_DRAW_UPDATE, this);
 }
 
 void CMPSkinVis::OnEvent(const IEvent *pEvent)

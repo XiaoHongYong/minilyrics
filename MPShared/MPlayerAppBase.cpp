@@ -491,9 +491,7 @@ bool CMPlayerAppBase::Init()
 
 	g_OnlineSearch.Init();
 
-	m_pEventDispatcher->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	m_pEventDispatcher->RegisterHanlder(ET_LYRICS_SEARCH_END, this);
-	m_pEventDispatcher->RegisterHanlder(ET_DOWNLOAD_END, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_MEDIA_CHANGED, ET_LYRICS_SEARCH_END, ET_DOWNLOAD_END);
 
 	// Initialize MiniLyrics/ZikiPlayer
 	bool bRet = false;
@@ -559,9 +557,7 @@ void CMPlayerAppBase::Quit()
 	g_lyrOutPlguinMgr.Quit();
 	g_OnlineSearch.Quit();
 
-	m_pEventDispatcher->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	m_pEventDispatcher->UnregisterHanlder(ET_LYRICS_SEARCH_END, this);
-	m_pEventDispatcher->UnregisterHanlder(ET_DOWNLOAD_END, this);
+	IEventHandler::UnregisterHandler();
 	m_pEventDispatcher->Quit();
 
 	GetHotkey().Quit();

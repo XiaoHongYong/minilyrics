@@ -15,21 +15,18 @@ CMPSkinInfoTextCtrlEx::CMPSkinInfoTextCtrlEx()
 
 CMPSkinInfoTextCtrlEx::~CMPSkinInfoTextCtrlEx()
 {
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_INFO_TEXT, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_LONG_ERROR_TEXT, this);
 }
 
 void CMPSkinInfoTextCtrlEx::OnCreate()
 {
 	CLyricShowObj::OnCreate();
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_INFO_TEXT, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_LONG_ERROR_TEXT, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_UI_INFO_TEXT, ET_UI_LONG_ERROR_TEXT);
 
 	// Do not proceed these messages.
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnRegisterHandler(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnRegisterHandler(ET_LYRICS_CHANGED, this);
+	CMPlayerAppBase::GetEventsDispatcher()->UnRegisterHandler(ET_LYRICS_DRAW_UPDATE, this);
 	if (m_bUseBgImg)
 		m_pSkin->UnregisterTimerObject(this);
 }

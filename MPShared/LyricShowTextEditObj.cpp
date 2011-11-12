@@ -109,12 +109,6 @@ CLyricShowTextEditObj::CLyricShowTextEditObj()
 
 CLyricShowTextEditObj::~CLyricShowTextEditObj()
 {
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_EDITOR_RELOAD_TAG, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LYRICS_DISPLAY_SETTINGS, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 }
 
 void CLyricShowTextEditObj::OnCreate()
@@ -149,12 +143,8 @@ void CLyricShowTextEditObj::OnCreate()
 
 	OnLyricsChanged();
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_ON_SAVE_EDIT, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_EDITOR_RELOAD_TAG, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_DRAW_UPDATE, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LYRICS_DISPLAY_SETTINGS, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_LYRICS_ON_SAVE_EDIT, ET_LYRICS_EDITOR_RELOAD_TAG, ET_LYRICS_CHANGED, ET_LYRICS_DRAW_UPDATE);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_LYRICS_DISPLAY_SETTINGS, ET_PLAYER_CUR_MEDIA_CHANGED);
 
 	UpdateTextFontColor();
 

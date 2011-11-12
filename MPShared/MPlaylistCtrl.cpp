@@ -84,8 +84,6 @@ CMPlaylistCtrl::CMPlaylistCtrl()
 
 CMPlaylistCtrl::~CMPlaylistCtrl()
 {
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
 }
 
 void CMPlaylistCtrl::OnCreate()
@@ -95,8 +93,7 @@ void CMPlaylistCtrl::OnCreate()
 	if (GetColumnCount() == 0)
 		AddColumn(TOLOCAL_T("Media Files"), 230);
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_PLAYLIST_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_PLAYLIST_CHANGED, ET_PLAYER_CUR_MEDIA_CHANGED);
 
 	CMPAutoPtr<IPlaylist> playlist;
 	int nRet = g_Player.GetCurrentPlaylist(&playlist);

@@ -22,19 +22,13 @@ CMPSkinInfoTextCtrl::~CMPSkinInfoTextCtrl()
 {
 	if (m_nTimerIDHideInfo != 0)
 		m_pSkin->UnregisterTimerObject(this, m_nTimerIDHideInfo);
-
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_INFO_TEXT, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
 }
 
 void CMPSkinInfoTextCtrl::OnCreate()
 {
 	CSkinScrollText::OnCreate();
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_INFO_TEXT, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_UI_INFO_TEXT, ET_PLAYER_CUR_MEDIA_CHANGED, ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
 
 	UpdateShowTrackInfo();
 }

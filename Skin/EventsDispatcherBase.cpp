@@ -3,6 +3,51 @@
 
 #define MAX_EVENT_ID		100
 
+IEventHandler::~IEventHandler()
+{
+	if (m_pEventDispatcher)
+		m_pEventDispatcher->UnRegisterHandler(this);
+}
+
+void IEventHandler::RegisterHandler(CEventsDispatcherBase *pEventDispatcher, EventType ev1)
+{
+	m_pEventDispatcher = pEventDispatcher;
+	m_pEventDispatcher->RegisterHandler(ev1, this);
+}
+
+void IEventHandler::RegisterHandler(CEventsDispatcherBase *pEventDispatcher, EventType ev1, EventType ev2)
+{
+	m_pEventDispatcher = pEventDispatcher;
+	m_pEventDispatcher->RegisterHandler(ev1, this);
+	m_pEventDispatcher->RegisterHandler(ev2, this);
+}
+
+void IEventHandler::RegisterHandler(CEventsDispatcherBase *pEventDispatcher, EventType ev1, EventType ev2, EventType ev3)
+{
+	m_pEventDispatcher = pEventDispatcher;
+	m_pEventDispatcher->RegisterHandler(ev1, this);
+	m_pEventDispatcher->RegisterHandler(ev2, this);
+	m_pEventDispatcher->RegisterHandler(ev3, this);
+}
+
+void IEventHandler::RegisterHandler(CEventsDispatcherBase *pEventDispatcher, EventType ev1, EventType ev2, EventType ev3, EventType ev4)
+{
+	m_pEventDispatcher = pEventDispatcher;
+	m_pEventDispatcher->RegisterHandler(ev1, this);
+	m_pEventDispatcher->RegisterHandler(ev2, this);
+	m_pEventDispatcher->RegisterHandler(ev3, this);
+	m_pEventDispatcher->RegisterHandler(ev4, this);
+}
+
+void IEventHandler::UnregisterHandler()
+{
+	if (m_pEventDispatcher)
+	{
+		m_pEventDispatcher->UnRegisterHandler(this);
+		m_pEventDispatcher = NULL;
+	}
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CEventsDispatcherBase::CEventsDispatcherBase()
@@ -27,7 +72,7 @@ void CEventsDispatcherBase::Quit()
 	m_vListEventHandler.clear();
 }
 
-void CEventsDispatcherBase::RegisterHanlder(EventType eventType, IEventHandler *pHandler)
+void CEventsDispatcherBase::RegisterHandler(EventType eventType, IEventHandler *pHandler)
 {
 	ASSERT(eventType >= 0 && eventType <= MAX_EVENT_ID);
 	CMutexAutolock		lock(m_mutex);
@@ -47,7 +92,7 @@ void CEventsDispatcherBase::RegisterHanlder(EventType eventType, IEventHandler *
 	listHandler.push_back(pHandler);
 }
 
-void CEventsDispatcherBase::UnregisterHanlder(EventType eventType, IEventHandler *pHandler)
+void CEventsDispatcherBase::UnRegisterHandler(EventType eventType, IEventHandler *pHandler)
 {
 	ASSERT(eventType >= 0 && eventType <= MAX_EVENT_ID);
 	if (eventType >= m_vListEventHandler.size())
@@ -68,7 +113,7 @@ void CEventsDispatcherBase::UnregisterHanlder(EventType eventType, IEventHandler
 	}
 }
 
-void CEventsDispatcherBase::UnregisterHanlder(IEventHandler *pHandler)
+void CEventsDispatcherBase::UnRegisterHandler(IEventHandler *pHandler)
 {
 	CMutexAutolock		lock(m_mutex);
 

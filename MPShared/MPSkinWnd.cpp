@@ -118,7 +118,7 @@ public:
 	virtual void AddPlayPauseUpdater(IUIStateUpdater *pUpdater)
 	{
 		if (m_listStatePlaypause.empty())
-			CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+			CMPlayerAppBase::GetEventsDispatcher()->RegisterHandler(ET_PLAYER_STATUS_CHANGED, this);
 		m_listStatePlaypause.Add(pUpdater);
 	}
 
@@ -126,7 +126,7 @@ public:
 	{
 		m_listStatePlaypause.Del(hObj);
 		if (m_listStatePlaypause.empty())
-			CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+			CMPlayerAppBase::GetEventsDispatcher()->UnRegisterHandler(ET_PLAYER_STATUS_CHANGED, this);
 	}
 
 	LIST_UISTATE_UPDATER		m_listStatePlaypause;
@@ -136,7 +136,7 @@ public:
 
 CUIPlayerStatusHandler		g_UIPlayerStatusHandler;*/
 
-class CPlayerShuffleEventHandler : public IEventHandlerEx
+class CPlayerShuffleEventHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -157,12 +157,7 @@ public:
 		m_pShuffle = pShuffle;
 		if (g_Player.IsShuffle() != Tobool(m_pShuffle->GetStatus()))
 			pShuffle->SetStatus(g_Player.IsShuffle() ? 1 : 0);
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_SETTING_CHANGED);
 	}
 
 protected:
@@ -170,7 +165,7 @@ protected:
 
 };
 
-class CPlayerLoopEventHandler : public IEventHandlerEx
+class CPlayerLoopEventHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -192,12 +187,7 @@ public:
 		m_pLoop = pLoopBt;
 		if ((int)g_Player.GetLoop() != pLoopBt->GetStatus())
 			m_pLoop->SetStatus(g_Player.GetLoop());
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_SETTING_CHANGED);
 	}
 
 protected:
@@ -205,7 +195,7 @@ protected:
 
 };
 
-class CPlayerVolumeEventHandler : public IEventHandlerEx
+class CPlayerVolumeEventHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -225,12 +215,7 @@ public:
 	{
 		m_pVolume = pVolume;
 		m_pVolume->SetScrollInfo(0, MP_VOLUME_MAX, 0, g_Player.GetVolume());
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_SETTING_CHANGED);
 	}
 
 protected:
@@ -238,7 +223,7 @@ protected:
 
 };
 
-class CPlayerSeekEventHandler : public IEventHandlerEx
+class CPlayerSeekEventHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -262,16 +247,7 @@ public:
 	{
 		m_pSeekCtrl = pSeekCtrl;
 		pSeekCtrl->SetScrollInfo(0, g_Player.GetMediaLength(), 0, 0);
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_POS_UPDATE, this);
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_POS_UPDATE, this);
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_MEDIA_CHANGED, ET_PLAYER_POS_UPDATE, ET_PLAYER_STATUS_CHANGED);
 	}
 
 protected:
@@ -279,7 +255,7 @@ protected:
 
 };
 
-class CPlayerPlayPauseBtHandler : public IEventHandlerEx
+class CPlayerPlayPauseBtHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -307,12 +283,7 @@ public:
 		{
 			m_pButtn->SetStatus(bCheck);
 		}
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_STATUS_CHANGED);
 	}
 
 protected:
@@ -320,7 +291,7 @@ protected:
 
 };
 
-class CPlayerPlayPauseToolbarHandler : public IEventHandlerEx
+class CPlayerPlayPauseToolbarHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -348,12 +319,7 @@ public:
 		{
 			m_pToolbar->SetCheck(CMD_PLAYPAUSE, bCheck, false);
 		}
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_STATUS_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_STATUS_CHANGED);
 	}
 
 protected:
@@ -361,7 +327,7 @@ protected:
 
 };
 
-class CPlayerShuffleRepeatToolbarHandler : public IEventHandlerEx
+class CPlayerShuffleRepeatToolbarHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -392,12 +358,7 @@ public:
 		if (g_Player.GetLoop() != m_pToolbar->GetBtStatus(CMD_LOOP))
 			m_pToolbar->SetBtStatus(CMD_LOOP, g_Player.GetLoop(), false);
 
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_SETTING_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_SETTING_CHANGED);
 	}
 
 protected:
@@ -411,7 +372,7 @@ protected:
 //
 
 // Media
-class CMediaStereoStatusEventHandler : public IEventHandlerEx
+class CMediaStereoStatusEventHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -444,12 +405,7 @@ public:
 			else
 				m_pStereoStatusCtrl->SetPropertyInt(_T("CurStatus"), 0);
 		}
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_MEDIA_CHANGED);
 	}
 
 protected:
@@ -457,7 +413,7 @@ protected:
 
 };
 
-class CPlayerMediaChangedRateEventHandler : public IEventHandlerEx
+class CPlayerMediaChangedRateEventHandler : public IEventHandler
 {
 public:
 	virtual void OnEvent(const IEvent *pEvent)
@@ -484,14 +440,7 @@ public:
 			pMedia->GetAttribute(MA_RATING, &nRating);
 			m_pRateCtrl->SetRating(nRating);
 		}
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-		CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
-	}
-
-	void Unregister()
-	{
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_CHANGED, this);
-		CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_PLAYER_CUR_MEDIA_INFO_CHANGED, this);
+		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_MEDIA_CHANGED, ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
 	}
 
 protected:
@@ -911,8 +860,8 @@ void CMPSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 	it = m_mapEventHandlers.find(pObj);
 	if (it != m_mapEventHandlers.end())
 	{
-		IEventHandlerEx		*pHandler = (*it).second;
-		pHandler->Unregister();
+		IEventHandler		*pHandler = (*it).second;
+		pHandler->UnregisterHandler();
 		m_mapEventHandlers.erase(it);
 		delete pHandler;
 	}

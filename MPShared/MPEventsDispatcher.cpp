@@ -255,9 +255,9 @@ void CMPEventsDispatcher::Quit()
 #endif
 }
 
-void CMPEventsDispatcher::RegisterHanlder(EventType eventType, IEventHandler *pHandler)
+void CMPEventsDispatcher::RegisterHandler(EventType eventType, IEventHandler *pHandler)
 {
-	CEventsDispatcher::RegisterHanlder(eventType, pHandler);
+	CEventsDispatcher::RegisterHandler(eventType, pHandler);
 
 #ifdef _MPLAYER
 	if (eventType == ET_VIS_DRAW_UPDATE)
@@ -277,9 +277,9 @@ void CMPEventsDispatcher::RegisterHanlder(EventType eventType, IEventHandler *pH
 #endif
 }
 
-void CMPEventsDispatcher::UnregisterHanlder(EventType eventType, IEventHandler *pHandler)
+void CMPEventsDispatcher::UnRegisterHandler(EventType eventType, IEventHandler *pHandler)
 {
-	CEventsDispatcher::UnregisterHanlder(eventType, pHandler);
+	CEventsDispatcher::UnRegisterHandler(eventType, pHandler);
 
 #ifdef _MPLAYER
 	if (eventType == ET_VIS_DRAW_UPDATE)

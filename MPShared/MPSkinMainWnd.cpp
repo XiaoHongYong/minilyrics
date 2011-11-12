@@ -23,8 +23,7 @@ bool CMPSkinMainWndBase::OnCreate()
 	if (!CMPSkinWnd::OnCreate())
 		return false;
 
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_UI_SETTINGS_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->RegisterHanlder(ET_LICENSE_CHANGED, this);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_UI_SETTINGS_CHANGED, ET_LICENSE_CHANGED);
 
 	UpdateCaptionText();
 
@@ -33,8 +32,7 @@ bool CMPSkinMainWndBase::OnCreate()
 
 void CMPSkinMainWndBase::OnDestroy()
 {
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_UI_SETTINGS_CHANGED, this);
-	CMPlayerAppBase::GetEventsDispatcher()->UnregisterHanlder(ET_LICENSE_CHANGED, this);
+	IEventHandler::UnregisterHandler();
 
 #ifndef _WIN32_WCE
 	// Save iconic status

@@ -137,8 +137,8 @@ class CMPEventsDispatcher : public CEventsDispatcher
 public:
 	virtual void Quit();
 
-	virtual void RegisterHanlder(EventType eventType, IEventHandler *pHandler);
-	virtual void UnregisterHanlder(EventType eventType, IEventHandler *pHandler);
+	virtual void RegisterHandler(EventType eventType, IEventHandler *pHandler);
+	virtual void UnRegisterHandler(EventType eventType, IEventHandler *pHandler);
 
 protected:
 #ifdef _MPLAYER

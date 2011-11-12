@@ -1,5 +1,6 @@
 #pragma once
 
+class CEventsDispatcherBase;
 typedef uint		EventType;
 
 class IEvent
@@ -14,8 +15,19 @@ public:
 class IEventHandler
 {
 public:
-	virtual ~IEventHandler() { }
+	IEventHandler() { m_pEventDispatcher = NULL; }
+
+	virtual ~IEventHandler();
 	virtual void OnEvent(const IEvent *pEvent) = 0;
+
+	void RegisterHandler(CEventsDispatcherBase *pEventDispatcher, EventType ev1);
+	void RegisterHandler(CEventsDispatcherBase *pEventDispatcher, EventType ev1, EventType ev2);
+	void RegisterHandler(CEventsDispatcherBase *pEventDispatcher, EventType ev1, EventType ev2, EventType ev3);
+	void RegisterHandler(CEventsDispatcherBase *pEventDispatcher, EventType ev1, EventType ev2, EventType ev3, EventType ev4);
+
+	void UnregisterHandler();
+
+	CEventsDispatcherBase		*m_pEventDispatcher;
 
 };
 
@@ -28,9 +40,9 @@ public:
 	virtual int Init();
 	virtual void Quit();
 
-	virtual void RegisterHanlder(EventType eventType, IEventHandler *pHandler);
-	virtual void UnregisterHanlder(EventType eventType, IEventHandler *pHandler);
-	virtual void UnregisterHanlder(IEventHandler *pHandler);
+	virtual void RegisterHandler(EventType eventType, IEventHandler *pHandler);
+	virtual void UnRegisterHandler(EventType eventType, IEventHandler *pHandler);
+	virtual void UnRegisterHandler(IEventHandler *pHandler);
 
 	// CEventsDispatcher will delete pEvent, after pass through it to all handlers.
 	void DispatchSyncEvent(IEvent *pEvent);
