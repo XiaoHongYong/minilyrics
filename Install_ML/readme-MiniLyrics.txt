@@ -1,3 +1,6 @@
+MiniLyrics 7.2.865
+Fixed: MiniLyrics may crash when switching skins. 
+
 MiniLyrics 7.2.861
 Fixed: Choosing player window may pop up when starting MediaMonkey, Winamp.
 Fixed: Lyrics scrolling status for text lyrics files.

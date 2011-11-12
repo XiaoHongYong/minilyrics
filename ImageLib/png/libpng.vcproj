@@ -391,6 +391,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\pngvalid.c"
+				>
+			</File>
+			<File
 				RelativePath=".\pngvcrd.c"
 				>
 			</File>
@@ -422,6 +426,26 @@
 			</File>
 			<File
 				RelativePath=".\pngconf.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pngdebug.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pnginfo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pnglibconf.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pngpriv.h"
+				>
+			</File>
+			<File
+				RelativePath=".\pngstruct.h"
 				>
 			</File>
 		</Filter>

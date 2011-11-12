@@ -1068,7 +1068,7 @@ void CSkinFactory::Close(bool bQuit)
 
 	m_resourceMgr.OnClose();
 
-	// Recover the orginal UIDs.
+	// Recover the original UIDs.
 	m_nCustomCmdIDNext = CMD_ID_CUSTOM_BASE;
 	m_nMenuIDNext = MENU_ID_CUSTOM_BASE;
 	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
