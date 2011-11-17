@@ -40,9 +40,14 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 	rcFrame.DeflateRect(m_xBorder, 0);
 	rcFrame.top += m_yBorder;
 
-	pGraph->GetTextExtentPoint32(m_strText.c_str(), m_strText.size(), &sizeText);
-	if (sizeText.cx > 0)
-		sizeText.cx += xTextBorder * 2;
+	if (m_strText.size() > 0)
+	{
+		pGraph->GetTextExtentPoint32(m_strText.c_str(), m_strText.size(), &sizeText);
+		if (sizeText.cx > 0)
+			sizeText.cx += xTextBorder * 2;
+	}
+	else
+		sizeText.cx = 0;
 
 	if (m_nRoundWidthTop > xTextStart)
 		xTextStart = m_nRoundWidthTop + rcFrame.left;

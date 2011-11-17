@@ -7,10 +7,10 @@
 #define COMPANY_NAME	"ZikiPlayer"
 #define PRODUCT_NAME	"ZikiPlayer"
 #define PRODUCT_DESC	"ZikiPlayer - an amazing lyrics player"
-#define COPYRIGHT		"Copyright (C) 2010 ZikiPlayer"
+#define COPYRIGHT		"Copyright (C) 2011 ZikiPlayer"
 #else
 #define COMPANY_NAME	"Crintsoft"
 #define PRODUCT_NAME	"MiniLyrics"
 #define PRODUCT_DESC	"MiniLyrics - Display lyrics automatically"
-#define COPYRIGHT		"Copyright (C) 2010 Crintsoft"
+#define COPYRIGHT		"Copyright (C) 2011 Crintsoft"
 #endif
