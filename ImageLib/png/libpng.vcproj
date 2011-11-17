@@ -351,10 +351,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\pnggccrd.c"
-				>
-			</File>
-			<File
 				RelativePath=".\pngget.c"
 				>
 			</File>
@@ -392,10 +388,6 @@
 			</File>
 			<File
 				RelativePath=".\pngvalid.c"
-				>
-			</File>
-			<File
-				RelativePath=".\pngvcrd.c"
 				>
 			</File>
 			<File

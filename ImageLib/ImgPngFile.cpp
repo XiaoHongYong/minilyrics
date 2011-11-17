@@ -8,6 +8,8 @@
 
 extern "C" {
 #include "./png/png.h"
+#include "./png/pngstruct.h"
+#include "./png/pnginfo.h"
 }
 
 // cexcept interface
@@ -65,7 +67,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromPngFile(IILIO *io)
     png_uint_32         ulRowBytes;
     png_byte			**ppbRowPointers = NULL;
     unsigned long       i;
-	unsigned long		nWidth, nHeight;
+	png_uint_32			nWidth, nHeight;
 	PRAW_IMAGE_DATA		imgData = NULL;
 	png_bytep			pRow;
 
