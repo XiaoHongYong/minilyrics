@@ -1,0 +1,319 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5F9CDF57147BD92400432DAC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9CDF56147BD92400432DAC /* Cocoa.framework */; };
+		5F9CDF7E147BD9FE00432DAC /* GfxRaw.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF6B147BD9FE00432DAC /* GfxRaw.h */; };
+		5F9CDF7F147BD9FE00432DAC /* ImageBuffBlt.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF6C147BD9FE00432DAC /* ImageBuffBlt.h */; };
+		5F9CDF80147BD9FE00432DAC /* RawGlyphBuilder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF6E147BD9FE00432DAC /* RawGlyphBuilder.mm */; };
+		5F9CDF81147BD9FE00432DAC /* RawGlyphBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF6F147BD9FE00432DAC /* RawGlyphBuilder.h */; };
+		5F9CDF82147BD9FE00432DAC /* RawGraphData.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF70147BD9FE00432DAC /* RawGraphData.mm */; };
+		5F9CDF83147BD9FE00432DAC /* RawGraphData.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF71147BD9FE00432DAC /* RawGraphData.h */; };
+		5F9CDF85147BD9FE00432DAC /* RawBmpFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF73147BD9FE00432DAC /* RawBmpFont.cpp */; };
+		5F9CDF86147BD9FE00432DAC /* RawBmpFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF74147BD9FE00432DAC /* RawBmpFont.h */; };
+		5F9CDF87147BD9FE00432DAC /* RawGraph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF75147BD9FE00432DAC /* RawGraph.cpp */; };
+		5F9CDF88147BD9FE00432DAC /* RawGraph.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF76147BD9FE00432DAC /* RawGraph.h */; };
+		5F9CDF89147BD9FE00432DAC /* RawImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF77147BD9FE00432DAC /* RawImage.cpp */; };
+		5F9CDF8A147BD9FE00432DAC /* RawImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF78147BD9FE00432DAC /* RawImage.h */; };
+		5F9CDF8D147BD9FE00432DAC /* RawPen.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF7B147BD9FE00432DAC /* RawPen.cpp */; };
+		5F9CDF8E147BD9FE00432DAC /* RawPen.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF7C147BD9FE00432DAC /* RawPen.h */; };
+		5F9CDF8F147BD9FE00432DAC /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF7D147BD9FE00432DAC /* stdafx.h */; };
+		5F9CDF93147BDBCC00432DAC /* GfxRawMac-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF92147BDBCC00432DAC /* GfxRawMac-Prefix.pch */; };
+		5F9CDF95147BDE4400432DAC /* GfxRawMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF94147BDE4400432DAC /* GfxRawMac.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5F9CDF53147BD92400432DAC /* libGfxRawMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGfxRawMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F9CDF56147BD92400432DAC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		5F9CDF59147BD92400432DAC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5F9CDF5A147BD92400432DAC /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		5F9CDF5B147BD92400432DAC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5F9CDF6B147BD9FE00432DAC /* GfxRaw.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GfxRaw.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF6C147BD9FE00432DAC /* ImageBuffBlt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageBuffBlt.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF6E147BD9FE00432DAC /* RawGlyphBuilder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RawGlyphBuilder.mm; sourceTree = "<group>"; };
+		5F9CDF6F147BD9FE00432DAC /* RawGlyphBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawGlyphBuilder.h; sourceTree = "<group>"; };
+		5F9CDF70147BD9FE00432DAC /* RawGraphData.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = RawGraphData.mm; sourceTree = "<group>"; };
+		5F9CDF71147BD9FE00432DAC /* RawGraphData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawGraphData.h; sourceTree = "<group>"; };
+		5F9CDF73147BD9FE00432DAC /* RawBmpFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RawBmpFont.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF74147BD9FE00432DAC /* RawBmpFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawBmpFont.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF75147BD9FE00432DAC /* RawGraph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RawGraph.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF76147BD9FE00432DAC /* RawGraph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawGraph.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF77147BD9FE00432DAC /* RawImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RawImage.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF78147BD9FE00432DAC /* RawImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawImage.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF7B147BD9FE00432DAC /* RawPen.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RawPen.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF7C147BD9FE00432DAC /* RawPen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RawPen.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF7D147BD9FE00432DAC /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF92147BDBCC00432DAC /* GfxRawMac-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GfxRawMac-Prefix.pch"; path = "mac/GfxRawMac-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		5F9CDF94147BDE4400432DAC /* GfxRawMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GfxRawMac.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5F9CDF50147BD92400432DAC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9CDF57147BD92400432DAC /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5F9CDF48147BD92400432DAC = {
+			isa = PBXGroup;
+			children = (
+				5F9CDF5C147BD92400432DAC /* Sources */,
+				5F9CDF55147BD92400432DAC /* Frameworks */,
+				5F9CDF54147BD92400432DAC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5F9CDF54147BD92400432DAC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDF53147BD92400432DAC /* libGfxRawMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5F9CDF55147BD92400432DAC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDF56147BD92400432DAC /* Cocoa.framework */,
+				5F9CDF58147BD92400432DAC /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5F9CDF58147BD92400432DAC /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDF59147BD92400432DAC /* AppKit.framework */,
+				5F9CDF5A147BD92400432DAC /* CoreData.framework */,
+				5F9CDF5B147BD92400432DAC /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5F9CDF5C147BD92400432DAC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDF6B147BD9FE00432DAC /* GfxRaw.h */,
+				5F9CDF6C147BD9FE00432DAC /* ImageBuffBlt.h */,
+				5F9CDF6D147BD9FE00432DAC /* mac */,
+				5F9CDF73147BD9FE00432DAC /* RawBmpFont.cpp */,
+				5F9CDF74147BD9FE00432DAC /* RawBmpFont.h */,
+				5F9CDF75147BD9FE00432DAC /* RawGraph.cpp */,
+				5F9CDF76147BD9FE00432DAC /* RawGraph.h */,
+				5F9CDF77147BD9FE00432DAC /* RawImage.cpp */,
+				5F9CDF78147BD9FE00432DAC /* RawImage.h */,
+				5F9CDF7B147BD9FE00432DAC /* RawPen.cpp */,
+				5F9CDF7C147BD9FE00432DAC /* RawPen.h */,
+				5F9CDF7D147BD9FE00432DAC /* stdafx.h */,
+				5F9CDF5D147BD92400432DAC /* Supporting Files */,
+			);
+			name = Sources;
+			path = GfxRawMac;
+			sourceTree = "<group>";
+		};
+		5F9CDF5D147BD92400432DAC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDF92147BDBCC00432DAC /* GfxRawMac-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5F9CDF6D147BD9FE00432DAC /* mac */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDF94147BDE4400432DAC /* GfxRawMac.h */,
+				5F9CDF6E147BD9FE00432DAC /* RawGlyphBuilder.mm */,
+				5F9CDF6F147BD9FE00432DAC /* RawGlyphBuilder.h */,
+				5F9CDF70147BD9FE00432DAC /* RawGraphData.mm */,
+				5F9CDF71147BD9FE00432DAC /* RawGraphData.h */,
+			);
+			path = mac;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5F9CDF51147BD92400432DAC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9CDF7E147BD9FE00432DAC /* GfxRaw.h in Headers */,
+				5F9CDF7F147BD9FE00432DAC /* ImageBuffBlt.h in Headers */,
+				5F9CDF81147BD9FE00432DAC /* RawGlyphBuilder.h in Headers */,
+				5F9CDF83147BD9FE00432DAC /* RawGraphData.h in Headers */,
+				5F9CDF86147BD9FE00432DAC /* RawBmpFont.h in Headers */,
+				5F9CDF88147BD9FE00432DAC /* RawGraph.h in Headers */,
+				5F9CDF8A147BD9FE00432DAC /* RawImage.h in Headers */,
+				5F9CDF8E147BD9FE00432DAC /* RawPen.h in Headers */,
+				5F9CDF8F147BD9FE00432DAC /* stdafx.h in Headers */,
+				5F9CDF93147BDBCC00432DAC /* GfxRawMac-Prefix.pch in Headers */,
+				5F9CDF95147BDE4400432DAC /* GfxRawMac.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5F9CDF52147BD92400432DAC /* GfxRawMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5F9CDF64147BD92400432DAC /* Build configuration list for PBXNativeTarget "GfxRawMac" */;
+			buildPhases = (
+				5F9CDF4F147BD92400432DAC /* Sources */,
+				5F9CDF50147BD92400432DAC /* Frameworks */,
+				5F9CDF51147BD92400432DAC /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GfxRawMac;
+			productName = GfxRawMac;
+			productReference = 5F9CDF53147BD92400432DAC /* libGfxRawMac.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5F9CDF4A147BD92400432DAC /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 5F9CDF4D147BD92400432DAC /* Build configuration list for PBXProject "GfxRawMac" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5F9CDF48147BD92400432DAC;
+			productRefGroup = 5F9CDF54147BD92400432DAC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5F9CDF52147BD92400432DAC /* GfxRawMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5F9CDF4F147BD92400432DAC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9CDF80147BD9FE00432DAC /* RawGlyphBuilder.mm in Sources */,
+				5F9CDF82147BD9FE00432DAC /* RawGraphData.mm in Sources */,
+				5F9CDF85147BD9FE00432DAC /* RawBmpFont.cpp in Sources */,
+				5F9CDF87147BD9FE00432DAC /* RawGraph.cpp in Sources */,
+				5F9CDF89147BD9FE00432DAC /* RawImage.cpp in Sources */,
+				5F9CDF8D147BD9FE00432DAC /* RawPen.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5F9CDF62147BD92400432DAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5F9CDF63147BD92400432DAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5F9CDF65147BD92400432DAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "mac/GfxRawMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC_OSX,
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5F9CDF66147BD92400432DAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "mac/GfxRawMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5F9CDF4D147BD92400432DAC /* Build configuration list for PBXProject "GfxRawMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F9CDF62147BD92400432DAC /* Debug */,
+				5F9CDF63147BD92400432DAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5F9CDF64147BD92400432DAC /* Build configuration list for PBXNativeTarget "GfxRawMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F9CDF65147BD92400432DAC /* Debug */,
+				5F9CDF66147BD92400432DAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5F9CDF4A147BD92400432DAC /* Project object */;
+}

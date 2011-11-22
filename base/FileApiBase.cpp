@@ -18,7 +18,7 @@ BOOL CreateDirectoryAll(LPCTSTR szDir)
 	{
 		*szBeg = '\0';
 
-		if (!IsDirExist(szTemp))
+		if (!IsEmptyString(szTemp) && !IsDirExist(szTemp))
 		{
 			if (!CreateDirectory(szTemp))
 				return FALSE;
@@ -99,7 +99,7 @@ BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 //		将目录字符串格式化为末尾带DIR_SLASH的
 void DirStringAddSlash(WCHAR *szDir)
 {
-	int		nLen;
+	size_t nLen;
 
 	nLen = wcslen(szDir);
 	if (nLen > 0)
@@ -116,7 +116,7 @@ void DirStringAddSlash(WCHAR *szDir)
 //		将目录字符串格式化为末尾带DIR_SLASH的
 void DirStringAddSlash(char *szDir)
 {
-	int		nLen;
+	size_t		nLen;
 
 	nLen = strlen(szDir);
 	if (nLen > 0)
@@ -227,10 +227,29 @@ LPCTSTR UrlGetName(LPCTSTR szFile)
 		return szFile;
 }
 
+LPCTSTR UrlGetExt(LPCTSTR szFile)
+{
+	LPCTSTR		szBeg;
+	
+	szBeg = _tcsrchr(szFile, '.');
+	if (szBeg == NULL)
+		return _T("");
+	else
+	{
+		LPCTSTR		szTemp;
+		
+		szTemp = _tcsrchr(szFile, '/');
+		if (szTemp == NULL || szTemp < szBeg)
+			return szBeg;
+		else
+			return _T("");
+	}
+}
+
 tstring UrlGetTitle(LPCTSTR szFile)
 {
 	LPCTSTR		szBeg, szBeg2, szEnd;
-	int			nLen;
+	size_t		nLen;
 	tstring		strFileTitle;
 
 	szEnd = _tcsrchr(szFile, '.');
@@ -271,7 +290,7 @@ LPCTSTR FileGetName(LPCTSTR szFile)
 void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
 {
 	LPCTSTR		szBeg, szEnd;
-	int			nLen;
+	size_t		nLen;
 
 	szEnd = _tcsrchr(szFile, '.');
 
@@ -294,7 +313,7 @@ void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
 void FileGetTitle(LPCTSTR szFile, tstring &strFileTitle)
 {
 	LPCTSTR		szBeg, szEnd;
-	int			nLen;
+	size_t		nLen;
 
 	szEnd = _tcsrchr(szFile, '.');
 
@@ -316,7 +335,7 @@ void FileGetTitle(LPCTSTR szFile, tstring &strFileTitle)
 
 void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile)
 {
-	int ilen = _tcslen(szFile);
+	long ilen = _tcslen(szFile);
 	ilen -= 2;
 	while (ilen >= 0)
 	{
@@ -332,7 +351,7 @@ void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile)
 
 void FileGetPath(LPCTSTR szFile, tstring &strPath)
 {
-	int ilen = _tcslen(szFile);
+	long ilen = _tcslen(szFile);
 	ilen -= 2;
 	while (ilen >= 0)
 	{
@@ -369,8 +388,7 @@ LPCTSTR FileGetExt(LPCTSTR szFile)
 // File name format: path/title/.ext
 void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt)
 {
-	int		len;
-	len = _tcslen(szFile);
+	long len = _tcslen(szFile);
 
 	len --;
 	while (len >= 0)
@@ -392,7 +410,7 @@ void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt)
 void FileSetExt(tstring &strFile, LPCTSTR szExt)
 {
 	LPCTSTR		szFile = strFile.c_str();
-	int			len = strFile.size();
+	long		len = strFile.size();
 
 	len --;
 	while (len >= 0)

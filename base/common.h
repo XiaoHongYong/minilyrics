@@ -109,7 +109,7 @@ inline void InterlockedIncrement(long *nReference)
 	(*nReference)++;
 }
 
-inline int InterlockedDecrement(long *nReference)
+inline long InterlockedDecrement(long *nReference)
 {
 	return --(*nReference);
 }

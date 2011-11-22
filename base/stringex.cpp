@@ -1,10 +1,10 @@
 #include "stdafx.h"
 #include "error.h"
+#include "xstr.h"
 #include "stringex_t.h"
 #include "CharEncoding.h"
 #include "stringex.h"
 #include "safestr.h"
-#include "xstr.h"
 
 #ifdef _UNICODE
 typedef	WCHAR			UTCHAR;
@@ -58,7 +58,7 @@ bool StrIBeginWith(LPCWSTR szText, LPCWSTR szBeginWith)
 
 bool IsStrEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 {
-	int lenText = _tcslen(szText), lenEndWith = _tcslen(szEndWith);
+	size_t lenText = _tcslen(szText), lenEndWith = _tcslen(szEndWith);
 	if (lenText < lenEndWith)
 		return false;
 	return _tcscmp(szText + lenText - lenEndWith, szEndWith) == 0;
@@ -66,7 +66,7 @@ bool IsStrEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 
 bool IsStrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 {
-	int lenText = _tcslen(szText), lenEndWith = _tcslen(szEndWith);
+	size_t lenText = _tcslen(szText), lenEndWith = _tcslen(szEndWith);
 	if (lenText < lenEndWith)
 		return false;
 	return _tcsicmp(szText + lenText - lenEndWith, szEndWith) == 0;
@@ -74,8 +74,8 @@ bool IsStrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 
 bool StrEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 {
-	int lenText = _tcslen(szText);
-	int lenEndWith = _tcslen(szEndWith);
+	size_t lenText = _tcslen(szText);
+	size_t lenEndWith = _tcslen(szEndWith);
 
 	if (lenText < lenEndWith)
 		return false;
@@ -85,8 +85,8 @@ bool StrEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 
 bool StrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 {
-	int lenText = _tcslen(szText);
-	int lenEndWith = _tcslen(szEndWith);
+	size_t lenText = _tcslen(szText);
+	size_t lenEndWith = _tcslen(szEndWith);
 
 	if (lenText < lenEndWith)
 		return false;
@@ -115,18 +115,18 @@ FILE_ENCODING GetStrEncodingType(LPCVOID lpData)
 
 void strrep(tstring &str, const TCHAR *szSrc, const TCHAR *szDest)
 {
-	int		nPos;
-	int		nLenSrc = _tcslen(szSrc);
-	int		nLenDest = _tcslen(szDest);
+	size_t		nPos;
+	size_t		nLenSrc = _tcslen(szSrc);
+	size_t		nLenDest = _tcslen(szDest);
 	LPCTSTR	szPos;
 
 	nPos = 0;
-	while (nPos < (int)str.size())
+	while (nPos < str.size())
 	{
 		szPos = _tcsstr(str.c_str() + nPos, szSrc);
 		if (szPos)
 		{
-			nPos = int(szPos - str.c_str());
+			nPos = size_t(szPos - str.c_str());
 			str.erase(str.begin() + nPos, str.begin() + nPos + nLenSrc);
 			str.insert(str.begin() + nPos, szDest, szDest + nLenDest);
 			nPos += nLenDest;
@@ -162,18 +162,18 @@ void strrep(tstringex &str, const TCHAR *szSrc, const TCHAR *szDest)
 
 void strrep(stringex &str, const char *szSrc, const char *szDest)
 {
-	int		nPos;
-	int		nLenSrc = strlen(szSrc);
-	int		nLenDest = strlen(szDest);
+	size_t		nPos;
+	size_t		nLenSrc = strlen(szSrc);
+	size_t		nLenDest = strlen(szDest);
 	LPCSTR	szPos;
 
 	nPos = 0;
-	while (nPos < (int)str.size())
+	while (nPos < str.size())
 	{
 		szPos = strstr(str.c_str() + nPos, szSrc);
 		if (szPos)
 		{
-			nPos = int(szPos - str.c_str());
+			nPos = size_t(szPos - str.c_str());
 			str.replace(nPos, nLenSrc, szDest, nLenDest);
 			nPos += nLenDest;
 		}
@@ -184,18 +184,18 @@ void strrep(stringex &str, const char *szSrc, const char *szDest)
 
 void strrep(wstringex &str, const WCHAR *szSrc, const WCHAR *szDest)
 {
-	int		nPos;
-	int		nLenSrc = wcslen(szSrc);
-	int		nLenDest = wcslen(szDest);
+	size_t		nPos;
+	size_t		nLenSrc = wcslen(szSrc);
+	size_t		nLenDest = wcslen(szDest);
 	LPCWSTR	szPos;
 
 	nPos = 0;
-	while (nPos < (int)str.size())
+	while (nPos < str.size())
 	{
 		szPos = wcsstr(str.c_str() + nPos, szSrc);
 		if (szPos)
 		{
-			nPos = int(szPos - str.c_str());
+			nPos = size_t(szPos - str.c_str());
 			str.replace(nPos, nLenSrc, szDest, nLenDest);
 			nPos += nLenDest;
 		}
@@ -664,7 +664,7 @@ WCHAR * __cdecl strnstr(
 void TrimStr(tstring &str, LPCTSTR szChars)
 {
 	tstring::iterator	it;
-	int		i;
+	long		i;
 
 	for (i = str.size() - 1; i >= 0; i--)
 	{
@@ -686,7 +686,7 @@ void TrimStr(tstring &str, LPCTSTR szChars)
 void TrimStr(tstring &str, TCHAR ch)
 {
 	tstring::iterator	it;
-	int		i;
+	long		i;
 
 	for (i = str.size() - 1; i >= 0; i--)
 	{
@@ -715,14 +715,13 @@ void TrimStr(V_Str &vStr, TCHAR ch)
 // 去掉字符串两端的空格
 void TrimStr(LPTSTR szString, TCHAR ch)
 {
-	int		nLen;
 	LPTSTR	szBeg;
 	szBeg = szString;
 
 	while (*szBeg == ch)
 		szBeg++;
 
-	nLen = _tcslen(szBeg);
+	long nLen = _tcslen(szBeg);
 	if (nLen > 0)
 	{
 		while (szBeg[nLen - 1] == ch)
@@ -841,7 +840,7 @@ int FilterAllHTMLTags(LPTSTR szText)
 			{
 				for (i = 0; szEscape[i] != NULL; i += 2)
 				{
-					int len = _tcslen(szEscape[i]);
+					size_t len = _tcslen(szEscape[i]);
 					if (_tcsnicmp(szBeg, szEscape[i], len) == 0)
 					{
 						szBeg += len;
@@ -921,7 +920,7 @@ int FilterAllHTMLTags(LPTSTR szText)
 
 		for (i = 0; i < CountOf(szToNewLine); i++)
 		{
-			int		n = _tcslen(szToNewLine[i]);
+			size_t		n = _tcslen(szToNewLine[i]);
 			if (_tcsnicmp(szBeg, szToNewLine[i], n) == 0)
 			{
 				_tcscpy_safe(szCopyPos, 4, _T("\r\n"));
@@ -946,7 +945,7 @@ int FilterAllHTMLTags(LPTSTR szText)
 
 			for (i = 0; i < CountOf(szIgnoreTags); i += 2)
 			{
-				int		n = _tcslen(szIgnoreTags[i]);
+				size_t		n = _tcslen(szIgnoreTags[i]);
 				if (_tcsnicmp(szBeg, szIgnoreTags[i], n) == 0)
 				{
 					szBeg = stristr(szBeg, szIgnoreTags[i + 1]);
@@ -1042,7 +1041,7 @@ uint32 HexToInt(LPCTSTR str)
 	if (_tcsnicmp(str, _T("0x"), 2) == 0)
 		str += 2;
 
-	int len = _tcslen(str);
+	size_t len = _tcslen(str);
 	uint32	val = 0;
 
 	for (int i = 0; i < len; i++)
@@ -1063,9 +1062,7 @@ uint32 HexToInt(LPCTSTR str)
 void UriUnescape(const char *szInet, string &str)
 {
 	int		i = 0;
-	int		nLenInet;
-
-	nLenInet = strlen(szInet);
+	size_t nLenInet = strlen(szInet);
 	str = "";
 
 	while (i + 2 < nLenInet)
@@ -1099,9 +1096,7 @@ void UriUnescape(const char *szInet, string &str)
 void UriUnescape(const char *szInet, char *szLocal, int nLenMax)
 {
 	int		i = 0, k = 0;
-	int		nLenInet;
-
-	nLenInet = strlen(szInet);
+	size_t nLenInet = strlen(szInet);
 
 	while (i + 2 < nLenInet)
 	{
@@ -1165,9 +1160,8 @@ void UriEscape(const char *szLocal, string &strInet)
 {
 	int		i = 0;
 	char	szTemp[256];
-	int		nLen;
 
-	nLen = strlen(szLocal);
+	size_t nLen = strlen(szLocal);
 	strInet = "";
 
 	while (i < nLen)
@@ -1394,7 +1388,7 @@ bool AppendFileToBuffer(FILE *fp, CCharBuffer &str)
 	if (fseek(fp, 0, SEEK_END) != 0)
 		return false;
 
-	int nLen = ftell(fp);
+	long nLen = ftell(fp);
 	if (nLen == 0)
 		return true;
 
@@ -1573,8 +1567,7 @@ bool TextFileToVStr(LPCTSTR szFile, vector<string> &vStr)
 
 	while (fgets(szBuff, CountOf(szBuff) - 1, fp))
 	{
-		int		nLen;
-		nLen = strlen(szBuff);
+		size_t nLen = strlen(szBuff);
 		if (nLen > 0)
 		{
 			while (szBuff[nLen - 1] == '\r'
@@ -1674,7 +1667,7 @@ int StrSplit(LPCTSTR szStr, TCHAR chSeperator, SetTStrNCase &containerStr)
 	set.m_setStr = &containerStr;
 	_StrSplit(szStr, chSeperator, set);
 
-	return containerStr.size();
+	return (int)containerStr.size();
 }
 
 int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr)
@@ -1683,7 +1676,7 @@ int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr)
 	vec.m_vecStr = &containerStr;
 	_StrSplit(szStr, chSeperator, vec);
 
-	return containerStr.size();
+	return (int)containerStr.size();
 }
 
 void _itostr(int value, tstring &str, int base)

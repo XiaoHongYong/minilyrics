@@ -35,13 +35,13 @@ public:
 	typedef T&	    reference;
 	typedef const T&  const_reference;
 
-	void erase(int nOffset, int n)
+	void erase(size_t nOffset, size_t n)
 	{
 		assert(n >= 0);
-		if (nOffset > (int)nLen)
+		if (nOffset > nLen)
 			return;
 
-		if (nOffset + n > (int)nLen)
+		if (nOffset + n > nLen)
 			n = nLen - nOffset;
 
 		T		*s1, *s2, *sEnd;
@@ -67,10 +67,10 @@ public:
 		m_szBuff[0] = '\0';
 	}
 
-	void replace(int nBeg, int n1, const T*str, int n = -1)
+	void replace(size_t nBeg, size_t n1, const T*str, long n = -1)
 	{
 		assert(n >= 0);
-		if (nBeg + n1 > (int)nLen)
+		if (nBeg + n1 > nLen)
 			return;
 		if (n < 0)
 			n = _xcslen(str);
@@ -136,10 +136,10 @@ public:
 		nLen += n - n1;
 	}
 
-	void insert(int nOffset, const T*str, int n)
+	void insert(size_t nOffset, const T*str, size_t n)
 	{
 		assert(n >= 0);
-		if (nOffset > (int)nLen || n == 0)
+		if (nOffset > nLen || n == 0)
 			return;
 
 		reserve(size() + n);
@@ -174,7 +174,7 @@ public:
 
 	const T *NCopy(const T *szBeg, const T *szEnd)
 	{
-		reserve(int(szEnd - szBeg));
+		reserve(size_t(szEnd - szBeg));
 
 		T	*cp = m_szBuff;
 		// T	*cpEnd = m_szBuff + nSizeMax - 1;
@@ -185,7 +185,7 @@ public:
 		{
 			*cp = *szBeg;
 		}
-		nLen = (int)(cp - m_szBuff);
+		nLen = (size_t)(cp - m_szBuff);
 		
 		*cp = '\0';
 
@@ -218,7 +218,7 @@ public:
 		return m_szBuff;
 	}
 */
-	stringex_t<T> &append(const T * str, int n = -1)
+	stringex_t<T> &append(const T * str, long n = -1)
 	{
 		assert(n >= -1);
 		if (n < 0)
@@ -234,7 +234,7 @@ public:
 
 		for (; str != szEnd; cp++, str++)
 			*cp = *str;
-		nLen = (int)(cp - m_szBuff);
+		nLen = (size_t)(cp - m_szBuff);
 
 		*cp = '\0';
 
@@ -324,7 +324,7 @@ public:
 		{
 			if (cp >= cpEnd)
 			{
-				nLen = (int)(cp - m_szBuff);
+				nLen = (size_t)(cp - m_szBuff);
 				nSizeMax += BUFF_INC;
 				m_szBuff = (T *)realloc(m_szBuff, nSizeMax * sizeof(T));
 				if (!m_szBuff)
@@ -335,7 +335,7 @@ public:
 			}
 			*cp = *str;
 		}
-		nLen = (int)(cp - m_szBuff);
+		nLen = (size_t)(cp - m_szBuff);
 
 		*cp = '\0';
 
@@ -368,7 +368,7 @@ public:
 		{
 			if (cp >= cpEnd)
 			{
-				nLen = (int)(cp - m_szBuff);
+				nLen = (size_t)(cp - m_szBuff);
 				nSizeMax += BUFF_INC;
 				m_szBuff = (T *)realloc(m_szBuff, nSizeMax * sizeof(T));
 				if (!m_szBuff)
@@ -379,7 +379,7 @@ public:
 			}
 			*cp = *str;
 		}
- 		nLen = (int)(cp - m_szBuff);
+ 		nLen = (size_t)(cp - m_szBuff);
 
 		*cp = '\0';
 
@@ -397,7 +397,7 @@ public:
 		for (; str < strEnd; cp++, str++)
 			*cp = *str;
 
-		nLen = (int)(cp - m_szBuff);
+		nLen = (size_t)(cp - m_szBuff);
 
 		*cp = '\0';
 
@@ -420,7 +420,7 @@ public:
         else if ( ret > 0 )
 			ret = 1 ;
 
-        return( ret );
+        return ret;
 	}
 
 	bool operator == (stringex_t<T> &obj2)
@@ -477,14 +477,14 @@ public:
 		}
 	}
 
-	void resize(int n)
+	void resize(size_t n)
 	{
 		setSize(n);
 	}
 
-	void setSize(int n)
+	void setSize(size_t n)
 	{
-		if (n < (int)nSizeMax)
+		if (n < nSizeMax)
 		{
 			nLen = n;
 			m_szBuff[n] = '\0';

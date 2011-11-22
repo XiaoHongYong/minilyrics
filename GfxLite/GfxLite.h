@@ -44,6 +44,9 @@ class CMLGraphics;
 
 #ifdef _MAC
 
+#include "mac/MLColor.h"
+#include "mac/Region.h"
+#include "mac/MLFont.h"
 #include "mac/MLGraphics.h"
 
 #endif

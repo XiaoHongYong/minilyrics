@@ -38,6 +38,7 @@ tstring DirStringJoint(LPCTSTR szDir, LPCTSTR szSubFileDir1, LPCTSTR szSubFileDi
 void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int nRelatedPathLen);
 
 LPCTSTR UrlGetName(LPCTSTR szFile);
+LPCTSTR UrlGetExt(LPCTSTR szFile);
 tstring UrlGetTitle(LPCTSTR szFile);
 
 LPCTSTR FileGetName(LPCTSTR szFile);

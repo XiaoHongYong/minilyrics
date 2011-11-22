@@ -1,9 +1,9 @@
 #include "stdafx.h"
+#include "xstr.h"
 #include "stringex_t.h"
 #include "CharEncoding.h"
 #include "stringex.h"
 #include "safestr.h"
-#include "xstr.h"
 
 CHAR_ENCODING FileEcodingToCharEncoding(FILE_ENCODING fileEncoding)
 {
@@ -245,7 +245,7 @@ void UCS2ToUtf8(const WCHAR *str, int nLen, string &strOut)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen * 3 + 3);
-	int n = UCS2ToUtf8(str, nLen, (char *)strOut.c_str(), strOut.capacity());
+	int n = UCS2ToUtf8(str, nLen, (char *)strOut.c_str(), (int)strOut.capacity());
 	strOut.resize(n);
 }
 
@@ -254,7 +254,7 @@ void UCS2ToMbcs(const WCHAR *str, int nLen, string &strOut, int encodingID)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen * 2 + 2);
-	int n = UCS2ToMbcs(str, nLen, (char *)strOut.c_str(), strOut.capacity(), encodingID);
+	int n = UCS2ToMbcs(str, nLen, (char *)strOut.c_str(), (int)strOut.capacity(), encodingID);
 	strOut.resize(n);
 }
 
@@ -263,7 +263,7 @@ void Utf8ToUCS2(const char *str, int nLen, wstring_t &strOut)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen + 1);
-	int n = Utf8ToUCS2(str, nLen, (WCHAR *)strOut.c_str(), strOut.capacity());
+	int n = Utf8ToUCS2(str, nLen, (WCHAR *)strOut.c_str(), (int)strOut.capacity());
 	strOut.resize(n);
 }
 
@@ -272,7 +272,7 @@ void Utf8ToMbcs(const char *str, int nLen, string &strOut, int encodingID)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen + 1);
-	int n = Utf8ToMbcs(str, nLen, (char *)strOut.c_str(), strOut.capacity(), encodingID);
+	int n = Utf8ToMbcs(str, nLen, (char *)strOut.c_str(), (int)strOut.capacity(), encodingID);
 	strOut.resize(n);
 }
 
@@ -281,7 +281,7 @@ void MbcsToUtf8(const char *str, int nLen, string &strOut, int encodingID)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen * 3 / 2 + 3);
-	int n = MbcsToUtf8(str, nLen, (char *)strOut.c_str(), strOut.capacity(), encodingID);
+	int n = MbcsToUtf8(str, nLen, (char *)strOut.c_str(), (int)strOut.capacity(), encodingID);
 	strOut.resize(n);
 }
 
@@ -290,7 +290,7 @@ void MbcsToUCS2(const char *str, int nLen, wstring_t &strOut, int encodingID)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen + 1);
-	int n = MbcsToUCS2(str, nLen, (WCHAR *)strOut.c_str(), strOut.capacity(), encodingID);
+	int n = MbcsToUCS2(str, nLen, (WCHAR *)strOut.c_str(), (int)strOut.capacity(), encodingID);
 	strOut.resize(n);
 }
 
@@ -317,7 +317,7 @@ void UCS2ToUtf8(const WCHAR *str, int nLen, stringex &strOut)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen * 3 + 3);
-	int n = UCS2ToUtf8(str, nLen, strOut.data(), strOut.capacity());
+	int n = UCS2ToUtf8(str, nLen, strOut.data(), (int)strOut.capacity());
 	strOut.resize(n);
 }
 
@@ -326,7 +326,7 @@ void UCS2ToMbcs(const WCHAR *str, int nLen, stringex &strOut, int encodingID)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen * 2 + 2);
-	int n = UCS2ToMbcs(str, nLen, strOut.data(), strOut.capacity(), encodingID);
+	int n = UCS2ToMbcs(str, nLen, strOut.data(), (int)strOut.capacity(), encodingID);
 	strOut.resize(n);
 }
 
@@ -335,7 +335,7 @@ void Utf8ToUCS2(const char *str, int nLen, wstringex &strOut)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen + 1);
-	int n = Utf8ToUCS2(str, nLen, strOut.data(), strOut.capacity());
+	int n = Utf8ToUCS2(str, nLen, strOut.data(), (int)strOut.capacity());
 	strOut.resize(n);
 }
 
@@ -344,7 +344,7 @@ void Utf8ToMbcs(const char *str, int nLen, stringex &strOut, int encodingID)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen + 1);
-	int n = Utf8ToMbcs(str, nLen, strOut.data(), strOut.capacity(), encodingID);
+	int n = Utf8ToMbcs(str, nLen, strOut.data(), (int)strOut.capacity(), encodingID);
 	strOut.resize(n);
 }
 
@@ -353,7 +353,7 @@ void MbcsToUtf8(const char *str, int nLen, stringex &strOut, int encodingID)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen * 3 / 2 + 3);
-	int n = MbcsToUtf8(str, nLen, strOut.data(), strOut.capacity(), encodingID);
+	int n = MbcsToUtf8(str, nLen, strOut.data(), (int)strOut.capacity(), encodingID);
 	strOut.resize(n);
 }
 
@@ -362,7 +362,7 @@ void MbcsToUCS2(const char *str, int nLen, wstringex &strOut, int encodingID)
 	EnsureInputStrLen(str, nLen);
 
 	strOut.resize(nLen + 1);
-	int n = MbcsToUCS2(str, nLen, strOut.data(), strOut.capacity(), encodingID);
+	int n = MbcsToUCS2(str, nLen, strOut.data(), (int)strOut.capacity(), encodingID);
 	strOut.resize(n);
 }
 
@@ -449,7 +449,7 @@ void ConvertStr2(const char *str, int nLen, char *strOut, int nOut, int encoding
 		strcpy_safe(strOut, nOut, str);
 	else
 	{
-		nLen = strlen(str);
+		nLen = (int)strlen(str);
 		strncpy_safe(strOut, nOut, str, nLen);
 	}
 }
@@ -460,7 +460,7 @@ void ConvertStr2(const WCHAR *str, int nLen, WCHAR *strOut, int nOut, int encodi
 		wcscpy_safe(strOut, nOut, str);
 	else
 	{
-		nLen = wcslen(str);
+		nLen = (int)wcslen(str);
 		wcsncpy_safe(strOut, nOut, str, nLen);
 	}
 }
@@ -474,7 +474,7 @@ void UCS2BEToLE(WCHAR *str, int nLen)
 {
 	// Swap the char of every WCHAR.
 	if (nLen == -1)
-		nLen = wcslen(str);
+		nLen = (int)wcslen(str);
 
 	byte	*p = (byte *)str;
 	int		lenBytes = nLen * sizeof(WCHAR);

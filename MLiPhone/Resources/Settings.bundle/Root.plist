@@ -2,26 +2,74 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>StringsTable</key>
-	<string>Root</string>
 	<key>PreferenceSpecifiers</key>
 	<array>
 		<dict>
+			<key>Title</key>
+			<string>Group</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
-			<key>Title</key>
-			<string>Configuration</string>
 		</dict>
 		<dict>
+			<key>DefaultValue</key>
+			<string>25</string>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>font_name</string>
+			<key>Title</key>
+			<string>Font Name</string>
+			<key>Type</key>
+			<string>PSMultiValueSpecifier</string>
+		</dict>
+		<dict>
+			<key>AutocorrectionType</key>
+			<integer>0</integer>
+			<key>DefaultValue</key>
+			<string>25</string>
+			<key>MaximumValue</key>
+			<integer>60</integer>
+			<key>MinimumValue</key>
+			<integer>10</integer>
+			<key>IsSecure</key>
+			<false/>
+			<key>Key</key>
+			<string>font_height</string>
+			<key>KeyboardType</key>
+			<real>0</real>
+			<key>Title</key>
+			<string>Font Size of Lyrics</string>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
+		</dict>
+		<dict>
+			<key>DefaultValue</key>
+			<true/>
+			<key>Key</key>
+			<string>enabled_preference</string>
+			<key>Title</key>
+			<string>Enabled</string>
 			<key>Type</key>
 			<string>PSToggleSwitchSpecifier</string>
-			<key>Title</key>
-			<string>Use iPodPlayer</string>
-			<key>Key</key>
-			<string>player_type_preference</string>
+		</dict>
+		<dict>
 			<key>DefaultValue</key>
-			<false/>
+			<real>0.5</real>
+			<key>Key</key>
+			<string>slider_preference</string>
+			<key>MaximumValue</key>
+			<integer>1</integer>
+			<key>MaximumValueImage</key>
+			<string></string>
+			<key>MinimumValue</key>
+			<integer>0</integer>
+			<key>MinimumValueImage</key>
+			<string></string>
+			<key>Type</key>
+			<string>PSSliderSpecifier</string>
 		</dict>
 	</array>
+	<key>StringsTable</key>
+	<string>Root</string>
 </dict>
 </plist>

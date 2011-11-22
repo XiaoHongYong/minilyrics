@@ -8,15 +8,15 @@ size_t strlen_safe(const char * str, size_t maxLength);
 size_t wcslen_safe(const WCHAR * str, size_t maxLength);
 
 // 安全的字符串拷贝，如果超出长度范围，则进行截断
-char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource);
-int	strncpy_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy);
-int	strncpysz_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy);
-char *strcat_safe(char * dst, int Size, const char * src);
+char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource);
+size_t	strncpy_safe(char *strDestination, size_t nLenMax, const char *strSource, size_t nToCopy);
+size_t	strncpysz_safe(char *strDestination, size_t nLenMax, const char *strSource, size_t nToCopy);
+char *strcat_safe(char * dst, size_t Size, const char * src);
 
-WCHAR *wcscpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource);
-int	wcsncpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int nToCopy);
-int	wcsncpysz_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int nToCopy);
-WCHAR * __cdecl wcscat_safe(WCHAR * dst, int Size, const WCHAR * src);
+WCHAR *wcscpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource);
+size_t	wcsncpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource, size_t nToCopy);
+size_t	wcsncpysz_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource, size_t nToCopy);
+WCHAR * __cdecl wcscat_safe(WCHAR * dst, size_t Size, const WCHAR * src);
 
 #ifdef _UNICODE
 #define _tcslen_safe		wcslen_safe

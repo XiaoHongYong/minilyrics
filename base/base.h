@@ -13,8 +13,8 @@
 
 #include "Error.h"
 
-#include "stringex_t.h"
 #include "xstr.h"
+#include "stringex_t.h"
 
 #include "CharEncoding.h"
 #include "stringex.h"
@@ -51,6 +51,7 @@
 #include "Mac/Mutex.h"
 #include "Mac/Semaphore.h"
 #include "Mac/Thread.h"
+#include "Mac/ThreadAutoReleasePool.h"
 #endif
 
 #include "misc.h"

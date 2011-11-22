@@ -107,6 +107,8 @@ public:
 		case PF_PALLETE2:
 			p += x * bitCount / 8;
 			break;
+		default:
+			break;
 		}
 
 		return p;

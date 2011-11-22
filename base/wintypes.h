@@ -90,8 +90,8 @@ class CRect;
 
 typedef struct  tagSIZE
 {
-    long cx;
-    long cy;
+    int cx;
+    int cy;
 }SIZE, *LPSIZE;
 
 #ifdef _LINUX_GTK2
@@ -101,17 +101,17 @@ typedef GdkPoint	*LPPOINT;
 #else // _LINUX_GTK2
 typedef struct  tagPOINT
 {
-	long x;
-	long y;
+	int x;
+	int y;
 }POINT, *LPPOINT;
 #endif // _LINUX_GTK2
 
 typedef struct  tagRECT
 {
-	long left;
-	long top;
-	long right;
-	long bottom;
+	int left;
+	int top;
+	int right;
+	int bottom;
 }RECT, *LPRECT;
 
 class CSize : public tagSIZE
@@ -420,9 +420,9 @@ inline CRect::CRect(POINT topLeft, POINT bottomRight)
 	{ left = topLeft.x; top = topLeft.y;
 		right = bottomRight.x; bottom = bottomRight.y; }
 inline int CRect::Width() const
-	{ return right - left; }
+	{ return (int)(right - left); }
 inline int CRect::Height() const
-	{ return bottom - top; }
+	{ return (int)(bottom - top); }
 inline CSize CRect::Size() const
 	{ return CSize(right - left, bottom - top); }
 inline CPoint& CRect::TopLeft()
@@ -438,7 +438,7 @@ inline CPoint CRect::CenterPoint() const
 inline void CRect::SwapLeftRight()
 	{ SwapLeftRight(LPRECT(this)); }
 inline void CRect::SwapLeftRight(LPRECT lpRect)
-	{ long temp = lpRect->left; lpRect->left = lpRect->right; lpRect->right = temp; }
+	{ int temp = lpRect->left; lpRect->left = lpRect->right; lpRect->right = temp; }
 inline CRect::operator LPRECT()
 	{ return this; }
 inline CRect::operator LPCRECT() const
@@ -465,17 +465,17 @@ inline BOOL CRect::EqualRect(LPCRECT lpRect) const
 inline void CRect::InflateRect(int x, int y)
 	{ left -= x; right += x; top -= y; bottom += y; }
 inline void CRect::InflateRect(SIZE size)
-	{ InflateRect(size.cx, size.cy); }
+	{ InflateRect((int)size.cx, (int)size.cy); }
 inline void CRect::DeflateRect(int x, int y)
 	{ InflateRect(-x, -y); }
 inline void CRect::DeflateRect(SIZE size)
-	{ InflateRect(-size.cx, -size.cy); }
+	{ InflateRect((int)(-size.cx), (int)(-size.cy)); }
 inline void CRect::OffsetRect(int x, int y)
 	{ left += x; right += x; top += y; bottom += y; }
 inline void CRect::OffsetRect(POINT point)
-	{ OffsetRect(point.x, point.y); }
+	{ OffsetRect((int)point.x, (int)point.y); }
 inline void CRect::OffsetRect(SIZE size)
-	{ OffsetRect(size.cx, size.cy); }
+	{ OffsetRect((int)size.cx, (int)size.cy); }
 inline BOOL CRect::IntersectRect(LPCRECT lpRect1, LPCRECT lpRect2)
 	{
 		if (::IsRectEmpty(lpRect1) || ::IsRectEmpty(lpRect2) ||
@@ -524,9 +524,9 @@ inline BOOL CRect::operator==(const RECT& rect) const
 inline BOOL CRect::operator!=(const RECT& rect) const
 	{ return !EqualRect(&rect); }
 inline void CRect::operator+=(POINT point)
-	{ OffsetRect(point.x, point.y); }
+	{ OffsetRect((int)point.x, (int)point.y); }
 inline void CRect::operator+=(SIZE size)
-	{ OffsetRect(size.cx, size.cy); }
+	{ OffsetRect((int)size.cx, (int)size.cy); }
 /*inline void CRect::operator+=(LPCRECT lpRect)
 	{
 		left += lpRect->left;
@@ -535,9 +535,9 @@ inline void CRect::operator+=(SIZE size)
 		bottom += lpRect->bottom;
 	}*/
 inline void CRect::operator-=(POINT point)
-	{ OffsetRect(-point.x, -point.y); }
+	{ OffsetRect((int)(-point.x), (int)(-point.y)); }
 inline void CRect::operator-=(SIZE size)
-	{ OffsetRect(-size.cx, -size.cy); }
+	{ OffsetRect((int)(-size.cx), (int)(-size.cy)); }
 //inline void CRect::operator-=(LPCRECT lpRect)
 //	{
 //		left -= lpRect->left;
@@ -550,13 +550,13 @@ inline void CRect::operator-=(SIZE size)
 //inline void CRect::operator|=(const RECT& rect)
 //	{ ::UnionRect(this, this, &rect); }
 inline CRect CRect::operator+(POINT pt) const
-	{ CRect rect(*this); rect.OffsetRect(pt.x, pt.y); return rect; }
+	{ CRect rect(*this); rect.OffsetRect((int)pt.x, (int)pt.y); return rect; }
 inline CRect CRect::operator-(POINT pt) const
-	{ CRect rect(*this); rect.OffsetRect(-pt.x, -pt.y); return rect; }
+	{ CRect rect(*this); rect.OffsetRect((int)-pt.x, (int)-pt.y); return rect; }
 inline CRect CRect::operator+(SIZE size) const
-	{ CRect rect(*this); rect.OffsetRect(size.cx, size.cy); return rect; }
+	{ CRect rect(*this); rect.OffsetRect((int)size.cx, (int)size.cy); return rect; }
 inline CRect CRect::operator-(SIZE size) const
-	{ CRect rect(*this); rect.OffsetRect(-size.cx, -size.cy); return rect; }
+	{ CRect rect(*this); rect.OffsetRect((int)-size.cx, (int)-size.cy); return rect; }
 //inline CRect CRect::operator+(LPCRECT lpRect) const
 //	{ CRect rect(this); rect.InflateRect(lpRect); return rect; }
 //inline CRect CRect::operator-(LPCRECT lpRect) const

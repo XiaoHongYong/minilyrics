@@ -156,6 +156,10 @@ UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, in
 -(void) onMediaChanged
 {
 	MPMediaItem *currentItem = [musicPlayer nowPlayingItem];
+	if (currentItem == nil) {
+		CMLApp::GetInstance()->OnMediaChanged("", "", "", "", "", 0);
+		return;
+	}
 
 	NSString	*title = [currentItem valueForProperty: MPMediaItemPropertyTitle];
 	NSString	*artist = [currentItem valueForProperty: MPMediaItemPropertyArtist];

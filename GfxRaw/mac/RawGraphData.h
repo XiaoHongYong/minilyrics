@@ -3,9 +3,7 @@
 
 #pragma once
 
-#include <CoreGraphics/CGContext.h>
-#include <CoreGraphics/CGBitmapContext.h>
-#include <CoreGraphics/CGContext.h>
+typedef struct CGContext *CGContextRef;
 
 class CRawGraphData
 {
@@ -13,7 +11,7 @@ public:
 	CRawGraphData();
 	virtual ~CRawGraphData();
 
-	virtual bool Create(int cx, int cy, IMLGraphicsBase *pGraph, int nBitCount = 32);
+	virtual bool Create(int cx, int cy, CMLGraphics *pGraph, int nBitCount = 32);
 
 	virtual void Destroy();
 
@@ -25,8 +23,8 @@ public:
 
 	bool IsValid() { return m_imageData.buff != NULL; }
 
-	virtual void DrawToGraphics(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc);
-	virtual void DrawToGraphicsStretch(IMLGraphicsBase *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc, int widthsrc, int heightsrc);
+	virtual void DrawToGraphics(CMLGraphics *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc);
+	virtual void DrawToGraphicsStretch(CMLGraphics *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc, int widthsrc, int heightsrc);
 
 	// For MAC only.
 	CGContextRef GetHandle() const { return m_context; }

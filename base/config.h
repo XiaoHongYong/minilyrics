@@ -7,7 +7,9 @@
 // #define _IPHONE
 
 #ifdef __MAC_OS_X_VERSION_MAX_ALLOWED
+#ifndef _MAC_OSX
 #define _MAC_OSX
+#endif
 #endif
 
 #if defined(_IPHONE) || defined(_MAC_OSX)

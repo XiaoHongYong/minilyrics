@@ -878,9 +878,10 @@ CGContextRef MyCreateBitmapContext(int pixelsWide, int pixelsHigh)
 		[albumArtImage setImage:imageDark];
 		[albumArtImage setHidden:NO];
 
-		[lyrVerticalView setHidden:YES];
-		[staticLyrView setHidden:NO];
+		[lyrVerticalView setHidden:NO];
+		[staticLyrView setHidden:YES];
 	}
+	[lyrVerticalView onLyricsChanged];
 /*	else
 	{
 		[lyrVerticalView onLyricsChanged];

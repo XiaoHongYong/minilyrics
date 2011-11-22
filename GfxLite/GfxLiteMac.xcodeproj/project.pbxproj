@@ -1,0 +1,306 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5FB1638D1478C78C0084494F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB1638C1478C78C0084494F /* Cocoa.framework */; };
+		5FB163AF1478C83B0084494F /* FontInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163A01478C83B0084494F /* FontInfo.h */; };
+		5FB163B01478C83B0084494F /* GfxLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163A11478C83B0084494F /* GfxLite.h */; };
+		5FB163B21478C83B0084494F /* GfxLiteMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163A41478C83B0084494F /* GfxLiteMac.h */; };
+		5FB163B31478C83B0084494F /* MLColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163A51478C83B0084494F /* MLColor.h */; };
+		5FB163B41478C83B0084494F /* MLFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB163A61478C83B0084494F /* MLFont.mm */; };
+		5FB163B51478C83B0084494F /* MLFont.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163A71478C83B0084494F /* MLFont.h */; };
+		5FB163B61478C83B0084494F /* MLGraphics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB163A81478C83B0084494F /* MLGraphics.mm */; };
+		5FB163B71478C83B0084494F /* MLGraphics.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163A91478C83B0084494F /* MLGraphics.h */; };
+		5FB163B81478C83B0084494F /* Region.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB163AA1478C83B0084494F /* Region.cpp */; };
+		5FB163B91478C83B0084494F /* Region.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163AB1478C83B0084494F /* Region.h */; };
+		5FB163BA1478C83B0084494F /* MLHandlerMap.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163AC1478C83B0084494F /* MLHandlerMap.h */; };
+		5FB163BB1478C83B0084494F /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163AD1478C83B0084494F /* StdAfx.h */; };
+		5FB163BC1478C83B0084494F /* targetver.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163AE1478C83B0084494F /* targetver.h */; };
+		5FB163BF1478C8590084494F /* GfxLiteMac-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5FB163BE1478C8590084494F /* GfxLiteMac-Prefix.pch */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5FB163891478C78C0084494F /* libGfxLiteMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libGfxLiteMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FB1638C1478C78C0084494F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		5FB1638F1478C78C0084494F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5FB163901478C78C0084494F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		5FB163911478C78C0084494F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5FB163A01478C83B0084494F /* FontInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FontInfo.h; sourceTree = SOURCE_ROOT; };
+		5FB163A11478C83B0084494F /* GfxLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GfxLite.h; sourceTree = SOURCE_ROOT; };
+		5FB163A41478C83B0084494F /* GfxLiteMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GfxLiteMac.h; sourceTree = "<group>"; };
+		5FB163A51478C83B0084494F /* MLColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLColor.h; sourceTree = "<group>"; };
+		5FB163A61478C83B0084494F /* MLFont.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MLFont.mm; sourceTree = "<group>"; };
+		5FB163A71478C83B0084494F /* MLFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLFont.h; sourceTree = "<group>"; };
+		5FB163A81478C83B0084494F /* MLGraphics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MLGraphics.mm; sourceTree = "<group>"; };
+		5FB163A91478C83B0084494F /* MLGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLGraphics.h; sourceTree = "<group>"; };
+		5FB163AA1478C83B0084494F /* Region.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Region.cpp; sourceTree = "<group>"; };
+		5FB163AB1478C83B0084494F /* Region.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Region.h; sourceTree = "<group>"; };
+		5FB163AC1478C83B0084494F /* MLHandlerMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLHandlerMap.h; sourceTree = SOURCE_ROOT; };
+		5FB163AD1478C83B0084494F /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = SOURCE_ROOT; };
+		5FB163AE1478C83B0084494F /* targetver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = targetver.h; sourceTree = SOURCE_ROOT; };
+		5FB163BE1478C8590084494F /* GfxLiteMac-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "GfxLiteMac-Prefix.pch"; path = "mac/GfxLiteMac-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5FB163861478C78C0084494F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB1638D1478C78C0084494F /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5FB1637E1478C78C0084494F = {
+			isa = PBXGroup;
+			children = (
+				5FB163921478C78C0084494F /* GfxLiteMac */,
+				5FB1638B1478C78C0084494F /* Frameworks */,
+				5FB1638A1478C78C0084494F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5FB1638A1478C78C0084494F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FB163891478C78C0084494F /* libGfxLiteMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FB1638B1478C78C0084494F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FB1638C1478C78C0084494F /* Cocoa.framework */,
+				5FB1638E1478C78C0084494F /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5FB1638E1478C78C0084494F /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FB1638F1478C78C0084494F /* AppKit.framework */,
+				5FB163901478C78C0084494F /* CoreData.framework */,
+				5FB163911478C78C0084494F /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5FB163921478C78C0084494F /* GfxLiteMac */ = {
+			isa = PBXGroup;
+			children = (
+				5FB163A01478C83B0084494F /* FontInfo.h */,
+				5FB163A11478C83B0084494F /* GfxLite.h */,
+				5FB163A21478C83B0084494F /* mac */,
+				5FB163AC1478C83B0084494F /* MLHandlerMap.h */,
+				5FB163AD1478C83B0084494F /* StdAfx.h */,
+				5FB163AE1478C83B0084494F /* targetver.h */,
+				5FB163931478C78C0084494F /* Supporting Files */,
+			);
+			path = GfxLiteMac;
+			sourceTree = "<group>";
+		};
+		5FB163931478C78C0084494F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5FB163BE1478C8590084494F /* GfxLiteMac-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5FB163A21478C83B0084494F /* mac */ = {
+			isa = PBXGroup;
+			children = (
+				5FB163A41478C83B0084494F /* GfxLiteMac.h */,
+				5FB163A51478C83B0084494F /* MLColor.h */,
+				5FB163A61478C83B0084494F /* MLFont.mm */,
+				5FB163A71478C83B0084494F /* MLFont.h */,
+				5FB163A81478C83B0084494F /* MLGraphics.mm */,
+				5FB163A91478C83B0084494F /* MLGraphics.h */,
+				5FB163AA1478C83B0084494F /* Region.cpp */,
+				5FB163AB1478C83B0084494F /* Region.h */,
+			);
+			path = mac;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5FB163871478C78C0084494F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB163AF1478C83B0084494F /* FontInfo.h in Headers */,
+				5FB163B01478C83B0084494F /* GfxLite.h in Headers */,
+				5FB163B21478C83B0084494F /* GfxLiteMac.h in Headers */,
+				5FB163B31478C83B0084494F /* MLColor.h in Headers */,
+				5FB163B51478C83B0084494F /* MLFont.h in Headers */,
+				5FB163B71478C83B0084494F /* MLGraphics.h in Headers */,
+				5FB163B91478C83B0084494F /* Region.h in Headers */,
+				5FB163BA1478C83B0084494F /* MLHandlerMap.h in Headers */,
+				5FB163BB1478C83B0084494F /* StdAfx.h in Headers */,
+				5FB163BC1478C83B0084494F /* targetver.h in Headers */,
+				5FB163BF1478C8590084494F /* GfxLiteMac-Prefix.pch in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5FB163881478C78C0084494F /* GfxLiteMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FB1639A1478C78D0084494F /* Build configuration list for PBXNativeTarget "GfxLiteMac" */;
+			buildPhases = (
+				5FB163851478C78C0084494F /* Sources */,
+				5FB163861478C78C0084494F /* Frameworks */,
+				5FB163871478C78C0084494F /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = GfxLiteMac;
+			productName = GfxLiteMac;
+			productReference = 5FB163891478C78C0084494F /* libGfxLiteMac.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5FB163801478C78C0084494F /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 5FB163831478C78C0084494F /* Build configuration list for PBXProject "GfxLiteMac" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5FB1637E1478C78C0084494F;
+			productRefGroup = 5FB1638A1478C78C0084494F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5FB163881478C78C0084494F /* GfxLiteMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5FB163851478C78C0084494F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB163B41478C83B0084494F /* MLFont.mm in Sources */,
+				5FB163B61478C83B0084494F /* MLGraphics.mm in Sources */,
+				5FB163B81478C83B0084494F /* Region.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5FB163981478C78D0084494F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5FB163991478C78D0084494F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5FB1639B1478C78D0084494F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "mac/GfxLiteMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC_OSX,
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5FB1639C1478C78D0084494F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "mac/GfxLiteMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5FB163831478C78C0084494F /* Build configuration list for PBXProject "GfxLiteMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FB163981478C78D0084494F /* Debug */,
+				5FB163991478C78D0084494F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5FB1639A1478C78D0084494F /* Build configuration list for PBXNativeTarget "GfxLiteMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FB1639B1478C78D0084494F /* Debug */,
+				5FB1639C1478C78D0084494F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5FB163801478C78C0084494F /* Project object */;
+}

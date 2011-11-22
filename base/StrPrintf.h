@@ -36,8 +36,8 @@ public:
 
 protected:
 	LPTSTR		m_pszBuffer;
-	int			m_nSize;
-	int			m_nCapacity;
+	size_t		m_nSize;
+	size_t		m_nCapacity;
 
 };
 

@@ -244,13 +244,15 @@ BOOL CWndDrag::AutoCloseToWindows(int &nOffx, int &nOffy, BOOL bMoveWindow /* = 
 	{
 		int nOffxt, nOffyt;
 		CRect rcd;
-		GetMonitorRestrictRect(rcw, rcd);
-		// close to monitor
-		RectCloseToRect(rcw, rcd, nOffxt, nOffyt, 10);
-		if (nOffx == 0)
-			nOffx = nOffxt;
-		if (nOffy == 0)
-			nOffy = nOffyt;
+		if (GetMonitorRestrictRect(rcw, rcd))
+		{
+			// close to monitor
+			RectCloseToRect(rcw, rcd, nOffxt, nOffyt, 10);
+			if (nOffx == 0)
+				nOffx = nOffxt;
+			if (nOffy == 0)
+				nOffy = nOffyt;
+		}
 	}
 	// ok 
 	rcw.OffsetRect(nOffx, nOffy);

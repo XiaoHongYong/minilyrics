@@ -31,7 +31,6 @@
 		5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
 		5FAF93F5144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */; };
 		5FAF93F6144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */; };
-		5FAF93F8144DB65D00E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F7144DB65D00E998BC /* libsqlite3.dylib */; };
 		5FAF93FA144DB67800E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F9144DB67800E998BC /* libsqlite3.dylib */; };
 		5FAF966114506D2400E998BC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		5FAF966214506D2400E998BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -190,9 +189,6 @@
 		5FAF97E91451243700E998BC /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C41451243700E998BC /* LrcTag.cpp */; };
 		5FAF97EA1451243700E998BC /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C41451243700E998BC /* LrcTag.cpp */; };
 		5FAF97EB1451243700E998BC /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C41451243700E998BC /* LrcTag.cpp */; };
-		5FAF97EC1451243700E998BC /* Lyrics3v2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C61451243700E998BC /* Lyrics3v2.cpp */; };
-		5FAF97ED1451243700E998BC /* Lyrics3v2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C61451243700E998BC /* Lyrics3v2.cpp */; };
-		5FAF97EE1451243700E998BC /* Lyrics3v2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C61451243700E998BC /* Lyrics3v2.cpp */; };
 		5FAF97EF1451243700E998BC /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C91451243700E998BC /* LyricsSearch.cpp */; };
 		5FAF97F01451243700E998BC /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C91451243700E998BC /* LyricsSearch.cpp */; };
 		5FAF97F11451243700E998BC /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C91451243700E998BC /* LyricsSearch.cpp */; };
@@ -205,29 +201,24 @@
 		5FAF97F81451243700E998BC /* MLData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97CF1451243700E998BC /* MLData.cpp */; };
 		5FAF97F91451243700E998BC /* MLData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97CF1451243700E998BC /* MLData.cpp */; };
 		5FAF97FA1451243700E998BC /* MLData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97CF1451243700E998BC /* MLData.cpp */; };
-		5FAF97FB1451243700E998BC /* MLGenRegV4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D21451243700E998BC /* MLGenRegV4.cpp */; };
-		5FAF97FC1451243700E998BC /* MLGenRegV4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D21451243700E998BC /* MLGenRegV4.cpp */; };
-		5FAF97FD1451243700E998BC /* MLGenRegV4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D21451243700E998BC /* MLGenRegV4.cpp */; };
 		5FAF97FE1451243700E998BC /* MLProfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D51451243700E998BC /* MLProfile.cpp */; };
 		5FAF97FF1451243700E998BC /* MLProfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D51451243700E998BC /* MLProfile.cpp */; };
 		5FAF98001451243700E998BC /* MLProfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D51451243700E998BC /* MLProfile.cpp */; };
-		5FAF98011451243700E998BC /* Register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D71451243700E998BC /* Register.cpp */; };
-		5FAF98021451243700E998BC /* Register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D71451243700E998BC /* Register.cpp */; };
-		5FAF98031451243700E998BC /* Register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D71451243700E998BC /* Register.cpp */; };
-		5FAF98041451243700E998BC /* SearchCacheFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D91451243700E998BC /* SearchCacheFile.cpp */; };
-		5FAF98051451243700E998BC /* SearchCacheFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D91451243700E998BC /* SearchCacheFile.cpp */; };
-		5FAF98061451243700E998BC /* SearchCacheFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D91451243700E998BC /* SearchCacheFile.cpp */; };
-		5FAF98071451243700E998BC /* SncParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97DB1451243700E998BC /* SncParser.cpp */; };
-		5FAF98081451243700E998BC /* SncParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97DB1451243700E998BC /* SncParser.cpp */; };
-		5FAF98091451243700E998BC /* SncParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97DB1451243700E998BC /* SncParser.cpp */; };
-		5FAF980A1451243700E998BC /* SrtParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97DD1451243700E998BC /* SrtParser.cpp */; };
-		5FAF980B1451243700E998BC /* SrtParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97DD1451243700E998BC /* SrtParser.cpp */; };
-		5FAF980C1451243700E998BC /* SrtParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97DD1451243700E998BC /* SrtParser.cpp */; };
-		5FAF980E145132C100E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF980D145132C000E998BC /* libsqlite3.dylib */; };
 		5FAF9810145132D900E998BC /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF980F145132D800E998BC /* MediaPlayer.framework */; };
 		5FAF98121451559100E998BC /* App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98111451559100E998BC /* App.mm */; };
 		5FAF98131451559100E998BC /* App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98111451559100E998BC /* App.mm */; };
 		5FAF98141451559100E998BC /* App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98111451559100E998BC /* App.mm */; };
+		5FAF981C1451C7F200E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F9144DB67800E998BC /* libsqlite3.dylib */; };
+		5FAF981D1451C7FE00E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F9144DB67800E998BC /* libsqlite3.dylib */; };
+		5FAF982014531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */; };
+		5FAF982114531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */; };
+		5FAF982214531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */; };
+		5FAF982A1454646300E998BC /* PinchTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98291454646000E998BC /* PinchTextView.m */; };
+		5FAF982B1454646300E998BC /* PinchTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98291454646000E998BC /* PinchTextView.m */; };
+		5FAF982C1454646300E998BC /* PinchTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98291454646000E998BC /* PinchTextView.m */; };
+		5FAF98361456FDEB00E998BC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5FAF98351456FDE600E998BC /* Settings.bundle */; };
+		5FAF98371456FDEB00E998BC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5FAF98351456FDE600E998BC /* Settings.bundle */; };
+		5FAF98381456FDEB00E998BC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5FAF98351456FDE600E998BC /* Settings.bundle */; };
 		5FB4FE501428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */; };
 		5FB4FE511428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */; };
 		5FB4FE54142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE53142A2C0000D1DDA4 /* MLAppNotifyParam.mm */; };
@@ -415,12 +406,10 @@
 		5F70B86C11D8EA46009D0254 /* sockadapt.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = sockadapt.h; path = ../MLProtocol/sockadapt.h; sourceTree = SOURCE_ROOT; };
 		5F70B86D11D8EA46009D0254 /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = StdAfx.h; path = ../MLProtocol/StdAfx.h; sourceTree = SOURCE_ROOT; };
 		5F70B8BF11D8EB00009D0254 /* MLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = MLProtocol.h; path = ../MLProtocol/MLProtocol.h; sourceTree = SOURCE_ROOT; };
-		5F9DEFC811AC101100312E83 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = usr/lib/libiconv.dylib; sourceTree = SDKROOT; };
 		5FAB7BA911B2013700C9395C /* LyrVecticalScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrVecticalScrollView.h; sourceTree = "<group>"; };
 		5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrVecticalScrollView.mm; sourceTree = "<group>"; };
 		5FAF93F3144DAE6100E998BC /* LyricsAssociation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsAssociation.h; sourceTree = "<group>"; };
 		5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsAssociation.cpp; sourceTree = "<group>"; };
-		5FAF93F7144DB65D00E998BC /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5FAF93F9144DB67800E998BC /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5FAF9401145066C600E998BC /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		5FAF959B14506AD400E998BC /* AdditionalMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdditionalMessage.h; path = ../SDK/cppunit/include/cppunit/AdditionalMessage.h; sourceTree = "<group>"; };
@@ -599,8 +588,6 @@
 		5FAF97C31451243700E998BC /* LrcParserHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LrcParserHelper.h; path = ../MLLib/LrcParserHelper.h; sourceTree = "<group>"; };
 		5FAF97C41451243700E998BC /* LrcTag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LrcTag.cpp; path = ../MLLib/LrcTag.cpp; sourceTree = "<group>"; };
 		5FAF97C51451243700E998BC /* LrcTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LrcTag.h; path = ../MLLib/LrcTag.h; sourceTree = "<group>"; };
-		5FAF97C61451243700E998BC /* Lyrics3v2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Lyrics3v2.cpp; path = ../MLLib/Lyrics3v2.cpp; sourceTree = "<group>"; };
-		5FAF97C71451243700E998BC /* Lyrics3v2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Lyrics3v2.h; path = ../MLLib/Lyrics3v2.h; sourceTree = "<group>"; };
 		5FAF97C81451243700E998BC /* LyricsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsParser.h; path = ../MLLib/LyricsParser.h; sourceTree = "<group>"; };
 		5FAF97C91451243700E998BC /* LyricsSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricsSearch.cpp; path = ../MLLib/LyricsSearch.cpp; sourceTree = "<group>"; };
 		5FAF97CA1451243700E998BC /* LyricsSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsSearch.h; path = ../MLLib/LyricsSearch.h; sourceTree = "<group>"; };
@@ -610,24 +597,17 @@
 		5FAF97CE1451243700E998BC /* LyrTimeStamp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyrTimeStamp.h; path = ../MLLib/LyrTimeStamp.h; sourceTree = "<group>"; };
 		5FAF97CF1451243700E998BC /* MLData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLData.cpp; path = ../MLLib/MLData.cpp; sourceTree = "<group>"; };
 		5FAF97D01451243700E998BC /* MLData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLData.h; path = ../MLLib/MLData.h; sourceTree = "<group>"; };
-		5FAF97D11451243700E998BC /* MLEncrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLEncrypt.h; path = ../MLLib/MLEncrypt.h; sourceTree = "<group>"; };
-		5FAF97D21451243700E998BC /* MLGenRegV4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLGenRegV4.cpp; path = ../MLLib/MLGenRegV4.cpp; sourceTree = "<group>"; };
-		5FAF97D31451243700E998BC /* MLGenRegV4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLGenRegV4.h; path = ../MLLib/MLGenRegV4.h; sourceTree = "<group>"; };
 		5FAF97D41451243700E998BC /* MLLib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLLib.h; path = ../MLLib/MLLib.h; sourceTree = "<group>"; };
 		5FAF97D51451243700E998BC /* MLProfile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLProfile.cpp; path = ../MLLib/MLProfile.cpp; sourceTree = "<group>"; };
 		5FAF97D61451243700E998BC /* MLProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLProfile.h; path = ../MLLib/MLProfile.h; sourceTree = "<group>"; };
-		5FAF97D71451243700E998BC /* Register.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Register.cpp; path = ../MLLib/Register.cpp; sourceTree = "<group>"; };
-		5FAF97D81451243700E998BC /* Register.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Register.h; path = ../MLLib/Register.h; sourceTree = "<group>"; };
-		5FAF97D91451243700E998BC /* SearchCacheFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SearchCacheFile.cpp; path = ../MLLib/SearchCacheFile.cpp; sourceTree = "<group>"; };
-		5FAF97DA1451243700E998BC /* SearchCacheFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SearchCacheFile.h; path = ../MLLib/SearchCacheFile.h; sourceTree = "<group>"; };
-		5FAF97DB1451243700E998BC /* SncParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SncParser.cpp; path = ../MLLib/SncParser.cpp; sourceTree = "<group>"; };
-		5FAF97DC1451243700E998BC /* SncParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SncParser.h; path = ../MLLib/SncParser.h; sourceTree = "<group>"; };
-		5FAF97DD1451243700E998BC /* SrtParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SrtParser.cpp; path = ../MLLib/SrtParser.cpp; sourceTree = "<group>"; };
-		5FAF97DE1451243700E998BC /* SrtParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SrtParser.h; path = ../MLLib/SrtParser.h; sourceTree = "<group>"; };
 		5FAF97DF1451243700E998BC /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StdAfx.h; path = ../MLLib/StdAfx.h; sourceTree = "<group>"; };
-		5FAF980D145132C000E998BC /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5FAF980F145132D800E998BC /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		5FAF98111451559100E998BC /* App.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = App.mm; sourceTree = "<group>"; };
+		5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ThreadAutoReleasePool.mm; sourceTree = "<group>"; };
+		5FAF981F14531DB900E998BC /* ThreadAutoReleasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadAutoReleasePool.h; sourceTree = "<group>"; };
+		5FAF98281454645F00E998BC /* PinchTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PinchTextView.h; sourceTree = "<group>"; };
+		5FAF98291454646000E998BC /* PinchTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PinchTextView.m; sourceTree = "<group>"; };
+		5FAF98351456FDE600E998BC /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = "<group>"; };
 		5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLClientSession.cpp; sourceTree = "<group>"; };
 		5FB4FE4F1428E3A900D1DDA4 /* MLClientSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLClientSession.h; sourceTree = "<group>"; };
 		5FB4FE52142A2BFF00D1DDA4 /* MLAppNotifyParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLAppNotifyParam.h; sourceTree = "<group>"; };
@@ -742,7 +722,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FAF93F8144DB65D00E998BC /* libsqlite3.dylib in Frameworks */,
 				1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */,
 				1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */,
 				288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */,
@@ -750,6 +729,7 @@
 				0ADFA0840FABA7250020C909 /* AudioToolbox.framework in Frameworks */,
 				0ADFA09E0FABA9DF0020C909 /* AVFoundation.framework in Frameworks */,
 				5F1B499B11DCE85500AAF8E4 /* CoreText.framework in Frameworks */,
+				5FAF981D1451C7FE00E998BC /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -758,10 +738,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FAF9810145132D900E998BC /* MediaPlayer.framework in Frameworks */,
-				5FAF980E145132C100E998BC /* libsqlite3.dylib in Frameworks */,
 				5FAF966114506D2400E998BC /* UIKit.framework in Frameworks */,
 				5FAF966214506D2400E998BC /* Foundation.framework in Frameworks */,
 				5FAF966314506D2400E998BC /* CoreGraphics.framework in Frameworks */,
+				5FAF981C1451C7F200E998BC /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -787,6 +767,8 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				5FAF98281454645F00E998BC /* PinchTextView.h */,
+				5FAF98291454646000E998BC /* PinchTextView.m */,
 				5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */,
 				5FB4FE4F1428E3A900D1DDA4 /* MLClientSession.h */,
 				5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */,
@@ -835,13 +817,12 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				5FAF98351456FDE600E998BC /* Settings.bundle */,
 				5FAF980F145132D800E998BC /* MediaPlayer.framework */,
-				5FAF980D145132C000E998BC /* libsqlite3.dylib */,
 				5FAF97BD145123FA00E998BC /* MLLib */,
 				5FAF975B14506DC500E998BC /* Utils */,
 				5FAF948914506A0900E998BC /* CPPUnit */,
 				5FAF93F9144DB67800E998BC /* libsqlite3.dylib */,
-				5FAF93F7144DB65D00E998BC /* libsqlite3.dylib */,
 				5FBE6253142B8E43005A50B6 /* base */,
 				5F70B85F11D8E9EC009D0254 /* MLProtocol */,
 				080E96DDFE201D6D7F000001 /* Classes */,
@@ -850,7 +831,6 @@
 				5FAF966414506D2400E998BC /* MiniLyricsTest */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				5F9DEFC811AC101100312E83 /* libiconv.dylib */,
 			);
 			name = CustomTemplate;
 			sourceTree = "<group>";
@@ -1217,8 +1197,6 @@
 				5FAF97C31451243700E998BC /* LrcParserHelper.h */,
 				5FAF97C41451243700E998BC /* LrcTag.cpp */,
 				5FAF97C51451243700E998BC /* LrcTag.h */,
-				5FAF97C61451243700E998BC /* Lyrics3v2.cpp */,
-				5FAF97C71451243700E998BC /* Lyrics3v2.h */,
 				5FAF97C81451243700E998BC /* LyricsParser.h */,
 				5FAF97C91451243700E998BC /* LyricsSearch.cpp */,
 				5FAF97CA1451243700E998BC /* LyricsSearch.h */,
@@ -1228,20 +1206,9 @@
 				5FAF97CE1451243700E998BC /* LyrTimeStamp.h */,
 				5FAF97CF1451243700E998BC /* MLData.cpp */,
 				5FAF97D01451243700E998BC /* MLData.h */,
-				5FAF97D11451243700E998BC /* MLEncrypt.h */,
-				5FAF97D21451243700E998BC /* MLGenRegV4.cpp */,
-				5FAF97D31451243700E998BC /* MLGenRegV4.h */,
 				5FAF97D41451243700E998BC /* MLLib.h */,
 				5FAF97D51451243700E998BC /* MLProfile.cpp */,
 				5FAF97D61451243700E998BC /* MLProfile.h */,
-				5FAF97D71451243700E998BC /* Register.cpp */,
-				5FAF97D81451243700E998BC /* Register.h */,
-				5FAF97D91451243700E998BC /* SearchCacheFile.cpp */,
-				5FAF97DA1451243700E998BC /* SearchCacheFile.h */,
-				5FAF97DB1451243700E998BC /* SncParser.cpp */,
-				5FAF97DC1451243700E998BC /* SncParser.h */,
-				5FAF97DD1451243700E998BC /* SrtParser.cpp */,
-				5FAF97DE1451243700E998BC /* SrtParser.h */,
 				5FAF97DF1451243700E998BC /* StdAfx.h */,
 			);
 			name = MLLib;
@@ -1304,6 +1271,8 @@
 				5FBE6275142B8E78005A50B6 /* OSError.cpp */,
 				5FBE6277142B8E78005A50B6 /* Semaphore.h */,
 				5FBE6278142B8E78005A50B6 /* Semaphore.mm */,
+				5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */,
+				5FAF981F14531DB900E998BC /* ThreadAutoReleasePool.h */,
 				5FBE6279142B8E78005A50B6 /* Thread.cpp */,
 				5FBE627A142B8E78005A50B6 /* Thread.h */,
 			);
@@ -1439,6 +1408,7 @@
 				5FCB8C641210FCA1009F23BD /* MusicTableView.xib in Resources */,
 				5FC1212E1214DF5F003D9B42 /* play_ctrl_bg.png in Resources */,
 				5FAF97E31451243700E998BC /* LRC File Format.txt in Resources */,
+				5FAF98361456FDEB00E998BC /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1450,6 +1420,7 @@
 				5FAF967614506D2400E998BC /* MainWindow_iPhone.xib in Resources */,
 				5FAF967D14506D2400E998BC /* MainWindow_iPad.xib in Resources */,
 				5FAF97E51451243700E998BC /* LRC File Format.txt in Resources */,
+				5FAF98381456FDEB00E998BC /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1495,6 +1466,7 @@
 				5FC122C012177E6B003D9B42 /* play_ctrl_bg.png in Resources */,
 				5FC123711217A011003D9B42 /* iPhone_icon_free.png in Resources */,
 				5FAF97E41451243700E998BC /* LRC File Format.txt in Resources */,
+				5FAF98371456FDEB00E998BC /* Settings.bundle in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1565,18 +1537,14 @@
 				5FAF97E01451243700E998BC /* HelperFun.cpp in Sources */,
 				5FAF97E61451243700E998BC /* LrcParser.cpp in Sources */,
 				5FAF97E91451243700E998BC /* LrcTag.cpp in Sources */,
-				5FAF97EC1451243700E998BC /* Lyrics3v2.cpp in Sources */,
 				5FAF97EF1451243700E998BC /* LyricsSearch.cpp in Sources */,
 				5FAF97F21451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */,
 				5FAF97F51451243700E998BC /* LyrTimeStamp.cpp in Sources */,
 				5FAF97F81451243700E998BC /* MLData.cpp in Sources */,
-				5FAF97FB1451243700E998BC /* MLGenRegV4.cpp in Sources */,
 				5FAF97FE1451243700E998BC /* MLProfile.cpp in Sources */,
-				5FAF98011451243700E998BC /* Register.cpp in Sources */,
-				5FAF98041451243700E998BC /* SearchCacheFile.cpp in Sources */,
-				5FAF98071451243700E998BC /* SncParser.cpp in Sources */,
-				5FAF980A1451243700E998BC /* SrtParser.cpp in Sources */,
 				5FAF98121451559100E998BC /* App.mm in Sources */,
+				5FAF982014531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */,
+				5FAF982A1454646300E998BC /* PinchTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1696,18 +1664,14 @@
 				5FAF97E21451243700E998BC /* HelperFun.cpp in Sources */,
 				5FAF97E81451243700E998BC /* LrcParser.cpp in Sources */,
 				5FAF97EB1451243700E998BC /* LrcTag.cpp in Sources */,
-				5FAF97EE1451243700E998BC /* Lyrics3v2.cpp in Sources */,
 				5FAF97F11451243700E998BC /* LyricsSearch.cpp in Sources */,
 				5FAF97F41451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */,
 				5FAF97F71451243700E998BC /* LyrTimeStamp.cpp in Sources */,
 				5FAF97FA1451243700E998BC /* MLData.cpp in Sources */,
-				5FAF97FD1451243700E998BC /* MLGenRegV4.cpp in Sources */,
 				5FAF98001451243700E998BC /* MLProfile.cpp in Sources */,
-				5FAF98031451243700E998BC /* Register.cpp in Sources */,
-				5FAF98061451243700E998BC /* SearchCacheFile.cpp in Sources */,
-				5FAF98091451243700E998BC /* SncParser.cpp in Sources */,
-				5FAF980C1451243700E998BC /* SrtParser.cpp in Sources */,
 				5FAF98141451559100E998BC /* App.mm in Sources */,
+				5FAF982214531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */,
+				5FAF982C1454646300E998BC /* PinchTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1775,18 +1739,14 @@
 				5FAF97E11451243700E998BC /* HelperFun.cpp in Sources */,
 				5FAF97E71451243700E998BC /* LrcParser.cpp in Sources */,
 				5FAF97EA1451243700E998BC /* LrcTag.cpp in Sources */,
-				5FAF97ED1451243700E998BC /* Lyrics3v2.cpp in Sources */,
 				5FAF97F01451243700E998BC /* LyricsSearch.cpp in Sources */,
 				5FAF97F31451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */,
 				5FAF97F61451243700E998BC /* LyrTimeStamp.cpp in Sources */,
 				5FAF97F91451243700E998BC /* MLData.cpp in Sources */,
-				5FAF97FC1451243700E998BC /* MLGenRegV4.cpp in Sources */,
 				5FAF97FF1451243700E998BC /* MLProfile.cpp in Sources */,
-				5FAF98021451243700E998BC /* Register.cpp in Sources */,
-				5FAF98051451243700E998BC /* SearchCacheFile.cpp in Sources */,
-				5FAF98081451243700E998BC /* SncParser.cpp in Sources */,
-				5FAF980B1451243700E998BC /* SrtParser.cpp in Sources */,
 				5FAF98131451559100E998BC /* App.mm in Sources */,
+				5FAF982114531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */,
+				5FAF982B1454646300E998BC /* PinchTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1838,6 +1798,10 @@
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
+					_IPHONE,
+				);
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
@@ -1960,6 +1924,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					_DEBUG,
 					_IPHONE,
 					_FREE,
 				);
@@ -2106,6 +2071,7 @@
 				5FAF968114506D2400E998BC /* Distribution */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		5FC122E712177E6B003D9B42 /* Build configuration list for PBXNativeTarget "MiniLyricsFree" */ = {
 			isa = XCConfigurationList;

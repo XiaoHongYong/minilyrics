@@ -1,0 +1,370 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5F9CDEA1147A2C2A00432DAC /* BaseWnd.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE89147A2C2A00432DAC /* BaseWnd.h */; };
+		5F9CDEA2147A2C2A00432DAC /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE8A147A2C2A00432DAC /* Cursor.cpp */; };
+		5F9CDEA3147A2C2A00432DAC /* Cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE8B147A2C2A00432DAC /* Cursor.h */; };
+		5F9CDEA4147A2C2A00432DAC /* desktop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE8C147A2C2A00432DAC /* desktop.cpp */; };
+		5F9CDEA5147A2C2A00432DAC /* desktop.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE8D147A2C2A00432DAC /* desktop.h */; };
+		5F9CDEA6147A2C2A00432DAC /* DlgChooseColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.cpp */; };
+		5F9CDEA7147A2C2A00432DAC /* DlgChooseColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */; };
+		5F9CDEA8147A2C2A00432DAC /* FileOpenDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE90147A2C2A00432DAC /* FileOpenDlg.cpp */; };
+		5F9CDEA9147A2C2A00432DAC /* FileOpenDlg.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */; };
+		5F9CDEAA147A2C2A00432DAC /* FileSaveDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE92147A2C2A00432DAC /* FileSaveDlg.cpp */; };
+		5F9CDEAB147A2C2A00432DAC /* FileSaveDlg.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */; };
+		5F9CDEAC147A2C2A00432DAC /* FolderDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */; };
+		5F9CDEAD147A2C2A00432DAC /* FolderDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE95147A2C2A00432DAC /* FolderDialog.h */; };
+		5F9CDEAE147A2C2A00432DAC /* MLMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE96147A2C2A00432DAC /* MLMenu.cpp */; };
+		5F9CDEAF147A2C2A00432DAC /* MLMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE97147A2C2A00432DAC /* MLMenu.h */; };
+		5F9CDEB0147A2C2A00432DAC /* ScrollBarHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE98147A2C2A00432DAC /* ScrollBarHandler.cpp */; };
+		5F9CDEB1147A2C2A00432DAC /* ScrollBarHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE99147A2C2A00432DAC /* ScrollBarHandler.h */; };
+		5F9CDEB2147A2C2A00432DAC /* SkinToolTip.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE9A147A2C2A00432DAC /* SkinToolTip.cpp */; };
+		5F9CDEB3147A2C2A00432DAC /* SkinToolTip.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE9B147A2C2A00432DAC /* SkinToolTip.h */; };
+		5F9CDEB5147A2C2A00432DAC /* WidgetLiteMac.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE9D147A2C2A00432DAC /* WidgetLiteMac.h */; };
+		5F9CDEB6147A2C2A00432DAC /* WndResizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE9E147A2C2A00432DAC /* WndResizer.cpp */; };
+		5F9CDEB7147A2C2A00432DAC /* WndResizer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE9F147A2C2A00432DAC /* WndResizer.h */; };
+		5FB1632D1476A41B0084494F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB1632C1476A41B0084494F /* Cocoa.framework */; };
+		5FB16345147893620084494F /* WidgetLiteMac-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5FB16344147893620084494F /* WidgetLiteMac-Prefix.pch */; };
+		5FB16379147893920084494F /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB16374147893920084494F /* StdAfx.h */; };
+		5FB1637A147893920084494F /* widgetif.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB16375147893920084494F /* widgetif.h */; };
+		5FB1637B147893920084494F /* WidgetLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB16376147893920084494F /* WidgetLite.h */; };
+		5FB1637C147893920084494F /* WndDrag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB16377147893920084494F /* WndDrag.cpp */; };
+		5FB1637D147893920084494F /* WndDrag.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB16378147893920084494F /* WndDrag.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5F9CDE89147A2C2A00432DAC /* BaseWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseWnd.h; sourceTree = "<group>"; };
+		5F9CDE8A147A2C2A00432DAC /* Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cursor.cpp; sourceTree = "<group>"; };
+		5F9CDE8B147A2C2A00432DAC /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cursor.h; sourceTree = "<group>"; };
+		5F9CDE8C147A2C2A00432DAC /* desktop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = desktop.cpp; sourceTree = "<group>"; };
+		5F9CDE8D147A2C2A00432DAC /* desktop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = desktop.h; sourceTree = "<group>"; };
+		5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgChooseColor.cpp; sourceTree = "<group>"; };
+		5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgChooseColor.h; sourceTree = "<group>"; };
+		5F9CDE90147A2C2A00432DAC /* FileOpenDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileOpenDlg.cpp; sourceTree = "<group>"; };
+		5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileOpenDlg.h; sourceTree = "<group>"; };
+		5F9CDE92147A2C2A00432DAC /* FileSaveDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSaveDlg.cpp; sourceTree = "<group>"; };
+		5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSaveDlg.h; sourceTree = "<group>"; };
+		5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FolderDialog.cpp; sourceTree = "<group>"; };
+		5F9CDE95147A2C2A00432DAC /* FolderDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDialog.h; sourceTree = "<group>"; };
+		5F9CDE96147A2C2A00432DAC /* MLMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLMenu.cpp; sourceTree = "<group>"; };
+		5F9CDE97147A2C2A00432DAC /* MLMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLMenu.h; sourceTree = "<group>"; };
+		5F9CDE98147A2C2A00432DAC /* ScrollBarHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollBarHandler.cpp; sourceTree = "<group>"; };
+		5F9CDE99147A2C2A00432DAC /* ScrollBarHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollBarHandler.h; sourceTree = "<group>"; };
+		5F9CDE9A147A2C2A00432DAC /* SkinToolTip.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinToolTip.cpp; sourceTree = "<group>"; };
+		5F9CDE9B147A2C2A00432DAC /* SkinToolTip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinToolTip.h; sourceTree = "<group>"; };
+		5F9CDE9C147A2C2A00432DAC /* WidgetLiteMac-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WidgetLiteMac-Prefix.pch"; sourceTree = "<group>"; };
+		5F9CDE9D147A2C2A00432DAC /* WidgetLiteMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WidgetLiteMac.h; sourceTree = "<group>"; };
+		5F9CDE9E147A2C2A00432DAC /* WndResizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WndResizer.cpp; sourceTree = "<group>"; };
+		5F9CDE9F147A2C2A00432DAC /* WndResizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WndResizer.h; sourceTree = "<group>"; };
+		5FB163291476A41B0084494F /* libWidgetLiteMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libWidgetLiteMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FB1632C1476A41B0084494F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		5FB1632F1476A41B0084494F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5FB163301476A41B0084494F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		5FB163311476A41B0084494F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5FB16344147893620084494F /* WidgetLiteMac-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "WidgetLiteMac-Prefix.pch"; path = "Mac/WidgetLiteMac-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		5FB16374147893920084494F /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = SOURCE_ROOT; };
+		5FB16375147893920084494F /* widgetif.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = widgetif.h; sourceTree = SOURCE_ROOT; };
+		5FB16376147893920084494F /* WidgetLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WidgetLite.h; sourceTree = SOURCE_ROOT; };
+		5FB16377147893920084494F /* WndDrag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WndDrag.cpp; sourceTree = SOURCE_ROOT; };
+		5FB16378147893920084494F /* WndDrag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WndDrag.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5FB163261476A41B0084494F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB1632D1476A41B0084494F /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5F9CDE87147A2C2A00432DAC /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDE89147A2C2A00432DAC /* BaseWnd.h */,
+				5F9CDE8A147A2C2A00432DAC /* Cursor.cpp */,
+				5F9CDE8B147A2C2A00432DAC /* Cursor.h */,
+				5F9CDE8C147A2C2A00432DAC /* desktop.cpp */,
+				5F9CDE8D147A2C2A00432DAC /* desktop.h */,
+				5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.cpp */,
+				5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */,
+				5F9CDE90147A2C2A00432DAC /* FileOpenDlg.cpp */,
+				5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */,
+				5F9CDE92147A2C2A00432DAC /* FileSaveDlg.cpp */,
+				5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */,
+				5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */,
+				5F9CDE95147A2C2A00432DAC /* FolderDialog.h */,
+				5F9CDE96147A2C2A00432DAC /* MLMenu.cpp */,
+				5F9CDE97147A2C2A00432DAC /* MLMenu.h */,
+				5F9CDE98147A2C2A00432DAC /* ScrollBarHandler.cpp */,
+				5F9CDE99147A2C2A00432DAC /* ScrollBarHandler.h */,
+				5F9CDE9A147A2C2A00432DAC /* SkinToolTip.cpp */,
+				5F9CDE9B147A2C2A00432DAC /* SkinToolTip.h */,
+				5F9CDE9C147A2C2A00432DAC /* WidgetLiteMac-Prefix.pch */,
+				5F9CDE9D147A2C2A00432DAC /* WidgetLiteMac.h */,
+				5F9CDE9E147A2C2A00432DAC /* WndResizer.cpp */,
+				5F9CDE9F147A2C2A00432DAC /* WndResizer.h */,
+			);
+			path = Mac;
+			sourceTree = SOURCE_ROOT;
+		};
+		5FB1631E1476A41B0084494F = {
+			isa = PBXGroup;
+			children = (
+				5FB163321476A41B0084494F /* Mac */,
+				5FB1632B1476A41B0084494F /* Frameworks */,
+				5FB1632A1476A41B0084494F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5FB1632A1476A41B0084494F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FB163291476A41B0084494F /* libWidgetLiteMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FB1632B1476A41B0084494F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FB1632C1476A41B0084494F /* Cocoa.framework */,
+				5FB1632E1476A41B0084494F /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5FB1632E1476A41B0084494F /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FB1632F1476A41B0084494F /* AppKit.framework */,
+				5FB163301476A41B0084494F /* CoreData.framework */,
+				5FB163311476A41B0084494F /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5FB163321476A41B0084494F /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDE87147A2C2A00432DAC /* Mac */,
+				5FB16374147893920084494F /* StdAfx.h */,
+				5FB16375147893920084494F /* widgetif.h */,
+				5FB16376147893920084494F /* WidgetLite.h */,
+				5FB16377147893920084494F /* WndDrag.cpp */,
+				5FB16378147893920084494F /* WndDrag.h */,
+				5FB163331476A41B0084494F /* Supporting Files */,
+			);
+			name = Mac;
+			path = WidgetLiteMac;
+			sourceTree = "<group>";
+		};
+		5FB163331476A41B0084494F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5FB16344147893620084494F /* WidgetLiteMac-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5FB163271476A41B0084494F /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB16345147893620084494F /* WidgetLiteMac-Prefix.pch in Headers */,
+				5FB16379147893920084494F /* StdAfx.h in Headers */,
+				5FB1637A147893920084494F /* widgetif.h in Headers */,
+				5FB1637B147893920084494F /* WidgetLite.h in Headers */,
+				5FB1637D147893920084494F /* WndDrag.h in Headers */,
+				5F9CDEA1147A2C2A00432DAC /* BaseWnd.h in Headers */,
+				5F9CDEA3147A2C2A00432DAC /* Cursor.h in Headers */,
+				5F9CDEA5147A2C2A00432DAC /* desktop.h in Headers */,
+				5F9CDEA7147A2C2A00432DAC /* DlgChooseColor.h in Headers */,
+				5F9CDEA9147A2C2A00432DAC /* FileOpenDlg.h in Headers */,
+				5F9CDEAB147A2C2A00432DAC /* FileSaveDlg.h in Headers */,
+				5F9CDEAD147A2C2A00432DAC /* FolderDialog.h in Headers */,
+				5F9CDEAF147A2C2A00432DAC /* MLMenu.h in Headers */,
+				5F9CDEB1147A2C2A00432DAC /* ScrollBarHandler.h in Headers */,
+				5F9CDEB3147A2C2A00432DAC /* SkinToolTip.h in Headers */,
+				5F9CDEB5147A2C2A00432DAC /* WidgetLiteMac.h in Headers */,
+				5F9CDEB7147A2C2A00432DAC /* WndResizer.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5FB163281476A41B0084494F /* WidgetLiteMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FB1633A1476A41B0084494F /* Build configuration list for PBXNativeTarget "WidgetLiteMac" */;
+			buildPhases = (
+				5FB163251476A41B0084494F /* Sources */,
+				5FB163261476A41B0084494F /* Frameworks */,
+				5FB163271476A41B0084494F /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WidgetLiteMac;
+			productName = WidgetLiteMac;
+			productReference = 5FB163291476A41B0084494F /* libWidgetLiteMac.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5FB163201476A41B0084494F /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0410;
+			};
+			buildConfigurationList = 5FB163231476A41B0084494F /* Build configuration list for PBXProject "WidgetLiteMac" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5FB1631E1476A41B0084494F;
+			productRefGroup = 5FB1632A1476A41B0084494F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5FB163281476A41B0084494F /* WidgetLiteMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5FB163251476A41B0084494F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB1637C147893920084494F /* WndDrag.cpp in Sources */,
+				5F9CDEA2147A2C2A00432DAC /* Cursor.cpp in Sources */,
+				5F9CDEA4147A2C2A00432DAC /* desktop.cpp in Sources */,
+				5F9CDEA6147A2C2A00432DAC /* DlgChooseColor.cpp in Sources */,
+				5F9CDEA8147A2C2A00432DAC /* FileOpenDlg.cpp in Sources */,
+				5F9CDEAA147A2C2A00432DAC /* FileSaveDlg.cpp in Sources */,
+				5F9CDEAC147A2C2A00432DAC /* FolderDialog.cpp in Sources */,
+				5F9CDEAE147A2C2A00432DAC /* MLMenu.cpp in Sources */,
+				5F9CDEB0147A2C2A00432DAC /* ScrollBarHandler.cpp in Sources */,
+				5F9CDEB2147A2C2A00432DAC /* SkinToolTip.cpp in Sources */,
+				5F9CDEB6147A2C2A00432DAC /* WndResizer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5FB163381476A41B0084494F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5FB163391476A41B0084494F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5FB1633B1476A41B0084494F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Mac/WidgetLiteMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC_OSX,
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5FB1633C1476A41B0084494F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Mac/WidgetLiteMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5FB163231476A41B0084494F /* Build configuration list for PBXProject "WidgetLiteMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FB163381476A41B0084494F /* Debug */,
+				5FB163391476A41B0084494F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5FB1633A1476A41B0084494F /* Build configuration list for PBXNativeTarget "WidgetLiteMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FB1633B1476A41B0084494F /* Debug */,
+				5FB1633C1476A41B0084494F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5FB163201476A41B0084494F /* Project object */;
+}

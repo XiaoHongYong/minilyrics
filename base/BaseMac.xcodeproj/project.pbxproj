@@ -1,0 +1,461 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5F9CDEC8147A323D00432DAC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9CDEC7147A323D00432DAC /* Cocoa.framework */; };
+		5F9CDF13147A330100432DAC /* auto_free_list.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEDC147A330100432DAC /* auto_free_list.h */; };
+		5F9CDF14147A330100432DAC /* base.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEDD147A330100432DAC /* base.h */; };
+		5F9CDF15147A330100432DAC /* BaseDate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEDE147A330100432DAC /* BaseDate.cpp */; };
+		5F9CDF16147A330100432DAC /* BaseDate.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEDF147A330100432DAC /* BaseDate.h */; };
+		5F9CDF17147A330100432DAC /* CharEncoding.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEE0147A330100432DAC /* CharEncoding.h */; };
+		5F9CDF18147A330100432DAC /* CharEncodingBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEE1147A330100432DAC /* CharEncodingBase.cpp */; };
+		5F9CDF19147A330100432DAC /* common.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEE2147A330100432DAC /* common.h */; };
+		5F9CDF1A147A330100432DAC /* config.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEE3147A330100432DAC /* config.h */; };
+		5F9CDF1B147A330100432DAC /* cppunit-utils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEE4147A330100432DAC /* cppunit-utils.cpp */; };
+		5F9CDF1C147A330100432DAC /* cppunit-utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEE5147A330100432DAC /* cppunit-utils.h */; };
+		5F9CDF1D147A330100432DAC /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEE6147A330100432DAC /* Error.cpp */; };
+		5F9CDF1E147A330100432DAC /* Error.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEE7147A330100432DAC /* Error.h */; };
+		5F9CDF1F147A330100432DAC /* FileApiBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEE8147A330100432DAC /* FileApiBase.cpp */; };
+		5F9CDF20147A330100432DAC /* FileApiBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEE9147A330100432DAC /* FileApiBase.h */; };
+		5F9CDF21147A330100432DAC /* idstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEEA147A330100432DAC /* idstring.cpp */; };
+		5F9CDF22147A330100432DAC /* idstring.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEEB147A330100432DAC /* idstring.h */; };
+		5F9CDF23147A330100432DAC /* BaseMac-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */; };
+		5F9CDF25147A330100432DAC /* CharEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF0147A330100432DAC /* CharEncoding.cpp */; };
+		5F9CDF26147A330100432DAC /* CharEncoding.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF1147A330100432DAC /* CharEncoding.mm */; };
+		5F9CDF27147A330100432DAC /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF2147A330100432DAC /* Event.cpp */; };
+		5F9CDF28147A330100432DAC /* Event.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEF3147A330100432DAC /* Event.h */; };
+		5F9CDF29147A330100432DAC /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF4147A330100432DAC /* fileapi.cpp */; };
+		5F9CDF2A147A330100432DAC /* fileapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEF5147A330100432DAC /* fileapi.h */; };
+		5F9CDF2B147A330100432DAC /* MemmapFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF6147A330100432DAC /* MemmapFile.cpp */; };
+		5F9CDF2C147A330100432DAC /* MemmapFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEF7147A330100432DAC /* MemmapFile.h */; };
+		5F9CDF2D147A330100432DAC /* Mutex.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEF8147A330100432DAC /* Mutex.h */; };
+		5F9CDF2E147A330100432DAC /* MutexIP.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF9147A330100432DAC /* MutexIP.mm */; };
+		5F9CDF2F147A330100432DAC /* OSError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEFA147A330100432DAC /* OSError.cpp */; };
+		5F9CDF30147A330100432DAC /* Semaphore.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEFB147A330100432DAC /* Semaphore.h */; };
+		5F9CDF31147A330100432DAC /* Semaphore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEFC147A330100432DAC /* Semaphore.mm */; };
+		5F9CDF32147A330100432DAC /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEFD147A330100432DAC /* Thread.cpp */; };
+		5F9CDF33147A330100432DAC /* Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEFE147A330100432DAC /* Thread.h */; };
+		5F9CDF34147A330100432DAC /* ThreadAutoReleasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEFF147A330100432DAC /* ThreadAutoReleasePool.h */; };
+		5F9CDF35147A330100432DAC /* ThreadAutoReleasePool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF00147A330100432DAC /* ThreadAutoReleasePool.mm */; };
+		5F9CDF36147A330100432DAC /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF01147A330100432DAC /* misc.cpp */; };
+		5F9CDF37147A330100432DAC /* misc.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF02147A330100432DAC /* misc.h */; };
+		5F9CDF38147A330100432DAC /* mltypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF03147A330100432DAC /* mltypes.h */; };
+		5F9CDF39147A330100432DAC /* OnlyAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF04147A330100432DAC /* OnlyAllocator.cpp */; };
+		5F9CDF3A147A330100432DAC /* OnlyAllocator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF05147A330100432DAC /* OnlyAllocator.h */; };
+		5F9CDF3B147A330100432DAC /* OsBaseInc.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF06147A330100432DAC /* OsBaseInc.h */; };
+		5F9CDF3C147A330100432DAC /* safestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF07147A330100432DAC /* safestr.cpp */; };
+		5F9CDF3D147A330100432DAC /* safestr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF08147A330100432DAC /* safestr.h */; };
+		5F9CDF3E147A330100432DAC /* StdAfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF09147A330100432DAC /* StdAfx.cpp */; };
+		5F9CDF3F147A330100432DAC /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF0A147A330100432DAC /* stdafx.h */; };
+		5F9CDF40147A330100432DAC /* stringex_t.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF0B147A330100432DAC /* stringex_t.h */; };
+		5F9CDF41147A330100432DAC /* stringex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF0C147A330100432DAC /* stringex.cpp */; };
+		5F9CDF42147A330100432DAC /* stringex.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF0D147A330100432DAC /* stringex.h */; };
+		5F9CDF43147A330100432DAC /* StringIterator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF0E147A330100432DAC /* StringIterator.h */; };
+		5F9CDF44147A330100432DAC /* StrPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF0F147A330100432DAC /* StrPrintf.cpp */; };
+		5F9CDF45147A330100432DAC /* StrPrintf.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF10147A330100432DAC /* StrPrintf.h */; };
+		5F9CDF46147A330100432DAC /* wintypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF11147A330100432DAC /* wintypes.h */; };
+		5F9CDF47147A330100432DAC /* xstr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF12147A330100432DAC /* xstr.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5F9CDEC4147A323D00432DAC /* libBaseMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBaseMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5F9CDEC7147A323D00432DAC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		5F9CDECA147A323D00432DAC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5F9CDECB147A323D00432DAC /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		5F9CDECC147A323D00432DAC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5F9CDECF147A323D00432DAC /* BaseMac-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BaseMac-Prefix.pch"; sourceTree = "<group>"; };
+		5F9CDEDC147A330100432DAC /* auto_free_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = auto_free_list.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEDD147A330100432DAC /* base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEDE147A330100432DAC /* BaseDate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BaseDate.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDEDF147A330100432DAC /* BaseDate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseDate.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEE0147A330100432DAC /* CharEncoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharEncoding.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEE1147A330100432DAC /* CharEncodingBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharEncodingBase.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDEE2147A330100432DAC /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEE3147A330100432DAC /* config.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = config.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEE4147A330100432DAC /* cppunit-utils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "cppunit-utils.cpp"; sourceTree = SOURCE_ROOT; };
+		5F9CDEE5147A330100432DAC /* cppunit-utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "cppunit-utils.h"; sourceTree = SOURCE_ROOT; };
+		5F9CDEE6147A330100432DAC /* Error.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Error.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDEE7147A330100432DAC /* Error.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Error.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEE8147A330100432DAC /* FileApiBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileApiBase.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDEE9147A330100432DAC /* FileApiBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileApiBase.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEEA147A330100432DAC /* idstring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = idstring.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDEEB147A330100432DAC /* idstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = idstring.h; sourceTree = SOURCE_ROOT; };
+		5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BaseMac-Prefix.pch"; sourceTree = "<group>"; };
+		5F9CDEF0147A330100432DAC /* CharEncoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharEncoding.cpp; sourceTree = "<group>"; };
+		5F9CDEF1147A330100432DAC /* CharEncoding.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CharEncoding.mm; sourceTree = "<group>"; };
+		5F9CDEF2147A330100432DAC /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
+		5F9CDEF3147A330100432DAC /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
+		5F9CDEF4147A330100432DAC /* fileapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileapi.cpp; sourceTree = "<group>"; };
+		5F9CDEF5147A330100432DAC /* fileapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileapi.h; sourceTree = "<group>"; };
+		5F9CDEF6147A330100432DAC /* MemmapFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MemmapFile.cpp; sourceTree = "<group>"; };
+		5F9CDEF7147A330100432DAC /* MemmapFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MemmapFile.h; sourceTree = "<group>"; };
+		5F9CDEF8147A330100432DAC /* Mutex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mutex.h; sourceTree = "<group>"; };
+		5F9CDEF9147A330100432DAC /* MutexIP.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MutexIP.mm; sourceTree = "<group>"; };
+		5F9CDEFA147A330100432DAC /* OSError.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OSError.cpp; sourceTree = "<group>"; };
+		5F9CDEFB147A330100432DAC /* Semaphore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Semaphore.h; sourceTree = "<group>"; };
+		5F9CDEFC147A330100432DAC /* Semaphore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Semaphore.mm; sourceTree = "<group>"; };
+		5F9CDEFD147A330100432DAC /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Thread.cpp; sourceTree = "<group>"; };
+		5F9CDEFE147A330100432DAC /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
+		5F9CDEFF147A330100432DAC /* ThreadAutoReleasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadAutoReleasePool.h; sourceTree = "<group>"; };
+		5F9CDF00147A330100432DAC /* ThreadAutoReleasePool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ThreadAutoReleasePool.mm; sourceTree = "<group>"; };
+		5F9CDF01147A330100432DAC /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = misc.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF02147A330100432DAC /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF03147A330100432DAC /* mltypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mltypes.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF04147A330100432DAC /* OnlyAllocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OnlyAllocator.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF05147A330100432DAC /* OnlyAllocator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OnlyAllocator.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF06147A330100432DAC /* OsBaseInc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OsBaseInc.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF07147A330100432DAC /* safestr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = safestr.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF08147A330100432DAC /* safestr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safestr.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF09147A330100432DAC /* StdAfx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StdAfx.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF0A147A330100432DAC /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF0B147A330100432DAC /* stringex_t.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringex_t.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF0C147A330100432DAC /* stringex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stringex.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF0D147A330100432DAC /* stringex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stringex.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF0E147A330100432DAC /* StringIterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StringIterator.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF0F147A330100432DAC /* StrPrintf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = StrPrintf.cpp; sourceTree = SOURCE_ROOT; };
+		5F9CDF10147A330100432DAC /* StrPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrPrintf.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF11147A330100432DAC /* wintypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wintypes.h; sourceTree = SOURCE_ROOT; };
+		5F9CDF12147A330100432DAC /* xstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xstr.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5F9CDEC1147A323D00432DAC /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9CDEC8147A323D00432DAC /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5F9CDEB9147A323D00432DAC = {
+			isa = PBXGroup;
+			children = (
+				5F9CDECD147A323D00432DAC /* Sources */,
+				5F9CDEC6147A323D00432DAC /* Frameworks */,
+				5F9CDEC5147A323D00432DAC /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5F9CDEC5147A323D00432DAC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDEC4147A323D00432DAC /* libBaseMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5F9CDEC6147A323D00432DAC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDEC7147A323D00432DAC /* Cocoa.framework */,
+				5F9CDEC9147A323D00432DAC /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5F9CDEC9147A323D00432DAC /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDECA147A323D00432DAC /* AppKit.framework */,
+				5F9CDECB147A323D00432DAC /* CoreData.framework */,
+				5F9CDECC147A323D00432DAC /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5F9CDECD147A323D00432DAC /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDEDC147A330100432DAC /* auto_free_list.h */,
+				5F9CDEDD147A330100432DAC /* base.h */,
+				5F9CDEDE147A330100432DAC /* BaseDate.cpp */,
+				5F9CDEDF147A330100432DAC /* BaseDate.h */,
+				5F9CDEE0147A330100432DAC /* CharEncoding.h */,
+				5F9CDEE1147A330100432DAC /* CharEncodingBase.cpp */,
+				5F9CDEE2147A330100432DAC /* common.h */,
+				5F9CDEE3147A330100432DAC /* config.h */,
+				5F9CDEE4147A330100432DAC /* cppunit-utils.cpp */,
+				5F9CDEE5147A330100432DAC /* cppunit-utils.h */,
+				5F9CDEE6147A330100432DAC /* Error.cpp */,
+				5F9CDEE7147A330100432DAC /* Error.h */,
+				5F9CDEE8147A330100432DAC /* FileApiBase.cpp */,
+				5F9CDEE9147A330100432DAC /* FileApiBase.h */,
+				5F9CDEEA147A330100432DAC /* idstring.cpp */,
+				5F9CDEEB147A330100432DAC /* idstring.h */,
+				5F9CDEEC147A330100432DAC /* Mac */,
+				5F9CDF01147A330100432DAC /* misc.cpp */,
+				5F9CDF02147A330100432DAC /* misc.h */,
+				5F9CDF03147A330100432DAC /* mltypes.h */,
+				5F9CDF04147A330100432DAC /* OnlyAllocator.cpp */,
+				5F9CDF05147A330100432DAC /* OnlyAllocator.h */,
+				5F9CDF06147A330100432DAC /* OsBaseInc.h */,
+				5F9CDF07147A330100432DAC /* safestr.cpp */,
+				5F9CDF08147A330100432DAC /* safestr.h */,
+				5F9CDF09147A330100432DAC /* StdAfx.cpp */,
+				5F9CDF0A147A330100432DAC /* stdafx.h */,
+				5F9CDF0B147A330100432DAC /* stringex_t.h */,
+				5F9CDF0C147A330100432DAC /* stringex.cpp */,
+				5F9CDF0D147A330100432DAC /* stringex.h */,
+				5F9CDF0E147A330100432DAC /* StringIterator.h */,
+				5F9CDF0F147A330100432DAC /* StrPrintf.cpp */,
+				5F9CDF10147A330100432DAC /* StrPrintf.h */,
+				5F9CDF11147A330100432DAC /* wintypes.h */,
+				5F9CDF12147A330100432DAC /* xstr.h */,
+				5F9CDECE147A323D00432DAC /* Supporting Files */,
+			);
+			name = Sources;
+			path = BaseMac;
+			sourceTree = "<group>";
+		};
+		5F9CDECE147A323D00432DAC /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDECF147A323D00432DAC /* BaseMac-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5F9CDEEC147A330100432DAC /* Mac */ = {
+			isa = PBXGroup;
+			children = (
+				5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */,
+				5F9CDEF0147A330100432DAC /* CharEncoding.cpp */,
+				5F9CDEF1147A330100432DAC /* CharEncoding.mm */,
+				5F9CDEF2147A330100432DAC /* Event.cpp */,
+				5F9CDEF3147A330100432DAC /* Event.h */,
+				5F9CDEF4147A330100432DAC /* fileapi.cpp */,
+				5F9CDEF5147A330100432DAC /* fileapi.h */,
+				5F9CDEF6147A330100432DAC /* MemmapFile.cpp */,
+				5F9CDEF7147A330100432DAC /* MemmapFile.h */,
+				5F9CDEF8147A330100432DAC /* Mutex.h */,
+				5F9CDEF9147A330100432DAC /* MutexIP.mm */,
+				5F9CDEFA147A330100432DAC /* OSError.cpp */,
+				5F9CDEFB147A330100432DAC /* Semaphore.h */,
+				5F9CDEFC147A330100432DAC /* Semaphore.mm */,
+				5F9CDEFD147A330100432DAC /* Thread.cpp */,
+				5F9CDEFE147A330100432DAC /* Thread.h */,
+				5F9CDEFF147A330100432DAC /* ThreadAutoReleasePool.h */,
+				5F9CDF00147A330100432DAC /* ThreadAutoReleasePool.mm */,
+			);
+			path = Mac;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5F9CDEC2147A323D00432DAC /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9CDF13147A330100432DAC /* auto_free_list.h in Headers */,
+				5F9CDF14147A330100432DAC /* base.h in Headers */,
+				5F9CDF16147A330100432DAC /* BaseDate.h in Headers */,
+				5F9CDF17147A330100432DAC /* CharEncoding.h in Headers */,
+				5F9CDF19147A330100432DAC /* common.h in Headers */,
+				5F9CDF1A147A330100432DAC /* config.h in Headers */,
+				5F9CDF1C147A330100432DAC /* cppunit-utils.h in Headers */,
+				5F9CDF1E147A330100432DAC /* Error.h in Headers */,
+				5F9CDF20147A330100432DAC /* FileApiBase.h in Headers */,
+				5F9CDF22147A330100432DAC /* idstring.h in Headers */,
+				5F9CDF23147A330100432DAC /* BaseMac-Prefix.pch in Headers */,
+				5F9CDF28147A330100432DAC /* Event.h in Headers */,
+				5F9CDF2A147A330100432DAC /* fileapi.h in Headers */,
+				5F9CDF2C147A330100432DAC /* MemmapFile.h in Headers */,
+				5F9CDF2D147A330100432DAC /* Mutex.h in Headers */,
+				5F9CDF30147A330100432DAC /* Semaphore.h in Headers */,
+				5F9CDF33147A330100432DAC /* Thread.h in Headers */,
+				5F9CDF34147A330100432DAC /* ThreadAutoReleasePool.h in Headers */,
+				5F9CDF37147A330100432DAC /* misc.h in Headers */,
+				5F9CDF38147A330100432DAC /* mltypes.h in Headers */,
+				5F9CDF3A147A330100432DAC /* OnlyAllocator.h in Headers */,
+				5F9CDF3B147A330100432DAC /* OsBaseInc.h in Headers */,
+				5F9CDF3D147A330100432DAC /* safestr.h in Headers */,
+				5F9CDF3F147A330100432DAC /* stdafx.h in Headers */,
+				5F9CDF40147A330100432DAC /* stringex_t.h in Headers */,
+				5F9CDF42147A330100432DAC /* stringex.h in Headers */,
+				5F9CDF43147A330100432DAC /* StringIterator.h in Headers */,
+				5F9CDF45147A330100432DAC /* StrPrintf.h in Headers */,
+				5F9CDF46147A330100432DAC /* wintypes.h in Headers */,
+				5F9CDF47147A330100432DAC /* xstr.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5F9CDEC3147A323D00432DAC /* BaseMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5F9CDED5147A323D00432DAC /* Build configuration list for PBXNativeTarget "BaseMac" */;
+			buildPhases = (
+				5F9CDEC0147A323D00432DAC /* Sources */,
+				5F9CDEC1147A323D00432DAC /* Frameworks */,
+				5F9CDEC2147A323D00432DAC /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = BaseMac;
+			productName = BaseMac;
+			productReference = 5F9CDEC4147A323D00432DAC /* libBaseMac.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5F9CDEBB147A323D00432DAC /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 5F9CDEBE147A323D00432DAC /* Build configuration list for PBXProject "BaseMac" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5F9CDEB9147A323D00432DAC;
+			productRefGroup = 5F9CDEC5147A323D00432DAC /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5F9CDEC3147A323D00432DAC /* BaseMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5F9CDEC0147A323D00432DAC /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F9CDF15147A330100432DAC /* BaseDate.cpp in Sources */,
+				5F9CDF18147A330100432DAC /* CharEncodingBase.cpp in Sources */,
+				5F9CDF1B147A330100432DAC /* cppunit-utils.cpp in Sources */,
+				5F9CDF1D147A330100432DAC /* Error.cpp in Sources */,
+				5F9CDF1F147A330100432DAC /* FileApiBase.cpp in Sources */,
+				5F9CDF21147A330100432DAC /* idstring.cpp in Sources */,
+				5F9CDF25147A330100432DAC /* CharEncoding.cpp in Sources */,
+				5F9CDF26147A330100432DAC /* CharEncoding.mm in Sources */,
+				5F9CDF27147A330100432DAC /* Event.cpp in Sources */,
+				5F9CDF29147A330100432DAC /* fileapi.cpp in Sources */,
+				5F9CDF2B147A330100432DAC /* MemmapFile.cpp in Sources */,
+				5F9CDF2E147A330100432DAC /* MutexIP.mm in Sources */,
+				5F9CDF2F147A330100432DAC /* OSError.cpp in Sources */,
+				5F9CDF31147A330100432DAC /* Semaphore.mm in Sources */,
+				5F9CDF32147A330100432DAC /* Thread.cpp in Sources */,
+				5F9CDF35147A330100432DAC /* ThreadAutoReleasePool.mm in Sources */,
+				5F9CDF36147A330100432DAC /* misc.cpp in Sources */,
+				5F9CDF39147A330100432DAC /* OnlyAllocator.cpp in Sources */,
+				5F9CDF3C147A330100432DAC /* safestr.cpp in Sources */,
+				5F9CDF3E147A330100432DAC /* StdAfx.cpp in Sources */,
+				5F9CDF41147A330100432DAC /* stringex.cpp in Sources */,
+				5F9CDF44147A330100432DAC /* StrPrintf.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5F9CDED3147A323D00432DAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5F9CDED4147A323D00432DAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5F9CDED6147A323D00432DAC /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Mac/BaseMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC_OSX,
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5F9CDED7147A323D00432DAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Mac/BaseMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5F9CDEBE147A323D00432DAC /* Build configuration list for PBXProject "BaseMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F9CDED3147A323D00432DAC /* Debug */,
+				5F9CDED4147A323D00432DAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5F9CDED5147A323D00432DAC /* Build configuration list for PBXNativeTarget "BaseMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5F9CDED6147A323D00432DAC /* Debug */,
+				5F9CDED7147A323D00432DAC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5F9CDEBB147A323D00432DAC /* Project object */;
+}

@@ -335,12 +335,12 @@ WCHAR * __cdecl wcschr (
 inline void EnsureInputStrLen(const WCHAR *str, int &nLen)
 {
 	if (nLen == -1)
-		nLen = wcslen(str);
+		nLen = (int)wcslen(str);
 }
 
 inline void EnsureInputStrLen(const char *str, int &nLen)
 {
 	if (nLen == -1)
-		nLen = strlen(str);
+		nLen = (int)strlen(str);
 }
 

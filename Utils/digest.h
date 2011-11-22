@@ -11,7 +11,7 @@ void MD5ToString16(LPCSTR szSource, TCHAR szMD5[]);
 
 inline void MD5ToBinary(LPCTSTR str, unsigned char digest[])
 {
-	MD5ToBinary(str, _tcslen(str) * sizeof(TCHAR), digest);
+	MD5ToBinary(str, (int)_tcslen(str) * sizeof(TCHAR), digest);
 }
 
 bool MD5FileToBinary(LPCTSTR filename, unsigned char digest[]);

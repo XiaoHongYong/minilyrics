@@ -10,7 +10,7 @@ public:
 
 	bool Resize(size_t nSize);
 
-	int GetSize() { return m_nFileSize; }
+	size_t GetSize() { return m_nFileSize; }
 
 	void Close();
 
@@ -23,7 +23,7 @@ public:
 
 protected:
 	int			m_file;
-	int			m_nFileSize;		// 文件大小
+	size_t		m_nFileSize;		// 文件大小
 	LPVOID		m_lpFile;			// 文件映射之后的文件内容
 
 };

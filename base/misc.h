@@ -30,6 +30,9 @@ int GetOperationSystemType();
 
 bool IsWin9xSystem();
 
+bool GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict);
+
+
 #ifndef _WIN32
 
 // return system elapsed time in ms.
@@ -44,8 +47,6 @@ void Sleep(DWORD dwMilliseconds);
 BOOL ExecuteCmdAndWait(LPCTSTR szCmd, DWORD dwTimeOut = INFINITE, DWORD *pExitCode = NULL);
 
 BOOL GetModulePath(TCHAR szPath[], HINSTANCE hInstance = NULL);
-
-void GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict);
 
 void CenterWindowToMonitor(HWND hWnd);
 

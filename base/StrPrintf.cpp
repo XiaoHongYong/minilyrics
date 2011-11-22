@@ -47,7 +47,7 @@ void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
 		m_nSize = _vsntprintf(m_pszBuffer, m_nCapacity, szFormat, args);
 
 		// was there an error? was the expanded string too long?
-		if (m_nSize < 0)
+		if ((long)m_nSize < 0)
 		{
 			if (m_nCapacity >= 100 * 1024)
 				break;
@@ -61,7 +61,7 @@ void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
 			break;
 	}
 
-	if (m_nSize < 0)
+	if ((long)m_nSize < 0)
 	{
 		_tcscpy_safe(m_pszBuffer, m_nCapacity, _T("Insufficient buffer space."));
 		m_nSize = _tcslen(m_pszBuffer);

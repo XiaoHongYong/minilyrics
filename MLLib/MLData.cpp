@@ -313,11 +313,9 @@ int CMLData::ReopenLyrics(bool bUseSpecifiedEncoding, CHAR_ENCODING encodingSpec
 
 int CMLData::OpenLyricsFile(LPCTSTR szFile, bool bUseSpecifiedEncoding, CHAR_ENCODING encodingSpecified)
 {
-	CLyricsParser	*pParser;
-	int				nRet;
-
 	Close();
 
+	CLyricsParser	*pParser = NULL;
 	if (FileIsExtSame(szFile, _T(".txt"))
 		|| FileIsExtSame(szFile, _T(".lrc")))
 	{
@@ -337,7 +335,7 @@ int CMLData::OpenLyricsFile(LPCTSTR szFile, bool bUseSpecifiedEncoding, CHAR_ENC
 	if (bUseSpecifiedEncoding)
 		m_lyrProperties.SetEncoding(encodingSpecified);
 
-	nRet = pParser->ParseFile(bUseSpecifiedEncoding, encodingSpecified);
+	int nRet = pParser->ParseFile(bUseSpecifiedEncoding, encodingSpecified);
 	if (nRet == ERR_OK)
 	{
 		SetLyrContentType(pParser->GetLyrContentType());

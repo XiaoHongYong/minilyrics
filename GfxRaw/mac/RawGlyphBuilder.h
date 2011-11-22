@@ -3,6 +3,8 @@
 
 #pragma once
 
+typedef const struct __CFDictionary * CFDictionaryRef;
+
 namespace GfxRaw
 {
 

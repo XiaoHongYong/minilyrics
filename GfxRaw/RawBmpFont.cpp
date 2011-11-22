@@ -1357,7 +1357,7 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 
 		for (int i = 0; i < (int)vLines.size(); i++)
 		{
-			DrawTextEx(pGraph, &rc, clrText, vLines[i].c_str(), vLines[i].size(), uFormat | DT_SINGLELINE, bDrawAlphaChannel);
+			DrawTextEx(pGraph, &rc, clrText, vLines[i].c_str(), (int)vLines[i].size(), uFormat | DT_SINGLELINE, bDrawAlphaChannel);
 			rc.top += GetHeight() + 2;
 			if (rc.top >= rc.bottom)
 				break;
@@ -1371,7 +1371,7 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 		uFormat &= ~DT_END_ELLIPSIS;
 
 		if (ShouldDrawTextEllipsis(szText, nLen, lpRect->right - lpRect->left, str))
-			return DrawTextEx(pGraph, lpRect, clrText, str.c_str(), str.size(), uFormat, bDrawAlphaChannel);
+			return DrawTextEx(pGraph, lpRect, clrText, str.c_str(), (int)str.size(), uFormat, bDrawAlphaChannel);
 	}
 	else if (IsFlagSet(uFormat, DT_PREFIX_TEXT))
 	{
@@ -1382,13 +1382,13 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 
 		if (ShouldDrawTextPrefix(szText, nLen, str, nXPrefix, nPrefixWidth))
 		{
-			DrawTextEx(pGraph, lpRect, clrText, str.c_str(), str.size(), uFormat, bDrawAlphaChannel);
+			DrawTextEx(pGraph, lpRect, clrText, str.c_str(), (int)str.size(), uFormat, bDrawAlphaChannel);
 
 			if (nPrefixWidth > 0)
 			{
 				int			x, y, width, xLeftClipOffset; //, height = lpRect->bottom - lpRect->top;
 
-				GetDrawTextExPosition(str.c_str(), str.size(), lpRect, uFormat, x, y, width, xLeftClipOffset);
+				GetDrawTextExPosition(str.c_str(), (int)str.size(), lpRect, uFormat, x, y, width, xLeftClipOffset);
 				x -= 1;
 				y -= 3;
 				x += nXPrefix;
@@ -1489,7 +1489,7 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 		uFormat &= ~DT_END_ELLIPSIS;
 
 		if (ShouldDrawTextEllipsis(szText, nLen, lpRect->right - lpRect->left, str))
-			return OutlinedDrawTextEx(pGraph, lpRect, clrText, clrBorder, str.c_str(), str.size(), uFormat, bDrawAlphaChannel);
+			return OutlinedDrawTextEx(pGraph, lpRect, clrText, clrBorder, str.c_str(), (int)str.size(), uFormat, bDrawAlphaChannel);
 	}
 	else if (IsFlagSet(uFormat, DT_PREFIX_TEXT))
 	{
@@ -1500,13 +1500,13 @@ bool CRawBmpFont::OutlinedDrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLC
 
 		if (ShouldDrawTextPrefix(szText, nLen, str, nXPrefix, nPrefixWidth))
 		{
-			OutlinedDrawTextEx(pGraph, lpRect, clrText, clrBorder, str.c_str(), str.size(), uFormat, bDrawAlphaChannel);
+			OutlinedDrawTextEx(pGraph, lpRect, clrText, clrBorder, str.c_str(), (int)str.size(), uFormat, bDrawAlphaChannel);
 
 			if (nPrefixWidth > 0)
 			{
 				int			x, y, width, xLeftClipOffset; //, height = lpRect->bottom - lpRect->top;
 
-				GetDrawTextExPosition(str.c_str(), str.size(), lpRect, uFormat, x, y, width, xLeftClipOffset);
+				GetDrawTextExPosition(str.c_str(), (int)str.size(), lpRect, uFormat, x, y, width, xLeftClipOffset);
 				x -= 1;
 				y -= 3;
 				x += nXPrefix;
@@ -1732,7 +1732,8 @@ bool CRawBmpFont::ShouldDrawTextEllipsis(LPCTSTR szText, int nLen, int nWidthMax
 	int			wMax;
 	nLen = strIterator.GetPos();
 
-	glyph = m_prawGlyphSet->GetGlyph(tstring(_T(".")));
+	static tstring dotStr = _T(".");
+	glyph = m_prawGlyphSet->GetGlyph(dotStr);
 	if (!glyph)
 		return false;
 	wMax = nWidthMax - glyph->nWidth * 3;
