@@ -474,12 +474,9 @@ void CMPSkinWnd::OnActivate(bool bActived)
 	CSkinWnd::OnActivate(bActived);
 }
 
-void CMPSkinWnd::OnPreCreate(DWORD &dwStyle, DWORD &dwExStyle)
+void CMPSkinWnd::OnPreCreate(bool &bTopmost, bool &bVisible)
 {
-	if (SettingGetTopmost())
-		dwExStyle |= WS_EX_TOPMOST;
-	else
-		dwExStyle &= ~WS_EX_TOPMOST;
+	bTopmost = SettingGetTopmost();
 }
 
 bool CMPSkinWnd::OnCreate()

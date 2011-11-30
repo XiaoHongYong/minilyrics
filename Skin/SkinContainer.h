@@ -130,7 +130,7 @@ public:
 
 	virtual void UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pObjCallUpdate);
 
-	int GetChildrenCount() { return m_vUIObjs.size(); }
+	size_t GetChildrenCount() { return m_vUIObjs.size(); }
 	CUIObject *GetChildByIndex(int nIndex)
 		{ if (nIndex >= 0 && nIndex < (int)m_vUIObjs.size()) return m_vUIObjs[nIndex]; else return NULL; }
 

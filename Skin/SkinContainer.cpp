@@ -169,7 +169,7 @@ void CSkinContainer::OnInitialUpdate()
 	}
 	else
 	{
-		ERRLOG1(_T("Inexistant default Page: %s"), m_strDefaultPageClass);
+		ERRLOG1(_T("Inexistant default Page: %s"), m_strDefaultPageClass.c_str());
 		return;
 	}
 }

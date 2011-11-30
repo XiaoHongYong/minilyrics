@@ -21,7 +21,7 @@ public:
 
 	void Copy(GIF_RAW_IMAGE_DATA *src)
 	{
-		int		nBufSize = src->GetBuffSize();
+		size_t		nBufSize = src->GetBuffSize();
 		buff = new uint8[nBufSize];
 		width = src->width;
 		height = src->height;
@@ -50,7 +50,7 @@ public:
 
 	void SetTransColor(RGBQUAD rgb) { m_clrTrans = rgb; }
 
-	BYTE GetPixelIndex(long x,long y)
+	BYTE GetPixelIndex(int x, int y)
 	{
 		if ((x < 0) || (y < 0) || (x >= width) || (y >= height))
 		{
@@ -83,7 +83,7 @@ public:
 		return 0;
 	}
 
-	void SetPixelColor(long x, long y, const RGBQUAD &c)
+	void SetPixelColor(int x, int y, const RGBQUAD &c)
 	{
 		if ((x < 0) || (y < 0) || 
 			(x >= width) || (y >= height))
@@ -100,7 +100,7 @@ public:
 		}
 	}
 
-	RGBQUAD GetPixelColor(long x, long y)
+	RGBQUAD GetPixelColor(int x, int y)
 	{
 		RGBQUAD		c;
 		if ((x < 0) || (y < 0) || 
@@ -143,7 +143,7 @@ public:
 
 	RGBQUAD GetPaletteColor(BYTE idx) { return pallete[idx]; }
 
-	void SetPixelIndex(long x,long y, BYTE i)
+	void SetPixelIndex(int x, int y, BYTE i)
 	{
 		if (nClrUsed == 0 ||
 			(x < 0) || (y < 0) || (x >= width) || (y >= height))
@@ -235,17 +235,17 @@ void TransferFrom(PGIF_RAW_IMAGE_DATA dst, PGIF_RAW_IMAGE_DATA src)
 	src->nClrUsed = 0;
 }
 
-void GifMix(PGIF_RAW_IMAGE_DATA imgSrc, PGIF_RAW_IMAGE_DATA imgTarg, long lxOffset, long lyOffset)
+void GifMix(PGIF_RAW_IMAGE_DATA imgSrc, PGIF_RAW_IMAGE_DATA imgTarg, int lxOffset, int lyOffset)
 {
-	long lWide = min((long)imgTarg->width, imgSrc->width - lxOffset);
-	long lHeight = min((long)imgTarg->height, imgSrc->height - lyOffset);
+	int lWide = min((int)imgTarg->width, imgSrc->width - lxOffset);
+	int lHeight = min((int)imgTarg->height, imgSrc->height - lyOffset);
 
 	BYTE ibg2 = (BYTE)imgSrc->GetTransIndex();
 	BYTE i2;
 
-	for (long y = 0; y < lHeight; y++)
+	for (int y = 0; y < lHeight; y++)
 	{
-		for (long x = 0; x < lWide; x++)
+		for (int x = 0; x < lWide; x++)
 		{
 			i2 = imgSrc->GetPixelIndex(x + lxOffset, y + lyOffset);
 			if (i2 != ibg2)
@@ -307,7 +307,7 @@ BOOL CImgGifFile::Open(IILIO *io)
 	else 
 		bTrueColor++;	//first chance for a truecolor gif
 
-	long first_transparent_index;
+	int first_transparent_index;
 
 	int		iImage = 0;
 	int		nNumFrames;
@@ -452,9 +452,9 @@ BOOL CImgGifFile::Open(IILIO *io)
 					imaRGB->Create(dscgif.scrwidth, dscgif.scrheight, 24);
 				}
 				//copy the partial image into the full RGB image
-				for (long y = 0; y < image.h; y++)
+				for (int y = 0; y < image.h; y++)
 				{
-					for (long x = 0; x < image.w; x++)
+					for (int x = 0; x < image.w; x++)
 					{
 						imaRGB->SetPixelColor(x + image.l, dscgif.scrheight - 1 - image.t - y,
 							m_imgData->GetPixelColor(x, image.h - y - 1));
@@ -550,7 +550,7 @@ int CImgGifFile::get_byte(IILIO* io)
 	if (ibf >= GIFBUFTAM)
 	{
 		// FW 06/02/98 >>>
-		ibfmax = io->Read(buf, GIFBUFTAM);
+		ibfmax = (int)io->Read(buf, GIFBUFTAM);
 		// ibfmax = file->Read( buf , 1 , GIFBUFTAM) ;
 		if( ibfmax < GIFBUFTAM ) buf[ ibfmax ] = 255 ;
 		// FW 06/02/98 <<<
@@ -786,15 +786,15 @@ bool CImgGifFile::EncodeRGB(IILIO *io)
 
 //	EncodeLoopExtension(io);
 
-	unsigned long w,h;
+	unsigned int w,h;
 	w=h=0;
-	const long cellw = 17;
-	const long cellh = 15;
+	const int cellw = 17;
+	const int cellh = 15;
 	GIF_RAW_IMAGE_DATA tmp;
 	CImgGifFile	gif;
 	gif.SetImgData(&tmp);
-	for (long y=0;y<m_imgData->height;y+=cellh){
-		for (long x=0;x<m_imgData->width;x+=cellw){
+	for (int y=0;y<m_imgData->height;y+=cellh){
+		for (int x=0;x<m_imgData->width;x+=cellw){
 			if ((m_imgData->width -x)<cellw) w=m_imgData->width -x; else w=cellw;
 			if ((m_imgData->height-y)<cellh) h=m_imgData->height-y; else h=cellh;
 
@@ -809,8 +809,8 @@ bool CImgGifFile::EncodeRGB(IILIO *io)
 			}
 
 			BYTE i;
-			for (unsigned long j=0;j<h;j++){
-				for (unsigned long k=0;k<w;k++){
+			for (unsigned int j=0;j<h;j++){
+				for (unsigned int k=0;k<w;k++){
 					i=(BYTE)(1+k+cellw*j);
 					RGBQUAD	clr = m_imgData->GetPixelColor(x+k,m_imgData->height-y-h+j);
 					tmp.SetPaletteIndex(i, clr);
@@ -1352,7 +1352,7 @@ int CImgGifFile::get_num_frames(IILIO *io,struct_TabCol* TabColSrc)
 {
 	struct_image image;
 
-	long pos= io->GetPos();
+	size_t pos= io->GetPos();
 	int nframes=0;
 
 	struct_TabCol TempTabCol;
@@ -1429,7 +1429,7 @@ int CImgGifFile::get_num_frames(IILIO *io,struct_TabCol* TabColSrc)
 		}
 	}
 
-	io->Seek(pos, SEEK_SET);
+	io->Seek((int)pos, SEEK_SET);
 	return nframes;
 }
 ////////////////////////////////////////////////////////////////////////////////

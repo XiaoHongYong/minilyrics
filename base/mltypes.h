@@ -50,7 +50,7 @@ typedef long BOOL;
 typedef unsigned char byte;
 typedef unsigned char BYTE;
 typedef unsigned short WORD;
-typedef unsigned long DWORD;
+typedef unsigned int DWORD;
 typedef long LONG;
 typedef unsigned int UINT;
 typedef unsigned int uint;

@@ -317,6 +317,8 @@ public:
 				return 1;
 			case NLT_RN:
 				return 2;
+			default:
+				break;
 			}
 			return 0;
 		}
@@ -328,6 +330,8 @@ public:
 			case NLT_N: return _T("\n");
 			case NLT_R: return _T("\r");
 			case NLT_RN: return _T("\r\n");
+			default:
+				break;
 			}
 			return _T("");
 		}

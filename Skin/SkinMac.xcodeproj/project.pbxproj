@@ -1,0 +1,625 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5FBCCDDD14851FD700D7C64A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCDDC14851FD700D7C64A /* Cocoa.framework */; };
+		5FBCCF04148520B500D7C64A /* EventsDispatcherBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEA9148520B500D7C64A /* EventsDispatcherBase.cpp */; };
+		5FBCCF05148520B500D7C64A /* EventsDispatcherBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEAA148520B500D7C64A /* EventsDispatcherBase.h */; };
+		5FBCCF06148520B500D7C64A /* Formula.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEAB148520B500D7C64A /* Formula.cpp */; };
+		5FBCCF07148520B500D7C64A /* Formula.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEAC148520B500D7C64A /* Formula.h */; };
+		5FBCCF08148520B500D7C64A /* PopupSkinListWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEAD148520B500D7C64A /* PopupSkinListWnd.cpp */; };
+		5FBCCF09148520B500D7C64A /* PopupSkinListWnd.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEAE148520B500D7C64A /* PopupSkinListWnd.h */; };
+		5FBCCF0A148520B500D7C64A /* PopupSkinWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEAF148520B500D7C64A /* PopupSkinWnd.cpp */; };
+		5FBCCF0B148520B500D7C64A /* PopupSkinWnd.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEB0148520B500D7C64A /* PopupSkinWnd.h */; };
+		5FBCCF0C148520B500D7C64A /* SFImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEB1148520B500D7C64A /* SFImage.cpp */; };
+		5FBCCF0D148520B500D7C64A /* SFImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEB2148520B500D7C64A /* SFImage.h */; };
+		5FBCCF0E148520B500D7C64A /* SFImgList.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEB3148520B500D7C64A /* SFImgList.cpp */; };
+		5FBCCF0F148520B500D7C64A /* sfimglist.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEB4148520B500D7C64A /* sfimglist.h */; };
+		5FBCCF10148520B500D7C64A /* SjvmSkinSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEB5148520B500D7C64A /* SjvmSkinSystem.cpp */; };
+		5FBCCF11148520B500D7C64A /* SjvmSkinSystem.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEB6148520B500D7C64A /* SjvmSkinSystem.h */; };
+		5FBCCF12148520B500D7C64A /* Skin.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEB7148520B500D7C64A /* Skin.h */; };
+		5FBCCF13148520B500D7C64A /* SkinAnimation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEB8148520B500D7C64A /* SkinAnimation.cpp */; };
+		5FBCCF14148520B500D7C64A /* SkinAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEB9148520B500D7C64A /* SkinAnimation.h */; };
+		5FBCCF15148520B500D7C64A /* SkinAnimationUIObj.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEBA148520B500D7C64A /* SkinAnimationUIObj.h */; };
+		5FBCCF16148520B500D7C64A /* SkinApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEBB148520B500D7C64A /* SkinApp.cpp */; };
+		5FBCCF17148520B500D7C64A /* SkinApp.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEBC148520B500D7C64A /* SkinApp.h */; };
+		5FBCCF18148520B500D7C64A /* SkinButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEBD148520B500D7C64A /* SkinButton.cpp */; };
+		5FBCCF19148520B500D7C64A /* SkinButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEBE148520B500D7C64A /* SkinButton.h */; };
+		5FBCCF1A148520B500D7C64A /* SkinCaption.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEBF148520B500D7C64A /* SkinCaption.cpp */; };
+		5FBCCF1B148520B500D7C64A /* SkinCaption.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEC0148520B500D7C64A /* SkinCaption.h */; };
+		5FBCCF1C148520B500D7C64A /* SkinComboBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEC1148520B500D7C64A /* SkinComboBox.cpp */; };
+		5FBCCF1D148520B500D7C64A /* SkinComboBox.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEC2148520B500D7C64A /* SkinComboBox.h */; };
+		5FBCCF1E148520B500D7C64A /* SkinContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEC3148520B500D7C64A /* SkinContainer.cpp */; };
+		5FBCCF1F148520B500D7C64A /* SkinContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEC4148520B500D7C64A /* SkinContainer.h */; };
+		5FBCCF20148520B500D7C64A /* SkinDataObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEC5148520B500D7C64A /* SkinDataObj.cpp */; };
+		5FBCCF21148520B500D7C64A /* SkinDataObj.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEC6148520B500D7C64A /* SkinDataObj.h */; };
+		5FBCCF22148520B500D7C64A /* SkinDecorativeContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEC7148520B500D7C64A /* SkinDecorativeContainer.cpp */; };
+		5FBCCF23148520B500D7C64A /* SkinDecorativeContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEC8148520B500D7C64A /* SkinDecorativeContainer.h */; };
+		5FBCCF24148520B500D7C64A /* SkinEditCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEC9148520B500D7C64A /* SkinEditCtrl.cpp */; };
+		5FBCCF25148520B500D7C64A /* SkinEditCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCECA148520B500D7C64A /* SkinEditCtrl.h */; };
+		5FBCCF26148520B500D7C64A /* SkinFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCECB148520B500D7C64A /* SkinFactory.cpp */; };
+		5FBCCF27148520B500D7C64A /* SkinFactory.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCECC148520B500D7C64A /* SkinFactory.h */; };
+		5FBCCF28148520B500D7C64A /* SkinFadeArea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCECD148520B500D7C64A /* SkinFadeArea.cpp */; };
+		5FBCCF29148520B500D7C64A /* SkinFadeArea.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCECE148520B500D7C64A /* SkinFadeArea.h */; };
+		5FBCCF2A148520B500D7C64A /* SkinFontProperty.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCECF148520B500D7C64A /* SkinFontProperty.cpp */; };
+		5FBCCF2B148520B500D7C64A /* SkinFontProperty.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCED0148520B500D7C64A /* SkinFontProperty.h */; };
+		5FBCCF2C148520B500D7C64A /* SkinFrameCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCED1148520B500D7C64A /* SkinFrameCtrl.cpp */; };
+		5FBCCF2D148520B500D7C64A /* SkinFrameCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCED2148520B500D7C64A /* SkinFrameCtrl.h */; };
+		5FBCCF2E148520B500D7C64A /* SkinImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCED3148520B500D7C64A /* SkinImage.cpp */; };
+		5FBCCF2F148520B500D7C64A /* SkinImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCED4148520B500D7C64A /* SkinImage.h */; };
+		5FBCCF30148520B500D7C64A /* SkinLinearContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCED5148520B500D7C64A /* SkinLinearContainer.cpp */; };
+		5FBCCF31148520B500D7C64A /* SkinLinearContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCED6148520B500D7C64A /* SkinLinearContainer.h */; };
+		5FBCCF32148520B500D7C64A /* SkinListCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCED7148520B500D7C64A /* SkinListCtrl.cpp */; };
+		5FBCCF33148520B500D7C64A /* SkinListCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCED8148520B500D7C64A /* SkinListCtrl.h */; };
+		5FBCCF34148520B500D7C64A /* SkinMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCED9148520B500D7C64A /* SkinMenu.cpp */; };
+		5FBCCF35148520B500D7C64A /* SkinMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEDA148520B500D7C64A /* SkinMenu.h */; };
+		5FBCCF36148520B500D7C64A /* SkinMenuBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEDB148520B500D7C64A /* SkinMenuBar.cpp */; };
+		5FBCCF37148520B500D7C64A /* SkinMenuBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEDC148520B500D7C64A /* SkinMenuBar.h */; };
+		5FBCCF38148520B500D7C64A /* SkinNStatusButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEDD148520B500D7C64A /* SkinNStatusButton.cpp */; };
+		5FBCCF39148520B500D7C64A /* SkinNStatusButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEDE148520B500D7C64A /* SkinNStatusButton.h */; };
+		5FBCCF3A148520B500D7C64A /* SkinResizableLinearContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEDF148520B500D7C64A /* SkinResizableLinearContainer.cpp */; };
+		5FBCCF3B148520B500D7C64A /* SkinResizableLinearContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEE0148520B500D7C64A /* SkinResizableLinearContainer.h */; };
+		5FBCCF3C148520B500D7C64A /* SkinResMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEE1148520B500D7C64A /* SkinResMgr.cpp */; };
+		5FBCCF3D148520B500D7C64A /* SkinResMgr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEE2148520B500D7C64A /* SkinResMgr.h */; };
+		5FBCCF3E148520B500D7C64A /* SkinRgn.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEE3148520B500D7C64A /* SkinRgn.h */; };
+		5FBCCF3F148520B500D7C64A /* SkinScaleImage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEE4148520B500D7C64A /* SkinScaleImage.cpp */; };
+		5FBCCF40148520B500D7C64A /* SkinScaleImage.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEE5148520B500D7C64A /* SkinScaleImage.h */; };
+		5FBCCF41148520B500D7C64A /* SkinScrollFrameCtrlBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEE6148520B500D7C64A /* SkinScrollFrameCtrlBase.cpp */; };
+		5FBCCF42148520B500D7C64A /* SkinScrollFrameCtrlBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEE7148520B500D7C64A /* SkinScrollFrameCtrlBase.h */; };
+		5FBCCF43148520B500D7C64A /* SkinSeekCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEE8148520B500D7C64A /* SkinSeekCtrl.cpp */; };
+		5FBCCF44148520B500D7C64A /* SkinSeekCtrl.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEE9148520B500D7C64A /* SkinSeekCtrl.h */; };
+		5FBCCF45148520B500D7C64A /* SkinSquare.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEEA148520B500D7C64A /* SkinSquare.cpp */; };
+		5FBCCF46148520B500D7C64A /* SkinSquare.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEEB148520B500D7C64A /* SkinSquare.h */; };
+		5FBCCF47148520B500D7C64A /* SkinStaticText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEEC148520B500D7C64A /* SkinStaticText.cpp */; };
+		5FBCCF48148520B500D7C64A /* SkinStaticText.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEED148520B500D7C64A /* SkinStaticText.h */; };
+		5FBCCF49148520B500D7C64A /* SkinTabButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEEE148520B500D7C64A /* SkinTabButton.cpp */; };
+		5FBCCF4A148520B500D7C64A /* SkinTabButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEEF148520B500D7C64A /* SkinTabButton.h */; };
+		5FBCCF4B148520B500D7C64A /* SkinTextButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEF0148520B500D7C64A /* SkinTextButton.cpp */; };
+		5FBCCF4C148520B500D7C64A /* SkinTextButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEF1148520B500D7C64A /* SkinTextButton.h */; };
+		5FBCCF4D148520B500D7C64A /* SkinToggleCtrlContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEF2148520B500D7C64A /* SkinToggleCtrlContainer.cpp */; };
+		5FBCCF4E148520B500D7C64A /* SkinToggleCtrlContainer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEF3148520B500D7C64A /* SkinToggleCtrlContainer.h */; };
+		5FBCCF4F148520B500D7C64A /* SkinToolBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEF4148520B500D7C64A /* SkinToolBar.cpp */; };
+		5FBCCF50148520B500D7C64A /* SkinToolBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEF5148520B500D7C64A /* SkinToolBar.h */; };
+		5FBCCF51148520B500D7C64A /* SkinTxtLink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEF6148520B500D7C64A /* SkinTxtLink.cpp */; };
+		5FBCCF52148520B500D7C64A /* SkinTxtLink.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEF7148520B500D7C64A /* SkinTxtLink.h */; };
+		5FBCCF53148520B500D7C64A /* SkinVScrollBar.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEF8148520B500D7C64A /* SkinVScrollBar.cpp */; };
+		5FBCCF54148520B500D7C64A /* SkinVScrollBar.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEF9148520B500D7C64A /* SkinVScrollBar.h */; };
+		5FBCCF55148520B500D7C64A /* SkinWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEFA148520B500D7C64A /* SkinWnd.cpp */; };
+		5FBCCF56148520B500D7C64A /* SkinWnd.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEFB148520B500D7C64A /* SkinWnd.h */; };
+		5FBCCF57148520B500D7C64A /* SkinWndDrag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEFC148520B500D7C64A /* SkinWndDrag.cpp */; };
+		5FBCCF58148520B500D7C64A /* SkinWndDrag.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEFD148520B500D7C64A /* SkinWndDrag.h */; };
+		5FBCCF59148520B500D7C64A /* SkinWndResizeObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEFE148520B500D7C64A /* SkinWndResizeObj.cpp */; };
+		5FBCCF5A148520B500D7C64A /* SkinWndResizeObj.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEFF148520B500D7C64A /* SkinWndResizeObj.h */; };
+		5FBCCF5B148520B500D7C64A /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCF00148520B500D7C64A /* StdAfx.h */; };
+		5FBCCF5C148520B500D7C64A /* UIObject.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCF01148520B500D7C64A /* UIObject.cpp */; };
+		5FBCCF5D148520B500D7C64A /* UIObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCF02148520B500D7C64A /* UIObject.h */; };
+		5FBCCF641485235600D7C64A /* EventsDispatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCF5F1485235600D7C64A /* EventsDispatcher.mm */; };
+		5FBCCF651485235600D7C64A /* EventsDispatcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCF601485235600D7C64A /* EventsDispatcher.h */; };
+		5FBCCF661485235600D7C64A /* SkinRgn.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCF611485235600D7C64A /* SkinRgn.cpp */; };
+		5FBCCF671485235600D7C64A /* SplashScreenWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCF621485235600D7C64A /* SplashScreenWnd.cpp */; };
+		5FBCCF681485235600D7C64A /* SplashScreenWnd.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCF631485235600D7C64A /* SplashScreenWnd.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5FBCCDD914851FD700D7C64A /* libSkinMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSkinMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FBCCDDC14851FD700D7C64A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		5FBCCDDF14851FD700D7C64A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5FBCCDE014851FD700D7C64A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		5FBCCDE114851FD700D7C64A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5FBCCEA9148520B500D7C64A /* EventsDispatcherBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EventsDispatcherBase.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEAA148520B500D7C64A /* EventsDispatcherBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsDispatcherBase.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEAB148520B500D7C64A /* Formula.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Formula.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEAC148520B500D7C64A /* Formula.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Formula.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEAD148520B500D7C64A /* PopupSkinListWnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PopupSkinListWnd.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEAE148520B500D7C64A /* PopupSkinListWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupSkinListWnd.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEAF148520B500D7C64A /* PopupSkinWnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PopupSkinWnd.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEB0148520B500D7C64A /* PopupSkinWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupSkinWnd.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEB1148520B500D7C64A /* SFImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFImage.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEB2148520B500D7C64A /* SFImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SFImage.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEB3148520B500D7C64A /* SFImgList.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SFImgList.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEB4148520B500D7C64A /* sfimglist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sfimglist.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEB5148520B500D7C64A /* SjvmSkinSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SjvmSkinSystem.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEB6148520B500D7C64A /* SjvmSkinSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SjvmSkinSystem.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEB7148520B500D7C64A /* Skin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Skin.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEB8148520B500D7C64A /* SkinAnimation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinAnimation.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEB9148520B500D7C64A /* SkinAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinAnimation.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEBA148520B500D7C64A /* SkinAnimationUIObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinAnimationUIObj.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEBB148520B500D7C64A /* SkinApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinApp.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEBC148520B500D7C64A /* SkinApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinApp.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEBD148520B500D7C64A /* SkinButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinButton.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEBE148520B500D7C64A /* SkinButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinButton.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEBF148520B500D7C64A /* SkinCaption.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinCaption.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEC0148520B500D7C64A /* SkinCaption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinCaption.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEC1148520B500D7C64A /* SkinComboBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinComboBox.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEC2148520B500D7C64A /* SkinComboBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinComboBox.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEC3148520B500D7C64A /* SkinContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinContainer.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEC4148520B500D7C64A /* SkinContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinContainer.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEC5148520B500D7C64A /* SkinDataObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinDataObj.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEC6148520B500D7C64A /* SkinDataObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinDataObj.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEC7148520B500D7C64A /* SkinDecorativeContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinDecorativeContainer.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEC8148520B500D7C64A /* SkinDecorativeContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinDecorativeContainer.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEC9148520B500D7C64A /* SkinEditCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinEditCtrl.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCECA148520B500D7C64A /* SkinEditCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinEditCtrl.h; sourceTree = SOURCE_ROOT; };
+		5FBCCECB148520B500D7C64A /* SkinFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinFactory.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCECC148520B500D7C64A /* SkinFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinFactory.h; sourceTree = SOURCE_ROOT; };
+		5FBCCECD148520B500D7C64A /* SkinFadeArea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinFadeArea.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCECE148520B500D7C64A /* SkinFadeArea.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinFadeArea.h; sourceTree = SOURCE_ROOT; };
+		5FBCCECF148520B500D7C64A /* SkinFontProperty.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinFontProperty.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCED0148520B500D7C64A /* SkinFontProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinFontProperty.h; sourceTree = SOURCE_ROOT; };
+		5FBCCED1148520B500D7C64A /* SkinFrameCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinFrameCtrl.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCED2148520B500D7C64A /* SkinFrameCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinFrameCtrl.h; sourceTree = SOURCE_ROOT; };
+		5FBCCED3148520B500D7C64A /* SkinImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinImage.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCED4148520B500D7C64A /* SkinImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinImage.h; sourceTree = SOURCE_ROOT; };
+		5FBCCED5148520B500D7C64A /* SkinLinearContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinLinearContainer.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCED6148520B500D7C64A /* SkinLinearContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinLinearContainer.h; sourceTree = SOURCE_ROOT; };
+		5FBCCED7148520B500D7C64A /* SkinListCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinListCtrl.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCED8148520B500D7C64A /* SkinListCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinListCtrl.h; sourceTree = SOURCE_ROOT; };
+		5FBCCED9148520B500D7C64A /* SkinMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinMenu.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEDA148520B500D7C64A /* SkinMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinMenu.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEDB148520B500D7C64A /* SkinMenuBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinMenuBar.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEDC148520B500D7C64A /* SkinMenuBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinMenuBar.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEDD148520B500D7C64A /* SkinNStatusButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinNStatusButton.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEDE148520B500D7C64A /* SkinNStatusButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinNStatusButton.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEDF148520B500D7C64A /* SkinResizableLinearContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinResizableLinearContainer.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEE0148520B500D7C64A /* SkinResizableLinearContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinResizableLinearContainer.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEE1148520B500D7C64A /* SkinResMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinResMgr.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEE2148520B500D7C64A /* SkinResMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinResMgr.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEE3148520B500D7C64A /* SkinRgn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinRgn.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEE4148520B500D7C64A /* SkinScaleImage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinScaleImage.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEE5148520B500D7C64A /* SkinScaleImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinScaleImage.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEE6148520B500D7C64A /* SkinScrollFrameCtrlBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinScrollFrameCtrlBase.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEE7148520B500D7C64A /* SkinScrollFrameCtrlBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinScrollFrameCtrlBase.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEE8148520B500D7C64A /* SkinSeekCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinSeekCtrl.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEE9148520B500D7C64A /* SkinSeekCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinSeekCtrl.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEEA148520B500D7C64A /* SkinSquare.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinSquare.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEEB148520B500D7C64A /* SkinSquare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinSquare.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEEC148520B500D7C64A /* SkinStaticText.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinStaticText.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEED148520B500D7C64A /* SkinStaticText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinStaticText.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEEE148520B500D7C64A /* SkinTabButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinTabButton.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEEF148520B500D7C64A /* SkinTabButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinTabButton.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEF0148520B500D7C64A /* SkinTextButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinTextButton.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEF1148520B500D7C64A /* SkinTextButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinTextButton.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEF2148520B500D7C64A /* SkinToggleCtrlContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinToggleCtrlContainer.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEF3148520B500D7C64A /* SkinToggleCtrlContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinToggleCtrlContainer.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEF4148520B500D7C64A /* SkinToolBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinToolBar.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEF5148520B500D7C64A /* SkinToolBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinToolBar.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEF6148520B500D7C64A /* SkinTxtLink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinTxtLink.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEF7148520B500D7C64A /* SkinTxtLink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinTxtLink.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEF8148520B500D7C64A /* SkinVScrollBar.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinVScrollBar.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEF9148520B500D7C64A /* SkinVScrollBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinVScrollBar.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEFA148520B500D7C64A /* SkinWnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinWnd.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEFB148520B500D7C64A /* SkinWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinWnd.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEFC148520B500D7C64A /* SkinWndDrag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinWndDrag.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEFD148520B500D7C64A /* SkinWndDrag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinWndDrag.h; sourceTree = SOURCE_ROOT; };
+		5FBCCEFE148520B500D7C64A /* SkinWndResizeObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinWndResizeObj.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCEFF148520B500D7C64A /* SkinWndResizeObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinWndResizeObj.h; sourceTree = SOURCE_ROOT; };
+		5FBCCF00148520B500D7C64A /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = SOURCE_ROOT; };
+		5FBCCF01148520B500D7C64A /* UIObject.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UIObject.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCF02148520B500D7C64A /* UIObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UIObject.h; sourceTree = SOURCE_ROOT; };
+		5FBCCF5F1485235600D7C64A /* EventsDispatcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = EventsDispatcher.mm; sourceTree = "<group>"; };
+		5FBCCF601485235600D7C64A /* EventsDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EventsDispatcher.h; sourceTree = "<group>"; };
+		5FBCCF611485235600D7C64A /* SkinRgn.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinRgn.cpp; sourceTree = "<group>"; };
+		5FBCCF621485235600D7C64A /* SplashScreenWnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SplashScreenWnd.cpp; sourceTree = "<group>"; };
+		5FBCCF631485235600D7C64A /* SplashScreenWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplashScreenWnd.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5FBCCDD614851FD700D7C64A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FBCCDDD14851FD700D7C64A /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5FBCCDCE14851FD700D7C64A = {
+			isa = PBXGroup;
+			children = (
+				5FBCCDE214851FD700D7C64A /* Source */,
+				5FBCCDDB14851FD700D7C64A /* Frameworks */,
+				5FBCCDDA14851FD700D7C64A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5FBCCDDA14851FD700D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCDD914851FD700D7C64A /* libSkinMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCDDB14851FD700D7C64A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCDDC14851FD700D7C64A /* Cocoa.framework */,
+				5FBCCDDE14851FD700D7C64A /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5FBCCDDE14851FD700D7C64A /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCDDF14851FD700D7C64A /* AppKit.framework */,
+				5FBCCDE014851FD700D7C64A /* CoreData.framework */,
+				5FBCCDE114851FD700D7C64A /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5FBCCDE214851FD700D7C64A /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCF5E1485235600D7C64A /* mac */,
+				5FBCCEA9148520B500D7C64A /* EventsDispatcherBase.cpp */,
+				5FBCCEAA148520B500D7C64A /* EventsDispatcherBase.h */,
+				5FBCCEAB148520B500D7C64A /* Formula.cpp */,
+				5FBCCEAC148520B500D7C64A /* Formula.h */,
+				5FBCCEAD148520B500D7C64A /* PopupSkinListWnd.cpp */,
+				5FBCCEAE148520B500D7C64A /* PopupSkinListWnd.h */,
+				5FBCCEAF148520B500D7C64A /* PopupSkinWnd.cpp */,
+				5FBCCEB0148520B500D7C64A /* PopupSkinWnd.h */,
+				5FBCCEB1148520B500D7C64A /* SFImage.cpp */,
+				5FBCCEB2148520B500D7C64A /* SFImage.h */,
+				5FBCCEB3148520B500D7C64A /* SFImgList.cpp */,
+				5FBCCEB4148520B500D7C64A /* sfimglist.h */,
+				5FBCCEB5148520B500D7C64A /* SjvmSkinSystem.cpp */,
+				5FBCCEB6148520B500D7C64A /* SjvmSkinSystem.h */,
+				5FBCCEB7148520B500D7C64A /* Skin.h */,
+				5FBCCEB8148520B500D7C64A /* SkinAnimation.cpp */,
+				5FBCCEB9148520B500D7C64A /* SkinAnimation.h */,
+				5FBCCEBA148520B500D7C64A /* SkinAnimationUIObj.h */,
+				5FBCCEBB148520B500D7C64A /* SkinApp.cpp */,
+				5FBCCEBC148520B500D7C64A /* SkinApp.h */,
+				5FBCCEBD148520B500D7C64A /* SkinButton.cpp */,
+				5FBCCEBE148520B500D7C64A /* SkinButton.h */,
+				5FBCCEBF148520B500D7C64A /* SkinCaption.cpp */,
+				5FBCCEC0148520B500D7C64A /* SkinCaption.h */,
+				5FBCCEC1148520B500D7C64A /* SkinComboBox.cpp */,
+				5FBCCEC2148520B500D7C64A /* SkinComboBox.h */,
+				5FBCCEC3148520B500D7C64A /* SkinContainer.cpp */,
+				5FBCCEC4148520B500D7C64A /* SkinContainer.h */,
+				5FBCCEC5148520B500D7C64A /* SkinDataObj.cpp */,
+				5FBCCEC6148520B500D7C64A /* SkinDataObj.h */,
+				5FBCCEC7148520B500D7C64A /* SkinDecorativeContainer.cpp */,
+				5FBCCEC8148520B500D7C64A /* SkinDecorativeContainer.h */,
+				5FBCCEC9148520B500D7C64A /* SkinEditCtrl.cpp */,
+				5FBCCECA148520B500D7C64A /* SkinEditCtrl.h */,
+				5FBCCECB148520B500D7C64A /* SkinFactory.cpp */,
+				5FBCCECC148520B500D7C64A /* SkinFactory.h */,
+				5FBCCECD148520B500D7C64A /* SkinFadeArea.cpp */,
+				5FBCCECE148520B500D7C64A /* SkinFadeArea.h */,
+				5FBCCECF148520B500D7C64A /* SkinFontProperty.cpp */,
+				5FBCCED0148520B500D7C64A /* SkinFontProperty.h */,
+				5FBCCED1148520B500D7C64A /* SkinFrameCtrl.cpp */,
+				5FBCCED2148520B500D7C64A /* SkinFrameCtrl.h */,
+				5FBCCED3148520B500D7C64A /* SkinImage.cpp */,
+				5FBCCED4148520B500D7C64A /* SkinImage.h */,
+				5FBCCED5148520B500D7C64A /* SkinLinearContainer.cpp */,
+				5FBCCED6148520B500D7C64A /* SkinLinearContainer.h */,
+				5FBCCED7148520B500D7C64A /* SkinListCtrl.cpp */,
+				5FBCCED8148520B500D7C64A /* SkinListCtrl.h */,
+				5FBCCED9148520B500D7C64A /* SkinMenu.cpp */,
+				5FBCCEDA148520B500D7C64A /* SkinMenu.h */,
+				5FBCCEDB148520B500D7C64A /* SkinMenuBar.cpp */,
+				5FBCCEDC148520B500D7C64A /* SkinMenuBar.h */,
+				5FBCCEDD148520B500D7C64A /* SkinNStatusButton.cpp */,
+				5FBCCEDE148520B500D7C64A /* SkinNStatusButton.h */,
+				5FBCCEDF148520B500D7C64A /* SkinResizableLinearContainer.cpp */,
+				5FBCCEE0148520B500D7C64A /* SkinResizableLinearContainer.h */,
+				5FBCCEE1148520B500D7C64A /* SkinResMgr.cpp */,
+				5FBCCEE2148520B500D7C64A /* SkinResMgr.h */,
+				5FBCCEE3148520B500D7C64A /* SkinRgn.h */,
+				5FBCCEE4148520B500D7C64A /* SkinScaleImage.cpp */,
+				5FBCCEE5148520B500D7C64A /* SkinScaleImage.h */,
+				5FBCCEE6148520B500D7C64A /* SkinScrollFrameCtrlBase.cpp */,
+				5FBCCEE7148520B500D7C64A /* SkinScrollFrameCtrlBase.h */,
+				5FBCCEE8148520B500D7C64A /* SkinSeekCtrl.cpp */,
+				5FBCCEE9148520B500D7C64A /* SkinSeekCtrl.h */,
+				5FBCCEEA148520B500D7C64A /* SkinSquare.cpp */,
+				5FBCCEEB148520B500D7C64A /* SkinSquare.h */,
+				5FBCCEEC148520B500D7C64A /* SkinStaticText.cpp */,
+				5FBCCEED148520B500D7C64A /* SkinStaticText.h */,
+				5FBCCEEE148520B500D7C64A /* SkinTabButton.cpp */,
+				5FBCCEEF148520B500D7C64A /* SkinTabButton.h */,
+				5FBCCEF0148520B500D7C64A /* SkinTextButton.cpp */,
+				5FBCCEF1148520B500D7C64A /* SkinTextButton.h */,
+				5FBCCEF2148520B500D7C64A /* SkinToggleCtrlContainer.cpp */,
+				5FBCCEF3148520B500D7C64A /* SkinToggleCtrlContainer.h */,
+				5FBCCEF4148520B500D7C64A /* SkinToolBar.cpp */,
+				5FBCCEF5148520B500D7C64A /* SkinToolBar.h */,
+				5FBCCEF6148520B500D7C64A /* SkinTxtLink.cpp */,
+				5FBCCEF7148520B500D7C64A /* SkinTxtLink.h */,
+				5FBCCEF8148520B500D7C64A /* SkinVScrollBar.cpp */,
+				5FBCCEF9148520B500D7C64A /* SkinVScrollBar.h */,
+				5FBCCEFA148520B500D7C64A /* SkinWnd.cpp */,
+				5FBCCEFB148520B500D7C64A /* SkinWnd.h */,
+				5FBCCEFC148520B500D7C64A /* SkinWndDrag.cpp */,
+				5FBCCEFD148520B500D7C64A /* SkinWndDrag.h */,
+				5FBCCEFE148520B500D7C64A /* SkinWndResizeObj.cpp */,
+				5FBCCEFF148520B500D7C64A /* SkinWndResizeObj.h */,
+				5FBCCF00148520B500D7C64A /* StdAfx.h */,
+				5FBCCF01148520B500D7C64A /* UIObject.cpp */,
+				5FBCCF02148520B500D7C64A /* UIObject.h */,
+			);
+			name = Source;
+			path = SkinMac;
+			sourceTree = "<group>";
+		};
+		5FBCCF5E1485235600D7C64A /* mac */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCF5F1485235600D7C64A /* EventsDispatcher.mm */,
+				5FBCCF601485235600D7C64A /* EventsDispatcher.h */,
+				5FBCCF611485235600D7C64A /* SkinRgn.cpp */,
+				5FBCCF621485235600D7C64A /* SplashScreenWnd.cpp */,
+				5FBCCF631485235600D7C64A /* SplashScreenWnd.h */,
+			);
+			path = mac;
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5FBCCDD714851FD700D7C64A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FBCCF05148520B500D7C64A /* EventsDispatcherBase.h in Headers */,
+				5FBCCF07148520B500D7C64A /* Formula.h in Headers */,
+				5FBCCF09148520B500D7C64A /* PopupSkinListWnd.h in Headers */,
+				5FBCCF0B148520B500D7C64A /* PopupSkinWnd.h in Headers */,
+				5FBCCF0D148520B500D7C64A /* SFImage.h in Headers */,
+				5FBCCF0F148520B500D7C64A /* sfimglist.h in Headers */,
+				5FBCCF11148520B500D7C64A /* SjvmSkinSystem.h in Headers */,
+				5FBCCF12148520B500D7C64A /* Skin.h in Headers */,
+				5FBCCF14148520B500D7C64A /* SkinAnimation.h in Headers */,
+				5FBCCF15148520B500D7C64A /* SkinAnimationUIObj.h in Headers */,
+				5FBCCF17148520B500D7C64A /* SkinApp.h in Headers */,
+				5FBCCF19148520B500D7C64A /* SkinButton.h in Headers */,
+				5FBCCF1B148520B500D7C64A /* SkinCaption.h in Headers */,
+				5FBCCF1D148520B500D7C64A /* SkinComboBox.h in Headers */,
+				5FBCCF1F148520B500D7C64A /* SkinContainer.h in Headers */,
+				5FBCCF21148520B500D7C64A /* SkinDataObj.h in Headers */,
+				5FBCCF23148520B500D7C64A /* SkinDecorativeContainer.h in Headers */,
+				5FBCCF25148520B500D7C64A /* SkinEditCtrl.h in Headers */,
+				5FBCCF27148520B500D7C64A /* SkinFactory.h in Headers */,
+				5FBCCF29148520B500D7C64A /* SkinFadeArea.h in Headers */,
+				5FBCCF2B148520B500D7C64A /* SkinFontProperty.h in Headers */,
+				5FBCCF2D148520B500D7C64A /* SkinFrameCtrl.h in Headers */,
+				5FBCCF2F148520B500D7C64A /* SkinImage.h in Headers */,
+				5FBCCF31148520B500D7C64A /* SkinLinearContainer.h in Headers */,
+				5FBCCF33148520B500D7C64A /* SkinListCtrl.h in Headers */,
+				5FBCCF35148520B500D7C64A /* SkinMenu.h in Headers */,
+				5FBCCF37148520B500D7C64A /* SkinMenuBar.h in Headers */,
+				5FBCCF39148520B500D7C64A /* SkinNStatusButton.h in Headers */,
+				5FBCCF3B148520B500D7C64A /* SkinResizableLinearContainer.h in Headers */,
+				5FBCCF3D148520B500D7C64A /* SkinResMgr.h in Headers */,
+				5FBCCF3E148520B500D7C64A /* SkinRgn.h in Headers */,
+				5FBCCF40148520B500D7C64A /* SkinScaleImage.h in Headers */,
+				5FBCCF42148520B500D7C64A /* SkinScrollFrameCtrlBase.h in Headers */,
+				5FBCCF44148520B500D7C64A /* SkinSeekCtrl.h in Headers */,
+				5FBCCF46148520B500D7C64A /* SkinSquare.h in Headers */,
+				5FBCCF48148520B500D7C64A /* SkinStaticText.h in Headers */,
+				5FBCCF4A148520B500D7C64A /* SkinTabButton.h in Headers */,
+				5FBCCF4C148520B500D7C64A /* SkinTextButton.h in Headers */,
+				5FBCCF4E148520B500D7C64A /* SkinToggleCtrlContainer.h in Headers */,
+				5FBCCF50148520B500D7C64A /* SkinToolBar.h in Headers */,
+				5FBCCF52148520B500D7C64A /* SkinTxtLink.h in Headers */,
+				5FBCCF54148520B500D7C64A /* SkinVScrollBar.h in Headers */,
+				5FBCCF56148520B500D7C64A /* SkinWnd.h in Headers */,
+				5FBCCF58148520B500D7C64A /* SkinWndDrag.h in Headers */,
+				5FBCCF5A148520B500D7C64A /* SkinWndResizeObj.h in Headers */,
+				5FBCCF5B148520B500D7C64A /* StdAfx.h in Headers */,
+				5FBCCF5D148520B500D7C64A /* UIObject.h in Headers */,
+				5FBCCF651485235600D7C64A /* EventsDispatcher.h in Headers */,
+				5FBCCF681485235600D7C64A /* SplashScreenWnd.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5FBCCDD814851FD700D7C64A /* SkinMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FBCCDEA14851FD800D7C64A /* Build configuration list for PBXNativeTarget "SkinMac" */;
+			buildPhases = (
+				5FBCCDD514851FD700D7C64A /* Sources */,
+				5FBCCDD614851FD700D7C64A /* Frameworks */,
+				5FBCCDD714851FD700D7C64A /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SkinMac;
+			productName = SkinMac;
+			productReference = 5FBCCDD914851FD700D7C64A /* libSkinMac.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5FBCCDD014851FD700D7C64A /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 5FBCCDD314851FD700D7C64A /* Build configuration list for PBXProject "SkinMac" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5FBCCDCE14851FD700D7C64A;
+			productRefGroup = 5FBCCDDA14851FD700D7C64A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5FBCCDD814851FD700D7C64A /* SkinMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5FBCCDD514851FD700D7C64A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FBCCF04148520B500D7C64A /* EventsDispatcherBase.cpp in Sources */,
+				5FBCCF06148520B500D7C64A /* Formula.cpp in Sources */,
+				5FBCCF08148520B500D7C64A /* PopupSkinListWnd.cpp in Sources */,
+				5FBCCF0A148520B500D7C64A /* PopupSkinWnd.cpp in Sources */,
+				5FBCCF0C148520B500D7C64A /* SFImage.cpp in Sources */,
+				5FBCCF0E148520B500D7C64A /* SFImgList.cpp in Sources */,
+				5FBCCF10148520B500D7C64A /* SjvmSkinSystem.cpp in Sources */,
+				5FBCCF13148520B500D7C64A /* SkinAnimation.cpp in Sources */,
+				5FBCCF16148520B500D7C64A /* SkinApp.cpp in Sources */,
+				5FBCCF18148520B500D7C64A /* SkinButton.cpp in Sources */,
+				5FBCCF1A148520B500D7C64A /* SkinCaption.cpp in Sources */,
+				5FBCCF1C148520B500D7C64A /* SkinComboBox.cpp in Sources */,
+				5FBCCF1E148520B500D7C64A /* SkinContainer.cpp in Sources */,
+				5FBCCF20148520B500D7C64A /* SkinDataObj.cpp in Sources */,
+				5FBCCF22148520B500D7C64A /* SkinDecorativeContainer.cpp in Sources */,
+				5FBCCF24148520B500D7C64A /* SkinEditCtrl.cpp in Sources */,
+				5FBCCF26148520B500D7C64A /* SkinFactory.cpp in Sources */,
+				5FBCCF28148520B500D7C64A /* SkinFadeArea.cpp in Sources */,
+				5FBCCF2A148520B500D7C64A /* SkinFontProperty.cpp in Sources */,
+				5FBCCF2C148520B500D7C64A /* SkinFrameCtrl.cpp in Sources */,
+				5FBCCF2E148520B500D7C64A /* SkinImage.cpp in Sources */,
+				5FBCCF30148520B500D7C64A /* SkinLinearContainer.cpp in Sources */,
+				5FBCCF32148520B500D7C64A /* SkinListCtrl.cpp in Sources */,
+				5FBCCF34148520B500D7C64A /* SkinMenu.cpp in Sources */,
+				5FBCCF36148520B500D7C64A /* SkinMenuBar.cpp in Sources */,
+				5FBCCF38148520B500D7C64A /* SkinNStatusButton.cpp in Sources */,
+				5FBCCF3A148520B500D7C64A /* SkinResizableLinearContainer.cpp in Sources */,
+				5FBCCF3C148520B500D7C64A /* SkinResMgr.cpp in Sources */,
+				5FBCCF3F148520B500D7C64A /* SkinScaleImage.cpp in Sources */,
+				5FBCCF41148520B500D7C64A /* SkinScrollFrameCtrlBase.cpp in Sources */,
+				5FBCCF43148520B500D7C64A /* SkinSeekCtrl.cpp in Sources */,
+				5FBCCF45148520B500D7C64A /* SkinSquare.cpp in Sources */,
+				5FBCCF47148520B500D7C64A /* SkinStaticText.cpp in Sources */,
+				5FBCCF49148520B500D7C64A /* SkinTabButton.cpp in Sources */,
+				5FBCCF4B148520B500D7C64A /* SkinTextButton.cpp in Sources */,
+				5FBCCF4D148520B500D7C64A /* SkinToggleCtrlContainer.cpp in Sources */,
+				5FBCCF4F148520B500D7C64A /* SkinToolBar.cpp in Sources */,
+				5FBCCF51148520B500D7C64A /* SkinTxtLink.cpp in Sources */,
+				5FBCCF53148520B500D7C64A /* SkinVScrollBar.cpp in Sources */,
+				5FBCCF55148520B500D7C64A /* SkinWnd.cpp in Sources */,
+				5FBCCF57148520B500D7C64A /* SkinWndDrag.cpp in Sources */,
+				5FBCCF59148520B500D7C64A /* SkinWndResizeObj.cpp in Sources */,
+				5FBCCF5C148520B500D7C64A /* UIObject.cpp in Sources */,
+				5FBCCF641485235600D7C64A /* EventsDispatcher.mm in Sources */,
+				5FBCCF661485235600D7C64A /* SkinRgn.cpp in Sources */,
+				5FBCCF671485235600D7C64A /* SplashScreenWnd.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5FBCCDE814851FD800D7C64A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5FBCCDE914851FD800D7C64A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5FBCCDEB14851FD800D7C64A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC_OSX,
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5FBCCDEC14851FD800D7C64A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5FBCCDD314851FD700D7C64A /* Build configuration list for PBXProject "SkinMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FBCCDE814851FD800D7C64A /* Debug */,
+				5FBCCDE914851FD800D7C64A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5FBCCDEA14851FD800D7C64A /* Build configuration list for PBXNativeTarget "SkinMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FBCCDEB14851FD800D7C64A /* Debug */,
+				5FBCCDEC14851FD800D7C64A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5FBCCDD014851FD700D7C64A /* Project object */;
+}

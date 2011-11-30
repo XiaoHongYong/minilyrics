@@ -172,6 +172,27 @@ BOOL CBaseWnd::CreateEx(LPCTSTR szClassName, LPCTSTR szCaption, int x, int y, in
 	return m_hWnd != NULL;
 }
 
+bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int y, int nWidth, int nHeight, CBaseWnd *pWndParent, bool bToolWindow, bool bTopmost, bool bVisible)
+{
+	DWORD	dwStyle = DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX;
+	DWORD	dwExStyle = 0;
+	if (bTopmost)
+		dwExStyle |= WS_EX_TOPMOST;
+	if (bToolWindow)
+		dwExStyle |= WS_EX_TOOLWINDOW;
+	if (bVisible)
+		dwStyle |= WS_VISIBLE;
+
+	// WS_THICKFRAME will cause window flashing on vista
+	if (!CreateEx(szClassName, szCaption,
+		x, y, nWidth, nHeight,
+		pWndParent,
+		dwStyle, dwExStyle))
+		return false;
+
+	return true;
+}
+
 bool CBaseWnd::Destroy()
 {
 	return Tobool(::DestroyWindow(m_hWnd));

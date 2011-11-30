@@ -30,6 +30,8 @@ public:
 		m_pMenuBar = NULL;
 		m_bMenuPopup = false;
 	}
+	
+	void Create();
 
 	void PostTrackPopupMenu();
 
@@ -66,7 +68,7 @@ protected:
 
 #else // _WIN32
 
-class CMenuBarMsgHandler : public CBaseWnd
+class CMenuBarMsgHandler
 {
 public:
 	CMenuBarMsgHandler()
@@ -74,6 +76,10 @@ public:
 		m_pMenuBar = NULL;
 		m_bMenuPopup = false;
 	}
+	
+	void Create() { }
+	
+	void Destroy() { }
 
 	void PostTrackPopupMenu() { }
 

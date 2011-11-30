@@ -170,7 +170,7 @@ void CSkinResMgr::FreeBitmap(PRAW_IMAGE_DATA hBmp)
 		}
 	}
 
-	ERRLOG1(_T("Delete, But Not Found Bitmap Object:%d"), (int)hBmp);
+	ERRLOG1(_T("Delete, But Not Found Bitmap Object:%d"), (int)(long)hBmp);
 	// FreeRawImage(hBmp);
 }
 
@@ -199,7 +199,7 @@ void CSkinResMgr::AddBitmapReference(PRAW_IMAGE_DATA hBmp)
 		}
 	}
 
-	ERRLOG1(_T("Add reference, but Not Found Bitmap Object:%d"), (int)hBmp);
+	ERRLOG1(_T("Add reference, but Not Found Bitmap Object:%d"), (int)(long)hBmp);
 }
 
 void CSkinResMgr::AddRessourceDir(LPCTSTR szResDir, int nPos)

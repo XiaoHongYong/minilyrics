@@ -9,6 +9,7 @@
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"
 #include "../GfxLite/GfxLite.h"
+#include "../GfxRaw/GfxRaw.h"
 
 
 // TODO: reference additional headers your program requires here

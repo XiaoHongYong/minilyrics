@@ -40,12 +40,16 @@ LPCTSTR GetWorkingFolder()
 	if (!IsEmptyString(g_szWorkingFolder))
 		return g_szWorkingFolder;
 
+#ifdef _IPHONE
 	NSArray *paths = NSSearchPathForDirectoriesInDomains(
 														 NSDocumentDirectory,
 														 NSUserDomainMask,
 														 YES);
 	NSString *documentsDir = [paths objectAtIndex:0];
 	_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), (const char *)[documentsDir UTF8String]);
+#else
+#endif
+	
 	DirStringAddSlash(g_szWorkingFolder);
 	return g_szWorkingFolder;
 }
@@ -63,7 +67,8 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 	assert(sizeof(WCHAR) == 2);
 	assert(sizeof(WCHAR) == 2);
 
-	/*{
+#ifdef _MAC_OSX
+	{
 		int nLen;
 
 		_tcscpy(g_szWorkingFolder, argv[0]);
@@ -75,7 +80,8 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 			return FALSE;
 
 		g_szWorkingFolder[nLen + 1] = '\0';
-	}*/
+	}
+#endif
 	
 	InitSetDefaultCharEncoding();
 

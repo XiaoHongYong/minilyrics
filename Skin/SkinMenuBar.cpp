@@ -14,6 +14,11 @@ bool	CMenuBarMsgHandler::ms_bSubMenuItem = false;
 HWND	CMenuBarMsgHandler::ms_hWndMsgReceiver = 0;
 HMENU	CMenuBarMsgHandler::ms_hMenuPopup = NULL;
 
+void CMenuBarMsgHandler::Create()
+{
+	CBaseWnd::Create(NULL, 0, 0,  1, 1, NULL, WS_POPUP);
+}
+
 void CMenuBarMsgHandler::PostTrackPopupMenu()
 {
 	// Exit popup menu first
@@ -202,7 +207,7 @@ void CSkinMenuBar::OnCreate()
 {
 	CUIObject::OnCreate();
 
-	m_wndMsgReceiver.Create(NULL, 0, 0,  1, 1, NULL, WS_POPUP);
+	m_wndMsgReceiver.Create();
 
 	m_font.OnCreate(m_pSkin);
 

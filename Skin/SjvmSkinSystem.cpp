@@ -38,52 +38,52 @@ public:
 
 		pClass->AddNativeDefaultConstructor();
 
-		nRet = pClass->AddNativeMethod(false, "getUIObject", getUIObject, TID_UIOBJECT, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "getUIObject", (LPVOID)getUIObject, TID_UIOBJECT, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "setUIObjVisible", setUIObjVisible, TID_VOID, TID_INT, TID_BOOLEAN, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "setUIObjVisible", (LPVOID)setUIObjVisible, TID_VOID, TID_INT, TID_BOOLEAN, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "getUIObjVisible", getUIObjVisible, TID_BOOLEAN, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "getUIObjVisible", (LPVOID)getUIObjVisible, TID_BOOLEAN, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "setUIObjProperty", setUIObjProperty, TID_VOID, TID_INT, TID_STRING, TID_STRING, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "setUIObjProperty", (LPVOID)setUIObjProperty, TID_VOID, TID_INT, TID_STRING, TID_STRING, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "setProperty", setProperty, TID_VOID, TID_STRING, TID_STRING, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "setProperty", (LPVOID)setProperty, TID_VOID, TID_STRING, TID_STRING, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "exeCommand", exeCommand, TID_VOID, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "exeCommand", (LPVOID)exeCommand, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "getWndPositionX", getWndPositionX, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "getWndPositionX", (LPVOID)getWndPositionX, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "getWndPositionY", getWndPositionY, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "getWndPositionY", (LPVOID)getWndPositionY, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "getWndWidth", getWndWidth, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "getWndWidth", (LPVOID)getWndWidth, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "getWndHeight", getWndHeight, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "getWndHeight", (LPVOID)getWndHeight, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "setWndPosition", setWndPosition, TID_VOID, TID_INT, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "setWndPosition", (LPVOID)setWndPosition, TID_VOID, TID_INT, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "moveWindow", moveWindow, TID_VOID, TID_INT, TID_INT, TID_INT, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "moveWindow", (LPVOID)moveWindow, TID_VOID, TID_INT, TID_INT, TID_INT, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "registerTimer", registerTimer, TID_INT, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "registerTimer", (LPVOID)registerTimer, TID_INT, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "unregisterTimer", unregisterTimer, TID_VOID, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "unregisterTimer", (LPVOID)unregisterTimer, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "startAnimation", startAnimation, TID_VOID, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "startAnimation", (LPVOID)startAnimation, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(false, "stopAnimation", stopAnimation, TID_VOID, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(false, "stopAnimation", (LPVOID)stopAnimation, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 	}
 
@@ -333,8 +333,8 @@ public:
 	static void SJNI_API onDestroy(jobject thiz) { }
 	static void SJNI_API onSize(jobject thiz, int cx, int cy) { }
 	static void SJNI_API onMove(jobject thiz, int x, int y) { }
-	static void SJNI_API onActivate(jobject thiz, boolean bActived) { }
-	static void SJNI_API OnMouseActive(jobject thiz, boolean bMouseActive) { }
+	static void SJNI_API onActivate(jobject thiz, bool bActived) { }
+	static void SJNI_API OnMouseActive(jobject thiz, bool bMouseActive) { }
 	static void SJNI_API onTimer(jobject thiz, int nTimerId) { }
 
 	static void RegisterJNI()
@@ -347,28 +347,28 @@ public:
 
 		pClass->AddNativeDefaultConstructor();
 
-		SjvmSkinWndEvent::m_sOnCommand = nRet = pClass->AddNativeMethod(false, "onCommand", onCommand, TID_BOOLEAN, TID_INT, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnCommand = nRet = pClass->AddNativeMethod(false, "onCommand", (LPVOID)onCommand, TID_BOOLEAN, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		SjvmSkinWndEvent::m_sOnCreate = nRet = pClass->AddNativeMethod(false, "onCreate", onCreate, TID_VOID, TID_SKIN_WND, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnCreate = nRet = pClass->AddNativeMethod(false, "onCreate", (LPVOID)onCreate, TID_VOID, TID_SKIN_WND, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		SjvmSkinWndEvent::m_sOnDestroy = nRet = pClass->AddNativeMethod(false, "onDestroy", onDestroy, TID_VOID, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnDestroy = nRet = pClass->AddNativeMethod(false, "onDestroy", (LPVOID)onDestroy, TID_VOID, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		SjvmSkinWndEvent::m_sOnSize = nRet = pClass->AddNativeMethod(false, "onSize", onSize, TID_VOID, TID_INT, TID_INT, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnSize = nRet = pClass->AddNativeMethod(false, "onSize", (LPVOID)onSize, TID_VOID, TID_INT, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		SjvmSkinWndEvent::m_sOnMove = nRet = pClass->AddNativeMethod(false, "onMove", onMove, TID_VOID, TID_INT, TID_INT, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnMove = nRet = pClass->AddNativeMethod(false, "onMove", (LPVOID)onMove, TID_VOID, TID_INT, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		SjvmSkinWndEvent::m_sOnActivate = nRet = pClass->AddNativeMethod(false, "onActivate", onActivate, TID_VOID, TID_BOOLEAN, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnActivate = nRet = pClass->AddNativeMethod(false, "onActivate", (LPVOID)onActivate, TID_VOID, TID_BOOLEAN, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		SjvmSkinWndEvent::m_sOnMouseActive = nRet = pClass->AddNativeMethod(false, "onMouseActive", OnMouseActive, TID_VOID, TID_BOOLEAN, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnMouseActive = nRet = pClass->AddNativeMethod(false, "onMouseActive", (LPVOID)OnMouseActive, TID_VOID, TID_BOOLEAN, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		SjvmSkinWndEvent::m_sOnTimer = nRet = pClass->AddNativeMethod(false, "onTimer", onTimer, TID_VOID, TID_INT, TID_INVALID);
+		SjvmSkinWndEvent::m_sOnTimer = nRet = pClass->AddNativeMethod(false, "onTimer", (LPVOID)onTimer, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 	}
 
@@ -434,7 +434,7 @@ void SjvmSkinWndEvent::onMove(int x, int y)
 	}
 }
 
-void SjvmSkinWndEvent::onActivate(boolean bActived)
+void SjvmSkinWndEvent::onActivate(bool bActived)
 {
 	if (m_sOnActivate >= 0)
 	{
@@ -442,7 +442,7 @@ void SjvmSkinWndEvent::onActivate(boolean bActived)
 	}
 }
 
-void SjvmSkinWndEvent::onMouseActive(boolean bMouseActive)
+void SjvmSkinWndEvent::onMouseActive(bool bMouseActive)
 {
 	if (m_sOnMouseActive >= 0)
 	{
@@ -518,16 +518,16 @@ public:
 
 		pClass->AddNativeDefaultConstructor();
 
-		CSjvmSkinSystemEvent::m_onInit = nRet = pClass->AddNativeMethod(false, "onInit", onInit, TID_VOID, TID_INVALID);
+		CSjvmSkinSystemEvent::m_onInit = nRet = pClass->AddNativeMethod(false, "onInit", (LPVOID)onInit, TID_VOID, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		CSjvmSkinSystemEvent::m_onDestory= nRet = pClass->AddNativeMethod(false, "onDestory", onDestory, TID_VOID, TID_INVALID);
+		CSjvmSkinSystemEvent::m_onDestory= nRet = pClass->AddNativeMethod(false, "onDestory", (LPVOID)onDestory, TID_VOID, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		CSjvmSkinSystemEvent::m_onSkinWndCreate = nRet = pClass->AddNativeMethod(false, "onSkinWndCreate", onSkinWndCreate, TID_VOID, TID_SKIN_WND, TID_INVALID);
+		CSjvmSkinSystemEvent::m_onSkinWndCreate = nRet = pClass->AddNativeMethod(false, "onSkinWndCreate", (LPVOID)onSkinWndCreate, TID_VOID, TID_SKIN_WND, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		CSjvmSkinSystemEvent::m_onSkinWndDestory = nRet = pClass->AddNativeMethod(false, "onSkinWndDestory", onSkinWndDestory, TID_VOID, TID_SKIN_WND, TID_INVALID);
+		CSjvmSkinSystemEvent::m_onSkinWndDestory = nRet = pClass->AddNativeMethod(false, "onSkinWndDestory", (LPVOID)onSkinWndDestory, TID_VOID, TID_SKIN_WND, TID_INVALID);
 		ASSERT(nRet != -1);
 	}
 
@@ -742,34 +742,34 @@ void CSjvmSkinSystem::RegisterJNI()
 
 	pClass->AddNativeDefaultConstructor();
 
-	nRet = pClass->AddNativeMethod(true, "registerSkinSystemEvent", registerSkinSystemEvent, TID_BOOLEAN, CSjvmSkinSystemEventObj::m_sTypeId, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "registerSkinSystemEvent", (LPVOID)registerSkinSystemEvent, TID_BOOLEAN, CSjvmSkinSystemEventObj::m_sTypeId, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "unRegisterSkinSystemEvent", unRegisterSkinSystemEvent, TID_VOID, CSjvmSkinSystemEventObj::m_sTypeId, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "unRegisterSkinSystemEvent", (LPVOID)unRegisterSkinSystemEvent, TID_VOID, CSjvmSkinSystemEventObj::m_sTypeId, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "registerSkinWndEvent", registerSkinWndEvent, TID_BOOLEAN, TID_STRING, TID_SKIN_WND_NOTIFY_EVENT, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "registerSkinWndEvent", (LPVOID)registerSkinWndEvent, TID_BOOLEAN, TID_STRING, TID_SKIN_WND_NOTIFY_EVENT, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "unRegisterSkinWndEvent", unRegisterSkinWndEvent, TID_VOID, TID_SKIN_WND_NOTIFY_EVENT, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "unRegisterSkinWndEvent", (LPVOID)unRegisterSkinWndEvent, TID_VOID, TID_SKIN_WND_NOTIFY_EVENT, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "getSkinWnd", getSkinWnd, TID_VOID, TID_SKIN_WND, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "getSkinWnd", (LPVOID)getSkinWnd, TID_VOID, TID_SKIN_WND, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "getCommandID", getCommandID, TID_INT, TID_STRING, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "getCommandID", (LPVOID)getCommandID, TID_INT, TID_STRING, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "writeProfileInt", writeProfileInt, TID_VOID, TID_STRING, TID_INT, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "writeProfileInt", (LPVOID)writeProfileInt, TID_VOID, TID_STRING, TID_INT, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "writeProfileString", writeProfileString, TID_VOID, TID_STRING, TID_STRING, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "writeProfileString", (LPVOID)writeProfileString, TID_VOID, TID_STRING, TID_STRING, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "getProfileInt", getProfileInt, TID_INT, TID_STRING, TID_INT, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "getProfileInt", (LPVOID)getProfileInt, TID_INT, TID_STRING, TID_INT, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(true, "getProfileString", getProfileString, TID_STRING, TID_STRING, TID_STRING, TID_INVALID);
+	nRet = pClass->AddNativeMethod(true, "getProfileString", (LPVOID)getProfileString, TID_STRING, TID_STRING, TID_STRING, TID_INVALID);
 	ASSERT(nRet != -1);
 }
 

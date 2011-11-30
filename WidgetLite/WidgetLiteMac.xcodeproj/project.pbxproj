@@ -36,6 +36,11 @@
 		5FB1637B147893920084494F /* WidgetLite.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB16376147893920084494F /* WidgetLite.h */; };
 		5FB1637C147893920084494F /* WndDrag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB16377147893920084494F /* WndDrag.cpp */; };
 		5FB1637D147893920084494F /* WndDrag.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB16378147893920084494F /* WndDrag.h */; };
+		5FBCCB7D147E8EE300D7C64A /* BaseWnd.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCB78147E8EE300D7C64A /* BaseWnd.mm */; };
+		5FBCCB7E147E8EE300D7C64A /* ViewMacImp.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCB79147E8EE300D7C64A /* ViewMacImp.h */; };
+		5FBCCB7F147E8EE300D7C64A /* ViewMacImp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCB7A147E8EE300D7C64A /* ViewMacImp.mm */; };
+		5FBCCB80147E8EE300D7C64A /* WindowMacImp.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCB7B147E8EE300D7C64A /* WindowMacImp.h */; };
+		5FBCCB81147E8EE300D7C64A /* WindowMacImp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCB7C147E8EE300D7C64A /* WindowMacImp.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +78,11 @@
 		5FB16376147893920084494F /* WidgetLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WidgetLite.h; sourceTree = SOURCE_ROOT; };
 		5FB16377147893920084494F /* WndDrag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WndDrag.cpp; sourceTree = SOURCE_ROOT; };
 		5FB16378147893920084494F /* WndDrag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WndDrag.h; sourceTree = SOURCE_ROOT; };
+		5FBCCB78147E8EE300D7C64A /* BaseWnd.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = BaseWnd.mm; sourceTree = "<group>"; };
+		5FBCCB79147E8EE300D7C64A /* ViewMacImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewMacImp.h; sourceTree = "<group>"; };
+		5FBCCB7A147E8EE300D7C64A /* ViewMacImp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ViewMacImp.mm; sourceTree = "<group>"; };
+		5FBCCB7B147E8EE300D7C64A /* WindowMacImp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WindowMacImp.h; sourceTree = "<group>"; };
+		5FBCCB7C147E8EE300D7C64A /* WindowMacImp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WindowMacImp.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,6 +100,11 @@
 		5F9CDE87147A2C2A00432DAC /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				5FBCCB78147E8EE300D7C64A /* BaseWnd.mm */,
+				5FBCCB79147E8EE300D7C64A /* ViewMacImp.h */,
+				5FBCCB7A147E8EE300D7C64A /* ViewMacImp.mm */,
+				5FBCCB7B147E8EE300D7C64A /* WindowMacImp.h */,
+				5FBCCB7C147E8EE300D7C64A /* WindowMacImp.mm */,
 				5F9CDE89147A2C2A00432DAC /* BaseWnd.h */,
 				5F9CDE8A147A2C2A00432DAC /* Cursor.cpp */,
 				5F9CDE8B147A2C2A00432DAC /* Cursor.h */,
@@ -120,7 +135,7 @@
 		5FB1631E1476A41B0084494F = {
 			isa = PBXGroup;
 			children = (
-				5FB163321476A41B0084494F /* Mac */,
+				5FB163321476A41B0084494F /* Source */,
 				5FB1632B1476A41B0084494F /* Frameworks */,
 				5FB1632A1476A41B0084494F /* Products */,
 			);
@@ -153,7 +168,7 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
-		5FB163321476A41B0084494F /* Mac */ = {
+		5FB163321476A41B0084494F /* Source */ = {
 			isa = PBXGroup;
 			children = (
 				5F9CDE87147A2C2A00432DAC /* Mac */,
@@ -164,7 +179,7 @@
 				5FB16378147893920084494F /* WndDrag.h */,
 				5FB163331476A41B0084494F /* Supporting Files */,
 			);
-			name = Mac;
+			name = Source;
 			path = WidgetLiteMac;
 			sourceTree = "<group>";
 		};
@@ -200,6 +215,8 @@
 				5F9CDEB3147A2C2A00432DAC /* SkinToolTip.h in Headers */,
 				5F9CDEB5147A2C2A00432DAC /* WidgetLiteMac.h in Headers */,
 				5F9CDEB7147A2C2A00432DAC /* WndResizer.h in Headers */,
+				5FBCCB7E147E8EE300D7C64A /* ViewMacImp.h in Headers */,
+				5FBCCB80147E8EE300D7C64A /* WindowMacImp.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -264,6 +281,9 @@
 				5F9CDEB0147A2C2A00432DAC /* ScrollBarHandler.cpp in Sources */,
 				5F9CDEB2147A2C2A00432DAC /* SkinToolTip.cpp in Sources */,
 				5F9CDEB6147A2C2A00432DAC /* WndResizer.cpp in Sources */,
+				5FBCCB7D147E8EE300D7C64A /* BaseWnd.mm in Sources */,
+				5FBCCB7F147E8EE300D7C64A /* ViewMacImp.mm in Sources */,
+				5FBCCB81147E8EE300D7C64A /* WindowMacImp.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,0 +1,285 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5FBCCC0E148515A300D7C64A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCC0D148515A300D7C64A /* Cocoa.framework */; };
+		5FBCCC2D1485163C00D7C64A /* ID3Helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCC221485163C00D7C64A /* ID3Helper.cpp */; };
+		5FBCCC2E1485163C00D7C64A /* ID3Helper.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC231485163C00D7C64A /* ID3Helper.h */; };
+		5FBCCC2F1485163C00D7C64A /* ID3v1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCC241485163C00D7C64A /* ID3v1.cpp */; };
+		5FBCCC301485163C00D7C64A /* ID3v1.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC251485163C00D7C64A /* ID3v1.h */; };
+		5FBCCC311485163C00D7C64A /* ID3v2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCC261485163C00D7C64A /* ID3v2.cpp */; };
+		5FBCCC321485163C00D7C64A /* ID3v2.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC271485163C00D7C64A /* ID3v2.h */; };
+		5FBCCC331485163C00D7C64A /* ID3v2Frame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCC281485163C00D7C64A /* ID3v2Frame.cpp */; };
+		5FBCCC341485163C00D7C64A /* ID3v2Frame.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC291485163C00D7C64A /* ID3v2Frame.h */; };
+		5FBCCC351485163C00D7C64A /* ID3v2FrameParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCC2A1485163C00D7C64A /* ID3v2FrameParser.cpp */; };
+		5FBCCC361485163C00D7C64A /* ID3v2FrameParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC2B1485163C00D7C64A /* ID3v2FrameParser.h */; };
+		5FBCCC371485163C00D7C64A /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC2C1485163C00D7C64A /* StdAfx.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		5FBCCC0A148515A300D7C64A /* libID3LibMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libID3LibMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FBCCC0D148515A300D7C64A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		5FBCCC10148515A300D7C64A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5FBCCC11148515A300D7C64A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		5FBCCC12148515A300D7C64A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5FBCCC221485163C00D7C64A /* ID3Helper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3Helper.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCC231485163C00D7C64A /* ID3Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3Helper.h; sourceTree = SOURCE_ROOT; };
+		5FBCCC241485163C00D7C64A /* ID3v1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3v1.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCC251485163C00D7C64A /* ID3v1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3v1.h; sourceTree = SOURCE_ROOT; };
+		5FBCCC261485163C00D7C64A /* ID3v2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3v2.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCC271485163C00D7C64A /* ID3v2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3v2.h; sourceTree = SOURCE_ROOT; };
+		5FBCCC281485163C00D7C64A /* ID3v2Frame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3v2Frame.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCC291485163C00D7C64A /* ID3v2Frame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3v2Frame.h; sourceTree = SOURCE_ROOT; };
+		5FBCCC2A1485163C00D7C64A /* ID3v2FrameParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ID3v2FrameParser.cpp; sourceTree = SOURCE_ROOT; };
+		5FBCCC2B1485163C00D7C64A /* ID3v2FrameParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ID3v2FrameParser.h; sourceTree = SOURCE_ROOT; };
+		5FBCCC2C1485163C00D7C64A /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5FBCCC07148515A300D7C64A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FBCCC0E148515A300D7C64A /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5FBCCBFF148515A200D7C64A = {
+			isa = PBXGroup;
+			children = (
+				5FBCCC13148515A300D7C64A /* Source */,
+				5FBCCC0C148515A300D7C64A /* Frameworks */,
+				5FBCCC0B148515A300D7C64A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5FBCCC0B148515A300D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCC0A148515A300D7C64A /* libID3LibMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCC0C148515A300D7C64A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCC0D148515A300D7C64A /* Cocoa.framework */,
+				5FBCCC0F148515A300D7C64A /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5FBCCC0F148515A300D7C64A /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCC10148515A300D7C64A /* AppKit.framework */,
+				5FBCCC11148515A300D7C64A /* CoreData.framework */,
+				5FBCCC12148515A300D7C64A /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5FBCCC13148515A300D7C64A /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCC221485163C00D7C64A /* ID3Helper.cpp */,
+				5FBCCC231485163C00D7C64A /* ID3Helper.h */,
+				5FBCCC241485163C00D7C64A /* ID3v1.cpp */,
+				5FBCCC251485163C00D7C64A /* ID3v1.h */,
+				5FBCCC261485163C00D7C64A /* ID3v2.cpp */,
+				5FBCCC271485163C00D7C64A /* ID3v2.h */,
+				5FBCCC281485163C00D7C64A /* ID3v2Frame.cpp */,
+				5FBCCC291485163C00D7C64A /* ID3v2Frame.h */,
+				5FBCCC2A1485163C00D7C64A /* ID3v2FrameParser.cpp */,
+				5FBCCC2B1485163C00D7C64A /* ID3v2FrameParser.h */,
+				5FBCCC2C1485163C00D7C64A /* StdAfx.h */,
+				5FBCCC14148515A300D7C64A /* Supporting Files */,
+			);
+			name = Source;
+			path = ID3LibMac;
+			sourceTree = "<group>";
+		};
+		5FBCCC14148515A300D7C64A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		5FBCCC08148515A300D7C64A /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FBCCC2E1485163C00D7C64A /* ID3Helper.h in Headers */,
+				5FBCCC301485163C00D7C64A /* ID3v1.h in Headers */,
+				5FBCCC321485163C00D7C64A /* ID3v2.h in Headers */,
+				5FBCCC341485163C00D7C64A /* ID3v2Frame.h in Headers */,
+				5FBCCC361485163C00D7C64A /* ID3v2FrameParser.h in Headers */,
+				5FBCCC371485163C00D7C64A /* StdAfx.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		5FBCCC09148515A300D7C64A /* ID3LibMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FBCCC1B148515A300D7C64A /* Build configuration list for PBXNativeTarget "ID3LibMac" */;
+			buildPhases = (
+				5FBCCC06148515A300D7C64A /* Sources */,
+				5FBCCC07148515A300D7C64A /* Frameworks */,
+				5FBCCC08148515A300D7C64A /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ID3LibMac;
+			productName = ID3LibMac;
+			productReference = 5FBCCC0A148515A300D7C64A /* libID3LibMac.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5FBCCC01148515A200D7C64A /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 5FBCCC04148515A200D7C64A /* Build configuration list for PBXProject "ID3LibMac" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5FBCCBFF148515A200D7C64A;
+			productRefGroup = 5FBCCC0B148515A300D7C64A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				5FBCCC09148515A300D7C64A /* ID3LibMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5FBCCC06148515A300D7C64A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FBCCC2D1485163C00D7C64A /* ID3Helper.cpp in Sources */,
+				5FBCCC2F1485163C00D7C64A /* ID3v1.cpp in Sources */,
+				5FBCCC311485163C00D7C64A /* ID3v2.cpp in Sources */,
+				5FBCCC331485163C00D7C64A /* ID3v2Frame.cpp in Sources */,
+				5FBCCC351485163C00D7C64A /* ID3v2FrameParser.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5FBCCC19148515A300D7C64A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5FBCCC1A148515A300D7C64A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5FBCCC1C148515A300D7C64A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC_OSX,
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		5FBCCC1D148515A300D7C64A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5FBCCC04148515A200D7C64A /* Build configuration list for PBXProject "ID3LibMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FBCCC19148515A300D7C64A /* Debug */,
+				5FBCCC1A148515A300D7C64A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5FBCCC1B148515A300D7C64A /* Build configuration list for PBXNativeTarget "ID3LibMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FBCCC1C148515A300D7C64A /* Debug */,
+				5FBCCC1D148515A300D7C64A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 5FBCCC01148515A200D7C64A /* Project object */;
+}

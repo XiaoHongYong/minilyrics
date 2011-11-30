@@ -134,13 +134,13 @@ struct StnExpression {
 			LPSTR			szCastToType;
 			STreeNode		*pVar;
 		}					dynCast;			// E_DYNAMIC_CAST
-		struct Var {
+		struct {
 			LPSTR			szVarName;
 			int				nAddress;
 			bool			bStatic;
 			STreeNode		*pVarParent;
 		}					var;				// E_VAR
-		struct FunctionCall {
+		struct {
 			LPSTR				szFuncName;
 			bool				bStatic;
 			TypeId				typeIdSpecialfiedClass;	// SI_INVALID, indicate call from typeId of pVarParent.
@@ -153,7 +153,7 @@ struct StnExpression {
 			STreeNode		*pVar;
 			STreeNode		*pRightExp;
 		}					assign;				// E_ASSIGN, E_ASSIGN_STATIC_VAR
-		struct OpExression {
+		struct {
 			STreeNode			*pExpressionLeft;
 			STreeNode			*pExpressionRight;
 		}					opParameter;		// OP_XXXX
@@ -285,7 +285,7 @@ STreeNode *newStnExpDynamicCast(STreeNode *pIDStr, STreeNode *pVar);
 
 STreeNode *newStnExpOp(ExpressionType expType, STreeNode *pExpressionLeft, STreeNode *pExpressionRight);
 
-STreeNode *newStnExpFuncCall(int nLineNo, LPSTR szMethodName, STreeNode *pVarToCall, STreeNode *pParameterList);
+STreeNode *newStnExpFuncCall(int nLineNo, LPCSTR szMethodName, STreeNode *pVarToCall, STreeNode *pParameterList);
 
 STreeNode *newStnReturn(int nLineNo, STreeNode *pExpression);
 

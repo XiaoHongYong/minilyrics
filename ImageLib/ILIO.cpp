@@ -41,7 +41,7 @@ bool CFileILIO::Open(LPCTSTR szFile)
 	return true;
 }
 
-uint32 CFileILIO::Read(void *buf, uint32 nSize)
+size_t CFileILIO::Read(void *buf, size_t nSize)
 {
 	return fread(buf, 1, nSize, m_fp);
 }
@@ -51,16 +51,16 @@ bool CFileILIO::Seek(int nOffset, int nOrigin)
 	return fseek(m_fp, nOffset, nOrigin) == 0;
 }
 
-bool CFileILIO::GetSize(uint32 &nSize)
+bool CFileILIO::GetSize(size_t &nSize)
 {
-	uint32	pos = ftell(m_fp);
+	size_t	pos = ftell(m_fp);
 	fseek(m_fp, 0, SEEK_END);
 	nSize = ftell(m_fp);
 	fseek(m_fp, pos, SEEK_SET);
 	return true;
 }
 
-uint32 CFileILIO::GetPos()
+size_t CFileILIO::GetPos()
 {
 	return ftell(m_fp);
 }
@@ -90,7 +90,7 @@ CBuffILIO::~CBuffILIO()
 {
 }
 
-bool CBuffILIO::Open(const void *buff, uint32 nLength)
+bool CBuffILIO::Open(const void *buff, size_t nLength)
 {
 	m_buf = (uint8*)buff;
 	m_nLength = nLength;
@@ -99,7 +99,7 @@ bool CBuffILIO::Open(const void *buff, uint32 nLength)
 	return true;
 }
 
-uint32 CBuffILIO::Read(void *buf, uint32 nSize)
+size_t CBuffILIO::Read(void *buf, size_t nSize)
 {
 	if (m_nPos >= m_nLength)
 		return 0;
@@ -122,21 +122,19 @@ bool CBuffILIO::Seek(int nOffset, int nOrigin)
 	else if (nOrigin == SEEK_END)
 		m_nPos = m_nLength + nOffset;
 
-	if (m_nPos < 0)
-		m_nPos = 0;
-	else if (m_nPos > m_nLength)
+	if (m_nPos > m_nLength)
 		m_nPos = m_nLength;
 
 	return true;
 }
 
-bool CBuffILIO::GetSize(uint32 &nSize)
+bool CBuffILIO::GetSize(size_t &nSize)
 {
 	nSize = m_nLength;
 	return true;
 }
 
-uint32 CBuffILIO::GetPos()
+size_t CBuffILIO::GetPos()
 {
 	return m_nPos;
 }

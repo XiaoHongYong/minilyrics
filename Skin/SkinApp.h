@@ -4,6 +4,10 @@
 #include "win32/EventsDispatcher.h"
 #endif
 
+#ifdef _MAC_OSX
+#include "mac/EventsDispatcher.h"
+#endif
+
 class CEventsDispatcher;
 class CSkinFactory;
 

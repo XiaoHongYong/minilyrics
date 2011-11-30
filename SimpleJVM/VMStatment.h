@@ -89,30 +89,30 @@ struct StmtExpression {
 	TypeId				typeId;				// E_NEW and typeId of this expression
 	union {
 		int					nConstValue;	// E_CONST_INT, E_CONST_STRING
-		struct New {
+		struct {
 			stmt_index		siParameter;	// Parameter of construction method
 			int				nMemberIndex;
 		}					newObj;			// E_NEW
-		struct DynCast {
+		struct {
 			stmt_index		siVar;
 		}					dynCast;		// E_DYNAMIC_CAST
-		struct Var {						// E_VAR
+		struct {						// E_VAR
 			int				nAddress;
 			bool			bStatic;
 			stmt_index		siParentVar;
 		}					var;
-		struct FunctionCall {
+		struct {
 			bool			bStatic;
 			TypeId			typeIdSpecialfiedClass;	// SI_INVALID, indicate call from typeId of pVarParent.
 			int				nMemberIndex;
 			stmt_index		siParentVar;
 			stmt_index		siParameter;
 		}					functionCall;		// E_METHOD_CALL
-		struct Assign {
+		struct {
 			stmt_index			siVarAddress;
 			stmt_index			siExpression;
 		}					assign;				// E_ASSIGN
-		struct OpExression {
+		struct {
 			stmt_index		siExprLeft;
 			stmt_index		siExprRight;
 			TypeId			typeIdOperand;		// The type of operand(left, right)

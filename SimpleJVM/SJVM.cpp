@@ -77,7 +77,7 @@ void CClass::AddNativeDefaultConstructor()
 	CMemberMethod	*pMethod = new CMemberMethod();
 	pMethod->strName = strName;
 	pMethod->typeIDRet = TID_INVALID;
-	pMethod->pNativeFunc = ClassDefaultConstructor;
+	pMethod->pNativeFunc = (LPVOID)ClassDefaultConstructor;
 	pMethod->bStatic = false;
 
 	pMethod->nVirtualIndex = (int)vVirtualMethod.size();
@@ -1078,6 +1078,7 @@ CJObject *CSJVM::NewJObject(TypeId typeId, jobject &jobj)
 	return m_jobjMgr.Get(jobj);
 }
 
+#ifdef _WIN32
 int CSJVM::CallNativeAPI(CMemberMethod *pMethod)
 {
 	ASSERT(pMethod->pNativeFunc);
@@ -1143,6 +1144,79 @@ Param_end:
 	return nRet;
 	// return __asm eax;
 }
+
+#else // #ifdef _WIN32
+
+
+int CSJVM::CallNativeAPI(CMemberMethod *pMethod)
+{
+	return 0;
+/*	ASSERT(pMethod->pNativeFunc);
+	
+	LPCVOID				vParameter[CVMParameters::COUNT_MAX];
+	size_t				pos = 0;
+	size_t				nParamCount = m_stack.size() - m_bp;
+	
+	ASSERT(nParamCount <= CVMParameters::COUNT_MAX);
+	
+	if (!pMethod->bStatic)
+	{
+		// Add "this" in parameter first
+		vParameter[0] = (LPVOID)(int64)(m_stack.Get(m_bp).nValue);
+		pos++;
+	}
+	
+	for (; pos < nParamCount; pos++)
+	{
+		Variable	&item = m_stack.Get(m_bp + pos);
+		if (item.typeId == TID_STRING)
+		{
+			CJObject	*pObj = m_jobjMgr.Get(item.nValue);
+			if (pObj && pObj->m_typeId == TID_STRING)
+			{
+				// valid input
+				CStrJObject	*pStrObj = (CStrJObject *)pObj;
+				vParameter[pos] = pStrObj->GetStrValue();
+			}
+			else
+				vParameter[pos] = "";
+		}
+		else
+			vParameter[pos] = (LPVOID)(int64)(item.nValue);
+	}
+	
+	LPVOID	pNativeFunc = pMethod->pNativeFunc;
+	int		nRet = 0;
+	
+	nParamCount--;
+	
+	__asm
+	{
+		// Push all parameters in stack
+		mov         eax,	dword ptr [nParamCount]
+	ParamStart:
+		cmp         eax,	0 
+		jl          Param_end
+		mov         ecx,	dword ptr vParameter[eax*4] 
+		push        ecx  
+		sub         eax,	1 
+		jmp			ParamStart 
+	Param_end:
+		
+		// Call function
+		mov			eax,      dword ptr [pNativeFunc]
+		call		eax
+		mov         dword ptr [nRet],eax 
+	}
+	
+	m_valueMethodReturn = nRet;
+	
+	return nRet;*/
+	// return __asm eax;
+}
+
+#endif // #ifdef _WIN32
+
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -2492,8 +2566,8 @@ int CSJVM::CanCovertRightToLeftType(TypeId typeIdLeft, TypeId typeIdRight)
 	if (m_classTable.IsSubClassOf(typeIdRight, typeIdLeft))
 		return ERR_OK;
 
-	if (typeIdRight == TID_NULL && !IsSimpleType(typeIdLeft)
-		|| typeIdLeft == TID_NULL && !IsSimpleType(typeIdRight))
+	if ((typeIdRight == TID_NULL && !IsSimpleType(typeIdLeft))
+		|| (typeIdLeft == TID_NULL && !IsSimpleType(typeIdRight)))
 		return ERR_OK;
 
 	return ERR_C_CONVERT_VALUE;
@@ -3391,7 +3465,7 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 					if (nRet != ERR_OK)
 					{
 						TCHAR		szMsg[512];
-						_stprintf(szMsg, _T("Can't convert from type '%S' to '%S'."), 
+						_stprintf(szMsg, _T("Can't convert from type '%s' to '%s'."), 
 							GetTypeNameStrByID(pObj->m_typeId),
 							GetTypeNameStrByID(expr.typeId));
 						ThrowException(szMsg);

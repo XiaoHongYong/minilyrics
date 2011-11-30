@@ -90,7 +90,11 @@ void CSkinApp::Quit()
 
 void CSkinApp::PostQuitMessage()
 {
+#ifdef _WIN32
 	::PostQuitMessage(0);
+#else
+	ERRLOG0("PostQuitMessage");
+#endif
 }
 
 int CSkinApp::ShowDialog(CBaseWnd *pWndParent, LPCTSTR szDialogName)

@@ -15,12 +15,12 @@ public:
 	IILIO();
 	virtual ~IILIO();
 
-	virtual uint32 Read(void *buf, uint32 nSize) = 0;
-	virtual uint32 Write(const void *buf, uint32 nSize) { return nSize; }
+	virtual size_t Read(void *buf, size_t nSize) = 0;
+	virtual size_t Write(const void *buf, size_t nSize) { return nSize; }
 	// nOrigin: SEEK_SET, SEEK_CUR, SEEK_END
 	virtual bool Seek(int nOffset, int nOrigin) = 0;
-	virtual bool GetSize(uint32 &nSize) = 0;
-	virtual uint32 GetPos() = 0;
+	virtual bool GetSize(size_t &nSize) = 0;
+	virtual size_t GetPos() = 0;
 
 	virtual bool IsEOF() = 0;
 
@@ -37,10 +37,10 @@ public:
 	bool Open(LPCTSTR szFile);
 
 public:
-	virtual uint32 Read(void *buf, uint32 nSize);
+	virtual size_t Read(void *buf, size_t nSize);
 	virtual bool Seek(int nOffset, int nOrigin);
-	virtual bool GetSize(uint32 &nSize);
-	virtual uint32 GetPos();
+	virtual bool GetSize(size_t &nSize);
+	virtual size_t GetPos();
 
 	virtual bool IsEOF();
 
@@ -57,13 +57,13 @@ public:
 	CBuffILIO();
 	~CBuffILIO();
 
-	bool Open(const void *buff, uint32 nLength);
+	bool Open(const void *buff, size_t nLength);
 
 public:
-	virtual uint32 Read(void *buf, uint32 nSize);
+	virtual size_t Read(void *buf, size_t nSize);
 	virtual bool Seek(int nOffset, int nOrigin);
-	virtual bool GetSize(uint32 &nSize);
-	virtual uint32 GetPos();
+	virtual bool GetSize(size_t &nSize);
+	virtual size_t GetPos();
 
 	virtual bool IsEOF();
 
@@ -71,7 +71,7 @@ public:
 
 protected:
 	uint8		*m_buf;
-	uint32		m_nLength;
+	size_t		m_nLength;
 	size_t			m_nPos;
 
 };

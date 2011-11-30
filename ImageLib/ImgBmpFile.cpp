@@ -22,14 +22,14 @@ typedef struct tagBITMAPFILEHEADER {
 
 typedef struct tagBITMAPINFOHEADER{
 	DWORD      biSize;
-	LONG       biWidth;
-	LONG       biHeight;
+	int32      biWidth;
+	int32      biHeight;
 	WORD       biPlanes;
 	WORD       biBitCount;
 	DWORD      biCompression;
 	DWORD      biSizeImage;
-	LONG       biXPelsPerMeter;
-	LONG       biYPelsPerMeter;
+	int32      biXPelsPerMeter;
+	int32      biYPelsPerMeter;
 	DWORD      biClrUsed;
 	DWORD      biClrImportant;
 } BITMAPINFOHEADER, *LPBITMAPINFOHEADER, *PBITMAPINFOHEADER;
@@ -49,7 +49,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromBmpFile(IILIO *io)
 	BITMAPFILEHEADER	bfh;
 	BITMAPINFOHEADER	bih;
 	DWORD				dwDataSize;
-	uint32				nFileLen;
+	size_t				nFileLen;
 	int					nClrUsed = 0;
 
 	io->GetSize(nFileLen);

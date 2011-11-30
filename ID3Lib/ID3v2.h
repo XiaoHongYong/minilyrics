@@ -104,7 +104,7 @@ parsing of the tag information, hence the extended header is optional.
    Where the 'Extended header size' is the size of the whole extended
    header, stored as a 32 bit synchsafe integer. An extended header can
    thus never have a size of fewer than six bytes.
-/***********************************************************************/
+\***********************************************************************/
 struct ID3v2HeaderExtended
 {
 	BYTE	bySize[4];

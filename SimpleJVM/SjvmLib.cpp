@@ -18,22 +18,22 @@ public:
 		CClass *pClass = g_sjvm->GetClass(CLASS_NAME);
 		ASSERT(pClass);
 
-		nRet = pClass->AddNativeMethod(true, "failedMessage", failedMessage, TID_VOID, TID_STRING, TID_INVALID);
+		nRet = pClass->AddNativeMethod(true, "failedMessage", (LPVOID)failedMessage, TID_VOID, TID_STRING, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(true, "message", messageStr, TID_VOID, TID_STRING, TID_INVALID);
+		nRet = pClass->AddNativeMethod(true, "message", (LPVOID)messageStr, TID_VOID, TID_STRING, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(true, "message", messageInt, TID_VOID, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(true, "message", (LPVOID)messageInt, TID_VOID, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(true, "getSp", getSp, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(true, "getSp", (LPVOID)getSp, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(true, "getBp", getBp, TID_INT, TID_INVALID);
+		nRet = pClass->AddNativeMethod(true, "getBp", (LPVOID)getBp, TID_INT, TID_INVALID);
 		ASSERT(nRet != -1);
 
-		nRet = pClass->AddNativeMethod(true, "printJVMStatus", printJVMStatus, TID_VOID, TID_INVALID);
+		nRet = pClass->AddNativeMethod(true, "printJVMStatus", (LPVOID)printJVMStatus, TID_VOID, TID_INVALID);
 		ASSERT(nRet != -1);
 	}
 
@@ -49,8 +49,12 @@ public:
 
 	static void SJNI_API failedMessage(LPCTSTR szMsg)
 	{
+#ifdef _WIN32
 		MessageBox(NULL, szMsg, _T("SimpleJVM UnitTest"), MB_OK | MB_TOPMOST);
 		ASSERT(0);
+#else
+		_tprintf(_T("%s\n"), szMsg);
+#endif
 	}
 
 	static int SJNI_API getSp()
@@ -66,8 +70,8 @@ public:
 	static void SJNI_API printJVMStatus()
 	{
 		_tprintf(_T(">>>SimpleJVM internal status:\n"));
-		_tprintf(_T("BP: %d, SP: %d,	Static variable count: %d,	\n"), g_sjvm->m_bp, g_sjvm->m_stack.size(), g_sjvm->m_vStaticVars.size());
-		_tprintf(_T("JObject manager size: %d,	Free: %d\n"), g_sjvm->m_jobjMgr.m_vJObjects.size(), g_sjvm->m_jobjMgr.m_vFreeJObjs.size());
+		_tprintf(_T("BP: %d, SP: %d,	Static variable count: %d,	\n"), (int)g_sjvm->m_bp, (int)g_sjvm->m_stack.size(), (int)g_sjvm->m_vStaticVars.size());
+		_tprintf(_T("JObject manager size: %d,	Free: %d\n"), (int)g_sjvm->m_jobjMgr.m_vJObjects.size(), (int)g_sjvm->m_jobjMgr.m_vFreeJObjs.size());
 		_tprintf(_T("<<<End of status:\n"));
 	}
 
@@ -88,10 +92,10 @@ void CSjobjException::RegisterJNI()
 	CClass *pClass = g_sjvm->GetClass(CLASS_NAME);
 	ASSERT(pClass);
 
-	nRet = pClass->AddNativeMethod(false, "Exception", ExceptionConstructor, TID_VOID, TID_STRING, TID_INVALID);
+	nRet = pClass->AddNativeMethod(false, "Exception", (LPVOID)ExceptionConstructor, TID_VOID, TID_STRING, TID_INVALID);
 	ASSERT(nRet != -1);
 
-	nRet = pClass->AddNativeMethod(false, "toString", ToString, TID_STRING, TID_INVALID);
+	nRet = pClass->AddNativeMethod(false, "toString", (LPVOID)ToString, TID_STRING, TID_INVALID);
 	ASSERT(nRet != -1);
 }
 

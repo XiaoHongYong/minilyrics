@@ -23,7 +23,7 @@ public:
 
 	void OnActivate(bool bActived);
 
-	virtual void OnPreCreate(DWORD &dwStyle, DWORD &dwExStyle);
+	virtual void OnPreCreate(bool &bTopmost, bool &bVisible);
 
 	virtual bool OnCreate();
 

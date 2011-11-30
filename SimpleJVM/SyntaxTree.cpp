@@ -387,7 +387,7 @@ STreeNode *newStnExpOp(ExpressionType expType, STreeNode *pExpressionLeft, STree
 	return pNode;
 }
 
-STreeNode *newStnExpFuncCall(int nLineNo, LPSTR szMethodName, STreeNode *pVarToCall, STreeNode *pParameterList)
+STreeNode *newStnExpFuncCall(int nLineNo, LPCSTR szMethodName, STreeNode *pVarToCall, STreeNode *pParameterList)
 {
 	STreeNode	*pNode = NewSTreeNode(STreeNode::T_EXPRESSION, nLineNo);
 	StnExpression	&sExp = pNode->sExpression;

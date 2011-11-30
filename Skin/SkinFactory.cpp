@@ -1075,8 +1075,11 @@ void CSkinFactory::Close(bool bQuit)
 		it != m_setUIDDefinition.end();)
 	{
 		UIObjectIDDefinition *p = *it;
-		if (p->nId >= CMD_ID_CUSTOM_BASE)
-			it = m_setUIDDefinition.erase(it);
+		if (p->nId >= CMD_ID_CUSTOM_BASE) {
+			SetUIObjectIDDefinition::iterator itRemove = it;
+			++it;
+			m_setUIDDefinition.erase(itRemove);
+		}
 		else
 			++it;
 	}

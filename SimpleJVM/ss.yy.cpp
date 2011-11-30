@@ -1052,8 +1052,6 @@ YY_RULE_SETUP
 				char	c;
 				// char	str[265];
 				string	str;
-				int		nLen = 0;
-				bool	done = false;
 				do
 				{
 					c = yyinput();

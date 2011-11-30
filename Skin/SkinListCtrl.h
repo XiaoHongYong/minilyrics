@@ -191,13 +191,13 @@ public:
 	virtual void AddColumn(LPCTSTR szCol, int nWidth);
 	void AddImageColumn(LPCTSTR szCol, int nWidth, bool bClickable = false);
 
-	int GetColumnCount() const { return m_vHeading.size(); }
+	size_t GetColumnCount() const { return m_vHeading.size(); }
 	int GetColumnWidth(int nCol) const;
 	BOOL SetColumnWidth(int nCol, int cx);
 
 	void SetLineHeight(int nLineHeight);
 
-	int GetItemCount() const { return m_vRows.size(); }
+	size_t GetItemCount() const { return m_vRows.size(); }
 
 	UINT GetSelectedCount() const;
 	int GetNextSelectedItem(int nPos = -1) const;

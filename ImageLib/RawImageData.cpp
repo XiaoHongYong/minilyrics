@@ -263,7 +263,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromFile(LPCTSTR szFile)
 	return NULL;
 #else
 	LPCTSTR			szExt;
-	int				n;
+	size_t			n;
 	CFileILIO		io;
 	PRAW_IMAGE_DATA	image = NULL;
 
@@ -1027,6 +1027,12 @@ RGBQUAD RAW_IMAGE_DATA::GetPixel(int x, int y)
 		break;
 	case PF_PALLETE16:
 	case PF_PALLETE2:
+		{
+			memset(&quad, 0, sizeof(quad));
+			ASSERT(0 && "unsupported format.");
+		}
+		break;
+	default:
 		{
 			memset(&quad, 0, sizeof(quad));
 			ASSERT(0 && "unsupported format.");

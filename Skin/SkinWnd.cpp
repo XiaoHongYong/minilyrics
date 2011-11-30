@@ -250,25 +250,13 @@ int CSkinWnd::Create(SkinWndStartupInfo &skinWndStartupInfo, CSkinFactory *pSkin
 	m_mapExchangePool = skinWndStartupInfo.mapExchangePool;
 	m_bMainAppWnd = skinWndStartupInfo.bMainWnd;
 
-	DWORD	dwStyle = DS_NOIDLEMSG | WS_SYSMENU | WS_MINIMIZEBOX | WS_CLIPCHILDREN | WS_MAXIMIZEBOX;
-	DWORD	dwExStyle = 0;
-	if (bTopmost)
-		dwExStyle |= WS_EX_TOPMOST;
-	if (bToolWindow)
-		dwExStyle |= WS_EX_TOOLWINDOW;
-	if (bVisible)
-		dwStyle |= WS_VISIBLE;
-
-	OnPreCreate(dwStyle, dwExStyle);
+	OnPreCreate(bTopmost, bVisible);
 
 	CAutoRedrawLock drawLock(this);
 
-	// WS_THICKFRAME will cause window flashing on vista
-	if (!CreateEx(skinWndStartupInfo.strClassName.c_str(), skinWndStartupInfo.strCaptionText.c_str(),
-		m_rcReal.left, m_rcReal.top, m_rcReal.Width(), m_rcReal.Height(),
-		skinWndStartupInfo.pWndParent,
-		dwStyle, dwExStyle))
-		return ERR_FALSE;
+	CreateForSkin(skinWndStartupInfo.strClassName.c_str(), skinWndStartupInfo.strCaptionText.c_str(),
+		m_rcReal.left, m_rcReal.top, m_rcReal.Width(), m_rcReal.Height(), skinWndStartupInfo.pWndParent,
+		bToolWindow, bTopmost, bVisible);
 
 	return ERR_OK;
 }
@@ -986,7 +974,7 @@ BOOL CSkinWnd::AddTool(LPCTSTR szText, LPCRECT lpRectTool, UINT nIDTool)
 
 void CSkinWnd::DelTool(UINT nIDTool)
 {
-	if (m_wndToolTip.IsWindow())
+	if (m_wndToolTip.IsValid())
 		m_wndToolTip.DelTool(nIDTool);
 }
 
@@ -2545,7 +2533,7 @@ void CSkinWnd::OnTimerMouseInactive()
 	InvalidateRect();
 }
 
-void CSkinWnd::OnMouseActive(boolean bMouseActive)
+void CSkinWnd::OnMouseActive(bool bMouseActive)
 {
 	if (m_pSjvmNotifyEvent)
 		m_pSjvmNotifyEvent->onMouseActive(bMouseActive);

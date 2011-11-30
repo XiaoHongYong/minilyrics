@@ -684,7 +684,7 @@ int CMLData::UpdateTagToID3v2DescTxt()
 	lrcTag.WriteToText(m_id3v2SaveCacheInfo.m_strLrcDescription, false);
 #else
 	// UTF8
-	lrcTag.WriteToText(m_id3v2SaveCacheInfo.m_strLrcDescription, GetEncodingIndex(), false);
+	lrcTag.WriteToText(m_id3v2SaveCacheInfo.m_strLrcDescription, false);
 #endif
 
 	return ERR_OK;

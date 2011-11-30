@@ -180,7 +180,7 @@ public:
 	// Messages of the window
 	//
 	virtual void OnActivate(bool bActived);
-	virtual void OnPreCreate(DWORD &dwStyle, DWORD &dwExStyle) { }
+	virtual void OnPreCreate(bool &bTopmost, bool &bVisible) { }
 	virtual bool OnCreate();
 	virtual void OnDestroy();
 	virtual void OnPaint(CMLGraphics *pGraph);
@@ -373,7 +373,7 @@ protected:
 
 	void OnMouseActiveMsg();
 	void OnTimerMouseInactive();
-	virtual void OnMouseActive(boolean bMouseActive);
+	virtual void OnMouseActive(bool bMouseActive);
 
 public:
 	class CAutoRedrawLock {

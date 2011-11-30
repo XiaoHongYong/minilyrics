@@ -21,8 +21,8 @@ public:
 	void onDestroy();
 	void onSize(int cx, int cy);
 	void onMove(int x, int y);
-	void onActivate(boolean bActived);
-	void onMouseActive(boolean bMouseActive);
+	void onActivate(bool bActived);
+	void onMouseActive(bool bMouseActive);
 	void onTimer(int nTimerId);
 
 	void AddSkinWnd(CSkinWnd *pWnd);
