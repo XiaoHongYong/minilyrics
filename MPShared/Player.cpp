@@ -7,6 +7,11 @@
 
 #ifdef _WIN32
 #include "MPMsg.h"
+#include "win32/PlayerEventDispatcher.h"
+#endif
+
+#ifdef _MAC_OSX
+#include "mac/PlayerEventDispatcher.h"
 #endif
 
 #ifndef _MPLAYER
@@ -14,6 +19,8 @@
 #endif
 
 CPlayer			g_Player;
+CPlayerEventDispatcher		g_playerEventDispatcher;
+
 
 void FormatFullTitle(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szUri, tstring &strFullTitle)
 {
@@ -40,127 +47,6 @@ void CopyPlaylist(IPlaylist *src, IPlaylist *dst)
 	}
 }
 
-
-///////////////////////////////////////////////////////////////////////////////
-// create window to get playback pos of player timely.
-
-class CPlayerEventWindow : public CBaseWnd
-{
-public:
-	CPlayerEventWindow() { m_nTimeOutUpdateLyr = 40; }
-	~CPlayerEventWindow() { }
-
-	enum
-	{
-		TIMER_LYR_DRAW_UPDATE		= 1,
-	};
-
-	bool Create()
-	{
-		return CBaseWnd::CreateEx(MSG_WND_CLASS_NAME, _T("PlayerEventWnd"), 0, 0, 1, 1, NULL, 0) != FALSE;
-	}
-
-	void SetLyrDrawUpdateFast(bool bFast)
-	{
-		if (bFast)
-			m_nTimeOutUpdateLyr = 20;
-		else
-			m_nTimeOutUpdateLyr = 40;
-
-		StartLyrDrawUpdate();
-	}
-
-	void StartLyrDrawUpdate()
-		{ SetTimer(TIMER_LYR_DRAW_UPDATE, m_nTimeOutUpdateLyr); }
-
-	void StopLyrDrawUpdate()
-		{ KillTimer(TIMER_LYR_DRAW_UPDATE); }
-
-	bool OnCreate()
-	{
-		if (!CBaseWnd::OnCreate())
-			return false;
-
-		ShowWindow(SW_MINIMIZE);
-		ShowWindow(SW_HIDE);
-
-		return true;
-	}
-
-	void OnPaint(CMLGraphics *pGraph)
-	{
-		ShowWindow(SW_HIDE);
-	}
-
-	void OnTimer(UINT nIDEvent)
-	{
-		ASSERT(nIDEvent == TIMER_LYR_DRAW_UPDATE);
-
-		if (g_Player.IsUseSeekTimeAsPlayingTime())
-			return;
-
-		int nPlayPos = g_Player.GetPlayPos();
-		g_LyricData.SetPlayElapsedTime(nPlayPos);
-
-		CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
-
-		DispatchPlayPosEvent(nPlayPos);
-	}
-
-
-	void OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
-	{
-		if (wParam == ML_ACTIVATE && pcds->dwData == ML_ACTIVATE)
-		{
-			CMPSkinMainWnd *pWnd = CMPlayerAppBase::GetMainWnd();
-			if (pWnd)
-				pWnd->Activate();
-			else
-				ERRLOG0(_T("MiniLyrics main window hasn't been started yet, can't activate it."));
-		}
-		else if (wParam == ML_SEND_CMD_LINE && pcds->dwData == ML_SEND_CMD_LINE)
-		{
-#ifndef _MPLAYER
-			AppMode appMode = SA_UNKNOWN;
-			ProcessCmdLine((LPCTSTR)pcds->lpData, appMode);
-			if (appMode == SA_IPOD_LYRICS_DOWNLOADER && appMode != CMPlayerApp::GetInstance()->GetCurrentAppMode())
-			{
-				// Change to another app mode
-				CMPlayerApp::GetInstance()->RestartToAppMode(appMode);
-			}
-#endif
-		}
-	}
-
-#ifdef _WIN32
-	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam)
-	{
-		if (message == WM_COPYDATA)
-			OnCopyData(wParam, (COPYDATASTRUCT *)lParam);
-#ifndef _MPLAYER
-		else if (message == MM_MIXM_CONTROL_CHANGE)
-		{
-			// Volume changed message.
-			CEventPlayerSettingChanged	*pEvent = new CEventPlayerSettingChanged();
-			pEvent->eventType = ET_PLAYER_SETTING_CHANGED;
-			pEvent->settingType = IMPEvent::MPS_VOLUME;
-			pEvent->nValue = g_Player.GetVolume();
-
-			CMPlayerApp::GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
-		}
-#endif
-
-		return CBaseWnd::WndProc(message, wParam, lParam);
-	}
-#endif
-
-protected:
-	int			m_nTimeOutUpdateLyr;
-
-};
-
-CPlayerEventWindow		g_wndPlayerEvent;
-
 ///////////////////////////////////////////////////////////////////////////
 //
 class CMPlayerEventHandler : public IMPEvent
@@ -177,10 +63,10 @@ public:
 		pEvent->status = state;
 		CMPlayerAppBase::GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
 
-		g_wndPlayerEvent.StopLyrDrawUpdate();
+		g_playerEventDispatcher.StopLyrDrawUpdate();
 
 		if (state == PS_PLAYING)
-			g_wndPlayerEvent.StartLyrDrawUpdate();
+			g_playerEventDispatcher.StartLyrDrawUpdate();
 	}
 
 	virtual void OnSeek()
@@ -287,21 +173,17 @@ HWND GetMLSericeWindow() { return NULL; }
 HWND GetMLSericeWindow();
 #endif
 
+#ifndef _MPLAYER
+
 void CPlayer::OnInitOfMiniLyrics()
 {
-	g_wndPlayerEvent.Create();
-
-	m_volMaster.Init(g_wndPlayerEvent.GetHandle());
+	g_playerEventDispatcher.Create();
 }
 
 void CPlayer::OnQuitOfMiniLyrics()
 {
-	g_wndPlayerEvent.Destroy();
-
-	m_playerSmoothTimer.Stop();
-
-	m_volMaster.Quit();
-
+	g_playerEventDispatcher.Destroy();
+	
 	if (m_playerInfo.hWndPluginService)
 		Disconnect();
 }
@@ -309,7 +191,7 @@ void CPlayer::OnQuitOfMiniLyrics()
 void CPlayer::QueryInfo(HWND hWndPluginService)
 {
 	HWND hWnd = GetMLSericeWindow();
-
+	
 	COPYDATASTRUCT	cds;
 	cds.cbData = sizeof(hWnd);
 	cds.dwData = M2P_QUERY_INFO;
@@ -376,6 +258,42 @@ void CPlayer::EndEmbeddedSkin()
 	SendMessage(M2P_END_EMBEDDED_SKIN);
 }
 
+LPCTSTR CPlayer::GetPlayerName() const
+{
+	if (m_spPlayer)
+		return _T("");
+	else
+		return m_playerInfo.playerName;
+}
+
+void CPlayer::GetCurSkinPath(TCHAR *lpszBuffer, int nBufSize)
+{
+	if (m_spPlayer)
+		EmptyStr(lpszBuffer);
+	else
+		_tcscpy_safe(lpszBuffer, nBufSize, m_skinInfo.skinPath);
+}
+
+HWND CPlayer::GetMainWnd() const
+{
+	if (m_spPlayer)
+		return NULL;
+	else
+		return m_playerInfo.hWndPlayer;
+} 
+
+#else // #ifndef _MPLAYER
+
+void CPlayer::OnInitOfMiniLyrics()
+{
+}
+
+void CPlayer::OnQuitOfMiniLyrics()
+{
+}
+
+#endif // #ifndef _MPLAYER
+
 // control player
 void CPlayer::Play()
 {
@@ -437,30 +355,6 @@ void CPlayer::SeekTo(DWORD nMsPos)
 	else
 		SendMessage(M2P_SEEK, &nMsPos, sizeof(nMsPos));
 }
-
-LPCTSTR CPlayer::GetPlayerName() const
-{
-	if (m_spPlayer)
-		return _T("");
-	else
-		return m_playerInfo.playerName;
-}
-
-void CPlayer::GetCurSkinPath(TCHAR *lpszBuffer, int nBufSize)
-{
-	if (m_spPlayer)
-		EmptyStr(lpszBuffer);
-	else
-		_tcscpy_safe(lpszBuffer, nBufSize, m_skinInfo.skinPath);
-}
-
-HWND CPlayer::GetMainWnd() const
-{
-	if (m_spPlayer)
-		return NULL;
-	else
-		return m_playerInfo.hWndPlayer;
-} 
 
 // get player state and song info
 PLAYER_STATE CPlayer::GetPlayerState()
@@ -539,18 +433,7 @@ bool CPlayer::HasVideo()
 
 void CPlayer::SetLyrDrawUpdateFast(bool bFast)
 {
-	if (m_spPlayer)
-		g_wndPlayerEvent.SetLyrDrawUpdateFast(bFast);
-	else
-	{
-		if (bFast)
-		{
-			if (!m_playerSmoothTimer.IsRunning())
-				m_playerSmoothTimer.Start();
-		}
-		else
-			m_playerSmoothTimer.Stop();
-	}
+	g_playerEventDispatcher.SetLyrDrawUpdateFast(bFast);
 }
 
 void CPlayer::SetToNextLoopMode()
@@ -619,7 +502,7 @@ long CPlayer::GetVolume()
 	if (m_spPlayer)
 		return m_spPlayer->GetVolume();
 	else
-		return m_volMaster.GetVolume();
+		return g_playerEventDispatcher.GetMasterVolume();
 }
 
 void CPlayer::SetVolume(long nVol)
@@ -631,7 +514,7 @@ void CPlayer::SetVolume(long nVol)
 		m_spPlayer->SetVolume(nVol);
 	}
 	else
-		m_volMaster.SetVolume(nVol);
+		g_playerEventDispatcher.SetMasterVolume(nVol);
 }
 
 bool CPlayer::IsMute()
@@ -696,34 +579,7 @@ void CPlayer::OnInitOfZikiPlayer()
 	// m_spPlayer->SetCurrentMediaInPlaylist(
 	//	g_Profile.GetProfileInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), 0));
 
-	g_wndPlayerEvent.Create();
-
-	// AddDirToPlaylist(_T("H:\\Mp3\\Britney Spears04¾«Ñ¡¼¯"), true);
-	// latest playlist and latest playing song file will loaded while main window is created.
-	LPCTSTR			szCmdLine;
-
-	// get command line
-	szCmdLine = GetCommandLine();
-	szCmdLine = CmdLineNext(szCmdLine);
-	if (_tcsicmp(szCmdLine, _T("/iPodLyricsDownloader")) == 0)
-		szCmdLine = _T("");
-	if (IsEmptyString(szCmdLine))
-	{
-		// Load default playlist
-		tstring		strCurrentPlaylist;
-
-		m_strCurrentPlaylist = g_Profile.GetProfileString(_T("Latest Playlist"), _T(""));
-		if (!LoadPlaylist(m_strCurrentPlaylist.c_str()))
-			NewCurrentPlaylist();
-
-		int	nNowPlaying = g_Profile.GetProfileInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), 0);
-		m_spPlayer->SetCurrentMediaInPlaylist(nNowPlaying);
-	}
-	else
-	{
-		// excute cmdline
-		SendCommandLine(CMPlayerAppBase::GetMainWnd()->GetHandle(), szCmdLine);
-	}
+	g_playerEventDispatcher.Init();
 
 	if (g_Profile.GetProfileBool(_T("StartPlayAtStartup"), false))
 		Play();
@@ -731,9 +587,7 @@ void CPlayer::OnInitOfZikiPlayer()
 
 void CPlayer::OnQuitOfZikiPlayer()
 {
-	m_playerSmoothTimer.Stop();
-
-	g_wndPlayerEvent.Destroy();
+	g_playerEventDispatcher.Quit();
 
 	SaveCurrentPlaylist();
 
@@ -1276,6 +1130,7 @@ void CPlayer::UISeekbarOnSeek(int nPos)
 	CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 }
 
+#ifndef _MPLAYER
 void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 {
 	bool			bChanged = false;
@@ -1362,6 +1217,7 @@ void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 		CMPlayerAppBase::GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
 	}
 }
+#endif // #ifndef _MPLAYER
 
 void CPlayer::OnMediaChangedOfZikiPlayer()
 {

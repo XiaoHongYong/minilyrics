@@ -10,7 +10,6 @@
 
 #ifdef _WIN32
 #include "win32/PlayerSmoothTimer.h"
-#include "win32/VolumeOutMaster.h"
 #endif
 
 #ifdef _LINUX_GTK2
@@ -52,10 +51,13 @@ public:
 	void OnInitOfMiniLyrics();
 	void OnQuitOfMiniLyrics();
 
+#ifdef _WIN32
 	static void QueryInfo(HWND hWndPluginService);
 
 	bool IsConnected() { return m_playerInfo.hWndPluginService != NULL; }
+#endif
 
+#ifndef _MPLAYER
 	void Connect(PlayerInfo &playerInfo);
 	void Disconnect();
 
@@ -82,10 +84,18 @@ public:
 
 	// Get player skin path
 	LPCTSTR GetEmbeddedSkinName() const
-		{ return m_playerInfo.embeddedSkinName; }
+	{
+#ifdef _WIN32
+		return m_playerInfo.embeddedSkinName;
+#else
+		return "";
+#endif
+	}
+#endif // #ifndef _MPLAYER
 
 	void SendMessage(MessageToPlayer message, LPVOID param = NULL, size_t sizeParam = 0)
 	{
+#ifdef _WIN32
 		ASSERT(m_playerInfo.hWndPluginService);
 
 		COPYDATASTRUCT	cds;
@@ -93,6 +103,7 @@ public:
 		cds.dwData = message;
 		cds.lpData = param;
 		::SendMessage(m_playerInfo.hWndPluginService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds);
+#endif
 	}
 
 	PLAYER_TYPE GetPlayerType() const { return m_PlayerType; }
@@ -209,7 +220,9 @@ public:
 	void SetUseSeekTimeAsPlayingTime(bool bUseSeekTimeAsPlayingTime) { m_bUseSeekTimeAsPlayingTime = bUseSeekTimeAsPlayingTime; }
 	bool IsUseSeekTimeAsPlayingTime() const { return m_bUseSeekTimeAsPlayingTime; }
 
+#ifndef _MPLAYER
 	void OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo);
+#endif // #ifndef _MPLAYER
 	void OnMediaChangedOfZikiPlayer();
 
 protected:
@@ -221,7 +234,6 @@ protected:
 	DWORD					m_dwPlayingPos;
 
 	bool					m_bUseSeekTimeAsPlayingTime;
-	CPlayerSmoothTimer		m_playerSmoothTimer;
 
 protected:
 	// For MiniLyrics
@@ -231,7 +243,6 @@ protected:
 	PlayerInfo				m_playerInfo;
 	PlayerSkinInfo			m_skinInfo;
 	PLAYER_STATE			m_playerState;
-	CVolumeOutMaster		m_volMaster;
 
 protected:
 	// For ZikiPlayer

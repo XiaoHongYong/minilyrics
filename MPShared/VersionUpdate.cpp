@@ -205,7 +205,7 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 
 		// 如果日期相隔7天，则检查更新
 		CBaseDate dateNow = CBaseDate::GetCurrentDate();
-		if (abs(dateNow.GetTime() - dateLastCheck.GetTime()) <= 7 * CBaseDate::MILLIS_IN_ONE_DAY)
+		if (abs((long)dateNow.GetTime() - (long)dateLastCheck.GetTime()) <= 7 * CBaseDate::MILLIS_IN_ONE_DAY)
 			return;
 
 		g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), dateNow.ToUtcDateString().c_str());

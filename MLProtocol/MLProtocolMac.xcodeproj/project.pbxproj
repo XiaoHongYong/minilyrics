@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F2BD4B6148D04DA003E7F5C /* MLProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4B5148D04DA003E7F5C /* MLProtocol.cpp */; };
 		5FBCCCE814851A0000D7C64A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCCE714851A0000D7C64A /* Cocoa.framework */; };
 		5FBCCD0B14851A5D00D7C64A /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCCFC14851A5D00D7C64A /* HttpClient.cpp */; };
 		5FBCCD0C14851A5D00D7C64A /* HttpClient.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCCFD14851A5D00D7C64A /* HttpClient.h */; };
@@ -26,6 +27,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F2BD4B5148D04DA003E7F5C /* MLProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLProtocol.cpp; sourceTree = SOURCE_ROOT; };
 		5FBCCCE414851A0000D7C64A /* libMLProtocolMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMLProtocolMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBCCCE714851A0000D7C64A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5FBCCCEA14851A0000D7C64A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -99,6 +101,7 @@
 		5FBCCCED14851A0000D7C64A /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				5F2BD4B5148D04DA003E7F5C /* MLProtocol.cpp */,
 				5FBCCCFC14851A5D00D7C64A /* HttpClient.cpp */,
 				5FBCCCFD14851A5D00D7C64A /* HttpClient.h */,
 				5FBCCCFE14851A5D00D7C64A /* HttpProtocol.cpp */,
@@ -191,6 +194,7 @@
 				5FBCCD1214851A5D00D7C64A /* MLUtils.cpp in Sources */,
 				5FBCCD1414851A5D00D7C64A /* NetSDK.cpp in Sources */,
 				5FBCCD1614851A5D00D7C64A /* NetServer.cpp in Sources */,
+				5F2BD4B6148D04DA003E7F5C /* MLProtocol.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

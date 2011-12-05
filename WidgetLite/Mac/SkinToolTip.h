@@ -17,6 +17,7 @@ public:
 	BOOL AddTool(LPCTSTR szText = LPSTR_TEXTCALLBACK, LPCRECT lpRectTool = NULL, UINT nIDTool = 0);
 	BOOL Create(CBaseWnd *pWndParent);
 
+	bool IsWindow() { return IsValid(); }
 	bool IsValid() { return m_hWnd != NULL; }
 
 	void Destroy();

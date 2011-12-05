@@ -170,3 +170,8 @@ bool CMPPlaylistCmdHandler::OnCustomCommand(int nID)
 
 	return true;
 }
+
+bool CMPPlaylistCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
+{
+	return false;
+}

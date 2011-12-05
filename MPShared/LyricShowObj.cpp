@@ -11,6 +11,12 @@
 #include "LyricShowObj.h"
 #include "LyricShowAgentObj.h"
 
+#ifndef _WIN32
+bool IsCharAlphaNumeric(int c) {
+	return IsAlpha(c) || IsDigit(c);
+}
+#endif
+
 
 PRAW_IMAGE_DATA AutoFitImageToRect(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst, int nBitCount)
 {
@@ -1075,7 +1081,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			if (pFrag->IsAdFrag())
 			{
 				if (pLyricRow->szContent)
-					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
+					SetAdSentence((int)(long)pLyricRow, pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
 			}
 #endif
 
@@ -1142,7 +1148,7 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 			if (pFrag->IsAdFrag())
 			{
 				if (pLyricRow->szContent)
-					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
+					SetAdSentence((int)(long)pLyricRow, pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
 			}
 #endif
 			x += GetLyricFragDrawWidth(pFrag, pGraphics);
@@ -1441,8 +1447,8 @@ void CLyricShowObj::DarkenLyricsBg(CRawGraph *pGraphics, CRect &rc)
 	int			nDarkenTop, nDarkenBottom;
 	nDarkenTop = GetLineVertAlignPos() - int(nLineHeight * m_nDarkenTopArea);
 	nDarkenBottom = GetLineVertAlignPos() + int(nLineHeight * m_nDarkenBottomArea);
-	nFillBottom = min(rc.bottom, (long)nDarkenBottom);
-	nFillTop = max(rc.top, (long)nDarkenTop);
+	nFillBottom = min((long)rc.bottom, (long)nDarkenBottom);
+	nFillTop = max((long)rc.top, (long)nDarkenTop);
 	if (nFillBottom > nFillTop)
 		pGraphics->FillRect(rc.left, nFillTop, rc.Width(), nFillBottom - nFillTop, m_clrDarken, BPM_BLEND);
 }

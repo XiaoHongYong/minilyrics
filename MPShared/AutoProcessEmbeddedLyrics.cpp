@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "MPlayerApp.h"
-#include "LyricsTool.h"
 #include "AutoProcessEmbeddedLyrics.h"
 #include "DlgBatchProcessEmbeddedLyrics.h"
 

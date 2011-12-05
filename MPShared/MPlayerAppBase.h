@@ -14,25 +14,22 @@
 
 #ifdef _WIN32
 #include "win32/MPHotkey.h"
+#include "win32/DlgChooseFont.h"
 #endif
 
 #ifdef _LINUX_GTK2
 #include "gtk2/MPHotkey.h"
+#include "gtk2/DlgChooseFont.h"
+#endif
+
+#ifdef _MAC_OSX
+#include "mac/MPHotkey.h"
+#include "mac/DlgChooseFont.h"
 #endif
 
 #include "resource.h"
 
 #ifdef _WIN32_DESKTOP
-#include "win32/DlgChooseFont.h"
-#endif
-
-#ifdef _WIN32_WCE
-#include "win32/wce/wce.h"
-#include "win32/wce/DlgChooseFont.h"
-#endif
-
-#ifdef _LINUX_GTK2
-#include "gtk2/DlgChooseFont.h"
 #endif
 
 #ifdef _MPLAYER
@@ -181,11 +178,11 @@ public:
 
 #ifndef _MPLAYER
 public:
-	AppMode GetCurrentAppMode() const { return m_appMode; }
-
 	bool					m_bMPSkinMode;
-	AppMode					m_appMode;
 #endif
+
+	AppMode GetCurrentAppMode() const { return m_appMode; }
+	AppMode					m_appMode;
 
 	void GetCurLyrDisplaySettingName(bool bFloatingLyr, tstring &strSectionName, EventType &etDispSettings);
 	LPCTSTR GetCurLyrDisplaySettingName(bool bFloatingLyr);
@@ -205,3 +202,8 @@ protected:
 #ifdef _LINUX_GTK2
 #include "gtk2/MPlayerApp.h"
 #endif
+
+#ifdef _MAC_OSX
+#include "mac/MPlayerApp.h"
+#endif
+

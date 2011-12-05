@@ -36,4 +36,8 @@ protected:
 #include "../MPShared/gtk2/MPSkinMainWndGtk2.h"
 #endif
 
+#ifdef _MAC_OSX
+#include "../MPShared/mac/MPSkinMainWndMac.h"
+#endif
+
 #endif // !defined(AFX_MPSKINMAINWND_H__5D734F0B_51A3_4A5C_BC56_E5064B5410B2__INCLUDED_)

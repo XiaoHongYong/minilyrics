@@ -575,6 +575,8 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	// LOG1(LOG_LVL_INFO, _T("Enter lyrics download thread: %s"), pTask->m_strURL.c_str());
 	// LOG2(LOG_LVL_INFO, _T("Proxy settings: %d, %s"), bUseProxy, szProxyPwd);
 
+	bool	bMLServer = false;
+
 	if (!AnalysisHttpUrl(pTask->m_strURL.c_str(), szHost, CountOf(szHost), nPort, szUri, CountOf(szUri)))
 	{
 		CStrPrintf	str(_T("Invalid http url: %s"),pTask->m_strURL.c_str());
@@ -585,7 +587,6 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		nHttpCode = 0;
 		goto RETURN_END;
 	}
-	bool	bMLServer = false;
 	if (nPort == 80)
 	{
 		bMLServer = true;
@@ -603,7 +604,6 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	httpClient.SetProxy(bUseProxy, szProxyServer, nProxyPort, szProxyPwd);
 #endif
 
-	const int nRetryCount = 2;
 	for (iRetry = 1; iRetry <= 2 && !IsQuiting(); iRetry++)
 	{
 		if (iRetry != 1)

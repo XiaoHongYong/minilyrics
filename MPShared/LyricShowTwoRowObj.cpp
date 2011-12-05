@@ -37,7 +37,6 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 	int			y;
 	PML_ROW		pLyricRow;
 	int			nRowHeight;// center row height
-	bool		bTheOtherRowHiglight = false;
 	int			nRowTheOther = 0;
 	int			nRowCur;
 	PML_ROW			pRowTheOther = NULL;

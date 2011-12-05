@@ -225,7 +225,7 @@ void CPagePfBase::InitCheckButtons()
 			if (pButton)
 				pButton->SetStatus(bValue);
 			else
-				ERRLOG1(_T("Control: %s is NOT defined in skin."), m_pSkin->GetSkinFactory()->GetStringOfID(opt.nCtrl));
+				ERRLOG1(_T("Control: %s is NOT defined in skin."), m_pSkin->GetSkinFactory()->GetStringOfID(opt.nCtrl).c_str());
 		}
 	}
 

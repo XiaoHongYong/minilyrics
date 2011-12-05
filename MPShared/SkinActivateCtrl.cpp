@@ -180,7 +180,8 @@ void CSkinActivateCtrl::Draw(CRawGraph *pGraph)
 			delete image;
 			return;
 		}
-		GradientFillImageHorz(image, CRect(0, 0, image->width, image->height), m_vClrBg, m_nCountBgClrs);
+		CRect rcImage(0, 0, image->width, image->height);
+		GradientFillImageHorz(image, rcImage, m_vClrBg, m_nCountBgClrs);
 		m_imgBg.Attach(image);
 	}
 

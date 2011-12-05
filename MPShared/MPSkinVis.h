@@ -10,7 +10,6 @@
 #endif // _MSC_VER > 1000
 
 #include "../MPlayerLib/IMPlayer.h"
-#include "../gfx/win32/MLPen.h"
 
 #ifdef SKIN_EDITOR
 class IEventHandler

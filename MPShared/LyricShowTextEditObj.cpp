@@ -1729,7 +1729,6 @@ void CLyricShowTextEditObj::AdjustSyncTimeOfSelected(bool bIncreaseTime)
 		nEndLine = nBegLine;
 	}
 
-	int		nTimeDuarationOffset = 0;
 	int		nLine;
 	CAutoBatchUndo	autoBatchUndo(this);
 	int		nPlayingPos = g_LyricData.GetPlayElapsedTime();
@@ -1774,8 +1773,8 @@ void CLyricShowTextEditObj::ShowFindDialog(bool bFind)
 	if (!pFind || !pReplace || !pEditorFrame)
 		return;
 
-	if (bFind && m_findReplaceStatus == FRS_FIND
-		|| !bFind && m_findReplaceStatus == FRS_REPLACE)
+	if ((bFind && m_findReplaceStatus == FRS_FIND)
+		|| (!bFind && m_findReplaceStatus == FRS_REPLACE))
 	{
 		// Hide
 		m_findReplaceStatus = FRS_NONE;

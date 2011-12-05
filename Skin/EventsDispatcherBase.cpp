@@ -138,9 +138,9 @@ void CEventsDispatcherBase::DispatchSyncEvent(IEvent *pEvent)
 {
 	EventType	eventType = pEvent->eventType;
 
-	if (eventType < 0 || eventType >= m_vListEventHandler.size())
+	if (eventType >= m_vListEventHandler.size())
 	{
-		DBGLOG1(_T("No Event Handler for: %d"), eventType);
+		DBGLOG1(_T("No Event Handler for: %d"), (int)eventType);
 		// ASSERT(0 && "No handler for this event");
 		delete pEvent;
 		return;

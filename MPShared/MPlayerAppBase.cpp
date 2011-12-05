@@ -23,6 +23,8 @@
 #ifdef _WIN32
 #include "../Skin/win32/SplashScreenWnd.h"
 #include "win32/LyricsOutPluginMgr.h"
+#include "win32/LyricsTool.h"
+#include "win32/DlgSaveLyrPrompt.h"
 #endif
 
 #ifdef _WIN32_DESKTOP
@@ -32,6 +34,11 @@
 #endif
 #else
 #include "MPFloatingLyrWnd.h"
+#endif
+
+#ifdef _MAC_OSX
+#include "mac/DlgSaveLyrPrompt.h"
+#include "mac/LyricsOutPluginMgr.h"
 #endif
 
 CMLData					g_LyricData;
@@ -275,68 +282,6 @@ void DispatchPlayPosEvent(int nPlayPos)
 	}
 }
 
-class CDlgSaveLyrPrompt : public CBaseDialog
-{
-public:
-	CDlgSaveLyrPrompt(LPCTSTR szInfo) : CBaseDialog(IDD_MSG) { m_strInfo = szInfo; }
-
-	BOOL OnInitDialog()
-	{
-		if (!CBaseDialog::OnInitDialog())
-			return FALSE;
-
-		SetDlgItemText(IDC_MSG, m_strInfo.c_str());
-
-		return TRUE;
-	}
-
-	void OnCommand(UINT uID, UINT nNotifyCode)
-	{
-		switch (uID)
-		{
-		case IDC_NO_PROMPT:
-			break;
-		case IDYES:
-		case IDNO:
-			if (IsButtonChecked(IDC_NO_PROMPT))
-				g_Profile.WriteProfileInt(_T("SaveLyrPrompt"), uID);
-		case IDCANCEL:
-			EndDialog(m_hWnd, uID);
-			break;
-		}
-	}
-
-protected:
-	tstring			m_strInfo;
-
-};
-
-int SaveDialogBox(CBaseWnd *pWnd)
-{
-	static bool bInModal = FALSE;
-	if (!bInModal)
-	{
-		bInModal = TRUE;
-
-		int nRet = g_Profile.GetProfileInt(_T("SaveLyrPrompt"), IDCANCEL);
-		if (nRet == IDCANCEL)
-		{
-			tstring		strMessage = CStrPrintf(TOLOCAL(_T("The lyrics of the %s file have changed.")), 
-				FileGetName(g_LyricData.GetSongFileName())).c_str();
-			strMessage += _T("\r\n\r\n");
-			strMessage += TOLOCAL(_T("Do you want to save the changes?"));
-
-			CDlgSaveLyrPrompt dlg(strMessage.c_str());
-			nRet = dlg.DoModal(pWnd);
-		}
-
-		bInModal = FALSE;
-		return nRet;
-	}
-
-	return IDCANCEL;
-}
-
 tstring GetAppIniFile()
 {
 	tstring	strFile;
@@ -437,8 +382,6 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 
 	return true;
 }
-
-#include "LyricsTool.h"
 
 bool CMPlayerAppBase::InitiPodLyricsDownloader()
 {
@@ -902,7 +845,7 @@ bool CMPlayerAppBase::OnLyricsChangingSavePrompt()
 		if (g_LyricData.IsOnlyAddLyrScrollActions())
 			nRet = IDYES;
 		else
-			nRet = SaveDialogBox(GetMainWnd());
+			nRet = SaveLyrDialogBox(GetMainWnd());
 		if (nRet == IDYES)
 			return CMPCommonCmdHandler::SaveCurrentLyrics(GetMainWnd(), false);
 		else if (nRet == IDCANCEL)

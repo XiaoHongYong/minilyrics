@@ -641,7 +641,7 @@ CSJVM::CSJVM(void)
 
 	int			nRet;
 	LPCSTR		vIDPredefined[] = { "", "void", "char", "boolean", "short", "int", "__jobject", "String" };
-	int			nIDPredefined[] = { TID_INVALID, TID_VOID, TID_CHAR, TID_BOOLEAN, TID_SHORT, TID_INT, TID_NULL, TID_STRING };
+	int			nIDPredefined[] = { TID_INVALID, TID_VOID, TID_CHAR, TID_BOOLEAN, TID_SHORT, TID_INT, TID_NULL_VAL, TID_STRING };
 
 	ASSERT(TID_STRING + 1 == CountOf(vIDPredefined));
 
@@ -2087,7 +2087,7 @@ int CSJVM::BSI_Expression(STreeNode *pTree)
 		}
 	case E_CONST_NULL:
 		{
-			exp.typeIdValExp = TID_NULL;
+			exp.typeIdValExp = TID_NULL_VAL;
 			return ERR_OK;
 		}
 	case E_CONST_STRING:
@@ -2566,8 +2566,8 @@ int CSJVM::CanCovertRightToLeftType(TypeId typeIdLeft, TypeId typeIdRight)
 	if (m_classTable.IsSubClassOf(typeIdRight, typeIdLeft))
 		return ERR_OK;
 
-	if ((typeIdRight == TID_NULL && !IsSimpleType(typeIdLeft))
-		|| (typeIdLeft == TID_NULL && !IsSimpleType(typeIdRight)))
+	if ((typeIdRight == TID_NULL_VAL && !IsSimpleType(typeIdLeft))
+		|| (typeIdLeft == TID_NULL_VAL && !IsSimpleType(typeIdRight)))
 		return ERR_OK;
 
 	return ERR_C_CONVERT_VALUE;

@@ -152,4 +152,4 @@ enum ML_CUSTOM_COMMAND
 	CMD_SHOW_ERR_RESULT,
 };
 
-UIObjectIDDefinition g_uidDefinition[];
+extern UIObjectIDDefinition g_uidDefinition[];

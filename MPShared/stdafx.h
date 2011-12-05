@@ -70,8 +70,11 @@
 #include "../WidgetLite/WidgetLite.h"
 #include "../Skin/Skin.h"
 #include "../MLLib/MLLib.h"
-#include "../widget/widget.h"
 #include "../MPlayerLib/IMPlayer.h"
+
+#ifdef _WIN32
+#include "../widget/widget.h"
+#endif
 
 // Local Header Files
 

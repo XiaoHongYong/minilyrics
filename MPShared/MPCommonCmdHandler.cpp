@@ -10,15 +10,14 @@
 #include "LyricShowTextEditObj.h"
 #include "SkinRateCtrl.h"
 #include "DlgSearchLyrics.h"
-#include "../WidgetLite/win32/FileOpenDlg.h"
 #include "DlgUpload.h"
 #include "AutoProcessEmbeddedLyrics.h"
 #include "DlgSaveEmbeddedLyrics.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
 #include "MPSkinMenu.h"
-#include "LyricsTool.h"
 #ifdef _WIN32
+#include "win32/LyricsTool.h"
 #include "DlgAdjustHue.h"
 #endif
 
@@ -128,10 +127,6 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 		}
 		break;
 
-	case IDC_IPOD_LYRICS_DOWNLOADER:
-		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
-		break;
-
 	case IDC_LDO_KARAOKE:
 		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("Karaoke"), 
 			!g_Profile.GetProfileBool(m_strSectName.c_str(), _T("Karaoke"), false));
@@ -156,6 +151,10 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 		}
 		break;
 #ifdef _WIN32_DESKTOP
+	case IDC_IPOD_LYRICS_DOWNLOADER:
+		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
+		break;
+
 	case IDC_ANTIAlIAS:
 		{
 			//

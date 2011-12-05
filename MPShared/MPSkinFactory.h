@@ -55,15 +55,12 @@ public:
 
 	CWndDrag			m_WndCloseToPlayers;
 #endif
-#ifdef _WIN32_DESKTOP
 	void AllUpdateTransparent();
 	void SetClickThrough(bool bClickThrough);
 	bool GetClickThrough() const { return m_bClickThrough; }
 
 protected:
 	bool				m_bClickThrough;
-
-#endif
 
 protected:
 	virtual CSkinMenu *LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu);

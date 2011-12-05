@@ -199,9 +199,7 @@ BOOL CMediaAlbumArtCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (_tcsicmp(szProperty, _T("FrameMaskRectPos")) == 0)
 	{
-		GetRectValue(szValue, m_rcFrameMaskPos.left, m_rcFrameMaskPos.top, m_rcFrameMaskPos.right, m_rcFrameMaskPos.bottom);
-		m_rcFrameMaskPos.right += m_rcFrameMaskPos.left;
-		m_rcFrameMaskPos.bottom += m_rcFrameMaskPos.top;
+		GetRectValue(szValue, m_rcFrameMaskPos);
 	}
 	else if (_tcsicmp(szProperty, _T("BgColor")) == 0)
 	{

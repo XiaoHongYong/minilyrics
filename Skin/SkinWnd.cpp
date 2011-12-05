@@ -129,6 +129,15 @@ bool GetRectValue(LPCTSTR szValue, long &x, long &y, long &cx, long &cy)
 	return Scan4IntX(szValue, x, y, cx, cy);
 }
 
+bool GetRectValue(LPCTSTR szValue, RECT &rc)
+{
+	if (!Scan4IntX(szValue, rc.left, rc.top, rc.right, rc.bottom))
+		return false;
+	rc.right += rc.left;
+	rc.bottom += rc.top;
+	return true;
+}
+
 
 void ColorToStr(const MLColor &clr, tstring &strColor)
 {
@@ -1587,7 +1596,7 @@ bool CSkinWnd::OnCreate()
 
 	// If translucency is used, call this to update screen explicitly
 	if (m_bTranslucencyLayered)
-		InvalidateRectOfLayeredWindow(NULL);
+		InvalidateRect(NULL);
 
 	return true;
 }

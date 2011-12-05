@@ -25,11 +25,16 @@
 	COPYDATASTRUCT.dwData:	MessageToML or MessageToPlayer
 	COPYDATASTRUCT.lpData:	Message parameter
 
-/*****************************************************************************************/
+\*****************************************************************************************/
 
 #define ML_MSG_VERSION			0xF20F4E57
 
 #define R_UNDETERMINED			(-1)
+
+#ifndef _WIN32
+typedef int HWND;
+#endif
+
 
 enum MessageToML
 {

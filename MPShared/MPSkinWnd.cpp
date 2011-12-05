@@ -6,11 +6,12 @@
 #include "MPlayerApp.h"
 #include "MPSkinWnd.h"
 #include "MPCommonCmdHandler.h"
-#ifdef _MPLAYER
+
 #include "MPPlaylistCmdHandler.h"
+#ifdef _MPLAYER
 #include "MPMediaLibCmdHandler.h"
-//#include "MPCmdHandlerOfMediaGuide.h"
 #endif
+
 #include "SkinRateCtrl.h"
 #include "LyricShowObj.h"
 #include "LyricShowTextEditObj.h"
@@ -1015,12 +1016,12 @@ void CMPSkinWnd::AddCmdHandler(LPCTSTR szName)
 	ISkinCmdHandler		*pHandler = NULL;
 
 	if (_tcsicmp(szName, _T("ch_common")) == 0)
-		pHandler = new CMPCommonCmdHandler;
+		pHandler = new CMPCommonCmdHandler();
 #ifdef _MPLAYER
 	else if (_tcsicmp(szName, _T("ch_playlist")) == 0)
-		pHandler = new CMPPlaylistCmdHandler;
+		pHandler = new CMPPlaylistCmdHandler();
 	else if (_tcsicmp(szName, _T("ch_medialib_ppc")) == 0)
-		pHandler = new CMPMediaLibCmdHandler;
+		pHandler = new CMPMediaLibCmdHandler();
 //	else if (_tcsicmp(szName, _T("ch_mediaguide")) == 0)
 //		pHandler = new CMPCmdHandlerOfMediaGuide;
 #endif

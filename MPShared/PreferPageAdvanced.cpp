@@ -11,6 +11,15 @@
 #include "gtk2/HotkeyCtrlEx.h"
 #endif
 
+#ifdef _MAC_OSX
+
+void FormatHotkeyText(tstring &strText, UINT nVirtKey, UINT fsModifiers)
+{
+	strText = CStrPrintf(_T("%d"), nVirtKey).c_str();
+}
+
+#endif
+
 #define DURATION_SEARCH		500
 
 #define SZ_YES			TOLOCAL(_T("Yes"))
@@ -432,6 +441,7 @@ public:
 
 };
 
+#ifdef _WIN32
 class CDlgShortcutKey : public CBaseDialog
 {
 public:
@@ -465,6 +475,31 @@ protected:
 	tstring				m_strCaption;
 
 };
+
+#else // #ifdef _WIN32
+
+class CDlgShortcutKey
+{
+public:
+	CDlgShortcutKey(LPCTSTR szCaption)
+	{
+		m_strCaption = szCaption;
+		m_nVirtualKey = 0;
+		m_fsModifiers = 0;
+	}
+	
+	int DoModal(CBaseWnd *pWndParent)
+	{
+		return IDCANCEL;
+	}
+	
+	UINT				m_nVirtualKey, m_fsModifiers;
+	
+protected:
+	tstring				m_strCaption;
+	
+};
+#endif // #ifdef _WIN32
 
 
 static tstring GetCmdIDDescription(int nCmd)
@@ -724,6 +759,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(m_pSkin));
 	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(m_pSkin));
 
+#ifdef _WIN32
 	//
 	// Tray Icon controls
 	//
@@ -732,6 +768,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 		m_vPreferItems.push_back(new CPfItemTrayIconPlayerCtrl(g_SysTrayIconCmd[i].szCmd, i));
 	}
 	m_vPreferItems.push_back(new CPfItemSystemTrayIcon());
+#endif
 
 	m_vPreferItems.push_back(new CPfItemBoolEnableGlobalHotkey());
 
@@ -787,7 +824,7 @@ void CPagePfAdvanced::OnUIObjNotify(IUIObjNotify *pNotify)
 			|| pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_RBTN_CLICK)
 		{
 			POINT	pt;
-			GetCursorPos(&pt);
+			MLWidget::GetCursorPos(&pt);
 			ShowCustomizeMenu(pt.x, pt.y);
 		}
 	}

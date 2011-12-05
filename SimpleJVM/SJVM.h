@@ -50,13 +50,13 @@ enum TypeIdPredefined
 	TID_BOOLEAN,
 	TID_SHORT,
 	TID_INT,
-	TID_NULL,
+	TID_NULL_VAL,
 	TID_STRING,
 };
 
 #define TID_EXCEPTION		CSjobjException::m_sTypeId
 
-inline bool IsSimpleType(TypeId typeId) { return typeId < TID_NULL; }
+inline bool IsSimpleType(TypeId typeId) { return typeId < TID_NULL_VAL; }
 
 #define JOBJ_NULL		0
 

@@ -47,7 +47,7 @@ static uint32 SearchWithKeywordEx(V_Str &vKeywords, LPCTSTR szText, LC_ITEMEX::V
 	while (*p)
 	{
 		while (IsAlpha(*p) || IsDigit(*p))
-			*p++;
+			p++;
 
 		if (p == pStart)
 			p++;

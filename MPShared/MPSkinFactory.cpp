@@ -31,7 +31,6 @@
 #include "PreferenceDlg.h"
 #include "DlgUpload.h"
 #include "DlgAdjustHue.h"
-#include "LyricsTool.h"
 #include "MPlaylistCtrl.h"
 #include "MPSkinMediaNumInfoCtrl.h"
 #include "MPlaylistSearchObj.h"
@@ -39,6 +38,7 @@
 #ifdef _MPLAYER
 #include "SkinTreeCtrl.h"
 #include "MPSkinVis.h"
+#include "win32/LyricsTool.h"
 #ifdef _WIN32_WCE
 #include "win32/wce/WCEMainCmdBar.h"
 #endif
@@ -50,6 +50,10 @@
 
 #ifdef _LINUX_GTK2
 #include "gtk2/MPSkinMenu.h"
+#endif
+
+#ifdef _MAC_OSX
+#include "mac/MPSkinMenu.h"
 #endif
 
 #ifdef _WIN32_DESKTOP
@@ -427,6 +431,19 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 	}
 
 	AllUpdateTransparent();
+}
+#else
+
+void CMPSkinFactory::AllUpdateTransparent()
+{
+}
+
+void CMPSkinFactory::SetClickThrough(bool bClickThrough)
+{
+	m_bClickThrough = bClickThrough;
+	
+	// Save ClickThrough options
+	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("ClickThrough"), m_bClickThrough);
 }
 
 #endif // _WIN32_DESKTOP

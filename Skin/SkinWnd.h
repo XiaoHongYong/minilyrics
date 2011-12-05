@@ -24,6 +24,7 @@ BOOL IsWndOutOfScreen(const CRect &rc);
 // 0, 0, 10, 20
 bool GetRectValue(LPCTSTR szValue, CSFImage &image);
 bool GetRectValue(LPCTSTR szValue, long &x, long &y, long &cx, long &cy);
+bool GetRectValue(LPCTSTR szValue, RECT &rc);
 
 bool inline IsPropertyName(LPCTSTR szName, LPCTSTR szStr) { return _tcsicmp(szName, szStr) == 0; }
 

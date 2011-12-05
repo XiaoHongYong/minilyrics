@@ -12,7 +12,7 @@ public:
 
 	typedef list<_Ty *>		Parent;
 #ifdef _MAC
-    typedef _List_iterator<_Ty>                        iterator;
+    typedef _List_iterator<_Ty*>                        iterator;
 #endif
 
 	~auto_free_list()

@@ -39,7 +39,9 @@ enum WndSizeMode
 #define SW_MINIMIZE         6
 #define SW_RESTORE          9
 #define SW_SHOWMINIMIZED	10
+#define SW_SHOWMINNOACTIVE	SW_SHOWMINIMIZED
 #define SW_SHOWMAXIMIZED	11
+#define SW_SHOWNOACTIVATE	SW_SHOW
 
 #define VK_ESCAPE			1
 #define VK_CONTROL			3
@@ -63,6 +65,7 @@ enum WndSizeMode
 #define VK_LBUTTON			20
 #define VK_SPACE			21
 #define VK_TAB				22
+#define VK_F3				23
 
 #define WHEEL_DELTA			50
 
@@ -70,11 +73,17 @@ enum WndSizeMode
 
 #define MB_ICONINFORMATION	10
 #define MB_OK				20
+#define MB_ICONQUESTION		30
+#define MB_YESNOCANCEL		40
+#define MB_YESNO			50
+#define MB_ICONERROR		60
 
 #define IDCLOSE				1
 
 #define IDOK				0
 #define IDCANCEL			1
+#define IDNO				2
+#define IDYES				3
 #define MK_LBUTTON			1
 
 #endif

@@ -82,7 +82,7 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 		goto FAILED;
 
 
-	int nSize, cur;
+	size_t nSize, cur;
 	nSize = vWords.size();
 	if (nSize <= 2){
 		// 表达式为空
@@ -142,7 +142,7 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 			}
 			else if (OpPriorF[pOptrTop->nWordType - FW_OPTR] > OpPriorG[pWordCur->nWordType - FW_OPTR]){
 				// calculate the value:
-				int tmp;
+				size_t tmp;
 				tmp = arrOpnd.size();
 				if (tmp < 2)
 				{
@@ -250,7 +250,7 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 					cur ++;
 					break;
 				case FW_OPTR_BEGIN:
-					int tmp;
+					size_t tmp;
 					tmp = arrOpnd.size();
 					if (tmp != 1){
 						goto FAILED;
@@ -278,8 +278,9 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 			goto FAILED;
 	}
 FAILED:
-	if (m_strFormula.size() > 0)
+	if (m_strFormula.size() > 0) {
 		DBGLOG1(_T("Failed to calculate value: %s"), m_strFormula.c_str());
+	}
 
 	bRet = FALSE;
 	goto END;
@@ -287,7 +288,7 @@ SUCEED:
 	bRet = TRUE;
 END:
 	// remove old data
-	int	nCount;
+	size_t	nCount;
 	nCount = vWords.size();
 	for (int i = 0; i < nCount; i ++)
 	{

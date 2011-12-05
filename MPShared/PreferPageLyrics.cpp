@@ -11,6 +11,10 @@
 #include "gtk2/LyricsOutPluginMgr.h"
 #endif
 
+#ifdef _MAC_OSX
+#include "mac/LyricsOutPluginMgr.h"
+#endif
+
 
 class CPagePfLyrDownload : public CPagePfBase
 {

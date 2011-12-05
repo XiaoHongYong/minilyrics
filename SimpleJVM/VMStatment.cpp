@@ -57,7 +57,7 @@ stmt_index CStmtImage::newStmtExpNull(int nLineNo)
 
 	ps->sExpression.expType = E_CONST;
 	ps->sExpression.nConstValue = 0;
-	ps->sExpression.typeId = TID_NULL;
+	ps->sExpression.typeId = TID_NULL_VAL;
 
 	return si;
 }
