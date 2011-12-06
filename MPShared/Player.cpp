@@ -177,12 +177,12 @@ HWND GetMLSericeWindow();
 
 void CPlayer::OnInitOfMiniLyrics()
 {
-	g_playerEventDispatcher.Create();
+	g_playerEventDispatcher.Init();
 }
 
 void CPlayer::OnQuitOfMiniLyrics()
 {
-	g_playerEventDispatcher.Destroy();
+	g_playerEventDispatcher.Quit();
 	
 	if (m_playerInfo.hWndPluginService)
 		Disconnect();

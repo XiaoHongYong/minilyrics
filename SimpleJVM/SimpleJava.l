@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <math.h>
 #include "SyntaxTree.h"
+#define YY_NEVER_INTERACTIVE	1
 #define YYSTYPE		STreeNode*
 #include "SimpleJava.tab.h"
 

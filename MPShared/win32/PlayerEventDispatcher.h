@@ -2,6 +2,8 @@
 #pragma once
 
 #include "win32/VolumeOutMaster.h"
+#include "PlayerSmoothTimer.h"
+#include "win32/MLPlayerMgr.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 // create window to get playback pos of player timely.
@@ -21,7 +23,7 @@ public:
 	{
 		CBaseWnd::CreateEx(MSG_WND_CLASS_NAME, _T("PlayerEventWnd"), 0, 0, 1, 1, NULL, 0);
 
-		m_volMaster.Init(g_playerEventDispatcher.GetHandle());
+		m_volMaster.Init(GetHandle());
 
 		// latest playlist and latest playing song file will loaded while main window is created.
 		LPCTSTR			szCmdLine;
@@ -154,7 +156,6 @@ public:
 		}
 	}
 	
-#ifdef _WIN32
 	LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (message == WM_COPYDATA)
@@ -174,7 +175,8 @@ public:
 		
 		return CBaseWnd::WndProc(message, wParam, lParam);
 	}
-#endif
+
+	CPlayerSmoothTimer &GetSmoothTimer() { return m_playerSmoothTimer; }
 	
 protected:
 	int					m_nTimeOutUpdateLyr;

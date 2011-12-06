@@ -8,14 +8,6 @@
 #include "../MLPluginLib/MiniLyricsPlugin.h"
 #endif
 
-#ifdef _WIN32
-#include "win32/PlayerSmoothTimer.h"
-#endif
-
-#ifdef _LINUX_GTK2
-#include "gtk2/PlayerSmoothTimer.h"
-#endif
-
 #define LRC_TITLE_MAX_LEN		128
 
 enum PLAYER_TYPE

@@ -70,7 +70,8 @@ BOOL CSkinToolTip::AddTool(LPCTSTR szText, LPCRECT lpRectTool, UINT nIDTool)
 
 void CSkinToolTip::DelTool(UINT nIDTool)
 {
-	ASSERT(::IsWindow(m_hWnd));
+	if (!::IsWindow(m_hWnd))
+		return;
 
 	TOOLINFO ti;
 	FillInToolInfo(ti, m_hWndParent, nIDTool);

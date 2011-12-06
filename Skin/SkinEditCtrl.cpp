@@ -1002,7 +1002,7 @@ byte CSkinEditCtrl::GetBgAlpha()
 {
 #ifdef _WIN32_DESKTOP
 	if (m_bTranslucencyWithSkin)
-		return int(m_pSkin->m_nTranslucencyAlphaDynamic);
+		return int(m_pSkin->m_nCurTranslucencyAlpha);
 	else
 #endif
 		return 255;

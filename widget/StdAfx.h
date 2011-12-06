@@ -9,5 +9,6 @@
 #include "../Utils/Utils.h"
 #include "../OurMFCLib/OurMFClib.h"
 #include "../GfxLite/GfxLite.h"
+#include "../GfxRaw/GfxRaw.h"
 
 #endif // _WIDGET_INC_

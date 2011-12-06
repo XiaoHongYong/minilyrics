@@ -154,7 +154,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 void CLyricShowHorzScrollObj::FadeOutHorzBorder(CRawGraph *pGraphics)
 {
 #ifdef _WIN32_DESKTOP
-	if (m_pSkin->m_nTranslucencyAlphaDynamic > 0)
+	if (m_pSkin->m_nCurTranslucencyAlpha > 0)
 	{
 		if (m_bSetSkinBg && m_pContainer->IsDrawBgImage())
 			return;
@@ -173,7 +173,7 @@ void CLyricShowHorzScrollObj::FadeOutHorzBorder(CRawGraph *pGraphics)
 	rc.SetRect(m_rcObj.left, m_rcObj.top, m_rcObj.left + 30, m_rcObj.bottom);
 	if (rc.right > m_rcObj.right)
 		rc.right = m_rcObj.right;
-	if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+	if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nCurTranslucencyAlpha <= 0)
 		pGraphics->HorzAlphaFadeOut(&rc, true);
 	else
 		pGraphics->HorzFadeOut(&rc, clrBg, true);
@@ -182,7 +182,7 @@ void CLyricShowHorzScrollObj::FadeOutHorzBorder(CRawGraph *pGraphics)
 	rc.left = m_rcObj.right - 30;
 	if (rc.left < m_rcObj.left)
 		rc.left = m_rcObj.left;
-	if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+	if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nCurTranslucencyAlpha <= 0)
 		pGraphics->HorzAlphaFadeOut(&rc, false);
 	else
 		pGraphics->HorzFadeOut(&rc, clrBg, false);

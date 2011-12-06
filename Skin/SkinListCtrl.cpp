@@ -1208,7 +1208,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 		MLColor		clrBg1, clrBg2;
 
 		if (m_bTranslucencyWithSkin)
-			alpha = int(m_pSkin->m_nTranslucencyAlphaDynamic);
+			alpha = int(m_pSkin->m_nCurTranslucencyAlpha);
 		else
 			alpha = 255;
 
@@ -1266,7 +1266,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 			MLColor		clr = GetColor(CN_SEL_BG);
 
 			if (m_bTranslucencyWithSkin)
-				alpha = (int)(m_pSkin->m_nTranslucencyAlphaDynamic);
+				alpha = (int)(m_pSkin->m_nCurTranslucencyAlpha);
 			else
 				alpha = 255;
 

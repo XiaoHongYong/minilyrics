@@ -28,8 +28,8 @@ void CSkinFadeArea::Draw(CRawGraph *pGraph)
 	if (!m_pSkin->GetEnableTranslucencyLayered())
 		return;
 
-	if ((int)m_pSkin->m_nTranslucencyAlphaDynamic == m_pSkin->m_nTranslucencyAlphaOnActive)
+	if ((int)m_pSkin->m_nCurTranslucencyAlpha == m_pSkin->m_nTranslucencyAlphaOnActive)
 		return;
 
-	pGraph->MultiplyAlpha((byte)m_pSkin->m_nTranslucencyAlphaDynamic, &m_rcObj);
+	pGraph->MultiplyAlpha((byte)m_pSkin->m_nCurTranslucencyAlpha, &m_rcObj);
 }

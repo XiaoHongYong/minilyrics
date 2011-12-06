@@ -249,24 +249,22 @@ public:
 	//
 	// window alpha and transparent features
 	//
-	void SetTransparent(BYTE nAlpha, bool bClickThrough);
 	inline bool GetEnableTranslucencyLayered() const { return m_bTranslucencyLayered; }
 	void EnableTranslucencyLayered(bool bTranslucencyLayered);
-	inline int GetCurrentTranslucency() const { return m_nTranslucencyAlphaDynamic; }
+	inline int GetCurrentTranslucency() const { return m_nCurTranslucencyAlpha; }
 
 	MLColor GetTranslucencyColor(const MLColor &clr) const;
 
 #ifdef _WIN32_DESKTOP
-	virtual BOOL InvalidateRect(const RECT* lpRect = NULL, BOOL bErase = FALSE);
-
 	void InvalidateRectOfLayeredWindow(const RECT* lpRect);
-
-	BOOL UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph);
+	virtual BOOL InvalidateRect(const RECT* lpRect = NULL, BOOL bErase = FALSE);
 
 	void StartTranslucencyFade();
 
 	void OnTimerDynamicAlphaChange();
 #endif
+
+	virtual bool IsClickThrough() { return m_bEnableClickThrough && m_bClickThrough && !m_bActived; }
 
 	enum TranslucencyStatus
 	{
@@ -275,19 +273,16 @@ public:
 		TS_ON_HOVER,
 	};
 
-	bool				m_bTranslucencyLayered;				// Is following alpha setting enabled?
-	int					m_nTranslucencyAlpha;				// Alpha on inactivate
-	int					m_nTranslucencyAlphaDynamic;		// Current alpha value
+	int					m_nTranslucencyAlphaDefault;		// Alpha on inactivate
 	DWORD				m_dwTransFadeinBegTime;				// Begin time of fade in/out translucency
 	int					m_nTransAlphaBeg;					// The alpha value of begin fade in/out.
 	int					m_nTranslucencyAlphaOnActive;		// Alpha on activate
 	int					m_nTranslucencyAlphaOnHover;		// Alpha on mouse hover
+	int					m_nCurTranslucencyAlpha;			// Current translucency alpha value
 
 	TranslucencyStatus	m_translucencyStatus;
 	bool				m_bOnMouseHover;
 
-	int					m_nAlpha;
-	bool				m_bClickThrough;
 	bool				m_bEnableClickThrough;
 
 

@@ -7,6 +7,8 @@
 #include "../widgetif.h"
 #include "Cursor.h"
 
+class CRawGraph;
+
 #ifdef _WINCE_
 #ifndef DS_NOIDLEMSG
 #define DS_NOIDLEMSG	0
@@ -176,6 +178,19 @@ public:
 	void SendUserMessage(int nMessageID, LPARAM param);
 
 	virtual void OnUserMessage(int nMessageID, LPARAM param) { }
+
+public:
+	// Translucency related APIs
+	bool				m_bTranslucencyLayered;				// Is following alpha setting enabled?
+
+	// Alpha
+	int					m_nAlpha;
+	bool				m_bClickThrough;
+
+	virtual void SetTransparent(BYTE nAlpha, bool bClickThrough);
+	virtual bool IsClickThrough() { return m_bClickThrough; }
+
+	BOOL UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph);
 
 public:
 	static CBaseWnd *FromHandle(HWND hWnd);

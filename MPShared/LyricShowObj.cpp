@@ -1350,7 +1350,7 @@ void CLyricShowObj::DrawCurrentRow(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos, int yDrawLyrEndPos)
 {
 #ifdef _WIN32_DESKTOP
-	if (m_pSkin->m_nTranslucencyAlphaDynamic > 0)
+	if (m_pSkin->m_nCurTranslucencyAlpha > 0)
 	{
 		if (m_bSetSkinBg && m_pContainer->IsDrawBgImage())
 			return;
@@ -1369,7 +1369,7 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 	rc.SetRect(m_rcObj.left, m_rcObj.top + m_nYMargin, m_rcObj.right, m_rcObj.top + m_nYMargin + m_nFontHeight);
 	if (rc.bottom > yDrawLyrStartPos)
 	{
-		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nCurTranslucencyAlpha <= 0)
 			pGraphics->VertAlphaFadeOut(&rc, true);
 		else
 			pGraphics->VertFadeOut(&rc, clrBg, true);
@@ -1379,7 +1379,7 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 	rc.top = m_rcObj.bottom - m_nYMargin - m_nFontHeight;
 	if (rc.top < yDrawLyrEndPos)
 	{
-		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nTranslucencyAlphaDynamic <= 0)
+		if (m_pSkin->GetEnableTranslucencyLayered() && m_pSkin->m_nCurTranslucencyAlpha <= 0)
 			pGraphics->VertAlphaFadeOut(&rc, false);
 		else
 			pGraphics->VertFadeOut(&rc, clrBg, false);

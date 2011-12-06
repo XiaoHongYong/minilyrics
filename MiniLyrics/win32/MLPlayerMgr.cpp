@@ -8,6 +8,7 @@
 #include "DlgStartMiniLyrics.h"
 #include "DlgSetupPlayerPlugins.h"
 #include "../MLPlayerPluginAgentLib/MLPlayerPluginAgentLib.h"
+#include "PlayerEventDispatcher.h"
 
 
 CMLPlayerMgr			g_playerMgr;
@@ -233,8 +234,8 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			if (g_Player.IsUseSeekTimeAsPlayingTime())
 				break;
 
-			if (g_Player.m_playerSmoothTimer.IsRunning())
-				g_Player.m_playerSmoothTimer.AdjustTimer(playPos);
+			if (g_playerEventDispatcher.GetSmoothTimer().IsRunning())
+				g_playerEventDispatcher.GetSmoothTimer().AdjustTimer(playPos);
 			else
 			{
 				g_LyricData.SetPlayElapsedTime(playPos);

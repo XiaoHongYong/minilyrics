@@ -103,7 +103,7 @@ BOOL RegWriteProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nVa
 
 #define SZ_REG_MINILYRICS		"SOFTWARE\\MiniLyrics"
 
-char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource)
+char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource)
 {
 	char	*cp = strDestination;
 	char	*cpEnd = strDestination + nLenMax - 1;
@@ -118,7 +118,7 @@ char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource)
 	return(strDestination);
 }
 
-char *strcat_safe(char * dst, int Size, const char * src)
+char *strcat_safe(char * dst, size_t Size, const char * src)
 {
 	char * cp = dst;
 	char * endcp = dst + Size - 1;
@@ -134,12 +134,12 @@ char *strcat_safe(char * dst, int Size, const char * src)
 }
 
 
-int	wcsncpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int nToCopy)
+size_t	wcsncpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource, size_t nToCopy)
 {
 	if (nToCopy >= nLenMax)
 		nToCopy = nLenMax - 1;
 
-	int		org = nToCopy;
+	size_t		org = nToCopy;
 
 	while (nToCopy && (*strDestination++ = *strSource++))    /* copy string */
 		nToCopy--;
@@ -149,7 +149,7 @@ int	wcsncpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int
 	return org - nToCopy;
 }
 
-wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource)
+wchar_t *wcscpy_safe(wchar_t *strDestination, size_t nLenMax, const wchar_t *strSource)
 {
 	wchar_t	*cp = strDestination;
 	wchar_t	*cpEnd = strDestination + nLenMax - 1;
@@ -166,7 +166,7 @@ wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSou
 
 WCHAR * __cdecl wcscat_safe (
 							 WCHAR * dst,
-							 int	Size,
+							 size_t	Size,
 							 const WCHAR * src
 							 )
 {

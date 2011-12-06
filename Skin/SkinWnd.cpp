@@ -234,8 +234,8 @@ CSkinWnd::CSkinWnd()
 	m_nAlpha = 255;
 	m_nTranslucencyAlphaOnActive = -1;
 	m_nTranslucencyAlphaOnHover = -1;
-	m_nTranslucencyAlpha = -1;
-	m_nTranslucencyAlphaDynamic = 255;
+	m_nTranslucencyAlphaDefault = -1;
+	m_nCurTranslucencyAlpha = 255;
 	m_dwTransFadeinBegTime = 0;
 	m_nTransAlphaBeg = 0;
 	m_bClickThrough = false;
@@ -345,8 +345,8 @@ void CSkinWnd::CloseSkin()
 	m_nAlpha = 255;
 	m_nTranslucencyAlphaOnActive = -1;
 	m_nTranslucencyAlphaOnHover = -1;
-	m_nTranslucencyAlpha = -1;
-	m_nTranslucencyAlphaDynamic = 255;
+	m_nTranslucencyAlphaDefault = -1;
+	m_nCurTranslucencyAlpha = 255;
 	m_dwTransFadeinBegTime = 0;
 	m_nTransAlphaBeg = 0;
 	m_bClickThrough = false;
@@ -869,9 +869,9 @@ bool CSkinWnd::UpdateSkinProperty()
 	if (m_bTranslucencyLayered)
 	{
 		if (m_bActived)
-			m_nTranslucencyAlphaDynamic = m_nTranslucencyAlphaOnActive;
+			m_nCurTranslucencyAlpha = m_nTranslucencyAlphaOnActive;
 		else
-			m_nTranslucencyAlphaDynamic = m_nTranslucencyAlpha;
+			m_nCurTranslucencyAlpha = m_nTranslucencyAlphaDefault;
 	}
 
 #ifdef _WIN32_DESKTOP
@@ -911,7 +911,7 @@ void CSkinWnd::OnPaint(CMLGraphics *pGraph)
 	// draw every ui objects on back buffer one by one
 	m_rootConainter.Draw(pMemGraph);
 
-	// from buffer to screen dc
+	// from buffer to screen
 	if (m_dbScale == 1.0)
 		pMemGraph->DrawToGraphics(pGraph, 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), 0, 0);
 	else
@@ -952,8 +952,8 @@ MLColor CSkinWnd::GetTranslucencyColor(const MLColor &clr) const
 	if (m_bTranslucencyLayered)
 	{
 		MLColor clrNew = clr;
-		clrNew.setAlpha((byte)m_nTranslucencyAlphaDynamic);
-		PreMultiplyColor(clrNew, (byte)m_nTranslucencyAlphaDynamic);
+		clrNew.setAlpha((byte)m_nCurTranslucencyAlpha);
+		PreMultiplyColor(clrNew, (byte)m_nCurTranslucencyAlpha);
 		return clrNew;
 	}
 	else
@@ -1006,16 +1006,16 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	if (!m_pmemGraph)
 		return;	// SkinWnd isn't created yet.
 
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(m_pmemGraph);
+
+	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
+
 	if (pObj->IsUseParentBg())
 	{
 		// Redraw background
 		ASSERT(pObj->GetParent() != NULL);
 		pObj->GetParent()->RedrawBackground(m_pmemGraph, pObj->m_rcObj);
 	}
-
-	CRawGraph::CClipBoxAutoRecovery	autoCBR(m_pmemGraph);
-
-	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
 
 	CRawGraph::COpacityBlendAutoRecovery opacityAR(m_pmemGraph, pObj->GetOpacity());
 
@@ -1393,19 +1393,19 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (IsPropertyName(szProperty, _T("TranslucencyAlpha")))
 	{
-		m_nTranslucencyAlpha = _ttoi(szValue);
+		m_nTranslucencyAlphaDefault = _ttoi(szValue);
 		if (m_nTranslucencyAlphaOnActive == -1)
-			m_nTranslucencyAlphaOnActive = m_nTranslucencyAlpha;
+			m_nTranslucencyAlphaOnActive = m_nTranslucencyAlphaDefault;
 		if (m_nTranslucencyAlphaOnHover == -1)
-			m_nTranslucencyAlphaOnHover = m_nTranslucencyAlpha;
+			m_nTranslucencyAlphaOnHover = m_nTranslucencyAlphaDefault;
 		if (m_bSkinOpened)
 			StartTranslucencyFade();
 	}
 	else if (IsPropertyName(szProperty, _T("TranslucencyAlphaOnActive")))
 	{
 		m_nTranslucencyAlphaOnActive = _ttoi(szValue);
-		if (m_nTranslucencyAlpha == -1)
-			m_nTranslucencyAlpha = m_nTranslucencyAlphaOnActive;
+		if (m_nTranslucencyAlphaDefault == -1)
+			m_nTranslucencyAlphaDefault = m_nTranslucencyAlphaOnActive;
 		if (m_bSkinOpened)
 			StartTranslucencyFade();
 	}
@@ -1464,7 +1464,7 @@ void CSkinWnd::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropBoolStr(_T("WindowsAppearance"), m_bWindowsAppearance, m_bWindowsAppearance);
 	listProperties.AddPropBoolStr(_T("EnableTransparentFeature"), m_bEnableClickThrough, !m_bEnableClickThrough);
 	listProperties.AddPropBoolStr(_T("EnableTranslucency"), m_bTranslucencyLayered, m_bTranslucencyLayered);
-	listProperties.AddPropInt(_T("TranslucencyAlpha"), m_nTranslucencyAlpha, m_nTranslucencyAlpha != 255);
+	listProperties.AddPropInt(_T("TranslucencyAlpha"), m_nTranslucencyAlphaDefault, m_nTranslucencyAlphaDefault != 255);
 	listProperties.AddPropInt(_T("TranslucencyAlphaOnActive"), m_nTranslucencyAlphaOnActive, m_nTranslucencyAlphaOnActive != 255);
 	listProperties.AddPropInt(_T("TranslucencyAlphaOnHover"), m_nTranslucencyAlphaOnHover, m_nTranslucencyAlphaOnHover != 255);
 #endif
@@ -1831,48 +1831,6 @@ void CSkinWnd::EnableTranslucencyLayered(bool bTranslucencyLayered)
 
 #ifdef _WIN32_DESKTOP
 
-void CSkinWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
-{
-	// If it's child old, ignore this.
-	if (::GetParent(m_hWnd))
-		return;
-
-	m_nAlpha = nAlpha;
-	m_bClickThrough = bClickThrough;
-
-	if (m_bTranslucencyLayered)
-	{
-		InvalidateRect(NULL, true);
-		return;
-	}
-
-	COLORREF		clrTrans = RGB(0, 0, 0);
-	DWORD			dwFlags = 0;
-
-	if (nAlpha < 255)
-		dwFlags = LWA_ALPHA;
-
-/*	if (bTransparentClr)
-	{
-		clrTrans = clrTransparent;
-		dwFlags |= LWA_COLORKEY;
-	}*/
-
-	if (m_bEnableClickThrough && bClickThrough && !m_bActived)
-	{
-		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) | WS_EX_TRANSPARENT);
-	}
-	else
-	{
-		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) & ~WS_EX_TRANSPARENT);
-	}
-
-	if (dwFlags != 0 || (m_bEnableClickThrough && bClickThrough && !m_bActived))
-		::SetLayeredWindow(m_hWnd, clrTrans, nAlpha, dwFlags);
-	else
-		::UnSetLayeredWindow(m_hWnd);
-}
-
 BOOL CSkinWnd::InvalidateRect(const RECT *lpRect, BOOL bErase)
 {
 	if (!IsVisible() || IsIconic())
@@ -1971,70 +1929,12 @@ HBITMAP Load32Bitbmp(LPCTSTR szImage, int &nWidth, int &nHeight)
 	return imgData.ToHBitmap(NULL);
 }*/
 
-BOOL CSkinWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
-{
-// 	int		w, h;
-// 	HBITMAP	hBmp;
-// 
-// 	hBmp = Load32Bitbmp(_T("c:\\main??.png"), w, h);
-// 	TestUpdateLayeredWindow(m_hWnd, hBmp, w, h);
-// 	return true;
-/*	CMemAggGraphics		*pAgg;
-
-	pAgg = (CMemAggGraphics *)pGraph;
-
-	TestUpdateLayeredWindow(m_hWnd, pAgg->GetMemBITMAP(), pAgg->Width(), pAgg->Height());
-
-	return true;*/
-
-	HDC		hdc, hdcSrc;
-	CRect	rcWnd;
-	POINT	ptSrc, ptDest;
-	SIZE	sizeWnd;
-	DWORD	dwStyle, dwStyleNew;
-	BLENDFUNCTION	blend;
-
-	hdc = GetDC(m_hWnd);
-
-	hdcSrc = pGraph->GetHandle();
-
-	// ????WS_EX_LAYERED??
-	dwStyle = GetWindowLong(m_hWnd, GWL_EXSTYLE);
-	dwStyleNew = dwStyle | WS_EX_LAYERED;
-	if (m_bEnableClickThrough && m_bClickThrough && !m_bActived)
-		dwStyleNew |= WS_EX_TRANSPARENT;
-	else
-		dwStyleNew &= ~WS_EX_TRANSPARENT;
-	if (dwStyle != dwStyleNew)
-		SetWindowLong(m_hWnd, GWL_EXSTYLE, dwStyleNew);
-
-	GetWindowRect(&rcWnd);
-
-	blend.AlphaFormat = AC_SRC_ALPHA;
-	blend.BlendOp = AC_SRC_OVER;
-	blend.BlendFlags = 0;
-	blend.SourceConstantAlpha = m_nAlpha;
-
-	ptSrc.x = ptSrc.y = 0;
-	ptDest.x = rcWnd.left;
-	ptDest.y = rcWnd.top;
-	sizeWnd.cx = rcWnd.Width();
-	sizeWnd.cy = rcWnd.Height();
-
-	BOOL bRet = UpdateLayeredWindow(m_hWnd, hdc, &ptDest, &sizeWnd, hdcSrc, &ptSrc, 0, &blend, ULW_ALPHA);
-	//BOOL bRet = UpdateLayeredWindow(m_hWnd, NULL, NULL, NULL, hdcSrc, &ptSrc, 0, &blend, ULW_ALPHA);
-
-	ReleaseDC(m_hWnd, hdc);
-
-	return bRet;
-}
-
 void CSkinWnd::StartTranslucencyFade()
 {
 	if (m_bTranslucencyLayered)
 	{
 		m_dwTransFadeinBegTime = GetTickCount();
-		m_nTransAlphaBeg = m_nTranslucencyAlphaDynamic;
+		m_nTransAlphaBeg = m_nCurTranslucencyAlpha;
 
 		KillTimer(TIMER_ID_DYNAMIC_TRANS);
 		SetTimer(TIMER_ID_DYNAMIC_TRANS, TIMER_SPAN_DYNAMIC_TRANS);
@@ -2061,18 +1961,18 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 		{
 			m_bOnMouseHover = bOnMouseHover;
 			m_dwTransFadeinBegTime = GetTickCount();
-			m_nTransAlphaBeg = m_nTranslucencyAlphaDynamic;
+			m_nTransAlphaBeg = m_nCurTranslucencyAlpha;
 		}
 
 		if (m_bOnMouseHover)
 			nTargetAlpha = m_nTranslucencyAlphaOnHover;
 		else
-			nTargetAlpha = m_nTranslucencyAlpha;
+			nTargetAlpha = m_nTranslucencyAlphaDefault;
 	}
 	else if (IsWndActive())
 		nTargetAlpha = m_nTranslucencyAlphaOnActive;
 	else
-		nTargetAlpha = m_nTranslucencyAlpha;
+		nTargetAlpha = m_nTranslucencyAlphaDefault;
 
 	DWORD		dwTimeCur = GetTickCount();
 	int			nAlphaNew;
@@ -2088,10 +1988,10 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 		float		fRadio = ((float)(dwTimeCur - m_dwTransFadeinBegTime)) / TIME_OUT_TRANS_FADEIN;
 		nAlphaNew = m_nTransAlphaBeg + int((nTargetAlpha - m_nTransAlphaBeg) * fRadio);
 	}
-	if (m_nTranslucencyAlphaDynamic != nAlphaNew)
+	if (m_nCurTranslucencyAlpha != nAlphaNew)
 	{
-		m_nTranslucencyAlphaDynamic = nAlphaNew;
-		ASSERT(m_nTranslucencyAlphaDynamic >= 0 && m_nTranslucencyAlphaDynamic <= 255);
+		m_nCurTranslucencyAlpha = nAlphaNew;
+		ASSERT(m_nCurTranslucencyAlpha >= 0 && m_nCurTranslucencyAlpha <= 255);
 
 		InvalidateRect();
 	}

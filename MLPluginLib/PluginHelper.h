@@ -28,14 +28,14 @@ BOOL WritePrivateProfileInt(
 							LPCSTR lpFileName  // initialization file
 							);
 
-char *strcpy_safe(char *strDestination, int nLenMax, const char *strSource);
-char *strcat_safe(char * dst, int Size, const char * src);
+char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource);
+char *strcat_safe(char * dst, size_t Size, const char * src);
 
-int	wcsncpy_safe(WCHAR *strDestination, int nLenMax, const WCHAR *strSource, int nToCopy);
-wchar_t *wcscpy_safe(wchar_t *strDestination, int nLenMax, const wchar_t *strSource);
+size_t	wcsncpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource, size_t nToCopy);
+wchar_t *wcscpy_safe(wchar_t *strDestination, size_t nLenMax, const wchar_t *strSource);
 WCHAR * __cdecl wcscat_safe (
 							 WCHAR * dst,
-							 int	Size,
+							 size_t	Size,
 							 const WCHAR * src
 							 );
 

@@ -38,13 +38,13 @@
 #ifdef _MPLAYER
 #include "SkinTreeCtrl.h"
 #include "MPSkinVis.h"
-#include "win32/LyricsTool.h"
 #ifdef _WIN32_WCE
 #include "win32/wce/WCEMainCmdBar.h"
 #endif
 #endif
 
 #ifdef _WIN32
+#include "win32/LyricsTool.h"
 #include "win32/MPSkinMenu.h"
 #endif
 

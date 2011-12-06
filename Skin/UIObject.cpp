@@ -424,7 +424,7 @@ CUIObject::~CUIObject()
 int CUIObject::GetOpacity()
 {
 	if (m_bTranslucencyWithSkin)
-		return m_nOpacity * m_pSkin->m_nTranslucencyAlphaDynamic / 255;
+		return m_nOpacity * m_pSkin->m_nCurTranslucencyAlpha / 255;
 	else
 		return m_nOpacity;
 }

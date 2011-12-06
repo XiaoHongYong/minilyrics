@@ -348,6 +348,8 @@ BEGIN
         MENUITEM "&New Lyrics",                 IDC_NEW_LYRICS
         MENUITEM "Open &Lyrics...\tCtrl+L",     IDC_OPEN_LYRICS
         MENUITEM SEPARATOR
+        MENUITEM "Save Lyrics in &MP3 file",    IDC_EMBEDDED_LYRICS
+        MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
         MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
         MENUITEM SEPARATOR
@@ -476,6 +478,8 @@ BEGIN
             MENUITEM "Sign in Via &Web Browser...", IDC_LOGIN_VIA_IE
             MENUITEM "&Sign up Free...",            IDC_APPLY_ACCOUNT
         END
+        MENUITEM SEPARATOR
+        MENUITEM "Save Lyrics in &MP3 file",    IDC_EMBEDDED_LYRICS
         MENUITEM SEPARATOR
         MENUITEM "&Save Lyrics\tCtrl+S",        IDC_SAVE_LYRICS
         MENUITEM "Save Lyrics &As...",          IDC_SAVE_LYRICS_AS
