@@ -216,9 +216,8 @@ public:
 #ifndef _MPLAYER
 		if (_tcsicmp(strSkinName.c_str(), m_strEmbeddedSkinName.c_str()) == 0)
 		{
-			g_Profile.WriteProfileInt(_T("MPSkinMode"), false);
-			// 嵌入到player 中的skin
-			CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode(true);
+			CMPlayerAppBase::GetInstance()->SetReloadEmbeddedTheme();
+			g_Player.SwitchToEmbeddedSkin();
 		}
 		else
 #endif

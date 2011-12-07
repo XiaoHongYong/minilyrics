@@ -24,7 +24,7 @@ public:
 	bool IsEmbeddedImmovable();
 	bool IsEmbeddedMode() { return !m_bMPSkinMode; }
 
-	int OnSwitchToEmbeddedSkinMode(bool bReloadTheme);
+	int OnSwitchToEmbeddedSkinMode();
 	void EndEmbeddedSkin();
 
 	int LoadGeneralEmbeddedSkin(bool bLoadSkinColorTheme = true);
@@ -32,8 +32,10 @@ public:
 
 	void RestartToAppMode(AppMode appMode);
 
+	void SetReloadEmbeddedTheme() { m_bReloadEmbeddedTheme = true; }
 protected:
 	AppMode					m_appModeQuitToStart;
+	bool					m_bReloadEmbeddedTheme;
 
 #endif
 

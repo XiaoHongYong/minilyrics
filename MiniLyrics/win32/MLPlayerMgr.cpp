@@ -365,7 +365,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			PlayerSkinInfo *skinInfo = (PlayerSkinInfo *)pcds->lpData;
 			g_Player.m_skinInfo = *skinInfo;
 			if (CMPlayerAppBase::GetInstance()->IsRunning() && CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
-				CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode(true);
+				CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode();
 		}
 		break;
 	case M2M_SWITCH_2_EMBEDDED_SKIN:
@@ -376,7 +376,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 			if (skinInfo->bEmbeddedSkin != CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
 			{
 				if (skinInfo->bEmbeddedSkin)
-					CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode(true);
+					CMPlayerAppBase::GetInstance()->OnSwitchToEmbeddedSkinMode();
 				else
 				{
 					CMPlayerAppBase::GetInstance()->EndEmbeddedSkin();

@@ -145,6 +145,9 @@ if TargetML:
 	# make pack: MiniLyrics.exe
 	ExecuteOnErrQuit(r'Build\NSIS\makensis.exe /X"SetCompressor /FINAL /SOLID lzma" Install_ML\minilyrics.nsi')
 
+	# make pack: MiniLyrics_rnl.exe
+	ExecuteOnErrQuit(r'Build\NSIS\makensis.exe /X"SetCompressor /FINAL /SOLID lzma" Install_ML\minilyrics_rnl.nsi')
+
 
 # Build ZikiPlayer
 if TargetZP:
@@ -235,6 +238,7 @@ Execute("cmd /c del " + PackReleaseDir + "*.* /q")
 shutil.move(r"src.7z", PackReleaseDir)
 
 if TargetML:
+	shutil.copy(r"Install_ML\MiniLyrics_rnl.exe", PackReleaseDir)
 	shutil.copy(r"Install_ML\MiniLyrics.exe", PackReleaseDir)
 	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"MiniLyrics-pdb.7z bin\MiniLyrics.pdb")
 	shutil.copy(r"Install_ML\readme-MiniLyrics.txt", PackReleaseDir + "MiniLyrics-" + VersionStr(MLMajorVer, MLMinorVer, BuildNum) + ".txt")

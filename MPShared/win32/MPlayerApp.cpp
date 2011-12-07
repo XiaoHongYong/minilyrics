@@ -120,6 +120,9 @@ int WINAPI _tWinMain(HINSTANCE hInstance,
 CMPlayerApp::CMPlayerApp()
 {
 	m_hMutexRuning = NULL;
+#ifndef _MPLAYER
+	m_bReloadEmbeddedTheme = false;
+#endif
 }
 
 CMPlayerApp::~CMPlayerApp()
@@ -294,7 +297,7 @@ void CMPlayerApp::EndEmbeddedSkin()
 	}
 }
 
-int CMPlayerApp::OnSwitchToEmbeddedSkinMode(bool bReloadTheme)
+int CMPlayerApp::OnSwitchToEmbeddedSkinMode()
 {
 	// to embedded mode
 	ASSERT(IsSupportEmbedded());
@@ -303,9 +306,11 @@ int CMPlayerApp::OnSwitchToEmbeddedSkinMode(bool bReloadTheme)
 
 	int nRet;
 	if (g_Player.GetPlayerType() == P_WINAMP2)
-		nRet = LoadWinamp2Skin(bReloadTheme);
+		nRet = LoadWinamp2Skin(m_bReloadEmbeddedTheme);
 	else
-		nRet = LoadGeneralEmbeddedSkin(bReloadTheme);
+		nRet = LoadGeneralEmbeddedSkin(m_bReloadEmbeddedTheme);
+
+	m_bReloadEmbeddedTheme = false;
 
 	if (nRet == ERR_OK)
 		m_bMPSkinMode = false;

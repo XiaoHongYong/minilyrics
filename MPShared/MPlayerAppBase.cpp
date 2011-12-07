@@ -99,8 +99,26 @@ LPCTSTR GetRegnowBuyLink()
 }
 #endif
 
+int IsRNLEdition()
+{
+	tstring strFile = GetWorkingFolder();
+	strFile += _T("install.ini");
+	if (IsFileExist(strFile.c_str()))
+	{
+		CProfile	file;
+		file.Init(strFile.c_str(), _T("install"));
+		return file.GetProfileBool(_T("RNLEdition"), false);
+	}
+
+	return false;
+}
+
 LPCTSTR GetStrName(STR_NAME nameId)
 {
+	static int	_nEditionRNL = -1;
+	if (_nEditionRNL != -1)
+		_nEditionRNL = IsRNLEdition();
+
 	switch (nameId)
 	{
 	case SN_HTTP_SIGNUP:	return _T("http://www.viewlyrics.com/user/signup.aspx");
@@ -125,11 +143,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 #endif
 	case SN_HTTP_DLSKIN:	return _T("http://www.zikiplayer.com/skins.htm");
 	case SN_HTTP_BBS:		return _T("http://forum.zikiplayer.com");
-#ifdef _WIN32_WCE
-	case SN_HTTP_ML_VER:	return _T("http://www.zikiplayer.com/zpppcver.xml");
-#else
 	case SN_HTTP_ML_VER:	return _T("http://www.zikiplayer.com/zpver.xml");
-	case SN_HTTP_GDIPLUS:	return _T("http://www.zikiplayer.com/gdiplus/");
 	case SN_HTTP_HELP:				return _T("http://www.zikiplayer.com/help.htm");
 	case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.zikiplayer.com/mlfaq-embedlyrics.htm");
 	case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.zikiplayer.com/mlfaq-upload.htm");
@@ -138,7 +152,6 @@ LPCTSTR GetStrName(STR_NAME nameId)
 	case SN_HTTP_HELP_G15_LCD:	return _T("http://www.zikiplayer.com/help-lyrscrollaction.htm");
 
 	case SN_HTTP_DLPLUGIN:	return _T("http://www.zikiplayer.com/plugins.htm");
-#endif
 	case SN_HTTP_FEEDBACK:	return _T("http://www.zikiplayer.com/contactus.htm");
 	case SN_EMAIL:			return _T("mailto:support@zikiplayer.com");
 	case SN_SUPPORT_MAIL:	return _T("support@zikiplayer.com");
@@ -146,43 +159,49 @@ LPCTSTR GetStrName(STR_NAME nameId)
 	default: ASSERT(0);		return _T("");
 	}
 #else // _MPLAYER
-//	if (g_bEngEdition)
+	if (_nEditionRNL)
 	{
 		switch (nameId)
 		{
-		case SN_HTTP_DOMAIN:	return _T("http://www.crintsoft.com");
-#ifdef _WIN32_DESKTOP
-		case SN_HTTP_REGISTER:
-			{
-				LPCTSTR		szLink;
-				szLink = GetRegnowBuyLink();
-				if (IsEmptyString(szLink))
-					return _T("http://www.crintsoft.com/mlbuy.htm");
-				else
-					return szLink;
-			}
-#endif
-		case SN_HTTP_DLSKIN:	return _T("http://www.crintsoft.com/mlskin.htm");
+		case SN_HTTP_DOMAIN:	return _T("http://www.rnl.de");
+		case SN_HTTP_REGISTER:	return _T("http://www.crintsoft.com/buy_rnl.htm");
+		case SN_HTTP_DLSKIN:	return _T("http://www.rnl.de/mlskin.htm");
 		case SN_HTTP_BBS:		return _T("http://forum.viewlyrics.com");
-#ifdef _WIN32_WCE
-		case SN_HTTP_ML_VER:	return _T("http://viewlyrics.com/mlppcver.xml");
-#else
 		case SN_HTTP_ML_VER:	return _T("http://viewlyrics.com/mlver.xml");
-		case SN_HTTP_GDIPLUS:	return _T("http://viewlyrics.com/gdiplus/");
-		case SN_HTTP_HELP:				return _T("http://www.crintsoft.com/help.htm");
-		case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.crintsoft.com/mlfaq-embedlyrics.htm");
-		case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.crintsoft.com/mlfaq-upload.htm");
-		case SN_HTTP_HELP_EDIT_LYR:		return _T("http://www.crintsoft.com/mlfaq-editlrc.htm");
-		case SN_HTTP_HELP_STATIC_LYR:	return _T("http://www.crintsoft.com/help-lyrscrollaction.htm");
-		case SN_HTTP_DLPLUGIN:	return _T("http://www.crintsoft.com/mlplugin.htm");
-		case SN_HTTP_HELP_G15_LCD:	return _T("http://www.crintsoft.com/help-logitech-lcd.htm");
-#endif
-		case SN_HTTP_FEEDBACK:	return _T("http://www.crintsoft.com/contactus.htm");
-		case SN_EMAIL:			return _T("mailto:support@crintsoft.com");
-		case SN_SUPPORT_MAIL:	return _T("support@crintsoft.com");
-		case SN_WEBHOME:		return _T("www.crintsoft.com");
+		case SN_HTTP_HELP:				return _T("http://www.rnl.de/help.htm");
+		case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.rnl.de/mlfaq-embedlyrics.htm");
+		case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.rnl.de/mlfaq-upload.htm");
+		case SN_HTTP_HELP_EDIT_LYR:		return _T("http://www.rnl.de/mlfaq-editlrc.htm");
+		case SN_HTTP_HELP_STATIC_LYR:	return _T("http://www.rnl.de/help-lyrscrollaction.htm");
+		case SN_HTTP_DLPLUGIN:	return _T("http://www.rnl.de/mlplugin.htm");
+		case SN_HTTP_HELP_G15_LCD:	return _T("http://www.rnl.de/help-logitech-lcd.htm");
+		case SN_HTTP_FEEDBACK:	return _T("http://www.rnl.de/contactus.htm");
+		case SN_EMAIL:			return _T("mailto:support@rnl.de");
+		case SN_SUPPORT_MAIL:	return _T("minilyrics@rnl.de");
+		case SN_WEBHOME:		return _T("www.rnl.de");
 		default: ASSERT(0);		return _T("");
 		}
+	}
+
+	switch (nameId)
+	{
+	case SN_HTTP_DOMAIN:	return _T("http://www.crintsoft.com");
+	case SN_HTTP_REGISTER:	return _T("http://www.crintsoft.com/mlbuy.htm");
+	case SN_HTTP_DLSKIN:	return _T("http://www.crintsoft.com/mlskin.htm");
+	case SN_HTTP_BBS:		return _T("http://forum.viewlyrics.com");
+	case SN_HTTP_ML_VER:	return _T("http://viewlyrics.com/mlver.xml");
+	case SN_HTTP_HELP:				return _T("http://www.crintsoft.com/help.htm");
+	case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.crintsoft.com/mlfaq-embedlyrics.htm");
+	case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.crintsoft.com/mlfaq-upload.htm");
+	case SN_HTTP_HELP_EDIT_LYR:		return _T("http://www.crintsoft.com/mlfaq-editlrc.htm");
+	case SN_HTTP_HELP_STATIC_LYR:	return _T("http://www.crintsoft.com/help-lyrscrollaction.htm");
+	case SN_HTTP_DLPLUGIN:	return _T("http://www.crintsoft.com/mlplugin.htm");
+	case SN_HTTP_HELP_G15_LCD:	return _T("http://www.crintsoft.com/help-logitech-lcd.htm");
+	case SN_HTTP_FEEDBACK:	return _T("http://www.crintsoft.com/contactus.htm");
+	case SN_EMAIL:			return _T("mailto:support@crintsoft.com");
+	case SN_SUPPORT_MAIL:	return _T("support@crintsoft.com");
+	case SN_WEBHOME:		return _T("www.crintsoft.com");
+	default: ASSERT(0);		return _T("");
 	}
 #endif // _MPLAYER
 }
