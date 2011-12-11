@@ -58,6 +58,18 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -66,110 +78,92 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
+IDI_DRAGBEFORE          ICON                    "res\\dragbefo.ico"
 IDR_MAINFRAME           ICON                    "res\\WRENCH.ICO"
+IDI_DRAGAFTER           ICON                    "res\\dragafte.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Dialog
 //
 
-IDD_ABOUTBOX DIALOG  0, 0, 235, 75
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 75
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "关于窗口修改器"
-FONT 9, "宋体"
+CAPTION "About Window Crack"
+FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "窗口修改器 0.6 版",IDC_STATIC,40,10,119,8,SS_NOPREFIX
-    LTEXT           "版权所有 (C) 2003 - 2005",IDC_STATIC,40,25,119,8
-    DEFPUSHBUTTON   "确定",IDOK,178,7,50,14,WS_GROUP
-    LTEXT           "http://www.minilyrics.com",IDC_STATIC,41,40,101,8
-    LTEXT           "showbrave@163.com",IDC_STATIC,40,54,69,8
+    LTEXT           "Window Crack 1.0",IDC_STATIC,40,12,119,8,SS_NOPREFIX
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+    LTEXT           "http://www.crintsoft.com",IDC_STATIC,41,39,97,8
+    LTEXT           "support@crintsoft.com",IDC_STATIC,40,54,85,8
 END
 
-IDD_WNDCRACK_DIALOG DIALOGEX 0, 0, 404, 311
-STYLE DS_SETFONT | DS_MODALFRAME | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
+IDD_WNDCRACK_DIALOG DIALOGEX 0, 0, 402, 313
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "窗口修改器"
-FONT 9, "宋体", 0, 0, 0x1
+CAPTION "Window Crack"
+FONT 8, "MS Shell Dlg", 400, 0, 0x86
 BEGIN
-    LTEXT           "拖动下面的图标，到一个窗口中，然后释放，来选择该窗口。",IDC_STATIC,157,7,237,8
-    LTEXT           "选择窗口：",IDC_STATIC,158,24,41,8
-    LTEXT           "Select Window Position",IDC_SELWND,207,17,22,20
-    LTEXT           "窗口句柄：",IDC_STATIC,156,64,41,8
-    EDITTEXT        IDC_HWND_CAPTURED,207,61,92,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "更新",IDC_UPDATE,348,81,50,14
-    LTEXT           "标题：",IDC_STATIC,157,102,25,8
+    LTEXT           "Drag the icon below, and release it to select the target window.",IDC_STATIC,148,6,247,10
+    LTEXT           "Select window:",IDC_STATIC,158,24,57,8
+    LTEXT           "Select Window Position",IDC_SELWND,220,17,22,20
+    LTEXT           "Window Handle:",IDC_STATIC,156,64,57,8
+    EDITTEXT        IDC_HWND_CAPTURED,243,61,92,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Reresh",IDC_UPDATE,345,79,50,14
+    LTEXT           "Caption:",IDC_STATIC,157,102,33,8
     EDITTEXT        IDC_HWND_CAPTION,207,99,188,14,ES_AUTOHSCROLL
-    LTEXT           "类名：",IDC_STATIC,157,121,25,8
+    LTEXT           "Class Name:",IDC_STATIC,157,121,45,8
     EDITTEXT        IDC_HWND_CLASSNAME,207,117,188,14,ES_AUTOHSCROLL
-    GROUPBOX        "窗口位置（相对于屏幕）",IDC_STATIC,157,169,238,51
-    LTEXT           "X：",IDC_STATIC,163,184,13,8
+    GROUPBOX        "Window Position(Related to Screen)",IDC_STATIC,157,169,238,51
+    LTEXT           "X:",IDC_STATIC,163,184,13,8
     EDITTEXT        IDC_HWND_X,180,181,56,14,ES_AUTOHSCROLL
-    LTEXT           "CX：",IDC_STATIC,297,187,17,8
+    LTEXT           "CX:",IDC_STATIC,297,187,17,8
     EDITTEXT        IDC_HWND_CX,325,182,56,14,ES_AUTOHSCROLL
     LTEXT           "Y:",IDC_STATIC,163,203,9,8
     EDITTEXT        IDC_HWND_Y,180,201,56,14,ES_AUTOHSCROLL
-    LTEXT           "CY：",IDC_STATIC,297,203,17,8
+    LTEXT           "CY:",IDC_STATIC,297,203,17,8
     EDITTEXT        IDC_HWND_CY,325,201,56,14,ES_AUTOHSCROLL
-    GROUPBOX        "修改窗口一般属性",IDC_STATIC,157,225,238,73
-    PUSHBUTTON      "显示/隐藏",IDC_SHOWWINDOW,167,238,50,14
-    PUSHBUTTON      "顶层/非顶层",IDC_TOPMOST,233,238,50,14
-    PUSHBUTTON      "关闭",IDC_CLOSEWND,299,238,50,14
-    PUSHBUTTON      "位置/大小",IDC_MOVEWINDOW,167,258,50,14
-    PUSHBUTTON      "标题",IDC_SET_WND_CAPTION,233,258,50,14
-    PUSHBUTTON      "透明窗口",IDC_SET_WND_OPAQUE,299,258,50,14
-    PUSHBUTTON      "最小化/恢复",IDC_MINIMIZE_WND,167,279,50,14
-    PUSHBUTTON      "允许/禁止",IDC_ENABLE_WND,299,279,50,14
+    GROUPBOX        "Modify window Properties",IDC_STATIC,157,225,238,73
+    PUSHBUTTON      "Show/Hide",IDC_SHOWWINDOW,165,238,67,14
+    PUSHBUTTON      "Top Most/Normal",IDC_TOPMOST,245,238,67,14
+    PUSHBUTTON      "Close",IDC_CLOSEWND,322,238,67,14
+    PUSHBUTTON      "Position && Size",IDC_MOVEWINDOW,165,258,67,14
+    PUSHBUTTON      "Caption",IDC_SET_WND_CAPTION,245,258,67,14
+    PUSHBUTTON      "Transparent",IDC_SET_WND_OPAQUE,322,258,67,14
+    PUSHBUTTON      "Minimize/Restore",IDC_MINIMIZE_WND,165,279,67,14
+    PUSHBUTTON      "Enable/Disable",IDC_ENABLE_WND,322,279,67,14
     CONTROL         "Tree1",IDC_TREE_WND,"SysTreeView32",TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT | TVS_DISABLEDRAGDROP | WS_BORDER | WS_HSCROLL | WS_TABSTOP,7,30,140,270
-    PUSHBUTTON      "枚举窗口",IDC_ENUM,7,7,50,14
+    PUSHBUTTON      "Enum Windows",IDC_ENUM,7,7,69,14
     LTEXT           "Process ID:",IDC_STATIC,157,138,45,8
-    EDITTEXT        IDC_E_PROCESSID,208,135,188,14,ES_AUTOHSCROLL
-    LTEXT           "Ctrl ID",IDC_STATIC,157,155,29,8
-    EDITTEXT        IDC_E_CTRLID,208,153,188,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_E_PROCESSID,207,135,188,14,ES_AUTOHSCROLL
+    LTEXT           "Ctrl ID:",IDC_STATIC,157,155,33,8
+    EDITTEXT        IDC_E_CTRLID,207,153,188,14,ES_AUTOHSCROLL
     EDITTEXT        IDC_MASK_COLOR,207,42,58,14,ES_AUTOHSCROLL
     LTEXT           "Color: ",IDC_STATIC,158,44,29,8
-    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,356,42,42,14
+    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,353,42,42,14
     EDITTEXT        IDC_MASK_COLOR2,269,42,80,14,ES_AUTOHSCROLL
-    PUSHBUTTON      "最大化/恢复",IDC_MAXIMIZE_WND,233,279,50,14
-    LTEXT           "父窗口句柄：",IDC_STATIC,155,82,49,8
-    EDITTEXT        IDC_HWND_PARENT,208,80,92,14,ES_AUTOHSCROLL
+    PUSHBUTTON      "Maximize/Restore",IDC_MAXIMIZE_WND,245,279,67,14
+    LTEXT           "Parent Window Handle:",IDC_STATIC,155,82,85,8
+    EDITTEXT        IDC_HWND_PARENT,244,79,92,14,ES_AUTOHSCROLL
 END
 
-IDD_MSG_DLG DIALOGEX 0, 0, 374, 253
+IDD_SET_LAYEREDWND_DLG DIALOGEX 0, 0, 273, 104
 STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 EXSTYLE WS_EX_APPWINDOW
-CAPTION "WndCrack"
-FONT 9, "宋体", 0, 0, 0x1
+CAPTION "Set window transparent"
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "确定",IDOK,260,7,50,14
-    PUSHBUTTON      "取消",IDCANCEL,260,23,50,14
-    PUSHBUTTON      "发送消息(SEND)",IDC_SENDMSG,164,114,83,14
-    GROUPBOX        "Message",-1,164,102,203,88
-    LTEXT           "消息类型：",-1,165,135,41,8
-    LTEXT           "WPARAM:",-1,165,156,29,8
-    LTEXT           "LPARAM:",-1,164,172,29,8
-    EDITTEXT        IDC_MSGWPARAM,212,154,155,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_MSGLPARAM,212,172,155,14,ES_AUTOHSCROLL
-    COMBOBOX        IDC_MSGTYPE,227,134,140,87,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "发送消息(POST)",IDC_POSTMSG,270,114,83,14
-END
-
-IDD_SET_LAYEREDWND_DLG DIALOGEX 0, 0, 205, 103
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
-EXSTYLE WS_EX_APPWINDOW
-CAPTION "设置窗口透明属性"
-FONT 9, "宋体", 0, 0, 0x1
-BEGIN
-    CONTROL         "使用透明设置",IDC_ENABLE_LAYERED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,11,64,10
-    EDITTEXT        IDC_MASK_COLOR,103,24,33,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_OPAQUE,103,43,33,14,ES_AUTOHSCROLL
-    DEFPUSHBUTTON   "修改",IDOK,32,82,50,14
-    PUSHBUTTON      "取消",IDCANCEL,110,82,50,14
-    LTEXT           "Static",IDC_SELWND,172,19,26,22
-    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,141,23,27,14
-    CONTROL         "使用透明色：",IDC_C_TRANS_COLOR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,26,64,10
-    CONTROL         "使用不透明度：",IDC_R_OPAQUE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,45,72,10
-    CONTROL         "鼠标点击可透过窗口",IDC_C_CLICKTHROUGH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,64,125,10
+    CONTROL         "Enable transparent settings",IDC_ENABLE_LAYERED,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,9,11,124,10
+    EDITTEXT        IDC_MASK_COLOR,160,24,33,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_OPAQUE,160,43,33,14,ES_AUTOHSCROLL
+    DEFPUSHBUTTON   "Alter",IDOK,73,83,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,151,83,50,14
+    LTEXT           "Static",IDC_SELWND,240,19,26,22
+    CONTROL         "Button1",IDC_SEL_COLOR,"Button",BS_OWNERDRAW | BS_FLAT | WS_TABSTOP,198,23,27,14
+    CONTROL         "Use Transparent Color:",IDC_C_TRANS_COLOR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,26,104,10
+    CONTROL         "Use Transparent alpha(0-255):",IDC_R_OPAQUE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,45,132,10
+    CONTROL         "Mouse Click Through",IDC_C_CLICKTHROUGH,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,25,64,125,10
 END
 
 
@@ -179,8 +173,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,4,0,1
- PRODUCTVERSION 0,4,0,1
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -193,20 +187,20 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "080404b0"
+        BLOCK "040904b0"
         BEGIN
-            VALUE "FileDescription", "WndCrack Microsoft 基础类应用程序"
-            VALUE "FileVersion", "0, 4, 0, 1"
-            VALUE "InternalName", "WndCrack"
-            VALUE "LegalCopyright", "版权所有 (C) 2000"
+            VALUE "FileDescription", "Window Crack"
+            VALUE "FileVersion", "1, 0, 0, 1"
+            VALUE "InternalName", "Window Crack"
+            VALUE "LegalCopyright", "CrintSoft"
             VALUE "OriginalFilename", "WndCrack.EXE"
-            VALUE "ProductName", "WndCrack 应用程序"
-            VALUE "ProductVersion", "0, 4, 0, 1"
+            VALUE "ProductName", "Window Crack"
+            VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END
     BLOCK "VarFileInfo"
     BEGIN
-        VALUE "Translation", 0x804, 1200
+        VALUE "Translation", 0x409, 1200
     END
 END
 
@@ -230,28 +224,27 @@ BEGIN
     IDD_WNDCRACK_DIALOG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 310
-    END
-
-    IDD_MSG_DLG, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 367
-        TOPMARGIN, 7
-        BOTTOMMARGIN, 246
+        RIGHTMARGIN, 395
+        BOTTOMMARGIN, 312
     END
 
     IDD_SET_LAYEREDWND_DLG, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 198
+        RIGHTMARGIN, 266
         TOPMARGIN, 7
-        BOTTOMMARGIN, 96
+        BOTTOMMARGIN, 97
     END
 END
 #endif    // APSTUDIO_INVOKED
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Cursor
+//
+
+IDC_CURSORSELWND        CURSOR                  "res\\cur10.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -260,38 +253,9 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDS_ABOUTBOX            "关于窗口修改器(&A)..."
+    IDS_ABOUTBOX            "???????(&A)..."
 END
 
-#endif    // Chinese (P.R.C.) resources
-/////////////////////////////////////////////////////////////////////////////
-
-
-/////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
-
-#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
-LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
-#pragma code_page(1252)
-#endif //_WIN32
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDI_DRAGBEFORE          ICON                    "res\\dragbefo.ico"
-IDI_DRAGAFTER           ICON                    "res\\dragafte.ico"
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Cursor
-//
-
-IDC_CURSORSELWND        CURSOR                  "res\\cur10.cur"
 #endif    // English (U.S.) resources
 /////////////////////////////////////////////////////////////////////////////
 

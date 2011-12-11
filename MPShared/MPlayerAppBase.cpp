@@ -116,7 +116,7 @@ int IsRNLEdition()
 LPCTSTR GetStrName(STR_NAME nameId)
 {
 	static int	_nEditionRNL = -1;
-	if (_nEditionRNL != -1)
+	if (_nEditionRNL == -1)
 		_nEditionRNL = IsRNLEdition();
 
 	switch (nameId)
@@ -159,26 +159,26 @@ LPCTSTR GetStrName(STR_NAME nameId)
 	default: ASSERT(0);		return _T("");
 	}
 #else // _MPLAYER
-	if (_nEditionRNL)
+	if (_nEditionRNL == 1)
 	{
 		switch (nameId)
 		{
-		case SN_HTTP_DOMAIN:	return _T("http://www.rnl.de");
+		case SN_HTTP_DOMAIN:	return _T("http://www.data4me.de");
 		case SN_HTTP_REGISTER:	return _T("http://www.crintsoft.com/buy_rnl.htm");
-		case SN_HTTP_DLSKIN:	return _T("http://www.rnl.de/mlskin.htm");
+		case SN_HTTP_DLSKIN:	return _T("http://www.data4me.de/mlskin.htm");
 		case SN_HTTP_BBS:		return _T("http://forum.viewlyrics.com");
 		case SN_HTTP_ML_VER:	return _T("http://viewlyrics.com/mlver.xml");
-		case SN_HTTP_HELP:				return _T("http://www.rnl.de/help.htm");
-		case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.rnl.de/mlfaq-embedlyrics.htm");
-		case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.rnl.de/mlfaq-upload.htm");
-		case SN_HTTP_HELP_EDIT_LYR:		return _T("http://www.rnl.de/mlfaq-editlrc.htm");
-		case SN_HTTP_HELP_STATIC_LYR:	return _T("http://www.rnl.de/help-lyrscrollaction.htm");
-		case SN_HTTP_DLPLUGIN:	return _T("http://www.rnl.de/mlplugin.htm");
-		case SN_HTTP_HELP_G15_LCD:	return _T("http://www.rnl.de/help-logitech-lcd.htm");
-		case SN_HTTP_FEEDBACK:	return _T("http://www.rnl.de/contactus.htm");
+		case SN_HTTP_HELP:				return _T("http://www.data4me.de/help.htm");
+		case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.data4me.de/mlfaq-embedlyrics.htm");
+		case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.data4me.de/mlfaq-upload.htm");
+		case SN_HTTP_HELP_EDIT_LYR:		return _T("http://www.data4me.de/mlfaq-editlrc.htm");
+		case SN_HTTP_HELP_STATIC_LYR:	return _T("http://www.data4me.de/help-lyrscrollaction.htm");
+		case SN_HTTP_DLPLUGIN:	return _T("http://www.data4me.de/mlplugin.htm");
+		case SN_HTTP_HELP_G15_LCD:	return _T("http://www.data4me.de/help-logitech-lcd.htm");
+		case SN_HTTP_FEEDBACK:	return _T("http://www.data4me.de/contactus.htm");
 		case SN_EMAIL:			return _T("mailto:support@rnl.de");
 		case SN_SUPPORT_MAIL:	return _T("minilyrics@rnl.de");
-		case SN_WEBHOME:		return _T("www.rnl.de");
+		case SN_WEBHOME:		return _T("www.data4me.de");
 		default: ASSERT(0);		return _T("");
 		}
 	}

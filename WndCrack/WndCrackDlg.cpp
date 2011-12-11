@@ -419,7 +419,7 @@ void CWndCrackDlg::OnMovewindow()
 
 	if (bError)
 	{
-		AfxMessageBox("请输入正确的窗口坐标！");
+		AfxMessageBox("Please input the correct window position and size.");
 		return;
 	}
 
@@ -436,7 +436,7 @@ void CWndCrackDlg::OnClosewnd()
     if (hWnd == NULL)
         return;
 
-	if (AfxMessageBox("您确实要关闭该窗口，您关闭之后，就不能再恢复了！", MB_OKCANCEL | MB_ICONWARNING) == IDCANCEL)
+	if (AfxMessageBox("Are you sure that you want to close the target window, this can't be undo.", MB_OKCANCEL | MB_ICONWARNING) == IDCANCEL)
 		return;
     
     CRect   rc;
@@ -490,19 +490,19 @@ HWND CWndCrackDlg::GetCapturedWnd()
 
 	if (GetDlgItemText(IDC_HWND_CAPTURED, szBuffer, 256) <= 0)
 	{
-		AfxMessageBox("请选择一个窗口！");
+		AfxMessageBox("Please select a target window.");
 		return NULL;
 	}
 
 	if (sscanf(szBuffer, "%X", &hWndCap) < 1)
 	{
-		AfxMessageBox("请选择一个窗口！");
+		AfxMessageBox("Please select a target window.");
 		return NULL;
 	}
 
 	if (!IsWindow(hWndCap))
 	{
-		AfxMessageBox("您选择的窗口可能已经关闭！");
+		AfxMessageBox("Maybe the target window has been closed.");
 		return NULL;
 	}
 
@@ -619,39 +619,47 @@ BOOL CALLBACK CWndCrackDlg::EnumWindowProc(
 	if (!pdlg)
 		return FALSE;
 
-	DWORD		dwProcessID;
-
-	GetWindowThreadProcessId(hwnd, &dwProcessID);
-	if (dwProcessID == pdlg->m_dwProcessID)
+	if (pdlg->m_dwProcessID != 0)
 	{
-		CString		strName;
-		TCHAR		szName[256];
-		HTREEITEM	hItem;
-
-		::GetWindowText(hwnd, szName, 256);
-		if (!IsEmptyString(szName))
-			strName.Format("%X(%s)", (DWORD)hwnd, szName);
-		else
-			strName.Format("%X", (DWORD)hwnd);
-		hItem = pdlg->m_wndTree.InsertItem(strName);
-
-		pdlg->m_wndTree.SetItemData(hItem, (DWORD)hwnd);
-
-		EnumChildWnd(&(pdlg->m_wndTree), hItem, hwnd);
+		DWORD		dwProcessID;
+		GetWindowThreadProcessId(hwnd, &dwProcessID);
+		if (dwProcessID != pdlg->m_dwProcessID)
+			return TRUE;
 	}
+
+	CString		strName;
+	TCHAR		szName[256];
+	HTREEITEM	hItem;
+
+	::GetWindowText(hwnd, szName, 256);
+	if (!IsEmptyString(szName))
+		strName.Format("%X(%s)", (DWORD)hwnd, szName);
+	else
+		strName.Format("%X", (DWORD)hwnd);
+	hItem = pdlg->m_wndTree.InsertItem(strName);
+
+	pdlg->m_wndTree.SetItemData(hItem, (DWORD)hwnd);
+
+	EnumChildWnd(&(pdlg->m_wndTree), hItem, hwnd);
 
 	return TRUE;
 }
 
 void CWndCrackDlg::OnEnum() 
 {
-	HWND		hWndCapture;
+	CString str;
 
-	hWndCapture = GetCapturedWnd();
-	if (!hWndCapture)
-		return;
+	GetDlgItemText(IDC_HWND_CAPTURED, str);
+	if (!str.IsEmpty())
+	{
+		HWND hWndCapture = GetCapturedWnd();
+		if (!hWndCapture)
+			return;
 
-	GetWindowThreadProcessId(hWndCapture, &m_dwProcessID);
+		GetWindowThreadProcessId(hWndCapture, &m_dwProcessID);
+	}
+	else
+		m_dwProcessID = 0;
 
 	m_wndTree.DeleteAllItems();
 
