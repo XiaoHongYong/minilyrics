@@ -15,3 +15,4 @@ void CMLTrayIcon::Quit() { }
 void CMLTrayIcon::UpdateShowIconPos() { }
 void CMLTrayIcon::UpdatePlayerSysTrayIcon() { }
 void CMLTrayIcon::ForceShow(bool bForceShow) { }
+void CMLTrayIcon::UpdateTrayIconText(LPCTSTR szText) { }

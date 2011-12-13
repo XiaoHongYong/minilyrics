@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F2BD59414963B52003E7F5C /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD59314963B52003E7F5C /* misc.cpp */; };
 		5F9CDEC8147A323D00432DAC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9CDEC7147A323D00432DAC /* Cocoa.framework */; };
 		5F9CDF13147A330100432DAC /* auto_free_list.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEDC147A330100432DAC /* auto_free_list.h */; };
 		5F9CDF14147A330100432DAC /* base.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEDD147A330100432DAC /* base.h */; };
@@ -42,7 +43,6 @@
 		5F9CDF33147A330100432DAC /* Thread.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEFE147A330100432DAC /* Thread.h */; };
 		5F9CDF34147A330100432DAC /* ThreadAutoReleasePool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEFF147A330100432DAC /* ThreadAutoReleasePool.h */; };
 		5F9CDF35147A330100432DAC /* ThreadAutoReleasePool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF00147A330100432DAC /* ThreadAutoReleasePool.mm */; };
-		5F9CDF36147A330100432DAC /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF01147A330100432DAC /* misc.cpp */; };
 		5F9CDF37147A330100432DAC /* misc.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF02147A330100432DAC /* misc.h */; };
 		5F9CDF38147A330100432DAC /* mltypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF03147A330100432DAC /* mltypes.h */; };
 		5F9CDF39147A330100432DAC /* OnlyAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDF04147A330100432DAC /* OnlyAllocator.cpp */; };
@@ -63,6 +63,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F2BD59314963B52003E7F5C /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = misc.cpp; sourceTree = "<group>"; };
 		5F9CDEC4147A323D00432DAC /* libBaseMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBaseMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F9CDEC7147A323D00432DAC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5F9CDECA147A323D00432DAC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -103,7 +104,6 @@
 		5F9CDEFE147A330100432DAC /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
 		5F9CDEFF147A330100432DAC /* ThreadAutoReleasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadAutoReleasePool.h; sourceTree = "<group>"; };
 		5F9CDF00147A330100432DAC /* ThreadAutoReleasePool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ThreadAutoReleasePool.mm; sourceTree = "<group>"; };
-		5F9CDF01147A330100432DAC /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = misc.cpp; sourceTree = SOURCE_ROOT; };
 		5F9CDF02147A330100432DAC /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = misc.h; sourceTree = SOURCE_ROOT; };
 		5F9CDF03147A330100432DAC /* mltypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mltypes.h; sourceTree = SOURCE_ROOT; };
 		5F9CDF04147A330100432DAC /* OnlyAllocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = OnlyAllocator.cpp; sourceTree = SOURCE_ROOT; };
@@ -191,7 +191,6 @@
 				5F9CDEEA147A330100432DAC /* idstring.cpp */,
 				5F9CDEEB147A330100432DAC /* idstring.h */,
 				5F9CDEEC147A330100432DAC /* Mac */,
-				5F9CDF01147A330100432DAC /* misc.cpp */,
 				5F9CDF02147A330100432DAC /* misc.h */,
 				5F9CDF03147A330100432DAC /* mltypes.h */,
 				5F9CDF04147A330100432DAC /* OnlyAllocator.cpp */,
@@ -226,6 +225,7 @@
 		5F9CDEEC147A330100432DAC /* Mac */ = {
 			isa = PBXGroup;
 			children = (
+				5F2BD59314963B52003E7F5C /* misc.cpp */,
 				5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */,
 				5F9CDEF0147A330100432DAC /* CharEncoding.cpp */,
 				5F9CDEF1147A330100432DAC /* CharEncoding.mm */,
@@ -351,12 +351,12 @@
 				5F9CDF31147A330100432DAC /* Semaphore.mm in Sources */,
 				5F9CDF32147A330100432DAC /* Thread.cpp in Sources */,
 				5F9CDF35147A330100432DAC /* ThreadAutoReleasePool.mm in Sources */,
-				5F9CDF36147A330100432DAC /* misc.cpp in Sources */,
 				5F9CDF39147A330100432DAC /* OnlyAllocator.cpp in Sources */,
 				5F9CDF3C147A330100432DAC /* safestr.cpp in Sources */,
 				5F9CDF3E147A330100432DAC /* StdAfx.cpp in Sources */,
 				5F9CDF41147A330100432DAC /* stringex.cpp in Sources */,
 				5F9CDF44147A330100432DAC /* StrPrintf.cpp in Sources */,
+				5F2BD59414963B52003E7F5C /* misc.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

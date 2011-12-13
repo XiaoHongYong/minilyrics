@@ -117,7 +117,10 @@ int CMPSkinFactory::Init()
 	RegisterPreferencePage(this);
 	RegisterUploadLyrPage(this);
 	RegisterAdjustHuePage(this);
+	
+#ifndef _MAC_OSX
 	RegisterLyricsToolPage(this);
+#endif
 
 	return CSkinFactory::Init();
 }

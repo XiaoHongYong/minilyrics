@@ -1,0 +1,1441 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */; };
+		5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */; };
+		5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */; };
+		5F2BD5911496398D003E7F5C /* libThirdPartiesSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F2BD58E14963983003E7F5C /* libThirdPartiesSDK.a */; };
+		5FB16205147017330084494F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB16204147017330084494F /* Cocoa.framework */; };
+		5FB1620F147017330084494F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5FB1620D147017330084494F /* InfoPlist.strings */; };
+		5FB16211147017330084494F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB16210147017330084494F /* main.mm */; };
+		5FB16215147017330084494F /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 5FB16213147017330084494F /* Credits.rtf */; };
+		5FB16218147017330084494F /* MiniLyricsMacAppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB16217147017330084494F /* MiniLyricsMacAppDelegate.mm */; };
+		5FB1621B147017340084494F /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FB16219147017340084494F /* MainMenu.xib */; };
+		5FB1621E147017340084494F /* MiniLyricsMac.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5FB1621C147017340084494F /* MiniLyricsMac.xcdatamodeld */; };
+		5FB16234147697D20084494F /* circle.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5FB16232147697D20084494F /* circle.tif */; };
+		5FB16235147697D20084494F /* pentagon.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5FB16233147697D20084494F /* pentagon.tif */; };
+		5FBCCB6C147E8C6100D7C64A /* libBaseMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCAB9147E7EFD00D7C64A /* libBaseMac.a */; };
+		5FBCCB6D147E8C6100D7C64A /* libGfxLiteMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCAC3147E7F2500D7C64A /* libGfxLiteMac.a */; };
+		5FBCCB6E147E8C6100D7C64A /* libGfxRawMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCACC147E7F4300D7C64A /* libGfxRawMac.a */; };
+		5FBCCB70147E8C6100D7C64A /* libImageLibMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCAE1147E7FF500D7C64A /* libImageLibMac.a */; };
+		5FBCCB73147E8C6100D7C64A /* libSimpleJVM.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCB6B147E8C3000D7C64A /* libSimpleJVM.a */; };
+		5FBCCB75147E8C6100D7C64A /* libWidgetLiteMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCB5C147E8BFB00D7C64A /* libWidgetLiteMac.a */; };
+		5FBCCB77147E8C6100D7C64A /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCB76147E8C6100D7C64A /* Accelerate.framework */; };
+		5FBCCDCA14851D0F00D7C64A /* libID3LibMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCC401485172200D7C64A /* libID3LibMac.a */; };
+		5FBCCDCB14851D0F00D7C64A /* libMLLibMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCD9014851C4A00D7C64A /* libMLLibMac.a */; };
+		5FBCCDCC14851D0F00D7C64A /* libMLProtocolMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCD2214851B1600D7C64A /* libMLProtocolMac.a */; };
+		5FBCCDCD14851D0F00D7C64A /* libUtilsMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCCB91485198900D7C64A /* libUtilsMac.a */; };
+		5FBCCF74148A1B1900D7C64A /* libSkinMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCF71148A1AF000D7C64A /* libSkinMac.a */; };
+		5FDC564A148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5599148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp */; };
+		5FDC564B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC559B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp */; };
+		5FDC564C148A1F1B00C74E6A /* DlgAbout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC559D148A1F1B00C74E6A /* DlgAbout.cpp */; };
+		5FDC564D148A1F1B00C74E6A /* DlgAdjustHue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC559F148A1F1B00C74E6A /* DlgAdjustHue.cpp */; };
+		5FDC5650148A1F1B00C74E6A /* DlgMediaInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55A5148A1F1B00C74E6A /* DlgMediaInfo.cpp */; };
+		5FDC5652148A1F1B00C74E6A /* DlgSearchLyrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55A9148A1F1B00C74E6A /* DlgSearchLyrics.cpp */; };
+		5FDC5654148A1F1B00C74E6A /* DlgUpload.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55AD148A1F1B00C74E6A /* DlgUpload.cpp */; };
+		5FDC5655148A1F1B00C74E6A /* DownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55AF148A1F1B00C74E6A /* DownloadMgr.cpp */; };
+		5FDC5656148A1F1B00C74E6A /* ErrorResolveDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55B1148A1F1B00C74E6A /* ErrorResolveDlg.cpp */; };
+		5FDC5657148A1F1B00C74E6A /* Helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55B3148A1F1B00C74E6A /* Helper.cpp */; };
+		5FDC5658148A1F1B00C74E6A /* LicenseManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55B5148A1F1B00C74E6A /* LicenseManager.cpp */; };
+		5FDC5659148A1F1B00C74E6A /* LrcUploadDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55B7148A1F1B00C74E6A /* LrcUploadDB.cpp */; };
+		5FDC565A148A1F1B00C74E6A /* LyrDisplayClrListWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55B9148A1F1B00C74E6A /* LyrDisplayClrListWnd.cpp */; };
+		5FDC565B148A1F1B00C74E6A /* LyricShowAgentObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55BB148A1F1B00C74E6A /* LyricShowAgentObj.cpp */; };
+		5FDC565C148A1F1B00C74E6A /* LyricShowHorzScrollObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55BD148A1F1B00C74E6A /* LyricShowHorzScrollObj.cpp */; };
+		5FDC565D148A1F1B00C74E6A /* LyricShowMultiRowObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55BF148A1F1B00C74E6A /* LyricShowMultiRowObj.cpp */; };
+		5FDC565E148A1F1B00C74E6A /* LyricShowObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55C1148A1F1B00C74E6A /* LyricShowObj.cpp */; };
+		5FDC565F148A1F1B00C74E6A /* LyricShowSingleRowObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55C3148A1F1B00C74E6A /* LyricShowSingleRowObj.cpp */; };
+		5FDC5660148A1F1B00C74E6A /* LyricShowTextEditObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55C5148A1F1B00C74E6A /* LyricShowTextEditObj.cpp */; };
+		5FDC5662148A1F1B00C74E6A /* LyricShowTwoRowObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55C9148A1F1B00C74E6A /* LyricShowTwoRowObj.cpp */; };
+		5FDC5663148A1F1B00C74E6A /* LyricShowTxtContainer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55CB148A1F1B00C74E6A /* LyricShowTxtContainer.cpp */; };
+		5FDC5664148A1F1B00C74E6A /* LyricShowTxtObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55CD148A1F1B00C74E6A /* LyricShowTxtObj.cpp */; };
+		5FDC5665148A1F1B00C74E6A /* LyricShowVobSub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55CF148A1F1B00C74E6A /* LyricShowVobSub.cpp */; };
+		5FDC5666148A1F1B00C74E6A /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55D1148A1F1B00C74E6A /* LyricsLocalSearch.cpp */; };
+		5FDC5668148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55D6148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp */; };
+		5FDC5669148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55D8148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp */; };
+		5FDC566A148A1F1B00C74E6A /* MediaDetectionService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55DA148A1F1B00C74E6A /* MediaDetectionService.cpp */; };
+		5FDC566B148A1F1B00C74E6A /* MediaInfoTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55DC148A1F1B00C74E6A /* MediaInfoTextCtrl.cpp */; };
+		5FDC566D148A1F1B00C74E6A /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55E0148A1F1B00C74E6A /* MLClientSession.cpp */; };
+		5FDC566E148A1F1B00C74E6A /* MLCmd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55E2148A1F1B00C74E6A /* MLCmd.cpp */; };
+		5FDC5670148A1F1B00C74E6A /* MPCommonCmdHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55E8148A1F1B00C74E6A /* MPCommonCmdHandler.cpp */; };
+		5FDC5671148A1F1B00C74E6A /* MPEventsDispatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55EA148A1F1B00C74E6A /* MPEventsDispatcher.cpp */; };
+		5FDC5672148A1F1B00C74E6A /* MPFloatingLyrWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55EC148A1F1B00C74E6A /* MPFloatingLyrWnd.cpp */; };
+		5FDC5673148A1F1B00C74E6A /* MPHelper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55EE148A1F1B00C74E6A /* MPHelper.cpp */; };
+		5FDC5674148A1F1B00C74E6A /* MPlayerAppBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55F0148A1F1B00C74E6A /* MPlayerAppBase.cpp */; };
+		5FDC5675148A1F1B00C74E6A /* MPlaylistCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55F2148A1F1B00C74E6A /* MPlaylistCtrl.cpp */; };
+		5FDC5676148A1F1B00C74E6A /* MPlaylistSearchObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55F4148A1F1B00C74E6A /* MPlaylistSearchObj.cpp */; };
+		5FDC5677148A1F1B00C74E6A /* MPluginManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55F6148A1F1B00C74E6A /* MPluginManager.cpp */; };
+		5FDC5678148A1F1B00C74E6A /* MPMediaLibCmdHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55F8148A1F1B00C74E6A /* MPMediaLibCmdHandler.cpp */; };
+		5FDC5679148A1F1B00C74E6A /* MPMediaTree.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55FA148A1F1B00C74E6A /* MPMediaTree.cpp */; };
+		5FDC567A148A1F1B00C74E6A /* MPPlaylistCmdHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55FC148A1F1B00C74E6A /* MPPlaylistCmdHandler.cpp */; };
+		5FDC567B148A1F1B00C74E6A /* MPSkinFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55FE148A1F1B00C74E6A /* MPSkinFactory.cpp */; };
+		5FDC567C148A1F1B00C74E6A /* MPSkinInfoTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5600148A1F1B00C74E6A /* MPSkinInfoTextCtrl.cpp */; };
+		5FDC567D148A1F1B00C74E6A /* MPSkinInfoTextCtrlEx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5602148A1F1B00C74E6A /* MPSkinInfoTextCtrlEx.cpp */; };
+		5FDC567E148A1F1B00C74E6A /* MPSkinMainWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5604148A1F1B00C74E6A /* MPSkinMainWnd.cpp */; };
+		5FDC567F148A1F1B00C74E6A /* MPSkinMediaNumInfoCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5606148A1F1B00C74E6A /* MPSkinMediaNumInfoCtrl.cpp */; };
+		5FDC5680148A1F1B00C74E6A /* MPSkinTimeCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5608148A1F1B00C74E6A /* MPSkinTimeCtrl.cpp */; };
+		5FDC5681148A1F1B00C74E6A /* MPSkinVis.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC560A148A1F1B00C74E6A /* MPSkinVis.cpp */; };
+		5FDC5682148A1F1B00C74E6A /* MPSkinWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC560C148A1F1B00C74E6A /* MPSkinWnd.cpp */; };
+		5FDC5683148A1F1B00C74E6A /* MPVisAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC560E148A1F1B00C74E6A /* MPVisAdapter.cpp */; };
+		5FDC5685148A1F1B00C74E6A /* OnlineSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5612148A1F1B00C74E6A /* OnlineSearch.cpp */; };
+		5FDC5686148A1F1B00C74E6A /* OperatingMiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5614148A1F1B00C74E6A /* OperatingMiner.cpp */; };
+		5FDC5687148A1F1B00C74E6A /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5616148A1F1B00C74E6A /* Player.cpp */; };
+		5FDC5688148A1F1B00C74E6A /* PlayListFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5618148A1F1B00C74E6A /* PlayListFile.cpp */; };
+		5FDC5689148A1F1B00C74E6A /* PreferenceDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC561A148A1F1B00C74E6A /* PreferenceDlg.cpp */; };
+		5FDC568A148A1F1B00C74E6A /* PreferencePageBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC561C148A1F1B00C74E6A /* PreferencePageBase.cpp */; };
+		5FDC568B148A1F1B00C74E6A /* PreferPageAdvanced.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC561E148A1F1B00C74E6A /* PreferPageAdvanced.cpp */; };
+		5FDC568C148A1F1B00C74E6A /* PreferPageLyrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5621148A1F1B00C74E6A /* PreferPageLyrics.cpp */; };
+		5FDC568D148A1F1B00C74E6A /* PreferPageSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5623148A1F1B00C74E6A /* PreferPageSystem.cpp */; };
+		5FDC568E148A1F1B00C74E6A /* PreferPageTheme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5625148A1F1B00C74E6A /* PreferPageTheme.cpp */; };
+		5FDC568F148A1F1B00C74E6A /* PreferPageUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5627148A1F1B00C74E6A /* PreferPageUI.cpp */; };
+		5FDC5691148A1F1B00C74E6A /* SkinActivateCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC562B148A1F1B00C74E6A /* SkinActivateCtrl.cpp */; };
+		5FDC5692148A1F1B00C74E6A /* SkinDroplistCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC562D148A1F1B00C74E6A /* SkinDroplistCtrl.cpp */; };
+		5FDC5694148A1F1B00C74E6A /* SkinFilterCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5632148A1F1B00C74E6A /* SkinFilterCtrl.cpp */; };
+		5FDC5695148A1F1B00C74E6A /* SkinImageListCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5634148A1F1B00C74E6A /* SkinImageListCtrl.cpp */; };
+		5FDC5696148A1F1B00C74E6A /* SkinListCtrlEx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5636148A1F1B00C74E6A /* SkinListCtrlEx.cpp */; };
+		5FDC5697148A1F1B00C74E6A /* SkinPicText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5638148A1F1B00C74E6A /* SkinPicText.cpp */; };
+		5FDC5698148A1F1B00C74E6A /* SkinRateCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC563A148A1F1B00C74E6A /* SkinRateCtrl.cpp */; };
+		5FDC5699148A1F1B00C74E6A /* SkinScrollText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC563C148A1F1B00C74E6A /* SkinScrollText.cpp */; };
+		5FDC569A148A1F1B00C74E6A /* SkinTabHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC563E148A1F1B00C74E6A /* SkinTabHeader.cpp */; };
+		5FDC569B148A1F1B00C74E6A /* SkinTreeCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5640148A1F1B00C74E6A /* SkinTreeCtrl.cpp */; };
+		5FDC569C148A1F1B00C74E6A /* StdAfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5642148A1F1B00C74E6A /* StdAfx.cpp */; };
+		5FDC569D148A1F1B00C74E6A /* ThemesFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5644148A1F1B00C74E6A /* ThemesFile.cpp */; };
+		5FDC569E148A1F1B00C74E6A /* VersionUpdate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5646148A1F1B00C74E6A /* VersionUpdate.cpp */; };
+		5FDC569F148A1F1B00C74E6A /* WaitingDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5648148A1F1B00C74E6A /* WaitingDlg.cpp */; };
+		5FDC56B0148A23AC00C74E6A /* HelperMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A1148A23AC00C74E6A /* HelperMac.cpp */; };
+		5FDC56B1148A23AC00C74E6A /* LyricsOutPluginMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A2148A23AC00C74E6A /* LyricsOutPluginMgr.cpp */; };
+		5FDC56B2148A23AC00C74E6A /* MLTrayIcon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A4148A23AC00C74E6A /* MLTrayIcon.cpp */; };
+		5FDC56B3148A23AC00C74E6A /* MPHotkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A6148A23AC00C74E6A /* MPHotkey.cpp */; };
+		5FDC56B4148A23AC00C74E6A /* MPlayerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A8148A23AC00C74E6A /* MPlayerApp.cpp */; };
+		5FDC56B6148A23AC00C74E6A /* MPSkinMainWndMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */; };
+		5FDC56B7148A23AC00C74E6A /* MPSkinMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56AE148A23AC00C74E6A /* MPSkinMenu.cpp */; };
+		5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		5F2BD52214962F4E003E7F5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5F2BD4C314962301003E7F5C;
+			remoteInfo = MPlayerLib;
+		};
+		5F2BD52414962FB6003E7F5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5F2BD4C214962301003E7F5C;
+			remoteInfo = MPlayerLib;
+		};
+		5F2BD58D14963983003E7F5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5F2BD53314963397003E7F5C;
+			remoteInfo = ThirdPartiesSDK;
+		};
+		5F2BD58F14963988003E7F5C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5F2BD53214963397003E7F5C;
+			remoteInfo = ThirdPartiesSDK;
+		};
+		5FBCCAB8147E7EFD00D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCAB1147E7EFB00D7C64A /* BaseMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5F9CDEC4147A323D00432DAC;
+			remoteInfo = BaseMac;
+		};
+		5FBCCAC2147E7F2500D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCABB147E7F2500D7C64A /* GfxLiteMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FB163891478C78C0084494F;
+			remoteInfo = GfxLiteMac;
+		};
+		5FBCCACB147E7F4300D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCAC4147E7F4200D7C64A /* GfxRawMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5F9CDF53147BD92400432DAC;
+			remoteInfo = GfxRawMac;
+		};
+		5FBCCAE0147E7FF500D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCAD9147E7FF500D7C64A /* ImageLibMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCC954147D3B9200D7C64A;
+			remoteInfo = ImageLibMac;
+		};
+		5FBCCB5B147E8BFB00D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCB54147E8BFA00D7C64A /* WidgetLiteMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FB163291476A41B0084494F;
+			remoteInfo = WidgetLiteMac;
+		};
+		5FBCCB6A147E8C3000D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCB63147E8C3000D7C64A /* SimpleJVM.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCCB00147E80DF00D7C64A;
+			remoteInfo = SimpleJVM;
+		};
+		5FBCCBBD1485140700D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCB54147E8BFA00D7C64A /* WidgetLiteMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FB163281476A41B0084494F;
+			remoteInfo = WidgetLiteMac;
+		};
+		5FBCCBC11485140700D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCAB1147E7EFB00D7C64A /* BaseMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5F9CDEC3147A323D00432DAC;
+			remoteInfo = BaseMac;
+		};
+		5FBCCBC51485140700D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCAD9147E7FF500D7C64A /* ImageLibMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCC953147D3B9200D7C64A;
+			remoteInfo = ImageLibMac;
+		};
+		5FBCCBC71485140700D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCAC4147E7F4200D7C64A /* GfxRawMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5F9CDF52147BD92400432DAC;
+			remoteInfo = GfxRawMac;
+		};
+		5FBCCBC91485140700D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCABB147E7F2500D7C64A /* GfxLiteMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FB163881478C78C0084494F;
+			remoteInfo = GfxLiteMac;
+		};
+		5FBCCBCD1485140700D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCB63147E8C3000D7C64A /* SimpleJVM.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCCAFF147E80DF00D7C64A;
+			remoteInfo = SimpleJVM;
+		};
+		5FBCCC3F1485172200D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCC381485172100D7C64A /* ID3LibMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCCC0A148515A300D7C64A;
+			remoteInfo = ID3LibMac;
+		};
+		5FBCCCB81485198900D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCCB11485198800D7C64A /* UtilsMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCCC4C1485177000D7C64A;
+			remoteInfo = UtilsMac;
+		};
+		5FBCCD2114851B1600D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCD1A14851B1500D7C64A /* MLProtocolMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCCCE414851A0000D7C64A;
+			remoteInfo = MLProtocolMac;
+		};
+		5FBCCD8F14851C4A00D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCD8814851C4900D7C64A /* MLLibMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCCD2E14851B5300D7C64A;
+			remoteInfo = MLLibMac;
+		};
+		5FBCCDC214851CDB00D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCC381485172100D7C64A /* ID3LibMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCCC09148515A300D7C64A;
+			remoteInfo = ID3LibMac;
+		};
+		5FBCCDC414851CDB00D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCD8814851C4900D7C64A /* MLLibMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCCD2D14851B5300D7C64A;
+			remoteInfo = MLLibMac;
+		};
+		5FBCCDC614851CDB00D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCD1A14851B1500D7C64A /* MLProtocolMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCCCE314851A0000D7C64A;
+			remoteInfo = MLProtocolMac;
+		};
+		5FBCCDC814851CDB00D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCCB11485198800D7C64A /* UtilsMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCCC4B1485177000D7C64A;
+			remoteInfo = UtilsMac;
+		};
+		5FBCCF70148A1AF000D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCCDD914851FD700D7C64A;
+			remoteInfo = SkinMac;
+		};
+		5FBCCF72148A1B0900D7C64A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCCDD814851FD700D7C64A;
+			remoteInfo = SkinMac;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		5F2BD4A9148A6511003E7F5C /* DlgSaveLyrPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveLyrPrompt.h; sourceTree = "<group>"; };
+		5F2BD4AA148B3354003E7F5C /* PlayerEventDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerEventDispatcher.h; sourceTree = "<group>"; };
+		5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgChooseFont.cpp; sourceTree = "<group>"; };
+		5F2BD4AC148BB9B8003E7F5C /* DlgChooseFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgChooseFont.h; sourceTree = "<group>"; };
+		5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MPlayerLib.xcodeproj; path = ../MPlayerLib/MPlayerLib.xcodeproj; sourceTree = "<group>"; };
+		5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sqlite3.cpp; path = ../../sqlite_cpp/Sqlite3.cpp; sourceTree = "<group>"; };
+		5F2BD53B149633C1003E7F5C /* Sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sqlite3.h; path = ../../sqlite_cpp/Sqlite3.h; sourceTree = "<group>"; };
+		5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ThirdPartiesSDK.xcodeproj; path = ../SDK/ThirdPartiesSDK.xcodeproj; sourceTree = "<group>"; };
+		5FB16200147017330084494F /* MiniLyricsMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniLyricsMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FB16204147017330084494F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
+		5FB16207147017330084494F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		5FB16208147017330084494F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		5FB16209147017330084494F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		5FB1620C147017330084494F /* MiniLyricsMac-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MiniLyricsMac-Info.plist"; sourceTree = "<group>"; };
+		5FB1620E147017330084494F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		5FB16210147017330084494F /* main.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		5FB16212147017330084494F /* MiniLyricsMac-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MiniLyricsMac-Prefix.pch"; sourceTree = "<group>"; };
+		5FB16214147017330084494F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
+		5FB16216147017330084494F /* MiniLyricsMacAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MiniLyricsMacAppDelegate.h; sourceTree = "<group>"; };
+		5FB16217147017330084494F /* MiniLyricsMacAppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MiniLyricsMacAppDelegate.mm; sourceTree = "<group>"; };
+		5FB1621A147017340084494F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		5FB1621D147017340084494F /* MiniLyricsMac.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MiniLyricsMac.xcdatamodel; sourceTree = "<group>"; };
+		5FB16232147697D20084494F /* circle.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = circle.tif; sourceTree = "<group>"; };
+		5FB16233147697D20084494F /* pentagon.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = pentagon.tif; sourceTree = "<group>"; };
+		5FBCCAB1147E7EFB00D7C64A /* BaseMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BaseMac.xcodeproj; path = ../base/BaseMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCABB147E7F2500D7C64A /* GfxLiteMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GfxLiteMac.xcodeproj; path = ../GfxLite/GfxLiteMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCAC4147E7F4200D7C64A /* GfxRawMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GfxRawMac.xcodeproj; path = ../GfxRaw/GfxRawMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCAD9147E7FF500D7C64A /* ImageLibMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ImageLibMac.xcodeproj; path = ../ImageLib/ImageLibMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCB54147E8BFA00D7C64A /* WidgetLiteMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = WidgetLiteMac.xcodeproj; path = ../WidgetLite/WidgetLiteMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCB63147E8C3000D7C64A /* SimpleJVM.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SimpleJVM.xcodeproj; path = ../SimpleJVM/SimpleJVM.xcodeproj; sourceTree = "<group>"; };
+		5FBCCB76147E8C6100D7C64A /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		5FBCCC381485172100D7C64A /* ID3LibMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ID3LibMac.xcodeproj; path = ../ID3Lib/ID3LibMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCCB11485198800D7C64A /* UtilsMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UtilsMac.xcodeproj; path = ../Utils/UtilsMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCD1A14851B1500D7C64A /* MLProtocolMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLProtocolMac.xcodeproj; path = ../MLProtocol/MLProtocolMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCD8814851C4900D7C64A /* MLLibMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLLibMac.xcodeproj; path = ../MLLib/MLLibMac.xcodeproj; sourceTree = "<group>"; };
+		5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SkinMac.xcodeproj; path = ../Skin/SkinMac.xcodeproj; sourceTree = "<group>"; };
+		5FDC5598148A1F1B00C74E6A /* AutoBuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AutoBuild.h; path = ../../MPShared/AutoBuild.h; sourceTree = "<group>"; };
+		5FDC5599148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AutoProcessEmbeddedLyrics.cpp; path = ../../MPShared/AutoProcessEmbeddedLyrics.cpp; sourceTree = "<group>"; };
+		5FDC559A148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AutoProcessEmbeddedLyrics.h; path = ../../MPShared/AutoProcessEmbeddedLyrics.h; sourceTree = "<group>"; };
+		5FDC559B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CurMediaAlbumArt.cpp; path = ../../MPShared/CurMediaAlbumArt.cpp; sourceTree = "<group>"; };
+		5FDC559C148A1F1B00C74E6A /* CurMediaAlbumArt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CurMediaAlbumArt.h; path = ../../MPShared/CurMediaAlbumArt.h; sourceTree = "<group>"; };
+		5FDC559D148A1F1B00C74E6A /* DlgAbout.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DlgAbout.cpp; path = ../../MPShared/DlgAbout.cpp; sourceTree = "<group>"; };
+		5FDC559E148A1F1B00C74E6A /* DlgAbout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DlgAbout.h; path = ../../MPShared/DlgAbout.h; sourceTree = "<group>"; };
+		5FDC559F148A1F1B00C74E6A /* DlgAdjustHue.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DlgAdjustHue.cpp; path = ../../MPShared/DlgAdjustHue.cpp; sourceTree = "<group>"; };
+		5FDC55A0148A1F1B00C74E6A /* DlgAdjustHue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DlgAdjustHue.h; path = ../../MPShared/DlgAdjustHue.h; sourceTree = "<group>"; };
+		5FDC55A5148A1F1B00C74E6A /* DlgMediaInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DlgMediaInfo.cpp; path = ../../MPShared/DlgMediaInfo.cpp; sourceTree = "<group>"; };
+		5FDC55A6148A1F1B00C74E6A /* DlgMediaInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DlgMediaInfo.h; path = ../../MPShared/DlgMediaInfo.h; sourceTree = "<group>"; };
+		5FDC55A9148A1F1B00C74E6A /* DlgSearchLyrics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DlgSearchLyrics.cpp; path = ../../MPShared/DlgSearchLyrics.cpp; sourceTree = "<group>"; };
+		5FDC55AA148A1F1B00C74E6A /* DlgSearchLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DlgSearchLyrics.h; path = ../../MPShared/DlgSearchLyrics.h; sourceTree = "<group>"; };
+		5FDC55AD148A1F1B00C74E6A /* DlgUpload.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DlgUpload.cpp; path = ../../MPShared/DlgUpload.cpp; sourceTree = "<group>"; };
+		5FDC55AE148A1F1B00C74E6A /* DlgUpload.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DlgUpload.h; path = ../../MPShared/DlgUpload.h; sourceTree = "<group>"; };
+		5FDC55AF148A1F1B00C74E6A /* DownloadMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DownloadMgr.cpp; path = ../../MPShared/DownloadMgr.cpp; sourceTree = "<group>"; };
+		5FDC55B0148A1F1B00C74E6A /* DownloadMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DownloadMgr.h; path = ../../MPShared/DownloadMgr.h; sourceTree = "<group>"; };
+		5FDC55B1148A1F1B00C74E6A /* ErrorResolveDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ErrorResolveDlg.cpp; path = ../../MPShared/ErrorResolveDlg.cpp; sourceTree = "<group>"; };
+		5FDC55B2148A1F1B00C74E6A /* ErrorResolveDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ErrorResolveDlg.h; path = ../../MPShared/ErrorResolveDlg.h; sourceTree = "<group>"; };
+		5FDC55B3148A1F1B00C74E6A /* Helper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Helper.cpp; path = ../../MPShared/Helper.cpp; sourceTree = "<group>"; };
+		5FDC55B4148A1F1B00C74E6A /* Helper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Helper.h; path = ../../MPShared/Helper.h; sourceTree = "<group>"; };
+		5FDC55B5148A1F1B00C74E6A /* LicenseManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LicenseManager.cpp; path = ../../MPShared/LicenseManager.cpp; sourceTree = "<group>"; };
+		5FDC55B6148A1F1B00C74E6A /* LicenseManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LicenseManager.h; path = ../../MPShared/LicenseManager.h; sourceTree = "<group>"; };
+		5FDC55B7148A1F1B00C74E6A /* LrcUploadDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LrcUploadDB.cpp; path = ../../MPShared/LrcUploadDB.cpp; sourceTree = "<group>"; };
+		5FDC55B8148A1F1B00C74E6A /* LrcUploadDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LrcUploadDB.h; path = ../../MPShared/LrcUploadDB.h; sourceTree = "<group>"; };
+		5FDC55B9148A1F1B00C74E6A /* LyrDisplayClrListWnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyrDisplayClrListWnd.cpp; path = ../../MPShared/LyrDisplayClrListWnd.cpp; sourceTree = "<group>"; };
+		5FDC55BA148A1F1B00C74E6A /* LyrDisplayClrListWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyrDisplayClrListWnd.h; path = ../../MPShared/LyrDisplayClrListWnd.h; sourceTree = "<group>"; };
+		5FDC55BB148A1F1B00C74E6A /* LyricShowAgentObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowAgentObj.cpp; path = ../../MPShared/LyricShowAgentObj.cpp; sourceTree = "<group>"; };
+		5FDC55BC148A1F1B00C74E6A /* LyricShowAgentObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowAgentObj.h; path = ../../MPShared/LyricShowAgentObj.h; sourceTree = "<group>"; };
+		5FDC55BD148A1F1B00C74E6A /* LyricShowHorzScrollObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowHorzScrollObj.cpp; path = ../../MPShared/LyricShowHorzScrollObj.cpp; sourceTree = "<group>"; };
+		5FDC55BE148A1F1B00C74E6A /* LyricShowHorzScrollObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowHorzScrollObj.h; path = ../../MPShared/LyricShowHorzScrollObj.h; sourceTree = "<group>"; };
+		5FDC55BF148A1F1B00C74E6A /* LyricShowMultiRowObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowMultiRowObj.cpp; path = ../../MPShared/LyricShowMultiRowObj.cpp; sourceTree = "<group>"; };
+		5FDC55C0148A1F1B00C74E6A /* LyricShowMultiRowObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowMultiRowObj.h; path = ../../MPShared/LyricShowMultiRowObj.h; sourceTree = "<group>"; };
+		5FDC55C1148A1F1B00C74E6A /* LyricShowObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowObj.cpp; path = ../../MPShared/LyricShowObj.cpp; sourceTree = "<group>"; };
+		5FDC55C2148A1F1B00C74E6A /* LyricShowObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowObj.h; path = ../../MPShared/LyricShowObj.h; sourceTree = "<group>"; };
+		5FDC55C3148A1F1B00C74E6A /* LyricShowSingleRowObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowSingleRowObj.cpp; path = ../../MPShared/LyricShowSingleRowObj.cpp; sourceTree = "<group>"; };
+		5FDC55C4148A1F1B00C74E6A /* LyricShowSingleRowObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowSingleRowObj.h; path = ../../MPShared/LyricShowSingleRowObj.h; sourceTree = "<group>"; };
+		5FDC55C5148A1F1B00C74E6A /* LyricShowTextEditObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowTextEditObj.cpp; path = ../../MPShared/LyricShowTextEditObj.cpp; sourceTree = "<group>"; };
+		5FDC55C6148A1F1B00C74E6A /* LyricShowTextEditObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowTextEditObj.h; path = ../../MPShared/LyricShowTextEditObj.h; sourceTree = "<group>"; };
+		5FDC55C9148A1F1B00C74E6A /* LyricShowTwoRowObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowTwoRowObj.cpp; path = ../../MPShared/LyricShowTwoRowObj.cpp; sourceTree = "<group>"; };
+		5FDC55CA148A1F1B00C74E6A /* LyricShowTwoRowObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowTwoRowObj.h; path = ../../MPShared/LyricShowTwoRowObj.h; sourceTree = "<group>"; };
+		5FDC55CB148A1F1B00C74E6A /* LyricShowTxtContainer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowTxtContainer.cpp; path = ../../MPShared/LyricShowTxtContainer.cpp; sourceTree = "<group>"; };
+		5FDC55CC148A1F1B00C74E6A /* LyricShowTxtContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowTxtContainer.h; path = ../../MPShared/LyricShowTxtContainer.h; sourceTree = "<group>"; };
+		5FDC55CD148A1F1B00C74E6A /* LyricShowTxtObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowTxtObj.cpp; path = ../../MPShared/LyricShowTxtObj.cpp; sourceTree = "<group>"; };
+		5FDC55CE148A1F1B00C74E6A /* LyricShowTxtObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowTxtObj.h; path = ../../MPShared/LyricShowTxtObj.h; sourceTree = "<group>"; };
+		5FDC55CF148A1F1B00C74E6A /* LyricShowVobSub.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricShowVobSub.cpp; path = ../../MPShared/LyricShowVobSub.cpp; sourceTree = "<group>"; };
+		5FDC55D0148A1F1B00C74E6A /* LyricShowVobSub.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricShowVobSub.h; path = ../../MPShared/LyricShowVobSub.h; sourceTree = "<group>"; };
+		5FDC55D1148A1F1B00C74E6A /* LyricsLocalSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricsLocalSearch.cpp; path = ../../MPShared/LyricsLocalSearch.cpp; sourceTree = "<group>"; };
+		5FDC55D2148A1F1B00C74E6A /* LyricsLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsLocalSearch.h; path = ../../MPShared/LyricsLocalSearch.h; sourceTree = "<group>"; };
+		5FDC55D3148A1F1B00C74E6A /* LyricsOutPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsOutPlugin.h; path = ../../MPShared/LyricsOutPlugin.h; sourceTree = "<group>"; };
+		5FDC55D6148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyrPlaylistAutoSwitch.cpp; path = ../../MPShared/LyrPlaylistAutoSwitch.cpp; sourceTree = "<group>"; };
+		5FDC55D7148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyrPlaylistAutoSwitch.h; path = ../../MPShared/LyrPlaylistAutoSwitch.h; sourceTree = "<group>"; };
+		5FDC55D8148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MediaAlbumArtCtrl.cpp; path = ../../MPShared/MediaAlbumArtCtrl.cpp; sourceTree = "<group>"; };
+		5FDC55D9148A1F1B00C74E6A /* MediaAlbumArtCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediaAlbumArtCtrl.h; path = ../../MPShared/MediaAlbumArtCtrl.h; sourceTree = "<group>"; };
+		5FDC55DA148A1F1B00C74E6A /* MediaDetectionService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MediaDetectionService.cpp; path = ../../MPShared/MediaDetectionService.cpp; sourceTree = "<group>"; };
+		5FDC55DB148A1F1B00C74E6A /* MediaDetectionService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediaDetectionService.h; path = ../../MPShared/MediaDetectionService.h; sourceTree = "<group>"; };
+		5FDC55DC148A1F1B00C74E6A /* MediaInfoTextCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MediaInfoTextCtrl.cpp; path = ../../MPShared/MediaInfoTextCtrl.cpp; sourceTree = "<group>"; };
+		5FDC55DD148A1F1B00C74E6A /* MediaInfoTextCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediaInfoTextCtrl.h; path = ../../MPShared/MediaInfoTextCtrl.h; sourceTree = "<group>"; };
+		5FDC55E0148A1F1B00C74E6A /* MLClientSession.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLClientSession.cpp; path = ../../MPShared/MLClientSession.cpp; sourceTree = "<group>"; };
+		5FDC55E1148A1F1B00C74E6A /* MLClientSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLClientSession.h; path = ../../MPShared/MLClientSession.h; sourceTree = "<group>"; };
+		5FDC55E2148A1F1B00C74E6A /* MLCmd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLCmd.cpp; path = ../../MPShared/MLCmd.cpp; sourceTree = "<group>"; };
+		5FDC55E3148A1F1B00C74E6A /* MLCmd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLCmd.h; path = ../../MPShared/MLCmd.h; sourceTree = "<group>"; };
+		5FDC55E4148A1F1B00C74E6A /* MLResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLResource.h; path = ../../MPShared/MLResource.h; sourceTree = "<group>"; };
+		5FDC55E5148A1F1B00C74E6A /* MLVersion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLVersion.h; path = ../../MPShared/MLVersion.h; sourceTree = "<group>"; };
+		5FDC55E8148A1F1B00C74E6A /* MPCommonCmdHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPCommonCmdHandler.cpp; path = ../../MPShared/MPCommonCmdHandler.cpp; sourceTree = "<group>"; };
+		5FDC55E9148A1F1B00C74E6A /* MPCommonCmdHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPCommonCmdHandler.h; path = ../../MPShared/MPCommonCmdHandler.h; sourceTree = "<group>"; };
+		5FDC55EA148A1F1B00C74E6A /* MPEventsDispatcher.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEventsDispatcher.cpp; path = ../../MPShared/MPEventsDispatcher.cpp; sourceTree = "<group>"; };
+		5FDC55EB148A1F1B00C74E6A /* MPEventsDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEventsDispatcher.h; path = ../../MPShared/MPEventsDispatcher.h; sourceTree = "<group>"; };
+		5FDC55EC148A1F1B00C74E6A /* MPFloatingLyrWnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPFloatingLyrWnd.cpp; path = ../../MPShared/MPFloatingLyrWnd.cpp; sourceTree = "<group>"; };
+		5FDC55ED148A1F1B00C74E6A /* MPFloatingLyrWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPFloatingLyrWnd.h; path = ../../MPShared/MPFloatingLyrWnd.h; sourceTree = "<group>"; };
+		5FDC55EE148A1F1B00C74E6A /* MPHelper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPHelper.cpp; path = ../../MPShared/MPHelper.cpp; sourceTree = "<group>"; };
+		5FDC55EF148A1F1B00C74E6A /* MPHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPHelper.h; path = ../../MPShared/MPHelper.h; sourceTree = "<group>"; };
+		5FDC55F0148A1F1B00C74E6A /* MPlayerAppBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPlayerAppBase.cpp; path = ../../MPShared/MPlayerAppBase.cpp; sourceTree = "<group>"; };
+		5FDC55F1148A1F1B00C74E6A /* MPlayerAppBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPlayerAppBase.h; path = ../../MPShared/MPlayerAppBase.h; sourceTree = "<group>"; };
+		5FDC55F2148A1F1B00C74E6A /* MPlaylistCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPlaylistCtrl.cpp; path = ../../MPShared/MPlaylistCtrl.cpp; sourceTree = "<group>"; };
+		5FDC55F3148A1F1B00C74E6A /* MPlaylistCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPlaylistCtrl.h; path = ../../MPShared/MPlaylistCtrl.h; sourceTree = "<group>"; };
+		5FDC55F4148A1F1B00C74E6A /* MPlaylistSearchObj.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPlaylistSearchObj.cpp; path = ../../MPShared/MPlaylistSearchObj.cpp; sourceTree = "<group>"; };
+		5FDC55F5148A1F1B00C74E6A /* MPlaylistSearchObj.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPlaylistSearchObj.h; path = ../../MPShared/MPlaylistSearchObj.h; sourceTree = "<group>"; };
+		5FDC55F6148A1F1B00C74E6A /* MPluginManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPluginManager.cpp; path = ../../MPShared/MPluginManager.cpp; sourceTree = "<group>"; };
+		5FDC55F7148A1F1B00C74E6A /* MPluginManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPluginManager.h; path = ../../MPShared/MPluginManager.h; sourceTree = "<group>"; };
+		5FDC55F8148A1F1B00C74E6A /* MPMediaLibCmdHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPMediaLibCmdHandler.cpp; path = ../../MPShared/MPMediaLibCmdHandler.cpp; sourceTree = "<group>"; };
+		5FDC55F9148A1F1B00C74E6A /* MPMediaLibCmdHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPMediaLibCmdHandler.h; path = ../../MPShared/MPMediaLibCmdHandler.h; sourceTree = "<group>"; };
+		5FDC55FA148A1F1B00C74E6A /* MPMediaTree.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPMediaTree.cpp; path = ../../MPShared/MPMediaTree.cpp; sourceTree = "<group>"; };
+		5FDC55FB148A1F1B00C74E6A /* MPMediaTree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPMediaTree.h; path = ../../MPShared/MPMediaTree.h; sourceTree = "<group>"; };
+		5FDC55FC148A1F1B00C74E6A /* MPPlaylistCmdHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPPlaylistCmdHandler.cpp; path = ../../MPShared/MPPlaylistCmdHandler.cpp; sourceTree = "<group>"; };
+		5FDC55FD148A1F1B00C74E6A /* MPPlaylistCmdHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPPlaylistCmdHandler.h; path = ../../MPShared/MPPlaylistCmdHandler.h; sourceTree = "<group>"; };
+		5FDC55FE148A1F1B00C74E6A /* MPSkinFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinFactory.cpp; path = ../../MPShared/MPSkinFactory.cpp; sourceTree = "<group>"; };
+		5FDC55FF148A1F1B00C74E6A /* MPSkinFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinFactory.h; path = ../../MPShared/MPSkinFactory.h; sourceTree = "<group>"; };
+		5FDC5600148A1F1B00C74E6A /* MPSkinInfoTextCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinInfoTextCtrl.cpp; path = ../../MPShared/MPSkinInfoTextCtrl.cpp; sourceTree = "<group>"; };
+		5FDC5601148A1F1B00C74E6A /* MPSkinInfoTextCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinInfoTextCtrl.h; path = ../../MPShared/MPSkinInfoTextCtrl.h; sourceTree = "<group>"; };
+		5FDC5602148A1F1B00C74E6A /* MPSkinInfoTextCtrlEx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinInfoTextCtrlEx.cpp; path = ../../MPShared/MPSkinInfoTextCtrlEx.cpp; sourceTree = "<group>"; };
+		5FDC5603148A1F1B00C74E6A /* MPSkinInfoTextCtrlEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinInfoTextCtrlEx.h; path = ../../MPShared/MPSkinInfoTextCtrlEx.h; sourceTree = "<group>"; };
+		5FDC5604148A1F1B00C74E6A /* MPSkinMainWnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinMainWnd.cpp; path = ../../MPShared/MPSkinMainWnd.cpp; sourceTree = "<group>"; };
+		5FDC5605148A1F1B00C74E6A /* MPSkinMainWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinMainWnd.h; path = ../../MPShared/MPSkinMainWnd.h; sourceTree = "<group>"; };
+		5FDC5606148A1F1B00C74E6A /* MPSkinMediaNumInfoCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinMediaNumInfoCtrl.cpp; path = ../../MPShared/MPSkinMediaNumInfoCtrl.cpp; sourceTree = "<group>"; };
+		5FDC5607148A1F1B00C74E6A /* MPSkinMediaNumInfoCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinMediaNumInfoCtrl.h; path = ../../MPShared/MPSkinMediaNumInfoCtrl.h; sourceTree = "<group>"; };
+		5FDC5608148A1F1B00C74E6A /* MPSkinTimeCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinTimeCtrl.cpp; path = ../../MPShared/MPSkinTimeCtrl.cpp; sourceTree = "<group>"; };
+		5FDC5609148A1F1B00C74E6A /* MPSkinTimeCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinTimeCtrl.h; path = ../../MPShared/MPSkinTimeCtrl.h; sourceTree = "<group>"; };
+		5FDC560A148A1F1B00C74E6A /* MPSkinVis.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinVis.cpp; path = ../../MPShared/MPSkinVis.cpp; sourceTree = "<group>"; };
+		5FDC560B148A1F1B00C74E6A /* MPSkinVis.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinVis.h; path = ../../MPShared/MPSkinVis.h; sourceTree = "<group>"; };
+		5FDC560C148A1F1B00C74E6A /* MPSkinWnd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinWnd.cpp; path = ../../MPShared/MPSkinWnd.cpp; sourceTree = "<group>"; };
+		5FDC560D148A1F1B00C74E6A /* MPSkinWnd.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinWnd.h; path = ../../MPShared/MPSkinWnd.h; sourceTree = "<group>"; };
+		5FDC560E148A1F1B00C74E6A /* MPVisAdapter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPVisAdapter.cpp; path = ../../MPShared/MPVisAdapter.cpp; sourceTree = "<group>"; };
+		5FDC560F148A1F1B00C74E6A /* MPVisAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPVisAdapter.h; path = ../../MPShared/MPVisAdapter.h; sourceTree = "<group>"; };
+		5FDC5612148A1F1B00C74E6A /* OnlineSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OnlineSearch.cpp; path = ../../MPShared/OnlineSearch.cpp; sourceTree = "<group>"; };
+		5FDC5613148A1F1B00C74E6A /* OnlineSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnlineSearch.h; path = ../../MPShared/OnlineSearch.h; sourceTree = "<group>"; };
+		5FDC5614148A1F1B00C74E6A /* OperatingMiner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OperatingMiner.cpp; path = ../../MPShared/OperatingMiner.cpp; sourceTree = "<group>"; };
+		5FDC5615148A1F1B00C74E6A /* OperatingMiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OperatingMiner.h; path = ../../MPShared/OperatingMiner.h; sourceTree = "<group>"; };
+		5FDC5616148A1F1B00C74E6A /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Player.cpp; path = ../../MPShared/Player.cpp; sourceTree = "<group>"; };
+		5FDC5617148A1F1B00C74E6A /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = ../../MPShared/Player.h; sourceTree = "<group>"; };
+		5FDC5618148A1F1B00C74E6A /* PlayListFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayListFile.cpp; path = ../../MPShared/PlayListFile.cpp; sourceTree = "<group>"; };
+		5FDC5619148A1F1B00C74E6A /* PlayListFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayListFile.h; path = ../../MPShared/PlayListFile.h; sourceTree = "<group>"; };
+		5FDC561A148A1F1B00C74E6A /* PreferenceDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferenceDlg.cpp; path = ../../MPShared/PreferenceDlg.cpp; sourceTree = "<group>"; };
+		5FDC561B148A1F1B00C74E6A /* PreferenceDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferenceDlg.h; path = ../../MPShared/PreferenceDlg.h; sourceTree = "<group>"; };
+		5FDC561C148A1F1B00C74E6A /* PreferencePageBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferencePageBase.cpp; path = ../../MPShared/PreferencePageBase.cpp; sourceTree = "<group>"; };
+		5FDC561D148A1F1B00C74E6A /* PreferencePageBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferencePageBase.h; path = ../../MPShared/PreferencePageBase.h; sourceTree = "<group>"; };
+		5FDC561E148A1F1B00C74E6A /* PreferPageAdvanced.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferPageAdvanced.cpp; path = ../../MPShared/PreferPageAdvanced.cpp; sourceTree = "<group>"; };
+		5FDC561F148A1F1B00C74E6A /* PreferPageAdvanced.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferPageAdvanced.h; path = ../../MPShared/PreferPageAdvanced.h; sourceTree = "<group>"; };
+		5FDC5620148A1F1B00C74E6A /* PreferPageAssociation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferPageAssociation.h; path = ../../MPShared/PreferPageAssociation.h; sourceTree = "<group>"; };
+		5FDC5621148A1F1B00C74E6A /* PreferPageLyrics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferPageLyrics.cpp; path = ../../MPShared/PreferPageLyrics.cpp; sourceTree = "<group>"; };
+		5FDC5622148A1F1B00C74E6A /* PreferPageLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferPageLyrics.h; path = ../../MPShared/PreferPageLyrics.h; sourceTree = "<group>"; };
+		5FDC5623148A1F1B00C74E6A /* PreferPageSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferPageSystem.cpp; path = ../../MPShared/PreferPageSystem.cpp; sourceTree = "<group>"; };
+		5FDC5624148A1F1B00C74E6A /* PreferPageSystem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferPageSystem.h; path = ../../MPShared/PreferPageSystem.h; sourceTree = "<group>"; };
+		5FDC5625148A1F1B00C74E6A /* PreferPageTheme.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferPageTheme.cpp; path = ../../MPShared/PreferPageTheme.cpp; sourceTree = "<group>"; };
+		5FDC5626148A1F1B00C74E6A /* PreferPageTheme.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferPageTheme.h; path = ../../MPShared/PreferPageTheme.h; sourceTree = "<group>"; };
+		5FDC5627148A1F1B00C74E6A /* PreferPageUI.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PreferPageUI.cpp; path = ../../MPShared/PreferPageUI.cpp; sourceTree = "<group>"; };
+		5FDC5628148A1F1B00C74E6A /* PreferPageUI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PreferPageUI.h; path = ../../MPShared/PreferPageUI.h; sourceTree = "<group>"; };
+		5FDC5629148A1F1B00C74E6A /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resource.h; path = ../../MPShared/resource.h; sourceTree = "<group>"; };
+		5FDC562B148A1F1B00C74E6A /* SkinActivateCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinActivateCtrl.cpp; path = ../../MPShared/SkinActivateCtrl.cpp; sourceTree = "<group>"; };
+		5FDC562C148A1F1B00C74E6A /* SkinActivateCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinActivateCtrl.h; path = ../../MPShared/SkinActivateCtrl.h; sourceTree = "<group>"; };
+		5FDC562D148A1F1B00C74E6A /* SkinDroplistCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinDroplistCtrl.cpp; path = ../../MPShared/SkinDroplistCtrl.cpp; sourceTree = "<group>"; };
+		5FDC562E148A1F1B00C74E6A /* SkinDroplistCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinDroplistCtrl.h; path = ../../MPShared/SkinDroplistCtrl.h; sourceTree = "<group>"; };
+		5FDC5632148A1F1B00C74E6A /* SkinFilterCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinFilterCtrl.cpp; path = ../../MPShared/SkinFilterCtrl.cpp; sourceTree = "<group>"; };
+		5FDC5633148A1F1B00C74E6A /* SkinFilterCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinFilterCtrl.h; path = ../../MPShared/SkinFilterCtrl.h; sourceTree = "<group>"; };
+		5FDC5634148A1F1B00C74E6A /* SkinImageListCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinImageListCtrl.cpp; path = ../../MPShared/SkinImageListCtrl.cpp; sourceTree = "<group>"; };
+		5FDC5635148A1F1B00C74E6A /* SkinImageListCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinImageListCtrl.h; path = ../../MPShared/SkinImageListCtrl.h; sourceTree = "<group>"; };
+		5FDC5636148A1F1B00C74E6A /* SkinListCtrlEx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinListCtrlEx.cpp; path = ../../MPShared/SkinListCtrlEx.cpp; sourceTree = "<group>"; };
+		5FDC5637148A1F1B00C74E6A /* SkinListCtrlEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinListCtrlEx.h; path = ../../MPShared/SkinListCtrlEx.h; sourceTree = "<group>"; };
+		5FDC5638148A1F1B00C74E6A /* SkinPicText.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinPicText.cpp; path = ../../MPShared/SkinPicText.cpp; sourceTree = "<group>"; };
+		5FDC5639148A1F1B00C74E6A /* SkinPicText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinPicText.h; path = ../../MPShared/SkinPicText.h; sourceTree = "<group>"; };
+		5FDC563A148A1F1B00C74E6A /* SkinRateCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinRateCtrl.cpp; path = ../../MPShared/SkinRateCtrl.cpp; sourceTree = "<group>"; };
+		5FDC563B148A1F1B00C74E6A /* SkinRateCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinRateCtrl.h; path = ../../MPShared/SkinRateCtrl.h; sourceTree = "<group>"; };
+		5FDC563C148A1F1B00C74E6A /* SkinScrollText.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinScrollText.cpp; path = ../../MPShared/SkinScrollText.cpp; sourceTree = "<group>"; };
+		5FDC563D148A1F1B00C74E6A /* SkinScrollText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinScrollText.h; path = ../../MPShared/SkinScrollText.h; sourceTree = "<group>"; };
+		5FDC563E148A1F1B00C74E6A /* SkinTabHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinTabHeader.cpp; path = ../../MPShared/SkinTabHeader.cpp; sourceTree = "<group>"; };
+		5FDC563F148A1F1B00C74E6A /* SkinTabHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinTabHeader.h; path = ../../MPShared/SkinTabHeader.h; sourceTree = "<group>"; };
+		5FDC5640148A1F1B00C74E6A /* SkinTreeCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinTreeCtrl.cpp; path = ../../MPShared/SkinTreeCtrl.cpp; sourceTree = "<group>"; };
+		5FDC5641148A1F1B00C74E6A /* SkinTreeCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinTreeCtrl.h; path = ../../MPShared/SkinTreeCtrl.h; sourceTree = "<group>"; };
+		5FDC5642148A1F1B00C74E6A /* StdAfx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StdAfx.cpp; path = ../../MPShared/StdAfx.cpp; sourceTree = "<group>"; };
+		5FDC5643148A1F1B00C74E6A /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stdafx.h; path = ../../MPShared/stdafx.h; sourceTree = "<group>"; };
+		5FDC5644148A1F1B00C74E6A /* ThemesFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThemesFile.cpp; path = ../../MPShared/ThemesFile.cpp; sourceTree = "<group>"; };
+		5FDC5645148A1F1B00C74E6A /* ThemesFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ThemesFile.h; path = ../../MPShared/ThemesFile.h; sourceTree = "<group>"; };
+		5FDC5646148A1F1B00C74E6A /* VersionUpdate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = VersionUpdate.cpp; path = ../../MPShared/VersionUpdate.cpp; sourceTree = "<group>"; };
+		5FDC5647148A1F1B00C74E6A /* VersionUpdate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VersionUpdate.h; path = ../../MPShared/VersionUpdate.h; sourceTree = "<group>"; };
+		5FDC5648148A1F1B00C74E6A /* WaitingDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = WaitingDlg.cpp; path = ../../MPShared/WaitingDlg.cpp; sourceTree = "<group>"; };
+		5FDC5649148A1F1B00C74E6A /* WaitingDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WaitingDlg.h; path = ../../MPShared/WaitingDlg.h; sourceTree = "<group>"; };
+		5FDC56A1148A23AC00C74E6A /* HelperMac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HelperMac.cpp; sourceTree = "<group>"; };
+		5FDC56A2148A23AC00C74E6A /* LyricsOutPluginMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsOutPluginMgr.cpp; sourceTree = "<group>"; };
+		5FDC56A3148A23AC00C74E6A /* LyricsOutPluginMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsOutPluginMgr.h; sourceTree = "<group>"; };
+		5FDC56A4148A23AC00C74E6A /* MLTrayIcon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLTrayIcon.cpp; sourceTree = "<group>"; };
+		5FDC56A5148A23AC00C74E6A /* MLTrayIcon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLTrayIcon.h; sourceTree = "<group>"; };
+		5FDC56A6148A23AC00C74E6A /* MPHotkey.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPHotkey.cpp; sourceTree = "<group>"; };
+		5FDC56A7148A23AC00C74E6A /* MPHotkey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPHotkey.h; sourceTree = "<group>"; };
+		5FDC56A8148A23AC00C74E6A /* MPlayerApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPlayerApp.cpp; sourceTree = "<group>"; };
+		5FDC56A9148A23AC00C74E6A /* MPlayerApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayerApp.h; sourceTree = "<group>"; };
+		5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPSkinMainWndMac.cpp; sourceTree = "<group>"; };
+		5FDC56AD148A23AC00C74E6A /* MPSkinMainWndMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPSkinMainWndMac.h; sourceTree = "<group>"; };
+		5FDC56AE148A23AC00C74E6A /* MPSkinMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPSkinMenu.cpp; sourceTree = "<group>"; };
+		5FDC56AF148A23AC00C74E6A /* MPSkinMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPSkinMenu.h; sourceTree = "<group>"; };
+		5FDC56B9148A2DC800C74E6A /* DlgBatchProcessEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgBatchProcessEmbeddedLyrics.h; sourceTree = "<group>"; };
+		5FDC56BB148A2ED900C74E6A /* DlgSaveEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveEmbeddedLyrics.h; sourceTree = "<group>"; };
+		5FDC56BC148A2FE300C74E6A /* DlgUpdateLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgUpdateLibrary.h; sourceTree = "<group>"; };
+		5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgUpdateLibrary.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		5FB161FD147017330084494F /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5F2BD5911496398D003E7F5C /* libThirdPartiesSDK.a in Frameworks */,
+				5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */,
+				5FBCCF74148A1B1900D7C64A /* libSkinMac.a in Frameworks */,
+				5FBCCDCA14851D0F00D7C64A /* libID3LibMac.a in Frameworks */,
+				5FBCCDCB14851D0F00D7C64A /* libMLLibMac.a in Frameworks */,
+				5FBCCDCC14851D0F00D7C64A /* libMLProtocolMac.a in Frameworks */,
+				5FBCCDCD14851D0F00D7C64A /* libUtilsMac.a in Frameworks */,
+				5FBCCB77147E8C6100D7C64A /* Accelerate.framework in Frameworks */,
+				5FBCCB6C147E8C6100D7C64A /* libBaseMac.a in Frameworks */,
+				5FBCCB6D147E8C6100D7C64A /* libGfxLiteMac.a in Frameworks */,
+				5FBCCB6E147E8C6100D7C64A /* libGfxRawMac.a in Frameworks */,
+				5FBCCB70147E8C6100D7C64A /* libImageLibMac.a in Frameworks */,
+				5FBCCB73147E8C6100D7C64A /* libSimpleJVM.a in Frameworks */,
+				5FBCCB75147E8C6100D7C64A /* libWidgetLiteMac.a in Frameworks */,
+				5FB16205147017330084494F /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		5F2BD51C14962F4C003E7F5C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5F2BD58714963980003E7F5C /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5F2BD58E14963983003E7F5C /* libThirdPartiesSDK.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FB161F5147017330084494F = {
+			isa = PBXGroup;
+			children = (
+				5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */,
+				5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */,
+				5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */,
+				5FBCCD8814851C4900D7C64A /* MLLibMac.xcodeproj */,
+				5FBCCD1A14851B1500D7C64A /* MLProtocolMac.xcodeproj */,
+				5FBCCCB11485198800D7C64A /* UtilsMac.xcodeproj */,
+				5FBCCC381485172100D7C64A /* ID3LibMac.xcodeproj */,
+				5FBCCB76147E8C6100D7C64A /* Accelerate.framework */,
+				5FBCCB63147E8C3000D7C64A /* SimpleJVM.xcodeproj */,
+				5FBCCB54147E8BFA00D7C64A /* WidgetLiteMac.xcodeproj */,
+				5FBCCAD9147E7FF500D7C64A /* ImageLibMac.xcodeproj */,
+				5FBCCAC4147E7F4200D7C64A /* GfxRawMac.xcodeproj */,
+				5FBCCABB147E7F2500D7C64A /* GfxLiteMac.xcodeproj */,
+				5FBCCAB1147E7EFB00D7C64A /* BaseMac.xcodeproj */,
+				5FB1620A147017330084494F /* Source */,
+				5FB16203147017330084494F /* Frameworks */,
+				5FB16201147017330084494F /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		5FB16201147017330084494F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FB16200147017330084494F /* MiniLyricsMac.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FB16203147017330084494F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FB16204147017330084494F /* Cocoa.framework */,
+				5FB16206147017330084494F /* Other Frameworks */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		5FB16206147017330084494F /* Other Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5FB16207147017330084494F /* AppKit.framework */,
+				5FB16208147017330084494F /* CoreData.framework */,
+				5FB16209147017330084494F /* Foundation.framework */,
+			);
+			name = "Other Frameworks";
+			sourceTree = "<group>";
+		};
+		5FB1620A147017330084494F /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */,
+				5F2BD53B149633C1003E7F5C /* Sqlite3.h */,
+				5FDC56A0148A23AC00C74E6A /* mac */,
+				5FDC5598148A1F1B00C74E6A /* AutoBuild.h */,
+				5FDC5599148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp */,
+				5FDC559A148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.h */,
+				5FDC559B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp */,
+				5FDC559C148A1F1B00C74E6A /* CurMediaAlbumArt.h */,
+				5FDC559D148A1F1B00C74E6A /* DlgAbout.cpp */,
+				5FDC559E148A1F1B00C74E6A /* DlgAbout.h */,
+				5FDC559F148A1F1B00C74E6A /* DlgAdjustHue.cpp */,
+				5FDC55A0148A1F1B00C74E6A /* DlgAdjustHue.h */,
+				5FDC55A5148A1F1B00C74E6A /* DlgMediaInfo.cpp */,
+				5FDC55A6148A1F1B00C74E6A /* DlgMediaInfo.h */,
+				5FDC55A9148A1F1B00C74E6A /* DlgSearchLyrics.cpp */,
+				5FDC55AA148A1F1B00C74E6A /* DlgSearchLyrics.h */,
+				5FDC55AD148A1F1B00C74E6A /* DlgUpload.cpp */,
+				5FDC55AE148A1F1B00C74E6A /* DlgUpload.h */,
+				5FDC55AF148A1F1B00C74E6A /* DownloadMgr.cpp */,
+				5FDC55B0148A1F1B00C74E6A /* DownloadMgr.h */,
+				5FDC55B1148A1F1B00C74E6A /* ErrorResolveDlg.cpp */,
+				5FDC55B2148A1F1B00C74E6A /* ErrorResolveDlg.h */,
+				5FDC55B3148A1F1B00C74E6A /* Helper.cpp */,
+				5FDC55B4148A1F1B00C74E6A /* Helper.h */,
+				5FDC55B5148A1F1B00C74E6A /* LicenseManager.cpp */,
+				5FDC55B6148A1F1B00C74E6A /* LicenseManager.h */,
+				5FDC55B7148A1F1B00C74E6A /* LrcUploadDB.cpp */,
+				5FDC55B8148A1F1B00C74E6A /* LrcUploadDB.h */,
+				5FDC55B9148A1F1B00C74E6A /* LyrDisplayClrListWnd.cpp */,
+				5FDC55BA148A1F1B00C74E6A /* LyrDisplayClrListWnd.h */,
+				5FDC55BB148A1F1B00C74E6A /* LyricShowAgentObj.cpp */,
+				5FDC55BC148A1F1B00C74E6A /* LyricShowAgentObj.h */,
+				5FDC55BD148A1F1B00C74E6A /* LyricShowHorzScrollObj.cpp */,
+				5FDC55BE148A1F1B00C74E6A /* LyricShowHorzScrollObj.h */,
+				5FDC55BF148A1F1B00C74E6A /* LyricShowMultiRowObj.cpp */,
+				5FDC55C0148A1F1B00C74E6A /* LyricShowMultiRowObj.h */,
+				5FDC55C1148A1F1B00C74E6A /* LyricShowObj.cpp */,
+				5FDC55C2148A1F1B00C74E6A /* LyricShowObj.h */,
+				5FDC55C3148A1F1B00C74E6A /* LyricShowSingleRowObj.cpp */,
+				5FDC55C4148A1F1B00C74E6A /* LyricShowSingleRowObj.h */,
+				5FDC55C5148A1F1B00C74E6A /* LyricShowTextEditObj.cpp */,
+				5FDC55C6148A1F1B00C74E6A /* LyricShowTextEditObj.h */,
+				5FDC55C9148A1F1B00C74E6A /* LyricShowTwoRowObj.cpp */,
+				5FDC55CA148A1F1B00C74E6A /* LyricShowTwoRowObj.h */,
+				5FDC55CB148A1F1B00C74E6A /* LyricShowTxtContainer.cpp */,
+				5FDC55CC148A1F1B00C74E6A /* LyricShowTxtContainer.h */,
+				5FDC55CD148A1F1B00C74E6A /* LyricShowTxtObj.cpp */,
+				5FDC55CE148A1F1B00C74E6A /* LyricShowTxtObj.h */,
+				5FDC55CF148A1F1B00C74E6A /* LyricShowVobSub.cpp */,
+				5FDC55D0148A1F1B00C74E6A /* LyricShowVobSub.h */,
+				5FDC55D1148A1F1B00C74E6A /* LyricsLocalSearch.cpp */,
+				5FDC55D2148A1F1B00C74E6A /* LyricsLocalSearch.h */,
+				5FDC55D3148A1F1B00C74E6A /* LyricsOutPlugin.h */,
+				5FDC55D6148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp */,
+				5FDC55D7148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.h */,
+				5FDC55D8148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp */,
+				5FDC55D9148A1F1B00C74E6A /* MediaAlbumArtCtrl.h */,
+				5FDC55DA148A1F1B00C74E6A /* MediaDetectionService.cpp */,
+				5FDC55DB148A1F1B00C74E6A /* MediaDetectionService.h */,
+				5FDC55DC148A1F1B00C74E6A /* MediaInfoTextCtrl.cpp */,
+				5FDC55DD148A1F1B00C74E6A /* MediaInfoTextCtrl.h */,
+				5FDC55E0148A1F1B00C74E6A /* MLClientSession.cpp */,
+				5FDC55E1148A1F1B00C74E6A /* MLClientSession.h */,
+				5FDC55E2148A1F1B00C74E6A /* MLCmd.cpp */,
+				5FDC55E3148A1F1B00C74E6A /* MLCmd.h */,
+				5FDC55E4148A1F1B00C74E6A /* MLResource.h */,
+				5FDC55E5148A1F1B00C74E6A /* MLVersion.h */,
+				5FDC55E8148A1F1B00C74E6A /* MPCommonCmdHandler.cpp */,
+				5FDC55E9148A1F1B00C74E6A /* MPCommonCmdHandler.h */,
+				5FDC55EA148A1F1B00C74E6A /* MPEventsDispatcher.cpp */,
+				5FDC55EB148A1F1B00C74E6A /* MPEventsDispatcher.h */,
+				5FDC55EC148A1F1B00C74E6A /* MPFloatingLyrWnd.cpp */,
+				5FDC55ED148A1F1B00C74E6A /* MPFloatingLyrWnd.h */,
+				5FDC55EE148A1F1B00C74E6A /* MPHelper.cpp */,
+				5FDC55EF148A1F1B00C74E6A /* MPHelper.h */,
+				5FDC55F0148A1F1B00C74E6A /* MPlayerAppBase.cpp */,
+				5FDC55F1148A1F1B00C74E6A /* MPlayerAppBase.h */,
+				5FDC55F2148A1F1B00C74E6A /* MPlaylistCtrl.cpp */,
+				5FDC55F3148A1F1B00C74E6A /* MPlaylistCtrl.h */,
+				5FDC55F4148A1F1B00C74E6A /* MPlaylistSearchObj.cpp */,
+				5FDC55F5148A1F1B00C74E6A /* MPlaylistSearchObj.h */,
+				5FDC55F6148A1F1B00C74E6A /* MPluginManager.cpp */,
+				5FDC55F7148A1F1B00C74E6A /* MPluginManager.h */,
+				5FDC55F8148A1F1B00C74E6A /* MPMediaLibCmdHandler.cpp */,
+				5FDC55F9148A1F1B00C74E6A /* MPMediaLibCmdHandler.h */,
+				5FDC55FA148A1F1B00C74E6A /* MPMediaTree.cpp */,
+				5FDC55FB148A1F1B00C74E6A /* MPMediaTree.h */,
+				5FDC55FC148A1F1B00C74E6A /* MPPlaylistCmdHandler.cpp */,
+				5FDC55FD148A1F1B00C74E6A /* MPPlaylistCmdHandler.h */,
+				5FDC55FE148A1F1B00C74E6A /* MPSkinFactory.cpp */,
+				5FDC55FF148A1F1B00C74E6A /* MPSkinFactory.h */,
+				5FDC5600148A1F1B00C74E6A /* MPSkinInfoTextCtrl.cpp */,
+				5FDC5601148A1F1B00C74E6A /* MPSkinInfoTextCtrl.h */,
+				5FDC5602148A1F1B00C74E6A /* MPSkinInfoTextCtrlEx.cpp */,
+				5FDC5603148A1F1B00C74E6A /* MPSkinInfoTextCtrlEx.h */,
+				5FDC5604148A1F1B00C74E6A /* MPSkinMainWnd.cpp */,
+				5FDC5605148A1F1B00C74E6A /* MPSkinMainWnd.h */,
+				5FDC5606148A1F1B00C74E6A /* MPSkinMediaNumInfoCtrl.cpp */,
+				5FDC5607148A1F1B00C74E6A /* MPSkinMediaNumInfoCtrl.h */,
+				5FDC5608148A1F1B00C74E6A /* MPSkinTimeCtrl.cpp */,
+				5FDC5609148A1F1B00C74E6A /* MPSkinTimeCtrl.h */,
+				5FDC560A148A1F1B00C74E6A /* MPSkinVis.cpp */,
+				5FDC560B148A1F1B00C74E6A /* MPSkinVis.h */,
+				5FDC560C148A1F1B00C74E6A /* MPSkinWnd.cpp */,
+				5FDC560D148A1F1B00C74E6A /* MPSkinWnd.h */,
+				5FDC560E148A1F1B00C74E6A /* MPVisAdapter.cpp */,
+				5FDC560F148A1F1B00C74E6A /* MPVisAdapter.h */,
+				5FDC5612148A1F1B00C74E6A /* OnlineSearch.cpp */,
+				5FDC5613148A1F1B00C74E6A /* OnlineSearch.h */,
+				5FDC5614148A1F1B00C74E6A /* OperatingMiner.cpp */,
+				5FDC5615148A1F1B00C74E6A /* OperatingMiner.h */,
+				5FDC5616148A1F1B00C74E6A /* Player.cpp */,
+				5FDC5617148A1F1B00C74E6A /* Player.h */,
+				5FDC5618148A1F1B00C74E6A /* PlayListFile.cpp */,
+				5FDC5619148A1F1B00C74E6A /* PlayListFile.h */,
+				5FDC561A148A1F1B00C74E6A /* PreferenceDlg.cpp */,
+				5FDC561B148A1F1B00C74E6A /* PreferenceDlg.h */,
+				5FDC561C148A1F1B00C74E6A /* PreferencePageBase.cpp */,
+				5FDC561D148A1F1B00C74E6A /* PreferencePageBase.h */,
+				5FDC561E148A1F1B00C74E6A /* PreferPageAdvanced.cpp */,
+				5FDC561F148A1F1B00C74E6A /* PreferPageAdvanced.h */,
+				5FDC5620148A1F1B00C74E6A /* PreferPageAssociation.h */,
+				5FDC5621148A1F1B00C74E6A /* PreferPageLyrics.cpp */,
+				5FDC5622148A1F1B00C74E6A /* PreferPageLyrics.h */,
+				5FDC5623148A1F1B00C74E6A /* PreferPageSystem.cpp */,
+				5FDC5624148A1F1B00C74E6A /* PreferPageSystem.h */,
+				5FDC5625148A1F1B00C74E6A /* PreferPageTheme.cpp */,
+				5FDC5626148A1F1B00C74E6A /* PreferPageTheme.h */,
+				5FDC5627148A1F1B00C74E6A /* PreferPageUI.cpp */,
+				5FDC5628148A1F1B00C74E6A /* PreferPageUI.h */,
+				5FDC5629148A1F1B00C74E6A /* resource.h */,
+				5FDC562B148A1F1B00C74E6A /* SkinActivateCtrl.cpp */,
+				5FDC562C148A1F1B00C74E6A /* SkinActivateCtrl.h */,
+				5FDC562D148A1F1B00C74E6A /* SkinDroplistCtrl.cpp */,
+				5FDC562E148A1F1B00C74E6A /* SkinDroplistCtrl.h */,
+				5FDC5632148A1F1B00C74E6A /* SkinFilterCtrl.cpp */,
+				5FDC5633148A1F1B00C74E6A /* SkinFilterCtrl.h */,
+				5FDC5634148A1F1B00C74E6A /* SkinImageListCtrl.cpp */,
+				5FDC5635148A1F1B00C74E6A /* SkinImageListCtrl.h */,
+				5FDC5636148A1F1B00C74E6A /* SkinListCtrlEx.cpp */,
+				5FDC5637148A1F1B00C74E6A /* SkinListCtrlEx.h */,
+				5FDC5638148A1F1B00C74E6A /* SkinPicText.cpp */,
+				5FDC5639148A1F1B00C74E6A /* SkinPicText.h */,
+				5FDC563A148A1F1B00C74E6A /* SkinRateCtrl.cpp */,
+				5FDC563B148A1F1B00C74E6A /* SkinRateCtrl.h */,
+				5FDC563C148A1F1B00C74E6A /* SkinScrollText.cpp */,
+				5FDC563D148A1F1B00C74E6A /* SkinScrollText.h */,
+				5FDC563E148A1F1B00C74E6A /* SkinTabHeader.cpp */,
+				5FDC563F148A1F1B00C74E6A /* SkinTabHeader.h */,
+				5FDC5640148A1F1B00C74E6A /* SkinTreeCtrl.cpp */,
+				5FDC5641148A1F1B00C74E6A /* SkinTreeCtrl.h */,
+				5FDC5642148A1F1B00C74E6A /* StdAfx.cpp */,
+				5FDC5643148A1F1B00C74E6A /* stdafx.h */,
+				5FDC5644148A1F1B00C74E6A /* ThemesFile.cpp */,
+				5FDC5645148A1F1B00C74E6A /* ThemesFile.h */,
+				5FDC5646148A1F1B00C74E6A /* VersionUpdate.cpp */,
+				5FDC5647148A1F1B00C74E6A /* VersionUpdate.h */,
+				5FDC5648148A1F1B00C74E6A /* WaitingDlg.cpp */,
+				5FDC5649148A1F1B00C74E6A /* WaitingDlg.h */,
+				5FB16216147017330084494F /* MiniLyricsMacAppDelegate.h */,
+				5FB16217147017330084494F /* MiniLyricsMacAppDelegate.mm */,
+				5FB16219147017340084494F /* MainMenu.xib */,
+				5FB1621C147017340084494F /* MiniLyricsMac.xcdatamodeld */,
+				5FB1620B147017330084494F /* Supporting Files */,
+			);
+			name = Source;
+			path = MiniLyricsMac;
+			sourceTree = "<group>";
+		};
+		5FB1620B147017330084494F /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				5FB16232147697D20084494F /* circle.tif */,
+				5FB16233147697D20084494F /* pentagon.tif */,
+				5FB1620C147017330084494F /* MiniLyricsMac-Info.plist */,
+				5FB1620D147017330084494F /* InfoPlist.strings */,
+				5FB16210147017330084494F /* main.mm */,
+				5FB16212147017330084494F /* MiniLyricsMac-Prefix.pch */,
+				5FB16213147017330084494F /* Credits.rtf */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5FBCCAB2147E7EFC00D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCAB9147E7EFD00D7C64A /* libBaseMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCABC147E7F2500D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCAC3147E7F2500D7C64A /* libGfxLiteMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCAC5147E7F4200D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCACC147E7F4300D7C64A /* libGfxRawMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCADA147E7FF500D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCAE1147E7FF500D7C64A /* libImageLibMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCB55147E8BFA00D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCB5C147E8BFB00D7C64A /* libWidgetLiteMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCB64147E8C3000D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCB6B147E8C3000D7C64A /* libSimpleJVM.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCC391485172100D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCC401485172200D7C64A /* libID3LibMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCCB21485198800D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCCB91485198900D7C64A /* libUtilsMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCD1B14851B1500D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCD2214851B1600D7C64A /* libMLProtocolMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCD8914851C4900D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCD9014851C4A00D7C64A /* libMLLibMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FBCCF6A148A1AEF00D7C64A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FBCCF71148A1AF000D7C64A /* libSkinMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FDC56A0148A23AC00C74E6A /* mac */ = {
+			isa = PBXGroup;
+			children = (
+				5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */,
+				5F2BD4AC148BB9B8003E7F5C /* DlgChooseFont.h */,
+				5F2BD4AA148B3354003E7F5C /* PlayerEventDispatcher.h */,
+				5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */,
+				5FDC56BC148A2FE300C74E6A /* DlgUpdateLibrary.h */,
+				5FDC56BB148A2ED900C74E6A /* DlgSaveEmbeddedLyrics.h */,
+				5F2BD4A9148A6511003E7F5C /* DlgSaveLyrPrompt.h */,
+				5FDC56B9148A2DC800C74E6A /* DlgBatchProcessEmbeddedLyrics.h */,
+				5FDC56A1148A23AC00C74E6A /* HelperMac.cpp */,
+				5FDC56A2148A23AC00C74E6A /* LyricsOutPluginMgr.cpp */,
+				5FDC56A3148A23AC00C74E6A /* LyricsOutPluginMgr.h */,
+				5FDC56A4148A23AC00C74E6A /* MLTrayIcon.cpp */,
+				5FDC56A5148A23AC00C74E6A /* MLTrayIcon.h */,
+				5FDC56A6148A23AC00C74E6A /* MPHotkey.cpp */,
+				5FDC56A7148A23AC00C74E6A /* MPHotkey.h */,
+				5FDC56A8148A23AC00C74E6A /* MPlayerApp.cpp */,
+				5FDC56A9148A23AC00C74E6A /* MPlayerApp.h */,
+				5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */,
+				5FDC56AD148A23AC00C74E6A /* MPSkinMainWndMac.h */,
+				5FDC56AE148A23AC00C74E6A /* MPSkinMenu.cpp */,
+				5FDC56AF148A23AC00C74E6A /* MPSkinMenu.h */,
+			);
+			name = mac;
+			path = ../../MPShared/mac;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		5FB161FF147017330084494F /* MiniLyricsMac */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5FB16221147017340084494F /* Build configuration list for PBXNativeTarget "MiniLyricsMac" */;
+			buildPhases = (
+				5FB161FC147017330084494F /* Sources */,
+				5FB161FD147017330084494F /* Frameworks */,
+				5FB161FE147017330084494F /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				5F2BD59014963988003E7F5C /* PBXTargetDependency */,
+				5F2BD52514962FB6003E7F5C /* PBXTargetDependency */,
+				5FBCCF73148A1B0900D7C64A /* PBXTargetDependency */,
+				5FBCCDC314851CDB00D7C64A /* PBXTargetDependency */,
+				5FBCCDC514851CDB00D7C64A /* PBXTargetDependency */,
+				5FBCCDC714851CDB00D7C64A /* PBXTargetDependency */,
+				5FBCCDC914851CDB00D7C64A /* PBXTargetDependency */,
+				5FBCCBBE1485140700D7C64A /* PBXTargetDependency */,
+				5FBCCBC21485140700D7C64A /* PBXTargetDependency */,
+				5FBCCBC61485140700D7C64A /* PBXTargetDependency */,
+				5FBCCBC81485140700D7C64A /* PBXTargetDependency */,
+				5FBCCBCA1485140700D7C64A /* PBXTargetDependency */,
+				5FBCCBCE1485140700D7C64A /* PBXTargetDependency */,
+			);
+			name = MiniLyricsMac;
+			productName = MiniLyricsMac;
+			productReference = 5FB16200147017330084494F /* MiniLyricsMac.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		5FB161F7147017330084494F /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 5FB161FA147017330084494F /* Build configuration list for PBXProject "MiniLyricsMac" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 5FB161F5147017330084494F;
+			productRefGroup = 5FB16201147017330084494F /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 5FBCCAB2147E7EFC00D7C64A /* Products */;
+					ProjectRef = 5FBCCAB1147E7EFB00D7C64A /* BaseMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCABC147E7F2500D7C64A /* Products */;
+					ProjectRef = 5FBCCABB147E7F2500D7C64A /* GfxLiteMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCAC5147E7F4200D7C64A /* Products */;
+					ProjectRef = 5FBCCAC4147E7F4200D7C64A /* GfxRawMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCC391485172100D7C64A /* Products */;
+					ProjectRef = 5FBCCC381485172100D7C64A /* ID3LibMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCADA147E7FF500D7C64A /* Products */;
+					ProjectRef = 5FBCCAD9147E7FF500D7C64A /* ImageLibMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCD8914851C4900D7C64A /* Products */;
+					ProjectRef = 5FBCCD8814851C4900D7C64A /* MLLibMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCD1B14851B1500D7C64A /* Products */;
+					ProjectRef = 5FBCCD1A14851B1500D7C64A /* MLProtocolMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5F2BD51C14962F4C003E7F5C /* Products */;
+					ProjectRef = 5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCB64147E8C3000D7C64A /* Products */;
+					ProjectRef = 5FBCCB63147E8C3000D7C64A /* SimpleJVM.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCF6A148A1AEF00D7C64A /* Products */;
+					ProjectRef = 5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5F2BD58714963980003E7F5C /* Products */;
+					ProjectRef = 5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCCB21485198800D7C64A /* Products */;
+					ProjectRef = 5FBCCCB11485198800D7C64A /* UtilsMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FBCCB55147E8BFA00D7C64A /* Products */;
+					ProjectRef = 5FBCCB54147E8BFA00D7C64A /* WidgetLiteMac.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				5FB161FF147017330084494F /* MiniLyricsMac */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMPlayerLib.a;
+			remoteRef = 5F2BD52214962F4E003E7F5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5F2BD58E14963983003E7F5C /* libThirdPartiesSDK.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libThirdPartiesSDK.a;
+			remoteRef = 5F2BD58D14963983003E7F5C /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCAB9147E7EFD00D7C64A /* libBaseMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBaseMac.a;
+			remoteRef = 5FBCCAB8147E7EFD00D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCAC3147E7F2500D7C64A /* libGfxLiteMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGfxLiteMac.a;
+			remoteRef = 5FBCCAC2147E7F2500D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCACC147E7F4300D7C64A /* libGfxRawMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libGfxRawMac.a;
+			remoteRef = 5FBCCACB147E7F4300D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCAE1147E7FF500D7C64A /* libImageLibMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libImageLibMac.a;
+			remoteRef = 5FBCCAE0147E7FF500D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCB5C147E8BFB00D7C64A /* libWidgetLiteMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libWidgetLiteMac.a;
+			remoteRef = 5FBCCB5B147E8BFB00D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCB6B147E8C3000D7C64A /* libSimpleJVM.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSimpleJVM.a;
+			remoteRef = 5FBCCB6A147E8C3000D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCC401485172200D7C64A /* libID3LibMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libID3LibMac.a;
+			remoteRef = 5FBCCC3F1485172200D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCCB91485198900D7C64A /* libUtilsMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libUtilsMac.a;
+			remoteRef = 5FBCCCB81485198900D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCD2214851B1600D7C64A /* libMLProtocolMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMLProtocolMac.a;
+			remoteRef = 5FBCCD2114851B1600D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCD9014851C4A00D7C64A /* libMLLibMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMLLibMac.a;
+			remoteRef = 5FBCCD8F14851C4A00D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FBCCF71148A1AF000D7C64A /* libSkinMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSkinMac.a;
+			remoteRef = 5FBCCF70148A1AF000D7C64A /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		5FB161FE147017330084494F /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB1620F147017330084494F /* InfoPlist.strings in Resources */,
+				5FB16215147017330084494F /* Credits.rtf in Resources */,
+				5FB1621B147017340084494F /* MainMenu.xib in Resources */,
+				5FB16234147697D20084494F /* circle.tif in Resources */,
+				5FB16235147697D20084494F /* pentagon.tif in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5FB161FC147017330084494F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5FB16211147017330084494F /* main.mm in Sources */,
+				5FB16218147017330084494F /* MiniLyricsMacAppDelegate.mm in Sources */,
+				5FB1621E147017340084494F /* MiniLyricsMac.xcdatamodeld in Sources */,
+				5FDC564A148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp in Sources */,
+				5FDC564B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp in Sources */,
+				5FDC564C148A1F1B00C74E6A /* DlgAbout.cpp in Sources */,
+				5FDC564D148A1F1B00C74E6A /* DlgAdjustHue.cpp in Sources */,
+				5FDC5650148A1F1B00C74E6A /* DlgMediaInfo.cpp in Sources */,
+				5FDC5652148A1F1B00C74E6A /* DlgSearchLyrics.cpp in Sources */,
+				5FDC5654148A1F1B00C74E6A /* DlgUpload.cpp in Sources */,
+				5FDC5655148A1F1B00C74E6A /* DownloadMgr.cpp in Sources */,
+				5FDC5656148A1F1B00C74E6A /* ErrorResolveDlg.cpp in Sources */,
+				5FDC5657148A1F1B00C74E6A /* Helper.cpp in Sources */,
+				5FDC5658148A1F1B00C74E6A /* LicenseManager.cpp in Sources */,
+				5FDC5659148A1F1B00C74E6A /* LrcUploadDB.cpp in Sources */,
+				5FDC565A148A1F1B00C74E6A /* LyrDisplayClrListWnd.cpp in Sources */,
+				5FDC565B148A1F1B00C74E6A /* LyricShowAgentObj.cpp in Sources */,
+				5FDC565C148A1F1B00C74E6A /* LyricShowHorzScrollObj.cpp in Sources */,
+				5FDC565D148A1F1B00C74E6A /* LyricShowMultiRowObj.cpp in Sources */,
+				5FDC565E148A1F1B00C74E6A /* LyricShowObj.cpp in Sources */,
+				5FDC565F148A1F1B00C74E6A /* LyricShowSingleRowObj.cpp in Sources */,
+				5FDC5660148A1F1B00C74E6A /* LyricShowTextEditObj.cpp in Sources */,
+				5FDC5662148A1F1B00C74E6A /* LyricShowTwoRowObj.cpp in Sources */,
+				5FDC5663148A1F1B00C74E6A /* LyricShowTxtContainer.cpp in Sources */,
+				5FDC5664148A1F1B00C74E6A /* LyricShowTxtObj.cpp in Sources */,
+				5FDC5665148A1F1B00C74E6A /* LyricShowVobSub.cpp in Sources */,
+				5FDC5666148A1F1B00C74E6A /* LyricsLocalSearch.cpp in Sources */,
+				5FDC5668148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp in Sources */,
+				5FDC5669148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp in Sources */,
+				5FDC566A148A1F1B00C74E6A /* MediaDetectionService.cpp in Sources */,
+				5FDC566B148A1F1B00C74E6A /* MediaInfoTextCtrl.cpp in Sources */,
+				5FDC566D148A1F1B00C74E6A /* MLClientSession.cpp in Sources */,
+				5FDC566E148A1F1B00C74E6A /* MLCmd.cpp in Sources */,
+				5FDC5670148A1F1B00C74E6A /* MPCommonCmdHandler.cpp in Sources */,
+				5FDC5671148A1F1B00C74E6A /* MPEventsDispatcher.cpp in Sources */,
+				5FDC5672148A1F1B00C74E6A /* MPFloatingLyrWnd.cpp in Sources */,
+				5FDC5673148A1F1B00C74E6A /* MPHelper.cpp in Sources */,
+				5FDC5674148A1F1B00C74E6A /* MPlayerAppBase.cpp in Sources */,
+				5FDC5675148A1F1B00C74E6A /* MPlaylistCtrl.cpp in Sources */,
+				5FDC5676148A1F1B00C74E6A /* MPlaylistSearchObj.cpp in Sources */,
+				5FDC5677148A1F1B00C74E6A /* MPluginManager.cpp in Sources */,
+				5FDC5678148A1F1B00C74E6A /* MPMediaLibCmdHandler.cpp in Sources */,
+				5FDC5679148A1F1B00C74E6A /* MPMediaTree.cpp in Sources */,
+				5FDC567A148A1F1B00C74E6A /* MPPlaylistCmdHandler.cpp in Sources */,
+				5FDC567B148A1F1B00C74E6A /* MPSkinFactory.cpp in Sources */,
+				5FDC567C148A1F1B00C74E6A /* MPSkinInfoTextCtrl.cpp in Sources */,
+				5FDC567D148A1F1B00C74E6A /* MPSkinInfoTextCtrlEx.cpp in Sources */,
+				5FDC567E148A1F1B00C74E6A /* MPSkinMainWnd.cpp in Sources */,
+				5FDC567F148A1F1B00C74E6A /* MPSkinMediaNumInfoCtrl.cpp in Sources */,
+				5FDC5680148A1F1B00C74E6A /* MPSkinTimeCtrl.cpp in Sources */,
+				5FDC5681148A1F1B00C74E6A /* MPSkinVis.cpp in Sources */,
+				5FDC5682148A1F1B00C74E6A /* MPSkinWnd.cpp in Sources */,
+				5FDC5683148A1F1B00C74E6A /* MPVisAdapter.cpp in Sources */,
+				5FDC5685148A1F1B00C74E6A /* OnlineSearch.cpp in Sources */,
+				5FDC5686148A1F1B00C74E6A /* OperatingMiner.cpp in Sources */,
+				5FDC5687148A1F1B00C74E6A /* Player.cpp in Sources */,
+				5FDC5688148A1F1B00C74E6A /* PlayListFile.cpp in Sources */,
+				5FDC5689148A1F1B00C74E6A /* PreferenceDlg.cpp in Sources */,
+				5FDC568A148A1F1B00C74E6A /* PreferencePageBase.cpp in Sources */,
+				5FDC568B148A1F1B00C74E6A /* PreferPageAdvanced.cpp in Sources */,
+				5FDC568C148A1F1B00C74E6A /* PreferPageLyrics.cpp in Sources */,
+				5FDC568D148A1F1B00C74E6A /* PreferPageSystem.cpp in Sources */,
+				5FDC568E148A1F1B00C74E6A /* PreferPageTheme.cpp in Sources */,
+				5FDC568F148A1F1B00C74E6A /* PreferPageUI.cpp in Sources */,
+				5FDC5691148A1F1B00C74E6A /* SkinActivateCtrl.cpp in Sources */,
+				5FDC5692148A1F1B00C74E6A /* SkinDroplistCtrl.cpp in Sources */,
+				5FDC5694148A1F1B00C74E6A /* SkinFilterCtrl.cpp in Sources */,
+				5FDC5695148A1F1B00C74E6A /* SkinImageListCtrl.cpp in Sources */,
+				5FDC5696148A1F1B00C74E6A /* SkinListCtrlEx.cpp in Sources */,
+				5FDC5697148A1F1B00C74E6A /* SkinPicText.cpp in Sources */,
+				5FDC5698148A1F1B00C74E6A /* SkinRateCtrl.cpp in Sources */,
+				5FDC5699148A1F1B00C74E6A /* SkinScrollText.cpp in Sources */,
+				5FDC569A148A1F1B00C74E6A /* SkinTabHeader.cpp in Sources */,
+				5FDC569B148A1F1B00C74E6A /* SkinTreeCtrl.cpp in Sources */,
+				5FDC569C148A1F1B00C74E6A /* StdAfx.cpp in Sources */,
+				5FDC569D148A1F1B00C74E6A /* ThemesFile.cpp in Sources */,
+				5FDC569E148A1F1B00C74E6A /* VersionUpdate.cpp in Sources */,
+				5FDC569F148A1F1B00C74E6A /* WaitingDlg.cpp in Sources */,
+				5FDC56B0148A23AC00C74E6A /* HelperMac.cpp in Sources */,
+				5FDC56B1148A23AC00C74E6A /* LyricsOutPluginMgr.cpp in Sources */,
+				5FDC56B2148A23AC00C74E6A /* MLTrayIcon.cpp in Sources */,
+				5FDC56B3148A23AC00C74E6A /* MPHotkey.cpp in Sources */,
+				5FDC56B4148A23AC00C74E6A /* MPlayerApp.cpp in Sources */,
+				5FDC56B6148A23AC00C74E6A /* MPSkinMainWndMac.cpp in Sources */,
+				5FDC56B7148A23AC00C74E6A /* MPSkinMenu.cpp in Sources */,
+				5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */,
+				5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */,
+				5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		5F2BD52514962FB6003E7F5C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MPlayerLib;
+			targetProxy = 5F2BD52414962FB6003E7F5C /* PBXContainerItemProxy */;
+		};
+		5F2BD59014963988003E7F5C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ThirdPartiesSDK;
+			targetProxy = 5F2BD58F14963988003E7F5C /* PBXContainerItemProxy */;
+		};
+		5FBCCBBE1485140700D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = WidgetLiteMac;
+			targetProxy = 5FBCCBBD1485140700D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCBC21485140700D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BaseMac;
+			targetProxy = 5FBCCBC11485140700D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCBC61485140700D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ImageLibMac;
+			targetProxy = 5FBCCBC51485140700D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCBC81485140700D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GfxRawMac;
+			targetProxy = 5FBCCBC71485140700D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCBCA1485140700D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = GfxLiteMac;
+			targetProxy = 5FBCCBC91485140700D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCBCE1485140700D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SimpleJVM;
+			targetProxy = 5FBCCBCD1485140700D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCDC314851CDB00D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = ID3LibMac;
+			targetProxy = 5FBCCDC214851CDB00D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCDC514851CDB00D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MLLibMac;
+			targetProxy = 5FBCCDC414851CDB00D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCDC714851CDB00D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MLProtocolMac;
+			targetProxy = 5FBCCDC614851CDB00D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCDC914851CDB00D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = UtilsMac;
+			targetProxy = 5FBCCDC814851CDB00D7C64A /* PBXContainerItemProxy */;
+		};
+		5FBCCF73148A1B0900D7C64A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = SkinMac;
+			targetProxy = 5FBCCF72148A1B0900D7C64A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		5FB1620D147017330084494F /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5FB1620E147017330084494F /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		5FB16213147017330084494F /* Credits.rtf */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5FB16214147017330084494F /* en */,
+			);
+			name = Credits.rtf;
+			sourceTree = "<group>";
+		};
+		5FB16219147017340084494F /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				5FB1621A147017340084494F /* en */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		5FB1621F147017340084494F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		5FB16220147017340084494F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		5FB16222147017340084494F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MiniLyricsMac/MiniLyricsMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MPLAYER,
+					_MAC_OSX,
+					"DEBUG=1",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				INFOPLIST_FILE = "MiniLyricsMac/MiniLyricsMac-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		5FB16223147017340084494F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "MiniLyricsMac/MiniLyricsMac-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MPLAYER,
+					_MAC_OSX,
+				);
+				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
+				INFOPLIST_FILE = "MiniLyricsMac/MiniLyricsMac-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5FB161FA147017330084494F /* Build configuration list for PBXProject "MiniLyricsMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FB1621F147017340084494F /* Debug */,
+				5FB16220147017340084494F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		5FB16221147017340084494F /* Build configuration list for PBXNativeTarget "MiniLyricsMac" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				5FB16222147017340084494F /* Debug */,
+				5FB16223147017340084494F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		5FB1621C147017340084494F /* MiniLyricsMac.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				5FB1621D147017340084494F /* MiniLyricsMac.xcdatamodel */,
+			);
+			currentVersion = 5FB1621D147017340084494F /* MiniLyricsMac.xcdatamodel */;
+			path = MiniLyricsMac.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
+	};
+	rootObject = 5FB161F7147017330084494F /* Project object */;
+}

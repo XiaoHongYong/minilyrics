@@ -33,3 +33,8 @@ BOOL CSkinToolTip::AddTool(LPCTSTR szText, LPCRECT lpRectTool, UINT nIDTool)
 void CSkinToolTip::DelTool(UINT nIDTool)
 {
 }
+
+void CSkinToolTip::Destroy()
+{
+}
+

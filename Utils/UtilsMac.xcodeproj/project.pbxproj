@@ -67,7 +67,6 @@
 		5FBCCC731485182B00D7C64A /* Profile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profile.cpp; sourceTree = "<group>"; };
 		5FBCCC741485182B00D7C64A /* App.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = App.mm; path = Mac/App.mm; sourceTree = SOURCE_ROOT; };
 		5FBCCC751485182B00D7C64A /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalizeTool.h; path = Mac/LocalizeTool.h; sourceTree = SOURCE_ROOT; };
-		5FBCCC761485182B00D7C64A /* Profile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Profile.cpp; path = Mac/Profile.cpp; sourceTree = SOURCE_ROOT; };
 		5FBCCC771485182B00D7C64A /* md5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = md5.cpp; sourceTree = SOURCE_ROOT; };
 		5FBCCC781485182B00D7C64A /* md5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = md5.h; sourceTree = SOURCE_ROOT; };
 		5FBCCC791485182B00D7C64A /* MLBinXMLParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLBinXMLParser.cpp; sourceTree = SOURCE_ROOT; };
@@ -155,7 +154,6 @@
 				5FBCCC701485182B00D7C64A /* Mac */,
 				5FBCCC741485182B00D7C64A /* App.mm */,
 				5FBCCC751485182B00D7C64A /* LocalizeTool.h */,
-				5FBCCC761485182B00D7C64A /* Profile.cpp */,
 				5FBCCC771485182B00D7C64A /* md5.cpp */,
 				5FBCCC781485182B00D7C64A /* md5.h */,
 				5FBCCC791485182B00D7C64A /* MLBinXMLParser.cpp */,

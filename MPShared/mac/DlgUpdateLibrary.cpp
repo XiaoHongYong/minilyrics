@@ -34,12 +34,10 @@ void CUpdateLibraryObj::WorkThread(LPVOID lpParam)
 
 void CUpdateLibraryObj::SetMsg1(LPCTSTR szMsg)
 {
-	m_pWnd->SetDlgItemText(IDC_S_MSG1, szMsg);
 }
 
 void CUpdateLibraryObj::SetMsg2(LPCTSTR szMsg)
 {
-	m_pWnd->SetDlgItemText(IDC_S_MSG2, szMsg);
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -6,6 +6,12 @@
 #include "stringex.h"
 #include "FileApiBase.h"
 
+bool filetruncate(FILE *fp, int nLen)
+{
+#pragma warning("TBD");
+	return false;
+}
+
 bool IsFileExist(LPCTSTR szFileName)
 {
 	struct stat		filestat;

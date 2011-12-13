@@ -17,6 +17,7 @@
 #include "linux/MOSoundCard.h"
 #endif
 
+#ifndef _MAC_OSX
 // #include "MOAnalysis.h"
 #include "MDRow.h"
 #include "MDWave.h"
@@ -25,6 +26,7 @@
 // #include "DspDemo.h"
 #include "MORaw.h"
 #include "../MPlayer-Plugins/Dsp_SuperEQ/dsp_supereq.h"
+#endif // #ifndef _MAC_OSX
 
 #define SIZE_INC (1024 * 4) 
 
@@ -317,6 +319,7 @@ MLRESULT CMPluginManagerAgent::DetectPlugins()
 	//
 	IMediaDecode	*pDecoder;
 
+#ifndef _MAC_OSX
 	pDecoder = new CMDWmpCore;
 	OnInternalDecoderRegister(pDecoder);
 	pDecoder->Release();
@@ -332,36 +335,7 @@ MLRESULT CMPluginManagerAgent::DetectPlugins()
 	pDecoder = new CMDRow;
 	OnInternalDecoderRegister(pDecoder);
 	pDecoder->Release();
-
-#ifdef _WIN32_WCE // in WCE, use static lib to link all the decoders.
-	pDecoder = MPlayerGetMDOgg();
-	if (pDecoder)
-	{
-		OnInternalDecoderRegister(pDecoder);
-		pDecoder->Release();
-	}
-
-	pDecoder = MPlayerGetMDMP4();
-	if (pDecoder)
-	{
-		OnInternalDecoderRegister(pDecoder);
-		pDecoder->Release();
-	}
-
-	pDecoder = MPlayerGetMDWMA();
-	if (pDecoder)
-	{
-		OnInternalDecoderRegister(pDecoder);
-		pDecoder->Release();
-	}
-
-	pDecoder = MPlayerGetMDFlac();
-	if (pDecoder)
-	{
-		OnInternalDecoderRegister(pDecoder);
-		pDecoder->Release();
-	}
-#endif // _WIN32_WCE
+#endif // #ifndef _MAC_OSX
 
 	return ERR_OK;
 }
@@ -396,6 +370,7 @@ MLRESULT CMPluginManagerAgent::NewDecoder(IMediaInput *pInput, IMediaDecode **pp
 
 	LPCXSTR szMediaUrl = pInput->GetSource();
 
+#ifndef _MAC_OSX
 	if (FileIsExtSame(szMediaUrl, _T(".mp3")))
 		*ppDecoder = new CMDWmpCore;
 		// *ppDecoder = new CMDLibmad;
@@ -403,20 +378,6 @@ MLRESULT CMPluginManagerAgent::NewDecoder(IMediaInput *pInput, IMediaDecode **pp
 		*ppDecoder = new CMDWave;
 	else if (FileIsExtSame(szMediaUrl, _T(".raw")))
 		*ppDecoder = new CMDRow;
-#ifdef _WIN32_WCE // in WCE, use static lib to link all the decoders.
-	else if (FileIsExtSame(szMediaUrl, _T(".flac")))
-		*ppDecoder = MPlayerGetMDFlac();
-	else if (FileIsExtSame(szMediaUrl, _T(".wma")))
-		*ppDecoder = MPlayerGetMDWMA();
-	else if (FileIsExtSame(szMediaUrl, _T(".mp4"))
-		|| FileIsExtSame(szMediaUrl, _T(".m4a"))
-		|| FileIsExtSame(szMediaUrl, _T(".aac")))
-		*ppDecoder = MPlayerGetMDMP4();
-	else if (FileIsExtSame(szMediaUrl, _T(".ogg")))
-		*ppDecoder = MPlayerGetMDOgg();
-	else if (FileIsExtSame(szMediaUrl, _T(".raw")))
-		*ppDecoder = new CMDRow;
-#endif // _WIN32_WCE
 	else if (m_pluginMgr)
 		return m_pluginMgr->NewDecoder(pInput, ppDecoder);
 	else
@@ -424,6 +385,7 @@ MLRESULT CMPluginManagerAgent::NewDecoder(IMediaInput *pInput, IMediaDecode **pp
 		*ppDecoder = NULL;
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
 	}
+#endif // #ifndef _MAC_OSX
 
 	if (*ppDecoder)
 	{
@@ -440,7 +402,9 @@ MLRESULT CMPluginManagerAgent::NewOutput(IMediaOutput **ppOutput)
 	if (m_pluginMgr && m_pluginMgr->NewOutput(ppOutput) == ERR_OK)
 		return ERR_OK;
 
+#ifndef _MAC_OSX
 	*ppOutput = new CMOSoundCard;
+#endif // #ifndef _MAC_OSX
 
 	return ERR_OK;
 }
@@ -485,8 +449,10 @@ CMPlayer::CMPlayer()
 
 	m_state = PS_STOPED;
 
+#ifndef _MAC_OSX
 	m_pMDAgent = new CMDWmpCore;//CMDAgent;
 	m_pMDAgent->Init(this);
+#endif // #ifndef _MAC_OSX
 
 	m_pMOAgent = new CMOAgent;
 	m_pMOAgent->Init(this);

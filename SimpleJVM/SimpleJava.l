@@ -8,6 +8,8 @@
 #include "SyntaxTree.h"
 #define YY_NEVER_INTERACTIVE	1
 #define YYSTYPE		STreeNode*
+#define YY_NEVER_INTERACTIVE 1
+
 #include "SimpleJava.tab.h"
 
 #pragma warning (disable:4996)

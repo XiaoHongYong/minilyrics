@@ -521,24 +521,22 @@ LPCTSTR CProfile::GetDefAppName()
 //
 // support encrypt keyname and value
 //
-void EncryptStr(LPCTSTR szStr, tstringex &strOut)
+void EncryptStr(LPCTSTR szStr, tstring &strOut)
 {
-	string      strEncrypt;
-	stringex	strAnsi;
-	ConvertStr(szStr, -1, strAnsi);
-	encodeuu(strAnsi.c_str(), strAnsi.size(), strEncrypt, true, false);
-	ConvertStr(strEncrypt.c_str(), strEncrypt.size(), strOut);
-	_xcsrep(strOut.data(), '=', '?');
+	stringex	strUtf8;
+	TStringToUTF8(szStr, -1, strUtf8);
+	encodeuu(strUtf8.c_str(), strUtf8.size(), strOut, true, false);
+	strrep(strOut, '=', '?');
 }
 
-void DecryptStr(LPCTSTR szStr, tstringex &strOut)
+void DecryptStr(LPCTSTR szStr, tstring &strOut)
 {
-	string      strDecrypt;
-	stringex	strAnsi;
-	ConvertStr(szStr, -1, strAnsi);
-	_xcsrep(strAnsi.data(), '?', '=');
-	decodebase64(strAnsi.c_str(), strAnsi.size(), strDecrypt);
-	ConvertStr(strDecrypt.c_str(), strDecrypt.size(), strOut);
+	tstring		str = szStr;
+	string		strUtf8;
+
+	strrep(str, '?', '=');
+	decodebase64(str.c_str(), str.size(), strUtf8);
+	UTF8ToTString(strUtf8.c_str(), strUtf8.size(), strOut);
 }
 /*
 void TestEnDecrypt()
@@ -570,7 +568,7 @@ tstring CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, 
 		return 0;
 	}
 
-	tstringex	strKeyNameEncrypt, strValue;
+	tstring	strKeyNameEncrypt, strValue;
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 
 	MAP_STRING::iterator	itKey;
@@ -597,7 +595,7 @@ BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, L
 
 	DWORD		dwRet;
 	MAP_STRING::iterator	itKey;
-	tstringex	strKeyNameEncrypt, strValueEncrypt;
+	tstring	strKeyNameEncrypt, strValueEncrypt;
 
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 	EncryptStr(szValue, strValueEncrypt);
@@ -612,4 +610,18 @@ BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, L
 		(*itKey).second = strValueEncrypt;
 
 	return dwRet;
+}
+
+int CProfile::EncryptGetProfileInt(LPCTSTR szKeyName, int nValue)
+{
+	tstring	str = EncryptGetProfileString(szKeyName, _T(""));
+	if (str.empty())
+		return nValue;
+	else
+		return _ttoi(str.c_str());
+}
+
+void CProfile::EncryptWriteProfileInt(LPCTSTR szKeyName, int nValue)
+{
+	EncryptWriteProfileString(szKeyName, CStrPrintf(_T("%d"), nValue).c_str());
 }

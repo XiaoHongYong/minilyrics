@@ -404,6 +404,11 @@ bool CBaseWnd::IsTopmost()
 	return [m_info->window level] == NSMainMenuWindowLevel;
 }
 
+bool CBaseWnd::IsSameWnd(CBaseWnd *pWnd)
+{
+	return this == pWnd;
+}
+
 void CBaseWnd::SetTopmost(bool bTopmost)
 {
 	if (m_info->window == NULL)

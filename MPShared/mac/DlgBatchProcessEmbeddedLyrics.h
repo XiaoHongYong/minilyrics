@@ -25,8 +25,6 @@ public:
 	
 	int DoModal(CBaseWnd *pWnd) { return IDOK; }
 
-	void OnOK() { }
-
 };
 
 #endif // !defined(AFX_DlgBatchProcessEmbeddedLyrics_H__7C2A5A6E_1CB5_4DA9_B1B0_9B1D64D1BCC9__INCLUDED_)

@@ -4,12 +4,8 @@
 class CDlgSaveEmbeddedLyrics
 {
 public:
-	CDlgSaveEmbeddedLyrics();
-	virtual ~CDlgSaveEmbeddedLyrics();
-
-	virtual BOOL OnInitDialog();
-
-	virtual void OnOK();
+	CDlgSaveEmbeddedLyrics() { }
+	virtual ~CDlgSaveEmbeddedLyrics() { }
 
 	int DoModal(CBaseWnd *pWnd) { return IDOK; }
 
