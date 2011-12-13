@@ -124,6 +124,10 @@ CHAR_ENCODING GetLyricsTextEncoding(LPBYTE &szLrc, int &nLen)
 			encoding = GetCharEncodingID(strValue.c_str());
 		else
 			encoding = ED_SYSDEF;
+
+		// Discard ED_UNICODE encoding
+		if (encoding == ED_UNICODE_BIG_ENDIAN || encoding == ED_UNICODE)
+			encoding = ED_SYSDEF;
 	}
 
 	return encoding;
@@ -320,13 +324,15 @@ void CLyrTagNameValueMap::OnSetValue(int nIndex)
 {
 	ASSERT(nIndex >= 0 && nIndex < (int)m_vItems.size());
 
-	tstring *pValue = m_vItems[nIndex].pstrValue;
+	Item &item = m_vItems[nIndex];
+
+	tstring *pValue = item.pstrValue;
 	ASSERT(pValue);
 	TrimStr(*pValue);
 
-	if (m_vItems[nIndex].tagType == LTT_OFFSET)
+	if (item.tagType == LTT_OFFSET)
 		m_prop.SetOffsetTime(pValue->c_str());
-	else if (m_vItems[nIndex].tagType == LTT_ENCODING)
+	else if (item.tagType == LTT_ENCODING)
 		m_prop.SetEncoding(pValue->c_str());
 }
 
@@ -349,15 +355,24 @@ tstring CLyrTagNameValueMap::GetLrcTagString(int nIndex, bool bIncLineRet)
 {
 	ASSERT(nIndex >= 0 && nIndex < (int)m_vItems.size());
 
+	Item &item = m_vItems[nIndex];
+	if (item.tagType == LTT_ENCODING)
+	{
+		// Don't return tag string for UNICODE encoding
+		CHAR_ENCODING encoding = GetCharEncodingID(item.pstrValue->c_str());
+		if (encoding == ED_UNICODE || encoding == ED_UNICODE_BIG_ENDIAN)
+			return _T("");
+	}
+
 	tstring		strTag;
 	tstring		strName;
 
-	AnsiToTString(m_vItems[nIndex].strLrcName.c_str(), m_vItems[nIndex].strLrcName.size(), strName);
+	AnsiToTString(item.strLrcName.c_str(), item.strLrcName.size(), strName);
 
 	strTag += _T("[");
 	strTag += strName;
 	strTag += _T(" ");
-	strTag += *(m_vItems[nIndex].pstrValue);
+	strTag += *(item.pstrValue);
 	if (bIncLineRet)
 		strTag += _T("]\r\n");
 	else
@@ -369,14 +384,23 @@ tstring CLyrTagNameValueMap::GetTxtTagString(int nIndex, bool bIncLineRet)
 {
 	ASSERT(nIndex >= 0 && nIndex < (int)m_vItems.size());
 
+	Item &item = m_vItems[nIndex];
+	if (item.tagType == LTT_ENCODING)
+	{
+		// Don't return tag string for UNICODE encoding
+		CHAR_ENCODING encoding = GetCharEncodingID(item.pstrValue->c_str());
+		if (encoding == ED_UNICODE || encoding == ED_UNICODE_BIG_ENDIAN)
+			return _T("");
+	}
+
 	tstring		strTag;
 	tstring		strName;
 
-	AnsiToTString(m_vItems[nIndex].strTxtName.c_str(), m_vItems[nIndex].strTxtName.size(), strName);
+	AnsiToTString(item.strTxtName.c_str(), item.strTxtName.size(), strName);
 
 	strTag += strName;
 	strTag += _T(" ");
-	strTag += *m_vItems[nIndex].pstrValue;
+	strTag += *item.pstrValue;
 	if (bIncLineRet)
 		strTag += _T("\r\n");
 	return strTag;

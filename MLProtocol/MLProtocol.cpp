@@ -46,7 +46,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_BAD_FILE_CONTENT, _T("The file format is incorrect or contains spam information.") },
 	{ ERR_NOT_AUTHORIZED, _T("Unauthorized action.") },
 	{ ERR_NOT_LOGIN, _T("Not signed in, please sign in.") },
-	{ ERR_LYR_NO_TAG_FOUND, _T("No lyrics tag is found in the lyrics.") },
+	{ ERR_LYR_NO_TAG_FOUND, _T("Please fill in lyrics artist and title information.") },
 	{ ERR_REQUIRE_ACTIVE_LICENSE, _T("An active license is required.") },
 
 	{ 0, NULL}
