@@ -67,12 +67,14 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 
 	if (pWndParent && pWndParent->m_info->window)
 		[w setParentWindow:pWndParent->m_info->window];
+
 	m_parent = pWndParent;
+	m_info->window = w;
+
+	OnCreate();
 
 	if (bVisible)
 		[w orderFront:NSApp];
-
-	m_info->window = w;
 
 	return true;
 }
@@ -506,3 +508,15 @@ void CBaseWnd::PostUserMessage(int nMessageID, LPARAM param)
 									 withObject:msg
 								  waitUntilDone:false];
 }
+
+void CBaseWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
+{
+	m_nAlpha = nAlpha;
+	m_bClickThrough = bClickThrough;
+}
+
+BOOL CBaseWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
+{
+	return false;
+}
+

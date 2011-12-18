@@ -203,10 +203,11 @@ CSkinWnd::CSkinWnd()
 	m_rcReal.SetRect(0, 0, 600, 350);
 
 	CRect rcRestrict;
-	GetMonitorRestrictRect(m_rcBoundBox, rcRestrict);
-	m_rcBoundBox.OffsetRect((rcRestrict.Width() - m_rcBoundBox.Width()) / 2,
-		(rcRestrict.Height() - m_rcBoundBox.Height()) / 2);
-	m_rcReal = m_rcBoundBox;
+	if (GetMonitorRestrictRect(m_rcBoundBox, rcRestrict)) {
+		m_rcBoundBox.OffsetRect((rcRestrict.Width() - m_rcBoundBox.Width()) / 2,
+			(rcRestrict.Height() - m_rcBoundBox.Height()) / 2);
+		m_rcReal = m_rcBoundBox;
+	}
 
 	m_nTimerIDMax = TIMER_ID_BEG_ALLOC;
 
@@ -1995,12 +1996,6 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 
 		InvalidateRect();
 	}
-}
-
-#else
-
-void CSkinWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
-{
 }
 
 #endif

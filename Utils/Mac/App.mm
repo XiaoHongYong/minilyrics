@@ -6,6 +6,7 @@
 	Purpose  :	应用程序的基本框架结构定义
 *********************************************************************/
 
+#import <Foundation/Foundation.h>
 #include "../stdafx.h"
 #include "Utils.h"
 #include "App.h"
@@ -67,9 +68,29 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 	assert(sizeof(WCHAR) == 2);
 	assert(sizeof(WCHAR) == 2);
 
-#ifdef _MAC_OSX
 	{
-		int nLen;
+		NSFileManager* fileManager = [NSFileManager defaultManager];
+
+/*		NSError *error = nil;
+		NSURL *supportedDir = [fileManager URLForDirectory:NSApplicationSupportDirectory | NSItemReplacementDirectory inDomain:NSUserDomainMask appropriateForURL:[NSURL URLWithString:@"com.crintsoft.zikiplayer"] create:YES error: &error];
+		
+		_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), [[[supportedDir filePathURL] absoluteString] UTF8String]);*/
+
+		NSURL* appSupportDir = nil;
+		NSArray *urls = [fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
+		if ([urls count] > 0) {
+			appSupportDir = [[urls objectAtIndex:0] URLByAppendingPathComponent:@"com.crintsoft.ZikiPlayer"];
+			_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), [[appSupportDir path] UTF8String]);
+			if ([fileManager fileExistsAtPath:[appSupportDir path]] != YES) {
+				[fileManager createDirectoryAtURL:appSupportDir
+					  withIntermediateDirectories:YES
+									   attributes:nil
+											error:nil];
+			}
+			DirStringAddSlash(g_szWorkingFolder);
+		}
+
+/*		int nLen;
 
 		_tcscpy(g_szWorkingFolder, argv[0]);
 		nLen = _tcslen(g_szWorkingFolder);
@@ -79,9 +100,8 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 		if (nLen < 0)
 			return FALSE;
 
-		g_szWorkingFolder[nLen + 1] = '\0';
+		g_szWorkingFolder[nLen + 1] = '\0';*/
 	}
-#endif
 	
 	InitSetDefaultCharEncoding();
 

@@ -22,7 +22,7 @@ CSkinToolTip::~CSkinToolTip()
 
 BOOL CSkinToolTip::Create(CBaseWnd *pWndParent)
 {
-	return (m_hWnd != NULL);
+	return TRUE;
 }
 
 BOOL CSkinToolTip::AddTool(LPCTSTR szText, LPCRECT lpRectTool, UINT nIDTool)
