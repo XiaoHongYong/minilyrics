@@ -12,7 +12,7 @@ typedef map<int, NSTimer *>	MapNSTimer;
 
 class CBaseWnd;
 
-@interface WindowMacImp : NSWindow {
+@interface WindowMacImp : NSWindow <NSWindowDelegate> {
 	NSPoint			mInitPt;
 	
 	MapNSTimer		mMapTimer;

@@ -56,10 +56,16 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 											  styleMask:NSBorderlessWindowMask
 												backing:NSBackingStoreBuffered
 												  defer:NO];
+	[w setOwnerBaseWnd:this];
 	
 	ViewMacImp* view = [[ViewMacImp alloc] initWithFrame:frame];
-	[w setContentView:view];
+	[view setOwnerBaseWnd:this];
 
+	m_parent = pWndParent;
+	m_info->window = w;
+	m_info->view = view;
+
+	[w setContentView:view];
 	[w setBackgroundColor:[NSColor blueColor]];
 
 	if (szCaption)
@@ -67,9 +73,6 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 
 	if (pWndParent && pWndParent->m_info->window)
 		[w setParentWindow:pWndParent->m_info->window];
-
-	m_parent = pWndParent;
-	m_info->window = w;
 
 	OnCreate();
 
@@ -88,11 +91,6 @@ bool CBaseWnd::Destroy()
 }
 
 void CBaseWnd::PostDestroy()
-{
-	Destroy();
-}
-
-void CBaseWnd::OnClose()
 {
 	Destroy();
 }
@@ -327,12 +325,17 @@ CMLGraphics *CBaseWnd::GetGraphics()
 	if (m_info->window == NULL)
 		return NULL;
 
-	NSGraphicsContext* aContext = [NSGraphicsContext currentContext];
+	CGContextRef context = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
+
+	CGContextSaveGState(context);
 	
+	CGContextTranslateCTM(context, 0, [m_info->view frame].size.height);
+	CGContextScaleCTM(context, 1.0, -1.0);
+
 	CMLGraphics		*pGraph;
 
 	pGraph = new CMLGraphics;
-	pGraph->Attach((CGContextRef)[aContext graphicsPort]);
+	pGraph->Attach(context);
 
 	return pGraph;
 }
@@ -341,7 +344,9 @@ void CBaseWnd::ReleaseGraphics(CMLGraphics *pGraph)
 {
 	if (m_info->window == NULL)
 		return;
-	
+
+	CGContextRestoreGState(pGraph->GetHandle());
+
 	pGraph->Detach();
 
 	delete pGraph;

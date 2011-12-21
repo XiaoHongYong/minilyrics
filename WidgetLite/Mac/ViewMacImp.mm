@@ -7,6 +7,8 @@
 //
 
 #import "ViewMacImp.h"
+#import "stdafx.h"
+#import "WidgetLite.h"
 
 @implementation ViewMacImp
 
@@ -36,7 +38,7 @@
     NSRectFill([self frame]);
     // A boolean tracks the previous shape of the window. If the shape changes, it's necessary for the
     // window to recalculate its shape and shadow.
-    BOOL shouldDisplayWindow = NO;
+/*    BOOL shouldDisplayWindow = NO;
     // If the window transparency is > 0.7, draw the circle, otherwise, draw the pentagon. 
     if ([[self window] alphaValue] > 0.7) {
         shouldDisplayWindow = (showingPentagon == YES);
@@ -52,7 +54,25 @@
         [[self window] display];
         [[self window] setHasShadow:NO];
         [[self window] setHasShadow:YES];
-    }
+    }*/
+
+	CMLGraphics * graph = mBaseWnd->GetGraphics();
+
+	mBaseWnd->OnPaint(graph);
+
+	mBaseWnd->ReleaseGraphics(graph);
+}
+
+- (void)setOwnerBaseWnd:(CBaseWnd*)baseWnd {
+	mBaseWnd = baseWnd;
+}
+
+///////////////////////////////////////////////////////////////////////////
+// View messages
+
+- (void)viewDidEndLiveResize {
+	NSRect rc = [self frame];
+	mBaseWnd->OnSize(rc.size.width, rc.size.height);
 }
 
 @end

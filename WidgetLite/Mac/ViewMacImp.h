@@ -8,11 +8,16 @@
 
 #import <Cocoa/Cocoa.h>
 
+class CBaseWnd;
+
 @interface ViewMacImp : NSView {
     NSImage *circleImage;
     NSImage *pentagonImage;
     BOOL showingPentagon;
+	
+	CBaseWnd		*mBaseWnd;
 }
 
+- (void)setOwnerBaseWnd:(CBaseWnd*)baseWnd;
 
 @end

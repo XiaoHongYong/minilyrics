@@ -76,10 +76,13 @@ BOOL IsWndOutOfScreen(const CRect &rc)
 {
 	CRect		rcRestrict;
 
-	GetMonitorRestrictRect(rc, rcRestrict);
-
-	return ((rc.right < rcRestrict.left + 20) || (rc.left > rcRestrict.right - 20) ||
-		(rc.bottom < rcRestrict.top + 10) || (rc.top > rcRestrict.bottom - 40));
+	if (GetMonitorRestrictRect(rc, rcRestrict))
+	{
+		return ((rc.right < rcRestrict.left + 20) || (rc.left > rcRestrict.right - 20) ||
+			(rc.bottom < rcRestrict.top + 10) || (rc.top > rcRestrict.bottom - 40));
+	}
+	else
+		return false;
 }
 
 
@@ -455,8 +458,8 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
-	point.x = (long)(point.x / m_dbScale);
-	point.y = (long)(point.y / m_dbScale);
+	point.x = (int)(point.x / m_dbScale);
+	point.y = (int)(point.y / m_dbScale);
 
 	if (m_wndResizer.IsSizing())
 	{
@@ -500,8 +503,8 @@ void CSkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
-	point.x = (long)(point.x / m_dbScale);
-	point.y = (long)(point.y / m_dbScale);
+	point.x = (int)(point.x / m_dbScale);
+	point.y = (int)(point.y / m_dbScale);
 
 	SetFocus();
 
@@ -539,8 +542,8 @@ void CSkinWnd::OnLButtonDblClk(UINT nFlags, CPoint point)
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
-	point.x = (long)(point.x / m_dbScale);
-	point.y = (long)(point.y / m_dbScale);
+	point.x = (int)(point.x / m_dbScale);
+	point.y = (int)(point.y / m_dbScale);
 
 	SetFocus();
 
@@ -577,11 +580,17 @@ void CSkinWnd::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 
 void CSkinWnd::OnLButtonUp(UINT nFlags, CPoint point)
 {
+/*	InvalidateRect();
+	
+	OnSize(m_rcBoundBox.Width(), m_rcBoundBox.Height());
+	
+	MoveWindow(m_rcReal);*/
+	
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
-	point.x = (long)(point.x / m_dbScale);
-	point.y = (long)(point.y / m_dbScale);
+	point.x = (int)(point.x / m_dbScale);
+	point.y = (int)(point.y / m_dbScale);
 
 	if (m_wndResizer.IsSizing())
 	{
@@ -621,8 +630,8 @@ void CSkinWnd::OnRButtonDown(UINT nFlags, CPoint point)
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
-	point.x = (long)(point.x / m_dbScale);
-	point.y = (long)(point.y / m_dbScale);
+	point.x = (int)(point.x / m_dbScale);
+	point.y = (int)(point.y / m_dbScale);
 
 	// first send message to ui objects that captured the mouse!
 	if (m_pUIObjCapMouse)
@@ -647,8 +656,8 @@ void CSkinWnd::OnRButtonUp(UINT nFlags, CPoint point)
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
 
-	point.x = (long)(point.x / m_dbScale);
-	point.y = (long)(point.y / m_dbScale);
+	point.x = (int)(point.x / m_dbScale);
+	point.y = (int)(point.y / m_dbScale);
 
 	// first send message to ui objects that captured the mouse!
 	if (m_pUIObjCapMouse)
@@ -911,6 +920,11 @@ void CSkinWnd::OnPaint(CMLGraphics *pGraph)
 
 	// draw every ui objects on back buffer one by one
 	m_rootConainter.Draw(pMemGraph);
+	
+/*	CRect rc(20, 20, 50, 30);
+	MLColor clr(RGB(10, 10, 10));
+	clr.setAlpha(50);
+	pMemGraph->FillRect(&rc, clr);*/
 
 	// from buffer to screen
 	if (m_dbScale == 1.0)
@@ -1138,8 +1152,8 @@ void CSkinWnd::OnMove(int x, int y)
 		m_rcReal = rc;
 		m_rcBoundBox.left = rc.left;
 		m_rcBoundBox.top = rc.top;
-		m_rcBoundBox.right = (long)(rc.left + rc.Width() / m_dbScale);
-		m_rcBoundBox.bottom = (long)(rc.top + rc.Height() / m_dbScale);
+		m_rcBoundBox.right = (int)(rc.left + rc.Width() / m_dbScale);
+		m_rcBoundBox.bottom = (int)(rc.top + rc.Height() / m_dbScale);
 
 		if (m_pSjvmNotifyEvent)
 			m_pSjvmNotifyEvent->onMove(x, y);
@@ -2542,9 +2556,9 @@ void CSkinWnd::OnTimerAnimation()
 
 	rcNew = m_rcReal;
 	if (m_wndResizer.IsFixedWidth())
-		rcNew.right = rcNew.left + (long)(m_nWidth * m_dbScale);
+		rcNew.right = rcNew.left + (int)(m_nWidth * m_dbScale);
 	if (m_wndResizer.IsFixedHeight())
-		rcNew.bottom = rcNew.top + (long)(m_nHeight * m_dbScale);
+		rcNew.bottom = rcNew.top + (int)(m_nHeight * m_dbScale);
 
 	if (rcNew.Width() < m_wndResizer.GetMinCx())
 		rcNew.right = rcNew.left + m_wndResizer.GetMinCx();

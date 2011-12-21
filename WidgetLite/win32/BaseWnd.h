@@ -42,7 +42,7 @@ public:
 	// Messages
 	//
 	virtual void OnActivate(bool bActived) { }
-	virtual void OnClose();
+	virtual bool OnClose();
 	virtual void OnCommand(UINT uID, UINT nNotifyCode) { }
 	virtual void OnContexMenu(int xPos, int yPos) { }
 	virtual bool OnCreate();

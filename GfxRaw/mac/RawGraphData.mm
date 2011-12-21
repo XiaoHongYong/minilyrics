@@ -25,8 +25,8 @@ bool CRawGraphData::Create(int cx, int cy, CMLGraphics *pGraph, int nBitCount)
 	// create the bitmap context
 	m_context = CGBitmapContextCreate(m_imageData.buff, m_imageData.width, m_imageData.height, 8,
 														m_imageData.AbsStride(), colorSpace,
-														// this will give us an optimal BGRA format for the device:
-														(kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst));
+														// this will give us an optimal RGBA format for the device:
+														(kCGImageAlphaPremultipliedLast));
 	CGColorSpaceRelease(colorSpace);
 
 	return m_context != NULL;
@@ -64,8 +64,9 @@ PRAW_IMAGE_DATA RawImageDataFromCGImage(CGImageRef cgimage)
 
 void CRawGraphData::DrawToGraphics(CMLGraphics *pTarg, int xdest, int ydest, int width, int height, int xsrc, int ysrc)
 {
+	CGContextRef ctxTarg = pTarg->GetHandle();
+
 	CGImageRef rawImage = CGBitmapContextCreateImage(m_context);
-	CMLGraphics		*pGraph = (CMLGraphics *)pTarg;
 	CGRect rcDest = CGRectMake(xdest, ydest, width, height);
 	
 	if (xsrc + width >= m_imageData.width)
@@ -75,7 +76,7 @@ void CRawGraphData::DrawToGraphics(CMLGraphics *pTarg, int xdest, int ydest, int
 
 	if (xsrc == 0 && ysrc == 0 && m_imageData.width == width && m_imageData.height == height)
 	{
-		CGContextDrawImage(pGraph->GetHandle(), rcDest, rawImage);
+		CGContextDrawImage(ctxTarg, rcDest, rawImage);
 		CGImageRelease(rawImage);
 		return;
 	}
@@ -83,7 +84,7 @@ void CRawGraphData::DrawToGraphics(CMLGraphics *pTarg, int xdest, int ydest, int
 	CGRect rcSrc = CGRectMake(xsrc, m_imageData.height - ysrc - height, width, height);
 	CGImageRef partImage = CGImageCreateWithImageInRect(rawImage, rcSrc);
 
-	CGContextDrawImage(pGraph->GetHandle(), rcDest, partImage);
+	CGContextDrawImage(ctxTarg, rcDest, partImage);
 	CGImageRelease(partImage);
 	CGImageRelease(rawImage);
 }
