@@ -94,9 +94,10 @@ using namespace std;
 #include "common.h"
 #include "wintypes.h"
 
-typedef vector<tstring>		V_Str;
-
-typedef list<tstring>		ListString;
+typedef vector<tstring>			V_Str;
+typedef vector<tstring>			VecString;
+typedef list<tstring>			ListString;
+typedef map<tstring, tstring>	MapString;
 
 class SetStrLessICmp
 {

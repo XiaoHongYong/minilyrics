@@ -432,6 +432,8 @@ bool CMPlayerAppBase::Init()
 {
 	SetDefaultSettings();
 
+	m_appAnalytics.Init();
+
 	g_licenseManager.Init();
 
 	if (!CSkinApp::Init())
@@ -587,6 +589,8 @@ CSkinFactory *CMPlayerAppBase::NewSkinFactory()
 
 void CMPlayerAppBase::OnMediaChanged()
 {
+	m_appAnalytics.CheckSendTask();
+
 	// ÅÐ¶ÏÊÇ·ñÒª±£´æ¸è´Ê
 	if (!OnLyricsChangingSavePrompt())
 		return;
@@ -741,6 +745,11 @@ CMPHotkey &CMPlayerAppBase::GetHotkey()
 	ASSERT(m_pInstance);
 
 	return ((CMPlayerAppBase*)m_pInstance)->m_hotKey;
+}
+
+CZPAnalyticsClient &CMPlayerAppBase::GetAppAnalytics()
+{
+	return GetInstance()->m_appAnalytics;
 }
 
 CMPlayerApp *CMPlayerAppBase::GetInstance()

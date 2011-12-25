@@ -141,6 +141,8 @@ BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding = 
 
 void MultiStrToVStr(LPCTSTR szText, vector<tstring> &vStr);
 
+bool StrSplit(LPCTSTR szStr, TCHAR chSeperator, tstring &strLeft, tstring &strRight);
+
 int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr);
 int StrSplit(LPCTSTR szStr, TCHAR chSeperator, SetTStrNCase &containerStr);
 #define StrBreak	StrSplit

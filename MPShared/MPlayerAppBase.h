@@ -11,6 +11,7 @@
 #include "MLCmd.h"
 #include "MPSkinMainWnd.h"
 #include "LyricsLocalSearch.h"
+#include "ZPAnalyticsClient.h"
 
 #ifdef _WIN32
 #include "win32/MPHotkey.h"
@@ -148,6 +149,7 @@ public:
 	static tstring GetAssociateFileKeyword();
 	static CMPSkinMainWnd *GetMainWnd();
 	static CMPHotkey &GetHotkey();
+	static CZPAnalyticsClient &GetAppAnalytics();
 
 	void DispatchInfoText(LPCTSTR szInfo, LPCTSTR szInfoName = NULL);
 	void DispatchLongErrorText(LPCTSTR szError);
@@ -191,6 +193,7 @@ protected:
 
 protected:
 	CMPHotkey				m_hotKey;
+	CZPAnalyticsClient		m_appAnalytics;
 
 };
 

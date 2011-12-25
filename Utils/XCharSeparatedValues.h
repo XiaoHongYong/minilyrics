@@ -8,7 +8,8 @@ public:
 	CXCharSeparatedValues(TCHAR chSeparator);
 	virtual ~CXCharSeparatedValues();
 
-	void Split(LPCTSTR szStr, V_Str &vValues);
+	void Split(LPCTSTR szStr, VecString &vValues);
+	void Split(LPCTSTR szStr, MapString &mapNameValues, TCHAR chAssign = '=');
 
 	void AddValue(LPCTSTR szValue);
 	void AddValue(int nValue);

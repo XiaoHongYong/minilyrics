@@ -27,7 +27,7 @@ bool FontPropertyValueFromStr(LPCTSTR szValue, int &nHeight, int &nWeight, BYTE 
 
 	strWeight = vValues[2];
 	if (strWeight.empty())
-		nWeight = -1;
+		nWeight = 13;
 	else
 	{
 		if (_tcsicmp(strWeight.c_str(), _T("bold")) == 0)
@@ -40,8 +40,8 @@ bool FontPropertyValueFromStr(LPCTSTR szValue, int &nHeight, int &nWeight, BYTE 
 			nWeight = _ttoi(strWeight.c_str());
 	}
 
-	byItalic = StringToInt(vValues[3].c_str(), -1);
-	nUnderLine = StringToInt(vValues[4].c_str(), -1);
+	byItalic = StringToInt(vValues[3].c_str(), 0);
+	nUnderLine = StringToInt(vValues[4].c_str(), 0);
 	strFaceNameOthers = vValues[5];
 
 	return true;

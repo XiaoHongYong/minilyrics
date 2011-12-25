@@ -1628,6 +1628,23 @@ void VStrToMultiStr(const vector<tstring> &vStr, tstring &strMulti)
 }
 */
 
+bool StrSplit(LPCTSTR szStr, TCHAR chSeperator, tstring &strLeft, tstring &strRight)
+{
+	strLeft.clear();
+	strRight.clear();
+
+	LPCTSTR p = _tcschr(szStr, chSeperator);
+	if (p == NULL)
+	{
+		strLeft = szStr;
+		return false;
+	}
+
+	strLeft.append(szStr, (size_t)(p - szStr));
+	strRight = p + 1;
+	return true;
+}
+
 class _SetInsert
 {
 public:
@@ -1881,6 +1898,7 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestReadColorValue_t);
 	CPPUNIT_TEST(TestTrimStrRight);
 	CPPUNIT_TEST(TestStrSplit);
+	CPPUNIT_TEST(TestStrSplit2);
 	CPPUNIT_TEST(TestStrJoin);
 	CPPUNIT_TEST(TestStrReplace);
 	CPPUNIT_TEST(TestStrBeginWith);
@@ -1974,6 +1992,17 @@ protected:
 			if (setStr.find(strResult[i]) == setStr.end())
 				CPPUNIT_FAIL_T(CStrPrintf(_T("StrSplit(Set) Test, case(Can't find): %d, %s"), i, strResult[i]).c_str());
 		}
+	}
+
+	void TestStrSplit2()
+	{
+		tstring		strLeft, strRight;
+		LPCTSTR		szInput = _T("name=valuexxx=x");
+
+		StrSplit(szInput, '=', strLeft, strRight);
+
+		CPPUNIT_ASSERT(strLeft == _T("name"));
+		CPPUNIT_ASSERT(strRight == _T("valuexxx=x"));
 	}
 
 	void TestStrJoin()

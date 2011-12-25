@@ -13,7 +13,7 @@ CXCharSeparatedValues::~CXCharSeparatedValues()
 {
 }
 
-void CXCharSeparatedValues::Split(LPCTSTR szStr, V_Str &vValues)
+void CXCharSeparatedValues::Split(LPCTSTR szStr, VecString &vValues)
 {
 	const TCHAR *p = szStr;
 
@@ -39,6 +39,20 @@ void CXCharSeparatedValues::Split(LPCTSTR szStr, V_Str &vValues)
 	vValues.push_back(strValue);
 }
 
+void CXCharSeparatedValues::Split(LPCTSTR szStr, MapString &mapNameValues, TCHAR chAssign)
+{
+	VecString	vValues;
+
+	Split(szStr, vValues);
+
+	for (size_t i = 0; i < vValues.size(); i++)
+	{
+		tstring	key, value;
+		StrSplit(vValues[i].c_str(), chAssign, key, value);
+		mapNameValues[key] = value;
+	}
+}
+
 void CXCharSeparatedValues::AddValue(LPCTSTR szValue)
 {
 	if (m_strWriting.size() > 0)
@@ -48,7 +62,7 @@ void CXCharSeparatedValues::AddValue(LPCTSTR szValue)
 	LPCTSTR p = szBegin;
 	while (*p)
 	{
-		if (*p == m_chSeparator || *p == CHAR_ESCAPE)
+		if (*p == m_chSeparator || *p == CHAR_ESCAPE || *p == '\r' || *p == '\n')
 		{
 			m_strWriting.append(szBegin, (size_t)(p - szBegin));
 			m_strWriting += CHAR_ESCAPE;
