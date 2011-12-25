@@ -1,11 +1,7 @@
-// SkinFontProperty.h: interface for the CSkinFontProperty class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#ifndef _CSKINFONTPROPERTY_INC_
-#define _CSKINFONTPROPERTY_INC_
 
 #pragma once
+
+DECLAR_CPPUNIT_TEST_REG(CSkinFontProperty)
 
 class CUIObjProperties;
 
@@ -94,6 +90,3 @@ protected:
 	MLColor			m_clrTextOrg, m_clrTextDisbledOrg, m_clrOutlinedOrg;
 
 };
-
-
-#endif // !_CSKINFONTPROPERTY_INC_

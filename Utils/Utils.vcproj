@@ -596,10 +596,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\CSVFile.cpp"
-				>
-			</File>
-			<File
 				RelativePath=".\digest.cpp"
 				>
 			</File>
@@ -1041,6 +1037,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\XCharSeparatedValues.cpp"
+				>
+			</File>
+			<File
 				RelativePath="XMLWriter.cpp"
 				>
 				<FileConfiguration
@@ -1117,10 +1117,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\CSVFile.h"
-				>
-			</File>
-			<File
 				RelativePath=".\digest.h"
 				>
 			</File>
@@ -1186,6 +1182,10 @@
 			</File>
 			<File
 				RelativePath=".\VersionNumber.h"
+				>
+			</File>
+			<File
+				RelativePath=".\XCharSeparatedValues.h"
 				>
 			</File>
 			<File

@@ -28,6 +28,7 @@
 #include "BaseDate.h"
 
 #include "FileApiBase.h"
+#include "TextFile.h"
 
 #ifdef _WIN32
 #include "win32/WndAbout.h"

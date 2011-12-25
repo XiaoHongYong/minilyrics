@@ -58,7 +58,7 @@ bool GetColorValueEx(SXNode *pNode, LPCTSTR szName, COLORREF &clr)
 
 	if (str[0] == '0' && str[1] == '0' && _tcslen(str) == 8)
 		str += 2;
-	COLORREF c = GetColorValue(str, 0xFFFFFFFF);
+	COLORREF c = StringToColor(str, 0xFFFFFFFF);
 	if (c == 0xFFFFFFFF)
 		return false;
 

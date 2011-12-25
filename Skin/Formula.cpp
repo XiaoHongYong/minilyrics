@@ -44,7 +44,7 @@ void CFormula::SetFormula(LPCTSTR szForm)
 
 void CFormula::SetFormula(int nConstValue)
 {
-	_itostr(nConstValue, m_strFormula, 10);
+	m_strFormula = StringFromInt(nConstValue);
 }
 
 void CFormula::Append(LPCTSTR szFormula)
@@ -290,7 +290,7 @@ END:
 	// remove old data
 	size_t	nCount;
 	nCount = vWords.size();
-	for (int i = 0; i < nCount; i ++)
+	for (size_t i = 0; i < nCount; i++)
 	{
 		delete vWords[i];
 	}

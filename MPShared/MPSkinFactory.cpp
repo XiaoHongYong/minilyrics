@@ -17,7 +17,6 @@
 #include "LyricShowTxtContainer.h"
 #include "SkinListCtrlEx.h"
 #include "SkinRateCtrl.h"
-#include "SkinTabHeader.h"
 #include "SkinPicText.h"
 #include "SkinActivateCtrl.h"
 #include "MPSkinTimeCtrl.h"
@@ -98,7 +97,6 @@ int CMPSkinFactory::Init()
 	AddUIObjNewer(CMPSkinTimeCtrl<CSkinStaticText>);
 	AddUIObjNewer(CMPSkinInfoTextCtrl);
 	AddUIObjNewer(CMPSkinInfoTextCtrlEx);
-	AddUIObjNewer(CSkinTabHeader);
 	AddUIObjNewer(CSkinFilterCtrl);
 #ifdef _MPLAYER
 	AddUIObjNewer(CSkinTreeCtrl);

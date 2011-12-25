@@ -100,7 +100,7 @@ static const char * ReadTime(const char *szBeg, DWORD &dwTime)
 
 	while (*szBeg == ' ')
 		szBeg++;
-	ReadInt(szBeg, n);
+	szBeg = ReadInt_t(szBeg, n);
 	if (*szBeg != ':')
 		return NULL;
 	szBeg++;
@@ -108,7 +108,7 @@ static const char * ReadTime(const char *szBeg, DWORD &dwTime)
 
 	while (*szBeg == ' ')
 		szBeg++;
-	ReadInt(szBeg, n);
+	szBeg = ReadInt_t(szBeg, n);
 	if (*szBeg != ':')
 		return NULL;
 	szBeg++;
@@ -116,7 +116,7 @@ static const char * ReadTime(const char *szBeg, DWORD &dwTime)
 
 	while (*szBeg == ' ')
 		szBeg++;
-	ReadInt(szBeg, n);
+	szBeg = ReadInt_t(szBeg, n);
 	if (*szBeg != ',')
 		return NULL;
 	szBeg++;
@@ -124,7 +124,7 @@ static const char * ReadTime(const char *szBeg, DWORD &dwTime)
 
 	while (*szBeg == ' ')
 		szBeg++;
-	ReadInt(szBeg, n);
+	szBeg = ReadInt_t(szBeg, n);
 	dwTime = dwTime * 1000 + n;
 
 	return szBeg;

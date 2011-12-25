@@ -8,7 +8,7 @@
 #include "log.h"
 #include "Profile.h"
 #include "App.h"
-#include "CSVFile.h"
+#include "XCharSeparatedValues.h"
 #include "UndoMgr.h"
 #include "digest.h"
 #include "VersionNumber.h"

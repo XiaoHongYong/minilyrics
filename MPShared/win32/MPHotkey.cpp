@@ -416,59 +416,62 @@ int CMPHotkey::LoadSettings()
 {
 	// every line is a hotkey settings.
 	// cmd, keycode, modifiers
-	tstring		strFile;
-	CCSVFile	file;
-	tstring		str;
-	bool		bFileVer1 = false;
-
 	m_vAccKey.clear();
 
+	tstring		strFile;
 	strFile = GetAppDataDir();
 	strFile += SZ_HOTKEY_FILENAME;
 
-	if (!file.Open(strFile.c_str(), CCSVFile::OM_READ))
+	CTextFile	file;
+	if (file.Open(strFile.c_str(), CTextFile::OM_READ, ED_SYSDEF) != ERR_OK)
+	{
+		ERRLOG1(_T("Failed to open hotkey config file: %s"), strFile.c_str());
 		return ERR_OPEN_FILE;
+	}
+
+	bool		bFileVer1 = false;
 
 	// File header correct?
-	if (!file.ReadLine() || !file.ReadFieldString(str))
+	tstring line;
+	if (!file.ReadLine(line))
 		return ERR_BAD_FILE_FORMAT;
-	if (_tcscmp(str.c_str(), SZ_HOTKEY_FILE_HEADER) != 0)
+	if (_tcscmp(line.c_str(), SZ_HOTKEY_FILE_HEADER) != 0)
 	{
-		if (_tcscmp(str.c_str(), SZ_HOTKEY_FILE_HEADER_V1) != 0)
+		if (_tcscmp(line.c_str(), SZ_HOTKEY_FILE_HEADER_V1) != 0)
 			return ERR_BAD_FILE_FORMAT;
 		bFileVer1 = true;
 	}
 
-	while (file.ReadLine())
+	while (file.ReadLine(line))
 	{
 		CmdAccKey	cmdKey;
-		int			nValue;
+		CCommaSeparatedValues csv;
+		V_Str	vValues;
 
-		if (!file.ReadFieldString(str))
+		csv.Split(line.c_str(), vValues);
+		TrimStr(vValues);
+
+		if (vValues.size() < 3)
 			continue;
 
+		size_t index = 0;
+
 		// Cmd
-		cmdKey.cmd = CMPlayerAppBase::GetMPSkinFactory()->GetIDByName(str.c_str());
+		cmdKey.cmd = CMPlayerAppBase::GetMPSkinFactory()->GetIDByName(vValues[index++].c_str());
 		if (cmdKey.cmd == UID_INVALID)
 			continue;
 
 		// Global flag
 		if (!bFileVer1)
-		{
-			if (!file.ReadFieldInt(nValue))
-				continue;
-			cmdKey.bGlobal = Tobool(nValue);
-		}
+			cmdKey.bGlobal = Tobool(StringToInt(vValues[index++].c_str()));
 
 		// keycode
-		if (!file.ReadFieldInt(nValue))
-			continue;
-		cmdKey.button = (uint16)nValue;
+		if (index < vValues.size())
+			cmdKey.button = (uint16)StringToInt(vValues[index++].c_str());
 
 		// modifier
-		if (!file.ReadFieldInt(nValue))
-			continue;
-		cmdKey.fsModifiers = (uint16)nValue;
+		if (index < vValues.size())
+			cmdKey.fsModifiers = (uint16)StringToInt(vValues[index++].c_str());
 
 		cmdKey.idHotKey = MakeHotkeyID(cmdKey.fsModifiers, cmdKey.button);
 		m_vAccKey.push_back(cmdKey);
@@ -480,16 +483,20 @@ int CMPHotkey::LoadSettings()
 int CMPHotkey::SaveSettings()
 {
 	tstring		strFile;
-	CCSVFile	file;
+	CTextFile	file;
 
 	strFile = GetAppDataDir();
 	strFile += SZ_HOTKEY_FILENAME;
 
-	if (!file.Open(strFile.c_str(), CCSVFile::OM_WRITE))
+	if (file.Open(strFile.c_str(), CTextFile::OM_WRITE, ED_SYSDEF) != ERR_OK)
+	{
+		ERRLOG1(_T("Failed to open hotkey config file: %s"), strFile.c_str());
 		return ERR_OPEN_FILE;
+	}
 
-	file.WriteFieldString(SZ_HOTKEY_FILE_HEADER);
-	file.WriteLine();
+	file.WriteLine(SZ_HOTKEY_FILE_HEADER);
+
+	CCommaSeparatedValues csv;
 
 	for (int i = 0; i < (int)m_vAccKey.size(); i++)
 	{
@@ -499,12 +506,16 @@ int CMPHotkey::SaveSettings()
 		if (strId.empty())
 			continue;
 
-		file.WriteFieldString(strId.c_str());
-		file.WriteFieldInt(cmdKey.bGlobal);
-		file.WriteFieldInt(cmdKey.button);
-		file.WriteFieldInt(cmdKey.fsModifiers);
-		file.WriteLine();
+		csv.AddValue(strId.c_str());
+		csv.AddValue(cmdKey.bGlobal);
+		csv.AddValue(cmdKey.button);
+		csv.AddValue(cmdKey.fsModifiers);
+		file.WriteLine(csv.c_str(), csv.size());
+
+		csv.clear();
 	}
+
+	file.Close();
 
 	return ERR_OK;
 }

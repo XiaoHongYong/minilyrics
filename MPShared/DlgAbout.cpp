@@ -138,6 +138,8 @@ public:
 
 		SetUIObjectText(_T("CID_E_NAME"), licenseInfo.strName.c_str(), false);
 		SetUIObjectText(_T("CID_E_CODE"), licenseInfo.strCode.c_str(), false);
+
+		SetUIObjectProperty(_T("CID_REG_LINK"), SZ_PN_LINK, GetStrName(SN_HTTP_REGISTER));
 	}
 
 	void OnCheckRegCode()

@@ -94,7 +94,7 @@ bool StrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 	return _tcsicmp(szText + lenText - lenEndWith, szEndWith) == 0;
 }
 
-FILE_ENCODING GetStrEncodingType(LPCVOID lpData)
+FILE_ENCODING GetFileEncodingByBom(LPCVOID lpData)
 {
 	BYTE						*szBuffer;
 
@@ -111,6 +111,27 @@ FILE_ENCODING GetStrEncodingType(LPCVOID lpData)
 		return FE_UTF8;
 	else
 		return FE_ANSI;
+}
+
+int GetFileEncodingBomSize(FILE_ENCODING fe)
+{
+	if (fe == FE_UCS2 || fe == FE_UCS2_BE)
+		return 2;
+	else if (fe == FE_UTF8)
+		return 3;
+	else
+		return 0;
+}
+
+LPCSTR GetFileEncodingBom(FILE_ENCODING fe)
+{
+	switch (fe)
+	{
+	case FE_UCS2: return SZ_FE_UCS2;
+	case FE_UCS2_BE: return SZ_FE_UCS2_BE;
+	case FE_UTF8: return SZ_FE_UTF8;
+	default: return "";
+	}
 }
 
 void strrep(tstring &str, const TCHAR *szSrc, const TCHAR *szDest)
@@ -1044,7 +1065,7 @@ uint32 HexToInt(LPCTSTR str)
 	size_t len = _tcslen(str);
 	uint32	val = 0;
 
-	for (int i = 0; i < len; i++)
+	for (size_t i = 0; i < len; i++)
 	{
 		if ('0' <= str[i] && str[i] <= '9')
 			val = val * 16 + str[i] - '0';
@@ -1061,10 +1082,10 @@ uint32 HexToInt(LPCTSTR str)
 //		将%20等类似的名字转换为对应的字符
 void UriUnescape(const char *szInet, string &str)
 {
-	int		i = 0;
 	size_t nLenInet = strlen(szInet);
-	str = "";
+	str.clear();
 
+	size_t i = 0;
 	while (i + 2 < nLenInet)
 	{
 		if (szInet[i] == '%')
@@ -1095,7 +1116,7 @@ void UriUnescape(const char *szInet, string &str)
 //		将%20等类似的名字转换为对应的字符
 void UriUnescape(const char *szInet, char *szLocal, int nLenMax)
 {
-	int		i = 0, k = 0;
+	size_t	i = 0, k = 0;
 	size_t nLenInet = strlen(szInet);
 
 	while (i + 2 < nLenInet)
@@ -1158,7 +1179,7 @@ void UriUnescape(const WCHAR *szInet, wstring_t &str, CHAR_ENCODING encoding)
 //		将汉字、' '、'	'等转换为 %20....等
 void UriEscape(const char *szLocal, string &strInet)
 {
-	int		i = 0;
+	size_t	i = 0;
 	char	szTemp[256];
 
 	size_t nLen = strlen(szLocal);
@@ -1451,7 +1472,7 @@ BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)
 	if (!OpenFileToBuffer(szFile, buff))
 		return false;
 
-	fileEncoding = GetStrEncodingType(buff.c_str());
+	fileEncoding = GetFileEncodingByBom(buff.c_str());
 #ifdef _UNICODE
 	if (fileEncoding == FE_ANSI)
 		ConvertStr(buff.c_str(), buff.size(), str, encoding);
@@ -1679,17 +1700,53 @@ int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr)
 	return (int)containerStr.size();
 }
 
-void _itostr(int value, tstring &str, int base)
+// "#FFFFFF"
+template<class _TCHARPTR, class _int_t>
+_TCHARPTR ReadColorValue_t(_TCHARPTR szColor, _int_t &nClr)
 {
-	TCHAR		szBuff[32];
+	nClr = 0;
 
-	_itot_s(value, szBuff, CountOf(szBuff), base);
-	str = szBuff;
+	if (*szColor == '#')
+		szColor++;
+
+	int		n;
+
+	for (int i = 0; i < 6 && *szColor; i++)
+	{
+		if (*szColor >= '0' && *szColor <= '9')
+			n = *szColor - '0';
+		else if (*szColor >= 'a' && *szColor <= 'f')
+			n = 10 + *szColor - 'a';
+		else if (*szColor >= 'A' && *szColor <= 'F')
+			n = 10 + *szColor - 'A';
+		else
+			break;
+
+		nClr = nClr * 16 + n;
+		szColor++;
+	}
+
+	nClr = ((nClr & 0xFF) << 16) + (nClr & 0xFF00) + ((nClr & 0xFF0000) >> 16);
+
+	return szColor;
 }
 
-// FgColor="#FFFFFF"
-UINT GetColorValue(LPCWSTR szColor, UINT nDefault)
+int StringToInt(LPCTSTR str, int nDefault)
 {
+	int nValue = 0;
+	LPCTSTR end = ReadInt_t(str, nValue);
+	if (end == str)
+		return nDefault;
+
+	return nValue;
+}
+
+// "#FFFFFF"
+COLORREF StringToColor(LPCTSTR szColor, COLORREF nDefault)
+{
+	if (IsEmptyString(szColor))
+		return nDefault;
+
 	UINT		clr;
 	LPCWSTR p = ReadColorValue_t(szColor, clr);
 	if (*p != '\0')
@@ -1698,29 +1755,26 @@ UINT GetColorValue(LPCWSTR szColor, UINT nDefault)
 		return clr;
 }
 
-// FgColor="#FFFFFF"
-UINT GetColorValue(LPCSTR szColor, UINT nDefault)
+tstring StringFromInt(int value)
 {
-	UINT		clr;
-	LPCSTR p = ReadColorValue_t(szColor, clr);
-	if (*p != '\0')
-		return nDefault;
-	else
-		return clr;
+	TCHAR		szBuff[32];
+
+	_itot_s(value, szBuff, CountOf(szBuff), 10);
+	return szBuff;
 }
 
-void ColorToStr(COLORREF clr, char szStr[])
+tstring StringFromColor(COLORREF clr)
 {
-	sprintf_s(szStr, 9, "#%02X%02X%02X", clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);
+	TCHAR	szColor[32];
+
+	StringFromColor(szColor, clr);
+	return szColor;
 }
 
-
-#ifdef _WIN32
-void ColorToStr(COLORREF clr, WCHAR szStr[])
+void StringFromColor(TCHAR szStr[], COLORREF clr)
 {
-	swprintf_s(szStr, 9, L"#%02X%02X%02X", clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);
+	_stprintf_s(szStr, 9, _T("#%02X%02X%02X"), clr & 0xFF, (clr >> 8) & 0xff, (clr >> 16) & 0xff);
 }
-#endif
 
 #ifndef _WIN32
 // For gcc compiler, sizeof(wchar_t) == 4, need to reimplementation wcsxxx functions.
@@ -1813,10 +1867,10 @@ WCHAR * __cdecl wcschr (
 
 #endif // #ifndef _WIN32
 
-#ifdef _CPPUNIT_TEST
-
 //////////////////////////////////////////////////////////////////////////
 // CPPUnit test
+
+#ifdef _CPPUNIT_TEST
 
 IMPLEMENT_CPPUNIT_TEST_REG(StringEx)
 
@@ -1832,16 +1886,6 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestStrBeginWith);
 	CPPUNIT_TEST(Test_xcsncpy);
 	CPPUNIT_TEST_SUITE_END();
-
-protected:
-
-public:
-	void setUp()
-	{
-	}
-	void tearDown() 
-	{
-	}
 
 protected:
 	void TestTrimStrRight()
@@ -1999,6 +2043,5 @@ protected:
 };
 
 CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseStringEx);
-
 
 #endif // _CPPUNIT_TEST

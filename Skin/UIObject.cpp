@@ -114,7 +114,7 @@ void CUIObjProperties::AddPropInt(LPCTSTR szName, int nValue, bool bToXmlAttrib)
 	CUIObjProperty		property;
 
 	property.strName = szName;
-	_itostr(nValue, property.strValue, 10);
+	property.strValue = StringFromInt(nValue);
 	property.valueType = CUIObjProperty::VT_INT;
 	property.bToXmlAttrib = bToXmlAttrib;
 

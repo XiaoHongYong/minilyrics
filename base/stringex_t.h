@@ -67,7 +67,7 @@ public:
 		m_szBuff[0] = '\0';
 	}
 
-	void replace(size_t nBeg, size_t n1, const T*str, long n = -1)
+	void replace(size_t nBeg, size_t n1, const T*str, int n = -1)
 	{
 		assert(n >= 0);
 		if (nBeg + n1 > nLen)
@@ -78,7 +78,7 @@ public:
 		T		*s1, *s2;
 		const T	*sEnd;
 
-		if (n1 >= n)
+		if (n1 >= (size_t)n)
 		{
 			s1 = m_szBuff + nBeg;
 			sEnd = str + n;
@@ -89,7 +89,7 @@ public:
 				str++;
 			}
 
-			if (n1 > n)
+			if (n1 > (size_t)n)
 			{
 				s2 = m_szBuff + nBeg + n1;
 				sEnd = m_szBuff + nLen;

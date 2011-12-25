@@ -145,7 +145,7 @@ BOOL CMPSkinVis::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (_tcsicmp(szProperty, _T("FgColor")) == 0)
 	{
-		m_clrFg.set(GetColorValue(szValue, m_clrFg.get()));
+		GetColorValue(m_clrFg, szValue);
 		m_pen.CreateSolidPen(1, m_clrFg);
 	}
 	else

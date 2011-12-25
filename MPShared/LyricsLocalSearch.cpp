@@ -872,7 +872,7 @@ void CLyricsLocalSearch::LoadLyricsAssociation()
 		nLenBuff = strlen(szBuff);
 
 		// get song file name.
-		ReadInt(szStr, nLen); if (nLen > nLenBuff - int(szStr - szBuff)) continue;
+		szStr = ReadInt_t(szStr, nLen); if (nLen > nLenBuff - int(szStr - szBuff)) continue;
 		if (*szStr == ',') szStr++; else continue;
 
 #ifdef _UNICODE
@@ -887,7 +887,7 @@ void CLyricsLocalSearch::LoadLyricsAssociation()
 		szStr++;
 
 		// get lyrics file name.
-		ReadInt(szStr, nLen); if (nLen > nLenBuff - int(szStr - szBuff)) continue;
+		szStr = ReadInt_t(szStr, nLen); if (nLen > nLenBuff - int(szStr - szBuff)) continue;
 		if (*szStr == ',') szStr++; else continue;
 
 #ifdef _UNICODE

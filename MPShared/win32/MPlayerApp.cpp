@@ -368,16 +368,16 @@ int CMPlayerApp::LoadGeneralEmbeddedSkin(bool bLoadSkinColorTheme)
 	{
 		TCHAR		szColor[128];
 
-		ColorToStr(skinInfo.clrFontHighlight, szColor);
+		StringFromColor(szColor, skinInfo.clrFontHighlight);
 		CMPlayerSettings::SetLyricsDisplaySettings(_T("FgColor"), szColor);
 
-		ColorToStr(skinInfo.clrFontLowlight, szColor);
+		StringFromColor(szColor, skinInfo.clrFontLowlight);
 		CMPlayerSettings::SetLyricsDisplaySettings(_T("FgLowColor"), szColor);
 
-		ColorToStr(skinInfo.clrBackground, szColor);
+		StringFromColor(szColor, skinInfo.clrBackground);
 		CMPlayerSettings::SetLyricsDisplaySettings(_T("BgColor"), szColor);
 
-		ColorToStr(skinInfo.clrCurLineBg, szColor);
+		StringFromColor(szColor, skinInfo.clrCurLineBg);
 		CMPlayerSettings::SetLyricsDisplaySettings(_T("FocusLineBgColor"), szColor);
 	}
 
@@ -408,7 +408,7 @@ UINT PleditGetPrivateProfileInt(LPCTSTR lpAppName, LPCTSTR lpKeyName, INT nDefau
 	if (GetPrivateProfileString(lpAppName, lpKeyName, _T(""), szBuffer, 256, lpFileName) == 0)
 		return nDefault;
 
-	return GetColorValue(szBuffer, nDefault);
+	return StringToColor(szBuffer, nDefault);
 }
 
 int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
@@ -483,25 +483,25 @@ int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
 
 			if (clrHigh != 0xFF000000)
 			{
-				ColorToStr(clrHigh, szColor);
+				StringFromColor(szColor, clrHigh);
 				CMPlayerSettings::SetLyricsDisplaySettings(_T("FgColor"), szColor);
 			}
 
 			if (clrLow != 0xFF000000)
 			{
-				ColorToStr(clrLow, szColor);
+				StringFromColor(szColor, clrLow);
 				CMPlayerSettings::SetLyricsDisplaySettings(_T("FgLowColor"), szColor);
 			}
 
 			if (clrBg != 0xFF000000)
 			{
-				ColorToStr(clrBg, szColor);
+				StringFromColor(szColor, clrBg);
 				CMPlayerSettings::SetLyricsDisplaySettings(_T("BgColor"), szColor);
 			}
 
 			if (clrFocusLineBg != 0xFF000000)
 			{
-				ColorToStr(clrFocusLineBg, szColor);
+				StringFromColor(szColor, clrFocusLineBg);
 				CMPlayerSettings::SetLyricsDisplaySettings(_T("FocusLineBgColor"), szColor);
 			}
 		}

@@ -176,7 +176,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 		case SN_HTTP_DLPLUGIN:	return _T("http://www.data4me.de/mlplugin.htm");
 		case SN_HTTP_HELP_G15_LCD:	return _T("http://www.data4me.de/help-logitech-lcd.htm");
 		case SN_HTTP_FEEDBACK:	return _T("http://www.data4me.de/contactus.htm");
-		case SN_EMAIL:			return _T("mailto:support@rnl.de");
+		case SN_EMAIL:			return _T("mailto:minilyrics@rnl.de");
 		case SN_SUPPORT_MAIL:	return _T("minilyrics@rnl.de");
 		case SN_WEBHOME:		return _T("www.data4me.de");
 		default: ASSERT(0);		return _T("");
@@ -729,7 +729,7 @@ CMPSkinMainWnd *CMPlayerAppBase::GetMainWnd()
 		return (CMPSkinMainWnd *)pWnd;
 	else
 	{
-		ASSERT(0 && "Main window should have been created already.");
+		ERRLOG0(_T("Main window should have been created already."));
 		static CMPSkinMainWnd wnd;
 		wnd.m_WndDrag.Init(&wnd, NULL);
 		return &wnd;

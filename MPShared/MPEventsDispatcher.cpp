@@ -332,7 +332,7 @@ void CMPlayerSettings::SetSettings(EventType eventType, LPCTSTR szSectionName, L
 
 	pEvt->eventType = eventType;
 	pEvt->strName = szSettingName;
-	_itostr(nValue, pEvt->strValue, 10);
+	pEvt->strValue = StringFromInt(nValue);
 
 	CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(pEvt);
 }

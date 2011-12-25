@@ -531,6 +531,10 @@
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 			>
 			<File
+				RelativePath=".\AppAnalyticsClient.cpp"
+				>
+			</File>
+			<File
 				RelativePath="HttpClient.cpp"
 				>
 				<FileConfiguration
@@ -980,6 +984,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl"
 			>
+			<File
+				RelativePath=".\AppAnalyticsClient.h"
+				>
+			</File>
 			<File
 				RelativePath="HttpClient.h"
 				>

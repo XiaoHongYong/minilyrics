@@ -1409,6 +1409,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\TextFile.cpp"
+				>
+			</File>
+			<File
 				RelativePath="win32\Thread.cpp"
 				>
 				<FileConfiguration
@@ -1720,6 +1724,10 @@
 			</File>
 			<File
 				RelativePath="StrPrintf.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TextFile.h"
 				>
 			</File>
 			<File

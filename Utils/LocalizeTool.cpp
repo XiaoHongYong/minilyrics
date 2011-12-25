@@ -98,7 +98,7 @@ static bool GetLanguagePackInfo(LPCTSTR szFile, tstring &strLanguage, tstring &s
 	if (fread(buff, 1, sizeof(buff), fp) != sizeof(buff))
 		goto R_FAILED;
 
-	fe = GetStrEncodingType(buff);
+	fe = GetFileEncodingByBom(buff);
 	if (fe == FE_ANSI)
 		ConvertStr(buff, CountOf(buff), strBuff);
 	else if (fe == FE_UTF8)

@@ -82,7 +82,7 @@ public:
 
 	void SetValue(int nValue)
 	{
-		_itostr(nValue, strValue, 10);
+		strValue = StringFromInt(nValue);
 	}
 
 	void ToUIObjProperties(vector<tstring> &vProperties);

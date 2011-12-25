@@ -297,7 +297,7 @@ MLRESULT CMDLibmad::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia 
 			comment = str.c_str();
 
 			if (tag.byTrack != 255)
-				_itostr(tag.byTrack, track, 10);
+				track = StringFromInt(tag.byTrack);
 
 			LPCSTR	szGenre = CID3v1::GetGenreDescription(tag.byGenre);
 			if (szGenre)

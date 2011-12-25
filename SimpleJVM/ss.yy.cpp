@@ -25,8 +25,6 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#define YY_NEVER_INTERACTIVE 1
-
 /* Use prototypes in function declarations. */
 #define YY_USE_PROTOS
 
@@ -510,6 +508,8 @@ char *yytext;
 #include "SyntaxTree.h"
 #define YY_NEVER_INTERACTIVE	1
 #define YYSTYPE		STreeNode*
+#define YY_NEVER_INTERACTIVE 1
+
 #include "SimpleJava.tab.h"
 
 #pragma warning (disable:4996)
@@ -526,7 +526,7 @@ char *yytext;
 #endif
 
 
-#line 528 "ss.yy.cpp"
+#line 530 "ss.yy.cpp"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -677,10 +677,10 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 32 "SimpleJava.l"
+#line 34 "SimpleJava.l"
 
 
-#line 682 "ss.yy.cpp"
+#line 684 "ss.yy.cpp"
 
 	if ( yy_init )
 		{
@@ -765,7 +765,7 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 34 "SimpleJava.l"
+#line 36 "SimpleJava.l"
 {
 				yylval = newStnString(g_srcLineNo, yytext);
 				return TK_NUMBER;
@@ -773,127 +773,127 @@ YY_RULE_SETUP
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 39 "SimpleJava.l"
+#line 41 "SimpleJava.l"
 { /* return TK_PRIVATE; */ }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 40 "SimpleJava.l"
+#line 42 "SimpleJava.l"
 { /* return TK_PROTECTED; */ }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 41 "SimpleJava.l"
+#line 43 "SimpleJava.l"
 { /* return TK_PUBLIC; */ }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 43 "SimpleJava.l"
+#line 45 "SimpleJava.l"
 { return TK_INTERFACE; }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 44 "SimpleJava.l"
+#line 46 "SimpleJava.l"
 { return TK_IMPLEMENTS; }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 45 "SimpleJava.l"
+#line 47 "SimpleJava.l"
 { return TK_EXTENDS; }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 46 "SimpleJava.l"
+#line 48 "SimpleJava.l"
 { return TK_ABSTRACT; }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 47 "SimpleJava.l"
+#line 49 "SimpleJava.l"
 { return TK_CLASS; }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 48 "SimpleJava.l"
+#line 50 "SimpleJava.l"
 { return TK_NATIVE; }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 49 "SimpleJava.l"
+#line 51 "SimpleJava.l"
 { return TK_IMPORT; }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 50 "SimpleJava.l"
+#line 52 "SimpleJava.l"
 { return TK_PACKAGE; }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 51 "SimpleJava.l"
+#line 53 "SimpleJava.l"
 { return TK_STATIC; }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 52 "SimpleJava.l"
+#line 54 "SimpleJava.l"
 { return TK_NEW; }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 53 "SimpleJava.l"
+#line 55 "SimpleJava.l"
 { return TK_IF; }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 54 "SimpleJava.l"
+#line 56 "SimpleJava.l"
 { return TK_ELSE; }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 55 "SimpleJava.l"
+#line 57 "SimpleJava.l"
 { return TK_WHILE; }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 56 "SimpleJava.l"
+#line 58 "SimpleJava.l"
 { return TK_DO; }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 57 "SimpleJava.l"
+#line 59 "SimpleJava.l"
 { return TK_FOR; }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 58 "SimpleJava.l"
+#line 60 "SimpleJava.l"
 { return TK_BREAK; }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 59 "SimpleJava.l"
+#line 61 "SimpleJava.l"
 { return TK_CONTINUE; }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 60 "SimpleJava.l"
+#line 62 "SimpleJava.l"
 { return TK_TRY; }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 61 "SimpleJava.l"
+#line 63 "SimpleJava.l"
 { return TK_CATCH; }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 62 "SimpleJava.l"
+#line 64 "SimpleJava.l"
 { return TK_THROW; }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 63 "SimpleJava.l"
+#line 65 "SimpleJava.l"
 { return TK_THROWS; }
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 64 "SimpleJava.l"
+#line 66 "SimpleJava.l"
 {
 				yylval = newStnReturn(g_srcLineNo, NULL);
 				return TK_RETURN;
@@ -901,147 +901,147 @@ YY_RULE_SETUP
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 68 "SimpleJava.l"
+#line 70 "SimpleJava.l"
 { return TK_TRUE; }
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 69 "SimpleJava.l"
+#line 71 "SimpleJava.l"
 { return TK_FALSE; }
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 70 "SimpleJava.l"
+#line 72 "SimpleJava.l"
 { return TK_NULL; }
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
-#line 72 "SimpleJava.l"
+#line 74 "SimpleJava.l"
 { return TK_BOOL_AND; }
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 73 "SimpleJava.l"
+#line 75 "SimpleJava.l"
 { return TK_BOOL_OR; }
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
-#line 75 "SimpleJava.l"
+#line 77 "SimpleJava.l"
 { return TK_LT_EQ; }
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
-#line 76 "SimpleJava.l"
+#line 78 "SimpleJava.l"
 { return TK_GT_EQ; }
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
-#line 77 "SimpleJava.l"
+#line 79 "SimpleJava.l"
 { return TK_LITTLE; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 78 "SimpleJava.l"
+#line 80 "SimpleJava.l"
 { return TK_GREATER; }
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
-#line 79 "SimpleJava.l"
+#line 81 "SimpleJava.l"
 { return TK_EQUAL; }
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
-#line 80 "SimpleJava.l"
+#line 82 "SimpleJava.l"
 { return TK_NOT_EQUAL; }
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
-#line 82 "SimpleJava.l"
+#line 84 "SimpleJava.l"
 { return TK_L_PARENTHESIS; }
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
-#line 83 "SimpleJava.l"
+#line 85 "SimpleJava.l"
 { return TK_R_PARENTHESIS; }
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
-#line 84 "SimpleJava.l"
+#line 86 "SimpleJava.l"
 { return TK_COLON; }
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
-#line 85 "SimpleJava.l"
+#line 87 "SimpleJava.l"
 { return TK_SEMICOLON; }
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
-#line 86 "SimpleJava.l"
+#line 88 "SimpleJava.l"
 { return TK_L_BRACE; }
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
-#line 87 "SimpleJava.l"
+#line 89 "SimpleJava.l"
 { return TK_R_BRACE; }
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
-#line 88 "SimpleJava.l"
+#line 90 "SimpleJava.l"
 { return TK_COMMA; }
 	YY_BREAK
 case 45:
 YY_RULE_SETUP
-#line 89 "SimpleJava.l"
+#line 91 "SimpleJava.l"
 { return TK_DOT; }
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 90 "SimpleJava.l"
+#line 92 "SimpleJava.l"
 { return TK_ASSIGN; }
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
-#line 92 "SimpleJava.l"
+#line 94 "SimpleJava.l"
 { return TK_OP_INC; }
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
-#line 93 "SimpleJava.l"
+#line 95 "SimpleJava.l"
 { return TK_OP_DEC; }
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
-#line 94 "SimpleJava.l"
+#line 96 "SimpleJava.l"
 { return TK_OP_PLUS_ASSIGN; }
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
-#line 95 "SimpleJava.l"
+#line 97 "SimpleJava.l"
 { return TK_OP_MINUS_ASSIGN; }
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
-#line 96 "SimpleJava.l"
+#line 98 "SimpleJava.l"
 { return TK_PLUS; }
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
-#line 97 "SimpleJava.l"
+#line 99 "SimpleJava.l"
 { return TK_MINUS; }
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
-#line 98 "SimpleJava.l"
+#line 100 "SimpleJava.l"
 { return TK_MULT; }
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
-#line 99 "SimpleJava.l"
+#line 101 "SimpleJava.l"
 { return TK_DIV; }
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
-#line 102 "SimpleJava.l"
+#line 104 "SimpleJava.l"
 {
 							 	yylval = newStnString(g_srcLineNo, yytext);
 								return TK_ID;
@@ -1049,7 +1049,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
-#line 108 "SimpleJava.l"
+#line 110 "SimpleJava.l"
 {
 				/* string */
 				char	c;
@@ -1092,17 +1092,17 @@ YY_RULE_SETUP
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
-#line 148 "SimpleJava.l"
+#line 150 "SimpleJava.l"
 {	/* eat up whitespace */ }
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
-#line 150 "SimpleJava.l"
+#line 152 "SimpleJava.l"
 { INC_LINENO(); }
 	YY_BREAK
 case 59:
 YY_RULE_SETUP
-#line 152 "SimpleJava.l"
+#line 154 "SimpleJava.l"
 {
 				/* eat cpp comment */
 				char	c;
@@ -1114,7 +1114,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 60:
 YY_RULE_SETUP
-#line 161 "SimpleJava.l"
+#line 163 "SimpleJava.l"
 {
 				/* eat c comment */
 				int c;
@@ -1146,7 +1146,7 @@ YY_RULE_SETUP
 	YY_BREAK
 case 61:
 YY_RULE_SETUP
-#line 190 "SimpleJava.l"
+#line 192 "SimpleJava.l"
 {
 				printf( "Unrecognized character: %s\n", yytext );
 				return TK_ERROR;
@@ -1154,10 +1154,10 @@ YY_RULE_SETUP
 	YY_BREAK
 case 62:
 YY_RULE_SETUP
-#line 195 "SimpleJava.l"
+#line 197 "SimpleJava.l"
 ECHO;
 	YY_BREAK
-#line 1159 "ss.yy.cpp"
+#line 1161 "ss.yy.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2043,7 +2043,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 195 "SimpleJava.l"
+#line 197 "SimpleJava.l"
 
 
 int yywrap(void)

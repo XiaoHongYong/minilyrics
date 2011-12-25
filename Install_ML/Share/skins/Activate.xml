@@ -12,7 +12,7 @@
     <NormalText ID="CID_REG_INFO" Text="If you haven't an activation code, please visit our website to purchase one."
                 Rect="15,h-115,w-30,40" AlignText="AT_VCENTER"/>
 
-    <NormalLink ID="CID_REG_INFO" Text="http://www.crintsoft.com/" Link="http://www.crintsoft.com/buy.htm"
+    <NormalLink ID="CID_REG_LINK" Text="http://www.crintsoft.com/"
                 Rect="15,h-70,w-30,40"/>
 
     <NormalTextBt ID="ID_OK" Text="Activate" Rect="w/2 - 110,h-40,90,"/>

@@ -146,7 +146,7 @@ void ColorToStr(const MLColor &clr, tstring &strColor)
 {
 	TCHAR				szValue[128];
 
-	ColorToStr(clr.get(), szValue);
+	StringFromColor(szValue, clr.get());
 
 	strColor = szValue;
 }
@@ -154,10 +154,7 @@ void ColorToStr(const MLColor &clr, tstring &strColor)
 // FgColor="#FFFFFF"
 void GetColorValue(MLColor &clr, LPCTSTR szColor)
 {
-	UINT		uRet;
-	LPCTSTR p = ReadColorValue_t(szColor, uRet);
-	if (*p == '\0')
-		clr.set(uRet);
+	clr.set(StringToColor(szColor, clr.get()));
 }
 
 int GetMenuKey(LPCTSTR szText)

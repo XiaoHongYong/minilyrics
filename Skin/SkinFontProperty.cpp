@@ -7,30 +7,25 @@
 #include "SkinFontProperty.h"
 
 
-
 // szValue format: Verdana, 13, thin, 1, 0, Tahoma
 // Latin font, height, weight(bold,normal,thin), italic, underline, Other font
 bool FontPropertyValueFromStr(LPCTSTR szValue, int &nHeight, int &nWeight, BYTE &byItalic, tstring &strFaceNameLatin9, tstring &strFaceNameOthers)
 {
 	int				nUnderLine;
 	tstring			strWeight;
-	CCSVLineT		csvLine;
 
-	csvLine.SetReadingLine(szValue);
+	CCommaSeparatedValues csv;
+	V_Str	vValues;
 
-	// latin font name
-	csvLine.IgnoreChars(_T(""));
-	csvLine.ReadFieldString(strFaceNameLatin9);
-	TrimStr(strFaceNameLatin9);
+	csv.Split(szValue, vValues);
+	TrimStr(vValues);
+	if (vValues.size() != 6)
+		return false;
 
-	// height
-	csvLine.IgnoreChars(_T(" "));
-	if (!csvLine.ReadFieldInt(nHeight))
-		nHeight = -1;
+	strFaceNameLatin9 = vValues[0];
+	nHeight = StringToInt(vValues[1].c_str(), -1);
 
-	// font weight?
-	csvLine.IgnoreChars(_T(" "));
-	csvLine.ReadFieldString(strWeight);
+	strWeight = vValues[2];
 	if (strWeight.empty())
 		nWeight = -1;
 	else
@@ -45,27 +40,16 @@ bool FontPropertyValueFromStr(LPCTSTR szValue, int &nHeight, int &nWeight, BYTE 
 			nWeight = _ttoi(strWeight.c_str());
 	}
 
-	// italic
-	csvLine.IgnoreChars(_T(" "));
-	if (!csvLine.ReadFieldInt(byItalic))
-		byItalic = 0;
-
-	// underline
-	csvLine.IgnoreChars(_T(" "));
-	if (!csvLine.ReadFieldInt(nUnderLine))
-		nUnderLine = -1;
-
-	// other character set font name.
-	csvLine.IgnoreChars(_T(" "));
-	csvLine.ReadFieldString(strFaceNameOthers);
-	TrimStr(strFaceNameOthers);
+	byItalic = StringToInt(vValues[3].c_str(), -1);
+	nUnderLine = StringToInt(vValues[4].c_str(), -1);
+	strFaceNameOthers = vValues[5];
 
 	return true;
 }
 
 void FontPropertyValueToStr(tstring &strValue, int nHeight, int nWeight, BYTE byItalic, LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers)
 {
-#define			SZ_FEILD_SEP	_T(", ")
+#define			SZ_FEILD_SEP	_T(",")
 	TCHAR			szBuff[64];
 
 	strValue.resize(0);
@@ -455,3 +439,39 @@ CRawBmpFont *CSkinFontProperty::GetFont()
 		return NULL;
 }
 
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+#ifdef _CPPUNIT_TEST
+
+IMPLEMENT_CPPUNIT_TEST_REG(CSkinFontProperty)
+
+class CTestCaseCSkinFontProperty : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseCSkinFontProperty);
+	CPPUNIT_TEST(TestFontPropertyValueFromStr);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+	void TestFontPropertyValueFromStr()
+	{
+		int nHeight, nWeight;
+		BYTE byItalic;
+		tstring strFaceNameLatin9, strFaceNameOthers;
+
+		LPCTSTR szValue = _T("Verdana, 13, thin, 1, 0, Tahoma");
+
+		CPPUNIT_ASSERT(FontPropertyValueFromStr(szValue, nHeight, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers));
+		CPPUNIT_ASSERT(nHeight == 13);
+		CPPUNIT_ASSERT(nWeight == FW_THIN);
+		CPPUNIT_ASSERT(byItalic == 1);
+		CPPUNIT_ASSERT(strFaceNameLatin9 == _T("Verdana"));
+		CPPUNIT_ASSERT(strFaceNameOthers == _T("Tahoma"));
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseCSkinFontProperty);
+
+#endif // _CPPUNIT_TEST

@@ -187,7 +187,7 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 	int			nErr = ERR_OK;
 	stringex	strAnsyLyr;
 
-	FILE_ENCODING fe = GetStrEncodingType(szLyrics);
+	FILE_ENCODING fe = GetFileEncodingByBom(szLyrics);
 	if (fe == FE_UCS2)
 	{
 		ConvertStr((LPCWSTR)(szLyrics + 2), (nLen - 2) / sizeof(WCHAR), strAnsyLyr);

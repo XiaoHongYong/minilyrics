@@ -98,7 +98,7 @@ SimpleXMLParserError CSimpleXMLParser::ParseData(LPCVOID lpXmlData, size_t nLen,
 	FILE_ENCODING				fileEncoding;
 
 	szBuffer = (BYTE *)lpXmlData;
-	fileEncoding = GetStrEncodingType(szBuffer);
+	fileEncoding = GetFileEncodingByBom(szBuffer);
 #ifdef _UNICODE
 	if (fileEncoding == FE_UCS2)
 	{

@@ -39,35 +39,6 @@ void GetNotepadEditor(tstring &strEditor);
 
 uint32 GetSecCount();
 
-#ifdef _WIN32
-PRAW_IMAGE_DATA LoadRawImageDataFromHBitmap(HBITMAP hBmp);
-#endif // #ifdef _WIN32
-
-//
-// Field Read and Write
-//
-
-template<class int_t>
-void FieldReadInt(LPCSTR &szStr, int_t &nValue)
-{
-	while (*szStr == ' ')
-		szStr++;
-	ReadInt(szStr, nValue);
-	if (*szStr == ',')
-		szStr++;
-}
-
-bool FieldReadColor(LPCSTR &szStr, COLORREF &clr);
-
-bool FieldReadStr(LPCSTR &szStr, tstring &str);
-
-void FieldWriteInt(string &strField, int n);
-
-void FieldWriteColor(string &strField, COLORREF clr);
-
-void FieldWriteStr(string &strField, LPCTSTR str);
-
-
 void ProfileGetColorValue(COLORREF &clr, LPCTSTR szSectName, LPCTSTR szKeyName);
 
 void ProfileGetColorValue(MLColor &clr, LPCTSTR szSectName, LPCTSTR szKeyName);

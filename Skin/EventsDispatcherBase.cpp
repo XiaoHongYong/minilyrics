@@ -117,7 +117,7 @@ void CEventsDispatcherBase::UnRegisterHandler(IEventHandler *pHandler)
 {
 	CMutexAutolock		lock(m_mutex);
 
-	for (int i = 0; i < m_vListEventHandler.size(); i++)
+	for (size_t i = 0; i < m_vListEventHandler.size(); i++)
 	{
 		LIST_EVENTHANDLER	&listHandler = m_vListEventHandler[i];
 		LIST_EVENTHANDLER::iterator	it, itEnd;

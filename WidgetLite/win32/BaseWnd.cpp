@@ -203,6 +203,11 @@ void CBaseWnd::PostDestroy()
 	PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 }
 
+bool CBaseWnd::OnClose()
+{
+	return true;
+}
+
 bool CBaseWnd::OnCreate()
 {
 	OnLanguageChanged();
@@ -758,6 +763,92 @@ LRESULT CBaseWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		return DefWindowProc(m_hWnd, message, wParam, lParam);
 	}
 	return 0;
+}
+
+
+void CBaseWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
+{
+	// If it's child old, ignore this.
+	if (::GetParent(m_hWnd))
+		return;
+
+	m_nAlpha = nAlpha;
+	m_bClickThrough = bClickThrough;
+
+	if (m_bTranslucencyLayered)
+	{
+		InvalidateRect(NULL, true);
+		return;
+	}
+
+	COLORREF		clrTrans = RGB(0, 0, 0);
+	DWORD			dwFlags = 0;
+
+	if (nAlpha < 255)
+		dwFlags = LWA_ALPHA;
+
+/*	if (bTransparentClr)
+	{
+		clrTrans = clrTransparent;
+		dwFlags |= LWA_COLORKEY;
+	}*/
+
+	if (IsClickThrough())
+	{
+		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) | WS_EX_TRANSPARENT);
+	}
+	else
+	{
+		SetWindowLong(m_hWnd, GWL_EXSTYLE, GetWindowLong(m_hWnd, GWL_EXSTYLE) & ~WS_EX_TRANSPARENT);
+	}
+
+	if (dwFlags != 0 || (IsClickThrough()))
+		::SetLayeredWindow(m_hWnd, clrTrans, nAlpha, dwFlags);
+	else
+		::UnSetLayeredWindow(m_hWnd);
+}
+
+BOOL CBaseWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
+{
+	HDC		hdc, hdcSrc;
+	CRect	rcWnd;
+	POINT	ptSrc, ptDest;
+	SIZE	sizeWnd;
+	DWORD	dwStyle, dwStyleNew;
+	BLENDFUNCTION	blend;
+
+	hdc = GetDC(m_hWnd);
+
+	hdcSrc = pGraph->GetHandle();
+
+	dwStyle = GetWindowLong(m_hWnd, GWL_EXSTYLE);
+	dwStyleNew = dwStyle | WS_EX_LAYERED;
+	if (IsClickThrough())
+		dwStyleNew |= WS_EX_TRANSPARENT;
+	else
+		dwStyleNew &= ~WS_EX_TRANSPARENT;
+	if (dwStyle != dwStyleNew)
+		SetWindowLong(m_hWnd, GWL_EXSTYLE, dwStyleNew);
+
+	GetWindowRect(&rcWnd);
+
+	blend.AlphaFormat = AC_SRC_ALPHA;
+	blend.BlendOp = AC_SRC_OVER;
+	blend.BlendFlags = 0;
+	blend.SourceConstantAlpha = m_nAlpha;
+
+	ptSrc.x = ptSrc.y = 0;
+	ptDest.x = rcWnd.left;
+	ptDest.y = rcWnd.top;
+	sizeWnd.cx = rcWnd.Width();
+	sizeWnd.cy = rcWnd.Height();
+
+	BOOL bRet = UpdateLayeredWindow(m_hWnd, hdc, &ptDest, &sizeWnd, hdcSrc, &ptSrc, 0, &blend, ULW_ALPHA);
+	//BOOL bRet = UpdateLayeredWindow(m_hWnd, NULL, NULL, NULL, hdcSrc, &ptSrc, 0, &blend, ULW_ALPHA);
+
+	ReleaseDC(m_hWnd, hdc);
+
+	return bRet;
 }
 
 CBaseWnd *CBaseWnd::FromHandle(HWND hWnd)

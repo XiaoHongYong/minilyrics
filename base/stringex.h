@@ -4,7 +4,9 @@
 
 DECLAR_CPPUNIT_TEST_REG(StringEx)
 
-FILE_ENCODING GetStrEncodingType(LPCVOID lpData);
+FILE_ENCODING GetFileEncodingByBom(LPCVOID lpData);
+int GetFileEncodingBomSize(FILE_ENCODING fe);
+LPCSTR GetFileEncodingBom(FILE_ENCODING fe);
 
 bool StrBeginWith(LPCSTR szText, LPCSTR szBeginWith);
 bool StrBeginWith(LPCWSTR szText, LPCWSTR szBeginWith);
@@ -174,27 +176,6 @@ tstring StrJoin(_iterator first, _iterator end, LPCTSTR szSeperator)
 	return str;
 }
 
-#define ReadInt(szBeg, nValue)\
-{\
-	bool		bNegative;\
-	nValue = 0;\
-	if (*szBeg == '-')\
-	{\
-		bNegative = true;\
-		szBeg++;\
-	}\
-	else\
-		bNegative = false;\
-	while (IsDigit(*szBeg))\
-	{\
-		nValue *= 10;\
-		nValue += *szBeg - '0';\
-		szBeg++;\
-	}\
-	if (bNegative)\
-		nValue = -nValue;\
-}
-
 template<class _TCHARPTR, class _int_t>
 _TCHARPTR ReadInt_t(_TCHARPTR str, _int_t &nValue)
 {
@@ -266,46 +247,13 @@ bool Scan2IntX(TCHARDEF szValue, _int_t &n1, _int_t &n2)
 	return true;
 }
 
-void _itostr(int value, tstring &str, int base);
+int StringToInt(LPCTSTR str, int nDefault = 0);
+COLORREF StringToColor(LPCTSTR szColor, COLORREF nDefault = 0);
 
-// "#FFFFFF"
-template<class _TCHARPTR, class _int_t>
-_TCHARPTR ReadColorValue_t(_TCHARPTR szColor, _int_t &nClr)
-{
-	nClr = 0;
+tstring StringFromInt(int n);
+tstring StringFromColor(COLORREF clr);
 
-	if (*szColor == '#')
-		szColor++;
-
-	int		n;
-
-	for (int i = 0; i < 6 && *szColor; i++)
-	{
-		if (*szColor >= '0' && *szColor <= '9')
-			n = *szColor - '0';
-		else if (*szColor >= 'a' && *szColor <= 'f')
-			n = 10 + *szColor - 'a';
-		else if (*szColor >= 'A' && *szColor <= 'F')
-			n = 10 + *szColor - 'A';
-		else
-			break;
-
-		nClr = nClr * 16 + n;
-		szColor++;
-	}
-
-	nClr = ((nClr & 0xFF) << 16) + (nClr & 0xFF00) + ((nClr & 0xFF0000) >> 16);
-
-	return szColor;
-}
-
-UINT GetColorValue(LPCSTR szColor, UINT nDefault);
-UINT GetColorValue(LPCWSTR szColor, UINT nDefault);
-
-void ColorToStr(COLORREF clr, char szStr[]);
-#ifdef _WIN32
-void ColorToStr(COLORREF clr, WCHAR szStr[]);
-#endif
+void StringFromColor(TCHAR szStr[], COLORREF clr);
 
 #ifndef _WIN32
 // For gcc compiler, sizeof(wchar_t) == 4, need to reimplementation wcsxxx functions.

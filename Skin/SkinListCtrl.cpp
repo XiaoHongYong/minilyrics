@@ -122,7 +122,7 @@ void CSkinListCtrl::LoadColumnWidth(LPCTSTR szProperty)
 void CSkinListCtrl::SaveColumnWidth(LPCTSTR szProperty)
 {
 	VecInt	vWidth;
-	for (int i = 0; i < GetColumnCount(); i++)
+	for (size_t i = 0; i < GetColumnCount(); i++)
 		vWidth.push_back(GetColumnWidth(i));
 	tstring str = StrJoin(vWidth.begin(), vWidth.end(), _T("%d"), _T(","));
 	g_Profile.WriteProfileString(szProperty, str.c_str());

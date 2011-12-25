@@ -81,28 +81,14 @@ bool GetTxtTagValue(LPCSTR szLyrics, LPCSTR szTagPropName, tstring &strValue, CH
 
 CHAR_ENCODING GetLyricsTextEncoding(LPBYTE &szLrc, int &nLen)
 {
-	CHAR_ENCODING	encoding;
-	FILE_ENCODING	fe = GetStrEncodingType(szLrc);
+	FILE_ENCODING fe = GetFileEncodingByBom(szLrc);
+	int nBomSize = GetFileEncodingBomSize(fe);
+	CHAR_ENCODING encoding = FileEcodingToCharEncoding(fe);
 
-	if (fe == FE_UTF8)
-	{
-		szLrc += 3;
-		nLen -= 3;
-		encoding = ED_UTF8;
-	}
-	else if (fe == FE_UCS2)
-	{
-		szLrc += 2;
-		nLen -= 2;
-		encoding = ED_UNICODE;
-	}
-	else if (fe == FE_UCS2_BE)
-	{
-		szLrc += 2;
-		nLen -= 2;
-		encoding = ED_UNICODE_BIG_ENDIAN;
-	}
-	else
+	szLrc += nBomSize;
+	nLen -= nBomSize;
+
+	if (fe == FE_ANSI)
 	{
 #ifdef _WIN32
 		if (strlen((const char *)szLrc) <= 3 && nLen >= 10)
@@ -1248,11 +1234,12 @@ bool ConvertUnicodeAnsiData(CCharBuffer &buf)
 	buf.resize(buf.size() - 2);
 
 	LPCSTR szTxt = buf.c_str();
-	FILE_ENCODING	fe = GetStrEncodingType(szTxt);
+
+	FILE_ENCODING fe = GetFileEncodingByBom(szTxt);
+	szTxt += GetFileEncodingBomSize(fe);
 
 	if (fe == FE_UTF8)
 	{
-		szTxt += 3;
 		if (IsAnsiStr((const char*)szTxt))
 		{
 			buf.erase(0, 3);
@@ -1261,8 +1248,6 @@ bool ConvertUnicodeAnsiData(CCharBuffer &buf)
 	}
 	else if (fe == FE_UCS2)
 	{
-		szTxt += 2;
-
 		if (IsAnsiStr((WCHAR*)szTxt))
 		{
 			string str;
@@ -1274,7 +1259,6 @@ bool ConvertUnicodeAnsiData(CCharBuffer &buf)
 	}
 	else if (fe == FE_UCS2_BE)
 	{
-		szTxt += 2;
 		wstringex strw;
 		strw = (const WCHAR*)szTxt;
 		UCS2BEToLE(strw.data(), strw.size());
