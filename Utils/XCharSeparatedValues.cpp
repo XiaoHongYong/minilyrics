@@ -86,6 +86,15 @@ void CXCharSeparatedValues::AddValue(int nValue)
 	m_strWriting += szBuff;
 }
 
+void CXCharSeparatedValues::AddNameValue(LPCTSTR szName, LPCTSTR szValue, TCHAR chAssign)
+{
+	tstring str = szName;
+	str += chAssign;
+	str += szValue;
+
+	AddValue(str.c_str());
+}
+
 #ifdef _CPPUNIT_TEST
 
 //////////////////////////////////////////////////////////////////////////

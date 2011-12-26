@@ -53,12 +53,12 @@ CMLProfile::~CMLProfile()
 
 }
 
-BOOL CMLProfile::InetIsUseProxy()
+bool CMLProfile::InetIsUseProxy()
 {
 	return (g_Profile.GetProfileInt(_T("ProxyType"), HTTP_PROXY_NONE) != HTTP_PROXY_NONE);
 }
 
-BOOL CMLProfile::InetGetProxy(TCHAR szServer[], int &nPort)
+bool CMLProfile::InetGetProxy(TCHAR szServer[], int &nPort)
 {
 	int		nHttpProxyType;
 

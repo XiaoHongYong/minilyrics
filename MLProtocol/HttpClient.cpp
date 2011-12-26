@@ -30,6 +30,9 @@ int CHttpClient::Init(LPCTSTR szUrl, LPCTSTR szReferUrl)
 	if (_tcsicmp(scheme.c_str(), _T("http")) != 0)
 		return ERR_HTTP_BAD_URL;
 
+	if (m_nHostPort == -1)
+		m_nHostPort = __HTTP_PORT;
+
 	TStringToAnsi(domain.c_str(), domain.size(), m_strHost);
 
 	m_httpRequest.SetNetFile(&m_NetFile);
@@ -72,46 +75,27 @@ int CHttpClient::Connect()
 	if (m_ClientCom.IsValid())
 		m_ClientCom.Close();
 
-//	if (g_MLProfile.InetIsUseProxy())
-//		SetProxy(TRUE, g_MLProfile.InetGetProxyServer(), g_MLProfile.InetGetBase64ProxyUserPass());
-//	else
-//		SetProxy(FALSE, "", "");
-
 	int		nRet;
 	nRet = m_ClientCom.Connect(m_strServer.c_str(), m_nServerPort);
 	if (nRet != ERR_OK)
 		return nRet;
 
 	m_NetFile.Attach(m_ClientCom.GetSocket());
-	nRet = m_NetFile.SetTimeOut(20000);		// 10 second
+	nRet = m_NetFile.SetTimeOut(20000);		// 20 second
 
 	return ERR_OK;
 }
 
-void CHttpClient::SetProxy(BOOL bEnableProxy, LPCSTR szProxyServer, int nPort, LPCSTR szBase64ProxyUserPass)
+void CHttpClient::SetProxy(BOOL bEnableProxy, LPCTSTR szProxyServer, int nPort, LPCTSTR szBase64ProxyUserPass)
 {
 	if (bEnableProxy && !IsEmptyString(szProxyServer))
 	{
-		ASSERT(strchr(szProxyServer, ':') == NULL);
-//		char			szServer[256];
-//		const char		*szColon;
-//
-//		szColon = strchr(szProxyServer, ':');
-//		if (szColon == NULL)
-//		{
-//			strcpy_safe(szServer, CountOf(szServer), szProxyServer);
-//			m_strServer = szServer;
-//			m_nServerPort = __HTTP_PORT;
-//		}
-//		else
-//		{
-//			strncpysz_safe(szServer, CountOf(szServer), szProxyServer, int(szColon - szProxyServer));
-//			m_strServer = szServer;
-//			m_nServerPort = atoi(szColon + 1);
-//		}
-		m_strServer = szProxyServer;
+		TStringToAnsi(szProxyServer, -1, m_strServer);
 		m_nServerPort = nPort;
-		m_httpRequest.SetProxyBase64Pass(TRUE, szBase64ProxyUserPass);
+
+		string strAnsi;
+		TStringToAnsi(szBase64ProxyUserPass, -1, strAnsi);
+		m_httpRequest.SetProxyBase64Pass(TRUE, strAnsi.c_str());
 	}
 	else
 	{
@@ -126,6 +110,20 @@ int CHttpClient::SendRequest()
 //	m_httpRequest.SetContentLength();
 	return m_httpRequest.WriteHead();
 //	return m_httpRequest.WriteData(pMsgBuff->GetBuffer(), pMsgBuff->GetLength());
+}
+
+int CHttpClient::SendPostRequest(LPCVOID lpPostData, size_t len)
+{
+	m_httpRequest.SetRequestType(CHttpRequestProtocol::RQ_POST);
+	m_httpRequest.SetContentLength(len);
+
+	m_httpRequest.SetNetFile(&m_NetFile);
+	//	m_httpRequest.SetContentLength();
+	int nRet = m_httpRequest.WriteHead();
+	if (nRet != ERR_OK)
+		return nRet;
+
+	return m_httpRequest.WriteData((LPVOID)lpPostData, len);
 }
 
 int CHttpClient::GetRespond(int &nRetCode, CCharBuffer &buffRet)

@@ -14,10 +14,12 @@ public:
 	void AddValue(LPCTSTR szValue);
 	void AddValue(int nValue);
 
+	void AddNameValue(LPCTSTR szName, LPCTSTR szValue, TCHAR chAssign = '=');
+
 	void clear() { m_strWriting.clear(); }
 
-	LPCTSTR c_str() { return m_strWriting.c_str(); }
-	size_t size() { return m_strWriting.size(); }
+	LPCTSTR c_str() const { return m_strWriting.c_str(); }
+	size_t size() const { return m_strWriting.size(); }
 
 protected:
 	TCHAR			m_chSeparator;

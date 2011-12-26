@@ -19,14 +19,16 @@ public:
 	void CheckSendTask();
 
 protected:
-	tstring GetAnalyticsFile();
+	virtual tstring GetAnalyticsFile() = 0;
 
-	void SavePingStatus();
+	virtual void PrepareBasePing(MapString &ping, LPCTSTR szPingType);
 
 	virtual void PrepareInstallPing(MapString &pingData) { }
 	virtual void PrepareWeeklyPing(MapString &pingData) { }
 
 	virtual bool GetProxy(tstring &strServer, int &port, tstring &base64UserPass) { return false; }
+
+	void SavePingStatus();
 
 	int Send(const CColonSeparatedValues &csvValues);
 
@@ -43,5 +45,6 @@ protected:
 	MapString				m_weeklyPing;
 
 	CThread					m_threadSend;
+	LPCTSTR					m_szProductId, m_szProductVer;
 
 };

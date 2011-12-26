@@ -497,19 +497,15 @@ int CDownloadMgr::TryToConnect(CHttpClient &httpClient)
 int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 {
 	CHttpClient			httpClient;
-	BOOL				bUseProxy = false;
-	int					nProxyPort = 80;
-	TCHAR				szProxyServer[256];
-	LPCTSTR				szProxyPwd;
-
 	int					nHttpCode = 0;
 	CCharBuffer			&buffRet = pTask->buffContent;
 	int					nRet;
 	int					iRetry;
-	stringex			strProxyServer, strProxyPwd;
 
-	bUseProxy = CMLProfile::InetGetProxy(szProxyServer, nProxyPort);
-	szProxyPwd = CMLProfile::InetGetBase64ProxyUserPass();
+	int					nProxyPort = 80;
+	TCHAR				szProxyServer[256];
+	bool bUseProxy = CMLProfile::InetGetProxy(szProxyServer, nProxyPort);
+	tstring strProxyPwd = CMLProfile::InetGetBase64ProxyUserPass();
 
 	// LOG1(LOG_LVL_INFO, _T("Enter lyrics download thread: %s"), pTask->m_strURL.c_str());
 	// LOG2(LOG_LVL_INFO, _T("Proxy settings: %d, %s"), bUseProxy, szProxyPwd);
@@ -533,13 +529,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		httpClient.SetHostPort(g_nPortDownloadServer);
 	}
 
-#ifdef _UNICODE
-	ConvertStr(szProxyServer, -1, strProxyServer);
-	ConvertStr(szProxyPwd, -1, strProxyPwd);
-	httpClient.SetProxy(bUseProxy, strProxyServer.c_str(), nProxyPort, strProxyPwd.c_str());
-#else
-	httpClient.SetProxy(bUseProxy, szProxyServer, nProxyPort, szProxyPwd);
-#endif
+	httpClient.SetProxy(bUseProxy, szProxyServer, nProxyPort, strProxyPwd.c_str());
 
 	for (iRetry = 1; iRetry <= 2 && !IsQuiting(); iRetry++)
 	{

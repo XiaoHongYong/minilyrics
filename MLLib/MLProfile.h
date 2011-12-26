@@ -52,9 +52,9 @@ public:
 	virtual ~CMLProfile();
 
 public:
-	static BOOL InetIsUseProxy();
+	static bool InetIsUseProxy();
 
-	static BOOL InetGetProxy(TCHAR szServer[], int &nPort);
+	static bool InetGetProxy(TCHAR szServer[], int &nPort);
 
 	static LPCTSTR InetGetBase64ProxyUserPass();
 

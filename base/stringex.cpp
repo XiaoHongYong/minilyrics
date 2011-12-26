@@ -1814,7 +1814,7 @@ COLORREF StringToColor(LPCTSTR szColor, COLORREF nDefault)
 		return nDefault;
 
 	UINT		clr;
-	LPCWSTR p = ReadColorValue_t(szColor, clr);
+	LPCTSTR p = ReadColorValue_t(szColor, clr);
 	if (*p != '\0')
 		return nDefault;
 	else
@@ -1943,6 +1943,7 @@ IMPLEMENT_CPPUNIT_TEST_REG(StringEx)
 class CTestCaseStringEx : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(CTestCaseStringEx);
+	CPPUNIT_TEST(TestStringFeedUntil);
 	CPPUNIT_TEST(TestUrlParse);
 	CPPUNIT_TEST(TestReadInt_t);
 	CPPUNIT_TEST(TestReadColorValue_t);
@@ -1956,6 +1957,25 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
+	void TestStringFeedUntil()
+	{
+		LPCTSTR p, begin, szUtil;
+		tstring buf;
+
+		begin = _T("http://domain");
+		szUtil = _T(":");
+		p = StringFeedUntil(begin, szUtil, buf);
+		CPPUNIT_ASSERT(p == begin + 5);
+		CPPUNIT_ASSERT(buf == _T("http"));
+
+		p = StringFeedUntil(begin, _T("*"), buf);
+		CPPUNIT_ASSERT(p == NULL);
+
+		p = StringFeedUntil(begin, _T("h"), buf);
+		CPPUNIT_ASSERT(p == begin + 1);
+		CPPUNIT_ASSERT(buf == _T(""));
+	}
+
 	void TestUrlParse()
 	{
 		LPCTSTR szUrl;
