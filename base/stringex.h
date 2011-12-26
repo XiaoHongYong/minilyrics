@@ -109,6 +109,10 @@ BOOL IsHexChar(char ch);
 int HexToInt(char chHex);
 uint32 HexToInt(LPCTSTR str);
 
+// szUrl: scheme://domain:port/path?query_string#fragment_id
+// If no port is specified, -1 will be set.
+bool UrlParse(LPCTSTR szUrl, tstring &scheme, tstring &domain, int &port, tstring &path);
+
 // COMMENT:
 // rfc:  http://www.faqs.org/rfcs/rfc2396.html
 void UriEscape(const char *szLocal, string &strInet);
@@ -177,6 +181,9 @@ tstring StrJoin(_iterator first, _iterator end, LPCTSTR szSeperator)
 
 	return str;
 }
+
+
+LPCTSTR StringFeedUntil(LPCTSTR begin, LPCTSTR szUtil, tstring &buf);
 
 template<class _TCHARPTR, class _int_t>
 _TCHARPTR ReadInt_t(_TCHARPTR str, _int_t &nValue)

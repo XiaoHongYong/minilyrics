@@ -26,11 +26,17 @@ protected:
 	virtual void PrepareInstallPing(MapString &pingData) { }
 	virtual void PrepareWeeklyPing(MapString &pingData) { }
 
-
-	// This method will be called before send data to server
-	virtual void PrepareSend(bool bInstallPing, bool bWeeklyPing) { }
+	virtual bool GetProxy(tstring &strServer, int &port, tstring &base64UserPass) { return false; }
 
 	int Send(const CColonSeparatedValues &csvValues);
+
+	static void ThreadSend(void * lpParam);
+
+	struct SendParam
+	{
+		CAppAnalyticsClient *pAAClient;
+		CColonSeparatedValues installPing, weeklyPing;
+	};
 
 protected:
 	CBaseDate				m_lastSendDate, m_lastWeeklyPingDate;

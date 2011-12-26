@@ -6,8 +6,6 @@
 #include "HttpClient.h"
 
 //////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
 
 CHttpClient::CHttpClient()
 {
@@ -22,31 +20,35 @@ CHttpClient::~CHttpClient()
 
 }
 
-int CHttpClient::Init(LPCTSTR szHost, LPCTSTR szUri, LPCTSTR szReferUrl, int nPort)
+int CHttpClient::Init(LPCTSTR szUrl, LPCTSTR szReferUrl)
 {
-	stringex	strOut;
+	tstring scheme, domain, path;
 
-	ConvertStr(szHost, -1, strOut);
-	m_strHost = strOut.c_str();
-	m_nHostPort = nPort;
+	if (!UrlParse(szUrl, scheme, domain, m_nHostPort, path))
+		return ERR_HTTP_BAD_URL;
+
+	if (_tcsicmp(scheme.c_str(), _T("http")) != 0)
+		return ERR_HTTP_BAD_URL;
+
+	TStringToAnsi(domain.c_str(), domain.size(), m_strHost);
 
 	m_httpRequest.SetNetFile(&m_NetFile);
 	m_httpRequest.SetHost(m_strHost.c_str(), m_nHostPort);
 	m_httpRequest.SetRequestType(CHttpRequestProtocol::RQ_GET);
-	ConvertStr(szUri, -1, strOut);
-	m_httpRequest.SetUrl(strOut.c_str());
+
+	stringex	strAnsi;
+	TStringToAnsi(path.c_str(), path.size(), strAnsi);
+	m_httpRequest.SetUrl(strAnsi.c_str());
+
 	m_httpRequest.SetAvailProp(CHttpRequestProtocol::RP_BASE_GET | CHttpRequestProtocol::RP_PRAGMA | CHttpRequestProtocol::RP_CONNECTION | CHttpRequestProtocol::RP_CACHE_CONTROL);
  	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_HOST, m_strHost.c_str());
  	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_ACCEPT, "*/*");
 	if (szReferUrl)
 	{
- 		ConvertStr(szReferUrl, -1, strOut);
-		m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_REFERER, strOut.c_str());
+		TStringToAnsi(szReferUrl, -1, strAnsi);
+		m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_REFERER, strAnsi.c_str());
 	}
 	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_USER_AGENT, m_strUserAgent.c_str());
- 	// m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_PRAGMA, "no-cache");
- 	// m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_CONNECTION, "close");
- 	// m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_CACHE_CONTROL, "no-cache");
 
 	m_httpReturn.SetNetFile(&m_NetFile);
 	m_httpReturn.SetAvailProp(CHttpReturnProtocol::RP_MIN_RET);
@@ -54,11 +56,6 @@ int CHttpClient::Init(LPCTSTR szHost, LPCTSTR szUri, LPCTSTR szReferUrl, int nPo
 	m_httpReturn.SetConnection("close");
 
 	SetProxy(false, NULL, 80);
-
-//	if (g_MLProfile.InetIsUseProxy())
-//		SetProxy(TRUE, g_MLProfile.InetGetProxyServer(), g_MLProfile.InetGetBase64ProxyUserPass());
-//	else
-//		SetProxy(FALSE, "", 0, "");
 
 	return ERR_OK;
 }

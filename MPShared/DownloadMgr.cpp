@@ -15,64 +15,6 @@
 
 #define SZ_USER_AGENT_IE5 _T("Mozilla/4.0 (compatible; MSIE 5.00; Windows 98)")
 
-//	COMMENT:
-//		在URL中取得服务器的名字
-//		URL的格式都是类似于:
-//		http_URL	   = "http:" "//" host [ ":" port ] [ abs_path ]
-//		http://127.0.0.1/README.TXT
-BOOL AnalysisHttpUrl(const TCHAR szURL[], TCHAR szHostBuff[], int nHostBuff, int &nOutPort, TCHAR szAbsPath[], int nAbsPath)
-{
-	assert(szURL);
-	assert(szHostBuff);
-	assert(szAbsPath);
-
-	const TCHAR	*szHostBeg, *szHostEnd1, *szHostEnd2;
-	const TCHAR	*szAbsPathBeg = NULL;
-	int 	nLen;
-	const TCHAR		*szHttp = _T("HTTP://");
-
-	if (_tcsnicmp(szURL, szHttp, _tcslen(szHttp)) != 0)
-		return FALSE;
-
-	// 找到主机名开始的位置
-	szHostBeg = szURL + _tcslen(szHttp);
-
-	// 找到下一个 / 开始的位置
-	szAbsPathBeg = szHostEnd1 = _tcschr(szHostBeg, '/');
-
-	if (szHostEnd1 == NULL) // 如果没有 / 则
-		nLen = _tcslen(szURL) - int(szURL - szHostBeg);
-	else
-		nLen = szHostEnd1 - szHostBeg;
-
-	nOutPort = __HTTP_PORT;
-
-	// 找到下一个 : 开始的位置
-	szHostEnd2 = _tcschr(szHostBeg, ':');
-	if (szHostEnd2) // 如果有 : 则
-	{
-		if (nLen > szHostEnd2 - szHostBeg)
-		{
-			nLen = szHostEnd2 - szHostBeg;		// 长度
-			nOutPort = _ttoi(szHostEnd2 + 1);	// 端口号
-		}
-	}
-
-	// 复制服务器名
-	_tcsncpy_safe(szHostBuff, nHostBuff, szHostBeg, nLen);
-	szHostBuff[nLen] = '\0';
-
-	// 服务器上的路径
-	if (szAbsPathBeg == NULL)
-		szAbsPath[0] = '\0';
-	else
-		_tcscpy_safe(szAbsPath, nAbsPath, szAbsPathBeg);
-
-	return TRUE;
-}
-
-////////////////////////////////////////////////////////////////////////////
-
 CDownloadMgr::CDownloadMgr() : m_eventShutDown(true, false)
 {
 	m_bAutoDownload = true;
@@ -563,9 +505,6 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 	int					nHttpCode = 0;
 	CCharBuffer			&buffRet = pTask->buffContent;
 	int					nRet;
-	TCHAR				szHost[256];
-	TCHAR				szUri[512];
-	int					nPort;
 	int					iRetry;
 	stringex			strProxyServer, strProxyPwd;
 
@@ -577,24 +516,22 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 
 	bool	bMLServer = false;
 
-	if (!AnalysisHttpUrl(pTask->m_strURL.c_str(), szHost, CountOf(szHost), nPort, szUri, CountOf(szUri)))
+	httpClient.SetUserAgent(GetAppNameLong().c_str());
+	nRet = httpClient.Init(pTask->m_strURL.c_str(), NULL);
+	if (nRet != ERR_OK)
 	{
-		CStrPrintf	str(_T("Invalid http url: %s"),pTask->m_strURL.c_str());
-		if (pTask->taskType == DTT_LYRICS)
-			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
+		CStrPrintf	str(_T("Failed to Init http url: %s"),pTask->m_strURL.c_str());
 		ERRLOG1(_T("%s"), str.c_str());
 		nRet = ERR_HTTP_BAD_REQUEST;
 		nHttpCode = 0;
 		goto RETURN_END;
 	}
-	if (nPort == 80)
+
+	if (httpClient.GetHostPort() == 80)
 	{
 		bMLServer = true;
-		nPort = g_nPortDownloadServer;
+		httpClient.SetHostPort(g_nPortDownloadServer);
 	}
-
-	httpClient.SetUserAgent(GetAppNameLong().c_str());
-	nRet = httpClient.Init(szHost, szUri, NULL, nPort);
 
 #ifdef _UNICODE
 	ConvertStr(szProxyServer, -1, strProxyServer);

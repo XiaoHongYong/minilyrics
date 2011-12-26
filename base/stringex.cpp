@@ -1078,6 +1078,44 @@ uint32 HexToInt(LPCTSTR str)
 	return val;
 }
 
+// szUrl: scheme://domain:port/path?query_string#fragment_id
+bool UrlParse(LPCTSTR szUrl, tstring &scheme, tstring &domain, int &port, tstring &path)
+{
+	LPCTSTR begin = szUrl;
+	LPCTSTR p;
+
+	// Scheme
+	p = StringFeedUntil(begin, _T("://"), scheme);
+	if (!p)
+		return false;
+	begin = p;
+
+	// domain
+	p = StringFeedUntil(begin, _T(":"), domain);
+	if (p != NULL)
+	{
+		begin = p;
+
+		// Port
+		port = _ttoi(begin);
+
+		tstring strPort;
+		p = StringFeedUntil(begin, _T("/"), strPort);
+	}
+	else
+	{
+		port = -1;
+		p = StringFeedUntil(begin, _T("/"), domain);
+	}
+
+	if (p)
+		path = p;
+	else
+		path.clear();
+
+	return true;
+}
+
 // COMMENT:
 //		将%20等类似的名字转换为对应的字符
 void UriUnescape(const char *szInet, string &str)
@@ -1717,6 +1755,17 @@ int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr)
 	return (int)containerStr.size();
 }
 
+LPCTSTR StringFeedUntil(LPCTSTR begin, LPCTSTR szUtil, tstring &buf)
+{
+	LPCTSTR p = _tcsstr(begin, szUtil);
+	if (!p)
+		return NULL;
+
+	buf.clear();
+	buf.append(begin, (size_t)(p - begin));
+	return p + _tcslen(szUtil);
+}
+
 // "#FFFFFF"
 template<class _TCHARPTR, class _int_t>
 _TCHARPTR ReadColorValue_t(_TCHARPTR szColor, _int_t &nClr)
@@ -1894,6 +1943,7 @@ IMPLEMENT_CPPUNIT_TEST_REG(StringEx)
 class CTestCaseStringEx : public CppUnit::TestFixture
 {
 	CPPUNIT_TEST_SUITE(CTestCaseStringEx);
+	CPPUNIT_TEST(TestUrlParse);
 	CPPUNIT_TEST(TestReadInt_t);
 	CPPUNIT_TEST(TestReadColorValue_t);
 	CPPUNIT_TEST(TestTrimStrRight);
@@ -1906,6 +1956,42 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
+	void TestUrlParse()
+	{
+		LPCTSTR szUrl;
+
+		tstring scheme, domain, path;
+		int port;
+
+		szUrl = _T("scheme://domain:10/path?query_string#fragment_id");
+		CPPUNIT_ASSERT(UrlParse(szUrl, scheme, domain, port, path));
+		CPPUNIT_ASSERT(scheme == _T("scheme"));
+		CPPUNIT_ASSERT(domain == _T("domain"));
+		CPPUNIT_ASSERT(path == _T("path?query_string#fragment_id"));
+		CPPUNIT_ASSERT(port == 10);
+
+		szUrl = _T("scheme://domain/path?query_string#fragment_id");
+		CPPUNIT_ASSERT(UrlParse(szUrl, scheme, domain, port, path));
+		CPPUNIT_ASSERT(scheme == _T("scheme"));
+		CPPUNIT_ASSERT(domain == _T("domain"));
+		CPPUNIT_ASSERT(path == _T("path?query_string#fragment_id"));
+		CPPUNIT_ASSERT(port == -1);
+
+		szUrl = _T("scheme://domain");
+		CPPUNIT_ASSERT(UrlParse(szUrl, scheme, domain, port, path));
+		CPPUNIT_ASSERT(scheme == _T("scheme"));
+		CPPUNIT_ASSERT(domain == _T("domain"));
+		CPPUNIT_ASSERT(path == _T(""));
+		CPPUNIT_ASSERT(port == -1);
+
+		szUrl = _T("scheme://domain:12");
+		CPPUNIT_ASSERT(UrlParse(szUrl, scheme, domain, port, path));
+		CPPUNIT_ASSERT(scheme == _T("scheme"));
+		CPPUNIT_ASSERT(domain == _T("domain"));
+		CPPUNIT_ASSERT(path == _T(""));
+		CPPUNIT_ASSERT(port == 12);
+	}
+
 	void TestTrimStrRight()
 	{
 		TCHAR szStr[1024] = _T("abcdef1213   ");

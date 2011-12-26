@@ -1,13 +1,4 @@
-// HttpClient.h: interface for the CHttpClient class.
-//
-//////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_HTTPCLIENT_H__0474F34E_B025_4BFB_9D8F_09D927ED8690__INCLUDED_)
-#define AFX_HTTPCLIENT_H__0474F34E_B025_4BFB_9D8F_09D927ED8690__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "NetServer.h"
 #include "MLProtocol.h"
@@ -18,9 +9,12 @@ public:
 	CHttpClient();
 	virtual ~CHttpClient();
 
-	int Init(LPCTSTR szHost, LPCTSTR szUri, LPCTSTR szReferUrl, int nPort = __HTTP_PORT);
+	int Init(LPCTSTR szUrl, LPCTSTR szReferUrl);
+
+	void SetPost(LPCVOID lpPostData, size_t len);
 
 	void SetHostPort(int nPort);
+	int GetHostPort() const { return m_nHostPort; }
 
 	int Connect();
 
@@ -57,5 +51,3 @@ protected:
 	string			m_strBase64ProxyUserPass;
 
 };
-
-#endif // !defined(AFX_HTTPCLIENT_H__0474F34E_B025_4BFB_9D8F_09D927ED8690__INCLUDED_)
