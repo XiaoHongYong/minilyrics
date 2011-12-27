@@ -198,7 +198,12 @@ CHttpRequestProtocol::~CHttpRequestProtocol()
 
 void CHttpRequestProtocol::SetUrl(const char * szUrl)
 {
-	m_strUrl = szUrl;
+	m_strUrl.clear();
+
+	if (szUrl[0] != '/')
+		m_strUrl += '/';
+
+	m_strUrl += szUrl;
 }
 
 void CHttpRequestProtocol::SetHost(const char * szHost, int nPort)
@@ -298,28 +303,28 @@ int CHttpRequestProtocol::WriteHead()
 	m_buffHead += m_httpVer == HTTP_V_1_1 ? "1.1" : "1.0";
 	m_buffHead += "\r\n";
 
-	if (m_dwAvailProp & RP_HOST)
+	if (IsFlagSet(m_dwAvailProp, RP_HOST) && !IsEmptyString(m_szHost))
 	{
 		m_buffHead += "Host: ";
 		m_buffHead += m_szHost;
 		m_buffHead += "\r\n";
 	}
 
-	if (m_dwAvailProp & RP_ACCEPT)
+	if (IsFlagSet(m_dwAvailProp, RP_ACCEPT) && !IsEmptyString(m_szAccept))
 	{
 		m_buffHead += "Accept: ";
 		m_buffHead += m_szAccept;
 		m_buffHead += "\r\n";
 	}
 
-	if (m_dwAvailProp & RP_REFERER)
+	if (IsFlagSet(m_dwAvailProp, RP_REFERER) && !IsEmptyString(m_szRefer))
 	{
 		m_buffHead += "Referer: ";
 		m_buffHead += m_szRefer;
 		m_buffHead += "\r\n";
 	}
 
-	if (m_dwAvailProp & RP_CONTENT_LENGTH)
+	if (IsFlagSet(m_dwAvailProp, RP_CONTENT_LENGTH) && m_dwContentLen > 0)
 	{
 		sprintf_s(szTemp, CountOf(szTemp), "%d", m_dwContentLen);
 		m_buffHead += SZ_HH_CONTENT_LENGTH;
@@ -335,14 +340,14 @@ int CHttpRequestProtocol::WriteHead()
 //		nSize += nLen;
 //	}
 
-	if (m_dwAvailProp & RP_USER_AGENT)
+	if (IsFlagSet(m_dwAvailProp, RP_USER_AGENT) && !IsEmptyString(m_szUserAgent))
 	{
 		m_buffHead += "User-Agent: ";
 		m_buffHead += m_szUserAgent;
 		m_buffHead += "\r\n";
 	}
 
-	if (m_dwAvailProp & RP_CONTENT_TYPE)
+	if (IsFlagSet(m_dwAvailProp, RP_CONTENT_TYPE) && !IsEmptyString(m_szContentType))
 	{
 		m_buffHead += SZ_HH_CONTENT_TYPE;
 		m_buffHead += m_szContentType;
@@ -358,39 +363,36 @@ int CHttpRequestProtocol::WriteHead()
 		m_buffHead += szTemp;
 	}
 
-	if (m_dwAvailProp & RP_CONNECTION)
+	if (IsFlagSet(m_dwAvailProp, RP_CONNECTION) && !IsEmptyString(m_szConnection))
 	{
 		m_buffHead += SZ_HH_CONNECTION;
 		m_buffHead += m_szConnection;
 		m_buffHead += "\r\n";
 	}
 
-	if (m_dwAvailProp & RP_PRAGMA)
+	if (IsFlagSet(m_dwAvailProp, RP_PRAGMA) && !IsEmptyString(m_szPragma))
 	{
 		m_buffHead += "Pragma: ";
 		m_buffHead += m_szPragma;
 		m_buffHead += "\r\n";
 	}
 
-	if (m_dwAvailProp & RP_CACHE_CONTROL)
+	if (IsFlagSet(m_dwAvailProp, RP_CACHE_CONTROL) && !IsEmptyString(m_szCacheControl))
 	{
 		m_buffHead += SZ_HH_CACHE_CONTROL;
 		m_buffHead += m_szCacheControl;
 		m_buffHead += "\r\n";
 	}
 
-	if (m_dwAvailProp & RP_COOKIE)
+	if (IsFlagSet(m_dwAvailProp, RP_COOKIE) && m_strCookie.size() > 0)
 	{
 		m_buffHead += "Cookie: ";
 		m_buffHead += m_strCookie.c_str();
 		m_buffHead += "\r\n";
 	}
 
-	if ((m_dwAvailProp & RP_PROXY_AUTHORIZATION) && m_bUseProxy && !m_strBase64ProxyUserPass.empty())
+	if (IsFlagSet(m_dwAvailProp, RP_PROXY_AUTHORIZATION) && m_bUseProxy && !m_strBase64ProxyUserPass.empty())
 	{
-// 		m_buffHead += "Authorization: Basic ";
-// 		m_buffHead += m_strBase64ProxyUserPass.c_str();
-// 		m_buffHead += "\r\n";
 		m_buffHead += "Proxy-Authorization: Basic ";
 		m_buffHead += m_strBase64ProxyUserPass.c_str();
 		m_buffHead += "\r\n";
@@ -398,7 +400,7 @@ int CHttpRequestProtocol::WriteHead()
 
 	m_buffHead += SZ_RETURNA;
 
-	// DBGLOGDUMPS(m_buffHead.c_str(), m_buffHead.size());
+	DBGLOGDUMPS(m_buffHead.c_str(), m_buffHead.size());
 
 	return m_pNetFile->Write(m_buffHead.data(), m_buffHead.size(), NULL);
 }

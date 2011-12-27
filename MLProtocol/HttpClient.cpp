@@ -43,7 +43,7 @@ int CHttpClient::Init(LPCTSTR szUrl, LPCTSTR szReferUrl)
 	TStringToAnsi(path.c_str(), path.size(), strAnsi);
 	m_httpRequest.SetUrl(strAnsi.c_str());
 
-	m_httpRequest.SetAvailProp(CHttpRequestProtocol::RP_BASE_GET | CHttpRequestProtocol::RP_PRAGMA | CHttpRequestProtocol::RP_CONNECTION | CHttpRequestProtocol::RP_CACHE_CONTROL);
+	m_httpRequest.SetAvailProp(CHttpRequestProtocol::RP_BASE_GET);
  	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_HOST, m_strHost.c_str());
  	m_httpRequest.SetPropValue(CHttpRequestProtocol::RP_ACCEPT, "*/*");
 	if (szReferUrl)
@@ -140,7 +140,10 @@ int CHttpClient::GetRespond(int &nRetCode, CCharBuffer &buffRet)
 
 	nRet = m_httpReturn.ReadData(&buffRet, 1024 * 1000);
 	if (nRet == ERR_OK)
+	{
 		nRetCode = m_httpReturn.GetResultCode();
+		nRet = CHttpReturnProtocol::ResultCodeToErrorCode(nRetCode);
+	}
 
 	return nRet;
 }

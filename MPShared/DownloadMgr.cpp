@@ -592,24 +592,9 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
+			if (nHttpCode != 0)
+				break;
 			continue;
-		}
-
-		if (IsQuiting())
-			break;
-
-		if (nHttpCode != 200 && pTask->taskType == DTT_LYRICS)
-		{
-			tstringex	strBuff;
-
-			ConvertStr(buffRet.c_str(), buffRet.size(), strBuff);
-			FilterAllHTMLTags(strBuff.data());
-			strBuff.resize(_tcslen(strBuff.c_str()));
-
-			CStrPrintf	str(_T("Url: %s\r\nHttp %d error!\r\n%s"), pTask->m_strURL.c_str(), nHttpCode, strBuff.c_str());
-			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
-			ERRLOG1(_T("%s"), str.c_str());
-			break;
 		}
 
 		httpClient.Close();

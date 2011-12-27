@@ -3,7 +3,8 @@
 #include "AppAnalyticsClient.h"
 
 #define SZ_APP_ANALYTICS_DATA_VER	_T("AAV1")
-#define SZ_APP_ANALYTICS_SERVER		_T("http://search.crintsoft.com/analytics/v1/put/")
+// #define SZ_APP_ANALYTICS_SERVER		_T("http://search.crintsoft.com/analytics/v1/put/")
+#define SZ_APP_ANALYTICS_SERVER		_T("http://127.0.0.1/analytics/v1/put/")
 
 #define SZ_NAME_PING_TYPE	_T("PT")
 #define SZ_NAME_PRODUCT_ID	_T("PID")
