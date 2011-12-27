@@ -856,7 +856,7 @@ int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 
 	httpProtocol->SetCacheData(pMsgBuff->data(), pMsgBuff->size());
 	httpProtocol->SetNetFile(m_pNetFile);
-	nRet = httpProtocol->ReadHead(TRUE);
+	nRet = httpProtocol->ReadHead();
 	if (nRet != ERR_OK)
 		return nRet;
 

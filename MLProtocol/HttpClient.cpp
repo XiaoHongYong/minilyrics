@@ -134,7 +134,7 @@ int CHttpClient::GetRespond(int &nRetCode, CCharBuffer &buffRet)
 
 	// HTTP ÏûÏ¢
 	m_httpReturn.SetNetFile(&m_NetFile);
-	nRet = m_httpReturn.ReadHead(TRUE);
+	nRet = m_httpReturn.ReadHead();
 	if (nRet != ERR_OK)
 		return nRet;
 

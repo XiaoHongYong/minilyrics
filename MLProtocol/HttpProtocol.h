@@ -32,10 +32,8 @@ public:
 #endif
 
 public:
-	virtual int ReadHead(BOOL bParseHead = TRUE);
+	virtual int ReadHead();
 	virtual int WriteHead() = 0;
-
-	virtual int ParseHead() = 0;
 
 	virtual int ReadData(CCharBuffer *pBuff, int nLenMax) = 0;
 	virtual int WriteData(LPVOID pData, int nLen) = 0;
@@ -47,6 +45,9 @@ public:
 
 	void SetCacheData(LPVOID lpData, int nLen);
 
+protected:
+	virtual int ParseHead() = 0;
+
 //
 //protected:
 //	virtual int GetPropValue(const char * szName, string &strValue);
@@ -55,7 +56,7 @@ public:
 protected:
 	BOOL			m_bHeadParsed;
 	HTTP_VER		m_httpVer;
-	CCharBuffer			m_buffHead;
+	CCharBuffer		m_buffHead;
 	CNetFile		*m_pNetFile;
 	int				m_nHeadEndPos;
 	DWORD			m_dwContentLen;
@@ -122,7 +123,6 @@ public:
 	BOOL IsUseProxy() { return m_bUseProxy; }
 	// const char * GetProxyServer() { return m_strProxyServer.c_str(); }
 
-	// virtual int ReadHead(BOOL bParseHead = TRUE);
 	virtual int WriteHead();
 
 	virtual int ReadData(CCharBuffer *pBuff, int nLenMax);
@@ -228,7 +228,6 @@ public:
 	CHttpReturnProtocol();
 	virtual ~CHttpReturnProtocol();
 
-	// virtual int ReadHead(BOOL bParseHead = TRUE);
 	virtual int WriteHead();
 
 	virtual int ReadData(CCharBuffer *pBuff, int nLenMax);

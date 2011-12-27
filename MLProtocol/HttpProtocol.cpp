@@ -109,7 +109,7 @@ BOOL CHttpProtocol::HttpTimeStrToSysTime(LPCSTR szHttpTime, SYSTEMTIME &sysTime)
 }
 #endif
 
-int CHttpProtocol::ReadHead(BOOL bParseHead)
+int CHttpProtocol::ReadHead()
 {
 	int			nLastPos = 0;
 	int			i = 0;
@@ -136,9 +136,7 @@ int CHttpProtocol::ReadHead(BOOL bParseHead)
 		{
 			m_nHeadEndPos = int(szData + nHttpHeadEndTagLen - m_buffHead.data());
 
-			if (bParseHead)
-				return ParseHead();
-			return ERR_OK;
+			return ParseHead();
 		}
 		nLastPos = m_buffHead.size();
 
@@ -230,49 +228,6 @@ void CHttpRequestProtocol::SetProxyBase64Pass(BOOL bEnableProxy, const char * sz
 		}
 	}
 }
-
-//
-//int CHttpRequestProtocol::ReadHead(BOOL bParseHead)
-//{
-//	int			nBufferLen = 1024;
-//	int			nRead = 0;
-//	int			nTotalRead = 0;
-//	int			nRet;
-//	char		*szBegRead;
-//
-//	while (1)
-//	{
-//		szBegRead = m_buffHead.AllocMemory(nBufferLen) + nRead;
-//		nRet = m_pNetFile->Read(szBegRead, nBufferLen - nRead, &nRead);
-//		if (nRet == ERR_OK)
-//		{
-//			m_buffHead.SetLength(m_buffHead.size() + nRead);
-//			szBegRead[nRead] = '\0';
-//			if (szBegRead - 4 <= m_buffHead.GetBuffer())
-//				szBegRead = m_buffHead.GetBuffer();
-//			else
-//				szBegRead -= 4;
-//			szBegRead = strstr(szBegRead, "\r\n\r\n");
-//			if (szBegRead)
-//			{
-//				m_nHeadEndPos = int(szBegRead + 4 - m_buffHead.GetBuffer());
-//
-//				if (bParseHead)
-//					return ParseHead();
-//				return ERR_OK;
-//			}
-//			else
-//			{
-//				// ¼ÌÐøread
-//				nBufferLen += 2048;
-//			}
-//		}
-//		else
-//			return nRet;
-//	}
-//
-//	return ERR_FALSE;
-//}
 
 int CHttpRequestProtocol::WriteHead()
 {
@@ -400,7 +355,7 @@ int CHttpRequestProtocol::WriteHead()
 
 	m_buffHead += SZ_RETURNA;
 
-	DBGLOGDUMPS(m_buffHead.c_str(), m_buffHead.size());
+	// DBGLOGDUMPS(m_buffHead.c_str(), m_buffHead.size());
 
 	return m_pNetFile->Write(m_buffHead.data(), m_buffHead.size(), NULL);
 }
@@ -597,6 +552,7 @@ int CHttpRequestProtocol::GetContentLength(long &nLength)
 
 void CHttpRequestProtocol::SetContentLength(long nLength)
 {
+	m_dwAvailProp |= RP_CONTENT_LENGTH;
 	m_dwContentLen = nLength;
 }
 

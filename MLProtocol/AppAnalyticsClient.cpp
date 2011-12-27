@@ -4,7 +4,7 @@
 
 #define SZ_APP_ANALYTICS_DATA_VER	_T("AAV1")
 // #define SZ_APP_ANALYTICS_SERVER		_T("http://search.crintsoft.com/analytics/v1/put/")
-#define SZ_APP_ANALYTICS_SERVER		_T("http://127.0.0.1/analytics/v1/put/")
+#define SZ_APP_ANALYTICS_SERVER		_T("http://192.168.1.102/analytics/v1/put/")
 
 #define SZ_NAME_PING_TYPE	_T("PT")
 #define SZ_NAME_PRODUCT_ID	_T("PID")
@@ -171,8 +171,10 @@ int CAppAnalyticsClient::Send(const CColonSeparatedValues &csvValues)
 		return nRet;
 	}
 
-	// Send new install ping
-	DBGLOG1(_T("Succeeded to submit AppAnalytics Data: %s"), csvValues.c_str());
+	if (strcmp(bufResponse.c_str(), "OK") != 0)
+		ERRLOG1(_T("AppAnalytics Response is NOT OK: %s"), bufResponse.c_str());
+	else
+		DBGLOG1(_T("Succeeded to submit AppAnalytics Data: %s"), csvValues.c_str());
 
 	return ERR_OK;
 }
@@ -193,8 +195,9 @@ void CAppAnalyticsClient::ThreadSend(void * lpParam)
 		int nRet = pSendParam->pAAClient->Send(pSendParam->weeklyPing);
 		if (nRet == ERR_OK)
 		{
+			pSendParam->pAAClient->m_lastWeeklyPingDate = GetCurrentDateOnly();
 			g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
-				GetCurrentDateOnly().ToUtcDateString().c_str());
+				pSendParam->pAAClient->m_lastWeeklyPingDate.ToUtcDateString().c_str());
 		}
 	}
 

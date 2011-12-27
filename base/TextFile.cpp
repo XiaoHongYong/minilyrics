@@ -89,7 +89,7 @@ void CTextFile::Close()
 bool CTextFile::ReadLine(tstring &strText)
 {
 	LPCTSTR begin = m_fileData.c_str() + m_offset;
-	LPCTSTR end = begin + m_fileData.size();
+	LPCTSTR end = m_fileData.c_str() + m_fileData.size();
 	LPCTSTR p = begin;
 
 	strText.clear();
