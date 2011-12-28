@@ -8,6 +8,8 @@ public:
 	CZPAnalyticsClient();
 	~CZPAnalyticsClient();
 
+	void IncreaseCmdClickCount(int nUID, CmdAccessMethod cam);
+
 protected:
 	virtual tstring GetAnalyticsFile();
 

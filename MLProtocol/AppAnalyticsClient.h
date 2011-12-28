@@ -8,13 +8,25 @@ public:
 	CAppAnalyticsClient(LPCTSTR szProductId, LPCTSTR szProductVer);
 	virtual ~CAppAnalyticsClient();
 
+	enum CmdAccessMethod
+	{
+		CAM_MENU,
+		CAM_POP_MENU,
+		CAM_BUTTON,
+	};
+
 	void Init();
+	void Quit();
 
-	void WriteValue(LPCTSTR szName, LPCTSTR szValue);
-	void WriteValue(LPCTSTR szName, int nValue);
+	void IncreaseValue(LPCTSTR szType, LPCTSTR szName, int nValue);
 
-	tstring GetValue(LPCTSTR szName, LPCTSTR szDefValue = _T(""));
-	int GetValueInt(LPCTSTR szName, int szValueDef = 0);
+	void WriteValue(LPCTSTR szType, LPCTSTR szName, LPCTSTR szValue);
+	void WriteValue(LPCTSTR szType, LPCTSTR szName, int nValue);
+
+	tstring GetValue(LPCTSTR szType, LPCTSTR szName, LPCTSTR szDefValue = _T(""));
+	int GetValueInt(LPCTSTR szType, LPCTSTR szName, int nDefValue = 0);
+
+	void IncreaseCmdClickCount(LPCTSTR szCmd, CmdAccessMethod cam);
 
 	void CheckSendTask();
 
@@ -28,7 +40,11 @@ protected:
 
 	virtual bool GetProxy(tstring &strServer, int &port, tstring &base64UserPass) { return false; }
 
+	MapString *GetPing(LPCTSTR szType);
+
 	void SavePingStatus();
+
+	void OnSavePingStatusCheck();
 
 	int Send(const CColonSeparatedValues &csvValues);
 
@@ -41,7 +57,11 @@ protected:
 	};
 
 protected:
-	CBaseDate				m_lastSendDate, m_lastWeeklyPingDate;
+	typedef map<tstring, MapString *> MapPing;
+
+	MapPing					m_mapPing;
+
+	CBaseDate				m_lastSendDate, m_lastWeeklyPingDate, m_lastSaveTime;
 	MapString				m_weeklyPing;
 
 	CThread					m_threadSend;

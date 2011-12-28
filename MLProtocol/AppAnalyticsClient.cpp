@@ -51,6 +51,8 @@ void CAppAnalyticsClient::Init()
 		g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), m_lastWeeklyPingDate.ToUtcDateString().c_str());
 	}
 
+	m_lastSaveTime = CBaseDate.GetCurrentDate();
+
 	CTextFile file;
 	int nRet = file.Open(GetAnalyticsFile().c_str(), CTextFile::OM_READ, ED_UTF8);
 	if (nRet == ERR_OK)
@@ -68,6 +70,80 @@ void CAppAnalyticsClient::Init()
 			}
 		}
 	}
+}
+
+void CAppAnalyticsClient::Quit()
+{
+
+}
+
+void CAppAnalyticsClient::IncreaseValue(LPCTSTR szType, LPCTSTR szName, int nValue)
+{
+	MapString *ping = GetPing(szType);
+
+	MapString::iterator it = ping->find(szName);
+	if (it == ping->end())
+		*ping[szName] = StringFromInt(nValue);
+	else
+		(*it).second = StringFromInt(nValue + StringToInt((*it).second.c_str()));
+}
+
+void CAppAnalyticsClient::WriteValue(LPCTSTR szType, LPCTSTR szName, LPCTSTR szValue)
+{
+	MapString *ping = GetPing(szType);
+	*ping[szName] = szValue;
+}
+
+void CAppAnalyticsClient::WriteValue(LPCTSTR szType, LPCTSTR szName, int nValue)
+{
+	MapString *ping = GetPing(szType);
+	*ping[szName] = StringFromInt(nValue);
+}
+
+tstring CAppAnalyticsClient::GetValue(LPCTSTR szType, LPCTSTR szName, LPCTSTR szDefValue)
+{
+	MapPing::iterator it = m_mapPing.find(szType);
+	if (it == m_mapPing.end())
+		return;
+
+	MapString *ping = *it;
+	MapString::iterator itValue = ping->find(szName);
+	if (it == ping->end())
+		return szDefValue;
+	else
+		return (*it).second;
+}
+
+int CAppAnalyticsClient::GetValueInt(LPCTSTR szType, LPCTSTR szName, int nDefValue)
+{
+	MapPing::iterator it = m_mapPing.find(szType);
+	if (it == m_mapPing.end())
+		return;
+
+	MapString *ping = *it;
+	MapString::iterator itValue = ping->find(szName);
+	if (it == ping->end())
+		return nDefValue;
+	else
+		return StringToInt((*it).second.c_str());
+}
+
+void CAppAnalyticsClient::IncreaseCmdClickCount(LPCTSTR szCmd, CmdAccessMethod cam)
+{
+
+}
+
+MapString *CAppAnalyticsClient::GetPing(LPCTSTR szType)
+{
+	MapPing::iterator it = m_mapPing.find(szType);
+	if (it == m_mapPing.end())
+	{
+		MapString *ping = new MapPing();
+		m_mapPing[szType] = ping;
+		return ping;
+	}
+
+	return (*it).second;
 }
 
 void CAppAnalyticsClient::SavePingStatus()
