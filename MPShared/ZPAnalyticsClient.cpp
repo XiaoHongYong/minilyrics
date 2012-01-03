@@ -2,12 +2,88 @@
 #include "ZPAnalyticsClient.h"
 #include "MPlayerAppBase.h"
 #include "MLVersionStr.h"
+#include "LyricShowObj.h"
 
 #ifdef _MPLAYER
 #define SZ_APP_ANALYTICS_PRODUCT_ID		_T("ZP")
 #else
 #define SZ_APP_ANALYTICS_PRODUCT_ID		_T("ML")
+
+#include "win32/PlayerPluginInstaller.h"
 #endif
+
+// Ping type for MiniLyrics
+#define SZ_UD_SETTINGS_NORMAL_MODE		_T("ST_N")
+#define SZ_UD_SETTINGS_FLOATING_LYR		_T("ST_F")
+
+// General Setting properties
+#define SZ_N_ST_CUR_SKIN				_T("SK")		// Current skin
+#define SZ_N_ST_INSTALLED_PLAYERS		_T("IP")
+#define SZ_N_ST_ALL_PLAYERS				_T("AP")
+#define SZ_N_ST_BG_IMAGE				_T("BGI")
+#define SZ_N_ST_USE_ALBUM_ARG_BG		_T("UABG")
+#define SZ_N_ST_DARK_LYR_BG				_T("DLBG")
+#define SZ_N_ST_SLIDE_DELAY_DURATION	_T("DLBG")
+
+// Normal mode or Floating lyrics mode setting properties
+#define SZ_N_ST_FONT_NAME				_T("FN")
+#define SZ_N_ST_FONT_NAME_OTHERS		_T("FNO")
+#define SZ_N_ST_FONT_SIZE				_T("FS")
+#define SZ_N_ST_FONT_BOLD				_T("FB")
+#define SZ_N_ST_FONT_ITALIC				_T("FI")
+#define SZ_N_ST_LYR_DISPLAY_OPT			_T("LDO")
+#define SZ_N_ST_LYR_DISPLAY_STYLE		_T("LDS")
+#define SZ_N_ST_KARAOKE					_T("KOK")
+#define SZ_N_ST_LYRICS_ALIGN			_T("LA")
+#define SZ_N_ST_BG_COLOR				_T("BC")
+#define SZ_N_ST_FG_COLOR				_T("FC")
+#define SZ_N_ST_OVERLAY_BLENDING_MODE	_T("OBM")
+#define SZ_N_ST_OUTLINE_LYR				_T("OL")
+#define SZ_N_ST_				_T("")
+
+tstring LicenseStatusToString(LicenseStatus ls)
+{
+	switch (ls)
+	{
+	case LS_ACTIVE: return _T("Active");
+	case LS_TRIAL: return _T("Trail");
+	case LS_EXPIRED: return _T("Expired");
+	case LS_REVOKED: return _T("Revoked");
+	case LS_TRANSFERED: return _T("Transfered");
+	default: return StringFromInt(ls);
+	}
+}
+
+#ifndef _MPLAYER
+void GetPlayersStatus(tstring &installedPlayers, tstring &allPlayers)
+{
+	CPlayerPluginInstaller	installer;
+	installer.Init();
+
+	// Show only installed players.
+	for (int i = 0; ; i++)
+	{
+		CPlayerPluginInstaller::Player *p = installer.GetPlayerByIndex(i);
+		if (!p)
+			break;
+
+		if (p->dwInstallFlags != 0 && p->IsInstalled())
+		{
+			if (installedPlayers.size() > 0)
+				installedPlayers += '#';
+			installedPlayers += p->szPlayerName;
+			if (p->IsPluginInstalled())
+			{
+				if (allPlayers.size() > 0)
+					allPlayers += '#';
+				allPlayers += p->szPlayerName;
+			}
+		}
+	}
+}
+#endif // #ifndef _MPLAYER
+
+//////////////////////////////////////////////////////////////////////////
 
 CZPAnalyticsClient::CZPAnalyticsClient() :
 	CAppAnalyticsClient(SZ_APP_ANALYTICS_PRODUCT_ID, _T(ML_VERSION_STR))
@@ -16,6 +92,20 @@ CZPAnalyticsClient::CZPAnalyticsClient() :
 
 CZPAnalyticsClient::~CZPAnalyticsClient()
 {
+}
+
+void CZPAnalyticsClient::IncreaseCmdClickCount(int nUID, CmdAccessMethod cam)
+{
+	CAppAnalyticsClient::IncreaseCmdClickCount(
+		CMPlayerApp::GetMPSkinFactory()->GetStringOfID(nUID).c_str(),
+		cam);
+}
+
+void CZPAnalyticsClient::IncreaseNumberOfResult(LPCTSTR szType, int nResult)
+{
+	CStrPrintf name(_T("%s#%d"), SZ_N_NUMBER_OF_RESULT, nResult);
+
+	IncreaseValue(szType, name.c_str(), 1);
 }
 
 tstring CZPAnalyticsClient::GetAnalyticsFile()
@@ -40,10 +130,71 @@ bool CZPAnalyticsClient::GetProxy(tstring &strServer, int &port, tstring &base64
 	return false;
 }
 
-void CZPAnalyticsClient::PrepareInstallPing(MapString &pingData)
+void CZPAnalyticsClient::PrepareProductInfo(MapString &ping, bool bInstallPing, bool bWeeklyPing)
 {
+	CAppAnalyticsClient::PrepareProductInfo(ping, bInstallPing, bWeeklyPing);
+
+	CLicenseManager::LicenseInfo li;
+	g_licenseManager.GetLicenseInfo(li);
+
+	ping[SZ_N_PI_DEVICE_ID] = li.strDeviceID;
 }
 
-void CZPAnalyticsClient::PrepareWeeklyPing(MapString &pingData)
+void CZPAnalyticsClient::PrepareLicenseStatusData(MapString &ping)
 {
+	CLicenseManager::LicenseInfo li;
+	g_licenseManager.GetLicenseInfo(li);
+
+	ping[SZ_N_LS_LICENSE_STATUS] = LicenseStatusToString(li.licenseStatus);
+	if (li.licenseStatus == LS_TRIAL)
+		return;
+
+	if (li.strCode.size() > 0)
+		ping[SZ_N_LS_CODE] = li.strCode;
+	ping[SZ_N_LS_NAME] = li.strName;
+	ping[SZ_N_LS_START_DATE] = li.strStartDate;
+	ping[SZ_N_LS_DURATION_DAYS] = StringFromInt(li.nDurationDays);
+	ping[SZ_N_LS_LICENSED_USERS] = StringFromInt(li.nLicensedUser);
+	ping[SZ_N_LS_ONLINE_VERIFIED] = StringFromInt(li.bOnlineVerified);
+}
+
+void CZPAnalyticsClient::PrepareSettingsData(MapString &ping)
+{
+#ifndef _MPLAYER
+	tstring installedPlayers, allPlayers;
+	GetPlayersStatus(installedPlayers, allPlayers);
+	ping[SZ_N_ST_INSTALLED_PLAYERS] = installedPlayers;
+	ping[SZ_N_ST_ALL_PLAYERS] = allPlayers;
+#endif // #ifndef _MPLAYER
+
+	ping[SZ_N_ST_CUR_SKIN] = CMPlayerApp::GetInstance()->GetDefaultSkin();
+	ping[SZ_N_ST_BG_IMAGE] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), _T(""));
+	ping[SZ_N_ST_USE_ALBUM_ARG_BG] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), _T(""));
+	ping[SZ_N_ST_DARK_LYR_BG] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("DarkenLyrBg"), _T(""));
+	ping[SZ_N_ST_SLIDE_DELAY_DURATION] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), _T(""));
+}
+
+void CZPAnalyticsClient::PrepareOtherUsageData()
+{
+	PrepareModeRelatedSettingsData(SZ_SECT_UI, GetUsageData(SZ_UD_SETTINGS_NORMAL_MODE));
+	PrepareModeRelatedSettingsData(SZ_SECT_FLOATING_LYR, GetUsageData(SZ_UD_SETTINGS_FLOATING_LYR));
+}
+
+void CZPAnalyticsClient::PrepareModeRelatedSettingsData(LPCTSTR szSection, MapString &ping)
+{
+	// Font related
+	int nHeight, nWeight;
+	BYTE byItalic;
+	tstring strFaceNameLatin9, strFaceNameOthers;
+	ProfileGetLyricsFont(szSection, nHeight, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
+	ping[SZ_N_ST_FONT_NAME] = strFaceNameLatin9;
+	ping[SZ_N_ST_FONT_NAME_OTHERS] = strFaceNameOthers;
+	ping[SZ_N_ST_FONT_BOLD] = StringFromInt(nWeight);
+	ping[SZ_N_ST_FONT_ITALIC] = StringFromInt(byItalic);
+	ping[SZ_N_ST_LYR_DISPLAY_OPT] = g_Profile.GetProfileString(szSection, _T("LyrDrawOpt"), _T(""));
+	ping[SZ_N_ST_KARAOKE] = g_Profile.GetProfileString(szSection, _T("Karaoke"), _T(""));
+	ping[SZ_N_ST_LYRICS_ALIGN] = g_Profile.GetProfileString(szSection, _T("VertAlign"), _T(""));
+	ping[SZ_N_ST_BG_COLOR] = g_Profile.GetProfileString(szSection, _T("BgColor"), _T(""));
+	ping[SZ_N_ST_LYR_DISPLAY_STYLE] = g_Profile.GetProfileString(szSection, _T("LyrDisplayStyle"), _T(""));
+	ping[SZ_N_ST_OUTLINE_LYR] = g_Profile.GetProfileString(szSection, _T("OutlineLyrText"), _T(""));
 }

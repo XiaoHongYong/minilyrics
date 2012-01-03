@@ -36,31 +36,25 @@ int CVersionInfo::FromXML(SXNode *pNodeVer)
 	if (_tcscmp(pNodeVer->strName.c_str(), SOFTWARE_INFO) != 0)
 		return ERR_FALSE;
 
-	SXNode		*pNode;
+	SXNode *pNode = pNodeVer->GetChild(_T("AA"));
+	CAppAnalyticsClient::Rule rule;
+	rule.SaveFromXml(pNode);
 
-	//
 	// curversion
-	//
 	pNode = pNodeVer->GetChild(_T("curversion"));
 	if (!pNode)
 		return ERR_FALSE;
 
-	LPCTSTR		szTemp;
-
-	//
 	// new version
-	szTemp = pNode->GetPropertySafe(_T("version"));
+	LPCTSTR szTemp = pNode->GetPropertySafe(_T("version"));
 	verNew = VersionNumFrom(szTemp);
 	if (verNew == 0)
 		return ERR_FALSE;
 
 	strNewVerDate = pNode->GetPropertySafe(_T("upgradedate"));
 
-	//
 	// new feature
-	SXNode		*pFeatureNode;
-	pFeatureNode = pNode->GetChild(_T("feature"));
-	assert(pFeatureNode);
+	SXNode *pFeatureNode = pNode->GetChild(_T("feature"));
 	if (pFeatureNode)
 		strFeature = pFeatureNode->strContent.c_str();
 

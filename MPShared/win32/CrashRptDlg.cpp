@@ -17,6 +17,8 @@ bool CMiniDumperNotify::OnBeginDump(HMODULE hCrashMod, TCHAR szDumpFileToSave[],
 	GetAppDataDir(szDumpFileToSave);
 	_tcscat_safe(szDumpFileToSave, nLen, SZ_APP_NAME _T("_crash.dmp"));
 
+	CMPlayerApp::GetAppAnalytics().IncreaseCrashTimes();
+
 	return true;
 }
 

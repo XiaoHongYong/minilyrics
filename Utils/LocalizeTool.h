@@ -1,5 +1,7 @@
 #pragma once
 
+bool GetUserDefaultLang(tstring &strLang, tstring &strLangFull);
+
 class CLanguageFile
 {
 public:

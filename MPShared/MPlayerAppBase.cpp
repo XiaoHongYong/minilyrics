@@ -515,6 +515,8 @@ bool CMPlayerAppBase::InitLoadSkin()
 
 void CMPlayerAppBase::Quit()
 {
+	m_appAnalytics.Quit();
+
 	g_LyricSearch.Quit();
 	g_LyricsDownloader.Quit();
 

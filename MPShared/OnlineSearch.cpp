@@ -569,7 +569,10 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 
 	nRet = session.Connect();
 	if (nRet != ERR_OK)
+	{
+		CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_DOWNLOAD_LYRICS_DATA, nRet);
 		return nRet;
+	}
 
 	MLMsgRetSearch	retSearch;
 
@@ -581,6 +584,8 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 
 	nCurPage = retSearch.nCurPage;
 	nPageCount = retSearch.nPageCount;
+
+	CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_DOWNLOAD_LYRICS_DATA, nRet);
 
 	if (retSearch.listResultFiles.size() > 0)
 	{

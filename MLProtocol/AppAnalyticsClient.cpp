@@ -4,17 +4,12 @@
 
 #define SZ_APP_ANALYTICS_DATA_VER	_T("AAV1")
 // #define SZ_APP_ANALYTICS_SERVER		_T("http://search.crintsoft.com/analytics/v1/put/")
-#define SZ_APP_ANALYTICS_SERVER		_T("http://192.168.1.102/analytics/v1/put/")
+#define SZ_APP_ANALYTICS_SERVER		_T("http://192.168.1.107/analytics/v1/put/")
 
-#define SZ_NAME_PING_TYPE	_T("PT")
-#define SZ_NAME_PRODUCT_ID	_T("PID")
-#define SZ_NAME_PRODUCT_VER	_T("PV")
-
-#define SZ_VALUE_PT_INSTALL	_T("is")
-#define SZ_VALUE_PT_WEEKLY	_T("wk")
 
 void MapStringToColonSeparatedValues(const MapString &mapNameValues, CColonSeparatedValues &csvValues)
 {
+	csvValues.clear();
 	for (MapString::const_iterator it = mapNameValues.begin(); it != mapNameValues.end(); ++it)
 	{
 		csvValues.AddNameValue((*it).first.c_str(), (*it).second.c_str());
@@ -29,12 +24,44 @@ CBaseDate GetCurrentDateOnly()
 }
 
 //////////////////////////////////////////////////////////////////////////
+bool CAppAnalyticsClient::Rule::SaveFromXml(SXNode *pNode)
+{
+	SXNode *pNodeBaseRule = pNode->GetChild(_T("BaseRule"));
+	if (!pNodeBaseRule)
+		return false;
+
+	LPCTSTR vNames[] = { _T("VerSeparator"), _T("NewVerEnabledAA"), _T("NewVerDisabledAA"), _T("OldVerEnabledAA"), _T("OldVerDisabledAA") };
+
+	for (int i = 0; i < CountOf(vNames); i++)
+		g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, vNames[i], 
+		pNodeBaseRule->GetPropertySafe(vNames[i]));
+
+	return true;
+}
+
+void AAProfileGetStringSet(LPCTSTR szValueName, LPCTSTR szDefault, SetTStrNCase &setStrings)
+{
+	StrSplit(g_Profile.GetProfileString(SZ_SECT_APP_ANALYTICS, szValueName, _T("")), '|', setStrings);
+}
+
+void CAppAnalyticsClient::Rule::LoadFromProfile()
+{
+	verSeparator = VersionNumFrom(g_Profile.GetProfileString(SZ_SECT_APP_ANALYTICS, _T("SplitVer"), _T("")));
+	AAProfileGetStringSet(_T("NewVerEnabledAA"), _T("*"), newVerEnabledAA);
+	AAProfileGetStringSet(_T("NewVerDisabledAA"), _T(""), newVerDisabledAA);
+	AAProfileGetStringSet(_T("OldVerEnabledAA"), _T("PI|BU|LS|CU"), oldVerEnabledAA);
+	AAProfileGetStringSet(_T("OldVerDisabledAA"), _T(""), oldVerDisabledAA);
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 CAppAnalyticsClient::CAppAnalyticsClient(LPCTSTR szProductId, LPCTSTR szProductVer)
 {
 	m_szProductId = szProductId;
 	m_szProductVer = szProductVer;
 	m_lastWeeklyPingDate = m_lastSendDate = GetCurrentDateOnly();
+	m_lastSaveTime = 0;
+	m_bUsageDataModified = false;
 }
 
 CAppAnalyticsClient::~CAppAnalyticsClient()
@@ -43,6 +70,8 @@ CAppAnalyticsClient::~CAppAnalyticsClient()
 
 void CAppAnalyticsClient::Init()
 {
+	m_nAppStartTime = GetTickCount();
+
 	m_lastSendDate.FromString(g_Profile.GetProfileString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), _T("1977:12:12")));
 
 	if (!m_lastWeeklyPingDate.FromString(g_Profile.GetProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), _T(""))))
@@ -51,7 +80,8 @@ void CAppAnalyticsClient::Init()
 		g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), m_lastWeeklyPingDate.ToUtcDateString().c_str());
 	}
 
-	m_lastSaveTime = CBaseDate.GetCurrentDate();
+	m_lastSaveTime = GetTickCount();
+	m_bUsageDataModified = false;
 
 	CTextFile file;
 	int nRet = file.Open(GetAnalyticsFile().c_str(), CTextFile::OM_READ, ED_UTF8);
@@ -66,88 +96,141 @@ void CAppAnalyticsClient::Init()
 			if (file.ReadLine(line))
 			{
 				CColonSeparatedValues csv;
-				csv.Split(line.c_str(), m_weeklyPing, '=');
+				MapString *usageData = new MapString();
+				csv.Split(line.c_str(), *usageData, '=');
+				MapString::iterator it = usageData->find(SZ_N_USAGE_DATA_TYPE);
+				if (it == usageData->end())
+					delete usageData;
+				else
+					m_mapUsageData[(*it).second] = usageData;
 			}
 		}
 	}
+	else
+		InitUDC();
 }
 
 void CAppAnalyticsClient::Quit()
 {
+	CMutexAutolock lock(m_mutex);
 
+	MapString &pingBasicUsage = GetUsageData(SZ_UD_BASIC_USAGE);
+
+	uint32 nAppRunningTimeSec = (GetTickCount() - m_nAppStartTime) / 1000;
+	if (nAppRunningTimeSec < 2 * 60)
+		IncreaseValue(pingBasicUsage, SZ_N_BU_CLOSED_TIMES, 1);
+	else
+	{
+		IncreaseValue(pingBasicUsage, SZ_N_BU_RUN_TIMES, 1);
+		IncreaseValue(pingBasicUsage, SZ_N_BU_RUN_DURATION, nAppRunningTimeSec);
+	}
+
+	Free();
+
+	SaveUDCStatus();
 }
 
 void CAppAnalyticsClient::IncreaseValue(LPCTSTR szType, LPCTSTR szName, int nValue)
 {
-	MapString *ping = GetPing(szType);
+	m_bUsageDataModified = true;
 
-	MapString::iterator it = ping->find(szName);
-	if (it == ping->end())
-		*ping[szName] = StringFromInt(nValue);
-	else
-		(*it).second = StringFromInt(nValue + StringToInt((*it).second.c_str()));
+	CMutexAutolock lock(m_mutex);
+	MapString &usageData = GetUsageData(szType);
+
+	IncreaseValue(usageData, szName, nValue);
 }
 
 void CAppAnalyticsClient::WriteValue(LPCTSTR szType, LPCTSTR szName, LPCTSTR szValue)
 {
-	MapString *ping = GetPing(szType);
-	*ping[szName] = szValue;
+	m_bUsageDataModified = true;
+
+	CMutexAutolock lock(m_mutex);
+	MapString &usageData = GetUsageData(szType);
+	usageData[szName] = szValue;
 }
 
 void CAppAnalyticsClient::WriteValue(LPCTSTR szType, LPCTSTR szName, int nValue)
 {
-	MapString *ping = GetPing(szType);
-	*ping[szName] = StringFromInt(nValue);
+	m_bUsageDataModified = true;
+
+	CMutexAutolock lock(m_mutex);
+	MapString &usageData = GetUsageData(szType);
+	usageData[szName] = StringFromInt(nValue);
 }
 
 tstring CAppAnalyticsClient::GetValue(LPCTSTR szType, LPCTSTR szName, LPCTSTR szDefValue)
 {
-	MapPing::iterator it = m_mapPing.find(szType);
-	if (it == m_mapPing.end())
-		return;
+	CMutexAutolock lock(m_mutex);
+	MapUsageData::iterator it = m_mapUsageData.find(szType);
+	if (it == m_mapUsageData.end())
+		return szDefValue;
 
-	MapString *ping = *it;
-	MapString::iterator itValue = ping->find(szName);
-	if (it == ping->end())
+	MapString *usageData = (*it).second;
+	MapString::iterator itValue = usageData->find(szName);
+	if (itValue == usageData->end())
 		return szDefValue;
 	else
-		return (*it).second;
+		return (*itValue).second;
 }
 
 int CAppAnalyticsClient::GetValueInt(LPCTSTR szType, LPCTSTR szName, int nDefValue)
 {
-	MapPing::iterator it = m_mapPing.find(szType);
-	if (it == m_mapPing.end())
-		return;
+	CMutexAutolock lock(m_mutex);
+	MapUsageData::iterator it = m_mapUsageData.find(szType);
+	if (it == m_mapUsageData.end())
+		return nDefValue;
 
-	MapString *ping = *it;
-	MapString::iterator itValue = ping->find(szName);
-	if (it == ping->end())
+	MapString *usageData = (*it).second;
+	MapString::iterator itValue = usageData->find(szName);
+	if (itValue == usageData->end())
 		return nDefValue;
 	else
-		return StringToInt((*it).second.c_str());
+		return StringToInt((*itValue).second.c_str());
 }
 
 void CAppAnalyticsClient::IncreaseCmdClickCount(LPCTSTR szCmd, CmdAccessMethod cam)
 {
+	CMutexAutolock lock(m_mutex);
+	CStrPrintf name(_T("%s#%c"), szCmd, (TCHAR)cam);
 
+	IncreaseValue(SZ_UD_CMD_USAGE, name.c_str(), 1);
 }
 
-MapString *CAppAnalyticsClient::GetPing(LPCTSTR szType)
+void CAppAnalyticsClient::IncreaseCrashTimes()
 {
-	MapPing::iterator it = m_mapPing.find(szType);
-	if (it == m_mapPing.end())
+	IncreaseValue(SZ_UD_BASIC_USAGE, SZ_N_BU_CRASH_TIMES, 1);
+
+	SaveUDCStatus();
+}
+
+MapString &CAppAnalyticsClient::GetUsageData(LPCTSTR szType)
+{
+	MapUsageData::iterator it = m_mapUsageData.find(szType);
+	if (it == m_mapUsageData.end())
 	{
-		MapString *ping = new MapPing();
-		m_mapPing[szType] = ping;
-		return ping;
+		MapString *usageData = new MapString();
+		m_mapUsageData[szType] = usageData;
+		(*usageData)[SZ_N_USAGE_DATA_TYPE] = szType;
+		return *usageData;
 	}
 
-	return (*it).second;
+	return *((*it).second);
 }
 
-void CAppAnalyticsClient::SavePingStatus()
+void CAppAnalyticsClient::IncreaseValue(MapString &usageData, LPCTSTR szName, int nValue)
 {
+	MapString::iterator it = usageData.find(szName);
+	if (it == usageData.end())
+		usageData[szName] = StringFromInt(nValue);
+	else
+		(*it).second = StringFromInt(nValue + StringToInt((*it).second.c_str()));
+}
+
+void CAppAnalyticsClient::SaveUDCStatus()
+{
+	m_lastSaveTime = GetTickCount();
+	m_bUsageDataModified = false;
+
 	CTextFile file;
 	int nRet = file.Open(GetAnalyticsFile().c_str(), CTextFile::OM_WRITE, ED_UTF8);
 	if (nRet == ERR_OK)
@@ -155,20 +238,91 @@ void CAppAnalyticsClient::SavePingStatus()
 		file.WriteLine(SZ_APP_ANALYTICS_DATA_VER);
 
 		CColonSeparatedValues csvValues;
-		MapStringToColonSeparatedValues(m_weeklyPing, csvValues);
-		file.WriteLine(csvValues.c_str());
+		tstring strUsageData;
+		GetAllUsageData(strUsageData);
+		file.WriteLine(strUsageData.c_str());
 	}
+	else
+		ERRLOG1(_T("Failed to save AA status."), Error2Str(nRet).c_str());
 }
 
-void CAppAnalyticsClient::PrepareBasePing(MapString &ping, LPCTSTR szPingType)
+void GetOSInfo(tstring &os, tstring &version, tstring &osLang)
 {
-	ping[SZ_NAME_PING_TYPE] = szPingType;
-	ping[SZ_NAME_PRODUCT_ID] = m_szProductId;
-	ping[SZ_NAME_PRODUCT_VER] = m_szProductVer;
+	OSVERSIONINFO osinfo;
+	memset(&osinfo, 0, sizeof(osinfo));
+
+	osinfo.dwOSVersionInfoSize = sizeof(osinfo);
+	if (!GetVersionEx(&osinfo))
+	{
+		os = _T("Unknown");
+		return;
+	}
+
+	os = _T("Win");
+	version = CStrPrintf(_T("%d.%d"), osinfo.dwMajorVersion, osinfo.dwMinorVersion).c_str();
+
+	SYSTEM_INFO si;
+	memset(&si, 0, sizeof(si));
+	GetSystemInfo(&si);
+	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
+		os += _T(" 64");
+
+	// Get OS language
+	tstring strLang;
+	GetUserDefaultLang(strLang, osLang);
+}
+
+void CAppAnalyticsClient::Free()
+{
+	for (MapUsageData::iterator it = m_mapUsageData.begin(); it != m_mapUsageData.end(); ++it)
+	{
+		MapString *usageData = (*it).second;
+		delete usageData;
+	}
+	m_mapUsageData.clear();
+}
+
+void CAppAnalyticsClient::InitUDC()
+{
+	Free();
+
+	MapString &usageData = GetUsageData(SZ_UD_BASIC_USAGE);
+	usageData[SZ_N_BU_START_TIME] = CBaseDate::GetCurrentDate().ToUtcDateTimeString();
+
+	SaveUDCStatus();
+}
+
+void CAppAnalyticsClient::PrepareProductInfo(MapString &usageData, bool bInstallPing, bool bWeeklyPing)
+{
+	if (bInstallPing)
+		usageData[SZ_N_PI_INSTALL] = SZ_1;
+	if (bWeeklyPing)
+		usageData[SZ_N_PI_WEEKLY] = SZ_1;
+
+	tstring os, osVer, osLang;
+	GetOSInfo(os, osVer, osLang);
+	usageData[SZ_N_PI_OS] = os;
+	usageData[SZ_N_PI_OS_VER] = osVer;
+	usageData[SZ_N_PI_OS_LANGUAGE] = osLang;
+
+	usageData[SZ_N_PI_PRODUCT_ID] = m_szProductId;
+	usageData[SZ_N_PI_PRODUCT_VER] = m_szProductVer;
+}
+
+void CAppAnalyticsClient::PrepareBasicUsageData(MapString &usageData)
+{
+	usageData[SZ_N_BU_END_TIME] = CBaseDate::GetCurrentDate().ToUtcDateTimeString();
 }
 
 void CAppAnalyticsClient::CheckSendTask()
 {
+	// Try to save Usage Data status
+	if (GetTickCount() - m_lastSaveTime >= 5 * 60 * 1000)
+	{
+		CMutexAutolock lock(m_mutex);
+		SaveUDCStatus();
+	}
+
 	// Try to send when one day past.
 	CBaseDate	dateNow = GetCurrentDateOnly();
 	if (abs(dateNow.GetTime() - m_lastSendDate.GetTime()) < CBaseDate::SECOND_IN_ONE_DAY)
@@ -180,36 +334,99 @@ void CAppAnalyticsClient::CheckSendTask()
 	SendParam *pSendParam = new SendParam;
 	pSendParam->pAAClient = this;
 
-	bool bNewInst = g_Profile.GetProfileBool(SZ_SECT_APP_ANALYTICS, _T("NIS"), true);
-	if (bNewInst)
-	{
-		// Prepare for install ping
-		MapString installPing;
-
-		PrepareBasePing(installPing, SZ_VALUE_PT_INSTALL);
-		PrepareInstallPing(installPing);
-
-		MapStringToColonSeparatedValues(installPing, pSendParam->installPing);
-	}
+	pSendParam->bInstallPing = g_Profile.GetProfileBool(SZ_SECT_APP_ANALYTICS, _T("NIS"), true);
+	pSendParam->bWeeklyPing = false;
 
 	if (abs(dateNow.GetTime() - m_lastWeeklyPingDate.GetTime()) >= CBaseDate::SECOND_IN_ONE_DAY * 7)
 	{
-		// More than 7 days, send weekly ping
-		PrepareBasePing(m_weeklyPing, SZ_VALUE_PT_WEEKLY);
-		PrepareWeeklyPing(m_weeklyPing);
-
-		MapStringToColonSeparatedValues(m_weeklyPing, pSendParam->weeklyPing);
+		// More than 7 days, send weekly usageData
+		pSendParam->bWeeklyPing = true;
 	}
 
-	if (pSendParam->installPing.size() > 0 || pSendParam->weeklyPing.size() > 0)
+	if (pSendParam->bInstallPing || pSendParam->bWeeklyPing)
+	{
+		CMutexAutolock lock(m_mutex);
+
+		// Prepare Usage Data
+		PrepareProductInfo(GetUsageData(SZ_UD_PRODUCT_INFO), pSendParam->bInstallPing, pSendParam->bWeeklyPing);
+		PrepareBasicUsageData(GetUsageData(SZ_UD_BASIC_USAGE));
+		PrepareLicenseStatusData(GetUsageData(SZ_UD_LICENSE_STATUS));
+		PrepareSettingsData(GetUsageData(SZ_UD_SETTINGS));
+		PrepareOtherUsageData();
+
+		tstring strUsageData;
+		GetAllUsageData(strUsageData, true);
+		TStringToUTF8(strUsageData.c_str(), strUsageData.size(), pSendParam->strUsageData);
 		m_threadSend.Create(ThreadSend, pSendParam);
+	}
 	else
 		delete pSendParam;
 
 	g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), dateNow.ToUtcDateString().c_str());
 }
 
-int CAppAnalyticsClient::Send(const CColonSeparatedValues &csvValues)
+void CAppAnalyticsClient::GetAllUsageData(tstring &strUsageData, bool bForSending)
+{
+	CColonSeparatedValues csv;
+	Rule rule;
+	rule.LoadFromProfile();
+	for (MapUsageData::iterator it = m_mapUsageData.begin(); it != m_mapUsageData.end(); ++it)
+	{
+		MapString *usageData = (*it).second;
+		if (!CanSendUsageDataType(*usageData, rule))
+			continue;
+
+		MapStringToColonSeparatedValues(*usageData, csv);
+		if (strUsageData.size() > 0)
+			strUsageData += '\n';
+		strUsageData += csv.c_str();
+	}
+}
+
+bool IsRuleMatch(SetTStrNCase &setEnabled, SetTStrNCase &setDisabled, LPCTSTR str)
+{
+	// Is Disabled?
+	if (setDisabled.find(_T("*")) != setDisabled.end())
+		return false;
+	if (setDisabled.find(str) != setDisabled.end())
+		return false;
+
+	// Is Enabled?
+	if (setEnabled.find(_T("*")) != setEnabled.end())
+		return true;
+	if (setEnabled.find(str) != setEnabled.end())
+		return true;
+	return false;
+}
+
+bool CAppAnalyticsClient::CanSendUsageDataType(MapString &usageData, Rule &rule)
+{
+	MapString::iterator it = usageData.find(SZ_N_USAGE_DATA_TYPE);
+	if (it == usageData.end())
+		return false;
+
+	LPCTSTR szType = (*it).second.c_str();
+
+	bool bCanSend = true;
+	VersionNumber verCur = VersionNumFrom(m_szProductVer);
+	if (verCur >= rule.verSeparator)
+	{
+		// New version
+		bCanSend = IsRuleMatch(rule.newVerEnabledAA, rule.newVerDisabledAA, szType);
+	}
+	else
+	{
+		// Old version
+		bCanSend = IsRuleMatch(rule.oldVerEnabledAA, rule.oldVerDisabledAA, szType);
+	}
+
+	if (!bCanSend)
+		DBGLOG1(_T("The Usage Data Type is disabled to send: %s."), szType);
+
+	return bCanSend;
+}
+
+int CAppAnalyticsClient::Send(const string &strUsageData)
 {
 	// Connect to server and send data
 	CHttpClient	httpClient;
@@ -229,9 +446,7 @@ int CAppAnalyticsClient::Send(const CColonSeparatedValues &csvValues)
 		return nRet;
 	}
 
-	string strUtf8Data;
-	TStringToUTF8(csvValues.c_str(), csvValues.size(), strUtf8Data);
-	nRet = httpClient.SendPostRequest(strUtf8Data.c_str(), strUtf8Data.size());
+	nRet = httpClient.SendPostRequest(strUsageData.c_str(), strUsageData.size());
 	if (nRet != ERR_OK)
 	{
 		DBGLOG1(_T("Failed to send AppAnalytics data: %s"), Error2Str(nRet).c_str());
@@ -247,10 +462,23 @@ int CAppAnalyticsClient::Send(const CColonSeparatedValues &csvValues)
 		return nRet;
 	}
 
-	if (strcmp(bufResponse.c_str(), "OK") != 0)
-		ERRLOG1(_T("AppAnalytics Response is NOT OK: %s"), bufResponse.c_str());
+	CColonSeparatedValues csv;
+	MapString mapRetValues;
+	tstring strResponse;
+	UTF8ToTString(bufResponse.c_str(), bufResponse.size(), strResponse);
+	csv.Split(strResponse.c_str(), mapRetValues);
+	MapString::iterator it = mapRetValues.find(_T("Result"));
+	if (it == mapRetValues.end()
+		|| _tcscmp((*it).second.c_str(), _T("OK")) != 0)
+		ERRLOG1(_T("AA Response is NOT OK: %s"), strResponse.c_str());
 	else
-		DBGLOG1(_T("Succeeded to submit AppAnalytics Data: %s"), csvValues.c_str());
+	{
+		// Succeeded, need to clear old status
+		DBGLOG0(_T("Succeeded to submit AppAnalytics Data."));
+
+		CMutexAutolock lock(m_mutex);
+		InitUDC();
+	}
 
 	return ERR_OK;
 }
@@ -259,22 +487,14 @@ void CAppAnalyticsClient::ThreadSend(void * lpParam)
 {
 	SendParam *pSendParam = (SendParam *)lpParam;
 
-	if (pSendParam->installPing.size() > 0)
+	int nRet = pSendParam->pAAClient->Send(pSendParam->strUsageData);
+	if (nRet == ERR_OK)
 	{
-		int nRet = pSendParam->pAAClient->Send(pSendParam->installPing);
-		if (nRet == ERR_OK)
+		if (pSendParam->bInstallPing)
 			g_Profile.WriteProfileInt(SZ_SECT_APP_ANALYTICS, _T("NIS"), false);
-	}
-
-	if (pSendParam->weeklyPing.size() > 0)
-	{
-		int nRet = pSendParam->pAAClient->Send(pSendParam->weeklyPing);
-		if (nRet == ERR_OK)
-		{
-			pSendParam->pAAClient->m_lastWeeklyPingDate = GetCurrentDateOnly();
-			g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
-				pSendParam->pAAClient->m_lastWeeklyPingDate.ToUtcDateString().c_str());
-		}
+		pSendParam->pAAClient->m_lastWeeklyPingDate = GetCurrentDateOnly();
+		g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
+			pSendParam->pAAClient->m_lastWeeklyPingDate.ToUtcDateString().c_str());
 	}
 
 	delete pSendParam;
