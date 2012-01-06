@@ -10,7 +10,7 @@ public:
 	LPCTSTR GetTranslation(LPCTSTR szString);
 
 protected:
-	map<tstring, tstring>		m_mapString;
+	MapString			m_mapString;
 
 };
 

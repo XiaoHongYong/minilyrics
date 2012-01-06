@@ -5,6 +5,7 @@
 #pragma once
 
 #include "OsBaseInc.h"
+#include "MapString.h"
 
 #include "OnlyAllocator.h"
 #include "StringIterator.h"

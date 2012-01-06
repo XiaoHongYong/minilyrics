@@ -1392,7 +1392,7 @@ void CSkinContainer::SetExPool(LPCTSTR szProperty, int nValue)
 
 tstring CSkinContainer::GetExPoolStr(LPCTSTR szProperty, LPCTSTR szDefault)
 {
-	CSkinWnd::MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
+	MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
 	if (it != m_pSkin->m_mapExchangePool.end())
 		return (*it).second;
 	else
@@ -1401,7 +1401,7 @@ tstring CSkinContainer::GetExPoolStr(LPCTSTR szProperty, LPCTSTR szDefault)
 
 int CSkinContainer::GetExPoolInt(LPCTSTR szProperty, int nDefault)
 {
-	CSkinWnd::MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
+	MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
 	if (it != m_pSkin->m_mapExchangePool.end())
 		return _ttoi((*it).second.c_str());
 	else
@@ -1410,7 +1410,7 @@ int CSkinContainer::GetExPoolInt(LPCTSTR szProperty, int nDefault)
 
 bool CSkinContainer::GetExPoolBool(LPCTSTR szProperty, bool bDefault)
 {
-	CSkinWnd::MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
+	MapString::iterator it = m_pSkin->m_mapExchangePool.find(szProperty);
 	if (it != m_pSkin->m_mapExchangePool.end())
 		return IsTRUE((*it).second.c_str());
 	else

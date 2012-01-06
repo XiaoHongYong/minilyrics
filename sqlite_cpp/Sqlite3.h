@@ -55,6 +55,9 @@ public:
 
 	int BindInt(int nField, int nData);
 
+	int GetColumnCount();
+	LPCSTR GetColumnName(int nCol);
+
 	int ColumnInt(int nCol);
 	void ColumnText(int nCol, string &strText);
 	LPCSTR ColumnText(int nCol);

@@ -242,6 +242,16 @@ int CSqlite3Stmt::BindInt(int nField, int nData)
 	return ERR_OK;
 }
 
+int CSqlite3Stmt::GetColumnCount()
+{
+	return sqlite3_column_count(m_stmt);
+}
+
+LPCSTR CSqlite3Stmt::GetColumnName(int nCol)
+{
+	return sqlite3_column_name(m_stmt, nCol);
+}
+
 int CSqlite3Stmt::ColumnInt(int nCol)
 {
 	return sqlite3_column_int(m_stmt, nCol);

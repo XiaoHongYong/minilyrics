@@ -97,7 +97,7 @@ using namespace std;
 typedef vector<tstring>			V_Str;
 typedef vector<tstring>			VecString;
 typedef list<tstring>			ListString;
-typedef map<tstring, tstring>	MapString;
+typedef set<tstring>			SetString;
 
 class SetStrLessICmp
 {

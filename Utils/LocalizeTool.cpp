@@ -412,7 +412,7 @@ void CLanguageFile::Close()
 
 LPCTSTR CLanguageFile::GetTranslation(LPCTSTR szString)
 {
-	map<tstring, tstring>::iterator		it;
+	MapString::iterator		it;
 	it = m_mapString.find(szString);
 	if (it == m_mapString.end())
 		return szString;

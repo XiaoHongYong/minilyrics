@@ -15,6 +15,8 @@ CXCharSeparatedValues::~CXCharSeparatedValues()
 
 void CXCharSeparatedValues::Split(LPCTSTR szStr, VecString &vValues)
 {
+	vValues.clear();
+
 	const TCHAR *p = szStr;
 
 	tstring		strValue;
@@ -41,6 +43,8 @@ void CXCharSeparatedValues::Split(LPCTSTR szStr, VecString &vValues)
 
 void CXCharSeparatedValues::Split(LPCTSTR szStr, MapString &mapNameValues, TCHAR chAssign)
 {
+	mapNameValues.clear();
+
 	VecString	vValues;
 
 	Split(szStr, vValues);

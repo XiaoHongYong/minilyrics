@@ -704,20 +704,20 @@ int CSkinFactory::GetUIDByMenuID(int nMenuID)
 #ifdef _DEBUG
 void CSkinFactory::DumpUID()
 {
-	typedef map<int, tstring>	MapString;
+	typedef map<int, tstring>	MapInt2String;
 
-	MapString mapUID;
+	MapInt2String mapUID;
 
 	for (SetUIObjectIDDefinition::iterator it = m_setUIDDefinition.begin();
 		it != m_setUIDDefinition.end(); ++it)
 	{
 		UIObjectIDDefinition *p = *it;
-		MapString::iterator i = mapUID.find(p->nId);
+		MapInt2String::iterator i = mapUID.find(p->nId);
 		// ASSERT(i == mapUID.end());
 		mapUID[p->nId] = tstring(p->szId);
 	}
 
-	for (MapString::iterator it = mapUID.begin(); it != mapUID.end(); ++it)
+	for (MapInt2String::iterator it = mapUID.begin(); it != mapUID.end(); ++it)
 		DBGLOG2(_T("UID: %04X, %s"), (*it).first, (*it).second.c_str());
 }
 #endif

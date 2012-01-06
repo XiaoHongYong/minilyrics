@@ -499,7 +499,6 @@ protected:
 	VecUIObjNotifyHandlers		m_vUIObjNotifyHandlers;
 
 	// Exchange Pool is used to exchange data between pages.
-	typedef map<tstring, tstring> MapString;
 	MapString				m_mapExchangePool;
 
 	//

@@ -166,11 +166,7 @@ tstring CAppAnalyticsClient::GetValue(LPCTSTR szType, LPCTSTR szName, LPCTSTR sz
 		return szDefValue;
 
 	MapString *usageData = (*it).second;
-	MapString::iterator itValue = usageData->find(szName);
-	if (itValue == usageData->end())
-		return szDefValue;
-	else
-		return (*itValue).second;
+	return usageData->GetValue(szName, szDefValue);
 }
 
 int CAppAnalyticsClient::GetValueInt(LPCTSTR szType, LPCTSTR szName, int nDefValue)
@@ -367,18 +363,26 @@ void CAppAnalyticsClient::CheckSendTask()
 
 void CAppAnalyticsClient::GetAllUsageData(tstring &strUsageData, bool bForSending)
 {
-	CColonSeparatedValues csv;
 	Rule rule;
-	rule.LoadFromProfile();
+	if (bForSending)
+		rule.LoadFromProfile();
+
+	// Write product info first
+	CColonSeparatedValues csv;
+	MapUsageData &bu = GetUsageData(SZ_UD_PRODUCT_INFO);
+	MapStringToColonSeparatedValues(*usageData, csv);
+	strUsageData = csv.c_str();
+
 	for (MapUsageData::iterator it = m_mapUsageData.begin(); it != m_mapUsageData.end(); ++it)
 	{
 		MapString *usageData = (*it).second;
-		if (!CanSendUsageDataType(*usageData, rule))
+		if (_tcscmp((*it).first.c_str(), SZ_UD_PRODUCT_INFO) == 0)
+			continue;
+		if (bForSending && !CanSendUsageDataType(*usageData, rule))
 			continue;
 
 		MapStringToColonSeparatedValues(*usageData, csv);
-		if (strUsageData.size() > 0)
-			strUsageData += '\n';
+		strUsageData += '\n';
 		strUsageData += csv.c_str();
 	}
 }

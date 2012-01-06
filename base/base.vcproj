@@ -893,6 +893,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\MapString.cpp"
+				>
+			</File>
+			<File
 				RelativePath="win32\MemmapFile.cpp"
 				>
 				<FileConfiguration
@@ -1672,6 +1676,10 @@
 			</File>
 			<File
 				RelativePath="idstring.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MapString.h"
 				>
 			</File>
 			<File
