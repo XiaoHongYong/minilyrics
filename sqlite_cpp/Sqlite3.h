@@ -12,7 +12,11 @@
 #include "../SDK/sqlite/sqlite3.h"
 #include "../MPlayerLib/IMPlayer.h"
 
+#ifdef _UNICODE
 #define LogSqlite3Error(db)		DBGLOG1(_T("Sqlite3 error: %S"), sqlite3_errmsg(db))
+#else
+#define LogSqlite3Error(db)		DBGLOG1(_T("Sqlite3 error: %s"), sqlite3_errmsg(db))
+#endif
 
 int sqlite_query_int_value(sqlite3 *db, LPCSTR szSql);
 

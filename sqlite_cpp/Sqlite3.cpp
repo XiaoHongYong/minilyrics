@@ -83,7 +83,11 @@ int CSqlite3::Exec(LPCSTR szSql)
 	nRet = sqlite3_exec(m_db, szSql, NULL, NULL, NULL);
 	if (nRet != SQLITE_OK)
 	{
+#ifdef _UNICODE
 		ERRLOG2(_T("CSqlite3::Exec %S, %S"), sqlite3_errmsg(m_db), szSql);
+#else
+		ERRLOG2(_T("CSqlite3::Exec %s, %s"), sqlite3_errmsg(m_db), szSql);
+#endif
 		return ERR_SL_EXE_SQL;
 	}
 
