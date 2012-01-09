@@ -121,7 +121,11 @@ int CSqlite3Stmt::Prepare(CSqlite3 *db, LPCSTR szSql)
 	nRet = sqlite3_prepare(m_db, szSql, -1, &m_stmt, NULL);
 	if (nRet != SQLITE_OK)
 	{
+#ifdef _UNICODE
 		ERRLOG2(_T("Sqlite3Stmt::Prepare %S, %S"), sqlite3_errmsg(m_db), szSql);
+#else
+		ERRLOG2(_T("Sqlite3Stmt::Prepare %s, %s"), sqlite3_errmsg(m_db), szSql);
+#endif
 		return ERR_FALSE;
 	}
 

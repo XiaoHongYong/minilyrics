@@ -18,7 +18,6 @@
 #define SZ_N_PI_INSTALL			_T("IS")
 #define SZ_N_PI_DEVICE_ID		_T("DID")
 #define SZ_N_PI_OS				_T("OS")
-#define SZ_N_PI_OS_VER			_T("OSV")
 #define SZ_N_PI_OS_LANGUAGE		_T("OL")
 
 // Basic Usage Data properties

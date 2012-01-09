@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-#if defined(_WIN32) && !defined(_WINCE_)
+#ifdef _WIN32
 #include <wtypes.h>
 #include <oleauto.h>
 #include <crtdbg.h>
@@ -60,9 +60,6 @@ void DBGLOG0(LPCTSTR szData)
 */
 
 // determine number of elements in an array (not bytes)
-
-
-#define SZ_RETURN			_T("\r\n")
 
 // 日志文件的最大长度为1MB
 #ifdef _WIN32_WCE
@@ -129,22 +126,11 @@ size_t fwriteWT(const TCHAR *szBuffer, size_t n, size_t nLen, FILE *fp)
 {
 	int		nLenWrite;
 #if defined(_WIN32)
-#if defined(_WINCE_)
-	stringex	str;
-	ConvertStr(szBuffer, nLen, str);
-	LPCSTR	szMsgAssii = str.c_str();
-	nLenWrite = str.size();
-#else
 	USES_CONVERSION;
 	LPCSTR	szMsgAssii = T2CA((TCHAR *)szBuffer);
 	nLenWrite = strlen(szMsgAssii);
-#endif
 #else
-	// g_print("%s", szBuffer);
 	LPCSTR	szMsgAssii = (LPCSTR)szBuffer;
-//	stringex		str;
-//	ConvertStr(szBuffer, -1, str);
-//	LPCSTR	szMsgAssii = str.c_str();
 	nLenWrite = sizeof(TCHAR) * nLen;
 #endif
 	return fwrite(szMsgAssii, 1, nLenWrite, fp);
@@ -251,9 +237,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	nLen = (int)_tcslen(szBuffer) + 1;
 
 #ifdef _DEBUG
-#ifndef _WIN32_WCE
 	LogTrace(szBuffer, nLen);
-#endif
 #endif
 
 	// 写入日志文件
@@ -284,6 +268,8 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 		fwriteWT(SZ_RETURN, sizeof(TCHAR), _tcslen(SZ_RETURN), m_fpLog);
 		fflush(m_fpLog);
 	}
+	else
+		_tprintf(_T("%s\n"), szBuffer);
 
 	m_mutex.Release();
 }
@@ -317,7 +303,6 @@ void CLog::Init(LPCTSTR szLogFileName)
 
 void CLog::Close()
 {
-	// DeleteCriticalSection(&m_csLog);
 	if (m_fpLog)
 	{
 		fclose(m_fpLog);
@@ -348,24 +333,18 @@ void CLog::SetSrcRootDir(LPCTSTR szSrcFile, int nCurFileDeep)
 
 BOOL CLog::OpenLogFile()
 {
-	// 写入日志文件log.txt
+	if (IsEmptyString(m_szLogFile))
+		return false;
+
 	if (m_fpLog)
 	{
 		fclose(m_fpLog);
 		m_fpLog = NULL;
 	}
 
-	if (IsEmptyString(m_szLogFile))
-	{
-		GetWorkingFolder(m_szLogFile);
-		_tcscat_safe(m_szLogFile, CountOf(m_szLogFile), _T("log.txt"));
-	}
-
 	uint64		nFileLength;
 	if (GetFileLength(m_szLogFile, nFileLength) && nFileLength >= MAX_LOG_FILE_LEN)
-	{
 		DeleteFile(m_szLogFile);
-	}
 
 	m_fpLog = _tfopen(m_szLogFile, _T("a+"));
 

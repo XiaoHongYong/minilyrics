@@ -242,7 +242,7 @@ void CAppAnalyticsClient::SaveUDCStatus()
 		ERRLOG1(_T("Failed to save AA status."), Error2Str(nRet).c_str());
 }
 
-void GetOSInfo(tstring &os, tstring &version, tstring &osLang)
+void GetOSInfo(tstring &os, tstring &osLang)
 {
 	OSVERSIONINFO osinfo;
 	memset(&osinfo, 0, sizeof(osinfo));
@@ -254,14 +254,15 @@ void GetOSInfo(tstring &os, tstring &version, tstring &osLang)
 		return;
 	}
 
-	os = _T("Win");
-	version = CStrPrintf(_T("%d.%d"), osinfo.dwMajorVersion, osinfo.dwMinorVersion).c_str();
+	os = _T("Win ");
 
 	SYSTEM_INFO si;
 	memset(&si, 0, sizeof(si));
 	GetSystemInfo(&si);
 	if (si.wProcessorArchitecture == PROCESSOR_ARCHITECTURE_AMD64)
-		os += _T(" 64");
+		os += _T("64 ");
+
+	os += CStrPrintf(_T("%d.%d"), osinfo.dwMajorVersion, osinfo.dwMinorVersion).c_str();
 
 	// Get OS language
 	tstring strLang;
@@ -295,10 +296,9 @@ void CAppAnalyticsClient::PrepareProductInfo(MapString &usageData, bool bInstall
 	if (bWeeklyPing)
 		usageData[SZ_N_PI_WEEKLY] = SZ_1;
 
-	tstring os, osVer, osLang;
-	GetOSInfo(os, osVer, osLang);
+	tstring os, osLang;
+	GetOSInfo(os, osLang);
 	usageData[SZ_N_PI_OS] = os;
-	usageData[SZ_N_PI_OS_VER] = osVer;
 	usageData[SZ_N_PI_OS_LANGUAGE] = osLang;
 
 	usageData[SZ_N_PI_PRODUCT_ID] = m_szProductId;
