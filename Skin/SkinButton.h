@@ -100,7 +100,7 @@ public:
 	virtual ~CSkinHoverActionButton();
 
 	bool OnLButtonUp(UINT nFlags, CPoint point);
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseMove(CPoint point);
 
 	void ButtonUpAction();
 

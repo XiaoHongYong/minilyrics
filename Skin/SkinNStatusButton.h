@@ -20,7 +20,8 @@ public:
 
 	void OnTimer(int nId);
 
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseDrag(CPoint point);
+	bool OnMouseMove(CPoint point);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 

@@ -777,12 +777,6 @@ bool CSkinTreeCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	return true;
 }
 
-bool CSkinTreeCtrl::OnMouseMove(UINT nFlags, CPoint point)
-{
-
-	return true;
-}
-
 void CSkinTreeCtrl::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 {
 	if (m_pObjScrollBar)

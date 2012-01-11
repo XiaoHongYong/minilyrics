@@ -432,7 +432,7 @@ CUIObject * CSkinWnd::GetUIObjectById(int nId, LPCTSTR szClassName)
 	return m_rootConainter.GetUIObjectById(nId, szClassName);
 }
 
-void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
+void CSkinWnd::ProcessMouseMove(CPoint point)
 {
 	OnMouseActiveMsg();
 
@@ -454,6 +454,11 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
+}
+
+void CSkinWnd::OnMouseDrag(UINT nFlags, CPoint point)
+{
+	ProcessMouseMove(point);
 
 	point.x = (int)(point.x / m_dbScale);
 	point.y = (int)(point.y / m_dbScale);
@@ -476,7 +481,7 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 	{
 		if (IsMouseCaptured())
 		{
-			if (m_pUIObjCapMouse->OnMouseMove(nFlags, point))
+			if (m_pUIObjCapMouse->OnMouseDrag(point))
 				return;
 		}
 		else
@@ -486,10 +491,36 @@ void CSkinWnd::OnMouseMove(UINT nFlags, CPoint point)
 	}
 
 	// then let root container to process it
-	if (!m_rootConainter.OnMouseMove(nFlags, point))
+	if (!m_rootConainter.OnMouseDrag(point))
 	{
 		// else, should set mouse resizing cursor
 		m_wndResizer.OnMouseMessage(nFlags, point);
+	}
+}
+
+void CSkinWnd::OnMouseMove(CPoint point)
+{
+	ProcessMouseMove(point);
+
+	// first send message to ui objects that captured the mouse
+	if (m_pUIObjCapMouse)
+	{
+		if (IsMouseCaptured())
+		{
+			if (m_pUIObjCapMouse->OnMouseMove(point))
+				return;
+		}
+		else
+		{
+			// capture lost!
+		}
+	}
+
+	// then let root container to process it
+	if (!m_rootConainter.OnMouseMove(point))
+	{
+		// else, should set mouse resizing cursor
+		m_wndResizer.OnMouseMessage(0, point);
 	}
 }
 

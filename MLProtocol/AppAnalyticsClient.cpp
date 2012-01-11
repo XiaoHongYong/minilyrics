@@ -125,9 +125,9 @@ void CAppAnalyticsClient::Quit()
 		IncreaseValue(pingBasicUsage, SZ_N_BU_RUN_DURATION, nAppRunningTimeSec);
 	}
 
-	Free();
-
 	SaveUDCStatus();
+
+	Free();
 }
 
 void CAppAnalyticsClient::IncreaseValue(LPCTSTR szType, LPCTSTR szName, int nValue)
@@ -369,8 +369,8 @@ void CAppAnalyticsClient::GetAllUsageData(tstring &strUsageData, bool bForSendin
 
 	// Write product info first
 	CColonSeparatedValues csv;
-	MapUsageData &bu = GetUsageData(SZ_UD_PRODUCT_INFO);
-	MapStringToColonSeparatedValues(*usageData, csv);
+	MapString &bu = GetUsageData(SZ_UD_PRODUCT_INFO);
+	MapStringToColonSeparatedValues(bu, csv);
 	strUsageData = csv.c_str();
 
 	for (MapUsageData::iterator it = m_mapUsageData.begin(); it != m_mapUsageData.end(); ++it)

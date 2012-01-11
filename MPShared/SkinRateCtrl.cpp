@@ -61,7 +61,7 @@ bool CSkinRateCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	return true;
 }
 
-bool CSkinRateCtrl::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinRateCtrl::OnMouseMove(CPoint point)
 {
 	return false;
 /*	assert(m_pSkin);

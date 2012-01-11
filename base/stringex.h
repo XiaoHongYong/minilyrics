@@ -95,9 +95,20 @@ tstring ToLower(LPCTSTR szString);
 
 int FilterAllHTMLTags(LPTSTR szText);
 
-#define IsDigit(ch) (('0' <= ch) && (ch <= '9'))
+inline bool IsDigit(int ch)
+{
+	return ('0' <= ch) && (ch <= '9');
+}
 
-#define IsAlpha(ch) (('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z'))
+inline bool IsAlpha(int ch)
+{
+	return ('a' <= ch && ch <= 'z') || ('A' <= ch && ch <= 'Z');
+}
+
+inline bool IsAlphaDigit(int c)
+{
+	return IsAlpha(c) || IsDigit(c);
+}
 
 #ifdef _MAC
 inline bool __isascii(int c) { return c >= 0 && c <= 0x7F; }

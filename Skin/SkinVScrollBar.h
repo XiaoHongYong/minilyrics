@@ -49,7 +49,8 @@ public:
 
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseDrag(CPoint point);
+	bool OnMouseMove(CPoint point);
 	void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 	void OnTimer(int nId);
 
@@ -66,9 +67,9 @@ protected:
 	void BottomBtOnLButtonDown(UINT nFlags, CPoint point);
 	void TrackOnLButtonDown(UINT nFlags, CPoint point);
 
-	void TopBtOnMouseMove(UINT nFlags, CPoint point);
-	void BottomBtOnMouseMove(UINT nFlags, CPoint point);
-	void TrackOnMouseMove(UINT nFlags, CPoint point);
+	void TopBtOnMouseMove(CPoint point);
+	void BottomBtOnMouseMove(CPoint point);
+	void TrackOnMouseDrag(CPoint point);
 
 	virtual void OnScroll(UINT nSBCode) = 0;
 
@@ -77,7 +78,7 @@ protected:
 	virtual PUSH_DOWN_POS GetPushDownPos(CPoint pt) = 0;
 
 	virtual void ThumbOnLButtonDown(UINT nFlags, CPoint point) = 0;
-	virtual void ThumbOnMouseMove(UINT nFlags, CPoint point) = 0;
+	virtual void ThumbOnMouseDrag(CPoint point) = 0;
 
 	virtual int VirtualPosToObjectPos(int nVirtualPos) = 0;
 	virtual int ObjectPosToVirtualPos(int nThumbPos) = 0;
@@ -151,7 +152,7 @@ protected:
 	virtual PUSH_DOWN_POS GetPushDownPos(CPoint pt);
 
 	virtual void ThumbOnLButtonDown(UINT nFlags, CPoint point);
-	virtual void ThumbOnMouseMove(UINT nFlags, CPoint point);
+	virtual void ThumbOnMouseDrag(CPoint point);
 
 	virtual int VirtualPosToObjectPos(int nVirtualPos);
 	virtual int ObjectPosToVirtualPos(int nThumbPos);
@@ -187,7 +188,7 @@ protected:
 	virtual PUSH_DOWN_POS GetPushDownPos(CPoint pt);
 
 	virtual void ThumbOnLButtonDown(UINT nFlags, CPoint point);
-	virtual void ThumbOnMouseMove(UINT nFlags, CPoint point);
+	virtual void ThumbOnMouseDrag(CPoint point);
 
 	virtual int VirtualPosToObjectPos(int nVirtualPos);
 	virtual int ObjectPosToVirtualPos(int nThumbPos);

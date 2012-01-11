@@ -13,7 +13,7 @@ public:
 
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 	bool OnLButtonDown(UINT nFlags, CPoint point);
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseMove(CPoint point);
 
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 

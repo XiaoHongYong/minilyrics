@@ -211,7 +211,7 @@ void CSkinContainer::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 }
 
-bool CSkinContainer::OnMouseMove(UINT nFlags, CPoint point) 
+bool CSkinContainer::OnMouseDrag(CPoint point)
 {
 	bool	bMsgProceed = false;
 
@@ -223,7 +223,30 @@ bool CSkinContainer::OnMouseMove(UINT nFlags, CPoint point)
 		if ((pObj->WantMsgMouseMove() || pObj->IsContainer()) && pObj->IsVisible()
 			 && pObj->IsEnable() && pObj->IsPtIn(point))
 		{
-			if (pObj->OnMouseMove(nFlags, point))
+			if (pObj->OnMouseDrag(point))
+			{
+				bMsgProceed = true;
+				break;
+			}
+		}
+	}
+
+	return bMsgProceed;
+}
+
+bool CSkinContainer::OnMouseMove(CPoint point) 
+{
+	bool	bMsgProceed = false;
+
+	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
+	{
+		CUIObject	*pObj;
+		pObj = m_vUIObjs[i];
+
+		if ((pObj->WantMsgMouseMove() || pObj->IsContainer()) && pObj->IsVisible()
+			&& pObj->IsEnable() && pObj->IsPtIn(point))
+		{
+			if (pObj->OnMouseMove(point))
 			{
 				bMsgProceed = true;
 				break;

@@ -115,25 +115,43 @@ bool CSkinNStatusButton::OnLButtonUp(UINT nFlags, CPoint point)
 	return true;
 }
 
-bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinNStatusButton::OnMouseDrag(CPoint point)
 {
-	assert(m_pSkin);
+	bool	bStatusChanged = false;
+
+	if (!IsMouseHitBt(point))
+	{
+		m_bLBtDown = FALSE;
+		bStatusChanged = true;
+	}
+	else if (!m_bLBtDown)
+	{
+		m_bLBtDown = TRUE;
+		bStatusChanged = true;
+
+		if (m_bHover)
+			m_bHover = false;
+		else
+			m_pSkin->SetCaptureMouse(this);
+	}
+
+	if (bStatusChanged)
+	{
+		if (m_nTimerIdFadein == 0)
+			StartFadeDrawTimer(m_bLBtDown, m_bHover);
+		Invalidate();
+	}
+
+	return true;
+}
+
+bool CSkinNStatusButton::OnMouseMove(CPoint point)
+{
 	bool	bStatusChanged = false;
 
 	if (IsMouseHitBt(point))
 	{
-		if (!m_bLBtDown && (nFlags & MK_LBUTTON))
-		{
-			m_bLBtDown = TRUE;
-
-			if (m_bHover)
-				m_bHover = false;
-			else
-				m_pSkin->SetCaptureMouse(this);
-
-			bStatusChanged = true;
-		}
-		else if (!m_bLBtDown && m_bEnableHover && !m_bHover)
+		if (!m_bLBtDown && m_bEnableHover && !m_bHover)
 		{
 			m_bHover = true;
 			m_pSkin->SetCaptureMouse(this);
@@ -143,15 +161,7 @@ bool CSkinNStatusButton::OnMouseMove(UINT nFlags, CPoint point)
 	}
 	else
 	{
-		if (m_bLBtDown)
-		{
-			m_bLBtDown = FALSE;
-
-			m_pSkin->ReleaseCaptureMouse(this);
-
-			bStatusChanged = true;
-		}
-		else if (m_bHover)
+		if (m_bHover)
 		{
 			m_bHover = false;
 

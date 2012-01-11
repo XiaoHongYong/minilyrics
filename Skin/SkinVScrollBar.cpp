@@ -339,28 +339,37 @@ void CSkinSrollBarBase::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 	}
 }
 
-bool CSkinSrollBarBase::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinSrollBarBase::OnMouseDrag(CPoint point)
 {
-	assert(m_pSkin);
+	switch (m_PushDownPos)
+	{
+	case PUSH_DOWN_THUMB:
+		// 滚动条的拖动box(thumb)
+		ThumbOnMouseDrag(point);
+		break;
+	default:
+		break;
+	}
 
+	return true;
+}
+
+bool CSkinSrollBarBase::OnMouseMove(CPoint point)
+{
 	switch (m_PushDownPos)
 	{
 	case PUSH_DOWN_TOPBT:
 		// 滚动条上面的按钮
-		TopBtOnMouseMove(nFlags, point);
+		TopBtOnMouseMove(point);
 		break;
 	case PUSH_DOWN_BOTTOMBT:
 		// 滚动条下面的按钮
-		BottomBtOnMouseMove(nFlags, point);
-		break;
-	case PUSH_DOWN_THUMB:
-		// 滚动条的拖动box(thumb)
-		ThumbOnMouseMove(nFlags, point);
+		BottomBtOnMouseMove(point);
 		break;
 	case PUSH_DOWN_TOPTRACK:
 	case PUSH_DOWN_BOTTOMTRACK:
 		// 滚动条的空白位置，进行翻页操作
-		TrackOnMouseMove(nFlags, point);
+		TrackOnMouseDrag(point);
 		break;
 	case PUSH_DOWN_NONE:
 		{
@@ -398,7 +407,7 @@ bool CSkinSrollBarBase::OnMouseMove(UINT nFlags, CPoint point)
 	return true;
 }
 
-void CSkinSrollBarBase::TopBtOnMouseMove(UINT nFlags, CPoint point)
+void CSkinSrollBarBase::TopBtOnMouseMove(CPoint point)
 {
 	PUSH_DOWN_POS		CursorPosNew;
 
@@ -411,7 +420,7 @@ void CSkinSrollBarBase::TopBtOnMouseMove(UINT nFlags, CPoint point)
 	}
 }
 
-void CSkinSrollBarBase::BottomBtOnMouseMove(UINT nFlags, CPoint point)
+void CSkinSrollBarBase::BottomBtOnMouseMove(CPoint point)
 {
 	PUSH_DOWN_POS		CursorPosNew;
 
@@ -424,7 +433,7 @@ void CSkinSrollBarBase::BottomBtOnMouseMove(UINT nFlags, CPoint point)
 	}
 }
 
-void CSkinSrollBarBase::TrackOnMouseMove(UINT nFlags, CPoint point)
+void CSkinSrollBarBase::TrackOnMouseDrag(CPoint point)
 {
 	PUSH_DOWN_POS		CursorPosNew;
 
@@ -873,7 +882,7 @@ void CSkinVScrollBar::ThumbOnLButtonDown(UINT nFlags, CPoint point)
 	Invalidate();
 }
 
-void CSkinVScrollBar::ThumbOnMouseMove(UINT nFlags, CPoint point)
+void CSkinVScrollBar::ThumbOnMouseDrag(CPoint point)
 {
 	int		nVirtualPosOld;
 	int		nPosThumbOld;
@@ -1181,7 +1190,7 @@ void CSkinHScrollBar::ThumbOnLButtonDown(UINT nFlags, CPoint point)
 	Invalidate();
 }
 
-void CSkinHScrollBar::ThumbOnMouseMove(UINT nFlags, CPoint point)
+void CSkinHScrollBar::ThumbOnMouseDrag(CPoint point)
 {
 	int		nVirtualPosOld;
 	int		nPosThumbOld;

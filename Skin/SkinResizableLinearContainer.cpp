@@ -21,9 +21,9 @@ CSkinResizableLinearContainer::~CSkinResizableLinearContainer()
 {
 }
 
-bool CSkinResizableLinearContainer::OnMouseMove(UINT nFlags, CPoint point) 
+bool CSkinResizableLinearContainer::OnMouseDrag(CPoint point)
 {
-	if (m_bDragWnd && nFlags & MK_LBUTTON)
+	if (m_bDragWnd)
 	{
 		SetResizerCursor();
 
@@ -49,7 +49,16 @@ bool CSkinResizableLinearContainer::OnMouseMove(UINT nFlags, CPoint point)
 	if (nResizerArea != -1)
 		SetResizerCursor();
 
-	return CSkinLinearContainer::OnMouseMove(nFlags, point);
+	return CSkinLinearContainer::OnMouseDrag(point);
+}
+
+bool CSkinResizableLinearContainer::OnMouseMove(CPoint point) 
+{
+	int nResizerArea = HitTestResizer(point);
+	if (nResizerArea != -1)
+		SetResizerCursor();
+
+	return CSkinLinearContainer::OnMouseMove(point);
 }
 
 bool CSkinResizableLinearContainer::OnLButtonDown(UINT nFlags, CPoint point)

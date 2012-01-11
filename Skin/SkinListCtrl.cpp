@@ -1707,10 +1707,9 @@ bool CSkinListCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	return true;
 }
 
-
-bool CSkinListCtrl::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinListCtrl::OnMouseDrag(CPoint point)
 {
-	if (m_bAdjustColWidth && (nFlags & MK_LBUTTON) && m_nResizingCol < (int)m_vHeading.size())
+	if (m_bAdjustColWidth && m_nResizingCol < (int)m_vHeading.size())
 	{
 		MLWidget::SetCursor(m_curResizeCol);
 
@@ -1735,8 +1734,13 @@ bool CSkinListCtrl::OnMouseMove(UINT nFlags, CPoint point)
 
 		return true;
 	}
+	else
+		return CSkinScrollFrameCtrlBase::OnMouseDrag(point);
+}
 
-	if (CSkinScrollFrameCtrlBase::OnMouseMove(nFlags, point))
+bool CSkinListCtrl::OnMouseMove(CPoint point)
+{
+	if (CSkinScrollFrameCtrlBase::OnMouseMove(point))
 		return true;
 
 	int			nColumnIndex;

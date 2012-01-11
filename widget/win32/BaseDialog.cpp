@@ -128,7 +128,13 @@ LRESULT CBaseDialog::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		OnLButtonUp((UINT)wParam, CPoint((short)LOWORD(lParam), (short)HIWORD(lParam)));
 		break;
 	case WM_MOUSEMOVE:
-		OnMouseMove((UINT)wParam, CPoint((short)LOWORD(lParam), (short)HIWORD(lParam)));
+		{
+			UINT nFlags = UINT(wParam);
+			if (nFlags & MK_LBUTTON)
+				OnMouseDrag((UINT)wParam, CPoint((short)LOWORD(lParam), (short)HIWORD(lParam)));
+			else
+				OnMouseMove(CPoint((short)LOWORD(lParam), (short)HIWORD(lParam)));
+		}
 		break;;
 	case WM_MOUSEWHEEL:
 		{

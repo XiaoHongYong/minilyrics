@@ -333,69 +333,66 @@ void CSkinToolbar::OnTimer(int nId)
 		m_pSkin->UnregisterTimerObject(this);
 }
 
-bool CSkinToolbar::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinToolbar::OnMouseDrag(CPoint point)
 {
-	assert(m_pSkin);
+	int		nOldCurButton = m_nCurButton;
+	bool	bUpdate = false;
+
+	m_nCurButton = GetCurButton(point);
 
 	if (IsPtIn(point))
 	{
-		int		nOldCurButton = m_nCurButton;
-
-		m_nCurButton = GetCurButton(point);
-
-		if (!m_bLBtDown && (nFlags & MK_LBUTTON))
+		if (!m_bLBtDown)
 		{
 			m_bLBtDown = TRUE;
+			bUpdate = true;
 
 			if (m_bHover)
 				m_bHover = false;
 			else
-			{
-				// 捕捉鼠标输入
 				m_pSkin->SetCaptureMouse(this);
-			}
-
-			Invalidate();
 		}
-		else if (!m_bLBtDown && m_bEnableHover)
-		{
-			m_bHover = true;
-
-			// 捕捉鼠标输入
-			m_pSkin->SetCaptureMouse(this);
-
-			Invalidate();
-		}
-		else if (m_nCurButton != nOldCurButton)
-			Invalidate();
 	}
 	else
 	{
-		int		nOldCurButton = m_nCurButton;
-
-		m_nCurButton = GetCurButton(point);
-
 		if (m_bLBtDown)
 		{
 			m_bLBtDown = FALSE;
-
-			// 释放鼠标输入
-			m_pSkin->ReleaseCaptureMouse(this);
-
-			Invalidate();
+			bUpdate = true;
 		}
-		else if (m_bHover)
+	}
+
+	if (m_nCurButton != nOldCurButton || bUpdate)
+		Invalidate();
+
+	return true;
+}
+
+bool CSkinToolbar::OnMouseMove(CPoint point)
+{
+	int		nOldCurButton = m_nCurButton;
+	bool	bHoverOld = m_bHover;
+	m_nCurButton = GetCurButton(point);
+
+	if (IsPtIn(point))
+	{
+		if (m_bEnableHover)
+		{
+			m_bHover = true;
+			m_pSkin->SetCaptureMouse(this);
+		}
+	}
+	else
+	{
+		if (m_bHover)
 		{
 			m_bHover = false;
-
-			// 释放鼠标输入
 			m_pSkin->ReleaseCaptureMouse(this);
-
-			Invalidate();
 		}
-		else if (m_nCurButton != nOldCurButton)
-			Invalidate();
 	}
+
+	if (m_nCurButton != nOldCurButton || bHoverOld != m_bHover)
+		Invalidate();
 
 	return true;
 }

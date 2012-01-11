@@ -7,6 +7,7 @@
 #define SZ_UD_SEARCH_LYRICS_DATA		_T("SL")
 #define SZ_UD_DOWNLOAD_LYRICS_DATA		_T("DL")
 #define SZ_UD_EMBEDDED_LYRICS_DATA		_T("EL")
+#define SZ_UD_PLAYER_RUN_TIME			_T("PR")
 
 #define SZ_N_NUMBER_OF_RESULT			_T("NR")
 
@@ -15,6 +16,8 @@ class CZPAnalyticsClient : public CAppAnalyticsClient
 public:
 	CZPAnalyticsClient();
 	~CZPAnalyticsClient();
+
+	virtual void Quit();
 
 	void IncreaseCmdClickCount(int nUID, CmdAccessMethod cam);
 

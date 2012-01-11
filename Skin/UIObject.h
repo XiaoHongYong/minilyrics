@@ -244,7 +244,8 @@ public:
 	virtual bool OnLButtonUp(UINT nFlags, CPoint point) { return true; }
 	virtual bool OnLButtonDown(UINT nFlags, CPoint point) { return true; }
 	virtual bool OnLButtonDblClk(UINT nFlags, CPoint point) { return true; }
-	virtual bool OnMouseMove(UINT nFlags, CPoint point) { return true; }
+	virtual bool OnMouseDrag(CPoint point) { return true; }
+	virtual bool OnMouseMove(CPoint point) { return true; }
 	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt) { }
 
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }

@@ -137,7 +137,7 @@ bool CSkinTxtLink::OnLButtonDown(UINT nFlags, CPoint point)
 	return true;
 }
 
-bool CSkinTxtLink::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinTxtLink::OnMouseMove(CPoint point)
 {
 	MLWidget::SetCursor(m_Cursor);
 

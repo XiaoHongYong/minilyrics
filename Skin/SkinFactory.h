@@ -14,8 +14,6 @@ class CSkinMenu;
 #include "SkinResMgr.h"
 #include "SkinWndDrag.h"
 
-typedef map<tstring, tstring> MapExchangePool;
-
 struct SkinWndStartupInfo
 {
 	tstring			strClassName, strCaptionText;
@@ -23,7 +21,7 @@ struct SkinWndStartupInfo
 	bool			bMainWnd;
 	CSkinWnd		*pSkinWnd;
 	CBaseWnd		*pWndParent;
-	MapExchangePool	mapExchangePool;
+	MapString		mapExchangePool;
 
 	SkinWndStartupInfo(LPCTSTR szClassName, LPCTSTR szCaptionText, LPCTSTR szSkinWnd,
 		CBaseWnd *pWndParent, bool bMainWnd = false);

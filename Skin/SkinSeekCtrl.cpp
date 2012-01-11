@@ -191,16 +191,22 @@ void CSkinSeekCtrl::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 	}
 }
 
-bool CSkinSeekCtrl::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinSeekCtrl::OnMouseDrag(CPoint point)
 {
-	assert(m_pSkin);
-
 	switch (m_PushDownPos)
 	{
 	case PUSH_DOWN_THUMB:
-		// 滚动条的拖动box(thumb)
-		ThumbOnMouseMove(nFlags, point);
+		ThumbOnMouseMove(point);
 		break;
+	}
+
+	return true;
+}
+
+bool CSkinSeekCtrl::OnMouseMove(CPoint point)
+{
+	switch (m_PushDownPos)
+	{
 	case PUSH_DOWN_NONE:
 		{
 			PUSH_DOWN_POS		CursorPosNew;
@@ -224,7 +230,6 @@ bool CSkinSeekCtrl::OnMouseMove(UINT nFlags, CPoint point)
 			{
 				m_CursorPosLatest = CursorPosNew;
 				Invalidate();
-				// DBGLOG0(_T("Invalidate!"));
 			}
 		}
 		break;
@@ -235,7 +240,7 @@ bool CSkinSeekCtrl::OnMouseMove(UINT nFlags, CPoint point)
 	return true;
 }
 
-void CSkinSeekCtrl::ThumbOnMouseMove(UINT nFlags, CPoint point)
+void CSkinSeekCtrl::ThumbOnMouseMove(CPoint point)
 {
 	int		nVirtualPosOld;
 	int		nPosThumbOld;

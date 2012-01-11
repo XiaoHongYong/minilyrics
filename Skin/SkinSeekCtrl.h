@@ -57,7 +57,8 @@ public:
 	void OnKeyDown(UINT nChar, UINT nFlags);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 	bool OnLButtonDown(UINT nFlags, CPoint point);
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseDrag(CPoint point);
+	bool OnMouseMove(CPoint point);
 	void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 
 	void OnVScroll(UINT nSBCode);
@@ -82,7 +83,7 @@ protected:
 	void ThumbOnLButtonDown(UINT nFlags, CPoint point);
 	void TrackOnLButtonDown(UINT nFlags, CPoint point);
 
-	void ThumbOnMouseMove(UINT nFlags, CPoint point);
+	void ThumbOnMouseMove(CPoint point);
 
 	void NotifyEvent(CSkinSeekCtrlEventNotify::Command cmd);
 

@@ -23,7 +23,7 @@ public:
 
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseMove(CPoint point);
 
 protected:
 	tstring				m_strLink;

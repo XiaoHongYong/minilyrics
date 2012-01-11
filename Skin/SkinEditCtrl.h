@@ -485,7 +485,8 @@ public:
 	virtual bool OnLButtonUp(UINT nFlags, CPoint point);
 	virtual bool OnLButtonDown(UINT nFlags, CPoint point);
 	virtual bool OnLButtonDblClk(UINT nFlags, CPoint point);
-	virtual bool OnMouseMove(UINT nFlags, CPoint point);
+	virtual bool OnMouseDrag(CPoint point);
+	virtual bool OnMouseMove(CPoint point);
 	virtual bool OnRButtonUp(UINT nFlags, CPoint point);
 	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 	virtual void OnKeyDown(UINT nChar, UINT nFlags);

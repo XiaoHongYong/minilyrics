@@ -343,7 +343,8 @@ public:
 	bool OnLButtonDblClk(UINT nFlags, CPoint point);
 	bool OnRButtonDown(UINT nFlags, CPoint point);
 	bool OnRButtonUp(UINT nFlags, CPoint point);
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseDrag(CPoint point);
+	bool OnMouseMove(CPoint point);
 
 	void OnCreate();
 	void OnSize();

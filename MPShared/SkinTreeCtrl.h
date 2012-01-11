@@ -186,7 +186,6 @@ public:
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	bool OnLButtonDblClk(UINT nFlags, CPoint point);
-	bool OnMouseMove(UINT nFlags, CPoint point);
 	void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 
 	void OnCreate();

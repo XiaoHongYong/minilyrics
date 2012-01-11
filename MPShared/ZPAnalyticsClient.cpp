@@ -94,6 +94,36 @@ CZPAnalyticsClient::~CZPAnalyticsClient()
 {
 }
 
+#ifndef _MPLAYER
+tstring ConvertPlayerName()
+{
+	if (CMPlayerApp::GetInstance()->GetCurrentAppMode() == SA_IPOD_LYRICS_DOWNLOADER)
+		return _T("LyricsDownloader");
+
+	tstring name = g_Player.GetPlayerName();
+	for (size_t i = 0; i < name.size(); i++)
+	{
+		if (!IsAlphaDigit(name[i]))
+			name.replace(i, 1, 1, '_');
+	}
+	return name;
+}
+#endif // #ifndef _MPLAYER
+
+void CZPAnalyticsClient::Quit()
+{
+#ifndef _MPLAYER
+	MapString &usageData = GetUsageData(SZ_UD_PLAYER_RUN_TIME);
+
+	uint32 nAppRunningTimeSec = (GetTickCount() - m_nAppStartTime) / 1000;
+	tstring playerName = ConvertPlayerName();
+	IncreaseValue(usageData, (_T("N#") + playerName).c_str(), 1);
+	IncreaseValue(usageData, (_T("T#") + playerName).c_str(), nAppRunningTimeSec);
+#endif // #ifndef _MPLAYER
+
+	CAppAnalyticsClient::Quit();
+}
+
 void CZPAnalyticsClient::IncreaseCmdClickCount(int nUID, CmdAccessMethod cam)
 {
 	CAppAnalyticsClient::IncreaseCmdClickCount(

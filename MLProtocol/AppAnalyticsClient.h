@@ -65,8 +65,8 @@ public:
 		CAM_BUTTON		= 'B',
 	};
 
-	void Init();
-	void Quit();
+	virtual void Init();
+	virtual void Quit();
 
 	void IncreaseValue(LPCTSTR szType, LPCTSTR szName, int nValue);
 

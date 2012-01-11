@@ -17,7 +17,7 @@ public:
 
 	LPCTSTR GetClassName();
 
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseMove(CPoint point);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	void Draw(CRawGraph *pGraph);

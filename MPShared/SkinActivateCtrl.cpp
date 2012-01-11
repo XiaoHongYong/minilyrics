@@ -118,12 +118,12 @@ bool CSkinActivateCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	return CSkinContainer::OnLButtonDown(nFlags, point);
 }
 
-bool CSkinActivateCtrl::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinActivateCtrl::OnMouseMove(CPoint point)
 {
 	if (IsInReactArea(point))
 		MLWidget::SetCursor(m_Cursor);
 
-	return CSkinContainer::OnMouseMove(nFlags, point);
+	return CSkinContainer::OnMouseMove(point);
 }
 
 bool CSkinActivateCtrl::IsInReactArea(POINT pt)

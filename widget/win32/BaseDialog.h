@@ -26,7 +26,7 @@ public:
 //
 //	virtual void OnLButtonUp(UINT nFlags, CPoint point);
 //	virtual void OnLButtonDown(UINT nFlags, CPoint point);
-//	virtual void OnMouseMove(UINT nFlags, CPoint point);
+//	virtual void OnMouseMove(CPoint point);
 
 public:
 	// for win32 only

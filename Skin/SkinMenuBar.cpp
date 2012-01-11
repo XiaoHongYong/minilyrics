@@ -73,12 +73,12 @@ void CMenuBarMsgHandler::OnKeyDown(UINT nChar, UINT nFlags)
 }
 
 
-void CMenuBarMsgHandler::OnMouseMove(UINT nFlags, CPoint point)
+void CMenuBarMsgHandler::OnMouseMove(CPoint point)
 {
 	if (WindowFromPoint(point) == m_pMenuBar->m_pSkin->GetHandle())
 	{
 		m_pMenuBar->m_pSkin->ScreenToClient(point);
-		m_pMenuBar->OnMouseMove(nFlags, point);
+		m_pMenuBar->OnMouseMove(point);
 	}
 }
 
@@ -325,7 +325,7 @@ bool CSkinMenuBar::OnLButtonUp(UINT nFlags, CPoint point)
 }
 
 
-bool CSkinMenuBar::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinMenuBar::OnMouseMove(CPoint point)
 {
 	int			nSelSubMenuNew;
 

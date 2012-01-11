@@ -129,7 +129,7 @@ public:
 #ifndef _WIN32_WCE
 	virtual bool OnLButtonUp(UINT nFlags, CPoint point);
 	virtual bool OnLButtonDown(UINT nFlags, CPoint point);
-	virtual bool OnMouseMove(UINT nFlags, CPoint point);
+	virtual bool OnMouseMove(CPoint point);
 	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 #endif
 

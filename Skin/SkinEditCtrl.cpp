@@ -2060,70 +2060,77 @@ bool CSkinEditCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	return true;
 }
 
-bool CSkinEditCtrl::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinEditCtrl::OnMouseDrag(CPoint point)
 {
-	if (CSkinScrollFrameCtrlBase::OnMouseMove(nFlags, point))
+	if (CSkinScrollFrameCtrlBase::OnMouseDrag(point))
 		return true;
 
 	MLWidget::SetCursor(m_cursor);
 
-	if (nFlags & MK_LBUTTON )
+	bool shift = IsKeyPressed(VK_SHIFT);
+	CAutoUpdate		updater(this);
+
+	if (shift)
 	{
-		bool shift = IsKeyPressed(VK_SHIFT);
-		CAutoUpdate		updater(this);
-
-		if (shift)
+		if (!IsSelected())
 		{
-			if (!IsSelected())
-			{
-				// Select text from the current caret.
-				m_nBegSelRow = m_nCaretRow;
-				m_nBegSelCol = m_nCaretCol;
-			}
-
-			SetCaretToPos(point.x, point.y);
-
-			MakeCaretInSight();
-
-			ShowCaret();
-
-			// Select text to the current caret now.
-			m_nEndSelRow = m_nCaretRow;
-			m_nEndSelCol = m_nCaretCol;
-			return true;
-		}
-
-		// mouse select
-		if (!m_bInMouseSel)
-		{
-			m_bInMouseSel = true;
-
+			// Select text from the current caret.
 			m_nBegSelRow = m_nCaretRow;
 			m_nBegSelCol = m_nCaretCol;
-
-			SetCaretToPos(point.x, point.y);
-
-			m_nEndSelRow = m_nCaretRow;
-			m_nEndSelCol = m_nCaretCol;
 		}
-		else
-		{
-			if (!IsSelected())
-			{
-				// Select text from the current caret.
-				m_nBegSelRow = m_nCaretRow;
-				m_nBegSelCol = m_nCaretCol;
-			}
 
-			SetCaretToPos(point.x, point.y);
-
-			m_nEndSelRow = m_nCaretRow;
-			m_nEndSelCol = m_nCaretCol;
-		}
+		SetCaretToPos(point.x, point.y);
 
 		MakeCaretInSight();
+
 		ShowCaret();
+
+		// Select text to the current caret now.
+		m_nEndSelRow = m_nCaretRow;
+		m_nEndSelCol = m_nCaretCol;
+		return true;
 	}
+
+	// mouse select
+	if (!m_bInMouseSel)
+	{
+		m_bInMouseSel = true;
+
+		m_nBegSelRow = m_nCaretRow;
+		m_nBegSelCol = m_nCaretCol;
+
+		SetCaretToPos(point.x, point.y);
+
+		m_nEndSelRow = m_nCaretRow;
+		m_nEndSelCol = m_nCaretCol;
+	}
+	else
+	{
+		if (!IsSelected())
+		{
+			// Select text from the current caret.
+			m_nBegSelRow = m_nCaretRow;
+			m_nBegSelCol = m_nCaretCol;
+		}
+
+		SetCaretToPos(point.x, point.y);
+
+		m_nEndSelRow = m_nCaretRow;
+		m_nEndSelCol = m_nCaretCol;
+	}
+
+	MakeCaretInSight();
+	ShowCaret();
+
+	return true;
+}
+
+bool CSkinEditCtrl::OnMouseMove(CPoint point)
+{
+	if (CSkinScrollFrameCtrlBase::OnMouseMove(point))
+		return true;
+
+	MLWidget::SetCursor(m_cursor);
 
 	return true;
 }

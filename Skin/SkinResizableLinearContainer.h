@@ -7,7 +7,8 @@ public:
 	CSkinResizableLinearContainer();
 	virtual ~CSkinResizableLinearContainer();
 
-	virtual bool OnMouseMove(UINT nFlags, CPoint point);
+	virtual bool OnMouseDrag(CPoint point);
+	virtual bool OnMouseMove(CPoint point);
 	virtual bool OnLButtonDown(UINT nFlags, CPoint point);
 	virtual bool OnLButtonUp(UINT nFlags, CPoint point);
 

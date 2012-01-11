@@ -41,7 +41,7 @@ public:
 
 	void OnKeyDown(UINT nChar, UINT nFlags);
 
-	void OnMouseMove(UINT nFlags, CPoint point);
+	void OnMouseMove(CPoint point);
 
 	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
 
@@ -107,7 +107,7 @@ public:
 	bool OnLButtonDown(UINT nFlags, CPoint point);
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 
-	bool OnMouseMove(UINT nFlags, CPoint point);
+	bool OnMouseMove(CPoint point);
 
 	void OnKeyDown(UINT nChar, UINT nFlags);
 

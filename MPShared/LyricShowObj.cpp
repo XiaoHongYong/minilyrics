@@ -1568,7 +1568,7 @@ void CLyricShowObj::OnKeyDown(UINT nChar, UINT nFlags)
 }
 
 #ifndef _WIN32_WCE
-bool CLyricShowObj::OnMouseMove(UINT nFlags, CPoint point)
+bool CLyricShowObj::OnMouseMove(CPoint point)
 {
 	if (m_vads.size())
 	{

@@ -290,11 +290,11 @@ bool CSkinHoverActionButton::OnLButtonUp(UINT nFlags, CPoint point)
 	return true;
 }
 
-bool CSkinHoverActionButton::OnMouseMove(UINT nFlags, CPoint point)
+bool CSkinHoverActionButton::OnMouseMove(CPoint point)
 {
 	bool	bHoverPrev = m_bHover;
 
-	bool bRet = CSkinButton::OnMouseMove(nFlags, point);
+	bool bRet = CSkinButton::OnMouseMove(point);
 
 	if (!m_bLBtDown && bHoverPrev != m_bHover)
 	{
