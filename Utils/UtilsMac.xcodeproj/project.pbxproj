@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5FB53E8814C19AF80041938C /* XCharSeparatedValues.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB53E8614C19AF80041938C /* XCharSeparatedValues.cpp */; };
+		5FB53E8914C19AF80041938C /* XCharSeparatedValues.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB53E8714C19AF80041938C /* XCharSeparatedValues.h */; };
 		5FBCCC501485177000D7C64A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCC4F1485177000D7C64A /* Cocoa.framework */; };
 		5FBCCC8B1485182B00D7C64A /* App.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC641485182B00D7C64A /* App.h */; };
-		5FBCCC8C1485182B00D7C64A /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCC651485182B00D7C64A /* CSVFile.cpp */; };
-		5FBCCC8D1485182B00D7C64A /* CSVFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC661485182B00D7C64A /* CSVFile.h */; };
 		5FBCCC8E1485182B00D7C64A /* digest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCC671485182B00D7C64A /* digest.cpp */; };
 		5FBCCC8F1485182B00D7C64A /* digest.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCC681485182B00D7C64A /* digest.h */; };
 		5FBCCC901485182B00D7C64A /* LocalizeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCC691485182B00D7C64A /* LocalizeTool.cpp */; };
@@ -45,14 +45,14 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5FB53E8614C19AF80041938C /* XCharSeparatedValues.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = XCharSeparatedValues.cpp; sourceTree = SOURCE_ROOT; };
+		5FB53E8714C19AF80041938C /* XCharSeparatedValues.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XCharSeparatedValues.h; sourceTree = SOURCE_ROOT; };
 		5FBCCC4C1485177000D7C64A /* libUtilsMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUtilsMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBCCC4F1485177000D7C64A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5FBCCC521485177000D7C64A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		5FBCCC531485177000D7C64A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		5FBCCC541485177000D7C64A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		5FBCCC641485182B00D7C64A /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = App.h; sourceTree = SOURCE_ROOT; };
-		5FBCCC651485182B00D7C64A /* CSVFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CSVFile.cpp; sourceTree = SOURCE_ROOT; };
-		5FBCCC661485182B00D7C64A /* CSVFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CSVFile.h; sourceTree = SOURCE_ROOT; };
 		5FBCCC671485182B00D7C64A /* digest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = digest.cpp; sourceTree = SOURCE_ROOT; };
 		5FBCCC681485182B00D7C64A /* digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = digest.h; sourceTree = SOURCE_ROOT; };
 		5FBCCC691485182B00D7C64A /* LocalizeTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LocalizeTool.cpp; sourceTree = SOURCE_ROOT; };
@@ -139,9 +139,9 @@
 		5FBCCC551485177000D7C64A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FB53E8614C19AF80041938C /* XCharSeparatedValues.cpp */,
+				5FB53E8714C19AF80041938C /* XCharSeparatedValues.h */,
 				5FBCCC641485182B00D7C64A /* App.h */,
-				5FBCCC651485182B00D7C64A /* CSVFile.cpp */,
-				5FBCCC661485182B00D7C64A /* CSVFile.h */,
 				5FBCCC671485182B00D7C64A /* digest.cpp */,
 				5FBCCC681485182B00D7C64A /* digest.h */,
 				5FBCCC691485182B00D7C64A /* LocalizeTool.cpp */,
@@ -196,7 +196,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				5FBCCC8B1485182B00D7C64A /* App.h in Headers */,
-				5FBCCC8D1485182B00D7C64A /* CSVFile.h in Headers */,
 				5FBCCC8F1485182B00D7C64A /* digest.h in Headers */,
 				5FBCCC911485182B00D7C64A /* LocalizeTool.h in Headers */,
 				5FBCCC931485182B00D7C64A /* log.h in Headers */,
@@ -214,6 +213,7 @@
 				5FBCCCAC1485182B00D7C64A /* UUEncode.h in Headers */,
 				5FBCCCAE1485182B00D7C64A /* VersionNumber.h in Headers */,
 				5FBCCCB01485182B00D7C64A /* XMLWriter.h in Headers */,
+				5FB53E8914C19AF80041938C /* XCharSeparatedValues.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -267,7 +267,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FBCCC8C1485182B00D7C64A /* CSVFile.cpp in Sources */,
 				5FBCCC8E1485182B00D7C64A /* digest.cpp in Sources */,
 				5FBCCC901485182B00D7C64A /* LocalizeTool.cpp in Sources */,
 				5FBCCC921485182B00D7C64A /* Log.cpp in Sources */,
@@ -282,6 +281,7 @@
 				5FBCCCAB1485182B00D7C64A /* UUEncode.cpp in Sources */,
 				5FBCCCAD1485182B00D7C64A /* VersionNumber.cpp in Sources */,
 				5FBCCCAF1485182B00D7C64A /* XMLWriter.cpp in Sources */,
+				5FB53E8814C19AF80041938C /* XCharSeparatedValues.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,6 +20,7 @@
 		5FB1621E147017340084494F /* MiniLyricsMac.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 5FB1621C147017340084494F /* MiniLyricsMac.xcdatamodeld */; };
 		5FB16234147697D20084494F /* circle.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5FB16232147697D20084494F /* circle.tif */; };
 		5FB16235147697D20084494F /* pentagon.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5FB16233147697D20084494F /* pentagon.tif */; };
+		5FB53E9514C19C2C0041938C /* ZPAnalyticsClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB53E9314C19C2C0041938C /* ZPAnalyticsClient.cpp */; };
 		5FBCCB6C147E8C6100D7C64A /* libBaseMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCAB9147E7EFD00D7C64A /* libBaseMac.a */; };
 		5FBCCB6D147E8C6100D7C64A /* libGfxLiteMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCAC3147E7F2500D7C64A /* libGfxLiteMac.a */; };
 		5FBCCB6E147E8C6100D7C64A /* libGfxRawMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCACC147E7F4300D7C64A /* libGfxRawMac.a */; };
@@ -327,6 +328,8 @@
 		5FB1621D147017340084494F /* MiniLyricsMac.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MiniLyricsMac.xcdatamodel; sourceTree = "<group>"; };
 		5FB16232147697D20084494F /* circle.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = circle.tif; sourceTree = "<group>"; };
 		5FB16233147697D20084494F /* pentagon.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = pentagon.tif; sourceTree = "<group>"; };
+		5FB53E9314C19C2C0041938C /* ZPAnalyticsClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZPAnalyticsClient.cpp; path = ../../MPShared/ZPAnalyticsClient.cpp; sourceTree = "<group>"; };
+		5FB53E9414C19C2C0041938C /* ZPAnalyticsClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZPAnalyticsClient.h; path = ../../MPShared/ZPAnalyticsClient.h; sourceTree = "<group>"; };
 		5FBCCAB1147E7EFB00D7C64A /* BaseMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BaseMac.xcodeproj; path = ../base/BaseMac.xcodeproj; sourceTree = "<group>"; };
 		5FBCCABB147E7F2500D7C64A /* GfxLiteMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GfxLiteMac.xcodeproj; path = ../GfxLite/GfxLiteMac.xcodeproj; sourceTree = "<group>"; };
 		5FBCCAC4147E7F4200D7C64A /* GfxRawMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GfxRawMac.xcodeproj; path = ../GfxRaw/GfxRawMac.xcodeproj; sourceTree = "<group>"; };
@@ -609,6 +612,8 @@
 		5FB1620A147017330084494F /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FB53E9314C19C2C0041938C /* ZPAnalyticsClient.cpp */,
+				5FB53E9414C19C2C0041938C /* ZPAnalyticsClient.h */,
 				5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */,
 				5F2BD53B149633C1003E7F5C /* Sqlite3.h */,
 				5FDC56A0148A23AC00C74E6A /* mac */,
@@ -1220,6 +1225,7 @@
 				5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */,
 				5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */,
 				5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */,
+				5FB53E9514C19C2C0041938C /* ZPAnalyticsClient.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

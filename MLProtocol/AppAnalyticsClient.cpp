@@ -243,6 +243,7 @@ void CAppAnalyticsClient::SaveUDCStatus()
 		ERRLOG1(_T("Failed to save AA status."), Error2Str(nRet).c_str());
 }
 
+#ifdef _WIN32
 void GetOSInfo(tstring &os, tstring &osLang)
 {
 	OSVERSIONINFO osinfo;
@@ -269,6 +270,15 @@ void GetOSInfo(tstring &os, tstring &osLang)
 	tstring strLang;
 	GetUserDefaultLang(strLang, osLang);
 }
+#endif // #ifdef _WIN32
+
+#ifdef _MAC_OSX
+void GetOSInfo(tstring &os, tstring &osLang)
+{
+	os = _T("Mac OS X");
+	osLang = _T("Unknown");
+}
+#endif
 
 void CAppAnalyticsClient::Free()
 {
@@ -322,7 +332,7 @@ void CAppAnalyticsClient::CheckSendTask()
 
 	// Try to send when one day past.
 	CBaseDate	dateNow = GetCurrentDateOnly();
-	if (abs(dateNow.GetTime() - m_lastSendDate.GetTime()) < CBaseDate::SECOND_IN_ONE_DAY)
+	if (abs((int)dateNow.GetTime() - (int)m_lastSendDate.GetTime()) < CBaseDate::SECOND_IN_ONE_DAY)
 		return;
 
 	if (m_threadSend.IsRunning())
@@ -334,7 +344,7 @@ void CAppAnalyticsClient::CheckSendTask()
 	pSendParam->bInstallPing = g_Profile.GetProfileBool(SZ_SECT_APP_ANALYTICS, _T("NIS"), true);
 	pSendParam->bWeeklyPing = false;
 
-	if (abs(dateNow.GetTime() - m_lastWeeklyPingDate.GetTime()) >= CBaseDate::SECOND_IN_ONE_DAY * 7)
+	if (abs((int)dateNow.GetTime() - (int)m_lastWeeklyPingDate.GetTime()) >= CBaseDate::SECOND_IN_ONE_DAY * 7)
 	{
 		// More than 7 days, send weekly usageData
 		pSendParam->bWeeklyPing = true;

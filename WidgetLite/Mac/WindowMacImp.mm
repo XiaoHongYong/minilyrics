@@ -19,7 +19,10 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle
 				  backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
-	self = [super initWithContentRect:contentRect styleMask:NSBorderlessWindowMask backing:NSBackingStoreBuffered defer:NO];
+	self = [super initWithContentRect:contentRect
+							styleMask:NSBorderlessWindowMask | NSResizableWindowMask
+							  backing:NSBackingStoreBuffered
+								defer:NO];
 	if (self != nil) {
 		// [self setAlphaValue:1.0];
 		[self setOpaque:NO];
@@ -50,8 +53,7 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 }
 
 - (void) mouseMoved:(NSEvent *)theEvent {
-	mBaseWnd->OnMouseMove((UINT)[theEvent modifierFlags],
-						  NSPointToCPoint([theEvent locationInWindow], [self frame].size.height));
+	mBaseWnd->OnMouseMove(NSPointToCPoint([theEvent locationInWindow], [self frame].size.height));
 }
 
 - (void) mouseDragged:(NSEvent *)theEvent {
@@ -72,6 +74,26 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 
 	// Move the window to the new location
 	[self setFrameOrigin:newOrigin];
+	
+	mBaseWnd->OnMouseDrag((UINT)[theEvent modifierFlags],
+						  NSPointToCPoint([theEvent locationInWindow], [self frame].size.height));
+}
+
+- (void) keyDown:(NSEvent *)theEvent {
+	mBaseWnd->OnKeyDown([theEvent keyCode], 0);
+	
+	int keyCode = [theEvent keyCode];
+	if (keyCode == NSUpArrowFunctionKey) {
+		keyCode = 1;
+	} else if (keyCode == NSPageUpFunctionKey) {
+		keyCode = 1;
+	} else if (keyCode == NSF1FunctionKey) {
+		keyCode = 1;
+	}
+}
+
+- (void) keyUp:(NSEvent *)theEvent {
+	
 }
 
 - (void)setTimer:(int)idTimer duration:(int)duration {

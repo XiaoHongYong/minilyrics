@@ -14,6 +14,7 @@
 namespace GfxRaw
 {
 
+#ifdef _WIN32
 enum
 {
 	PIX_B				= 0,
@@ -22,6 +23,16 @@ enum
 	PIX_A				= 3,		// Alpha channel
 	PIX_SIZE			= 4
 };
+#else // #ifdef _WIN32
+enum
+{
+	PIX_R				= 0,
+	PIX_G				= 1,
+	PIX_B				= 2,
+	PIX_A				= 3,		// Alpha channel
+	PIX_SIZE			= 4
+};
+#endif // #ifdef _WIN32
 
 };
 

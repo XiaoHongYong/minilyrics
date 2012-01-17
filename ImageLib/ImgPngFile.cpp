@@ -125,8 +125,10 @@ PRAW_IMAGE_DATA LoadRawImageDataFromPngFile(IILIO *io)
         png_set_expand(png_ptr);
 
 		// <vho> - flip the RGB pixels to BGR (or RGBA to BGRA)
+#ifdef _WIN32
 		if (info_ptr->color_type & PNG_COLOR_MASK_COLOR)
 			png_set_bgr(png_ptr);
+#endif
 
         // set the background color to draw transparent and alpha images over.
         if (png_get_bKGD(png_ptr, info_ptr, &pBackground))

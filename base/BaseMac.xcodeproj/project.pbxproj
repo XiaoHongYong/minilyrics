@@ -60,6 +60,10 @@
 		5F9CDF45147A330100432DAC /* StrPrintf.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF10147A330100432DAC /* StrPrintf.h */; };
 		5F9CDF46147A330100432DAC /* wintypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF11147A330100432DAC /* wintypes.h */; };
 		5F9CDF47147A330100432DAC /* xstr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF12147A330100432DAC /* xstr.h */; };
+		5FB53E9A14C19FA20041938C /* MapString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB53E9614C19FA20041938C /* MapString.cpp */; };
+		5FB53E9B14C19FA20041938C /* MapString.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB53E9714C19FA20041938C /* MapString.h */; };
+		5FB53E9C14C19FA20041938C /* TextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB53E9814C19FA20041938C /* TextFile.cpp */; };
+		5FB53E9D14C19FA20041938C /* TextFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB53E9914C19FA20041938C /* TextFile.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -121,6 +125,10 @@
 		5F9CDF10147A330100432DAC /* StrPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrPrintf.h; sourceTree = SOURCE_ROOT; };
 		5F9CDF11147A330100432DAC /* wintypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wintypes.h; sourceTree = SOURCE_ROOT; };
 		5F9CDF12147A330100432DAC /* xstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xstr.h; sourceTree = SOURCE_ROOT; };
+		5FB53E9614C19FA20041938C /* MapString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapString.cpp; sourceTree = SOURCE_ROOT; };
+		5FB53E9714C19FA20041938C /* MapString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapString.h; sourceTree = SOURCE_ROOT; };
+		5FB53E9814C19FA20041938C /* TextFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextFile.cpp; sourceTree = SOURCE_ROOT; };
+		5FB53E9914C19FA20041938C /* TextFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFile.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -174,6 +182,10 @@
 		5F9CDECD147A323D00432DAC /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				5FB53E9614C19FA20041938C /* MapString.cpp */,
+				5FB53E9714C19FA20041938C /* MapString.h */,
+				5FB53E9814C19FA20041938C /* TextFile.cpp */,
+				5FB53E9914C19FA20041938C /* TextFile.h */,
 				5F9CDEDC147A330100432DAC /* auto_free_list.h */,
 				5F9CDEDD147A330100432DAC /* base.h */,
 				5F9CDEDE147A330100432DAC /* BaseDate.cpp */,
@@ -285,6 +297,8 @@
 				5F9CDF45147A330100432DAC /* StrPrintf.h in Headers */,
 				5F9CDF46147A330100432DAC /* wintypes.h in Headers */,
 				5F9CDF47147A330100432DAC /* xstr.h in Headers */,
+				5FB53E9B14C19FA20041938C /* MapString.h in Headers */,
+				5FB53E9D14C19FA20041938C /* TextFile.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -357,6 +371,8 @@
 				5F9CDF41147A330100432DAC /* stringex.cpp in Sources */,
 				5F9CDF44147A330100432DAC /* StrPrintf.cpp in Sources */,
 				5F2BD59414963B52003E7F5C /* misc.cpp in Sources */,
+				5FB53E9A14C19FA20041938C /* MapString.cpp in Sources */,
+				5FB53E9C14C19FA20041938C /* TextFile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

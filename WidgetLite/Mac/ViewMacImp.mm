@@ -67,8 +67,26 @@
 	mBaseWnd = baseWnd;
 }
 
+- (void)keyDown:(NSEvent *)theEvent {
+	mBaseWnd->OnKeyDown([theEvent keyCode], 0);
+	
+	int keyCode = [theEvent keyCode];
+	if (keyCode == NSUpArrowFunctionKey) {
+		keyCode = 1;
+	} else if (keyCode == NSPageUpFunctionKey) {
+		keyCode = 1;
+	} else if (keyCode == NSF1FunctionKey) {
+		keyCode = 1;
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////
 // View messages
+
+/*- (void)viewWillStartLiveResize {
+	NSRect rc = [self frame];
+	mBaseWnd->OnSize(rc.size.width, rc.size.height);
+}*/
 
 - (void)viewDidEndLiveResize {
 	NSRect rc = [self frame];

@@ -46,7 +46,8 @@ public:
 	virtual void OnLButtonDblClk(UINT nFlags, CPoint point) { }
 	virtual void OnRButtonUp( UINT nFlags, CPoint point ) { }
 	virtual void OnRButtonDown( UINT nFlags, CPoint point ) { }
-	virtual void OnMouseMove(UINT nFlags, CPoint point) { }
+	virtual void OnMouseMove(CPoint point) { }
+	virtual void OnMouseDrag(UINT nFlags, CPoint point) { }
 	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt) { }
 
 	virtual void OnMove(int x, int y) { }
