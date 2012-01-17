@@ -51,6 +51,12 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 {
 	switch (nId)
 	{
+#ifdef _DEBUG
+	case 3999:
+		// Test menu
+		CMPlayerApp::GetAppAnalytics().TestSend();
+		break;
+#endif
 	case IDC_REPEAT_OFF:
 		g_Player.SetLoop(MP_LOOP_OFF);
 		break;

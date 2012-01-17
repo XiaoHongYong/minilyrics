@@ -138,6 +138,16 @@ void CZPAnalyticsClient::IncreaseNumberOfResult(LPCTSTR szType, int nResult)
 	IncreaseValue(szType, name.c_str(), 1);
 }
 
+#ifdef _DEBUG
+void CZPAnalyticsClient::TestSend()
+{
+	m_lastSendDate.FromTime(CBaseDate::GetCurrentDate().GetTime() - CBaseDate::SECOND_IN_ONE_DAY * 8);
+	m_lastWeeklyPingDate.FromTime(CBaseDate::GetCurrentDate().GetTime() - CBaseDate::SECOND_IN_ONE_DAY * 8);
+
+	CheckSendTask();
+}
+#endif
+
 tstring CZPAnalyticsClient::GetAnalyticsFile()
 {
 	tstring file = GetAppDataDir();

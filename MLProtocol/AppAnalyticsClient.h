@@ -22,7 +22,7 @@
 
 // Basic Usage Data properties
 #define SZ_N_BU_START_TIME		_T("ST")
-#define SZ_N_BU_END_TIME		_T("ST")
+#define SZ_N_BU_END_TIME		_T("ET")
 #define SZ_N_BU_RUN_DURATION	_T("RD")	// Total running durations, in seconds
 #define SZ_N_BU_RUN_TIMES		_T("RT")
 #define SZ_N_BU_CLOSED_TIMES	_T("CT")	// After running, app is closed almost immediately(less than 2 minUtes)

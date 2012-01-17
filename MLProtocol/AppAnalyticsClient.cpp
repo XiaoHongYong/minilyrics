@@ -3,8 +3,8 @@
 #include "AppAnalyticsClient.h"
 
 #define SZ_APP_ANALYTICS_DATA_VER	_T("AAV1")
-// #define SZ_APP_ANALYTICS_SERVER		_T("http://search.crintsoft.com/analytics/v1/put/")
-#define SZ_APP_ANALYTICS_SERVER		_T("http://192.168.1.107/analytics/v1/put/")
+#define SZ_APP_ANALYTICS_SERVER		_T("http://search.crintsoft.com/analytics/v1/put/")
+// #define SZ_APP_ANALYTICS_SERVER		_T("http://192.168.1.107/analytics/v1/put/")
 
 
 void MapStringToColonSeparatedValues(const MapString &mapNameValues, CColonSeparatedValues &csvValues)
@@ -30,26 +30,27 @@ bool CAppAnalyticsClient::Rule::SaveFromXml(SXNode *pNode)
 	if (!pNodeBaseRule)
 		return false;
 
-	LPCTSTR vNames[] = { _T("VerSeparator"), _T("NewVerEnabledAA"), _T("NewVerDisabledAA"), _T("OldVerEnabledAA"), _T("OldVerDisabledAA") };
+	LPCTSTR vNames[] = { _T("SplitVer"), _T("NewVerEnabledAA"), _T("NewVerDisabledAA"), _T("OldVerEnabledAA"), _T("OldVerDisabledAA") };
 
 	for (int i = 0; i < CountOf(vNames); i++)
-		g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, vNames[i], 
-		pNodeBaseRule->GetPropertySafe(vNames[i]));
+		g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, vNames[i], 
+			pNodeBaseRule->GetPropertySafe(vNames[i]));
 
 	return true;
 }
 
 void AAProfileGetStringSet(LPCTSTR szValueName, LPCTSTR szDefault, SetTStrNCase &setStrings)
 {
-	StrSplit(g_Profile.GetProfileString(SZ_SECT_APP_ANALYTICS, szValueName, _T("")), '|', setStrings);
+	StrSplit(g_Profile.EncryptGetProfileString(SZ_SECT_APP_ANALYTICS, szValueName, szDefault).c_str(),
+		'|', setStrings);
 }
 
 void CAppAnalyticsClient::Rule::LoadFromProfile()
 {
-	verSeparator = VersionNumFrom(g_Profile.GetProfileString(SZ_SECT_APP_ANALYTICS, _T("SplitVer"), _T("")));
+	verSeparator = VersionNumFrom(g_Profile.EncryptGetProfileString(SZ_SECT_APP_ANALYTICS, _T("SplitVer"), _T("")).c_str());
 	AAProfileGetStringSet(_T("NewVerEnabledAA"), _T("*"), newVerEnabledAA);
 	AAProfileGetStringSet(_T("NewVerDisabledAA"), _T(""), newVerDisabledAA);
-	AAProfileGetStringSet(_T("OldVerEnabledAA"), _T("PI|BU|LS|CU"), oldVerEnabledAA);
+	AAProfileGetStringSet(_T("OldVerEnabledAA"), _T("PI|BU|LS|CU|PR"), oldVerEnabledAA);
 	AAProfileGetStringSet(_T("OldVerDisabledAA"), _T(""), oldVerDisabledAA);
 }
 
@@ -72,12 +73,12 @@ void CAppAnalyticsClient::Init()
 {
 	m_nAppStartTime = GetTickCount();
 
-	m_lastSendDate.FromString(g_Profile.GetProfileString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), _T("1977:12:12")));
+	m_lastSendDate.FromString(g_Profile.EncryptGetProfileString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), _T("1977:12:12")).c_str());
 
-	if (!m_lastWeeklyPingDate.FromString(g_Profile.GetProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), _T(""))))
+	if (!m_lastWeeklyPingDate.FromString(g_Profile.EncryptGetProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), _T("")).c_str()))
 	{
 		m_lastWeeklyPingDate = GetCurrentDateOnly();
-		g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), m_lastWeeklyPingDate.ToUtcDateString().c_str());
+		g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), m_lastWeeklyPingDate.ToUtcDateString().c_str());
 	}
 
 	m_lastSaveTime = GetTickCount();
@@ -93,7 +94,7 @@ void CAppAnalyticsClient::Init()
 		if (file.ReadLine(line) && _tcsicmp(line.c_str(), SZ_APP_ANALYTICS_DATA_VER) == 0)
 		{
 			// Weekly Ping
-			if (file.ReadLine(line))
+			while (file.ReadLine(line))
 			{
 				CColonSeparatedValues csv;
 				MapString *usageData = new MapString();
@@ -358,7 +359,7 @@ void CAppAnalyticsClient::CheckSendTask()
 	else
 		delete pSendParam;
 
-	g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), dateNow.ToUtcDateString().c_str());
+	g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), dateNow.ToUtcDateString().c_str());
 }
 
 void CAppAnalyticsClient::GetAllUsageData(tstring &strUsageData, bool bForSending)
@@ -435,7 +436,13 @@ int CAppAnalyticsClient::Send(const string &strUsageData)
 	// Connect to server and send data
 	CHttpClient	httpClient;
 
+#ifdef _DEBUG
+	tstring strServer = g_Profile.GetProfileString(_T("aaserverurl"), SZ_APP_ANALYTICS_DATA_VER);
+	httpClient.Init(strServer.c_str(), NULL);
+	DBGLOG1(_T("AppAnalytics server: %s"), strServer.c_str());
+#else
 	httpClient.Init(SZ_APP_ANALYTICS_SERVER, NULL);
+#endif
 	httpClient.SetUserAgent(_T("AppAnalytics"));
 
 	tstring proxyServer, base64UserPass;
@@ -497,7 +504,7 @@ void CAppAnalyticsClient::ThreadSend(void * lpParam)
 		if (pSendParam->bInstallPing)
 			g_Profile.WriteProfileInt(SZ_SECT_APP_ANALYTICS, _T("NIS"), false);
 		pSendParam->pAAClient->m_lastWeeklyPingDate = GetCurrentDateOnly();
-		g_Profile.WriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
+		g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
 			pSendParam->pAAClient->m_lastWeeklyPingDate.ToUtcDateString().c_str());
 	}
 

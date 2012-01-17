@@ -23,6 +23,10 @@ public:
 
 	void IncreaseNumberOfResult(LPCTSTR szType, int nResult);
 
+#ifdef _DEBUG
+	void TestSend();
+#endif
+
 protected:
 	virtual tstring GetAnalyticsFile();
 
