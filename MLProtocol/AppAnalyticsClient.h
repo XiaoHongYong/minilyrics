@@ -15,7 +15,7 @@
 #define SZ_N_PI_PRODUCT_ID		_T("PID")
 #define SZ_N_PI_PRODUCT_VER		_T("PV")
 #define SZ_N_PI_WEEKLY			_T("WK")
-#define SZ_N_PI_INSTALL			_T("IS")
+#define SZ_N_PI_INSTALL			_T("IST")
 #define SZ_N_PI_DEVICE_ID		_T("DID")
 #define SZ_N_PI_OS				_T("OS")
 #define SZ_N_PI_OS_LANGUAGE		_T("OL")

@@ -18,8 +18,6 @@
 
 // General Setting properties
 #define SZ_N_ST_CUR_SKIN				_T("SK")		// Current skin
-#define SZ_N_ST_INSTALLED_PLAYERS		_T("IP")
-#define SZ_N_ST_ALL_PLAYERS				_T("AP")
 #define SZ_N_ST_BG_IMAGE				_T("BGI")
 #define SZ_N_ST_USE_ALBUM_ARG_BG		_T("UABG")
 #define SZ_N_ST_DARK_LYR_BG				_T("DLBG")
@@ -53,35 +51,6 @@ tstring LicenseStatusToString(LicenseStatus ls)
 	default: return StringFromInt(ls);
 	}
 }
-
-#ifndef _MPLAYER
-void GetPlayersStatus(tstring &installedPlayers, tstring &allPlayers)
-{
-	CPlayerPluginInstaller	installer;
-	installer.Init();
-
-	// Show only installed players.
-	for (int i = 0; ; i++)
-	{
-		CPlayerPluginInstaller::Player *p = installer.GetPlayerByIndex(i);
-		if (!p)
-			break;
-
-		if (p->dwInstallFlags != 0 && p->IsInstalled())
-		{
-			if (installedPlayers.size() > 0)
-				installedPlayers += '#';
-			installedPlayers += p->szPlayerName;
-			if (p->IsPluginInstalled())
-			{
-				if (allPlayers.size() > 0)
-					allPlayers += '#';
-				allPlayers += p->szPlayerName;
-			}
-		}
-	}
-}
-#endif // #ifndef _MPLAYER
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -117,8 +86,8 @@ void CZPAnalyticsClient::Quit()
 
 	uint32 nAppRunningTimeSec = (GetTickCount() - m_nAppStartTime) / 1000;
 	tstring playerName = ConvertPlayerName();
-	IncreaseValue(usageData, (_T("N#") + playerName).c_str(), 1);
-	IncreaseValue(usageData, (_T("T#") + playerName).c_str(), nAppRunningTimeSec);
+	IncreaseValue(usageData, (_T("N_") + playerName).c_str(), 1);
+	IncreaseValue(usageData, (_T("T_") + playerName).c_str(), nAppRunningTimeSec);
 #endif // #ifndef _MPLAYER
 
 	CAppAnalyticsClient::Quit();
@@ -200,13 +169,6 @@ void CZPAnalyticsClient::PrepareLicenseStatusData(MapString &ping)
 
 void CZPAnalyticsClient::PrepareSettingsData(MapString &ping)
 {
-#ifndef _MPLAYER
-	tstring installedPlayers, allPlayers;
-	GetPlayersStatus(installedPlayers, allPlayers);
-	ping[SZ_N_ST_INSTALLED_PLAYERS] = installedPlayers;
-	ping[SZ_N_ST_ALL_PLAYERS] = allPlayers;
-#endif // #ifndef _MPLAYER
-
 	ping[SZ_N_ST_CUR_SKIN] = CMPlayerApp::GetInstance()->GetDefaultSkin();
 	ping[SZ_N_ST_BG_IMAGE] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), _T(""));
 	ping[SZ_N_ST_USE_ALBUM_ARG_BG] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), _T(""));

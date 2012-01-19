@@ -46,4 +46,6 @@ public:
 
 	static CBaseDate GetCurrentDate();
 
+	static CBaseDate GetLocalTime();
+
 };

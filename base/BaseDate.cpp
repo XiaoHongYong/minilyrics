@@ -237,6 +237,25 @@ CBaseDate CBaseDate::GetCurrentDate()
 	tm			*ptm;
 
 	time(&ltime);
+	ptm = gmtime(&ltime);
+
+	return CBaseDate(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, 0);
+#endif
+}
+
+CBaseDate CBaseDate::GetLocalTime()
+{
+#ifdef _WIN32
+	SYSTEMTIME	sysTime;
+
+	::GetLocalTime(&sysTime);
+
+	return CBaseDate(sysTime.wYear, sysTime.wMonth, sysTime.wDay, sysTime.wHour, sysTime.wMinute, sysTime.wSecond, sysTime.wMilliseconds);
+#else
+	time_t		ltime;
+	tm			*ptm;
+
+	time(&ltime);
 	ptm = localtime(&ltime);
 
 	return CBaseDate(ptm->tm_year + 1900, ptm->tm_mon + 1, ptm->tm_mday, ptm->tm_hour, ptm->tm_min, ptm->tm_sec, 0);

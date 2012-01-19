@@ -295,7 +295,7 @@ void CAppAnalyticsClient::InitUDC()
 	Free();
 
 	MapString &usageData = GetUsageData(SZ_UD_BASIC_USAGE);
-	usageData[SZ_N_BU_START_TIME] = CBaseDate::GetCurrentDate().ToUtcDateTimeString();
+	usageData[SZ_N_BU_START_TIME] = CStrPrintf(_T("%u"), CBaseDate::GetCurrentDate().GetTime()).c_str();
 
 	SaveUDCStatus();
 }
@@ -318,7 +318,7 @@ void CAppAnalyticsClient::PrepareProductInfo(MapString &usageData, bool bInstall
 
 void CAppAnalyticsClient::PrepareBasicUsageData(MapString &usageData)
 {
-	usageData[SZ_N_BU_END_TIME] = CBaseDate::GetCurrentDate().ToUtcDateTimeString();
+	usageData[SZ_N_BU_END_TIME] = CStrPrintf(_T("%u"), CBaseDate::GetCurrentDate().GetTime()).c_str();
 }
 
 void CAppAnalyticsClient::CheckSendTask()
