@@ -344,7 +344,9 @@ void CAppAnalyticsClient::CheckSendTask()
 	pSendParam->bInstallPing = g_Profile.GetProfileBool(SZ_SECT_APP_ANALYTICS, _T("NIS"), true);
 	pSendParam->bWeeklyPing = false;
 
-	if (abs((int)dateNow.GetTime() - (int)m_lastWeeklyPingDate.GetTime()) >= CBaseDate::SECOND_IN_ONE_DAY * 7)
+	// Install & Weekly Ping can't be send at same time.
+	if (!pSendParam->bInstallPing
+		&& abs((int)dateNow.GetTime() - (int)m_lastWeeklyPingDate.GetTime()) >= CBaseDate::SECOND_IN_ONE_DAY * 7)
 	{
 		// More than 7 days, send weekly usageData
 		pSendParam->bWeeklyPing = true;
@@ -356,13 +358,19 @@ void CAppAnalyticsClient::CheckSendTask()
 
 		// Prepare Usage Data
 		PrepareProductInfo(GetUsageData(SZ_UD_PRODUCT_INFO), pSendParam->bInstallPing, pSendParam->bWeeklyPing);
-		PrepareBasicUsageData(GetUsageData(SZ_UD_BASIC_USAGE));
-		PrepareLicenseStatusData(GetUsageData(SZ_UD_LICENSE_STATUS));
-		PrepareSettingsData(GetUsageData(SZ_UD_SETTINGS));
-		PrepareOtherUsageData();
 
 		tstring strUsageData;
-		GetAllUsageData(strUsageData, true);
+		if (pSendParam->bWeeklyPing)
+		{
+			PrepareBasicUsageData(GetUsageData(SZ_UD_BASIC_USAGE));
+			PrepareLicenseStatusData(GetUsageData(SZ_UD_LICENSE_STATUS));
+			PrepareSettingsData(GetUsageData(SZ_UD_SETTINGS));
+			PrepareOtherUsageData();
+			GetAllUsageData(strUsageData, true);
+		}
+		else
+			GetUsageDataForInstallPing(strUsageData);
+
 		TStringToUTF8(strUsageData.c_str(), strUsageData.size(), pSendParam->strUsageData);
 		m_threadSend.Create(ThreadSend, pSendParam);
 	}
@@ -396,6 +404,15 @@ void CAppAnalyticsClient::GetAllUsageData(tstring &strUsageData, bool bForSendin
 		strUsageData += '\n';
 		strUsageData += csv.c_str();
 	}
+}
+
+void CAppAnalyticsClient::GetUsageDataForInstallPing(tstring &strUsageData)
+{
+	// Write product info first
+	CColonSeparatedValues csv;
+	MapString &bu = GetUsageData(SZ_UD_PRODUCT_INFO);
+	MapStringToColonSeparatedValues(bu, csv);
+	strUsageData = csv.c_str();
 }
 
 bool IsRuleMatch(SetTStrNCase &setEnabled, SetTStrNCase &setDisabled, LPCTSTR str)
@@ -441,7 +458,7 @@ bool CAppAnalyticsClient::CanSendUsageDataType(MapString &usageData, Rule &rule)
 	return bCanSend;
 }
 
-int CAppAnalyticsClient::Send(const string &strUsageData)
+int CAppAnalyticsClient::Send(const string &strUsageData, bool bInstallPing)
 {
 	// Connect to server and send data
 	CHttpClient	httpClient;
@@ -499,6 +516,13 @@ int CAppAnalyticsClient::Send(const string &strUsageData)
 
 		CMutexAutolock lock(m_mutex);
 		InitUDC();
+
+		// Save status of ping
+		if (bInstallPing)
+			g_Profile.WriteProfileInt(SZ_SECT_APP_ANALYTICS, _T("NIS"), false);
+		m_lastWeeklyPingDate = GetCurrentDateOnly();
+		g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
+			m_lastWeeklyPingDate.ToUtcDateString().c_str());
 	}
 
 	return ERR_OK;
@@ -508,15 +532,7 @@ void CAppAnalyticsClient::ThreadSend(void * lpParam)
 {
 	SendParam *pSendParam = (SendParam *)lpParam;
 
-	int nRet = pSendParam->pAAClient->Send(pSendParam->strUsageData);
-	if (nRet == ERR_OK)
-	{
-		if (pSendParam->bInstallPing)
-			g_Profile.WriteProfileInt(SZ_SECT_APP_ANALYTICS, _T("NIS"), false);
-		pSendParam->pAAClient->m_lastWeeklyPingDate = GetCurrentDateOnly();
-		g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
-			pSendParam->pAAClient->m_lastWeeklyPingDate.ToUtcDateString().c_str());
-	}
+	int nRet = pSendParam->pAAClient->Send(pSendParam->strUsageData, pSendParam->bInstallPing);
 
 	delete pSendParam;
 }

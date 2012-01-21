@@ -104,8 +104,9 @@ protected:
 	void SaveUDCStatus();
 
 	void GetAllUsageData(tstring &strUsageData, bool bForSending = false);
+	void GetUsageDataForInstallPing(tstring &strUsageData);
 
-	int Send(const string &strUsageData);
+	int Send(const string &strUsageData, bool bInstallPing);
 
 	static void ThreadSend(void * lpParam);
 

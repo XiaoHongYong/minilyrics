@@ -35,7 +35,7 @@ protected:
 	virtual void PrepareSettingsData(MapString &ping);
 	virtual void PrepareOtherUsageData();
 
-	void PrepareModeRelatedSettingsData(LPCTSTR szSection, MapString &ping);
+	void PrepareModeRelatedSettingsData(LPCTSTR szSection, MapString &ping, bool bFloatingLyr);
 
 	virtual bool GetProxy(tstring &strServer, int &port, tstring &base64UserPass);
 

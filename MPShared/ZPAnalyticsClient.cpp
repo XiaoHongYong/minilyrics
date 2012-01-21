@@ -178,11 +178,11 @@ void CZPAnalyticsClient::PrepareSettingsData(MapString &ping)
 
 void CZPAnalyticsClient::PrepareOtherUsageData()
 {
-	PrepareModeRelatedSettingsData(SZ_SECT_UI, GetUsageData(SZ_UD_SETTINGS_NORMAL_MODE));
-	PrepareModeRelatedSettingsData(SZ_SECT_FLOATING_LYR, GetUsageData(SZ_UD_SETTINGS_FLOATING_LYR));
+	PrepareModeRelatedSettingsData(SZ_SECT_UI, GetUsageData(SZ_UD_SETTINGS_NORMAL_MODE), false);
+	PrepareModeRelatedSettingsData(SZ_SECT_FLOATING_LYR, GetUsageData(SZ_UD_SETTINGS_FLOATING_LYR), true);
 }
 
-void CZPAnalyticsClient::PrepareModeRelatedSettingsData(LPCTSTR szSection, MapString &ping)
+void CZPAnalyticsClient::PrepareModeRelatedSettingsData(LPCTSTR szSection, MapString &ping, bool bFloatingLyr)
 {
 	// Font related
 	int nHeight, nWeight;
@@ -197,6 +197,9 @@ void CZPAnalyticsClient::PrepareModeRelatedSettingsData(LPCTSTR szSection, MapSt
 	ping[SZ_N_ST_KARAOKE] = g_Profile.GetProfileString(szSection, _T("Karaoke"), _T(""));
 	ping[SZ_N_ST_LYRICS_ALIGN] = g_Profile.GetProfileString(szSection, _T("VertAlign"), _T(""));
 	ping[SZ_N_ST_BG_COLOR] = g_Profile.GetProfileString(szSection, _T("BgColor"), _T(""));
-	ping[SZ_N_ST_LYR_DISPLAY_STYLE] = g_Profile.GetProfileString(szSection, _T("LyrDisplayStyle"), _T(""));
 	ping[SZ_N_ST_OUTLINE_LYR] = g_Profile.GetProfileString(szSection, _T("OutlineLyrText"), _T(""));
+	if (bFloatingLyr)
+		ping[SZ_N_ST_LYR_DISPLAY_STYLE] = g_Profile.GetProfileString(SZ_SECT_FLOATING_LYR, _T("FloatingLyrDispStyle"), _T(""));
+	else
+		ping[SZ_N_ST_LYR_DISPLAY_STYLE] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("LyrDisplayStyle"), _T(""));
 }
