@@ -56,7 +56,7 @@ bool CSkinRateCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 
 	Invalidate();
 
-	m_pSkin->OnCustomCommand(m_nId);
+	m_pSkin->PostCustomCommandMsg(m_nId);
 
 	return true;
 }

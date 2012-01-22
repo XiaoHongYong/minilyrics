@@ -43,7 +43,6 @@ bool CSkinApp::Init()
 	return true;
 }
 
-
 int CSkinApp::LoadDefaultSkin(LPCTSTR szDefaultSkin, bool bCreateSkinWnd)
 {
 	bool		bLoadSkinTheme = false;

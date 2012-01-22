@@ -1519,7 +1519,7 @@ void CLyricShowObj::OnKeyDown(UINT nChar, UINT nFlags)
 		CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 		break;
 	case 'D':
-		m_pSkin->OnCustomCommand(CMD_OPEN_LRC);
+		m_pSkin->PostShortcutKeyCmd(CMD_OPEN_LRC);
 		break;
 	case 'Z':
 		g_Player.Prev();
@@ -1720,7 +1720,7 @@ void CLyricShowObj::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 {
 	if (nMkeys == MK_CONTROL)
 	{
-		m_pSkin->OnCustomCommand(nWheelDistance > 0 ? CMD_FONT_SIZE_INC : CMD_FONT_SIZE_DEC);
+		m_pSkin->PostShortcutKeyCmd(nWheelDistance > 0 ? CMD_FONT_SIZE_INC : CMD_FONT_SIZE_DEC);
 	}
 }
 

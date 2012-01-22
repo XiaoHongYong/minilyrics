@@ -95,7 +95,7 @@ bool CMediaAlbumArtCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	if (m_nId != UID_INVALID)
 	{
-		m_pSkin->OnCustomCommand(m_nId);
+		m_pSkin->PostCustomCommandMsg(m_nId);
 
 		return true;
 	}

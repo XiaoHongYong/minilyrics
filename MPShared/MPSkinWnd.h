@@ -71,6 +71,9 @@ public:
 	virtual bool GetChecked(UINT nID, bool &bChecked);
 	virtual bool GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked);
 
+	virtual void PostCustomCommandMsg(int nId);
+	virtual void PostShortcutKeyCmd(int nId);
+
 #ifdef _WIN32_DESKTOP
 protected:
 	virtual void OnDropFiles(HDROP hDrop);

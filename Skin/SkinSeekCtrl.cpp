@@ -135,7 +135,7 @@ bool CSkinSeekCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 			m_pSkin->ReleaseCaptureMouse(this);
 
 			OnVScroll(SB_THUMBPOSITION);
-			m_pSkin->OnCustomCommand(m_nId);
+			m_pSkin->PostCustomCommandMsg(m_nId);
 
 			NotifyEvent(CSkinSeekCtrlEventNotify::C_END_DRAG);
 		}
@@ -187,7 +187,7 @@ void CSkinSeekCtrl::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 		OnVScroll(nWheelDistance > 0 ? SB_LINEDOWN : SB_LINEUP);
 		Invalidate();
 
-		m_pSkin->OnCustomCommand(m_nId);
+		m_pSkin->PostCustomCommandMsg(m_nId);
 	}
 }
 

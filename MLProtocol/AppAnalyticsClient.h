@@ -63,6 +63,7 @@ public:
 		CAM_MENU		= 'M',
 		CAM_POP_MENU	= 'P',
 		CAM_BUTTON		= 'B',
+		CAM_HOTKEY		= 'H',
 	};
 
 	virtual void Init();

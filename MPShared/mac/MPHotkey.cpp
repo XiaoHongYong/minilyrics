@@ -161,7 +161,7 @@ void CMPHotkey::OnHotKey(int nId, UINT fuModifiers, UINT uVirtKey)
 		{
 			// execute cmd
 			if (CMPlayerAppBase::GetMPSkinFactory()->GetMainWnd())
-				CMPlayerAppBase::GetMPSkinFactory()->GetMainWnd()->OnCustomCommand(cmdKey.cmd);
+				CMPlayerAppBase::GetMPSkinFactory()->GetMainWnd()->PostShortcutKeyCmd(cmdKey.cmd);
 			return;
 		}
 	}

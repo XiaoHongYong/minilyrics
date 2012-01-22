@@ -57,37 +57,6 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 		CMPlayerApp::GetAppAnalytics().TestSend();
 		break;
 #endif
-	case IDC_REPEAT_OFF:
-		g_Player.SetLoop(MP_LOOP_OFF);
-		break;
-	case IDC_REPEAT_ALL:
-		g_Player.SetLoop(MP_LOOP_ALL);
-		break;
-	case IDC_REPEAT_TRACK:
-		g_Player.SetLoop(MP_LOOP_TRACK);
-		break;
-	case IDC_RATE_LYR_1:
-	case IDC_RATE_LYR_2:
-	case IDC_RATE_LYR_3:
-	case IDC_RATE_LYR_4:
-	case IDC_RATE_LYR_5:
-		{
-			int nRate;
-			if (nId == IDC_RATE_LYR_2) nRate = 2;
-			else if (nId == IDC_RATE_LYR_3) nRate = 3;
-			else if (nId == IDC_RATE_LYR_4) nRate = 4;
-			else if (nId == IDC_RATE_LYR_5) nRate = 5;
-			else nRate = 1;
-
-			tstring		strUrl;
-
-			strUrl = GetStrName(SN_HTTP_RATE_LRC);
-			strUrl += g_LyricData.Properties().m_strId;
-
-			strUrl += CStrPrintf(_T("&rating=%d"), nRate).c_str();
-			OpenUrl(m_pSkinWnd, strUrl.c_str());
-		}
-		break;
 
 	case IDC_SL_CLEAR_TIME_STAMP:
 		{
@@ -105,10 +74,7 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 	case IDC_EDIT_LINE_COLOR:
 	case IDC_EDITOR_BG_COLOR:
 		{
-			CDlgChooseColor		dlg;
-			MLColor				clr(RGB(0, 0, 0));
-			LPCTSTR				szColorValueName = NULL;
-
+			LPCTSTR	szColorValueName = NULL;
 			if (nId == IDC_EDITOR_LYR_COLOR)
 				szColorValueName = _T("Ed_LowColor");
 			else if (nId == IDC_EDITOR_HIGH_COLOR)
@@ -120,8 +86,10 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 			else
 				szColorValueName = _T("Ed_FocusLineBgColor");
 
+			MLColor	clr(RGB(0, 0, 0));
 			ProfileGetColorValue(clr, SZ_SECT_LYR_DISPLAY, szColorValueName);
 
+			CDlgChooseColor	dlg;
 			if (dlg.DoModal(m_pSkinWnd, clr) == IDOK)
 			{
 				clr = dlg.GetColor();
@@ -132,22 +100,61 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 			}
 		}
 		break;
+	default:
+		{
+			if (OnCommandCharEncoding(nId))
+				break;
+			if (OnCommandSkin(nId))
+				break;
+			return false;
+		}
+	}
 
-	case IDC_LDO_KARAOKE:
+	return true;
+}
+
+bool CMPCommonCmdHandler::OnCustomCommand(int nID)
+{
+	switch (nID)
+	{
+#ifdef _WIN32_DESKTOP
+	case CMD_RATE_LYR_1:
+	case CMD_RATE_LYR_2:
+	case CMD_RATE_LYR_3:
+	case CMD_RATE_LYR_4:
+	case CMD_RATE_LYR_5:
+		{
+			int nRate;
+			if (nID == CMD_RATE_LYR_2) nRate = 2;
+			else if (nID == CMD_RATE_LYR_3) nRate = 3;
+			else if (nID == CMD_RATE_LYR_4) nRate = 4;
+			else if (nID == CMD_RATE_LYR_5) nRate = 5;
+			else nRate = 1;
+
+			tstring		strUrl;
+
+			strUrl = GetStrName(SN_HTTP_RATE_LRC);
+			strUrl += g_LyricData.Properties().m_strId;
+
+			strUrl += CStrPrintf(_T("&rating=%d"), nRate).c_str();
+			OpenUrl(m_pSkinWnd, strUrl.c_str());
+		}
+		break;
+	case CMD_LDO_KARAOKE:
 		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("Karaoke"), 
 			!g_Profile.GetProfileBool(m_strSectName.c_str(), _T("Karaoke"), false));
 		break;
-	case IDC_LDO_NORMAL:
-	case IDC_LDO_FADE_IN:
-	case IDC_LDO_FADEOUT_BG:
+	case CMD_LDO_NORMAL:
+	case CMD_LDO_FADE_IN:
+	case CMD_LDO_FADEOUT_BG:
 		{
 			DISPLAY_OPTIONS	displayOpt;
 
-			if (nId == IDC_LDO_NORMAL)
+			if (nID == CMD_LDO_NORMAL)
 				displayOpt = DO_NORMAL;
-			else if (nId == IDC_LDO_FADE_IN)
+			else if (nID == CMD_LDO_FADE_IN)
 				displayOpt = DO_FADEOUT_LOWCOLOR;
-			else if (nId == IDC_LDO_FADEOUT_BG)
+			else if (nID == CMD_LDO_FADEOUT_BG)
 				displayOpt = DO_FADEOUT_BG;
 			else
 				return false;
@@ -156,12 +163,11 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 				DisplayOptToStr(displayOpt));
 		}
 		break;
-#ifdef _WIN32_DESKTOP
-	case IDC_IPOD_LYRICS_DOWNLOADER:
+	case CMD_IPOD_LYRICS_DOWNLOADER:
 		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
 		break;
 
-	case IDC_ANTIAlIAS:
+	case CMD_ANTIAlIAS:
 		{
 			//
 			// 反锯齿
@@ -185,11 +191,39 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 			CMPlayerSettings::SetPlayerUISettings(_T("Antialias"), bAntialias);
 		}
 		break;
+	case CMD_TOGGLE_MP:
+		{
+			if (m_pSkinWnd->IsIconic() || ::GetForegroundWindow() != m_pSkinWnd->GetHandle())
+				m_pSkinWnd->ActivateWindow();
+			else
+			{
+				m_pSkinWnd->ShowWindow(SW_MINIMIZE);
+				if (m_pSkinWnd->IsToolWindow())
+					m_pSkinWnd->ShowWindow(SW_HIDE);
+			}
+		}
+		break;
+	case CMD_PREFERENCES:
+		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS);
+		break;
+	case CMD_DISPLAY_OPT:
+		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS, PAGE_LYR_DISPLAY);
+		break;
+	case CMD_FLOATING_LYRICS:
+		{
+			g_Profile.WriteProfileInt(_T("FloatingLyr"), !g_wndFloatingLyr.IsValid());
+			if (!g_wndFloatingLyr.IsValid())
+				g_wndFloatingLyr.Create();
+			else
+				g_wndFloatingLyr.Destroy();
+		}
+		break;
 #endif // _WIN32_DESKTOP
-	case IDC_WEBHOME:
+
+	case CMD_WEBHOME:
 		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_DOMAIN));
 		break;
-	case IDC_EMAIL:
+	case CMD_EMAIL:
 		// feed back
 		{
 			tstring		str;
@@ -200,58 +234,34 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 			OpenUrl(m_pSkinWnd, str.c_str());
 		}
 		break;
-	case IDC_REGISTER:
+	case CMD_REGISTER:
 		ShowActivateDialog(m_pSkinWnd);
 		break;
-// 	case IDC_MINIMIZE:
+// 	case CMD_MINIMIZE:
 // #if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
 // 		if (::GetParent(CMPlayerAppBase::GetMainWnd()->GetHandle()))
 // 			break;
 // #endif
 // 		CMPlayerAppBase::GetMPSkinFactory()->MinizeAll();
 // 		break;
-	case IDC_APPLY_ACCOUNT:
+	case CMD_APPLY_ACCOUNT:
 		{
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_SIGNUP));
 		}
 		break;
-	case IDC_LOGIN_VIA_IE:
+	case CMD_LOGIN_VIA_IE:
 		{
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_LOGIN));
 		}
 		break;
-// 	case IDC_VIEW_AS_TEXT:
-// 		{
-// 			// 转换尾纯文本，并使用用记事本打开
-// 			TCHAR		szTempTxtFile[MAX_PATH];
-// 
-// 			GetAppDataDir(szTempTxtFile);
-// 			_tcscat_safe(szTempTxtFile, CountOf(szTempTxtFile), _T("TempTxtLyrics.txt"));
-// 			g_LyricData.SaveToTextFile(szTempTxtFile, true);
-// 
-// 			// 用记事本打开
-// 			Execute(m_pSkinWnd, szTempTxtFile, NULL);
-// 		}
-// 		break;
-#ifdef _WIN32_WCE
-	case IDC_MEDIALIB:
-		CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Media Library"), _T("medialib"));
-		break;
-	case IDC_PLAYLIST:
-		CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Playlist"), _T("Playlist"));
-		break;
-	case IDC_LYRICS_VIEWER:
-		CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(false, _SZ_SKINWND_CLASS_NAME, _T("Lyrics"), _T("lyrics"));
-		break;
-#endif
 #ifdef _WIN32
-	case IDC_ADJUST_HUE:
+	case CMD_ADJUST_HUE:
 		{
 			ShowAdjustHueDialog(m_pSkinWnd);
 		}
 		break;
 #endif
-	case IDC_ABOUT:
+	case CMD_ABOUT:
 		{
 /*			CSkinWnd	*pWnd = new CDlgAbout();
 			int nRet = CMPlayerAppBase::GetMPSkinFactory()->OpenOrCloseSkinWnd(_T("about_box"),
@@ -260,7 +270,7 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 			ShowAboutDialog(m_pSkinWnd);
 		}
 		break;
-	case IDC_BR_ALBUM_ART:
+	case CMD_BR_ALBUM_ART:
 		{
 			tstring				strAlbumArtFileName;
 
@@ -294,55 +304,9 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_PLAYER_CUR_MEDIA_INFO_CHANGED);
 		}
 		break;
-	case IDC_HELP_STATIC_LYR:
+	case CMD_HELP_STATIC_LYR:
 		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_HELP_STATIC_LYR));
 		break;
-	default:
-		{
-			if (OnCommandCharEncoding(nId))
-				break;
-			if (OnCommandSkin(nId))
-				break;
-			return false;
-		}
-	}
-
-	return true;
-}
-
-bool CMPCommonCmdHandler::OnCustomCommand(int nID)
-{
-	switch (nID)
-	{
-#ifdef _WIN32_DESKTOP
-	case CMD_TOGGLE_MP:
-		{
-			if (m_pSkinWnd->IsIconic() || ::GetForegroundWindow() != m_pSkinWnd->GetHandle())
-				m_pSkinWnd->ActivateWindow();
-			else
-			{
-				m_pSkinWnd->ShowWindow(SW_MINIMIZE);
-				if (m_pSkinWnd->IsToolWindow())
-					m_pSkinWnd->ShowWindow(SW_HIDE);
-			}
-		}
-		break;
-	case CMD_PREFERENCES:
-		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS);
-		break;
-	case CMD_DISPLAY_OPT:
-		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS, PAGE_LYR_DISPLAY);
-		break;
-	case CMD_FLOATING_LYRICS:
-		{
-			g_Profile.WriteProfileInt(_T("FloatingLyr"), !g_wndFloatingLyr.IsValid());
-			if (!g_wndFloatingLyr.IsValid())
-				g_wndFloatingLyr.Create();
-			else
-				g_wndFloatingLyr.Destroy();
-		}
-		break;
-#endif // _WIN32_DESKTOP
 
 	case CMD_LYR_SCROLL_ENABLE_RECORD:
 	case CMD_LYR_SCROLL_ENABLE_REPLAY:
@@ -480,6 +444,15 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			g_Player.SetShuffle(bShuffle);
 			CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bShuffle ? _T("Shuffle On") : _T("Shuffle Off")));
 		}
+		break;
+	case CMD_LOOP_OFF:
+		g_Player.SetLoop(MP_LOOP_OFF);
+		break;
+	case CMD_LOOP_ALL:
+		g_Player.SetLoop(MP_LOOP_ALL);
+		break;
+	case CMD_LOOP_TRACK:
+		g_Player.SetLoop(MP_LOOP_TRACK);
 		break;
 	case CMD_LOOP:
 		{

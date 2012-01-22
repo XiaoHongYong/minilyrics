@@ -197,7 +197,7 @@ void CMPHotkey::OnHotKey(int nId, UINT fuModifiers, UINT uVirtKey)
 		{
 			// execute cmd
 			if (CMPlayerAppBase::GetMPSkinFactory()->GetMainWnd())
-				CMPlayerAppBase::GetMPSkinFactory()->GetMainWnd()->OnCustomCommand(cmdKey.cmd);
+				CMPlayerAppBase::GetMPSkinFactory()->GetMainWnd()->PostShortcutKeyCmd(cmdKey.cmd);
 			return;
 		}
 	}
@@ -230,7 +230,7 @@ bool CMPHotkey::OnKeyDown(CMPSkinWnd *pWnd, UINT nChar, UINT nFlags)
 		if (!cmdKey.bGlobal && nIDKeyPressed == cmdKey.idHotKey)
 		{
 			// execute cmd
-			pWnd->OnCustomCommand(cmdKey.cmd);
+			pWnd->PostShortcutKeyCmd(cmdKey.cmd);
 			return true;
 		}
 	}

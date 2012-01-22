@@ -37,10 +37,13 @@ int CVersionInfo::FromXML(SXNode *pNodeVer)
 		return ERR_FALSE;
 
 	SXNode *pNode = pNodeVer->GetChild(_T("AA"));
-	CAppAnalyticsClient::Rule rule;
-	rule.SaveFromXml(pNode);
+	if (pNode != NULL)
+	{
+		CAppAnalyticsClient::Rule rule;
+		rule.SaveFromXml(pNode);
+	}
 
-	// curversion
+	// current version
 	pNode = pNodeVer->GetChild(_T("curversion"));
 	if (!pNode)
 		return ERR_FALSE;

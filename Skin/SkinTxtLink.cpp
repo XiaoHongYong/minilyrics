@@ -116,7 +116,7 @@ bool CSkinTxtLink::OnLButtonUp(UINT nFlags, CPoint point)
 		if (StrBeginWith(m_strLink.c_str(), SZ_CMD))
 		{
 			int nId = m_pSkin->GetSkinFactory()->GetIDByName(m_strLink.c_str() + _tcslen(SZ_CMD));
-			m_pSkin->OnCustomCommand(nId);
+			m_pSkin->PostCustomCommandMsg(nId);
 		}
 		else
 			OpenUrl(m_pSkin, m_strLink.c_str());

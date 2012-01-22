@@ -226,6 +226,7 @@ public:
 
 	virtual bool OnCustomCommand(int nId);
 	virtual void PostCustomCommandMsg(int nId);
+	virtual void PostShortcutKeyCmd(int nId);
 
 	virtual void OnUserMessage(int nMessageID, LPARAM param);
 

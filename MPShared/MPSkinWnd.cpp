@@ -502,19 +502,13 @@ void CMPSkinWnd::OnEvent(const IEvent *pEvent)
 
 void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 {
+	int	nUID = m_pSkinFactory->GetUIDByMenuID(uID);
+	if (nUID != UID_INVALID)
+		CMPlayerApp::GetAppAnalytics().IncreaseCmdClickCount(nUID, CAppAnalyticsClient::CAM_MENU);
+
 #ifdef _WIN32_DESKTOP
 	switch (uID)
 	{
-	case IDC_CLICK_THROUGH:
-		{
-			SettingReverseClickThrough();
-		}
-		return;
-	case IDC_SETTOPMOST:
-		{
-			SettingReverseTopmost();
-		}
-		return;
 	case IDC_SET_OPAQUE_100:
 	case IDC_SET_OPAQUE_90:
 	case IDC_SET_OPAQUE_80:
@@ -541,33 +535,6 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 			else if (uID == IDC_SET_OPAQUE_10)	nPercent = 10;
 
 			SettingSetOpaquePercent(nPercent);
-		}
-		return;
-	case IDC_LDS_MULTI_LINE:
-	case IDC_LDS_STATIC_TXT:
-	case IDC_LDS_TWO_LINE:
-	case IDC_LDS_HORZ_SCROLL:
-	case IDC_LDS_SINGLE_LINE:
-	case IDC_LDS_VOBSUB:
-		{
-			// special lyrics display style
-			tstring		strName;
-			if (uID == IDC_LDS_MULTI_LINE)
-				strName = CLyricShowMultiRowObj::ClassName();
-			else if (uID == IDC_LDS_STATIC_TXT)
-				strName = SZ_TXT_LYR_CONTAINER;
-			else if (uID == IDC_LDS_TWO_LINE)
-				strName = CLyricShowTwoRowObj::ClassName();
-			else if (uID == IDC_LDS_HORZ_SCROLL)
-				strName = CLyricShowHorzScrollObj::ClassName();
-			else if (uID == IDC_LDS_SINGLE_LINE)
-				strName = CLyricShowSingleRowObj::ClassName();
-			else if (uID == IDC_LDS_VOBSUB)
-				strName = CLyricShowVobSub::ClassName();
-			else
-				ASSERT(0);
-
-			CLyricShowAgentObj::SetLyrDispStyleSettings(this, strName.c_str());
 		}
 		return;
 	default:
@@ -598,13 +565,40 @@ bool CMPSkinWnd::OnCustomCommand(int nId)
 	switch (nId)
 	{
 	case CMD_TOPMOST:
-		OnCommand(IDC_SETTOPMOST, 0);
+		SettingReverseTopmost();
 		return true;
 #ifdef _WIN32_DESKTOP
 	case CMD_CLICK_THROUGH:
-		OnCommand(IDC_CLICK_THROUGH, 0);
+		SettingReverseClickThrough();
 		return true;
 #endif
+	case CMD_LDS_MULTI_LINE:
+	case CMD_LDS_STATIC_TXT:
+	case CMD_LDS_TWO_LINE:
+	case CMD_LDS_HORZ_SCROLL:
+	case CMD_LDS_SINGLE_LINE:
+	case CMD_LDS_VOBSUB:
+		{
+			// special lyrics display style
+			tstring		strName;
+			if (nId == CMD_LDS_MULTI_LINE)
+				strName = CLyricShowMultiRowObj::ClassName();
+			else if (nId == CMD_LDS_STATIC_TXT)
+				strName = SZ_TXT_LYR_CONTAINER;
+			else if (nId == CMD_LDS_TWO_LINE)
+				strName = CLyricShowTwoRowObj::ClassName();
+			else if (nId == CMD_LDS_HORZ_SCROLL)
+				strName = CLyricShowHorzScrollObj::ClassName();
+			else if (nId == CMD_LDS_SINGLE_LINE)
+				strName = CLyricShowSingleRowObj::ClassName();
+			else if (nId == CMD_LDS_VOBSUB)
+				strName = CLyricShowVobSub::ClassName();
+			else
+				ASSERT(0);
+
+			CLyricShowAgentObj::SetLyrDispStyleSettings(this, strName.c_str());
+		}
+		return true;
 	}
 
 	LIST_SKINCMDHANDLER::iterator	it, itEnd;
@@ -1009,6 +1003,20 @@ bool CMPSkinWnd::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 	}
 
 	return false;
+}
+
+void CMPSkinWnd::PostCustomCommandMsg(int nId)
+{
+	CSkinWnd::PostCustomCommandMsg(nId);
+
+	CMPlayerApp::GetAppAnalytics().IncreaseCmdClickCount(nId, CAppAnalyticsClient::CAM_BUTTON);
+}
+
+void CMPSkinWnd::PostShortcutKeyCmd(int nId)
+{
+	CSkinWnd::PostShortcutKeyCmd(nId);
+
+	CMPlayerApp::GetAppAnalytics().IncreaseCmdClickCount(nId, CAppAnalyticsClient::CAM_HOTKEY);
 }
 
 void CMPSkinWnd::AddCmdHandler(LPCTSTR szName)

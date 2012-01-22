@@ -2160,6 +2160,15 @@ void CSkinWnd::PostCustomCommandMsg(int nId)
 #endif
 }
 
+void CSkinWnd::PostShortcutKeyCmd(int nId)
+{
+#ifdef _WIN32
+	::PostMessage(m_hWnd, ms_msgIDCustomCommand, nId, 0);
+#else
+	OnCustomCommand(nId);
+#endif
+}
+
 void CSkinWnd::OnUserMessage(int nMessageID, LPARAM param)
 {
 	m_rootConainter.OnUserMessage(nMessageID, param);

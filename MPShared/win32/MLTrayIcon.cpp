@@ -251,7 +251,7 @@ void CMLTrayIcon::OnMyNotifyIcon(WPARAM wParam, LPARAM lParam)
 			}
 			else if (lParam == WM_LBUTTONUP)
 			{
-				CMPlayerAppBase::GetMainWnd()->OnCustomCommand(g_SysTrayIconCmd[i].dwCmd);
+				CMPlayerAppBase::GetMainWnd()->PostShortcutKeyCmd(g_SysTrayIconCmd[i].dwCmd);
 			}
 			else if (lParam == WM_LBUTTONDBLCLK)
 			{

@@ -95,9 +95,9 @@ void CZPAnalyticsClient::Quit()
 
 void CZPAnalyticsClient::IncreaseCmdClickCount(int nUID, CmdAccessMethod cam)
 {
-	CAppAnalyticsClient::IncreaseCmdClickCount(
-		CMPlayerApp::GetMPSkinFactory()->GetStringOfID(nUID).c_str(),
-		cam);
+	tstring strID = CMPlayerApp::GetMPSkinFactory()->GetStringOfID(nUID);
+	if (strID.size() > 0)
+		CAppAnalyticsClient::IncreaseCmdClickCount(strID.c_str(), cam);
 }
 
 void CZPAnalyticsClient::IncreaseNumberOfResult(LPCTSTR szType, int nResult)
@@ -167,9 +167,19 @@ void CZPAnalyticsClient::PrepareLicenseStatusData(MapString &ping)
 	ping[SZ_N_LS_ONLINE_VERIFIED] = StringFromInt(li.bOnlineVerified);
 }
 
+inline tstring GetCurSkin()
+{
+	tstring curSkinWnd = CMPlayerApp::GetMainWnd()->GetSkinWndName();
+	if (_tcsicmp(curSkinWnd.c_str(), _T("MiniLyrics")) == 0
+		|| _tcsicmp(curSkinWnd.c_str(), _T("ZikiPlayer")) == 0)
+		return CMPlayerApp::GetInstance()->GetDefaultSkin();
+	else
+		return CMPlayerApp::GetInstance()->GetDefaultSkin() + _T("#") + curSkinWnd;
+}
+
 void CZPAnalyticsClient::PrepareSettingsData(MapString &ping)
 {
-	ping[SZ_N_ST_CUR_SKIN] = CMPlayerApp::GetInstance()->GetDefaultSkin();
+	ping[SZ_N_ST_CUR_SKIN] = GetCurSkin();
 	ping[SZ_N_ST_BG_IMAGE] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), _T(""));
 	ping[SZ_N_ST_USE_ALBUM_ARG_BG] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), _T(""));
 	ping[SZ_N_ST_DARK_LYR_BG] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("DarkenLyrBg"), _T(""));

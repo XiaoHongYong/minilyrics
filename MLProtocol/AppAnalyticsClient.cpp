@@ -26,6 +26,7 @@ CBaseDate GetCurrentDateOnly()
 //////////////////////////////////////////////////////////////////////////
 bool CAppAnalyticsClient::Rule::SaveFromXml(SXNode *pNode)
 {
+	ASSERT(pNode);
 	SXNode *pNodeBaseRule = pNode->GetChild(_T("BaseRule"));
 	if (!pNodeBaseRule)
 		return false;
@@ -187,10 +188,8 @@ int CAppAnalyticsClient::GetValueInt(LPCTSTR szType, LPCTSTR szName, int nDefVal
 
 void CAppAnalyticsClient::IncreaseCmdClickCount(LPCTSTR szCmd, CmdAccessMethod cam)
 {
-	CMutexAutolock lock(m_mutex);
-	CStrPrintf name(_T("%s#%c"), szCmd, (TCHAR)cam);
-
-	IncreaseValue(SZ_UD_CMD_USAGE, name.c_str(), 1);
+	CStrPrintf type(_T("%s_%c"), SZ_UD_CMD_USAGE, (TCHAR)cam);
+	IncreaseValue(type.c_str(), szCmd, 1);
 }
 
 void CAppAnalyticsClient::IncreaseCrashTimes()
