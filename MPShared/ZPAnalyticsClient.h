@@ -3,10 +3,11 @@
 #include "../MLProtocol/AppAnalyticsClient.h"
 
 // Ping type
-#define SZ_UD_UPLOAD_LYRICS_DATA		_T("UL")
-#define SZ_UD_SEARCH_LYRICS_DATA		_T("SL")
-#define SZ_UD_DOWNLOAD_LYRICS_DATA		_T("DL")
-#define SZ_UD_EMBEDDED_LYRICS_DATA		_T("EL")
+#define SZ_UD_SEARCH_LYRICS_DATA		_T("SLR")
+#define SZ_UD_BATCH_SEARCH_DATA			_T("BSR")
+#define SZ_UD_DOWNLOAD_LYRICS_DATA		_T("DLR")
+#define SZ_UD_UPLOAD_LYRICS_DATA		_T("ULR")
+#define SZ_UD_EMBEDDED_LYRICS_DATA		_T("ELR")
 #define SZ_UD_PLAYER_RUN_TIME			_T("PR")
 
 #define SZ_N_NUMBER_OF_RESULT			_T("NR")

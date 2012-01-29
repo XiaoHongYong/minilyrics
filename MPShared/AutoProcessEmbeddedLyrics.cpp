@@ -262,6 +262,8 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 	if (nRet == ERR_OK)
 		item.m_bDealOK = true;
 
+	CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_EMBEDDED_LYRICS_DATA, nRet);
+
 	return nRet;
 }
 

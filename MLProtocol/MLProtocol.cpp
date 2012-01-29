@@ -10,9 +10,10 @@
 History of MLProtocol:
 
 ML 3.0:			Old XML message format, encoding: gb2312(system default).
+				disabled now
 
 ML 3.1 ~ 3.9:	HTTP tunnel XML message format, encoding: gb2312(system default).
-				Deprecated: Protocol Version: "0.9"
+				Deprecated: Protocol Version: "0.9", disabled now
 
 ML 4.0 ~ 7.0:	HTTP tunnel Encrypted XML message format, encoding: UTF-8
 

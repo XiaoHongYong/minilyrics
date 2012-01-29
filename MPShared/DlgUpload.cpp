@@ -30,6 +30,8 @@ public:
 		}
 		g_sessionUpload.Close();
 
+		CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_UPLOAD_LYRICS_DATA, m_nResult);
+
 		return CWorkObjBase::DoTheJob();
 	}
 
@@ -105,6 +107,8 @@ public:
 				}
 			}
 		}
+
+		CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_UPLOAD_LYRICS_DATA, m_nResult);
 
 		return CWorkObjBase::DoTheJob();
 	}

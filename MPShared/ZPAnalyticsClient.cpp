@@ -102,7 +102,7 @@ void CZPAnalyticsClient::IncreaseCmdClickCount(int nUID, CmdAccessMethod cam)
 
 void CZPAnalyticsClient::IncreaseNumberOfResult(LPCTSTR szType, int nResult)
 {
-	CStrPrintf name(_T("%s#%d"), SZ_N_NUMBER_OF_RESULT, nResult);
+	CStrPrintf name(_T("%s_%d"), SZ_N_NUMBER_OF_RESULT, nResult);
 
 	IncreaseValue(szType, name.c_str(), 1);
 }

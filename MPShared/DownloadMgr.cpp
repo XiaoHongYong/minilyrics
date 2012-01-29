@@ -608,6 +608,8 @@ RETURN_END:
 	if (!(nRet == ERR_OK && nHttpCode == 200))
 		DBGLOG3(_T("Downloaded Failed, Error: %d, httpcode: %d, %s"), nRet, nHttpCode, pTask->m_strURL.c_str());
 
+	CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_DOWNLOAD_LYRICS_DATA, nRet);
+
 	return ERR_OK;
 }
 

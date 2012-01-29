@@ -570,7 +570,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	nRet = session.Connect();
 	if (nRet != ERR_OK)
 	{
-		CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_DOWNLOAD_LYRICS_DATA, nRet);
+		CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_SEARCH_LYRICS_DATA, nRet);
 		return nRet;
 	}
 
@@ -585,7 +585,7 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	nCurPage = retSearch.nCurPage;
 	nPageCount = retSearch.nPageCount;
 
-	CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_DOWNLOAD_LYRICS_DATA, nRet);
+	CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_SEARCH_LYRICS_DATA, nRet);
 
 	if (retSearch.listResultFiles.size() > 0)
 	{
@@ -605,7 +605,10 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 
 	int nRet = session.Connect();
 	if (nRet != ERR_OK)
+	{
+		CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_BATCH_SEARCH_DATA, nRet);
 		return nRet;
+	}
 
 	nRet = session.BatchSearch(listSearch, retLyrics);
 	session.Close();
@@ -614,6 +617,7 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 	if (nRet == ERR_OK)
 		g_licenseManager.SaveActivateResult(retLyrics);
 
+	CMPlayerApp::GetAppAnalytics().IncreaseNumberOfResult(SZ_UD_BATCH_SEARCH_DATA, nRet);
 	return nRet;
 }
 
