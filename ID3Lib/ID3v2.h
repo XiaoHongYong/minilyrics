@@ -312,6 +312,9 @@ public:
 
 	int Save();
 
+	// Remove the whole ID3v2 tag
+	int RemoveTagAndClose();
+
 public:
 	typedef list<CID3v2Frame*>		FRAME_LIST;
 	typedef FRAME_LIST::iterator		FrameIterator;

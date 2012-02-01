@@ -595,6 +595,18 @@ int CID3v2::Save()
 	return ERR_OK;
 }
 
+int CID3v2::RemoveTagAndClose()
+{
+	if (m_nHeaderTotalLen <= 0)
+		return ERR_NOT_FOUND_ID3V2;
+
+	int nRet = FileMoveEndData(m_fp, m_nId3v2BegPos + m_nHeaderTotalLen, m_nId3v2BegPos);
+	if (nRet == ERR_OK)
+		Close();
+
+	return nRet;	
+}
+
 int CID3v2::ReadAllFrames()
 {
 	int			nRet;
