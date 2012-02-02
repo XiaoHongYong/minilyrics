@@ -250,7 +250,7 @@ void CMPSkinFactory::RestoreAll()
 		CSkinWnd	*pWnd = *it;
 
 		if (pWnd->IsIconic())
-			pWnd->ShowWindow(SW_RESTORE);
+			pWnd->ShowWindow(SW_SHOWNOACTIVATE);
 
 		if (pWnd->IsToolWindow())
 			pWnd->ShowWindow(SW_SHOW);
@@ -392,14 +392,16 @@ void CMPSkinFactory::AllUpdateTransparent()
 	if (!IsLayeredWndSupported())
 		return;
 
+	int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
+	byte	byAlpha = OpaquePercentToAlpha(nOpaque);
+
 #ifndef _MPLAYER
+	if (g_wndFloatingLyr.IsValid())
+		g_wndFloatingLyr.SetTransparent(byAlpha, false);
+
 	if (::GetParent(CMPlayerAppBase::GetMainWnd()->GetHandle()))
 		return;
 #endif
-
-	// °ëÍ¸Ã÷Öµ
-	int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
-	byte	byAlpha = OpaquePercentToAlpha(nOpaque);
 
 	LIST_SKINWNDS::iterator	it, itEnd;
 

@@ -68,7 +68,7 @@ bool CMPFloatingLyrWnd::SettingGetTopmost()
 
 int CMPFloatingLyrWnd::SettingGetOpaquePercent()
 {
-	return g_Profile.GetProfileInt(SZ_SECT_FLOATING_LYR, _T("WindowOpaquePercent"), 100);
+	return g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
 }
 
 bool CMPFloatingLyrWnd::SettingGetClickThrough()

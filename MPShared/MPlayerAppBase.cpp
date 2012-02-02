@@ -636,7 +636,7 @@ void CMPlayerAppBase::OnMediaChanged()
 	{
 		if (g_bAutoMinimized)
 		{
-			GetMainWnd()->ShowWindow(SW_SHOWNOACTIVATE);
+			CMPlayerAppBase::GetMPSkinFactory()->RestoreAll();
 			g_bAutoMinimized = FALSE;
 		}
 

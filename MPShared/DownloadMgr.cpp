@@ -642,7 +642,7 @@ int CDownloadMgr::SaveDownloadedLyrics(LPCTSTR szMediaFile, LPCTSTR szLyrFileNam
 	int		nRet = ERR_OK;
 
 	if (nLyrSaveFlag & (LST_ID3V2_USLT | LST_ID3V2_SYLT | LST_LYRICS3V2)
-		&& FileIsExtSame(szMediaFile, _T(".mp3")))
+		&& CAutoProcessEmbeddedLyrics::CanSaveEmbeddedLyricsInMediaFile(szMediaFile))
 	{
 		CCharBuffer bufLyrics;
 		bufLyrics.append((LPCSTR)lpData, nSize);

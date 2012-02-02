@@ -1654,6 +1654,7 @@ void CSkinWnd::OnActivate(bool bActived)
 	CAutoRedrawLock	redrawLock(this);
 
 	m_bActived = bActived;
+	DBGLOG1(_T("OnActivate: %d"), bActived);
 
 	if (!m_bOnDestroy)
 	{

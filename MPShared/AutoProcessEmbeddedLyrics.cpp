@@ -69,6 +69,8 @@ void CAutoProcessEmbeddedLyrics::Item::ToXML(CXMLWriter &xmlWriter)
 int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
 {
 	ASSERT(szLyricsFile || pBufLyrics);
+	if (!CanSaveEmbeddedLyricsInMediaFile(szSongFile))
+		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
 	CMutexAutolock		autolock(m_mutex);
 
@@ -249,7 +251,8 @@ void CAutoProcessEmbeddedLyrics::OnSongChanged()
 
 int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 {
-	ASSERT(FileIsExtSame(item.m_strSongFile.c_str(), _T(".mp3")));
+	if (!CanSaveEmbeddedLyricsInMediaFile(item.m_strSongFile.c_str()))
+		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
 	SetFileNoReadOnly(item.m_strSongFile.c_str());
 
@@ -413,6 +416,11 @@ void CAutoProcessEmbeddedLyrics::LoadJobs(bool bDeleteFile)
 
 	if (bDeleteFile)
 		DeleteFile(strFile.c_str());
+}
+
+bool CAutoProcessEmbeddedLyrics::CanSaveEmbeddedLyricsInMediaFile(LPCTSTR szFile)
+{
+	return FileIsExtSame(szFile, _T(".mp3"));
 }
 
 //////////////////////////////////////////////////////////////////////////

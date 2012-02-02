@@ -42,6 +42,35 @@ tstring ConnectToLocalStr(LPCTSTR szStr1, LPCTSTR szStr2)
 	return str;
 }
 
+class CPfItemRestoreLyrChgSavePrompt : public CPreferItem
+{
+public:
+	CPfItemRestoreLyrChgSavePrompt() : CPreferItem(ConnectToLocalStr(_T("UI:"), _T("Restore saving prompt setting for lyrics changed")).c_str())
+	{
+	}
+
+	virtual tstring GetValue() {
+		return _T("");
+	}
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		vString.push_back(TOLOCAL_T("Restore"));
+	}
+
+	virtual void SetOption(int nIndex) {
+		g_Profile.WriteProfileInt(_T("SaveLyrPrompt"), IDCANCEL);
+	}
+
+	virtual bool IsDefault() {
+		return true;
+	}
+
+	virtual void Reset() {
+		
+	}
+
+};
+
 class CPfItemInt : public CPreferItem
 {
 public:
@@ -740,6 +769,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 #endif
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto adjust window width with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndWidth"), false));
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto adjust window height with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndHeight"), true));
+	m_vPreferItems.push_back(new CPfItemRestoreLyrChgSavePrompt());
 	// m_vPreferItems.push_back(new CPfItemBool(_T("Hide the link of rating lyrics"), ET_NULL, SZ_SECT_UI, _T("HideRateLink"), true));
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Display:"), _T("Allow to adjust the vertical position of lyrics")).c_str(),
 		ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, 
