@@ -263,7 +263,7 @@ void CID3v2::Close()
 {
 	if (m_fp)
 	{
-		if (m_bAttach)
+		if (!m_bAttach)
 			fclose(m_fp);
 		m_fp = NULL;
 	}
@@ -353,8 +353,11 @@ int CID3v2::Open(FILE *fp, bool bCreate)
 {
 #define E_RETURN(code)	{ nRet = code; goto R_ERROR; }
 	ASSERT(fp);
-	m_fp = fp;
-	m_bAttach = true;
+	if (m_fp != fp)
+	{
+		m_fp = fp;
+		m_bAttach = true;
+	}
 
 	int		nRet;
 

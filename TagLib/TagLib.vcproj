@@ -149,6 +149,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\M4aTag.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MP3InfoReader.cpp"
 				>
 			</File>
@@ -183,6 +187,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath=".\M4aTag.h"
+				>
+			</File>
+			<File
 				RelativePath=".\MP3InfoReader.h"
 				>
 			</File>
@@ -194,10 +202,6 @@
 				RelativePath=".\TagLib.h"
 				>
 			</File>
-			<File
-				RelativePath=".\targetver.h"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -205,10 +209,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\ReadMe.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
