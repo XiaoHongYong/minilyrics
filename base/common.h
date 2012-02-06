@@ -31,12 +31,25 @@ template<int n> struct __sizeof_at_compile_helper;
 
 #define Tobool(bValue)		((bValue) != 0)
 
-inline uint32 NetbyteToUInt32(byte *byData)
+inline uint32 BigEndianToUInt32(byte *byData)
+{
+	return byData[3] | (byData[2] << 8) | (byData[1] << 16) | (byData[0] << 24);
+}
+
+inline void BigEndianFromUInt32(uint32 nValue, byte *byData)
+{
+	byData[3] = nValue & 0xFF;
+	byData[2] = (nValue >> 8) & 0xFF;
+	byData[1] = (nValue >> 16) & 0xFF;
+	byData[0] = (nValue >> 24) & 0xFF;
+}
+
+inline uint32 LittleEndianToUInt32(byte *byData)
 {
 	return byData[0] | (byData[1] << 8) | (byData[2] << 16) | (byData[3] << 24);
 }
 
-inline void NetbyteFromUInt32(uint32 nValue, byte *byData)
+inline void LittleEndianFromUInt32(uint32 nValue, byte *byData)
 {
 	byData[0] = nValue & 0xFF;
 	byData[1] = (nValue >> 8) & 0xFF;
@@ -44,12 +57,12 @@ inline void NetbyteFromUInt32(uint32 nValue, byte *byData)
 	byData[3] = (nValue >> 24) & 0xFF;
 }
 
-inline uint16 NetbyteToUInt16(byte *byData)
+inline uint16 LittleEndianToUInt16(byte *byData)
 {
 	return byData[0] | (byData[1] << 8);
 }
 
-inline void NetbyteFromUInt16(uint16 nValue, byte *byData)
+inline void LittleEndianFromUInt16(uint16 nValue, byte *byData)
 {
 	byData[0] = nValue & 0xFF;
 	byData[1] = (nValue >> 8) & 0xFF;

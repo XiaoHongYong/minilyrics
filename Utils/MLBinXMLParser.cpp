@@ -107,7 +107,7 @@ public:
 		LPBYTE dataEnd = data + nLength;
 		for (uint32 i = 0; i < nCount && data + sizeof(uint32) + 1 < dataEnd; i++)
 		{
-			uint32 lenItem = NetbyteToUInt32(data);
+			uint32 lenItem = LittleEndianToUInt32(data);
 			data += sizeof(uint32);
 			if (data + lenItem > dataEnd)
 				return false;
@@ -281,11 +281,11 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 	data++;
 
 	// Flag
-	uint32	nXmlFlags = NetbyteToUInt32(data);
+	uint32	nXmlFlags = LittleEndianToUInt32(data);
 	data += sizeof(uint32);
 
 	// Length
-	uint32	nTotalLength = NetbyteToUInt32(data);
+	uint32	nTotalLength = LittleEndianToUInt32(data);
 	data += sizeof(uint32);
 	dataEnd += nTotalLength;
 
@@ -301,7 +301,7 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 		// Read block info
 		LPCSTR blockName = (LPCSTR)data;
 		data += LEN_BLOCK_NAME;
-		uint32 lenBlock = NetbyteToUInt32(data);
+		uint32 lenBlock = LittleEndianToUInt32(data);
 		data += sizeof(uint32);
 
 		lenBlock -= LEN_BLOCK_HEADER;
@@ -310,7 +310,7 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 
 		if (StrBeginWith(blockName, BX_BLOCK_STING_TABLE))
 		{
-			uint32 countStr = NetbyteToUInt32(data);
+			uint32 countStr = LittleEndianToUInt32(data);
 			data += sizeof(uint32);
 			lenBlock -= sizeof(uint32);
 			if (!strTable.SetTable((char*)data, lenBlock, countStr))
@@ -321,7 +321,7 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 		}
 		else if (StrBeginWith(blockName, BX_BLOCK_BIN))
 		{
-			uint32 countItem = NetbyteToUInt32(data);
+			uint32 countItem = LittleEndianToUInt32(data);
 			data += sizeof(uint32);
 			lenBlock -= sizeof(uint32);
 			if (!binDataTable.SetTable(data, lenBlock, countItem))
@@ -344,7 +344,7 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 				byte *dataEnd = data + lenBlock;
 				uint16 *wp = wData;
 				for (byte *p = data; p < dataEnd; p += sizeof(uint16), wp++)
-					*wp = NetbyteToUInt16(data);
+					*wp = LittleEndianToUInt16(data);
 
 				CMLBXContentParserObj<uint16>	parser(xmlData, wData, 
 					lenBlock / sizeof(uint16), binDataTable, strTable);
@@ -357,7 +357,7 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 				byte *dataEnd = data + lenBlock;
 				uint32 *wp = dwData;
 				for (byte *p = data; p < dataEnd; p += sizeof(uint32), wp++)
-					*wp = NetbyteToUInt32(data);
+					*wp = LittleEndianToUInt32(data);
 
 				CMLBXContentParserObj<uint32>	parser(xmlData, dwData, 
 					lenBlock / sizeof(uint32), binDataTable, strTable);
@@ -386,7 +386,7 @@ bool CMLBinXMLParser::IsHeaderType(LPCSTR szHeader)
 inline void AppendUint32(stringex &buf, uint32 n)
 {
 	byte byLen[sizeof(uint32)];
-	NetbyteFromUInt32(n, byLen);
+	LittleEndianFromUInt32(n, byLen);
 	buf.append((LPCSTR)byLen, sizeof(uint32));
 }
 
@@ -523,7 +523,7 @@ CCharBuffer &CMLBinXMLWriter::GetBuffer()
 	WriteContentBlock(indexSize);
 
 	// Rewrite total length
-	NetbyteFromUInt32(m_strBuff.size(), (byte *)m_strBuff.data() + LEN_BIN_XML_HEADER + 1 + sizeof(uint32));
+	LittleEndianFromUInt32(m_strBuff.size(), (byte *)m_strBuff.data() + LEN_BIN_XML_HEADER + 1 + sizeof(uint32));
 
 	return m_strBuff;
 }
@@ -584,7 +584,7 @@ void CMLBinXMLWriter::WriteStrTable()
 	}
 
 	// Rewrite length
-	NetbyteFromUInt32(m_strBuff.size() - nStrTableStartPos, (byte*)m_strBuff.data() + nStrTableStartPos + LEN_BLOCK_NAME);
+	LittleEndianFromUInt32(m_strBuff.size() - nStrTableStartPos, (byte*)m_strBuff.data() + nStrTableStartPos + LEN_BLOCK_NAME);
 }
 
 void CMLBinXMLWriter::WriteContentBlock(int indexSize)
@@ -606,7 +606,7 @@ void CMLBinXMLWriter::WriteContentBlock(int indexSize)
 	{
 		for (int i = 0; i < (int)m_vContentBlock.size(); i++)
 		{
-			NetbyteFromUInt16(m_vContentBlock[i], data);
+			LittleEndianFromUInt16(m_vContentBlock[i], data);
 			data += sizeof(uint16);
 		}
 	}
@@ -614,7 +614,7 @@ void CMLBinXMLWriter::WriteContentBlock(int indexSize)
 	{
 		for (int i = 0; i < (int)m_vContentBlock.size(); i++)
 		{
-			NetbyteFromUInt32(m_vContentBlock[i], data);
+			LittleEndianFromUInt32(m_vContentBlock[i], data);
 			data += sizeof(uint32);
 		}
 	}
