@@ -379,14 +379,10 @@ bool CFileMediaSource::GetEmbeddedLyrics(int nIndex, tstring &lyrics)
 	nRet = id3v2.Open(item.file.c_str(), false, false);
 	if (nRet == ERR_OK)
 	{
-		ID3v2LyricsInfo		id3v2Lyrics;
-		tstringex			str;
-		nRet = id3v2.GetLyrics(id3v2Lyrics);
+		ID3v2UnsynchLyrics unsyncLyrics;
+		nRet = id3v2.GetUnsyncLyrics(unsyncLyrics);
 		if (nRet == ERR_OK)
-		{
-			if (id3v2Lyrics.m_unsynchLyrics.size() > 0)
-				lyrics = id3v2Lyrics.m_unsynchLyrics.front()->m_strLyrics;
-		}
+			lyrics = unsyncLyrics.m_strLyrics;
 		id3v2.Close();
 	}
 
@@ -406,17 +402,7 @@ int CFileMediaSource::SetEmbeddedLyrics(int nIndex, tstring &lyrics)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	CHAR_ENCODING encoding;
-	if (IsAnsiStr(lyrics.c_str()))
-		encoding = ED_SYSDEF;
-	else
-		encoding = ED_UNICODE;
-
-	ID3v2UnsynchLyrics	usly;
-	usly.m_encodingType = CharEncodingToID3v2EncType(encoding);
-	usly.m_strLyrics = lyrics.c_str();
-
-	nRet = id3v2.UpdateUnsynchLyricsFrame(&usly);
+	nRet = id3v2.SetUnsynchLyrics(NULL, lyrics.c_str());
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -436,10 +422,10 @@ int CFileMediaSource::RemoveEmbeddedLyrics(int nIndex)
 		return nRet;
 
 	int nRemovedCount = 0;
-	nRet = id3v2.RemoveSynchLyrics(NULL);
+	nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_USLT);
 	if (nRet == ERR_OK)
 		nRemovedCount++;
-	nRet = id3v2.RemoveUnsynchLyrics(NULL);
+	nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_SYLT);
 	if (nRet == ERR_OK)
 		nRemovedCount++;
 

@@ -14,9 +14,7 @@ DECLAR_CPPUNIT_TEST_REG(CMLData)
 #define _ID3V2_SUPPORT
 #endif
 
-#ifdef _ID3V2_SUPPORT
-#include "../ID3Lib/ID3v2.h"
-#endif
+#include "../TagLib/TagLib.h"
 
 #include "../MLProtocol/MLUtils.h"
 #include "LrcTag.h"
@@ -182,20 +180,6 @@ public:
 
 };
 
-
-enum LRC_SOURCE_TYPE
-{
-	LST_NONE			= 0,
-	LST_UNKNOWN			= 0x1 << 1,
-	LST_FILE			= 0x1 << 2,
-	LST_ID3V2_SYLT		= 0x1 << 3,
-	LST_ID3V2_USLT		= 0x1 << 4,
-	LST_LYRICS3V2		= 0x1 << 5,
-	LST_ID3V2_LYRICS	= 0x1 << 6,
-};
-
-LRC_SOURCE_TYPE GetLrcSourceType(LPCTSTR szLrcSource);
-
 // END 歌词数据的数据结构定义
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -332,6 +316,7 @@ public:
 	int GetOffsetTime() { return m_lyrProperties.GetOffsetTime(); }
 	void SetOffsetTime(int nOffsetTime) { m_lyrProperties.SetOffsetTime(nOffsetTime); }
 
+	LPCTSTR GetMediaSource() { return m_strSongFile.c_str(); }
 	int GetMediaLength() { return m_nMediaLength; }
 
 	BOOL HasLyricsOpened();
@@ -347,8 +332,8 @@ protected:
 	int OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 	int OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 
-	bool ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encoding);
-	bool ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING encoding);
+	void ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encoding);
+	void ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING encoding);
 
 	int UpdateTagToID3v2DescTxt();
 #endif // #ifdef _ID3V2_SUPPORT

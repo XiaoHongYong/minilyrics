@@ -40,8 +40,6 @@ public:
 	bool OnPostQuit();
 	void OnSongChanged();
 
-	static bool CanSaveEmbeddedLyricsInMediaFile(LPCTSTR szFile);
-
 protected:
 	friend class CDlgBatchProcessEmbeddedLyrics;
 	friend class CTestCaseCAutoProcessEmbeddedLyrics;

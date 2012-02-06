@@ -7,128 +7,6 @@
 #include "MLData.h"
 #include "HelperFun.h"
 
-
-#ifdef _ID3V2_SUPPORT
-
-bool ID3v2LyricsInfoGetSynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2SynchLyrics *&plyrics)
-{
-	tstringex			str;
-	int					nLen;
-
-	nLen = _tcslen(SZ_SONG_ID3V2_SYLT);
-	if (_tcsnicmp(szLrcSource, SZ_SONG_ID3V2_SYLT, nLen) != 0)
-		return false;
-
-	for (ID3v2LyricsInfo::LIST_SYNCHLYRICS::iterator it = lyricsInfo.m_synchLyrics.begin();
-		it != lyricsInfo.m_synchLyrics.end(); it++)
-	{
-		plyrics = *it;
-
-		ConvertStr(plyrics->m_szLanguage, -1, str);
-
-		if (_tcscmp(szLrcSource + nLen, str.c_str()) == 0)
-		{
-			return true;
-		}
-	}
-
-	plyrics = NULL;
-	return false;
-}
-
-bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2UnsynchLyrics *&plyrics)
-{
-	tstringex			str;
-	int					nLen;
-
-	nLen = _tcslen(SZ_SONG_ID3V2_USLT);
-	if (_tcsnicmp(szLrcSource, SZ_SONG_ID3V2_USLT, nLen) != 0)
-		return false;
-
-	for (ID3v2LyricsInfo::LIST_UNSYNLYRICS::iterator it = lyricsInfo.m_unsynchLyrics.begin();
-		it != lyricsInfo.m_unsynchLyrics.end(); it++)
-	{
-		plyrics = *it;
-
-		ConvertStr(plyrics->m_szLanguage, -1, str);
-
-		if (_tcscmp(szLrcSource + nLen, str.c_str()) == 0)
-		{
-			return true;
-		}
-	}
-
-	plyrics = NULL;
-	return false;
-}
-
-void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable)
-{
-	tstringex			str;
-	LrcSearchResult		result;
-
-	for (ID3v2LyricsInfo::LIST_SYNCHLYRICS::iterator it = lyricsInfo.m_synchLyrics.begin();
-		it != lyricsInfo.m_synchLyrics.end(); it++)
-	{
-		ID3v2SynchLyrics	*plyrics = *it;
-
-		if (bOnlyListAvailable)
-		{
-			if (plyrics->m_vSynLyrics.size() < 1)
-				continue;
-		}
-
-		ConvertStr(plyrics->m_szLanguage, -1, str);
-
-		result.strUrl = SZ_SONG_ID3V2_SYLT;
-		result.strUrl += str;
-
-		result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(SZ_SONG_ID3V2_SYLT_DESC));
-		result.strSaveFileName += _T(", ");
-		result.strSaveFileName += str;
-		result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
-
-		vLyrics.push_back(result);
-	}
-
-	{
-		for (ID3v2LyricsInfo::LIST_UNSYNLYRICS::iterator it = lyricsInfo.m_unsynchLyrics.begin();
-			it != lyricsInfo.m_unsynchLyrics.end(); it++)
-		{
-			ID3v2UnsynchLyrics	*plyrics = *it;
-
-			if (bOnlyListAvailable)
-			{
-				if (plyrics->m_strLyrics.size() < MIN_EMBEDDED_LYR_SIZE)
-					continue;
-			}
-
-			ConvertStr(plyrics->m_szLanguage, -1, str);
-
-			result.strUrl = SZ_SONG_ID3V2_USLT;
-			result.strUrl += str;
-
-			result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(SZ_SONG_ID3V2_USLT_DESC));
-			result.strSaveFileName += _T(", ");
-			result.strSaveFileName += str;
-			result.nMatchValue = MATCH_VALUE_OK + 2;
-
-			vLyrics.push_back(result);
-		}
-	}
-
-	if (lyricsInfo.m_lyricsUserDefined.m_strValue.size()
-		|| lyricsInfo.m_lyricsUserDefined.m_strDesc.size())
-	{
-		result.strUrl = SZ_SONG_ID3V2_LYRICS;
-		result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(SZ_SONG_ID3V2_LYRICS_DESC));
-		result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC - 1;
-		vLyrics.push_back(result);
-	}
-}
-#endif // #ifdef _ID3V2_SUPPORT
-
-
 LPCTSTR			SZ_LRC_FILE_LEFT_COMMENT = _T("£¨");
 LPCTSTR			SZ_LRC_FILE_RIGHT_COMMENT = _T("£©");
 
@@ -734,7 +612,7 @@ V_LRCSEARCHRESULT::iterator V_LRCSEARCHRESULT::GetTheBestMatchLyrics(BOOL bCheck
 	for (iterator it = begin(); it != end(); it++)
 	{
 		LrcSearchResult		&result = *it;
-		if (bCheckExist && GetLrcSourceType(result.strUrl.c_str()) == LST_FILE)
+		if (bCheckExist && LyrSrcTypeFromName(result.strUrl.c_str()) == LST_FILE)
 		{
 			if (!IsFileExist(result.strUrl.c_str()))
 				continue;

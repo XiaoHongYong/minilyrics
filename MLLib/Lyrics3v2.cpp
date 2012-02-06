@@ -6,14 +6,7 @@
 #include "MLLib.h"
 #include "Lyrics3v2.h"
 #include "../ID3Lib/ID3v1.h"
-// #include "io.h"
 #include "LrcTag.h"
-
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
 
 #define _ID3_V1_LEN		128
 

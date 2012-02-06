@@ -3,8 +3,60 @@
 
 #include "../ID3Lib/ID3v1.h"
 #include "../ID3Lib/ID3v2.h"
+#include "../MLLib/Lyrics3v2.h"
 
 #include "MP3InfoReader.h"
+
+#define MIN_EMBEDDED_LYR_SIZE	10		// Minum file size of embedded lyrics
+
+ID_TO_STRING	__id2strLyrSrcType[] = {
+	{ LST_ID3V2_SYLT, SZ_SONG_ID3V2_SYLT },
+	{ LST_ID3V2_USLT, SZ_SONG_ID3V2_USLT },
+	{ LST_LYRICS3V2, SZ_SONG_LYRICS3V2 },
+	{ LST_ID3V2_LYRICS, SZ_SONG_ID3V2_LYRICS },
+	{ LST_M4A_LYRICS, SZ_SONG_M4A_LYRICS },
+	{ LST_NONE, NULL },
+	// { ,  },
+};
+
+ID_TO_STRING	__id2strLyrSrcTypeDesc[] = {
+	{ LST_ID3V2_SYLT, SZ_SONG_ID3V2_SYLT_DESC },
+	{ LST_ID3V2_USLT, SZ_SONG_ID3V2_USLT_DESC },
+	{ LST_LYRICS3V2, SZ_SONG_LYRICS3V2_DESC },
+	{ LST_ID3V2_LYRICS, SZ_SONG_ID3V2_LYRICS_DESC },
+	{ LST_M4A_LYRICS, SZ_SONG_M4A_LYRICS_DESC },
+	{ LST_NONE, NULL },
+	// { ,  },
+};
+
+LRC_SOURCE_TYPE LyrSrcTypeFromName(LPCTSTR szLrcSource)
+{
+	if (IsEmptyString(szLrcSource))
+		return LST_NONE;
+	else if (!StrBeginWith(szLrcSource, _T("song://")))
+		return LST_FILE;
+
+	LPCTSTR end = _tcsrchr(szLrcSource, '/');
+	if (end == NULL)
+		return LST_UNKNOWN;
+	tstring strPathName;
+	strPathName.append(szLrcSource, (size_t)(end - szLrcSource + 1));
+	return (LRC_SOURCE_TYPE)StringToID(__id2strLyrSrcType, strPathName.c_str(), LST_NONE);
+}
+
+LPCTSTR LyrSrcTypeToName(LRC_SOURCE_TYPE lst)
+{
+	LPCTSTR name = IDToString(__id2strLyrSrcType, lst, _T("Unknown"));
+	return name;
+}
+
+LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst)
+{
+	LPCTSTR name = IDToString(__id2strLyrSrcTypeDesc, lst, _T("Unknown"));
+	return name;
+}
+
+//////////////////////////////////////////////////////////////////////////
 
 CTagLib::CTagLib(void)
 {
@@ -95,4 +147,68 @@ int CTagLib::GetTagFast(LPCTSTR szFile, tstring *pArtist, tstring *pTitle, tstri
 	}
 
 	return ERR_OK;
+}
+
+int CTagLib::GetEmbeddedLyrics(LPCTSTR szFile, VecString &vLyricsNames)
+{
+	if (!IsFileExist(szFile))
+		return ERR_NOT_FOUND;
+
+	if (IsID3v2TagSupported(szFile))
+	{
+		// ID3v2 lyrics
+		CID3v2IF		id3v2(ED_SYSDEF);
+		int				nRet;
+
+		nRet = id3v2.Open(szFile, false, false);
+		if (nRet == ERR_OK)
+		{
+			VecString vLyrics;
+			nRet = id3v2.ListLyrics(vLyricsNames);
+			id3v2.Close();
+			if (nRet != ERR_OK)
+				return nRet;
+		}
+
+		// Lyrics3v2
+		{
+			CLyrics3v2	lyrics3v2;
+			stringex	strLyrics;
+
+			if (lyrics3v2.ReadLyrcsInfo(szFile, strLyrics) == ERR_OK)
+			{
+				if (strLyrics.size() > MIN_EMBEDDED_LYR_SIZE)
+					vLyricsNames.push_back(SZ_SONG_LYRICS3V2);
+			}
+		}
+	}
+
+	if (IsM4aTagSupported(szFile))
+	{
+		CM4aTag	tag;
+		int nRet = tag.Open(szFile, false);
+		if (nRet != ERR_OK)
+			return nRet;
+
+		nRet = tag.ListLyrics(vLyricsNames);
+		if (nRet != ERR_OK)
+			return nRet;
+	}
+
+	return ERR_OK;
+}
+
+bool CTagLib::IsEmbeddedLyricsSupported(LPCTSTR szFile)
+{
+	return IsID3v2TagSupported(szFile) || IsM4aTagSupported(szFile);
+}
+
+bool CTagLib::IsID3v2TagSupported(LPCTSTR szFile)
+{
+	return FileIsExtSame(szFile, _T(".mp3"));
+}
+
+bool CTagLib::IsM4aTagSupported(LPCTSTR szFile)
+{
+	return FileIsExtSame(szFile, _T(".m4a"));
 }

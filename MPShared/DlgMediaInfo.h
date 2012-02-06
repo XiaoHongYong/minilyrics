@@ -49,9 +49,9 @@ protected:
 	bool				m_bDetailInfoModified;
 
 	// lyrics
-	ID3v2LyricsInfo		m_lyricsInfo;
+	tstring				m_strLyrName;
+	tstring				m_strLyrics;
 	bool				m_bUnsyncLyricsModified;
-	bool				m_bSyncLyricsModified;
 
 	// pictures
 	ID3v2Pictures		m_pictures;

@@ -218,7 +218,7 @@ int CID3v2FrameParserSynLyrics::ToFrameData(ID3v2SynchLyrics &synchLyrics, CID3v
 	return ERR_OK;
 }
 
-bool CID3v2FrameParserSynLyrics::IsFrameLanguageSame(CID3v2Frame *pFrame, const char *szLanguage, CONTENT_TYPE contentType)
+bool CID3v2FrameParserSynLyrics::IsFrameLanguageSame(CID3v2Frame *pFrame, const char *szLanguage)
 {
 	const char *data = pFrame->m_frameData.c_str();
 	int		len = pFrame->m_frameData.size();
@@ -227,7 +227,7 @@ bool CID3v2FrameParserSynLyrics::IsFrameLanguageSame(CID3v2Frame *pFrame, const 
 		return false;
 
 	if (strncmp(szLanguage, data + 1, 3) == 0
-		&& contentType == data[5])
+		&& CID3v2FrameParserSynLyrics::CT_LYRICS == data[5])
 		return true;
 
 	return false;

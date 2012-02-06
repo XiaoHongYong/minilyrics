@@ -114,8 +114,9 @@ inline bool IsAlphaDigit(int c)
 inline bool __isascii(int c) { return c >= 0 && c <= 0x7F; }
 #endif
 
+bool IsStrNumeric(LPCTSTR szString);
 
-BOOL IsHexChar(char ch);
+bool IsHexChar(char ch);
 
 int HexToInt(char chHex);
 uint32 HexToInt(LPCTSTR str);
@@ -138,21 +139,21 @@ void UriUnescape(const char *szInet, char *szLocal, int nLenMax);
 void UriUnescape(const WCHAR *szInet, WCHAR *szLocal, int nLenMax, CHAR_ENCODING encoding);
 void UriUnescape(const WCHAR *szInet, wstring_t &str, CHAR_ENCODING encoding);
 
-BOOL IsUnicodeStr(LPCVOID lpData);
+bool IsUnicodeStr(LPCVOID lpData);
 
 void ConvertStrByFileEncoding(CCharBuffer &outData, LPCTSTR szText, int nLen, FILE_ENCODING fileEncoding = FE_ANSI, int nCharEncodingID = ED_SYSDEF);
 
-BOOL SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen);
+bool SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen);
 
-BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, CHAR_ENCODING encoding = ED_SYSDEF);
+bool SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, CHAR_ENCODING encoding = ED_SYSDEF);
 
 #ifdef WIN32
-BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str);
+bool OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str);
 #endif
 
-BOOL OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str);
+bool OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str);
 
-BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding = ED_SYSDEF);
+bool OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding = ED_SYSDEF);
 
 void MultiStrToVStr(LPCTSTR szText, vector<tstring> &vStr);
 

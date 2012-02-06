@@ -425,46 +425,25 @@ BOOL CLyricsLocalSearch::SearchLyrics(LPCTSTR szSongFile, LPCTSTR szTitle, BOOL 
 
 int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable)
 {
-	//
-	// 读取 ID3v2 歌词，添加到列表中
-	//
-	CID3v2IF		id3v2(ED_SYSDEF);
-	int				nRet;
+	VecString vLyricsNames;
+	int nRet = CTagLib::GetEmbeddedLyrics(szSongFile, vLyricsNames);
+	if (nRet != ERR_OK)
+		return nRet;
 
-	if (!IsFileExist(szSongFile))
-		return ERR_NOT_FOUND;
-
-	nRet = id3v2.Open(szSongFile, false, false);
-	if (nRet == ERR_OK)
+	for (uint i = 0; i < vLyricsNames.size(); i++)
 	{
-		ID3v2LyricsInfo		lyrics;
-		tstringex			str;
-		nRet = id3v2.GetLyrics(lyrics);
-		if (nRet == ERR_OK)
-		{
-			ID3v2LyricsInfoToResult(lyrics, vLyrics, bOnlyListAvailable);
-		}
-		id3v2.Close();
-	}
+		tstring &lyrName = vLyricsNames[i];
+		LRC_SOURCE_TYPE lst = LyrSrcTypeFromName(lyrName.c_str());
 
-	//
-	// 读取 Lyrics3v2 歌词，添加到列表中
-	//
-	{
-		CLyrics3v2		lyrics3v2;
-		stringex	strLyrics;
+		LrcSearchResult		result;
+		result.strUrl = lyrName;
+		result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(LyrSrcTypeToDesc(lst)));
+		if (lst == LST_LYRICS3V2 || lst == LST_ID3V2_SYLT || lst == LST_ID3V2_LYRICS)
+			result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
+		else
+			result.nMatchValue = MATCH_VALUE_OK + 2;
 
-		if (lyrics3v2.ReadLyrcsInfo(szSongFile, strLyrics) == ERR_OK)
-		{
-			if (!(bOnlyListAvailable && strLyrics.size() < MIN_EMBEDDED_LYR_SIZE))
-			{
-				LrcSearchResult		result;
-				result.strUrl = SZ_SONG_LYRICS3V2;
-				result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(SZ_SONG_LYRICS3V2_DESC));
-				result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
-				vLyrics.AddResult(result);
-			}
-		}
+		vLyrics.AddResult(result);
 	}
 
 	return ERR_OK;
@@ -474,43 +453,13 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSour
 {
 	lrcSourceType = 0;
 
-	//
-	// ID3v2 lyrics
-	//
-	CID3v2IF		id3v2(ED_SYSDEF);
-	int				nRet;
+	VecString vLyricsNames;
+	int nRet = CTagLib::GetEmbeddedLyrics(szSongFile, vLyricsNames);
+	if (nRet != ERR_OK)
+		return nRet;
 
-	if (!IsFileExist(szSongFile))
-		return ERR_NOT_FOUND;
-
-	nRet = id3v2.Open(szSongFile, false, false);
-	if (nRet == ERR_OK)
-	{
-		ID3v2LyricsInfo		lyrics;
-		tstringex			str;
-		nRet = id3v2.GetLyrics(lyrics);
-		if (nRet == ERR_OK)
-		{
-			if (lyrics.m_synchLyrics.size())
-				lrcSourceType |= LST_ID3V2_SYLT;
-			if (lyrics.m_unsynchLyrics.size())
-				lrcSourceType |= LST_ID3V2_USLT;
-			if (lyrics.m_lyricsUserDefined.m_strValue.size())
-				lrcSourceType |= LST_ID3V2_LYRICS;
-		}
-		id3v2.Close();
-	}
-
-	//
-	// Lyrics3v2
-	//
-	{
-		CLyrics3v2		lyrics3v2;
-		stringex	strLyrics;
-
-		if (lyrics3v2.ReadLyrcsInfo(szSongFile, strLyrics) == ERR_OK)
-			lrcSourceType |= LST_LYRICS3V2;
-	}
+	for (uint i = 0; i < vLyricsNames.size(); i++)
+		lrcSourceType |= LyrSrcTypeFromName(vLyricsNames[i].c_str());
 
 	return ERR_OK;
 }
@@ -729,7 +678,7 @@ BOOL CLyricsLocalSearch::GetAssociateLyrics(LPCTSTR szAssociateFileKeyword, LPTS
 
 bool CLyricsLocalSearch::IsLyricsExist(LPCTSTR szLyricSource)
 {
-	LRC_SOURCE_TYPE	sourceType = GetLrcSourceType(szLyricSource);
+	LRC_SOURCE_TYPE	sourceType = LyrSrcTypeFromName(szLyricSource);
 
 	if (sourceType == LST_FILE)
 	{

@@ -8,7 +8,7 @@
 class M4aBox
 {
 public:
-	M4aBox();
+	M4aBox(LPCSTR szType, size_t offset, size_t size);
 	virtual ~M4aBox();
 
 	typedef vector<M4aBox*> VecBoxes;
@@ -50,12 +50,15 @@ public:
 	CM4aTag();
 	virtual ~CM4aTag();
 
-	virtual int Open(LPCTSTR szFile, bool bModify, bool bCreate = false);
-	virtual int Open(FILE *fp, bool bCreate = false);
+	int Open(LPCTSTR szFile, bool bModify, bool bCreate = false);
+	int Open(FILE *fp, bool bCreate = false);
 	void Close();
+	int SaveClose();
 
-	int Save();
+	int ListLyrics(VecString &vLyrNames);
+	int GetLyrics(tstring &strLyrics);
 
+	bool HasLyrics();
 	int SetLyrics(LPCTSTR szLyrics);
 
 	M4aBox &GetRoot() { return m_root; }

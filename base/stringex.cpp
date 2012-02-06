@@ -851,7 +851,7 @@ int FilterAllHTMLTags(LPTSTR szText)
 	szBeg = szText;
 	szEnd = szBeg + _tcslen(szText);
 
-	BOOL bSpace = FALSE;
+	bool bSpace = FALSE;
 	while (szBeg < szEnd)
 	{
 		// 复制TAG外字符串
@@ -1017,7 +1017,7 @@ int FilterAllHTMLTags(LPTSTR szText)
 // COMMENT:
 //		判断字符串是否为数字串
 //		规则：必须包含至少一个以上，且全为数字的数字才是数字串
-BOOL IsStrNumeric(LPCTSTR szString)
+bool IsStrNumeric(LPCTSTR szString)
 {
 	LPCTSTR		szTemp;
 	szTemp = szString;
@@ -1036,7 +1036,7 @@ BOOL IsStrNumeric(LPCTSTR szString)
 }
 
 
-BOOL IsHexChar(char ch)
+bool IsHexChar(char ch)
 {
 	return (IsDigit(ch) || 
 		(ch >= 'a' && ch <= 'f') ||
@@ -1296,7 +1296,7 @@ void UriEscape(const WCHAR *szLocal, wstring_t &strInet, CHAR_ENCODING encoding)
 	strInet = strOutW.c_str();
 }
 
-BOOL IsUnicodeStr(LPCVOID lpData)
+bool IsUnicodeStr(LPCVOID lpData)
 {
 	BYTE						*szBuffer;
 
@@ -1361,7 +1361,7 @@ void ConvertStrByFileEncoding(CCharBuffer &outData, LPCTSTR szText, int nLen, FI
 	}
 }
 
-BOOL SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen)
+bool SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen)
 {
 	FILE	*fp;
 
@@ -1380,12 +1380,12 @@ BOOL SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen)
 	return TRUE;
 }
 
-BOOL SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, CHAR_ENCODING encoding)
+bool SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, CHAR_ENCODING encoding)
 {
 	assert(nLen >= 0);
 
 	FILE	*fp;
-	BOOL	bRet = true;
+	bool	bRet = true;
 
 	fp = _tfopen(szFile, _T("wb"));
 	if (fp == NULL)
@@ -1468,7 +1468,7 @@ bool AppendFileToBuffer(FILE *fp, CCharBuffer &str)
 }
 
 #ifdef WIN32
-BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str)
+bool OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str)
 {
 	FILE	*fp;
 
@@ -1486,7 +1486,7 @@ BOOL OpenFileToBuffer(LPCWSTR szFile, CCharBuffer &str)
 
 #endif
 
-BOOL OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str)
+bool OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str)
 {
 	FILE	*fp;
 
@@ -1502,7 +1502,7 @@ BOOL OpenFileToBuffer(LPCSTR szFile, CCharBuffer &str)
 	return bRet;
 }
 
-BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)
+bool OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)
 {
 	CCharBuffer		buff;
 	FILE_ENCODING	fileEncoding;
@@ -1538,7 +1538,7 @@ BOOL OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)
 }
 
 /*
-BOOL OpenFileToBuffer(LPCTSTR szFile, CString &str)
+bool OpenFileToBuffer(LPCTSTR szFile, CString &str)
 {
 	FILE	*fp;
 	int		nLen;
@@ -1586,7 +1586,7 @@ UINT GetTempFileName(
 	return GetTempFileName(lpTempFileName, _T("mg"), 0, lpTempFileName);
 }
 
-BOOL SaveBufferAsTempFile(LPTSTR szTempFile, LPVOID lpBuffer, int nLen)
+bool SaveBufferAsTempFile(LPTSTR szTempFile, LPVOID lpBuffer, int nLen)
 {
 	if (GetTempFileName(szTempFile) == 0)
 	{

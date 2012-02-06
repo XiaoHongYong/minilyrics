@@ -4,7 +4,7 @@
 #define EmptyStr(str)	(str[0] = '\0')
 #define CountOf(arr)	(sizeof(arr) / sizeof(arr[0]))
 
-#define IsEmptyString(str)	(str[0] == '\0')
+#define IsEmptyString(str)	((str) == NULL || (str)[0] == '\0')
 #endif
 
 int Utf8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen);

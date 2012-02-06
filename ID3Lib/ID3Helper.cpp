@@ -418,16 +418,6 @@ void TestFileMoveEndData()
 }
 */
 
-bool IsUnsynchLyricsFrameID(UINT nFrameID)
-{
-	return nFrameID == ID3V2_2_USLT || nFrameID == ID3V2_3_USLT;
-}
-
-bool IsSynchLyricsFrameID(UINT nFrameID)
-{
-	return nFrameID == ID3V2_2_SYLT || nFrameID == ID3V2_3_SYLT;
-}
-
 #ifdef _CPPUNIT_TEST
 
 IMPLEMENT_CPPUNIT_TEST_REG(ID3_HELPER)

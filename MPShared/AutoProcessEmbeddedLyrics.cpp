@@ -69,7 +69,7 @@ void CAutoProcessEmbeddedLyrics::Item::ToXML(CXMLWriter &xmlWriter)
 int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
 {
 	ASSERT(szLyricsFile || pBufLyrics);
-	if (!CanSaveEmbeddedLyricsInMediaFile(szSongFile))
+	if (!CTagLib::IsEmbeddedLyricsSupported(szSongFile))
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
 	CMutexAutolock		autolock(m_mutex);
@@ -79,7 +79,7 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 	// Open lyrics file to bufLyrFile
 	if (szLyricsFile && !IsEmptyString(szLyricsFile))
 	{
-		LRC_SOURCE_TYPE	lst = GetLrcSourceType(szLyricsFile);
+		LRC_SOURCE_TYPE	lst = LyrSrcTypeFromName(szLyricsFile);
 		if (lst == LST_LYRICS3V2 || lst == LST_ID3V2_SYLT || lst == LST_ID3V2_LYRICS)
 		{
 			uEmbeddedLyrType &= ~lst; // Don't save itself.
@@ -251,7 +251,7 @@ void CAutoProcessEmbeddedLyrics::OnSongChanged()
 
 int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 {
-	if (!CanSaveEmbeddedLyricsInMediaFile(item.m_strSongFile.c_str()))
+	if (!CTagLib::IsEmbeddedLyricsSupported(item.m_strSongFile.c_str()))
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
 	SetFileNoReadOnly(item.m_strSongFile.c_str());
@@ -349,13 +349,13 @@ int CAutoProcessEmbeddedLyrics::DealRemoveEmbeddedLyrics(Item &item)
 		return nRet;
 
 	if (Id3v2Uslt)
-		nRet = id3v2.RemoveUnsynchLyrics(NULL);
+		nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_USLT);
 
 	if (Id3v2Sylt)
-		nRet = id3v2.RemoveSynchLyrics(NULL);
+		nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_SYLT);
 
 	if (bId3v2LyricsUserDefined)
-		nRet = id3v2.RemoveUserDefinedTextFrameByDesc(SZ_ID3V2_LYR_USER_DEFINED);
+		nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_LYRICS);
 
 	nRet = id3v2.Save();
 	if (nRet != ERR_OK)
@@ -416,11 +416,6 @@ void CAutoProcessEmbeddedLyrics::LoadJobs(bool bDeleteFile)
 
 	if (bDeleteFile)
 		DeleteFile(strFile.c_str());
-}
-
-bool CAutoProcessEmbeddedLyrics::CanSaveEmbeddedLyricsInMediaFile(LPCTSTR szFile)
-{
-	return FileIsExtSame(szFile, _T(".mp3"));
 }
 
 //////////////////////////////////////////////////////////////////////////

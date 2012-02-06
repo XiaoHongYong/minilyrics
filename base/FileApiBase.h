@@ -17,14 +17,14 @@ DWORD GetFileLength(LPCSTR szFileName);
 DWORD GetFileLength(LPCWSTR szFileName);
 
 bool CreateDirectory(LPCTSTR lpPathName);
-BOOL CreateDirectoryAll(LPCTSTR szDir);
+bool CreateDirectoryAll(LPCTSTR szDir);
 
 DWORD CanWriteInDir(LPCTSTR szDir);
 
-BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath);
+bool EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles, bool bEnumFullPath);
 
 typedef void (*FUNProcessFile)(LPCTSTR szFileName, LPCTSTR szDir, LPVOID lpUserData);
-BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData);
+bool ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData);
 
 void DirStringAddSlash(WCHAR *szDir);
 void DirStringAddSlash(char *szDir);
@@ -53,9 +53,9 @@ void FileSetExt(tstring &strFile, LPCTSTR szExt);
 void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt);
 LPCTSTR FileGetExt(LPCTSTR szFile);
 
-BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt);
+bool FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt);
 
-BOOL FileNameIsIncInvalidChars(LPCTSTR szFile);
+bool FileNameIsIncInvalidChars(LPCTSTR szFile);
 tstring FileNameFilterInvalidChars(LPCTSTR szFile);
 void FilePathFilterInvalidChars(LPTSTR szFile);
 

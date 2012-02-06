@@ -18,7 +18,79 @@
 #endif // #ifndef _IPHONE
 #include <algorithm>
 #include "LrcTag.h"
+/*
+class ILyricsProvider
+{
+public:
+	virtual int Open(CMLData &lyrData);
+	virtual int Save(CMLData &lyrData);
 
+};
+
+class CID3v2LyrProvider
+{
+public:
+	CID3v2LyrProvider(uint32 lstToSave = 0);
+
+	virtual int Open(CMLData &lyrData);
+	virtual int Save(CMLData &lyrData);
+
+};
+
+int CID3v2LyrProvider::Open(CMLData &lyrData)
+{
+	CID3v2IF id3v2(GetEncodingIndex());
+
+	nRet = id3v2.Open(szSongFile, false, false);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	ID3v2LyricsInfo		lyricsInfo;
+	tstringex			str;
+	nRet = id3v2.GetLyrics(lyricsInfo);
+	if (nRet == ERR_OK)
+	{
+		if (lrcSourceType == LST_ID3V2_SYLT)
+		{
+			ID3v2SynchLyrics	*plyrics;
+			if (ID3v2LyricsInfoGetSynchLyrics(lyricsInfo, szLrcSource, plyrics))
+			{
+				nRet = OpenLyricsInSongOfID3v2SYLT(*plyrics, bUseSpecifiedEncoding, encodingSpecified);
+			}
+			else
+				nRet = ERR_NOT_FOUND;
+		}
+		else if (lrcSourceType == LST_ID3V2_USLT)
+		{
+			ID3v2UnsynchLyrics	*plyrics;
+			if (ID3v2LyricsInfoGetUnsynchLyrics(lyricsInfo, szLrcSource, plyrics))
+			{
+				nRet = OpenLyricsInSongOfID3v2USLT(*plyrics, bUseSpecifiedEncoding, encodingSpecified);
+			}
+			else
+				nRet = ERR_NOT_FOUND;
+		}
+		else if (lrcSourceType == LST_ID3V2_LYRICS)
+		{
+			if (lyricsInfo.m_lyricsUserDefined.m_strValue.empty())
+			{
+				SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
+				nRet = ERR_CUSTOM_ERROR;
+			}
+			else
+			{
+				nRet = FromString(lyricsInfo.m_lyricsUserDefined.m_strValue.c_str());
+			}
+		}
+	}
+	id3v2.Close();
+
+	lyrData.GetMediaSource();
+
+}
+
+int Save(CMLData &lyrData);
+*/
 
 IMPLEMENT_CPPUNIT_TEST_REG(CMLData)
 
@@ -185,55 +257,65 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 		|| lrcSourceType == LST_ID3V2_USLT
 		|| lrcSourceType == LST_ID3V2_LYRICS)
 	{
-		//
 		// Open ID3v2 lyrics
-		//
-
 		CID3v2IF		id3v2(GetEncodingIndex());
 
 		nRet = id3v2.Open(szSongFile, false, false);
 		if (nRet != ERR_OK)
 			return nRet;
 
-		ID3v2LyricsInfo		lyricsInfo;
-		tstringex			str;
-		nRet = id3v2.GetLyrics(lyricsInfo);
-		if (nRet == ERR_OK)
+		if (lrcSourceType == LST_ID3V2_USLT)
 		{
-			if (lrcSourceType == LST_ID3V2_SYLT)
-			{
-				ID3v2SynchLyrics	*plyrics;
-				if (ID3v2LyricsInfoGetSynchLyrics(lyricsInfo, szLrcSource, plyrics))
-				{
-					nRet = OpenLyricsInSongOfID3v2SYLT(*plyrics, bUseSpecifiedEncoding, encodingSpecified);
-				}
-				else
-					nRet = ERR_NOT_FOUND;
-			}
-			else if (lrcSourceType == LST_ID3V2_USLT)
-			{
-				ID3v2UnsynchLyrics	*plyrics;
-				if (ID3v2LyricsInfoGetUnsynchLyrics(lyricsInfo, szLrcSource, plyrics))
-				{
-					nRet = OpenLyricsInSongOfID3v2USLT(*plyrics, bUseSpecifiedEncoding, encodingSpecified);
-				}
-				else
-					nRet = ERR_NOT_FOUND;
-			}
-			else if (lrcSourceType == LST_ID3V2_LYRICS)
-			{
-				if (lyricsInfo.m_lyricsUserDefined.m_strValue.empty())
-				{
-					SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
-					nRet = ERR_CUSTOM_ERROR;
-				}
-				else
-				{
-					nRet = FromString(lyricsInfo.m_lyricsUserDefined.m_strValue.c_str());
-				}
-			}
+			ID3v2UnsynchLyrics lyrics;
+			nRet = id3v2.GetUnsyncLyrics(lyrics, szLrcSource);
+			if (nRet != ERR_OK)
+				return nRet;
+			nRet = OpenLyricsInSongOfID3v2USLT(lyrics, bUseSpecifiedEncoding, encodingSpecified);
 		}
-		id3v2.Close();
+		else if (lrcSourceType == LST_ID3V2_SYLT)
+		{
+			ID3v2SynchLyrics lyrics;
+			nRet = id3v2.GetSyncLyrics(lyrics, szLrcSource);
+			if (nRet != ERR_OK)
+				return nRet;
+			nRet = OpenLyricsInSongOfID3v2SYLT(lyrics, bUseSpecifiedEncoding, encodingSpecified);
+		}
+		else if (lrcSourceType == LST_ID3V2_LYRICS)
+		{
+			ID3v2TextUserDefined lyrics;
+			nRet = id3v2.GetUserDefLyrics(lyrics);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			if (lyrics.m_strValue.empty())
+			{
+				SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
+				nRet = ERR_CUSTOM_ERROR;
+			}
+			else
+				nRet = FromString(lyrics.m_strValue.c_str());
+		}
+		else
+			ASSERT(0);
+	}
+	else if (lrcSourceType == LST_M4A_LYRICS)
+	{
+		CM4aTag tag;
+		nRet = tag.Open(szSongFile, false);
+		if (nRet != ERR_OK)
+			return nRet;
+
+		tstring strLyrics;
+		nRet = tag.GetLyrics(strLyrics);
+		if (nRet != ERR_OK)
+			return nRet;
+		if (strLyrics.empty())
+		{
+			SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
+			nRet = ERR_CUSTOM_ERROR;
+		}
+		else
+			nRet = FromString(strLyrics.c_str());
 	}
 	else
 #endif // #ifdef _ID3V2_SUPPORT
@@ -553,7 +635,7 @@ int CMLData::SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLy
 		ID3v2UnsynchLyrics	lyrics;
 		ToID3v2UnsynchLyrics(lyrics, encoding);
 
-		nRet = id3v2.UpdateUnsynchLyricsFrame(&lyrics);
+		nRet = id3v2.SetUnsynchLyrics(NULL, lyrics);
 		if (nRet != ERR_OK)
 			return nRet;
 	}
@@ -564,7 +646,7 @@ int CMLData::SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLy
 
 		ToID3v2SynchLyrics(lyrics, encoding);
 
-		nRet = id3v2.UpdateSynchLyricsFrame(&lyrics);
+		nRet = id3v2.SetSynchLyrics(NULL, lyrics);
 		if (nRet != ERR_OK)
 			return nRet;
 	}
@@ -572,13 +654,9 @@ int CMLData::SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLy
 	if (bUserDefinedLyr)
 	{
 		tstring		str;
-
 		ToString(str, FT_LYRICS_LRC, TRUE);
 
-		ID3v2TextUserDefined	lyrics;
-
-		lyrics.SetValueAndOptimizeEncoding(SZ_ID3V2_LYR_USER_DEFINED, str.c_str());
-		nRet = id3v2.UpdateUserDefinedTextFrameByDesc(lyrics);
+		nRet = id3v2.SetUserDefLyrics(str.c_str());
 		if (nRet != ERR_OK)
 			return nRet;
 	}
@@ -1569,7 +1647,7 @@ int CMLData::FilterContents(void)
 }
 
 #ifdef _ID3V2_SUPPORT
-bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encoding)
+void CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encoding)
 {
 	strcpy_safe(lyrics.m_szLanguage, CountOf(lyrics.m_szLanguage), m_id3v2SaveCacheInfo.m_strLanguage.c_str());
 	lyrics.m_bTimeStampMs = true;
@@ -1612,11 +1690,9 @@ bool CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encodin
 			}
 		}
 	}
-
-	return true;
 }
 
-bool CMLData::ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING encoding)
+void CMLData::ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING encoding)
 {
 	tstring		str;
 
@@ -1627,8 +1703,6 @@ bool CMLData::ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING enc
 	lyrics.m_encodingType = CharEncodingToID3v2EncType(encoding);
 	lyrics.m_strContentDesc = m_id3v2SaveCacheInfo.m_strLrcDescription.c_str();
 	lyrics.m_strLyrics = str.c_str();
-
-	return true;
 }
 #endif // #ifdef _ID3V2_SUPPORT
 

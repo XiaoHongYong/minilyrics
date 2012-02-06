@@ -6,7 +6,7 @@
 
 IMPLEMENT_CPPUNIT_TEST_REG(FileAPI)
 
-BOOL CreateDirectoryAll(LPCTSTR szDir)
+bool CreateDirectoryAll(LPCTSTR szDir)
 {
 	TCHAR	szTemp[512];
 	TCHAR	*szBeg;
@@ -37,7 +37,7 @@ BOOL CreateDirectoryAll(LPCTSTR szDir)
 	return TRUE;
 }
 
-BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath)
+bool EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles, bool bEnumFullPath)
 {
 	CMLFileFind			find;
 
@@ -67,7 +67,7 @@ BOOL EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles
 }
 
 // typedef void (*FUNProcessFile)(LPCTSTR szFileName, LPCTSTR szDir, LPVOID lpUserData);
-BOOL ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData)
+bool ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData)
 {
 	CMLFileFind			find;
 
@@ -429,7 +429,7 @@ void FileSetExt(tstring &strFile, LPCTSTR szExt)
 	strFile += szExt;
 }
 
-BOOL FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt)
+bool FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt)
 {
 	return StrIEndWith(szFile, szExt);
 }
@@ -440,7 +440,7 @@ const TCHAR	_SZ_FILE_NAME_INVALID_CHARS[] = _T("/:*?\"<>|");
 #else
 const TCHAR	_SZ_FILE_NAME_INVALID_CHARS[] = _T("\\:*?\"<>|");
 #endif
-BOOL FileNameIsIncInvalidChars(LPCTSTR szFile)
+bool FileNameIsIncInvalidChars(LPCTSTR szFile)
 {
 	LPCTSTR		szBeg;
 

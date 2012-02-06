@@ -563,7 +563,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				break;
 			}
 
-			if (!CAutoProcessEmbeddedLyrics::CanSaveEmbeddedLyricsInMediaFile(g_Player.GetSrcMedia()))
+			if (!CTagLib::IsEmbeddedLyricsSupported(g_Player.GetSrcMedia()))
 			{
 				m_pSkinWnd->MessageOut(TOLOCAL(_T("This file doesn't support embedded lyrics.")));
 				break;

@@ -5,8 +5,7 @@
 #include "stdafx.h"
 #include "MDLibmad.h"
 #include "audio.h"
-#include "../ID3Lib/ID3v1.h"
-#include "../ID3Lib/ID3v2.h"
+#include "../TagLib/TagLib.h"
 
 #define		BPS		16
 #define DECODE_BUFF_SIZE		(1024 * 32)

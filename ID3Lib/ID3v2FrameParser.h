@@ -43,7 +43,7 @@ public:
 	virtual int Parse(CID3v2Frame *pFrame, ID3v2SynchLyrics &synchLyrics);
 	virtual int ToFrameData(ID3v2SynchLyrics &synchLyrics, CID3v2Frame *pFrame);
 
-	static bool IsFrameLanguageSame(CID3v2Frame *pFrame, const char *szLanguage, CONTENT_TYPE contentType);
+	static bool IsFrameLanguageSame(CID3v2Frame *pFrame, const char *szLanguage);
 
 protected:
 

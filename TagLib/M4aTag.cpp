@@ -1,20 +1,8 @@
 #include "StdAfx.h"
 #include "../ID3Lib/ID3v2.h"
 #include "../ID3Lib/ID3Helper.h"
+#include "TagLib.h"
 #include "M4aTag.h"
-
-inline uint32 BigEndianToUInt32(byte *byData)
-{
-	return byData[3] | (byData[2] << 8) | (byData[1] << 16) | (byData[0] << 24);
-}
-
-inline void BigEndianFromUInt32(uint32 nValue, byte *byData)
-{
-	byData[3] = nValue & 0xFF;
-	byData[2] = (nValue >> 8) & 0xFF;
-	byData[1] = (nValue >> 16) & 0xFF;
-	byData[0] = (nValue >> 24) & 0xFF;
-}
 
 #define SZ_TYPE_MOOV		"moov"
 #define SZ_TYPE_TRACK		"trak"
@@ -85,21 +73,24 @@ public:
 
 };
 
+#ifdef _DEBUG
 void debugParseLyrics(M4aBox *box)
 {
 	CM4aBoxTextParser parser;
 	parser.Parse(box);
 	_tprintf(_T("Lyrics: %s\r\n"), parser.m_strLyrics.c_str());
 }
+#endif // #ifdef _DEBUG
 
 //////////////////////////////////////////////////////////////////////////
 
-M4aBox::M4aBox()
+M4aBox::M4aBox(LPCSTR szType, size_t offset, size_t size)
 {
-	m_nOffset = 0;
-	m_nSize = 0;
+	m_nOffset = offset;
+	m_nSize = size;
+	strncpy_safe(m_szType, CountOf(m_szType), szType, M4aBox::TYPE_SIZE);
+
 	ASSERT(sizeof(m_szType) >= TYPE_SIZE);
-	m_szType[TYPE_SIZE] = '\0';
 	m_nSizeNew = 0;
 }
 
@@ -211,7 +202,7 @@ public:
 
 //////////////////////////////////////////////////////////////////////////
 
-CM4aTag::CM4aTag()
+CM4aTag::CM4aTag() : m_root("", 0, 0)
 {
 }
 
@@ -268,7 +259,7 @@ void CM4aTag::Close()
 	}
 }
 
-int CM4aTag::Save()
+int CM4aTag::SaveClose()
 {
 	M4aBox *boxMoov = m_root.FindBox(SZ_TYPE_MOOV);
 	if (boxMoov == NULL)
@@ -317,6 +308,8 @@ int CM4aTag::Save()
 	if (nRet != ERR_OK)
 		return nRet;
 
+	Close();
+
 	return ERR_OK;
 }
 
@@ -349,15 +342,12 @@ int CM4aTag::Parse(M4aBox *parent, int nExtraHeaderOffset)
 		if (totalSize > parent->m_nSize)
 			return ERR_BAD_FILE_FORMAT;
 
-		M4aBox	*pChild = new M4aBox();
-		pChild->m_nOffset = offset;
-		pChild->m_nSize = size;
-		memcpy(pChild->m_szType, type, M4aBox::TYPE_SIZE);
+		M4aBox	*pChild = new M4aBox(type, offset, size);
 
 		offset += size;
 		parent->AddChild(pChild);
 
-		_tprintf(_T("Box: %S, offset: %d, size: %d\n"), pChild->m_szType, pChild->m_nOffset, pChild->m_nSize);
+		_tprintf(_T("Box: %S, offset: %d, size: %d\n"), type, offset, size);
 
 		if (totalSize == parent->m_nSize)
 			break;
@@ -390,6 +380,8 @@ void Read(FILE *fp, string &buf, size_t offset, size_t size)
 		buf.resize(0);
 }
 
+#ifdef _DEBUG
+// This is used to verify the data read can composed are OK.
 void VerifyData(FILE *fp, M4aBox *box)
 {
 	string buf;
@@ -401,6 +393,7 @@ void VerifyData(FILE *fp, M4aBox *box)
 	ASSERT(buf.size() == buf2.size());
 	ASSERT(memcmp(buf.c_str(), buf2.c_str(), buf.size()) == 0);
 }
+#endif // #ifdef _DEBUG
 
 int CM4aTag::Read(M4aBox *parent)
 {
@@ -413,7 +406,7 @@ int CM4aTag::Read(M4aBox *parent)
 		if (n != parent->m_data.size())
 			return ERR_READ_FILE;
 
-		VerifyData(m_fp, parent);
+		// VerifyData(m_fp, parent);
 
 		return ERR_OK;
 	}
@@ -435,7 +428,7 @@ int CM4aTag::Read(M4aBox *parent)
 			return nRet;
 	}
 
-	VerifyData(m_fp, parent);
+	// VerifyData(m_fp, parent);
 
 	return ERR_OK;
 }
@@ -460,6 +453,33 @@ M4aBox *CM4aTag::GetBox(LPCSTR szPath)
 	return parent;
 }
 
+int CM4aTag::ListLyrics(VecString &vLyrNames)
+{
+	if (HasLyrics())
+		vLyrNames.push_back(SZ_SONG_M4A_LYRICS);
+
+	return ERR_OK;
+}
+
+int CM4aTag::GetLyrics(tstring &strLyrics)
+{
+	M4aBox *box = GetBox("moov.udta.meta.ilst.\xA9lyr.data");
+	if (!box)
+		return ERR_NOT_FOUND;
+
+	CM4aBoxTextParser parser;
+	int nRet = parser.Parse(box);
+	if (nRet == ERR_OK)
+		strLyrics = parser.m_strLyrics;
+
+	return nRet;
+}
+
+bool CM4aTag::HasLyrics()
+{
+	return GetBox("moov.udta.meta.ilst.\xA9lyr.data") != NULL;
+}
+
 int CM4aTag::SetLyrics(LPCTSTR szLyrics)
 {
 	M4aBox *pIList = GetBox("moov.udta.meta.ilst");
@@ -471,19 +491,19 @@ int CM4aTag::SetLyrics(LPCTSTR szLyrics)
 	M4aBox *pLyrics = pIList->FindBox(SZ_TYPE_LYRICS);
 	if (pLyrics == NULL)
 	{
-/*		// Add a lyrics box
-		pLyrics = new M4aLyricsBox();
-		pLyrics->m_nOffset = -1;*/
+		pLyrics = new M4aBox(SZ_TYPE_LYRICS, 0, 0);
+		pIList->AddChild(pLyrics);
+
+		pLyrics->AddChild(new M4aBox(SZ_TYPE_DATA, 0, 0));
 	}
-	else
-	{
-		M4aBox *pData = pLyrics->FindBox(SZ_TYPE_DATA);
-		if (!pData)
-			return ERR_BAD_FILE_FORMAT;
-		CM4aBoxTextParser parser;
-		parser.m_strLyrics = szLyrics;
-		parser.ConvertTo(pData);
-	}
+
+	M4aBox *pData = pLyrics->FindBox(SZ_TYPE_DATA);
+	if (!pData)
+		return ERR_BAD_FILE_FORMAT;
+
+	CM4aBoxTextParser parser;
+	parser.m_strLyrics = szLyrics;
+	parser.ConvertTo(pData);
 
 	return ERR_OK;
 }

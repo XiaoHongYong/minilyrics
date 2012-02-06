@@ -180,48 +180,21 @@ public:
 	{
 		m_bModified = false;
 
-		if (!m_pDlgMediaInfo->m_lyricsInfo.m_unsynchLyrics.empty())
-		{
-			ID3v2UnsynchLyrics		*unsyncLyrics = m_pDlgMediaInfo->m_lyricsInfo.m_unsynchLyrics.front();
-
-			SetUIObjectText(CID_E_LYRICS, unsyncLyrics->m_strLyrics.c_str());
-		}
+		if (m_pDlgMediaInfo->m_strLyrics.size() > 0)
+			SetUIObjectText(CID_E_LYRICS, m_pDlgMediaInfo->m_strLyrics.c_str());
 	}
 
 	virtual void OnSave()
 	{
 		tstring		strLyrics;
 		strLyrics = GetUIObjectText(CID_E_LYRICS);
-		if (m_pDlgMediaInfo->m_lyricsInfo.m_unsynchLyrics.empty())
-		{
-			TrimStr(strLyrics);
-			if (strLyrics.empty())
-				return;
 
-			// add new unsync lyrics.
-			ID3v2UnsynchLyrics		*unsyncLyrics = m_pDlgMediaInfo->m_lyricsInfo.AddNewUnsyncLyrics();
-			unsyncLyrics->action = IFA_ADD;
-			unsyncLyrics->m_strLyrics = strLyrics.c_str();
-		}
-		else
+		if (_tcscmp(strLyrics.c_str(), m_pDlgMediaInfo->m_strLyrics.c_str()) != 0)
 		{
-			// modify existing...
-			ID3v2UnsynchLyrics		*unsyncLyrics = m_pDlgMediaInfo->m_lyricsInfo.m_unsynchLyrics.front();
-			if (strLyrics.empty())
-				unsyncLyrics->action = IFA_DEL;
-			else
-			{
-				if (_tcscmp(strLyrics.c_str(), unsyncLyrics->m_strLyrics.c_str()) != 0)
-				{
-					unsyncLyrics->m_strLyrics = strLyrics.c_str();
-					unsyncLyrics->action = IFA_MODIFY;
-				}
-			}
-		}
-
-		if (m_pDlgMediaInfo->m_lyricsInfo.IsUnsyncLyricsModified())
+			m_pDlgMediaInfo->m_strLyrics = strLyrics.c_str();
 			m_bModified = true;
-		m_pDlgMediaInfo->m_bUnsyncLyricsModified = m_bModified;
+			m_pDlgMediaInfo->m_bUnsyncLyricsModified = m_bModified;
+		}
 	}
 
 protected:
@@ -448,7 +421,7 @@ void CDlgMediaInfo::OnOK()
 			// Id3v2 lyrics
 			if (m_bUnsyncLyricsModified)
 			{
-				nRet = id3v2.UpdateLyrics(m_lyricsInfo);
+				nRet = id3v2.SetUnsynchLyrics(m_strLyrName.c_str(), m_strLyrics.c_str());
 				if (nRet != ERR_OK)
 					goto ERR_MSG_OUT_RET;
 			}
@@ -493,11 +466,9 @@ void CDlgMediaInfo::Clear()
 	m_bBasicInfoModified = false;
 	m_bDetailInfoModified = false;
 	m_bUnsyncLyricsModified = false;
-	m_bSyncLyricsModified = false;
 	m_bPicturesModified = false;
 
-	m_lyricsInfo.m_synchLyrics.clear();
-	m_lyricsInfo.m_unsynchLyrics.clear();
+	m_strLyrics.clear();
 }
 
 #define IfNotEmptyThenSet(strSrc, strTarg)	if (!strSrc.empty())	strTarg = strSrc
@@ -572,7 +543,10 @@ void CDlgMediaInfo::ReloadMediaInfo()
 			}
 
 			// Id3v2 lyrics
-			nRet = id3v2.GetLyrics(m_lyricsInfo);
+			ID3v2UnsynchLyrics lyrics;
+			nRet = id3v2.GetUnsyncLyrics(lyrics);
+			if (nRet == ERR_OK)
+				m_strLyrics = lyrics.m_strLyrics.c_str();
 
 			// id3v2 pictures
 			nRet = id3v2.GetPictures(m_pictures);

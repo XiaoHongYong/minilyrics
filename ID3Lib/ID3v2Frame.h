@@ -14,7 +14,7 @@
 class CID3v2Frame  
 {
 public:
-	CID3v2Frame();
+	CID3v2Frame(UINT frameID);
 	CID3v2Frame(const ID3v2FrameHdr &frameHdr, const char *data, int len);
 	virtual ~CID3v2Frame();
 

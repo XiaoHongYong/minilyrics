@@ -33,8 +33,4 @@ int FileDataCmp(FILE *m_fp, int nOffset, LPCVOID lpData, int nSize, int &nResult
 int FileAppendData(FILE *m_fp, int nAppend, int nMask = 0);
 int FileMoveEndData(FILE *m_fp, int nOffset, int nNewOffset);
 
-bool IsUnsynchLyricsFrameID(UINT nFrameID);
-
-bool IsSynchLyricsFrameID(UINT nFrameID);
-
 #endif // !defined(AFX_HELPERFUN_H__0EF9ABC8_88D8_4CFE_8F2C_3FA90B7AC30C__INCLUDED_)

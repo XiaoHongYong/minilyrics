@@ -331,7 +331,7 @@ public:
 			SetExPool(_T("RenameDlgResult"), IDCANCEL);
 
 			pSel = GetCurSel();
-			if (!pSel || GetLrcSourceType(pSel->strUrl.c_str()) != LST_FILE)
+			if (!pSel || LyrSrcTypeFromName(pSel->strUrl.c_str()) != LST_FILE)
 				return;
 
 			tstring		strFileTitleOld;
@@ -421,7 +421,7 @@ public:
 				LrcSearchResult	*pSel;
 
 				pSel = GetCurSel();
-				if (!pSel || GetLrcSourceType(pSel->strUrl.c_str()) != LST_FILE)
+				if (!pSel || LyrSrcTypeFromName(pSel->strUrl.c_str()) != LST_FILE)
 					break;
 
 				tstring		strTitle;
@@ -439,7 +439,7 @@ public:
 				if (!pSel)
 					break;
 
-				LRC_SOURCE_TYPE lst = GetLrcSourceType(pSel->strUrl.c_str());
+				LRC_SOURCE_TYPE lst = LyrSrcTypeFromName(pSel->strUrl.c_str());
 				bool bDeleted = false;
 				if (lst == LST_FILE)
 				{
@@ -475,7 +475,7 @@ public:
 				if (!pSel)
 					break;
 
-				if (GetLrcSourceType(pSel->strUrl.c_str()) != LST_FILE)
+				if (LyrSrcTypeFromName(pSel->strUrl.c_str()) != LST_FILE)
 					break;
 
 				tstring		strEditor;
@@ -496,7 +496,7 @@ public:
 				pSel = GetCurSel();
 				if (pSel)
 				{
-					if (GetLrcSourceType(pSel->strUrl.c_str()) != LST_FILE)
+					if (LyrSrcTypeFromName(pSel->strUrl.c_str()) != LST_FILE)
 						strFile = pSel->strUrl;
 				}
 
@@ -566,7 +566,7 @@ public:
 				if (!IsHttpUrl(pSel->strUrl.c_str()))
 				{
 					bLocalLyr = true;
-					if (GetLrcSourceType(pSel->strUrl.c_str()) == LST_FILE)
+					if (LyrSrcTypeFromName(pSel->strUrl.c_str()) == LST_FILE)
 						bLocalLyrFile = true;
 				}
 			}
@@ -791,7 +791,7 @@ protected:
 		tstring			strName;
 		bool			bLocalFile = false;
 
-		lrcSrcType = GetLrcSourceType(Item.strUrl.c_str());
+		lrcSrcType = LyrSrcTypeFromName(Item.strUrl.c_str());
 
 		fileType = MLGetFileType(Item.strSaveFileName.c_str());
 		if (fileType == FT_LYRICS_LRC)		nImg = IMG_L_LRC;

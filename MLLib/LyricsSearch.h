@@ -17,7 +17,7 @@
 
 #ifdef _ID3V2_SUPPORT
 #include "Lyrics3v2.h"
-#include "../ID3Lib/ID3v2.h"
+#include "../TagLib/TagLib.h"
 #endif // #ifdef _ID3V2_SUPPORT
 
 // 歌词文件匹配类型的定义
@@ -30,8 +30,6 @@ enum LRC_MATCH_TYPE
 	LYRIC_MATCH_ALL			= 4,
 	LYRIC_MATCH_MAX_TYPE	= LYRIC_MATCH_ALL,
 };
-
-#define MIN_EMBEDDED_LYR_SIZE	10		// Minum file size of embedded lyrics
 
 #define MAX_FILE_NAME		MAX_PATH
 
@@ -100,24 +98,6 @@ public:
 	void DeleteByOrder(int n);
 
 };
-
-#define SZ_SONG_ID3V2_SYLT		_T("song://id3v2/sylt/")
-#define SZ_SONG_ID3V2_USLT		_T("song://id3v2/uslt/")
-#define SZ_SONG_LYRICS3V2		_T("song://lyrics3v2")
-#define SZ_SONG_ID3V2_LYRICS	_T("song://id3v2/lyrics(nonstandard)")
-
-#define SZ_SONG_ID3V2_SYLT_DESC	_T("Embedded lyrics for Windows Media Player (ID3v2 synchronized lyrics)")
-#define SZ_SONG_ID3V2_USLT_DESC	_T("Embedded lyrics for iPod, iTunes (ID3v2 unsynchronized lyrics)")
-#define SZ_SONG_LYRICS3V2_DESC	_T("Embedded lyrics for MiniLyrics (Lyrics3v2 synchronized lyrics)")
-#define SZ_SONG_ID3V2_LYRICS_DESC	_T("Embedded ID3v2 lyrics (Nonstandard)")
-
-#ifdef _ID3V2_SUPPORT
-
-bool ID3v2LyricsInfoGetSynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2SynchLyrics *&plyrics);
-bool ID3v2LyricsInfoGetUnsynchLyrics(ID3v2LyricsInfo &lyricsInfo, LPCTSTR szLrcSource, ID3v2UnsynchLyrics *&plyrics);
-
-void ID3v2LyricsInfoToResult(ID3v2LyricsInfo &lyricsInfo, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable = false);
-#endif // #ifdef _ID3V2_SUPPORT
 
 void StrIgnoreCompare(LPCTSTR &szDest, LPCTSTR &szTemplate, BOOL bIgnoreNumb);
 int StrIgnoreCompare(LPCTSTR szStr1, LPCTSTR szStr2);

@@ -317,7 +317,7 @@ public:
 
 public:
 	typedef list<CID3v2Frame*>		FRAME_LIST;
-	typedef FRAME_LIST::iterator		FrameIterator;
+	typedef FRAME_LIST::iterator	FrameIterator;
 
 	FrameIterator FrameBegin() { return m_listFrames.begin(); }
 	FrameIterator FrameEnd() { return m_listFrames.end(); }
@@ -325,6 +325,7 @@ public:
 	int FrameAdd(CID3v2Frame *pFrame);
 	FrameIterator FrameRemove(FrameIterator itToRemove);
 
+	FrameIterator FindFrame(FrameIterator itBegin, UINT nFrameID);
 	CID3v2Frame *FindFrame(UINT nFrameID);
 	CID3v2Frame *FindFrameByUID(ID3v2FrameUID_t frameUID, UINT nFrameID);
 
@@ -353,7 +354,7 @@ protected:
 	FILE		*m_fp;
 	CHAR_ENCODING m_Encoding;
 
-	list<CID3v2Frame*>		m_listFrames;
+	FRAME_LIST	m_listFrames;
 	// long		m_nNextFramePos;
 
 	ID3v2FrameUID_t	frameUID;
@@ -412,6 +413,9 @@ struct ID3v2SynchLyrics
 struct ID3v2UnsynchLyrics
 {
 	ID3v2UnsynchLyrics();
+
+	void SetValueAndOptimizeEncoding(LPCTSTR szDescription, LPCTSTR szLyrics);
+
 	// This Uid identified the position of the frame in the id3v2 tag.
 	// It's used for update the tag.
 	ID3v2FrameUID_t		frameUID;
@@ -420,46 +424,6 @@ struct ID3v2UnsynchLyrics
 	ID3v2EncType		m_encodingType;
 	char				m_szLanguage[10];
 	tstringex			m_strContentDesc, m_strLyrics;
-};
-
-#define SZ_ID3V2_LYR_USER_DEFINED		_T("LYRICS")
-
-class ID3v2LyricsInfo
-{
-public:
-	ID3v2LyricsInfo() { }
-	virtual ~ID3v2LyricsInfo()
-	{
-		{
-			for (LIST_SYNCHLYRICS::iterator it = m_synchLyrics.begin();
-				it != m_synchLyrics.end(); it++)
-			{
-				delete *it;
-			}
-			m_synchLyrics.clear();
-		}
-		{
-			for (LIST_UNSYNLYRICS::iterator it = m_unsynchLyrics.begin();
-				it != m_unsynchLyrics.end(); it++)
-			{
-				delete *it;
-			}
-			m_unsynchLyrics.clear();
-		}
-	}
-	bool IsUnsyncLyricsModified();
-	ID3v2UnsynchLyrics *AddNewUnsyncLyrics();
-
-	bool IsSyncLyricsModified();
-	ID3v2SynchLyrics *AddNewSyncLyrics();
-
-	typedef list<ID3v2SynchLyrics *>	LIST_SYNCHLYRICS;
-	typedef list<ID3v2UnsynchLyrics *>	LIST_UNSYNLYRICS;
-	LIST_SYNCHLYRICS		m_synchLyrics;
-	LIST_UNSYNLYRICS		m_unsynchLyrics;
-
-	ID3v2TextUserDefined	m_lyricsUserDefined;
-
 };
 
 class ID3v2Pictures
@@ -533,49 +497,6 @@ public:
 
 public:
 	V_ITEMS				m_vItems;
-
-};
-
-class CID3v2IF : public CID3v2
-{
-public:
-	CID3v2IF(CHAR_ENCODING encoding);
-	~CID3v2IF();
-
-	// virtual int ReadUnsynchLyrics(bool bUnicode, tstringex &strContentDesc, tstringex &strText);
-	virtual int GetLyrics(ID3v2LyricsInfo &id3v2Lyrics);
-	virtual int ListLyricsInfoOnly(ID3v2LyricsInfo &id3v2Lyrics);
-	virtual int UpdateLyrics(ID3v2LyricsInfo &id3v2Lyrics);
-
-	int UpdateSynchLyricsFrame(ID3v2SynchLyrics *psynchLyrics);
-	int UpdateUnsynchLyricsFrame(ID3v2UnsynchLyrics *punsynchLyrics);
-
-	int RemoveSynchLyrics(const char *szLanguage);
-	int RemoveUnsynchLyrics(const char *szLanguage);
-
-	virtual int GetTags(tstring &artist, tstring &title, tstring &album, tstring &comment, 
-		tstring &track, tstring &year, tstring &genre);
-
-	virtual int SetTags(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szAlbum, LPCTSTR szComment, 
-		LPCTSTR szTrack, LPCTSTR szYear, LPCTSTR szGenre);
-
-	int UpdateUserDefinedTextFrameByDesc(ID3v2TextUserDefined &text);
-	int RemoveUserDefinedTextFrameByDesc(LPCTSTR szDesc);
-
-	int UpdateGeneralCommentFrame(LPCTSTR szText);
-	int RemoveGeneralCommentFrame();
-
-	int UpdateGeneralUrlFrame(LPCTSTR szText);
-	int RemoveGeneralUrlFrame();
-
-	int GetPictures(ID3v2Pictures &pictures);
-	int UpdatePictures(ID3v2Pictures &pictures);
-
-	int UpdatePicFrame(ID3v2Pictures::ITEM *pic);
-	int RemovePicFrame(ID3v2FrameUID_t nFrameUID, UINT picType);
-
-protected:
-	int UpdateTextFrame(UINT nFrameID, LPCTSTR szText);
 
 };
 
