@@ -325,7 +325,7 @@ public:
 	int FrameAdd(CID3v2Frame *pFrame);
 	FrameIterator FrameRemove(FrameIterator itToRemove);
 
-	FrameIterator FindFrame(FrameIterator itBegin, UINT nFrameID);
+	FrameIterator FindFrameIter(UINT nFrameID);
 	CID3v2Frame *FindFrame(UINT nFrameID);
 	CID3v2Frame *FindFrameByUID(ID3v2FrameUID_t frameUID, UINT nFrameID);
 

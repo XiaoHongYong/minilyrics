@@ -402,7 +402,7 @@ int CFileMediaSource::SetEmbeddedLyrics(int nIndex, tstring &lyrics)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	nRet = id3v2.SetUnsynchLyrics(NULL, lyrics.c_str());
+	nRet = id3v2.SetUnsynchLyrics(NULL, _T("Lyrics were Saved by MiniLyrics."), lyrics.c_str());
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -415,23 +415,12 @@ int CFileMediaSource::RemoveEmbeddedLyrics(int nIndex)
 		return ERR_FALSE;
 	Item &item = m_vFiles[nIndex];
 
-	CID3v2IF		id3v2(ED_SYSDEF);
-
-	int nRet = id3v2.Open(item.file.c_str(), true, true);
-	if (nRet != ERR_OK)
-		return nRet;
-
 	int nRemovedCount = 0;
-	nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_USLT);
-	if (nRet == ERR_OK)
-		nRemovedCount++;
-	nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_SYLT);
-	if (nRet == ERR_OK)
-		nRemovedCount++;
+	VecString vLyrNames;
+	vLyrNames.push_back(SZ_SONG_ID3V2_SYLT);
+	vLyrNames.push_back(SZ_SONG_ID3V2_USLT);
 
-	if (nRemovedCount > 0)
-		return id3v2.Save();
-	return ERR_NOT_FOUND;
+	return CTagLib::RemoveEmbeddedLyrics(item.file.c_str(), vLyrNames, &nRemovedCount);
 }
 
 void CFileMediaSource::RemoveItem(int nIndex)

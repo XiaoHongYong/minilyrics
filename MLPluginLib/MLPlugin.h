@@ -19,7 +19,7 @@ using namespace std;
 extern HINSTANCE		g_hInstance;
 extern class CMLService	g_MLService;
 
-BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayerService);
+BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayerService, bool bManual = false);
 
 void DisconnectMiniLyrics(CPlayerServiceBase *pPlayerService);
 

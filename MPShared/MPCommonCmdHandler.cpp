@@ -557,18 +557,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_SAVE_LYR_IN_SONG_FILE:
 		{
-			if (!g_LyricData.HasLyricsOpened())
-			{
-				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
-				break;
-			}
-
-			if (!CTagLib::IsEmbeddedLyricsSupported(g_Player.GetSrcMedia()))
-			{
-				m_pSkinWnd->MessageOut(TOLOCAL(_T("This file doesn't support embedded lyrics.")));
-				break;
-			}
-
 			CDlgSaveEmbeddedLyrics dlg;
 			dlg.DoModal(m_pSkinWnd);
 		}
@@ -1054,10 +1042,13 @@ bool CMPCommonCmdHandler::SaveCurrentLyrics(CSkinWnd *pSkinWnd, bool bDispatchOn
 				tstring		str;
 				g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE);
 
+				VecString vLyrNames;
+				vLyrNames.push_back(g_LyricData.GetLyricsFileName());
+
 				CCharBuffer bufLyrics;
 				TStringToProperFileData(str.c_str(), bufLyrics);
 				g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(g_LyricData.GetSongFileName(), 
-					NULL, &bufLyrics, g_LyricData.GetLyricsSourceType());
+					NULL, &bufLyrics, vLyrNames);
 			}
 			pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics, $Product$ will auto try again later."))).c_str());
 		}

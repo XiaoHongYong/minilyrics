@@ -449,7 +449,9 @@ public:
 				}
 				else
 				{
-					int nRet = g_autoProcessEmbeddedLyrics.RemoveEmbeddedLyrics(m_strSongFile.c_str(), lst, true);
+					VecString vLyrNames;
+					vLyrNames.push_back(pSel->strUrl);
+					int nRet = g_autoProcessEmbeddedLyrics.RemoveEmbeddedLyrics(m_strSongFile.c_str(), vLyrNames, true);
 					if (nRet == ERR_OK)
 						bDeleted = true;
 					else
@@ -803,7 +805,7 @@ protected:
 			// local file...
 			if (lrcSrcType == LST_ID3V2_SYLT || lrcSrcType == LST_ID3V2_LYRICS || lrcSrcType == LST_LYRICS3V2)
 				nImg = IMG_L_LRC;
-			else if (lrcSrcType == LST_ID3V2_USLT)
+			else if (lrcSrcType == LST_ID3V2_USLT || lrcSrcType == LST_M4A_LYRICS)
 				nImg = IMG_L_TXT;
 			else if (lrcSrcType == LST_NONE)
 				nImg = IMG_NONE;

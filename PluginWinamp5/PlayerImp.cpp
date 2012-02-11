@@ -417,7 +417,7 @@ LRESULT CALLBACK HookWinampWnd(
 		if (uMsg == WM_COMMAND && LOWORD(wParam) == CWinampMenu::ID_ML_MENU_ITEM)
 		{
 			// Open MiniLyrics
-			RunMiniLyrics(g_hInstance, plugin.hwndParent, &g_Player);
+			RunMiniLyrics(g_hInstance, plugin.hwndParent, &g_Player, true);
 			return 0;
 		}
 		return CallWindowProc(g_pOrgWinampProc, hWnd, uMsg, wParam, lParam);

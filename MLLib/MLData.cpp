@@ -18,79 +18,6 @@
 #endif // #ifndef _IPHONE
 #include <algorithm>
 #include "LrcTag.h"
-/*
-class ILyricsProvider
-{
-public:
-	virtual int Open(CMLData &lyrData);
-	virtual int Save(CMLData &lyrData);
-
-};
-
-class CID3v2LyrProvider
-{
-public:
-	CID3v2LyrProvider(uint32 lstToSave = 0);
-
-	virtual int Open(CMLData &lyrData);
-	virtual int Save(CMLData &lyrData);
-
-};
-
-int CID3v2LyrProvider::Open(CMLData &lyrData)
-{
-	CID3v2IF id3v2(GetEncodingIndex());
-
-	nRet = id3v2.Open(szSongFile, false, false);
-	if (nRet != ERR_OK)
-		return nRet;
-
-	ID3v2LyricsInfo		lyricsInfo;
-	tstringex			str;
-	nRet = id3v2.GetLyrics(lyricsInfo);
-	if (nRet == ERR_OK)
-	{
-		if (lrcSourceType == LST_ID3V2_SYLT)
-		{
-			ID3v2SynchLyrics	*plyrics;
-			if (ID3v2LyricsInfoGetSynchLyrics(lyricsInfo, szLrcSource, plyrics))
-			{
-				nRet = OpenLyricsInSongOfID3v2SYLT(*plyrics, bUseSpecifiedEncoding, encodingSpecified);
-			}
-			else
-				nRet = ERR_NOT_FOUND;
-		}
-		else if (lrcSourceType == LST_ID3V2_USLT)
-		{
-			ID3v2UnsynchLyrics	*plyrics;
-			if (ID3v2LyricsInfoGetUnsynchLyrics(lyricsInfo, szLrcSource, plyrics))
-			{
-				nRet = OpenLyricsInSongOfID3v2USLT(*plyrics, bUseSpecifiedEncoding, encodingSpecified);
-			}
-			else
-				nRet = ERR_NOT_FOUND;
-		}
-		else if (lrcSourceType == LST_ID3V2_LYRICS)
-		{
-			if (lyricsInfo.m_lyricsUserDefined.m_strValue.empty())
-			{
-				SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
-				nRet = ERR_CUSTOM_ERROR;
-			}
-			else
-			{
-				nRet = FromString(lyricsInfo.m_lyricsUserDefined.m_strValue.c_str());
-			}
-		}
-	}
-	id3v2.Close();
-
-	lyrData.GetMediaSource();
-
-}
-
-int Save(CMLData &lyrData);
-*/
 
 IMPLEMENT_CPPUNIT_TEST_REG(CMLData)
 
@@ -109,38 +36,6 @@ MLFileType LyricsConentTypeToFileType(LYRICS_CONTENT_TYPE lyrContentType)
 		return FT_LYRICS_TXT;
 	else
 		return FT_UNKNOWN;
-}
-
-LRC_SOURCE_TYPE GetLrcSourceType(LPCTSTR szLrcSource)
-{
-#define SONG_HDR_LEN		7
-	LPCTSTR		szTemp;
-	if (_tcsnicmp(szLrcSource, _T("song://"), SONG_HDR_LEN) == 0)
-	{
-		szTemp = SZ_SONG_LYRICS3V2 + SONG_HDR_LEN;
-		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
-			return LST_LYRICS3V2;
-
-#ifdef _ID3V2_SUPPORT
-		szTemp = SZ_SONG_ID3V2_LYRICS + SONG_HDR_LEN;
-		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
-			return LST_ID3V2_LYRICS;
-
-		szTemp = SZ_SONG_ID3V2_SYLT + SONG_HDR_LEN;
-		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
-			return LST_ID3V2_SYLT;
-
-		szTemp = SZ_SONG_ID3V2_USLT + SONG_HDR_LEN;
-		if (_tcsnicmp(szLrcSource + SONG_HDR_LEN, szTemp, _tcslen(szTemp)) == 0)
-			return LST_ID3V2_USLT;
-#endif // #ifdef _ID3V2_SUPPORT
-
-		return LST_UNKNOWN;
-	}
-	else if (_tcsicmp(szLrcSource, NONE_LYRCS) == 0)
-		return LST_NONE;
-	else
-		return LST_FILE;
 }
 
 void WrapText(LPCTSTR szText, vector<tstring> &vOutput, int nLineSize)
@@ -241,7 +136,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 
 	Close();
 
-	lrcSourceType = GetLrcSourceType(szLrcSource);
+	lrcSourceType = LyrSrcTypeFromName(szLrcSource);
 
 #ifdef _ID3V2_SUPPORT
 	if (lrcSourceType == LST_LYRICS3V2)
@@ -572,21 +467,15 @@ int CMLData::Save()
 
 #ifdef _ID3V2_SUPPORT
 	if (m_lrcSourceType == LST_LYRICS3V2)
+		return SaveLyricsInSongOfLyrics3v2();
+	else if ((m_lrcSourceType & LST_ID3V2) != 0)
 	{
-		return SaveLyricsInSongOfLyrics3v2(GetEncodingIndex());
+		VecString vLyrNames;
+		vLyrNames.push_back(m_strLrcSource);
+		return SaveLyricsInSongOfID3v2(vLyrNames);
 	}
-	else if (m_lrcSourceType == LST_ID3V2_SYLT)
-	{
-		return SaveLyricsInSongOfID3v2(false, true, false);
-	}
-	else if (m_lrcSourceType == LST_ID3V2_USLT)
-	{
-		return SaveLyricsInSongOfID3v2(true, false, false);
-	}
-	else if (m_lrcSourceType == LST_ID3V2_LYRICS)
-	{
-		return SaveLyricsInSongOfID3v2(false, false, true);
-	}
+	else if (m_lrcSourceType == LST_M4A_LYRICS)
+		return SaveLyricsInSongOfM4a();
 	else
 #endif // #ifdef _ID3V2_SUPPORT
 	{
@@ -610,87 +499,97 @@ int CMLData::Save()
 }
 
 #ifdef _ID3V2_SUPPORT
-int CMLData::SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLyr)
+int CMLData::SaveLyricsInSongOfID3v2(VecString &vLyrNames)
 {
-	CID3v2IF		id3v2(m_lyrProperties.GetEncodingIndex());
-	int				nRet;
-
-	if (!bUslt && !bSylt && !bUserDefinedLyr)
+	if (vLyrNames.empty())
 		return ERR_OK;
 
-	nRet = id3v2.Open(m_strSongFile.c_str(), true, true);
+	CID3v2IF	id3v2(m_lyrProperties.GetEncodingIndex());
+
+	int nRet = id3v2.Open(m_strSongFile.c_str(), true, true);
 	if (nRet != ERR_OK)
 		return nRet;
 
-	tstring			str;
+	tstring			strLyrics;
 	CHAR_ENCODING	encoding = m_lyrProperties.GetEncodingIndex();
-	ToString(str, FT_LYRICS_TXT, TRUE);
-	if (IsAnsiStr(str.c_str()))
+	ToString(strLyrics, FT_LYRICS_TXT, TRUE);
+	if (IsAnsiStr(strLyrics.c_str()))
 		encoding = ED_SYSDEF;
 	else
 		encoding = ED_UNICODE;
 
-	if (bUslt)
+	for (size_t i = 0; i < vLyrNames.size(); ++i)
 	{
-		ID3v2UnsynchLyrics	lyrics;
-		ToID3v2UnsynchLyrics(lyrics, encoding);
+		LPCTSTR szLyrName = vLyrNames[i].c_str();
+		LRC_SOURCE_TYPE lst = LyrSrcTypeFromName(szLyrName);
 
-		nRet = id3v2.SetUnsynchLyrics(NULL, lyrics);
-		if (nRet != ERR_OK)
-			return nRet;
-	}
+		if (lst == LST_ID3V2_USLT)
+		{
+			nRet = id3v2.SetUnsynchLyrics(szLyrName, _T("Lyrics were Saved by MiniLyrics."), strLyrics.c_str());
+			if (nRet != ERR_OK)
+				return nRet;
+		}
+		else if (lst == LST_ID3V2_SYLT && GetLyrContentType() != LCT_TXT)
+		{
+			ID3v2SynchLyrics	lyrics;
 
-	if (bSylt)
-	{
-		ID3v2SynchLyrics	lyrics;
+			ToID3v2SynchLyrics(lyrics, encoding);
 
-		ToID3v2SynchLyrics(lyrics, encoding);
-
-		nRet = id3v2.SetSynchLyrics(NULL, lyrics);
-		if (nRet != ERR_OK)
-			return nRet;
-	}
-
-	if (bUserDefinedLyr)
-	{
-		tstring		str;
-		ToString(str, FT_LYRICS_LRC, TRUE);
-
-		nRet = id3v2.SetUserDefLyrics(str.c_str());
-		if (nRet != ERR_OK)
-			return nRet;
+			nRet = id3v2.SetSynchLyrics(szLyrName, lyrics);
+			if (nRet != ERR_OK)
+				return nRet;
+		}
+		else if (lst == LST_ID3V2_LYRICS)
+		{
+			nRet = id3v2.SetUserDefLyrics(strLyrics.c_str());
+			if (nRet != ERR_OK)
+				return nRet;
+		}
 	}
 
 	nRet = id3v2.Save();
 	if (nRet == ERR_OK)
-	{
-		if ((bUslt && m_lrcSourceType == LST_ID3V2_USLT
-			&& m_lyrProperties.m_lyrContentType == m_lyrPropertiesOrg.m_lyrContentType) ||
-			(bSylt && m_lrcSourceType == LST_ID3V2_SYLT))
-		{
-			ResetModificationFlag();
-		}
-	}
+		ResetModificationFlag();
 
 	return nRet;
 }
 
-int CMLData::SaveLyricsInSongOfLyrics3v2(CHAR_ENCODING encoding)
+int CMLData::SaveLyricsInSongOfLyrics3v2()
 {
-	// save into mp3 file
-	int			nRet;
+	// Save lyrics3v2 lyrics in mp3 file
 	tstring		str;
-	CLyrics3v2	lyrics3v2;
-	CCharBuffer	strData;
-
 	ToString(str, FT_LYRICS_LRC, TRUE);
 
+	CCharBuffer	strData;
 	ConvertStrByFileEncoding(strData, str.c_str(), str.size(), 
-		CharEncodingToFileEncoding(encoding), encoding);
+		CharEncodingToFileEncoding(GetEncodingIndex()), GetEncodingIndex());
 
-	nRet = lyrics3v2.WriteLyrcsInfo(m_strSongFile.c_str(), (const char *)strData.c_str(), strData.size() * sizeof(char), TRUE);
+	CLyrics3v2	lyrics3v2;
+	int nRet = lyrics3v2.WriteLyrcsInfo(m_strSongFile.c_str(), (const char *)strData.c_str(), strData.size() * sizeof(char), TRUE);
 	if (nRet == ERR_OK && m_lrcSourceType == LST_LYRICS3V2)
 		ResetModificationFlag();
+
+	return nRet;
+}
+
+int CMLData::SaveLyricsInSongOfM4a()
+{
+	// Save lyrics in m4a files
+	tstring		str;
+	ToString(str, FT_LYRICS_LRC, TRUE);
+
+	CM4aTag tag;
+	int nRet = tag.Open(m_strSongFile.c_str(), true, false);
+	if (nRet == ERR_OK)
+	{
+		int nRet = tag.SetLyrics(str.c_str());
+		if (nRet == ERR_OK)
+		{
+			nRet = tag.SaveClose();
+			if (nRet == ERR_OK && m_lrcSourceType == LST_M4A_LYRICS)
+				ResetModificationFlag();
+		}
+	}
 
 	return nRet;
 }
@@ -1967,6 +1866,7 @@ protected:
 			m_strTestDataFolder + _T("lyr(wmp-chs).mp3"),
 			m_strTestDataFolder + _T("lyr-usly(chs).mp3"),
 			m_strTestDataFolder + _T("lyrics3v2.mp3"),
+			m_strTestDataFolder + _T("lyr-chs.m4a"),
 		};
 
 		for (int i = 0; i < (int)CountOf(vstrSongFile); i++)
@@ -1984,6 +1884,7 @@ protected:
 			m_strTestDataFolder + _T("lyr(wmp-chs).mp3"),
 			m_strTestDataFolder + _T("lyr-usly(chs).mp3"),
 			m_strTestDataFolder + _T("lyrics3v2.mp3"),
+			m_strTestDataFolder + _T("lyr-chs.m4a"),
 		};
 
 		for (int i = 0; i < (int)CountOf(vstrSongFile); i++)
@@ -1997,7 +1898,6 @@ protected:
 	void Test_CMLData_OpenSaveID3v2_USLT()
 	{
 		int			nRet;
-		CMLData		data;
 
 		PrepareMediaFile();
 
@@ -2012,21 +1912,25 @@ protected:
 			strWorkingFolder + _T("lyr(wmp-chs).mp3"),
 			strWorkingFolder + _T("lyr-usly(chs).mp3"),
 			strWorkingFolder + _T("lyr(wmp-chs).mp3"),
+			strWorkingFolder + _T("lyr-chs.m4a"),
 		};
 		LPCTSTR		vLyrFile[] = {
 			_T("song://id3v2/uslt/eng"),
 			_T("song://id3v2/uslt/eng"),
 			_T("song://id3v2/uslt/eng"),
 			_T("song://id3v2/uslt/chi"),
+			SZ_SONG_M4A_LYRICS,
 		};
-		bool		vWriteTested[] = { false, false, false, false };
+		bool		vWriteTested[] = { false, false, false, false, false };
+		ASSERT(CountOf(vWriteTested) == CountOf(vLyrFile));
+		ASSERT(CountOf(vWriteTested) == CountOf(vstrSongFile));
 
-		for (int kk = 0; kk < 2; kk++)
+		for (int i = 0; i < CountOf(vstrSongFile); i++)
 		{
-			// Loop twice, first for reading, second for writing.
-
-			for (int i = 0; i < CountOf(vstrSongFile); i++)
+			for (int kk = 0; kk < 2; kk++)
 			{
+				// Loop twice, first for reading, second for writing.
+				CMLData		data;
 				nRet = data.OpenLyrics(vstrSongFile[i].c_str(), 60 * 1000, vLyrFile[i]);
 				CPPUNIT_ASSERT(nRet == ERR_OK);
 
@@ -2160,7 +2064,7 @@ protected:
 			strWorkingFolder + _T("lyrics3v2.mp3"),
 		};
 		LPCTSTR		vLyrFileSylt[] = {
-			_T("song://lyrics3v2"),
+			SZ_SONG_LYRICS3V2,
 		};
 		bool		vWriteTested[] = { false };
 

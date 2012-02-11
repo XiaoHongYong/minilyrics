@@ -216,7 +216,7 @@ int CWidgetListCtrl::AppendItem(LPCTSTR lpszItem)
 	ASSERT(::IsWindow(m_hWnd));
 	LVITEM item;
 	item.mask = LVIF_TEXT;
-	item.iItem = -1;
+	item.iItem = GetItemCount();
 	item.iSubItem = 0;
 	item.pszText = (LPTSTR)lpszItem;
 	item.state = 0;

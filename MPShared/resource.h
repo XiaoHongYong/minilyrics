@@ -164,6 +164,8 @@
 #define IDC_C_ID3V2_SYNC                1121
 #define IDC_C_LYRICS3V2                 1123
 #define IDC_C_ID3V2_UNSYNC              1124
+#define IDC_LIST1                       1125
+#define IDC_L_LYRICS                    1125
 #define IDC_SETTOPMOST                  40001
 #define IDC_STOP                        40002
 #define IDC_EXIT                        40003
@@ -365,7 +367,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        183
 #define _APS_NEXT_COMMAND_VALUE         40199
-#define _APS_NEXT_CONTROL_VALUE         1125
+#define _APS_NEXT_CONTROL_VALUE         1126
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

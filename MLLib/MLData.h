@@ -206,8 +206,9 @@ public:
 	int Save();
 
 #ifdef _ID3V2_SUPPORT
-	int SaveLyricsInSongOfID3v2(bool bUslt, bool bSylt, bool bUserDefinedLyr);
-	int SaveLyricsInSongOfLyrics3v2(CHAR_ENCODING encoding);
+	int SaveLyricsInSongOfID3v2(VecString &vLyrNames);
+	int SaveLyricsInSongOfLyrics3v2();
+	int SaveLyricsInSongOfM4a();
 #endif
 
 	void ToString(tstring &str, MLFileType lrcFormat = FT_LYRICS_LRC, bool bIncTags = FALSE);

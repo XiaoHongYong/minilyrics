@@ -28,8 +28,6 @@ public:
 	void OnOK();
 
 protected:
-	void GetEmbeddedLyricsTypeName(UINT uEmbeddedLyricsType, tstring &strName);
-
 	CWidgetListCtrl				m_listCtrl;
 
 };

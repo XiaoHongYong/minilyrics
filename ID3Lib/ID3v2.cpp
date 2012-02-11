@@ -719,9 +719,9 @@ CID3v2::FrameIterator CID3v2::FrameRemove(FrameIterator itToRemove)
 	return m_listFrames.erase(itToRemove);
 }
 
-CID3v2::FrameIterator CID3v2::FindFrame(FrameIterator itBegin, UINT nFrameID)
+CID3v2::FrameIterator CID3v2::FindFrameIter(UINT nFrameID)
 {
-	for (FrameIterator it = itBegin; it != m_listFrames.end(); ++it)
+	for (FrameIterator it = m_listFrames.begin(); it != m_listFrames.end(); ++it)
 	{
 		CID3v2Frame *pFrame = *it;
 		if (pFrame->m_framehdr.nFrameID == nFrameID)
@@ -733,7 +733,7 @@ CID3v2::FrameIterator CID3v2::FindFrame(FrameIterator itBegin, UINT nFrameID)
 
 CID3v2Frame *CID3v2::FindFrame(UINT nFrameID)
 {
-	FrameIterator it = FindFrame(m_listFrames.begin(), nFrameID);
+	FrameIterator it = FindFrameIter(nFrameID);
 	if (it == m_listFrames.end())
 		return NULL;
 	return *it;

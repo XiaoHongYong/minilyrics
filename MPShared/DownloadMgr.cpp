@@ -616,44 +616,40 @@ RETURN_END:
 int CDownloadMgr::SaveDownloadedLyrics(LPCTSTR szMediaFile, LPCTSTR szLyrFileName, LPCVOID lpData, int nSize, uint32 nLyrSaveFlag)
 {
 	ASSERT(lpData && nSize > 0 && nSize < 1024 * 200);
+	VecString vEmbeddedLyrNames;
 
 	if (nLyrSaveFlag == LST_NONE)
 	{
 		// Load default settings
-
-		// Save as file?
 		if (g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR)
 			!= DOWN_SAVE_NO_FILE)
 			nLyrSaveFlag = LST_FILE;
 
-		// Save as embedded lyrics?
+		// Save lyrics in song file?
 		if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
 		{
 			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Sylt"), true))
-				nLyrSaveFlag |= LST_ID3V2_SYLT;
+				vEmbeddedLyrNames.push_back(SZ_SONG_ID3V2_SYLT);
 			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Uslt"), true))
-				nLyrSaveFlag |= LST_ID3V2_USLT;
+				vEmbeddedLyrNames.push_back(SZ_SONG_ID3V2_USLT);
 			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveLyrics3v2"), false))
-				nLyrSaveFlag |= LST_LYRICS3V2;
+				vEmbeddedLyrNames.push_back(SZ_SONG_LYRICS3V2);
+			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveLyricsM4a"), false))
+				vEmbeddedLyrNames.push_back(SZ_SONG_M4A_LYRICS);
 		}
 	}
 
 	bool	bLrcSaved = false;
 	int		nRet = ERR_OK;
 
-	if (nLyrSaveFlag & (LST_ID3V2_USLT | LST_ID3V2_SYLT | LST_LYRICS3V2)
+	if (vEmbeddedLyrNames.size() > 0
 		&& CTagLib::IsEmbeddedLyricsSupported(szMediaFile))
 	{
 		CCharBuffer bufLyrics;
 		bufLyrics.append((LPCSTR)lpData, nSize);
-		nRet = g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(szMediaFile, NULL, &bufLyrics, nLyrSaveFlag);
+		nRet = g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(szMediaFile, NULL, &bufLyrics, vEmbeddedLyrNames);
 		if (nRet == ERR_OK)
-		{
-			if (nLyrSaveFlag & (LST_ID3V2_SYLT | LST_LYRICS3V2))
-				bLrcSaved = true;
-			if (!bLrcSaved && FileIsExtSame(szLyrFileName, _T(".txt")))
-				bLrcSaved = true;
-		}
+			bLrcSaved = true;
 	}
 
 	if (nLyrSaveFlag & LST_FILE || !bLrcSaved)

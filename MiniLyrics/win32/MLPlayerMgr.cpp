@@ -13,6 +13,7 @@
 
 CMLPlayerMgr			g_playerMgr;
 HWND					g_hWndPlayerServiceOnStartup = NULL;
+bool					g_bForceStart = false;
 
 
 HWND GetMLSericeWindow()
@@ -40,6 +41,8 @@ bool ProcessCmdLine(LPCTSTR szCmdLine, AppMode &appMode)
 		}
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/iPodLyricsDownloader")) == 0)
 			appMode = SA_IPOD_LYRICS_DOWNLOADER;
+		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/Manual")) == 0)
+			g_bForceStart = true;
 		else if (_tcsicmp(vCmdLine[i].c_str(), _T("/Setup")) == 0)
 		{
 			CDlgSetupPlayerPlugins	dlg;
@@ -86,7 +89,7 @@ bool CMLPlayerMgr::ConnectToPlayer()
 			return false;
 	}
 
-	if (m_listPlayers.size() == 1)
+	if (m_listPlayers.size() == 1 && !g_bForceStart)
 	{
 		// Player info is specified in the command line, 
 		// Check whether MiniLyrics shall start with it?

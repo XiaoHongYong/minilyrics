@@ -14,6 +14,8 @@ enum LRC_SOURCE_TYPE
 	LST_LYRICS3V2		= 0x1 << 5,
 	LST_ID3V2_LYRICS	= 0x1 << 6,
 	LST_M4A_LYRICS		= 0x1 << 7,		// Embedded lyrics in M4A file.
+
+	LST_ID3V2			= LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_ID3V2_LYRICS,
 };
 
 LRC_SOURCE_TYPE LyrSrcTypeFromName(LPCTSTR szLrcSource);
@@ -26,11 +28,13 @@ LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst);
 #define SZ_SONG_ID3V2_LYRICS	_T("song://id3v2/lyrics(nonstandard)")
 #define SZ_SONG_M4A_LYRICS		_T("song://m4a/lyrics")
 
+#define NONE_LYRCS	_T("")
+
 #define SZ_SONG_ID3V2_SYLT_DESC	_T("Embedded lyrics for Windows Media Player (ID3v2 synchronized lyrics)")
 #define SZ_SONG_ID3V2_USLT_DESC	_T("Embedded lyrics for iPod, iTunes (ID3v2 unsynchronized lyrics)")
 #define SZ_SONG_LYRICS3V2_DESC	_T("Embedded lyrics for MiniLyrics (Lyrics3v2 synchronized lyrics)")
 #define SZ_SONG_ID3V2_LYRICS_DESC	_T("Embedded ID3v2 lyrics (Nonstandard)")
-#define SZ_SONG_M4A_LYRICS_DESC	_T("Embedded lyrics for iPod AAC files")
+#define SZ_SONG_M4A_LYRICS_DESC	_T("Embedded lyrics for iPod, iTunes (For &AAC (M4A) file)")
 
 enum TagType
 {
@@ -88,6 +92,8 @@ public:
 	static bool IsEmbeddedLyricsSupported(LPCTSTR szFile);
 	static bool IsID3v2TagSupported(LPCTSTR szFile);
 	static bool IsM4aTagSupported(LPCTSTR szFile);
+
+	static int RemoveEmbeddedLyrics(LPCTSTR szMediaFile, VecString &vLyrNamesToRemove, int *succeededCount = NULL);
 
 };
 

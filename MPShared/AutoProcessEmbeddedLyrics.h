@@ -8,7 +8,7 @@ public:
 	struct Item
 	{
 		tstring				m_strSongFile;
-		UINT				m_uEmbeddedLyrType;		// LST_ID3V2_SYLT, LST_ID3V2_USLT, LST_LYRICS3V2
+		VecString			m_vLyrNames;	// SZ_SONG_ID3V2_USLT, etc.
 		bool				m_bRemove;		// true: remove, false: add.
 		byte				m_nTryFailed;
 		bool				m_bDealOK;
@@ -20,7 +20,6 @@ public:
 		{
 			m_bDealOK = false;
 			m_nTryFailed = 0;
-			m_uEmbeddedLyrType = 0;
 		}
 
 		bool FromXML(SXNode *pNode);
@@ -31,8 +30,8 @@ public:
 	CAutoProcessEmbeddedLyrics();
 	virtual ~CAutoProcessEmbeddedLyrics();
 
-	int SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
-	int RemoveEmbeddedLyrics(LPCTSTR szSongFile, UINT uEmbeddedLyrType = LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_LYRICS3V2, bool bAddToQueueOnFailed = true);
+	int SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed = true);
+	int RemoveEmbeddedLyrics(LPCTSTR szSongFile, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed = true);
 	void RemoveJob(LPCTSTR szSongFile);
 
 	void Init();

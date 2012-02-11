@@ -421,7 +421,7 @@ void CDlgMediaInfo::OnOK()
 			// Id3v2 lyrics
 			if (m_bUnsyncLyricsModified)
 			{
-				nRet = id3v2.SetUnsynchLyrics(m_strLyrName.c_str(), m_strLyrics.c_str());
+				nRet = id3v2.SetUnsynchLyrics(m_strLyrName.c_str(), _T("Lyrics were saved by ZikiPlayer."), m_strLyrics.c_str());
 				if (nRet != ERR_OK)
 					goto ERR_MSG_OUT_RET;
 			}

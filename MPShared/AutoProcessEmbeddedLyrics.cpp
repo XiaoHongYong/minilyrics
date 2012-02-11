@@ -10,7 +10,7 @@
 CAutoProcessEmbeddedLyrics		g_autoProcessEmbeddedLyrics;
 
 #define SZ_JOB_FILE_NAME		_T("process_embedded_lyrics.bxml")
-#define VERSION_CUR				_T("1")
+#define VERSION_CUR				_T("2")
 #define SZ_VERSION				_T("version")
 
 //////////////////////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ static void StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<string> &vAnsiStr)
 bool CAutoProcessEmbeddedLyrics::Item::FromXML(SXNode *pNode)
 {
 	m_strSongFile = pNode->GetPropertySafe(_T("song_file"));
-	m_uEmbeddedLyrType = pNode->GetPropertyInt(_T("embedded_lyr_type"), 0);
+	StrSplit(pNode->GetPropertySafe(_T("embedded_lyr_names")), '|', m_vLyrNames);
 	m_bRemove = Tobool(pNode->GetPropertyInt(_T("remove"), false));
 	m_nTryFailed = pNode->GetPropertyInt(_T("try_failed"), 0);
 
@@ -58,7 +58,8 @@ void CAutoProcessEmbeddedLyrics::Item::ToXML(CXMLWriter &xmlWriter)
 	xmlWriter.WriteStartElement(_T("item"));
 
 	xmlWriter.WriteAttribute(_T("song_file"), m_strSongFile.c_str());
-	xmlWriter.WriteAttribute(_T("embedded_lyr_type"), m_uEmbeddedLyrType);
+	xmlWriter.WriteAttribute(_T("embedded_lyr_names"), 
+		StrJoin(m_vLyrNames.begin(), m_vLyrNames.end(), _T("|")).c_str());
 	xmlWriter.WriteAttribute(_T("remove"), m_bRemove);
 	xmlWriter.WriteAttribute(_T("try_failed"), m_nTryFailed);
 	xmlWriter.WriteAttribute(_T("bin_lyrics"), m_strLyrics.c_str(), m_strLyrics.size());
@@ -66,7 +67,7 @@ void CAutoProcessEmbeddedLyrics::Item::ToXML(CXMLWriter &xmlWriter)
 	xmlWriter.WriteEndElement();
 }
 
-int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
+int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed)
 {
 	ASSERT(szLyricsFile || pBufLyrics);
 	if (!CTagLib::IsEmbeddedLyricsSupported(szSongFile))
@@ -77,13 +78,16 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 	CCharBuffer		bufLyrFile;
 
 	// Open lyrics file to bufLyrFile
-	if (szLyricsFile && !IsEmptyString(szLyricsFile))
+	if (!IsEmptyString(szLyricsFile))
 	{
 		LRC_SOURCE_TYPE	lst = LyrSrcTypeFromName(szLyricsFile);
-		if (lst == LST_LYRICS3V2 || lst == LST_ID3V2_SYLT || lst == LST_ID3V2_LYRICS)
+		if (lst == LST_FILE)
 		{
-			uEmbeddedLyrType &= ~lst; // Don't save itself.
-
+			if (!OpenFileToBuffer(szLyricsFile, bufLyrFile))
+				return ERR_OPEN_FILE;
+		}
+		else
+		{
 			CMLData		lyrics;
 			int nRet = lyrics.OpenLyrics(szSongFile, 0, szLyricsFile);
 			if (nRet != ERR_OK)
@@ -92,17 +96,6 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 			tstring str;
 			lyrics.ToString(str, FT_LYRICS_LRC, true);
 			TStringToProperFileData(str.c_str(), bufLyrFile);
-		}
-		else if (lst == LST_ID3V2_USLT)
-		{
-			// For ID3v2 unsync lyrics, It can't be converted to other(sync) embedded lyrics.
-			DBGLOG2(_T("ID3v2 unsync lyrics, It can't be converted to other(sync) embedded lyrics: %s, %s"), szSongFile, szLyricsFile);
-			return ERR_OK;
-		}
-		else if (lst == LST_FILE)
-		{
-			if (!OpenFileToBuffer(szLyricsFile, bufLyrFile))
-				return ERR_OPEN_FILE;
 		}
 	}
 
@@ -122,7 +115,7 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 				item.m_strLyrics = bufLyrFile;
 			else
 				item.m_strLyrics = *pBufLyrics;
-			item.m_uEmbeddedLyrType	= uEmbeddedLyrType;
+			item.m_vLyrNames = vEmbeddedLyrNames;
 			item.m_nTryFailed = 0;
 			nRet = DealEmbeddedLyrics(item);
 			if (nRet == ERR_OK)
@@ -138,7 +131,7 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 		newItem.m_strLyrics = bufLyrFile;
 	else
 		newItem.m_strLyrics = *pBufLyrics;
-	newItem.m_uEmbeddedLyrType = uEmbeddedLyrType;
+	newItem.m_vLyrNames = vEmbeddedLyrNames;
 	newItem.m_nTryFailed = 0;
 	nRet = DealEmbeddedLyrics(newItem);
 	if (nRet != ERR_OK && bAddToQueueOnFailed)
@@ -147,7 +140,7 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 	return nRet;
 }
 
-int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, UINT uEmbeddedLyrType, bool bAddToQueueOnFailed)
+int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed)
 {
 	CMutexAutolock		autolock(m_mutex);
 
@@ -160,7 +153,7 @@ int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, UINT uE
 		if (_tcscmp(szSongFile, item.m_strSongFile.c_str()) == 0)
 		{
 			item.m_bRemove = true;
-			item.m_uEmbeddedLyrType	= uEmbeddedLyrType;
+			item.m_vLyrNames = vEmbeddedLyrNames;
 			item.m_nTryFailed = 0;
 			nRet = DealEmbeddedLyrics(item);
 			if (nRet == ERR_OK)
@@ -172,7 +165,7 @@ int CAutoProcessEmbeddedLyrics::RemoveEmbeddedLyrics(LPCTSTR szSongFile, UINT uE
 	Item	newItem;
 	newItem.m_strSongFile = szSongFile;
 	newItem.m_bRemove = true;
-	newItem.m_uEmbeddedLyrType = uEmbeddedLyrType;
+	newItem.m_vLyrNames = vEmbeddedLyrNames;
 	newItem.m_nTryFailed = 0;
 	nRet = DealEmbeddedLyrics(newItem);
 	if (nRet != ERR_OK && bAddToQueueOnFailed)
@@ -272,16 +265,25 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 
 int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 {
-	int				nRet;
-	bool			Id3v2Uslt, Id3v2Sylt, bLyrics3v2, bId3v2LyricsUserDefined;
+	UINT32 uAllLstFlag = 0;
+	for (uint i = 0; i < item.m_vLyrNames.size(); i++)
+		uAllLstFlag |= LyrSrcTypeFromName(item.m_vLyrNames[i].c_str());
 
-	Id3v2Sylt = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_SYLT);
-	Id3v2Uslt = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_USLT);
-	bLyrics3v2 = IsFlagSet(item.m_uEmbeddedLyrType, LST_LYRICS3V2);
-	bId3v2LyricsUserDefined = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_LYRICS);
+	int nRet;
 
-	// save embedded lyrics
-	if (Id3v2Sylt || Id3v2Uslt || bId3v2LyricsUserDefined)
+	// Save lyrics3v2 lyrics
+	if (IsFlagSet(uAllLstFlag, LST_LYRICS3V2)
+		&& CTagLib::IsID3v2TagSupported(item.m_strSongFile.c_str()))
+	{
+		CLyrics3v2	lyrics3v2;
+		nRet = lyrics3v2.WriteLyrcsInfo(item.m_strSongFile.c_str(), item.m_strLyrics.c_str(), item.m_strLyrics.size());
+		if (nRet != ERR_OK && nRet != ERR_NOT_FIND_LRC3V2)
+			return nRet;
+	}
+
+	// Save ID3v2 embedded lyrics
+	if ((uAllLstFlag & LST_ID3V2) > 0
+		 && CTagLib::IsID3v2TagSupported(item.m_strSongFile.c_str()))
 	{
 		// save lyrics as id3v2 sylt and uslt
 		CMLData		lyricsData;
@@ -289,31 +291,28 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 		nRet = lyricsData.OpenLyrics(item.m_strSongFile.c_str(), 0, (LPBYTE)item.m_strLyrics.c_str(), item.m_strLyrics.size());
 		if (nRet == ERR_OK)
 		{
-			if (lyricsData.GetLyrContentType() != LCT_LRC)
-				Id3v2Sylt = false;
-
-			nRet = lyricsData.SaveLyricsInSongOfID3v2(
-				Id3v2Uslt,
-				Id3v2Sylt,
-				bId3v2LyricsUserDefined);
+			nRet = lyricsData.SaveLyricsInSongOfID3v2(item.m_vLyrNames);
 			if (nRet != ERR_OK)
 				return nRet;
 		}
 	}
 
-	if (bLyrics3v2)
+	// Save M4a embedded lyrics
+	if ((uAllLstFlag & LST_M4A_LYRICS) > 0
+		 && CTagLib::IsM4aTagSupported(item.m_strSongFile.c_str()))
 	{
-		// save lyrics as id3v2 uslt
-		CLyrics3v2		lyrics3v2;
+		CMLData		lyricsData;
 
-		ASSERT(item.m_strLyrics.size());
-		nRet = lyrics3v2.WriteLyrcsInfo(item.m_strSongFile.c_str(), 
-			item.m_strLyrics.c_str(), item.m_strLyrics.size(), TRUE);
-		if (nRet != ERR_OK)
-			return nRet;
+		nRet = lyricsData.OpenLyrics(item.m_strSongFile.c_str(), 0, (LPBYTE)item.m_strLyrics.c_str(), item.m_strLyrics.size());
+		if (nRet == ERR_OK)
+		{
+			nRet = lyricsData.SaveLyricsInSongOfM4a();
+			if (nRet != ERR_OK)
+				return nRet;
+		}
 	}
 
-	if (Id3v2Sylt || bLyrics3v2)
+	if ((uAllLstFlag & (LST_ID3V2_SYLT | LST_LYRICS3V2)) > 0)
 		g_LyricSearch.CancelAssociate(item.m_strSongFile.c_str());
 
 	return ERR_OK;
@@ -322,47 +321,8 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 int CAutoProcessEmbeddedLyrics::DealRemoveEmbeddedLyrics(Item &item)
 {
 	ASSERT(item.m_bRemove);
-	int				nRet;
-	bool			Id3v2Uslt, Id3v2Sylt, bLyrics3v2, bId3v2LyricsUserDefined;
 
-	Id3v2Sylt = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_SYLT);
-	Id3v2Uslt = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_USLT);
-	bLyrics3v2 = IsFlagSet(item.m_uEmbeddedLyrType, LST_LYRICS3V2);
-	bId3v2LyricsUserDefined = IsFlagSet(item.m_uEmbeddedLyrType, LST_ID3V2_LYRICS);
-
-	if (bLyrics3v2)
-	{
-		CLyrics3v2	lyrics3v2;
-
-		nRet = lyrics3v2.ClearLyricsInfo(item.m_strSongFile.c_str());
-		if (nRet != ERR_OK && nRet != ERR_NOT_FIND_LRC3V2)
-			return nRet;
-	}
-
-	// remove embedded lyrics
-	if (!(Id3v2Sylt || Id3v2Uslt || bId3v2LyricsUserDefined))
-		return ERR_OK;
-
-	CID3v2IF		id3v2(ED_SYSDEF);
-	nRet = id3v2.Open(item.m_strSongFile.c_str(), true, false);
-	if (nRet != ERR_OK)
-		return nRet;
-
-	if (Id3v2Uslt)
-		nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_USLT);
-
-	if (Id3v2Sylt)
-		nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_SYLT);
-
-	if (bId3v2LyricsUserDefined)
-		nRet = id3v2.RemoveLyrics(SZ_SONG_ID3V2_LYRICS);
-
-	nRet = id3v2.Save();
-	if (nRet != ERR_OK)
-		return nRet;
-	id3v2.Close();
-
-	return ERR_OK;
+	return CTagLib::RemoveEmbeddedLyrics(item.m_strSongFile.c_str(), item.m_vLyrNames, NULL);
 }
 
 void CAutoProcessEmbeddedLyrics::SaveJobs()
@@ -447,7 +407,8 @@ protected:
 
 		item.m_strSongFile = _T("C:\\abc.mp3");
 		item.m_strLyrics.append(";lksjd;gioew1230$/;%^&*");
-		item.m_uEmbeddedLyrType = 2308273;
+		item.m_vLyrNames.push_back(_T("abc"));
+		item.m_vLyrNames.push_back(_T("de"));
 		item.m_bRemove = true;
 		item.m_bDealOK = false;
 		item.m_nTryFailed = 2;
@@ -455,7 +416,8 @@ protected:
 
 		item.m_strSongFile = _T("C:\\abcd.mp3");
 		item.m_strLyrics.append(";lksjd;gssgeeggioew1230$/;%^&*");
-		item.m_uEmbeddedLyrType = 21308273;
+		item.m_vLyrNames.push_back(_T("a"));
+		item.m_vLyrNames.push_back(_T("def"));
 		item.m_bRemove = false;
 		item.m_bDealOK = false;
 		item.m_nTryFailed = 0;
@@ -476,7 +438,7 @@ protected:
 			CAutoProcessEmbeddedLyrics::Item &i2 = *it2;
 
 			CPPUNIT_ASSERT(i1.m_strSongFile == i2.m_strSongFile);
-			CPPUNIT_ASSERT(i1.m_uEmbeddedLyrType == i2.m_uEmbeddedLyrType);
+			CPPUNIT_ASSERT(i1.m_vLyrNames == i2.m_vLyrNames);
 			CPPUNIT_ASSERT(i1.m_bRemove == i2.m_bRemove);
 			CPPUNIT_ASSERT(i1.m_nTryFailed == i2.m_nTryFailed);
 

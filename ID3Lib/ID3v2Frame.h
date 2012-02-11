@@ -18,6 +18,7 @@ public:
 	CID3v2Frame(const ID3v2FrameHdr &frameHdr, const char *data, int len);
 	virtual ~CID3v2Frame();
 
+	UINT GetFrameID() const { return m_framehdr.nFrameID; }
 	virtual int RenderFrame(const ID3v2Header *pHeader, CCharBuffer &buff);
 
 	// CCharBuffer *GetData() { return &m_frameData; }

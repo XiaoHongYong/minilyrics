@@ -24,7 +24,7 @@ BOOL Execute(LPCSTR szCmd)
 }
 
 // Launch "MiniLyrics.exe /Wnd 0xWNDHANDLE /Player "Winamp"" to start MiniLyrics
-BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayerService)
+BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayerService, bool bManual)
 {
 	ASSERT(hInst);
 	ASSERT(pPlayerService);
@@ -77,6 +77,8 @@ BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayer
 
 	char	szCmdLine[MAX_PATH];
 	sprintf_s(szCmdLine, CountOf(szCmdLine), "%s /Wnd 0x%X", szMiniLyricsExe, pPlayerService->GetHandle());
+	if (bManual)
+		_tcscat_safe(szCmdLine, CountOf(szCmdLine), " /Manual");
 	Execute(szCmdLine);
 
 	return TRUE;

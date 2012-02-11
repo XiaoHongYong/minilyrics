@@ -508,6 +508,11 @@ int CM4aTag::SetLyrics(LPCTSTR szLyrics)
 	return ERR_OK;
 }
 
+int CM4aTag::RemoveLyrics()
+{
+	return ERR_NOT_SUPPORT_FILE_FORMAT;
+}
+
 int CM4aTag::Write(string &buf, size_t offset)
 {
 	fseek(m_fp, offset, SEEK_SET);

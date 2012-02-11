@@ -25,10 +25,11 @@ public:
 		CID_DOWN_DIR = 0;
 		CID_C_SAVE_IN_SONG_DIR = 0;
 		CID_C_SAVE_IN_DIR = 0;
-		CID_C_SAVE_IN_MP3 = 0;
+		CID_C_SAVE_IN_SONG_FILE = 0;
 		CID_C_ID3V2_SYLT = 0;
 		CID_C_ID3V2_USLT = 0;
 		CID_C_LYR3V2 = 0;
+		CID_C_M4A_LYRICS = 0;
 	}
 
 	void OnInitialUpdate()
@@ -38,7 +39,7 @@ public:
 		GET_ID_BY_NAME(CID_DOWN_DIR);
 		GET_ID_BY_NAME(CID_C_SAVE_IN_SONG_DIR);
 		GET_ID_BY_NAME(CID_C_SAVE_IN_DIR);
-		GET_ID_BY_NAME(CID_C_SAVE_IN_MP3);
+		GET_ID_BY_NAME2(CID_C_SAVE_IN_SONG_FILE, CID_C_M4A_LYRICS);
 		GET_ID_BY_NAME(CID_C_ID3V2_SYLT);
 		GET_ID_BY_NAME(CID_C_ID3V2_USLT);
 		GET_ID_BY_NAME(CID_C_LYR3V2);
@@ -46,6 +47,7 @@ public:
 		AddOptBool(ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveId3v2Sylt"), true, _T("CID_C_ID3V2_SYLT"));
 		AddOptBool(ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveId3v2Uslt"), true, _T("CID_C_ID3V2_USLT"));
 		AddOptBool(ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveLyrics3v2"), false, _T("CID_C_LYR3V2"));
+		AddOptBool(ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveLyricsM4a"), false, _T("CID_C_M4A_LYRICS"));
 
 		{
 			// downloaded lyrics file name
@@ -78,9 +80,10 @@ public:
 			EnableUIObject(CID_DOWN_DIR, false, false);
 
 		if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
-			CheckButton(_T("CID_C_SAVE_IN_MP3"), true);
+			CheckButton(_T("CID_C_SAVE_IN_SONG_FILE"), true);
 		else
 		{
+			EnableUIObject(CID_C_M4A_LYRICS, false, false);
 			EnableUIObject(CID_C_ID3V2_SYLT, false, false);
 			EnableUIObject(CID_C_ID3V2_USLT, false, false);
 			EnableUIObject(CID_C_LYR3V2, false, false);
@@ -115,12 +118,13 @@ public:
 
 			g_Profile.WriteProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DownSaveDir);
 		}
-		else if (nId == CID_C_SAVE_IN_MP3)
+		else if (nId == CID_C_SAVE_IN_SONG_FILE)
 		{
 			bool		bCheck;
 			bCheck = IsButtonChecked(nId);
 
 			g_Profile.WriteProfileInt(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), bCheck);
+			EnableUIObject(CID_C_M4A_LYRICS, bCheck);
 			EnableUIObject(CID_C_ID3V2_SYLT, bCheck);
 			EnableUIObject(CID_C_ID3V2_USLT, bCheck);
 			EnableUIObject(CID_C_LYR3V2, bCheck);
@@ -159,7 +163,8 @@ public:
 	}
 
 protected:
-	int				CID_DOWN_DIR, CID_C_SAVE_IN_SONG_DIR, CID_C_SAVE_IN_DIR, CID_C_SAVE_IN_MP3;
+	int				CID_DOWN_DIR, CID_C_SAVE_IN_SONG_DIR, CID_C_SAVE_IN_DIR;
+	int				CID_C_SAVE_IN_SONG_FILE, CID_C_M4A_LYRICS;
 	int				CID_C_ID3V2_SYLT, CID_C_ID3V2_USLT, CID_C_LYR3V2;
 
 };

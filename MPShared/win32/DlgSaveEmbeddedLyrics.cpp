@@ -9,18 +9,21 @@
 
 CDlgSaveEmbeddedLyrics::CDlgSaveEmbeddedLyrics() : CBaseDialog(IDD_SAVE_EMBEDDED_LYR)
 {
-	m_bId3v2Sync = m_bId3v2Unsyc = m_bLyrics3v2 = false;
+	m_nDefaultEmbededLST = g_Profile.GetProfileInt(_T("DefaultEmbeddedLST"), LST_ID3V2_USLT);
+	m_bHasEmbeddedLyrAlready = false;
 }
 
 CDlgSaveEmbeddedLyrics::~CDlgSaveEmbeddedLyrics()
 {
-
 }
 
-BOOL CDlgSaveEmbeddedLyrics::OnInitDialog()
+int CDlgSaveEmbeddedLyrics::DoModal(CBaseWnd *pWnd)
 {
-	if (!CBaseDialog::OnInitDialog())
-		return FALSE;
+	if (!g_LyricData.HasLyricsOpened())
+	{
+		pWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+		return IDCANCEL;
+	}
 
 	// Get current media and lyrics information
 	m_strMediaUrl = g_Player.GetSrcMedia();
@@ -29,69 +32,109 @@ BOOL CDlgSaveEmbeddedLyrics::OnInitDialog()
 	g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE);
 	TStringToProperFileData(str.c_str(), m_bufLyrics);
 
-	V_LRCSEARCHRESULT vLyrics;
-	if (g_LyricSearch.SearchEmbeddedLyrics(m_strMediaUrl.c_str(), vLyrics) == ERR_OK)
+	if (CTagLib::IsM4aTagSupported(m_strMediaUrl.c_str()))
 	{
-		for (V_LRCSEARCHRESULT::iterator it = vLyrics.begin(); it != vLyrics.end(); ++it)
-		{
-			LrcSearchResult &item = *it;
-			if (StrIBeginWith(item.strUrl.c_str(), SZ_SONG_ID3V2_SYLT))
-				m_bId3v2Sync = true;
-			else if (StrIBeginWith(item.strUrl.c_str(), SZ_SONG_ID3V2_USLT))
-				m_bId3v2Unsyc = true;
-			else if (StrIBeginWith(item.strUrl.c_str(), SZ_SONG_LYRICS3V2))
-				m_bLyrics3v2 = true;
-		}
+		// Save lyrics directly
+		VecString vLyrNames;
+		vLyrNames.push_back(SZ_SONG_M4A_LYRICS);
+		if (DoSaveAction(vLyrNames, pWnd) == ERR_OK)
+			pWnd->MessageOut(TOLOCAL_T("Embedded Lyrics were saved successfully."));
+		return IDOK;
 	}
-
-	if (!m_bId3v2Sync && !m_bId3v2Unsyc && !m_bLyrics3v2)
+	else if (CTagLib::IsID3v2TagSupported(m_strMediaUrl.c_str()))
+		return CBaseDialog::DoModal(pWnd);
+	else
 	{
-		m_bId3v2Unsyc = g_Profile.GetProfileBool(_T("SaveId3v2Unsyc"), true);
-		m_bId3v2Sync = g_Profile.GetProfileBool(_T("SaveId3v2Sync"), false);
-		m_bLyrics3v2 = g_Profile.GetProfileBool(_T("SaveLyr3v2Sync"), false);
+		pWnd->MessageOut(TOLOCAL(_T("This file doesn't support embedded lyrics.")));
+		return IDCANCEL;
 	}
+}
 
-	if (m_bId3v2Unsyc)
-		CheckButton(IDC_C_ID3V2_UNSYNC, true);
+BOOL CDlgSaveEmbeddedLyrics::OnInitDialog()
+{
+	if (!CBaseDialog::OnInitDialog())
+		return FALSE;
 
-	if (m_bId3v2Sync)
-		CheckButton(IDC_C_ID3V2_SYNC, true);
+	m_ctrlListLyrics.Attach(this, IDC_L_LYRICS);
+	m_ctrlListLyrics.SetExtendedStyle(LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT);
+	int n = m_ctrlListLyrics.InsertColumn(COL_DESC, TOLOCAL_T("Embedded Lyrics Type"), LVCFMT_LEFT, 450);
+	n = m_ctrlListLyrics.InsertColumn(COL_NAME, TOLOCAL_T(""), LVCFMT_LEFT, 200);
 
-	if (m_bLyrics3v2)
-		CheckButton(IDC_C_LYRICS3V2, true);
+	VecString vLyricsNames;
+	CTagLib::GetEmbeddedLyrics(m_strMediaUrl.c_str(), vLyricsNames);
+
+	m_bHasEmbeddedLyrAlready = vLyricsNames.size() > 0;
+
+	AddEmbeddedItem(vLyricsNames, SZ_SONG_ID3V2_USLT);
+	AddEmbeddedItem(vLyricsNames, SZ_SONG_ID3V2_SYLT);
+	AddEmbeddedItem(vLyricsNames, SZ_SONG_LYRICS3V2);
 
 	return TRUE;
 }
 
+void CDlgSaveEmbeddedLyrics::AddEmbeddedItem(VecString &vAlreadyHave, LPCTSTR szToAdd)
+{
+	LRC_SOURCE_TYPE lstToAdd = LyrSrcTypeFromName(szToAdd);
+	bool bAdded = false;
+
+	for (uint i = 0; i < vAlreadyHave.size(); i++)
+	{
+		if (StrBeginWith(vAlreadyHave[i].c_str(), szToAdd))
+		{
+			bAdded = true;
+			int n = m_ctrlListLyrics.AppendItem(TOLOCAL(LyrSrcTypeToDesc(lstToAdd)));
+			m_ctrlListLyrics.SetItemText(n, COL_NAME, vAlreadyHave[i].c_str());
+			m_ctrlListLyrics.SetCheck(n, true);
+		}
+	}
+
+	if (!bAdded)
+	{
+		int n = m_ctrlListLyrics.AppendItem(TOLOCAL(LyrSrcTypeToDesc(lstToAdd)));
+		m_ctrlListLyrics.SetItemText(n, COL_NAME, szToAdd);
+
+		if (vAlreadyHave.empty())
+		{
+			if (IsFlagSet(m_nDefaultEmbededLST, lstToAdd))
+				m_ctrlListLyrics.SetCheck(n, true);
+		}
+	}
+}
+
 void CDlgSaveEmbeddedLyrics::OnOK()
 {
-	bool bId3v2Sync = false, bId3v2Unsyc = true, bLyrics3v2 = false;
+	VecString vLyrNames;
+	uint32 nEmbeddedLST = 0;
+	for (int i = 0; i < m_ctrlListLyrics.GetItemCount(); i++)
+	{
+		if (m_ctrlListLyrics.GetCheck(i))
+		{
+			tstring strName;
+			m_ctrlListLyrics.GetItemText(i, COL_NAME, strName);
+			vLyrNames.push_back(strName);
+			nEmbeddedLST |= LyrSrcTypeFromName(strName.c_str());
+		}
+	}
 
-	bId3v2Sync = IsButtonChecked(IDC_C_ID3V2_SYNC);
-	bId3v2Unsyc = IsButtonChecked(IDC_C_ID3V2_UNSYNC);
-	bLyrics3v2 = IsButtonChecked(IDC_C_LYRICS3V2);
+	if (!m_bHasEmbeddedLyrAlready)
+		g_Profile.WriteProfileInt(_T("DefaultEmbeddedLST"), nEmbeddedLST);
 
-	if (m_bId3v2Sync != bId3v2Sync)
-		g_Profile.WriteProfileInt(_T("SaveId3v2Sync"), bId3v2Sync);
-	if (m_bId3v2Unsyc != bId3v2Unsyc)
-		g_Profile.WriteProfileInt(_T("SaveId3v2Unsyc"), bId3v2Unsyc);
-	if (m_bLyrics3v2 != bLyrics3v2)
-		g_Profile.WriteProfileInt(_T("SaveLyr3v2Sync"), bLyrics3v2);
+	DoSaveAction(vLyrNames, this);
 
-	UINT uEmbeddedLyrType = 0;
-	if (bId3v2Sync) uEmbeddedLyrType |= LST_ID3V2_SYLT;
-	if (bId3v2Unsyc) uEmbeddedLyrType |= LST_ID3V2_USLT;
-	if (bLyrics3v2) uEmbeddedLyrType |= LST_LYRICS3V2;
+	CBaseDialog::OnOK();
+}
 
-	int nRet = g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(m_strMediaUrl.c_str(), _T(""), &m_bufLyrics, uEmbeddedLyrType);
+int CDlgSaveEmbeddedLyrics::DoSaveAction(VecString &vLyrNames, CBaseWnd *pWnd)
+{
+	int nRet = g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(m_strMediaUrl.c_str(), _T(""), &m_bufLyrics, vLyrNames);
 	if (nRet != ERR_OK)
 	{
 		tstring strMsg = TOLOCAL_T("Failed to Save embedded lyrics, MiniLyrics will auto try again later.");
 		strMsg += SZ_RETURN;
 		strMsg += SZ_RETURN;
 		strMsg += ERROR2STR_LOCAL(nRet);
-		MessageOut(strMsg.c_str());
+		pWnd->MessageOut(strMsg.c_str());
 	}
 
-	CBaseDialog::OnOK();
+	return nRet;
 }

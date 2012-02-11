@@ -60,6 +60,7 @@ public:
 
 	bool HasLyrics();
 	int SetLyrics(LPCTSTR szLyrics);
+	int RemoveLyrics();
 
 	M4aBox &GetRoot() { return m_root; }
 

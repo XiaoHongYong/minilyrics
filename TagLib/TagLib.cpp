@@ -15,8 +15,7 @@ ID_TO_STRING	__id2strLyrSrcType[] = {
 	{ LST_LYRICS3V2, SZ_SONG_LYRICS3V2 },
 	{ LST_ID3V2_LYRICS, SZ_SONG_ID3V2_LYRICS },
 	{ LST_M4A_LYRICS, SZ_SONG_M4A_LYRICS },
-	{ LST_NONE, NULL },
-	// { ,  },
+	{ LST_UNKNOWN, NULL },
 };
 
 ID_TO_STRING	__id2strLyrSrcTypeDesc[] = {
@@ -25,7 +24,8 @@ ID_TO_STRING	__id2strLyrSrcTypeDesc[] = {
 	{ LST_LYRICS3V2, SZ_SONG_LYRICS3V2_DESC },
 	{ LST_ID3V2_LYRICS, SZ_SONG_ID3V2_LYRICS_DESC },
 	{ LST_M4A_LYRICS, SZ_SONG_M4A_LYRICS_DESC },
-	{ LST_NONE, NULL },
+	{ LST_NONE, _T("No suitable lyrics for the song file") },
+	{ LST_UNKNOWN, NULL },
 	// { ,  },
 };
 
@@ -33,27 +33,26 @@ LRC_SOURCE_TYPE LyrSrcTypeFromName(LPCTSTR szLrcSource)
 {
 	if (IsEmptyString(szLrcSource))
 		return LST_NONE;
-	else if (!StrBeginWith(szLrcSource, _T("song://")))
-		return LST_FILE;
 
-	LPCTSTR end = _tcsrchr(szLrcSource, '/');
-	if (end == NULL)
-		return LST_UNKNOWN;
-	tstring strPathName;
-	strPathName.append(szLrcSource, (size_t)(end - szLrcSource + 1));
-	return (LRC_SOURCE_TYPE)StringToID(__id2strLyrSrcType, strPathName.c_str(), LST_NONE);
+	for (int i = 0; __id2strLyrSrcType[i].szId != NULL; i++)
+	{
+		if (StrBeginWith(szLrcSource, __id2strLyrSrcType[i].szId))
+			return (LRC_SOURCE_TYPE)__id2strLyrSrcType[i].dwId;
+	}
+
+	return LST_FILE;
 }
 
 LPCTSTR LyrSrcTypeToName(LRC_SOURCE_TYPE lst)
 {
-	LPCTSTR name = IDToString(__id2strLyrSrcType, lst, _T("Unknown"));
-	return name;
+	if (lst == LST_NONE)
+		return NONE_LYRCS;
+	return IDToString(__id2strLyrSrcType, lst, _T("Unknown"));
 }
 
 LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst)
 {
-	LPCTSTR name = IDToString(__id2strLyrSrcTypeDesc, lst, _T("Unknown"));
-	return name;
+	return IDToString(__id2strLyrSrcTypeDesc, lst, _T("Unknown"));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -169,17 +168,18 @@ int CTagLib::GetEmbeddedLyrics(LPCTSTR szFile, VecString &vLyricsNames)
 			if (nRet != ERR_OK)
 				return nRet;
 		}
+	}
 
+	if (IsID3v2TagSupported(szFile))
+	{
 		// Lyrics3v2
-		{
-			CLyrics3v2	lyrics3v2;
-			stringex	strLyrics;
+		CLyrics3v2	lyrics3v2;
+		stringex	strLyrics;
 
-			if (lyrics3v2.ReadLyrcsInfo(szFile, strLyrics) == ERR_OK)
-			{
-				if (strLyrics.size() > MIN_EMBEDDED_LYR_SIZE)
-					vLyricsNames.push_back(SZ_SONG_LYRICS3V2);
-			}
+		if (lyrics3v2.ReadLyrcsInfo(szFile, strLyrics) == ERR_OK)
+		{
+			if (strLyrics.size() > MIN_EMBEDDED_LYR_SIZE)
+				vLyricsNames.push_back(SZ_SONG_LYRICS3V2);
 		}
 	}
 
@@ -211,4 +211,71 @@ bool CTagLib::IsID3v2TagSupported(LPCTSTR szFile)
 bool CTagLib::IsM4aTagSupported(LPCTSTR szFile)
 {
 	return FileIsExtSame(szFile, _T(".m4a"));
+}
+
+int CTagLib::RemoveEmbeddedLyrics(LPCTSTR szMediaFile, VecString &vLyrNamesToRemove, int *succeededCount)
+{
+	UINT32 uAllLstFlag = 0;
+	for (uint i = 0; i < vLyrNamesToRemove.size(); i++)
+		uAllLstFlag |= LyrSrcTypeFromName(vLyrNamesToRemove[i].c_str());
+
+	int nRet;
+
+	// Remove lyrics3v2 lyrics
+	if (IsFlagSet(uAllLstFlag, LST_LYRICS3V2))
+	{
+		CLyrics3v2	lyrics3v2;
+		nRet = lyrics3v2.ClearLyricsInfo(szMediaFile);
+		if (nRet != ERR_OK && nRet != ERR_NOT_FIND_LRC3V2)
+			return nRet;
+	}
+
+	// Remove ID3v2 embedded lyrics
+	if ((uAllLstFlag & LST_ID3V2) > 0)
+	{
+		CID3v2IF		id3v2(ED_SYSDEF);
+		nRet = id3v2.Open(szMediaFile, true, false);
+		if (nRet != ERR_OK)
+			return nRet;
+
+		bool bRemoved = false;
+		for (uint i = 0; i < vLyrNamesToRemove.size(); i++)
+			if ((LyrSrcTypeFromName(vLyrNamesToRemove[i].c_str()) & LST_ID3V2) > 0)
+			{
+				nRet = id3v2.RemoveLyrics(vLyrNamesToRemove[i].c_str());
+				if (nRet == ERR_OK)
+					bRemoved = true;
+			}
+
+		if (bRemoved)
+		{
+			nRet = id3v2.Save();
+			if (nRet == ERR_OK && succeededCount)
+				(*succeededCount)++;
+			return nRet;
+		}
+
+		return ERR_OK;
+	}
+
+	// Remove M4a lyrics
+	if (IsFlagSet(uAllLstFlag, LST_M4A_LYRICS))
+	{
+		CM4aTag tag;
+		nRet = tag.Open(szMediaFile, true, false);
+		if (nRet == ERR_OK)
+		{
+			nRet = tag.RemoveLyrics();
+			if (nRet == ERR_OK)
+			{
+				nRet = tag.SaveClose();
+				if (nRet == ERR_OK && succeededCount)
+					(*succeededCount)++;
+				else
+					return nRet;
+			}
+		}
+	}
+
+	return ERR_OK;
 }

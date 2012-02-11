@@ -38,16 +38,14 @@ BOOL CDlgBatchProcessEmbeddedLyrics::OnInitDialog()
 
 	CMutexAutolock	autolock(g_autoProcessEmbeddedLyrics.m_mutex);
 
-	tstring		strName;
 	CAutoProcessEmbeddedLyrics::LIST_ITEMS::iterator	it, itEnd;
 	itEnd = g_autoProcessEmbeddedLyrics.m_listJobs.end();
 	for (it = g_autoProcessEmbeddedLyrics.m_listJobs.begin(); it != itEnd; ++it)
 	{
 		CAutoProcessEmbeddedLyrics::Item	&item = *it;
-		int			n;
-		n = m_listCtrl.InsertItem(m_listCtrl.GetItemCount(), item.m_bRemove ? _T("Remove") : _T("Add"));
+		int n = m_listCtrl.InsertItem(m_listCtrl.GetItemCount(), item.m_bRemove ? _T("Remove") : _T("Add"));
 		m_listCtrl.SetItemText(n, COL_SONG, FileGetName(item.m_strSongFile.c_str()));
-		GetEmbeddedLyricsTypeName(item.m_uEmbeddedLyrType, strName);
+		tstring strName = StrJoin(item.m_vLyrNames.begin(), item.m_vLyrNames.end(), _T(", "));
 		m_listCtrl.SetItemText(n, COL_EMBEDDED_TYPE, strName.c_str());
 	}
 
@@ -82,34 +80,4 @@ void CDlgBatchProcessEmbeddedLyrics::OnOK()
 		MessageOut(CStrPrintf(_T("%d Lyrics were failed to process."), nFailedTimes).c_str());
 	else
 		CBaseDialog::OnOK();
-}
-
-void CDlgBatchProcessEmbeddedLyrics::GetEmbeddedLyricsTypeName(UINT uEmbeddedLyricsType, tstring &strName)
-{
-	strName.resize(0);
-
-	if (IsFlagSet(uEmbeddedLyricsType, LST_ID3V2_SYLT))
-	{
-		if (strName.size())
-			strName += _T(", ");
-		strName += SZ_SONG_ID3V2_SYLT;
-	}
-	if (IsFlagSet(uEmbeddedLyricsType, LST_ID3V2_USLT))
-	{
-		if (strName.size())
-			strName += _T(", ");
-		strName += SZ_SONG_ID3V2_USLT;
-	}
-	if (IsFlagSet(uEmbeddedLyricsType, LST_ID3V2_LYRICS))
-	{
-		if (strName.size())
-			strName += _T(", ");
-		strName += SZ_SONG_ID3V2_LYRICS;
-	}
-	if (IsFlagSet(uEmbeddedLyricsType, LST_LYRICS3V2))
-	{
-		if (strName.size())
-			strName += _T(", ");
-		strName += SZ_SONG_LYRICS3V2;
-	}
 }

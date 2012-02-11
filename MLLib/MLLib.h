@@ -10,4 +10,3 @@
 #include "MLData.h"
 
 
-#define NONE_LYRCS	_T("")

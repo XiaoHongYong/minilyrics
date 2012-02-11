@@ -230,6 +230,10 @@ void CMPSkinFactory::MinizeAll(bool bSilently)
 	for (it = m_listSkinWnds.begin(); it != itEnd; ++it)
 	{
 		CSkinWnd	*pWnd = *it;
+#ifdef _WIN32
+		if (::GetParent(pWnd->GetHandle()) != NULL)
+			continue;
+#endif
 		if (pWnd->IsToolWindow())
 		{
 			pWnd->ShowWindow(SW_SHOWMINNOACTIVE);
