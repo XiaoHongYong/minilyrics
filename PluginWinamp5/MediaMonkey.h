@@ -11,6 +11,8 @@ public:
 
 	// static HWND CreateEmbeddedWnd();
 
+	static void OnTimerCheckEmbeddedMiniLyricsWindow();
+
 	static void Close();
 
 protected:

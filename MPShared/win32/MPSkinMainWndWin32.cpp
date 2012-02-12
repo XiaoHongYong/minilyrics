@@ -19,6 +19,7 @@ const UINT g_msgTaskBarCreated = RegisterWindowMessage(_T("TaskBarCreated"));
 #endif
 
 const UINT g_msgMediaMonkeyEmbeder = RegisterWindowMessage(_T("MediaMonkeyEmbederToMiniLyrics"));
+bool g_bMediaMonkeyEmbeder = false;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -131,6 +132,27 @@ void CMPSkinMainWnd::OnCopyData(WPARAM wParam, PCOPYDATASTRUCT pCopyData)
 #endif
 }
 
+void CMPSkinMainWnd::OnSkinLoaded()
+{
+	CMPSkinMainWndBase::OnSkinLoaded();
+
+	if (g_bMediaMonkeyEmbeder)
+		SetEmbedded();
+}
+
+void CMPSkinMainWnd::SetEmbedded()
+{
+	CMPSkinMainWnd *pMainWnd = CMPlayerAppBase::GetMainWnd();
+	if (pMainWnd && pMainWnd->GetEnableTranslucencyLayered())
+		pMainWnd->EnableTranslucencyLayered(false);
+	g_Player.m_playerInfo.startupFlags |= ML_EMBEDDED_WND_IMMOVABLE;
+	g_Player.m_playerInfo.startupFlags &= ~(ML_SUPPORT_CLASSIC_SKINS | ML_SUPPORT_EMBEDDED);
+
+	pMainWnd->m_WndDrag.EnableDrag(false);
+	pMainWnd->m_wndResizer.FixedWidth(true);
+	pMainWnd->m_wndResizer.FixedHeight(true);
+}
+
 LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch (message)
@@ -165,15 +187,8 @@ LRESULT CMPSkinMainWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 #ifndef _MPLAYER
 		if (message == g_msgMediaMonkeyEmbeder)
 		{
-			CMPSkinMainWnd *pMainWnd = CMPlayerAppBase::GetMainWnd();
-			if (pMainWnd && pMainWnd->GetEnableTranslucencyLayered())
-				pMainWnd->EnableTranslucencyLayered(false);
-			g_Player.m_playerInfo.startupFlags |= ML_EMBEDDED_WND_IMMOVABLE;
-			g_Player.m_playerInfo.startupFlags &= ~(ML_SUPPORT_CLASSIC_SKINS | ML_SUPPORT_EMBEDDED);
-
-			pMainWnd->m_WndDrag.EnableDrag(false);
-			pMainWnd->m_wndResizer.FixedWidth(true);
-			pMainWnd->m_wndResizer.FixedHeight(true);
+			g_bMediaMonkeyEmbeder = true;
+			SetEmbedded();
 		}
 #endif
 		break;

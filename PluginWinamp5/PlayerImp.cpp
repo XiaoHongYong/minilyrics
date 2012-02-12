@@ -26,7 +26,6 @@ CPlayerImp			g_Player;
 bool g_bKmplayer = false;
 bool g_bWinamp = false;
 bool g_bMediaMonkey = false;
-const UINT g_msgMediaMonkeyEmbeder = RegisterWindowMessage(_T("MediaMonkeyEmbederToMiniLyrics"));
 
 inline HWND GetPlayerWnd()
 {
@@ -356,53 +355,6 @@ void RemovePlayingStatInfoInMediaTitle(LPWSTR szMediaTitle)
 	}
 }
 
-HWND FindMiniLyricsParentWnd(HWND hWndParent, HWND hWndMiniLyrics)
-{
-	HWND hWndNext = NULL;
-
-	while (1)
-	{
-		hWndNext = FindWindowEx(hWndParent, hWndNext, NULL, NULL);
-		if (!hWndNext)
-			break;
-		if (hWndNext == hWndMiniLyrics)
-			return hWndParent;
-		else
-		{
-			HWND hWnd = FindMiniLyricsParentWnd(hWndNext, hWndMiniLyrics);
-			if (hWnd)
-				return hWnd;
-		}
-	}
-
-	return NULL;
-}
-
-bool IsMLEmbeddedInMediaMonkey()
-{
-	HWND hWndMiniLyrics = g_MLService.GetMainWindow();
-	assert(hWndMiniLyrics);
-
-	static HWND hWndMiniLyricsParent = NULL;
-	if (hWndMiniLyricsParent
-		&& FindMiniLyricsParentWnd(hWndMiniLyricsParent, hWndMiniLyrics))
-		return true;
-
-	HWND	hWndMediaMonkey = NULL;
-	while (1)
-	{
-		hWndMediaMonkey = FindWindowEx(NULL, hWndMediaMonkey, _T("TFMainWindow"), NULL);
-		if (!hWndMediaMonkey)
-			break;
-		hWndMiniLyricsParent = FindMiniLyricsParentWnd(hWndMediaMonkey, hWndMiniLyrics);
-		if (hWndMiniLyricsParent)
-			return true;
-	}
-
-	return false;
-}
-
-
 ////////////////////////////////////////////////////////////////////////////////////
 
 LRESULT CALLBACK HookWinampWnd(
@@ -633,7 +585,7 @@ void CPlayerImp::OnConnected()
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	SetTimer(TIMER_CHECK_MEDIA, TIME_OUT_UPDATE_MEDIA_INFO);
 	if (g_bMediaMonkey)
-		SetTimer(TIMER_MEDIA_MONKEY_EMBEDER, 5000);
+		SetTimer(TIMER_MEDIA_MONKEY_EMBEDER, 1000);
 
 	// Update Media info
 	CheckMediaUpdate(true);
@@ -866,12 +818,7 @@ void CPlayerImp::OnTimer(int nTimerID)
 		CheckMediaUpdate();
 	else if (nTimerID == TIMER_MEDIA_MONKEY_EMBEDER)
 	{
-		if (IsMLEmbeddedInMediaMonkey())
-		{
-			// Has Embedded parent
-			PostMessage(g_MLService.GetMainWindow(), g_msgMediaMonkeyEmbeder, true, 0);
-			// KillTimer(m_hWnd, TIMER_MEDIA_MONKEY_EMBEDER);
-		}
+		CMediaMonkey::OnTimerCheckEmbeddedMiniLyricsWindow();
 	}
 	else if (nTimerID == TIMER_VERIFY_ML_IN_WINAMP_MENU)
 	{

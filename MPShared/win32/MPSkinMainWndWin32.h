@@ -19,6 +19,8 @@ public:
 
 	virtual void OnCopyData(WPARAM wParam, PCOPYDATASTRUCT pCopyData);
 
+	virtual void OnSkinLoaded();
+
 	void UpdatePlayerSysTrayIcon() { m_mlTrayIcon.UpdatePlayerSysTrayIcon(); }
 
 	CMLTrayIcon &GetTrayIcon() { return m_mlTrayIcon; }
@@ -39,6 +41,8 @@ public:
 
 protected:
 	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);
+
+	void SetEmbedded();
 
 protected:
 	CMLTrayIcon		m_mlTrayIcon;
