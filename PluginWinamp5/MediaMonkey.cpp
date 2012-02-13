@@ -189,7 +189,7 @@ BOOL CALLBACK EnumWindowProc(HWND hwnd, LPARAM lParam)
 void FindEmbeddedMMWindow()
 {
 	static int nRetries = 0;
-	if (g_hWndEWofMM != NULL || nRetries > 10)
+	if (g_hWndEWofMM != NULL || nRetries > 20)
 		return;
 	nRetries++;
 
@@ -201,6 +201,8 @@ void FindEmbeddedMMWindow()
 		HWND hWnd = FindWindowEx(g_hWndEWofMM, NULL, NULL, NULL);
 		if (hWnd != NULL)
 			g_hWndEWofMM = hWnd;
+		else if (nRetries < 18)
+			g_hWndEWofMM = NULL;
 	}
 }
 

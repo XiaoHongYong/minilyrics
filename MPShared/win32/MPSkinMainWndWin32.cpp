@@ -144,7 +144,10 @@ void CMPSkinMainWnd::SetEmbedded()
 {
 	CMPSkinMainWnd *pMainWnd = CMPlayerAppBase::GetMainWnd();
 	if (pMainWnd && pMainWnd->GetEnableTranslucencyLayered())
+	{
+		::UnSetLayeredWindow(m_hWnd);
 		pMainWnd->EnableTranslucencyLayered(false);
+	}
 	g_Player.m_playerInfo.startupFlags |= ML_EMBEDDED_WND_IMMOVABLE;
 	g_Player.m_playerInfo.startupFlags &= ~(ML_SUPPORT_CLASSIC_SKINS | ML_SUPPORT_EMBEDDED);
 

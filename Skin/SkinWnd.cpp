@@ -1870,6 +1870,8 @@ void CSkinWnd::EnableTranslucencyLayered(bool bTranslucencyLayered)
 	}
 
 	m_bTranslucencyLayered = bTranslucencyLayered;
+	if (!bTranslucencyLayered)
+		m_nCurTranslucencyAlpha = 255;
 }
 
 #ifdef _WIN32_DESKTOP
@@ -2031,7 +2033,7 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 		float		fRadio = ((float)(dwTimeCur - m_dwTransFadeinBegTime)) / TIME_OUT_TRANS_FADEIN;
 		nAlphaNew = m_nTransAlphaBeg + int((nTargetAlpha - m_nTransAlphaBeg) * fRadio);
 	}
-	if (m_nCurTranslucencyAlpha != nAlphaNew)
+	if (m_nCurTranslucencyAlpha != nAlphaNew && m_bTranslucencyLayered)
 	{
 		m_nCurTranslucencyAlpha = nAlphaNew;
 		ASSERT(m_nCurTranslucencyAlpha >= 0 && m_nCurTranslucencyAlpha <= 255);
