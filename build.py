@@ -172,7 +172,6 @@ if TargetZP:
 	# Create installation pack for MiniLyrics
 	#
 
-	shutil.copy(r"bin-player\ZikiPlayer.exe", r"Install_ZP\Share\ZikiPlayer.exe")
 	shutil.copy(r"Install_ML\Share\Themes.xml", r"Install_ZP\Share\Themes.xml")
 	# shutil.copytree(r"Install_ML\Share\Patterns", r"Install_ZP\Share\Patterns")
 	Execute(r"cmd /c xcopy /Y Install_ML\Share\Patterns\*.* Install_ZP\Share\Patterns\\")

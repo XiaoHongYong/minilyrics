@@ -379,7 +379,8 @@ protected:
 		if (m_pcbFadeOut)
 		{
 			// lyrics Fade out options
-			LPCTSTR		vszItemName[] = { _T("Normal"), _T("Fade in lyrics"), _T("Fade out background") };
+			LPCTSTR		vszItemName[] = { TOLOCAL_MARK_T("Automatic"), TOLOCAL_MARK_T("Normal"), TOLOCAL_MARK_T("Fade in lyrics"),
+				TOLOCAL_MARK_T("Fade out background") };
 
 			OptComboStr		opt;
 			opt.nIDWidgetCombo = CID_DS_FADEOUT;

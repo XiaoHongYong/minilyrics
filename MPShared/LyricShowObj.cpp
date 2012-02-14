@@ -383,16 +383,17 @@ ID_TO_STRING g_idsLyrDisplayOpt[] =
 	{ DO_NORMAL,			_T("normal") },
 	{ DO_FADEOUT_LOWCOLOR,	_T("fadein") },
 	{ DO_FADEOUT_BG,		_T("fadeout") },
+	{ DO_AUTO,				_T("auto") },
 };
 
 LPCTSTR DisplayOptToStr(DISPLAY_OPTIONS displayOpt)
 {
-	return IDToString(g_idsLyrDisplayOpt, displayOpt, g_idsLyrDisplayOpt[DO_FADEOUT_BG].szId);
+	return IDToString(g_idsLyrDisplayOpt, displayOpt, g_idsLyrDisplayOpt[DO_AUTO].szId);
 }
 
 DISPLAY_OPTIONS DisplayOptFromStr(LPCTSTR szDisplayOpt)
 {
-	return (DISPLAY_OPTIONS)StringToID(g_idsLyrDisplayOpt, szDisplayOpt, DO_FADEOUT_LOWCOLOR);
+	return (DISPLAY_OPTIONS)StringToID(g_idsLyrDisplayOpt, szDisplayOpt, DO_AUTO);
 }
 
 struct LyrShowTOBFieldName
@@ -607,7 +608,7 @@ CLyricShowObj::CLyricShowObj()
 
 	m_nAlignment = LA_CENTER;
 
-	m_LyricsDisplayOpt = DO_FADEOUT_BG;
+	m_LyricsDisplayOpt = DO_AUTO;
 
 	m_hue = 0.0;
 
@@ -865,7 +866,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 //		c. LP_BELOW_CUR_LINE :	
 //			(i) karaok : bg -> Low light
 //			(ii)other  : bg -> high light
-	else if (m_LyricsDisplayOpt == DO_FADEOUT_BG)
+	else if (m_LyricsDisplayOpt == DO_FADEOUT_BG || m_LyricsDisplayOpt == DO_AUTO)
 	{
 		if (linePos == LP_ABOVE_CUR_LINE)
 		{

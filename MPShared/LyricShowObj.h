@@ -6,9 +6,6 @@
 	Purpose  :	
 *********************************************************************/
 
-#if !defined(AFX_LYRICSHOWOBJ_H__9DAA20E0_7727_11D5_9E04_02608CAD9330__INCLUDED_)
-#define AFX_LYRICSHOWOBJ_H__9DAA20E0_7727_11D5_9E04_02608CAD9330__INCLUDED_
-
 #pragma once
 
 
@@ -22,9 +19,11 @@ enum LyrAlignment
 
 enum DISPLAY_OPTIONS
 {
-	DO_NORMAL = 0,				// 普通显示选项
-	DO_FADEOUT_LOWCOLOR,		// 淡出为低调色显示
-	DO_FADEOUT_BG,				// 淡出为背景色显示
+	DO_NORMAL = 0,				// Normal, no fade out
+	DO_FADEOUT_LOWCOLOR,		// Fade out to low color
+	DO_FADEOUT_BG,				// Fade out to background color
+	DO_AUTO,					// If there are space for more than 4 or 5 lines, 
+								// we users fade out low color, or uses fade out background.
 	DO_MAX
 };
 
@@ -343,5 +342,3 @@ void ProfileWriteTOBToOld(bool bOutlineLyrText,
 						  const CLyricShowObj::TextOverlayBlending &tobLowlight);
 
 void ProfileWriteTOBCustomizedToCurrent();
-
-#endif // !defined(AFX_LYRICSHOWOBJ_H__9DAA20E0_7727_11D5_9E04_02608CAD9330__INCLUDED_)

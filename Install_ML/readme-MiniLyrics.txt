@@ -1,9 +1,10 @@
-MiniLyrics 7.3.916
+MiniLyrics 7.3.917
 New: Support save embedded lyrics in AAC(M4A) files.
 Fixed: Saving embedded lyrics in AAC(M4A) file may corrupt it.
 Fixed: MiniLyrics window may be invisible for Embedded MiniLyrics in MediaMonkey.
 Fixed: Support JRiver Media Center 17.
 Improved: Add options in advanced preferences: Restore saving prompt setting for lyrics changed.
+Improved: Auto adjust lyrics display fade out options by window height.
 
 MiniLyrics 7.2.865
 Fixed: MiniLyrics may crash when switching skins. 

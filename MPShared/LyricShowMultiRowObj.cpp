@@ -1,5 +1,5 @@
 /********************************************************************
-	Created  :	2001年12月27日 0:02:48
+	Created  :	2001-12-27 0:02:48
 	FileName :	LyricShowMultiRowObj.cpp
 	Author   :	xhy
 	
@@ -54,10 +54,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 
 	pGraphics->SetFont(&m_font);
 
-	CDispOptRecover		dispOptRecover(this);
-	if (m_img.IsValid())
-		m_LyricsDisplayOpt = DO_FADEOUT_BG;
-
 	if (prcUpdate)
 		*prcUpdate = m_rcObj;
 
@@ -79,14 +75,18 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	}
 
 	pRowCur = m_lyrLines[nRowCur];
-
-	// 行高
 	nRowHeight = GetLineHeight();
-
-	// 此行歌词的时间
 	nDeltaTime = pRowCur->nEndTime - pRowCur->nBegTime;
 
-	// 计算此行歌词显示的座标 Y
+	CDispOptRecover		dispOptRecover(this);
+	if (m_img.IsValid())
+		m_LyricsDisplayOpt = DO_FADEOUT_BG;
+	else if (m_LyricsDisplayOpt == DO_AUTO)
+	{
+		if (m_rcObj.Height() / nRowHeight >= 5)
+			m_LyricsDisplayOpt = DO_FADEOUT_LOWCOLOR;
+	}
+
 	if (nDeltaTime == 0 && m_nCurRowOld == nRowCur)
 		yCurRow = m_yDrawingOld;
 	else
@@ -112,10 +112,10 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	{
 		*prcUpdate = rcClip;
 
-		if (m_LyricsDisplayOpt == DO_FADEOUT_BG || m_LyricsDisplayOpt == DO_FADEOUT_LOWCOLOR)
-			FastestDraw_GetUpdateRectOfFadeInOut(pGraphics, prcUpdate, yCurRow, nRowCur);
-		else
+		if (m_LyricsDisplayOpt == DO_NORMAL)
 			FastestDraw_GetUpdateRectOfNormal(pGraphics, prcUpdate, yCurRow);
+		else
+			FastestDraw_GetUpdateRectOfFadeInOut(pGraphics, prcUpdate, yCurRow, nRowCur);
 
 		rcClip = *prcUpdate;
 
@@ -127,7 +127,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	}
 	else
 	{
-		// 保存这次的值
 		m_nCurRowOld = nRowCur;
 		m_yDrawingOld = yCurRow;
 

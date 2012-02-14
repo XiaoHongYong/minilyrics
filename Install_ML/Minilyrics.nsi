@@ -240,7 +240,7 @@ SectionIn RO
   ; File to extract
   SetOutPath $INSTDIR
   File Share\*.*
-  File ..\bin\MiniLyrics.exe
+  File ..\bin\release\MiniLyrics.exe
 
   SetOutPath $INSTDIR\Player-Plugins
   File ..\bin\gen_MiniLyrics.dll

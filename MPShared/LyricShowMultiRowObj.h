@@ -32,7 +32,7 @@ protected:
 
 	virtual int GetAutoHeightLines() {
 		if (m_etDispSettings == ET_LYRICS_FLOATING_SETTINGS
-			&& m_LyricsDisplayOpt == DO_FADEOUT_BG)
+			&& (m_LyricsDisplayOpt == DO_FADEOUT_BG || m_LyricsDisplayOpt == DO_AUTO))
 			return 3;
 		else
 			return 0;

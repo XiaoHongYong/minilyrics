@@ -147,6 +147,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_LDO_NORMAL:
 	case CMD_LDO_FADE_IN:
 	case CMD_LDO_FADEOUT_BG:
+	case CMD_LDO_AUTO:
 		{
 			DISPLAY_OPTIONS	displayOpt;
 
@@ -156,6 +157,8 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				displayOpt = DO_FADEOUT_LOWCOLOR;
 			else if (nID == CMD_LDO_FADEOUT_BG)
 				displayOpt = DO_FADEOUT_BG;
+			else if (nID == CMD_LDO_AUTO)
+				displayOpt = DO_AUTO;
 			else
 				return false;
 
@@ -832,6 +835,7 @@ bool CMPCommonCmdHandler::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 	case IDC_LDO_NORMAL:
 	case IDC_LDO_FADE_IN:
 	case IDC_LDO_FADEOUT_BG:
+	case IDC_LDO_AUTO:
 		{
 			DISPLAY_OPTIONS		displayOpt = DisplayOptFromStr(
 				g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
@@ -840,8 +844,10 @@ bool CMPCommonCmdHandler::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 				nIDChecked = IDC_LDO_NORMAL;
 			else if (displayOpt == DO_FADEOUT_LOWCOLOR)
 				nIDChecked = IDC_LDO_FADE_IN;
-			else
+			else if (displayOpt == DO_FADEOUT_BG)
 				nIDChecked = IDC_LDO_FADEOUT_BG;
+			else
+				nIDChecked = IDC_LDO_AUTO;
 		}
 		break;
 // 	case IDC_ALIGN_LYRICS_LEFT:

@@ -190,6 +190,7 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "&Karaoke",                    IDC_LDO_KARAOKE
             MENUITEM SEPARATOR
+            MENUITEM "&Automatic",                  IDC_LDO_AUTO
             MENUITEM "Norma&l",                     IDC_LDO_NORMAL
             MENUITEM "&Fade in Lyrics",             IDC_LDO_FADE_IN
             MENUITEM "Fadeout back&ground",         IDC_LDO_FADEOUT_BG
@@ -281,6 +282,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Mouse &click through",        IDC_CLICK_THROUGH
         MENUITEM SEPARATOR
+        MENUITEM "&Automatic",                  IDC_LDO_AUTO
         MENUITEM "Norma&l",                     IDC_LDO_NORMAL
         MENUITEM "&Fade in Lyrics",             IDC_LDO_FADE_IN
         MENUITEM "Fadeout back&ground",         IDC_LDO_FADEOUT_BG
