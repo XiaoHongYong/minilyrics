@@ -134,7 +134,7 @@ if TargetML:
 	#
 
 	#call MLEncrypt to set private encrypt signature.
-	ExecuteOnErrQuit(r"bin\MLEncrypt.exe MiniLyrics.exe search.crintsoft.com www.minilyrics.com")
+	ExecuteOnErrQuit(r"bin\MLEncrypt.exe release\MiniLyrics.exe search.crintsoft.com www.minilyrics.com")
 
 	# Create MLVersion.nsh
 	f = open(r"Install_ML\MLVersion.nsh", "w")
