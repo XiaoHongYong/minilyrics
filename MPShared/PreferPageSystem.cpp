@@ -37,6 +37,7 @@ public:
 		tstring strPwd = g_Profile.EncryptGetProfileString(_T("ProxyPassEnc"), _T(""));
 		if (strPwd.empty())
 			strPwd = g_Profile.GetProfileString(_T("ProxyPass"), _T(""));
+		SetUIObjectProperty(_T("CID_PASS"), _T("Style"), _T("PASSWORD"));
 		SetUIObjectText(_T("CID_PASS"), strPwd.c_str());
 
 		m_bInitailed = true;

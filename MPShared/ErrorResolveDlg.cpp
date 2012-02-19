@@ -33,7 +33,7 @@ void ShowErrorDlg(CBaseWnd *pWnd, int nError)
 	case WSAECONNREFUSED:
 		strResolve  = TOLOCAL(_T("1. First make sure that you can visit our website by your web browser."));
 		strResolve += _T("\r\n");
-		strResolve += TOLOCAL(_T("2. Check whether your internet firewall blocks $Product$ to access internet, please enable your media player(example: winamp, windows media player ...) to access internet."));
+		strResolve += TOLOCAL(_T("2. Check whether your internet firewall blocks $Product$ to access internet, please enable your $Product$.exe to access internet."));
 		strResolve += _T("\r\n");
 		strResolve += TOLOCAL(_T("3. Check whether you access internet via the network proxy, if so, setup the proxy server address and port in the preference window."));
 		break;
