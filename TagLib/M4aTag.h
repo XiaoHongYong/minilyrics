@@ -24,6 +24,8 @@ public:
 	M4aBox *FindBox(LPCSTR szBox);
 	M4aBox *NextBox(M4aBox *brother);
 
+	bool DeleteChild(LPCSTR szType);
+
 	void ClearChildren();
 
 	void ToBuf(string &buf);
@@ -68,6 +70,8 @@ public:
 
 protected:
 	int Parse(M4aBox *parent, int nExtraHeaderOffset = M4aBox::HEADER_SIZE);
+
+	int AdjustStco(int nAdjustedOffset);
 
 	int Read(M4aBox *parent);
 	int Write(string &buf, size_t offset);

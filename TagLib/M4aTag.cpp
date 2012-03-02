@@ -143,6 +143,22 @@ M4aBox *M4aBox::NextBox(M4aBox *brother)
 	return NULL;
 }
 
+bool M4aBox::DeleteChild(LPCSTR szType)
+{
+	for (uint i = 0; i < m_vChildren.size(); i++)
+	{
+		M4aBox *p = m_vChildren[i];
+		if (p->IsType(szType))
+		{
+			delete p;
+			m_vChildren.erase(m_vChildren.begin() + i);
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void M4aBox::ToBuf(string &buf)
 {
 	// Size
@@ -265,34 +281,41 @@ int CM4aTag::SaveClose()
 	if (boxMoov == NULL)
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
-	string buf;
+	if (GetBox("moov.trak.mdia.minf.stbl.co64") != NULL)
+		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
-	boxMoov->ToBuf(buf);
-	if (boxMoov->m_nSize != buf.size())
+	boxMoov->CalculateNewSize();
+
+	int nAdjustedOffset = 0;
+	int nSizeNew = boxMoov->m_nSizeNew;
+	if (boxMoov->m_nSize != nSizeNew)
 	{
 		// Need to resize boxes
 		M4aBox *free = m_root.NextBox(boxMoov);
+		free = NULL;
 		if (free == NULL)
 		{
 			// Resize
-			int nRet = FileMoveEndData(m_fp, boxMoov->m_nOffset + boxMoov->m_nSize, boxMoov->m_nOffset + buf.size());
+			int nRet = FileMoveEndData(m_fp, boxMoov->m_nOffset + boxMoov->m_nSize, boxMoov->m_nOffset + nSizeNew);
 			if (nRet != ERR_OK)
 				return nRet;
+			nAdjustedOffset = nSizeNew - boxMoov->m_nSize;
 		}
 		else
 		{
-			if (boxMoov->m_nSize + free->m_nSize + M4aBox::HEADER_SIZE < buf.size())
+			if (boxMoov->m_nSize + free->m_nSize + M4aBox::HEADER_SIZE < nSizeNew)
 			{
 				// Resize
-				int nRet = FileMoveEndData(m_fp, boxMoov->m_nOffset + boxMoov->m_nSize, boxMoov->m_nOffset + buf.size());
+				int nRet = FileMoveEndData(m_fp, boxMoov->m_nOffset + boxMoov->m_nSize, boxMoov->m_nOffset + nSizeNew);
 				if (nRet != ERR_OK)
 					return nRet;
+				nAdjustedOffset = nSizeNew - boxMoov->m_nSize;
 			}
 			else
 			{
 				// Resize free box
-				free->m_nOffset = boxMoov->m_nOffset + buf.size();
-				free->m_nSize -= buf.size() - boxMoov->m_nSize;
+				free->m_nOffset = boxMoov->m_nOffset + nSizeNew;
+				free->m_nSize -= nSizeNew - boxMoov->m_nSize;
 				free->m_data.resize(free->GetDataSize(), 0);
 
 				string bufFree;
@@ -303,6 +326,12 @@ int CM4aTag::SaveClose()
 			}
 		}
 	}
+
+	if (nAdjustedOffset != 0)
+		AdjustStco(nAdjustedOffset);
+
+	string buf;
+	boxMoov->ToBuf(buf);
 
 	int nRet = Write(buf, boxMoov->m_nOffset);
 	if (nRet != ERR_OK)
@@ -365,6 +394,42 @@ int CM4aTag::Parse(M4aBox *parent, int nExtraHeaderOffset)
 			int nRet = Parse(pChild, nExtraHeaderOffset);
 			if (nRet != ERR_OK)
 				pChild->ClearChildren();
+		}
+	}
+
+	return ERR_OK;
+}
+
+/**
+stco = sample table chunk offset
+
+QT Atom Preamble
+1 byte    version
+3 bytes   flags
+4 bytes   total entries in offset table (n)
+4 bytes   chunk offset 0
+4 bytes   chunk offset 1
+..
+..
+4 bytes   chunk offset n-1
+*/
+int CM4aTag::AdjustStco(int nAdjustedOffset)
+{
+	M4aBox *pBoxStco = GetBox("moov.trak.mdia.minf.stbl.stco");
+	if (pBoxStco != NULL)
+	{
+		const int offsetTrunk = 8;
+		int count = (pBoxStco->m_data.size() - offsetTrunk) / 4;
+		int countShould = BigEndianToUInt32((byte *)(pBoxStco->m_data.c_str() + 4));
+		ASSERT(count == countShould);
+		if (count > countShould)
+			count = countShould;
+
+		int end = offsetTrunk + count * 4;
+		for (int i = offsetTrunk; i < end; i += 4)
+		{
+			uint32 n = BigEndianToUInt32((byte *)(pBoxStco->m_data.c_str() + i));
+			BigEndianFromUInt32(n + nAdjustedOffset, (byte *)(pBoxStco->m_data.c_str() + i));
 		}
 	}
 
