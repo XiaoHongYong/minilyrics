@@ -2,23 +2,23 @@
  * vlc_extension.h: Extensions (meta data, web information, ...)
  *****************************************************************************
  * Copyright (C) 2009-2010 VideoLAN and authors
- * $Id: 07c6221ae744008b426989cd1184ae17ee3ff513 $
+ * $Id: bcda72a27ddd61bb08b06257846bd87213db6bd2 $
  *
  * Authors: Jean-Philippe André < jpeg # videolan.org >
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
+ * This program is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as published by
+ * the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin Street, Fifth Floor, Boston MA 02110-1301, USA.
  *****************************************************************************/
 
 #ifndef VLC_EXTENSIONS_H
@@ -43,6 +43,8 @@ typedef struct extension_t {
     char *psz_url;            /**< A URL to the official page (ro) */
     char *psz_description;    /**< Full description (ro) */
     char *psz_shortdescription; /**< Short description (eg. 1 line)  (ro) */
+    char *p_icondata;         /**< Embedded data for the icon (ro) */
+    int   i_icondata_size;    /**< Size of that data */
 
     extension_sys_t *p_sys;   /**< Reserved for the manager module */
 } extension_t;
@@ -74,8 +76,9 @@ enum
     EXTENSION_TRIGGER_ONLY,   /**< arg1: extension_t*, arg2: bool* */
     EXTENSION_TRIGGER,        /**< arg1: extension_t* */
     EXTENSION_TRIGGER_MENU,   /**< arg1: extension_t*, int (uint16_t) */
-    EXTENSION_SET_INPUT,      /**< arg1: extension_t*, arg2 (input_thread_t) */
+    EXTENSION_SET_INPUT,      /**< arg1: extension_t*, arg2 (input_thread_t*) */
     EXTENSION_PLAYING_CHANGED, /**< arg1: extension_t*, arg2 int( playing status ) */
+    EXTENSION_META_CHANGED,   /**< arg1: extension_t*, arg2 (input_item_t*) */
 };
 
 /**
@@ -159,6 +162,12 @@ static inline int extension_PlayingChanged( extensions_manager_t *p_mgr,
                                             int state )
 {
     return extension_Control( p_mgr, EXTENSION_PLAYING_CHANGED, p_ext, state );
+}
+
+static inline int extension_MetaChanged( extensions_manager_t *p_mgr,
+                                         extension_t *p_ext )
+{
+    return extension_Control( p_mgr, EXTENSION_META_CHANGED, p_ext );
 }
 
 /** Can this extension only be triggered but not activated?
@@ -246,7 +255,7 @@ static inline int extension_DialogCommand( extension_dialog_t* p_dialog,
 /// Widget types
 typedef enum
 {
-    EXTENSION_WIDGET_LABEL,      ///< Non editable text label
+    EXTENSION_WIDGET_LABEL,      ///< Text label
     EXTENSION_WIDGET_BUTTON,     ///< Clickable button
     EXTENSION_WIDGET_IMAGE,      ///< Image label (psz_text is local URI)
     EXTENSION_WIDGET_HTML,       ///< HTML or rich text area (non editable)
@@ -255,6 +264,7 @@ typedef enum
     EXTENSION_WIDGET_DROPDOWN,   ///< Drop-down box
     EXTENSION_WIDGET_LIST,       ///< Vertical list box (of strings)
     EXTENSION_WIDGET_CHECK_BOX,  ///< Checkable box with label
+    EXTENSION_WIDGET_SPIN_ICON,  ///< A "loading..." spinning icon
 } extension_widget_type_e;
 
 /// Widget descriptor for extensions
@@ -285,6 +295,10 @@ struct extension_widget_t
     int i_height;                 ///< Height hint
     bool b_hide;                  ///< Hide this widget (make it invisible)
 
+    /* Spinning icon */
+    int i_spin_loops;             ///< Number of loops to play (-1 = infinite,
+                                  // 0 = stop animation)
+
     /* Orders */
     bool b_kill;                  ///< Destroy this widget
     bool b_update;                ///< Update this widget
@@ -297,7 +311,7 @@ struct extension_widget_t
     extension_dialog_t *p_dialog; ///< Parent dialog
 };
 
-VLC_EXPORT(int, dialog_ExtensionUpdate, (vlc_object_t*, extension_dialog_t *));
+VLC_API int dialog_ExtensionUpdate(vlc_object_t*, extension_dialog_t *);
 #define dialog_ExtensionUpdate(o, d) dialog_ExtensionUpdate(VLC_OBJECT(o), d)
 
 #endif /* VLC_EXTENSIONS_H */

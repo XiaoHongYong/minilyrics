@@ -63,7 +63,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libvlccore.lib"
-				OutputFile="C:\Program Files\VideoLAN\VLC\plugins/libminilyrics_plugin.dll"
+				OutputFile="C:\Program Files\VideoLAN\VLC\plugins/notify/libminilyrics_plugin.dll"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="2"
@@ -211,10 +211,6 @@
 			</File>
 			<File
 				RelativePath=".\include\vlc\libvlc_vlm.h"
-				>
-			</File>
-			<File
-				RelativePath=".\include\vlc\mediacontrol.h"
 				>
 			</File>
 			<File

@@ -33,6 +33,8 @@ public:
 public:
 	PLAYER_STATE	m_stat;
 
-	intf_thread_t	*m_p_intf;
+	volatile intf_thread_t	*m_p_intf;
+	int				m_posLast;
+	DWORD			m_dwTimeBeg;
 
 };

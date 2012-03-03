@@ -94,7 +94,7 @@ void CMLService::OnMediaInfoChanged(LPCWSTR szMediaUrl, LPCWSTR szArtist, LPCWST
 
 void CMLService::SendMessage(MessageToML message, LPVOID param, size_t sizeParam)
 {
-	ASSERT(m_mlInfo.hWndMLService);
+	// ASSERT(m_mlInfo.hWndMLService);
 	if (!m_mlInfo.hWndMLService)
 		return;
 

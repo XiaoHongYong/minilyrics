@@ -63,7 +63,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("VLC"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\VLC media player\\DisplayIcon"),
 		_T("VideoLAN\\VLC\\"), _T("vlc.exe"),
-		_T("plugins"),
+		_T("plugins\\notify"),
 		_T("InstVLC"),
 		_T("libminilyrics_plugin.dll"),
 	},
