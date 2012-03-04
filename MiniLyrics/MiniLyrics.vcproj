@@ -1157,11 +1157,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\LyricsTool.h"
+				RelativePath="..\MPShared\win32\LyricsTool.h"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\LyricsTool.h"
+				RelativePath="..\MPShared\LyricsTool.h"
 				>
 			</File>
 			<File
@@ -1181,11 +1181,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\MediaSource.h"
+				RelativePath="..\MPShared\win32\MediaSource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\MediaSource.h"
+				RelativePath="..\MPShared\MediaSource.h"
 				>
 			</File>
 			<File
@@ -1443,39 +1443,7 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\MPShared\Res\AdvancedPref.bmp"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\AdvancedPref.bmp"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\applicat.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\applicat.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\res\bin00001.bin"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\Res\dragafte.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\dragafte.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\Res\dragbefo.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\dragbefo.ico"
 				>
 			</File>
 			<File
@@ -1483,31 +1451,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\fileType.bmp"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\Res\fileType.bmp"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\hand.cur"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\hand.cur"
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\ico00001.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\ico00001.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\icon-tga.ico"
 				>
 			</File>
 			<File
@@ -1523,19 +1471,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\mplayer.ico"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\next.ICO"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\next.ICO"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\open.ICO"
 				>
 			</File>
 			<File
@@ -1543,15 +1479,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\play.ICO"
+				RelativePath="..\ML6\Res\open.ICO"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\play.ICO"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\prev.ico"
 				>
 			</File>
 			<File
@@ -1564,22 +1496,6 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\save.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\save.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\Res\selcolor.cur"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\selcolor.cur"
-				>
-			</File>
-			<File
-				RelativePath="..\ML6\Res\stop.ICO"
 				>
 			</File>
 			<File

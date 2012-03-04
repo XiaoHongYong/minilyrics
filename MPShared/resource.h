@@ -36,7 +36,9 @@
 #define IDD_MEDIA_INFO_BASIC            164
 #define IDD_SAVE_EMBEDDED_LYR           164
 #define IDM_MAIN_WND                    165
+#define IDD_LD_ADV_DOWNLOAD_LYR         165
 #define IDD_MEDIA_INFO                  166
+#define IDD_LD_ADV_REMOVE_LYR           166
 #define IDD_MEDIA_INFO_DETAIL           167
 #define IDD_MEDIA_INFO_PIC              168
 #define IDM_NEW_MENU                    169
@@ -166,6 +168,18 @@
 #define IDC_C_ID3V2_UNSYNC              1124
 #define IDC_LIST1                       1125
 #define IDC_L_LYRICS                    1125
+#define IDC_C_SAVE_IN_SONG_DIR          1126
+#define IDC_C_SAVE_IN_DIR               1127
+#define IDC_BUTTON1                     1128
+#define IDC_C_SAVE_IN_SONG_FILE         1129
+#define IDC_C_EDL_M4A                   1130
+#define IDC_C_EDL_ID3V2_USLY            1131
+#define IDC_C_EDL_ID3V2_SYLY            1132
+#define IDC_C_EDL_LYR3V2                1133
+#define IDC_C_KEEP_NAME                 1134
+#define IDC_C_AS_SONG_NAME              1135
+#define IDC_C_USE_LOCAL_ONLY            1136
+#define IDC_C_SAVE_IN_SONG_FILE2        1136
 #define IDC_SETTOPMOST                  40001
 #define IDC_STOP                        40002
 #define IDC_EXIT                        40003
@@ -284,9 +298,13 @@
 #define IDC_LDO_AUTO                    40118
 #define IDC_LDO_NORMAL                  40119
 #define IDC_LDO_FADE_IN                 40120
+#define ID_LYRICS_ADVANCED              40120
 #define IDC_LDO_FADEOUT_BG              40121
+#define ID_ADVANCED_DOWNLOADALLLYRICS   40121
 #define IDC_LYR_DISPLAY_OPT             40122
+#define IDC_DOWNLOAD_ALL_LYRICS         40122
 #define IDC_TO_LOWER_CASE               40123
+#define IDC_REMOVE_ALL_LYRICS           40123
 #define IDC_BR_ALBUM_ART                40124
 #define IDC_EDIT_COPY                   40125
 #define IDC_EDIT_UNDO                   40126
@@ -365,8 +383,8 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        183
-#define _APS_NEXT_COMMAND_VALUE         40120
-#define _APS_NEXT_CONTROL_VALUE         1126
+#define _APS_NEXT_COMMAND_VALUE         40124
+#define _APS_NEXT_CONTROL_VALUE         1129
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
