@@ -201,7 +201,6 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 
 	va_list		args;
 
-	int			nBuf;
 	TCHAR		szBuffer[MAX_MSG_LEN] = _T("");
 	int			nLen = 0;
 
@@ -211,7 +210,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	__try
 #endif
 	{
-		nLen = _stprintf_s(szBuffer, CountOf(szBuffer), _T("|T%d-%d %d:%d:%d|F%s|L%d|E%d|M"), 
+		nLen = _stprintf_s(szBuffer, CountOf(szBuffer) - 1, _T("|T%d-%d %d:%d:%d|F%s|L%d|E%d|M"), 
 			time.month, time.day, time.hour, time.minute, time.second,
 			szFile, nLine, byLevel);
 
@@ -219,12 +218,14 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 		TCHAR		*szMsg = NULL;
 		va_start(args, szFormat);
 		szMsg = szBuffer + nLen;
-		nBuf = _vstprintf_s(szMsg, CountOf(szBuffer) - nLen, szFormat, args);
+		int nBuf = _vstprintf_s(szMsg, CountOf(szBuffer) - nLen, szFormat, args);
 		va_end(args);
 
 		// was there an error? was the expanded string too long?
 		if (nBuf < 0)
 			_tcscpy_safe(szMsg, CountOf(szBuffer) - nLen, _T("Insufficient log buffer space."));
+		else
+			szMsg[nBuf] = '\0';
 	}
 #if defined(_WIN32_DESKTOP)
 	__except(EXCEPTION_EXECUTE_HANDLER)

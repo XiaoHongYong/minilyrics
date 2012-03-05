@@ -44,7 +44,7 @@ void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
 
 	while (1)
 	{
-		m_nSize = _vsntprintf(m_pszBuffer, m_nCapacity, szFormat, args);
+		m_nSize = _vsntprintf(m_pszBuffer, m_nCapacity - 1, szFormat, args);
 
 		// was there an error? was the expanded string too long?
 		if ((long)m_nSize < 0)
@@ -60,6 +60,9 @@ void CStrPrintf::vprintf(LPCTSTR szFormat, va_list args)
 		else
 			break;
 	}
+
+	if (m_nSize == m_nCapacity - 1)
+		m_pszBuffer[m_nSize] = '\0';
 
 	if ((long)m_nSize < 0)
 	{
