@@ -159,7 +159,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../bin/QCDMinilyrics.dll"
+				OutputFile="../bin/release/QCDMinilyrics.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ProgramDatabaseFile="$(ProjectDir)/../Output/QCDGeneral/Release/QCDMinilyrics.pdb"

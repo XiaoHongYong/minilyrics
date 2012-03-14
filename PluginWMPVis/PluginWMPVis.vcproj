@@ -174,7 +174,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../bin/PluginWMPVis.dll"
+				OutputFile="../bin/release/PluginWMPVis.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\PluginWMPVis.def"

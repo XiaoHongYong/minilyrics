@@ -243,18 +243,18 @@ SectionIn RO
   File ..\bin\release\MiniLyrics.exe
 
   SetOutPath $INSTDIR\Player-Plugins
-  File ..\bin\gen_MiniLyrics.dll
-  File ..\bin\foo_ui_minilyrics.dll
-  File ..\bin\QCDMinilyrics.dll
-  File ..\bin\iTunesMinilyrics.dll
-  File ..\bin\MLPluginBsp.dll
-  File ..\bin\WMPLyrics.dll
-  File ..\bin\PluginWMPVis.dll
-  File ..\bin\PluginMJ.dll
-  File ..\bin\xmp-ml.dll
-  File ..\bin\MB_MiniLyrics.dll
-  File ..\bin\libminilyrics_plugin.dll
-  File ..\bin\PluginSilverjuke.dll
+  File ..\bin\release\gen_MiniLyrics.dll
+  File ..\bin\release\foo_ui_minilyrics.dll
+  File ..\bin\release\QCDMinilyrics.dll
+  File ..\bin\release\iTunesMinilyrics.dll
+  File ..\bin\release\MLPluginBsp.dll
+  File ..\bin\release\WMPLyrics.dll
+  File ..\bin\release\PluginWMPVis.dll
+  File ..\bin\release\PluginMJ.dll
+  File ..\bin\release\xmp-ml.dll
+  File ..\bin\release\MB_MiniLyrics.dll
+  File ..\bin\release\libminilyrics_plugin.dll
+  File ..\bin\release\PluginSilverjuke.dll
   File forSongbird\sbMLSongbird.dll
   File forSongbird\sbMLSongbird.xpt
 

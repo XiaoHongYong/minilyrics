@@ -136,7 +136,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="..\SDK\foobar_SDK_1.0\foobar2000\shared\shared.lib"
-				OutputFile="..\bin\foo_ui_minilyrics.dll"
+				OutputFile="..\bin\release\foo_ui_minilyrics.dll"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="2"

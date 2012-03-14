@@ -354,7 +354,7 @@
 				Name="VCLinkerTool"
 				RegisterOutput="true"
 				IgnoreImportLibrary="true"
-				OutputFile="../bin/$(ProjectName).dll"
+				OutputFile="../bin/release/$(ProjectName).dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile=".\PluginYme.def"
 				GenerateDebugInformation="true"

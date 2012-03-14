@@ -138,7 +138,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="Msimg32.lib"
-				OutputFile="../bin/mlp_G15.dll"
+				OutputFile="../bin/release/mlp_G15.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories=".\SDK\Lib\x86"
 				GenerateDebugInformation="true"

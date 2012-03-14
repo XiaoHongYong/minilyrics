@@ -71,7 +71,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\bin\MB_MiniLyrics.dll"
+				OutputFile="..\bin\release\MB_MiniLyrics.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\PluginMusicBee.def"

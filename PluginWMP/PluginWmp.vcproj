@@ -174,7 +174,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="../bin/WmpLyrics.dll"
+				OutputFile="../bin/release/WmpLyrics.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
 				ModuleDefinitionFile=".\wmpLyrics.def"

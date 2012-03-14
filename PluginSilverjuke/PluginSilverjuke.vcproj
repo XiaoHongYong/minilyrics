@@ -135,7 +135,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="..\bin\$(ProjectName).dll"
+				OutputFile="..\bin\release\$(ProjectName).dll"
 				LinkIncremental="1"
 				ModuleDefinitionFile="PluginSilverjuke.def"
 				GenerateDebugInformation="true"
