@@ -1,0 +1,836 @@
+// DlgAdjustHue.cpp: implementation of the CDlgAdjustHue class.
+//
+//////////////////////////////////////////////////////////////////////
+
+#include "stdafx.h"
+#include "MPlayerApp.h"
+#include "LyricsDownloader.h"
+#include "OnlineSearch.h"
+#include "DownloadMgr.h"
+#include "MediaSource.h"
+#include "../MLLib/LrcParserHelper.h"
+#include "DlgAbout.h"
+#include "MPlaylistCtrl.h"
+#include "../Utils/Looper.h"
+#include "AutoProcessEmbeddedLyrics.h"
+#include "LyricsDownloader_dialog.h"
+#include "LyricsDownloader_worker.h"
+
+using namespace LyricsDownloader;
+
+bool ConvertBufToTextLyrics(string &buf, tstring &lyrics)
+{
+	LPBYTE byLyrData = (LPBYTE)buf.c_str();
+	int nLyrDataLen = (int)buf.size();
+	CHAR_ENCODING encoding = GetLyricsTextEncoding(byLyrData, nLyrDataLen);
+
+	if (encoding == ED_UNICODE)
+		UCS2ToTString((LPCWSTR)byLyrData, nLyrDataLen / sizeof(WCHAR), lyrics);
+	else if (encoding == ED_UNICODE_BIG_ENDIAN)
+	{
+		UCS2BEToLE((LPWSTR)byLyrData, nLyrDataLen / sizeof(WCHAR));
+		UCS2ToTString((LPCWSTR)byLyrData, nLyrDataLen / sizeof(WCHAR), lyrics);
+	}
+	else if (encoding == ED_UTF8)
+		UTF8ToTString((LPCSTR)byLyrData, nLyrDataLen, lyrics);
+	else
+		MBCSToTString((LPCSTR)byLyrData, nLyrDataLen, lyrics, encoding);
+
+	return true;
+}
+
+LPCTSTR GetLyricsDescription(LPCTSTR szLyrics)
+{
+	LRC_SOURCE_TYPE	lst = LyrSrcTypeFromName(szLyrics);
+	if (lst == LST_FILE)
+		return szLyrics;
+	return LyrSrcTypeToDesc(lst);
+}
+
+#define SZ_NO_SUITABLE_LYRICS		_T("**NL")
+
+class CPageLyricsTool : public CSkinContainer, public ILyricsToolWork::IUpdateNotify
+{
+	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
+public:
+	CPageLyricsTool()
+	{
+		m_filesListCtrl = NULL;
+		m_pMediaLib = NULL;
+		m_nProgress = 0;
+		CID_UPDATEPROGRESS = 0, CID_STATUS = 0;
+		m_pProgressCtrl = NULL;
+
+		m_threadWorking.Create(WorkThreadProc, this);
+	}
+	~CPageLyricsTool()
+	{
+		m_WorkLooper.Quit();
+		m_workStatus.Cancel();
+		m_threadWorking.Join();
+	}
+
+	enum
+	{
+		COL_MEDIA_FILE,
+		COL_RESULT,
+		COL_LYRICS,
+	};
+
+	enum
+	{
+		IMG_NONE,
+		IMG_OK,
+		IMG_ERROR,
+		IMG_INFO,
+	};
+
+	struct UpdateItem
+	{
+		UpdateItem(int nIndex, int nCol, LPCTSTR szText)
+		{
+			this->n = nIndex;
+			this->nCol = nCol;
+			this->strText = szText;
+		}
+		int			n;
+		int			nCol;
+		tstring		strText;
+	};
+	typedef list<UpdateItem>	ListUpdateItem;
+
+	void OnCreate();
+	virtual void OnDestroy();
+
+	virtual bool OnCommand(int nId);
+
+	virtual bool OnCustomCommand(int nId);
+
+	virtual bool OnOK();
+	virtual bool OnCancel();
+
+	void OnUpdateItemStatus(int nIndex, ILyricsToolWork::SuccessStatus status, LPCTSTR szResult)
+	{
+		m_filesListCtrl->SetItemImageIndex(nIndex, status, false);
+		AddUpdateMsgList(nIndex, COL_RESULT, szResult, true);
+	}
+
+protected:
+	void AddUpdateMsgList(int nIndex, int nCol, LPCTSTR szText, bool bLock = false);
+
+	void UpdateProgress();
+
+	void ClearResult();
+
+	void FromCurrentPlaylist();
+	void MergeToCurrentPlaylist();
+
+	void UpdateNewMediaList();
+
+	void OnAdvDownloadAllLyrics();
+	void OnAdvRemoveAllLyrics();
+
+	void OnDownloadLyricsForiPod();
+	void OnRemoveEmbeddedLyrics();
+
+	void PostWork(ILyricsToolWork *pWork);
+
+	static void WorkThreadProc(LPVOID param)
+	{
+		CPageLyricsTool *pThis = (CPageLyricsTool *)param;
+
+		OleInitialize(NULL);
+
+		pThis->m_WorkLooper.Loop();
+
+		OleUninitialize();
+	}
+
+	void DoWork(ILyricsToolWork *pWork);
+
+	uint32 GetEmbeddedLyricsOpt();
+
+	void ChangeToMediaLib(MediaSourceType type)
+	{
+		if (m_pMediaLib)
+		{
+			if (m_pMediaLib->GetType() == type)
+				return;
+
+			g_Player.ClearPlaylist();
+			delete m_pMediaLib;
+		}
+
+		if (type == MST_ITUNES)
+			m_pMediaLib = new CiTunesMediaSource();
+		else
+			m_pMediaLib = new CFileMediaSource();
+	}
+
+	void HideInstructions()
+	{
+		m_pSkin->SetUIObjectVisible(UID_INSTRUCTION, false, false);
+		m_pSkin->SetUIObjectVisible(UID_MEDIA_INFO, true, false);
+	}
+
+	friend class CRunnableDoWork;
+	friend class CRunnableUpdateiTunesMediaLib;
+
+protected:
+	CSkinListCtrl			*m_filesListCtrl;
+
+	IMediaSource			*m_pMediaLib;
+
+	Mutex					m_mutexMsg;
+	tstring					m_strMsg, m_strStatus;
+	int						m_nProgress;
+	int						CID_UPDATEPROGRESS, CID_STATUS, CID_CANCEL_WORK, UID_INSTRUCTION;
+	int						CMD_IMPORT, CMD_DL_LYRICS, UID_MEDIA_INFO, CID_PROGRESS;
+	CSkinSeekCtrl			*m_pProgressCtrl;
+	ListUpdateItem			m_listUpdateItems;
+
+	CThread					m_threadWorking;
+	CLooper					m_WorkLooper;		// Used to loop the background work
+	WorkStatus				m_workStatus;
+
+};
+
+UIOBJECT_CLASS_NAME_IMP(CPageLyricsTool, _T("Container.LyricsTool"));
+
+void CPageLyricsTool::OnCreate()
+{
+	CSkinContainer::OnCreate();
+
+	GET_ID_BY_NAME4(CID_STATUS, CID_UPDATEPROGRESS, CID_CANCEL_WORK, UID_INSTRUCTION);
+	GET_ID_BY_NAME4(UID_MEDIA_INFO, CMD_IMPORT, CMD_DL_LYRICS, CID_PROGRESS);
+
+	m_filesListCtrl = (CSkinListCtrl *)GetUIObjectByClassName(CMPlaylistCtrl::ClassName());
+	if (!m_filesListCtrl)
+		return;
+
+	LPCTSTR vColName[] = { _T("Result"), _T("Lyrics") };
+	for (int i = 0; i < CountOf(vColName); i++)
+		m_filesListCtrl->AddColumn(TOLOCAL(vColName[i]), 200);
+
+	m_filesListCtrl->LoadColumnWidth(_T("LyricsTool_ListWidth"));
+
+	m_pProgressCtrl = (CSkinSeekCtrl *)m_pSkin->GetUIObjectById(CID_PROGRESS, CSkinSeekCtrl::ClassName());
+	ASSERT(m_pProgressCtrl);
+	if (m_pProgressCtrl)
+	{
+		m_pProgressCtrl->SetScrollInfo(0, 100, 0, 0, 1, false);
+		m_pProgressCtrl->SetEnable(false);
+	}
+
+	//
+	// Add current media source file.
+	//
+	FromCurrentPlaylist();
+
+	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+	{
+		m_pSkin->SetUIObjectVisible(UID_INSTRUCTION, true, false);
+		m_pSkin->SetUIObjectVisible(UID_MEDIA_INFO, false, false);
+	}
+
+/*	if (!IsEmptyString(g_Player.GetSrcMedia()))
+	{
+		ChangeToMediaLib(MST_FILES);
+		CFileMediaSource *pFileMediaLib = (CFileMediaSource *)m_pMediaLib;
+		V_Str	vFiles;
+		vFiles.push_back(g_Player.GetSrcMedia());
+		pFileMediaLib->AddFiles(vFiles);
+		UpdateNewMediaList();
+	}*/
+}
+
+void CPageLyricsTool::OnDestroy()
+{
+	if (m_filesListCtrl)
+		m_filesListCtrl->SaveColumnWidth(_T("LyricsTool_ListWidth"));
+}
+
+class CRunnableUpdateiTunesMediaLib : public IRunnable
+{
+public:
+	CRunnableUpdateiTunesMediaLib(CPageLyricsTool *pPageLyricsTool)
+			: m_pPageLyricsTool(pPageLyricsTool), m_eventFinished(false, false)
+		{ m_bUpdateSuccessfully = false; }
+
+	void Run()
+	{
+		ASSERT(m_pPageLyricsTool->m_pMediaLib);
+		CiTunesMediaSource *piTunesMediaLib = (CiTunesMediaSource *)m_pPageLyricsTool->m_pMediaLib;
+
+		m_bUpdateSuccessfully = piTunesMediaLib->UpdateLibrary(m_strErr);
+		m_eventFinished.Set();
+	}
+
+public:
+	bool					m_bUpdateSuccessfully;
+	tstring					m_strErr;
+	Event					m_eventFinished;
+
+protected:
+	CPageLyricsTool			*m_pPageLyricsTool;
+
+};
+
+class CRunnableDoWork : public IRunnable
+{
+public:
+	CRunnableDoWork(CPageLyricsTool *pPageLyricsTool, ILyricsToolWork *pWork)
+		: m_pPageLyricsTool(pPageLyricsTool) { m_pWork = pWork; }
+
+	void Run()
+	{
+		m_pPageLyricsTool->DoWork(m_pWork);
+	}
+
+protected:
+	ILyricsToolWork			*m_pWork;
+	CPageLyricsTool			*m_pPageLyricsTool;
+
+};
+
+bool CPageLyricsTool::OnCommand(int nId)
+{
+	if (m_workStatus.IsWorking() && nId != IDC_ABOUT && nId != IDC_ABOUT
+		 && nId != IDC_ML_HELP && nId != IDC_REGISTER && nId != IDC_WEBHOME)
+		 return true;
+
+	switch (nId)
+	{
+	case IDC_IMPORT_ITUNES_LIB:
+		{
+			if (m_pMediaLib)
+			{
+				g_Player.ClearPlaylist();
+				delete m_pMediaLib;
+				m_pMediaLib = NULL;
+			}
+
+			ChangeToMediaLib(MST_ITUNES);
+
+			CRunnableUpdateiTunesMediaLib rUpdate(this);
+
+			m_WorkLooper.Post(&rUpdate);
+			rUpdate.m_eventFinished.Acquire();
+
+			if (rUpdate.m_bUpdateSuccessfully)
+				UpdateNewMediaList();
+			else
+			{
+				m_pSkin->MessageOut(CStrPrintf(_T("%s\n%s"), 
+					TOLOCAL_T("Failed to load iTunes Library."),
+					rUpdate.m_strErr.c_str()).c_str());
+			}
+		}
+		break;
+	case IDC_ADD_FILES:
+		{
+			ChangeToMediaLib(MST_FILES);
+
+			// static LPCTSTR	szSupportedExtion = _T("All supported files\0*.mp3;*.mp2;*.mpa;\0MPEG Audio Files (*.MP3;*.MP2;*.MPA)\0*.mp3;*.mp2;*.mpa\0\0");
+			CFileDlgExtFilter		strFileExt;
+			strFileExt.AddExtention(TOLOCAL_T("All supported files"), _T("*.mp3;*.mp2;*.mpa;*.m4a"));
+			strFileExt.AddExtention(TOLOCAL_T("MPEG Audio Files (*.MP3;*.MP2;*.MPA)"), _T("*.mp3;*.mp2;*.mpa"));
+			strFileExt.AddExtention(TOLOCAL_T("AAC Files (*.M4A)"), _T("*.m4a"));
+			CFileOpenDlg	dlg(TOLOCAL_T("Add Media Files"), NULL, strFileExt.c_str(), 0, true);
+			if (dlg.DoModal(m_pSkin) != IDOK)
+				break;
+
+			V_Str	vFiles;
+			dlg.GetOpenFile(vFiles);
+
+			CFileMediaSource *pFileMediaLib = (CFileMediaSource *)m_pMediaLib;
+			pFileMediaLib->AddFiles(vFiles);
+
+			UpdateNewMediaList();
+		}
+		break;
+	case IDC_ADD_FOLDER:
+		{
+			ChangeToMediaLib(MST_FILES);
+
+			CiTunesMediaSource *piTunesMediaLib = (CiTunesMediaSource *)m_pMediaLib;
+
+			CFolderDialog	dlg;
+			tstring			strFolder;
+			dlg.SetInitFolder(g_Profile.GetProfileString(_T("LastMediaDir"), _T("")));
+			if (dlg.DoBrowse(m_pSkin) == IDOK)
+			{
+				strFolder = dlg.GetFolder();
+
+				g_Profile.WriteProfileString(_T("LastMediaDir"), strFolder.c_str());
+
+				CFileMediaSource *pFileMediaLib = (CFileMediaSource *)m_pMediaLib;
+				pFileMediaLib->AddFolder(strFolder.c_str(), true);
+
+				UpdateNewMediaList();
+			}
+		}
+		break;
+	case IDC_CLEAR_LIST:
+		if (m_pMediaLib)
+		{
+			delete m_pMediaLib;
+			m_pMediaLib = NULL;
+		}
+		g_Player.ClearPlaylist();
+		break;
+	case IDC_REMOVE_SELECTED:
+		{
+			vector<int>		vSelected;
+			int				n = -1;
+			while (1)
+			{
+				n = m_filesListCtrl->GetNextSelectedItem(n);
+				if (n == -1)
+					break;
+				vSelected.push_back(n);
+			}
+
+			for (int i = vSelected.size() - 1; i >= 0; i--)
+				m_pMediaLib->RemoveItem(vSelected[i]);
+
+			MergeToCurrentPlaylist();
+		}
+		break;
+	case IDC_DOWNLOAD_ALL_LYRICS:
+		HideInstructions();
+		OnAdvDownloadAllLyrics();
+		break;
+	case IDC_REMOVE_ALL_LYRICS:
+		HideInstructions();
+		OnAdvRemoveAllLyrics();
+		break;
+	case IDC_DOWNLOAD_ALL_LYR_FOR_IPOD:
+		HideInstructions();
+		OnDownloadLyricsForiPod();
+		break;
+// 	case IDC_SAVE_LYRICS_TO_MP3:
+// 		HideInstructions();
+// 		break;
+	case IDC_REMOVE_LRC_IN_MP3:
+		HideInstructions();
+		OnRemoveEmbeddedLyrics();
+		break;
+	case IDC_EXIT:
+		m_pSkin->PostDestroy();
+		break;
+	default:
+		return false;
+	}
+
+	return true;
+}
+
+bool CPageLyricsTool::OnCustomCommand(int nId)
+{
+	if (nId == CID_UPDATEPROGRESS)
+		UpdateProgress();
+	else if (nId == CMD_PLAYPAUSE)
+	{
+		HideInstructions();
+		return false;
+	}
+	else if (nId == CMD_IMPORT)
+	{
+		OnCommand(IDC_IMPORT_ITUNES_LIB);
+
+		if (m_pMediaLib->GetItemCount() == 0)
+			OnCommand(IDC_ADD_FILES);
+	}
+	else if (nId == CMD_DL_LYRICS)
+		OnCommand(IDC_DOWNLOAD_ALL_LYR_FOR_IPOD);
+	else if (nId == CID_CANCEL_WORK)
+	{
+		if (m_workStatus.IsWorking())
+			m_workStatus.Cancel();
+		else
+			m_pSkin->StartAnimation(GetIDByName(_T("CID_AM_HIDE_WORKING")));
+	}
+	else
+		return CSkinContainer::OnCustomCommand(nId);
+
+	return true;
+}
+
+bool CPageLyricsTool::OnOK()
+{
+	if (m_WorkLooper.IsIdle())
+	{
+		CSkinContainer::OnOK();
+	}
+
+	return false;
+}
+
+bool CPageLyricsTool::OnCancel()
+{
+	if (!m_WorkLooper.IsIdle())
+	{
+		// Cancel.
+		if (m_workStatus.IsWorking())
+			m_workStatus.Cancel();
+
+		m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL(_T("Canceling is in progress, please wait...")), true);
+	}
+
+	return true;
+}
+
+void CPageLyricsTool::AddUpdateMsgList(int nIndex, int nCol, LPCTSTR szText, bool bLock)
+{
+	if (bLock)
+		m_mutexMsg.Acquire();
+	m_listUpdateItems.push_back(UpdateItem(nIndex, nCol, szText));
+	if (bLock)
+		m_mutexMsg.Release();
+}
+
+void CPageLyricsTool::UpdateProgress()
+{
+	bool	bRedrawListCtrl = false;
+	tstring	strMsg;
+
+	m_mutexMsg.Acquire();
+	strMsg = m_strMsg;
+	m_strMsg.resize(0);
+
+	if (m_strStatus.size())
+	{
+		m_pSkin->SetUIObjectText(CID_STATUS, m_strStatus.c_str(), false);
+		m_strStatus.clear();
+	}
+	if (m_nProgress != -1)
+		m_pProgressCtrl->SetScrollPos(m_nProgress, false);
+
+	for (ListUpdateItem::iterator it = m_listUpdateItems.begin(); it != m_listUpdateItems.end(); ++it)
+	{
+		UpdateItem &item = *it;
+		m_filesListCtrl->SetItemText(item.n, item.nCol, item.strText.c_str(), false);
+	}
+	bRedrawListCtrl = m_listUpdateItems.size() > 0;
+	m_listUpdateItems.clear();
+
+	m_mutexMsg.Release();
+
+	if (bRedrawListCtrl)
+		m_pSkin->InvalidateRect();
+	else
+	{
+		m_pSkin->InvalidateUIObject(CID_STATUS);
+		m_pProgressCtrl->Invalidate();
+	}
+
+	if (m_nProgress == 100 || m_nProgress == -1)
+	{
+		// DONE, show message and hide working area.
+		if (strMsg.size())
+			m_pSkin->MessageOut(strMsg.c_str());
+
+		m_pSkin->SetUIObjectText(CID_CANCEL_WORK, _T("OK"), true);
+	}
+}
+
+void CPageLyricsTool::ClearResult()
+{
+	for (int i = 0; i < m_filesListCtrl->GetItemCount(); i++)
+	{
+		m_filesListCtrl->SetItemImageIndex(i, IMG_NONE, false);
+		m_filesListCtrl->SetItemText(i, COL_RESULT, _T(""), false);
+	}
+}
+
+void CPageLyricsTool::FromCurrentPlaylist()
+{
+	CMPAutoPtr<IPlaylist> playlist;
+
+	MLRESULT ret = g_Player.GetCurrentPlaylist(&playlist);
+	if (ret != ERR_OK)
+		return;
+
+	int count = playlist->GetCount();
+	if (count == 0)
+		return;
+
+	ChangeToMediaLib(MST_FILES);
+
+	for (int i = 0; i < count; i++)
+	{
+		CMPAutoPtr<IMedia> media;
+		tstring location;
+
+		ret = playlist->GetItem(i, &media);
+		if (ret != ERR_OK)
+			return;
+
+		CXStr url;
+		if (media->GetSourceUrl(&url) != ERR_OK)
+			return;
+
+		CFileMediaSource *pFileMediaLib = (CFileMediaSource *)m_pMediaLib;
+		pFileMediaLib->AddFile(url.c_str());
+	}
+}
+
+void CPageLyricsTool::MergeToCurrentPlaylist()
+{
+	if (!m_pMediaLib)
+		return;
+
+	CMPAutoPtr<IPlaylist> playlist;
+
+	MLRESULT ret = g_Player.GetCurrentPlaylist(&playlist);
+	if (ret != ERR_OK)
+		return;
+
+	int count = m_pMediaLib->GetItemCount();
+	for (int i = 0; i < count; i++)
+	{
+		CMPAutoPtr<IMedia> media;
+		tstring location;
+
+		if (!m_pMediaLib->GetLocation(i, location))
+			break;
+
+		ret = playlist->GetItem(i, &media);
+		if (ret != ERR_OK)
+		{
+			// No more items, add it.
+			ret = g_Player.NewMedia(&media, location.c_str());
+			if (ret != ERR_OK)
+				return;
+
+			ret = playlist->InsertItem(i, media);
+			if (ret != ERR_OK)
+				return;
+
+			TCHAR		szLyrics[MAX_PATH];
+			if (g_LyricSearch.GetAssociateLyrics(location.c_str(), szLyrics, CountOf(szLyrics)))
+			{
+				if (_tcscmp(szLyrics, NONE_LYRCS) == 0)
+					m_filesListCtrl->SetItemText(i, COL_LYRICS, TOLOCAL(_T("No suitable lyrics")), true);
+				else
+					m_filesListCtrl->SetItemText(i, COL_LYRICS, GetLyricsDescription(szLyrics), true);
+			}
+
+			g_Player.SetPlaylistModified(true);
+
+			continue;
+		}
+
+		CXStr url;
+		if (media->GetSourceUrl(&url) != ERR_OK)
+			return;
+
+		if (_tcscmp(url.c_str(), location.c_str()) != 0)
+		{
+			// must be remove
+			playlist->RemoveItem(i);
+			g_Player.SetPlaylistModified(true);
+		}
+	}
+
+	if (count < playlist->GetCount())
+	{
+		// Remove extra items.
+		for (int i = count; i < playlist->GetCount(); i++)
+			playlist->RemoveItem(count);
+
+		g_Player.SetPlaylistModified(true);
+	}
+
+	ASSERT(count == playlist->GetCount());
+}
+
+void CPageLyricsTool::UpdateNewMediaList()
+{
+	if (!m_pMediaLib)
+		return;
+
+	CUIObject *pObjInst = m_pSkin->GetUIObjectById(UID_INSTRUCTION);
+	if (pObjInst != NULL && pObjInst->IsVisible())
+	{
+		pObjInst->SetProperty(SZ_PN_TEXT, TOLOCAL_MARK_T("Please click here to download all lyrics."));
+		pObjInst->SetProperty(SZ_PN_LINK, _T("cmd://CMD_DL_LYRICS"));
+		pObjInst->GetParent()->RecalculateUIObjSizePos(pObjInst);
+	}
+
+	m_pSkin->EnterInDrawUpdate();
+	MergeToCurrentPlaylist();
+	m_pSkin->LeaveInDrawUpdate();
+}
+
+void CPageLyricsTool::OnAdvDownloadAllLyrics()
+{
+	ClearResult();
+
+	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+	{
+		m_pSkin->MessageOut(TOLOCAL(_T("Please add media files in the list.")));
+		return;
+	}
+
+	if (!g_licenseManager.IsLicenseValid())
+	{
+		m_pSkin->MessageOut(TOLOCAL(_T("Sorry, please activate your MiniLyrics to continue.")));
+		ShowActivateDialog(m_pSkin);
+		return;
+	}
+
+	CDlgAdvDownloadPrompt	dlg;
+
+	if (dlg.DoModal(m_pSkin) != IDOK)
+		return;
+
+	m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL(_T("Downloading lyrics is in progress...")), true);
+
+	CAdvDownloadLyrWork *pWork = new CAdvDownloadLyrWork(m_pMediaLib, this, m_workStatus);
+	pWork->SetInfo(dlg.m_downSaveDir, dlg.m_downSaveName, dlg.m_bOnlyUseLocalLyrics, dlg.m_vSaveEmbeddedLyrNames);
+	PostWork(pWork);
+}
+
+void CPageLyricsTool::OnAdvRemoveAllLyrics()
+{
+	ClearResult();
+
+	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+	{
+		m_pSkin->MessageOut(TOLOCAL(_T("Please add media files in the list.")));
+		return;
+	}
+
+	CDlgAdvRemovePrompt	dlg;
+
+	if (dlg.DoModal(m_pSkin) != IDOK)
+		return;
+
+	int nRet = m_pSkin->MessageOut(TOLOCAL_T("Are you sure that you want to remove the embedded lyrics of all the files?"), MB_ICONQUESTION | MB_OKCANCEL);
+	if (nRet != IDOK)
+		return;
+
+	m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL_T("Removing embedded lyrics in media files is in progress..."), true);
+
+	CAdvRemoveLyrics *pWork = new CAdvRemoveLyrics(m_pMediaLib, this, m_workStatus);
+	pWork->SetInfo(dlg.m_bRemoveAssociateLyrFile, dlg.m_vEmbeddedLyrNames);
+	PostWork(pWork);
+}
+
+void CPageLyricsTool::OnDownloadLyricsForiPod()
+{
+	ClearResult();
+
+	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+	{
+		m_pSkin->MessageOut(TOLOCAL(_T("Please add media files in the list.")));
+		return;
+	}
+
+	if (!g_licenseManager.IsLicenseValid())
+	{
+		m_pSkin->MessageOut(TOLOCAL(_T("Sorry, please activate your MiniLyrics to continue.")));
+		ShowActivateDialog(m_pSkin);
+		return;
+	}
+
+	m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL(_T("Downloading lyrics for iPod is in progress...")), true);
+
+	PostWork(new CSaveLyricsInITunes(m_pMediaLib, this, m_workStatus));
+}
+
+void CPageLyricsTool::OnRemoveEmbeddedLyrics()
+{
+	ClearResult();
+
+	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+	{
+		m_pSkin->MessageOut(TOLOCAL(_T("Please add media files in the list.")));
+		return;
+	}
+
+	int nRet = m_pSkin->MessageOut(TOLOCAL_T("Are you sure that you want to remove the embedded lyrics of all the files?"), MB_ICONQUESTION | MB_OKCANCEL);
+	if (nRet != IDOK)
+		return;
+
+	m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL_T("Removing embedded lyrics in media files is in progress..."), true);
+
+	PostWork(new CRemoveEmbeddedLyrics(m_pMediaLib, this, m_workStatus));
+}
+
+void CPageLyricsTool::PostWork(ILyricsToolWork *pWork)
+{
+	if (!m_WorkLooper.IsIdle())
+	{
+		DBGLOG0(_T("Working looper is NOT idle now. Can't post work."));
+		return;
+	}
+
+	m_pProgressCtrl->SetScrollPos(0, false);
+
+	m_pSkin->SetUIObjectText(CID_CANCEL_WORK, _T("Cancel"), false);
+	m_pSkin->StartAnimation(GetIDByName(_T("CID_AM_SHOW_WORKING")));
+
+	CRunnableDoWork	*pRunnable = new CRunnableDoWork(this, pWork);
+	m_WorkLooper.PostFreeAfterRun(pRunnable);
+}
+
+void CPageLyricsTool::DoWork(ILyricsToolWork *pWork)
+{
+	if (!m_pMediaLib)
+		return;
+
+	m_nProgress = 0;
+
+	pWork->OnBegin();
+	int nCount = m_pMediaLib->GetItemCount();
+	for (int i = 0; i < nCount; i++)
+	{
+		if (m_workStatus.IsCancel())
+			break;
+
+		pWork->OnProcessItem(i);
+
+		m_nProgress = i * 100 / nCount;
+		if (m_nProgress != 100)
+			m_pSkin->PostCustomCommandMsg(CID_UPDATEPROGRESS);
+	}
+
+	tstring	strMsg;
+	pWork->OnEnd(strMsg);
+
+	m_nProgress = 100;
+
+	m_mutexMsg.Acquire();
+	m_strStatus = TOLOCAL_T("Finished.");
+	m_strMsg = strMsg;
+	if (pWork)
+	{
+		delete pWork;
+		pWork = NULL;
+	}
+	m_mutexMsg.Release();
+
+	m_pSkin->PostCustomCommandMsg(CID_UPDATEPROGRESS);
+}
+
+uint32 CPageLyricsTool::GetEmbeddedLyricsOpt()
+{
+	uint32		uEmbeddedLyricsTypes = 0;
+
+	if (IsButtonChecked(_T("CID_C_ID3V2_SYLT")))
+		uEmbeddedLyricsTypes |= LST_ID3V2_SYLT;
+	if (IsButtonChecked(_T("CID_C_ID3V2_USLT")))
+		uEmbeddedLyricsTypes |= LST_ID3V2_USLT;
+	if (IsButtonChecked(_T("CID_C_LYR3V2")))
+		uEmbeddedLyricsTypes |= LST_LYRICS3V2;
+
+	return uEmbeddedLyricsTypes;
+}
+
+void RegisterLyricsToolPage(CSkinFactory *pSkinFactory)
+{
+	AddUIObjNewer2(pSkinFactory, CPageLyricsTool);
+}

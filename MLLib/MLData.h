@@ -298,6 +298,7 @@ public:
 	bool IsOnlyAddLyrScrollActions();
 
 public:
+	tstring GetSuggestedLyricsFileName();
 	LPCTSTR GetLyricsFileName();
 	LPCTSTR GetSongFileName() { return m_strSongFile.c_str(); }
 

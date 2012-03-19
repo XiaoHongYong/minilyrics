@@ -23,7 +23,7 @@
 #ifdef _WIN32
 #include "../Skin/win32/SplashScreenWnd.h"
 #include "win32/LyricsOutPluginMgr.h"
-#include "win32/LyricsTool.h"
+#include "win32/LyricsDownloader.h"
 #include "win32/DlgSaveLyrPrompt.h"
 #endif
 

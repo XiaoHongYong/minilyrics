@@ -979,6 +979,28 @@ void CMLData::AddRowByTime(PML_ROW pRow)
 		m_arrFileRows.push_back(pRow);
 }
 
+tstring CMLData::GetSuggestedLyricsFileName()
+{
+	// Combine file name
+	tstring	strFileName;
+
+	strFileName = m_lyrProperties.m_strArtist;
+	if (strFileName.size())
+		strFileName += _T(" - ");
+	strFileName += m_lyrProperties.m_strTitle;
+	strFileName = FileNameFilterInvalidChars(strFileName.c_str());
+
+	if (strFileName.empty())
+		FileGetTitle(m_strSongFile.c_str(), strFileName);
+
+	if (m_lyrProperties.m_lyrContentType == LCT_LRC)
+		strFileName += _T(".lrc");
+	else
+		strFileName += _T(".txt");
+
+	return strFileName;
+}
+
 LPCTSTR CMLData::GetLyricsFileName()
 {
 	return m_strLrcSource.c_str();

@@ -1,7 +1,6 @@
 
 #pragma once
 
-#include "AutoBuild.h"
 #include "MlVersionStr.h"
 
 #ifdef _MPLAYER

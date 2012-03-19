@@ -539,6 +539,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\win32\LyricsDownloader.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\LyricShowAgentObj.cpp"
 				>
 			</File>
@@ -584,10 +588,6 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\win32\LyricsOutPluginMgr.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\win32\LyricsTool.cpp"
 				>
 			</File>
 			<File
@@ -1105,6 +1105,18 @@
 				>
 			</File>
 			<File
+				RelativePath="..\MPShared\win32\LyricsDownloader.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\win32\LyricsDownloader_dialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\MPShared\win32\LyricsDownloader_worker.h"
+				>
+			</File>
+			<File
 				RelativePath="..\MPShared\LyricShowAgentObj.h"
 				>
 			</File>
@@ -1157,14 +1169,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\LyricsTool.h"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\LyricsTool.h"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\LyrPlaylistAutoSwitch.h"
 				>
 			</File>
@@ -1181,11 +1185,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\win32\MediaSource.h"
+				RelativePath="..\MPShared\MediaSource.h"
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\MediaSource.h"
+				RelativePath="..\MPShared\win32\MediaSource.h"
 				>
 			</File>
 			<File

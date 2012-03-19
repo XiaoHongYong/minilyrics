@@ -67,8 +67,14 @@ void CAutoProcessEmbeddedLyrics::Item::ToXML(CXMLWriter &xmlWriter)
 	xmlWriter.WriteEndElement();
 }
 
-int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed)
+int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed, int *succeededCount)
 {
+	if (succeededCount)
+		*succeededCount = 0;
+
+	if (vEmbeddedLyrNames.empty())
+		return ERR_OK;
+
 	ASSERT(szLyricsFile || pBufLyrics);
 	if (!CTagLib::IsEmbeddedLyricsSupported(szSongFile))
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
@@ -118,6 +124,8 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 			item.m_vLyrNames = vEmbeddedLyrNames;
 			item.m_nTryFailed = 0;
 			nRet = DealEmbeddedLyrics(item);
+			if (succeededCount)
+				*succeededCount = item.m_nSucceededCount;
 			if (nRet == ERR_OK)
 				m_listJobs.erase(it);
 			return ERR_OK;
@@ -134,6 +142,8 @@ int CAutoProcessEmbeddedLyrics::SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR s
 	newItem.m_vLyrNames = vEmbeddedLyrNames;
 	newItem.m_nTryFailed = 0;
 	nRet = DealEmbeddedLyrics(newItem);
+	if (succeededCount)
+		*succeededCount = newItem.m_nSucceededCount;
 	if (nRet != ERR_OK && bAddToQueueOnFailed)
 		m_listJobs.push_back(newItem);
 
@@ -279,6 +289,7 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 		nRet = lyrics3v2.WriteLyrcsInfo(item.m_strSongFile.c_str(), item.m_strLyrics.c_str(), item.m_strLyrics.size());
 		if (nRet != ERR_OK && nRet != ERR_NOT_FIND_LRC3V2)
 			return nRet;
+		item.m_nSucceededCount++;
 	}
 
 	// Save ID3v2 embedded lyrics
@@ -294,6 +305,7 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 			nRet = lyricsData.SaveLyricsInSongOfID3v2(item.m_vLyrNames);
 			if (nRet != ERR_OK)
 				return nRet;
+			item.m_nSucceededCount++;
 		}
 	}
 
@@ -309,6 +321,7 @@ int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 			nRet = lyricsData.SaveLyricsInSongOfM4a();
 			if (nRet != ERR_OK)
 				return nRet;
+			item.m_nSucceededCount++;
 		}
 	}
 
@@ -322,7 +335,7 @@ int CAutoProcessEmbeddedLyrics::DealRemoveEmbeddedLyrics(Item &item)
 {
 	ASSERT(item.m_bRemove);
 
-	return CTagLib::RemoveEmbeddedLyrics(item.m_strSongFile.c_str(), item.m_vLyrNames, NULL);
+	return CTagLib::RemoveEmbeddedLyrics(item.m_strSongFile.c_str(), item.m_vLyrNames, &item.m_nSucceededCount);
 }
 
 void CAutoProcessEmbeddedLyrics::SaveJobs()

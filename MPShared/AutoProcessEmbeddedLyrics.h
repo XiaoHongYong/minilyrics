@@ -12,6 +12,7 @@ public:
 		bool				m_bRemove;		// true: remove, false: add.
 		byte				m_nTryFailed;
 		bool				m_bDealOK;
+		int					m_nSucceededCount;
 
 		// save embedded lyrics
 		CCharBuffer			m_strLyrics;
@@ -20,6 +21,7 @@ public:
 		{
 			m_bDealOK = false;
 			m_nTryFailed = 0;
+			m_nSucceededCount = 0;
 		}
 
 		bool FromXML(SXNode *pNode);
@@ -30,7 +32,7 @@ public:
 	CAutoProcessEmbeddedLyrics();
 	virtual ~CAutoProcessEmbeddedLyrics();
 
-	int SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed = true);
+	int SaveEmbeddedLyrics(LPCTSTR szSongFile, LPCTSTR szLyricsFile, CCharBuffer *pBufLyrics, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed = true, int *succeededCount = NULL);
 	int RemoveEmbeddedLyrics(LPCTSTR szSongFile, VecString &vEmbeddedLyrNames, bool bAddToQueueOnFailed = true);
 	void RemoveJob(LPCTSTR szSongFile);
 

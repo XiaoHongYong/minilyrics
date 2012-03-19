@@ -162,16 +162,15 @@
 #define IDC_C_PLAYER6                   1116
 #define IDC_C_PLAYER7                   1117
 #define IDC_C_PLAYER8                   1118
-#define IDC_SETUP                       1120
-#define IDC_C_ID3V2_SYNC                1121
-#define IDC_C_LYRICS3V2                 1123
-#define IDC_C_ID3V2_UNSYNC              1124
-#define IDC_LIST1                       1125
-#define IDC_L_LYRICS                    1125
-#define IDC_C_SAVE_IN_SONG_DIR          1126
-#define IDC_C_SAVE_IN_DIR               1127
-#define IDC_BUTTON1                     1128
-#define IDC_C_SAVE_IN_SONG_FILE         1129
+#define IDC_SETUP                       1119
+#define IDC_C_ID3V2_SYNC                1120
+#define IDC_C_LYRICS3V2                 1121
+#define IDC_C_ID3V2_UNSYNC              1122
+#define IDC_L_LYRICS                    1124
+#define IDC_C_SAVE_IN_SONG_DIR          1125
+#define IDC_C_SAVE_IN_DIR               1126
+#define IDC_BUTTON1                     1127
+#define IDC_C_SAVE_IN_SONG_FILE         1128
 #define IDC_C_EDL_M4A                   1130
 #define IDC_C_EDL_ID3V2_USLY            1131
 #define IDC_C_EDL_ID3V2_SYLY            1132
@@ -179,7 +178,9 @@
 #define IDC_C_KEEP_NAME                 1134
 #define IDC_C_AS_SONG_NAME              1135
 #define IDC_C_USE_LOCAL_ONLY            1136
-#define IDC_C_SAVE_IN_SONG_FILE2        1136
+#define IDC_BR_DIR                      1137
+#define IDC_C_REMOVE_EMBEDDED_LYR       1138
+#define IDC_C_REMOVE_LYR_FILE           1139
 #define IDC_SETTOPMOST                  40001
 #define IDC_STOP                        40002
 #define IDC_EXIT                        40003
@@ -384,7 +385,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        183
 #define _APS_NEXT_COMMAND_VALUE         40124
-#define _APS_NEXT_CONTROL_VALUE         1129
+#define _APS_NEXT_CONTROL_VALUE         1140
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

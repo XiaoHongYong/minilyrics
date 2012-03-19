@@ -287,7 +287,7 @@ int CM4aTag::SaveClose()
 	boxMoov->CalculateNewSize();
 
 	int nAdjustedOffset = 0;
-	int nSizeNew = boxMoov->m_nSizeNew;
+	size_t nSizeNew = boxMoov->m_nSizeNew;
 	if (boxMoov->m_nSize != nSizeNew)
 	{
 		// Need to resize boxes

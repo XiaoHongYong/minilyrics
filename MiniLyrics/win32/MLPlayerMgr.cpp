@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "MPlayerApp.h"
 #include "MLPlayerMgr.h"
-#include "LyricsTool.h"
+#include "LyricsDownloader.h"
 #include "MPMsg.h"
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"

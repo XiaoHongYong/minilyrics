@@ -297,17 +297,25 @@ tstring CDownloadMgr::GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName)
 {
 	DOWN_SAVE_DIR		DownSaveDir;
 	DOWN_SAVE_NAME		DownSaveName;
-	tstring				strLyricsFile;
-	TCHAR				szName[MAX_PATH] = _T("");
 
 	DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
+	DownSaveName = (DOWN_SAVE_NAME)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveName"), DOWN_SAVE_NAME_KEEP);
+
+	return GetSaveLyricsFile(szSongFile, szFileName, DownSaveDir, DownSaveName);
+}
+
+tstring CDownloadMgr::GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName, DOWN_SAVE_DIR DownSaveDir, DOWN_SAVE_NAME DownSaveName)
+{
+	szFileName = FileGetName(szFileName);
+
+	tstring				strLyricsFile;
 	if (DownSaveDir == DOWN_SAVE_IN_SONG_DIR)
-	{
 		FileGetPath(szSongFile, strLyricsFile);
-	}
 
 	if (strLyricsFile.empty())
 		strLyricsFile = m_strDefSavePath.c_str();
+
+	DirStringAddSlash(strLyricsFile);
 
 	// Save lyrics in sub folder by ABC order?
 	if (DownSaveDir != DOWN_SAVE_IN_SONG_DIR 
@@ -315,19 +323,14 @@ tstring CDownloadMgr::GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName)
 	{
 		TCHAR			c = *szFileName;
 		if (c >= 'a' && c <='z' || c >= 'A' && c <='Z')
-		{
-			c = toupper(c);
-			strLyricsFile += c;
-			strLyricsFile += _T(SZ_DIR_SLASH);
-		}
+			strLyricsFile += toupper(c);
 		else if (c >= '0' && c <='9')
-		{
 			strLyricsFile += '#';
-			strLyricsFile += _T(SZ_DIR_SLASH);
-		}
+
+		DirStringAddSlash(strLyricsFile);
 	}
 
-	DownSaveName = (DOWN_SAVE_NAME)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveName"), DOWN_SAVE_NAME_KEEP);
+	TCHAR				szName[MAX_PATH] = _T("");
 	if (DownSaveName == DOWN_SAVE_NAME_AS_SONG_NAME)
 	{
 		_tcscpy_safe(szName, CountOf(szName), UrlGetTitle(szSongFile).c_str());

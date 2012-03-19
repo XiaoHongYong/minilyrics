@@ -43,7 +43,7 @@
 #endif
 
 #ifdef _WIN32
-#include "win32/LyricsTool.h"
+#include "win32/LyricsDownloader.h"
 #include "win32/MPSkinMenu.h"
 #endif
 

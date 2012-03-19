@@ -817,33 +817,33 @@ BEGIN
     CONTROL         "",IDC_L_LYRICS,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,7,26,278,79,WS_EX_CLIENTEDGE
 END
 
-IDD_LD_ADV_DOWNLOAD_LYR DIALOGEX 0, 0, 323, 215
+IDD_LD_ADV_DOWNLOAD_LYR DIALOGEX 0, 0, 344, 214
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Save embedded lyrics in song file"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,100,194,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,179,194,50,14
-    GROUPBOX        "Save lyrics in:",IDC_STATIC,7,22,309,115
+    CONTROL         "Only use the local lyrics in the hard disk (MiniLyrics will NOT download lyrics)",IDC_C_USE_LOCAL_ONLY,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,8,322,12
     CONTROL         "&Save lyrics in the song's directory",IDC_C_SAVE_IN_SONG_DIR,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,34,260,12
-    CONTROL         "Save lyrics in:",IDC_C_SAVE_IN_DIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,47,86,12
-    PUSHBUTTON      "Choose the directory",IDC_BUTTON1,126,46,161,14
+    CONTROL         "Save lyrics in:",IDC_C_SAVE_IN_DIR,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,47,100,12
+    PUSHBUTTON      "Choose the directory",IDC_BR_DIR,126,46,161,14
     CONTROL         "Save lyrics in &song file",IDC_C_SAVE_IN_SONG_FILE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,60,260,12
     CONTROL         "Embedded lyrics for iPod, iTunes (For &AAC (M4A) file)",IDC_C_EDL_M4A,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,77,260,12
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,77,307,12
     CONTROL         "Embedded lyrics for iPod, iTunes (ID3v2 unsynchronized lyrics)",IDC_C_EDL_ID3V2_USLY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,90,260,12
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,90,307,12
     CONTROL         "Embedded lyrics for Windows Media Player (ID3v2 synchronized lyrics)",IDC_C_EDL_ID3V2_SYLY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,103,260,12
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,103,307,12
     CONTROL         "Embedded lyrics for MiniLyrics (Lyrics3v2 synchronized lyrics)",IDC_C_EDL_LYR3V2,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,116,260,12
-    GROUPBOX        "Rename the downloaded lyrics file name",IDC_STATIC,7,145,309,42
-    CONTROL         "Keep the file name",IDC_C_KEEP_NAME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,158,260,12
-    CONTROL         "As the same name as the song",IDC_C_AS_SONG_NAME,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,171,260,12
-    CONTROL         "Only use the local lyrics in the hard disk (MiniLyrics will NOT download lyrics)",IDC_C_USE_LOCAL_ONLY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,15,8,260,12
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,30,116,307,12
+    GROUPBOX        "Save lyrics in:",IDC_STATIC,7,22,330,115
+    CONTROL         "Keep the file name",IDC_C_KEEP_NAME,"Button",BS_AUTORADIOBUTTON,15,160,239,10
+    CONTROL         "As the same name as the song",IDC_C_AS_SONG_NAME,"Button",BS_AUTORADIOBUTTON,15,173,216,10
+    DEFPUSHBUTTON   "OK",IDOK,100,193,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,179,193,50,14
+    GROUPBOX        "Rename the downloaded lyrics file name",IDC_STATIC,7,145,330,42
 END
 
 IDD_LD_ADV_REMOVE_LYR DIALOGEX 0, 0, 323, 119
@@ -853,18 +853,18 @@ FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
     DEFPUSHBUTTON   "OK",IDOK,202,98,50,14
     PUSHBUTTON      "Cancel",IDCANCEL,266,98,50,14
-    CONTROL         "Remove the associated lyrics file",IDC_C_SAVE_IN_SONG_FILE,
+    CONTROL         "Remove the associated lyrics file",IDC_C_REMOVE_LYR_FILE,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,8,260,12
-    CONTROL         "Embedded lyrics for iPod, iTunes (For &AAC (M4A) file)",IDC_C_EDL_M4A,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,29,35,260,12
-    CONTROL         "Embedded lyrics for iPod, iTunes (ID3v2 unsynchronized lyrics)",IDC_C_EDL_ID3V2_USLY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,29,48,260,12
-    CONTROL         "Embedded lyrics for Windows Media Player (ID3v2 synchronized lyrics)",IDC_C_EDL_ID3V2_SYLY,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,29,61,260,12
-    CONTROL         "Embedded lyrics for MiniLyrics (Lyrics3v2 synchronized lyrics)",IDC_C_EDL_LYR3V2,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,29,74,260,12
-    CONTROL         "Remove the embedded lyrics below:",IDC_C_SAVE_IN_SONG_FILE2,
+    CONTROL         "Remove the embedded lyrics below:",IDC_C_REMOVE_EMBEDDED_LYR,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,14,21,260,12
+    CONTROL         "Embedded lyrics for iPod, iTunes (For &AAC (M4A) file)",IDC_C_EDL_M4A,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,35,260,12
+    CONTROL         "Embedded lyrics for iPod, iTunes (ID3v2 unsynchronized lyrics)",IDC_C_EDL_ID3V2_USLY,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,48,260,12
+    CONTROL         "Embedded lyrics for Windows Media Player (ID3v2 synchronized lyrics)",IDC_C_EDL_ID3V2_SYLY,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,61,260,12
+    CONTROL         "Embedded lyrics for MiniLyrics (Lyrics3v2 synchronized lyrics)",IDC_C_EDL_LYR3V2,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,74,260,12
 END
 
 
@@ -950,9 +950,9 @@ BEGIN
     IDD_LD_ADV_DOWNLOAD_LYR, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 316
+        RIGHTMARGIN, 337
         TOPMARGIN, 7
-        BOTTOMMARGIN, 208
+        BOTTOMMARGIN, 207
     END
 
     IDD_LD_ADV_REMOVE_LYR, DIALOG

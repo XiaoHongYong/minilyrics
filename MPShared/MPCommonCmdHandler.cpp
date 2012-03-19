@@ -16,8 +16,9 @@
 #include "PreferenceDlg.h"
 #include "DlgAbout.h"
 #include "MPSkinMenu.h"
+#include "DownloadMgr.h"
 #ifdef _WIN32
-#include "win32/LyricsTool.h"
+#include "win32/LyricsDownloader.h"
 #include "DlgAdjustHue.h"
 #endif
 
@@ -930,32 +931,8 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 	tstring strFile = g_LyricData.GetLyricsFileName();
 	if (strFile.empty() || !IsFileExist(strFile.c_str()))
 	{
-		DOWN_SAVE_DIR downSaveDir = (DOWN_SAVE_DIR)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
-		if (downSaveDir == DOWN_SAVE_IN_SONG_DIR)
-			FileGetPath(g_LyricData.GetSongFileName(), strFile);
-
-		DOWN_SAVE_NAME downSaveName = (DOWN_SAVE_NAME)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveName"), DOWN_SAVE_NAME_KEEP);
-		if (downSaveName == DOWN_SAVE_NAME_AS_SONG_NAME)
-		{
-			// Uses media file title.
-			tstring strTitle;
-			FileGetTitle(g_LyricData.GetSongFileName(), strTitle);
-			strFile += strTitle;
-		}
-		else
-		{
-			// Uses artist - title
-			if (!g_LyricData.Properties().m_strArtist.empty())
-			{
-				strFile += g_LyricData.Properties().m_strArtist;
-				strFile += _T(" - ");
-			}
-
-			strFile += g_LyricData.Properties().m_strTitle;
-		}
-
-		strFile += _T(".lrc");
-		strFile = FileNameFilterInvalidChars(strFile.c_str());
+		strFile = g_LyricsDownloader.GetSaveLyricsFile(g_LyricData.GetSongFileName(),
+			g_LyricData.GetSuggestedLyricsFileName().c_str());
 	}
 
 	// set saved file extension

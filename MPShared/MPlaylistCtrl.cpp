@@ -334,6 +334,6 @@ void CMPlaylistCtrl::SetNowPlaying()
 		}
 	}
 
-	SetItemImageIndex(g_Player.GetCurrentMediaIndex(), IMAGE_NOW_PLAYING, false);
-
+	if (m_vRows.size() > 0)
+		SetItemImageIndex(g_Player.GetCurrentMediaIndex(), IMAGE_NOW_PLAYING, false);
 }

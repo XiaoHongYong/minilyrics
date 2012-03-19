@@ -66,11 +66,12 @@ public:
 	bool AutoDownloadEnabled() const { return m_bAutoDownload; }
 
 	tstring GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName);
+	tstring GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName, DOWN_SAVE_DIR DownSaveDir, DOWN_SAVE_NAME DownSaveName);
 
 	int SaveDownloadedLyrics(LPCTSTR szMediaFile, LPCTSTR szLyrFileName, LPCVOID lpData, int nSize, uint32 nLyrSaveFlag = LST_NONE);
+	int SaveDownloadedLyrAsFile(tstring &strFile, LPCVOID lpData, int nSize);
 
 protected:
-	int SaveDownloadedLyrAsFile(tstring &strFile, LPCVOID lpData, int nSize);
 
 	void AddTask(CDownloadTask *pTask);
 
