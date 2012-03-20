@@ -265,7 +265,7 @@ SectionIn RO
   File Share\lang\*.*
 
   SetOutPath $INSTDIR\Plugins
-  File ..\bin\mlp_G15.dll
+  File ..\bin\release\mlp_G15.dll
 
   SetOutPath $INSTDIR\Patterns
   File Share\Patterns\*.*

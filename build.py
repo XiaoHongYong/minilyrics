@@ -222,7 +222,7 @@ def buildMiniLyrics():
 
 	shutil.copy(r"Install_ML\MiniLyrics_data4me.exe", PackReleaseDir)
 	shutil.copy(r"Install_ML\MiniLyrics.exe", PackReleaseDir)
-	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"MiniLyrics-pdb.7z bin\MiniLyrics.pdb")
+	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"MiniLyrics-pdb.7z bin\release\MiniLyrics.pdb")
 	shutil.copy(r"Install_ML\readme-MiniLyrics.txt", PackReleaseDir + "MiniLyrics-" + version + ".txt")
 
 # Build ZikiPlayer
@@ -283,7 +283,7 @@ def buildZikiPlayer():
 
 	shutil.copy(r"Install_ZP\ZikiPlayer.exe", PackReleaseDir)
 	shutil.move(r"ZikiPlayer-Plugins.7z", PackReleaseDir)
-	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"ZikiPlayer-pdb.7z bin-player\ZikiPlayer.pdb")
+	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"ZikiPlayer-pdb.7z bin-player\release\ZikiPlayer.pdb")
 	shutil.copy(r"Install_ZP\readme-ZikiPlayer.txt", PackReleaseDir + "ZikiPlayer-" + version + ".txt")
 
 # Get target product from command line

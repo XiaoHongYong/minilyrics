@@ -391,11 +391,11 @@ public:
 
 			FileSetExt(strLyricsFile, _T(".lrc"));
 			if (IsFileExist(strLyricsFile.c_str()))
-				DeleteFile(szLyricsFile);
+				DeleteFile(strLyricsFile.c_str());
 
 			FileSetExt(strLyricsFile, _T(".txt"));
 			if (IsFileExist(strLyricsFile.c_str()))
-				DeleteFile(szLyricsFile);
+				DeleteFile(strLyricsFile.c_str());
 		}
 
 	}

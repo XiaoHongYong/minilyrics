@@ -1,3 +1,8 @@
+MiniLyrics 7.4.5
+New: Add advanced save and download 
+Improved: Support VLC 2.0
+Fixed: Saving embedded lyrics in AAC(M4A) file may corrupt it.
+
 MiniLyrics 7.3.917
 New: Support save embedded lyrics in AAC(M4A) files.
 Fixed: Saving embedded lyrics in AAC(M4A) file may corrupt it.
