@@ -177,7 +177,10 @@ def buildMiniLyrics():
 		
 	if BuildAction == "/clean":
 		sys.exit(0, "All projects have been cleaned.")
-		
+
+	#call MLEncrypt to set private encrypt signature.
+	ExecuteOnErrQuit(r"bin\MLEncrypt.exe release\MiniLyrics.exe search.crintsoft.com www.minilyrics.com")
+
 	# Sign all files in directory
 	signFilesInDir(cfg_signfile_dir)
 	for d in cfg_signfile_additional:
@@ -186,9 +189,6 @@ def buildMiniLyrics():
 	#
 	# Create installation pack for MiniLyrics
 	#
-
-	#call MLEncrypt to set private encrypt signature.
-	ExecuteOnErrQuit(r"bin\MLEncrypt.exe release\MiniLyrics.exe search.crintsoft.com www.minilyrics.com")
 
 	# Create MLVersion.nsh
 	f = open(r"Install_ML\MLVersion.nsh", "w")

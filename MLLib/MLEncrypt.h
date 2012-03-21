@@ -3,6 +3,9 @@
 
 #pragma once
 
+#define OFFSET_DATA		0x100
+#define LENGTH_FILE		(1024 * (1024 * 2 + 378))
+
 bool MLEncriptV2(LPCTSTR szFile, LPCSTR szData1, LPCSTR szData2, stringex &strData, tstring &strErrMsg)
 {
 	const int		LEN_DATA_MAX = 40;
@@ -38,8 +41,14 @@ bool MLEncriptV2(LPCTSTR szFile, LPCSTR szData1, LPCSTR szData2, stringex &strDa
 		return false;
 	}
 
+	if (str.size() < OFFSET_DATA + LENGTH_FILE)
+	{
+		strErrMsg = _T("File length is too less than expected.");
+		return false;
+	}
+
 	memset(szMD5, 0, sizeof(szMD5));
-	MD5ToString(str.c_str() + 0x100, (int)str.size() - 0x100, szMD5);
+	MD5ToString(str.c_str() + OFFSET_DATA, LENGTH_FILE, szMD5);
 
 	for (int i = 0; i < LEN_DATA_MAX; i++)
 		szOrgData[i] = szOrgData[i] ^ szMD5[i % 32];
@@ -78,8 +87,11 @@ bool MLDecriptV2(LPCTSTR szFile, string &strData1, string &strData2)
 	if (!OpenFileToBuffer(szFile, str))
 		return false;
 
+	if (str.size() < OFFSET_DATA + LENGTH_FILE)
+		return false;
+
 	memset(szMD5, 0, sizeof(szMD5));
-	MD5ToString(str.c_str() + 0x100, (int)str.size() - 0x100, szMD5);
+	MD5ToString(str.c_str() + OFFSET_DATA, LENGTH_FILE, szMD5);
 
 	strncpy_safe(szOrgData, CountOf(szOrgData), str.c_str() + POS_MZ_TXT_BEG, LEN_DATA_MAX);
 
@@ -91,51 +103,5 @@ bool MLDecriptV2(LPCTSTR szFile, string &strData1, string &strData2)
 
 	return true;
 }
-
-
-
-/*void EncriptV1()
-{
-
-stringex	str, strData;
-TCHAR			szMD5[64];
-char			strOrgData[33];
-
-memset(strOrgData, 0, sizeof(strOrgData));
-strncpy_safe(strOrgData, 16, m_strData1, 16);
-strncpy_safe(strOrgData + 16, 16, m_strData2, 16);
-
-if (!OpenFileToBuffer(m_strFile, str))
-return;
-
-MD5Str(str.c_str() + 0x100, str.size() - 0x100, szMD5);
-
-for (int i = 0; i < 32; i++)
-strOrgData[i] = strOrgData[i] ^ szMD5[i];
-
-// 0x51 ~ 0x78
-// encodeuu(strOrgData, 32, strData, true, false);
-strData.append(strOrgData, 32);
-
-SetDlgItemText(IDC_OUT, strData.c_str());
-
-if (strData.size() > 0x78 - 0x51)
-{
-AfxMessageBox("Encrypt data too long!");
-return;
-}
-
-FILE	*fp;
-
-fp = fopen(m_strFile, "rb+");
-if (fp)
-{
-fseek(fp, 0x51, SEEK_SET);
-fwrite(strData.c_str(), 1, strData.size(), fp);
-fclose(fp);
-}
-else
-AfxMessageBox("Open file FAILED!");
-}*/
 
 #endif // _MLENCRYPT_H_
