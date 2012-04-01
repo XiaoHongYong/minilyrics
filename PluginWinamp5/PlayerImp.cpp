@@ -505,6 +505,8 @@ void GetPlayerName(WCHAR *lpszBuffer, int nBufSize)
 	}
 	else if (strcmp(szExeName, "AIMP2.exe") == 0)
 		wcscpy_safe(lpszBuffer, nBufSize, L"AIMP2");
+	else if (strcmp(szExeName, "AIMP3.exe") == 0)
+		wcscpy_safe(lpszBuffer, nBufSize, L"AIMP3");
 	else if (strcmp(szExeName, "KMPlayer.exe") == 0)
 	{
 		g_bKmplayer = true;

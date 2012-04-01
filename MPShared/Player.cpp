@@ -261,7 +261,7 @@ void CPlayer::EndEmbeddedSkin()
 LPCTSTR CPlayer::GetPlayerName() const
 {
 	if (m_spPlayer)
-		return _T("");
+		return _T("Lyrics Downloader");
 	else
 		return m_playerInfo.playerName;
 }
