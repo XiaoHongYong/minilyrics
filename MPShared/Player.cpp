@@ -228,7 +228,7 @@ void CPlayer::Connect(PlayerInfo &playerInfo)
 	if (IsSupportEmbedded() && IsEmptyString(m_playerInfo.embeddedSkinName))
 	{
 		wcscpy_safe(m_playerInfo.embeddedSkinName, CountOf(m_playerInfo.embeddedSkinName),
-			TOLOCAL_MARK(L"Embedded Skin"));
+			_TLM("Embedded Skin"));
 	}
 }
 

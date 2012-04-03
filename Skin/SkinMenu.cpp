@@ -137,7 +137,7 @@ int CSkinMenu::FromXML(SXNode *pNodeMenu, int nAppendPos)
 			if (item.action == A_APPEND)
 			{
 				InsertItem(m_nAppendPosition, item.nMenuID,
-					TOLOCAL(item.strName.c_str()));
+					_TL(item.strName.c_str()));
 				m_nAppendPosition++;
 			}
 			else if (item.action == A_REMOVE)
@@ -149,7 +149,7 @@ int CSkinMenu::FromXML(SXNode *pNodeMenu, int nAppendPos)
 			else  if (item.action == A_INSERT_BY_ID)
 			{
 				InsertItemByID(item.nPos, item.nMenuID,
-					TOLOCAL(item.strName.c_str()));
+					_TL(item.strName.c_str()));
 			}
 		}
 	}

@@ -26,7 +26,7 @@ BOOL CDlgBatchProcessEmbeddedLyrics::OnInitDialog()
 	if (!CBaseDialog::OnInitDialog())
 		return FALSE;
 
-	LPCTSTR		szColName[] = { _T("Action"), _T("Song File"), _T("Result"), _T("Embedded Lyrics Type"), _T("Lyrics File")};
+	LPCTSTR		szColName[] = { _TLM("Action"), _TLM("Song File"), _TLM("Result"), _TLM("Embedded Lyrics Type"), _TLM("Lyrics File")};
 	int			nColWidth[] = { 50, 150, 200, 200, 200};
 
 	m_listCtrl.Attach(this, IDC_LIST);
@@ -34,7 +34,7 @@ BOOL CDlgBatchProcessEmbeddedLyrics::OnInitDialog()
 
 	ASSERT(CountOf(szColName) == CountOf(nColWidth));
 	for (int i = 0; i < CountOf(szColName); i++)
-		m_listCtrl.InsertColumn(i, TOLOCAL(szColName[i]), LVCFMT_LEFT, nColWidth[i]);
+		m_listCtrl.InsertColumn(i, _TL(szColName[i]), LVCFMT_LEFT, nColWidth[i]);
 
 	CMutexAutolock	autolock(g_autoProcessEmbeddedLyrics.m_mutex);
 

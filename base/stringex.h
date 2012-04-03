@@ -18,6 +18,7 @@ bool StrIEndWith(LPCTSTR szText, LPCTSTR szEndWith);
 
 const TCHAR * strignore(const TCHAR *str, const TCHAR *strIgnore);
 
+void strdel(tstring &str, TCHAR ch);
 void strdel(char *szStr, char ch);
 void strdel(WCHAR *szStr, WCHAR ch);
 

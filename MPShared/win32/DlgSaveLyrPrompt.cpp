@@ -12,10 +12,10 @@ int SaveLyrDialogBox(CBaseWnd *pWnd)
 		int nRet = g_Profile.GetProfileInt(_T("SaveLyrPrompt"), IDCANCEL);
 		if (nRet == IDCANCEL)
 		{
-			tstring		strMessage = CStrPrintf(TOLOCAL(_T("The lyrics of the %s file have changed.")), 
+			tstring		strMessage = CStrPrintf(_TLT("The lyrics of the %s file have changed."), 
 												FileGetName(g_LyricData.GetSongFileName())).c_str();
 			strMessage += _T("\r\n\r\n");
-			strMessage += TOLOCAL(_T("Do you want to save the changes?"));
+			strMessage += _TLT("Do you want to save the changes?");
 			
 			CDlgSaveLyrPrompt dlg(strMessage.c_str());
 			nRet = dlg.DoModal(pWnd);

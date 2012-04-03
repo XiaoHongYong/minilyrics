@@ -17,7 +17,7 @@
       <NormalTextBt ID="CID_DELETE_THEME" Text="&amp;Delete Theme" Rect="w/2+110/2+30,260,110,"/>
     </PreferPage.Theme>
     <PreferPage.LyrDisplayStyle Name="Lyrics Display" Visible="false" Rect="0,30,w,h-30-20">
-      <NormalComboBox ID="CID_DS_MODE" Text="Display Mode" Rect="10,10,w-20,"/>
+      <NormalComboBox ID="CID_DS_MODE" Text="UNTRANS_Display Mode" Rect="10,10,w-20,"/>
 
       <NormalFrame Rect="10,35,w-20,90" Text="Font of lyrics text"/>
       <NormalText Rect="25,60,w/2-30," Text="Latin language font:"/>
@@ -37,10 +37,10 @@
       <NormalImageBt ID="CID_DS_CLR_BG" Name="bg" Rect="w/2,245,w/4-20,"/>
 
       <NormalFrame Rect="10,285,w-20,90" Text="Lyrics display style"/>
-      <NormalComboBox ID="CID_DS_STYLE" Text="Display Style" Rect="25,310,w/2-45,"/>
-      <NormalComboBox ID="CID_DS_FADEOUT" Text="Fade out" Rect="w/2,310,w/2-20,"/>
+      <NormalComboBox ID="CID_DS_STYLE" Text="UNTRANS_Display Style" Rect="25,310,w/2-45,"/>
+      <NormalComboBox ID="CID_DS_FADEOUT" Text="UNTRANS_Fade out" Rect="w/2,310,w/2-20,"/>
       <NormalText Rect="25,340,w/4-25," Text="Align lyrics at:"/>
-      <NormalComboBox ID="CID_DS_ALIGN" Text="Align" Rect="w/4,340,w/4-20,"/>
+      <NormalComboBox ID="CID_DS_ALIGN" Text="UNTRANS_Align" Rect="w/4,340,w/4-20,"/>
       <NormalCheckBox ID="CID_C_KARAOKE" Text="&amp;Karaoke" Rect="w/2,340,w/2-20,"/>
     </PreferPage.LyrDisplayStyle>
     <PreferPage.LyrBgPic Name="Lyrics Background" Visible="false" Rect="0,30,w,h-30-20">

@@ -40,9 +40,9 @@ void PromptForLogitechLCD(LPCTSTR szModuleName)
 
 	g_Profile.WriteProfileInt(_T("G15LCDPrompted"), true);
 
-	tstring	strMsg = TOLOCAL(_T("You have Logitech LCD device installed, lyrics can be displayed on it."));
+	tstring	strMsg = _TL3("You have Logitech LCD device installed, lyrics can be displayed on it.");
 	strMsg += _T("\r\n");
-	strMsg += TOLOCAL(_T("Do you want to visit our website for more information?"));
+	strMsg += _TLT("Do you want to visit our website for more information?");
 	int nRet = CMPlayerAppBase::GetInstance()->MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL);
 	if (nRet == IDOK)
 		OpenUrl(CMPlayerAppBase::GetMainWnd(), GetStrName(SN_HTTP_HELP_G15_LCD));
@@ -217,9 +217,9 @@ void CLyricsOutPluginMgr::UninstPlugin(int nPluginIdx, CBaseWnd *pWndParent)
 	if (plugin.bInitOK)
 	{
 		int		nRet;
-		tstring	str = TOLOCAL(_T("Are you sure you want to permanently uninstall this plug-in?"));
+		tstring	str = _TLT("Are you sure you want to permanently uninstall this plug-in?");
 		str += _T("\n");
-		str += TOLOCAL(_T("$Product$ will uninstall it at next restart."));
+		str += _TLT("$Product$ will uninstall it at next restart.");
 		nRet = pWndParent->MessageOut(str.c_str(), MB_YESNO);
 		if (nRet == IDYES)
 			g_Profile.WriteProfileString(_T("UninstLyrOutPluginFile"), plugin.strPluginFile.c_str());

@@ -182,7 +182,7 @@ class CPageLogin : public CSkinContainer
 	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
 	CPageLogin()
-		{ CID_E_PASSWORD = CID_REMEMBER_PWD = CID_E_NAME = 0; m_strText = TOLOCAL_MARK(_T("Log in")); }
+		{ CID_E_PASSWORD = CID_REMEMBER_PWD = CID_E_NAME = 0; m_strText = _TLM("Log in"); }
 
 	void OnInitialUpdate()
 	{
@@ -225,10 +225,7 @@ public:
 		bool bRememberePwd = IsButtonChecked(CID_REMEMBER_PWD);
 
 		if (strName.empty() || strPwd.empty())
-		{
-			m_pSkin->MessageOut(TOLOCAL(_T("Please input user name and password!")));
 			return true;
-		}
 
 		g_Profile.WriteProfileInt(_T("rememberPwd"), bRememberePwd);
 		g_sessionUpload.SetUploader(strName.c_str(), strPwd.c_str(), bRememberePwd);
@@ -238,8 +235,8 @@ public:
 		if (pPageWait)
 		{
 			pPageWait->SetLoginWork(true);
-			pPageWait->StartWork(TOLOCAL(_T("Login")), 
-				TOLOCAL(_T("Processing login, It may take a few seconds.")),
+			pPageWait->StartWork(_TLT("Log in"), 
+				_TLT("Processing login, It may take a few seconds."),
 				&m_loginWorkObj);
 		}
 
@@ -269,7 +266,7 @@ public:
 	CPageUploadNotice()
 	{
 		m_pUploadObj = NULL;
-		m_strText = TOLOCAL_MARK(_T("Upload Lyrics"));
+		m_strText = _TLM("Upload Lyrics");
 	}
 
 	void OnCreate()
@@ -288,7 +285,7 @@ public:
 
 		ASSERT(g_sessionUpload.IsLogined());
 		SetUIObjectText(_T("CID_ACCOUNT_NOTICE"), 
-			CStrPrintf(TOLOCAL_T("Your lyrics will be uploaded under account: %s"), g_sessionUpload.GetLoginName()).c_str(), false);
+			CStrPrintf(_TLT("Your lyrics will be uploaded under account: %s"), g_sessionUpload.GetLoginName()).c_str(), false);
 	}
 
 	bool OnOK()
@@ -298,8 +295,8 @@ public:
 		if (pPageWait)
 		{
 			pPageWait->SetLoginWork(false);
-			pPageWait->StartWork(TOLOCAL(_T("Uploading")), 
-				TOLOCAL(_T("MiniLyrics is uploading lyrics, It may take a few seconds.")),
+			pPageWait->StartWork(_TLT("Upload Lyrics"), 
+				_TLT("MiniLyrics is uploading lyrics, It may take a few seconds."),
 				m_pUploadObj);
 		}
 
@@ -371,8 +368,8 @@ public:
 			if (pPageWait)
 			{
 				pPageWait->SetLoginWork(false);
-				pPageWait->StartWork(TOLOCAL(_T("Uploading")), 
-					TOLOCAL(_T("MiniLyrics is uploading lyrics, It may take a few seconds.")),
+				pPageWait->StartWork(_TLT("Upload Lyrics"), 
+					_TLT("MiniLyrics is uploading lyrics, It may take a few seconds."),
 					((CSkinWndUploadLyr *)m_pSkin)->GetUploadWorkObj());
 			}
 		}

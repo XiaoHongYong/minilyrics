@@ -280,6 +280,17 @@ const TCHAR * strignore(const TCHAR *str, const TCHAR *strIgnore)
 	return cp;
 }
 
+void strdel(tstring &str, TCHAR ch)
+{
+	for (uint i = 0; i < str.size(); )
+	{
+		if (str[i] == ch)
+			str.erase(i, 1);
+		else
+			i++;
+	}
+}
+
 void strdel(char *szStr, char ch)
 {
 	char	*szPos;

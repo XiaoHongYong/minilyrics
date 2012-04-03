@@ -164,7 +164,7 @@ void CMediaInfoTextCtrl::UpdateShowTrackInfo()
 
 		if (m_bShowTitle)
 		{
-			strText = TOLOCAL(IDToString(__mediaInfoType, m_vInfoType[m_nCurrentItem], _T("")));
+			strText = _TL(IDToString(__mediaInfoType, m_vInfoType[m_nCurrentItem], _T("")));
 			strText += _T(": ");
 		}
 		strText += GetMediaAttrInfo(m_vInfoType[m_nCurrentItem]);
@@ -192,9 +192,9 @@ tstring CMediaInfoTextCtrl::GetMediaAttrInfo(MediaAttribute infoType)
 		// Channel info should be deal specially
 		int			nChannels = _ttoi(strValue.c_str());
 		if (nChannels == 1)
-			strValue = TOLOCAL(_T("Mono"));
+			strValue = _TLT("Mono");
 		else
-			strValue = TOLOCAL(_T("Stereo"));
+			strValue = _TLT("Stereo");
 	}
 	else if (infoType == MA_BITRATE)
 	{

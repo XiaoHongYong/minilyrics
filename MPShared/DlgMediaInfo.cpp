@@ -225,7 +225,7 @@ public:
 		if (nId == CID_ADD_PIC)
 		{
 			// add picture
-			CFileOpenDlg	dlg(TOLOCAL(_T("Browse picture file")),
+			CFileOpenDlg	dlg(_TLT("Browse picture file"),
 				_T(""), _T("All picture files (*.bmp; *.jpg; *.gif; *.png)\0*.bmp;*.jpg;*.gif;*.png\0\0"), 1);
 
 			if (dlg.DoModal(m_pSkin) != IDOK)
@@ -262,7 +262,7 @@ public:
 				tstring	strExt;
 
 				pic->MimeToPicExt(szExtA);
-				CFileSaveDlg	dlg(TOLOCAL(_T("Save picture as...")),
+				CFileSaveDlg	dlg(_TLT("Save picture as..."),
 					_T(""), _T("All picture files (*.bmp; *.jpg; *.gif; *.png)\0*.bmp;*.jpg;*.gif;*.png\0\0"), 1);
 
 				if (dlg.DoModal(m_pSkin) != IDOK)

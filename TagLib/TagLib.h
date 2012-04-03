@@ -30,11 +30,12 @@ LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst);
 
 #define NONE_LYRCS	_T("")
 
-#define SZ_SONG_ID3V2_SYLT_DESC	_T("Embedded lyrics for Windows Media Player (ID3v2 synchronized lyrics)")
-#define SZ_SONG_ID3V2_USLT_DESC	_T("Embedded lyrics for iPod, iTunes (ID3v2 unsynchronized lyrics)")
-#define SZ_SONG_LYRICS3V2_DESC	_T("Embedded lyrics for MiniLyrics (Lyrics3v2 synchronized lyrics)")
-#define SZ_SONG_ID3V2_LYRICS_DESC	_T("Embedded ID3v2 lyrics (Nonstandard)")
-#define SZ_SONG_M4A_LYRICS_DESC	_T("Embedded lyrics for iPod, iTunes (For &AAC (M4A) file)")
+#define SZ_SONG_ID3V2_SYLT_DESC	_TLM("Embedded lyrics for Windows Media Player (ID3v2 synchronized lyrics)")
+#define SZ_SONG_ID3V2_USLT_DESC	_TLM("Embedded lyrics for iPod, iTunes (ID3v2 unsynchronized lyrics)")
+#define SZ_SONG_LYRICS3V2_DESC	_TLM("Embedded lyrics for MiniLyrics (Lyrics3v2 synchronized lyrics)")
+#define SZ_SONG_ID3V2_LYRICS_DESC	_TLM("Embedded ID3v2 lyrics (Nonstandard)")
+#define SZ_SONG_M4A_LYRICS_DESC	_TLM("Embedded lyrics for iPod, iTunes (For &AAC (M4A) file)")
+#define SZ_SONG_NO_LYRICS_DESC	_TLM("No suitable lyrics for the song file")
 
 enum TagType
 {

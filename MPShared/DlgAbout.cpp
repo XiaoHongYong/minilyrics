@@ -15,49 +15,49 @@ tstring LicenseStatusToStr(CLicenseManager::LicenseInfo &licenseInfo)
 	{
 		if (licenseInfo.bOnlineVerified)
 		{
-			strMsg = TOLOCAL_T("Your MiniLyrics was activated successfully.");
+			strMsg = _TLT("Your MiniLyrics was activated successfully.");
 			strMsg += _T("\n");
-			strMsg += TOLOCAL_T("Thank you for supporting the development of MiniLyrics.");
+			strMsg += _TLT("Thank you for supporting the development of MiniLyrics.");
 		}
 		else
 		{
-			strMsg = TOLOCAL_T("Your activation code is verified OK.");
+			strMsg = _TLT("Your activation code is verified OK.");
 			strMsg += _T("\n");
-			strMsg += TOLOCAL_T("Please click the 'Activate' button to activate MiniLyrics.");
+			strMsg += _TLT("Please click the 'Activate' button to activate MiniLyrics.");
 		}
 	}
 	else if (licenseInfo.licenseStatus == LS_TRIAL)
 	{
 		if (licenseInfo.strCode.size())
 		{
-			strMsg = TOLOCAL_T("Your activation code is invalid.");
+			strMsg = _TLT("Your activation code is invalid.");
 			strMsg += _T("\n");
-			strMsg += TOLOCAL_T("If you have purchased MiniLyrics, please contact us.");
+			strMsg += _TLT("If you have purchased MiniLyrics, please contact us.");
 		}
 		else
 		{
-			strMsg = TOLOCAL_T("*** TRIAL VERSION ***");
+			strMsg = _TLT("*** TRIAL VERSION ***");
 			strMsg += _T("\n");
-			strMsg += TOLOCAL_T("Please activate MiniLyrics.");
+			strMsg += _TLT("Please activate MiniLyrics.");
 		}
 	}
 	else if (licenseInfo.licenseStatus == LS_EXPIRED)
 	{
-		strMsg = TOLOCAL_T("Your license has expired.");
+		strMsg = _TLT("Your license has expired.");
 		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Please renew your license.");
+		strMsg += _TLT("Please renew your license.");
 	}
 	else if (licenseInfo.licenseStatus == LS_REVOKED)
 	{
-		strMsg = TOLOCAL_T("Your activation code has been revoked.");
+		strMsg = _TLT("Your activation code has been revoked.");
 		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Maybe you have revoked your order.");
+		strMsg += _TLT("Maybe you have revoked your order.");
 	}
 	else if (licenseInfo.licenseStatus == LS_TRANSFERED)
 	{
-		strMsg = TOLOCAL_T("Your activation code has been transferred to another device.");
+		strMsg = _TLT("Your activation code has been transferred to another device.");
 		strMsg += _T("\n");
-		strMsg += CStrPrintf(TOLOCAL_T("Your code can be used on %d devices."), licenseInfo.nLicensedUser).c_str();
+		strMsg += CStrPrintf(_TLT("Your code can be used on %d devices."), licenseInfo.nLicensedUser).c_str();
 	}
 
 	return strMsg;
@@ -119,7 +119,7 @@ public:
 	CPageEnterCode()
 	{
 		m_pActivateWorkObj = NULL;
-		m_strText = TOLOCAL_MARK(_T("MiniLyrics Activation"));
+		m_strText = _TLM("Activate MiniLyrics");
 	}
 
 	~CPageEnterCode()
@@ -178,16 +178,16 @@ public:
 			ASSERT(pPageWait);
 			if (pPageWait)
 			{
-				pPageWait->StartWork(TOLOCAL(_T("Activate MiniLyrics")), 
-					TOLOCAL(_T("The activation code is being verified, it may take a few seconds.")),
+				pPageWait->StartWork(_TLT("Activate MiniLyrics"), 
+					_TLT("The activation code is being verified, it may take a few seconds."),
 					m_pActivateWorkObj);
 			}
 		}
 		else
 		{
-			strMsg = TOLOCAL(_T("The name and activation code you entered are invalid, please double check and try again."));
+			strMsg = _TLT("The name and activation code you entered are invalid, please double check and try again.");
 			strMsg += _T("\n");
-			strMsg += TOLOCAL(_T("Please copy and paste the code from the original source if you continue to receive this error."));
+			strMsg += _TLT("Please copy and paste the code from the original source if you continue to receive this error.");
 			m_pSkin->MessageOut(strMsg.c_str());
 		}
 	}
@@ -213,7 +213,7 @@ class CPageActivateResult : public CSkinContainer
 public:
 	CPageActivateResult()
 	{
-		m_strText = TOLOCAL_MARK(_T("MiniLyrics Activation"));
+		m_strText = _TLM("MiniLyrics Activation");
 	}
 
 	void OnCreate()
@@ -262,7 +262,7 @@ public:
 	CPageAbout()
 	{
 		RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_DOWNLOAD_END);
-		m_strText = TOLOCAL_MARK(_T("About $Product$"));
+		m_strText = _TLM("About $Product$");
 	}
 
 	void OnCreate()
@@ -278,7 +278,7 @@ public:
 		SetUIObjectProperty(_T("CID_VERSION"), SZ_PN_TEXT, strVer.c_str());
 
 		SetUIObjectProperty(_T("CID_COPYRIGHT"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));
-		SetUIObjectText(_T("CID_COPYRIGHT"), CStrPrintf(_T("%s  2001-2011 Crintsoft MiniLyrics"), TOLOCAL_T("Copyright")).c_str());
+		SetUIObjectText(_T("CID_COPYRIGHT"), CStrPrintf(_T("%s  2001-2011 Crintsoft MiniLyrics"), _TLT("Copyright")).c_str());
 
 		SetUIObjectProperty(_T("CID_FEEDBACK"), SZ_PN_LINK, GetStrName(SN_HTTP_FEEDBACK));
 
@@ -294,30 +294,30 @@ public:
 		g_licenseManager.GetLicenseInfo(licenseInfo);
 
 
-		tstring	strLicensedTo = TOLOCAL_T("Licensed to: ");
+		tstring	strLicensedTo = _TLT("Licensed to: ");
 		strLicensedTo += licenseInfo.strName;
 
 		tstring strLicense;
 		if (licenseInfo.bOnlineVerified)
 		{
-			strLicense = TOLOCAL_T("License: ");
+			strLicense = _TLT("License: ");
 			if (licenseInfo.nLicensedUser > 1)
-				strLicense += CStrPrintf(TOLOCAL_T("%d Users"), licenseInfo.nLicensedUser).c_str();
+				strLicense += CStrPrintf(_TLT("%d Users"), licenseInfo.nLicensedUser).c_str();
 			else
-				strLicense += TOLOCAL_T("Single User");
+				strLicense += _TLT("Single User");
 			if (licenseInfo.nDurationDays > 0)
 			{
 				strLicense += _T(", ");
-				strLicense += CStrPrintf(TOLOCAL_T("%d Days"), licenseInfo.nDurationDays).c_str();
+				strLicense += CStrPrintf(_TLT("%d Days"), licenseInfo.nDurationDays).c_str();
 
 				if (licenseInfo.strStartDate.size())
 				{
-					strLicense += _T("\n"); strLicense += TOLOCAL_T("Start Date:"); strLicense += _T(" "); 
+					strLicense += _T("\n"); strLicense += _TLT("Start Date:"); strLicense += _T(" "); 
 					strLicense += licenseInfo.strStartDate;
 				}
 				if (licenseInfo.strExpireDate.size())
 				{
-					strLicense += _T("\n"); strLicense += TOLOCAL_T("Expiration Date:"); strLicense += _T(" ");
+					strLicense += _T("\n"); strLicense += _TLT("Expiration Date:"); strLicense += _T(" ");
 					strLicense += licenseInfo.strExpireDate;
 				}
 			}
@@ -368,7 +368,7 @@ public:
 						if (g_version < versionInfo.verNew)
 						{
 							// New version
-							tstring		strNewVersion = TOLOCAL(_T("New version of $Product$ is available"));
+							tstring		strNewVersion = _TLT("New version of $Product$ is available.");
 							strNewVersion += _T(" ");
 							strNewVersion += VersionNumToStr(versionInfo.verNew);
 
@@ -380,7 +380,7 @@ public:
 						}
 						else
 						{
-							SetUIObjectProperty(_T("CID_CHECK_VERSION"), SZ_PN_TEXT, TOLOCAL(_T("Your $Product$ is up to date.")));
+							SetUIObjectProperty(_T("CID_CHECK_VERSION"), SZ_PN_TEXT, _TLT("Your $Product$ is up to date."));
 							InvalidateUIObject(_T("CID_CHECK_VERSION"));
 						}
 						return;

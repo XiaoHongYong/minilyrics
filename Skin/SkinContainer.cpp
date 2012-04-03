@@ -70,7 +70,7 @@ bool CSkinContainer::OnCustomCommand(int nId)
 void CSkinContainer::OnSwitchTo()
 {
 	if (m_strText.size())
-		m_pSkin->SetCaptionText(TOLOCAL(m_strText.c_str()));
+		m_pSkin->SetCaptionText(_TL(m_strText.c_str()));
 }
 
 bool CSkinContainer::OnUserMessage(int nMessageID, LPARAM param)

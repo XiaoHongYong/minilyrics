@@ -62,7 +62,7 @@ BOOL CPreferPageAssociation::OnInitDialog()
 	m_listCtrl.Attach(this, IDC_LIST_MEDIA_TYPE);
 	m_listCtrl.SetExtendedStyle(LVS_EX_FULLROWSELECT | LVS_EX_CHECKBOXES);
 
-	m_listCtrl.InsertColumn(0, TOLOCAL(_T("File Types")), LVCFMT_LEFT, 150);
+	m_listCtrl.InsertColumn(0, _TLT("File Types"), LVCFMT_LEFT, 150);
 
 	vector<tstring>		vExt;
 	g_Player.GetSupportedExtentions(vExt);

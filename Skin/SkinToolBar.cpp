@@ -103,7 +103,7 @@ void CSkinToolbar::Button::FromXML(CSkinToolbar *pToolbar, SXNode *pNode)
 		else if (IsPropertyName(szProperty, _T("Text")))
 		{
 			strTextEnglish = szValue;
-			strText = TOLOCAL(szValue);
+			strText = _TL(szValue);
 		}
 		else if (IsPropertyName(szProperty, _T("RadioGroup")))
 			nGroup = _ttoi(szValue);
@@ -144,7 +144,7 @@ void CSkinToolbar::Button::FromXML(CSkinToolbar *pToolbar, SXNode *pNode)
 		}
 		else if (_tcsicmp(szProperty, _T("ToolTip")) == 0)
 		{
-			tstring str = TOLOCAL(szValue);
+			tstring str = _TL(szValue);
 			if (_tcscmp(strTooltip.c_str(), str.c_str()) != 0)
 			{
 				strTooltip = str.c_str();
@@ -401,7 +401,7 @@ void CSkinToolbar::OnLanguageChanged()
 {
 	for (int i = 0; i < (int)m_vButtons.size(); i++)
 	{
-		m_vButtons[i].strText = TOLOCAL(m_vButtons[i].strTextEnglish.c_str());
+		m_vButtons[i].strText = _TL(m_vButtons[i].strTextEnglish.c_str());
 		if (m_vButtons[i].strTooltip.size())
 			m_pSkin->GetSkinFactory()->GetTooltip(m_vButtons[i].nID, m_vButtons[i].strTooltip);
 	}
@@ -1003,7 +1003,7 @@ void CSkinToolbar::AddTooltip()
 				rcBt.right = m_rcObj.right;
 
 			m_pSkin->DelTool(bt.nAutoUniID);
-			m_pSkin->AddTool(TOLOCAL(bt.strTooltip.c_str()), &rcBt, bt.nAutoUniID);
+			m_pSkin->AddTool(_TL(bt.strTooltip.c_str()), &rcBt, bt.nAutoUniID);
 		}
 
 		rcBt.left += bt.nWidth + m_nBtSpacesCX;

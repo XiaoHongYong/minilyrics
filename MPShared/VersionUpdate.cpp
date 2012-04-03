@@ -153,8 +153,8 @@ void CVersionUpdate::OnDownloadOK(CDownloadTask *pTask)
 	{
 		tstring		strMessage = versionInfo.strFeature;
 		strMessage += _T("\r\n\r\n");
-		strMessage += TOLOCAL(_T("Do you want to visit the website of MiniLyrics?"));
-		if (IDYES == CMPlayerAppBase::GetInstance()->MessageOut(strMessage.c_str(), MB_YESNO, TOLOCAL(_T("New Version Notice"))))
+		strMessage += _TLT("Do you want to visit our website for more information?");
+		if (IDYES == CMPlayerAppBase::GetInstance()->MessageOut(strMessage.c_str(), MB_YESNO, _TLT("New Version Notice")))
 		{
 			OpenUrl(CMPlayerAppBase::GetMainWnd(), GetStrName(SN_HTTP_DOMAIN));
 		}

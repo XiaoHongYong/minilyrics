@@ -21,14 +21,11 @@
 #define IDR_MENU_ALBUMART               148
 #define IDD_CRASH_REPORT                149
 #define IDD_MSG                         150
-#define IDD_ERROR_RESOLVE               152
-#define IDD_COPYSONGLYRICS              153
 #define IDD_BATCH_EMBEDDED_LYR          154
 #define IDM_MOUSE_CLICK_THROUGH         155
 #define IDM_LYR_EDITOR                  156
 #define IDD_SET_HOTKEY                  157
 #define IDM_PLAYER_MENU                 158
-#define IDD_MLSTART1                    159
 #define IDD_SETUP                       160
 #define IDM_MEDIA_INFO_PIC              161
 #define IDD_START_PLAYER                162

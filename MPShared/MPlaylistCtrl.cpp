@@ -91,7 +91,7 @@ void CMPlaylistCtrl::OnCreate()
 	CSkinListCtrl::OnCreate();
 
 	if (GetColumnCount() == 0)
-		AddColumn(TOLOCAL_T("Media Files"), 230);
+		AddColumn(_TLT("Media Files"), 230);
 
 	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_PLAYER_CUR_PLAYLIST_CHANGED, ET_PLAYER_CUR_MEDIA_CHANGED);
 

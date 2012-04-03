@@ -169,7 +169,7 @@ void CMLTrayIcon::UpdatePlayerSysTrayIcon()
 		{
 			// add icon in tray bar
 			CShellNotifyIcon::AddIcon(m_pWnd, IDN_PLAYER_CTRL + i, 
-				TOLOCAL(g_SysTrayIconCmd[i].szCmd), 
+				_TL(g_SysTrayIconCmd[i].szCmd), 
 				g_SysTrayIconCmd[i].hIcon, MPWM_TRAYICN);
 		}
 	}

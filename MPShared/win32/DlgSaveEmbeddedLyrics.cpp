@@ -21,7 +21,7 @@ int CDlgSaveEmbeddedLyrics::DoModal(CBaseWnd *pWnd)
 {
 	if (!g_LyricData.HasLyricsOpened())
 	{
-		pWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+		pWnd->MessageOut(_TLT("No Lyrics file was opened."));
 		return IDCANCEL;
 	}
 
@@ -38,14 +38,14 @@ int CDlgSaveEmbeddedLyrics::DoModal(CBaseWnd *pWnd)
 		VecString vLyrNames;
 		vLyrNames.push_back(SZ_SONG_M4A_LYRICS);
 		if (DoSaveAction(vLyrNames, pWnd) == ERR_OK)
-			pWnd->MessageOut(TOLOCAL_T("Embedded Lyrics were saved successfully."));
+			pWnd->MessageOut(_TLT("Embedded Lyrics were saved successfully."));
 		return IDOK;
 	}
 	else if (CTagLib::IsID3v2TagSupported(m_strMediaUrl.c_str()))
 		return CBaseDialog::DoModal(pWnd);
 	else
 	{
-		pWnd->MessageOut(TOLOCAL(_T("This file doesn't support embedded lyrics.")));
+		pWnd->MessageOut(_TLT("This file doesn't support embedded lyrics."));
 		return IDCANCEL;
 	}
 }
@@ -57,8 +57,8 @@ BOOL CDlgSaveEmbeddedLyrics::OnInitDialog()
 
 	m_ctrlListLyrics.Attach(this, IDC_L_LYRICS);
 	m_ctrlListLyrics.SetExtendedStyle(LVS_EX_CHECKBOXES | LVS_EX_FULLROWSELECT);
-	int n = m_ctrlListLyrics.InsertColumn(COL_DESC, TOLOCAL_T("Embedded Lyrics Type"), LVCFMT_LEFT, 450);
-	n = m_ctrlListLyrics.InsertColumn(COL_NAME, TOLOCAL_T(""), LVCFMT_LEFT, 200);
+	int n = m_ctrlListLyrics.InsertColumn(COL_DESC, _TLT("Embedded Lyrics Type"), LVCFMT_LEFT, 450);
+	n = m_ctrlListLyrics.InsertColumn(COL_NAME, _TLT(""), LVCFMT_LEFT, 200);
 
 	VecString vLyricsNames;
 	CTagLib::GetEmbeddedLyrics(m_strMediaUrl.c_str(), vLyricsNames);
@@ -82,7 +82,7 @@ void CDlgSaveEmbeddedLyrics::AddEmbeddedItem(VecString &vAlreadyHave, LPCTSTR sz
 		if (StrBeginWith(vAlreadyHave[i].c_str(), szToAdd))
 		{
 			bAdded = true;
-			int n = m_ctrlListLyrics.AppendItem(TOLOCAL(LyrSrcTypeToDesc(lstToAdd)));
+			int n = m_ctrlListLyrics.AppendItem(_TL(LyrSrcTypeToDesc(lstToAdd)));
 			m_ctrlListLyrics.SetItemText(n, COL_NAME, vAlreadyHave[i].c_str());
 			m_ctrlListLyrics.SetCheck(n, true);
 		}
@@ -90,7 +90,7 @@ void CDlgSaveEmbeddedLyrics::AddEmbeddedItem(VecString &vAlreadyHave, LPCTSTR sz
 
 	if (!bAdded)
 	{
-		int n = m_ctrlListLyrics.AppendItem(TOLOCAL(LyrSrcTypeToDesc(lstToAdd)));
+		int n = m_ctrlListLyrics.AppendItem(_TL(LyrSrcTypeToDesc(lstToAdd)));
 		m_ctrlListLyrics.SetItemText(n, COL_NAME, szToAdd);
 
 		if (vAlreadyHave.empty())
@@ -129,7 +129,7 @@ int CDlgSaveEmbeddedLyrics::DoSaveAction(VecString &vLyrNames, CBaseWnd *pWnd)
 	int nRet = g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(m_strMediaUrl.c_str(), _T(""), &m_bufLyrics, vLyrNames);
 	if (nRet != ERR_OK)
 	{
-		tstring strMsg = TOLOCAL_T("Failed to Save embedded lyrics, MiniLyrics will auto try again later.");
+		tstring strMsg = _TLT("Failed to Save embedded lyrics, MiniLyrics will auto try again later.");
 		strMsg += SZ_RETURN;
 		strMsg += SZ_RETURN;
 		strMsg += ERROR2STR_LOCAL(nRet);

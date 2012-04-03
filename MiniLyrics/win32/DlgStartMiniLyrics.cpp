@@ -5,7 +5,7 @@
 #include "../../base/win32/ProcessEnum.h"
 #include "DlgSetupPlayerPlugins.h"
 
-TOLOCAL_SECTION("MiniLyrics setup")
+_TLS("MiniLyrics setup")
 
 #define TIMER_ID_CHECK_ML_RUNNING		1
 
@@ -175,9 +175,9 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 	// Is player installed?
 	if (!p->IsInstalled())
 	{
-		tstring strMsg = TOLOCAL_T("MiniLyrics can't detect the player's installation path.");
+		tstring strMsg = _TLT("MiniLyrics can't detect the player's installation path.");
 		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Do you want to specify the player's installation path manually?");
+		strMsg += _TLT("Do you want to specify the player's installation path manually?");
 		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
 			return;
 
@@ -190,7 +190,7 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 		p->pExtraInfo->strPlayerPath = dlg.GetFolder();
 		if (!p->CheckPlayerInstalled(false))
 		{
-			MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed does not have file: %s"), p->szExeName).c_str());
+			MessageOut(CStrPrintf(_T("Sorry, the folder you browsed does not have file: %s"), p->szExeName).c_str());
 			return;
 		}
 		else
@@ -203,18 +203,18 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 	{
 		tstring strMsg = strError;
 		strMsg += _T("\n\n");
-		strMsg += TOLOCAL_T("MiniLyrics plugin for this player was not installed properly.");
+		strMsg += _TLT("MiniLyrics plugin for this player was not installed properly.");
 		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Do you want to install the plugin for it again?");
+		strMsg += _TLT("Do you want to install the plugin for it again?");
 		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) == IDOK)
 		{
 			if (p->IsPlayerRunning())
 			{
-				strMsg = TOLOCAL_T("The player is running.");
+				strMsg = _TLT("The player is running.");
 				strMsg += _T("\n");
 				strMsg += p->GetPlayerExeFile();
 				strMsg += _T("\n\n");
-				strMsg += TOLOCAL_T("Please close it, then click 'OK' to continue.");
+				strMsg += _TLT("Please close it, then click 'OK' to continue.");
 				MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OK);
 			}
 
@@ -276,16 +276,16 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 	{
 		tstring strMsg = _T("MiniLyrics plugin for this player was not installed properly.");
 		strMsg += _T("\n");
-		strMsg += TOLOCAL_T("Do you want to install the plugin for it again?");
+		strMsg += _TLT("Do you want to install the plugin for it again?");
 		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) == IDOK)
 		{
 			tstring strErr;
 			int err;
 			if (!p->Install(strErr, err))
 			{
-				tstring strMsg = TOLOCAL_T("Failed to install the plugin for this player.");
+				tstring strMsg = _TLT("Failed to install the plugin for this player.");
 				strMsg += _T("\n");
-				strMsg += TOLOCAL_T("Please close the player, then click 'Install' again.");
+				strMsg += _TLT("Please close the player, then click 'Install' again.");
 				strMsg += _T("\n");
 				strMsg += strErr;
 				MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OK);
@@ -370,11 +370,11 @@ void CDlgStartMiniLyrics::UpdatePlayersToView()
 	{
 		// Show "More ..." button
 		PlayerCtrl &ctrl = __vPlayerCtrl[nEndCtrlIndex];
-		SetDlgItemText(ctrl.nStartBt, TOLOCAL_T("&More..."));
+		SetDlgItemText(ctrl.nStartBt, _TLT("&More..."));
 		if (!m_bShowInstalledPlayers)
-			SetDlgItemText(ctrl.nInfoId, TOLOCAL_T("Show more players installed on your PC"));
+			SetDlgItemText(ctrl.nInfoId, _TLT("Show more players installed on your PC"));
 		else if (!m_bShowAllSupportedPlayers)
-			SetDlgItemText(ctrl.nInfoId, TOLOCAL_T("Show more players that MiniLyrics supports"));
+			SetDlgItemText(ctrl.nInfoId, _TLT("Show more players that MiniLyrics supports"));
 		nEndCtrlIndex++;
 		ctrl.SetVisible(this, true);
 	}

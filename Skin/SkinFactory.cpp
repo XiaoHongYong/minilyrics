@@ -40,11 +40,11 @@ SkinWndStartupInfo::SkinWndStartupInfo(LPCTSTR szClassName, LPCTSTR szCaptionTex
 
 UIObjectIDDefinition g_uidBaseDefinition[] = 
 {
-	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, 0, _T("Minimize") },
-	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, 0, _T("Maximize") },
-	{ _T("ID_CLOSE"), CMD_CLOSE, IDCLOSE, _T("Close") },
-	{ _T("ID_QUIT"), CMD_QUIT, 0, _T("Quit") },
-	{ _T("ID_MENU"), CMD_MENU, 0, _T("Menu") },
+	{ _T("ID_MINIMIZE"), CMD_MINIMIZE, 0, _TLM("Minimize") },
+	{ _T("ID_MAXIMIZE"), CMD_MAXIMIZE, 0, _TLM("Maximize") },
+	{ _T("ID_CLOSE"), CMD_CLOSE, IDCLOSE, _TLM("Close") },
+	{ _T("ID_QUIT"), CMD_QUIT, 0, _TLM("Quit") },
+	{ _T("ID_MENU"), CMD_MENU, 0, _TLM("Menu") },
 	{ _T("ID_OK"), CMD_OK, IDOK, NULL },
 	{ _T("ID_CANCEL"), CMD_CANCEL, IDCANCEL, NULL },
 

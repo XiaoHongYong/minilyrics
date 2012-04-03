@@ -1093,10 +1093,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\LoginDlg.h"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\LrcUploadDB.h"
 				>
 			</File>
@@ -1182,10 +1178,6 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\MediaInfoTextCtrl.h"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\MediaSource.h"
 				>
 			</File>
 			<File
@@ -1409,10 +1401,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\TagInfoDlg.h"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\ThemesFile.h"
 				>
 			</File>
@@ -1483,19 +1471,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\ML6\Res\open.ICO"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\Res\play.ICO"
 				>
 			</File>
 			<File
 				RelativePath="..\MPShared\Res\prev.ico"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\res\rt_manif.bin"
 				>
 			</File>
 			<File

@@ -1389,7 +1389,7 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (IsPropertyName(szProperty, _T("Caption")))
 	{
-		m_strCaption = TOLOCAL(szValue);
+		m_strCaption = _TL(szValue);
 		SetWindowText(m_strCaption.c_str());
 	}
 	else if (_tcsicmp(szProperty, _T("ContextMenu")) == 0)
@@ -1760,7 +1760,7 @@ LRESULT CSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 				pObj = GetUIObjectById(nId);
 				if (pObj)
 				{
-					_tcscpy_safe(lpnmtdi->szText, CountOf(lpnmtdi->szText), TOLOCAL(pObj->m_strTooltip.c_str()));
+					_tcscpy_safe(lpnmtdi->szText, CountOf(lpnmtdi->szText), _TL(pObj->m_strTooltip.c_str()));
 					lpnmtdi->lpszText = lpnmtdi->szText;
 					lpnmtdi->hinst = NULL;
 				}

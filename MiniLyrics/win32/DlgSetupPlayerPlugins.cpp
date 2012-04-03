@@ -5,7 +5,7 @@
 #include "PreferenceDlg.h"
 #include "UACTool.h"
 
-TOLOCAL_SECTION("MiniLyrics setup")
+_TLS("MiniLyrics setup")
 
 #define INDEX_BUILT_IN_PLUGIN		-1
 
@@ -96,9 +96,9 @@ int CmdId2Index(int nId, SetupCmdType &type)
 
 BOOL ShowElevatedDialog(CBaseWnd *pWnd)
 {
-	tstring	str = TOLOCAL_T("To install MiniLyrics plugin, you will be asked to run MiniLyrics as administrator.");
+	tstring	str = _TLT("To install MiniLyrics plugin, you will be asked to run MiniLyrics as administrator.");
 	str += _T("\n\n");
-	str += TOLOCAL_T("Do you want to restart MiniLyrics to continue the setup?");
+	str += _TLT("Do you want to restart MiniLyrics to continue the setup?");
 	int nRet = pWnd->MessageOut(str.c_str(), MB_ICONINFORMATION | MB_OKCANCEL);
 	if (nRet == IDOK)
 	{
@@ -108,7 +108,7 @@ BOOL ShowElevatedDialog(CBaseWnd *pWnd)
 		if (!bSuccess)
 		{
 			int nErr = GetLastError();
-			str = TOLOCAL_T("Failed to elevate the privilege of MiniLyrics.");
+			str = _TLT("Failed to elevate the privilege of MiniLyrics.");
 			str += _T("\n");
 			str += OSError(nErr).Description();
 			pWnd->MessageOut(str.c_str(), MB_ICONSTOP | MB_OK);
@@ -145,7 +145,7 @@ BOOL CDlgSetupPlayerPlugins::OnInitDialog()
 	if (!g_bFirstSetup)
 	{
 		ShowDlgItem(IDOK, SW_HIDE);
-		SetDlgItemText(IDCANCEL, TOLOCAL_T("Close"));
+		SetDlgItemText(IDCANCEL, _TLT("Close"));
 		// ShowDlgItem(IDCANCEL, SW_HIDE);
 	}
 
@@ -220,11 +220,11 @@ void CDlgSetupPlayerPlugins::OnOK()
 	{
 		if (nInstalledCount > 0)
 		{
-			MessageOut(TOLOCAL_T("MiniLyrics plug-ins were installed successfully."), MB_ICONINFORMATION);
+			MessageOut(_TLT("MiniLyrics plug-ins were installed successfully."), MB_ICONINFORMATION);
 			CBaseDialog::OnOK();
 		}
 		else
-			MessageOut(TOLOCAL_T("Please choose at least one player."), MB_ICONINFORMATION);
+			MessageOut(_TLT("Please choose at least one player."), MB_ICONINFORMATION);
 	}
 }
 
@@ -273,7 +273,7 @@ void CDlgSetupPlayerPlugins::OnCommand(UINT uID, UINT nNotifyCode)
 				if (type == SCT_INSTALL)
 				{
 					CStrPrintf	str(_T("%s\n\n%s"),
-						TOLOCAL_T("The players below are built-in supported."),
+						_TLT("The players below are built-in supported."),
 						m_strBuiltInPlayers.c_str());
 					MessageOut(str.c_str(), MB_ICONINFORMATION | MB_OK);
 				}
@@ -357,14 +357,14 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 	else if (p->IsPluginInstalled())
 	{
 		// Uninstall plugin
-		tstring strMsg = CStrPrintf(TOLOCAL_T("Are you sure that you want to uninstall MiniLyrics plugin for %s?"), p->szPlayerName).c_str();
+		tstring strMsg = CStrPrintf(_TLT("Are you sure that you want to uninstall MiniLyrics plugin for %s?"), p->szPlayerName).c_str();
 		if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
 			return;
 
 		tstring strErr;
 		if (!p->Uninstall(strErr))
 		{
-			tstring strMsg = CStrPrintf(TOLOCAL_T("Failed to uninstall MiniLyrics plugin for %s"), p->szPlayerName).c_str();
+			tstring strMsg = CStrPrintf(_TLT("Failed to uninstall MiniLyrics plugin for %s"), p->szPlayerName).c_str();
 			strMsg += _T("\n\n");
 			strMsg += strErr;
 			MessageOut(strMsg.c_str(), MB_ICONWARNING | MB_OK);
@@ -380,11 +380,11 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 	// Is player running?
 	if (p->IsPlayerRunning())
 	{
-		tstring strMsg = TOLOCAL_T("The player is running.");
+		tstring strMsg = _TLT("The player is running.");
 		strMsg += _T("\n");
 		strMsg += p->GetPlayerExeFile();
 		strMsg += _T("\n\n");
-		strMsg += TOLOCAL_T("Please close it, then click 'OK' to continue.");
+		strMsg += _TLT("Please close it, then click 'OK' to continue.");
 		MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OK);
 	}
 
@@ -400,7 +400,7 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 
 	p->SavePlayerPath();
 
-	MessageOut(CStrPrintf(TOLOCAL_T("MiniLyrics plugin was installed for %s."), p->szPlayerName).c_str(),
+	MessageOut(CStrPrintf(_TLT("MiniLyrics plugin was installed for %s."), p->szPlayerName).c_str(),
 		MB_ICONINFORMATION | MB_OK);
 
 	UpdatePlayersToView();
@@ -423,7 +423,7 @@ void CDlgSetupPlayerPlugins::OnClickedBrowsePathBtn(CPlayerPluginInstaller::Play
 			p->SetToInstallPlugin(true);
 	}
 	else
-		MessageOut(TOLOCAL_T("Can't detect the player installed in the specified folder."), MB_OK | MB_ICONINFORMATION);
+		MessageOut(_TLT("Can't detect the player installed in the specified folder."), MB_OK | MB_ICONINFORMATION);
 
 	UpdatePlayersToView();
 }
@@ -435,9 +435,9 @@ void CDlgSetupPlayerPlugins::OnPathEditChanged(CPlayerPluginInstaller::Player *p
 
 bool CDlgSetupPlayerPlugins::BrowsePlayerFolder(CPlayerPluginInstaller::Player *p)
 {
-	tstring strMsg = CStrPrintf(TOLOCAL_T("MiniLyrics can't detect the path of %s."), p->szPlayerName).c_str();
+	tstring strMsg = CStrPrintf(_TLT("MiniLyrics can't detect the path of %s."), p->szPlayerName).c_str();
 	strMsg += _T("\n\n");
-	strMsg += TOLOCAL_T("Do you want to specify its installation path manually?");
+	strMsg += _TLT("Do you want to specify its installation path manually?");
 	if (MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_OKCANCEL) != IDOK)
 		return false;
 
@@ -450,7 +450,7 @@ bool CDlgSetupPlayerPlugins::BrowsePlayerFolder(CPlayerPluginInstaller::Player *
 	p->pExtraInfo->strPlayerPath = dlg.GetFolder();
 	if (!p->CheckPlayerInstalled(false))
 	{
-		MessageOut(CStrPrintf(TOLOCAL_T("Sorry, the folder you browsed does NOT have file: %s"), p->szExeName).c_str());
+		MessageOut(CStrPrintf(_T("Sorry, the folder you browsed does NOT have file: %s"), p->szExeName).c_str());
 		return false;
 	}
 
@@ -497,8 +497,8 @@ void CDlgSetupPlayerPlugins::UpdatePlayersToView()
 
 		if (m_vPlayerItems[i] == INDEX_BUILT_IN_PLUGIN)
 		{
-			SetDlgItemText(ctrl.nInstallBt, TOLOCAL_T("&Built-in Plugins"));
-			SetDlgItemText(ctrl.nPlayerNameId, TOLOCAL_T("Supported players:"));
+			SetDlgItemText(ctrl.nInstallBt, _TLT("&Built-in Plugins"));
+			SetDlgItemText(ctrl.nPlayerNameId, _TLT("Supported players:"));
 			SetDlgItemText(ctrl.nPathId, m_strBuiltInPlayers.c_str());
 			ctrl.SetVisibleForMoreBtn(this);
 			ShowDlgItem(ctrl.nPathId, SW_SHOW);
@@ -509,8 +509,8 @@ void CDlgSetupPlayerPlugins::UpdatePlayersToView()
 			ASSERT(p != NULL);
 
 			CheckButton(ctrl.nCheckBt, p->IsToInstallPlugin());
-			SetDlgItemText(ctrl.nCheckBt, CStrPrintf(TOLOCAL_T("Support %s:"), p->szPlayerName).c_str());
-			SetDlgItemText(ctrl.nInstallBt, p->IsPluginInstalled() ? TOLOCAL_T("Uninstall") : TOLOCAL_T("Install"));
+			SetDlgItemText(ctrl.nCheckBt, CStrPrintf(_TLT("Support %s:"), p->szPlayerName).c_str());
+			SetDlgItemText(ctrl.nInstallBt, p->IsPluginInstalled() ? _TLT("Uninstall") : _TLT("Install"));
 			SetDlgItemText(ctrl.nPlayerNameId, p->szPlayerName);
 			SetDlgItemText(ctrl.nPathId, p->pExtraInfo->strPlayerPath.c_str());
 			ctrl.SetVisible(this, true);
@@ -525,8 +525,8 @@ void CDlgSetupPlayerPlugins::UpdatePlayersToView()
 	{
 		// Show "More ..." button
 		SetupPlayerCtrl &ctrl = __vSetupPlayerCtrl[nEndCtrlIndex];
-		SetDlgItemText(ctrl.nInstallBt, TOLOCAL_T("&More..."));
-		SetDlgItemText(ctrl.nPlayerNameId, TOLOCAL_T("More players..."));
+		SetDlgItemText(ctrl.nInstallBt, _TLT("&More..."));
+		SetDlgItemText(ctrl.nPlayerNameId, _TLT("More players..."));
 		nEndCtrlIndex++;
 		ctrl.SetVisibleForMoreBtn(this);
 	}

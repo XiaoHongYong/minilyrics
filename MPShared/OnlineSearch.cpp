@@ -400,7 +400,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	if (nRet != ERR_OK)
 	{
 		tstring		str;
-		str += TOLOCAL(_T("Failed to search lyrics with error:"));
+		str += _TLT("Failed to search lyrics with error:");
 		str += _T(" ");
 		str += LPCTSTR(ERROR2STR_LOCAL(nRet));
 		CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
@@ -429,7 +429,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	else
 	{
 		tstring			str;
-		str += TOLOCAL(_T("Failed to search lyrics with error:"));
+		str += _TLT("Failed to search lyrics with error:");
 		str += _T(" ");
 		str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 		CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
@@ -513,10 +513,10 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 		{
 			// ....todo 添加上次搜索时间的介绍, 优化离线歌词搜索库和在下歌词搜索缓存
 // 			tstring			str;
-// 			CStrPrintf		str2(TOLOCAL(_T("Searched lyrics %d days ago, no results returned.")), abs((int)dwLatestSearchTime - GetCurDaysFrom2000()));
+// 			CStrPrintf		str2(_TLT("Searched lyrics %d days ago, no results returned."), abs((int)dwLatestSearchTime - GetCurDaysFrom2000()));
 // 			str = str2.c_str();
 // 			str += _T(" ");
-// 			str += TOLOCAL(_T("Auto search canceled."));
+// 			str += _TLT("Auto search canceled.");
 // 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 			return FALSE;
 		}
@@ -551,8 +551,8 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	dwLastSearch = GetSecCount();
 
 	tstring			str;
-	str = TOLOCAL(_T("Searching lyrics:"));
-	str += _T(" ");
+	str = _TLT("Searching lyrics");
+	str += _T(": ");
 	str += g_Player.GetFullTitle();
 	CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 
@@ -707,7 +707,7 @@ bool COnlineSearch::IsTitleExcludedFromAutoSearch(LPCTSTR szTitle)
 	{
 		if (_tcscmp(szExcludedTitle[i], szTitleFiltered) == 0)
 			return true;
-		if (_tcscmp(TOLOCAL(szExcludedTitle[i]), szTitleFiltered) == 0)
+		if (_tcscmp(_TL(szExcludedTitle[i]), szTitleFiltered) == 0)
 			return true;
 	}
 

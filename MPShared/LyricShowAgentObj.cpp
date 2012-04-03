@@ -201,7 +201,7 @@ tstring GetRandomActivateNoticeText()
 
 	srand(GetTickCount());
 
-	tstring str = TOLOCAL(vNoticeText[rand() % CountOf(vNoticeText)]);
+	tstring str = _TL(vNoticeText[rand() % CountOf(vNoticeText)]);
 //	str += _T("  -  ");
 //	str += vNoticeText2[rand() % CountOf(vNoticeText2)];
 

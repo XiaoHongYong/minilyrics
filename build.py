@@ -12,6 +12,7 @@
 import sys, os, subprocess, time, shutil, re
 
 cmdLines = set(sys.argv)
+cfg_no_sign = False
 
 ZipExe = r"C:\Program Files\7-Zip\7z.exe"
 if not os.access(ZipExe, 0):
@@ -80,6 +81,9 @@ def VersionStr(*args):
 	return ".".join(listStr)
 
 def signFile(fileName):
+	if cfg_no_sign:
+		print("Ignore sign file:", fileName)
+		return
 	ext = os.path.splitext(fileName)[1].lower()
 	if ext != '.dll' and ext != '.exe':
 		return
@@ -287,6 +291,7 @@ def buildZikiPlayer():
 	shutil.copy(r"Install_ZP\readme-ZikiPlayer.txt", PackReleaseDir + "ZikiPlayer-" + version + ".txt")
 
 # Get target product from command line
+cfg_no_sign = "/nosign" in cmdLines
 TargetML = False
 TargetZP = False
 if "MiniLyrics" in cmdLines: TargetML = True

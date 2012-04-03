@@ -40,7 +40,7 @@ bool CiTunesMediaSource::UpdateLibrary(tstring &err)
 		if (FAILED(hr) || m_iTunesApp == NULL)
 		{
 			ERRLOG1(_T("Failed to create iTunesApp Instance: %X"), hr);
-			err = TOLOCAL_T("Maybe you haven't installed iTunes.");
+			err = _TLT("Maybe you haven't installed iTunes.");
 			return false;
 		}
 #ifdef _DEBUG

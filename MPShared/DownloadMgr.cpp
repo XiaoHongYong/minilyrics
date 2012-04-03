@@ -106,9 +106,9 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		if (bShowInfoText && nFailedCount > 2)
 		{
 			tstring		str;
-			str = TOLOCAL(_T("Failed to get searching lyrics results."));
+			str = _TLT("Failed to get searching lyrics results.");
 			str += _T(" ");
-			str += TOLOCAL(_T("Please contact us to report this issue."));
+			str += _TLT("Please contact us to report this issue.");
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 		}
 		return FALSE;
@@ -119,7 +119,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		if (bShowInfoText)
 		{
 			tstring		str;
-			str = TOLOCAL(_T("Search returned no results."));
+			str = _TLT("Search returned no results.");
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 		}
 		return FALSE;
@@ -144,7 +144,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 			if (FileIsExtSame(result.strUrl.c_str(), _T(".txt"))
 				&& g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false))
 			{
-				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("None of the lyrics are .lrc extension lyrics, so they are not downloaded."));
 				return TRUE;
 			}
 
@@ -156,7 +156,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 
 			// 就下载它了
 			tstring		str;
-			str = TOLOCAL(_T("Downloading lyrics:"));
+			str = _TLT("Downloading lyrics:");
 			str += _T(" ");
 			str += result.strSaveFileName.c_str();
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
@@ -178,14 +178,14 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		if (g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false)
 			&& vLrcSearchResult.IsAllTxtLyrics())
 		{
-			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(TOLOCAL(_T("None of the lyrics are .lrc extension lyrics, so they are not downloaded.")));
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("None of the lyrics are .lrc extension lyrics, so they are not downloaded."));
 			return true;
 		}
 
 		if (bShowInfoText)
 		{
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(
-				TOLOCAL(_T("Found lyrics, please select the lyrics in the popup dialog.")));
+				_TLT("Found lyrics, please select the lyrics in the popup dialog."));
 		}
 
 		CMPlayerAppBase::GetMainWnd()->OnCustomCommand(CMD_OPEN_LRC);
@@ -196,7 +196,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		if (bShowInfoText)
 		{
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(
-				TOLOCAL(_T("Found some similar lyrics, please choose them in 'Search Lyrics' window.")));
+				_TLT("Found some similar lyrics, please choose them in 'Search Lyrics' window."));
 		}
 	}
 
@@ -541,7 +541,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			//
 			// Wait for 10 sec to try again
 			if (pTask->taskType == DTT_LYRICS)
-				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(TOLOCAL(_T("Wait 10 seconds and retry.")));
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("Wait 10 seconds and retry."));
 
 			if (m_eventShutDown.Acquire(10 * 1000))
 				break;
@@ -554,7 +554,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		if (nRet != ERR_OK)
 		{
 			tstring		str;
-			str = TOLOCAL(_T("Failed to download lyrics with error:"));
+			str = _TLT("Failed to download lyrics with error:");
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)
@@ -571,7 +571,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		if (nRet != ERR_OK)
 		{
 			tstring		str;
-			str = TOLOCAL(_T("Failed to download lyrics with error:"));
+			str = _TLT("Failed to download lyrics with error:");
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)
@@ -588,7 +588,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 		if (nRet != ERR_OK)
 		{
 			tstring		str;
-			str = TOLOCAL(_T("Failed to download lyrics with error:"));
+			str = _TLT("Failed to download lyrics with error:");
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)

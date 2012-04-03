@@ -503,7 +503,7 @@ bool CMPlayerAppBase::InitLoadSkin()
 		nRet = ChangeSkinByUserCmd(SZ_DEFSKIN);
 		if (nRet != ERR_OK)
 		{
-			MessageOut(TOLOCAL(_T("$Product$ can't open latest skin, please try other skins.")), MB_OK | MB_ICONERROR);
+			MessageOut(_T("$Product$ can't open latest skin, please try other skins."), MB_OK | MB_ICONERROR);
 			nRet = GetMPSkinFactory()->OpenSimpliestSkin();
 			if (nRet != ERR_OK)
 				return false;
@@ -660,11 +660,11 @@ void CMPlayerAppBase::OnMediaChanged()
 	// Add Media Info:
 	V_Str		vMediaInfo;
 	if (!IsEmptyString(g_Player.GetArtist()))
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Artist:"))) + _T(" ") + g_Player.GetArtist());
+		vMediaInfo.push_back(tstring(_TLT("Artist:")) + _T(" ") + g_Player.GetArtist());
 	if (!IsEmptyString(g_Player.GetTitle()))
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Title:"))) + _T(" ") + g_Player.GetTitle());
+		vMediaInfo.push_back(tstring(_TLT("Title:")) + _T(" ") + g_Player.GetTitle());
 	if (!IsEmptyString(g_Player.GetAlbum()))
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Album:"))) + _T(" ") + g_Player.GetAlbum());
+		vMediaInfo.push_back(tstring(_TLT("Album:")) + _T(" ") + g_Player.GetAlbum());
 	g_LyricData.AddTextInLyrics(vMediaInfo);
 
 	DispatchLyricsChangedSyncEvent();
@@ -805,7 +805,7 @@ void CMPlayerAppBase::DispatchLyricsChangedSyncEvent()
 void CMPlayerAppBase::OnDownloadLyricsFailed(CDownloadTask *pTask)
 {
 	if (pTask->m_errResult != ERR_OK)
-		ShowErrorDlg(GetMainWnd(), pTask->m_errResult);
+		ShowInetErrorDlg(GetMainWnd(), pTask->m_errResult);
 	else if (pTask->m_nHttpRetCode != 200)
 	{
 		CStrPrintf	str;
@@ -850,7 +850,7 @@ int CMPlayerAppBase::OpenLyrics(LPCTSTR szAssociateKeyword, LPCTSTR szLrcSource)
 	{
 		if (g_LyricData.Properties().m_strId.size())
 		{
-//			g_LyricData.AddAdInLyrics(g_LyricData.GetPlayElapsedTime() + 3 * 1000, TOLOCAL(_T("Are these lyrics correct to the song? Rate them!")), 
+//			g_LyricData.AddAdInLyrics(g_LyricData.GetPlayElapsedTime() + 3 * 1000, _TLT("Are these lyrics correct to the song? Rate them!"), 
 //				(tstring(_T("cmd://rate/")) + GetStrName(SN_HTTP_RATE_LRC) + g_LyricData.Properties().m_strId).c_str());
 		}
 	}

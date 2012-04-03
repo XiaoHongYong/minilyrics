@@ -22,22 +22,22 @@ void FormatHotkeyText(tstring &strText, UINT nVirtKey, UINT fsModifiers)
 
 #define DURATION_SEARCH		500
 
-#define SZ_YES			TOLOCAL(_T("Yes"))
-#define SZ_NO			TOLOCAL(_T("No"))
-#define SZ_ENABLED		TOLOCAL(_T("Enabled"))
-#define SZ_DISABLED		TOLOCAL(_T("Disabled"))
-#define SZ_EDIT			TOLOCAL(_T("Edit..."))
-#define SZ_BROWSE		TOLOCAL(_T("Browse..."))
-#define SZ_RESET		TOLOCAL(_T("Reset Selected Settings"))
+#define SZ_YES			_TLT("Yes")
+#define SZ_NO			_TLT("NO")
+#define SZ_ENABLED		_TLT("Enabled")
+#define SZ_DISABLED		_TLT("Disabled")
+#define SZ_EDIT			_TLT("Edit...")
+#define SZ_BROWSE		_TLT("Browse...")
+#define SZ_RESET		_TLT("Reset Selected Settings")
 
 #define MENUID_START		3000
 
 tstring ConnectToLocalStr(LPCTSTR szStr1, LPCTSTR szStr2)
 {
-	tstring		str = TOLOCAL(szStr1);
+	tstring		str = _TL(szStr1);
 
-	str += _T(" ");
-	str += TOLOCAL(szStr2);
+	str += _T(": ");
+	str += _TL(szStr2);
 
 	return str;
 }
@@ -45,7 +45,8 @@ tstring ConnectToLocalStr(LPCTSTR szStr1, LPCTSTR szStr2)
 class CPfItemRestoreLyrChgSavePrompt : public CPreferItem
 {
 public:
-	CPfItemRestoreLyrChgSavePrompt(CBaseWnd *pWnd) : CPreferItem(ConnectToLocalStr(_T("UI:"), _T("Restore saving prompt setting for lyrics changed")).c_str())
+	CPfItemRestoreLyrChgSavePrompt(CBaseWnd *pWnd) : CPreferItem(ConnectToLocalStr(_TLM("UI"),
+		_TLM("Restore saving prompt setting for lyrics changed")).c_str())
 	{
 		m_pWnd = pWnd;
 	}
@@ -55,12 +56,12 @@ public:
 	}
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
-		vString.push_back(TOLOCAL_T("Restore"));
+		vString.push_back(_TLT("Restore"));
 	}
 
 	virtual void SetOption(int nIndex) {
 		g_Profile.WriteProfileInt(_T("SaveLyrPrompt"), IDCANCEL);
-		m_pWnd->MessageOut(TOLOCAL_T("Setting was restored successfully."), MB_OK | MB_ICONINFORMATION);
+		m_pWnd->MessageOut(_TLT("Setting was restored successfully."), MB_OK | MB_ICONINFORMATION);
 	}
 
 	virtual bool IsDefault() {
@@ -160,7 +161,8 @@ class CPfItemBoolEnableAutoDlLyr : public CPfItemBool
 {
 public:
 	CPfItemBoolEnableAutoDlLyr() 
-		: CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Auto download lyrics")).c_str(), ET_NULL, SZ_SECT_LYR_DL,
+		: CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Download"), 
+		_TLM("Auto download lyrics")).c_str(), ET_NULL, SZ_SECT_LYR_DL,
 			_T("EnableAuoDownload"), true)
 	{
 	}
@@ -177,7 +179,7 @@ class CPfItemLyrSearchFolder : public CPreferItem
 {
 public:
 	CPfItemLyrSearchFolder(CBaseWnd *pWndParent)
-		: CPreferItem(ConnectToLocalStr(_T("Lyrics:"), _T("Lyrics search folder")).c_str())
+		: CPreferItem(ConnectToLocalStr(_TLM("Lyrics"), _TLM("Lyrics search folder")).c_str())
 	{
 		m_pWndParent = pWndParent;
 	}
@@ -195,14 +197,14 @@ public:
 	}
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
-		vString.push_back(TOLOCAL(_T("Add folder...")));
+		vString.push_back(_TLT("Add &Folder..."));
 
 		if (g_LyricSearch.GetSearchFolerCount() > 0)
 			vString.push_back(_T(""));
 
 		for (int i = 0; i < g_LyricSearch.GetSearchFolerCount(); i++)
 		{
-			vString.push_back(tstring(TOLOCAL(_T("Remove folder:"))) + _T(" ") + g_LyricSearch.GetFolder(i));
+			vString.push_back(tstring(_TLT("Remove folder:")) + _T(" ") + g_LyricSearch.GetFolder(i));
 		}
 	}
 
@@ -265,7 +267,7 @@ class CPfItemLyrExternalEditor : public CPreferItem
 {
 public:
 	CPfItemLyrExternalEditor(CBaseWnd *pWndParent)
-		: CPreferItem(ConnectToLocalStr(_T("Lyrics:"), _T("External Lyrics Editor")).c_str())
+		: CPreferItem(ConnectToLocalStr(_TLM("Lyrics"), _TLM("External Lyrics Editor")).c_str())
 	{
 		m_pWndParent = pWndParent;
 	}
@@ -277,7 +279,7 @@ public:
 	}
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
-		vString.push_back(TOLOCAL(SZ_BROWSE));
+		vString.push_back(_TL(SZ_BROWSE));
 	}
 
 	virtual void SetOption(int nIndex) {
@@ -286,7 +288,7 @@ public:
 
 		GetNotepadEditor(strEditor);
 
-		CFileOpenDlg	dlg(TOLOCAL(_T("Browse external lyrics editor program")), strEditor.c_str(), _T("Executable file(*.exe)\0*.exe\0\0"), 1);
+		CFileOpenDlg	dlg(_TLT("Browse external lyrics editor program"), strEditor.c_str(), _T("Executable file(*.exe)\0*.exe\0\0"), 1);
 
 		if (dlg.DoModal(m_pWndParent) == IDOK)
 		{
@@ -317,7 +319,7 @@ public:
 class CPfItemWndOpacity : public CPfItemInt
 {
 public:
-	CPfItemWndOpacity() : CPfItemInt(ConnectToLocalStr(_T("UI:"), _T("Window opaque percent (10 - 100)")).c_str(),
+	CPfItemWndOpacity() : CPfItemInt(ConnectToLocalStr(_TLM("UI"), _TLM("Window opaque percent (10 - 100)")).c_str(),
 		ET_NULL, SZ_SECT_UI, _T("WindowOpaquePercent"), 100) { }
 
 	int GetIntValue() {
@@ -356,7 +358,7 @@ class CPfItemTrayIconPlayerCtrl : public CPfItemBool
 {
 public:
 	CPfItemTrayIconPlayerCtrl(LPCTSTR szName, int nPlayerCtrlIndex) 
-		: CPfItemBool((tstring(TOLOCAL(_T("System tray icon player control"))) + _T(": ") + TOLOCAL(szName)).c_str(),
+		: CPfItemBool((tstring(_TLT("System tray icon player control")) + _T(": ") + _TL(szName)).c_str(),
 		ET_NULL, SZ_SECT_UI,
 		_T(""), false)
 	{
@@ -381,13 +383,13 @@ public:
 
 };
 
-LPCTSTR		g_szSysTrayOpt[] = { _T("&Taskbar only"), _T("S&ystem tray only"), _T("T&askbar and system tray"), _T("&None") };
+LPCTSTR		g_szSysTrayOpt[] = { _TLM("&Taskbar only"), _TLM("S&ystem tray only"), _TLM("T&askbar and system tray"), _T("&None") };
 
 class CPfItemSystemTrayIcon : public CPfItemInt
 {
 public:
 	CPfItemSystemTrayIcon() 
-		: CPfItemInt(_T("Show $Product$ in System tray and taskbar"), 
+		: CPfItemInt(_TLM("Show $Product$ in System tray and taskbar"), 
 		ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_TASKBAR)
 	{
 	}
@@ -396,12 +398,12 @@ public:
 		int	n = GetIntValue();
 		if (n < 0 || n >= CountOf(g_szSysTrayOpt))
 			n = SHOW_ICON_ON_TASKBAR;
-		return RemovePrefixOfAcckey(TOLOCAL(g_szSysTrayOpt[n]));
+		return RemovePrefixOfAcckey(_TL(g_szSysTrayOpt[n]));
 	}
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
 		for (int i = 0; i < CountOf(g_szSysTrayOpt); i++)
-			vString.push_back(TOLOCAL(g_szSysTrayOpt[i]));
+			vString.push_back(_TL(g_szSysTrayOpt[i]));
 
 		nRadio = GetIntValue();
 	}
@@ -417,7 +419,7 @@ public:
 class CPfItemLyrLineSpacing : public CPfItemInt
 {
 public:
-	CPfItemLyrLineSpacing() : CPfItemInt(ConnectToLocalStr(_T("Lyrics Display:"), _T("Lyrics line spacing")).c_str(),
+	CPfItemLyrLineSpacing() : CPfItemInt(ConnectToLocalStr(_TLM("Lyrics Display"), _TLM("Lyrics line spacing")).c_str(),
 		ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("LineSpacing"), 2) { }
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
@@ -440,7 +442,8 @@ public:
 class CPfItemLyrDelayTime : public CPfItemInt
 {
 public:
-	CPfItemLyrDelayTime() : CPfItemInt(ConnectToLocalStr(_T("Lyrics Display:"), _T("Global lyrics displaying delay time (seconds)")).c_str(),
+	CPfItemLyrDelayTime() : CPfItemInt(ConnectToLocalStr(_TLM("Lyrics Display"), 
+			_TLM("Global lyrics displaying delay time (seconds)")).c_str(),
 		ET_NULL, SZ_SECT_LYR_DISPLAY, _T("LyrDelayTime"), 0) { }
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
@@ -549,7 +552,7 @@ static tstring GetCmdIDDescription(int nCmd)
 		{
 			if (pSect->vHotkeys[k] == nCmd)
 			{
-				return tstring(TOLOCAL(pSect->szName)) + _T(" ") + TOLOCAL(strTooltip.c_str());
+				return tstring(_TL(pSect->szName)) + _T(": ") + _TL(strTooltip.c_str());
 			}
 		}
 	}
@@ -561,7 +564,7 @@ class CPfItemBoolEnableGlobalHotkey : public CPfItemBool
 {
 public:
 	CPfItemBoolEnableGlobalHotkey()
-		: CPfItemBool(RemovePrefixOfAcckey(ConnectToLocalStr(_T("Shortcut:"), _T("&Enable Global Hotkeys")).c_str()).c_str(),
+		: CPfItemBool(RemovePrefixOfAcckey(ConnectToLocalStr(_TLM("Shortcut"), _TLM("&Enable Global Hotkeys")).c_str()).c_str(),
 			ET_NULL, SZ_APP_NAME, _T("EnableGlobalHotkey"), true)
 	{
 	}
@@ -602,7 +605,7 @@ public:
 				strValue.append(_T("; "));
 			if (vHotkeys[i].bGlobal)
 			{
-				strValue += TOLOCAL(_T("Global:"));
+				strValue += _TLT("Global:");
 				strValue += _T(" ");
 			}
 			strValue += vHotkeys[i].strHotkey;
@@ -633,8 +636,8 @@ public:
 	}
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
-		vString.push_back(TOLOCAL(_T("Add Shortcut Key...")));
-		vString.push_back(TOLOCAL(_T("Add Global Hotkey...")));
+		vString.push_back(_TLT("Add Shortcut Key..."));
+		vString.push_back(_TLT("Add Global Hotkey..."));
 
 		VecHotkeys		vHotkeys;
 
@@ -646,7 +649,7 @@ public:
 		for (size_t i = 0; i < vHotkeys.size(); i++)
 		{
 			vString.push_back(
-				tstring(TOLOCAL(vHotkeys[i].bGlobal ? _T("Remove Global Hotkey:") : _T("Remove Shortcut Key:")))
+				tstring(_TL(vHotkeys[i].bGlobal ? _T("Remove Global Hotkey:") : _T("Remove Shortcut Key:")))
 				+ _T(" ") + vHotkeys[i].strHotkey);
 		}
 	}
@@ -674,9 +677,9 @@ public:
 
 					strCmd = GetCmdIDDescription(CMPlayerAppBase::GetHotkey().Get(nUsedCmdIndex)->cmd);
 
-					strMsg = CStrPrintf(TOLOCAL(_T("This hotkey is currently used by action: %s.")), TOLOCAL(strCmd.c_str())).c_str();
+					strMsg = CStrPrintf(_TLT("This hotkey is currently used by action: %s."), _TL(strCmd.c_str())).c_str();
 					strMsg += _T("\r\n");
-					strMsg += TOLOCAL(_T("Do you want to replace it?"));
+					strMsg += _TLT("Do you want to replace it?");
 					if (m_pWndParent->GetSkinWnd()->MessageOut(strMsg.c_str(), MB_ICONINFORMATION | MB_YESNO) != IDYES)
 						return;
 
@@ -756,8 +759,8 @@ void CPagePfAdvanced::OnInitialUpdate()
 
 	m_pSkin->RegisterUIObjNotifyHandler(CID_LIST_SETTINGS, this);
 
-	m_pListItems->AddColumn(TOLOCAL(_T("Option")), 450);
-	m_pListItems->AddColumn(TOLOCAL(_T("Value")), 150);
+	m_pListItems->AddColumn(_TLT("Option"), 450);
+	m_pListItems->AddColumn(_TLT("Value"), 150);
 
 #ifdef _WIN32_DESKTOP
 	m_vPreferItems.push_back(new CPfItemWndOpacity());
@@ -765,17 +768,17 @@ void CPagePfAdvanced::OnInitialUpdate()
 
 #ifndef _MPLAYER
 	// 自动隐藏迷你歌词如果没有歌词
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Activate, minimize and restore with player window")).c_str(),
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("UI"), _TLM("Activate, minimize and restore with player window")).c_str(),
 		ET_NULL, SZ_SECT_UI, _T("ActivateWithWinamp"), true));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Hide toolbar")).c_str(), ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("HideToolbar"), false));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto hide MiniLyrics if no lyrics is opened")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto hide minilyrics when playing movie")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("UI"), _TLM("Hide toolbar")).c_str(), ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("HideToolbar"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("UI"), _TLM("Auto hide MiniLyrics if no lyrics is opened")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("UI"), _TLM("Auto hide minilyrics when playing movie")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true));
 #endif
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto adjust window width with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndWidth"), false));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("UI:"), _T("Auto adjust window height with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndHeight"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("UI"), _TLM("Auto adjust window width with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndWidth"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("UI"), _TLM("Auto adjust window height with lyrics")).c_str(), ET_NULL, SZ_SECT_UI, _T("AutoAdjustWndHeight"), true));
 	m_vPreferItems.push_back(new CPfItemRestoreLyrChgSavePrompt(m_pSkin));
 	// m_vPreferItems.push_back(new CPfItemBool(_T("Hide the link of rating lyrics"), ET_NULL, SZ_SECT_UI, _T("HideRateLink"), true));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Display:"), _T("Allow to adjust the vertical position of lyrics")).c_str(),
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Display"), _TLM("Allow to adjust the vertical position of lyrics")).c_str(),
 		ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, 
 		_T("EnableAdjustVertAlign"), false));
 	m_vPreferItems.push_back(new CPfItemLyrLineSpacing());
@@ -786,10 +789,10 @@ void CPagePfAdvanced::OnInitialUpdate()
 	//
 	// m_vPreferItems.push_back(new CPfItemBool(_T(""), ));
 	m_vPreferItems.push_back(new CPfItemBoolEnableAutoDlLyr());
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Only download synchronized lyrics with .lrc extension")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Try to download synchronized lyrics (.lrc) even if having local unsynchronized (.txt) lyrics")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Pop up lyrics searching dialog when lyrics are found")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
-	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_T("Lyrics Download:"), _T("Save downloaded lyrics in the a, b, c... folder of downloaded folder")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Download"), _TLM("Only download synchronized lyrics with .lrc extension")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Download"), _TLM("Try to download synchronized lyrics (.lrc) even if having local unsynchronized (.txt) lyrics")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Download"), _TLM("Pop up lyrics searching dialog when lyrics are found")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
+	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Download"), _TLM("Save downloaded lyrics in the a, b, c... folder of downloaded folder")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
 	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(m_pSkin));
 	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(m_pSkin));
 
@@ -821,8 +824,8 @@ void CPagePfAdvanced::OnInitialUpdate()
 
 			m_vPreferItems.push_back(new CPfItemShortcut(
 				this,
-				(tstring(TOLOCAL(_T("Shortcut:"))) + _T(" ")
-				+ TOLOCAL(pSect->szName) + _T(" ") + TOLOCAL(strTooltip.c_str())).c_str(),
+				(tstring(_TLT("Shortcut")) + _T(": ")
+				+ _TL(pSect->szName) + _T(": ") + _TL(strTooltip.c_str())).c_str(),
 				pSect->vHotkeys[k]));
 		}
 	}
@@ -908,7 +911,7 @@ void CPagePfAdvanced::OnTimer(int nId)
 
 		for (size_t k = 0; k < vKeyWords.size(); k++)
 		{
-			if (!stristr(TOLOCAL(item->m_strName.c_str()), vKeyWords[k].c_str()))
+			if (!stristr(_TL(item->m_strName.c_str()), vKeyWords[k].c_str()))
 			{
 				bMatch = false;
 				break;
@@ -918,7 +921,7 @@ void CPagePfAdvanced::OnTimer(int nId)
 		if (bMatch)
 		{
 			m_vFilteredItems.push_back(item);
-			int	n = m_pListItems->InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, false);
+			int	n = m_pListItems->InsertItem(i, _TL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, false);
 			m_pListItems->SetItemText(n, 1, item->GetValue().c_str(), false);
 		}
 	}
@@ -1081,7 +1084,7 @@ void CPagePfAdvanced::ListAllItems()
 	for (size_t i = 0; i < m_vPreferItems.size(); i++)
 	{
 		CPreferItem	*item = m_vPreferItems[i];
-		int	n = m_pListItems->InsertItem(i, TOLOCAL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, false);
+		int	n = m_pListItems->InsertItem(i, _TL(item->m_strName.c_str()), item->IsDefault() ? IMG_UNMODIFIED : IMG_MODIFIED, 0, false);
 		m_pListItems->SetItemText(n, 1, item->GetValue().c_str(), false);
 	}
 

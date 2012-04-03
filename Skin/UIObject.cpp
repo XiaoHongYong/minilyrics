@@ -440,7 +440,7 @@ void CUIObject::OnSize()
 	if (!m_strTooltip.empty() && m_bVisible)
 	{
 		m_pSkin->DelTool(m_nAutoUniID);
-		m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
+		m_pSkin->AddTool(_TL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
 	}
 }
 
@@ -564,7 +564,7 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bTranslucencyWithSkin = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_TOOLTIP) == 0)
 	{
-		tstring str = TOLOCAL(szValue);
+		tstring str = _TL(szValue);
 		if (_tcscmp(m_strTooltip.c_str(), str.c_str()) != 0)
 		{
 			m_strTooltip = str.c_str();
@@ -642,7 +642,7 @@ void CUIObject::SetVisible(bool bVisible, bool bRedraw)
 	if (m_strTooltip.size())
 	{
 		if (bVisible)
-			m_pSkin->AddTool(TOLOCAL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
+			m_pSkin->AddTool(_TL(m_strTooltip.c_str()), &m_rcObj, m_nAutoUniID);
 		else
 			m_pSkin->DelTool(m_nAutoUniID);
 	}
@@ -725,7 +725,7 @@ bool CUIObject::IsParentVisible()
 void CUIObject::SetText(LPCTSTR szText)
 {
 	m_strTextEnglish = szText;
-	m_strText = TOLOCAL(m_strTextEnglish.c_str());
+	m_strText = _TL(m_strTextEnglish.c_str());
 }
 
 void CUIObject::SetFocus()
@@ -883,7 +883,7 @@ tstring CUIObject::GetProfileKeyName(LPCTSTR szSubKeyName)
 void CUIObject::OnLanguageChanged()
 {
 	if (m_strTextEnglish.size())
-		m_strText = TOLOCAL(m_strTextEnglish.c_str());
+		m_strText = _TL(m_strTextEnglish.c_str());
 
 	if (m_strTooltip.size())
 		m_pSkin->GetSkinFactory()->GetTooltip(m_nId, m_strTooltip);

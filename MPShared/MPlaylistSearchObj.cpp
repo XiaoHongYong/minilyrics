@@ -170,10 +170,10 @@ void CMPlaylistSearchObj::OnCreate()
 	m_pCtrlPlaylistList->AddColumn(_T("Playlist"), 200);
 	m_pCtrlPlaylist->AddColumn(_T("Results"), 200);
 
-	m_pCtrlPlaylistList->InsertItem(PN_NOWPLAYING, TOLOCAL(_T("Now Playing")));
+	m_pCtrlPlaylistList->InsertItem(PN_NOWPLAYING, _TLT("Now Playing"));
 	m_vRecentPL.push_back(_T("NowPlaying"));
 
-	m_pCtrlPlaylistList->InsertItem(PN_ALL_MEDIALIB, TOLOCAL(_T("Entire Media Library")));
+	m_pCtrlPlaylistList->InsertItem(PN_ALL_MEDIALIB, _TLT("Entire Media Library"));
 	m_vRecentPL.push_back(_T("Entire Media Library"));
 
 	// Load recent playlist...

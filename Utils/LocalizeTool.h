@@ -70,12 +70,17 @@ protected:
 
 extern CLanguageTool			g_LangTool;
 
-#define TOLOCAL_SECTION(szString)
-#define TOLOCAL2(szString, comments)	(g_LangTool.ToLocalString(szString))
-#define TOLOCAL_MARK(szString)	szString
-#define TOLOCAL_MARK_T(szString)	_T(szString)
-#define TOLOCAL(szString)	(g_LangTool.ToLocalString(szString))
-#define TOLOCAL_T(szString)	(g_LangTool.ToLocalString(_T(szString)))
+
+// TLS = To local section: indicate the section of current file.
+// TL = To Local
+// TLT = Tolocal _T()
+// TLM = To Local Mark: Mark it need to local
+// TL3 = To Local level 3
+#define _TLS(szString)
+#define _TL(szString)		(g_LangTool.ToLocalString(szString))
+#define _TLT(szString)		(g_LangTool.ToLocalString(_T(szString)))
+#define _TLM(szString)		_T(szString)
+#define _TL3(szString)		(g_LangTool.ToLocalString(_T(szString)))
 
 #define LOADLOCALMENU(ID)	(g_LangTool.LoadLocalMenu(ID))
 #define ERROR2STR_LOCAL(nError)	(g_LangTool.ToLocalString(Error2Str(nError)))

@@ -685,7 +685,7 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 		g_Player.SetVolume(pScrollBar->GetScrollPos());
 		long vol = g_Player.GetVolume();
 
-		CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
+		CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), _TLT("Set Volume"), vol).c_str());
 	}
 	else if (pScrollBar->GetID() == CMD_SEEK)
 	{
@@ -699,7 +699,7 @@ void CMPSkinWnd::OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar)
 			nPercent = nPos * 100 / nMediaLength;
 			FormatPlayTime(nPos, szPos);
 			FormatPlayTime(nMediaLength, szLength);
-			CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %s/%s (%d%%)"), TOLOCAL(_T("Seek")),
+			CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %s/%s (%d%%)"), _TLT("Seek"),
 				szPos, szLength, nPercent).c_str(), _T("seek"));
 		}
 

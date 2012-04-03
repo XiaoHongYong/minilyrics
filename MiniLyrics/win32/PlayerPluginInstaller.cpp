@@ -477,7 +477,7 @@ bool RegisterDll(LPCTSTR szDll, tstring &strErr)
 	if (ExecuteCmdAndWait(strCmd.c_str(), 5 * 1000, &dwExitCode) && dwExitCode == 0)
 		return true;
 
-	strErr = TOLOCAL_T("Failed to register dll: ");
+	strErr = _T("Failed to register dll: ");
 	strErr += szDll;
 	return false;
 }
@@ -494,7 +494,7 @@ bool UnregisterDll(LPCTSTR szDll, tstring &strErr)
 	if (ExecuteCmdAndWait(strCmd.c_str(), 5 * 1000, &dwExitCode) && dwExitCode == 0)
 		return true;
 
-	strErr = TOLOCAL_T("Failed to unregister dll: ");
+	strErr = _T("Failed to unregister dll: ");
 	strErr += szDll;
 	return false;
 }
@@ -613,7 +613,7 @@ public:
 		if (!::CopyFile(szSrc, szTarg, false))
 		{
 			int nErr = GetLastError();
-			strErr = CStrPrintf(TOLOCAL_T("Failed to copy file: %s to: %s."), szSrc, szTarg).c_str();
+			strErr = CStrPrintf(_TLT("Failed to copy file: %s to: %s."), szSrc, szTarg).c_str();
 			strErr += _T("\n");
 			strErr += OSError(nErr).Description();
 			return nErr;
@@ -637,7 +637,7 @@ public:
 		if (!SaveDataAsFile(szFile, strIniContent.c_str(), strIniContent.size()))
 		{
 			int nErr = GetLastError();
-			strErr = CStrPrintf(TOLOCAL_T("Failed to save file: %s."), szFile).c_str();
+			strErr = CStrPrintf(_TLT("Failed to save file: %s."), szFile).c_str();
 			strErr += _T("\n");
 			strErr += OSError(nErr).Description();
 			return false;
@@ -658,7 +658,7 @@ public:
 			if (!DeleteFile(szTarg))
 			{
 				int nErr = GetLastError();
-				strErr = CStrPrintf(TOLOCAL_T("Failed to delete file: %s."), szTarg).c_str();
+				strErr = CStrPrintf(_TLT("Failed to delete file: %s."), szTarg).c_str();
 				strErr += _T("\n");
 				strErr += OSError(nErr).Description();
 				return false;
@@ -679,7 +679,7 @@ public:
 		if (!DeleteFile(szFile))
 		{
 			int nErr = GetLastError();
-			strErr = CStrPrintf(TOLOCAL_T("Failed to delete file: %s."), szFile).c_str();
+			strErr = CStrPrintf(_TLT("Failed to delete file: %s."), szFile).c_str();
 			strErr += _T("\n");
 			strErr += OSError(nErr).Description();
 			return false;
@@ -715,7 +715,7 @@ public:
 		if (nMajor != item.verMajor || nMinor != item.verMinor || nRevision != item.verRevision)
 		{
 			item.pExtraInfo->status |= CPlayerPluginInstaller::S_PG_VER_NOT_MATCH;
-			item.pExtraInfo->strMsg = TOLOCAL(_T("File version doesn't match the current version."));
+			item.pExtraInfo->strMsg = _T("File version doesn't match the current version.");
 			item.pExtraInfo->strMsg += _T("\r\n");
 			item.pExtraInfo->strMsg += szTarg;
 			strErr = item.pExtraInfo->strMsg;

@@ -130,11 +130,11 @@ protected:
 			profile.Init(strLangFile.c_str());
 			profile.DoCache();
 
-			strInfo = TOLOCAL(_T("Translator:"));
+			strInfo = _TLT("Translator:");
 			strInfo += _T(" ");
 			strInfo += profile.GetProfileString(_T("Info"), _T("Translator"), _T(""));
 			strInfo += _T("\r\n");
-			strInfo += TOLOCAL(_T("Contact:"));
+			strInfo += _TLT("Contact:");
 			strInfo += _T(" ");
 			strInfo += profile.GetProfileString(_T("Info"), _T("Contact"), _T(""));
 		}

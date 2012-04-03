@@ -186,7 +186,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				nRet = GetOperationSystemType();
 				if (nRet == OPS_WIN95 || nRet == OPS_WINNT4)
 				{
-					m_pSkinWnd->MessageOut(TOLOCAL(_T("Sorry, Microsoft windows 95 and windows NT4 does not support Antialiasing!")), MB_ICONINFORMATION | MB_YESNO);
+					m_pSkinWnd->MessageOut(_T("Sorry, Microsoft windows 95 and windows NT4 does not support Antialiasing!"), MB_ICONINFORMATION | MB_YESNO);
 					break;
 				}
 			}
@@ -288,11 +288,11 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				strAlbumArtFileName += g_Player.GetAlbum();
 
 			CFileDlgExtFilter		strFileExt;
-			strFileExt.AddExtention(TOLOCAL_T("All Picture Files"), _T("*.jpg;*.gif;*.bmp;*.png"));
-			strFileExt.AddExtention(TOLOCAL_T("JPEG (*.jpg)"), _T("*.jpg"));
-			strFileExt.AddExtention(TOLOCAL_T("PNG (*.png)"), _T("*.png"));
-			strFileExt.AddExtention(TOLOCAL_T("Bitmap files (*.bmp)"), _T("*.bmp"));
-			CFileOpenDlg		dlg(TOLOCAL_T("Browse album art picture file"), _T(""), 
+			strFileExt.AddExtention(_TLT("All Picture Files"), _T("*.jpg;*.gif;*.bmp;*.png"));
+			strFileExt.AddExtention(_T("JPEG (*.jpg)"), _T("*.jpg"));
+			strFileExt.AddExtention(_T("PNG (*.png)"), _T("*.png"));
+			strFileExt.AddExtention(_TLT("Bitmap files (*.bmp)"), _T("*.bmp"));
+			CFileOpenDlg		dlg(_TLT("Browse album art picture file"), _T(""), 
 				strFileExt.c_str(), 0);
 
 			if (dlg.DoModal(m_pSkinWnd) != IDOK)
@@ -338,7 +338,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_LYR_EDITOR:
 		{
-			SkinWndStartupInfo skinWndStartupInfo(_T("LyrEditor"), TOLOCAL(_T("Lyrics Editor")), _T("LyricsEditor.xml"), NULL);
+			SkinWndStartupInfo skinWndStartupInfo(_T("LyrEditor"), _TLT("Lyrics Editor"), _T("LyricsEditor.xml"), NULL);
 			CMPlayerAppBase::GetMPSkinFactory()->ActiveOrCreateSkinWnd(skinWndStartupInfo);
 		}
 		break;
@@ -416,7 +416,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				if (vol > MP_VOLUME_MAX)
 					vol = MP_VOLUME_MAX;
 				g_Player.SetVolume(vol);
-				CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), _TLT("Set Volume"), vol).c_str());
 			}
 		}
 		break;
@@ -431,7 +431,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				if (vol < 0)
 					vol = 0;
 				g_Player.SetVolume(vol);
-				CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), TOLOCAL(_T("Set Volume")), vol).c_str());
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(CStrPrintf(_T("%s %d%%"), _TLT("Set Volume"), vol).c_str());
 			}
 		}
 		break;
@@ -439,14 +439,14 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		{
 			bool		bMute = !g_Player.IsMute();
 			g_Player.SetMute(bMute);
-			CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bMute ? _T("Mute On") : _T("Mute Off")));
+			CMPlayerAppBase::GetInstance()->DispatchInfoText(_TL(bMute ? _T("Mute On") : _T("Mute Off")));
 		}
 		break;
 	case CMD_SHUFFLE:
 		{
 			bool		bShuffle = !g_Player.IsShuffle();
 			g_Player.SetShuffle(bShuffle);
-			CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(bShuffle ? _T("Shuffle On") : _T("Shuffle Off")));
+			CMPlayerAppBase::GetInstance()->DispatchInfoText(_TL(bShuffle ? _T("Shuffle On") : _T("Shuffle Off")));
 		}
 		break;
 	case CMD_LOOP_OFF:
@@ -515,10 +515,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 			if (g_LyricData.IsContentModified())
 			{
-				tstring		strMessage = CStrPrintf(TOLOCAL(_T("The lyrics of the %s file have changed.")), 
+				tstring		strMessage = CStrPrintf(_TLT("The lyrics of the %s file have changed."), 
 					FileGetName(g_LyricData.GetSongFileName())).c_str();
 				strMessage += _T("\r\n\r\n");
-				strMessage += TOLOCAL(_T("Do you want to save the changes?"));
+				strMessage += _TLT("Do you want to save the changes?");
 				int nRet = m_pSkinWnd->MessageOut(strMessage.c_str(), MB_ICONQUESTION | MB_YESNOCANCEL);
 				if (nRet == IDCANCEL)
 					break;
@@ -556,7 +556,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(pEvent);
 
 			SaveAsLyricsFile(m_pSkinWnd,
-				LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false);
+				LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()));
 		}
 		break;
 	case CMD_SAVE_LYR_IN_SONG_FILE:
@@ -581,7 +581,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 				CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
 
-				// CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(_T("Lyrics Forward 0.5 Sec")));
+				// CMPlayerAppBase::GetInstance()->DispatchInfoText(_TLT("Lyrics Forward 0.5 Sec"));
 			}
 		}
 		break;
@@ -602,7 +602,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 				CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
 
-				// CMPlayerAppBase::GetInstance()->DispatchInfoText(TOLOCAL(_T("Lyrics Backward 0.5 Sec")));
+				// CMPlayerAppBase::GetInstance()->DispatchInfoText(_TLT("Lyrics Backward 0.5 Sec"));
 			}
 		}
 		break;
@@ -699,7 +699,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		{
 			if (!g_LyricData.HasLyricsOpened())
 			{
-				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+				m_pSkinWnd->MessageOut(_TLT("No Lyrics file was opened."));
 				break;
 			}
 
@@ -739,14 +739,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			}
 		}
 		break;
-	case CMD_ADVANCED_SAVE_LYR:
-		SaveAsLyricsFile(m_pSkinWnd,
-			LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), true);
-		break;
 	case CMD_UPLOAD_LYR:
 		{
 			if (!g_LyricData.HasLyricsOpened())
-				m_pSkinWnd->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+				m_pSkinWnd->MessageOut(_TLT("No Lyrics file was opened."));
 
 			// show upload lyrics dialog
 			tstring	strLyrics;
@@ -762,7 +758,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		// Edit lyrics with external editor.
 		if (g_LyricData.GetLyricsSourceType() != LST_FILE)
 		{
-			m_pSkinWnd->MessageOut(TOLOCAL(_T("Embedded lyrics can not be edited with external editors.")));
+			m_pSkinWnd->MessageOut(_TLT("Embedded lyrics can not be edited with external editors."));
 			break;
 		}
 
@@ -893,9 +889,9 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 	{
 		tstringex		str;
 
-		str += TOLOCAL(_T("Change character encoding must reload lyrics, and your modification will be lost."));
+		str += _TLT("Change character encoding must reload lyrics, and your modification will be lost.");
 		str += _T("\r\n");
-		str += TOLOCAL(_T("Do you want to continue?"));
+		str += _TLT("Do you want to continue?");
 		if (m_pSkinWnd->MessageOut(str.c_str(), MB_ICONINFORMATION | MB_YESNO) != IDYES)
 			return true;
 	}
@@ -920,11 +916,11 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 // RETURN:
 //		TRUE	-	保存成功，注意：如果没有歌词数据也返回TRUE；
 //		FALSE	-	用户选择取消，或者保存失败;
-BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefFileType, bool bAdvancedSaveOpt)
+BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefFileType)
 {
 	if (!g_LyricData.HasLyricsOpened())
 	{
-		pWndParent->MessageOut(TOLOCAL(_T("No Lyrics file was opened.")));
+		pWndParent->MessageOut(_TLT("No Lyrics file was opened."));
 		return TRUE;
 	}
 
@@ -954,7 +950,7 @@ BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefF
 	else
 		nFileExtIndex = 1;
 
-	_tcscpy_safe(szWndTitle, CountOf(szWndTitle), TOLOCAL(_T("Save As")));
+	_tcscpy_safe(szWndTitle, CountOf(szWndTitle), _TLT("Save As"));
 	CFileSaveDlg		dlg(szWndTitle, strFile.c_str(),
 		_T("All supported files (*.lrc; *.txt; *.snc)\0*.lrc;*.txt;*.snc\0LRC Lyrics File (*.lrc)\0*.lrc\0Text File (*.txt)\0*.txt\0Snc File (*.snc)\0*.snc\0\0"),
 		nFileExtIndex);
@@ -1012,7 +1008,7 @@ bool CMPCommonCmdHandler::SaveCurrentLyrics(CSkinWnd *pSkinWnd, bool bDispatchOn
 	if (g_LyricData.DoesChooseNewFileName())
 	{
 		if (!SaveAsLyricsFile(pSkinWnd, 
-			LyricsConentTypeToFileType(g_LyricData.GetLyrContentType()), false))
+			LyricsConentTypeToFileType(g_LyricData.GetLyrContentType())))
 			return false;
 	}
 	else
@@ -1033,7 +1029,7 @@ bool CMPCommonCmdHandler::SaveCurrentLyrics(CSkinWnd *pSkinWnd, bool bDispatchOn
 				g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(g_LyricData.GetSongFileName(), 
 					NULL, &bufLyrics, vLyrNames);
 			}
-			pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), TOLOCAL(_T("Failed to Save embedded lyrics, $Product$ will auto try again later."))).c_str());
+			pSkinWnd->MessageOut(CStrPrintf(_T("%s\n%s"), ERROR2STR_LOCAL(nRet), _TLT("Failed to Save embedded lyrics, $Product$ will auto try again later.")).c_str());
 		}
 	}
 

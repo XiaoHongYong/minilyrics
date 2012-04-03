@@ -172,8 +172,8 @@ public:
 		m_pcbMode = (CSkinComboBox *)GetUIObjectById(CID_DS_MODE, CSkinComboBox::ClassName());
 		if (m_pcbMode)
 		{
-			m_pcbMode->AddString(TOLOCAL(_T("Normal lyrics mode settings")));
-			m_pcbMode->AddString(TOLOCAL(_T("Floating lyrics mode settings")));
+			m_pcbMode->AddString(_TLT("Normal lyrics mode settings"));
+			m_pcbMode->AddString(_TLT("Floating lyrics mode settings"));
 
 			if (m_eventType == ET_LYRICS_FLOATING_SETTINGS)
 				m_pcbMode->SetCurSel(1);
@@ -326,8 +326,8 @@ protected:
 			//
 			// Add lyrics display style options
 			//
-			LPCTSTR		vszItemName[] = { _T("Vertical scrolling"), _T("Double lines"), _T("Single line"),
-				_T("Horizontal scrolling"), _T("Static text"), _T("Movie subtitle") };
+			LPCTSTR		vszItemName[] = { _TLM("Vertical scrolling"), _TLM("Double lines"), _TLM("Single line"),
+				_TLM("Horizontal scrolling"), _TLM("Static text"), _TLM("Movie subtitle") };
 
 			LPCTSTR		vszItemValues[] = { CLyricShowMultiRowObj::ClassName(), CLyricShowTwoRowObj::ClassName(), 
 				CLyricShowSingleRowObj::ClassName(), CLyricShowHorzScrollObj::ClassName(), 
@@ -344,7 +344,7 @@ protected:
 			ASSERT(CountOf(vszItemName) == CountOf(vszItemValues));
 			for (int i = 0; i < CountOf(vszItemValues); i++)
 			{
-				m_pcbStyle->InsertString(i, TOLOCAL(vszItemName[i]));
+				m_pcbStyle->InsertString(i, _TL(vszItemName[i]));
 				opt.AddItemValue(vszItemValues[i]);
 			}
 			AddOptComboStr(opt);
@@ -357,7 +357,7 @@ protected:
 			//
 			// lyrics align
 			//
-			LPCTSTR		vszItemName[] = { _T("Left"), _T("Center"), _T("Right") };
+			LPCTSTR		vszItemName[] = { _TLM("Left"), _TLM("Center"), _TLM("Right") };
 			LPCTSTR		vszItemValues[] = { _T("left"), _T("center"), _T("right") };
 
 			OptComboStr		opt;
@@ -368,7 +368,7 @@ protected:
 			m_pcbAlign->ResetContent();
 			for (int i = 0; i < CountOf(vszItemValues); i++)
 			{
-				m_pcbAlign->InsertString(i, TOLOCAL(vszItemName[i]));
+				m_pcbAlign->InsertString(i, _TL(vszItemName[i]));
 				opt.AddItemValue(vszItemValues[i]);
 			}
 			AddOptComboStr(opt);
@@ -379,8 +379,8 @@ protected:
 		if (m_pcbFadeOut)
 		{
 			// lyrics Fade out options
-			LPCTSTR		vszItemName[] = { TOLOCAL_MARK_T("Automatic"), TOLOCAL_MARK_T("Normal"), TOLOCAL_MARK_T("Fade in lyrics"),
-				TOLOCAL_MARK_T("Fade out background") };
+			LPCTSTR		vszItemName[] = { _TLM("Automatic"), _TLM("Normal"), _TLM("Fade in lyrics"),
+				_TLM("Fade out background") };
 
 			OptComboStr		opt;
 			opt.nIDWidgetCombo = CID_DS_FADEOUT;
@@ -390,7 +390,7 @@ protected:
 			m_pcbFadeOut->ResetContent();
 			for (int i = 0; i < CountOf(vszItemName); i++)
 			{
-				m_pcbFadeOut->InsertString(i, TOLOCAL(vszItemName[i]));
+				m_pcbFadeOut->InsertString(i, _TL(vszItemName[i]));
 				opt.AddItemValue(g_idsLyrDisplayOpt[i].szId);
 			}
 			AddOptComboStr(opt);
@@ -541,7 +541,7 @@ protected:
 		nSel = m_pThemeList->GetNextSelectedItem(-1);
 		if (nSel == -1)
 		{
-			m_pSkin->MessageOut(TOLOCAL(_T("Please select the theme from list.")));
+			m_pSkin->MessageOut(_TLT("Please select the theme from list."));
 			return;
 		}
 
@@ -563,7 +563,7 @@ protected:
 		tstring strThemeName = GetUIObjectText(_T("CID_E_THEMENAME"));
 		if (strThemeName.empty())
 		{
-			m_pSkin->MessageOut(TOLOCAL(_T("Please enter the theme name.")));
+			m_pSkin->MessageOut(_TLT("Please enter the theme name."));
 			return;
 		}
 
@@ -583,7 +583,7 @@ protected:
 		nSel = m_pThemeList->GetNextSelectedItem(-1);
 		if (nSel == -1)
 		{
-			m_pSkin->MessageOut(TOLOCAL(_T("Please select the theme from list.")));
+			m_pSkin->MessageOut(_TLT("Please select the theme from list."));
 			return;
 		}
 

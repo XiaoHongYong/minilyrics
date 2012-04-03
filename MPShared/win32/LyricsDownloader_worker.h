@@ -133,7 +133,7 @@ public:
 		strMsg.clear();
 		if (m_nLastError != ERR_OK && !m_status.IsCancel())
 		{
-			strMsg = TOLOCAL_T("Error:");
+			strMsg = _TLT("Error:");
 			strMsg += _T(" ");
 			strMsg += ERROR2STR_LOCAL(m_nLastError);
 			strMsg += _T("\n\n");
@@ -141,24 +141,24 @@ public:
 
 		if (m_nFailedCount > 0)
 		{
-			strMsg += CStrPrintf(TOLOCAL(_T("%d lyrics were failed to save.")), m_nFailedCount).c_str();
+			strMsg += CStrPrintf(_TLT("%d lyrics were failed to save."), m_nFailedCount).c_str();
 			strMsg += _T("\n");
 		}
 
-		strMsg += CStrPrintf(TOLOCAL(_T("%d lyrics are saved in audio files.")), m_nSavedEmbeddedLyrics).c_str();
+		strMsg += CStrPrintf(_TLT("%d lyrics are saved in audio files."), m_nSavedEmbeddedLyrics).c_str();
 		strMsg += _T("\n");
 		if (m_nSavedFileLyrics > 0)
 		{
-			strMsg += CStrPrintf(TOLOCAL(_T("%d lyrics files are saved.")), m_nSavedFileLyrics).c_str();
+			strMsg += CStrPrintf(_TLT("%d lyrics files are saved."), m_nSavedFileLyrics).c_str();
 			strMsg += _T("\n");
 		}
 		if (m_nHavedLyrics > 0)
-			strMsg += CStrPrintf(TOLOCAL(_T("%d audio files already have lyrics.")), m_nHavedLyrics).c_str();
+			strMsg += CStrPrintf(_TLT("%d audio files already have lyrics."), m_nHavedLyrics).c_str();
 
 		if (m_nNotFoundCount > 0)
 		{
 			strMsg += _T("\r\n\r\n");
-			strMsg += CStrPrintf(TOLOCAL(_T("Can't find lyrics for %d audio files.")), m_nNotFoundCount).c_str();
+			strMsg += CStrPrintf(_TLT("Can't find lyrics for %d audio files."), m_nNotFoundCount).c_str();
 		}
 	}
 
@@ -178,7 +178,7 @@ protected:
 			{
 				MLSearchItem &search = m_listSearchItems[i];
 				UpdateItemStatus(search.nIndex, SS_ERROR, 
-					CStrPrintf(_T("%s: %s"), TOLOCAL_T("Failed to download lyrics"), ERROR2STR_LOCAL(nRet)).c_str());
+					CStrPrintf(_T("%s: %s"), _TLT("Failed to download lyrics"), ERROR2STR_LOCAL(nRet)).c_str());
 			}
 			m_listSearchItems.clear();
 			return nRet;
@@ -196,7 +196,7 @@ protected:
 			if (retSearch.bufLyrContent.empty())
 			{
 				m_nNotFoundCount++;
-				UpdateItemStatus(search.nIndex, SS_ERROR, TOLOCAL_T("No lyrics was found."));
+				UpdateItemStatus(search.nIndex, SS_ERROR, _TLT("No lyrics were found."));
 				continue;
 			}
 
@@ -233,7 +233,7 @@ public:
 		if (m_pMediaLib->GetEmbeddedLyrics(nIndex, strLyrics))
 		{
 			m_nHavedLyrics++;
-			UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Already has lyrics"));
+			UpdateItemStatus(nIndex, SS_OK, _TLT("Already has lyrics"));
 			return;
 		}
 
@@ -249,13 +249,13 @@ protected:
 		int nRet = m_pMediaLib->SetEmbeddedLyrics(nIndex, strLyrics);
 		if (nRet == ERR_OK)
 		{
-			UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Lyrics were saved successfully"));
+			UpdateItemStatus(nIndex, SS_OK, _TLT("Lyrics were saved successfully"));
 			m_nSavedEmbeddedLyrics++;
 		}
 		else
 		{
 			UpdateItemStatus(nIndex, SS_ERROR, 
-				CStrPrintf(_T("%s: %s"), TOLOCAL_T("Failed to save embedded lyrics"), ERROR2STR_LOCAL(nRet)).c_str());
+				CStrPrintf(_T("%s: %s"), _TLT("Failed to save embedded lyrics"), ERROR2STR_LOCAL(nRet)).c_str());
 			m_nFailedCount++;
 		}
 	}
@@ -303,13 +303,13 @@ public:
 		int nRet = m_pMediaLib->RemoveEmbeddedLyrics(nIndex);
 		if (nRet == ERR_OK)
 		{
-			UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Embedded Lyrics were removed successfully"));
+			UpdateItemStatus(nIndex, SS_OK, _TLT("Embedded Lyrics were removed successfully"));
 			m_nCountEmbeddedRemoved++;
 		}
 		else
 		{
 			if (nRet == ERR_NOT_FOUND)
-				UpdateItemStatus(nIndex, SS_INFO, TOLOCAL_T("No embedded lyrics"));
+				UpdateItemStatus(nIndex, SS_INFO, _TLT("No embedded lyrics"));
 			else
 				UpdateItemStatus(nIndex, SS_ERROR, ERROR2STR_LOCAL(nRet));
 		}
@@ -319,18 +319,18 @@ public:
 	{
 		if (m_nLastError != ERR_OK && !m_status.IsCancel())
 		{
-			strMsg = TOLOCAL_T("Error:");
+			strMsg = _TLT("Error:");
 			strMsg += _T(" ");
 			strMsg += ERROR2STR_LOCAL(m_nLastError);
 			strMsg += _T("\n\n");
 		}
 
-		strMsg += CStrPrintf(TOLOCAL(_T("%d of %d embedded lyrics are removed.")), m_nCountEmbeddedRemoved, m_pMediaLib->GetItemCount()).c_str();
+		strMsg += CStrPrintf(_TLT("%d of %d embedded lyrics are removed."), m_nCountEmbeddedRemoved, m_pMediaLib->GetItemCount()).c_str();
 
 		if (m_nCountFailed > 0)
 		{
 			strMsg += _T("\n");
-			strMsg += CStrPrintf(TOLOCAL(_T("%d embedded lyrics are failed to remove.")), m_nCountFailed).c_str();
+			strMsg += CStrPrintf(_TLT("%d embedded lyrics are failed to remove."), m_nCountFailed).c_str();
 		}
 	}
 
@@ -367,9 +367,9 @@ public:
 			int nRet = CTagLib::RemoveEmbeddedLyrics(strMediaFile.c_str(), m_vEmbeddedLyrNames, &succeededCount);
 			m_nCountEmbeddedRemoved += succeededCount;
 			if (succeededCount > 0)
-				UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Embedded Lyrics were removed successfully"));
+				UpdateItemStatus(nIndex, SS_OK, _TLT("Embedded Lyrics were removed successfully"));
 			else if (nRet == ERR_OK)
-				UpdateItemStatus(nIndex, SS_INFO, TOLOCAL_T("No embedded lyrics"));
+				UpdateItemStatus(nIndex, SS_INFO, _TLT("No embedded lyrics"));
 			else
 				UpdateItemStatus(nIndex, SS_ERROR, ERROR2STR_LOCAL(nRet));
 		}
@@ -383,7 +383,7 @@ public:
 				{
 					m_nCountFileRemoved++;
 					DeleteFile(szLyricsFile);
-					UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Lyrics file was removed successfully"));
+					UpdateItemStatus(nIndex, SS_OK, _TLT("Lyrics file was removed successfully"));
 				}
 			}
 
@@ -405,7 +405,7 @@ public:
 		CRemoveEmbeddedLyrics::OnEnd(strMsg);
 
 		strMsg += _T("\n");
-		strMsg += CStrPrintf(TOLOCAL(_T("%d of %d lyrics files are removed.")), m_nCountFileRemoved, m_pMediaLib->GetItemCount()).c_str();
+		strMsg += CStrPrintf(_TLT("%d of %d lyrics files are removed."), m_nCountFileRemoved, m_pMediaLib->GetItemCount()).c_str();
 	}
 
 	bool			m_bRemoveAssociateLyrFile;
@@ -449,7 +449,7 @@ protected:
 					{
 						vSaveEmbeddedLyrNames.push_back(m_vSaveEmbeddedLyrNames[i]);
 						m_nHavedLyrics++;
-						UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Already has lyrics"));
+						UpdateItemStatus(nIndex, SS_OK, _TLT("Already has lyrics"));
 					}
 				}
 			}
@@ -462,7 +462,7 @@ protected:
 			{
 				if (succeededCount > 0)
 				{
-					UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Lyrics were saved successfully"));
+					UpdateItemStatus(nIndex, SS_OK, _TLT("Lyrics were saved successfully"));
 					m_nSavedEmbeddedLyrics++;
 				}
 			}
@@ -470,7 +470,7 @@ protected:
 			{
 				bFailed = true;
 				UpdateItemStatus(nIndex, SS_ERROR, 
-					CStrPrintf(_T("%s: %s"), TOLOCAL_T("Failed to save embedded lyrics"), ERROR2STR_LOCAL(nRet)).c_str());
+					CStrPrintf(_T("%s: %s"), _TLT("Failed to save embedded lyrics"), ERROR2STR_LOCAL(nRet)).c_str());
 			}
 		}
 
@@ -487,21 +487,21 @@ protected:
 			if (nRet == ERR_OK)
 			{
 				if (!bFailed)
-					UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Lyrics were saved successfully"));
+					UpdateItemStatus(nIndex, SS_OK, _TLT("Lyrics were saved successfully"));
 				m_nSavedFileLyrics++;
 			}
 			else
 			{
 				bFailed = true;
 				UpdateItemStatus(nIndex, SS_ERROR, 
-					CStrPrintf(_T("%s: %s"), TOLOCAL_T("Failed to save lyrics in specified directory"), ERROR2STR_LOCAL(nRet)).c_str());
+					CStrPrintf(_TLT("Failed to save file: %s."), strLyrFile.c_str()).c_str());
 			}
 		}
 		else
 		{
 			m_nHavedLyrics++;
 			if (!bFailed)
-				UpdateItemStatus(nIndex, SS_OK, TOLOCAL_T("Already has lyrics"));
+				UpdateItemStatus(nIndex, SS_OK, _TLT("Already has lyrics"));
 		}
 	}
 

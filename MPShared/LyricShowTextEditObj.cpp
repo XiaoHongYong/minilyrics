@@ -1824,7 +1824,7 @@ bool CLyricShowTextEditObj::FindNext(bool bSearchDown)
 
 	if (!FindText(strFindWhat.c_str(), dwFlags))
 	{
-		m_pSkin->MessageOut(CStrPrintf(TOLOCAL(_T("Can't find \"%s\"")), strFindWhat.c_str()).c_str());
+		m_pSkin->MessageOut(CStrPrintf(_TLT("Can't find \"%s\""), strFindWhat.c_str()).c_str());
 		return false;
 	}
 

@@ -49,7 +49,7 @@ public:
 	{
 		CSkinContainer::OnSwitchTo();
 
-		m_pSkin->SetCaptionText(TOLOCAL(_T("Rename lyrics file")));
+		m_pSkin->SetCaptionText(_TLT("Rename lyrics file"));
 
 		SetUIObjectText(_T("CID_E_FILENAME"), GetExPoolStr(_T("FileTitle")).c_str(), false);
 		SetExPool(_T("RenameDlgResult"), IDCANCEL);
@@ -157,7 +157,7 @@ public:
 
 		CID_PREV_PAGE = CID_NEXT_PAGE = CID_GOOGLE = CID_MORE = CID_E_ARTIST = 0;
 		CID_E_TITLE = CID_SEARCH = CID_OPEN = CID_L_LYRICS = 0;
-		m_strTitle = TOLOCAL_MARK(_T("Search lyrics"));
+		m_strTitle = _TLM("Search Lyrics");
 	}
 
 	~CPageSearchLyrics()
@@ -230,7 +230,7 @@ public:
 
 		ASSERT(CountOf(arrWidth) == CountOf(szHead));
 		for (int i = 0; szHead[i] != NULL; i++)
-			m_pLyricsList->AddColumn(TOLOCAL(szHead[i]), arrWidth[i]);
+			m_pLyricsList->AddColumn(_TL(szHead[i]), arrWidth[i]);
 		if (g_Profile.GetProfileInt(_T("ShowLink"), false))
 			m_pLyricsList->AddColumn(_T("URL"), 400);
 		m_pLyricsList->LoadColumnWidth(_T("OpenLyrics_ListColWidth"));
@@ -348,7 +348,7 @@ public:
 			_tcscat_safe(szFileNew, CountOf(szFileNew), FileGetExt(pSel->strUrl.c_str()));
 			if (!MoveFile(pSel->strUrl.c_str(), szFileNew))
 			{
-				m_pSkin->MessageOut(TOLOCAL(_T("Failed to rename lyrics file.")));
+				m_pSkin->MessageOut(_TLT("Failed to rename lyrics file."));
 			}
 			else
 			{
@@ -502,8 +502,8 @@ public:
 						strFile = pSel->strUrl;
 				}
 
-				static const TCHAR *SZ_SUPPORTED_FILE_TYPE		 = _T("All supported files (*.lrc; *.txt; *.srt)\0*.lrc;*.txt;*.srt\0Lyric File (*.lrc)\0*.LRC\0Text File (*.txt)\0*.txt\0Vob Subtitle File(*.srt)\0*.srt\0\0");
-				CFileOpenDlg	dlg(TOLOCAL(_T("Open Lyrics file")), strFile.c_str(), SZ_SUPPORTED_FILE_TYPE, 1);
+				static const TCHAR *SZ_SUPPORTED_FILE_TYPE		 = _T("All supported files (*.lrc; *.txt; *.srt)\0*.lrc;*.txt;*.srt\0Lyrics File (*.lrc)\0*.LRC\0Text File (*.txt)\0*.txt\0Vob Subtitle File(*.srt)\0*.srt\0\0");
+				CFileOpenDlg	dlg(_TLT("Open Lyrics file"), strFile.c_str(), SZ_SUPPORTED_FILE_TYPE, 1);
 
 				if (dlg.DoModal(m_pSkin) == IDOK)
 				{
@@ -546,13 +546,13 @@ public:
 			if (m_nErrResultToShow == ERR_NOT_FOUND)
 			{
 				tstring		strMsg;
-				strMsg = TOLOCAL(_T("Sorry, no result returned. Please make sure you enter the correct artist name and title."));
+				strMsg = _TLT("Sorry, no result returned. Please make sure you enter the correct artist name and title.");
 				strMsg += _T("\r\n");
-				strMsg += TOLOCAL(_T("If you have the lyrics, please upload it to our server to share it with others."));
+				strMsg += _TLT("If you have the lyrics, please upload it to our server to share it with others.");
 				m_pSkin->MessageOut(strMsg.c_str());
 			}
 			else if (m_nErrResultToShow != ERR_OK)
-				ShowErrorDlg(m_pSkin, m_nErrResultToShow);
+				ShowInetErrorDlg(m_pSkin, m_nErrResultToShow);
 		}
 		else if (nId == CID_MORE)
 		{
@@ -691,17 +691,6 @@ protected:
 		strFullTitle += _T(" - ");
 		strFullTitle += m_strTitle;
 
-		/*	{
-		//
-		// Add "No suitable lyrics"
-		//
-		LrcSearchResult		result;
-		result.strUrl = NONE_LYRCS;
-		result.strSaveFileName = TOLOCAL(_T("No suitable lyrics for the song file"));
-		result.nMatchValue = MATCH_VALUE_WITH_LRC - 5;
-		m_vResultsLocal.AddResult(result);
-		}*/
-
 		g_LyricSearch.SearchAllMatchLyrics(m_strSongFile.c_str(), strFullTitle.c_str(), m_vResultsLocal);
 
 		//
@@ -756,8 +745,8 @@ protected:
 		ASSERT(pPageWait);
 		if (pPageWait)
 		{
-			pPageWait->StartWork(TOLOCAL(_T("Searching Lyrics")), 
-				TOLOCAL(_T("$Product$ is searching lyrics now, it may take a few seconds.")),
+			pPageWait->StartWork(_TLT("Searching lyrics"), 
+				_TLT("$Product$ is searching lyrics now, it may take a few seconds."),
 				m_pSearchObj);
 		}
 	}
@@ -822,7 +811,7 @@ protected:
 
 		if (Item.fRate != 0.0)
 		{
-			_stprintf_s(szTemp, CountOf(szTemp), _T("%.1f/5 (%d %s)"), Item.fRate, Item.nRateCount, TOLOCAL(_T("Votes")));
+			_stprintf_s(szTemp, CountOf(szTemp), _T("%.1f/5 (%d %s)"), Item.fRate, Item.nRateCount, _TLT("Votes"));
 		}
 		else
 			_tcscpy_safe(szTemp, CountOf(szTemp), _T("-"));

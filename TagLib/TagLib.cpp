@@ -24,7 +24,7 @@ ID_TO_STRING	__id2strLyrSrcTypeDesc[] = {
 	{ LST_LYRICS3V2, SZ_SONG_LYRICS3V2_DESC },
 	{ LST_ID3V2_LYRICS, SZ_SONG_ID3V2_LYRICS_DESC },
 	{ LST_M4A_LYRICS, SZ_SONG_M4A_LYRICS_DESC },
-	{ LST_NONE, _T("No suitable lyrics for the song file") },
+	{ LST_NONE, SZ_SONG_NO_LYRICS_DESC },
 	{ LST_UNKNOWN, NULL },
 	// { ,  },
 };

@@ -105,7 +105,7 @@ void CLangTreeCtrlHelper::BrotherAndSubTreeToLocal(HTREEITEM hItem, int &nIndex)
 		assert((UINT)nIndex < m_vStrItem.size());
 
 		tvi.hItem = hItem;
-		tvi.pszText = (LPTSTR)TOLOCAL(m_vStrItem[nIndex].c_str());
+		tvi.pszText = (LPTSTR)_TL(m_vStrItem[nIndex].c_str());
 		tvi.cchTextMax = _tcslen(tvi.pszText);
 
 		if (TreeView_SetItem(m_hWnd, &tvi))
@@ -169,7 +169,7 @@ void CLangListCtrlHelper::ToLocal()
 	for (i = 0; i < nCount; i++)
 	{
 		LvCol.cchTextMax = m_vStrHeader[i].size();
-		LvCol.pszText = (LPTSTR)TOLOCAL(m_vStrHeader[i].c_str());
+		LvCol.pszText = (LPTSTR)_TL(m_vStrHeader[i].c_str());
 
 		if (!ListView_SetColumn(m_hWnd, i, &LvCol))
 			return;
@@ -244,7 +244,7 @@ void CLangDialogHelper::ToLocal()
 
 
 	if (!m_strParent.empty())
-		SetWindowText(m_hWndParent, TOLOCAL(m_strParent.c_str()));
+		SetWindowText(m_hWndParent, _TL(m_strParent.c_str()));
 
 	vector<DlgItem>::iterator		it;
 
@@ -252,7 +252,7 @@ void CLangDialogHelper::ToLocal()
 	{
 		// 转换文字
 		if ((*it).bLoacalText)
-			SetWindowText((*it).hWnd, TOLOCAL((*it).strInit.c_str()));
+			SetWindowText((*it).hWnd, _TL((*it).strInit.c_str()));
 
 		// 设置字体
 		SendMessage((*it).hWnd, WM_SETFONT, (WPARAM)(HFONT)GetStockObject(DEFAULT_GUI_FONT), TRUE);

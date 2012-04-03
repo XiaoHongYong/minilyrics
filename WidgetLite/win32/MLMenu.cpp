@@ -78,12 +78,12 @@ BOOL ToLocalMenu(HMENU hMenu)
 		//
 		szPos = _tcschr(szString, '\t');
 		if (!szPos)
-			_tcscpy_safe(szString, CountOf(szString), TOLOCAL(szString));
+			_tcscpy_safe(szString, CountOf(szString), _TL(szString));
 		else
 		{
 			_tcscpy_safe(szAccKey, CountOf(szAccKey), szPos);
 			szString[int(szPos - szString)] = '\0';
-			_tcscpy_safe(szString, CountOf(szString), TOLOCAL(szString));
+			_tcscpy_safe(szString, CountOf(szString), _TL(szString));
 			_tcscat_safe(szString, CountOf(szString), szAccKey);
 		}
 

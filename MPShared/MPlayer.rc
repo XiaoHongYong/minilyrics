@@ -1038,26 +1038,12 @@ STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSM
 CAPTION "Confirm to save the lyrics file"
 FONT 8, "MS Shell Dlg", 0, 0, 0x0
 BEGIN
-    PUSHBUTTON      "YES",IDYES,80,73,50,14
+    PUSHBUTTON      "Yes",IDYES,80,73,50,14
     PUSHBUTTON      "NO",IDNO,137,73,50,14
     DEFPUSHBUTTON   "Cancel",IDCANCEL,211,73,50,14
     LTEXT           "message",IDC_MSG,27,9,226,41
     CONTROL         "Use as default setting, don't prompt any more",IDC_NO_PROMPT,
                     "Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,54,196,10
-END
-
-IDD_ERROR_RESOLVE DIALOG  0, 0, 300, 174
-STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "$Product$"
-FONT 8, "MS Shell Dlg"
-BEGIN
-    LTEXT           "Your messages here!",IDC_ERROR,27,11,238,36
-    LTEXT           "How to solve the problem?",IDC_STATIC,7,52,139,8
-    LTEXT           "How to solve the problem?",IDC_RESOLVE,27,67,238,81
-    PUSHBUTTON      "Copy To Clipboard",IDC_COPYTOCLIPBOARD,7,153,65,14
-    PUSHBUTTON      "Setup Connection",IDC_SETUP_INET,80,153,65,14
-    PUSHBUTTON      "Help",IDC_ML_HELP,153,153,65,14
-    PUSHBUTTON      "Report Bug?",IDC_REPORT,226,153,65,14
 END
 
 IDD_MEDIA_INFO_LYRICS DIALOGEX 0, 0, 300, 215
@@ -1182,13 +1168,6 @@ BEGIN
         RIGHTMARGIN, 261
         TOPMARGIN, 1
         BOTTOMMARGIN, 87
-    END
-
-    IDD_ERROR_RESOLVE, DIALOG
-    BEGIN
-        LEFTMARGIN, 7
-        RIGHTMARGIN, 293
-        BOTTOMMARGIN, 167
     END
 
     IDD_FRAME_DLG, DIALOG

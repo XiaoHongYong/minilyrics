@@ -210,7 +210,7 @@ void CPageLyricsTool::OnCreate()
 
 	LPCTSTR vColName[] = { _T("Result"), _T("Lyrics") };
 	for (int i = 0; i < CountOf(vColName); i++)
-		m_filesListCtrl->AddColumn(TOLOCAL(vColName[i]), 200);
+		m_filesListCtrl->AddColumn(_TL(vColName[i]), 200);
 
 	m_filesListCtrl->LoadColumnWidth(_T("LyricsTool_ListWidth"));
 
@@ -322,7 +322,7 @@ bool CPageLyricsTool::OnCommand(int nId)
 			else
 			{
 				m_pSkin->MessageOut(CStrPrintf(_T("%s\n%s"), 
-					TOLOCAL_T("Failed to load iTunes Library."),
+					_TLT("Failed to load iTunes Library."),
 					rUpdate.m_strErr.c_str()).c_str());
 			}
 		}
@@ -333,10 +333,10 @@ bool CPageLyricsTool::OnCommand(int nId)
 
 			// static LPCTSTR	szSupportedExtion = _T("All supported files\0*.mp3;*.mp2;*.mpa;\0MPEG Audio Files (*.MP3;*.MP2;*.MPA)\0*.mp3;*.mp2;*.mpa\0\0");
 			CFileDlgExtFilter		strFileExt;
-			strFileExt.AddExtention(TOLOCAL_T("All supported files"), _T("*.mp3;*.mp2;*.mpa;*.m4a"));
-			strFileExt.AddExtention(TOLOCAL_T("MPEG Audio Files (*.MP3;*.MP2;*.MPA)"), _T("*.mp3;*.mp2;*.mpa"));
-			strFileExt.AddExtention(TOLOCAL_T("AAC Files (*.M4A)"), _T("*.m4a"));
-			CFileOpenDlg	dlg(TOLOCAL_T("Add Media Files"), NULL, strFileExt.c_str(), 0, true);
+			strFileExt.AddExtention(_TLT("All supported files"), _T("*.mp3;*.mp2;*.mpa;*.m4a"));
+			strFileExt.AddExtention(_TLT("MPEG Audio Files (*.MP3;*.MP2;*.MPA)"), _T("*.mp3;*.mp2;*.mpa"));
+			strFileExt.AddExtention(_TLT("AAC Files (*.M4A)"), _T("*.m4a"));
+			CFileOpenDlg	dlg(_TLT("Add Media Files"), NULL, strFileExt.c_str(), 0, true);
 			if (dlg.DoModal(m_pSkin) != IDOK)
 				break;
 
@@ -475,7 +475,7 @@ bool CPageLyricsTool::OnCancel()
 		if (m_workStatus.IsWorking())
 			m_workStatus.Cancel();
 
-		m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL(_T("Canceling is in progress, please wait...")), true);
+		m_pSkin->SetUIObjectText(CID_STATUS, _TLT("Canceling is in progress, please wait..."), true);
 	}
 
 	return true;
@@ -612,7 +612,7 @@ void CPageLyricsTool::MergeToCurrentPlaylist()
 			if (g_LyricSearch.GetAssociateLyrics(location.c_str(), szLyrics, CountOf(szLyrics)))
 			{
 				if (_tcscmp(szLyrics, NONE_LYRCS) == 0)
-					m_filesListCtrl->SetItemText(i, COL_LYRICS, TOLOCAL(_T("No suitable lyrics")), true);
+					m_filesListCtrl->SetItemText(i, COL_LYRICS, _TLT("No suitable lyrics for the song file"), true);
 				else
 					m_filesListCtrl->SetItemText(i, COL_LYRICS, GetLyricsDescription(szLyrics), true);
 			}
@@ -654,7 +654,7 @@ void CPageLyricsTool::UpdateNewMediaList()
 	CUIObject *pObjInst = m_pSkin->GetUIObjectById(UID_INSTRUCTION);
 	if (pObjInst != NULL && pObjInst->IsVisible())
 	{
-		pObjInst->SetProperty(SZ_PN_TEXT, TOLOCAL_MARK_T("Please click here to download all lyrics."));
+		pObjInst->SetProperty(SZ_PN_TEXT, _TLM("Please click here to download all lyrics."));
 		pObjInst->SetProperty(SZ_PN_LINK, _T("cmd://CMD_DL_LYRICS"));
 		pObjInst->GetParent()->RecalculateUIObjSizePos(pObjInst);
 	}
@@ -670,13 +670,13 @@ void CPageLyricsTool::OnAdvDownloadAllLyrics()
 
 	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
 	{
-		m_pSkin->MessageOut(TOLOCAL(_T("Please add media files in the list.")));
+		m_pSkin->MessageOut(_TLT("Please add media files in the list."));
 		return;
 	}
 
 	if (!g_licenseManager.IsLicenseValid())
 	{
-		m_pSkin->MessageOut(TOLOCAL(_T("Sorry, please activate your MiniLyrics to continue.")));
+		m_pSkin->MessageOut(_TLT("Sorry, please activate your MiniLyrics to continue."));
 		ShowActivateDialog(m_pSkin);
 		return;
 	}
@@ -686,7 +686,7 @@ void CPageLyricsTool::OnAdvDownloadAllLyrics()
 	if (dlg.DoModal(m_pSkin) != IDOK)
 		return;
 
-	m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL(_T("Downloading lyrics is in progress...")), true);
+	m_pSkin->SetUIObjectText(CID_STATUS, _TLT("Downloading lyrics is in progress..."), true);
 
 	CAdvDownloadLyrWork *pWork = new CAdvDownloadLyrWork(m_pMediaLib, this, m_workStatus);
 	pWork->SetInfo(dlg.m_downSaveDir, dlg.m_downSaveName, dlg.m_bOnlyUseLocalLyrics, dlg.m_vSaveEmbeddedLyrNames);
@@ -699,7 +699,7 @@ void CPageLyricsTool::OnAdvRemoveAllLyrics()
 
 	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
 	{
-		m_pSkin->MessageOut(TOLOCAL(_T("Please add media files in the list.")));
+		m_pSkin->MessageOut(_TLT("Please add media files in the list."));
 		return;
 	}
 
@@ -708,11 +708,11 @@ void CPageLyricsTool::OnAdvRemoveAllLyrics()
 	if (dlg.DoModal(m_pSkin) != IDOK)
 		return;
 
-	int nRet = m_pSkin->MessageOut(TOLOCAL_T("Are you sure that you want to remove the embedded lyrics of all the files?"), MB_ICONQUESTION | MB_OKCANCEL);
+	int nRet = m_pSkin->MessageOut(_TLT("Are you sure that you want to remove the embedded lyrics of all the files?"), MB_ICONQUESTION | MB_OKCANCEL);
 	if (nRet != IDOK)
 		return;
 
-	m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL_T("Removing embedded lyrics in media files is in progress..."), true);
+	m_pSkin->SetUIObjectText(CID_STATUS, _TLT("Removing embedded lyrics in media files is in progress..."), true);
 
 	CAdvRemoveLyrics *pWork = new CAdvRemoveLyrics(m_pMediaLib, this, m_workStatus);
 	pWork->SetInfo(dlg.m_bRemoveAssociateLyrFile, dlg.m_vEmbeddedLyrNames);
@@ -725,18 +725,18 @@ void CPageLyricsTool::OnDownloadLyricsForiPod()
 
 	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
 	{
-		m_pSkin->MessageOut(TOLOCAL(_T("Please add media files in the list.")));
+		m_pSkin->MessageOut(_TLT("Please add media files in the list."));
 		return;
 	}
 
 	if (!g_licenseManager.IsLicenseValid())
 	{
-		m_pSkin->MessageOut(TOLOCAL(_T("Sorry, please activate your MiniLyrics to continue.")));
+		m_pSkin->MessageOut(_TLT("Sorry, please activate your MiniLyrics to continue."));
 		ShowActivateDialog(m_pSkin);
 		return;
 	}
 
-	m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL(_T("Downloading lyrics for iPod is in progress...")), true);
+	m_pSkin->SetUIObjectText(CID_STATUS, _TLT("Downloading lyrics for iPod is in progress..."), true);
 
 	PostWork(new CSaveLyricsInITunes(m_pMediaLib, this, m_workStatus));
 }
@@ -747,15 +747,15 @@ void CPageLyricsTool::OnRemoveEmbeddedLyrics()
 
 	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
 	{
-		m_pSkin->MessageOut(TOLOCAL(_T("Please add media files in the list.")));
+		m_pSkin->MessageOut(_TLT("Please add media files in the list."));
 		return;
 	}
 
-	int nRet = m_pSkin->MessageOut(TOLOCAL_T("Are you sure that you want to remove the embedded lyrics of all the files?"), MB_ICONQUESTION | MB_OKCANCEL);
+	int nRet = m_pSkin->MessageOut(_TLT("Are you sure that you want to remove the embedded lyrics of all the files?"), MB_ICONQUESTION | MB_OKCANCEL);
 	if (nRet != IDOK)
 		return;
 
-	m_pSkin->SetUIObjectText(CID_STATUS, TOLOCAL_T("Removing embedded lyrics in media files is in progress..."), true);
+	m_pSkin->SetUIObjectText(CID_STATUS, _TLT("Removing embedded lyrics in media files is in progress..."), true);
 
 	PostWork(new CRemoveEmbeddedLyrics(m_pMediaLib, this, m_workStatus));
 }
@@ -804,7 +804,7 @@ void CPageLyricsTool::DoWork(ILyricsToolWork *pWork)
 	m_nProgress = 100;
 
 	m_mutexMsg.Acquire();
-	m_strStatus = TOLOCAL_T("Finished.");
+	m_strStatus = _TLT("Finished.");
 	m_strMsg = strMsg;
 	if (pWork)
 	{

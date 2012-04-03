@@ -184,7 +184,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 
 			if (lyrics.m_strValue.empty())
 			{
-				SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
+				SetCustomErrorDesc(_TLM("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
 				nRet = ERR_CUSTOM_ERROR;
 			}
 			else
@@ -206,7 +206,7 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 			return nRet;
 		if (strLyrics.empty())
 		{
-			SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
+			SetCustomErrorDesc(_TLM("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
 			nRet = ERR_CUSTOM_ERROR;
 		}
 		else
@@ -405,7 +405,7 @@ int CMLData::OpenLyricsInSongOfLyrics3v2(const char *buffer, int len, bool bUseS
 
 	if (len == 0)
 	{
-		SetCustomErrorDesc(_T("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
+		SetCustomErrorDesc(_TLM("The embedded lyrics is empty, please click the \"search lyrics\" button to get lyrics."));
 		return ERR_CUSTOM_ERROR;
 	}
 

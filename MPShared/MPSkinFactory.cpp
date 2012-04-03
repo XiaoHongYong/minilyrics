@@ -271,7 +271,7 @@ int CMPSkinFactory::GetIDByNameEx(LPCTSTR szId, tstring &strToolTip)
 
 	if (CMPlayerAppBase::GetHotkey().GetHotkeyText(nID, strHotkey))
 	{
-		strToolTip = TOLOCAL(strToolTip.c_str());
+		strToolTip = _TL(strToolTip.c_str());
 		strToolTip += _T(" (");
 		strToolTip += strHotkey;
 		strToolTip += _T(")");
@@ -290,7 +290,7 @@ void CMPSkinFactory::GetTooltip(int nId, tstring &strToolTip)
 
 		if (CMPlayerAppBase::GetHotkey().GetHotkeyText(nId, strHotkey))
 		{
-			strToolTip = TOLOCAL(strToolTip.c_str());
+			strToolTip = _TL(strToolTip.c_str());
 			strToolTip += _T(" (");
 			strToolTip += strHotkey;
 			strToolTip += _T(")");

@@ -437,7 +437,7 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESU
 
 		LrcSearchResult		result;
 		result.strUrl = lyrName;
-		result.strSaveFileName = RemovePrefixOfAcckey(TOLOCAL(LyrSrcTypeToDesc(lst)));
+		result.strSaveFileName = RemovePrefixOfAcckey(_TL(LyrSrcTypeToDesc(lst)));
 		if (lst == LST_LYRICS3V2 || lst == LST_ID3V2_SYLT || lst == LST_ID3V2_LYRICS)
 			result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
 		else
