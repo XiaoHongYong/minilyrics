@@ -3,7 +3,7 @@
 
 #pragma once
 
-#define OFFSET_DATA		0x100
+#define OFFSET_DATA		0x400
 #define LENGTH_FILE		(1024 * (1024 * 2 + 378))
 
 bool MLEncriptV2(LPCTSTR szFile, LPCSTR szData1, LPCSTR szData2, stringex &strData, tstring &strErrMsg)
