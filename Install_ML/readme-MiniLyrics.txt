@@ -1,3 +1,7 @@
+MiniLyrics 7.4.7
+Fixed: The name of AIMP3 can't be detected correctly.
+Fixed: Fixed a crash bug.
+
 MiniLyrics 7.4.5
 New: Add advanced save and download 
 Improved: Support VLC 2.0
