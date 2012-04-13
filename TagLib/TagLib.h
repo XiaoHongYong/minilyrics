@@ -14,6 +14,7 @@ enum LRC_SOURCE_TYPE
 	LST_LYRICS3V2		= 0x1 << 5,
 	LST_ID3V2_LYRICS	= 0x1 << 6,
 	LST_M4A_LYRICS		= 0x1 << 7,		// Embedded lyrics in M4A file.
+	LST_KAR_LYRICS		= 0x1 << 8,		// Embedded lyrics in KAR file.
 
 	LST_ID3V2			= LST_ID3V2_SYLT | LST_ID3V2_USLT | LST_ID3V2_LYRICS,
 };
@@ -27,6 +28,7 @@ LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst);
 #define SZ_SONG_LYRICS3V2		_T("song://lyrics3v2")
 #define SZ_SONG_ID3V2_LYRICS	_T("song://id3v2/lyrics(nonstandard)")
 #define SZ_SONG_M4A_LYRICS		_T("song://m4a/lyrics")
+#define SZ_SONG_KAR_LYRICS		_T("song://kar/lyrics")
 
 #define NONE_LYRCS	_T("")
 
@@ -35,6 +37,7 @@ LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst);
 #define SZ_SONG_LYRICS3V2_DESC	_TLM("Embedded lyrics for MiniLyrics (Lyrics3v2 synchronized lyrics)")
 #define SZ_SONG_ID3V2_LYRICS_DESC	_TLM("Embedded ID3v2 lyrics (Nonstandard)")
 #define SZ_SONG_M4A_LYRICS_DESC	_TLM("Embedded lyrics for iPod, iTunes (For &AAC (M4A) file)")
+#define SZ_SONG_KAR_LYRICS_DESC	_TLM("Embedded lyrics for Karaoke (KAR file)")
 #define SZ_SONG_NO_LYRICS_DESC	_TLM("No suitable lyrics for the song file")
 
 enum TagType
@@ -93,6 +96,7 @@ public:
 	static bool IsEmbeddedLyricsSupported(LPCTSTR szFile);
 	static bool IsID3v2TagSupported(LPCTSTR szFile);
 	static bool IsM4aTagSupported(LPCTSTR szFile);
+	static bool IsKarTagSupported(LPCTSTR szFile);
 
 	static int RemoveEmbeddedLyrics(LPCTSTR szMediaFile, VecString &vLyrNamesToRemove, int *succeededCount = NULL);
 

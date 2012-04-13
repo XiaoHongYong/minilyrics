@@ -153,7 +153,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LyricsData.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\M4aTag.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MidiTag.cpp"
 				>
 			</File>
 			<File
@@ -195,7 +203,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LyricsData.h"
+				>
+			</File>
+			<File
 				RelativePath=".\M4aTag.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MidiTag.h"
 				>
 			</File>
 			<File

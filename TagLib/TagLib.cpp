@@ -15,6 +15,7 @@ ID_TO_STRING	__id2strLyrSrcType[] = {
 	{ LST_LYRICS3V2, SZ_SONG_LYRICS3V2 },
 	{ LST_ID3V2_LYRICS, SZ_SONG_ID3V2_LYRICS },
 	{ LST_M4A_LYRICS, SZ_SONG_M4A_LYRICS },
+	{ LST_KAR_LYRICS, SZ_SONG_KAR_LYRICS },
 	{ LST_UNKNOWN, NULL },
 };
 
@@ -24,6 +25,7 @@ ID_TO_STRING	__id2strLyrSrcTypeDesc[] = {
 	{ LST_LYRICS3V2, SZ_SONG_LYRICS3V2_DESC },
 	{ LST_ID3V2_LYRICS, SZ_SONG_ID3V2_LYRICS_DESC },
 	{ LST_M4A_LYRICS, SZ_SONG_M4A_LYRICS_DESC },
+	{ LST_KAR_LYRICS, SZ_SONG_KAR_LYRICS_DESC },
 	{ LST_NONE, SZ_SONG_NO_LYRICS_DESC },
 	{ LST_UNKNOWN, NULL },
 	// { ,  },
@@ -195,6 +197,18 @@ int CTagLib::GetEmbeddedLyrics(LPCTSTR szFile, VecString &vLyricsNames)
 			return nRet;
 	}
 
+	if (IsKarTagSupported(szFile))
+	{
+		CMidiTag	tag;
+		int nRet = tag.Open(szFile);
+		if (nRet != ERR_OK)
+			return nRet;
+
+		nRet = tag.ListLyrics(vLyricsNames);
+		if (nRet != ERR_OK)
+			return nRet;
+	}
+
 	return ERR_OK;
 }
 
@@ -211,6 +225,11 @@ bool CTagLib::IsID3v2TagSupported(LPCTSTR szFile)
 bool CTagLib::IsM4aTagSupported(LPCTSTR szFile)
 {
 	return FileIsExtSame(szFile, _T(".m4a"));
+}
+
+bool CTagLib::IsKarTagSupported(LPCTSTR szFile)
+{
+	return FileIsExtSame(szFile, _T(".kar"));
 }
 
 int CTagLib::RemoveEmbeddedLyrics(LPCTSTR szMediaFile, VecString &vLyrNamesToRemove, int *succeededCount)

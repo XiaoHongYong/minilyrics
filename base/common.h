@@ -44,6 +44,17 @@ inline void BigEndianFromUInt32(uint32 nValue, byte *byData)
 	byData[0] = (nValue >> 24) & 0xFF;
 }
 
+inline uint32 BigEndianToUInt16(byte *byData)
+{
+	return byData[1] | (byData[0] << 8);
+}
+
+inline void BigEndianFromUInt16(uint32 nValue, byte *byData)
+{
+	byData[1] = nValue & 0xFF;
+	byData[0] = (nValue >> 8) & 0xFF;
+}
+
 inline uint32 LittleEndianToUInt32(byte *byData)
 {
 	return byData[0] | (byData[1] << 8) | (byData[2] << 16) | (byData[3] << 24);

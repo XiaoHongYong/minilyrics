@@ -822,6 +822,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\FileEx.cpp"
+				>
+			</File>
+			<File
 				RelativePath="idstring.cpp"
 				>
 				<FileConfiguration
@@ -1672,6 +1676,10 @@
 			</File>
 			<File
 				RelativePath=".\FileApiBase.h"
+				>
+			</File>
+			<File
+				RelativePath=".\FileEx.h"
 				>
 			</File>
 			<File

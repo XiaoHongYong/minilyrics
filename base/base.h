@@ -30,6 +30,7 @@
 
 #include "FileApiBase.h"
 #include "TextFile.h"
+#include "FileEx.h"
 
 #ifdef _WIN32
 #include "win32/WndAbout.h"
