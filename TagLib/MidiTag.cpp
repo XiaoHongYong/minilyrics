@@ -354,8 +354,6 @@ int CMidiTag::GetLyrics(CLyricsLines &lyricsLines)
 
 			//DBGLOG3(_T("Time division: %d, delta: %d, time: %d"), m_timeDivision, deltaTime, (int)startTime);
 		}
-		else
-			break;
 	}
 
 	return ERR_OK;
@@ -445,7 +443,7 @@ int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
 			}
 
 			// tstring str;
-			// AnsiToTString(buf.c_str(), buf.size(), str);
+			// AnsiToTString((char *)buf.c_str(), buf.size(), str);
 			// DBGLOG0(CStrPrintf(_T("  Meta, metaType: 0x%x, deltatime: %d, len: %d, %s"), metaEvent, deltaTime, len, str.c_str()).c_str());
 		}
 	}
@@ -461,7 +459,7 @@ TrackTrunk *CMidiTag::FindLyricsTrunk()
 
 		m_file.Seek(trunk.offset + TRUNK_HEADER_LEN, SEEK_SET);
 
-		if (m_file.GetPos() < long(trunk.offset + trunk.sizeOfData))
+		for (int i = 0; i < 10 && m_file.GetPos() < long(trunk.offset + trunk.sizeOfData); i++)
 		{
 			int deltaTime;
 			int nRet = ReadVarlen(m_file, deltaTime);
