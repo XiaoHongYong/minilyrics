@@ -288,7 +288,7 @@ public:
 	template<class index_t>
 	T & operator[](index_t n)
 	{
-		if (n >= nLen)
+		if ((size_t)n >= nLen)
 		{
 			static	T	temp(0);
 			return temp;

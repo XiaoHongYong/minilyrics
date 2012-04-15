@@ -92,7 +92,7 @@ CLyrScrollActionRecorder::CLyrScrollActionRecorder()
 	m_bHasActions = false;
 }
 
-void CLyrScrollActionRecorder::InitCreateAutoEvents(VLyrLines &lyrLines)
+void CLyrScrollActionRecorder::InitCreateAutoEvents(CLyricsLines &lyrLines)
 {
 	CLyrScrollActionRecorder::Close();
 
@@ -106,31 +106,6 @@ void CLyrScrollActionRecorder::InitCreateAutoEvents(VLyrLines &lyrLines)
 		nStartTime = MAX_TIME;
 		lyrLines[i]->nEndTime = nStartTime;
 	}
-
-	/*	// Max speed test, Turn this on, and open a text file, will see how fast lyrics scrolling...
-	{
-	int		nCurEvent = 0;
-	int		nCurDistance = 0;
-	int		nLastTime = 0;
-
-	for (int i = 0; i < (int)lyrLines.size(); i++)
-	{
-	PML_ROW pRow = lyrLines[i];
-	ASSERT(pRow->vFrags.size() == 1);
-	if (pRow->vFrags.size() != 1)
-	continue;
-
-	LPLYRIC_FRAG pFrag = pRow->vFrags[0];
-	pFrag->dwAttrib |= LSA_TEMP_TIME_BEG | LSA_TEMP_TIME_END;
-	pFrag->nBegTime = nLastTime;
-	nCurDistance += CharCountToCharDistance(pFrag->nLen);
-
-	pFrag->nEndTime = nCurDistance / MAX_SPEED;
-
-	pRow->nBegTime = pFrag->nBegTime;
-	nLastTime = pRow->nEndTime = pFrag->nEndTime;
-	}
-	}*/
 }
 
 void CLyrScrollActionRecorder::Close()
@@ -181,7 +156,7 @@ tstring CLyrScrollActionRecorder::EventsDataToString()
 	return strData;
 }
 
-void CLyrScrollActionRecorder::EventsDataFromString(LPCTSTR szEventsData, VLyrLines &lyrLines)
+void CLyrScrollActionRecorder::EventsDataFromString(LPCTSTR szEventsData, CLyricsLines &lyrLines)
 {
 	InitCreateAutoEvents(lyrLines);
 
@@ -226,14 +201,14 @@ void CLyrScrollActionRecorder::EventsDataFromString(LPCTSTR szEventsData, VLyrLi
 	UpdateTimeTagByEvents(lyrLines);
 }
 
-void CLyrScrollActionRecorder::ScrollToLine(VLyrLines &lyrLines, int nLine, int nTime, bool bUpdateTimeTag)
+void CLyrScrollActionRecorder::ScrollToLine(CLyricsLines &lyrLines, int nLine, int nTime, bool bUpdateTimeTag)
 {
 	m_bHasActions = true;
 
 	AddScrollTo(lyrLines, GetDistanceOfLine(lyrLines, nLine), nTime, bUpdateTimeTag);
 }
 
-void CLyrScrollActionRecorder::AddScrollTo(VLyrLines &lyrLines, int nPos, int nTime, bool bUpdateTimeTag)
+void CLyrScrollActionRecorder::AddScrollTo(CLyricsLines &lyrLines, int nPos, int nTime, bool bUpdateTimeTag)
 {
 	ASSERT(m_listEvents.size() >= 1);
 	const int RECENT_ACTION = 500;
@@ -293,7 +268,7 @@ void CLyrScrollActionRecorder::AddScrollTo(VLyrLines &lyrLines, int nPos, int nT
 		UpdateTimeTagByEvents(lyrLines);
 }
 
-void CLyrScrollActionRecorder::UpdateTimeTagByEvents(VLyrLines &lyrLines)
+void CLyrScrollActionRecorder::UpdateTimeTagByEvents(CLyricsLines &lyrLines)
 {
 	if (m_nLyrCharCount == 0 || m_listEvents.empty())
 		return;
@@ -337,13 +312,12 @@ void CLyrScrollActionRecorder::UpdateTimeTagByEvents(VLyrLines &lyrLines)
 
 	for (int i = 0; i < (int)lyrLines.size(); i++)
 	{
-		PML_ROW pRow = lyrLines[i];
+		LyricsLine *pRow = lyrLines[i];
 		ASSERT(pRow->vFrags.size() == 1);
 		if (pRow->vFrags.size() != 1)
 			continue;
 
-		LPLYRIC_FRAG pFrag = pRow->vFrags[0];
-		pFrag->dwAttrib |= LSA_TEMP_TIME_BEG | LSA_TEMP_TIME_END;
+		LyricsPiece *pFrag = pRow->vFrags[0];
 		pFrag->nBegTime = nLastTime;
 		nCurDistance += CharCountToCharDistance(pFrag->nLen);
 
@@ -373,7 +347,7 @@ void CLyrScrollActionRecorder::UpdateTimeTagByEvents(VLyrLines &lyrLines)
 	}
 }
 
-int CLyrScrollActionRecorder::GetDistanceOfLine(VLyrLines &lyrLines, int nLine)
+int CLyrScrollActionRecorder::GetDistanceOfLine(CLyricsLines &lyrLines, int nLine)
 {
 	if (nLine > (int)lyrLines.size())
 		nLine = (int)lyrLines.size();
@@ -382,8 +356,8 @@ int CLyrScrollActionRecorder::GetDistanceOfLine(VLyrLines &lyrLines, int nLine)
 	int		nCharCount = 0;
 	for (int i = 0; i < nLine; i++)
 	{
-		PML_ROW pRow = lyrLines[i];
-		ASSERT(pRow->nRowType == ML_ROW_LYRICS);
+		LyricsLine *pRow = lyrLines[i];
+		ASSERT(pRow->bLyricsLine);
 		ASSERT(pRow->vFrags.size() == 1);
 		if (pRow->vFrags.size() != 1)
 			continue;
@@ -393,7 +367,7 @@ int CLyrScrollActionRecorder::GetDistanceOfLine(VLyrLines &lyrLines, int nLine)
 	return nCharCount;
 }
 
-int CLyrScrollActionRecorder::CountLyrChar(VLyrLines &lyrLines)
+int CLyrScrollActionRecorder::CountLyrChar(CLyricsLines &lyrLines)
 {
 	return GetDistanceOfLine(lyrLines, lyrLines.size());
 }
@@ -425,47 +399,6 @@ public:
 protected:
 	void TestAddLyrEvent()
 	{
-		/*		CLyrScrollActionRecorder	asl;
-		CMLyrLines		lyrLines;
-
-		LPCTSTR		SZ_TXT = _T("abcdefghijklmnopqrstuvw");
-
-		for (int i = 0; i < 10; i++)
-		{
-		PML_ROW	pRow = new ML_ROW;
-		int	nLen = rand() % 20;
-		PLYRIC_FRAG pFrag = (PLYRIC_FRAG)new BYTE[sizeof(LYRIC_FRAG) + nLen * sizeof(TCHAR)];
-		pFrag->nBegTime = pFrag->nEndTime = -1;
-		pFrag->dwAttrib = 0;
-		_tcsncpy_safe(pFrag->szLyric, nLen + 1, SZ_TXT, nLen);
-
-		pRow->vFrags.push_back(pFrag);
-		pRow->nRowType = ML_ROW_LYRICS;
-		lyrLines.push_back(pRow);
-		}
-
-		asl.AddPlayLineAction(0, 5000, lyrLines);
-
-		g_LyricData.SetPlayElapsedTime(10 * 1000);
-		asl.AddActionAtCurrentPos(CLyrScrollActionRecorder::A_PAUSE, lyrLines);
-
-		g_LyricData.SetPlayElapsedTime(12 * 1000);
-		asl.AddActionAtCurrentPos(CLyrScrollActionRecorder::A_PLAY, lyrLines);
-
-		g_LyricData.SetPlayElapsedTime(14 * 1000);
-		asl.AddActionAtCurrentPos(CLyrScrollActionRecorder::A_SPEED_UP, lyrLines);
-
-		g_LyricData.SetPlayElapsedTime(25 * 1000);
-		asl.AddActionAtCurrentPos(CLyrScrollActionRecorder::A_PLAY, lyrLines);
-
-		g_LyricData.SetPlayElapsedTime(28 * 1000);
-		asl.AddActionAtCurrentPos(CLyrScrollActionRecorder::A_PLAY, lyrLines);
-
-		/*		asl.AddPlayLineAction(3, 9000, lyrLines);
-		asl.AddPlayLineAction(5, 10 * 1000, lyrLines);
-		asl.AddPlayLineAction(7, 15 * 1000, lyrLines);
-		asl.AddPlayLineAction(9, 25 * 1000, lyrLines);
-		*/
 		// CPPUNIT_ASSERT(_tcscmp(szStr, _T("abcdef1213")) == 0);
 		// CPPUNIT_FAIL_T(CStrPrintf(_T("StrSplit(Set) Test, case(Can't find): %d, %s"), i, strResult[i]).c_str());
 	}

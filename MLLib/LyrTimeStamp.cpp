@@ -90,19 +90,19 @@ bool CLyrTimeStamp::Parse(LPCTSTR szTimeStamps, CMLData *pMLData)
 
 	// Time of every line
 	int nTimeAboveLine = 0;
-	VLyrLines	&lines = pMLData->GetRawLyrics();
-	for (VLyrLines::iterator it = lines.begin(); it != lines.end() && *szTimeStamps;)
+	CLyricsLines	&lines = pMLData->GetRawLyrics();
+	for (CLyricsLines::iterator it = lines.begin(); it != lines.end() && *szTimeStamps;)
 	{
-		PML_ROW pRow = *it;
-		PLYRIC_FRAG pFrag = pRow->vFrags[0];
-		ASSERT(pRow->nRowType == ML_ROW_LYRICS && pFrag->IsTempBegTime());
+		LyricsLine *pRow = *it;
+		LyricsPiece *pFrag = pRow->vFrags[0];
+		ASSERT(pRow->bLyricsLine && pFrag->IsTempBegTime());
 
 		if (*szTimeStamps == CHAR_NO_TIME_STAMP)
 		{
 			szTimeStamps++;
 			// Just remove this line from RawLyrics (will be kept in m_arrFileRows).
 			it = lines.erase(it);
-			pRow->nRowType = ML_ROW_UNKNOW;
+			pRow->bLyricsLine = false;
 			pRow->SetContent(pFrag->szLyric, _tcslen(pFrag->szLyric));
 		}
 		else
@@ -110,7 +110,7 @@ bool CLyrTimeStamp::Parse(LPCTSTR szTimeStamps, CMLData *pMLData)
 			int duration;
 			szTimeStamps = DecodeTimeStamps(szTimeStamps, duration);
 			pFrag->nBegTime = pRow->nBegTime = nTimeAboveLine + duration;
-			pFrag->dwAttrib &= ~LSA_TEMP_TIME_BEG;
+			pFrag->bTempBegTime = false;
 
 			nTimeAboveLine = pRow->nBegTime;
 			 ++it;
@@ -123,7 +123,7 @@ bool CLyrTimeStamp::Parse(LPCTSTR szTimeStamps, CMLData *pMLData)
 	return true;
 }
 
-void CLyrTimeStamp::ToString(tstring &strTimeStamps, int nOffsetTime, VLyrLines &lyrLines)
+void CLyrTimeStamp::ToString(tstring &strTimeStamps, int nOffsetTime, CLyricsLines &lyrLines)
 {
 	// Header
 	strTimeStamps.clear();
@@ -136,8 +136,8 @@ void CLyrTimeStamp::ToString(tstring &strTimeStamps, int nOffsetTime, VLyrLines 
 	int nTimeAboveLine = 0;
 	for (uint i = 0; i < lyrLines.size(); i++)
 	{
-		PML_ROW pRow = lyrLines[i];
-		if (pRow->nRowType == ML_ROW_LYRICS)
+		LyricsLine *pRow = lyrLines[i];
+		if (pRow->bLyricsLine)
 		{
 			int duration = pRow->nBegTime - nTimeAboveLine + TIME_STAMP_UNIT / 2;
 			EncodeTimeStamps(duration, strTimeStamps);

@@ -30,8 +30,8 @@ protected:
 	void WrapInfoText();
 
 protected:
-	CMLyrLines		m_vText;
-	CMLyrLines		m_vUnWrapedText;
+	CLyricsLines		m_vText;
+	CLyricsLines		m_vUnWrapedText;
 
 };
 

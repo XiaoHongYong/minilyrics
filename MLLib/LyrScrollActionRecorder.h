@@ -32,28 +32,28 @@ public:
 
 	static bool IsEventTag(LPCTSTR str);
 
-	void InitCreateAutoEvents(VLyrLines &lyrLines);
+	void InitCreateAutoEvents(CLyricsLines &lyrLines);
 
 	void Close();
 
 	bool HasActions() { return m_bHasActions; }
 
 	tstring EventsDataToString();
-	void EventsDataFromString(LPCTSTR szEventsData, VLyrLines &lyrLines);
+	void EventsDataFromString(LPCTSTR szEventsData, CLyricsLines &lyrLines);
 
-	void ScrollToLine(VLyrLines &lyrLines, int nLine, int nTime, bool bUpdateTimeTag = true);
+	void ScrollToLine(CLyricsLines &lyrLines, int nLine, int nTime, bool bUpdateTimeTag = true);
 
-	void UpdateTimeTagByEvents(VLyrLines &lyrLines);
-
-protected:
-	void AddScrollTo(VLyrLines &lyrLines, int nPos, int nTime, bool bUpdateTimeTag = true);
+	void UpdateTimeTagByEvents(CLyricsLines &lyrLines);
 
 protected:
-	int GetDistanceOfLine(VLyrLines &lyrLines, int nLine);
+	void AddScrollTo(CLyricsLines &lyrLines, int nPos, int nTime, bool bUpdateTimeTag = true);
 
-	int GetDistanceOfCurrentPos(VLyrLines &lyrLines);
+protected:
+	int GetDistanceOfLine(CLyricsLines &lyrLines, int nLine);
 
-	int CountLyrChar(VLyrLines &lyrLines);
+	int GetDistanceOfCurrentPos(CLyricsLines &lyrLines);
+
+	int CountLyrChar(CLyricsLines &lyrLines);
 
 	friend class CTestCaseLyrScrollActionRecorder;
 

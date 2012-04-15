@@ -718,7 +718,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_J_NEXT_LINE:
 		{
 			// Jump to next/previous line of lyrics.
-			VLyrLines	vLyrics = g_LyricData.GetRawLyrics();
+			CLyricsLines	&vLyrics = g_LyricData.GetRawLyrics();
 
 			int			nCurLine = g_LyricData.GetCurPlayLine(vLyrics);
 			if (nCurLine >= 0 && nCurLine < (int)vLyrics.size())
@@ -1036,7 +1036,7 @@ bool CMPCommonCmdHandler::SaveCurrentLyrics(CSkinWnd *pSkinWnd, bool bDispatchOn
 	return true;
 }
 
-VLyrLines &CMPCommonCmdHandler::GetDisplayLyrics()
+CLyricsLines &CMPCommonCmdHandler::GetDisplayLyrics()
 {
 	CLyricShowObj *pObj = (CLyricShowObj*)m_pSkinWnd->GetUIObjectByClassName(CLyricShowMultiRowObj::ClassName());
 	if (pObj)

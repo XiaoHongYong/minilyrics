@@ -140,7 +140,7 @@ public:
 
 	virtual void SetAntialise(BOOL bAntialis);
 
-	int GetAlpha(PML_ROW pRow);
+	int GetAlpha(LyricsLine *pRow);
 
 	void SetLyricData(CMLData *pMLData);
 
@@ -151,7 +151,7 @@ public:
 	//
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 
-	CMLyrLines &GetLyrics() { return m_lyrLines; }
+	CLyricsLines &GetLyrics() { return m_lyrLines; }
 
 protected:
 	virtual bool OnLyrDisplaySettings(LPCTSTR szProperty, LPCTSTR szValue);
@@ -173,17 +173,17 @@ protected:
 
 	void DarkenLyricsBg(CRawGraph *pGraphics, CRect &rc);
 
-	int GetLyricRowAlignPos(CRawGraph	*pGraphics, PML_ROW pLyricRow);
-	int GetLyricRowTextWidth(CRawGraph	*pGraphics, PML_ROW pLyricRow);
+	int GetLyricRowAlignPos(CRawGraph	*pGraphics, LyricsLine *pLyricRow);
+	int GetLyricRowTextWidth(CRawGraph	*pGraphics, LyricsLine *pLyricRow);
 
 	void FastDrawMediaInfo(CRawGraph *pGraph, CRect *prcUpdate = NULL);
 
-	bool DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y, LinePos linePos = LP_ABOVE_CUR_LINE);
-	void DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y, MLColor &clrTxt, MLColor &clrTxtBorder);
+	bool DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, int y, LinePos linePos = LP_ABOVE_CUR_LINE);
+	void DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, int y, MLColor &clrTxt, MLColor &clrTxtBorder);
 
-	void DrawRowKaraoke(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y);
+	void DrawRowKaraoke(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, int y);
 
-	void DrawCurrentRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y);
+	void DrawCurrentRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, int y);
 
 	void FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos, int yDrawLyrEndPos);
 
@@ -322,7 +322,7 @@ protected:
 
 	// ¸è´ÊÊý¾Ý
 	CMLData				*m_pMLData;
-	CMLyrLines			m_lyrLines;
+	CLyricsLines		m_lyrLines;
 
 	bool				m_bCanWrapLines;
 

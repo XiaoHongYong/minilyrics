@@ -1,5 +1,7 @@
 #pragma once
 
+#include "LyricsData.h"
+
 namespace MidiTag {
 
 #define MIDI_HEADER		"MThd"
@@ -78,14 +80,18 @@ public:
 	void Close();
 
 	int ListLyrics(VecString &vLyrNames);
-	int GetLyrics(CLyricsData &lyricsData);
+	int GetLyrics(CLyricsLines &lyricsLines);
 
 	bool HasLyrics();
 
 protected:
 	int ReadTrackTrunk(MidiTag::TrackTrunk &trunk);
 
+	MidiTag::TrackTrunk *CMidiTag::FindLyricsTrunk();
+
 protected:
-	CFileEx		m_file;
+	CFileEx					m_file;
+	MidiTag::ListTrackTrunk	m_listTrunks;
+	uint16					m_timeDivision;
 
 };

@@ -32,7 +32,7 @@ public:
 protected:
 	bool OnCommandCharEncoding(int nCmdId);
 
-	VLyrLines &GetDisplayLyrics();
+	CLyricsLines &GetDisplayLyrics();
 
 protected:
 	tstring			m_strSectName;

@@ -80,6 +80,7 @@ TCHAR * __cdecl stristrignore (
 						const TCHAR * str2
 						);
 
+void TrimStr(tstring &str, LPCTSTR szChars);
 void TrimStr(tstring &str, TCHAR ch = ' ');
 void TrimStr(V_Str &vStr, TCHAR ch = ' ');
 void TrimStr(LPTSTR pszString, TCHAR ch = ' ');

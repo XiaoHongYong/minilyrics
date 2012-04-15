@@ -109,28 +109,29 @@ void CMPSkinInfoTextCtrlEx::OnSize()
 
 void CMPSkinInfoTextCtrlEx::AppendInfoText(const tstring &str)
 {
-	PLYRIC_FRAG	pFrag;
+	LyricsPiece *pFrag;
 
-	pFrag = (PLYRIC_FRAG)new BYTE[sizeof(LYRIC_FRAG) + str.size() * sizeof(TCHAR)];
+	pFrag = (LyricsPiece *)new BYTE[sizeof(LyricsPiece) + str.size() * sizeof(TCHAR)];
 
 	pFrag->nBegTime = 0;
 	pFrag->nEndTime = 0;
 	pFrag->nDrawWidth = 0;
 	_tcscpy_safe(pFrag->szLyric, str.size() + 1, str.c_str());
 	pFrag->nLen = str.size();
-	pFrag->dwAttrib = LSA_TEMP_TIME_BEG | LSA_TEMP_TIME_END;
+	pFrag->bTempBegTime = true;
+	pFrag->bTempEndTime = true;
 
-	PML_ROW		pRow = new ML_ROW;
+	LyricsLine *pRow = new LyricsLine;
 	pRow->nBegTime = 0;
 	pRow->nEndTime = 0;
-	pRow->nRowType = ML_ROW_LYRICS;
+	pRow->bLyricsLine = true;
 	pRow->szContent = NULL;
 	pRow->vFrags.push_back(pFrag);
 
 	m_vUnWrapedText.push_back(pRow);
 }
 
-bool WrapDisplayLyrics(VLyrLines &lyrLinesSrc, CMLyrLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax);
+bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax);
 
 void CMPSkinInfoTextCtrlEx::WrapInfoText()
 {

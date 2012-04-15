@@ -24,7 +24,7 @@ public:
 	virtual LYRICS_CONTENT_TYPE GetLyrContentType();
 
 protected:
-	BOOL LyricsRowToText(PML_ROW pRow, tstringex &strBuff);
+	BOOL LyricsRowToText(LyricsLine *pRow, tstringex &strBuff);
 	
 };
 

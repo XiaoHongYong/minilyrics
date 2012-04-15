@@ -124,9 +124,9 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 
 	if ((pDataA && pDataA->dwVersion == 1) || (pDataW && pDataW->dwVersion == 1))
 	{
-		PML_ROW		pLyricRow;
+		LyricsLine *pLyricRow;
 		int			nCurSingRow;
-		VLyrLines	&lyrLines = g_LyricData.GetRawLyrics();
+		CLyricsLines	&lyrLines = g_LyricData.GetRawLyrics();
 
 		nCurSingRow = g_LyricData.GetCurPlayLine(lyrLines);
 		if (nCurSingRow == -1)

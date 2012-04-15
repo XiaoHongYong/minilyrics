@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "LyricsData.h"
+#include "TagLib.h"
 #include "MidiTag.h"
 
 using namespace MidiTag;
@@ -139,6 +140,25 @@ using namespace MidiTag;
  *           u3         - quarter note length in microseconds
  */
 
+/* KAR trunk fields
+
+Origin: The Company Tune 1000 
+A file kar (kar) is in fact, a midi file, but whose words are standardized in events meta of the type TEXT. 
+The texts starting with @ are additional indications compared to the words. 
+Example:
+
+@L specifies the language of the words 
+@I any additional information 
+@T information of title 
+@KMIDI KARAOKE SPINS information of copyright and type of file
+
+Several lines of titles and information can be present. KaraWin extracts information from titles to post them. 
+The text even has a very simple format to him: 
+\ indicates a page break, 
+/a return indicates has the line
+
+*/
+
 
 /** Read a variable-length integer (1 to 4 bytes). The integer ends
  * when you encounter a byte that doesn't have the 8th bit set
@@ -174,6 +194,8 @@ CMidiTag::~CMidiTag()
 
 int CMidiTag::Open(LPCTSTR szFile)
 {
+	Close();
+
 	int nRet = m_file.Open(szFile, _T("rb"));
 	if (nRet != ERR_OK)
 		return nRet;
@@ -192,18 +214,16 @@ int CMidiTag::Open(LPCTSTR szFile)
 	if (trunkLen != 6)
 		return ERR_NOT_SUPPORT_FILE_FORMAT;
 
-	uint16 formatType, numbTracks, timeDivision;
+	uint16 formatType, numbTracks;
 	nRet = m_file.ReadUInt16BE(formatType);
 	if (nRet != ERR_OK)
 		return nRet;
 	nRet = m_file.ReadUInt16BE(numbTracks);
 	if (nRet != ERR_OK)
 		return nRet;
-	nRet = m_file.ReadUInt16BE(timeDivision);
+	nRet = m_file.ReadUInt16BE(m_timeDivision);
 	if (nRet != ERR_OK)
 		return nRet;
-
-	ListTrackTrunk listTrunk;
 
 	while (!m_file.IsEOF())
 	{
@@ -212,7 +232,11 @@ int CMidiTag::Open(LPCTSTR szFile)
 
 		nRet = m_file.ReadCount(header, CountOf(header));
 		if (nRet != ERR_OK)
+		{
+			if (m_file.IsEOF())
+				break;
 			return nRet;
+		}
 		if (memcmp(header, TRACK_HEADER, CountOf(header)) != 0)
 			return ERR_NOT_SUPPORT_FILE_FORMAT;
 
@@ -220,11 +244,11 @@ int CMidiTag::Open(LPCTSTR szFile)
 		if (nRet != ERR_OK)
 			return nRet;
 
-		nRet = ReadTrackTrunk(trunk);
-		if (nRet != ERR_OK)
-			return nRet;
+		// nRet = ReadTrackTrunk(trunk);
+		// if (nRet != ERR_OK)
+		// 	return nRet;
 
-		listTrunk.push_back(trunk);
+		m_listTrunks.push_back(trunk);
 
 		m_file.Seek(trunk.sizeOfData + TRUNK_HEADER_LEN + trunk.offset, SEEK_SET);
 	}
@@ -234,22 +258,109 @@ int CMidiTag::Open(LPCTSTR szFile)
 
 void CMidiTag::Close()
 {
+	m_listTrunks.clear();
 	m_file.Close();
 }
 
 int CMidiTag::ListLyrics(VecString &vLyrNames)
 {
-	return ERR_FAILED;
+	if (HasLyrics())
+	{
+		vLyrNames.push_back(SZ_SONG_KAR_LYRICS);
+		return ERR_OK;
+	}
+	return ERR_NOT_FOUND;
 }
 
-int CMidiTag::GetLyrics(CLyricsData &lyricsData)
+int CMidiTag::GetLyrics(CLyricsLines &lyricsLines)
 {
-	return ERR_FAILED;
+	TrackTrunk *pTrunk = FindLyricsTrunk();
+	if (pTrunk == NULL)
+		return ERR_NOT_FOUND;
+
+	m_file.Seek(pTrunk->offset + TRUNK_HEADER_LEN, SEEK_SET);
+
+	DBGLOG2(_T("Trunk, offset: %d, len: %d"), pTrunk->offset, pTrunk->sizeOfData);
+
+	bool bPrinted = false;
+	LyricsLine *line = NULL;
+	float startTime = 0;
+	byte eventCode = 0;
+	while (m_file.GetPos() < long(pTrunk->offset + pTrunk->sizeOfData))
+	{
+		int deltaTime;
+		int nRet = ReadVarlen(m_file, deltaTime);
+		if (nRet != ERR_OK)
+			return nRet;
+
+		byte newEventCode;
+		nRet = m_file.ReadByte(newEventCode);
+		if (nRet != ERR_OK)
+			return nRet;
+		if (newEventCode >= MET_NOTE_OFF)
+			eventCode = newEventCode;
+		else
+			m_file.Seek(-1, SEEK_CUR);
+
+		byte metaEvent;
+		nRet = m_file.ReadByte(metaEvent);
+		if (nRet != ERR_OK)
+			return nRet;
+
+		int len;
+		nRet = ReadVarlen(m_file, len);
+		if (nRet != ERR_OK)
+			return nRet;
+
+		CCharBuffer buf;
+		buf.resize(len);
+		nRet = m_file.ReadCount(buf.data(), len);
+		if (nRet != ERR_OK)
+			return nRet;
+
+		if (metaEvent == MAT_END_OF_TRACK)
+			break;
+
+		tstring str;
+		bool bNewLine = (buf[0] == '/' || buf[0] == '\\');
+		if (bNewLine)
+			AnsiToTString(buf.c_str() + 1, buf.size() - 1, str);
+		else
+			AnsiToTString(buf.c_str(), buf.size(), str);
+
+		if (metaEvent == MAT_SEQUENCE_NAME)
+		{
+			ASSERT(_tcscmp(str.c_str(), _T("Words")) == 0);
+		}
+		else if (metaEvent == MAT_TEXT)
+		{
+			if (buf[0] == '@')
+				continue;
+			startTime += (float)(deltaTime * 1000) / ((float)m_timeDivision / 5.2) / 10;
+			if (bNewLine || line == NULL)
+			{
+				line = NewLyricsLine((int)startTime, TEMP_TIME);
+				lyricsLines.push_back(line);
+			}
+			line->AppendPiece((int)startTime, TEMP_TIME, str.c_str(), str.size(), false, true);
+
+			if (!bPrinted)
+			{
+				bPrinted = true;
+				DBGLOG3(_T("Time division: %d, delta: %d, time: %d"), m_timeDivision, deltaTime, (int)startTime);
+			}
+		}
+		else
+			break;
+	}
+
+	return ERR_OK;
 }
 
 bool CMidiTag::HasLyrics()
 {
-	return false;
+	TrackTrunk *pTrunk = FindLyricsTrunk();
+	return pTrunk != NULL;
 }
 
 int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
@@ -258,6 +369,8 @@ int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
 
 	DBGLOG2(_T("Trunk, offset: %d, len: %d"), trunk.offset, trunk.sizeOfData);
 
+	LyricsLine *line = NULL;
+	int startTime = 0;
 	byte eventCode = 0;
 	while (m_file.GetPos() < long(trunk.offset + trunk.sizeOfData))
 	{
@@ -317,20 +430,19 @@ int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
 
 			if (metaEvent == MAT_SEQUENCE_NAME)
 			{
-				CLyricsData lyricsData;
-				LyricsLine *line;
+				CLyricsLines lyricsLines;
 
 				tstring str;
 				bool bNewLine = (buf[0] == '/');
-				if (bNewLine)
+				if (bNewLine || line == NULL)
 				{
-					line = lyricsData.AppendNewLine();
+					line = NewLyricsLine(TEMP_TIME, TEMP_TIME);
 					AnsiToTString(buf.c_str(), buf.size(), str);
 				}
 				else
 					AnsiToTString(buf.c_str() + 1, buf.size() - 1, str);
 
-				line->AppendPiece(str.c_str(), str.size(), startTime);
+				line->AppendPiece(startTime, TEMP_TIME, str.c_str(), str.size(), true, false);
 			}
 
 			tstring str;
@@ -340,4 +452,51 @@ int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
 	}
 
 	return ERR_OK;
+}
+
+TrackTrunk *CMidiTag::FindLyricsTrunk()
+{
+	for (ListTrackTrunk::iterator it = m_listTrunks.begin(); it != m_listTrunks.end(); ++it)
+	{
+		TrackTrunk &trunk = *it;
+
+		m_file.Seek(trunk.offset + TRUNK_HEADER_LEN, SEEK_SET);
+
+		if (m_file.GetPos() < long(trunk.offset + trunk.sizeOfData))
+		{
+			int deltaTime;
+			int nRet = ReadVarlen(m_file, deltaTime);
+			if (nRet != ERR_OK)
+				break;
+			if (deltaTime != 0)
+				continue;
+
+			byte eventCode = 0;
+			nRet = m_file.ReadByte(eventCode);
+			if (nRet != ERR_OK)
+				break;
+			if (eventCode != MET_META)
+				continue;
+
+			byte metaEvent;
+			nRet = m_file.ReadByte(metaEvent);
+			if (nRet != ERR_OK)
+				return NULL;
+
+			int len;
+			nRet = ReadVarlen(m_file, len);
+			if (nRet != ERR_OK)
+				return NULL;
+
+			CCharBuffer buf;
+			buf.resize(len);
+			nRet = m_file.ReadCount(buf.data(), len);
+			if (nRet != ERR_OK)
+				return NULL;
+			if (strcmp(buf.c_str(), "Words") == 0)
+				return &(*it);
+		}
+	}
+
+	return NULL;
 }

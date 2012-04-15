@@ -33,8 +33,8 @@ protected:
 	void ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt);
 	void ToTxtString(tstring &str, bool bIncTags);
 
-	bool LyricsRowToLrcString(PML_ROW pRow, bool bLongTimeFmt, tstringex &strBuff);
-	void LyricsRowToTxtString(PML_ROW pRow, tstring &strBuff);
+	bool LyricsRowToLrcString(LyricsLine *pRow, bool bLongTimeFmt, tstringex &strBuff);
+	void LyricsRowToTxtString(LyricsLine *pRow, tstring &strBuff);
 
 	void AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine);
 	void AddStrAsTimedLine(const TCHAR *szLine);

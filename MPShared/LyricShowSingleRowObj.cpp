@@ -32,7 +32,7 @@ CLyricShowSingleRowObj::~CLyricShowSingleRowObj()
 //
 // 取得此行歌词的Fade out color
 //
-void CLyricShowSingleRowObj::GetCurLineFadeOutColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
+void CLyricShowSingleRowObj::GetCurLineFadeOutColor(LyricsLine *pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
 {
 	int				nTime;
 
@@ -56,7 +56,7 @@ void CLyricShowSingleRowObj::GetCurLineFadeOutColor(PML_ROW pRow, MLColor clrIn,
 //
 // 取得此行歌词的Fade In color
 //
-void CLyricShowSingleRowObj::GetNextLineFadeInColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
+void CLyricShowSingleRowObj::GetNextLineFadeInColor(LyricsLine *pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
 {
 	int				nTime;
 
@@ -82,7 +82,7 @@ void CLyricShowSingleRowObj::GetNextLineFadeInColor(PML_ROW pRow, MLColor clrIn,
 
 void AlphaBlendColor(MLColor &clr1, MLColor &clr2, int nAlpha, MLColor &clrOut);
 
-void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, PML_ROW pRowCur, PML_ROW pRowNext, int x, int y)
+void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, LyricsLine *pRowCur, LyricsLine *pRowNext, int x, int y)
 {
 	int				nTime;
 	int				nAlphaCurLine, nAlphaNextLine;
@@ -144,7 +144,7 @@ void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, PML
 void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
 {
 	int			y;
-	PML_ROW		pLyricRow;
+	LyricsLine *pLyricRow;
 	int			nRowCur;
 	int			nPlayPos;
 
@@ -174,7 +174,7 @@ void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* =
 	if (nPlayPos + FIO_TIME >= pLyricRow->nEndTime)
 	{
 		// 计算渐变显示的颜色
-		PML_ROW		pRowNext = NULL;
+		LyricsLine *pRowNext = NULL;
 
 		CRect	rcClip;
 

@@ -215,14 +215,14 @@ void CLrcParser::FinalFixOnLyrics(bool bAddTimeStampForTextLine)
 		//
 		// 将未设置时间标签的歌词行的时间设置为－1，再调用CheckLyricsRowTime重新
 		// 校正时间。注意：不能调用LRCCheckRowTime()函数
-		VLyrLines	&lyrLines = m_pMLData->GetRawLyrics();
+		CLyricsLines	&lyrLines = m_pMLData->GetRawLyrics();
 		for (int i = 0; i < (int)lyrLines.size(); i++)
 		{
-			PML_ROW			pRow = lyrLines[i];
+			LyricsLine *pRow = lyrLines[i];
 			if (pRow->vFrags.size())
 			{
-				PLYRIC_FRAG		pFrag = pRow->vFrags[0];
-				if ((pFrag->dwAttrib & LSA_TEMP_TIME_BEG) == LSA_TEMP_TIME_BEG)
+				LyricsPiece *pFrag = pRow->vFrags[0];
+				if (pFrag->bTempBegTime)
 				{
 					pFrag->nBegTime = -1;
 					pFrag->nEndTime = -1;
@@ -300,7 +300,7 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 void CLrcParser::ParseTxtTagInLyrics()
 {
 	CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
-	VLyrLines	&lyrLines = m_pMLData->GetRawLyrics();
+	CLyricsLines	&lyrLines = m_pMLData->GetRawLyrics();
 
 	// For some duplicated tags (lyrics file are not well written, 
 	// we need to filter those tags).
@@ -310,9 +310,9 @@ void CLrcParser::ParseTxtTagInLyrics()
 	//
 	for (int i = 0; i < (int)lyrLines.size(); i++)
 	{
-		PML_ROW		pRow = lyrLines[i];
+		LyricsLine *pRow = lyrLines[i];
 		ASSERT(pRow->vFrags.size() == 1);
-		PLYRIC_FRAG	pFrag = pRow->vFrags[0];
+		LyricsPiece *pFrag = pRow->vFrags[0];
 		ASSERT(pFrag->IsTempBegTime());
 
 		// Parse Txt tag.
@@ -339,9 +339,9 @@ void CLrcParser::ParseTxtTagInLyrics()
 	//
 	for (int i = (int)lyrLines.size() - 1; i >= 0; i--)
 	{
-		PML_ROW		pRow = lyrLines[i];
+		LyricsLine *pRow = lyrLines[i];
 		ASSERT(pRow->vFrags.size() == 1);
-		PLYRIC_FRAG	pFrag = pRow->vFrags[0];
+		LyricsPiece *pFrag = pRow->vFrags[0];
 		ASSERT(pFrag->IsTempBegTime());
 
 		// Parse Txt tag.
@@ -384,12 +384,11 @@ void CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
 		// Test whether is long time format
 		for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
 		{
-			PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
-			if (pRow->nRowType != ML_ROW_LYRICS
-				|| pRow->vFrags.empty())
+			LyricsLine *pRow = m_pMLData->m_arrFileRows[i];
+			if (pRow->vFrags.empty())
 				continue;
 
-			if (!IsFlagSet(pRow->vFrags[0]->dwAttrib, LSA_TEMP_TIME_BEG))
+			if (!pRow->vFrags[0]->bTempBegTime)
 			{
 				if (pRow->nBegTime % 1000 != 0)
 				{
@@ -405,7 +404,7 @@ void CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
 	tstringex		strBuff;
 	for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
 	{
-		PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
+		LyricsLine *pRow = m_pMLData->m_arrFileRows[i];
 		ASSERT(pRow);
 
 		if (LyricsRowToLrcString(pRow, bLongTimeFmt, strBuff))
@@ -427,15 +426,15 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 	//
 	// Convert and remove lyrics line which is text lyrics tag.
 	//
-	tstring		strBuff;
-	VLyrLines	lyrLines;
+	tstring			strBuff;
+	CLyricsLines	lyrLines(false);
 	LyricsProperties properties;
 	CLyrTagNameValueMap	propNameValueMap(properties);
 
 	for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
 	{
-		PML_ROW		pRow = m_pMLData->m_arrFileRows[i];
-		if (pRow->nRowType == ML_ROW_LYRICS)
+		LyricsLine *pRow = m_pMLData->m_arrFileRows[i];
+		if (pRow->bLyricsLine)
 		{
 			LyricsRowToTxtString(pRow, strBuff);
 			if (propNameValueMap.ParseTxtTag(strBuff.c_str(), strBuff.size()) == -1)
@@ -448,7 +447,6 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 		else
 		{
 			lyrLines.push_back(pRow);
-			ASSERT(pRow->nRowType == ML_ROW_UNKNOW);
 			// Only append blank spaces, not "pRow->szContent";
 			str += _T("\r\n");
 		}
@@ -498,81 +496,69 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 }
 
 //
-bool CLrcParser::LyricsRowToLrcString(PML_ROW pRow, bool bLongTimeFmt, tstringex &strBuff)
+bool CLrcParser::LyricsRowToLrcString(LyricsLine *pRow, bool bLongTimeFmt, tstringex &strBuff)
 {
 	ASSERT(pRow);
 	strBuff.clear();
 
-	switch (pRow->nRowType)
+	if (pRow->IsTempRow())
+		return FALSE;
+
+	if (!pRow->bLyricsLine)
 	{
-	case ML_ROW_UNKNOW:
 		assert(pRow->szContent);
 		strBuff = pRow->szContent;
-		break;
-	case ML_ROW_LYRICS:
-		{
-			if (pRow->vFrags.size() && !(pRow->vFrags[0]->dwAttrib & LSA_TEMP_TIME_BEG))
-			{
-				strBuff.reserve(100);
-				int nLen = FormtLrcTimeTag(pRow->nBegTime, bLongTimeFmt, strBuff.data());
-				strBuff.resize(nLen);
-			}
-
-			TCHAR			szTime[64];
-			for (int i = 0; i < (int)pRow->vFrags.size(); i++)
-			{
-				PLYRIC_FRAG	pFrag = pRow->vFrags[i];
-				// Remove ad strings
-				if (IsTempLyricsFrag(pFrag->dwAttrib))
-				{
-					strBuff.clear();
-					return FALSE;
-				}
-
-				strBuff += pFrag->szLyric;
-
-				if (i + 1 < (int)pRow->vFrags.size())
-				{
-					pFrag = pRow->vFrags[i + 1];
-					if (!IsTempTimeBeg(pFrag->dwAttrib))
-					{
-						int		nMin, nSec, nMs;
-						int		nTime = pFrag->nBegTime + 10 / 2;
-
-						nMs = (nTime / 10) % 100;
-						nSec = (nTime / 1000) % 60;
-						nMin = nTime / (1000 * 60);
-						_stprintf_s(szTime, CountOf(szTime), _T("<%02d:%02d.%02d>"), nMin, nSec, nMs);
-						strBuff += szTime;
-					}
-				}
-			}
-			if (strBuff.empty())
-				return false;	// do not insert temp empty lyrics 
-		}
-		break;
-	default:
-		return FALSE;
+		return true;
 	}
+
+	if (pRow->vFrags.size() && !(pRow->vFrags[0]->bTempBegTime))
+	{
+		strBuff.reserve(100);
+		int nLen = FormtLrcTimeTag(pRow->nBegTime, bLongTimeFmt, strBuff.data());
+		strBuff.resize(nLen);
+	}
+
+	TCHAR			szTime[64];
+	for (int i = 0; i < (int)pRow->vFrags.size(); i++)
+	{
+		LyricsPiece *pFrag = pRow->vFrags[i];
+
+		strBuff += pFrag->szLyric;
+
+		if (i + 1 < (int)pRow->vFrags.size())
+		{
+			pFrag = pRow->vFrags[i + 1];
+			if (!pFrag->bTempBegTime)
+			{
+				int		nMin, nSec, nMs;
+				int		nTime = pFrag->nBegTime + 10 / 2;
+
+				nMs = (nTime / 10) % 100;
+				nSec = (nTime / 1000) % 60;
+				nMin = nTime / (1000 * 60);
+				_stprintf_s(szTime, CountOf(szTime), _T("<%02d:%02d.%02d>"), nMin, nSec, nMs);
+				strBuff += szTime;
+			}
+		}
+	}
+	if (strBuff.empty())
+		return false;	// do not insert temp empty lyrics 
+
 	return TRUE;
 }
 
 //
-void CLrcParser::LyricsRowToTxtString(PML_ROW pRow, tstring &strBuff)
+void CLrcParser::LyricsRowToTxtString(LyricsLine *pRow, tstring &strBuff)
 {
-	ASSERT(pRow->nRowType == ML_ROW_LYRICS);
+	ASSERT(pRow->bLyricsLine);
 	strBuff.clear();
+
+	if (pRow->IsTempRow())
+		return;
 
 	for (int i = 0; i < (int)pRow->vFrags.size(); i++)
 	{
-		PLYRIC_FRAG	pFrag = pRow->vFrags[i];
-		// Remove ad strings
-		if (IsTempLyricsFrag(pFrag->dwAttrib))
-		{
-			strBuff.clear();
-			return;
-		}
-
+		LyricsPiece *pFrag = pRow->vFrags[i];
 		strBuff += pFrag->szLyric;
 	}
 }
@@ -587,19 +573,16 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 
 	for (int i = 0; i < (int)vTimes.size(); i++)
 	{
-		PML_ROW			pRow;
-
 		nBegTime = vTimes[i];
-		pRow = m_pMLData->NewMLRow(nBegTime, -1);
+		LyricsLine *pRow = NewLyricsLine(nBegTime, -1);
 
-		LPCTSTR			szLyricsBeg = szLyrLine;
+		LPCTSTR	szLyricsBeg = szLyrLine;
 		do
 		{
 			nEndTime = -1;
 			szLyricsBeg = EatFrag(szLyricsBeg, nEndTime, buff);
-			PLYRIC_FRAG	pFrag = m_pMLData->NewLyricFrag(nBegTime, nEndTime, buff.c_str(), buff.size(), FALSE, TRUE);
-
-			pRow->vFrags.push_back(pFrag);
+			
+			pRow->AppendPiece(nBegTime, nEndTime, buff.c_str(), buff.size(), FALSE, TRUE);
 
 			if (nEndTime != -1)
 				nBegTime = nEndTime;
@@ -609,7 +592,7 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 		m_nLatestTime = nBegTime;
 
 		if (pRow->vFrags.size() > 1)
-			m_pMLData->SetDefShowStyle(LSA_SHOW_KARAOKE);
+			m_pMLData->SetKaraokeStyle(true);
 
 		m_pMLData->AddRowByTime(pRow);
 	}
@@ -623,14 +606,8 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 //
 void CLrcParser::AddStrAsTimedLine(const TCHAR *szLine)
 {
-	PLYRIC_FRAG		pFrag;
-	PML_ROW			pRow;
-
-	pFrag = m_pMLData->NewLyricFrag(m_nLatestTime, -1, szLine, _tcslen(szLine), TRUE, TRUE);
-	//	m_nLatestTime += 10;
-
-	pRow = m_pMLData->NewMLRow(pFrag->nBegTime, pFrag->nEndTime);
-	pRow->vFrags.push_back(pFrag);
+	LyricsLine *pRow = NewLyricsLine(m_nLatestTime, -1);
+	pRow->AppendPiece(m_nLatestTime, -1, szLine, _tcslen(szLine), TRUE, TRUE);
 
 	m_pMLData->AddRowByTime(pRow);
 }
@@ -638,7 +615,7 @@ void CLrcParser::AddStrAsTimedLine(const TCHAR *szLine)
 void CLrcParser::AddStrAsUnknowLine(const TCHAR *szLine)
 {
 	// Unknown tag, just add it in the file.
-	PML_ROW pRow = m_pMLData->NewMLRow(0, 0, szLine, _tcslen(szLine), ML_ROW_UNKNOW);
+	LyricsLine *pRow = NewLyricsLine(0, 0, szLine, _tcslen(szLine), false);
 	m_pMLData->AddRow(pRow);
 }
 
@@ -666,7 +643,7 @@ void CLrcParser::FixTextLrcTimeTag()
 
 	for (int i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
 	{
-		PML_ROW		pRow = m_pMLData->GetLyricsRow(i);
+		LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
 
 		if (pRow->vFrags.size() > 0)
 		{
@@ -683,7 +660,7 @@ void CLrcParser::RemoveExtraBlankLinesOfTextLyr()
 
 	for (i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
 	{
-		PML_ROW		pRow = m_pMLData->GetLyricsRow(i);
+		LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
 
 		if (pRow->vFrags.size() == 1)
 		{
@@ -715,7 +692,7 @@ void CLrcParser::RemoveExtraBlankLinesOfTextLyr()
 	nBlankLines = 0;
 	for (i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
 	{
-		PML_ROW		pRow = m_pMLData->GetLyricsRow(i);
+		LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
 
 		if (pRow->vFrags.size() == 1)
 		{
@@ -731,7 +708,7 @@ void CLrcParser::RemoveExtraBlankLinesOfTextLyr()
 		nBlankLines = 0;
 		for (i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
 		{
-			PML_ROW		pRow = m_pMLData->GetLyricsRow(i);
+			LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
 
 			if (pRow->vFrags.size() == 1)
 			{
@@ -762,15 +739,12 @@ void CLrcParser::LRCCheckRowTime()
 	// 如果歌词段的开始时间 < 此行歌词的开始时间，则修改
 	for (i = 0; i < nSize; i ++)
 	{
-		PML_ROW			pRow;
-		PLYRIC_FRAG		pFrag;
-
-		pRow = m_pMLData->GetLyricsRow(i);
+		LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
 		nSizeFrag = pRow->vFrags.size();
 
 		for (int k = 0; k < nSizeFrag; k++)
 		{
-			pFrag = pRow->vFrags[k];
+			LyricsPiece *pFrag = pRow->vFrags[k];
 
 			if (pFrag->nBegTime < pRow->nBegTime)
 				pFrag->nBegTime = pRow->nBegTime;
@@ -781,8 +755,8 @@ void CLrcParser::LRCCheckRowTime()
 	// 如果两行歌词的时间没有按先后顺序排，则修改之。
 	for (i = 0; i < nSize; i ++)
 	{
-		PML_ROW			pRow;
-		PLYRIC_FRAG		pFrag;
+		LyricsLine *pRow;
+		LyricsPiece *pFrag;
 		int				k;
 		int				nIdx;
 		PLYRIC_ROW		pRow1;
@@ -811,8 +785,8 @@ void CLrcParser::LRCCheckRowTime()
 	// 检查每一行歌词中的所有歌词段是否正确，并且进行矫正。
 	for (i = 0; i < nSize; i ++)
 	{
-		PML_ROW			pRow, pRowNext;
-		PLYRIC_FRAG		pFrag, pFragNext;
+		LyricsLine *pRow, *pRowNext;
+		LyricsPiece *pFrag, *pFragNext;
 
 		pRow = m_pMLData->GetLyricsRow(i);
 
@@ -937,11 +911,11 @@ protected:
 			CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strTitle.c_str(), valTitle) == 0);
 			CPPUNIT_ASSERT(data.Properties().GetEncodingIndex() == vEncoding[i]);
 
-			VLyrLines	&lyrLines = data.GetRawLyrics();
+			CLyricsLines	&lyrLines = data.GetRawLyrics();
 
 			for (int k = 0; k < lyrLines.size(); k++)
 			{
-				PML_ROW	pRow = lyrLines[k];
+				LyricsLine *pRow = lyrLines[k];
 
 				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
 				CPPUNIT_ASSERT(k < CountOf(vLyrLines));
@@ -971,11 +945,11 @@ protected:
 				CPPUNIT_ASSERT(_tcscmp(data3.Properties().m_strTitle.c_str(), valTitle) == 0);
 				CPPUNIT_ASSERT(data3.Properties().GetEncodingIndex() == vEncoding[i]);
 
-				VLyrLines	&lyrLines = data3.GetRawLyrics();
+				CLyricsLines	&lyrLines = data3.GetRawLyrics();
 
 				for (int k = 0; k < lyrLines.size(); k++)
 				{
-					PML_ROW	pRow = lyrLines[k];
+					LyricsLine *pRow = lyrLines[k];
 
 					CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
 					CPPUNIT_ASSERT(k < CountOf(vLyrLines));
@@ -1001,10 +975,10 @@ protected:
 			CPPUNIT_ASSERT(data5.Properties().GetOffsetTime() == data.GetOffsetTime());
 
 			// Compare line by line
-			VLyrLines	&lyrLines2 = data5.GetRawLyrics();
+			CLyricsLines	&lyrLines2 = data5.GetRawLyrics();
 			for (int k = 0; k < lyrLines2.size(); k++)
 			{
-				PML_ROW	pRow = lyrLines2[k];
+				LyricsLine *pRow = lyrLines2[k];
 
 				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
 				CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
@@ -1054,11 +1028,11 @@ protected:
 			CPPUNIT_ASSERT(_tcscmp(data.Properties().m_strTitle.c_str(), valTitle) == 0);
 			CPPUNIT_ASSERT(data.Properties().GetEncodingIndex() == vEncoding[i]);
 
-			VLyrLines	&lyrLines = data.GetRawLyrics();
+			CLyricsLines	&lyrLines = data.GetRawLyrics();
 
 			for (int k = 0; k < lyrLines.size(); k++)
 			{
-				PML_ROW	pRow = lyrLines[k];
+				LyricsLine *pRow = lyrLines[k];
 
 				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
 				CPPUNIT_ASSERT(k < CountOf(vLyrLines));
@@ -1087,11 +1061,11 @@ protected:
 				CPPUNIT_ASSERT(_tcscmp(data3.Properties().m_strTitle.c_str(), valTitle) == 0);
 				CPPUNIT_ASSERT(data3.Properties().GetEncodingIndex() == vEncoding[i]);
 
-				VLyrLines	&lyrLines = data3.GetRawLyrics();
+				CLyricsLines	&lyrLines = data3.GetRawLyrics();
 
 				for (int k = 0; k < CountOf(vLyrLines); k++)
 				{
-					PML_ROW	pRow = lyrLines[k];
+					LyricsLine *pRow = lyrLines[k];
 
 					CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
 					CPPUNIT_ASSERT(k < lyrLines.size());

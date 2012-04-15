@@ -29,12 +29,12 @@ CLyricShowHorzScrollObj::~CLyricShowHorzScrollObj()
 void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
 {
 	int			x, y;
-	PML_ROW		pLyricRow;
+	LyricsLine *pLyricRow;
 	int			nRowWidth;
 	int			nRowHeight;// center row height
 	int			nLeft, nRight, nCX, nCY;
 	int			nRowCur;
-	PML_ROW			pRow;
+	LyricsLine *pRow;
 
 	int				_ROW_INTERVAL;
 
@@ -202,7 +202,7 @@ void CLyricShowHorzScrollObj::CalculateAccelerate()
 		return;
 
 	CRawGraph	*pGraphics;
-	PML_ROW			pRow;
+	LyricsLine *pRow;
 	int				nRowWidth;
 	double			V0 = 0, v = 0, a, deltat;
 

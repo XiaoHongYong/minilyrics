@@ -792,7 +792,7 @@ protected:
 		if (!bInetFile)
 		{
 			// local file...
-			if (lrcSrcType == LST_ID3V2_SYLT || lrcSrcType == LST_ID3V2_LYRICS || lrcSrcType == LST_LYRICS3V2)
+			if (lrcSrcType == LST_ID3V2_SYLT || lrcSrcType == LST_ID3V2_LYRICS || lrcSrcType == LST_LYRICS3V2 || lrcSrcType == LST_KAR_LYRICS)
 				nImg = IMG_L_LRC;
 			else if (lrcSrcType == LST_ID3V2_USLT || lrcSrcType == LST_M4A_LYRICS)
 				nImg = IMG_L_TXT;

@@ -4,6 +4,7 @@
 #include "../ID3Lib/ID3v1.h"
 #include "../ID3Lib/ID3v2.h"
 #include "../MLLib/Lyrics3v2.h"
+#include "MidiTag.h"
 
 #include "MP3InfoReader.h"
 

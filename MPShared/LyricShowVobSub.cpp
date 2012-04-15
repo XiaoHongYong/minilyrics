@@ -30,7 +30,7 @@ CLyricShowVobSub::~CLyricShowVobSub()
 void CLyricShowVobSub::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
 {
 	int			y;
-	PML_ROW		pLyricRow = NULL, pLyricRowNext = NULL;
+	LyricsLine *pLyricRow = NULL, *pLyricRowNext = NULL;
 
 	pGraphics->SetFont(&m_font);
 

@@ -15,177 +15,14 @@ DECLAR_CPPUNIT_TEST_REG(CMLData)
 #endif
 
 #include "../TagLib/TagLib.h"
+#include "../TagLib/LyricsData.h"
 
 #include "../MLProtocol/MLUtils.h"
 #include "LrcTag.h"
 
-///////////////////////////////////////////////////////////////////////////////
-// BEGIN 歌词数据的数据结构定义
-enum LYRIC_FRAG_ATTRIBUTE
-{
-	// LYRIC_FRAG::dwAttrib 的值的描述
-
-	// 前面的3位（1 - 3)为显示风格
-	LSA_SHOW_DEFAULT = 0,			// 缺省的显示风格，为：LSA_SHOW_SIMPLE
-	LSA_SHOW_SIMPLE = 1,			// 简单的显示风格
-	LSA_SHOW_KARAOKE = 2,			// 逐字显示风格
-
-	// 第4位开始时间是否为临时的标志
-	LSA_TEMP_TIME_BEG = 0x1 << 3,		// 开始时间是否为临时计算出的？
-
-	// 第5位结束时间是否为临时的标志
-	LSA_TEMP_TIME_END = 0x1 << 4,		// 结束时间是否为临时计算出的？
-
-	// 第6位为临时歌词位：如插入的广告、注册提示等临时信息
-	LSA_TEMP_FRAG		= 0x1 << 5,
-	// 第7位为提示信息标志位
-	LSA_AD_FRAG			= 0x1 << 7,
-};
-
-#define GetShowStyle(dwAttrib)		(dwAttrib & 0x7)
-
-#define SetShowStyle(dwAttrib, dwStyle)		(dwAttrib = (dwAttrib & (~0x7)) | dwStyle)
-
-#define IsValidShowStyle(dwAttrib)		((dwAttrib == LSA_SHOW_DEFAULT) || (dwAttrib == LSA_SHOW_SIMPLE) || (dwAttrib == LSA_SHOW_KARAOKE))
-
-#define IsTempTimeBeg(dwAttrib)		((dwAttrib & LSA_TEMP_TIME_BEG) == LSA_TEMP_TIME_BEG)
-
-#define IsTempTimeEnd(dwAttrib)		((dwAttrib & LSA_TEMP_TIME_END) == LSA_TEMP_TIME_END)
-
-#define IsTempLyricsFrag(dwAttrib)		((dwAttrib & LSA_TEMP_FRAG) == LSA_TEMP_FRAG)
-
-struct LYRIC_FRAG
-{
-	DWORD				dwAttrib;		// 属性，表示此段数据的信息LYRIC_FRAG_ATTRIBUTE
-	int					nBegTime;		// begin time
-	int					nEndTime;		// end time
-	int16				nDrawWidth;		// 显示出来的宽度
-	int16				nLen;			// length of szLyric
-	TCHAR				szLyric[1];
-	LYRIC_FRAG()
-	{
-		nDrawWidth = 0;
-		nLen = 0;
-	}
-	bool IsAdFrag() { return (dwAttrib & LSA_AD_FRAG) == LSA_AD_FRAG; }
-	bool IsTempFrag() { return IsTempLyricsFrag(dwAttrib); }
-	bool IsTempBegTime() { return IsTempTimeBeg(dwAttrib); }
-
-};
-
-typedef LYRIC_FRAG *PLYRIC_FRAG;
-typedef LYRIC_FRAG *LPLYRIC_FRAG;
-
-typedef vector<LPLYRIC_FRAG>		V_FRAG;
-
-enum ML_ROW_TYPE
-{
-	ML_ROW_LYRICS,		// 歌词行
-	ML_ROW_UNKNOW,		// 不能识别的行
-};
-
-// 歌词中的每一行，在 ML 文件中，它表示歌词中的一行
-class ML_ROW
-{
-public:
-	ML_ROW()
-	{
-		szContent = NULL;
-	}
-	~ML_ROW()
-	{
-		if (szContent)
-			delete szContent;
-
-		for (int k = 0; k < (int)vFrags.size(); k++)
-		{
-			delete[] (BYTE*)vFrags[k];
-		}
-	}
-	int						nRowType;			// 表示此行的类型，必须是ML_ROW_TYPE中定义的一种类型。
-
-	// 当 nRowType == ML_ROW_LYRICS 时使用以下成员
-	vector<PLYRIC_FRAG>		vFrags;			// words in the row
-	int						nBegTime;		// begin time
-	int						nEndTime;		// end time
-
-	// 当 nRowType == ML_ROW_UNKNOWN 时使用以下成员
-	// int					nLen;			// length of szContent
-	TCHAR					*szContent;		// content of the row
-
-	void SetContent(LPCTSTR szContent, int nLen);
-
-	bool IsTempBegTime()
-	{
-		if (vFrags.size())
-			return vFrags[0]->IsTempBegTime();
-
-		return false;
-	}
-
-	bool IsAdRow()
-	{
-		if (vFrags.size())
-			return vFrags[0]->IsAdFrag();
-
-		return false;
-	}
-	bool IsTempRow()
-	{
-		if (vFrags.size())
-			return vFrags[0]->IsTempFrag();
-
-		return false;
-	}
-};
-
-typedef ML_ROW*		PML_ROW;
-typedef ML_ROW*		LPML_ROW;
-
-typedef vector<PML_ROW>		VLyrLines;
-
-class CMLyrLines : public VLyrLines
-{
-public:
-	~CMLyrLines()
-	{
-		clear();
-	}
-
-	void clear()
-	{
-		iterator	it, itEnd;
-		itEnd = end();
-		for (it = begin(); it != itEnd; ++it)
-		{
-			PML_ROW		pRow = *it;
-			delete pRow;
-		}
-		vector<PML_ROW>::clear();
-	}
-
-	void ClearDrawContextWidth()
-	{
-		iterator	it, itEnd;
-		itEnd = end();
-		for (it = begin(); it != itEnd; ++it)
-		{
-			PML_ROW		pRow = *it;
-			for (int k = 0; k < (int)pRow->vFrags.size(); k++)
-			{
-				pRow->vFrags[k]->nDrawWidth = 0;
-			}
-		}
-	}
-
-};
-
-// END 歌词数据的数据结构定义
-///////////////////////////////////////////////////////////////////////////////
+#include "LyrScrollActionRecorder.h"
 
 MLFileType LyricsConentTypeToFileType(LYRICS_CONTENT_TYPE lyrContentType);
-
-#include "LyrScrollActionRecorder.h"
 
 class CMLData  
 {
@@ -219,18 +56,17 @@ public:
 	int GetPlayElapsedTime();
 	void SetPlayElapsedTime (int nTimeElapsed);
 
-	int GetCurPlayLine(const VLyrLines &lyrLines);
+	int GetCurPlayLine(const CLyricsLines &lyrLines);
 
 	int GetLyricRowCount() { return m_arrLyricsRows.size(); }
-	PML_ROW GetLyricsRow(int nRow);
-	VLyrLines &GetRawLyrics() { return m_arrLyricsRows; }
-	VLyrLines &GetFileRows() { return m_arrFileRows; }
+	LyricsLine *GetLyricsRow(int nRow);
+	CLyricsLines &GetRawLyrics() { return m_arrLyricsRows; }
+	CLyricsLines &GetFileRows() { return m_arrFileRows; }
 
-	void CopyMLyrLines(CMLyrLines &lyrLines);
+	void CopyMLyrLines(CLyricsLines &lyrLines);
 
-	// 设置缺省的显示风格
-	void SetDefShowStyle(DWORD dwDefShowStyle) { m_dwDefShowStyle = dwDefShowStyle; }
-	bool IsKaraokeShowStyle() { return m_dwDefShowStyle == LSA_SHOW_KARAOKE; }
+	void SetKaraokeStyle(bool bKaraoke = true) { m_bKaraokeStyle = bKaraoke; }
+	bool IsKaraokeShowStyle() { return m_bKaraokeStyle; }
 
 	// 检查歌词数据的时间顺序的正确性
 	void CheckLyricsRowTime();
@@ -243,28 +79,19 @@ public:
 	// 计算两个歌词行之间的所有歌词行的开始时间和结束时间的值
 	BOOL CalFragTimeBetweenRows(int nBegRow, int nBegFrag, int nEndRow, int nEndFrag, int nBegTime, int nEndTime);
 
-	PLYRIC_FRAG NewLyricFrag(int nBegTime, int nEndTime, 
-		const char * szLyrics, int nLen, BOOL bTempBegTime, BOOL bTempEndTime, DWORD dwStyle = LSA_SHOW_DEFAULT);
-
-	PLYRIC_FRAG NewLyricFrag(int nBegTime, int nEndTime, 
-		const WCHAR * szLyrics, int nLen, BOOL bTempBegTime, BOOL bTempEndTime, DWORD dwStyle = LSA_SHOW_DEFAULT);
-
-	PML_ROW NewMLRow(int nBegTime, int nEndTime, 
-		LPCTSTR szContent = NULL, int nLen = 0, ML_ROW_TYPE rowType = ML_ROW_LYRICS);
-
-	static PML_ROW CopyMLRow(PML_ROW pRowSrc);
+	static LyricsLine *CopyMLRow(LyricsLine *pRowSrc);
 
 	// 添加歌词行
-	void AddRow(PML_ROW pFileRow);
-	void AddRowByTime(PML_ROW pRow);
+	void AddRow(LyricsLine *pFileRow);
+	void AddRowByTime(LyricsLine *pRow);
 
-	void AddTextInLyrics(V_Str &vText, DWORD dwLyrFlagAttr = LSA_SHOW_SIMPLE);
+	void AddTextInLyrics(V_Str &vText);
 
 	bool RemoveLyricsRow(int nRow);
 
 	void AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink);
 
-	BOOL LyricsRowToText(PML_ROW pRow, tstring &strLyricsRow);
+	BOOL LyricsRowToText(LyricsLine *pRow, tstring &strLyricsRow);
 
 	int FilterContents(void);
 
@@ -272,7 +99,7 @@ public:
 	//
 	// Interface for Lyrics Scroll Action Recorder (CLyrScrollActionRecorder).
 	//
-	void ClearRecordedLyrScrollActions(VLyrLines &lyrLines) {
+	void ClearRecordedLyrScrollActions(CLyricsLines &lyrLines) {
 		ASSERT(GetLyrContentType() == LCT_TXT);
 		m_lyrScrollActionRecorder.InitCreateAutoEvents(lyrLines);
 		m_lyrScrollActionRecorder.InitCreateAutoEvents(GetRawLyrics());
@@ -281,7 +108,7 @@ public:
 	bool IsUsingLyrScrollActionRecorder()
 		{ return GetLyrContentType() == LCT_TXT && m_lyrScrollActionRecorder.HasActions(); }
 
-	void UpdateTimeTagByLyrScrollActions(VLyrLines &lyrLines)
+	void UpdateTimeTagByLyrScrollActions(CLyricsLines &lyrLines)
 		{ ASSERT(GetLyrContentType() == LCT_TXT); m_lyrScrollActionRecorder.UpdateTimeTagByEvents(lyrLines); }
 
 	void LyrScrollActionsToTag() {
@@ -289,7 +116,7 @@ public:
 			m_lyrProperties.SetTxtLyrScrollEvents(m_lyrScrollActionRecorder.EventsDataToString().c_str());
 	}
 
-	void LyrScrollToLine(VLyrLines &lyrLines, int nLine, int nTime, bool bUpdateTimeTag = true)
+	void LyrScrollToLine(CLyricsLines &lyrLines, int nLine, int nTime, bool bUpdateTimeTag = true)
 	{
 		ASSERT(GetLyrContentType() == LCT_TXT);
 		m_lyrScrollActionRecorder.ScrollToLine(lyrLines, nLine, nTime, bUpdateTimeTag);
@@ -327,6 +154,8 @@ public:
 	void Close();
 	void ClearLyrics();
 
+	CHAR_ENCODING GetEncodingIndex() { return m_lyrProperties.GetEncodingIndex(); }
+
 protected:
 	int OpenLyricsFile(LPCTSTR szFile, bool bUseSpecifiedEncoding = FALSE, CHAR_ENCODING encodingSpecified = ED_SYSDEF);
 #ifdef _ID3V2_SUPPORT
@@ -347,26 +176,23 @@ protected:
 	void ResetModificationFlag();
 
 	// 取得下一个“歌词段”
-	PLYRIC_FRAG NextFrag(int nRow, int nFrag);
-	BOOL NextFrag(int nRow, int nFrag, int &nNextRow, int &nNextFrag, PLYRIC_FRAG *ppFrag = NULL);
+	LyricsPiece *NextFrag(int nRow, int nFrag);
+	BOOL NextFrag(int nRow, int nFrag, int &nNextRow, int &nNextFrag, LyricsPiece **ppFrag = NULL);
 
 	// 取得上一个“歌词段”
-	PLYRIC_FRAG PrevFrag(int nRow, int nFrag);
-	BOOL PrevFrag(int nRow, int nFrag, int &nPrevRow, int &nPrevFrag, PLYRIC_FRAG *ppFrag = NULL);
-
-	CHAR_ENCODING GetEncodingIndex() { return m_lyrProperties.GetEncodingIndex(); }
+	LyricsPiece *PrevFrag(int nRow, int nFrag);
+	BOOL PrevFrag(int nRow, int nFrag, int &nPrevRow, int &nPrevFrag, LyricsPiece **ppFrag = NULL);
 
 public:
 
-	// 歌词文件的歌词部分，包含了不能识别的歌词、数据、注释等。
-	// ML_ROW_LYRICS 之外的其他行都存在此处。
-	CMLyrLines				m_arrFileRows;
+	// All the file lines of the lyrics file.
+	CLyricsLines			m_arrFileRows;
 
 	int						m_nGlobalOffsetTime;
 
 protected:
 	// Only lyrics lines are saved here, it's just a sub copy of m_arrFileRows.
-	VLyrLines				m_arrLyricsRows;
+	CLyricsLines			m_arrLyricsRows;
 
 protected:
 	CLyrScrollActionRecorder	m_lyrScrollActionRecorder;
@@ -400,7 +226,7 @@ protected:
 	LyricsProperties		m_lyrPropertiesOrg;
 
 	// lyrics display style
-	DWORD					m_dwDefShowStyle;
+	bool					m_bKaraokeStyle;
 
 	// current playing position of lyrics
 	int						m_nTimeElapsed;

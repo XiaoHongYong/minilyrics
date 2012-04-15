@@ -80,7 +80,7 @@ PRAW_IMAGE_DATA AutoFitImageToRect(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst, 
 	return pImgDst;
 }
 
-int GetLyricFragDrawWidth(LYRIC_FRAG *pFrag, CRawGraph* pGraphics)
+int GetLyricFragDrawWidth(LyricsPiece *pFrag, CRawGraph* pGraphics)
 {
 	ASSERT(pFrag);
 
@@ -94,16 +94,16 @@ int GetLyricFragDrawWidth(LYRIC_FRAG *pFrag, CRawGraph* pGraphics)
 	return pFrag->nDrawWidth;
 }
 
-int GetMLRowDrawWidth(PML_ROW pRow, CRawGraph *pGraph)
+int GetMLRowDrawWidth(LyricsLine *pRow, CRawGraph *pGraph)
 {
-	V_FRAG::iterator	it, itEnd;
+	VecLyricsPiece::iterator	it, itEnd;
 	int					w = 0;
 	SIZE				size;
 
 	itEnd = pRow->vFrags.end();
 	for (it = pRow->vFrags.begin(); it != itEnd; it++)
 	{
-		PLYRIC_FRAG		pFrag = *it;
+		LyricsPiece *pFrag = *it;
 
 		if (pGraph->GetTextExtentPoint32(pFrag->szLyric, pFrag->nLen, &size))
 			w += size.cx;
@@ -166,17 +166,17 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 	}
 }
 
-bool WrapDisplayLyrics(VLyrLines &lyrLinesSrc, CMLyrLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax)
+bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax)
 {
 	int		i;
 
 	lyrLinesOut.clear();
 
-	PML_ROW			pRow;
+	LyricsLine *pRow;
 	vector<tstring>	vStr;
 	for (i = 0; i < (int)lyrLinesSrc.size(); i++)
 	{
-		PML_ROW		pRowSrc = lyrLinesSrc[i];
+		LyricsLine *pRowSrc = lyrLinesSrc[i];
 
 		if (pRowSrc->vFrags.size() > 1 || pRowSrc->vFrags.size() == 0
 			|| GetMLRowDrawWidth(pRowSrc, pGraph) <= nWidthMax)
@@ -188,10 +188,9 @@ bool WrapDisplayLyrics(VLyrLines &lyrLinesSrc, CMLyrLines &lyrLinesOut, CRawGrap
 		else
 		{
 			// Wrap
-			PLYRIC_FRAG		pFragSrc, pFrag;
-			int				nLen, nTimeSpan, nBegTime, nEndTime;
+			int			nLen, nTimeSpan, nBegTime, nEndTime;
 
-			pFragSrc = pRowSrc->vFrags[0];
+			LyricsPiece *pFragSrc = pRowSrc->vFrags[0];
 
 			vStr.clear();
 			WrapWords(pGraph, nWidthMax, pFragSrc->szLyric, vStr);
@@ -207,15 +206,9 @@ bool WrapDisplayLyrics(VLyrLines &lyrLinesSrc, CMLyrLines &lyrLinesOut, CRawGrap
 					nEndTime = nBegTime + (vStr[k].size() * nTimeSpan) / nLen;
 				else
 					nEndTime = nBegTime + nTimeSpan;
-				pRow = g_LyricData.NewMLRow(nBegTime, 
-					nEndTime, 
-					pRowSrc->szContent, -1,
-					(ML_ROW_TYPE)pRowSrc->nRowType);
+				pRow = NewLyricsLine(nBegTime,  nEndTime, pRowSrc->szContent, -1, pRowSrc->bLyricsLine);
 
-				pFrag = g_LyricData.NewLyricFrag(nBegTime, nEndTime, vStr[k].c_str(), vStr[k].size(), false, false, 0);
-				pFrag->dwAttrib = pFragSrc->dwAttrib;
-				pFrag->nDrawWidth = 0;
-				pRow->vFrags.push_back(pFrag);
+				pRow->AppendPiece(nBegTime, nEndTime, vStr[k].c_str(), vStr[k].size(), false, false);
 
 				lyrLinesOut.push_back(pRow);
 
@@ -815,7 +808,7 @@ enum	LYR_COLOR_TRANSFORM
 	LCT_LOW,
 };
 
-bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y, LinePos linePos)
+bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, int y, LinePos linePos)
 {
 	int			nSize;
 	MLColor		clrTxt, clrTxtBorder;
@@ -1026,12 +1019,12 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 	nSize = pLyricRow->vFrags.size();
 	for (int i = 0; i < nSize; i++)
 	{
-		PLYRIC_FRAG		pFrag;
+		LyricsPiece *pFrag;
 
 		pFrag = pLyricRow->vFrags[i];
 
 /*#ifndef _WIN32_WCE
-		if (pFrag->IsAdFrag())
+		if (pLyricRow->IsAdvertise())
 		{
 			CFontInfo		*pOldFont;
 
@@ -1079,7 +1072,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				pGraphics->SetOpacityPainting(alphaOld);
 
 #ifndef _WIN32_WCE
-			if (pFrag->IsAdFrag())
+			if (pLyricRow->IsAdvertise())
 			{
 				if (pLyricRow->szContent)
 					SetAdSentence((int)(long)pLyricRow, pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
@@ -1093,7 +1086,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 	return true;
 }
 
-void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int y, MLColor &clrTxt, MLColor &clrTxtBorder)
+void CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, int y, MLColor &clrTxt, MLColor &clrTxtBorder)
 {
 	int			nSize;
 
@@ -1104,12 +1097,12 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 	nSize = pLyricRow->vFrags.size();
 	for (int i = 0; i < nSize; i++)
 	{
-		PLYRIC_FRAG		pFrag;
+		LyricsPiece *pFrag;
 
 		pFrag = pLyricRow->vFrags[i];
 
 /*#ifndef _WIN32_WCE
-		if (pFrag->IsAdFrag())
+		if (pLyricRow->IsAdvertise())
 		{
 			CFontInfo		*pOldFont;
 
@@ -1146,7 +1139,7 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
 			}
 #ifndef _WIN32_WCE
-			if (pFrag->IsAdFrag())
+			if (pLyricRow->IsAdvertise())
 			{
 				if (pLyricRow->szContent)
 					SetAdSentence((int)(long)pLyricRow, pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
@@ -1159,7 +1152,7 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, PML_ROW pLyricRow, int x, int 
 
 // COMMENT:
 //		逐字显示歌词, like Karaoke
-void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int x, int y)
+void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, int x, int y)
 {
 	assert(m_pMLData);
 	if (pLyricRow == NULL)
@@ -1172,11 +1165,11 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 	// 3. Draw word pCurWord
 	// 4. draw words after pCurWords
 	// 5. ok
-	PLYRIC_FRAG	pFrag;
+	LyricsPiece *pFrag;
 	int			nSize;
 	int			nCurPos;
 
-	if (pLyricRow->IsAdRow())
+	if (pLyricRow->IsAdvertise())
 	{
 		DrawRow(pGraphics, pLyricRow, x, y, LP_CUR_LINE);
 		return;
@@ -1337,7 +1330,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, PML_ROW pLyricRow, int 
 	// 5. ok
 }
 
-void CLyricShowObj::DrawCurrentRow(CRawGraph	*pGraphics, PML_ROW pLyricRow, int x, int y)
+void CLyricShowObj::DrawCurrentRow(CRawGraph	*pGraphics, LyricsLine *pLyricRow, int x, int y)
 {
 	assert(m_pMLData);
 	assert(pGraphics);
@@ -1390,13 +1383,13 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 
 // COMMENT:
 //		根据当前的 Graphics 环境，取得歌词pLyricRow行的宽度
-int CLyricShowObj::GetLyricRowTextWidth(CRawGraph	*pGraphics, PML_ROW pLyricRow)
+int CLyricShowObj::GetLyricRowTextWidth(CRawGraph	*pGraphics, LyricsLine *pLyricRow)
 {
 	assert(m_pMLData);
 
 	int			nTxtWidth = 0;
 	int			nSize;
-	PLYRIC_FRAG	pFrag;
+	LyricsPiece *pFrag;
 
 	nSize = pLyricRow->vFrags.size();
 	for (int i = 0; i < nSize; i++)
@@ -1466,7 +1459,7 @@ void CLyricShowObj::SetAntialise(BOOL bAntialis)
 //		pLyricRow -	歌词行
 // OUTPUT:
 //		输出此行歌词显示的 X 座标位置
-int CLyricShowObj::GetLyricRowAlignPos(CRawGraph	*pGraphics, PML_ROW pLyricRow)
+int CLyricShowObj::GetLyricRowAlignPos(CRawGraph	*pGraphics, LyricsLine *pLyricRow)
 {
 	assert(m_pMLData);
 
@@ -1980,7 +1973,7 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 		m_pContainer->UpdateMemGraphicsToScreen(&rcUpdate, this);
 }
 
-int CLyricShowObj::GetAlpha(PML_ROW pRow)
+int CLyricShowObj::GetAlpha(LyricsLine *pRow)
 {
 	int				nTime;
 	const int		FADE_DURATION = 1500;
@@ -2601,10 +2594,10 @@ void CLyricShowObj::ReverseLyricsForRightToLeftLanguage()
 {
 	for (int i = 0; i < (int)m_lyrLines.size(); i++)
 	{
-		PML_ROW		pRow = m_lyrLines[i];
+		LyricsLine *pRow = m_lyrLines[i];
 		for (int k = 0; k < (int)pRow->vFrags.size(); k++)
 		{
-			PLYRIC_FRAG	pFrag = pRow->vFrags[k];
+			LyricsPiece *pFrag = pRow->vFrags[k];
 
 			if (isStrArabic(pFrag->szLyric))
 				ReverseStringForRightToLeftLanguage(pFrag->szLyric);

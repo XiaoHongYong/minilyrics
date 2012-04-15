@@ -264,8 +264,8 @@ void CLyricsOutPluginMgr::OnPlayPos(int uPos)
 
 	if (m_dwNotifyFlag & (ILyricsOut::NOTIF_CUR_LINE | ILyricsOut::NOTIF_HALF_CUR_LINE))
 	{
-		VLyrLines		&lyrLines = g_LyricData.GetRawLyrics();
-		PML_ROW			pRow;
+		CLyricsLines		&lyrLines = g_LyricData.GetRawLyrics();
+		LyricsLine *pRow;
 
 		int				nCurLineOld = m_nCurLine;
 		bool			bHalfOfCurLineOld = m_bHalfOfCurLine;
@@ -377,18 +377,18 @@ void CLyricsOutPluginMgr::OnLyricsChanged()
 
 int CLyricsOutPluginMgr::GetLineCount()
 {
-	VLyrLines		&lyrLines = g_LyricData.GetRawLyrics();
+	CLyricsLines		&lyrLines = g_LyricData.GetRawLyrics();
 	return lyrLines.size();
 }
 
 bool CLyricsOutPluginMgr::GetLyricsOfLine(int nLine, TCHAR szLyrics[], int nBuffLen, int &nBegTime, int &nEndTime)
 {
-	VLyrLines		&lyrLines = g_LyricData.GetRawLyrics();
+	CLyricsLines		&lyrLines = g_LyricData.GetRawLyrics();
 	if (nLine < 0 || nLine >= (int)lyrLines.size())
 		return false;
 
 	tstring			str;
-	PML_ROW			pRow = lyrLines[nLine];
+	LyricsLine *pRow = lyrLines[nLine];
 	g_LyricData.LyricsRowToText(pRow, str);
 	_tcscpy_safe(szLyrics, nBuffLen, str.c_str());
 	nBegTime = pRow->nBegTime;
@@ -399,7 +399,7 @@ bool CLyricsOutPluginMgr::GetLyricsOfLine(int nLine, TCHAR szLyrics[], int nBuff
 
 int CLyricsOutPluginMgr::GetCurLine()
 {
-	VLyrLines		&lyrLines = g_LyricData.GetRawLyrics();
+	CLyricsLines		&lyrLines = g_LyricData.GetRawLyrics();
 
 	return g_LyricData.GetCurPlayLine(lyrLines);
 }

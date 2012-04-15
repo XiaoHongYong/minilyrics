@@ -58,11 +58,11 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		*prcUpdate = m_rcObj;
 
 	int				y, yCurRow;
-	PML_ROW			pRowCur;
+	LyricsLine *pRowCur;
 	int				nRowHeight;
 	int				nDeltaTime;
 	int				nRowCur;
-	PML_ROW			pRow;
+	LyricsLine *pRow;
 
 
 	// get the current playing line
@@ -201,7 +201,7 @@ void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGra
 	// Get previous line update rect
 	if (nCurLine > 0)
 	{
-		PML_ROW		pPrevLine;
+		LyricsLine *pPrevLine;
 		pPrevLine = m_lyrLines[nCurLine - 1];
 
 		nAlpha = GetAlpha(pPrevLine);
@@ -217,7 +217,7 @@ void CLyricShowMultiRowObj::FastestDraw_GetUpdateRectOfFadeInOut(CRawGraph *pGra
 	// Get next line update rect
 	if (nCurLine < (int)m_lyrLines.size() - 1)
 	{
-		PML_ROW		pNextLine;
+		LyricsLine *pNextLine;
 		pNextLine = m_lyrLines[nCurLine + 1];
 
 		nAlpha = GetAlpha(pNextLine);

@@ -32,7 +32,6 @@ CSrtParser::~CSrtParser()
 
 }
 
-// 保存为文件
 int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 {
 	int			nCount;
@@ -49,7 +48,7 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 	nCount = (int)m_pMLData->m_arrFileRows.size();
 	for (int i = 0; i < nCount; i++)
 	{
-		PML_ROW		pRow;
+		LyricsLine *pRow;
 
 		pRow = m_pMLData->m_arrFileRows[i];
 
@@ -86,15 +85,14 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 		}
 	}
 
-	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), 
-		newEncoding))
+	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), newEncoding))
 		return ERR_WRITE_FILE;
 
 	return ERR_OK;
 }
 
 // //00:00:21,657
-static const char * ReadTime(const char *szBeg, DWORD &dwTime)
+static LPCTSTR ReadTime(LPCTSTR szBeg, DWORD &dwTime)
 {
 	int		n;
 
@@ -137,9 +135,8 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 	//00:00:21,657 --> 00:00:26,516
 	//就像佛洛伊飞船出场前
 	//你得耐著性子先看完脱口秀
+	CTextFile	file;
 
-	char		szBuff[2048 + 4];
-	FILE		*fp;
 	enum Parse_State
 	{
 		PS_NUMBER,
@@ -150,25 +147,20 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 	Parse_State	state;
 	DWORD		dwBegTime, dwEndTime;
 
-	fp = _tfopen(m_pMLData->GetLyricsFileName(), _T("rt"));
-	if (!fp)
-	{
-		SetCustomErrorDesc(OSError());
-		ERRLOG1(_T("Open file: %s FAILED!"), m_pMLData->GetLyricsFileName());
-		return ERR_CUSTOM_ERROR;
-	}
+	int nRet = file.Open(m_pMLData->GetLyricsFileName(), CTextFile::OM_READ, m_pMLData->GetEncodingIndex());
+	if (nRet != ERR_OK)
+		nRet;
 
 	state = PS_NUMBER;
-	while (fgets(szBuff, CountOf(szBuff) - 1, fp))
+	tstring line;
+	while (file.ReadLine(line))
 	{
-		const char		*szBeg;
+		TrimStr(line, _T("\r\n"));
 
-		szBeg = szBuff;
+		LPCTSTR szBeg = line.c_str();
 		if (state == PS_NUMBER)
 		{
 			while (IsDigit(*szBeg))
-				szBeg++;
-			while (*szBeg == '\r' || *szBeg == '\n' || *szBeg == ' ')
 				szBeg++;
 			if (*szBeg != '\0')
 				continue;
@@ -182,7 +174,7 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 			if (szBeg == NULL)
 				continue;
 
-			if (strncmp(szBeg, " --> ", 5) != 0)
+			if (_tcsncmp(szBeg, _T(" --> "), 5) != 0)
 				continue;
 			szBeg += 5;
 
@@ -190,8 +182,6 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 			if (szBeg == NULL)
 				continue;
 
-			while (*szBeg == '\r' || *szBeg == '\n' || *szBeg == ' ')
-				szBeg++;
 			if (*szBeg != '\0')
 				continue;
 
@@ -200,32 +190,19 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 		}
 		else if (state == PS_TXT)
 		{
-			if (*szBeg == '\r' || *szBeg == '\n')
+			if (line.empty())
 			{
 				state = PS_NUMBER;
 				continue;
 			}
 
-			PLYRIC_FRAG		pFrag;
-			PML_ROW			pRow;
-			int				nLen;
-
-			nLen = strlen(szBuff);
-			while (szBuff[nLen - 1] == '\r' || szBuff[nLen - 1] == '\n')
-				nLen--;
-			szBuff[nLen] = '\0';
-
-			pFrag = m_pMLData->NewLyricFrag(dwBegTime, dwEndTime,
-				szBuff, nLen, FALSE, FALSE);
-			
-			pRow = m_pMLData->NewMLRow(dwBegTime, dwEndTime);
-			pRow->vFrags.push_back(pFrag);
+			LyricsLine *pRow = NewLyricsLine(dwBegTime, dwEndTime);
+			pRow->AppendPiece(dwBegTime, dwEndTime,
+				line.c_str(), line.size(), FALSE, FALSE);
 
 			m_pMLData->AddRowByTime(pRow);
 		}
 	}
-
-	fclose(fp);
 
 	return ERR_OK;
 }
@@ -235,37 +212,19 @@ LYRICS_CONTENT_TYPE CSrtParser::GetLyrContentType()
 	return LCT_LRC;
 }
 
-BOOL CSrtParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
+BOOL CSrtParser::LyricsRowToText(LyricsLine *pRow, tstringex &strBuff)
 {
 	strBuff.clear();
+	if (!pRow->bLyricsLine)
+		return false;
 
-	switch (pRow->nRowType)
-	{
-	case ML_ROW_UNKNOW:		// 不能识别的行
-//		assert(pRow->szContent);
-//		_tcscpy(szBuff, pRow->szContent);
-//		_tcscat(szBuff, _T("\r\n"));
-		break;
-	case ML_ROW_LYRICS:		// 歌词行
-		{
-			int		nCount;
-			nCount = (int)pRow->vFrags.size();
-			for (int i = 0; i < nCount; i++)
-			{
-				// 去掉插入的注册信息，广告信息等
-				if (IsTempLyricsFrag(pRow->vFrags[i]->dwAttrib))
-				{
-					strBuff.clear();
-					break;
-				}
+	if (pRow->IsTempRow())
+		return false;
 
-				strBuff += pRow->vFrags[i]->szLyric;
-			}
-			strBuff +=  _T("\r\n");
-		}
-		break;
-	default:
-		return FALSE;
-	}
+	for (int i = 0; i < (int)pRow->vFrags.size(); i++)
+		strBuff += pRow->vFrags[i]->szLyric;
+
+	strBuff +=  _T("\r\n");
+
 	return TRUE;
 }

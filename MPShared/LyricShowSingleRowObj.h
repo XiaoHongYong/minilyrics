@@ -19,13 +19,13 @@ public:
 
 public:
 	void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
-	int GetLyricRightRowAlignPos(CRawGraph *pGraphics, PML_ROW pLyricRow);
-	int GetLyricLeftRowAlignPos(CRawGraph *pGraphics, PML_ROW pLyricRow);
+	int GetLyricRightRowAlignPos(CRawGraph *pGraphics, LyricsLine *pLyricRow);
+	int GetLyricLeftRowAlignPos(CRawGraph *pGraphics, LyricsLine *pLyricRow);
 
-	void DrawCurLineFadeInNextLine(CRawGraph *pGraphics, PML_ROW pRowCur, PML_ROW pRowNext, int x, int y);
+	void DrawCurLineFadeInNextLine(CRawGraph *pGraphics, LyricsLine *pRowCur, LyricsLine *pRowNext, int x, int y);
 
-	void GetCurLineFadeOutColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
-	void GetNextLineFadeInColor(PML_ROW pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
+	void GetCurLineFadeOutColor(LyricsLine *pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
+	void GetNextLineFadeInColor(LyricsLine *pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
 
 public:
 	static LPCTSTR ClassName() { return ms_szClassName; }

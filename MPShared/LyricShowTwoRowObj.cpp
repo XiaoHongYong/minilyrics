@@ -35,11 +35,11 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 		return;
 
 	int			y;
-	PML_ROW		pLyricRow;
+	LyricsLine *pLyricRow;
 	int			nRowHeight;// center row height
 	int			nRowTheOther = 0;
 	int			nRowCur;
-	PML_ROW			pRowTheOther = NULL;
+	LyricsLine *pRowTheOther = NULL;
 
 	pGraphics->SetFont(&m_font);
 

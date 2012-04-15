@@ -21,8 +21,8 @@ public:
 public:
 	//	void UpdateDraw(DWORD dwTimeElapsed);
 	void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
-	int GetLyricRightRowAlignPos(CRawGraph *pGraphics, PML_ROW pLyricRow);
-	int GetLyricLeftRowAlignPos(CRawGraph *pGraphics, PML_ROW pLyricRow);
+	int GetLyricRightRowAlignPos(CRawGraph *pGraphics, LyricsLine *pLyricRow);
+	int GetLyricLeftRowAlignPos(CRawGraph *pGraphics, LyricsLine *pLyricRow);
 
 protected:
 	void OnLyrDrawContextChanged();

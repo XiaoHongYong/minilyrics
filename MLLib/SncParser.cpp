@@ -35,7 +35,7 @@ int CSncParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 	nCount = (int)m_pMLData->m_arrFileRows.size();
 	for (int i = 0; i < nCount; i++)
 	{
-		PML_ROW		pRow;
+		LyricsLine *pRow;
 
 		pRow = m_pMLData->m_arrFileRows[i];
 
@@ -59,60 +59,47 @@ int CSncParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 //		⑩00010450⑿
 //          MMSS
 //		我躲在车里
-BOOL CSncParser::LyricsRowToText(PML_ROW pRow, tstringex &strBuff)
+BOOL CSncParser::LyricsRowToText(LyricsLine *pRow, tstringex &strBuff)
 {
 	strBuff.clear();
 
-	switch (pRow->nRowType)
+	if (!pRow->bLyricsLine)
+		return false;
+
+	if (pRow->IsTempRow())
+		return false;
+
+	int		nMin, nSec, n10Ms;
+	int		nMs;
+	int		nLen;
+
+	nMs = pRow->nBegTime + m_pMLData->GetOffsetTime();
+	n10Ms = (nMs / 10) % 100;
+	nSec = (nMs / 1000) % 60;
+	nMin = nMs / (1000 * 60);
+	// _stprintf(szBuff, _T("⑩%04d%02d%02d⑿\r\n"), nMin, nSec, n10Ms);
+	strBuff.reserve(100);
+	nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("⑩%04d%02d%02d⑿\r\n"), nMin, nSec, n10Ms);
+	strBuff.setSize(nLen);
+
+	int			nCount;
+	tstringex	strLyrics;
+
+	nCount = (int)pRow->vFrags.size();
+	for (int i = 0; i < nCount; i++)
 	{
-	case ML_ROW_UNKNOW:		// 不能识别的行
-		// lstrcpy(szBuff, pRow->szContent);
-		// lstrcat(szBuff, "\r\n");
-		break;
-	case ML_ROW_LYRICS:		// 歌词行
-		{
-			int		nMin, nSec, n10Ms;
-			int		nMs;
-			int		nLen;
-
-			nMs = pRow->nBegTime + m_pMLData->GetOffsetTime();
-			n10Ms = (nMs / 10) % 100;
-			nSec = (nMs / 1000) % 60;
-			nMin = nMs / (1000 * 60);
-			// _stprintf(szBuff, _T("⑩%04d%02d%02d⑿\r\n"), nMin, nSec, n10Ms);
-			strBuff.reserve(100);
-			nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("⑩%04d%02d%02d⑿\r\n"), nMin, nSec, n10Ms);
-			strBuff.setSize(nLen);
-
-			int			nCount;
-			tstringex	strLyrics;
-
-			nCount = (int)pRow->vFrags.size();
-			for (int i = 0; i < nCount; i++)
-			{
-				// 去掉插入的注册信息，广告信息等
-				if (IsTempLyricsFrag(pRow->vFrags[i]->dwAttrib))
-				{
-					strBuff.clear();
-					return TRUE;
-				}
-
-				strLyrics += pRow->vFrags[i]->szLyric;
-			}
-			strLyrics.trim();
-
-			// 如果本行歌词为空，则不保存本行
-			if (strLyrics.empty())
-				strBuff.clear();
-			else
-			{
-				strBuff += strLyrics;
-				strBuff += _T("\r\n");
-			}
-		}
-		break;
-	default:
-		return FALSE;
+		strLyrics += pRow->vFrags[i]->szLyric;
 	}
+	strLyrics.trim();
+
+	// 如果本行歌词为空，则不保存本行
+	if (strLyrics.empty())
+		strBuff.clear();
+	else
+	{
+		strBuff += strLyrics;
+		strBuff += _T("\r\n");
+	}
+
 	return TRUE;
 }
