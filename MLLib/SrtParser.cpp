@@ -34,7 +34,6 @@ CSrtParser::~CSrtParser()
 
 int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 {
-	int			nCount;
 	tstringex	strData;
 	tstringex	strBuff;
 	TCHAR		szTime[256];
@@ -45,7 +44,8 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 	//你得耐著性子先看完脱口秀
 	int			nBegOld = -1, nEndOld = -1;
 
-	nCount = (int)m_pMLData->m_arrFileRows.size();
+	int index = 1;
+	int nCount = (int)m_pMLData->m_arrFileRows.size();
 	for (int i = 0; i < nCount; i++)
 	{
 		LyricsLine *pRow;
@@ -61,6 +61,12 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 			}
 			else
 			{
+				nBegOld = pRow->nBegTime;
+				nEndOld = pRow->nEndTime;
+
+				if (index > 1)
+					strData += _T("\n");
+
 				int		nHour, nMinute, nSec, nMs;
 				nMs = pRow->nBegTime % 1000;
 				nSec = pRow->nBegTime / 1000;
@@ -68,7 +74,7 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 				nSec %= 60;
 				nHour = nMinute / 60;
 				nMinute %= 60;
-				_stprintf_s(szTime, CountOf(szTime), _T("%d\n%02d:%02d:%02d,%03d --> "), i, nHour, nMinute, nSec, nMs);
+				_stprintf_s(szTime, CountOf(szTime), _T("%d\n%02d:%02d:%02d,%03d --> "), index++, nHour, nMinute, nSec, nMs);
 				strData += szTime;
 
 				nMs = pRow->nEndTime % 1000;

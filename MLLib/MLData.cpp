@@ -628,6 +628,13 @@ int CMLData::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNew
 		if (GetLyrContentType() <= LCT_TXT)
 			bUseNewFileName = true;
 	}
+	else if (FileIsExtSame(szFile, _T(".srt")) )
+	{
+		pParser = new CSrtParser(this);
+		NewFileType = FT_LYRICS_LRC;
+		if (GetLyrContentType() <= LCT_TXT)
+			bUseNewFileName = true;
+	}
 #ifndef _IPHONE
 	else if (FileIsExtSame(szFile, _T(".snc")) )
 	{

@@ -87,11 +87,15 @@ public:
 protected:
 	int ReadTrackTrunk(MidiTag::TrackTrunk &trunk);
 
+	int DeltaTickToMs(int tick);
+
 	MidiTag::TrackTrunk *CMidiTag::FindLyricsTrunk();
 
 protected:
 	CFileEx					m_file;
 	MidiTag::ListTrackTrunk	m_listTrunks;
-	uint16					m_timeDivision;
+	uint16					m_timeDivision;	// Ticks Per Quarter Note
+	byte					m_numberator, m_dominator;
+	int						m_tempo;	// Microseconds Per Quarter-Note
 
 };
