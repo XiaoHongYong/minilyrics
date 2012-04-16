@@ -217,6 +217,9 @@ public:
 #endif // #ifndef _MPLAYER
 	void OnMediaChangedOfZikiPlayer();
 
+	tstring GetTitleFilterFile();
+	bool SetFieldValue(TCHAR szField[], int lenField, LPCTSTR szValue);
+
 protected:
 	TCHAR					m_szSrcMedia[MAX_PATH];
 	TCHAR					m_szArtist[LRC_TITLE_MAX_LEN], m_szTitle[LRC_TITLE_MAX_LEN];
@@ -226,6 +229,8 @@ protected:
 	DWORD					m_dwPlayingPos;
 
 	bool					m_bUseSeekTimeAsPlayingTime;
+
+	VecString				m_vTitleFilters;
 
 protected:
 	// For MiniLyrics

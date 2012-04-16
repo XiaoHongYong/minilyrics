@@ -1393,7 +1393,8 @@ bool SaveDataAsFile(LPCTSTR szFile, const LPCVOID lpData, int nLen)
 
 bool SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, CHAR_ENCODING encoding)
 {
-	assert(nLen >= 0);
+	if (nLen < 0)
+		nLen = _tcslen(szText);
 
 	FILE	*fp;
 	bool	bRet = true;
@@ -1435,7 +1436,7 @@ bool SaveStringAsFile(LPCTSTR szFile, LPCTSTR szText, int nLen, CHAR_ENCODING en
 			bRet = false;
 #else
 		stringex	str;
-		TStringToUTF8(szText, nLen, str, encoding);
+		TStringToUTF8(szText, nLen, str);
 		if (fwrite(str.c_str(), sizeof(char), str.size(), fp) != str.size())
 			bRet = false;
 #endif

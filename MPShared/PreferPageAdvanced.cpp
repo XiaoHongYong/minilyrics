@@ -69,7 +69,6 @@ public:
 	}
 
 	virtual void Reset() {
-		
 	}
 
 	CBaseWnd		*m_pWnd;
@@ -172,6 +171,46 @@ public:
 		g_LyricsDownloader.m_bAutoDownload = Tobool(nValue);
 		CPfItemBool::SetIntValue(nValue);
 	}
+
+};
+
+class CPfItemTitleFilter : public CPreferItem
+{
+public:
+	CPfItemTitleFilter(CBaseWnd *pWnd) : CPreferItem(ConnectToLocalStr(_TLM("Lyrics Download"),
+		_TLM("Filter radio station names in media artist and title")).c_str())
+	{
+		m_pWnd = pWnd;
+	}
+
+	virtual tstring GetValue() {
+		return _T("");
+	}
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		vString.push_back(_TLT("Edit..."));
+	}
+
+	virtual void SetOption(int nIndex) {
+		tstring strFilterFile = g_Player.GetTitleFilterFile();
+		if (!IsFileExist(strFilterFile.c_str()))
+			SaveStringAsFile(strFilterFile.c_str(), _T("; Enter the Radio station name filters below, one name per line.\r\n; Please save this file, and restart MiniLyrics.\r\n"), -1, ED_UTF8);
+
+		tstring		strEditor;
+		GetNotepadEditor(strEditor);
+		Execute(m_pWnd,
+			strEditor.c_str(),
+			strFilterFile.c_str());
+	}
+
+	virtual bool IsDefault() {
+		return true;
+	}
+
+	virtual void Reset() {
+	}
+
+	CBaseWnd		*m_pWnd;
 
 };
 
@@ -793,6 +832,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Download"), _TLM("Try to download synchronized lyrics (.lrc) even if having local unsynchronized (.txt) lyrics")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true));
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Download"), _TLM("Pop up lyrics searching dialog when lyrics are found")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("Lyrics Download"), _TLM("Save downloaded lyrics in the a, b, c... folder of downloaded folder")).c_str(), ET_NULL, SZ_SECT_LYR_DL, _T("DownSaveByABC"), false));
+	m_vPreferItems.push_back(new CPfItemTitleFilter(m_pSkin));
 	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(m_pSkin));
 	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(m_pSkin));
 

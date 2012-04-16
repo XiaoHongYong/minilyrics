@@ -148,6 +148,22 @@ CPlayer::~CPlayer()
 
 void CPlayer::OnInit(bool bMiniLyrics)
 {
+	// Open title filters
+	tstringex strFilter;
+	if (OpenFileToTString(GetTitleFilterFile().c_str(), strFilter))
+	{
+		StrSplit(strFilter.c_str(), '\n', m_vTitleFilters);
+		for (size_t i = 0; i < m_vTitleFilters.size();)
+		{
+			if (m_vTitleFilters[i].empty() || StrBeginWith(m_vTitleFilters[i].c_str(), _T(";")))
+				m_vTitleFilters.erase(m_vTitleFilters.begin() + i);
+			else
+				i++;
+		}
+		TrimStr(m_vTitleFilters, '\r');
+		TrimStr(m_vTitleFilters, ' ');
+	}
+
 	if (bMiniLyrics)
 		OnInitOfMiniLyrics();
 	else
@@ -1136,11 +1152,7 @@ void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 	bool			bChanged = false;
 
 #define		SAFE_COPY_FIELD(src, dst)	\
-	if (src && _tcscmp(src, dst) != 0)	\
-	{									\
-	bChanged = true;				\
-	_tcscpy_safe(dst, CountOf(dst), src);	\
-	}
+	if (SetFieldValue(dst, CountOf(dst), src)) bChanged = true;
 
 #define		EMPTY_FIELD(dst)	\
 	if (!IsEmptyString(dst))	\
@@ -1204,8 +1216,9 @@ void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 		{
 			tstring		strAr, strTi;
 			AnalysisLyricsFileNameEx(strAr, strTi, FileGetName(m_szSrcMedia));
-			_tcscpy_safe(m_szArtist, CountOf(m_szArtist), strAr.c_str());
-			_tcscpy_safe(m_szTitle, CountOf(m_szTitle), strTi.c_str());
+
+			SetFieldValue(m_szArtist, CountOf(m_szArtist), strAr.c_str());
+			SetFieldValue(m_szTitle, CountOf(m_szTitle), strTi.c_str());
 		}
 
 		tstring			strFullTitle;
@@ -1263,4 +1276,30 @@ void CPlayer::OnMediaChangedOfZikiPlayer()
 		FormatFullTitle(m_szArtist, m_szTitle, m_szSrcMedia, strFullTitle);
 		_tcscpy_safe(m_szFullTitle, CountOf(m_szFullTitle), strFullTitle.c_str());
 	}
+}
+
+tstring CPlayer::GetTitleFilterFile()
+{
+	return DirStringJoint(GetAppDataDir(), _T("TitlFilters.txt"));
+}
+
+bool CPlayer::SetFieldValue(TCHAR szField[], int lenField, LPCTSTR szValue)
+{
+	if (szValue == NULL)
+		return false;
+
+	tstring str = szValue;
+	if (szField != m_szSrcMedia)
+	{
+		for (size_t i = 0; i < m_vTitleFilters.size(); i++)
+			strrep(str, m_vTitleFilters[i].c_str(), _T(""));
+	}
+
+	if (_tcscmp(szField, str.c_str()) != 0)
+	{
+		_tcscpy_safe(szField, lenField, str.c_str());
+		return true;
+	}
+
+	return false;
 }
