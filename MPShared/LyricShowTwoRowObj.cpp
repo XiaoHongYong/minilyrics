@@ -39,7 +39,7 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 	int			nRowHeight;// center row height
 	int			nRowTheOther = 0;
 	int			nRowCur;
-	LyricsLine *pRowTheOther = NULL;
+	LyricsLine *pLineTheOther = NULL;
 
 	pGraphics->SetFont(&m_font);
 
@@ -82,7 +82,7 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 	if (nRowTheOther < 0)
 		nRowTheOther = -1;
 	else
-		pRowTheOther = m_lyrLines[nRowTheOther];
+		pLineTheOther = m_lyrLines[nRowTheOther];
 
 	int		yCurRow;
 	int		yTheOtherRow;
@@ -172,10 +172,10 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 	// 显示当前歌词行
 	DrawCurrentRow(pGraphics, pLyricRow, AUTO_CAL_X, yCurRow);
 
-	if (pRowTheOther)
+	if (pLineTheOther)
 	{
 		// 显示前（后）一歌词行
-		DrawRow(pGraphics, pRowTheOther, AUTO_CAL_X, yTheOtherRow, 
+		DrawRow(pGraphics, pLineTheOther, AUTO_CAL_X, yTheOtherRow, 
 			nRowTheOther < nRowCur ? LP_ABOVE_CUR_LINE : LP_BELOW_CUR_LINE);
 	}
 }

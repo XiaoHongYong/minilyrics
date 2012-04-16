@@ -1,3 +1,6 @@
+MiniLyrics 7.4.8
+New: Support load embedded lyrics in .KAR files.
+
 MiniLyrics 7.4.7
 Fixed: The name of AIMP3 can't be detected correctly.
 Fixed: Fixed a crash bug.

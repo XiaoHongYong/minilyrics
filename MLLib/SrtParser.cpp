@@ -45,31 +45,31 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 	int			nBegOld = -1, nEndOld = -1;
 
 	int index = 1;
-	int nCount = (int)m_pMLData->m_arrFileRows.size();
+	int nCount = (int)m_pMLData->m_arrFileLines.size();
 	for (int i = 0; i < nCount; i++)
 	{
-		LyricsLine *pRow;
+		LyricsLine *pLine;
 
-		pRow = m_pMLData->m_arrFileRows[i];
+		pLine = m_pMLData->m_arrFileLines[i];
 
-		if (pRow && LyricsRowToText(pRow, strBuff))
+		if (pLine && LyricsLineToText(pLine, strBuff))
 		{
-			if (pRow->nBegTime == nBegOld && pRow->nEndTime == nEndOld)
+			if (pLine->nBegTime == nBegOld && pLine->nEndTime == nEndOld)
 			{
 				// 时间相同的行
 				strData += strBuff;
 			}
 			else
 			{
-				nBegOld = pRow->nBegTime;
-				nEndOld = pRow->nEndTime;
+				nBegOld = pLine->nBegTime;
+				nEndOld = pLine->nEndTime;
 
 				if (index > 1)
 					strData += _T("\n");
 
 				int		nHour, nMinute, nSec, nMs;
-				nMs = pRow->nBegTime % 1000;
-				nSec = pRow->nBegTime / 1000;
+				nMs = pLine->nBegTime % 1000;
+				nSec = pLine->nBegTime / 1000;
 				nMinute = nSec / 60;
 				nSec %= 60;
 				nHour = nMinute / 60;
@@ -77,8 +77,8 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 				_stprintf_s(szTime, CountOf(szTime), _T("%d\n%02d:%02d:%02d,%03d --> "), index++, nHour, nMinute, nSec, nMs);
 				strData += szTime;
 
-				nMs = pRow->nEndTime % 1000;
-				nSec = pRow->nEndTime / 1000;
+				nMs = pLine->nEndTime % 1000;
+				nSec = pLine->nEndTime / 1000;
 				nMinute = nSec / 60;
 				nSec %= 60;
 				nHour = nMinute / 60;
@@ -202,11 +202,11 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 				continue;
 			}
 
-			LyricsLine *pRow = NewLyricsLine(dwBegTime, dwEndTime);
-			pRow->AppendPiece(dwBegTime, dwEndTime,
+			LyricsLine *pLine = NewLyricsLine(dwBegTime, dwEndTime);
+			pLine->AppendPiece(dwBegTime, dwEndTime,
 				line.c_str(), line.size(), FALSE, FALSE);
 
-			m_pMLData->AddRowByTime(pRow);
+			m_pMLData->AddLineByTime(pLine);
 		}
 	}
 
@@ -218,17 +218,17 @@ LYRICS_CONTENT_TYPE CSrtParser::GetLyrContentType()
 	return LCT_LRC;
 }
 
-BOOL CSrtParser::LyricsRowToText(LyricsLine *pRow, tstringex &strBuff)
+BOOL CSrtParser::LyricsLineToText(LyricsLine *pLine, tstringex &strBuff)
 {
 	strBuff.clear();
-	if (!pRow->bLyricsLine)
+	if (!pLine->bLyricsLine)
 		return false;
 
-	if (pRow->IsTempRow())
+	if (pLine->IsTempLine())
 		return false;
 
-	for (int i = 0; i < (int)pRow->vFrags.size(); i++)
-		strBuff += pRow->vFrags[i]->szLyric;
+	for (int i = 0; i < (int)pLine->vFrags.size(); i++)
+		strBuff += pLine->vFrags[i]->szLyric;
 
 	strBuff +=  _T("\r\n");
 

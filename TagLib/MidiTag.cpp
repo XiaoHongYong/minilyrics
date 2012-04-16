@@ -344,7 +344,7 @@ int CMidiTag::GetLyrics(CLyricsLines &lyricsLines)
 			if (buf[0] == '@')
 				continue;
 			// startTime += (float)(deltaTime * 1000) / ((float)m_timeDivision / 5.2) / 10;
-			startTime += (float)deltaTime * m_tempo / 1000.0 / m_timeDivision;
+			startTime += (float)deltaTime * m_tempo / 1000 / m_timeDivision;
 			if (bNewLine || line == NULL)
 			{
 				line = NewLyricsLine((int)startTime, TEMP_TIME);

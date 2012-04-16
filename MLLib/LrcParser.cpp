@@ -160,7 +160,7 @@ int CLrcParser::ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine)
 			AddStrAsUnknowLine(szLine);
 	}
 
-	if (m_pMLData->GetLyricRowCount() == 0 && !bAddTimeStampForTextLine)
+	if (m_pMLData->GetLyricsLinesCount() == 0 && !bAddTimeStampForTextLine)
 	{
 		// .txt lyrics
 		m_pMLData->ClearLyrics();
@@ -213,26 +213,26 @@ void CLrcParser::FinalFixOnLyrics(bool bAddTimeStampForTextLine)
 	else
 	{
 		//
-		// 将未设置时间标签的歌词行的时间设置为－1，再调用CheckLyricsRowTime重新
+		// 将未设置时间标签的歌词行的时间设置为－1，再调用CheckLyricsLineTime重新
 		// 校正时间。注意：不能调用LRCCheckRowTime()函数
 		CLyricsLines	&lyrLines = m_pMLData->GetRawLyrics();
 		for (int i = 0; i < (int)lyrLines.size(); i++)
 		{
-			LyricsLine *pRow = lyrLines[i];
-			if (pRow->vFrags.size())
+			LyricsLine *pLine = lyrLines[i];
+			if (pLine->vFrags.size())
 			{
-				LyricsPiece *pFrag = pRow->vFrags[0];
-				if (pFrag->bTempBegTime)
+				LyricsPiece *pPiece = pLine->vFrags[0];
+				if (pPiece->bTempBegTime)
 				{
-					pFrag->nBegTime = -1;
-					pFrag->nEndTime = -1;
-					pRow->nBegTime = -1;
-					pRow->nEndTime = -1;
+					pPiece->nBegTime = -1;
+					pPiece->nEndTime = -1;
+					pLine->nBegTime = -1;
+					pLine->nEndTime = -1;
 				}
 			}
 		}
 
-		m_pMLData->CheckLyricsRowTime();
+		m_pMLData->CheckLyricsLineTime();
 	}
 
 	m_pMLData->FixExtendedLrcTimeStamps();
@@ -310,13 +310,13 @@ void CLrcParser::ParseTxtTagInLyrics()
 	//
 	for (int i = 0; i < (int)lyrLines.size(); i++)
 	{
-		LyricsLine *pRow = lyrLines[i];
-		ASSERT(pRow->vFrags.size() == 1);
-		LyricsPiece *pFrag = pRow->vFrags[0];
-		ASSERT(pFrag->IsTempBegTime());
+		LyricsLine *pLine = lyrLines[i];
+		ASSERT(pLine->vFrags.size() == 1);
+		LyricsPiece *pPiece = pLine->vFrags[0];
+		ASSERT(pPiece->IsTempBegTime());
 
 		// Parse Txt tag.
-		int propIndex = propNameValueMap.ParseTxtTag(pFrag->szLyric, _tcslen(pFrag->szLyric));
+		int propIndex = propNameValueMap.ParseTxtTag(pPiece->szLyric, _tcslen(pPiece->szLyric));
 		if (propIndex != -1)
 		{
 			if (IsTxtTagAtTailOfFile(propNameValueMap.GetTagType(propIndex)))
@@ -328,7 +328,7 @@ void CLrcParser::ParseTxtTagInLyrics()
 			else
 			{
 				propNameValueMap.Remove(propIndex);
-				m_pMLData->RemoveLyricsRow(i);
+				m_pMLData->RemoveLyricsLine(i);
 				i--;
 			}
 		}
@@ -339,17 +339,17 @@ void CLrcParser::ParseTxtTagInLyrics()
 	//
 	for (int i = (int)lyrLines.size() - 1; i >= 0; i--)
 	{
-		LyricsLine *pRow = lyrLines[i];
-		ASSERT(pRow->vFrags.size() == 1);
-		LyricsPiece *pFrag = pRow->vFrags[0];
-		ASSERT(pFrag->IsTempBegTime());
+		LyricsLine *pLine = lyrLines[i];
+		ASSERT(pLine->vFrags.size() == 1);
+		LyricsPiece *pPiece = pLine->vFrags[0];
+		ASSERT(pPiece->IsTempBegTime());
 
 		// Parse Txt tag.
-		int propIndex = propNameValueMap.ParseTxtTag(pFrag->szLyric, _tcslen(pFrag->szLyric));
+		int propIndex = propNameValueMap.ParseTxtTag(pPiece->szLyric, _tcslen(pPiece->szLyric));
 		if (propIndex != -1)
 		{
 			propNameValueMap.Remove(propIndex);
-			m_pMLData->RemoveLyricsRow(i);
+			m_pMLData->RemoveLyricsLine(i);
 		}
 	}
 }
@@ -382,15 +382,15 @@ void CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
 	if (!bLongTimeFmt)
 	{
 		// Test whether is long time format
-		for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
+		for (int i = 0; i < (int)m_pMLData->m_arrFileLines.size(); i++)
 		{
-			LyricsLine *pRow = m_pMLData->m_arrFileRows[i];
-			if (pRow->vFrags.empty())
+			LyricsLine *pLine = m_pMLData->m_arrFileLines[i];
+			if (pLine->vFrags.empty())
 				continue;
 
-			if (!pRow->vFrags[0]->bTempBegTime)
+			if (!pLine->vFrags[0]->bTempBegTime)
 			{
-				if (pRow->nBegTime % 1000 != 0)
+				if (pLine->nBegTime % 1000 != 0)
 				{
 					bLongTimeFmt = true;
 					break;
@@ -402,12 +402,12 @@ void CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
 	//
 	// Save every lyrics line
 	tstringex		strBuff;
-	for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
+	for (int i = 0; i < (int)m_pMLData->m_arrFileLines.size(); i++)
 	{
-		LyricsLine *pRow = m_pMLData->m_arrFileRows[i];
-		ASSERT(pRow);
+		LyricsLine *pLine = m_pMLData->m_arrFileLines[i];
+		ASSERT(pLine);
 
-		if (LyricsRowToLrcString(pRow, bLongTimeFmt, strBuff))
+		if (LyricsLineToLrcString(pLine, bLongTimeFmt, strBuff))
 		{
 			str += strBuff;
 			str += _T("\r\n");
@@ -431,23 +431,23 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 	LyricsProperties properties;
 	CLyrTagNameValueMap	propNameValueMap(properties);
 
-	for (int i = 0; i < (int)m_pMLData->m_arrFileRows.size(); i++)
+	for (int i = 0; i < (int)m_pMLData->m_arrFileLines.size(); i++)
 	{
-		LyricsLine *pRow = m_pMLData->m_arrFileRows[i];
-		if (pRow->bLyricsLine)
+		LyricsLine *pLine = m_pMLData->m_arrFileLines[i];
+		if (pLine->bLyricsLine)
 		{
-			LyricsRowToTxtString(pRow, strBuff);
+			LyricsLineToTxtString(pLine, strBuff);
 			if (propNameValueMap.ParseTxtTag(strBuff.c_str(), strBuff.size()) == -1)
 			{
-				lyrLines.push_back(pRow);
+				lyrLines.push_back(pLine);
 				str += strBuff;
 				str += _T("\r\n");
 			}
 		}
 		else
 		{
-			lyrLines.push_back(pRow);
-			// Only append blank spaces, not "pRow->szContent";
+			lyrLines.push_back(pLine);
+			// Only append blank spaces, not "pLine->szContent";
 			str += _T("\r\n");
 		}
 	}
@@ -496,42 +496,42 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 }
 
 //
-bool CLrcParser::LyricsRowToLrcString(LyricsLine *pRow, bool bLongTimeFmt, tstringex &strBuff)
+bool CLrcParser::LyricsLineToLrcString(LyricsLine *pLine, bool bLongTimeFmt, tstringex &strBuff)
 {
-	ASSERT(pRow);
+	ASSERT(pLine);
 	strBuff.clear();
 
-	if (pRow->IsTempRow())
+	if (pLine->IsTempLine())
 		return FALSE;
 
-	if (!pRow->bLyricsLine)
+	if (!pLine->bLyricsLine)
 	{
-		assert(pRow->szContent);
-		strBuff = pRow->szContent;
+		assert(pLine->szContent);
+		strBuff = pLine->szContent;
 		return true;
 	}
 
-	if (pRow->vFrags.size() && !(pRow->vFrags[0]->bTempBegTime))
+	if (pLine->vFrags.size() && !(pLine->vFrags[0]->bTempBegTime))
 	{
 		strBuff.reserve(100);
-		int nLen = FormtLrcTimeTag(pRow->nBegTime, bLongTimeFmt, strBuff.data());
+		int nLen = FormtLrcTimeTag(pLine->nBegTime, bLongTimeFmt, strBuff.data());
 		strBuff.resize(nLen);
 	}
 
 	TCHAR			szTime[64];
-	for (int i = 0; i < (int)pRow->vFrags.size(); i++)
+	for (int i = 0; i < (int)pLine->vFrags.size(); i++)
 	{
-		LyricsPiece *pFrag = pRow->vFrags[i];
+		LyricsPiece *pPiece = pLine->vFrags[i];
 
-		strBuff += pFrag->szLyric;
+		strBuff += pPiece->szLyric;
 
-		if (i + 1 < (int)pRow->vFrags.size())
+		if (i + 1 < (int)pLine->vFrags.size())
 		{
-			pFrag = pRow->vFrags[i + 1];
-			if (!pFrag->bTempBegTime)
+			pPiece = pLine->vFrags[i + 1];
+			if (!pPiece->bTempBegTime)
 			{
 				int		nMin, nSec, nMs;
-				int		nTime = pFrag->nBegTime + 10 / 2;
+				int		nTime = pPiece->nBegTime + 10 / 2;
 
 				nMs = (nTime / 10) % 100;
 				nSec = (nTime / 1000) % 60;
@@ -548,18 +548,18 @@ bool CLrcParser::LyricsRowToLrcString(LyricsLine *pRow, bool bLongTimeFmt, tstri
 }
 
 //
-void CLrcParser::LyricsRowToTxtString(LyricsLine *pRow, tstring &strBuff)
+void CLrcParser::LyricsLineToTxtString(LyricsLine *pLine, tstring &strBuff)
 {
-	ASSERT(pRow->bLyricsLine);
+	ASSERT(pLine->bLyricsLine);
 	strBuff.clear();
 
-	if (pRow->IsTempRow())
+	if (pLine->IsTempLine())
 		return;
 
-	for (int i = 0; i < (int)pRow->vFrags.size(); i++)
+	for (int i = 0; i < (int)pLine->vFrags.size(); i++)
 	{
-		LyricsPiece *pFrag = pRow->vFrags[i];
-		strBuff += pFrag->szLyric;
+		LyricsPiece *pPiece = pLine->vFrags[i];
+		strBuff += pPiece->szLyric;
 	}
 }
 
@@ -574,7 +574,7 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 	for (int i = 0; i < (int)vTimes.size(); i++)
 	{
 		nBegTime = vTimes[i];
-		LyricsLine *pRow = NewLyricsLine(nBegTime, -1);
+		LyricsLine *pLine = NewLyricsLine(nBegTime, -1);
 
 		LPCTSTR	szLyricsBeg = szLyrLine;
 		do
@@ -582,7 +582,7 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 			nEndTime = -1;
 			szLyricsBeg = EatFrag(szLyricsBeg, nEndTime, buff);
 			
-			pRow->AppendPiece(nBegTime, nEndTime, buff.c_str(), buff.size(), FALSE, TRUE);
+			pLine->AppendPiece(nBegTime, nEndTime, buff.c_str(), buff.size(), FALSE, TRUE);
 
 			if (nEndTime != -1)
 				nBegTime = nEndTime;
@@ -591,10 +591,10 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 
 		m_nLatestTime = nBegTime;
 
-		if (pRow->vFrags.size() > 1)
+		if (pLine->vFrags.size() > 1)
 			m_pMLData->SetKaraokeStyle(true);
 
-		m_pMLData->AddRowByTime(pRow);
+		m_pMLData->AddLineByTime(pLine);
 	}
 
 	m_lyrContentType = LCT_LRC;
@@ -606,22 +606,22 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 //
 void CLrcParser::AddStrAsTimedLine(const TCHAR *szLine)
 {
-	LyricsLine *pRow = NewLyricsLine(m_nLatestTime, -1);
-	pRow->AppendPiece(m_nLatestTime, -1, szLine, _tcslen(szLine), TRUE, TRUE);
+	LyricsLine *pLine = NewLyricsLine(m_nLatestTime, -1);
+	pLine->AppendPiece(m_nLatestTime, -1, szLine, _tcslen(szLine), TRUE, TRUE);
 
-	m_pMLData->AddRowByTime(pRow);
+	m_pMLData->AddLineByTime(pLine);
 }
 
 void CLrcParser::AddStrAsUnknowLine(const TCHAR *szLine)
 {
 	// Unknown tag, just add it in the file.
-	LyricsLine *pRow = NewLyricsLine(0, 0, szLine, _tcslen(szLine), false);
-	m_pMLData->AddRow(pRow);
+	LyricsLine *pLine = NewLyricsLine(0, 0, szLine, _tcslen(szLine), false);
+	m_pMLData->AddLine(pLine);
 }
 
 void CLrcParser::FixTextLrcTimeTag()
 {
-	if (m_pMLData->GetLyricRowCount() == 0)
+	if (m_pMLData->GetLyricsLinesCount() == 0)
 		return;
 
 	int		nBegTime, nEndTime, nSpan;
@@ -636,19 +636,19 @@ void CLrcParser::FixTextLrcTimeTag()
 
 	nEndTime -= nBegTime;
 
-	if (m_pMLData->GetLyricRowCount() == 1)
+	if (m_pMLData->GetLyricsLinesCount() == 1)
 		nSpan = 0;
 	else
-		nSpan = (nEndTime - nBegTime) / (m_pMLData->GetLyricRowCount() - 1);
+		nSpan = (nEndTime - nBegTime) / (m_pMLData->GetLyricsLinesCount() - 1);
 
-	for (int i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
+	for (int i = 0; i < (int)m_pMLData->GetLyricsLinesCount(); i++)
 	{
-		LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
+		LyricsLine *pLine = m_pMLData->GetLyricsLine(i);
 
-		if (pRow->vFrags.size() > 0)
+		if (pLine->vFrags.size() > 0)
 		{
-			pRow->vFrags[0]->nBegTime = pRow->nBegTime = nBegTime;
-			pRow->vFrags[0]->nEndTime = pRow->nEndTime = nBegTime + nSpan;
+			pLine->vFrags[0]->nBegTime = pLine->nBegTime = nBegTime;
+			pLine->vFrags[0]->nEndTime = pLine->nEndTime = nBegTime + nSpan;
 		}
 		nBegTime += nSpan;
 	}
@@ -658,25 +658,25 @@ void CLrcParser::RemoveExtraBlankLinesOfTextLyr()
 {
 	int			i, nBlankLines = 0;
 
-	for (i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
+	for (i = 0; i < (int)m_pMLData->GetLyricsLinesCount(); i++)
 	{
-		LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
+		LyricsLine *pLine = m_pMLData->GetLyricsLine(i);
 
-		if (pRow->vFrags.size() == 1)
+		if (pLine->vFrags.size() == 1)
 		{
-			if (IsEmptyString(pRow->vFrags[0]->szLyric))
+			if (IsEmptyString(pLine->vFrags[0]->szLyric))
 				nBlankLines++;
 			else
 				nBlankLines = 0;
 		}
-		else if (pRow->vFrags.size() == 0)
+		else if (pLine->vFrags.size() == 0)
 			nBlankLines++;
 		else
 			nBlankLines = 0;
 		if (nBlankLines >= 3)
 		{
 			// remove this line
-			m_pMLData->RemoveLyricsRow(i);
+			m_pMLData->RemoveLyricsLine(i);
 			i--;
 			nBlankLines--;
 		}
@@ -685,42 +685,42 @@ void CLrcParser::RemoveExtraBlankLinesOfTextLyr()
 	//
 	// if the blank lines take the half part of all lyrics, remove them all.
 	//
-	if (m_pMLData->GetLyricRowCount() < 10)
+	if (m_pMLData->GetLyricsLinesCount() < 10)
 		return;
 
 	// Get blank line count of lyrics.
 	nBlankLines = 0;
-	for (i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
+	for (i = 0; i < (int)m_pMLData->GetLyricsLinesCount(); i++)
 	{
-		LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
+		LyricsLine *pLine = m_pMLData->GetLyricsLine(i);
 
-		if (pRow->vFrags.size() == 1)
+		if (pLine->vFrags.size() == 1)
 		{
-			if (IsEmptyString(pRow->vFrags[0]->szLyric))
+			if (IsEmptyString(pLine->vFrags[0]->szLyric))
 				nBlankLines++;
 		}
-		else if (pRow->vFrags.size() == 0)
+		else if (pLine->vFrags.size() == 0)
 			nBlankLines++;
 	}
 
-	if (nBlankLines >= m_pMLData->GetLyricRowCount() / 2)
+	if (nBlankLines >= m_pMLData->GetLyricsLinesCount() / 2)
 	{
 		nBlankLines = 0;
-		for (i = 0; i < (int)m_pMLData->GetLyricRowCount(); i++)
+		for (i = 0; i < (int)m_pMLData->GetLyricsLinesCount(); i++)
 		{
-			LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
+			LyricsLine *pLine = m_pMLData->GetLyricsLine(i);
 
-			if (pRow->vFrags.size() == 1)
+			if (pLine->vFrags.size() == 1)
 			{
-				if (IsEmptyString(pRow->vFrags[0]->szLyric))
+				if (IsEmptyString(pLine->vFrags[0]->szLyric))
 					nBlankLines++;
 			}
-			else if (pRow->vFrags.size() == 0)
+			else if (pLine->vFrags.size() == 0)
 				nBlankLines++;
 			if (nBlankLines > 0)
 			{
 				// remove this line
-				m_pMLData->RemoveLyricsRow(i);
+				m_pMLData->RemoveLyricsLine(i);
 				i--;
 				nBlankLines = 0;
 			}
@@ -734,20 +734,20 @@ void CLrcParser::LRCCheckRowTime()
 	int		nSizeFrag;
 	int		i;
 
-	nSize = m_pMLData->GetLyricRowCount();
+	nSize = m_pMLData->GetLyricsLinesCount();
 	
 	// 如果歌词段的开始时间 < 此行歌词的开始时间，则修改
 	for (i = 0; i < nSize; i ++)
 	{
-		LyricsLine *pRow = m_pMLData->GetLyricsRow(i);
-		nSizeFrag = pRow->vFrags.size();
+		LyricsLine *pLine = m_pMLData->GetLyricsLine(i);
+		nSizeFrag = pLine->vFrags.size();
 
 		for (int k = 0; k < nSizeFrag; k++)
 		{
-			LyricsPiece *pFrag = pRow->vFrags[k];
+			LyricsPiece *pPiece = pLine->vFrags[k];
 
-			if (pFrag->nBegTime < pRow->nBegTime)
-				pFrag->nBegTime = pRow->nBegTime;
+			if (pPiece->nBegTime < pLine->nBegTime)
+				pPiece->nBegTime = pLine->nBegTime;
 		}
 	}
 	
@@ -755,81 +755,81 @@ void CLrcParser::LRCCheckRowTime()
 	// 如果两行歌词的时间没有按先后顺序排，则修改之。
 	for (i = 0; i < nSize; i ++)
 	{
-		LyricsLine *pRow;
-		LyricsPiece *pFrag;
+		LyricsLine *pLine;
+		LyricsPiece *pPiece;
 		int				k;
 		int				nIdx;
-		PLYRIC_ROW		pRow1;
+		PLYRIC_ROW		pLine1;
 
-		pRow = m_pMLData->m_arrLyricsRows[i];
-		pRow = pRow1 = m_pMLData->m_arrLyricsRows[i];
+		pLine = m_pMLData->m_arrLyricsLines[i];
+		pLine = pLine1 = m_pMLData->m_arrLyricsLines[i];
 		nIdx = i;
 		for (k = i + 1; k < nSize; k ++)
 		{
-			PLYRIC_ROW	pRow2;
-			pRow2 = (PLYRIC_ROW)m_pMLData->m_arrLyricsRows[k];
-			if (pRow2->nBegTime < pRow->nBegTime )
+			PLYRIC_ROW	pLine2;
+			pLine2 = (PLYRIC_ROW)m_pMLData->m_arrLyricsLines[k];
+			if (pLine2->nBegTime < pLine->nBegTime )
 			{
-				pRow = pRow2;
+				pLine = pLine2;
 				nIdx = k;
 			}
 		}
 		// exchange prow and prow1
-		if (pRow != pRow1)
+		if (pLine != pLine1)
 		{
-			m_pMLData->m_arrLyricsRows.SetAt(nIdx, pRow1);
-			m_pMLData->m_arrLyricsRows.SetAt(i, pRow);
+			m_pMLData->m_arrLyricsLines.SetAt(nIdx, pLine1);
+			m_pMLData->m_arrLyricsLines.SetAt(i, pLine);
 		}
 	}*/
 	
 	// 检查每一行歌词中的所有歌词段是否正确，并且进行矫正。
 	for (i = 0; i < nSize; i ++)
 	{
-		LyricsLine *pRow, *pRowNext;
-		LyricsPiece *pFrag, *pFragNext;
+		LyricsLine *pLine, *pLineNext;
+		LyricsPiece *pPiece, *pPieceNext;
 
-		pRow = m_pMLData->GetLyricsRow(i);
+		pLine = m_pMLData->GetLyricsLine(i);
 
 		// 如果此行的开始时间小于结束时间
-		if (pRow->nEndTime < pRow->nBegTime)
+		if (pLine->nEndTime < pLine->nBegTime)
 		{
 			if (i + 1 >= nSize)
-				pRow->nEndTime = pRow->nBegTime + 10 * 1000;	// delay ten second
+				pLine->nEndTime = pLine->nBegTime + 10 * 1000;	// delay ten second
 			else
 			{
-				pRowNext = m_pMLData->GetLyricsRow(i + 1);
-				pRow->nEndTime = pRowNext->nBegTime;
+				pLineNext = m_pMLData->GetLyricsLine(i + 1);
+				pLine->nEndTime = pLineNext->nBegTime;
 			}
 		}
 		
 		// 对每一段歌词的时间正确性进行校验
-		nSizeFrag = pRow->vFrags.size();
+		nSizeFrag = pLine->vFrags.size();
 		for (int k = 0; k < nSizeFrag; k++)
 		{
-			pFrag = pRow->vFrags[k];
+			pPiece = pLine->vFrags[k];
 
-			if (pFrag->nEndTime < pFrag->nBegTime)
+			if (pPiece->nEndTime < pPiece->nBegTime)
 			{
 				if (k + 1 < nSizeFrag)
 				{
-					pFragNext = pRow->vFrags[k + 1];
-					pFrag->nEndTime = pFragNext->nBegTime;
+					pPieceNext = pLine->vFrags[k + 1];
+					pPiece->nEndTime = pPieceNext->nBegTime;
 				}
 				else
-					pFrag->nEndTime = pRow->nEndTime;
+					pPiece->nEndTime = pLine->nEndTime;
 			}
 			else
 			{
 				if (k + 1 < nSizeFrag)
 				{
-					pFragNext = pRow->vFrags[k + 1];
-					if (pFrag->nEndTime > pFragNext->nBegTime)
-						pFrag->nEndTime = pFragNext->nBegTime;
+					pPieceNext = pLine->vFrags[k + 1];
+					if (pPiece->nEndTime > pPieceNext->nBegTime)
+						pPiece->nEndTime = pPieceNext->nBegTime;
 				}
 				else
 				{
-					if (pFrag->nEndTime > pRow->nEndTime)
-						pFrag->nEndTime = pRow->nEndTime;
+					if (pPiece->nEndTime > pLine->nEndTime)
+						pPiece->nEndTime = pLine->nEndTime;
 				}
 			}
 		}
@@ -915,12 +915,12 @@ protected:
 
 			for (int k = 0; k < lyrLines.size(); k++)
 			{
-				LyricsLine *pRow = lyrLines[k];
+				LyricsLine *pLine = lyrLines[k];
 
-				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+				CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
 				CPPUNIT_ASSERT(k < CountOf(vLyrLines));
-				CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
-				CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == vTime[k]);
+				CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+				CPPUNIT_ASSERT(pLine->vFrags[0]->nBegTime == vTime[k]);
 			}
 			CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 
@@ -949,12 +949,12 @@ protected:
 
 				for (int k = 0; k < lyrLines.size(); k++)
 				{
-					LyricsLine *pRow = lyrLines[k];
+					LyricsLine *pLine = lyrLines[k];
 
-					CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+					CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
 					CPPUNIT_ASSERT(k < CountOf(vLyrLines));
-					CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
-					CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == vTime[k]);
+					CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+					CPPUNIT_ASSERT(pLine->vFrags[0]->nBegTime == vTime[k]);
 				}
 				CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 			}
@@ -978,12 +978,12 @@ protected:
 			CLyricsLines	&lyrLines2 = data5.GetRawLyrics();
 			for (int k = 0; k < lyrLines2.size(); k++)
 			{
-				LyricsLine *pRow = lyrLines2[k];
+				LyricsLine *pLine = lyrLines2[k];
 
-				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
-				CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+				CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
+				CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
 				// 100 = TIME UNIT (TIME_STAMP_UNIT) in timestamps.
-				CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == (vTime[k] + 50) / 100 * 100);
+				CPPUNIT_ASSERT(pLine->vFrags[0]->nBegTime == (vTime[k] + 50) / 100 * 100);
 			}
 
 		}
@@ -1032,11 +1032,11 @@ protected:
 
 			for (int k = 0; k < lyrLines.size(); k++)
 			{
-				LyricsLine *pRow = lyrLines[k];
+				LyricsLine *pLine = lyrLines[k];
 
-				CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+				CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
 				CPPUNIT_ASSERT(k < CountOf(vLyrLines));
-				CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+				CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
 			}
 			CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 
@@ -1065,11 +1065,11 @@ protected:
 
 				for (int k = 0; k < CountOf(vLyrLines); k++)
 				{
-					LyricsLine *pRow = lyrLines[k];
+					LyricsLine *pLine = lyrLines[k];
 
-					CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+					CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
 					CPPUNIT_ASSERT(k < lyrLines.size());
-					CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+					CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
 				}
 				// New generated lyrics may increase 1 line by adding encoding.
 				// CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));

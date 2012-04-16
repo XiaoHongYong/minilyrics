@@ -58,40 +58,38 @@ public:
 
 	int GetCurPlayLine(const CLyricsLines &lyrLines);
 
-	int GetLyricRowCount() { return m_arrLyricsRows.size(); }
-	LyricsLine *GetLyricsRow(int nRow);
-	CLyricsLines &GetRawLyrics() { return m_arrLyricsRows; }
-	CLyricsLines &GetFileRows() { return m_arrFileRows; }
+	int GetLyricsLinesCount() { return m_arrLyricsLines.size(); }
+	LyricsLine *GetLyricsLine(int nLine);
+	CLyricsLines &GetRawLyrics() { return m_arrLyricsLines; }
+	CLyricsLines &GetFileLines() { return m_arrFileLines; }
 
-	void CopyMLyrLines(CLyricsLines &lyrLines);
+	void CopyLyricsLines(CLyricsLines &lyrLines);
 
 	void SetKaraokeStyle(bool bKaraoke = true) { m_bKaraokeStyle = bKaraoke; }
 	bool IsKaraokeShowStyle() { return m_bKaraokeStyle; }
 
 	// 检查歌词数据的时间顺序的正确性
-	void CheckLyricsRowTime();
+	void CheckLyricsLineTime();
 
 	void FixExtendedLrcTimeStamps();
 
 	// 计算两个歌词段之间的所有歌词段开始时间和结束时间的值
-	BOOL CalFragTimeBetweenFrags(int nRow, int nBegFrag, int nEndFrag, int nBegTime, int nEndTime);
+	BOOL CalFragTimeBetweenFrags(int nLine, int nBegFrag, int nEndFrag, int nBegTime, int nEndTime);
 
 	// 计算两个歌词行之间的所有歌词行的开始时间和结束时间的值
-	BOOL CalFragTimeBetweenRows(int nBegRow, int nBegFrag, int nEndRow, int nEndFrag, int nBegTime, int nEndTime);
-
-	static LyricsLine *CopyMLRow(LyricsLine *pRowSrc);
+	BOOL CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, int nEndFrag, int nBegTime, int nEndTime);
 
 	// 添加歌词行
-	void AddRow(LyricsLine *pFileRow);
-	void AddRowByTime(LyricsLine *pRow);
+	void AddLine(LyricsLine *pFileLine);
+	void AddLineByTime(LyricsLine *pLine);
 
 	void AddTextInLyrics(V_Str &vText);
 
-	bool RemoveLyricsRow(int nRow);
+	bool RemoveLyricsLine(int nLine);
 
 	void AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink);
 
-	BOOL LyricsRowToText(LyricsLine *pRow, tstring &strLyricsRow);
+	BOOL LyricsLineToText(LyricsLine *pLine, tstring &strLyricsLine);
 
 	int FilterContents(void);
 
@@ -176,23 +174,23 @@ protected:
 	void ResetModificationFlag();
 
 	// 取得下一个“歌词段”
-	LyricsPiece *NextFrag(int nRow, int nFrag);
-	BOOL NextFrag(int nRow, int nFrag, int &nNextRow, int &nNextFrag, LyricsPiece **ppFrag = NULL);
+	LyricsPiece *NextFrag(int nLine, int nFrag);
+	BOOL NextFrag(int nLine, int nFrag, int &nNextLine, int &nNextFrag, LyricsPiece **ppPiece = NULL);
 
 	// 取得上一个“歌词段”
-	LyricsPiece *PrevFrag(int nRow, int nFrag);
-	BOOL PrevFrag(int nRow, int nFrag, int &nPrevRow, int &nPrevFrag, LyricsPiece **ppFrag = NULL);
+	LyricsPiece *PrevFrag(int nLine, int nFrag);
+	BOOL PrevFrag(int nLine, int nFrag, int &nPrevLine, int &nPrevFrag, LyricsPiece **ppPiece = NULL);
 
 public:
 
 	// All the file lines of the lyrics file.
-	CLyricsLines			m_arrFileRows;
+	CLyricsLines			m_arrFileLines;
 
 	int						m_nGlobalOffsetTime;
 
 protected:
-	// Only lyrics lines are saved here, it's just a sub copy of m_arrFileRows.
-	CLyricsLines			m_arrLyricsRows;
+	// Only lyrics lines are saved here, it's just a sub copy of m_arrFileLines.
+	CLyricsLines			m_arrLyricsLines;
 
 protected:
 	CLyrScrollActionRecorder	m_lyrScrollActionRecorder;

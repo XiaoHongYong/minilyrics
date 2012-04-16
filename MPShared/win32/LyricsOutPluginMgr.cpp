@@ -265,7 +265,7 @@ void CLyricsOutPluginMgr::OnPlayPos(int uPos)
 	if (m_dwNotifyFlag & (ILyricsOut::NOTIF_CUR_LINE | ILyricsOut::NOTIF_HALF_CUR_LINE))
 	{
 		CLyricsLines		&lyrLines = g_LyricData.GetRawLyrics();
-		LyricsLine *pRow;
+		LyricsLine *pLine;
 
 		int				nCurLineOld = m_nCurLine;
 		bool			bHalfOfCurLineOld = m_bHalfOfCurLine;
@@ -276,20 +276,20 @@ void CLyricsOutPluginMgr::OnPlayPos(int uPos)
 			m_nCurLine = g_LyricData.GetCurPlayLine(lyrLines);
 			if (m_nCurLine >= 0 && m_nCurLine < (int)lyrLines.size())
 			{
-				pRow = lyrLines[m_nCurLine];
+				pLine = lyrLines[m_nCurLine];
 
-				m_nCLBegTime = pRow->nBegTime;
-				m_nCLendtime = pRow->nEndTime;
+				m_nCLBegTime = pLine->nBegTime;
+				m_nCLendtime = pLine->nEndTime;
 				m_nCLHalftime = (m_nCLBegTime + m_nCLendtime) / 2;
 
 				if (m_nCurLine + 1 < (int)lyrLines.size())
 				{
-					pRow = lyrLines[m_nCurLine + 1];
-					m_nNLBegTime = pRow->nBegTime;
-					m_nNLEndtime = pRow->nEndTime;
+					pLine = lyrLines[m_nCurLine + 1];
+					m_nNLBegTime = pLine->nBegTime;
+					m_nNLEndtime = pLine->nEndTime;
 				}
 				else
-					m_nNLBegTime = m_nNLEndtime = pRow->nEndTime;
+					m_nNLBegTime = m_nNLEndtime = pLine->nEndTime;
 				if (uPos >= m_nCLHalftime)
 					m_bHalfOfCurLine = true;
 				else
@@ -307,8 +307,8 @@ void CLyricsOutPluginMgr::OnPlayPos(int uPos)
 			tstring			strLyrCurline;
 			if (m_nCurLine != -1)
 			{
-				pRow = lyrLines[m_nCurLine];
-				g_LyricData.LyricsRowToText(pRow, strLyrCurline);
+				pLine = lyrLines[m_nCurLine];
+				g_LyricData.LyricsLineToText(pLine, strLyrCurline);
 			}
 
 			for (it = m_vPlugins.begin(); it != itEnd; ++it)
@@ -388,11 +388,11 @@ bool CLyricsOutPluginMgr::GetLyricsOfLine(int nLine, TCHAR szLyrics[], int nBuff
 		return false;
 
 	tstring			str;
-	LyricsLine *pRow = lyrLines[nLine];
-	g_LyricData.LyricsRowToText(pRow, str);
+	LyricsLine *pLine = lyrLines[nLine];
+	g_LyricData.LyricsLineToText(pLine, str);
 	_tcscpy_safe(szLyrics, nBuffLen, str.c_str());
-	nBegTime = pRow->nBegTime;
-	nEndTime = pRow->nEndTime;
+	nBegTime = pLine->nBegTime;
+	nEndTime = pLine->nEndTime;
 
 	return true;
 }

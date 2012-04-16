@@ -29,7 +29,7 @@ typedef struct WVS_LYRICS_DATA_A
 	DWORD		dwLen;			// 该结构的长度
 	DWORD		dwVersion;		// 该结构的版本
 	int			nCurrentRow;	// 当前歌词行
-	LYRICS_ROW_A	LyricsRow[2];	// 歌词行s
+	LYRICS_ROW_A	LyricsLine[2];	// 歌词行s
 }WVS_LYRICS_DATA_A;
 
 typedef struct WVS_LYRICS_DATA_W
@@ -44,7 +44,7 @@ typedef struct WVS_LYRICS_DATA_W
 	DWORD		dwLen;			// 该结构的长度
 	DWORD		dwVersion;		// 该结构的版本
 	int			nCurrentRow;	// 当前歌词行
-	LYRICS_ROW_W	LyricsRow[2];	// 歌词行s
+	LYRICS_ROW_W	LyricsLine[2];	// 歌词行s
 }WVS_LYRICS_DATA_W;
 #endif
 
@@ -135,14 +135,14 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 			if (pDataA)
 			{
 				pDataA->nCurrentRow = -1;
-				pDataA->LyricsRow[0].nRow = -1;
-				pDataA->LyricsRow[1].nRow = -1;
+				pDataA->LyricsLine[0].nRow = -1;
+				pDataA->LyricsLine[1].nRow = -1;
 			}
 			else
 			{
 				pDataW->nCurrentRow = -1;
-				pDataW->LyricsRow[0].nRow = -1;
-				pDataW->LyricsRow[1].nRow = -1;
+				pDataW->LyricsLine[0].nRow = -1;
+				pDataW->LyricsLine[1].nRow = -1;
 			}
 			return 1;
 		}
@@ -150,30 +150,30 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 
 		// 偶数行显示在上面，奇数行显示在下面
 		int		nRow;
-		tstring	strLyricsRow;
+		tstring	strLyricsLine;
 
-		g_LyricData.LyricsRowToText(pLyricRow, strLyricsRow);
+		g_LyricData.LyricsLineToText(pLyricRow, strLyricsLine);
 
 		nRow = nCurSingRow;
 		if (pDataA)
 		{
 			pDataA->nCurrentRow = nCurSingRow;
-			pDataA->LyricsRow[nRow % 2].nRow = nRow;
-			pDataA->LyricsRow[nRow % 2].fKaraokePos = 0;
-			pDataA->LyricsRow[nRow % 2].dwLyricsShowAttrb = LSA_SHOW_SIMPLE;
+			pDataA->LyricsLine[nRow % 2].nRow = nRow;
+			pDataA->LyricsLine[nRow % 2].fKaraokePos = 0;
+			pDataA->LyricsLine[nRow % 2].dwLyricsShowAttrb = LSA_SHOW_SIMPLE;
 			stringex	str;
-			ConvertStr(strLyricsRow.c_str(), strLyricsRow.size(), str, g_LyricData.Properties().GetEncodingIndex());
-			strcpy_safe(pDataA->LyricsRow[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
+			ConvertStr(strLyricsLine.c_str(), strLyricsLine.size(), str, g_LyricData.Properties().GetEncodingIndex());
+			strcpy_safe(pDataA->LyricsLine[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
 		}
 		else
 		{
 			pDataW->nCurrentRow = nCurSingRow;
-			pDataW->LyricsRow[nRow % 2].nRow = nRow;
-			pDataW->LyricsRow[nRow % 2].fKaraokePos = 0;
-			pDataW->LyricsRow[nRow % 2].dwLyricsShowAttrb = LSA_SHOW_SIMPLE;
+			pDataW->LyricsLine[nRow % 2].nRow = nRow;
+			pDataW->LyricsLine[nRow % 2].fKaraokePos = 0;
+			pDataW->LyricsLine[nRow % 2].dwLyricsShowAttrb = LSA_SHOW_SIMPLE;
 			wstringex	str;
-			ConvertStr(strLyricsRow.c_str(), strLyricsRow.size(), str, g_LyricData.Properties().GetEncodingIndex());
-			wcscpy_safe(pDataW->LyricsRow[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
+			ConvertStr(strLyricsLine.c_str(), strLyricsLine.size(), str, g_LyricData.Properties().GetEncodingIndex());
+			wcscpy_safe(pDataW->LyricsLine[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
 		}
 
 		// 如果当前歌词行的显示时间超过一半，则预显示下一行歌词
@@ -203,32 +203,32 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 
 		if (pLyricRow)
 		{
-			g_LyricData.LyricsRowToText(pLyricRow, strLyricsRow);
+			g_LyricData.LyricsLineToText(pLyricRow, strLyricsLine);
 			if (pDataA)
 			{
-				pDataA->LyricsRow[nRow % 2].nRow = nRow;
-				pDataA->LyricsRow[nRow % 2].fKaraokePos = 0;
-				pDataA->LyricsRow[nRow % 2].dwLyricsShowAttrb = LSA_SHOW_SIMPLE;
+				pDataA->LyricsLine[nRow % 2].nRow = nRow;
+				pDataA->LyricsLine[nRow % 2].fKaraokePos = 0;
+				pDataA->LyricsLine[nRow % 2].dwLyricsShowAttrb = LSA_SHOW_SIMPLE;
 				stringex	str;
-				ConvertStr(strLyricsRow.c_str(), strLyricsRow.size(), str, g_LyricData.Properties().GetEncodingIndex());
-				strcpy_safe(pDataA->LyricsRow[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
+				ConvertStr(strLyricsLine.c_str(), strLyricsLine.size(), str, g_LyricData.Properties().GetEncodingIndex());
+				strcpy_safe(pDataA->LyricsLine[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
 			}
 			else if (pDataW)
 			{
-				pDataW->LyricsRow[nRow % 2].nRow = nRow;
-				pDataW->LyricsRow[nRow % 2].fKaraokePos = 0;
-				pDataW->LyricsRow[nRow % 2].dwLyricsShowAttrb = LSA_SHOW_SIMPLE;
+				pDataW->LyricsLine[nRow % 2].nRow = nRow;
+				pDataW->LyricsLine[nRow % 2].fKaraokePos = 0;
+				pDataW->LyricsLine[nRow % 2].dwLyricsShowAttrb = LSA_SHOW_SIMPLE;
 				wstringex	str;
-				ConvertStr(strLyricsRow.c_str(), strLyricsRow.size(), str, g_LyricData.Properties().GetEncodingIndex());
-				wcscpy_safe(pDataW->LyricsRow[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
+				ConvertStr(strLyricsLine.c_str(), strLyricsLine.size(), str, g_LyricData.Properties().GetEncodingIndex());
+				wcscpy_safe(pDataW->LyricsLine[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
 			}
 		}
 		else
 		{
 			if (pDataA)
-				pDataA->LyricsRow[nRow % 2].nRow = -1;
+				pDataA->LyricsLine[nRow % 2].nRow = -1;
 			else
-				pDataW->LyricsRow[nRow % 2].nRow = -1;
+				pDataW->LyricsLine[nRow % 2].nRow = -1;
 		}
 	}
 

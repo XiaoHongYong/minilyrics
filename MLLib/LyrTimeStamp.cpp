@@ -93,26 +93,26 @@ bool CLyrTimeStamp::Parse(LPCTSTR szTimeStamps, CMLData *pMLData)
 	CLyricsLines	&lines = pMLData->GetRawLyrics();
 	for (CLyricsLines::iterator it = lines.begin(); it != lines.end() && *szTimeStamps;)
 	{
-		LyricsLine *pRow = *it;
-		LyricsPiece *pFrag = pRow->vFrags[0];
-		ASSERT(pRow->bLyricsLine && pFrag->IsTempBegTime());
+		LyricsLine *pLine = *it;
+		LyricsPiece *pPiece = pLine->vFrags[0];
+		ASSERT(pLine->bLyricsLine && pPiece->IsTempBegTime());
 
 		if (*szTimeStamps == CHAR_NO_TIME_STAMP)
 		{
 			szTimeStamps++;
-			// Just remove this line from RawLyrics (will be kept in m_arrFileRows).
+			// Just remove this line from RawLyrics (will be kept in m_arrFileLines).
 			it = lines.erase(it);
-			pRow->bLyricsLine = false;
-			pRow->SetContent(pFrag->szLyric, _tcslen(pFrag->szLyric));
+			pLine->bLyricsLine = false;
+			pLine->SetContent(pPiece->szLyric, _tcslen(pPiece->szLyric));
 		}
 		else
 		{
 			int duration;
 			szTimeStamps = DecodeTimeStamps(szTimeStamps, duration);
-			pFrag->nBegTime = pRow->nBegTime = nTimeAboveLine + duration;
-			pFrag->bTempBegTime = false;
+			pPiece->nBegTime = pLine->nBegTime = nTimeAboveLine + duration;
+			pPiece->bTempBegTime = false;
 
-			nTimeAboveLine = pRow->nBegTime;
+			nTimeAboveLine = pLine->nBegTime;
 			 ++it;
 		}
 	}
@@ -136,10 +136,10 @@ void CLyrTimeStamp::ToString(tstring &strTimeStamps, int nOffsetTime, CLyricsLin
 	int nTimeAboveLine = 0;
 	for (uint i = 0; i < lyrLines.size(); i++)
 	{
-		LyricsLine *pRow = lyrLines[i];
-		if (pRow->bLyricsLine)
+		LyricsLine *pLine = lyrLines[i];
+		if (pLine->bLyricsLine)
 		{
-			int duration = pRow->nBegTime - nTimeAboveLine + TIME_STAMP_UNIT / 2;
+			int duration = pLine->nBegTime - nTimeAboveLine + TIME_STAMP_UNIT / 2;
 			EncodeTimeStamps(duration, strTimeStamps);
 			// Round the above line.
 			nTimeAboveLine += duration / TIME_STAMP_UNIT * TIME_STAMP_UNIT;

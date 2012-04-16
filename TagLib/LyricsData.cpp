@@ -24,37 +24,21 @@ LyricsLine::~LyricsLine()
 LyricsPiece *LyricsLine::AppendPiece(int nBegTime, int nEndTime, 
 							LPCTSTR szLyrics, int nLen, bool bTempBegTime, bool bTempEndTime)
 {
-	LyricsPiece *pFrag;
+	LyricsPiece *pPiece;
 
-	pFrag = (LyricsPiece *)new BYTE[sizeof(LyricsPiece) + nLen * sizeof(TCHAR)];
+	pPiece = (LyricsPiece *)new BYTE[sizeof(LyricsPiece) + nLen * sizeof(TCHAR)];
 
-	pFrag->nBegTime = nBegTime;
-	pFrag->nEndTime = nEndTime;
-	pFrag->nDrawWidth = 0;
-	_tcscpy_safe(pFrag->szLyric, nLen + 1, szLyrics);
-	pFrag->nLen = nLen;
-	pFrag->bTempBegTime = bTempBegTime;
-	pFrag->bTempEndTime = bTempEndTime;
+	pPiece->nBegTime = nBegTime;
+	pPiece->nEndTime = nEndTime;
+	pPiece->nDrawWidth = 0;
+	_tcscpy_safe(pPiece->szLyric, nLen + 1, szLyrics);
+	pPiece->nLen = nLen;
+	pPiece->bTempBegTime = bTempBegTime;
+	pPiece->bTempEndTime = bTempEndTime;
 
-	vFrags.push_back(pFrag);
+	vFrags.push_back(pPiece);
 
-	return pFrag;
-}
-
-LyricsLine *NewLyricsLine(int nBegTime, int nEndTime, 
-						  LPCTSTR szContent, int nLen, bool bLyricsLine)
-{
-	LyricsLine *pRow;
-
-	pRow = new LyricsLine;
-	pRow->nBegTime = nBegTime;
-	pRow->nEndTime = nEndTime;
-	pRow->bLyricsLine = bLyricsLine;
-
-	if (szContent)
-		pRow->SetContent(szContent, nLen);
-
-	return pRow;
+	return pPiece;
 }
 
 void LyricsLine::SetContent(LPCTSTR szContent, int nLen)
@@ -66,6 +50,52 @@ void LyricsLine::SetContent(LPCTSTR szContent, int nLen)
 	_tcsncpysz_safe(this->szContent, nLen + 1, szContent, nLen);
 }
 
+LyricsLine *NewLyricsLine(int nBegTime, int nEndTime, 
+						  LPCTSTR szContent, int nLen, bool bLyricsLine)
+{
+	LyricsLine *pLine;
+
+	pLine = new LyricsLine;
+	pLine->nBegTime = nBegTime;
+	pLine->nEndTime = nEndTime;
+	pLine->bLyricsLine = bLyricsLine;
+
+	if (szContent)
+		pLine->SetContent(szContent, nLen);
+
+	return pLine;
+}
+
+LyricsLine *DuplicateLyricsLine(LyricsLine *pLineSrc)
+{
+	LyricsLine *pLine = new LyricsLine;
+	pLine->nBegTime = pLineSrc->nBegTime;
+	pLine->nEndTime = pLineSrc->nEndTime;
+	pLine->bLyricsLine = pLineSrc->bLyricsLine;
+	pLine->bTempLine = pLineSrc->bTempLine;
+	pLine->bAdvertise = pLineSrc->bAdvertise;
+
+	if (pLineSrc->szContent)
+	{
+		int		n = _tcslen(pLineSrc->szContent) + 1;
+		pLine->szContent = new TCHAR[n];
+		_tcscpy_safe(pLine->szContent, n, pLineSrc->szContent);
+	}
+
+	for (int i = 0; i < (int)pLineSrc->vFrags.size(); i++)
+	{
+		LyricsPiece *pPieceSrc = pLineSrc->vFrags[i];
+
+		int len = sizeof(LyricsPiece) + pPieceSrc->nLen * sizeof(TCHAR);
+		LyricsPiece *pPiece = (LyricsPiece *)new BYTE[len];
+		memcpy(pPiece, pPieceSrc, len);
+
+		pLine->vFrags.push_back(pPiece);
+	}
+
+	return pLine;
+}
+
 //////////////////////////////////////////////////////////////////////////
 
 void CLyricsLines::clear()
@@ -74,8 +104,8 @@ void CLyricsLines::clear()
 	{
 		for (iterator it = begin(); it != end(); ++it)
 		{
-			LyricsLine *pRow = *it;
-			delete pRow;
+			LyricsLine *pLine = *it;
+			delete pLine;
 		}
 	}
 	vector<LyricsLine *>::clear();
@@ -85,8 +115,8 @@ void CLyricsLines::ClearDrawContextWidth()
 {
 	for (iterator it = begin(); it != end(); ++it)
 	{
-		LyricsLine *pRow = *it;
-		for (int k = 0; k < (int)pRow->vFrags.size(); k++)
-			pRow->vFrags[k]->nDrawWidth = 0;
+		LyricsLine *pLine = *it;
+		for (int k = 0; k < (int)pLine->vFrags.size(); k++)
+			pLine->vFrags[k]->nDrawWidth = 0;
 	}
 }

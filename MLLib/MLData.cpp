@@ -101,7 +101,7 @@ void CMLData::ID3v2LyricsSaveCacheInfo::clear()
 }
 #endif // #ifdef _ID3V2_SUPPORT
 
-CMLData::CMLData() : m_arrLyricsRows(false)
+CMLData::CMLData() : m_arrLyricsLines(false)
 {
 	EmptyStr(m_szLyrContentMd5Org);
 	MD5ToString((const char *)_T(""), 0,
@@ -211,14 +211,14 @@ int CMLData::OpenLyrics(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szLrcSourc
 		if (nRet != ERR_OK)
 			return nRet;
 
-		nRet = tag.GetLyrics(m_arrFileRows);
+		nRet = tag.GetLyrics(m_arrFileLines);
 		if (nRet != ERR_OK)
 			return nRet;
-		m_arrLyricsRows.insert(m_arrLyricsRows.begin(), m_arrFileRows.begin(), m_arrFileRows.end());
+		m_arrLyricsLines.insert(m_arrLyricsLines.begin(), m_arrFileLines.begin(), m_arrFileLines.end());
 		SetKaraokeStyle(true);
 		SetLyrContentType(LCT_KARAOKE);
 
-		CheckLyricsRowTime();
+		CheckLyricsLineTime();
 		FixExtendedLrcTimeStamps();
 	}
 	else
@@ -367,7 +367,7 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bUseSpec
 
 	m_id3v2SaveCacheInfo.m_strLrcDescription = lyrics.m_strContentDesc.c_str();
 
-	LyricsLine *pRow = NULL;
+	LyricsLine *pLine = NULL;
 	for (ID3v2SynchLyrics::LIST_SYLRC::iterator it = lyrics.m_vSynLyrics.begin();
 		it != lyrics.m_vSynLyrics.end(); it++)
 	{
@@ -375,19 +375,19 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bUseSpec
 
 		if (syllable.bNewLine)
 		{
-			if (pRow && pRow->vFrags.size() > 1)
+			if (pLine && pLine->vFrags.size() > 1)
 				m_bKaraokeStyle = true;
-			pRow = NULL;
+			pLine = NULL;
 			continue;
 		}
 
-		if (!pRow || lyrics.m_bAllSyllableIsNewLine)
+		if (!pLine || lyrics.m_bAllSyllableIsNewLine)
 		{
-			pRow = NewLyricsLine(syllable.nTime, -1);
-			AddRow(pRow);
+			pLine = NewLyricsLine(syllable.nTime, -1);
+			AddLine(pLine);
 		}
 
-		pRow->AppendPiece(syllable.nTime, -1, syllable.strText.c_str(), 
+		pLine->AppendPiece(syllable.nTime, -1, syllable.strText.c_str(), 
 			syllable.strText.size(), false, true);
 	}
 
@@ -395,7 +395,7 @@ int CMLData::OpenLyricsInSongOfID3v2SYLT(ID3v2SynchLyrics &lyrics, bool bUseSpec
 	m_lyrProperties.SetOffsetTime(0);
 	SetLyrContentType(LCT_LRC);
 
-	CheckLyricsRowTime();
+	CheckLyricsLineTime();
 
 	FixExtendedLrcTimeStamps();
 
@@ -439,7 +439,7 @@ void CMLData::OnLyricsOpened()
 {
 	ResetModificationFlag();
 
-	if (m_arrLyricsRows.empty())
+	if (m_arrLyricsLines.empty())
 		return;
 
 	ASSERT(GetLyrContentType() != LCT_UNKNOWN);
@@ -455,9 +455,9 @@ void CMLData::OnLyricsOpened()
 		if (!m_lyrScrollActionRecorder.HasActions() && m_nMediaLength > 0)
 		{
 			// We need to the simple actions to make it scroll.
-			m_lyrScrollActionRecorder.InitCreateAutoEvents(m_arrLyricsRows);
-			m_lyrScrollActionRecorder.ScrollToLine(m_arrLyricsRows, 0, 10 * 1000, false);
-			m_lyrScrollActionRecorder.ScrollToLine(m_arrLyricsRows, m_arrLyricsRows.size(), m_nMediaLength, true);
+			m_lyrScrollActionRecorder.InitCreateAutoEvents(m_arrLyricsLines);
+			m_lyrScrollActionRecorder.ScrollToLine(m_arrLyricsLines, 0, 10 * 1000, false);
+			m_lyrScrollActionRecorder.ScrollToLine(m_arrLyricsLines, m_arrLyricsLines.size(), m_nMediaLength, true);
 		}
 	}
 }
@@ -706,35 +706,35 @@ void CMLData::ResetModificationFlag()
 		m_szLyrContentMd5Org);
 }
 
-LyricsLine *CMLData::GetLyricsRow(int nRow)
+LyricsLine *CMLData::GetLyricsLine(int nLine)
 {
-	int nSize = m_arrLyricsRows.size();
-	if (nSize <= nRow || nRow < 0)
+	int nSize = m_arrLyricsLines.size();
+	if (nSize <= nLine || nLine < 0)
 		return NULL;
 	
-	return m_arrLyricsRows[nRow];
+	return m_arrLyricsLines[nLine];
 }
 
 // COMMENT:
 //		检查歌词数据的时间顺序的正确性
 //		查找所有的歌词显示时间为-1的“歌词段”，进行计算。
-void CMLData::CheckLyricsRowTime()
+void CMLData::CheckLyricsLineTime()
 {
-	int		nRowCount;
-	int		nBegRow = 0;
+	int		nLineCount;
+	int		nBegLine = 0;
 	int		nBegFrag = 0;
 	int		nBegTime = 0;
-	int		nEndRow = -1;
+	int		nEndLine = -1;
 	int		nEndFrag = 0;
 	int		nEndTime = 0;
-	int		nRow = 0;
+	int		nLine = 0;
 	int		nFrag = 0;
 	BOOL	bFind = FALSE;
 
-	if (GetLyricRowCount() == 0)
+	if (GetLyricsLinesCount() == 0)
 		return;
 
-	if (GetLyricsRow(0)->vFrags.size() == 0)
+	if (GetLyricsLine(0)->vFrags.size() == 0)
 		return;
 
 	while (1)
@@ -743,45 +743,45 @@ void CMLData::CheckLyricsRowTime()
 		bFind = FALSE;
 		do
 		{
-			LyricsPiece *pFrag;
-			LyricsLine *pRow;
+			LyricsPiece *pPiece;
+			LyricsLine *pLine;
 
-			pRow = GetLyricsRow(nRow);
-			assert(pRow);
+			pLine = GetLyricsLine(nLine);
+			assert(pLine);
 
-			pFrag = pRow->vFrags[nFrag];
-			if (pFrag->nBegTime == -1)
+			pPiece = pLine->vFrags[nFrag];
+			if (pPiece->nBegTime == -1)
 			{
-				pFrag = PrevFrag(nRow, nFrag);
-				if (pFrag)
+				pPiece = PrevFrag(nLine, nFrag);
+				if (pPiece)
 				{
-					assert(pFrag->nEndTime != -1);
-					nBegTime = pFrag->nEndTime;
+					assert(pPiece->nEndTime != -1);
+					nBegTime = pPiece->nEndTime;
 				}
 				else
 				{
 					// 一定是第一行，开始时间设置为 15 s
 					nBegTime = LYRICS_BEGIN_TIME;
 				}
-				nBegRow = nRow;
+				nBegLine = nLine;
 				nBegFrag = nFrag;
 				bFind = TRUE; 
 				break;
 			}
 
-			if (pRow->vFrags[nFrag]->nEndTime == -1)
+			if (pLine->vFrags[nFrag]->nEndTime == -1)
 			{
-				nBegTime = pRow->vFrags[nFrag]->nBegTime;
-				nBegRow = nRow;
+				nBegTime = pLine->vFrags[nFrag]->nBegTime;
+				nBegLine = nLine;
 				nBegFrag = nFrag;
 				bFind = TRUE;
 				break;
 			}
 
-			nRow = nBegRow;
+			nLine = nBegLine;
 			nFrag = nBegFrag;
 		}
-		while (NextFrag(nRow, nFrag, nBegRow, nBegFrag));
+		while (NextFrag(nLine, nFrag, nBegLine, nBegFrag));
 
 		if (!bFind)	// 所有的歌词段的时间都是正确的。
 			break;
@@ -789,9 +789,9 @@ void CMLData::CheckLyricsRowTime()
 		// 查找结束歌词段
 		while (1)
 		{
-			LyricsLine *pRow;
+			LyricsLine *pLine;
 
-			if (!NextFrag(nRow, nFrag, nEndRow, nEndFrag))
+			if (!NextFrag(nLine, nFrag, nEndLine, nEndFrag))
 			{
 				// 所有的歌词都没有时间标记，则最后的时间定为歌曲时间 － LYRICS_END_TIME
 				nEndTime = GetMediaLength() - LYRICS_END_TIME - GetOffsetTime();
@@ -799,29 +799,29 @@ void CMLData::CheckLyricsRowTime()
 					nEndTime = GetMediaLength() - GetOffsetTime();
 				if (nBegTime >= nEndTime)
 					nEndTime = nBegTime + 10 * 1000;
-				nEndRow = nRow;
+				nEndLine = nLine;
 				nEndFrag = nFrag;
 				break;
 			}
 
-			pRow = GetLyricsRow(nEndRow);
-			assert(pRow);
+			pLine = GetLyricsLine(nEndLine);
+			assert(pLine);
 
-			if (pRow->vFrags[nEndFrag]->nBegTime != -1)
+			if (pLine->vFrags[nEndFrag]->nBegTime != -1)
 			{
-				nEndTime = pRow->vFrags[nEndFrag]->nBegTime;
-				nEndRow = nRow;
+				nEndTime = pLine->vFrags[nEndFrag]->nBegTime;
+				nEndLine = nLine;
 				nEndFrag = nFrag;
 				break;
 			}
 
-			if (pRow->vFrags[nEndFrag]->nEndTime != -1)
+			if (pLine->vFrags[nEndFrag]->nEndTime != -1)
 			{
-				nEndTime = pRow->vFrags[nEndFrag]->nEndTime;
+				nEndTime = pLine->vFrags[nEndFrag]->nEndTime;
 				break;
 			}
 
-			nRow = nEndRow;
+			nLine = nEndLine;
 			nFrag = nEndFrag;
 		}
 		if (nBegTime > nEndTime)
@@ -829,20 +829,20 @@ void CMLData::CheckLyricsRowTime()
 
 
 		// 计算在开始段到最后段歌词之间的时间。
-		CalFragTimeBetweenRows(nBegRow, nBegFrag, nEndRow, nEndFrag, nBegTime, nEndTime);
+		CalFragTimeBetweenLines(nBegLine, nBegFrag, nEndLine, nEndFrag, nBegTime, nEndTime);
 	}
-	nRowCount = m_arrLyricsRows.size();
-	for (int i = 0; i < nRowCount; i++)
+	nLineCount = m_arrLyricsLines.size();
+	for (int i = 0; i < nLineCount; i++)
 	{
-		if (m_arrLyricsRows[i]->nBegTime == -1)
+		if (m_arrLyricsLines[i]->nBegTime == -1)
 		{
-			assert(m_arrLyricsRows[i]->vFrags.size() != 0);
-			m_arrLyricsRows[i]->nBegTime = m_arrLyricsRows[i]->vFrags[0]->nBegTime;
+			assert(m_arrLyricsLines[i]->vFrags.size() != 0);
+			m_arrLyricsLines[i]->nBegTime = m_arrLyricsLines[i]->vFrags[0]->nBegTime;
 		}
-		if (m_arrLyricsRows[i]->nEndTime == -1)
+		if (m_arrLyricsLines[i]->nEndTime == -1)
 		{
-			assert(m_arrLyricsRows[i]->vFrags.size() != 0);
-			m_arrLyricsRows[i]->nEndTime = m_arrLyricsRows[i]->vFrags[m_arrLyricsRows[i]->vFrags.size() - 1]->nEndTime;
+			assert(m_arrLyricsLines[i]->vFrags.size() != 0);
+			m_arrLyricsLines[i]->nEndTime = m_arrLyricsLines[i]->vFrags[m_arrLyricsLines[i]->vFrags.size() - 1]->nEndTime;
 		}
 	}
 }
@@ -855,38 +855,38 @@ void CMLData::FixExtendedLrcTimeStamps()
 	if (!m_bKaraokeStyle)
 		return;
 
-	for (int i = 0; i < (int)GetLyricRowCount(); i++)
+	for (int i = 0; i < (int)GetLyricsLinesCount(); i++)
 	{
-		LyricsLine *pRow = GetLyricsRow(i);
+		LyricsLine *pLine = GetLyricsLine(i);
 
-		if (pRow->vFrags.size() < 1)
+		if (pLine->vFrags.size() < 1)
 			continue;
 
-		int			n = pRow->vFrags.size() - 1;
-		LyricsPiece *pFrag;
-		pFrag = pRow->vFrags[n];
-		if (pFrag->bTempEndTime)
+		int			n = pLine->vFrags.size() - 1;
+		LyricsPiece *pPiece;
+		pPiece = pLine->vFrags[n];
+		if (pPiece->bTempEndTime)
 		{
-			LyricsLine *pNextRow;
-			if (i + 1 < (int)GetLyricRowCount())
-				pNextRow = GetLyricsRow(i + 1);
+			LyricsLine *pNextLine;
+			if (i + 1 < (int)GetLyricsLinesCount())
+				pNextLine = GetLyricsLine(i + 1);
 			else
-				pNextRow = NULL;
-			if (pNextRow)
+				pNextLine = NULL;
+			if (pNextLine)
 			{
-				if (pFrag->nBegTime + 500 < pNextRow->nBegTime)
-					pFrag->nEndTime = pFrag->nBegTime + 500;
+				if (pPiece->nBegTime + 500 < pNextLine->nBegTime)
+					pPiece->nEndTime = pPiece->nBegTime + 500;
 			}
 			else
-				pFrag->nEndTime = pFrag->nBegTime + 500;
+				pPiece->nEndTime = pPiece->nBegTime + 500;
 		}
 	}
 }
 
 void CMLData::ClearLyrics()
 {
-	m_arrLyricsRows.erase(m_arrLyricsRows.begin(), m_arrLyricsRows.end());
-	m_arrFileRows.clear();
+	m_arrLyricsLines.erase(m_arrLyricsLines.begin(), m_arrLyricsLines.end());
+	m_arrFileLines.clear();
 }
 
 void CMLData::Close()
@@ -916,79 +916,79 @@ BOOL CMLData::HasLyricsOpened()
 	return GetLyrContentType() != LCT_UNKNOWN;
 }
 
-void CMLData::AddRow(LyricsLine *pFileRow)
+void CMLData::AddLine(LyricsLine *pFileLine)
 {
-	if (pFileRow->bLyricsLine)
+	if (pFileLine->bLyricsLine)
 	{
-		m_arrLyricsRows.push_back(pFileRow);
+		m_arrLyricsLines.push_back(pFileLine);
 	}
 
-	m_arrFileRows.push_back(pFileRow);
+	m_arrFileLines.push_back(pFileLine);
 }
 
 // COMMENT:
 //		将歌词行按照时间排序插入
-void CMLData::AddRowByTime(LyricsLine *pRow)
+void CMLData::AddLineByTime(LyricsLine *pLine)
 {
-	if (pRow->bLyricsLine)
+	if (pLine->bLyricsLine)
 	{
-		// 将歌词行插入 m_arrLyricsRows
+		// 将歌词行插入 m_arrLyricsLines
 		CLyricsLines::iterator	itPos;
 
-		int			i, nRowCount;
+		int			i, nLineCount;
 
-		for (i = 0; i < (int)pRow->vFrags.size(); i++)
-			pRow->vFrags[i]->nDrawWidth = 0;
+		for (i = 0; i < (int)pLine->vFrags.size(); i++)
+			pLine->vFrags[i]->nDrawWidth = 0;
 
-		nRowCount = m_arrLyricsRows.size();
-		for (i = 0; i < nRowCount; i++)
+		nLineCount = m_arrLyricsLines.size();
+		for (i = 0; i < nLineCount; i++)
 		{
-			if (m_arrLyricsRows[i]->nBegTime > pRow->nBegTime)
+			if (m_arrLyricsLines[i]->nBegTime > pLine->nBegTime)
 				break;
 		}
 
-		if (i != nRowCount)
+		if (i != nLineCount)
 		{
 			// 找到了位置
-			itPos = find(m_arrFileRows.begin(), m_arrFileRows.end(), m_arrLyricsRows[i]);
+			itPos = find(m_arrFileLines.begin(), m_arrFileLines.end(), m_arrLyricsLines[i]);
 			
-			if (itPos == m_arrFileRows.end())
+			if (itPos == m_arrFileLines.end())
 			{
 				// error occurs!
 				assert(0);
-				m_arrFileRows.push_back(pRow);
+				m_arrFileLines.push_back(pLine);
 			}
 			else
 			{
-				m_arrFileRows.insert(itPos, pRow);
+				m_arrFileLines.insert(itPos, pLine);
 			}
 
 			// 插入歌词部分
-			LyricsLine *pRowPrev;
+			LyricsLine *pLinePrev;
 			if (i > 0)
 			{
 				// reset the time of prev line.
-				pRowPrev = m_arrLyricsRows[i - 1];
-				if (pRowPrev->nEndTime != -1)
+				pLinePrev = m_arrLyricsLines[i - 1];
+				if (pLinePrev->nEndTime != -1)
 				{
-					if (pRowPrev->vFrags.size() == 1 && pRowPrev->vFrags[0]->bTempEndTime)
+					if (pLinePrev->vFrags.size() == 1 && pLinePrev->vFrags[0]->bTempEndTime)
 					{
-						pRowPrev->vFrags[0]->nEndTime = pRow->nBegTime;
-						pRowPrev->nEndTime = pRow->nBegTime;
+						pLinePrev->vFrags[0]->nEndTime = pLine->nBegTime;
+						pLinePrev->nEndTime = pLine->nBegTime;
 					}
 				}
 			}
-			m_arrLyricsRows.insert(m_arrLyricsRows.begin() + i, pRow);
+			m_arrLyricsLines.insert(m_arrLyricsLines.begin() + i, pLine);
 		}
 		else
 		{
 			// 未找到位置，则插入末尾
-			m_arrLyricsRows.push_back(pRow);
-			m_arrFileRows.push_back(pRow);
+			m_arrLyricsLines.push_back(pLine);
+			m_arrFileLines.push_back(pLine);
 		}
 	}
 	else
-		m_arrFileRows.push_back(pRow);
+		m_arrFileLines.push_back(pLine);
 }
 
 tstring CMLData::GetSuggestedLyricsFileName()
@@ -1038,56 +1038,56 @@ int CMLData::GetPlayElapsedTime()
 //		歌词行的行号
 int CMLData::GetCurPlayLine(const CLyricsLines &lyrLines)
 {
-	int				nRowCount;
+	int				nLineCount;
 
 	//// ERROR:在多线程中使用，可能会存在问题。
-	static int		nRow = 0;
+	static int		nLine = 0;
 
-	nRowCount = lyrLines.size();
+	nLineCount = lyrLines.size();
 
-	if (nRowCount == 0)
+	if (nLineCount == 0)
 		return -1;
 
-	if (nRow >= nRowCount)
-		nRow = 0;
+	if (nLine >= nLineCount)
+		nLine = 0;
 
 	// 找到前一行
-	for (; nRow >= 0; nRow--)
+	for (; nLine >= 0; nLine--)
 	{
-		LyricsLine *pLyricRow = lyrLines[nRow];
-		assert(pLyricRow);
+		LyricsLine *pLyricLine = lyrLines[nLine];
+		assert(pLyricLine);
 
-		if (pLyricRow->nEndTime != -1 && pLyricRow->nEndTime < GetPlayElapsedTime())
+		if (pLyricLine->nEndTime != -1 && pLyricLine->nEndTime < GetPlayElapsedTime())
 		{
-			nRow++;
+			nLine++;
 			break; // ok.
 		}
 	}
-	if (nRow == -1)
-		nRow = 0;
+	if (nLine == -1)
+		nLine = 0;
 	
 	// 找到下一行
-	for (; nRow < nRowCount; nRow ++)
+	for (; nLine < nLineCount; nLine ++)
 	{
-		LyricsLine *pLyricRow = lyrLines[nRow];
-		assert(pLyricRow);
+		LyricsLine *pLyricLine = lyrLines[nLine];
+		assert(pLyricLine);
 
-		if (pLyricRow->nEndTime > GetPlayElapsedTime())
+		if (pLyricLine->nEndTime > GetPlayElapsedTime())
 			break; // ok.
 	}
-	if (nRow == nRowCount)
-		nRow = nRowCount - 1;
+	if (nLine == nLineCount)
+		nLine = nLineCount - 1;
 
-	for (int i = nRow - 1; i >= 0; i--)
+	for (int i = nLine - 1; i >= 0; i--)
 	{
-		if (lyrLines[nRow]->nEndTime != lyrLines[i]->nEndTime)
+		if (lyrLines[nLine]->nEndTime != lyrLines[i]->nEndTime)
 		{
 			return i + 1;
 		}
 	}
 
-	assert(nRow != -1);
-	return nRow;
+	assert(nLine != -1);
+	return nLine;
 }
 
 bool CMLData::DoesChooseNewFileName()
@@ -1136,22 +1136,22 @@ BOOL CMLData::IsContentModified()
 //	COMMENT:
 //		计算两个歌词段之间的所有歌词段开始时间和结束时间的值
 //	INPUT:
-//		nRow, nBegFrag	-	开始的位置，这个位置的时间可能还没有被计算出来。
-//		nRow, nEndFrag	-	结束的位置，这个位置的时间可能还没有被计算出来。
-BOOL CMLData::CalFragTimeBetweenFrags(int nRow, int nBegFrag, int nEndFrag, int nBegTime, int nEndTime)
+//		nLine, nBegFrag	-	开始的位置，这个位置的时间可能还没有被计算出来。
+//		nLine, nEndFrag	-	结束的位置，这个位置的时间可能还没有被计算出来。
+BOOL CMLData::CalFragTimeBetweenFrags(int nLine, int nBegFrag, int nEndFrag, int nBegTime, int nEndTime)
 {
 	int nFragCount = nEndFrag - nBegFrag + 1;
 	assert(nFragCount > 0);
 
-	LyricsLine *pRow = GetLyricsRow(nRow);
-	assert(pRow);
-	assert((unsigned int)nEndFrag < pRow->vFrags.size());
+	LyricsLine *pLine = GetLyricsLine(nLine);
+	assert(pLine);
+	assert((unsigned int)nEndFrag < pLine->vFrags.size());
 
 	for (int m = nBegFrag; m <= nEndFrag; m++)
 	{
-		pRow->vFrags[m]->nBegTime = nBegTime
+		pLine->vFrags[m]->nBegTime = nBegTime
 			+ ((nEndTime - nBegTime) * (m - nBegFrag)) / nFragCount;
-		pRow->vFrags[m]->nEndTime = nBegTime + 
+		pLine->vFrags[m]->nEndTime = nBegTime + 
 			((nEndTime - nBegTime) * (m - nBegFrag + 1)) / nFragCount;
 	}
 
@@ -1161,74 +1161,74 @@ BOOL CMLData::CalFragTimeBetweenFrags(int nRow, int nBegFrag, int nEndFrag, int 
 //	COMMENT:
 //		计算两个歌词行之间的所有歌词行的开始时间和结束时间的值
 //	INPUT:
-//		nBegRow, nBegFrag	-	开始的位置，这个位置的时间可能还没有被计算出来。
-//		nEndRow, nEndFrag	-	结束的位置，这个位置的时间可能还没有被计算出来。
-BOOL CMLData::CalFragTimeBetweenRows(int nBegRow, int nBegFrag, int nEndRow, int nEndFrag, int nBegTime, int nEndTime)
+//		nBegLine, nBegFrag	-	开始的位置，这个位置的时间可能还没有被计算出来。
+//		nEndLine, nEndFrag	-	结束的位置，这个位置的时间可能还没有被计算出来。
+BOOL CMLData::CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, int nEndFrag, int nBegTime, int nEndTime)
 {
-	LyricsLine *pRow = NULL;
+	LyricsLine *pLine = NULL;
 
 	assert(nEndTime >= nBegTime);
-	assert(nEndRow >= nBegRow);
-	assert(nBegRow < GetLyricRowCount());
-	assert(nEndRow < GetLyricRowCount());
+	assert(nEndLine >= nBegLine);
+	assert(nBegLine < GetLyricsLinesCount());
+	assert(nEndLine < GetLyricsLinesCount());
 
-	if (nBegRow >= GetLyricRowCount())
+	if (nBegLine >= GetLyricsLinesCount())
 		return FALSE;
-	if (nEndRow >= GetLyricRowCount())
+	if (nEndLine >= GetLyricsLinesCount())
 		return FALSE;
 
 	// 如果所有的“歌词段”在一行内，则每一段的时间采用平均值
-	if (nBegRow == nEndRow)
+	if (nBegLine == nEndLine)
 	{
-		pRow = GetLyricsRow(nBegRow);
-		assert(pRow);
+		pLine = GetLyricsLine(nBegLine);
+		assert(pLine);
 
-		CalFragTimeBetweenFrags(nBegRow, nBegFrag, nEndFrag, nBegTime, nEndTime);
+		CalFragTimeBetweenFrags(nBegLine, nBegFrag, nEndFrag, nBegTime, nEndTime);
 
-//		if (pRow->nBegTime == -1)
-		pRow->nBegTime = pRow->vFrags[0]->nBegTime;
-//		if (pRow->nEndTime == -1)
-		pRow->nEndTime = pRow->vFrags[pRow->vFrags.size() - 1]->nEndTime;
+//		if (pLine->nBegTime == -1)
+		pLine->nBegTime = pLine->vFrags[0]->nBegTime;
+//		if (pLine->nEndTime == -1)
+		pLine->nEndTime = pLine->vFrags[pLine->vFrags.size() - 1]->nEndTime;
 	}
 	else
 	{
 		// 计算最开始的行
-		pRow = GetLyricsRow(nBegRow);
-		assert(pRow);
+		pLine = GetLyricsLine(nBegLine);
+		assert(pLine);
 		
-//		if (pRow->nEndTime == -1)
-		pRow->nEndTime = nBegTime +
-			(nEndTime - nBegTime) / (nEndRow - nBegRow + 1);
+//		if (pLine->nEndTime == -1)
+		pLine->nEndTime = nBegTime +
+			(nEndTime - nBegTime) / (nEndLine - nBegLine + 1);
 
-		CalFragTimeBetweenFrags(nBegRow, nBegFrag, pRow->vFrags.size() - 1, nBegTime, pRow->nEndTime);
+		CalFragTimeBetweenFrags(nBegLine, nBegFrag, pLine->vFrags.size() - 1, nBegTime, pLine->nEndTime);
 
-//		if (pRow->nBegTime == -1)
-		pRow->nBegTime = pRow->vFrags[0]->nBegTime;
+//		if (pLine->nBegTime == -1)
+		pLine->nBegTime = pLine->vFrags[0]->nBegTime;
 
 		// “歌词段”不在一行内，每一行的时间采用平均值；在一行内再采用平均值
-		for (int i = nBegRow + 1; i < nEndRow; i++)
+		for (int i = nBegLine + 1; i < nEndLine; i++)
 		{
-			pRow = GetLyricsRow(i);
-			assert(pRow);
+			pLine = GetLyricsLine(i);
+			assert(pLine);
 
-			pRow->nBegTime = nBegTime +
-				(nEndTime - nBegTime) * (i - nBegRow) / (nEndRow - nBegRow + 1);
-			pRow->nEndTime = nBegTime +
-				(nEndTime - nBegTime) * (i - nBegRow + 1) / (nEndRow - nBegRow + 1);
+			pLine->nBegTime = nBegTime +
+				(nEndTime - nBegTime) * (i - nBegLine) / (nEndLine - nBegLine + 1);
+			pLine->nEndTime = nBegTime +
+				(nEndTime - nBegTime) * (i - nBegLine + 1) / (nEndLine - nBegLine + 1);
 
-			CalFragTimeBetweenFrags(i, 0, pRow->vFrags.size() - 1, pRow->nBegTime, pRow->nEndTime);
+			CalFragTimeBetweenFrags(i, 0, pLine->vFrags.size() - 1, pLine->nBegTime, pLine->nEndTime);
 		}
 
 		// 计算结束歌词行的时间
-		pRow = GetLyricsRow(nEndRow);
-		assert(pRow);
-		pRow->nBegTime = nBegTime +
-			(nEndTime - nBegTime) * (nEndRow - nBegRow) / (nEndRow - nBegRow + 1);
+		pLine = GetLyricsLine(nEndLine);
+		assert(pLine);
+		pLine->nBegTime = nBegTime +
+			(nEndTime - nBegTime) * (nEndLine - nBegLine) / (nEndLine - nBegLine + 1);
 
-		CalFragTimeBetweenFrags(nEndRow, 0, nEndFrag, pRow->nBegTime, nEndTime);
+		CalFragTimeBetweenFrags(nEndLine, 0, nEndFrag, pLine->nBegTime, nEndTime);
 
-//		if (pRow->nEndTime == -1)
-		pRow->nEndTime = pRow->vFrags[pRow->vFrags.size() - 1]->nEndTime;
+//		if (pLine->nEndTime == -1)
+		pLine->nEndTime = pLine->vFrags[pLine->vFrags.size() - 1]->nEndTime;
 	}
 	
 	return TRUE;
@@ -1236,140 +1236,140 @@ BOOL CMLData::CalFragTimeBetweenRows(int nBegRow, int nBegFrag, int nEndRow, int
 
 //	COMMENT:
 //		取得上一个“歌词段”
-BOOL CMLData::PrevFrag(int nRow, int nFrag, int &nPrevRow, int &nPrevFrag, LyricsPiece **ppFrag)
+BOOL CMLData::PrevFrag(int nLine, int nFrag, int &nPrevLine, int &nPrevFrag, LyricsPiece **ppPiece)
 {
-	assert(nRow < GetLyricRowCount());
+	assert(nLine < GetLyricsLinesCount());
 	assert(nFrag >= 0);
-	assert((unsigned int)nFrag < GetLyricsRow(nRow)->vFrags.size());
+	assert((unsigned int)nFrag < GetLyricsLine(nLine)->vFrags.size());
 
 	if (nFrag <= 0)
 	{
-		if (nRow <= 0)
+		if (nLine <= 0)
 		{
-			nPrevRow = 0;
+			nPrevLine = 0;
 			nPrevFrag = 0;
-			if (ppFrag)
-				*ppFrag = NULL;
+			if (ppPiece)
+				*ppPiece = NULL;
 			return FALSE;
 		}
 
-		nPrevRow = nRow - 1;
-		nPrevFrag = GetLyricsRow(nPrevRow)->vFrags.size() - 1;
+		nPrevLine = nLine - 1;
+		nPrevFrag = GetLyricsLine(nPrevLine)->vFrags.size() - 1;
 	}
 	else
 	{
 		nPrevFrag--;
-		nPrevRow = nRow;
+		nPrevLine = nLine;
 	}
 
-	if (ppFrag)
-		*ppFrag = GetLyricsRow(nPrevRow)->vFrags[nPrevFrag];
+	if (ppPiece)
+		*ppPiece = GetLyricsLine(nPrevLine)->vFrags[nPrevFrag];
 
 	return TRUE;
 }
 
 //	COMMENT:
 //		取得上一个“歌词段”
-LyricsPiece *CMLData::PrevFrag(int nRow, int nFrag)
+LyricsPiece *CMLData::PrevFrag(int nLine, int nFrag)
 {
-	assert(nRow < GetLyricRowCount());
+	assert(nLine < GetLyricsLinesCount());
 	assert(nFrag >= 0);
-	assert((unsigned int)nFrag < GetLyricsRow(nRow)->vFrags.size());
+	assert((unsigned int)nFrag < GetLyricsLine(nLine)->vFrags.size());
 
-	LyricsLine *pRow;
+	LyricsLine *pLine;
 
 	if (nFrag <= 0)
-		nRow--;
+		nLine--;
 
-	pRow = GetLyricsRow(nRow);
-	if (!pRow || pRow->vFrags.size() == 0)
+	pLine = GetLyricsLine(nLine);
+	if (!pLine || pLine->vFrags.size() == 0)
 		return NULL;
 
 	if (nFrag <= 0)
-		nFrag = pRow->vFrags.size() - 1;
+		nFrag = pLine->vFrags.size() - 1;
 
-	return pRow->vFrags[nFrag];
+	return pLine->vFrags[nFrag];
 }
 
 //	COMMENT:
 //		取得下一个“歌词段”
-BOOL CMLData::NextFrag(int nRow, int nFrag, int &nNextRow, int &nNextFrag, LyricsPiece **ppFrag)
+BOOL CMLData::NextFrag(int nLine, int nFrag, int &nNextLine, int &nNextFrag, LyricsPiece **ppPiece)
 {
-	assert(nRow >= 0 && nRow < GetLyricRowCount());
+	assert(nLine >= 0 && nLine < GetLyricsLinesCount());
 	assert(nFrag >= 0);
-	assert((unsigned int)nFrag < GetLyricsRow(nRow)->vFrags.size());
+	assert((unsigned int)nFrag < GetLyricsLine(nLine)->vFrags.size());
 
-	LyricsLine *pRow;
-	nNextRow = nRow;
-	pRow = GetLyricsRow(nNextRow);
-	if (!pRow)
+	LyricsLine *pLine;
+	nNextLine = nLine;
+	pLine = GetLyricsLine(nNextLine);
+	if (!pLine)
 		return FALSE;
 
 	nNextFrag = nFrag + 1;
-	if ((unsigned int)nNextFrag >= pRow->vFrags.size())
+	if ((unsigned int)nNextFrag >= pLine->vFrags.size())
 	{
-		nNextRow = nRow + 1;
-		pRow = GetLyricsRow(nNextRow);
-		if (!pRow || pRow->vFrags.size() <= 0)
+		nNextLine = nLine + 1;
+		pLine = GetLyricsLine(nNextLine);
+		if (!pLine || pLine->vFrags.size() <= 0)
 		{
-			nNextRow = 0;
+			nNextLine = 0;
 			nNextFrag = 0;
-			if (ppFrag)
-				*ppFrag = NULL;
+			if (ppPiece)
+				*ppPiece = NULL;
 			return FALSE;
 		}
 		nNextFrag = 0;
 	}
 
-	if (ppFrag)
-		*ppFrag = GetLyricsRow(nNextRow)->vFrags[nNextFrag];
+	if (ppPiece)
+		*ppPiece = GetLyricsLine(nNextLine)->vFrags[nNextFrag];
 
 	return TRUE;
 }
 
 //	COMMENT:
 //		取得下一个“歌词段”
-LyricsPiece *CMLData::NextFrag(int nRow, int nFrag)
+LyricsPiece *CMLData::NextFrag(int nLine, int nFrag)
 {
-	assert(nRow < GetLyricRowCount());
+	assert(nLine < GetLyricsLinesCount());
 	assert(nFrag >= 0);
-	assert((unsigned int)nFrag < GetLyricsRow(nRow)->vFrags.size());
+	assert((unsigned int)nFrag < GetLyricsLine(nLine)->vFrags.size());
 
 	nFrag ++;
-	if ((unsigned int)nFrag >= GetLyricsRow(nRow)->vFrags.size())
+	if ((unsigned int)nFrag >= GetLyricsLine(nLine)->vFrags.size())
 	{
-		nRow++;
-		if (nRow >= GetLyricRowCount())
+		nLine++;
+		if (nLine >= GetLyricsLinesCount())
 		{
 			return NULL;
 		}
 		nFrag = 0;
 	}
 
-	return GetLyricsRow(nRow)->vFrags[nFrag];
+	return GetLyricsLine(nLine)->vFrags[nFrag];
 }
 
-bool CMLData::RemoveLyricsRow(int nRow)
+bool CMLData::RemoveLyricsLine(int nLine)
 {
-	LyricsLine *pRow;
+	LyricsLine *pLine;
 
-	pRow = GetLyricsRow(nRow);
-	if (!pRow)
+	pLine = GetLyricsLine(nLine);
+	if (!pLine)
 		return false;
 
 	int			k;
 
-	m_arrLyricsRows.erase(m_arrLyricsRows.begin() + nRow);
-	for (k = 0; k < (int)m_arrFileRows.size(); k++)
+	m_arrLyricsLines.erase(m_arrLyricsLines.begin() + nLine);
+	for (k = 0; k < (int)m_arrFileLines.size(); k++)
 	{
-		if (m_arrFileRows[k] == pRow)
+		if (m_arrFileLines[k] == pLine)
 		{
-			m_arrFileRows.erase(m_arrFileRows.begin() + k);
+			m_arrFileLines.erase(m_arrFileLines.begin() + k);
 			break;
 		}
 	}
 
-	delete pRow;
+	delete pLine;
 
 	return true;
 }
@@ -1377,8 +1377,8 @@ bool CMLData::RemoveLyricsRow(int nRow)
 void CMLData::AddTextInLyrics(V_Str &vText)
 {
 	int		nPrevEnd;
-	if (m_arrLyricsRows.size())
-		nPrevEnd = m_arrLyricsRows.back()->nEndTime;
+	if (m_arrLyricsLines.size())
+		nPrevEnd = m_arrLyricsLines.back()->nEndTime;
 	else
 		nPrevEnd = GetPlayElapsedTime();
 
@@ -1386,13 +1386,13 @@ void CMLData::AddTextInLyrics(V_Str &vText)
 	{
 		int nEndTime = nPrevEnd + 8 * 1000;
 
-		LyricsLine *pRow = NewLyricsLine(nPrevEnd, nEndTime);
-		pRow->bTempLine = true;
+		LyricsLine *pLine = NewLyricsLine(nPrevEnd, nEndTime);
+		pLine->bTempLine = true;
 
-		pRow->AppendPiece(pRow->nBegTime, pRow->nEndTime, vText[i].c_str(), vText[i].size(), TRUE, TRUE);
+		pLine->AppendPiece(pLine->nBegTime, pLine->nEndTime, vText[i].c_str(), vText[i].size(), TRUE, TRUE);
 		nPrevEnd = nEndTime;
 
-		AddRowByTime(pRow);
+		AddLineByTime(pLine);
 	}
 }
 
@@ -1401,10 +1401,10 @@ void CMLData::AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink)
 	int			nBegTime;
 
 	// if ad exists, don't add new.
-	for (int i = 0; i < (int)m_arrLyricsRows.size(); i++)
+	for (int i = 0; i < (int)m_arrLyricsLines.size(); i++)
 	{
-		LyricsLine *pRow = m_arrLyricsRows[i];
-		if (pRow->IsAdvertise() && pRow->szContent && _tcscmp(pRow->szContent, szLink) == 0)
+		LyricsLine *pLine = m_arrLyricsLines[i];
+		if (pLine->IsAdvertise() && pLine->szContent && _tcscmp(pLine->szContent, szLink) == 0)
 			return;
 	}
 
@@ -1414,48 +1414,48 @@ void CMLData::AddAdInLyrics(int nBegTimeOffset, LPCTSTR szText, LPCTSTR szLink)
 		nBegTime = 0;
 
 	// add ad at beginning of the lyrics
-	LyricsLine *pRow = NewLyricsLine(nBegTime, -1, szLink, -1);
-	pRow->bAdvertise = true;
-	pRow->bTempLine = true;
-	pRow->AppendPiece(nBegTime, -1, szText, -1, TRUE, TRUE);
-	AddRowByTime(pRow);
+	LyricsLine *pLine = NewLyricsLine(nBegTime, -1, szLink, -1);
+	pLine->bAdvertise = true;
+	pLine->bTempLine = true;
+	pLine->AppendPiece(nBegTime, -1, szText, -1, TRUE, TRUE);
+	AddLineByTime(pLine);
 
 	// add ad at the end of the lyrics.
-	pRow = GetLyricsRow(GetLyricRowCount() - 1);
-	if (pRow)
+	pLine = GetLyricsLine(GetLyricsLinesCount() - 1);
+	if (pLine)
 	{
-		nBegTime = pRow->nEndTime;
+		nBegTime = pLine->nEndTime;
 		if (nBegTime != -1)
-			nBegTime = pRow->nBegTime + 5 * 1000;
-		pRow = NewLyricsLine(nBegTime, -1, szLink, -1);
-		pRow->bAdvertise = true;
-		pRow->bTempLine = true;
-		pRow->AppendPiece(nBegTime, -1, szText, -1, TRUE, TRUE);
-		AddRow(pRow);
+			nBegTime = pLine->nBegTime + 5 * 1000;
+		pLine = NewLyricsLine(nBegTime, -1, szLink, -1);
+		pLine->bAdvertise = true;
+		pLine->bTempLine = true;
+		pLine->AppendPiece(nBegTime, -1, szText, -1, TRUE, TRUE);
+		AddLine(pLine);
 	}
 
-	CheckLyricsRowTime();
+	CheckLyricsLineTime();
 }
 
-BOOL CMLData::LyricsRowToText(LyricsLine *pRow, tstring &strLyricsRow)
+BOOL CMLData::LyricsLineToText(LyricsLine *pLine, tstring &strLyricsLine)
 {
-	strLyricsRow.resize(0);
-	if (!pRow)
+	strLyricsLine.resize(0);
+	if (!pLine)
 		return FALSE;
 
-	if (pRow->bLyricsLine)
+	if (pLine->bLyricsLine)
 	{
 		int		nCount;
-		nCount = pRow->vFrags.size();
+		nCount = pLine->vFrags.size();
 		for (int i = 0; i < nCount; i++)
 		{
-			strLyricsRow += pRow->vFrags[i]->szLyric;
+			strLyricsLine += pLine->vFrags[i]->szLyric;
 		}
 	}
 	else
 	{
-		if (pRow->szContent)
-			strLyricsRow = pRow->szContent;
+		if (pLine->szContent)
+			strLyricsLine = pLine->szContent;
 	}
 
 	return TRUE;
@@ -1481,11 +1481,11 @@ int CMLData::FilterContents(void)
 	//
 	// 进行替换，TAB，
 	// 对HTML进行转义
-	for (UINT i = 0; i < m_arrLyricsRows.size(); i++)
+	for (UINT i = 0; i < m_arrLyricsLines.size(); i++)
 	{
-		for (UINT k = 0; k < m_arrLyricsRows[i]->vFrags.size(); k++)
+		for (UINT k = 0; k < m_arrLyricsLines[i]->vFrags.size(); k++)
 		{
-			LPTSTR		szBeg = m_arrLyricsRows[i]->vFrags[k]->szLyric;
+			LPTSTR		szBeg = m_arrLyricsLines[i]->vFrags[k]->szLyric;
 
 			int		pos = 0;
 			for (int m = 0; szBeg[m] != '\0'; m++)
@@ -1545,7 +1545,7 @@ int CMLData::FilterContents(void)
 				}
 			}
 			szBeg[pos] = '\0';
-			m_arrLyricsRows[i]->vFrags[k]->nLen = pos;
+			m_arrLyricsLines[i]->vFrags[k]->nLen = pos;
 		}
 	}
 
@@ -1566,25 +1566,25 @@ void CMLData::ToID3v2SynchLyrics(ID3v2SynchLyrics &lyrics, CHAR_ENCODING encodin
 	lyrics.m_strContentDesc = m_id3v2SaveCacheInfo.m_strLrcDescription.c_str();
 
 	// convert lyrics rows
-	for (int i = 0; i < (int)m_arrLyricsRows.size(); i++)
+	for (int i = 0; i < (int)m_arrLyricsLines.size(); i++)
 	{
-		LyricsLine *pRow = m_arrLyricsRows[i];
+		LyricsLine *pLine = m_arrLyricsLines[i];
 
-		if (pRow->bLyricsLine && !pRow->IsTempRow())
+		if (pLine->bLyricsLine && !pLine->IsTempLine())
 		{
 			//
 			// to compatible with windows media player, the Karaoke info has to be lost.
 			//
 			LrcSyllable	syllable;
 			syllable.bNewLine = false;
-			syllable.nTime = pRow->nBegTime - m_lyrProperties.GetOffsetTime();
+			syllable.nTime = pLine->nBegTime - m_lyrProperties.GetOffsetTime();
 			if (syllable.nTime < 0)
 				syllable.nTime = 0;
-			for (int k = 0; k < (int)pRow->vFrags.size(); k++)
+			for (int k = 0; k < (int)pLine->vFrags.size(); k++)
 			{
-				LyricsPiece *pFrag = pRow->vFrags[k];
+				LyricsPiece *pPiece = pLine->vFrags[k];
 
-				syllable.strText += pFrag->szLyric;
+				syllable.strText += pPiece->szLyric;
 			}
 			lyrics.m_vSynLyrics.push_back(syllable);
 
@@ -1663,49 +1663,19 @@ int CMLData::FromString(LPCTSTR szLyrics)
 	return nRet;
 }
 
-LyricsLine *CMLData::CopyMLRow(LyricsLine *pRowSrc)
-{
-	LyricsLine *pRow = new LyricsLine;
-	pRow->nBegTime = pRowSrc->nBegTime;
-	pRow->nEndTime = pRowSrc->nEndTime;
-	pRow->bLyricsLine = pRowSrc->bLyricsLine;
-	pRow->bTempLine = pRowSrc->bTempLine;
-	pRow->bAdvertise = pRowSrc->bAdvertise;
-
-	if (pRowSrc->szContent)
-	{
-		int		n = _tcslen(pRowSrc->szContent) + 1;
-		pRow->szContent = new TCHAR[n];
-		_tcscpy_safe(pRow->szContent, n, pRowSrc->szContent);
-	}
-
-	for (int i = 0; i < (int)pRowSrc->vFrags.size(); i++)
-	{
-		LyricsPiece *pFragSrc = pRowSrc->vFrags[i];
-		
-		int len = sizeof(LyricsPiece) + pFragSrc->nLen * sizeof(TCHAR);
-		LyricsPiece *pFrag = (LyricsPiece *)new BYTE[len];
-		memcpy(pFrag, pFragSrc, len);
-
-		pRow->vFrags.push_back(pFrag);
-	}
-
-	return pRow;
-}
-
-void CMLData::CopyMLyrLines(CLyricsLines &lyrLines)
+void CMLData::CopyLyricsLines(CLyricsLines &lyrLines)
 {
 	int			i;
-	LyricsLine *pRow;
+	LyricsLine *pLine;
 
 	lyrLines.clear();
 
-	for (i = 0; i < (int)m_arrLyricsRows.size(); i++)
+	for (i = 0; i < (int)m_arrLyricsLines.size(); i++)
 	{
-		LyricsLine *pRowSrc = m_arrLyricsRows[i];
+		LyricsLine *pLineSrc = m_arrLyricsLines[i];
 
-		pRow = CopyMLRow(pRowSrc);
-		lyrLines.push_back(pRow);
+		pLine = DuplicateLyricsLine(pLineSrc);
+		lyrLines.push_back(pLine);
 	}
 }
 
@@ -1782,12 +1752,12 @@ protected:
 
 				for (int k = 0; k < lyrLines.size(); k++)
 				{
-					LyricsLine *pRow = lyrLines[k];
+					LyricsLine *pLine = lyrLines[k];
 
-					CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+					CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
 					CPPUNIT_ASSERT(k < CountOf(vLyrLines));
-					CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
-					CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == vTime[k]);
+					CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+					CPPUNIT_ASSERT(pLine->vFrags[0]->nBegTime == vTime[k]);
 				}
 				CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 			}
@@ -1882,14 +1852,14 @@ protected:
 
 					for (int k = 0; k < lyrLines.size(); k++)
 					{
-						LyricsLine *pRow = lyrLines[k];
+						LyricsLine *pLine = lyrLines[k];
 
-						CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+						CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
 						CPPUNIT_ASSERT(k < CountOf(vLyrLines));
 						if (i < 2)
-							CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+							CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
 						else
-							CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLinesChs[k]) == 0);
+							CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLinesChs[k]) == 0);
 					}
 					CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 				}
@@ -1956,16 +1926,16 @@ protected:
 
 					for (int k = 0; k < lyrLines.size(); k++)
 					{
-						LyricsLine *pRow = lyrLines[k];
+						LyricsLine *pLine = lyrLines[k];
 
-						CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+						CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
 						CPPUNIT_ASSERT(k < CountOf(vLyrLines));
 						if (i < 1)
-							CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+							CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
 						else
-							CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLinesChs[k]) == 0);
+							CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLinesChs[k]) == 0);
 
-						CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == vTime[k] + nOffsetTime);
+						CPPUNIT_ASSERT(pLine->vFrags[0]->nBegTime == vTime[k] + nOffsetTime);
 					}
 					CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 				}
@@ -2026,12 +1996,12 @@ protected:
 
 					for (int k = 0; k < lyrLines.size(); k++)
 					{
-						LyricsLine *pRow = lyrLines[k];
+						LyricsLine *pLine = lyrLines[k];
 
-						CPPUNIT_ASSERT(pRow->vFrags.size() == 1);
+						CPPUNIT_ASSERT(pLine->vFrags.size() == 1);
 						CPPUNIT_ASSERT(k < CountOf(vLyrLines));
-						CPPUNIT_ASSERT(_tcscmp(pRow->vFrags[0]->szLyric, vLyrLines[k]) == 0);
-						CPPUNIT_ASSERT(pRow->vFrags[0]->nBegTime == vTime[k]);
+						CPPUNIT_ASSERT(_tcscmp(pLine->vFrags[0]->szLyric, vLyrLines[k]) == 0);
+						CPPUNIT_ASSERT(pLine->vFrags[0]->nBegTime == vTime[k]);
 					}
 					CPPUNIT_ASSERT(lyrLines.size() == CountOf(vLyrLines));
 				}

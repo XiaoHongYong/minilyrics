@@ -32,14 +32,14 @@ CLyricShowSingleRowObj::~CLyricShowSingleRowObj()
 //
 // 取得此行歌词的Fade out color
 //
-void CLyricShowSingleRowObj::GetCurLineFadeOutColor(LyricsLine *pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
+void CLyricShowSingleRowObj::GetCurLineFadeOutColor(LyricsLine *pLine, MLColor clrIn, MLColor clrOut, MLColor &color)
 {
 	int				nTime;
 
-	if (!pRow)
+	if (!pLine)
 		return;
 
-	nTime = pRow->nEndTime - m_pMLData->GetPlayElapsedTime();
+	nTime = pLine->nEndTime - m_pMLData->GetPlayElapsedTime();
 	if (nTime <= FIO_TIME && nTime >= 0)
 	{
 		int		nPart1;
@@ -56,15 +56,15 @@ void CLyricShowSingleRowObj::GetCurLineFadeOutColor(LyricsLine *pRow, MLColor cl
 //
 // 取得此行歌词的Fade In color
 //
-void CLyricShowSingleRowObj::GetNextLineFadeInColor(LyricsLine *pRow, MLColor clrIn, MLColor clrOut, MLColor &color)
+void CLyricShowSingleRowObj::GetNextLineFadeInColor(LyricsLine *pLine, MLColor clrIn, MLColor clrOut, MLColor &color)
 {
 	int				nTime;
 
-	if (!pRow)
+	if (!pLine)
 		return;
 
 	// nTime 变小
-	nTime = pRow->nBegTime - m_pMLData->GetPlayElapsedTime();
+	nTime = pLine->nBegTime - m_pMLData->GetPlayElapsedTime();
 	if (nTime <= FIO_TIME && nTime >= 0)
 	{
 		int		nPart1;
@@ -82,20 +82,20 @@ void CLyricShowSingleRowObj::GetNextLineFadeInColor(LyricsLine *pRow, MLColor cl
 
 void AlphaBlendColor(MLColor &clr1, MLColor &clr2, int nAlpha, MLColor &clrOut);
 
-void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, LyricsLine *pRowCur, LyricsLine *pRowNext, int x, int y)
+void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, LyricsLine *pLineCur, LyricsLine *pLineNext, int x, int y)
 {
 	int				nTime;
 	int				nAlphaCurLine, nAlphaNextLine;
 
-	nTime = pRowCur->nEndTime - m_pMLData->GetPlayElapsedTime();
+	nTime = pLineCur->nEndTime - m_pMLData->GetPlayElapsedTime();
 	if (nTime <= FIO_TIME && nTime >= 0)
 		nAlphaCurLine = (FIO_TIME - nTime) * 255 / FIO_TIME;
 	else
 		nAlphaCurLine = 255;
 
-	if (pRowNext)
+	if (pLineNext)
 	{
-		nTime = pRowNext->nBegTime - m_pMLData->GetPlayElapsedTime();
+		nTime = pLineNext->nBegTime - m_pMLData->GetPlayElapsedTime();
 		if (nTime <= FIO_TIME && nTime >= 0)
 			nAlphaNextLine = nTime * 255 / FIO_TIME;
 		else
@@ -110,13 +110,13 @@ void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, Lyr
 		// transparent window
 		byte		alphaOld = pGraphics->GetOpacityPainting();
 		pGraphics->SetOpacityPainting(nAlphaNextLine);
-		DrawRow(pGraphics, pRowCur, AUTO_CAL_X, y, GetHighlightColor(), m_tobHilight.clr[TCI_BORDER]);
+		DrawRow(pGraphics, pLineCur, AUTO_CAL_X, y, GetHighlightColor(), m_tobHilight.clr[TCI_BORDER]);
 
-		if (pRowNext)
+		if (pLineNext)
 		{
 			pGraphics->SetOpacityPainting(nAlphaCurLine);
 
-			DrawRow(pGraphics, pRowNext, AUTO_CAL_X, y, GetHighlightColor(), m_tobHilight.clr[TCI_BORDER]);
+			DrawRow(pGraphics, pLineNext, AUTO_CAL_X, y, GetHighlightColor(), m_tobHilight.clr[TCI_BORDER]);
 		}
 		pGraphics->SetOpacityPainting(alphaOld);
 	}
@@ -127,14 +127,14 @@ void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, Lyr
 		AlphaBlendColor(m_tobHilight.clr[TCI_BORDER], m_clrBg, nAlphaCurLine, clrTxtBorder);
 		AlphaBlendColor(GetHighlightColor(), m_clrBg, nAlphaCurLine, clrTxt);
 
-		DrawRow(pGraphics, pRowCur, AUTO_CAL_X, y, clrTxt, clrTxtBorder);
+		DrawRow(pGraphics, pLineCur, AUTO_CAL_X, y, clrTxt, clrTxtBorder);
 
-		if (pRowNext)
+		if (pLineNext)
 		{
 			AlphaBlendColor(m_tobHilight.clr[TCI_BORDER], m_clrBg, nAlphaNextLine, clrTxtBorder);
 			AlphaBlendColor(GetHighlightColor(), m_clrBg, nAlphaNextLine, clrTxt);
 
-			DrawRow(pGraphics, pRowNext, AUTO_CAL_X, y, clrTxt, clrTxtBorder);
+			DrawRow(pGraphics, pLineNext, AUTO_CAL_X, y, clrTxt, clrTxtBorder);
 		}
 	}
 }
@@ -174,7 +174,7 @@ void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* =
 	if (nPlayPos + FIO_TIME >= pLyricRow->nEndTime)
 	{
 		// 计算渐变显示的颜色
-		LyricsLine *pRowNext = NULL;
+		LyricsLine *pLineNext = NULL;
 
 		CRect	rcClip;
 
@@ -187,9 +187,9 @@ void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* =
 		pGraphics->SetClipBoundBox(rcClip);
 
 		if (nRowCur + 1 < (int)m_lyrLines.size())
-			pRowNext = m_lyrLines[nRowCur + 1];
+			pLineNext = m_lyrLines[nRowCur + 1];
 
-		DrawCurLineFadeInNextLine(pGraphics, pLyricRow, pRowNext, -1, y);
+		DrawCurLineFadeInNextLine(pGraphics, pLyricRow, pLineNext, -1, y);
 	}
 	else
 	{

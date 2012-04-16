@@ -32,17 +32,17 @@ int CSncParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 	tstringex	strData;
 	tstringex	strBuff;
 
-	nCount = (int)m_pMLData->m_arrFileRows.size();
+	nCount = (int)m_pMLData->m_arrFileLines.size();
 	for (int i = 0; i < nCount; i++)
 	{
-		LyricsLine *pRow;
+		LyricsLine *pLine;
 
-		pRow = m_pMLData->m_arrFileRows[i];
+		pLine = m_pMLData->m_arrFileLines[i];
 
-		if (pRow)
+		if (pLine)
 		{
 			// save row.
-			if (LyricsRowToText(pRow, strBuff))
+			if (LyricsLineToText(pLine, strBuff))
 			{
 				strData += strBuff;
 			}
@@ -59,21 +59,21 @@ int CSncParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 //		⑩00010450⑿
 //          MMSS
 //		我躲在车里
-BOOL CSncParser::LyricsRowToText(LyricsLine *pRow, tstringex &strBuff)
+BOOL CSncParser::LyricsLineToText(LyricsLine *pLine, tstringex &strBuff)
 {
 	strBuff.clear();
 
-	if (!pRow->bLyricsLine)
+	if (!pLine->bLyricsLine)
 		return false;
 
-	if (pRow->IsTempRow())
+	if (pLine->IsTempLine())
 		return false;
 
 	int		nMin, nSec, n10Ms;
 	int		nMs;
 	int		nLen;
 
-	nMs = pRow->nBegTime + m_pMLData->GetOffsetTime();
+	nMs = pLine->nBegTime + m_pMLData->GetOffsetTime();
 	n10Ms = (nMs / 10) % 100;
 	nSec = (nMs / 1000) % 60;
 	nMin = nMs / (1000 * 60);
@@ -85,10 +85,10 @@ BOOL CSncParser::LyricsRowToText(LyricsLine *pRow, tstringex &strBuff)
 	int			nCount;
 	tstringex	strLyrics;
 
-	nCount = (int)pRow->vFrags.size();
+	nCount = (int)pLine->vFrags.size();
 	for (int i = 0; i < nCount; i++)
 	{
-		strLyrics += pRow->vFrags[i]->szLyric;
+		strLyrics += pLine->vFrags[i]->szLyric;
 	}
 	strLyrics.trim();
 

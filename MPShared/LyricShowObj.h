@@ -140,7 +140,7 @@ public:
 
 	virtual void SetAntialise(BOOL bAntialis);
 
-	int GetAlpha(LyricsLine *pRow);
+	int GetAlpha(LyricsLine *pLine);
 
 	void SetLyricData(CMLData *pMLData);
 

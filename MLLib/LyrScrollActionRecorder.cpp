@@ -312,14 +312,14 @@ void CLyrScrollActionRecorder::UpdateTimeTagByEvents(CLyricsLines &lyrLines)
 
 	for (int i = 0; i < (int)lyrLines.size(); i++)
 	{
-		LyricsLine *pRow = lyrLines[i];
-		ASSERT(pRow->vFrags.size() == 1);
-		if (pRow->vFrags.size() != 1)
+		LyricsLine *pLine = lyrLines[i];
+		ASSERT(pLine->vFrags.size() == 1);
+		if (pLine->vFrags.size() != 1)
 			continue;
 
-		LyricsPiece *pFrag = pRow->vFrags[0];
-		pFrag->nBegTime = nLastTime;
-		nCurDistance += CharCountToCharDistance(pFrag->nLen);
+		LyricsPiece *pPiece = pLine->vFrags[0];
+		pPiece->nBegTime = nLastTime;
+		nCurDistance += CharCountToCharDistance(pPiece->nLen);
 
 		while (nCurEvent < (int)m_listEvents.size() - 1
 			&& nCurDistance >= m_listEvents[nCurEvent].distance)
@@ -329,7 +329,7 @@ void CLyrScrollActionRecorder::UpdateTimeTagByEvents(CLyricsLines &lyrLines)
 		if (nCurEvent == m_listEvents.size() - 1)
 		{
 			// in last event, set end time as MAX_TIME.
-			pFrag->nEndTime = MAX_TIME;
+			pPiece->nEndTime = MAX_TIME;
 		}
 		else
 		{
@@ -337,13 +337,13 @@ void CLyrScrollActionRecorder::UpdateTimeTagByEvents(CLyricsLines &lyrLines)
 			ASSERT(nCurDistance >= pEvent->distance);
 
 			if (pEvent->speed > 0)
-				pFrag->nEndTime = int(pEvent->nTime + (nCurDistance - pEvent->distance) / pEvent->speed);
+				pPiece->nEndTime = int(pEvent->nTime + (nCurDistance - pEvent->distance) / pEvent->speed);
 			else
-				pFrag->nEndTime = pEvent->nTime;
+				pPiece->nEndTime = pEvent->nTime;
 		}
 
-		pRow->nBegTime = pFrag->nBegTime;
-		nLastTime = pRow->nEndTime = pFrag->nEndTime;
+		pLine->nBegTime = pPiece->nBegTime;
+		nLastTime = pLine->nEndTime = pPiece->nEndTime;
 	}
 }
 
@@ -356,12 +356,12 @@ int CLyrScrollActionRecorder::GetDistanceOfLine(CLyricsLines &lyrLines, int nLin
 	int		nCharCount = 0;
 	for (int i = 0; i < nLine; i++)
 	{
-		LyricsLine *pRow = lyrLines[i];
-		ASSERT(pRow->bLyricsLine);
-		ASSERT(pRow->vFrags.size() == 1);
-		if (pRow->vFrags.size() != 1)
+		LyricsLine *pLine = lyrLines[i];
+		ASSERT(pLine->bLyricsLine);
+		ASSERT(pLine->vFrags.size() == 1);
+		if (pLine->vFrags.size() != 1)
 			continue;
-		nCharCount += CharCountToCharDistance(pRow->vFrags[0]->nLen);
+		nCharCount += CharCountToCharDistance(pLine->vFrags[0]->nLen);
 	}
 
 	return nCharCount;

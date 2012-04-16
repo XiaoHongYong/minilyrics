@@ -34,7 +34,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 	int			nRowHeight;// center row height
 	int			nLeft, nRight, nCX, nCY;
 	int			nRowCur;
-	LyricsLine *pRow;
+	LyricsLine *pLine;
 
 	int				_ROW_INTERVAL;
 
@@ -114,12 +114,12 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 	// 显示当前行之前的歌词行
 	while (x > nLeft && nRow >= 0)
 	{
-		pRow = m_lyrLines[nRow];
-		nRowWidth = GetLyricRowTextWidth(pGraphics, pRow);
+		pLine = m_lyrLines[nRow];
+		nRowWidth = GetLyricRowTextWidth(pGraphics, pLine);
 
 		x -= nRowWidth + _ROW_INTERVAL;
 
-		DrawRow(pGraphics, pRow, x, y, LP_ABOVE_CUR_LINE);
+		DrawRow(pGraphics, pLine, x, y, LP_ABOVE_CUR_LINE);
 
 		nRow--;
 	}
@@ -135,11 +135,11 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 	// 显示以后歌词行
 	while (x < nRight && nRow < (int)m_lyrLines.size())
 	{
-		pRow = m_lyrLines[nRow];
+		pLine = m_lyrLines[nRow];
 
-		DrawRow(pGraphics, pRow, x, y, LP_BELOW_CUR_LINE);
+		DrawRow(pGraphics, pLine, x, y, LP_BELOW_CUR_LINE);
 
-		nRowWidth = GetLyricRowTextWidth(pGraphics, pRow);
+		nRowWidth = GetLyricRowTextWidth(pGraphics, pLine);
 
 		x += nRowWidth + _ROW_INTERVAL;
 		nRow++;
@@ -202,7 +202,7 @@ void CLyricShowHorzScrollObj::CalculateAccelerate()
 		return;
 
 	CRawGraph	*pGraphics;
-	LyricsLine *pRow;
+	LyricsLine *pLine;
 	int				nRowWidth;
 	double			V0 = 0, v = 0, a, deltat;
 
@@ -220,15 +220,15 @@ void CLyricShowHorzScrollObj::CalculateAccelerate()
 	for (int i = 0; i < (int)m_lyrLines.size(); i++)
 	{
 		V0 = v;
-		pRow = m_lyrLines[i];
-		nRowWidth = GetLyricRowTextWidth(pGraphics, pRow) + _ROW_INTERVAL;
-		deltat = pRow->nEndTime - pRow->nBegTime;
+		pLine = m_lyrLines[i];
+		nRowWidth = GetLyricRowTextWidth(pGraphics, pLine) + _ROW_INTERVAL;
+		deltat = pLine->nEndTime - pLine->nBegTime;
 //			static int nLastEndTime = 0;
-//			if (nLastEndTime != pRow->nBegTime)
+//			if (nLastEndTime != pLine->nBegTime)
 //			{
-//				DBGLOG3(_T("Row: %d, E: %d, B: %d"), i, nLastEndTime, pRow->nBegTime);
+//				DBGLOG3(_T("Row: %d, E: %d, B: %d"), i, nLastEndTime, pLine->nBegTime);
 //			}
-//			nLastEndTime = pRow->nEndTime;
+//			nLastEndTime = pLine->nEndTime;
 		if (deltat == 0)
 		{
 			v = V0;

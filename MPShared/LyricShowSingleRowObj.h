@@ -22,10 +22,10 @@ public:
 	int GetLyricRightRowAlignPos(CRawGraph *pGraphics, LyricsLine *pLyricRow);
 	int GetLyricLeftRowAlignPos(CRawGraph *pGraphics, LyricsLine *pLyricRow);
 
-	void DrawCurLineFadeInNextLine(CRawGraph *pGraphics, LyricsLine *pRowCur, LyricsLine *pRowNext, int x, int y);
+	void DrawCurLineFadeInNextLine(CRawGraph *pGraphics, LyricsLine *pLineCur, LyricsLine *pLineNext, int x, int y);
 
-	void GetCurLineFadeOutColor(LyricsLine *pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
-	void GetNextLineFadeInColor(LyricsLine *pRow, MLColor clrIn, MLColor clrOut, MLColor &color);
+	void GetCurLineFadeOutColor(LyricsLine *pLine, MLColor clrIn, MLColor clrOut, MLColor &color);
+	void GetNextLineFadeInColor(LyricsLine *pLine, MLColor clrIn, MLColor clrOut, MLColor &color);
 
 public:
 	static LPCTSTR ClassName() { return ms_szClassName; }

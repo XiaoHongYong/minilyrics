@@ -80,32 +80,32 @@ PRAW_IMAGE_DATA AutoFitImageToRect(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst, 
 	return pImgDst;
 }
 
-int GetLyricFragDrawWidth(LyricsPiece *pFrag, CRawGraph* pGraphics)
+int GetLyricFragDrawWidth(LyricsPiece *pPiece, CRawGraph* pGraphics)
 {
-	ASSERT(pFrag);
+	ASSERT(pPiece);
 
-	if (pFrag->nDrawWidth == 0)
+	if (pPiece->nDrawWidth == 0)
 	{
 		SIZE			size;
-		pGraphics->GetTextExtentPoint32(pFrag->szLyric, pFrag->nLen, &size);
-		pFrag->nDrawWidth = (int16)size.cx;
+		pGraphics->GetTextExtentPoint32(pPiece->szLyric, pPiece->nLen, &size);
+		pPiece->nDrawWidth = (int16)size.cx;
 	}
 
-	return pFrag->nDrawWidth;
+	return pPiece->nDrawWidth;
 }
 
-int GetMLRowDrawWidth(LyricsLine *pRow, CRawGraph *pGraph)
+int GetMLRowDrawWidth(LyricsLine *pLine, CRawGraph *pGraph)
 {
 	VecLyricsPiece::iterator	it, itEnd;
 	int					w = 0;
 	SIZE				size;
 
-	itEnd = pRow->vFrags.end();
-	for (it = pRow->vFrags.begin(); it != itEnd; it++)
+	itEnd = pLine->vFrags.end();
+	for (it = pLine->vFrags.begin(); it != itEnd; it++)
 	{
-		LyricsPiece *pFrag = *it;
+		LyricsPiece *pPiece = *it;
 
-		if (pGraph->GetTextExtentPoint32(pFrag->szLyric, pFrag->nLen, &size))
+		if (pGraph->GetTextExtentPoint32(pPiece->szLyric, pPiece->nLen, &size))
 			w += size.cx;
 	}
 
@@ -172,45 +172,45 @@ bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRa
 
 	lyrLinesOut.clear();
 
-	LyricsLine *pRow;
+	LyricsLine *pLine;
 	vector<tstring>	vStr;
 	for (i = 0; i < (int)lyrLinesSrc.size(); i++)
 	{
-		LyricsLine *pRowSrc = lyrLinesSrc[i];
+		LyricsLine *pLineSrc = lyrLinesSrc[i];
 
-		if (pRowSrc->vFrags.size() > 1 || pRowSrc->vFrags.size() == 0
-			|| GetMLRowDrawWidth(pRowSrc, pGraph) <= nWidthMax)
+		if (pLineSrc->vFrags.size() > 1 || pLineSrc->vFrags.size() == 0
+			|| GetMLRowDrawWidth(pLineSrc, pGraph) <= nWidthMax)
 		{
 			// Not support vFrags > 1.
-			pRow = g_LyricData.CopyMLRow(pRowSrc);
-			lyrLinesOut.push_back(pRow);
+			pLine = DuplicateLyricsLine(pLineSrc);
+			lyrLinesOut.push_back(pLine);
 		}
 		else
 		{
 			// Wrap
 			int			nLen, nTimeSpan, nBegTime, nEndTime;
 
-			LyricsPiece *pFragSrc = pRowSrc->vFrags[0];
+			LyricsPiece *pPieceSrc = pLineSrc->vFrags[0];
 
 			vStr.clear();
-			WrapWords(pGraph, nWidthMax, pFragSrc->szLyric, vStr);
+			WrapWords(pGraph, nWidthMax, pPieceSrc->szLyric, vStr);
 
-			nLen = pFragSrc->nLen;
-			nTimeSpan = pRowSrc->nEndTime - pRowSrc->nBegTime;
+			nLen = pPieceSrc->nLen;
+			nTimeSpan = pLineSrc->nEndTime - pLineSrc->nBegTime;
 
 			// ASSERT(vStr.size() > 1);
-			nBegTime = pRowSrc->nBegTime;
+			nBegTime = pLineSrc->nBegTime;
 			for (int k = 0; k < (int)vStr.size(); k++)
 			{
 				if (nLen > 0)
 					nEndTime = nBegTime + (vStr[k].size() * nTimeSpan) / nLen;
 				else
 					nEndTime = nBegTime + nTimeSpan;
-				pRow = NewLyricsLine(nBegTime,  nEndTime, pRowSrc->szContent, -1, pRowSrc->bLyricsLine);
+				pLine = NewLyricsLine(nBegTime,  nEndTime, pLineSrc->szContent, -1, pLineSrc->bLyricsLine);
 
-				pRow->AppendPiece(nBegTime, nEndTime, vStr[k].c_str(), vStr[k].size(), false, false);
+				pLine->AppendPiece(nBegTime, nEndTime, vStr[k].c_str(), vStr[k].size(), false, false);
 
-				lyrLinesOut.push_back(pRow);
+				lyrLinesOut.push_back(pLine);
 
 				nBegTime = nEndTime;
 			}
@@ -678,7 +678,7 @@ void CLyricShowObj::OnCreate()
 	if (!m_bEnableAutoResize || !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)
 		|| !m_bCanWrapLines)
 	{
-		m_pMLData->CopyMLyrLines(m_lyrLines);
+		m_pMLData->CopyLyricsLines(m_lyrLines);
 		ReverseLyricsForRightToLeftLanguage();
 	}
 }
@@ -1019,9 +1019,9 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 	nSize = pLyricRow->vFrags.size();
 	for (int i = 0; i < nSize; i++)
 	{
-		LyricsPiece *pFrag;
+		LyricsPiece *pPiece;
 
-		pFrag = pLyricRow->vFrags[i];
+		pPiece = pLyricRow->vFrags[i];
 
 /*#ifndef _WIN32_WCE
 		if (pLyricRow->IsAdvertise())
@@ -1038,11 +1038,11 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 				pGraphics->SetFont(&font);
 
 				if (pLyricRow->szContent)
-					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
+					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pPiece, pGraphics), GetFontHeight());
 
 				pGraphics->SetTextColor(clrTxt);
-				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
-				x += GetLyricFragDrawWidth(pFrag, pGraphics);
+				pGraphics->TextOut(x, y, pPiece->szLyric, pPiece->nLen);
+				x += GetLyricFragDrawWidth(pPiece, pGraphics);
 
 				pGraphics->SetFont(pOldFont);
 			}
@@ -1059,13 +1059,13 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 			if (IsOutlineLyrics())
 			{
 				// Draw lyrics text outlined
-				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
+				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pPiece->szLyric, pPiece->nLen, clrTxt, clrTxtBorder);
 			}
 			else
 			{
 				pGraphics->SetTextColor(clrTxt);
 
-				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
+				pGraphics->TextOut(x, y, pPiece->szLyric, pPiece->nLen);
 			}
 
 			if (bSetOpacityPainting)
@@ -1075,11 +1075,11 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 			if (pLyricRow->IsAdvertise())
 			{
 				if (pLyricRow->szContent)
-					SetAdSentence((int)(long)pLyricRow, pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
+					SetAdSentence((int)(long)pLyricRow, pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pPiece, pGraphics), GetFontHeight());
 			}
 #endif
 
-			x += GetLyricFragDrawWidth(pFrag, pGraphics);
+			x += GetLyricFragDrawWidth(pPiece, pGraphics);
 		}
 	}
 
@@ -1097,9 +1097,9 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 	nSize = pLyricRow->vFrags.size();
 	for (int i = 0; i < nSize; i++)
 	{
-		LyricsPiece *pFrag;
+		LyricsPiece *pPiece;
 
-		pFrag = pLyricRow->vFrags[i];
+		pPiece = pLyricRow->vFrags[i];
 
 /*#ifndef _WIN32_WCE
 		if (pLyricRow->IsAdvertise())
@@ -1116,11 +1116,11 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 				pGraphics->SetFont(&font);
 
 				if (pLyricRow->szContent)
-					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
+					SetAdSentence(int(pLyricRow), pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pPiece, pGraphics), GetFontHeight());
 
 				pGraphics->SetTextColor(clrTxt);
-				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
-				x += GetLyricFragDrawWidth(pFrag, pGraphics);
+				pGraphics->TextOut(x, y, pPiece->szLyric, pPiece->nLen);
+				x += GetLyricFragDrawWidth(pPiece, pGraphics);
 
 				pGraphics->SetFont(pOldFont);
 			}
@@ -1131,21 +1131,21 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 			if (IsOutlineLyrics())
 			{
 				// Draw lyrics text outlined
-				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pFrag->szLyric, pFrag->nLen, clrTxt, clrTxtBorder);
+				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pPiece->szLyric, pPiece->nLen, clrTxt, clrTxtBorder);
 			}
 			else
 			{
 				pGraphics->SetTextColor(clrTxt);
-				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
+				pGraphics->TextOut(x, y, pPiece->szLyric, pPiece->nLen);
 			}
 #ifndef _WIN32_WCE
 			if (pLyricRow->IsAdvertise())
 			{
 				if (pLyricRow->szContent)
-					SetAdSentence((int)(long)pLyricRow, pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pFrag, pGraphics), GetFontHeight());
+					SetAdSentence((int)(long)pLyricRow, pLyricRow->szContent, x, y, GetLyricFragDrawWidth(pPiece, pGraphics), GetFontHeight());
 			}
 #endif
-			x += GetLyricFragDrawWidth(pFrag, pGraphics);
+			x += GetLyricFragDrawWidth(pPiece, pGraphics);
 		}
 	}
 }
@@ -1165,7 +1165,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 	// 3. Draw word pCurWord
 	// 4. draw words after pCurWords
 	// 5. ok
-	LyricsPiece *pFrag;
+	LyricsPiece *pPiece;
 	int			nSize;
 	int			nCurPos;
 
@@ -1190,9 +1190,9 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 	// 先将在时间已过的歌词段显示出来
 	for (nCurPos = 0; nCurPos < nSize; nCurPos++)
 	{
-		pFrag = pLyricRow->vFrags[nCurPos];
+		pPiece = pLyricRow->vFrags[nCurPos];
 
-		if (pFrag->nEndTime >= m_pMLData->GetPlayElapsedTime())
+		if (pPiece->nEndTime >= m_pMLData->GetPlayElapsedTime())
 		{
 			// 时间未过的歌词段
 			break;
@@ -1212,14 +1212,14 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 			if (IsOutlineLyrics())
 			{
 				// Draw lyrics text outlined
-				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pFrag->szLyric, pFrag->nLen, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
+				pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pPiece->szLyric, pPiece->nLen, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
 			}
 			else
 			{
 				pGraphics->SetTextColor(GetHighlightColor());
-				pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
+				pGraphics->TextOut(x, y, pPiece->szLyric, pPiece->nLen);
 			}
-			x += GetLyricFragDrawWidth(pFrag, pGraphics);;
+			x += GetLyricFragDrawWidth(pPiece, pGraphics);;
 		}
 	}
 
@@ -1232,28 +1232,28 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 		int		nFragDrawWidth;
 		int		nKaraokePos = 0;
 
-		pFrag = pLyricRow->vFrags[nCurPos];
+		pPiece = pLyricRow->vFrags[nCurPos];
 
 		// get width of the lyrics fragment
-		nFragDrawWidth = GetLyricFragDrawWidth(pFrag, pGraphics);
+		nFragDrawWidth = GetLyricFragDrawWidth(pPiece, pGraphics);
 
-		if (pFrag->nBegTime < m_pMLData->GetPlayElapsedTime())
+		if (pPiece->nBegTime < m_pMLData->GetPlayElapsedTime())
 		{
 			// 如果时间 m_pMLData->GetPlayElapsedTime() 在当前歌词段之间
 			//    |1word2|   |1word2|
-			//                  ^ pFrag
-			int dt = (pFrag->nEndTime - pFrag->nBegTime);
+			//                  ^ pPiece
+			int dt = (pPiece->nEndTime - pPiece->nBegTime);
 			if (dt != 0)
 			{
 
-				nKaraokePos = nFragDrawWidth * (m_pMLData->GetPlayElapsedTime() - pFrag->nBegTime) / dt;
+				nKaraokePos = nFragDrawWidth * (m_pMLData->GetPlayElapsedTime() - pPiece->nBegTime) / dt;
 				// rcText.SetRect(x, y, x + nKaraokePos + 1, y + GetFontHeight() + 1);
 			}
 		}
 		else
 		{
 			//    |1word2|   |1word2|
-			//             ^  pFrag
+			//             ^  pPiece
 			nKaraokePos = nFragDrawWidth;
 		}
 
@@ -1271,12 +1271,12 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 
 			if (IsOutlineLyrics())
 			{
-				pGraphics->DrawTextClipOutlined(pFrag->szLyric, pFrag->nLen, &rcText, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER], nKaraokePos);
+				pGraphics->DrawTextClipOutlined(pPiece->szLyric, pPiece->nLen, &rcText, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER], nKaraokePos);
 			}
 			else
 			{
 				pGraphics->SetTextColor(GetLowlightColor());
-				pGraphics->DrawTextClip(pFrag->szLyric, pFrag->nLen, &rcText, nKaraokePos);
+				pGraphics->DrawTextClip(pPiece->szLyric, pPiece->nLen, &rcText, nKaraokePos);
 			}
 		}
 
@@ -1291,12 +1291,12 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 		if (IsOutlineLyrics())
 		{
 			// Draw lyrics text outlined
-			pGraphics->DrawTextClipOutlined(pFrag->szLyric, pFrag->nLen, &rcText, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
+			pGraphics->DrawTextClipOutlined(pPiece->szLyric, pPiece->nLen, &rcText, m_tobHilight.clr[TCI_FILL], m_tobHilight.clr[TCI_BORDER]);
 		}
 		else
 		{
 			pGraphics->SetTextColor(GetHighlightColor());
-			pGraphics->DrawTextClip(pFrag->szLyric, pFrag->nLen, &rcText);
+			pGraphics->DrawTextClip(pPiece->szLyric, pPiece->nLen, &rcText);
 		}
 
 		// 增加 x 的偏移位置
@@ -1312,20 +1312,20 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 	// 显示时间未到的歌词段
 	for (; nCurPos < nSize; nCurPos++)
 	{
-		pFrag = pLyricRow->vFrags[nCurPos];
+		pPiece = pLyricRow->vFrags[nCurPos];
 
 		// draw text border
 		if (IsOutlineLyrics())
 		{
 			// Draw lyrics text outlined
-			pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pFrag->szLyric, pFrag->nLen, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER]);
+			pGraphics->TextOutOutlined(x, y + GfxRaw::MARGIN_BITMAP, pPiece->szLyric, pPiece->nLen, m_tobLowlight.clr[TCI_FILL], m_tobLowlight.clr[TCI_BORDER]);
 		}
 		else
 		{
 			pGraphics->SetTextColor(GetLowlightColor());
-			pGraphics->TextOut(x, y, pFrag->szLyric, pFrag->nLen);
+			pGraphics->TextOut(x, y, pPiece->szLyric, pPiece->nLen);
 		}
-		x += GetLyricFragDrawWidth(pFrag, pGraphics);
+		x += GetLyricFragDrawWidth(pPiece, pGraphics);
 	}
 	// 5. ok
 }
@@ -1389,14 +1389,14 @@ int CLyricShowObj::GetLyricRowTextWidth(CRawGraph	*pGraphics, LyricsLine *pLyric
 
 	int			nTxtWidth = 0;
 	int			nSize;
-	LyricsPiece *pFrag;
+	LyricsPiece *pPiece;
 
 	nSize = pLyricRow->vFrags.size();
 	for (int i = 0; i < nSize; i++)
 	{
-		pFrag = pLyricRow->vFrags[i];
+		pPiece = pLyricRow->vFrags[i];
 
-		nTxtWidth += GetLyricFragDrawWidth(pFrag, pGraphics);
+		nTxtWidth += GetLyricFragDrawWidth(pPiece, pGraphics);
 	}
 	
 	return nTxtWidth;
@@ -1726,7 +1726,7 @@ void CLyricShowObj::OnLyricsChanged()
 		|| !m_bCanWrapLines)
 	{
 		// auto resize || !wrap lines
-		m_pMLData->CopyMLyrLines(m_lyrLines);
+		m_pMLData->CopyLyricsLines(m_lyrLines);
 		ReverseLyricsForRightToLeftLanguage();
 	}
 	else
@@ -1973,14 +1973,14 @@ void CLyricShowObj::OnPlayTimeChangedUpdate()
 		m_pContainer->UpdateMemGraphicsToScreen(&rcUpdate, this);
 }
 
-int CLyricShowObj::GetAlpha(LyricsLine *pRow)
+int CLyricShowObj::GetAlpha(LyricsLine *pLine)
 {
 	int				nTime;
 	const int		FADE_DURATION = 1500;
 
-	if (pRow->nBegTime > m_pMLData->GetPlayElapsedTime())
+	if (pLine->nBegTime > m_pMLData->GetPlayElapsedTime())
 	{
-		nTime = pRow->nBegTime - m_pMLData->GetPlayElapsedTime();
+		nTime = pLine->nBegTime - m_pMLData->GetPlayElapsedTime();
 		if (nTime <= FADE_DURATION && nTime >= -FADE_DURATION)
 		{
 			return (FADE_DURATION - nTime) * 255 / FADE_DURATION;
@@ -1990,7 +1990,7 @@ int CLyricShowObj::GetAlpha(LyricsLine *pRow)
 	}
 	else
 	{
-		nTime = m_pMLData->GetPlayElapsedTime() - pRow->nEndTime;
+		nTime = m_pMLData->GetPlayElapsedTime() - pLine->nEndTime;
 		if (nTime >= FADE_DURATION)
 			return 0;
 		else if (nTime > 0)
@@ -2594,13 +2594,13 @@ void CLyricShowObj::ReverseLyricsForRightToLeftLanguage()
 {
 	for (int i = 0; i < (int)m_lyrLines.size(); i++)
 	{
-		LyricsLine *pRow = m_lyrLines[i];
-		for (int k = 0; k < (int)pRow->vFrags.size(); k++)
+		LyricsLine *pLine = m_lyrLines[i];
+		for (int k = 0; k < (int)pLine->vFrags.size(); k++)
 		{
-			LyricsPiece *pFrag = pRow->vFrags[k];
+			LyricsPiece *pPiece = pLine->vFrags[k];
 
-			if (isStrArabic(pFrag->szLyric))
-				ReverseStringForRightToLeftLanguage(pFrag->szLyric);
+			if (isStrArabic(pPiece->szLyric))
+				ReverseStringForRightToLeftLanguage(pPiece->szLyric);
 		}
 	}
 }

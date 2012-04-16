@@ -23,7 +23,7 @@ public:
 	virtual LYRICS_CONTENT_TYPE GetLyrContentType() { return LCT_UNKNOWN; }
 
 protected:
-	BOOL LyricsRowToText(LyricsLine *pRow, tstringex &strBuff);
+	BOOL LyricsLineToText(LyricsLine *pLine, tstringex &strBuff);
 
 };
 

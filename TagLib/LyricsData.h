@@ -51,7 +51,7 @@ public:
 
 	bool IsAdvertise() { return bAdvertise; }
 
-	bool IsTempRow() { return bTempLine; }
+	bool IsTempLine() { return bTempLine; }
 };
 
 class CLyricsLines : public vector<LyricsLine *>
@@ -72,3 +72,5 @@ protected:
 
 LyricsLine *NewLyricsLine(int nBegTime, int nEndTime, 
 						  LPCTSTR szContent = NULL, int nLen = 0, bool bLyricsLine = true);
+
+LyricsLine *DuplicateLyricsLine(LyricsLine *pLineSrc);

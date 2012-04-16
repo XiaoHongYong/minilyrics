@@ -58,11 +58,11 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		*prcUpdate = m_rcObj;
 
 	int				y, yCurRow;
-	LyricsLine *pRowCur;
+	LyricsLine *pLineCur;
 	int				nRowHeight;
 	int				nDeltaTime;
 	int				nRowCur;
-	LyricsLine *pRow;
+	LyricsLine *pLine;
 
 
 	// get the current playing line
@@ -74,9 +74,9 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		return;
 	}
 
-	pRowCur = m_lyrLines[nRowCur];
+	pLineCur = m_lyrLines[nRowCur];
 	nRowHeight = GetLineHeight();
-	nDeltaTime = pRowCur->nEndTime - pRowCur->nBegTime;
+	nDeltaTime = pLineCur->nEndTime - pLineCur->nBegTime;
 
 	CDispOptRecover		dispOptRecover(this);
 	if (m_img.IsValid())
@@ -92,13 +92,13 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	else
 	{
 		yCurRow = GetLineVertAlignPos();
-		if (m_pMLData->GetPlayElapsedTime() < pRowCur->nBegTime || nDeltaTime == 0)
+		if (m_pMLData->GetPlayElapsedTime() < pLineCur->nBegTime || nDeltaTime == 0)
 			;
-		else if (m_pMLData->GetPlayElapsedTime() > pRowCur->nEndTime)
+		else if (m_pMLData->GetPlayElapsedTime() > pLineCur->nEndTime)
 			yCurRow += -nRowHeight;
 		else
 			yCurRow += -nRowHeight + 
-				nRowHeight * (pRowCur->nEndTime - m_pMLData->GetPlayElapsedTime()) / nDeltaTime;
+				nRowHeight * (pLineCur->nEndTime - m_pMLData->GetPlayElapsedTime()) / nDeltaTime;
 	}
 
 	CRect	rcClip;
@@ -141,16 +141,16 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	int		yLyrStart, yLyrEnd;
 
 	// draw center row, the row lyric is current
-	DrawCurrentRow(pGraphics, pRowCur, AUTO_CAL_X, yCurRow);
+	DrawCurrentRow(pGraphics, pLineCur, AUTO_CAL_X, yCurRow);
 
 	// Draw lyrics lines above current line
 	nRow = nRowCur - 1;
 	nRowEnd = 0;
 	for (y = yCurRow - nRowHeight; y + nRowHeight > rcClip.top && nRow >= nRowEnd; y -= nRowHeight)
 	{
-		pRow = m_lyrLines[nRow];
+		pLine = m_lyrLines[nRow];
 
-		if (!DrawRow(pGraphics, pRow, AUTO_CAL_X, y, LP_ABOVE_CUR_LINE))
+		if (!DrawRow(pGraphics, pLine, AUTO_CAL_X, y, LP_ABOVE_CUR_LINE))
 			break;
 		nRow--;
 	}
@@ -161,8 +161,8 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	nRowEnd = m_lyrLines.size();
 	for (y = yCurRow + nRowHeight; y < rcClip.bottom && nRow < nRowEnd; y += nRowHeight)
 	{
-		pRow = m_lyrLines[nRow];
-		if (!DrawRow(pGraphics, pRow, AUTO_CAL_X, y, LP_BELOW_CUR_LINE))
+		pLine = m_lyrLines[nRow];
+		if (!DrawRow(pGraphics, pLine, AUTO_CAL_X, y, LP_BELOW_CUR_LINE))
 			break;
 		nRow++;
 	}
