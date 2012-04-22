@@ -190,7 +190,7 @@ int ReadVarlen(CFileEx &file, int &len)
 
 CMidiTag::CMidiTag()
 {
-	m_tempo = 500000;	// 120 beats/minute
+	m_tempo = 0;
 	m_dominator = 4;
 	m_numberator = 4;
 }
@@ -261,6 +261,9 @@ int CMidiTag::Open(LPCTSTR szFile)
 		m_file.Seek(trunk.sizeOfData + TRUNK_HEADER_LEN + trunk.offset, SEEK_SET);
 	}
 
+	if (m_tempo == 0)
+		m_tempo = 500000;	// 120 beats/minute
+
 	return ERR_OK;
 }
 
@@ -268,6 +271,9 @@ void CMidiTag::Close()
 {
 	m_listTrunks.clear();
 	m_file.Close();
+	m_tempo = 0;
+	m_dominator = 4;
+	m_numberator = 4;
 }
 
 int CMidiTag::ListLyrics(VecString &vLyrNames)
@@ -309,50 +315,90 @@ int CMidiTag::GetLyrics(CLyricsLines &lyricsLines)
 		else
 			m_file.Seek(-1, SEEK_CUR);
 
-		byte metaEvent;
-		nRet = m_file.ReadByte(metaEvent);
-		if (nRet != ERR_OK)
-			return nRet;
-
-		int len;
-		nRet = ReadVarlen(m_file, len);
-		if (nRet != ERR_OK)
-			return nRet;
-
-		CCharBuffer buf;
-		buf.resize(len);
-		nRet = m_file.ReadCount(buf.data(), len);
-		if (nRet != ERR_OK)
-			return nRet;
-
-		if (metaEvent == MAT_END_OF_TRACK)
-			break;
-
-		tstring str;
-		bool bNewLine = (buf[0] == '/' || buf[0] == '\\');
-		if (bNewLine)
-			AnsiToTString(buf.c_str() + 1, buf.size() - 1, str);
-		else
-			AnsiToTString(buf.c_str(), buf.size(), str);
-
-		if (metaEvent == MAT_SEQUENCE_NAME)
+		if (eventCode >= MET_NOTE_OFF && eventCode <= MET_CONTROL_CHANGE)
 		{
-			ASSERT(_tcscmp(str.c_str(), _T("Words")) == 0);
+			// DBGLOG1(_T("  MidiEvent, code: 0x%x"), eventCode);
+			m_file.Seek(2, SEEK_CUR);
 		}
-		else if (metaEvent == MAT_TEXT)
+		else if (eventCode >= MET_PROGRAM_CHANGE && eventCode <= MET_PITCH_BEND)
 		{
-			if (buf[0] == '@')
-				continue;
-			// startTime += (float)(deltaTime * 1000) / ((float)m_timeDivision / 5.2) / 10;
-			startTime += (float)deltaTime * m_tempo / 1000 / m_timeDivision;
-			if (bNewLine || line == NULL)
-			{
-				line = NewLyricsLine((int)startTime, TEMP_TIME);
-				lyricsLines.push_back(line);
-			}
-			line->AppendPiece((int)startTime, TEMP_TIME, str.c_str(), str.size(), false, true);
+			if (eventCode == MET_PROGRAM_CHANGE)
+				startTime += (float)deltaTime * m_tempo / 1000 / m_numberator;
 
-			//DBGLOG3(_T("Time division: %d, delta: %d, time: %d"), m_timeDivision, deltaTime, (int)startTime);
+			// DBGLOG1(_T("  MidiEvent, code: 0x%x"), eventCode);
+			m_file.Seek(1, SEEK_CUR);
+		}
+		else if (eventCode >= MET_SYSEX1 && eventCode <= MET_SYSEX2)
+		{
+			// DBGLOG1(_T("  MidiEvent, code: 0x%x"), eventCode);
+			int len;
+			nRet = ReadVarlen(m_file, len);
+			if (nRet != ERR_OK)
+				return nRet;
+			m_file.Seek(len, SEEK_CUR);
+		}
+		else if (eventCode == MET_META)
+		{
+			byte metaEvent;
+			nRet = m_file.ReadByte(metaEvent);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			int len;
+			nRet = ReadVarlen(m_file, len);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			CCharBuffer buf;
+			buf.resize(len);
+			nRet = m_file.ReadCount(buf.data(), len);
+			if (nRet != ERR_OK)
+				return nRet;
+
+			if (metaEvent == MAT_END_OF_TRACK)
+				break;
+
+			tstring str;
+			bool bNewLine = (buf[0] == '/' || buf[0] == '\\' || buf[0] == '\n');
+			if (bNewLine)
+				AnsiToTString(buf.c_str() + 1, buf.size() - 1, str);
+			else
+				AnsiToTString(buf.c_str(), buf.size(), str);
+
+			if (metaEvent == MAT_TEMPO)
+			{
+				m_tempo = (byte)buf[2] | ((byte)buf[1] << 8) | ((byte)buf[0] << 16);
+				DBGLOG1(_T("  Tempo: %d"), m_tempo);
+			}
+			else if (metaEvent == MAT_SEQUENCE_NAME)
+			{
+				// ASSERT(_tcscmp(str.c_str(), _T("Words")) == 0);
+			}
+			else if (metaEvent == MAT_TEXT)
+			{
+				startTime += (float)deltaTime * m_tempo / 1000 / m_timeDivision;
+				if (buf[0] == '@')
+					continue;
+				if (bNewLine || line == NULL)
+				{
+					line = NewLyricsLine((int)startTime, TEMP_TIME);
+					lyricsLines.push_back(line);
+				}
+				line->AppendPiece((int)startTime, TEMP_TIME, str.c_str(), str.size(), false, true);
+
+				// DBGLOG0(CStrPrintf(_T("Time division: %d, delta: %d, time: %d, %s"), m_timeDivision, deltaTime, (int)startTime, str.c_str()).c_str());
+			}
+			else if (metaEvent == MAT_LYRIC)
+			{
+				if (bNewLine || line == NULL)
+				{
+					line = NewLyricsLine((int)startTime, TEMP_TIME);
+					lyricsLines.push_back(line);
+				}
+				line->AppendPiece((int)startTime, TEMP_TIME, str.c_str(), str.size(), false, true);
+				// DBGLOG0(CStrPrintf(_T("Time division: %d, delta: %d, time: %d, %s"), m_timeDivision, deltaTime, (int)startTime, str.c_str()).c_str());
+				startTime += (float)deltaTime * m_tempo / 1000 / m_numberator;
+			}
 		}
 	}
 
@@ -373,7 +419,6 @@ int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
 
 	stringex_t<byte> buf;
 	LyricsLine *line = NULL;
-	int startTime = 0;
 	byte eventCode = 0;
 	while (m_file.GetPos() < long(trunk.offset + trunk.sizeOfData))
 	{
@@ -393,17 +438,17 @@ int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
 
 		if (eventCode >= MET_NOTE_OFF && eventCode <= MET_CONTROL_CHANGE)
 		{
-			// DBGLOG1(_T("  MidiEvent, code: 0x%x"), eventCode);
+			// DBGLOG2(_T("  MidiEvent, code: 0x%x, delta: %d"), eventCode, deltaTime);
 			m_file.Seek(2, SEEK_CUR);
 		}
 		else if (eventCode >= MET_PROGRAM_CHANGE && eventCode <= MET_PITCH_BEND)
 		{
-			// DBGLOG1(_T("  MidiEvent, code: 0x%x"), eventCode);
+			// DBGLOG2(_T("  MidiEvent, code: 0x%x, delta: %d"), eventCode, deltaTime);
 			m_file.Seek(1, SEEK_CUR);
 		}
 		else if (eventCode >= MET_SYSEX1 && eventCode <= MET_SYSEX2)
 		{
-			// DBGLOG1(_T("  MidiEvent, code: 0x%x"), eventCode);
+			// DBGLOG2(_T("  MidiEvent, code: 0x%x, delta: %d"), eventCode, deltaTime);
 			int len;
 			nRet = ReadVarlen(m_file, len);
 			if (nRet != ERR_OK)
@@ -434,12 +479,12 @@ int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
 			{
 				m_numberator = buf[0];
 				m_dominator = buf[1];
-				// DBGLOG2(_T("  Time Signature: %d, %d"), m_numberator, m_dominator);
+				DBGLOG2(_T("  Time Signature: %d, %d"), m_numberator, m_dominator);
 			}
-			else if (metaEvent == MAT_TEMPO)
+			else if (metaEvent == MAT_TEMPO && m_tempo == 0)
 			{
 				m_tempo = buf[2] | (buf[1] << 8) | (buf[0] << 16);
-				// DBGLOG1(_T("  Tempo: %d"), m_tempo);
+				DBGLOG1(_T("  Tempo: %d"), m_tempo);
 			}
 
 			// tstring str;
@@ -459,7 +504,7 @@ TrackTrunk *CMidiTag::FindLyricsTrunk()
 
 		m_file.Seek(trunk.offset + TRUNK_HEADER_LEN, SEEK_SET);
 
-		for (int i = 0; i < 10 && m_file.GetPos() < long(trunk.offset + trunk.sizeOfData); i++)
+		for (int i = 0; i < 20 && m_file.GetPos() < long(trunk.offset + trunk.sizeOfData); i++)
 		{
 			int deltaTime;
 			int nRet = ReadVarlen(m_file, deltaTime);
@@ -480,6 +525,9 @@ TrackTrunk *CMidiTag::FindLyricsTrunk()
 			if (nRet != ERR_OK)
 				return NULL;
 
+			if (metaEvent == MAT_LYRIC)
+				return &(*it);
+
 			int len;
 			nRet = ReadVarlen(m_file, len);
 			if (nRet != ERR_OK)
@@ -490,6 +538,7 @@ TrackTrunk *CMidiTag::FindLyricsTrunk()
 			nRet = m_file.ReadCount(buf.data(), len);
 			if (nRet != ERR_OK)
 				return NULL;
+
 			if (strcmp(buf.c_str(), "Words") == 0)
 				return &(*it);
 		}

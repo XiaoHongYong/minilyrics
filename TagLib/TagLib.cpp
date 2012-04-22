@@ -230,7 +230,7 @@ bool CTagLib::IsM4aTagSupported(LPCTSTR szFile)
 
 bool CTagLib::IsKarTagSupported(LPCTSTR szFile)
 {
-	return FileIsExtSame(szFile, _T(".kar"));
+	return FileIsExtSame(szFile, _T(".kar")) || FileIsExtSame(szFile, _T(".mid"));
 }
 
 int CTagLib::RemoveEmbeddedLyrics(LPCTSTR szMediaFile, VecString &vLyrNamesToRemove, int *succeededCount)

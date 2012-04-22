@@ -1,12 +1,13 @@
 MiniLyrics 7.4.8
 New: Support load embedded lyrics in .KAR files.
+New: Filter radio station names in media artist and title.
 
 MiniLyrics 7.4.7
 Fixed: The name of AIMP3 can't be detected correctly.
 Fixed: Fixed a crash bug.
 
 MiniLyrics 7.4.5
-New: Add advanced save and download 
+New: Add advanced save and download lyrics in Lyrics Downloader
 Improved: Support VLC 2.0
 Fixed: Saving embedded lyrics in AAC(M4A) file may corrupt it.
 
