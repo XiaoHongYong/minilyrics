@@ -51,15 +51,15 @@ void CAddMediaObj::DoUpdating()
 
 	if (!m_bAddFiles)
 	{
-		_stprintf(szMsg, TOLOCAL(_T("%d files found")), 0);
+		_stprintf(szMsg, _TLT("%d files found"), 0);
 		SetMsg1(szMsg);
-		SetMsg2(TOLOCAL(_T("Searching for files...")));
+		SetMsg2(_TLT("Searching for files..."));
 		ListMedia(m_strDir.c_str());
 	}
 
-	_stprintf(szMsg, TOLOCAL(_T("%d files added")), 0);
+	_stprintf(szMsg, _TLT("%d files added"), 0);
 	SetMsg1(szMsg);
-	SetMsg2(TOLOCAL(_T("Adding files...")));
+	SetMsg2(_TLT("Adding files..."));
 
 	if (g_Player.GetMediaLibrary(&pMediaLib) == ERR_OK)
 	{
@@ -74,13 +74,13 @@ void CAddMediaObj::DoUpdating()
 			if (nRet == ERR_OK)
 			{
 				n++;
-				_stprintf(szMsg, TOLOCAL(_T("%d files added")), n);
+				_stprintf(szMsg, _TLT("%d files added"), n);
 				SetMsg1(szMsg);
 			}
 		}
 	}
 
-	SetMsg2(TOLOCAL(_T("The library has been updated. To continue, click Done.")));
+	SetMsg2(_TLT("The library has been updated. To continue, click Done."));
 }
 
 void CAddMediaObj::ListMedia(LPCTSTR szDir)
@@ -113,7 +113,7 @@ void CAddMediaObj::ListMedia(LPCTSTR szDir)
 			{
 				strFile = strDir + find.GetCurName();
 				m_vFiles.push_back(strFile);
-				_stprintf(szMsg, TOLOCAL(_T("%d files found")), m_vFiles.size());
+				_stprintf(szMsg, _TLT("%d files found"), m_vFiles.size());
 				SetMsg1(szMsg);
 			}
 		}

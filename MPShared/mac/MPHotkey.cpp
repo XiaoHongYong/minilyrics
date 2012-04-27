@@ -35,18 +35,18 @@ int				g_mlCmdAccKeyCount = CountOf(g_mlCmdAccKey) - 1;*/
 
 
 int				g_hcPlayback[] = { CMD_PLAY, CMD_PLAYPAUSE, CMD_STOP, CMD_PREVIOUS, CMD_NEXT, CMD_FORWARD, CMD_BACKWARD, CMD_J_PREV_LINE, CMD_J_NEXT_LINE, 0 };
-int				g_hcGeneral[] = { CMD_HELP, CMD_QUIT, CMD_CLOSE, CMD_MENU, CMD_PREFERENCES, CMD_DISPLAY_OPT, CMD_COPY_SONG_FILE_LYR, 0 };
+int				g_hcGeneral[] = { CMD_HELP, CMD_QUIT, CMD_CLOSE, CMD_MENU, CMD_PREFERENCES, CMD_DISPLAY_OPT, 0 };
 int				g_hcUI[] = { CMD_FONT_SIZE_INC, CMD_FONT_SIZE_DEC, CMD_CLR_PREV_HUE, CMD_CLR_NEXT_HUE, CMD_TOGGLE_MP, CMD_MINIMIZE, CMD_TOPMOST, CMD_CLICK_THROUGH, 0 };
 int				g_hcLyrics[] = { CMD_OPEN_LRC, CMD_BACKWARD_LYRICS, CMD_FORWARD_LYRICS, CMD_RELOAD_LYR, 0 };
 int				g_hcLyrEditor[] = { CMD_LYR_EDITOR, CMD_NEW_LRC, CMD_SAVE_LRC, CMD_SAVE_LRC_AS, CMD_SAVE_LYR_IN_SONG_FILE, CMD_INSERTTAG_DOWN, CMD_INSERTTAG, CMD_DEL_TAG, CMD_AUTO_FILL_LYR_INFO, CMD_JUMP, CMD_FORWARD_CUR_LINE, CMD_BACKWARD_CUR_LINE, CMD_FORWARD_REMAIN_LINES, CMD_BACKWARD_REMAIN_LINES, CMD_REMOVE_ALL_TAG, CMD_REMOVE_BLANK_LINE, CMD_TRIM_WHITESPACE, CMD_REMOVE_UNSYNC_LINES, CMD_CAPITALIZE_LEADING_LETTER, CMD_LYRICS_TO_LOWERCASE, 0 };
 
 MPHotKeySection		g_vHotkeySections[] = 
 {
-	{ _T("Playback:"), g_hcPlayback },
-	{ _T("General:"), g_hcGeneral },
-	{ _T("UI:"), g_hcUI },
-	{ _T("Lyrics:"), g_hcLyrics },
-	{ _T("Lyrics Editor:"), g_hcLyrEditor },
+	{ _TLM("Playback"), g_hcPlayback },
+	{ _TLM("General"), g_hcGeneral },
+	{ _TLM("UI"), g_hcUI },
+	{ _TLM("Lyrics"), g_hcLyrics },
+	{ _TLM("Lyrics Editor"), g_hcLyrEditor },
 	{ NULL, NULL }
 };
 
@@ -328,9 +328,9 @@ bool CMPHotkey::GetHotkeyText(int cmd, tstring &strKey)
 	}
 
 	if (cmd == CMD_FONT_SIZE_INC)
-		strKey = tstring(TOLOCAL(_T("Ctrl+"))) + TOLOCAL(_T("Mouse Wheel Up"));
+		strKey = tstring(_TLT("Ctrl+")) + _TLT("Mouse Wheel Up");
 	else if (cmd == CMD_FONT_SIZE_DEC)
-		strKey = tstring(TOLOCAL(_T("Ctrl+"))) + TOLOCAL(_T("Mouse Wheel Down"));
+		strKey = tstring(_TLT("Ctrl+")) + _TLT("Mouse Wheel Down");
 	else
 		return false;
 
@@ -349,8 +349,11 @@ int CMPHotkey::LoadSettings()
 	strFile += SZ_HOTKEY_FILENAME;
 
 	CTextFile	file;
-	if (!file.Open(strFile.c_str(), CTextFile::OM_READ, ED_SYSDEF))
+	if (file.Open(strFile.c_str(), CTextFile::OM_READ, ED_SYSDEF) != ERR_OK)
+	{
+		ERRLOG1(_T("Failed to open hotkey config file: %s"), strFile.c_str());
 		return ERR_OPEN_FILE;
+	}
 
 	bool		bFileVer1 = false;
 
@@ -411,8 +414,11 @@ int CMPHotkey::SaveSettings()
 	strFile = GetAppDataDir();
 	strFile += SZ_HOTKEY_FILENAME;
 
-	if (!file.Open(strFile.c_str(), CTextFile::OM_WRITE, ED_SYSDEF))
+	if (file.Open(strFile.c_str(), CTextFile::OM_WRITE, ED_SYSDEF) != ERR_OK)
+	{
+		ERRLOG1(_T("Failed to open hotkey config file: %s"), strFile.c_str());
 		return ERR_OPEN_FILE;
+	}
 
 	file.WriteLine(SZ_HOTKEY_FILE_HEADER);
 

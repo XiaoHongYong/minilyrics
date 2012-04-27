@@ -1,0 +1,87 @@
+#include <sys/time.h>
+#include "../base/base.h"
+#include "MLService.h"
+
+CMLService	g_MLService;
+
+// Launch "MiniLyrics.exe /Pipe pipe_name /Player "iTunes"" to start MiniLyrics
+BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bManual)
+{
+	//pPlayerService->Create();
+
+	char	szMiniLyricsExe[MAX_PATH];
+	strcpy(szMiniLyricsExe, "/MiniLyrics.app");
+
+	// char	szCmdLine[MAX_PATH];
+	// sprintf_s(szCmdLine, CountOf(szCmdLine), "%s /Pipe %s", szMiniLyricsExe, pipeName);
+
+	execl(szMiniLyricsExe, "/Pipe", pipeName, NULL);
+
+	return true;
+}
+
+void DisconnectMiniLyrics(CPlayerServiceBase *pPlayerService)
+{
+	//pPlayerService->Destroy();
+	
+	if (g_MLService.IsValid())
+		g_MLService.OnDisconnected();
+}
+
+inline void appendMediaInfoStr(LPSTR szInfo, size_t &offset, WORD &offsetTag, LPCSTR tag, size_t lenTag)
+{
+	offsetTag = offset;
+	memcpy(szInfo + offset, tag, (lenTag + 1) * sizeof(char));
+	offset += lenTag + 1;
+}
+
+inline MLMediaInfo *NewMLMediaInfo(LPCSTR artist, LPCSTR album, LPCSTR title, LPCSTR mediaUrl, unsigned long mediaLength, WORD hasVideo = R_UNDETERMINED)
+{
+	size_t	lenArtist = strlen(artist);
+	size_t	lenAlbum = strlen(album);
+	size_t	lenTitle = strlen(title);
+	size_t	lenMediaUrl = strlen(mediaUrl);
+
+	// 8 is the extra characters '\0' of artist, album, title, mediaUrl.
+	DWORD	sizeInfo = sizeof(MLMediaInfo) + (8 + lenArtist + lenAlbum + lenTitle + lenMediaUrl) * sizeof(char);
+	MLMediaInfo *info = (MLMediaInfo *)new char[sizeInfo];
+
+	info->size = sizeInfo;
+	info->mediaLength = mediaLength;
+	info->hasVideo = hasVideo;
+
+	size_t offset = 0;
+	appendMediaInfoStr(info->mediaInfo, offset, info->offsetArtist, artist, lenArtist);
+	appendMediaInfoStr(info->mediaInfo, offset, info->offsetAlbum, album, lenAlbum);
+	appendMediaInfoStr(info->mediaInfo, offset, info->offsetTitle, title, lenTitle);
+	appendMediaInfoStr(info->mediaInfo, offset, info->offsetMediaUrl, mediaUrl, lenMediaUrl);
+	ASSERT(offset * sizeof(char) + sizeof(MLMediaInfo) < sizeInfo);
+
+	return info;
+}
+
+void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle, unsigned long nMediaLength, int hasVideo)
+{
+	if (szMediaUrl == NULL)
+		szMediaUrl = "";
+	if (szArtist == NULL)
+		szArtist = "";
+	if (szAlbum == NULL)
+		szAlbum = "";
+	if (szTitle == NULL)
+		szTitle = "";
+
+	MLMediaInfo *info = NewMLMediaInfo(szArtist, szAlbum, szTitle, szMediaUrl, nMediaLength, hasVideo);
+
+	SendMessage(M2M_MEDIA_CHANGED, info, info->size);
+
+	delete info;
+}
+
+void CMLService::SendMessage(MessageToML message, LPVOID param, size_t sizeParam)
+{
+	if (!m_msgPipeMiniLyrics.IsOK())
+		return;
+
+	m_msgPipeMiniLyrics.Write(message, param, sizeParam);
+}

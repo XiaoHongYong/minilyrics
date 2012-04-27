@@ -275,7 +275,7 @@ int CAutoProcessEmbeddedLyrics::DealEmbeddedLyrics(Item &item)
 
 int CAutoProcessEmbeddedLyrics::DealSaveEmbeddedLyrics(Item &item)
 {
-	UINT32 uAllLstFlag = 0;
+	uint32 uAllLstFlag = 0;
 	for (uint i = 0; i < item.m_vLyrNames.size(); i++)
 		uAllLstFlag |= LyrSrcTypeFromName(item.m_vLyrNames[i].c_str());
 

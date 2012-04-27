@@ -32,7 +32,10 @@
 #define R_UNDETERMINED			(-1)
 
 #ifndef _WIN32
-typedef int HWND;
+typedef int			HWND;
+typedef TCHAR		MLCHAR;
+#else
+typedef WCHAR		MLCHAR;
 #endif
 
 
@@ -97,10 +100,12 @@ enum MessageToPlayer
 struct PlayerSkinInfo
 {
 	bool		bEmbeddedSkin;
+#ifdef _WIN32
 	bool		bClrThemeValid;
-	WCHAR		skinPath[MAX_PATH];
+	MLCHAR		skinPath[MAX_PATH];
 	COLORREF	clrFontHighlight, clrFontLowlight, clrBackground, clrCurLineBg;
 	HWND		hWndToAttach;
+#endif
 };
 
 enum MLStarupFlags
@@ -124,10 +129,12 @@ enum MLStarupFlags
 struct PlayerInfo
 {
 	DWORD						startupFlags;	// Combination of MLStarupFlags
+#ifdef _WIN32
 	HWND						hWndPlayer;		// The main window of player
 	HWND						hWndPluginService;	// The service window of the player plugin
-	WCHAR						playerName[LEN_SHORT_STR];
-	WCHAR						embeddedSkinName[LEN_SHORT_STR];
+#endif
+	MLCHAR						playerName[LEN_SHORT_STR];
+	MLCHAR						embeddedSkinName[LEN_SHORT_STR];
 	// PlayerSkinInfo				skinInfo;
 };
 
@@ -147,28 +154,32 @@ struct MLMediaInfo
 	unsigned long	mediaLength;		// in ms, 0 means unknown
 	WORD			offsetArtist, offsetAlbum, offsetTitle, offsetMediaUrl;
 	short			hasVideo;	// Is video media? 1, has; 0, has not; -1, undeterminted.
-	WCHAR			mediaInfo[1];
+	MLCHAR			mediaInfo[1];
 
-	LPCWSTR Artist() { ASSERT(offsetArtist < size); return mediaInfo + offsetArtist; }
-	LPCWSTR Album() { ASSERT(offsetAlbum < size); return mediaInfo + offsetAlbum; }
-	LPCWSTR Title() { ASSERT(offsetTitle < size); return mediaInfo + offsetTitle; }
-	LPCWSTR MediaUrl() { ASSERT(offsetMediaUrl < size); return mediaInfo + offsetMediaUrl; }
+	const MLCHAR *Artist() { ASSERT(offsetArtist < size); return mediaInfo + offsetArtist; }
+	const MLCHAR * Album() { ASSERT(offsetAlbum < size); return mediaInfo + offsetAlbum; }
+	const MLCHAR * Title() { ASSERT(offsetTitle < size); return mediaInfo + offsetTitle; }
+	const MLCHAR * MediaUrl() { ASSERT(offsetMediaUrl < size); return mediaInfo + offsetMediaUrl; }
 
 };
 
+#ifdef _WIN32
 struct WndCloseToML
 {
 	HWND		hWndCloseTo;
-	WCHAR		wndName[LEN_SHORT_STR];
-	WCHAR		className[LEN_SHORT_STR];
+	MLCHAR		wndName[LEN_SHORT_STR];
+	MLCHAR		className[LEN_SHORT_STR];
 };
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 // Message definitions send to player
 
 struct MLInfo
 {
+#ifdef _WIN32
 	HWND				hWndMLService;
+#endif
 };
 
 // The windows class name of MiniLyrics service

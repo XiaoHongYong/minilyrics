@@ -235,7 +235,7 @@ bool CTagLib::IsKarTagSupported(LPCTSTR szFile)
 
 int CTagLib::RemoveEmbeddedLyrics(LPCTSTR szMediaFile, VecString &vLyrNamesToRemove, int *succeededCount)
 {
-	UINT32 uAllLstFlag = 0;
+	uint32 uAllLstFlag = 0;
 	for (uint i = 0; i < vLyrNamesToRemove.size(); i++)
 		uAllLstFlag |= LyrSrcTypeFromName(vLyrNamesToRemove[i].c_str());
 

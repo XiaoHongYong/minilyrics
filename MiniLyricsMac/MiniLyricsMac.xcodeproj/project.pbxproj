@@ -10,7 +10,6 @@
 		5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */; };
 		5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */; };
 		5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */; };
-		5F2BD5911496398D003E7F5C /* libThirdPartiesSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F2BD58E14963983003E7F5C /* libThirdPartiesSDK.a */; };
 		5FB16205147017330084494F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB16204147017330084494F /* Cocoa.framework */; };
 		5FB1620F147017330084494F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5FB1620D147017330084494F /* InfoPlist.strings */; };
 		5FB16211147017330084494F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB16210147017330084494F /* main.mm */; };
@@ -21,6 +20,8 @@
 		5FB16234147697D20084494F /* circle.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5FB16232147697D20084494F /* circle.tif */; };
 		5FB16235147697D20084494F /* pentagon.tif in Resources */ = {isa = PBXBuildFile; fileRef = 5FB16233147697D20084494F /* pentagon.tif */; };
 		5FB53E9514C19C2C0041938C /* ZPAnalyticsClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB53E9314C19C2C0041938C /* ZPAnalyticsClient.cpp */; };
+		5FB592B81545A1990071B204 /* libThirdPartiesSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB592B515459C990071B204 /* libThirdPartiesSDK.a */; };
+		5FB593751545A2950071B204 /* libTaglib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB592A515459BD60071B204 /* libTaglib.a */; };
 		5FBCCB6C147E8C6100D7C64A /* libBaseMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCAB9147E7EFD00D7C64A /* libBaseMac.a */; };
 		5FBCCB6D147E8C6100D7C64A /* libGfxLiteMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCAC3147E7F2500D7C64A /* libGfxLiteMac.a */; };
 		5FBCCB6E147E8C6100D7C64A /* libGfxRawMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCACC147E7F4300D7C64A /* libGfxRawMac.a */; };
@@ -84,7 +85,6 @@
 		5FDC5682148A1F1B00C74E6A /* MPSkinWnd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC560C148A1F1B00C74E6A /* MPSkinWnd.cpp */; };
 		5FDC5683148A1F1B00C74E6A /* MPVisAdapter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC560E148A1F1B00C74E6A /* MPVisAdapter.cpp */; };
 		5FDC5685148A1F1B00C74E6A /* OnlineSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5612148A1F1B00C74E6A /* OnlineSearch.cpp */; };
-		5FDC5686148A1F1B00C74E6A /* OperatingMiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5614148A1F1B00C74E6A /* OperatingMiner.cpp */; };
 		5FDC5687148A1F1B00C74E6A /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5616148A1F1B00C74E6A /* Player.cpp */; };
 		5FDC5688148A1F1B00C74E6A /* PlayListFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5618148A1F1B00C74E6A /* PlayListFile.cpp */; };
 		5FDC5689148A1F1B00C74E6A /* PreferenceDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC561A148A1F1B00C74E6A /* PreferenceDlg.cpp */; };
@@ -102,7 +102,6 @@
 		5FDC5697148A1F1B00C74E6A /* SkinPicText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5638148A1F1B00C74E6A /* SkinPicText.cpp */; };
 		5FDC5698148A1F1B00C74E6A /* SkinRateCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC563A148A1F1B00C74E6A /* SkinRateCtrl.cpp */; };
 		5FDC5699148A1F1B00C74E6A /* SkinScrollText.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC563C148A1F1B00C74E6A /* SkinScrollText.cpp */; };
-		5FDC569A148A1F1B00C74E6A /* SkinTabHeader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC563E148A1F1B00C74E6A /* SkinTabHeader.cpp */; };
 		5FDC569B148A1F1B00C74E6A /* SkinTreeCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5640148A1F1B00C74E6A /* SkinTreeCtrl.cpp */; };
 		5FDC569C148A1F1B00C74E6A /* StdAfx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5642148A1F1B00C74E6A /* StdAfx.cpp */; };
 		5FDC569D148A1F1B00C74E6A /* ThemesFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5644148A1F1B00C74E6A /* ThemesFile.cpp */; };
@@ -133,19 +132,33 @@
 			remoteGlobalIDString = 5F2BD4C214962301003E7F5C;
 			remoteInfo = MPlayerLib;
 		};
-		5F2BD58D14963983003E7F5C /* PBXContainerItemProxy */ = {
+		5FB592A415459BD60071B204 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */;
+			containerPortal = 5FB592A015459BD50071B204 /* Taglib.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FB5925B154594720071B204;
+			remoteInfo = Taglib;
+		};
+		5FB592B415459C990071B204 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FB592AD15459C980071B204 /* ThirdPartiesSDK.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 5F2BD53314963397003E7F5C;
 			remoteInfo = ThirdPartiesSDK;
 		};
-		5F2BD58F14963988003E7F5C /* PBXContainerItemProxy */ = {
+		5FB592B61545A18F0071B204 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */;
+			containerPortal = 5FB592AD15459C980071B204 /* ThirdPartiesSDK.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 5F2BD53214963397003E7F5C;
 			remoteInfo = ThirdPartiesSDK;
+		};
+		5FB593731545A28F0071B204 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 5FB592A015459BD50071B204 /* Taglib.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FB5925A154594720071B204;
+			remoteInfo = Taglib;
 		};
 		5FBCCAB8147E7EFD00D7C64A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -311,7 +324,6 @@
 		5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MPlayerLib.xcodeproj; path = ../MPlayerLib/MPlayerLib.xcodeproj; sourceTree = "<group>"; };
 		5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sqlite3.cpp; path = ../../sqlite_cpp/Sqlite3.cpp; sourceTree = "<group>"; };
 		5F2BD53B149633C1003E7F5C /* Sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sqlite3.h; path = ../../sqlite_cpp/Sqlite3.h; sourceTree = "<group>"; };
-		5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ThirdPartiesSDK.xcodeproj; path = ../SDK/ThirdPartiesSDK.xcodeproj; sourceTree = "<group>"; };
 		5FB16200147017330084494F /* MiniLyricsMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniLyricsMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FB16204147017330084494F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5FB16207147017330084494F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -330,6 +342,8 @@
 		5FB16233147697D20084494F /* pentagon.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = pentagon.tif; sourceTree = "<group>"; };
 		5FB53E9314C19C2C0041938C /* ZPAnalyticsClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ZPAnalyticsClient.cpp; path = ../../MPShared/ZPAnalyticsClient.cpp; sourceTree = "<group>"; };
 		5FB53E9414C19C2C0041938C /* ZPAnalyticsClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ZPAnalyticsClient.h; path = ../../MPShared/ZPAnalyticsClient.h; sourceTree = "<group>"; };
+		5FB592A015459BD50071B204 /* Taglib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Taglib.xcodeproj; path = ../TagLib/Taglib.xcodeproj; sourceTree = "<group>"; };
+		5FB592AD15459C980071B204 /* ThirdPartiesSDK.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ThirdPartiesSDK.xcodeproj; path = ../SDK/ThirdPartiesSDK.xcodeproj; sourceTree = "<group>"; };
 		5FBCCAB1147E7EFB00D7C64A /* BaseMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BaseMac.xcodeproj; path = ../base/BaseMac.xcodeproj; sourceTree = "<group>"; };
 		5FBCCABB147E7F2500D7C64A /* GfxLiteMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GfxLiteMac.xcodeproj; path = ../GfxLite/GfxLiteMac.xcodeproj; sourceTree = "<group>"; };
 		5FBCCAC4147E7F4200D7C64A /* GfxRawMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = GfxRawMac.xcodeproj; path = ../GfxRaw/GfxRawMac.xcodeproj; sourceTree = "<group>"; };
@@ -448,8 +462,6 @@
 		5FDC560F148A1F1B00C74E6A /* MPVisAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPVisAdapter.h; path = ../../MPShared/MPVisAdapter.h; sourceTree = "<group>"; };
 		5FDC5612148A1F1B00C74E6A /* OnlineSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OnlineSearch.cpp; path = ../../MPShared/OnlineSearch.cpp; sourceTree = "<group>"; };
 		5FDC5613148A1F1B00C74E6A /* OnlineSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OnlineSearch.h; path = ../../MPShared/OnlineSearch.h; sourceTree = "<group>"; };
-		5FDC5614148A1F1B00C74E6A /* OperatingMiner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OperatingMiner.cpp; path = ../../MPShared/OperatingMiner.cpp; sourceTree = "<group>"; };
-		5FDC5615148A1F1B00C74E6A /* OperatingMiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OperatingMiner.h; path = ../../MPShared/OperatingMiner.h; sourceTree = "<group>"; };
 		5FDC5616148A1F1B00C74E6A /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Player.cpp; path = ../../MPShared/Player.cpp; sourceTree = "<group>"; };
 		5FDC5617148A1F1B00C74E6A /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Player.h; path = ../../MPShared/Player.h; sourceTree = "<group>"; };
 		5FDC5618148A1F1B00C74E6A /* PlayListFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayListFile.cpp; path = ../../MPShared/PlayListFile.cpp; sourceTree = "<group>"; };
@@ -486,8 +498,6 @@
 		5FDC563B148A1F1B00C74E6A /* SkinRateCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinRateCtrl.h; path = ../../MPShared/SkinRateCtrl.h; sourceTree = "<group>"; };
 		5FDC563C148A1F1B00C74E6A /* SkinScrollText.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinScrollText.cpp; path = ../../MPShared/SkinScrollText.cpp; sourceTree = "<group>"; };
 		5FDC563D148A1F1B00C74E6A /* SkinScrollText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinScrollText.h; path = ../../MPShared/SkinScrollText.h; sourceTree = "<group>"; };
-		5FDC563E148A1F1B00C74E6A /* SkinTabHeader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinTabHeader.cpp; path = ../../MPShared/SkinTabHeader.cpp; sourceTree = "<group>"; };
-		5FDC563F148A1F1B00C74E6A /* SkinTabHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinTabHeader.h; path = ../../MPShared/SkinTabHeader.h; sourceTree = "<group>"; };
 		5FDC5640148A1F1B00C74E6A /* SkinTreeCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinTreeCtrl.cpp; path = ../../MPShared/SkinTreeCtrl.cpp; sourceTree = "<group>"; };
 		5FDC5641148A1F1B00C74E6A /* SkinTreeCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinTreeCtrl.h; path = ../../MPShared/SkinTreeCtrl.h; sourceTree = "<group>"; };
 		5FDC5642148A1F1B00C74E6A /* StdAfx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = StdAfx.cpp; path = ../../MPShared/StdAfx.cpp; sourceTree = "<group>"; };
@@ -522,7 +532,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5F2BD5911496398D003E7F5C /* libThirdPartiesSDK.a in Frameworks */,
+				5FB593751545A2950071B204 /* libTaglib.a in Frameworks */,
+				5FB592B81545A1990071B204 /* libThirdPartiesSDK.a in Frameworks */,
 				5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */,
 				5FBCCF74148A1B1900D7C64A /* libSkinMac.a in Frameworks */,
 				5FBCCDCA14851D0F00D7C64A /* libID3LibMac.a in Frameworks */,
@@ -551,18 +562,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		5F2BD58714963980003E7F5C /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				5F2BD58E14963983003E7F5C /* libThirdPartiesSDK.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		5FB161F5147017330084494F = {
 			isa = PBXGroup;
 			children = (
-				5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */,
+				5FB592AD15459C980071B204 /* ThirdPartiesSDK.xcodeproj */,
+				5FB592A015459BD50071B204 /* Taglib.xcodeproj */,
 				5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */,
 				5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */,
 				5FBCCD8814851C4900D7C64A /* MLLibMac.xcodeproj */,
@@ -723,8 +727,6 @@
 				5FDC560F148A1F1B00C74E6A /* MPVisAdapter.h */,
 				5FDC5612148A1F1B00C74E6A /* OnlineSearch.cpp */,
 				5FDC5613148A1F1B00C74E6A /* OnlineSearch.h */,
-				5FDC5614148A1F1B00C74E6A /* OperatingMiner.cpp */,
-				5FDC5615148A1F1B00C74E6A /* OperatingMiner.h */,
 				5FDC5616148A1F1B00C74E6A /* Player.cpp */,
 				5FDC5617148A1F1B00C74E6A /* Player.h */,
 				5FDC5618148A1F1B00C74E6A /* PlayListFile.cpp */,
@@ -761,8 +763,6 @@
 				5FDC563B148A1F1B00C74E6A /* SkinRateCtrl.h */,
 				5FDC563C148A1F1B00C74E6A /* SkinScrollText.cpp */,
 				5FDC563D148A1F1B00C74E6A /* SkinScrollText.h */,
-				5FDC563E148A1F1B00C74E6A /* SkinTabHeader.cpp */,
-				5FDC563F148A1F1B00C74E6A /* SkinTabHeader.h */,
 				5FDC5640148A1F1B00C74E6A /* SkinTreeCtrl.cpp */,
 				5FDC5641148A1F1B00C74E6A /* SkinTreeCtrl.h */,
 				5FDC5642148A1F1B00C74E6A /* StdAfx.cpp */,
@@ -795,6 +795,22 @@
 				5FB16213147017330084494F /* Credits.rtf */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		5FB592A115459BD50071B204 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FB592A515459BD60071B204 /* libTaglib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		5FB592AE15459C980071B204 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				5FB592B515459C990071B204 /* libThirdPartiesSDK.a */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		5FBCCAB2147E7EFC00D7C64A /* Products */ = {
@@ -928,7 +944,8 @@
 			buildRules = (
 			);
 			dependencies = (
-				5F2BD59014963988003E7F5C /* PBXTargetDependency */,
+				5FB593741545A28F0071B204 /* PBXTargetDependency */,
+				5FB592B71545A18F0071B204 /* PBXTargetDependency */,
 				5F2BD52514962FB6003E7F5C /* PBXTargetDependency */,
 				5FBCCF73148A1B0900D7C64A /* PBXTargetDependency */,
 				5FBCCDC314851CDB00D7C64A /* PBXTargetDependency */,
@@ -1004,8 +1021,12 @@
 					ProjectRef = 5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */;
 				},
 				{
-					ProductGroup = 5F2BD58714963980003E7F5C /* Products */;
-					ProjectRef = 5F2BD58614963980003E7F5C /* ThirdPartiesSDK.xcodeproj */;
+					ProductGroup = 5FB592A115459BD50071B204 /* Products */;
+					ProjectRef = 5FB592A015459BD50071B204 /* Taglib.xcodeproj */;
+				},
+				{
+					ProductGroup = 5FB592AE15459C980071B204 /* Products */;
+					ProjectRef = 5FB592AD15459C980071B204 /* ThirdPartiesSDK.xcodeproj */;
 				},
 				{
 					ProductGroup = 5FBCCCB21485198800D7C64A /* Products */;
@@ -1031,11 +1052,18 @@
 			remoteRef = 5F2BD52214962F4E003E7F5C /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		5F2BD58E14963983003E7F5C /* libThirdPartiesSDK.a */ = {
+		5FB592A515459BD60071B204 /* libTaglib.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libTaglib.a;
+			remoteRef = 5FB592A415459BD60071B204 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		5FB592B515459C990071B204 /* libThirdPartiesSDK.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libThirdPartiesSDK.a;
-			remoteRef = 5F2BD58D14963983003E7F5C /* PBXContainerItemProxy */;
+			remoteRef = 5FB592B415459C990071B204 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5FBCCAB9147E7EFD00D7C64A /* libBaseMac.a */ = {
@@ -1191,7 +1219,6 @@
 				5FDC5682148A1F1B00C74E6A /* MPSkinWnd.cpp in Sources */,
 				5FDC5683148A1F1B00C74E6A /* MPVisAdapter.cpp in Sources */,
 				5FDC5685148A1F1B00C74E6A /* OnlineSearch.cpp in Sources */,
-				5FDC5686148A1F1B00C74E6A /* OperatingMiner.cpp in Sources */,
 				5FDC5687148A1F1B00C74E6A /* Player.cpp in Sources */,
 				5FDC5688148A1F1B00C74E6A /* PlayListFile.cpp in Sources */,
 				5FDC5689148A1F1B00C74E6A /* PreferenceDlg.cpp in Sources */,
@@ -1209,7 +1236,6 @@
 				5FDC5697148A1F1B00C74E6A /* SkinPicText.cpp in Sources */,
 				5FDC5698148A1F1B00C74E6A /* SkinRateCtrl.cpp in Sources */,
 				5FDC5699148A1F1B00C74E6A /* SkinScrollText.cpp in Sources */,
-				5FDC569A148A1F1B00C74E6A /* SkinTabHeader.cpp in Sources */,
 				5FDC569B148A1F1B00C74E6A /* SkinTreeCtrl.cpp in Sources */,
 				5FDC569C148A1F1B00C74E6A /* StdAfx.cpp in Sources */,
 				5FDC569D148A1F1B00C74E6A /* ThemesFile.cpp in Sources */,
@@ -1237,10 +1263,15 @@
 			name = MPlayerLib;
 			targetProxy = 5F2BD52414962FB6003E7F5C /* PBXContainerItemProxy */;
 		};
-		5F2BD59014963988003E7F5C /* PBXTargetDependency */ = {
+		5FB592B71545A18F0071B204 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = ThirdPartiesSDK;
-			targetProxy = 5F2BD58F14963988003E7F5C /* PBXContainerItemProxy */;
+			targetProxy = 5FB592B61545A18F0071B204 /* PBXContainerItemProxy */;
+		};
+		5FB593741545A28F0071B204 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Taglib;
+			targetProxy = 5FB593731545A28F0071B204 /* PBXContainerItemProxy */;
 		};
 		5FBCCBBE1485140700D7C64A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

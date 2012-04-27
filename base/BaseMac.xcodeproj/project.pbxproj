@@ -64,6 +64,8 @@
 		5FB53E9B14C19FA20041938C /* MapString.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB53E9714C19FA20041938C /* MapString.h */; };
 		5FB53E9C14C19FA20041938C /* TextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB53E9814C19FA20041938C /* TextFile.cpp */; };
 		5FB53E9D14C19FA20041938C /* TextFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB53E9914C19FA20041938C /* TextFile.h */; };
+		5FB5924D15458EA60071B204 /* FileEx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB5924B15458EA60071B204 /* FileEx.cpp */; };
+		5FB5924E15458EA60071B204 /* FileEx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB5924C15458EA60071B204 /* FileEx.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -129,6 +131,8 @@
 		5FB53E9714C19FA20041938C /* MapString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapString.h; sourceTree = SOURCE_ROOT; };
 		5FB53E9814C19FA20041938C /* TextFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextFile.cpp; sourceTree = SOURCE_ROOT; };
 		5FB53E9914C19FA20041938C /* TextFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFile.h; sourceTree = SOURCE_ROOT; };
+		5FB5924B15458EA60071B204 /* FileEx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileEx.cpp; sourceTree = SOURCE_ROOT; };
+		5FB5924C15458EA60071B204 /* FileEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileEx.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -182,6 +186,8 @@
 		5F9CDECD147A323D00432DAC /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				5FB5924B15458EA60071B204 /* FileEx.cpp */,
+				5FB5924C15458EA60071B204 /* FileEx.h */,
 				5FB53E9614C19FA20041938C /* MapString.cpp */,
 				5FB53E9714C19FA20041938C /* MapString.h */,
 				5FB53E9814C19FA20041938C /* TextFile.cpp */,
@@ -299,6 +305,7 @@
 				5F9CDF47147A330100432DAC /* xstr.h in Headers */,
 				5FB53E9B14C19FA20041938C /* MapString.h in Headers */,
 				5FB53E9D14C19FA20041938C /* TextFile.h in Headers */,
+				5FB5924E15458EA60071B204 /* FileEx.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -373,6 +380,7 @@
 				5F2BD59414963B52003E7F5C /* misc.cpp in Sources */,
 				5FB53E9A14C19FA20041938C /* MapString.cpp in Sources */,
 				5FB53E9C14C19FA20041938C /* TextFile.cpp in Sources */,
+				5FB5924D15458EA60071B204 /* FileEx.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

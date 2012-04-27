@@ -56,19 +56,31 @@
 #define WHEEL_DELTA			50
 
 
+#define MB_OK                       0x00000000L
+#define MB_OKCANCEL                 0x00000001L
+#define MB_ABORTRETRYIGNORE         0x00000002L
+#define MB_YESNOCANCEL              0x00000003L
+#define MB_YESNO                    0x00000004L
+#define MB_RETRYCANCEL              0x00000005L
 
-#define MB_ICONINFORMATION	10
-#define MB_OK				20
-#define MB_ICONQUESTION		30
-#define MB_YESNOCANCEL		40
-#define MB_YESNO			50
-#define MB_ICONERROR		60
+#define MB_ICONHAND                 0x00000010L
+#define MB_ICONQUESTION             0x00000020L
+#define MB_ICONEXCLAMATION          0x00000030L
+#define MB_ICONASTERISK             0x00000040L
+#define MB_ICONWARNING              MB_ICONEXCLAMATION
+#define MB_ICONERROR                MB_ICONHAND
+#define MB_ICONINFORMATION          MB_ICONASTERISK
+#define MB_ICONSTOP                 MB_ICONHAND
 
-#define IDCLOSE				1
+#define IDOK                1
+#define IDCANCEL            2
+#define IDABORT             3
+#define IDRETRY             4
+#define IDIGNORE            5
+#define IDYES               6
+#define IDNO                7
+#define IDCLOSE				8
+#define IDHELP				9
 
-#define IDOK				0
-#define IDCANCEL			1
-#define IDNO				2
-#define IDYES				3
 #define MK_LBUTTON			1
 
