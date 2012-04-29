@@ -6,8 +6,8 @@
     <Image Rect="w-120,25,," Image="logo.png"/>
     <NormalText ID="CID_BRANDING" Text="MiniLyrics" Rect="20,20,w-40,35" FontHeight="30" AlignText="AT_LEFT"/>
     <NormalText ID="CID_VERSION" Text="UNTRANS_Version" Rect="20,55,w-40,15" AlignText="AT_LEFT"/>
-    <NormalLink ID="CID_NEW_VERSION" Visible="false" Text="" Rect="20,75,w-20-20,15" AlignText="AT_LEFT"/>
-    <NormalText ID="CID_CHECK_VERSION" Text="Checking for updates..." Rect="20,75,260,15"/>
+    <NormalLink ID="CID_NEW_VERSION" Visible="false" Text="" Rect="20,75,w-20-130,15" AlignText="AT_LEFT"/>
+    <NormalText ID="CID_CHECK_VERSION" Text="Checking for updates..." Rect="20,75,w-20-130,15"/>
     <NormalLink ID="CID_COPYRIGHT" Text="" Rect="20,120,w-40,15" AlignText="AT_LEFT"/>
     <NormalLink ID="CID_FEEDBACK" Text="Submit online feedback form" Rect="20,140,w-40,15" AlignText="AT_LEFT"/>
 

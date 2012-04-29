@@ -374,9 +374,8 @@ public:
 
 							SetUIObjectProperty(_T("CID_NEW_VERSION"), SZ_PN_TEXT, strNewVersion.c_str());
 							SetUIObjectProperty(_T("CID_NEW_VERSION"), SZ_PN_LINK, GetStrName(SN_HTTP_DOMAIN));
-							SetUIObjectVisible(_T("CID_CHECK_VERSION"), false, false);
-							SetUIObjectVisible(_T("CID_NEW_VERSION"), true, false);
-							Invalidate();
+							SetUIObjectVisible(_T("CID_CHECK_VERSION"), false, true);
+							SetUIObjectVisible(_T("CID_NEW_VERSION"), true, true);
 						}
 						else
 						{
