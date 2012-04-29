@@ -106,18 +106,20 @@ protected:
 
 		szFile = _T("c:\\abc\ar - ti-a.mp3");
 		AnalysisLyricsFileNameEx(artist, title, szFile);
-		CPPUNIT_ASSERT(artist == "ar");
-		CPPUNIT_ASSERT(title == "ti-a");
+		CPPUNIT_ASSERT(artist == _T("ar"));
+		CPPUNIT_ASSERT(title == _T("ti-a"));
 
 		szFile = _T("c:\\abc\ar-ti-a.mp3");
 		AnalysisLyricsFileNameEx(artist, title, szFile);
-		CPPUNIT_ASSERT(artist == "ar");
-		CPPUNIT_ASSERT(title == "ti-a");
+		CPPUNIT_ASSERT(artist == _T("ar"));
+		CPPUNIT_ASSERT(title == _T("ti-a"));
 
 		szFile = _T("c:\\abc\ti.mp3");
 		AnalysisLyricsFileNameEx(artist, title, szFile);
-		CPPUNIT_ASSERT(artist == "");
-		CPPUNIT_ASSERT(title == "ti");
+		CPPUNIT_ASSERT(artist == _T(""));
+		CPPUNIT_ASSERT(title == _T("ti"));
 	}
 
 };
+
+#endif
