@@ -44,8 +44,6 @@ enum LRC_MATCH_TYPE
 
 void FilterChars(LPTSTR szBuffer, int nBuffMax, LPCTSTR szString, BOOL bFilterNumb);
 
-void FilterSongFileExt(LPTSTR szFile);
-
 int CalLyricsMatchValue(MLFileType fileType, LPCTSTR szTitleTarg, LPCTSTR szArtistTarg, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb);
 int CalLyricsMatchValue(LPCTSTR szFile, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb);
 

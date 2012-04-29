@@ -236,9 +236,10 @@ LPCTSTR UrlGetExt(LPCTSTR szFile)
 		return _T("");
 	else
 	{
-		LPCTSTR		szTemp;
-		
-		szTemp = _tcsrchr(szFile, '/');
+		LPCTSTR szTemp = _tcsrchr(szFile, '/');
+		LPCTSTR szTemp2 = _tcsrchr(szFile, '\\');
+		if (szTemp2 > szTemp)
+			szTemp = szTemp2;
 		if (szTemp == NULL || szTemp < szBeg)
 			return szBeg;
 		else
@@ -274,83 +275,9 @@ tstring UrlGetTitle(LPCTSTR szFile)
 	return strFileTitle;
 }
 
-LPCTSTR FileGetName(LPCTSTR szFile)
+tstring FileGetPath(LPCTSTR szFile)
 {
-	LPCTSTR		szBeg;
-
-	szBeg = _tcsrchr(szFile, DIR_SLASH);
-	if (szBeg)
-		return szBeg + 1;
-	else
-		return szFile;
-}
-
-// Retrieve the file title.
-// File name format: path/title/.ext
-void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile)
-{
-	LPCTSTR		szBeg, szEnd;
-	size_t		nLen;
-
-	szEnd = _tcsrchr(szFile, '.');
-
-	szBeg = _tcsrchr(szFile, DIR_SLASH);
-	if (szBeg == NULL)
-		szBeg = szFile;
-	else
-		szBeg++;
-
-	if (szEnd == NULL || szBeg > szEnd)
-		nLen = szFile - szBeg + _tcslen(szFile);
-	else
-		nLen = szEnd - szBeg;
-
-	_tcsncpy_safe(szBuff, nBuffLen, szBeg, nLen);
-	szBuff[nLen] = '\0';
-}
-
-
-void FileGetTitle(LPCTSTR szFile, tstring &strFileTitle)
-{
-	LPCTSTR		szBeg, szEnd;
-	size_t		nLen;
-
-	szEnd = _tcsrchr(szFile, '.');
-
-	szBeg = _tcsrchr(szFile, DIR_SLASH);
-	if (szBeg == NULL)
-		szBeg = szFile;
-	else
-		szBeg++;
-
-	if (szEnd == NULL || szBeg > szEnd)
-		nLen = szFile - szBeg + _tcslen(szFile);
-	else
-		nLen = szEnd - szBeg;
-
-	strFileTitle.resize(0);
-	strFileTitle.append(szBeg, nLen);
-}
-
-
-void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile)
-{
-	long ilen = _tcslen(szFile);
-	ilen -= 2;
-	while (ilen >= 0)
-	{
-		if (szFile[ilen] == DIR_SLASH)
-			break;
-		ilen--;
-	}
-
-	if (ilen >= 0)
-		_tcsncpy_safe(szBuff, nBufLen, szFile, ilen + 1);
-	szBuff[ilen + 1] = '\0';
-}
-
-void FileGetPath(LPCTSTR szFile, tstring &strPath)
-{
+	tstring strPath;
 	long ilen = _tcslen(szFile);
 	ilen -= 2;
 	while (ilen >= 0)
@@ -363,25 +290,8 @@ void FileGetPath(LPCTSTR szFile, tstring &strPath)
 	strPath.resize(0);
 	if (ilen >= 0)
 		strPath.append(szFile, ilen + 1);
-}
 
-LPCTSTR FileGetExt(LPCTSTR szFile)
-{
-	LPCTSTR		szBeg;
-
-	szBeg = _tcsrchr(szFile, '.');
-	if (szBeg == NULL)
-		return _T("");
-	else
-	{
-		LPCTSTR		szTemp;
-
-		szTemp = _tcsrchr(szFile, DIR_SLASH);
-		if (szTemp == NULL || szTemp < szBeg)
-			return szBeg;
-		else
-			return _T("");
-	}
+	return strPath;
 }
 
 // Set the file extention.

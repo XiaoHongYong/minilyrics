@@ -179,7 +179,7 @@ void CMPlaylistSearchObj::OnCreate()
 	// Load recent playlist...
 	for (int i = PN_CUSTOMIZED; i < COUNT_RECENT_PL_MAX; i++)
 	{
-		tstring			strPlaylist, strName;
+		tstring			strPlaylist;
 
 		strPlaylist = g_Profile.GetProfileString(CStrPrintf(_T("%s%d"), SZ_RECENT_PL, i).c_str(), _T(""));
 		if (strPlaylist.empty())
@@ -187,9 +187,7 @@ void CMPlaylistSearchObj::OnCreate()
 		if (!IsFileExist(strPlaylist.c_str()))
 			continue;
 
-		FileGetTitle(strPlaylist.c_str(), strName);
-
-		AddInRecentPlaylist(strName.c_str(), strPlaylist.c_str(), -1);
+		AddInRecentPlaylist(FileGetTitle(strPlaylist.c_str()).c_str(), strPlaylist.c_str(), -1);
 	}
 	m_pCtrlPlaylistList->Invalidate();
 	m_pCtrlPlaylistList->SetItemSelectionState(0, true);

@@ -300,7 +300,7 @@ void UpdatePlayerPath(LPCTSTR szFile, DWORD dwProcessId)
 		CPlayerPluginInstaller::Player &item = g_playersPlugin[i];
 		if (item.szExeName && _tcsicmp(szFileName, item.szExeName) == 0)
 		{
-			FileGetPath(szFile, item.pExtraInfo->strPlayerPath);
+			item.pExtraInfo->strPlayerPath = FileGetPath(szFile);
 			item.pExtraInfo->dwProcessId = dwProcessId;
 			DBGLOG2(_T("Player: %s is running: %d"), szFile, dwProcessId);
 			return;
@@ -518,7 +518,7 @@ void CPlayerPluginInstaller::Player::DetectPlayerPath()
 
 			TrimStr(szPath, '"');
 			if (!IsEmptyString(szPath))
-				FileGetPath(szPath, pExtraInfo->strPlayerPath);
+				pExtraInfo->strPlayerPath = FileGetPath(szPath);
 		}
 	}
 

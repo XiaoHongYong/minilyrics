@@ -82,10 +82,7 @@ void ParseMLTextMacro(LPCTSTR szText, tstring &str)
 	str = szText;
 	tstring		strTitleFull;
 
-	strTitleFull = g_Player.GetArtist();
-	if (!strTitleFull.empty())
-		strTitleFull += _T(" - ");
-	strTitleFull += g_Player.GetTitle();
+	strTitleFull = FormatMediaTitle(g_Player.GetArtist(), g_Player.GetTitle());
 
 	strrep(str, _T("$$title$$"), g_Player.GetTitle());
 	strrep(str, _T("$$artist$$"), g_Player.GetArtist());

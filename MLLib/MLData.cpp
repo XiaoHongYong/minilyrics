@@ -996,14 +996,11 @@ tstring CMLData::GetSuggestedLyricsFileName()
 	// Combine file name
 	tstring	strFileName;
 
-	strFileName = m_lyrProperties.m_strArtist;
-	if (strFileName.size())
-		strFileName += _T(" - ");
-	strFileName += m_lyrProperties.m_strTitle;
+	strFileName = FormatMediaTitle(m_lyrProperties.m_strArtist.c_str(), m_lyrProperties.m_strTitle.c_str());
 	strFileName = FileNameFilterInvalidChars(strFileName.c_str());
 
 	if (strFileName.empty())
-		FileGetTitle(m_strSongFile.c_str(), strFileName);
+		strFileName = FileGetTitle(m_strSongFile.c_str());
 
 	if (m_lyrProperties.m_lyrContentType == LCT_LRC)
 		strFileName += _T(".lrc");
@@ -1702,7 +1699,7 @@ public:
 #ifndef _IPHONE
 	void setUp()
 	{
-		FileGetPath(_T(__FILE__), m_strTestDataFolder);
+		m_strTestDataFolder = FileGetPath(_T(__FILE__));
 		DirStringAddSlash(m_strTestDataFolder);
 		m_strTestDataFolder += _T("TestData\\");
 	}

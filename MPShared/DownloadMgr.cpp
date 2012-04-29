@@ -310,7 +310,7 @@ tstring CDownloadMgr::GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName, 
 
 	tstring				strLyricsFile;
 	if (DownSaveDir == DOWN_SAVE_IN_SONG_DIR)
-		FileGetPath(szSongFile, strLyricsFile);
+		strLyricsFile = FileGetPath(szSongFile);
 
 	if (strLyricsFile.empty())
 		strLyricsFile = m_strDefSavePath.c_str();
@@ -678,10 +678,8 @@ int CDownloadMgr::SaveDownloadedLyrAsFile(tstring &strFile, LPCVOID lpData, int 
 
 	if (!SaveDataAsFile(strFile.c_str(), lpData, nSize))
 	{
-		TCHAR	szPath[MAX_PATH];
-
-		FileGetPath(szPath, CountOf(szPath), strFile.c_str());
-		CreateDirectoryAll(szPath);
+		tstring strDir = FileGetPath(strFile.c_str());
+		CreateDirectoryAll(strDir.c_str());
 
 		if (!SaveDataAsFile(strFile.c_str(), lpData, nSize))
 		{
@@ -694,8 +692,8 @@ int CDownloadMgr::SaveDownloadedLyrAsFile(tstring &strFile, LPCVOID lpData, int 
 			strSaveFile += FileGetName(strFile.c_str());
 			strFile = strSaveFile;
 
-			FileGetPath(szPath, CountOf(szPath), strFile.c_str());
-			CreateDirectoryAll(szPath);
+			strDir = FileGetPath(strFile.c_str());
+			CreateDirectoryAll(strDir.c_str());
 			if (!SaveDataAsFile(strFile.c_str(), lpData, nSize))
 			{
 				ERRLOG1(_T("Failed to save downloaded lyrics file: %s."), strFile.c_str());

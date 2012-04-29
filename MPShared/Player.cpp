@@ -24,14 +24,7 @@ CPlayerEventDispatcher		g_playerEventDispatcher;
 
 void FormatFullTitle(LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szUri, tstring &strFullTitle)
 {
-	strFullTitle.resize(0);
-	if (!IsEmptyString(szArtist))
-	{
-		strFullTitle = szArtist;
-		strFullTitle += _T(" - ");
-	}
-
-	strFullTitle += szTitle;
+	strFullTitle = FormatMediaTitle(szArtist, szTitle);
 	if (strFullTitle.empty())
 		strFullTitle = UrlGetTitle(szUri);
 }
@@ -980,29 +973,18 @@ void CPlayer::AddFileToMediaLib(LPCTSTR szMedia)
 	}
 }
 
-void CPlayer::FormatMediaTitle(IMedia *pMedia, tstring &strTitle)
+void CPlayer::FormatMediaTitle(IMedia *pMedia, tstring &strFullTitle)
 {
-	CXStr		str;
+	CXStr artist, title;
+	pMedia->GetArtist(&artist);
+	pMedia->GetTitle(&title);
 
-	strTitle.resize(0);
-
-	pMedia->GetArtist(&str);
-	if (str.size() != 0)
+	strFullTitle = ::FormatMediaTitle(artist.c_str(), title.c_str());
+	if (strFullTitle.empty())
 	{
-		strTitle = str.c_str();
-		strTitle += _T(" - ");
-	}
-
-	pMedia->GetTitle(&str);
-	strTitle += str.c_str();
-
-	if (strTitle.empty())
-	{
-		TCHAR	szFileTitle[256];
-
-		pMedia->GetSourceUrl(&str);
-		FileGetTitle(szFileTitle, CountOf(szFileTitle), str.c_str());
-		strTitle = szFileTitle;
+		CXStr file;
+		pMedia->GetSourceUrl(&file);
+		strFullTitle = FileGetTitle(file.c_str());
 	}
 }
 
@@ -1212,10 +1194,11 @@ void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 
 	if (bChanged)
 	{
-		if (IsEmptyString(m_szArtist) && IsEmptyString(m_szTitle))
+		if (IsEmptyString(m_szArtist) && 
+			(IsEmptyString(m_szTitle) || _tcscmp(FileGetTitle(m_szSrcMedia).c_str(), m_szTitle) == 0))
 		{
 			tstring		strAr, strTi;
-			AnalysisLyricsFileNameEx(strAr, strTi, FileGetName(m_szSrcMedia));
+			AnalysisLyricsFileNameEx(strAr, strTi, m_szSrcMedia);
 
 			SetFieldValue(m_szArtist, CountOf(m_szArtist), strAr.c_str());
 			SetFieldValue(m_szTitle, CountOf(m_szTitle), strTi.c_str());

@@ -158,7 +158,6 @@ bool LoadM3uPlaylist(IMPlayer *player, IPlaylist *playList, LPCTSTR szFile)
 {
 	char		szBuff[MAX_PATH * 2];
 	FILE		*fp;
-	TCHAR		szPath[MAX_PATH];
 	tstringex	strFile;
 	tstringex	str;
 
@@ -166,7 +165,7 @@ bool LoadM3uPlaylist(IMPlayer *player, IPlaylist *playList, LPCTSTR szFile)
 	if (!fp)
 		return false;
 
-	FileGetPath(szPath, CountOf(szPath), szFile);
+	tstring strPath = FileGetPath(szFile);
 
 	// #EXTM3U
 	if (!fgets(szBuff, CountOf(szBuff), fp))
@@ -202,7 +201,7 @@ bool LoadM3uPlaylist(IMPlayer *player, IPlaylist *playList, LPCTSTR szFile)
 
 		ConvertStr(szBuff, -1, str);
 
-		AppendMediaToList(player, playList, str.c_str(), szPath);
+		AppendMediaToList(player, playList, str.c_str(), strPath.c_str());
 	}
 	fclose(fp);
 
@@ -214,9 +213,8 @@ bool LoadPlsPlaylist(IMPlayer *player, IPlaylist *playList, LPCTSTR szFile)
 	CProfile		file;
 	int				n;
 	TCHAR			szkey[256];
-	TCHAR			szPath[MAX_PATH];
 
-	FileGetPath(szPath, CountOf(szPath), szFile);
+	tstring strPath = FileGetPath(szFile);
 
 	file.Init(szFile, _T("playlist"));
 	n = file.GetProfileInt(_T("NumberOfEntries"), 0);
@@ -230,7 +228,7 @@ bool LoadPlsPlaylist(IMPlayer *player, IPlaylist *playList, LPCTSTR szFile)
 		if (strFile.empty())
 			continue;
 
-		AppendMediaToList(player, playList, strFile.c_str(), szPath);
+		AppendMediaToList(player, playList, strFile.c_str(), strPath.c_str());
 	}
 
 	return true;
@@ -239,9 +237,8 @@ bool LoadPlsPlaylist(IMPlayer *player, IPlaylist *playList, LPCTSTR szFile)
 bool LoadWplPlaylist(IMPlayer *player, IPlaylist	*playList, LPCTSTR szFile)
 {
 	CCharBuffer		buffer;
-	TCHAR			szPath[MAX_PATH];
 
-	FileGetPath(szPath, CountOf(szPath), szFile);
+	tstring strPath = FileGetPath(szFile);
 
 	if (!OpenFileToBuffer(szFile, buffer))
 		return false;
@@ -299,7 +296,7 @@ bool LoadWplPlaylist(IMPlayer *player, IPlaylist	*playList, LPCTSTR szFile)
 		{
 			LPCTSTR	szFile = pNodeMedia->GetPropertySafe(_T("src"));
 			if (szFile && !IsEmptyString(szFile))
-				AppendMediaToList(player, playList, szFile, szPath);
+				AppendMediaToList(player, playList, szFile, strPath.c_str());
 		}
 	}
 

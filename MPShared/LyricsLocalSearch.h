@@ -13,7 +13,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-void AnalysisSongTitle(TCHAR szTitle[]/* out */, BOOL &bTitleIgnoreNumb/* out */, TCHAR szArtist[]/* out */, BOOL &bArtIgnoreNumb/* out */, LPCTSTR szFullTitle);
+void AnalysisSongArTitle(TCHAR szTitle[]/* out */, BOOL &bTitleIgnoreNumb/* out */, TCHAR szArtist[]/* out */, BOOL &bArtIgnoreNumb/* out */, LPCTSTR szFile);
 
 // 歌词关连定义
 typedef map<tstring, tstring> SONG_LYRIC_MAP;

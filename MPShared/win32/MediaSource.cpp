@@ -345,7 +345,7 @@ bool CFileMediaSource::GetMediaInfo(int nIndex, tstring &artist, tstring &album,
 		if (nRet != ERR_OK || item.title.empty())
 		{
 			// Analysis file name
-			AnalysisLyricsFileNameEx(item.artist, item.title, FileGetName(item.file.c_str()));
+			AnalysisLyricsFileNameEx(item.artist, item.title, item.file.c_str());
 		}
 		item.bInfoAvailable = true;
 		item.nMediaLength /= 1000;

@@ -1695,6 +1695,23 @@ bool StrSplit(LPCTSTR szStr, TCHAR chSeperator, tstring &strLeft, tstring &strRi
 	return true;
 }
 
+bool StrSplit(LPCTSTR szStr, LPCTSTR szSeperator, tstring &strLeft, tstring &strRight)
+{
+	strLeft.clear();
+	strRight.clear();
+
+	LPCTSTR p = _tcsstr(szStr, szSeperator);
+	if (p == NULL)
+	{
+		strLeft = szStr;
+		return false;
+	}
+
+	strLeft.append(szStr, (size_t)(p - szStr));
+	strRight = p + _tcslen(szSeperator);
+	return true;
+}
+
 class _SetInsert
 {
 public:
@@ -2118,7 +2135,11 @@ protected:
 		LPCTSTR		szInput = _T("name=valuexxx=x");
 
 		StrSplit(szInput, '=', strLeft, strRight);
+		CPPUNIT_ASSERT(strLeft == _T("name"));
+		CPPUNIT_ASSERT(strRight == _T("valuexxx=x"));
 
+		szInput = _T("name - valuexxx=x");
+		StrSplit(szInput, _T(" - "), strLeft, strRight);
 		CPPUNIT_ASSERT(strLeft == _T("name"));
 		CPPUNIT_ASSERT(strRight == _T("valuexxx=x"));
 	}

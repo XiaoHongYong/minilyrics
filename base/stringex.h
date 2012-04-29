@@ -165,6 +165,8 @@ int StrSplit(LPCTSTR szStr, TCHAR chSeperator, vector<tstring> &containerStr);
 int StrSplit(LPCTSTR szStr, TCHAR chSeperator, SetTStrNCase &containerStr);
 #define StrBreak	StrSplit
 
+bool StrSplit(LPCTSTR szStr, LPCTSTR szSeperator, tstring &strLeft, tstring &strRight);
+
 template<class _iterator>
 tstring StrJoin(_iterator first, _iterator end, LPCTSTR szFormat, LPCTSTR szSeperator)
 {

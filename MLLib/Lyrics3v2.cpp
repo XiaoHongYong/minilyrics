@@ -238,7 +238,7 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 		lrcTag.ReadFromText((LPBYTE)szLyrics, nLen);
 
 		if (lrcTag.m_strArtist.empty())
-			AnalysisLyricsFileNameEx(lrcTag.m_strArtist, lrcTag.m_strTitle, FileGetName(szMp3File));
+			AnalysisLyricsFileNameEx(lrcTag.m_strArtist, lrcTag.m_strTitle, szMp3File);
 
 		stringex	strTitle, strArtist, strAlbum, strEncoding;
 		ConvertStr(lrcTag.m_strArtist.c_str(), -1, strArtist, lrcTag.GetEncodingIndex());

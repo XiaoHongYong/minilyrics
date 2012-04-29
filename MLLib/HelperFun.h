@@ -1,9 +1,14 @@
 
 #pragma once
 
-void FilterSongFileExt(LPTSTR szFile);
+DECLAR_CPPUNIT_TEST_REG(HelperFun)
 
-BOOL AnalysisLyricsFileNameEx(tstring &strArtist, tstring &strTitle, LPCTSTR szFileName);
+void AnalysisLyricsFileNameEx(tstring &strArtist, tstring &strTitle, LPCTSTR szFile);
+
+/**
+* Format media title in format of "artist - title"
+**/
+tstring FormatMediaTitle(LPCTSTR szArtist, LPCTSTR szTitle);
 
 #ifdef WIN32
 bool GetMLEncriptyData(stringex &strData);

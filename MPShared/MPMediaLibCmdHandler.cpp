@@ -685,11 +685,8 @@ void CMPMediaLibCmdHandler::UpdateMediaList()
 			CMediaLibTreeProvider::Item	&item = vItems[i];
 			if (item.folderType == CMediaLibTreeProvider::FT_PLAYLIST_FILE)
 			{
-				TCHAR		szFileTitle[MAX_PATH];
-
-				FileGetTitle(szFileTitle, CountOf(szFileTitle), item.strName.c_str());
 				plistCtrl->InsertItem(plistCtrl->GetItemCount(), 
-					szFileTitle, item.nImageIndex);
+					FileGetTitle(item.strName.c_str()).c_str(), item.nImageIndex);
 			}
 			else
 				plistCtrl->InsertItem(plistCtrl->GetItemCount(), 

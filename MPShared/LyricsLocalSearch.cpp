@@ -63,69 +63,25 @@ bool IsSupportedOpenFileType(MLFileType fileType)
 // OUTPUT:
 //		szTitle		-	标题
 //		szArtist	-	作者
-void AnalysisSongTitle(TCHAR szTitle[]/* out */, BOOL &bTitleIgnoreNumb/* out */, TCHAR szArtist[]/* out */, BOOL &bArtIgnoreNumb/* out */, LPCTSTR szFullTitle)
+void AnalysisSongArTitle(TCHAR szTitle[], BOOL &bTitleIgnoreNumb, TCHAR szArtist[], BOOL &bArtIgnoreNumb, LPCTSTR szFile)
 {
-	LPCTSTR		szEndArtist;
-	LPCTSTR		szBegTitle;
-	TCHAR		szFullTitleNew[256];
+	tstring		strArtist, strTitle;
 
-	// 将FullTitle中的[buffering ...]替换掉
-	_tcscpy_safe(szFullTitleNew, CountOf(szFullTitleNew), szFullTitle);
-
-	//
-	// 将FullTitle中的.mp3, .ra, .rm ....等替换掉
-	FilterSongFileExt(szFullTitleNew);
-
-	// 作者和标题之间是以：' - ' or ' － ' or '-'为分隔
-	szEndArtist = szBegTitle = _tcsstr(szFullTitleNew, _T(" - "));
-	if (szBegTitle)
-		szBegTitle += 3;	// _tcslen(_T(" - "));
-	else
+	tstring fileTitle = FileGetTitle(szFile);
+	if (!StrSplit(fileTitle.c_str(), _T(" - "), strArtist, strTitle)
+		&& !StrSplit(fileTitle.c_str(), '-', strArtist, strTitle))
 	{
-		szEndArtist = szBegTitle = _tcsstr(szFullTitleNew, _T(" － "));
-		if (szBegTitle)
-			szBegTitle += 4;	// _tcslen(_T(" － "));
-		else
-		{
-			szEndArtist = szBegTitle = _tcschr(szFullTitleNew, '-');
-			if (szBegTitle)
-				szBegTitle++;	// -
-		}
+		strArtist.resize(0);
+		strTitle = fileTitle;
 	}
 
-	//
-	// 处理作者……
-	if (szEndArtist == NULL)
-	{
-		//
-		// 认为 szFullTitle 都是 Title, Artist 为空
-		szBegTitle = szFullTitleNew;
+	_tcscpy_safe(szArtist, 256, strArtist.c_str());
+	bArtIgnoreNumb = IsIgnoreNumber(szArtist);
+	FilterChars(szArtist, 256, szArtist, bArtIgnoreNumb);
 
-		szArtist[0] = '\0';
-		bArtIgnoreNumb = FALSE;
-	}
-	else
-	{
-		TCHAR		szTemp[256];
-
-		_tcsncpysz_safe(szTemp, 256, szFullTitleNew, int(szEndArtist - szFullTitleNew));
-
-		// 作者名为数字的比较少，所以先假设为不是数字的
-		bArtIgnoreNumb = IsIgnoreNumber(szTemp);
-
-		// 经过过滤之后已经没有字符了，对为数字的情况需要再进行处理
-		FilterChars(szArtist, 256, szTemp, FALSE);
-	}
-
-	//
-	// 处理歌词标题
-	//
-
-	// 歌词名为数字的比较少，所以先假设为不是数字的
-	bTitleIgnoreNumb = IsIgnoreNumber(szBegTitle);
-
-	// 经过过滤之后已经没有字符了，对歌词名为数字的情况需要再进行处理
-	FilterChars(szTitle, 256, szBegTitle, FALSE);
+	_tcscpy_safe(szTitle, 256, strTitle.c_str());
+	bTitleIgnoreNumb = IsIgnoreNumber(szTitle);
+	FilterChars(szTitle, 256, szTitle, bTitleIgnoreNumb);
 }
 
 // PURPOSE:
@@ -316,31 +272,16 @@ BOOL CLyricsLocalSearch::SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szSong
 
 	SearchEmbeddedLyrics(szSongFile, vLyrics, true);
 
-	AnalysisSongTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongName);
+	AnalysisSongArTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongName);
 
 	if (!IsEmptyString(szTitle))
-	{
 		SearchLyrics(szSongFile, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, &vLyrics);
-
-		//
-		// 搜索本地建立的歌词库
-		//
-	}
 
 	if (vLyrics.size() == 0 && !IsEmptyString(szSongFile))
 	{
-		TCHAR	szSongFileName[MAX_PATH];
-
-		FileGetTitle(szSongFileName, CountOf(szSongFileName), szSongFile);
-		AnalysisSongTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongFileName);
+		AnalysisSongArTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongFile);
 		if (!IsEmptyString(szTitle))
-		{
 			SearchLyrics(szSongFile, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, &vLyrics);
-
-			//
-			// 搜索本地建立的歌词库
-			//
-		}
 	}
 
 	return TRUE;
@@ -365,7 +306,7 @@ BOOL CLyricsLocalSearch::SearchLyrics(LPCTSTR szSongFile, LPCTSTR szTitle, BOOL 
 	{
 		if (!IsEmptyString(szSongFile))
 		{
-			FileGetPath(szSongFile, strDir);
+			strDir = FileGetPath(szSongFile);
 
 			SearchMatchLyricsInDir(strDir.c_str(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, pvLyrics, FALSE);
 		}
@@ -952,16 +893,14 @@ void CLyricsLocalSearch::SaveLyricsAssociation()
 //		szLyricFile	-	匹配的歌曲文件
 BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, TCHAR *szLyricFile)
 {
-	TCHAR			szFullTitle[MAX_PATH];
 	TCHAR			szEmbeddedLyrics[MAX_PATH];
 
 	szLyricFile[0] = '\0';
-	_tcscpy_safe(szFullTitle, CountOf(szFullTitle), szArtist);
-	_tcscat_safe(szFullTitle, CountOf(szFullTitle), _T(" - "));
-	_tcscat_safe(szFullTitle, CountOf(szFullTitle), szTitle);
+
+	tstring fullTitle = FormatMediaTitle(szArtist, szTitle);
 
 	// 首先到关连表中搜索.
-	if (GetAssociateLyrics(GetAssociateFileKeyword(szSongFile, szFullTitle).c_str(), szLyricFile, MAX_PATH))
+	if (GetAssociateLyrics(GetAssociateFileKeyword(szSongFile, fullTitle.c_str()).c_str(), szLyricFile, MAX_PATH))
 		return TRUE;
 
 	V_LRCSEARCHRESULT		vLyrics;
@@ -1022,15 +961,10 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 
 	// Search lyrics by song file name
 	{
-		TCHAR	szSongFileName[MAX_PATH];
 		BOOL	bTitleIgnoreNumb, bArtIgnoreNumb;
 		TCHAR	szArtist[MAX_PATH], szTitle[MAX_PATH];
 
-		FileGetTitle(szSongFileName, CountOf(szSongFileName), szSongFile);
-		AnalysisSongTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongFileName);
-
-		bTitleIgnoreNumb = IsIgnoreNumber(szTitle);
-		bArtIgnoreNumb = IsIgnoreNumber(szArtist);
+		AnalysisSongArTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongFile);
 
 		if (!IsEmptyString(szTitle))
 		{

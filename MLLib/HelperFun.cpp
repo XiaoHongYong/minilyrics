@@ -12,80 +12,29 @@
 //////////////////////////////////////////////////////////////////////////
 //
 
-const TCHAR *_SZ_SONG_EXT[] = {
-	_T("mp3"), _T("669"), _T("aac"), _T("amf"), _T("aif"), _T("aiff"), _T("ape"), _T("avi"), _T("asf"), _T("au"), _T("cda"), 
-	_T("far"), _T("it"), _T("kar"), _T("m2v"), _T("m3u"), _T("m4a"), _T("mac"), _T("mdz"), _T("mid"), _T("midi"), 
-	_T("miz"), _T("mod"), _T("mp2"), _T("mp1"), _T("mpg"), _T("mp4"), _T("mpeg"), _T("mtm"), 
-	_T("nst"), _T("nsa"), _T("nsv"), _T("ogg"), _T("okt"), _T("pls"), _T("ptm"), _T("rmi"), _T("s3m"), 
-	_T("s3z"), _T("snd"), _T("stm"), _T("stz"), _T("voc"), _T("wav"), _T("wma"), _T("wmv"), _T("xm"), 
-	_T("xmz"), _T("mkv"), _T("mka"), _T("ult"), _T("lrc"), _T("txt"), NULL
-};
-
-void FilterSongFileExt(LPTSTR szFile)
+void AnalysisLyricsFileNameEx(tstring &strArtist, tstring &strTitle, LPCTSTR szFile)
 {
-	LPTSTR	szDot;
-	LPCTSTR	*szPos;
+	tstring fileTitle = FileGetTitle(szFile);
 
-	szDot = _tcsrchr(szFile, '.');
-	if (szDot)
+	if (!StrSplit(fileTitle.c_str(), _T(" - "), strArtist, strTitle)
+		&& !StrSplit(fileTitle.c_str(), '-', strArtist, strTitle))
 	{
-		szDot++;
-		for (szPos = _SZ_SONG_EXT; *szPos; szPos++)
-		{
-			if (_tcsicmp(szDot, *szPos) == 0)
-			{
-				szDot--;
-				szDot[0] = '\0';
-				return;
-			}
-		}
+		strArtist.resize(0);
+		strTitle = fileTitle;
 	}
+
+	TrimStr(strArtist);
+	TrimStr(strTitle);
 }
 
-BOOL AnalysisLyricsFileNameEx(tstring &strArtist, tstring &strTitle, LPCTSTR szFileName)
+tstring FormatMediaTitle(LPCTSTR szArtist, LPCTSTR szTitle)
 {
-	LPCTSTR		szEndArtist;
-	LPCTSTR		szBegTitle;
-	TCHAR		szFullTitleNew[MAX_PATH];
+	tstring mediaTitle = szArtist;
+	if (mediaTitle.size() > 0 && !IsEmptyString(szTitle))
+		mediaTitle += _T(" - ");
+	mediaTitle += szTitle;
 
-	strArtist.resize(0);
-	strTitle.resize(0);
-
-	//
-	// 将FullTitle中的.mp3, .ra, .rm ....等替换掉
-	_tcscpy_safe(szFullTitleNew, MAX_PATH, szFileName);
-	FilterSongFileExt(szFullTitleNew);
-
-	// 作者和标题之间是以：' - ' or ' － ' or '-'为分隔
-	szEndArtist = szBegTitle = _tcsstr(szFullTitleNew, _T(" - "));
-	if (szBegTitle)
-		szBegTitle += 3;	// strlen(_T(" - "));
-	else
-	{
-		szEndArtist = szBegTitle = _tcschr(szFullTitleNew, '-');
-		if (szBegTitle)
-			szBegTitle++;	// -
-	}
-
-
-	//
-	// 处理作者……
-	if (szEndArtist == NULL)
-	{
-		//
-		// 认为 szFullTitle 都是 Title, Artist 为空
-		szBegTitle = szFullTitleNew;
-	}
-	else
-	{
-		strArtist.append(szFullTitleNew, int(szEndArtist - szFullTitleNew));
-		TrimStr(strArtist);
-	}
-
-	strTitle = szBegTitle;
-	TrimStr(strTitle);
-
-	return TRUE;
+	return mediaTitle;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -135,3 +84,40 @@ bool GetMLEncriptyData(stringex &strData)
 	return true;
 }
 #endif
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+#ifdef _CPPUNIT_TEST
+
+IMPLEMENT_CPPUNIT_TEST_REG(HelperFun)
+
+class CTestCaseStringEx : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseStringEx);
+	CPPUNIT_TEST(TestAnalysisLyricsFileNameEx);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+	void TestAnalysisLyricsFileNameEx()
+	{
+		tstring artist, title;
+		LPCTSTR szFile;
+
+		szFile = _T("c:\\abc\ar - ti-a.mp3");
+		AnalysisLyricsFileNameEx(artist, title, szFile);
+		CPPUNIT_ASSERT(artist == "ar");
+		CPPUNIT_ASSERT(title == "ti-a");
+
+		szFile = _T("c:\\abc\ar-ti-a.mp3");
+		AnalysisLyricsFileNameEx(artist, title, szFile);
+		CPPUNIT_ASSERT(artist == "ar");
+		CPPUNIT_ASSERT(title == "ti-a");
+
+		szFile = _T("c:\\abc\ti.mp3");
+		AnalysisLyricsFileNameEx(artist, title, szFile);
+		CPPUNIT_ASSERT(artist == "");
+		CPPUNIT_ASSERT(title == "ti");
+	}
+
+};

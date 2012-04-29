@@ -105,18 +105,7 @@ LPCTSTR IgnoreChars(LPCTSTR szString, BOOL bIgnoreNumb)
 			}
 		}
 		else
-		{
-			//			ÖÐÎÄ·ûºÅ£º0xA3A1(£¡) ~ 0xA3FE(£þ)
-			if (BYTE(szNew[0]) >= 0xA1 && BYTE(szNew[0]) <= 0xA3)
-			{
-				if (BYTE(szNew[1]) >= 0xA1 && BYTE(szNew[1]) <= 0xFE)
-					szNew += 2;
-				else
-					break;
-			}
-			else
-				break;
-		}
+			break;
 	}
 
 	return szNew;
@@ -143,19 +132,10 @@ void FilterChars(LPTSTR szBuffer, int nBuffMax, LPCTSTR szString, BOOL bFilterNu
 			break;
 		if (i >= nBuffMax)
 			break;
-		if (__isascii(szBeg[0]))
-		{
-			szBuffer[i] = szBeg[0];
-			i++;
-			szBeg++;
-		}
-		else
-		{
-			szBuffer[i] = szBeg[0];
-			szBuffer[i + 1] = szBeg[1];
-			i += 2;
-			szBeg += 2;
-		}
+
+		szBuffer[i] = szBeg[0];
+		i++;
+		szBeg++;
 	}
 	if (i >= nBuffMax)
 		i = nBuffMax - 1;
@@ -322,15 +302,9 @@ LRC_MATCH_TYPE GetLyricsMatchTypeTitleOnly(LPCTSTR szLyricsFileName, LPCTSTR szT
 		szTitleFile += 3;	// _tcslen(_T(" - "));
 	else
 	{
-		szTitleFile = _tcsstr(szLyricsFileName, _T(" £­ "));
+		szTitleFile = _tcschr(szLyricsFileName, '-');
 		if (szTitleFile)
-			szTitleFile += 4;	// _tcslen(_T(" £­ "));
-		else
-		{
-			szTitleFile = _tcschr(szLyricsFileName, '-');
-			if (szTitleFile)
-				szTitleFile++;	// -
-		}
+			szTitleFile++;	// -
 	}
 	if (szTitleFile == NULL)
 		szTitleFile = szLyricsFileName;
@@ -560,14 +534,13 @@ int CalLyricsMatchValue(LPCTSTR szFile, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, 
 
 	if (bTitleIgnoreNumb)
 	{
-		TCHAR		szFileTitle[512];
-		FileGetTitle(szFileTitle, CountOf(szFileTitle), szFile);
-		nMatchType = GetLyricsMatchType(szFileTitle, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
+		nMatchType = GetLyricsMatchType(FileGetTitle(szFile).c_str(),
+			szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
 	}
 	else
 	{
 		tstring		strArTarg, strTiTarg;
-		AnalysisLyricsFileNameEx(strArTarg, strTiTarg, FileGetName(szFile));
+		AnalysisLyricsFileNameEx(strArTarg, strTiTarg, szFile);
 
 		nMatchType = GetLyricsMatchType(strTiTarg.c_str(), strArTarg.c_str(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
 	}

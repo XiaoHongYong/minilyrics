@@ -41,17 +41,14 @@ LPCTSTR UrlGetName(LPCTSTR szFile);
 LPCTSTR UrlGetExt(LPCTSTR szFile);
 tstring UrlGetTitle(LPCTSTR szFile);
 
-LPCTSTR FileGetName(LPCTSTR szFile);
+inline LPCTSTR FileGetName(LPCTSTR szFile) { return UrlGetName(szFile); }
+inline tstring FileGetTitle(LPCTSTR szFile) { return UrlGetTitle(szFile); }
+inline LPCTSTR FileGetExt(LPCTSTR szFile) { return UrlGetExt(szFile); }
 
-void FileGetTitle(LPTSTR szBuff, int nBuffLen, LPCTSTR szFile);
-void FileGetTitle(LPCTSTR szFile, tstring &strFileTitle);
-
-void FileGetPath(LPCTSTR szFile, tstring &strPath);
-void FileGetPath(LPTSTR szBuff, int nBufLen, LPCTSTR szFile);
+tstring FileGetPath(LPCTSTR szFile);
 
 void FileSetExt(tstring &strFile, LPCTSTR szExt);
 void FileSetExt(LPTSTR szFile, int nFileBufLen, LPCTSTR szExt);
-LPCTSTR FileGetExt(LPCTSTR szFile);
 
 bool FileIsExtSame(LPCTSTR szFile, LPCTSTR szExt);
 

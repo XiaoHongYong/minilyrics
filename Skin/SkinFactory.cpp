@@ -1793,8 +1793,7 @@ void CSkinFactory::ApplyDefaultThemeOfSkin()
 {
 	TCHAR	szThemeFile[MAX_PATH];
 
-	tstring strThemeName;
-	FileGetTitle(GetSkinFileName(), strThemeName);
+	tstring strThemeName = FileGetTitle(GetSkinFileName());
 	strThemeName += _T("_theme.xml");
 	if (!m_resourceMgr.GetResourcePathName(szThemeFile, CountOf(szThemeFile), strThemeName.c_str()))
 		return;

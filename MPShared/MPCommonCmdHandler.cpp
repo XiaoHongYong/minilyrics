@@ -276,9 +276,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_BR_ALBUM_ART:
 		{
-			tstring				strAlbumArtFileName;
-
-			FileGetPath(g_Player.GetSrcMedia(), strAlbumArtFileName);
+			tstring strAlbumArtFileName = FileGetPath(g_Player.GetSrcMedia());
 			if (!IsDirExist(strAlbumArtFileName.c_str()))
 				break;
 

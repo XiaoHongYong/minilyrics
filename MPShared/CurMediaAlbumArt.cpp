@@ -43,7 +43,6 @@ bool GetImageFileWithName(LPCTSTR szName, V_Str &vPicFiles)
 
 bool GetCurrentMediaAlbumArtInSongDir(V_Str &vPicFiles)
 {
-	TCHAR		szDir[MAX_PATH], szFileTitle[MAX_PATH];
 	tstring		strFile;
 	LPCTSTR		szAlbumName = g_Player.GetAlbum(), szSongFile = g_Player.GetSrcMedia();
 	V_Str		vOtherPicFiles;
@@ -54,8 +53,8 @@ bool GetCurrentMediaAlbumArtInSongDir(V_Str &vPicFiles)
 
 	CMLFileFind		find;
 
-	FileGetPath(szDir, CountOf(szDir), szSongFile);
-	if (!find.OpenDir(szDir))
+	tstring strDir = FileGetPath(szSongFile);
+	if (!find.OpenDir(strDir.c_str()))
 		return false;
 
 	tstring		file;
@@ -70,14 +69,14 @@ bool GetCurrentMediaAlbumArtInSongDir(V_Str &vPicFiles)
 		if (!IsSupportedImageFile(find.GetCurName()))
 			continue;
 
-		strFile = szDir;
+		strFile = strDir;
 		strFile += find.GetCurName();
-		FileGetTitle(szFileTitle, CountOf(szFileTitle), find.GetCurName());
+		tstring strFileTitle = FileGetTitle(find.GetCurName());
 
 		//
 		// album.jpg
 		//
-		if (_tcsicmp(szFileTitle, szAlbumName) == 0)
+		if (_tcsicmp(strFileTitle.c_str(), szAlbumName) == 0)
 		{
 			vPicFiles.push_back(strFile);
 			continue;
@@ -89,18 +88,12 @@ bool GetCurrentMediaAlbumArtInSongDir(V_Str &vPicFiles)
 		tstring		strArAl;
 		strArAl = g_Player.GetArtist();
 		if (!IsEmptyString(szAlbumName))
-		{
-			if (!strArAl.empty())
-				strArAl += _T(" - ");
-			strArAl += szAlbumName;
-		}
+			strArAl = FormatMediaTitle(g_Player.GetArtist(), szAlbumName);
 		if (strArAl.empty())
 		{
-			TCHAR		szTemp[MAX_PATH];
-			FileGetTitle(szTemp, CountOf(szTemp), g_Player.GetSrcMedia());
-			strArAl = szTemp;
+			strArAl = FileGetTitle(g_Player.GetSrcMedia());
 		}
-		if (_tcsicmp(szFileTitle, strArAl.c_str()) == 0)
+		if (_tcsicmp(strFileTitle.c_str(), strArAl.c_str()) == 0)
 		{
 			vPicFiles.push_back(strFile);
 			continue;
@@ -109,7 +102,7 @@ bool GetCurrentMediaAlbumArtInSongDir(V_Str &vPicFiles)
 		//
 		// Folder.jpg
 		//
-		if (_tcsicmp(szFileTitle, _T("Folder")) == 0)
+		if (_tcsicmp(strFileTitle.c_str(), _T("Folder")) == 0)
 		{
 			vPicFiles.push_back(strFile);
 			continue;

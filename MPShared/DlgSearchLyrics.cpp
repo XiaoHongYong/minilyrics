@@ -334,19 +334,17 @@ public:
 			if (!pSel || LyrSrcTypeFromName(pSel->strUrl.c_str()) != LST_FILE)
 				return;
 
-			tstring		strFileTitleOld;
-			tstring		strFileTitle = GetExPoolStr(_T("FileTitle"));
-			FileGetTitle(pSel->strUrl.c_str(), strFileTitleOld);
+			tstring strFileTitle = GetExPoolStr(_T("FileTitle"));
+			tstring strFileTitleOld = FileGetTitle(pSel->strUrl.c_str());
 
 			// Same?
 			if (_tcscmp(strFileTitle.c_str(), strFileTitleOld.c_str()) == 0)
 				return;
 
-			TCHAR			szFileNew[MAX_PATH];
-			FileGetPath(szFileNew, CountOf(szFileNew), pSel->strUrl.c_str());
-			_tcscat_safe(szFileNew, CountOf(szFileNew), strFileTitle.c_str());
-			_tcscat_safe(szFileNew, CountOf(szFileNew), FileGetExt(pSel->strUrl.c_str()));
-			if (!MoveFile(pSel->strUrl.c_str(), szFileNew))
+			tstring strFileNew = FileGetPath(pSel->strUrl.c_str());
+			strFileNew += strFileTitle.c_str();
+			strFileNew += FileGetExt(pSel->strUrl.c_str());
+			if (!MoveFile(pSel->strUrl.c_str(), strFileNew.c_str()))
 			{
 				m_pSkin->MessageOut(_TLT("Failed to rename lyrics file."));
 			}
@@ -356,12 +354,12 @@ public:
 				TCHAR	szAssociateLyr[MAX_PATH];
 				if (g_LyricSearch.GetAssociateLyrics(m_strMediaKey.c_str(), szAssociateLyr, CountOf(szAssociateLyr))
 					&& _tcscmp(szAssociateLyr, pSel->strUrl.c_str()) == 0)
-					g_LyricSearch.AssociateLyrics(m_strMediaKey.c_str(), szFileNew);
+					g_LyricSearch.AssociateLyrics(m_strMediaKey.c_str(), strFileNew.c_str());
 
-				pSel->strUrl = szFileNew;
+				pSel->strUrl = strFileNew;
 
 				int			nSel = m_pLyricsList->GetNextSelectedItem(-1);
-				m_pLyricsList->SetItemText(nSel, COL_FROM, szFileNew);
+				m_pLyricsList->SetItemText(nSel, COL_FROM, strFileNew.c_str());
 			}
 		}
 
@@ -424,8 +422,7 @@ public:
 				if (!pSel || LyrSrcTypeFromName(pSel->strUrl.c_str()) != LST_FILE)
 					break;
 
-				tstring		strTitle;
-				FileGetTitle(pSel->strUrl.c_str(), strTitle);
+				tstring		strTitle = FileGetTitle(pSel->strUrl.c_str());
 
 				SetExPool(_T("FileTitle"), strTitle.c_str());
 				m_pContainer->SwitchToPage(CPageRename::ClassName(), true, R_CODE_RENAME_LYR, true);
@@ -687,9 +684,7 @@ protected:
 		uint32			nTimeStart = GetTickCount();
 		const int		nAcceptableCostTime = 500;
 
-		strFullTitle = m_strArtist;
-		strFullTitle += _T(" - ");
-		strFullTitle += m_strTitle;
+		strFullTitle = FormatMediaTitle(m_strArtist.c_str(), m_strTitle.c_str());
 
 		g_LyricSearch.SearchAllMatchLyrics(m_strSongFile.c_str(), strFullTitle.c_str(), m_vResultsLocal);
 

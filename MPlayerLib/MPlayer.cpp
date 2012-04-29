@@ -1190,11 +1190,10 @@ MLRESULT CMPlayer::LoadMediaTagInfo(IMedia *pMedia, bool bForceReload)
 	if (artist.size() == 0 && title.size() == 0)
 	{
 		tstring		strArtist, strTitle;
-		if (AnalysisLyricsFileNameEx(strArtist, strTitle, FileGetName(url.c_str())))
-		{
-			pMedia->SetAttribute(MA_ARTIST, strArtist.c_str());
-			pMedia->SetAttribute(MA_TITLE, strTitle.c_str());
-		}
+		AnalysisLyricsFileNameEx(strArtist, strTitle, url.c_str());
+
+		pMedia->SetAttribute(MA_ARTIST, strArtist.c_str());
+		pMedia->SetAttribute(MA_TITLE, strTitle.c_str());
 	}
 
 	return ERR_OK;
