@@ -20,7 +20,6 @@
 		DC2667950BD9410900B4ED68 /* iTunesAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 01285C0200CC31B17F000001 /* iTunesAPI.h */; };
 		DC2667960BD9410900B4ED68 /* iTunesVisualAPI.h in Headers */ = {isa = PBXBuildFile; fileRef = 01285C0300CC31B17F000001 /* iTunesVisualAPI.h */; };
 		DC2667990BD9410900B4ED68 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C167DFE841241C02AAC07 /* InfoPlist.strings */; };
-		DC26679A0BD9410900B4ED68 /* ReadMe.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 0103924500CE94127F000001 /* ReadMe.rtf */; };
 		DC26679C0BD9410900B4ED68 /* iTunesPlugInMac.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01285C0700CC38597F000001 /* iTunesPlugInMac.mm */; };
 		DC61BBEB13CBD871008AD92E /* ConfigurePanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = DC61BBE913CBD871008AD92E /* ConfigurePanel.xib */; };
 		DC8CE6DF13A31B4500963E07 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DC8CE6DE13A31B4500963E07 /* Cocoa.framework */; };
@@ -38,7 +37,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		0103924500CE94127F000001 /* ReadMe.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ReadMe.rtf; sourceTree = "<group>"; };
 		01285C0200CC31B17F000001 /* iTunesAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunesAPI.h; sourceTree = "<group>"; };
 		01285C0300CC31B17F000001 /* iTunesVisualAPI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iTunesVisualAPI.h; sourceTree = "<group>"; };
 		01285C0700CC38597F000001 /* iTunesPlugInMac.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = iTunesPlugInMac.mm; sourceTree = "<group>"; };
@@ -89,7 +87,6 @@
 			isa = PBXGroup;
 			children = (
 				5F5CF65B1548431D00FC88A6 /* BaseMac.xcodeproj */,
-				0103924500CE94127F000001 /* ReadMe.rtf */,
 				08FB77AFFE84173DC02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
 				089C1671FE841209C02AAC07 /* External Frameworks and Libraries */,
@@ -240,7 +237,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DC2667990BD9410900B4ED68 /* InfoPlist.strings in Resources */,
-				DC26679A0BD9410900B4ED68 /* ReadMe.rtf in Resources */,
 				DC61BBEB13CBD871008AD92E /* ConfigurePanel.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

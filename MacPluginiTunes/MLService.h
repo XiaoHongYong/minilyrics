@@ -15,6 +15,8 @@ public:
 	{
 		memset(&m_mlInfo, 0, sizeof(m_mlInfo));
 	}
+	
+	bool Init(LPCSTR pipeName);
 
 	void SendPlayerInfo(PlayerInfo &playerInfo)
 		{ SendMessage(M2M_PLAYER_INFO, &playerInfo, sizeof(PlayerInfo)); }

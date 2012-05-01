@@ -34,6 +34,8 @@ CPlayerServiceBase::~CPlayerServiceBase(void)
 
 bool CPlayerServiceBase::Create()
 {
+	m_msgPipe.Open(SZ_PIPE_MINILYRICS_NAME, true);
+
 	pthread_create(&g_threadMsg, NULL, ThreadMsg, NULL);
 	g_bQuitMsg = false;
 
@@ -48,6 +50,8 @@ void CPlayerServiceBase::Destroy()
 		pthread_join(g_threadMsg, NULL);
 		g_threadMsg = 0;
 	}
+	
+	m_msgPipe.Close();
 }
 
 bool CPlayerServiceBase::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)

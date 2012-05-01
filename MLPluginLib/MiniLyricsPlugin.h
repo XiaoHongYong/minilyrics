@@ -182,8 +182,16 @@ struct MLInfo
 #endif
 };
 
+#ifdef _WIN32
+
 // The windows class name of MiniLyrics service
 #define SZ_MINILYRICS_SERVICE_CLASS_NAME		_T("MiniLyricsServiceV1")
 
 // The window class name of player plugin service
 #define SZ_PLUGIN_SERVICE_CLASS_NAME			_T("MLPluginServiceV1")
+
+#else // #ifdef _WIN32
+
+#define SZ_PIPE_MINILYRICS_NAME			"/tmp/MiniLyrics_service.pipe"
+
+#endif // #ifdef _WIN32

@@ -8,8 +8,8 @@ public:
 	//
 	// Player service interface
 	//
-	bool Create();
-	void Destroy();
+	virtual bool Create();
+	virtual void Destroy();
 
 	virtual void OnGetInfo(PlayerInfo &playerInfo) = 0;
 

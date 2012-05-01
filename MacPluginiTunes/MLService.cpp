@@ -7,10 +7,12 @@ CMLService	g_MLService;
 // Launch "MiniLyrics.exe /Pipe pipe_name /Player "iTunes"" to start MiniLyrics
 BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bManual)
 {
-	//pPlayerService->Create();
+	g_MLService.Init(pipeName);
 
 	char	szMiniLyricsExe[MAX_PATH];
 	strcpy(szMiniLyricsExe, "/MiniLyrics.app");
+
+	pPlayerService->Create();
 
 	// char	szCmdLine[MAX_PATH];
 	// sprintf_s(szCmdLine, CountOf(szCmdLine), "%s /Pipe %s", szMiniLyricsExe, pipeName);
@@ -22,7 +24,7 @@ BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bMa
 
 void DisconnectMiniLyrics(CPlayerServiceBase *pPlayerService)
 {
-	//pPlayerService->Destroy();
+	pPlayerService->Destroy();
 	
 	if (g_MLService.IsValid())
 		g_MLService.OnDisconnected();
@@ -58,6 +60,11 @@ inline MLMediaInfo *NewMLMediaInfo(LPCSTR artist, LPCSTR album, LPCSTR title, LP
 	ASSERT(offset * sizeof(char) + sizeof(MLMediaInfo) < sizeInfo);
 
 	return info;
+}
+
+bool CMLService::Init(LPCSTR pipeName)
+{
+	return m_msgPipeMiniLyrics.Open(pipeName, false);
 }
 
 void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle, unsigned long nMediaLength, int hasVideo)

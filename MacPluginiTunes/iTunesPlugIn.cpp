@@ -373,7 +373,7 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 /*		case kVisualPluginPauseMessage:
 			g_Player.m_playerState = PS_PAUSED;
 			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
-			break;
+			break;*/
 
 		/*
 		 Sent when the player unpauses.  iTunes does not currently use pause or unpause.
