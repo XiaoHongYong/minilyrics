@@ -28,7 +28,7 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_EXIST, _T("Exist") },
 	{ ERR_NOT_FOUND, _T("Not found.") },
 
-	{ ERR_NET_HOST_NOT_FOUND, _T("Ineternet connection may be down, no such host is known.") },
+	{ ERR_NET_HOST_NOT_FOUND, _T("Internet connection may be down, no such host is known.") },
 	{ ERR_NOT_RECIVED_ALL, _T("The data packet didn't receive the rest data.") },
 
 	{ ERR_NOT_SUPPORT_FILE_FORMAT, _T("The file may not be supported.") },

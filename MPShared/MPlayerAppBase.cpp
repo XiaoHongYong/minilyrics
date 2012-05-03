@@ -142,6 +142,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 		}
 #endif
 	case SN_HTTP_DLSKIN:	return _T("http://www.zikiplayer.com/skins.htm");
+	case SN_HTTP_FAQ_INET:	return _T("http://www.zikiplayer.com/mlfaq-ineterror.htm");
 	case SN_HTTP_BBS:		return _T("http://forum.zikiplayer.com");
 	case SN_HTTP_ML_VER:	return _T("http://www.zikiplayer.com/zpver.xml");
 	case SN_HTTP_HELP:				return _T("http://www.zikiplayer.com/help.htm");
@@ -166,6 +167,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 		case SN_HTTP_DOMAIN:	return _T("http://www.data4me.de");
 		case SN_HTTP_REGISTER:	return _T("http://www.crintsoft.com/buy_rnl.htm");
 		case SN_HTTP_DLSKIN:	return _T("http://www.data4me.de/mlskin.htm");
+		case SN_HTTP_FAQ_INET:	return _T("http://www.data4me.com/mlfaq-ineterror.htm");
 		case SN_HTTP_BBS:		return _T("http://forum.viewlyrics.com");
 		case SN_HTTP_ML_VER:	return _T("http://viewlyrics.com/mlver.xml");
 		case SN_HTTP_HELP:				return _T("http://www.data4me.de/help.htm");
@@ -188,6 +190,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 	case SN_HTTP_DOMAIN:	return _T("http://www.crintsoft.com");
 	case SN_HTTP_REGISTER:	return _T("http://www.crintsoft.com/mlbuy.htm");
 	case SN_HTTP_DLSKIN:	return _T("http://www.crintsoft.com/mlskin.htm");
+	case SN_HTTP_FAQ_INET:	return _T("http://www.crintsoft.com/mlfaq-ineterror.htm");
 	case SN_HTTP_BBS:		return _T("http://forum.viewlyrics.com");
 	case SN_HTTP_ML_VER:	return _T("http://viewlyrics.com/mlver.xml");
 	case SN_HTTP_HELP:				return _T("http://www.crintsoft.com/help.htm");

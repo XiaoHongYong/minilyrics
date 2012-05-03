@@ -581,7 +581,7 @@ int CMLData::SaveLyricsInSongOfM4a()
 {
 	// Save lyrics in m4a files
 	tstring		str;
-	ToString(str, FT_LYRICS_LRC, TRUE);
+	ToString(str, FT_LYRICS_TXT, TRUE);
 
 	CM4aTag tag;
 	int nRet = tag.Open(m_strSongFile.c_str(), true, false);
