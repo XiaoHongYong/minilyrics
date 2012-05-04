@@ -363,7 +363,7 @@ void ID3v2TextUserDefined::SetValue(LPCTSTR szDescription, LPCTSTR szValue)
 
 void ID3v2TextUserDefined::SetValueAndOptimizeEncoding(LPCTSTR szDescription, LPCTSTR szValue)
 {
-	if (m_EncodingType == IET_ANSI && !IsAnsiStr(szDescription) && !IsAnsiStr(szValue))
+	if (m_EncodingType == IET_ANSI && (!IsAnsiStr(szDescription) || !IsAnsiStr(szValue)))
 		m_EncodingType = IET_UCS2LE_BOM;
 	SetValue(szDescription, szValue);
 }

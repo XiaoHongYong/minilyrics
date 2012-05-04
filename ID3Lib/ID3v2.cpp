@@ -90,10 +90,10 @@ ID3v2UnsynchLyrics::ID3v2UnsynchLyrics()
 
 void ID3v2UnsynchLyrics::SetValueAndOptimizeEncoding(LPCTSTR szDescription, LPCTSTR szLyrics)
 {
-	if (!IsAnsiStr(szDescription) && !IsAnsiStr(szLyrics))
-		m_encodingType = IET_UCS2LE_BOM;
-	else
+	if (IsAnsiStr(szDescription) && IsAnsiStr(szLyrics))
 		m_encodingType = IET_ANSI;
+	else
+		m_encodingType = IET_UCS2LE_BOM;
 
 	m_strContentDesc = szDescription;
 	m_strLyrics = szLyrics;
