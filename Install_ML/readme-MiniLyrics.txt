@@ -1,3 +1,7 @@
+MiniLyrics 7.4.10
+Fixed: The embedded lyrics saved in MP3 file may not be opened correctly by iPod, iTunes.
+Fixed: Some other small issues.
+
 MiniLyrics 7.4.8
 New: Support load embedded lyrics in .KAR files.
 New: Filter radio station names in media artist and title.
