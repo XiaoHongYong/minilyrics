@@ -8,6 +8,8 @@ BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bMa
 
 void DisconnectMiniLyrics(CPlayerServiceBase *pPlayerService);
 
+void Log(LPCTSTR szFormat, ...);
+
 class CMLService
 {
 public:

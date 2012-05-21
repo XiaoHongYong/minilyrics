@@ -10,6 +10,8 @@ volatile bool g_bQuitMsg = false;
 LPVOID CPlayerServiceBase::ThreadMsg(LPVOID param)
 {
 	CPlayerServiceBase *pService = (CPlayerServiceBase *)param;
+	ASSERT(pService != NULL);
+	Log("Enter CPlayerServiceBase::ThreadMsg");
 
 	string data;
 	uint32 msg = 0;
@@ -34,9 +36,11 @@ CPlayerServiceBase::~CPlayerServiceBase(void)
 
 bool CPlayerServiceBase::Create()
 {
+	Log("CPlayerServiceBase::Create()");
+
 	m_msgPipe.Open(SZ_PIPE_MINILYRICS_NAME, true);
 
-	pthread_create(&g_threadMsg, NULL, ThreadMsg, NULL);
+	pthread_create(&g_threadMsg, NULL, ThreadMsg, this);
 	g_bQuitMsg = false;
 
 	return true;
@@ -56,6 +60,8 @@ void CPlayerServiceBase::Destroy()
 
 bool CPlayerServiceBase::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 {
+	Log("Got service message from MiniLyrics: %d", msg);
+
 	// MessageToPlayer
 	switch (msg)
 	{

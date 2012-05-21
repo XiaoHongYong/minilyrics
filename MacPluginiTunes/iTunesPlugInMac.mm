@@ -426,18 +426,21 @@ OSStatus iTunesPluginMainMachO(OSType message, PluginMessageInfo * messageInfo, 
 	{
 		case kPluginInitMessage:
 		{
+			Log("Init: kPluginInitMessage");
 			status = RegisterVisualPlugin(messageInfo);
 			RunMiniLyrics(SZ_MSG_PIPE, &g_Player);
 		}
 		break;
 		case kPluginCleanupMessage:
 		{
+			Log("Quit: kPluginCleanupMessage");
 			DisconnectMiniLyrics(&g_Player);
 			status = noErr;
 		}
 		break;
 			
 		default:
+			Log("Unknown iTunesPluginMainMachO message");
 			status = unimpErr;
 			break;
 	}

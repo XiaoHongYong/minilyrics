@@ -153,8 +153,6 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 	visualPluginData = (VisualPluginData*) refCon;
 	
 	status = noErr;
-	
-	mkfifo("/tmp/MiniLyrics.fifo", 0);
 
 	switch (message)
 	{
@@ -164,6 +162,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/		
 		case kVisualPluginInitMessage:
 		{
+			Log("MSG: Init Visual Plugin");
+
 			visualPluginData = (VisualPluginData *)calloc(1, sizeof(VisualPluginData));
 			if (visualPluginData == NULL)
 			{
@@ -182,6 +182,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/		
 		case kVisualPluginCleanupMessage:
 		{
+			Log("MSG: Cleanup Visual Plugin");
+
 			if (visualPluginData != NULL)
 				free(visualPluginData);
 			break;
@@ -193,6 +195,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		case kVisualPluginEnableMessage:
 		case kVisualPluginDisableMessage:
 		{
+			Log("MSG: Enable/Disable");
+
 			break;
 		}
 		/*
@@ -203,6 +207,7 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginIdleMessage:
 		{
+			// Log("MSG: Idle: %x", messageInfo);
 			break;
 		}			
 		/*
@@ -211,6 +216,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginConfigureMessage:
 		{
+			Log("MSG: Configure");
+
 			status = ConfigureVisual(visualPluginData);
 			break;
 		}
@@ -220,6 +227,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginActivateMessage:
 		{
+			Log("MSG: Activate");
+
 			status = ActivateVisual(visualPluginData, messageInfo->u.activateMessage.view, messageInfo->u.activateMessage.options);
 
 			// note: do not draw here if you can avoid it, a draw message will be sent as soon as possible
@@ -233,6 +242,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginDeactivateMessage:
 		{
+			Log("MSG: Deactivate");
+
 			UpdateTrackInfo(visualPluginData, NULL, NULL);
 
 			status = DeactivateVisual(visualPluginData);
@@ -243,6 +254,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginWindowChangedMessage:
 		{
+			Log("MSG: Window changed");
+
 			status = MoveVisual(visualPluginData, messageInfo->u.windowChangedMessage.options);
 			break;
 		}
@@ -253,6 +266,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginFrameChangedMessage:
 		{
+			Log("MSG: Frame Changed");
+
 			status = ResizeVisual(visualPluginData);
 			break;
 		}
@@ -266,6 +281,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginPulseMessage:
 		{
+			Log("MSG: Pulse");
+
 			PulseVisual(visualPluginData,
 						 messageInfo->u.pulseMessage.timeStampID,
 						 messageInfo->u.pulseMessage.renderData,
@@ -283,6 +300,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginDrawMessage:
 		{
+			Log("MSG: Draw");
+
 			#if !USE_SUBVIEW
 			DrawVisual(visualPluginData);
 			#endif
@@ -293,6 +312,15 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginPlayMessage:
 		{
+			ITTrackInfo *	trackInfo = messageInfo->u.playMessage.trackInfo;
+			ITStreamInfo *	streamInfo = messageInfo->u.playMessage.streamInfo;
+
+			Log("MSG: Play - filename. %d, %s", trackInfo->fileName[0], trackInfo->fileName + 1);
+			Log("MSG: Play - filename valid: %s", (trackInfo->validFields & kITTIFileNameFieldMask) ? "true" : "false");
+			Log("MSG: Play - name. %d, %s", trackInfo->name[0], trackInfo->name + 1);
+			
+			Log("MSG: Play(stream)->. %d, %s", streamInfo->streamURL[0], streamInfo->streamURL + 1);
+
 			g_Player.OnMediaChanged(messageInfo->u.playMessage.trackInfo);
 			g_Player.m_playerState = PS_PLAYING;
 			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
@@ -312,6 +340,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginChangeTrackMessage:
 		{
+			Log("MSG: Track changed. %s", messageInfo->u.changeTrackMessage.trackInfo->fileName + 1);
+
 			g_Player.OnMediaChanged(messageInfo->u.changeTrackMessage.trackInfo);
 			UpdateTrackInfo(visualPluginData, messageInfo->u.changeTrackMessage.trackInfo, messageInfo->u.changeTrackMessage.streamInfo);
 
@@ -327,6 +357,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginCoverArtMessage:
 		{
+			Log("MSG: CoverArt");
+
 			UpdateArtwork(	visualPluginData,
 							messageInfo->u.coverArtMessage.coverArt,
 							messageInfo->u.coverArtMessage.coverArtSize,
@@ -340,6 +372,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginStopMessage:
 		{
+			Log("MSG: Stop");
+
 			visualPluginData->playing = false;
 			
 			ResetRenderData(visualPluginData);
@@ -356,13 +390,11 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 		*/
 		case kVisualPluginSetPositionMessage:
 		{
-			if (g_Player.m_playerState == PS_PLAYING)
-				g_Player.m_dwBegTickCount = GetTickCount() - messageInfo->u.setPositionMessage.positionTimeInMS;
-			else
-			{
-				g_Player.m_dwPos = messageInfo->u.setPositionMessage.positionTimeInMS;
-				g_MLService.OnPlayPosChanged(g_Player.m_dwPos);
-			}
+			Log("MSG: Set position");
+
+			g_Player.m_dwBegTickCount = GetTickCount() - messageInfo->u.setPositionMessage.positionTimeInMS;
+			g_Player.m_dwPos = messageInfo->u.setPositionMessage.positionTimeInMS;
+			g_MLService.OnPlayPosChanged(g_Player.m_dwPos);
 			break;
 		}
 
@@ -386,7 +418,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 			break;*/
 
 		default:
-		{
+		{			
+			Log("Unhandled message: %d", message);
 			status = unimpErr;
 			break;
 		}
@@ -413,9 +446,9 @@ OSStatus RegisterVisualPlugin(PluginMessageInfo * messageInfo)
 	playerMessageInfo.u.registerVisualPluginMessage.options					= GetVisualOptions();
 	playerMessageInfo.u.registerVisualPluginMessage.handler					= (VisualPluginProcPtr)VisualPluginHandler;
 	playerMessageInfo.u.registerVisualPluginMessage.registerRefCon			= 0;
-	playerMessageInfo.u.registerVisualPluginMessage.creator					= kTVisualPluginCreator;
+	playerMessageInfo.u.registerVisualPluginMessage.creator					= (OSType)kTVisualPluginCreator;
 	
-	playerMessageInfo.u.registerVisualPluginMessage.pulseRateInHz			= kStoppedPulseRateInHz;	// update my state N times a second
+	playerMessageInfo.u.registerVisualPluginMessage.pulseRateInHz			= kPlayingPulseRateInHz;	// update my state N times a second
 	playerMessageInfo.u.registerVisualPluginMessage.numWaveformChannels		= 2;
 	playerMessageInfo.u.registerVisualPluginMessage.numSpectrumChannels		= 2;
 	

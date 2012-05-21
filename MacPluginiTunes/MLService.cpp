@@ -4,6 +4,35 @@
 
 CMLService	g_MLService;
 
+
+void Log(LPCTSTR szFormat, ...)
+{
+	static int _fd = -1;
+	if (_fd == -1)
+	{
+		LPCTSTR SZ_PIPE_NAME = "/tmp/debug.pipe";
+		int nRet = mkfifo(SZ_PIPE_NAME, S_IRWXO | S_IRWXG | S_IRWXU);
+		if (nRet != 0 && errno != EEXIST)
+			return;
+		
+		_fd = ::open(SZ_PIPE_NAME, O_NONBLOCK | O_WRONLY);
+		if (_fd == -1)
+			return;
+	}
+	
+	va_list		args;
+	va_start(args, szFormat);
+	TCHAR buf[1024];
+	int nBuf = _vstprintf_s(buf, CountOf(buf), szFormat, args);
+	va_end(args);
+	
+	if (nBuf > 0) {
+		::write(_fd, buf, nBuf);
+		::write(_fd, "\n", 1);
+	}
+}
+
+
 // Launch "MiniLyrics.exe /Pipe pipe_name /Player "iTunes"" to start MiniLyrics
 BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bManual)
 {
@@ -13,6 +42,7 @@ BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bMa
 	strcpy(szMiniLyricsExe, "/MiniLyrics.app");
 
 	pPlayerService->Create();
+	pPlayerService->OnConnected();
 
 	// char	szCmdLine[MAX_PATH];
 	// sprintf_s(szCmdLine, CountOf(szCmdLine), "%s /Pipe %s", szMiniLyricsExe, pipeName);
@@ -77,6 +107,8 @@ void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR s
 		szAlbum = "";
 	if (szTitle == NULL)
 		szTitle = "";
+
+	::Log("OnMediaInfoChanged, url: %s, %s, %s, %s", szMediaUrl, szArtist, szAlbum, szTitle);
 
 	MLMediaInfo *info = NewMLMediaInfo(szArtist, szAlbum, szTitle, szMediaUrl, nMediaLength, hasVideo);
 
