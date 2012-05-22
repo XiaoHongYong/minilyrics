@@ -77,11 +77,10 @@
 #include "../widget/widget.h"
 #endif
 
-// Local Header Files
-
-// TODO: reference additional headers your program requires here
-
-//{{AFX_INSERT_LOCATION}}
-// Microsoft eMbedded Visual C++ will insert additional declarations immediately before the previous line.
+#ifndef _MPLAYER
+#ifdef _WIN32_DESKTOP
+#define _MINILYRICS_WIN32
+#endif
+#endif
 
 #endif // !defined(AFX_STDAFX_H__57A8F822_10B6_4939_B51A_4E1E84678795__INCLUDED_)

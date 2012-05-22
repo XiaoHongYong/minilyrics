@@ -30,12 +30,6 @@
 
 #include "resource.h"
 
-#ifndef _MPLAYER
-#ifdef _WIN32_DESKTOP
-#define _MINILYRICS_WIN32
-#endif
-#endif
-
 #ifdef _WIN32_DESKTOP
 #endif
 
