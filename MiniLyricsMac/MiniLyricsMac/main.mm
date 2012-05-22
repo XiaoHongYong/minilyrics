@@ -14,5 +14,7 @@ int main(int argc, char *argv[])
 {
 	InitBaseFrameWork(argc, argv, "ZikiPlayer.log", "ZikiPlayer.ini", SZ_SECT_UI);
 
+	g_playerMgr.Init(argc, argv);
+
 	return NSApplicationMain(argc, (const char **)argv);
 }

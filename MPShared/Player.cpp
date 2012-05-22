@@ -15,8 +15,16 @@
 #endif
 
 #ifndef _MPLAYER
+
+#ifdef _MAC_OSX
+#include "../MiniLyrics/mac/MLPlayerMgr.h"
+#endif
+
+#ifdef _WIN32
 #include "../MiniLyrics/win32/MLPlayerMgr.h"
 #endif
+
+#endif // #ifndef _MPLAYER
 
 CPlayer			g_Player;
 CPlayerEventDispatcher		g_playerEventDispatcher;
@@ -192,21 +200,8 @@ void CPlayer::OnInitOfMiniLyrics()
 void CPlayer::OnQuitOfMiniLyrics()
 {
 	g_playerEventDispatcher.Quit();
-	
-	if (m_playerInfo.hWndPluginService)
-		Disconnect();
-}
 
-void CPlayer::QueryInfo(HWND hWndPluginService)
-{
-	HWND hWnd = GetMLSericeWindow();
-	
-	COPYDATASTRUCT	cds;
-	cds.cbData = sizeof(hWnd);
-	cds.dwData = M2P_QUERY_INFO;
-	cds.lpData = &hWnd;
-	ASSERT(hWndPluginService);
-	::SendMessageTimeout(hWndPluginService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds, SMTO_ABORTIFHUNG | SMTO_NORMAL, 1000, NULL);
+	Disconnect();
 }
 
 void CPlayer::Connect(PlayerInfo &playerInfo)
@@ -214,8 +209,10 @@ void CPlayer::Connect(PlayerInfo &playerInfo)
 	m_playerInfo = playerInfo;
 
 	MLInfo		mlInfo;
+#ifdef _WIN32
 	mlInfo.hWndMLService = GetMLSericeWindow();
 	ASSERT(mlInfo.hWndMLService);
+#endif
 	SendMessage(M2P_CONNECTED, &mlInfo, sizeof(mlInfo));
 
 	LPCTSTR		playerName = GetPlayerName();
@@ -234,11 +231,13 @@ void CPlayer::Connect(PlayerInfo &playerInfo)
 	else
 		m_PlayerType = P_UNKNOWN;
 
+#ifdef _WIN32
 	if (IsSupportEmbedded() && IsEmptyString(m_playerInfo.embeddedSkinName))
 	{
 		wcscpy_safe(m_playerInfo.embeddedSkinName, CountOf(m_playerInfo.embeddedSkinName),
 			_TLM("Embedded Skin"));
 	}
+#endif
 }
 
 void CPlayer::Disconnect()
@@ -246,6 +245,7 @@ void CPlayer::Disconnect()
 	SendMessage(M2P_DISCONNECT);
 }
 
+#ifdef _MINILYRICS_WIN32
 void CPlayer::SendMainWndHandle()
 {
 	HWND	hWndML = CMPlayerAppBase::GetMainWnd()->GetHandle();
@@ -267,14 +267,6 @@ void CPlayer::EndEmbeddedSkin()
 	SendMessage(M2P_END_EMBEDDED_SKIN);
 }
 
-LPCTSTR CPlayer::GetPlayerName() const
-{
-	if (m_spPlayer)
-		return _T("Lyrics Downloader");
-	else
-		return m_playerInfo.playerName;
-}
-
 void CPlayer::GetCurSkinPath(TCHAR *lpszBuffer, int nBufSize)
 {
 	if (m_spPlayer)
@@ -289,7 +281,35 @@ HWND CPlayer::GetMainWnd() const
 		return NULL;
 	else
 		return m_playerInfo.hWndPlayer;
-} 
+}
+
+void CPlayer::SendMessage(MessageToPlayer message, LPVOID param, size_t sizeParam)
+{
+	ASSERT(m_playerInfo.hWndPluginService);
+	
+	COPYDATASTRUCT	cds;
+	cds.cbData = sizeParam;
+	cds.dwData = message;
+	cds.lpData = param;
+	::SendMessage(m_playerInfo.hWndPluginService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds);
+}
+
+#else // _MINILYRICS_WIN32
+
+void CPlayer::SendMessage(MessageToPlayer message, LPVOID param, size_t sizeParam)
+{
+	g_playerMgr.SendMessageToPlayer(message, param, sizeParam);
+}
+
+#endif // _MINILYRICS_WIN32
+
+LPCTSTR CPlayer::GetPlayerName() const
+{
+	if (m_spPlayer)
+		return _T("Lyrics Downloader");
+	else
+		return m_playerInfo.playerName;
+}
 
 #else // #ifndef _MPLAYER
 
@@ -1178,7 +1198,12 @@ void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 #endif
 			tstring		strConverted;
 
+#ifdef _WIN32
 			UriUnescape(m_szSrcMedia, strConverted, ED_UTF8);
+#else
+			UriUnescape(m_szSrcMedia, strConverted);
+#endif
+
 			_tcscpy_safe(m_szSrcMedia, CountOf(m_szSrcMedia), strConverted.c_str());
 		}
 	}

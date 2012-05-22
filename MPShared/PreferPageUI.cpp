@@ -213,7 +213,7 @@ public:
 		m_pSkinList->GetItemText(nSel, 0, strSkinName);
 
 		// Set default page, when skin changes.
-#ifndef _MPLAYER
+#ifdef _MINILYRICS_WIN32
 		if (_tcsicmp(strSkinName.c_str(), m_strEmbeddedSkinName.c_str()) == 0)
 		{
 			CMPlayerAppBase::GetInstance()->SetReloadEmbeddedTheme();
@@ -254,7 +254,7 @@ public:
 
 		tstring strDefaultSkin = CSkinApp::GetInstance()->GetDefaultSkin();
 
-#if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
+#ifdef _MINILYRICS_WIN32
 		m_strEmbeddedSkinName = _T("");
 		if (CMPlayerAppBase::GetInstance()->IsSupportEmbedded())
 		{

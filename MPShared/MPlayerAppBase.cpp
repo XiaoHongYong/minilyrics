@@ -393,7 +393,7 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 		GetMPSkinFactory()->SetClickThrough(true);
 #endif
 
-#ifndef _MPLAYER
+#ifdef _MINILYRICS_WIN32
 	g_Player.SendMainWndHandle();
 
 	if (g_Profile.GetProfileBool(_T("FloatingLyr"), false))
@@ -446,8 +446,6 @@ bool CMPlayerAppBase::Init()
 	MLRunUnitTest();
 #endif // _CPPUNIT_TEST
 
-	int			nRet = 0;
-
 	g_LyricSearch.Init();
 
 	g_LyricsDownloader.Init();
@@ -486,7 +484,7 @@ bool CMPlayerAppBase::InitLoadSkin()
 	int nRet;
 
 	// create main skin window.
-#ifndef _MPLAYER
+#ifdef _MINILYRICS_WIN32
 	bool bMPSkinMode = g_Profile.GetProfileBool(_T("MPSkinMode"), true);
 	if (!bMPSkinMode)
 	{
@@ -906,7 +904,7 @@ int CMPlayerAppBase::MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption)
 int CMPlayerAppBase::ChangeSkinByUserCmd(LPCTSTR szSkin)
 {
 	// Set default page, when skin changes.
-#ifndef _MPLAYER
+#ifdef _MINILYRICS_WIN32
 	if (CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
 		g_Profile.WriteProfileInt(_T("MPSkinMode"), true);
 

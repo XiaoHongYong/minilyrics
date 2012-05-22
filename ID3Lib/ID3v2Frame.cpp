@@ -112,6 +112,6 @@ int CID3v2Frame::RenderFrameHdr(const ID3v2Header *pHeader, CCharBuffer &buff)
 #ifdef DEBUG
 void CID3v2Frame::DebugOutput()
 {
-	DBGLOG3(_T("FrameID: %S, length: %d, flag: %X"), m_framehdr.szFrameID, m_frameData.size(), m_framehdr.byFlags[0] << 8 | m_framehdr.byFlags[1]);
+	DBGLOG3(_T("FrameID: %d, length: %d, flag: %X"), m_framehdr.nFrameID, m_frameData.size(), m_framehdr.byFlags[0] << 8 | m_framehdr.byFlags[1]);
 }
 #endif

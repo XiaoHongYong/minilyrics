@@ -225,14 +225,14 @@ public:
 
 	void OnDestroy()
 	{
-#ifndef _MPLAYER
+#ifdef _MINILYRICS_WIN32
 		if (m_bInitailed)
 		{
 			ASSERT(_idWmp != UID_INVALID);
 			RegWriteProfileInt(HKEY_CURRENT_USER, _T("Software\\Microsoft\\MediaPlayer\\UIPlugins\\{46B5EE7F-3B6B-4079-A756-5EFC10B1F50B}"), 
 				_T("Running"), IsButtonChecked(_idWmp));
 		}
-#endif // #ifndef _MPLAYER
+#endif // #ifdef _MINILYRICS_WIN32
 
 		CPagePfBase::OnDestroy();
 	}

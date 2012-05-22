@@ -67,7 +67,7 @@ bool CPlayerServiceBase::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 	{
 	case M2P_QUERY_INFO:
 		{
-			ASSERT(lenData == sizeof(HWND));
+			// ASSERT(lenData == sizeof(HWND));
 
 			PlayerInfo playerInfo;
 			memset(&playerInfo, 0, sizeof(playerInfo));

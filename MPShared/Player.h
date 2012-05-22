@@ -8,6 +8,10 @@
 #include "../MLPluginLib/MiniLyricsPlugin.h"
 #endif
 
+#ifdef _MAC_OSX
+#include "../MiniLyrics/mac/MLPlayerMgr.h"
+#endif
+
 #define LRC_TITLE_MAX_LEN		128
 
 enum PLAYER_TYPE
@@ -44,8 +48,6 @@ public:
 	void OnQuitOfMiniLyrics();
 
 #ifdef _WIN32
-	static void QueryInfo(HWND hWndPluginService);
-
 	bool IsConnected() { return m_playerInfo.hWndPluginService != NULL; }
 #endif
 
@@ -53,50 +55,37 @@ public:
 	void Connect(PlayerInfo &playerInfo);
 	void Disconnect();
 
+#ifdef _MINILYRICS_WIN32
 	void SendMainWndHandle();
 
 	int SwitchToEmbeddedSkin();
 	void EndEmbeddedSkin();
-
-	bool IsSupportEmbedded() { return IsFlagSet(m_playerInfo.startupFlags, ML_SUPPORT_EMBEDDED); }
-	bool IsEmbeddedImmovable() { return IsFlagSet(m_playerInfo.startupFlags, ML_EMBEDDED_WND_IMMOVABLE); }
-
-	LPCTSTR GetPlayerName() const;
 
 	// Get player skin path
 	void GetCurSkinPath(TCHAR * lpszBuffer, int nBufSize) const;
 
 	HWND GetMainWnd() const;
 
+	// Get player skin path
+	LPCTSTR GetEmbeddedSkinName() const
+	{
+		return m_playerInfo.embeddedSkinName;
+	}
+#endif // #ifdef _MINILYRICS_WIN32
+
+	bool IsSupportEmbedded() { return IsFlagSet(m_playerInfo.startupFlags, ML_SUPPORT_EMBEDDED); }
+	bool IsEmbeddedImmovable() { return IsFlagSet(m_playerInfo.startupFlags, ML_EMBEDDED_WND_IMMOVABLE); }
+
+	LPCTSTR GetPlayerName() const;
+
 	const PlayerSkinInfo &GetPlayerSkinInfo() const
 		{ return m_skinInfo; }
 
 	BOOL IsFeatureSupported(MLStarupFlags feature)
 		{ return IsFlagSet(m_playerInfo.startupFlags, feature); }
-
-	// Get player skin path
-	LPCTSTR GetEmbeddedSkinName() const
-	{
-#ifdef _WIN32
-		return m_playerInfo.embeddedSkinName;
-#else
-		return "";
-#endif
-	}
+	
+	void SendMessage(MessageToPlayer message, LPVOID param = NULL, size_t sizeParam = 0);
 #endif // #ifndef _MPLAYER
-
-	void SendMessage(MessageToPlayer message, LPVOID param = NULL, size_t sizeParam = 0)
-	{
-#ifdef _WIN32
-		ASSERT(m_playerInfo.hWndPluginService);
-
-		COPYDATASTRUCT	cds;
-		cds.cbData = sizeParam;
-		cds.dwData = message;
-		cds.lpData = param;
-		::SendMessage(m_playerInfo.hWndPluginService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds);
-#endif
-	}
 
 	PLAYER_TYPE GetPlayerType() const { return m_PlayerType; }
 

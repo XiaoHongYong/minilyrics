@@ -9,7 +9,9 @@
 #else
 #define SZ_APP_ANALYTICS_PRODUCT_ID		_T("ML")
 
+#ifdef _WIN32
 #include "win32/PlayerPluginInstaller.h"
+#endif
 #endif
 
 // Ping type for MiniLyrics

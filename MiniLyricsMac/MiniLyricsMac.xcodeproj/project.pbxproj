@@ -10,6 +10,8 @@
 		5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */; };
 		5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */; };
 		5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */; };
+		5F65BB0F156A7EE500605207 /* MLPlayerMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F65BB0D156A7EE500605207 /* MLPlayerMgr.cpp */; };
+		5F65BB13156B19BE00605207 /* MsgPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F65BB11156B19BE00605207 /* MsgPipe.cpp */; };
 		5FB16205147017330084494F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB16204147017330084494F /* Cocoa.framework */; };
 		5FB1620F147017330084494F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5FB1620D147017330084494F /* InfoPlist.strings */; };
 		5FB16211147017330084494F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB16210147017330084494F /* main.mm */; };
@@ -324,6 +326,10 @@
 		5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MPlayerLib.xcodeproj; path = ../MPlayerLib/MPlayerLib.xcodeproj; sourceTree = "<group>"; };
 		5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sqlite3.cpp; path = ../../sqlite_cpp/Sqlite3.cpp; sourceTree = "<group>"; };
 		5F2BD53B149633C1003E7F5C /* Sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sqlite3.h; path = ../../sqlite_cpp/Sqlite3.h; sourceTree = "<group>"; };
+		5F65BB0D156A7EE500605207 /* MLPlayerMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MLPlayerMgr.cpp; path = ../../MiniLyrics/mac/MLPlayerMgr.cpp; sourceTree = "<group>"; };
+		5F65BB0E156A7EE500605207 /* MLPlayerMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLPlayerMgr.h; path = ../../MiniLyrics/mac/MLPlayerMgr.h; sourceTree = "<group>"; };
+		5F65BB11156B19BE00605207 /* MsgPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MsgPipe.cpp; path = ../../MacPluginiTunes/MsgPipe.cpp; sourceTree = "<group>"; };
+		5F65BB12156B19BE00605207 /* MsgPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MsgPipe.h; path = ../../MacPluginiTunes/MsgPipe.h; sourceTree = "<group>"; };
 		5FB16200147017330084494F /* MiniLyricsMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniLyricsMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FB16204147017330084494F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5FB16207147017330084494F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -356,7 +362,6 @@
 		5FBCCD1A14851B1500D7C64A /* MLProtocolMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLProtocolMac.xcodeproj; path = ../MLProtocol/MLProtocolMac.xcodeproj; sourceTree = "<group>"; };
 		5FBCCD8814851C4900D7C64A /* MLLibMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLLibMac.xcodeproj; path = ../MLLib/MLLibMac.xcodeproj; sourceTree = "<group>"; };
 		5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SkinMac.xcodeproj; path = ../Skin/SkinMac.xcodeproj; sourceTree = "<group>"; };
-		5FDC5598148A1F1B00C74E6A /* AutoBuild.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AutoBuild.h; path = ../../MPShared/AutoBuild.h; sourceTree = "<group>"; };
 		5FDC5599148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AutoProcessEmbeddedLyrics.cpp; path = ../../MPShared/AutoProcessEmbeddedLyrics.cpp; sourceTree = "<group>"; };
 		5FDC559A148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AutoProcessEmbeddedLyrics.h; path = ../../MPShared/AutoProcessEmbeddedLyrics.h; sourceTree = "<group>"; };
 		5FDC559B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CurMediaAlbumArt.cpp; path = ../../MPShared/CurMediaAlbumArt.cpp; sourceTree = "<group>"; };
@@ -621,7 +626,6 @@
 				5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */,
 				5F2BD53B149633C1003E7F5C /* Sqlite3.h */,
 				5FDC56A0148A23AC00C74E6A /* mac */,
-				5FDC5598148A1F1B00C74E6A /* AutoBuild.h */,
 				5FDC5599148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp */,
 				5FDC559A148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.h */,
 				5FDC559B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp */,
@@ -773,6 +777,7 @@
 				5FDC5647148A1F1B00C74E6A /* VersionUpdate.h */,
 				5FDC5648148A1F1B00C74E6A /* WaitingDlg.cpp */,
 				5FDC5649148A1F1B00C74E6A /* WaitingDlg.h */,
+				5FB16210147017330084494F /* main.mm */,
 				5FB16216147017330084494F /* MiniLyricsMacAppDelegate.h */,
 				5FB16217147017330084494F /* MiniLyricsMacAppDelegate.mm */,
 				5FB16219147017340084494F /* MainMenu.xib */,
@@ -790,7 +795,6 @@
 				5FB16233147697D20084494F /* pentagon.tif */,
 				5FB1620C147017330084494F /* MiniLyricsMac-Info.plist */,
 				5FB1620D147017330084494F /* InfoPlist.strings */,
-				5FB16210147017330084494F /* main.mm */,
 				5FB16212147017330084494F /* MiniLyricsMac-Prefix.pch */,
 				5FB16213147017330084494F /* Credits.rtf */,
 			);
@@ -904,6 +908,10 @@
 		5FDC56A0148A23AC00C74E6A /* mac */ = {
 			isa = PBXGroup;
 			children = (
+				5F65BB11156B19BE00605207 /* MsgPipe.cpp */,
+				5F65BB12156B19BE00605207 /* MsgPipe.h */,
+				5F65BB0D156A7EE500605207 /* MLPlayerMgr.cpp */,
+				5F65BB0E156A7EE500605207 /* MLPlayerMgr.h */,
 				5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */,
 				5F2BD4AC148BB9B8003E7F5C /* DlgChooseFont.h */,
 				5F2BD4AA148B3354003E7F5C /* PlayerEventDispatcher.h */,
@@ -1252,6 +1260,8 @@
 				5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */,
 				5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */,
 				5FB53E9514C19C2C0041938C /* ZPAnalyticsClient.cpp in Sources */,
+				5F65BB0F156A7EE500605207 /* MLPlayerMgr.cpp in Sources */,
+				5F65BB13156B19BE00605207 /* MsgPipe.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1371,6 +1381,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					_MAC_OSX,
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
@@ -1393,6 +1404,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
@@ -1409,7 +1421,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MiniLyricsMac/MiniLyricsMac-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
-					_MPLAYER,
 					_MAC_OSX,
 					"DEBUG=1",
 				);
@@ -1426,10 +1437,7 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MiniLyricsMac/MiniLyricsMac-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					_MPLAYER,
-					_MAC_OSX,
-				);
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				INFOPLIST_FILE = "MiniLyricsMac/MiniLyricsMac-Info.plist";

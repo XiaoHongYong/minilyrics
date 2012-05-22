@@ -64,7 +64,7 @@
 //	typedefs, structs, enums, etc.
 //-------------------------------------------------------------------------------------------------
 
-#define	kTVisualPluginCreator			'Crintsoft'
+#define	kTVisualPluginCreator			'CRST'
 
 #define	kTVisualPluginMajorVersion		1
 #define	kTVisualPluginMinorVersion		0

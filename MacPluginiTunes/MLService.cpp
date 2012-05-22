@@ -39,15 +39,29 @@ BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bMa
 	g_MLService.Init(pipeName);
 
 	char	szMiniLyricsExe[MAX_PATH];
-	strcpy(szMiniLyricsExe, "/MiniLyrics.app");
+	strcpy(szMiniLyricsExe, "/Users/showbrave/Library/Developer/Xcode/DerivedData/MiniLyricsMac-agclrmbubvezruavpgqfpggqmabs/Build/Products/Debug/MiniLyricsMac.app");
 
 	pPlayerService->Create();
 	pPlayerService->OnConnected();
 
 	// char	szCmdLine[MAX_PATH];
 	// sprintf_s(szCmdLine, CountOf(szCmdLine), "%s /Pipe %s", szMiniLyricsExe, pipeName);
-
-	execl(szMiniLyricsExe, "/Pipe", pipeName, NULL);
+	
+	pid_t child = fork();
+	if (child == 0)
+	{
+		int ret = execl("/usr/bin/open", "-a", szMiniLyricsExe, "--args", "/Pipe", pipeName, NULL);
+		if (ret == 0)
+			Log("Succeeded to start MiniLyrics.");
+		else
+			Log("Failed to start MiniLyrics: %s", strerror(errno));
+	}
+	else if (child == -1)
+		return false;
+	else {
+		int status = 0;
+		waitpid(child, &status, WNOHANG);
+	}
 
 	return true;
 }
@@ -94,7 +108,11 @@ inline MLMediaInfo *NewMLMediaInfo(LPCSTR artist, LPCSTR album, LPCSTR title, LP
 
 bool CMLService::Init(LPCSTR pipeName)
 {
-	return m_msgPipeMiniLyrics.Open(pipeName, false);
+	if (m_msgPipeMiniLyrics.Open(pipeName, false))
+		return true;
+
+	::Log("Failed to open MiniLyrics pipe: %s", pipeName);
+	return false;
 }
 
 void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR szAlbum, LPCSTR szTitle, unsigned long nMediaLength, int hasVideo)
@@ -119,6 +137,7 @@ void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR s
 
 void CMLService::SendMessage(MessageToML message, LPVOID param, size_t sizeParam)
 {
+	::Log("Send Message to ML: %d, OK: %d", message, m_msgPipeMiniLyrics.IsOK());
 	if (!m_msgPipeMiniLyrics.IsOK())
 		return;
 

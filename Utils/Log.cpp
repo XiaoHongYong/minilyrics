@@ -97,21 +97,37 @@ void LogTrace(LPVOID lpData, int nSize)
 	if (_hDebugWnd)
 		::SendMessage(_hDebugWnd, WM_COPYDATA, NULL, (LPARAM)&data);
 }
-#endif
+#else
 
-#ifdef _LINUX
-void LogTrace(LPVOID lpData, int nSize)
+
+void LogTraceToPipe(LPVOID lpData, int nSize)
 {
-	g_print("%s\n", (const char*)lpData);
+	static int _fd = -1;
+	if (_fd == -1)
+	{
+		LPCTSTR SZ_PIPE_NAME = "/tmp/debug.pipe";
+		int nRet = mkfifo(SZ_PIPE_NAME, S_IRWXO | S_IRWXG | S_IRWXU);
+		if (nRet != 0 && errno != EEXIST)
+			return;
+		
+		_fd = ::open(SZ_PIPE_NAME, O_NONBLOCK | O_WRONLY);
+		if (_fd == -1)
+			return;
+	}
+	
+	::write(_fd, lpData, nSize);
+	::write(_fd, "\n", 1);
 }
-#endif
 
-#ifdef _IPHONE
 void LogTrace(LPVOID lpData, int nSize)
 {
 	printf("%s\n", (const char*)lpData);
+	
+	LogTraceToPipe(lpData, nSize);
 }
+
 #endif
+
 
 /*
 |F%s|L%d|E%d|M%s
@@ -237,7 +253,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 
 	nLen = (int)_tcslen(szBuffer) + 1;
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 	LogTrace(szBuffer, nLen);
 #endif
 

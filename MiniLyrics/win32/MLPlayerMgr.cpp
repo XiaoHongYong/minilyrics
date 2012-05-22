@@ -21,6 +21,18 @@ HWND GetMLSericeWindow()
 	return g_playerMgr.GetHandle();
 }
 
+void QueryInfo(HWND hWndPluginService)
+{
+	HWND hWnd = GetMLSericeWindow();
+
+	COPYDATASTRUCT	cds;
+	cds.cbData = sizeof(hWnd);
+	cds.dwData = M2P_QUERY_INFO;
+	cds.lpData = &hWnd;
+	ASSERT(hWndPluginService);
+	::SendMessageTimeout(hWndPluginService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds, SMTO_ABORTIFHUNG | SMTO_NORMAL, 1000, NULL);
+}
+
 bool ProcessCmdLine(LPCTSTR szCmdLine, AppMode &appMode)
 {
 	// Parse command line
@@ -66,7 +78,7 @@ bool ProcessCmdLine(LPCTSTR szCmdLine, AppMode &appMode)
 		if (!g_playerMgr.IsValid())
 			g_playerMgr.Create();
 
-		CPlayer::QueryInfo(g_hWndPlayerServiceOnStartup);
+		QueryInfo(g_hWndPlayerServiceOnStartup);
 	}
 
 	return true;
@@ -191,7 +203,7 @@ void CMLPlayerMgr::QueryRunningPlayerInfo()
 		if (hWndPluginService == NULL)
 			break;
 
-		CPlayer::QueryInfo(hWndPluginService);
+		QueryInfo(hWndPluginService);
 	}
 }
 

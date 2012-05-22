@@ -34,8 +34,6 @@
 		5FBCCD7E14851BE700D7C64A /* MLProfile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCD5D14851BE700D7C64A /* MLProfile.h */; };
 		5FBCCD7F14851BE700D7C64A /* Register.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCD5E14851BE700D7C64A /* Register.cpp */; };
 		5FBCCD8014851BE700D7C64A /* Register.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCD5F14851BE700D7C64A /* Register.h */; };
-		5FBCCD8114851BE700D7C64A /* SearchCacheFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCD6014851BE700D7C64A /* SearchCacheFile.cpp */; };
-		5FBCCD8214851BE700D7C64A /* SearchCacheFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCD6114851BE700D7C64A /* SearchCacheFile.h */; };
 		5FBCCD8314851BE700D7C64A /* SncParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCD6214851BE700D7C64A /* SncParser.cpp */; };
 		5FBCCD8414851BE700D7C64A /* SncParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCD6314851BE700D7C64A /* SncParser.h */; };
 		5FBCCD8514851BE700D7C64A /* SrtParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCD6414851BE700D7C64A /* SrtParser.cpp */; };
@@ -75,8 +73,6 @@
 		5FBCCD5D14851BE700D7C64A /* MLProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLProfile.h; sourceTree = SOURCE_ROOT; };
 		5FBCCD5E14851BE700D7C64A /* Register.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Register.cpp; sourceTree = SOURCE_ROOT; };
 		5FBCCD5F14851BE700D7C64A /* Register.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Register.h; sourceTree = SOURCE_ROOT; };
-		5FBCCD6014851BE700D7C64A /* SearchCacheFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SearchCacheFile.cpp; sourceTree = SOURCE_ROOT; };
-		5FBCCD6114851BE700D7C64A /* SearchCacheFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SearchCacheFile.h; sourceTree = SOURCE_ROOT; };
 		5FBCCD6214851BE700D7C64A /* SncParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SncParser.cpp; sourceTree = SOURCE_ROOT; };
 		5FBCCD6314851BE700D7C64A /* SncParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SncParser.h; sourceTree = SOURCE_ROOT; };
 		5FBCCD6414851BE700D7C64A /* SrtParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SrtParser.cpp; sourceTree = SOURCE_ROOT; };
@@ -161,8 +157,6 @@
 				5FBCCD5D14851BE700D7C64A /* MLProfile.h */,
 				5FBCCD5E14851BE700D7C64A /* Register.cpp */,
 				5FBCCD5F14851BE700D7C64A /* Register.h */,
-				5FBCCD6014851BE700D7C64A /* SearchCacheFile.cpp */,
-				5FBCCD6114851BE700D7C64A /* SearchCacheFile.h */,
 				5FBCCD6214851BE700D7C64A /* SncParser.cpp */,
 				5FBCCD6314851BE700D7C64A /* SncParser.h */,
 				5FBCCD6414851BE700D7C64A /* SrtParser.cpp */,
@@ -195,7 +189,6 @@
 				5FBCCD7C14851BE700D7C64A /* MLLib.h in Headers */,
 				5FBCCD7E14851BE700D7C64A /* MLProfile.h in Headers */,
 				5FBCCD8014851BE700D7C64A /* Register.h in Headers */,
-				5FBCCD8214851BE700D7C64A /* SearchCacheFile.h in Headers */,
 				5FBCCD8414851BE700D7C64A /* SncParser.h in Headers */,
 				5FBCCD8614851BE700D7C64A /* SrtParser.h in Headers */,
 				5FBCCD8714851BE700D7C64A /* StdAfx.h in Headers */,
@@ -260,7 +253,6 @@
 				5FBCCD7A14851BE700D7C64A /* MLGenRegV4.cpp in Sources */,
 				5FBCCD7D14851BE700D7C64A /* MLProfile.cpp in Sources */,
 				5FBCCD7F14851BE700D7C64A /* Register.cpp in Sources */,
-				5FBCCD8114851BE700D7C64A /* SearchCacheFile.cpp in Sources */,
 				5FBCCD8314851BE700D7C64A /* SncParser.cpp in Sources */,
 				5FBCCD8514851BE700D7C64A /* SrtParser.cpp in Sources */,
 			);

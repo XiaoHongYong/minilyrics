@@ -54,5 +54,11 @@
 #define DEFAULT_ENCODING		ED_SYSDEF
 #endif
 
+#ifdef DEBUG
+#ifndef _DEBUG
+#define _DEBUG
+#endif
+#endif
+
 
 #endif
