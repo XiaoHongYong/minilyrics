@@ -18,7 +18,7 @@ public:
 		memset(&m_mlInfo, 0, sizeof(m_mlInfo));
 	}
 	
-	bool Init(LPCSTR pipeName);
+	bool Init();
 
 	void SendPlayerInfo(PlayerInfo &playerInfo)
 		{ SendMessage(M2M_PLAYER_INFO, &playerInfo, sizeof(PlayerInfo)); }
@@ -58,7 +58,7 @@ public:
 	void SendMessage(MessageToML message, LPVOID param, size_t sizeParam);
 
 	bool IsValid()
-		{ return m_msgPipeMiniLyrics.IsOK(); }
+		{ return true; }
 
 public:
 	MLInfo				m_mlInfo;

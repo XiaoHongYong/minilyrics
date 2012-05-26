@@ -172,16 +172,12 @@
 		5FBCC9A9147D3C7000D7C64A /* jmemnobs.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jmemnobs.c; sourceTree = "<group>"; };
 		5FBCC9AA147D3C7000D7C64A /* jmemsys.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jmemsys.h; sourceTree = "<group>"; };
 		5FBCC9AB147D3C7000D7C64A /* jmorecfg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jmorecfg.h; sourceTree = "<group>"; };
-		5FBCC9AC147D3C7000D7C64A /* Jpeg.dsp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Jpeg.dsp; sourceTree = "<group>"; };
-		5FBCC9AD147D3C7000D7C64A /* Jpeg.dsw */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Jpeg.dsw; sourceTree = "<group>"; };
 		5FBCC9AE147D3C7000D7C64A /* jpegint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jpegint.h; sourceTree = "<group>"; };
 		5FBCC9AF147D3C7000D7C64A /* jpeglib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jpeglib.h; sourceTree = "<group>"; };
 		5FBCC9B0147D3C7000D7C64A /* jquant1.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jquant1.c; sourceTree = "<group>"; };
 		5FBCC9B1147D3C7000D7C64A /* jquant2.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jquant2.c; sourceTree = "<group>"; };
 		5FBCC9B2147D3C7000D7C64A /* jutils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = jutils.c; sourceTree = "<group>"; };
 		5FBCC9B3147D3C7000D7C64A /* jversion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = jversion.h; sourceTree = "<group>"; };
-		5FBCC9B4147D3C7000D7C64A /* libjpeg.vcproj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = libjpeg.vcproj; sourceTree = "<group>"; };
-		5FBCC9B5147D3C7100D7C64A /* libjpeg.vcproj.SHOWBRAV-70B1EE.showbrave.user */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "libjpeg.vcproj.SHOWBRAV-70B1EE.showbrave.user"; sourceTree = "<group>"; };
 		5FBCC9B6147D3C7100D7C64A /* Readme.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Readme.txt; sourceTree = "<group>"; };
 		5FBCCA19147D3C7100D7C64A /* png.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = png.c; sourceTree = "<group>"; };
 		5FBCCA1A147D3C7100D7C64A /* png.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = png.h; sourceTree = "<group>"; };
@@ -347,16 +343,12 @@
 				5FBCC9A9147D3C7000D7C64A /* jmemnobs.c */,
 				5FBCC9AA147D3C7000D7C64A /* jmemsys.h */,
 				5FBCC9AB147D3C7000D7C64A /* jmorecfg.h */,
-				5FBCC9AC147D3C7000D7C64A /* Jpeg.dsp */,
-				5FBCC9AD147D3C7000D7C64A /* Jpeg.dsw */,
 				5FBCC9AE147D3C7000D7C64A /* jpegint.h */,
 				5FBCC9AF147D3C7000D7C64A /* jpeglib.h */,
 				5FBCC9B0147D3C7000D7C64A /* jquant1.c */,
 				5FBCC9B1147D3C7000D7C64A /* jquant2.c */,
 				5FBCC9B2147D3C7000D7C64A /* jutils.c */,
 				5FBCC9B3147D3C7000D7C64A /* jversion.h */,
-				5FBCC9B4147D3C7000D7C64A /* libjpeg.vcproj */,
-				5FBCC9B5147D3C7100D7C64A /* libjpeg.vcproj.SHOWBRAV-70B1EE.showbrave.user */,
 				5FBCC9B6147D3C7100D7C64A /* Readme.txt */,
 			);
 			path = jpeg;

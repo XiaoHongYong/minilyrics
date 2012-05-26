@@ -6,6 +6,77 @@
 #include "PlayerEventDispatcher.h"
 #include "../../MPShared/Player.h"
 
+#ifdef DEBUG
+
+LPCSTR SZ_PIPE_NAME = "/tmp/ml_+_test.pipe";
+pthread_t	g_threadMsgTest = 0;
+volatile bool g_bQuitMsgTest = false;
+
+uint32 _msg_id = 5;//0x0102FFFE;
+byte _data[4] = { 0xf9, 0x4d, 0xdb, 0x0 };
+
+void Log(LPCTSTR szFormat, ...)
+{
+	static int _fd = -1;
+	if (_fd == -1)
+	{
+		LPCTSTR SZ_PIPE_NAME = "/tmp/debug.pipe";
+		int nRet = mkfifo(SZ_PIPE_NAME, S_IRWXO | S_IRWXG | S_IRWXU);
+		if (nRet != 0 && errno != EEXIST)
+			return;
+		
+		_fd = ::open(SZ_PIPE_NAME, O_NONBLOCK | O_WRONLY);
+		if (_fd == -1)
+			return;
+	}
+	
+	va_list		args;
+	va_start(args, szFormat);
+	TCHAR buf[1024];
+	int nBuf = _vstprintf_s(buf, CountOf(buf), szFormat, args);
+	va_end(args);
+	
+	if (nBuf > 0) {
+		::write(_fd, buf, nBuf);
+		::write(_fd, "\n", 1);
+	}
+}
+
+LPVOID ThreadMsgTest(LPVOID param)
+{
+	CMsgPipe	pipeRead;
+	ASSERT(pipeRead.Open(SZ_PIPE_NAME, true));
+
+	string data;
+	for (int i = 0; i < 10; i++)
+	{
+		uint32 message = 0;
+		if (!pipeRead.Read(message, data))
+			break;
+		ASSERT(message == _msg_id);
+		ASSERT(data.size() == sizeof(_data));
+		ASSERT(memcmp(data.c_str(), _data, CountOf(_data)) == 0);
+	}
+
+	return NULL;
+}
+
+void TestMsgPipe()
+{
+	CMsgPipe	pipeWrite;
+	ASSERT(pipeWrite.Open(SZ_PIPE_NAME, false));
+	
+	pthread_create(&g_threadMsgTest, NULL, ThreadMsgTest, NULL);
+
+	for (int i = 0; i < 10; i++)
+	{
+		Sleep(10000000);
+		pipeWrite.Write(_msg_id, _data, sizeof(_data));
+	}
+	pipeWrite.Close();
+}
+#endif // DEBUG
+
 
 CMLPlayerMgr			g_playerMgr;
 bool					g_bForceStart = false;
@@ -18,13 +89,12 @@ LPVOID CMLPlayerMgr::ThreadMsg(LPVOID param)
 {
 	CMLPlayerMgr *pMgr = (CMLPlayerMgr *)param;
 	ASSERT(pMgr != NULL);
-	DBGLOG0("Enter CMLPlayerMgr::ThreadMsg");
 	
 	string data;
 	while (!g_bQuitMsg)
 	{
 		uint32 message = 0;
-		if (!pMgr->m_msgPipeOfPlayer.Read(message, data))
+		if (!pMgr->m_msgPipeOfMiniLyrics.Read(message, data))
 			break;
 		pMgr->OnMsg(message, data.c_str(), data.size());
 	}
@@ -33,7 +103,7 @@ LPVOID CMLPlayerMgr::ThreadMsg(LPVOID param)
 }
 
 
-void CMLPlayerMgr::QueryInfo(LPCTSTR szPlayerPipeName)
+void CMLPlayerMgr::QueryInfo()
 {
 	g_playerMgr.m_msgPipeOfPlayer.Write(M2P_QUERY_INFO, NULL, 0);
 }
@@ -42,10 +112,11 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 {
 	DBGLOG0("Enter CMLPlayerMgr::Init");
 
-	m_msgPipeOfMiniLyrics.Open(SZ_PIPE_MINILYRICS_NAME, true);
+#ifdef DEBUG
+	// TestMsgPipe();
+#endif // DEBUG
 
-	pthread_create(&g_threadMsg, NULL, ThreadMsg, this);
-	g_bQuitMsg = false;
+	m_msgPipeOfMiniLyrics.Open(SZ_PIPE_MINILYRICS_NAME, true);
 
 	tstring strPlayerServicePipeName;
 
@@ -68,18 +139,27 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 	}
 
 	if (strPlayerServicePipeName.empty())
-		return false;
-
-	QueryInfo(strPlayerServicePipeName.c_str());
-
-	g_Player.Connect(g_Player.m_playerInfo);
+	{
+		// TODO: need to return false, just for debug
+		strPlayerServicePipeName = "/tmp/MiniLyrics_iTunes.pipe";
+		// return false;
+	}
+	
+	m_msgPipeOfPlayer.Open(strPlayerServicePipeName.c_str(), false);
 
 	return true;
 }
 
 bool CMLPlayerMgr::ConnectToPlayer()
 {
-	return m_msgPipeOfPlayer.IsOK();
+	pthread_create(&g_threadMsg, NULL, ThreadMsg, this);
+	g_bQuitMsg = false;
+	
+	QueryInfo();
+	
+	g_Player.Connect(g_Player.m_playerInfo);
+	
+	return true;
 }
 
 void CMLPlayerMgr::SendMessageToPlayer(MessageToPlayer message, LPVOID param, size_t sizeParam)
@@ -104,7 +184,7 @@ void CMLPlayerMgr::OnPlayerDisconnected()
 
 bool CMLPlayerMgr::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 {
-	DBGLOG1("Got service message from MiniLyrics: %d", msg);
+	DBGLOG2("Got message from Player: %d, len: %d", msg, lenData);
 
 	// MessageToPlayer
 	switch (msg)
@@ -132,6 +212,8 @@ bool CMLPlayerMgr::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 		{
 			ASSERT(sizeof(DWORD) == lenData);
 			DWORD	playPos = *(DWORD*)lpData;
+			
+			DBGLOG1("M2M_PLAY_POS_CHANGED: %d", playPos);
 
 			g_Player.m_dwPlayingPos = playPos;
 
@@ -181,6 +263,7 @@ bool CMLPlayerMgr::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 		}
 		break;
 	default:
+		DBGLOG2("Unknown message from Player: %d, len: %d", msg, lenData);
 		return false;
 	}
 

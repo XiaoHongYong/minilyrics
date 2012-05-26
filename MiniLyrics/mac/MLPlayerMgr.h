@@ -16,12 +16,12 @@ public:
 
 	void OnPlayerDisconnected();
 
-	bool IsValid() { return m_msgPipeOfPlayer.IsOK(); }
+	bool IsValid() { return true; }
 
 	void SendMessageToPlayer(MessageToPlayer message, LPVOID param, size_t sizeParam);
 
 protected:
-	void QueryInfo(LPCTSTR szPlayerPipeName);
+	void QueryInfo();
 	bool OnMsg(uint32 msg, LPCVOID lpData, size_t lenData);
 	static LPVOID ThreadMsg(LPVOID param);
 

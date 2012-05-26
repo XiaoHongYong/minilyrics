@@ -10,7 +10,7 @@
 
 - (id) initWithEvent:(IEvent *)pEvent dispatcher:(CEventsDispatcher *)pDispacher;
 
-- (void) dispatch:(id)param;
+- (void) dispatch;
 
 @end
 
@@ -22,7 +22,7 @@
 	return self;
 }
 
-- (void) dispatch:(id)param {
+- (void) dispatch {
 	m_pDispacher->DispatchSyncEvent(m_pEvent);
 }
 

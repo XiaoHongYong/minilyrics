@@ -8,7 +8,7 @@ public:
 	//
 	// Player service interface
 	//
-	virtual bool Create();
+	virtual bool Create(LPCSTR szPipeName);
 	virtual void Destroy();
 
 	virtual void OnGetInfo(PlayerInfo &playerInfo) = 0;

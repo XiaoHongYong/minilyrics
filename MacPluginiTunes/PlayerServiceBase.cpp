@@ -34,11 +34,11 @@ CPlayerServiceBase::~CPlayerServiceBase(void)
 {
 }
 
-bool CPlayerServiceBase::Create()
+bool CPlayerServiceBase::Create(LPCSTR szPipeName)
 {
 	Log("CPlayerServiceBase::Create()");
 
-	m_msgPipe.Open(SZ_PIPE_MINILYRICS_NAME, true);
+	m_msgPipe.Open(szPipeName, true);
 
 	pthread_create(&g_threadMsg, NULL, ThreadMsg, this);
 	g_bQuitMsg = false;
@@ -60,7 +60,7 @@ void CPlayerServiceBase::Destroy()
 
 bool CPlayerServiceBase::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 {
-	Log("Got service message from MiniLyrics: %d", msg);
+	Log("Got service message from MiniLyrics: %d, len: %d", msg, lenData);
 
 	// MessageToPlayer
 	switch (msg)

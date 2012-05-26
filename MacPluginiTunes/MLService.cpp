@@ -36,12 +36,12 @@ void Log(LPCTSTR szFormat, ...)
 // Launch "MiniLyrics.exe /Pipe pipe_name /Player "iTunes"" to start MiniLyrics
 BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bManual)
 {
-	g_MLService.Init(pipeName);
+	g_MLService.Init();
 
 	char	szMiniLyricsExe[MAX_PATH];
 	strcpy(szMiniLyricsExe, "/Users/showbrave/Library/Developer/Xcode/DerivedData/MiniLyricsMac-agclrmbubvezruavpgqfpggqmabs/Build/Products/Debug/MiniLyricsMac.app");
 
-	pPlayerService->Create();
+	pPlayerService->Create(pipeName);
 	pPlayerService->OnConnected();
 
 	// char	szCmdLine[MAX_PATH];
@@ -106,12 +106,12 @@ inline MLMediaInfo *NewMLMediaInfo(LPCSTR artist, LPCSTR album, LPCSTR title, LP
 	return info;
 }
 
-bool CMLService::Init(LPCSTR pipeName)
+bool CMLService::Init()
 {
-	if (m_msgPipeMiniLyrics.Open(pipeName, false))
+	if (m_msgPipeMiniLyrics.Open(SZ_PIPE_MINILYRICS_NAME, false))
 		return true;
 
-	::Log("Failed to open MiniLyrics pipe: %s", pipeName);
+	::Log("Failed to open MiniLyrics pipe: %s", SZ_PIPE_MINILYRICS_NAME);
 	return false;
 }
 
@@ -137,9 +137,10 @@ void CMLService::OnMediaInfoChanged(LPCSTR szMediaUrl, LPCSTR szArtist, LPCSTR s
 
 void CMLService::SendMessage(MessageToML message, LPVOID param, size_t sizeParam)
 {
-	::Log("Send Message to ML: %d, OK: %d", message, m_msgPipeMiniLyrics.IsOK());
-	if (!m_msgPipeMiniLyrics.IsOK())
-		return;
+//	if (!m_msgPipeMiniLyrics.IsOK())
+//		return;
 
-	m_msgPipeMiniLyrics.Write(message, param, sizeParam);
+	bool ok = m_msgPipeMiniLyrics.Write(message, param, sizeParam);
+	
+	::Log("Message was sent to ML: %d, len: %d, OK: %d", message, sizeParam, ok);
 }

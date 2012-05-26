@@ -60,6 +60,8 @@ int CDownloadMgr::Init()
 	m_strDefSavePath = CMLProfile::GetDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""));
 	if (m_strDefSavePath.empty())
 		CreateDefaultLyricsDir(m_strDefSavePath);
+	
+	DBGLOG1(_T("Lyrics download dir: %s"), m_strDefSavePath.c_str());
 
 	// ×Ô¶¯ÏÂÔØ
 	m_bAutoDownload = g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("EnableAuoDownload"), true);
@@ -226,8 +228,6 @@ void CDownloadMgr::AddTask(CDownloadTask *pTask)
 		return;
 	}
 
-	int					nRet = ERR_OK;
-
 	m_mutexAccess.Acquire();
 	m_listTasks.push_back(pTask);
 
@@ -284,7 +284,8 @@ void CDownloadMgr::CreateDefaultLyricsDir(tstring &strDefSavePath)
 #else
 	strDefSavePath = GetAppDataDir();
 #endif
-	strDefSavePath += _T("Lyrics\\");
+	strDefSavePath += _T("Lyrics");
+	DirStringAddSlash(strDefSavePath);
 
 	if (!IsDirExist(strDefSavePath.c_str()))
 		CreateDirectoryAll(strDefSavePath.c_str());
@@ -322,7 +323,7 @@ tstring CDownloadMgr::GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName, 
 		&& g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveByABC"), false))
 	{
 		TCHAR			c = *szFileName;
-		if (c >= 'a' && c <='z' || c >= 'A' && c <='Z')
+		if (IsAlpha(c))
 			strLyricsFile += toupper(c);
 		else if (c >= '0' && c <='9')
 			strLyricsFile += '#';

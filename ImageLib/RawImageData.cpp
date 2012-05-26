@@ -1047,6 +1047,7 @@ void RAW_IMAGE_DATA::Free()
 	if (buff)
 	{
 		delete[] buff;
+		buff = NULL;
 	}
 	if (pallete)
 	{
