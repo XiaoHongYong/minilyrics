@@ -162,7 +162,7 @@ void CBaseWnd::OnDestroy()
 //	m_LangDlgHelper.Destroy();
 }
 
-void CBaseWnd::OnPaint(IMLGraphicsBase *pGraph)
+void CBaseWnd::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
 	//	RECT	rc;
 
@@ -855,7 +855,7 @@ gboolean CBaseWnd::CBExposeEvent(GtkWidget *widget, GdkEventExpose *event, gpoin
 	pThis = (CBaseWnd *)data;
 
 	pGtkGraph = (CMLGraphics*)pThis->GetGraphics();
-	pThis->OnPaint(pGtkGraph);
+	pThis->OnPaint(pGtkGraph, );
 	pThis->ReleaseGraphics(pGtkGraph);
 
 	return true;

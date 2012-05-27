@@ -44,7 +44,7 @@ BOOL CHyperLinkCtrl::Attach(CBaseWnd *pParentWnd, UINT uChildId, LPCTSTR szUrl)
 	return TRUE;
 }
 
-void CHyperLinkCtrl::OnPaint(CMLGraphics *pGraph)
+void CHyperLinkCtrl::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
 	CRect		rc;
 	TCHAR		szText[256];

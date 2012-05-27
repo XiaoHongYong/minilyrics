@@ -352,7 +352,7 @@ protected:
 	void SortSelectPos(int &nBegSelRow, int &nBegSelCol, int &nEndSelRow, int &nEndSelCol, bool &bSelectedEmpty);
 
 protected:
-	void OnPaint(IMLGraphicsBase *pGraph);
+	void OnPaint(CMLGraphics *pGraph, CRect &rcClip);
 	void OnSize(int cx, int cy);
 
 	virtual void OnSetFocus();

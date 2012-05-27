@@ -64,7 +64,7 @@ public:
 
 	virtual void OnMove(int x, int y) { }
 
-	virtual void OnPaint(CMLGraphics *pGraph);
+	virtual void OnPaint(CMLGraphics *pGraph, CRect &rcClip);
 
 	virtual void OnKillFocus() { }
 	virtual void OnSetFocus() { }

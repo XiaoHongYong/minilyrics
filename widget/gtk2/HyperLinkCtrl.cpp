@@ -30,7 +30,7 @@ BOOL CHyperLinkCtrl::Attach(CBaseWnd *pParentWnd, UINT uChildId, LPCTSTR szUrl)
 	return TRUE;
 }
 
-void CHyperLinkCtrl::OnPaint(IMLGraphicsBase *pGraph)
+void CHyperLinkCtrl::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
 }
 

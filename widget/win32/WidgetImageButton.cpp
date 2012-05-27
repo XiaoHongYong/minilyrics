@@ -64,7 +64,7 @@ void CWidgetImageButton::SetImage(CMLImage *pImage)
 }
 
 
-void CWidgetImageButton::OnPaint(IMLGraphicsBase *pGraph)
+void CWidgetImageButton::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
 	if (m_hBmp)
 	{

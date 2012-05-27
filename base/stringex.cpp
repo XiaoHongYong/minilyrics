@@ -56,22 +56,6 @@ bool StrIBeginWith(LPCWSTR szText, LPCWSTR szBeginWith)
 	return *szBeginWith == '\0';
 }
 
-bool IsStrEndWith(LPCTSTR szText, LPCTSTR szEndWith)
-{
-	size_t lenText = _tcslen(szText), lenEndWith = _tcslen(szEndWith);
-	if (lenText < lenEndWith)
-		return false;
-	return _tcscmp(szText + lenText - lenEndWith, szEndWith) == 0;
-}
-
-bool IsStrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
-{
-	size_t lenText = _tcslen(szText), lenEndWith = _tcslen(szEndWith);
-	if (lenText < lenEndWith)
-		return false;
-	return _tcsicmp(szText + lenText - lenEndWith, szEndWith) == 0;
-}
-
 bool StrEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 {
 	size_t lenText = _tcslen(szText);
@@ -1982,6 +1966,7 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestStrJoin);
 	CPPUNIT_TEST(TestStrReplace);
 	CPPUNIT_TEST(TestStrBeginWith);
+	CPPUNIT_TEST(TestStrEndWith);
 	CPPUNIT_TEST(Test_xcsncpy);
 	CPPUNIT_TEST_SUITE_END();
 
@@ -2185,6 +2170,21 @@ protected:
 			CPPUNIT_ASSERT(StrBeginWith(szSrc[i], szBeg[i]));
 			CPPUNIT_ASSERT(StrIBeginWith(szSrc[i], szIBeg[i]));
 			CPPUNIT_ASSERT(!StrBeginWith(szSrc[i], szBegFalse[i]));
+		}
+	}
+
+	void TestStrEndWith()
+	{
+		LPCTSTR		szSrc[] = { _T("abca"), _T("baAcd"), _T("aXDegae"), _T("aXDegae") };
+		LPCTSTR		szEnd[] = { _T(""), _T("d"), _T("egae"), _T("aXDegae") };
+		LPCTSTR		szIEnd[] = { _T(""), _T("D"), _T("EGaE"), _T("aXDegaE") };
+		LPCTSTR		szEndFalse[] = { _T("ac"), _T("bb"), _T("x"), _T("aXDegaeD") };
+
+		for (int i = 0; i < CountOf(szSrc); i++)
+		{
+			CPPUNIT_ASSERT(StrEndWith(szSrc[i], szEnd[i]));
+			CPPUNIT_ASSERT(StrIEndWith(szSrc[i], szIEnd[i]));
+			CPPUNIT_ASSERT(!StrEndWith(szSrc[i], szEndFalse[i]));
 		}
 	}
 

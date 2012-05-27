@@ -111,7 +111,7 @@ public:
 		return true;
 	}
 	
-	void OnPaint(CMLGraphics *pGraph)
+	void OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 	{
 		ShowWindow(SW_HIDE);
 	}

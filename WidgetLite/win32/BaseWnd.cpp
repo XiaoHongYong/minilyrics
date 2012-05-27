@@ -225,7 +225,7 @@ void CBaseWnd::OnDestroy()
 	}
 }
 
-void CBaseWnd::OnPaint(CMLGraphics *pGraph)
+void CBaseWnd::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
 }
 
@@ -643,6 +643,10 @@ LRESULT CBaseWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_PAINT:
 		{
+			CRect rcClip;
+			if (!::GetUpdateRect(m_hWnd, &rcClip, false))
+				return 0;
+
 			PAINTSTRUCT		ps;
 			HDC				hdc;
 			hdc = BeginPaint(m_hWnd, &ps);
@@ -651,7 +655,7 @@ LRESULT CBaseWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 			pGraph = new CMLGraphics;
 			pGraph->Attach(hdc);
 
-			OnPaint(pGraph);
+			OnPaint(pGraph, rcClip);
 
 			delete pGraph;
 

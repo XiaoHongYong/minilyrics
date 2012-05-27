@@ -937,7 +937,7 @@ bool CSkinWnd::UpdateSkinProperty()
 	return TRUE;
 }
 
-void CSkinWnd::OnPaint(CMLGraphics *pGraph)
+void CSkinWnd::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
 	if (IsIconic())
 		return;
@@ -945,6 +945,8 @@ void CSkinWnd::OnPaint(CMLGraphics *pGraph)
 	CRawGraph		*pMemGraph;
 
 	pMemGraph = GetMemGraphics();
+
+	pMemGraph->SetClipBoundBox(rcClip);
 
 	// draw every ui objects on back buffer one by one
 	m_rootConainter.Draw(pMemGraph);
@@ -1839,6 +1841,10 @@ LRESULT CSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 			else
 #endif
 			{
+				CRect rcClip;
+				if (!::GetUpdateRect(m_hWnd, &rcClip, false))
+					return 0;
+
 				PAINTSTRUCT		ps;
 				HDC				hdc;
 				hdc = BeginPaint(m_hWnd, &ps);
@@ -1847,7 +1853,7 @@ LRESULT CSkinWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 				pGraph = new CMLGraphics;
 				pGraph->Attach(hdc);
 
-				OnPaint(pGraph);
+				OnPaint(pGraph, rcClip);
 
 				delete pGraph;
 

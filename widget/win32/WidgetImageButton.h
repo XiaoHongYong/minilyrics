@@ -20,7 +20,7 @@ public:
 	void SetImage(CMLImage *pImage);
 
 public:
-	void OnPaint(IMLGraphicsBase *pGraph);
+	void OnPaint(CMLGraphics *pGraph, CRect &rcClip);
 
 	void OnLButtonUp(UINT nFlags, CPoint point);
 

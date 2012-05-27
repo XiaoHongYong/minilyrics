@@ -184,7 +184,7 @@ public:
 	virtual void OnPreCreate(bool &bTopmost, bool &bVisible) { }
 	virtual bool OnCreate();
 	virtual void OnDestroy();
-	virtual void OnPaint(CMLGraphics *pGraph);
+	virtual void OnPaint(CMLGraphics *pGraph, CRect &rcClip);
 
 	virtual void OnContexMenu(int xPos, int yPos);
 

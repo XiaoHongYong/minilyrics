@@ -45,7 +45,7 @@ void CWidgetColorButton::GetColor(MLColor &clr)
 	clr = m_clrBg;
 }
 
-void CWidgetColorButton::OnPaint(CMLGraphics *pGraph)
+void CWidgetColorButton::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
 	CRect		rc;
 	HBRUSH		hbrBg;

@@ -1139,7 +1139,7 @@ void CEditEx::SortSelectPos(int &nBegSelRow, int &nBegSelCol, int &nEndSelRow, i
 	}
 }
 
-void CEditEx::OnPaint(IMLGraphicsBase *pGraph)
+void CEditEx::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
 	CRect	rc, rcClip;
 	int		nBegSelRow, nEndSelRow;
