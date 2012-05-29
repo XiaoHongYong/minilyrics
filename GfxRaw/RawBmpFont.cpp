@@ -29,10 +29,36 @@ inline byte RGBToGray(int r, int g, int b)
 	return (r * 3 + g * 6 + b + 5) / 10;
 }
 
-bool inline isCharComposed(WCHAR c)
+bool inline isCharComposed(uint32 c)
 {
 	// The Unicode range for Devanagari is U+0900 .. U+097F.
 	return (c >= 0x590 && c <= 0x6ff) || (c >= 0x0E00 && c <= 0x0E7F) || (c >= 0x0900 && c <= 0x097F);
+}
+
+void inline readUtf8Char(const char *str, string &dst)
+{
+	while (true)
+	{
+		unsigned char	firstChar = (unsigned char)(str[0]);
+		int				n;
+		
+		if (firstChar < 0xc0)			n = 1;
+		else if (firstChar < 0xe0)		n = 2;
+		else if (firstChar < 0xf0)		n = 3;
+		else							n = 1;
+		dst.append(str, n);
+
+		// Is composed char?
+		uint32		nValue = 0;	
+		for (int i = 0; str[i] != 0; i++)
+		{
+			nValue <<= 8;
+			nValue |= uint8(str[i]);
+		}
+		if (!isCharComposed(nValue))
+			break;
+		str += n;
+	}
 }
 
 // Right to left string iterator
@@ -82,6 +108,9 @@ private:
 	{
 		m_ch.clear();
 
+#ifdef UTF8
+		readUtf8Char(m_szText + m_nPos, m_ch);
+#else
 		int n = m_nPos;
 		m_ch += m_szText[n];
 		if (isCharComposed(m_szText[n]))
@@ -93,6 +122,7 @@ private:
 				n++;
 			}
 		}
+#endif
 	}
 
 protected:

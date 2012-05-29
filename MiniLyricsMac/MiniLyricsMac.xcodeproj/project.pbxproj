@@ -97,7 +97,6 @@
 		5FDC568E148A1F1B00C74E6A /* PreferPageTheme.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5625148A1F1B00C74E6A /* PreferPageTheme.cpp */; };
 		5FDC568F148A1F1B00C74E6A /* PreferPageUI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5627148A1F1B00C74E6A /* PreferPageUI.cpp */; };
 		5FDC5691148A1F1B00C74E6A /* SkinActivateCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC562B148A1F1B00C74E6A /* SkinActivateCtrl.cpp */; };
-		5FDC5692148A1F1B00C74E6A /* SkinDroplistCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC562D148A1F1B00C74E6A /* SkinDroplistCtrl.cpp */; };
 		5FDC5694148A1F1B00C74E6A /* SkinFilterCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5632148A1F1B00C74E6A /* SkinFilterCtrl.cpp */; };
 		5FDC5695148A1F1B00C74E6A /* SkinImageListCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5634148A1F1B00C74E6A /* SkinImageListCtrl.cpp */; };
 		5FDC5696148A1F1B00C74E6A /* SkinListCtrlEx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5636148A1F1B00C74E6A /* SkinListCtrlEx.cpp */; };
@@ -489,7 +488,6 @@
 		5FDC5629148A1F1B00C74E6A /* resource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = resource.h; path = ../../MPShared/resource.h; sourceTree = "<group>"; };
 		5FDC562B148A1F1B00C74E6A /* SkinActivateCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinActivateCtrl.cpp; path = ../../MPShared/SkinActivateCtrl.cpp; sourceTree = "<group>"; };
 		5FDC562C148A1F1B00C74E6A /* SkinActivateCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinActivateCtrl.h; path = ../../MPShared/SkinActivateCtrl.h; sourceTree = "<group>"; };
-		5FDC562D148A1F1B00C74E6A /* SkinDroplistCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinDroplistCtrl.cpp; path = ../../MPShared/SkinDroplistCtrl.cpp; sourceTree = "<group>"; };
 		5FDC562E148A1F1B00C74E6A /* SkinDroplistCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinDroplistCtrl.h; path = ../../MPShared/SkinDroplistCtrl.h; sourceTree = "<group>"; };
 		5FDC5632148A1F1B00C74E6A /* SkinFilterCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SkinFilterCtrl.cpp; path = ../../MPShared/SkinFilterCtrl.cpp; sourceTree = "<group>"; };
 		5FDC5633148A1F1B00C74E6A /* SkinFilterCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SkinFilterCtrl.h; path = ../../MPShared/SkinFilterCtrl.h; sourceTree = "<group>"; };
@@ -753,7 +751,6 @@
 				5FDC5629148A1F1B00C74E6A /* resource.h */,
 				5FDC562B148A1F1B00C74E6A /* SkinActivateCtrl.cpp */,
 				5FDC562C148A1F1B00C74E6A /* SkinActivateCtrl.h */,
-				5FDC562D148A1F1B00C74E6A /* SkinDroplistCtrl.cpp */,
 				5FDC562E148A1F1B00C74E6A /* SkinDroplistCtrl.h */,
 				5FDC5632148A1F1B00C74E6A /* SkinFilterCtrl.cpp */,
 				5FDC5633148A1F1B00C74E6A /* SkinFilterCtrl.h */,
@@ -1237,7 +1234,6 @@
 				5FDC568E148A1F1B00C74E6A /* PreferPageTheme.cpp in Sources */,
 				5FDC568F148A1F1B00C74E6A /* PreferPageUI.cpp in Sources */,
 				5FDC5691148A1F1B00C74E6A /* SkinActivateCtrl.cpp in Sources */,
-				5FDC5692148A1F1B00C74E6A /* SkinDroplistCtrl.cpp in Sources */,
 				5FDC5694148A1F1B00C74E6A /* SkinFilterCtrl.cpp in Sources */,
 				5FDC5695148A1F1B00C74E6A /* SkinImageListCtrl.cpp in Sources */,
 				5FDC5696148A1F1B00C74E6A /* SkinListCtrlEx.cpp in Sources */,

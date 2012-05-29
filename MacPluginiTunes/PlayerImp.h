@@ -28,6 +28,7 @@ public:
 public:
 	void OnTimer(int nTimerID);
 	void OnMediaChanged(ITTrackInfo	*pTrackInfo);
+	void OnPlayStateChanged(PLAYER_STATE newStat);
 
 public:
 	DWORD			m_dwPos;

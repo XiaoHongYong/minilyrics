@@ -19,7 +19,7 @@ uint32 GetTickCount()
 {
 	timeval tim;
 	gettimeofday(&tim, NULL);
-	return (uint32)(tim.tv_sec * 1000 * 1000 + tim.tv_usec);
+	return (uint32)((tim.tv_sec * 1000 * 1000 + tim.tv_usec) / 1000);
 }
 
 //-------------------------------------------------------------------------------------------------
@@ -322,8 +322,8 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 			Log("MSG: Play(stream)->. %d, %s", streamInfo->streamURL[0], streamInfo->streamURL + 1);
 
 			g_Player.OnMediaChanged(messageInfo->u.playMessage.trackInfo);
-			g_Player.m_playerState = PS_PLAYING;
-			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
+			
+			g_Player.OnPlayStateChanged(PS_PLAYING);
 
 			visualPluginData->playing = true;
 			
@@ -380,9 +380,7 @@ static OSStatus VisualPluginHandler(OSType message,VisualPluginMessageInfo *mess
 
 			InvalidateVisual(visualPluginData);
 			
-			g_Player.m_playerState = PS_STOPED;
-			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
-
+			g_Player.OnPlayStateChanged(PS_STOPED);
 			break;
 		}
 		/*

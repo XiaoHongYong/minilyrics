@@ -6,8 +6,8 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
-#import "ViewMacImp.h"
 #import "stdafx.h"
+#import "ViewMacImp.h"
 #import "WidgetLite.h"
 
 @implementation ViewMacImp
@@ -57,8 +57,10 @@
     }*/
 
 	CMLGraphics * graph = mBaseWnd->GetGraphics();
+	CRect rcClip;
+	NSRectToRect(rect, rcClip);
 
-	mBaseWnd->OnPaint(graph);
+	mBaseWnd->OnPaint(graph, rcClip);
 
 	mBaseWnd->ReleaseGraphics(graph);
 }

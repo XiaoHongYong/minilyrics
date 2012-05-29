@@ -460,6 +460,9 @@ protected:
 
 	// draw buffer
 	CRawGraph		*m_pmemGraph;
+#ifndef _WIN32
+	CRect			m_rcMemUpdate;
+#endif
 
 	//
 	// Timer IDs

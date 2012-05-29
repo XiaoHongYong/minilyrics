@@ -67,7 +67,7 @@ void CRawGraphData::DrawToGraphics(CMLGraphics *pTarg, int xdest, int ydest, int
 	CGContextRef ctxTarg = pTarg->GetHandle();
 
 	CGImageRef rawImage = CGBitmapContextCreateImage(m_context);
-	CGRect rcDest = CGRectMake(xdest, ydest, width, height);
+	CGRect rcDest = CGRectMake(xdest, m_imageData.height - height - ydest, width, height);
 	
 	if (xsrc + width >= m_imageData.width)
 		width = m_imageData.width - xsrc;
@@ -81,10 +81,11 @@ void CRawGraphData::DrawToGraphics(CMLGraphics *pTarg, int xdest, int ydest, int
 		return;
 	}
 
-	CGRect rcSrc = CGRectMake(xsrc, m_imageData.height - ysrc - height, width, height);
+	CGRect rcSrc = CGRectMake(xsrc, ysrc, width, height);
 	CGImageRef partImage = CGImageCreateWithImageInRect(rawImage, rcSrc);
 
 	CGContextDrawImage(ctxTarg, rcDest, partImage);
+
 	CGImageRelease(partImage);
 	CGImageRelease(rawImage);
 }

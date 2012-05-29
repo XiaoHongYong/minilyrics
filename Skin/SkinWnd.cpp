@@ -246,6 +246,10 @@ CSkinWnd::CSkinWnd()
 	m_translucencyStatus = TS_NORMAL;
 
 	m_pSjvmNotifyEvent = NULL;
+
+#ifndef _WIN32
+	m_rcMemUpdate.top = m_rcMemUpdate.bottom = 0;
+#endif
 }
 
 CSkinWnd::~CSkinWnd()
@@ -942,14 +946,27 @@ void CSkinWnd::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 	if (IsIconic())
 		return;
 
-	CRawGraph		*pMemGraph;
+	bool		bRedraw = true;
+	CRawGraph	*pMemGraph;
 
 	pMemGraph = GetMemGraphics();
 
-	pMemGraph->SetClipBoundBox(rcClip);
+#ifndef _WIN32
+	if (m_rcMemUpdate.top != m_rcMemUpdate.bottom)
+	{
+		m_rcMemUpdate.top = m_rcMemUpdate.bottom = 0;
+		if (m_rcMemUpdate == rcClip)
+			bRedraw = false;
+	}
+#endif // #ifdef _WIN32
 
-	// draw every ui objects on back buffer one by one
-	m_rootConainter.Draw(pMemGraph);
+	if (bRedraw)
+	{
+		// pMemGraph->SetClipBoundBox(rcClip);
+
+		// draw every UI objects on back buffer one by one
+		m_rootConainter.Draw(pMemGraph);
+	}
 	
 /*	CRect rc(20, 20, 50, 30);
 	MLColor clr(RGB(10, 10, 10));
@@ -957,10 +974,11 @@ void CSkinWnd::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 	pMemGraph->FillRect(&rc, clr);*/
 
 	// from buffer to screen
-	if (m_dbScale == 1.0)
-		pMemGraph->DrawToGraphics(pGraph, 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), 0, 0);
-	else
-		pMemGraph->DrawToGraphicsStretch(pGraph, 0, 0, m_rcReal.Width(), m_rcReal.Height(), 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height());
+	// if (m_dbScale == 1.0)
+		pMemGraph->DrawToGraphics(pGraph, rcClip.left, rcClip.top, rcClip.Width(), rcClip.Height(), rcClip.left, rcClip.top);
+	//pMemGraph->DrawToGraphics(pGraph, 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height(), 0, 0);
+	// else
+		// pMemGraph->DrawToGraphicsStretch(pGraph, 0, 0, m_rcReal.Width(), m_rcReal.Height(), 0, 0, m_rcBoundBox.Width(), m_rcBoundBox.Height());
 }
 
 
@@ -1051,6 +1069,7 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	if (!m_pmemGraph)
 		return;	// SkinWnd isn't created yet.
 
+#ifdef _WIN32
 	CRawGraph::CClipBoxAutoRecovery	autoCBR(m_pmemGraph);
 
 	m_pmemGraph->SetClipBoundBox(pObj->m_rcObj);
@@ -1099,6 +1118,9 @@ void CSkinWnd::InvalidateUIObject(CUIObject *pObj)
 	}
 
 	ReleaseGraphics(pGraphics);
+#else // _WIN32
+	InvalidateRect(&pObj->m_rcObj);
+#endif
 }
 
 void CSkinWnd::EnterInDrawUpdate()
@@ -1710,7 +1732,6 @@ void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
 	if (GetEnableTranslucencyLayered())
 		UpdateLayeredWindowUsingMemGraph(m_pmemGraph);
 	else
-#endif
 	{
 		CMLGraphics		*pGraphics;
 
@@ -1723,6 +1744,12 @@ void CSkinWnd::UpdateMemGraphicsToScreen(const RECT* lpRect)
 
 		ReleaseGraphics(pGraphics);
 	}
+#else // #ifdef _WIN32
+	if (m_rcMemUpdate.top == m_rcMemUpdate.bottom)
+		m_rcMemUpdate = *lpRect;
+
+	InvalidateRect(lpRect);
+#endif // #ifdef _WIN32
 }
 
 #ifdef _WIN32

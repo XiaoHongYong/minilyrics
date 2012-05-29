@@ -152,8 +152,8 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 
 bool CMLPlayerMgr::ConnectToPlayer()
 {
-	pthread_create(&g_threadMsg, NULL, ThreadMsg, this);
 	g_bQuitMsg = false;
+	pthread_create(&g_threadMsg, NULL, ThreadMsg, this);
 	
 	QueryInfo();
 	
@@ -175,6 +175,8 @@ void CMLPlayerMgr::OnPlayerInfoReturned(PlayerInfo *playerInfo)
 
 void CMLPlayerMgr::OnPlayerDisconnected()
 {
+	g_bQuitMsg = true;
+
 	g_Player.Disconnect();
 
 	memset(&g_Player.m_playerInfo, 0, sizeof(g_Player.m_playerInfo));
@@ -210,7 +212,8 @@ bool CMLPlayerMgr::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 		break;
 	case M2M_PLAY_POS_CHANGED:
 		{
-			ASSERT(sizeof(DWORD) == lenData);
+			if (sizeof(DWORD) != lenData)
+				break;
 			DWORD	playPos = *(DWORD*)lpData;
 			
 			DBGLOG1("M2M_PLAY_POS_CHANGED: %d", playPos);

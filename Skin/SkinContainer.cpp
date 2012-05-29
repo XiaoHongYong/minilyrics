@@ -1339,10 +1339,14 @@ bool CSkinContainer::IsChild(CUIObject *pObj)
 
 void CSkinContainer::InvalidateUIObject(CUIObject *pObj)
 {
+#ifdef _WIN32
 	if (m_pContainer)
 		m_pContainer->InvalidateUIObject(pObj);
 	else
 		m_pSkin->InvalidateUIObject(pObj);
+#else // #ifdef _WIN32
+	m_pSkin->InvalidateUIObject(pObj);
+#endif // #ifdef _WIN32
 }
 
 void CSkinContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUIObject *pObjCallUpdate)
