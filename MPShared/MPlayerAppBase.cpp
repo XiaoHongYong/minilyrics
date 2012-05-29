@@ -574,8 +574,7 @@ void CMPlayerAppBase::PostQuitMessage()
 {
 	OnLyricsChangingSavePrompt();
 
-	if (!g_autoProcessEmbeddedLyrics.OnPostQuit())
-		return;
+	g_autoProcessEmbeddedLyrics.OnPostQuit();
 
 	CSkinApp::PostQuitMessage();
 }
