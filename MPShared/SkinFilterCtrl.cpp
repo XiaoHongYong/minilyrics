@@ -43,7 +43,7 @@ void CSkinFilterCtrl::Draw(CRawGraph *pGraph)
 	const int PIX_R = GfxRaw::PIX_R;
 	const int PIX_G = GfxRaw::PIX_G;
 	const int PIX_B = GfxRaw::PIX_B;
-	const int PIX_A = GfxRaw::PIX_A;
+	// const int PIX_A = GfxRaw::PIX_A;
 	const int PIX_SIZE = GfxRaw::PIX_SIZE;
 
 	CRect rcClip;

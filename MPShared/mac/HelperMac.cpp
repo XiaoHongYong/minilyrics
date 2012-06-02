@@ -35,10 +35,14 @@ bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText)
 
 BOOL SHDeleteFile(LPCTSTR szFile, CBaseWnd *pWndParent)
 {
+	// TODO:
+	return false;
 }
 
 BOOL SHCopyFile(LPCTSTR szSrcFile, LPCTSTR szTargFile, CBaseWnd *pWndParent)
 {
+	// TODO:
+	return false;
 }
 
 #ifndef INVALID_FILE_ATTRIBUTES

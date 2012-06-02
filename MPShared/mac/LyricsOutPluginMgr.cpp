@@ -87,6 +87,7 @@ void CLyricsOutPluginMgr::OnLyricsChanged()
 
 int CLyricsOutPluginMgr::GetLineCount()
 {
+	return 0;
 }
 
 bool CLyricsOutPluginMgr::GetLyricsOfLine(int nLine, TCHAR szLyrics[], int nBuffLen, int &nBegTime, int &nEndTime)

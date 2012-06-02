@@ -49,20 +49,11 @@ bool OnSongOpenFileCmd(CBaseWnd *pWndParent, bool bOpen)
 bool OnSongOpenDirCmd(CBaseWnd *pWndParent, bool bOpen)
 {
 	tstring				strFolder;
-	bool				bIncSubfolder = true;
-
-#ifdef _WIN32_WCE
-	CFolderBrowseDlg	dlg;
-	if (dlg.DoModal(pWndParent, g_Profile.GetProfileString(_T("Last Open Dir"), _T("")), 
-		g_Profile.GetProfileBool(_T("AddIncSubFolder"), true)) == IDOK)
-	{
-		bIncSubfolder = dlg.IsIncSubfolder();
-#else
+	
 	CFolderDialog	dlg;
 	dlg.SetInitFolder(g_Profile.GetProfileString(_T("Last Open Dir"), _T("")));
 	if (dlg.DoBrowse(pWndParent) == IDOK)
 	{
-#endif
 		strFolder = dlg.GetFolder();
 
 		g_Profile.WriteProfileString(_T("Last Open Dir"), strFolder.c_str());
@@ -72,17 +63,13 @@ bool OnSongOpenDirCmd(CBaseWnd *pWndParent, bool bOpen)
 		else
 			g_Player.SetPlaylistModified(true);
 
-		g_Player.AddDirToPlaylist(strFolder.c_str(), bIncSubfolder);
+		g_Player.AddDirToPlaylist(strFolder.c_str(), true);
 		g_Player.SaveCurrentPlaylist();
 		if (bOpen)
 			g_Player.Play();
 
 		return true;
-#ifdef _WIN32_WCE
 	}
-#else
-	}
-#endif
 
 	return false;
 }
@@ -90,9 +77,9 @@ bool OnSongOpenDirCmd(CBaseWnd *pWndParent, bool bOpen)
 bool OnCmdSongAddDirToMediaLib(CBaseWnd *pWndParent)
 {
 	tstring				strFolder;
-	bool				bIncSubfolder = true;
 
 #ifdef _WIN32_WCE
+	bool				bIncSubfolder = true;
 	CFolderBrowseDlg	dlg;
 	if (dlg.DoModal(pWndParent, g_Profile.GetProfileString(_T("Last Open Dir"), _T("")), 
 		g_Profile.GetProfileBool(_T("AddIncSubFolder"), true)) == IDOK)
@@ -180,13 +167,11 @@ void EnumPlaylists(LPCTSTR szDir, int &nLevel, vector<tstring> &vFiles)
 
 void EnumPlaylistsFast(vector<tstring> &vFiles)
 {
-	int			nLevel;
-	TCHAR		szDir[MAX_PATH];
-
-	nLevel = 0;
+	int nLevel = 0;
 	EnumPlaylists(GetWorkingFolder(), nLevel, vFiles);
 
 #ifdef _WIN32
+	TCHAR		szDir[MAX_PATH];
 	if (SUCCEEDED(SHGetSpecialFolderPath(NULL, szDir, CSIDL_PERSONAL, FALSE)))
 	{
 		nLevel = 1;

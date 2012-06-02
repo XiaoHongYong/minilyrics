@@ -497,7 +497,7 @@ int CMP3InfoReader::GetVbrInfoFrameCount(unsigned char const *frameBuff, int nBu
 			dwVersion = bufReader.ExtractIx(2);
 			fDelay = (float)bufReader.ExtractIx(2);
 			dwQuality = bufReader.ExtractIx(2);
-			int nFileSizeOrg = bufReader.ExtractIx(4);
+			/* int nFileSizeOrg = */bufReader.ExtractIx(4);
 			nFrameCount = bufReader.ExtractIx(4);
 		}
 		catch(CBigEndianBuffReader::COutOfRangeException &)

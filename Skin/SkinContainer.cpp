@@ -1472,7 +1472,6 @@ bool CSkinContainer::IsPageAtLeft(CSkinContainer *pPage, CSkinContainer *pPage2)
 		return false;
 
 	int		nPos = -1, nPos2 = m_vUIObjs.size();
-	int		i = 0;
 
 	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{

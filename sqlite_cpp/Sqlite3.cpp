@@ -7,12 +7,6 @@
 
 #include "Sqlite3.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 
 int sqlite_query_int_value(sqlite3 *db, LPCSTR szSql)
 {

@@ -106,6 +106,7 @@ CMLMenu::CMLMenu()
 {
 	m_hMenu = NULL;
 	m_nSubMenu = -1;
+	m_bFree = true;
 }
 
 CMLMenu::~CMLMenu()
@@ -129,16 +130,23 @@ bool CMLMenu::LoadMenu(int nID)
 	return m_hMenu != NULL;
 }
 
+bool CMLMenu::CreatePopupMenu()
+{
+	Destroy();
+
+	m_hMenu = ::CreatePopupMenu();
+
+	return m_hMenu != NULL;
+}
 
 void CMLMenu::Destroy()
 {
-	if (m_hMenu)
+	if (m_hMenu && m_bFree)
 	{
 		DestroyMenu(m_hMenu);
 		m_hMenu = NULL;
 	}
 }
-
 
 void CMLMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
@@ -167,7 +175,7 @@ void CMLMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT
 		tpmParam.rcExclude = *prcNotOverlap;
 	}
 
-	TrackPopupMenuEx(GetSubMenu(nSubMenu), TPM_LEFTALIGN | TPM_VERTICAL, x, y, pWnd->GetHandle(), prcNotOverlap ? &tpmParam : NULL);
+	TrackPopupMenuEx(GetSubMenuHandle(nSubMenu), TPM_LEFTALIGN | TPM_VERTICAL, x, y, pWnd->GetHandle(), prcNotOverlap ? &tpmParam : NULL);
 }
 
 void CMLMenu::EnableItem(int nID, bool bEnable)
@@ -191,18 +199,17 @@ void CMLMenu::CheckRadioItem(int nID, int nStartID, int nEndID)
 	CheckMenuRadioItem(hMenu, nStartID, nEndID, nID, MF_BYCOMMAND);
 }
 
-bool CMLMenu::CreatePopupMenu()
+int CMLMenu::GetItemCount()
 {
-	Destroy();
-
-	m_hMenu = ::CreatePopupMenu();
-
-	return m_hMenu != NULL;
+	::GetMenuItemCount(GetHandle());
 }
 
-void CMLMenu::AppendItem(UINT nID, LPCTSTR szText)
+void CMLMenu::AppendItem(UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey)
 {
-	::AppendMenu(m_hMenu, MF_STRING, nID, szText);
+	if (IsEmptyString(szShortcutKey))
+		::AppendMenu(m_hMenu, MF_STRING, nID, szText);
+	else
+		::AppendMenu(m_hMenu, MF_STRING, nID, (tstring(szText) + _T("\t") + szShortcutKey).c_str());
 }
 
 void CMLMenu::AppendSeperator()
@@ -210,23 +217,56 @@ void CMLMenu::AppendSeperator()
 	AppendMenu(m_hMenu, MF_SEPARATOR, 0, NULL);
 }
 
-void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText)
+void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey)
 {
-	::InsertMenu(GetHandle(), nPos, MF_BYPOSITION, nID, szText);
+	if (IsEmptyString(szShortcutKey))
+		::InsertMenu(GetHandle(), nPos, MF_BYPOSITION, nID, szText);
+	else
+		::InsertMenu(GetHandle(), nPos, MF_BYPOSITION, nID, (tstring(szText) + _T("\t") + szShortcutKey).c_str());
 }
 
-void CMLMenu::InsertItemByID(UINT nPosID, UINT nID, LPCTSTR szText)
+void CMLMenu::InsertItemByID(UINT nPosID, UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey)
 {
 	HMENU	hMenu = FindMenuPos(GetHandle(), nPosID);
 	ASSERT(hMenu);
-	if (hMenu)
+	if (hMenu == NULL)
+		return;
+
+	if (IsEmptyString(szShortcutKey))
 		::InsertMenu(hMenu, nPosID, MF_BYCOMMAND, nID, szText);
+	else
+		::InsertMenu(hMenu, nPosID, MF_BYCOMMAND, nID, (tstring(szText) + _T("\t") + szShortcutKey).c_str());
 }
 
 void CMLMenu::InsertSeperator(int nPos)
 {
 	::InsertMenu(GetHandle(), nPos, MF_SEPARATOR, 0, NULL);
 }
+
+CMLMenu CMLMenu::AppendSubmenu(LPCTSTR szText)
+{
+	HMENU hSubMenu = ::CreatePopupMenu();
+	::AppendMenu(GetHandle(), MF_POPUP, (UINT_PTR)hSubMenu, szText);
+
+	CMLMenu menu;
+	menu.Attach(hSubMenu);
+	menu.m_bFree = false;
+
+	return menu;
+}
+
+CMLMenu CMLMenu::InsertSubmenu(int nPos, LPCTSTR szText)
+{
+	HMENU hSubMenu = ::CreatePopupMenu();
+	::InsertMenu(GetHandle(), nPos, MF_BYPOSITION | MF_POPUP, (UINT_PTR)hSubMenu, szText);
+
+	CMLMenu menu;
+	menu.Attach(hSubMenu);
+	menu.m_bFree = false;
+
+	return menu;
+}
+
 
 void CMLMenu::RemoveItem(int nPos)
 {
@@ -279,7 +319,49 @@ bool CMLMenu::LoadPopupMenu(int nID, int nSubMenu)
 	return m_hMenu != NULL;
 }
 
-HMENU CMLMenu::GetSubMenu(int nPos)
+bool CMLMenu::HasItem(int nPos)
+{
+	MENUITEMINFO	mii;
+
+	memset(&mii, 0, sizeof(mii));
+
+	mii.cbSize = sizeof(mii);
+	mii.fMask = MIIM_TYPE;
+	mii.dwTypeData = NULL;
+	mii.cch = 0;
+
+	// get menu item by pos.
+	if (!::GetMenuItemInfo(GetHandle(), nPos, TRUE, &mii))
+		return false;
+
+	return true;
+}
+
+bool CMLMenu::HasSubmenu(int nPos)
+{
+	return GetSubMenuHandle(nPos) != NULL;
+}
+
+CMLMenu CMLMenu::GetSubmenu(int nPos)
+{
+	CMLMenu menu;
+
+	menu.Attach(GetSubMenuHandle(nPos));
+	menu.m_bFree = false;
+
+	return menu;
+}
+
+CMLMenu & CMLMenu::operator = (CMLMenu &menu)
+{
+	m_hMenu = menu.m_hMenu;
+	m_nSubMenu = menu.m_nSubMenu;
+	m_bFree = false;
+
+	return *this;
+}
+
+HMENU CMLMenu::GetSubMenuHandle(int nPos)
 {
 	if (m_nSubMenu == -1)
 		return ::GetSubMenu(m_hMenu, nPos);

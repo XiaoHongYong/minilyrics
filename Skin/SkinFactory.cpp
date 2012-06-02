@@ -1492,7 +1492,7 @@ bool CSkinFactory::LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu)
 				pSkinMenu = LoadPresetMenu(pWnd, szFromMenu);
 
 			if (!pSkinMenu)
-				pSkinMenu = new CSkinMenu(this);
+				pSkinMenu = new CSkinMenu();
 
 			pSkinMenu->FromXML(pNode, pSkinMenu->GetOrgAppendPos());
 		}

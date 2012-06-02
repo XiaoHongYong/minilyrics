@@ -182,6 +182,8 @@ public:
 				if (OnOK())
 					m_pSkin->PostDestroy();
 				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -234,9 +236,6 @@ public:
 		if (g_Profile.GetProfileInt(_T("ShowLink"), false))
 			m_pLyricsList->AddColumn(_T("URL"), 400);
 		m_pLyricsList->LoadColumnWidth(_T("OpenLyrics_ListColWidth"));
-
-		m_menu.LoadPopupMenu(IDR_MENU_OPEN_LRC_DLG, 0);
-		ToLocalMenu(&m_menu);
 
 		g_OnlineSearch.SearchCacheForCur(&m_vResultsInet);
 		m_vResultsInet.Sort();
@@ -377,8 +376,8 @@ public:
 		tstring strTitle = GetUIObjectText(CID_E_TITLE);
 
 		// Not changed?
-		if (_tcsicmp(strArtist.c_str(), m_strArtist.c_str()) == 0
-			&& _tcsicmp(strTitle.c_str(), m_strTitle.c_str()) == 0
+		if ((_tcsicmp(strArtist.c_str(), m_strArtist.c_str()) == 0
+			&& _tcsicmp(strTitle.c_str(), m_strTitle.c_str()) == 0)
 			|| IsEmptyString(strTitle.c_str()))
 			return true;
 
@@ -569,6 +568,9 @@ public:
 						bLocalLyrFile = true;
 				}
 			}
+
+			CSkinMenu m_menu;
+			m_menu.LoadMenu(IDR_MENU_OPEN_LRC_DLG);
 
 			m_menu.EnableItem(IDC_EXTERNAL_LYR_EDIT, bLocalLyrFile);
 			m_menu.EnableItem(IDC_DEL_FILE, bLocalLyr);
@@ -883,8 +885,6 @@ protected:
 	vector<V_LRCSEARCHRESULT>	m_vCachePages;
 
 	tstring				m_strSongFile, m_strMediaKey, m_strArtist, m_strTitle;
-
-	CMLMenu				m_menu;
 
 	//
 	// Auto search local lyrics, if artist/tile changed?

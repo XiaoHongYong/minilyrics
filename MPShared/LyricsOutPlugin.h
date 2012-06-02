@@ -1,7 +1,7 @@
 #ifndef _LYRICSOUTPLUGIN_H_
 #define _LYRICSOUTPLUGIN_H_
 
-#ifndef UNICODE
+#if !defined (UNICODE) && !defined (UTF8)
 #pragma message("UNICODE must be defined!")
 #endif
 

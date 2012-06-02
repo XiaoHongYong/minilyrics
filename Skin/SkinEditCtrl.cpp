@@ -266,7 +266,6 @@ bool CSkinEditCtrl::CGlyph::ReverseiCmp(const TCHAR *str)
 void CSkinEditCtrl::OnFontChanged()
 {
 	CRawGraph			*pGraph;
-	COneLine			*pLine = NULL;
 	SIZE				size;
 
 	pGraph = GetMemGraphics();
@@ -356,7 +355,7 @@ void CSkinEditCtrl::SetSel(int nBeg, int nEnd)
 				m_nBegSelRow = i;
 				m_nBegSelCol = k;
 			}
-			else if (n = nEnd)
+			else if (n == nEnd)
 			{
 				m_nEndSelRow = i;
 				m_nEndSelCol = k;
@@ -2601,10 +2600,10 @@ void CSkinEditCtrl::OnChar(UINT nChar)
 
 void CSkinEditCtrl::OnContexMenu(int xPos, int yPos)
 {
-	CSkinMenu	menu(m_pSkin->GetSkinFactory());
+	CSkinMenu	menu;
 	bool		bEnable;
 
-	menu.LoadPopupMenu(IDM_MENU, 2);
+	menu.LoadMenu(IDM_MENU);
 
 	bEnable = IsSelected();
 	menu.EnableItem(IDC_EDIT_CUT, bEnable);

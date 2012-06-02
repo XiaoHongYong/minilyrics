@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F10F0491576F5F90080ECF6 /* MPSkinMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F10F0471576F5F90080ECF6 /* MPSkinMenu.cpp */; };
 		5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */; };
 		5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */; };
 		5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */; };
@@ -114,7 +115,6 @@
 		5FDC56B3148A23AC00C74E6A /* MPHotkey.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A6148A23AC00C74E6A /* MPHotkey.cpp */; };
 		5FDC56B4148A23AC00C74E6A /* MPlayerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A8148A23AC00C74E6A /* MPlayerApp.cpp */; };
 		5FDC56B6148A23AC00C74E6A /* MPSkinMainWndMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */; };
-		5FDC56B7148A23AC00C74E6A /* MPSkinMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56AE148A23AC00C74E6A /* MPSkinMenu.cpp */; };
 		5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */; };
 /* End PBXBuildFile section */
 
@@ -318,6 +318,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5F10F0471576F5F90080ECF6 /* MPSkinMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinMenu.cpp; path = ../../MPShared/MPSkinMenu.cpp; sourceTree = "<group>"; };
+		5F10F0481576F5F90080ECF6 /* MPSkinMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinMenu.h; path = ../../MPShared/MPSkinMenu.h; sourceTree = "<group>"; };
 		5F2BD4A9148A6511003E7F5C /* DlgSaveLyrPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveLyrPrompt.h; sourceTree = "<group>"; };
 		5F2BD4AA148B3354003E7F5C /* PlayerEventDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerEventDispatcher.h; sourceTree = "<group>"; };
 		5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgChooseFont.cpp; sourceTree = "<group>"; };
@@ -522,8 +524,6 @@
 		5FDC56A9148A23AC00C74E6A /* MPlayerApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPlayerApp.h; sourceTree = "<group>"; };
 		5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPSkinMainWndMac.cpp; sourceTree = "<group>"; };
 		5FDC56AD148A23AC00C74E6A /* MPSkinMainWndMac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPSkinMainWndMac.h; sourceTree = "<group>"; };
-		5FDC56AE148A23AC00C74E6A /* MPSkinMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPSkinMenu.cpp; sourceTree = "<group>"; };
-		5FDC56AF148A23AC00C74E6A /* MPSkinMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPSkinMenu.h; sourceTree = "<group>"; };
 		5FDC56B9148A2DC800C74E6A /* DlgBatchProcessEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgBatchProcessEmbeddedLyrics.h; sourceTree = "<group>"; };
 		5FDC56BB148A2ED900C74E6A /* DlgSaveEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveEmbeddedLyrics.h; sourceTree = "<group>"; };
 		5FDC56BC148A2FE300C74E6A /* DlgUpdateLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgUpdateLibrary.h; sourceTree = "<group>"; };
@@ -619,6 +619,8 @@
 		5FB1620A147017330084494F /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5F10F0471576F5F90080ECF6 /* MPSkinMenu.cpp */,
+				5F10F0481576F5F90080ECF6 /* MPSkinMenu.h */,
 				5FB53E9314C19C2C0041938C /* ZPAnalyticsClient.cpp */,
 				5FB53E9414C19C2C0041938C /* ZPAnalyticsClient.h */,
 				5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */,
@@ -928,8 +930,6 @@
 				5FDC56A9148A23AC00C74E6A /* MPlayerApp.h */,
 				5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */,
 				5FDC56AD148A23AC00C74E6A /* MPSkinMainWndMac.h */,
-				5FDC56AE148A23AC00C74E6A /* MPSkinMenu.cpp */,
-				5FDC56AF148A23AC00C74E6A /* MPSkinMenu.h */,
 			);
 			name = mac;
 			path = ../../MPShared/mac;
@@ -1251,13 +1251,13 @@
 				5FDC56B3148A23AC00C74E6A /* MPHotkey.cpp in Sources */,
 				5FDC56B4148A23AC00C74E6A /* MPlayerApp.cpp in Sources */,
 				5FDC56B6148A23AC00C74E6A /* MPSkinMainWndMac.cpp in Sources */,
-				5FDC56B7148A23AC00C74E6A /* MPSkinMenu.cpp in Sources */,
 				5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */,
 				5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */,
 				5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */,
 				5FB53E9514C19C2C0041938C /* ZPAnalyticsClient.cpp in Sources */,
 				5F65BB0F156A7EE500605207 /* MLPlayerMgr.cpp in Sources */,
 				5F65BB13156B19BE00605207 /* MsgPipe.cpp in Sources */,
+				5F10F0491576F5F90080ECF6 /* MPSkinMenu.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

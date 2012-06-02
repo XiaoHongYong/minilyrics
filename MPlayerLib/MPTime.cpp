@@ -5,12 +5,6 @@
 #include "stdafx.h"
 #include "MPTime.h"
 
-#ifdef _DEBUG
-#undef THIS_FILE
-static char THIS_FILE[]=__FILE__;
-#define new DEBUG_NEW
-#endif
-
 static int _monthDays[] = // gs_nMonthFirstDayFromYearStart
 {
    -1,

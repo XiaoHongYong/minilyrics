@@ -155,7 +155,7 @@ int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 
 	int nRet = file.Open(m_pMLData->GetLyricsFileName(), CTextFile::OM_READ, m_pMLData->GetEncodingIndex());
 	if (nRet != ERR_OK)
-		nRet;
+		return nRet;
 
 	state = PS_NUMBER;
 	tstring line;

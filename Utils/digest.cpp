@@ -65,7 +65,7 @@ bool MD5FileToBinary(LPCTSTR filename, unsigned char digest[])
 	else
 	{
 		MDInit (&context);
-		while (len = fread(buffer, 1, 1024, file))
+		while ((len = fread(buffer, 1, 1024, file)) > 0)
 			MDUpdate(&context, buffer, len);
 		MDFinal(digest, &context);
 		fclose(file);

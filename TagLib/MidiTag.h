@@ -89,7 +89,7 @@ protected:
 
 	int DeltaTickToMs(int tick);
 
-	MidiTag::TrackTrunk *CMidiTag::FindLyricsTrunk();
+	MidiTag::TrackTrunk *FindLyricsTrunk();
 
 protected:
 	CFileEx					m_file;

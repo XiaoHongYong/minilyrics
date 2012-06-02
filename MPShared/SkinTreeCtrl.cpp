@@ -424,7 +424,6 @@ void CSkinTreeCtrl::Draw(CRawGraph *pGraph)
 	int			nDepth;
 	bool		bBigBrother;
 	int			x, y, xMax, yMax;
-	bool		bVScrollBarVisible = true;
 	CRect		rcNodeText;
 
 	pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_clrBk);

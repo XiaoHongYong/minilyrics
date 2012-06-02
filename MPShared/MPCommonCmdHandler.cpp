@@ -326,10 +326,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 	case CMD_LYR_SCROLL_MENU:
 		{
-			CMLMenu menu;
+			CSkinMenu menu;
 			POINT pt;
 			MLWidget::GetCursorPos(&pt);
-			menu.LoadPopupMenu(IDR_MENU_STATIC_LYR, 0);
+			menu.LoadMenu(IDR_MENU_STATIC_LYR);
 			menu.EnableItem(IDC_SL_CLEAR_TIME_STAMP, g_LyricData.GetLyrContentType() == LCT_TXT);
 			menu.TrackPopupMenu(pt.x, pt.y, m_pSkinWnd, NULL);
 		}
@@ -673,9 +673,9 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_MENU_LYR_EDIT:
 		{
 			POINT	pt;
-			CMLMenu	menu;
+			CSkinMenu	menu;
 			MLWidget::GetCursorPos(&pt);
-			menu.LoadPopupMenu(IDM_MENU, 2);
+			menu.LoadMenu(IDM_MENU);
 			menu.TrackPopupMenu(pt.x, pt.y, m_pSkinWnd);
 		}
 		break;
@@ -685,11 +685,11 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case ID_ALBUMART:
 		{
 			// album art
-			CMLMenu		menu;
+			CSkinMenu	menu;
 			CPoint		pt;
 
 			MLWidget::GetCursorPos(&pt);
-			menu.LoadPopupMenu(IDR_MENU_ALBUMART, 0);
+			menu.LoadMenu(IDR_MENU_ALBUMART);
 			menu.TrackPopupMenu(pt.x, pt.y, m_pSkinWnd);
 		}
 		break;
@@ -701,8 +701,8 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				break;
 			}
 
-			CMLMenu	menu;
-			menu.LoadPopupMenu(IDR_MENU_RATE, 0);
+			CSkinMenu	menu;
+			menu.LoadMenu(IDR_MENU_RATE);
 
 			CPoint	pt;
 			MLWidget::GetCursorPos(&pt);

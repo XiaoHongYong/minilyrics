@@ -99,7 +99,7 @@ int CClass::AddNativeMethod(bool bStatic, LPCSTR szMethodName, LPVOID funcPtr, T
 
 	for (int i = 0; i < CVMParameters::COUNT_MAX; i++)
 	{
-		TypeId		typeId = va_arg(args, TypeId);
+		TypeId		typeId = (TypeId)va_arg(args, int);
 		if (typeId == TID_INVALID)
 			break;
 
@@ -466,7 +466,7 @@ void CClassTable::Print(class CSJVM *pVm)
 
 		// Print member variable
 		size_t k;
-		printf("	Class member variable: %d\n", pClass->vMemberVar.size());
+		printf("	Class member variable: %d\n", (int)pClass->vMemberVar.size());
 		for (k = 0; k < pClass->vMemberVar.size(); k++)
 		{
 			CMemberVar *pVar = pClass->vMemberVar[k];
@@ -477,7 +477,7 @@ void CClassTable::Print(class CSJVM *pVm)
 		}
 
 		// Print class method
-		printf("	Class member method: %d\n", pClass->vMethod.size());
+		printf("	Class member method: %d\n", (int)pClass->vMethod.size());
 		for (k = 0; k < pClass->vMethod.size(); k++)
 		{
 			CMemberMethod	*pMethod = pClass->vMethod[k];
@@ -749,7 +749,7 @@ int CSJVM::Compile(LPCTSTR szFile)
 		return nRet;
 
 #ifdef _DEBUG
-	int		nIndent = 0;
+//	int		nIndent = 0;
 //	PrintSyntaxTree(m_syntaxTree, nIndent);
 #endif
 
@@ -819,7 +819,7 @@ int CSJVM::CompileFiles(VecString &vFiles)
 			return nRet;
 
 #ifdef _DEBUG
-		int		nIndent = 0;
+		// int		nIndent = 0;
 		// PrintSyntaxTree(m_syntaxTree, nIndent);
 		// Print();
 #endif
@@ -1037,13 +1037,13 @@ int CSJVM::RegisterNativeAPI(LPCSTR szClassName, LPCSTR szFuncName, LPVOID funcP
 
 	for (i = 0; (int)i < nParameterMax; i++)
 	{
-		int		typeId = va_arg(args, TypeId);
+		int		typeId = (TypeId)va_arg(args, int);
 		if (typeId == TID_INVALID)
 			return ERR_C_UNDECLARED_METHOD;
 
 		method.AddParam(typeId);
 	}
-	int		typeId = va_arg(args, TypeId);
+	int		typeId = (TypeId)va_arg(args, int);
 	if (typeId != TID_INVALID)
 		return ERR_C_UNDECLARED_METHOD;
 

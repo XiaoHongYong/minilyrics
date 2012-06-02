@@ -222,7 +222,7 @@ void CSkinResMgr::AddRessourceDir(LPCTSTR szResDir, int nPos)
 		m_vResSearchDirs.insert(m_vResSearchDirs.begin() + nPos, strDir);
 }
 
-void CSkinResMgr::EnumFiles(LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath)
+void CSkinResMgr::EnumFiles(LPCTSTR szFilter, vector<tstring> &vFiles, bool bEnumFullPath)
 {
 	for (uint i = 0; i < m_vResSearchDirs.size(); i++)
 	{
@@ -245,6 +245,17 @@ BOOL CSkinResMgr::GetResourcePathName(LPTSTR szPathName, int nSizePathName, LPCT
 	ERRLOG1(_T("Resource File: %s does NOT exist!"), szResName);
 	return FALSE;
 }
+
+tstring CSkinResMgr::GetResourcePathName(LPCTSTR szResName) const
+{
+	TCHAR szPathName[MAX_PATH];
+	EmptyStr(szPathName);
+	
+	GetResourcePathName(szPathName, CountOf(szPathName), szResName);
+
+	return szPathName;
+}
+
 
 void CSkinResMgr::AdjustHue(float hue, float saturation, float luminance)
 {

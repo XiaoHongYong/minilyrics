@@ -39,14 +39,18 @@ public:
 		int FromXML(CSkinFactory *pSkinFactory, SXNode *pNode);
 	};
 
-	CSkinMenu(CSkinFactory *pSkinFactory);
+	CSkinMenu();
 	virtual ~CSkinMenu();
+
+	int LoadMenu(int nID);
 
 	void TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap = NULL);
 
 	void TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap = NULL);
 
 	virtual int FromXML(SXNode *pNodeMenu, int nAppendPos);
+
+	virtual bool GetShortcutKey(int nMenuID, tstring &strShortcut) { return false; }
 
 	virtual int GetOrgAppendPos() { return m_nOrgAppenPos; }
 
@@ -55,12 +59,14 @@ public:
 	int GetSubMenuPos(int nSubMenu) const;
 
 protected:
+	void LoadMenu(CTextFile &file, CMLMenu &menu);
+
+protected:
 	typedef list<Item>		LIST_ITEMS;
 
 	int				m_nOrgAppenPos;
 	int				m_nAppendPosition;
 	LIST_ITEMS		m_listItems;
-	CSkinFactory	*m_pSkinFactory;
 
 };
 

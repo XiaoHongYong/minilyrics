@@ -28,7 +28,6 @@ bool CSkinResizableLinearContainer::OnMouseDrag(CPoint point)
 		SetResizerCursor();
 
 		// Start to resizer drag now
-		bool bDone = false;
 		if (m_bVertical)
 		{
 			int offset = point.y - m_ptDragOld.y;

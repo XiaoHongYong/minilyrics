@@ -72,6 +72,8 @@ bool CSkinSeekCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 		// 滚动条的空白位置，进行seek操作
 		TrackOnLButtonDown(nFlags, point);
 		break;
+	default:
+		break;
 	}
 
 	return true;
@@ -140,6 +142,8 @@ bool CSkinSeekCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 			NotifyEvent(CSkinSeekCtrlEventNotify::C_END_DRAG);
 		}
 		break;
+	default:
+		break;
 	}
 
 	m_PushDownPos = PUSH_DOWN_NONE;
@@ -197,6 +201,8 @@ bool CSkinSeekCtrl::OnMouseDrag(CPoint point)
 	{
 	case PUSH_DOWN_THUMB:
 		ThumbOnMouseMove(point);
+		break;
+	default:
 		break;
 	}
 

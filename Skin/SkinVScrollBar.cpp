@@ -156,6 +156,8 @@ bool CSkinSrollBarBase::OnLButtonDown(UINT nFlags, CPoint point)
 		// 滚动条的空白位置，进行翻页操作
 		TrackOnLButtonDown(nFlags, point);
 		break;
+	default:
+		break;
 	}
 
 	return true;
@@ -257,6 +259,8 @@ bool CSkinSrollBarBase::OnLButtonUp(UINT nFlags, CPoint point)
 	case PUSH_DOWN_BOTTOMTRACK:
 		// 滚动条的空白位置，进行翻页操作
 		TrackOnLButtonUp(nFlags, point);
+		break;
+	default:
 		break;
 	}
 
@@ -595,6 +599,8 @@ void CSkinSrollBarBase::OnTimer(int nId)
 					Invalidate();
 				}
 			}
+			break;
+		default:
 			break;
 		}
 	}

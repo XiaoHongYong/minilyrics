@@ -161,6 +161,8 @@ MLRESULT CMPluginManager::DetectPlugins()
 					RegisterDecoder(decoder, strPlugin.c_str(), i);
 				}
 				break;
+			default:
+				break;
 			}
 		}
 	}

@@ -73,6 +73,7 @@ enum UIObjectId
 class IUIObjNewer
 {
 public:
+	virtual ~IUIObjNewer() { }
 	virtual CUIObject *New() = 0;
 
 };

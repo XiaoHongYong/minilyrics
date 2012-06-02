@@ -106,7 +106,7 @@ image/jpeg	image/tiff	image/gif	image/bmp	image/png
 #define MIME_IMAGE	"image/"
 void ID3v2Pictures::ITEM::MimeToPicExt(char szPicExt[4])
 {
-	memset(szPicExt, 0, sizeof(szPicExt));
+	memset(szPicExt, 0, sizeof(char) * 4);
 
 	int		nMimeImage = strlen(MIME_IMAGE);
 	if (strncmp(m_strMimeType.c_str(), MIME_IMAGE, nMimeImage) == 0)

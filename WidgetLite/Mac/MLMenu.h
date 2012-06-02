@@ -11,11 +11,14 @@ class CMLMenu
 {
 public:
 	CMLMenu();
+	CMLMenu(const CMLMenu &src);
 	virtual ~CMLMenu();
 
-	bool IsValid() const { return m_hMenu != NULL; }
+	bool IsValid() const;
 
-	bool LoadMenu(int nID);
+	bool CreatePopupMenu();
+	
+	virtual void OnLoadMenu() { }
 
 	void Destroy();
 
@@ -27,30 +30,32 @@ public:
 	void CheckItem(int nID, bool bCheck);
 	void CheckRadioItem(int nID, int nStartID, int nEndID);
 
-	//
-	// Create menu...
-	//
-	bool CreatePopupMenu();
+	int GetItemCount();
 
-	virtual void AppendItem(UINT nID, LPCTSTR szText);
+	virtual void AppendItem(UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey = _T(""));
+	virtual void InsertItem(int nPos, UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey = _T(""));
+	virtual void InsertItemByID(UINT nPosID, UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey = _T(""));
+	
 	void AppendSeperator();
-	virtual void InsertItem(int nPos, UINT nID, LPCTSTR szText);
-	virtual void InsertItemByID(UINT nPosID, UINT nID, LPCTSTR szText);
 	void InsertSeperator(int nPos);
+	
+	CMLMenu AppendSubmenu(LPCTSTR szText);
+	CMLMenu InsertSubmenu(int nPos, LPCTSTR szText);
+
 	void RemoveItem(int nPos);
 
 	bool GetMenuItemText(UINT nItem, tstring &strText, bool bByPosition);
 
 	bool GetMenuItemInfo(UINT nItem, tstring &strText, UINT &nID, bool &bSubMenu, bool bByPosition);
 
-public:
-	bool LoadPopupMenu(int nID, int nSubMenu);
+	bool HasItem(int nPos);
+	bool HasSubmenu(int nPos);
+	CMLMenu GetSubmenu(int nPos);
 
-	virtual void OnLoadMenu() { }
+	CMLMenu & operator = (CMLMenu &menu);
 	
 protected:
-	LPVOID			m_hMenu;
-	int				m_nSubMenu;
+	struct MLMenuInfo	*m_info;
 
 };
 

@@ -28,7 +28,7 @@ CSkinRgn::~CSkinRgn()
 
 BOOL CSkinRgn::StretchRgn(double dbScaleRadio, int nWidth, int nHeight)
 {
-	int			nStretchStartX = (int)(m_nStretchStartX * dbScaleRadio);
+/*	int			nStretchStartX = (int)(m_nStretchStartX * dbScaleRadio);
 	int			nStretchEndX = (int)(m_nStretchEndX * dbScaleRadio);
 	int			nStretchStartY = (int)(m_nStretchStartY * dbScaleRadio);
 	int			nStretchEndY = (int)(m_nStretchEndY * dbScaleRadio);
@@ -40,7 +40,7 @@ BOOL CSkinRgn::StretchRgn(double dbScaleRadio, int nWidth, int nHeight)
 	int			nNewEndY;
 	RECT		*pRc;
 	int			i;
-
+*/
 
 	return FALSE;
 }

@@ -342,7 +342,7 @@ return TRUE;
 }\
 }
 
-/*#define		REG_VERIFY_CODE_2		\
+#define		REG_VERIFY_CODE_2		\
 {\
 if (g_nMLRegCodeVer == 2 && g_MiniLyricsMain.m_bRegistered)\
 {\

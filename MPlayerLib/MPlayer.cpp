@@ -317,9 +317,9 @@ MLRESULT CMPluginManagerAgent::DetectPlugins()
 	//
 	// Register internal plugins
 	//
+#ifndef _MAC_OSX
 	IMediaDecode	*pDecoder;
 
-#ifndef _MAC_OSX
 	pDecoder = new CMDWmpCore;
 	OnInternalDecoderRegister(pDecoder);
 	pDecoder->Release();
@@ -368,9 +368,9 @@ MLRESULT CMPluginManagerAgent::NewDecoder(IMediaInput *pInput, IMediaDecode **pp
 {
 	ASSERT(pInput);
 
+#ifndef _MAC_OSX
 	LPCXSTR szMediaUrl = pInput->GetSource();
 
-#ifndef _MAC_OSX
 	if (FileIsExtSame(szMediaUrl, _T(".mp3")))
 		*ppDecoder = new CMDWmpCore;
 		// *ppDecoder = new CMDLibmad;
@@ -1776,7 +1776,7 @@ void CMPlayer::AddVisData(IFBuffer *pBuf, int nBps, int nChannels, int nSampleRa
 
 	CMutexAutolock	autolock(m_mutexVisdataAccess);
 
-	if (m_nBufferedVisMs > m_nMODelay && m_queVisDataPre.size() >= 9 || m_queVisDataPre.size() > 40)
+	if ((m_nBufferedVisMs > m_nMODelay && m_queVisDataPre.size() >= 9) || m_queVisDataPre.size() > 40)
 	{
 		VisDataPre	&temp = m_queVisDataPre.front();
 		m_nBufferedVisMs -= temp.pBuf->size() / (temp.nBps / 8) / temp.nChannels / temp.nSampleRate;

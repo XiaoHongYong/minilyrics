@@ -213,7 +213,7 @@ bool CMPHotkey::Remove(int nIndex)
 	if (nIndex < 0 || nIndex >= (int)m_vAccKey.size())
 		return false;
 
-	CmdAccKey &cmdKey = m_vAccKey[nIndex];
+	// CmdAccKey &cmdKey = m_vAccKey[nIndex];
 	m_vAccKey.erase(m_vAccKey.begin() + nIndex);
 
 	SaveSettings();
@@ -322,9 +322,7 @@ bool CMPHotkey::GetHotkeyText(int cmd, tstring &strKey)
 		CmdAccKey		&cmdKey = m_vAccKey[i];
 
 		if (cmdKey.cmd == cmd)
-		{
 			return true;
-		}
 	}
 
 	if (cmd == CMD_FONT_SIZE_INC)
@@ -460,7 +458,7 @@ void CMPHotkey::UnregisterAllGlobalHotKeys()
 {
 	for (int i = 0; i < (int)m_vAccKey.size(); i++)
 	{
-		CmdAccKey		&cmdKey = m_vAccKey[i];
+		// CmdAccKey		&cmdKey = m_vAccKey[i];
 
 	}
 }

@@ -52,11 +52,10 @@ int CSkinMenu::Item::FromXML(CSkinFactory *pSkinFactory, SXNode *pNode)
 	return ERR_OK;
 }
 
-CSkinMenu::CSkinMenu(CSkinFactory *pSkinFactory)
+CSkinMenu::CSkinMenu()
 {
 	m_nOrgAppenPos = 0;
 	m_nAppendPosition = 0;
-	m_pSkinFactory = pSkinFactory;
 }
 
 CSkinMenu::~CSkinMenu()
@@ -64,22 +63,101 @@ CSkinMenu::~CSkinMenu()
 
 }
 
+int CSkinMenu::LoadMenu(int nID)
+{
+	tstring strFile = CSkinApp::GetInstance()->GetSkinFactory()->GetResourceMgr()->GetResourcePathName(_T("menu.txt"));
+	if (strFile.empty())
+		return ERR_NOT_FOUND;
+
+	CTextFile file;
+
+	int nRet = file.Open(strFile.c_str(), CTextFile::OM_READ, ED_LATIN9_ISO);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	tstring line;
+	file.ReadLine(line);
+	if (_tcscmp(line.c_str(), _T("menufile_v1")) != 0)
+	{
+		ERRLOG1(_T("Invalid menu file format: %s"), strFile.c_str());
+		return ERR_BAD_FILE_FORMAT;
+	}
+
+	CreatePopupMenu();
+
+	CStrPrintf strMenu(_T("menu:%d"), nID);
+
+	while (file.ReadLine(line))
+	{
+		if (_tcscmp(line.c_str(), strMenu.c_str()) != 0)
+			continue;
+
+		LoadMenu(file, *this);
+		
+		OnLoadMenu();
+		return ERR_OK;
+	}
+	
+	ERRLOG1(_T("Failed to load menu, NOT exists: %d"), nID);
+
+	return ERR_NOT_FOUND;
+}
+
+void CSkinMenu::LoadMenu(CTextFile &file, CMLMenu &menu)
+{
+	CColonSeparatedValues values;
+	tstring line;
+	while (file.ReadLine(line))
+	{
+		VecString vValues;
+		values.Split(line.c_str(), vValues);
+		if (vValues.size() == 0)
+			continue;
+
+		if (_tcscmp(vValues[0].c_str(), _T("popup")) == 0)
+		{
+			CMLMenu subMenu = menu.AppendSubmenu(_TL(vValues[1].c_str()));
+			LoadMenu(file, subMenu);
+		}
+		else if (_tcscmp(vValues[0].c_str(), _T("item")) == 0)
+		{
+			if (vValues.size() != 4)
+			{
+				ERRLOG1(_T("Invalid menu item line: %s"), line.c_str());
+				continue;
+			}
+			int nID = StringToInt(vValues[1].c_str(), -1);
+			GetShortcutKey(nID, vValues[3]);
+			menu.AppendItem(nID, 
+				_TL(vValues[2].c_str()), vValues[3].c_str());
+		}
+		else if (_tcscmp(vValues[0].c_str(), _T("separator")) == 0)
+		{
+			menu.AppendSeperator();
+		}
+		else if (_tcscmp(vValues[0].c_str(), _T("end")) == 0)
+		{
+			return;
+		}
+		else
+			ERRLOG1(_T("Invalid menu item line: %s"), line.c_str());
+	}
+}
+
 void CSkinMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
-	if (m_pSkinFactory)
-	{
-		LIST_ITEMS::iterator	it, itEnd;
-		int						nRet;
+	CSkinFactory *pSkinFactory = CSkinApp::GetInstance()->GetSkinFactory();
+	LIST_ITEMS::iterator	it, itEnd;
+	int						nRet;
 
-		itEnd = m_listItems.end();
-		for (it = m_listItems.begin(); it != itEnd; ++it)
+	itEnd = m_listItems.end();
+	for (it = m_listItems.begin(); it != itEnd; ++it)
+	{
+		Item	&item = *it;
+		if (item.nIDCmdIsChecked != UID_INVALID && item.bCanCheck)
 		{
-			Item	&item = *it;
-			if (item.nIDCmdIsChecked != UID_INVALID && item.bCanCheck)
-			{
-				nRet = m_pSkinFactory->OnDynamicCmd(item.nIDCmdIsChecked, (CSkinWnd *)pWnd);
-				CheckItem(item.nMenuID, nRet == ERR_OK);
-			}
+			nRet = pSkinFactory->OnDynamicCmd(item.nIDCmdIsChecked, (CSkinWnd *)pWnd);
+			CheckItem(item.nMenuID, nRet == ERR_OK);
 		}
 	}
 
@@ -88,20 +166,18 @@ void CSkinMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap
 
 void CSkinMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
-	if (m_pSkinFactory)
-	{
-		LIST_ITEMS::iterator	it, itEnd;
-		int						nRet;
+	CSkinFactory *pSkinFactory = CSkinApp::GetInstance()->GetSkinFactory();
+	LIST_ITEMS::iterator	it, itEnd;
+	int						nRet;
 
-		itEnd = m_listItems.end();
-		for (it = m_listItems.begin(); it != itEnd; ++it)
+	itEnd = m_listItems.end();
+	for (it = m_listItems.begin(); it != itEnd; ++it)
+	{
+		Item	&item = *it;
+		if (item.nIDCmdIsChecked != UID_INVALID && item.bCanCheck)
 		{
-			Item	&item = *it;
-			if (item.nIDCmdIsChecked != UID_INVALID && item.bCanCheck)
-			{
-				nRet = m_pSkinFactory->OnDynamicCmd(item.nIDCmdIsChecked, (CSkinWnd *)pWnd);
-				CheckItem(item.nMenuID, nRet == ERR_OK);
-			}
+			nRet = pSkinFactory->OnDynamicCmd(item.nIDCmdIsChecked, (CSkinWnd *)pWnd);
+			CheckItem(item.nMenuID, nRet == ERR_OK);
 		}
 	}
 
@@ -110,8 +186,6 @@ void CSkinMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RE
 
 int CSkinMenu::FromXML(SXNode *pNodeMenu, int nAppendPos)
 {
-	SXNode::iterator it, itEnd;
-
 	if (!pNodeMenu)
 		return ERR_NOT_FOUND;
 
@@ -122,6 +196,7 @@ int CSkinMenu::FromXML(SXNode *pNodeMenu, int nAppendPos)
 
 	m_nAppendPosition = nAppendPos;
 
+	SXNode::iterator it, itEnd;
 	itEnd = pNodeMenu->listChildren.end();
 	for (it = pNodeMenu->listChildren.begin(); it != itEnd; ++it)
 	{
@@ -131,7 +206,7 @@ int CSkinMenu::FromXML(SXNode *pNodeMenu, int nAppendPos)
 		if (_tcsicmp(pNode->strName.c_str(), _T("Item")) == 0)
 		{
 			Item	item;
-			item.FromXML(m_pSkinFactory, pNode);
+			item.FromXML(CSkinApp::GetInstance()->GetSkinFactory(), pNode);
 
 			m_listItems.push_back(item);
 			if (item.action == A_APPEND)

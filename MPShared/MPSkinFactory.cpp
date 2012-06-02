@@ -44,16 +44,9 @@
 
 #ifdef _WIN32
 #include "win32/LyricsDownloader.h"
-#include "win32/MPSkinMenu.h"
 #endif
 
-#ifdef _LINUX_GTK2
-#include "gtk2/MPSkinMenu.h"
-#endif
-
-#ifdef _MAC_OSX
-#include "mac/MPSkinMenu.h"
-#endif
+#include "MPSkinMenu.h"
 
 #ifdef _WIN32_DESKTOP
 #include "win32/MPFloatingLyrWnd.h"
@@ -133,52 +126,58 @@ CSkinWnd *CMPSkinFactory::NewSkinWnd(LPCTSTR szSkinWndName, bool bMainWnd)
 
 CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 {
-	CSkinMenu		*pSkinMenu = NULL;
+	CSkinMenu	*pSkinMenu = NULL;
 
 	if (_tcsicmp(szMenu, _T("MainMenu")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		// pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		pSkinMenu->LoadMenu(IDM_MENU);
 	}
 	else if (_tcsicmp(szMenu, _T("LyricsMenu")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 1);
+		// pSkinMenu->LoadPopupMenu(IDM_MENU, 1);
+		pSkinMenu->LoadMenu(IDM_MENU);
 	}
 	else if (_tcsicmp(szMenu, _T("LyrEditorMenu")) == 0)
 	{
-		pSkinMenu = new CLyrEditorMenu(this);
+		pSkinMenu = new CLyrEditorMenu();
+		// pSkinMenu->LoadMenu(IDM_LYR_EDITOR);
 		pSkinMenu->LoadMenu(IDM_LYR_EDITOR);
 	}
 	else if (_tcsicmp(szMenu, _T("MainWndMenu")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
+		// pSkinMenu->LoadMenu(IDM_MAIN_WND);
 		pSkinMenu->LoadMenu(IDM_MAIN_WND);
 	}
 	else if (_tcsicmp(szMenu, _T("LyrDlCtxMenu")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		// pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		pSkinMenu->LoadMenu(IDM_MENU);
 		pMenu->RemoveItem(7); // 7 is Lyrics Downloader for iPod
 	}
 	else if (_tcsicmp(szMenu, _T("iPodLyricsDownloader")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
+		// pSkinMenu->LoadMenu(IDM_IPOD_LYR_DOWNLOADER);
 		pSkinMenu->LoadMenu(IDM_IPOD_LYR_DOWNLOADER);
 	}
 #ifdef _MPLAYER
 	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 2);
@@ -201,10 +200,11 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 #endif
 	else
 	{
-		CMPSkinMenu	*pMenu = new CMPSkinMenu(this);
+		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		// pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
+		pSkinMenu->LoadMenu(IDM_MENU);
 	}
 
 	return pSkinMenu;

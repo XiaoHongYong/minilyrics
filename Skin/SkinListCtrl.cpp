@@ -1114,7 +1114,7 @@ CSkinListCtrl::HitTestArea CSkinListCtrl::HitTest(POINT &point, int &nColumnInde
 
 void CSkinListCtrl::DrawHeader(CRawGraph *pGraph)
 {
-	int		x = m_rcContent.left, xMax = m_rcContent.Width();
+	int		x = m_rcContent.left;
 	int		y = m_rcContent.top;
 
 	if (m_pHorzScrollBar)
@@ -1183,7 +1183,6 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 	CSkinScrollFrameCtrlBase::Draw(pGraph);
 
 	CRect	rc, rcItem;
-	int		nWidthMax = 0;
 	int		nImageCx = 0;
 
 	if (m_font.IsGood())
@@ -1513,7 +1512,6 @@ void CSkinListCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 
 	CPaintUpdater		updater(this);
 	CSelChangedCheck	selChecher(this);
-	bool				bSelChanged = false;
 
 	switch (nChar)
 	{

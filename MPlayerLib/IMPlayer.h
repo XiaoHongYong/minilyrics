@@ -123,6 +123,8 @@ typedef LPTSTR  LPXSTR;
 
 interface IXStr
 {
+	virtual ~IXStr() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -143,6 +145,8 @@ interface IXStr
 
 interface IVXStr
 {
+	virtual ~IVXStr() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -157,6 +161,8 @@ interface IVXStr
 
 interface IVector
 {
+	virtual ~IVector() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -171,6 +177,8 @@ interface IVector
 
 interface IVInt
 {
+	virtual ~IVInt() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -185,6 +193,8 @@ interface IVInt
 
 interface IFBuffer
 {
+	virtual ~IFBuffer() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -198,6 +208,8 @@ interface IFBuffer
 
 interface IMemAllocator
 {
+	virtual ~IMemAllocator() { }
+	
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -249,6 +261,8 @@ enum MediaAttribute
 
 interface IMedia
 {
+	virtual ~IMedia() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -280,6 +294,8 @@ interface IMedia
 
 interface IPlaylist
 {
+	virtual ~IPlaylist() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -311,6 +327,8 @@ enum MediaLibOrderBy
 
 interface IMediaLibrary
 {
+	virtual ~IMediaLibrary() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -383,6 +401,8 @@ interface IMediaLibrary
 
 interface IMPEvent
 {
+	virtual ~IMPEvent() { }
+
 	enum MP_SETTING_TYPE
 	{
 		MPS_SHUFFLE,	// bool
@@ -419,6 +439,8 @@ interface IMPEvent
 
 interface IMPluginManager
 {
+	virtual ~IMPluginManager() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -436,6 +458,8 @@ interface IMPluginManager
 
 interface IMPlayer
 {
+	virtual ~IMPlayer() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -548,6 +572,7 @@ struct VisParam
 
 interface IVis
 {
+	virtual ~IVis() { }
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -559,6 +584,8 @@ interface IVis
 
 interface IDSP
 {
+	virtual ~IDSP() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -571,6 +598,7 @@ interface IDSP
 interface IMediaOutput// : IUnknown
 {
 	IMediaOutput() : m_nChannels(0), m_nSamplerate(0), m_nBitsPerSamp(0) { }
+	virtual ~IMediaOutput() { }
 
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
@@ -610,6 +638,8 @@ protected:
 
 interface IMediaInputDetector
 {
+	virtual ~IMediaInputDetector() { }
+	
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -620,6 +650,7 @@ interface IMediaInputDetector
 
 interface IMediaInput
 {
+	virtual ~IMediaInput() { }
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 
@@ -675,6 +706,8 @@ interface IMediaDecodeSimple
 
 interface IMediaDecode// : IUnknown
 {
+	virtual ~IMediaDecode() { }
+
 	virtual void AddRef() = 0;
 	virtual void Release() = 0;
 

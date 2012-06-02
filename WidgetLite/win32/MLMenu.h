@@ -15,7 +15,9 @@ public:
 
 	bool IsValid() const { return m_hMenu != NULL; }
 
-	bool LoadMenu(int nID);
+	bool CreatePopupMenu();
+
+	virtual void OnLoadMenu() { }
 
 	void Destroy();
 
@@ -23,34 +25,44 @@ public:
 
 	virtual void TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap = NULL);
 
+	int GetItemCount();
+
 	void EnableItem(int nID, bool bEnable);
 	void CheckItem(int nID, bool bCheck);
 	void CheckRadioItem(int nID, int nStartID, int nEndID);
 
-	//
-	// Create menu...
-	//
-	bool CreatePopupMenu();
+	virtual void AppendItem(UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey = _T(""));
+	virtual void InsertItem(int nPos, UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey = _T(""));
+	virtual void InsertItemByID(UINT nPosID, UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey = _T(""));
 
-	virtual void AppendItem(UINT nID, LPCTSTR szText);
 	void AppendSeperator();
-	virtual void InsertItem(int nPos, UINT nID, LPCTSTR szText);
-	virtual void InsertItemByID(UINT nPosID, UINT nID, LPCTSTR szText);
 	void InsertSeperator(int nPos);
+
+	CMLMenu AppendSubmenu(LPCTSTR szText);
+	CMLMenu InsertSubmenu(int nPos, LPCTSTR szText);
+
 	void RemoveItem(int nPos);
 
 	bool GetMenuItemText(UINT nItem, tstring &strText, bool bByPosition);
 
 	bool GetMenuItemInfo(UINT nItem, tstring &strText, UINT &nID, bool &bSubMenu, bool bByPosition);
 
+	bool HasItem(int nPos);
+	bool HasSubmenu(int nPos);
+	CMLMenu GetSubmenu(int nPos);
+
+	CMLMenu & operator = (CMLMenu &menu);
+
 public:
+	//
+	// APIs for Win32
+	//
+
+	bool LoadMenu(int nID);
 	bool LoadPopupMenu(int nID, int nSubMenu);
 
-	virtual void OnLoadMenu() { }
-
-	// Win32 only
 	void Attach(HMENU hMenu) { m_hMenu = hMenu; }
-	HMENU GetSubMenu(int nPos);
+	HMENU GetSubMenuHandle(int nPos);
 	HMENU GetHandle();
 
 	HMENU FindMenuPos(HMENU hMenu, UINT nIDMenu);
@@ -58,6 +70,7 @@ public:
 protected:
 	HMENU			m_hMenu;
 	int				m_nSubMenu;
+	bool			m_bFree;
 
 };
 

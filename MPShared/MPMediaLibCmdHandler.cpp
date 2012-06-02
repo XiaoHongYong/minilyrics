@@ -110,9 +110,8 @@ bool CMediaLibTreeProvider::ChToChild(int nIndex)
 	if (item.folderType == FT_ALL_PLAYLIST_FILES)
 	{
 		// nRet = m_mediaLib->GetAll(&playlist);
-		int			nLevel = 3;
 		vector<tstring>	vFiles;
-		Item				newitem;
+		Item			newitem;
 
 		newitem.bUptodate = false;
 		newitem.folderType = FT_PLAYLIST_FILE;

@@ -442,9 +442,6 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 // 创建一个线程搜索歌词，线程执行完毕之后会通知目标
 BOOL COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle)
 {
-	COnlineSearchThreadParam		*pParam;
-	DWORD							dwThreadId = 0;
-
 	// LOG0(LOG_LVL_INFO, _T("Enter Add search job proc"));
 
 	if (m_bRunning)
@@ -453,7 +450,7 @@ BOOL COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR sz
 		return FALSE;
 	}
 
-	pParam = new COnlineSearchThreadParam;
+	COnlineSearchThreadParam *pParam = new COnlineSearchThreadParam;
 	pParam->strArtist = szArtist;
 	pParam->strTitle = szTitle;
 	pParam->strAssociateMediaKey = CMPlayerAppBase::GetAssociateFileKeyword();

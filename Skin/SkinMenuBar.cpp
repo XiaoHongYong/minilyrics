@@ -29,7 +29,7 @@ void CMenuBarMsgHandler::PostTrackPopupMenu()
 
 bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, CMLMenu *pMenu, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
-	HMENU	hMenu = pMenu->GetSubMenu(nSubMenu);
+	HMENU	hMenu = pMenu->GetSubMenuHandle(nSubMenu);
 	ASSERT(pWnd);
 	ASSERT(hMenu);
 	if (!hMenu)
@@ -218,7 +218,6 @@ void CSkinMenuBar::OnCreate()
 void CSkinMenuBar::Draw(CRawGraph *pGraph)
 {
 	int			x = 0;
-	int			y = 0;
 	int			nSpaceSubMenus = SPACE_SUBMENUS;
 	CRect		rcItem;
 

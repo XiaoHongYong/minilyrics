@@ -880,7 +880,6 @@ bool CSkinWnd::UpdateSkinProperty()
 		{
 			// Skin mode, for windows xp or later, if the region is used, set rect region instead.
 			CRegion		rgnOrg;
-			int			n;
 
 			// don't use any region
 			SetWindowRgn(NULL);
@@ -888,7 +887,7 @@ bool CSkinWnd::UpdateSkinProperty()
 #ifdef _WIN32
 			// Is region used?
 			rgnOrg.CreateRectRgn(0, 0, 1, 1);
-			n = GetWindowRgn(m_hWnd, rgnOrg.m_rgn);
+			int n = GetWindowRgn(m_hWnd, rgnOrg.m_rgn);
 			if (n != ERROR)
 			{
 				// yes, use rect region instead.
@@ -1252,7 +1251,6 @@ void CSkinWnd::OnSize(int cx, int cy)
 				{
 					// Skin mode, for windows xp or later, if the region is used, set rect region instead.
 					CRegion		rgnOrg;
-					int			n;
 
 					// don't use any region
 					SetWindowRgn(NULL);
@@ -1260,7 +1258,7 @@ void CSkinWnd::OnSize(int cx, int cy)
 #ifdef _WIN32
 					// Is region used?
 					rgnOrg.CreateRectRgn(0, 0, 1, 1);
-					n = GetWindowRgn(m_hWnd, rgnOrg.m_rgn);
+					int n = GetWindowRgn(m_hWnd, rgnOrg.m_rgn);
 					if (n != ERROR)
 					{
 						// yes, use rect region instead.
@@ -2656,7 +2654,6 @@ void CSkinWnd::OnLoadWndSizePos()
 
 	// WndSizeMode		sizeMode;
 	CRect			rcNew;
-	DWORD			dwShowFlag = 0;
 	bool			bCenterWnd = true;
 
 	if (IsZoomed())

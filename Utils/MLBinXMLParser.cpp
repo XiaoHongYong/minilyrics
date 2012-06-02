@@ -23,7 +23,7 @@ XML = "MBXML" Version[byte] flags[uint32] total_length[uint32] [data block] [dat
   "<" element2_name_index_str_table prop_name_index_str_table prop_value_index_str_table "/>"
 "/>"
 
-/************************************************************************/
+\************************************************************************/
 
 #define SZ_BIN_XML_HEADER		"MBXML"
 #define LEN_BIN_XML_HEADER		(sizeof(SZ_BIN_XML_HEADER) - 1)

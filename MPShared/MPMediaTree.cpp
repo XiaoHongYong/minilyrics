@@ -279,13 +279,13 @@ void CMPMTNDiskDevice::OnUpdate()
 	if (m_nImageIndex == II_MYCOMPUTER)
 	{
 		// root of my computer
+#ifdef _WIN32
 		TCHAR	szStr[512] = _T("");
 		int		nRet;
 		V_Str	vStr;
 		int		nImage;
 		UINT	nType;
 
-#ifdef _WIN32
 		nRet = GetLogicalDriveStrings(CountOf(szStr), szStr);
 		MultiStrToVStr(szStr, vStr);
 		for (int i = 0; i < (int)vStr.size(); i++)
@@ -350,7 +350,6 @@ void CMPMTNPlaylists::OnUpdate()
 	if (folderType == FT_ALL_PLAYLISTS)
 	{
 		// enum all the playlist files
-		int				nLevel = 3;
 		vector<tstring>	vFiles;
 
 		EnumPlaylistsFast(vFiles);

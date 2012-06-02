@@ -376,7 +376,7 @@ int CM4aTag::Parse(M4aBox *parent, int nExtraHeaderOffset)
 		offset += size;
 		parent->AddChild(pChild);
 
-		_tprintf(_T("Box: %S, offset: %d, size: %d\n"), type, offset, size);
+		DBGLOG3(_T("Box: %S, offset: %d, size: %d\n"), type, offset, size);
 
 		if (totalSize == parent->m_nSize)
 			break;

@@ -124,6 +124,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 	case SN_HTTP_SIGNUP:	return _T("http://www.viewlyrics.com/user/signup.aspx");
 	case SN_HTTP_LOGIN:		return _T("http://www.viewlyrics.com/user/Login.aspx");
 	case SN_HTTP_RATE_LRC:	return _T("http://viewlyrics.com/lyrics/rate.aspx?lid=");
+	default: break;
 	}
 
 #ifdef _MPLAYER

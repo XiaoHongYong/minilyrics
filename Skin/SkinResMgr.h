@@ -24,9 +24,10 @@ public:
 public:
 	void OnClose();
 
-	void EnumFiles(LPCTSTR szFilter, vector<tstring> &vFiles, BOOL bEnumFullPath);
+	void EnumFiles(LPCTSTR szFilter, vector<tstring> &vFiles, bool bEnumFullPath);
 
 	BOOL GetResourcePathName(LPTSTR szPathName, int nSizePathName, LPCTSTR szResName) const;
+	tstring GetResourcePathName(LPCTSTR szResName) const;
 
 	void ClearRessourceDir() { m_vResSearchDirs.clear(); }
 

@@ -531,7 +531,7 @@ void CAppAnalyticsClient::ThreadSend(void * lpParam)
 {
 	SendParam *pSendParam = (SendParam *)lpParam;
 
-	int nRet = pSendParam->pAAClient->Send(pSendParam->strUsageData, pSendParam->bInstallPing);
+	pSendParam->pAAClient->Send(pSendParam->strUsageData, pSendParam->bInstallPing);
 
 	delete pSendParam;
 }

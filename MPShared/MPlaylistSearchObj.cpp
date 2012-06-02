@@ -12,28 +12,9 @@
 
 void SplitKeywords(LPCTSTR szKeywords, V_Str &vKeywords)
 {
-	LPCTSTR		pStart, p;
-	tstring		str;
-
 	vKeywords.clear();
-
-	pStart = p = szKeywords;
-	while (*p)
-	{
-		while (IsAlpha(*p) || IsDigit(*p))
-			*p++;
-
-		if (p == pStart)
-			p++;
-
-		if (*pStart != ' ' && *pStart != '\t')
-		{
-			vKeywords.push_back(tstring());
-			vKeywords.back().append(pStart, p);
-		}
-
-		pStart = p;
-	}
+	
+	StrSplit(szKeywords, ' ', vKeywords);
 }
 
 
@@ -388,6 +369,8 @@ void CMPlaylistSearchObj::OnUIObjNotify(IUIObjNotify *pNotify)
 					m_pCtrlPlaylistList->DeleteItem(nSel);
 				}
 				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -439,6 +422,8 @@ void CMPlaylistSearchObj::OnUIObjNotify(IUIObjNotify *pNotify)
 						m_pCtrlPlaylist->DeleteItem(nItem);
 					}
 				}
+				break;
+			default:
 				break;
 			}
 		}

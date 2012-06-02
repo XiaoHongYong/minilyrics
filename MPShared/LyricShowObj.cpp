@@ -1673,8 +1673,8 @@ bool CLyricShowObj::OnLButtonDown(UINT nFlags, CPoint point)
 				{
 #ifndef _MPLAYER
 					// show rate dialog
-					CMLMenu	menu;
-					menu.LoadPopupMenu(IDR_MENU_RATE, 0);
+					CSkinMenu	menu;
+					menu.LoadMenu(IDR_MENU_RATE);
 
 					CPoint	pt;
 					MLWidget::GetCursorPos(&pt);
@@ -1849,7 +1849,6 @@ bool CLyricShowObj::AutoWidthSkinAccordLyrics()
 #else
 	CRect		rc, rcOrg;
 	int			nWidthMax = 200;
-	int			nWPrev = 0;
 
 	if (!m_pMLData || !m_bEnableAutoResize || m_pSkin->m_wndResizer.IsFixedWidth())
 		return false;

@@ -686,7 +686,6 @@ void CLyricsLocalSearch::LoadLyricsAssociationV2()
 	CMutexAutolock					autoLock(m_mutex);
 
 #ifndef _WIN32_WCE
-	BOOL			bConvertSave = FALSE;
 	// 先加载旧的歌词关联表，并删除之
 	LoadLyricsAssociationOld();
 #endif

@@ -21,7 +21,7 @@
 		5F9CDEAB147A2C2A00432DAC /* FileSaveDlg.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */; };
 		5F9CDEAC147A2C2A00432DAC /* FolderDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */; };
 		5F9CDEAD147A2C2A00432DAC /* FolderDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE95147A2C2A00432DAC /* FolderDialog.h */; };
-		5F9CDEAE147A2C2A00432DAC /* MLMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE96147A2C2A00432DAC /* MLMenu.cpp */; };
+		5F9CDEAE147A2C2A00432DAC /* MLMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE96147A2C2A00432DAC /* MLMenu.mm */; };
 		5F9CDEAF147A2C2A00432DAC /* MLMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE97147A2C2A00432DAC /* MLMenu.h */; };
 		5F9CDEB0147A2C2A00432DAC /* ScrollBarHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE98147A2C2A00432DAC /* ScrollBarHandler.cpp */; };
 		5F9CDEB1147A2C2A00432DAC /* ScrollBarHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE99147A2C2A00432DAC /* ScrollBarHandler.h */; };
@@ -59,7 +59,7 @@
 		5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSaveDlg.h; sourceTree = "<group>"; };
 		5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FolderDialog.cpp; sourceTree = "<group>"; };
 		5F9CDE95147A2C2A00432DAC /* FolderDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDialog.h; sourceTree = "<group>"; };
-		5F9CDE96147A2C2A00432DAC /* MLMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLMenu.cpp; sourceTree = "<group>"; };
+		5F9CDE96147A2C2A00432DAC /* MLMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MLMenu.mm; sourceTree = "<group>"; };
 		5F9CDE97147A2C2A00432DAC /* MLMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLMenu.h; sourceTree = "<group>"; };
 		5F9CDE98147A2C2A00432DAC /* ScrollBarHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ScrollBarHandler.cpp; sourceTree = "<group>"; };
 		5F9CDE99147A2C2A00432DAC /* ScrollBarHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollBarHandler.h; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 				5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */,
 				5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */,
 				5F9CDE95147A2C2A00432DAC /* FolderDialog.h */,
-				5F9CDE96147A2C2A00432DAC /* MLMenu.cpp */,
+				5F9CDE96147A2C2A00432DAC /* MLMenu.mm */,
 				5F9CDE97147A2C2A00432DAC /* MLMenu.h */,
 				5F9CDE98147A2C2A00432DAC /* ScrollBarHandler.cpp */,
 				5F9CDE99147A2C2A00432DAC /* ScrollBarHandler.h */,
@@ -281,7 +281,7 @@
 				5F9CDEA8147A2C2A00432DAC /* FileOpenDlg.cpp in Sources */,
 				5F9CDEAA147A2C2A00432DAC /* FileSaveDlg.cpp in Sources */,
 				5F9CDEAC147A2C2A00432DAC /* FolderDialog.cpp in Sources */,
-				5F9CDEAE147A2C2A00432DAC /* MLMenu.cpp in Sources */,
+				5F9CDEAE147A2C2A00432DAC /* MLMenu.mm in Sources */,
 				5F9CDEB0147A2C2A00432DAC /* ScrollBarHandler.cpp in Sources */,
 				5F9CDEB2147A2C2A00432DAC /* SkinToolTip.cpp in Sources */,
 				5F9CDEB6147A2C2A00432DAC /* WndResizer.cpp in Sources */,

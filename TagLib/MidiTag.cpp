@@ -418,7 +418,6 @@ int CMidiTag::ReadTrackTrunk(TrackTrunk &trunk)
 	// DBGLOG2(_T("Trunk, offset: %d, len: %d"), trunk.offset, trunk.sizeOfData);
 
 	stringex_t<byte> buf;
-	LyricsLine *line = NULL;
 	byte eventCode = 0;
 	while (m_file.GetPos() < long(trunk.offset + trunk.sizeOfData))
 	{

@@ -9,6 +9,7 @@ class CPreferItem
 {
 public:
 	CPreferItem(LPCTSTR szName) : m_strName(szName) { }
+	virtual ~CPreferItem() { }
 	virtual tstring GetValue() = 0;
 	virtual void GetOptions(V_Str &vString, int &nRadio) = 0;
 	virtual void SetOption(int nIndex) = 0;
