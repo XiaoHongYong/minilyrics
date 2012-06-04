@@ -12,15 +12,27 @@
 
 void SplitKeywords(LPCTSTR szKeywords, V_Str &vKeywords)
 {
+	LPCTSTR		pStart, p;
+	tstring		str;
+
 	vKeywords.clear();
-	
-	StrSplit(szKeywords, ' ', vKeywords);
-	for (uint i = 0; i < vKeywords.size(); )
+
+	pStart = p = szKeywords;
+	while (*p)
 	{
-		if (vKeywords[i].empty())
-			vKeywords.erase(vKeywords.begin() + i);
-		else
-			i++;
+		while (IsAlpha(*p) || IsDigit(*p) || (unsigned int)(*p) >= 128)
+			*p++;
+
+		if (p == pStart)
+			p++;
+
+		if (*pStart != ' ' && *pStart != '\t')
+		{
+			vKeywords.push_back(tstring());
+			vKeywords.back().append(pStart, p);
+		}
+
+		pStart = p;
 	}
 }
 
