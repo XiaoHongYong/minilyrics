@@ -226,12 +226,9 @@ void CAutoProcessEmbeddedLyrics::OnSongChanged()
 {
 	CMutexAutolock		autolock(m_mutex);
 
-	LIST_ITEMS::iterator	it;
-	tstring					strSongFileCur;
+	tstring strSongFileCur = g_Player.GetSrcMedia();
 
-	strSongFileCur = g_Player.GetSrcMedia();
-
-	for (it = m_listJobs.begin(); it != m_listJobs.end(); )
+	for (LIST_ITEMS::iterator it = m_listJobs.begin(); it != m_listJobs.end(); )
 	{
 		Item		&item = *it;
 

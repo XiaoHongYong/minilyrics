@@ -675,7 +675,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			POINT	pt;
 			CSkinMenu	menu;
 			MLWidget::GetCursorPos(&pt);
-			menu.LoadMenu(IDM_MENU);
+			menu.LoadMenu(IDM_EDITOR_CONTEXT);
 			menu.TrackPopupMenu(pt.x, pt.y, m_pSkinWnd);
 		}
 		break;

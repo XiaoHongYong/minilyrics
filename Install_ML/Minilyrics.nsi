@@ -28,7 +28,7 @@
   XPStyle on
 
   ;Default installation folder
-  InstallDir "$PROGRAMFILES\Minilyrics"
+  InstallDir "$PROGRAMFILES\MiniLyrics"
 
   ;Request application privileges for Windows Vista
   RequestExecutionLevel admin
@@ -150,7 +150,7 @@ SectionIn RO
   Delete /REBOOTOK $INSTDIR\*.dll
   Delete $INSTDIR\MLSetup.exe
   Delete $INSTDIR\MLStart.exe
-  Delete /REBOOTOK $INSTDIR\miniLyrics.dll
+  Delete /REBOOTOK $INSTDIR\MiniLyrics.dll
   Delete $INSTDIR\PluginMiniLyrics.exe
   Delete $INSTDIR\help.chm
   Delete $INSTDIR\PluginJetaudio.exe
@@ -164,18 +164,18 @@ SectionIn RO
   StrCmp ${TEMP1} "" J_WINAMP2_UE
     Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
     Delete ${TEMP1}Plugins\MLPlugin.ini
-    Delete "${TEMP1}Plugins\avs\Minilyrics\*.*"
+    Delete "${TEMP1}Plugins\avs\MiniLyrics\*.*"
     Delete "${TEMP1}Plugins\avs\WvsLyrics.ape"
-    RMDir "${TEMP1}Plugins\avs\Minilyrics"
+    RMDir "${TEMP1}Plugins\avs\MiniLyrics"
   J_WINAMP2_UE:
 
   ReadINIStr ${TEMP1} $INSTDIR\Install.ini "INSTALL" "InstWinamp5Path"
   StrCmp ${TEMP1} "" J_WINAMP5_UE
     Delete /REBOOTOK ${TEMP1}Plugins\gen_MiniLyrics.dll
     Delete ${TEMP1}Plugins\MLPlugin.ini
-    Delete "${TEMP1}Plugins\avs\Minilyrics\*.*"
+    Delete "${TEMP1}Plugins\avs\MiniLyrics\*.*"
     Delete "${TEMP1}Plugins\avs\WvsLyrics.ape"
-    RMDir "${TEMP1}Plugins\avs\Minilyrics"
+    RMDir "${TEMP1}Plugins\avs\MiniLyrics"
   J_WINAMP5_UE:
 
   ; remove all skin files.
@@ -244,16 +244,16 @@ SectionIn RO
 
   SetOutPath $INSTDIR\Player-Plugins
   File ..\bin\release\gen_MiniLyrics.dll
-  File ..\bin\release\foo_ui_minilyrics.dll
-  File ..\bin\release\QCDMinilyrics.dll
-  File ..\bin\release\iTunesMinilyrics.dll
+  File ..\bin\release\foo_ui_MiniLyrics.dll
+  File ..\bin\release\QCDMiniLyrics.dll
+  File ..\bin\release\iTunesMiniLyrics.dll
   File ..\bin\release\MLPluginBsp.dll
   File ..\bin\release\WMPLyrics.dll
   File ..\bin\release\PluginWMPVis.dll
   File ..\bin\release\PluginMJ.dll
   File ..\bin\release\xmp-ml.dll
   File ..\bin\release\MB_MiniLyrics.dll
-  File ..\bin\release\libminilyrics_plugin.dll
+  File ..\bin\release\libMiniLyrics_plugin.dll
   File ..\bin\release\PluginSilverjuke.dll
   File forSongbird\sbMLSongbird.dll
   File forSongbird\sbMLSongbird.xpt
@@ -343,7 +343,7 @@ SectionIn 1
   ; Write the installation path into the registry
   ; WriteRegStr HKLM SOFTWARE\MiniLyrics "ForWa2InstallDir" "$INSTDIR"
   ; Write the uninstall keys for Windows
-  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "Minilyrics"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "MiniLyrics"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "UninstallString" '"$INSTDIR\uninst-ml.exe"'
   WriteUninstaller "$INSTDIR\uninst-ml.exe"
 SectionEnd
@@ -380,11 +380,11 @@ Section "Uninstall"
 
   MessageBox MB_YESNO|MB_ICONQUESTION $(un.MsgRemovelAll) IDYES RemoveAllFiles
 
-  Delete /REBOOTOK $APPDATA\Minilyrics\ad.dat
-  Delete /REBOOTOK $APPDATA\Minilyrics\*.db
-  Delete /REBOOTOK $APPDATA\Minilyrics\log.txt_3.txt
-  Delete /REBOOTOK $APPDATA\Minilyrics\log_3.txt
-  Delete /REBOOTOK $APPDATA\Minilyrics\log.txt
+  Delete /REBOOTOK $APPDATA\MiniLyrics\ad.dat
+  Delete /REBOOTOK $APPDATA\MiniLyrics\*.db
+  Delete /REBOOTOK $APPDATA\MiniLyrics\log.txt_3.txt
+  Delete /REBOOTOK $APPDATA\MiniLyrics\log_3.txt
+  Delete /REBOOTOK $APPDATA\MiniLyrics\log.txt
 
   Delete "$INSTDIR\MiniLyrics' Homepage.url"
   Delete "$INSTDIR\readme-MiniLyrics.txt"
@@ -421,8 +421,8 @@ Section "Uninstall"
 
   RemoveAllFiles:
   SetShellVarContext current
-  Delete /REBOOTOK "$APPDATA\Minilyrics\*.*"
-  RMDir /REBOOTOK "$APPDATA\Minilyrics"
+  Delete /REBOOTOK "$APPDATA\MiniLyrics\*.*"
+  RMDir /REBOOTOK "$APPDATA\MiniLyrics"
   Delete "$INSTDIR\*.*"
   SetShellVarContext all
   EndRemoveAllFiles:
@@ -505,12 +505,12 @@ Section "Uninstall"
   DeleteRegKey HKCU MUI_LANGDLL_REGISTRY_KEY
 SectionEnd
 
-Function GetMinilyricsInstPath
+Function GetMiniLyricsInstPath
   Push $0
   Push $1
   Push $2
   ReadRegStr $0 HKLM \
-     "Software\Microsoft\Windows\CurrentVersion\Uninstall\Minilyrics" \ 
+     "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" \ 
      "UninstallString"
   StrCmp $0 "" fin
 
@@ -558,7 +558,7 @@ Function .onInit
   ;Extract InstallOptions files
  ; InitPluginsDir
 
-  Call GetMinilyricsInstPath
+  Call GetMiniLyricsInstPath
   Pop $0
   StrCmp $0 "" J_skip
   StrCpy $INSTDIR $0
@@ -597,5 +597,5 @@ FunctionEnd
 
 ;ChangeUI all "${NSISDIR}\Contrib\UIs\modern.exe"
   
-  Icon "${NSISDIR}\contrib\graphics\icons\Minilyrics.ico"
-  UninstallIcon "${NSISDIR}\contrib\graphics\icons\Minilyrics.ico"
+  Icon "${NSISDIR}\contrib\graphics\icons\MiniLyrics.ico"
+  UninstallIcon "${NSISDIR}\contrib\graphics\icons\MiniLyrics.ico"

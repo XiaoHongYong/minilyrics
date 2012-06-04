@@ -201,7 +201,7 @@ void CMLMenu::CheckRadioItem(int nID, int nStartID, int nEndID)
 
 int CMLMenu::GetItemCount()
 {
-	::GetMenuItemCount(GetHandle());
+	return ::GetMenuItemCount(GetHandle());
 }
 
 void CMLMenu::AppendItem(UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey)

@@ -2603,7 +2603,7 @@ void CSkinEditCtrl::OnContexMenu(int xPos, int yPos)
 	CSkinMenu	menu;
 	bool		bEnable;
 
-	menu.LoadMenu(IDM_MENU);
+	menu.LoadMenu(IDM_EDITOR_CONTEXT);
 
 	bEnable = IsSelected();
 	menu.EnableItem(IDC_EDIT_CUT, bEnable);

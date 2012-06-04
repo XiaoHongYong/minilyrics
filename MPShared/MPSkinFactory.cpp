@@ -133,16 +133,14 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		// pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
-		pSkinMenu->LoadMenu(IDM_MENU);
+		pSkinMenu->LoadMenu(IDM_NORMAL_STAT);
 	}
 	else if (_tcsicmp(szMenu, _T("LyricsMenu")) == 0)
 	{
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		// pSkinMenu->LoadPopupMenu(IDM_MENU, 1);
-		pSkinMenu->LoadMenu(IDM_MENU);
+		pSkinMenu->LoadMenu(IDM_FLOATING_LYRICS);
 	}
 	else if (_tcsicmp(szMenu, _T("LyrEditorMenu")) == 0)
 	{
@@ -163,15 +161,13 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		// pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
-		pSkinMenu->LoadMenu(IDM_MENU);
+		pSkinMenu->LoadMenu(IDM_NORMAL_STAT);
 		pMenu->RemoveItem(7); // 7 is Lyrics Downloader for iPod
 	}
 	else if (_tcsicmp(szMenu, _T("iPodLyricsDownloader")) == 0)
 	{
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
-		// pSkinMenu->LoadMenu(IDM_IPOD_LYR_DOWNLOADER);
 		pSkinMenu->LoadMenu(IDM_IPOD_LYR_DOWNLOADER);
 	}
 #ifdef _MPLAYER
@@ -203,8 +199,7 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
-		// pSkinMenu->LoadPopupMenu(IDM_MENU, 0);
-		pSkinMenu->LoadMenu(IDM_MENU);
+		pSkinMenu->LoadMenu(IDM_NORMAL_STAT);
 	}
 
 	return pSkinMenu;

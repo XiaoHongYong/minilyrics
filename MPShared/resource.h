@@ -1,11 +1,11 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by MiniLyrics.rc
+// Used by MiniLyrics_menu.rc
 //
 #define IDR_RT_MANIFEST                 1
 #define IDC_REPORT                      129
 #define IDI_MPLAYER                     130
-#define IDM_MENU                        131
+#define IDM_EDITOR_CONTEXT              131
 #define IDI_SAVE                        132
 #define IDI_PLAY                        133
 #define IDI_STOP                        134
@@ -47,6 +47,8 @@
 #define IDR_MENU_STATIC_LYR             175
 #define IDR_MENU_RATE                   178
 #define IDM_IPOD_LYR_DOWNLOADER         179
+#define IDM_NORMAL_STAT                 183
+#define IDM_FLOATING_LYRICS             184
 #define IDC_APPLY_ACCOUNT               1000
 #define IDC_HOTKEY                      1001
 #define IDC_ADD_SONG_FILE               1002
@@ -380,7 +382,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        183
+#define _APS_NEXT_RESOURCE_VALUE        184
 #define _APS_NEXT_COMMAND_VALUE         40124
 #define _APS_NEXT_CONTROL_VALUE         1140
 #define _APS_NEXT_SYMED_VALUE           101

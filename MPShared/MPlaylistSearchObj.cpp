@@ -15,6 +15,13 @@ void SplitKeywords(LPCTSTR szKeywords, V_Str &vKeywords)
 	vKeywords.clear();
 	
 	StrSplit(szKeywords, ' ', vKeywords);
+	for (uint i = 0; i < vKeywords.size(); )
+	{
+		if (vKeywords[i].empty())
+			vKeywords.erase(vKeywords.begin() + i);
+		else
+			i++;
+	}
 }
 
 
