@@ -27,6 +27,9 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 		// [self setAlphaValue:1.0];
 		[self setOpaque:NO];
 	}
+	
+	[self setDelegate: self];
+	
 	return self;
 }
 
@@ -101,7 +104,7 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 	
 	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:duration
 													  target:self
-													selector:@selector(onTimer)
+													selector:@selector(onTimer:)
 													userInfo:[NSNumber numberWithInt:idTimer]
 													 repeats:YES];
 
@@ -227,8 +230,14 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 	mBaseWnd->OnMove((int)rc.origin.x, (int)rc.origin.y);
 }
 
-//- (void)windowDidBecomeKey:(NSNotification *)notification;
-//- (void)windowDidResignKey:(NSNotification *)notification;
+- (void)windowDidBecomeKey:(NSNotification *)notification {
+	mBaseWnd->OnActivate(true);
+}
+
+- (void)windowDidResignKey:(NSNotification *)notification {
+	mBaseWnd->OnActivate(false);
+}
+
 //- (void)windowDidBecomeMain:(NSNotification *)notification;
 //- (void)windowDidResignMain:(NSNotification *)notification;
 - (void)windowWillClose:(NSNotification *)notification {

@@ -21,7 +21,7 @@ void SplitKeywords(LPCTSTR szKeywords, V_Str &vKeywords)
 	while (*p)
 	{
 		while (IsAlpha(*p) || IsDigit(*p) || (unsigned int)(*p) >= 128)
-			*p++;
+			p++;
 
 		if (p == pStart)
 			p++;

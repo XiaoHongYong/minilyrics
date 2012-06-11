@@ -60,7 +60,8 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 	OnCreate();
 
 	if (bVisible)
-		[w orderFront:NSApp];
+		[w makeKeyAndOrderFront:w];
+		// [w orderFront:NSApp];
 
 	return true;
 }
@@ -285,7 +286,9 @@ bool CBaseWnd::SetWndCursor(CCursor *pCursor)
 
 bool CBaseWnd::SetFocus()
 {
-	[m_info->window orderFront:NSApp];
+	[m_info->window makeKeyAndOrderFront:m_info->window];
+	//[m_info->window orderFront:NSApp];
+	// [m_info->window makeKeyWindow];
 	return true;
 }
 
@@ -459,7 +462,7 @@ bool CBaseWnd::MoveWindow(int X, int Y, int nWidth, int nHeight, bool bRepaint)
 	if (m_info->window == NULL)
 		return false;
 	
-	[m_info->window setFrame:NSMakeRect(X, Y, nWidth, nHeight) display:YES];
+	[m_info->window setFrame:NSMakeRect(X, Y, nWidth, nHeight) display: bRepaint ? YES : NO];
 	
 	return true;
 }

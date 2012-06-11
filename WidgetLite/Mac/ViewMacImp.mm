@@ -35,7 +35,12 @@
 - (void)drawRect:(NSRect)rect {
     // Clear the drawing rect.
     [[NSColor clearColor] set];
-    NSRectFill([self frame]);
+    NSRectFill(rect);
+	
+//	NSRect r = [self frame];
+//	printf("Frame: x: %f, y: %f, width: %f, height: %f", r.origin.x, r.origin.y, r.size.width, r.size.height);
+//	printf("ClipRect: x: %f, y: %f, width: %f, height: %f", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
+	
     // A boolean tracks the previous shape of the window. If the shape changes, it's necessary for the
     // window to recalculate its shape and shadow.
 /*    BOOL shouldDisplayWindow = NO;
@@ -91,8 +96,8 @@
 }*/
 
 - (void)viewDidEndLiveResize {
-	NSRect rc = [self frame];
-	mBaseWnd->OnSize(rc.size.width, rc.size.height);
+//	NSRect rc = [self frame];
+//	mBaseWnd->OnSize(rc.size.width, rc.size.height);
 }
 
 @end

@@ -942,7 +942,7 @@ bool CSkinWnd::UpdateSkinProperty()
 
 void CSkinWnd::OnPaint(CMLGraphics *pGraph, CRect &rcClip)
 {
-	if (IsIconic())
+	if (IsIconic() || m_bOnDestroy)
 		return;
 
 	bool		bRedraw = true;
@@ -2188,6 +2188,10 @@ void CSkinWnd::PostCustomCommandMsg(int nId)
 {
 #ifdef _WIN32
 	::PostMessage(m_hWnd, ms_msgIDCustomCommand, nId, 0);
+#endif
+	
+#ifdef _MAC_OSX
+	::PostCustomCommandMsgMac(this, nId);
 #else
 	OnCustomCommand(nId);
 #endif
@@ -2195,11 +2199,7 @@ void CSkinWnd::PostCustomCommandMsg(int nId)
 
 void CSkinWnd::PostShortcutKeyCmd(int nId)
 {
-#ifdef _WIN32
-	::PostMessage(m_hWnd, ms_msgIDCustomCommand, nId, 0);
-#else
-	OnCustomCommand(nId);
-#endif
+	PostCustomCommandMsg(nId);
 }
 
 void CSkinWnd::OnUserMessage(int nMessageID, LPARAM param)
@@ -2732,12 +2732,13 @@ void CSkinWnd::OnLoadWndSizePos()
 //		save current skin window size pos.
 void CSkinWnd::SaveWndPos()
 {
+	CRect			rcToSave;
+
 #ifdef _WIN32_DESKTOP
 	if (::GetParent(m_hWnd))
 		return;
 
 	WINDOWPLACEMENT	wp;
-	CRect			rcToSave;
 
 	wp.length = sizeof(wp);
 	if (GetWindowPlacement(m_hWnd, &wp))
@@ -2756,10 +2757,13 @@ void CSkinWnd::SaveWndPos()
 		sizeMode = WndSizeMode_Normal;
 
 	g_Profile.WriteProfileInt(GetSkinWndName(), _T("SizeMode"), sizeMode);
+#else
+	if (!GetWindowRect(&rcToSave))
+		return;
+#endif
 
 	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_left"), rcToSave.left);
 	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_top"), rcToSave.top);
 	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_width"), rcToSave.Width());
 	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_height"), rcToSave.Height());
-#endif
 }

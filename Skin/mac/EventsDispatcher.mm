@@ -2,6 +2,7 @@
 #import <Foundation/Foundation.h>
 #include "EventsDispatcherBase.h"
 #include "EventsDispatcher.h"
+#include "Skin.h"
 
 @interface EventsDispatchItem : NSObject {
 	IEvent		*m_pEvent;
@@ -61,3 +62,42 @@ void CEventsDispatcher::DispatchUnsyncEvent(IEvent *pEvent)
 								   withObject:nil
 								waitUntilDone:false];
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////
+
+@interface CustomCmdPoster : NSObject {
+	CSkinWnd		*mSkinWnd;
+	int mCmdId;
+	
+}
+
+- (void) OnCustomCommand;
+- (id) init:(CSkinWnd *)pWnd cmd:(int)cmdId;
+
+@end
+
+@implementation CustomCmdPoster
+
+- (void) OnCustomCommand {
+	mSkinWnd->OnCustomCommand(mCmdId);
+}
+
+- (id) init:(CSkinWnd *)pWnd cmd:(int)cmdId {
+	mSkinWnd = pWnd;
+	mCmdId = cmdId;
+	return self;
+}
+
+@end
+
+void PostCustomCommandMsgMac(CSkinWnd *pSkinWnd, int cmd)
+{
+	CustomCmdPoster *poster = [[CustomCmdPoster alloc] init:pSkinWnd cmd:cmd];
+	[poster performSelectorOnMainThread:@selector(OnCustomCommand)
+							 withObject:nil
+						  waitUntilDone:NO];
+}
+
+

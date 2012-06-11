@@ -9,6 +9,7 @@
 #ifndef _WIN32
 
 #pragma pack(push)
+#pragma pack(1)
 typedef long LONG;
 
 typedef struct tagBITMAPFILEHEADER {

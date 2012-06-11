@@ -169,6 +169,9 @@
 /* Begin PBXProject section */
 		5FBCCAF7147E80DF00D7C64A /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 5FBCCAFA147E80DF00D7C64A /* Build configuration list for PBXProject "SimpleJVM" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;

@@ -10,9 +10,11 @@
 
 @interface MLMenuImp : NSObject {
 	CBaseWnd		*mBaseWnd;
+	
 }
 
 - (void) OnCommand:(NSMenuItem *)item;
+- (void) setBaseWnd:(CBaseWnd *)pWnd;
 
 @end
 
@@ -26,6 +28,11 @@
 -(BOOL) validateMenuItem:(NSMenuItem *)item
 {
 	return YES;
+}
+
+- (void) setBaseWnd:(CBaseWnd *)pWnd
+{
+	mBaseWnd = pWnd;
 }
 
 @end
@@ -88,14 +95,20 @@ void CMLMenu::Destroy()
 void CMLMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
 	NSPoint pt = { x, y };
-	[m_info->menu popUpMenuPositioningItem: [m_info->menu itemAtIndex:0]
-								atLocation: pt
-									inView: nil];
+	[m_info->menuImp setBaseWnd:pWnd];
+	@try {
+		[m_info->menu popUpMenuPositioningItem: [m_info->menu itemAtIndex:0]
+									atLocation: pt
+										inView: nil];
+	}
+	@catch (NSException *exception) {
+	}
 }
 
 void CMLMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
 	NSPoint pt = { x, y };
+	[m_info->menuImp setBaseWnd:pWnd];
 	NSMenuItem *item = [m_info->menu itemAtIndex:nSubMenu];
 	if (item == nil || [item hasSubmenu] != YES)
 		return;
@@ -267,11 +280,16 @@ bool CMLMenu::HasItem(int nPos)
 
 bool CMLMenu::HasSubmenu(int nPos)
 {
-	NSMenuItem *item = [m_info->menu itemAtIndex:nPos];
-	if (item == nil)
-		return false;
+	@try {
+		NSMenuItem *item = [m_info->menu itemAtIndex:nPos];
+		if (item == nil)
+			return false;
 
-	return [item hasSubmenu] == YES;
+		return [item hasSubmenu] == YES;
+	}
+	@catch (NSException *exception) {
+		return false;
+	}
 }
 
 CMLMenu CMLMenu::GetSubmenu(int nPos)
