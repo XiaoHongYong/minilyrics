@@ -334,6 +334,9 @@
 /* Begin PBXProject section */
 		5F9CDEBB147A323D00432DAC /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 5F9CDEBE147A323D00432DAC /* Build configuration list for PBXProject "BaseMac" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;

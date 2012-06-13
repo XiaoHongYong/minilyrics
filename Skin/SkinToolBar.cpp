@@ -310,7 +310,7 @@ void CSkinToolbar::OnTimer(int nId)
 		return;
 	}
 
-	if (IsKeyPressed(VK_LBUTTON))
+	if (m_bLBtDown)
 	{
 		POINT	pt;
 

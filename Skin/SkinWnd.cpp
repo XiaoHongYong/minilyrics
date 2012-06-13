@@ -717,10 +717,9 @@ void CSkinWnd::OnRButtonUp(UINT nFlags, CPoint point)
 void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 {
 #ifdef _DEBUG
-#ifdef WIN32
 	{
 		// Dump UIObject
-		if (((GetKeyState(VK_CONTROL) & 0x8000) == 0x8000))
+		if (IsModifierKeyPressed(MK_CONTROL, nFlags))
 		{
 			if (nChar == VK_F1)
 			{
@@ -740,7 +739,6 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 			}
 		}
 	}
-#endif
 #endif
 
 	CUIObject	*pObjFocus = GetFocusUIObj();
@@ -770,14 +768,7 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 	// tab key to switch between uiobject
 	if (nChar == VK_TAB)	//TAB
 	{
-#ifdef WIN32
-		short		nShift;
-		bool		bShitDown;
-		nShift = GetKeyState(VK_SHIFT);
-		bShitDown = ((nShift & 0x8000) == 0x8000);
-#else
-		bool		bShitDown = IsFlagSet(nFlags, MK_SHIFT);
-#endif
+		bool bShitDown = IsModifierKeyPressed(MK_SHIFT, nFlags);
 		// shift + VK_TAB
 		if (bShitDown)
 			m_rootConainter.FocusToPrev();

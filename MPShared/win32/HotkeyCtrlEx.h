@@ -11,6 +11,8 @@
 
 void FormatHotkeyText(tstring &strText, UINT nVirtKey, UINT fsModifiers);
 
+bool IsKeyPressed(int nKey);
+
 class CHotkeyCtrlEx : public CBaseWnd
 {
 public:

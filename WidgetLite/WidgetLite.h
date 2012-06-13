@@ -5,7 +5,6 @@
 #include "widgetif.h"
 
 #ifdef WIN32
-#include "win32/desktop.h"
 #include "win32/BaseWnd.h"
 #include "win32/FolderDialog.h"
 #include "win32/FileSaveDlg.h"
@@ -23,7 +22,6 @@
 
 #ifdef _MAC_OSX
 #include "Mac/Cursor.h"
-#include "Mac/desktop.h"
 #include "Mac/BaseWnd.h"
 #include "Mac/FolderDialog.h"
 #include "Mac/FileSaveDlg.h"
@@ -35,5 +33,6 @@
 #endif
 
 #include "WndDrag.h"
+#include "desktop.h"
 
 #endif // _ML_WIDGET_H_

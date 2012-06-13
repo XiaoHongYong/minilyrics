@@ -231,7 +231,7 @@
 				>
 			</File>
 			<File
-				RelativePath=".\win32\desktop.h"
+				RelativePath=".\desktop.h"
 				>
 			</File>
 			<File

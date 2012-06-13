@@ -60,6 +60,12 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 }
 
 - (void) mouseDragged:(NSEvent *)theEvent {
+	if (mBaseWnd->IsMouseCaptured()) {
+		mBaseWnd->OnMouseDrag((UINT)[theEvent modifierFlags],
+							  NSPointToCPoint([theEvent locationInWindow], [self frame].size.height));
+		return;
+	}
+	
 	NSRect screenVisibleFrame = [[NSScreen mainScreen] visibleFrame];
 	NSRect windowFrame = [self frame];
 	NSPoint newOrigin = windowFrame.origin;
@@ -77,22 +83,14 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 
 	// Move the window to the new location
 	[self setFrameOrigin:newOrigin];
-	
-	mBaseWnd->OnMouseDrag((UINT)[theEvent modifierFlags],
-						  NSPointToCPoint([theEvent locationInWindow], [self frame].size.height));
+}
+
+- (BOOL)canBecomeKeyWindow {
+	return YES;
 }
 
 - (void) keyDown:(NSEvent *)theEvent {
-	mBaseWnd->OnKeyDown([theEvent keyCode], 0);
-	
-	int keyCode = [theEvent keyCode];
-	if (keyCode == NSUpArrowFunctionKey) {
-		keyCode = 1;
-	} else if (keyCode == NSPageUpFunctionKey) {
-		keyCode = 1;
-	} else if (keyCode == NSF1FunctionKey) {
-		keyCode = 1;
-	}
+	mBaseWnd->OnKeyDown([theEvent keyCode], [theEvent modifierFlags]);
 }
 
 - (void) keyUp:(NSEvent *)theEvent {
@@ -232,10 +230,13 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 
 - (void)windowDidBecomeKey:(NSNotification *)notification {
 	mBaseWnd->OnActivate(true);
+	mBaseWnd->OnSetFocus();
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
+	mBaseWnd->OnKillFocus();
 	mBaseWnd->OnActivate(false);
+	mBaseWnd->m_bMouseCaptured = false;
 }
 
 //- (void)windowDidBecomeMain:(NSNotification *)notification;

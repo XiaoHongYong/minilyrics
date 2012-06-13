@@ -1,15 +1,19 @@
 #include "stdafx.h"
 #include "BaseWnd.h"
-#include "desktop.h"
-
 
 void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
 {
 	ShellExecute(pWnd->GetHandle(), _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
 }
 
-bool IsKeyPressed(int nKey)
+bool IsModifierKeyPressed(int nKey, UINT nFlags)
 {
+	ASSERT(nKey == MK_SHIFT || nKey == MK_CONTROL);
+	if (nKey == MK_SHIFT)
+		nKey = VK_SHIFT;
+	else if (nKey == MK_CONTROL)
+		nKey = VK_CONTROL;
+
 	return (GetKeyState(nKey) & 0x8000) == 0x8000;
 }
 

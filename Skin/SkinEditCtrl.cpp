@@ -1952,7 +1952,7 @@ bool CSkinEditCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 	MLWidget::SetCursor(m_cursor);
 
-	bool control = IsKeyPressed(VK_CONTROL);
+	bool control = IsModifierKeyPressed(MK_CONTROL, nFlags);
 	CAutoUpdate		updater(this);
 
 	m_bInMouseSel = false;
@@ -1979,7 +1979,7 @@ bool CSkinEditCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	}
 	else
 	{
-		bool shift = IsKeyPressed(VK_SHIFT);
+		bool shift = IsModifierKeyPressed(MK_SHIFT, nFlags);
 
 		if (shift && !IsSelected())
 		{
@@ -2066,7 +2066,7 @@ bool CSkinEditCtrl::OnMouseDrag(CPoint point)
 
 	MLWidget::SetCursor(m_cursor);
 
-	bool shift = IsKeyPressed(VK_SHIFT);
+	bool shift = IsModifierKeyPressed(MK_SHIFT, 0);
 	CAutoUpdate		updater(this);
 
 	if (shift)
@@ -2208,8 +2208,8 @@ void CSkinEditCtrl::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 
 void CSkinEditCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 {
-	bool ctrl = IsKeyPressed(VK_CONTROL);
-	bool shift = IsKeyPressed(VK_SHIFT);
+	bool ctrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
+	bool shift = IsModifierKeyPressed(MK_SHIFT, nFlags);
 
 	bool			bSelKey = false;
 	int				nBegSelRow, nBegSelCol;

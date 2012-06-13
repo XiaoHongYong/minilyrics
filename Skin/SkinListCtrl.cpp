@@ -1472,7 +1472,7 @@ void CSkinListCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 	else if (nChar == 'A')
 	{
-		bool		bCtrl = IsKeyPressed(VK_CONTROL);
+		bool		bCtrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
 
 		if (bCtrl)
 		{
@@ -1487,7 +1487,7 @@ void CSkinListCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 	else if (nChar == 'I')
 	{
-		bool		bCtrl = IsKeyPressed(VK_CONTROL);
+		bool		bCtrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
 
 		if (bCtrl)
 		{
@@ -1504,7 +1504,7 @@ void CSkinListCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 		return;
 	}
 
-	bool		bShift = IsKeyPressed(VK_SHIFT);
+	bool		bShift = IsModifierKeyPressed(MK_SHIFT, nFlags);
 
 	if (nChar != VK_UP && nChar != VK_DOWN && nChar != VK_PRIOR && nChar != VK_NEXT
 		&& nChar != VK_HOME && nChar != VK_END)

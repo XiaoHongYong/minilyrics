@@ -239,13 +239,13 @@ public:
 	virtual void OnKeyDown(UINT nChar, UINT nFlags) { }
 	virtual bool OnMenuKey(UINT nChar, UINT nFlags) { return false; }
 	virtual void OnChar(UINT nChar) { }
-	virtual bool OnRButtonUp(UINT nFlags, CPoint point) { return true; }
-	virtual bool OnRButtonDown(UINT nFlags, CPoint point) { return true; }
-	virtual bool OnLButtonUp(UINT nFlags, CPoint point) { return true; }
-	virtual bool OnLButtonDown(UINT nFlags, CPoint point) { return true; }
-	virtual bool OnLButtonDblClk(UINT nFlags, CPoint point) { return true; }
-	virtual bool OnMouseDrag(CPoint point) { return true; }
-	virtual bool OnMouseMove(CPoint point) { return true; }
+	virtual bool OnRButtonUp(UINT nFlags, CPoint point) { return false; }
+	virtual bool OnRButtonDown(UINT nFlags, CPoint point) { return false; }
+	virtual bool OnLButtonUp(UINT nFlags, CPoint point) { return false; }
+	virtual bool OnLButtonDown(UINT nFlags, CPoint point) { return false; }
+	virtual bool OnLButtonDblClk(UINT nFlags, CPoint point) { return false; }
+	virtual bool OnMouseDrag(CPoint point) { return false; }
+	virtual bool OnMouseMove(CPoint point) { return false; }
 	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt) { }
 
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }

@@ -23,6 +23,7 @@ CBaseWnd::CBaseWnd()
 	m_info = new _BaseWndInfo();
 	m_info->window = NULL;
 	m_info->view = NULL;
+	m_bMouseCaptured = false;
 	
 	m_parent = NULL;
 }
@@ -299,11 +300,14 @@ bool CBaseWnd::SetWindowRgn(CRegion *pRgn)
 
 bool CBaseWnd::SetCapture()
 {
+	m_bMouseCaptured = true;
+
 	return true;
 }
 
 void CBaseWnd::ReleaseCapture()
 {
+	m_bMouseCaptured = false;
 }
 
 CMLGraphics *CBaseWnd::GetGraphics()
@@ -359,7 +363,7 @@ bool CBaseWnd::IsChild()
 
 bool CBaseWnd::IsMouseCaptured()
 {
-	return true;
+	return m_bMouseCaptured;
 }
 
 bool CBaseWnd::IsIconic()

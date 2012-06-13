@@ -26,27 +26,29 @@
 #define SW_SHOWMAXIMIZED	11
 #define SW_SHOWNOACTIVATE	SW_SHOW
 
-#define VK_ESCAPE			1
-#define VK_CONTROL			3
-#define VK_ALT				4
-#define VK_SHIFT			5
-#define VK_INSERT			6
-#define VK_LEFT				7
-#define VK_RIGHT			8
-#define VK_UP				9
-#define VK_DOWN				10
-#define VK_PRIOR			11
-#define VK_NEXT				12
-#define VK_BACK				13
-#define VK_DELETE			14
-#define VK_RETURN			15
-#define VK_END				16
-#define VK_HOME				17
+#define VK_ESCAPE			53
+#define VK_CONTROL			59
+#define VK_ALT				58
+#define VK_SHIFT			56
+#define VK_INSERT			114
+#define VK_LEFT				123
+#define VK_RIGHT			124
+#define VK_UP				126
+#define VK_DOWN				125
+#define VK_PRIOR			116
+#define VK_NEXT				121
+#define VK_BACK				117
+#define VK_DELETE			51
+#define VK_RETURN			36
+#define VK_END				119
+#define VK_HOME				115
 
 #define VK_LBUTTON			20
-#define VK_SPACE			21
-#define VK_TAB				22
-#define VK_F3				23
+#define VK_SPACE			49
+#define VK_TAB				48
+#define VK_F3				99
+#define VK_F2				120
+#define VK_F1				122
 
 // Modifier Flags
 #define MK_SHIFT			(1 << 17) // NSShiftKeyMask

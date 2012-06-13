@@ -9,11 +9,10 @@ void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
 #pragma warning("Unplememented method: OpenUrl");
 }
 
-bool IsKeyPressed(int nKey)
+bool IsModifierKeyPressed(int nKey, UINT nFlags)
 {
-	// return (GetKeyState(nKey) & 0x8000) == 0x8000;
-#pragma warning("Unplememented method: IsKeyPressed");
-	return false;
+	ASSERT(nKey == MK_SHIFT || nKey == MK_CONTROL);
+	return IsFlagSet(nFlags, nKey);
 }
 
 namespace MLWidget

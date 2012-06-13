@@ -10,6 +10,11 @@ bool IsExtendedKey(UINT nVk)
 	return nVk >= VK_SPACE && nVk <= VK_HELP;
 }
 
+bool IsKeyPressed(int nKey)
+{
+	return (GetKeyState(nKey) & 0x8000) == 0x8000;
+}
+
 void FormatHotkeyText(tstring &strText, UINT nVirtKey, UINT fsModifiers)
 {
 	TCHAR	szKeyName[256];

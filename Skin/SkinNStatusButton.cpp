@@ -69,7 +69,7 @@ void CSkinNStatusButton::OnTimer(int nId)
 		return;
 	}
 
-	if (IsKeyPressed(VK_LBUTTON))
+	if (m_bLBtDown)
 	{
 		CPoint	pt;
 

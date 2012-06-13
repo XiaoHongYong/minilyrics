@@ -230,8 +230,8 @@ void CLyricShowTextEditObj::AutoVScrollDown(int nDownLine)
 
 void CLyricShowTextEditObj::OnKeyDown(UINT nChar, UINT nFlags)
 {
-	bool ctrl = IsKeyPressed(VK_CONTROL);
-	bool shift = IsKeyPressed(VK_SHIFT);
+	bool ctrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
+	bool shift = IsModifierKeyPressed(MK_SHIFT, nFlags);
 
 	if (!ctrl && !shift)
 	{

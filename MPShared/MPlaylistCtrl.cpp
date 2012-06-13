@@ -153,7 +153,7 @@ void CMPlaylistCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 	if (nChar == VK_UP || nChar == VK_DOWN)
 	{
-		bool ctrl = IsKeyPressed(VK_CONTROL);
+		bool ctrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
 		if (ctrl)
 			OffsetAllSelectedItems(nChar == VK_DOWN);
 	}
