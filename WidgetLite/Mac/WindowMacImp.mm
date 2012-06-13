@@ -91,6 +91,15 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 
 - (void) keyDown:(NSEvent *)theEvent {
 	mBaseWnd->OnKeyDown([theEvent keyCode], [theEvent modifierFlags]);
+	
+	@try {
+		NSString *s = [theEvent charactersIgnoringModifiers];
+		for (int i = 0; i < [s length]; i++) {
+			mBaseWnd->OnChar([s characterAtIndex:i]);
+		}
+	}
+	@catch (NSException *exception) {
+	}
 }
 
 - (void) keyUp:(NSEvent *)theEvent {

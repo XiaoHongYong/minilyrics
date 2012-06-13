@@ -2047,9 +2047,8 @@ bool CSkinEditCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 
 	MLWidget::SetCursor(m_cursor);
 
-#ifdef _WIN32
-	ReleaseCapture();
-#endif
+	m_pSkin->ReleaseCapture();
+
 	m_bInMouseSel = false;
 	if (m_nBegSelRow == m_nEndSelRow && m_nBegSelCol == m_nEndSelCol)
 		m_nBegSelRow = -1;

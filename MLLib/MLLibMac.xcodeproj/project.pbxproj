@@ -220,6 +220,9 @@
 /* Begin PBXProject section */
 		5FBCCD2514851B5300D7C64A /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 5FBCCD2814851B5300D7C64A /* Build configuration list for PBXProject "MLLibMac" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;

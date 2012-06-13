@@ -37,8 +37,8 @@
 #define VK_DOWN				125
 #define VK_PRIOR			116
 #define VK_NEXT				121
-#define VK_BACK				117
-#define VK_DELETE			51
+#define VK_BACK				51
+#define VK_DELETE			117
 #define VK_RETURN			36
 #define VK_END				119
 #define VK_HOME				115
