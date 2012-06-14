@@ -1,0 +1,68 @@
+#include "stdafx.h"
+#include "stringex_t.h"
+#include "CharEncoding.h"
+#include "misc.h"
+
+int GetOperationSystemType()
+{
+	return OPS_MACOSX;
+}
+
+bool IsWin9xSystem()
+{
+	return (GetOperationSystemType() <= OPS_WIN9XMORE);
+}
+
+#include <sys/time.h>
+
+uint32 GetTickCount()
+{
+	timeval tim;
+	gettimeofday(&tim, NULL);
+	return (uint32)(tim.tv_sec * 1000 * 1000 + tim.tv_usec);
+}
+
+bool GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict)
+{
+	NSArray *screens = [NSScreen screens];
+	int nMaxSpace = -1;
+	for (int i = 0; i < [screens count]; i++)
+	{
+		NSRect screenVisibleFrame = [[screens objectAtIndex:i] visibleFrame];
+		RECT rcScreen;
+		rcScreen.top = screenVisibleFrame.origin.y;
+		rcScreen.left = screenVisibleFrame.origin.x;
+		rcScreen.bottom = rcScreen.top + screenVisibleFrame.size.height;
+		rcScreen.right = rcScreen.left + screenVisibleFrame.size.width;
+		CRect rc;
+		rc.IntersectRect(&rcIn, &rcScreen);
+		int nSpace = rc.Width() * rc.Height();
+		if (nMaxSpace < nSpace)
+		{
+			nMaxSpace = nSpace;
+			rcRestrict = rcScreen;
+		}
+	}
+
+	return nMaxSpace != -1;
+}
+
+void Sleep(DWORD dwMilliseconds)
+{
+	usleep((unsigned int)dwMilliseconds);
+}
+
+BOOL ExecuteCmdAndWait(LPCTSTR szCmd, DWORD dwTimeOut, DWORD *pExitCode)
+{
+	return false;
+}
+
+bool CopyTextToClipboard(LPCTSTR szText)
+{
+	return false;
+}
+
+bool GetClipBoardText(tstringex &str)
+{
+	return false;
+}

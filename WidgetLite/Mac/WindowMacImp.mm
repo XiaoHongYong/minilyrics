@@ -109,7 +109,7 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 - (void)setTimer:(int)idTimer duration:(int)duration {
 	[self killTimer:idTimer];
 	
-	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:duration
+	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:((double)duration) / 1000
 													  target:self
 													selector:@selector(onTimer:)
 													userInfo:[NSNumber numberWithInt:idTimer]

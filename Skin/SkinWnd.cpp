@@ -2686,11 +2686,13 @@ void CSkinWnd::OnLoadWndSizePos()
 		CRect	rcScreen;
 		int		w = rcNew.Width(), h = rcNew.Height();
 
-		GetMonitorRestrictRect(rcNew, rcScreen);
-		rcNew.left = (rcScreen.left + rcScreen.right - w) / 2;
-		rcNew.top = (rcScreen.top + rcScreen.bottom - h) / 2;
-		rcNew.right = rcNew.left + w;
-		rcNew.bottom = rcNew.top + h;
+		if (GetMonitorRestrictRect(rcNew, rcScreen))
+		{
+			rcNew.left = (rcScreen.left + rcScreen.right - w) / 2;
+			rcNew.top = (rcScreen.top + rcScreen.bottom - h) / 2;
+			rcNew.right = rcNew.left + w;
+			rcNew.bottom = rcNew.top + h;
+		}
 	}
 
 	if (!rcNew.EqualRect(&m_rcReal))

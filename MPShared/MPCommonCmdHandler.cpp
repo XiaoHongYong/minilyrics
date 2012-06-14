@@ -118,7 +118,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 {
 	switch (nID)
 	{
-#ifdef _WIN32_DESKTOP
 	case CMD_RATE_LYR_1:
 	case CMD_RATE_LYR_2:
 	case CMD_RATE_LYR_3:
@@ -167,6 +166,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				DisplayOptToStr(displayOpt));
 		}
 		break;
+#ifdef _WIN32_DESKTOP
 	case CMD_IPOD_LYRICS_DOWNLOADER:
 		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
 		break;
@@ -207,12 +207,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			}
 		}
 		break;
-	case CMD_PREFERENCES:
-		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS);
-		break;
-	case CMD_DISPLAY_OPT:
-		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS, PAGE_LYR_DISPLAY);
-		break;
 	case CMD_FLOATING_LYRICS:
 		{
 			g_Profile.WriteProfileInt(_T("FloatingLyr"), !g_wndFloatingLyr.IsValid());
@@ -222,7 +216,19 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				g_wndFloatingLyr.Destroy();
 		}
 		break;
+	case CMD_ADJUST_HUE:
+		{
+			ShowAdjustHueDialog(m_pSkinWnd);
+		}
+		break;
 #endif // _WIN32_DESKTOP
+
+	case CMD_PREFERENCES:
+		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS);
+		break;
+	case CMD_DISPLAY_OPT:
+		ShowPreferenceDialog(m_pSkinWnd, m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS, PAGE_LYR_DISPLAY);
+		break;
 
 	case CMD_WEBHOME:
 		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_DOMAIN));
@@ -258,13 +264,6 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_LOGIN));
 		}
 		break;
-#ifdef _WIN32
-	case CMD_ADJUST_HUE:
-		{
-			ShowAdjustHueDialog(m_pSkinWnd);
-		}
-		break;
-#endif
 	case CMD_ABOUT:
 		{
 /*			CSkinWnd	*pWnd = new CDlgAbout();

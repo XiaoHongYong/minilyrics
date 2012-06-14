@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5F2BD59414963B52003E7F5C /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD59314963B52003E7F5C /* misc.cpp */; };
+		5F2BD59414963B52003E7F5C /* misc.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD59314963B52003E7F5C /* misc.mm */; };
 		5F9CDEC8147A323D00432DAC /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F9CDEC7147A323D00432DAC /* Cocoa.framework */; };
 		5F9CDF13147A330100432DAC /* auto_free_list.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEDC147A330100432DAC /* auto_free_list.h */; };
 		5F9CDF14147A330100432DAC /* base.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEDD147A330100432DAC /* base.h */; };
@@ -69,7 +69,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5F2BD59314963B52003E7F5C /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = misc.cpp; sourceTree = "<group>"; };
+		5F2BD59314963B52003E7F5C /* misc.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = misc.mm; sourceTree = "<group>"; };
 		5F9CDEC4147A323D00432DAC /* libBaseMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libBaseMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5F9CDEC7147A323D00432DAC /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5F9CDECA147A323D00432DAC /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -243,7 +243,7 @@
 		5F9CDEEC147A330100432DAC /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				5F2BD59314963B52003E7F5C /* misc.cpp */,
+				5F2BD59314963B52003E7F5C /* misc.mm */,
 				5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */,
 				5F9CDEF0147A330100432DAC /* CharEncoding.cpp */,
 				5F9CDEF1147A330100432DAC /* CharEncoding.mm */,
@@ -380,7 +380,7 @@
 				5F9CDF3E147A330100432DAC /* StdAfx.cpp in Sources */,
 				5F9CDF41147A330100432DAC /* stringex.cpp in Sources */,
 				5F9CDF44147A330100432DAC /* StrPrintf.cpp in Sources */,
-				5F2BD59414963B52003E7F5C /* misc.cpp in Sources */,
+				5F2BD59414963B52003E7F5C /* misc.mm in Sources */,
 				5FB53E9A14C19FA20041938C /* MapString.cpp in Sources */,
 				5FB53E9C14C19FA20041938C /* TextFile.cpp in Sources */,
 				5FB5924D15458EA60071B204 /* FileEx.cpp in Sources */,
