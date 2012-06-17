@@ -2,10 +2,10 @@
 #include "digest.h"
 #include "md5.h"
 
-#define MD_CTX MD5_CTX
-#define MDInit MD5Init
-#define MDUpdate MD5Update
-#define MDFinal MD5Final
+#define MD_CTX md5_state_t
+#define MDInit md5_init
+#define MDUpdate md5_append
+#define MDFinal md5_finish
 
 void MD5ToBinary(LPCVOID input, int len, unsigned char digest[])
 {
@@ -15,7 +15,7 @@ void MD5ToBinary(LPCVOID input, int len, unsigned char digest[])
 
 	MDInit (&context);
 	MDUpdate (&context, (unsigned char *)input, len);
-	MDFinal (digest, &context);
+	MDFinal (&context, digest);
 }
 
 void MD5ToString(LPCVOID input, int len, TCHAR szDigest[])
@@ -67,7 +67,7 @@ bool MD5FileToBinary(LPCTSTR filename, unsigned char digest[])
 		MDInit (&context);
 		while ((len = fread(buffer, 1, 1024, file)) > 0)
 			MDUpdate(&context, buffer, len);
-		MDFinal(digest, &context);
+		MDFinal (&context, digest);
 		fclose(file);
 	}
 

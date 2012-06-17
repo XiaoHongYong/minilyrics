@@ -42,7 +42,8 @@ public:
 	// virtual BOOL Save(IILIO *io);
 
 public:
-#pragma pack(push, 1)
+#pragma pack(push)
+#pragma pack(1)
 
 typedef struct tag_gifgce{
   BYTE transpcolflag:1;

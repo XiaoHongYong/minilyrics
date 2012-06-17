@@ -40,7 +40,8 @@ public:
 	CID3v1();
 	virtual ~CID3v1();
 
-#pragma pack(push, 1)
+#pragma pack(push)
+#pragma pack(1)
 	struct ID3v1Data
 	{
 		char	szID3ID[ID3_V1_LEN_ID];

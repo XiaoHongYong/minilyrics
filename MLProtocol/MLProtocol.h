@@ -415,7 +415,8 @@ enum ML_PACK_VERSION
 	MPV_V1_MD5_ID		= 2,		// 
 };
 
-#pragma pack(push, 1)
+#pragma pack(push)
+#pragma pack(1)
 struct MLEncodePacketV1
 {
 	BYTE		byVersion;		// 协议的版本：

@@ -501,7 +501,7 @@ void CBaseWnd::PostUserMessage(int nMessageID, LPARAM param)
 	
 	NSArray *msg = [NSArray arrayWithObjects:[NSNumber numberWithInt:nMessageID], [NSNumber numberWithLong:param], nil];
 	
-	[m_info->window performSelectorOnMainThread:@selector(onUserMsg)
+	[m_info->window performSelectorOnMainThread:@selector(onUserMsg:)
 									 withObject:msg
 								  waitUntilDone:false];
 }
