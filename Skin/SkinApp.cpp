@@ -92,7 +92,7 @@ void CSkinApp::PostQuitMessage()
 #ifdef _WIN32
 	::PostQuitMessage(0);
 #else
-	ERRLOG0("PostQuitMessage");
+	PostQuitMessageMac();
 #endif
 }
 

@@ -14,10 +14,39 @@
 
 @synthesize window;
 
+CMLMenu *_menu;
+
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
 	// Insert code here to initialize your application
-	CMPlayerAppBase::GetInstance()->Init();
+	CMPlayerAppBase *pApp = CMPlayerAppBase::GetInstance();
+	pApp->Init();
+	
+	if (pApp->GetSkinFactory()->LoadMenu(pApp->GetMainWnd(), &_menu, _T("MainWndMenu"))) {
+		NSMenu *mainMenu = [NSApp mainMenu];
+		NSMenu *menu = (NSMenu*)_menu->GetHandle();
+
+		
+/*		for (int i = 0; i < [menu numberOfItems]; i++) {
+			NSMenuItem *item = [menu itemAtIndex:i];
+			[item retain];
+			[menu removeItemAtIndex:i];
+			[mainMenu addItem:item];
+			[item release];
+		}*/
+	}
+	
+	NSMenu *newMenu;
+    NSMenuItem *newItem;
+	
+    // Add the submenu
+    newItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Flashy" action:NULL keyEquivalent:@""];
+    newMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@"Flashy"];
+    [newItem setSubmenu:newMenu];
+    [newMenu release];
+    [[NSApp mainMenu] addItem:newItem];
+    [newItem release];
+
 }
 
 /**
@@ -27,7 +56,7 @@
 
     NSFileManager *fileManager = [NSFileManager defaultManager];
     NSURL *libraryURL = [[fileManager URLsForDirectory:NSLibraryDirectory inDomains:NSUserDomainMask] lastObject];
-    return [libraryURL URLByAppendingPathComponent:@"MiniLyricsMac"];
+    return [libraryURL URLByAppendingPathComponent:@"MiniLyrics"];
 }
 
 /**
@@ -38,7 +67,7 @@
         return __managedObjectModel;
     }
 	
-    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"MiniLyricsMac" withExtension:@"momd"];
+    NSURL *modelURL = [[NSBundle mainBundle] URLForResource:@"MiniLyrics" withExtension:@"momd"];
     __managedObjectModel = [[NSManagedObjectModel alloc] initWithContentsOfURL:modelURL];    
     return __managedObjectModel;
 }
@@ -194,12 +223,18 @@
     return NSTerminateNow;
 }
 
-- (IBAction)newWindow:(id)sender
+- (IBAction)aboutWindow:(id)sender
 {
-	// [w setHidden:false];
-	CBaseWnd *baseWnd = new CBaseWnd();
-	
-	baseWnd->CreateForSkin("SinClass", "Caption", 0, 100, 300, 200, NULL);
+	CMPSkinMainWnd *pWnd = CMPlayerApp::GetInstance()->GetMainWnd();
+	if (pWnd != NULL && pWnd->IsValid())
+		pWnd->PostCustomCommandMsg(CMD_ABOUT);
+}
+
+- (IBAction)preferencesWindow:(id)sender
+{
+	CMPSkinMainWnd *pWnd = CMPlayerApp::GetInstance()->GetMainWnd();
+	if (pWnd != NULL && pWnd->IsValid())
+		pWnd->PostCustomCommandMsg(CMD_PREFERENCES);
 }
 
 - (void)dealloc

@@ -738,8 +738,10 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_UPLOAD_LYR:
 		{
-			if (!g_LyricData.HasLyricsOpened())
+			if (!g_LyricData.HasLyricsOpened()) {
 				m_pSkinWnd->MessageOut(_TLT("No Lyrics file was opened."));
+				break;
+			}
 
 			// show upload lyrics dialog
 			tstring	strLyrics;

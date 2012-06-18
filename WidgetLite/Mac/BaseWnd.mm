@@ -63,6 +63,9 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 	if (bVisible)
 		[w makeKeyAndOrderFront:w];
 		// [w orderFront:NSApp];
+	
+	if (bTopmost)
+		[w setLevel:NSFloatingWindowLevel];
 
 	return true;
 }
@@ -387,6 +390,11 @@ bool CBaseWnd::IsWindow()
 	return m_info->window != NULL;
 }
 
+bool CBaseWnd::IsValid()
+{
+	return m_info->window != NULL;
+}
+
 bool CBaseWnd::IsVisible()
 {
 	if (m_info->window == NULL)
@@ -400,7 +408,7 @@ bool CBaseWnd::IsTopmost()
 	if (m_info->window == NULL)
 		return false;
 
-	return [m_info->window level] == NSMainMenuWindowLevel;
+	return [m_info->window level] == NSFloatingWindowLevel;
 }
 
 bool CBaseWnd::IsSameWnd(CBaseWnd *pWnd)
@@ -414,7 +422,7 @@ void CBaseWnd::SetTopmost(bool bTopmost)
 		return;
 
 	if (bTopmost)
-		[m_info->window setLevel: NSMainMenuWindowLevel];
+		[m_info->window setLevel: NSFloatingWindowLevel];
 	else
 		[m_info->window setLevel: NSNormalWindowLevel];
 }
@@ -510,6 +518,16 @@ void CBaseWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
 {
 	m_nAlpha = nAlpha;
 	m_bClickThrough = bClickThrough;
+	if (nAlpha == 255)
+	{
+		[m_info->window setOpaque:YES];
+		[m_info->window setAlphaValue:1.0];
+	}
+	else
+	{
+		[m_info->window setOpaque:NO];
+		[m_info->window setAlphaValue:(float)nAlpha / 255];
+	}
 }
 
 BOOL CBaseWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)

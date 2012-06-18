@@ -938,9 +938,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		5FB161FF147017330084494F /* MiniLyricsMac */ = {
+		5FB161FF147017330084494F /* MiniLyrics */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 5FB16221147017340084494F /* Build configuration list for PBXNativeTarget "MiniLyricsMac" */;
+			buildConfigurationList = 5FB16221147017340084494F /* Build configuration list for PBXNativeTarget "MiniLyrics" */;
 			buildPhases = (
 				5FB161FC147017330084494F /* Sources */,
 				5FB161FD147017330084494F /* Frameworks */,
@@ -964,7 +964,7 @@
 				5FBCCBCA1485140700D7C64A /* PBXTargetDependency */,
 				5FBCCBCE1485140700D7C64A /* PBXTargetDependency */,
 			);
-			name = MiniLyricsMac;
+			name = MiniLyrics;
 			productName = MiniLyricsMac;
 			productReference = 5FB16200147017330084494F /* MiniLyricsMac.app */;
 			productType = "com.apple.product-type.application";
@@ -1044,7 +1044,7 @@
 			);
 			projectRoot = "";
 			targets = (
-				5FB161FF147017330084494F /* MiniLyricsMac */,
+				5FB161FF147017330084494F /* MiniLyrics */,
 			);
 		};
 /* End PBXProject section */
@@ -1454,7 +1454,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		5FB16221147017340084494F /* Build configuration list for PBXNativeTarget "MiniLyricsMac" */ = {
+		5FB16221147017340084494F /* Build configuration list for PBXNativeTarget "MiniLyrics" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				5FB16222147017340084494F /* Debug */,

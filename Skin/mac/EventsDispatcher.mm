@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #import <Foundation/Foundation.h>
+#import <AppKit/NSApplication.h>
 #include "EventsDispatcherBase.h"
 #include "EventsDispatcher.h"
 #include "Skin.h"
@@ -98,6 +99,11 @@ void PostCustomCommandMsgMac(CSkinWnd *pSkinWnd, int cmd)
 	[poster performSelectorOnMainThread:@selector(OnCustomCommand)
 							 withObject:nil
 						  waitUntilDone:NO];
+}
+
+void PostQuitMessageMac()
+{
+	[NSApp terminate:nil];
 }
 
 

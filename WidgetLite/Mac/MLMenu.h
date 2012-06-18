@@ -53,6 +53,9 @@ public:
 	CMLMenu GetSubmenu(int nPos);
 
 	CMLMenu & operator = (CMLMenu &menu);
+
+	// For Mac
+	LPVOID GetHandle();
 	
 protected:
 	struct MLMenuInfo	*m_info;

@@ -155,9 +155,36 @@ int CMLMenu::GetItemCount()
 	return [m_info->menu numberOfItems];
 }
 
+LPCTSTR ToMacMenuText(LPCTSTR szOrg, tstring &buf)
+{
+	LPCTSTR p = _tcschr(szOrg, '&');
+	if (p == NULL)
+		return szOrg;
+	if (p[1] == '&') {
+		buf = szOrg;
+		strrep(buf, _T("&&"), _T("&"));
+		return buf.c_str();
+	}
+
+	if (!IsAlpha(p[1]))
+		return szOrg;
+
+	buf = szOrg;
+	if (p > szOrg) {
+		if (*(p - 1) == '(' && p[2] == ')') {
+			buf.erase((int)(p - szOrg) - 1, 4);
+			return buf.c_str();
+		}
+	}
+	
+	buf.erase((int)(p - szOrg), 1);
+	return buf.c_str();
+}
+
 void CMLMenu::AppendItem(UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey)
 {
-	NSString *title = [NSString stringWithUTF8String:szText];
+	tstring buf;
+	NSString *title = [NSString stringWithUTF8String:ToMacMenuText(szText, buf)];
 	NSMenuItem *item = [m_info->menu addItemWithTitle:title
 											   action:@selector(OnCommand:)
 										keyEquivalent:[NSString stringWithUTF8String:szShortcutKey]];
@@ -167,7 +194,8 @@ void CMLMenu::AppendItem(UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey)
 
 CMLMenu CMLMenu::AppendSubmenu(LPCTSTR szText)
 {
-	NSString *title = [NSString stringWithUTF8String:szText];
+	tstring buf;
+	NSString *title = [NSString stringWithUTF8String:ToMacMenuText(szText, buf)];
 	NSMenuItem *item = [m_info->menu addItemWithTitle:title
 												  action:@selector(OnCommand:)
 										   keyEquivalent:@""];
@@ -190,7 +218,8 @@ void CMLMenu::AppendSeperator()
 
 void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey)
 {
-	NSString *title = [NSString stringWithUTF8String:szText];
+	tstring buf;
+	NSString *title = [NSString stringWithUTF8String:ToMacMenuText(szText, buf)];
 	NSMenuItem *item = [m_info->menu insertItemWithTitle:title
 												  action:@selector(OnCommand:)
 										   keyEquivalent:[NSString stringWithUTF8String:szShortcutKey]
@@ -210,7 +239,8 @@ void CMLMenu::InsertItemByID(UINT nPosID, UINT nID, LPCTSTR szText, LPCTSTR szSh
 
 CMLMenu CMLMenu::InsertSubmenu(int nPos, LPCTSTR szText)
 {
-	NSString *title = [NSString stringWithUTF8String:szText];
+	tstring buf;
+	NSString *title = [NSString stringWithUTF8String:ToMacMenuText(szText, buf)];
 	NSMenuItem *item = [m_info->menu insertItemWithTitle:title
 												  action:@selector(OnCommand:)
 										   keyEquivalent:@""
@@ -319,3 +349,7 @@ CMLMenu & CMLMenu::operator = (CMLMenu &menu)
 	return *this;
 }
 
+LPVOID CMLMenu::GetHandle()
+{
+	return m_info->menu;
+}

@@ -806,6 +806,9 @@
 /* Begin PBXProject section */
 		5F2BD52A14963396003E7F5C /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 5F2BD52D14963396003E7F5C /* Build configuration list for PBXProject "ThirdPartiesSDK" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;

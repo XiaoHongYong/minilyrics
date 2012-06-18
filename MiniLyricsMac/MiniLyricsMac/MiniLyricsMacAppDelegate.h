@@ -23,6 +23,8 @@
 
 - (IBAction)saveAction:(id)sender;
 
-- (IBAction)newWindow:(id)sender;
+- (IBAction)aboutWindow:(id)sender;
+
+- (IBAction)preferencesWindow:(id)sender;
 
 @end

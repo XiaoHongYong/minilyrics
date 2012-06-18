@@ -15,3 +15,4 @@ public:
 
 void PostCustomCommandMsgMac(class CSkinWnd *pSkinWnd, int cmd);
 
+void PostQuitMessageMac();
