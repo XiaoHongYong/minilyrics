@@ -527,7 +527,8 @@ void CSkinMenuBar::OnLanguageChanged()
 
 	if (m_pMenu)
 	{
-		for (int i = 0; i < 255; i++)
+		int count = m_pMenu->GetItemCount();
+		for (int i = 0; i < count; i++)
 		{
 			SubMenu		item;
 

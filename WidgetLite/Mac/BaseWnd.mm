@@ -50,7 +50,7 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 	m_info->view = view;
 
 	[w setContentView:view];
-	[w setBackgroundColor:[NSColor blueColor]];
+	// [w setBackgroundColor:[NSColor blueColor]];
 
 	if (szCaption)
 		[w setTitle: [NSString stringWithUTF8String:szCaption]];
@@ -533,5 +533,10 @@ void CBaseWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
 BOOL CBaseWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)
 {
 	return false;
+}
+
+LPVOID CBaseWnd::GetHandle()
+{
+	return m_info->window;
 }
 

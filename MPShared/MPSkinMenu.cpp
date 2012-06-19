@@ -168,10 +168,11 @@ MenuRadioGroup _menuRadioGroup[] =
 
 void CMenuAutoCheck::InitProcSubMenu(CMLMenu &menu)
 {
-	int				nInRadioGroupIndex = -1;
+	int	nInRadioGroupIndex = -1;
 	MenuRadioGroup	radioGroup;
 
-	for (int i = 0; i < 255; i++)
+	int count = menu.GetItemCount();
+	for (int i = 0; i < count; i++)
 	{
 		tstring strText;
 		UINT nID;
@@ -387,28 +388,27 @@ void CMPSkinMenu::OnLoadMenu()
 
 void CMPSkinMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
-	m_autoCheckMenu.UpdateMenuCheckStatus();
-
-	if (m_autoCheckMenu.m_hInsertSkinsMenu.IsValid())
-	{
-		InsertSkinMenu(m_autoCheckMenu.m_hInsertSkinsMenu,
-			m_autoCheckMenu.m_nInsertSkinsPos);
-	}
+	UpdateMenuStatus();
 
 	CSkinMenu::TrackPopupMenu(x, y, pWnd, prcNotOverlap);
 }
 
 void CMPSkinMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
-	m_autoCheckMenu.UpdateMenuCheckStatus();
+	UpdateMenuStatus();
 
+	CSkinMenu::TrackPopupSubMenu(x, y, nSubMenu, pWnd, prcNotOverlap);
+}
+
+void CMPSkinMenu::UpdateMenuStatus()
+{
+	m_autoCheckMenu.UpdateMenuCheckStatus();
+	
 	if (m_autoCheckMenu.m_hInsertSkinsMenu.IsValid())
 	{
 		InsertSkinMenu(m_autoCheckMenu.m_hInsertSkinsMenu,
-			m_autoCheckMenu.m_nInsertSkinsPos);
+					   m_autoCheckMenu.m_nInsertSkinsPos);
 	}
-
-	CSkinMenu::TrackPopupSubMenu(x, y, nSubMenu, pWnd, prcNotOverlap);
 }
 
 bool CMPSkinMenu::GetShortcutKey(int nMenuID, tstring &strShortcut)

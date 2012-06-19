@@ -87,6 +87,8 @@ public:
 	virtual void OnLoadMenu();
 
 	void AddUICheckStatusIf(IUICheckStatus *pIfUICheckStatus) { m_autoCheckMenu.AddUICheckStatusIf(pIfUICheckStatus); }
+	
+	void UpdateMenuStatus();
 
 protected:	
 	virtual bool GetShortcutKey(int nMenuID, tstring &strShortcut);

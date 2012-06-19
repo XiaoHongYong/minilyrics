@@ -6,15 +6,74 @@
 //  Copyright 2011 __MyCompanyName__. All rights reserved.
 //
 
+void CallMenuCommand(int cmd);
+
+// This is used to handle the main menu of MiniLyrics
+@interface MainMenuHandler : NSObject {
+}
+
+- (void) OnCommand:(NSMenuItem *)item;
+
+@end
+
+@implementation MainMenuHandler
+
+- (void) OnCommand:(NSMenuItem *)item
+{
+	CallMenuCommand([item tag]);
+}
+
+-(BOOL) validateMenuItem:(NSMenuItem *)item
+{
+	return YES;
+}
+
+@end
+
 #import "MiniLyricsMacAppDelegate.h"
 #import "stdafx.h"
 #import "MPlayerAppBase.h"
+#import "MPSkinMenu.h"
+
+
+void CallMenuCommand(int cmd) {
+	CMPlayerAppBase::GetInstance()->GetMainWnd()->OnCommand(cmd, 0);
+}
 
 @implementation MiniLyricsMacAppDelegate
 
 @synthesize window;
 
-CMLMenu *_menu;
+CMPSkinMenu *_menu;
+
+NSMenuItem *duplicateMenuItem(NSMenuItem *org) {
+	if ([org isSeparatorItem])
+		return [NSMenuItem separatorItem];
+
+	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[org title]
+												  action:[org action]
+										   keyEquivalent:[org keyEquivalent]];
+	[item setTarget:[MainMenuHandler alloc]];
+	[item setTag:[org tag]];
+	
+	if ([org hasSubmenu] != YES)
+		return item;
+
+	NSMenu *subMenu = [org submenu];
+	NSMenu *newSubMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:[org title]];
+	[newSubMenu setAutoenablesItems:NO];
+	[item setSubmenu:newSubMenu];
+
+	int count = [subMenu numberOfItems];
+	for (int i = 0; i < count; i++) {
+		NSMenuItem *newSubItem = duplicateMenuItem([subMenu itemAtIndex:i]);
+		[newSubMenu addItem:newSubItem];
+	}
+
+	[newSubMenu release];
+
+	return item;
+}
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
 {
@@ -22,31 +81,18 @@ CMLMenu *_menu;
 	CMPlayerAppBase *pApp = CMPlayerAppBase::GetInstance();
 	pApp->Init();
 	
-	if (pApp->GetSkinFactory()->LoadMenu(pApp->GetMainWnd(), &_menu, _T("MainWndMenu"))) {
+	if (pApp->GetSkinFactory()->LoadMenu(pApp->GetMainWnd(), (CMLMenu **)&_menu, _T("MainWndMenu"))) {
+		_menu->UpdateMenuStatus();
+
 		NSMenu *mainMenu = [NSApp mainMenu];
 		NSMenu *menu = (NSMenu*)_menu->GetHandle();
 
-		
-/*		for (int i = 0; i < [menu numberOfItems]; i++) {
-			NSMenuItem *item = [menu itemAtIndex:i];
-			[item retain];
-			[menu removeItemAtIndex:i];
+		for (int i = 0; i < [menu numberOfItems]; i++) {
+			NSMenuItem *item = duplicateMenuItem([menu itemAtIndex:i]);
 			[mainMenu addItem:item];
 			[item release];
-		}*/
+		}
 	}
-	
-	NSMenu *newMenu;
-    NSMenuItem *newItem;
-	
-    // Add the submenu
-    newItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Flashy" action:NULL keyEquivalent:@""];
-    newMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@"Flashy"];
-    [newItem setSubmenu:newMenu];
-    [newMenu release];
-    [[NSApp mainMenu] addItem:newItem];
-    [newItem release];
-
 }
 
 /**

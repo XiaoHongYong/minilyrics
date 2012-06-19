@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5F10F0491576F5F90080ECF6 /* MPSkinMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F10F0471576F5F90080ECF6 /* MPSkinMenu.cpp */; };
-		5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */; };
+		5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.mm */; };
 		5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */; };
 		5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */; };
 		5F65BB0F156A7EE500605207 /* MLPlayerMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F65BB0D156A7EE500605207 /* MLPlayerMgr.cpp */; };
@@ -322,7 +322,7 @@
 		5F10F0481576F5F90080ECF6 /* MPSkinMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinMenu.h; path = ../../MPShared/MPSkinMenu.h; sourceTree = "<group>"; };
 		5F2BD4A9148A6511003E7F5C /* DlgSaveLyrPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveLyrPrompt.h; sourceTree = "<group>"; };
 		5F2BD4AA148B3354003E7F5C /* PlayerEventDispatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerEventDispatcher.h; sourceTree = "<group>"; };
-		5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgChooseFont.cpp; sourceTree = "<group>"; };
+		5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlgChooseFont.mm; sourceTree = "<group>"; };
 		5F2BD4AC148BB9B8003E7F5C /* DlgChooseFont.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgChooseFont.h; sourceTree = "<group>"; };
 		5F2BD51B14962F4C003E7F5C /* MPlayerLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MPlayerLib.xcodeproj; path = ../MPlayerLib/MPlayerLib.xcodeproj; sourceTree = "<group>"; };
 		5F2BD53A149633BE003E7F5C /* Sqlite3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sqlite3.cpp; path = ../../sqlite_cpp/Sqlite3.cpp; sourceTree = "<group>"; };
@@ -911,7 +911,7 @@
 				5F65BB12156B19BE00605207 /* MsgPipe.h */,
 				5F65BB0D156A7EE500605207 /* MLPlayerMgr.cpp */,
 				5F65BB0E156A7EE500605207 /* MLPlayerMgr.h */,
-				5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.cpp */,
+				5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.mm */,
 				5F2BD4AC148BB9B8003E7F5C /* DlgChooseFont.h */,
 				5F2BD4AA148B3354003E7F5C /* PlayerEventDispatcher.h */,
 				5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */,
@@ -1252,7 +1252,7 @@
 				5FDC56B4148A23AC00C74E6A /* MPlayerApp.cpp in Sources */,
 				5FDC56B6148A23AC00C74E6A /* MPSkinMainWndMac.cpp in Sources */,
 				5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */,
-				5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.cpp in Sources */,
+				5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.mm in Sources */,
 				5F2BD53C149633C5003E7F5C /* Sqlite3.cpp in Sources */,
 				5FB53E9514C19C2C0041938C /* ZPAnalyticsClient.cpp in Sources */,
 				5F65BB0F156A7EE500605207 /* MLPlayerMgr.cpp in Sources */,

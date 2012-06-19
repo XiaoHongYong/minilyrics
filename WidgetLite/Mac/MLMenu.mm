@@ -299,17 +299,15 @@ bool CMLMenu::GetMenuItemInfo(UINT nItem, tstring &strText, UINT &nID, bool &bSu
 
 bool CMLMenu::HasItem(int nPos)
 {
-	@try {
-		return [m_info->menu itemAtIndex:nPos] != nil;
-	}
-	@catch (NSException *exception) {
-		return false;
-	}
+	return nPos >= 0 && nPos < GetItemCount();
 }
 
 
 bool CMLMenu::HasSubmenu(int nPos)
 {
+	if (!HasItem(nPos))
+		return false;
+
 	@try {
 		NSMenuItem *item = [m_info->menu itemAtIndex:nPos];
 		if (item == nil)

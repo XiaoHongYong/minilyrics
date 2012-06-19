@@ -177,6 +177,9 @@ public:
 	BOOL UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph);
 
 	bool				m_bMouseCaptured;
+	
+	// For Mac
+	LPVOID GetHandle();
 
 protected:
 	_BaseWndInfo		*m_info;
