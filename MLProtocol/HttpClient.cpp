@@ -5,6 +5,45 @@
 #include "StdAfx.h"
 #include "HttpClient.h"
 
+int DownloadUrl(LPCTSTR szUrl, LPCTSTR szRefer, int &nHttpCode, CCharBuffer &buffRet)
+{
+	CHttpClient			httpClient;
+	int					nRet;
+
+	nRet = httpClient.Init(szUrl, szRefer);
+	if (nRet != ERR_OK)
+	{
+		DBGLOG1(_T("Init Error: %s"), (LPCTSTR)Error2Str(nRet));
+		return nRet;
+	}
+
+	nRet = httpClient.Connect();
+	if (nRet != ERR_OK)
+	{
+		DBGLOG1(_T("Connect Error: %s"), (LPCTSTR)Error2Str(nRet));
+		return nRet;
+	}
+
+	nRet = httpClient.SendRequest();
+	if (nRet != ERR_OK)
+	{
+		DBGLOG1(_T("SendRequest Error=%s"), (LPCTSTR)Error2Str(nRet));
+		httpClient.Close();
+		return nRet;
+	}
+
+	nRet = httpClient.GetRespond(nHttpCode, buffRet);
+	if (nRet != ERR_OK)
+	{
+		DBGLOG1(_T("GetRespond Error=%s"), (LPCTSTR)Error2Str(nRet));
+		httpClient.Close();
+		return nRet;
+	}
+	httpClient.Close();
+
+	return ERR_OK;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 CHttpClient::CHttpClient()
