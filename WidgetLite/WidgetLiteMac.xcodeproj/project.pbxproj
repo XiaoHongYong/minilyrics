@@ -13,7 +13,7 @@
 		5F9CDEA2147A2C2A00432DAC /* Cursor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE8A147A2C2A00432DAC /* Cursor.cpp */; };
 		5F9CDEA3147A2C2A00432DAC /* Cursor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE8B147A2C2A00432DAC /* Cursor.h */; };
 		5F9CDEA4147A2C2A00432DAC /* desktop.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE8C147A2C2A00432DAC /* desktop.mm */; };
-		5F9CDEA6147A2C2A00432DAC /* DlgChooseColor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.cpp */; };
+		5F9CDEA6147A2C2A00432DAC /* DlgChooseColor.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.mm */; };
 		5F9CDEA7147A2C2A00432DAC /* DlgChooseColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */; };
 		5F9CDEA8147A2C2A00432DAC /* FileOpenDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE90147A2C2A00432DAC /* FileOpenDlg.cpp */; };
 		5F9CDEA9147A2C2A00432DAC /* FileOpenDlg.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */; };
@@ -51,7 +51,7 @@
 		5F9CDE8A147A2C2A00432DAC /* Cursor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Cursor.cpp; sourceTree = "<group>"; };
 		5F9CDE8B147A2C2A00432DAC /* Cursor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Cursor.h; sourceTree = "<group>"; };
 		5F9CDE8C147A2C2A00432DAC /* desktop.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = desktop.mm; sourceTree = "<group>"; };
-		5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgChooseColor.cpp; sourceTree = "<group>"; };
+		5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlgChooseColor.mm; sourceTree = "<group>"; };
 		5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgChooseColor.h; sourceTree = "<group>"; };
 		5F9CDE90147A2C2A00432DAC /* FileOpenDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileOpenDlg.cpp; sourceTree = "<group>"; };
 		5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileOpenDlg.h; sourceTree = "<group>"; };
@@ -111,7 +111,7 @@
 				5F9CDE8A147A2C2A00432DAC /* Cursor.cpp */,
 				5F9CDE8B147A2C2A00432DAC /* Cursor.h */,
 				5F9CDE8C147A2C2A00432DAC /* desktop.mm */,
-				5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.cpp */,
+				5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.mm */,
 				5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */,
 				5F9CDE90147A2C2A00432DAC /* FileOpenDlg.cpp */,
 				5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */,
@@ -277,7 +277,7 @@
 				5FB1637C147893920084494F /* WndDrag.cpp in Sources */,
 				5F9CDEA2147A2C2A00432DAC /* Cursor.cpp in Sources */,
 				5F9CDEA4147A2C2A00432DAC /* desktop.mm in Sources */,
-				5F9CDEA6147A2C2A00432DAC /* DlgChooseColor.cpp in Sources */,
+				5F9CDEA6147A2C2A00432DAC /* DlgChooseColor.mm in Sources */,
 				5F9CDEA8147A2C2A00432DAC /* FileOpenDlg.cpp in Sources */,
 				5F9CDEAA147A2C2A00432DAC /* FileSaveDlg.cpp in Sources */,
 				5F9CDEAC147A2C2A00432DAC /* FolderDialog.cpp in Sources */,

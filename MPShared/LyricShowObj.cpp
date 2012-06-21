@@ -271,9 +271,9 @@ void GradientFillImageVert(PRAW_IMAGE_DATA pImage, CRect &rc, MLColor clrGradien
 			uint8	*pixl = row;
 			for (int x = rc.left; x < rc.right; x++)
 			{
-				pixl[0] = (uint8)bN;
-				pixl[1] = (uint8)gN;
-				pixl[2] = (uint8)rN;
+				pixl[GfxRaw::PIX_B] = (uint8)bN;
+				pixl[GfxRaw::PIX_G] = (uint8)gN;
+				pixl[GfxRaw::PIX_R] = (uint8)rN;
 				pixl += nPixCount;
 			}
 
@@ -326,9 +326,9 @@ void GradientFillImageHorz(PRAW_IMAGE_DATA pImage, CRect &rc, MLColor clrGradien
 			uint8	*pixl = col;
 			for (int y = rc.top; y < rc.bottom; y++)
 			{
-				pixl[0] = (uint8)bN;
-				pixl[1] = (uint8)gN;
-				pixl[2] = (uint8)rN;
+				pixl[GfxRaw::PIX_B] = (uint8)bN;
+				pixl[GfxRaw::PIX_G] = (uint8)gN;
+				pixl[GfxRaw::PIX_R] = (uint8)rN;
 				pixl += pImage->stride;
 			}
 

@@ -233,9 +233,9 @@ void CopyBitmpDataFromGraphBuffer_t(Glyph *pGlyph, pixfmt &bufGraph)
 			// 			pDst[G_B] = 255;
 			// 			pDst[G_A] = 255;
 #ifdef _CLEAR_TYPE
-			pDst[G_R] = pSrc[2];
-			pDst[G_G] = pSrc[1];
-			pDst[G_B] = pSrc[0];
+			pDst[G_R] = pSrc[GfxRaw::PIX_R];
+			pDst[G_G] = pSrc[GfxRaw::PIX_G];
+			pDst[G_B] = pSrc[GfxRaw::PIX_B];
 #endif
 			pDst[G_A] = RGBToGray(pSrc[G_R], pSrc[G_G], pSrc[G_B]);
 			pDst += G_PIX_SIZE;
@@ -881,9 +881,9 @@ void DrawGlyphRGBA32Buff(agg::rendering_buffer &graph, int xDst, int yDst, int x
 	int	x, y;
 	byte		clr[3];
 	
-	clr[0] = clrGlyph.b();
-	clr[1] = clrGlyph.g();
-	clr[2] = clrGlyph.r();
+	clr[GfxRaw::PIX_B] = clrGlyph.b();
+	clr[GfxRaw::PIX_G] = clrGlyph.g();
+	clr[GfxRaw::PIX_R] = clrGlyph.r();
 	
 	for (y = yDst; y < yDstEnd; y++)
 	{
@@ -917,9 +917,9 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 
 	byte		clr[3];
 
-	clr[0] = clrGlyph.b();
-	clr[1] = clrGlyph.g();
-	clr[2] = clrGlyph.r();
+	clr[GfxRaw::PIX_B] = clrGlyph.b();
+	clr[GfxRaw::PIX_G] = clrGlyph.g();
+	clr[GfxRaw::PIX_R] = clrGlyph.r();
 
 	int	xSrc = 0, ySrc = 0;
 
@@ -1161,9 +1161,9 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	int			x, y;
 	byte		pclrPt[3];
 
-	pclrPt[0] = clrPt.b();
-	pclrPt[1] = clrPt.g();
-	pclrPt[2] = clrPt.r();
+	pclrPt[GfxRaw::PIX_B] = clrPt.b();
+	pclrPt[GfxRaw::PIX_G] = clrPt.g();
+	pclrPt[GfxRaw::PIX_B] = clrPt.r();
 
 	int			xDstEnd, yDstEnd, xSrc, ySrc;
 

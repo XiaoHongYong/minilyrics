@@ -5,6 +5,8 @@
 #include "stdafx.h"
 #include "ILIO.h"
 #include "RawImageData.h"
+#include "../GfxLite/GfxLite.h"
+#include "../GfxRaw/GfxRaw.h"
 
 #include "../SDK/Agg/include/agg_scanline_p.h"
 #include "../SDK/Agg/include/agg_renderer_scanline.h"
@@ -77,9 +79,9 @@ PRAW_IMAGE_DATA Convert16BppTo24BppRawImage(PRAW_IMAGE_DATA src)
 		for (int x = 0; x < src->width; x++)
 		{
 			clrSrc = *pixSrc;
-			pixDst[0] = clrTable[clrSrc & RMASK];
-			pixDst[1] = clrTable[(clrSrc & GMASK) >> GMOVE];
-			pixDst[2] = clrTable[(clrSrc & BMASK) >> BMOVE];
+			pixDst[GfxRaw::PIX_R] = clrTable[clrSrc & RMASK];
+			pixDst[GfxRaw::PIX_G] = clrTable[(clrSrc & GMASK) >> GMOVE];
+			pixDst[GfxRaw::PIX_B] = clrTable[(clrSrc & BMASK) >> BMOVE];
 			pixDst += 3;
 			pixSrc++;
 		}
@@ -350,9 +352,9 @@ void RawImageBGR24Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b)
 		p = pRow;
 		for (int x = 0; x < pRawImage->width; x++)
 		{
-			p[0] = b;
-			p[1] = g;
-			p[2] = r;
+			p[GfxRaw::PIX_B] = b;
+			p[GfxRaw::PIX_G] = g;
+			p[GfxRaw::PIX_R] = r;
 			p += 3;
 		}
 		pRow += pRawImage->stride;
@@ -372,10 +374,10 @@ void RawImageBGRA32Set(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b, uin
 		p = pRow;
 		for (int x = 0; x < pRawImage->width; x++)
 		{
-			p[0] = b;
-			p[1] = g;
-			p[2] = r;
-			p[3] = a;
+			p[GfxRaw::PIX_B] = b;
+			p[GfxRaw::PIX_G] = g;
+			p[GfxRaw::PIX_R] = r;
+			p[GfxRaw::PIX_A] = a;
 			p += 4;
 		}
 		pRow += pRawImage->stride;
@@ -427,9 +429,9 @@ inline void AdjustPixHue(byte *pix, float hueOffset)
     }
     else
     {
-		float rnorm = (maxval - pix[2]  ) / mdiff;
-		float gnorm = (maxval - pix[1]  ) / mdiff;
-		float bnorm = (maxval - pix[0]  ) / mdiff;
+		float rnorm = (maxval - pix[GfxRaw::PIX_R]  ) / mdiff;
+		float gnorm = (maxval - pix[GfxRaw::PIX_G]  ) / mdiff;
+		float bnorm = (maxval - pix[GfxRaw::PIX_B]  ) / mdiff;
 
 		saturation = (luminance <= 0.5f) ? (mdiff / msum) : (mdiff / (510.0f - msum));
 
@@ -479,9 +481,9 @@ inline void AdjustPixHue(byte *pix, float hueOffset, float saturationRatio, floa
     }
     else
     {
-		float rnorm = (maxval - pix[2]  ) / mdiff;
-		float gnorm = (maxval - pix[1]  ) / mdiff;
-		float bnorm = (maxval - pix[0]  ) / mdiff;
+		float rnorm = (maxval - pix[GfxRaw::PIX_R]  ) / mdiff;
+		float gnorm = (maxval - pix[GfxRaw::PIX_G]  ) / mdiff;
+		float bnorm = (maxval - pix[GfxRaw::PIX_B]  ) / mdiff;
 
 		saturation = (luminance <= 0.5f) ? (mdiff / msum) : (mdiff / (510.0f - msum));
 
@@ -1001,18 +1003,18 @@ RGBQUAD RAW_IMAGE_DATA::GetPixel(int x, int y)
 	case PF_RGBA32:
 		{
 			p += x * 4;
-			quad.rgbBlue = p[0];
-			quad.rgbGreen = p[1];
-			quad.rgbRed = p[2];
+			quad.rgbBlue = p[GfxRaw::PIX_B];
+			quad.rgbGreen = p[GfxRaw::PIX_G];
+			quad.rgbRed = p[GfxRaw::PIX_R];
 			quad.rgbReserved = p[3];
 		}
 		break;
 	case PF_RGB24:
 		{
 			p += x * 3;
-			quad.rgbBlue = p[0];
-			quad.rgbGreen = p[1];
-			quad.rgbRed = p[2];
+			quad.rgbBlue = p[GfxRaw::PIX_B];
+			quad.rgbGreen = p[GfxRaw::PIX_G];
+			quad.rgbRed = p[GfxRaw::PIX_R];
 			quad.rgbReserved = 255;
 		}
 		break;
