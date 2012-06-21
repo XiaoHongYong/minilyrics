@@ -6,37 +6,37 @@
          BgColor="#ece9d8" FontName="Verdana" FontHeight="14" TextColor="#000000">
       <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="23">
         <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption-frame.png" ImageRect="0,24,275,23" ImageFocus="caption-frame.png" ImageFocusRect="0,0,275,23" CutPos="25,78,196,225"/>
-        <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_CLOSE" Name="quit" Image="buttons.bmp" ImageRect="33,0,11,10" ImageSel="buttons.bmp" ImageSelRect="33,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="33,10,11,10"/>
+        <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_CLOSE" Name="quit" Image="buttons.png" ImageRect="33,0,11,10" ImageSel="buttons.png" ImageSelRect="33,20,11,10" ImageFocus="buttons.png" ImageFocusRect="33,10,11,10"/>
         <Text ID="ID_CAPTION" Rect="w/2-58,1,106,18" CaptionText="true" FontName="Verdana"
               FontHeight="12" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000"
               TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
       </DecorativeContainer>
       <ClientArea Rect="6, 23, w-12, h-23-10" ClipChildren="true"/>
-      <VStretchImage Left="0" Top="23" Width="6" Height="h-23-10" Name="left frame" Image="caption.bmp" ImageRect="276,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
-      <VStretchImage Left="w-6" Top="23" Width="6" Height="h-23-10" Name="right frame" Image="caption.bmp" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
-      <HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.bmp" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
+      <VStretchImage Left="0" Top="23" Width="6" Height="h-23-10" Name="left frame" Image="caption.png" ImageRect="276,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
+      <VStretchImage Left="w-6" Top="23" Width="6" Height="h-23-10" Name="right frame" Image="caption.png" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
+      <HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.png" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
     </WindowFrame>
     <MenuWindowFrame Region="Modern.tr2" MinWidth="275" MinHeight="250" Width="640" Height="450"
          BgColor="#ece9d8" FontHeight="14" TextColor="#000000">
       <DecorativeContainer Name="Caption" Left="0" Top="0" Width="w" Height="40">
         <CaptionImage Left="0" Top="0" Width="w" Height="40" Name="Caption" EnableDblClick="true" Image="menu-caption.png" ImageRect="0,45,275,40" ImageFocus="menu-caption.png" ImageFocusRect="0,0,275,40" CutPos="25,78,196,225"/>
-        <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,11,10" ImageSel="buttons.bmp" ImageSelRect="0,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="0,10,11,10"/>
-        <ActiveButton Left="w-41" Top="4" Width="11" Height="10" ID="ID_MINIMIZE" Name="Minimize" Image="buttons.bmp" ImageRect="11,0,11,10" ImageSel="buttons.bmp" ImageSelRect="11,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="11,10,11,10"/>
-        <ActiveButton Left="w-41+12" Top="4" Width="11" Height="10" ID="ID_MAXIMIZE" Name="maximize" Image="buttons.bmp" ImageRect="44,0,11,10" ImageSel="buttons.bmp" ImageSelRect="44,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="44,10,11,10" S1_Image="buttons.bmp" S1_ImageRect="55,0,11,10" S1_ImageSel="buttons.bmp" S1_ImageSelRect="55,20,11,10" S1_ImageFocus="buttons.bmp" S1_ImageFocusRect="55,10,11,10"/>
-        <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_CLOSE" Name="close" Image="buttons.bmp" ImageRect="33,0,11,10" ImageSel="buttons.bmp" ImageSelRect="33,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="33,10,11,10"/>
+        <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.png" ImageRect="0,0,11,10" ImageSel="buttons.png" ImageSelRect="0,20,11,10" ImageFocus="buttons.png" ImageFocusRect="0,10,11,10"/>
+        <ActiveButton Left="w-41" Top="4" Width="11" Height="10" ID="ID_MINIMIZE" Name="Minimize" Image="buttons.png" ImageRect="11,0,11,10" ImageSel="buttons.png" ImageSelRect="11,20,11,10" ImageFocus="buttons.png" ImageFocusRect="11,10,11,10"/>
+        <ActiveButton Left="w-41+12" Top="4" Width="11" Height="10" ID="ID_MAXIMIZE" Name="maximize" Image="buttons.png" ImageRect="44,0,11,10" ImageSel="buttons.png" ImageSelRect="44,20,11,10" ImageFocus="buttons.png" ImageFocusRect="44,10,11,10" S1_Image="buttons.png" S1_ImageRect="55,0,11,10" S1_ImageSel="buttons.png" S1_ImageSelRect="55,20,11,10" S1_ImageFocus="buttons.png" S1_ImageFocusRect="55,10,11,10"/>
+        <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_CLOSE" Name="close" Image="buttons.png" ImageRect="33,0,11,10" ImageSel="buttons.png" ImageSelRect="33,20,11,10" ImageFocus="buttons.png" ImageFocusRect="33,10,11,10"/>
         <Text ID="ID_CAPTION" Rect="w/2-58,1,106,18" CaptionText="true" FontName="Verdana"
               FontHeight="12" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000"
               TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
         <MenuBar left="10" top="20" width="w-15-15" height="18" Name="Menu" FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF" TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF" TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000" BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
       </DecorativeContainer>
       <ClientArea Rect="6, 40, w-12, h-40-10" ClipChildren="true"/>
-      <VStretchImage Left="0" Top="40" Width="6" Height="h-40-10" Name="left frame" Image="caption.bmp" ImageRect="276,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
-      <VStretchImage Left="w-6" Top="40" Width="6" Height="h-40-10" Name="right frame" Image="caption.bmp" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
-      <HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.bmp" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
+      <VStretchImage Left="0" Top="40" Width="6" Height="h-40-10" Name="left frame" Image="caption.png" ImageRect="276,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
+      <VStretchImage Left="w-6" Top="40" Width="6" Height="h-40-10" Name="right frame" Image="caption.png" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
+      <HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.png" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
     </MenuWindowFrame>
 
-    <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.bmp" ScalableThumb="TRUE" />
-    <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.bmp" ScalableThumb="TRUE" />
+    <VScrollBar Width="14" PushBtHeight="14" ThumbHeight="28" TrackHeight="28" ScrollBarWidth="14" Image="vscrollbar.png" ScalableThumb="TRUE" />
+    <HScrollBar Height="14" PushBtWidth="14" ThumbWidth="28" TrackWidth="28" ScrollBarHeight="14" Image="hscrollbar.png" ScalableThumb="TRUE" />
   </style>
   <Menus>
     <Menu Name="NormalMode" From="MainMenu" >
@@ -61,23 +61,23 @@
   <skinwnd Name="minilyrics" Region="Modern.tr2" MinWidth="275" MinHeight="116" Width="295" Height="116"
            ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="6" Top="23" Width="w-12" Height="h-23-10"/>
-    <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption.bmp" ImageRect="0,24,275,23" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" CutPos="25,97,177,225"/>
-    <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.bmp" ImageRect="0,0,11,10" ImageSel="buttons.bmp" ImageSelRect="0,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="0,10,11,10"/>
-    <ActiveButton Left="w-41" Top="4" Width="11" Height="10" ID="ID_MINIMIZE" Name="Minimize" Image="buttons.bmp" ImageRect="11,0,11,10" ImageSel="buttons.bmp" ImageSelRect="11,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="11,10,11,10"/>
-    <ActiveButton Left="w-41+12" Top="4" Width="11" Height="10" ID="dyncmd_change_to_bar" Name="lyrics bar" ToolTip="Lyrics Bar" Image="buttons.bmp" ImageRect="22,0,11,10" ImageSel="buttons.bmp" ImageSelRect="22,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="22,10,11,10" />
-    <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_QUIT" Name="quit" Image="buttons.bmp" ImageRect="33,0,11,10" ImageSel="buttons.bmp" ImageSelRect="33,20,11,10" ImageFocus="buttons.bmp" ImageFocusRect="33,10,11,10"/>
-	<VStretchImage Left="0" Top="23" Width="6" Height="h-23-10" Name="left frame" Image="caption.bmp" ImageRect="276,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
-	<VStretchImage Left="w-6" Top="23" Width="6" Height="h-23-10" Name="right frame" Image="caption.bmp" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
-	<HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.bmp" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
+    <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption.png" ImageRect="0,24,275,23" ImageFocus="caption.png" ImageFocusRect="0,0,275,23" CutPos="25,97,177,225"/>
+    <ActiveButton Left="6" Top="4" Width="11" Height="10" ID="ID_MENU" Name="Menu" Image="buttons.png" ImageRect="0,0,11,10" ImageSel="buttons.png" ImageSelRect="0,20,11,10" ImageFocus="buttons.png" ImageFocusRect="0,10,11,10"/>
+    <ActiveButton Left="w-41" Top="4" Width="11" Height="10" ID="ID_MINIMIZE" Name="Minimize" Image="buttons.png" ImageRect="11,0,11,10" ImageSel="buttons.png" ImageSelRect="11,20,11,10" ImageFocus="buttons.png" ImageFocusRect="11,10,11,10"/>
+    <ActiveButton Left="w-41+12" Top="4" Width="11" Height="10" ID="dyncmd_change_to_bar" Name="lyrics bar" ToolTip="Lyrics Bar" Image="buttons.png" ImageRect="22,0,11,10" ImageSel="buttons.png" ImageSelRect="22,20,11,10" ImageFocus="buttons.png" ImageFocusRect="22,10,11,10" />
+    <ActiveButton Left="w-41+24" Top="4" Width="11" Height="10" ID="ID_QUIT" Name="quit" Image="buttons.png" ImageRect="33,0,11,10" ImageSel="buttons.png" ImageSelRect="33,20,11,10" ImageFocus="buttons.png" ImageFocusRect="33,10,11,10"/>
+	<VStretchImage Left="0" Top="23" Width="6" Height="h-23-10" Name="left frame" Image="caption.png" ImageRect="276,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
+	<VStretchImage Left="w-6" Top="23" Width="6" Height="h-23-10" Name="right frame" Image="caption.png" ImageRect="283,0,6,54" ImageScaleYStart="2" ImageScaleYEnd="40"/>
+	<HStretchImage Left="0" Top="h-10" Width="w" Height="10" Name="bottom frame" Image="caption.png" ImageRect="0,48,275,10" ImageScaleXStart="60" ImageScaleXEnd="250"/>
   </skinwnd>
   <skinwnd Name="lyrbar" Region="lyr-bar.tr2" MinWidth="275" MinHeight="25" Width="400" Height="200" BgColor="#183C7B" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow Left="8" Top="4" Width="w-8-48" Height="h-8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
-    <YScaleImage Left="0" Top="0" Width="8" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,8,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
-    <YScaleImage Left="w-48" Top="0" Width="48" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="132,0,48,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
-    <Image Left="8" Top="0" Width="w-8-48" Height="4" Name="top frame" Image="lyr-bar-frame.bmp" ImageRect="8,0,124,4" BltMode="stretch"/>
-    <Image Left="8" Top="h-4" Width="w-8-48" Height="4" Name="bottom frame" Image="lyr-bar-frame.bmp" ImageRect="8,21,124,4" BltMode="stretch"/>
-    <Button Left="w-17-24" Top="5" Width="11" Height="10" ID="ID_MINIMIZE" Name="MiniMize" Image="buttons.bmp" ImageRect="11,10,11,10" ImageSel="buttons.bmp" ImageSelRect="11,20,11,10"/>
-    <Button Left="w-17-12" Top="5" Width="11" Height="10" ID="dyncmd_change_to_normal" Name="To Moral Mode" ToolTip="Normal Mode" Image="buttons.bmp" ImageRect="66,10,11,10" ImageSel="buttons.bmp" ImageSelRect="66,20,11,10"/>
-    <Button Left="w-17" Top="5" Width="11" Height="10" ID="ID_CLOSE" Name="Close" Image="buttons.bmp" ImageRect="33,10,11,10" ImageSel="buttons.bmp" ImageSelRect="33,20,11,10"/>
+    <YScaleImage Left="0" Top="0" Width="8" Height="h" Name="left frame" Image="lyr-bar-frame.png" ImageRect="0,0,8,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
+    <YScaleImage Left="w-48" Top="0" Width="48" Height="h" Name="right frame" Image="lyr-bar-frame.png" ImageRect="132,0,48,25" ImageScaleYStart="5" ImageScaleYEnd="20"/>
+    <Image Left="8" Top="0" Width="w-8-48" Height="4" Name="top frame" Image="lyr-bar-frame.png" ImageRect="8,0,124,4" BltMode="stretch"/>
+    <Image Left="8" Top="h-4" Width="w-8-48" Height="4" Name="bottom frame" Image="lyr-bar-frame.png" ImageRect="8,21,124,4" BltMode="stretch"/>
+    <Button Left="w-17-24" Top="5" Width="11" Height="10" ID="ID_MINIMIZE" Name="MiniMize" Image="buttons.png" ImageRect="11,10,11,10" ImageSel="buttons.png" ImageSelRect="11,20,11,10"/>
+    <Button Left="w-17-12" Top="5" Width="11" Height="10" ID="dyncmd_change_to_normal" Name="To Moral Mode" ToolTip="Normal Mode" Image="buttons.png" ImageRect="66,10,11,10" ImageSel="buttons.png" ImageSelRect="66,20,11,10"/>
+    <Button Left="w-17" Top="5" Width="11" Height="10" ID="ID_CLOSE" Name="Close" Image="buttons.png" ImageRect="33,10,11,10" ImageSel="buttons.png" ImageSelRect="33,20,11,10"/>
   </skinwnd>
 </skin>

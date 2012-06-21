@@ -23,21 +23,21 @@
   <include Name="FloatingLyrMode.xml"/>
   <skinwnd Name="lyrbar" MinWidth="150" MinHeight="33" Width="400" Height="200" BgColor="#3169B5" ContextMenu="LyrBarMode" CmdHandler="ch_common" LyrDisplayStylePropName="LyrBarDispStyle">
     <LyricsShow Left="4" Top="4" Width="w - 18" Height="h - 8" EnableToolbar="FALSE" LyrDisplayStylePropName="LyrBarDispStyle" LyrDisplayStyle="LyricShowSingleRow"/>
-    <YScaleImage Left="0" Top="0" Width="4" Height="h" Name="left frame" Image="lyr-bar-frame.bmp" ImageRect="0,0,4,35" ImageScaleYStart="5" ImageScaleYEnd="30"/>
-    <YScaleImage Left="w - 16" Top="0" Width="16" Height="h" Name="right frame" Image="lyr-bar-frame.bmp" ImageRect="184,0,16,35" ImageScaleYStart="30" ImageScaleYEnd="31"/>
-    <Image Left="4" Top="0" Width="w - 20" Height="4" Name="top frame" Image="lyr-bar-frame.bmp" ImageRect="4,0,180,4" BltMode="stretch"/>
-    <Image Left="4" Top="h - 4" Width="w - 20" Height="4" Name="bottom frame" Image="lyr-bar-frame.bmp" ImageRect="4,31,180,4" BltMode="stretch"/>
-    <Button Left="w - 12" Top="h/2-4" Width="9" Height="9" ID="ID_CLOSE" Name="Close" Image="lyr-bar-bt.bmp" ImageRect="18,0,9,9" ImageSel="lyr-bar-bt.bmp" ImageSelRect="0,0,9,9" ImageFocus="lyr-bar-bt.bmp" ImageFocusRect="9,0,9,9"/>
+    <YScaleImage Left="0" Top="0" Width="4" Height="h" Name="left frame" Image="lyr-bar-frame.png" ImageRect="0,0,4,35" ImageScaleYStart="5" ImageScaleYEnd="30"/>
+    <YScaleImage Left="w - 16" Top="0" Width="16" Height="h" Name="right frame" Image="lyr-bar-frame.png" ImageRect="184,0,16,35" ImageScaleYStart="30" ImageScaleYEnd="31"/>
+    <Image Left="4" Top="0" Width="w - 20" Height="4" Name="top frame" Image="lyr-bar-frame.png" ImageRect="4,0,180,4" BltMode="stretch"/>
+    <Image Left="4" Top="h - 4" Width="w - 20" Height="4" Name="bottom frame" Image="lyr-bar-frame.png" ImageRect="4,31,180,4" BltMode="stretch"/>
+    <Button Left="w - 12" Top="h/2-4" Width="9" Height="9" ID="ID_CLOSE" Name="Close" Image="lyr-bar-bt.png" ImageRect="18,0,9,9" ImageSel="lyr-bar-bt.png" ImageSelRect="0,0,9,9" ImageFocus="lyr-bar-bt.png" ImageFocusRect="9,0,9,9"/>
   </skinwnd>
   <skinwnd Name="minilyrics" Region="wmp10.tr2" MinWidth="275" MinHeight="116" Width="295" Height="116" BgColor="#3169B5" ContextMenu="NormalMode" CmdHandler="ch_common">
     <LyricsShow Left="4" Top="23" Width="w-8" Height="h-31"/>
-    <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption.bmp" ImageRect="0,0,275,23" ImageFocus="caption.bmp" ImageFocusRect="0,0,275,23" CutPos="75,125,130,220"/>
-    <Button Left="5" Top="4" Width="17" Height="18" ID="ID_MENU" Name="Menu" Image="cap-bt.bmp" ImageRect="0,0,17,18" ImageSel="cap-bt.bmp" ImageSelRect="0,18,17,18"/>
-    <Button Left="w-58" Top="4" Width="17" Height="18" ID="ID_MINIMIZE" Name="Minimize" Image="cap-bt.bmp" ImageRect="17,0,17,18" ImageSel="cap-bt.bmp" ImageSelRect="17,18,17,18"/>
-    <Button Left="w-40" Top="4" Width="17" Height="18" ID="dyncmd_change_to_bar" ToolTip="Lyrics Bar" Image="cap-bt.bmp" ImageRect="34,0,17,18" ImageSel="cap-bt.bmp" ImageSelRect="34,18,17,18"/>
-    <Button Left="w-22" Top="4" Width="17" Height="18" ID="ID_QUIT" Name="Quit" Image="cap-bt.bmp" ImageRect="51,0,17,18" ImageSel="cap-bt.bmp" ImageSelRect="51,18,17,18"/>
-    <XScaleImage Left="0" Top="h-8" Width="w" Height="8" Name="bottom" Image="caption.bmp" ImageRect="0,24,275,8" ImageScaleXStart="10" ImageScaleXEnd="260"/>
-    <Image Left="0" Top="23" Width="4" Height="h-31" Name="left frame" Image="caption.bmp" ImageRect="276,0,4,23" BltMode="stretch"/>
-    <Image Left="w-4" Top="23" Width="4" Height="h-31" Name="right frame" Image="caption.bmp" ImageRect="281,0,4,23" BltMode="stretch"/>
+    <CaptionImage Left="0" Top="0" Width="w" Height="23" Name="Caption" Image="caption.png" ImageRect="0,0,275,23" ImageFocus="caption.png" ImageFocusRect="0,0,275,23" CutPos="75,125,130,220"/>
+    <Button Left="5" Top="4" Width="17" Height="18" ID="ID_MENU" Name="Menu" Image="cap-bt.png" ImageRect="0,0,17,18" ImageSel="cap-bt.png" ImageSelRect="0,18,17,18"/>
+    <Button Left="w-58" Top="4" Width="17" Height="18" ID="ID_MINIMIZE" Name="Minimize" Image="cap-bt.png" ImageRect="17,0,17,18" ImageSel="cap-bt.png" ImageSelRect="17,18,17,18"/>
+    <Button Left="w-40" Top="4" Width="17" Height="18" ID="dyncmd_change_to_bar" ToolTip="Lyrics Bar" Image="cap-bt.png" ImageRect="34,0,17,18" ImageSel="cap-bt.png" ImageSelRect="34,18,17,18"/>
+    <Button Left="w-22" Top="4" Width="17" Height="18" ID="ID_QUIT" Name="Quit" Image="cap-bt.png" ImageRect="51,0,17,18" ImageSel="cap-bt.png" ImageSelRect="51,18,17,18"/>
+    <XScaleImage Left="0" Top="h-8" Width="w" Height="8" Name="bottom" Image="caption.png" ImageRect="0,24,275,8" ImageScaleXStart="10" ImageScaleXEnd="260"/>
+    <Image Left="0" Top="23" Width="4" Height="h-31" Name="left frame" Image="caption.png" ImageRect="276,0,4,23" BltMode="stretch"/>
+    <Image Left="w-4" Top="23" Width="4" Height="h-31" Name="right frame" Image="caption.png" ImageRect="281,0,4,23" BltMode="stretch"/>
   </skinwnd>
 </skin>
