@@ -7,9 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5F65C1E41546F2D000A6BA24 /* PlayerImp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F65C1E31546F2D000A6BA24 /* PlayerImp.cpp */; };
+		5F65C1E41546F2D000A6BA24 /* PlayerImp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F65C1E31546F2D000A6BA24 /* PlayerImp.mm */; };
 		5F65C1EE15477A7D00A6BA24 /* MsgPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F65C1EC15477A7D00A6BA24 /* MsgPipe.cpp */; };
 		5F65C1EF15477A7D00A6BA24 /* MsgPipe.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F65C1ED15477A7D00A6BA24 /* MsgPipe.h */; };
+		5F8A1C961594A7AF0062394E /* ETAppleEventObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F8A1C8F1594A7AF0062394E /* ETAppleEventObject.h */; };
+		5F8A1C971594A7AF0062394E /* ETAppleEventObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A1C901594A7AF0062394E /* ETAppleEventObject.m */; };
+		5F8A1C981594A7AF0062394E /* ETEyeTunes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F8A1C911594A7AF0062394E /* ETEyeTunes.h */; };
+		5F8A1C991594A7AF0062394E /* ETEyeTunes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A1C921594A7AF0062394E /* ETEyeTunes.m */; };
+		5F8A1C9A1594A7AF0062394E /* ETTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F8A1C931594A7AF0062394E /* ETTrack.h */; };
+		5F8A1C9B1594A7AF0062394E /* ETTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A1C941594A7AF0062394E /* ETTrack.m */; };
+		5F8A1C9C1594A7AF0062394E /* EyeTunes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F8A1C951594A7AF0062394E /* EyeTunes.h */; };
+		5F8A1C9F1594A8D80062394E /* EyeTunesEventCodes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F8A1C9E1594A8D80062394E /* EyeTunesEventCodes.h */; };
+		5F8A1CA11594A9C20062394E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F8A1CA01594A9C20062394E /* AppKit.framework */; };
 		5FBDF0231547760600983DDC /* MLService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBDF01F1547760600983DDC /* MLService.cpp */; };
 		5FBDF0241547760600983DDC /* MLService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBDF0201547760600983DDC /* MLService.h */; };
 		5FBDF0251547760600983DDC /* PlayerServiceBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBDF0211547760600983DDC /* PlayerServiceBase.cpp */; };
@@ -43,9 +52,18 @@
 		089C167EFE841241C02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		5F5CF65B1548431D00FC88A6 /* BaseMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BaseMac.xcodeproj; path = ../base/BaseMac.xcodeproj; sourceTree = "<group>"; };
 		5F65C1E21546F2B400A6BA24 /* PlayerImp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerImp.h; sourceTree = "<group>"; };
-		5F65C1E31546F2D000A6BA24 /* PlayerImp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerImp.cpp; sourceTree = "<group>"; };
+		5F65C1E31546F2D000A6BA24 /* PlayerImp.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PlayerImp.mm; sourceTree = "<group>"; };
 		5F65C1EC15477A7D00A6BA24 /* MsgPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MsgPipe.cpp; sourceTree = "<group>"; };
 		5F65C1ED15477A7D00A6BA24 /* MsgPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MsgPipe.h; sourceTree = "<group>"; };
+		5F8A1C8F1594A7AF0062394E /* ETAppleEventObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETAppleEventObject.h; sourceTree = "<group>"; };
+		5F8A1C901594A7AF0062394E /* ETAppleEventObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETAppleEventObject.m; sourceTree = "<group>"; };
+		5F8A1C911594A7AF0062394E /* ETEyeTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETEyeTunes.h; sourceTree = "<group>"; };
+		5F8A1C921594A7AF0062394E /* ETEyeTunes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETEyeTunes.m; sourceTree = "<group>"; };
+		5F8A1C931594A7AF0062394E /* ETTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETTrack.h; sourceTree = "<group>"; };
+		5F8A1C941594A7AF0062394E /* ETTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETTrack.m; sourceTree = "<group>"; };
+		5F8A1C951594A7AF0062394E /* EyeTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyeTunes.h; sourceTree = "<group>"; };
+		5F8A1C9E1594A8D80062394E /* EyeTunesEventCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EyeTunesEventCodes.h; sourceTree = "<group>"; };
+		5F8A1CA01594A9C20062394E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		5FBDF01F1547760600983DDC /* MLService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLService.cpp; sourceTree = "<group>"; };
 		5FBDF0201547760600983DDC /* MLService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLService.h; sourceTree = "<group>"; };
 		5FBDF0211547760600983DDC /* PlayerServiceBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerServiceBase.cpp; sourceTree = "<group>"; };
@@ -65,6 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F8A1CA11594A9C20062394E /* AppKit.framework in Frameworks */,
 				DC8CE6DF13A31B4500963E07 /* Cocoa.framework in Frameworks */,
 				DC13014513AB3AB40013DDA5 /* OpenGL.framework in Frameworks */,
 			);
@@ -86,6 +105,7 @@
 		089C166AFE841209C02AAC07 /* iTunesPlugIn */ = {
 			isa = PBXGroup;
 			children = (
+				5F8A1CA01594A9C20062394E /* AppKit.framework */,
 				5F5CF65B1548431D00FC88A6 /* BaseMac.xcodeproj */,
 				08FB77AFFE84173DC02AAC07 /* Source */,
 				089C167CFE841241C02AAC07 /* Resources */,
@@ -117,6 +137,14 @@
 		08FB77AFFE84173DC02AAC07 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5F8A1C9E1594A8D80062394E /* EyeTunesEventCodes.h */,
+				5F8A1C8F1594A7AF0062394E /* ETAppleEventObject.h */,
+				5F8A1C901594A7AF0062394E /* ETAppleEventObject.m */,
+				5F8A1C911594A7AF0062394E /* ETEyeTunes.h */,
+				5F8A1C921594A7AF0062394E /* ETEyeTunes.m */,
+				5F8A1C931594A7AF0062394E /* ETTrack.h */,
+				5F8A1C941594A7AF0062394E /* ETTrack.m */,
+				5F8A1C951594A7AF0062394E /* EyeTunes.h */,
 				5F65C1EC15477A7D00A6BA24 /* MsgPipe.cpp */,
 				5F65C1ED15477A7D00A6BA24 /* MsgPipe.h */,
 				5FBDF01F1547760600983DDC /* MLService.cpp */,
@@ -128,7 +156,7 @@
 				01285C0700CC38597F000001 /* iTunesPlugInMac.mm */,
 				01285C0000CC31B17F000001 /* iTunesVisualAPI */,
 				5F65C1E21546F2B400A6BA24 /* PlayerImp.h */,
-				5F65C1E31546F2D000A6BA24 /* PlayerImp.cpp */,
+				5F65C1E31546F2D000A6BA24 /* PlayerImp.mm */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -162,6 +190,11 @@
 				5FBDF0241547760600983DDC /* MLService.h in Headers */,
 				5FBDF0261547760600983DDC /* PlayerServiceBase.h in Headers */,
 				5F65C1EF15477A7D00A6BA24 /* MsgPipe.h in Headers */,
+				5F8A1C961594A7AF0062394E /* ETAppleEventObject.h in Headers */,
+				5F8A1C981594A7AF0062394E /* ETEyeTunes.h in Headers */,
+				5F8A1C9A1594A7AF0062394E /* ETTrack.h in Headers */,
+				5F8A1C9C1594A7AF0062394E /* EyeTunes.h in Headers */,
+				5F8A1C9F1594A8D80062394E /* EyeTunesEventCodes.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,10 +284,13 @@
 				DC26679C0BD9410900B4ED68 /* iTunesPlugInMac.mm in Sources */,
 				9542E97313D61AE600EE8D31 /* iTunesPlugIn.cpp in Sources */,
 				9542E97513D61AFE00EE8D31 /* iTunesAPI.cpp in Sources */,
-				5F65C1E41546F2D000A6BA24 /* PlayerImp.cpp in Sources */,
+				5F65C1E41546F2D000A6BA24 /* PlayerImp.mm in Sources */,
 				5FBDF0231547760600983DDC /* MLService.cpp in Sources */,
 				5FBDF0251547760600983DDC /* PlayerServiceBase.cpp in Sources */,
 				5F65C1EE15477A7D00A6BA24 /* MsgPipe.cpp in Sources */,
+				5F8A1C971594A7AF0062394E /* ETAppleEventObject.m in Sources */,
+				5F8A1C991594A7AF0062394E /* ETEyeTunes.m in Sources */,
+				5F8A1C9B1594A7AF0062394E /* ETTrack.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

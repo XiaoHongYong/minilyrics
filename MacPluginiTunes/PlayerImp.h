@@ -30,6 +30,8 @@ public:
 	void OnMediaChanged(ITTrackInfo	*pTrackInfo);
 	void OnPlayStateChanged(PLAYER_STATE newStat);
 
+	void InitUpdateTrackInfo();
+
 public:
 	DWORD			m_dwPos;
 	bool			m_bWorking;

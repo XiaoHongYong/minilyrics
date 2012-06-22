@@ -152,7 +152,6 @@ popup:S&kins
 item:40021:Winamp's skin:
 separator
 item:40146:INSERT_SKIN_POS:
-separator
 end
 popup:Display &Options
 item:40122:Dis&play Options...:
@@ -407,7 +406,6 @@ popup:S&kins
 item:40021:Winamp's skin:
 separator
 item:40146:INSERT_SKIN_POS:
-separator
 end
 popup:&Help
 item:40004:A&bout $Product$...:
@@ -423,5 +421,41 @@ menu:175
 item:40173:&Clear Lyrics Scrolling Actions:
 item:40172:Lyrics &Editor...:
 item:40175:&Help:
+end
+
+menu:179
+popup:&Media Files
+item:40193:Import &iTunes Library:
+separator
+item:40179:&Add Media Files...:
+item:40180:Add &Folder...:
+separator
+item:40181:&Clear File List:
+item:40183:&Remove Selected from List:
+separator
+item:40003:E&xit:
+end
+popup:&Lyrics
+item:40194:&Download All Lyrics for iPod:
+separator
+item:40097:&Remove All Embedded Lyrics:
+separator
+popup:&Advanced
+item:40122:&Download All Lyrics...:
+item:40123:&Remove All Lyrics...:
+end
+end
+popup:&Help
+item:40004:A&bout $Product$...:
+item:40023:$Product$ &Help:
+separator
+item:1013:&Activate $Product$...:
+separator
+item:40066:$Product$ &Website:
+end
+end
+
+menu:155
+item:1007:Mouse &Click Through:
 end
 
