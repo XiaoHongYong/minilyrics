@@ -1,3 +1,3 @@
 #pragma once
 
-inline int SaveLyrDialogBox(CBaseWnd *pWnd) { return IDYES; }
+int SaveLyrDialogBox(CBaseWnd *pWnd);

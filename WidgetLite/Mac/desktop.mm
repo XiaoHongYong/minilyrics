@@ -6,7 +6,7 @@
 
 void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
 {
-#pragma warning("Unplememented method: OpenUrl");
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:[NSString stringWithUTF8String:szUrl]]];
 }
 
 bool IsModifierKeyPressed(int nKey, UINT nFlags)

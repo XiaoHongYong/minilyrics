@@ -174,6 +174,7 @@ void CBaseWnd::ClientToScreen(RECT &rc)
 		return;
 
 	NSRect nsrc = NSMakeRect(rc);
+	nsrc.origin.y = [m_info->window frame].size.height - rc.top - nsrc.size.height;
 	NSRect rcRet = [m_info->window convertRectToScreen:nsrc];
 
 	NSRectToRect(rcRet, rc);
@@ -197,6 +198,7 @@ void CBaseWnd::ClientToScreen(POINT &pt)
 		return;
 	
 	NSRect nsrc = NSMakeRect(pt.x, pt.y, 0, 0);
+	nsrc.origin.y = [m_info->window frame].size.height - pt.y;
 	NSRect rcRet = [m_info->window convertRectToScreen:nsrc];
 	
 	pt.x = rcRet.origin.x;
@@ -486,15 +488,49 @@ bool CBaseWnd::MoveWindowSafely(int X, int Y, int nWidth, int nHeight, bool bRep
 
 int CBaseWnd::MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption)
 {
+	UINT btType = uType & 0xF;
+	NSString *defBt = nil;
+	NSString *alterBt = nil;
+	NSString *otherBt = nil;
+	if (btType == MB_OKCANCEL) {
+		defBt = [NSString stringWithUTF8String:_TLT("OK")];
+		alterBt = [NSString stringWithUTF8String:_TLT("Cancel")];
+	} else if (btType == MB_YESNOCANCEL) {
+		defBt = [NSString stringWithUTF8String:_TLT("Yes")];
+		alterBt = [NSString stringWithUTF8String:_TLT("NO")];
+		alterBt = [NSString stringWithUTF8String:_TLT("Cancel")];
+	} else if (btType == MB_YESNO) {
+		defBt = [NSString stringWithUTF8String:_TLT("Yes")];
+		alterBt = [NSString stringWithUTF8String:_TLT("NO")];
+	}
+	
 	NSAlert *alert = [NSAlert alertWithMessageText:[m_info->window title]
-									defaultButton:nil
-								  alternateButton:nil
-									  otherButton:nil
+									defaultButton:defBt
+								  alternateButton:alterBt
+									  otherButton:otherBt
 						informativeTextWithFormat:[NSString stringWithUTF8String:lpText]];
 	
-	[alert runModal];
-	
-	return IDOK;
+	int nRet = [alert runModal];
+	if (btType == MB_OKCANCEL) {
+		if (nRet == 1)
+			return IDOK;
+		else
+			return IDCANCEL;
+	} else if (btType == MB_YESNOCANCEL) {
+		if (nRet == 1)
+			return IDYES;
+		else if (nRet == 0)
+			return IDNO;
+		else
+			return IDCANCEL;
+	} else if (btType == MB_YESNO) {
+		if (nRet == 1)
+			return IDYES;
+		else
+			return IDNO;
+	} else {
+		return IDOK;
+	}
 }
 
 bool CBaseWnd::ReplaceChildPos(int nIDChildSrcPos, CBaseWnd *pChildNew)
