@@ -14,5 +14,6 @@ public:
 
 public:
 	TCHAR			m_szFile[MAX_PATH];
+	SetString		m_setExt;
 
 };

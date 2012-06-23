@@ -17,9 +17,9 @@
 		5F9CDEA7147A2C2A00432DAC /* DlgChooseColor.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */; };
 		5F9CDEA8147A2C2A00432DAC /* FileOpenDlg.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE90147A2C2A00432DAC /* FileOpenDlg.mm */; };
 		5F9CDEA9147A2C2A00432DAC /* FileOpenDlg.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */; };
-		5F9CDEAA147A2C2A00432DAC /* FileSaveDlg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE92147A2C2A00432DAC /* FileSaveDlg.cpp */; };
+		5F9CDEAA147A2C2A00432DAC /* FileSaveDlg.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE92147A2C2A00432DAC /* FileSaveDlg.mm */; };
 		5F9CDEAB147A2C2A00432DAC /* FileSaveDlg.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */; };
-		5F9CDEAC147A2C2A00432DAC /* FolderDialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */; };
+		5F9CDEAC147A2C2A00432DAC /* FolderDialog.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE94147A2C2A00432DAC /* FolderDialog.mm */; };
 		5F9CDEAD147A2C2A00432DAC /* FolderDialog.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE95147A2C2A00432DAC /* FolderDialog.h */; };
 		5F9CDEAE147A2C2A00432DAC /* MLMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDE96147A2C2A00432DAC /* MLMenu.mm */; };
 		5F9CDEAF147A2C2A00432DAC /* MLMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDE97147A2C2A00432DAC /* MLMenu.h */; };
@@ -53,11 +53,11 @@
 		5F9CDE8C147A2C2A00432DAC /* desktop.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = desktop.mm; sourceTree = "<group>"; };
 		5F9CDE8E147A2C2A00432DAC /* DlgChooseColor.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlgChooseColor.mm; sourceTree = "<group>"; };
 		5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgChooseColor.h; sourceTree = "<group>"; };
-		5F9CDE90147A2C2A00432DAC /* FileOpenDlg.mm */ = {isa = PBXFileReference; fileEncoding = 4; path = FileOpenDlg.mm; sourceTree = "<group>"; };
+		5F9CDE90147A2C2A00432DAC /* FileOpenDlg.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileOpenDlg.mm; sourceTree = "<group>"; };
 		5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileOpenDlg.h; sourceTree = "<group>"; };
-		5F9CDE92147A2C2A00432DAC /* FileSaveDlg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileSaveDlg.cpp; sourceTree = "<group>"; };
+		5F9CDE92147A2C2A00432DAC /* FileSaveDlg.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FileSaveDlg.mm; sourceTree = "<group>"; };
 		5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileSaveDlg.h; sourceTree = "<group>"; };
-		5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FolderDialog.cpp; sourceTree = "<group>"; };
+		5F9CDE94147A2C2A00432DAC /* FolderDialog.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = FolderDialog.mm; sourceTree = "<group>"; };
 		5F9CDE95147A2C2A00432DAC /* FolderDialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FolderDialog.h; sourceTree = "<group>"; };
 		5F9CDE96147A2C2A00432DAC /* MLMenu.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MLMenu.mm; sourceTree = "<group>"; };
 		5F9CDE97147A2C2A00432DAC /* MLMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLMenu.h; sourceTree = "<group>"; };
@@ -115,9 +115,9 @@
 				5F9CDE8F147A2C2A00432DAC /* DlgChooseColor.h */,
 				5F9CDE90147A2C2A00432DAC /* FileOpenDlg.mm */,
 				5F9CDE91147A2C2A00432DAC /* FileOpenDlg.h */,
-				5F9CDE92147A2C2A00432DAC /* FileSaveDlg.cpp */,
+				5F9CDE92147A2C2A00432DAC /* FileSaveDlg.mm */,
 				5F9CDE93147A2C2A00432DAC /* FileSaveDlg.h */,
-				5F9CDE94147A2C2A00432DAC /* FolderDialog.cpp */,
+				5F9CDE94147A2C2A00432DAC /* FolderDialog.mm */,
 				5F9CDE95147A2C2A00432DAC /* FolderDialog.h */,
 				5F9CDE96147A2C2A00432DAC /* MLMenu.mm */,
 				5F9CDE97147A2C2A00432DAC /* MLMenu.h */,
@@ -279,8 +279,8 @@
 				5F9CDEA4147A2C2A00432DAC /* desktop.mm in Sources */,
 				5F9CDEA6147A2C2A00432DAC /* DlgChooseColor.mm in Sources */,
 				5F9CDEA8147A2C2A00432DAC /* FileOpenDlg.mm in Sources */,
-				5F9CDEAA147A2C2A00432DAC /* FileSaveDlg.cpp in Sources */,
-				5F9CDEAC147A2C2A00432DAC /* FolderDialog.cpp in Sources */,
+				5F9CDEAA147A2C2A00432DAC /* FileSaveDlg.mm in Sources */,
+				5F9CDEAC147A2C2A00432DAC /* FolderDialog.mm in Sources */,
 				5F9CDEAE147A2C2A00432DAC /* MLMenu.mm in Sources */,
 				5F9CDEB0147A2C2A00432DAC /* ScrollBarHandler.cpp in Sources */,
 				5F9CDEB2147A2C2A00432DAC /* SkinToolTip.cpp in Sources */,

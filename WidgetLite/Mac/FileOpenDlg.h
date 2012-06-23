@@ -28,5 +28,6 @@ public:
 	LPTSTR			m_szFile;
 	int				m_nBufLen;
 	bool			m_bAllowMultiSel;
+	SetString		m_setExt;
 
 };
