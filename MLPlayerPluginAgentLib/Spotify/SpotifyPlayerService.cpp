@@ -156,9 +156,10 @@ void CPlayerService::OnTimer(int nTimerID)
 		LPCWSTR		SZ_SPLLITOR = L" - ";
 		const int	LEN_SZ_SPLLITOR = wcslen(SZ_SPLLITOR);
 
+		// Replace the separator '¨C' with '-'
 		for (i = 0; i < nLen; i++)
 		{
-			if (szWndTitle[i] == L'¨C')
+			if (szWndTitle[i] == 0x2013) // L'¨C'
 				szWndTitle[i] = L'-';
 		}
 
