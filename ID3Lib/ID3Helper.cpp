@@ -56,7 +56,10 @@ int CopyAnsiStr(string &str, const char *data, int nLen)
 
 	int nStrLen = strlen_safe(data, nLen);
 	str.append(data, nStrLen);
-	return nStrLen + 1;
+	if (nStrLen < nLen)
+		return nStrLen + 1;
+	else
+		return nStrLen;
 }
 
 // return the size of bytes used from buffer data
@@ -94,12 +97,15 @@ int CopyStrByEncodingAndBom(tstringex &str, ID3v2EncType encType, const char *da
 	if (encType == IET_UCS2LE_BOM || encType == IET_UCS2BE_NO_BOM)
 	{
 		int n = wcslen_safe((WCHAR *)pbyData, len / sizeof(WCHAR));
-
+		tstring temp;
+		temp.append((WCHAR *)pbyData, n);
 		if (encType == IET_UCS2BE_NO_BOM)
-			UCS2BEToLE((WCHAR *)pbyData, n);
-		UCS2ToTString((WCHAR *)pbyData, n, str, encoding);
+			UCS2BEToLE((WCHAR *)temp.c_str(), n);
+		UCS2ToTString((WCHAR *)temp.c_str(), n, str, encoding);
 
-		nCopyiedBytes = (n + 1) * sizeof(WCHAR);
+		nCopyiedBytes = n * sizeof(WCHAR);
+		if (n != len / sizeof(WCHAR))
+			nCopyiedBytes += sizeof(WCHAR);
 	}
 	else if (encType == IET_UTF8)
 	{
@@ -107,14 +113,18 @@ int CopyStrByEncodingAndBom(tstringex &str, ID3v2EncType encType, const char *da
 
 		UTF8ToTString((const char *)pbyData, n, str, encoding);
 
-		nCopyiedBytes = n + 1;
+		nCopyiedBytes = n;
+		if (n != len)
+			nCopyiedBytes++;
 	}
 	else
 	{
 		int n = strlen_safe((const char *)pbyData, len);
 		MBCSToTString((const char *)pbyData, n, str, encoding);
 
-		nCopyiedBytes = n + 1;
+		nCopyiedBytes = n;
+		if (n != len)
+			nCopyiedBytes++;
 	}
 
 	return lenOrg - len + nCopyiedBytes;
@@ -476,40 +486,46 @@ protected:
 		wLyrics.append(wStr.c_str(), wStr.size());
 
 		wstringex	wLyricsBe;
-		wLyricsBe.append(wLyrics.c_str(), wLyrics.size());
+		wLyricsBe.append(wStr.c_str(), wStr.size());
 		UCS2LEToBE(wLyricsBe.data(), wLyricsBe.size());
 
 		stringex	utf8Lyrics;
 		utf8Lyrics.append(SZ_FE_UTF8);
 		utf8Lyrics.append(text, lenText);
 
-		LPCSTR		vData[] = { (LPCSTR)text, (LPCSTR)wLyrics.c_str(),		(LPCSTR)wLyricsBe.c_str(),			(LPCSTR)utf8Lyrics.c_str(), };
-		int			vLen[] = { lenText,	wLyrics.size() * sizeof(WCHAR), wLyricsBe.size() * sizeof(WCHAR),	utf8Lyrics.size(), };
-		ID3v2EncType	vEncoding[] = { IET_ANSI,	IET_UCS2LE_BOM,						IET_UCS2BE_NO_BOM,				IET_UTF8, };
-		int			vCopiedOffset[] = {0, 2, 2, 3 };
-
-		for (int i = 0; i < CountOf(vData); i++)
 		{
-			{
-				tstring		str;
-				n = CopyStrByEncodingAndBom(str, vEncoding[i], vData[i], vLen[i]);
-				CPPUNIT_ASSERT(n == 4 + vCopiedOffset[i]);
-				CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("abc")) == 0);
+			tstring		str;
+			n = CopyStrByEncodingAndBom(str, IET_ANSI, text, lenText);
+			CPPUNIT_ASSERT(n == 4);
+			CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("abc")) == 0);
 
-				n = CopyStrByEncodingAndBom(str, vEncoding[i], vData[i], 2);
-				CPPUNIT_ASSERT(n == 2 + vCopiedOffset[i]);
-				CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("ab")) == 0);
-			}
-			{
-				tstringex	str;
-				n = CopyStrByEncodingAndBom(str, vEncoding[i], vData[i], vLen[i]);
-				CPPUNIT_ASSERT(n == 4 + vCopiedOffset[i]);
-				CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("abc")) == 0);
+			n = CopyStrByEncodingAndBom(str, IET_ANSI, text, 2);
+			CPPUNIT_ASSERT(n == 2);
+			CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("ab")) == 0);
 
-				n = CopyStrByEncodingAndBom(str, vEncoding[i], vData[i], 2);
-				CPPUNIT_ASSERT(n == 2 + vCopiedOffset[i]);
-				CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("ab")) == 0);
-			}
+			n = CopyStrByEncodingAndBom(str, IET_UCS2LE_BOM, (LPCSTR)wLyrics.c_str(), wLyrics.size() * sizeof(WCHAR));
+			CPPUNIT_ASSERT(n == (4 + 1) * sizeof(WCHAR));
+			CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("abc")) == 0);
+
+			n = CopyStrByEncodingAndBom(str, IET_UCS2LE_BOM, (LPCSTR)wLyrics.c_str(), 3 * sizeof(WCHAR));
+			CPPUNIT_ASSERT(n == (2 + 1) * sizeof(WCHAR));
+			CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("ab")) == 0);
+
+			n = CopyStrByEncodingAndBom(str, IET_UCS2BE_NO_BOM, (LPCSTR)wLyricsBe.c_str(), wLyricsBe.size() * sizeof(WCHAR));
+			CPPUNIT_ASSERT(n == 4 * sizeof(WCHAR));
+			CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("abc")) == 0);
+
+			n = CopyStrByEncodingAndBom(str, IET_UCS2BE_NO_BOM, (LPCSTR)wLyricsBe.c_str(), 2 * sizeof(WCHAR));
+			CPPUNIT_ASSERT(n == 2 * sizeof(WCHAR));
+			CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("ab")) == 0);
+
+			n = CopyStrByEncodingAndBom(str, IET_ANSI, utf8Lyrics.c_str(), utf8Lyrics.size());
+			CPPUNIT_ASSERT(n == 4 + 3);
+			CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("abc")) == 0);
+
+			n = CopyStrByEncodingAndBom(str, IET_ANSI, utf8Lyrics.c_str(), 2 + 3);
+			CPPUNIT_ASSERT(n == 2 + 3);
+			CPPUNIT_ASSERT(_tcscmp(str.c_str(), _T("ab")) == 0);
 		}
 	}
 

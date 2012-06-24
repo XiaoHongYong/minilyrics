@@ -90,7 +90,7 @@ int ServerBindListen(int nPort, SOCKET &sServer, LPCTSTR szIPServer)
 	}
 
     // bind the socket
-    nRet = bind(sServer, (sockaddr*)&sin, sizeof(sin));
+    nRet = ::bind(sServer, (sockaddr*)&sin, sizeof(sin));
     if(nRet == SOCKET_ERROR)
     {
 		nRet = WSAError();

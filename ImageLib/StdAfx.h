@@ -65,6 +65,7 @@
 // Local Header Files
 #include "../base/base.h"
 #include "../Utils/Utils.h"
+#include "../OurMFCLib/OurMFClib.h"
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.

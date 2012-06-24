@@ -7,7 +7,7 @@ Purpose  :	调整窗口的大小
 *********************************************************************/
 
 #include "stdafx.h"
-#include "desktop.h"
+#include "../WidgetLite.h"
 #include "WndResizer.h"
 
 #define SIZING_REGION		5		// 调整大小的范围
