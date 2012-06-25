@@ -118,7 +118,7 @@ tstring CMLProfile::GetDir(LPCTSTR szSectName, LPCTSTR szKeyName, LPCTSTR szDefD
 
 	strDir = g_Profile.GetProfileString(szSectName, szKeyName, szDefDir);
 
-	if (strDir[0] == CHAR_WORKING_FOLDER && strDir[1] == ':')
+	if (strDir.size() >= 2 && strDir[0] == CHAR_WORKING_FOLDER && strDir[1] == ':')
 		strDir[0] = GetWorkingFolder()[0];
 
 	return strDir;

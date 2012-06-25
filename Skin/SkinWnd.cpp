@@ -2179,13 +2179,13 @@ void CSkinWnd::PostCustomCommandMsg(int nId)
 {
 #ifdef _WIN32
 	::PostMessage(m_hWnd, ms_msgIDCustomCommand, nId, 0);
-#endif
-	
+#else // #ifdef _WIN32
 #ifdef _MAC_OSX
 	::PostCustomCommandMsgMac(this, nId);
 #else
 	OnCustomCommand(nId);
-#endif
+#endif // #ifdef _MAC_OSX
+#endif // #ifdef _WIN32
 }
 
 void CSkinWnd::PostShortcutKeyCmd(int nId)
