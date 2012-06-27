@@ -1,3 +1,7 @@
+MiniLyrics 7.4.12
+Fixed: MiniLyrics can't get correct artist & title info for Spotify player
+Fixed: MiniLyrics won't quit normally if failed to save embedded lyrics.
+
 MiniLyrics 7.4.10
 Fixed: The embedded lyrics saved in MP3 file may not be opened correctly by iPod, iTunes.
 Fixed: Some other small issues.

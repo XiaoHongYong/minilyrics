@@ -185,6 +185,9 @@ LPCXSTR CMDWmpCore::GetFileExtentions()
 
 MLRESULT CMDWmpCore::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)
 {
+	if (!IsOK())
+		return ERR_DECODER_INIT_FAILED;
+
 	CMPAutoPtr<IWMPMedia>	media;
 	HRESULT hr = m_collection->add((BSTR)pInput->GetSource(), &media);
 	if (FAILED(hr))
@@ -234,6 +237,9 @@ bool CMDWmpCore::IsUseOutputPlug()
 
 MLRESULT CMDWmpCore::Play(IMPlayer *pPlayer, IMediaInput *pInput)
 {
+	if (!IsOK())
+		return ERR_DECODER_INIT_FAILED;
+
 	m_mplayer = pPlayer;
 
 	CMPAutoPtr<IWMPMedia>	media;
@@ -253,6 +259,9 @@ MLRESULT CMDWmpCore::Play(IMPlayer *pPlayer, IMediaInput *pInput)
 
 MLRESULT CMDWmpCore::Pause()
 {
+	if (!IsOK())
+		return ERR_DECODER_INIT_FAILED;
+
 	HRESULT hr = m_controls->pause();
 
 	return HResultToMLResult(hr);
@@ -260,6 +269,9 @@ MLRESULT CMDWmpCore::Pause()
 
 MLRESULT CMDWmpCore::Unpause()
 {
+	if (!IsOK())
+		return ERR_DECODER_INIT_FAILED;
+
 	WMPPlayState	state;
 	HRESULT hr = m_player->get_playState(&state);
 	if (FAILED(hr))
@@ -273,12 +285,18 @@ MLRESULT CMDWmpCore::Unpause()
 
 MLRESULT CMDWmpCore::Stop()
 {
+	if (!IsOK())
+		return ERR_DECODER_INIT_FAILED;
+
 	HRESULT hr = m_controls->stop();
 	return HResultToMLResult(hr);
 }
 
 uint32 CMDWmpCore::GetLength()
 {
+	if (!IsOK())
+		return 0;
+
 	CMPAutoPtr<IWMPMedia>	media;
 	HRESULT hr = m_controls->get_currentItem(&media);
 	if (FAILED(hr))
@@ -294,6 +312,9 @@ uint32 CMDWmpCore::GetLength()
 
 MLRESULT CMDWmpCore::Seek(uint32 nPos)
 {
+	if (!IsOK())
+		return ERR_DECODER_INIT_FAILED;
+
 	double pos = (double)nPos / 1000;
 	HRESULT hr = m_controls->put_currentPosition(pos);
 	return HResultToMLResult(hr);
@@ -301,6 +322,9 @@ MLRESULT CMDWmpCore::Seek(uint32 nPos)
 
 uint32 CMDWmpCore::GetPos()
 {
+	if (!IsOK())
+		return 0;
+
 	double pos = 0;
 	HRESULT hr = m_controls->get_currentPosition(&pos);
 	if (FAILED(hr))
@@ -311,6 +335,9 @@ uint32 CMDWmpCore::GetPos()
 
 MLRESULT CMDWmpCore::SetVolume(int nVolume, int nBanlance)
 {
+	if (!IsOK())
+		return ERR_DECODER_INIT_FAILED;
+
 	CMPAutoPtr<IWMPSettings>	settings;
 
 	HRESULT hr = m_player->get_settings(&settings);
@@ -326,16 +353,25 @@ bool CMDWmpCore::Init()
 {
 	HRESULT hr = CoCreateInstance(__uuidof(WindowsMediaPlayer), NULL, CLSCTX_INPROC_SERVER, __uuidof(IWMPPlayer), (LPVOID*)&m_player);
 	if (FAILED(hr))
+	{
+		ERRLOG1(_T("Failed to create IWMPPlayer instance: %s"), Error2Str(hr).c_str());
 		return false;
+	}
 
 	CMPAutoPtr<IConnectionPointContainer> connectionPointContainer;
 	hr = m_player->QueryInterface(__uuidof(IConnectionPointContainer), (LPVOID*)&connectionPointContainer);
 	if (FAILED(hr))
+	{
+		ERRLOG1(_T("Failed to Query IConnectionPointContainer: %s"), Error2Str(hr).c_str());
 		return false;
+	}
 
 	hr = connectionPointContainer->FindConnectionPoint(__uuidof(IWMPEvents), &m_pConnectionPoint);
 	if (FAILED(hr))
+	{
+		ERRLOG1(_T("Failed to FindConnectionPoint IWMPEvents: %s"), Error2Str(hr).c_str());
 		return false;
+	}
 
 	CWmpEventsSink *pSink = new CWmpEventsSink(this);
 	pSink->AddRef();
@@ -345,21 +381,33 @@ bool CMDWmpCore::Init()
 
 	hr = m_player->get_controls(&m_controls);
 	if (FAILED(hr))
+	{
+		ERRLOG1(_T("Failed to get_controls : %s"), Error2Str(hr).c_str());
 		return false;
+	}
 
 	hr = m_player->get_currentPlaylist(&m_playlist);
 	if (FAILED(hr))
+	{
+		ERRLOG1(_T("Failed to get_currentPlaylist : %s"), Error2Str(hr).c_str());
 		return false;
+	}
 
 	hr = m_player->get_mediaCollection(&m_collection);
 	if (FAILED(hr))
+	{
+		ERRLOG1(_T("Failed to get_mediaCollection : %s"), Error2Str(hr).c_str());
 		return false;
+	}
 
 	return true;
 }
 
 MLRESULT CMDWmpCore::DoDecode(IMedia *pMedia)
 {
+	if (!IsOK())
+		return ERR_DECODER_INIT_FAILED;
+
 	MLRESULT					nRet;
 	CXStr						strMedia;
 	CMPAutoPtr<IMediaInput>		pInput;
@@ -412,4 +460,9 @@ MLRESULT CMDWmpCore::DoDecode(IMedia *pMedia)
 
 R_FAILED:
 	return nRet;
+}
+
+bool CMDWmpCore::IsOK()
+{
+	return m_player != NULL && m_playlist != NULL && m_controls != NULL && m_collection != NULL;
 }

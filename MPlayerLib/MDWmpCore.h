@@ -51,6 +51,8 @@ protected:
 
 	virtual void NotifyEod(IMediaDecode *pDecoder, MLRESULT nError) { }
 
+	bool IsOK();
+
 protected:
 	friend class CWmpEventsSink;
 
