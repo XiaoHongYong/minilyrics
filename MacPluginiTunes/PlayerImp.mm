@@ -139,7 +139,7 @@ void CPlayerImp::OnTimer(int nTimerID)
 		if (m_playerState == PS_PLAYING)
 		{
 			m_dwPos = GetTickCount() - m_dwBegTickCount;
-			Log("Play position changed: %d", m_dwPos);
+			// Log("Play position changed: %d", m_dwPos);
 			g_MLService.OnPlayPosChanged(m_dwPos);
 		}
 	}

@@ -98,8 +98,24 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 }
 
 - (void) keyDown:(NSEvent *)theEvent {
-	mBaseWnd->OnKeyDown([theEvent keyCode], [theEvent modifierFlags]);
+	uint modifierFlags = [theEvent modifierFlags];
+	int code = [theEvent keyCode];
 	
+	@try {
+		NSString *s = [theEvent charactersIgnoringModifiers];
+		if ([s length] > 0) {
+			if (IsAlpha([s characterAtIndex:0]))
+				code = CharUpr([s characterAtIndex:0]);
+		}
+	}
+	@catch (NSException *exception) {
+	}
+
+	mBaseWnd->OnKeyDown(code, modifierFlags);
+	
+	if (modifierFlags != 0 && modifierFlags != NSShiftKeyMask)
+		return;
+
 	@try {
 		NSString *s = [theEvent charactersIgnoringModifiers];
 		for (int i = 0; i < [s length]; i++) {

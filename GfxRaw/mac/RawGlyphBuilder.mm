@@ -56,12 +56,12 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 
 	m_font.Create(font);
 
-	m_fontMemGraph.Create(GetHeightBitmap() * 2, GetHeightBitmap(), NULL, MEM_GRAPH_BITS);
-
 	{
 		CGFloat lineHeight = GetLineHeightForFont(m_font.GetHandle());
-		m_nLineHeight = (int)(lineHeight + 0.5);
+		m_nLineHeight = (int)(lineHeight + 0.99);
 		
+		m_fontMemGraph.Create(GetHeightBitmap() * 2, GetHeightBitmap(), NULL, MEM_GRAPH_BITS);
+
 		CGContextSetTextMatrix(m_fontMemGraph.GetHandle(), CGAffineTransformMakeScale(1.0, -1.0));
 		
 		CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
@@ -79,8 +79,8 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 						   &kCFTypeDictionaryValueCallBacks);
 		
 		
-	}	
-	
+	}
+
 /*	m_graph.Attach(m_fontMemGraph.GetHandle());
 	m_graph.SetFont(&m_font);
 	m_graph.SetTextColor(MLColor(RGB(255, 255, 255)));
@@ -96,6 +96,11 @@ void CRawGlyphBuilder::Destroy()
 }
 
 void CopyBitmpDataFromGraphBuffer(Glyph *pGlyph, agg::pixfmt_rgba32 &bufGraph);
+
+int CRawGlyphBuilder::GetHeightBitmap()
+{
+	return m_nLineHeight + MARGIN_BITMAP * 2;
+}
 
 Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 {

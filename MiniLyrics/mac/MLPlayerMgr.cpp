@@ -150,6 +150,17 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 	return true;
 }
 
+void CMLPlayerMgr::Quit()
+{
+	g_bQuitMsg = true;
+
+	m_msgPipeOfPlayer.Close();
+	pthread_kill(g_threadMsg, SIGINT);
+	pthread_join(g_threadMsg, NULL);
+	// pthread_wait(g_threadMsg, 
+}
+
+
 bool CMLPlayerMgr::ConnectToPlayer()
 {
 	g_bQuitMsg = false;
@@ -186,7 +197,7 @@ void CMLPlayerMgr::OnPlayerDisconnected()
 
 bool CMLPlayerMgr::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 {
-	DBGLOG2("Got message from Player: %d, len: %d", msg, lenData);
+	// DBGLOG2("Got message from Player: %d, len: %d", msg, lenData);
 
 	// MessageToPlayer
 	switch (msg)
@@ -216,7 +227,7 @@ bool CMLPlayerMgr::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 				break;
 			DWORD	playPos = *(DWORD*)lpData;
 			
-			DBGLOG1("M2M_PLAY_POS_CHANGED: %d", playPos);
+			// DBGLOG1("M2M_PLAY_POS_CHANGED: %d", playPos);
 
 			g_Player.m_dwPlayingPos = playPos;
 

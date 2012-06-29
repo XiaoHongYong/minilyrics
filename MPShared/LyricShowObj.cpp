@@ -1343,7 +1343,6 @@ void CLyricShowObj::DrawCurrentRow(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 
 void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos, int yDrawLyrEndPos)
 {
-#ifdef _WIN32_DESKTOP
 	if (m_pSkin->m_nCurTranslucencyAlpha > 0)
 	{
 		if (m_bSetSkinBg && m_pContainer->IsDrawBgImage())
@@ -1378,7 +1377,6 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 		else
 			pGraphics->VertFadeOut(&rc, clrBg, false);
 	}
-#endif
 }
 
 // COMMENT:

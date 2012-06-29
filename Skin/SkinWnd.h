@@ -260,11 +260,11 @@ public:
 #ifdef _WIN32_DESKTOP
 	void InvalidateRectOfLayeredWindow(const RECT* lpRect);
 	virtual BOOL InvalidateRect(const RECT* lpRect = NULL, BOOL bErase = FALSE);
+#endif
 
 	void StartTranslucencyFade();
 
 	void OnTimerDynamicAlphaChange();
-#endif
 
 	virtual bool IsClickThrough() { return m_bEnableClickThrough && m_bClickThrough && !m_bActived; }
 

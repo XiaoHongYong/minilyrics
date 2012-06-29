@@ -2209,6 +2209,9 @@ void CSkinEditCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 {
 	bool ctrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
 	bool shift = IsModifierKeyPressed(MK_SHIFT, nFlags);
+#ifdef _MAC_OSX
+	ctrl = IsModifierKeyPressed(1 << 20, nFlags);// NSCommandKeyMask = 1 << 20;
+#endif
 
 	bool			bSelKey = false;
 	int				nBegSelRow, nBegSelCol;

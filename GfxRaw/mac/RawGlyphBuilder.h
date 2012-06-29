@@ -21,7 +21,7 @@ public:
 	Glyph *BuildGlyph(tstring &ch);
 
 protected:
-	int GetHeightBitmap() { return m_font.GetHeight() + MARGIN_BITMAP * 2; }
+	int GetHeightBitmap();
 
 protected:
 	CMLFont					m_font;

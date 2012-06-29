@@ -59,10 +59,18 @@ BOOL ExecuteCmdAndWait(LPCTSTR szCmd, DWORD dwTimeOut, DWORD *pExitCode)
 
 bool CopyTextToClipboard(LPCTSTR szText)
 {
-	return false;
+	NSPasteboard *board = [NSPasteboard generalPasteboard];
+	[board clearContents];
+	[board setString:[NSString stringWithUTF8String:szText] forType:NSStringPboardType];
+	return true;
 }
 
 bool GetClipBoardText(tstringex &str)
 {
-	return false;
+	NSPasteboard *board = [NSPasteboard generalPasteboard];
+	NSString *ns = [board stringForType:NSStringPboardType];
+	if (ns == nil)
+		return false;
+	str = [ns UTF8String];
+	return true;
 }

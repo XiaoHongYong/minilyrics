@@ -58,5 +58,7 @@ void CMPlayerApp::Quit()
 	m_bRunning = false;
 
 	CMPlayerAppBase::Quit();
+	
+	g_playerMgr.Quit();
 }
 

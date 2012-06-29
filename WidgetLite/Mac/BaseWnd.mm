@@ -70,6 +70,11 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 	return true;
 }
 
+void CBaseWnd::SetHasShadow(bool hasShadow)
+{
+	[m_info->window setHasShadow:hasShadow ? YES : NO];
+}
+
 bool CBaseWnd::Destroy()
 {
 	if (m_info->window)

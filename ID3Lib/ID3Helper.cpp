@@ -97,7 +97,7 @@ int CopyStrByEncodingAndBom(tstringex &str, ID3v2EncType encType, const char *da
 	if (encType == IET_UCS2LE_BOM || encType == IET_UCS2BE_NO_BOM)
 	{
 		int n = wcslen_safe((WCHAR *)pbyData, len / sizeof(WCHAR));
-		tstring temp;
+		wstring_t temp;
 		temp.append((WCHAR *)pbyData, n);
 		if (encType == IET_UCS2BE_NO_BOM)
 			UCS2BEToLE((WCHAR *)temp.c_str(), n);

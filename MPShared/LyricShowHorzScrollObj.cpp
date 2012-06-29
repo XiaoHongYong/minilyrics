@@ -153,7 +153,6 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 
 void CLyricShowHorzScrollObj::FadeOutHorzBorder(CRawGraph *pGraphics)
 {
-#ifdef _WIN32_DESKTOP
 	if (m_pSkin->m_nCurTranslucencyAlpha > 0)
 	{
 		if (m_bSetSkinBg && m_pContainer->IsDrawBgImage())
@@ -186,7 +185,6 @@ void CLyricShowHorzScrollObj::FadeOutHorzBorder(CRawGraph *pGraphics)
 		pGraphics->HorzAlphaFadeOut(&rc, false);
 	else
 		pGraphics->HorzFadeOut(&rc, clrBg, false);
-#endif
 }
 
 void CLyricShowHorzScrollObj::OnLyrDrawContextChanged()

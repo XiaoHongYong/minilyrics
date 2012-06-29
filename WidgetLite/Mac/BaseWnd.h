@@ -180,6 +180,7 @@ public:
 	
 	// For Mac
 	LPVOID GetHandle();
+	void SetHasShadow(bool hasShadow);
 
 protected:
 	_BaseWndInfo		*m_info;

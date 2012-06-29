@@ -32,6 +32,8 @@ const TCHAR SZ_WINAMP2_DEFSKIN_DIR[] = _T("");
 #define TIME_OUT_TRANS_FADEIN		500
 #define TIME_OUT_ANIMATION		30
 
+#define _TRANSLUCENCY_ENABLED
+
 #ifdef _WIN32_DESKTOP
 
 #include <Dwmapi.h>
@@ -378,9 +380,10 @@ void CSkinWnd::CloseSkin()
 	m_rootConainter.OnDestroy();
 	m_rootConainter.Destroy();
 
-#ifdef _WIN32_DESKTOP
 	KillTimer(TIMER_ID_DYNAMIC_TRANS);
 	m_translucencyStatus = TS_NORMAL;
+
+#ifdef _WIN32_DESKTOP
 	::UnSetLayeredWindow(m_hWnd);
 #endif
 
@@ -440,7 +443,7 @@ void CSkinWnd::ProcessMouseMove(CPoint point)
 {
 	OnMouseActiveMsg();
 
-#ifdef _WIN32_DESKTOP
+#ifdef _TRANSLUCENCY_ENABLED
 	//
 	// Change translucency on hover?
 	//
@@ -454,7 +457,7 @@ void CSkinWnd::ProcessMouseMove(CPoint point)
 
 		StartTranslucencyFade();
 	}
-#endif	// _WIN32_DESKTOP
+#endif	// _TRANSLUCENCY_ENABLED
 
 	if (m_cursor.IsValid())
 		MLWidget::SetCursor(m_cursor);
@@ -1438,6 +1441,7 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_bEnableClickThrough = IsTRUE(szValue);
 	}
+#endif
 	else if (IsPropertyName(szProperty, _T("EnableTranslucency")))
 	{
 		m_bTranslucencyLayered = IsTRUE(szValue);
@@ -1469,7 +1473,6 @@ BOOL CSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	{
 		m_nTranslucencyAlphaOnHover = _ttoi(szValue);
 	}
-#endif
 	else if (IsPropertyName(szProperty, _T("IsDialog")))
 		m_bDialogWnd = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("Animate")))
@@ -1519,11 +1522,11 @@ void CSkinWnd::EnumProperties(CUIObjProperties &listProperties)
 #ifdef _WIN32_DESKTOP
 	listProperties.AddPropBoolStr(_T("WindowsAppearance"), m_bWindowsAppearance, m_bWindowsAppearance);
 	listProperties.AddPropBoolStr(_T("EnableTransparentFeature"), m_bEnableClickThrough, !m_bEnableClickThrough);
+#endif
 	listProperties.AddPropBoolStr(_T("EnableTranslucency"), m_bTranslucencyLayered, m_bTranslucencyLayered);
 	listProperties.AddPropInt(_T("TranslucencyAlpha"), m_nTranslucencyAlphaDefault, m_nTranslucencyAlphaDefault != 255);
 	listProperties.AddPropInt(_T("TranslucencyAlphaOnActive"), m_nTranslucencyAlphaOnActive, m_nTranslucencyAlphaOnActive != 255);
 	listProperties.AddPropInt(_T("TranslucencyAlphaOnHover"), m_nTranslucencyAlphaOnHover, m_nTranslucencyAlphaOnHover != 255);
-#endif
 }
 #endif // _SKIN_EDITOR_
 
@@ -1670,7 +1673,7 @@ void CSkinWnd::OnActivate(bool bActived)
 
 	if (!m_bOnDestroy)
 	{
-#ifdef _WIN32_DESKTOP
+#ifdef _TRANSLUCENCY_ENABLED
 		StartTranslucencyFade();
 
 		if (bActived)
@@ -1680,6 +1683,10 @@ void CSkinWnd::OnActivate(bool bActived)
 
 		if (m_bEnableClickThrough && m_bClickThrough)
 			SetTransparent(m_nAlpha, m_bClickThrough);
+		
+#ifdef _MAC_OSX
+		SetHasShadow(bActived);
+#endif
 #endif
 		if (bActived != m_bMouseActive)
 		{
@@ -1933,6 +1940,8 @@ void CSkinWnd::InvalidateRectOfLayeredWindow(const RECT* lpRect)
 	UpdateLayeredWindowUsingMemGraph(pMemGraph);
 }
 
+#endif
+
 /*
 void TestUpdateLayeredWindow(HWND hWnd, HBITMAP hbmp, int nBmpWidth, int nBmpHeight)
 {
@@ -2019,11 +2028,9 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 		//
 
 		POINT		point;
-		bool		bAlphaAdjusted = false;
-		bool		bOnMouseHover;
 
-		GetCursorPos(&point);
-		bOnMouseHover = Tobool(m_rcBoundBox.PtInRect(point));
+		MLWidget::GetCursorPos(&point);
+		bool bOnMouseHover = Tobool(m_rcBoundBox.PtInRect(point));
 		if (m_bOnMouseHover != bOnMouseHover)
 		{
 			m_bOnMouseHover = bOnMouseHover;
@@ -2063,8 +2070,6 @@ void CSkinWnd::OnTimerDynamicAlphaChange()
 		InvalidateRect();
 	}
 }
-
-#endif
 
 void CSkinWnd::OnSkinLoaded()
 {
@@ -2286,13 +2291,13 @@ void CSkinWnd::OnTimer (UINT nIDEvent)
 {
 	MAP_TIMER_OBJS::iterator	it;
 
-#ifdef _WIN32_DESKTOP
+#ifdef _TRANSLUCENCY_ENABLED
 	if (nIDEvent == TIMER_ID_DYNAMIC_TRANS)
 	{
 		OnTimerDynamicAlphaChange();
 		return;
 	}
-#endif // #ifdef _WIN32_DESKTOP
+#endif // #ifdef _TRANSLUCENCY_ENABLED
 
 	if (nIDEvent == TIMER_ID_MOUSE_INACTIVE)
 	{

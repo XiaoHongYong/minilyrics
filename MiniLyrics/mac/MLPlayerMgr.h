@@ -9,6 +9,7 @@ public:
 	typedef vector<PlayerInfo>	ListPlayerInfo;
 
 	bool Init(int argc, char *argv[]);
+	void Quit();
 
 	bool ConnectToPlayer();
 

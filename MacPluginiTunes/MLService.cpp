@@ -142,5 +142,5 @@ void CMLService::SendMessage(MessageToML message, LPVOID param, size_t sizeParam
 
 	bool ok = m_msgPipeMiniLyrics.Write(message, param, sizeParam);
 	
-	::Log("Message was sent to ML: %d, len: %d, OK: %d", message, sizeParam, ok);
+	// ::Log("Message was sent to ML: %d, len: %d, OK: %d", message, sizeParam, ok);
 }
