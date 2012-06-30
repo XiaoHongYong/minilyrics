@@ -51,7 +51,9 @@ void CPlayerServiceBase::Destroy()
 	if (g_threadMsg != 0)
 	{
 		g_bQuitMsg = true;
-		pthread_join(g_threadMsg, NULL);
+		m_msgPipe.Close();
+		pthread_kill(g_threadMsg, SIGINT);
+		// pthread_join(g_threadMsg, NULL);
 		g_threadMsg = 0;
 	}
 	

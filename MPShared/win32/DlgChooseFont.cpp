@@ -32,7 +32,7 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 	m_nWeight = nWeight;
 	m_nItalic = nItalic;
 
-	lgfont.lfSize = nFontSize;
+	lgfont.lfHeight = nFontSize;
 	lgfont.lfWeight = nWeight;
 	lgfont.lfItalic = nItalic;
 	_tcscpy_safe(lgfont.lfFaceName, CountOf(lgfont.lfFaceName), szFontFaceName);
@@ -44,7 +44,7 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 	if (ChooseFont(&choosefont))
 	{
 		m_strFontFaceName = lgfont.lfFaceName;
-		m_nFontSize = lgfont.lfSize;
+		m_nFontSize = lgfont.lfHeight;
 		m_nWeight = lgfont.lfWeight;
 		m_nItalic = lgfont.lfItalic;
 

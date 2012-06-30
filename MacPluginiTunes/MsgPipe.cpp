@@ -164,6 +164,21 @@ bool CMsgPipe::ReadEncodedMessage(string &data)
 		}
 		data.append((const char *)m_readBuf + start, m_nPosRead - start);
 		
+		timeval timeout;
+		timeout.tv_sec = 1;
+		timeout.tv_usec = 0;
+		fd_set rdset;
+		FD_ZERO(&rdset);
+		FD_SET(m_fd, &rdset);
+		int ret = ::select(m_fd + 1, &rdset, NULL, NULL, &timeout);
+		if (ret < 0)
+			return false;
+		else if (ret == 0) {
+			if (m_fd == -1)
+				return false;
+			continue;
+		}
+
 		m_nSizeRead = read(m_fd, m_readBuf, LEN_BUF_READ);
 		m_nPosRead = 0;
 		if (m_nSizeRead <= 0)
@@ -188,6 +203,20 @@ bool CMsgPipe::ReadToSeparator()
 			}
 		}
 		
+		timeval timeout;
+		timeout.tv_sec = 1;
+		timeout.tv_usec = 0;
+		fd_set rdset;
+		FD_ZERO(&rdset);
+		FD_SET(m_fd, &rdset);
+		int ret = ::select(m_fd + 1, &rdset, NULL, NULL, &timeout);
+		if (ret < 0)
+			return false;
+		else if (ret == 0) {
+			if (m_fd == -1)
+				return false;
+			continue;
+		}
 		m_nSizeRead = read(m_fd, m_readBuf, LEN_BUF_READ);
 		m_nPosRead = 0;
 		if (m_nSizeRead <= 0)
