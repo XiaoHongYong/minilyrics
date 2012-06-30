@@ -125,7 +125,7 @@ bool CMLFont::Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHe
 
 bool CMLFont::Create(const CFontInfo &font)
 {
-	return Create(font.GetName(), font.GetNameOthers(), font.GetHeight(), font.GetWeight(), font.GetItalic(), font.IsUnderline());
+	return Create(font.GetName(), font.GetNameOthers(), font.GetSize(), font.GetWeight(), font.GetItalic(), font.IsUnderline());
 }
 
 void CMLFont::Destroy()

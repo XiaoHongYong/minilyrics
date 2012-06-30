@@ -16,6 +16,8 @@ public:
 
 	void Init(const CFontInfo &font);
 
+	int GetHeight() const;
+
 	void Destroy();
 	
 	Glyph *BuildGlyph(tstring &ch);
@@ -26,7 +28,6 @@ protected:
 protected:
 	CMLFont					m_font;
 	CRawGraphData			m_fontMemGraph;
-	// CMLGraphics				m_graph;
 	CFDictionaryRef			m_attributes;
 	int						m_nLineHeight;
 

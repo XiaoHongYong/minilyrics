@@ -98,7 +98,7 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 }
 
 - (void) keyDown:(NSEvent *)theEvent {
-	uint modifierFlags = [theEvent modifierFlags];
+	uint modifierFlags = [theEvent modifierFlags] & NSDeviceIndependentModifierFlagsMask;
 	int code = [theEvent keyCode];
 	
 	@try {

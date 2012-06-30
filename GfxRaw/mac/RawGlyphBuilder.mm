@@ -28,22 +28,6 @@ CRawGlyphBuilder::~CRawGlyphBuilder()
 		CFRelease(m_attributes);
 }
 
-CGFloat GetLineHeightForFont(CTFontRef iFont)
-{
-	CGFloat lineHeight = 0.0;
-	
-	// Get the ascent from the font, already scaled for the font's size
-	lineHeight += CTFontGetAscent(iFont);
-	
-	// Get the descent from the font, already scaled for the font's size
-	lineHeight += CTFontGetDescent(iFont);
-	
-	// Get the leading from the font, already scaled for the font's size
-	lineHeight += CTFontGetLeading(iFont);
-	
-	return lineHeight;
-}
-
 void CRawGlyphBuilder::Init(const CFontInfo &font)
 {
 	if (m_fontMemGraph.IsValid())
@@ -57,8 +41,7 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 	m_font.Create(font);
 
 	{
-		CGFloat lineHeight = GetLineHeightForFont(m_font.GetHandle());
-		m_nLineHeight = (int)(lineHeight + 0.99);
+		m_nLineHeight = m_font.GetHeight();
 		
 		m_fontMemGraph.Create(GetHeightBitmap() * 2, GetHeightBitmap(), NULL, MEM_GRAPH_BITS);
 
@@ -86,6 +69,11 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 	m_graph.SetTextColor(MLColor(RGB(255, 255, 255)));
 	m_graph.SetBgColor(MLColor(RGB(0, 0, 0)));
 	CGContextSetRGBFillColor(m_fontMemGraph.GetHandle(), 1.0, 1.0, 1.0, 1.0);*/
+}
+
+int CRawGlyphBuilder::GetHeight() const
+{
+	return m_font.GetHeight();
 }
 
 void CRawGlyphBuilder::Destroy()

@@ -528,6 +528,11 @@ bool CRawGlyphSet::Create(const CFontInfo &font)
 	return true;
 }
 
+int CRawGlyphSet::GetHeight() const
+{
+	return m_rawGlyphBuilder.GetHeight();
+}
+
 GfxRaw::Glyph *CRawGlyphSet::GetGlyph(tstring &ch)
 {
 	MAP_GLYPH::iterator		it;
@@ -820,6 +825,15 @@ void CRawBmpFont::Destroy()
 		m_prawGlyphSet->Release();
 		m_prawGlyphSet = NULL;
 	}
+}
+
+
+int CRawBmpFont::GetHeight() const
+{
+	if (m_prawGlyphSet)
+		return m_prawGlyphSet->GetHeight();
+	else
+		return 0;
 }
 
 bool CRawBmpFont::TextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, LPCTSTR szText, int nLen, bool bDrawAlphaChannel)

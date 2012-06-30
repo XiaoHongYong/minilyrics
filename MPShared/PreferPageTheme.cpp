@@ -207,28 +207,28 @@ public:
 	{
 		if (nId == CID_DS_LOAD_LATIN_FONT || nId == CID_DS_LOAD_OTHER_FONT)
 		{
-			int		nHeight, nWeight;
+			int		nSize, nWeight;
 			BYTE	byItalic;
 			tstring	strFaceNameLatin9, strFaceNameOthers;
 			int		nRet;
 			bool	bLatin9 = (nId == CID_DS_LOAD_LATIN_FONT);
 
 			// get default settings in profile
-			ProfileGetLyricsFont(m_strSectName.c_str(), nHeight, nWeight, 
+			ProfileGetLyricsFont(m_strSectName.c_str(), nSize, nWeight, 
 				byItalic, strFaceNameLatin9, strFaceNameOthers);
 
 			CDlgChooseFont		chooser;
 
 			nRet = chooser.DoModal(m_pSkin, bLatin9 ? strFaceNameLatin9.c_str() : strFaceNameOthers.c_str(), 
-				nHeight, nWeight, byItalic != 0);
+				nSize, nWeight, byItalic != 0);
 			if (nRet == IDOK)
 			{
-				nHeight = chooser.GetHeight();
-				if (nHeight < 0)
-					nHeight = -nHeight;
+				nSize = chooser.GetSize();
+				if (nSize < 0)
+					nSize = -nSize;
 
 				// now save to profile
-				ProfileWriteLyricsFont(m_eventType, m_strSectName.c_str(), nHeight, chooser.GetWeight(), 
+				ProfileWriteLyricsFont(m_eventType, m_strSectName.c_str(), nSize, chooser.GetWeight(), 
 					chooser.GetItalic(), bLatin9 ? chooser.GetFaceName() : NULL, bLatin9 ? NULL : chooser.GetFaceName());
 			}
 		}

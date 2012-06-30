@@ -24,12 +24,12 @@ CDlgChooseFont::~CDlgChooseFont()
 		gtk_widget_destroy(m_window);
 }
 
-int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontHeight, int nWeight, int nItalic)
+int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontSize, int nWeight, int nItalic)
 {
 	int		nRet;
 
 	m_strFontFaceName = szFontFaceName;
-	m_nFontHeight = nFontHeight;
+	m_nFontSize = nFontSize;
 	m_nWeight = nWeight;
 	m_nItalic = nItalic;
 
@@ -54,7 +54,7 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 
 		// font size
 		strFontName += " ";
-		strFontName += CStrPrintf(_T("%d"), nFontHeight).c_str();
+		strFontName += CStrPrintf(_T("%d"), nFontSize).c_str();
 
 		gtk_font_selection_dialog_set_font_name(GTK_FONT_SELECTION_DIALOG(m_window), strFontName.c_str());
 	}
@@ -79,10 +79,10 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 		StrBreak(fontName, ' ', vStr);
 
 		// font size.
-		m_nFontHeight = 12;
+		m_nFontSize = 12;
 		if (vStr.size() > 0)
 		{
-			m_nFontHeight = _ttoi(vStr.back().c_str());
+			m_nFontSize = _ttoi(vStr.back().c_str());
 			vStr.pop_back();
 		}
 
@@ -168,9 +168,9 @@ LPCTSTR CDlgChooseFont::GetFaceName()
 	return m_strFontFaceName.c_str();
 }
 
-int CDlgChooseFont::GetHeight()
+int CDlgChooseFont::GetSize()
 {
-	return m_nFontHeight;
+	return m_nFontSize;
 }
 
 int CDlgChooseFont::GetWeight()

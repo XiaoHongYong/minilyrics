@@ -109,12 +109,14 @@ public:
 
 	virtual bool Create(const CFontInfo &font);
 
+	virtual int GetHeight() const;
+
 	Glyph *GetGlyph(tstring &ch);
 
 	void ClearGlyph();
 
 protected:
-	int GetGlyphHeight() { return m_nHeight + MARGIN_BITMAP * 2; }
+	int GetGlyphHeight() { return GetHeight() + MARGIN_BITMAP * 2; }
 
 protected:
 	friend class CRawGlyphSetMgr;
@@ -157,13 +159,7 @@ public:
 
 	virtual void Destroy();
 
-	int GetHeight() const
-	{
-		if (m_prawGlyphSet)
-			return m_prawGlyphSet->GetHeight();
-		else
-			return 0;
-	}
+	int GetHeight() const;
 
 public:
 	bool TextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrText, LPCTSTR szText, int nLen, bool bDrawAlphaChannel);

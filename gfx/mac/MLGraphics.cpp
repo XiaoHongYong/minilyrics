@@ -170,13 +170,13 @@ void CMLGraphics::SetFont(CMLFont *font)
 {
 	IMLGraphicsBase::SetFont(font);
 
-	CGContextSelectFont(m_context, "Helvetica", m_font->GetHeight(), kCGEncodingMacRoman);
+	CGContextSelectFont(m_context, "Helvetica", m_font->GetSize(), kCGEncodingMacRoman);
 	// Next we set the text matrix to flip our text upside down. We do this because the context itself
 	// is flipped upside down relative to the expected orientation for drawing text (much like the case for drawing Images & PDF).
 	CGContextSetTextMatrix(m_context, CGAffineTransformMakeScale(1.0, -1.0));
 
 	// CGContextSetFont(m_context, m_font->GetHandle());
-	// CGContextSetFontSize(m_context, m_font->GetHeight());
+	// CGContextSetFontSize(m_context, m_font->GetSize());
 	CGContextSetTextDrawingMode(m_context, kCGTextFill);
 }
 

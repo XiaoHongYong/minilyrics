@@ -20,7 +20,8 @@ class CFontInfo
 public:
 	CFontInfo()
 	{
-		m_nHeight = 0;
+		m_nSize = 0;
+		m_nFontHeight = 0;
 		m_nWeight = FW_NORMAL;
 		m_nItalic = 0;
 		m_bUnderline = false;
@@ -30,7 +31,7 @@ public:
 	}
 
 public:
-	virtual bool Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHeight, int nWeight, int nItalic, bool bUnderline = false)
+	virtual bool Create(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nSize, int nWeight, int nItalic, bool bUnderline = false)
 	{
 		m_strNameLatin9 = szFaceNameLatin9;
 		if (!szFaceNameOthers || IsEmptyString(szFaceNameOthers))
@@ -38,7 +39,7 @@ public:
 		else
 			m_strNameOthers = szFaceNameOthers;
 
-		m_nHeight = nHeight;
+		m_nFontHeight = m_nSize = nSize;
 		m_nWeight = nWeight;
 		m_nItalic = nItalic;
 		m_bUnderline = bUnderline;
@@ -50,7 +51,7 @@ public:
 	{
 		m_strNameLatin9 = font.m_strNameLatin9;
 		m_strNameOthers = font.m_strNameOthers;
-		m_nHeight = font.m_nHeight;
+		m_nFontHeight = m_nSize = font.m_nSize;
 		m_nWeight = font.m_nWeight;
 		m_nItalic = font.m_nItalic;
 		m_bUnderline = font.m_bUnderline;
@@ -58,7 +59,7 @@ public:
 		return true;
 	}
 
-	bool IsSame(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nHeight, int nWeight, int nItalic, bool bUnderline)
+	bool IsSame(LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers, int nSize, int nWeight, int nItalic, bool bUnderline)
 	{
 		if (_tcscmp(szFaceNameLatin9, m_strNameLatin9.c_str()) != 0)
 			return false;
@@ -68,14 +69,14 @@ public:
 		if (_tcscmp(szFaceNameOthers, m_strNameOthers.c_str()) != 0)
 			return false;
 
-		return nHeight == m_nHeight && nWeight == m_nWeight && m_nItalic == nItalic && bUnderline == m_bUnderline;
+		return nSize == m_nSize && nWeight == m_nWeight && m_nItalic == nItalic && bUnderline == m_bUnderline;
 	}
 
 	bool IsSame(const CFontInfo &font)
 	{
 		return font.m_strNameLatin9 == m_strNameLatin9
 			&& font.m_strNameOthers == m_strNameOthers
-			&& font.m_nHeight == m_nHeight
+			&& font.m_nSize == m_nSize
 			&& font.m_nWeight == m_nWeight
 			&& font.m_nItalic == m_nItalic
 			&& font.m_bUnderline == m_bUnderline;
@@ -85,14 +86,17 @@ public:
 
 	LPCTSTR GetName() const { return m_strNameLatin9.c_str(); }
 	LPCTSTR GetNameOthers() const { return m_strNameOthers.c_str(); }
-	int GetHeight() const { return m_nHeight; }
+	int GetSize() const { return m_nSize; }
 	int GetWeight() const { return m_nWeight; }
 	int GetItalic() const { return m_nItalic; }
 	bool IsUnderline() const { return m_bUnderline; }
 
+	virtual int GetHeight() const { return m_nFontHeight; }
+
 public:
 	tstring		m_strNameLatin9, m_strNameOthers;
-	int			m_nHeight;
+	int			m_nSize;
+	int			m_nFontHeight;
 	int			m_nWeight;
 	byte		m_nItalic;
 	bool		m_bUnderline;

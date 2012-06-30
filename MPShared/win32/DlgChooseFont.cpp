@@ -22,17 +22,17 @@ CDlgChooseFont::~CDlgChooseFont()
 
 }
 
-int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontHeight, int nWeight, int nItalic)
+int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontSize, int nWeight, int nItalic)
 {
 	LOGFONT lgfont = { 0 };
 	CHOOSEFONT	choosefont = { 0 };
 
 	m_strFontFaceName = szFontFaceName;
-	m_nFontHeight = nFontHeight;
+	m_nFontSize = nFontSize;
 	m_nWeight = nWeight;
 	m_nItalic = nItalic;
 
-	lgfont.lfHeight = nFontHeight;
+	lgfont.lfSize = nFontSize;
 	lgfont.lfWeight = nWeight;
 	lgfont.lfItalic = nItalic;
 	_tcscpy_safe(lgfont.lfFaceName, CountOf(lgfont.lfFaceName), szFontFaceName);
@@ -44,7 +44,7 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 	if (ChooseFont(&choosefont))
 	{
 		m_strFontFaceName = lgfont.lfFaceName;
-		m_nFontHeight = lgfont.lfHeight;
+		m_nFontSize = lgfont.lfSize;
 		m_nWeight = lgfont.lfWeight;
 		m_nItalic = lgfont.lfItalic;
 
@@ -59,9 +59,9 @@ LPCTSTR CDlgChooseFont::GetFaceName()
 	return m_strFontFaceName.c_str();
 }
 
-int CDlgChooseFont::GetHeight()
+int CDlgChooseFont::GetSize()
 {
-	return m_nFontHeight;
+	return m_nFontSize;
 }
 
 int CDlgChooseFont::GetWeight()

@@ -57,7 +57,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 	// Create font
 	// desc = pango_font_description_new();
 	pango_font_description_set_family(desc, m_font.GetName());
-	pango_font_description_set_size(desc, m_font.GetHeight());
+	pango_font_description_set_size(desc, m_font.GetSize());
 	pango_font_description_set_weight(desc, (PangoWeight)m_font.GetWeight());
 	pango_font_description_set_style(desc, (PangoStyle)m_font.GetItalic());
 //	#define FONT "Sans Bold 12"
@@ -96,7 +96,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 	byte			*pDst, *pRowDst, *pSrc, *pRowSrc;
 
 	DBGLOG3("glyph: %c, w: %d, h: %d", (LPCSTR)ch, width, height);
-	DBGLOG1("Font height: %d", m_font.GetHeight());
+	DBGLOG1("Font size: %d", m_font.GetSize());
 	DBGLOG3("Format: %d, %d, %d", cairo_image_surface_get_format (m_surface), CAIRO_FORMAT_ARGB32, CAIRO_FORMAT_RGB24);
 	// assert(height == m_font.GetHeight());
 

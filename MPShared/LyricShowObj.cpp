@@ -516,7 +516,7 @@ void CreateLyrOverlayBlendingPattern(CLyricShowObj::TextOverlayBlending &tob, in
 		tob.obm = OBM_COLOR;
 }
 
-bool ProfileGetLyricsFont(LPCTSTR szSectName, int &nHeight, int &nWeight, BYTE &byItalic, tstring &strFaceNameLatin9, tstring &strFaceNameOthers)
+bool ProfileGetLyricsFont(LPCTSTR szSectName, int &nSize, int &nWeight, BYTE &byItalic, tstring &strFaceNameLatin9, tstring &strFaceNameOthers)
 {
 	tstring		strFont;
 
@@ -524,11 +524,11 @@ bool ProfileGetLyricsFont(LPCTSTR szSectName, int &nHeight, int &nWeight, BYTE &
 	if (strFont.size())
 	{
 		// Apply ThemeFont to current font setting, then remove it.
-		FontPropertyValueFromStr(strFont.c_str(), nHeight, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
+		FontPropertyValueFromStr(strFont.c_str(), nSize, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
 
 		g_Profile.WriteProfileString(szSectName, _T("ThemeFont"), _T(""));
 
-		ProfileWriteLyricsFont(ET_NULL, szSectName, nHeight, nWeight, byItalic, strFaceNameLatin9.c_str(), strFaceNameOthers.c_str());
+		ProfileWriteLyricsFont(ET_NULL, szSectName, nSize, nWeight, byItalic, strFaceNameLatin9.c_str(), strFaceNameOthers.c_str());
 	}
 
 #ifdef _WIN32
@@ -537,10 +537,10 @@ bool ProfileGetLyricsFont(LPCTSTR szSectName, int &nHeight, int &nWeight, BYTE &
 	strFont = g_Profile.GetProfileString(szSectName, _T("Font"), _T(", 13, bold, 0, 0, "));
 #endif
 
-	return FontPropertyValueFromStr(strFont.c_str(), nHeight, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
+	return FontPropertyValueFromStr(strFont.c_str(), nSize, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
 }
 
-void ProfileWriteLyricsFont(EventType etColorTheme, LPCTSTR szSectName, int nHeight, int nWeight, BYTE byItalic, LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers)
+void ProfileWriteLyricsFont(EventType etColorTheme, LPCTSTR szSectName, int nSize, int nWeight, BYTE byItalic, LPCTSTR szFaceNameLatin9, LPCTSTR szFaceNameOthers)
 {
 	tstring		strFont;
 	tstring		strLatin9, strOthers;
@@ -548,24 +548,24 @@ void ProfileWriteLyricsFont(EventType etColorTheme, LPCTSTR szSectName, int nHei
 	if (szFaceNameLatin9 == NULL || szFaceNameOthers == NULL || IsEmptyString(szFaceNameLatin9) || IsEmptyString(szFaceNameOthers))
 	{
 		if ((szFaceNameLatin9 == NULL || IsEmptyString(szFaceNameLatin9)) && (szFaceNameOthers == NULL || IsEmptyString(szFaceNameOthers))
-			&& nHeight == -1 && nWeight == -1)
+			&& nSize == -1 && nWeight == -1)
 			return;
 
-		int		nHeightOld, nWeightOld;
+		int		nSizeOld, nWeightOld;
 		BYTE	nItalicOld;
 
-		ProfileGetLyricsFont(szSectName, nHeightOld, nWeightOld, nItalicOld, strLatin9, strOthers);
+		ProfileGetLyricsFont(szSectName, nSizeOld, nWeightOld, nItalicOld, strLatin9, strOthers);
 		if (!szFaceNameLatin9 || IsEmptyString(szFaceNameLatin9))
 			szFaceNameLatin9 = strLatin9.c_str();
 		if (!szFaceNameOthers || IsEmptyString(szFaceNameOthers))
 			szFaceNameOthers = strOthers.c_str();
-		if (nHeight == -1)
-			nHeight = nHeightOld;
+		if (nSize == -1)
+			nSize = nSizeOld;
 		if (nWeight == -1)
 			nWeight = nWeightOld;
 	}
 
-	FontPropertyValueToStr(strFont, nHeight, nWeight, byItalic, szFaceNameLatin9, szFaceNameOthers);
+	FontPropertyValueToStr(strFont, nSize, nWeight, byItalic, szFaceNameLatin9, szFaceNameOthers);
 
 	CMPlayerSettings::SetSettings(etColorTheme, szSectName, _T("Font"), strFont.c_str());
 }
@@ -1033,7 +1033,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 			if (pOldFont)
 			{
 				CFontInfo		font;
-				font.Create(m_font.GetName(), font.GetNameOthers(), m_font.GetHeight(), m_font.GetWeight(), m_font.GetItalic(), true);
+				font.Create(m_font.GetName(), font.GetNameOthers(), m_font.GetSize(), m_font.GetWeight(), m_font.GetItalic(), true);
 
 				pGraphics->SetFont(&font);
 
@@ -1111,7 +1111,7 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 			if (pOldFont)
 			{
 				CFontInfo		font;
-				font.Create(m_font.GetName(), font.GetNameOthers(), m_font.GetHeight(), m_font.GetWeight(), m_font.GetItalic(), true);
+				font.Create(m_font.GetName(), font.GetNameOthers(), m_font.GetSize(), m_font.GetWeight(), m_font.GetItalic(), true);
 
 				pGraphics->SetFont(&font);
 
@@ -2218,13 +2218,13 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_nLineSpacing = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, _T("Font")) == 0)
 	{
-		int			nHeight, nWeight;
+		int			nSize, nWeight;
 		BYTE		byItalic;
 		tstring		strFaceName, strFaceNameOthers;
 
 		// 创建English 歌词的字体
-		FontPropertyValueFromStr(szValue, nHeight, nWeight, byItalic, strFaceName, strFaceNameOthers);
-		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nHeight, nWeight, Tobool(byItalic));
+		FontPropertyValueFromStr(szValue, nSize, nWeight, byItalic, strFaceName, strFaceNameOthers);
+		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nSize, nWeight, Tobool(byItalic));
 		m_nFontHeight = m_font.GetHeight();
 
 		if (m_tobHilight.imgPattern.height() != GetPatternFontHeight())
@@ -2441,13 +2441,13 @@ void CLyricShowObj::LoadAllSettings()
 		return;
 
 	{
-		int			nHeight, nWeight;
+		int			nSize, nWeight;
 		BYTE		byItalic;
 		tstring		strFaceName, strFaceNameOthers;
 
-		ProfileGetLyricsFont(m_strSectName.c_str(), nHeight, nWeight, byItalic, strFaceName, strFaceNameOthers);
+		ProfileGetLyricsFont(m_strSectName.c_str(), nSize, nWeight, byItalic, strFaceName, strFaceNameOthers);
 
-		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nHeight, nWeight, byItalic);
+		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nSize, nWeight, byItalic);
 		m_nFontHeight = m_font.GetHeight();
 	}
 

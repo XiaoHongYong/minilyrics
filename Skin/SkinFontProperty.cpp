@@ -145,7 +145,7 @@ bool CSkinFontProperty::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	else if (IsPropertyName(szProperty, _T("Font")))
 	{
 		// Set font property in one field: Verdana, 13, thin, 1, 0, Tahoma
-		FontPropertyValueFromStr(szValue, m_font.m_nHeight, m_font.m_nWeight, m_font.m_nItalic, m_font.m_strNameLatin9, m_font.m_strNameOthers);
+		FontPropertyValueFromStr(szValue, m_font.m_nSize, m_font.m_nWeight, m_font.m_nItalic, m_font.m_strNameLatin9, m_font.m_strNameOthers);
 		m_nFlagProperties |= FP_FONT;
 	}
 	else if (IsPropertyName(szProperty, _T("FontName")))
@@ -166,8 +166,8 @@ bool CSkinFontProperty::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	}
 	else if (IsPropertyName(szProperty, _T("FontHeight")))
 	{
-		m_font.m_nHeight = _ttoi(szValue);
-		if (m_font.m_nHeight >= 8 && m_font.m_nHeight < 255)
+		m_font.m_nSize = _ttoi(szValue);
+		if (m_font.m_nSize >= 8 && m_font.m_nSize < 255)
 			m_nFlagProperties |= FP_HEIGHT;
 		else
 			m_nFlagProperties &= ~FP_HEIGHT;
@@ -233,7 +233,7 @@ void CSkinFontProperty::EnumProperties(CUIObjProperties &listProperties)
 	listProperties.AddPropBoolStr(_T("CustomizedFont"), m_bCustomized, !m_bCustomized);
 	listProperties.AddPropFontName(_T("FontName"), m_font.GetName(), IsFlagSet(m_nFlagProperties, FP_NAME_LATIN9));
 	listProperties.AddPropFontName(_T("FontNameOthers"), m_font.GetNameOthers(), IsFlagSet(m_nFlagProperties, FP_NAME_OTHERS));
-	listProperties.AddPropInt(_T("FontHeight"), m_font.GetHeight(), IsFlagSet(m_nFlagProperties, FP_HEIGHT));
+	listProperties.AddPropInt(_T("FontHeight"), m_font.GetSize(), IsFlagSet(m_nFlagProperties, FP_HEIGHT));
 	listProperties.AddPropInt(_T("FontWeight"), m_font.GetWeight(), IsFlagSet(m_nFlagProperties, FP_WEIGHT));
 	listProperties.AddPropInt(_T("FontItalic"), m_font.GetItalic(), IsFlagSet(m_nFlagProperties, FP_ITALIC));
 	listProperties.AddPropInt(_T("FontUnderLine"), m_font.IsUnderline(), IsFlagSet(m_nFlagProperties, FP_UNDERLINE));
@@ -263,12 +263,12 @@ LPCTSTR CSkinFontProperty::GetNameOthers()
 }
 
 
-int CSkinFontProperty::GetHeight()
+int CSkinFontProperty::GetSize()
 {
 	if (IsPropertySet(FP_HEIGHT))
-		return m_font.GetHeight();
+		return m_font.GetSize();
 	else if (m_pSkin)
-		return m_pSkin->GetFontProperty()->m_font.GetHeight();
+		return m_pSkin->GetFontProperty()->m_font.GetSize();
 	else
 		return 13;
 }
@@ -295,6 +295,14 @@ bool CSkinFontProperty::IsOutlined()
 		return false;
 }
 
+int CSkinFontProperty::GetHeight()
+{
+	CRawBmpFont *font = GetFont();
+	if (font == NULL)
+		return GetSize();
+	
+	return font->GetHeight();
+}
 
 const MLColor &CSkinFontProperty::GetTextColor(bool bEnabledClr)
 {
@@ -401,7 +409,7 @@ void CSkinFontProperty::UpdateMLFontInfo()
 		m_font.m_strNameOthers = pFont->m_font.m_strNameOthers;
 
 	if (!IsFlagSet(m_nFlagProperties, FP_HEIGHT))
-		m_font.m_nHeight = pFont->m_font.m_nHeight;
+		m_font.m_nSize = pFont->m_font.m_nSize;
 
 	if (!IsFlagSet(m_nFlagProperties, FP_WEIGHT))
 		m_font.m_nWeight = pFont->m_font.m_nWeight;

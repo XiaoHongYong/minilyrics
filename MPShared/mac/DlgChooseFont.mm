@@ -28,17 +28,17 @@ CDlgChooseFont::~CDlgChooseFont()
 
 @end
 
-int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontHeight, int nWeight, int nItalic)
+int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontSize, int nWeight, int nItalic)
 {
 	m_strFontFaceName = szFontFaceName;
-	m_nFontHeight = nFontHeight;
+	m_nFontSize = nFontSize;
 	m_nWeight = nWeight;
 	m_nItalic = nItalic;
 	
 	NSFont *oldFont = [NSFont fontWithName:[NSString stringWithUTF8String:szFontFaceName]
-									   size:nFontHeight];
+									   size:nFontSize];
 	if (oldFont == nil)
-		oldFont = [NSFont systemFontOfSize:nFontHeight];
+		oldFont = [NSFont systemFontOfSize:nFontSize];
 	
 	NSFontPanel *panel = [NSFontPanel sharedFontPanel];
 	if (pWndParent != NULL)
@@ -54,7 +54,7 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 	
 	NSFont *newFont = [panel panelConvertFont:oldFont];
 	m_strFontFaceName = [[newFont fontName] UTF8String];
-	m_nFontHeight = [newFont pointSize];
+	m_nFontSize = [newFont pointSize];
 	
 	return IDOK;
 }
@@ -64,9 +64,9 @@ LPCTSTR CDlgChooseFont::GetFaceName()
 	return m_strFontFaceName.c_str();
 }
 
-int CDlgChooseFont::GetHeight()
+int CDlgChooseFont::GetSize()
 {
-	return m_nFontHeight;
+	return m_nFontSize;
 }
 
 int CDlgChooseFont::GetWeight()

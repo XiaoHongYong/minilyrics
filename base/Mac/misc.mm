@@ -19,7 +19,7 @@ uint32 GetTickCount()
 {
 	timeval tim;
 	gettimeofday(&tim, NULL);
-	return (uint32)(tim.tv_sec * 1000 * 1000 + tim.tv_usec);
+	return (uint32)(tim.tv_sec * 1000 + tim.tv_usec / 1000);
 }
 
 bool GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict)

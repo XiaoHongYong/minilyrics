@@ -14,6 +14,8 @@ public:
 
 	void Init(const CFontInfo &font);
 
+	int GetHeight() const;
+
 	void Destroy();
 
 	Glyph *BuildGlyph(tstring &ch);

@@ -80,7 +80,7 @@ bool CGdiFont::Create(const CMLFont &font)
 {
 	LOGFONT logFont = {25, 0, 0, 0, FW_REGULAR, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, g_byFontQuality, DEFAULT_PITCH | FF_ROMAN, _T("Tahoma")};
 
-	logFont.lfHeight = font.GetHeight();
+	logFont.lfHeight = font.GetSize();
 	logFont.lfWeight = font.GetWeight();
 	logFont.lfItalic = font.GetItalic();
 	logFont.lfUnderline = font.IsUnderline();

@@ -33,7 +33,7 @@ public:
 
 	void SetFont(CFontInfo &font)
 	{
-		if (m_logFontLatin9.lfHeight == font.GetHeight() &&
+		if (m_logFontLatin9.lfHeight == font.GetSize() &&
 			m_logFontLatin9.lfWeight == font.GetWeight() &&
 			m_logFontLatin9.lfItalic == (BYTE)font.GetItalic() &&
 			m_logFontLatin9.lfUnderline == (BYTE)font.IsUnderline())
@@ -49,7 +49,7 @@ public:
 
 		Destroy();
 
-		m_logFontOthers.lfHeight = m_logFontLatin9.lfHeight = font.GetHeight();
+		m_logFontOthers.lfHeight = m_logFontLatin9.lfHeight = font.GetSize();
 		m_logFontOthers.lfWeight = m_logFontLatin9.lfWeight = font.GetWeight();
 		m_logFontOthers.lfItalic = m_logFontLatin9.lfItalic = font.GetItalic();
 		m_logFontOthers.lfUnderline = m_logFontLatin9.lfUnderline = font.IsUnderline();

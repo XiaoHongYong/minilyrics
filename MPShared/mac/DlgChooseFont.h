@@ -6,11 +6,11 @@ public:
 	CDlgChooseFont();
 	virtual ~CDlgChooseFont();
 
-	int DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontHeight, int nWeight, int nItalic);
+	int DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nFontSize, int nWeight, int nItalic);
 
 	LPCTSTR GetFaceName();
 
-	int GetHeight();
+	int GetSize();
 
 	int GetWeight();
 
@@ -18,7 +18,7 @@ public:
 
 public:
 	tstring			m_strFontFaceName;
-	int				m_nFontHeight, m_nWeight;
+	int				m_nFontSize, m_nWeight;
 	int				m_nItalic;
 
 };

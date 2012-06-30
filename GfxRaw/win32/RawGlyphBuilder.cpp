@@ -37,6 +37,12 @@ void CRawGlyphBuilder::Init(const CFontInfo &font)
 	CreateMemGraph(GetHeightBitmap() * 2);
 }
 
+
+int CRawGlyphBuilder::GetHeight() const
+{
+	return m_font.GetHeight();
+}
+
 void CRawGlyphBuilder::CreateMemGraph(int nWidthGraph)
 {
 	nWidthGraph = (nWidthGraph + 3 % 4) * 4;

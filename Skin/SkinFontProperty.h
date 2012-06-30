@@ -54,9 +54,11 @@ public:
 
 	LPCTSTR GetName();
 	LPCTSTR GetNameOthers();
-	int GetHeight();
+	int GetSize();
 	int GetWeight();
 	bool IsOutlined();
+	
+	int GetHeight();
 
 	const MLColor &GetTextColor(bool bEnabledClr = true);
 	const MLColor &GetColorOutlined();
