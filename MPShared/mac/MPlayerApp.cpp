@@ -43,8 +43,6 @@ bool CMPlayerApp::Init()
 	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
 	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
 
-	LOG1(LOG_LVL_INFO, _T("Start %s."), GetAppNameLong().c_str());
-
 	m_appMode = SA_LYRICS_PLAYER;
 
 	return CMPlayerAppBase::Init();

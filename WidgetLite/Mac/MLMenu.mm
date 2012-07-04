@@ -122,14 +122,14 @@ void CMLMenu::EnableItem(int nID, bool bEnable)
 {
 	NSMenuItem *item = [m_info->menu itemWithTag:nID];
 	if (item != nil)
-		[item setEnabled:YES];
+		[item setEnabled:bEnable ? YES : NO];
 }
 
 void CMLMenu::CheckItem(int nID, bool bCheck)
 {
 	NSMenuItem *item = [m_info->menu itemWithTag:nID];
 	if (item != nil)
-		[item setState:NSOnState];
+		[item setState:bCheck ? NSOnState : NSOffState];
 }
 
 void CMLMenu::CheckRadioItem(int nID, int nStartID, int nEndID)

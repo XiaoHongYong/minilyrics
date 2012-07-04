@@ -58,11 +58,23 @@ tstring CreateDeviceID()
 
 	return _T("");
 }
-#else
+#endif
+#ifdef _MAC_OSX
+#include <CoreFoundation/CoreFoundation.h>
 tstring CreateDeviceID()
 {
-	ERRLOG0(_T("NO Device ID is created."));
-	return _T("");
+	CFUUIDRef theUUID = CFUUIDCreate(NULL);
+    CFStringRef string = CFUUIDCreateString(NULL, theUUID);
+    CFRelease(theUUID);
+	char buf[128];
+	CFStringGetCString(string, buf, CountOf(buf), kCFStringEncodingUTF8);
+	CFRelease(string);
+
+	TCHAR szDeviceId[64];
+	MD5ToString((LPCSTR)&buf, strlen(buf), szDeviceId);
+	if (!g_Profile.EncryptWriteProfileString(SZ_DEVICE_ID, szDeviceId))
+		ERRLOG1(_T("Failed to write ID: %s"), szDeviceId);
+	return szDeviceId;
 }
 #endif
 

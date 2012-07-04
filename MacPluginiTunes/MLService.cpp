@@ -39,7 +39,7 @@ BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bMa
 	g_MLService.Init();
 
 	char	szMiniLyricsExe[MAX_PATH];
-	strcpy(szMiniLyricsExe, "/Users/showbrave/Library/Developer/Xcode/DerivedData/MiniLyricsMac-agclrmbubvezruavpgqfpggqmabs/Build/Products/Debug/MiniLyricsMac.app");
+	strcpy(szMiniLyricsExe, "/Users/showbrave/Library/Developer/Xcode/DerivedData/MiniLyricsMac-agclrmbubvezruavpgqfpggqmabs/Build/Products/Debug/MiniLyrics.app");
 
 	pPlayerService->Create(pipeName);
 	pPlayerService->OnConnected();

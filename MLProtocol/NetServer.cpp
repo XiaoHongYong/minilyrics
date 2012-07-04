@@ -422,7 +422,6 @@ void CNetServer::ThreadServerAccept(LPVOID lpParam)
 		if (s == INVALID_SOCKET)
 		{
 #ifdef WIN32
-			nRet = WSAError();
 	        LOGSOCKERR(_T("accept() FAILED! LastError: %d"));
 #endif
 

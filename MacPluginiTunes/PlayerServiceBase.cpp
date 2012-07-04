@@ -48,16 +48,15 @@ bool CPlayerServiceBase::Create(LPCSTR szPipeName)
 
 void CPlayerServiceBase::Destroy()
 {
+	g_bQuitMsg = true;
+	m_msgPipe.Close();
+
 	if (g_threadMsg != 0)
 	{
-		g_bQuitMsg = true;
-		m_msgPipe.Close();
 		pthread_kill(g_threadMsg, SIGINT);
 		// pthread_join(g_threadMsg, NULL);
 		g_threadMsg = 0;
 	}
-	
-	m_msgPipe.Close();
 }
 
 bool CPlayerServiceBase::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
