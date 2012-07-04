@@ -376,14 +376,13 @@ BOOL CImgGifFile::Open(IILIO *io)
 
 			if ((image.pf & 0x80) || (dscgif.pflds & 0x80)) {
 				unsigned char r[256], g[256], b[256];
-				int i, has_white = 0;
+				int i;
 
 				for (i=0; i < TabCol.sogct; i++) {
 					r[i] = TabCol.paleta[i].r;
 					g[i] = TabCol.paleta[i].g;
 					b[i] = TabCol.paleta[i].b;
 
-					if (RGB(r[i],g[i],b[i]) == 0xFFFFFF) has_white = 1;
 				}
 
 				// Force transparency colour white...
@@ -392,7 +391,6 @@ BOOL CImgGifFile::Open(IILIO *io)
 				// Fill in with white // AD
 				if (m_imgData->m_nTransIndex != -1) {
 					while (i < 256)	{
-						has_white = 1;
 						r[i] = g[i] = b[i] = 255;
 						i++;
 					}
@@ -734,7 +732,6 @@ void CImgGifFile::EncodeBody(IILIO *io, bool bLocalColorMap)
 	fwritec(io, Flags);
 
 	if (bLocalColorMap){
-		Flags|=0x87;
 		RGBQUAD* pPal = m_imgData->pallete;
 		for(DWORD i=0; i<m_imgData->nClrUsed; ++i) 
 		{

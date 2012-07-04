@@ -412,7 +412,6 @@ void CDownloadMgr::DownloadThread()
 	while (!IsQuiting())
 	{
 		CDownloadTask	*pTask = NULL;
-		int				nRet = ERR_FALSE;
 
 		// Pick up one task
 		m_mutexAccess.Acquire();
@@ -431,7 +430,7 @@ void CDownloadMgr::DownloadThread()
 
 		if (_tcsnicmp(pTask->m_strURL.c_str(), _T("http://"), 7) == 0)
 		{
-			nRet = RunHttpTask(pTask);
+			RunHttpTask(pTask);
 		}
 
 		if (IsQuiting())

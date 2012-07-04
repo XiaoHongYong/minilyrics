@@ -436,8 +436,6 @@ LPCTSTR CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR
 {
 	assert(!m_strProfile.empty());
 
-	DWORD		dwRet;
-
 	if (szKeyName[0] == '\0')
 		return _T("");
 
@@ -446,7 +444,7 @@ LPCTSTR CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR
 	if (!GetKey(szAppName, szKeyName, itKey))
 	{
 		TCHAR	szReturnedString[1024];
-		dwRet = GetPrivateProfileString(szAppName, szKeyName, szDefault, szReturnedString, 1024, m_strProfile.c_str());
+		GetPrivateProfileString(szAppName, szKeyName, szDefault, szReturnedString, 1024, m_strProfile.c_str());
 		AddKeys(szAppName, szKeyName, szReturnedString);
 		if (!GetKey(szAppName, szKeyName, itKey))
 		{
@@ -559,7 +557,6 @@ tstring CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, 
 {
 	assert(!m_strProfile.empty());
 
-	DWORD		dwRet;
     TCHAR       szReturnedString[512];
 
 	if (szKeyName[0] == '\0')
@@ -576,7 +573,7 @@ tstring CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, 
 	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itKey))
 	{
 		EncryptStr(szDefault, strValue);
-		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, CountOf(szReturnedString), m_strProfile.c_str());
+		GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, CountOf(szReturnedString), m_strProfile.c_str());
 		AddKeys(szAppName, strKeyNameEncrypt.c_str(), szReturnedString);
 	}
 	else

@@ -422,7 +422,6 @@ void CSkinTreeCtrl::Draw(CRawGraph *pGraph)
 {
 	ISkinTreeNode		*pNodeFirstVisible, *pNode, *pNodeNext;
 	int			nDepth;
-	bool		bBigBrother;
 	int			x, y, xMax, yMax;
 	CRect		rcNodeText;
 
@@ -447,7 +446,6 @@ void CSkinTreeCtrl::Draw(CRawGraph *pGraph)
 
 	// Draw Tree from first visible node
 	nDepth = pNodeFirstVisible->GetDepth();
-	bBigBrother = pNodeFirstVisible->IsBigBrother();
 	pNode = pNodeFirstVisible;
 
 	if (m_font.IsGood())
@@ -529,7 +527,6 @@ CSkinTreeCtrl::TreeArea CSkinTreeCtrl::HitTest(POINT point, ISkinTreeNode **ppNo
 
 	ISkinTreeNode		*pNodeFirstVisible, *pNode, *pNodeNext;
 	int			nDepth;
-	bool		bBigBrother;
 	int			x, y, xMax, yMax;
 	bool		bVScrollBarVisible = true;
 
@@ -546,7 +543,6 @@ CSkinTreeCtrl::TreeArea CSkinTreeCtrl::HitTest(POINT point, ISkinTreeNode **ppNo
 
 	// Draw Tree from first visible node
 	nDepth = pNodeFirstVisible->GetDepth();
-	bBigBrother = pNodeFirstVisible->IsBigBrother();
 	pNode = pNodeFirstVisible;
 
 	if (point.y < y || point.x > xMax || point.x < m_rcObj.left + m_nXMargin)

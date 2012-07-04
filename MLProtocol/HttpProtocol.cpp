@@ -231,7 +231,6 @@ void CHttpRequestProtocol::SetProxyBase64Pass(BOOL bEnableProxy, const char * sz
 
 int CHttpRequestProtocol::WriteHead()
 {
-	int			nLen = 0;
 	char		szUrlNew[512];
 	char		szTemp[256];
 
@@ -312,9 +311,9 @@ int CHttpRequestProtocol::WriteHead()
 	if (m_dwAvailProp & RP_RANGE)
 	{
 		if (m_dwRangeEnd > m_dwRangeBeg)
-			nLen = sprintf_s(szTemp, CountOf(szTemp), "Range: bytes=%d-%d\r\n", m_dwRangeBeg, m_dwRangeEnd);
+			sprintf_s(szTemp, CountOf(szTemp), "Range: bytes=%d-%d\r\n", m_dwRangeBeg, m_dwRangeEnd);
 		else if (m_dwRangeEnd == 0)
-			nLen = sprintf_s(szTemp, CountOf(szTemp), "Range: bytes=%d-\r\n", m_dwRangeBeg);
+			sprintf_s(szTemp, CountOf(szTemp), "Range: bytes=%d-\r\n", m_dwRangeBeg);
 		m_buffHead += szTemp;
 	}
 

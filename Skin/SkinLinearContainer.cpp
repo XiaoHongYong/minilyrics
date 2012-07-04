@@ -138,7 +138,7 @@ void CSkinLinearContainer::ZoomWeightable(VecItems &vItems, int nSize)
 	for (VecItems::iterator it = vItems.begin(); it != vItems.end(); ++it)
 	{
 		Item &item = *it;
-		if (item.weight > 0)
+		if (item.weight > 0 && totalWeight > 0)
 		{
 			item.size = item.minSize + sizeToAlloc * item.weight / totalWeight;
 			if (item.size < 0)

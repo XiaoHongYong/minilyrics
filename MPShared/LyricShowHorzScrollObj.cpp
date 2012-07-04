@@ -31,8 +31,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 	int			x, y;
 	LyricsLine *pLyricRow;
 	int			nRowWidth;
-	int			nRowHeight;// center row height
-	int			nLeft, nRight, nCX, nCY;
+	int			nLeft, nRight, nCX;
 	int			nRowCur;
 	LyricsLine *pLine;
 
@@ -58,8 +57,6 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 	if (m_lyrLines.size() != m_vA.size())
 		CalculateAccelerate();
 
-	nRowHeight = GetLineHeight();
-
 	_ROW_INTERVAL = m_nFontHeight / 2;
 
 	y = GetLineVertAlignPos() - 
@@ -68,7 +65,6 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 	nLeft = m_rcObj.left + m_nXMargin;
 	nRight = m_rcObj.right - m_nXMargin;
 	nCX = nRight - nLeft;
-	nCY = m_rcObj.Height() - m_nYMargin * 2;
 
 	int		nRow;
 	int		nCurRowPosx;

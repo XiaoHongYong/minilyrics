@@ -225,7 +225,7 @@ int LyricsProperties::GetMediaLengthInt() const
 	if (*p != ':')
 		return 0;
 	p++;
-	p = ReadInt_t(p, n3);
+	ReadInt_t(p, n3);
 
 	return (n1 * 60 + n2) * 60 + n3;
 }

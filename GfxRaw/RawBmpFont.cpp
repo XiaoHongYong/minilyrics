@@ -1115,8 +1115,6 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	{
 		byte *pDst = pRowDst;
 		byte *pSrc = pRowSrc;
-		pDst = pRowDst;
-		pSrc = pRowSrc;
 		pPt = pRowPt;
 		int xPtStartNew = xPtStart;
 		for (x = xDst; x < xDstEnd; x++)
@@ -1207,8 +1205,6 @@ void DrawGlyphRGBA32(agg::rendering_buffer &graph, int xDst, int yDst, CRect &rc
 	{
 		byte *pDst = pRowDst;
 		byte *pSrc = pRowSrc;
-		pDst = pRowDst;
-		pSrc = pRowSrc;
 		pPt = pRowPt;
 		int xPtStartNew = xPtStart;
 		for (x = xDst; x < xDstEnd; x++)

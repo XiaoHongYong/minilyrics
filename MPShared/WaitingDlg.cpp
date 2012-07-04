@@ -35,10 +35,9 @@ DWORD CWorkObjBase::DoTheJob()
 void CWorkObjBase::WorkThread(LPVOID lpParam)
 {
 	CWorkObjBase		*pThis;
-	DWORD				dwRet;
 
 	pThis = (CWorkObjBase *)lpParam;
-	dwRet = pThis->DoTheJob();
+	pThis->DoTheJob();
 
 	pThis->m_hWndNotify->PostUserMessage(UMSG_WORK_END, 0);
 }

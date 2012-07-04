@@ -44,11 +44,12 @@ int CDlgChooseColor::DoModal(CBaseWnd *pWndParent, const MLColor &clr)
 	if (pWndParent != NULL)
 		[panel setParentWindow:(NSWindow*)pWndParent->GetHandle()];
 	// [panel setWorksWhenModal:YES];
-	[panel setDelegate:[ColorChooserDelegate alloc]];
+	ColorChooserDelegate *delegate = [ColorChooserDelegate alloc];
+	[panel setDelegate:delegate];
 	[panel setColor:nsclr];
-	//[nsclr release];
-	
+
 	int nRet = [NSApp runModalForWindow:panel];
+	[delegate release];	
 	if (nRet != IDOK)
 		return nRet;
 	
@@ -58,11 +59,6 @@ int CDlgChooseColor::DoModal(CBaseWnd *pWndParent, const MLColor &clr)
 		[nsclr getRed:&r green:&g blue:&b alpha:&a];
 	
 		m_clr.set(int(r * 255), int(g * 255), int(b * 255));
-		int r2, g2, b2, a2;
-		r2 = m_clr.r();
-		g2 = m_clr.g();
-		b2 = m_clr.b();
-		a2 = m_clr.a();
 	}
 
 	return IDOK;

@@ -52,6 +52,7 @@ void CEventsDispatcher::DispatchSyncEventByNoUIThread(IEvent *pEvent)
 	[dispatchItem performSelectorOnMainThread:@selector(dispatch)
 									 withObject:nil
 								  waitUntilDone:true];
+	[dispatchItem release];
 }
 
 void CEventsDispatcher::DispatchUnsyncEvent(IEvent *pEvent)
@@ -62,6 +63,7 @@ void CEventsDispatcher::DispatchUnsyncEvent(IEvent *pEvent)
 	[dispatchItem performSelectorOnMainThread:@selector(dispatch)
 								   withObject:nil
 								waitUntilDone:false];
+	[dispatchItem release];
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -99,6 +101,7 @@ void PostCustomCommandMsgMac(CSkinWnd *pSkinWnd, int cmd)
 	[poster performSelectorOnMainThread:@selector(OnCustomCommand)
 							 withObject:nil
 						  waitUntilDone:NO];
+	[poster release];
 }
 
 void PostQuitMessageMac()

@@ -3195,7 +3195,7 @@ void CE_LOG(int nLineNo, LPCSTR szFormat, ...)
 int CSJVM::Execute(stmt_index siEntry)
 {
 	Statement	*ps = m_stmtImage.GetStmt(siEntry);
-	int			nRet;
+	int			nRet = 0;
 	stmt_index	si = siEntry;
 
 	while (ps)
@@ -3419,7 +3419,7 @@ int CSJVM::Execute(stmt_index siEntry)
 		si = ps->siNextStmt;
 		ps = m_stmtImage.GetStmt(ps->siNextStmt);
 	}
-	return 0;
+	return nRet;
 }
 
 int CSJVM::ExecuteExpression(stmt_index siExpr)
@@ -3668,7 +3668,10 @@ int CSJVM::ExecuteExpression(stmt_index siExpr)
 	case OP_MULT:		// *
 		return nLeftVal * nRightVal;
 	case OP_DIV:		// /
-		return nLeftVal / nRightVal;
+		if (nRightVal != 0)
+			return nLeftVal / nRightVal;
+		else
+			return 0;
 	case OP_OP_INC:		// ++
 		{
 			int		*pInt = ExeExprGetVarAddr(expr.opParameter.siExprLeft);

@@ -44,10 +44,12 @@ int CDlgChooseFont::DoModal(CBaseWnd *pWndParent, LPCTSTR szFontFaceName, int nF
 	if (pWndParent != NULL)
 		[panel setParentWindow:(NSWindow*)pWndParent->GetHandle()];
 	// [panel setWorksWhenModal:YES];
-	[panel setDelegate:[FontChooserDelegate alloc]];
+	FontChooserDelegate *delegate = [FontChooserDelegate alloc];
+	[panel setDelegate:delegate];
 	[panel setPanelFont:oldFont isMultiple:NO];
 
 	int nRet = [NSApp runModalForWindow:panel];
+	[delegate release];
 	if (nRet != IDOK)
 		return nRet;
 	//[panel makeKeyAndOrderFront:nil];

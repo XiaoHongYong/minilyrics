@@ -283,14 +283,12 @@ void TestFileDataCmp()
 int FileAppendData(FILE *m_fp, int nAppend, int nMask)
 {
 	char	buff[4096];
-	int		nOldLen, nLen;
+	int		nLen;
 
 	memset(buff, nMask, sizeof(buff));
 
 	if (fseek(m_fp, 0, SEEK_END) != 0)
 		return ERR_SEEK_FILE;
-
-	nOldLen = ftell(m_fp);
 
 	for (int i = nAppend; i > 0; i -= sizeof(buff))
 	{

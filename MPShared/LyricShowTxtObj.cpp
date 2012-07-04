@@ -110,7 +110,6 @@ void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
 	else
 	{
 		CLyricShowMultiRowObj::OnKeyDown(nChar, nFlags);
-		bProcessed = TRUE;
 	}
 }
 

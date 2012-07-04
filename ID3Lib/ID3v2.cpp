@@ -244,10 +244,8 @@ long CID3v2::FindID3v2()
 
 	while (1)
 	{
-		int		nLastSize;
 		while (buff.size() <= strIdentifier.size())
 		{
-			nLastSize = buff.size();
 			nRead = fread(buff.data() + buff.size(), 1, buff.capacity() - buff.size(), m_fp);
 			// if (ferror(m_fp))
 			//	return ERR_READ_FILE;

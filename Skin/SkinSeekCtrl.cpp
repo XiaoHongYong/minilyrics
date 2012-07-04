@@ -96,12 +96,6 @@ void CSkinSeekCtrl::TrackOnLButtonDown(UINT nFlags, CPoint point)
 	// ²¶×½Êó±êÊäÈë
 	m_pSkin->SetCaptureMouse(this);
 
-	int		nVirtualPosOld;
-	int		nPosThumbOld;
-
-	nVirtualPosOld = m_nVirtualCurPos;
-	nPosThumbOld = m_nPosThumb;
-
 	m_nPosThumb = point.x - m_rcObj.left;
 	if (m_PushDownPos == PUSH_DOWN_BOTTOMTRACK)
 		m_nPosThumb -= m_nWidthThumb / 2;
@@ -148,9 +142,9 @@ bool CSkinSeekCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 
 	m_PushDownPos = PUSH_DOWN_NONE;
 
-	PUSH_DOWN_POS		CursorPosNew;
+//	PUSH_DOWN_POS		CursorPosNew;
 
-	CursorPosNew = GetPushDownPos(point);
+//	CursorPosNew = GetPushDownPos(point);
 // 	if (CursorPosNew != PUSH_DOWN_NONE)
 // 		m_pSkin->SetCaptureMouse(this);
 

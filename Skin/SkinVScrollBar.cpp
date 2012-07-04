@@ -266,9 +266,8 @@ bool CSkinSrollBarBase::OnLButtonUp(UINT nFlags, CPoint point)
 
 	m_PushDownPos = PUSH_DOWN_NONE;
 
-	PUSH_DOWN_POS		CursorPosNew;
-
-	CursorPosNew = GetPushDownPos(point);
+//	PUSH_DOWN_POS		CursorPosNew;
+//	CursorPosNew = GetPushDownPos(point);
 
 	Invalidate();
 

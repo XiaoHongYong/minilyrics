@@ -53,7 +53,9 @@ NSMenuItem *duplicateMenuItem(NSMenuItem *org) {
 	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[org title]
 												  action:[org action]
 										   keyEquivalent:[org keyEquivalent]];
-	[item setTarget:[MainMenuHandler alloc]];
+	MainMenuHandler *mainMenuHandler = [MainMenuHandler alloc];
+	[item setTarget:mainMenuHandler];
+	[mainMenuHandler release];
 	[item setTag:[org tag]];
 	
 	if ([org hasSubmenu] != YES)

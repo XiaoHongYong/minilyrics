@@ -292,7 +292,6 @@ int CM4aTag::SaveClose()
 	{
 		// Need to resize boxes
 		M4aBox *free = m_root.NextBox(boxMoov);
-		free = NULL;
 		if (free == NULL)
 		{
 			// Resize

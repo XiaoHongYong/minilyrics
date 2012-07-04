@@ -503,7 +503,7 @@ int CBaseWnd::MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption)
 	} else if (btType == MB_YESNOCANCEL) {
 		defBt = [NSString stringWithUTF8String:_TLT("Yes")];
 		alterBt = [NSString stringWithUTF8String:_TLT("NO")];
-		alterBt = [NSString stringWithUTF8String:_TLT("Cancel")];
+		otherBt = [NSString stringWithUTF8String:_TLT("Cancel")];
 	} else if (btType == MB_YESNO) {
 		defBt = [NSString stringWithUTF8String:_TLT("Yes")];
 		alterBt = [NSString stringWithUTF8String:_TLT("NO")];

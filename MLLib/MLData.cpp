@@ -516,7 +516,7 @@ int CMLData::SaveLyricsInSongOfID3v2(VecString &vLyrNames)
 		return nRet;
 
 	tstring			strLyrics;
-	CHAR_ENCODING	encoding = m_lyrProperties.GetEncodingIndex();
+	CHAR_ENCODING	encoding;
 	ToString(strLyrics, FT_LYRICS_TXT, TRUE);
 	if (IsAnsiStr(strLyrics.c_str()))
 		encoding = ED_SYSDEF;
@@ -609,7 +609,6 @@ int CMLData::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNew
 
 	// 基类接口
 	CLyricsParser	*pParser;
-	MLFileType		NewFileType;
 
 	bUseNewFileName = false;
 
@@ -617,21 +616,18 @@ int CMLData::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNew
 	if (FileIsExtSame(szFile, _T(".lrc")) )
 	{
 		pParser = new CLrcParser(this);
-		NewFileType = FT_LYRICS_LRC;
 		if (GetLyrContentType() <= LCT_LRC)
 			bUseNewFileName = true;
 	}
 	else if (FileIsExtSame(szFile, _T(".txt")) )
 	{
 		pParser = new CLrcParser(this);
-		NewFileType = FT_LYRICS_TXT;
 		if (GetLyrContentType() <= LCT_TXT)
 			bUseNewFileName = true;
 	}
 	else if (FileIsExtSame(szFile, _T(".srt")) )
 	{
 		pParser = new CSrtParser(this);
-		NewFileType = FT_LYRICS_LRC;
 		if (GetLyrContentType() <= LCT_TXT)
 			bUseNewFileName = true;
 	}

@@ -201,7 +201,6 @@ void CMPSkinVis::DrawOsilloscope(CRawGraph *pGraph, VisParam *visParam)
 	pGraph->SetPen(m_pen);
 
 	y = m_rcObj.top + nHeight;
-	x = 0;
 	i = 0;
 	//for (i = 0; i < visParam->nChannels; i++)
 	{

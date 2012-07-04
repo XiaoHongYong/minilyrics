@@ -64,7 +64,6 @@ PRAW_IMAGE_DATA LoadRawImageDataFromPngFile(IILIO *io)
     double              dGamma;
     png_color_16		*pBackground;
     png_uint_32         ulChannels;
-    png_uint_32         ulRowBytes;
     png_byte			**ppbRowPointers = NULL;
     unsigned long       i;
 	png_uint_32			nWidth, nHeight;
@@ -150,7 +149,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromPngFile(IILIO *io)
             &iColorType, NULL, NULL, NULL);
 
         // row_bytes is the width x number of channels
-        ulRowBytes = png_get_rowbytes(png_ptr, info_ptr);
+        /*png_uint_32 ulRowBytes = */png_get_rowbytes(png_ptr, info_ptr);
         ulChannels = png_get_channels(png_ptr, info_ptr);
 
         // now we can allocate memory to store the image

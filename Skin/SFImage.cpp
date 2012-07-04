@@ -106,7 +106,6 @@ void CSFImage::XScaleBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthD
 		xSrc, m_y, bpm);
 
 	x += xExtendStart - xSrc;
-	xSrc = xExtendStart;
 
 	// Center part
 	if (bTile)

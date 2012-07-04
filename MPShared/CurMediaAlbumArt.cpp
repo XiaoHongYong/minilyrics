@@ -144,7 +144,7 @@ int CCurMediaAlbumArt::Load()
 	nRet = id3v2.Open(strSongFile.c_str(), false, false);
 	if (nRet == ERR_OK)
 	{
-		nRet = id3v2.GetPictures(m_id3v2Pic);
+		id3v2.GetPictures(m_id3v2Pic);
 	}
 
 	// load album art in song dir, with same album name.

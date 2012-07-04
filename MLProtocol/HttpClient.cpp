@@ -120,7 +120,7 @@ int CHttpClient::Connect()
 		return nRet;
 
 	m_NetFile.Attach(m_ClientCom.GetSocket());
-	nRet = m_NetFile.SetTimeOut(20000);		// 20 second
+	m_NetFile.SetTimeOut(20000);		// 20 second
 
 	return ERR_OK;
 }

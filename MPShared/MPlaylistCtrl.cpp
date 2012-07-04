@@ -8,7 +8,7 @@
 
 bool DeleteSelectedItemsInPlaylist(IPlaylist *playlist, vector<int> &vSelIndex)
 {
-	MLRESULT	nRet;
+	MLRESULT	nRet = ERR_OK;
 	long		n;
 	long		count = 0;
 

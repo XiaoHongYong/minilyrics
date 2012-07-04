@@ -891,6 +891,8 @@ int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 		{
 			SkinWndStartupInfo skinWndStartupInfo(_SZ_SKINWND_CLASS_NAME, (*itSet).c_str(), (*itSet).c_str(), NULL);
 			nRet = CreateSkinWnd(skinWndStartupInfo);
+			if (nRet != ERR_OK)
+				DBGLOG1(_T("Failed to create skin window: %s"), Error2Str(nRet).c_str());
 		}
 	}
 

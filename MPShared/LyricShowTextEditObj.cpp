@@ -497,8 +497,7 @@ void CLyricShowTextEditObj::FastDraw(CRawGraph *pGraph, CRect *prcUpdate/* = NUL
 	CRect	rc = m_rcContent;
 	pGraph->SetFont(m_font.GetFont());
 
-	if (prcUpdate)
-		*prcUpdate = rc;
+	*prcUpdate = rc;
 
 	int			xStart = rc.left + m_xMargin;
 	int			nTimePos = g_LyricData.GetPlayElapsedTime();
@@ -1378,13 +1377,11 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 	case CMD_LYRICS_TO_LOWERCASE:
 		{
 			tstring	strLine, strTimeTag;
-			CLyrOneLine	*pLine;
 
 			CAutoBatchUndo		autoBatchUndo(this);
 			for (int i = GetLineCount() - 1; i >= 0; i--)
 			{
 				GetTextOfLine(i, strLine);
-				pLine = GetLine(i);
 
 				strTimeTag.resize(0);
 				GetTimeTagOfLine(strLine.c_str(), strTimeTag);
@@ -1731,9 +1728,6 @@ void CLyricShowTextEditObj::AdjustSyncTimeOfSelected(bool bIncreaseTime)
 
 	int		nLine;
 	CAutoBatchUndo	autoBatchUndo(this);
-	int		nPlayingPos = g_LyricData.GetPlayElapsedTime();
-	if (nPlayingPos < 0)
-		nPlayingPos = 0;
 
 	for (nLine = nBegLine; nLine <= nEndLine; nLine++)
 	{

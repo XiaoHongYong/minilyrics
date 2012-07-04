@@ -75,16 +75,7 @@
 }
 
 - (void)keyDown:(NSEvent *)theEvent {
-	mBaseWnd->OnKeyDown([theEvent keyCode], 0);
-	
-	int keyCode = [theEvent keyCode];
-	if (keyCode == NSUpArrowFunctionKey) {
-		keyCode = 1;
-	} else if (keyCode == NSPageUpFunctionKey) {
-		keyCode = 1;
-	} else if (keyCode == NSF1FunctionKey) {
-		keyCode = 1;
-	}
+//	mBaseWnd->OnKeyDown([theEvent keyCode], 0);
 }
 
 ///////////////////////////////////////////////////////////////////////////

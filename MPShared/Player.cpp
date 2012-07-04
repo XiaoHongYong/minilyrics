@@ -735,7 +735,7 @@ void CPlayer::AddToPlaylist(LPCTSTR szMedia)
 		CMPAutoPtr<IMedia>	media;
 
 		if (m_spPlayer->NewMedia(&media, szMedia) == ERR_OK)
-			nRet = playList->InsertItem(-1, media);
+			playList->InsertItem(-1, media);
 
  		playList->Release();
 	}
@@ -989,7 +989,7 @@ void CPlayer::AddFileToMediaLib(LPCTSTR szMedia)
 	{
 		nRet = m_spPlayer->GetCurrentPlaylist(&playlist);
 		if (nRet == ERR_OK)
-			nRet = playlist->InsertItem(-1, pMedia);
+			playlist->InsertItem(-1, pMedia);
 	}
 }
 

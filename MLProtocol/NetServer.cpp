@@ -396,7 +396,6 @@ void CNetServer::ThreadServerAccept(LPVOID lpParam)
 	sockaddr_in		AddrIn;
 	socklen_t		nAddrLen;
 	SOCKET			s;
-	int				nRet;
 
 	memset(&AddrIn, 0, sizeof(AddrIn));
 	nAddrLen = sizeof(AddrIn);
@@ -430,7 +429,7 @@ void CNetServer::ThreadServerAccept(LPVOID lpParam)
 			if (pServiceInfo->sServer)
 				closesocket(pServiceInfo->sServer);
 
-			nRet = ServerBindListen(pServiceInfo->nPort, pServiceInfo->sServer, pServiceInfo->strServer.c_str());
+			ServerBindListen(pServiceInfo->nPort, pServiceInfo->sServer, pServiceInfo->strServer.c_str());
 
 #ifdef _WIN32
 			Sleep(1000);

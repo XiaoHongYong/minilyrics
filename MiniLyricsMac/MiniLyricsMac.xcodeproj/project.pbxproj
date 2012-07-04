@@ -977,6 +977,9 @@
 /* Begin PBXProject section */
 		5FB161F7147017330084494F /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 5FB161FA147017330084494F /* Build configuration list for PBXProject "MiniLyricsMac" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;

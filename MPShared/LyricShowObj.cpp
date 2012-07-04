@@ -1887,9 +1887,6 @@ bool CLyricShowObj::AutoWidthSkinAccordLyrics()
 //	if (rc.right != rc.left + rc.Width() - m_rcObj.Width() + nWidthMax + m_nXMargin * 2 + 40)
 	{
 		CRect			rcRestrict;
-		int				nCxScr;
-
-		nCxScr = rcRestrict.Width();
 
 		GetMonitorRestrictRect(rcOrg, rcRestrict);
 

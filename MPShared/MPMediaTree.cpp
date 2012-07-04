@@ -33,7 +33,6 @@ public:
 
 void CMPMTNMediaLibrary::OnUpdate()
 {
-	int							nRet;
 	CMPAutoPtr<IMediaLibrary>	mediaLib;
 
 	if (g_Player.GetMediaLibrary(&mediaLib) != ERR_OK)
@@ -43,7 +42,7 @@ void CMPMTNMediaLibrary::OnUpdate()
 
 	if (folderType == FT_ALL_SONGS_BY_ARTIST)
 	{
-		nRet = mediaLib->GetAll(&m_playlist, MLOB_ARTIST, -1);
+		mediaLib->GetAll(&m_playlist, MLOB_ARTIST, -1);
 	}
 	else if (folderType == FT_ALL_ARTIST)
 	{
@@ -85,7 +84,6 @@ void CMPMTNMediaLibrary::OnUpdate()
 		folderType == FT_ARTIST_UNKNOWN)
 	{
 		CMPAutoPtr<IVXStr>	pvStr;
-		MLRESULT			nRet;
 
 #ifdef _WIN32_WCE
 		AddNewNode(_T("All songs by artist"), FT_ARTIST_ALL_MUSIC, II_MUSIC, false);
@@ -95,25 +93,22 @@ void CMPMTNMediaLibrary::OnUpdate()
 
 		if (folderType == FT_ARTIST_UNKNOWN)
 		{
-			nRet = mediaLib->GetByArtist(_T(""), &m_playlist, MLOB_NONE, -1);
-			nRet = mediaLib->GetAlbumOfArtist(_T(""), &pvStr);
+			mediaLib->GetByArtist(_T(""), &m_playlist, MLOB_NONE, -1);
+			mediaLib->GetAlbumOfArtist(_T(""), &pvStr);
 		}
 		else
 		{
-			nRet = mediaLib->GetByArtist(m_strName.c_str(), &m_playlist, MLOB_NONE, -1);
-			nRet = mediaLib->GetAlbumOfArtist(m_strName.c_str(), &pvStr);
+			mediaLib->GetByArtist(m_strName.c_str(), &m_playlist, MLOB_NONE, -1);
+			mediaLib->GetAlbumOfArtist(m_strName.c_str(), &pvStr);
 		}
 
-		if (nRet == ERR_OK)
+		int		nCount = pvStr->size();
+		for (int i = 0; i < nCount; i++)
 		{
-			int		nCount = pvStr->size();
-			for (int i = 0; i < nCount; i++)
-			{
-				if (IsEmptyString(pvStr->at(i)))
-					AddNewNode(_T("Unknown album"), FT_ARTIST_ALBUM_UNKNOWN, II_ALBUM, false);
-				else
-					AddNewNode(pvStr->at(i), FT_ARTIST_ALBUM, II_ALBUM, false);
-			}
+			if (IsEmptyString(pvStr->at(i)))
+				AddNewNode(_T("Unknown album"), FT_ARTIST_ALBUM_UNKNOWN, II_ALBUM, false);
+			else
+				AddNewNode(pvStr->at(i), FT_ARTIST_ALBUM, II_ALBUM, false);
 		}
 	}
 	else if (folderType == FT_ARTIST_ALBUM || 
@@ -130,16 +125,16 @@ void CMPMTNMediaLibrary::OnUpdate()
 			strArtist = pNodeArtist->m_strName;
 
 		if (folderType == FT_ARTIST_ALL_MUSIC)
-			nRet = mediaLib->GetByArtist(strArtist.c_str(), &m_playlist, MLOB_NONE, -1);
+			mediaLib->GetByArtist(strArtist.c_str(), &m_playlist, MLOB_NONE, -1);
 		else if (folderType == FT_ARTIST_TOP_RATING)
 		{
-			nRet = mediaLib->GetByArtist(strArtist.c_str(), &m_playlist, MLOB_RATING, -1);
+			MLRESULT nRet = mediaLib->GetByArtist(strArtist.c_str(), &m_playlist, MLOB_RATING, -1);
 			if (nRet == ERR_OK && m_playlist)
 				g_Player.FilterLowRatingMedia(m_playlist);
 		}
 		else
 		{
-			nRet = mediaLib->GetByAlbum(strArtist.c_str(), 
+			mediaLib->GetByAlbum(strArtist.c_str(), 
 				folderType == FT_ARTIST_ALBUM_UNKNOWN ? _T("") : m_strName.c_str(),
 				&m_playlist, MLOB_NONE, -1);
 		}
@@ -147,7 +142,7 @@ void CMPMTNMediaLibrary::OnUpdate()
 	else if (folderType == FT_ALBUM_UNKNOWN || 
 		folderType == FT_ALBUM)
 	{
-		nRet = mediaLib->GetByAlbum(
+		mediaLib->GetByAlbum(
 			folderType == FT_ALBUM_UNKNOWN ? _T("") : m_strName.c_str(), &m_playlist, MLOB_NONE, -1);
 	}
 	//////////////////////////////////////////////////////////////////////////
@@ -173,7 +168,7 @@ void CMPMTNMediaLibrary::OnUpdate()
 	else if (folderType == FT_GENRE_UNKNOWN || 
 		folderType == FT_GENRE)
 	{
-		nRet = mediaLib->GetByGenre(
+		mediaLib->GetByGenre(
 			folderType == FT_GENRE_UNKNOWN ? _T("") : m_strName.c_str(), &m_playlist, MLOB_NONE, -1);
 	}
 	// Year
@@ -232,7 +227,7 @@ void CMPMTNMediaLibrary::OnUpdate()
 	{
 		int		nYear;
 		nYear = _ttoi(m_strName.c_str());
-		nRet = mediaLib->GetByYear(nYear, &m_playlist, MLOB_NONE, -1);
+		mediaLib->GetByYear(nYear, &m_playlist, MLOB_NONE, -1);
 	}
 	// rating
 	else if (folderType == FT_ALL_RATING)
@@ -247,7 +242,7 @@ void CMPMTNMediaLibrary::OnUpdate()
 			strName.resize(i + 1);
 			AddNewNode(strName.c_str(), FT_RATING_1 + i, II_RATING, false);
 		}
-//		nRet = mediaLib->GetTopRating(16, &m_playlist);
+//		mediaLib->GetTopRating(16, &m_playlist);
 //		if (nRet == ERR_OK && m_playlist)
 //			g_Player.FilterLowRatingMedia(m_playlist);
 	}
@@ -255,21 +250,21 @@ void CMPMTNMediaLibrary::OnUpdate()
 		folderType == FT_RATING_2 || folderType == FT_RATING_3 ||
 		folderType == FT_RATING_4 || folderType == FT_RATING_5)
 	{
-		nRet = mediaLib->GetByRating(folderType - FT_NOT_RATED, &m_playlist, MLOB_RATING, -1);
+		mediaLib->GetByRating(folderType - FT_NOT_RATED, &m_playlist, MLOB_RATING, -1);
 	}
 	else if (folderType == FT_TOP_PLAYED)
 	{
-		nRet = mediaLib->GetTopPlayed(50, &m_playlist);
+		mediaLib->GetTopPlayed(50, &m_playlist);
 		SetUpdated(false);
 	}
 	else if (folderType == FT_RECENT_ADDED)
 	{
-		nRet = mediaLib->GetRecentAdded(32, &m_playlist);
+		mediaLib->GetRecentAdded(32, &m_playlist);
 		SetUpdated(false);
 	}
 	else if (folderType == FT_RECENT_PLAYED)
 	{
-		nRet = mediaLib->GetRecentPlayed(32, &m_playlist);
+		mediaLib->GetRecentPlayed(32, &m_playlist);
 		SetUpdated(false);
 	}
 }

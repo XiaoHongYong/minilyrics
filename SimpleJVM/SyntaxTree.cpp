@@ -643,7 +643,6 @@ void PrintSyntaxTree(STreeNode *t, int &nIndent)
 						ASSERT(pParent->sExpression.type == E_VAR);
 						PrintSyntaxTree(pParent, nIndent);
 						printf(".");
-						pParent = pParent->sExpression.var.pVarParent;
 					}
 					printf("%s(%d%s)", t->sExpression.var.szVarName, t->sExpression.var.nAddress, t->sExpression.var.bStatic ? " Static" : "");
 					return;

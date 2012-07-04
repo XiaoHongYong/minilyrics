@@ -129,6 +129,7 @@ Glyph *CRawGlyphBuilder::BuildGlyph(tstring &ch)
 			size.cx = ptEnd.x - ptStart.x;
 			
 			CFRelease(line);
+			CFRelease(attrString);
 		}
 		else
 		{

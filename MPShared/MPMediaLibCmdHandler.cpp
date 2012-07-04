@@ -546,7 +546,6 @@ bool CMPMediaLibCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
 				pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_ENTER ||
 				pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_CLICK)
 			{
-				bool		bClose = false;
 				if (m_mediaLibTree.IsCurNodePlaylist())
 				{
 					if (pListCtrlNotify->cmd != CSkinListCtrlEventNotify::C_CLICK)
@@ -558,7 +557,6 @@ bool CMPMediaLibCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
 							g_Player.SetCurrentPlaylist(playlist);
 							g_Player.SetCurrentMediaInPlaylist(nSel);
 							g_Player.Play();
-							bClose = true;
 						}
 					}
 				}
@@ -574,7 +572,6 @@ bool CMPMediaLibCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
 							g_Player.AddToPlaylist(strFile.c_str());
 							g_Player.SaveCurrentPlaylist();
 							g_Player.Play();
-							bClose = true;
 						}
 					}
 				}
@@ -585,9 +582,6 @@ bool CMPMediaLibCmdHandler::OnUIObjNotify(IUIObjNotify *pNotify)
 					item = m_mediaLibTree.GetChildData(nSel);
 					if (item.folderType == CMediaLibTreeProvider::FT_NOW_PLAYING)
 					{
-						// 
-						bClose = true;
-
 						SkinWndStartupInfo	startInfo(_T("MPSkin"), _T("Playlist"), _T("Playlist.xml"), NULL);
 						CMPlayerAppBase::GetMPSkinFactory()->ActiveOrCreateSkinWnd(startInfo);
 					}

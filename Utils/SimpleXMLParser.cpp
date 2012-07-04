@@ -591,10 +591,7 @@ SimpleXMLParserError CSimpleXMLParser::ParseProlog(int nPos, int &nPosNext, CSim
 		desireType = ET_R_XML_DECL;
 		retType = ReadElemnt(desireType, strValue, nPos, nPosNext);
 		if (retType == desireType)
-		{
-			nPos = nPosNext;
 			break;
-		}
 	}
 
 	return SXPE_OK;
@@ -762,7 +759,6 @@ SimpleXMLParserError CSimpleXMLParser::ParseEntity(int nPos, int &nPosNext, SXNo
 		retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
 		if (retType != desireType)
 			return SXPE_FORMAT_ERROR;
-		nPos = nPosNext;
 
 		return SXPE_OK;
 	}
@@ -775,7 +771,6 @@ SimpleXMLParserError CSimpleXMLParser::ParseEntity(int nPos, int &nPosNext, SXNo
 	retType = ReadElemnt(desireType, strElement, nPos, nPosNext);
 	if (retType == desireType)
 		return SXPE_FORMAT_ERROR;
-	nPos = nPosNext;
 
 	return SXPE_OK;
 }

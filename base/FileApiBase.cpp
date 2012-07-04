@@ -169,7 +169,6 @@ tstring DirStringJoint(LPCTSTR szDir, LPCTSTR szSubFileDir1, LPCTSTR szSubFileDi
 void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int nRelatedPathLen)
 {
 	LPCTSTR		pDir = szDir, pBaseDir = szBaseDir;
-	LPCTSTR		pLatestSame = pDir;
 
 #ifdef _WIN32
 	// win32, dir name is case insensitive
@@ -182,8 +181,6 @@ void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int 
 			l -= ('A' - 'a');
 		if (f != l)
 			break;
-		if (f == DIR_SLASH)
-			pLatestSame = pDir;
 		pDir++, pBaseDir++;
 	}
 #else
@@ -191,8 +188,6 @@ void GetRelatedPath(LPCTSTR szDir, LPCTSTR szBaseDir, LPTSTR szRelatedPath, int 
 	{
 		pDir++;
 		pBaseDir++;
-		if (*pDir == DIR_SLASH)
-			pLatestSame = pDir;
 	}
 #endif
 

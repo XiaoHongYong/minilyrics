@@ -11,7 +11,6 @@
 // Latin font, height, weight(bold,normal,thin), italic, underline, Other font
 bool FontPropertyValueFromStr(LPCTSTR szValue, int &nHeight, int &nWeight, BYTE &byItalic, tstring &strFaceNameLatin9, tstring &strFaceNameOthers)
 {
-	int				nUnderLine;
 	tstring			strWeight;
 
 	CCommaSeparatedValues csv;
@@ -41,7 +40,7 @@ bool FontPropertyValueFromStr(LPCTSTR szValue, int &nHeight, int &nWeight, BYTE 
 	}
 
 	byItalic = StringToInt(vValues[3].c_str(), 0);
-	nUnderLine = StringToInt(vValues[4].c_str(), 0);
+	// int nUnderLine = StringToInt(vValues[4].c_str(), 0);
 	strFaceNameOthers = vValues[5];
 
 	return true;

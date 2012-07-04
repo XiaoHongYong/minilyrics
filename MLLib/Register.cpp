@@ -51,6 +51,9 @@ int CharToNumber(char ch);
 
 BYTE AvgValue(const char *szString, int nLen)
 {
+	if (nLen == 0)
+		return 0;
+
 	int		nValue = 0;
 
 	for (int i = 0; i < nLen; i++)
@@ -181,8 +184,7 @@ bool VerifyRegCode1(const char *szName, const char *szRegCode)
 	char		szVersion[10];
 	int			i;
 	bool		bRet = TRUE;;
-	BYTE		byVersion;
-	BYTE		byVerRand;
+	//BYTE		byVerRand;
 
 	if (strlen(szName) < 3)
 		return FALSE;
@@ -197,12 +199,12 @@ bool VerifyRegCode1(const char *szName, const char *szRegCode)
 	szVersion[2] = '\0';
 
 	// ¼ÆËã°æ±¾ºÅ: 0 - 1
-	if (szCodeTemp[15] >= 'A')
-		byVerRand = szCodeTemp[15] - 'A' + 10;
-	else
-		byVerRand = szCodeTemp[15] - '0';
+	//if (szCodeTemp[15] >= 'A')
+	//	byVerRand = szCodeTemp[15] - 'A' + 10;
+	//else
+	//	byVerRand = szCodeTemp[15] - '0';
 
-	byVersion = (BYTE)String2HexUINT(szVersion) - byVerRand - (AvgValue(szNameNew, strlen(szNameNew)) + szNameNew[0]) % (0x7F - ('Z' - 'A' + '9' - '0' + 2));
+	// byte byVersion = (BYTE)String2HexUINT(szVersion) - byVerRand - (AvgValue(szNameNew, strlen(szNameNew)) + szNameNew[0]) % (0x7F - ('Z' - 'A' + '9' - '0' + 2));
 
 	//static BOOL VerifyDate(const char *szRegCode)
 	{
@@ -275,6 +277,9 @@ int CharToNumber(char ch)
 
 BYTE AvgValue(const char *szString, size_t nLen)
 {
+	if (nLen == 0)
+		return 0;
+	
 	int		nValue = 0;
 
 	for (UINT i = 0; i < nLen; i++)

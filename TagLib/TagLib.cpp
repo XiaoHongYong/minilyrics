@@ -124,7 +124,7 @@ int CTagLib::GetTagFast(LPCTSTR szFile, tstring *pArtist, tstring *pTitle, tstri
 			if (!pYear) pYear = &temp;
 			if (!pGenre) pGenre = &temp;
 
-			nRet = id3v2.GetTags(*pArtist, *pTitle, *pAlbum, temp, *pTrackNo, *pYear, *pGenre);
+			id3v2.GetTags(*pArtist, *pTitle, *pAlbum, temp, *pTrackNo, *pYear, *pGenre);
 		}
 
 		CID3v1		id3v1;

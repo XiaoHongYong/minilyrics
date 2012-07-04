@@ -155,7 +155,7 @@ int CMLClientSession::Connect()
 		return nRet;
 
 	m_NetFile.Attach(m_ClientCom.GetSocket());
-	nRet = m_NetFile.SetTimeOut(20 * 1000);
+	m_NetFile.SetTimeOut(20 * 1000);
 
 /*	nRet = m_MsgProtocol.Init(&m_NetFile);
 	if (nRet != ERR_OK)

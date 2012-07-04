@@ -34,6 +34,9 @@ static int CharToNumber(char ch)
 
 static BYTE AvgValue(const char *szString, size_t nLen)
 {
+	if (nLen == 0)
+		return 0;
+
 	int		nValue = 0;
 
 	for (UINT i = 0; i < nLen; i++)

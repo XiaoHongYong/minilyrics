@@ -820,7 +820,7 @@ void CSkinListCtrl::GetRowColAtPoint(POINT pt, int &row, int &col, POINT *ptAtIt
 			row = n;
 	}
 
-	if (bItemClickable && col != -1 && row != -1
+	if (bItemClickable && col != -1 && row != -1 && ptAtItemCell != NULL
 		&& m_vHeading[col]->bClickable)
 	{
 		LC_ITEM		*item = m_vRows[row]->GetSubItem(col);

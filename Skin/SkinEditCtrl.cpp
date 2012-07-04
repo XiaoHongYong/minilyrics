@@ -2207,25 +2207,18 @@ void CSkinEditCtrl::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 
 void CSkinEditCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 {
-	bool ctrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
 	bool shift = IsModifierKeyPressed(MK_SHIFT, nFlags);
 #ifdef _MAC_OSX
-	ctrl = IsModifierKeyPressed(1 << 20, nFlags);// NSCommandKeyMask = 1 << 20;
+	bool ctrl = IsModifierKeyPressed(1 << 20, nFlags);// NSCommandKeyMask = 1 << 20;
+#else
+	bool ctrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
 #endif
 
 	bool			bSelKey = false;
-	int				nBegSelRow, nBegSelCol;
+	int				nBegSelRow = m_nCaretRow, nBegSelCol = m_nCaretCol;
 	CAutoUpdate		updater(this);
 	int				nCaretMaxXLatestOrg = m_nCaretMaxXLatest;
 	bool			bRecoverCaretMaxXLatestOrg = false;
-
-
-	if (shift && !IsSelected())
-	{
-		// Select text from the current caret.
-		nBegSelRow = m_nCaretRow;
-		nBegSelCol = m_nCaretCol;
-	}
 
 	switch (nChar)
 	{

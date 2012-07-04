@@ -294,7 +294,6 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 
 	CBinXmlBinDataTable		binDataTable;
 	CBinXmlStrTable	strTable;
-	bool bStrTable = false, bBinTable = false;
 
 	while (data + LEN_BLOCK_HEADER + sizeof(uint32) < dataEnd)
 	{
@@ -317,7 +316,6 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 				return E_INVALID_STR_TABLE;
 
 			data += lenBlock;
-			bStrTable = true;
 		}
 		else if (StrBeginWith(blockName, BX_BLOCK_BIN))
 		{
@@ -328,7 +326,6 @@ CMLBinXMLParser::MLBinXmlParseError CMLBinXMLParser::ParseData(LPCVOID lpXmlData
 				return E_INVALID_BIN_TABLE;
 
 			data += lenBlock;
-			bBinTable = true;
 		}
 		else if (StrBeginWith(blockName, BX_BLOCK_CONTENT))
 		{

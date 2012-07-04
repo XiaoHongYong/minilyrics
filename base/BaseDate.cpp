@@ -218,7 +218,7 @@ bool CBaseDate::FromString(LPCTSTR szDate)
 	szDate++;
 
 	// second
-	szDate = ReadInt_t(szDate, second);
+	ReadInt_t(szDate, second);
 
 	ms = 0;
 	return true;

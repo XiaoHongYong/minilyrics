@@ -549,7 +549,7 @@ void CDlgMediaInfo::ReloadMediaInfo()
 				m_strLyrics = lyrics.m_strLyrics.c_str();
 
 			// id3v2 pictures
-			nRet = id3v2.GetPictures(m_pictures);
+			id3v2.GetPictures(m_pictures);
 		}
 	}
 }
