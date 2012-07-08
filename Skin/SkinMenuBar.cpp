@@ -162,6 +162,13 @@ void CMenuBarMsgHandler::ProcessHookMessage(UINT message, WPARAM wParam, LPARAM 
 	}
 }
 
+#else
+
+bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, CMLMenu *pMenu, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
+{
+	pMenu->TrackPopupSubMenu(x, y, nSubMenu, pWnd, NULL);
+}
+
 #endif // _WIN32
 
 //////////////////////////////////////////////////////////////////////////
@@ -608,7 +615,6 @@ void CSkinMenuBar::TrackPopupMenu()
 	}
 
 	m_bLBtDown = false;
-#ifdef _WIN32
+
 	m_wndMsgReceiver.TrackPopupSubMenu(pt.x, pt.y, m_pMenu, m_nSelSubMenu, m_pSkin, &rc);
-#endif
 }

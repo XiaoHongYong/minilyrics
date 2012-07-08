@@ -678,6 +678,8 @@ void CLyricShowTextEditObj::ReDraw(CRawGraph *pGraph)
 
 		y += GetLineDy();
 	}
+	
+	m_caret.Draw(pGraph);
 }
 
 void CLyricShowTextEditObj::DrawLineGradual(CRawGraph *pGraph, COneLine *pLine, int x, int xMax, int y)

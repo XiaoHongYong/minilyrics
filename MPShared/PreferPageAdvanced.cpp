@@ -845,7 +845,6 @@ void CPagePfAdvanced::OnInitialUpdate()
 		m_vPreferItems.push_back(new CPfItemTrayIconPlayerCtrl(g_SysTrayIconCmd[i].szCmd, i));
 	}
 	m_vPreferItems.push_back(new CPfItemSystemTrayIcon());
-#endif
 
 	m_vPreferItems.push_back(new CPfItemBoolEnableGlobalHotkey());
 
@@ -869,6 +868,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 				pSect->vHotkeys[k]));
 		}
 	}
+#endif
 
 	ListAllItems();
 

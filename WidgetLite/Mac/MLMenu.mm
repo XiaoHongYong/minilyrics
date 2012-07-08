@@ -113,7 +113,7 @@ void CMLMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT
 	if (item == nil || [item hasSubmenu] != YES)
 		return;
 
-	[m_info->menu popUpMenuPositioningItem: [[item submenu] itemAtIndex:0]
+	[[item submenu] popUpMenuPositioningItem: [[item submenu] itemAtIndex:0]
 								atLocation: pt
 									inView: nil];
 }

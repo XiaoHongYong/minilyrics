@@ -79,7 +79,10 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 		NSURL* appSupportDir = nil;
 		NSArray *urls = [fileManager URLsForDirectory:NSApplicationSupportDirectory inDomains:NSUserDomainMask];
 		if ([urls count] > 0) {
-			appSupportDir = [[urls objectAtIndex:0] URLByAppendingPathComponent:@"com.crintsoft.ZikiPlayer"];
+			tstring componentName = tstring("com.crintsoft.");
+			if (!IsEmptyString(szDefAppName))
+				componentName += szDefAppName;
+			appSupportDir = [[urls objectAtIndex:0] URLByAppendingPathComponent:[NSString stringWithUTF8String:componentName.c_str()]];
 			_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), [[appSupportDir path] UTF8String]);
 			if ([fileManager fileExistsAtPath:[appSupportDir path]] != YES) {
 				[fileManager createDirectoryAtURL:appSupportDir

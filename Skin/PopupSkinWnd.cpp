@@ -18,7 +18,7 @@ int CPopupSkinWnd::Create(CSkinFactory *pSkinFactory, LPCTSTR szSkinWndName,
 	m_rcReal = rc;
 
 	SkinWndStartupInfo skinWndStartupInfo(_T("ZPMenu"), _T("menu"), szSkinWndName, pWndParent);
-	int nRet = CSkinWnd::Create(skinWndStartupInfo, pSkinFactory, true, false);
+	int nRet = CSkinWnd::Create(skinWndStartupInfo, pSkinFactory, true, true);
 	if (nRet != ERR_OK)
 		return nRet;
 

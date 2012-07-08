@@ -73,6 +73,7 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 void CBaseWnd::SetHasShadow(bool hasShadow)
 {
 	[m_info->window setHasShadow:hasShadow ? YES : NO];
+	[m_info->window invalidateShadow];
 }
 
 bool CBaseWnd::Destroy()
@@ -502,8 +503,8 @@ int CBaseWnd::MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption)
 		alterBt = [NSString stringWithUTF8String:_TLT("Cancel")];
 	} else if (btType == MB_YESNOCANCEL) {
 		defBt = [NSString stringWithUTF8String:_TLT("Yes")];
-		alterBt = [NSString stringWithUTF8String:_TLT("NO")];
-		otherBt = [NSString stringWithUTF8String:_TLT("Cancel")];
+		alterBt = [NSString stringWithUTF8String:_TLT("Cancel")];
+		otherBt = [NSString stringWithUTF8String:_TLT("NO")];
 	} else if (btType == MB_YESNO) {
 		defBt = [NSString stringWithUTF8String:_TLT("Yes")];
 		alterBt = [NSString stringWithUTF8String:_TLT("NO")];
@@ -517,19 +518,19 @@ int CBaseWnd::MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption)
 	
 	int nRet = [alert runModal];
 	if (btType == MB_OKCANCEL) {
-		if (nRet == 1)
+		if (nRet == NSAlertDefaultReturn)
 			return IDOK;
 		else
 			return IDCANCEL;
 	} else if (btType == MB_YESNOCANCEL) {
-		if (nRet == 1)
+		if (nRet == NSAlertDefaultReturn)
 			return IDYES;
-		else if (nRet == 0)
+		else if (nRet == NSAlertOtherReturn)
 			return IDNO;
 		else
 			return IDCANCEL;
 	} else if (btType == MB_YESNO) {
-		if (nRet == 1)
+		if (nRet == NSAlertDefaultReturn)
 			return IDYES;
 		else
 			return IDNO;

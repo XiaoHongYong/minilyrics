@@ -113,13 +113,22 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 
 	mBaseWnd->OnKeyDown(code, modifierFlags);
 	
+	bool bCaptionDown = IsFlagSet(modifierFlags, NSAlphaShiftKeyMask);
+	modifierFlags &= ~NSAlphaShiftKeyMask;
 	if (modifierFlags != 0 && modifierFlags != NSShiftKeyMask)
 		return;
 
 	@try {
 		NSString *s = [theEvent charactersIgnoringModifiers];
 		for (int i = 0; i < [s length]; i++) {
-			mBaseWnd->OnChar([s characterAtIndex:i]);
+			unichar c = [s characterAtIndex:i];
+			if (bCaptionDown) {
+				if ('a' <= c && c <= 'z')
+					c = CharUpr(c);
+				else if ('A' <= c && c <= 'Z')
+					c = CharLwr(c);
+			}
+			mBaseWnd->OnChar(c);
 		}
 	}
 	@catch (NSException *exception) {

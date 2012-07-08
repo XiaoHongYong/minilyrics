@@ -14,7 +14,7 @@ int SaveLyrDialogBox(CBaseWnd *pWnd)
 		strMessage += _T("\r\n\r\n");
 		strMessage += _TLT("Do you want to save the changes?");
 
-		int nRet = pWnd->MessageOut(strMessage.c_str(), MB_OKCANCEL, SZ_APP_NAME);
+		int nRet = pWnd->MessageOut(strMessage.c_str(), MB_YESNOCANCEL, SZ_APP_NAME);
 		
 		bInModal = FALSE;
 		return nRet;

@@ -187,6 +187,9 @@
 /* Begin PBXProject section */
 		5F9CDF4A147BD92400432DAC /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
 			buildConfigurationList = 5F9CDF4D147BD92400432DAC /* Build configuration list for PBXProject "GfxRawMac" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
