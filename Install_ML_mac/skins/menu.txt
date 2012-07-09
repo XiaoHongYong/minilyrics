@@ -1,0 +1,396 @@
+menufile_v1
+
+menu:178
+item:40188:Rate These Lyrics\: 1 (Low):
+item:40189:Rate These Lyrics\: 2:
+item:40190:Rate These Lyrics\: 3:
+item:40191:Rate These Lyrics\: 4:
+item:40192:Rate These Lyrics\: 5 (High):
+end
+
+menu:131
+item:40126:&Undo:Ctrl+Z
+item:40127:&Redo:Ctrl+Y
+separator
+item:40128:Cu&t:Ctrl+X
+item:40125:&Copy:Ctrl+C
+item:40129:&Paste:Ctrl+V
+item:40130:&Delete:Del
+end
+
+menu:184
+item:40110:&Search Lyrics...:D
+popup:&Lyrics
+popup:Ra&te These Lyrics
+item:40192:5 (High):
+item:40191:4:
+item:40190:3:
+item:40189:2:
+item:40188:1 (Low):
+end
+separator
+item:40019:&Save Lyrics:Ctrl+S
+item:40020:Save Lyrics &As...:
+separator
+popup:&Character Encoding
+item:40024:&Default:
+separator
+item:40025:Arabic:
+separator
+item:40026:Baltic:
+separator
+item:40027:Cyrillic:
+separator
+item:40028:Central European:
+separator
+item:40029:Western European:
+separator
+item:40030:Greek:
+separator
+item:40031:Hebrew:
+separator
+item:40032:&Japanese:
+separator
+item:40033:&Korean:
+separator
+item:40036:Latin 9 (ISO):
+separator
+item:40034:&Simplified Chinese (GB):
+item:40037:&Traditional Chinese (Big5):
+separator
+item:40035:Thai:
+separator
+item:40039:Turkish:
+separator
+item:40041:&Unicode:
+item:40043:Utf-&8:
+separator
+item:40045:Vietnamese:
+end
+end
+separator
+item:40122:Dis&play Options...:
+separator
+item:40118:&Automatic:
+item:40119:Norma&l:
+item:40120:&Fade in Lyrics:
+item:40121:Fade out to Back&ground:
+separator
+item:40001:Always on &Top:Ctrl+T
+separator
+item:40004:A&bout $Product$...:
+separator
+item:8:&Close:
+end
+
+menu:183
+item:40110:&Search Lyrics...:D
+popup:&Lyrics
+popup:Ra&te These Lyrics
+item:40192:5 (High):
+item:40191:4:
+item:40190:3:
+item:40189:2:
+item:40188:1 (Low):
+end
+separator
+item:40019:&Save Lyrics:Ctrl+S
+item:40020:Save Lyrics &As...:
+separator
+item:40059:&Upload Lyrics...:
+item:40096:Sign in Via &Web Browser...:
+item:1000:&Sign up Free...:
+separator
+popup:&Character Encoding
+item:40024:&Default:
+separator
+item:40025:Arabic:
+separator
+item:40026:Baltic:
+separator
+item:40027:Cyrillic:
+separator
+item:40028:Central European:
+separator
+item:40029:Western European:
+separator
+item:40030:Greek:
+separator
+item:40031:Hebrew:
+separator
+item:40032:&Japanese:
+separator
+item:40033:&Korean:
+separator
+item:40036:Latin 9 (ISO):
+separator
+item:40034:&Simplified Chinese (GB):
+item:40037:&Traditional Chinese (Big5):
+separator
+item:40035:Thai:
+separator
+item:40039:Turkish:
+separator
+item:40041:&Unicode:
+item:40043:Utf-&8:
+separator
+item:40045:Vietnamese:
+end
+end
+separator
+popup:S&kins
+item:40021:Winamp's skin:
+separator
+item:40146:INSERT_SKIN_POS:
+end
+popup:Display &Options
+item:40122:Dis&play Options...:
+separator
+item:40111:&Vertical Scrolling Style:
+item:40113:&Double Line Style:
+item:40115:Single &Line Style:
+item:40114:&Horizontal Scrolling style:
+item:40112:S&tatic Text Style:
+item:40116:Movie S&ubtitle Style:
+separator
+item:40117:&Karaoke:
+separator
+item:40118:&Automatic:
+item:40119:Norma&l:
+item:40120:&Fade in Lyrics:
+item:40121:Fade out to Back&ground:
+end
+item:40005:&Preferences...:Ctrl+P
+separator
+item:40172:Lyrics &Editor...:
+item:40147:INSERT_NEW_MENU_POS:
+separator
+popup:&Help and Support
+item:40004:A&bout $Product$...:
+item:40023:$Product$ &Help:
+separator
+item:1013:&Activate $Product$...:
+separator
+item:40066:$Product$ &Website:
+item:40067:&Report to Author:
+end
+separator
+item:40001:Always on &Top:Ctrl+T
+separator
+item:40003:E&xit:
+end
+
+menu:147
+item:1010:&Browse File...:
+item:1024:&No Suitable Lyrics for the Song File:
+separator
+item:1011:&Delete File:
+item:1012:&Rename File:
+separator
+item:1009:Don't &Pop up This Window Automatically:
+end
+
+menu:148
+item:40124:Browse Album Art...:
+end
+
+menu:156
+popup:&File
+popup:&Upload Lyrics
+item:40059:&Upload Lyrics...:
+item:40096:Sign in Via &Web Browser...:
+item:1000:&Sign up Free...:
+end
+separator
+item:40197:&New Lyrics:
+item:40110:Open &Lyrics...:Ctrl+L
+separator
+item:40019:&Save Lyrics:Ctrl+S
+item:40020:Save Lyrics &As...:
+separator
+popup:&Character Encoding
+item:40024:&Default:
+separator
+item:40025:Arabic:
+separator
+item:40026:Baltic:
+separator
+item:40027:Cyrillic:
+separator
+item:40028:Central European:
+separator
+item:40029:Western European:
+separator
+item:40030:Greek:
+separator
+item:40031:Hebrew:
+separator
+item:40032:&Japanese:
+separator
+item:40033:&Korean:
+separator
+item:40036:Latin 9 (ISO):
+separator
+item:40034:&Simplified Chinese (GB):
+item:40037:&Traditional Chinese (Big5):
+separator
+item:40035:Thai:
+separator
+item:40039:Turkish:
+separator
+item:40041:&Unicode:
+item:40043:Utf-&8:
+separator
+item:40045:Vietnamese:
+end
+separator
+item:8:&Close:
+end
+popup:&Play
+item:40057:&Play/Pause:
+item:40002:&Stop:
+separator
+item:40056:Pr&evious:
+item:40058:&Next:
+separator
+item:40141:&Backward 2 Seconds:Ctrl+Page up
+item:40142:&Forward 2 Seconds:Ctrl+Page down
+item:40145:Jump to current line:Ctrl+J
+end
+popup:&Edit
+item:40126:&Undo:Ctrl+Z
+item:40127:&Redo:Ctrl+Y
+separator
+item:40128:Cu&t:Ctrl+X
+item:40125:&Copy:Ctrl+C
+item:40129:&Paste:Ctrl+V
+item:40130:&Delete:Del
+separator
+item:40135:&Find...:Ctrl+F
+item:40136:&Replace...:Ctrl+H
+end
+popup:&Lyrics
+item:40144:Synchronize the current line and move to next line:F7
+item:40143:Synchronize the current line:Ctrl+F7
+separator
+item:40109:Auto fill artist, album and title info:
+separator
+item:40104:Forward the timestamp of this line 0.2s:Ctrl+'+'
+item:40105:Backward the timestamp of this line 0.2s:Ctrl+'-'
+separator
+item:40106:Forward the remaining lyrics 0.2s:
+item:40107:Backward the remaining lyrics 0.2s:
+separator
+item:40102:Trim Leading and Trailing Whitespace of All Lines:
+item:40100:Remove All Timestamps:
+item:40101:Remove All Blank Lines:
+item:40103:Remove All Unsynchronized Lines:
+separator
+item:40108:Capitalize the Leading Letter of All Lines:
+item:40123:Convert All Lyrics Characters to Lower Case:
+end
+popup:&Options
+item:40184:&Lyrics Color...:
+item:40185:&Highlight Lyrics Color...:
+item:40148:&Tag Color...:
+item:40149:&Background Color of Edited Line...:
+item:40186:Back&ground Color...:
+separator
+item:40199:Edit Lyrics &Tag:
+end
+popup:&Help
+item:40004:A&bout $Product$...:
+item:40023:$Product$ &Help:
+separator
+item:40066:$Product$ &Website:
+item:40067:&Report to Author:
+end
+end
+
+menu:165
+popup:&Lyrics
+item:40110:&Search Lyrics...:D
+separator
+popup:Ra&te These Lyrics
+item:40192:5 (High):
+item:40191:4:
+item:40190:3:
+item:40189:2:
+item:40188:1 (Low):
+end
+popup:&Upload Lyrics
+item:40059:&Upload Lyrics...:
+item:40096:Sign in Via &Web Browser...:
+item:1000:&Sign up Free...:
+end
+separator
+item:40019:&Save Lyrics:Ctrl+S
+item:40020:Save Lyrics &As...:
+separator
+popup:&Character Encoding
+item:40024:&Default:
+separator
+item:40025:Arabic:
+separator
+item:40026:Baltic:
+separator
+item:40027:Cyrillic:
+separator
+item:40028:Central European:
+separator
+item:40029:Western European:
+separator
+item:40030:Greek:
+separator
+item:40031:Hebrew:
+separator
+item:40032:&Japanese:
+separator
+item:40033:&Korean:
+separator
+item:40036:Latin 9 (ISO):
+separator
+item:40034:&Simplified Chinese (GB):
+item:40037:&Traditional Chinese (Big5):
+separator
+item:40035:Thai:
+separator
+item:40039:Turkish:
+separator
+item:40041:&Unicode:
+item:40043:Utf-&8:
+separator
+item:40045:Vietnamese:
+end
+end
+popup:&View
+item:40172:Lyrics &Editor...:
+item:40005:&Preferences...:Ctrl+P
+item:40147:INSERT_NEW_MENU_POS:
+separator
+item:40111:&Vertical Scrolling Style:
+item:40112:S&tatic Text Style:
+separator
+item:40001:Always on &Top:Ctrl+T
+end
+popup:S&kins
+item:40021:Winamp's skin:
+separator
+item:40146:INSERT_SKIN_POS:
+end
+popup:&Help
+item:40004:A&bout $Product$...:
+item:40023:$Product$ &Help:
+separator
+item:1013:&Activate $Product$...:
+separator
+item:40066:$Product$ &Website:
+end
+end
+
+menu:175
+item:40173:&Clear Lyrics Scrolling Actions:
+item:40172:Lyrics &Editor...:
+item:40175:&Help:
+end
+
