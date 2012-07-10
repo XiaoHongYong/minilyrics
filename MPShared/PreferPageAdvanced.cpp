@@ -327,7 +327,14 @@ public:
 
 		GetNotepadEditor(strEditor);
 
-		CFileOpenDlg	dlg(_TLT("Browse external lyrics editor program"), strEditor.c_str(), _T("Executable file(*.exe)\0*.exe\0\0"), 1);
+		LPCTSTR szExt = _T("");
+#ifdef _WIN32
+		szExt = _T("Executable file(*.exe)\0*.exe\0\0");
+#endif
+#ifdef _MAC_OSX
+		szExt = _T("Executable file(*.app)\0*.app\0\0");
+#endif
+		CFileOpenDlg	dlg(_TLT("Browse external lyrics editor program"), strEditor.c_str(), szExt, 1);
 
 		if (dlg.DoModal(m_pWndParent) == IDOK)
 		{

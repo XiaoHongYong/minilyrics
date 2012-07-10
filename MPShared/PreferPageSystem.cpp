@@ -18,6 +18,9 @@ public:
 	{
 		CPagePfBase::OnInitialUpdate();
 
+		AddOptBool(ET_NULL, SZ_SECT_UI, _T("CheckNewVer"), true, _T("CID_C_CHECK_NEW_VERSION"));
+		
+		InitCheckButtons();
 		//
 		// HTTP ¥˙¿Ì…Ë÷√
 		//

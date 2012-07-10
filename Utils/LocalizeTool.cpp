@@ -509,7 +509,7 @@ bool CLanguageTool::ListTransFiles(LPCTSTR szDir, V_TRANSFILEINFO &vTransFiles)
 	vTransFiles.push_back(item);
 
 	strFilter = _T("*.ini");
-	strEngTransFileName = _T("eng.ini");
+	strEngTransFileName = _T("English.ini");
 
 	if (!find.OpenDir(strLangDir.c_str(), strFilter.c_str()))
 		return false;

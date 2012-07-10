@@ -124,16 +124,16 @@ BOOL CBaseWnd::ShowWindow(int nCmdShow)
 	
 	switch (nCmdShow) {
 	case SW_HIDE:
-		[m_info->window orderOut:NSApp];
+		[m_info->window miniaturize:m_info->window];
 		break;
 	case SW_MAXIMIZE:
-		[m_info->window performZoom:NSApp];
+		[m_info->window zoom:m_info->window];
 		break;
 	case SW_SHOW:
 		[m_info->window orderFront:NSApp];
 		break;
 	case SW_MINIMIZE:
-		[m_info->window performMiniaturize:NSApp];
+		[m_info->window miniaturize:m_info->window];
 		break;
 	case SW_RESTORE:
 		if (IsZoomed())
@@ -142,10 +142,10 @@ BOOL CBaseWnd::ShowWindow(int nCmdShow)
 			ShowWindow(SW_MINIMIZE);
 		break;
 	case SW_SHOWMINIMIZED:
-			[m_info->window performMiniaturize:NSApp];
+		[m_info->window miniaturize:m_info->window];
 		break;
 	case SW_SHOWMAXIMIZED:
-			[m_info->window performZoom:NSApp];
+		[m_info->window zoom:m_info->window];
 		break;
 	}
 

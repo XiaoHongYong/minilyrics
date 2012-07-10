@@ -2,16 +2,6 @@
 <skin defmainwnd="minilyrics" mainwnds="minilyrics"
       Script="minilyrics.java">
   <include Name="Styles.xml"/>
-  <Menus>
-    <Menu Name="MainWndMenu" From="MainWndMenu" >
-      <Item Action="InsertByID" Type="item" Position="ID_CLICK_THROUGH"
-            Name="Hide Background on Lost Focus" IDCmd="ID_HIDE_WND_FRAME"
-            CanCheck="true" IsCheckedCmd="dyncmd_is_frame_hide" />
-      <Item Action="InsertByID" Type="item" Position="ID_CLICK_THROUGH"
-            Name="Display Background on Mouse Hover" IDCmd="ID_MOUSE_HOVER_SHOW_WND"
-            CanCheck="true" IsCheckedCmd="dyncmd_is_mouse_hover_show_frame" />
-    </Menu>
-  </Menus>
   <DynCmds>
     <cmd ID="dyncmd_is_frame_hide" func="get_profile_bool" param="HideFrameOnLostFocus,1"/>
     <cmd ID="dyncmd_is_mouse_hover_show_frame" func="get_profile_bool" param="ShowFrameOnMouseHover,1"/>
@@ -28,7 +18,7 @@
               CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
 
 	<Frame Rect="0,0,w,h" Image="frame-focus.png" ImageRect="0,0,95,95" ImageFocus="frame-focus.png" ImageFocusRect="0,0,95,95" 
-		RoundWidthTop="23" RoundWidthBottom="5" ThickWidth="4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+		RoundWidthTop="23" RoundWidthBottom="7" ThickWidth="4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
 
     <DecorativeContainer Name="Caption bar" Rect="0,0,w,23" TranslucencyWithSkin="TRUE">
       <CaptionImage Rect="0,0,w,23" Name="Caption Bg" Image="frame.png" ImageRect="0,0,95,23"
@@ -59,8 +49,6 @@
         </Container>
         <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" UseParentBg="TRUE" Visible="false"/>
       </ToggleCtrlContainer>
-      <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
-      <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
 
       <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,24" TranslucencyWithSkin="TRUE">
         <Image Name="Top-ctrl-bg" Rect="0,0,w,24" Image="top-ctrl-bg.png" BltMode="tile" />

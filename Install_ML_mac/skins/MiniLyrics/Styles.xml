@@ -7,13 +7,13 @@
 			 FontName="Verdana" FontHeight="14" TextColor="#000000" IsDialog="true">
 
 			<Frame Rect="0,0,w,h" Image="frame.png" ImageRect="0,0,95,95"
-				RoundWidthTop="23" RoundWidthBottom="5" ThickWidth="4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+				RoundWidthTop="23" RoundWidthBottom="7" ThickWidth="4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
 
 			<DecorativeContainer Name="Caption bar" Rect="0,0,w,23" TranslucencyWithSkin="TRUE">
 				<CaptionImage Rect="0,0,w,23" Name="Caption Bg" Image="frame.png" ImageRect="0,0,95,23"
 					ImageFocus="frame-focus.png" ImageFocusRect="0,0,95,23" CutPos="20,50,50,80" BlendPixMode="copy"/>
 
-				<Text ID="ID_CAPTION" Rect="70,3,w-140,17" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="false" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
+				<Text ID="ID_CAPTION" Rect="70,3,w-140,17" CaptionText="true" FontName="Verdana" FontHeight="14" FontBold="false" TextColor="#333333" TextOutlinedColor="#000000" TextOutlined="false" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
 
 				<Toolbar ID="CID_TB_SYSBT" Rect="9,5,54,14" TranslucencyWithSkin="TRUE" UseParentBg="true"
 					   Image="caption_btn.png" enablehover="TRUE" units_x="14"
@@ -31,7 +31,7 @@
 			FontName="Verdana" FontHeight="14" TextColor="#000000" IsDialog="true" >
 
 			<Frame Rect="0,0,w,h" Image="frame.png" ImageRect="0,0,95,95"
-				RoundWidthTop="23" RoundWidthBottom="5" ThickWidth="4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+				RoundWidthTop="23" RoundWidthBottom="7" ThickWidth="4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
 
 			<DecorativeContainer Name="Caption bar" Rect="0,0,w,23" TranslucencyWithSkin="TRUE">
 				<CaptionImage Rect="0,0,w,23" Name="Caption Bg" Image="frame.png" ImageRect="0,0,95,23"
