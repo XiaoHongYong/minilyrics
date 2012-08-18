@@ -246,6 +246,9 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 	if (!bUseSpecifiedEncoding)
 		encoding = GetLyricsTextEncoding(szLrc, nLen);
 
+	// Save original position after removed encoding.
+	LPBYTE szLrcOrg = szLrc;
+
 	//
 	// Convert lyrics to the current encoding
 	//
@@ -286,6 +289,17 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 			nLen = strSysEncoding.size();
 		}
 #endif
+	}
+
+	if (szLrc == szLrcOrg)
+	{
+		// Need to append extra '\0' at the end of string, to make sure
+		// the ending of string is OK.
+		strSysEncoding.clear();
+		strSysEncoding.append((LPCTSTR)szLrcOrg, nLen);
+		strSysEncoding.append((TCHAR)'\0');
+		strSysEncoding.append((TCHAR)'\0');
+		szLrc = (LPBYTE)strSysEncoding.c_str();
 	}
 
 	// Parse lyrics with current encoding.
