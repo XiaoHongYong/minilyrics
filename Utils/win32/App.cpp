@@ -27,17 +27,17 @@ void SetWorkingFolder(LPCTSTR szWorkingFolder)
 	DirStringFormat(g_szWorkingFolder);
 }
 
-void GetWorkingFolder(LPTSTR szWorkingFolder)
+void GetAppResourceDir(LPTSTR szWorkingFolder)
 {
 	if (IsEmptyString(g_szWorkingFolder))
 	{
-		GetWorkingFolder();
+		GetAppResourceDir();
 	}
 
 	_tcscpy_safe(szWorkingFolder, MAX_PATH, g_szWorkingFolder);
 }
 
-LPCTSTR GetWorkingFolder()
+LPCTSTR GetAppResourceDir()
 {
 	if (IsEmptyString(g_szWorkingFolder))
 	{
@@ -51,10 +51,90 @@ LPCTSTR GetWorkingFolder()
 	return g_szWorkingFolder;
 }
 
+LPCTSTR GetAppDataDir()
+{
+	static TCHAR			g_szAppDataDir[MAX_PATH] = _T("");
+	
+	if (IsEmptyString(g_szAppDataDir))
+	{
+		OSVERSIONINFO	osvi;
+		bool			bInUserDir = false;
+		
+		osvi.dwOSVersionInfoSize = sizeof(osvi);
+		if (GetVersionEx(&osvi))
+		{
+			if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5)
+				bInUserDir = true;
+		}
+		if (bInUserDir)
+		{
+			tstring		strFile;
+			
+			//
+			// PerUserSettings?
+			//
+			strFile = GetAppResourceDir();
+			strFile += _T("install.ini");
+			if (IsFileExist(strFile.c_str()))
+			{
+				CProfile	file;
+				file.Init(strFile.c_str(), _T("install"));
+				bInUserDir = file.GetProfileBool(_T("PerUserSettings"), true);
+				if (!bInUserDir)
+				{
+					// To verify that it is writable.
+					if (!CanWriteInDir(GetAppResourceDir()))
+						bInUserDir = true;
+				}
+			}
+		}
+		
+		if (!bInUserDir)
+		{
+			GetAppResourceDir(g_szAppDataDir);
+		}
+		else
+		{
+			if (SUCCEEDED(SHGetSpecialFolderPath(NULL, g_szAppDataDir, CSIDL_APPDATA, FALSE)))
+			{
+				DirStringFormat(g_szAppDataDir);
+				_tcscat_safe(g_szAppDataDir, CountOf(g_szAppDataDir), SZ_APP_NAME _T(SZ_DIR_SLASH));
+				if (!IsDirExist(g_szAppDataDir))
+				{
+					CreateDirectory(g_szAppDataDir, NULL);
+					
+					LPCTSTR		szToMoveFiles[] = { _T("MiniLyric.ini"), _T("MLLyrics.S2L"), _T("FontColorCustom.the"),
+						_T("dbSearchCache.db"), _T("dbLyrUpload.db") };
+					tstring		strMLIniOld, strMLIniNew;
+					
+					for (int i = 0; i < CountOf(szToMoveFiles); i++)
+					{
+						strMLIniOld = GetAppResourceDir();
+						strMLIniOld += szToMoveFiles[i];
+						strMLIniNew = g_szAppDataDir;
+						strMLIniNew += szToMoveFiles[i];
+						if (IsFileExist(strMLIniOld.c_str()))
+							MoveFile(strMLIniOld.c_str(), strMLIniNew.c_str());
+					}
+				}
+			}
+			else
+				GetAppResourceDir(g_szAppDataDir);
+		}
+	}
+	
+	return g_szAppDataDir;
+}
+
+void GetAppDataDir(TCHAR *szAppDir)
+{
+	_tcscpy_safe(szAppDir, MAX_PATH, GetAppDataDir());
+}
+
 #if defined (_DEBUG) && defined (_WIN32)
 tstring GetInstallShareDir()
 {
-	tstring strShareDir = GetWorkingFolder();
+	tstring strShareDir = GetAppResourceDir();
 
 	TCHAR		szFile[MAX_PATH];
 	if (GetModuleFileName(GetAppInstance(), szFile, CountOf(szFile)))

@@ -52,7 +52,7 @@ BOOL CDlgOpenSkin::OnInitDialog()
 
 	if (m_strSkinsRootDir.IsEmpty())
 	{
-		m_strSkinsRootDir = GetWorkingFolder();
+		m_strSkinsRootDir = GetAppResourceDir();
 		m_strSkinsRootDir += _T("skins\\");
 	}
 	g_skinFactory.SetSkinsRootDir(m_strSkinsRootDir);

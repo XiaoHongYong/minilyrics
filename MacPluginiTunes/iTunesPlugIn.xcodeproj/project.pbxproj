@@ -350,6 +350,7 @@
 				INFOPLIST_FILE = "iTunes_Visualizer-Info.plist";
 				INSTALL_PATH = "~/Library/iTunes/iTunes Plug-ins/";
 				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -378,6 +379,7 @@
 				INFOPLIST_FILE = "iTunes_Visualizer-Info.plist";
 				"INSTALL_PATH[sdk=*]" = "";
 				LIBRARY_SEARCH_PATHS = "";
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";

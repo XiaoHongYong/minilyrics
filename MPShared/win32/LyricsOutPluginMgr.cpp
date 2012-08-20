@@ -70,7 +70,7 @@ int CLyricsOutPluginMgr::Init()
 
 	m_dwNotifyFlag = 0;
 
-	strPluginDir = GetWorkingFolder();
+	strPluginDir = GetAppResourceDir();
 	strPluginDir += _T("Plugins\\");
 
 	DBGLOG0(_T("Begin to load lyrics output plugins."));

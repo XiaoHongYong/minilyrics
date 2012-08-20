@@ -109,7 +109,7 @@ MLRESULT CMPluginManager::DetectPlugins()
 	tstring			strPluginFolder, strPlugin;
 	CMLFileFind		finder;
 
-	strPluginFolder = GetWorkingFolder();
+	strPluginFolder = GetAppResourceDir();
 	strPluginFolder += _T("Plugins");
 	DirStringFormat(strPluginFolder);
 

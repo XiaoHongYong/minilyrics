@@ -1771,7 +1771,7 @@ protected:
 
 		for (int i = 0; i < (int)CountOf(vstrSongFile); i++)
 		{
-			tstring	strFile = GetWorkingFolder();
+			tstring	strFile = GetAppDataDir();
 			strFile += FileGetName(vstrSongFile[i].c_str());
 			CPPUNIT_ASSERT(CopyFile(vstrSongFile[i].c_str(), strFile.c_str(), false));
 		}
@@ -1789,7 +1789,7 @@ protected:
 
 		for (int i = 0; i < (int)CountOf(vstrSongFile); i++)
 		{
-			tstring	strFile = GetWorkingFolder();
+			tstring	strFile = GetAppDataDir();
 			strFile += FileGetName(vstrSongFile[i].c_str());
 			DeleteFile(strFile.c_str());
 		}
@@ -1801,7 +1801,7 @@ protected:
 
 		PrepareMediaFile();
 
-		tstring		strWorkingFolder = GetWorkingFolder();
+		tstring		strWorkingFolder = GetAppDataDir();
 
 		//
 		// Test on embedded USLT lyrics.
@@ -1881,7 +1881,7 @@ protected:
 
 		PrepareMediaFile();
 
-		tstring		strWorkingFolder = GetWorkingFolder();
+		tstring		strWorkingFolder = GetAppDataDir();
 
 		//
 		// Test on embedded SYLT lyrics.
@@ -1958,7 +1958,7 @@ protected:
 
 		PrepareMediaFile();
 
-		tstring		strWorkingFolder = GetWorkingFolder();
+		tstring		strWorkingFolder = GetAppDataDir();
 
 		tstring		vstrSongFileSylt[] = {
 			strWorkingFolder + _T("lyrics3v2.mp3"),

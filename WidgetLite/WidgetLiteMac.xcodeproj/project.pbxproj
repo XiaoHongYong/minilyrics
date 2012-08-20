@@ -250,7 +250,7 @@
 		5FB163201476A41B0084494F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0410;
+				LastUpgradeCheck = 0430;
 			};
 			buildConfigurationList = 5FB163231476A41B0084494F /* Build configuration list for PBXProject "WidgetLiteMac" */;
 			compatibilityVersion = "Xcode 3.2";

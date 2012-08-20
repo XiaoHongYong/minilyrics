@@ -1107,7 +1107,7 @@ protected:
 		msgRet.nLicensedUser = 2;
 		msgRet.strCodeStartDate = _T("2011-12-11");
 
-		tstring	strFile = GetWorkingFolder();
+		tstring	strFile = GetAppDataDir();
 		strFile += _T("unittest_save.txt");
 		string bufContent = ";alskge\1,.zsm,ng\n;ea<>>\n";
 		CPPUNIT_ASSERT(SaveDataAsFile(strFile.c_str(), bufContent.c_str(), bufContent.size()));

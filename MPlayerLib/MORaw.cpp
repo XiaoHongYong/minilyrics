@@ -47,7 +47,7 @@ MLRESULT CMORaw::Open(int nSampleRate, int nNumChannels, int nBitsPerSamp)
 
 // #ifndef _WIN32_WCE
 	TCHAR		szFile[MAX_PATH];
-	GetWorkingFolder(szFile);
+	GetAppResourceDir(szFile);
 	_tcscat_safe(szFile, CountOf(szFile), _T("mout.raw"));
 	m_fp = _tfopen(szFile, _T("wb"));
 	if (!m_fp)

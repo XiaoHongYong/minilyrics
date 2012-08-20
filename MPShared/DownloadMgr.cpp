@@ -268,7 +268,7 @@ void CDownloadMgr::CreateDefaultLyricsDir(tstring &strDefSavePath)
 {
 #ifdef _WIN32_DESKTOP
 	// Retrieve the root Dir.
-	strDefSavePath = GetWorkingFolder();
+	strDefSavePath = GetAppResourceDir();
 	strDefSavePath.resize(3);
 	if (!CanWriteInDir(strDefSavePath.c_str()))
 	{

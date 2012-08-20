@@ -25,17 +25,17 @@ void SetWorkingFolder(LPCTSTR szWorkingFolder)
 	DirStringFormat(g_szWorkingFolder);
 }
 
-void GetWorkingFolder(LPTSTR szWorkingFolder)
+void GetAppResourceDir(LPTSTR szWorkingFolder)
 {
 	if (IsEmptyString(g_szWorkingFolder))
 	{
-		GetWorkingFolder();
+		GetAppResourceDir();
 	}
 
 	_tcscpy(szWorkingFolder, g_szWorkingFolder);
 }
 
-LPCTSTR GetWorkingFolder()
+LPCTSTR GetAppResourceDir()
 {
 	return g_szWorkingFolder;
 }

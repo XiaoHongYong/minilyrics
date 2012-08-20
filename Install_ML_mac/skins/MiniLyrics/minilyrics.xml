@@ -37,7 +37,7 @@
       </Toolbar>
     </DecorativeContainer>
 
-    <DecorativeContainer Name="Body" Rect="1,23,w-5,h-23-5" UseParentBg="TRUE">
+    <DecorativeContainer Name="Body" Rect="1,23,w-5,h-23-7" UseParentBg="TRUE">
       <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Lyrics" Rect="0,0,w,h" >
         <Container ID="CID_LYRICS" Rect="0,0,w,h">
           <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE">

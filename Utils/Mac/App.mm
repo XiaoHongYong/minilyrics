@@ -18,6 +18,7 @@ class CProfile	g_Profile;
 class CLog		g_Log;
 
 TCHAR			g_szWorkingFolder[MAX_PATH] = _T("");
+TCHAR			g_szAppDataDir[MAX_PATH] = _T("");
 
 void SetWorkingFolder(LPCTSTR szWorkingFolder)
 {
@@ -26,17 +27,17 @@ void SetWorkingFolder(LPCTSTR szWorkingFolder)
 	DirStringFormat(g_szWorkingFolder);
 }
 
-void GetWorkingFolder(LPTSTR szWorkingFolder)
+void GetAppResourceDir(LPTSTR szWorkingFolder)
 {
 	if (IsEmptyString(g_szWorkingFolder))
 	{
-		GetWorkingFolder();
+		GetAppResourceDir();
 	}
 
 	_tcscpy(szWorkingFolder, g_szWorkingFolder);
 }
 
-LPCTSTR GetWorkingFolder()
+LPCTSTR GetAppResourceDir()
 {
 	if (!IsEmptyString(g_szWorkingFolder))
 		return g_szWorkingFolder;
@@ -49,10 +50,27 @@ LPCTSTR GetWorkingFolder()
 	NSString *documentsDir = [paths objectAtIndex:0];
 	_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), (const char *)[documentsDir UTF8String]);
 #else
+	NSString *resourcePath = [[NSBundle mainBundle] resourcePath];
+	_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), (const char *)[resourcePath UTF8String]);
 #endif
 	
 	DirStringAddSlash(g_szWorkingFolder);
 	return g_szWorkingFolder;
+}
+
+LPCTSTR GetAppDataDir()
+{
+	if (IsEmptyString(g_szAppDataDir))
+	{
+		GetAppResourceDir(g_szAppDataDir);
+	}
+	
+	return g_szAppDataDir;
+}
+
+void GetAppDataDir(TCHAR *szAppDir)
+{
+	_tcscpy_safe(szAppDir, MAX_PATH, GetAppDataDir());
 }
 
 void InitSetDefaultCharEncoding();
@@ -83,14 +101,14 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 			if (!IsEmptyString(szDefAppName))
 				componentName += szDefAppName;
 			appSupportDir = [[urls objectAtIndex:0] URLByAppendingPathComponent:[NSString stringWithUTF8String:componentName.c_str()]];
-			_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), [[appSupportDir path] UTF8String]);
+			_tcscpy_safe(g_szAppDataDir, CountOf(g_szAppDataDir), [[appSupportDir path] UTF8String]);
 			if ([fileManager fileExistsAtPath:[appSupportDir path]] != YES) {
 				[fileManager createDirectoryAtURL:appSupportDir
 					  withIntermediateDirectories:YES
 									   attributes:nil
 											error:nil];
 			}
-			DirStringAddSlash(g_szWorkingFolder);
+			DirStringAddSlash(g_szAppDataDir);
 		}
 
 /*		int nLen;

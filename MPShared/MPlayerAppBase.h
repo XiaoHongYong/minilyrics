@@ -112,12 +112,6 @@ tstring GetAppNameLong();
 
 LPCTSTR GetStrName(STR_NAME nameId);
 
-LPCTSTR GetAppDataDir();
-
-void GetAppDataDir(TCHAR *szAppDir);
-
-tstring GetAppIniFile();
-
 void DispatchPlayPosEvent(int nPlayPos);
 
 class CMPlayerAppBase : public CSkinApp

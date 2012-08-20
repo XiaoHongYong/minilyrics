@@ -375,7 +375,7 @@ tstring GetProgramFilesPath()
 bool CPlayerPluginInstaller::Init()
 {
 	CProfile		profile;
-	tstring			strFileInstCfg = GetWorkingFolder();
+	tstring			strFileInstCfg = GetAppResourceDir();
 	strFileInstCfg += _T("Install.ini");
 
 	profile.Init(strFileInstCfg.c_str(), _T("INSTALL"));
@@ -631,7 +631,7 @@ public:
 	{
 		string		strIniContent = "[MiniLyrics]\r\nWorkingFolder=";
 		string		strWorkingFolder;
-		TStringToMBCS(GetWorkingFolder(), -1, strWorkingFolder);
+		TStringToMBCS(GetAppResourceDir(), -1, strWorkingFolder);
 		strIniContent += strWorkingFolder + "\r\n";
 
 		if (!SaveDataAsFile(szFile, strIniContent.c_str(), strIniContent.size()))
@@ -736,7 +736,7 @@ public:
 		file.Init(szFile, _T("MiniLyrics"));
 		tstring str = file.GetProfileString(_T("WorkingFolder"), _T(""));
 		DirStringAddSlash(str);
-		if (_tcsicmp(GetWorkingFolder(), str.c_str()) == 0)
+		if (_tcsicmp(GetAppResourceDir(), str.c_str()) == 0)
 			return true;
 
 		return false;
@@ -769,11 +769,11 @@ int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 	for (int i = 0; i < (int)vFiles.size(); i++)
 	{
 		// Plugin for players are saved in MiniLyrics "Player-Plugins" dir.
-		tstring		strFileSrc = DirStringJoint(GetWorkingFolder(), _T("Player-Plugins\\"));
+		tstring		strFileSrc = DirStringJoint(GetAppResourceDir(), _T("Player-Plugins\\"));
 		strFileSrc += vFiles[i];
 #ifdef _DEBUG
 		if (!IsFileExist(strFileSrc.c_str()))
-			strFileSrc = DirStringJoint(GetWorkingFolder(), vFiles[i].c_str());
+			strFileSrc = DirStringJoint(GetAppResourceDir(), vFiles[i].c_str());
 #endif
 
 		tstring		strFileTarg;

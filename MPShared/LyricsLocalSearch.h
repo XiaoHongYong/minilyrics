@@ -62,7 +62,9 @@ protected:
 	// ËÑË÷ËùÓÐµÄ¸è´Ê
 	BOOL SearchLyrics(LPCTSTR szSongFile, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb, V_LRCSEARCHRESULT *pvLyrics);
 
+#ifdef _WIN32_DESKTOP
 	void LoadLyricsAssociationOld();
+#endif
 	void LoadLyricsAssociationV2();
 	void LoadLyricsAssociation();
 	void SaveLyricsAssociation();

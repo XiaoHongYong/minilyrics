@@ -111,7 +111,7 @@ bool CSESkinPrj::IsModified()
 	tstring			strSkinFile, strSkinFileTemp;
 
 	pSkinFile = g_skinFactory.GetSkinFile();
-	strSkinFileTemp = GetWorkingFolder();
+	strSkinFileTemp = GetAppResourceDir();
 	strSkinFileTemp += _T("savetempskin.xml");
 	strSkinFile = pSkinFile->GetFileName();
 

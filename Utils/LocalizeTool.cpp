@@ -20,7 +20,7 @@ CLanguageTool			g_LangTool;
 
 tstring GetLangPackDir()
 {
-	tstring strLangDir = GetWorkingFolder();
+	tstring strLangDir = GetAppResourceDir();
 	strLangDir += SZ_LANG_DIR _T(SZ_DIR_SLASH);
 
 #if defined (_DEBUG) && defined (_WIN32)

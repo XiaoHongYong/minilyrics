@@ -632,7 +632,7 @@ bool CLyricsLocalSearch::IsLyricsExist(LPCTSTR szLyricSource)
 		return true;
 }
 
-#ifndef _WIN32_WCE
+#ifdef _WIN32_DESKTOP
 // COMMENT:
 //		先加载旧的歌词关联表，并删除之
 void CLyricsLocalSearch::LoadLyricsAssociationOld()
@@ -644,7 +644,7 @@ void CLyricsLocalSearch::LoadLyricsAssociationOld()
 	TCHAR			szFile[MAX_PATH];
 	tstringex		strKey, strValue;
 
-	GetWorkingFolder(szFile);
+	GetAppResourceDir(szFile);
 
 	_tcscat_safe(szFile, CountOf(szFile), _T("MiniLyrics.S2L"));
 
@@ -685,7 +685,7 @@ void CLyricsLocalSearch::LoadLyricsAssociationV2()
 	TCHAR			szFile[MAX_PATH];
 	CMutexAutolock					autoLock(m_mutex);
 
-#ifndef _WIN32_WCE
+#ifdef _WIN32_DESKTOP
 	// 先加载旧的歌词关联表，并删除之
 	LoadLyricsAssociationOld();
 #endif

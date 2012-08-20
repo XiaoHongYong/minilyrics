@@ -100,7 +100,7 @@ LPCTSTR CMLProfile::InetGetBase64ProxyUserPass()
 
 BOOL CMLProfile::WriteDir(LPCTSTR szSectName, LPCTSTR szKeyName, LPCTSTR szDir)
 {
-	if (szDir[0] == GetWorkingFolder()[0] && szDir[1] == ':')
+	if (szDir[0] == GetAppResourceDir()[0] && szDir[1] == ':')
 	{
 		// Lyrics folder is the same drive of Current working folder
 		tstring		str = szDir;
@@ -119,7 +119,7 @@ tstring CMLProfile::GetDir(LPCTSTR szSectName, LPCTSTR szKeyName, LPCTSTR szDefD
 	strDir = g_Profile.GetProfileString(szSectName, szKeyName, szDefDir);
 
 	if (strDir.size() >= 2 && strDir[0] == CHAR_WORKING_FOLDER && strDir[1] == ':')
-		strDir[0] = GetWorkingFolder()[0];
+		strDir[0] = GetAppResourceDir()[0];
 
 	return strDir;
 }

@@ -269,7 +269,7 @@ bool CThemesFile::Open()
 {
 	tstring		strFile;
 
-	strFile = GetWorkingFolder();
+	strFile = GetAppResourceDir();
 	strFile += SZ_THEMES_FILE;
 	m_xmlThemes.ParseFile(strFile.c_str());
 
@@ -284,7 +284,7 @@ bool CThemesFile::Save()
 {
 	tstring		strFile;
 
-	strFile = GetWorkingFolder();
+	strFile = GetAppResourceDir();
 	strFile += SZ_THEMES_FILE;
 	m_xmlThemes.SaveFile(strFile.c_str());
 

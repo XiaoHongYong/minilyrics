@@ -352,14 +352,14 @@ void CAutoProcessEmbeddedLyrics::SaveJobs()
 
 	xmlWriter.WriteEndElement();
 
-	tstring	strFile = GetWorkingFolder();
+	tstring	strFile = GetAppDataDir();
 	strFile += SZ_JOB_FILE_NAME;
 	xmlWriter.SaveAsFile(strFile.c_str());
 }
 
 void CAutoProcessEmbeddedLyrics::LoadJobs(bool bDeleteFile)
 {
-	tstring	strFile = GetWorkingFolder();
+	tstring	strFile = GetAppDataDir();
 	strFile += SZ_JOB_FILE_NAME;
 
 	m_listJobs.clear();
@@ -405,7 +405,7 @@ protected:
 
 	void Test_AutoProcessEmbeddedLyricsLoad()
 	{
-		tstring	strFile = GetWorkingFolder();
+		tstring	strFile = GetAppDataDir();
 		strFile += SZ_JOB_FILE_NAME;
 
 		// Only run this test when the file doesn't exist.

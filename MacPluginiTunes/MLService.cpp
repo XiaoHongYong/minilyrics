@@ -32,14 +32,22 @@ void Log(LPCTSTR szFormat, ...)
 	}
 }
 
+bool IsFileExist(LPCTSTR szFileName)
+{
+	struct stat		filestat;
+	
+	memset(&filestat, 0, sizeof(filestat));
+	return stat(szFileName, &filestat) == 0;
+}
 
 // Launch "MiniLyrics.exe /Pipe pipe_name /Player "iTunes"" to start MiniLyrics
 BOOL RunMiniLyrics(LPCSTR pipeName, CPlayerServiceBase *pPlayerService, bool bManual)
 {
 	g_MLService.Init();
 
-	char	szMiniLyricsExe[MAX_PATH];
-	strcpy(szMiniLyricsExe, "/Users/showbrave/Library/Developer/Xcode/DerivedData/MiniLyricsMac-agclrmbubvezruavpgqfpggqmabs/Build/Products/Debug/MiniLyrics.app");
+	const char *szMiniLyricsExe = "/Applications/MiniLyrics.app";
+	if (!IsFileExist(szMiniLyricsExe))
+		szMiniLyricsExe = "/Users/showbrave/Library/Developer/Xcode/DerivedData/MiniLyricsMac-agclrmbubvezruavpgqfpggqmabs/Build/Products/Debug/MiniLyrics.app";
 
 	pPlayerService->Create(pipeName);
 	pPlayerService->OnConnected();

@@ -408,7 +408,7 @@ HMODULE CGdiplusGraphicsLite::LoadGdiplusDll()
 	{
 		TCHAR	szDll[MAX_PATH];
 
-		GetWorkingFolder(szDll);
+		GetAppResourceDir(szDll);
 		_tcscat_safe(szDll, CountOf(szDll), _T("Gdiplus.dll"));
 		hModule = LoadLibrary(szDll);
 	}

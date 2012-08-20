@@ -70,7 +70,7 @@ bool CMPlayerApp::Init(int argc, char *argv[])
 	}
 
 #if (defined _WIN32_DESKTOP && defined _DEBUG_OUTPUT)
-	DBGLOG1(_T("Working Folder: %s"), GetWorkingFolder());
+	DBGLOG1(_T("Working Folder: %s"), GetAppResourceDir());
 	DBGLOG1(_T("App Data Folder: %s"), GetAppDataDir());
 #endif
 

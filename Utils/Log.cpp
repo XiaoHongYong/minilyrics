@@ -305,7 +305,7 @@ void CLog::Init(LPCTSTR szLogFileName)
 	else
 	{
 		// 如果不是全路径，则
-		GetWorkingFolder(m_szLogFile);
+		GetAppDataDir(m_szLogFile);
 		_tcscat_safe(m_szLogFile, CountOf(m_szLogFile), szLogFileName);
 	}
 

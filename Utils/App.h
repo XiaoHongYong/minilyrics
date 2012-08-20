@@ -20,8 +20,11 @@
 // ≈‰÷√Œƒº˛
 extern class CProfile			g_Profile;
 
-void GetWorkingFolder(LPTSTR szWorkingFolder);
-LPCTSTR GetWorkingFolder();
+void GetAppResourceDir(LPTSTR szWorkingFolder);
+LPCTSTR GetAppResourceDir();
+
+void GetAppDataDir(TCHAR *szAppDir);
+LPCTSTR GetAppDataDir();
 
 void SetWorkingFolder(LPCTSTR szWorkingFolder);
 

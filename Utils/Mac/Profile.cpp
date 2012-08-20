@@ -277,7 +277,7 @@ void CProfile::Init(LPCTSTR szProfile, LPCTSTR szDefKey)
 		}
 	}
 
-	m_strProfile = GetWorkingFolder();
+	m_strProfile = GetAppDataDir();
 	m_strProfile += szProfile;
 }
 

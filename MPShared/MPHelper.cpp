@@ -168,7 +168,7 @@ void EnumPlaylists(LPCTSTR szDir, int &nLevel, vector<tstring> &vFiles)
 void EnumPlaylistsFast(vector<tstring> &vFiles)
 {
 	int nLevel = 0;
-	EnumPlaylists(GetWorkingFolder(), nLevel, vFiles);
+	EnumPlaylists(GetAppDataDir(), nLevel, vFiles);
 
 #ifdef _WIN32
 	TCHAR		szDir[MAX_PATH];

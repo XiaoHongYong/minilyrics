@@ -1023,7 +1023,7 @@ int CMediaLibrary::Init(CMPlayer *pPlayer)
 	TCHAR			szFile[MAX_PATH];
 	tstringex		strFile;
 
-	GetWorkingFolder(szFile);
+	GetAppDataDir(szFile);
 	_tcscat_safe(szFile, CountOf(szFile), _T("medialib.db"));
 	ConvertStr(szFile, -1, strFile);
 

@@ -298,7 +298,7 @@ int CMPSkinFactory::OpenSimpliestSkin()
 	int			nRet;
 	tstring		strSkinFile;
 
-	strSkinFile = GetWorkingFolder();
+	strSkinFile = GetAppResourceDir();
 	strSkinFile += _T("sskin.xml");
 
 	nRet = OpenSkinFile(strSkinFile.c_str());

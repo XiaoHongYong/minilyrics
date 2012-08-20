@@ -101,7 +101,7 @@ LPCTSTR GetRegnowBuyLink()
 
 int IsRNLEdition()
 {
-	tstring strFile = GetWorkingFolder();
+	tstring strFile = GetAppResourceDir();
 	strFile += _T("install.ini");
 	if (IsFileExist(strFile.c_str()))
 	{
@@ -210,90 +210,6 @@ LPCTSTR GetStrName(STR_NAME nameId)
 #endif // _MPLAYER
 }
 
-LPCTSTR GetAppDataDir()
-{
-	static TCHAR			g_szAppDataDir[MAX_PATH] = _T("");
-
-	if (IsEmptyString(g_szAppDataDir))
-	{
-#ifdef _WIN32
-		OSVERSIONINFO	osvi;
-		bool			bInUserDir = false;
-
-		osvi.dwOSVersionInfoSize = sizeof(osvi);
-		if (GetVersionEx(&osvi))
-		{
-			if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5)
-				bInUserDir = true;
-		}
-		if (bInUserDir)
-		{
-			tstring		strFile;
-
-			//
-			// PerUserSettings?
-			//
-			strFile = GetWorkingFolder();
-			strFile += _T("install.ini");
-			if (IsFileExist(strFile.c_str()))
-			{
-				CProfile	file;
-				file.Init(strFile.c_str(), _T("install"));
-				bInUserDir = file.GetProfileBool(_T("PerUserSettings"), true);
-				if (!bInUserDir)
-				{
-					// To verify that it is writable.
-					if (!CanWriteInDir(GetWorkingFolder()))
-						bInUserDir = true;
-				}
-			}
-		}
-
-		if (!bInUserDir)
-		{
-			GetWorkingFolder(g_szAppDataDir);
-		}
-		else
-		{
-			if (SUCCEEDED(SHGetSpecialFolderPath(NULL, g_szAppDataDir, CSIDL_APPDATA, FALSE)))
-			{
-				DirStringFormat(g_szAppDataDir);
-				_tcscat_safe(g_szAppDataDir, CountOf(g_szAppDataDir), SZ_APP_NAME _T(SZ_DIR_SLASH));
-				if (!IsDirExist(g_szAppDataDir))
-				{
-					CreateDirectory(g_szAppDataDir, NULL);
-
-					LPCTSTR		szToMoveFiles[] = { _T("MiniLyric.ini"), _T("MLLyrics.S2L"), _T("FontColorCustom.the"), 
-						_T("dbSearchCache.db"), _T("dbLyrUpload.db") };
-					tstring		strMLIniOld, strMLIniNew;
-
-					for (int i = 0; i < CountOf(szToMoveFiles); i++)
-					{
-						strMLIniOld = GetWorkingFolder();
-						strMLIniOld += szToMoveFiles[i];
-						strMLIniNew = g_szAppDataDir;
-						strMLIniNew += szToMoveFiles[i];
-						if (IsFileExist(strMLIniOld.c_str()))
-							MoveFile(strMLIniOld.c_str(), strMLIniNew.c_str());
-					}
-				}
-			}
-			else
-				GetWorkingFolder(g_szAppDataDir);
-		}
-#else
-		GetWorkingFolder(g_szAppDataDir);
-#endif
-	}
-
-	return g_szAppDataDir;
-}
-
-void GetAppDataDir(TCHAR *szAppDir)
-{
-	_tcscpy_safe(szAppDir, MAX_PATH, GetAppDataDir());
-}
-
 void DispatchPlayPosEvent(int nPlayPos)
 {
 	static int nPlayPosLast = 0;
@@ -303,22 +219,6 @@ void DispatchPlayPosEvent(int nPlayPos)
 		nPlayPosLast = nPlayPos;
 		CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_PLAYER_POS_UPDATE);
 	}
-}
-
-tstring GetAppIniFile()
-{
-	tstring	strFile;
-	//
-	// Init Base frame, save log and settings in app dir
-#ifdef _WIN32_WCE
-	strFile = _T("HKEY_LOCAL_MACHINE\\Software\\ZikiPlayer\\");
-#else
-	strFile = GetAppDataDir();
-	strFile += SZ_PROFILE_NAME;
-	SetFileNoReadOnly(strFile.c_str());
-#endif
-
-	return strFile;
 }
 
 //////////////////////////////////////////////////////////////////////////

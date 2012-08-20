@@ -157,7 +157,7 @@
 		5FBCCC01148515A200D7C64A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = 5FBCCC04148515A200D7C64A /* Build configuration list for PBXProject "ID3LibMac" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -240,6 +240,7 @@
 		5FBCCC1C148515A300D7C64A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -255,6 +256,7 @@
 		5FBCCC1D148515A300D7C64A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;

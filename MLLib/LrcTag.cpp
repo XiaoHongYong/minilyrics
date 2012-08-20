@@ -1923,7 +1923,7 @@ protected:
 		LPBYTE		vLyrics[] = { (LPBYTE)SZ_LYRICS, (LPBYTE)wLyrics.c_str(),		(LPBYTE)wLyricsBe.c_str(),			(LPBYTE)utf8Lyrics.c_str(), };
 		int			vLen[] = { sizeof(SZ_LYRICS),	wLyrics.size() * sizeof(WCHAR), wLyricsBe.size() * sizeof(WCHAR),	utf8Lyrics.size(), };
 
-		tstring		strFile = GetWorkingFolder();
+		tstring		strFile = GetAppDataDir();
 		strFile += _T("unit_test.lrc");
 		for (int i = 0; i < CountOf(vLen); i++)
 		{

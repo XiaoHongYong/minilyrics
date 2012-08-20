@@ -155,6 +155,22 @@ bool CMPlayerApp::SetRunningFlag()
 	return true;
 }
 
+tstring GetAppIniFile()
+{
+	tstring	strFile;
+	//
+	// Init Base frame, save log and settings in app dir
+#ifdef _WIN32_WCE
+	strFile = _T("HKEY_LOCAL_MACHINE\\Software\\ZikiPlayer\\");
+#else
+	strFile = GetAppDataDir();
+	strFile += SZ_PROFILE_NAME;
+	SetFileNoReadOnly(strFile.c_str());
+#endif
+
+	return strFile;
+}
+
 bool CMPlayerApp::Init()
 {
 	LPCTSTR lpCmdLine = GetCommandLine();
@@ -187,7 +203,7 @@ bool CMPlayerApp::Init()
 	GetModulePath(szWorkingFolder, GetAppInstance());
 	SetWorkingFolder(szWorkingFolder);
 
-	tstring		strMLIniFile =GetAppIniFile();
+	tstring		strMLIniFile = GetAppIniFile();
 	tstring		strMLLogFile = GetAppDataDir();
 	strMLLogFile += _T("log.txt");
 	InitBaseFrameWork(GetAppInstance(), strMLLogFile.c_str(), strMLIniFile.c_str(), SZ_SECT_UI);
@@ -343,7 +359,7 @@ int CMPlayerApp::LoadGeneralEmbeddedSkin(bool bLoadSkinColorTheme)
 	if (!skinInfo.hWndToAttach)
 		return ERR_FALSE;
 
-	strSkinDir = GetWorkingFolder();
+	strSkinDir = GetAppResourceDir();
 
 	strSkinDir += GEN_EMBEDDED_SKIN _T(SZ_DIR_SLASH);
 #ifdef _DEBUG
@@ -445,7 +461,7 @@ int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
 		else
 		{
 			// 取得缺省的skin的目录
-			strSkinDir = GetWorkingFolder();
+			strSkinDir = GetAppResourceDir();
 			strSkinDir += _T("ml-winamp2-skin\\");
 #ifdef _DEBUG
 			VerySkinDirOK(strSkinDir, _T("ml-winamp2-skin\\"));
