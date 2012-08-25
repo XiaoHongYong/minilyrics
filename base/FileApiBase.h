@@ -60,6 +60,8 @@ void FilePathFilterInvalidChars(LPTSTR szFile);
 bool DeleteFile(LPCTSTR lpFileName);
 #endif
 
+bool CopyDir(LPCTSTR lpExistingDir, LPCTSTR lpNewDir);
+
 void TStringToProperFileData(LPCTSTR str, CCharBuffer &bufData);
 
 bool IsCurOrParentDir(LPCTSTR szDir);

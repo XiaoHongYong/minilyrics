@@ -221,7 +221,7 @@
 		5FBCCD2514851B5300D7C64A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = 5FBCCD2814851B5300D7C64A /* Build configuration list for PBXProject "MLLibMac" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -312,6 +312,7 @@
 		5FBCCD4014851B5300D7C64A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -328,6 +329,7 @@
 		5FBCCD4114851B5300D7C64A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;

@@ -5,6 +5,7 @@
 #include "DlgAbout.h"
 #include "PlayerEventDispatcher.h"
 #include "../../MPShared/Player.h"
+#include "PlayerPluginInstaller.h"
 
 #ifdef DEBUG
 
@@ -108,6 +109,8 @@ void CMLPlayerMgr::QueryInfo()
 	g_playerMgr.m_msgPipeOfPlayer.Write(M2P_QUERY_INFO, NULL, 0);
 }
 
+int MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption);
+
 bool CMLPlayerMgr::Init(int argc, char *argv[])
 {
 	DBGLOG0("Enter CMLPlayerMgr::Init");
@@ -140,6 +143,30 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 
 	if (strPlayerServicePipeName.empty())
 	{
+		CPlayerPluginInstaller installer;
+		
+		installer.Init();
+		for (int i = 0; ; i++) {
+			CPlayerPluginInstaller::Player *player = installer.GetPlayerByIndex(i);
+			if (player == NULL)
+				break;
+			player->DetectPlayerPath();
+			if (player->IsInstalled()) {
+				tstring strErr;
+				if (player->CheckPluginInstalled(strErr))
+					continue;
+				int ret = MessageOut(CStrPrintf("Do you want to install player plugin for %s?", player->szPlayerName).c_str(), MB_YESNO, "MiniLyrics");
+				if (ret != IDYES)
+					continue;
+
+				int err;
+				if (!player->Install(strErr, err)) {
+					tstring title = "Failed to install player plugin.";
+					MessageOut(strErr.c_str(), MB_OK, title.c_str());
+				}
+			}
+		}
+		
 		// TODO: need to return false, just for debug
 		strPlayerServicePipeName = "/tmp/MiniLyrics_iTunes.pipe";
 		// return false;

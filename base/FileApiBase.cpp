@@ -463,6 +463,32 @@ void FilePathFilterInvalidChars(LPTSTR szFile)
 	}
 }
 
+bool CopyDir(LPCTSTR lpExistingDir, LPCTSTR lpNewDir)
+{
+	CMLFileFind finder;
+	if (!finder.OpenDir(lpExistingDir))
+		return false;
+	
+	if (!IsFileExist(lpNewDir))
+		CreateDirectory(lpNewDir);
+
+	while (finder.FindNext())
+	{
+		tstring src = DirStringJoint(lpExistingDir, finder.GetCurName());
+		tstring dst = DirStringJoint(lpNewDir, finder.GetCurName());
+		
+		bool ret;
+		if (finder.IsCurDir())
+			ret = CopyDir(src.c_str(), dst.c_str());
+		else
+			ret = CopyFile(src.c_str(), dst.c_str(), false);
+		if (!ret)
+			return false;
+	}
+	
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////////
 //
 

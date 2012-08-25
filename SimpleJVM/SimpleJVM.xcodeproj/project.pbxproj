@@ -170,7 +170,7 @@
 		5FBCCAF7147E80DF00D7C64A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 			};
 			buildConfigurationList = 5FBCCAFA147E80DF00D7C64A /* Build configuration list for PBXProject "SimpleJVM" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -256,6 +256,7 @@
 		5FBCCB12147E80DF00D7C64A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -271,6 +272,7 @@
 		5FBCCB13147E80DF00D7C64A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;

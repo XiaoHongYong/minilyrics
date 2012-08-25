@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F0315B415E769C400E5F752 /* PlayerPluginInstaller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F0315B215E769C400E5F752 /* PlayerPluginInstaller.mm */; };
+		5F0315BA15E7849C00E5F752 /* Player-Plugins in Resources */ = {isa = PBXBuildFile; fileRef = 5F0315B915E7849C00E5F752 /* Player-Plugins */; };
 		5F05D55B15E0F20E00200E2B /* skins in Resources */ = {isa = PBXBuildFile; fileRef = 5F05D55A15E0F20E00200E2B /* skins */; };
 		5F10F0491576F5F90080ECF6 /* MPSkinMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F10F0471576F5F90080ECF6 /* MPSkinMenu.cpp */; };
 		5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.mm */; };
@@ -116,6 +118,8 @@
 		5FDC56B4148A23AC00C74E6A /* MPlayerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A8148A23AC00C74E6A /* MPlayerApp.cpp */; };
 		5FDC56B6148A23AC00C74E6A /* MPSkinMainWndMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */; };
 		5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */; };
+		5FEA17EC15E49EB700B29626 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = 5FEA17EA15E49EB700B29626 /* lang */; };
+		5FEA17ED15E49EB700B29626 /* Patterns in Resources */ = {isa = PBXBuildFile; fileRef = 5FEA17EB15E49EB700B29626 /* Patterns */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -318,6 +322,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5F0315B215E769C400E5F752 /* PlayerPluginInstaller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = PlayerPluginInstaller.mm; path = ../../MiniLyrics/mac/PlayerPluginInstaller.mm; sourceTree = "<group>"; };
+		5F0315B315E769C400E5F752 /* PlayerPluginInstaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerPluginInstaller.h; path = ../../MiniLyrics/mac/PlayerPluginInstaller.h; sourceTree = "<group>"; };
+		5F0315B915E7849C00E5F752 /* Player-Plugins */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Player-Plugins"; path = "../Install_ML_mac/Player-Plugins"; sourceTree = "<group>"; };
 		5F05D55A15E0F20E00200E2B /* skins */ = {isa = PBXFileReference; lastKnownFileType = folder; name = skins; path = ../Install_ML_mac/skins; sourceTree = "<group>"; };
 		5F10F0471576F5F90080ECF6 /* MPSkinMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinMenu.cpp; path = ../../MPShared/MPSkinMenu.cpp; sourceTree = "<group>"; };
 		5F10F0481576F5F90080ECF6 /* MPSkinMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinMenu.h; path = ../../MPShared/MPSkinMenu.h; sourceTree = "<group>"; };
@@ -529,6 +536,8 @@
 		5FDC56BB148A2ED900C74E6A /* DlgSaveEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveEmbeddedLyrics.h; sourceTree = "<group>"; };
 		5FDC56BC148A2FE300C74E6A /* DlgUpdateLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgUpdateLibrary.h; sourceTree = "<group>"; };
 		5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgUpdateLibrary.cpp; sourceTree = "<group>"; };
+		5FEA17EA15E49EB700B29626 /* lang */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lang; path = ../Install_ML/Share/lang; sourceTree = "<group>"; };
+		5FEA17EB15E49EB700B29626 /* Patterns */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Patterns; path = ../Install_ML/Share/Patterns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -569,6 +578,9 @@
 		5FB161F5147017330084494F = {
 			isa = PBXGroup;
 			children = (
+				5F0315B915E7849C00E5F752 /* Player-Plugins */,
+				5FEA17EA15E49EB700B29626 /* lang */,
+				5FEA17EB15E49EB700B29626 /* Patterns */,
 				5F05D55A15E0F20E00200E2B /* skins */,
 				5FB592AD15459C980071B204 /* ThirdPartiesSDK.xcodeproj */,
 				5FB592A015459BD50071B204 /* Taglib.xcodeproj */,
@@ -908,6 +920,8 @@
 		5FDC56A0148A23AC00C74E6A /* mac */ = {
 			isa = PBXGroup;
 			children = (
+				5F0315B215E769C400E5F752 /* PlayerPluginInstaller.mm */,
+				5F0315B315E769C400E5F752 /* PlayerPluginInstaller.h */,
 				5F65BB11156B19BE00605207 /* MsgPipe.cpp */,
 				5F65BB12156B19BE00605207 /* MsgPipe.h */,
 				5F65BB0D156A7EE500605207 /* MLPlayerMgr.cpp */,
@@ -1160,6 +1174,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5F0315BA15E7849C00E5F752 /* Player-Plugins in Resources */,
+				5FEA17EC15E49EB700B29626 /* lang in Resources */,
+				5FEA17ED15E49EB700B29626 /* Patterns in Resources */,
 				5F05D55B15E0F20E00200E2B /* skins in Resources */,
 				5FB1620F147017330084494F /* InfoPlist.strings in Resources */,
 				5FB1621B147017340084494F /* MainMenu.xib in Resources */,
@@ -1263,6 +1280,7 @@
 				5F65BB13156B19BE00605207 /* MsgPipe.cpp in Sources */,
 				5F10F0491576F5F90080ECF6 /* MPSkinMenu.cpp in Sources */,
 				5F8A1CA5159555360062394E /* DlgSaveLyrPrompt.cpp in Sources */,
+				5F0315B415E769C400E5F752 /* PlayerPluginInstaller.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

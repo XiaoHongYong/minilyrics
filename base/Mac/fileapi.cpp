@@ -5,6 +5,7 @@
 #include "CharEncoding.h"
 #include "stringex.h"
 #include "FileApiBase.h"
+#include <copyfile.h>
 
 bool filetruncate(FILE *fp, int nLen)
 {
@@ -100,7 +101,13 @@ bool CreateDirectory(LPCSTR lpPathName)
 
 bool CopyFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName, BOOL bFailIfExists)
 {
-	return false;
+	if (!bFailIfExists)
+	{
+		if (IsFileExist(lpNewFileName))
+			DeleteFile(lpNewFileName);
+	}
+	int n = copyfile(lpExistingFileName, lpNewFileName, 0, COPYFILE_STAT | COPYFILE_DATA);
+	return n == 0;
 }
 
 DWORD CanWriteInDir(LPCTSTR szDir)
@@ -175,9 +182,9 @@ bool CMLFileFind::GetCurStat()
 	if (!m_dirp)
 		return false;
 
-	TCHAR		szFile[MAX_PATH];
+	TCHAR		szFile[400];
 	_tcscpy(szFile, m_szDir);
-	DirStringAddSlash(m_szDir);
+	DirStringAddSlash(szFile);
 	_tcscat(szFile, m_dirp->d_name);
 
 	memset(&m_stat, 0, sizeof(m_stat));
