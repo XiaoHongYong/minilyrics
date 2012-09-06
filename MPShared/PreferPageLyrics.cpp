@@ -173,6 +173,30 @@ UIOBJECT_CLASS_NAME_IMP(CPagePfLyrDownload, _T("PreferPage.LyrDownload"))
 
 //////////////////////////////////////////////////////////////////////////
 
+class CPagePfLyrSaveOpt : public CPagePfBase
+{
+	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
+public:
+	CPagePfLyrSaveOpt() : CPagePfBase(PAGE_LYR_SAVE_OPTIONS, _T("CMD_LYR_SAVE_OPT"))
+	{
+	}
+
+	void OnInitialUpdate()
+	{
+		CPagePfBase::OnInitialUpdate();
+
+		AddOptBool(ET_NULL, SZ_SECT_UI, _T("RemoveExtraBlankLines"), true, _T("CID_C_REMOVE_EXTRA_BLANK_LINES"));
+		AddOptBool(ET_NULL, SZ_SECT_UI, _T("AppendTimeStampsInTxtLyr"), true, _T("CID_C_APPEND_OFFSET_FOR_IOS"));
+
+		InitCheckButtons();
+	}
+
+};
+
+UIOBJECT_CLASS_NAME_IMP(CPagePfLyrSaveOpt, _T("PreferPage.LyrSaveOptions"))
+
+//////////////////////////////////////////////////////////////////////////
+
 class CPagePfLyrOutputPlugin : public CPagePfBase
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CPagePfBase)
@@ -284,6 +308,7 @@ void CPagePfLyricsRoot::OnInitialUpdate()
 void RegisterPfLyricsPages(CSkinFactory *pSkinFactory)
 {
 	AddUIObjNewer2(pSkinFactory, CPagePfLyrDownload);
+	AddUIObjNewer2(pSkinFactory, CPagePfLyrSaveOpt);
 	AddUIObjNewer2(pSkinFactory, CPagePfLyrOutputPlugin);
 	AddUIObjNewer2(pSkinFactory, CPagePfLyricsRoot);
 }

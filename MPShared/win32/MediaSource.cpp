@@ -402,7 +402,7 @@ int CFileMediaSource::SetEmbeddedLyrics(int nIndex, tstring &lyrics)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	nRet = id3v2.SetUnsynchLyrics(NULL, _T("Lyrics were Saved by MiniLyrics."), lyrics.c_str());
+	nRet = id3v2.SetUnsynchLyrics(NULL, _T(""), lyrics.c_str());
 	if (nRet != ERR_OK)
 		return nRet;
 

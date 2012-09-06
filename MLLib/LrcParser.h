@@ -15,7 +15,7 @@ DECLAR_CPPUNIT_TEST_REG(LrcParser)
 class CLrcParser : public CLyricsParser
 {
 public:
-	CLrcParser(CMLData *pMLData);
+	CLrcParser(CMLData *pMLData, bool bTurnOffPref = false);
 	virtual ~CLrcParser();
 
 public:
@@ -55,5 +55,6 @@ protected:
 
 	// 上一次添加的歌词行的时间，用于添加没有时间标签的文本歌词行
 	int						m_nLatestTime;
+	bool					m_bTurnOffPref;
 
 };

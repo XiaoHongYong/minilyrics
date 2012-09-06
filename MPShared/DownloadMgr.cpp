@@ -379,9 +379,11 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 		{
 			if (SaveDownloadedLyrics(pTask->strMediaKey.c_str(), pTask->m_strLyrFileName.c_str(), 
 				pTask->buffContent.c_str(), pTask->buffContent.size()) == ERR_OK)
+			{
 				CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
-			CSkinApp::GetInstance()->GetEventPatcher()->DispatchUnsyncEvent(ET_UI_ACTIVATE_NOTICE);
+				CSkinApp::GetInstance()->GetEventPatcher()->DispatchUnsyncEvent(ET_UI_ACTIVATE_NOTICE);
+			}
 		}
 		break;
 	case DTT_CHECK_VERSION:
@@ -620,6 +622,9 @@ int CDownloadMgr::SaveDownloadedLyrics(LPCTSTR szMediaFile, LPCTSTR szLyrFileNam
 {
 	ASSERT(lpData && nSize > 0 && nSize < 1024 * 200);
 	VecString vEmbeddedLyrNames;
+
+	// Cancel old lyrics association.
+	g_LyricSearch.CancelAssociate(szMediaFile);
 
 	if (nLyrSaveFlag == LST_NONE)
 	{

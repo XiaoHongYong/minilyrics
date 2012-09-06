@@ -290,6 +290,10 @@ int FileAppendData(FILE *m_fp, int nAppend, int nMask)
 	if (fseek(m_fp, 0, SEEK_END) != 0)
 		return ERR_SEEK_FILE;
 
+	long orgLength = ftell(m_fp);
+	if (orgLength == -1)
+		return ERR_READ_FILE;
+
 	for (int i = nAppend; i > 0; i -= sizeof(buff))
 	{
 		if (i >= sizeof(buff))
@@ -300,7 +304,7 @@ int FileAppendData(FILE *m_fp, int nAppend, int nMask)
 		if (fwrite(buff, 1, nLen, m_fp) != nLen)
 		{
 			// write error!
-			filetruncate(m_fp, ftell(m_fp));
+			filetruncate(m_fp, orgLength);
 
 			return ERR_WRITE_FILE;
 		}

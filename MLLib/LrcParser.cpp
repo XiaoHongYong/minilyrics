@@ -17,6 +17,51 @@
 
 IMPLEMENT_CPPUNIT_TEST_REG(LrcParser)
 
+void RemoveExtraBlankLine(tstring &str)
+{
+	bool bAppendNewLine = (str.size() > 0 && str[str.size() - 1] == '\n');
+	TrimStr(str, _T("\r\n"));
+
+	int oldSize = str.size();
+
+	while (true) 
+	{
+		// Replace 2 blank lines to 1 blank line
+		strrep(str, _T("\r\n\r\n\r\n"), _T("\r\n\r\n"));
+
+		LPCTSTR		p = str.c_str();
+		int			nLineCount = 0, nBlankLineCount = 0;
+		bool		bPrevEndLine = false;
+
+		while (*p)
+		{
+			while (*p && *p != '\n')
+			{
+				if (*p != '\r')
+					bPrevEndLine = false;
+				p++;
+			}
+			if (*p == '\0')
+				break;
+			p++;
+
+			if (bPrevEndLine)
+				nBlankLineCount++;
+			nLineCount++;
+			bPrevEndLine = true;
+		}
+
+		if (nBlankLineCount >= nLineCount * 2 / 5)
+			strrep(str, _T("\r\n\r\n"), _T("\r\n"));
+
+		if (oldSize == str.size())
+			break;
+		oldSize = str.size();
+	}
+
+	if (bAppendNewLine)
+		str += _T("\r\n");
+}
 
 bool ReadIntValue(LPCTSTR &szBeg, LPCTSTR szEnd, int nSize, int &nValue)
 {
@@ -73,9 +118,10 @@ LPCTSTR EatFrag(LPCTSTR szLyricsBeg, int &nEndTime, tstringex &buffLyrics)
 
 //////////////////////////////////////////////////////////////////////////
 
-CLrcParser::CLrcParser(CMLData *pMLData) : CLyricsParser(pMLData)
+CLrcParser::CLrcParser(CMLData *pMLData, bool bTurnOffPref) : CLyricsParser(pMLData)
 {
 	m_lyrContentType = LCT_LRC;
+	m_bTurnOffPref = bTurnOffPref;
 }
 
 CLrcParser::~CLrcParser()
@@ -374,6 +420,18 @@ void CLrcParser::ToString(tstring &str, bool bIncTags, bool bToTxtFormat)
 		ToTxtString(str, bIncTags);
 	else
 		ToLrcString(str, bIncTags, true);
+
+	if (!m_bTurnOffPref)
+	{
+		// Remove extra blank line only work under !turn of preferences.
+		if (!bToTxtFormat
+			|| !g_Profile.GetProfileBool(_T("AppendTimeStampsInTxtLyr"), true)
+			|| m_lyrContentType == LCT_TXT)
+		{
+			if (g_Profile.GetProfileBool(_T("RemoveExtraBlankLines"), true))
+				RemoveExtraBlankLine(str);
+		}
+	}
 }
 
 void CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
@@ -445,11 +503,17 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 	LyricsProperties properties;
 	CLyrTagNameValueMap	propNameValueMap(properties);
 
+	bool bRemoveExtraBlankLines = false;
+	if (!m_bTurnOffPref)
+		bRemoveExtraBlankLines = g_Profile.GetProfileBool(_T("RemoveExtraBlankLines"), true);
+	bool bLastLineBlank = false;
+
 	for (int i = 0; i < (int)m_pMLData->m_arrFileLines.size(); i++)
 	{
 		LyricsLine *pLine = m_pMLData->m_arrFileLines[i];
 		if (pLine->bLyricsLine)
 		{
+			bLastLineBlank = false;
 			LyricsLineToTxtString(pLine, strBuff);
 			if (propNameValueMap.ParseTxtTag(strBuff.c_str(), strBuff.size()) == -1)
 			{
@@ -460,9 +524,14 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 		}
 		else
 		{
+			// Don't write extra blank lines.
+			if (bRemoveExtraBlankLines && bLastLineBlank)
+				continue;
+
 			lyrLines.push_back(pLine);
 			// Only append blank spaces, not "pLine->szContent";
 			str += _T("\r\n");
+			bLastLineBlank = true;
 		}
 	}
 
@@ -497,7 +566,8 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 		if (strTagsAtBeginOfFile.size())
 			str.insert(0, strTagsAtBeginOfFile.c_str());
 
-		if (strTagsAtEndOfFile.size())
+		if ((m_bTurnOffPref || g_Profile.GetProfileBool(_T("AppendTimeStampsInTxtLyr"), true))
+			&& strTagsAtEndOfFile.size())
 		{
 			if (str.size() && str[str.size() - 1] != '\n')
 				str += _T("\r\n");
@@ -915,7 +985,7 @@ protected:
 		for (int i = 0; i < CountOf(vLyrics); i++)
 		{
 			CMLData			data;
-			CLrcParser		parser(&data);
+			CLrcParser		parser(&data, true);
 
 			int nRet = parser.ParseString(vLyrics[i], vLen[i], false, false);
 			CPPUNIT_ASSERT(nRet == ERR_OK);
@@ -942,11 +1012,11 @@ protected:
 			// Cases on CLrcParser::ToString
 			//
 			tstring		strNewLyr;
-			CLrcParser		parser2(&data);
+			CLrcParser		parser2(&data, true);
 			parser2.ToString(strNewLyr, true, false);
 
 			CMLData			data3;
-			CLrcParser		parser3(&data3);
+			CLrcParser		parser3(&data3, true);
 			parser3.ParseString(strNewLyr.c_str(), false);
 			data3.Properties().SetEncoding(vEncoding[i]);
 
@@ -977,11 +1047,11 @@ protected:
 			// Case: Convert to text including timestamps
 			//
 			tstring			strTxtLyr;
-			CLrcParser		parserTxt(&data);
+			CLrcParser		parserTxt(&data, true);
 			parserTxt.ToString(strTxtLyr, true, true);
 
 			CMLData			data5;
-			CLrcParser		parser5(&data5);
+			CLrcParser		parser5(&data5, true);
 			parser5.ParseString(strTxtLyr.c_str(), false);
 			data5.Properties().SetEncoding(vEncoding[i]);
 
@@ -1033,7 +1103,7 @@ protected:
 		for (int i = 0; i < CountOf(vLyrics); i++)
 		{
 			CMLData			data;
-			CLrcParser		parser(&data);
+			CLrcParser		parser(&data, true);
 
 			int nRet = parser.ParseString(vLyrics[i], vLen[i], false, false);
 			CPPUNIT_ASSERT(nRet == ERR_OK);
@@ -1058,11 +1128,11 @@ protected:
 			// Cases on CLrcParser::ToString
 			//
 			tstring		strNewLyr;
-			CLrcParser		parser2(&data);
+			CLrcParser		parser2(&data, true);
 			parser2.ToString(strNewLyr, true, true);
 
 			CMLData			data3;
-			CLrcParser		parser3(&data3);
+			CLrcParser		parser3(&data3, true);
 			parser3.ParseString(strNewLyr.c_str(), false);
 			data3.Properties().SetEncoding(vEncoding[i]);
 

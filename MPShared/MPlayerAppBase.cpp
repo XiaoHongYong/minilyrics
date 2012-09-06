@@ -273,7 +273,7 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 	if (!InitLoadSkin())
 		return false;
 
-	OnMediaChanged();
+	OnMediaChanged(true);
 
 	m_hotKey.Init();
 
@@ -452,7 +452,11 @@ void CMPlayerAppBase::OnEvent(const IEvent *pEvent)
 {
 	if (pEvent->eventType == ET_PLAYER_CUR_MEDIA_CHANGED)
 	{
-		OnMediaChanged();
+		OnMediaChanged(true);
+	}
+	else if (pEvent->eventType == ET_LYRICS_RESEARCH)
+	{
+		OnMediaChanged(false);
 	}
 	else if (pEvent->eventType == ET_LYRICS_SEARCH_END)
 	{
@@ -490,7 +494,7 @@ CSkinFactory *CMPlayerAppBase::NewSkinFactory()
 	return new CMPSkinFactory(this, g_uidDefinition);
 }
 
-void CMPlayerAppBase::OnMediaChanged()
+void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 {
 	m_appAnalytics.CheckSendTask();
 
@@ -544,7 +548,8 @@ void CMPlayerAppBase::OnMediaChanged()
 		if (g_LyricsDownloader.AutoDownloadEnabled() &&
 			g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true))
 		{
-			if (g_LyricData.GetLyrContentType() == LCT_TXT &&
+			if (bAutoDownloadIfNotExist
+				&& g_LyricData.GetLyrContentType() == LCT_TXT &&
 				!g_LyricSearch.IsAssociatedLyrics(g_Player.GetSrcMedia(), g_Player.GetFullTitle()))
 			{
 				//
@@ -598,7 +603,7 @@ void CMPlayerAppBase::OnMediaChanged()
 	if (bAssociateNone)
 		return;
 
-	if (_tcslen(g_Player.GetTitle()) >= 3)
+	if (_tcslen(g_Player.GetTitle()) >= 3 && bAutoDownloadIfNotExist)
 	{
 		// title at least 3 char long
 		g_LyricsDownloader.OnSongChanged();
@@ -691,7 +696,7 @@ void CMPlayerAppBase::DispatchLongErrorText(LPCTSTR szError)
 void CMPlayerAppBase::DispatchResearchLyrics()
 {
 	IEvent	*pEvent = new IEvent();
-	pEvent->eventType = ET_PLAYER_CUR_MEDIA_CHANGED;
+	pEvent->eventType = ET_LYRICS_RESEARCH;
 	GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
 }
 

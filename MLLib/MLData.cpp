@@ -530,7 +530,7 @@ int CMLData::SaveLyricsInSongOfID3v2(VecString &vLyrNames)
 
 		if (lst == LST_ID3V2_USLT)
 		{
-			nRet = id3v2.SetUnsynchLyrics(szLyrName, _T("Lyrics were Saved by MiniLyrics."), strLyrics.c_str());
+			nRet = id3v2.SetUnsynchLyrics(szLyrName, _T(""), strLyrics.c_str());
 			if (nRet != ERR_OK)
 				return nRet;
 		}

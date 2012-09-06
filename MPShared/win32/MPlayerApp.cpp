@@ -67,6 +67,21 @@ bool TerminateAnotherInstance()
 
 	return false;
 }
+/*
+	LPCTSTR		szToMoveFiles[] = { _T("MiniLyric.ini"), _T("MLLyrics.S2L"), _T("FontColorCustom.the"),
+		_T("dbSearchCache.db"), _T("dbLyrUpload.db") };
+	tstring		strMLIniOld, strMLIniNew;
+	
+	for (int i = 0; i < CountOf(szToMoveFiles); i++)
+	{
+		strMLIniOld = GetAppResourceDir();
+		strMLIniOld += szToMoveFiles[i];
+		strMLIniNew = szAppDataDir;
+		strMLIniNew += szToMoveFiles[i];
+		if (IsFileExist(strMLIniOld.c_str()))
+			MoveFile(strMLIniOld.c_str(), strMLIniNew.c_str());
+	}
+*/
 
 int WINAPI _tWinMain(HINSTANCE hInstance,
 					 HINSTANCE hPrevInstance,

@@ -153,7 +153,7 @@ public:
 
 	bool InitLoadSkin();
 
-	void OnMediaChanged();
+	void OnMediaChanged(bool bAutoDownloadIfNotExist);
 
 	void OnLanguageChanged();
 

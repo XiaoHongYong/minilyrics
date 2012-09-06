@@ -51,78 +51,78 @@ LPCTSTR GetAppResourceDir()
 	return g_szWorkingFolder;
 }
 
-LPCTSTR GetAppDataDir()
+TCHAR			g_szAppDataDir[MAX_PATH] = _T("");
+
+void GetAppDataDir(LPTSTR szAppDataDir, LPCTSTR szDefAppName)
 {
-	static TCHAR			g_szAppDataDir[MAX_PATH] = _T("");
-	
-	if (IsEmptyString(g_szAppDataDir))
+	OSVERSIONINFO	osvi;
+	bool			bInUserDir = false;
+
+	TCHAR szAppExeName[MAX_PATH];
+	if (szDefAppName == NULL)
 	{
-		OSVERSIONINFO	osvi;
-		bool			bInUserDir = false;
+		TCHAR szAppExe[MAX_PATH];
+		GetModuleFileName(NULL, szAppExe, CountOf(szAppExe));
+		_tcscpy_safe(szAppExeName, CountOf(szAppExeName), FileGetTitle(szAppExe).c_str());
+	}
+
+	osvi.dwOSVersionInfoSize = sizeof(osvi);
+	if (GetVersionEx(&osvi))
+	{
+		if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5)
+			bInUserDir = true;
+	}
+	if (bInUserDir)
+	{
+		tstring		strFile;
 		
-		osvi.dwOSVersionInfoSize = sizeof(osvi);
-		if (GetVersionEx(&osvi))
+		//
+		// PerUserSettings?
+		//
+		strFile = GetAppResourceDir();
+		strFile += _T("install.ini");
+		if (IsFileExist(strFile.c_str()))
 		{
-			if (osvi.dwPlatformId == VER_PLATFORM_WIN32_NT && osvi.dwMajorVersion >= 5)
-				bInUserDir = true;
-		}
-		if (bInUserDir)
-		{
-			tstring		strFile;
-			
-			//
-			// PerUserSettings?
-			//
-			strFile = GetAppResourceDir();
-			strFile += _T("install.ini");
-			if (IsFileExist(strFile.c_str()))
+			CProfile	file;
+			file.Init(strFile.c_str(), _T("install"));
+			bInUserDir = file.GetProfileBool(_T("PerUserSettings"), true);
+			if (!bInUserDir)
 			{
-				CProfile	file;
-				file.Init(strFile.c_str(), _T("install"));
-				bInUserDir = file.GetProfileBool(_T("PerUserSettings"), true);
-				if (!bInUserDir)
-				{
-					// To verify that it is writable.
-					if (!CanWriteInDir(GetAppResourceDir()))
-						bInUserDir = true;
-				}
+				// To verify that it is writable.
+				if (!CanWriteInDir(GetAppResourceDir()))
+					bInUserDir = true;
 			}
-		}
-		
-		if (!bInUserDir)
-		{
-			GetAppResourceDir(g_szAppDataDir);
-		}
-		else
-		{
-			if (SUCCEEDED(SHGetSpecialFolderPath(NULL, g_szAppDataDir, CSIDL_APPDATA, FALSE)))
-			{
-				DirStringFormat(g_szAppDataDir);
-				_tcscat_safe(g_szAppDataDir, CountOf(g_szAppDataDir), SZ_APP_NAME _T(SZ_DIR_SLASH));
-				if (!IsDirExist(g_szAppDataDir))
-				{
-					CreateDirectory(g_szAppDataDir, NULL);
-					
-					LPCTSTR		szToMoveFiles[] = { _T("MiniLyric.ini"), _T("MLLyrics.S2L"), _T("FontColorCustom.the"),
-						_T("dbSearchCache.db"), _T("dbLyrUpload.db") };
-					tstring		strMLIniOld, strMLIniNew;
-					
-					for (int i = 0; i < CountOf(szToMoveFiles); i++)
-					{
-						strMLIniOld = GetAppResourceDir();
-						strMLIniOld += szToMoveFiles[i];
-						strMLIniNew = g_szAppDataDir;
-						strMLIniNew += szToMoveFiles[i];
-						if (IsFileExist(strMLIniOld.c_str()))
-							MoveFile(strMLIniOld.c_str(), strMLIniNew.c_str());
-					}
-				}
-			}
-			else
-				GetAppResourceDir(g_szAppDataDir);
 		}
 	}
 	
+	if (!bInUserDir)
+	{
+		GetAppResourceDir(szAppDataDir);
+	}
+	else
+	{
+		if (SUCCEEDED(SHGetSpecialFolderPath(NULL, szAppDataDir, CSIDL_APPDATA, FALSE)))
+		{
+			DirStringFormat(szAppDataDir);
+			_tcscat_safe(szAppDataDir, CountOf(szAppDataDir), szDefAppName);
+			if (!IsDirExist(szAppDataDir))
+			{
+				CreateDirectory(szAppDataDir, NULL);
+				DirStringAddSlash(szAppDataDir);
+			}
+		}
+		else
+			GetAppResourceDir(szAppDataDir);
+	}
+}
+
+LPCTSTR GetAppDataDir()
+{
+	if (IsEmptyString(g_szAppDataDir))
+	{
+		GetAppDataDir(g_szAppDataDir, NULL);
+	}
+
 	return g_szAppDataDir;
 }
 
@@ -187,6 +187,8 @@ BOOL InitBaseFrameWork(HINSTANCE hInst, LPCTSTR szLogFile, LPCTSTR szProfileName
 
 	g_Profile.Init(szProfileName, szDefAppName);
 	g_Log.Init(szLogFile);
+
+	GetAppDataDir(g_szAppDataDir, szDefAppName);
 
 	 _set_invalid_parameter_handler(_invalid_parameter);
 
