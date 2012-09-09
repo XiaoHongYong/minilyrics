@@ -50,6 +50,16 @@ bool IsSupportedOpenFileType(MLFileType fileType)
 	return fileType != FT_UNKNOWN && IsFlagSet(FT_LYRICS_TXT | FT_SUBTITLE_SRT | FT_LYRICS_LRC, fileType);
 }
 
+// Filter non alpha symbols and numbers if possible.
+// Rule:
+// * If only number is contained, do not filter number.
+// * If contains alpha, remover all other chars.
+void FilterCharsEx(LPTSTR szBuffer, int nBuffMax, LPCTSTR szString, BOOL &bFilterNumb)
+{
+	bFilterNumb = IsIgnoreNumber(szString);
+	FilterChars(szBuffer, nBuffMax, szString, bFilterNumb);
+}
+
 // COMMENT:
 //		分析类似Winamp的歌曲名称标题：
 //		exp. "叶丽仪 - 上海滩" ----> 上海滩
@@ -75,13 +85,8 @@ void AnalysisSongArTitle(TCHAR szTitle[], BOOL &bTitleIgnoreNumb, TCHAR szArtist
 		strTitle = fileTitle;
 	}
 
-	_tcscpy_safe(szArtist, 256, strArtist.c_str());
-	bArtIgnoreNumb = IsIgnoreNumber(szArtist);
-	FilterChars(szArtist, 256, szArtist, bArtIgnoreNumb);
-
-	_tcscpy_safe(szTitle, 256, strTitle.c_str());
-	bTitleIgnoreNumb = IsIgnoreNumber(szTitle);
-	FilterChars(szTitle, 256, szTitle, bTitleIgnoreNumb);
+	FilterCharsEx(szArtist, 256, strArtist.c_str(), bArtIgnoreNumb);
+	FilterCharsEx(szTitle, 256, strTitle.c_str(), bTitleIgnoreNumb);
 }
 
 // PURPOSE:
@@ -260,28 +265,25 @@ void CLyricsLocalSearch::SaveLyricFolderCfg()
 	g_Profile.WriteProfileString(SZ_SECT_SEARCH_FOLDER, szKeyName, _T(""));
 }
 
-// COMMENT:
-//		搜索与歌曲szSongName，所有相关得歌词 
-BOOL CLyricsLocalSearch::SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szSongName, V_LRCSEARCHRESULT &vLyrics)
+BOOL CLyricsLocalSearch::SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vLyrics)
 {
-	// 将 szSongName 转换为歌名.
-	// exp. "叶丽仪 - 上海滩" ----> 上海滩
-	TCHAR	szTitle[MAX_PATH];
-	TCHAR	szArtist[MAX_PATH];
+	TCHAR	szTitleFiltered[MAX_PATH];
+	TCHAR	szArtistFiltered[MAX_PATH];
 	BOOL	bTitleIgnoreNumb, bArtIgnoreNumb;
 
 	SearchEmbeddedLyrics(szSongFile, vLyrics, true);
 
-	AnalysisSongArTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongName);
+	FilterCharsEx(szArtistFiltered, 256, szArtist, bArtIgnoreNumb);
+	FilterCharsEx(szTitleFiltered, 256, szTitle, bTitleIgnoreNumb);
 
-	if (!IsEmptyString(szTitle))
-		SearchLyrics(szSongFile, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, &vLyrics);
+	if (!IsEmptyString(szTitleFiltered))
+		SearchLyrics(szSongFile, szTitleFiltered, bTitleIgnoreNumb, szArtistFiltered, bArtIgnoreNumb, &vLyrics);
 
 	if (vLyrics.size() == 0 && !IsEmptyString(szSongFile))
 	{
-		AnalysisSongArTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongFile);
-		if (!IsEmptyString(szTitle))
-			SearchLyrics(szSongFile, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, &vLyrics);
+		AnalysisSongArTitle(szTitleFiltered, bTitleIgnoreNumb, szArtistFiltered, bArtIgnoreNumb, szSongFile);
+		if (!IsEmptyString(szTitleFiltered))
+			SearchLyrics(szSongFile, szTitleFiltered, bTitleIgnoreNumb, szArtistFiltered, bArtIgnoreNumb, &vLyrics);
 	}
 
 	return TRUE;
@@ -892,8 +894,6 @@ void CLyricsLocalSearch::SaveLyricsAssociation()
 //		szLyricFile	-	匹配的歌曲文件
 BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, TCHAR *szLyricFile)
 {
-	TCHAR			szEmbeddedLyrics[MAX_PATH];
-
 	szLyricFile[0] = '\0';
 
 	tstring fullTitle = FormatMediaTitle(szArtist, szTitle);
@@ -907,6 +907,7 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 	//
 	// 搜索嵌入的歌词
 	//
+	TCHAR			szEmbeddedLyrics[MAX_PATH];
 	EmptyStr(szEmbeddedLyrics);
 	SearchEmbeddedLyrics(szSongFile, vLyrics, true);
 	V_LRCSEARCHRESULT::iterator	it = vLyrics.GetTheBestMatchLyrics();
@@ -937,15 +938,17 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 	if (IsFileExist(szLyricFile))
 		return TRUE;
 
+	TCHAR	szTitleFiltered[MAX_PATH];
+	TCHAR	szArtistFiltered[MAX_PATH];
+	BOOL	bTitleIgnoreNumb, bArtIgnoreNumb;
+
+	FilterCharsEx(szArtistFiltered, 256, szArtist, bArtIgnoreNumb);
+	FilterCharsEx(szTitleFiltered, 256, szTitle, bTitleIgnoreNumb);
+
 	// Search lyrics by artist and title.
 	if (!IsEmptyString(szTitle))
 	{
-		BOOL	bTitleIgnoreNumb, bArtIgnoreNumb;
-
-		bTitleIgnoreNumb = IsIgnoreNumber(szTitle);
-		bArtIgnoreNumb = IsIgnoreNumber(szArtist);
-
-		SearchLyrics(szSongFile, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, &vLyrics);
+		SearchLyrics(szSongFile, szTitleFiltered, bTitleIgnoreNumb, szArtistFiltered, bArtIgnoreNumb, &vLyrics);
 		V_LRCSEARCHRESULT::iterator itBest = vLyrics.GetTheBestMatchLyrics(TRUE);
 		if (itBest != vLyrics.end())
 		{
@@ -960,14 +963,10 @@ BOOL CLyricsLocalSearch::GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist
 
 	// Search lyrics by song file name
 	{
-		BOOL	bTitleIgnoreNumb, bArtIgnoreNumb;
-		TCHAR	szArtist[MAX_PATH], szTitle[MAX_PATH];
-
-		AnalysisSongArTitle(szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, szSongFile);
-
-		if (!IsEmptyString(szTitle))
+		AnalysisSongArTitle(szTitleFiltered, bTitleIgnoreNumb, szArtistFiltered, bArtIgnoreNumb, szSongFile);
+		if (!IsEmptyString(szTitleFiltered))
 		{
-			SearchLyrics(szSongFile, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb, &vLyrics);
+			SearchLyrics(szSongFile, szTitleFiltered, bTitleIgnoreNumb, szArtistFiltered, bArtIgnoreNumb, &vLyrics);
 			V_LRCSEARCHRESULT::iterator itBest = vLyrics.GetTheBestMatchLyrics(TRUE);
 			if (itBest != vLyrics.end())
 			{

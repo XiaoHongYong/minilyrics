@@ -681,14 +681,11 @@ protected:
 	{
 		m_vResultsLocal.clear();
 
-		tstring			strFullTitle;
 		TCHAR			szLyricsFile[MAX_PATH];
 		uint32			nTimeStart = GetTickCount();
 		const int		nAcceptableCostTime = 500;
 
-		strFullTitle = FormatMediaTitle(m_strArtist.c_str(), m_strTitle.c_str());
-
-		g_LyricSearch.SearchAllMatchLyrics(m_strSongFile.c_str(), strFullTitle.c_str(), m_vResultsLocal);
+		g_LyricSearch.SearchAllMatchLyrics(m_strSongFile.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), m_vResultsLocal);
 
 		//
 		// Set best match lyrics

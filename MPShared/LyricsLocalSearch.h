@@ -28,7 +28,7 @@ public:
 	void Quit();
 
 	// 搜索所有匹配的歌词，包括了歌曲名完全匹配、歌词名完全匹配
-	BOOL SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szSongName, V_LRCSEARCHRESULT &vLyrics);
+	BOOL SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vLyrics);
 
 	// 取得最匹配的歌词，首先从歌词关连列表中读取
 	BOOL GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, TCHAR *szLyricFile);
