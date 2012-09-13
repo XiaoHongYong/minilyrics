@@ -64,6 +64,7 @@ void GetAppDataDir(LPTSTR szAppDataDir, LPCTSTR szDefAppName)
 		TCHAR szAppExe[MAX_PATH];
 		GetModuleFileName(NULL, szAppExe, CountOf(szAppExe));
 		_tcscpy_safe(szAppExeName, CountOf(szAppExeName), FileGetTitle(szAppExe).c_str());
+		szDefAppName = szAppExeName;
 	}
 
 	osvi.dwOSVersionInfoSize = sizeof(osvi);
@@ -104,12 +105,10 @@ void GetAppDataDir(LPTSTR szAppDataDir, LPCTSTR szDefAppName)
 		if (SUCCEEDED(SHGetSpecialFolderPath(NULL, szAppDataDir, CSIDL_APPDATA, FALSE)))
 		{
 			DirStringFormat(szAppDataDir);
-			_tcscat_safe(szAppDataDir, CountOf(szAppDataDir), szDefAppName);
+			_tcscat_safe(szAppDataDir, MAX_PATH, szDefAppName);
 			if (!IsDirExist(szAppDataDir))
-			{
 				CreateDirectory(szAppDataDir, NULL);
-				DirStringAddSlash(szAppDataDir);
-			}
+			DirStringAddSlash(szAppDataDir);
 		}
 		else
 			GetAppResourceDir(szAppDataDir);
@@ -185,10 +184,10 @@ BOOL InitBaseFrameWork(HINSTANCE hInst, LPCTSTR szLogFile, LPCTSTR szProfileName
 {
 	g_hInst = hInst;
 
+	GetAppDataDir(g_szAppDataDir, szDefAppName);
+
 	g_Profile.Init(szProfileName, szDefAppName);
 	g_Log.Init(szLogFile);
-
-	GetAppDataDir(g_szAppDataDir, szDefAppName);
 
 	 _set_invalid_parameter_handler(_invalid_parameter);
 

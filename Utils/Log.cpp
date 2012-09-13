@@ -296,15 +296,13 @@ void CLog::Init(LPCTSTR szLogFileName)
 	if (!szLogFileName)
 		return;
 
-	if ((szLogFileName[0] != '\0' && szLogFileName[1] == ':' && szLogFileName[2] == DIR_SLASH) ||
-		(szLogFileName[0] == DIR_SLASH))
+	if (_tcschr(szLogFileName, DIR_SLASH) != NULL)
 	{
-		// 如果已经是全路径，则不管
+		// It might be full file path
 		_tcscpy_safe(m_szLogFile, CountOf(m_szLogFile), szLogFileName);
 	}
 	else
 	{
-		// 如果不是全路径，则
 		GetAppDataDir(m_szLogFile);
 		_tcscat_safe(m_szLogFile, CountOf(m_szLogFile), szLogFileName);
 	}

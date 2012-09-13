@@ -397,18 +397,14 @@ void CProfile::Init(LPCTSTR szProfile, LPCTSTR szDefKey)
 		}
 	}
 
-	if (_tcslen(szProfile) > 3)
+	if (_tcschr(szProfile, DIR_SLASH) != NULL)
 	{
-		if ((szProfile[1] == ':') && (szProfile[2] == DIR_SLASH) ||
-			(szProfile[0] == DIR_SLASH))
-		{
-			// 如果已经是全路径，则不管
-			m_strProfile = szProfile;
-			return;
-		}
+		// It might be full file path
+		m_strProfile = szProfile;
+		return;
 	}
 
-	m_strProfile = GetAppResourceDir();
+	m_strProfile = GetAppDataDir();
 	m_strProfile += szProfile;
 }
 

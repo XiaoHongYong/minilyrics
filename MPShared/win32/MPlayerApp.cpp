@@ -170,20 +170,15 @@ bool CMPlayerApp::SetRunningFlag()
 	return true;
 }
 
-tstring GetAppIniFile()
+LPCTSTR GetAppIniFile()
 {
-	tstring	strFile;
 	//
 	// Init Base frame, save log and settings in app dir
 #ifdef _WIN32_WCE
-	strFile = _T("HKEY_LOCAL_MACHINE\\Software\\ZikiPlayer\\");
+	return _T("HKEY_LOCAL_MACHINE\\Software\\ZikiPlayer\\");
 #else
-	strFile = GetAppDataDir();
-	strFile += SZ_PROFILE_NAME;
-	SetFileNoReadOnly(strFile.c_str());
+	return SZ_PROFILE_NAME;
 #endif
-
-	return strFile;
 }
 
 bool CMPlayerApp::Init()
@@ -218,10 +213,8 @@ bool CMPlayerApp::Init()
 	GetModulePath(szWorkingFolder, GetAppInstance());
 	SetWorkingFolder(szWorkingFolder);
 
-	tstring		strMLIniFile = GetAppIniFile();
-	tstring		strMLLogFile = GetAppDataDir();
-	strMLLogFile += _T("log.txt");
-	InitBaseFrameWork(GetAppInstance(), strMLLogFile.c_str(), strMLIniFile.c_str(), SZ_SECT_UI);
+	InitBaseFrameWork(GetAppInstance(), _T("log.txt"), GetAppIniFile(), SZ_SECT_UI);
+	SetFileNoReadOnly(g_Profile.GetProfileName());	
 
 	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
 	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
