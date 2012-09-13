@@ -16,7 +16,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	// Players need the plugin to install to proper location.
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
-		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
+		INST_COPY_2_PLAYER_PLUGIN_DIR,
 		_T("iTunes"),
 		_T("iTunes.app"),
 		_T("~/Library/iTunes/iTunes Plug-ins/"),
@@ -227,14 +227,71 @@ public:
 
 };
 
+bool IsFileSame(LPCTSTR szSrc, LPCTSTR szTarg)
+{
+	unsigned char md5Src[MD5_LEN];
+	if (!MD5FileToBinary(szSrc, md5Src))
+		return false;
+
+	unsigned char md5Targ[MD5_LEN];
+	if (!MD5FileToBinary(szSrc, md5Targ))
+		return false;
+	
+	return memcmp(md5Src, md5Targ, MD5_LEN) == 0;
+}
+
+bool IsFileDirSame(LPCTSTR szSrc, LPCTSTR szTarg)
+{
+	if (!IsDirExist(szSrc))
+		return IsFileSame(szSrc, szTarg);
+	
+	CMLFileFind finderSrc;
+	if (!finderSrc.OpenDir(szSrc))
+		return false;
+	
+	set<tstring> setSrcFiles;
+
+	while (finderSrc.FindNext())
+	{
+		setSrcFiles.insert(finderSrc.GetCurName());
+		
+		tstring src, targ;
+		src = DirStringJoint(szSrc, finderSrc.GetCurName());
+		targ = DirStringJoint(szTarg, finderSrc.GetCurName());
+		if (finderSrc.IsCurDir())
+		{
+			if (!IsFileDirSame(src.c_str(), targ.c_str()))
+				return false;
+		}
+		else
+		{
+			if (!IsFileSame(src.c_str(), targ.c_str()))
+				return false;
+		}
+	}
+	
+	CMLFileFind finderTarg;
+	if (!finderTarg.OpenDir(szTarg))
+		return false;
+	
+	while (finderTarg.FindNext())
+	{
+		// The file must exist in src files.
+		if (setSrcFiles.find(finderTarg.GetCurName()) == setSrcFiles.end())
+			return false;
+	}
+	
+	return true;
+}
+
 class PluginInstallerVerify
 {
 public:
 	static int CopyFile(LPCTSTR szSrc, LPCTSTR szTarg, tstring &strErr, CPlayerPluginInstaller::Player &item)
 	{
-		if (!IsFileExist(szTarg))
+		if (!IsFileDirSame(szTarg, szSrc))
 		{
-			item.pExtraInfo->strMsg = _T("File does not exist.");
+			item.pExtraInfo->strMsg = _T("File does not exist or not same.");
 			item.pExtraInfo->strMsg += _T("\n");
 			item.pExtraInfo->strMsg += szTarg;
 			strErr = item.pExtraInfo->strMsg;
