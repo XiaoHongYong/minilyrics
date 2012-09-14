@@ -172,7 +172,8 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 		// return false;
 	}
 	
-	m_msgPipeOfPlayer.Open(strPlayerServicePipeName.c_str(), false);
+	bool ret = m_msgPipeOfPlayer.Open(strPlayerServicePipeName.c_str(), false);
+	LOG2(LOG_LVL_INFO, _T("Open player service pipe: %s. Result: %d"), strPlayerServicePipeName.c_str(), ret);
 
 	return true;
 }
@@ -182,6 +183,7 @@ void CMLPlayerMgr::Quit()
 	g_bQuitMsg = true;
 
 	m_msgPipeOfPlayer.Close();
+	LOG0(LOG_LVL_INFO, _T("Close player service pipe."));
 	pthread_kill(g_threadMsg, SIGINT);
 	pthread_join(g_threadMsg, NULL);
 	// pthread_wait(g_threadMsg, 

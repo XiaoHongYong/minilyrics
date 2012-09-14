@@ -20,7 +20,7 @@ void CallMenuCommand(int cmd);
 
 - (void) OnCommand:(NSMenuItem *)item
 {
-	CallMenuCommand([item tag]);
+	CallMenuCommand((int)[item tag]);
 }
 
 -(BOOL) validateMenuItem:(NSMenuItem *)item
@@ -45,6 +45,7 @@ void CallMenuCommand(int cmd) {
 @synthesize window;
 
 CMPSkinMenu *_menu;
+MainMenuHandler *_mainMenuHandler = [MainMenuHandler alloc];
 
 NSMenuItem *duplicateMenuItem(NSMenuItem *org) {
 	if ([org isSeparatorItem])
@@ -53,9 +54,8 @@ NSMenuItem *duplicateMenuItem(NSMenuItem *org) {
 	NSMenuItem *item = [[NSMenuItem alloc] initWithTitle:[org title]
 												  action:[org action]
 										   keyEquivalent:[org keyEquivalent]];
-	MainMenuHandler *mainMenuHandler = [MainMenuHandler alloc];
-	[item setTarget:mainMenuHandler];
-	[mainMenuHandler release];
+
+	[item setTarget:_mainMenuHandler];
 	[item setTag:[org tag]];
 	
 	if ([org hasSubmenu] != YES)
@@ -66,7 +66,7 @@ NSMenuItem *duplicateMenuItem(NSMenuItem *org) {
 	[newSubMenu setAutoenablesItems:NO];
 	[item setSubmenu:newSubMenu];
 
-	int count = [subMenu numberOfItems];
+	int count = (int)[subMenu numberOfItems];
 	for (int i = 0; i < count; i++) {
 		NSMenuItem *newSubItem = duplicateMenuItem([subMenu itemAtIndex:i]);
 		[newSubMenu addItem:newSubItem];

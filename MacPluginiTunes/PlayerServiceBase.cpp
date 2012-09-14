@@ -18,7 +18,16 @@ LPVOID CPlayerServiceBase::ThreadMsg(LPVOID param)
 	while (!g_bQuitMsg)
 	{
 		if (!pService->m_msgPipe.Read(msg, data))
-			break;
+		{
+			::Log(_T("Player plugin: Failed to read player service pipe."));
+			if (g_bQuitMsg)
+				break;
+
+			::Log(_T("Player plugin: Program not quit, create player service pipe again."));
+			pService->m_msgPipe.Open(pService->m_strPipeName.c_str(), true);
+			usleep(1000);
+			continue;
+		}
 		pService->OnMsg(msg, data.c_str(), data.size());
 	}
 	
@@ -36,9 +45,11 @@ CPlayerServiceBase::~CPlayerServiceBase(void)
 
 bool CPlayerServiceBase::Create(LPCSTR szPipeName)
 {
-	Log("CPlayerServiceBase::Create()");
+	::Log("CPlayerServiceBase::Create()");
 
-	m_msgPipe.Open(szPipeName, true);
+	m_strPipeName = szPipeName;
+	bool ret = m_msgPipe.Open(szPipeName, true);
+	::Log(_T("Player plugin: Open player service pipe: %s. Result: %d"), szPipeName, ret);
 
 	pthread_create(&g_threadMsg, NULL, ThreadMsg, this);
 	g_bQuitMsg = false;
@@ -50,6 +61,7 @@ void CPlayerServiceBase::Destroy()
 {
 	g_bQuitMsg = true;
 	m_msgPipe.Close();
+	::Log(_T("Player plugin: Close player service pipe"));
 
 	if (g_threadMsg != 0)
 	{

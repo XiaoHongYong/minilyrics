@@ -46,5 +46,6 @@ protected:
 
 protected:
 	CMsgPipe			m_msgPipe;
+	tstring				m_strPipeName;
 
 };
