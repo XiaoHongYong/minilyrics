@@ -330,9 +330,7 @@ SectionIn 1
   CreateShortCut "$SMPROGRAMS\MiniLyrics\Setup.lnk" "$INSTDIR\MiniLyrics.exe" \
 	"/Setup"
 
-  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe" \
-	"" "" "" "" \
-	ALT|CONTROL|M ""
+  CreateShortCut "$SMPROGRAMS\MiniLyrics\MiniLyrics.lnk" "$INSTDIR\MiniLyrics.exe"
 
   StrCpy $R1 $(SecShortcut.MLUninst)
   CreateShortCut "$SMPROGRAMS\MiniLyrics\$R1.lnk" "$INSTDIR\uninst-ml.exe"
