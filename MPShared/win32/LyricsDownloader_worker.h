@@ -427,6 +427,12 @@ public:
 		m_downSaveDir = downSaveDir;
 		m_downSaveName = downSaveName;
 		m_vSaveEmbeddedLyrNames = vSaveEmbeddedLyrNames;
+
+		m_nSavedEmbeddedLyrSrcType = 0;
+		for (size_t i = 0; i < vSaveEmbeddedLyrNames.size(); i++)
+		{
+			m_nSavedEmbeddedLyrSrcType |= LyrSrcTypeFromName(m_vSaveEmbeddedLyrNames[i].c_str());
+		}
 	}
 
 protected:
@@ -515,6 +521,14 @@ protected:
 			return nRet;
 		}
 
+		if (lyrData.GetLyrContentType() == LCT_TXT)
+		{
+			// For text only lyrics, if we want to save sync lyrics, need to try to download it again.
+			if ((m_nSavedEmbeddedLyrSrcType & (LST_ID3V2_SYLT | LST_LYRICS3V2)) != 0
+				&& !g_LyricSearch.IsAssociatedLyrics(szMediaFile))
+				return ERR_NOT_FOUND;
+		}
+
 		tstring str;
 		CCharBuffer		bufLyrFile;
 		lyrData.ToString(str, FT_LYRICS_LRC, true);
@@ -541,6 +555,7 @@ protected:
 	DOWN_SAVE_DIR	m_downSaveDir;
 	DOWN_SAVE_NAME	m_downSaveName;
 	VecString		m_vSaveEmbeddedLyrNames;
+	uint32			m_nSavedEmbeddedLyrSrcType;
 
 };
 

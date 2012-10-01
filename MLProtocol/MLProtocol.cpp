@@ -824,8 +824,7 @@ int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 	ASSERT(pMsgBuff->size() == 0);
 	pMsgBuff->clear();
 
-	int		nRead;
-	int		nRet = m_pNetFile->Read(*pMsgBuff, ALLOC_BLOCK_LEN, &nRead);
+	int		nRet = m_pNetFile->ReadExactly(*pMsgBuff, 4);
 	if (nRet != ERR_OK)
 		return nRet;
 	if (pMsgBuff->size() < 4)
@@ -887,68 +886,47 @@ int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 
 int CMLProtocol::ReadOldXmlMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 {
-	int nDataLength = 0;
-
-	while (1)
+	if (pMsgBuff->size() < ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN)
 	{
-		if (pMsgBuff->size() < ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN)
-		{
-			int nRead = 0;
-			int nRet = m_pNetFile->Read(*pMsgBuff, ALLOC_BLOCK_LEN, &nRead);
-			if (nRet != ERR_OK)
-				return nRet;
-			if (nRead == 0)
-				return ERR_NOT_RECIVED_ALL;
-		}
-
-		//
-		// 如果没有接收到数据长度，则继续接收
-		if (pMsgBuff->size() < ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN)
-			continue;
-
-		if (nDataLength == 0)
-		{
-			// Read message header
-			LPCSTR pszMsg = NULL;
-			pszMsg = pMsgBuff->data();
-			if (!StrBeginWith(pszMsg, ML_MSG_XML))
-				return ERR_BAD_MSG;
-
-			char	szMsgDataLen[ML_MSG_XML_DATA_LEN + 1];
-			strncpy_safe(szMsgDataLen, CountOf(szMsgDataLen), pszMsg + ML_MSG_XML_LEN, ML_MSG_XML_DATA_LEN);
-			szMsgDataLen[ML_MSG_XML_DATA_LEN] = '\0';
-
-			char	*pTemp = szMsgDataLen;
-			while (*pTemp == ' ')
-				pTemp++;
-			nDataLength = atoi(pTemp);
-
-			if (nDataLength > 0xFFFFFF || nDataLength <= 0)
-			{
-				pMsgBuff->clear();
-				DBGLOG1(_T("INVALID MSG!! Length: %d Invalid! CMGCPCom::OnRecieve(), Drop it!"), nDataLength);
-				return ERR_BAD_MSG;
-			}
-
-			// Erase header
-			pMsgBuff->erase(0, ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN);
-		}
-
-		if (nDataLength <= (int)pMsgBuff->size())
-		{
-			//
-			// 已经读完了一条消息
-			ASSERT(nDataLength <= (int)pMsgBuff->size());
-			break;
-		}
-
-		if (pMsgBuff->size() >= ML_MSG_MAX_LENGTH)
-			return ERR_OUTOF_BUFF;
+		int nRet = m_pNetFile->ReadExactly(*pMsgBuff, ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN - pMsgBuff->size());
+		if (nRet != ERR_OK)
+			return nRet;
 	}
+
+	// Read message header
+	LPCSTR pszMsg = NULL;
+	pszMsg = pMsgBuff->data();
+	if (!StrBeginWith(pszMsg, ML_MSG_XML))
+		return ERR_BAD_MSG;
+
+	char	szMsgDataLen[ML_MSG_XML_DATA_LEN + 1];
+	strncpy_safe(szMsgDataLen, CountOf(szMsgDataLen), pszMsg + ML_MSG_XML_LEN, ML_MSG_XML_DATA_LEN);
+	szMsgDataLen[ML_MSG_XML_DATA_LEN] = '\0';
+
+	char	*pTemp = szMsgDataLen;
+	while (*pTemp == ' ')
+		pTemp++;
+	int nDataLength = atoi(pTemp);
+	if (nDataLength > 0xFFFFFF || nDataLength <= 0)
+	{
+		pMsgBuff->clear();
+		DBGLOG1(_T("INVALID MSG!! Length: %d Invalid! CMGCPCom::OnRecieve(), Drop it!"), nDataLength);
+		return ERR_BAD_MSG;
+	}
+
+	// Erase header
+	pMsgBuff->erase(0, ML_MSG_XML_LEN + ML_MSG_XML_DATA_LEN);
+
+	int nRet = m_pNetFile->ReadExactly(*pMsgBuff, nDataLength - pMsgBuff->size());
+	if (nRet != ERR_OK)
+		return nRet;
+
+	if (pMsgBuff->size() >= ML_MSG_MAX_LENGTH)
+		return ERR_OUTOF_BUFF;
 
 	msgType = MT_XML;
 
-	int nRet = m_packetWrapper.Unwrapp(*pMsgBuff);
+	nRet = m_packetWrapper.Unwrapp(*pMsgBuff);
 	if (nRet != ERR_OK)
 		return nRet;
 

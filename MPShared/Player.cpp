@@ -1301,6 +1301,21 @@ bool CPlayer::SetFieldValue(TCHAR szField[], int lenField, LPCTSTR szValue)
 	{
 		for (size_t i = 0; i < m_vTitleFilters.size(); i++)
 			strrep(str, m_vTitleFilters[i].c_str(), _T(""));
+
+		// Remove regular extension.
+		static LPCTSTR vToTrim[] = { _T(".mp3"), _T(".m4a"), _T(".flv"), _T(".mpg"), };
+		LPCTSTR szExt = FileGetExt(str.c_str());
+		if (!IsEmptyString(szExt))
+		{
+			for (int i = 0; i < CountOf(vToTrim); i++)
+			{
+				if (_tcsicmp(szExt, vToTrim[i]) == 0)
+				{
+					str.erase(str.size() - _tcslen(szExt), _tcslen(szExt));
+					break;
+				}
+			}
+		}
 	}
 
 	if (_tcscmp(szField, str.c_str()) != 0)

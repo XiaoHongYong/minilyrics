@@ -15,13 +15,13 @@ static ID_TO_STRING	__ErrID2Str[] =
 {
 	{ ERR_FALSE, _T("Failed.") },
 	{ ERR_OK, _T("Succeed.") },
-	{ ERR_INITDB_FAILED, _T("Init Database FAILED.") },
+	{ ERR_INITDB_FAILED, _T("Failed to init Database.") },
 	{ ERR_NO_MEM, _T("Can't allocate more memory.") },
 	{ ERR_OUTOF_BUFF, _T("Insufficient buffer.") },
 	{ ERR_NOT_IMPLEMENTED, _T("Not implemented.") },
 	{ ERR_EOF, _T("Reached the end of the file.") },
 	{ ERR_BAD_MSG, _T("Corrupted message.") },
-	{ ERR_PARSE_XML, _T("Parse xml FAILED.") },
+	{ ERR_PARSE_XML, _T("Failed to parse XML.") },
 
 	{ ERR_FILE_NOT_EXIST, _T("File does not exist.") },
 
@@ -33,11 +33,12 @@ static ID_TO_STRING	__ErrID2Str[] =
 
 	{ ERR_NOT_SUPPORT_FILE_FORMAT, _T("The file may not be supported.") },
 	{ ERR_NOLYRICS_OPENED, _T("No lyrics file was opened.") },
+	{ ERR_EMPTY_LYRICS, _T("The lyrics are empty.")},
 
-	{ ERR_OPEN_FILE, _T("Open file FAILED.")},
-	{ ERR_READ_FILE, _T("Read file FAILED.")},
-	{ ERR_WRITE_FILE, _T("Write file FAILED.") },
-	{ ERR_SEEK_FILE, _T("Seek file FAILED.") },
+	{ ERR_OPEN_FILE, _T("Failed to open file.")},
+	{ ERR_READ_FILE, _T("Failed to read file.")},
+	{ ERR_WRITE_FILE, _T("Failed to write file.") },
+	{ ERR_SEEK_FILE, _T("Failed to seek file.") },
 	{ ERR_NOT_FIND_LRC3V2, _T("Not found Lyrics3v2 tag") },
 	{ ERR_BAD_LRC3V2_FORMAT, _T("Invalid Lyrics3v2 format.") },
 	{ ERR_BAD_FILE_FORMAT, _T("Invalid file format.") },

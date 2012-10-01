@@ -160,7 +160,7 @@ int CLrcParser::ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine)
 	CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
 
 	if (IsEmptyString(szText))
-		return ERR_NOT_SUPPORT_FILE_FORMAT;
+		return ERR_EMPTY_LYRICS;
 
 	m_pMLData->Properties().SetEncoding(DEFAULT_ENCODING);
 

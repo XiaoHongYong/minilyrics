@@ -318,6 +318,47 @@ int CNetFile::Read(char *szBuffer, int nBufferLen, int *pnRead)
 	return ERR_OK;
 }
 
+int CNetFile::ReadExactly(CCharBuffer &buf, int nToRead)
+{
+	if (nToRead <= 0)
+		return ERR_OK;
+
+	if (buf.capacity() - buf.size() < (size_t)nToRead)
+		buf.reserve(buf.size() + nToRead);
+
+	while (nToRead > 0)
+	{
+		int got = recv(m_s, buf.data() + buf.size(), nToRead, 0);
+		if (got == SOCKET_ERROR)
+			return WSAError();
+		else if (got == 0)
+			return ERR_NOT_RECIVED_ALL;
+		buf.resize(buf.size() + got);
+		nToRead -= got;
+	}
+
+	return ERR_OK;
+}
+
+int CNetFile::ReadTillDataStreamClosed(CCharBuffer &buf)
+{
+	while (true)
+	{
+		int nToRead = 4096;
+		if (buf.capacity() - buf.size() < (size_t)nToRead)
+			buf.reserve(buf.size() + nToRead);
+
+		int got = recv(m_s, buf.data() + buf.size(), nToRead, 0);
+		if (got == SOCKET_ERROR)
+			return WSAError();
+		else if (got == 0)
+			return ERR_OK;
+		buf.resize(buf.size() + got);
+	}
+
+	return ERR_OK;
+}
+
 int CNetFile::Read(CCharBuffer &buf, int nMaxToRead, int *pnRead)
 {
 	if (nMaxToRead == -1)

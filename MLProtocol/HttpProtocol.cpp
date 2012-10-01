@@ -366,25 +366,15 @@ int CHttpRequestProtocol::ReadData(CCharBuffer *pBuff, int nLenMax)
 		if ((int)m_buffHead.size() > m_nHeadEndPos)
 			pBuff->append(m_buffHead.data() + m_nHeadEndPos, m_buffHead.size() - m_nHeadEndPos);
 
-		while (pBuff->size() < m_dwContentLen)
-		{
-			int		nRead;
-			int nRet = m_pNetFile->Read(*pBuff, READ_BLOCK_SIZE, &nRead);
-			if (nRet != ERR_OK)
-				return nRet;
-			if (nRead == 0)
-			{
-				if (m_dwContentLen == -1)
-					return ERR_OK;
-				else
-					return ERR_HTTP_DATA_NOT_FINISHED;
-			}
-
-			if ((int)pBuff->size() > nLenMax)
-				return ERR_BAD_MSG;
-		}
-		if (pBuff->size() > m_dwContentLen)
+		int nRet = ERR_OK;
+		if (m_dwContentLen == -1)
+			nRet = m_pNetFile->ReadTillDataStreamClosed(*pBuff);
+		else if (pBuff->size() < m_dwContentLen)
+			nRet = m_pNetFile->ReadExactly(*pBuff, m_dwContentLen - pBuff->size());
+		else if (pBuff->size() > m_dwContentLen)
 			pBuff->setSize(m_dwContentLen);
+		if (nRet != ERR_OK)
+			return nRet;
 	}
 
 	return ERR_OK;
@@ -995,32 +985,25 @@ int CHttpReturnProtocol::ReadData(CCharBuffer *pBuff, int nLenMax)
 			if (nCount > 0)
 				memmove(szBuffer, szData, nCount);
 		}
+
+		if (pBuff->size() > m_dwContentLen)
+			pBuff->setSize(m_dwContentLen);
 	}
 	else
 	{
 		if ((int)m_buffHead.size() > m_nHeadEndPos)
 			pBuff->append(m_buffHead.data() + m_nHeadEndPos, m_buffHead.size() - m_nHeadEndPos);
 
-		while (pBuff->size() < m_dwContentLen)
-		{
-			int		nRead;
-			int		nRet = m_pNetFile->Read(*pBuff, READ_BLOCK_SIZE, &nRead);
-			if (nRet != ERR_OK)
-			{
-				return nRet;
-			}
-			if (nRead == 0)
-			{
-				if (m_dwContentLen == -1)
-					return ERR_OK;
-				else
-					return ERR_HTTP_DATA_NOT_FINISHED;
-			}
-		}
+		int nRet = ERR_OK;
+		if (m_dwContentLen == -1)
+			nRet = m_pNetFile->ReadTillDataStreamClosed(*pBuff);
+		else if (pBuff->size() < m_dwContentLen)
+			nRet = m_pNetFile->ReadExactly(*pBuff, m_dwContentLen - pBuff->size());
+		else if (pBuff->size() > m_dwContentLen)
+			pBuff->setSize(m_dwContentLen);
+		if (nRet != ERR_OK)
+			return nRet;
 	}
-
-	if (pBuff->size() > m_dwContentLen)
-		pBuff->setSize(m_dwContentLen);
 
 	return ERR_OK;
 }
