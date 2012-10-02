@@ -92,6 +92,7 @@ def signFile(fileName):
 	code = -1
 	for _ in range(3):
 		cmdLine = r'signtool sign /d Crintsoft /du http://www.crintsoft.com /t  http://timestamp.verisign.com/scripts/timstamp.dll "{0}"'.format(fileName)
+		#cmdLine = r'signtool sign /d Crintsoft /du http://www.crintsoft.com /t  http://timestamp.globalsign.com/scripts/timstamp.dll "{0}"'.format(fileName)
 		code = Execute(cmdLine)
 		if code != 0:
 			time.sleep(2)
