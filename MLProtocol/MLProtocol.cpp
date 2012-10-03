@@ -713,28 +713,25 @@ int CMLPacketWrapper::Wrapp(CCharBuffer &buff)
 
 	if (m_packFlag == MPV_V1_MD5_ID)
 	{
-		const char *szPwd;
-		MLEncodePacketV1	head;
-		int			n = 0;
-		size_t		nSizeOld;
-		uint		i;
-
-		szPwd = m_pAccountMgr->GetPwd(m_nCurrentId);
+		const char *szPwd = m_pAccountMgr->GetPwd(m_nCurrentId);
 		if (!szPwd)
 		{
 			ERRLOG1(_T("Invalid Lyrics Search Account: %d"), m_nCurrentId);
 			return ERR_BAD_MSG;
 		}
 
+		MLEncodePacketV1	head;
 		head.byVersion = MPV_V1_MD5_ID;
 		head.SetID(m_nCurrentId);
 
-		nSizeOld = buff.size();
+		size_t	nSizeOld = buff.size();
 		buff += szPwd;
 		assert(sizeof(head.byMd5) >= 16);
 		MD5ToBinary(buff.c_str(), buff.size(), head.byMd5);
 		buff.setSize(nSizeOld);
 
+		int			n = 0;
+		uint		i;
 		for (i = 0; i < buff.size(); i++)
 			n += (BYTE)(buff[i]);
 		head.byXor = BYTE(n / buff.size());
@@ -753,13 +750,10 @@ int CMLPacketWrapper::Wrapp(CCharBuffer &buff)
 
 int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 {
-	MLEncodePacketV1		*pHead;
-
 	if (buff.size() <= sizeof(MLEncodePacketV1))
 		return ERR_INVALID_PACK_VER;
 
-	pHead = (MLEncodePacketV1 *)buff.data();
-
+	MLEncodePacketV1 *pHead = (MLEncodePacketV1 *)buff.data();
 	if (pHead->byVersion == MPV_XML)
 	{
 		// We doesn't support old XML Packet now.
@@ -768,15 +762,13 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 
 	if (pHead->byVersion == MPV_V1_MD5_ID)
 	{
-		const char		*szPwd;
-		unsigned char	Md5[16];
 		int				i;
 
 		for (i = sizeof(MLEncodePacketV1); i < (int)buff.size(); i++)
 			buff[(uint)i] = buff[(uint)i] ^ pHead->byXor;
 
 		m_nCurrentId = pHead->GetID();
-		szPwd = m_pAccountMgr->GetPwd(m_nCurrentId);
+		const char *szPwd = m_pAccountMgr->GetPwd(m_nCurrentId);
 		if (!szPwd)
 		{
 			ERRLOG1(_T("Invalid Lyrics Search Account: %d"), m_nCurrentId);
@@ -784,11 +776,14 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 			return ERR_BAD_MSG;
 		}
 
+		unsigned char	Md5[16];
 		int nSizeOld = buff.size();
-		buff += szPwd;
+		buff.append(szPwd);
 		MD5ToBinary(buff.c_str() + sizeof(MLEncodePacketV1), buff.size() - sizeof(MLEncodePacketV1), Md5);
 		buff.resize(nSizeOld);
 
+		// buff is appended and resized, pHead might point to incorrect memory, assign again.
+		pHead = (MLEncodePacketV1 *)buff.data();
 		for (i = 0; i < CountOf(pHead->byMd5); i++)
 		{
 			if (pHead->byMd5[i] != Md5[i])
