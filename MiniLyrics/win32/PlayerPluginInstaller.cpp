@@ -223,8 +223,8 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_REG_DLL,
 		_T("J. River Media Jukebox"),
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Jukebox 14\\UninstallString"),
-		_T("J River\\Media Jukebox 14\\"), _T("Media Jukebox 14.exe"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Jukebox %d\\UninstallString"),
+		_T("J River\\Media Jukebox %d\\"), _T("Media Jukebox %d.exe\n14\n20"),
 		NULL,
 		_T("InstMJ"),
 		_T("PluginMJ.dll"),
@@ -233,8 +233,8 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
 		INST_REG_DLL,
 		_T("J. River Media Center"),
-		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Center 17\\UninstallString"),
-		_T("J River\\Media Center 17\\"), _T("Media Center 17.exe"),
+		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Media Center %d\\UninstallString"),
+		_T("J River\\Media Center %d\\"), _T("Media Center %d.exe\n15\n20"),
 		NULL,
 		_T("InstMJ"),
 		_T("PluginMJ.dll"),
@@ -298,7 +298,7 @@ void UpdatePlayerPath(LPCTSTR szFile, DWORD dwProcessId)
 	for (int i = 0; i < CountOf(g_playersPlugin); i++)
 	{
 		CPlayerPluginInstaller::Player &item = g_playersPlugin[i];
-		if (item.szExeName && _tcsicmp(szFileName, item.szExeName) == 0)
+		if (item.IsExeNameSame(szFileName))
 		{
 			item.pExtraInfo->strPlayerPath = FileGetPath(szFile);
 			item.pExtraInfo->dwProcessId = dwProcessId;
@@ -499,6 +499,47 @@ bool UnregisterDll(LPCTSTR szDll, tstring &strErr)
 	return false;
 }
 
+void CPlayerPluginInstaller::Player::GetStringRangeList(LPCTSTR szInput, ListString &listStrings)
+{
+	ASSERT(szExeName != NULL);
+
+	listStrings.clear();
+
+	VecString vRange;
+	StrSplit(szExeName, '\n', vRange);
+	if (vRange.size() != 3)
+	{
+		listStrings.push_back(szInput);
+		return;
+	}
+
+	tstring strInput, strRange;
+	StrSplit(szInput, '\n', strInput, strRange);
+
+	CStrPrintf format;
+
+	int start = _ttoi(vRange[1].c_str());
+	int end = _ttoi(vRange[2].c_str());
+	for (int i = start; i <= end; i++)
+	{
+		format.printf(strInput.c_str(), i);
+		listStrings.push_back(format.c_str());
+	}
+}
+
+bool CPlayerPluginInstaller::Player::IsExeNameSame(LPCTSTR szName)
+{
+	ListString listExeNames;
+	GetStringRangeList(szExeName, listExeNames);
+	for (ListString::iterator it = listExeNames.begin(); it != listExeNames.end(); ++it)
+	{
+		if (_tcsicmp(szName, (*it).c_str()) == 0)
+			return true;
+	}
+
+	return false;
+}
+
 void CPlayerPluginInstaller::Player::DetectPlayerPath()
 {
 	pExtraInfo->strPlayerPath.clear();
@@ -506,19 +547,25 @@ void CPlayerPluginInstaller::Player::DetectPlayerPath()
 	if (szPathRegKeys && !IsEmptyString(szPathRegKeys))
 	{
 		// Detect player by registry key
-		LPCTSTR szValueName = _tcsrchr(szPathRegKeys, '\\');
-		if (szValueName)
+		ListString listPathRegKeys;
+		GetStringRangeList(szPathRegKeys, listPathRegKeys);
+		for (ListString::iterator it = listPathRegKeys.begin(); it != listPathRegKeys.end(); ++it)
 		{
+			LPCTSTR		szPathRegKeys = (*it).c_str();
 			tstring		strKey;
-			strKey.append(szPathRegKeys, szValueName);
-			szValueName++;
+			LPCTSTR szValueName = _tcsrchr(szPathRegKeys, '\\');
+			if (szValueName)
+			{
+				strKey.append(szPathRegKeys, szValueName);
+				szValueName++;
 
-			TCHAR	szPath[MAX_PATH];
-			RegGetProfileString(HKEY_LOCAL_MACHINE, strKey.c_str(), szValueName, _T(""), szPath, MAX_PATH);
+				TCHAR	szPath[MAX_PATH];
+				RegGetProfileString(HKEY_LOCAL_MACHINE, strKey.c_str(), szValueName, _T(""), szPath, MAX_PATH);
 
-			TrimStr(szPath, '"');
-			if (!IsEmptyString(szPath))
-				pExtraInfo->strPlayerPath = FileGetPath(szPath);
+				TrimStr(szPath, '"');
+				if (!IsEmptyString(szPath))
+					pExtraInfo->strPlayerPath = FileGetPath(szPath);
+			}
 		}
 	}
 
@@ -526,10 +573,15 @@ void CPlayerPluginInstaller::Player::DetectPlayerPath()
 		return;
 
 	// Detect player by check program files folder
-	pExtraInfo->strPlayerPath = DirStringJoint(GetProgramFilesPath().c_str(), szDefaultProgramFilesDir);
-	DirStringAddSlash(pExtraInfo->strPlayerPath);
-	if (CheckPlayerInstalled(false))
-		return;
+	ListString listProgramDir;
+	GetStringRangeList(szDefaultProgramFilesDir, listProgramDir);
+	for (ListString::iterator it = listProgramDir.begin(); it != listProgramDir.end(); ++it)
+	{
+		pExtraInfo->strPlayerPath = DirStringJoint(GetProgramFilesPath().c_str(), (*it).c_str());
+		DirStringAddSlash(pExtraInfo->strPlayerPath);
+		if (IsDirExist(pExtraInfo->strPlayerPath.c_str()) && CheckPlayerInstalled(false))
+			return;
+	}
 
 	DWORD dwDriveMask = GetLogicalDrives();
 	TCHAR chDrive = 'A';
@@ -570,36 +622,46 @@ bool CPlayerPluginInstaller::Player::CheckPlayerInstalled(bool bClearPathIfNotIn
 		return true;
 	}
 
-	ASSERT(pExtraInfo && szExeName);
+	ASSERT(pExtraInfo);
 
 	DirStringAddSlash(pExtraInfo->strPlayerPath);
 
-	tstring		strPath = pExtraInfo->strPlayerPath;
-	strPath += szExeName;
-
-	pExtraInfo->status &= ~CPlayerPluginInstaller::S_PLAYER_INSTALLED;
-	if (!IsFileExist(strPath.c_str()))
+	ListString listExeNames;
+	GetStringRangeList(szExeName, listExeNames);
+	for (ListString::iterator it = listExeNames.begin(); it != listExeNames.end(); ++it)
 	{
-		if (bClearPathIfNotInstalled)
-			pExtraInfo->strPlayerPath.clear();
-		return false;
+		tstring		strPath = pExtraInfo->strPlayerPath;
+		strPath += *it;
+
+		pExtraInfo->status &= ~CPlayerPluginInstaller::S_PLAYER_INSTALLED;
+		if (IsFileExist(strPath.c_str()))
+		{
+			pExtraInfo->status |= CPlayerPluginInstaller::S_PLAYER_INSTALLED;
+			return true;
+		}
 	}
 
-	pExtraInfo->status |= CPlayerPluginInstaller::S_PLAYER_INSTALLED;
-	return true;
+	if (bClearPathIfNotInstalled)
+		pExtraInfo->strPlayerPath.clear();
+	return false;
 }
 
 tstring CPlayerPluginInstaller::Player::GetPlayerExeFile()
 {
 	if (szExeName != NULL)
 	{
-		ASSERT(pExtraInfo && szExeName);
+		ASSERT(pExtraInfo);
 
 		DirStringAddSlash(pExtraInfo->strPlayerPath);
 
-		tstring		strExeFile = DirStringJoint(pExtraInfo->strPlayerPath.c_str(), szExeName);
-		if (IsFileExist(strExeFile.c_str()))
-			return strExeFile;
+		ListString listExeNames;
+		GetStringRangeList(szExeName, listExeNames);
+		for (ListString::iterator it = listExeNames.begin(); it != listExeNames.end(); ++it)
+		{
+			tstring		strExeFile = pExtraInfo->strPlayerPath + *it;
+			if (IsFileExist(strExeFile.c_str()))
+				return strExeFile;
+		}
 	}
 
 	return _T("");

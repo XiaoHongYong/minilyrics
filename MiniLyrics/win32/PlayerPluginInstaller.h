@@ -38,11 +38,16 @@ public:
 		LPCTSTR				szPlayerName;
 		LPCTSTR				szPathRegKeys;
 		LPCTSTR				szDefaultProgramFilesDir;
-		LPCTSTR				szExeName;
+		LPCTSTR				szExeName;		// Exe Name, Reg path, Program dir can be formated with %d.
+											// Exe name then will be splited with \n into 3 parts. 
 		LPCTSTR				szPluginDirOfPlayer;
 		LPCTSTR				szConfigName;
 		LPCTSTR				szPluginFiles;	// Separated with ';'
 		PlayerExtraInfo		*pExtraInfo;
+
+		void GetStringRangeList(LPCTSTR szInput, ListString &listStrings);
+
+		bool IsExeNameSame(LPCTSTR szName);
 
 		bool IsInstalled() { return IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED); }
 

@@ -532,6 +532,12 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		//
 		// ¸è´ÊÏÂÔØ
 		//
+		if (!g_Player.IsMediaOpened())
+		{
+			m_pSkinWnd->MessageOut(_TLT("No media was opened."));
+			break;
+		}
+
 		{
 			if (!g_bInModalDlLrcSelDlg)
 			{
