@@ -341,7 +341,7 @@
 		5F65BB11156B19BE00605207 /* MsgPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MsgPipe.cpp; path = ../../MacPluginiTunes/MsgPipe.cpp; sourceTree = "<group>"; };
 		5F65BB12156B19BE00605207 /* MsgPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MsgPipe.h; path = ../../MacPluginiTunes/MsgPipe.h; sourceTree = "<group>"; };
 		5F8A1CA4159555350062394E /* DlgSaveLyrPrompt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgSaveLyrPrompt.cpp; sourceTree = "<group>"; };
-		5FB16200147017330084494F /* MiniLyricsMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = MiniLyricsMac.app; path = MiniLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5FB16200147017330084494F /* MiniLyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FB16204147017330084494F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5FB16207147017330084494F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		5FB16208147017330084494F /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -606,7 +606,7 @@
 		5FB16201147017330084494F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5FB16200147017330084494F /* MiniLyricsMac.app */,
+				5FB16200147017330084494F /* MiniLyrics.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -982,7 +982,7 @@
 			);
 			name = MiniLyrics;
 			productName = MiniLyricsMac;
-			productReference = 5FB16200147017330084494F /* MiniLyricsMac.app */;
+			productReference = 5FB16200147017330084494F /* MiniLyrics.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -1446,6 +1446,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				INFOPLIST_FILE = "MiniLyricsMac/MiniLyricsMac-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1460,6 +1461,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				INFOPLIST_FILE = "MiniLyricsMac/MiniLyricsMac-Info.plist";
+				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

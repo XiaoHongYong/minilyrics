@@ -146,6 +146,7 @@ public:
 	{
 		tstring	strName = GetUIObjectText(_T("CID_E_NAME"));
 		tstring	strCode = GetUIObjectText(_T("CID_E_CODE"));
+		strCode = ToUpper(strCode.c_str());
 
 		TrimStr(strName);
 		TrimStr(strCode);

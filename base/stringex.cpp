@@ -803,7 +803,7 @@ void LowerString(LPSTR szString)
 
 tstring ToUpper(LPCTSTR szString)
 {
-	tstring		str;
+	tstring		str = szString;
 
 	for (int i = 0; szString[i] != '\0'; i ++)
 		if ('a' <= szString[i]  && szString[i] <= 'z')
@@ -814,7 +814,7 @@ tstring ToUpper(LPCTSTR szString)
 
 tstring ToLower(LPCTSTR szString)
 {
-	tstring		str;
+	tstring		str = szString;
 
 	str = szString;
 	for (int i = 0; szString[i] != '\0'; i ++)
