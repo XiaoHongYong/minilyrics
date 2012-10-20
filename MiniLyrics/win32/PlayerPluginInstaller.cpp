@@ -906,6 +906,17 @@ bool CPlayerPluginInstaller::Player::CheckPluginInstalled(tstring &strErr)
 	return true;
 }
 
+bool CPlayerPluginInstaller::Player::MakesureDllRegistered(tstring strErr)
+{
+	if (IsFlagSet(dwInstallFlags, INST_REG_DLL))
+	{
+		int err;
+		return Install(strErr, err);
+	}
+
+	return true;
+}
+
 bool CPlayerPluginInstaller::Player::Uninstall(tstring &strErr)
 {
 	ASSERT(IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED));

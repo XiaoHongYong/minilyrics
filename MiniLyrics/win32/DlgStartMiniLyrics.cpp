@@ -229,6 +229,12 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 			}
 		}
 	}
+	else
+	{
+		tstring strErr;
+		if (!p->MakesureDllRegistered(strErr))
+			MessageOut(strErr.c_str(), MB_ICONINFORMATION);
+	}
 
 	// Is Player running?
 	if (!p->IsPlayerRunning())
