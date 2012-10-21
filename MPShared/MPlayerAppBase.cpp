@@ -47,6 +47,7 @@ CDownloadMgr			g_LyricsDownloader;
 
 CLyricsLocalSearch		g_LyricSearch;
 
+CHAR_ENCODING GetDefaultLyricsEncodingSettings();
 
 //
 // ∞Ê±æ∂®“Â
@@ -352,6 +353,8 @@ bool CMPlayerAppBase::Init()
 	g_LyricsDownloader.Init();
 
 	g_LyricData.m_nGlobalOffsetTime = g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("LyrDelayTime"), 0);
+
+	SetDefaultLyricsEncoding(GetDefaultLyricsEncodingSettings());
 
 	g_autoProcessEmbeddedLyrics.Init();
 

@@ -31,6 +31,8 @@ enum LYRICS_CONTENT_TYPE
 	LCT_ALL				= LCT_TXT | LCT_LRC | LCT_KARAOKE,
 };
 
+void SetDefaultLyricsEncoding(CHAR_ENCODING encoding);
+
 bool IsTxtTagAtTailOfFile(LyrTagType tagType);
 
 int FormtLrcTimeTag(int nTime, bool bLongTimeFmt, char szBuff[]);

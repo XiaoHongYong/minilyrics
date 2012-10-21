@@ -302,6 +302,64 @@ public:
 
 };
 
+CHAR_ENCODING GetDefaultLyricsEncodingSettings()
+{
+	tstring defEncoding = g_Profile.GetProfileString(_T("LyrDefEncoding"), _T(""));
+	CHAR_ENCODING encodingId = GetCharEncodingID(defEncoding.c_str());
+	return encodingId;
+}
+
+void SetDefaultLyricsEncodingSettings(CHAR_ENCODING encoding)
+{
+	SetDefaultLyricsEncoding(encoding);
+
+	tstring strEncoding;
+	AnsiToTString(GetCharEncodingByID(encoding).szEncoding, -1, strEncoding);
+	g_Profile.WriteProfileString(_T("LyrDefEncoding"), strEncoding.c_str());
+}
+
+class CPfItemLyrDefaultEncoding : public CPreferItem
+{
+public:
+	CPfItemLyrDefaultEncoding()
+		: CPreferItem(ConnectToLocalStr(_TLM("Lyrics"), _TLM("Lyrics default encoding")).c_str())
+	{
+	}
+
+	virtual tstring GetValue() {
+		tstring strDesc;
+		AnsiToTString(GetCharEncodingByID(GetDefaultLyricsEncodingSettings()).szDesc,
+			-1, strDesc);
+
+		return strDesc;
+	}
+
+	virtual void GetOptions(V_Str &vString, int &nRadio) {
+		tstring strDesc;
+		int count = GetCharEncodingCount();
+		for (int i = 0; i < count; i++)
+		{
+			AnsiToTString(GetCharEncodingByID((CHAR_ENCODING)i).szDesc, -1, strDesc);
+			vString.push_back(strDesc);
+		}
+
+		nRadio = GetDefaultLyricsEncodingSettings();
+	}
+
+	virtual void SetOption(int nIndex) {
+		SetDefaultLyricsEncodingSettings((CHAR_ENCODING)nIndex);
+	}
+
+	virtual bool IsDefault() {
+		return GetDefaultLyricsEncodingSettings() == ED_SYSDEF;
+	}
+
+	virtual void Reset() {
+		SetDefaultLyricsEncodingSettings(ED_SYSDEF);
+	}
+
+};
+
 class CPfItemLyrExternalEditor : public CPreferItem
 {
 public:
@@ -842,6 +900,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 	m_vPreferItems.push_back(new CPfItemTitleFilter(m_pSkin));
 	m_vPreferItems.push_back(new CPfItemLyrSearchFolder(m_pSkin));
 	m_vPreferItems.push_back(new CPfItemLyrExternalEditor(m_pSkin));
+	m_vPreferItems.push_back(new CPfItemLyrDefaultEncoding());
 
 #ifdef _WIN32
 	//

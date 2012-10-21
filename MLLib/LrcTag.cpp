@@ -6,6 +6,13 @@
 #include "LrcTag.h"
 #include "LrcParserHelper.h"
 
+CHAR_ENCODING g_defaultLyricsEncoding = ED_SYSDEF;
+
+void SetDefaultLyricsEncoding(CHAR_ENCODING encoding)
+{
+	g_defaultLyricsEncoding = encoding;
+}
+
 void TStringToStr(LPCTSTR str, int nLen, wstringex &strOut, int nEncodingID)
 {
 	TStringToUCS2(str, nLen, strOut, nEncodingID);
@@ -109,11 +116,11 @@ CHAR_ENCODING GetLyricsTextEncoding(LPBYTE &szLrc, int &nLen)
 		else if (GetTxtTagValue((const char *)szLrc, SZ_TXT_ENCODING, strValue, ED_SYSDEF))
 			encoding = GetCharEncodingID(strValue.c_str());
 		else
-			encoding = ED_SYSDEF;
+			encoding = g_defaultLyricsEncoding;
 
 		// Discard ED_UNICODE encoding
 		if (encoding == ED_UNICODE_BIG_ENDIAN || encoding == ED_UNICODE)
-			encoding = ED_SYSDEF;
+			encoding = g_defaultLyricsEncoding;
 	}
 
 	return encoding;

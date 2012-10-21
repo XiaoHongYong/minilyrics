@@ -18,7 +18,7 @@
 // ¼´__encodingCodepage[ED_XXX].encodingID = ED_XXX
 ENCODING_CODEPAGE	__encodingCodepage[] = 
 {
-	{ ED_SYSDEF, CP_ACP, DEFAULT_CHARSET, "", "", "systemdefault" },
+	{ ED_SYSDEF, CP_ACP, DEFAULT_CHARSET, "", "", "Default" },
 	{ ED_UNICODE, 0, DEFAULT_CHARSET, "unicode", "", "Unicode" },
 	{ ED_UNICODE_BIG_ENDIAN, 0, DEFAULT_CHARSET, "Unicode (Big-Endian)", "", "Unicode (Big-Endian)" },
 	{ ED_UTF8, CP_UTF8, DEFAULT_CHARSET, "utf-8", "", "Unicode (UTF-8)" },

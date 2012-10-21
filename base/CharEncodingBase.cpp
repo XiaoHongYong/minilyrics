@@ -45,8 +45,13 @@ CHAR_ENCODING GetCharEncodingID(const char *szEncoding)
 	{
 		if (_stricmp(szEncoding, __encodingCodepage[i].szEncoding) == 0)
 			return __encodingCodepage[i].encodingID;
-		if (_stricmp(szEncoding, __encodingCodepage[i].szAlias) == 0)
-			return __encodingCodepage[i].encodingID;
+		if (!IsEmptyString(szEncoding))
+		{
+			if (_stricmp(szEncoding, __encodingCodepage[i].szAlias) == 0)
+				return __encodingCodepage[i].encodingID;
+			if (_stricmp(szEncoding, __encodingCodepage[i].szDesc) == 0)
+				return __encodingCodepage[i].encodingID;
+		}
 	}
 
 	return ED_SYSDEF;
@@ -59,10 +64,13 @@ CHAR_ENCODING GetCharEncodingID(const WCHAR *szEncoding)
 	{
 		if (_xcsicmp(szEncoding, __encodingCodepage[i].szEncoding) == 0)
 			return __encodingCodepage[i].encodingID;
-		if (_xcsicmp(szEncoding, __encodingCodepage[i].szAlias) == 0)
-			return __encodingCodepage[i].encodingID;
-		if (_xcsicmp(szEncoding, __encodingCodepage[i].szDesc) == 0)
-			return __encodingCodepage[i].encodingID;
+		if (!IsEmptyString(szEncoding))
+		{
+			if (_xcsicmp(szEncoding, __encodingCodepage[i].szAlias) == 0)
+				return __encodingCodepage[i].encodingID;
+			if (_xcsicmp(szEncoding, __encodingCodepage[i].szDesc) == 0)
+				return __encodingCodepage[i].encodingID;
+		}
 	}
 
 	return ED_SYSDEF;
