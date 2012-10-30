@@ -1,3 +1,14 @@
+MiniLyrics 7.5.21
+New: Add glocal default lyrics encoding settings in preference advanced page.
+Fixed: JRiver Media Center 18 support.
+Fixed: A crash issue when opening lyrics.
+Fixed: Sometimes corrupted message may pop up while uploading lyrics.
+
+MiniLyrics 7.4.14
+
+Fixed: Crash issue while using lyrics downloader for iPod.
+Fixed: Crash issue while open some kind of special lyrics.
+
 MiniLyrics 7.4.12
 Fixed: MiniLyrics can't get correct artist & title info for Spotify player
 Fixed: MiniLyrics won't quit normally if failed to save embedded lyrics.

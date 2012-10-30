@@ -624,6 +624,10 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\MDLrc.cpp"
+				>
+			</File>
+			<File
 				RelativePath="MDRow.cpp"
 				>
 				<FileConfiguration
@@ -1134,6 +1138,10 @@
 			</File>
 			<File
 				RelativePath="MDLibmad.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MDLrc.h"
 				>
 			</File>
 			<File
