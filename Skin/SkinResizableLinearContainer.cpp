@@ -190,7 +190,7 @@ void CSkinResizableLinearContainer::OnCreate()
 
 	// Reload sizes of children
 	VecString vSize;
-	StrSplit(GetProfileString(_T("ChildrenSize"), _T("")).c_str(), ',', vSize);
+	StrSplit(GetString(_T("ChildrenSize"), _T("")).c_str(), ',', vSize);
 	if (vSize.size() == vItems.size())
 	{
 		int i = 0;
@@ -225,7 +225,7 @@ void CSkinResizableLinearContainer::OnDestroy()
 		strSizes += strFormat.c_str();
 	}
 
-	WriteProfileString(_T("ChildrenSize"), strSizes.c_str());
+	WriteString(_T("ChildrenSize"), strSizes.c_str());
 
 	CSkinLinearContainer::OnDestroy();
 }

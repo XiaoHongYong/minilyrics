@@ -444,7 +444,7 @@ bool CLanguageTool::GetCurrentLanguageFile(tstring &strLanguageFile)
 
 	strLanguageFile = GetLangPackDir();
 
-	if (g_Profile.GetProfileString(_T("Language"), _T(""), szLanFileName, MAX_PATH) == 0)
+	if (g_Profile.GetString(_T("Language"), _T(""), szLanFileName, MAX_PATH) == 0)
 	{
 		tstring		strLang, strLangFull;
 
@@ -481,7 +481,7 @@ bool CLanguageTool::GetCurrentLanguageFile(tstring &strLanguageFile)
 
 		// save auto detected translation file
 		if (!IsEmptyString(szLanFileName))
-			g_Profile.WriteProfileString(_T("Language"), szLanFileName);
+			g_Profile.WriteString(_T("Language"), szLanFileName);
 	}
 
 	strLanguageFile += szLanFileName;

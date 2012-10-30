@@ -19,7 +19,7 @@ BOOL CWidgetListCtrl::LoadColumnWidth(LPCTSTR szKeyName)
 		int			nCx;
 
 		_stprintf_s(szKey, CountOf(szKey), _T("%s_%d"), szKeyName, i);
-		g_Profile.GetProfileString(szKey, _T(""), szValue, 256);
+		g_Profile.GetString(szKey, _T(""), szValue, 256);
 		if (IsEmptyString(szValue))
 			break;
 
@@ -45,7 +45,7 @@ BOOL CWidgetListCtrl::SaveColumnWidth(LPCTSTR szKeyName)
 		if (!::SendMessage(m_hWnd, LVM_GETCOLUMN, i, (LPARAM)&Column))
 			break;
 
-		g_Profile.WriteProfileInt(szKey, Column.cx);
+		g_Profile.WriteInt(szKey, Column.cx);
 	}
 	return TRUE;
 }

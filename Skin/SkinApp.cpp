@@ -60,12 +60,12 @@ int CSkinApp::LoadDefaultSkin(LPCTSTR szDefaultSkin, bool bCreateSkinWnd)
 
 tstring CSkinApp::GetDefaultSkin()
 {
-	return g_Profile.GetProfileString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkin"), _T(""));
+	return g_Profile.GetString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkin"), _T(""));
 }
 
 void CSkinApp::WriteDefaultSkin(LPCTSTR szDefaultSkin)
 {
-	g_Profile.WriteProfileString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkin"), szDefaultSkin);
+	g_Profile.WriteString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkin"), szDefaultSkin);
 }
 
 template <class _T>

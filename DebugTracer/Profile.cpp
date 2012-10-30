@@ -89,7 +89,7 @@ CProfile::STRING_MAP::iterator CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKey
 	return itStr;
 }
 
-DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPSTR szReturnedString, DWORD nSize)
+DWORD CProfile::GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPSTR szReturnedString, DWORD nSize)
 {
 	ASSERT(m_szProfile[0] != '\0');
 
@@ -112,7 +112,7 @@ DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR s
 	}
 }
 
-BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
+BOOL CProfile::WriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
 	ASSERT(m_szProfile[0] != '\0');
 
@@ -133,7 +133,7 @@ BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR 
 }
 
 
-UINT CProfile::GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
+UINT CProfile::GetInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
 {
 	ASSERT(m_szProfile[0] != '\0');
 
@@ -141,12 +141,12 @@ UINT CProfile::GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
 	TCHAR	szDefault[64];
 	sprintf(szDefault, "%d", nDefault);
 
-	GetProfileString(szAppName, szKeyName, szDefault, szValue, 64);
+	GetString(szAppName, szKeyName, szDefault, szValue, 64);
 
 	return atoi(szValue);
 }
 
-BOOL CProfile::WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
+BOOL CProfile::WriteInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
 {
 	ASSERT(m_szProfile[0] != '\0');
 
@@ -154,10 +154,10 @@ BOOL CProfile::WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
 	
 	wsprintf(szValue, _T("%d"), nValue);
 
-	return WriteProfileString(szAppName, szKeyName, szValue);
+	return WriteString(szAppName, szKeyName, szValue);
 }
 
-void CProfile::GetProfileName(char szProfile[])
+void CProfile::GetFile(char szProfile[])
 {
 }
 

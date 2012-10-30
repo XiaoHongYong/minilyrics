@@ -262,7 +262,7 @@ void CLyricsLocalSearch::SaveLyricFolderCfg()
 
 	// Set end positions.
 	_stprintf_s(szKeyName, CountOf(szKeyName), _T("%s%d"), SZ_FOLDER_PREFIX, m_vLyricsFolders.size());
-	g_Profile.WriteProfileString(SZ_SECT_SEARCH_FOLDER, szKeyName, _T(""));
+	g_Profile.WriteString(SZ_SECT_SEARCH_FOLDER, szKeyName, _T(""));
 }
 
 BOOL CLyricsLocalSearch::SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vLyrics)

@@ -1110,12 +1110,12 @@ CBaseWnd *CMPSkinWnd::GetParentOrSelf()
 
 bool CMPSkinWnd::SettingGetTopmost()
 {
-	return g_Profile.GetProfileBool(SZ_SECT_UI, _T("topmost"), true);
+	return g_Profile.GetBool(SZ_SECT_UI, _T("topmost"), true);
 }
 
 int CMPSkinWnd::SettingGetOpaquePercent()
 {
-	return g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
+	return g_Profile.GetInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
 }
 
 bool CMPSkinWnd::SettingGetClickThrough()
@@ -1127,13 +1127,13 @@ void CMPSkinWnd::SettingReverseTopmost()
 {
 	bool		bTopmost = !IsTopmost();
 
-	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bTopmost);
+	g_Profile.WriteInt(SZ_SECT_UI, _T("topmost"), bTopmost);
 	CMPlayerAppBase::GetMPSkinFactory()->TopmostAll(bTopmost);
 }
 
 void CMPSkinWnd::SettingSetOpaquePercent(int nPercent)
 {
-	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), nPercent);
+	g_Profile.WriteInt(SZ_SECT_UI, _T("WindowOpaquePercent"), nPercent);
 	CMPlayerAppBase::GetMPSkinFactory()->AllUpdateTransparent();
 }
 

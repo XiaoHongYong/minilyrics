@@ -217,14 +217,14 @@ bool LoadPlsPlaylist(IMPlayer *player, IPlaylist *playList, LPCTSTR szFile)
 	tstring strPath = FileGetPath(szFile);
 
 	file.Init(szFile, _T("playlist"));
-	n = file.GetProfileInt(_T("NumberOfEntries"), 0);
+	n = file.GetInt(_T("NumberOfEntries"), 0);
 
 	for (int i = 1; i < n; i++)
 	{
 		_stprintf(szkey, _T("File%d"), i);
 
 		tstring		strFile;
-		strFile = file.GetProfileString(szkey, _T(""));
+		strFile = file.GetString(szkey, _T(""));
 		if (strFile.empty())
 			continue;
 

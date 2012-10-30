@@ -32,14 +32,14 @@ public:
 		CheckButton(_T("CID_USE_PROXY"), Tobool(bUseProxy));
 
 		// Proxy server address
-		SetUIObjectText(_T("CID_HTTP_PROXY"), g_Profile.GetProfileString(_T("ProxyServer"), _T("")));
-		SetUIObjectText(_T("CID_HTTP_PORT"), g_Profile.GetProfileString(_T("ProxyPort"), _T("")));
+		SetUIObjectText(_T("CID_HTTP_PROXY"), g_Profile.GetString(_T("ProxyServer"), _T("")));
+		SetUIObjectText(_T("CID_HTTP_PORT"), g_Profile.GetString(_T("ProxyPort"), _T("")));
 
 		// Proxy user name and password
-		SetUIObjectText(_T("CID_USER"), g_Profile.GetProfileString(_T("ProxyUser"), _T("")));
-		tstring strPwd = g_Profile.EncryptGetProfileString(_T("ProxyPassEnc"), _T(""));
+		SetUIObjectText(_T("CID_USER"), g_Profile.GetString(_T("ProxyUser"), _T("")));
+		tstring strPwd = g_Profile.EncryptGetString(_T("ProxyPassEnc"), _T(""));
 		if (strPwd.empty())
-			strPwd = g_Profile.GetProfileString(_T("ProxyPass"), _T(""));
+			strPwd = g_Profile.GetString(_T("ProxyPass"), _T(""));
 		SetUIObjectProperty(_T("CID_PASS"), _T("Style"), _T("PASSWORD"));
 		SetUIObjectText(_T("CID_PASS"), strPwd.c_str());
 
@@ -70,7 +70,7 @@ public:
 				else
 					nHttpProxyType = HTTP_PROXY_NONE;
 
-				g_Profile.WriteProfileInt(_T("ProxyType"), nHttpProxyType);
+				g_Profile.WriteInt(_T("ProxyType"), nHttpProxyType);
 
 				SetUIObjectText(_T("CID_HTTP_PROXY"), strSvr.c_str());
 				SetUIObjectText(_T("CID_HTTP_PORT"), CStrPrintf(_T("%d"), nPort).c_str());
@@ -84,7 +84,7 @@ public:
 				nHttpProxyType = HTTP_PROXY_OURS;
 			else
 				nHttpProxyType = HTTP_PROXY_NONE;
-			g_Profile.WriteProfileInt(_T("ProxyType"), nHttpProxyType);
+			g_Profile.WriteInt(_T("ProxyType"), nHttpProxyType);
 		}
 		else
 			return CPagePfBase::OnCustomCommand(nId);
@@ -98,18 +98,18 @@ protected:
 		if (!m_bInitailed)
 			return;
 
-		g_Profile.WriteProfileString(_T("ProxyServer"), 
+		g_Profile.WriteString(_T("ProxyServer"), 
 			GetUIObjectText(_T("CID_HTTP_PROXY")).c_str());
 
-		g_Profile.WriteProfileString(_T("ProxyPort"), 
+		g_Profile.WriteString(_T("ProxyPort"), 
 			GetUIObjectText(_T("CID_HTTP_PORT")).c_str());
 
 		tstring strUser = GetUIObjectText(_T("CID_USER"));
-		g_Profile.WriteProfileString(_T("ProxyUser"), strUser.c_str());
+		g_Profile.WriteString(_T("ProxyUser"), strUser.c_str());
 
 		tstring strPwd = GetUIObjectText(_T("CID_PASS"));
-		g_Profile.EncryptWriteProfileString(_T("ProxyPassEnc"), strPwd.c_str());
-		g_Profile.WriteProfileString(_T("ProxyPass"), _T(""));
+		g_Profile.EncryptWriteString(_T("ProxyPassEnc"), strPwd.c_str());
+		g_Profile.WriteString(_T("ProxyPass"), _T(""));
 
 		if (strUser.size())
 		{
@@ -120,7 +120,7 @@ protected:
 			ConvertStr(szPwdUser, -1, strPwdUser);
 			tstring		strBase64;
 			encodeuu(strPwdUser, strPwdUser.size(), strBase64, true, false);
-			g_Profile.WriteProfileString(_T("Base64ProxyUserPass"), strBase64.c_str());
+			g_Profile.WriteString(_T("Base64ProxyUserPass"), strBase64.c_str());
 		}
 	}
 
@@ -198,7 +198,7 @@ public:
 			if (pButton)
 			{
 				pButton->SetProperty(SZ_PN_TEXT, _id2strPlayers[i].szId);
-				if (g_Profile.GetProfileInt(_id2strPlayers[i].szId, TRUE))
+				if (g_Profile.GetInt(_id2strPlayers[i].szId, TRUE))
 					pButton->SetStatus(true);
 			}
 
@@ -218,7 +218,7 @@ public:
 		szPlayer = IDToString(_id2strPlayers, nId, _T(""));
 		if (!IsEmptyString(szPlayer))
 		{
-			g_Profile.WriteProfileInt(szPlayer, IsButtonChecked(nId));
+			g_Profile.WriteInt(szPlayer, IsButtonChecked(nId));
 			return true;
 		}
 #endif // #ifndef _MPLAYER

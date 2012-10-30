@@ -57,10 +57,10 @@ void LoadServerInfo()
 		tstring		str;
 		file.Init(_T("install.ini"), _T("INSTALL"));
 
-		str = file.GetProfileString(_T("server1"), _T(""));
+		str = file.GetString(_T("server1"), _T(""));
 		if (!str.empty())
 			_tcscpy_safe(g_LyrServers[0].szServer, CountOf(g_LyrServers[0].szServer), str.c_str());
-		str = file.GetProfileString(_T("server1port"), _T(""));
+		str = file.GetString(_T("server1port"), _T(""));
 		if (!str.empty())
 			g_LyrServers[0].nPort = _ttoi(str.c_str());
 #endif
@@ -91,8 +91,8 @@ void CMLClientSession::Init(LPCTSTR szAppName)
 	m_strClient = szAppName;
 	LoadServerInfo();
 
-	m_strLoginName = g_Profile.GetProfileString(_T("LoginName"), _T(""));
-	m_strPwdMask = g_Profile.GetProfileString(_T("LoginPwdMask"), _T(""));
+	m_strLoginName = g_Profile.GetString(_T("LoginName"), _T(""));
+	m_strPwdMask = g_Profile.GetString(_T("LoginPwdMask"), _T(""));
 
 	m_MsgProtocol.Init(&m_NetFile, GetDefaultServer(), GetDefaultServerPort());
 
@@ -178,7 +178,7 @@ void CMLClientSession::SetUploader(LPCTSTR szUser, LPCTSTR szPwd, bool bSavePwd)
 		m_strLoginName = szUser;
 	}
 
-	LPCTSTR szPwdSaved = g_Profile.GetProfileString(_T("LoginPwdMask"), _T(""));
+	LPCTSTR szPwdSaved = g_Profile.GetString(_T("LoginPwdMask"), _T(""));
 	LPCTSTR szPwdToSave;
 	if (bSavePwd)
 		szPwdToSave = m_strPwdMask.c_str();
@@ -186,10 +186,10 @@ void CMLClientSession::SetUploader(LPCTSTR szUser, LPCTSTR szPwd, bool bSavePwd)
 		szPwdToSave = _T("");
 
 	if (_tcscmp(szPwdToSave, szPwdSaved) != 0)
-		g_Profile.WriteProfileString(_T("LoginPwdMask"), szPwdToSave);
+		g_Profile.WriteString(_T("LoginPwdMask"), szPwdToSave);
 
-	if (_tcscmp(szPwdToSave, g_Profile.GetProfileString(_T("LoginName"), _T(""))) != 0)
-		g_Profile.WriteProfileString(_T("LoginName"), szUser);
+	if (_tcscmp(szPwdToSave, g_Profile.GetString(_T("LoginName"), _T(""))) != 0)
+		g_Profile.WriteString(_T("LoginName"), szUser);
 }
 
 void CMLClientSession::SetProxy(BOOL bEnableProxy, LPCSTR szProxyServer, int nPort, LPCSTR szBase64ProxyUserPass)

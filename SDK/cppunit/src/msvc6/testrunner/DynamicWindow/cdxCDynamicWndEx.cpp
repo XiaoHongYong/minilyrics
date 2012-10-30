@@ -199,14 +199,14 @@ bool cdxCDynamicWndEx::StoreWindowPosition(LPCTSTR lpszProfile,
 		return false;
 	}
 
-	return	app->WriteProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Valid,	REGVAL_INVALID) &&	// invalidate first
-				app->WriteProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Left,		wpl.rcNormalPosition.left) &&
-				app->WriteProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Right,		wpl.rcNormalPosition.right) &&
-				app->WriteProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Top,		wpl.rcNormalPosition.top) &&
-				app->WriteProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Bottom,	wpl.rcNormalPosition.bottom) &&
-				app->WriteProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Visible,	bVisible ? REGVAL_VISIBLE : REGVAL_HIDDEN) &&
-				app->WriteProfileInt(lpszProfile,	entryPrefix+lpszRegVal_State,		iState) &&
-				app->WriteProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Valid,	REGVAL_VALID);		// validate position
+	return	app->WriteInt(lpszProfile,	entryPrefix+lpszRegVal_Valid,	REGVAL_INVALID) &&	// invalidate first
+				app->WriteInt(lpszProfile,	entryPrefix+lpszRegVal_Left,		wpl.rcNormalPosition.left) &&
+				app->WriteInt(lpszProfile,	entryPrefix+lpszRegVal_Right,		wpl.rcNormalPosition.right) &&
+				app->WriteInt(lpszProfile,	entryPrefix+lpszRegVal_Top,		wpl.rcNormalPosition.top) &&
+				app->WriteInt(lpszProfile,	entryPrefix+lpszRegVal_Bottom,	wpl.rcNormalPosition.bottom) &&
+				app->WriteInt(lpszProfile,	entryPrefix+lpszRegVal_Visible,	bVisible ? REGVAL_VISIBLE : REGVAL_HIDDEN) &&
+				app->WriteInt(lpszProfile,	entryPrefix+lpszRegVal_State,		iState) &&
+				app->WriteInt(lpszProfile,	entryPrefix+lpszRegVal_Valid,	REGVAL_VALID);		// validate position
 }
 
 /*
@@ -237,7 +237,7 @@ bool cdxCDynamicWndEx::RestoreWindowPosition(LPCTSTR lpszProfile,
 	// first, we check whether the position had been saved successful any time before
 	//
 
-	if( app->GetProfileInt(lpszProfile,entryPrefix+lpszRegVal_Valid,REGVAL_INVALID) != REGVAL_VALID )
+	if( app->GetInt(lpszProfile,entryPrefix+lpszRegVal_Valid,REGVAL_INVALID) != REGVAL_VALID )
 		return false;
 
 	//
@@ -251,16 +251,16 @@ bool cdxCDynamicWndEx::RestoreWindowPosition(LPCTSTR lpszProfile,
 	// read registry
 	//
 
-	int	iState	=	app->GetProfileInt(lpszProfile,	entryPrefix+lpszRegVal_State, REGVAL_NOSTATE);
+	int	iState	=	app->GetInt(lpszProfile,	entryPrefix+lpszRegVal_State, REGVAL_NOSTATE);
 
 	//
 	// get window's previous normal position
 	//
 
-	wpl.rcNormalPosition.left		=	app->GetProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Left,		wpl.rcNormalPosition.left);
-	wpl.rcNormalPosition.right		=	app->GetProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Right,		wpl.rcNormalPosition.right);
-	wpl.rcNormalPosition.top		=	app->GetProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Top,		wpl.rcNormalPosition.top);
-	wpl.rcNormalPosition.bottom	=	app->GetProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Bottom,	wpl.rcNormalPosition.bottom);
+	wpl.rcNormalPosition.left		=	app->GetInt(lpszProfile,	entryPrefix+lpszRegVal_Left,		wpl.rcNormalPosition.left);
+	wpl.rcNormalPosition.right		=	app->GetInt(lpszProfile,	entryPrefix+lpszRegVal_Right,		wpl.rcNormalPosition.right);
+	wpl.rcNormalPosition.top		=	app->GetInt(lpszProfile,	entryPrefix+lpszRegVal_Top,		wpl.rcNormalPosition.top);
+	wpl.rcNormalPosition.bottom	=	app->GetInt(lpszProfile,	entryPrefix+lpszRegVal_Bottom,	wpl.rcNormalPosition.bottom);
 
 	if(wpl.rcNormalPosition.left > wpl.rcNormalPosition.right)
 	{
@@ -314,7 +314,7 @@ bool cdxCDynamicWndEx::RestoreWindowPosition(LPCTSTR lpszProfile,
 
 	if(restoreFlags & rflg_visibility)
 	{
-		int	i	=	app->GetProfileInt(lpszProfile,	entryPrefix+lpszRegVal_Visible, REGVAL_NOSTATE);
+		int	i	=	app->GetInt(lpszProfile,	entryPrefix+lpszRegVal_Visible, REGVAL_NOSTATE);
 		if(i == REGVAL_VISIBLE)
 			pWnd->ShowWindow(SW_SHOW);
 		else

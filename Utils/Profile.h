@@ -89,32 +89,32 @@ public:
 	void SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault);
 
 	// 读和写配置文件 MiniLyrics.ini
-	DWORD GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize);
-	LPCTSTR GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault);
-	BOOL WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
+	DWORD GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize);
+	LPCTSTR GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault);
+	BOOL WriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
 
-	UINT GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault);
-	BOOL WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue);
+	UINT GetInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault);
+	BOOL WriteInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue);
 
-	bool GetProfileBool(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
-		{ return GetProfileInt(szAppName, szKeyName, nDefault) != 0; }
-	bool GetProfileBool(LPCTSTR szKeyName, int nDefault)
-		{ return GetProfileInt(m_strDefAppName.c_str(), szKeyName, nDefault) != 0; }
+	bool GetBool(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
+		{ return GetInt(szAppName, szKeyName, nDefault) != 0; }
+	bool GetBool(LPCTSTR szKeyName, int nDefault)
+		{ return GetInt(m_strDefAppName.c_str(), szKeyName, nDefault) != 0; }
 
 	// 无需输入 szAppName 的函数
-	DWORD GetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
-		{ return GetProfileString(m_strDefAppName.c_str(), szKeyName, szDefault, szReturnedString, nSize); }
-	LPCTSTR GetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault)
-		{ return GetProfileString(m_strDefAppName.c_str(), szKeyName, szDefault); }
-	BOOL WriteProfileString(LPCTSTR szKeyName, LPCTSTR szValue)
-		{ return WriteProfileString(m_strDefAppName.c_str(), szKeyName, szValue); }
+	DWORD GetString(LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
+		{ return GetString(m_strDefAppName.c_str(), szKeyName, szDefault, szReturnedString, nSize); }
+	LPCTSTR GetString(LPCTSTR szKeyName, LPCTSTR szDefault)
+		{ return GetString(m_strDefAppName.c_str(), szKeyName, szDefault); }
+	BOOL WriteString(LPCTSTR szKeyName, LPCTSTR szValue)
+		{ return WriteString(m_strDefAppName.c_str(), szKeyName, szValue); }
 
-	UINT GetProfileInt(LPCTSTR szKeyName, int nDefault)
-		{ return GetProfileInt(m_strDefAppName.c_str(), szKeyName, nDefault); }
-	BOOL WriteProfileInt(LPCTSTR szKeyName, int nValue)
-		{ return WriteProfileInt(m_strDefAppName.c_str(), szKeyName, nValue); }
+	UINT GetInt(LPCTSTR szKeyName, int nDefault)
+		{ return GetInt(m_strDefAppName.c_str(), szKeyName, nDefault); }
+	BOOL WriteInt(LPCTSTR szKeyName, int nValue)
+		{ return WriteInt(m_strDefAppName.c_str(), szKeyName, nValue); }
 
-	LPCTSTR GetProfileName();
+	LPCTSTR GetFile();
 	LPCTSTR GetDefAppName();
 
 	//
@@ -122,16 +122,16 @@ public:
 	//	only keyname is encrypted in cache
 	//  vlaue does not encrypted in cache, and value only encrypted in file.
 	//
-	tstring EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault);
-	BOOL EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
+	tstring EncryptGetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault);
+	BOOL EncryptWriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
 
 	// 无需输入 szAppName 的函数
-	tstring EncryptGetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault)
-		{ return EncryptGetProfileString(m_strDefAppName.c_str(), szKeyName, szDefault); }
-	BOOL EncryptWriteProfileString(LPCTSTR szKeyName, LPCTSTR szValue)
-		{ return EncryptWriteProfileString(m_strDefAppName.c_str(), szKeyName, szValue); }
-	int EncryptGetProfileInt(LPCTSTR szKeyName, int nValue);
-	void EncryptWriteProfileInt(LPCTSTR szKeyName, int nValue);
+	tstring EncryptGetString(LPCTSTR szKeyName, LPCTSTR szDefault)
+		{ return EncryptGetString(m_strDefAppName.c_str(), szKeyName, szDefault); }
+	BOOL EncryptWriteString(LPCTSTR szKeyName, LPCTSTR szValue)
+		{ return EncryptWriteString(m_strDefAppName.c_str(), szKeyName, szValue); }
+	int EncryptGetInt(LPCTSTR szKeyName, int nValue);
+	void EncryptWriteInt(LPCTSTR szKeyName, int nValue);
 
 };
 

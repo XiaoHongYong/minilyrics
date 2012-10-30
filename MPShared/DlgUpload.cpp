@@ -193,7 +193,7 @@ public:
 		SetUIObjectProperty(_T("CID_SIGNUP"), _T("Link"), GetStrName(SN_HTTP_SIGNUP));
 
 		SetUIObjectText(CID_E_NAME, g_sessionUpload.GetLoginName());
-		bool bRememberPwd = g_Profile.GetProfileBool(_T("rememberPwd"), FALSE);
+		bool bRememberPwd = g_Profile.GetBool(_T("rememberPwd"), FALSE);
 		if (bRememberPwd)
 			SetUIObjectText(CID_E_PASSWORD, g_sessionUpload.GetLoginPwd());
 		CheckButton(CID_REMEMBER_PWD, bRememberPwd);
@@ -227,7 +227,7 @@ public:
 		if (strName.empty() || strPwd.empty())
 			return true;
 
-		g_Profile.WriteProfileInt(_T("rememberPwd"), bRememberePwd);
+		g_Profile.WriteInt(_T("rememberPwd"), bRememberePwd);
 		g_sessionUpload.SetUploader(strName.c_str(), strPwd.c_str(), bRememberePwd);
 
 		CPageUploadWaitMessage *pPageWait = (CPageUploadWaitMessage *)m_pContainer->GetChildByClass(CPageUploadWaitMessage::ClassName());

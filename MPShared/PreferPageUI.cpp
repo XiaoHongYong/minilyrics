@@ -37,7 +37,7 @@ public:
 		if (nId == GetIDByName(_T("CID_C_ON_TOP")))
 		{
 			bool	bValue = IsButtonChecked(nId);
-			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("topmost"), bValue);
+			g_Profile.WriteInt(SZ_SECT_UI, _T("topmost"), bValue);
 			CMPlayerAppBase::GetMPSkinFactory()->TopmostAll(bValue);
 		}
 #ifdef _WIN32_DESKTOP
@@ -97,13 +97,13 @@ public:
 		{
 			TCHAR	szLanFileName[MAX_PATH] = _T("");
 
-			if (g_Profile.GetProfileString(_T("Language"), _T(""), szLanFileName, MAX_PATH))
+			if (g_Profile.GetString(_T("Language"), _T(""), szLanFileName, MAX_PATH))
 			{
 				if (m_vTransFiles[nId - _CMD_ID_LANGUANG_BEGIN].strFileName == szLanFileName)
 					return true;
 			}
 
-			g_Profile.WriteProfileString(_T("Language"), m_vTransFiles[nId - _CMD_ID_LANGUANG_BEGIN].strFileName.c_str());
+			g_Profile.WriteString(_T("Language"), m_vTransFiles[nId - _CMD_ID_LANGUANG_BEGIN].strFileName.c_str());
 
 			CMPlayerAppBase::GetInstance()->OnLanguageChanged();
 
@@ -132,11 +132,11 @@ protected:
 
 			strInfo = _TLT("Translator:");
 			strInfo += _T(" ");
-			strInfo += profile.GetProfileString(_T("Info"), _T("Translator"), _T(""));
+			strInfo += profile.GetString(_T("Info"), _T("Translator"), _T(""));
 			strInfo += _T("\r\n");
 			strInfo += _TLT("Contact:");
 			strInfo += _T(" ");
-			strInfo += profile.GetProfileString(_T("Info"), _T("Contact"), _T(""));
+			strInfo += profile.GetString(_T("Info"), _T("Contact"), _T(""));
 		}
 
 		SetUIObjectText(_T("CID_LANGUAGE_INFO"), strInfo.c_str(), true);

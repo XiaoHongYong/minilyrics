@@ -19,7 +19,7 @@ CDlgOpenSkin::CDlgOpenSkin(CWnd* pParent /*=NULL*/)
 	: CDialog(CDlgOpenSkin::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(CDlgOpenSkin)
-	m_strSkinsRootDir = g_Profile.GetProfileString(_T("SkinsRootDir"), _T(""));
+	m_strSkinsRootDir = g_Profile.GetString(_T("SkinsRootDir"), _T(""));
 	m_strInfo = _T("");
 	//}}AFX_DATA_INIT
 }
@@ -98,13 +98,13 @@ void CDlgOpenSkin::OnBrSkinRootDir()
 {
 	TCHAR		szFolder[MAX_PATH];
 
-	_tcscpy_safe(szFolder, CountOf(szFolder), g_Profile.GetProfileString(_T("SkinsRootDir"), _T("")));
+	_tcscpy_safe(szFolder, CountOf(szFolder), g_Profile.GetString(_T("SkinsRootDir"), _T("")));
 	if (!BrowserForFolder(m_hWnd, _T("Browse skins root dir:"), szFolder))
 		return;
 
 	m_strSkinsRootDir = szFolder;
 	SetDlgItemText(IDC_E_SKIN_ROOT_DIR, m_strSkinsRootDir);
-	g_Profile.WriteProfileString(_T("SkinsRootDir"), m_strSkinsRootDir);
+	g_Profile.WriteString(_T("SkinsRootDir"), m_strSkinsRootDir);
 
 	g_skinFactory.SetSkinsRootDir(m_strSkinsRootDir);
 

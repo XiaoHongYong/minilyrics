@@ -136,7 +136,7 @@ void CLyricShowTextEditObj::OnCreate()
 	CUIObject *pTagEditor = m_pSkin->GetUIObjectById(GetIDByName(_T("CID_C_LYR_TAG")));
 	if (pTagEditor)
 	{
-		bool bVisible = g_Profile.GetProfileBool(_T("LyrTagEdit"), true);
+		bool bVisible = g_Profile.GetBool(_T("LyrTagEdit"), true);
 		if (!bVisible)
 			pTagEditor->SetVisible(false, false);
 	}
@@ -148,8 +148,8 @@ void CLyricShowTextEditObj::OnCreate()
 
 	UpdateTextFontColor();
 
-	m_pSkin->SetUIObjectText(CID_E_FIND, g_Profile.GetProfileString(_T("FindWhat"), _T("")));
-	m_pSkin->SetUIObjectText(CID_E_REPLACE, g_Profile.GetProfileString(_T("ReplaceWith"), _T("")));
+	m_pSkin->SetUIObjectText(CID_E_FIND, g_Profile.GetString(_T("FindWhat"), _T("")));
+	m_pSkin->SetUIObjectText(CID_E_REPLACE, g_Profile.GetString(_T("ReplaceWith"), _T("")));
 
 	// If there's no lyrics opened, fill media info.
 	if (!g_LyricData.HasLyricsOpened())
@@ -157,7 +157,7 @@ void CLyricShowTextEditObj::OnCreate()
 
 	CUIObject *pToolbar = m_pSkin->GetUIObjectById(ID_TB_LYR_EDIT);
 	if (pToolbar)
-		pToolbar->SetVisible(g_Profile.GetProfileBool(_T("LyrEditorTB_Visible"), false), false);
+		pToolbar->SetVisible(g_Profile.GetBool(_T("LyrEditorTB_Visible"), false), false);
 }
 
 void CLyricShowTextEditObj::OnDestroy()
@@ -166,8 +166,8 @@ void CLyricShowTextEditObj::OnDestroy()
 
 	tstring	strFindWhat = m_pSkin->GetUIObjectText(CID_E_FIND);
 	tstring	strReplaceWith = m_pSkin->GetUIObjectText(CID_E_REPLACE);
-	g_Profile.WriteProfileString(_T("FindWhat"), strFindWhat.c_str());
-	g_Profile.WriteProfileString(_T("ReplaceWith"), strReplaceWith.c_str());
+	g_Profile.WriteString(_T("FindWhat"), strFindWhat.c_str());
+	g_Profile.WriteString(_T("ReplaceWith"), strReplaceWith.c_str());
 
 	CSkinEditCtrl::OnDestroy();
 }
@@ -1041,7 +1041,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 		m_pSkin->SetUIObjectText(CID_E_ALBUM, g_Player.GetAlbum());
 	else if (nId == CID_RERESH_BY)
 	{
-		tstring		strLogName = g_Profile.GetProfileString(_T("LoginName"), _T(""));
+		tstring		strLogName = g_Profile.GetString(_T("LoginName"), _T(""));
 		if (strLogName.size())
 			m_pSkin->SetUIObjectText(CID_E_BY, strLogName.c_str());
 	}
@@ -1119,7 +1119,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 			if (pToolbar)
 			{
 				pToolbar->SetVisible(!pToolbar->IsVisible(), true);
-				g_Profile.WriteProfileInt(_T("LyrEditorTB_Visible"), pToolbar->IsVisible());
+				g_Profile.WriteInt(_T("LyrEditorTB_Visible"), pToolbar->IsVisible());
 			}
 			break;
 		}
@@ -1204,7 +1204,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 			prop.m_strAlbum = g_Player.GetAlbum();
 			if (g_Player.GetMediaLength() > 0)
 				prop.SetMediaLength(g_Player.GetMediaLength() / 1000);
-			tstring		strLogName = g_Profile.GetProfileString(_T("LoginName"), _T(""));
+			tstring		strLogName = g_Profile.GetString(_T("LoginName"), _T(""));
 			if (strLogName.size())
 				prop.m_strBy = strLogName;
 
@@ -1416,7 +1416,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 
 			bool bVisible = !pTagEditor->IsVisible();
 			pTagEditor->SetVisible(bVisible);
-			g_Profile.WriteProfileInt(_T("LyrTagEdit"), bVisible);
+			g_Profile.WriteInt(_T("LyrTagEdit"), bVisible);
 
 			pEditorFrame->GetParent()->RecalculateUIObjSizePos(pEditorFrame);
 			pEditorFrame->Invalidate();

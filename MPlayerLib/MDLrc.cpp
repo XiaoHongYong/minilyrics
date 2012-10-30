@@ -1,5 +1,6 @@
 #include "StdAfx.h"
 #include "MDLrc.h"
+#include "../MLLib/MLLib.h"
 
 CMDLrc::CMDLrc(void)
 {
@@ -11,12 +12,12 @@ CMDLrc::~CMDLrc(void)
 
 LPCXSTR CMDLrc::GetDescription()
 {
-
+	return _T("LRC decoder");
 }
 
 LPCXSTR CMDLrc::GetFileExtentions()
 {
-
+	return _T(".lrc|LRC file");
 }
 
 MLRESULT CMDLrc::GetMediaInfo(IMPlayer *pPlayer, IMediaInput *pInput, IMedia *pMedia)
@@ -50,6 +51,7 @@ bool CMDLrc::IsUseOutputPlug()
 MLRESULT CMDLrc::Play(IMPlayer *pPlayer, IMediaInput *pInput)
 {
 	m_dwBeginTime = GetTickCount();
+	return ERR_OK;
 }
 
 MLRESULT CMDLrc::Pause()
@@ -79,6 +81,7 @@ MLRESULT CMDLrc::Stop()
 	m_dwBeginTime = 0;
 	m_nPausedPos = 0;
 	m_state = PS_STOPED;
+	return ERR_OK;
 }
 
 // media length, pos related functions, unit: ms
@@ -119,22 +122,16 @@ bool CMDLrc::Init()
 	return true;
 }
 
-MLRESULT CMDLrc::Init(CMPlayer *pPlayer)
-{
-	return CMDAgent::Init(pPlayer);
-}
-
 MLRESULT CMDLrc::DoDecode(IMedia *pMedia)
 {
-	MLRESULT					nRet;
 	CXStr						strMedia;
 
-	nRet = pMedia->GetSourceUrl(&strMedia);
+	MLRESULT nRet = pMedia->GetSourceUrl(&strMedia);
 	if (nRet != ERR_OK)
 		return nRet;
 
 	CMLData data;
-	int nRet = data.OpenLyrics(strMedia.c_str(), 0, strMedia.c_str());
+	nRet = data.OpenLyrics(strMedia.c_str(), 0, strMedia.c_str());
 
 	m_nLength = data.Properties().GetMediaLengthInt();
 	m_dwBeginTime = GetTickCount();

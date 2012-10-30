@@ -189,12 +189,12 @@ public:
 
 	static void GetSettings(LPCTSTR szSectionName, LPCTSTR szSettingName, tstring &strValue)
 	{
-		strValue = g_Profile.GetProfileString(szSectionName, szSettingName, _T(""));
+		strValue = g_Profile.GetString(szSectionName, szSettingName, _T(""));
 	}
 
 	static int GetSettings(LPCTSTR szSectionName, LPCTSTR szSettingName, int nValueDef)
 	{
-		return g_Profile.GetProfileInt(szSectionName, szSettingName, nValueDef);
+		return g_Profile.GetInt(szSectionName, szSettingName, nValueDef);
 	}
 
 	// szValue: p1="v1" p2="v2"

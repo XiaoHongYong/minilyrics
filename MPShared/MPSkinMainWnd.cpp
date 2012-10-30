@@ -36,7 +36,7 @@ void CMPSkinMainWndBase::OnDestroy()
 
 #ifndef _WIN32_WCE
 	// Save iconic status
-	g_Profile.WriteProfileInt(_T("Minimized"), IsIconic());
+	g_Profile.WriteInt(_T("Minimized"), IsIconic());
 #endif
 
 	CMPSkinWnd::OnDestroy();

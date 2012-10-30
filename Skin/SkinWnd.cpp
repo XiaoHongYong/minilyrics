@@ -2662,10 +2662,10 @@ void CSkinWnd::OnLoadWndSizePos()
 
 	if (m_bRememberSizePos)
 	{
-		rcNew.left = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_left"), rcNew.left);
-		rcNew.top = g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_top"), rcNew.top);
-		rcNew.right = rcNew.left + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_width"), m_nWidth);
-		rcNew.bottom = rcNew.top + g_Profile.GetProfileInt(GetSkinWndName(), _T("wnd_height"), m_nHeight);
+		rcNew.left = g_Profile.GetInt(GetSkinWndName(), _T("wnd_left"), rcNew.left);
+		rcNew.top = g_Profile.GetInt(GetSkinWndName(), _T("wnd_top"), rcNew.top);
+		rcNew.right = rcNew.left + g_Profile.GetInt(GetSkinWndName(), _T("wnd_width"), m_nWidth);
+		rcNew.bottom = rcNew.top + g_Profile.GetInt(GetSkinWndName(), _T("wnd_height"), m_nHeight);
 		// if (!rcNew.EqualRect(&m_rcReal))
 		//	bCenterWnd = false;
 		bCenterWnd = false;
@@ -2705,7 +2705,7 @@ void CSkinWnd::OnLoadWndSizePos()
 
 /*	if (!m_wndResizer.IsFixedWidth() && !m_wndResizer.IsFixedHeight())
 	{
-// 		sizeMode = (WndSizeMode)g_Profile.GetProfileInt(GetSkinWndName(), _T("SizeMode"), WndSizeMode_Normal);
+// 		sizeMode = (WndSizeMode)g_Profile.GetInt(GetSkinWndName(), _T("SizeMode"), WndSizeMode_Normal);
 // 		if (sizeMode == WndSizeMode_Maximized)
 // 			dwShowFlag = SW_MAXIMIZE;
 // 			// ShowWindow(SW_MAXIMIZE);
@@ -2754,14 +2754,14 @@ void CSkinWnd::SaveWndPos()
 	else
 		sizeMode = WndSizeMode_Normal;
 
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("SizeMode"), sizeMode);
+	g_Profile.WriteInt(GetSkinWndName(), _T("SizeMode"), sizeMode);
 #else
 	if (!GetWindowRect(&rcToSave))
 		return;
 #endif
 
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_left"), rcToSave.left);
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_top"), rcToSave.top);
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_width"), rcToSave.Width());
-	g_Profile.WriteProfileInt(GetSkinWndName(), _T("wnd_height"), rcToSave.Height());
+	g_Profile.WriteInt(GetSkinWndName(), _T("wnd_left"), rcToSave.left);
+	g_Profile.WriteInt(GetSkinWndName(), _T("wnd_top"), rcToSave.top);
+	g_Profile.WriteInt(GetSkinWndName(), _T("wnd_width"), rcToSave.Width());
+	g_Profile.WriteInt(GetSkinWndName(), _T("wnd_height"), rcToSave.Height());
 }

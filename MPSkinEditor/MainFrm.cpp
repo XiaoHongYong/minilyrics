@@ -166,11 +166,11 @@ void CMainFrame::OnDestroy()
 void CMainFrame::OnSaveSkin() 
 {
 	g_skinPrj.Save();
-/*	CFileDialog ofdlg(FALSE, 0, g_Profile.GetProfileString(_T("LastOpenSknFile"), _T("")), OFN_FILEMUSTEXIST, _T("Skin files(*.xml)|*.xml|All files (*.*)|*.*||"), this);
+/*	CFileDialog ofdlg(FALSE, 0, g_Profile.GetString(_T("LastOpenSknFile"), _T("")), OFN_FILEMUSTEXIST, _T("Skin files(*.xml)|*.xml|All files (*.*)|*.*||"), this);
 	if (ofdlg.DoModal() != IDOK)
 		return;
 
-	g_Profile.WriteProfileString(_T("LastOpenSknFile"), ofdlg.GetPathName());
+	g_Profile.WriteString(_T("LastOpenSknFile"), ofdlg.GetPathName());
 
 	g_skinPrj.Save(ofdlg.GetPathName());*/
 }

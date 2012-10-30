@@ -34,7 +34,7 @@ bool CAppAnalyticsClient::Rule::SaveFromXml(SXNode *pNode)
 	LPCTSTR vNames[] = { _T("SplitVer"), _T("NewVerEnabledAA"), _T("NewVerDisabledAA"), _T("OldVerEnabledAA"), _T("OldVerDisabledAA") };
 
 	for (int i = 0; i < CountOf(vNames); i++)
-		g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, vNames[i], 
+		g_Profile.EncryptWriteString(SZ_SECT_APP_ANALYTICS, vNames[i], 
 			pNodeBaseRule->GetPropertySafe(vNames[i]));
 
 	return true;
@@ -42,13 +42,13 @@ bool CAppAnalyticsClient::Rule::SaveFromXml(SXNode *pNode)
 
 void AAProfileGetStringSet(LPCTSTR szValueName, LPCTSTR szDefault, SetTStrNCase &setStrings)
 {
-	StrSplit(g_Profile.EncryptGetProfileString(SZ_SECT_APP_ANALYTICS, szValueName, szDefault).c_str(),
+	StrSplit(g_Profile.EncryptGetString(SZ_SECT_APP_ANALYTICS, szValueName, szDefault).c_str(),
 		'|', setStrings);
 }
 
 void CAppAnalyticsClient::Rule::LoadFromProfile()
 {
-	verSeparator = VersionNumFrom(g_Profile.EncryptGetProfileString(SZ_SECT_APP_ANALYTICS, _T("SplitVer"), _T("")).c_str());
+	verSeparator = VersionNumFrom(g_Profile.EncryptGetString(SZ_SECT_APP_ANALYTICS, _T("SplitVer"), _T("")).c_str());
 	AAProfileGetStringSet(_T("NewVerEnabledAA"), _T("*"), newVerEnabledAA);
 	AAProfileGetStringSet(_T("NewVerDisabledAA"), _T(""), newVerDisabledAA);
 	AAProfileGetStringSet(_T("OldVerEnabledAA"), _T("PI|BU|LS|CU|PR"), oldVerEnabledAA);
@@ -74,12 +74,12 @@ void CAppAnalyticsClient::Init()
 {
 	m_nAppStartTime = GetTickCount();
 
-	m_lastSendDate.FromString(g_Profile.EncryptGetProfileString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), _T("1977:12:12")).c_str());
+	m_lastSendDate.FromString(g_Profile.EncryptGetString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), _T("1977:12:12")).c_str());
 
-	if (!m_lastWeeklyPingDate.FromString(g_Profile.EncryptGetProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), _T("")).c_str()))
+	if (!m_lastWeeklyPingDate.FromString(g_Profile.EncryptGetString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), _T("")).c_str()))
 	{
 		m_lastWeeklyPingDate = GetCurrentDateOnly();
-		g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), m_lastWeeklyPingDate.ToUtcDateString().c_str());
+		g_Profile.EncryptWriteString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"), m_lastWeeklyPingDate.ToUtcDateString().c_str());
 	}
 
 	m_lastSaveTime = GetTickCount();
@@ -340,7 +340,7 @@ void CAppAnalyticsClient::CheckSendTask()
 	SendParam *pSendParam = new SendParam;
 	pSendParam->pAAClient = this;
 
-	pSendParam->bInstallPing = g_Profile.GetProfileBool(SZ_SECT_APP_ANALYTICS, _T("NIS"), true);
+	pSendParam->bInstallPing = g_Profile.GetBool(SZ_SECT_APP_ANALYTICS, _T("NIS"), true);
 	pSendParam->bWeeklyPing = false;
 
 	// Install & Weekly Ping can't be send at same time.
@@ -376,7 +376,7 @@ void CAppAnalyticsClient::CheckSendTask()
 	else
 		delete pSendParam;
 
-	g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), dateNow.ToUtcDateString().c_str());
+	g_Profile.EncryptWriteString(SZ_SECT_APP_ANALYTICS, _T("LastTaskDate"), dateNow.ToUtcDateString().c_str());
 }
 
 void CAppAnalyticsClient::GetAllUsageData(tstring &strUsageData, bool bForSending)
@@ -463,7 +463,7 @@ int CAppAnalyticsClient::Send(const string &strUsageData, bool bInstallPing)
 	CHttpClient	httpClient;
 
 #ifdef _DEBUG
-	tstring strServer = g_Profile.GetProfileString(_T("aaserverurl"), SZ_APP_ANALYTICS_DATA_VER);
+	tstring strServer = g_Profile.GetString(_T("aaserverurl"), SZ_APP_ANALYTICS_DATA_VER);
 	httpClient.Init(strServer.c_str(), NULL);
 	DBGLOG1(_T("AppAnalytics server: %s"), strServer.c_str());
 #else
@@ -518,9 +518,9 @@ int CAppAnalyticsClient::Send(const string &strUsageData, bool bInstallPing)
 
 		// Save status of ping
 		if (bInstallPing)
-			g_Profile.WriteProfileInt(SZ_SECT_APP_ANALYTICS, _T("NIS"), false);
+			g_Profile.WriteInt(SZ_SECT_APP_ANALYTICS, _T("NIS"), false);
 		m_lastWeeklyPingDate = GetCurrentDateOnly();
-		g_Profile.EncryptWriteProfileString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
+		g_Profile.EncryptWriteString(SZ_SECT_APP_ANALYTICS, _T("LastWeeklyDate"),
 			m_lastWeeklyPingDate.ToUtcDateString().c_str());
 	}
 

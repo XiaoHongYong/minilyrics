@@ -317,11 +317,11 @@ public:
 	static LPCTSTR ClassName() { return ms_szClassName; }
 
 	// profile api
-	UINT GetProfileInt(LPCTSTR szKeyName, int nDefault);
-	bool GetProfileBool(LPCTSTR szKeyName, bool bDefault) { return GetProfileInt(szKeyName, bDefault) != 0; }
-	tstring GetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault);
-	void WriteProfileInt(LPCTSTR szKeyName, int nValue);
-	void WriteProfileString(LPCTSTR szKeyName, LPCTSTR szValue);
+	UINT GetInt(LPCTSTR szKeyName, int nDefault);
+	bool GetBool(LPCTSTR szKeyName, bool bDefault) { return GetInt(szKeyName, bDefault) != 0; }
+	tstring GetString(LPCTSTR szKeyName, LPCTSTR szDefault);
+	void WriteInt(LPCTSTR szKeyName, int nValue);
+	void WriteString(LPCTSTR szKeyName, LPCTSTR szValue);
 	tstring GetProfileKeyName(LPCTSTR szSubKeyName);
 
 	virtual void OnLanguageChanged();

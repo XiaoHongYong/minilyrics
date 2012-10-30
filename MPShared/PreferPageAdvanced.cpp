@@ -60,7 +60,7 @@ public:
 	}
 
 	virtual void SetOption(int nIndex) {
-		g_Profile.WriteProfileInt(_T("SaveLyrPrompt"), IDCANCEL);
+		g_Profile.WriteInt(_T("SaveLyrPrompt"), IDCANCEL);
 		m_pWnd->MessageOut(_TLT("Setting was restored successfully."), MB_OK | MB_ICONINFORMATION);
 	}
 
@@ -92,7 +92,7 @@ public:
 
 	virtual int GetIntValue()
 	{
-		return g_Profile.GetProfileInt(strSection.c_str(), strValueName.c_str(), nDefaultValue);
+		return g_Profile.GetInt(strSection.c_str(), strValueName.c_str(), nDefaultValue);
 	}
 
 	virtual void SetIntValue(int nValue)
@@ -255,14 +255,14 @@ public:
 			TCHAR	szPath[MAX_PATH];
 
 			// 取得上次选择过的文件夹的位置
-			g_Profile.GetProfileString(_T("LastSelectFolder"), _T(""), szPath, MAX_PATH);
+			g_Profile.GetString(_T("LastSelectFolder"), _T(""), szPath, MAX_PATH);
 			dlg.SetInitFolder(szPath);
 
 			if (dlg.DoBrowse(m_pWndParent))
 			{
 				// 保存上次选择过的文件夹的位置
 				_tcscpy_safe(szPath, CountOf(szPath), dlg.GetFolder());
-				g_Profile.WriteProfileString(_T("LastSelectFolder"), szPath);
+				g_Profile.WriteString(_T("LastSelectFolder"), szPath);
 
 				if (g_LyricSearch.SetFolder(szPath))
 				{
@@ -304,7 +304,7 @@ public:
 
 CHAR_ENCODING GetDefaultLyricsEncodingSettings()
 {
-	tstring defEncoding = g_Profile.GetProfileString(_T("LyrDefEncoding"), _T(""));
+	tstring defEncoding = g_Profile.GetString(_T("LyrDefEncoding"), _T(""));
 	CHAR_ENCODING encodingId = GetCharEncodingID(defEncoding.c_str());
 	return encodingId;
 }
@@ -315,7 +315,7 @@ void SetDefaultLyricsEncodingSettings(CHAR_ENCODING encoding)
 
 	tstring strEncoding;
 	AnsiToTString(GetCharEncodingByID(encoding).szEncoding, -1, strEncoding);
-	g_Profile.WriteProfileString(_T("LyrDefEncoding"), strEncoding.c_str());
+	g_Profile.WriteString(_T("LyrDefEncoding"), strEncoding.c_str());
 }
 
 class CPfItemLyrDefaultEncoding : public CPreferItem
@@ -476,7 +476,7 @@ public:
 
 	virtual void SetIntValue(int nValue)
 	{
-		g_Profile.WriteProfileInt(strValueName.c_str(), nValue);
+		g_Profile.WriteInt(strValueName.c_str(), nValue);
 
 		g_SysTrayIconCmd[nPlayerCtrlIndex].bEnable = Tobool(nValue);
 

@@ -534,7 +534,7 @@ void CAudioEncoder::DoStopAudio()
   StopEncoder();
 
   CHECK_AND_FREE(m_audioPreEncodingBuffer);
-  debug_message("Audio profile %s stats", GetProfileName());
+  debug_message("Audio profile %s stats", GetFile());
   debug_message(" encoded samples: "U64, m_audioDstSampleNumber);
   debug_message(" encoded frames: %u", m_audioDstFrameNumber);
 }

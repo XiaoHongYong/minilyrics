@@ -51,12 +51,12 @@ bool OnSongOpenDirCmd(CBaseWnd *pWndParent, bool bOpen)
 	tstring				strFolder;
 	
 	CFolderDialog	dlg;
-	dlg.SetInitFolder(g_Profile.GetProfileString(_T("Last Open Dir"), _T("")));
+	dlg.SetInitFolder(g_Profile.GetString(_T("Last Open Dir"), _T("")));
 	if (dlg.DoBrowse(pWndParent) == IDOK)
 	{
 		strFolder = dlg.GetFolder();
 
-		g_Profile.WriteProfileString(_T("Last Open Dir"), strFolder.c_str());
+		g_Profile.WriteString(_T("Last Open Dir"), strFolder.c_str());
 
 		if (bOpen)
 			g_Player.ClearPlaylist();
@@ -81,19 +81,19 @@ bool OnCmdSongAddDirToMediaLib(CBaseWnd *pWndParent)
 #ifdef _WIN32_WCE
 	bool				bIncSubfolder = true;
 	CFolderBrowseDlg	dlg;
-	if (dlg.DoModal(pWndParent, g_Profile.GetProfileString(_T("Last Open Dir"), _T("")), 
-		g_Profile.GetProfileBool(_T("AddIncSubFolder"), true)) == IDOK)
+	if (dlg.DoModal(pWndParent, g_Profile.GetString(_T("Last Open Dir"), _T("")), 
+		g_Profile.GetBool(_T("AddIncSubFolder"), true)) == IDOK)
 	{
 		bIncSubfolder = dlg.IsIncSubfolder();
 #else
 	CFolderDialog	dlg;
-	dlg.SetInitFolder(g_Profile.GetProfileString(_T("Last Open Dir"), _T("")));
+	dlg.SetInitFolder(g_Profile.GetString(_T("Last Open Dir"), _T("")));
 	if (dlg.DoBrowse(pWndParent) == IDOK)
 	{
 #endif
 		strFolder = dlg.GetFolder();
 
-		g_Profile.WriteProfileString(_T("Last Open Dir"), strFolder.c_str());
+		g_Profile.WriteString(_T("Last Open Dir"), strFolder.c_str());
 
 		pWndParent->MessageOut(_T("The music in the folder will added in the background."));
 		g_mediaDetectionService.AddMediaInDir(strFolder.c_str());

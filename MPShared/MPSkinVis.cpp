@@ -24,7 +24,7 @@ CMPSkinVis::CMPSkinVis()
 	m_nSpectrumColSpace = 0;
 	m_nSpectrumUnitHeight = 1;
 	m_visParamCur = NULL;
-	if (_tcsicmp(g_Profile.GetProfileString(_T("VisMode"), _T("")),  _T("Osilloscope")) == 0)
+	if (_tcsicmp(g_Profile.GetString(_T("VisMode"), _T("")),  _T("Osilloscope")) == 0)
 		m_visMode = VM_OSILLOSCOPE;
 	else
 		m_visMode = VM_SPECTRUM;
@@ -62,12 +62,12 @@ bool CMPSkinVis::OnLButtonUp(UINT nFlags, CPoint point)
 	if (m_visMode == VM_OSILLOSCOPE)
 	{
 		m_visMode = VM_SPECTRUM;
-		g_Profile.WriteProfileString(_T("VisMode"), _T("Spectrum"));
+		g_Profile.WriteString(_T("VisMode"), _T("Spectrum"));
 	}
 	else
 	{
 		m_visMode = VM_OSILLOSCOPE;
-		g_Profile.WriteProfileString(_T("VisMode"), _T("Osilloscope"));
+		g_Profile.WriteString(_T("VisMode"), _T("Osilloscope"));
 	}
 
 

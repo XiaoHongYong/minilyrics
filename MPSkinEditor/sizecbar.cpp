@@ -971,36 +971,36 @@ void CSizingControlBar::LoadState(LPCTSTR lpszProfileName)
     wsprintf(szSection, _T("%s-SCBar-%d"), lpszProfileName,
         GetDlgCtrlID());
 //
-//    m_szHorz.cx = max(m_szMin.cx, (int) pApp->GetProfileInt(szSection,
+//    m_szHorz.cx = max(m_szMin.cx, (int) pApp->GetInt(szSection,
 //        _T("sizeHorzCX"), m_szHorz.cx));
-//    m_szHorz.cy = max(m_szMin.cy, (int) pApp->GetProfileInt(szSection, 
+//    m_szHorz.cy = max(m_szMin.cy, (int) pApp->GetInt(szSection, 
 //        _T("sizeHorzCY"), m_szHorz.cy));
 //
-//    m_szVert.cx = max(m_szMin.cx, (int) pApp->GetProfileInt(szSection, 
+//    m_szVert.cx = max(m_szMin.cx, (int) pApp->GetInt(szSection, 
 //        _T("sizeVertCX"), m_szVert.cx));
-//    m_szVert.cy = max(m_szMin.cy, (int) pApp->GetProfileInt(szSection, 
+//    m_szVert.cy = max(m_szMin.cy, (int) pApp->GetInt(szSection, 
 //        _T("sizeVertCY"), m_szVert.cy));
 //
-//    m_szFloat.cx = max(m_szMin.cx, (int) pApp->GetProfileInt(szSection,
+//    m_szFloat.cx = max(m_szMin.cx, (int) pApp->GetInt(szSection,
 //        _T("sizeFloatCX"), m_szFloat.cx));
-//    m_szFloat.cy = max(m_szMin.cy, (int) pApp->GetProfileInt(szSection,
+//    m_szFloat.cy = max(m_szMin.cy, (int) pApp->GetInt(szSection,
 //        _T("sizeFloatCY"), m_szFloat.cy));
 
-    m_nDockBarID = max(m_szMin.cx, (int) g_Profile.GetProfileInt(szSection,
+    m_nDockBarID = max(m_szMin.cx, (int) g_Profile.GetInt(szSection,
         _T("DockBarID"), AFX_IDW_DOCKBAR_RIGHT));
-    m_szHorz.cx = max(m_szMin.cx, (int) g_Profile.GetProfileInt(szSection,
+    m_szHorz.cx = max(m_szMin.cx, (int) g_Profile.GetInt(szSection,
         _T("sizeHorzCX"), m_szHorz.cx));
-    m_szHorz.cy = max(m_szMin.cy, (int) g_Profile.GetProfileInt(szSection, 
+    m_szHorz.cy = max(m_szMin.cy, (int) g_Profile.GetInt(szSection, 
         _T("sizeHorzCY"), m_szHorz.cy));
 
-    m_szVert.cx = max(m_szMin.cx, (int) g_Profile.GetProfileInt(szSection, 
+    m_szVert.cx = max(m_szMin.cx, (int) g_Profile.GetInt(szSection, 
         _T("sizeVertCX"), m_szVert.cx));
-    m_szVert.cy = max(m_szMin.cy, (int) g_Profile.GetProfileInt(szSection, 
+    m_szVert.cy = max(m_szMin.cy, (int) g_Profile.GetInt(szSection, 
         _T("sizeVertCY"), m_szVert.cy));
 
-    m_szFloat.cx = max(m_szMin.cx, (int) g_Profile.GetProfileInt(szSection,
+    m_szFloat.cx = max(m_szMin.cx, (int) g_Profile.GetInt(szSection,
         _T("sizeFloatCX"), m_szFloat.cx));
-    m_szFloat.cy = max(m_szMin.cy, (int) g_Profile.GetProfileInt(szSection,
+    m_szFloat.cy = max(m_szMin.cy, (int) g_Profile.GetInt(szSection,
         _T("sizeFloatCY"), m_szFloat.cy));
 }
 
@@ -1015,16 +1015,16 @@ void CSizingControlBar::SaveState(LPCTSTR lpszProfileName)
     wsprintf(szSection, _T("%s-SCBar-%d"), lpszProfileName,
         GetDlgCtrlID());
 
- //    pApp->WriteProfileInt(szSection, _T("sizeVertCX"), m_szVert.cx);
-	g_Profile.WriteProfileInt(szSection, _T("DockBarID"), m_nDockBarID);
-	g_Profile.WriteProfileInt(szSection, _T("sizeHorzCX"), m_szHorz.cx);
-	g_Profile.WriteProfileInt(szSection, _T("sizeHorzCY"), m_szHorz.cy);
+ //    pApp->WriteInt(szSection, _T("sizeVertCX"), m_szVert.cx);
+	g_Profile.WriteInt(szSection, _T("DockBarID"), m_nDockBarID);
+	g_Profile.WriteInt(szSection, _T("sizeHorzCX"), m_szHorz.cx);
+	g_Profile.WriteInt(szSection, _T("sizeHorzCY"), m_szHorz.cy);
 
-	g_Profile.WriteProfileInt(szSection, _T("sizeVertCX"), m_szVert.cx);
-	g_Profile.WriteProfileInt(szSection, _T("sizeVertCY"), m_szVert.cy);
+	g_Profile.WriteInt(szSection, _T("sizeVertCX"), m_szVert.cx);
+	g_Profile.WriteInt(szSection, _T("sizeVertCY"), m_szVert.cy);
 
-	g_Profile.WriteProfileInt(szSection, _T("sizeFloatCX"), m_szFloat.cx);
-	g_Profile.WriteProfileInt(szSection, _T("sizeFloatCY"), m_szFloat.cy);
+	g_Profile.WriteInt(szSection, _T("sizeFloatCX"), m_szFloat.cx);
+	g_Profile.WriteInt(szSection, _T("sizeFloatCY"), m_szFloat.cy);
 }
 
 void CSizingControlBar::GlobalLoadState(LPCTSTR lpszProfileName)

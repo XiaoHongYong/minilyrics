@@ -391,7 +391,7 @@ void CMPSkinFactory::AllUpdateTransparent()
 	if (!IsLayeredWndSupported())
 		return;
 
-	int		nOpaque = g_Profile.GetProfileInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
+	int		nOpaque = g_Profile.GetInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
 	byte	byAlpha = OpaquePercentToAlpha(nOpaque);
 
 #ifndef _MPLAYER
@@ -417,17 +417,17 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 	m_bClickThrough = bClickThrough;
 
 	// Save ClickThrough options
-	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("ClickThrough"), m_bClickThrough);
+	g_Profile.WriteInt(SZ_SECT_UI, _T("ClickThrough"), m_bClickThrough);
 
 	if (m_bClickThrough)
 	{
 		// Show MiniLyrics system tray icon.
 		int			nShowPos;
 
-		nShowPos = g_Profile.GetProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_TASKBAR);
+		nShowPos = g_Profile.GetInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_TASKBAR);
 		if (nShowPos == SHOW_ICON_ON_NONE || nShowPos == SHOW_ICON_ON_TASKBAR)
 		{
-			g_Profile.WriteProfileInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_TASKBAR);
+			g_Profile.WriteInt(SZ_SECT_UI, _T("ShowIconOn"), SHOW_ICON_ON_TASKBAR);
 			CMPlayerAppBase::GetMainWnd()->GetTrayIcon().UpdateShowIconPos();
 		}
 	}
@@ -445,7 +445,7 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 	m_bClickThrough = bClickThrough;
 	
 	// Save ClickThrough options
-	g_Profile.WriteProfileInt(SZ_SECT_UI, _T("ClickThrough"), m_bClickThrough);
+	g_Profile.WriteInt(SZ_SECT_UI, _T("ClickThrough"), m_bClickThrough);
 }
 
 #endif // _WIN32_DESKTOP

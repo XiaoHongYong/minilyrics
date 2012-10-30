@@ -182,10 +182,10 @@ inline tstring GetCurSkin()
 void CZPAnalyticsClient::PrepareSettingsData(MapString &ping)
 {
 	ping[SZ_N_ST_CUR_SKIN] = GetCurSkin();
-	ping[SZ_N_ST_BG_IMAGE] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), _T(""));
-	ping[SZ_N_ST_USE_ALBUM_ARG_BG] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), _T(""));
-	ping[SZ_N_ST_DARK_LYR_BG] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("DarkenLyrBg"), _T(""));
-	ping[SZ_N_ST_SLIDE_DELAY_DURATION] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), _T(""));
+	ping[SZ_N_ST_BG_IMAGE] = g_Profile.GetString(SZ_SECT_LYR_DISPLAY, _T("UseBgImage"), _T(""));
+	ping[SZ_N_ST_USE_ALBUM_ARG_BG] = g_Profile.GetString(SZ_SECT_LYR_DISPLAY, _T("UseAlbumArtAsBg"), _T(""));
+	ping[SZ_N_ST_DARK_LYR_BG] = g_Profile.GetString(SZ_SECT_LYR_DISPLAY, _T("DarkenLyrBg"), _T(""));
+	ping[SZ_N_ST_SLIDE_DELAY_DURATION] = g_Profile.GetString(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), _T(""));
 }
 
 void CZPAnalyticsClient::PrepareOtherUsageData()
@@ -205,13 +205,13 @@ void CZPAnalyticsClient::PrepareModeRelatedSettingsData(LPCTSTR szSection, MapSt
 	ping[SZ_N_ST_FONT_NAME_OTHERS] = strFaceNameOthers;
 	ping[SZ_N_ST_FONT_BOLD] = StringFromInt(nWeight);
 	ping[SZ_N_ST_FONT_ITALIC] = StringFromInt(byItalic);
-	ping[SZ_N_ST_LYR_DISPLAY_OPT] = g_Profile.GetProfileString(szSection, _T("LyrDrawOpt"), _T(""));
-	ping[SZ_N_ST_KARAOKE] = g_Profile.GetProfileString(szSection, _T("Karaoke"), _T(""));
-	ping[SZ_N_ST_LYRICS_ALIGN] = g_Profile.GetProfileString(szSection, _T("VertAlign"), _T(""));
-	ping[SZ_N_ST_BG_COLOR] = g_Profile.GetProfileString(szSection, _T("BgColor"), _T(""));
-	ping[SZ_N_ST_OUTLINE_LYR] = g_Profile.GetProfileString(szSection, _T("OutlineLyrText"), _T(""));
+	ping[SZ_N_ST_LYR_DISPLAY_OPT] = g_Profile.GetString(szSection, _T("LyrDrawOpt"), _T(""));
+	ping[SZ_N_ST_KARAOKE] = g_Profile.GetString(szSection, _T("Karaoke"), _T(""));
+	ping[SZ_N_ST_LYRICS_ALIGN] = g_Profile.GetString(szSection, _T("VertAlign"), _T(""));
+	ping[SZ_N_ST_BG_COLOR] = g_Profile.GetString(szSection, _T("BgColor"), _T(""));
+	ping[SZ_N_ST_OUTLINE_LYR] = g_Profile.GetString(szSection, _T("OutlineLyrText"), _T(""));
 	if (bFloatingLyr)
-		ping[SZ_N_ST_LYR_DISPLAY_STYLE] = g_Profile.GetProfileString(SZ_SECT_FLOATING_LYR, _T("FloatingLyrDispStyle"), _T(""));
+		ping[SZ_N_ST_LYR_DISPLAY_STYLE] = g_Profile.GetString(SZ_SECT_FLOATING_LYR, _T("FloatingLyrDispStyle"), _T(""));
 	else
-		ping[SZ_N_ST_LYR_DISPLAY_STYLE] = g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("LyrDisplayStyle"), _T(""));
+		ping[SZ_N_ST_LYR_DISPLAY_STYLE] = g_Profile.GetString(SZ_SECT_LYR_DISPLAY, _T("LyrDisplayStyle"), _T(""));
 }

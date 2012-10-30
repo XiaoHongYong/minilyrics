@@ -301,7 +301,7 @@ void CLyricShowTxtObj::EnableRecordScrollingActions(bool bEnable)
 	{
 		m_bReplayDisabledTemp = false;
 		m_bRecordScrollingActionsEnabled = bEnable;
-		g_Profile.WriteProfileInt(_T("LyrRecordSAEnabled"), bEnable);
+		g_Profile.WriteInt(_T("LyrRecordSAEnabled"), bEnable);
 	}
 }
 
@@ -310,7 +310,7 @@ void CLyricShowTxtObj::EnableReplayScrollingActions(bool bEnable)
 	if (bEnable)
 		m_bReplayDisabledTemp = false;
 	m_bReplayScrollingActionsEnabled = bEnable;
-	g_Profile.WriteProfileInt(_T("LyrReplaySAEnabled"), bEnable);
+	g_Profile.WriteInt(_T("LyrReplaySAEnabled"), bEnable);
 
 	CSkinToolbar *pToolbarLyrTxt = (CSkinToolbar*)m_pSkin->GetUIObjectById(ID_TB_LYR_TXT, CSkinToolbar::ClassName());
 	if (pToolbarLyrTxt)
@@ -344,8 +344,8 @@ void CLyricShowTxtObj::OnCreate()
 
 	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_LYRICS_ON_SAVE_EDIT);
 
-	m_bRecordScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrRecordSAEnabled"), false);
-	m_bReplayScrollingActionsEnabled = g_Profile.GetProfileBool(_T("LyrReplaySAEnabled"), true);
+	m_bRecordScrollingActionsEnabled = g_Profile.GetBool(_T("LyrRecordSAEnabled"), false);
+	m_bReplayScrollingActionsEnabled = g_Profile.GetBool(_T("LyrReplaySAEnabled"), true);
 
 	m_pObjScrollBar = m_pContainer->GetUIObjectByClassName(CSkinVScrollBar::ClassName());
 	if (m_pObjScrollBar)

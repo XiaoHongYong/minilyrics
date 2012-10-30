@@ -75,7 +75,7 @@ void ST_SplitterWnd::SetInitialStatus()
 	CString sSubKey;
 	sSubKey.Format(_T("Panes_%d"),m_nLevel);
 	CString s;
-	s = AfxGetApp()->GetProfileString(m_sRegKey,sSubKey,_T("-1 150 -1 150"));
+	s = AfxGetApp()->GetString(m_sRegKey,sSubKey,_T("-1 150 -1 150"));
 	   sscanf(s,_T("%d %d %d %d"),&c,&m_nPaneSize[0],&r,&m_nPaneSize[1]);
 	   
 	   if (IsSplittverticaly()) {
@@ -107,7 +107,7 @@ void ST_SplitterWnd::SaveToRegistry()
 	if (m_nPaneSize[1] == -1) m_nPaneSize[1] = 100;
 	
 	s.Format(_T("%d %d %d %d"),m_nHiddenCol,m_nPaneSize[0],m_nHiddenRow,m_nPaneSize[1]);
-	AfxGetApp()->WriteProfileString(m_sRegKey,sSubKey,s);
+	AfxGetApp()->WriteString(m_sRegKey,sSubKey,s);
 	
 	if (m_pSubSplitterWnd[0] != NULL) m_pSubSplitterWnd[0]->SaveToRegistry();
 	if (m_pSubSplitterWnd[1] != NULL) m_pSubSplitterWnd[1]->SaveToRegistry();

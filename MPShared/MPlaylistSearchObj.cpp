@@ -181,7 +181,7 @@ void CMPlaylistSearchObj::OnCreate()
 	{
 		tstring			strPlaylist;
 
-		strPlaylist = g_Profile.GetProfileString(CStrPrintf(_T("%s%d"), SZ_RECENT_PL, i).c_str(), _T(""));
+		strPlaylist = g_Profile.GetString(CStrPrintf(_T("%s%d"), SZ_RECENT_PL, i).c_str(), _T(""));
 		if (strPlaylist.empty())
 			break;
 		if (!IsFileExist(strPlaylist.c_str()))
@@ -541,7 +541,7 @@ void CMPlaylistSearchObj::UseResultAsNowPlaying()
 
 	// Save recent playlist...
 	for (i = PN_CUSTOMIZED; i < (int)m_vRecentPL.size(); i++)
-		g_Profile.WriteProfileString(CStrPrintf(_T("%s%d"), SZ_RECENT_PL, i).c_str(), m_vRecentPL[i].c_str());
+		g_Profile.WriteString(CStrPrintf(_T("%s%d"), SZ_RECENT_PL, i).c_str(), m_vRecentPL[i].c_str());
 }
 
 #ifdef _CPPUNIT_TEST

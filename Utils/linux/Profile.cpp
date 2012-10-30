@@ -24,15 +24,15 @@ int TestEncryptProfile()
 	tstringex	str;
 
 	// read k1
-	file.EncryptGetProfileString(_T("k1"), _T("k1default"), szReturn, CountOf(szReturn));
-	str = file.EncryptGetProfileString(_T("k1"), _T("k1default2"));
+	file.EncryptGetString(_T("k1"), _T("k1default"), szReturn, CountOf(szReturn));
+	str = file.EncryptGetString(_T("k1"), _T("k1default2"));
 
 	// write k1
-	file.EncryptWriteProfileString(_T("k1"), _T("k1value"));
+	file.EncryptWriteString(_T("k1"), _T("k1value"));
 
 	// read k1
-	file.EncryptGetProfileString(_T("k1"), _T("k1default"), szReturn, CountOf(szReturn));
-	str = file.EncryptGetProfileString(_T("k1"), _T("k1default2"));
+	file.EncryptGetString(_T("k1"), _T("k1default"), szReturn, CountOf(szReturn));
+	str = file.EncryptGetString(_T("k1"), _T("k1default2"));
 
 	return 1;
 }
@@ -404,7 +404,7 @@ void CProfile::SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, int nD
 	SetKeyDefaultIfNotExist(szAppName, szKeyName, szDefault);
 }
 
-DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
+DWORD CProfile::GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
 {
 	assert(!m_strProfile.empty());
 
@@ -432,7 +432,7 @@ DWORD CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR s
 	}
 }
 
-LPCTSTR CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
+LPCTSTR CProfile::GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
 {
 	assert(!m_strProfile.empty());
 
@@ -458,7 +458,7 @@ LPCTSTR CProfile::GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR
 	return (*itKey).second.c_str();
 }
 
-BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
+BOOL CProfile::WriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
 	assert(!m_strProfile.empty());
 
@@ -478,7 +478,7 @@ BOOL CProfile::WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR 
 }
 
 
-UINT CProfile::GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
+UINT CProfile::GetInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
 {
 	assert(!m_strProfile.empty());
 
@@ -491,12 +491,12 @@ UINT CProfile::GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault)
 	TCHAR	szDefault[64];
 	_itot_s(nDefault, szDefault, CountOf(szDefault), 10);
 
-	GetProfileString(szAppName, szKeyName, szDefault, szValue, 64);
+	GetString(szAppName, szKeyName, szDefault, szValue, 64);
 
 	return _ttoi(szValue);
 }
 
-BOOL CProfile::WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
+BOOL CProfile::WriteInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
 {
 	assert(!m_strProfile.empty());
 
@@ -504,11 +504,11 @@ BOOL CProfile::WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue)
 
 	_itot_s(nValue, szValue, CountOf(szValue), 10);
 
-	return WriteProfileString(szAppName, szKeyName, szValue);
+	return WriteString(szAppName, szKeyName, szValue);
 }
 
 
-LPCTSTR CProfile::GetProfileName()
+LPCTSTR CProfile::GetFile()
 {
 	return m_strProfile.c_str();
 }
@@ -557,7 +557,7 @@ void TestEnDecrypt()
 }
 */
 
-DWORD CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
+DWORD CProfile::EncryptGetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
 {
 	assert(!m_strProfile.empty());
 
@@ -590,7 +590,7 @@ DWORD CProfile::EncryptGetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LP
 	return _tcslen(szReturnedString);
 }
 
-BOOL CProfile::EncryptWriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
+BOOL CProfile::EncryptWriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
 	assert(!m_strProfile.empty());
 

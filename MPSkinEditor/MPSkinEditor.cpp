@@ -200,13 +200,13 @@ void CMPSkinEditorApp::OnOpenSkin()
 {
 	tstring		strSkinFile;
 	int			nRet;
-/*	CFileDialog ofdlg(TRUE, 0, g_Profile.GetProfileString(_T("LastOpenSknFile"), _T("")), OFN_FILEMUSTEXIST, _T("Skin files(*.xml)|*.xml|All files (*.*)|*.*||"), m_pMainWnd);
+/*	CFileDialog ofdlg(TRUE, 0, g_Profile.GetString(_T("LastOpenSknFile"), _T("")), OFN_FILEMUSTEXIST, _T("Skin files(*.xml)|*.xml|All files (*.*)|*.*||"), m_pMainWnd);
 
 	if (ofdlg.DoModal() != IDOK)
 		return;
 
 	strSkinFile = ofdlg.GetPathName();
-	g_Profile.WriteProfileString(_T("LastOpenSknFile"), strSkinFile.c_str());*/
+	g_Profile.WriteString(_T("LastOpenSknFile"), strSkinFile.c_str());*/
 
 	CDlgOpenSkin	dlg;
 

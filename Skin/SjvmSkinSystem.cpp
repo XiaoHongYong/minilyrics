@@ -869,22 +869,22 @@ int SJNI_API CSjvmSkinSystem::getCommandID(LPCTSTR string)
 
 void SJNI_API CSjvmSkinSystem::writeProfileInt(LPCTSTR szValueName, int nValue)
 {
-	g_Profile.WriteProfileInt(m_pSkinFactory->GetSkinName(), szValueName, nValue);
+	g_Profile.WriteInt(m_pSkinFactory->GetSkinName(), szValueName, nValue);
 }
 
 void SJNI_API CSjvmSkinSystem::writeProfileString(LPCTSTR szValueName, LPCTSTR szValue)
 {
-	g_Profile.WriteProfileString(m_pSkinFactory->GetSkinName(), szValueName, szValue);
+	g_Profile.WriteString(m_pSkinFactory->GetSkinName(), szValueName, szValue);
 }
 
 int SJNI_API CSjvmSkinSystem::getProfileInt(LPCTSTR szValueName, int nDefault)
 {
-	return g_Profile.GetProfileInt(m_pSkinFactory->GetSkinName(), szValueName, nDefault);
+	return g_Profile.GetInt(m_pSkinFactory->GetSkinName(), szValueName, nDefault);
 }
 
 jobject SJNI_API CSjvmSkinSystem::getProfileString(LPCTSTR szValueName, LPCTSTR szDefault)
 {
-	LPCTSTR szValue = g_Profile.GetProfileString(m_pSkinFactory->GetSkinName(), szValueName, szDefault);
+	LPCTSTR szValue = g_Profile.GetString(m_pSkinFactory->GetSkinName(), szValueName, szDefault);
 
 	if (!szValue)
 		return g_sjvm->NewString(_T(""), false);

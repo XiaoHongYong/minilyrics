@@ -297,7 +297,7 @@ bool CMLPlayerMgr::OnMsg(uint32 msg, LPCVOID lpData, size_t lenData)
 		}
 		break;
 	case M2M_PLAYER_ACTIVATED:
-		if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("ActivateWithWinamp"), true))
+		if (g_Profile.GetBool(SZ_SECT_UI, _T("ActivateWithWinamp"), true))
 		{
 			ASSERT(sizeof(BOOL) == lenData);
 			BOOL bActivate = *(BOOL*)lpData;

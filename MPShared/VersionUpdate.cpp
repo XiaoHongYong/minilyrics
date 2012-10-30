@@ -177,7 +177,7 @@ int CVersionUpdate::GetUpdateInfo(CDownloadTask *pTask, CVersionInfo &versionInf
 	//
 	// 将检查更新时间写入配置文件中
 	_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
-	g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), szCheckVerTime);
+	g_Profile.EncryptWriteString(_T("CheckVerTime"), szCheckVerTime);
 
 	// 分析VER_FILE
 	if (!xml.ParseData(pTask->buffContent.c_str(), pTask->buffContent.size()))
@@ -196,7 +196,7 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 {
 	if (bAutoCheck)
 	{
-		tstring strCheckVerTime = g_Profile.EncryptGetProfileString(_T("CheckVerTime"), _T(""));
+		tstring strCheckVerTime = g_Profile.EncryptGetString(_T("CheckVerTime"), _T(""));
 		CBaseDate dateLastCheck;
 		dateLastCheck.FromString(strCheckVerTime.c_str());
 
@@ -205,7 +205,7 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 		if (abs((long)dateNow.GetTime() - (long)dateLastCheck.GetTime()) <= 7 * CBaseDate::MILLIS_IN_ONE_DAY)
 			return;
 
-		g_Profile.EncryptWriteProfileString(_T("CheckVerTime"), dateNow.ToUtcDateString().c_str());
+		g_Profile.EncryptWriteString(_T("CheckVerTime"), dateNow.ToUtcDateString().c_str());
 	}
 
 	g_LyricsDownloader.DownloadVersionFile(GetStrName(SN_HTTP_ML_VER), !bAutoCheck);

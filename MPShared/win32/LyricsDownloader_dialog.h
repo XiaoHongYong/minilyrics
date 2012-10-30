@@ -37,12 +37,12 @@ public:
 			vEmbeddedLyrNames.push_back(SZ_SONG_LYRICS3V2);
 		}
 
-		g_Profile.WriteProfileInt(SZ_SECT_LYR_DOWNLOADER, _T("EmbeddedLyr"), lst);
+		g_Profile.WriteInt(SZ_SECT_LYR_DOWNLOADER, _T("EmbeddedLyr"), lst);
 	}
 
 	void LoadEmbeddedOptCheck(CBaseDialog *pDlg)
 	{
-		uint32 lst = g_Profile.GetProfileInt(SZ_SECT_LYR_DOWNLOADER, _T("EmbeddedLyr"), 0);
+		uint32 lst = g_Profile.GetInt(SZ_SECT_LYR_DOWNLOADER, _T("EmbeddedLyr"), 0);
 
 		if (IsFlagSet(lst, LST_M4A_LYRICS))
 			pDlg->CheckButton(IDC_C_EDL_M4A, true);
@@ -59,7 +59,7 @@ public:
 
 	bool LoadBtnCheckStatus(int btnId, LPCTSTR szValueName, bool bDefault)
 	{
-		bool bVal = g_Profile.GetProfileBool(SZ_SECT_LYR_DOWNLOADER, szValueName, bDefault);
+		bool bVal = g_Profile.GetBool(SZ_SECT_LYR_DOWNLOADER, szValueName, bDefault);
 		CheckButton(btnId, bVal);
 		return bVal;
 	}
@@ -67,7 +67,7 @@ public:
 	bool SaveBtnCheckStatus(int btnId, LPCTSTR szValueName)
 	{
 		bool bVal = IsButtonChecked(btnId);
-		g_Profile.WriteProfileInt(SZ_SECT_LYR_DOWNLOADER, szValueName, bVal);
+		g_Profile.WriteInt(SZ_SECT_LYR_DOWNLOADER, szValueName, bVal);
 		return bVal;
 	}
 

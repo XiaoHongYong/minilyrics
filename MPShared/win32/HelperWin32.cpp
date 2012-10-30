@@ -278,7 +278,7 @@ bool LoadProxySvrFromFireFox(bool &bUseProxy, tstring &strSvr, int &nPort)
 		// Get current profile folder.
 		for (int i = 0; i < 10; i++)
 		{
-			if (1 == profile.GetProfileInt(CStrPrintf(_T("Profile%d"), i).c_str(), _T("Default"), 0))
+			if (1 == profile.GetInt(CStrPrintf(_T("Profile%d"), i).c_str(), _T("Default"), 0))
 			{
 				// Find the default profile.
 				nDefault = i;
@@ -286,7 +286,7 @@ bool LoadProxySvrFromFireFox(bool &bUseProxy, tstring &strSvr, int &nPort)
 			}
 		}
 
-		tstring		strPath = profile.GetProfileString(CStrPrintf(_T("Profile%d"), nDefault).c_str(), _T("Path"), _T(""));
+		tstring		strPath = profile.GetString(CStrPrintf(_T("Profile%d"), nDefault).c_str(), _T("Path"), _T(""));
 		if (strPath.empty())
 			return false;
 

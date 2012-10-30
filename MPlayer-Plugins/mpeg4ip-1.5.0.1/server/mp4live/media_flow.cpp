@@ -134,7 +134,7 @@ void CAVMediaFlow::Stop(void)
 	// This will stop the sinks, and deletes the rtp destinations
 	CMediaCodec *mc = m_video_encoder_list, *p;
 	while (mc != NULL) {
-	  //debug_message("stopping video profile %s", mc->GetProfileName());
+	  //debug_message("stopping video profile %s", mc->GetFile());
 	  if (m_videoSource != NULL) {
 	    m_videoSource->RemoveSink(mc);
 	  }
@@ -150,7 +150,7 @@ void CAVMediaFlow::Stop(void)
 	m_video_encoder_list = NULL;
 	mc = m_audio_encoder_list;
 	while (mc != NULL) {
-	  // debug_message("stopping audio profile %s", mc->GetProfileName());
+	  // debug_message("stopping audio profile %s", mc->GetFile());
 	  mc->StopThread();
 	  //debug_message("thread stopped");
 	  mc->StopSinks();
@@ -163,7 +163,7 @@ void CAVMediaFlow::Stop(void)
 
 	mc = m_text_encoder_list;
 	while (mc != NULL) {
-	   debug_message("stopping text profile %s", mc->GetProfileName());
+	   debug_message("stopping text profile %s", mc->GetFile());
 	  mc->StopThread();
 	  debug_message("thread stopped");
 	  mc->StopSinks();
@@ -812,7 +812,7 @@ CVideoEncoder *CAVMediaFlow::FindOrCreateVideoEncoder (CVideoProfile *vp,
   CVideoEncoder *ve_ptr = m_video_encoder_list;
 
   while (ve_ptr != NULL) {
-    if (strcmp(vp_name, ve_ptr->GetProfileName()) == 0) {
+    if (strcmp(vp_name, ve_ptr->GetFile()) == 0) {
       return ve_ptr;
     }
     ve_ptr = ve_ptr->GetNext();
@@ -837,7 +837,7 @@ CAudioEncoder *CAVMediaFlow::FindOrCreateAudioEncoder (CAudioProfile *ap)
   CAudioEncoder *ae_ptr = m_audio_encoder_list;
  
   while (ae_ptr != NULL) {
-    if (strcmp(ap_name, ae_ptr->GetProfileName()) == 0) {
+    if (strcmp(ap_name, ae_ptr->GetFile()) == 0) {
       return ae_ptr;
     }
     ae_ptr = ae_ptr->GetNext();
@@ -864,7 +864,7 @@ CTextEncoder *CAVMediaFlow::FindOrCreateTextEncoder (CTextProfile *tp)
   CTextEncoder *te_ptr = m_text_encoder_list;
  
   while (te_ptr != NULL) {
-    if (strcmp(tp_name, te_ptr->GetProfileName()) == 0) {
+    if (strcmp(tp_name, te_ptr->GetFile()) == 0) {
       return te_ptr;
     }
     te_ptr = te_ptr->GetNext();

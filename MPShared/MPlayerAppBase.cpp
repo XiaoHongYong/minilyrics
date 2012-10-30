@@ -61,7 +61,7 @@ CHAR_ENCODING GetDefaultLyricsEncodingSettings();
 #ifdef _CPPUNIT_TEST
 void MLRunUnitTest()
 {
-	if (!g_Profile.GetProfileBool(_T("RunUnitTest"), true))
+	if (!g_Profile.GetBool(_T("RunUnitTest"), true))
 		return;
 
 	CreateUnitResultWnd(GetAppInstance());
@@ -90,7 +90,7 @@ LPCTSTR GetRegnowBuyLink()
 {
 	static	TCHAR szBuyNowLink[MAX_PATH] = _T("");
 
-	if (g_Profile.GetProfileInt(_T("UseAffiliate"), true))
+	if (g_Profile.GetInt(_T("UseAffiliate"), true))
 	{
 		RegGetProfileString(HKEY_LOCAL_MACHINE,
 			_T("SOFTWARE\\Digital River\\SoftwarePassport\\Crintsoft\\MiniLyrics\\0"), _T("BuyURL"), _T(""), szBuyNowLink, CountOf(szBuyNowLink));
@@ -108,7 +108,7 @@ int IsRNLEdition()
 	{
 		CProfile	file;
 		file.Init(strFile.c_str(), _T("install"));
-		return file.GetProfileBool(_T("RNLEdition"), false);
+		return file.GetBool(_T("RNLEdition"), false);
 	}
 
 	return false;
@@ -282,7 +282,7 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 
 #ifndef _WIN32_WCE
 	// Restore iconic status
-	if (g_Profile.GetProfileBool(_T("Minimized"), false))
+	if (g_Profile.GetBool(_T("Minimized"), false))
 	{
 		if (GetMainWnd()->IsToolWindow())
 			GetMainWnd()->ShowWindow(SW_HIDE);
@@ -291,14 +291,14 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 #endif
 
 #ifdef _WIN32_DESKTOP
-	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("ClickThrough"), false))
+	if (g_Profile.GetBool(SZ_SECT_UI, _T("ClickThrough"), false))
 		GetMPSkinFactory()->SetClickThrough(true);
 #endif
 
 #ifdef _MINILYRICS_WIN32
 	g_Player.SendMainWndHandle();
 
-	if (g_Profile.GetProfileBool(_T("FloatingLyr"), false))
+	if (g_Profile.GetBool(_T("FloatingLyr"), false))
 		g_wndFloatingLyr.Create();
 #endif
 
@@ -315,7 +315,7 @@ bool CMPlayerAppBase::InitiPodLyricsDownloader()
 	int nRet = LoadDefaultSkin(_T("Metal"), true);
 	if (nRet != ERR_OK)
 	{
-		g_Profile.WriteProfileString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
+		g_Profile.WriteString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
 		nRet = ChangeSkinByUserCmd(_T("Metal"));
 		if (nRet != ERR_OK)
 		{
@@ -352,7 +352,7 @@ bool CMPlayerAppBase::Init()
 
 	g_LyricsDownloader.Init();
 
-	g_LyricData.m_nGlobalOffsetTime = g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("LyrDelayTime"), 0);
+	g_LyricData.m_nGlobalOffsetTime = g_Profile.GetInt(SZ_SECT_LYR_DISPLAY, _T("LyrDelayTime"), 0);
 
 	SetDefaultLyricsEncoding(GetDefaultLyricsEncodingSettings());
 
@@ -374,7 +374,7 @@ bool CMPlayerAppBase::Init()
 	GetInstance()->SetRunningFlag();
 
 	// Checker for new version
-	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("CheckNewVer"), true))
+	if (g_Profile.GetBool(SZ_SECT_UI, _T("CheckNewVer"), true))
 	{
 		CVersionUpdate		VerUp;
 		VerUp.CheckNewVersion();
@@ -389,7 +389,7 @@ bool CMPlayerAppBase::InitLoadSkin()
 
 	// create main skin window.
 #ifdef _MINILYRICS_WIN32
-	bool bMPSkinMode = g_Profile.GetProfileBool(_T("MPSkinMode"), true);
+	bool bMPSkinMode = g_Profile.GetBool(_T("MPSkinMode"), true);
 	if (!bMPSkinMode)
 	{
 		nRet = g_Player.SwitchToEmbeddedSkin();
@@ -404,7 +404,7 @@ bool CMPlayerAppBase::InitLoadSkin()
 
 	if (nRet != ERR_OK)
 	{
-		g_Profile.WriteProfileString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
+		g_Profile.WriteString(m_pSkinFactory->GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
 		nRet = ChangeSkinByUserCmd(SZ_DEFSKIN);
 		if (nRet != ERR_OK)
 		{
@@ -549,7 +549,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 		}
 
 		if (g_LyricsDownloader.AutoDownloadEnabled() &&
-			g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true))
+			g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true))
 		{
 			if (bAutoDownloadIfNotExist
 				&& g_LyricData.GetLyrContentType() == LCT_TXT &&
@@ -580,7 +580,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 
 #if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
 	// Òş²Ø¸è´ÊÏÔÊ¾´°¿Ú
-	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false))
+	if (g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false))
 	{
 		HWND	hWnd = GetForegroundWindow();
 		if (!hWnd || GetWindowThreadProcessId(hWnd, NULL) != GetWindowThreadProcessId(GetMainWnd()->GetHandle(), NULL)
@@ -594,7 +594,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 	//
 	// ²¥·ÅMOVIEµÄÊ±ºòÒş²Ø´°¿Ú
 	//
-	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true)
+	if (g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true)
 		&& g_Player.HasVideo() && !::GetParent(GetMainWnd()->GetHandle()))
 	{
 		CMPlayerAppBase::GetMPSkinFactory()->MinizeAll(true);
@@ -755,7 +755,7 @@ int CMPlayerAppBase::OpenLyrics(LPCTSTR szAssociateKeyword, LPCTSTR szLrcSource)
 	// Show rate link in the lyrics
 	//
 // #ifndef _MPLAYER
-	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("HideRateLink"), false))
+	if (g_Profile.GetBool(SZ_SECT_UI, _T("HideRateLink"), false))
 	{
 		if (g_LyricData.Properties().m_strId.size())
 		{
@@ -814,7 +814,7 @@ int CMPlayerAppBase::ChangeSkinByUserCmd(LPCTSTR szSkin)
 	// Set default page, when skin changes.
 #ifdef _MINILYRICS_WIN32
 	if (CMPlayerAppBase::GetInstance()->IsEmbeddedMode())
-		g_Profile.WriteProfileInt(_T("MPSkinMode"), true);
+		g_Profile.WriteInt(_T("MPSkinMode"), true);
 
 	CMPlayerAppBase::GetInstance()->EndEmbeddedSkin();
 #endif

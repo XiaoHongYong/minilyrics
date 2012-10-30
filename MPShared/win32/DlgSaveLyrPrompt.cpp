@@ -9,7 +9,7 @@ int SaveLyrDialogBox(CBaseWnd *pWnd)
 	{
 		bInModal = TRUE;
 		
-		int nRet = g_Profile.GetProfileInt(_T("SaveLyrPrompt"), IDCANCEL);
+		int nRet = g_Profile.GetInt(_T("SaveLyrPrompt"), IDCANCEL);
 		if (nRet == IDCANCEL)
 		{
 			tstring		strMessage = CStrPrintf(_TLT("The lyrics of the %s file have changed."), 
@@ -47,7 +47,7 @@ void CDlgSaveLyrPrompt::OnCommand(UINT uID, UINT nNotifyCode)
 		case IDYES:
 		case IDNO:
 			if (IsButtonChecked(IDC_NO_PROMPT))
-				g_Profile.WriteProfileInt(_T("SaveLyrPrompt"), uID);
+				g_Profile.WriteInt(_T("SaveLyrPrompt"), uID);
 		case IDCANCEL:
 			EndDialog(m_hWnd, uID);
 			break;

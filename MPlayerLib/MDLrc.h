@@ -48,7 +48,7 @@ protected:
 	virtual MLRESULT Init(CMPlayer *pPlayer) { return CMDAgent::Init(pPlayer); }
 	virtual MLRESULT DoDecode(IMedia *pMedia);
 
-	virtual void NotifyEod(IMediaDecode *pDecoder, MLRESULT nError) { }
+	virtual void NotifyEod(IMediaDecode *pDecoder, MLRESULT nError);
 
 	bool IsOK();
 

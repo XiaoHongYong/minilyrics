@@ -43,7 +43,7 @@ tstring CreateDeviceID()
 	{
 		TCHAR szDeviceId[64];
 		MD5ToString((LPCSTR)&guid, sizeof(guid), szDeviceId);
-		if (!g_Profile.EncryptWriteProfileString(SZ_DEVICE_ID, szDeviceId))
+		if (!g_Profile.EncryptWriteString(SZ_DEVICE_ID, szDeviceId))
 		{
 			ERRLOG1(_T("Failed to write ID: %s"), szDeviceId);
 			MessageBox(NULL, _T("Failed to save MiniLyrics settings, please contact us for help."), _T("MiniLyrics"), MB_OK);
@@ -72,7 +72,7 @@ tstring CreateDeviceID()
 
 	TCHAR szDeviceId[64];
 	MD5ToString((LPCSTR)&buf, strlen(buf), szDeviceId);
-	if (!g_Profile.EncryptWriteProfileString(SZ_DEVICE_ID, szDeviceId))
+	if (!g_Profile.EncryptWriteString(SZ_DEVICE_ID, szDeviceId))
 		ERRLOG1(_T("Failed to write ID: %s"), szDeviceId);
 	return szDeviceId;
 }
@@ -90,9 +90,9 @@ CLicenseManager::~CLicenseManager(void)
 
 void CLicenseManager::Init()
 {
-	tstring strName = g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""));
-	tstring strCode = g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""));
-	tstring strCodeInvalid = g_Profile.EncryptGetProfileString(SZ_INVALID_RC, _T(""));
+	tstring strName = g_Profile.EncryptGetString(SZ_REGNAME, _T(""));
+	tstring strCode = g_Profile.EncryptGetString(SZ_REGCODE, _T(""));
+	tstring strCodeInvalid = g_Profile.EncryptGetString(SZ_INVALID_RC, _T(""));
 
 	if (strCode.size() > 0 && _tcscmp(strCodeInvalid.c_str(), strCode.c_str()) == 0)
 	{
@@ -103,21 +103,21 @@ void CLicenseManager::Init()
 	if (!VerifyCode(strName.c_str(), strCode.c_str(), false))
 		return;
 
-	m_bOnlineVerified = Tobool(g_Profile.EncryptGetProfileInt(SZ_ONLINE_VERIFYIED, false));
+	m_bOnlineVerified = Tobool(g_Profile.EncryptGetInt(SZ_ONLINE_VERIFYIED, false));
 	if (m_bOnlineVerified)
-		m_licenseStatus = (LicenseStatus)g_Profile.EncryptGetProfileInt(SZ_LICENSE_STATUS, LS_ACTIVE);
+		m_licenseStatus = (LicenseStatus)g_Profile.EncryptGetInt(SZ_LICENSE_STATUS, LS_ACTIVE);
 }
 
 void CLicenseManager::GetLicenseInfo(LicenseInfo &info)
 {
 	info.bOnlineVerified = m_bOnlineVerified;
 	info.licenseStatus = m_licenseStatus;
-	info.strName = g_Profile.EncryptGetProfileString(SZ_REGNAME, _T(""));
-	info.strCode = g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""));
-	info.strStartDate = g_Profile.EncryptGetProfileString(SZ_START_DATE, _T(""));
-	info.nDurationDays = g_Profile.EncryptGetProfileInt(SZ_DURATION_DAYS, LICENSE_DURATION_PERPETUAL);
-	info.nLicensedUser = g_Profile.EncryptGetProfileInt(SZ_LICENSED_USER, 1);
-	info.strDeviceID = g_Profile.EncryptGetProfileString(SZ_DEVICE_ID, _T(""));
+	info.strName = g_Profile.EncryptGetString(SZ_REGNAME, _T(""));
+	info.strCode = g_Profile.EncryptGetString(SZ_REGCODE, _T(""));
+	info.strStartDate = g_Profile.EncryptGetString(SZ_START_DATE, _T(""));
+	info.nDurationDays = g_Profile.EncryptGetInt(SZ_DURATION_DAYS, LICENSE_DURATION_PERPETUAL);
+	info.nLicensedUser = g_Profile.EncryptGetInt(SZ_LICENSED_USER, 1);
+	info.strDeviceID = g_Profile.EncryptGetString(SZ_DEVICE_ID, _T(""));
 	if (info.strDeviceID.empty())
 		info.strDeviceID = CreateDeviceID();
 
@@ -142,7 +142,7 @@ void CLicenseManager::GetLicenseInfo(LicenseInfo &info)
 
 tstring CLicenseManager::GetLicenseCode()
 {
-	return g_Profile.EncryptGetProfileString(SZ_REGCODE, _T(""));
+	return g_Profile.EncryptGetString(SZ_REGCODE, _T(""));
 }
 
 int CLicenseManager::SaveActivateResult(const MLMsgRetActivateLicense &retActivation)
@@ -153,11 +153,11 @@ int CLicenseManager::SaveActivateResult(const MLMsgRetActivateLicense &retActiva
 	m_licenseStatus = retActivation.licenseStatus;
 	m_bOnlineVerified = true;
 
-	g_Profile.EncryptWriteProfileString(SZ_START_DATE, retActivation.strCodeStartDate.c_str());
-	g_Profile.EncryptWriteProfileInt(SZ_DURATION_DAYS, retActivation.nCodeDurationDays);
-	g_Profile.EncryptWriteProfileInt(SZ_LICENSED_USER, retActivation.nLicensedUser);
-	g_Profile.EncryptWriteProfileInt(SZ_LICENSE_STATUS, m_licenseStatus);
-	g_Profile.EncryptWriteProfileInt(SZ_ONLINE_VERIFYIED, true);
+	g_Profile.EncryptWriteString(SZ_START_DATE, retActivation.strCodeStartDate.c_str());
+	g_Profile.EncryptWriteInt(SZ_DURATION_DAYS, retActivation.nCodeDurationDays);
+	g_Profile.EncryptWriteInt(SZ_LICENSED_USER, retActivation.nLicensedUser);
+	g_Profile.EncryptWriteInt(SZ_LICENSE_STATUS, m_licenseStatus);
+	g_Profile.EncryptWriteInt(SZ_ONLINE_VERIFYIED, true);
 
 	CMPlayerApp::GetEventsDispatcher()->DispatchUnsyncEvent(ET_LICENSE_CHANGED);
 
@@ -173,10 +173,10 @@ bool CLicenseManager::VerifyCode(LPCTSTR szName, LPCTSTR szCode, bool bSave)
 			m_licenseStatus = LS_ACTIVE;
 			m_bOnlineVerified = false;
 
-			g_Profile.EncryptWriteProfileInt(SZ_LICENSE_STATUS, m_licenseStatus);
-			g_Profile.EncryptWriteProfileInt(SZ_ONLINE_VERIFYIED, false);
-			g_Profile.EncryptWriteProfileString(SZ_REGNAME, szName);
-			g_Profile.EncryptWriteProfileString(SZ_REGCODE, szCode);
+			g_Profile.EncryptWriteInt(SZ_LICENSE_STATUS, m_licenseStatus);
+			g_Profile.EncryptWriteInt(SZ_ONLINE_VERIFYIED, false);
+			g_Profile.EncryptWriteString(SZ_REGNAME, szName);
+			g_Profile.EncryptWriteString(SZ_REGCODE, szCode);
 		}
 		return true;
 	}
@@ -204,7 +204,7 @@ void CLicenseManager::CheckChsEdition()
 	CProfile	file;
 	tstring		strEng;
 	file.Init(_T("install.ini"), _T("INSTALL"));
-	strEng = file.GetProfileString(_T("Edition"), _T(""));
+	strEng = file.GetString(_T("Edition"), _T(""));
 	if (_tcscmp(strEng.c_str(), _T("english")) == 0)
 		m_bChsEdition = false;
 	else if (_tcscmp(strEng.c_str(), _T("chinese")) == 0)

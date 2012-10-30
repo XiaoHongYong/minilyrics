@@ -193,7 +193,7 @@ void CPagePfBase::InitCheckButtons()
 
 			m_pSkin->RegisterUIObjNotifyHandler(opt.nIDWidgetCombo, this);
 
-			strValue = g_Profile.GetProfileString(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.strDefaultValue.c_str());
+			strValue = g_Profile.GetString(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.strDefaultValue.c_str());
 			if (strValue.empty())
 				strValue = opt.strDefaultValue;
 			else
@@ -220,7 +220,7 @@ void CPagePfBase::InitCheckButtons()
 			OptBool		&opt = *it;
 			bool		bValue;
 
-			bValue = g_Profile.GetProfileBool(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.nDefaultValue);
+			bValue = g_Profile.GetBool(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.nDefaultValue);
 			CSkinNStatusButton *pButton = (CSkinNStatusButton*)GetUIObjectById(opt.nCtrl, CSkinNStatusButton::ClassName());
 			if (pButton)
 				pButton->SetStatus(bValue);
@@ -240,7 +240,7 @@ void CPagePfBase::InitCheckButtons()
 		{
 			OptRadioInt		&opt = *it;
 
-			nValue = g_Profile.GetProfileInt(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.nDefaultValue);
+			nValue = g_Profile.GetInt(opt.strSection.c_str(), opt.strSettingName.c_str(), opt.nDefaultValue);
 			for (int i = 0; i < (int)opt.vValues.size(); i++)
 			{
 				if (opt.vValues[i] == nValue)

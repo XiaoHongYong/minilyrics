@@ -453,12 +453,12 @@ void LoadLyrOverlayBlendingSettings(LPCTSTR szSectName, CLyricShowObj::TextOverl
 	ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_BORDER], szSectName, pFieledName[CLyricShowObj::TCI_BORDER]);
 	ProfileGetColorValue(tob.clr[CLyricShowObj::TCI_FILL], szSectName, pFieledName[CLyricShowObj::TCI_FILL]);
 
-	tob.obm = (OverlayBlendingMode)g_Profile.GetProfileInt(szSectName, GetLyrTOBSettingName(bHilight, CLyricShowObj::TCI_OBM),  OBM_COLOR);
+	tob.obm = (OverlayBlendingMode)g_Profile.GetInt(szSectName, GetLyrTOBSettingName(bHilight, CLyricShowObj::TCI_OBM),  OBM_COLOR);
 	if (tob.obm == OBM_PATTERN)
 	{
 		tob.imgPattern.Destroy();
 
-		tob.strPatternFile = g_Profile.GetProfileString(szSectName, bHilight ? _T("HilightPattern") : _T("LowlightPattern"), _T(""));
+		tob.strPatternFile = g_Profile.GetString(szSectName, bHilight ? _T("HilightPattern") : _T("LowlightPattern"), _T(""));
 		if (!tob.strPatternFile.empty())
 		{
 			PRAW_IMAGE_DATA		pImage = LoadRawImageDataPatternFile(tob.strPatternFile.c_str());
@@ -520,21 +520,21 @@ bool ProfileGetLyricsFont(LPCTSTR szSectName, int &nSize, int &nWeight, BYTE &by
 {
 	tstring		strFont;
 
-	strFont = g_Profile.GetProfileString(szSectName, _T("ThemeFont"), _T(""));
+	strFont = g_Profile.GetString(szSectName, _T("ThemeFont"), _T(""));
 	if (strFont.size())
 	{
 		// Apply ThemeFont to current font setting, then remove it.
 		FontPropertyValueFromStr(strFont.c_str(), nSize, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
 
-		g_Profile.WriteProfileString(szSectName, _T("ThemeFont"), _T(""));
+		g_Profile.WriteString(szSectName, _T("ThemeFont"), _T(""));
 
 		ProfileWriteLyricsFont(ET_NULL, szSectName, nSize, nWeight, byItalic, strFaceNameLatin9.c_str(), strFaceNameOthers.c_str());
 	}
 
 #ifdef _WIN32
-	strFont = g_Profile.GetProfileString(szSectName, _T("Font"), _T("Verdana, 13, bold, 0, 0, Tahoma"));
+	strFont = g_Profile.GetString(szSectName, _T("Font"), _T("Verdana, 13, bold, 0, 0, Tahoma"));
 #else
-	strFont = g_Profile.GetProfileString(szSectName, _T("Font"), _T(", 13, bold, 0, 0, "));
+	strFont = g_Profile.GetString(szSectName, _T("Font"), _T(", 13, bold, 0, 0, "));
 #endif
 
 	return FontPropertyValueFromStr(strFont.c_str(), nSize, nWeight, byItalic, strFaceNameLatin9, strFaceNameOthers);
@@ -641,7 +641,7 @@ CLyricShowObj::CLyricShowObj()
 	m_curAdjustVertAlign.LoadCursorFromRes(IDC_MLHAND);
 	m_yBeginDrag = -1;
 	m_bEnableAdjustVertAlign = true;
-	m_bEnableAdjustVertAlignUser = g_Profile.GetProfileBool(SZ_SECT_LYR_DISPLAY, _T("EnableAdjustVertAlign"), false);
+	m_bEnableAdjustVertAlignUser = g_Profile.GetBool(SZ_SECT_LYR_DISPLAY, _T("EnableAdjustVertAlign"), false);
 	m_vertLineAlign = VLA_CENTER;
 	m_nVertLineOffset = 0;
 #endif
@@ -652,7 +652,7 @@ CLyricShowObj::CLyricShowObj()
 
 CLyricShowObj::~CLyricShowObj()
 {
-	g_Profile.WriteProfileInt(_T("NextPicInFolder"), m_nNextPicInFolder);
+	g_Profile.WriteInt(_T("NextPicInFolder"), m_nNextPicInFolder);
 	m_pSkin->UnregisterTimerObject(this);
 }
 
@@ -672,10 +672,10 @@ void CLyricShowObj::OnCreate()
 
 	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), m_etDispSettings, ET_LYRICS_CHANGED, ET_LYRICS_DRAW_UPDATE, ET_PLAYER_CUR_MEDIA_CHANGED);
 	if (m_bUseBgImg)
-		m_pSkin->RegisterTimerObject(this, g_Profile.GetProfileInt(_T("SlideDelayTime"), 10) * 1000);
+		m_pSkin->RegisterTimerObject(this, g_Profile.GetInt(_T("SlideDelayTime"), 10) * 1000);
 
 	// !auto resize || !wrap lines
-	if (!m_bEnableAutoResize || !g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)
+	if (!m_bEnableAutoResize || !g_Profile.GetBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false)
 		|| !m_bCanWrapLines)
 	{
 		m_pMLData->CopyLyricsLines(m_lyrLines);
@@ -1630,8 +1630,8 @@ bool CLyricShowObj::OnLButtonUp(UINT nFlags, CPoint point)
 		MLWidget::SetCursor(m_curAdjustVertAlign);
 		m_pSkin->ReleaseCaptureMouse(this);
 
-		g_Profile.WriteProfileInt(_T("VertAlign"), m_vertLineAlign);
-		g_Profile.WriteProfileInt(_T("VertAlignOffset"), m_nVertLineOffset);
+		g_Profile.WriteInt(_T("VertAlign"), m_vertLineAlign);
+		g_Profile.WriteInt(_T("VertAlignOffset"), m_nVertLineOffset);
 		return true;
 	}
 
@@ -1720,7 +1720,7 @@ void CLyricShowObj::OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt)
 
 void CLyricShowObj::OnLyricsChanged()
 {
-	if ((m_bEnableAutoResize && g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
+	if ((m_bEnableAutoResize && g_Profile.GetBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
 		|| !m_bCanWrapLines)
 	{
 		// auto resize || !wrap lines
@@ -1761,7 +1761,7 @@ void CLyricShowObj::OnAdjustHue(float hue, float saturation, float luminance)
 	if (m_hue != 0)
 	{
 		// Load original settings.
-		SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
+		SetBgColor(g_Profile.GetString(m_strSectName.c_str(), _T("BgColor"), _T("")));
 
 		LoadLyrOverlaySettings();
 	}
@@ -1821,7 +1821,7 @@ void CLyricShowObj::AutoHeightSkinAccordLyrics(int nLines)
 	if (m_pSkin->m_wndResizer.IsFixedHeight())
 		return;
 
-	if (!g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndHeight"), TRUE))
+	if (!g_Profile.GetBool(SZ_SECT_UI, _T("AutoAdjustWndHeight"), TRUE))
 		return;
 
 	CRect		rc;
@@ -1854,7 +1854,7 @@ bool CLyricShowObj::AutoWidthSkinAccordLyrics()
 	if (m_lyrLines.empty())
 		return false;
 
-	if (!g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
+	if (!g_Profile.GetBool(SZ_SECT_UI, _T("AutoAdjustWndWidth"), false))
 		return false;
 
 #ifdef _WIN32
@@ -2180,7 +2180,7 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		{
 			LoadBgImageFolder();
 			LoadNextBgImage();
-			m_pSkin->RegisterTimerObject(this, g_Profile.GetProfileInt(m_strSectName.c_str(), _T("SlideDelayTime"), 10) * 1000);
+			m_pSkin->RegisterTimerObject(this, g_Profile.GetInt(m_strSectName.c_str(), _T("SlideDelayTime"), 10) * 1000);
 		}
 		else if (!m_bUseAlbumArtAsBg)
 		{
@@ -2413,7 +2413,7 @@ void CLyricShowObj::SetBgColor(LPCTSTR szValue)
 
 void CLyricShowObj::LoadLyrOverlaySettings()
 {
-	m_bOutlineLyrics = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("OutlineLyrText"), m_bOutlineLyrics);
+	m_bOutlineLyrics = g_Profile.GetBool(m_strSectName.c_str(), _T("OutlineLyrText"), m_bOutlineLyrics);
 
 	ProfileGetColorValue(m_tobHilight.clr[TCI_BORDER], m_strSectName.c_str(), _T("HilightBorderColor"));
 	ProfileGetColorValue(m_tobLowlight.clr[TCI_BORDER], m_strSectName.c_str(), _T("LowlightBorderColor"));
@@ -2448,22 +2448,22 @@ void CLyricShowObj::LoadAllSettings()
 		m_nFontHeight = m_font.GetHeight();
 	}
 
-	SetBgColor(g_Profile.GetProfileString(m_strSectName.c_str(), _T("BgColor"), _T("")));
+	SetBgColor(g_Profile.GetString(m_strSectName.c_str(), _T("BgColor"), _T("")));
 
 	LoadLyrOverlaySettings();
 
-	SetLyrAlign(g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrAlign"), _T("")));
+	SetLyrAlign(g_Profile.GetString(m_strSectName.c_str(), _T("LyrAlign"), _T("")));
 
-	m_LyricsDisplayOpt = DisplayOptFromStr(g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
+	m_LyricsDisplayOpt = DisplayOptFromStr(g_Profile.GetString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
 
 	m_nLineSpacing = CMPlayerSettings::GetSettings(m_strSectName.c_str(), _T("LineSpacing"), 2);
-	m_bKaraoke = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("Karaoke"), m_bKaraoke);
+	m_bKaraoke = g_Profile.GetBool(m_strSectName.c_str(), _T("Karaoke"), m_bKaraoke);
 
 #ifndef _WIN32_WCE
-	m_vertLineAlign = (VertLineAlign)g_Profile.GetProfileInt(m_strSectName.c_str(), _T("VertAlign"), VLA_CENTER);
+	m_vertLineAlign = (VertLineAlign)g_Profile.GetInt(m_strSectName.c_str(), _T("VertAlign"), VLA_CENTER);
 	if (m_vertLineAlign > VLA_BOTTOM || m_vertLineAlign < VLA_TOP)
 		m_vertLineAlign = VLA_CENTER;
-	m_nVertLineOffset = g_Profile.GetProfileInt(m_strSectName.c_str(), _T("VertAlignOffset"), 0);
+	m_nVertLineOffset = g_Profile.GetInt(m_strSectName.c_str(), _T("VertAlignOffset"), 0);
 #endif
 
 	//
@@ -2471,16 +2471,16 @@ void CLyricShowObj::LoadAllSettings()
 	//		Floating lyrics don't use background....
 	if (m_etDispSettings != ET_LYRICS_FLOATING_SETTINGS)
 	{
-		m_bUseAlbumArtAsBg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("UseAlbumArtAsBg"), false);
-		m_bUseBgImg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("UseBgImage"), false);
+		m_bUseAlbumArtAsBg = g_Profile.GetBool(m_strSectName.c_str(), _T("UseAlbumArtAsBg"), false);
+		m_bUseBgImg = g_Profile.GetBool(m_strSectName.c_str(), _T("UseBgImage"), false);
 		m_strBgPicFolder = CMLProfile::GetDir(m_strSectName.c_str(), _T("BgPicFolder"), _T(""));
 
-		m_bDarkenLyrBgOnImg = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("DarkenLyrBg"), true);
+		m_bDarkenLyrBgOnImg = g_Profile.GetBool(m_strSectName.c_str(), _T("DarkenLyrBg"), true);
 
 		if (m_bUseBgImg)
 		{
 			LoadBgImageFolder();
-			m_nNextPicInFolder = g_Profile.GetProfileInt(m_strSectName.c_str(), _T("NextPicInFolder"), 0);
+			m_nNextPicInFolder = g_Profile.GetInt(m_strSectName.c_str(), _T("NextPicInFolder"), 0);
 		}
 
 		LoadLyrOverlaySettings();

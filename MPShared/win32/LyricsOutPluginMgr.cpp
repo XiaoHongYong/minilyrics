@@ -35,10 +35,10 @@ void PromptForLogitechLCD(LPCTSTR szModuleName)
 	if (_tcsicmp(FileGetName(szModuleName), _T("mlp_G15.dll")) != 0)
 		return;
 
-	if (g_Profile.GetProfileBool(_T("G15LCDPrompted"), false))
+	if (g_Profile.GetBool(_T("G15LCDPrompted"), false))
 		return;
 
-	g_Profile.WriteProfileInt(_T("G15LCDPrompted"), true);
+	g_Profile.WriteInt(_T("G15LCDPrompted"), true);
 
 	tstring	strMsg = _TL3("You have Logitech LCD device installed, lyrics can be displayed on it.");
 	strMsg += _T("\r\n");
@@ -58,13 +58,13 @@ int CLyricsOutPluginMgr::Init()
 	FunInitMLyricsOutPlugin	funInitMLyricsOutPlugin;
 
 	// Uninstall the plug-in which was selected last time.
-	strPluginFile = g_Profile.GetProfileString(_T("UninstLyrOutPluginFile"), _T(""));
+	strPluginFile = g_Profile.GetString(_T("UninstLyrOutPluginFile"), _T(""));
 	if (!strPluginFile.empty())
 	{
 		SetFileNoReadOnly(strPluginFile.c_str());
 		if (DeleteFile(strPluginFile.c_str()))
 		{
-			g_Profile.WriteProfileString(_T("UninstLyrOutPluginFile"), _T(""));
+			g_Profile.WriteString(_T("UninstLyrOutPluginFile"), _T(""));
 		}
 	}
 
@@ -222,7 +222,7 @@ void CLyricsOutPluginMgr::UninstPlugin(int nPluginIdx, CBaseWnd *pWndParent)
 		str += _TLT("$Product$ will uninstall it at next restart.");
 		nRet = pWndParent->MessageOut(str.c_str(), MB_YESNO);
 		if (nRet == IDYES)
-			g_Profile.WriteProfileString(_T("UninstLyrOutPluginFile"), plugin.strPluginFile.c_str());
+			g_Profile.WriteString(_T("UninstLyrOutPluginFile"), plugin.strPluginFile.c_str());
 	}
 #endif
 }

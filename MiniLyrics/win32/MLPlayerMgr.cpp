@@ -109,7 +109,7 @@ bool CMLPlayerMgr::ConnectToPlayer()
 
 		if (!IsEmptyString(playerInfo.playerName))
 		{
-			if (!g_Profile.GetProfileBool(playerInfo.playerName, true))
+			if (!g_Profile.GetBool(playerInfo.playerName, true))
 				return false;
 		}
 	}
@@ -316,7 +316,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 		}
 		break;
 	case M2M_PLAYER_ACTIVATED:
-		if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("ActivateWithWinamp"), true))
+		if (g_Profile.GetBool(SZ_SECT_UI, _T("ActivateWithWinamp"), true))
 		{
 			ASSERT(sizeof(BOOL) == pcds->cbData);
 			BOOL bActivate = *(BOOL*)pcds->lpData;
@@ -325,7 +325,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 		}
 		break;
 	case M2M_PLAYER_MINRESTORE:
-		if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("ActivateWithWinamp"), true))
+		if (g_Profile.GetBool(SZ_SECT_UI, _T("ActivateWithWinamp"), true))
 		{
 			ASSERT(sizeof(DWORD) == pcds->cbData);
 			DWORD state = *(DWORD*)pcds->lpData;
@@ -333,7 +333,7 @@ bool CMLPlayerMgr::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 				CMPlayerAppBase::GetMPSkinFactory()->MinizeAll();
 			else if (SIZE_RESTORED == state)
 			{
-				if (!g_Profile.GetProfileBool(SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true)
+				if (!g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true)
 					|| !g_Player.HasVideo())
 				{
 					CMPlayerAppBase::GetMPSkinFactory()->RestoreAll();

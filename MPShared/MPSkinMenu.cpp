@@ -283,7 +283,7 @@ void CMenuAutoCheck::UpdateMenuCheckStatus()
 			if (item.szSection == NULL || item.szName == NULL)
 				bCheck = GetChecked(item.nID);
 			else
-				bCheck = _tcsicmp(item.szCheckValue, g_Profile.GetProfileString(item.szSection, item.szName, _T(""))) == 0;
+				bCheck = _tcsicmp(item.szCheckValue, g_Profile.GetString(item.szSection, item.szName, _T(""))) == 0;
 			item.menu.CheckItem(item.nID, bCheck);
 		}
 	}

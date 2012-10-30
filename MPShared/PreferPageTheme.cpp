@@ -29,7 +29,7 @@ public:
 		AddOptBool(ET_LYRICS_DISPLAY_SETTINGS, SZ_SECT_LYR_DISPLAY, _T("DarkenLyrBg"), true, _T("CID_C_DARKEN_LYR_BG"));
 
 		SetUIObjectText(_T("CID_E_DELAY_TIME"), 
-			g_Profile.GetProfileString(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), _T("10")));
+			g_Profile.GetString(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), _T("10")));
 
 		InitCheckButtons();
 
@@ -52,7 +52,7 @@ public:
 				if (nDelayTime > 10000)
 					nDelayTime = 10000;
 
-				if (nDelayTime != g_Profile.GetProfileInt(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), 10))
+				if (nDelayTime != g_Profile.GetInt(SZ_SECT_LYR_DISPLAY, _T("SlideDelayTime"), 10))
 				{
 					CMPlayerSettings::SetLyricsDisplaySettings(_T("SlideDelayTime"), nDelayTime);
 				}
@@ -551,7 +551,7 @@ protected:
 		m_pThemeList->GetItemText(nSel, 0, strSelTheme);
 		file.Open();
 
-		g_Profile.WriteProfileString(_T("CurTheme"), strSelTheme.c_str());
+		g_Profile.WriteString(_T("CurTheme"), strSelTheme.c_str());
 		file.SetCurTheme(strSelTheme.c_str());
 	}
 
@@ -615,7 +615,7 @@ protected:
 
 		m_pThemeList->DeleteAllItems();
 
-		strCurTheme = g_Profile.GetProfileString(_T("CurTheme"), _T(""));
+		strCurTheme = g_Profile.GetString(_T("CurTheme"), _T(""));
 
 		for (int i = 0; i < (int)vThemes.size(); i++)
 		{

@@ -94,14 +94,14 @@ void ProfileGetColorValue(COLORREF &clr, LPCTSTR szSectName, LPCTSTR szKeyName)
 	MLColor		c;
 
 	c.set(clr);
-	GetColorValue(c, g_Profile.GetProfileString(szSectName, szKeyName, _T("")));
+	GetColorValue(c, g_Profile.GetString(szSectName, szKeyName, _T("")));
 
 	clr = c.get();
 }
 
 void ProfileGetColorValue(MLColor &clr, LPCTSTR szSectName, LPCTSTR szKeyName)
 {
-	GetColorValue(clr, g_Profile.GetProfileString(szSectName, szKeyName, _T("")));
+	GetColorValue(clr, g_Profile.GetString(szSectName, szKeyName, _T("")));
 }
 
 void DeleteAllFiles(LPCTSTR szDir, BOOL bIncSubDir, BOOL bDelReadOnlyFile)

@@ -473,7 +473,7 @@ void CMainFrame::OnOpen()
 	int			nLen;
 	char		szFile[MAX_PATH];
 
-	g_Profile.GetProfileString("DebugTracer", "OpenLogFile", "", szFile, MAX_PATH);
+	g_Profile.GetString("DebugTracer", "OpenLogFile", "", szFile, MAX_PATH);
 
 	CFileDialog		dlg(TRUE, "Log Files(*.txt)|*.txt|All Files (*.*)|*.*||", szFile);
 	if (dlg.DoModal() != IDOK)
@@ -486,7 +486,7 @@ void CMainFrame::OnOpen()
 		return;
 	}
 
-	g_Profile.WriteProfileString("DebugTracer", "OpenLogFile", dlg.GetPathName());
+	g_Profile.WriteString("DebugTracer", "OpenLogFile", dlg.GetPathName());
 
 	// fseek(fp, 0, SEEK_END);
 	// nLen = ftell(fp);

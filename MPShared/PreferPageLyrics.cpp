@@ -65,7 +65,7 @@ public:
 
 		// 需要保存的歌词目录
 		DOWN_SAVE_DIR		DownSaveDir;
-		DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
+		DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
 		if (DownSaveDir == DOWN_SAVE_IN_SONG_DIR)
 		{
 			EnableUIObject(CID_DOWN_DIR, false, false);
@@ -79,7 +79,7 @@ public:
 		else
 			EnableUIObject(CID_DOWN_DIR, false, false);
 
-		if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
+		if (g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
 			CheckButton(_T("CID_C_SAVE_IN_SONG_FILE"), true);
 		else
 		{
@@ -116,14 +116,14 @@ public:
 
 			EnableUIObject(CID_DOWN_DIR, DownSaveDir == DOWN_SAVE_IN_CUSTOM_DIR);
 
-			g_Profile.WriteProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DownSaveDir);
+			g_Profile.WriteInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DownSaveDir);
 		}
 		else if (nId == CID_C_SAVE_IN_SONG_FILE)
 		{
 			bool		bCheck;
 			bCheck = IsButtonChecked(nId);
 
-			g_Profile.WriteProfileInt(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), bCheck);
+			g_Profile.WriteInt(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), bCheck);
 			EnableUIObject(CID_C_M4A_LYRICS, bCheck);
 			EnableUIObject(CID_C_ID3V2_SYLT, bCheck);
 			EnableUIObject(CID_C_ID3V2_USLT, bCheck);

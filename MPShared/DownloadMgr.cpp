@@ -31,11 +31,11 @@ int CDownloadMgr::Init()
 {
 	m_eventShutDown.Reset();
 
-	g_nPortDownloadServer = g_Profile.GetProfileInt(_T("PortDownloadServer"), 80);
-	g_nPortSearchServer = g_Profile.GetProfileInt(_T("PortSearchServer"), 80);
+	g_nPortDownloadServer = g_Profile.GetInt(_T("PortDownloadServer"), 80);
+	g_nPortSearchServer = g_Profile.GetInt(_T("PortSearchServer"), 80);
 
 #ifdef _WIN32_DESKTOP
-	if (g_Profile.GetProfileInt(_T("ProxyType"), 0xFF) == 0xFF)
+	if (g_Profile.GetInt(_T("ProxyType"), 0xFF) == 0xFF)
 	{
 		// 第一次运行，自动加载代理设置
 		bool		bUseProxy;
@@ -45,14 +45,14 @@ int CDownloadMgr::Init()
 		if (LoadProxySvrFromIE(bUseProxy, strSvr, nPort))
 		{
 			if (bUseProxy)
-				g_Profile.WriteProfileInt(_T("ProxyType"), HTTP_PROXY_OURS);
+				g_Profile.WriteInt(_T("ProxyType"), HTTP_PROXY_OURS);
 			else
-				g_Profile.WriteProfileInt(_T("ProxyType"), HTTP_PROXY_NONE);
-			g_Profile.WriteProfileString(_T("ProxyServer"), strSvr.c_str());
-			g_Profile.WriteProfileInt(_T("ProxyPort"), nPort);
+				g_Profile.WriteInt(_T("ProxyType"), HTTP_PROXY_NONE);
+			g_Profile.WriteString(_T("ProxyServer"), strSvr.c_str());
+			g_Profile.WriteInt(_T("ProxyPort"), nPort);
 		}
 		else
-			g_Profile.WriteProfileInt(_T("ProxyType"), HTTP_PROXY_NONE);
+			g_Profile.WriteInt(_T("ProxyType"), HTTP_PROXY_NONE);
 	}
 #endif
 
@@ -64,7 +64,7 @@ int CDownloadMgr::Init()
 	DBGLOG1(_T("Lyrics download dir: %s"), m_strDefSavePath.c_str());
 
 	// 自动下载
-	m_bAutoDownload = g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("EnableAuoDownload"), true);
+	m_bAutoDownload = g_Profile.GetBool(SZ_SECT_LYR_DL, _T("EnableAuoDownload"), true);
 
 	return ERR_OK;
 }
@@ -72,8 +72,8 @@ int CDownloadMgr::Init()
 
 void CDownloadMgr::Quit()
 {
-	g_Profile.WriteProfileInt(_T("PortDownloadServer"), g_nPortDownloadServer);
-	g_Profile.GetProfileInt(_T("PortSearchServer"), g_nPortSearchServer);
+	g_Profile.WriteInt(_T("PortDownloadServer"), g_nPortDownloadServer);
+	g_Profile.GetInt(_T("PortSearchServer"), g_nPortSearchServer);
 
 	m_eventShutDown.Set();
 	m_threadDownload.Join();
@@ -131,7 +131,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 	BOOL	bUserSelDown;
 	V_LRCSEARCHRESULT::iterator itBest;
 
-	bUserSelDown = g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false);
+	bUserSelDown = g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false);
 
 	//
 	// 分值超过 MATCH_VALUE_OK
@@ -144,7 +144,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		{
 			// Do not download .txt lyrics
 			if (FileIsExtSame(result.strUrl.c_str(), _T(".txt"))
-				&& g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false))
+				&& g_Profile.GetInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false))
 			{
 				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("None of the lyrics are .lrc extension lyrics, so they are not downloaded."));
 				return TRUE;
@@ -177,7 +177,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 	if (bUserSelDown)
 	{
 		// if all lyrics is txt, return directly.
-		if (g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false)
+		if (g_Profile.GetInt(SZ_SECT_LYR_DL, _T("OnlyDlSyncLyr"), false)
 			&& vLrcSearchResult.IsAllTxtLyrics())
 		{
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("None of the lyrics are .lrc extension lyrics, so they are not downloaded."));
@@ -290,7 +290,7 @@ void CDownloadMgr::CreateDefaultLyricsDir(tstring &strDefSavePath)
 	if (!IsDirExist(strDefSavePath.c_str()))
 		CreateDirectoryAll(strDefSavePath.c_str());
 
-	if (IsEmptyString(g_Profile.GetProfileString(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""))))
+	if (IsEmptyString(g_Profile.GetString(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""))))
 		CMLProfile::WriteDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), strDefSavePath.c_str());
 }
 
@@ -299,8 +299,8 @@ tstring CDownloadMgr::GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName)
 	DOWN_SAVE_DIR		DownSaveDir;
 	DOWN_SAVE_NAME		DownSaveName;
 
-	DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
-	DownSaveName = (DOWN_SAVE_NAME)g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveName"), DOWN_SAVE_NAME_KEEP);
+	DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
+	DownSaveName = (DOWN_SAVE_NAME)g_Profile.GetInt(SZ_SECT_LYR_DL, _T("DownSaveName"), DOWN_SAVE_NAME_KEEP);
 
 	return GetSaveLyricsFile(szSongFile, szFileName, DownSaveDir, DownSaveName);
 }
@@ -320,7 +320,7 @@ tstring CDownloadMgr::GetSaveLyricsFile(LPCTSTR szSongFile, LPCTSTR szFileName, 
 
 	// Save lyrics in sub folder by ABC order?
 	if (DownSaveDir != DOWN_SAVE_IN_SONG_DIR 
-		&& g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveByABC"), false))
+		&& g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownSaveByABC"), false))
 	{
 		TCHAR			c = *szFileName;
 		if (IsAlpha(c))
@@ -629,20 +629,20 @@ int CDownloadMgr::SaveDownloadedLyrics(LPCTSTR szMediaFile, LPCTSTR szLyrFileNam
 	if (nLyrSaveFlag == LST_NONE)
 	{
 		// Load default settings
-		if (g_Profile.GetProfileInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR)
+		if (g_Profile.GetInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR)
 			!= DOWN_SAVE_NO_FILE)
 			nLyrSaveFlag = LST_FILE;
 
 		// Save lyrics in song file?
-		if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
+		if (g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownSaveEmbeded"), false))
 		{
-			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Sylt"), true))
+			if (g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Sylt"), true))
 				vEmbeddedLyrNames.push_back(SZ_SONG_ID3V2_SYLT);
-			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Uslt"), true))
+			if (g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownSaveId3v2Uslt"), true))
 				vEmbeddedLyrNames.push_back(SZ_SONG_ID3V2_USLT);
-			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveLyrics3v2"), false))
+			if (g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownSaveLyrics3v2"), false))
 				vEmbeddedLyrNames.push_back(SZ_SONG_LYRICS3V2);
-			if (g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownSaveLyricsM4a"), false))
+			if (g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownSaveLyricsM4a"), false))
 				vEmbeddedLyrNames.push_back(SZ_SONG_M4A_LYRICS);
 		}
 	}

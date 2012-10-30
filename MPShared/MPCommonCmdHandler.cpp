@@ -142,7 +142,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_LDO_KARAOKE:
 		CMPlayerSettings::SetSettings(m_etDispSettings, m_strSectName.c_str(), _T("Karaoke"), 
-			!g_Profile.GetProfileBool(m_strSectName.c_str(), _T("Karaoke"), false));
+			!g_Profile.GetBool(m_strSectName.c_str(), _T("Karaoke"), false));
 		break;
 	case CMD_LDO_NORMAL:
 	case CMD_LDO_FADE_IN:
@@ -209,7 +209,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_FLOATING_LYRICS:
 		{
-			g_Profile.WriteProfileInt(_T("FloatingLyr"), !g_wndFloatingLyr.IsValid());
+			g_Profile.WriteInt(_T("FloatingLyr"), !g_wndFloatingLyr.IsValid());
 			if (!g_wndFloatingLyr.IsValid())
 				g_wndFloatingLyr.Create();
 			else
@@ -643,7 +643,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_CLR_PREV_HUE:
 	case CMD_CLR_NEXT_HUE:
 		{
-			float hue = (float)(g_Profile.GetProfileInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), 0));
+			float hue = (float)(g_Profile.GetInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), 0));
 
 			if (nID == CMD_CLR_NEXT_HUE)
 				hue += 30;
@@ -652,7 +652,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 			if (hue >= 360)   hue -= 360;
 			else if (hue < 0) hue += 360;
 
-			g_Profile.WriteProfileInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
+			g_Profile.WriteInt(CMPlayerAppBase::GetMPSkinFactory()->GetSkinName(), _T("Hue"), (int)hue);
 			CMPlayerAppBase::GetMPSkinFactory()->AdjustHue(hue);
 		}
 		break;
@@ -816,7 +816,7 @@ bool CMPCommonCmdHandler::GetChecked(UINT nID, bool &bChecked)
 	switch (nID)
 	{
 	case IDC_LDO_KARAOKE:
-		bChecked = g_Profile.GetProfileBool(m_strSectName.c_str(), _T("Karaoke"), false);
+		bChecked = g_Profile.GetBool(m_strSectName.c_str(), _T("Karaoke"), false);
 		break;
 #if defined(_WIN32_DESKTOP)
 	case IDC_FLOATING_LYRICS:
@@ -840,7 +840,7 @@ bool CMPCommonCmdHandler::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 	case IDC_LDO_AUTO:
 		{
 			DISPLAY_OPTIONS		displayOpt = DisplayOptFromStr(
-				g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
+				g_Profile.GetString(m_strSectName.c_str(), _T("LyrDrawOpt"), _T("")));
 
 			if (displayOpt == DO_NORMAL)
 				nIDChecked = IDC_LDO_NORMAL;
@@ -857,7 +857,7 @@ bool CMPCommonCmdHandler::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 // 	case IDC_ALIGN_LYRICS_RIGHT:
 // 		{
 // 			tstring		strAlign;
-// 			strAlign = g_Profile.GetProfileString(m_strSectName.c_str(), _T("LyrAlign"), _T("center"));
+// 			strAlign = g_Profile.GetString(m_strSectName.c_str(), _T("LyrAlign"), _T("center"));
 // 			if (_tcsicmp(strAlign.c_str(), _T("left")) == 0)
 // 				nIDChecked = IDC_ALIGN_LYRICS_LEFT;
 // 			else if (_tcsicmp(strAlign.c_str(), _T("right")) == 0)

@@ -66,15 +66,15 @@ TestRunnerModel::loadSettings(Settings & s)
   CWinApp *app = AfxGetApp();
   ASSERT( app != NULL );
 
-  int autorun = app->GetProfileInt( _T("CppUnit"),
+  int autorun = app->GetInt( _T("CppUnit"),
                                     _T("AutorunAtStartup"),
                                     1 );
   s.autorunOnLaunch = (autorun == 1);
 
-  s.col_1 = app->GetProfileInt( _T("CppUnit"), _T("Col_1"), 40 );
-  s.col_2 = app->GetProfileInt( _T("CppUnit"), _T("Col_2"), 40 );
-  s.col_3 = app->GetProfileInt( _T("CppUnit"), _T("Col_3"), 40 );
-  s.col_4 = app->GetProfileInt( _T("CppUnit"), _T("Col_4"), 40 );
+  s.col_1 = app->GetInt( _T("CppUnit"), _T("Col_1"), 40 );
+  s.col_2 = app->GetInt( _T("CppUnit"), _T("Col_2"), 40 );
+  s.col_3 = app->GetInt( _T("CppUnit"), _T("Col_3"), 40 );
+  s.col_4 = app->GetInt( _T("CppUnit"), _T("Col_4"), 40 );
 
   loadHistory();
 }
@@ -109,7 +109,7 @@ TestRunnerModel::loadHistoryEntry( int idx )
   CWinApp *app = AfxGetApp();
   ASSERT( app != NULL );
 
-  return app->GetProfileString( _T("CppUnit"), getHistoryEntryName( idx ) );
+  return app->GetString( _T("CppUnit"), getHistoryEntryName( idx ) );
 }
 
 
@@ -120,12 +120,12 @@ TestRunnerModel::saveSettings( const Settings & s )
   ASSERT( app != NULL );
 
   int autorun = s.autorunOnLaunch ? 1 : 0;
-  app->WriteProfileInt( _T("CppUnit"), _T("AutorunAtStartup"), autorun );
+  app->WriteInt( _T("CppUnit"), _T("AutorunAtStartup"), autorun );
 
-  app->WriteProfileInt( _T("CppUnit"), _T("Col_1"),	 s.col_1 );
-  app->WriteProfileInt( _T("CppUnit"), _T("Col_2"),	 s.col_2 );
-  app->WriteProfileInt( _T("CppUnit"), _T("Col_3"),	 s.col_3 );
-  app->WriteProfileInt( _T("CppUnit"), _T("Col_4"),	 s.col_4 );
+  app->WriteInt( _T("CppUnit"), _T("Col_1"),	 s.col_1 );
+  app->WriteInt( _T("CppUnit"), _T("Col_2"),	 s.col_2 );
+  app->WriteInt( _T("CppUnit"), _T("Col_3"),	 s.col_3 );
+  app->WriteInt( _T("CppUnit"), _T("Col_4"),	 s.col_4 );
 
   int idx = 1;
   for ( History::const_iterator it = m_history.begin(); 
@@ -145,7 +145,7 @@ TestRunnerModel::saveHistoryEntry( int idx,
   CWinApp *app = AfxGetApp();
   ASSERT( app != NULL );
 
-  app->WriteProfileString( _T("CppUnit"),
+  app->WriteString( _T("CppUnit"),
                            getHistoryEntryName( idx ),
                            testName );
 }

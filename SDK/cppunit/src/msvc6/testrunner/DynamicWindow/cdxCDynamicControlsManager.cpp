@@ -650,7 +650,7 @@ CSize cdxCDynamicControlsManager::GetWindowSize(CWnd & rWnd)
 bool cdxCDynamicControlsManager::StoreWindowPosition(CWnd & rWnd, LPCTSTR lpszProfile)
 {
 	ASSERT(::IsWindow(rWnd.m_hWnd) && lpszProfile && *lpszProfile);
-	// can't use an empty profile section string; see CWinApp::GetProfileInt() for further information
+	// can't use an empty profile section string; see CWinApp::GetInt() for further information
 
 	WINDOWPLACEMENT	wpl;
 	VERIFY( rWnd.GetWindowPlacement(&wpl) );
@@ -663,14 +663,14 @@ bool cdxCDynamicControlsManager::StoreWindowPosition(CWnd & rWnd, LPCTSTR lpszPr
 		if(rWnd.IsZoomed())
 			iState	=	REGVAL_MAXIMIZED;
 
-	return	AfxGetApp()->WriteProfileInt(lpszProfile,	lpszRegVal_Valid,	REGVAL_INVALID) &&	// invalidate first
-				AfxGetApp()->WriteProfileInt(lpszProfile,	lpszRegVal_Left,		wpl.rcNormalPosition.left) &&
-				AfxGetApp()->WriteProfileInt(lpszProfile,	lpszRegVal_Right,		wpl.rcNormalPosition.right) &&
-				AfxGetApp()->WriteProfileInt(lpszProfile,	lpszRegVal_Top,		wpl.rcNormalPosition.top) &&
-				AfxGetApp()->WriteProfileInt(lpszProfile,	lpszRegVal_Bottom,	wpl.rcNormalPosition.bottom) &&
-				AfxGetApp()->WriteProfileInt(lpszProfile,	lpszRegVal_Visible,	bVisible ? REGVAL_VISIBLE : REGVAL_HIDDEN) &&
-				AfxGetApp()->WriteProfileInt(lpszProfile,	lpszRegVal_State,		iState) &&
-				AfxGetApp()->WriteProfileInt(lpszProfile,	lpszRegVal_Valid,	REGVAL_VALID);		// validate position
+	return	AfxGetApp()->WriteInt(lpszProfile,	lpszRegVal_Valid,	REGVAL_INVALID) &&	// invalidate first
+				AfxGetApp()->WriteInt(lpszProfile,	lpszRegVal_Left,		wpl.rcNormalPosition.left) &&
+				AfxGetApp()->WriteInt(lpszProfile,	lpszRegVal_Right,		wpl.rcNormalPosition.right) &&
+				AfxGetApp()->WriteInt(lpszProfile,	lpszRegVal_Top,		wpl.rcNormalPosition.top) &&
+				AfxGetApp()->WriteInt(lpszProfile,	lpszRegVal_Bottom,	wpl.rcNormalPosition.bottom) &&
+				AfxGetApp()->WriteInt(lpszProfile,	lpszRegVal_Visible,	bVisible ? REGVAL_VISIBLE : REGVAL_HIDDEN) &&
+				AfxGetApp()->WriteInt(lpszProfile,	lpszRegVal_State,		iState) &&
+				AfxGetApp()->WriteInt(lpszProfile,	lpszRegVal_Valid,	REGVAL_VALID);		// validate position
 }
 
 /*
@@ -683,13 +683,13 @@ bool cdxCDynamicControlsManager::StoreWindowPosition(CWnd & rWnd, LPCTSTR lpszPr
 bool cdxCDynamicControlsManager::RestoreWindowPosition(CWnd & rWnd, LPCTSTR lpszProfile, UINT restoreFlags)
 {
 	ASSERT(::IsWindow(rWnd.m_hWnd) && lpszProfile && *lpszProfile);
-	// can't use an empty profile section string; see CWinApp::GetProfileInt() for further information
+	// can't use an empty profile section string; see CWinApp::GetInt() for further information
 
 	//
 	// first, we check whether the position had been saved successful any time before
 	//
 
-	if( AfxGetApp()->GetProfileInt(lpszProfile,lpszRegVal_Valid,REGVAL_INVALID) != REGVAL_VALID )
+	if( AfxGetApp()->GetInt(lpszProfile,lpszRegVal_Valid,REGVAL_INVALID) != REGVAL_VALID )
 		return false;
 
 	//
@@ -703,16 +703,16 @@ bool cdxCDynamicControlsManager::RestoreWindowPosition(CWnd & rWnd, LPCTSTR lpsz
 	// read registry
 	//
 
-	int	iState	=	AfxGetApp()->GetProfileInt(lpszProfile,	lpszRegVal_State, REGVAL_NOSTATE);
+	int	iState	=	AfxGetApp()->GetInt(lpszProfile,	lpszRegVal_State, REGVAL_NOSTATE);
 
 	//
 	// get window's previous normal position
 	//
 
-	wpl.rcNormalPosition.left		=	AfxGetApp()->GetProfileInt(lpszProfile,	lpszRegVal_Left,		wpl.rcNormalPosition.left);
-	wpl.rcNormalPosition.right		=	AfxGetApp()->GetProfileInt(lpszProfile,	lpszRegVal_Right,		wpl.rcNormalPosition.right);
-	wpl.rcNormalPosition.top		=	AfxGetApp()->GetProfileInt(lpszProfile,	lpszRegVal_Top,		wpl.rcNormalPosition.top);
-	wpl.rcNormalPosition.bottom	=	AfxGetApp()->GetProfileInt(lpszProfile,	lpszRegVal_Bottom,	wpl.rcNormalPosition.bottom);
+	wpl.rcNormalPosition.left		=	AfxGetApp()->GetInt(lpszProfile,	lpszRegVal_Left,		wpl.rcNormalPosition.left);
+	wpl.rcNormalPosition.right		=	AfxGetApp()->GetInt(lpszProfile,	lpszRegVal_Right,		wpl.rcNormalPosition.right);
+	wpl.rcNormalPosition.top		=	AfxGetApp()->GetInt(lpszProfile,	lpszRegVal_Top,		wpl.rcNormalPosition.top);
+	wpl.rcNormalPosition.bottom	=	AfxGetApp()->GetInt(lpszProfile,	lpszRegVal_Bottom,	wpl.rcNormalPosition.bottom);
 
 	if(wpl.rcNormalPosition.left > wpl.rcNormalPosition.right)
 	{
@@ -766,7 +766,7 @@ bool cdxCDynamicControlsManager::RestoreWindowPosition(CWnd & rWnd, LPCTSTR lpsz
 
 	if(restoreFlags & rflg_visibility)
 	{
-		int	i	=	AfxGetApp()->GetProfileInt(lpszProfile,	lpszRegVal_Visible, REGVAL_NOSTATE);
+		int	i	=	AfxGetApp()->GetInt(lpszProfile,	lpszRegVal_Visible, REGVAL_NOSTATE);
 		if(i == REGVAL_VISIBLE)
 			rWnd.ShowWindow(SW_SHOW);
 		else

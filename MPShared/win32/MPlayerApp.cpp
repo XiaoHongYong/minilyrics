@@ -214,7 +214,7 @@ bool CMPlayerApp::Init()
 	SetWorkingFolder(szWorkingFolder);
 
 	InitBaseFrameWork(GetAppInstance(), _T("log.txt"), GetAppIniFile(), SZ_SECT_UI);
-	SetFileNoReadOnly(g_Profile.GetProfileName());	
+	SetFileNoReadOnly(g_Profile.GetFile());	
 
 	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
 	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
@@ -236,7 +236,7 @@ bool CMPlayerApp::Init()
 
 	CGdiplusGraphicsLite::Startup();
 
-	if (g_Profile.GetProfileBool(SZ_SECT_UI, _T("Antialias"), FALSE))
+	if (g_Profile.GetBool(SZ_SECT_UI, _T("Antialias"), FALSE))
 		GfxRaw::EnableAntialiasFont(TRUE);
 
 #ifndef _MPLAYER
@@ -326,7 +326,7 @@ int CMPlayerApp::OnSwitchToEmbeddedSkinMode()
 	// to embedded mode
 	ASSERT(IsSupportEmbedded());
 
-	g_Profile.WriteProfileInt(_T("MPSkinMode"), false);
+	g_Profile.WriteInt(_T("MPSkinMode"), false);
 
 	int nRet;
 	if (g_Player.GetPlayerType() == P_WINAMP2)

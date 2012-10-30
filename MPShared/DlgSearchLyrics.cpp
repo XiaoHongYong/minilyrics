@@ -233,7 +233,7 @@ public:
 		ASSERT(CountOf(arrWidth) == CountOf(szHead));
 		for (int i = 0; szHead[i] != NULL; i++)
 			m_pLyricsList->AddColumn(_TL(szHead[i]), arrWidth[i]);
-		if (g_Profile.GetProfileInt(_T("ShowLink"), false))
+		if (g_Profile.GetInt(_T("ShowLink"), false))
 			m_pLyricsList->AddColumn(_T("URL"), 400);
 		m_pLyricsList->LoadColumnWidth(_T("OpenLyrics_ListColWidth"));
 
@@ -407,8 +407,8 @@ public:
 			break;
 		case IDC_NO_PROMPT:
 			// Don't prompt this dialog automatically.
-			g_Profile.WriteProfileInt(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), 
-				!g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
+			g_Profile.WriteInt(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), 
+				!g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 			break;
 		case IDC_RENAME:
 			{
@@ -576,7 +576,7 @@ public:
 			m_menu.EnableItem(IDC_DEL_FILE, bLocalLyr);
 			m_menu.EnableItem(IDC_RENAME, bLocalLyrFile);
 			m_menu.CheckItem(IDC_NO_PROMPT,
-				!g_Profile.GetProfileBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
+				!g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false));
 
 			GetUIObjectRect(CID_MORE, rc);
 			m_pSkin->ClientToScreen(rc);

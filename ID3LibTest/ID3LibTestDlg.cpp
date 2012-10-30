@@ -304,12 +304,12 @@ HCURSOR CID3LibTestDlg::OnQueryDragIcon()
 
 void CID3LibTestDlg::OnOpenMp3() 
 {
-	CFileDialog		dlg(true, NULL, g_Profile.GetProfileString(_T("LastOpenedMp3File"), _T("")), 0, _T("*.mp3|*.mp3||"));
+	CFileDialog		dlg(true, NULL, g_Profile.GetString(_T("LastOpenedMp3File"), _T("")), 0, _T("*.mp3|*.mp3||"));
 
 	if (dlg.DoModal() != IDOK)
 		return;
 
-	g_Profile.WriteProfileString(_T("LastOpenedMp3File"), dlg.GetPathName());
+	g_Profile.WriteString(_T("LastOpenedMp3File"), dlg.GetPathName());
 
 	EnumID3v3Tag(dlg.GetPathName());
 
@@ -398,12 +398,12 @@ void CID3LibTestDlg::GetDlgItemText(int nID, tstring &str)
 void CID3LibTestDlg::OnAddImg() 
 {
 	tstring			strImage;
-	CFileDialog		dlg(true, NULL, g_Profile.GetProfileString(_T("LastOpenedPicFile"), _T("")), 0, _T("*.jpg|*.jpg||"));
+	CFileDialog		dlg(true, NULL, g_Profile.GetString(_T("LastOpenedPicFile"), _T("")), 0, _T("*.jpg|*.jpg||"));
 
 	if (dlg.DoModal() != IDOK)
 		return;
 
-	g_Profile.WriteProfileString(_T("LastOpenedPicFile"), dlg.GetPathName());
+	g_Profile.WriteString(_T("LastOpenedPicFile"), dlg.GetPathName());
 
 	strImage = dlg.GetPathName();
 

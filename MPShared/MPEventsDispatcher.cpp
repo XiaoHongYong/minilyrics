@@ -304,7 +304,7 @@ void CMPEventsDispatcher::UnRegisterHandler(EventType eventType, IEventHandler *
 void CMPlayerSettings::SetSettings(EventType eventType, LPCTSTR szSectionName, LPCTSTR szSettingName, LPCTSTR szValue, bool bNotify)
 {
 	// save setting
-	g_Profile.WriteProfileString(szSectionName, szSettingName, szValue);
+	g_Profile.WriteString(szSectionName, szSettingName, szValue);
 
 	if (!bNotify)
 		return;
@@ -322,7 +322,7 @@ void CMPlayerSettings::SetSettings(EventType eventType, LPCTSTR szSectionName, L
 void CMPlayerSettings::SetSettings(EventType eventType, LPCTSTR szSectionName, LPCTSTR szSettingName, int nValue, bool bNotify)
 {
 	// save setting
-	g_Profile.WriteProfileInt(szSectionName, szSettingName, nValue);
+	g_Profile.WriteInt(szSectionName, szSettingName, nValue);
 
 	if (!bNotify)
 		return;

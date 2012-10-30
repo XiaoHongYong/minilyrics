@@ -425,10 +425,10 @@ void CLrcParser::ToString(tstring &str, bool bIncTags, bool bToTxtFormat)
 	{
 		// Remove extra blank line only work under !turn of preferences.
 		if (!bToTxtFormat
-			|| !g_Profile.GetProfileBool(_T("AppendTimeStampsInTxtLyr"), true)
+			|| !g_Profile.GetBool(_T("AppendTimeStampsInTxtLyr"), true)
 			|| m_lyrContentType == LCT_TXT)
 		{
-			if (g_Profile.GetProfileBool(_T("RemoveExtraBlankLines"), true))
+			if (g_Profile.GetBool(_T("RemoveExtraBlankLines"), true))
 				RemoveExtraBlankLine(str);
 		}
 	}
@@ -505,7 +505,7 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 
 	bool bRemoveExtraBlankLines = false;
 	if (!m_bTurnOffPref)
-		bRemoveExtraBlankLines = g_Profile.GetProfileBool(_T("RemoveExtraBlankLines"), true);
+		bRemoveExtraBlankLines = g_Profile.GetBool(_T("RemoveExtraBlankLines"), true);
 	bool bLastLineBlank = false;
 
 	for (int i = 0; i < (int)m_pMLData->m_arrFileLines.size(); i++)
@@ -566,7 +566,7 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 		if (strTagsAtBeginOfFile.size())
 			str.insert(0, strTagsAtBeginOfFile.c_str());
 
-		if ((m_bTurnOffPref || g_Profile.GetProfileBool(_T("AppendTimeStampsInTxtLyr"), true))
+		if ((m_bTurnOffPref || g_Profile.GetBool(_T("AppendTimeStampsInTxtLyr"), true))
 			&& strTagsAtEndOfFile.size())
 		{
 			if (str.size() && str[str.size() - 1] != '\n')

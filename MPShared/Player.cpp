@@ -497,7 +497,7 @@ void CPlayer::SetLoop(MP_LOOP_MODE loopMode)
 	else
 		szValue = _T("off");
 
-	g_Profile.WriteProfileString(SZ_SECT_PLAYER, _T("repeat"), szValue);
+	g_Profile.WriteString(SZ_SECT_PLAYER, _T("repeat"), szValue);
 }
 
 void CPlayer::SetShuffle(bool bValue)
@@ -507,7 +507,7 @@ void CPlayer::SetShuffle(bool bValue)
 
 	m_spPlayer->SetShuffle(bValue);
 
-	g_Profile.WriteProfileString(SZ_SECT_PLAYER, _T("shuffle"), bValue ? SZ_TRUE : SZ_FALSE);
+	g_Profile.WriteString(SZ_SECT_PLAYER, _T("shuffle"), bValue ? SZ_TRUE : SZ_FALSE);
 }
 
 MP_LOOP_MODE CPlayer::GetLoop()
@@ -538,8 +538,8 @@ void CPlayer::SetVolume(long nVol)
 {
 	if (m_spPlayer)
 	{
-		g_Profile.WriteProfileString(SZ_SECT_PLAYER, _T("mute"), SZ_FALSE);
-		g_Profile.WriteProfileInt(SZ_SECT_PLAYER, _T("volume"), nVol);
+		g_Profile.WriteString(SZ_SECT_PLAYER, _T("mute"), SZ_FALSE);
+		g_Profile.WriteInt(SZ_SECT_PLAYER, _T("volume"), nVol);
 		m_spPlayer->SetVolume(nVol);
 	}
 	else
@@ -561,7 +561,7 @@ void CPlayer::SetMute(bool bValue)
 
 	m_spPlayer->SetMute(bValue);
 
-	g_Profile.WriteProfileString(SZ_SECT_PLAYER, _T("mute"), bValue ? SZ_TRUE : SZ_FALSE);
+	g_Profile.WriteString(SZ_SECT_PLAYER, _T("mute"), bValue ? SZ_TRUE : SZ_FALSE);
 }
 
 void CPlayer::OnInitOfZikiPlayer()
@@ -584,7 +584,7 @@ void CPlayer::OnInitOfZikiPlayer()
 	MP_LOOP_MODE	loopMode;
 
 	// get loop mode
-	szValue = g_Profile.GetProfileString(SZ_SECT_PLAYER, _T("repeat"), _T("off"));
+	szValue = g_Profile.GetString(SZ_SECT_PLAYER, _T("repeat"), _T("off"));
 	if (_tcsicmp(szValue, _T("all")) == 0)
 		loopMode = MP_LOOP_ALL;
 	else if (_tcsicmp(szValue, _T("track")) == 0)
@@ -595,22 +595,22 @@ void CPlayer::OnInitOfZikiPlayer()
 
 	// shuffle
 	m_spPlayer->SetShuffle(
-		IsTRUE(g_Profile.GetProfileString(SZ_SECT_PLAYER, _T("shuffle"), SZ_FALSE)));
+		IsTRUE(g_Profile.GetString(SZ_SECT_PLAYER, _T("shuffle"), SZ_FALSE)));
 
 	// mute
 	m_spPlayer->SetMute(
-		IsTRUE(g_Profile.GetProfileString(SZ_SECT_PLAYER, _T("mute"), SZ_FALSE)));
+		IsTRUE(g_Profile.GetString(SZ_SECT_PLAYER, _T("mute"), SZ_FALSE)));
 
 	// volume
-	m_spPlayer->SetVolume(g_Profile.GetProfileInt(SZ_SECT_PLAYER, _T("volume"), 30));
+	m_spPlayer->SetVolume(g_Profile.GetInt(SZ_SECT_PLAYER, _T("volume"), 30));
 
 	// current playing music
 	// m_spPlayer->SetCurrentMediaInPlaylist(
-	//	g_Profile.GetProfileInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), 0));
+	//	g_Profile.GetInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), 0));
 
 	g_playerEventDispatcher.Init();
 
-	if (g_Profile.GetProfileBool(_T("StartPlayAtStartup"), false))
+	if (g_Profile.GetBool(_T("StartPlayAtStartup"), false))
 		Play();
 }
 
@@ -621,7 +621,7 @@ void CPlayer::OnQuitOfZikiPlayer()
 	SaveCurrentPlaylist();
 
 	// save latest playing song file
-	g_Profile.WriteProfileInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), m_spPlayer->GetCurrentMediaInPlaylist());
+	g_Profile.WriteInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), m_spPlayer->GetCurrentMediaInPlaylist());
 
 	if (m_pEventHandler)
 	{
@@ -1130,7 +1130,7 @@ void CPlayer::SaveCurrentPlaylist()
 		{
 			SetPlaylistModified(false);
 			// SaveRecentPlList(m_strCurrentPlaylist.c_str());
-			g_Profile.WriteProfileString(_T("Latest Playlist"), m_strCurrentPlaylist.c_str());
+			g_Profile.WriteString(_T("Latest Playlist"), m_strCurrentPlaylist.c_str());
 		}
 	}
 }

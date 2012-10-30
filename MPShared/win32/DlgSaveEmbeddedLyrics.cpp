@@ -9,7 +9,7 @@
 
 CDlgSaveEmbeddedLyrics::CDlgSaveEmbeddedLyrics() : CBaseDialog(IDD_SAVE_EMBEDDED_LYR)
 {
-	m_nDefaultEmbededLST = g_Profile.GetProfileInt(_T("DefaultEmbeddedLST"), LST_ID3V2_USLT);
+	m_nDefaultEmbededLST = g_Profile.GetInt(_T("DefaultEmbeddedLST"), LST_ID3V2_USLT);
 	m_bHasEmbeddedLyrAlready = false;
 }
 
@@ -117,7 +117,7 @@ void CDlgSaveEmbeddedLyrics::OnOK()
 	}
 
 	if (!m_bHasEmbeddedLyrAlready)
-		g_Profile.WriteProfileInt(_T("DefaultEmbeddedLST"), nEmbeddedLST);
+		g_Profile.WriteInt(_T("DefaultEmbeddedLST"), nEmbeddedLST);
 
 	DoSaveAction(vLyrNames, this);
 

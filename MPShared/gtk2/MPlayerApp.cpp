@@ -86,7 +86,7 @@ bool CMPlayerApp::Init(int argc, char *argv[])
 		CProfile	file;
 		tstring		strEng;
 		file.Init(_T("install.ini"), _T("INSTALL"));
-		strEng = file.GetProfileString(_T("Edition"), _T(""));
+		strEng = file.GetString(_T("Edition"), _T(""));
 		if (_tcscmp(strEng.c_str(), _T("english")) == 0)
 			g_bEngEdition = TRUE;
 		else if (_tcscmp(strEng.c_str(), _T("chinese")) == 0)

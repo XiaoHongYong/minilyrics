@@ -804,12 +804,12 @@ int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	if (bLoadSkinColorTheme)
 	{
 		// Load the default theme settings of skin
-		g_Profile.WriteProfileInt(szSkinName, _T("Hue"), 0);
+		g_Profile.WriteInt(szSkinName, _T("Hue"), 0);
 
 		ApplyDefaultThemeOfSkin();
 	}
 
-	float hue = (float)g_Profile.GetProfileInt(szSkinName, _T("Hue"), 0);
+	float hue = (float)g_Profile.GetInt(szSkinName, _T("Hue"), 0);
 	if (hue < 0)
 		hue = 0;
 	else if (hue > 360)
@@ -825,8 +825,8 @@ int CSkinFactory::ChangeSkin(LPCTSTR szSkinName, LPCTSTR szSkinDir, LPCTSTR szEx
 	tstring		strOpenedSkinWnds;
 	SetTStrNCase	setOpenedSkinWnds;
 
-	strOpenedSkinWnds = g_Profile.GetProfileString(GetSkinFileName(), _T("LatestOpenedSkinWnds"), _T(""));
-	strSkinWndDef = g_Profile.GetProfileString(GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
+	strOpenedSkinWnds = g_Profile.GetString(GetSkinFileName(), _T("LatestOpenedSkinWnds"), _T(""));
+	strSkinWndDef = g_Profile.GetString(GetSkinFileName(), _T("DefaultSkinWnd"), _T(""));
 
 	StrSplit(strOpenedSkinWnds.c_str(), ',', setOpenedSkinWnds);
 
@@ -1050,7 +1050,7 @@ void CSkinFactory::Close(bool bQuit)
 			continue;
 
 		if (pSkin->IsMainAppWnd())
-			g_Profile.WriteProfileString(GetSkinFileName(), _T("DefaultSkinWnd"), pSkin->GetSkinWndName());
+			g_Profile.WriteString(GetSkinFileName(), _T("DefaultSkinWnd"), pSkin->GetSkinWndName());
 		else
 		{
 			if (!strOpenedSkinWnds.empty())
@@ -1064,7 +1064,7 @@ void CSkinFactory::Close(bool bQuit)
 			pSkin->CloseSkin();
 	}
 	if (listSkinWnds.size() > 0)
-		g_Profile.WriteProfileString(GetSkinFileName(), _T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
+		g_Profile.WriteString(GetSkinFileName(), _T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
 
 	// ASSERT(m_listSkinWnds.size() <= 1);
 
@@ -1331,7 +1331,7 @@ void CSkinFactory::SetSkinsRootDir(LPCTSTR szSkinsRootDir)
 	if (!m_strSkinRootDir.empty())
 	{
 		DirStringFormat(m_strSkinRootDir);
-		g_Profile.WriteProfileString(_T("SkinRootDir"), m_strSkinRootDir.c_str());
+		g_Profile.WriteString(_T("SkinRootDir"), m_strSkinRootDir.c_str());
 	}
 }
 
@@ -1339,7 +1339,7 @@ LPCTSTR CSkinFactory::GetSkinRootDir()
 {
 	if (m_strSkinRootDir.empty())
 	{
-		m_strSkinRootDir = g_Profile.GetProfileString(_T("SkinRootDir"), _T(""));
+		m_strSkinRootDir = g_Profile.GetString(_T("SkinRootDir"), _T(""));
 		if (!m_strSkinRootDir.empty())
 		{
 			DirStringFormat(m_strSkinRootDir);
@@ -1579,7 +1579,7 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 			if (pObj)
 			{
 				// Proceed only if visible state is set.
-				tstring strValue = pObj->GetProfileString(_T("VisibleState"), _T(""));
+				tstring strValue = pObj->GetString(_T("VisibleState"), _T(""));
 				if (!strValue.empty())
 					pObj->SetVisible(IsTRUE(strValue.c_str()));
 			}
@@ -1601,7 +1601,7 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 
 			pObj = pSkinWnd->GetUIObjectById(GetIDByName(vStrParam[i].c_str()));
 			if (pObj)
-				pObj->WriteProfileInt(_T("VisibleState"), pObj->IsVisible());
+				pObj->WriteInt(_T("VisibleState"), pObj->IsVisible());
 		}
 
 		return ERR_OK;
@@ -1729,7 +1729,7 @@ int CSkinFactory::ExeDynamicCmd(const CDynamicCmds::DynamicCmd &cmd, CSkinWnd *p
 		bool bDefault = true;
 		if (vStrParam.size() > 1)
 			bDefault = IsTRUE(vStrParam[1].c_str());
-		if (g_Profile.GetProfileBool(GetSkinName(), vStrParam[0].c_str(), bDefault))
+		if (g_Profile.GetBool(GetSkinName(), vStrParam[0].c_str(), bDefault))
 			return ERR_OK;
 
 		return ERR_FALSE;
@@ -1818,7 +1818,7 @@ void CSkinFactory::ApplyDefaultThemeOfSkin()
 			itValue != pNodeSection->listChildren.end(); ++itValue)
 		{
 			SXNode *pNodeValue = *itValue;
-			g_Profile.WriteProfileString(pNodeSection->strName.c_str(),
+			g_Profile.WriteString(pNodeSection->strName.c_str(),
 				pNodeValue->strName.c_str(), pNodeValue->strContent.c_str());
 		}
 	}

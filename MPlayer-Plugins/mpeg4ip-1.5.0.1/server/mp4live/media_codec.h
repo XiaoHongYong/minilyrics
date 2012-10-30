@@ -56,7 +56,7 @@ public:
 	virtual MediaType GetFrameType(void) = 0;
 
 	CMediaCodec *GetNext(void) { return m_nextCodec; };
-	const char *GetProfileName(void) {
+	const char *GetFile(void) {
 	  return m_pConfig->GetName();
 	};
 	virtual void AddRtpDestination(CMediaStream *stream,

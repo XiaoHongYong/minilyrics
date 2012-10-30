@@ -48,7 +48,7 @@ void CLyricShowAgentObj::GetLyrDispStyleSettings(CSkinWnd *pSkinWnd, tstring &st
 
 	GetLyrDispStylePropName(pSkinWnd, bFloatingLyr, strLyrStylePropName);
 
-	strLyrStyle = g_Profile.GetProfileString(
+	strLyrStyle = g_Profile.GetString(
 		CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(bFloatingLyr),
 		strLyrStylePropName.c_str(),
 		strLyrStyle.c_str());
@@ -72,14 +72,14 @@ void CLyricShowAgentObj::OnCreate()
 
 	GetLyrDispStylePropName(m_pSkin, m_bFloatingLyr, m_strLyrDisplayStylePropName);
 
-	m_strLyrDisplayStyleDefault = g_Profile.GetProfileString(
+	m_strLyrDisplayStyleDefault = g_Profile.GetString(
 		CMPlayerApp::GetInstance()->GetCurLyrDisplaySettingName(m_bFloatingLyr),
 		m_strLyrDisplayStylePropName.c_str(),
 		m_strLyrDisplayStyleDefault.c_str());
 
 	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_UI_SETTINGS_CHANGED, ET_LYRICS_CHANGED, ET_UI_ACTIVATE_NOTICE);
 
-	if (m_bEnableToolbar && !g_Profile.GetProfileBool(_T("HideToolbar"), false))
+	if (m_bEnableToolbar && !g_Profile.GetBool(_T("HideToolbar"), false))
 	{
 		// create tool bar
 		LoadToolbar();

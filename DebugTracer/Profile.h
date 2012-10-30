@@ -46,13 +46,13 @@ public:
 	void AddKeys(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
 	void Init(LPCTSTR szProfile, HINSTANCE hInst);
 	// ∂¡∫Õ–¥≈‰÷√Œƒº˛ MiniLyrics.ini
-	DWORD GetProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPSTR szReturnedString, DWORD nSize);
-	BOOL WriteProfileString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
+	DWORD GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPSTR szReturnedString, DWORD nSize);
+	BOOL WriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
 
-	UINT GetProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault);
-	BOOL WriteProfileInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue);
+	UINT GetInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault);
+	BOOL WriteInt(LPCTSTR szAppName, LPCTSTR szKeyName, int nValue);
 
-	static void GetProfileName(char szProfile[]);
+	static void GetFile(char szProfile[]);
 };
 
 extern CProfile	g_Profile;
@@ -61,22 +61,22 @@ extern CProfile	g_Profile;
 // for APPNAME : "DebugTracer"
 inline DWORD ProfileGetString(LPCTSTR szKeyName, LPCTSTR szDefault, LPSTR szReturnedString, DWORD nSize)
 {
-	return g_Profile.GetProfileString("DebugTracer", szKeyName, szDefault, szReturnedString, nSize);
+	return g_Profile.GetString("DebugTracer", szKeyName, szDefault, szReturnedString, nSize);
 }
 
 inline DWORD ProfileWriteString(LPCTSTR szKeyName, LPCTSTR szValue)
 {
-	return g_Profile.WriteProfileString("DebugTracer", szKeyName, szValue);
+	return g_Profile.WriteString("DebugTracer", szKeyName, szValue);
 }
 
 inline BOOL ProfileWriteInt(LPCTSTR szKeyName, int nValue)
 {
-	return g_Profile.WriteProfileInt("DebugTracer", szKeyName, nValue);
+	return g_Profile.WriteInt("DebugTracer", szKeyName, nValue);
 }
 
 inline UINT ProfileGetInt(LPCTSTR szKeyName, int nDefault)
 {
-	return g_Profile.GetProfileInt("DebugTracer", szKeyName, nDefault);
+	return g_Profile.GetInt("DebugTracer", szKeyName, nDefault);
 }
 
 #endif // !defined(AFX_PROFILE_H__2102F360_D5B3_45ED_921E_6A155BD28862__INCLUDED_)

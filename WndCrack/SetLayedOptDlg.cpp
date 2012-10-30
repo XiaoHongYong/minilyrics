@@ -142,12 +142,12 @@ CSetLayedOptDlg::CSetLayedOptDlg(CWnd* pParent /*=NULL*/)
 	m_bOpaque = FALSE;
 	m_bClickThrough = FALSE;
 	//}}AFX_DATA_INIT
-	m_bUseLayeredOpt = g_Profile.GetProfileInt("m_bUseLayeredOpt", TRUE);
-	m_bTransColor = g_Profile.GetProfileInt("m_bTransColor", TRUE);
-	m_bOpaque = g_Profile.GetProfileInt("m_bOpaque", TRUE);
-	m_byOpaque = g_Profile.GetProfileInt("m_byOpaque", 200);
+	m_bUseLayeredOpt = g_Profile.GetInt("m_bUseLayeredOpt", TRUE);
+	m_bTransColor = g_Profile.GetInt("m_bTransColor", TRUE);
+	m_bOpaque = g_Profile.GetInt("m_bOpaque", TRUE);
+	m_byOpaque = g_Profile.GetInt("m_byOpaque", 200);
 
-	m_strMaskColor = g_Profile.GetProfileString("m_strMaskColor", "0");
+	m_strMaskColor = g_Profile.GetString("m_strMaskColor", "0");
 }
 
 
@@ -411,10 +411,10 @@ void CSetLayedOptDlg::OnDestroy()
 	if (m_hbrColor)
 		DeleteObject(m_hbrColor);
 
-	g_Profile.WriteProfileInt("m_bUseLayeredOpt", m_bUseLayeredOpt);
-	g_Profile.WriteProfileInt("m_bTransColor", m_bTransColor);
-	g_Profile.WriteProfileInt("m_bOpaque", m_bOpaque);
-	g_Profile.WriteProfileInt("m_byOpaque", m_byOpaque);
+	g_Profile.WriteInt("m_bUseLayeredOpt", m_bUseLayeredOpt);
+	g_Profile.WriteInt("m_bTransColor", m_bTransColor);
+	g_Profile.WriteInt("m_bOpaque", m_bOpaque);
+	g_Profile.WriteInt("m_byOpaque", m_byOpaque);
 
-	g_Profile.WriteProfileString("m_strMaskColor", m_strMaskColor);
+	g_Profile.WriteString("m_strMaskColor", m_strMaskColor);
 }

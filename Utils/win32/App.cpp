@@ -86,7 +86,7 @@ void GetAppDataDir(LPTSTR szAppDataDir, LPCTSTR szDefAppName)
 		{
 			CProfile	file;
 			file.Init(strFile.c_str(), _T("install"));
-			bInUserDir = file.GetProfileBool(_T("PerUserSettings"), true);
+			bInUserDir = file.GetBool(_T("PerUserSettings"), true);
 			if (!bInUserDir)
 			{
 				// To verify that it is writable.

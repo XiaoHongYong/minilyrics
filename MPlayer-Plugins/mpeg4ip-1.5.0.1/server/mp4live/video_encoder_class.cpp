@@ -471,7 +471,7 @@ void CVideoEncoder::DoStopVideo()
   DestroyVideoResizer();
 
   StopEncoder();
-  debug_message("Video encoding profile %s stats", GetProfileName());
+  debug_message("Video encoding profile %s stats", GetFile());
   debug_message("Encoded frames: %u", m_videoDstFrameNumber);
 		
 }

@@ -38,11 +38,11 @@ public:
 			// Load default playlist
 			tstring		strCurrentPlaylist;
 			
-			strCurrentPlaylist = g_Profile.GetProfileString(_T("Latest Playlist"), _T(""));
+			strCurrentPlaylist = g_Profile.GetString(_T("Latest Playlist"), _T(""));
 			if (!g_Player.LoadPlaylist(strCurrentPlaylist.c_str(), true))
 				g_Player.NewCurrentPlaylist();
 
-			int	nNowPlaying = g_Profile.GetProfileInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), 0);
+			int	nNowPlaying = g_Profile.GetInt(SZ_SECT_PLAYER, _T("NowPlayingIdx"), 0);
 			g_Player.SetCurrentMediaInPlaylist(nNowPlaying);
 		}
 		else

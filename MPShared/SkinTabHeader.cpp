@@ -31,7 +31,7 @@ CSkinTabHeader::CSkinTabHeader()
 
 CSkinTabHeader::~CSkinTabHeader()
 {
-	g_Profile.WriteProfileInt((tstring(_T("TabActiveBt_")) + m_strName).c_str(), m_nActiveButton);
+	g_Profile.WriteInt((tstring(_T("TabActiveBt_")) + m_strName).c_str(), m_nActiveButton);
 }
 
 
@@ -121,7 +121,7 @@ void CSkinTabHeader::OnCreate()
 
 	m_font.OnCreate(m_pSkin);
 
-	m_nActiveButton = g_Profile.GetProfileInt((tstring(_T("TabActiveBt_")) + m_strName).c_str(), m_nActiveButton);
+	m_nActiveButton = g_Profile.GetInt((tstring(_T("TabActiveBt_")) + m_strName).c_str(), m_nActiveButton);
 	if (m_nActiveButton < 0 || m_nActiveButton >= (int)m_vButtons.size())
 		m_nActiveButton = 0;
 

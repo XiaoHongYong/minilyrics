@@ -837,34 +837,34 @@ int CUIObject::GetAnimationDuration() const
 	return m_pSkin->GetAnimationDuration();
 }
 
-UINT CUIObject::GetProfileInt(LPCTSTR szKeyName, int nDefault)
+UINT CUIObject::GetInt(LPCTSTR szKeyName, int nDefault)
 {
-	return g_Profile.GetProfileInt(m_pSkin->GetSkinFactory()->GetSkinName(),
+	return g_Profile.GetInt(m_pSkin->GetSkinFactory()->GetSkinName(),
 		GetProfileKeyName(szKeyName).c_str(), 
 		nDefault);
 }
 
-tstring CUIObject::GetProfileString(LPCTSTR szKeyName, LPCTSTR szDefault)
+tstring CUIObject::GetString(LPCTSTR szKeyName, LPCTSTR szDefault)
 {
 	tstring		strValue;
 
-	strValue = g_Profile.GetProfileString(m_pSkin->GetSkinFactory()->GetSkinName(),
+	strValue = g_Profile.GetString(m_pSkin->GetSkinFactory()->GetSkinName(),
 		GetProfileKeyName(szKeyName).c_str(),
 		szDefault);
 
 	return strValue;
 }
 
-void CUIObject::WriteProfileInt(LPCTSTR szKeyName, int nValue)
+void CUIObject::WriteInt(LPCTSTR szKeyName, int nValue)
 {
-	g_Profile.WriteProfileInt(m_pSkin->GetSkinFactory()->GetSkinName(),
+	g_Profile.WriteInt(m_pSkin->GetSkinFactory()->GetSkinName(),
 		GetProfileKeyName(szKeyName).c_str(), 
 		nValue);
 }
 
-void CUIObject::WriteProfileString(LPCTSTR szKeyName, LPCTSTR szValue)
+void CUIObject::WriteString(LPCTSTR szKeyName, LPCTSTR szValue)
 {
-	g_Profile.WriteProfileString(m_pSkin->GetSkinFactory()->GetSkinName(),
+	g_Profile.WriteString(m_pSkin->GetSkinFactory()->GetSkinName(),
 		GetProfileKeyName(szKeyName).c_str(), 
 		szValue);
 }

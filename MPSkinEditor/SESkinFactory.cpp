@@ -63,7 +63,7 @@ void CSESkinFactory::Quit()
 		strOpenedSkinWnds += pSkin->GetSkinWndName();
 	}
 
-	g_Profile.WriteProfileString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
+	g_Profile.WriteString(_T("LatestOpenedSkinWnds"), strOpenedSkinWnds.c_str());
 
 	Close();
 }

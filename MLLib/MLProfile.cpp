@@ -55,7 +55,7 @@ CMLProfile::~CMLProfile()
 
 bool CMLProfile::InetIsUseProxy()
 {
-	return (g_Profile.GetProfileInt(_T("ProxyType"), HTTP_PROXY_NONE) != HTTP_PROXY_NONE);
+	return (g_Profile.GetInt(_T("ProxyType"), HTTP_PROXY_NONE) != HTTP_PROXY_NONE);
 }
 
 bool CMLProfile::InetGetProxy(TCHAR szServer[], int &nPort)
@@ -66,21 +66,21 @@ bool CMLProfile::InetGetProxy(TCHAR szServer[], int &nPort)
 	nPort = __HTTP_PORT;
 
 	// 代理类型？
-	nHttpProxyType = g_Profile.GetProfileInt(_T("ProxyType"), HTTP_PROXY_NONE);
+	nHttpProxyType = g_Profile.GetInt(_T("ProxyType"), HTTP_PROXY_NONE);
 	if (nHttpProxyType == HTTP_PROXY_OURS)
 	{
 		// 我们自己的代理设置
 		// 代理服务器地址
-		nPort = g_Profile.GetProfileInt(_T("ProxyPort"), __HTTP_PORT);
+		nPort = g_Profile.GetInt(_T("ProxyPort"), __HTTP_PORT);
 		if (nPort <= 0)
 			nPort = __HTTP_PORT;
-		_tcscpy_safe(szServer, MAX_PATH, g_Profile.GetProfileString(_T("ProxyServer"), _T("")));
+		_tcscpy_safe(szServer, MAX_PATH, g_Profile.GetString(_T("ProxyServer"), _T("")));
 		if (IsEmptyString(szServer))
 		{
 			//
 			// 可能是minilyrics 旧的proxy 设置，分析并读取
 			//
-			AnalysisProxySetting(g_Profile.GetProfileString(_T("Proxy"), _T("")),
+			AnalysisProxySetting(g_Profile.GetString(_T("Proxy"), _T("")),
 				szServer, 128, nPort);
 		}
 
@@ -94,7 +94,7 @@ bool CMLProfile::InetGetProxy(TCHAR szServer[], int &nPort)
 LPCTSTR CMLProfile::InetGetBase64ProxyUserPass()
 {
 	// return _T("");
-	return g_Profile.GetProfileString(_T("Base64ProxyUserPass"), _T(""));
+	return g_Profile.GetString(_T("Base64ProxyUserPass"), _T(""));
 }
 
 
@@ -105,10 +105,10 @@ BOOL CMLProfile::WriteDir(LPCTSTR szSectName, LPCTSTR szKeyName, LPCTSTR szDir)
 		// Lyrics folder is the same drive of Current working folder
 		tstring		str = szDir;
 		str[0] = CHAR_WORKING_FOLDER;
-		return g_Profile.WriteProfileString(szSectName, szKeyName, str.c_str());
+		return g_Profile.WriteString(szSectName, szKeyName, str.c_str());
 	}
 	else
-		return g_Profile.WriteProfileString(szSectName, szKeyName, szDir);
+		return g_Profile.WriteString(szSectName, szKeyName, szDir);
 }
 
 
@@ -116,7 +116,7 @@ tstring CMLProfile::GetDir(LPCTSTR szSectName, LPCTSTR szKeyName, LPCTSTR szDefD
 {
 	tstring		strDir;
 
-	strDir = g_Profile.GetProfileString(szSectName, szKeyName, szDefDir);
+	strDir = g_Profile.GetString(szSectName, szKeyName, szDefDir);
 
 	if (strDir.size() >= 2 && strDir[0] == CHAR_WORKING_FOLDER && strDir[1] == ':')
 		strDir[0] = GetAppResourceDir()[0];

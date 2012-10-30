@@ -357,12 +357,12 @@ bool CPageLyricsTool::OnCommand(int nId)
 
 			CFolderDialog	dlg;
 			tstring			strFolder;
-			dlg.SetInitFolder(g_Profile.GetProfileString(_T("LastMediaDir"), _T("")));
+			dlg.SetInitFolder(g_Profile.GetString(_T("LastMediaDir"), _T("")));
 			if (dlg.DoBrowse(m_pSkin) == IDOK)
 			{
 				strFolder = dlg.GetFolder();
 
-				g_Profile.WriteProfileString(_T("LastMediaDir"), strFolder.c_str());
+				g_Profile.WriteString(_T("LastMediaDir"), strFolder.c_str());
 
 				CFileMediaSource *pFileMediaLib = (CFileMediaSource *)m_pMediaLib;
 				pFileMediaLib->AddFolder(strFolder.c_str(), true);

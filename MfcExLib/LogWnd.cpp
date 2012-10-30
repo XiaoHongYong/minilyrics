@@ -205,7 +205,7 @@ void CLogWnd::OnOpen()
 	int			nLen;
 	char		szFile[MAX_PATH];
 
-	g_Profile.GetProfileString("DebugTracer", "OpenLogFile", "", szFile, MAX_PATH);
+	g_Profile.GetString("DebugTracer", "OpenLogFile", "", szFile, MAX_PATH);
 
 	CFileDialog		dlg(TRUE, "Log Files(*.txt)|*.txt|All Files (*.*)|*.*||", szFile);
 	if (dlg.DoModal() != IDOK)
@@ -218,7 +218,7 @@ void CLogWnd::OnOpen()
 		return;
 	}
 
-	g_Profile.WriteProfileString("DebugTracer", "OpenLogFile", dlg.GetPathName());
+	g_Profile.WriteString("DebugTracer", "OpenLogFile", dlg.GetPathName());
 
 	// fseek(fp, 0, SEEK_END);
 	// nLen = ftell(fp);
@@ -479,15 +479,15 @@ void CLogWnd::Init()
 {
 	SetExtendedStyle(GetExtendedStyle() | LVS_EX_GRIDLINES | LVS_EX_FULLROWSELECT);
 
-	m_nShowLogLvl = g_Profile.GetProfileInt(_T("LogWnd"), _T("ShowLogLevel"), LOG_LVL_DEBUG);
-	m_bScroll = g_Profile.GetProfileInt(_T("LogWnd"), _T("AutoScroll"), TRUE);
-	m_bMaxLogLimit = g_Profile.GetProfileInt(_T("LogWnd"), _T("MaxLogLimit"), TRUE);
+	m_nShowLogLvl = g_Profile.GetInt(_T("LogWnd"), _T("ShowLogLevel"), LOG_LVL_DEBUG);
+	m_bScroll = g_Profile.GetInt(_T("LogWnd"), _T("AutoScroll"), TRUE);
+	m_bMaxLogLimit = g_Profile.GetInt(_T("LogWnd"), _T("MaxLogLimit"), TRUE);
 
 	int		nIndex = 0;
 	
 	for (int i = 0; _COL_LIST_CTRL[i].szName != NULL; i++)
 	{
-		_COL_LIST_CTRL[i].bShow = g_Profile.GetProfileInt(_T("LogWnd"), _COL_LIST_CTRL[i].szName, TRUE);
+		_COL_LIST_CTRL[i].bShow = g_Profile.GetInt(_T("LogWnd"), _COL_LIST_CTRL[i].szName, TRUE);
 		_COL_LIST_CTRL[i].nIndex = nIndex;
 		if (_COL_LIST_CTRL[i].bShow)
 		{

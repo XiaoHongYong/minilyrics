@@ -207,7 +207,7 @@ static void AddSubPropNode(SXNode *pNodeParent, LPCTSTR szSect, LPCTSTR szSubPro
 
 	for (int i = 0; i < nCount; i++)
 	{
-		szContent = g_Profile.GetProfileString(szSect, szNames[i], _T(""));
+		szContent = g_Profile.GetString(szSect, szNames[i], _T(""));
 		if (!szContent || IsEmptyString(szContent))
 			continue;
 

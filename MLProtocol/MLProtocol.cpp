@@ -1008,7 +1008,7 @@ int CMLProtocol::WriteXMLMsg(MLMsgType msgType, CCharBuffer *pMsgBuff)
 	if (msgType == MT_HTTP_POST)
 	{
 #ifdef _DEBUG
-		if (g_Profile.GetProfileInt(_T("PrintMLSend"), FALSE))
+		if (g_Profile.GetInt(_T("PrintMLSend"), FALSE))
 			DBGLOGDUMPS(pMsgBuff->data(), pMsgBuff->size());
 #endif
 		m_httpReqWriteXmlCache.SetNetFile(m_pNetFile);
