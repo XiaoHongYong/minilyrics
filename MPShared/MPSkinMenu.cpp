@@ -69,7 +69,7 @@ int EncodingIdToCmd(CHAR_ENCODING nEncodingId)
 MenuItemCheck _menuItemsCheck[] = 
 {
 #ifdef _MPLAYER
-	{ IDC_SHUFFLE, SZ_SECT_PLAYER, _T("shuffle"), SZ_TRUE, NULL, },
+	{ IDC_SHUFFLE, SZ_SECT_PLAYER, _T("shuffle"), _T("1"), },
 #endif
 	{ IDC_SETTOPMOST, NULL, NULL, NULL, },
 	{ IDC_ANTIAlIAS, SZ_SECT_UI, _T("Antialias"), _T("1"), },
@@ -158,7 +158,7 @@ static UINT GetCharEncodingCheckMenuID()
 MenuRadioGroup _menuRadioGroup[] = 
 {
 #ifdef _MPLAYER
-	{ SZ_SECT_PLAYER, _T("repeat"), _MenuRadioLoop, NULL, 0, 0 },
+//	{ SZ_SECT_PLAYER, _T("repeat"), _MenuRadioLoop, NULL, 0, 0 },
 #endif
 	{ 0, 0, _MenuRadioLyrDrawOpt, },
 	{ 0, 0, _MenuRadioCharEncoding, },

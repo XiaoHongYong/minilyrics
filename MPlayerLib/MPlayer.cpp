@@ -22,7 +22,7 @@
 #include "MDRow.h"
 #include "MDWave.h"
 #include "MDLibmad.h"
-// #include "VISDemo.h"
+#include "VISDemo.h"
 // #include "DspDemo.h"
 #include "MORaw.h"
 #include "../MPlayer-Plugins/Dsp_SuperEQ/dsp_supereq.h"
@@ -320,13 +320,16 @@ MLRESULT CMPluginManagerAgent::DetectPlugins()
 #ifndef _MAC_OSX
 	IMediaDecode	*pDecoder;
 
-	pDecoder = new CMDWmpCore;
+#ifdef _MPLAYER
+	IMPlayer *player = NULL;
+	CMPlayer::GetInstance(&player);
+	IVis *pVis = new CVISDemo();
+	pVis->Init(player);
+	player->RegisterVis(pVis);
+
+	pDecoder = new CMDLibmad;
 	OnInternalDecoderRegister(pDecoder);
 	pDecoder->Release();
-
-//	pDecoder = new CMDLibmad;
-//	OnInternalDecoderRegister(pDecoder);
-//	pDecoder->Release();
 
 	pDecoder = new CMDWave;
 	OnInternalDecoderRegister(pDecoder);
@@ -335,6 +338,12 @@ MLRESULT CMPluginManagerAgent::DetectPlugins()
 	pDecoder = new CMDRow;
 	OnInternalDecoderRegister(pDecoder);
 	pDecoder->Release();
+#else
+	pDecoder = new CMDWmpCore;
+	OnInternalDecoderRegister(pDecoder);
+	pDecoder->Release();
+#endif
+
 #endif // #ifndef _MAC_OSX
 
 	return ERR_OK;
@@ -368,23 +377,25 @@ MLRESULT CMPluginManagerAgent::NewDecoder(IMediaInput *pInput, IMediaDecode **pp
 {
 	ASSERT(pInput);
 
+	*ppDecoder = NULL;
+
 #ifndef _MAC_OSX
 	LPCXSTR szMediaUrl = pInput->GetSource();
 
+#ifdef _MPLAYER
 	if (FileIsExtSame(szMediaUrl, _T(".mp3")))
-		*ppDecoder = new CMDWmpCore;
-		// *ppDecoder = new CMDLibmad;
+		*ppDecoder = new CMDLibmad;
 	else if (FileIsExtSame(szMediaUrl, _T(".wav")))
 		*ppDecoder = new CMDWave;
 	else if (FileIsExtSame(szMediaUrl, _T(".raw")))
 		*ppDecoder = new CMDRow;
 	else if (m_pluginMgr)
 		return m_pluginMgr->NewDecoder(pInput, ppDecoder);
-	else
-	{
-		*ppDecoder = NULL;
-		return ERR_NOT_SUPPORT_FILE_FORMAT;
-	}
+#else
+	if (FileIsExtSame(szMediaUrl, _T(".mp3")))
+		*ppDecoder = new CMDLibmad;
+#endif
+
 #endif // #ifndef _MAC_OSX
 
 	if (*ppDecoder)
@@ -418,8 +429,10 @@ MLRESULT CMPluginManagerAgent::GetActiveDSP(IDSP **ppDSP)
 	
 	if (mlRes == ERR_NOT_SUPPORT)
 	{
-		// *ppDSP = CDspSuperEQ::GetInstance();
-		// return ERR_OK;
+#ifdef _MPLAYER
+		*ppDSP = CDspSuperEQ::GetInstance();
+		return ERR_OK;
+#endif
 
 		//*ppDSP = new CDspDemo;
 		//(*ppDSP)->AddRef();
@@ -450,8 +463,14 @@ CMPlayer::CMPlayer()
 	m_state = PS_STOPED;
 
 #ifndef _MAC_OSX
-	m_pMDAgent = new CMDWmpCore;//CMDAgent;
+
+#ifdef _MPLAYER
+	m_pMDAgent = new CMDAgent();
+#else
+	m_pMDAgent = new CMDWmpCore;
+#endif
 	m_pMDAgent->Init(this);
+
 #endif // #ifndef _MAC_OSX
 
 	m_pMOAgent = new CMOAgent;
@@ -538,6 +557,20 @@ MLRESULT CMPlayer::SetPluginManager(IMPluginManager *pPluginMgr)
 	if (m_pluginMgrAgent.m_pluginMgr)
 		m_pluginMgrAgent.m_pluginMgr.Release();
 
+	// Stop and unregister all Vis
+	StopVis();
+
+	m_mutexVisdataAccess.Acquire();
+	V_VIS::iterator	it, itEnd;
+	itEnd = m_vVis.end();
+	for (it = m_vVis.begin(); it != m_vVis.end(); ++it)
+	{
+		IVis	*pVis = *it;
+		pVis->Quit();
+		pVis->Release();
+	}
+	m_mutexVisdataAccess.Release();
+
 	m_pluginMgrAgent.m_pluginMgr = pPluginMgr;
 	m_pluginMgrAgent.DetectPlugins();
 
@@ -554,20 +587,6 @@ MLRESULT CMPlayer::SetPluginManager(IMPluginManager *pPluginMgr)
 	//
 	// Set Vis
 	//
-
-	// Stop and unregister all Vis
-	StopVis();
-
-	m_mutexVisdataAccess.Acquire();
-	V_VIS::iterator	it, itEnd;
-	itEnd = m_vVis.end();
-	for (it = m_vVis.begin(); it != m_vVis.end(); ++it)
-	{
-		IVis	*pVis = *it;
-		pVis->Quit();
-		pVis->Release();
-	}
-	m_mutexVisdataAccess.Release();
 
 	// Register new vis
 	CVector		vVis;

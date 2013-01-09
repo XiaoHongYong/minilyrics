@@ -47,9 +47,9 @@ HDC memDC;		// memory device context
 HBITMAP	memBM,  // memory bitmap (for memDC)
 		oldBM;  // old bitmap (from memDC)
 
-	int		width = 388,height = 350;
+	int		width = 488,height = 256 * 2 + 30;
 
-	int	nMode = 3;
+	int	nMode = 4;
 
 int CVISDemo::Render(VisParam *visParam)
 {
@@ -57,6 +57,8 @@ int CVISDemo::Render(VisParam *visParam)
 		return Render2(visParam);
 	else if (nMode == 3)
 		return Render3(visParam);
+	else if (nMode == 4)
+		return Render4(visParam);
 	int x, y;
 	// clear background
 	Rectangle(memDC,0,0,256,32);
@@ -103,6 +105,38 @@ int CVISDemo::Render2(VisParam *visParam)
 		SetLastError(0);
 		HDC hdc = GetDC(m_hWnd);
 		BitBlt(hdc,0,0,288,256,memDC,0,0,SRCCOPY);
+		ReleaseDC(m_hWnd,hdc);
+	}
+	return 0;
+}
+
+int CVISDemo::Render4(VisParam *visParam)
+{
+	int y;
+	static int pos = 0;
+	// clear background
+	//if (pos == 0)
+	//	Rectangle(memDC,0,0,width,height);
+	pos++;
+	if (pos > width)
+		pos = 0;
+
+	y = 0;
+	for (int i = 0; i < visParam->nChannels; i++)
+	{
+		for (int y1 = 0; y1 < 288; y1 ++)
+		{
+			byte b = visParam->spectrumData[i][y1] * 2;
+			SetPixel(memDC, pos, y + y1, RGB(b, b, b));
+			// MoveToEx(memDC,x,(y*256+256)>>(visParam->nChannels-1),NULL);
+			// LineTo(memDC,x,(y*256 + 256 - visParam->spectrumData[y][x])>>(visParam->nChannels-1));
+		}
+		y += 257;
+	}
+	{ // copy doublebuffer to window
+		SetLastError(0);
+		HDC hdc = GetDC(m_hWnd);
+		BitBlt(hdc,0,0,width,height,memDC,0,0,SRCCOPY);
 		ReleaseDC(m_hWnd,hdc);
 	}
 	return 0;
@@ -161,7 +195,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 		return 0;
 	case WM_LBUTTONDOWN:
 		nMode++;
-		if (nMode > 3)
+		if (nMode > 4)
 			nMode = 1;
 		return 0;
 //	case WM_WINDOWPOSCHANGING:

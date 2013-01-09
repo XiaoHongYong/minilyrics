@@ -85,6 +85,8 @@ public:
 		{ return IsFlagSet(m_playerInfo.startupFlags, feature); }
 	
 	void SendMessage(MessageToPlayer message, LPVOID param = NULL, size_t sizeParam = 0);
+#else
+	void SendMessage(MessageToPlayer message, LPVOID param = NULL, size_t sizeParam = 0) { }
 #endif // #ifndef _MPLAYER
 
 	PLAYER_TYPE GetPlayerType() const { return m_PlayerType; }

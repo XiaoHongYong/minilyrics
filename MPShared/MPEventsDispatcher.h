@@ -136,6 +136,8 @@ protected:
 class CMPEventsDispatcher : public CEventsDispatcher
 {
 public:
+	CMPEventsDispatcher();
+
 	virtual void Quit();
 
 	virtual void RegisterHandler(EventType eventType, IEventHandler *pHandler);

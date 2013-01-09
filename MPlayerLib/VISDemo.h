@@ -25,6 +25,7 @@ public:
 	virtual int Render(VisParam *visParam);
 	int Render2(VisParam *visParam);
 	int Render3(VisParam *visParam);
+	int Render4(VisParam *visParam);
 
 protected:
 	bool CreateWnd();

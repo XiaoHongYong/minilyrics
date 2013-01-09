@@ -34,10 +34,10 @@ public:
 	virtual bool IsIconic();
 	virtual void Topmost(bool bTopmost);
 	virtual void Minimize();
+#endif
 	virtual void Activate();
 
 	HWND GetRootParentWnd();
-#endif
 
 protected:
 	virtual LRESULT WndProc(UINT message, WPARAM wParam, LPARAM lParam);

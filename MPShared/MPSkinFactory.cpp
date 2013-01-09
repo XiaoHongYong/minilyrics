@@ -171,26 +171,26 @@ CSkinMenu *CMPSkinFactory::LoadPresetMenu(CSkinWnd *pWnd, LPCTSTR szMenu)
 		pSkinMenu->LoadMenu(IDM_IPOD_LYR_DOWNLOADER);
 	}
 #ifdef _MPLAYER
-	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
+/*	else if (_tcsicmp(szMenu, _T("PlaylistMenu")) == 0)
 	{
 		CMPSkinMenu	*pMenu = new CMPSkinMenu();
 		pSkinMenu = pMenu;
 		pMenu->AddUICheckStatusIf(pWnd);
 		pSkinMenu->LoadPopupMenu(IDM_MENU, 2);
-	}
+	}*/
 	else if (_tcsicmp(szMenu, _T("MediaLibMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu(this);
+		pSkinMenu = new CSkinMenu();
 		pSkinMenu->LoadPopupMenu(IDM_PLAYER_MENU, 1);
 	}
 	else if (_tcsicmp(szMenu, _T("MediaGuideTreeMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu(this);
+		pSkinMenu = new CSkinMenu();
 		pSkinMenu->LoadPopupMenu(IDM_PLAYER_MENU, 1);
 	}
 	else if (_tcsicmp(szMenu, _T("MediaGuideSongListMenu")) == 0)
 	{
-		pSkinMenu = new CSkinMenu(this);
+		pSkinMenu = new CSkinMenu();
 		pSkinMenu->LoadPopupMenu(IDM_PLAYER_MENU, 1);
 	}
 #endif

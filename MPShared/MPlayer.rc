@@ -55,7 +55,7 @@ END
 
 IDR_MENU_RATE MENU 
 BEGIN
-    POPUP "Rate"
+    POPUP "UNTRANS_Rate"
     BEGIN
         MENUITEM "Rate These Lyrics: 1 (Low)",  IDC_RATE_LYR_1
         MENUITEM "Rate These Lyrics: 2",        IDC_RATE_LYR_2
@@ -67,7 +67,7 @@ END
 
 IDR_MENU_ID MENU 
 BEGIN
-    POPUP "Skin:)"
+    POPUP "UNTRANS_Skin:)"
     BEGIN
         MENUITEM "IDC_SKIN_0",                  IDC_SKIN_0
         MENUITEM "IDC_SKIN_1",                  IDC_SKIN_1
@@ -92,30 +92,10 @@ BEGIN
         MENUITEM "IDC_SKIN_20",                 IDC_SKIN_20
         MENUITEM "IDC_SKIN_MAX",                IDC_SKIN_MAX
     END
-    POPUP "Theme:)"
+    POPUP "UNTRANS_Remain"
     BEGIN
-        MENUITEM "THEME0",                      IDC_THEME0
-        MENUITEM "THEME1",                      IDC_THEME1
-        MENUITEM "THEME1",                      IDC_THEME2
-        MENUITEM "THEME1",                      IDC_THEME3
-        MENUITEM "THEME1",                      IDC_THEME4
-        MENUITEM "THEME1",                      IDC_THEME5
-        MENUITEM "THEME1",                      IDC_THEME6
-        MENUITEM "THEME1",                      IDC_THEME7
-        MENUITEM "THEME1",                      IDC_THEME8
-        MENUITEM "THEME1",                      IDC_THEME9
-        MENUITEM "THEME1",                      IDC_THEME10
-        MENUITEM "THEME1",                      IDC_THEME11
-        MENUITEM "THEME1",                      IDC_THEME12
-        MENUITEM "THEME1",                      IDC_THEME13
-        MENUITEM "THEME1",                      IDC_THEME14
-        MENUITEM "THEME1",                      IDC_THEME15
-        MENUITEM "THEME1",                      IDC_THEME16
-        MENUITEM "THEME1",                      IDC_THEME17
-        MENUITEM "THEME1",                      IDC_THEME18
-        MENUITEM "THEME1",                      IDC_THEME19
-        MENUITEM "THEME1",                      IDC_THEME20
-        MENUITEM "THEME1",                      IDC_THEME21
+        MENUITEM "Play",                        IDC_PLAY
+        MENUITEM "Pause",                       IDC_PAUSE
     END
 END
 

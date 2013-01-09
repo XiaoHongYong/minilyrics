@@ -249,6 +249,7 @@ void CMPSkinMainWnd::Minimize()
 	if (IsToolWindow())
 		ShowWindow(SW_HIDE);
 }
+#endif
 
 void CMPSkinMainWnd::Activate()
 {
@@ -276,4 +277,3 @@ HWND CMPSkinMainWnd::GetRootParentWnd()
 
 	return hParent;
 }
-#endif

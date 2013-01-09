@@ -24,11 +24,21 @@ public:
 
 	virtual void Process(IFBuffer *pBuf, int nBps, int nChannels, int nSampleRate);
 
+	bool CreateWnd();
+	virtual int Render(VisParam *visParam);
+	int Render2(VisParam *visParam);
+	int Render3(VisParam *visParam);
+	int Render4(VisParam *visParam);
+	void ThreadVis();
+
 protected:
 	int						m_nLastSRate;
 	int						m_nLastChannel;
 	int						m_nLastBps;
 	CMPAutoPtr<IMPlayer>	m_pPlayer;
+
+	HWND			m_hWnd;
+
 };
 
 #endif

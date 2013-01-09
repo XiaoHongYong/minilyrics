@@ -241,6 +241,13 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 
 //////////////////////////////////////////////////////////////////////////
 
+CMPEventsDispatcher::CMPEventsDispatcher()
+{
+#ifdef _MPLAYER
+	m_pVisAdapter = NULL;
+#endif
+}
+
 void CMPEventsDispatcher::Quit()
 {
 	CEventsDispatcher::Quit();

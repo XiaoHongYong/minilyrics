@@ -167,9 +167,11 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		}
 		break;
 #ifdef _WIN32_DESKTOP
+#ifndef _MPLAYER
 	case CMD_IPOD_LYRICS_DOWNLOADER:
 		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
 		break;
+#endif
 
 	case CMD_ANTIAlIAS:
 		{
