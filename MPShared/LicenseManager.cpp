@@ -104,8 +104,7 @@ void CLicenseManager::Init()
 		return;
 
 	m_bOnlineVerified = Tobool(g_Profile.EncryptGetInt(SZ_ONLINE_VERIFYIED, false));
-	if (m_bOnlineVerified)
-		m_licenseStatus = (LicenseStatus)g_Profile.EncryptGetInt(SZ_LICENSE_STATUS, LS_ACTIVE);
+	m_licenseStatus = (LicenseStatus)g_Profile.EncryptGetInt(SZ_LICENSE_STATUS, LS_ACTIVE);
 }
 
 void CLicenseManager::GetLicenseInfo(LicenseInfo &info)

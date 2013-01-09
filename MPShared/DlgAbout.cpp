@@ -332,7 +332,7 @@ public:
 
 		SetUIObjectText(_T("CID_ACT_NOTICE"), LicenseStatusToStr(licenseInfo).c_str());
 		bool bActivateNotice = !licenseInfo.bOnlineVerified || licenseInfo.licenseStatus != LS_ACTIVE;
-		SetUIObjectVisible(_T("CID_ACT_NOTICE"), bActivateNotice, false);
+		SetUIObjectVisible(_T("CID_ACT_NOTICE"), licenseInfo.licenseStatus != LS_ACTIVE, false);
 		SetUIObjectVisible(_T("CID_ENTER_CODE"), bActivateNotice, false);
 	}
 
