@@ -92,7 +92,7 @@ CMPHotkey::~CMPHotkey()
 
 void CMPHotkey::Init()
 {
-	m_bGlobalHotkeyEnabled = g_Profile.GetBool(_T("EnableGlobalHotkey"), true);
+	m_bGlobalHotkeyEnabled = g_Profile.GetBool(_T("EnableGlobalHotkey"), false);
 
 	if (LoadSettings() != ERR_OK)
 	{

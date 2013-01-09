@@ -669,7 +669,7 @@ class CPfItemBoolEnableGlobalHotkey : public CPfItemBool
 public:
 	CPfItemBoolEnableGlobalHotkey()
 		: CPfItemBool(RemovePrefixOfAcckey(ConnectToLocalStr(_TLM("Shortcut"), _TLM("&Enable Global Hotkeys")).c_str()).c_str(),
-			ET_NULL, SZ_APP_NAME, _T("EnableGlobalHotkey"), true)
+			ET_NULL, SZ_APP_NAME, _T("EnableGlobalHotkey"), false)
 	{
 	}
 
