@@ -25,13 +25,13 @@ LPCSTR strchr_ntimes(LPCSTR szStr, int nTimes)
 	return szStr;
 }
 
-static void HMMCopyTabEndText(LPCSTR szText, CHAR szBuff[], int nBuffSize)
+static void HMMCopyTabEndText(LPCSTR szText, tstring &strOut)
 {
-	int		i;
-	for (i = 0; szText[i] != '\0' && szText[i] !='\t' && i < nBuffSize; i++)
-		szBuff[i] =  szText[i];
+	int		i = 0;
+	while (szText[i] != '\0' && szText[i] !='\t')
+		 i++;
 
-	szBuff[i] = '\0';
+	UTF8ToTString(szText, i, strOut);
 }
 
 HWND GetPlayerWindow()
@@ -161,53 +161,42 @@ bool CPlayerService::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 	case IPC_TRACK_CHANGED_NOTIFICATION:
 		{
 			str = (LPCSTR)pcds->lpData;
-			char		szSrcMedia[MAX_PATH];
-			char		szArtist[MAX_PATH];
-			char		szAlbum[MAX_PATH];
-			char		szTitle[MAX_PATH];
+			tstring		strSrcMedia, strArtist, strAlbum, strTitle;
 
 			nPos = 0;
 
 			// title
 			if (str)
-				HMMCopyTabEndText(str, szTitle, CountOf(szTitle));
-			else
-				EmptyStr(szTitle);
+				HMMCopyTabEndText(str, strTitle);
 
 			// artist
 			if (str)
 				str = strchr_ntimes(str, POS_AR);
 			if (str)
-				HMMCopyTabEndText(str, szArtist, CountOf(szArtist));
-			else
-				EmptyStr(szArtist);
+				HMMCopyTabEndText(str, strArtist);
 			nPos = POS_AR;
 
 			// album
 			if (str)
 				str = strchr_ntimes(str, POS_AL - nPos);
 			if (str)
-				HMMCopyTabEndText(str, szAlbum, CountOf(szAlbum));
-			else
-				EmptyStr(szAlbum);
+				HMMCopyTabEndText(str, strAlbum);
 			nPos = POS_AL;
 
 			// media
 			if (str)
 				str = strchr_ntimes(str, POS_URL - nPos);
 			if (str)
-				HMMCopyTabEndText(str, szSrcMedia, CountOf(szSrcMedia));
-			else
-				EmptyStr(szSrcMedia);
+				HMMCopyTabEndText(str, strSrcMedia);
 
 			// Is changed?
-			if (strcmp(m_strSrcMedia.c_str(), szSrcMedia) == 0)
+			if (_tcscmp(m_strSrcMedia.c_str(), strSrcMedia.c_str()) == 0)
 				break;
-			m_strSrcMedia = szSrcMedia;
+			m_strSrcMedia = strSrcMedia;
 
 			unsigned long nMediaLength = ::SendMessage(m_hWndPlayer, WM_HMM_IPC, (WPARAM)0, IPC_GET_DURATION) * 1000;
 
-			g_MLService.OnMediaInfoChanged(szSrcMedia, szArtist, szAlbum, szTitle, nMediaLength);
+			g_MLService.OnMediaInfoChanged(strSrcMedia.c_str(), strArtist.c_str(), strAlbum.c_str(), strTitle.c_str(), nMediaLength);
 		}
 		break;
 	case IPC_SHUTDOWN_NOTIFICATION:

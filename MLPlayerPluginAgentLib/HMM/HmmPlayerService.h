@@ -35,7 +35,7 @@ protected:
 	void UpdatePlayerState();
 
 protected:
-	string			m_strSrcMedia;
+	tstring			m_strSrcMedia;
 	DWORD			m_dwTimeBeg;
 	HWND			m_hWndPlayer;
 	PLAYER_STATE	m_playerState, m_playerStateOld;
