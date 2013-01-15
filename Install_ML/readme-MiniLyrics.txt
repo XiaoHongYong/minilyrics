@@ -1,3 +1,8 @@
+MiniLyrics 7.5.22
+Fixed: Support Helium Music Manager 9
+Fixed: Disable MiniLyrics global hotkey by default.
+Fixed: Support activate MiniLyrics without internet connections.
+
 MiniLyrics 7.5.21
 New: Add glocal default lyrics encoding settings in preference advanced page.
 Fixed: JRiver Media Center 18 support.
