@@ -71,6 +71,8 @@ end
 separator
 item:40122:Dis&play Options...:
 separator
+item:1007:Mouse &Click Through:
+separator
 item:40118:&Automatic:
 item:40119:Norma&l:
 item:40120:&Fade in Lyrics:
@@ -145,6 +147,8 @@ item:40146:INSERT_SKIN_POS:
 end
 popup:Display &Options
 item:40122:Dis&play Options...:
+separator
+item:1007:Mouse &Click Through:
 separator
 item:40111:&Vertical Scrolling Style:
 item:40113:&Double Line Style:
@@ -371,6 +375,7 @@ separator
 item:40111:&Vertical Scrolling Style:
 item:40112:S&tatic Text Style:
 separator
+item:1007:Mouse &Click Through:
 item:40001:Always on &Top:Ctrl+T
 end
 popup:S&kins

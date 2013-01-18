@@ -455,7 +455,3 @@ item:40066:$Product$ &Website:
 end
 end
 
-menu:155
-item:1007:Mouse &Click Through:
-end
-
