@@ -612,16 +612,22 @@ void CBaseWnd::SetTransparent(BYTE nAlpha, bool bClickThrough)
 {
 	m_nAlpha = nAlpha;
 	m_bClickThrough = bClickThrough;
+	
 	if (nAlpha == 255)
 	{
-		[m_info->window setOpaque:YES];
+		// [m_info->window setOpaque:YES];
 		[m_info->window setAlphaValue:1.0];
 	}
 	else
 	{
-		[m_info->window setOpaque:NO];
+		// [m_info->window setOpaque:NO];
 		[m_info->window setAlphaValue:(float)nAlpha / 255];
 	}
+
+	// NOTE: [window setIgnoresMouseEvents] or NSResizableWindowMask flag will affect the mouse click through
+	BOOL ignoresMouseEvents = IsClickThrough() ? YES : NO;
+	if ([m_info->window ignoresMouseEvents] != ignoresMouseEvents)
+		[m_info->window setIgnoresMouseEvents: ignoresMouseEvents];
 }
 
 BOOL CBaseWnd::UpdateLayeredWindowUsingMemGraph(CRawGraph *pGraph)

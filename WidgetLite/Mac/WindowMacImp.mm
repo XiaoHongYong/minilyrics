@@ -20,15 +20,14 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle
 				  backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
 	self = [super initWithContentRect:contentRect
-							styleMask:NSBorderlessWindowMask | NSResizableWindowMask
+							styleMask:NSBorderlessWindowMask
 							  backing:NSBackingStoreBuffered
 								defer:NO];
 	if (self != nil) {
-		// [self setAlphaValue:1.0];
+		//[self setAlphaValue:1.0];
 		[self setOpaque:NO];
+		[self setDelegate: self];
 	}
-	
-	[self setDelegate: self];
 	
 	return self;
 }

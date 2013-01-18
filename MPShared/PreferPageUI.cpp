@@ -21,11 +21,9 @@ public:
 
 		AddOptBool(ET_NULL, SZ_SECT_UI, _T("topmost"), true, _T("CID_C_ON_TOP"));
 
-#ifdef _WIN32_DESKTOP
 		// Click though...
 		CStrPrintf str(_T("%d"), CMPlayerAppBase::GetMPSkinFactory()->GetClickThrough());
 		SetUIObjectProperty(_T("CID_C_CLICK_THROUGH"), _T("CurStatus"), str.c_str());
-#endif
 
 		InitCheckButtons();
 
@@ -40,12 +38,10 @@ public:
 			g_Profile.WriteInt(SZ_SECT_UI, _T("topmost"), bValue);
 			CMPlayerAppBase::GetMPSkinFactory()->TopmostAll(bValue);
 		}
-#ifdef _WIN32_DESKTOP
 		else if (nId == GetIDByName(_T("CID_C_CLICK_THROUGH")))
 		{
 			CMPlayerAppBase::GetMPSkinFactory()->SetClickThrough(IsButtonChecked(nId));
 		}
-#endif
 		else if (nId == GetIDByName(_T("CID_SEL_LANGUAGE")))
 		{
 			//

@@ -81,9 +81,9 @@ bool CPlayerPluginInstaller::Init()
 
 		// Get Player path from config file
 		tstring strCfgName = item.szConfigName + tstring(_T("Path"));
-		item.pExtraInfo->strPlayerPath = g_Profile.GetProfileString(strCfgName.c_str(), _T(""));
+		item.pExtraInfo->strPlayerPath = g_Profile.GetString(strCfgName.c_str(), _T(""));
 		if (item.pExtraInfo->strPlayerPath.empty())
-			item.pExtraInfo->strPlayerPath = profile.GetProfileString(strCfgName.c_str(), _T(""));
+			item.pExtraInfo->strPlayerPath = profile.GetString(strCfgName.c_str(), _T(""));
 	}
 
 	return true;
@@ -107,7 +107,7 @@ void CPlayerPluginInstaller::Player::DetectPlayerPath()
 
 void CPlayerPluginInstaller::Player::SavePlayerPath()
 {
-	g_Profile.WriteProfileString((szConfigName + tstring(_T("Path"))).c_str(), pExtraInfo->strPlayerPath.c_str());
+	g_Profile.WriteString((szConfigName + tstring(_T("Path"))).c_str(), pExtraInfo->strPlayerPath.c_str());
 }
 
 void CPlayerPluginInstaller::Player::SetToInstallPlugin(bool bInstall)
@@ -305,7 +305,7 @@ public:
 	{
 		CProfile	file;
 		file.Init(szFile, _T("MiniLyrics"));
-		tstring str = file.GetProfileString(_T("WorkingFolder"), _T(""));
+		tstring str = file.GetString(_T("WorkingFolder"), _T(""));
 		DirStringAddSlash(str);
 		if (_tcsicmp(GetAppResourceDir(), str.c_str()) == 0)
 			return true;

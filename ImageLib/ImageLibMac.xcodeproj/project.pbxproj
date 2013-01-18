@@ -445,6 +445,9 @@
 /* Begin PBXProject section */
 		5FBCC94B147D3B9200D7C64A /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+			};
 			buildConfigurationList = 5FBCC94E147D3B9200D7C64A /* Build configuration list for PBXProject "ImageLibMac" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
@@ -589,6 +592,7 @@
 		5FBCC966147D3B9200D7C64A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -605,6 +609,7 @@
 		5FBCC967147D3B9200D7C64A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = "";
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = _MAC_OSX;

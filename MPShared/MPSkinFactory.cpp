@@ -61,9 +61,7 @@
 CMPSkinFactory::CMPSkinFactory(CSkinApp *pApp, UIObjectIDDefinition uidDefinition[])
 	: CSkinFactory(pApp, uidDefinition)
 {
-#ifdef _WIN32_DESKTOP
 	m_bClickThrough = false;
-#endif
 
 	SetMenuIDByUID(CMD_QUIT, IDC_EXIT);
 }
@@ -384,15 +382,14 @@ void CMPSkinFactory::GetWndDragAutoCloseTo(vector<CBaseWnd *> &vWnd)
 }
 #endif
 
-#ifdef _WIN32_DESKTOP
-
 void CMPSkinFactory::AllUpdateTransparent()
 {
-	if (!IsLayeredWndSupported())
-		return;
-
 	int		nOpaque = g_Profile.GetInt(SZ_SECT_UI, _T("WindowOpaquePercent"), 100);
 	byte	byAlpha = OpaquePercentToAlpha(nOpaque);
+
+#ifdef _WIN32_DESKTOP
+	if (!IsLayeredWndSupported())
+		return;
 
 #ifndef _MPLAYER
 	if (g_wndFloatingLyr.IsValid())
@@ -401,6 +398,7 @@ void CMPSkinFactory::AllUpdateTransparent()
 	if (::GetParent(CMPlayerAppBase::GetMainWnd()->GetHandle()))
 		return;
 #endif
+#endif // #ifdef _WIN32_DESKTOP
 
 	LIST_SKINWNDS::iterator	it, itEnd;
 
@@ -419,6 +417,7 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 	// Save ClickThrough options
 	g_Profile.WriteInt(SZ_SECT_UI, _T("ClickThrough"), m_bClickThrough);
 
+#ifdef _WIN32_DESKTOP
 	if (m_bClickThrough)
 	{
 		// Show MiniLyrics system tray icon.
@@ -431,21 +430,7 @@ void CMPSkinFactory::SetClickThrough(bool bClickThrough)
 			CMPlayerAppBase::GetMainWnd()->GetTrayIcon().UpdateShowIconPos();
 		}
 	}
+#endif // #ifdef _WIN32_DESKTOP
 
 	AllUpdateTransparent();
 }
-#else
-
-void CMPSkinFactory::AllUpdateTransparent()
-{
-}
-
-void CMPSkinFactory::SetClickThrough(bool bClickThrough)
-{
-	m_bClickThrough = bClickThrough;
-	
-	// Save ClickThrough options
-	g_Profile.WriteInt(SZ_SECT_UI, _T("ClickThrough"), m_bClickThrough);
-}
-
-#endif // _WIN32_DESKTOP

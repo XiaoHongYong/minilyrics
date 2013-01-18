@@ -567,11 +567,9 @@ bool CMPSkinWnd::OnCustomCommand(int nId)
 	case CMD_TOPMOST:
 		SettingReverseTopmost();
 		return true;
-#ifdef _WIN32_DESKTOP
 	case CMD_CLICK_THROUGH:
 		SettingReverseClickThrough();
 		return true;
-#endif
 	case CMD_LDS_MULTI_LINE:
 	case CMD_LDS_STATIC_TXT:
 	case CMD_LDS_TWO_LINE:
@@ -723,11 +721,9 @@ void CMPSkinWnd::OnSkinLoaded()
 	if (vHandler.empty())
 		AddCmdHandler(_T("ch_common"));
 
-#ifdef _WIN32_DESKTOP
 	// °ëÍ¸Ã÷Öµ
 	int		nOpaque = SettingGetOpaquePercent();
 	SetTransparent(OpaquePercentToAlpha(nOpaque), SettingGetClickThrough());
-#endif
 
 	CSkinNStatusButton	*pBt;
 
@@ -921,11 +917,9 @@ bool CMPSkinWnd::GetChecked(UINT nID, bool &bChecked)
 	case IDC_SETTOPMOST:
 		bChecked = IsTopmost();
 		break;
-#ifdef _WIN32
 	case IDC_CLICK_THROUGH:
 		bChecked = m_bClickThrough;
 		break;
-#endif
 	default:
 		{
 			LIST_SKINCMDHANDLER::iterator	it, itEnd;

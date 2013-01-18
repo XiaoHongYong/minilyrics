@@ -28,10 +28,6 @@ inline NSRect NSMakeRect(const RECT &rc) {
 }
 
 @interface ViewMacImp : NSView {
-    NSImage *circleImage;
-    NSImage *pentagonImage;
-    BOOL showingPentagon;
-	
 	CBaseWnd		*mBaseWnd;
 }
 

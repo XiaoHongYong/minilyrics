@@ -15,17 +15,11 @@
 - (id)initWithFrame:(NSRect)frame
 {
     self = [super initWithFrame:frame];
-    if (self) {
-		circleImage = [NSImage imageNamed:@"circle"];
-		pentagonImage = [NSImage imageNamed:@"pentagon"];
-    }
     
     return self;
 }
 
 - (void)dealloc {
-    [circleImage release];
-    [pentagonImage release];
     [super dealloc];
 }
 

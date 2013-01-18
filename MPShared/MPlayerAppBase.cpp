@@ -290,10 +290,8 @@ bool CMPlayerAppBase::InitLyricsPlayer()
 	}
 #endif
 
-#ifdef _WIN32_DESKTOP
 	if (g_Profile.GetBool(SZ_SECT_UI, _T("ClickThrough"), false))
 		GetMPSkinFactory()->SetClickThrough(true);
-#endif
 
 #ifdef _MINILYRICS_WIN32
 	g_Player.SendMainWndHandle();
