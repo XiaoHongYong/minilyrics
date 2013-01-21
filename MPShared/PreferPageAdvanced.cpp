@@ -331,7 +331,7 @@ public:
 		AnsiToTString(GetCharEncodingByID(GetDefaultLyricsEncodingSettings()).szDesc,
 			-1, strDesc);
 
-		return strDesc;
+		return _TL(strDesc.c_str());
 	}
 
 	virtual void GetOptions(V_Str &vString, int &nRadio) {
@@ -340,7 +340,7 @@ public:
 		for (int i = 0; i < count; i++)
 		{
 			AnsiToTString(GetCharEncodingByID((CHAR_ENCODING)i).szDesc, -1, strDesc);
-			vString.push_back(strDesc);
+			vString.push_back(_TL(strDesc.c_str()));
 		}
 
 		nRadio = GetDefaultLyricsEncodingSettings();
