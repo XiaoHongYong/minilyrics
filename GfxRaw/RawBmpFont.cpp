@@ -1391,10 +1391,15 @@ bool CRawBmpFont::DrawTextEx(CRawGraph *pGraph, LPRECT lpRect, const MLColor &cl
 		// Multiple line
 		V_Str	vLines;
 		CRect	rc = *lpRect;
-		uFormat &= ~DT_VCENTER;
 
 		SplitToMultiLine(lpRect, szText, nLen, uFormat, vLines);
 
+		if (IsFlagSet(uFormat, DT_VCENTER)) {
+			int height = vLines.size() * (m_prawGlyphSet->GetHeight() + 2) - 2;
+			rc.top = (lpRect->top + lpRect->bottom - height) / 2;
+		}
+
+		uFormat &= ~DT_VCENTER;
 		for (int i = 0; i < (int)vLines.size(); i++)
 		{
 			DrawTextEx(pGraph, &rc, clrText, vLines[i].c_str(), (int)vLines[i].size(), uFormat | DT_SINGLELINE, bDrawAlphaChannel);

@@ -244,7 +244,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		0,
 		_T("Helium Music Manager"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{C60EE1FA-B137-11E1-8346-A7E16088709B}}_is1\\InstallLocation"),
-		_T("Intermedia Software\Helium 9\\"), _T("helium9.exe"),
+		_T("Intermedia Software\\Helium 9\\"), _T("helium9.exe"),
 		NULL,
 		_T("InstHMM"),
 		NULL,
