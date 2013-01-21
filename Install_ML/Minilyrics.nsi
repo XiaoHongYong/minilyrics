@@ -342,6 +342,10 @@ SectionIn 1
   ; WriteRegStr HKLM SOFTWARE\MiniLyrics "ForWa2InstallDir" "$INSTDIR"
   ; Write the uninstall keys for Windows
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayName" "MiniLyrics"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayIcon" "$INSTDIR\uninst-ml.exe"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "DisplayVersion" "${ML_VERSION}"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "Publisher" "Crintsoft"
+  WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "InstallSource" "$EXEDIR\"
   WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\MiniLyrics" "UninstallString" '"$INSTDIR\uninst-ml.exe"'
   WriteUninstaller "$INSTDIR\uninst-ml.exe"
 SectionEnd
