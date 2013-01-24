@@ -918,6 +918,37 @@ void CLrcParser::LRCCheckRowTime()
 			}
 		}
 	}
+
+	CLyricsLines &lyrLines = m_pMLData->GetRawLyrics();
+
+	// If a lyrics line is 0 length, recover to display multiple line at same time.
+	for (int i = 0; i < lyrLines.size(); i++)
+	{
+		LyricsLine *pLine = lyrLines[i];
+		if (pLine->nBegTime != pLine->nEndTime || pLine->vFrags.size() != 1)
+			continue;
+
+		int nextLine = i;
+		for (; nextLine < lyrLines.size(); nextLine++)
+		{
+			LyricsLine *pNext = lyrLines[nextLine];
+			if (pNext->nBegTime == pLine->nBegTime && pNext->nBegTime != pNext->nEndTime)
+			{
+				// Next line is not 0 length.
+				pLine->nEndTime = pNext->nEndTime;
+				pLine->vFrags[0]->nEndTime = pNext->nEndTime;
+				break;
+			}
+
+			if (pNext->nBegTime != pLine->nBegTime)
+			{
+				// Find till next line has different begin time.
+				pLine->nEndTime = pNext->nBegTime;
+				pLine->vFrags[0]->nEndTime = pNext->nBegTime;
+				break;
+			}
+		}
+	}
 }
 
 

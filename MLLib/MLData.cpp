@@ -827,19 +827,17 @@ void CMLData::CheckLyricsLineTime()
 		// 计算在开始段到最后段歌词之间的时间。
 		CalFragTimeBetweenLines(nBegLine, nBegFrag, nEndLine, nEndFrag, nBegTime, nEndTime);
 	}
+
+	// Set time stamp of lyrics line.
 	nLineCount = m_arrLyricsLines.size();
 	for (int i = 0; i < nLineCount; i++)
 	{
-		if (m_arrLyricsLines[i]->nBegTime == -1)
-		{
-			assert(m_arrLyricsLines[i]->vFrags.size() != 0);
-			m_arrLyricsLines[i]->nBegTime = m_arrLyricsLines[i]->vFrags[0]->nBegTime;
-		}
-		if (m_arrLyricsLines[i]->nEndTime == -1)
-		{
-			assert(m_arrLyricsLines[i]->vFrags.size() != 0);
-			m_arrLyricsLines[i]->nEndTime = m_arrLyricsLines[i]->vFrags[m_arrLyricsLines[i]->vFrags.size() - 1]->nEndTime;
-		}
+		LyricsLine *pLine = m_arrLyricsLines[i];
+		assert(pLine->vFrags.size() != 0);
+		if (pLine->nBegTime == -1)
+			pLine->nBegTime = pLine->vFrags[0]->nBegTime;
+		if (pLine->nEndTime == -1)
+			pLine->nEndTime = pLine->vFrags[pLine->vFrags.size() - 1]->nEndTime;
 	}
 }
 
@@ -1060,24 +1058,24 @@ int CMLData::GetCurPlayLine(const CLyricsLines &lyrLines)
 		nLine = 0;
 	
 	// 找到下一行
-	for (; nLine < nLineCount; nLine ++)
+	for (; nLine < nLineCount; nLine++)
 	{
 		LyricsLine *pLyricLine = lyrLines[nLine];
-		assert(pLyricLine);
-
 		if (pLyricLine->nEndTime > GetPlayElapsedTime())
 			break; // ok.
 	}
-	if (nLine == nLineCount)
+//	if (nLine > 0)
+//		nLine--;
+	if (nLine >= nLineCount)
 		nLine = nLineCount - 1;
 
-	for (int i = nLine - 1; i >= 0; i--)
+/*	for (int i = nLine - 1; i >= 0; i--)
 	{
 		if (lyrLines[nLine]->nEndTime != lyrLines[i]->nEndTime)
 		{
 			return i + 1;
 		}
-	}
+	}*/
 
 	assert(nLine != -1);
 	return nLine;

@@ -120,3 +120,19 @@ void CLyricsLines::ClearDrawContextWidth()
 			pLine->vFrags[k]->nDrawWidth = 0;
 	}
 }
+
+int CLyricsLines::GetCountWithSameTimeStamps(int nLine)
+{
+	if (nLine < 0 || nLine >= size())
+		return 0;
+
+	LyricsLine *pLine = at(nLine);
+	for (int i = nLine; i < size(); i++)
+	{
+		LyricsLine *p = at(i);
+		if (pLine->nBegTime != p->nBegTime || pLine->nEndTime != p->nEndTime)
+			return i - nLine;
+	}
+
+	return size() - nLine;
+}

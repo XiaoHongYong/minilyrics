@@ -61,18 +61,20 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	LyricsLine *pLineCur;
 	int				nRowHeight;
 	int				nDeltaTime;
-	int				nRowCur;
 	LyricsLine *pLine;
 
 
 	// get the current playing line
-	nRowCur = m_pMLData->GetCurPlayLine(m_lyrLines);
+	int nRowCur = m_pMLData->GetCurPlayLine(m_lyrLines);
 	if (nRowCur == -1)
 	{
 		// no lyrics, redraw the whole background
 		UpdateLyricDrawBufferBackground(pGraphics, m_rcObj);
 		return;
 	}
+
+	int nCurRowCount = m_lyrLines.GetCountWithSameTimeStamps(nRowCur);
+	ASSERT(nCurRowCount > 0);
 
 	pLineCur = m_lyrLines[nRowCur];
 	nRowHeight = GetLineHeight();
@@ -95,10 +97,10 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 		if (m_pMLData->GetPlayElapsedTime() < pLineCur->nBegTime || nDeltaTime == 0)
 			;
 		else if (m_pMLData->GetPlayElapsedTime() > pLineCur->nEndTime)
-			yCurRow += -nRowHeight;
+			yCurRow += -nRowHeight * nCurRowCount;
 		else
-			yCurRow += -nRowHeight + 
-				nRowHeight * (pLineCur->nEndTime - m_pMLData->GetPlayElapsedTime()) / nDeltaTime;
+			yCurRow += -nRowHeight * nCurRowCount + 
+				nRowHeight * nCurRowCount * (pLineCur->nEndTime - m_pMLData->GetPlayElapsedTime()) / nDeltaTime;
 	}
 
 	CRect	rcClip;

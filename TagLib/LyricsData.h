@@ -65,6 +65,8 @@ public:
 
 	void ClearDrawContextWidth();
 
+	int GetCountWithSameTimeStamps(int nLine);
+
 protected:
 	bool		m_bAutoFreeItem;
 
