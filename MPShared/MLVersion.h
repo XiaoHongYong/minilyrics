@@ -13,7 +13,7 @@
 #else
 #define		ML_MAJOR_VERSION	7
 #define		ML_MINOR_VERSION	5
-#define		ML_BUILD_NUM		22
+#define		ML_BUILD_NUM		24
 
 #define AUTO_BUILD_NUM ML_BUILD_NUM
 
