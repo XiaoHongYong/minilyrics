@@ -142,9 +142,6 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	int		nRow, nRowEnd;
 	int		yLyrStart, yLyrEnd;
 
-	// draw center row, the row lyric is current
-	DrawCurrentRow(pGraphics, pLineCur, AUTO_CAL_X, yCurRow);
-
 	// Draw lyrics lines above current line
 	nRow = nRowCur - 1;
 	nRowEnd = 0;
@@ -158,10 +155,17 @@ void CLyricShowMultiRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = 
 	}
 	yLyrStart = y + nRowHeight;
 
+	// draw center row, the row lyric is current
+	y = yCurRow;
+	for (nRow = nRowCur; nRow < nRowCur + nCurRowCount; nRow++)
+	{
+		DrawCurrentRow(pGraphics, m_lyrLines[nRow], AUTO_CAL_X, y);
+		y += nRowHeight;
+	}
+
 	// Draw lyrics lines below current line
-	nRow = nRowCur + 1;
 	nRowEnd = m_lyrLines.size();
-	for (y = yCurRow + nRowHeight; y < rcClip.bottom && nRow < nRowEnd; y += nRowHeight)
+	for (; y < rcClip.bottom && nRow < nRowEnd; y += nRowHeight)
 	{
 		pLine = m_lyrLines[nRow];
 		if (!DrawRow(pGraphics, pLine, AUTO_CAL_X, y, LP_BELOW_CUR_LINE))
