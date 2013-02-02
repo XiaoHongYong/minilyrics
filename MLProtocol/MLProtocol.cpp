@@ -171,7 +171,7 @@ int MLRetMsg::FromXML(SXNode *pXmlNode)
 	{
 		strCodeStartDate = pXmlNode->GetPropertySafe(_T("ls_sd"));
 		nLicensedUser = pXmlNode->GetPropertyInt(_T("ls_lu"), 1);
-		nCodeDurationDays = pXmlNode->GetPropertyInt(_T("ls_dd"), LICENSE_DURATION_PERPETUAL);
+		nCodeDurationDays = pXmlNode->GetPropertyInt(_T("ls_dd"), LICENSE_DURATION_LIFETIME);
 	}
 
 	return ERR_OK;
@@ -203,7 +203,7 @@ void MLRetMsg::ToXMLAttribute(CXMLWriter &xmlFile)
 			xmlFile.WriteAttribute(_T("ls_sd"), strCodeStartDate.c_str());
 		if (nLicensedUser > 1)
 			xmlFile.WriteAttribute(_T("ls_lu"), nLicensedUser);
-		if (nCodeDurationDays != LICENSE_DURATION_PERPETUAL)
+		if (nCodeDurationDays != LICENSE_DURATION_LIFETIME)
 			xmlFile.WriteAttribute(_T("ls_dd"), nCodeDurationDays);
 	}
 }

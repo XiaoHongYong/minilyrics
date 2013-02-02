@@ -110,7 +110,7 @@ enum LicenseStatus
 	LS_TRANSFERED	= 4,		// The license is transfered to another device.
 };
 
-#define LICENSE_DURATION_PERPETUAL		0
+#define LICENSE_DURATION_LIFETIME		0
 
 #define PRODUCT_ID_INVALID				0
 #define PRODUCT_ID_MINILYRICS			1
@@ -145,7 +145,7 @@ public:
 	// Activate license message result
 	LicenseStatus			licenseStatus;
 	tstring					strCodeStartDate;	// 2011-12-03
-	int						nCodeDurationDays;	// In days, 0: Perpetual license; 1: Auto renewal; Others is fixed license days.
+	int						nCodeDurationDays;	// In days, 0: Lifetime license; 1: Auto renewal; Others is fixed license days.
 	int						nLicensedUser;		// n user license.
 
 public:
