@@ -131,7 +131,7 @@ void CMPSkinInfoTextCtrlEx::AppendInfoText(const tstring &str)
 	m_vUnWrapedText.push_back(pLine);
 }
 
-bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax);
+bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax, bool bVerticalStyle);
 
 void CMPSkinInfoTextCtrlEx::WrapInfoText()
 {
@@ -142,5 +142,5 @@ void CMPSkinInfoTextCtrlEx::WrapInfoText()
 	pGraphics->SetFont(&m_font);
 
 	m_vText.clear();
-	WrapDisplayLyrics(m_vUnWrapedText, m_vText, pGraphics, m_rcObj.Width() - m_nXMargin * 4);
+	WrapDisplayLyrics(m_vUnWrapedText, m_vText, pGraphics, m_rcObj.Width() - m_nXMargin * 4, true);
 }

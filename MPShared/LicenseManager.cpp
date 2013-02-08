@@ -114,7 +114,7 @@ void CLicenseManager::GetLicenseInfo(LicenseInfo &info)
 	info.strName = g_Profile.EncryptGetString(SZ_REGNAME, _T(""));
 	info.strCode = g_Profile.EncryptGetString(SZ_REGCODE, _T(""));
 	info.strStartDate = g_Profile.EncryptGetString(SZ_START_DATE, _T(""));
-	info.nDurationDays = g_Profile.EncryptGetInt(SZ_DURATION_DAYS, LICENSE_DURATION_PERPETUAL);
+	info.nDurationDays = g_Profile.EncryptGetInt(SZ_DURATION_DAYS, LICENSE_DURATION_LIFETIME);
 	info.nLicensedUser = g_Profile.EncryptGetInt(SZ_LICENSED_USER, 1);
 	info.strDeviceID = g_Profile.EncryptGetString(SZ_DEVICE_ID, _T(""));
 	if (info.strDeviceID.empty())

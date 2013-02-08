@@ -166,7 +166,7 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 	}
 }
 
-bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax)
+bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRawGraph *pGraph, int nWidthMax, bool bVerticalStyle)
 {
 	int		i;
 
@@ -188,31 +188,44 @@ bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRa
 		else
 		{
 			// Wrap
-			int			nLen, nTimeSpan, nBegTime, nEndTime;
-
 			LyricsPiece *pPieceSrc = pLineSrc->vFrags[0];
-
 			vStr.clear();
 			WrapWords(pGraph, nWidthMax, pPieceSrc->szLyric, vStr);
 
-			nLen = pPieceSrc->nLen;
-			nTimeSpan = pLineSrc->nEndTime - pLineSrc->nBegTime;
-
-			// ASSERT(vStr.size() > 1);
-			nBegTime = pLineSrc->nBegTime;
-			for (int k = 0; k < (int)vStr.size(); k++)
+			if (bVerticalStyle)
 			{
-				if (nLen > 0)
-					nEndTime = nBegTime + (vStr[k].size() * nTimeSpan) / nLen;
-				else
-					nEndTime = nBegTime + nTimeSpan;
-				pLine = NewLyricsLine(nBegTime,  nEndTime, pLineSrc->szContent, -1, pLineSrc->bLyricsLine);
+				// All lines of lyrics has same time, for vertical scroll styles.
+				for (int k = 0; k < (int)vStr.size(); k++)
+				{
+					pLine = NewLyricsLine(pPieceSrc->nBegTime,  pPieceSrc->nEndTime, pLineSrc->szContent, -1, pLineSrc->bLyricsLine);
 
-				pLine->AppendPiece(nBegTime, nEndTime, vStr[k].c_str(), vStr[k].size(), false, false);
+					pLine->AppendPiece(pPieceSrc->nBegTime, pPieceSrc->nEndTime, vStr[k].c_str(), vStr[k].size(), false, false);
 
-				lyrLinesOut.push_back(pLine);
+					lyrLinesOut.push_back(pLine);
+				}
+			}
+			else
+			{
+				int nLen = pPieceSrc->nLen;
+				int nTimeSpan = pLineSrc->nEndTime - pLineSrc->nBegTime;
 
-				nBegTime = nEndTime;
+				// ASSERT(vStr.size() > 1);
+				int nBegTime = pLineSrc->nBegTime;
+				for (int k = 0; k < (int)vStr.size(); k++)
+				{
+					int nEndTime;
+					if (nLen > 0)
+						nEndTime = nBegTime + (vStr[k].size() * nTimeSpan) / nLen;
+					else
+						nEndTime = nBegTime + nTimeSpan;
+					pLine = NewLyricsLine(nBegTime,  nEndTime, pLineSrc->szContent, -1, pLineSrc->bLyricsLine);
+
+					pLine->AppendPiece(nBegTime, nEndTime, vStr[k].c_str(), vStr[k].size(), false, false);
+
+					lyrLinesOut.push_back(pLine);
+
+					nBegTime = nEndTime;
+				}
 			}
 		}
 	}
@@ -1800,7 +1813,9 @@ void CLyricShowObj::WrapLyricsLines()
 
 	pGraphics->SetFont(&m_font);
 
-	WrapDisplayLyrics(g_LyricData.GetRawLyrics(), m_lyrLines, pGraphics, m_rcObj.Width() - m_nXMargin * 2);
+	bool bVerticalStyle = (IsKindOf(CLyricShowMultiRowObj::ClassName()) || IsKindOf(CLyricShowTxtObj::ClassName()));
+
+	WrapDisplayLyrics(g_LyricData.GetRawLyrics(), m_lyrLines, pGraphics, m_rcObj.Width() - m_nXMargin * 2, bVerticalStyle);
 
 	ReverseLyricsForRightToLeftLanguage();
 }
