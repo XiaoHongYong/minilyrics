@@ -90,8 +90,17 @@ void CDownloadMgr::Quit()
 
 void CDownloadMgr::OnSongChanged()
 {
-	if (!m_bAutoDownload || g_LyricData.HasLyricsOpened())
+	if (!m_bAutoDownload)
 		return;
+
+	if (g_LyricData.HasLyricsOpened())
+	{
+		// For text lyrics and not associated by user, continue to search for LRC lyrics.
+		if (!(g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true)
+			&& g_LyricData.GetLyrContentType() == LCT_TXT
+			&& !g_LyricSearch.IsAssociatedLyrics(g_Player.GetSrcMedia(), g_Player.GetFullTitle())))
+			return;
+	}
 
 	if (!SearchInCacheResult(false))
 		g_OnlineSearch.AutoSearch(g_Player.GetArtist(), g_Player.GetTitle());

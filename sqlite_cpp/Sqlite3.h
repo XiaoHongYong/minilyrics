@@ -10,7 +10,6 @@
 #endif // _MSC_VER > 1000
 
 #include "../SDK/sqlite/sqlite3.h"
-#include "../MPlayerLib/IMPlayer.h"
 
 #ifdef _UNICODE
 #define LogSqlite3Error(db)		DBGLOG1(_T("Sqlite3 error: %S"), sqlite3_errmsg(db))

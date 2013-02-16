@@ -32,6 +32,8 @@
 #include "TextFile.h"
 #include "FileEx.h"
 
+#include "RegExTool.h"
+
 #ifdef _WIN32
 #include "win32/WndAbout.h"
 #include "win32/WndHelper.h"

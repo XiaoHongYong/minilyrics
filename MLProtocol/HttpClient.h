@@ -3,7 +3,7 @@
 #include "NetServer.h"
 #include "MLProtocol.h"
 
-int DownloadUrl(LPCTSTR szUrl, LPCTSTR szRefer, int &nHttpCode, CCharBuffer &buffRet);
+int DownloadUrl(LPCTSTR szUrl, LPCTSTR szRefer, int &nHttpCode, CCharBuffer &buffRet, LPCTSTR szUserAgent = NULL);
 
 class CHttpClient  
 {

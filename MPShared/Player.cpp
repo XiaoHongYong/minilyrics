@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "PlayListFile.h"
 #include "MPluginManager.h"
+#include "OnlineSearch.h"
 
 #ifdef _WIN32
 #include "MPMsg.h"
@@ -1153,66 +1154,41 @@ void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 {
 	bool			bChanged = false;
 
-#define		SAFE_COPY_FIELD(src, dst)	\
-	if (SetFieldValue(dst, CountOf(dst), src)) bChanged = true;
-
-#define		EMPTY_FIELD(dst)	\
-	if (!IsEmptyString(dst))	\
-	{							\
-	bChanged = true;		\
-	EmptyStr(dst);			\
-	}
-
 	if (pMediaInfo)
 	{
 		// Remove file:// prefix in source media url
 		static LPCTSTR		SZ_FILE_PREFIX		= _T("file://");
 		LPCTSTR szMediaUrl = pMediaInfo->MediaUrl();
 		int			nLenPrefix = _tcslen(SZ_FILE_PREFIX);
-		bool		bSongBird = false;
 		if (szMediaUrl && _tcsnicmp(szMediaUrl, SZ_FILE_PREFIX, nLenPrefix) == 0)
 		{
 			szMediaUrl += nLenPrefix;
 
 			// Songbird use file:///c:/xx...xxx.mp3 , remove the extra '/'
 			if (szMediaUrl[0] == '/' && szMediaUrl[2] == ':')
-			{
 				szMediaUrl++;
-				bSongBird = true;
-			}
 		}
 
-		SAFE_COPY_FIELD(szMediaUrl, m_szSrcMedia);
-		SAFE_COPY_FIELD(pMediaInfo->Artist(), m_szArtist);
-		SAFE_COPY_FIELD(pMediaInfo->Album(), m_szAlbum);
-		SAFE_COPY_FIELD(pMediaInfo->Title(), m_szTitle);
+		// Filter spam info first.
+		tstring strArtist = pMediaInfo->Artist();
+		tstring strTitle = pMediaInfo->Title();
+		FilterSpamInfo(strArtist, strTitle);
+
+		bChanged |= SetFieldValue(m_szSrcMedia, CountOf(m_szSrcMedia), szMediaUrl);
+		bChanged |= SetFieldValue(m_szArtist, CountOf(m_szArtist), strArtist.c_str());
+		bChanged |= SetFieldValue(m_szAlbum, CountOf(m_szAlbum), pMediaInfo->Album());
+		bChanged |= SetFieldValue(m_szTitle, CountOf(m_szTitle), strTitle.c_str());
 		m_nMediaLength = pMediaInfo->mediaLength;
 		m_hasVideo = pMediaInfo->hasVideo;
 
-		if (bSongBird)
-		{
-			// For songbird, it will convert all characters to URL format.
-#ifdef _WIN32
-			// Songbird will conver \ to /, so recover it.
-			strrep(m_szSrcMedia, '/', '\\');
-#endif
-			tstring		strConverted;
-
-#ifdef _WIN32
-			UriUnescape(m_szSrcMedia, strConverted, ED_UTF8);
-#else
-			UriUnescape(m_szSrcMedia, strConverted);
-#endif
-
-			_tcscpy_safe(m_szSrcMedia, CountOf(m_szSrcMedia), strConverted.c_str());
-		}
+		strrep(m_szSrcMedia, '/', DIR_SLASH);
 	}
 	else
 	{
-		EMPTY_FIELD(m_szSrcMedia);
-		EMPTY_FIELD(m_szArtist);
-		EMPTY_FIELD(m_szAlbum);
-		EMPTY_FIELD(m_szTitle);
+		bChanged |= SetFieldValue(m_szSrcMedia, CountOf(m_szSrcMedia), _T(""));
+		bChanged |= SetFieldValue(m_szArtist, CountOf(m_szArtist), _T(""));
+		bChanged |= SetFieldValue(m_szAlbum, CountOf(m_szAlbum), _T(""));
+		bChanged |= SetFieldValue(m_szTitle, CountOf(m_szTitle), _T(""));
 		m_nMediaLength = 0;
 		m_hasVideo = R_UNDETERMINED;
 	}
@@ -1296,14 +1272,19 @@ bool CPlayer::SetFieldValue(TCHAR szField[], int lenField, LPCTSTR szValue)
 	if (szValue == NULL)
 		return false;
 
-	tstring str = szValue;
+	tstring str;
+	if (UriIsQuoted(szValue))
+		str = UriUnquote(szValue);
+	else
+		str = szValue;
+
 	if (szField != m_szSrcMedia)
 	{
 		for (size_t i = 0; i < m_vTitleFilters.size(); i++)
 			strrep(str, m_vTitleFilters[i].c_str(), _T(""));
 
-		// Remove regular extension.
-		static LPCTSTR vToTrim[] = { _T(".mp3"), _T(".m4a"), _T(".flv"), _T(".mpg"), };
+		// Remove regular file extension.
+		static LPCTSTR vToTrim[] = { _T(".mp3"), _T(".m4a"), _T(".wma"), _T(".flac"), _T(".ogg"), _T(".aac"), };
 		LPCTSTR szExt = FileGetExt(str.c_str());
 		if (!IsEmptyString(szExt))
 		{
@@ -1326,3 +1307,38 @@ bool CPlayer::SetFieldValue(TCHAR szField[], int lenField, LPCTSTR szValue)
 
 	return false;
 }
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+#ifdef _CPPUNIT_TEST
+
+IMPLEMENT_CPPUNIT_TEST_REG(CPlayer)
+
+class CTestCaseCPlayer : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseCPlayer);
+// 	CPPUNIT_TEST(TestUnquote);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+// 	void TestUnquote()
+// 	{
+// 		LPCTSTR cases[] = { _T("%E5%BC%A0%E6%AF%85"), _T("artist.movie.1080p.xxx"), 
+// 			_T(""), _T("%2%X1"), };
+// 
+// 		LPCTSTR results[] = { _T("ÕÅÒã"), _T("artist.movie.1080p.xxx"), _T(""), _T("%2%X1"), };
+// 
+// 		CPPUNIT_ASSERT(IsQuoted(cases[0]));
+// 		for (int i = 0; i < CountOf(cases); i++)
+// 		{
+// 			tstring r = Unquote(cases[i]);
+// 			CPPUNIT_ASSERT(_tcscmp(results[i], r.c_str()) == 0);
+// 		}
+// 	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseCPlayer);
+
+#endif // _CPPUNIT_TEST

@@ -1031,14 +1031,14 @@ bool IsStrNumeric(LPCTSTR szString)
 }
 
 
-bool IsHexChar(char ch)
+bool IsHexChar(int ch)
 {
 	return (IsDigit(ch) || 
 		(ch >= 'a' && ch <= 'f') ||
 		(ch >= 'A' && ch <= 'F'));
 }
 
-int HexToInt(char chHex)
+int HexToInt(int chHex)
 {
 	if (IsDigit(chHex))
 	{
@@ -1111,106 +1111,58 @@ bool UrlParse(LPCTSTR szUrl, tstring &scheme, tstring &domain, int &port, tstrin
 	return true;
 }
 
-// COMMENT:
-//		将%20等类似的名字转换为对应的字符
-void UriUnescape(const char *szInet, string &str)
+bool UriIsQuoted(LPCTSTR str)
 {
-	size_t nLenInet = strlen(szInet);
-	str.clear();
+	return _tcschr(str, '%') != NULL;
+}
 
-	size_t i = 0;
-	while (i + 2 < nLenInet)
+// Convert %20 etc to blank space...
+tstring UriUnquote(LPCTSTR str)
+{
+	tstring out;
+
+	string tempAnsi;
+	tstring temp;
+	LPCTSTR p = str;
+	while (*p)
 	{
-		if (szInet[i] == '%')
+		if (*p == '%' && IsHexChar(p[1]) && IsHexChar(p[2]))
 		{
-			if (IsHexChar(szInet[i + 1])
-				&& IsHexChar(szInet[i + 2]))
+			int a = HexToInt(p[1]);
+			int b = HexToInt(p[2]);
+			tempAnsi.insert(tempAnsi.end(), (char)(byte)(a * 16 + b));
+			p += 2;
+		}
+		else
+		{
+			if (tempAnsi.size() > 0)
 			{
-				BYTE		ch;
-				ch = (BYTE)HexToInt(szInet[i + 1]) * 0x10;
-				ch += (BYTE)HexToInt(szInet[i + 2]);
-				str += (char)ch;
-				i += 3;
-				continue;
+				UTF8ToTString(tempAnsi.c_str(), tempAnsi.size(), temp);
+				out.append(temp);
+				tempAnsi.clear();
+				temp.clear();
 			}
+			out.insert(out.end(), *p);
 		}
 
-		str += szInet[i];
-		i++;
+		p++;
 	}
-	while(szInet[i] != '\0')
+
+	if (tempAnsi.size() > 0)
 	{
-		str += szInet[i];
-		i++;
+		UTF8ToTString(tempAnsi.c_str(), tempAnsi.size(), temp);
+		out.append(temp);
+		tempAnsi.clear();
+		temp.clear();
 	}
-}
+	out.insert(out.end(), *p);
 
-// COMMENT:
-//		将%20等类似的名字转换为对应的字符
-void UriUnescape(const char *szInet, char *szLocal, int nLenMax)
-{
-	size_t	i = 0, k = 0;
-	size_t nLenInet = strlen(szInet);
-
-	while (i + 2 < nLenInet)
-	{
-		if (szInet[i] == '%')
-		{
-			if (IsHexChar(szInet[i + 1])
-				&& IsHexChar(szInet[i + 2]))
-			{
-				szLocal[k] = (BYTE)HexToInt(szInet[i + 1]) * 0x10;
-				szLocal[k] += (BYTE)HexToInt(szInet[i + 2]);
-				k++;
-				i += 3;
-				continue;
-			}
-		}
-
-		szLocal[k] = szInet[i];
-		k++;
-		i++;
-	}
-	while(szInet[i] != '\0')
-	{
-		szLocal[k] = szInet[i];
-		k++;
-		i++;
-	}
-	szLocal[k] = '\0';
-}
-
-void UriUnescape(const WCHAR *szInet, WCHAR *szLocal, int nLenMax, CHAR_ENCODING encoding)
-{
-	stringex		strIn;
-	string			strOut;
-	wstringex		strOutW;
-
-	ConvertStr(szInet, -1, strIn);
-
-	UriUnescape(strIn.c_str(), strOut);
-	ConvertStr(strOut.c_str(), strOut.size(), strOutW, encoding);
-
-	wcscpy_safe(szLocal, nLenMax, strOutW.c_str());
-}
-
-void UriUnescape(const WCHAR *szInet, wstring_t &str, CHAR_ENCODING encoding)
-{
-	stringex		strIn;
-	string			strOut;
-	wstringex		strOutW;
-
-	ConvertStr(szInet, -1, strIn);
-
-	UriUnescape(strIn.c_str(), strOut);
-	ConvertStr(strOut.c_str(), strOut.size(), strOutW, encoding);
-
-	str = strOutW.c_str();
+	return out;
 }
 
 // COMMENT:
 //		将汉字、' '、'	'等转换为 %20....等
-void UriEscape(const char *szLocal, string &strInet)
+void UriQuote(const char *szLocal, string &strInet)
 {
 	size_t	i = 0;
 	char	szTemp[256];
@@ -1254,16 +1206,16 @@ void UriEscape(const char *szLocal, string &strInet)
 	}
 }
 
-void UriEscape(const char *szLocal, char *szInet, int nLenMax)
+void UriQuote(const char *szLocal, char *szInet, int nLenMax)
 {
 	string		strTemp;
 
-	UriEscape(szLocal, strTemp);
+	UriQuote(szLocal, strTemp);
 
 	strcpy_safe(szInet, nLenMax, strTemp.c_str());
 }
 
-void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax, CHAR_ENCODING encoding)
+void UriQuote(const WCHAR *szLocal, WCHAR *szInet, int nLenMax, CHAR_ENCODING encoding)
 {
 	stringex		strIn;
 	string				str;
@@ -1271,13 +1223,13 @@ void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax, CHAR_ENCODING e
 
 	ConvertStr(szLocal, -1, strIn, encoding);
 
-	UriEscape(strIn.c_str(), str);
+	UriQuote(strIn.c_str(), str);
 	ConvertStr(str.c_str(), str.size(), strOutW);
 
 	wcscpy_safe(szInet, nLenMax, strOutW.c_str());
 }
 
-void UriEscape(const WCHAR *szLocal, wstring_t &strInet, CHAR_ENCODING encoding)
+void UriQuote(const WCHAR *szLocal, wstring_t &strInet, CHAR_ENCODING encoding)
 {
 	stringex		strIn;
 	string				str;
@@ -1285,7 +1237,7 @@ void UriEscape(const WCHAR *szLocal, wstring_t &strInet, CHAR_ENCODING encoding)
 
 	ConvertStr(szLocal, -1, strIn, encoding);
 
-	UriEscape(strIn.c_str(), str);
+	UriQuote(strIn.c_str(), str);
 	ConvertStr(str.c_str(), str.size(), strOutW);
 
 	strInet = strOutW.c_str();
@@ -1968,6 +1920,7 @@ class CTestCaseStringEx : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestStrBeginWith);
 	CPPUNIT_TEST(TestStrEndWith);
 	CPPUNIT_TEST(Test_xcsncpy);
+	CPPUNIT_TEST(TestUriUnquote);
 	CPPUNIT_TEST_SUITE_END();
 
 protected:
@@ -2205,6 +2158,21 @@ protected:
 
 			_xcsncpy(szTempW, szSrc[i], _tcslen(szSrc[i]));
 			CPPUNIT_ASSERT(_xcscmp(szTempW, szSrc[i]) == 0);
+		}
+	}
+
+	void TestUriUnquote()
+	{
+		LPCTSTR cases[] = { _T("%E5%BC%A0%E6%AF%85"), _T("artist.movie.1080p.xxx"), 
+			_T(""), _T("%2%X1"), };
+
+		LPCTSTR results[] = { _T("张毅"), _T("artist.movie.1080p.xxx"), _T(""), _T("%2%X1"), };
+
+		CPPUNIT_ASSERT(UriIsQuoted(cases[0]));
+		for (int i = 0; i < CountOf(cases); i++)
+		{
+			tstring r = UriUnquote(cases[i]);
+			CPPUNIT_ASSERT(_tcscmp(results[i], r.c_str()) == 0);
 		}
 	}
 

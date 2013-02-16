@@ -2,14 +2,11 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_ONLINESEARCH_H__F7E2D78C_B3D3_42B9_BFE8_6DD7F2AEFDA2__INCLUDED_)
-#define AFX_ONLINESEARCH_H__F7E2D78C_B3D3_42B9_BFE8_6DD7F2AEFDA2__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "../sqlite_cpp/Sqlite3.h"
+
+DECLAR_CPPUNIT_TEST_REG(COnlineSearch)
 
 class ILyrSearchResultCacheDB
 {
@@ -110,7 +107,7 @@ public:
 
 	BOOL SearchCacheForCur(V_LRCSEARCHRESULT *pvResult = NULL, DWORD *pdwSearchTime = NULL);
 
-	BOOL AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle);
+	bool AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle);
 
 	int SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szMediaKey, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount);
 	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, uint32 nLyrSaveFlag, tstring &strMsg, INotifyEvent *pNotify);
@@ -118,9 +115,10 @@ public:
 	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, MLMsgRetBatchSearch &retLyrics);
 
 protected:
+	bool CheckLicenseLimitation();
+
 	int UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch);
-	BOOL AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle);
-	bool IsTitleExcludedFromAutoSearch(LPCTSTR szTitle);
+	bool AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle);
 
 	static void ThreadSearchOnline(LPVOID lpParam);
 
@@ -130,9 +128,10 @@ protected:
 
 	CLyrSearchResultCacheDB		m_dbSearchResult;
 	CLyrSearchResultCacheMemDB	m_dbSearchResultMem;
+	//CLyricsInetSearch			m_lyricsInetSearch;
 
 };
 
-extern COnlineSearch		g_OnlineSearch;
+bool FilterSpamInfo(tstring &artist, tstring &title);
 
-#endif // !defined(AFX_ONLINESEARCH_H__F7E2D78C_B3D3_42B9_BFE8_6DD7F2AEFDA2__INCLUDED_)
+extern COnlineSearch		g_OnlineSearch;

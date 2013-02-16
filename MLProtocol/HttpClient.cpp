@@ -5,7 +5,7 @@
 #include "StdAfx.h"
 #include "HttpClient.h"
 
-int DownloadUrl(LPCTSTR szUrl, LPCTSTR szRefer, int &nHttpCode, CCharBuffer &buffRet)
+int DownloadUrl(LPCTSTR szUrl, LPCTSTR szRefer, int &nHttpCode, CCharBuffer &buffRet, LPCTSTR szUserAgent)
 {
 	CHttpClient			httpClient;
 	int					nRet;
@@ -23,6 +23,9 @@ int DownloadUrl(LPCTSTR szUrl, LPCTSTR szRefer, int &nHttpCode, CCharBuffer &buf
 		DBGLOG1(_T("Connect Error: %s"), (LPCTSTR)Error2Str(nRet));
 		return nRet;
 	}
+
+	if (szUserAgent != NULL)
+		httpClient.SetUserAgent(szUserAgent);
 
 	nRet = httpClient.SendRequest();
 	if (nRet != ERR_OK)
@@ -48,7 +51,7 @@ int DownloadUrl(LPCTSTR szUrl, LPCTSTR szRefer, int &nHttpCode, CCharBuffer &buf
 
 CHttpClient::CHttpClient()
 {
-	m_strUserAgent = "Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.2.3) Gecko/20100401 Firefox/3.6.3 ( .NET CLR 3.5.30729)";
+	m_strUserAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_2) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1309.0 Safari/537.17";
 	m_bUseProxy = false;
 	m_nHostPort = 80;
 	m_nServerPort = 80;

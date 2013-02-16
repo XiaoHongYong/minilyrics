@@ -112,6 +112,14 @@ public:
 		m_pMediaLib->GetMediaInfo(nIndex, item.strArtist, item.strAlbum, item.strTitle, item.strMediaFile, nMediaLength);
 		item.nMediaLength = nMediaLength;
 		item.nIndex = nIndex;
+
+		// Filter spam info in searches.
+		if (item.strArtist.empty() || !FilterSpamInfo(item.strArtist, item.strTitle))
+		{
+			UpdateItemStatus(nIndex, SS_ERROR, _TL3("The artist and title is incomplete"));
+			return;
+		}
+
 		m_listSearchItems.push_back(item);
 
 		if (m_listSearchItems.size() >= 20)

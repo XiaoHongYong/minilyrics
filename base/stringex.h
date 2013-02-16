@@ -118,9 +118,9 @@ inline bool __isascii(int c) { return c >= 0 && c <= 0x7F; }
 
 bool IsStrNumeric(LPCTSTR szString);
 
-bool IsHexChar(char ch);
+bool IsHexChar(int ch);
 
-int HexToInt(char chHex);
+int HexToInt(int chHex);
 uint32 HexToInt(LPCTSTR str);
 
 // szUrl: scheme://domain:port/path?query_string#fragment_id
@@ -129,17 +129,14 @@ bool UrlParse(LPCTSTR szUrl, tstring &scheme, tstring &domain, int &port, tstrin
 
 // COMMENT:
 // rfc:  http://www.faqs.org/rfcs/rfc2396.html
-void UriEscape(const char *szLocal, string &strInet);
-void UriEscape(const char *szLocal, char *szInet, int nLenMax);
-void UriEscape(const WCHAR *szLocal, WCHAR *szInet, int nLenMax, CHAR_ENCODING encoding);
-void UriEscape(const WCHAR *szLocal, wstring_t &strInet, CHAR_ENCODING encoding);
+void UriQuote(const char *szLocal, string &strInet);
+void UriQuote(const char *szLocal, char *szInet, int nLenMax);
+void UriQuote(const WCHAR *szLocal, WCHAR *szInet, int nLenMax, CHAR_ENCODING encoding);
+void UriQuote(const WCHAR *szLocal, wstring_t &strInet, CHAR_ENCODING encoding);
 
-// COMMENT:
-//		将%20等类似的名字转换为对应的字符
-void UriUnescape(const char *szInet, string &str);
-void UriUnescape(const char *szInet, char *szLocal, int nLenMax);
-void UriUnescape(const WCHAR *szInet, WCHAR *szLocal, int nLenMax, CHAR_ENCODING encoding);
-void UriUnescape(const WCHAR *szInet, wstring_t &str, CHAR_ENCODING encoding);
+// Convert %20 etc to blank space...
+bool UriIsQuoted(LPCTSTR str);
+tstring UriUnquote(LPCTSTR str);
 
 bool IsUnicodeStr(LPCVOID lpData);
 

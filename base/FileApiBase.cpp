@@ -481,7 +481,7 @@ bool CopyDir(LPCTSTR lpExistingDir, LPCTSTR lpNewDir)
 		if (finder.IsCurDir())
 			ret = CopyDir(src.c_str(), dst.c_str());
 		else
-			ret = CopyFile(src.c_str(), dst.c_str(), false);
+			ret = Tobool(CopyFile(src.c_str(), dst.c_str(), false));
 		if (!ret)
 			return false;
 	}

@@ -100,6 +100,127 @@ int GetCurDaysFrom2000()
 	return (dateNow.GetTime() - date2000.GetTime()) / CBaseDate::MILLIS_IN_ONE_DAY;
 }
 
+static LPCTSTR SZ_IGNOR_NAMES[] = { _T(".720p"), _T(".1080p"), };
+
+static LPCTSTR SZ_IGNOR_EXTS[] = { _T(".mkv"), _T(".flv"), _T(".rmvb"), _T(".mp4"), };
+
+bool IsTitleIgnoredStep1(LPCTSTR szTitle)
+{
+	// Ignore if includes: .720p, 1080p
+	tstring strTitleLower = ToLower(szTitle);
+	for (int i = 0; i < CountOf(SZ_IGNOR_NAMES); i++)
+	{
+		if (_tcsstr(strTitleLower.c_str(), SZ_IGNOR_NAMES[i]) != 0)
+			return true;
+	}
+
+	// Ignore if title ends with movie extention: .mkv, .flv .avi .mp4
+	for (int i = 0; i < CountOf(SZ_IGNOR_EXTS); i++)
+	{
+		if (StrEndWith(strTitleLower.c_str(), SZ_IGNOR_EXTS[i]))
+			return true;
+	}
+
+	return false;
+}
+
+bool IsTitleIgnoredStep2(LPCTSTR szTitle)
+{
+	TCHAR		szTitleFiltered[MAX_PATH];
+
+	FilterChars(szTitleFiltered, MAX_PATH, szTitle, true);
+
+	if (IsEmptyString(szTitleFiltered))
+		return true;
+
+	tstring strTitleLower = ToLower(szTitleFiltered);
+
+	static LPCTSTR szExcludedTitle[] = { _T("track"), _T("music"), _T("cd"), _T("record"), _T("movie"), _T("wav"), _T("song") };
+
+	for (int i = 0; i < CountOf(szExcludedTitle); i++)
+	{
+		if (_tcscmp(szExcludedTitle[i], strTitleLower.c_str()) == 0)
+			return true;
+		if (_tcscmp(_TL(szExcludedTitle[i]), strTitleLower.c_str()) == 0)
+			return true;
+	}
+
+	return false;
+}
+
+static LPCSTR SZ_DOMAIN_NAMES[] = {
+	"[[\\w\\-]+\\.[[\\w\\-]+\\.[\\w\\-]+\\.(com|info|fm|blogspot|net|org)\\b",
+	             "[[\\w\\-]+\\.[\\w\\-]+\\.(com|info|fm|blogspot|net|org)\\b",
+	                          "[\\w\\-]+\\.(com|info|fm|blogspot|net|org)\\b",
+	"www\\b\\.[[\\w\\-]+\\.[[\\w\\-]+\\.[\\w\\-]+",
+	"www\\b\\.[[\\w\\-]+\\.[[\\w\\-]+",
+};
+
+LPCTSTR SZ_SYMBOLS_TRIM = _T(" \t_-!~@#$%^&*'\"?/\\|+=");
+
+tstring RemoveSpamInTag(LPCTSTR szValue)
+{
+	tstring strValueLower = ToLower(szValue);
+
+	// Remove xxx.xxx.com domain names:
+	tstring strNewValue = szValue;
+	for (int i = 0; i < CountOf(SZ_DOMAIN_NAMES); i++)
+		strNewValue = RegExSub(SZ_DOMAIN_NAMES[i], strNewValue.c_str(), _T(""));
+
+	// Remove http:
+	strrep(strNewValue, _T("http:"), _T(""));
+
+	TrimStr(strNewValue, SZ_SYMBOLS_TRIM);
+
+	return strNewValue;
+}
+
+//
+// Return false: Indicate that the spam info was failed to remove from tag, should stop search lyrics.
+//
+bool FilterSpamInfo(tstring &strArtist, tstring &strTitle)
+{
+	if (UriIsQuoted(strArtist.c_str()))
+		strArtist = UriUnquote(strArtist.c_str());
+
+	if (UriIsQuoted(strTitle.c_str()))
+		strArtist = UriUnquote(strTitle.c_str());
+
+	if (IsTitleIgnoredStep1(strTitle.c_str()))
+		return false;
+
+	strTitle = RemoveSpamInTag(strTitle.c_str());
+	strArtist = RemoveSpamInTag(strArtist.c_str());
+
+	// If title = 'artist - title', remove extra artist in title.
+	if (StrIBeginWith(strTitle.c_str(), strArtist.c_str()))
+	{
+		tstring strNewTitle(strTitle.c_str() + strArtist.size());
+		TrimStr(strNewTitle, ' \t');
+
+		int c = strNewTitle[0];
+		// Artist is long enough or with separator - . _ etc.
+		if (strArtist.size() >= 15 || c == '_' || c == '-' || c == '.' || c == '/')
+		{
+			strTitle = strNewTitle;
+			TrimStr(strTitle, SZ_SYMBOLS_TRIM);
+		}
+	}
+
+	// If title contains 01. xxxx, remove begin numbers.
+	if (strTitle.size() > 4
+		&& IsDigit(strTitle[0])
+		&& IsDigit(strTitle[1])
+		&& strTitle[2] == '.' && strTitle[3] == ' ')
+		strTitle.erase(0, 4);
+
+	// Check whether title is in excluded from searching.
+	if (IsTitleIgnoredStep2(strTitle.c_str()))
+		return false;
+
+	return true;
+}
+
 void ILyrSearchResultCacheDB::ResultToXML(MLMsgRetSearch &retSearch, CXMLWriter &xmlWriter)
 {
 	xmlWriter.WriteStartElement(_T("SearchResults"));
@@ -440,15 +561,10 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 }
 
 // 创建一个线程搜索歌词，线程执行完毕之后会通知目标
-BOOL COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle)
+bool COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle)
 {
-	// LOG0(LOG_LVL_INFO, _T("Enter Add search job proc"));
-
 	if (m_bRunning)
-	{
-		// LOG0(LOG_LVL_INFO, _T("Another search job is running, quit."));
-		return FALSE;
-	}
+		return false;
 
 	COnlineSearchThreadParam *pParam = new COnlineSearchThreadParam;
 	pParam->strArtist = szArtist;
@@ -479,23 +595,8 @@ bool IsTextWidthExceed(LPCTSTR sztext, int nWidth)
 	return nWidth < 0;
 }
 
-BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
+bool COnlineSearch::CheckLicenseLimitation()
 {
-	// LOG0(LOG_LVL_INFO, _T("Enter auto search proc"));
-
-	// 歌词为空, 小于3个字符
-	if (_tcslen(szTitle) < 3)
-	{
-		// LOG1(LOG_LVL_INFO, _T("Title is : %s, quit."), sztitleNew);
-		return FALSE;
-	}
-
-	if (IsTitleExcludedFromAutoSearch(szTitle))
-	{
-		// LOG1(LOG_LVL_INFO, _T("Title is : %s, quit."), sztitleNew);
-		return FALSE;
-	}
-
 	//
 	// 检查上次自动搜索相隔时间小于1个月才搜索
 	DWORD		dwLatestSearchTime;
@@ -507,16 +608,7 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 			nNextSearch = 10;
 
 		if (abs((int)dwLatestSearchTime - GetCurDaysFrom2000()) < nNextSearch)
-		{
-			// ....todo 添加上次搜索时间的介绍, 优化离线歌词搜索库和在下歌词搜索缓存
-// 			tstring			str;
-// 			CStrPrintf		str2(_TLT("Searched lyrics %d days ago, no results returned."), abs((int)dwLatestSearchTime - GetCurDaysFrom2000()));
-// 			str = str2.c_str();
-// 			str += _T(" ");
-// 			str += _TLT("Auto search canceled.");
-// 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
-			return FALSE;
-		}
+			return false;
 	}
 
 	//
@@ -525,8 +617,9 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	if (int(GetSecCount() - dwLastSearch) < 
 		(bAdvVersion ? 2 : 10))
 	{
-		// LOG1(LOG_LVL_INFO, _T("Lastest auto search is about :%d s ago, quit."), GetSecCount() - dwLastSearch);
-		return FALSE;
+		if (!bAdvVersion)
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("Trial edition can't search lyrics too frequently."));
+		return false;
 	}
 
 	if (!(bAdvVersion))
@@ -537,8 +630,8 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 		static DWORD		dwSearchCount = 0;
 		if (GetSecCount() - dwStartCall >= 10 * 60 && dwSearchCount / (((double)(GetSecCount() - dwStartCall)) / (60 * 60)) > 40)
 		{
-			// LOG1(LOG_LVL_INFO, _T("Auto search is too frequent: %d"), dwSearchCount);
-			return FALSE;
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("Trial edition can't search lyrics too frequently."));
+			return false;
 		}
 		// 增加搜索次数
 		dwSearchCount++;
@@ -547,13 +640,31 @@ BOOL COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	// 更新上次调用自动搜索的时间
 	dwLastSearch = GetSecCount();
 
+	return true;
+}
+
+bool COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
+{
+	// Won't search is title is too short, or artist is empty.
+	if (_tcslen(szTitle) < 2 && _tcslen(szArtist) == 0)
+		return false;
+
+	if (!CheckLicenseLimitation())
+		return false;
+
+	tstring strArtist = szArtist;
+	tstring strTitle = szTitle;
+
+	if (!FilterSpamInfo(strArtist, strTitle))
+		return false;
+
 	tstring			str;
 	str = _TLT("Searching lyrics");
 	str += _T(": ");
 	str += g_Player.GetFullTitle();
 	CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 
-	return AddSearchJob(true, szArtist, szTitle);
+	return AddSearchJob(true, strArtist.c_str(), strTitle.c_str());
 }
 
 int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szMediaKey, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount)
@@ -589,9 +700,14 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 		UpdateSearchLrcInfo(strAssociateMediaKey.c_str(), retSearch);
 
 		RetLyrInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, vResult);
-
-		return ERR_OK;
+		if (vResult.front().nMatchValue >= MATCH_VALUE_OK)
+			return ERR_OK;
 	}
+
+// 	// Use LyricsInetSearch to search for results.
+// 	m_lyricsInetSearch.Search(szArtist, szTitle, vResult);
+// 	if (vResult.size() > 0)
+// 		return ERR_OK;
 
 	return nRet;
 }
@@ -640,6 +756,19 @@ int COnlineSearch::BatchSearch(CMLClientSession &session, MLListSearchItems &lis
 	{
 		MLSearchItem	&search = listSearch[i];
 		MLLyricsInfoLite &lyr = *it;
+// 		if (lyr.bufLyrContent.empty())
+// 		{
+//			// Using Lyrics Inet to search lyrics.
+// 			tstring lyrics = m_lyricsInetSearch.SearchBest(search.strArtist.c_str(), search.strTitle.c_str());
+// 			if (lyrics.size() > 0)
+// 			{
+// 				ConvertStrByFileEncoding(lyr.bufLyrContent, lyrics.c_str(), lyrics.size(), FE_UTF8);
+// 				lyr.strFile = FormatMediaTitle(search.strArtist.c_str(), search.strTitle.c_str()) + _T(".txt");
+// 				lyr.strSaveName = FileNameFilterInvalidChars(lyr.strFile.c_str());
+// 				lyr.strFile = lyr.strSaveName;
+// 			}
+// 		}
+
 		if (lyr.bufLyrContent.empty())
 		{
 			if (pNotify)
@@ -680,33 +809,76 @@ int COnlineSearch::UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetS
 	return ERR_OK;
 }
 
-bool COnlineSearch::IsTitleExcludedFromAutoSearch(LPCTSTR szTitle)
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+#ifdef _CPPUNIT_TEST
+
+IMPLEMENT_CPPUNIT_TEST_REG(COnlineSearch)
+
+class CTestCaseOnlineSearch : public CppUnit::TestFixture
 {
-	TCHAR		szTitleFiltered[MAX_PATH];
-	int			i;
-	static LPCTSTR szWithoutWords[] = { _T("www."), _T(".net"), _T(".com"), _T("http://") };
+	CPPUNIT_TEST_SUITE(CTestCaseOnlineSearch);
+	CPPUNIT_TEST(TestFilterSearchKeywords);
+	CPPUNIT_TEST(TestRemoveSpamInTag);
+	CPPUNIT_TEST(TestFilterSpamInfo);
+	CPPUNIT_TEST_SUITE_END();
 
-	// 过滤掉包含网址的：www. .net .com http://
-	for (i = 0; i < CountOf(szWithoutWords); i++)
+protected:
+	void TestFilterSearchKeywords()
 	{
-		if (stristr(szTitle, szWithoutWords[i]))
-			return true;
+		LPCTSTR cases[] = { _T("artist.movie.720p.xxxx"), _T("artist.movie.1080p.xxx"), 
+			_T("artist.movie.mkv"), _T("artist.movie.mp4"), };
+
+		for (int i = 0; i < CountOf(cases); i++)
+		{
+			CPPUNIT_ASSERT(IsTitleIgnoredStep1(cases[i]));
+
+			tstring strTitle = cases[i], strArtist = _T("artist");
+			CPPUNIT_ASSERT(FilterSpamInfo(strArtist, strTitle) == false);
+		}
+
+		CPPUNIT_ASSERT(IsTitleIgnoredStep1(_T("artist title.mp3")) == false);
 	}
 
-	FilterChars(szTitleFiltered, MAX_PATH, szTitle, true);
-
-	if (IsEmptyString(szTitleFiltered))
-		return true;
-
-	static LPCTSTR szExcludedTitle[] = { _T("track"), _T("music"), _T("title"), _T("cd"), _T("record"), _T("movie"), _T("wav") };
-
-	for (i = 0; i < CountOf(szExcludedTitle); i++)
+	void TestRemoveSpamInTag()
 	{
-		if (_tcscmp(szExcludedTitle[i], szTitleFiltered) == 0)
-			return true;
-		if (_tcscmp(_TL(szExcludedTitle[i]), szTitleFiltered) == 0)
-			return true;
+		LPCTSTR cases[] = { _T("www.test.com - abc"), _T("abc | ass.com"), 
+			_T("http://a.com | title"), _T("hi.come"), };
+
+		LPCTSTR results[] = { _T("abc"), _T("abc"), 
+			_T("title"), _T("hi.come"), };
+
+		for (int i = 0; i < CountOf(cases); i++)
+		{
+			tstring r = RemoveSpamInTag(cases[i]);
+			CPPUNIT_ASSERT(_tcscmp(r.c_str(), results[i]) == 0);
+
+			tstring strTitle = cases[i], strArtist = _T("artist");
+			CPPUNIT_ASSERT(FilterSpamInfo(strArtist, strTitle));
+			CPPUNIT_ASSERT(_tcscmp(strTitle.c_str(), results[i]) == 0);
+			CPPUNIT_ASSERT(_tcscmp(strArtist.c_str(), _T("artist")) == 0);
+		}
 	}
 
-	return false;
-}
+	void TestFilterSpamInfo()
+	{
+		tstring strTitle = _T("artist must be long - title"), strArtist = _T("artist must be long");
+		CPPUNIT_ASSERT(FilterSpamInfo(strArtist, strTitle));
+		CPPUNIT_ASSERT(_tcscmp(strArtist.c_str(), _T("artist must be long")) == 0);
+		CPPUNIT_ASSERT(_tcscmp(strTitle.c_str(), _T("title")) == 0);
+
+		strTitle = _T("01. title");
+		CPPUNIT_ASSERT(FilterSpamInfo(strArtist, strTitle));
+		CPPUNIT_ASSERT(_tcscmp(strArtist.c_str(), _T("artist must be long")) == 0);
+		CPPUNIT_ASSERT(_tcscmp(strTitle.c_str(), _T("title")) == 0);
+
+		strTitle = _T("track");
+		CPPUNIT_ASSERT(FilterSpamInfo(strArtist, strTitle) == false);
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseOnlineSearch);
+
+#endif // _CPPUNIT_TEST

@@ -1059,6 +1059,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RegExTool.cpp"
+				>
+			</File>
+			<File
 				RelativePath="safestr.cpp"
 				>
 				<FileConfiguration
@@ -1716,6 +1720,10 @@
 			</File>
 			<File
 				RelativePath=".\win32\ProcessEnum.h"
+				>
+			</File>
+			<File
+				RelativePath=".\RegExTool.h"
 				>
 			</File>
 			<File

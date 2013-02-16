@@ -518,7 +518,6 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 	}
 
 	TCHAR	szLyricFile[MAX_PATH];
-	BOOL	bLyricsOpened = FALSE;
 	BOOL	bAssociateNone = FALSE;
 	int		nRet;
 
@@ -530,85 +529,61 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 		if (g_LyricSearch.GetBestMatchLyrics(g_Player.GetSrcMedia(), g_Player.GetArtist(), g_Player.GetTitle(), szLyricFile))
 		{
 			nRet = OpenLyrics(strAssociateMediaKey.c_str(), szLyricFile);
-			if (nRet == ERR_OK)
-				bLyricsOpened = TRUE;
-			else
+			if (nRet != ERR_OK)
 				DispatchLongErrorText(ERROR2STR_LOCAL(nRet));
 		}
-
 	}
 
-	if (bLyricsOpened)
+	if (g_LyricData.HasLyricsOpened())
 	{
 		if (g_bAutoMinimized)
 		{
 			CMPlayerAppBase::GetMPSkinFactory()->RestoreAll();
 			g_bAutoMinimized = FALSE;
 		}
+	}
+	else
+	{
+		// Add Media Info:
+		V_Str		vMediaInfo;
+		if (!IsEmptyString(g_Player.GetArtist()))
+			vMediaInfo.push_back(tstring(_TLT("Artist:")) + _T(" ") + g_Player.GetArtist());
+		if (!IsEmptyString(g_Player.GetTitle()))
+			vMediaInfo.push_back(tstring(_TLT("Title:")) + _T(" ") + g_Player.GetTitle());
+		if (!IsEmptyString(g_Player.GetAlbum()))
+			vMediaInfo.push_back(tstring(_TLT("Album:")) + _T(" ") + g_Player.GetAlbum());
+		g_LyricData.AddTextInLyrics(vMediaInfo);
 
-		if (g_LyricsDownloader.AutoDownloadEnabled() &&
-			g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true))
+		DispatchLyricsChangedSyncEvent();
+
+#if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
+		// Òþ²Ø¸è´ÊÏÔÊ¾´°¿Ú
+		if (g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false))
 		{
-			if (bAutoDownloadIfNotExist
-				&& g_LyricData.GetLyrContentType() == LCT_TXT &&
-				!g_LyricSearch.IsAssociatedLyrics(g_Player.GetSrcMedia(), g_Player.GetFullTitle()))
+			HWND	hWnd = GetForegroundWindow();
+			if (!hWnd || GetWindowThreadProcessId(hWnd, NULL) != GetWindowThreadProcessId(GetMainWnd()->GetHandle(), NULL)
+				&& !::GetParent(GetMainWnd()->GetHandle()))
 			{
-				//
-				// continue to search online .lrc, if .txt lyrics is opened
-				//
-				if (!g_LyricsDownloader.SearchInCacheResult(false))
-					g_OnlineSearch.AutoSearch(g_Player.GetArtist(), g_Player.GetTitle());
+				CMPlayerAppBase::GetMPSkinFactory()->MinizeAll(true);
+				g_bAutoMinimized = TRUE;
 			}
 		}
 
-		return;
-	}
-
-	// Add Media Info:
-	V_Str		vMediaInfo;
-	if (!IsEmptyString(g_Player.GetArtist()))
-		vMediaInfo.push_back(tstring(_TLT("Artist:")) + _T(" ") + g_Player.GetArtist());
-	if (!IsEmptyString(g_Player.GetTitle()))
-		vMediaInfo.push_back(tstring(_TLT("Title:")) + _T(" ") + g_Player.GetTitle());
-	if (!IsEmptyString(g_Player.GetAlbum()))
-		vMediaInfo.push_back(tstring(_TLT("Album:")) + _T(" ") + g_Player.GetAlbum());
-	g_LyricData.AddTextInLyrics(vMediaInfo);
-
-	DispatchLyricsChangedSyncEvent();
-
-#if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
-	// Òþ²Ø¸è´ÊÏÔÊ¾´°¿Ú
-	if (g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false))
-	{
-		HWND	hWnd = GetForegroundWindow();
-		if (!hWnd || GetWindowThreadProcessId(hWnd, NULL) != GetWindowThreadProcessId(GetMainWnd()->GetHandle(), NULL)
-			&& !::GetParent(GetMainWnd()->GetHandle()))
+		//
+		// ²¥·ÅMOVIEµÄÊ±ºòÒþ²Ø´°¿Ú
+		//
+		if (g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true)
+			&& g_Player.HasVideo() && !::GetParent(GetMainWnd()->GetHandle()))
 		{
 			CMPlayerAppBase::GetMPSkinFactory()->MinizeAll(true);
 			g_bAutoMinimized = TRUE;
+			return;
 		}
-	}
-
-	//
-	// ²¥·ÅMOVIEµÄÊ±ºòÒþ²Ø´°¿Ú
-	//
-	if (g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true)
-		&& g_Player.HasVideo() && !::GetParent(GetMainWnd()->GetHandle()))
-	{
-		CMPlayerAppBase::GetMPSkinFactory()->MinizeAll(true);
-		g_bAutoMinimized = TRUE;
-		return;
-	}
 #endif
-
-	if (bAssociateNone)
-		return;
-
-	if (_tcslen(g_Player.GetTitle()) >= 3 && bAutoDownloadIfNotExist)
-	{
-		// title at least 3 char long
-		g_LyricsDownloader.OnSongChanged();
 	}
+
+	if (bAutoDownloadIfNotExist && !bAssociateNone)
+		g_LyricsDownloader.OnSongChanged();
 }
 
 void CMPlayerAppBase::OnLanguageChanged()
