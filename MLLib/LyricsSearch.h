@@ -2,14 +2,11 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#if !defined(AFX_LYRICSSEARCH_H__B9364267_AFE5_41D9_BDCA_49CAE54D4ECC__INCLUDED_)
-#define AFX_LYRICSSEARCH_H__B9364267_AFE5_41D9_BDCA_49CAE54D4ECC__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
 #include "../MLProtocol/MLUtils.h"
+
+DECLAR_CPPUNIT_TEST_REG(LyricsSearch)
 
 #ifndef _IPHONE
 #define _ID3V2_SUPPORT
@@ -20,39 +17,41 @@
 #include "../TagLib/TagLib.h"
 #endif // #ifdef _ID3V2_SUPPORT
 
-// 歌词文件匹配类型的定义
-enum LRC_MATCH_TYPE
-{
-	LYRIC_MATCH_NONE		= 0,
-	LYRIC_MATCH_PART_DEC	= 1,
-	LYRIC_MATCH_PART		= 2,
-	LYRIC_MATCH_ALL_DEC		= 3,
-	LYRIC_MATCH_ALL			= 4,
-	LYRIC_MATCH_MAX_TYPE	= LYRIC_MATCH_ALL,
-};
-
-#define MAX_FILE_NAME		MAX_PATH
-
-//
-#define MATCH_VALUE_MAX			(100)
+#define MATCH_VALUE_MIN				30
+#define MATCH_VALUE_OK				60
+#define MATCH_VALUE_BETTER			70
+#define MATCH_VALUE_MAX				100
 #define MATCH_VALUE_EMBEDDED_LRC	95
-#define MATCH_VALUE_WITH_LRC	90
-#define MATCH_VALUE_MIN			10
-#define MATCH_VALUE_BETTER		(65)
-#define MATCH_VALUE_OK			(60)
-#define MATCH_VALUE_MIN_DL		(33)
 
-void FilterChars(LPTSTR szBuffer, int nBuffMax, LPCTSTR szString, BOOL bFilterNumb);
+class CLyricsSearchParameter 
+{
+public:
+	LPCTSTR szSongFile, szArtist, szTitle;
 
-int CalLyricsMatchValue(MLFileType fileType, LPCTSTR szTitleTarg, LPCTSTR szArtistTarg, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb);
-int CalLyricsMatchValue(LPCTSTR szFile, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb);
+	tstringex strArtistFiltered, strTitleFiltered;
+	tstring strSongTitle;
+	tstring strSongDir;
 
+	bool bOnlySearchBestMatch;
+	int nMatchValueOfBest;
+	tstring strBestMatchLyrics;
+
+	// Used for cache memory alloc
+	tstringex strLyrArFiltered, strLyrTiFiltered;
+
+public:
+	CLyricsSearchParameter(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, bool bOnlySearchBestMatch = false);
+
+	int CalMatchValueByName(LPCTSTR szLyricsDir, LPCTSTR szLyricsFileName, MLFileType fileType);
+
+	int CalMatchValueByTitle(LPCTSTR szLyrArtist, LPCTSTR szLyrTitle, MLFileType fileType);
+
+	bool IsBestMatchLyricsFound();
+
+};
 
 struct LrcSearchResult
 {
-//	TCHAR	szLyricsName[128];			// 歌词名
-//	TCHAR	szURL[256];
-//	TCHAR	szSaveFileName[MAX_PATH];
 	tstring	strUrl;
 	tstring	strSaveFileName;
 	tstring	strArtist;
@@ -70,9 +69,6 @@ struct LrcSearchResult
 		fRate = 0.0;
 		nRateCount = 0;
 		nDownloads = 0;
-//		EmptyStr(szLyricsName);
-//		EmptyStr(szURL);
-//		EmptyStr(szSaveFileName);
 	}
 };
 bool operator<=(const LrcSearchResult &l1, const LrcSearchResult &l2);
@@ -96,13 +92,3 @@ public:
 	void DeleteByOrder(int n);
 
 };
-
-void StrIgnoreCompare(LPCTSTR &szDest, LPCTSTR &szTemplate, BOOL bIgnoreNumb);
-int StrIgnoreCompare(LPCTSTR szStr1, LPCTSTR szStr2);
-
-LPCTSTR IgnoreChars(LPCTSTR szString, BOOL bIgnoreNumb);
-
-BOOL IsIgnoreNumber(LPCTSTR szString);
-
-
-#endif // !defined(AFX_LYRICSSEARCH_H__B9364267_AFE5_41D9_BDCA_49CAE54D4ECC__INCLUDED_)

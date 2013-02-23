@@ -14,6 +14,7 @@
 #include "ErrorResolveDlg.h"
 #include "LyricShowObj.h"
 #include "MlVersion.h"
+#include "../MLServer/LyricsKeywordFilter.h"
 
 #ifdef _LINUX_GTK2
 #include "../Skin/gtk2/SplashScreenWnd.h"
@@ -342,6 +343,8 @@ bool CMPlayerAppBase::Init()
 	if (!CSkinApp::Init())
 		return false;
 
+	CLyricsKeywordFilter::Init();
+
 #ifdef _CPPUNIT_TEST
 	MLRunUnitTest();
 #endif // _CPPUNIT_TEST
@@ -517,7 +520,6 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 		return;
 	}
 
-	TCHAR	szLyricFile[MAX_PATH];
 	BOOL	bAssociateNone = FALSE;
 	int		nRet;
 
@@ -526,9 +528,10 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 		bAssociateNone = TRUE;
 	else
 	{
-		if (g_LyricSearch.GetBestMatchLyrics(g_Player.GetSrcMedia(), g_Player.GetArtist(), g_Player.GetTitle(), szLyricFile))
+		tstring strLyricsFile;
+		if (g_LyricSearch.GetBestMatchLyrics(g_Player.GetSrcMedia(), g_Player.GetArtist(), g_Player.GetTitle(), strLyricsFile))
 		{
-			nRet = OpenLyrics(strAssociateMediaKey.c_str(), szLyricFile);
+			nRet = OpenLyrics(strAssociateMediaKey.c_str(), strLyricsFile.c_str());
 			if (nRet != ERR_OK)
 				DispatchLongErrorText(ERROR2STR_LOCAL(nRet));
 		}

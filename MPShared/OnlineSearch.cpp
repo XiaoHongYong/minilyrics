@@ -8,6 +8,7 @@
 #include "OnlineSearch.h"
 #include "DownloadMgr.h"
 #include "Helper.h"
+#include "../MLServer/LyricsKeywordFilter.h"
 
 COnlineSearch		g_OnlineSearch;
 
@@ -44,12 +45,8 @@ CREATE INDEX IF NOT EXISTS SR_modify_time on SearchResults (modify_time);
 
 #define SQL_DEL_SEARCHRESULT	"delete from SearchResults where song_file=?"
 
-void RetLyrInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, RetLyrInfoList &filelist, V_LRCSEARCHRESULT &vResult)
+void RetLyrInfoListToVResult(CLyricsSearchParameter &searchParam, RetLyrInfoList &filelist, V_LRCSEARCHRESULT &vResult)
 {
-	BOOL		bIgnoreTitleNumb, bIgnoreArtistNumb;
-	bIgnoreTitleNumb = IsIgnoreNumber(szTitle);
-	bIgnoreArtistNumb = IsIgnoreNumber(szArtist);
-
 	for (RetLyrInfoList::iterator it = filelist.begin(); it != filelist.end(); it++)
 	{
 		RetLyrInfo		&file = *it;
@@ -63,10 +60,7 @@ void RetLyrInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, RetLyrInfoList &
 		item.fRate = file.fRate;
 		item.nRateCount = file.nRateCount;
 		item.nDownloads = file.nDownloads;
-		if (IsEmptyString(szTitle))
-			item.nMatchValue = 2;
-		else
-			item.nMatchValue = (float)CalLyricsMatchValue(MLGetFileType(item.strSaveFileName.c_str()), item.strTitle.c_str(), item.strArtist.c_str(), szTitle, bIgnoreTitleNumb, szArtist, bIgnoreArtistNumb);
+		item.nMatchValue = (float)searchParam.CalMatchValueByTitle(item.strTitle.c_str(), item.strArtist.c_str(), MLGetFileType(item.strSaveFileName.c_str()));
 		// DBGLOG2(_T("file: %s, value: %d"), item.strSaveFileName.c_str(), item.nMatchValue);
 
 		// Sort English result before other language.
@@ -84,6 +78,7 @@ void RetLyrInfoListToVResult(LPCTSTR szArtist, LPCTSTR szTitle, RetLyrInfoList &
 				else if (item.fRate <= 3.0)
 					item.nMatchValue--;
 			}
+			item.nMatchValue += item.nRateCount / (float)1000.0;
 		}
 
 		vResult.AddResult(item);
@@ -102,7 +97,7 @@ int GetCurDaysFrom2000()
 
 static LPCTSTR SZ_IGNOR_NAMES[] = { _T(".720p"), _T(".1080p"), };
 
-static LPCTSTR SZ_IGNOR_EXTS[] = { _T(".mkv"), _T(".flv"), _T(".rmvb"), _T(".mp4"), };
+static LPCTSTR SZ_IGNOR_EXTS[] = { _T(".mkv"), _T(".flv"), _T(".rmvb"), _T(".mp4"), _T(".dat"), _T(".vob") };
 
 bool IsTitleIgnoredStep1(LPCTSTR szTitle)
 {
@@ -126,22 +121,38 @@ bool IsTitleIgnoredStep1(LPCTSTR szTitle)
 
 bool IsTitleIgnoredStep2(LPCTSTR szTitle)
 {
-	TCHAR		szTitleFiltered[MAX_PATH];
+	tstringex strTitleFiltered;
 
-	FilterChars(szTitleFiltered, MAX_PATH, szTitle, true);
-
-	if (IsEmptyString(szTitleFiltered))
+	CLyricsKeywordFilter::Filter(szTitle, strTitleFiltered);
+	if (strTitleFiltered.empty())
 		return true;
 
-	tstring strTitleLower = ToLower(szTitleFiltered);
-
-	static LPCTSTR szExcludedTitle[] = { _T("track"), _T("music"), _T("cd"), _T("record"), _T("movie"), _T("wav"), _T("song") };
+	static LPCTSTR szExcludedTitle[] = { _T("track"), _T("music"), _T("cd"), _T("record"), _T("movie"), _T("wav"), _T("song"), _T("unknown"), _T("unknown title") };
 
 	for (int i = 0; i < CountOf(szExcludedTitle); i++)
 	{
-		if (_tcscmp(szExcludedTitle[i], strTitleLower.c_str()) == 0)
+		if (_tcscmp(szExcludedTitle[i], strTitleFiltered.c_str()) == 0)
 			return true;
-		if (_tcscmp(_TL(szExcludedTitle[i]), strTitleLower.c_str()) == 0)
+		if (_tcscmp(_TL(szExcludedTitle[i]), strTitleFiltered.c_str()) == 0)
+			return true;
+	}
+
+	return false;
+}
+
+bool IsArtistIgnoredStep2(LPCTSTR szArtist)
+{
+	tstringex strArtistFiltered;
+
+	CLyricsKeywordFilter::Filter(szArtist, strArtistFiltered);
+	if (strArtistFiltered.empty())
+		return true;
+
+	static LPCTSTR szExcludedArtist[] = { _T("unknown"), _T("http"), _T("unknown artist"), _T("unknown artists") };
+
+	for (int i = 0; i < CountOf(szExcludedArtist); i++)
+	{
+		if (_tcscmp(szExcludedArtist[i], strArtistFiltered.c_str()) == 0)
 			return true;
 	}
 
@@ -216,6 +227,10 @@ bool FilterSpamInfo(tstring &strArtist, tstring &strTitle)
 
 	// Check whether title is in excluded from searching.
 	if (IsTitleIgnoredStep2(strTitle.c_str()))
+		return false;
+
+	// Check whether artist is in excluded from searching.
+	if (IsArtistIgnoredStep2(strArtist.c_str()))
 		return false;
 
 	return true;
@@ -334,7 +349,8 @@ bool CLyrSearchResultCacheDB::SearchCache(LPCTSTR szFileAssociateKeyword, LPCTST
 			MLMsgRetSearch retSearch;
 			ResultFromXML(retSearch, str);
 
-			RetLyrInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, *pvResult);
+			CLyricsSearchParameter searchParam(szFileAssociateKeyword, szArtist, szTitle);
+			RetLyrInfoListToVResult(searchParam, retSearch.listResultFiles, *pvResult);
 		}
 	}
 
@@ -391,10 +407,9 @@ CLyrSearchResultCacheMemDB::LIST_ITEMS CLyrSearchResultCacheMemDB::m_listResults
 
 bool CLyrSearchResultCacheMemDB::SearchCache(LPCTSTR szFileAssociateKeyword, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT *pvResult, DWORD *pdwSearchTime)
 {
-	LIST_ITEMS::iterator	it, itEnd;
+	CLyricsSearchParameter searchParam(szFileAssociateKeyword, szArtist, szTitle);
 
-	itEnd = m_listResults.end();
-	for (it = m_listResults.begin(); it != itEnd; ++it)
+	for (LIST_ITEMS::iterator it = m_listResults.begin(); it != m_listResults.end(); ++it)
 	{
 		ITEM	&item = *it;
 		if (_tcscmp(item.strKeyword.c_str(), szFileAssociateKeyword) == 0)
@@ -410,7 +425,7 @@ bool CLyrSearchResultCacheMemDB::SearchCache(LPCTSTR szFileAssociateKeyword, LPC
 					MLMsgRetSearch retSearch;
 					ResultFromXML(retSearch, str);
 
-					RetLyrInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, *pvResult);
+					RetLyrInfoListToVResult(searchParam, retSearch.listResultFiles, *pvResult);
 				}
 			}
 
@@ -699,7 +714,8 @@ int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPC
 	{
 		UpdateSearchLrcInfo(strAssociateMediaKey.c_str(), retSearch);
 
-		RetLyrInfoListToVResult(szArtist, szTitle, retSearch.listResultFiles, vResult);
+		CLyricsSearchParameter searchParam(szMediaKey, szArtist, szTitle);
+		RetLyrInfoListToVResult(searchParam, retSearch.listResultFiles, vResult);
 		if (vResult.front().nMatchValue >= MATCH_VALUE_OK)
 			return ERR_OK;
 	}

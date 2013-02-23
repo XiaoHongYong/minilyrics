@@ -11,13 +11,7 @@ bool IMediaSource::GetBestMatchLyrics(int nIndex, tstring &lyrSrcPath)
 	if (!GetMediaInfo(nIndex, artist, album, title, location, nMediaLength))
 		return false;
 
-	TCHAR	szLyrFile[MAX_PATH];
-	if (!g_LyricSearch.GetBestMatchLyrics(location.c_str(), artist.c_str(), title.c_str(), szLyrFile))
-		return false;
-
-	lyrSrcPath = szLyrFile;
-
-	return true;
+	return g_LyricSearch.GetBestMatchLyrics(location.c_str(), artist.c_str(), title.c_str(), lyrSrcPath);
 }
 
 

@@ -8,6 +8,9 @@ FILE_ENCODING GetFileEncodingByBom(LPCVOID lpData);
 int GetFileEncodingBomSize(FILE_ENCODING fe);
 LPCSTR GetFileEncodingBom(FILE_ENCODING fe);
 
+inline bool StrIsSame(LPCTSTR s1, LPCTSTR s2) { return _tcscmp(s1, s2) == 0; }
+inline bool StrIsISame(LPCTSTR s1, LPCTSTR s2) { return _tcsicmp(s1, s2) == 0; }
+
 bool StrBeginWith(LPCSTR szText, LPCSTR szBeginWith);
 bool StrBeginWith(LPCWSTR szText, LPCWSTR szBeginWith);
 bool StrIBeginWith(LPCSTR szText, LPCSTR szBeginWith);
@@ -92,10 +95,21 @@ void LowerString(LPTSTR szString);
 tstring ToUpper(LPCTSTR szString);
 tstring ToLower(LPCTSTR szString);
 
-#define CharUpr(ch)		(('a' <= ch && ch <= 'z') ? (ch + 'A' - 'a') : ch)
-#define CharLwr(ch)		(('A' <= ch && ch <= 'Z') ? (ch + 'a' - 'A') : ch)
+inline int CharLwr(int ch)
+{
+	if ('A' <= ch && ch <= 'Z')
+		return (ch + 'a' - 'A');
+	else
+		return ch;
+}
 
-int FilterAllHTMLTags(LPTSTR szText);
+inline int CharUpr(int ch)
+{
+	if ('a' <= ch && ch <= 'z')
+		return (ch + 'A' - 'a');
+	else
+		return ch;
+}
 
 inline bool IsDigit(int ch)
 {

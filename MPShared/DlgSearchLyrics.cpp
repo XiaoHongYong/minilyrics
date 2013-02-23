@@ -681,7 +681,6 @@ protected:
 	{
 		m_vResultsLocal.clear();
 
-		TCHAR			szLyricsFile[MAX_PATH];
 		uint32			nTimeStart = GetTickCount();
 		const int		nAcceptableCostTime = 500;
 
@@ -690,11 +689,12 @@ protected:
 		//
 		// Set best match lyrics
 		//
-		if (g_LyricSearch.GetBestMatchLyrics(m_strSongFile.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), szLyricsFile)
+		tstring strLyricsFile;
+		if (g_LyricSearch.GetBestMatchLyrics(m_strSongFile.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), strLyricsFile)
 			&& !g_LyricSearch.IsAssociatedWithNoneLyrics(m_strMediaKey.c_str()))
 		{
 			LrcSearchResult	*pResult;
-			pResult = m_vResultsLocal.SearchByUrl(szLyricsFile);
+			pResult = m_vResultsLocal.SearchByUrl(strLyricsFile.c_str());
 			if (pResult)
 			{
 				pResult->nMatchValue = MATCH_VALUE_MAX;
@@ -702,7 +702,7 @@ protected:
 			else
 			{
 				LrcSearchResult		result;
-				result.strUrl = szLyricsFile;
+				result.strUrl = strLyricsFile;
 				result.nMatchValue = MATCH_VALUE_MAX;
 				m_vResultsLocal.AddResult(result);
 			}

@@ -34,7 +34,7 @@ ID_TO_STRING	__id2strLyrSrcTypeDesc[] = {
 
 LRC_SOURCE_TYPE LyrSrcTypeFromName(LPCTSTR szLrcSource)
 {
-	if (IsEmptyString(szLrcSource))
+	if (_tcsicmp(szLrcSource, NONE_LYRCS) == 0)
 		return LST_NONE;
 
 	for (int i = 0; __id2strLyrSrcType[i].szId != NULL; i++)

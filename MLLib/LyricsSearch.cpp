@@ -6,207 +6,124 @@
 #include "LyricsSearch.h"
 #include "MLData.h"
 #include "HelperFun.h"
+#include "../MLServer/LyricsKeywordFilter.h"
 
-LPCTSTR			SZ_LRC_FILE_LEFT_COMMENT = _T("（");
-LPCTSTR			SZ_LRC_FILE_RIGHT_COMMENT = _T("）");
-
-// 判断一个字符串是否为数字(如果为空，也返回TRUE)
-BOOL IsIgnoreNumber(LPCTSTR szString)
+//////////////////////////////////////////////////////////////////////////
+// CLyricsSearchParameter
+CLyricsSearchParameter::CLyricsSearchParameter(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, bool bOnlySearchBestMatch)
 {
-	LPCTSTR	szNew = IgnoreChars(szString, TRUE);
+	this->szSongFile = szSongFile;
+	this->szArtist = szArtist;
+	this->szTitle = szTitle;
+	this->bOnlySearchBestMatch = bOnlySearchBestMatch;
+	this->nMatchValueOfBest = 0;
 
-	if (*szNew == '\0')
-		return FALSE;
+	CLyricsKeywordFilter::Filter(szArtist, strArtistFiltered);
+	CLyricsKeywordFilter::Filter(szTitle, strTitleFiltered);
+
+	if (!IsEmptyString(szSongFile))
+	{
+		strSongTitle = FileGetTitle(szSongFile);
+		strSongDir = FileGetPath(szSongFile);
+	}
+}
+
+//						   TXT, 			    LRC                     SRT
+const int __vArTiSame[] = { MATCH_VALUE_OK,      MATCH_VALUE_OK + 20,	MATCH_VALUE_OK + 10  };
+const int   __vTiSame[] = { MATCH_VALUE_OK - 30, MATCH_VALUE_OK - 10, 	MATCH_VALUE_OK - 20 };
+
+inline int FileTypeToMatchValueCol(MLFileType fileType)
+{
+	int col = 0;
+	if (fileType == FT_LYRICS_LRC)
+		col = 1;
+	else if (fileType == FT_SUBTITLE_SRT)
+		col = 2;
+
+	return col;
+}
+
+int CLyricsSearchParameter::CalMatchValueByName(LPCTSTR szLyricsDir, LPCTSTR szLyricsFileName, MLFileType fileType)
+{
+	ASSERT(StrEndWith(szLyricsDir, _T(SZ_DIR_SLASH)));
+
+	bool isFileTitleSame = false;
+	bool isDirSame = false;
+	bool isArtistSame = false;
+
+	tstring strLyrArtist, strLyrTitle;
+	AnalysisLyricsFileNameEx(strLyrArtist, strLyrTitle, szLyricsFileName);
+
+	// Calculate match by artist and title.
+	int matchValue = CalMatchValueByTitle(strLyrArtist.c_str(), strLyrTitle.c_str(), fileType);
+
+	// Is file name same with song file name?
+	if (strSongTitle.size() > 0)
+		isFileTitleSame = StrIsISame(FileGetTitle(szSongFile).c_str(), FileGetTitle(szLyricsFileName).c_str());
+
+	// Continue ?
+	if (!isFileTitleSame && matchValue == 0)
+		return 0;
+
+	// Is file dir same with song file name?
+	if (strSongDir.size() > 0)
+		isDirSame = StrIsISame(strSongDir.c_str(), szLyricsDir);
+
+	if (matchValue > 0)
+	{
+		// Title same.
+		if (isFileTitleSame) matchValue += 1;
+		if (isDirSame) matchValue += 1;
+	}
+
+	if (isFileTitleSame && matchValue < MATCH_VALUE_OK)
+	{
+		// File name same.
+		matchValue = __vArTiSame[FileTypeToMatchValueCol(fileType)];
+		if (isDirSame)
+			matchValue += 2;
+	}
+
+	return matchValue;
+}
+
+int CLyricsSearchParameter::CalMatchValueByTitle(LPCTSTR szLyrArtist, LPCTSTR szLyrTitle, MLFileType fileType)
+{
+	bool isTitleSame = false;
+	bool isArtistSame = false;
+
+	// Is Title same?
+	CLyricsKeywordFilter::Filter(szLyrTitle, strLyrTiFiltered);
+	isTitleSame = StrIsSame(strLyrTiFiltered.c_str(), strTitleFiltered.c_str());
+
+	// Continue ?
+	if (!isTitleSame)
+		return 0;
+
+	// Is Artist same?
+	CLyricsKeywordFilter::Filter(szLyrArtist, strLyrArFiltered);
+	isArtistSame = StrIsSame(strLyrArFiltered.c_str(), strArtistFiltered.c_str());
+
+	int matchValue;
+	if (isArtistSame)
+		matchValue = __vArTiSame[FileTypeToMatchValueCol(fileType)];
 	else
-		return TRUE;
+		matchValue = __vTiSame[FileTypeToMatchValueCol(fileType)];
+
+	bool isTitleAllSame = StrIsISame(szTitle, szLyrTitle);
+	bool isArtistAllSame = StrIsISame(szArtist, szLyrArtist);
+
+	if (isTitleAllSame) matchValue += 1;
+	if (isArtistAllSame) matchValue += 1;
+
+	return matchValue;
 }
 
-
-// COMMENT:
-//		忽略以下的字符
-//			"(注释)"
-//			"（注释）"
-//			"[注释]"
-//			英文中非数字和字母
-//			中文符号：0xA3A1(！) ~ 0xA3FE(￣)
-//			。: A1, A3  〓: A1, FE
-//			ⅰ: A2, A1	Ⅻ: A2, FC
-//			！: A3, A1	￣: A3, FE
-// 用例:
-//		(comment)
-//		（cmt)
-//		（cmt）
-//		(
-//		（
-// 用例 '.' ';' '^' '{'
-LPCTSTR IgnoreChars(LPCTSTR szString, BOOL bIgnoreNumb)
+bool CLyricsSearchParameter::IsBestMatchLyricsFound()
 {
-	LPCTSTR	szNew, szCur;
-
-	szNew = szString;
-
-	while (1)
-	{
-		szCur = szNew;
-		// "(注释)" 
-		if (szCur[0] == '(')
-		{
-			szNew = _tcschr(szCur + 1, ')');
-			if (szNew == NULL)
-				szNew = szCur + 1;
-			else
-				szNew++;
-		}
-		else if (szCur[0] == '[')
-		{
-			// "[注释]"
-			szNew = _tcschr(szCur + 1, ']');
-			if (szNew == NULL)
-				szNew = szCur + 1;
-			else
-				szNew++;
-		}
-		else if (szCur[0] == SZ_LRC_FILE_LEFT_COMMENT[0])
-		{
-			// "（注释）"
-			if (szCur[1] == SZ_LRC_FILE_LEFT_COMMENT[1])
-			{
-				szNew = _tcsstr(szCur + 2, SZ_LRC_FILE_RIGHT_COMMENT);
-				if (szNew == NULL)
-					szNew = szCur + 2;
-				else
-					szNew += 2;
-			}
-		}
-
-		if (szNew[0] == '\0')
-			break;
-
-		// 过滤是ASCII的字符
-		// 除 0 ~ 9   A ~ Z   a ~ z 外，都要过滤
-		// 用例 '.' ';' '^' '{'
-		if (__isascii(szNew[0]))
-		{
-			if (bIgnoreNumb)
-			{
-				if (szNew[0] < 'A'
-				 || (szNew[0] > 'Z' && szNew[0] < 'a') || szNew[0] > 'z')
-					 szNew ++;
-				else
-					break;
-			}
-			else
-			{
-				if (szNew[0] < '0' || (szNew[0] > '9' && szNew[0] < 'A')
-				 || (szNew[0] > 'Z' && szNew[0] < 'a') || szNew[0] > 'z')
-					szNew ++;
-				else
-					break;
-			}
-		}
-		else
-			break;
-	}
-
-	return szNew;
+	return nMatchValueOfBest >= MATCH_VALUE_BETTER;
 }
 
-// COMMENT:
-//		将 szString 中的一些字符过滤掉，过滤的规则和 IgnoreChars 函数一致。
-//
-void FilterChars(LPTSTR szBuffer, int nBuffMax, LPCTSTR szString, BOOL bFilterNumb)
-{
-	assert(nBuffMax != 0);
-	assert(szBuffer);
-	assert(szString);
-
-	int		i = 0;
-	LPCTSTR	szBeg;
-
-	szBeg = szString;
-	while (szBeg[0] != '\0')
-	{
-		szBeg = IgnoreChars(szBeg, bFilterNumb);
-
-		if (szBeg[0] == '\0')
-			break;
-		if (i >= nBuffMax)
-			break;
-
-		szBuffer[i] = szBeg[0];
-		i++;
-		szBeg++;
-	}
-	if (i >= nBuffMax)
-		i = nBuffMax - 1;
-	szBuffer[i] = '\0';
-}
-
-int StrIgnoreCompare(LPCTSTR szStr1, LPCTSTR szStr2)
-{
-	LPCTSTR	szDest = szStr1, szTemplate = szStr2;
-
-	StrIgnoreCompare(szDest, szTemplate, FALSE);
-
-	return _tcsicmp(szDest, szTemplate);
-}
-
-// COMMENT:
-//		此段代码会重复使用。
-//		比较目标和模板是否匹配，如果匹配则移动指针
-// EXP:
-//		szDest:			Artist(comment)
-//		szTemplate:		Artist
-// INPUT/OUTPUT:
-//		szDest		-	被比较对象，于szTemplate进行匹配，匹配多少则，移动
-//						多少指针。
-//		szTemplate	-	比较得模板
-//		bIsNumTemplate	-	该模板是否为全数字
-void StrIgnoreCompare(LPCTSTR &szDest, LPCTSTR &szTemplate, BOOL bIgnoreNumb)
-{
-	while (1)
-	{
-		LPCTSTR		szBeforeEat = szDest;
-		LPCTSTR		szBeforeEat2 = szTemplate;
-		while (1)
-		{
-			szDest = IgnoreChars(szDest, bIgnoreNumb);
-			szTemplate = IgnoreChars(szTemplate, bIgnoreNumb);
-
-			if (*szDest == *szTemplate && *szDest != '\0')
-			{
-				szDest++;
-				szTemplate++;
-			}
-			else
-				break;
-		}
-
-		if (*szDest == '\0' || *szTemplate == '\0')
-			break;
-
-		if (('a' <= (*szDest) && *szDest <= 'z') || ('A' <= (*szDest) && *szDest <= 'Z'))
-		{
-			// 忽略大小写进行比较
-			if ((*szDest | ('z' - 'Z')) != (*szTemplate | ('z' - 'Z')))
-				break;
-
-			szDest++;
-			szTemplate++;
-		}
-		else
-			break;
-
-		if (szBeforeEat == szDest && szBeforeEat2 == szTemplate)
-		{
-			// 没有吃掉字符
-			break;
-		}
-	}
-}
-
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
 bool operator<=(const LrcSearchResult &l1, const LrcSearchResult &l2)
@@ -227,325 +144,6 @@ bool operator<=(const LrcSearchResult &l1, const LrcSearchResult &l2)
 bool operator<(const LrcSearchResult &l1, const LrcSearchResult &l2)
 {
 	return l1.nMatchValue > l2.nMatchValue;
-}
-
-// 歌词文件匹配类型的合歌词文件格式共同决定他的“匹配值”
-const int	_aMatchValue[LYRIC_MATCH_MAX_TYPE + 1][3] = 
-{
-	//			  srt,				TXT,	LRC
-	/* NONE */	 {0,				0,		0				},
-	/* PART_DEC*/{35,				10,		33				},
-	/* PART */	 {44,				35,		40				},
-	/* ALL_DEC */{MATCH_VALUE_BETTER,	MATCH_VALUE_OK,		MATCH_VALUE_BETTER	},
-	/* ALL */	 {MATCH_VALUE_BETTER+5, MATCH_VALUE_OK+1,	MATCH_VALUE_BETTER + 5	}
-};                           //60
-
-// COMMENT:
-//		根据 nMatchType 和 nLyricFileType 计算所得得分
-int GetLyricsMatchValue(int nMatchType, MLFileType nLyricFileType)
-{
-	assert(nMatchType >= 0 && nMatchType <= LYRIC_MATCH_MAX_TYPE);
-	if (!(nMatchType >= 0 && nMatchType <= LYRIC_MATCH_MAX_TYPE))
-		return 0;
-
-	int		n;
-
-	if (nLyricFileType == FT_SUBTITLE_SRT)
-		n = 0;
-	else if (nLyricFileType == FT_LYRICS_TXT)
-		n = 1;
-	else if (nLyricFileType == FT_LYRICS_LRC)
-		n = 2;
-	else
-		return 1;
-
-	return _aMatchValue[nMatchType][n];
-}
-
-// COMMENT:
-//		取得仅仅标题匹配的歌词的匹配度
-LRC_MATCH_TYPE GetLyricsMatchTypeTitleOnly(LPCTSTR szLyricsFileName, LPCTSTR szTitle, BOOL bTitleIgnoreNumb)
-{
-	LPCTSTR		szTitleFile;
-	LPCTSTR		szBegTitle, szBegTemp;
-
-	//
-	// 试试直接匹配，可以解决：
-	// szLyricsFileName：标题 － 作者
-	// szTitle：标题 作者
-	//
-	szBegTitle = szLyricsFileName;
-	szBegTemp = szTitle;
-
-	StrIgnoreCompare(szBegTitle, szBegTemp, bTitleIgnoreNumb);
-	if (*szBegTemp == '\0' && *szBegTitle == '\0')
-	{
-		szBegTitle = szLyricsFileName;
-		szBegTemp = szTitle;
-
-		StrIgnoreCompare(szBegTitle, szBegTemp, FALSE);
-		if (*szBegTemp == '\0' && *szBegTitle == '\0')
-			return LYRIC_MATCH_PART;
-		else
-			return LYRIC_MATCH_PART_DEC;
-	}
-
-	//
-	// 找到歌词的标题，检查是否匹配，匹配方式：
-	// szLyricsFileName：作者 － 标题
-	// szTitle：标题
-	//
-
-	// 查找标题
-	szTitleFile = _tcsstr(szLyricsFileName, _T(" - "));
-	if (szTitleFile)
-		szTitleFile += 3;	// _tcslen(_T(" - "));
-	else
-	{
-		szTitleFile = _tcschr(szLyricsFileName, '-');
-		if (szTitleFile)
-			szTitleFile++;	// -
-	}
-	if (szTitleFile == NULL)
-		szTitleFile = szLyricsFileName;
-
-	szBegTitle = szTitleFile;
-	szBegTemp = szTitle;
-
-	StrIgnoreCompare(szBegTitle, szBegTemp, bTitleIgnoreNumb);
-	if (*szBegTemp == '\0' && *szBegTitle == '\0')
-	{
-		szBegTitle = szTitleFile;
-		szBegTemp = szTitle;
-
-		StrIgnoreCompare(szBegTitle, szBegTemp, FALSE);
-		if (*szBegTemp == '\0' && *szBegTitle == '\0')
-			return LYRIC_MATCH_PART;
-		else
-			return LYRIC_MATCH_PART_DEC;
-	}
-	else if (*szBegTitle == '\0')
-	{
-		//
-		// 接着上面的情况，匹配下面的样式：
-		// szLyricsFileName：作者 － 标题
-		// szTitle：标题 作者
-		//               ^~~^
-		//
-		// 目前已经匹配了标题，再匹配作者就行了
-		// szTemp 接着匹配使用
-		TCHAR	szArtistFile[256];
-		LPCTSTR	szBegArtist;
-
-		_tcsncpysz_safe(szArtistFile, 256, szLyricsFileName, int(szTitleFile - szLyricsFileName));
-
-		szBegArtist = szArtistFile;
-		StrIgnoreCompare(szBegArtist, szBegTemp, bTitleIgnoreNumb);
-		if (*szBegTemp == '\0' && *szBegArtist == '\0')
-		{
-			szBegTitle = szTitleFile;
-			szBegTemp = szTitle;
-
-			StrIgnoreCompare(szBegTitle, szBegTemp, FALSE);
-			if (*szBegTemp == '\0' && *szBegTitle == '\0')
-				return LYRIC_MATCH_ALL;
-			else
-				return LYRIC_MATCH_ALL_DEC;
-		}
-	}
-
-	return LYRIC_MATCH_NONE;
-}
-
-// COMMENT:
-//		取得文件名与歌曲的"匹配类型"
-//		szFileName 的一般格式为 作者 － 歌曲名
-// INPUT:
-//		szTitle, szArtist	－	经过标准化的字符串，字符串中只包含：(均为小写)字母、数字。
-LRC_MATCH_TYPE GetLyricsMatchType(LPCTSTR szLyricsFileName, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb)
-{
-	assert(szLyricsFileName);
-	assert(szTitle);
-	assert(szArtist);
-	assert(szTitle[0] != '\0');
-
-	if (szArtist[0] == '\0')
-	{
-		// 对Artist 为空的情况进行处理
-		return GetLyricsMatchTypeTitleOnly(szLyricsFileName, szTitle, bTitleIgnoreNumb);
-	}
-
-	//
-	// 将szLyricsFileName 按照“作者 － 歌曲名”格式进行比较
-	//
-
-	LPCTSTR		szBegFile, szBegTemp;
-
-	szBegFile = szLyricsFileName;
-	szBegTemp = szArtist;
-
-	StrIgnoreCompare(szBegFile, szBegTemp, bArtIgnoreNumb);
-
-	// 没有匹配到作者名
-	if (*szBegTemp != '\0')
-		return GetLyricsMatchTypeTitleOnly(szLyricsFileName, szTitle, bTitleIgnoreNumb);
-
-	// 再匹配歌曲标题, 继续使用szBegFile
-	LPCTSTR		szFileTitle = szBegFile;
-	szBegTemp = szTitle;
-
-	StrIgnoreCompare(szBegFile, szBegTemp, bTitleIgnoreNumb);
-
-	// 完全匹配
-	if (*szBegTemp == '\0' && *szBegFile == '\0')
-	{
-		szBegTemp = szTitle;
-		StrIgnoreCompare(szFileTitle, szBegTemp, FALSE);
-		if (*szBegTemp == '\0' && *szBegFile == '\0')
-			return LYRIC_MATCH_ALL;
-		else
-			return LYRIC_MATCH_ALL_DEC;
-	}
-
-	return LYRIC_MATCH_NONE;
-}
-
-// COMMENT:
-//		取得文件名与歌曲的"匹配类型"
-//		szFileName 的一般格式为 作者 － 歌曲名
-// INPUT:
-//		szTitle, szArtist	－	经过标准化的字符串，字符串中只包含：(均为小写)字母、数字。
-LRC_MATCH_TYPE GetLyricsMatchType(LPCTSTR szItemTitle, LPCTSTR szItemArtist, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb)
-{
-	assert(szItemTitle);
-	assert(szTitle);
-	assert(szArtist);
-	assert(szTitle[0] != '\0');
-
-	if (szArtist[0] == '\0')
-	{
-		// szTitle 可能的格式 title - artist
-		// szTitle 可能的格式 artist - title
-		LPCTSTR		szBeg1, szBeg2;
-
-		szBeg1 = szItemTitle;
-		szBeg2 = szTitle;
-
-		StrIgnoreCompare(szBeg1, szBeg2, bTitleIgnoreNumb);
-
-		if (*szBeg1 == '\0')
-		{
-			// szTitle 可能的格式 title - artist
-			// szItemTitle 匹配完了
-
-			//
-			// szTitle: title
-			if (*szBeg2 == '\0')
-				return LYRIC_MATCH_PART;
-
-			//
-			// szTitle: title - artist
-			szBeg1 = szItemArtist;
-			StrIgnoreCompare(szBeg1, szBeg2, bTitleIgnoreNumb);
-			if (*szBeg1 == '\0' && *szBeg2 == '\0')
-			{
-				return LYRIC_MATCH_ALL_DEC;
-			}
-			else
-				return LYRIC_MATCH_PART_DEC;
-		}
-		else
-		{
-			// szTitle 可能的格式 artist - title
-			szBeg1 = szItemArtist;
-			szBeg2 = szTitle;
-
-			StrIgnoreCompare(szBeg1, szBeg2, bTitleIgnoreNumb);
-			if (*szBeg1 == '\0')
-			{
-				szBeg1 = szItemTitle;
-				StrIgnoreCompare(szBeg1, szBeg2, bTitleIgnoreNumb);
-				if (*szBeg1 == '\0' && *szBeg2 == '\0')
-					return LYRIC_MATCH_ALL_DEC;
-			}
-		}
-
-		return LYRIC_MATCH_NONE;
-	}
-
-	//
-	// 将szLyricsFileName 按照“作者 － 歌曲名”格式进行比较
-	//
-	LPCTSTR		szBeg1, szBeg2;
-
-	szBeg1 = szItemTitle;
-	szBeg2 = szTitle;
-
-	StrIgnoreCompare(szBeg1, szBeg2, bTitleIgnoreNumb);
-
-	if (*szBeg1 == '\0' && *szBeg2 == '\0')
-	{
-		szBeg1 = szItemArtist;
-		szBeg2 = szArtist;
-		StrIgnoreCompare(szBeg1, szBeg2, bTitleIgnoreNumb);
-		if (*szBeg1 == '\0' && *szBeg2 == '\0')
-			return LYRIC_MATCH_ALL;
-		else
-			return LYRIC_MATCH_PART;
-	}
-
-	//
-	// 将szLyricsFileName 按照“歌曲名 － 作者”格式进行比较
-	//
-	szBeg1 = szItemArtist;
-	szBeg2 = szTitle;
-
-	StrIgnoreCompare(szBeg1, szBeg2, bTitleIgnoreNumb);
-
-	if (*szBeg1 == '\0' && *szBeg2 == '\0')
-	{
-		szBeg1 = szItemTitle;
-		szBeg2 = szArtist;
-		StrIgnoreCompare(szBeg1, szBeg2, bTitleIgnoreNumb);
-		if (*szBeg1 == '\0' && *szBeg2 == '\0')
-			return LYRIC_MATCH_ALL;
-	}
-
-	return LYRIC_MATCH_NONE;
-}
-
-int CalLyricsMatchValue(MLFileType fileType, LPCTSTR szTitleTarg, LPCTSTR szArtistTarg, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb)
-{
-	LRC_MATCH_TYPE	nMatchType;
-
-	nMatchType = GetLyricsMatchType(szTitleTarg, szArtistTarg, szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
-
-	return GetLyricsMatchValue(nMatchType, fileType);
-}
-
-// COMMENT:
-//		根据 歌词名、文件类型 计算所得得分
-int CalLyricsMatchValue(LPCTSTR szFile, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb)
-{
-	LRC_MATCH_TYPE	nMatchType;
-	MLFileType		nFileType;
-
-	nFileType = MLGetFileType(szFile);
-
-	if (bTitleIgnoreNumb)
-	{
-		nMatchType = GetLyricsMatchType(FileGetTitle(szFile).c_str(),
-			szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
-	}
-	else
-	{
-		tstring		strArTarg, strTiTarg;
-		AnalysisLyricsFileNameEx(strArTarg, strTiTarg, szFile);
-
-		nMatchType = GetLyricsMatchType(strTiTarg.c_str(), strArTarg.c_str(), szTitle, bTitleIgnoreNumb, szArtist, bArtIgnoreNumb);
-	}
-
-	return GetLyricsMatchValue(nMatchType, nFileType);
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -653,3 +251,58 @@ void V_LRCSEARCHRESULT::DeleteByOrder(int n)
 		}
 	}
 }
+
+//////////////////////////////////////////////////////////////////////////
+// CPPUnit test
+
+#ifdef _CPPUNIT_TEST
+
+IMPLEMENT_CPPUNIT_TEST_REG(LyricsSearch)
+
+class CTestCaseLyricsSearch : public CppUnit::TestFixture
+{
+	CPPUNIT_TEST_SUITE(CTestCaseLyricsSearch);
+	CPPUNIT_TEST(TestCLyricsSearchParameter);
+	CPPUNIT_TEST(TestCLyricsSearchParameter2);
+	CPPUNIT_TEST_SUITE_END();
+
+protected:
+	void TestCLyricsSearchParameter()
+	{
+		tstring testDir = GetUnitTestFolder();
+		tstring strMedia = DirStringJoint(testDir.c_str(), _T("artist - title.mp3"));
+		LPCTSTR szArtist = _T("artist");
+		LPCTSTR szTitle = _T("title");
+
+		LPCTSTR vLyrFileName[] = { _T("artist - title.lrc"), _T("artist - 01 title.txt"), _T("artist(who are you?) - 01 title.txt"), _T("title.lrc"),       _T("artist.lrc"), };
+		int      vMatchValue[] = { __vArTiSame[1] + 2 + 2,   __vArTiSame[0] + 1 + 1,     __vArTiSame[0] + 1,                         __vTiSame[1] + 1 + 1,  0 };
+
+		CLyricsSearchParameter searchParam(strMedia.c_str(), szArtist, szTitle);
+
+		for (int i = 0; i < CountOf(vLyrFileName); i++)
+		{
+			tstring strLyrFile = DirStringJoint(testDir.c_str(), vLyrFileName[i]);
+			int matchValue = searchParam.CalMatchValueByName(testDir.c_str(), vLyrFileName[i], MLGetFileType(strLyrFile.c_str()));
+			CPPUNIT_ASSERT(matchValue == vMatchValue[i]);
+		}
+	}
+
+	void TestCLyricsSearchParameter2()
+	{
+		tstring testDir = GetUnitTestFolder();
+		tstring strMedia = DirStringJoint(testDir.c_str(), _T("just a media.mp3"));
+		LPCTSTR szArtist = _T("artist");
+		LPCTSTR szTitle = _T("title");
+
+		CLyricsSearchParameter searchParam(strMedia.c_str(), szArtist, szTitle);
+
+		tstring strLyrFile = DirStringJoint(testDir.c_str(), _T("just a media.lrc"));
+		int matchValue = searchParam.CalMatchValueByName(testDir.c_str(), strLyrFile.c_str(), MLGetFileType(strLyrFile.c_str()));
+		CPPUNIT_ASSERT(matchValue == __vArTiSame[1] + 2);
+	}
+
+};
+
+CPPUNIT_TEST_SUITE_REGISTRATION(CTestCaseLyricsSearch);
+
+#endif // _CPPUNIT_TEST

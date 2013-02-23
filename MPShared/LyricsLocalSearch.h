@@ -6,20 +6,11 @@
 	Purpose  :	
 *********************************************************************/
 
-#if !defined(AFX_LYRICSLOCALSEARCH_H__A34FB361_77F5_11D5_9E04_02608CAD9330__INCLUDED_)
-#define AFX_LYRICSLOCALSEARCH_H__A34FB361_77F5_11D5_9E04_02608CAD9330__INCLUDED_
-
-#if _MSC_VER > 1000
 #pragma once
-#endif // _MSC_VER > 1000
 
-void AnalysisSongArTitle(TCHAR szTitle[]/* out */, BOOL &bTitleIgnoreNumb/* out */, TCHAR szArtist[]/* out */, BOOL &bArtIgnoreNumb/* out */, LPCTSTR szFile);
-
-// 歌词关连定义
-typedef map<tstring, tstring> SONG_LYRIC_MAP;
 
 //
-// 本地歌词搜索
+// Search local lyrics
 //
 class CLyricsLocalSearch
 {
@@ -27,13 +18,12 @@ public:
 	void Init();
 	void Quit();
 
-	// 搜索所有匹配的歌词，包括了歌曲名完全匹配、歌词名完全匹配
-	BOOL SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vLyrics);
+	// Search match lyrics
+	void SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vLyrics);
 
-	// 取得最匹配的歌词，首先从歌词关连列表中读取
-	BOOL GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, TCHAR *szLyricFile);
+	// Search best match lyrics
+	bool GetBestMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, tstring &strLyrFile);
 
-	// 取得相关连的歌词
 	// song://lyrics3v2
 	// song://id3v2/sylt/xxx
 	// song://id3v2/uslt/xxx
@@ -59,8 +49,7 @@ public:
 	static int SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSourceType);
 
 protected:
-	// 搜索所有的歌词
-	BOOL SearchLyrics(LPCTSTR szSongFile, LPCTSTR szTitle, BOOL bTitleIgnoreNumb, LPCTSTR szArtist, BOOL bArtIgnoreNumb, V_LRCSEARCHRESULT *pvLyrics);
+	void SearchLyrics(CLyricsSearchParameter &searchParam, V_LRCSEARCHRESULT &vLyrics);
 
 #ifdef _WIN32_DESKTOP
 	void LoadLyricsAssociationOld();
@@ -103,10 +92,10 @@ public:
 	//    Check whether lyrics is in the $Product$ program driver.
 	// 4) "Lyrics" folder should be verified dynamically.
 	//
+	typedef map<tstring, tstring> SONG_LYRIC_MAP;
+
 	SONG_LYRIC_MAP			m_mapLyricsAssociate;
 	Mutex					m_mutex;
 
 	BOOL					m_bSaved;
 };
-
-#endif // !defined(AFX_LYRICSLOCALSEARCH_H__A34FB361_77F5_11D5_9E04_02608CAD9330__INCLUDED_)
