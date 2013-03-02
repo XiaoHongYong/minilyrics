@@ -66,6 +66,35 @@ bool EnumFilesInDir(LPCTSTR szBaseDir, LPCTSTR szFilter, vector<tstring> &vFiles
 	return TRUE;
 }
 
+bool EnumDirsInDir(LPCTSTR szBaseDir, vector<tstring> &vFiles, bool bEnumFullPath)
+{
+	CMLFileFind			find;
+
+	if (!find.OpenDir(szBaseDir, "*"))
+		return FALSE;
+
+	while (find.FindNext())
+	{
+		if (find.IsCurDir())
+		{
+			if (bEnumFullPath)
+			{
+				tstring		strFile;
+
+				strFile = szBaseDir;
+				DirStringAddSlash(strFile);
+				strFile += find.GetCurName();
+
+				vFiles.push_back(strFile);
+			}
+			else
+				vFiles.push_back(find.GetCurName());
+		}
+	}
+
+	return TRUE;
+}
+
 // typedef void (*FUNProcessFile)(LPCTSTR szFileName, LPCTSTR szDir, LPVOID lpUserData);
 bool ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUserData)
 {
