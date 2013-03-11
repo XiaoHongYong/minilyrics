@@ -1,5 +1,7 @@
 #pragma once
 
+bool IsValidXMLText(LPCTSTR szText);
+
 class CXMLWriter  
 {
 public:

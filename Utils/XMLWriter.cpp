@@ -28,6 +28,28 @@ void XMLWriterTest()
 }
 #endif
 
+bool IsValidXMLText(LPCTSTR szText)
+{
+	LPCWSTR wszText;
+#ifndef UNICODE
+	wstring wstr;
+	TStringToUCS2(szText, -1, wstr);
+	wszText = wstr.c_str();
+#else
+	wszText = szText;
+#endif
+
+	for (LPCWSTR p = wszText; *p != '\0'; p++)
+	{
+		uint c = (uint)*p;
+		if (!(c == 0x9 || c == 0xA || c == 0xD || (c >= 0x20 && c <= 0xD7FF) ||
+			(c >= 0xE000 && c <= 0xFFFD) || (c >= 0x10000 && c <= 0x10FFFF)))
+			return false;
+	}
+
+	return true;
+}
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////

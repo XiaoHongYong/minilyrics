@@ -70,7 +70,7 @@ bool EnumDirsInDir(LPCTSTR szBaseDir, vector<tstring> &vFiles, bool bEnumFullPat
 {
 	CMLFileFind			find;
 
-	if (!find.OpenDir(szBaseDir, "*"))
+	if (!find.OpenDir(szBaseDir, _T("*")))
 		return FALSE;
 
 	while (find.FindNext())
