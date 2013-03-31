@@ -23,6 +23,8 @@ LRC_SOURCE_TYPE LyrSrcTypeFromName(LPCTSTR szLrcSource);
 LPCTSTR LyrSrcTypeToName(LRC_SOURCE_TYPE lst);
 LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst);
 
+bool GetEmbeddedLyricsNameInfo(LPCTSTR szName, string &language, int &index);
+
 #define SZ_SONG_ID3V2_SYLT		_T("song://id3v2/sylt/")
 #define SZ_SONG_ID3V2_USLT		_T("song://id3v2/uslt/")
 #define SZ_SONG_LYRICS3V2		_T("song://lyrics3v2")

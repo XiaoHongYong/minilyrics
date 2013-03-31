@@ -246,11 +246,27 @@ int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESU
 
 		LrcSearchResult		result;
 		result.strUrl = lyrName;
-		result.strSaveFileName = RemovePrefixOfAcckey(_TL(LyrSrcTypeToDesc(lst)));
+		result.strTitle = result.strSaveFileName = RemovePrefixOfAcckey(_TL(LyrSrcTypeToDesc(lst)));
 		if (lst == LST_LYRICS3V2 || lst == LST_ID3V2_SYLT || lst == LST_ID3V2_LYRICS)
 			result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
 		else
 			result.nMatchValue = MATCH_VALUE_BETTER - 4;	// Larger than the text lyrics.
+
+		string language;
+		int index;
+		if (GetEmbeddedLyricsNameInfo(lyrName.c_str(), language, index))
+		{
+			tstring strIndex;
+			if (index > 0)
+				strIndex = CStrPrintf(_T(": %d"), index).c_str();
+			if (language == "eng")
+				result.strArtist = _T("English");
+			else if (language == "fre")
+				result.strArtist = _T("French");
+			else
+				AnsiToTString(language.c_str(), -1, result.strArtist);
+			result.strArtist += strIndex;
+		}
 
 		vLyrics.AddResult(result);
 	}

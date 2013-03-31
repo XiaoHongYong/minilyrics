@@ -16,19 +16,18 @@ bool IsSynchLyricsFrameID(UINT nFrameID)
 	return nFrameID == ID3V2_2_SYLT || nFrameID == ID3V2_3_SYLT;
 }
 
-string GetID3v2LyricsLanguage(LPCTSTR szLyrName)
+void AddEmbeddedLyrics(VecString &vNames, tstring &name)
 {
-	string strLangAnsi;
-
-	if (!IsEmptyString(szLyrName))
+	int next = 0;
+	for (int i = 0; i < vNames.size(); i++)
 	{
-		ASSERT(StrBeginWith(szLyrName, SZ_SONG_ID3V2_SYLT) || StrBeginWith(szLyrName, SZ_SONG_ID3V2_USLT));
-		LPCTSTR szLang = UrlGetName(szLyrName);
-		if (!IsEmptyString(szLang))
-			TStringToAnsi(szLang, -1, strLangAnsi);
+		if (StrBeginWith(vNames[i].c_str(), name.c_str()))
+			next++;
 	}
 
-	return strLangAnsi;
+	if (next > 0)
+		name += CStrPrintf(_T("/%d"), next).c_str();
+	vNames.push_back(name);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -58,7 +57,8 @@ int CID3v2IF::ListLyrics(VecString &vLyrNames)
 			{
 				tstring strLang;
 				AnsiToTString(unsyncLyrics.m_szLanguage, -1, strLang);
-				vLyrNames.push_back(tstring(SZ_SONG_ID3V2_USLT) + strLang);
+				tstring name = tstring(SZ_SONG_ID3V2_USLT) + strLang;
+				AddEmbeddedLyrics(vLyrNames, name);
 			}
 		}
 		else if (IsSynchLyricsFrameID(pFrame->m_framehdr.nFrameID))
@@ -71,7 +71,8 @@ int CID3v2IF::ListLyrics(VecString &vLyrNames)
 			{
 				tstring strLang;
 				AnsiToTString(syncLyrics.m_szLanguage, -1, strLang);
-				vLyrNames.push_back(tstring(SZ_SONG_ID3V2_SYLT) + strLang);
+				tstring name = tstring(SZ_SONG_ID3V2_SYLT) + strLang;
+				AddEmbeddedLyrics(vLyrNames, name);
 			}
 		}
 		else if (pFrame->m_framehdr.nFrameID == ID3V2_2_USER_TEXT
@@ -174,11 +175,14 @@ int CID3v2IF::SetSynchLyrics(LPCTSTR szName, ID3v2SynchLyrics &lyrics)
 int CID3v2IF::SetUnsynchLyrics(LPCTSTR szName, LPCTSTR szDesc, LPCTSTR szLyrics)
 {
 	ID3v2UnsynchLyrics unsyncLyr;
+	string language;
+	int index;
 
-	string strLangAnsi = GetID3v2LyricsLanguage(szName);
-	if (strLangAnsi.empty())
-		strLangAnsi = "eng";
-	strcpy_safe(unsyncLyr.m_szLanguage, CountOf(unsyncLyr.m_szLanguage), strLangAnsi.c_str());
+	GetEmbeddedLyricsNameInfo(szName, language, index);
+
+	if (language.empty())
+		language = "eng";
+	strcpy_safe(unsyncLyr.m_szLanguage, CountOf(unsyncLyr.m_szLanguage), language.c_str());
 	unsyncLyr.SetValueAndOptimizeEncoding(szDesc, szLyrics);
 
 	return SetUnsynchLyrics(szName, unsyncLyr);
@@ -679,38 +683,62 @@ int CID3v2IF::UpdateTextFrame(UINT nFrameID, LPCTSTR szText)
 
 CID3v2IF::FrameIterator CID3v2IF::GetSyncLyricsFrame(LPCTSTR szName)
 {
+	string language;
+	int index;
+	if (!GetEmbeddedLyricsNameInfo(szName, language, index))
+		return m_listFrames.end();
+
 	int nFrameID = IsID3v2_2() ? ID3V2_2_SYLT : ID3V2_3_SYLT;
-	string strLangAnsi = GetID3v2LyricsLanguage(szName);
-	if (strLangAnsi.empty())
+
+	if (language.empty())
 		return FindFrameIter(nFrameID);
 
+	FrameIterator itLastFound = m_listFrames.end();
 	for (FrameIterator it = m_listFrames.begin(); it != m_listFrames.end(); ++it)
 	{
 		CID3v2Frame *pFrame = *it;
 		if (pFrame->GetFrameID() == nFrameID
-			&& CID3v2FrameParserSynLyrics::IsFrameLanguageSame(pFrame, strLangAnsi.c_str()))
-			return it;
+			&& CID3v2FrameParserSynLyrics::IsFrameLanguageSame(pFrame, language.c_str()))
+		{
+			itLastFound = it;
+			if (index == 0)
+				return it;
+			else
+				index--;
+		}
 	}
 
-	return m_listFrames.end();
+	return itLastFound;
 }
 
 CID3v2IF::FrameIterator CID3v2IF::GetUnsyncLyricsFrame(LPCTSTR szName)
 {
+	string language;
+	int index;
+	if (!GetEmbeddedLyricsNameInfo(szName, language, index))
+		return m_listFrames.end();
+
 	int nFrameID = IsID3v2_2() ? ID3V2_2_USLT : ID3V2_3_USLT;
-	string strLangAnsi = GetID3v2LyricsLanguage(szName);
-	if (strLangAnsi.empty())
+
+	if (language.empty())
 		return FindFrameIter(nFrameID);
 
+	FrameIterator itLastFound = m_listFrames.end();
 	for (FrameIterator it = m_listFrames.begin(); it != m_listFrames.end(); ++it)
 	{
 		CID3v2Frame *pFrame = *it;
 		if (pFrame->GetFrameID() == nFrameID
-			&& CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(pFrame, strLangAnsi.c_str()))
-			return it;
+			&& CID3v2FrameParserUnsynLyrics::IsFrameLanguageSame(pFrame, language.c_str()))
+		{
+			itLastFound = it;
+			if (index == 0)
+				return it;
+			else
+				index--;
+		}
 	}
 
-	return m_listFrames.end();
+	return itLastFound;
 }
 
 CID3v2IF::FrameIterator CID3v2IF::GetUserDefLyricsFrame()

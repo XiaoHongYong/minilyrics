@@ -8,6 +8,7 @@
 #include "../ID3Lib/ID3v2Frame.h"
 #include "../ID3Lib/ID3v2FrameParser.h"
 #include "../ID3Lib/ID3v1.h"
+#include "../TagLib/ID3v2IF.h"
 /*
 void TestID3v2Lyrics(LPCTSTR szMp3File)
 {

@@ -58,6 +58,34 @@ LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst)
 	return IDToString(__id2strLyrSrcTypeDesc, lst, _T("Unknown"));
 }
 
+bool GetEmbeddedLyricsNameInfo(LPCTSTR szName, string &language, int &index)
+{
+// 	type.clear();
+// 	subType.clear();
+	language.clear();
+	index = 0;
+
+	szName = szName + _tcslen(_T("song://"));
+	VecString vStr;
+
+	StrSplit(szName, '/', vStr);
+
+	if (vStr.size() < 2)
+		return false;
+
+// 	type = vStr[0];
+// 	subType = vStr[1];
+
+	if (vStr.size() >= 3)
+		TStringToUTF8(vStr[2].c_str(), -1, language);
+
+	if (vStr.size() >= 4)
+		index = _ttoi(vStr[3].c_str());
+
+	return true;
+}
+
+
 //////////////////////////////////////////////////////////////////////////
 
 CTagLib::CTagLib(void)

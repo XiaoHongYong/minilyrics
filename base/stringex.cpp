@@ -12,6 +12,17 @@ typedef	WCHAR			UTCHAR;
 typedef	unsigned char	UTCHAR;
 #endif
 
+int isCharWordBoundary(WCHAR c) {
+	return ((c >= 0x4E00 && c <= 0x9FFF)
+		|| (c >= 0x3000 && c <= 0x303F) // Chinese punctuation
+		|| (c >= 0x3400 && c <= 0x4DFF)
+		|| (c >= 0x20000 && c <= 0x2A6DF)
+		|| (c >= 0xF900 && c <= 0xFAFF)
+		|| (c >= 0xF900 && c <= 0xFAFF)
+		|| (c >= 0x2F800 && c <= 0x2FA1F)
+		|| (!IsAlphaDigit(c) && c != '\'' && c != '-' && c != '_'));
+}
+
 bool StrBeginWith(LPCSTR szText, LPCSTR szBeginWith)
 {
 	while (*szBeginWith == *szText && *szBeginWith && *szText)
