@@ -21,6 +21,8 @@ public:
 
 	virtual void OnSkinLoaded();
 
+	virtual void OnTimer(UINT nIDEvent);
+
 	void UpdatePlayerSysTrayIcon() { m_mlTrayIcon.UpdatePlayerSysTrayIcon(); }
 
 	CMLTrayIcon &GetTrayIcon() { return m_mlTrayIcon; }
@@ -46,5 +48,7 @@ protected:
 
 protected:
 	CMLTrayIcon		m_mlTrayIcon;
+
+	UINT			m_nTimerFixWndFocus;
 
 };

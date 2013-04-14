@@ -42,6 +42,8 @@ bool CMPSkinMainWnd::OnCreate()
 
 	m_mlTrayIcon.Init(this);
 
+	m_nTimerFixWndFocus = RegisterTimerObject(NULL, 1000);
+
 	return true;
 }
 
@@ -138,6 +140,23 @@ void CMPSkinMainWnd::OnSkinLoaded()
 
 	if (g_bMediaMonkeyEmbeder)
 		SetEmbedded();
+}
+
+void CMPSkinMainWnd::OnTimer(UINT nIDEvent)
+{
+	if (nIDEvent == m_nTimerFixWndFocus)
+	{
+		// Under some special situation, MiniLyrics may not receive WM_ACTIVATE !activate notifications.
+		UnregisterTimerObject(NULL, m_nTimerFixWndFocus);
+		if (GetForegroundWindow() != m_hWnd)
+		{
+			if (m_bActived)
+				OnActivate(false);
+		}
+		return;
+	}
+
+	return CMPSkinMainWndBase::OnTimer(nIDEvent);
 }
 
 void CMPSkinMainWnd::SetEmbedded()

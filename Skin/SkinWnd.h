@@ -212,7 +212,7 @@ public:
 	virtual void OnSetFocus();
 	virtual void OnKillFocus();
 
-	virtual void OnTimer (UINT nIDEvent);
+	virtual void OnTimer(UINT nIDEvent);
 
 	virtual void OnVScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }
 	virtual void OnHScroll(UINT nSBCode, int nPos, IScrollBar *pScrollBar) { }

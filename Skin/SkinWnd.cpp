@@ -2229,47 +2229,36 @@ void CSkinWnd::OnAdjustHue(float hue, float saturation, float luminance)
 	m_rootConainter.OnAdjustHue(hue, saturation, luminance);
 }
 
-// COMMENTS:
-//		??TimerObject
-// RETURN:
-//		???????TIMER_ID
 int CSkinWnd::RegisterTimerObject(CUIObject *pObj, int nTimeDuration)
 {
-	TIMER_OBJECT		TimerObj;
-
 	m_nTimerIDMax++;
-	TimerObj.nTimeDuration = nTimeDuration;
-	TimerObj.pObj = pObj;
 	int nTimerId = m_nTimerIDMax;
+	if (pObj != NULL)
+	{
+		TIMER_OBJECT		TimerObj;
 
-	m_mapTimerObjs[nTimerId] = TimerObj;
+		TimerObj.nTimeDuration = nTimeDuration;
+		TimerObj.pObj = pObj;
 
-	SetTimer(nTimerId, TimerObj.nTimeDuration);
+		m_mapTimerObjs[nTimerId] = TimerObj;
+	}
+
+	SetTimer(nTimerId, nTimeDuration);
 
 	return nTimerId;
 }
 
-// COMMENTS:
-//		?????TIMER_ID
 void CSkinWnd::UnregisterTimerObject(CUIObject *pObj, int nTimerId)
 {
-	MAP_TIMER_OBJS::iterator	it;
-
-	it = m_mapTimerObjs.find(nTimerId);
-	// assert(it != m_mapTimerObjs.end());
-
+	MAP_TIMER_OBJS::iterator it = m_mapTimerObjs.find(nTimerId);
 	if (it != m_mapTimerObjs.end())
-	{
-		KillTimer(nTimerId);
 		m_mapTimerObjs.erase(it);
-	}
+
+	KillTimer(nTimerId);
 }
 
-// COMMENTS:
-//		?????TIMER_ID
 void CSkinWnd::UnregisterTimerObject(CUIObject *pObj)
 {
-	// ???????Timer,?????timer
 	MAP_TIMER_OBJS::iterator	it;
 
 	for (it = m_mapTimerObjs.begin(); it != m_mapTimerObjs.end(); )
@@ -2287,7 +2276,7 @@ void CSkinWnd::UnregisterTimerObject(CUIObject *pObj)
 	}
 }
 
-void CSkinWnd::OnTimer (UINT nIDEvent)
+void CSkinWnd::OnTimer(UINT nIDEvent)
 {
 	MAP_TIMER_OBJS::iterator	it;
 
@@ -2472,7 +2461,6 @@ void CSkinWnd::ToXML(CXMLWriter &xmlStream)
 	EnumProperties(properties);
 	properties.ToXMLCategoryAttrib(xmlStream);
 
-	// ?????
 	m_rootConainter.OnToXMLChild(xmlStream);
 
 	xmlStream.WriteEndElement();
