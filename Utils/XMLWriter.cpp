@@ -32,7 +32,7 @@ bool IsValidXMLText(LPCTSTR szText)
 {
 	LPCWSTR wszText;
 #ifndef UNICODE
-	wstring wstr;
+	wstring_t wstr;
 	TStringToUCS2(szText, -1, wstr);
 	wszText = wstr.c_str();
 #else
