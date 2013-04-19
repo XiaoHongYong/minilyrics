@@ -840,7 +840,7 @@ tstring ToLower(LPCTSTR szString)
 // * No other chars.
 bool IsStrNumeric(LPCSTR szString)
 {
-	LPCTSTR		szTemp;
+	LPCSTR		szTemp;
 	szTemp = szString;
 
 	while (IsDigit(*szTemp))
