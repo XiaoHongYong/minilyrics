@@ -20,7 +20,7 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(NSUInteger)aStyle
 				  backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag {
 	self = [super initWithContentRect:contentRect
-							styleMask:NSBorderlessWindowMask
+							styleMask:aStyle
 							  backing:NSBackingStoreBuffered
 								defer:NO];
 	if (self != nil) {
@@ -272,10 +272,13 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 - (void)windowDidBecomeKey:(NSNotification *)notification {
 	mBaseWnd->OnActivate(true);
 	mBaseWnd->OnSetFocus();
+	[self setStyleMask:NSResizableWindowMask];
+	
 }
 
 - (void)windowDidResignKey:(NSNotification *)notification {
 	mBaseWnd->OnKillFocus();
+	[self setStyleMask:NSBorderlessWindowMask];
 	mBaseWnd->OnActivate(false);
 	mBaseWnd->m_bMouseCaptured = false;
 }

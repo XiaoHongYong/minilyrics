@@ -14,7 +14,7 @@
 #include "ErrorResolveDlg.h"
 #include "LyricShowObj.h"
 #include "MlVersion.h"
-#include "../MLServer/LyricsKeywordFilter.h"
+#include "../MLLib/LyricsKeywordFilter.h"
 
 #ifdef _LINUX_GTK2
 #include "../Skin/gtk2/SplashScreenWnd.h"

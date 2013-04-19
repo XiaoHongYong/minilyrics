@@ -39,6 +39,8 @@
 		5FBCCD8514851BE700D7C64A /* SrtParser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCD6414851BE700D7C64A /* SrtParser.cpp */; };
 		5FBCCD8614851BE700D7C64A /* SrtParser.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCD6514851BE700D7C64A /* SrtParser.h */; };
 		5FBCCD8714851BE700D7C64A /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCD6614851BE700D7C64A /* StdAfx.h */; };
+		5FDF5F991720CE8100F20EB2 /* LyricsKeywordFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDF5F971720CE8100F20EB2 /* LyricsKeywordFilter.cpp */; };
+		5FDF5F9A1720CE8100F20EB2 /* LyricsKeywordFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FDF5F981720CE8100F20EB2 /* LyricsKeywordFilter.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		5FBCCD6414851BE700D7C64A /* SrtParser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SrtParser.cpp; sourceTree = SOURCE_ROOT; };
 		5FBCCD6514851BE700D7C64A /* SrtParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SrtParser.h; sourceTree = SOURCE_ROOT; };
 		5FBCCD6614851BE700D7C64A /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = SOURCE_ROOT; };
+		5FDF5F971720CE8100F20EB2 /* LyricsKeywordFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsKeywordFilter.cpp; sourceTree = SOURCE_ROOT; };
+		5FDF5F981720CE8100F20EB2 /* LyricsKeywordFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsKeywordFilter.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -131,6 +135,8 @@
 		5FBCCD3714851B5300D7C64A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FDF5F971720CE8100F20EB2 /* LyricsKeywordFilter.cpp */,
+				5FDF5F981720CE8100F20EB2 /* LyricsKeywordFilter.h */,
 				5FBCCD4614851BE700D7C64A /* HelperFun.cpp */,
 				5FBCCD4714851BE700D7C64A /* HelperFun.h */,
 				5FBCCD4814851BE700D7C64A /* LrcParser.cpp */,
@@ -192,6 +198,7 @@
 				5FBCCD8414851BE700D7C64A /* SncParser.h in Headers */,
 				5FBCCD8614851BE700D7C64A /* SrtParser.h in Headers */,
 				5FBCCD8714851BE700D7C64A /* StdAfx.h in Headers */,
+				5FDF5F9A1720CE8100F20EB2 /* LyricsKeywordFilter.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -258,6 +265,7 @@
 				5FBCCD7F14851BE700D7C64A /* Register.cpp in Sources */,
 				5FBCCD8314851BE700D7C64A /* SncParser.cpp in Sources */,
 				5FBCCD8514851BE700D7C64A /* SrtParser.cpp in Sources */,
+				5FDF5F991720CE8100F20EB2 /* LyricsKeywordFilter.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -312,6 +320,8 @@
 		5FBCCD4014851B5300D7C64A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";
@@ -329,6 +339,8 @@
 		5FBCCD4114851B5300D7C64A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "";

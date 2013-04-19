@@ -1,18 +1,18 @@
 #pragma once
 
 template<class _Ty>
-class auto_free_list : public list<_Ty *>
+class auto_free_list : public list<_Ty*>
 {
 private:
 	// Do NOT define copy construct
-	auto_free_list(auto_free_list<_Ty> &copy) { }
+	auto_free_list(auto_free_list<_Ty*> &copy) { }
 
 public:
 	auto_free_list() { }
 
-	typedef list<_Ty *>		Parent;
+	typedef list<_Ty*>		Parent;
 #ifdef _MAC
-    typedef _List_iterator<_Ty*>                        iterator;
+	typedef typename Parent::iterator                  iterator;
 #endif
 
 	~auto_free_list()

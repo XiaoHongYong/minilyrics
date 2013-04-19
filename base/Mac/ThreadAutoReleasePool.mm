@@ -4,6 +4,7 @@
 
 #import "stdafx.h"
 #import "ThreadAutoReleasePool.h"
+#include <pthread.h>
 
 bool CThreadAutoReleasePool::Create(FUNThread function, void* lpData)
 {

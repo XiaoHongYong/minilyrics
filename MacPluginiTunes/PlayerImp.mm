@@ -3,6 +3,7 @@
 #include "PlayerImp.h"
 #import "EyeTunes.h"
 #include <cmath>
+#include <pthread.h>
 
 CPlayerImp	g_Player;
 pthread_t	g_threadTimer = 0;

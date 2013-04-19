@@ -6,6 +6,7 @@
 #include "PlayerEventDispatcher.h"
 #include "../../MPShared/Player.h"
 #include "PlayerPluginInstaller.h"
+#include <pthread.h>
 
 #ifdef DEBUG
 

@@ -8,7 +8,7 @@
 #include "OnlineSearch.h"
 #include "DownloadMgr.h"
 #include "Helper.h"
-#include "../MLServer/LyricsKeywordFilter.h"
+#include "../MLLib/LyricsKeywordFilter.h"
 
 COnlineSearch		g_OnlineSearch;
 

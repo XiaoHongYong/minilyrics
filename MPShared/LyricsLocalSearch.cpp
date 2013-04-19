@@ -10,7 +10,6 @@
 #include "MPlayerApp.h"
 #include "DownloadMgr.h"
 #include "LyricsLocalSearch.h"
-#include "../MLServer/LyricsKeywordFilter.h"
 
 LPCTSTR 		SZ_FOLDER_PREFIX = _T("LyricFolder");
 

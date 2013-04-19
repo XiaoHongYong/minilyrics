@@ -95,7 +95,7 @@ LyricsLine *DuplicateLyricsLine(LyricsLine *pLineSrc)
 
 	return pLine;
 }
-
+	
 //////////////////////////////////////////////////////////////////////////
 
 void CLyricsLines::clear()

@@ -12,9 +12,15 @@
 tstring RegExSub(LPCSTR szRegEx, LPCTSTR szInput, LPCTSTR szWithWhat)
 {
 #ifdef UTF8
-	tr1::regex re(szRegEx, std::tr1::regex_constants::icase);
+#ifdef _MAC
+	regex re(szRegEx, regex_constants::icase);
 
+	return regex_replace(string(szInput), re, string(szWithWhat));
+#else
+	tr1::regex re(szRegEx, std::tr1::regex_constants::icase);
+	
 	return tr1::regex_replace(string(szInput), re, string(szWithWhat));
+#endif
 #else
 	string input, withWhat;
 

@@ -118,6 +118,9 @@
 		5FDC56B4148A23AC00C74E6A /* MPlayerApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56A8148A23AC00C74E6A /* MPlayerApp.cpp */; };
 		5FDC56B6148A23AC00C74E6A /* MPSkinMainWndMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */; };
 		5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */; };
+		5FDF5FD71720D79800F20EB2 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FDF5FD61720D79800F20EB2 /* libstdc++.dylib */; };
+		5FDF5FD91720D7B700F20EB2 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FDF5FD81720D7B700F20EB2 /* libstdc++.6.0.9.dylib */; };
+		5FDF5FDB1720D7C600F20EB2 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FDF5FDA1720D7C600F20EB2 /* libstdc++.6.dylib */; };
 		5FEA17EC15E49EB700B29626 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = 5FEA17EA15E49EB700B29626 /* lang */; };
 		5FEA17ED15E49EB700B29626 /* Patterns in Resources */ = {isa = PBXBuildFile; fileRef = 5FEA17EB15E49EB700B29626 /* Patterns */; };
 /* End PBXBuildFile section */
@@ -536,6 +539,9 @@
 		5FDC56BB148A2ED900C74E6A /* DlgSaveEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveEmbeddedLyrics.h; sourceTree = "<group>"; };
 		5FDC56BC148A2FE300C74E6A /* DlgUpdateLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgUpdateLibrary.h; sourceTree = "<group>"; };
 		5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgUpdateLibrary.cpp; sourceTree = "<group>"; };
+		5FDF5FD61720D79800F20EB2 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
+		5FDF5FD81720D7B700F20EB2 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
+		5FDF5FDA1720D7C600F20EB2 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
 		5FEA17EA15E49EB700B29626 /* lang */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lang; path = ../Install_ML/Share/lang; sourceTree = "<group>"; };
 		5FEA17EB15E49EB700B29626 /* Patterns */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Patterns; path = ../Install_ML/Share/Patterns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -545,6 +551,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FDF5FDB1720D7C600F20EB2 /* libstdc++.6.dylib in Frameworks */,
+				5FDF5FD91720D7B700F20EB2 /* libstdc++.6.0.9.dylib in Frameworks */,
+				5FDF5FD71720D79800F20EB2 /* libstdc++.dylib in Frameworks */,
 				5FB593751545A2950071B204 /* libTaglib.a in Frameworks */,
 				5FB592B81545A1990071B204 /* libThirdPartiesSDK.a in Frameworks */,
 				5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */,
@@ -578,6 +587,9 @@
 		5FB161F5147017330084494F = {
 			isa = PBXGroup;
 			children = (
+				5FDF5FDA1720D7C600F20EB2 /* libstdc++.6.dylib */,
+				5FDF5FD81720D7B700F20EB2 /* libstdc++.6.0.9.dylib */,
+				5FDF5FD61720D79800F20EB2 /* libstdc++.dylib */,
 				5F0315B915E7849C00E5F752 /* Player-Plugins */,
 				5FEA17EA15E49EB700B29626 /* lang */,
 				5FEA17EB15E49EB700B29626 /* Patterns */,
@@ -991,7 +1003,7 @@
 		5FB161F7147017330084494F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 5FB161FA147017330084494F /* Build configuration list for PBXProject "MiniLyricsMac" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1392,6 +1404,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1419,6 +1432,7 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LIBRARY = "libc++";
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1437,6 +1451,9 @@
 		5FB16222147017340084494F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MiniLyricsMac/MiniLyricsMac-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1446,7 +1463,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				INFOPLIST_FILE = "MiniLyricsMac/MiniLyricsMac-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -1455,13 +1472,16 @@
 		5FB16223147017340084494F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MiniLyricsMac/MiniLyricsMac-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
 				GCC_PREPROCESSOR_DEFINITIONS_NOT_USED_IN_PRECOMPS = "";
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = NO;
 				INFOPLIST_FILE = "MiniLyricsMac/MiniLyricsMac-Info.plist";
-				MACOSX_DEPLOYMENT_TARGET = 10.6;
+				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

@@ -37,7 +37,7 @@ bool CBaseWnd::CreateForSkin(LPCTSTR szClassName, LPCTSTR szCaption, int x, int 
 {
 	NSRect frame = NSMakeRect(x, y, nWidth, nHeight);
 	WindowMacImp* w = [[WindowMacImp alloc] initWithContentRect:frame
-											  styleMask:NSBorderlessWindowMask
+											  styleMask:NSResizableWindowMask
 												backing:NSBackingStoreBuffered
 												  defer:NO];
 	[w setOwnerBaseWnd:this];

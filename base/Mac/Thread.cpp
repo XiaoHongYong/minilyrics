@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "Thread.h"
+#include <pthread.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
