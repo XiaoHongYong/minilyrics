@@ -1149,6 +1149,30 @@ void CPlayer::UISeekbarOnSeek(int nPos)
 	CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_DRAW_UPDATE);
 }
 
+tstring FixFileUri(LPCTSTR szUri)
+{
+	static LPCTSTR SZ_FILE_PREFIX		= _T("file://");
+	static LPCTSTR SZ_LOCALHOST_MAC		= _T("localhost");
+	int	nLenPrefix = _tcslen(SZ_FILE_PREFIX);
+	if (szUri && _tcsnicmp(szUri, SZ_FILE_PREFIX, nLenPrefix) == 0)
+	{
+		szUri += nLenPrefix;
+		
+		if (StrBeginWith(szUri, SZ_LOCALHOST_MAC))
+			// For mac: file://localhost/Volumes/
+			szUri += _tcslen(SZ_LOCALHOST_MAC);
+		else if (szUri[0] == '/' && szUri[2] == ':')
+			// Songbird use file:///c:/xx...xxx.mp3 , remove the extra '/'
+			szUri++;
+		
+		tstring uri = UriUnquote(szUri);
+		strrep(uri, '/', DIR_SLASH);
+		return uri;
+	}
+	else
+		return szUri;
+}
+
 #ifndef _MPLAYER
 void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 {
@@ -1156,25 +1180,14 @@ void CPlayer::OnMediaInfoChangedOfMiniLyrics(MLMediaInfo *pMediaInfo)
 
 	if (pMediaInfo)
 	{
-		// Remove file:// prefix in source media url
-		static LPCTSTR		SZ_FILE_PREFIX		= _T("file://");
-		LPCTSTR szMediaUrl = pMediaInfo->MediaUrl();
-		int			nLenPrefix = _tcslen(SZ_FILE_PREFIX);
-		if (szMediaUrl && _tcsnicmp(szMediaUrl, SZ_FILE_PREFIX, nLenPrefix) == 0)
-		{
-			szMediaUrl += nLenPrefix;
-
-			// Songbird use file:///c:/xx...xxx.mp3 , remove the extra '/'
-			if (szMediaUrl[0] == '/' && szMediaUrl[2] == ':')
-				szMediaUrl++;
-		}
+		tstring mediaUrl = FixFileUri(pMediaInfo->MediaUrl());
 
 		// Filter spam info first.
 		tstring strArtist = pMediaInfo->Artist();
 		tstring strTitle = pMediaInfo->Title();
 		FilterSpamInfo(strArtist, strTitle);
 
-		bChanged |= SetFieldValue(m_szSrcMedia, CountOf(m_szSrcMedia), szMediaUrl);
+		bChanged |= SetFieldValue(m_szSrcMedia, CountOf(m_szSrcMedia), mediaUrl.c_str());
 		bChanged |= SetFieldValue(m_szArtist, CountOf(m_szArtist), strArtist.c_str());
 		bChanged |= SetFieldValue(m_szAlbum, CountOf(m_szAlbum), pMediaInfo->Album());
 		bChanged |= SetFieldValue(m_szTitle, CountOf(m_szTitle), strTitle.c_str());

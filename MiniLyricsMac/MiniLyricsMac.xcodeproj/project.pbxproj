@@ -119,8 +119,6 @@
 		5FDC56B6148A23AC00C74E6A /* MPSkinMainWndMac.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */; };
 		5FDC56BE148A30BC00C74E6A /* DlgUpdateLibrary.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */; };
 		5FDF5FD71720D79800F20EB2 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FDF5FD61720D79800F20EB2 /* libstdc++.dylib */; };
-		5FDF5FD91720D7B700F20EB2 /* libstdc++.6.0.9.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FDF5FD81720D7B700F20EB2 /* libstdc++.6.0.9.dylib */; };
-		5FDF5FDB1720D7C600F20EB2 /* libstdc++.6.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FDF5FDA1720D7C600F20EB2 /* libstdc++.6.dylib */; };
 		5FEA17EC15E49EB700B29626 /* lang in Resources */ = {isa = PBXBuildFile; fileRef = 5FEA17EA15E49EB700B29626 /* lang */; };
 		5FEA17ED15E49EB700B29626 /* Patterns in Resources */ = {isa = PBXBuildFile; fileRef = 5FEA17EB15E49EB700B29626 /* Patterns */; };
 /* End PBXBuildFile section */
@@ -540,8 +538,6 @@
 		5FDC56BC148A2FE300C74E6A /* DlgUpdateLibrary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgUpdateLibrary.h; sourceTree = "<group>"; };
 		5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgUpdateLibrary.cpp; sourceTree = "<group>"; };
 		5FDF5FD61720D79800F20EB2 /* libstdc++.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.dylib"; path = "usr/lib/libstdc++.dylib"; sourceTree = SDKROOT; };
-		5FDF5FD81720D7B700F20EB2 /* libstdc++.6.0.9.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.0.9.dylib"; path = "usr/lib/libstdc++.6.0.9.dylib"; sourceTree = SDKROOT; };
-		5FDF5FDA1720D7C600F20EB2 /* libstdc++.6.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libstdc++.6.dylib"; path = "usr/lib/libstdc++.6.dylib"; sourceTree = SDKROOT; };
 		5FEA17EA15E49EB700B29626 /* lang */ = {isa = PBXFileReference; lastKnownFileType = folder; name = lang; path = ../Install_ML/Share/lang; sourceTree = "<group>"; };
 		5FEA17EB15E49EB700B29626 /* Patterns */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Patterns; path = ../Install_ML/Share/Patterns; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -551,8 +547,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FDF5FDB1720D7C600F20EB2 /* libstdc++.6.dylib in Frameworks */,
-				5FDF5FD91720D7B700F20EB2 /* libstdc++.6.0.9.dylib in Frameworks */,
 				5FDF5FD71720D79800F20EB2 /* libstdc++.dylib in Frameworks */,
 				5FB593751545A2950071B204 /* libTaglib.a in Frameworks */,
 				5FB592B81545A1990071B204 /* libThirdPartiesSDK.a in Frameworks */,
@@ -587,8 +581,6 @@
 		5FB161F5147017330084494F = {
 			isa = PBXGroup;
 			children = (
-				5FDF5FDA1720D7C600F20EB2 /* libstdc++.6.dylib */,
-				5FDF5FD81720D7B700F20EB2 /* libstdc++.6.0.9.dylib */,
 				5FDF5FD61720D79800F20EB2 /* libstdc++.dylib */,
 				5F0315B915E7849C00E5F752 /* Player-Plugins */,
 				5FEA17EA15E49EB700B29626 /* lang */,

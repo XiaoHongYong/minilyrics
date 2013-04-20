@@ -234,7 +234,7 @@ bool IsFileSame(LPCTSTR szSrc, LPCTSTR szTarg)
 		return false;
 
 	unsigned char md5Targ[MD5_LEN];
-	if (!MD5FileToBinary(szSrc, md5Targ))
+	if (!MD5FileToBinary(szTarg, md5Targ))
 		return false;
 	
 	return memcmp(md5Src, md5Targ, MD5_LEN) == 0;

@@ -142,7 +142,7 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 			g_bForceStart = true;
 	}
 
-	if (strPlayerServicePipeName.empty())
+	// if (strPlayerServicePipeName.empty())
 	{
 		CPlayerPluginInstaller installer;
 		
@@ -167,10 +167,10 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 				}
 			}
 		}
-		
-		// TODO: need to return false, just for debug
-		strPlayerServicePipeName = "/tmp/MiniLyrics_iTunes.pipe";
-		// return false;
+
+		// On mac only iTunes is supported now.
+		if (strPlayerServicePipeName.empty())
+			strPlayerServicePipeName = "/tmp/MiniLyrics_iTunes.pipe";
 	}
 	
 	bool ret = m_msgPipeOfPlayer.Open(strPlayerServicePipeName.c_str(), false);

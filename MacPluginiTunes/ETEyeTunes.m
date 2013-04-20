@@ -230,6 +230,11 @@ const OSType iTunesSignature = ET_APPLE_EVENT_OBJECT_DEFAULT_APPL;
    return (int)[self getPropertyAsIntegerForDesc:ET_APP_PLAYER_POSITION];
 }
 
+- (void)setPlayerPosition:(int)pos
+{
+	[self setPropertyWithInteger:pos forDesc:ET_APP_PLAYER_POSITION];
+}
+
 - (DescType)playerState
 {
     return [self getPropertyAsEnumForDesc:ET_APP_PLAYER_STATE];

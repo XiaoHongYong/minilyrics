@@ -44,6 +44,7 @@
 
 - (id) initWithDescriptor:(AEDesc *)desc;
 
+- (NSString *)location;
 - (NSString *)name;
 - (NSString *)album;
 - (NSString *)albumArtist;				// >=7.0
