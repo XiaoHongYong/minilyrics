@@ -57,12 +57,48 @@ MPHotKeySection		g_vHotkeySections[] =
 #define VK_MEDIA_PLAY_PAUSE    0xB3
 #endif
 
-CMPHotkey::CmdAccKey			g_vDefAccKey[] = 
+#define MOD_ALT                         0x0001
+#define MOD_CONTROL                     0x0002
+#define MOD_SHIFT                       0x0004
+
+CMPHotkey::CmdAccKey			g_vDefAccKey[] =
 {
 	{ CMD_PLAYPAUSE, true, VK_MEDIA_PLAY_PAUSE, 0, 0 },
 	{ CMD_STOP, true, VK_MEDIA_STOP, 0, 0 },
 	{ CMD_NEXT, true, VK_MEDIA_NEXT_TRACK, 0, 0 },
 	{ CMD_PREVIOUS, true, VK_MEDIA_PREV_TRACK, 0, 0 },
+
+	{ CMD_BACKWARD_LYRICS, false, VK_UP, MOD_CONTROL | MOD_SHIFT, 0 },
+	{ CMD_FORWARD_LYRICS, false, VK_DOWN, MOD_CONTROL | MOD_SHIFT, 0 },
+	{ CMD_TOPMOST, true, 'T', MOD_CONTROL | MOD_SHIFT, 0 },
+	{ CMD_TOGGLE_MP, true, 'M', MOD_CONTROL | MOD_ALT, 0 },
+
+	{ CMD_HELP, false, VK_F1, 0, 0 },
+
+	{ CMD_OPEN_LRC, false, 'D', MOD_CONTROL, 0 },
+	{ CMD_RELOAD_LYR, false, VK_F5, 0, 0 },
+
+	{ CMD_LYR_EDITOR, false, 'E', MOD_CONTROL, 0 },
+	{ CMD_NEW_LRC, false, 'N', MOD_CONTROL, 0 },
+	{ CMD_OPEN_LRC, false, 'O', MOD_CONTROL, 0 },
+	{ CMD_SAVE_LRC, false, 'S', MOD_CONTROL, 0 },
+	{ CMD_JUMP, false, 'J', MOD_CONTROL, 0 },
+	{ CMD_FORWARD_REMAIN_LINES, false, VK_F11, 0, 0 },
+	{ CMD_BACKWARD_REMAIN_LINES, false, VK_F12, 0, 0 },
+	{ CMD_INSERTTAG_DOWN, false, VK_F7, 0, 0 },
+	{ CMD_INSERTTAG, false, VK_F7, MOD_CONTROL, 0 },
+	{ CMD_FORWARD_CUR_LINE, false, VK_ADD, MOD_CONTROL, 0 },
+	{ CMD_FORWARD_CUR_LINE, false, 187, MOD_CONTROL, 0 },
+	{ CMD_BACKWARD_CUR_LINE, false, VK_SUBTRACT, MOD_CONTROL, 0 },
+	{ CMD_BACKWARD_CUR_LINE, false, 189, MOD_CONTROL, 0 },
+
+	{ CMD_FORWARD, false, VK_NEXT, MOD_CONTROL, 0 },
+	{ CMD_BACKWARD, false, VK_PRIOR, MOD_CONTROL, 0 },
+
+	{ CMD_MINIMIZE, false, 'M', MOD_CONTROL, 0 },
+	{ CMD_TOPMOST, false, 'T', MOD_CONTROL, 0 },
+
+	{ CMD_PREFERENCES, false, 'P', MOD_CONTROL, 0 },
 
 };
 
@@ -171,6 +207,33 @@ bool CMPHotkey::OnKeyDown(CMPSkinWnd *pWnd, UINT nChar, UINT nFlags)
 {
 	ASSERT(pWnd);
 
+	bool ctrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
+	bool shift = IsModifierKeyPressed(MK_SHIFT, nFlags);
+	bool alt = IsModifierKeyPressed(MK_ALT, nFlags);
+
+	int		nModifiers = 0;
+	int		nIDKeyPressed;
+
+	if (ctrl)
+		nModifiers |= MOD_CONTROL;
+	if (shift)
+		nModifiers |= MOD_SHIFT;
+	if (alt)
+		nModifiers |= MOD_ALT;
+
+	nIDKeyPressed = MakeHotkeyID(nModifiers, nChar);
+
+	for (int i = 0; i < (int)m_vAccKey.size(); i++)
+	{
+		CmdAccKey		&cmdKey = m_vAccKey[i];
+
+		if (!cmdKey.bGlobal && nIDKeyPressed == cmdKey.idHotKey)
+		{
+			// execute cmd
+			pWnd->PostShortcutKeyCmd(cmdKey.cmd);
+			return true;
+		}
+	}
 
 	return false;
 }
