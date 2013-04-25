@@ -207,7 +207,7 @@ bool FilterSpamInfo(tstring &strArtist, tstring &strTitle)
 	if (StrIBeginWith(strTitle.c_str(), strArtist.c_str()))
 	{
 		tstring strNewTitle(strTitle.c_str() + strArtist.size());
-		TrimStr(strNewTitle, ' \t');
+		TrimStr(strNewTitle, _T(" \t"));
 
 		int c = strNewTitle[0];
 		// Artist is long enough or with separator - . _ etc.

@@ -29,6 +29,7 @@
 #define VK_ESCAPE			53
 #define VK_CONTROL			59
 #define VK_ALT				58
+#define VK_MENU				VK_ALT
 #define VK_SHIFT			56
 #define VK_INSERT			114
 #define VK_LEFT				123
@@ -42,10 +43,22 @@
 #define VK_RETURN			36
 #define VK_END				119
 #define VK_HOME				115
+#define VK_ADD				69
+#define VK_SUBTRACT			78
 
 #define VK_LBUTTON			20
 #define VK_SPACE			49
 #define VK_TAB				48
+
+#define VK_F12				111
+#define VK_F11				103
+#define VK_F10				109
+#define VK_F9				101
+#define VK_F8				100
+#define VK_F7				98
+#define VK_F6				97
+#define VK_F5				96
+#define VK_F4				118
 #define VK_F3				99
 #define VK_F2				120
 #define VK_F1				122
@@ -53,10 +66,10 @@
 // Modifier Flags
 #define MK_SHIFT			(1 << 17) // NSShiftKeyMask
 #define MK_CONTROL			(1 << 18) // NSControlKeyMask
-
+#define MK_ALT				(1 << 19) // NSAlternateKeyMask
+#define MK_COMMAND			(1 << 20) // NSCommandKeyMask
 
 #define WHEEL_DELTA			50
-
 
 #define MB_OK                       0x00000000L
 #define MB_OKCANCEL                 0x00000001L
