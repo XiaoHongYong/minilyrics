@@ -59,7 +59,6 @@ public:
 	void CreateChild(SXNode *pXmlNode);
 
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
-	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
 #ifdef _SKIN_EDITOR_
 	void EnumProperties(CUIObjProperties &listProperties);
 #endif // _SKIN_EDITOR_
@@ -147,11 +146,6 @@ public:
 
 	virtual CRawGraph *GetMemGraph();
 
-	MLColor GetBgColor() const;
-	bool IsDrawBgImage() const;
-
-	void RedrawBackground(CRawGraph *pGraph, const RECT &rc);
-
 	void DispatchOnCreateMsg();
 
 	// Page view APIs
@@ -168,7 +162,7 @@ public:
 	bool GetExPoolBool(LPCTSTR szProperty, bool bDefault = false);
 
 #ifdef _DEBUG
-	void DumpUIObject(int &nDeep);
+	void DumpUIObject(int &nDeep, POINT *pt);
 #endif
 
 protected:
@@ -194,15 +188,6 @@ protected:
 	tstring				m_strContextMenu;
 	CMLMenu				*m_pMenu;
 
-	// Background color
-	MLColor				m_clrBg, m_clrBgOrg;
-	bool				m_bDrawBg;
-
-	// Background images
-	CScaleImagePainter	m_bgImagePainter;
-	CSFImage			m_imageBg, m_imageBgMask;
-	BlendPixMode		m_BgBpm;
-
 	// Status for Page view
 	struct PageViewItem
 	{
@@ -226,7 +211,6 @@ class CSkinClientArea : public CSkinContainer
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
-	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		{ return CSkinContainer::SetProperty(szProperty, szValue); }
 

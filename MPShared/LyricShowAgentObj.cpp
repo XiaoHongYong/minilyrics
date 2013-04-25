@@ -6,6 +6,7 @@
 #include "MPlayerApp.h"
 #include "LyricShowAgentObj.h"
 #include "SkinActivateCtrl.h"
+#include "MPSkinInfoTextCtrl.h"
 
 //////////////////////////////////////////////////////////////////////
 
@@ -20,7 +21,7 @@ CLyricShowAgentObj::CLyricShowAgentObj()
 	m_bEnableToolbar = true;
 	m_pToolbar = NULL;
 	m_bFloatingLyr = false;
-	m_pActivateButton = NULL;
+	m_pInfoTextCtrl = NULL;
 }
 
 CLyricShowAgentObj::~CLyricShowAgentObj()
@@ -77,7 +78,7 @@ void CLyricShowAgentObj::OnCreate()
 		m_strLyrDisplayStylePropName.c_str(),
 		m_strLyrDisplayStyleDefault.c_str());
 
-	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_UI_SETTINGS_CHANGED, ET_LYRICS_CHANGED, ET_UI_ACTIVATE_NOTICE);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_UI_SETTINGS_CHANGED, ET_LYRICS_CHANGED);
 
 	if (m_bEnableToolbar && !g_Profile.GetBool(_T("HideToolbar"), false))
 	{
@@ -87,10 +88,7 @@ void CLyricShowAgentObj::OnCreate()
 
 	ChangeLyricsDisplayStyle(m_strLyrDisplayStyleDefault.c_str(), false);
 
-	ToggleActivateButton(15);
-
-	if (!g_licenseManager.IsLicenseValid())
-		m_nTimerShowActivateBtn = m_pSkin->RegisterTimerObject(this, 1000 * 60 * 60 * 3);
+	CreateInfoTextCtrl();
 }
 
 void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
@@ -135,32 +133,6 @@ void CLyricShowAgentObj::OnEvent(const IEvent *pEvent)
 
 		m_pContainer->RecalculateUIObjSizePos(this);
 	}
-	else if (pEvent->eventType == ET_UI_ACTIVATE_NOTICE)
-	{
-		ToggleActivateButton(5);
-		m_pContainer->RecalculateUIObjSizePos(this);
-		Invalidate();
-	}
-}
-
-void CLyricShowAgentObj::OnTimer(int nId)
-{
-	if (nId != m_nTimerShowActivateBtn)
-		return;
-
-	ToggleActivateButton(15);
-	m_pContainer->RecalculateUIObjSizePos(this);
-	Invalidate();
-}
-
-BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
-{
-	if (IsPropertyName(szProperty, _T("ActivateNotice")))
-		m_activateButtonProperties = pXmlNode->listProperties;
-	else
-		return FALSE;
-
-	return true;
 }
 
 BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
@@ -178,6 +150,11 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bEnableStaticTextStyle = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("EnableToolbar")))
 		m_bEnableToolbar = IsTRUE(szValue);
+	else if (IsPropertyName(szProperty, _T("FgColor")))
+	{
+		if (m_pInfoTextCtrl && m_pInfoTextCtrl->IsUseParentBg())
+			m_pInfoTextCtrl->SetProperty(_T("TextColor"), szValue);
+	}
 	else
 	{
 		m_vProperties.push_back(szProperty);
@@ -186,83 +163,57 @@ BOOL CLyricShowAgentObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 	return TRUE;
 }
+// 
+// tstring GetRandomActivateNoticeText()
+// {
+// 	LPCTSTR	vNoticeText[] = {
+// 		_T("Do you think MiniLyrics is useful to you?"),
+// 		_T("We love to make MiniLyrics better, will you help us?"),
+// 	};
+// 
+// 	srand(GetTickCount());
+// 
+// 	tstring str = _TL(vNoticeText[rand() % CountOf(vNoticeText)]);
+// //	str += _T("  -  ");
+// //	str += vNoticeText2[rand() % CountOf(vNoticeText2)];
+// 
+// 	return str;
+// }
 
-tstring GetRandomActivateNoticeText()
+void CLyricShowAgentObj::CreateInfoTextCtrl()
 {
-	LPCTSTR	vNoticeText[] = {
-		_T("Do you think MiniLyrics is useful to you?"),
-		_T("We love to make MiniLyrics better, will you help us?"),
-	};
-
-/*	LPCTSTR	vNoticeText2[] = {
-		_T("Buy Now"),
-		_T("Support us"),
-	};*/
-
-	srand(GetTickCount());
-
-	tstring str = _TL(vNoticeText[rand() % CountOf(vNoticeText)]);
-//	str += _T("  -  ");
-//	str += vNoticeText2[rand() % CountOf(vNoticeText2)];
-
-	return str;
-}
-
-void CLyricShowAgentObj::ToggleActivateButton(int nDuration)
-{
-	if (g_licenseManager.IsLicenseValid())
+	// Do NOT display activation notice, if there's no lyrics opened.
+	if (m_pInfoTextCtrl)
 	{
-		if (m_pActivateButton)
-		{
-			if (m_pActivateButton->GetOverlappedCtrl() != UID_INVALID)
-				m_pSkin->SetUIObjectVisible(m_pActivateButton->GetOverlappedCtrl(), true, false);
-			RemoveUIObject(m_pActivateButton, true);
-			m_pActivateButton = NULL;
-		}
+		m_pInfoTextCtrl->SetVisible(true, false);
 	}
 	else
 	{
-		// Do NOT display activation notice, if there's no lyrics opened.
-		if (!g_LyricData.HasLyricsOpened())
+		if (!IsPropertyName(m_strLyrDisplayStylePropName.c_str(), _T("LyrDisplayStyle"))
+			|| m_bFloatingLyr || m_pSkin->m_bClickThrough)
 			return;
 
-		if (m_pActivateButton)
-		{
-			m_pActivateButton->SetVisible(true, false);
-			m_pSkin->SetUIObjectVisible(m_pActivateButton->GetOverlappedCtrl(), false, false);
-		}
-		else
-		{
-			if (!IsPropertyName(m_strLyrDisplayStylePropName.c_str(), _T("LyrDisplayStyle"))
-				|| m_bFloatingLyr || m_pSkin->m_bClickThrough)
-				return;
+		m_pInfoTextCtrl = (CMPSkinInfoTextCtrl*)m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, 
+			CMPSkinInfoTextCtrl::ClassName(), this);
+		ASSERT(m_pInfoTextCtrl);
+		if (m_pInfoTextCtrl->IsUseParentBg())
+			m_pInfoTextCtrl->SetProperty(_T("TextColor"), ColorToStr(m_pLyricsShow->GetHighlightColor()).c_str());
+		m_pInfoTextCtrl->SetProperty(SZ_PN_RECT, _T("0,0,w,"));
+// 		m_pInfoTextCtrl->SetProperty(_T("TextColor"), _T("#FFFFFF"));
+// 		m_pInfoTextCtrl->SetProperty(_T("FontName"), _T("Verdana"));
+// 		m_pInfoTextCtrl->SetProperty(_T("FontHeight"), _T("14"));
+// 		m_pInfoTextCtrl->SetProperty(_T("FontBold"), _T("true"));
+// 		m_pInfoTextCtrl->SetProperty(_T("FontItalic"), _T("1"));
+// 		m_pInfoTextCtrl->SetProperty(_T("BgColors"), _T("#FE8713,#FFDE00,#FF5400,#FFA780"));
+// 		for (SXNode::iterProperties it = m_activateButtonProperties.begin();
+// 			it != m_activateButtonProperties.end(); ++it)
+// 		{
+// 			m_pInfoTextCtrl->SetProperty((*it).strName.c_str(), (*it).strValue.c_str());
+// 		}
+// 		m_pInfoTextCtrl->SetProperty(SZ_PN_TEXT, GetRandomActivateNoticeText().c_str());
+// 		m_pInfoTextCtrl->SetProperty(_T("Duration"), CStrPrintf(_T("%d"), nDuration).c_str());
 
-			m_pActivateButton = (CSkinActivateCtrl*)m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, 
-				CSkinActivateCtrl::ClassName(), this);
-			ASSERT(m_pActivateButton);
-			m_pActivateButton->SetProperty(SZ_PN_RECT, _T("0,0,w,"));
-			m_pActivateButton->SetProperty(_T("TextColor"), _T("#FFFFFF"));
-			m_pActivateButton->SetProperty(_T("FontName"), _T("Verdana"));
-			m_pActivateButton->SetProperty(_T("FontHeight"), _T("14"));
-			m_pActivateButton->SetProperty(_T("FontBold"), _T("true"));
-			m_pActivateButton->SetProperty(_T("FontItalic"), _T("1"));
-			m_pActivateButton->SetProperty(_T("BgColors"), _T("#FE8713,#FFDE00,#FF5400,#FFA780"));
-			for (SXNode::iterProperties it = m_activateButtonProperties.begin();
-				it != m_activateButtonProperties.end(); ++it)
-			{
-				m_pActivateButton->SetProperty((*it).strName.c_str(), (*it).strValue.c_str());
-			}
-			m_pActivateButton->SetProperty(SZ_PN_TEXT, GetRandomActivateNoticeText().c_str());
-			m_pActivateButton->SetProperty(_T("Duration"), CStrPrintf(_T("%d"), nDuration).c_str());
-
-			if (m_pActivateButton->GetOverlappedCtrl() == UID_INVALID)
-				this->AddUIObject(m_pActivateButton);
-			else
-			{
-				this->InsertUIObjectAt(m_pLyricsShow, m_pActivateButton);
-				m_pSkin->SetUIObjectVisible(m_pActivateButton->GetOverlappedCtrl(), false, false);
-			}
-		}
+		this->AddUIObject(m_pInfoTextCtrl);
 	}
 }
 
@@ -291,7 +242,7 @@ void CLyricShowAgentObj::ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, boo
 
 	m_strLyrDisplayStyleCurrent = szLyrDispalyStyle;
 
-	m_pLyricsShow = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, szLyrDispalyStyle, this);
+	m_pLyricsShow = (CLyricShowObj*)m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, szLyrDispalyStyle, this);
 	if (!m_pLyricsShow)
 		return;
 

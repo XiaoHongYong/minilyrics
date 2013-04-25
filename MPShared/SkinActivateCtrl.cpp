@@ -49,9 +49,7 @@ void CSkinActivateCtrl::OnCreate()
 	m_pTimerText = m_pSkin->GetSkinFactory()->CreateUIObject(m_pSkin, CSkinStaticText::ClassName(), this);
 	m_pTimerText->SetProperty(SZ_PN_RECT, _T("w-20,9,15,20"));
 	m_pTimerText->SetText(CStrPrintf(_T("%d"), m_nDuration).c_str());
-	tstring	strColor;
-	ColorToStr(m_font.GetTextColor(), strColor);
-	m_pTimerText->SetProperty(_T("TextColor"), strColor.c_str());
+	m_pTimerText->SetProperty(_T("TextColor"), ColorToStr(m_font.GetTextColor()).c_str());
 	AddUIObject(m_pTimerText);
 
 	m_nIdTimerText = m_pSkin->RegisterTimerObject(this, 1000);

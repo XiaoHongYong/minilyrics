@@ -9,7 +9,7 @@ CSkinFrameCtrl::CSkinFrameCtrl()
 {
 	m_nRoundWidthTop = m_nRoundWidthBottom = 0;
 	m_xBorder = m_yBorder = 0;
-	m_nThickWidth = 0;
+	m_nThickLeft = m_nThickTop = m_nThickRight = m_nThickBottom = 0;
 	m_pObjFocusIndicator = NULL;
 	m_bpm = BPM_BLEND;
 }
@@ -68,10 +68,10 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 
 	if (sizeText.cx > 0)
 	{
-		// Draw top border left
+		// Draw top border - left
 		pImage->XTileBlt(pGraph, rcFrame.left + m_nRoundWidthTop, rcFrame.top, 
-			xTextStart - rcFrame.left, m_nThickWidth, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
-			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickWidth, m_bpm);
+			xTextStart - rcFrame.left, m_nThickTop, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
+			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickTop, m_bpm);
 
 
 		if (m_font.IsGood())
@@ -79,21 +79,21 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 
 		// Draw text
 		CRect	rcText(xTextStart, m_rcObj.top, 
-			xTextStart + sizeText.cx, m_rcObj.top + m_yBorder * 2 + m_nThickWidth);
+			xTextStart + sizeText.cx, m_rcObj.top + m_yBorder * 2 + m_nThickTop);
 		pGraph->SetTextColor(m_font.GetTextColor(m_bEnable));
 		pGraph->DrawText(m_strText.c_str(), m_strText.size(), &rcText, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 
 		// Draw top border right
 		pImage->XTileBlt(pGraph, rcText.right, rcFrame.top, 
-			rcFrame.right - rcText.right - m_nRoundWidthTop, m_nThickWidth, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
-			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickWidth, m_bpm);
+			rcFrame.right - rcText.right - m_nRoundWidthTop, m_nThickTop, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
+			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickTop, m_bpm);
 	}
 	else
 	{
 		// Draw top border
 		pImage->XTileBlt(pGraph, rcFrame.left + m_nRoundWidthTop, rcFrame.top, 
-			rcFrame.Width() - m_nRoundWidthTop * 2, m_nThickWidth, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
-			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickWidth, m_bpm);
+			rcFrame.Width() - m_nRoundWidthTop * 2, m_nThickTop, pImage->m_x + m_nRoundWidthTop, pImage->m_y,
+			pImage->m_cx - m_nRoundWidthTop * 2, m_nThickTop, m_bpm);
 	}
 
 	// Draw top right corner
@@ -102,22 +102,22 @@ void CSkinFrameCtrl::Draw(CRawGraph *pGraph)
 
 	// Draw left border
 	pImage->YTileBlt(pGraph, rcFrame.left, rcFrame.top + m_nRoundWidthTop,
-		m_nThickWidth, rcFrame.Height() - m_nRoundWidthTop - m_nRoundWidthBottom,
-		pImage->m_x, pImage->m_y + m_nRoundWidthTop, m_nThickWidth, pImage->m_cy - m_nRoundWidthTop - m_nRoundWidthBottom, m_bpm);
+		m_nThickLeft, rcFrame.Height() - m_nRoundWidthTop - m_nRoundWidthBottom,
+		pImage->m_x, pImage->m_y + m_nRoundWidthTop, m_nThickLeft, pImage->m_cy - m_nRoundWidthTop - m_nRoundWidthBottom, m_bpm);
 
 	// Draw right border
-	pImage->YTileBlt(pGraph, rcFrame.right - m_nThickWidth, rcFrame.top + m_nRoundWidthTop,
-		m_nThickWidth, rcFrame.Height() - m_nRoundWidthTop - m_nRoundWidthBottom,
-		pImage->m_x + pImage->m_cx - m_nThickWidth, pImage->m_y + m_nRoundWidthTop, m_nThickWidth, pImage->m_cy - m_nRoundWidthTop - m_nRoundWidthBottom, m_bpm);
+	pImage->YTileBlt(pGraph, rcFrame.right - m_nThickRight, rcFrame.top + m_nRoundWidthTop,
+		m_nThickRight, rcFrame.Height() - m_nRoundWidthTop - m_nRoundWidthBottom,
+		pImage->m_x + pImage->m_cx - m_nThickRight, pImage->m_y + m_nRoundWidthTop, m_nThickRight, pImage->m_cy - m_nRoundWidthTop - m_nRoundWidthBottom, m_bpm);
 
 	// Draw left bottom corner.
 	pImage->Blt(pGraph, rcFrame.left, rcFrame.bottom - m_nRoundWidthBottom,
 		m_nRoundWidthBottom, m_nRoundWidthBottom, pImage->m_x, pImage->m_y + pImage->m_cy - m_nRoundWidthBottom, m_bpm);
 
 	// Draw bottom border
-	pImage->XTileBlt(pGraph, rcFrame.left + m_nRoundWidthBottom, rcFrame.bottom - m_nThickWidth, 
-		rcFrame.Width() - m_nRoundWidthBottom * 2, m_nThickWidth, pImage->m_x + m_nRoundWidthBottom, pImage->m_y + pImage->m_cy - m_nThickWidth,
-		pImage->m_cx - m_nRoundWidthBottom * 2, m_nThickWidth, m_bpm);
+	pImage->XTileBlt(pGraph, rcFrame.left + m_nRoundWidthBottom, rcFrame.bottom - m_nThickBottom, 
+		rcFrame.Width() - m_nRoundWidthBottom * 2, m_nThickBottom, pImage->m_x + m_nRoundWidthBottom, pImage->m_y + pImage->m_cy - m_nThickBottom,
+		pImage->m_cx - m_nRoundWidthBottom * 2, m_nThickBottom, m_bpm);
 
 	// Draw right bottom corner
 	pImage->Blt(pGraph, rcFrame.right - m_nRoundWidthBottom, rcFrame.bottom - m_nRoundWidthBottom,
@@ -147,7 +147,18 @@ BOOL CSkinFrameCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	else if (IsPropertyName(szProperty, _T("RoundWidthBottom")))
 		m_nRoundWidthBottom = _ttoi(szValue);
 	else if (IsPropertyName(szProperty, _T("ThickWidth")))
-		m_nThickWidth = _ttoi(szValue);
+	{
+		if (!Scan4IntX(szValue, m_nThickLeft, m_nThickTop, m_nThickRight, m_nThickBottom))
+		{
+			if (Scan2IntX(szValue, m_nThickLeft, m_nThickTop))
+			{
+				m_nThickRight = m_nThickLeft;
+				m_nThickBottom = m_nThickTop;
+			}
+			else
+				m_nThickLeft = m_nThickTop = m_nThickRight = m_nThickBottom = _ttoi(szValue);
+		}
+	}
 	else if (IsPropertyName(szProperty, _T("XBorder")))
 		m_xBorder = _ttoi(szValue);
 	else if (IsPropertyName(szProperty, _T("YBorder")))

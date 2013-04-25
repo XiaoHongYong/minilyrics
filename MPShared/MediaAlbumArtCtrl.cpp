@@ -135,6 +135,8 @@ void CMediaAlbumArtCtrl::OnSize()
 
 void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 {
+	CUIObject::Draw(pGraph);
+
 	if (!m_img.IsValid())
 		return;
 
@@ -147,36 +149,22 @@ void CMediaAlbumArtCtrl::Draw(CRawGraph *pGraph)
 	//
 	// No album art mask image is used.
 	//
-
-	CRect	rc;
-	int		w, h;
-
-	rc = m_rcObj;
+	CRect rc = m_rcObj;
 
 	if (m_img.m_cx == 0 || m_img.m_cy == 0 || rc.IsRectEmpty())
 		return;
 
+	int		w, h;
 	w = m_img.m_cx * rc.Height() / m_img.m_cy;
 	if (w < rc.Width())
 	{
 		// fill left and right
 		h = rc.Height();
-		if (!m_bUseParentBg)
-		{
-			pGraph->FillRect(rc.left, rc.top, (rc.Width() - w) / 2, h, m_clrBg);
-			pGraph->FillRect(rc.right - (rc.Width() - w) / 2, rc.top, (rc.Width() - w) / 2, h, m_clrBg);
-		}
 	}
 	else
 	{
 		// fill top and bottom
 		h = m_img.m_cy * rc.Width() / m_img.m_cx;
-		w = rc.Width();
-		if (!m_bUseParentBg)
-		{
-			pGraph->FillRect(rc.left, rc.top, w, (rc.Height() - h) / 2, m_clrBg);
-			pGraph->FillRect(rc.left, rc.bottom - (rc.Height() - h) / 2, w, (rc.Height() - h) / 2, m_clrBg);
-		}
 	}
 
 	m_img.Blt(pGraph, rc.left + (rc.Width() - w) / 2, rc.top + (rc.Height() - h) / 2, BPM_BLEND);

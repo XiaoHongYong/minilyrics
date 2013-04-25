@@ -911,10 +911,7 @@ void CSkinTreeCtrl::SetFont(const CFontInfo &font)
 
 void CSkinTreeCtrl::SetTextColor(const MLColor &clrText)
 {
-	tstring		strColor;
-
-	ColorToStr(clrText, strColor);
-	m_font.SetProperty(_T("TextColor"), strColor.c_str());
+	m_font.SetProperty(_T("TextColor"), ColorToStr(clrText).c_str());
 }
 
 void CSkinTreeCtrl::NotifyEvent(CSkinTreeCtrlEventNotify::Command cmd)

@@ -8,11 +8,13 @@ void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
 
 bool IsModifierKeyPressed(int nKey, UINT nFlags)
 {
-	ASSERT(nKey == MK_SHIFT || nKey == MK_CONTROL);
+	ASSERT(nKey == MK_SHIFT || nKey == MK_CONTROL || nKey == MK_ALT);
 	if (nKey == MK_SHIFT)
 		nKey = VK_SHIFT;
 	else if (nKey == MK_CONTROL)
 		nKey = VK_CONTROL;
+	else if (nKey == MK_ALT)
+		nKey = VK_MENU;
 
 	return (GetKeyState(nKey) & 0x8000) == 0x8000;
 }

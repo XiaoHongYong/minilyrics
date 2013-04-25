@@ -94,10 +94,8 @@ bool CMPCommonCmdHandler::OnCommand(int nId)
 			if (dlg.DoModal(m_pSkinWnd, clr) == IDOK)
 			{
 				clr = dlg.GetColor();
-				tstring		strColor;
-				ColorToStr(clr, strColor);
 				CMPlayerSettings::SetSettings(ET_LYRICS_DISPLAY_SETTINGS, 
-					SZ_SECT_LYR_DISPLAY, szColorValueName, strColor.c_str());
+					SZ_SECT_LYR_DISPLAY, szColorValueName, ColorToStr(clr).c_str());
 			}
 		}
 		break;
@@ -118,6 +116,15 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 {
 	switch (nID)
 	{
+	case CMD_NO_SUITTABLE_LYRICS:
+	case CMD_INSTRUMENTAL_MUSIC:
+		if (g_LyricSearch.AssociateLyrics(CMPlayerApp::GetInstance()->GetAssociateFileKeyword().c_str(), NONE_LYRCS))
+			CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
+		break;
+	case CMD_SEARCH_LYR_SUGGESTIONS:
+		OpenUrl(m_pSkinWnd, GetStrName(SN_HTTP_HELP_SEARCH_LYR_SUGGESTIONS));
+		break;
+
 	case CMD_RATE_LYR_1:
 	case CMD_RATE_LYR_2:
 	case CMD_RATE_LYR_3:
@@ -586,7 +593,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 				CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
 
-				// CMPlayerAppBase::GetInstance()->DispatchInfoText(_TLT("Lyrics Forward 0.5 Sec"));
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(_TLT("Lyrics Forward 0.5 Sec"));
 			}
 		}
 		break;
@@ -607,7 +614,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 
 				CMPlayerAppBase::GetEventsDispatcher()->DispatchSyncEvent(ET_LYRICS_EDITOR_RELOAD_TAG);
 
-				// CMPlayerAppBase::GetInstance()->DispatchInfoText(_TLT("Lyrics Backward 0.5 Sec"));
+				CMPlayerAppBase::GetInstance()->DispatchInfoText(_TLT("Lyrics Backward 0.5 Sec"));
 			}
 		}
 		break;

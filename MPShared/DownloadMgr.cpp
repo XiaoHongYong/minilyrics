@@ -120,7 +120,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 			str = _TLT("Failed to get searching lyrics results.");
 			str += _T(" ");
 			str += _TLT("Please contact us to report this issue.");
-			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str(), CMD_EMAIL);
 		}
 		return FALSE;
 	}
@@ -131,7 +131,15 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		{
 			tstring		str;
 			str = _TLT("Search returned no results.");
-			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
+			int cmds[] = { CMD_NO_SUITTABLE_LYRICS, CMD_INSTRUMENTAL_MUSIC, CMD_SEARCH_LYR_SUGGESTIONS };
+			tstring strCmd = _T("cmd://");
+			for (int i = 0; i < CountOf(cmds); i++)
+			{
+				if (i != 0)
+					strCmd += _T("|");
+				strCmd += CMPlayerAppBase::GetInstance()->GetSkinFactory()->GetStringOfID(cmds[i]);
+			}
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str(), strCmd.c_str());
 		}
 		return FALSE;
 	}
@@ -196,7 +204,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		if (bShowInfoText)
 		{
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(
-				_TLT("Found lyrics, please select the lyrics in the popup dialog."));
+				_TLT("Found lyrics, please select the lyrics in the popup dialog."), CMD_OPEN_LRC);
 		}
 
 		CMPlayerAppBase::GetMainWnd()->OnCustomCommand(CMD_OPEN_LRC);
@@ -207,7 +215,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 		if (bShowInfoText)
 		{
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(
-				_TLT("Found some similar lyrics, please choose them in 'Search Lyrics' window."));
+				_TLT("Found some similar lyrics, please choose them in 'Search Lyrics' window."), CMD_OPEN_LRC);
 		}
 	}
 
@@ -569,7 +577,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)
-				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str(), GetStrName(SN_HTTP_FAQ_INET));
 			DBGLOG1(_T("%s"), str.c_str());
 
 			continue;
@@ -586,7 +594,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)
-				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str(), GetStrName(SN_HTTP_FAQ_INET));
 			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
 			continue;
@@ -603,7 +611,7 @@ int CDownloadMgr::RunHttpTask(CDownloadTask *pTask)
 			str += _T("\r\n");
 			str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
 			if (pTask->taskType == DTT_LYRICS)
-				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
+				CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str(), GetStrName(SN_HTTP_FAQ_INET));
 			DBGLOG1(_T("%s"), str.c_str());
 			httpClient.Close();
 			if (nHttpCode != 0)

@@ -85,7 +85,7 @@ void CSkinToggleCtrlContainer::Draw(CRawGraph *pGraph)
 			nOpaque = pGraph->SetOpacityPainting(nOpaque);
 
 			// Draw toggle to control
-			if (m_bUseParentBg || pObj->IsUseParentBg())
+			if (IsUseParentBg() || pObj->IsUseParentBg())
 				m_pContainer->RedrawBackground(&m_memGraph, m_rcObj);
 			CRawGraph::COpacityBlendAutoRecovery opacityAR(&m_memGraph, pObj->GetOpacity());
 			pObj->TryToCallInitialUpdate();

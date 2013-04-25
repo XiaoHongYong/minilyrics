@@ -144,13 +144,13 @@ bool GetRectValue(LPCTSTR szValue, RECT &rc)
 }
 
 
-void ColorToStr(const MLColor &clr, tstring &strColor)
+tstring ColorToStr(const MLColor &clr)
 {
 	TCHAR				szValue[128];
 
 	StringFromColor(szValue, clr.get());
 
-	strColor = szValue;
+	return szValue;
 }
 
 // FgColor="#FFFFFF"
@@ -727,7 +727,7 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 			if (nChar == VK_F1)
 			{
 				int nDeep = 0;
-				m_rootConainter.DumpUIObject(nDeep);
+				m_rootConainter.DumpUIObject(nDeep, NULL);
 			}
 			else if (nChar == VK_F2)
 			{
@@ -735,6 +735,9 @@ void CSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 				MLWidget::GetCursorPos(&pt);
 				ScreenToClient(pt);
 				DBGLOG2(_T("Current Pos: %d, %d"), pt.x, pt.y);
+
+				int nDeep = 0;
+				m_rootConainter.DumpUIObject(nDeep, &pt);
 			}
 			else if (nChar == VK_F3)
 			{
@@ -2385,7 +2388,7 @@ int CSkinWnd::FromXML(SXNode *pXmlNode)
 	LPCTSTR szExtends = pXmlNode->GetProperty(SZ_PN_EXTENDS);
 	if (szExtends && !IsEmptyString(szExtends))
 	{
-		pNodeExtends = m_pSkinFactory->GetExtendSkinWndStyle(szExtends);
+		pNodeExtends = m_pSkinFactory->GetExtendsStyle(szExtends);
 	}
 
 	if (pNodeExtends)

@@ -298,7 +298,7 @@ public:
 	LPCTSTR GetSkinName() const { return m_strSkinName.c_str(); }
 	LPCTSTR GetSkinFileName() const { return m_strSkinFileName.c_str(); }
 
-	SXNode *GetExtendSkinWndStyle(LPCTSTR szExtendsSkinWnd) const;
+	SXNode *GetExtendsStyle(LPCTSTR szExtendsSkinWnd) const;
 
 	// resource
 	virtual bool LoadMenu(CSkinWnd *pWnd, CMLMenu **ppMenu, LPCTSTR szMenu);

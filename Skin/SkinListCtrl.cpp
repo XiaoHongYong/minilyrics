@@ -163,7 +163,7 @@ BOOL CSkinListCtrl::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			GetColor(CN_ALTER_BG) = GetColor(CN_BG);
 
 		m_clrBg = GetColor(CN_BG);
-		m_bDrawBg = true;
+		m_BgType = BG_COLOR;
 		return true;
 	}
 
@@ -352,10 +352,7 @@ void CSkinListCtrl::SetFont(const CFontInfo &font)
 
 void CSkinListCtrl::SetTextColor(const MLColor &clrText)
 {
-	tstring		strColor;
-
-	ColorToStr(clrText, strColor);
-	m_font.SetProperty(_T("TextColor"), strColor.c_str());
+	m_font.SetProperty(_T("TextColor"), ColorToStr(clrText).c_str());
 }
 
 void CSkinListCtrl::SetColor(int nColorName, const MLColor &clr)
@@ -369,10 +366,7 @@ void CSkinListCtrl::SetColor(int nColorName, const MLColor &clr)
 	}
 	else if (nColorName == CN_TEXT)
 	{
-		tstring		strColor;
-
-		ColorToStr(clr, strColor);
-		m_font.SetProperty(_T("TextColor"), strColor.c_str());
+		m_font.SetProperty(_T("TextColor"), ColorToStr(clr).c_str());
 	}
 
 	m_vColors[nColorName] = clr;
@@ -1199,7 +1193,7 @@ void CSkinListCtrl::Draw(CRawGraph *pGraph)
 	pGraph->SetPen(m_penLine);
 
 	// Draw background color
-	if (m_bUseParentBg)
+	if (IsUseParentBg())
 		m_pContainer->RedrawBackground(pGraph, m_rcContent);
 	else
 	{

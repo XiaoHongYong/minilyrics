@@ -17,7 +17,7 @@
         <Image Name="Menu Bg" Rect="0,0,w,23" Image="menu_bg.png"
                BltMode="tile" BlendPixMode="copy"/>
         <MenuBar Rect="0,2,w-90-150,20" Name="Menu"
-                 UseParentBg="true" TranslucencyWithSkin="TRUE"
+                 TranslucencyWithSkin="TRUE"
            FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
            TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
            TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"

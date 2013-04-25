@@ -152,6 +152,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 	case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.zikiplayer.com/mlfaq-embedlyrics.htm");
 	case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.zikiplayer.com/mlfaq-upload.htm");
 	case SN_HTTP_HELP_EDIT_LYR:		return _T("http://www.zikiplayer.com/mlfaq-editlrc.htm");
+	case SN_HTTP_HELP_SEARCH_LYR_SUGGESTIONS:		return _T("http://www.zikiplayer.com/mlfaq-search-lyrics-suggestions.htm");
 	case SN_HTTP_HELP_STATIC_LYR:	return _T("http://www.zikiplayer.com/help-lyrscrollaction.htm");
 	case SN_HTTP_HELP_G15_LCD:	return _T("http://www.zikiplayer.com/help-lyrscrollaction.htm");
 
@@ -177,6 +178,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 		case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.data4me.de/mlfaq-embedlyrics.htm");
 		case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.data4me.de/mlfaq-upload.htm");
 		case SN_HTTP_HELP_EDIT_LYR:		return _T("http://www.data4me.de/mlfaq-editlrc.htm");
+		case SN_HTTP_HELP_SEARCH_LYR_SUGGESTIONS:		return _T("http://www.data4me.de/mlfaq-search-lyrics-suggestions.htm");
 		case SN_HTTP_HELP_STATIC_LYR:	return _T("http://www.data4me.de/help-lyrscrollaction.htm");
 		case SN_HTTP_DLPLUGIN:	return _T("http://www.data4me.de/mlplugin.htm");
 		case SN_HTTP_HELP_G15_LCD:	return _T("http://www.data4me.de/help-logitech-lcd.htm");
@@ -200,6 +202,7 @@ LPCTSTR GetStrName(STR_NAME nameId)
 	case SN_HTTP_HELP_EMBEDDED_LYR:	return _T("http://www.crintsoft.com/mlfaq-embedlyrics.htm");
 	case SN_HTTP_HELP_UPLOAD_LYR:	return _T("http://www.crintsoft.com/mlfaq-upload.htm");
 	case SN_HTTP_HELP_EDIT_LYR:		return _T("http://www.crintsoft.com/mlfaq-editlrc.htm");
+	case SN_HTTP_HELP_SEARCH_LYR_SUGGESTIONS:		return _T("http://www.crintsoft.com/mlfaq-search-lyrics-suggestions.htm");
 	case SN_HTTP_HELP_STATIC_LYR:	return _T("http://www.crintsoft.com/help-lyrscrollaction.htm");
 	case SN_HTTP_DLPLUGIN:	return _T("http://www.crintsoft.com/mlplugin.htm");
 	case SN_HTTP_HELP_G15_LCD:	return _T("http://www.crintsoft.com/help-logitech-lcd.htm");
@@ -663,11 +666,18 @@ void CMPlayerAppBase::DispatchInfoText(LPCTSTR szInfo, LPCTSTR szInfoName)
 	GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
 }
 
-void CMPlayerAppBase::DispatchLongErrorText(LPCTSTR szError)
+void CMPlayerAppBase::DispatchLongErrorText(LPCTSTR szError, int cmd)
+{
+	DispatchLongErrorText(szError, (_T("cmd://") + GetSkinFactory()->GetStringOfID(cmd)).c_str());
+}
+
+void CMPlayerAppBase::DispatchLongErrorText(LPCTSTR szError, LPCTSTR szCmd)
 {
 	IEvent		*pEvent = new IEvent;
 	pEvent->eventType = ET_UI_LONG_ERROR_TEXT;
 	pEvent->strValue = szError;
+	if (szCmd != NULL)
+		pEvent->strName = szCmd;
 
 	GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
 }
@@ -727,19 +737,14 @@ int CMPlayerAppBase::OpenLyrics(LPCTSTR szAssociateKeyword, LPCTSTR szLrcSource)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	//
-	// Show rate link in the lyrics
-	//
-// #ifndef _MPLAYER
-	if (g_Profile.GetBool(SZ_SECT_UI, _T("HideRateLink"), false))
+	// Show rate link
+	if (!g_Profile.GetBool(SZ_SECT_UI, _T("HideRateLink"), false))
 	{
 		if (g_LyricData.Properties().m_strId.size())
 		{
-//			g_LyricData.AddAdInLyrics(g_LyricData.GetPlayElapsedTime() + 3 * 1000, _TLT("Are these lyrics correct to the song? Rate them!"), 
-//				(tstring(_T("cmd://rate/")) + GetStrName(SN_HTTP_RATE_LRC) + g_LyricData.Properties().m_strId).c_str());
+			DispatchLongErrorText(_TLT("Are these lyrics correct to the song? Rate them!"), CMD_RATE_LYR);
 		}
 	}
-// #endif
 
 	DispatchLyricsChangedSyncEvent();
 

@@ -539,7 +539,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		str += _TLT("Failed to search lyrics with error:");
 		str += _T(" ");
 		str += LPCTSTR(ERROR2STR_LOCAL(nRet));
-		CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
+		CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str(), GetStrName(SN_HTTP_FAQ_INET));
 
 		pSearchParam->pOnlineSearch->m_bRunning = false;
 		delete pSearchParam;
@@ -568,7 +568,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		str += _TLT("Failed to search lyrics with error:");
 		str += _T(" ");
 		str += (LPCTSTR)ERROR2STR_LOCAL(nRet);
-		CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
+		CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str(), GetStrName(SN_HTTP_FAQ_INET));
 	}
 
 	pSearchParam->pOnlineSearch->m_bRunning = false;
@@ -633,7 +633,7 @@ bool COnlineSearch::CheckLicenseLimitation()
 		(bAdvVersion ? 2 : 10))
 	{
 		if (!bAdvVersion)
-			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("Trial edition can't search lyrics too frequently."));
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("Trial edition can't search lyrics too frequently."), GetStrName(SN_HTTP_REGISTER));
 		return false;
 	}
 
@@ -645,7 +645,7 @@ bool COnlineSearch::CheckLicenseLimitation()
 		static DWORD		dwSearchCount = 0;
 		if (GetSecCount() - dwStartCall >= 10 * 60 && dwSearchCount / (((double)(GetSecCount() - dwStartCall)) / (60 * 60)) > 40)
 		{
-			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("Trial edition can't search lyrics too frequently."));
+			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("Trial edition can't search lyrics too frequently."), GetStrName(SN_HTTP_REGISTER));
 			return false;
 		}
 		// 增加搜索次数

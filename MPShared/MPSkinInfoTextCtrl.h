@@ -22,6 +22,8 @@ public:
 
 	virtual void OnEvent(const IEvent *pEvent);
 
+	bool OnMouseMove(CPoint point);
+
 	virtual bool OnLButtonUp(UINT nFlags, CPoint point);
 	virtual bool OnLButtonDown(UINT nFlags, CPoint point);
 
@@ -30,10 +32,12 @@ public:
 	void Draw(CRawGraph *pGraph);
 
 protected:
-	void UpdateShowTrackInfo();
+	void UpdateShowDefaultInfo();
 
 protected:
 	int			m_nTimerIDHideInfo;
+	tstring		m_strCmd;
+	CCursor		m_Cursor;
 
 };
 

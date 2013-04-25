@@ -219,6 +219,8 @@ protected:
 	void ReverseLyricsForRightToLeftLanguage();
 
 protected:
+	friend class CLyricShowAgentObj;
+
 	// ±ß½ç
 	int						m_nXMargin, m_nYMargin;
 

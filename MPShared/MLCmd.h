@@ -178,6 +178,11 @@ enum ML_CUSTOM_COMMAND
 	CMD_LDS_SINGLE_LINE,
 	CMD_LDS_VOBSUB,
 
+	// Commands for long error text
+	CMD_NO_SUITTABLE_LYRICS,
+	CMD_INSTRUMENTAL_MUSIC,
+	CMD_SEARCH_LYR_SUGGESTIONS,
+
 	// Commands below haven't any ID associated.
 	CMD_SHOW_ERR_RESULT,
 };
