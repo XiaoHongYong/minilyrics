@@ -15,7 +15,7 @@
 			<Property Name="BgImage" Image="frame.png" ImageRect="0,0,425,114" HorzExtendPos="7,418" BlendPixMode="copy"/>
 
 			<MenuBar Rect="119,8,w/2-25,20" Name="Menu" Menu="MainWndMenu"
-					 UseParentBg="true" FontName="Verdana"
+					 FontName="Verdana"
 			   FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
 			   TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
 			   TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
@@ -25,7 +25,7 @@
 				FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" 
 				TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER" Visible="false"/>
 			<Toolbar ID="CID_TB_SYSBT" Rect="w-10-60,10,60,16" 
-				 UseParentBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+				 Image="caption_btn.png" enablehover="TRUE" units_x="16"
 				 blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
 				 MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
 				<button ID="ID_MINIMIZE" Left="1" />
@@ -33,19 +33,19 @@
 			  <button ID="ID_CLOSE" Left="4" />
 			</Toolbar>
 
-			<AlbumArt Name="AlbumArt" Rect="5,5,108,108" ID="ID_ALBUMART" UseParentBg="TRUE" Image="AlbumArt.png"
+			<AlbumArt Name="AlbumArt" Rect="5,5,108,108" ID="ID_ALBUMART" Image="AlbumArt.png"
 				FrameMask="albumart-mask.png" FrameMaskRectPos="4,4,100,100"/>
 			<Container Name="MediaInfo" ID="CCMD_MEDIAINFO" Rect="123,28,w-123-15,80" MinWidth="108" MinHeight="108" FixedHeight="TRUE" Weight="1">
-				<MediaInfoText Name="Title" Rect="0,8,w,18" UseParentBg="TRUE" FontName="Arial" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="2" Text="" MediaInfoType="Title" ShowTitle="false"/>
+				<MediaInfoText Name="Title" Rect="0,8,w,18" FontName="Arial" FontHeight="16" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="2" Text="" MediaInfoType="Title" ShowTitle="false"/>
 				<HStretchImage Left="-2" Top="25" Width="w+2" Height="6" Name="TitleLine" Image="title_line.png" ImageRect="0,0,20,6" StretchStartX="6" StretchEndX="14"/>
-				<MediaInfoText Name="Artist - album" Left="0" Top="33" Width="w" Height="16" UseParentBg="TRUE" FontName="Arial" FontHeight="14" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="2" Text="" MediaInfoType="Artist" ShowTitle="false"/>
-				<Toolbar Rect="0,58,80,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
+				<MediaInfoText Name="Artist - album" Left="0" Top="33" Width="w" Height="16" FontName="Arial" FontHeight="14" FontBold="TRUE" TextOutlined="TRUE" TextOutlinedColor="#000000" TextColor="#FFFFFF" LeftMargin="2" Text="" MediaInfoType="Artist" ShowTitle="false"/>
+				<Toolbar Rect="0,58,80,22" Image="fl_buttons.png" enablehover="TRUE" units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" MarginX="0" MarginY="0" FullStatusImage="TRUE">
 					<button ID="ID_PREVIOUS" Left="0" />
 					<button ID="ID_PLAYPAUSE" Left="1" CanCheck="TRUE" checked_left="2"/>
 					<button ID="ID_NEXT" Left="3" />
 					<seperator/>
 				</Toolbar>
-				<Toolbar ID="ID_TB_LYR_SYNC" Rect="80,58,92,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+				<Toolbar ID="ID_TB_LYR_SYNC" Rect="80,58,92,22" Image="fl_buttons.png" enablehover="TRUE"
 						units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14"
 						MarginX="0" MarginY="0" FullStatusImage="TRUE">
 					<button ID="ID_SEARCH_LYRICS" Left="5" />
@@ -54,7 +54,7 @@
 					<button ID="ID_RATE_LYR" Left="15"/>
 				</Toolbar>
 
-				<Toolbar ID="ID_TB_LYR_TXT" Rect="80,59,70,20" UseParentBg="TRUE" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
+				<Toolbar ID="ID_TB_LYR_TXT" Rect="80,59,70,20" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
 						units_x="20" blank_x="-1" blank_cx="20" seperator_x="-1" seperator_cx="20" ButtonSpacesCX="3"
 						MarginX="0" MarginY="0" FullStatusImage="TRUE" Visible="false">
 					<button ID="ID_LYR_SCROLL_ENABLE_RECORD" Left="0" CanCheck="TRUE" checked_left="1"/>

@@ -93,6 +93,7 @@ enum STR_NAME
 	SN_HTTP_HELP_EMBEDDED_LYR,
 	SN_HTTP_HELP_UPLOAD_LYR,
 	SN_HTTP_HELP_EDIT_LYR,
+	SN_HTTP_HELP_SEARCH_LYR_SUGGESTIONS,
 	SN_HTTP_HELP_STATIC_LYR,
 	SN_HTTP_HELP_G15_LCD,
 	SN_HTTP_FEEDBACK,
@@ -146,7 +147,10 @@ public:
 	static CZPAnalyticsClient &GetAppAnalytics();
 
 	void DispatchInfoText(LPCTSTR szInfo, LPCTSTR szInfoName = NULL);
-	void DispatchLongErrorText(LPCTSTR szError);
+
+	// When user click the info text, the szCmd can be executed.
+	void DispatchLongErrorText(LPCTSTR szError, LPCTSTR szCmd = NULL);
+	void DispatchLongErrorText(LPCTSTR szError, int cmd);
 
 	void DispatchResearchLyrics();
 	void DispatchLyricsChangedSyncEvent();

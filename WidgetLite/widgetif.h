@@ -20,6 +20,12 @@ enum WndSizeMode
 #include "Mac/Constants.h"
 #endif
 
+#ifdef _WIN32
+#ifndef MK_ALT
+#define MK_ALT         0x0080
+#endif
+#endif
+
 //
 // Scroll info define
 //

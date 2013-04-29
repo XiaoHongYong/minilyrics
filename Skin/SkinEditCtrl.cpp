@@ -975,9 +975,6 @@ void CSkinEditCtrl::Draw(CRawGraph *pGraph)
 MLColor & CSkinEditCtrl::GetColor(int nColorName)
 {
 	ASSERT(m_vClrTable.size() >= CN_CUSTOMIZED_START);
-	/*if (nColorName == CN_BG && m_bUseParentBg)
-		return m_pSkin->GetBgColor();
-	else */
 	if (nColorName < 0 || nColorName >= (int)m_vClrTable.size())
 		return m_vClrTable[CN_TEXT];
 	else
@@ -2209,7 +2206,7 @@ void CSkinEditCtrl::OnKeyDown(UINT nChar, UINT nFlags)
 {
 	bool shift = IsModifierKeyPressed(MK_SHIFT, nFlags);
 #ifdef _MAC_OSX
-	bool ctrl = IsModifierKeyPressed(1 << 20, nFlags);// NSCommandKeyMask = 1 << 20;
+	bool ctrl = IsModifierKeyPressed(MK_COMMAND, nFlags);
 #else
 	bool ctrl = IsModifierKeyPressed(MK_CONTROL, nFlags);
 #endif

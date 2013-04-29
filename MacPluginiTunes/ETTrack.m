@@ -196,6 +196,14 @@
 #pragma mark Setters
 #pragma mark -
 
+- (NSString *)location
+{
+	NSString * path = [self getPropertyAsPathURLForDesc:pETTrackLocation];
+	if (path == nil)
+		path = @"";
+	return path;
+}
+
 - (NSString *)name
 {
 	return [self getPropertyAsStringForDesc:ET_ITEM_PROP_NAME];
@@ -334,11 +342,6 @@
 - (NSString *)kind
 {
 	return [self getPropertyAsStringForDesc:ET_TRACK_PROP_KIND];
-}
-
-- (NSString *)location
-{
-	return [self getPropertyAsPathURLForDesc:pETTrackLocation];
 }
 
 - (NSString *)longDescription

@@ -194,6 +194,24 @@ public:
 #define UIOBJECT_CLASS_NAME_IMP(_ClassName, szClassName)	\
 	LPCTSTR _ClassName::ms_szClassName = szClassName;
 
+class CSXNodeProperty
+{
+public:
+	CSXNodeProperty(SXNode *pNode1, SXNode *pNode2);
+
+	// If not exists, NULL will be returned
+	LPCTSTR GetProperty(LPCTSTR szPropName);
+
+	// If not exists, _T("") will be returned.
+	LPCTSTR GetPropertySafe(LPCTSTR szPropName);
+
+	int GetPropertyInt(LPCTSTR szPropName);
+	int GetPropertyInt(LPCTSTR szPropName, int nValueIfInexist);
+
+protected:
+	SXNode		*m_pNode1, *m_pNode2;
+
+};
 
 class CUIObject  
 {
@@ -201,11 +219,18 @@ public:
 	CUIObject();
 	virtual ~CUIObject();
 
+	enum BackgroundType {
+		BG_NONE,	// Use the background of parent.
+		BG_COLOR,
+		BG_IMAGE,
+	};
+
 public:
 	void SetParent(CSkinWnd *pSkinWnd, CSkinContainer *pContainer)
 		{ m_pSkin = pSkinWnd; m_pContainer = pContainer; }
 
 	// modify CUIObject's property
+	virtual BOOL SetProperty(LPCTSTR szProperty, CSXNodeProperty *pProperties);
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 	virtual BOOL SetPropertyInt(LPCTSTR szProperty, int nValue);
 	virtual void SetProperties(vector<tstring> &vProperties);
@@ -255,7 +280,7 @@ public:
 
 	virtual void OnAnimate(CSkinAnimation *pAnimation) { }
 
-	virtual void Draw(CRawGraph *pGraph) { }
+	virtual void Draw(CRawGraph *pGraph);
 
 	int GetOpacity();
 
@@ -287,8 +312,13 @@ public:
 	inline bool IsEnable() { return m_bEnable; }
 	inline void SetEnable(bool bEnable) { m_bEnable = bEnable; } 
 
-	inline bool IsUseParentBg() { return m_bUseParentBg; }
-	inline void SetUseParentBg(bool bUseSkinBg) { m_bUseParentBg = bUseSkinBg; }
+	inline bool IsUseParentBg() { return m_BgType == BG_NONE; }
+	// inline void SetUseParentBg(bool bUseSkinBg) { m_BgType = BG_IMAGE; }
+
+	MLColor GetBgColor() const;
+	bool IsDrawBgImage() const;
+
+	void RedrawBackground(CRawGraph *pGraph, const RECT &rc);
 
 	virtual void SetText(LPCTSTR szText);
 	virtual tstring &GetText() { return m_strText; }
@@ -375,7 +405,19 @@ public:
 	bool		m_bVisible;
 	bool		m_bHideIfWndInactive;
 	bool		m_bHideIfMouseInactive;
-	bool		m_bUseParentBg;	// Invalidate call will update background, if m_bUseParentBg is true
+
+	/**
+	 * Background related properties.
+	 **/
+	BackgroundType		m_BgType;
+
+	// Background color
+	MLColor				m_clrBg, m_clrBgOrg;
+
+	// Background images
+	CScaleImagePainter	m_bgImagePainter;
+	CSFImage			m_imageBg, m_imageBgMask;
+	BlendPixMode		m_BgBpm;
 
 	bool		m_bTranslucencyWithSkin;	// Set the alpha of UIObject to the skin, if this flag is set.
 	int16		m_nOpacity;

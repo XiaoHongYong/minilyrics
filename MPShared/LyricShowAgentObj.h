@@ -30,10 +30,6 @@ public:
 	// IEventHandler
 	virtual void OnEvent(const IEvent *pEvent);
 
-	void OnTimer(int nId);
-
-	BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
-
 	BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 
 public:
@@ -42,7 +38,7 @@ public:
 	static void SetLyrDispStyleSettings(CSkinWnd *pSkinWnd, LPCTSTR szLyrStyle);
 
 protected:
-	void ToggleActivateButton(int nDuration);
+	void CreateInfoTextCtrl();
 
 	void ChangeLyricsDisplayStyle(LPCTSTR szLyrDispalyStyle, bool bRedraw = true);
 
@@ -51,16 +47,13 @@ protected:
 protected:
 	CUIObject		*m_pToolbar;
 	bool			m_bEnableToolbar;
-	class CSkinActivateCtrl	*m_pActivateButton;
-	int				m_nTimerShowActivateBtn;
-
-	SXNode::LIST_PROPERTIES m_activateButtonProperties;
+	class CMPSkinInfoTextCtrl	*m_pInfoTextCtrl;
 
 	bool			m_bFloatingLyr;
 	tstring			m_strLyrDisplayStylePropName;
 	tstring			m_strLyrDisplayStyleDefault;
 	tstring			m_strLyrDisplayStyleCurrent;
-	CUIObject		*m_pLyricsShow;
+	CLyricShowObj	*m_pLyricsShow;
 	vector<tstring>	m_vProperties;
 	bool			m_bEnableStaticTextStyle;
 

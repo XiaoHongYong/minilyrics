@@ -33,18 +33,12 @@ public:
 	bool OnLButtonUp(UINT nFlags, CPoint point);
 
 protected:
-	tstring			m_strImgBkFile;
-	CSFImage		m_imgBk;
-	BLT_MODE		m_BltMode;
 	DWORD			m_dwAlignText;
 	bool			m_bCaptionText;
 
 	int				m_nLeftMargin;
 
 	CSkinFontProperty	m_font;
-
-	MLColor			m_clrBg;		// background color
-	bool			m_bPaintBg;		// Should Paint background?
 
 };
 

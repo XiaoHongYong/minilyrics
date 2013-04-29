@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "LyrPlaylistAutoSwitch.h"
-
 class ISkinCmdHandler;
 
 
@@ -21,14 +19,10 @@ public:
 	CMPSkinWnd();
 	virtual ~CMPSkinWnd();
 
-	void OnActivate(bool bActived);
-
 	virtual void OnPreCreate(bool &bTopmost, bool &bVisible);
 
 	virtual bool OnCreate();
-
-	// IEventHandler
-	virtual void OnEvent(const IEvent *pEvent);
+	virtual void OnEvent(const IEvent *pEvent) { };
 
 	void OnCommand(UINT uID, UINT nNotifyCode);
 
@@ -51,19 +45,6 @@ public:
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 
 	virtual void CloseSkin();
-
-	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode);
-#ifdef _MPLAYER
-	virtual void OnLButtonUp(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonUp(nFlags, point); }
-	// virtual void OnLButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonDown(nFlags, point); }
-	virtual void OnLButtonDblClk(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnLButtonDblClk(nFlags, point); }
-	virtual void OnRButtonUp(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnRButtonUp(nFlags, point); }
-	virtual void OnRButtonDown(UINT nFlags, CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnRButtonDown(nFlags, point); }
-	virtual void OnMouseMove(CPoint point) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnMouseMove(point); }
-	virtual void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt) { m_autoSwitchToLyrShow.OnUserAction(); CSkinWnd::OnMouseWheel(nWheelDistance, nMkeys, pt); }
-#endif // _MPLAYER
-
-	virtual void OnTimer (UINT nIDEvent) { if (m_autoSwitchToLyrShow.OnTimer(nIDEvent)) return; CSkinWnd::OnTimer(nIDEvent); }
 
 
 public:
@@ -102,12 +83,6 @@ protected:
 	LIST_SKINCMDHANDLER		m_listSkinCmdHandler;
 
 	MAP_EVENT_HANDLER		m_mapEventHandlers;
-
-	//
-	// Window status and properties
-	//
-
-	CLyrPlaylistAutoSwitch	m_autoSwitchToLyrShow;
 
 };
 

@@ -30,7 +30,7 @@ bool inline IsPropertyName(LPCTSTR szName, LPCTSTR szStr) { return _tcsicmp(szNa
 
 void PreMultiplyRGBColr(MLColor &clr, byte alpha);
 
-void ColorToStr(const MLColor &clr, tstring &strColor);
+tstring ColorToStr(const MLColor &clr);
 
 // "#FFFFFF"
 void GetColorValue(MLColor &clr, LPCTSTR szColor);
@@ -290,7 +290,6 @@ public:
 
 public:
 	void SetProperies(SXNode::LIST_PROPERTIES &listProperties);
-	virtual BOOL SetProperty(LPCTSTR szProperty, SXNode *pXmlNode) { return false; }
 	virtual BOOL SetProperty(LPCTSTR szProperty, LPCTSTR szValue);
 #ifdef _SKIN_EDITOR_
 	virtual void EnumProperties(CUIObjProperties &listProperties);

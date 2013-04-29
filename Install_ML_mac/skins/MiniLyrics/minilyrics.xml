@@ -2,6 +2,12 @@
 <skin defmainwnd="minilyrics" mainwnds="minilyrics"
       Script="minilyrics.java">
   <include Name="Styles.xml"/>
+  <style>
+    <InfoText Name="InfoText" Rect="0,h-26,w,26" FontName="Verdana" FontHeight="16" FontItalic="1"
+	TextColor="#0000FF" LeftMargin="10" TranslucencyWithSkin="TRUE">
+      <Property Name="BgImage" Image="bottom-ctrl-bg.png" HorzExtendPos="12,48"/>
+    </InfoText>
+  </style>
   <DynCmds>
     <cmd ID="dyncmd_is_frame_hide" func="get_profile_bool" param="HideFrameOnLostFocus,1"/>
     <cmd ID="dyncmd_is_mouse_hover_show_frame" func="get_profile_bool" param="ShowFrameOnMouseHover,1"/>
@@ -14,21 +20,18 @@
        MinWidth="330" MinHeight="190" Width="640" Height="240" 
        BgColor="#FFFFFF" ContextMenu="NormalMode" CmdHandler="ch_common">
 
-    <Property Name="LyrAutoSwitch" CmdSwithToLyrics="CMD_SHOW_LYR"
-              CmdSwithToInfoText="CMD_SHOW_INFO_TEXT"/>
-
 	<Frame Rect="0,0,w,h" Image="frame-focus.png" ImageRect="0,0,95,95" ImageFocus="frame-focus.png" ImageFocusRect="0,0,95,95" 
-		RoundWidthTop="23" RoundWidthBottom="7" ThickWidth="4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
+		RoundWidthTop="23" RoundWidthBottom="7" ThickWidth="1,1,4,4" BlendPixMode="copy" TranslucencyWithSkin="TRUE"/>
 
     <DecorativeContainer Name="Caption bar" Rect="0,0,w,23" TranslucencyWithSkin="TRUE">
       <CaptionImage Rect="0,0,w,23" Name="Caption Bg" Image="frame.png" ImageRect="0,0,95,23"
         ImageFocus="frame-focus.png" ImageFocusRect="0,0,95,23" CutPos="20,50,50,80" BlendPixMode="copy"/>
 
-	  <Text ID="ID_CAPTION" Rect="70,3,w-140,17" CaptionText="true" UseParentBg="true"
+	  <Text ID="ID_CAPTION" Rect="70,3,w-140,17" CaptionText="true" 
 		FontName="Verdana" FontHeight="14" FontBold="false" TextColor="#333333" 
 		TextOutlinedColor="#000000" TextOutlined="false" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
 		 
-      <Toolbar ID="CID_TB_SYSBT" Rect="9,5,54,14" TranslucencyWithSkin="TRUE" UseParentBg="true"
+      <Toolbar ID="CID_TB_SYSBT" Rect="9,5,54,14" TranslucencyWithSkin="TRUE" 
            Image="caption_btn.png" enablehover="TRUE" units_x="14"
            blank_x="-1" blank_cx="14" seperator_x="0" seperator_cx="10"
            MarginX="0" MarginY="0" ButtonSpacesCX="6" FullStatusImage="TRUE">
@@ -37,18 +40,8 @@
       </Toolbar>
     </DecorativeContainer>
 
-    <DecorativeContainer Name="Body" Rect="1,23,w-5,h-23-7" UseParentBg="TRUE">
-      <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Lyrics" Rect="0,0,w,h" >
-        <Container ID="CID_LYRICS" Rect="0,0,w,h">
-          <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE">
-            <Property Name="ActivateNotice"
-              FontName="Verdana" FontHeight="18" FontBold="false" FontItalic="1"
-              OverlappedCtrl="CID_TOP_CTRL_PARENT" TextColor="#FFFFFF"
-              Height="30" BgColors="#FE8713,#FFDE00,#FF5400,#FFA780"/>
-          </LyricsShow>
-        </Container>
-        <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" Rect="0,0,w,h" UseParentBg="TRUE" Visible="false"/>
-      </ToggleCtrlContainer>
+    <DecorativeContainer Name="Body" Rect="1,23,w-5,h-23-4" >
+	  <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE"/>
 
       <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,24" TranslucencyWithSkin="TRUE">
         <Image Name="Top-ctrl-bg" Rect="0,0,w,24" Image="top-ctrl-bg.png" BltMode="tile" />
@@ -57,6 +50,6 @@
 
       </Container>
     </DecorativeContainer>
-  
+
 </skinwnd>
 </skin>

@@ -1787,10 +1787,8 @@ void CLyricShowObj::OnAdjustHue(float hue, float saturation, float luminance)
 	// Adjust hue
 	AdjustColorHue(m_clrBg, hue);
 
-	tstring		strColor;
-	ColorToStr(m_clrBg, strColor);
 	if (m_pSkin && m_bSetSkinBg)
-		m_pSkin->SetProperty(_T("BgColor"), strColor.c_str());
+		m_pSkin->SetProperty(_T("BgColor"), ColorToStr(m_clrBg).c_str());
 
 	for (TOBColorIndex i = TCI_START; i < TCI_COUNT; i = (TOBColorIndex)(i + 1))
 	{

@@ -206,9 +206,9 @@ bool CMPHotkey::OnKeyDown(CMPSkinWnd *pWnd, UINT nChar, UINT nFlags)
 {
 	ASSERT(pWnd);
 
-	bool ctrl = IsKeyPressed(VK_CONTROL);
-	bool shift = IsKeyPressed(VK_SHIFT);
-	bool alt = IsKeyPressed(VK_MENU);
+	bool ctrl = IsModifierKeyPressed(MK_CONTROL);
+	bool shift = IsModifierKeyPressed(MK_SHIFT);
+	bool alt = IsModifierKeyPressed(MK_ALT);
 
 	int		nModifiers = 0;
 	int		nIDKeyPressed;

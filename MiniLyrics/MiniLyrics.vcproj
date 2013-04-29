@@ -591,10 +591,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MPShared\LyrPlaylistAutoSwitch.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\MPShared\MediaAlbumArtCtrl.cpp"
 				>
 			</File>
@@ -1162,10 +1158,6 @@
 			</File>
 			<File
 				RelativePath="..\MPShared\win32\LyricsOutPluginMgr.h"
-				>
-			</File>
-			<File
-				RelativePath="..\MPShared\LyrPlaylistAutoSwitch.h"
 				>
 			</File>
 			<File

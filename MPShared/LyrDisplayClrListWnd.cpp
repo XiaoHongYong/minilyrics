@@ -94,7 +94,7 @@ void CLyrDisplayClrListWnd::PopupSkinWndOnSelected()
 
 		fontClr.clr[0] = dlg.GetColor().get();
 
-		ColorToStr(fontClr.clr[0], strColor);
+		strColor = ColorToStr(fontClr.clr[0]);
 		CMPlayerSettings::SetSettings(m_et, m_strSectName.c_str(), 
 			GetLyrTOBSettingName(m_bHilight, CLyricShowObj::TCI_FILL), strColor.c_str());
 	}
@@ -102,7 +102,7 @@ void CLyrDisplayClrListWnd::PopupSkinWndOnSelected()
 	{
 		for (int i = CLyricShowObj::TCI_GRADIENT1; i <= CLyricShowObj::TCI_GRADIENT3; i++)
 		{
-			ColorToStr(fontClr.clr[i - CLyricShowObj::TCI_GRADIENT1], strColor);
+			strColor = ColorToStr(fontClr.clr[i - CLyricShowObj::TCI_GRADIENT1]);
 			CMPlayerSettings::SetSettings(m_et, m_strSectName.c_str(), 
 				GetLyrTOBSettingName(m_bHilight, (CLyricShowObj::TOBColorIndex)i), strColor.c_str());
 		}

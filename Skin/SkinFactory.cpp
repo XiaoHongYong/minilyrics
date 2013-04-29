@@ -404,7 +404,7 @@ int CSkinStyles::FromXML(SXNode *pNodeSkin)
 		}
 		else if (IsPropertyName(pNode->strName.c_str(), _T("style")))
 		{
-			m_listStyleNodes.push_back(pNode);
+			m_listStyleNodes.insert(m_listStyleNodes.begin(), pNode);
 		}
 	}
 
@@ -1451,7 +1451,7 @@ CSkinWnd *CSkinFactory::GetMainWnd()
 	return NULL;
 }
 
-SXNode *CSkinFactory::GetExtendSkinWndStyle(LPCTSTR szExtendsSkinWnd) const
+SXNode *CSkinFactory::GetExtendsStyle(LPCTSTR szExtendsSkinWnd) const
 {
 	return m_skinStyle.GetClassNode(szExtendsSkinWnd);
 }

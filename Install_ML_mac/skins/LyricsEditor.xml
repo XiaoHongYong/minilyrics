@@ -2,14 +2,14 @@
 <skinwnd Extends="MenuWindowFrame" Name="LyricsEditor.xml" Caption="Lyrics Editor" CmdHandler="ch_common"
          MinWidth="640" MinHeight="300" Width="640" Height="400" ContextMenu="NormalMode" Menu="LyrEditorMenu"
          IsDialog="false">
-	<Toolbar Rect="0,3,22*4+5,26" UseParentBg="true" Image="lyr-tb.png"
+	<Toolbar Rect="0,3,22*4+5,26" Image="lyr-tb.png"
            enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3">
 		<button ID="ID_INSERTTAG_DOWN" Left="12" Width="2" />
 		<button ID="ID_INSERTTAG" Left="14" />
 		<button ID="ID_TOGGLE_LYR_EDIT_TOOLBAR" Left="23"/>
 	</Toolbar>
-	<Toolbar ID="ID_TB_LYR_EDIT" Rect="22*4+5,3,w-(22*4+5),26" UseParentBg="true"
+	<Toolbar ID="ID_TB_LYR_EDIT" Rect="22*4+5,3,w-(22*4+5),26" 
            Image="lyr-tb.png" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3" Visible="false">
 		<seperator/>
@@ -41,14 +41,14 @@
 		<button ID="ID_EDIT_HELP" Left="24" />
 	</Toolbar>
 	<LinearContainer Name="EditorFrame" ID="CID_EDITOR_FRAME" Rect="5,26+5,w-10,h-26-10" Orientation="Vertical">
-		<Container Name="Find" ID="CID_C_FIND" Height="35" LayoutParams="match_parent_width" Visible="false" FixedHeight="TRUE" UseParentBg="true">
+		<Container Name="Find" ID="CID_C_FIND" Height="35" LayoutParams="match_parent_width" Visible="false" FixedHeight="TRUE" >
 			<NormalTextBt ID="CID_FIND_PREV" Text="Find &amp;Previous" Rect="10,5,100,"/>
 			<NormalTextBt ID="CID_FIND_NEXT" Text="Find &amp;Next" Rect="130,5,100,"/>
 			<NormalText Text="Find what:" Rect="230,10,100," AlignText="AT_RIGHT | AT_VCENTER"/>
 			<NormalEdit ID="CID_E_FIND" Rect="340,10,w-340-160,"/>
 			<NormalCheckBox ID="CID_MATCHCASE" Text="Match &amp;case" Rect="w-150,8,130,"/>
 		</Container>
-		<Container Name="Replace" ID="CID_C_REPLACE" Height="35" LayoutParams="match_parent_width" Visible="false" FixedHeight="TRUE" UseParentBg="true">
+		<Container Name="Replace" ID="CID_C_REPLACE" Height="35" LayoutParams="match_parent_width" Visible="false" FixedHeight="TRUE" >
 			<NormalTextBt ID="CID_REPLACE" Text="&amp;Replace" Rect="10,5,100,"/>
 			<NormalTextBt ID="CID_REPLACE_ALL" Text="Replace &amp;All" Rect="130,5,100,"/>
 			<NormalText Text="Replace with:" Rect="230,10,100," AlignText="AT_RIGHT | AT_VCENTER"/>
@@ -61,7 +61,7 @@
 			<LyricShowTextEdit Rect="1,1,w-2,h-2"/>
 		</Container>
 	
-		<Container Name="Lyrics Tag" ID="CID_C_LYR_TAG" Height="95" Width="200" LayoutParams="match_parent_width" FixedHeight="TRUE" UseParentBg="true">
+		<Container Name="Lyrics Tag" ID="CID_C_LYR_TAG" Height="95" Width="200" LayoutParams="match_parent_width" FixedHeight="TRUE" >
 			<NormalText Text="Artist:" Rect="10,10,70," AlignText="AT_RIGHT | AT_VCENTER"/>
 			<RefreshButton ID="CID_RERESH_ARTIST" ToolTip="Refresh from media tag" Rect="85,10,,"/>
 			<NormalEdit ID="CID_E_ARTIST" Rect="110,10,w/2-110,"/>

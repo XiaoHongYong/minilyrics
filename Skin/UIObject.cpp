@@ -223,7 +223,7 @@ void CUIObjProperties::AddPropColor(LPCTSTR szName, MLColor &clrValue, bool bToX
 	CUIObjProperty		property;
 
 	property.strName = szName;
-	ColorToStr(clrValue, property.strValue);
+	property.strValue = ColorToStr(clrValue);
 	property.valueType = CUIObjProperty::VT_COLOR;
 	property.bToXmlAttrib = bToXmlAttrib;
 
@@ -364,6 +364,47 @@ bool IsTRUE(LPCTSTR szValue)
 
 //////////////////////////////////////////////////////////////////////
 
+CSXNodeProperty::CSXNodeProperty(SXNode *pNode1, SXNode *pNode2)
+{
+	m_pNode1 = pNode1;
+	m_pNode2 = pNode2;
+}
+
+// If not exists, NULL will be returned
+LPCTSTR CSXNodeProperty::GetProperty(LPCTSTR szPropName)
+{
+	LPCTSTR szValue = m_pNode1->GetProperty(szPropName);
+	if (szValue != NULL)
+		return szValue;
+
+	if (m_pNode2 == NULL)
+		return NULL;
+
+	return m_pNode2->GetProperty(szPropName);
+}
+
+// If not exists, _T("") will be returned.
+LPCTSTR CSXNodeProperty::GetPropertySafe(LPCTSTR szPropName)
+{
+	LPCTSTR szValue = GetProperty(szPropName);
+	if (szValue == NULL)
+		szValue = _T("");
+	return szValue;
+}
+
+int CSXNodeProperty::GetPropertyInt(LPCTSTR szPropName)
+{
+	return GetPropertyInt(szPropName, 0);
+}
+
+int CSXNodeProperty::GetPropertyInt(LPCTSTR szPropName, int nValueIfInexist)
+{
+	LPCTSTR szValue = GetProperty(szPropName);
+	if (szValue != NULL)
+		return _ttoi(szValue);
+	return nValueIfInexist;
+}
+
 
 LPCTSTR CUIObject::ms_szClassName = _T("UIObject");
 
@@ -393,7 +434,6 @@ CUIObject::CUIObject()
 	m_bVisible = true;
 	m_bHideIfWndInactive = false;
 	m_bHideIfMouseInactive = false;
-	m_bUseParentBg = false;
 
 	m_bTranslucencyWithSkin = false;
 	m_nOpacity = 255;
@@ -403,6 +443,9 @@ CUIObject::CUIObject()
 
 	m_animateType = AT_UNKNOWN;
 	m_animateDuration = 0;
+
+	m_BgType = BG_NONE;
+	m_BgBpm = BPM_BLEND;
 }
 
 CUIObject::~CUIObject()
@@ -419,6 +462,92 @@ CUIObject::~CUIObject()
 
 		m_pSkin->UnregisterTimerObject(this);
 	}
+}
+
+MLColor CUIObject::GetBgColor() const
+{
+	if (m_BgType == BG_COLOR)
+		return m_pSkin->GetTranslucencyColor(m_clrBg);
+
+	if (m_pContainer)
+		return m_pContainer->GetBgColor();
+
+	return m_clrBg;
+}
+
+bool CUIObject::IsDrawBgImage() const
+{
+	// Draw with background color?
+	if (m_BgType == BG_IMAGE)
+		return true;
+	else if (m_BgType == BG_NONE && m_pContainer)
+		return m_pContainer->IsDrawBgImage();
+
+	return false;
+}
+
+void CUIObject::RedrawBackground(CRawGraph *pGraph, const RECT &rc)
+{
+	ASSERT(pGraph);
+	if (!pGraph)
+		return;
+
+	if (m_BgType == BG_NONE)
+	{
+		if (m_pContainer)
+			m_pContainer->RedrawBackground(pGraph, rc);
+		return;
+	}
+
+	MLColor clrBg = m_pSkin->GetTranslucencyColor(m_clrBg);
+
+	CRect	rcClip, rcNewClip;
+	pGraph->GetClipBoundBox(rcClip);
+	rcNewClip.IntersectRect(&rcClip, &rc);
+
+	if (m_pSkin->GetCurrentTranslucency() == 0)
+	{
+		// Optimize for totally transparent background
+		MLColor	clr(RGB(0, 0, 0));
+		clr.setAlpha(0);
+		pGraph->FillRect(&rcNewClip, clr);
+		return;
+	}
+
+	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
+	pGraph->SetClipBoundBox(rcNewClip);
+
+	if (m_imageBg.IsValid())
+	{
+		// Draw Background with image
+		CDrawImageFunMask	funcDraw(pGraph, &m_imageBg, NULL, m_BgBpm);
+
+		if (m_imageBgMask.IsValid())
+			funcDraw.m_pImageMask = &m_imageBgMask;
+
+		// Fill background
+		if (m_imageBgMask.IsValid())
+			pGraph->FillRect(&rcNewClip, clrBg);
+		else if (m_pSkin->GetCurrentTranslucency() != 255)
+		{
+			// 			MLColor	clr(RGB(0, 0, 0));
+			// 			clr.setAlpha(0);
+			// 			pGraph->FillRect(&rcNewClip, clr);
+		}
+
+		m_bgImagePainter.Blt(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), funcDraw);
+
+		//		if (m_pSkin->GetCurrentTranslucency() != 255)
+		//			pGraph->MultiplyAlpha(m_pSkin->GetCurrentTranslucency(), &rcNewClip);
+	}
+	else
+		pGraph->FillRect(&rcNewClip, clrBg);
+}
+
+void CUIObject::Draw(CRawGraph *pGraph)
+{
+	if (m_BgType != BG_NONE)
+		RedrawBackground(pGraph, m_rcObj);
 }
 
 int CUIObject::GetOpacity()
@@ -492,6 +621,52 @@ void CUIObject::SetProperties(vector<tstring> &vProperties)
 		SetProperty(vProperties[i].c_str(), vProperties[i + 1].c_str());
 }
 
+BOOL CUIObject::SetProperty(LPCTSTR szProperty, CSXNodeProperty *pProperties)
+{
+	if (IsPropertyName(szProperty, _T("BgImage")))
+	{
+		// Set background image
+		m_imageBg.LoadFromSRM(m_pSkin->GetSkinFactory(), pProperties->GetPropertySafe(SZ_PN_IMAGE));
+		LPCTSTR szValue = pProperties->GetProperty(_T("ImageMask"));
+		if (szValue)
+			m_imageBgMask.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
+
+		// Image Rect
+		szValue = pProperties->GetProperty(SZ_PN_IMAGERECT);
+		if (szValue)
+		{
+			GetRectValue(szValue, m_imageBg);
+			if (m_imageBgMask.IsValid())
+				GetRectValue(szValue, m_imageBgMask);
+		}
+
+		szValue = pProperties->GetPropertySafe(_T("HorzExtendPos"));
+		if (!Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd))
+			m_bgImagePainter.nSrcHorzExtendStart = m_bgImagePainter.nSrcHorzExtendEnd = m_imageBg.m_x + m_imageBg.m_cx;
+
+		szValue = pProperties->GetPropertySafe(_T("VertExtendPos"));
+		if (!Scan2IntX(szValue, m_bgImagePainter.nSrcVertExtendStart, m_bgImagePainter.nSrcVertExtendEnd))
+			m_bgImagePainter.nSrcVertExtendStart = m_bgImagePainter.nSrcVertExtendEnd = m_imageBg.m_y + m_imageBg.m_cy;
+
+		szValue = pProperties->GetProperty(_T("BlendPixMode"));
+		if (szValue)
+			m_BgBpm = BlendPixModeFromStr(szValue);
+
+		m_bgImagePainter.nSrcX = m_imageBg.m_x;
+		m_bgImagePainter.nSrcY = m_imageBg.m_y;
+		m_bgImagePainter.nSrcWidth = m_imageBg.m_cx;
+		m_bgImagePainter.nSrcHeight = m_imageBg.m_cy;
+		m_bgImagePainter.bDrawCenterArea = !m_imageBgMask.IsValid();
+
+		if (m_imageBg.IsValid())
+			m_BgType = BG_IMAGE;
+
+		return true;
+	}
+
+	return false;
+}
+
 BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	assert(m_pSkin);
@@ -558,8 +733,6 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bHideIfWndInactive = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("HideIfMouseInactive")) == 0)
 		m_bHideIfMouseInactive = IsTRUE(szValue);
-	else if (IsPropertyName(szProperty, _T("UseParentBg")))
-		m_bUseParentBg = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, _T("TranslucencyWithSkin")) == 0)
 		m_bTranslucencyWithSkin = IsTRUE(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_TOOLTIP) == 0)
@@ -570,6 +743,18 @@ BOOL CUIObject::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 			m_strTooltip = str.c_str();
 			m_bTempTooltip = FALSE;
 		}
+	}
+
+	// Background color
+	else if (IsPropertyName(szProperty, _T("BgColor")))
+	{
+		m_BgType = BG_COLOR;
+		GetColorValue(m_clrBg, szValue);
+		m_clrBgOrg = m_clrBg;
+	}
+	else if (IsPropertyName(szProperty, _T("BgImage.Image")))
+	{
+		m_imageBg.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 	}
 	else if (IsPropertyName(szProperty, _T("ImageMask")))
 	{
@@ -771,7 +956,6 @@ void CUIObject::EnumProperties(CUIObjProperties &listProperties)
 
 	listProperties.AddPropBoolStr(_T("Visible"), m_bVisible, !m_bVisible);
 	listProperties.AddPropBoolStr(_T("HideIfWndInactive"), m_bHideIfWndInactive, m_bHideIfWndInactive);
-	listProperties.AddPropBoolStr(_T("UseParentBg"), m_bUseParentBg, m_bUseParentBg);
 	listProperties.AddPropBoolStr(_T("TranslucencyWithSkin"), m_bTranslucencyWithSkin, m_bTranslucencyWithSkin);
 
 	listProperties.AddPropStr(SZ_PN_TOOLTIP, m_strTooltip.c_str(), !m_strTooltip.empty() && !m_bTempTooltip);
@@ -796,6 +980,26 @@ int CUIObject::FromXML(SXNode *pXmlNode)
 					(tstring(GetClassName()) + pXmlNode->GetPropertySafe(SZ_PN_ID)).c_str(),
 					prop.strName.c_str(), prop.strValue.c_str());
 #endif
+		}
+	}
+
+	// Handle property node.
+	for (SXNode::iterator it = pXmlNode->listChildren.begin();
+		it != pXmlNode->listChildren.end(); ++it)
+	{
+		SXNode			*pNode = *it;
+
+		// Is it a property node?
+		if (IsPropertyName(pNode->strName.c_str(), SZ_PN_PROPERTY))
+		{
+			LPCTSTR szPropName = pNode->GetPropertySafe(SZ_PN_NAME);
+			LPCTSTR szExtends = pNode->GetProperty(SZ_PN_EXTENDS);
+			SXNode *pExtends = NULL;
+			if (szExtends != NULL)
+				pExtends = m_pSkin->GetSkinFactory()->GetExtendsStyle(szExtends);
+			CSXNodeProperty properties(pNode, pExtends);
+			if (!IsEmptyString(szPropName) && !SetProperty(szPropName, &properties))
+				DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), szPropName);
 		}
 	}
 

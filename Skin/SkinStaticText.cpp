@@ -21,11 +21,7 @@ CSkinStaticText::CSkinStaticText()
 	m_nLeftMargin = 2;
 	m_bCaptionText = false;
 
-	m_BltMode = BLT_COPY;
 	m_dwAlignText = AT_LEFT;
-
-	m_bPaintBg = false;
-	m_clrBg.set(0, 0, 0);
 }
 
 CSkinStaticText::~CSkinStaticText()
@@ -102,28 +98,7 @@ bool CSkinStaticText::OnLButtonUp(UINT nFlags, CPoint point)
 
 void CSkinStaticText::Draw(CRawGraph *pGraph)
 {
-	if (m_imgBk.IsValid())
-	{
-		if (m_BltMode == BLT_COPY)
-		{
-			m_imgBk.Blt(pGraph, m_rcObj.left, m_rcObj.top);
-		}
-		else if (m_BltMode == BLT_TILE)
-		{
-			m_imgBk.TileBlt(pGraph, m_rcObj.left, m_rcObj.top,
-				m_rcObj.Width(), m_rcObj.Height());
-		}
-		else
-		{
-			m_imgBk.StretchBlt(pGraph, m_rcObj.left, m_rcObj.top,
-						m_rcObj.Width(), m_rcObj.Height());
-		}
-	}
-	else
-	{
-		if (m_bPaintBg && !m_bUseParentBg)
-			pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_clrBg);
-	}
+	CUIObject::Draw(pGraph);
 
 	if (m_font.IsGood())
 		pGraph->SetFont(m_font.GetFont());
@@ -157,27 +132,8 @@ BOOL CSkinStaticText::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 	if (CUIObject::SetProperty(szProperty, szValue))
 		return TRUE;
 
-	if (_tcsicmp(szProperty, SZ_PN_IMAGE) == 0)
-	{
-		m_strImgBkFile = szValue;
-		m_imgBk.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
-	}
-	else if (_tcsicmp(szProperty, SZ_PN_IMAGERECT) == 0)
-	{
-		if (!GetRectValue(szValue, m_imgBk))
-			ERRLOG2(_T("Analysis Value: %s = %s FAILED."), szProperty, szValue);
-	}
-	else if (_tcsicmp(szProperty, _T("BltMode")) == 0)
-	{
-		m_BltMode = BltModeFromStr(szValue);
-	}
-	else if (m_font.SetProperty(szProperty, szValue))
+	if (m_font.SetProperty(szProperty, szValue))
 		return TRUE;
-	else if (_tcsicmp(szProperty, _T("BgColor")) == 0)
-	{
-		m_bPaintBg = true;
-		GetColorValue(m_clrBg, szValue);
-	}
 	else if (_tcsicmp(szProperty, _T("LeftMargin")) == 0)
 	{
 		m_nLeftMargin = _ttoi(szValue);
@@ -199,13 +155,9 @@ void CSkinStaticText::EnumProperties(CUIObjProperties &listProperties)
 {
 	CUIObject::EnumProperties(listProperties);
 
-	listProperties.AddPropImage(SZ_PN_IMAGE, SZ_PN_IMAGERECT, m_strImgBkFile.c_str(), m_imgBk, !m_strImgBkFile.empty());
-
-	listProperties.AddPropBltMode(_T("BltMode"), m_BltMode);
 	m_font.EnumProperties(listProperties);
 	listProperties.AddPropInt(_T("LeftMargin"), m_nLeftMargin);
 	listProperties.AddPropStr(_T("Text"), m_strText.c_str(), !m_strText.empty());
-	listProperties.AddPropColor(_T("BgColor"), m_clrBg, m_bPaintBg || m_clrBg.get() != 0);
 
 	tstring		str;
 	AlignTextToStr(m_dwAlignText, str);

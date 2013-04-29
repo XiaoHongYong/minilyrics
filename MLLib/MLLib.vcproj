@@ -532,7 +532,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\MLServer\LyricsKeywordFilter.cpp"
+				RelativePath=".\LyricsKeywordFilter.cpp"
 				>
 			</File>
 			<File
@@ -903,7 +903,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\MLServer\LyricsKeywordFilter.h"
+				RelativePath=".\LyricsKeywordFilter.h"
 				>
 			</File>
 			<File

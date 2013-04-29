@@ -838,9 +838,9 @@ tstring ToLower(LPCTSTR szString)
 // Return true if:
 // * Has at least one number.
 // * No other chars.
-bool IsStrNumeric(LPCTSTR szString)
+bool IsStrNumeric(LPCSTR szString)
 {
-	LPCTSTR		szTemp;
+	LPCSTR		szTemp;
 	szTemp = szString;
 
 	while (IsDigit(*szTemp))
@@ -856,6 +856,26 @@ bool IsStrNumeric(LPCTSTR szString)
 	return TRUE;
 }
 
+// Return true if:
+// * Has at least one number.
+// * No other chars.
+bool IsStrNumeric(LPCWSTR szString)
+{
+	LPCWSTR		szTemp;
+	szTemp = szString;
+	
+	while (IsDigit(*szTemp))
+		szTemp++;
+	
+	if (*szTemp != '\0')
+		return FALSE;
+	
+	// Empty String
+	if (szString == szTemp)
+		return FALSE;
+	
+	return TRUE;
+}
 
 bool IsHexChar(int ch)
 {

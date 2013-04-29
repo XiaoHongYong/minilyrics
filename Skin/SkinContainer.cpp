@@ -19,9 +19,6 @@ CSkinContainer::CSkinContainer()
 	m_pMenu = NULL;
 	m_bClipChildren = false;
 	m_nFocusUIObj = -1;
-	m_bDrawBg = false;
-
-	m_BgBpm = BPM_COPY;
 }
 
 CSkinContainer::~CSkinContainer()
@@ -522,91 +519,6 @@ CRawGraph *CSkinContainer::GetMemGraph()
 		return m_pSkin->GetMemGraphics();
 }
 
-MLColor CSkinContainer::GetBgColor() const
-{
-	if (m_bDrawBg && !m_imageBg.IsValid())
-		return m_pSkin->GetTranslucencyColor(m_clrBg);
-
-	if (m_pContainer)
-		return m_pContainer->GetBgColor();
-
-	return m_clrBg;
-}
-
-bool CSkinContainer::IsDrawBgImage() const
-{
-	// Draw with background image
-	if (m_imageBg.IsValid())
-		return true;
-
-	// Draw with background color?
-	if (m_bDrawBg)
-		return false;
-
-	if (m_pContainer)
-		return m_pContainer->IsDrawBgImage();
-
-	return false;
-}
-
-void CSkinContainer::RedrawBackground(CRawGraph *pGraph, const RECT &rc)
-{
-	ASSERT(pGraph);
-	if (!pGraph)
-		return;
-
-	if (!m_bDrawBg)
-	{
-		if (m_pContainer)
-			m_pContainer->RedrawBackground(pGraph, rc);
-		return;
-	}
-
-	MLColor clrBg = m_pSkin->GetTranslucencyColor(m_clrBg);
-
-	CRect	rcClip, rcNewClip;
-	pGraph->GetClipBoundBox(rcClip);
-	rcNewClip.IntersectRect(&rcClip, &rc);
-
-	if (m_pSkin->GetCurrentTranslucency() == 0)
-	{
-		// Optimize for totally transparent background
-		MLColor	clr(RGB(0, 0, 0));
-		clr.setAlpha(0);
-		pGraph->FillRect(&rcNewClip, clr);
-		return;
-	}
-
-	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraph);
-	pGraph->SetClipBoundBox(rcNewClip);
-
-	if (m_imageBg.IsValid())
-	{
-		// Draw Background with image
-		CDrawImageFunMask	funcDraw(pGraph, &m_imageBg, NULL, m_BgBpm);
-
-		if (m_imageBgMask.IsValid())
-			funcDraw.m_pImageMask = &m_imageBgMask;
-
-		// Fill background
-		if (m_imageBgMask.IsValid())
-			pGraph->FillRect(&rcNewClip, clrBg);
-		else if (m_pSkin->GetCurrentTranslucency() != 255)
-		{
-// 			MLColor	clr(RGB(0, 0, 0));
-// 			clr.setAlpha(0);
-// 			pGraph->FillRect(&rcNewClip, clr);
-		}
-
-		m_bgImagePainter.Blt(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), funcDraw);
-
-//		if (m_pSkin->GetCurrentTranslucency() != 255)
-//			pGraph->MultiplyAlpha(m_pSkin->GetCurrentTranslucency(), &rcNewClip);
-	}
-	else
-		pGraph->FillRect(&rcNewClip, clrBg);
-}
-
 void CSkinContainer::Draw(CRawGraph *pGraph)
 {
 	CRect	rc;
@@ -617,8 +529,7 @@ void CSkinContainer::Draw(CRawGraph *pGraph)
 		pGraph->SetClipBoundBox(m_rcObj);
 	}
 
-	if (m_bDrawBg)
-		RedrawBackground(pGraph, m_rcObj);
+	CUIObject::Draw(pGraph);
 
 	for (int i = 0; i < (int)m_vUIObjs.size(); i++)
 	{
@@ -659,10 +570,7 @@ void CSkinContainer::CreateChild(SXNode *pXmlNode)
 
 		if (IsPropertyName(pNode->strName.c_str(), SZ_PN_PROPERTY))
 		{
-			// Is it a property node?
-			LPCTSTR szPropName = pNode->GetPropertySafe(SZ_PN_NAME);
-			if (!IsEmptyString(szPropName) && !SetProperty(szPropName, pNode))
-				DBGLOG2(_T("Unknow Property: %s, name: %s"), pNode->strName.c_str(), szPropName);
+			// CUIObject has handled it.
 			continue;
 		}
 		else if (IsPropertyName(pNode->strName.c_str(), _T("PlaceHolder")))
@@ -706,16 +614,6 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_bClipChildren = IsTRUE(szValue);
 	else if (IsPropertyName(szProperty, _T("DefaultPage")))
 		m_strDefaultPageClass = szValue;
-	else if (IsPropertyName(szProperty, _T("BgColor")))
-	{
-		m_bDrawBg = true;
-		GetColorValue(m_clrBg, szValue);
-		m_clrBgOrg = m_clrBg;
-	}
-	else if (IsPropertyName(szProperty, _T("BgImage.Image")))
-	{
-		m_imageBg.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
-	}
 	else if (StrBeginWith(szProperty, SZ_EX_POOL))
 	{
 		ASSERT(LEN_EX_POOL == _tcslen(SZ_EX_POOL));
@@ -727,55 +625,6 @@ BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		return FALSE;
 
 	return true;
-}
-
-BOOL CSkinContainer::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
-{
-	if (m_pSkin->SetProperty(szProperty, pXmlNode))
-		return TRUE;
-
-	if (IsPropertyName(szProperty, _T("BgImage")))
-	{
-		// Set background image
-		m_imageBg.LoadFromSRM(m_pSkin->GetSkinFactory(), pXmlNode->GetPropertySafe(SZ_PN_IMAGE));
-		LPCTSTR szValue = pXmlNode->GetProperty(_T("ImageMask"));
-		if (szValue)
-			m_imageBgMask.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
-
-		// Image Rect
-		szValue = pXmlNode->GetProperty(SZ_PN_IMAGERECT);
-		if (szValue)
-		{
-			GetRectValue(szValue, m_imageBg);
-			if (m_imageBgMask.IsValid())
-				GetRectValue(szValue, m_imageBgMask);
-		}
-
-		szValue = pXmlNode->GetPropertySafe(_T("HorzExtendPos"));
-		if (!Scan2IntX(szValue, m_bgImagePainter.nSrcHorzExtendStart, m_bgImagePainter.nSrcHorzExtendEnd))
-			m_bgImagePainter.nSrcHorzExtendStart = m_bgImagePainter.nSrcHorzExtendEnd = m_imageBg.m_x + m_imageBg.m_cx;
-
-		szValue = pXmlNode->GetPropertySafe(_T("VertExtendPos"));
-		if (!Scan2IntX(szValue, m_bgImagePainter.nSrcVertExtendStart, m_bgImagePainter.nSrcVertExtendEnd))
-			m_bgImagePainter.nSrcVertExtendStart = m_bgImagePainter.nSrcVertExtendEnd = m_imageBg.m_y + m_imageBg.m_cy;
-
-		szValue = pXmlNode->GetProperty(_T("BlendPixMode"));
-		if (szValue)
-			m_BgBpm = BlendPixModeFromStr(szValue);
-
-		m_bgImagePainter.nSrcX = m_imageBg.m_x;
-		m_bgImagePainter.nSrcY = m_imageBg.m_y;
-		m_bgImagePainter.nSrcWidth = m_imageBg.m_cx;
-		m_bgImagePainter.nSrcHeight = m_imageBg.m_cy;
-		m_bgImagePainter.bDrawCenterArea = !m_imageBgMask.IsValid();
-
-		if (m_imageBg.IsValid())
-			m_bDrawBg = true;
-
-		return true;
-	}
-
-	return false;
 }
 
 #ifdef _SKIN_EDITOR_
@@ -1445,7 +1294,7 @@ bool CSkinContainer::GetExPoolBool(LPCTSTR szProperty, bool bDefault)
 }
 
 #ifdef _DEBUG
-void CSkinContainer::DumpUIObject(int &nDeep)
+void CSkinContainer::DumpUIObject(int &nDeep, POINT *pt)
 {
 	tstring		strDeep;
 	strDeep.resize(nDeep * 2, ' ');
@@ -1457,9 +1306,10 @@ void CSkinContainer::DumpUIObject(int &nDeep)
 		CStrPrintf str(_T("%s id=%s(%d), name=%s visible=%d rc=%d,%d,%d,%d"), + p->GetClassName(), 
 			m_pSkin->GetSkinFactory()->GetStringOfID(p->GetID()).c_str(), p->GetID(),
 			p->m_strName.c_str(), p->m_bVisible, p->m_rcObj.left, p->m_rcObj.top, p->m_rcObj.Width(), p->m_rcObj.Height());
-		DBGLOG2(_T("%s%s"), strDeep.c_str(), str.c_str());
+		if (pt == NULL || p->IsPtIn(*pt))
+			DBGLOG2(_T("%s%s"), strDeep.c_str(), str.c_str());
 		if (p->IsContainer())
-			p->GetContainerIf()->DumpUIObject(nDeep);
+			p->GetContainerIf()->DumpUIObject(nDeep, pt);
 	}
 
 	nDeep--;
@@ -1525,11 +1375,3 @@ void CSkinContainer::OnToXMLChild(CXMLWriter &xmlStream)
 #endif // _SKIN_EDITOR_
 
 UIOBJECT_CLASS_NAME_IMP(CSkinClientArea, _T("ClientArea"))
-
-BOOL CSkinClientArea::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
-{
-	if (m_pSkin->SetProperty(szProperty, pXmlNode))
-		return TRUE;
-
-	return CSkinContainer::SetProperty(szProperty, pXmlNode);
-}

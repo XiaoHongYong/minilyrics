@@ -94,7 +94,7 @@ void CMLMenu::Destroy()
 
 void CMLMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
-	NSPoint pt = { x, y };
+	NSPoint pt = { float(x), float(y) };
 	[m_info->menuImp setBaseWnd:pWnd];
 	@try {
 		[m_info->menu popUpMenuPositioningItem: [m_info->menu itemAtIndex:0]
@@ -107,7 +107,7 @@ void CMLMenu::TrackPopupMenu(int x, int y, CBaseWnd *pWnd, RECT *prcNotOverlap)
 
 void CMLMenu::TrackPopupSubMenu(int x, int y, int nSubMenu, CBaseWnd *pWnd, RECT *prcNotOverlap)
 {
-	NSPoint pt = { x, y };
+	NSPoint pt = { float(x), float(y) };
 	[m_info->menuImp setBaseWnd:pWnd];
 	NSMenuItem *item = [m_info->menu itemAtIndex:nSubMenu];
 	if (item == nil || [item hasSubmenu] != YES)

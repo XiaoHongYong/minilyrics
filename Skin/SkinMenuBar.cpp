@@ -173,7 +173,7 @@ bool CMenuBarMsgHandler::TrackPopupSubMenu(int x, int y, CMLMenu *pMenu, int nSu
 
 //////////////////////////////////////////////////////////////////////////
 
-#define SPACE_SUBMENUS		(m_font.GetHeight() / 2)
+#define SPACE_SUBMENUS		(m_font.GetHeight() / 2 + 5)
 
 UIOBJECT_CLASS_NAME_IMP(CSkinMenuBar, _T("MenuBar"))
 

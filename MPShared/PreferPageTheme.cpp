@@ -252,13 +252,11 @@ public:
 			{
 				if (nId == m_ColorSet[i].nButtonID)
 				{
-					tstring		strColor;
-
 					if (m_ColorSet[i].pButton)
 					{
 						m_ColorSet[i].clr = m_ColorSet[i].pButton->GetColor();
 
-						ColorToStr(m_ColorSet[i].clr, strColor);
+						tstring strColor = ColorToStr(m_ColorSet[i].clr);
 						CMPlayerSettings::SetSettings(m_eventType, m_strSectName.c_str(), m_ColorSet[i].strProfileKey.c_str(), strColor.c_str());
 					}
 					return true;

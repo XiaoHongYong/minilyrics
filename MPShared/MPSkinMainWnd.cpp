@@ -23,8 +23,6 @@ bool CMPSkinMainWndBase::OnCreate()
 	if (!CMPSkinWnd::OnCreate())
 		return false;
 
-	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_UI_SETTINGS_CHANGED, ET_LICENSE_CHANGED);
-
 	UpdateCaptionText();
 
 	return true;
@@ -51,8 +49,6 @@ void CMPSkinMainWndBase::OnEvent(const IEvent *pEvent)
 		else
 			CMPSkinWnd::OnEvent(pEvent);
 	}
-	if (pEvent->eventType == ET_LICENSE_CHANGED)
-		UpdateCaptionText();
 	else
 		CMPSkinWnd::OnEvent(pEvent);
 }
@@ -65,11 +61,5 @@ void CMPSkinMainWndBase::UpdateCaptionText()
 	else
 		szAppName = SZ_APP_NAME;
 
-	if (g_licenseManager.IsLicenseValid())
-		SetCaptionText(_TL(szAppName));
-	else
-	{
-		CStrPrintf strCaption(_T("%s (%s)"), _TL(szAppName), _TLT("Unactivated"));
-		SetCaptionText(strCaption.c_str());
-	}
+	SetCaptionText(_TL(szAppName));
 }

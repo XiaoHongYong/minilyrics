@@ -16,7 +16,7 @@
 
 			<Text ID="ID_CAPTION" Rect="24,8,w-80,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
 			<Toolbar ID="CID_TB_SYSBT" Rect="w-10-20,10,20,16" TranslucencyWithSkin="TRUE"
-				 UseParentBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+				 Image="caption_btn.png" enablehover="TRUE" units_x="16"
 				 blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
 				 MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
 			  <button ID="ID_CLOSE" Left="4" />
@@ -39,7 +39,7 @@
 			<Property Name="BgImage" Image="frame.png" ImageRect="0,0,425,31" HorzExtendPos="7,418" BlendPixMode="copy"/>
 
 			<MenuBar Rect="13,8,w/2-20,20" Name="Menu"
-				UseParentBg="true" TranslucencyWithSkin="TRUE" FontName="Verdana"
+				TranslucencyWithSkin="TRUE" FontName="Verdana"
 				FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
 				TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
 				TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
@@ -47,7 +47,7 @@
 			
 			<Text ID="ID_CAPTION" Rect="w/2,8,w/2-10-60-10,20" CaptionText="true" FontName="Verdana" FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
 			<Toolbar ID="CID_TB_SYSBT" Rect="w-10-20,10,20,16" TranslucencyWithSkin="TRUE"
-				 UseParentBg="TRUE" Image="caption_btn.png" enablehover="TRUE" units_x="16"
+				 Image="caption_btn.png" enablehover="TRUE" units_x="16"
 				 blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
 				 MarginX="0" MarginY="0" ButtonSpacesCX="5" FullStatusImage="TRUE">
 			  <button ID="ID_CLOSE" Left="4" />
@@ -73,7 +73,7 @@
       <ClientArea Rect="1, 5, w-2, h-5-5"/>
     </PopupWndFrame>
 	<NormalToolbar Extends="Container" Height="24" >
-		<Toolbar ID="ID_TB_LYR_SYNC" Rect="8,1,78,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+		<Toolbar ID="ID_TB_LYR_SYNC" Rect="8,1,78,22" Image="fl_buttons.png" enablehover="TRUE"
 				units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" ButtonSpacesCX="1"
 				MarginX="0" MarginY="0" FullStatusImage="TRUE">
 			<button ID="ID_SEARCH_LYRICS" Left="5" />
@@ -81,7 +81,7 @@
 			<button ID="ID_FORWARD_LYRICS" Left="7" Continuous="TRUE"/>
 		</Toolbar>
 
-		<Toolbar ID="ID_TB_LYR_TXT" Rect="8,2,78,20" UseParentBg="TRUE" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
+		<Toolbar ID="ID_TB_LYR_TXT" Rect="8,2,78,20" Image="lyr_scroll_actions_tb.png" enablehover="TRUE"
 				units_x="20" blank_x="-1" blank_cx="20" seperator_x="-1" seperator_cx="20" ButtonSpacesCX="4"
 				MarginX="0" MarginY="0" FullStatusImage="TRUE" Visible="false">
 			<button ID="ID_LYR_SCROLL_ENABLE_RECORD" Left="0" CanCheck="TRUE" checked_left="1"/>
@@ -89,7 +89,7 @@
 			<button ID="ID_LYR_SCROLL_MENU" Left="4"/>
 		</Toolbar>
 
-		<Toolbar Rect="86,1,w-88,22" UseParentBg="TRUE" Image="fl_buttons.png" enablehover="TRUE"
+		<Toolbar Rect="86,1,w-88,22" Image="fl_buttons.png" enablehover="TRUE"
 				units_x="22" blank_x="-1" blank_cx="22" seperator_x="220" seperator_cx="14" ButtonSpacesCX="1"
 				MarginX="0" MarginY="0" FullStatusImage="TRUE">
 			<seperator/>
@@ -103,34 +103,34 @@
 		</Toolbar>
 	</NormalToolbar>
 
-	<RefreshButton Extends="Button" Width="16" Height="16" Image="refresh.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16" ImageFocusPos="0,32" UseParentBg="TRUE"/>
-    <NormalText Extends="Text" Height="15" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
-    <TitleText Extends="Text" Height="25" UseParentBg="true" FontName="Verdana" FontHeight="20" TextColor="#000000" AlignText="AT_CENTER"/>
-    <ErrorText Extends="Text" Height="15" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#FF0000"/>
-    <NormalLink Extends="TxtLink" Height="15" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#0000FF"/>
+	<RefreshButton Extends="Button" Width="16" Height="16" Image="refresh.png" ImageSize="16,16" ImagePos="0,0" ImageSelPos="0,16" ImageFocusPos="0,32" />
+    <NormalText Extends="Text" Height="15" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
+    <TitleText Extends="Text" Height="25" FontName="Verdana" FontHeight="20" TextColor="#000000" AlignText="AT_CENTER"/>
+    <ErrorText Extends="Text" Height="15" FontName="Verdana" FontHeight="14" TextColor="#FF0000"/>
+    <NormalLink Extends="TxtLink" Height="15" FontName="Verdana" FontHeight="14" TextColor="#0000FF"/>
     <NormalTextBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
-          Height="22" Padding="5,3" UseParentBg="true" TextLeftMargin="8" TextRightMargin="8"
+          Height="22" Padding="5,3" TextLeftMargin="8" TextRightMargin="8"
           Image="s_txt_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalImageBt Extends="ImageButton" ContentMarginX="9" ContentMarginY="7"
-          Height="20" Padding="5,4" UseParentBg="true" TabFocus="true"
+          Height="20" Padding="5,4" TabFocus="true"
           Image="s_image_button.png" ImageSize="70,28" ExtendPos="20,50"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28"/>
     <NormalCheckBox Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080"
-          Height="20" Padding="3,2" UseParentBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
+          Height="20" Padding="3,2" TextLeftMargin="25" AlignText="AT_LEFT"
           CheckBox="true" TabFocus="true"
           Image="s_checkbox.png" ImageSize="20,20"
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_checkbox.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
     <NormalRadioBt Extends="TextButton" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080"
-          Height="20" Padding="3,2" UseParentBg="true" TextLeftMargin="25" AlignText="AT_LEFT"
+          Height="20" Padding="3,2" TextLeftMargin="25" AlignText="AT_LEFT"
            Radio="true" TabFocus="true"
           Image="s_radio_button.png" ImageSize="20,20"
           ImagePos="20,0" ImageSelPos="20,20" ImageFocusPos="20,40" ImageDisabledPos="20,60"
           S1_Image="s_radio_button.png" S1_ImageSize="20,20"
           S1_ImagePos="0,0" S1_ImageSelPos="0,20" S1_ImageFocusPos="0,40" S1_ImageDisabledPos="0,60"/>
-    <NormalEdit Extends="EditCtrl" Height="18" UseParentBg="true" FontName="Verdana" FontHeight="14" TextColor="#000000"
+    <NormalEdit Extends="EditCtrl" Height="18" FontName="Verdana" FontHeight="14" TextColor="#000000"
           XMargin="5" YMargin="0"/>
     <NormalListCtrl Extends="ListCtrl" BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 
           TextColor="#000000" SelTextColor="#FFFFFF" 
@@ -142,13 +142,13 @@
 		  ImageList="imagelist.png" 
           HeaderHeight="17" LineColor="#808080" ImageSortedHeader="s_listctrl_sorted_header.png"
           ImageHeader="s_listctrl_header.png" ImageSortFlag="s_listctrl_sort_flag.png"/>
-    <NormalTabButton Extends="TabButton" Height="22" UseParentBg="TRUE"
+    <NormalTabButton Extends="TabButton" Height="22" 
           FontName="Verdana" FontHeight="14" TextColor="#000000"
           Image="s_tab_button.png" SperatorLineWidth="1" ButtunBorderWidth="6" 
           MarginX="0" MarginY="0" />
     <NormalComboBox Extends="ComboBox" FontName="Verdana" FontHeight="14" TextColor="#000000" DisabledTextColor="#808080" TabFocus="true"
           Height="22" Padding="5,4" AlignText="AT_LEFT" TextLeftMargin="14" TextRightMargin="30"
-          UseParentBg="true" Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
+          Image="s_combobox.png" ImageSize="70,28" ExtendPos="20,40"
           ImagePos="0,0" ImageSelPos="0,56" ImageFocusPos="0,28" ImageDisabledPos="0,84"/>
     <NormalFrame Extends="Frame" Image="s_tab_frame.png" RoundWidth="6" ThickWidth="1"
           XBorder="0" YBorder="10" FontName="Verdana" FontHeight="14" TextColor="#000000"/>
@@ -162,6 +162,6 @@
     <VScrollBar Width="15" PushBtHeight="15" ThumbHeight="20" TrackHeight="20" ScrollBarWidth="15" Image="s_vscrollbar.png" ScalableThumb="TRUE" />
     <HScrollBar Height="15" PushBtWidth="15" ThumbWidth="20" TrackWidth="20" ScrollBarHeight="15" Image="s_hscrollbar.png" ScalableThumb="TRUE" />
     <ListCtrl BgColor="#4F586E" SelBgColor="#D9D9D9" TextColor="#FFFFFF" SelTextColor="#4F586E" FontHeight="13"/>
-
+	<InfoText Name="InfoText" Rect="0,h-26,w,26" FontName="Verdana" FontHeight="16" FontItalic="1" TextColor="#0000FF" LeftMargin="10" TranslucencyWithSkin="TRUE"/>
   </style>
 </styles>

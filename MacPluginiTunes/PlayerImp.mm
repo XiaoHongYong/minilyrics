@@ -3,21 +3,30 @@
 #include "PlayerImp.h"
 #import "EyeTunes.h"
 #include <cmath>
+#include <pthread.h>
 
 CPlayerImp	g_Player;
 pthread_t	g_threadTimer = 0;
 volatile bool g_bQuitTimer = false;
+volatile bool g_bMediaChanged = false;
+
+static char	fileNameLast[256 + 128] = { 0 };
 
 #define TIMER_DURATION_GET_POS		100000
 
 LPVOID ThreadTimer(LPVOID param)
 {
-	//g_Player.InitUpdateTrackInfo();
+	g_Player.UpdateTrackInfo();
 
 	while (!g_bQuitTimer)
 	{
 		if (usleep(TIMER_DURATION_GET_POS) != 0)
 			Log("Failed to sleep");
+		if (g_bMediaChanged)
+		{
+			g_Player.UpdateTrackInfo();
+			g_bMediaChanged = false;
+		}
 		g_Player.OnTimer(CPlayerServiceBase::TIMER_GETPOS);
 	}
 
@@ -64,6 +73,9 @@ void CPlayerImp::OnConnected()
 {
 	Log("OnConnected.");
 	
+	g_bMediaChanged = true;
+	fileNameLast[0] = '\0';
+
 	if (m_bWorking)
 		return;
 
@@ -75,6 +87,8 @@ void CPlayerImp::OnConnected()
 
 void CPlayerImp::OnDisconnect()
 {
+	Log("OnDisconnect.");
+
 	m_bWorking = false;
 
 	if (g_threadTimer != 0)
@@ -130,6 +144,9 @@ void CPlayerImp::Next()
 
 void CPlayerImp::SeekTo(int nMsPos)
 {
+	EyeTunes *iTunes = [EyeTunes sharedInstance];
+	if (iTunes != nil)
+		[iTunes setPlayerPosition:nMsPos / 1000];
 }
 
 void CPlayerImp::OnTimer(int nTimerID)
@@ -155,29 +172,12 @@ void CopyTrackInfoField(LPSTR szField, size_t sizeField, const UniChar *value)
 
 void CPlayerImp::OnMediaChanged(ITTrackInfo	*pTrackInfo)
 {
-	char		szMediaUrl[MAX_PATH], szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
-	static char			fileNameLast[256 + 128] = { 0 };
-	static UInt64		sizeInBytesLast = 0;
-	
-	CopyTrackInfoField(szMediaUrl, CountOf(szMediaUrl), pTrackInfo->fileName);
-	
-	// Is current track changed?
-	if (strcmp(fileNameLast, szMediaUrl) == 0 && sizeInBytesLast == pTrackInfo->sizeInBytes)
-		return;
-	strcpy(fileNameLast, szMediaUrl);
-	sizeInBytesLast = pTrackInfo->sizeInBytes;
+	// Can't call [iTunes currentTrack] in this thread, it might cause dead lock.
+	// So, set this flag, and call it in another thread.
+	g_bMediaChanged = true;
 
 	m_dwBegTickCount = GetTickCount();
 	m_dwPos = 0;
-
-	CopyTrackInfoField(szArtist, CountOf(szArtist), pTrackInfo->artist);
-	CopyTrackInfoField(szAlbum, CountOf(szAlbum), pTrackInfo->album);
-	CopyTrackInfoField(szTitle, CountOf(szTitle), pTrackInfo->name);
-
-	g_MLService.OnMediaInfoChanged(szMediaUrl, szArtist, szAlbum, szTitle, pTrackInfo->totalTimeInMS);
-
-	m_playerState = PS_PLAYING;
-	g_MLService.OnPlayStateChanged(m_playerState);
 }
 
 void CPlayerImp::OnPlayStateChanged(PLAYER_STATE newStat)
@@ -200,22 +200,35 @@ void CPlayerImp::OnPlayStateChanged(PLAYER_STATE newStat)
 	g_MLService.OnPlayStateChanged(g_Player.m_playerState);
 }
 
-void CPlayerImp::InitUpdateTrackInfo()
+void CPlayerImp::UpdateTrackInfo()
 {
 	EyeTunes *iTunes = [EyeTunes sharedInstance];
 	if (iTunes == nil)
 		return;
 
 	ETTrack *track = [iTunes currentTrack];
-
-	m_dwPos = [iTunes playerPosition] * 1000;
-	m_dwBegTickCount = GetTickCount() - m_dwPos;
+	if (track == nil)
+		return;
+	
+	int pos = [iTunes playerPosition] * 1000;
+	if (std::abs((int)m_dwPos - pos) >= 1000)
+	{
+		m_dwPos = pos;
+		m_dwBegTickCount = GetTickCount() - m_dwPos;
+	}
 
 	char szMediaUrl[MAX_PATH], szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
+
+	strcpy_safe(szMediaUrl, CountOf(szMediaUrl), [[track location] UTF8String]);
+
+	// Is current track changed?
+	if (strcmp(fileNameLast, szMediaUrl) == 0)
+		return;
+	strcpy(fileNameLast, szMediaUrl);
+
 	strcpy_safe(szArtist, CountOf(szArtist), [[track artist] UTF8String]);
 	strcpy_safe(szAlbum, CountOf(szAlbum), [[track album] UTF8String]);
 	strcpy_safe(szTitle, CountOf(szTitle), [[track name] UTF8String]);
-	strcpy_safe(szMediaUrl, CountOf(szMediaUrl), [[track name] UTF8String]);
 
 	g_MLService.OnMediaInfoChanged(szMediaUrl, szArtist, szAlbum, szTitle, [track duration] * 1000);
 

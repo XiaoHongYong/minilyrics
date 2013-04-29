@@ -457,22 +457,11 @@ protected:
 
 CMPSkinWnd::CMPSkinWnd()
 {
-	m_autoSwitchToLyrShow.m_pSkinWnd = this;
 }
 
 CMPSkinWnd::~CMPSkinWnd()
 {
 
-}
-
-void CMPSkinWnd::OnActivate(bool bActived)
-{
-#ifdef _MPLAYER
-	if (m_wndToolTip.IsWindow())
-		m_autoSwitchToLyrShow.OnActivate(bActived);
-#endif
-
-	CSkinWnd::OnActivate(bActived);
 }
 
 void CMPSkinWnd::OnPreCreate(bool &bTopmost, bool &bVisible)
@@ -493,11 +482,6 @@ bool CMPSkinWnd::OnCreate()
 #endif
 
 	return true;
-}
-
-void CMPSkinWnd::OnEvent(const IEvent *pEvent)
-{
-	m_autoSwitchToLyrShow.OnEvent(pEvent);
 }
 
 void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
@@ -557,8 +541,6 @@ void CMPSkinWnd::OnCommand(UINT uID, UINT nNotifyCode)
 
 bool CMPSkinWnd::OnCustomCommand(int nId)
 {
-	m_autoSwitchToLyrShow.OnCustomCmdNotify(nId);
-
 	if (CSkinWnd::OnCustomCommand(nId))
 		return true;
 
@@ -635,10 +617,6 @@ void CMPSkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 
 	CSkinWnd::OnKeyDown(nChar, nFlags);
-
-#ifdef _MPLAYER
-	m_autoSwitchToLyrShow.OnUserAction();
-#endif
 }
 
 void CMPSkinWnd::OnSizeModeChanged(WndSizeMode sizeMode)
@@ -736,8 +714,6 @@ void CMPSkinWnd::OnSkinLoaded()
 	pBt = (CSkinNStatusButton *)GetUIObjectById(CMD_TOPMOST, CSkinNStatusButton::ClassName());
 	if (pBt && IsTopmost())
 		pBt->SetStatus(1);
-
-	m_autoSwitchToLyrShow.OnCreate(this);
 }
 
 void CMPSkinWnd::OnAddUIObj(CUIObject *pObj)
@@ -857,25 +833,6 @@ void CMPSkinWnd::OnRemoveUIObj(CUIObject *pObj)
 	CSkinWnd::OnRemoveUIObj(pObj);
 }
 
-BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, SXNode *pXmlNode)
-{
-	ASSERT(szProperty);
-	if (IsPropertyName(szProperty, _T("LyrAutoSwitch")))
-	{
-		m_autoSwitchToLyrShow.m_bEnabled = true;
-		m_autoSwitchToLyrShow.m_nCmdShowLyr = m_pSkinFactory->GetIDByName(
-			pXmlNode->GetPropertySafe(_T("CmdSwithToLyrics")));
-		m_autoSwitchToLyrShow.m_nCmdShowPlaylist = m_pSkinFactory->GetIDByName(
-			pXmlNode->GetPropertySafe(_T("CmdSwithToPlaylist")));
-		m_autoSwitchToLyrShow.m_nCmdShowInfoText = m_pSkinFactory->GetIDByName(
-			pXmlNode->GetPropertySafe(_T("CmdSwithToInfoText")));
-
-		return TRUE;
-	}
-
-	return CSkinWnd::SetProperty(szProperty, pXmlNode);
-}
-
 BOOL CMPSkinWnd::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 {
 	if (_tcsicmp(szProperty, _T("CmdHandler")) == 0)
@@ -894,8 +851,6 @@ void CMPSkinWnd::CloseSkin()
 		return;
 
 	CSkinWnd::CloseSkin();
-
-	m_autoSwitchToLyrShow.OnClose();
 
 	LIST_SKINCMDHANDLER::iterator	it, itEnd;
 

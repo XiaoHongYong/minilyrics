@@ -6,7 +6,7 @@
 #include "LyricsSearch.h"
 #include "MLData.h"
 #include "HelperFun.h"
-#include "../MLServer/LyricsKeywordFilter.h"
+#include "LyricsKeywordFilter.h"
 
 //////////////////////////////////////////////////////////////////////////
 // CLyricsSearchParameter

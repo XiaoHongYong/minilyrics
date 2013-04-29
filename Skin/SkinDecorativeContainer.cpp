@@ -49,11 +49,6 @@ void CSkinDecorativeContainer::UpdateMemGraphicsToScreen(const RECT* lpRect, CUI
 		if (pObj != pObjCallUpdate && pObj->IsVisible()
 			&& rc.IntersectRect(&pObj->m_rcObj, lpRect))
 		{
-//			if (pObj->IsUseParentBg() && m_bPaintBg)
-//			{
-//				// redraw background ?
-//				RedrawBackground(pGraphMem, pObj->m_rcObj);
-//			}
 			if (!pGraphMem)
 			{
 				pGraphMem = m_pContainer->GetMemGraph();

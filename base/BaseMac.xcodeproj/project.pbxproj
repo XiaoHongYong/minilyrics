@@ -66,6 +66,8 @@
 		5FB53E9D14C19FA20041938C /* TextFile.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB53E9914C19FA20041938C /* TextFile.h */; };
 		5FB5924D15458EA60071B204 /* FileEx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB5924B15458EA60071B204 /* FileEx.cpp */; };
 		5FB5924E15458EA60071B204 /* FileEx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB5924C15458EA60071B204 /* FileEx.h */; };
+		5FDF5F4B172036BB00F20EB2 /* RegExTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDF5F49172036BB00F20EB2 /* RegExTool.cpp */; };
+		5FDF5F4C172036BB00F20EB2 /* RegExTool.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FDF5F4A172036BB00F20EB2 /* RegExTool.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -133,6 +135,8 @@
 		5FB53E9914C19FA20041938C /* TextFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextFile.h; sourceTree = SOURCE_ROOT; };
 		5FB5924B15458EA60071B204 /* FileEx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FileEx.cpp; sourceTree = SOURCE_ROOT; };
 		5FB5924C15458EA60071B204 /* FileEx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileEx.h; sourceTree = SOURCE_ROOT; };
+		5FDF5F49172036BB00F20EB2 /* RegExTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RegExTool.cpp; sourceTree = SOURCE_ROOT; };
+		5FDF5F4A172036BB00F20EB2 /* RegExTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegExTool.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,6 +190,8 @@
 		5F9CDECD147A323D00432DAC /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				5FDF5F49172036BB00F20EB2 /* RegExTool.cpp */,
+				5FDF5F4A172036BB00F20EB2 /* RegExTool.h */,
 				5FB5924B15458EA60071B204 /* FileEx.cpp */,
 				5FB5924C15458EA60071B204 /* FileEx.h */,
 				5FB53E9614C19FA20041938C /* MapString.cpp */,
@@ -306,6 +312,7 @@
 				5FB53E9B14C19FA20041938C /* MapString.h in Headers */,
 				5FB53E9D14C19FA20041938C /* TextFile.h in Headers */,
 				5FB5924E15458EA60071B204 /* FileEx.h in Headers */,
+				5FDF5F4C172036BB00F20EB2 /* RegExTool.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,7 +342,7 @@
 		5F9CDEBB147A323D00432DAC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 			};
 			buildConfigurationList = 5F9CDEBE147A323D00432DAC /* Build configuration list for PBXProject "BaseMac" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -384,6 +391,7 @@
 				5FB53E9A14C19FA20041938C /* MapString.cpp in Sources */,
 				5FB53E9C14C19FA20041938C /* TextFile.cpp in Sources */,
 				5FB5924D15458EA60071B204 /* FileEx.cpp in Sources */,
+				5FDF5F4B172036BB00F20EB2 /* RegExTool.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,6 +446,9 @@
 		5F9CDED6147A323D00432DAC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Mac/BaseMac-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -453,6 +464,9 @@
 		5F9CDED7147A323D00432DAC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Mac/BaseMac-Prefix.pch";
 				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;

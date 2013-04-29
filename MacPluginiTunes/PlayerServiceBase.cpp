@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../base/base.h"
 #include "MLService.h"
-
+#include <pthread.h>
 
 pthread_t	g_threadMsg = 0;
 volatile bool g_bQuitMsg = false;

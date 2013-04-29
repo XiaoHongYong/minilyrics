@@ -7,6 +7,7 @@
 #include "MLCmd.h"
 
 #define DEFINE_CMD_ID(uid, idc)		{ _T(#uid), uid, idc, NULL },
+#define DEFINE_CMD_ID2(uid, idc, tooltip)		{ _T(#uid), uid, idc, tooltip },
 
 UIObjectIDDefinition g_uidDefinition[] = 
 {
@@ -169,7 +170,10 @@ UIObjectIDDefinition g_uidDefinition[] =
 	DEFINE_CMD_ID( CMD_LDS_HORZ_SCROLL, IDC_LDS_HORZ_SCROLL )
 	DEFINE_CMD_ID( CMD_LDS_SINGLE_LINE, IDC_LDS_SINGLE_LINE )
 	DEFINE_CMD_ID( CMD_LDS_VOBSUB, IDC_LDS_VOBSUB )
-//	DEFINE_CMD_ID( ,  )
+	DEFINE_CMD_ID2( CMD_NO_SUITTABLE_LYRICS, IDC_NOT_MATCH, _TLM("&No Suitable Lyrics for the Song File") )
+	DEFINE_CMD_ID2( CMD_INSTRUMENTAL_MUSIC, IDC_INSTRUMENTAL_MUSIC, _TLM("Instrumental Music, No Lyrics") )
+	DEFINE_CMD_ID2( CMD_SEARCH_LYR_SUGGESTIONS, 0, _TLM("Lyrics Search Suggestions") )
+//	DEFINE_CMD_ID2( , , _TLM("") )
 //	DEFINE_CMD_ID( ,  )
 
 	{ NULL, 0, 0, NULL },

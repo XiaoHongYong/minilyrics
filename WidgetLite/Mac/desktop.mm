@@ -11,7 +11,7 @@ void OpenUrl(CBaseWnd *pWnd, LPCTSTR szUrl)
 
 bool IsModifierKeyPressed(int nKey, UINT nFlags)
 {
-	ASSERT(nKey == MK_SHIFT || nKey == MK_CONTROL || nKey == (1 << 20));
+	ASSERT(nKey == MK_SHIFT || nKey == MK_CONTROL || nKey == MK_COMMAND || nKey == MK_ALT);
 	return IsFlagSet(nFlags, nKey);
 }
 

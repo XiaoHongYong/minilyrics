@@ -60,6 +60,8 @@
 - (int)playerPosition;
 - (DescType)playerState;
 
+- (void)setPlayerPosition:(int)pos;
+
 // no return value
 - (void)backTrack;
 - (void)fastForward;

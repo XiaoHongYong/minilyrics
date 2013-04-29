@@ -39,28 +39,7 @@ void CSkinScrollText::Draw(CRawGraph *pGraph)
 	CRawGraph::CClipBoxAutoRecovery clipRecover(pGraph);
 	pGraph->SetClipBoundBox(m_rcObj);
 
-	if (m_imgBk.IsValid())
-	{
-		if (m_BltMode == BLT_COPY)
-		{
-			m_imgBk.Blt(pGraph, m_rcObj.left, m_rcObj.top);
-		}
-		else if (m_BltMode == BLT_TILE)
-		{
-			m_imgBk.TileBlt(pGraph, m_rcObj.left, m_rcObj.top,
-				m_rcObj.Width(), m_rcObj.Height());
-		}
-		else
-		{
-			m_imgBk.StretchBlt(pGraph, m_rcObj.left, m_rcObj.top,
-						m_rcObj.Width(), m_rcObj.Height());
-		}
-	}
-	else
-	{
-		if (m_bPaintBg && !m_bUseParentBg)
-			pGraph->FillRect(m_rcObj.left, m_rcObj.top, m_rcObj.Width(), m_rcObj.Height(), m_clrBg);
-	}
+	CUIObject::Draw(pGraph);
 
 	if (m_font.IsGood())
 		pGraph->SetFont(m_font.GetFont());
