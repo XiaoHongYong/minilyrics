@@ -2,6 +2,12 @@
 <skin defmainwnd="minilyrics" mainwnds="minilyrics"
       Script="minilyrics.java">
   <include Name="Styles.xml"/>
+  <style>
+    <InfoText Name="InfoText" Rect="0,h-26,w,26" FontName="Verdana" FontHeight="16" FontItalic="1"
+	TextColor="#0000FF" LeftMargin="10" TranslucencyWithSkin="TRUE">
+      <Property Name="BgImage" Image="bottom-ctrl-bg.png" HorzExtendPos="12,48"/>
+    </InfoText>
+  </style>
   <DynCmds>
     <cmd ID="dyncmd_is_frame_hide" func="get_profile_bool" param="HideFrameOnLostFocus,1"/>
     <cmd ID="dyncmd_is_mouse_hover_show_frame" func="get_profile_bool" param="ShowFrameOnMouseHover,1"/>
@@ -34,7 +40,7 @@
       </Toolbar>
     </DecorativeContainer>
 
-    <DecorativeContainer Name="Body" Rect="1,23,w-5,h-23-7" >
+    <DecorativeContainer Name="Body" Rect="1,23,w-5,h-23-4" >
 	  <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE"/>
 
       <Container Name="Top control" ID="CID_TOP_CTRL" Rect="0,0,w,24" TranslucencyWithSkin="TRUE">
@@ -44,6 +50,6 @@
 
       </Container>
     </DecorativeContainer>
-  
+
 </skinwnd>
 </skin>

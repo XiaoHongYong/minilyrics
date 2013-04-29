@@ -14,7 +14,8 @@ int main(int argc, char *argv[])
 {
 	InitBaseFrameWork(argc, argv, "MiniLyrics.log", "MiniLyrics.ini", SZ_SECT_UI);
 
-	g_playerMgr.Init(argc, argv);
+	if (!g_playerMgr.Init(argc, argv))
+		return 0;
 
 	return NSApplicationMain(argc, (const char **)argv);
 }

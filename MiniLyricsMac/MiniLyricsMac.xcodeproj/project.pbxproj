@@ -63,7 +63,6 @@
 		5FDC5664148A1F1B00C74E6A /* LyricShowTxtObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55CD148A1F1B00C74E6A /* LyricShowTxtObj.cpp */; };
 		5FDC5665148A1F1B00C74E6A /* LyricShowVobSub.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55CF148A1F1B00C74E6A /* LyricShowVobSub.cpp */; };
 		5FDC5666148A1F1B00C74E6A /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55D1148A1F1B00C74E6A /* LyricsLocalSearch.cpp */; };
-		5FDC5668148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55D6148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp */; };
 		5FDC5669148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55D8148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp */; };
 		5FDC566A148A1F1B00C74E6A /* MediaDetectionService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55DA148A1F1B00C74E6A /* MediaDetectionService.cpp */; };
 		5FDC566B148A1F1B00C74E6A /* MediaInfoTextCtrl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC55DC148A1F1B00C74E6A /* MediaInfoTextCtrl.cpp */; };
@@ -421,8 +420,6 @@
 		5FDC55D1148A1F1B00C74E6A /* LyricsLocalSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricsLocalSearch.cpp; path = ../../MPShared/LyricsLocalSearch.cpp; sourceTree = "<group>"; };
 		5FDC55D2148A1F1B00C74E6A /* LyricsLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsLocalSearch.h; path = ../../MPShared/LyricsLocalSearch.h; sourceTree = "<group>"; };
 		5FDC55D3148A1F1B00C74E6A /* LyricsOutPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsOutPlugin.h; path = ../../MPShared/LyricsOutPlugin.h; sourceTree = "<group>"; };
-		5FDC55D6148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyrPlaylistAutoSwitch.cpp; path = ../../MPShared/LyrPlaylistAutoSwitch.cpp; sourceTree = "<group>"; };
-		5FDC55D7148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyrPlaylistAutoSwitch.h; path = ../../MPShared/LyrPlaylistAutoSwitch.h; sourceTree = "<group>"; };
 		5FDC55D8148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MediaAlbumArtCtrl.cpp; path = ../../MPShared/MediaAlbumArtCtrl.cpp; sourceTree = "<group>"; };
 		5FDC55D9148A1F1B00C74E6A /* MediaAlbumArtCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MediaAlbumArtCtrl.h; path = ../../MPShared/MediaAlbumArtCtrl.h; sourceTree = "<group>"; };
 		5FDC55DA148A1F1B00C74E6A /* MediaDetectionService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MediaDetectionService.cpp; path = ../../MPShared/MediaDetectionService.cpp; sourceTree = "<group>"; };
@@ -693,8 +690,6 @@
 				5FDC55D1148A1F1B00C74E6A /* LyricsLocalSearch.cpp */,
 				5FDC55D2148A1F1B00C74E6A /* LyricsLocalSearch.h */,
 				5FDC55D3148A1F1B00C74E6A /* LyricsOutPlugin.h */,
-				5FDC55D6148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp */,
-				5FDC55D7148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.h */,
 				5FDC55D8148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp */,
 				5FDC55D9148A1F1B00C74E6A /* MediaAlbumArtCtrl.h */,
 				5FDC55DA148A1F1B00C74E6A /* MediaDetectionService.cpp */,
@@ -1222,7 +1217,6 @@
 				5FDC5664148A1F1B00C74E6A /* LyricShowTxtObj.cpp in Sources */,
 				5FDC5665148A1F1B00C74E6A /* LyricShowVobSub.cpp in Sources */,
 				5FDC5666148A1F1B00C74E6A /* LyricsLocalSearch.cpp in Sources */,
-				5FDC5668148A1F1B00C74E6A /* LyrPlaylistAutoSwitch.cpp in Sources */,
 				5FDC5669148A1F1B00C74E6A /* MediaAlbumArtCtrl.cpp in Sources */,
 				5FDC566A148A1F1B00C74E6A /* MediaDetectionService.cpp in Sources */,
 				5FDC566B148A1F1B00C74E6A /* MediaInfoTextCtrl.cpp in Sources */,

@@ -141,6 +141,20 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 		else if (_tcsicmp(argv[i], _T("/Manual")) == 0)
 			g_bForceStart = true;
 	}
+	
+	if (!strPlayerServicePipeName.empty())
+	{
+		// Check whether MiniLyrics shall start with the player.
+		// PipeName: /tmp/MiniLyrics_xxxx.pipe
+		LPCTSTR SZ_PREFIX = _T("/tmp/MiniLyrics_");
+		LPCTSTR SZ_POSTFIX = _T(".pipe");
+		if (StrBeginWith(strPlayerServicePipeName.c_str(), SZ_PREFIX) && StrEndWith(strPlayerServicePipeName.c_str(), SZ_POSTFIX))
+		{
+			tstring playerName(strPlayerServicePipeName.c_str() + _tcslen(SZ_PREFIX), strPlayerServicePipeName.size() - _tcslen(SZ_PREFIX) - _tcslen(SZ_POSTFIX));
+			if (!g_Profile.GetBool(playerName.c_str(), true))
+				return false;
+		}
+	}
 
 	// if (strPlayerServicePipeName.empty())
 	{
