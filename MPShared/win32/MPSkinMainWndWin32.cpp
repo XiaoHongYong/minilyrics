@@ -43,6 +43,8 @@ bool CMPSkinMainWnd::OnCreate()
 	m_mlTrayIcon.Init(this);
 
 	m_nTimerFixWndFocus = RegisterTimerObject(NULL, 1000);
+	if (GetForegroundWindow() != m_hWnd && m_bActived)
+		OnActivate(false);
 
 	return true;
 }
