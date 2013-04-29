@@ -134,15 +134,25 @@ UIOBJECT_CLASS_NAME_IMP(CPagePfInternet, _T("Container.Inet"))
 
 #ifndef _MPLAYER
 
+#ifdef _MAC_OSX
+
+ID_TO_STRING		_id2strPlayers[] = { { 0, _T("iTunes") },
+	{ 0, NULL }
+};
+
+#else
+
 ID_TO_STRING		_id2strPlayers[] = { { 0, _T("Winamp2") }, { 0, _T("Winamp5") },
-	{ 0, _T("Windows Media Player") }, { 0, _T("iTunes") }, { 0, _T("Foobar2000") }, 
+	{ 0, _T("Windows Media Player") }, { 0, _T("iTunes") }, { 0, _T("Foobar2000") },
 	{ 0, _T("Quintessential Player") }, { 0, _T("Silverjuke") },
-	{ 0, _T("MediaMonkey") }, { 0, _T("KMPlayer") }, 
-	{ 0, _T("BSPlayer") }, { 0, _T("Media Jukebox") }, 
+	{ 0, _T("MediaMonkey") }, { 0, _T("KMPlayer") },
+	{ 0, _T("BSPlayer") }, { 0, _T("Media Jukebox") },
 	{ 0, _T("XMPlay") }, { 0, _T("AIMP2") }, { 0, _T("AIMP3") },
 	{ 0, _T("VLC Media Player") },
 	{ 0, NULL }
 };
+
+#endif
 
 int   _idWmp = 0;
 

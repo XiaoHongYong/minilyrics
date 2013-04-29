@@ -209,6 +209,13 @@ void CPlayerImp::UpdateTrackInfo()
 	ETTrack *track = [iTunes currentTrack];
 	if (track == nil)
 		return;
+	
+	int pos = [iTunes playerPosition] * 1000;
+	if (std::abs((int)m_dwPos - pos) >= 1000)
+	{
+		m_dwPos = pos;
+		m_dwBegTickCount = GetTickCount() - m_dwPos;
+	}
 
 	char szMediaUrl[MAX_PATH], szArtist[MAX_PATH], szAlbum[MAX_PATH], szTitle[MAX_PATH];
 
