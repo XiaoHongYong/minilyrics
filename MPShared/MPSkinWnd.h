@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "LyrPlaylistAutoSwitch.h"
-
 class ISkinCmdHandler;
 
 

@@ -30,6 +30,7 @@ void CMPSkinInfoTextCtrl::OnCreate()
 	CSkinScrollText::OnCreate();
 
 	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_UI_INFO_TEXT, ET_UI_LONG_ERROR_TEXT, ET_LICENSE_CHANGED, ET_UI_ACTIVATE_NOTICE);
+	RegisterHandler(CMPlayerAppBase::GetEventsDispatcher(), ET_LYRICS_CHANGED);
 
 	UpdateShowDefaultInfo();
 	m_Cursor.LoadStdCursor(CCursor::C_HAND);
@@ -55,9 +56,7 @@ void CMPSkinInfoTextCtrl::OnEvent(const IEvent *pEvent)
 		m_nTimerIDHideInfo = m_pSkin->RegisterTimerObject(this, 30000);
 		SetVisible(true, true);
 	}
-	else if (pEvent->eventType == ET_LICENSE_CHANGED)
-		UpdateShowDefaultInfo();
-	else if (pEvent->eventType == ET_UI_ACTIVATE_NOTICE)
+	else if (pEvent->eventType == ET_LICENSE_CHANGED || pEvent->eventType == ET_LYRICS_CHANGED || pEvent->eventType == ET_UI_ACTIVATE_NOTICE)
 		UpdateShowDefaultInfo();
 }
 

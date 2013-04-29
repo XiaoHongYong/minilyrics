@@ -399,7 +399,14 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 			{
 				CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
-				CSkinApp::GetInstance()->GetEventPatcher()->DispatchUnsyncEvent(ET_UI_ACTIVATE_NOTICE);
+				// Show rate link
+				if (!g_Profile.GetBool(SZ_SECT_UI, _T("HideRateLink"), false))
+				{
+					if (g_LyricData.Properties().m_strId.size())
+						CMPlayerApp::GetInstance()->DispatchLongErrorText(_TLT("Are these lyrics correct to the song? Rate them!"), CMD_RATE_LYR);
+				}
+
+				// CSkinApp::GetInstance()->GetEventPatcher()->DispatchUnsyncEvent(ET_UI_ACTIVATE_NOTICE);
 			}
 		}
 		break;

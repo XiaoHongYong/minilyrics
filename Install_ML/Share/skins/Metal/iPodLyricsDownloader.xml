@@ -84,7 +84,7 @@
 					<LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" SetSkinBg="false"
 					  EnableToolbar="FALSE" EnableAutoResize="FALSE" />
 
-					<Container ID="CID_LYR_TOOL_BAR" Rect="10,h-40,94,30">
+					<Container ID="CID_LYR_TOOL_BAR" Rect="w-100,10,94,30">
 						<Property Name="BgImage" Image="lyr_ctrl_bg.png" HorzExtendPos="8,22" BlendPixMode="alpha_blend"/>
 
 						<Toolbar ID="ID_TB_LYR_SYNC" Rect="12,4,70,22" Image="fl_buttons.png" enablehover="TRUE"

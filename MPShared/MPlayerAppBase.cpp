@@ -737,15 +737,6 @@ int CMPlayerAppBase::OpenLyrics(LPCTSTR szAssociateKeyword, LPCTSTR szLrcSource)
 	if (nRet != ERR_OK)
 		return nRet;
 
-	// Show rate link
-	if (!g_Profile.GetBool(SZ_SECT_UI, _T("HideRateLink"), false))
-	{
-		if (g_LyricData.Properties().m_strId.size())
-		{
-			DispatchLongErrorText(_TLT("Are these lyrics correct to the song? Rate them!"), CMD_RATE_LYR);
-		}
-	}
-
 	DispatchLyricsChangedSyncEvent();
 
 	return nRet;
