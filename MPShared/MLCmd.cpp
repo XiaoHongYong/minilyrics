@@ -89,7 +89,7 @@ UIObjectIDDefinition g_uidDefinition[] =
 	{ _T("ID_SEEK"), CMD_SEEK, 0, _T("Seek") },
 	{ _T("ID_VOL_INC"), CMD_VOL_INC, 0, _T("Increase Volume") },
 	{ _T("ID_VOL_DEC"), CMD_VOL_DEC, 0, _T("Decrease Volume") },
-	{ _T("ID_VOLUME"), CMD_VOLUME, 0, _T("Volume") },
+	{ _T("ID_VOLUME"), CMD_VOLUME, 0, _TLM("Volume") },
 	{ _T("ID_MUTE"), CMD_MUTE, 0, _T("Mute") },
 	{ _T("ID_PLAYLIST"), ID_PLAYLIST, 0, NULL },
 	{ _T("ID_SHUFFLE"), CMD_SHUFFLE, IDC_SHUFFLE, _T("Toggle Shuffle") },
