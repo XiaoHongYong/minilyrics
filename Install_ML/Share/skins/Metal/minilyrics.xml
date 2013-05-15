@@ -66,6 +66,6 @@
 		</Container>
 		
 		<LyricsShow ID="ID_LYRICS_SHOW" Rect="5,119,w-10,h-119-5" SetSkinBg="false"
-			EnableToolbar="FALSE" EnableAutoResize="FALSE" />
+			EnableToolbar="FALSE" />
 	</skinwnd>
 </skin>

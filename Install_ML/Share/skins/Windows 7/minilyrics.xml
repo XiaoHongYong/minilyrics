@@ -46,7 +46,7 @@
            WindowsAppearance="TRUE" AeroGlass="true" BgColor="#E7E7E7" ContextMenu="NormalMode" CmdHandler="ch_common">
 
     <DecorativeContainer Name="Body" Rect="0,0,w,h" >
-      <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE"/>
+      <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE"/>
       <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_PLAY_CTRL,CID_TOP_CTRL"/>
       <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_PLAY_CTRL,CID_TOP_CTRL"/>
 

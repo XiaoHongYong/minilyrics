@@ -95,7 +95,7 @@
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Left="10" Top="140" Width="w-30" Height="h-150-15" >
 
       <Container Name="Lyrics" ID="CID_LYRICS" left="0" top="0" width="w" height="h">
-        <LyricsShow Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAutoResize="TRUE"/>
+        <LyricsShow Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE"/>
       </Container>
       <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" left="0" top="0" width="w" height="h" Visible="false"/>
     </ToggleCtrlContainer>
