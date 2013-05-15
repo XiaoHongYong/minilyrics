@@ -95,11 +95,7 @@
     <ToggleCtrlContainer ID="CID_TOGGLE_LYR_PL" Name="Body" Left="10" Top="140" Width="w-30" Height="h-150-15" >
 
       <Container Name="Lyrics" ID="CID_LYRICS" left="0" top="0" width="w" height="h">
-        <LyricsShow Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE" EnableAutoResize="TRUE">
-          <Property Name="ActivateNotice" TextColor="#FFFFFF"
-            FontName="Verdana" FontHeight="14" FontBold="true" FontItalic="1"
-            Height="25" BgColors="#5F708E,#BE4D01,#FF8040,#5F708E"/>
-        </LyricsShow>
+        <LyricsShow Left="0" Top="0" Width="w" Height="h" EnableToolbar="FALSE"/>
       </Container>
       <InfoTextEx Name="Info Prompt" ID="CID_INFOTEXT" left="0" top="0" width="w" height="h" Visible="false"/>
     </ToggleCtrlContainer>

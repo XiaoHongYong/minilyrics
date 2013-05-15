@@ -57,7 +57,7 @@
     </DecorativeContainer>
 
     <DecorativeContainer Name="Body" Rect="1,30,w-5,h-30-4" >
-      <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE" EnableAutoResize="FALSE"/>
+      <LyricsShow Rect="0,0,w,h" EnableToolbar="FALSE"/>
       <Animation ID="CID_AM_HIDE_PLAY" FadeOut="CID_TOP_CTRL"/>
       <Animation ID="CID_AM_SHOW_PLAY" FadeIn="CID_TOP_CTRL"/>
 

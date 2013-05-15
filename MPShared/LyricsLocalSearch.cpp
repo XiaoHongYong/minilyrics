@@ -229,6 +229,19 @@ void CLyricsLocalSearch::SearchLyrics(CLyricsSearchParameter &searchParam, V_LRC
 		if (searchParam.IsBestMatchLyricsFound())
 			return;
 	}
+
+	// Finally use the best match lyrics in vLyrics.
+	V_LRCSEARCHRESULT::iterator	it = vLyrics.GetTheBestMatchLyrics();
+	if (it != vLyrics.end())
+	{
+		LrcSearchResult		&result = *it;
+		if (result.nMatchValue >= MATCH_VALUE_OK)
+		{
+			searchParam.strBestMatchLyrics = result.strUrl.c_str();
+			searchParam.nMatchValueOfBest = (int)result.nMatchValue;
+			return;
+		}
+	}
 }
 
 int CLyricsLocalSearch::SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable)
