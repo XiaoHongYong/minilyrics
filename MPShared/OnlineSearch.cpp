@@ -60,7 +60,7 @@ void RetLyrInfoListToVResult(CLyricsSearchParameter &searchParam, RetLyrInfoList
 		item.fRate = file.fRate;
 		item.nRateCount = file.nRateCount;
 		item.nDownloads = file.nDownloads;
-		item.nMatchValue = (float)searchParam.CalMatchValueByTitle(item.strTitle.c_str(), item.strArtist.c_str(), MLGetFileType(item.strSaveFileName.c_str()));
+		item.nMatchValue = (float)searchParam.CalMatchValueByTitle(item.strArtist.c_str(), item.strTitle.c_str(), MLGetFileType(item.strSaveFileName.c_str()));
 		// DBGLOG2(_T("file: %s, value: %d"), item.strSaveFileName.c_str(), item.nMatchValue);
 
 		// Sort English result before other language.
