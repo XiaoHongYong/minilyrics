@@ -1573,7 +1573,7 @@ void CLyricShowObj::OnKeyDown(UINT nChar, UINT nFlags)
 }
 
 #ifndef _WIN32_WCE
-bool CLyricShowObj::OnMouseMove(CPoint point)
+bool CLyricShowObj::OnMouseDrag(CPoint point)
 {
 	if (m_vads.size())
 	{
@@ -1586,7 +1586,7 @@ bool CLyricShowObj::OnMouseMove(CPoint point)
 			{
 				// SetCursor
 				MLWidget::SetCursor(m_Cursor);
-
+				
 				return true;
 			}
 		}
@@ -1596,42 +1596,42 @@ bool CLyricShowObj::OnMouseMove(CPoint point)
 	{
 		int		nPosStart;
 		int		nHeight = m_rcObj.Height();
-
+		
 		if (point.y < m_rcObj.top + nHeight / 4)
 			m_vertLineAlign = VLA_TOP;
 		else if (point.y > m_rcObj.bottom - nHeight / 4)
 			m_vertLineAlign = VLA_BOTTOM;
 		else
 			m_vertLineAlign = VLA_CENTER;
-
+		
 		if (m_vertLineAlign == VLA_TOP)
 			nPosStart = m_rcObj.top;
 		else if (m_vertLineAlign == VLA_BOTTOM)
 			nPosStart = m_rcObj.bottom;
 		else
 			nPosStart = m_rcObj.top + nHeight / 2;
-
+		
 		m_nVertLineOffset = point.y - nPosStart;
-		// ASSERT(GetLineVertAlignPos() == point.y);		
-
+		// ASSERT(GetLineVertAlignPos() == point.y);
+		
 		MLWidget::SetCursor(m_curAdjustVertAlign);
-
+		
 		Invalidate();
 		return true;
 	}
 	else if (m_bEnableAdjustVertAlign && m_bEnableAdjustVertAlignUser)
 	{
 		int			nPos;
-
+		
 		nPos = GetLineVertAlignPos();
 		if (point.y >= nPos - m_nFontHeight && point.y <= nPos + m_nFontHeight
-			 && m_rcObj.Height() >= m_nFontHeight * 3)
+			&& m_rcObj.Height() >= m_nFontHeight * 3)
 		{
 			MLWidget::SetCursor(m_curAdjustVertAlign);
 			return true;
 		}
 	}
-
+	
 	return false;
 }
 
@@ -2500,6 +2500,8 @@ void CLyricShowObj::LoadAllSettings()
 	}
 }
 
+bool inline isArabic(WCHAR c) __ATTR_ALWAYS_INLINE;
+
 bool inline isArabic(WCHAR c)
 {
 	return (c >= 0x590 && c <= 0x6ff);// || (c >= 0x0E00 && c <= 0x0E7F);
@@ -2526,6 +2528,8 @@ void strreverse(LPTSTR str, int len)
 		str[i] = c;
 	}
 }
+
+inline bool IsNoneAlpha(TCHAR c) __ATTR_ALWAYS_INLINE;
 
 inline bool IsNoneAlpha(TCHAR c)
 {

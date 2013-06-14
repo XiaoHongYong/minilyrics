@@ -23,18 +23,24 @@ namespace GfxRaw
 
 bool	g_bAntialiasFontEnabled = false;
 
+inline byte RGBToGray(int r, int g, int b) __ATTR_ALWAYS_INLINE;
+	
 inline byte RGBToGray(int r, int g, int b)
 {
 	// 5 = ËÄÉáÎåÈë
 	return (r * 3 + g * 6 + b + 5) / 10;
 }
 
+bool inline isCharComposed(uint32 c) __ATTR_ALWAYS_INLINE;
+	
 bool inline isCharComposed(uint32 c)
 {
 	// The Unicode range for Devanagari is U+0900 .. U+097F.
 	return (c >= 0x590 && c <= 0x6ff) || (c >= 0x0E00 && c <= 0x0E7F) || (c >= 0x0900 && c <= 0x097F);
 }
 
+void inline readUtf8Char(const char *str, string &dst) __ATTR_ALWAYS_INLINE;
+	
 void inline readUtf8Char(const char *str, string &dst)
 {
 	while (true)
@@ -841,6 +847,8 @@ bool CRawBmpFont::TextOut(CRawGraph *pGraph, int x, int y, const MLColor &clrTex
 	return DrawText(pGraph, x, y, pGraph->Width() - x, 0, clrText, szText, nLen, bDrawAlphaChannel);
 }
 
+inline void blend_raw_font_clr(uint8 *dst, uint8 src, uint8 clr) __ATTR_ALWAYS_INLINE;
+
 inline void blend_raw_font_clr(uint8 *dst, uint8 src, uint8 clr)
 {
 	dst[0] = (uint8)(((clr - dst[0]) * src + (dst[0] << 8)) >> 8);
@@ -850,7 +858,7 @@ inline void blend_raw_font_clr(uint8 *dst, uint8 src, uint8 clr)
 class raw_glyph_get_alpha_255
 {
 public:
-	inline uint8 operator()(uint8 alpha)
+	inline uint8 operator()(uint8 alpha) __ATTR_ALWAYS_INLINE
 	{
 		return alpha;
 	}
@@ -860,7 +868,7 @@ public:
 class raw_glyph_get_alpha
 {
 public:
-	inline uint8 operator()(uint8 alpha)
+	inline uint8 operator()(uint8 alpha) __ATTR_ALWAYS_INLINE
 	{
 		return uint8(alpha * nGlyphAlpha / 255);
 	}
@@ -872,7 +880,7 @@ public:
 class raw_glyph_blend_alpha
 {
 public:
-	static inline void blend(uint8 *dst, uint8 src)
+	static inline void blend(uint8 *dst, uint8 src) __ATTR_ALWAYS_INLINE
 	{
 		dst[3] = BlendAlpha(dst[3], src);
 	}
@@ -881,7 +889,7 @@ public:
 class raw_glyph_blend_alpha_none
 {
 public:
-	static inline void blend(uint8 *dst, uint8 src)
+	static inline void blend(uint8 *dst, uint8 src) __ATTR_ALWAYS_INLINE
 	{
 	}
 };

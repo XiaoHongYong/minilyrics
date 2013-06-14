@@ -7,6 +7,13 @@
 #define MLDebug		g_print
 #endif
 
+// Define always inline for GCC compiler.
+#ifdef WIN32
+#define __ATTR_ALWAYS_INLINE
+#else
+#define __ATTR_ALWAYS_INLINE __attribute__((always_inline))
+#endif
+
 #ifdef WIN32
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 

@@ -207,7 +207,7 @@ void mask_blt_buff_opacity(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, pixfmtMask &
 class blend_rgb
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src)
+	static inline void blend(uint8 *dst, uint8 *src) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = src[3]; // 256 - 0 = 0 for uint8.
 // 		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
@@ -222,7 +222,7 @@ public:
 class blend_alpha
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src)
+	static inline void blend(uint8 *dst, uint8 *src) __ATTR_ALWAYS_INLINE
 	{
 		// uint8	alpha = src[3];
 
@@ -234,7 +234,7 @@ public:
 class blend_copy_none
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src)
+	static inline void blend(uint8 *dst, uint8 *src) __ATTR_ALWAYS_INLINE
 	{
 	}
 };
@@ -243,7 +243,7 @@ public:
 class copy_rgb
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src)
+	static inline void blend(uint8 *dst, uint8 *src) __ATTR_ALWAYS_INLINE
 	{
 		dst[0] = src[0];
 		dst[1] = src[1];
@@ -255,7 +255,7 @@ public:
 class copy_alpha
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src)
+	static inline void blend(uint8 *dst, uint8 *src) __ATTR_ALWAYS_INLINE
 	{
 		dst[3] = src[3];
 	}
@@ -265,7 +265,7 @@ public:
 class copy_alpha_255
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src)
+	static inline void blend(uint8 *dst, uint8 *src) __ATTR_ALWAYS_INLINE
 	{
 		dst[3] = 255;
 	}
@@ -274,7 +274,7 @@ public:
 class multiply_rgb
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src)
+	static inline void blend(uint8 *dst, uint8 *src) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = src[3];
 		dst[0] = (uint8)((dst[0] * alpha) / 255);
@@ -286,7 +286,7 @@ public:
 class multiply_alpha
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src)
+	static inline void blend(uint8 *dst, uint8 *src) __ATTR_ALWAYS_INLINE
 	{
 		dst[3] = (uint8)((dst[3] * src[3]) / 255);
 	}
@@ -296,7 +296,7 @@ class CBuffBitBlter
 {
 public:
 	template<class pixfmtDst, class pixfmtSrc, class PixRGBBlender, class PixAlphaBlender>
-	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender)
+	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender) __ATTR_ALWAYS_INLINE
 	{
 		::blt_buff(pixfDest, pixfSrc, rcDest, xSrc, ySrc, pixRGBBlender, pixAlphaBlender);
 	}
@@ -310,7 +310,7 @@ class CBuffStretchBitBlter
 {
 public:
 	template<class pixfmtDst, class pixfmtSrc, class PixRGBBlender, class PixAlphaBlender>
-	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender)
+	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender) __ATTR_ALWAYS_INLINE
 	{
 		::stretch_buff(pixfDest, pixfSrc, rcDest, rcSrc, pixRGBBlender, pixAlphaBlender);
 	}
@@ -326,7 +326,7 @@ public:
 class blend_rgb_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = uint8(src[3] * nOpacitySrc / 255);
 		dst[0] = (uint8)((dst[0] * (256 - alpha) + src[0] * nOpacitySrc) >> 8);
@@ -341,7 +341,7 @@ public:
 class blend_alpha_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = uint8(src[3] * nOpacitySrc / 255);
 		// dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
@@ -352,7 +352,7 @@ public:
 class blend_copy_none_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 	}
 };
@@ -361,7 +361,7 @@ public:
 class copy_rgb_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		dst[0] = (uint8)((src[0] * nOpacitySrc >> 8) + (dst[0] * (256-nOpacitySrc) >> 8));
 		dst[1] = (uint8)((src[1] * nOpacitySrc >> 8) + (dst[1] * (256-nOpacitySrc) >> 8));
@@ -379,7 +379,7 @@ public:
 class copy_alpha_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		// uint8	alpha = uint8(src[3] * (255 - (255 - src[3]) * nOpacitySrc / 255) / 255);
 		// dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
@@ -392,7 +392,7 @@ public:
 class copy_alpha_255_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		dst[3] = 255;
 	}
@@ -401,7 +401,7 @@ public:
 class multiply_rgb_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		// uint8	alpha = uint8(src[3] * nOpacitySrc / 255);
 		uint8	alpha = uint8(255 - (255 - src[3]) * nOpacitySrc / 255);
@@ -414,7 +414,7 @@ public:
 class multiply_alpha_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = uint8(255 - (255 - src[3]) * nOpacitySrc / 255);
 		dst[3] = (uint8)((dst[3] * alpha) / 255);
@@ -425,7 +425,7 @@ class CBuffBitBlterOpacity
 {
 public:
 	template<class pixfmtDst, class pixfmtSrc, class PixRGBBlender, class PixAlphaBlender>
-	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender)
+	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender) __ATTR_ALWAYS_INLINE
 	{
 		::blt_buff_opacity(pixfDest, pixfSrc, rcDest, xSrc, ySrc, nOpacitySrc, pixRGBBlender, pixAlphaBlender);
 	}
@@ -441,7 +441,7 @@ class CBuffStretchBitBlterOpacity
 {
 public:
 	template<class pixfmtDst, class pixfmtSrc, class PixRGBBlender, class PixAlphaBlender>
-	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender)
+	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender) __ATTR_ALWAYS_INLINE
 	{
 		::stretch_buff_opacity(pixfDest, pixfSrc, rcDest, rcSrc, nOpacitySrc, pixRGBBlender, pixAlphaBlender);
 	}
@@ -457,7 +457,7 @@ class CBuffMaskBlter
 {
 public:
 	template<class pixfmtDst, class pixfmtSrc, class PixRGBBlender, class PixAlphaBlender>
-	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender)
+	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender) __ATTR_ALWAYS_INLINE
 	{
 		agg::rendering_buffer			rbufMask(pImageMask->buff, pImageMask->width, pImageMask->height, pImageMask->stride);
 		typedef agg::pixfmt_rgba32      pixfmt32;
@@ -476,7 +476,7 @@ class CBuffMaskBlterOpacity
 {
 public:
 	template<class pixfmtDst, class pixfmtSrc, class PixRGBBlender, class PixAlphaBlender>
-	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender)
+	inline void blt_buff(pixfmtDst &pixfDest, pixfmtSrc &pixfSrc, PixRGBBlender &pixRGBBlender, PixAlphaBlender &pixAlphaBlender) __ATTR_ALWAYS_INLINE
 	{
 		agg::rendering_buffer			rbufMask(pImageMask->buff, pImageMask->width, pImageMask->height, pImageMask->stride);
 		typedef agg::pixfmt_rgba32      pixfmt32;
@@ -493,7 +493,7 @@ public:
 };
 
 template<class _rgb_blender, class _alpha_blender, class _blend_copy_none, class _BuffBitBlter, class _pixFmtDst, class _pixFmtSrc>
-inline void SelectBlenderBlt(_BuffBitBlter &blter, _pixFmtDst &pixfDst, _pixFmtSrc &pixfSrc, bool bRgb, bool bAlpha)
+inline void SelectBlenderBlt(_BuffBitBlter &blter, _pixFmtDst &pixfDst, _pixFmtSrc &pixfSrc, bool bRgb, bool bAlpha) __ATTR_ALWAYS_INLINE
 {
 	if (bRgb)
 	{
@@ -527,7 +527,7 @@ inline void SelectBlenderBlt(_BuffBitBlter &blter, _pixFmtDst &pixfDst, _pixFmtS
 class mask_blend_rgb
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = uint8(src[3] * mask[3] / 255);
 		dst[0] = (uint8)((dst[0] * (256 - alpha) + src[0] * mask[3]) >> 8);
@@ -544,7 +544,7 @@ public:
 class mask_blend_alpha
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask) __ATTR_ALWAYS_INLINE
 	{
 		// int		alpha = src[3] * mask[3] / 255;
 		dst[3] = (uint8)((src[3] + dst[3]) - ((src[3] * dst[3] + 0xFF) >> 8));
@@ -555,7 +555,7 @@ public:
 class mask_copy_rgb
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = mask[3];
 		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
@@ -567,7 +567,7 @@ public:
 class mask_copy_alpha
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = mask[3];
 		dst[3] = (uint8)(((src[3] - dst[3]) * alpha + (dst[3] << 8)) >> 8);
@@ -577,7 +577,7 @@ public:
 class mask_copy_alpha_255
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask) __ATTR_ALWAYS_INLINE
 	{
 		dst[3] = 255 * mask[3] / 255;
 	}
@@ -587,7 +587,7 @@ public:
 class mask_blend_copy_none
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask) __ATTR_ALWAYS_INLINE
 	{
 	}
 };
@@ -596,7 +596,7 @@ public:
 class mask_multiply_rgb
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask) __ATTR_ALWAYS_INLINE
 	{
 		int		alpha = mask[3] * src[3] / 255;
 		dst[0] = (uint8)((dst[0] * alpha) / 255);
@@ -608,7 +608,7 @@ public:
 class mask_multiply_alpha
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask) __ATTR_ALWAYS_INLINE
 	{
 		dst[3] = (uint8)((dst[3] * src[3] * mask[3]) / 255 / 255);
 	}
@@ -621,7 +621,7 @@ public:
 class mask_blend_rgb_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint	m = uint8(mask[3] * nOpacitySrc / 255);
 		uint8	alpha = uint8(src[3] * m / 255);
@@ -639,7 +639,7 @@ public:
 class mask_blend_alpha_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint	m = uint8(mask[3] * nOpacitySrc / 255);
 		uint8	alpha = uint8(src[3] * m / 255);
@@ -651,7 +651,7 @@ public:
 class mask_copy_rgb_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = uint8(mask[3] * nOpacitySrc / 255);
 		dst[0] = (uint8)(((src[0] - dst[0]) * alpha + (dst[0] << 8)) >> 8);
@@ -663,7 +663,7 @@ public:
 class mask_copy_alpha_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = uint8(mask[3] * nOpacitySrc / 255);
 		dst[3] = (uint8)(((src[3] - dst[3]) * alpha + (dst[3] << 8)) >> 8);
@@ -673,7 +673,7 @@ public:
 class mask_copy_alpha_255_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		dst[3] = 255 * mask[3] / 255;
 	}
@@ -683,7 +683,7 @@ public:
 class mask_blend_copy_none_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 	}
 };
@@ -692,7 +692,7 @@ public:
 class mask_multiply_rgb_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = uint8(255 - (255 - src[3]) * nOpacitySrc / 255);
 		alpha = mask[3] * alpha / 255;
@@ -705,7 +705,7 @@ public:
 class mask_multiply_alpha_opacity
 {
 public:
-	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc)
+	static inline void blend(uint8 *dst, uint8 *src, uint8 *mask, int nOpacitySrc) __ATTR_ALWAYS_INLINE
 	{
 		uint8	alpha = uint8(255 - (255 - src[3]) * nOpacitySrc / 255);
 		dst[3] = (uint8)((dst[3] * alpha * mask[3]) / 255 / 255);

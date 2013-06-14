@@ -29,6 +29,8 @@ item:40189:2:
 item:40188:1 (Low):
 end
 separator
+item:40178:Save Lyrics in &Song File...:
+separator
 item:40019:&Save Lyrics:Ctrl+S
 item:40020:Save Lyrics &As...:
 separator
@@ -95,6 +97,8 @@ item:40190:3:
 item:40189:2:
 item:40188:1 (Low):
 end
+separator
+item:40178:Save Lyrics in &Song File...:
 separator
 item:40019:&Save Lyrics:Ctrl+S
 item:40020:Save Lyrics &As...:
@@ -208,6 +212,8 @@ end
 separator
 item:40197:&New Lyrics:
 item:40110:Open &Lyrics...:Ctrl+L
+separator
+item:40178:Save Lyrics in &Song File...:
 separator
 item:40019:&Save Lyrics:Ctrl+S
 item:40020:Save Lyrics &As...:
@@ -327,6 +333,8 @@ item:40059:&Upload Lyrics...:
 item:40096:Sign in Via &Web Browser...:
 item:1000:&Sign up Free...:
 end
+separator
+item:40178:Save Lyrics in &Song File...:
 separator
 item:40019:&Save Lyrics:Ctrl+S
 item:40020:Save Lyrics &As...:
