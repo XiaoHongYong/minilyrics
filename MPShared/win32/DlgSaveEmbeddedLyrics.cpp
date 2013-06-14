@@ -24,15 +24,15 @@ int CDlgSaveEmbeddedLyrics::DoModal(CBaseWnd *pWnd)
 		pWnd->MessageOut(_TLT("No Lyrics file was opened."));
 		return IDCANCEL;
 	}
+
+	// Get current media and lyrics information
+	m_strMediaUrl = g_Player.GetSrcMedia();
 	
 	if (m_strMediaUrl.empty() || !IsFileExist(m_strMediaUrl.c_str()))
 	{
 		pWnd->MessageOut(_TL3("Can't locate the song file path."));
 		return IDCANCEL;
 	}
-
-	// Get current media and lyrics information
-	m_strMediaUrl = g_Player.GetSrcMedia();
 
 	tstring		str;
 	g_LyricData.ToString(str, FT_LYRICS_LRC, TRUE);
