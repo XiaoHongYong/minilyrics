@@ -702,7 +702,10 @@ void CLyricShowTextEditObj::DrawLineGradual(CRawGraph *pGraph, COneLine *pLine, 
 
 	pGraph->SetTextColor(m_vClrTable[byClrLast]);
 
-	ASSERT(pLyrLine->nBegTime <= nTimePos && nTimePos <= pLyrLine->nEndTime);
+	if (nTimePos < pLyrLine->nBegTime)
+		nTimePos = pLyrLine->nBegTime;
+	else if (nTimePos > pLyrLine->nEndTime)
+		nTimePos = pLyrLine->nEndTime;
 
 	// draw time tag
 	for (k = 0; k < (int)pLine->size(); k++)

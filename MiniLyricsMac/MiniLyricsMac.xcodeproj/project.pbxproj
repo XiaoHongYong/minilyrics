@@ -18,6 +18,9 @@
 		5F65BB0F156A7EE500605207 /* MLPlayerMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F65BB0D156A7EE500605207 /* MLPlayerMgr.cpp */; };
 		5F65BB13156B19BE00605207 /* MsgPipe.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F65BB11156B19BE00605207 /* MsgPipe.cpp */; };
 		5F8A1CA5159555360062394E /* DlgSaveLyrPrompt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A1CA4159555350062394E /* DlgSaveLyrPrompt.cpp */; };
+		5F9A2557176232010009A049 /* DlgSaveEmbeddedLyricsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9A2555176232010009A049 /* DlgSaveEmbeddedLyricsController.mm */; };
+		5F9A2558176232010009A049 /* DlgSaveEmbeddedLyricsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F9A2556176232010009A049 /* DlgSaveEmbeddedLyricsController.xib */; };
+		5FA656FD1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FA656FC1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm */; };
 		5FB16205147017330084494F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB16204147017330084494F /* Cocoa.framework */; };
 		5FB1620F147017330084494F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5FB1620D147017330084494F /* InfoPlist.strings */; };
 		5FB16211147017330084494F /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB16210147017330084494F /* main.mm */; };
@@ -341,6 +344,10 @@
 		5F65BB11156B19BE00605207 /* MsgPipe.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MsgPipe.cpp; path = ../../MacPluginiTunes/MsgPipe.cpp; sourceTree = "<group>"; };
 		5F65BB12156B19BE00605207 /* MsgPipe.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MsgPipe.h; path = ../../MacPluginiTunes/MsgPipe.h; sourceTree = "<group>"; };
 		5F8A1CA4159555350062394E /* DlgSaveLyrPrompt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DlgSaveLyrPrompt.cpp; sourceTree = "<group>"; };
+		5F9A2554176232010009A049 /* DlgSaveEmbeddedLyricsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveEmbeddedLyricsController.h; sourceTree = "<group>"; };
+		5F9A2555176232010009A049 /* DlgSaveEmbeddedLyricsController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlgSaveEmbeddedLyricsController.mm; sourceTree = "<group>"; };
+		5F9A2556176232010009A049 /* DlgSaveEmbeddedLyricsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DlgSaveEmbeddedLyricsController.xib; sourceTree = "<group>"; };
+		5FA656FC1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlgSaveEmbeddedLyrics.mm; sourceTree = "<group>"; };
 		5FB16200147017330084494F /* MiniLyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FB16204147017330084494F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5FB16207147017330084494F /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -919,6 +926,8 @@
 		5FDC56A0148A23AC00C74E6A /* mac */ = {
 			isa = PBXGroup;
 			children = (
+				5FA656FC1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm */,
+				5FDC56BB148A2ED900C74E6A /* DlgSaveEmbeddedLyrics.h */,
 				5F0315B215E769C400E5F752 /* PlayerPluginInstaller.mm */,
 				5F0315B315E769C400E5F752 /* PlayerPluginInstaller.h */,
 				5F65BB11156B19BE00605207 /* MsgPipe.cpp */,
@@ -930,7 +939,6 @@
 				5F2BD4AA148B3354003E7F5C /* PlayerEventDispatcher.h */,
 				5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */,
 				5FDC56BC148A2FE300C74E6A /* DlgUpdateLibrary.h */,
-				5FDC56BB148A2ED900C74E6A /* DlgSaveEmbeddedLyrics.h */,
 				5F8A1CA4159555350062394E /* DlgSaveLyrPrompt.cpp */,
 				5F2BD4A9148A6511003E7F5C /* DlgSaveLyrPrompt.h */,
 				5FDC56B9148A2DC800C74E6A /* DlgBatchProcessEmbeddedLyrics.h */,
@@ -945,6 +953,9 @@
 				5FDC56A9148A23AC00C74E6A /* MPlayerApp.h */,
 				5FDC56AC148A23AC00C74E6A /* MPSkinMainWndMac.cpp */,
 				5FDC56AD148A23AC00C74E6A /* MPSkinMainWndMac.h */,
+				5F9A2554176232010009A049 /* DlgSaveEmbeddedLyricsController.h */,
+				5F9A2555176232010009A049 /* DlgSaveEmbeddedLyricsController.mm */,
+				5F9A2556176232010009A049 /* DlgSaveEmbeddedLyricsController.xib */,
 			);
 			name = mac;
 			path = ../../MPShared/mac;
@@ -1180,6 +1191,7 @@
 				5FB1620F147017330084494F /* InfoPlist.strings in Resources */,
 				5FB1621B147017340084494F /* MainMenu.xib in Resources */,
 				5F3B273215AF260F002F961D /* MiniLyrics.icns in Resources */,
+				5F9A2558176232010009A049 /* DlgSaveEmbeddedLyricsController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1279,6 +1291,8 @@
 				5F10F0491576F5F90080ECF6 /* MPSkinMenu.cpp in Sources */,
 				5F8A1CA5159555360062394E /* DlgSaveLyrPrompt.cpp in Sources */,
 				5F0315B415E769C400E5F752 /* PlayerPluginInstaller.mm in Sources */,
+				5FA656FD1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm in Sources */,
+				5F9A2557176232010009A049 /* DlgSaveEmbeddedLyricsController.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

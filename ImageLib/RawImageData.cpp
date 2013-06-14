@@ -394,6 +394,8 @@ void RawImageSet(PRAW_IMAGE_DATA pRawImage, uint8 r, uint8 g, uint8 b, uint8 a)
 
 //////////////////////////////////////////////////////////////////////////
 
+inline unsigned char ToRGBx(float rm1, float rm2, float rh) __ATTR_ALWAYS_INLINE;
+
 inline unsigned char ToRGBx(float rm1, float rm2, float rh)
 {
 	if		(rh > 360.0f)
@@ -410,6 +412,8 @@ inline unsigned char ToRGBx(float rm1, float rm2, float rh)
 
 	return static_cast<unsigned char>(rm1 * 255);
 }
+
+inline void AdjustPixHue(byte *pix, float hueOffset) __ATTR_ALWAYS_INLINE;
 
 inline void AdjustPixHue(byte *pix, float hueOffset)
 {
@@ -462,6 +466,8 @@ inline void AdjustPixHue(byte *pix, float hueOffset)
 		pix[0] = ToRGBx(rm1, rm2, hue - 120.0f);
     }
 }
+
+inline void AdjustPixHue(byte *pix, float hueOffset, float saturationRatio, float luminanceRatio) __ATTR_ALWAYS_INLINE;
 
 inline void AdjustPixHue(byte *pix, float hueOffset, float saturationRatio, float luminanceRatio)
 {
