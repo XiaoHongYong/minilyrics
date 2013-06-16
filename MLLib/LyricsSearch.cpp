@@ -49,7 +49,6 @@ int CLyricsSearchParameter::CalMatchValueByName(LPCTSTR szLyricsDir, LPCTSTR szL
 
 	bool isFileTitleSame = false;
 	bool isDirSame = false;
-	bool isArtistSame = false;
 
 	tstring strLyrArtist, strLyrTitle;
 	AnalysisLyricsFileNameEx(strLyrArtist, strLyrTitle, szLyricsFileName);

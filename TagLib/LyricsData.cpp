@@ -77,7 +77,7 @@ LyricsLine *DuplicateLyricsLine(LyricsLine *pLineSrc)
 
 	if (pLineSrc->szContent)
 	{
-		int		n = _tcslen(pLineSrc->szContent) + 1;
+		size_t		n = _tcslen(pLineSrc->szContent) + 1;
 		pLine->szContent = new TCHAR[n];
 		_tcscpy_safe(pLine->szContent, n, pLineSrc->szContent);
 	}

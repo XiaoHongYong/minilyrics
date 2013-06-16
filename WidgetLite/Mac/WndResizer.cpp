@@ -153,7 +153,6 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 	// 正在调整大小
 	int			nOffx;
 	int			nOffy;
-	CRect		rcOld = m_rcResizing;
 
 	MLWidget::GetCursorPos(&pt);
 
