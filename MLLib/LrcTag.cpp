@@ -126,24 +126,6 @@ CHAR_ENCODING GetLyricsTextEncoding(LPBYTE &szLrc, int &nLen)
 	return encoding;
 }
 
-// Remove extra \0\0 inside of lyrics.
-inline void BugFixOfExtraStrEnding(stringex &str)
-{
-	for (uint i = 0; i < str.size(); i++)
-	{
-		if (str[i] != '\0')
-			continue;
-		i++;
-		if (i >= str.size())
-			break;
-		if (str[i] == '\0')
-		{
-			str.erase(i - 1, 2);
-			i -= 2;
-		}
-	}
-}
-
 //////////////////////////////////////////////////////////////////////////
 
 bool LyricsProperties::Equal(const LyricsProperties &other) const
@@ -571,8 +553,6 @@ int CLrcTag::WriteToFile(LPCTSTR szFile, bool bLrcTag)
 
 void CLrcTag::WriteToBuffer(CCharBuffer &bufData, bool bLrcTag)
 {
-	BugFixOfExtraStrEnding(bufData);
-
 	LPBYTE	pData = (LPBYTE)bufData.c_str();
 	int		nLen = bufData.size();
 
@@ -1299,7 +1279,6 @@ class CTestCaseLrcTag : public CppUnit::TestFixture
 	CPPUNIT_TEST(TestSearchTxtPropTag);
 	CPPUNIT_TEST(TestGetLRCTagValue);
 	CPPUNIT_TEST(TestGetLyricsTextEncoding);
-	CPPUNIT_TEST(TestBugFixOfExtraStrEnding);
 	CPPUNIT_TEST(TestCLyrTagNameValueMap);
 	CPPUNIT_TEST(TestCLrcTag_ReadFromText_Lrc);
 	CPPUNIT_TEST(TestCLrcTag_WriteToText_Lrc);
@@ -1659,33 +1638,6 @@ protected:
 					CPPUNIT_FAIL_T(CStrPrintf(_T("GetLyricsTextEncoding(ANSI): failed, case: %d, %s"), i, vTestTag[i]).c_str());
 			}
 		}
-	}
-
-	void TestBugFixOfExtraStrEnding()
-	{
-#define SZ_1ZERO	"abc\0a"
-#define SZ_2ZERO	"abc\0\0a"
-#define SZ_3ZERO	"abc\0\0\0a"
-
-		stringex	str;
-
-		str.clear();
-		str.append(SZ_1ZERO, CountOf(SZ_1ZERO));
-		BugFixOfExtraStrEnding(str);
-		if (str.size() != CountOf(SZ_1ZERO))
-			CPPUNIT_FAIL("BugFixOfExtraStrEnding: failed, case 1");
-
-		str.clear();
-		str.append(SZ_2ZERO, CountOf(SZ_2ZERO));
-		BugFixOfExtraStrEnding(str);
-		if (str.size() != CountOf(SZ_2ZERO) - 2)
-			CPPUNIT_FAIL("BugFixOfExtraStrEnding: failed, case 2");
-
-		str.clear();
-		str.append(SZ_3ZERO, CountOf(SZ_3ZERO));
-		BugFixOfExtraStrEnding(str);
-		if (str.size() != CountOf(SZ_3ZERO) - 2)
-			CPPUNIT_FAIL("BugFixOfExtraStrEnding: failed, case 3");
 	}
 
 	void TestCLyrTagNameValueMap()
