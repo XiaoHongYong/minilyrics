@@ -712,7 +712,7 @@ void CSkinFactory::DumpUID()
 		it != m_setUIDDefinition.end(); ++it)
 	{
 		UIObjectIDDefinition *p = *it;
-		MapInt2String::iterator i = mapUID.find(p->nId);
+		// MapInt2String::iterator i = mapUID.find(p->nId);
 		// ASSERT(i == mapUID.end());
 		mapUID[p->nId] = tstring(p->szId);
 	}

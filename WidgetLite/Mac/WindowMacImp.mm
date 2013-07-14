@@ -86,10 +86,19 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 
 - (void)scrollWheel:(NSEvent *)theEvent {
 	POINT pt = { 0, 0 };
-	if ([theEvent deltaX] > [theEvent deltaY])
-		mBaseWnd->OnMouseWheel([theEvent deltaX], MK_SHIFT, pt);
-	else
-		mBaseWnd->OnMouseWheel([theEvent deltaY], 0, pt);
+
+	float offsetX = [theEvent deltaX];
+	float offsetY = [theEvent deltaY];
+
+	if (offsetX != 0) {
+		int wheel = offsetX > 0 ? 120 : -120;
+		mBaseWnd->OnMouseWheel(wheel, MK_SHIFT, pt);
+	}
+
+	if (offsetY != 0) {
+		int wheel = offsetY > 0 ? 120 : -120;
+		mBaseWnd->OnMouseWheel(wheel, 0, pt);
+	}
 }
 
 - (BOOL)canBecomeKeyWindow {

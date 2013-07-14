@@ -493,7 +493,10 @@ public:
 };
 
 template<class _rgb_blender, class _alpha_blender, class _blend_copy_none, class _BuffBitBlter, class _pixFmtDst, class _pixFmtSrc>
-inline void SelectBlenderBlt(_BuffBitBlter &blter, _pixFmtDst &pixfDst, _pixFmtSrc &pixfSrc, bool bRgb, bool bAlpha) __ATTR_ALWAYS_INLINE
+inline void SelectBlenderBlt(_BuffBitBlter &blter, _pixFmtDst &pixfDst, _pixFmtSrc &pixfSrc, bool bRgb, bool bAlpha) __ATTR_ALWAYS_INLINE;
+
+template<class _rgb_blender, class _alpha_blender, class _blend_copy_none, class _BuffBitBlter, class _pixFmtDst, class _pixFmtSrc>
+inline void SelectBlenderBlt(_BuffBitBlter &blter, _pixFmtDst &pixfDst, _pixFmtSrc &pixfSrc, bool bRgb, bool bAlpha)
 {
 	if (bRgb)
 	{
