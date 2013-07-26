@@ -29,6 +29,7 @@ class CSkinWnd;
 #include "SkinEditCtrl.h"
 #include "SkinMenu.h"
 #include "SkinComboBox.h"
+#include "SkinListView.h"
 #include "SkinListCtrl.h"
 #include "SkinSeekCtrl.h"
 #include "SkinStaticText.h"

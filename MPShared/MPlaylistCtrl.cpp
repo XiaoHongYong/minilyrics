@@ -263,7 +263,7 @@ void CMPlaylistCtrl::UpdatePlaylist(CEventPlaylistChanged *pEventPlaylistChanged
 		if (nIndex >= 0 && nIndex < GetItemCount()
 			&& nIndexOld >= 0 && nIndexOld < GetItemCount())
 		{
-			LC_ROW *temp = m_vRows[nIndex];
+			Row *temp = m_vRows[nIndex];
 			m_vRows[nIndex] = m_vRows[nIndexOld];
 			m_vRows[nIndexOld] = temp;
 		}
@@ -300,7 +300,7 @@ int CMPlaylistCtrl::GetItemImageIndex(int nItem)
 	ASSERT(nItem >= 0 && nItem < (int)m_vRows.size());
 	if (nItem >= 0 && nItem < (int)m_vRows.size())
 	{
-		LC_ROW		*row = m_vRows[nItem];
+		Row		*row = m_vRows[nItem];
 		return row->nImageIndex;
 	}
 
@@ -313,7 +313,7 @@ void CMPlaylistCtrl::SetNowPlaying()
 	bool bOldStatusCleared = false;
 	if (m_nNowPlaying >= 0 && m_nNowPlaying < (int)m_vRows.size())
 	{
-		LC_ROW *row = m_vRows[m_nNowPlaying];
+		Row *row = m_vRows[m_nNowPlaying];
 		if (row->nImageIndex == IMAGE_NOW_PLAYING)
 		{
 			row->nImageIndex = IMAGE_NONE;
@@ -325,7 +325,7 @@ void CMPlaylistCtrl::SetNowPlaying()
 	{
 		for (int i = 0; i < (int)m_vRows.size(); i++)
 		{
-			LC_ROW *row = m_vRows[i];
+			Row *row = m_vRows[i];
 			if (row->nImageIndex == IMAGE_NOW_PLAYING)
 			{
 				row->nImageIndex = IMAGE_NONE;

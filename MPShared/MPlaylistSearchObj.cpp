@@ -37,7 +37,7 @@ void SplitKeywords(LPCTSTR szKeywords, V_Str &vKeywords)
 }
 
 
-static uint32 SearchWithKeywordEx(V_Str &vKeywords, LPCTSTR szText, LC_ITEMEX::VecTextColor &vItemClrs)
+static uint32 SearchWithKeywordEx(V_Str &vKeywords, LPCTSTR szText, CSkinListCtrlEx::ItemStringEx::VecTextColor &vItemClrs)
 {
 	LPCTSTR		pStart, p, pLastUnmatch;
 	tstring		str;
@@ -86,7 +86,7 @@ static uint32 SearchWithKeywordEx(V_Str &vKeywords, LPCTSTR szText, LC_ITEMEX::V
 }
 
 
-static uint32 SearchWithKeyword(LPCTSTR szKeyword, LPCTSTR szText, LC_ITEMEX::VecTextColor &vItemClrs)
+static uint32 SearchWithKeyword(LPCTSTR szKeyword, LPCTSTR szText, CSkinListCtrlEx::ItemStringEx::VecTextColor &vItemClrs)
 {
 	LPCTSTR		pKey, pDst, pDstStart;
 
@@ -244,7 +244,7 @@ void CMPlaylistSearchObj::DoSearch(LPCTSTR szKeyword)
 	// Search playlist with keyword: szKeyword
 	//
 
-	LC_ITEMEX::VecTextColor		vItemClrs;
+	CSkinListCtrlEx::ItemStringEx::VecTextColor		vItemClrs;
 	uint32			nMatchValue;
 	V_Str			vKeywords;
 
