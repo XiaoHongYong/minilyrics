@@ -700,6 +700,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SkinListView.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\SkinMenu.cpp"
 				>
 			</File>
@@ -1200,6 +1204,10 @@
 			</File>
 			<File
 				RelativePath=".\SkinListCtrl.h"
+				>
+			</File>
+			<File
+				RelativePath=".\SkinListView.h"
 				>
 			</File>
 			<File

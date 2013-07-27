@@ -215,6 +215,9 @@ void CRawGraph::ClearClipBoundBox()
 
 bool CRawGraph::TextOut(int x, int y, LPCTSTR szText, int nLen)
 {
+	if (nLen == -1)
+		nLen = _tcslen(szText);
+
 	if (m_rawBmpFont)
 		return m_rawBmpFont->TextOut(this, MapX(x), MapY(y), m_clrText, szText, nLen, m_bAlphaChannelEnabled);
 	return false;
@@ -222,6 +225,9 @@ bool CRawGraph::TextOut(int x, int y, LPCTSTR szText, int nLen)
 
 bool CRawGraph::DrawTextClip(LPCTSTR szText, int nLen, LPRECT lpRect, int xLeftClipOffset)
 {
+	if (nLen == -1)
+		nLen = _tcslen(szText);
+
 	if (m_rawBmpFont)
 	{
 		return m_rawBmpFont->DrawText(this, MapX(lpRect->left), MapY(lpRect->top), MapX(lpRect->right - lpRect->left), MapX(xLeftClipOffset), m_clrText, szText, nLen, m_bAlphaChannelEnabled);
@@ -231,6 +237,9 @@ bool CRawGraph::DrawTextClip(LPCTSTR szText, int nLen, LPRECT lpRect, int xLeftC
 
 bool CRawGraph::TextOutOutlined(int x, int y, LPCTSTR szText, int nLen, const MLColor &clrText, const MLColor &clrBorder)
 {
+	if (nLen == -1)
+		nLen = _tcslen(szText);
+
 	if (m_rawBmpFont)
 		return m_rawBmpFont->OutlinedTextOut(this, MapX(x), MapY(y), clrText, clrBorder, szText, nLen, m_bAlphaChannelEnabled);
 	return false;
@@ -238,6 +247,9 @@ bool CRawGraph::TextOutOutlined(int x, int y, LPCTSTR szText, int nLen, const ML
 
 bool CRawGraph::DrawTextClipOutlined(LPCTSTR szText, int nLen, LPRECT lpRect, const MLColor &clrText, const MLColor &clrBorder, int xLeftClipOffset)
 {
+	if (nLen == -1)
+		nLen = _tcslen(szText);
+
 	if (m_rawBmpFont)
 		return m_rawBmpFont->OutlinedDrawText(this, MapX(lpRect->left), MapY(lpRect->top), MapX(lpRect->right - lpRect->left), MapX(xLeftClipOffset), clrText, clrBorder, szText, nLen, m_bAlphaChannelEnabled);
 	return false;
@@ -246,6 +258,9 @@ bool CRawGraph::DrawTextClipOutlined(LPCTSTR szText, int nLen, LPRECT lpRect, co
 
 bool CRawGraph::DrawTextOutlined(LPCTSTR szText, int nLen, LPRECT lpRect, const MLColor &clrText, const MLColor &clrBorder, UINT uFormat)
 {
+	if (nLen == -1)
+		nLen = _tcslen(szText);
+
 	RECT	rc = *lpRect;
 	MapRect(rc);
 
@@ -258,6 +273,9 @@ bool CRawGraph::DrawTextOutlined(LPCTSTR szText, int nLen, LPRECT lpRect, const 
 
 bool CRawGraph::DrawText(LPCTSTR szText, int nLen, LPRECT lpRect, UINT uFormat)
 {
+	if (nLen == -1)
+		nLen = _tcslen(szText);
+
 	RECT	rc = *lpRect;
 	MapRect(rc);
 
@@ -270,6 +288,9 @@ bool CRawGraph::DrawText(LPCTSTR szText, int nLen, LPRECT lpRect, UINT uFormat)
 
 bool CRawGraph::GetTextExtentPoint32(LPCTSTR szText, int nLen, LPSIZE pSize)
 {
+	if (nLen == -1)
+		nLen = _tcslen(szText);
+
 	if (m_rawBmpFont)
 		return m_rawBmpFont->GetTextExtentPoint32(szText, nLen, pSize);
 

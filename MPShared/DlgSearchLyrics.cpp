@@ -759,7 +759,7 @@ protected:
 			AppendItemInResultsList(*it, true);
 		}
 
-		if (m_pLyricsList->GetItemCount()
+		if (m_pLyricsList->GetRowCount() > 0
 			&& !g_LyricSearch.IsAssociatedWithNoneLyrics(m_strMediaKey.c_str()))
 			m_pLyricsList->SetItemSelectionState(0, true);
 
@@ -823,7 +823,8 @@ protected:
 			m_pLyricsList->SetItemText(nItem, COL_FROM, Item.strUploader.c_str(), false);
 
 		m_pLyricsList->SetItemText(nItem, COL_ALBUM, Item.strAlbum.c_str(), false);
-		m_pLyricsList->SetItemText(nItem, COL_URL, Item.strUrl.c_str(), false);
+		if (m_pLyricsList->GetColumnCount() > COL_URL)
+			m_pLyricsList->SetItemText(nItem, COL_URL, Item.strUrl.c_str(), false);
 	}
 
 	LrcSearchResult *GetCurSel()
