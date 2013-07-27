@@ -19,22 +19,22 @@
  other materials provided with the distribution.
  
  Neither the Alastair Tse nor the names of its contributors may
- be used to endorse or promote products derived from this software without 
+ be used to endorse or promote products derived from this software without
  specific prior written permission.
  
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
- ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE 
+ ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
- CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+ CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
  INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
- CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+ CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  POSSIBILITY OF SUCH DAMAGE.
  
-*/
+ */
 
 enum {
 	kETPlayerStateStopped		= 'kPSS',
@@ -47,7 +47,11 @@ enum {
 enum {
 	kETRepeatModeOff			= 'kRp0',
 	kETRepeatModeOne			= 'kRp1',
+#if ITUNES_VERSION >= ITUNES_10_0//This might go back further then 10 but that is what I have to test
+    kETRepeatModeAll			= 'kAll'
+#else
 	kETRepeatModeAll			= 'kRpA'
+#endif
 };
 
 enum {
@@ -73,7 +77,7 @@ enum {
 	kETSearchAttributeArtist	= 'kSrR',
 	kETSearchAttributeComposers	= 'kSrC',
 	kETSearchAttributeDisplayed	= 'kSrV',
-	kETSearchAttributeSongs		= 'kSrs'	
+	kETSearchAttributeSongs		= 'kSrs'
 };
 
 #if ITUNES_VERSION < ITUNES_6_0
@@ -82,28 +86,45 @@ enum {
 	kETSpecialPlaylistPartyShuffle		= 'kSpS',
 	kETSpecialPlaylistPodcasts			= 'kSpP',
 	kETSpecialPlaylistPurchasedMusic	= 'kSpM',
-}; 
+};
 #else
 enum {
+#if ITUNES_VERSION >= ITUNES_10_0//This might go back further then 10 but that is what I have to test
+    kETSpecialPlaylistNone				= 'kNon',
+    kETSpecialPlaylistGenius			= 'kSpG',
+    kETSpecialPlaylistITunesU			= 'kSpU',
+#else
 	kETSpecialPlaylistNone				= 'kSpN',
+#endif
 	kETSpecialPlaylistFolder			= 'kSpF',
 	kETSpecialPlaylistPartyShuffle		= 'kSpS',
 	kETSpecialPlaylistPodcasts			= 'kSpP',
 	kETSpecialPlaylistPurchasedMusic	= 'kSpM',
 	kETSpecialPlaylistVideo				= 'kSpV',
-#if ITUNES_VERSION >= ITUNES_7_0	
+#if ITUNES_VERSION >= ITUNES_7_0
 	kETSpecialPlaylistAudiobooks		= 'kSpA',
 	kETSpecialPlaylistMovies			= 'kSpI',
 	kETSpecialPlaylistMusic				= 'kSpZ',
 	kETSpecialPlaylistTVShows			= 'kSpT',
-#endif	
+#endif
 }; // ET_PLAYLIST_SPECIAL_KIND (eSpK)
 #endif
 
+enum {
+	kETSpecialPlaylistRoot = 0,
+	kETSpecialPlaylistCategoryLibrary = 1,
+	kETSpecialPlaylistCategoryStore = 2,
+	kETSpecialPlaylistCategoryPlaylists = 3,
+};
+
 #if ITUNES_VERSION >= ITUNES_7_0
 enum {
-	kETVideoKindUnknown					= 'kVdN',
-	kETVideoKindMovie					= 'kVdM',
+#if ITUNES_VERSION >= ITUNES_10_0//This might go back further then 10 but that is what I have to test
+	kETVideoKindUnknown					= 'kNon',
+#else
+    kETVideoKindUnknown					= 'kVdN',
+#endif
+    kETVideoKindMovie					= 'kVdM',
 	kETVideoKindMusicVideo				= 'kVdV',
 	kETVideoKindTVShow					= 'kVdT',
 };
@@ -178,6 +199,9 @@ enum {
 #if ITUNES_VERSION >= ITUNES_6_0_1
 #define	ET_ITEM_PROP_PERSISTENT_ID	'pPID' // double int (r)
 #endif
+#if ITUNES_VERSION >= ITUNES_7_3
+#define ET_ITEM_PROP_PERSISTENT_ID_STRING	'pPIS' // string (r)
+#endif
 // --- generic applescript item codes end ---
 
 // --- itunes track parameters start ---
@@ -222,7 +246,7 @@ enum {
 #define ET_TRACK_PROP_LONG_DESCRIPTION 'pLds' // utxt
 #define ET_TRACK_PROP_LYRICS		'pLyr' // utxt
 #define ET_TRACK_PROP_SHUFFABLE		'pSfa'	// bool
-#endif 
+#endif
 
 #if ITUNES_VERSION >= ITUNES_7_0
 #define ET_TRACK_PROP_ALBUM_ARTIST		'pAlA' // utxt
@@ -265,6 +289,13 @@ enum {
 #define ET_PLAYLIST_PROP_SPECIAL_KIND	'pSpK'	// eSpk? (r)
 #define ET_PLAYLIST_PROP_TIME			'pTim'	// utxt (r)
 #define ET_PLAYLIST_PROP_VISIBLE		'pvis'	// bool (r)
+#define ET_PLAYLIST_PROP_PARENT			'pPlP'  // <property name="parent" code="pPlP" type="playlist" access="r" description="folder which contains this playlist (if any)"/>
+#define ET_PLAYLIST_PROP_SMART          'pSmt'	// bool (r)
 // generic playlist properies ---
 
-
+// -- special playlists --
+#define ET_CLASS_CD_PLAYLIST			'cCDP'	// <class name="audio CD playlist" code="cCDP" description="a playlist representing an audio CD" inherits="playlist" plural="audio CD playlists">
+#define ET_CLASS_DEVICE_PLAYLIST		'cDvP'	// <class name="device playlist" code="cDvP" description="a playlist representing the contents of a portable device" inherits="playlist" plural="device playlists">
+#define ET_CLASS_FOLDER_PLAYLIST		'cFoP'	// <class name="folder playlist" code="cFoP" description="a folder that contains other playlists" inherits="user playlist" plural="folder playlists"/>
+#define ET_CLASS_USER_PLAYLIST			'cUsP'	// <class name="user playlist" code="cUsP" description="custom playlists created by the user" inherits="playlist" plural="user playlists">
+#define ET_CLASS_RADIOTUNER_PLAYLIST	'cRTP'  // <class name="radio tuner playlist" code="cRTP" description="the radio tuner playlist" inherits="playlist" plural="radio tuner playlists">

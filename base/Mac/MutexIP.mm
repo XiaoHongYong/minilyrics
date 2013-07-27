@@ -42,7 +42,7 @@ bool Mutex::Acquire(uint32 nTimeOut)
 		return [nslock->lock tryLock] == YES;
 	else
 	{
-		NSDate *limit = [NSDate dateWithTimeIntervalSinceReferenceDate: (double)nTimeOut / 1000];
+		NSDate *limit = [NSDate dateWithTimeIntervalSinceNow: (double)nTimeOut / 1000];
 		return [nslock->lock lockBeforeDate:limit] == YES;
 	}
 	return true;

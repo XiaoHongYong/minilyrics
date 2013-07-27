@@ -41,6 +41,7 @@
 #import "ETAppleEventObject.h"
 
 @class ETTrack;
+@class ETPlaylist;
 
 @interface EyeTunes : ETAppleEventObject {
 }
@@ -49,6 +50,7 @@
 
 // parameters
 - (ETTrack *)currentTrack;
+- (ETPlaylist *)libraryPlaylist;
 - (BOOL) fixedIndexing;
 - (void) setFixedIndexing:(BOOL)useFixedIndexing;
 

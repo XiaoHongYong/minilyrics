@@ -224,6 +224,8 @@ NSMenuItem *duplicateMenuItem(NSMenuItem *org) {
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender {
 
     // Save changes in the application's managed object context before the application terminates.
+	
+	CMPlayerAppBase::GetInstance()->Quit();
 
     if (!__managedObjectContext) {
         return NSTerminateNow;
@@ -266,8 +268,6 @@ NSMenuItem *duplicateMenuItem(NSMenuItem *org) {
         }
     }
 	
-	CMPlayerAppBase::GetInstance()->Quit();
-
     return NSTerminateNow;
 }
 

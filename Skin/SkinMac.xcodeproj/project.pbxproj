@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5F12C83F179C05FE003ADC70 /* SkinListView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F12C83D179C05FE003ADC70 /* SkinListView.cpp */; };
+		5F12C840179C05FE003ADC70 /* SkinListView.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F12C83E179C05FE003ADC70 /* SkinListView.h */; };
 		5FBCCDDD14851FD700D7C64A /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCDDC14851FD700D7C64A /* Cocoa.framework */; };
 		5FBCCF04148520B500D7C64A /* EventsDispatcherBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBCCEA9148520B500D7C64A /* EventsDispatcherBase.cpp */; };
 		5FBCCF05148520B500D7C64A /* EventsDispatcherBase.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBCCEAA148520B500D7C64A /* EventsDispatcherBase.h */; };
@@ -106,6 +108,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		5F12C83D179C05FE003ADC70 /* SkinListView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SkinListView.cpp; sourceTree = SOURCE_ROOT; };
+		5F12C83E179C05FE003ADC70 /* SkinListView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SkinListView.h; sourceTree = SOURCE_ROOT; };
 		5FBCCDD914851FD700D7C64A /* libSkinMac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libSkinMac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FBCCDDC14851FD700D7C64A /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		5FBCCDDF14851FD700D7C64A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -259,6 +263,8 @@
 		5FBCCDE214851FD700D7C64A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5F12C83D179C05FE003ADC70 /* SkinListView.cpp */,
+				5F12C83E179C05FE003ADC70 /* SkinListView.h */,
 				5FBCCF5E1485235600D7C64A /* mac */,
 				5FBCCEA9148520B500D7C64A /* EventsDispatcherBase.cpp */,
 				5FBCCEAA148520B500D7C64A /* EventsDispatcherBase.h */,
@@ -423,6 +429,7 @@
 				5FBCCF5D148520B500D7C64A /* UIObject.h in Headers */,
 				5FBCCF651485235600D7C64A /* EventsDispatcher.h in Headers */,
 				5FBCCF681485235600D7C64A /* SplashScreenWnd.h in Headers */,
+				5F12C840179C05FE003ADC70 /* SkinListView.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,6 +529,7 @@
 				5FBCCF641485235600D7C64A /* EventsDispatcher.mm in Sources */,
 				5FBCCF661485235600D7C64A /* SkinRgn.cpp in Sources */,
 				5FBCCF671485235600D7C64A /* SplashScreenWnd.cpp in Sources */,
+				5F12C83F179C05FE003ADC70 /* SkinListView.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

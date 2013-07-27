@@ -173,13 +173,11 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 				DisplayOptToStr(displayOpt));
 		}
 		break;
-#ifdef _WIN32_DESKTOP
-#ifndef _MPLAYER
 	case CMD_IPOD_LYRICS_DOWNLOADER:
 		CMPlayerApp::GetInstance()->RestartToAppMode(SA_IPOD_LYRICS_DOWNLOADER);
 		break;
-#endif
 
+#ifdef _WIN32_DESKTOP
 	case CMD_ANTIAlIAS:
 		{
 			//

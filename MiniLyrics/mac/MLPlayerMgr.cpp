@@ -136,8 +136,6 @@ bool CMLPlayerMgr::Init(int argc, char *argv[])
 			// g_strPlayerServicePipeName = argv[i + 1];
 			i++;
 		}
-		// else if (_tcsicmp(argv[i], _T("/iPodLyricsDownloader")) == 0)
-		//	appMode = SA_IPOD_LYRICS_DOWNLOADER;
 		else if (_tcsicmp(argv[i], _T("/Manual")) == 0)
 			g_bForceStart = true;
 	}
@@ -198,10 +196,14 @@ void CMLPlayerMgr::Quit()
 	g_bQuitMsg = true;
 
 	m_msgPipeOfPlayer.Close();
-	LOG0(LOG_LVL_INFO, _T("Close player service pipe."));
-	pthread_kill(g_threadMsg, SIGINT);
-	pthread_join(g_threadMsg, NULL);
-	// pthread_wait(g_threadMsg, 
+	
+	if (g_threadMsg != 0)
+	{
+		LOG0(LOG_LVL_INFO, _T("Close player service pipe."));
+		pthread_kill(g_threadMsg, SIGINT);
+		pthread_join(g_threadMsg, NULL);
+		// pthread_wait(g_threadMsg,
+	}
 }
 
 

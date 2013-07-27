@@ -72,7 +72,6 @@
 - (NSString *)genre;
 - (NSString *)grouping;
 - (NSString *)kind;
-- (NSString *)location;
 - (NSString *)longDescription;			// >=6.0.2
 - (NSString *)lyrics;					// >=6.0.2
 - (NSDate *)modificationDate;

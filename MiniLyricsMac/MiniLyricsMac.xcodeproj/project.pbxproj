@@ -10,6 +10,8 @@
 		5F0315B415E769C400E5F752 /* PlayerPluginInstaller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F0315B215E769C400E5F752 /* PlayerPluginInstaller.mm */; };
 		5F0315BA15E7849C00E5F752 /* Player-Plugins in Resources */ = {isa = PBXBuildFile; fileRef = 5F0315B915E7849C00E5F752 /* Player-Plugins */; };
 		5F05D55B15E0F20E00200E2B /* skins in Resources */ = {isa = PBXBuildFile; fileRef = 5F05D55A15E0F20E00200E2B /* skins */; };
+		5F08830B1792E71400E909B8 /* LyricsDownloader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F0883071792E71400E909B8 /* LyricsDownloader.cpp */; };
+		5F08830C1792E71400E909B8 /* MediaSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F0883091792E71400E909B8 /* MediaSource.mm */; };
 		5F10F0491576F5F90080ECF6 /* MPSkinMenu.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F10F0471576F5F90080ECF6 /* MPSkinMenu.cpp */; };
 		5F2BD4AD148BB9B8003E7F5C /* DlgChooseFont.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.mm */; };
 		5F2BD52614962FBD003E7F5C /* libMPlayerLib.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */; };
@@ -20,6 +22,11 @@
 		5F8A1CA5159555360062394E /* DlgSaveLyrPrompt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F8A1CA4159555350062394E /* DlgSaveLyrPrompt.cpp */; };
 		5F9A2557176232010009A049 /* DlgSaveEmbeddedLyricsController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9A2555176232010009A049 /* DlgSaveEmbeddedLyricsController.mm */; };
 		5F9A2558176232010009A049 /* DlgSaveEmbeddedLyricsController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5F9A2556176232010009A049 /* DlgSaveEmbeddedLyricsController.xib */; };
+		5F9FA0E11794D87900A6CAC2 /* ETAppleEventObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0D61794D87900A6CAC2 /* ETAppleEventObject.m */; };
+		5F9FA0E21794D87900A6CAC2 /* ETEyeTunes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0D81794D87900A6CAC2 /* ETEyeTunes.m */; };
+		5F9FA0E31794D87900A6CAC2 /* ETPlaylist.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0DA1794D87900A6CAC2 /* ETPlaylist.mm */; };
+		5F9FA0E41794D87900A6CAC2 /* ETTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0DC1794D87900A6CAC2 /* ETTrack.m */; };
+		5F9FA0E51794D87900A6CAC2 /* ETTrackEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0DE1794D87900A6CAC2 /* ETTrackEnumerator.m */; };
 		5FA656FD1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FA656FC1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm */; };
 		5FB16205147017330084494F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB16204147017330084494F /* Cocoa.framework */; };
 		5FB1620F147017330084494F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5FB1620D147017330084494F /* InfoPlist.strings */; };
@@ -329,6 +336,12 @@
 		5F0315B315E769C400E5F752 /* PlayerPluginInstaller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayerPluginInstaller.h; path = ../../MiniLyrics/mac/PlayerPluginInstaller.h; sourceTree = "<group>"; };
 		5F0315B915E7849C00E5F752 /* Player-Plugins */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Player-Plugins"; path = "../Install_ML_mac/Player-Plugins"; sourceTree = "<group>"; };
 		5F05D55A15E0F20E00200E2B /* skins */ = {isa = PBXFileReference; lastKnownFileType = folder; name = skins; path = ../Install_ML_mac/skins; sourceTree = "<group>"; };
+		5F0883051792E71400E909B8 /* LyricsDownloader_dialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsDownloader_dialog.h; sourceTree = "<group>"; };
+		5F0883061792E71400E909B8 /* LyricsDownloader_worker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsDownloader_worker.h; sourceTree = "<group>"; };
+		5F0883071792E71400E909B8 /* LyricsDownloader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsDownloader.cpp; sourceTree = "<group>"; };
+		5F0883081792E71400E909B8 /* LyricsDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsDownloader.h; sourceTree = "<group>"; };
+		5F0883091792E71400E909B8 /* MediaSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MediaSource.mm; sourceTree = "<group>"; };
+		5F08830A1792E71400E909B8 /* MediaSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaSource.h; sourceTree = "<group>"; };
 		5F10F0471576F5F90080ECF6 /* MPSkinMenu.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPSkinMenu.cpp; path = ../../MPShared/MPSkinMenu.cpp; sourceTree = "<group>"; };
 		5F10F0481576F5F90080ECF6 /* MPSkinMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPSkinMenu.h; path = ../../MPShared/MPSkinMenu.h; sourceTree = "<group>"; };
 		5F2BD4A9148A6511003E7F5C /* DlgSaveLyrPrompt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveLyrPrompt.h; sourceTree = "<group>"; };
@@ -347,6 +360,18 @@
 		5F9A2554176232010009A049 /* DlgSaveEmbeddedLyricsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DlgSaveEmbeddedLyricsController.h; sourceTree = "<group>"; };
 		5F9A2555176232010009A049 /* DlgSaveEmbeddedLyricsController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlgSaveEmbeddedLyricsController.mm; sourceTree = "<group>"; };
 		5F9A2556176232010009A049 /* DlgSaveEmbeddedLyricsController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DlgSaveEmbeddedLyricsController.xib; sourceTree = "<group>"; };
+		5F9FA0D51794D87900A6CAC2 /* ETAppleEventObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ETAppleEventObject.h; path = ../../MacPluginiTunes/ETAppleEventObject.h; sourceTree = "<group>"; };
+		5F9FA0D61794D87900A6CAC2 /* ETAppleEventObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ETAppleEventObject.m; path = ../../MacPluginiTunes/ETAppleEventObject.m; sourceTree = "<group>"; };
+		5F9FA0D71794D87900A6CAC2 /* ETEyeTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ETEyeTunes.h; path = ../../MacPluginiTunes/ETEyeTunes.h; sourceTree = "<group>"; };
+		5F9FA0D81794D87900A6CAC2 /* ETEyeTunes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ETEyeTunes.m; path = ../../MacPluginiTunes/ETEyeTunes.m; sourceTree = "<group>"; };
+		5F9FA0D91794D87900A6CAC2 /* ETPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ETPlaylist.h; path = ../../MacPluginiTunes/ETPlaylist.h; sourceTree = "<group>"; };
+		5F9FA0DA1794D87900A6CAC2 /* ETPlaylist.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ETPlaylist.mm; path = ../../MacPluginiTunes/ETPlaylist.mm; sourceTree = "<group>"; };
+		5F9FA0DB1794D87900A6CAC2 /* ETTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ETTrack.h; path = ../../MacPluginiTunes/ETTrack.h; sourceTree = "<group>"; };
+		5F9FA0DC1794D87900A6CAC2 /* ETTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ETTrack.m; path = ../../MacPluginiTunes/ETTrack.m; sourceTree = "<group>"; };
+		5F9FA0DD1794D87900A6CAC2 /* ETTrackEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ETTrackEnumerator.h; path = ../../MacPluginiTunes/ETTrackEnumerator.h; sourceTree = "<group>"; };
+		5F9FA0DE1794D87900A6CAC2 /* ETTrackEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ETTrackEnumerator.m; path = ../../MacPluginiTunes/ETTrackEnumerator.m; sourceTree = "<group>"; };
+		5F9FA0DF1794D87900A6CAC2 /* EyeTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EyeTunes.h; path = ../../MacPluginiTunes/EyeTunes.h; sourceTree = "<group>"; };
+		5F9FA0E01794D87900A6CAC2 /* EyeTunesEventCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EyeTunesEventCodes.h; path = ../../MacPluginiTunes/EyeTunesEventCodes.h; sourceTree = "<group>"; };
 		5FA656FC1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlgSaveEmbeddedLyrics.mm; sourceTree = "<group>"; };
 		5FB16200147017330084494F /* MiniLyrics.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MiniLyrics.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FB16204147017330084494F /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
@@ -580,6 +605,26 @@
 				5F2BD52314962F4E003E7F5C /* libMPlayerLib.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		5F9FA0C31794D82F00A6CAC2 /* EyeTunes */ = {
+			isa = PBXGroup;
+			children = (
+				5F9FA0D51794D87900A6CAC2 /* ETAppleEventObject.h */,
+				5F9FA0D61794D87900A6CAC2 /* ETAppleEventObject.m */,
+				5F9FA0D71794D87900A6CAC2 /* ETEyeTunes.h */,
+				5F9FA0D81794D87900A6CAC2 /* ETEyeTunes.m */,
+				5F9FA0D91794D87900A6CAC2 /* ETPlaylist.h */,
+				5F9FA0DA1794D87900A6CAC2 /* ETPlaylist.mm */,
+				5F9FA0DB1794D87900A6CAC2 /* ETTrack.h */,
+				5F9FA0DC1794D87900A6CAC2 /* ETTrack.m */,
+				5F9FA0DD1794D87900A6CAC2 /* ETTrackEnumerator.h */,
+				5F9FA0DE1794D87900A6CAC2 /* ETTrackEnumerator.m */,
+				5F9FA0DF1794D87900A6CAC2 /* EyeTunes.h */,
+				5F9FA0E01794D87900A6CAC2 /* EyeTunesEventCodes.h */,
+			);
+			name = EyeTunes;
+			path = ../../MiniLyricsMac/MiniLyricsMac;
 			sourceTree = "<group>";
 		};
 		5FB161F5147017330084494F = {
@@ -926,6 +971,13 @@
 		5FDC56A0148A23AC00C74E6A /* mac */ = {
 			isa = PBXGroup;
 			children = (
+				5F9FA0C31794D82F00A6CAC2 /* EyeTunes */,
+				5F0883051792E71400E909B8 /* LyricsDownloader_dialog.h */,
+				5F0883061792E71400E909B8 /* LyricsDownloader_worker.h */,
+				5F0883071792E71400E909B8 /* LyricsDownloader.cpp */,
+				5F0883081792E71400E909B8 /* LyricsDownloader.h */,
+				5F0883091792E71400E909B8 /* MediaSource.mm */,
+				5F08830A1792E71400E909B8 /* MediaSource.h */,
 				5FA656FC1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm */,
 				5FDC56BB148A2ED900C74E6A /* DlgSaveEmbeddedLyrics.h */,
 				5F0315B215E769C400E5F752 /* PlayerPluginInstaller.mm */,
@@ -1293,6 +1345,13 @@
 				5F0315B415E769C400E5F752 /* PlayerPluginInstaller.mm in Sources */,
 				5FA656FD1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm in Sources */,
 				5F9A2557176232010009A049 /* DlgSaveEmbeddedLyricsController.mm in Sources */,
+				5F08830B1792E71400E909B8 /* LyricsDownloader.cpp in Sources */,
+				5F08830C1792E71400E909B8 /* MediaSource.mm in Sources */,
+				5F9FA0E11794D87900A6CAC2 /* ETAppleEventObject.m in Sources */,
+				5F9FA0E21794D87900A6CAC2 /* ETEyeTunes.m in Sources */,
+				5F9FA0E31794D87900A6CAC2 /* ETPlaylist.mm in Sources */,
+				5F9FA0E41794D87900A6CAC2 /* ETTrack.m in Sources */,
+				5F9FA0E51794D87900A6CAC2 /* ETTrackEnumerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -28,7 +28,6 @@
 		5F9CDF23147A330100432DAC /* BaseMac-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */; };
 		5F9CDF25147A330100432DAC /* CharEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF0147A330100432DAC /* CharEncoding.cpp */; };
 		5F9CDF26147A330100432DAC /* CharEncoding.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF1147A330100432DAC /* CharEncoding.mm */; };
-		5F9CDF27147A330100432DAC /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF2147A330100432DAC /* Event.cpp */; };
 		5F9CDF28147A330100432DAC /* Event.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEF3147A330100432DAC /* Event.h */; };
 		5F9CDF29147A330100432DAC /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF4147A330100432DAC /* fileapi.cpp */; };
 		5F9CDF2A147A330100432DAC /* fileapi.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEF5147A330100432DAC /* fileapi.h */; };
@@ -60,6 +59,7 @@
 		5F9CDF45147A330100432DAC /* StrPrintf.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF10147A330100432DAC /* StrPrintf.h */; };
 		5F9CDF46147A330100432DAC /* wintypes.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF11147A330100432DAC /* wintypes.h */; };
 		5F9CDF47147A330100432DAC /* xstr.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDF12147A330100432DAC /* xstr.h */; };
+		5F9FA0E71795992C00A6CAC2 /* Event.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0E61795992C00A6CAC2 /* Event.mm */; };
 		5FB53E9A14C19FA20041938C /* MapString.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB53E9614C19FA20041938C /* MapString.cpp */; };
 		5FB53E9B14C19FA20041938C /* MapString.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FB53E9714C19FA20041938C /* MapString.h */; };
 		5FB53E9C14C19FA20041938C /* TextFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB53E9814C19FA20041938C /* TextFile.cpp */; };
@@ -97,7 +97,6 @@
 		5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BaseMac-Prefix.pch"; sourceTree = "<group>"; };
 		5F9CDEF0147A330100432DAC /* CharEncoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharEncoding.cpp; sourceTree = "<group>"; };
 		5F9CDEF1147A330100432DAC /* CharEncoding.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CharEncoding.mm; sourceTree = "<group>"; };
-		5F9CDEF2147A330100432DAC /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
 		5F9CDEF3147A330100432DAC /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		5F9CDEF4147A330100432DAC /* fileapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileapi.cpp; sourceTree = "<group>"; };
 		5F9CDEF5147A330100432DAC /* fileapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileapi.h; sourceTree = "<group>"; };
@@ -129,6 +128,7 @@
 		5F9CDF10147A330100432DAC /* StrPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StrPrintf.h; sourceTree = SOURCE_ROOT; };
 		5F9CDF11147A330100432DAC /* wintypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = wintypes.h; sourceTree = SOURCE_ROOT; };
 		5F9CDF12147A330100432DAC /* xstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xstr.h; sourceTree = SOURCE_ROOT; };
+		5F9FA0E61795992C00A6CAC2 /* Event.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Event.mm; sourceTree = "<group>"; };
 		5FB53E9614C19FA20041938C /* MapString.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MapString.cpp; sourceTree = SOURCE_ROOT; };
 		5FB53E9714C19FA20041938C /* MapString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapString.h; sourceTree = SOURCE_ROOT; };
 		5FB53E9814C19FA20041938C /* TextFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextFile.cpp; sourceTree = SOURCE_ROOT; };
@@ -253,7 +253,7 @@
 				5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */,
 				5F9CDEF0147A330100432DAC /* CharEncoding.cpp */,
 				5F9CDEF1147A330100432DAC /* CharEncoding.mm */,
-				5F9CDEF2147A330100432DAC /* Event.cpp */,
+				5F9FA0E61795992C00A6CAC2 /* Event.mm */,
 				5F9CDEF3147A330100432DAC /* Event.h */,
 				5F9CDEF4147A330100432DAC /* fileapi.cpp */,
 				5F9CDEF5147A330100432DAC /* fileapi.h */,
@@ -374,7 +374,6 @@
 				5F9CDF21147A330100432DAC /* idstring.cpp in Sources */,
 				5F9CDF25147A330100432DAC /* CharEncoding.cpp in Sources */,
 				5F9CDF26147A330100432DAC /* CharEncoding.mm in Sources */,
-				5F9CDF27147A330100432DAC /* Event.cpp in Sources */,
 				5F9CDF29147A330100432DAC /* fileapi.cpp in Sources */,
 				5F9CDF2B147A330100432DAC /* MemmapFile.cpp in Sources */,
 				5F9CDF2E147A330100432DAC /* MutexIP.mm in Sources */,
@@ -392,6 +391,7 @@
 				5FB53E9C14C19FA20041938C /* TextFile.cpp in Sources */,
 				5FB5924D15458EA60071B204 /* FileEx.cpp in Sources */,
 				5FDF5F4B172036BB00F20EB2 /* RegExTool.cpp in Sources */,
+				5F9FA0E71795992C00A6CAC2 /* Event.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

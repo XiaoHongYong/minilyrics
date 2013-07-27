@@ -46,6 +46,10 @@
 #include "win32/LyricsDownloader.h"
 #endif
 
+#ifdef _MAC_OSX
+#include "mac/LyricsDownloader.h"
+#endif
+
 #include "MPSkinMenu.h"
 
 #ifdef _WIN32_DESKTOP
@@ -107,9 +111,7 @@ int CMPSkinFactory::Init()
 	RegisterUploadLyrPage(this);
 	RegisterAdjustHuePage(this);
 	
-#ifndef _MAC_OSX
 	RegisterLyricsToolPage(this);
-#endif
 
 	return CSkinFactory::Init();
 }

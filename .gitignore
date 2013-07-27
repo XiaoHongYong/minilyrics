@@ -1,0 +1,8 @@
+.DS_Store
+*.user
+*.ncb
+*.suo
+*.pyc
+*.xcuserdatad
+Release
+Output

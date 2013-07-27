@@ -211,7 +211,7 @@ void CPlayerImp::UpdateTrackInfo()
 		return;
 	
 	int pos = [iTunes playerPosition] * 1000;
-	if (std::abs((int)m_dwPos - pos) >= 1000)
+	if (abs_x((long)(m_dwPos - pos)) >= 1000)
 	{
 		m_dwPos = pos;
 		m_dwBegTickCount = GetTickCount() - m_dwPos;

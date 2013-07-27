@@ -38,6 +38,7 @@
 #import "ETEyeTunes.h"
 #import "ETTrack.h"
 #import "EyeTunes.h"
+#import "ETPlaylist.h"
 
 void NullLog(NSString *format, ...)
 {
@@ -288,6 +289,32 @@ cleanup_reply_event:
 cleanup_get_event:
 	AEDisposeDesc(&getEvent);
 	return currentTrack;		
+}
+
+- (ETPlaylist *)libraryPlaylist
+{
+	OSErr err;
+	AEDesc replyObject;
+	ETPlaylist *libraryPlaylist = nil;
+	
+	AppleEvent *replyEvent = [self getElementOfClass:ET_CLASS_LIBRARY_PLAYLIST atIndex:0];
+	if (!replyEvent) {
+		ETLog(@"Unable to get Library Playlist");
+		return nil;
+	}
+	
+	err = AEGetParamDesc(replyEvent, keyDirectObject, typeWildCard, &replyObject);
+	if (err != noErr) {
+		ETLog(@"Error extracting from reply event: %d", err);
+		goto cleanup_reply_event;
+	}
+	
+	libraryPlaylist = [[[ETPlaylist alloc] initWithDescriptor:&replyObject] autorelease];
+	
+cleanup_reply_event:
+	AEDisposeDesc(replyEvent);
+	free(replyEvent);
+	return libraryPlaylist;
 }
 
 - (BOOL) fixedIndexing

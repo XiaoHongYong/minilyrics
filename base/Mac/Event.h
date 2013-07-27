@@ -15,6 +15,8 @@
 #define WAIT_FOREVER 0xFFFFFFFF
 #endif
 
+class _NSConditionInternal;
+
 class Event  
 {
 public:
@@ -28,6 +30,8 @@ public:
 protected:
 	Mutex	m_mutex;
 	bool	m_bMaualset;
+	
+	_NSConditionInternal *m_nsCondition;
 
 };
 

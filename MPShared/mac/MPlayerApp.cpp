@@ -11,12 +11,13 @@
 #include "MPFloatingLyrWnd.h"
 #include "LyricShowObj.h"
 
-#include "MPMsg.h"
-
 
 CMPlayerApp::CMPlayerApp()
 {
 	m_bRunning = false;
+
+	m_appMode = SA_LYRICS_PLAYER;
+	m_appModeQuitToStart = SA_UNKNOWN;
 }
 
 CMPlayerApp::~CMPlayerApp()
@@ -43,10 +44,10 @@ bool CMPlayerApp::Init()
 	g_LangTool.SetMacro(SZ_MACRO_PRODUCT_NAME, SZ_APP_NAME);
 	g_LangTool.SetMacro(SZ_MACRO_COMPANY_NAME, SZ_COMPANY_NAME);
 
-	m_appMode = SA_LYRICS_PLAYER;
-
 	return CMPlayerAppBase::Init();
 }
+
+void RestartToLyricsDownloader();
 
 void CMPlayerApp::Quit()
 {
@@ -58,5 +59,17 @@ void CMPlayerApp::Quit()
 	CMPlayerAppBase::Quit();
 	
 	g_playerMgr.Quit();
+	
+#ifndef _MPLAYER
+	if (m_appModeQuitToStart != SA_IPOD_LYRICS_DOWNLOADER)
+		RestartToLyricsDownloader();
+#endif
+}
+
+void CMPlayerApp::RestartToAppMode(AppMode appMode)
+{
+	m_appModeQuitToStart = appMode;
+
+	PostQuitMessageMac();
 }
 

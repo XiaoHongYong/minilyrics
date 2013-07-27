@@ -170,6 +170,7 @@ item:40121:Fade out to Back&ground:
 end
 item:40005:&Preferences...:Ctrl+P
 separator
+item:40196:Lyrics Downloader for &iPod...:
 item:40172:Lyrics &Editor...:
 item:40147:INSERT_NEW_MENU_POS:
 separator
@@ -376,6 +377,7 @@ item:40045:Vietnamese:
 end
 end
 popup:&View
+item:40196:Lyrics Downloader for &iPod...:
 item:40172:Lyrics &Editor...:
 item:40005:&Preferences...:Ctrl+P
 item:40147:INSERT_NEW_MENU_POS:
@@ -405,5 +407,37 @@ menu:175
 item:40173:&Clear Lyrics Scrolling Actions:
 item:40172:Lyrics &Editor...:
 item:40175:&Help:
+end
+
+menu:179
+popup:&Media Files
+item:40193:Import &iTunes Library:
+separator
+item:40179:&Add Media Files...:
+item:40180:Add &Folder...:
+separator
+item:40181:&Clear File List:
+item:40183:&Remove Selected from List:
+separator
+item:40003:E&xit:
+end
+popup:&Lyrics
+item:40194:&Download All Lyrics for iPod:
+separator
+item:40097:&Remove All Embedded Lyrics:
+separator
+popup:&Advanced
+item:40122:&Download All Lyrics...:
+item:40123:&Remove All Lyrics...:
+end
+end
+popup:&Help
+item:40004:A&bout $Product$...:
+item:40023:$Product$ &Help:
+separator
+item:1013:&Activate $Product$...:
+separator
+item:40066:$Product$ &Website:
+end
 end
 
