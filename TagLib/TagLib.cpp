@@ -60,10 +60,11 @@ LPCTSTR LyrSrcTypeToDesc(LRC_SOURCE_TYPE lst)
 
 bool GetEmbeddedLyricsNameInfo(LPCTSTR szName, string &language, int &index)
 {
-// 	type.clear();
-// 	subType.clear();
 	language.clear();
 	index = 0;
+
+	if (szName == NULL)
+		return true; // No language or index is set.
 
 	szName = szName + _tcslen(_T("song://"));
 	VecString vStr;

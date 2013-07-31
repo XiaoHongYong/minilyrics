@@ -12,7 +12,7 @@
 
 #define SZ_CUSTOMIZED_CLR	_T("CustomizedColor")
 
-UIOBJECT_CLASS_NAME_IMP(CSkinListView, _T("ListCtrl"))
+UIOBJECT_CLASS_NAME_IMP(CSkinListView, _T("ListView"))
 
 CSkinListView::CSkinListView()
 {
@@ -66,7 +66,14 @@ CSkinListView::~CSkinListView()
 void CSkinListView::SetDataSource(IListViewDataSource *pDataSource)
 {
 	m_dataSource = pDataSource;
-	pDataSource->SetView(this);
+	if (pDataSource != NULL)
+		pDataSource->SetView(this);
+}
+
+void CSkinListView::NotifyDataChanged()
+{
+	SetScrollInfo();
+	Invalidate();
 }
 
 void CSkinListView::LoadColumnWidth(LPCTSTR szProperty)

@@ -39,14 +39,6 @@ bool ConvertBufToTextLyrics(string &buf, tstring &lyrics)
 	return true;
 }
 
-LPCTSTR GetLyricsDescription(LPCTSTR szLyrics)
-{
-	LRC_SOURCE_TYPE	lst = LyrSrcTypeFromName(szLyrics);
-	if (lst == LST_FILE)
-		return szLyrics;
-	return LyrSrcTypeToDesc(lst);
-}
-
 #define SZ_NO_SUITABLE_LYRICS		_T("**NL")
 
 class CPageLyricsTool : public CSkinContainer, public ILyricsToolWork::IUpdateNotify
@@ -87,15 +79,13 @@ public:
 
 	struct UpdateItem
 	{
-		UpdateItem(int nIndex, int nCol, LPCTSTR szText)
+		UpdateItem(int nIndex, LPCTSTR szResult)
 		{
 			this->n = nIndex;
-			this->nCol = nCol;
-			this->strText = szText;
+			this->strResult = szResult;
 		}
 		int			n;
-		int			nCol;
-		tstring		strText;
+		tstring		strResult;
 	};
 	typedef list<UpdateItem>	ListUpdateItem;
 
@@ -111,19 +101,19 @@ public:
 
 	void OnUpdateItemStatus(int nIndex, ILyricsToolWork::SuccessStatus status, LPCTSTR szResult)
 	{
-		m_filesListCtrl->SetItemImageIndex(nIndex, status, false);
-		AddUpdateMsgList(nIndex, COL_RESULT, szResult, true);
+		m_pMediaLib->SetItemImageIndex(nIndex, status, false);
+
+		m_mutexMsg.Acquire();
+		m_listUpdateItems.push_back(UpdateItem(nIndex, szResult));
+		m_mutexMsg.Release();
 	}
 
 protected:
-	void AddUpdateMsgList(int nIndex, int nCol, LPCTSTR szText, bool bLock = false);
-
 	void UpdateProgress();
 
 	void ClearResult();
 
 	void FromCurrentPlaylist();
-	void MergeToCurrentPlaylist();
 
 	void UpdateNewMediaList();
 
@@ -153,14 +143,13 @@ protected:
 			if (m_pMediaLib->GetType() == type)
 				return;
 
-			g_Player.ClearPlaylist();
+//			g_Player.ClearPlaylist();
 			delete m_pMediaLib;
 		}
 
-		if (type == MST_ITUNES)
-			m_pMediaLib = GetiTunesMediaSource();
-		else
-			m_pMediaLib = new CFileMediaSource();
+		m_pMediaLib = NewMediaSource(type);
+		m_filesListCtrl->SetDataSource(m_pMediaLib);
+		m_filesListCtrl->NotifyDataChanged();
 	}
 
 	void HideInstructions()
@@ -173,7 +162,7 @@ protected:
 	friend class CRunnableUpdateiTunesMediaLib;
 
 protected:
-	CSkinListCtrl			*m_filesListCtrl;
+	CSkinListView			*m_filesListCtrl;
 
 	IMediaSource			*m_pMediaLib;
 
@@ -181,7 +170,7 @@ protected:
 	tstring					m_strMsg, m_strStatus;
 	int						m_nProgress;
 	int						CID_UPDATEPROGRESS, CID_STATUS, CID_CANCEL_WORK, UID_INSTRUCTION;
-	int						CMD_IMPORT, CMD_DL_LYRICS, UID_MEDIA_INFO, CID_PROGRESS;
+	int						CMD_IMPORT, CMD_DL_LYRICS, UID_MEDIA_INFO, CID_PROGRESS, CID_LISTVIEW;
 	CSkinSeekCtrl			*m_pProgressCtrl;
 	ListUpdateItem			m_listUpdateItems;
 
@@ -199,12 +188,13 @@ void CPageLyricsTool::OnCreate()
 
 	GET_ID_BY_NAME4(CID_STATUS, CID_UPDATEPROGRESS, CID_CANCEL_WORK, UID_INSTRUCTION);
 	GET_ID_BY_NAME4(UID_MEDIA_INFO, CMD_IMPORT, CMD_DL_LYRICS, CID_PROGRESS);
+	GET_ID_BY_NAME(CID_LISTVIEW);
 
-	m_filesListCtrl = (CSkinListCtrl *)GetUIObjectByClassName(CMPlaylistCtrl::ClassName());
+	m_filesListCtrl = (CSkinListCtrl *)GetUIObjectById(CID_LISTVIEW, CSkinListView::ClassName());
 	if (!m_filesListCtrl)
 		return;
 
-	LPCTSTR vColName[] = { _T("Result"), _T("Lyrics") };
+	LPCTSTR vColName[] = { _T("Media Files"), _T("Result"), _T("Lyrics") };
 	for (int i = 0; i < CountOf(vColName); i++)
 		m_filesListCtrl->AddColumn(_TL(vColName[i]), 200);
 
@@ -223,7 +213,8 @@ void CPageLyricsTool::OnCreate()
 	//
 	FromCurrentPlaylist();
 
-	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+	m_filesListCtrl->SetDataSource(m_pMediaLib);
+	if (!m_pMediaLib || m_pMediaLib->GetRowCount() == 0)
 	{
 		m_pSkin->SetUIObjectVisible(UID_INSTRUCTION, true, false);
 		m_pSkin->SetUIObjectVisible(UID_MEDIA_INFO, false, false);
@@ -300,10 +291,11 @@ bool CPageLyricsTool::OnCommand(int nId)
 		{
 			if (m_pMediaLib)
 			{
-				g_Player.ClearPlaylist();
+//				g_Player.ClearPlaylist();
 				delete m_pMediaLib;
 				m_pMediaLib = NULL;
 			}
+			m_filesListCtrl->SetDataSource(NULL);
 
 			ChangeToMediaLib(MST_ITUNES);
 
@@ -311,6 +303,8 @@ bool CPageLyricsTool::OnCommand(int nId)
 
 			m_WorkLooper.Post(&rUpdate);
 			rUpdate.m_eventFinished.Acquire();
+
+			m_filesListCtrl->SetDataSource(m_pMediaLib);
 
 			if (rUpdate.m_bUpdateSuccessfully)
 				UpdateNewMediaList();
@@ -369,8 +363,9 @@ bool CPageLyricsTool::OnCommand(int nId)
 		{
 			delete m_pMediaLib;
 			m_pMediaLib = NULL;
+			m_filesListCtrl->SetDataSource(NULL);
+			m_filesListCtrl->NotifyDataChanged();
 		}
-		g_Player.ClearPlaylist();
 		break;
 	case IDC_REMOVE_SELECTED:
 		{
@@ -384,10 +379,10 @@ bool CPageLyricsTool::OnCommand(int nId)
 				vSelected.push_back(n);
 			}
 
-			for (int i = vSelected.size() - 1; i >= 0; i--)
+			for (int i = (int)vSelected.size() - 1; i >= 0; i--)
 				m_pMediaLib->RemoveItem(vSelected[i]);
 
-			MergeToCurrentPlaylist();
+			m_filesListCtrl->NotifyDataChanged();
 		}
 		break;
 	case IDC_DOWNLOAD_ALL_LYRICS:
@@ -432,7 +427,7 @@ bool CPageLyricsTool::OnCustomCommand(int nId)
 	{
 		OnCommand(IDC_IMPORT_ITUNES_LIB);
 
-		if (m_pMediaLib->GetItemCount() == 0)
+		if (m_pMediaLib->GetRowCount() == 0)
 			OnCommand(IDC_ADD_FILES);
 	}
 	else if (nId == CMD_DL_LYRICS)
@@ -474,15 +469,6 @@ bool CPageLyricsTool::OnCancel()
 	return true;
 }
 
-void CPageLyricsTool::AddUpdateMsgList(int nIndex, int nCol, LPCTSTR szText, bool bLock)
-{
-	if (bLock)
-		m_mutexMsg.Acquire();
-	m_listUpdateItems.push_back(UpdateItem(nIndex, nCol, szText));
-	if (bLock)
-		m_mutexMsg.Release();
-}
-
 void CPageLyricsTool::UpdateProgress()
 {
 	bool	bRedrawListCtrl = false;
@@ -503,7 +489,7 @@ void CPageLyricsTool::UpdateProgress()
 	for (ListUpdateItem::iterator it = m_listUpdateItems.begin(); it != m_listUpdateItems.end(); ++it)
 	{
 		UpdateItem &item = *it;
-		m_filesListCtrl->SetItemText(item.n, item.nCol, item.strText.c_str(), false);
+		m_pMediaLib->SetResult(item.n, item.strResult.c_str());
 	}
 	bRedrawListCtrl = m_listUpdateItems.size() > 0;
 	m_listUpdateItems.clear();
@@ -530,10 +516,10 @@ void CPageLyricsTool::UpdateProgress()
 
 void CPageLyricsTool::ClearResult()
 {
-	for (int i = 0; i < m_filesListCtrl->GetItemCount(); i++)
+	for (int i = 0; i < m_filesListCtrl->GetRowCount(); i++)
 	{
-		m_filesListCtrl->SetItemImageIndex(i, IMG_NONE, false);
-		m_filesListCtrl->SetItemText(i, COL_RESULT, _T(""), false);
+		m_pMediaLib->SetItemImageIndex(i, IMG_NONE, false);
+		m_pMediaLib->SetResult(i, _T(""));
 	}
 }
 
@@ -569,76 +555,6 @@ void CPageLyricsTool::FromCurrentPlaylist()
 	}
 }
 
-void CPageLyricsTool::MergeToCurrentPlaylist()
-{
-	if (!m_pMediaLib)
-		return;
-
-	CMPAutoPtr<IPlaylist> playlist;
-
-	MLRESULT ret = g_Player.GetCurrentPlaylist(&playlist);
-	if (ret != ERR_OK)
-		return;
-
-	int count = m_pMediaLib->GetItemCount();
-	for (int i = 0; i < count; i++)
-	{
-		CMPAutoPtr<IMedia> media;
-		tstring location;
-
-		if (!m_pMediaLib->GetLocation(i, location))
-			break;
-
-		ret = playlist->GetItem(i, &media);
-		if (ret != ERR_OK)
-		{
-			// No more items, add it.
-			ret = g_Player.NewMedia(&media, location.c_str());
-			if (ret != ERR_OK)
-				return;
-
-			ret = playlist->InsertItem(i, media);
-			if (ret != ERR_OK)
-				return;
-
-			TCHAR		szLyrics[MAX_PATH];
-			if (g_LyricSearch.GetAssociateLyrics(location.c_str(), szLyrics, CountOf(szLyrics)))
-			{
-				if (_tcscmp(szLyrics, NONE_LYRCS) == 0)
-					m_filesListCtrl->SetItemText(i, COL_LYRICS, _TLT("No suitable lyrics for the song file"), true);
-				else
-					m_filesListCtrl->SetItemText(i, COL_LYRICS, GetLyricsDescription(szLyrics), true);
-			}
-
-			g_Player.SetPlaylistModified(true);
-
-			continue;
-		}
-
-		CXStr url;
-		if (media->GetSourceUrl(&url) != ERR_OK)
-			return;
-
-		if (_tcscmp(url.c_str(), location.c_str()) != 0)
-		{
-			// must be remove
-			playlist->RemoveItem(i);
-			g_Player.SetPlaylistModified(true);
-		}
-	}
-
-	if (count < playlist->GetCount())
-	{
-		// Remove extra items.
-		for (int i = count; i < playlist->GetCount(); i++)
-			playlist->RemoveItem(count);
-
-		g_Player.SetPlaylistModified(true);
-	}
-
-	ASSERT(count == playlist->GetCount());
-}
-
 void CPageLyricsTool::UpdateNewMediaList()
 {
 	if (!m_pMediaLib)
@@ -652,16 +568,14 @@ void CPageLyricsTool::UpdateNewMediaList()
 		pObjInst->GetParent()->RecalculateUIObjSizePos(pObjInst);
 	}
 
-	m_pSkin->EnterInDrawUpdate();
-	MergeToCurrentPlaylist();
-	m_pSkin->LeaveInDrawUpdate();
+	m_filesListCtrl->NotifyDataChanged();
 }
 
 void CPageLyricsTool::OnAdvDownloadAllLyrics()
 {
 //	ClearResult();
 //
-//	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+//	if (!m_pMediaLib || m_pMediaLib->GetRowCount() == 0)
 //	{
 //		m_pSkin->MessageOut(_TLT("Please add media files in the list."));
 //		return;
@@ -690,7 +604,7 @@ void CPageLyricsTool::OnAdvRemoveAllLyrics()
 {
 //	ClearResult();
 //
-//	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+//	if (!m_pMediaLib || m_pMediaLib->GetRowCount() == 0)
 //	{
 //		m_pSkin->MessageOut(_TLT("Please add media files in the list."));
 //		return;
@@ -716,7 +630,7 @@ void CPageLyricsTool::OnDownloadLyricsForiPod()
 {
 	ClearResult();
 
-	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+	if (!m_pMediaLib || m_pMediaLib->GetRowCount() == 0)
 	{
 		m_pSkin->MessageOut(_TLT("Please add media files in the list."));
 		return;
@@ -738,7 +652,7 @@ void CPageLyricsTool::OnRemoveEmbeddedLyrics()
 {
 	ClearResult();
 
-	if (!m_pMediaLib || m_pMediaLib->GetItemCount() == 0)
+	if (!m_pMediaLib || m_pMediaLib->GetRowCount() == 0)
 	{
 		m_pSkin->MessageOut(_TLT("Please add media files in the list."));
 		return;
@@ -778,7 +692,7 @@ void CPageLyricsTool::DoWork(ILyricsToolWork *pWork)
 	m_nProgress = 0;
 
 	pWork->OnBegin();
-	int nCount = m_pMediaLib->GetItemCount();
+	int nCount = m_pMediaLib->GetRowCount();
 	for (int i = 0; i < nCount; i++)
 	{
 		if (m_workStatus.IsCancel())

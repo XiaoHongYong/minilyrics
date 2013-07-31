@@ -49,8 +49,8 @@ public:
 	virtual int GetItemImageIndex(int row) { return -1; }
 	virtual bool SetItemImageIndex(int nItem, int nImageIndex, bool bRedraw = true) { return false; }
 
-	virtual LPCTSTR GetCellText(int row, int col) const = 0;
-	virtual CRawImage *GetCellImage(int row, int col) const = 0;
+	virtual LPCTSTR GetCellText(int row, int col) = 0;
+	virtual CRawImage *GetCellImage(int row, int col) = 0;
 
 protected:
 	CSkinListView *m_pView;
@@ -108,6 +108,8 @@ public:
 	virtual ~CSkinListView();
 
 	void SetDataSource(IListViewDataSource *pDataSource);
+	
+	void NotifyDataChanged();
 
 	void LoadColumnWidth(LPCTSTR szProperty);
 	void SaveColumnWidth(LPCTSTR szProperty);
@@ -143,6 +145,8 @@ public:
 	void IncreaseHeight(int nValue);
 
 	int GetContentHeight() const;
+
+	int GetRowCount() const;
 
 protected:
 	class CPaintUpdater
@@ -241,8 +245,6 @@ protected:
 	void DrawHeader(CRawGraph *pGraph);
 
 	void InvalidateItem(int nItem);
-
-	int GetRowCount() const;
 
 	virtual bool IsClickedOn(int row, int col, CColHeader *pHeader, int x, int y);
 

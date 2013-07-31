@@ -26,7 +26,6 @@
 		5F9FA0E21794D87900A6CAC2 /* ETEyeTunes.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0D81794D87900A6CAC2 /* ETEyeTunes.m */; };
 		5F9FA0E31794D87900A6CAC2 /* ETPlaylist.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0DA1794D87900A6CAC2 /* ETPlaylist.mm */; };
 		5F9FA0E41794D87900A6CAC2 /* ETTrack.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0DC1794D87900A6CAC2 /* ETTrack.m */; };
-		5F9FA0E51794D87900A6CAC2 /* ETTrackEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0DE1794D87900A6CAC2 /* ETTrackEnumerator.m */; };
 		5FA656FD1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FA656FC1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm */; };
 		5FB16205147017330084494F /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FB16204147017330084494F /* Cocoa.framework */; };
 		5FB1620F147017330084494F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5FB1620D147017330084494F /* InfoPlist.strings */; };
@@ -368,8 +367,6 @@
 		5F9FA0DA1794D87900A6CAC2 /* ETPlaylist.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = ETPlaylist.mm; path = ../../MacPluginiTunes/ETPlaylist.mm; sourceTree = "<group>"; };
 		5F9FA0DB1794D87900A6CAC2 /* ETTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ETTrack.h; path = ../../MacPluginiTunes/ETTrack.h; sourceTree = "<group>"; };
 		5F9FA0DC1794D87900A6CAC2 /* ETTrack.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ETTrack.m; path = ../../MacPluginiTunes/ETTrack.m; sourceTree = "<group>"; };
-		5F9FA0DD1794D87900A6CAC2 /* ETTrackEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ETTrackEnumerator.h; path = ../../MacPluginiTunes/ETTrackEnumerator.h; sourceTree = "<group>"; };
-		5F9FA0DE1794D87900A6CAC2 /* ETTrackEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ETTrackEnumerator.m; path = ../../MacPluginiTunes/ETTrackEnumerator.m; sourceTree = "<group>"; };
 		5F9FA0DF1794D87900A6CAC2 /* EyeTunes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EyeTunes.h; path = ../../MacPluginiTunes/EyeTunes.h; sourceTree = "<group>"; };
 		5F9FA0E01794D87900A6CAC2 /* EyeTunesEventCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EyeTunesEventCodes.h; path = ../../MacPluginiTunes/EyeTunesEventCodes.h; sourceTree = "<group>"; };
 		5FA656FC1747B5420029E1C5 /* DlgSaveEmbeddedLyrics.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DlgSaveEmbeddedLyrics.mm; sourceTree = "<group>"; };
@@ -618,8 +615,6 @@
 				5F9FA0DA1794D87900A6CAC2 /* ETPlaylist.mm */,
 				5F9FA0DB1794D87900A6CAC2 /* ETTrack.h */,
 				5F9FA0DC1794D87900A6CAC2 /* ETTrack.m */,
-				5F9FA0DD1794D87900A6CAC2 /* ETTrackEnumerator.h */,
-				5F9FA0DE1794D87900A6CAC2 /* ETTrackEnumerator.m */,
 				5F9FA0DF1794D87900A6CAC2 /* EyeTunes.h */,
 				5F9FA0E01794D87900A6CAC2 /* EyeTunesEventCodes.h */,
 			);
@@ -1351,7 +1346,6 @@
 				5F9FA0E21794D87900A6CAC2 /* ETEyeTunes.m in Sources */,
 				5F9FA0E31794D87900A6CAC2 /* ETPlaylist.mm in Sources */,
 				5F9FA0E41794D87900A6CAC2 /* ETTrack.m in Sources */,
-				5F9FA0E51794D87900A6CAC2 /* ETTrackEnumerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

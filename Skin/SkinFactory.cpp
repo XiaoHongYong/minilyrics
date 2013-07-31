@@ -596,6 +596,7 @@ int CSkinFactory::Init()
 	AddUIObjNewer(CSkinHoverActionButton);
 	AddUIObjNewer(CSkinComboBox);
 	AddUIObjNewer(CSkinListCtrl);
+	AddUIObjNewer(CSkinListView);
 	AddUIObjNewer(CSkinSeekCtrl);
 	AddUIObjNewer(CSkinStaticText);
 	AddUIObjNewer(CSkinTabButton);

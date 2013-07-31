@@ -9,6 +9,15 @@
 #import "MPlayerAppBase.h"
 #import "../../TagLib/TagLib.h"
 
+IMediaSource::~IMediaSource()
+{
+	for (size_t i = 0; i < m_vTracks.size(); i++)
+	{
+		delete m_vTracks[i];
+	}
+	m_vTracks.clear();
+}
+
 bool IMediaSource::GetBestMatchLyrics(int nIndex, tstring &lyrSrcPath)
 {
 	uint32	nMediaLength;
@@ -19,6 +28,102 @@ bool IMediaSource::GetBestMatchLyrics(int nIndex, tstring &lyrSrcPath)
 	return g_LyricSearch.GetBestMatchLyrics(location.c_str(), artist.c_str(), title.c_str(), lyrSrcPath);
 }
 
+void IMediaSource::RemoveItem(int nIndex)
+{
+	if (nIndex >= 0 && nIndex < (int)m_vTracks.size())
+	{
+		delete m_vTracks[nIndex];
+		m_vTracks.erase(m_vTracks.begin() + nIndex);
+	}
+}
+
+void IMediaSource::SetResult(int nIndex, LPCTSTR szResult)
+{
+	if (nIndex >= 0 && nIndex < (int)m_vTracks.size())
+	{
+		m_vTracks[nIndex]->result = szResult;
+	}
+}
+
+int IMediaSource::GetRowCount() const
+{
+	return (int)m_vTracks.size();
+}
+
+bool IMediaSource::IsRowSelected(int row) const
+{
+	return m_vTracks[row]->isSelected;
+}
+
+void IMediaSource::SetRowSelectionState(int nIndex, bool bSelected)
+{
+	m_vTracks[nIndex]->isSelected = bSelected;
+}
+
+int IMediaSource::GetItemImageIndex(int row)
+{
+	return m_vTracks[row]->imageIndex;
+}
+
+bool IMediaSource::SetItemImageIndex(int nItem, int nImageIndex, bool bRedraw)
+{
+	m_vTracks[nItem]->imageIndex = nImageIndex;
+	if (bRedraw)
+		m_pView->Invalidate();
+
+	return true;
+}
+
+tstring FormatMediaTitle(LPCTSTR szArtist, LPCTSTR szTitle);
+
+LPCTSTR GetLyricsDescription(LPCTSTR szLyrics)
+{
+	LRC_SOURCE_TYPE	lst = LyrSrcTypeFromName(szLyrics);
+	if (lst == LST_FILE)
+		return szLyrics;
+	return LyrSrcTypeToDesc(lst);
+}
+
+LPCTSTR IMediaSource::GetCellText(int row, int col)
+{
+	Item *item = m_vTracks[row];
+
+	if (col == COL_RESULT)
+	{
+		return item->result.c_str();
+	}
+	else if (col == COL_LYRICS)
+	{
+		if (item->lyrics.empty())
+		{
+			TCHAR		szLyrics[MAX_PATH];
+			if (g_LyricSearch.GetAssociateLyrics(GetLocation(row).c_str(), szLyrics, CountOf(szLyrics)))
+			{
+				if (_tcscmp(szLyrics, NONE_LYRCS) == 0)
+					item->lyrics = _TLT("No suitable lyrics for the song file");
+				else
+					item->lyrics = GetLyricsDescription(szLyrics);
+			}
+		}
+		return item->lyrics.c_str();
+	}
+	else
+		return "";
+	
+	//	item.location = [[track location] UTF8String];
+	//	item.album = [[track album] UTF8String];
+	//	item.artist = [[track artist] UTF8String];
+	//	item.title = [[track name] UTF8String];
+	//
+	//	item.duration = [track duration] * 1000;
+	//
+	
+}
+
+CRawImage *IMediaSource::GetCellImage(int row, int col)
+{
+	return NULL;
+}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -30,8 +135,7 @@ public:
 	
 	bool UpdateLibrary(tstring &err);
 	
-	virtual int GetItemCount();
-	virtual bool GetLocation(int nIndex, tstring &location);
+	virtual tstring GetLocation(int nIndex);
 	virtual bool GetMediaInfo(int nIndex, tstring &artist, tstring &album, tstring &title, tstring &location, uint32 &nMediaLength);
 	
 	virtual bool GetEmbeddedLyrics(int nIndex, tstring &lyrics);
@@ -39,31 +143,27 @@ public:
 	
 	virtual int RemoveEmbeddedLyrics(int nIndex);
 	
+	virtual LPCTSTR GetCellText(int row, int col);
+
 protected:
-	struct Item
+	class ItemT : public Item
 	{
-		tstring		location, artist, album, title;
-		uint32		duration;
-		ETTrack		*trackFile;
+	public:
+		ETTrack		*track;
+		
+		ItemT() { track = NULL; }
+		virtual ~ItemT() {
+			[track release];
+		}
 	};
-	typedef vector<Item>	VecTracks;
 	
-	virtual void RemoveItem(int nIndex);
-	
+	ETTrack *GetTrack(int index);
+
 protected:
-	virtual bool UpdateMediaInfo(Item &item);
-	
-protected:
-	VecTracks				m_vTracks;
 	EyeTunes				*m_iTunes;
+	ETPlaylist				*m_playlist;
 
 };
-
-
-IMediaSource *GetiTunesMediaSource()
-{
-	return new CiTunesMediaSource();
-}
 
 CiTunesMediaSource::CiTunesMediaSource() : IMediaSource(MST_ITUNES)
 {
@@ -72,7 +172,21 @@ CiTunesMediaSource::CiTunesMediaSource() : IMediaSource(MST_ITUNES)
 
 CiTunesMediaSource::~CiTunesMediaSource()
 {
+}
 
+ETTrack *CiTunesMediaSource::GetTrack(int index)
+{
+	if (index < 0 || index >= (int)m_vTracks.size())
+	{
+		ASSERT(0);
+		return NULL;
+	}
+	
+	ItemT *item = (ItemT*)m_vTracks[index];
+	if (item->track == NULL)
+		item->track = [m_playlist trackAtIndex:index];
+
+	return item->track;
 }
 
 bool CiTunesMediaSource::UpdateLibrary(tstring &err)
@@ -80,94 +194,49 @@ bool CiTunesMediaSource::UpdateLibrary(tstring &err)
 	if (m_iTunes == nil)
 		return false;
 	
-	ETPlaylist *playlist = [m_iTunes libraryPlaylist];
+	m_playlist = [m_iTunes libraryPlaylist];
+	int count = [m_playlist trackCount];
 
-	NSArray *tracks = [playlist tracks];
-	for (int i = 0; i < [tracks count]; i++)
+	for (int i = 0; i < count; i++)
 	{
-		ETTrack *track = [tracks objectAtIndex:i];
-		if (track == nil)
-			continue;
-
-		NSString *kind = [track kind];
-//		if (kind != ITTrackKindFile)
-//			continue;
-
-		NSString *location = [track location];
-		if (location == nil)
-			continue;
-
-		Item item;
-		item.trackFile = track;
-		UpdateMediaInfo(item);
+		ItemT *item = new ItemT;
 		m_vTracks.push_back(item);
 	}
 
 	return true;
 }
 
-int CiTunesMediaSource::GetItemCount()
+tstring CiTunesMediaSource::GetLocation(int nIndex)
 {
-	return (int)m_vTracks.size();
-}
+	ETTrack *track = GetTrack(nIndex);
+	if (track == NULL)
+		return _T("");
 
-bool CiTunesMediaSource::GetLocation(int nIndex, tstring &location)
-{
-	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
-	{
-		ASSERT(0);
-		return false;
-	}
-
-	Item &item = m_vTracks[nIndex];
-	location = item.location;
-
-	return true;
+	return [[track location] UTF8String];
 }
 
 bool CiTunesMediaSource::GetMediaInfo(int nIndex, tstring &artist, tstring &album, tstring &title, tstring &location, uint32 &nMediaLength)
 {
-	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
-	{
-		ASSERT(0);
+	ETTrack *track = GetTrack(nIndex);
+	if (track == NULL)
 		return false;
-	}
 
-	Item &item = m_vTracks[nIndex];
-	artist = item.artist;
-	album = item.album;
-	title = item.title;
-	location = item.location;
-	nMediaLength = item.duration;
-
-	return true;
-}
-
-bool CiTunesMediaSource::UpdateMediaInfo(Item &item)
-{
-	ETTrack *track = item.trackFile;
-
-	item.location = [[track location] UTF8String];
-	item.album = [[track album] UTF8String];
-	item.artist = [[track artist] UTF8String];
-	item.title = [[track name] UTF8String];
-	
-	item.duration = [track duration] * 1000;
+	artist = [[track artist] UTF8String];
+	album = [[track album] UTF8String];
+	title = [[track name] UTF8String];
+	location = [[track location] UTF8String];;
+	nMediaLength = [track duration] * 1000;
 
 	return true;
 }
 
 bool CiTunesMediaSource::GetEmbeddedLyrics(int nIndex, tstring &lyrics)
 {
-	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
-	{
-		ASSERT(0);
+	ETTrack *track = GetTrack(nIndex);
+	if (track == NULL)
 		return false;
-	}
 
-	ETTrack *trackFile = m_vTracks[nIndex].trackFile;
-
-	NSString *nsLyrics = [trackFile lyrics];
+	NSString *nsLyrics = [track lyrics];
 	if (nsLyrics == nil || [nsLyrics length] == 0)
 		return false;
 
@@ -178,41 +247,42 @@ bool CiTunesMediaSource::GetEmbeddedLyrics(int nIndex, tstring &lyrics)
 
 int CiTunesMediaSource::SetEmbeddedLyrics(int nIndex, tstring &lyrics)
 {
-	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
-	{
-		ASSERT(0);
-		return ERR_FALSE;
-	}
-	
-	ETTrack *trackFile = m_vTracks[nIndex].trackFile;
+	ETTrack *track = GetTrack(nIndex);
+	if (track == NULL)
+		return false;
 
-	[trackFile setLyrics: [NSString stringWithUTF8String:lyrics.c_str()]];
+	[track setLyrics: [NSString stringWithUTF8String:lyrics.c_str()]];
 
 	return ERR_OK;
 }
 
 int CiTunesMediaSource::RemoveEmbeddedLyrics(int nIndex)
 {
-	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
-	{
-		ASSERT(0);
-		return ERR_FALSE;
-	}
-	
 	tstring lyrics;
 	return SetEmbeddedLyrics(nIndex, lyrics);
 }
 
-void CiTunesMediaSource::RemoveItem(int nIndex)
+LPCTSTR CiTunesMediaSource::GetCellText(int row, int col)
 {
-	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
-	{
-		ASSERT(0);
-		return;
-	}
+	if (col != COL_MEDIA_FILE)
+		return IMediaSource::GetCellText(row, col);
 
-	[m_vTracks[nIndex].trackFile release];
-	m_vTracks.erase(m_vTracks.begin() + nIndex);
+	Item *item = m_vTracks[row];
+
+	if (item->title.empty())
+	{
+		ETTrack *track = GetTrack(row);
+		if (track == NULL)
+			return _T("");
+
+		item->title = FormatMediaTitle([[track artist] UTF8String], [[track name] UTF8String]);
+		if (item->title.empty())
+		{
+			item->title = FileGetTitle(GetLocation(row).c_str());
+		}
+	}
+	
+	return item->title.c_str();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -243,7 +313,7 @@ void CFileMediaSource::AddFolder(LPCTSTR szFolder, bool bIncludeSubFolder)
 				strFile = strDir + find.GetCurName();
 				if (!IsFileExist(strFile.c_str()))
 				{
-					m_vFiles.push_back(Item(strFile));
+					m_vTracks.push_back(new ItemF(strFile));
 				}
 			}
 		}
@@ -257,7 +327,7 @@ void CFileMediaSource::AddFiles(const V_Str &vFiles)
 		if (!IsFileExist(vFiles[i].c_str()))
 		{
 			tstring	str = vFiles[i];
-			m_vFiles.push_back(Item(str));
+			m_vTracks.push_back(new ItemF(str));
 		}
 	}
 }
@@ -267,55 +337,36 @@ void CFileMediaSource::AddFile(LPCTSTR szFile)
 	if (!IsFileExist(szFile))
 	{
 		tstring str = szFile;
-		m_vFiles.push_back(Item(str));
+		m_vTracks.push_back(new ItemF(str));
 	}
 }
 
-void CFileMediaSource::Close()
+tstring CFileMediaSource::GetLocation(int nIndex)
 {
-	m_vFiles.clear();
-}
+	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
+		return "";
+	
+	ItemF *item = (ItemF*)m_vTracks[nIndex];
 
-int CFileMediaSource::GetItemCount()
-{
-	return (int)m_vFiles.size();
-}
-
-bool CFileMediaSource::GetLocation(int nIndex, tstring &location)
-{
-	if (nIndex < 0 || nIndex >= (int)m_vFiles.size())
-		return false;
-
-	location = m_vFiles[nIndex].file;
-
-	return true;
+	return item->file;
 }
 
 bool CFileMediaSource::GetMediaInfo(int nIndex, tstring &artist, tstring &album, tstring &title, tstring &location, uint32 &nMediaLength)
 {
-	if (nIndex < 0 || nIndex >= (int)m_vFiles.size())
+	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
 		return false;
 
-	Item &item = m_vFiles[nIndex];
+	ItemF *item = (ItemF*)m_vTracks[nIndex];
 
-	if (!item.bInfoAvailable)
+	int nRet = CTagLib::GetTagFast(item->file.c_str(), &artist, &title, &album,
+		NULL, NULL, NULL, &nMediaLength);
+	if (nRet != ERR_OK || title.empty())
 	{
-		int nRet = CTagLib::GetTagFast(item.file.c_str(), &item.artist, &item.title, &item.album,
-			NULL, NULL, NULL, &item.nMediaLength);
-		if (nRet != ERR_OK || item.title.empty())
-		{
-			// Analysis file name
-			AnalysisLyricsFileNameEx(item.artist, item.title, item.file.c_str());
-		}
-		item.bInfoAvailable = true;
-		item.nMediaLength /= 1000;
+		// Analysis file name
+		AnalysisLyricsFileNameEx(artist, title, item->file.c_str());
 	}
-
-	location = item.file;
-	artist = item.artist;
-	album = item.album;
-	title = item.title;
-	nMediaLength = item.nMediaLength;
+	nMediaLength /= 1000;
+	location = item->file;
 
 	return true;
 }
@@ -324,19 +375,19 @@ bool CFileMediaSource::GetEmbeddedLyrics(int nIndex, tstring &lyrics)
 {
 	lyrics.clear();
 
-	if (nIndex < 0 || nIndex >= (int)m_vFiles.size())
+	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
 		return false;
 
-	Item &item = m_vFiles[nIndex];
+	ItemF *item = (ItemF*)m_vTracks[nIndex];
 
 	// Get ID3v2 USLT
 	CID3v2IF		id3v2(ED_SYSDEF);
 	int				nRet;
 
-	if (!IsFileExist(item.file.c_str()))
+	if (!IsFileExist(item->file.c_str()))
 		return false;
 
-	nRet = id3v2.Open(item.file.c_str(), false, false);
+	nRet = id3v2.Open(item->file.c_str(), false, false);
 	if (nRet == ERR_OK)
 	{
 		ID3v2UnsynchLyrics unsyncLyrics;
@@ -352,13 +403,13 @@ bool CFileMediaSource::GetEmbeddedLyrics(int nIndex, tstring &lyrics)
 // Save lyrics as id3v2 unsync lyrics.
 int CFileMediaSource::SetEmbeddedLyrics(int nIndex, tstring &lyrics)
 {
-	if (nIndex < 0 || nIndex >= (int)m_vFiles.size())
+	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
 		return ERR_FALSE;
-	Item &item = m_vFiles[nIndex];
 
+	ItemF *item = (ItemF*)m_vTracks[nIndex];
 	CID3v2IF		id3v2(ED_SYSDEF);
 
-	int nRet = id3v2.Open(item.file.c_str(), true, true);
+	int nRet = id3v2.Open(item->file.c_str(), true, true);
 	if (nRet != ERR_OK)
 		return nRet;
 
@@ -371,45 +422,49 @@ int CFileMediaSource::SetEmbeddedLyrics(int nIndex, tstring &lyrics)
 
 int CFileMediaSource::RemoveEmbeddedLyrics(int nIndex)
 {
-	if (nIndex < 0 || nIndex >= (int)m_vFiles.size())
+	if (nIndex < 0 || nIndex >= (int)m_vTracks.size())
 		return ERR_FALSE;
-	Item &item = m_vFiles[nIndex];
+	ItemF *item = (ItemF*)m_vTracks[nIndex];
 
 	int nRemovedCount = 0;
 	VecString vLyrNames;
 	vLyrNames.push_back(SZ_SONG_ID3V2_SYLT);
 	vLyrNames.push_back(SZ_SONG_ID3V2_USLT);
 
-	return CTagLib::RemoveEmbeddedLyrics(item.file.c_str(), vLyrNames, &nRemovedCount);
-}
-
-void CFileMediaSource::RemoveItem(int nIndex)
-{
-	if (nIndex < 0 || nIndex >= (int)m_vFiles.size())
-		return;
-
-	m_vFiles.erase(m_vFiles.begin() + nIndex);
-}
-
-void CFileMediaSource::ExpandMediaFiles(V_Str &vFiles)
-{
-	for (int i = 0; i < (int)vFiles.size(); ++i)
-	{
-		if (CTagLib::IsMediaTypeSupported(vFiles[i].c_str())
-			&& !IsFileExist(vFiles[i].c_str()))
-		{
-			m_vFiles.push_back(Item(vFiles[i]));
-		}
-	}
+	return CTagLib::RemoveEmbeddedLyrics(item->file.c_str(), vLyrNames, &nRemovedCount);
 }
 
 bool CFileMediaSource::IsFileExist(LPCTSTR szFile)
 {
-	for (int i = 0; i < (int)m_vFiles.size(); i++)
+	for (int i = 0; i < (int)m_vTracks.size(); i++)
 	{
-		if (_tcscmp(szFile, m_vFiles[i].file.c_str()) == 0)
+		if (_tcscmp(szFile, ((ItemF *)m_vTracks[i])->file.c_str()) == 0)
 			return true;
 	}
 
 	return false;
+}
+
+LPCTSTR CFileMediaSource::GetCellText(int row, int col)
+{
+	if (col != COL_MEDIA_FILE)
+		return IMediaSource::GetCellText(row, col);
+
+	Item *item = m_vTracks[row];
+	tstring &file = ((ItemF*)m_vTracks[row])->file;
+
+	if (item->title.empty())
+	{
+		item->title = FileGetTitle(file.c_str());
+	}
+	
+	return item->title.c_str();
+}
+
+IMediaSource *NewMediaSource(MediaSourceType type)
+{
+	if (type == MST_ITUNES)
+		return new CiTunesMediaSource();
+	else
+		return new CFileMediaSource();
 }

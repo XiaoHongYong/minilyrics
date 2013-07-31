@@ -61,7 +61,7 @@ void CMPlayerApp::Quit()
 	g_playerMgr.Quit();
 	
 #ifndef _MPLAYER
-	if (m_appModeQuitToStart != SA_IPOD_LYRICS_DOWNLOADER)
+	if (m_appModeQuitToStart == SA_IPOD_LYRICS_DOWNLOADER)
 		RestartToLyricsDownloader();
 #endif
 }

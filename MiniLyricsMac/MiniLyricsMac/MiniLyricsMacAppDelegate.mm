@@ -83,7 +83,11 @@ NSMenuItem *duplicateMenuItem(NSMenuItem *org) {
 	CMPlayerAppBase *pApp = CMPlayerAppBase::GetInstance();
 	pApp->Init();
 	
-	if (pApp->GetSkinFactory()->LoadMenu(pApp->GetMainWnd(), (CMLMenu **)&_menu, _T("MainWndMenu"))) {
+	LPCTSTR szMenu = _T("MainWndMenu");
+	if (pApp->GetCurrentAppMode() == SA_IPOD_LYRICS_DOWNLOADER)
+		szMenu = _T("iPodLyricsDownloader");
+	
+	if (pApp->GetSkinFactory()->LoadMenu(pApp->GetMainWnd(), (CMLMenu **)&_menu, szMenu)) {
 		_menu->UpdateMenuStatus();
 
 		NSMenu *mainMenu = [NSApp mainMenu];

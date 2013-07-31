@@ -29,7 +29,7 @@ CSkinListCtrl::~CSkinListCtrl()
 
 int CSkinListCtrl::GetRowCount() const
 {
-	return m_vRows.size();
+	return (int)m_vRows.size();
 }
 
 bool CSkinListCtrl::IsRowSelected(int nRow) const
@@ -43,14 +43,14 @@ bool CSkinListCtrl::IsRowSelected(int nRow) const
 	return false;
 }
 
-int CSkinListCtrl::GetItemText(int nItem, int nSubItem, LPTSTR lpszText, int nLen) const
+int CSkinListCtrl::GetItemText(int nItem, int nSubItem, LPTSTR lpszText, int nLen)
 {
 	ASSERT(nItem >= 0 && nItem < (int)m_vRows.size());
 	LPCTSTR szText = GetCellText(nItem, nSubItem);
 	if (szText != NULL)
 	{
 		_tcscpy_safe(lpszText, nLen, szText);
-		return _tcslen(szText);
+		return (int)_tcslen(szText);
 	}
 
 	EmptyStr(lpszText);
@@ -59,7 +59,7 @@ int CSkinListCtrl::GetItemText(int nItem, int nSubItem, LPTSTR lpszText, int nLe
 }
 
 
-int CSkinListCtrl::GetItemText(int nItem, int nSubItem, tstring &strText) const
+int CSkinListCtrl::GetItemText(int nItem, int nSubItem, tstring &strText)
 {
 	ASSERT(nItem >= 0 && nItem < (int)m_vRows.size());
 	LPCTSTR szText = GetCellText(nItem, nSubItem);
@@ -276,7 +276,7 @@ void CSkinListCtrl::SetItemData(int nItem, UINT nItemData)
 	}
 }
 
-LPCTSTR CSkinListCtrl::GetCellText(int row, int col) const
+LPCTSTR CSkinListCtrl::GetCellText(int row, int col)
 {
 	ASSERT(row >= 0 && row < m_vRows.size());
 	if (row < 0 || row >= (int)m_vRows.size())
@@ -290,7 +290,7 @@ LPCTSTR CSkinListCtrl::GetCellText(int row, int col) const
 	return item->text.c_str();
 }
 
-CRawImage *CSkinListCtrl::GetCellImage(int row, int col) const
+CRawImage *CSkinListCtrl::GetCellImage(int row, int col)
 {
 	ASSERT(row >= 0 && row < m_vRows.size());
 	if (row < 0 || row >= (int)m_vRows.size())

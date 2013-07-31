@@ -84,8 +84,8 @@ public:
 
 	virtual void AddImageColumn(LPCTSTR szCol, int nWidth, bool bClickable = false) { AddColumn(szCol, nWidth, CColHeader::TYPE_IMAGE, bClickable); }
 
-	int GetItemText(int nItem, int nSubItem, LPTSTR lpszText, int nLen) const;
-	int GetItemText(int nItem, int nSubItem, tstring &strText) const;
+	int GetItemText(int nItem, int nSubItem, LPTSTR lpszText, int nLen);
+	int GetItemText(int nItem, int nSubItem, tstring &strText);
 	virtual bool SetItemText(int nItem, int nSubItem, LPCTSTR lpszText, bool bRedraw = true);
 
 	virtual bool SetItemImage(int nItem, int nSubItem, PRAW_IMAGE_DATA hImage, bool bRedraw = true);
@@ -115,8 +115,8 @@ public:
 	virtual int GetItemImageIndex(int row);
 	virtual bool SetItemImageIndex(int nItem, int nImageIndex, bool bRedraw = true);
 
-	virtual LPCTSTR GetCellText(int row, int col) const;
-	virtual CRawImage *GetCellImage(int row, int col) const;
+	virtual LPCTSTR GetCellText(int row, int col);
+	virtual CRawImage *GetCellImage(int row, int col);
 
 protected:
 	Item *NewItem(int nCol);

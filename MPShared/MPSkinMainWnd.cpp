@@ -32,7 +32,7 @@ void CMPSkinMainWndBase::OnDestroy()
 {
 	IEventHandler::UnregisterHandler();
 
-#ifndef _WIN32_WCE
+#ifdef _WIN32
 	// Save iconic status
 	g_Profile.WriteInt(_T("Minimized"), IsIconic());
 #endif

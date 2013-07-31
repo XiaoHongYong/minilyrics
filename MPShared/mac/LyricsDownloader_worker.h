@@ -96,8 +96,7 @@ public:
 		tstring strLyrSrcPath;
 		if (m_pMediaLib->GetBestMatchLyrics(nIndex, strLyrSrcPath))
 		{
-			tstring strMediaSrc;
-			m_pMediaLib->GetLocation(nIndex, strMediaSrc);
+			tstring strMediaSrc = m_pMediaLib->GetLocation(nIndex);
 
 			if (OnLocalLyricsFound(nIndex, strMediaSrc.c_str(), strLyrSrcPath.c_str()) != ERR_NOT_FOUND)
 				return;
@@ -284,7 +283,7 @@ protected:
 	{
 		// Open lyrics
 		CMLData lyrData;
-		int nRet = lyrData.OpenLyrics(_T(""), 0, (LPBYTE)bufLyr.c_str(), bufLyr.size());
+		int nRet = lyrData.OpenLyrics(_T(""), 0, (LPBYTE)bufLyr.c_str(), (int)bufLyr.size());
 		if (nRet != ERR_OK)
 		{
 			UpdateItemStatus(nMediaIndex, SS_ERROR, ERROR2STR_LOCAL(nRet));
@@ -333,7 +332,7 @@ public:
 			strMsg += _T("\n\n");
 		}
 
-		strMsg += CStrPrintf(_TLT("%d of %d embedded lyrics are removed."), m_nCountEmbeddedRemoved, m_pMediaLib->GetItemCount()).c_str();
+		strMsg += CStrPrintf(_TLT("%d of %d embedded lyrics are removed."), m_nCountEmbeddedRemoved, m_pMediaLib->GetRowCount()).c_str();
 
 		if (m_nCountFailed > 0)
 		{
@@ -362,12 +361,7 @@ public:
 
 	virtual void OnProcessItem(int nIndex)
 	{
-		tstring strMediaFile;
-		if (!m_pMediaLib->GetLocation(nIndex, strMediaFile))
-		{
-			ASSERT(0);
-			return;
-		}
+		tstring strMediaFile = m_pMediaLib->GetLocation(nIndex);
 
 		if (m_vEmbeddedLyrNames.size() > 0)
 		{
@@ -413,7 +407,7 @@ public:
 		CRemoveEmbeddedLyrics::OnEnd(strMsg);
 
 		strMsg += _T("\n");
-		strMsg += CStrPrintf(_TLT("%d of %d lyrics files are removed."), m_nCountFileRemoved, m_pMediaLib->GetItemCount()).c_str();
+		strMsg += CStrPrintf(_TLT("%d of %d lyrics files are removed."), m_nCountFileRemoved, m_pMediaLib->GetRowCount()).c_str();
 	}
 
 	bool			m_bRemoveAssociateLyrFile;
@@ -550,8 +544,8 @@ protected:
 
 	virtual void OnLyricsDownloaded(int nMediaIndex, LPCTSTR szLyrSaveName, string &bufLyr)
 	{
-		tstring strMediaFile;
-		if (!m_pMediaLib->GetLocation(nMediaIndex, strMediaFile))
+		tstring strMediaFile = m_pMediaLib->GetLocation(nMediaIndex);
+		if (strMediaFile.empty())
 		{
 			ASSERT(0);
 			return;

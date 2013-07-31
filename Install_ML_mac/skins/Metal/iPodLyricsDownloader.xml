@@ -12,16 +12,9 @@
 		<Container Name="Caption" Rect="0,0,w,110" TranslucencyWithSkin="FALSE">
 			<Property Name="BgImage" Image="frame.png" ImageRect="0,0,425,110" HorzExtendPos="7,418" BlendPixMode="copy"/>
 
-			<MenuBar Rect="13,8,w/2-25,20" Name="Menu"
-					 FontName="Verdana"
-			   FontHeight="14" FontBold="false" TextColor="#000000" TextOutlinedColor="#FFFFFF"
-			   TextOutlined="TRUE" TextColorHover="#202020" TextOutlinedColorHover="#FFFFFF"
-			   TextColorPressed="#FFFFFF" TextOutlinedColorPressed="#000000"
-			   BgColorPressed="#D0D0D0" BgPressedAlpha="127"/>
-
-			<Text ID="ID_CAPTION" Rect="w/2,8,w/2-10-60-10,20" CaptionText="true" FontName="Verdana"
+			<Text ID="ID_CAPTION" Rect="100,8,w - 200,20" CaptionText="true" FontName="Verdana"
 				FontHeight="16" FontBold="false" TextColor="#FFFFFF" TextOutlinedColor="#000000" 
-				TextOutlined="true" LeftMargin="0" AlignText="AT_LEFT | AT_VCENTER"/>
+				TextOutlined="true" LeftMargin="0" AlignText="AT_CENTER | AT_VCENTER"/>
 			<Toolbar ID="CID_TB_SYSBT" Rect="w-10-60,10,60,16" 
 				 Image="caption_btn.png" enablehover="TRUE" units_x="16"
 				 blank_x="-1" blank_cx="16" seperator_x="0" seperator_cx="10"
@@ -78,7 +71,7 @@
 			<ResizableLinearContainer Name="Body" Rect="1,1,w-2,h-2" BgColor="#7F7F7F" SeparatorThickness="2" Orientation="Horizontal">
 				<Container.LyricsTool Rect=",,200,108" MinWidth="200" MinHeight="108"
 						LayoutParams="match_parent_height" Weight="1">
-					<NormalPlaylist Rect="0,0,w,h" DrawHeader="true" EnableBorder="false"/>
+					<ListView Rect="0,0,w,h" ID="CID_LISTVIEW" DrawHeader="true" EnableBorder="false"/>
 				</Container.LyricsTool>
 				<DecorativeContainer Name="MediaInfo" Width="200" Height="108" MinWidth="200" MinHeight="108" LayoutParams="match_parent_height">
 					<LyricsShow ID="ID_LYRICS_SHOW" Rect="0,0,w,h" SetSkinBg="false"

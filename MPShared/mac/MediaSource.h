@@ -6,18 +6,17 @@ enum MediaSourceType
 	MST_FILES,
 };
 
-class IMediaSource
+class IMediaSource : public IListViewDataSource
 {
 public:
 	IMediaSource(MediaSourceType type) : m_type(type) { }
-	virtual ~IMediaSource() { }
+	virtual ~IMediaSource();
 	
 	virtual bool UpdateLibrary(tstring &err) { return true; }
 
 	MediaSourceType GetType() const { return m_type; }
 
-	virtual int GetItemCount() = 0;
-	virtual bool GetLocation(int nIndex, tstring &location) = 0;
+	virtual tstring GetLocation(int nIndex) = 0;
 	virtual bool GetMediaInfo(int nIndex, tstring &artist, tstring &album, tstring &title, tstring &location, uint32 &nMediaLength) = 0;
 
 	virtual bool GetEmbeddedLyrics(int nIndex, tstring &lyrics) = 0;
@@ -27,56 +26,85 @@ public:
 
 	virtual bool GetBestMatchLyrics(int nIndex, tstring &lyrSrcPath);
 
-	virtual void RemoveItem(int nIndex) = 0;
+	virtual void RemoveItem(int nIndex);
+
+	virtual void SetResult(int nIndex, LPCTSTR szResult);
+
+
+	//
+	// Common Methods for IListViewDataSource
+	//
+
+	virtual int GetRowCount() const;
+	
+	virtual bool IsRowSelected(int row) const;
+	virtual void SetRowSelectionState(int nIndex, bool bSelected);
+	
+	virtual int GetItemImageIndex(int row);
+	virtual bool SetItemImageIndex(int nItem, int nImageIndex, bool bRedraw = true);
+	
+	virtual LPCTSTR GetCellText(int row, int col);
+	virtual CRawImage *GetCellImage(int row, int col);
+
+protected:
+	class Item
+	{
+	public:
+		int imageIndex;
+		bool isSelected;
+		tstring		result, lyrics;
+		tstring		title;
+		
+		Item() { imageIndex = 0; isSelected = false; }
+		virtual ~Item() { }
+
+	};
+
+	typedef vector<Item *>	VecTracks;
+
+	enum
+	{
+		COL_MEDIA_FILE,
+		COL_RESULT,
+		COL_LYRICS,
+	};
 
 protected:
 	MediaSourceType		m_type;
+	VecTracks			m_vTracks;
 
 };
-
-IMediaSource *GetiTunesMediaSource();
 
 class CFileMediaSource : public IMediaSource
 {
 public:
 	CFileMediaSource() : IMediaSource(MST_FILES) { }
-
+	
 	void AddFolder(LPCTSTR szFolder, bool bIncludeSubFolder);
 	void AddFiles(const V_Str &vFiles);
 	void AddFile(LPCTSTR szFile);
-
-	virtual void Close();
-
-	virtual int GetItemCount();
-	virtual bool GetLocation(int nIndex, tstring &location);
+	
+	virtual tstring GetLocation(int nIndex);
 	virtual bool GetMediaInfo(int nIndex, tstring &artist, tstring &album, tstring &title, tstring &location, uint32 &nMediaLength);
-
+	
 	virtual bool GetEmbeddedLyrics(int nIndex, tstring &lyrics);
 	virtual int SetEmbeddedLyrics(int nIndex, tstring &lyrics);
-
+	
 	virtual int RemoveEmbeddedLyrics(int nIndex);
 
-	virtual void RemoveItem(int nIndex);
-
 protected:
-	void ExpandMediaFiles(V_Str &vFiles);
 	bool IsFileExist(LPCTSTR szFile);
 
+	virtual LPCTSTR GetCellText(int row, int col);
+
 protected:
-	struct Item
+	class ItemF : public Item
 	{
-		tstring		file, artist, album, title;
-		bool		bInfoAvailable;
-		uint32		nMediaLength;
-
-		Item(tstring &file) {
-			this->bInfoAvailable = false;
-			this->file = file;
-			this->nMediaLength = 0;
-		}
+	public:
+		ItemF(tstring &file) { this->file = file; }
+		tstring		file;
 	};
-	typedef vector<Item>		VecItems;
-
-	VecItems				m_vFiles;
 
 };
+
+IMediaSource *NewMediaSource(MediaSourceType type);
