@@ -224,8 +224,11 @@ bool CiTunesMediaSource::GetMediaInfo(int nIndex, tstring &artist, tstring &albu
 	artist = [[track artist] UTF8String];
 	album = [[track album] UTF8String];
 	title = [[track name] UTF8String];
-	location = [[track location] UTF8String];;
+	location = [[track location] UTF8String];
 	nMediaLength = [track duration] * 1000;
+	
+	if (artist.empty() && title.find('-') != -1)
+		AnalysisLyricsFileNameEx(artist, title, location.c_str());
 
 	return true;
 }

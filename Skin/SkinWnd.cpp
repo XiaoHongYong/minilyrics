@@ -2602,6 +2602,8 @@ void CSkinWnd::OnTimerAnimation()
 		else
 			++it;
 	}
+	
+	InvalidateRect();
 
 	if (m_listAnimations.empty())
 		KillTimer(TIMER_ID_ANIMATION);

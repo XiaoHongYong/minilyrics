@@ -56,17 +56,10 @@ NSArray *SetStrToExtArray(SetString &setExt)
 
 CFileOpenDlg::CFileOpenDlg(LPCTSTR szTitle, LPCTSTR szFile, LPCTSTR szFilter, int nDefFileType, bool bAllowMultiSel)
 {
-	if (bAllowMultiSel)
-		m_nBufLen = 1024 * 10;
-	else
-		m_nBufLen = MAX_PATH;
-
 	m_bAllowMultiSel = bAllowMultiSel;
-	m_szFile = new TCHAR[m_nBufLen];
-	EmptyStr(m_szFile);
 
 	if (szFile)
-		_tcscpy_safe(m_szFile, m_nBufLen, szFile);
+		m_vFiles.push_back(szFile);
 	
 	if (szFilter)
 		ExtFiltersToSet(szFilter, m_setExt);
@@ -74,7 +67,6 @@ CFileOpenDlg::CFileOpenDlg(LPCTSTR szTitle, LPCTSTR szFile, LPCTSTR szFilter, in
 
 CFileOpenDlg::~CFileOpenDlg()
 {
-	delete[] m_szFile;
 }
 
 int CFileOpenDlg::DoModal(CBaseWnd *pWndParent)
@@ -87,11 +79,13 @@ int CFileOpenDlg::DoModal(CBaseWnd *pWndParent)
 	// Enable the selection of directories in the dialog.
 	[openDlg setCanChooseDirectories:NO];
 
-	[openDlg setAllowsMultipleSelection:NO];
+	[openDlg setAllowsMultipleSelection: m_bAllowMultiSel ? YES : NO];
 	
-	[openDlg setDirectoryURL:[NSURL URLWithString:[NSString stringWithUTF8String:m_szFile]]];
+	// [openDlg setDirectoryURL:[NSURL URLWithString:[NSString stringWithUTF8String:m_szFile]]];
 
 	[openDlg setAllowedFileTypes:SetStrToExtArray(m_setExt)];
+
+	m_vFiles.clear();
 
 	if ([openDlg runModal] == NSOKButton)
 	{
@@ -101,9 +95,7 @@ int CFileOpenDlg::DoModal(CBaseWnd *pWndParent)
 		for(int i = 0; i < [files count]; i++ )
 		{
 			NSString* fileName = [files objectAtIndex:i];
-			
-			_tcscpy_safe(m_szFile, m_nBufLen, [fileName UTF8String]);
-			break;
+			m_vFiles.push_back([fileName UTF8String]);
 		}
 		
 		return IDOK;
@@ -114,34 +106,13 @@ int CFileOpenDlg::DoModal(CBaseWnd *pWndParent)
 
 LPCTSTR CFileOpenDlg::GetOpenFile()
 {
-	return m_szFile;
+	if (m_vFiles.size() > 0)
+		return m_vFiles[0].c_str();
+	else
+		return _T("");
 }
 
 void CFileOpenDlg::GetOpenFile(vector<tstring> &vFiles)
 {
-	if (m_bAllowMultiSel)
-	{
-		LPCTSTR		szText = m_szFile;
-		tstring		strDir;
-
-		strDir = m_szFile;
-		DirStringFormat(strDir);
-
-		while (*szText != '\0')
-			szText++;
-		szText++;
-
-		while (*szText)
-		{
-			vFiles.push_back(strDir + szText);
-			while (*szText != '\0')
-				szText++;
-			szText++;
-		}
-
-		if (vFiles.empty())
-			vFiles.push_back(m_szFile);
-	}
-	else
-		vFiles.push_back(m_szFile);
+	vFiles = m_vFiles;
 }

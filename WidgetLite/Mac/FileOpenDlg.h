@@ -25,8 +25,7 @@ public:
 	void GetOpenFile(vector<tstring> &vFiles);
 
 public:
-	LPTSTR			m_szFile;
-	int				m_nBufLen;
+	VecString		m_vFiles;
 	bool			m_bAllowMultiSel;
 	SetString		m_setExt;
 
