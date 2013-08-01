@@ -8,7 +8,7 @@
 class CPlayerEventDispatcher
 {
 public:
-	CPlayerEventDispatcher() { m_nTimeOutUpdateLyr = 40; }
+	CPlayerEventDispatcher();
 	~CPlayerEventDispatcher() { }
 	
 	void Init()
@@ -38,14 +38,13 @@ public:
 		StartLyrDrawUpdate();
 	}
 	
-	void StartLyrDrawUpdate()
-	{}
+	void StartLyrDrawUpdate();
 	
-	void StopLyrDrawUpdate()
-	{}
+	void StopLyrDrawUpdate();
 
 protected:
 	int			m_nTimeOutUpdateLyr;
+	void *		m_pInternal;
 	
 };
 

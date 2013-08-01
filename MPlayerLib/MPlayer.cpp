@@ -17,7 +17,9 @@
 #include "linux/MOSoundCard.h"
 #endif
 
-#ifndef _MAC_OSX
+#ifdef _MAC_OSX
+#include "MDAVPlayer.h"
+#else
 // #include "MOAnalysis.h"
 #include "MDRow.h"
 #include "MDWave.h"
@@ -26,7 +28,7 @@
 // #include "DspDemo.h"
 #include "MORaw.h"
 #include "../MPlayer-Plugins/Dsp_SuperEQ/dsp_supereq.h"
-#endif // #ifndef _MAC_OSX
+#endif // #ifdef _MAC_OSX
 
 #define SIZE_INC (1024 * 4) 
 
@@ -317,9 +319,13 @@ MLRESULT CMPluginManagerAgent::DetectPlugins()
 	//
 	// Register internal plugins
 	//
-#ifndef _MAC_OSX
 	IMediaDecode	*pDecoder;
-
+	
+#ifdef _MAC_OSX
+	pDecoder = new CMDAVPlayer;
+	OnInternalDecoderRegister(pDecoder);
+	pDecoder->Release();
+#else
 #ifdef _MPLAYER
 	IMPlayer *player = NULL;
 	CMPlayer::GetInstance(&player);
@@ -462,16 +468,17 @@ CMPlayer::CMPlayer()
 
 	m_state = PS_STOPED;
 
-#ifndef _MAC_OSX
+#ifdef _MAC_OSX
+	m_pMDAgent = new CMDAVPlayer();
+#else // #ifdef _MAC_OSX
 
 #ifdef _MPLAYER
 	m_pMDAgent = new CMDAgent();
 #else
 	m_pMDAgent = new CMDWmpCore;
 #endif
+#endif // #ifdef _MAC_OSX
 	m_pMDAgent->Init(this);
-
-#endif // #ifndef _MAC_OSX
 
 	m_pMOAgent = new CMOAgent;
 	m_pMOAgent->Init(this);

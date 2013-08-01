@@ -28,6 +28,8 @@
 		5F2BD51A149623F1003E7F5C /* stdafx.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F2BD4FA149623F1003E7F5C /* stdafx.h */; };
 		5F2BD59714963C09003E7F5C /* fft.c in Sources */ = {isa = PBXBuildFile; fileRef = 5F2BD59514963C09003E7F5C /* fft.c */; };
 		5F2BD59814963C09003E7F5C /* fft.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F2BD59614963C09003E7F5C /* fft.h */; };
+		5FCD5B9817A95168004FD253 /* MDAVPlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FCD5B9617A95168004FD253 /* MDAVPlayer.h */; };
+		5FCD5B9917A95168004FD253 /* MDAVPlayer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FCD5B9717A95168004FD253 /* MDAVPlayer.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +58,8 @@
 		5F2BD4FA149623F1003E7F5C /* stdafx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stdafx.h; sourceTree = SOURCE_ROOT; };
 		5F2BD59514963C09003E7F5C /* fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fft.c; sourceTree = SOURCE_ROOT; };
 		5F2BD59614963C09003E7F5C /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = SOURCE_ROOT; };
+		5FCD5B9617A95168004FD253 /* MDAVPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MDAVPlayer.h; path = mac/MDAVPlayer.h; sourceTree = SOURCE_ROOT; };
+		5FCD5B9717A95168004FD253 /* MDAVPlayer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = MDAVPlayer.mm; path = mac/MDAVPlayer.mm; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +113,7 @@
 		5F2BD4CC14962301003E7F5C /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				5FCD5B9517A95157004FD253 /* mac */,
 				5F2BD59514963C09003E7F5C /* fft.c */,
 				5F2BD59614963C09003E7F5C /* fft.h */,
 				5F2BD4DF149623F1003E7F5C /* IMPlayer.h */,
@@ -134,6 +139,15 @@
 			path = MPlayerLib;
 			sourceTree = "<group>";
 		};
+		5FCD5B9517A95157004FD253 /* mac */ = {
+			isa = PBXGroup;
+			children = (
+				5FCD5B9617A95168004FD253 /* MDAVPlayer.h */,
+				5FCD5B9717A95168004FD253 /* MDAVPlayer.mm */,
+			);
+			name = mac;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -152,6 +166,7 @@
 				5F2BD519149623F1003E7F5C /* Playlist.h in Headers */,
 				5F2BD51A149623F1003E7F5C /* stdafx.h in Headers */,
 				5F2BD59814963C09003E7F5C /* fft.h in Headers */,
+				5FCD5B9817A95168004FD253 /* MDAVPlayer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,6 +229,7 @@
 				5F2BD516149623F1003E7F5C /* MPTools.cpp in Sources */,
 				5F2BD518149623F1003E7F5C /* Playlist.cpp in Sources */,
 				5F2BD59714963C09003E7F5C /* fft.c in Sources */,
+				5FCD5B9917A95168004FD253 /* MDAVPlayer.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

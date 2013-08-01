@@ -35,8 +35,13 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 - (void) mouseDown:(NSEvent *)theEvent {
 	mInitPt = [theEvent locationInWindow];
 
-	mBaseWnd->OnLButtonDown((UINT)[theEvent modifierFlags],
-							NSPointToCPoint(mInitPt, [self frame].size.height));
+	UINT flags = (UINT)[theEvent modifierFlags];
+	CPoint point = NSPointToCPoint(mInitPt, [self frame].size.height);
+	
+	if ([theEvent clickCount] > 1)
+		mBaseWnd->OnLButtonDblClk(flags, point);
+	else
+		mBaseWnd->OnLButtonDown(flags, point);
 }
 
 - (void) mouseUp:(NSEvent *)theEvent {
@@ -45,8 +50,10 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 }
 
 - (void) rightMouseDown:(NSEvent *)theEvent {
-	mBaseWnd->OnRButtonDown((UINT)[theEvent modifierFlags],
-						  NSPointToCPoint([theEvent locationInWindow], [self frame].size.height));
+	UINT flags = (UINT)[theEvent modifierFlags];
+	CPoint point = NSPointToCPoint([theEvent locationInWindow], [self frame].size.height);
+
+	mBaseWnd->OnRButtonDown(flags, point);
 }
 
 - (void) rightMouseUp:(NSEvent *)theEvent {

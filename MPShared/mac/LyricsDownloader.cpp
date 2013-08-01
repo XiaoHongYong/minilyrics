@@ -41,7 +41,7 @@ bool ConvertBufToTextLyrics(string &buf, tstring &lyrics)
 
 #define SZ_NO_SUITABLE_LYRICS		_T("**NL")
 
-class CPageLyricsTool : public CSkinContainer, public ILyricsToolWork::IUpdateNotify
+class CPageLyricsTool : public CSkinContainer, public ILyricsToolWork::IUpdateNotify,  IUIObjNotifyHandler
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
@@ -157,7 +157,12 @@ protected:
 		m_pSkin->SetUIObjectVisible(UID_INSTRUCTION, false, false);
 		m_pSkin->SetUIObjectVisible(UID_MEDIA_INFO, true, false);
 	}
+	
+	void PlayItem(int nIndex, bool playNow);
 
+	virtual void OnUIObjNotify(IUIObjNotify *pNotify);
+
+	
 	friend class CRunnableDoWork;
 	friend class CRunnableUpdateiTunesMediaLib;
 
@@ -181,6 +186,37 @@ protected:
 };
 
 UIOBJECT_CLASS_NAME_IMP(CPageLyricsTool, _T("Container.LyricsTool"));
+
+
+void CPageLyricsTool::PlayItem(int nIndex, bool playNow)
+{
+	if (m_pMediaLib == NULL)
+		return;
+	
+	uint32	nMediaLength;
+	tstring artist, album, title, location;
+	if (!m_pMediaLib->GetMediaInfo(nIndex, artist, album, title, location, nMediaLength))
+		return;
+	
+	if (IsFileExist(location.c_str()))
+	{
+		g_Player.ClearPlaylist();
+		g_Player.AddToPlaylist(location.c_str());
+		
+		if (playNow)
+			g_Player.Play();
+	}
+}
+
+void CPageLyricsTool::OnUIObjNotify(IUIObjNotify *pNotify)
+{
+	if (pNotify->nID != CID_LISTVIEW)
+		return;
+	
+	CSkinListCtrlEventNotify *pListViewNotify = (CSkinListCtrlEventNotify*)pNotify;
+	if (pListViewNotify->cmd == CSkinListCtrlEventNotify::C_DBL_CLICK)
+		PlayItem(pListViewNotify->nClickOnRow, true);
+}
 
 void CPageLyricsTool::OnCreate()
 {
@@ -219,6 +255,8 @@ void CPageLyricsTool::OnCreate()
 		m_pSkin->SetUIObjectVisible(UID_INSTRUCTION, true, false);
 		m_pSkin->SetUIObjectVisible(UID_MEDIA_INFO, false, false);
 	}
+	
+	GetSkinWnd()->RegisterUIObjNotifyHandler(CID_LISTVIEW, this);
 
 /*	if (!IsEmptyString(g_Player.GetSrcMedia()))
 	{
@@ -421,6 +459,10 @@ bool CPageLyricsTool::OnCustomCommand(int nId)
 	else if (nId == CMD_PLAYPAUSE)
 	{
 		HideInstructions();
+
+		CMPAutoPtr<IMedia> media;
+		if (g_Player.GetIMPlayer()->GetCurrentMedia(&media) != ERR_OK || media == NULL)
+			PlayItem(0, false);
 		return false;
 	}
 	else if (nId == CMD_IMPORT)

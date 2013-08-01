@@ -247,6 +247,7 @@ public:
 protected:
 	friend class CMDAgent;
 	friend class CMDWmpCore;
+	friend class CMDAVPlayer;
 
 	bool				m_bAutoPlayNext;
 	PLAYER_STATE		m_state;

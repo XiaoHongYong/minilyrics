@@ -48,6 +48,9 @@
 		5FBCCDCC14851D0F00D7C64A /* libMLProtocolMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCD2214851B1600D7C64A /* libMLProtocolMac.a */; };
 		5FBCCDCD14851D0F00D7C64A /* libUtilsMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCCB91485198900D7C64A /* libUtilsMac.a */; };
 		5FBCCF74148A1B1900D7C64A /* libSkinMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FBCCF71148A1AF000D7C64A /* libSkinMac.a */; };
+		5FCD5B9B17A9E309004FD253 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FCD5B9A17A9E309004FD253 /* AVFoundation.framework */; };
+		5FCD5B9D17A9E347004FD253 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FCD5B9C17A9E347004FD253 /* CoreMedia.framework */; };
+		5FCD5B9F17AAAFA6004FD253 /* PlayerEventDispatcher.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FCD5B9E17AAAFA6004FD253 /* PlayerEventDispatcher.mm */; };
 		5FDC564A148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC5599148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp */; };
 		5FDC564B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC559B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp */; };
 		5FDC564C148A1F1B00C74E6A /* DlgAbout.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDC559D148A1F1B00C74E6A /* DlgAbout.cpp */; };
@@ -400,6 +403,9 @@
 		5FBCCD1A14851B1500D7C64A /* MLProtocolMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLProtocolMac.xcodeproj; path = ../MLProtocol/MLProtocolMac.xcodeproj; sourceTree = "<group>"; };
 		5FBCCD8814851C4900D7C64A /* MLLibMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLLibMac.xcodeproj; path = ../MLLib/MLLibMac.xcodeproj; sourceTree = "<group>"; };
 		5FBCCF69148A1AEF00D7C64A /* SkinMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SkinMac.xcodeproj; path = ../Skin/SkinMac.xcodeproj; sourceTree = "<group>"; };
+		5FCD5B9A17A9E309004FD253 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		5FCD5B9C17A9E347004FD253 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		5FCD5B9E17AAAFA6004FD253 /* PlayerEventDispatcher.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PlayerEventDispatcher.mm; sourceTree = "<group>"; };
 		5FDC5599148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AutoProcessEmbeddedLyrics.cpp; path = ../../MPShared/AutoProcessEmbeddedLyrics.cpp; sourceTree = "<group>"; };
 		5FDC559A148A1F1B00C74E6A /* AutoProcessEmbeddedLyrics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AutoProcessEmbeddedLyrics.h; path = ../../MPShared/AutoProcessEmbeddedLyrics.h; sourceTree = "<group>"; };
 		5FDC559B148A1F1B00C74E6A /* CurMediaAlbumArt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CurMediaAlbumArt.cpp; path = ../../MPShared/CurMediaAlbumArt.cpp; sourceTree = "<group>"; };
@@ -573,6 +579,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5FCD5B9D17A9E347004FD253 /* CoreMedia.framework in Frameworks */,
+				5FCD5B9B17A9E309004FD253 /* AVFoundation.framework in Frameworks */,
 				5FDF5FD71720D79800F20EB2 /* libstdc++.dylib in Frameworks */,
 				5FB593751545A2950071B204 /* libTaglib.a in Frameworks */,
 				5FB592B81545A1990071B204 /* libThirdPartiesSDK.a in Frameworks */,
@@ -625,6 +633,8 @@
 		5FB161F5147017330084494F = {
 			isa = PBXGroup;
 			children = (
+				5FCD5B9C17A9E347004FD253 /* CoreMedia.framework */,
+				5FCD5B9A17A9E309004FD253 /* AVFoundation.framework */,
 				5FDF5FD61720D79800F20EB2 /* libstdc++.dylib */,
 				5F0315B915E7849C00E5F752 /* Player-Plugins */,
 				5FEA17EA15E49EB700B29626 /* lang */,
@@ -984,6 +994,7 @@
 				5F2BD4AB148BB9B8003E7F5C /* DlgChooseFont.mm */,
 				5F2BD4AC148BB9B8003E7F5C /* DlgChooseFont.h */,
 				5F2BD4AA148B3354003E7F5C /* PlayerEventDispatcher.h */,
+				5FCD5B9E17AAAFA6004FD253 /* PlayerEventDispatcher.mm */,
 				5FDC56BD148A30BC00C74E6A /* DlgUpdateLibrary.cpp */,
 				5FDC56BC148A2FE300C74E6A /* DlgUpdateLibrary.h */,
 				5F8A1CA4159555350062394E /* DlgSaveLyrPrompt.cpp */,
@@ -1346,6 +1357,7 @@
 				5F9FA0E21794D87900A6CAC2 /* ETEyeTunes.m in Sources */,
 				5F9FA0E31794D87900A6CAC2 /* ETPlaylist.mm in Sources */,
 				5F9FA0E41794D87900A6CAC2 /* ETTrack.m in Sources */,
+				5FCD5B9F17AAAFA6004FD253 /* PlayerEventDispatcher.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

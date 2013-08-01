@@ -215,6 +215,8 @@ tstring CiTunesMediaSource::GetLocation(int nIndex)
 	return [[track location] UTF8String];
 }
 
+tstring FixFileUri(LPCTSTR szUri);
+
 bool CiTunesMediaSource::GetMediaInfo(int nIndex, tstring &artist, tstring &album, tstring &title, tstring &location, uint32 &nMediaLength)
 {
 	ETTrack *track = GetTrack(nIndex);
@@ -227,8 +229,10 @@ bool CiTunesMediaSource::GetMediaInfo(int nIndex, tstring &artist, tstring &albu
 	location = [[track location] UTF8String];
 	nMediaLength = [track duration] * 1000;
 	
+	location = FixFileUri(location.c_str());
+
 	if (artist.empty() && title.find('-') != -1)
-		AnalysisLyricsFileNameEx(artist, title, location.c_str());
+		AnalysisLyricsFileNameEx(artist, title, title.c_str());
 
 	return true;
 }
