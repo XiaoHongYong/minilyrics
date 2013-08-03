@@ -1092,6 +1092,8 @@ int CPlayer::RegisterVis(IVis *pVis)
 		return ERR_NOT_IMPLEMENTED;
 }
 
+tstring FormatTime(int nTimeSec);
+
 void CPlayer::GetCurMediaAttribute(MediaAttribute mediaAttr, tstring &strValue)
 {
 	if (mediaAttr == MA_ARTIST)
@@ -1100,6 +1102,11 @@ void CPlayer::GetCurMediaAttribute(MediaAttribute mediaAttr, tstring &strValue)
 		strValue = m_szAlbum;
 	else if (mediaAttr == MA_TITLE)
 		strValue = m_szTitle;
+	else if (mediaAttr == MA_DURATION)
+	{
+		if (m_nMediaLength > 0)
+			strValue = FormatTime(m_nMediaLength / 1000);
+	}
 	else if (m_spPlayer)
 	{
 		strValue.resize(0);

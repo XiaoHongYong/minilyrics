@@ -19,6 +19,7 @@ ID_TO_STRING __mediaInfoType[] =
 	{ MA_CHANNELS, _T("Channels") },
 	{ MA_FORMAT, _T("File Format") },
 	{ MA_FILESIZE, _T("File Size") },
+	{ MA_DURATION, _T("Duration") },
 	{ 0, NULL },
 };
 

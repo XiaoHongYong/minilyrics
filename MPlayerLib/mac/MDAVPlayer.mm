@@ -49,6 +49,8 @@ static void *AVSPPlayerRateContext = &AVSPPlayerRateContext;
 	AVPlayerItem *playerItem = [AVPlayerItem playerItemWithAsset:asset];
 	[mPlayer replaceCurrentItemWithPlayerItem:playerItem];
 	
+	[mPlayer play];
+	
 	return true;
 }
 
@@ -66,6 +68,8 @@ static void *AVSPPlayerRateContext = &AVSPPlayerRateContext;
 {
 	[mPlayer pause];
 	[mPlayer seekToTime:CMTimeMake(0, 1)];
+
+	mMDAVPlayer->GetMPlayer()->NotifyEod(mMDAVPlayer, ERR_OK);
 }
 
 - (AVPlayer *)player
@@ -98,7 +102,17 @@ static void *AVSPPlayerRateContext = &AVSPPlayerRateContext;
 	}
 	else if (context == AVSPPlayerRateContext)
 	{
-//		float rate = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		float rate = [[change objectForKey:NSKeyValueChangeNewKey] floatValue];
+		if (rate != 1.f)
+		{
+			CMTime pos = [mPlayer currentTime];
+			CMTime length = [[mPlayer currentItem] duration];
+			if (pos.value * 1.f / pos.timescale >= length.value * 1.f / length.timescale)
+			{
+				if (mMDAVPlayer->GetMPlayer())
+					mMDAVPlayer->GetMPlayer()->NotifyEod(mMDAVPlayer, ERR_OK);
+			}
+		}
 //		if (rate != 1.f)
 //		{
 //			[[self playPauseButton] setTitle:@"Play"];

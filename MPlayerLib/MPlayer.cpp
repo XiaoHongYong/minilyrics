@@ -1130,6 +1130,8 @@ void CMPlayer::UnregisterEvent(IMPEvent *pEventHandler)
 
 void CMPlayer::NotifyEod(IMediaDecode *pDecoder, MLRESULT nError)
 {
+	bool bSendNotify = m_state != PS_STOPED;
+
 	m_state = PS_STOPED;
 
 	m_pMDAgent->NotifyEod(pDecoder, nError);
@@ -1168,7 +1170,8 @@ void CMPlayer::NotifyEod(IMediaDecode *pDecoder, MLRESULT nError)
 		}
 	}
 
-	NotifyPlayStateChanged();
+	if (bSendNotify)
+		NotifyPlayStateChanged();
 }
 
 

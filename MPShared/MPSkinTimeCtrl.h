@@ -11,6 +11,8 @@
 
 #include "SkinPicText.h"
 
+tstring FormatTime(int nTimeSec);
+
 template<class _CSkinText>
 class CMPSkinTimeCtrl : public _CSkinText  
 {
@@ -51,19 +53,6 @@ public:
 	}
 
 protected:
-	void FormatTime(TCHAR szTime[], int nCount, int nTimeSec)
-	{
-		int			nHour, nMinute, nSec;
-
-		nSec = nTimeSec % 60;
-		nMinute = nTimeSec / 60;
-		nHour = nMinute / 60;
-		nMinute = nMinute % 60;
-		if (nHour > 0)
-			_stprintf_s(szTime, nCount, _T("%02d:%02d:%02d"), nHour, nMinute, nSec);
-		else
-			_stprintf_s(szTime, nCount, _T("%02d:%02d"), nMinute, nSec);
-	}
 
 	void ResetTimeText()
 	{
@@ -76,17 +65,12 @@ protected:
 		{
 			m_nTimeOld = nTime;
 
-			TCHAR		szTime[64];
 			tstring		strText;
 
-			FormatTime(szTime, CountOf(szTime), nTime);
-
-			if (m_bShowElapsedTime)
-				strText.resize(0);
-			else
+			if (!m_bShowElapsedTime)
 				strText = _T("-");
 
-			strText += szTime;
+			strText += FormatTime(nTime);
 			_CSkinText::SetText(strText.c_str());
 
 			_CSkinText::Invalidate();

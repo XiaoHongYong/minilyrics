@@ -41,7 +41,7 @@ bool ConvertBufToTextLyrics(string &buf, tstring &lyrics)
 
 #define SZ_NO_SUITABLE_LYRICS		_T("**NL")
 
-class CPageLyricsTool : public CSkinContainer, public ILyricsToolWork::IUpdateNotify,  IUIObjNotifyHandler
+class CPageLyricsTool : public CSkinContainer, public ILyricsToolWork::IUpdateNotify,  IUIObjNotifyHandler, IEventHandler
 {
 	UIOBJECT_CLASS_NAME_DECLARE(CSkinContainer)
 public:
@@ -54,6 +54,9 @@ public:
 		m_pProgressCtrl = NULL;
 
 		m_threadWorking.Create(WorkThreadProc, this);
+		
+		m_nCurrentMedia = 0;
+		m_nTimerIDPlayNext = 0;
 	}
 	~CPageLyricsTool()
 	{
@@ -156,13 +159,47 @@ protected:
 	{
 		m_pSkin->SetUIObjectVisible(UID_INSTRUCTION, false, false);
 		m_pSkin->SetUIObjectVisible(UID_MEDIA_INFO, true, false);
+		m_pSkin->InvalidateRect();
 	}
 	
 	void PlayItem(int nIndex, bool playNow);
 
 	virtual void OnUIObjNotify(IUIObjNotify *pNotify);
 
+	virtual void OnEvent(const IEvent *pEvent)
+	{
+		if (pEvent->eventType == ET_PLAYER_STATUS_CHANGED)
+		{
+			CEventPlayerStatusChanged *pStatusEvent = (CEventPlayerStatusChanged *)pEvent;
+			if (pStatusEvent->status == PS_STOPED)
+			{
+				if (m_pMediaLib != NULL && m_nCurrentMedia < m_pMediaLib->GetRowCount())
+				{
+					if (m_nTimerIDPlayNext != 0)
+						m_pSkin->UnregisterTimerObject(this, m_nTimerIDPlayNext);
+					m_nTimerIDPlayNext = m_pSkin->RegisterTimerObject(this, 300);
+				}
+			}
+		}
+	}
 	
+	virtual void OnTimer(int nId)
+	{
+		if (nId != m_nTimerIDPlayNext)
+		{
+			CSkinContainer::OnTimer(nId);
+			return;
+		}
+		
+		m_pSkin->UnregisterTimerObject(this, m_nTimerIDPlayNext);
+		m_nTimerIDPlayNext = 0;
+		if (g_Player.GetPlayerState() == PS_STOPED
+			&& m_pMediaLib != NULL && m_nCurrentMedia < m_pMediaLib->GetRowCount())
+		{
+			PlayItem(m_nCurrentMedia + 1, true);
+		}
+	}
+
 	friend class CRunnableDoWork;
 	friend class CRunnableUpdateiTunesMediaLib;
 
@@ -183,6 +220,10 @@ protected:
 	CLooper					m_WorkLooper;		// Used to loop the background work
 	WorkStatus				m_workStatus;
 
+	// Handle play/next.
+	int						m_nCurrentMedia;
+	int						m_nTimerIDPlayNext;
+
 };
 
 UIOBJECT_CLASS_NAME_IMP(CPageLyricsTool, _T("Container.LyricsTool"));
@@ -201,11 +242,13 @@ void CPageLyricsTool::PlayItem(int nIndex, bool playNow)
 	if (IsFileExist(location.c_str()))
 	{
 		g_Player.ClearPlaylist();
-		g_Player.AddToPlaylist(location.c_str());
+		g_Player.GetIMPlayer()->SetCurrentMedia(location.c_str());
 		
 		if (playNow)
 			g_Player.Play();
 	}
+	
+	m_nCurrentMedia = nIndex;
 }
 
 void CPageLyricsTool::OnUIObjNotify(IUIObjNotify *pNotify)
@@ -215,7 +258,10 @@ void CPageLyricsTool::OnUIObjNotify(IUIObjNotify *pNotify)
 	
 	CSkinListCtrlEventNotify *pListViewNotify = (CSkinListCtrlEventNotify*)pNotify;
 	if (pListViewNotify->cmd == CSkinListCtrlEventNotify::C_DBL_CLICK)
+	{
+		HideInstructions();
 		PlayItem(pListViewNotify->nClickOnRow, true);
+	}
 }
 
 void CPageLyricsTool::OnCreate()
@@ -257,6 +303,8 @@ void CPageLyricsTool::OnCreate()
 	}
 	
 	GetSkinWnd()->RegisterUIObjNotifyHandler(CID_LISTVIEW, this);
+	
+	RegisterHandler(CSkinApp::GetInstance()->GetEventPatcher(), ET_PLAYER_STATUS_CHANGED);
 
 /*	if (!IsEmptyString(g_Player.GetSrcMedia()))
 	{
@@ -463,7 +511,35 @@ bool CPageLyricsTool::OnCustomCommand(int nId)
 		CMPAutoPtr<IMedia> media;
 		if (g_Player.GetIMPlayer()->GetCurrentMedia(&media) != ERR_OK || media == NULL)
 			PlayItem(0, false);
-		return false;
+		return true;
+	}
+	else if (nId == CMD_NEXT)
+	{
+		if (m_pMediaLib != NULL && m_nCurrentMedia + 1 < m_pMediaLib->GetRowCount())
+		{
+			m_filesListCtrl->ClearAllSelMark();
+			m_pMediaLib->SetRowSelectionState(m_nCurrentMedia + 1, true);
+			m_filesListCtrl->MakeSureRowVisible(m_nCurrentMedia + 1);
+			m_filesListCtrl->Invalidate();
+
+			PlayItem(m_nCurrentMedia + 1, true);
+			HideInstructions();
+		}
+		return true;
+	}
+	else if (nId == CMD_PREVIOUS)
+	{
+		if (m_pMediaLib != NULL && m_nCurrentMedia - 1 > 0)
+		{
+			m_filesListCtrl->ClearAllSelMark();
+			m_pMediaLib->SetRowSelectionState(m_nCurrentMedia - 1, true);
+			m_filesListCtrl->MakeSureRowVisible(m_nCurrentMedia - 1);
+			m_filesListCtrl->Invalidate();
+			
+			PlayItem(m_nCurrentMedia - 1, true);
+			HideInstructions();
+		}
+		return true;
 	}
 	else if (nId == CMD_IMPORT)
 	{

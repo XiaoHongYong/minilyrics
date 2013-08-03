@@ -165,6 +165,11 @@
 		<VScrollBar TranslucencyWithSkin="TRUE" Width="15" PushBtHeight="15" ThumbHeight="20" TrackHeight="20" ScrollBarWidth="15" Image="s_vscrollbar.png" ScalableThumb="TRUE" />
 		<HScrollBar TranslucencyWithSkin="TRUE" Height="15" PushBtWidth="15" ThumbWidth="20" TrackWidth="20" ScrollBarHeight="15" Image="s_hscrollbar.png" ScalableThumb="TRUE" />
 		<ListCtrl BgColor="#4F586E" SelBgColor="#D9D9D9" TextColor="#FFFFFF" SelTextColor="#4F586E" FontHeight="13"/>
+		<ListView BgColor="#FFFFFF,#EDF3FE" SelBgColor="#3875D7" 
+			  TextColor="#000000" SelTextColor="#FFFFFF" FontName="Verdana" FontHeight="14"
+			  ImageList="imagelist.png" 
+			  HeaderHeight="17" LineColor="#808080" ImageSortedHeader="s_listctrl_sorted_header.png"
+			  ImageHeader="s_listctrl_header.png" ImageSortFlag="s_listctrl_sort_flag.png"/>
 		<InfoText Name="InfoText" Rect="0,h-26,w,26" FontName="Verdana" FontHeight="16" FontItalic="1" TextColor="#0000FF"
 			LeftMargin="10" TranslucencyWithSkin="TRUE"/>
 	</style>

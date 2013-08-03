@@ -139,6 +139,7 @@ public:
 	int GetNextSelectedItem(int nPos = -1) const;
 
 	void SetItemSelectionState(int nIndex, bool bSelected);
+	void ClearAllSelMark();
 
 	void MakeSureRowVisible(int nRow);
 
@@ -222,8 +223,6 @@ protected:
 	void GetRowColAtPoint(POINT pt, int &row, int &col, POINT *ptAtItemCell = NULL, bool *bItemClickable = NULL);
 
 	void SetClickCursor();
-
-	void ClearAllSelMark();
 
 	int GetLinesOfPerPage() const { return m_rcContent.Height() / m_nLineHeight; }
 

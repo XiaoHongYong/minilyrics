@@ -6,8 +6,23 @@
 #include "Player.h"
 #include "MPSkinTimeCtrl.h"
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
+tstring FormatTime(int nTimeSec)
+{
+	TCHAR		szTime[64];
+	int			nHour, nMinute, nSec;
+	
+	nSec = nTimeSec % 60;
+	nMinute = nTimeSec / 60;
+	nHour = nMinute / 60;
+	nMinute = nMinute % 60;
+	if (nHour > 0)
+		_stprintf_s(szTime, CountOf(szTime), _T("%02d:%02d:%02d"), nHour, nMinute, nSec);
+	else
+		_stprintf_s(szTime, CountOf(szTime), _T("%02d:%02d"), nMinute, nSec);
+	
+	return szTime;
+}
+
 //////////////////////////////////////////////////////////////////////
 
 template<>

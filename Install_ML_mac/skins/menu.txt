@@ -425,11 +425,6 @@ popup:&Lyrics
 item:40194:&Download All Lyrics for iPod:
 separator
 item:40097:&Remove All Embedded Lyrics:
-separator
-popup:&Advanced
-item:40122:&Download All Lyrics...:
-item:40123:&Remove All Lyrics...:
-end
 end
 popup:&Help
 item:40004:A&bout $Product$...:
