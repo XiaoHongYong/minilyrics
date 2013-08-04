@@ -109,7 +109,7 @@ void Log(const char* szFormat, ...);
 							&replyValue, sizeof(replyValue), &resultSize);
 		if (replyValue != errAENoSuchObject)
 		{
-			Log("ERROR in -[ETPlaylist parentplaylist] \"%s\" -- replyEvent: %s (AEGetParamPtr result %d)", [[self name] UTF8String], *stringHandle, err);
+//			Log("ERROR in -[ETPlaylist parentplaylist] \"%s\" -- replyEvent: %s (AEGetParamPtr result %d)", [[self name] UTF8String], *stringHandle, err);
 		}
 		return nil;
 	}
@@ -161,7 +161,7 @@ void Log(const char* szFormat, ...);
 	OSErr err;
 	err = AEGetParamDesc(replyEvent, keyDirectObject, typeWildCard, &replyObject);
 	if (err != noErr) {
-		Log("Error extracting from reply event: %d", err);
+//		Log("Error extracting from reply event: %d", err);
 		goto cleanup_reply_event;
 	}
 	

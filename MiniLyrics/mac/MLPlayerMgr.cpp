@@ -100,7 +100,7 @@ LPVOID CMLPlayerMgr::ThreadMsg(LPVOID param)
 			break;
 		pMgr->OnMsg(message, data.c_str(), data.size());
 	}
-	
+
 	return NULL;
 }
 
@@ -200,8 +200,8 @@ void CMLPlayerMgr::Quit()
 	if (g_threadMsg != 0)
 	{
 		LOG0(LOG_LVL_INFO, _T("Close player service pipe."));
-		pthread_kill(g_threadMsg, SIGINT);
-		pthread_join(g_threadMsg, NULL);
+		// pthread_kill(g_threadMsg, SIGINT);
+		// pthread_join(g_threadMsg, NULL);
 		// pthread_wait(g_threadMsg,
 	}
 }

@@ -106,7 +106,8 @@ void PostCustomCommandMsgMac(CSkinWnd *pSkinWnd, int cmd)
 
 void PostQuitMessageMac()
 {
-	[NSApp terminate:nil];
+	[NSApp performSelectorOnMainThread:@selector(terminate:) withObject:nil waitUntilDone:NO];
+//	[NSApp terminate:nil];
 }
 
 

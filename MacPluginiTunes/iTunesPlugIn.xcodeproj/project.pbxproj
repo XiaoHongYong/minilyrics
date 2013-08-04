@@ -21,8 +21,6 @@
 		5F8A1CA11594A9C20062394E /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F8A1CA01594A9C20062394E /* AppKit.framework */; };
 		5F9FA0BC1794C2E600A6CAC2 /* ETPlaylist.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9FA0BA1794C2E600A6CAC2 /* ETPlaylist.h */; };
 		5F9FA0BD1794C2E600A6CAC2 /* ETPlaylist.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0BB1794C2E600A6CAC2 /* ETPlaylist.mm */; };
-		5F9FA0C11794C79B00A6CAC2 /* ETTrackEnumerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9FA0BF1794C79B00A6CAC2 /* ETTrackEnumerator.h */; };
-		5F9FA0C21794C79B00A6CAC2 /* ETTrackEnumerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 5F9FA0C01794C79B00A6CAC2 /* ETTrackEnumerator.m */; };
 		5FBDF0231547760600983DDC /* MLService.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBDF01F1547760600983DDC /* MLService.cpp */; };
 		5FBDF0241547760600983DDC /* MLService.h in Headers */ = {isa = PBXBuildFile; fileRef = 5FBDF0201547760600983DDC /* MLService.h */; };
 		5FBDF0251547760600983DDC /* PlayerServiceBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBDF0211547760600983DDC /* PlayerServiceBase.cpp */; };
@@ -70,8 +68,6 @@
 		5F8A1CA01594A9C20062394E /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		5F9FA0BA1794C2E600A6CAC2 /* ETPlaylist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETPlaylist.h; sourceTree = "<group>"; };
 		5F9FA0BB1794C2E600A6CAC2 /* ETPlaylist.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ETPlaylist.mm; sourceTree = "<group>"; };
-		5F9FA0BF1794C79B00A6CAC2 /* ETTrackEnumerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ETTrackEnumerator.h; sourceTree = "<group>"; };
-		5F9FA0C01794C79B00A6CAC2 /* ETTrackEnumerator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ETTrackEnumerator.m; sourceTree = "<group>"; };
 		5FBDF01F1547760600983DDC /* MLService.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLService.cpp; sourceTree = "<group>"; };
 		5FBDF0201547760600983DDC /* MLService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLService.h; sourceTree = "<group>"; };
 		5FBDF0211547760600983DDC /* PlayerServiceBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerServiceBase.cpp; sourceTree = "<group>"; };
@@ -147,8 +143,6 @@
 			children = (
 				5F9FA0BA1794C2E600A6CAC2 /* ETPlaylist.h */,
 				5F9FA0BB1794C2E600A6CAC2 /* ETPlaylist.mm */,
-				5F9FA0BF1794C79B00A6CAC2 /* ETTrackEnumerator.h */,
-				5F9FA0C01794C79B00A6CAC2 /* ETTrackEnumerator.m */,
 				5F8A1C9E1594A8D80062394E /* EyeTunesEventCodes.h */,
 				5F8A1C8F1594A7AF0062394E /* ETAppleEventObject.h */,
 				5F8A1C901594A7AF0062394E /* ETAppleEventObject.m */,
@@ -208,7 +202,6 @@
 				5F8A1C9C1594A7AF0062394E /* EyeTunes.h in Headers */,
 				5F8A1C9F1594A8D80062394E /* EyeTunesEventCodes.h in Headers */,
 				5F9FA0BC1794C2E600A6CAC2 /* ETPlaylist.h in Headers */,
-				5F9FA0C11794C79B00A6CAC2 /* ETTrackEnumerator.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -306,7 +299,6 @@
 				5F8A1C991594A7AF0062394E /* ETEyeTunes.m in Sources */,
 				5F8A1C9B1594A7AF0062394E /* ETTrack.m in Sources */,
 				5F9FA0BD1794C2E600A6CAC2 /* ETPlaylist.mm in Sources */,
-				5F9FA0C21794C79B00A6CAC2 /* ETTrackEnumerator.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

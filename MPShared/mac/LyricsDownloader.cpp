@@ -507,39 +507,30 @@ bool CPageLyricsTool::OnCustomCommand(int nId)
 	else if (nId == CMD_PLAYPAUSE)
 	{
 		HideInstructions();
-
+		
 		CMPAutoPtr<IMedia> media;
 		if (g_Player.GetIMPlayer()->GetCurrentMedia(&media) != ERR_OK || media == NULL)
+		{
 			PlayItem(0, false);
-		return true;
+		}
+		else
+			return false;
 	}
-	else if (nId == CMD_NEXT)
+	else if (nId == CMD_NEXT || nId == CMD_PREVIOUS)
 	{
-		if (m_pMediaLib != NULL && m_nCurrentMedia + 1 < m_pMediaLib->GetRowCount())
+		int media = m_nCurrentMedia + 1;
+		if (nId == CMD_PREVIOUS)
+			media = m_nCurrentMedia - 1;
+		if (m_pMediaLib != NULL && media > 0 && media < m_pMediaLib->GetRowCount())
 		{
 			m_filesListCtrl->ClearAllSelMark();
-			m_pMediaLib->SetRowSelectionState(m_nCurrentMedia + 1, true);
-			m_filesListCtrl->MakeSureRowVisible(m_nCurrentMedia + 1);
+			m_pMediaLib->SetRowSelectionState(media, true);
+			m_filesListCtrl->MakeSureRowVisible(media);
 			m_filesListCtrl->Invalidate();
 
-			PlayItem(m_nCurrentMedia + 1, true);
+			PlayItem(media, true);
 			HideInstructions();
 		}
-		return true;
-	}
-	else if (nId == CMD_PREVIOUS)
-	{
-		if (m_pMediaLib != NULL && m_nCurrentMedia - 1 > 0)
-		{
-			m_filesListCtrl->ClearAllSelMark();
-			m_pMediaLib->SetRowSelectionState(m_nCurrentMedia - 1, true);
-			m_filesListCtrl->MakeSureRowVisible(m_nCurrentMedia - 1);
-			m_filesListCtrl->Invalidate();
-			
-			PlayItem(m_nCurrentMedia - 1, true);
-			HideInstructions();
-		}
-		return true;
 	}
 	else if (nId == CMD_IMPORT)
 	{
