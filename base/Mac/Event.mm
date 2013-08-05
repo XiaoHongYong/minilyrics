@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "Event.h"
 #import <pthread.h>
+#import <sys/time.h>
 
 class _NSConditionInternal
 {
@@ -62,27 +63,48 @@ bool Event::Reset()
 
 bool Event::Acquire(uint32 nTimeOut)
 {
+	bool ret = false;
 	pthread_mutex_lock(&m_nsCondition->mutex);
-	while (!m_nsCondition->read_to_go)
-		pthread_cond_wait(&m_nsCondition->condition, &m_nsCondition->mutex);
-	m_nsCondition->read_to_go = false;
-	pthread_mutex_unlock(&m_nsCondition->mutex);
+	if (nTimeOut == 0)
+	{
+		ret = m_nsCondition->read_to_go;
+		pthread_mutex_unlock(&m_nsCondition->mutex);
+	}
+	else if (nTimeOut == WAIT_FOREVER)
+	{
+		while (!m_nsCondition->read_to_go)
+			pthread_cond_wait(&m_nsCondition->condition, &m_nsCondition->mutex);
+		m_nsCondition->read_to_go = false;
+		pthread_mutex_unlock(&m_nsCondition->mutex);
+		ret = true;
+//		if (m_bMaualset)
+//			Set();
+	}
+	else
+	{
+		struct timeval tv;
+		struct timespec ts;
+		gettimeofday(&tv, NULL);
+		ts.tv_sec = tv.tv_sec;
+		ts.tv_nsec = 1000 * nTimeOut;
+		
+		int n = 0;
+		while (!m_nsCondition->read_to_go)
+		{
+			n = pthread_cond_timedwait(&m_nsCondition->condition, &m_nsCondition->mutex, &ts);
+			if (ret != 0)
+				break;
+		}
+		if (n == 0)
+		{
+			ret = true;
+			m_nsCondition->read_to_go = false;
+//			if (m_bMaualset)
+//				Set();
+		}
+		pthread_mutex_unlock(&m_nsCondition->mutex);
+	}
 
-//	[m_nsCondition->_condition lock];
-//	if (nTimeOut == WAIT_FOREVER)
-//		[m_nsCondition->_condition wait];
-//	else
-//	{
-//		pthread_cond_t cond;
-//		pthread_cond_init(&cond);
-//		NSDate *limit = [NSDate dateWithTimeIntervalSinceNow: (double)nTimeOut / 1000];
-//		[m_nsCondition->_condition waitUntilDate:limit];
-//	}
-//	
-//	[m_nsCondition->_condition unlock];
-//
-	if (m_bMaualset)
-		Set();
-	return false;
+	return ret;
 }
 
