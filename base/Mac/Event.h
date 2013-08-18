@@ -7,6 +7,8 @@
 
 #include "Mutex.h"
 
+DECLAR_CPPUNIT_TEST_REG(CEvent)
+
 #ifndef INFINITE
 #define INFINITE 0xFFFFFFFF
 #endif
@@ -20,7 +22,7 @@ class _NSConditionInternal;
 class Event  
 {
 public:
-	Event(bool bManualSet, bool bInitialStat);
+	Event(bool bManualSet, bool isSingaled);
 	virtual ~Event();
 
 	bool Set();
@@ -28,7 +30,6 @@ public:
 	bool Acquire(uint32 nTimeOut = WAIT_FOREVER);
 
 protected:
-	Mutex	m_mutex;
 	bool	m_bMaualset;
 	
 	_NSConditionInternal *m_nsCondition;

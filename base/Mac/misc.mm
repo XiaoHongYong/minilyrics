@@ -49,7 +49,7 @@ bool GetMonitorRestrictRect(const RECT &rcIn, RECT &rcRestrict)
 
 void Sleep(DWORD dwMilliseconds)
 {
-	usleep((unsigned int)dwMilliseconds);
+	usleep((unsigned int)(dwMilliseconds * 1000));
 }
 
 BOOL ExecuteCmdAndWait(LPCTSTR szCmd, DWORD dwTimeOut, DWORD *pExitCode)
