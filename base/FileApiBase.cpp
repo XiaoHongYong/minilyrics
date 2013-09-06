@@ -537,6 +537,7 @@ void TStringToProperFileData(LPCTSTR str, CCharBuffer &bufData)
 		TStringToAnsi(str, -1, bufData);
 	else
 	{
+#ifdef UNICODE
 		TStringToUTF8(str, -1, bufData);
 		if (bufData.size() < _tcslen(str) * sizeof(TCHAR))
 			bufData.insert(0, SZ_FE_UTF8, strlen(SZ_FE_UTF8));
@@ -546,6 +547,20 @@ void TStringToProperFileData(LPCTSTR str, CCharBuffer &bufData)
 			bufData.append(SZ_FE_UCS2);
 			bufData.append((LPCSTR)str, _tcslen(str) * sizeof(TCHAR));
 		}
+#else
+		TStringToUTF8(str, -1, bufData);
+		wstring_t bufUCS2;
+		TStringToUCS2(str, -1, bufUCS2);
+		
+		if (bufData.size() < bufUCS2.size() * sizeof(WCHAR))
+			bufData.insert(0, SZ_FE_UTF8, strlen(SZ_FE_UTF8));
+		else
+		{
+			bufData.clear();
+			bufData.append(SZ_FE_UCS2);
+			bufData.append((LPCSTR)bufUCS2.c_str(), bufUCS2.size() * sizeof(WCHAR));
+		}
+#endif
 	}
 }
 
