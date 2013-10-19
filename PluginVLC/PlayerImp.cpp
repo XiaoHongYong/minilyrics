@@ -4,22 +4,33 @@
 #pragma warning (disable: 4996)
 
 #define _WIN32_WINNT  0x0500
+#define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
+
+#define HAVE_DIRFD 1
+#define HAVE_FDOPENDIR
+#define HAVE_GETPID
+#define LIBVLC_USE_PTHREAD_CANCEL
+
+typedef unsigned short ssize_t;
 
 #include <Windows.h>
-#include <vlc/libvlc.h>
-#include <vlc/libvlc_structures.h>
-#include <vlc/libvlc_media.h>
-#include <vlc/libvlc_media_player.h>
-#include <vlc_common.h>
+#include <winuser.h>
 
+#include <stdint.h>
+
+#include <vlc_common.h>
 #include <vlc_plugin.h>
 #include <vlc_interface.h>
+#include <vlc_dialog.h>
 #include <vlc_meta.h>
+#include <vlc_md5.h>
+#include <vlc_stream.h>
+#include <vlc_url.h>
+#include <vlc_network.h>
 #include <vlc_playlist.h>
 
 #include "../MLPluginLib/MLPlugin.h"
 #include "PlayerImp.h"
-#include <tchar.h>
 
 /*
 #define SENDDEBUGMESSAGE	19771212
@@ -387,7 +398,7 @@ int ItemChange(vlc_object_t *, const char *,
 int PlayingChange(vlc_object_t *, const char *, vlc_value_t,
 		vlc_value_t, void *);
 
-void Run(intf_thread_t *p_intf);
+void *Run(void *data);
 
 #define MODULE_NAME  "MiniLyrics"
 #define MODULE_STRING  "MiniLyrics"
@@ -403,17 +414,38 @@ set_capability("interface", 0);
 set_callbacks(Open, Close);
 vlc_module_end();
 
+struct intf_sys_t
+{
+    vlc_mutex_t             lock;               /**< p_sys mutex            */
+    vlc_cond_t              wait;               /**< song to submit event   */
+    vlc_thread_t            thread;             /**< thread to submit song  */
+};
+
 int  Open(vlc_object_t * p_this)
 {
 	ENTER_METHOD("Open");
 	intf_thread_t *p_intf = (intf_thread_t *)p_this;
-	playlist_t *p_playlist;
+	intf_sys_t    *p_sys = (intf_sys_t *)calloc(1, sizeof(intf_sys_t));
 
-	p_playlist = pl_Get(p_intf);
+	if (!p_sys)
+		return VLC_ENOMEM;
+
+	p_intf->p_sys = p_sys;
+
+    vlc_mutex_init(&p_sys->lock);
+    vlc_cond_init(&p_sys->wait);
+
+    if (vlc_clone(&p_sys->thread, Run, p_intf, VLC_THREAD_PRIORITY_LOW))
+    {
+        vlc_cond_destroy(&p_sys->wait);
+        vlc_mutex_destroy(&p_sys->lock);
+        free(p_sys);
+        return VLC_ENOMEM;
+    }
+
+	playlist_t *p_playlist = pl_Get(p_intf);
 	var_AddCallback( p_playlist, "item-change", ItemChange, p_intf );
 	var_AddCallback(p_playlist, "item-current", ItemChange, p_intf);
-
-	p_intf->pf_run = Run;
 
 	return VLC_SUCCESS;
 }
@@ -436,10 +468,21 @@ void Close(vlc_object_t * p_this)
 
 		vlc_object_release( p_input );
 	}
+
+	intf_sys_t *p_sys  = p_intf->p_sys;
+
+	vlc_cancel(p_sys->thread);
+	vlc_join(p_sys->thread, NULL);
+
+	vlc_cond_destroy(&p_sys->wait);
+	vlc_mutex_destroy(&p_sys->lock);
+	free(p_sys);
 }
 
-void Run(intf_thread_t *p_intf)
+void *Run(void *data)
 {
+	intf_thread_t *p_intf = (intf_thread_t *)data
+	intf_sys_t *p_sys = p_intf->p_sys;
 	ENTER_METHOD("Run");
 	g_Player.m_p_intf = p_intf;
 
@@ -460,6 +503,8 @@ void Run(intf_thread_t *p_intf)
 	DisconnectMiniLyrics(&g_Player);
 
 	g_Player.m_p_intf = NULL;
+
+	return NULL;
 }
 
 /*****************************************************************************
