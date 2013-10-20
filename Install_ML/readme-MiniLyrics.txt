@@ -1,3 +1,24 @@
+MiniLyrics 7.6.36 for Windows
+Fixed: Support iTunes 11.
+Fixed: Support VLC Player 2.1.0.
+
+MiniLyrics 7.6.35 for Mac
+Add lyrics download options, remove IE proxy settings.
+Fixed: MiniLyrics may corrupt mp3 files on Mac.
+Fixed: Bugs in lyrics downloader tool.
+
+MiniLyrics 7.5.29
+New: Add Lyrics Downloader for Mac.
+
+MiniLyrics 7.5.28
+Fixed: Can't load embedded lyrics automatically.
+
+MiniLyrics 7.5.24
+New: Support displaying LRC lyrics with same timestamps of multiple lines.
+
+MiniLyrics 7.5.23
+New: Support mouse click through on Mac.
+
 MiniLyrics 7.5.22
 Fixed: Support Helium Music Manager 9
 Fixed: Disable MiniLyrics global hotkey by default.
