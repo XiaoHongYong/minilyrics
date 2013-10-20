@@ -250,9 +250,9 @@ DWORD CPlayerImp::GetPlayPos()
 	nPos /= 1000;
 	if (nPos != m_posLast)
 	{
-		m_posLast = nPos;
-		m_dwTimeBeg = GetTickCount() - nPos;
-		return nPos;
+		m_posLast = (DWORD)nPos;
+		m_dwTimeBeg = GetTickCount() - (DWORD)nPos;
+		return (DWORD)nPos;
 	}
 	else
 		return GetTickCount() - m_dwTimeBeg;
@@ -398,7 +398,7 @@ int ItemChange(vlc_object_t *, const char *,
 int PlayingChange(vlc_object_t *, const char *, vlc_value_t,
 		vlc_value_t, void *);
 
-void *Run(void *data);
+DWORD __stdcall Run(void *data);
 
 #define MODULE_NAME  "MiniLyrics"
 #define MODULE_STRING  "MiniLyrics"
@@ -416,9 +416,8 @@ vlc_module_end();
 
 struct intf_sys_t
 {
-    vlc_mutex_t             lock;               /**< p_sys mutex            */
-    vlc_cond_t              wait;               /**< song to submit event   */
-    vlc_thread_t            thread;             /**< thread to submit song  */
+	DWORD					threadId;
+	HANDLE					hThread;
 };
 
 int  Open(vlc_object_t * p_this)
@@ -430,18 +429,9 @@ int  Open(vlc_object_t * p_this)
 	if (!p_sys)
 		return VLC_ENOMEM;
 
+	p_sys->hThread = CreateThread(NULL, 0, Run, p_intf, NULL, &p_sys->threadId);
+
 	p_intf->p_sys = p_sys;
-
-    vlc_mutex_init(&p_sys->lock);
-    vlc_cond_init(&p_sys->wait);
-
-    if (vlc_clone(&p_sys->thread, Run, p_intf, VLC_THREAD_PRIORITY_LOW))
-    {
-        vlc_cond_destroy(&p_sys->wait);
-        vlc_mutex_destroy(&p_sys->lock);
-        free(p_sys);
-        return VLC_ENOMEM;
-    }
 
 	playlist_t *p_playlist = pl_Get(p_intf);
 	var_AddCallback( p_playlist, "item-change", ItemChange, p_intf );
@@ -471,17 +461,16 @@ void Close(vlc_object_t * p_this)
 
 	intf_sys_t *p_sys  = p_intf->p_sys;
 
-	vlc_cancel(p_sys->thread);
-	vlc_join(p_sys->thread, NULL);
+	PostThreadMessage(p_sys->threadId, WM_QUIT, 0, 0);
+	WaitForSingleObject(p_sys->hThread, INFINITE);
+	CloseHandle(p_sys->hThread);
 
-	vlc_cond_destroy(&p_sys->wait);
-	vlc_mutex_destroy(&p_sys->lock);
 	free(p_sys);
 }
 
-void *Run(void *data)
+DWORD __stdcall Run(void *data)
 {
-	intf_thread_t *p_intf = (intf_thread_t *)data
+	intf_thread_t *p_intf = (intf_thread_t *)data;
 	intf_sys_t *p_sys = p_intf->p_sys;
 	ENTER_METHOD("Run");
 	g_Player.m_p_intf = p_intf;
@@ -615,5 +604,5 @@ DWORD CPlayerImp::GetMediaLength()
 
 	vlc_object_release(p_input);
 
-	return nPos / 1000;
+	return (DWORD)(nPos / 1000);
 }
