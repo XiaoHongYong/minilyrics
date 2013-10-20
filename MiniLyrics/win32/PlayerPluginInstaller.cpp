@@ -672,6 +672,18 @@ class PluginInstaller
 public:
 	static int CopyFile(LPCTSTR szSrc, LPCTSTR szTarg, tstring &strErr, CPlayerPluginInstaller::Player &item)
 	{
+		tstring path = FileGetPath(szTarg);
+		if (!IsDirExist(path.c_str()))
+		{
+			if (!CreateDirectoryAll(path.c_str()))
+			{
+				int nErr = GetLastError();
+				strErr = tstring(_TL3("Failed to create directory:")) + _T(" ") + path + _T("\n");
+				strErr += OSError(nErr).Description();
+				return nErr;
+			}
+		}
+
 		if (!::CopyFile(szSrc, szTarg, false))
 		{
 			int nErr = GetLastError();
