@@ -65,15 +65,23 @@ void RemoveExtraBlankLine(tstring &str)
 
 bool ReadIntValue(LPCTSTR &szBeg, LPCTSTR szEnd, int nSize, int &nValue)
 {
+	LPCTSTR p = szBeg;
 	nValue = 0;
-	while (IsDigit(*szBeg) && nSize > 0 && szBeg < szEnd)
+	while (IsDigit(*p) && nSize > 0 && p < szEnd)
 	{
 		nValue *= 10;
-		nValue += *szBeg - '0';
-		szBeg++;
+		nValue += *p - '0';
+		p++;
 		nSize--;
 	}
-	return nSize == 0;
+
+	if (nSize == 0)
+	{
+		szBeg = p;
+		return true;
+	}
+
+	return false;
 }
 
 // [mm:ss.xx]word 1<mm:ss.xx> word 2 <mm:ss.xx> ...
@@ -99,7 +107,14 @@ LPCTSTR EatFrag(LPCTSTR szLyricsBeg, int &nEndTime, tstringex &buffLyrics)
 				{
 					szTemp++;
 					nEndTime += n * 1000;
-					if (ReadIntValue(szTemp, szLyricsEnd, 2, n) && *szTemp == '>')
+					if (ReadIntValue(szTemp, szLyricsEnd, 3, n) && *szTemp == '>')
+					{
+						szTemp++;
+						nEndTime += n;
+						buffLyrics.append(szLyricsBeg, int(szPos - szLyricsBeg));
+						return szTemp;
+					}
+					else if (ReadIntValue(szTemp, szLyricsEnd, 2, n) && *szTemp == '>')
 					{
 						szTemp++;
 						nEndTime += n * 10;
