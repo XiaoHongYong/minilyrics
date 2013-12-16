@@ -1,7 +1,7 @@
 // Src From modules\misc\notify\msn.c
 
 1.  dumpbin /exports libvlccore.dll > libvlccore.def
-     dumpbin /exports C:\Program Files\VideoLAN\VLC\libvlccore.dll > F:\zikiplayer\PluginVLC\libvlccore.def
+     dumpbin /exports "C:\Program Files\VideoLAN\VLC\libvlccore.dll" > F:\zikiplayer\PluginVLC\libvlccore.def
 
 2. Edit libvlccore.def:
 LIBRARY      "libvlccore.dll"
@@ -11,6 +11,8 @@ EXPORTS
 	....
 
 3.  lib /DEF:libvlccore.def
+cd F:\zikiplayer\PluginVLC\
+lib /DEF:F:\zikiplayer\PluginVLC\libvlccore.def
  
 got libvlccore.lib
 
