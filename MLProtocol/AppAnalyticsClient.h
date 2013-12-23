@@ -6,10 +6,10 @@
 
 // Define Usage Data types
 #define SZ_UD_PRODUCT_INFO		_T("PI")
-#define SZ_UD_BASIC_USAGE		_T("BU")
-#define SZ_UD_LICENSE_STATUS	_T("LS")
-#define SZ_UD_CMD_USAGE			_T("CU")
-#define SZ_UD_SETTINGS			_T("ST")
+#define SZ_UD_BASIC_USAGE		_T("BU")	// Count statistic values
+#define SZ_UD_LICENSE_STATUS	_T("LS")	// Option List values
+#define SZ_UD_CMD_USAGE			_T("CU")	// Count statistic values
+#define SZ_UD_SETTINGS			_T("ST")	// Option List values
 
 // Product info properties
 #define SZ_N_PI_PRODUCT_ID		_T("PID")
