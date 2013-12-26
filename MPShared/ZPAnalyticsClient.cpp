@@ -15,8 +15,8 @@
 #endif
 
 // Ping type for MiniLyrics
-#define SZ_UD_SETTINGS_NORMAL_MODE		_T("ST_N")
-#define SZ_UD_SETTINGS_FLOATING_LYR		_T("ST_F")
+#define SZ_UD_SETTINGS_NORMAL_MODE		_T("ST_N")		// Option List values
+#define SZ_UD_SETTINGS_FLOATING_LYR		_T("ST_F")		// Option List values
 
 // General Setting properties
 #define SZ_N_ST_CUR_SKIN				_T("SK")		// Current skin
