@@ -43,6 +43,20 @@ bool CSkinListCtrl::IsRowSelected(int nRow) const
 	return false;
 }
 
+
+void CSkinListCtrl::AddColumn(LPCTSTR szCol, int nWidth, int colType, bool bClickable)
+{
+	CSkinListView::AddColumn(szCol, nWidth, colType, bClickable);
+
+	int col = GetColumnCount() - 1;
+
+	for (uint i = 0; i < m_vRows.size(); i++)
+	{
+		Row *row = m_vRows[i];
+		row->vItems.push_back(NewItem(col));
+	}
+}
+
 int CSkinListCtrl::GetItemText(int nItem, int nSubItem, LPTSTR lpszText, int nLen)
 {
 	ASSERT(nItem >= 0 && nItem < (int)m_vRows.size());

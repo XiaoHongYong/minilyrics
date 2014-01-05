@@ -82,6 +82,8 @@ public:
 	CSkinListCtrl();
 	virtual ~CSkinListCtrl();
 
+	virtual void AddColumn(LPCTSTR szCol, int nWidth, int colType = CColHeader::TYPE_TEXT, bool bClickable = false);
+
 	virtual void AddImageColumn(LPCTSTR szCol, int nWidth, bool bClickable = false) { AddColumn(szCol, nWidth, CColHeader::TYPE_IMAGE, bClickable); }
 
 	int GetItemText(int nItem, int nSubItem, LPTSTR lpszText, int nLen);
