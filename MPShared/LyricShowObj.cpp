@@ -1643,8 +1643,8 @@ bool CLyricShowObj::OnLButtonUp(UINT nFlags, CPoint point)
 		MLWidget::SetCursor(m_curAdjustVertAlign);
 		m_pSkin->ReleaseCaptureMouse(this);
 
-		g_Profile.WriteInt(_T("VertAlign"), m_vertLineAlign);
-		g_Profile.WriteInt(_T("VertAlignOffset"), m_nVertLineOffset);
+		g_Profile.WriteInt(m_strSectName.c_str(), _T("VertAlign"), m_vertLineAlign);
+		g_Profile.WriteInt(m_strSectName.c_str(), _T("VertAlignOffset"), m_nVertLineOffset);
 		return true;
 	}
 
