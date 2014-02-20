@@ -154,7 +154,7 @@ int CID3v2IF::RemoveLyrics(LPCTSTR szName)
 
 int CID3v2IF::SetSynchLyrics(LPCTSTR szName, ID3v2SynchLyrics &lyrics)
 {
-	UINT nFrameID = IsID3v2_2() ? ID3V2_2_SYLT : ID3V2_3_SYLT;
+	UINT nFrameID = IsID3v2_2() ? (int)ID3V2_2_SYLT : (int)ID3V2_3_SYLT;
 	CID3v2Frame *pTargFrame = NULL;
 	FrameIterator it = GetSyncLyricsFrame(szName);
 	if (it == m_listFrames.end())
@@ -190,7 +190,7 @@ int CID3v2IF::SetUnsynchLyrics(LPCTSTR szName, LPCTSTR szDesc, LPCTSTR szLyrics)
 
 int CID3v2IF::SetUnsynchLyrics(LPCTSTR szName, ID3v2UnsynchLyrics &lyrics)
 {
-	UINT nFrameID = IsID3v2_2() ? ID3V2_2_USLT: ID3V2_3_USLT;
+	UINT nFrameID = IsID3v2_2() ? (int)ID3V2_2_USLT: (int)ID3V2_3_USLT;
 	CID3v2Frame *pTargFrame = NULL;
 	FrameIterator it = GetUnsyncLyricsFrame(szName);
 	if (it == m_listFrames.end())
@@ -211,7 +211,7 @@ int CID3v2IF::SetUnsynchLyrics(LPCTSTR szName, ID3v2UnsynchLyrics &lyrics)
 
 int CID3v2IF::SetUserDefLyrics(LPCTSTR szLyrics)
 {
-	UINT nFrameID = IsID3v2_2() ? ID3V2_2_USER_TEXT : ID3V2_3_USER_TEXT;
+	UINT nFrameID = IsID3v2_2() ? (int)ID3V2_2_USER_TEXT : (int)ID3V2_3_USER_TEXT;
 	CID3v2Frame *pTargFrame = NULL;
 	FrameIterator it = GetUserDefLyricsFrame();
 	if (it == m_listFrames.end())
@@ -688,7 +688,7 @@ CID3v2IF::FrameIterator CID3v2IF::GetSyncLyricsFrame(LPCTSTR szName)
 	if (!GetEmbeddedLyricsNameInfo(szName, language, index))
 		return m_listFrames.end();
 
-	int nFrameID = IsID3v2_2() ? ID3V2_2_SYLT : ID3V2_3_SYLT;
+	int nFrameID = IsID3v2_2() ? (int)ID3V2_2_SYLT : (int)ID3V2_3_SYLT;
 
 	if (language.empty())
 		return FindFrameIter(nFrameID);
@@ -718,7 +718,7 @@ CID3v2IF::FrameIterator CID3v2IF::GetUnsyncLyricsFrame(LPCTSTR szName)
 	if (!GetEmbeddedLyricsNameInfo(szName, language, index))
 		return m_listFrames.end();
 
-	int nFrameID = IsID3v2_2() ? ID3V2_2_USLT : ID3V2_3_USLT;
+	int nFrameID = IsID3v2_2() ? (int)ID3V2_2_USLT : (int)ID3V2_3_USLT;
 
 	if (language.empty())
 		return FindFrameIter(nFrameID);
@@ -743,7 +743,7 @@ CID3v2IF::FrameIterator CID3v2IF::GetUnsyncLyricsFrame(LPCTSTR szName)
 
 CID3v2IF::FrameIterator CID3v2IF::GetUserDefLyricsFrame()
 {
-	UINT nFrameID = IsID3v2_2() ? ID3V2_2_USER_TEXT : ID3V2_3_USER_TEXT;
+	UINT nFrameID = IsID3v2_2() ? (int)ID3V2_2_USER_TEXT : (int)ID3V2_3_USER_TEXT;
 
 	CID3v2FrameParserTextUserDefined parser(m_Encoding);
 	for (FrameIterator it = m_listFrames.begin(); it != m_listFrames.end(); ++it)

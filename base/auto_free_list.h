@@ -11,7 +11,7 @@ public:
 	auto_free_list() { }
 
 	typedef list<_Ty*>		Parent;
-#ifdef _MAC
+#ifndef _WIN32
 	typedef typename Parent::iterator                  iterator;
 #endif
 

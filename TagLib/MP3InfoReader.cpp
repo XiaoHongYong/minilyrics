@@ -368,11 +368,6 @@ int CMP3InfoReader::GetMediaLength()
 class CBigEndianBuffReader
 {
 public:
-	class COutOfRangeException {
-	public:
-		COutOfRangeException() {}
-	};
-
 	CBigEndianBuffReader(const byte *buf, int nLen) : m_buf(buf)
 	{
 		m_bufEndPos = m_buf + nLen;
@@ -381,7 +376,7 @@ public:
 	int ExtractI1()
 	{
 		if (m_buf + 1 > m_bufEndPos)
-			throw COutOfRangeException();
+			return -1;
 
 		m_buf++;
 
@@ -391,7 +386,7 @@ public:
 	int ExtractIx(int nBytes)
 	{
 		if (m_buf + nBytes > m_bufEndPos)
-			throw COutOfRangeException();
+			return -1;
 
 		int x = m_buf[0];
 		// big endian extract
@@ -407,11 +402,15 @@ public:
 		return x;
 	}
 
-	void Advance(int nBytes)
+	bool IsAvailable(int nBytes)
+	{
+		return m_buf + nBytes <= m_bufEndPos;
+	}
+
+	bool Advance(int nBytes)
 	{
 		m_buf += nBytes;
-		if (m_buf > m_bufEndPos)
-			throw COutOfRangeException();
+		return m_buf <= m_bufEndPos;
 	}
 
 protected:
@@ -452,16 +451,15 @@ int CMP3InfoReader::GetVbrInfoFrameCount(unsigned char const *frameBuff, int nBu
 		int		nHeadFlags;
 		CBigEndianBuffReader	bufReader(buff + 4, nBuffLen - nOffset - 4);
 
-		try
-		{
-			nHeadFlags = bufReader.ExtractIx(4);
-
-			if (nHeadFlags & FRAMES_FLAG)
-				nFrameCount = bufReader.ExtractIx(4);
-		}
-		catch(CBigEndianBuffReader::COutOfRangeException &)
-		{
+		if (!bufReader.IsAvailable(4))
 			return -1;
+		nHeadFlags = bufReader.ExtractIx(4);
+
+		if (nHeadFlags & FRAMES_FLAG)
+		{
+			if (!bufReader.IsAvailable(4))
+				return -1;
+			nFrameCount = bufReader.ExtractIx(4);
 		}
 	}
 	else if (buff[0] == 'V' && buff[1] == 'B' && buff[2] == 'R' && buff[3] == 'I')
@@ -492,18 +490,14 @@ int CMP3InfoReader::GetVbrInfoFrameCount(unsigned char const *frameBuff, int nBu
 		DWORD	dwVersion, dwQuality;
 		float	fDelay;
 
-		try
-		{
-			dwVersion = bufReader.ExtractIx(2);
-			fDelay = (float)bufReader.ExtractIx(2);
-			dwQuality = bufReader.ExtractIx(2);
-			/* int nFileSizeOrg = */bufReader.ExtractIx(4);
-			nFrameCount = bufReader.ExtractIx(4);
-		}
-		catch(CBigEndianBuffReader::COutOfRangeException &)
-		{
+		if (!bufReader.IsAvailable(2 + 2 + 2 + 4 + 4))
 			return -1;
-		}
+
+		dwVersion = bufReader.ExtractIx(2);
+		fDelay = (float)bufReader.ExtractIx(2);
+		dwQuality = bufReader.ExtractIx(2);
+		/* int nFileSizeOrg = */bufReader.ExtractIx(4);
+		nFrameCount = bufReader.ExtractIx(4);
 	}
 
 	return nFrameCount;

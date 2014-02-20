@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "NetServer.h"
+#include "ClientCom.h"
 #include "HttpProtocol.h"
 #include "MLUtils.h"
 

@@ -1040,7 +1040,7 @@ public:
 		int nLrcLineCount = 0;
 		int nTxtLineCount = 0;
 
-		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
+		for (typename ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
 		{
 			Line &line = *it;
 			if (line.vTime.size())
@@ -1067,7 +1067,7 @@ public:
 		str.reserve(1024 * 4);
 
 		// Tags
-		for (_ListString::iterator it = m_listTags.begin(); it != m_listTags.end(); ++it)
+		for (typename _ListString::iterator it = m_listTags.begin(); it != m_listTags.end(); ++it)
 		{
 			str.append(*it);
 			str.append(szReturn);
@@ -1077,7 +1077,7 @@ public:
 		_TCHAR	szTime[64];
 
 		// Time
-		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
+		for (typename ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
 		{
 			Line &line = *it;
 
@@ -1100,7 +1100,7 @@ public:
 
 	bool IsLongTimeFormat()
 	{
-		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
+		for (typename ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
 		{
 			Line &line = *it;
 			for (uint i = 0; i < line.vTime.size(); i++)
@@ -1120,7 +1120,7 @@ protected:
 		SetLine(str, szLine);
 
 		// Add to existed items
-		for (ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
+		for (typename ListLines::iterator it = m_listLines.begin(); it != m_listLines.end(); ++it)
 		{
 			Line &line = *it;
 			if (!line.vTime.empty() && _xcscmp(line.lyrics.c_str(), str.c_str()) == 0)

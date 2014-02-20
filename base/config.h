@@ -5,6 +5,7 @@
 // #define _LINUX
 // #define _MAC_OSX
 // #define _IPHONE
+// #define _ANDROID
 
 #ifdef __MAC_OS_X_VERSION_MAX_ALLOWED
 #ifndef _MAC_OSX
@@ -17,6 +18,9 @@
 #define UTF8 // in iPhone and Mac OS X, default character encoding is UTF8
 #endif
 
+#ifdef _ANDROID
+#define UTF8
+#endif
 
 #ifdef _LINUX
 #define UTF8
@@ -33,12 +37,6 @@
 #ifndef _WIN32_DESKTOP
 #define _WIN32_DESKTOP
 #endif
-#endif
-#endif
-
-#ifdef _WIN32_WCE
-#ifndef _WINCE_
-#define _WINCE_
 #endif
 #endif
 

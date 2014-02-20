@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NetServer.h"
+#include "ClientCom.h"
 #include "MLProtocol.h"
 
 int DownloadUrl(LPCTSTR szUrl, LPCTSTR szRefer, int &nHttpCode, CCharBuffer &buffRet, LPCTSTR szUserAgent = NULL);

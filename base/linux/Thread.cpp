@@ -2,8 +2,9 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "Thread.h"
+#include <pthread.h>
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -30,7 +31,7 @@ bool CThread::Create(FUNThread function, void* lpData)
 
 void CThread::Destroy()
 {
-
+	pthread_kill(m_threadID, 0);
 }
 
 void CThread::Suspend()
@@ -67,4 +68,6 @@ void *CThread::ThreadFunction(void *lpParam)
 	CThread	*pThis = (CThread *)lpParam;
 
 	pThis->m_funThead(pThis->m_lpData);
+	
+	return NULL;
 }

@@ -65,15 +65,3 @@ bool CopyDir(LPCTSTR lpExistingDir, LPCTSTR lpNewDir);
 void TStringToProperFileData(LPCTSTR str, CCharBuffer &bufData);
 
 bool IsCurOrParentDir(LPCTSTR szDir);
-
-#ifdef _WIN32
-#include "win32/fileapi.h"
-#endif
-
-#ifdef _MAC
-#include "Mac/fileapi.h"
-#endif
-
-#ifdef _LINUX
-#include "linux/fileapi.h"
-#endif

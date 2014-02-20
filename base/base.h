@@ -42,6 +42,7 @@
 #include "win32/Mutex.h"
 #include "win32/Semaphore.h"
 #include "win32/Thread.h"
+#include "win32/fileapi.h"
 #endif
 
 #ifdef _LINUX
@@ -49,6 +50,16 @@
 #include "linux/Mutex.h"
 #include "linux/Semaphore.h"
 #include "linux/Thread.h"
+#include "linux/fileapi.h"
+#endif
+
+#ifdef _ANDROID
+#include "android/android.h"
+#include "linux/Event.h"
+#include "linux/Mutex.h"
+#include "linux/Semaphore.h"
+#include "android/Thread.h"
+#include "linux/fileapi.h"
 #endif
 
 #ifdef _MAC
@@ -57,6 +68,7 @@
 #include "Mac/Semaphore.h"
 #include "Mac/Thread.h"
 #include "Mac/ThreadAutoReleasePool.h"
+#include "Mac/fileapi.h"
 #endif
 
 #include "misc.h"

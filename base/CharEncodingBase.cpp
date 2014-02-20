@@ -5,6 +5,8 @@
 #include "stringex.h"
 #include "safestr.h"
 
+extern ENCODING_CODEPAGE	__encodingCodepage[];
+
 CHAR_ENCODING FileEcodingToCharEncoding(FILE_ENCODING fileEncoding)
 {
 	switch (fileEncoding)

@@ -279,6 +279,22 @@ void GetOSInfo(tstring &os, tstring &osLang)
 }
 #endif
 
+#ifdef _ANDROID
+void GetOSInfo(tstring &os, tstring &osLang)
+{
+	os = _T("Android");
+	osLang = _T("**");
+}
+#endif
+
+#ifdef _LINUX
+void GetOSInfo(tstring &os, tstring &osLang)
+{
+	os = _T("Linux");
+	osLang = _T("**");
+}
+#endif
+
 void CAppAnalyticsClient::Free()
 {
 	for (MapUsageData::iterator it = m_mapUsageData.begin(); it != m_mapUsageData.end(); ++it)

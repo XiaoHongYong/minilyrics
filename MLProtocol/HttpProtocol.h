@@ -9,7 +9,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "NetServer.h"
+#include "ClientCom.h"
 
 #define __HTTP_PORT		80
 

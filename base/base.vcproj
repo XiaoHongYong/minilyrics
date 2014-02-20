@@ -1643,6 +1643,10 @@
 			Filter="h;hpp;hxx;hm;inl"
 			>
 			<File
+				RelativePath=".\auto_free_list.h"
+				>
+			</File>
+			<File
 				RelativePath="base.h"
 				>
 			</File>

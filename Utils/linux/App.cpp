@@ -7,8 +7,8 @@
 *********************************************************************/
 
 #include "../stdafx.h"
-#include "Utils.h"
-#include "App.h"
+#include "../Utils.h"
+#include "../App.h"
 
 // ≈‰÷√Œƒº˛
 class CProfile	g_Profile;
@@ -17,6 +17,7 @@ class CProfile	g_Profile;
 class CLog		g_Log;
 
 TCHAR			g_szWorkingFolder[MAX_PATH] = _T("");
+TCHAR			g_szAppDataDir[MAX_PATH] = _T("");
 
 void SetWorkingFolder(LPCTSTR szWorkingFolder)
 {
@@ -40,8 +41,34 @@ LPCTSTR GetAppResourceDir()
 	return g_szWorkingFolder;
 }
 
+LPCTSTR GetAppDataDir()
+{
+	if (IsEmptyString(g_szAppDataDir))
+	{
+		GetAppResourceDir(g_szAppDataDir);
+	}
+	
+	return g_szAppDataDir;
+}
+
+void GetAppDataDir(TCHAR *szAppDir)
+{
+	_tcscpy_safe(szAppDir, MAX_PATH, GetAppDataDir());
+}
+
+void InitSetDefaultCharEncoding();
+
 BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProfileName, LPCTSTR szDefAppName)
 {
+	assert(sizeof(byte) == 1);
+	assert(sizeof(WORD) == 2);
+	assert(sizeof(DWORD) == 4);
+	assert(sizeof(int16) == 2);
+	assert(sizeof(int32) == 4);
+	assert(sizeof(int64) == 8);
+	assert(sizeof(WCHAR) == 2);
+	assert(sizeof(WCHAR) == 2);
+
 	{
 		int nLen;
 

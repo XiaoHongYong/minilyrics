@@ -57,6 +57,24 @@
 #include <unistd.h>
 #include <errno.h>
 #include <malloc.h>
+#include <pthread.h>
+#endif
+
+#ifdef _ANDROID
+#include <dirent.h>
+#include <ctype.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/times.h>
+#include <fcntl.h>
+#include <netdb.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <errno.h>
+#include <malloc.h>
+#include <pthread.h>
 #endif
 
 #ifdef _MAC
@@ -85,6 +103,7 @@
 #pragma warning(disable:4786)
 #pragma warning(disable:4503)
 #pragma warning(disable:4996)
+
 #include <algorithm>
 #include <string>
 #include <vector>

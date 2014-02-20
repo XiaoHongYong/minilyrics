@@ -7,11 +7,11 @@
 *********************************************************************/
 
 #include "../stdafx.h"
-#include "Profile.h"
-#include "UUEncode.h"
-#include "App.h"
+#include "../Profile.h"
+#include "../UUEncode.h"
+#include "../App.h"
 
-#include "privateprofilestring.cpp"
+#include "../privateprofilestring.cpp"
 
 /*
 Test Encrypt ....
@@ -268,7 +268,7 @@ void CProfile::Init(LPCTSTR szProfile, LPCTSTR szDefKey)
 
 	if (_tcslen(szProfile) > 3)
 	{
-		if ((szProfile[1] == ':') && (szProfile[2] == DIR_SLASH) ||
+		if (((szProfile[1] == ':') && (szProfile[2] == DIR_SLASH)) ||
 			(szProfile[0] == DIR_SLASH))
 		{
 			// 如果已经是全路径，则不管
@@ -277,7 +277,7 @@ void CProfile::Init(LPCTSTR szProfile, LPCTSTR szDefKey)
 		}
 	}
 
-	m_strProfile = GetAppResourceDir();
+	m_strProfile = GetAppDataDir();
 	m_strProfile += szProfile;
 }
 
@@ -436,8 +436,6 @@ LPCTSTR CProfile::GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefa
 {
 	assert(!m_strProfile.empty());
 
-	DWORD		dwRet;
-
 	if (szKeyName[0] == '\0')
 		return _T("");
 
@@ -446,7 +444,7 @@ LPCTSTR CProfile::GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefa
 	if (!GetKey(szAppName, szKeyName, itKey))
 	{
 		TCHAR	szReturnedString[1024];
-		dwRet = GetPrivateProfileString(szAppName, szKeyName, szDefault, szReturnedString, 1024, m_strProfile.c_str());
+		GetPrivateProfileString(szAppName, szKeyName, szDefault, szReturnedString, 1024, m_strProfile.c_str());
 		AddKeys(szAppName, szKeyName, szReturnedString);
 		if (!GetKey(szAppName, szKeyName, itKey))
 		{
@@ -521,24 +519,22 @@ LPCTSTR CProfile::GetDefAppName()
 //
 // support encrypt keyname and value
 //
-void EncryptStr(LPCTSTR szStr, tstringex &strOut)
+void EncryptStr(LPCTSTR szStr, tstring &strOut)
 {
-	stringex	strEncrypt;
-	stringex	strAnsi;
-	ConvertStr(szStr, -1, strAnsi);
-	encodeuu(strAnsi.c_str(), strAnsi.size(), strEncrypt, true, false);
-	_xcsrep(strEncrypt.data(), '=', '?');
-	ConvertStr(strEncrypt.c_str(), strEncrypt.size(), strOut);
+	stringex	strUtf8;
+	TStringToUTF8(szStr, -1, strUtf8);
+	encodeuu(strUtf8.c_str(), strUtf8.size(), strOut, true, false);
+	strrep(strOut, '=', '?');
 }
 
-void DecryptStr(LPCTSTR szStr, tstringex &strOut)
+void DecryptStr(LPCTSTR szStr, tstring &strOut)
 {
-	stringex	strDecrypt;
-	stringex	strAnsi;
-	ConvertStr(szStr, -1, strAnsi);
-	_xcsrep(strAnsi.data(), '?', '=');
-	decodebase64(strAnsi.c_str(), strAnsi.size(), strDecrypt);
-	ConvertStr(strDecrypt.c_str(), strDecrypt.size(), strOut);
+	tstring		str = szStr;
+	string		strUtf8;
+
+	strrep(str, '?', '=');
+	decodebase64(str.c_str(), str.size(), strUtf8);
+	UTF8ToTString(strUtf8.c_str(), strUtf8.size(), strOut);
 }
 /*
 void TestEnDecrypt()
@@ -557,11 +553,11 @@ void TestEnDecrypt()
 }
 */
 
-DWORD CProfile::EncryptGetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
+tstring CProfile::EncryptGetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault)
 {
 	assert(!m_strProfile.empty());
 
-	DWORD		dwRet;
+    TCHAR       szReturnedString[512];
 
 	if (szKeyName[0] == '\0')
 	{
@@ -569,7 +565,7 @@ DWORD CProfile::EncryptGetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR s
 		return 0;
 	}
 
-	tstringex	strKeyNameEncrypt, strValue;
+	tstring	strKeyNameEncrypt, strValue;
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 
 	MAP_STRING::iterator	itKey;
@@ -577,17 +573,17 @@ DWORD CProfile::EncryptGetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR s
 	if (!GetKey(szAppName, strKeyNameEncrypt.c_str(), itKey))
 	{
 		EncryptStr(szDefault, strValue);
-		dwRet = GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, nSize, m_strProfile.c_str());
+		GetPrivateProfileString(szAppName, strKeyNameEncrypt.c_str(), strValue.c_str(), szReturnedString, CountOf(szReturnedString), m_strProfile.c_str());
 		AddKeys(szAppName, strKeyNameEncrypt.c_str(), szReturnedString);
 	}
 	else
 	{
-		_tcscpy_safe(szReturnedString, nSize, (*itKey).second.c_str());
+		_tcscpy_safe(szReturnedString, CountOf(szReturnedString), (*itKey).second.c_str());
 	}
 	DecryptStr(szReturnedString, strValue);
-	_tcscpy_safe(szReturnedString, nSize, strValue.c_str());
+	_tcscpy_safe(szReturnedString, CountOf(szReturnedString), strValue.c_str());
 
-	return _tcslen(szReturnedString);
+	return szReturnedString;
 }
 
 BOOL CProfile::EncryptWriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
@@ -596,7 +592,7 @@ BOOL CProfile::EncryptWriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR 
 
 	DWORD		dwRet;
 	MAP_STRING::iterator	itKey;
-	tstringex	strKeyNameEncrypt, strValueEncrypt;
+	tstring	strKeyNameEncrypt, strValueEncrypt;
 
 	EncryptStr(szKeyName, strKeyNameEncrypt);
 	EncryptStr(szValue, strValueEncrypt);
@@ -611,4 +607,18 @@ BOOL CProfile::EncryptWriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR 
 		(*itKey).second = strValueEncrypt;
 
 	return dwRet;
+}
+
+int CProfile::EncryptGetInt(LPCTSTR szKeyName, int nValue)
+{
+	tstring	str = EncryptGetString(szKeyName, _T(""));
+	if (str.empty())
+		return nValue;
+	else
+		return _ttoi(str.c_str());
+}
+
+void CProfile::EncryptWriteInt(LPCTSTR szKeyName, int nValue)
+{
+	EncryptWriteString(szKeyName, CStrPrintf(_T("%d"), nValue).c_str());
 }

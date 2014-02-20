@@ -11,78 +11,81 @@ typedef unsigned char uint8;
 typedef char int8;
 
 #ifdef _LINUX
-typedef int64_t int64;
-typedef u_int64_t uint64;
+	typedef int64_t int64;
+	typedef u_int64_t uint64;
 #endif
 
 #ifdef WIN32
-#ifdef _WINCE_
-typedef __int64 int64;
-typedef unsigned __int64 uint64;
-#else
-typedef LONGLONG int64;
-typedef int64 uint64;
-#endif
+	#ifdef _WINCE_
+	typedef __int64 int64;
+	typedef unsigned __int64 uint64;
+	#else
+	typedef LONGLONG int64;
+	typedef int64 uint64;
+	#endif
 #endif
 
 #if defined(_MAC)
-typedef int64_t int64;
-typedef u_int64_t uint64;
-#ifndef TRUE
-#define TRUE		1
-#define FALSE		0
-#endif
+	typedef int64_t int64;
+	typedef u_int64_t uint64;
 #endif
 
-#if !defined(WIN32) && !defined(_WIN32_WCE)
-
-#if !defined( _OBJC_OBJC_H_)
-#if defined(_MAC)
-typedef signed char		BOOL; 
-#else
-typedef long BOOL;
+#ifdef _ANDROID
+	typedef int64_t int64;
+	typedef u_int64_t uint64;
 #endif
-#endif // !defined( _OBJC_OBJC_H_)
 
-#define  __cdecl		
-#define WINAPI __stdcall
+#if !defined(WIN32)
 
-typedef unsigned char byte;
-typedef unsigned char BYTE;
-typedef unsigned short WORD;
-typedef unsigned int DWORD;
-typedef long LONG;
-typedef unsigned int UINT;
-typedef unsigned int uint;
+	#if !defined( _OBJC_OBJC_H_)
+		#if defined(_MAC)
+			typedef signed char		BOOL; 
+		#else
+			typedef long BOOL;
+		#endif
+	#endif // !defined( _OBJC_OBJC_H_)
 
-typedef DWORD   COLORREF;
+	#define  __cdecl		
+	#define WINAPI __stdcall
 
-typedef /* [string] */ const char		*LPCSTR;
-typedef /* [string] */ const unsigned short *LPCWSTR;
-typedef /* [string] */ char *LPSTR;
-typedef /* [string] */ unsigned short *LPWSTR;
-typedef /* [string] */ unsigned short WCHAR;
+	typedef unsigned char byte;
+	typedef unsigned char BYTE;
+	typedef unsigned short WORD;
+	typedef unsigned int DWORD;
+	typedef long LONG;
+	typedef unsigned int UINT;
+	typedef unsigned int uint;
 
-#ifdef UNICODE
-typedef LPCWSTR			LPCTSTR;
-typedef LPWSTR			LPTSTR;
-typedef WCHAR			TCHAR;
-#else
-typedef LPCSTR			LPCTSTR;
-typedef LPSTR			LPTSTR;
-typedef char			TCHAR;
-#endif // #ifdef UNICODE
+	typedef DWORD   COLORREF;
 
-typedef const void* LPCVOID;
+	typedef /* [string] */ const char		*LPCSTR;
+	typedef /* [string] */ const unsigned short *LPCWSTR;
+	typedef /* [string] */ char *LPSTR;
+	typedef /* [string] */ unsigned short *LPWSTR;
+	typedef /* [string] */ unsigned short WCHAR;
 
-typedef void* LPVOID;
+	#ifdef UNICODE
+	typedef LPCWSTR			LPCTSTR;
+	typedef LPWSTR			LPTSTR;
+	typedef WCHAR			TCHAR;
+	#else
+	typedef LPCSTR			LPCTSTR;
+	typedef LPSTR			LPTSTR;
+	typedef char			TCHAR;
+	#endif // #ifdef UNICODE
 
-typedef BYTE		*LPBYTE;
+	typedef const void* LPCVOID;
 
-// #define TRUE		1
-// #define FALSE		0
+	typedef void* LPVOID;
 
-#endif // #if !defined(WIN32) && !defined(_WIN32_WCE)
+	typedef BYTE		*LPBYTE;
+
+	#ifndef TRUE
+		#define TRUE		true
+		#define FALSE		false
+	#endif
+
+#endif // #if !defined(WIN32)
 
 typedef basic_string<WCHAR> wstring_t;
 

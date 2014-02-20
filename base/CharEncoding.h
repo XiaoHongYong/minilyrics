@@ -43,7 +43,9 @@ struct ENCODING_CODEPAGE
 
 #ifdef _MAC
 	int					nCFStringEncoding;
-#else
+#endif
+
+#ifdef _WIN32
 	int					nCodePage;		// windows codepage
 	int					nFontCharset;
 #endif
@@ -56,9 +58,11 @@ struct ENCODING_CODEPAGE
 	LPCSTR				szIConvCode;
 #endif
 
-};
+#ifdef _ANDROID
+	LPCSTR				szIConvCode;
+#endif
 
-extern ENCODING_CODEPAGE	__encodingCodepage[];
+};
 
 int GetCharEncodingCount();
 
