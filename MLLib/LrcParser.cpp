@@ -22,7 +22,7 @@ void RemoveExtraBlankLine(tstring &str)
 	bool bAppendNewLine = (str.size() > 0 && str[str.size() - 1] == '\n');
 	TrimStr(str, _T("\r\n"));
 
-	int oldSize = str.size();
+	size_t oldSize = str.size();
 
 	while (true) 
 	{
@@ -153,7 +153,7 @@ int CLrcParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 	if (!OpenFileToBuffer(m_pMLData->GetLyricsFileName(), lyrics))
 		return ERR_READ_FILE;
 
-	return ParseString((LPBYTE)lyrics.data(), lyrics.size(), false, bUseSpecifiedEncoding, encoding);
+	return ParseString((LPBYTE)lyrics.data(), (int)lyrics.size(), false, bUseSpecifiedEncoding, encoding);
 }
 
 int CLrcParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
@@ -163,7 +163,7 @@ int CLrcParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 	bool bToTxtFormat = Tobool(FileIsExtSame(szFile, _T(".txt")));
 	ToString(strData, true, bToTxtFormat);
 
-	if (!SaveStringAsFile(szFile, strData.c_str(), strData.size(), newEncoding))
+	if (!SaveStringAsFile(szFile, strData.c_str(), (int)strData.size(), newEncoding))
 		return ERR_WRITE_FILE;
 
 	return ERR_OK;
@@ -216,7 +216,7 @@ int CLrcParser::ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine)
 		}
 
 		// Parse lrc tag.
-		int propIndex = propNameValueMap.ParseLrcTag(szLine, _tcslen(szLine));
+		int propIndex = propNameValueMap.ParseLrcTag(szLine, (int)_tcslen(szLine));
 		if (propIndex == -1)
 			AddStrAsUnknowLine(szLine);
 	}
@@ -319,7 +319,7 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 	{
 		wstrBE.reserve(nLen / sizeof(WCHAR));
 		wstrBE.append((WCHAR *)szLrc, nLen / sizeof(WCHAR));
-		UCS2BEToLE(wstrBE.data(), wstrBE.size());
+		UCS2BEToLE(wstrBE.data(), (int)wstrBE.size());
 		szLrc = (LPBYTE)wstrBE.data();
 	}
 
@@ -329,7 +329,7 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 #ifdef UTF8
 		UCS2ToUtf8((LPCWSTR)szLrc, nLen / sizeof(WCHAR), strSysEncoding);
 		szLrc = (LPBYTE)strSysEncoding.data();
-		nLen = strSysEncoding.size();
+		nLen = (int)strSysEncoding.size();
 #else
 		// Unicode
 		nLen = nLen / sizeof(WCHAR);
@@ -347,7 +347,7 @@ int CLrcParser::ParseString(LPBYTE szLrc, int nLen, bool bAddTimeStampForTextLin
 		{
 			MbcsToUtf8((LPCSTR)szLrc, nLen, strSysEncoding, encoding);
 			szLrc = (LPBYTE)strSysEncoding.data();
-			nLen = strSysEncoding.size();
+			nLen = (int)strSysEncoding.size();
 		}
 #endif
 	}
@@ -391,7 +391,7 @@ void CLrcParser::ParseTxtTagInLyrics()
 		ASSERT(pPiece->IsTempBegTime());
 
 		// Parse Txt tag.
-		int propIndex = propNameValueMap.ParseTxtTag(pPiece->szLyric, _tcslen(pPiece->szLyric));
+		int propIndex = propNameValueMap.ParseTxtTag(pPiece->szLyric, (int)_tcslen(pPiece->szLyric));
 		if (propIndex != -1)
 		{
 			if (IsTxtTagAtTailOfFile(propNameValueMap.GetTagType(propIndex)))
@@ -420,7 +420,7 @@ void CLrcParser::ParseTxtTagInLyrics()
 		ASSERT(pPiece->IsTempBegTime());
 
 		// Parse Txt tag.
-		int propIndex = propNameValueMap.ParseTxtTag(pPiece->szLyric, _tcslen(pPiece->szLyric));
+		int propIndex = propNameValueMap.ParseTxtTag(pPiece->szLyric, (int)_tcslen(pPiece->szLyric));
 		if (propIndex != -1)
 		{
 			propNameValueMap.Remove(propIndex);
@@ -530,7 +530,7 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 		{
 			bLastLineBlank = false;
 			LyricsLineToTxtString(pLine, strBuff);
-			if (propNameValueMap.ParseTxtTag(strBuff.c_str(), strBuff.size()) == -1)
+			if (propNameValueMap.ParseTxtTag(strBuff.c_str(), (int)strBuff.size()) == -1)
 			{
 				lyrLines.push_back(pLine);
 				str += strBuff;
@@ -681,7 +681,7 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 			nEndTime = -1;
 			szLyricsBeg = EatFrag(szLyricsBeg, nEndTime, buff);
 			
-			pLine->AppendPiece(nBegTime, nEndTime, buff.c_str(), buff.size(), FALSE, TRUE);
+			pLine->AppendPiece(nBegTime, nEndTime, buff.c_str(), (int)buff.size(), FALSE, TRUE);
 
 			if (nEndTime != -1)
 				nBegTime = nEndTime;
@@ -706,7 +706,7 @@ void CLrcParser::AddLyrLines(vector<int> &vTimes, LPCTSTR szLyrLine)
 void CLrcParser::AddStrAsTimedLine(const TCHAR *szLine)
 {
 	LyricsLine *pLine = NewLyricsLine(m_nLatestTime, -1);
-	pLine->AppendPiece(m_nLatestTime, -1, szLine, _tcslen(szLine), TRUE, TRUE);
+	pLine->AppendPiece(m_nLatestTime, -1, szLine, (int)_tcslen(szLine), TRUE, TRUE);
 
 	m_pMLData->AddLineByTime(pLine);
 }
@@ -714,7 +714,7 @@ void CLrcParser::AddStrAsTimedLine(const TCHAR *szLine)
 void CLrcParser::AddStrAsUnknowLine(const TCHAR *szLine)
 {
 	// Unknown tag, just add it in the file.
-	LyricsLine *pLine = NewLyricsLine(0, 0, szLine, _tcslen(szLine), false);
+	LyricsLine *pLine = NewLyricsLine(0, 0, szLine, (int)_tcslen(szLine), false);
 	m_pMLData->AddLine(pLine);
 }
 
@@ -833,13 +833,13 @@ void CLrcParser::LRCCheckRowTime()
 	int		nSizeFrag;
 	int		i;
 
-	nSize = m_pMLData->GetLyricsLinesCount();
+	nSize = (int)m_pMLData->GetLyricsLinesCount();
 	
 	// 如果歌词段的开始时间 < 此行歌词的开始时间，则修改
 	for (i = 0; i < nSize; i ++)
 	{
 		LyricsLine *pLine = m_pMLData->GetLyricsLine(i);
-		nSizeFrag = pLine->vFrags.size();
+		nSizeFrag = (int)pLine->vFrags.size();
 
 		for (int k = 0; k < nSizeFrag; k++)
 		{
@@ -902,7 +902,7 @@ void CLrcParser::LRCCheckRowTime()
 		}
 		
 		// 对每一段歌词的时间正确性进行校验
-		nSizeFrag = pLine->vFrags.size();
+		nSizeFrag = (int)pLine->vFrags.size();
 		for (int k = 0; k < nSizeFrag; k++)
 		{
 			pPiece = pLine->vFrags[k];

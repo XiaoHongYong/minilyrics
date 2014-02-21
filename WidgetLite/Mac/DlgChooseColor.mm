@@ -48,7 +48,7 @@ int CDlgChooseColor::DoModal(CBaseWnd *pWndParent, const MLColor &clr)
 	[panel setDelegate:delegate];
 	[panel setColor:nsclr];
 
-	int nRet = [NSApp runModalForWindow:panel];
+	int nRet = (int)[NSApp runModalForWindow:panel];
 	[delegate release];	
 	if (nRet != IDOK)
 		return nRet;

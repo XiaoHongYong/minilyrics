@@ -26,7 +26,6 @@
 		5F9CDF21147A330100432DAC /* idstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEEA147A330100432DAC /* idstring.cpp */; };
 		5F9CDF22147A330100432DAC /* idstring.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEEB147A330100432DAC /* idstring.h */; };
 		5F9CDF23147A330100432DAC /* BaseMac-Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */; };
-		5F9CDF25147A330100432DAC /* CharEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF0147A330100432DAC /* CharEncoding.cpp */; };
 		5F9CDF26147A330100432DAC /* CharEncoding.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF1147A330100432DAC /* CharEncoding.mm */; };
 		5F9CDF28147A330100432DAC /* Event.h in Headers */ = {isa = PBXBuildFile; fileRef = 5F9CDEF3147A330100432DAC /* Event.h */; };
 		5F9CDF29147A330100432DAC /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F9CDEF4147A330100432DAC /* fileapi.cpp */; };
@@ -95,7 +94,6 @@
 		5F9CDEEA147A330100432DAC /* idstring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = idstring.cpp; sourceTree = SOURCE_ROOT; };
 		5F9CDEEB147A330100432DAC /* idstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = idstring.h; sourceTree = SOURCE_ROOT; };
 		5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "BaseMac-Prefix.pch"; sourceTree = "<group>"; };
-		5F9CDEF0147A330100432DAC /* CharEncoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharEncoding.cpp; sourceTree = "<group>"; };
 		5F9CDEF1147A330100432DAC /* CharEncoding.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CharEncoding.mm; sourceTree = "<group>"; };
 		5F9CDEF3147A330100432DAC /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		5F9CDEF4147A330100432DAC /* fileapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileapi.cpp; sourceTree = "<group>"; };
@@ -251,7 +249,6 @@
 			children = (
 				5F2BD59314963B52003E7F5C /* misc.mm */,
 				5F9CDEEE147A330100432DAC /* BaseMac-Prefix.pch */,
-				5F9CDEF0147A330100432DAC /* CharEncoding.cpp */,
 				5F9CDEF1147A330100432DAC /* CharEncoding.mm */,
 				5F9FA0E61795992C00A6CAC2 /* Event.mm */,
 				5F9CDEF3147A330100432DAC /* Event.h */,
@@ -342,7 +339,7 @@
 		5F9CDEBB147A323D00432DAC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0460;
+				LastUpgradeCheck = 0500;
 			};
 			buildConfigurationList = 5F9CDEBE147A323D00432DAC /* Build configuration list for PBXProject "BaseMac" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -372,7 +369,6 @@
 				5F9CDF1D147A330100432DAC /* Error.cpp in Sources */,
 				5F9CDF1F147A330100432DAC /* FileApiBase.cpp in Sources */,
 				5F9CDF21147A330100432DAC /* idstring.cpp in Sources */,
-				5F9CDF25147A330100432DAC /* CharEncoding.cpp in Sources */,
 				5F9CDF26147A330100432DAC /* CharEncoding.mm in Sources */,
 				5F9CDF29147A330100432DAC /* fileapi.cpp in Sources */,
 				5F9CDF2B147A330100432DAC /* MemmapFile.cpp in Sources */,
@@ -402,8 +398,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -421,7 +418,9 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
@@ -433,8 +432,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
@@ -446,7 +446,9 @@
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;

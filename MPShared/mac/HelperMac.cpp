@@ -26,6 +26,7 @@ int CanOpenFileForWrite(LPCTSTR szFile, bool bMustExist)
 
 void Execute(CBaseWnd *pWnd, LPCTSTR szExe, LPCTSTR szParam)
 {
+	// TODO: TBD
 }
 
 bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText)
@@ -35,14 +36,12 @@ bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText)
 
 BOOL SHDeleteFile(LPCTSTR szFile, CBaseWnd *pWndParent)
 {
-	// TODO:
-	return false;
+	return DeleteFile(szFile);
 }
 
 BOOL SHCopyFile(LPCTSTR szSrcFile, LPCTSTR szTargFile, CBaseWnd *pWndParent)
 {
-	// TODO:
-	return false;
+	return CopyFile(szSrcFile, szTargFile, true);
 }
 
 #ifndef INVALID_FILE_ATTRIBUTES

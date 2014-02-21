@@ -18,10 +18,10 @@ public:
 	int Connect(LPCWSTR szServer, int nPort);
 
 	int Recieve(char * buf, int nLen, int flags = 0)
-	{ return recv(m_s, buf, nLen, flags); }
+		{ return (int)recv(m_s, buf, nLen, flags); }
 
 	int Send(const char *buf, int nLen, int flags = 0)
-	{ return send(m_s, buf, nLen, flags); }
+		{ return (int)send(m_s, buf, nLen, flags); }
 
 	int Close() { closesocket(m_s); m_s = 0; return 0; }
 

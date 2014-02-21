@@ -58,7 +58,7 @@ public:
 
 	int GetCurPlayLine(const CLyricsLines &lyrLines);
 
-	int GetLyricsLinesCount() { return m_arrLyricsLines.size(); }
+	size_t GetLyricsLinesCount() { return m_arrLyricsLines.size(); }
 	LyricsLine *GetLyricsLine(int nLine);
 	CLyricsLines &GetRawLyrics() { return m_arrLyricsLines; }
 	CLyricsLines &GetFileLines() { return m_arrFileLines; }

@@ -112,7 +112,7 @@ class CLyrTagNameValueMap
 public:
 	CLyrTagNameValueMap(LyricsProperties &prop, uint32 tagMask = LTT_ALL_TAG);
 
-	int GetCount() const { return m_vItems.size(); }
+	size_t GetCount() const { return m_vItems.size(); }
 	LyrTagType GetTagType(int nIndex);
 	const string &GetLrcName(int nIndex);
 	const string &GetTxtName(int nIndex);

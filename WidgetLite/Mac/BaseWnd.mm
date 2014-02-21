@@ -514,9 +514,9 @@ int MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption)
 									 defaultButton:defBt
 								   alternateButton:alterBt
 									   otherButton:otherBt
-						 informativeTextWithFormat:[NSString stringWithUTF8String:lpText]];
+						 informativeTextWithFormat:@"%@", [NSString stringWithUTF8String:lpText]];
 	
-	int nRet = [alert runModal];
+	int nRet = (int)[alert runModal];
 	if (btType == MB_OKCANCEL) {
 		if (nRet == NSAlertDefaultReturn)
 			return IDOK;
@@ -566,9 +566,9 @@ int CBaseWnd::MessageOut(LPCTSTR lpText, UINT uType, LPCTSTR lpCaption)
 									defaultButton:defBt
 								  alternateButton:alterBt
 									  otherButton:otherBt
-						informativeTextWithFormat:[NSString stringWithUTF8String:lpText]];
+						informativeTextWithFormat:@"%@", [NSString stringWithUTF8String:lpText]];
 	
-	int nRet = [alert runModal];
+	int nRet = (int)[alert runModal];
 	if (btType == MB_OKCANCEL) {
 		if (nRet == NSAlertDefaultReturn)
 			return IDOK;

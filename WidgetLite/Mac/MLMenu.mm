@@ -22,7 +22,7 @@
 
 - (void) OnCommand:(NSMenuItem *)item
 {
-	mBaseWnd->OnCommand([item tag], 0);
+	mBaseWnd->OnCommand((uint)[item tag], 0);
 }
 
 -(BOOL) validateMenuItem:(NSMenuItem *)item
@@ -152,7 +152,7 @@ bool CMLMenu::CreatePopupMenu()
 
 int CMLMenu::GetItemCount()
 {
-	return [m_info->menu numberOfItems];
+	return (int)[m_info->menu numberOfItems];
 }
 
 LPCTSTR ToMacMenuText(LPCTSTR szOrg, tstring &buf)
@@ -230,7 +230,7 @@ void CMLMenu::InsertItem(int nPos, UINT nID, LPCTSTR szText, LPCTSTR szShortcutK
 
 void CMLMenu::InsertItemByID(UINT nPosID, UINT nID, LPCTSTR szText, LPCTSTR szShortcutKey)
 {
-	int pos = [m_info->menu indexOfItemWithTag:nID];
+	int pos = (int)[m_info->menu indexOfItemWithTag:nID];
 	if (pos == -1)
 		AppendItem(nID, szText, szShortcutKey);
 	else
@@ -291,7 +291,7 @@ bool CMLMenu::GetMenuItemInfo(UINT nItem, tstring &strText, UINT &nID, bool &bSu
 		return false;
 	
 	strText = [[item title] UTF8String];
-	nID = [item tag];
+	nID = (int)[item tag];
 	bSubMenu = [item hasSubmenu] == YES;
 
 	return true;
