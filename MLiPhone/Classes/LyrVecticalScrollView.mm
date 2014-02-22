@@ -20,7 +20,7 @@ const int END_LYR_LINE_DURATION = 10 * 1000;
 
 UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, int height);
 
-tstring getLyricsOfLine(PML_ROW pRow)
+tstring getLyricsOfLine(LyricsLine *pRow)
 {
 	tstring str;
 	for (int i = 0; i < pRow->vFrags.size(); i++) {
@@ -101,7 +101,7 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
 	
 	NSString *drawArea = [[NSString alloc] initWithFormat:@"Left: %d, Top: %d, Width: %d, height: %d", 
-						  rect.origin.x, rect.origin.y, rect.size.width, 120];
+						  rect.origin.x, rect.origin.y, (int)rect.size.width, 120];
 	
 	// And now we actually draw some text. This screen will demonstrate the typical drawing modes used.
 	CGContextSetTextDrawingMode(context, kCGTextFill);
@@ -111,7 +111,8 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 
 - (int) getLineByTime:(int)time
 {
-	
+	// todo:/....
+	return 0;
 }
 
 - (void) freeLyricsLines
@@ -128,7 +129,7 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 	[self freeLyricsLines];
 
 	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
-	VLyrLines &lyrLines = lyrData.GetRawLyrics();
+	CLyricsLines &lyrLines = lyrData.GetRawLyrics();
 	float boundsWidth = self.bounds.size.width - mMarginX * 2;
 
 	if (m_FontName == NULL)
@@ -147,7 +148,7 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 											  &kCFTypeDictionaryValueCallBacks);
 
 	for (int i = 0; i < lyrLines.size(); i++) {
-		PML_ROW pRow = lyrLines[i];
+		LyricsLine *pRow = lyrLines[i];
 		tstring strLyrLine = getLyricsOfLine(pRow);
 
 		if (strLyrLine.size() == 0) {

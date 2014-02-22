@@ -6,9 +6,7 @@
 	Purpose  :	
 *********************************************************************/
 
-
-#ifndef _FRAME_WORK_2003_11_2_23_28INCLUDED_
-#define _FRAME_WORK_2003_11_2_23_28INCLUDED_
+#pragma once
 
 #include "log.h"
 #include "LogAlias.h"
@@ -17,7 +15,7 @@
 // golobal variable
 //
 
-// ≈‰÷√Œƒº˛
+// Configuration file
 extern class CProfile			g_Profile;
 
 void GetAppResourceDir(LPTSTR szWorkingFolder);
@@ -44,5 +42,3 @@ BOOL InitBaseFrameWork(HINSTANCE hInst, LPCTSTR szLogFile, LPCTSTR szProfileName
 #else
 BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProfileName, LPCTSTR szDefAppName = NULL);
 #endif
-
-#endif // _FRAME_WORK_2003_11_2_23_28INCLUDED_

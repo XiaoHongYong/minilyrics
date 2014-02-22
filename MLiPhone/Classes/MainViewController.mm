@@ -1,7 +1,6 @@
 
 #import "MainViewController.h"
 #import <Foundation/Foundation.h>
-#import "LyricsSearchViewController.h"
 
 #import "../../base/base.h"
 #import "../../Utils/Utils.h"
@@ -208,12 +207,6 @@ extern "C" NSString *formatPlayingTime(int n);
 }
 
 - (IBAction) ShowLyrSearchView: (id) sender {
-	LyricsSearchViewController *controller = [[LyricsSearchViewController alloc] initWithNibName: @"LyricsSearchView" bundle: nil];
-	controller.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-	controller.parentViewController = self;
-	
-	[self presentModalViewController: controller animated: YES];
-	[controller release];
 }
 
 // Invoked by the delegate of the media item picker when the user is finished picking music.
@@ -756,7 +749,7 @@ bool ScaleLyricsFont(float scale)
 		return;*/
 
 	BOOL isHidden = ![advancedCtrlView isHidden];
-	g_Profile.WriteProfileInt(_T("HideAdvCtrl"), isHidden);
+	g_Profile.WriteInt(_T("HideAdvCtrl"), isHidden);
 	[advancedCtrlView setHidden:isHidden];
 }
 

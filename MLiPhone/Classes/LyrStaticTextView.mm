@@ -38,15 +38,15 @@
 - (void) onLyricsChanged
 {
 	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
-	VLyrLines &lyrLines = lyrData.GetRawLyrics();
+	CLyricsLines &lyrLines = lyrData.GetRawLyrics();
 
 	string	strLyrics;
 	for (int i = 0; i < lyrLines.size(); i++)
 	{
-		PML_ROW pLine = lyrLines[i];
+		LyricsLine *pLine = lyrLines[i];
 		if (pLine->vFrags.size() <= 0)
 			continue;
-		PLYRIC_FRAG pFrag = pLine->vFrags[0];
+		LyricsPiece *pFrag = pLine->vFrags[0];
 		strLyrics += pFrag->szLyric;
 		strLyrics += "\r\n";
 	}

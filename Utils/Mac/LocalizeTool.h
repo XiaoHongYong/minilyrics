@@ -4,7 +4,11 @@
 
 #pragma once
 
-LPCTSTR TOLOCAL(LPCTSTR szString);
+LPCTSTR _TL(LPCTSTR szString);
+#define _TLT _TL
+#define _TL3 _TL
 
-#undef ERROR2STR_LOCAL
-#define ERROR2STR_LOCAL(nError)	(TOLOCAL(Error2Str(nError)))
+#define _TLS(szString)
+#define _TLM(szString)		_T(szString)
+
+//#define ERROR2STR_LOCAL(nError)	(g_LangTool.ToLocalString(Error2Str(nError)))

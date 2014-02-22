@@ -32,7 +32,7 @@
 
 -(void) onMediaChanged;
 
--(UIImage*) getAlbumArtWithWidth:(int)width Height:(int)height;
+//-(UIImage*) getAlbumArtWithWidth:(int)width Height:(int)height;
 
 @end
 

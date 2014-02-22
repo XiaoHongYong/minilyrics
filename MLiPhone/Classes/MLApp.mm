@@ -15,47 +15,28 @@
 
 #import "MLAppNotifyParam.h"
 
-LPCTSTR TOLOCAL(LPCTSTR szString)
+LPCTSTR _TL(LPCTSTR szString)
 {
 	NSString *key = [NSString stringWithUTF8String:szString];
 	NSString *local = [[NSBundle mainBundle] localizedStringForKey:(key) value:@"" table:nil];
 	return [local UTF8String];
 }
-
-tstring GetAppDataDir()
-{
-	NSArray *paths = NSSearchPathForDirectoriesInDomains(
-														 NSDocumentDirectory,
-														 NSUserDomainMask,
-														 YES);
-	NSString *documentsDir = [paths objectAtIndex:0];
-	tstring	str = (const char *)[documentsDir UTF8String];
-	DirStringAddSlash(str);
-	return str;
-}
-
-void GetAppDataDir(TCHAR szDir[])
-{
-	tstring	str = GetAppDataDir();
-	_tcscpy_safe(szDir, MAX_PATH, str.c_str());
-}
-
-tstring GetResourceFile(LPCTSTR szFileName)
-{
-	TCHAR	szTitle[MAX_PATH];
-	FileGetTitle(szTitle, CountOf(szTitle), szFileName);
-	LPCTSTR szExt = FileGetExt(szFileName);
-	if (szExt)
-		szExt++;
-	else
-		szExt = "";
-
-	NSString *name = [[NSString alloc] initWithUTF8String:szTitle];
-	NSString *type = [[NSString alloc] initWithUTF8String:szExt];
-	NSString *dbFilePath = [[NSBundle mainBundle] pathForResource:name ofType:type];
-	
-	return [dbFilePath UTF8String];
-}
+//
+//tstring GetResourceFile(LPCTSTR szFileName)
+//{
+//	tstring title = FileGetTitle(szFileName);
+//	LPCTSTR szExt = FileGetExt(szFileName);
+//	if (szExt)
+//		szExt++;
+//	else
+//		szExt = "";
+//
+//	NSString *name = [[NSString alloc] initWithUTF8String:title.c_str()];
+//	NSString *type = [[NSString alloc] initWithUTF8String:szExt];
+//	NSString *dbFilePath = [[NSBundle mainBundle] pathForResource:name ofType:type];
+//	
+//	return [dbFilePath UTF8String];
+//}
 
 #import "CMLApp.h"
 
@@ -134,16 +115,16 @@ UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, in
 {
 	MLAppNotifyParam *param = [notification object];
 
-	if (param.type == MLNT_LYRICS_SEARCH_END) {
-		bool bPopupSearchWnd = false;
-		CMLApp::GetInstance()->OnLyricsSearchEnd(param.searchEndResult, bPopupSearchWnd);
-		if (bPopupSearchWnd)
-			[delegate onPopupLyrSearchView];
-	}
-	else if (param.type == MLNT_LYRICS_DOWNLOADED) {
-		CMLApp::GetInstance()->OnLyricsDownloaded([param mediaKey], [param lyricsFile]);
-	}
-	else if (param.type == MLNT_MESSAGE) {
+//	else if (param.type == MLNT_LYRICS_SEARCH_END) {
+//		bool bPopupSearchWnd = false;
+//		CMLApp::GetInstance()->OnLyricsSearchEnd(param.searchEndResult, bPopupSearchWnd);
+//		if (bPopupSearchWnd)
+//			[delegate onPopupLyrSearchView];
+//	}
+//	else if (param.type == MLNT_LYRICS_DOWNLOADED) {
+//		CMLApp::GetInstance()->OnLyricsDownloaded([param mediaKey], [param lyricsFile]);
+//	}
+	if (param.type == MLNT_MESSAGE) {
 		NSString	*msg = [[NSString alloc] initWithUTF8String:[param message]];
 		[delegate onMessage:msg showActivityIndicator:[param showActivityIndicator] infoMsg:[param infoMsg]];
 	}

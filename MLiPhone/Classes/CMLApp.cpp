@@ -25,25 +25,16 @@ CMLApp *CMLApp::GetInstance()
 int CMLApp::Init()
 {
 	LPTSTR  vArgv[2] = { 0 };
-	tstring strAppDirDir = GetAppDataDir() + _T("MiniLyrics.app");
+	tstring strAppDirDir = tstring(GetAppDataDir()) + _T("MiniLyrics.app");
 	vArgv[0] = (LPTSTR)strAppDirDir.c_str();
 
 	InitBaseFrameWork(1, vArgv, NULL, _T("MiniLyrics.ini"), _T("MiniLyrics"));
-
-	m_localLyrSearch.Init();
-	g_lyricsAssociation.Init();
-	m_onlineLyrSearch.Init();
-	m_lyrDownloadMgr.Init();
 
 	return ERR_OK;
 }
 
 void CMLApp::Quit()
 {
-	m_localLyrSearch.Quit();
-	g_lyricsAssociation.Quit();
-	m_onlineLyrSearch.Quit();
-	m_lyrDownloadMgr.Quit();
 }
 
 #define MAKE_SURE_STR_NOT_NULL(str)		if (str == NULL) str = _T("")
@@ -81,31 +72,25 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 		return;
 	}
 
-	tstring strLyrics;
-	if (m_localLyrSearch.GetBestMatchLyrics(szMediaKey, szArtist, szTitle, strLyrics))
-	{
-		// Open lyrics
-		if (_tcsicmp(strLyrics.c_str(), NONE_LYRICS) == 0)
-		{
-			AddMediaInfo();
-			PostNotifyLyricsChanged();
-			return;
-		}
-		int nRet = m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, strLyrics.c_str(), false, ED_SYSDEF);
-		if (nRet == ERR_OK)
-		{
-			PostNotifyLyricsChanged();
-			return;
-		}
-	}
+//	tstring strLyrics;
+//	if (m_localLyrSearch.GetBestMatchLyrics(szMediaKey, szArtist, szTitle, strLyrics))
+//	{
+//		// Open lyrics
+//		if (_tcsicmp(strLyrics.c_str(), NONE_LYRICS) == 0)
+//		{
+//			AddMediaInfo();
+//			PostNotifyLyricsChanged();
+//			return;
+//		}
+//		int nRet = m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, strLyrics.c_str(), false, ED_SYSDEF);
+//		if (nRet == ERR_OK)
+//		{
+//			PostNotifyLyricsChanged();
+//			return;
+//		}
+//	}
 
 	AddMediaInfo();
-
-	if (g_lyricsAssociation.canAutoSearchOnline(szMediaKey))
-	{
-		// Search online
-		m_onlineLyrSearch.AutoSearch(szMediaKey, szArtist, szTitle);
-	}
 
 	PostNotifyLyricsChanged();
 }
@@ -115,143 +100,11 @@ void CMLApp::AddMediaInfo()
 	V_Str		vMediaInfo;
 	
 	if (m_strArtist.size() > 0)
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Artist:"))) + _T(" ") + m_strArtist);
+		vMediaInfo.push_back(tstring(_TLT("Artist:")) + _T(" ") + m_strArtist);
 	if (m_strTitle.size() > 0)
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Title:"))) + _T(" ") + m_strTitle);
+		vMediaInfo.push_back(tstring(_TLT("Title:")) + _T(" ") + m_strTitle);
 	if (m_strAlbum.size() > 0)
-		vMediaInfo.push_back(tstring(TOLOCAL(_T("Album:"))) + _T(" ") + m_strAlbum);
+		vMediaInfo.push_back(tstring(_TLT("Album:")) + _T(" ") + m_strAlbum);
 	
 	m_lyrData.AddTextInLyrics(vMediaInfo);
-}
-
-void CMLApp::OnLyricsSearchEnd(int nResult, bool &bPopupSearchWnd)
-{
-	if (nResult == ERR_OK)
-	{
-		bPopupSearchWnd = false;
-	
-		// Lyrics are opened already?
-		tstring strLyrics;
-		if (g_lyricsAssociation.getAssociatedLyrics(m_strCurMediaKey.c_str(), strLyrics))
-			return;
-
-		// Got lyrics search result, so search it.
-		SearchInCacheResult(true);
-	}
-	else if (nResult == ERR_NOT_FOUND)
-	{
-		PostNotifyMessage(TOLOCAL(_T("Sorry, no lyrics returned.")), false, true);
-	}
-	else
-	{
-		tstring		str;
-		str = TOLOCAL(_T("Failed to search lyrics:"));
-		str += _T(" ");
-		str += Error2Str(nResult);
-		PostNotifyMessage(str.c_str(), false, false);
-	}
-}
-
-bool CMLApp::SearchCacheForCurrentMedia(V_LRCSEARCHRESULT &vLrcSearchResult)
-{
-	return m_onlineLyrSearch.SearchCache(m_strCurMediaKey.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), vLrcSearchResult);
-}
-
-void CMLApp::DownloadLyrics(LPCTSTR szMediaKey, LPCTSTR szUrl, LPCTSTR szFileName)
-{
-	tstring		str;
-	str = TOLOCAL(_T("Downloading lyrics:"));
-	str += _T(" ");
-	str += szFileName;
-	PostNotifyMessage(str.c_str(), true, true);
-	
-	m_lyrDownloadMgr.DownloadLyrics(szMediaKey, szUrl, szFileName);
-}
-
-void CMLApp::OnLyricsDownloaded(LPCTSTR szMediaKey, LPCTSTR szFile)
-{
-	// Associate lyrics
-	g_lyricsAssociation.AssociateLyrics(szMediaKey, szFile);
-
-	// Open Lyrics
-	if (_tcscmp(szMediaKey, m_strCurMediaKey.c_str()) == 0)
-	{
-		// Save lyrics changes
-		if (m_lyrData.HasLyricsOpened() && m_lyrData.IsModified())
-			m_lyrData.Save();
-
-		m_lyrData.OpenLyrics(szMediaKey, m_nMediaLength, szFile, false, ED_SYSDEF);
-		PostNotifyLyricsChanged();
-	}
-}
-
-BOOL CMLApp::SearchInCacheResult(bool bShowInfoText)
-{
-	V_LRCSEARCHRESULT		vLrcSearchResult;
-
-	if (!m_onlineLyrSearch.SearchCache(m_strCurMediaKey.c_str(), m_strArtist.c_str(), m_strTitle.c_str(), vLrcSearchResult))
-	{
-		static	int nFailedCount = 0;
-		nFailedCount++;
-		if (bShowInfoText && nFailedCount > 2)
-		{
-			tstring		str;
-			str = TOLOCAL(_T("Failed to get searching lyrics results."));
-			str += _T(" ");
-			str += TOLOCAL(_T("Please contact us to report this issue."));
-			PostNotifyMessage(str.c_str(), false, false);
-		}
-		return FALSE;
-	}
-
-	if (vLrcSearchResult.size() == 0)
-	{
-		if (bShowInfoText)
-		{
-			tstring		str;
-			str = TOLOCAL(_T("Search returned no results."));
-			PostNotifyMessage(str.c_str(), false, true);
-		}
-		return FALSE;
-	}
-
-	float	nValueMax = 0;
-	V_LRCSEARCHRESULT::iterator itBest;
-
-	//
-	// ·ÖÖµ³¬¹ý MATCH_VALUE_OK
-	itBest = vLrcSearchResult.GetTheBestMatchLyrics(FALSE);
-	if (itBest != vLrcSearchResult.end())
-	{
-		LrcSearchResult		&result = *itBest;
-		nValueMax = result.nMatchValue;
-		if (nValueMax >= MATCH_VALUE_OK)
-		{
-			// If current lyrics is text lyrics, and the match lyrics is also text
-			// lyrics, do NOT download it.
-			if (m_lyrData.GetLyrContentType() != LCT_UNKNOWN
-				&& result.nMatchValue < MATCH_VALUE_BETTER)
-				return TRUE;
-
-			// Download it
-			DownloadLyrics(m_strCurMediaKey.c_str(), result.strUrl.c_str(), result.strSaveFileName.c_str());
-			return TRUE;
-		}
-	}
-
-	// If any lyrics is opened, do not continue to download.
-	if (m_lyrData.HasLyricsOpened())
-		return true;
-
-	if (bShowInfoText)
-	{
-		PostNotifyMessage(
-			TOLOCAL(_T("Found some similar lyrics, please click 'Search Lyrics' button.")), false, true);
-	}
-
-	return TRUE;
-}
-
-void CMLApp::SetDefaultSettings()
-{
 }

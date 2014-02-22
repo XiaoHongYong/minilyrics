@@ -3,6 +3,7 @@
 #import "../../gfx/gfx.h"
 #import "../../GfxRaw/GfxRaw.h"
 #import "../../Utils/Utils.h"
+#import "../../TagLib/TagLib.h"
 #import "helper.h"
 
 tstring GetLyricsFolder()
@@ -16,4 +17,12 @@ tstring GetLyricsFolder()
 BOOL SetFileNoReadOnly(LPCTSTR szFile)
 {
 	return TRUE;
+}
+
+LRC_SOURCE_TYPE LyrSrcTypeFromName(LPCTSTR szLrcSource)
+{
+	if (_tcsicmp(szLrcSource, NONE_LYRCS) == 0)
+		return LST_NONE;
+	
+	return LST_FILE;
 }

@@ -20,17 +20,9 @@
 		288765FD0DF74451002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765FC0DF74451002DB57D /* CoreGraphics.framework */; };
 		580748730FAA6E1600373EAF /* MusicTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580748710FAA6E1600373EAF /* MusicTableViewController.m */; };
 		58D3B0100F9FE329006F1B20 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D3B00F0F9FE329006F1B20 /* MediaPlayer.framework */; };
-		5F12E55711D8EB8E00F8572F /* MLProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F12E55611D8EB8E00F8572F /* MLProtocol.cpp */; };
 		5F1B47F211DC171B00AAF8E4 /* CMLApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */; };
 		5F1B499B11DCE85500AAF8E4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F1B499A11DCE85500AAF8E4 /* CoreText.framework */; };
-		5F2CF47C11DAE72B00A4D095 /* LyricsSearchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */; };
-		5F70B86E11D8EA46009D0254 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86111D8EA46009D0254 /* HttpClient.cpp */; };
-		5F70B87211D8EA46009D0254 /* MLUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86611D8EA46009D0254 /* MLUtils.cpp */; };
-		5F70B87311D8EA46009D0254 /* NetSDK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86811D8EA46009D0254 /* NetSDK.cpp */; };
-		5F70B87411D8EA46009D0254 /* NetServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86A11D8EA46009D0254 /* NetServer.cpp */; };
 		5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
-		5FAF93F5144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */; };
-		5FAF93F6144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */; };
 		5FAF93FA144DB67800E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F9144DB67800E998BC /* libsqlite3.dylib */; };
 		5FAF966114506D2400E998BC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		5FAF966214506D2400E998BC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -97,56 +89,32 @@
 		5FAF970814506D9A00E998BC /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6262142B8E78005A50B6 /* Error.cpp */; };
 		5FAF970A14506D9A00E998BC /* FileApiBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6264142B8E78005A50B6 /* FileApiBase.cpp */; };
 		5FAF970C14506D9A00E998BC /* idstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6266142B8E78005A50B6 /* idstring.cpp */; };
-		5FAF970E14506D9A00E998BC /* CharEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */; };
 		5FAF970F14506D9A00E998BC /* CharEncoding.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626B142B8E78005A50B6 /* CharEncoding.mm */; };
-		5FAF971014506D9A00E998BC /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626C142B8E78005A50B6 /* Event.cpp */; };
 		5FAF971214506D9A00E998BC /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626E142B8E78005A50B6 /* fileapi.cpp */; };
 		5FAF971414506D9A00E998BC /* MemmapFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6270142B8E78005A50B6 /* MemmapFile.cpp */; };
 		5FAF971714506D9B00E998BC /* MutexIP.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6274142B8E78005A50B6 /* MutexIP.mm */; };
 		5FAF971814506D9B00E998BC /* OSError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6275142B8E78005A50B6 /* OSError.cpp */; };
 		5FAF971A14506D9B00E998BC /* Semaphore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6278142B8E78005A50B6 /* Semaphore.mm */; };
 		5FAF971B14506D9B00E998BC /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6279142B8E78005A50B6 /* Thread.cpp */; };
-		5FAF971D14506D9B00E998BC /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627C142B8E78005A50B6 /* misc.cpp */; };
 		5FAF972014506D9B00E998BC /* OnlyAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */; };
 		5FAF972314506D9B00E998BC /* safestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6282142B8E78005A50B6 /* safestr.cpp */; };
 		5FAF972714506D9B00E998BC /* stringex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6286142B8E78005A50B6 /* stringex.cpp */; };
 		5FAF972A14506D9B00E998BC /* StrPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6289142B8E78005A50B6 /* StrPrintf.cpp */; };
-		5FAF972E14506D9B00E998BC /* MLProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F12E55611D8EB8E00F8572F /* MLProtocol.cpp */; };
-		5FAF972F14506D9B00E998BC /* HttpProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */; };
-		5FAF973214506D9B00E998BC /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86111D8EA46009D0254 /* HttpClient.cpp */; };
-		5FAF973414506D9B00E998BC /* MLUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86611D8EA46009D0254 /* MLUtils.cpp */; };
-		5FAF973614506D9B00E998BC /* NetSDK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86811D8EA46009D0254 /* NetSDK.cpp */; };
-		5FAF973814506D9B00E998BC /* NetServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86A11D8EA46009D0254 /* NetServer.cpp */; };
-		5FAF973C14506D9B00E998BC /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */; };
 		5FAF973E14506D9B00E998BC /* CMLApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */; };
-		5FAF974114506D9B00E998BC /* LyricsAssociation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */; };
-		5FAF974314506D9B00E998BC /* LyricsDownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */; };
-		5FAF974514506D9B00E998BC /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */; };
-		5FAF974714506D9B00E998BC /* OnlineSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */; };
 		5FAF974A14506D9B00E998BC /* MiniLyricsAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1D3623250D0F684500981E51 /* MiniLyricsAppDelegate.m */; };
 		5FAF974C14506D9B00E998BC /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56C4B11C11088000E68A1 /* helper.cpp */; };
 		5FAF974E14506D9B00E998BC /* MainViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0A735D520FACBA430057280A /* MainViewController.mm */; };
 		5FAF975014506D9B00E998BC /* MusicTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 580748710FAA6E1600373EAF /* MusicTableViewController.m */; };
 		5FAF975214506D9B00E998BC /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
 		5FAF975414506D9B00E998BC /* MLApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56D0011C12D35000E68A1 /* MLApp.mm */; };
-		5FAF975614506D9B00E998BC /* LyricsSearchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */; };
 		5FAF975814506D9B00E998BC /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
 		5FAF975A14506D9B00E998BC /* MLAppNotifyParam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE53142A2C0000D1DDA4 /* MLAppNotifyParam.mm */; };
-		5FAF978414506E0D00E998BC /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF975D14506E0D00E998BC /* CSVFile.cpp */; };
-		5FAF978514506E0D00E998BC /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF975D14506E0D00E998BC /* CSVFile.cpp */; };
-		5FAF978614506E0D00E998BC /* CSVFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF975D14506E0D00E998BC /* CSVFile.cpp */; };
 		5FAF978714506E0D00E998BC /* digest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF975F14506E0D00E998BC /* digest.cpp */; };
 		5FAF978814506E0D00E998BC /* digest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF975F14506E0D00E998BC /* digest.cpp */; };
 		5FAF978914506E0D00E998BC /* digest.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF975F14506E0D00E998BC /* digest.cpp */; };
-		5FAF978A14506E0D00E998BC /* LocalizeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976114506E0D00E998BC /* LocalizeTool.cpp */; };
-		5FAF978B14506E0D00E998BC /* LocalizeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976114506E0D00E998BC /* LocalizeTool.cpp */; };
-		5FAF978C14506E0D00E998BC /* LocalizeTool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976114506E0D00E998BC /* LocalizeTool.cpp */; };
 		5FAF978D14506E0D00E998BC /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976314506E0D00E998BC /* Log.cpp */; };
 		5FAF978E14506E0D00E998BC /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976314506E0D00E998BC /* Log.cpp */; };
 		5FAF978F14506E0D00E998BC /* Log.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976314506E0D00E998BC /* Log.cpp */; };
-		5FAF979014506E0D00E998BC /* Looper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976614506E0D00E998BC /* Looper.cpp */; };
-		5FAF979114506E0D00E998BC /* Looper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976614506E0D00E998BC /* Looper.cpp */; };
-		5FAF979214506E0D00E998BC /* Looper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976614506E0D00E998BC /* Looper.cpp */; };
 		5FAF979614506E0D00E998BC /* Profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976B14506E0D00E998BC /* Profile.cpp */; };
 		5FAF979714506E0D00E998BC /* Profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976B14506E0D00E998BC /* Profile.cpp */; };
 		5FAF979814506E0D00E998BC /* Profile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF976B14506E0D00E998BC /* Profile.cpp */; };
@@ -189,9 +157,6 @@
 		5FAF97E91451243700E998BC /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C41451243700E998BC /* LrcTag.cpp */; };
 		5FAF97EA1451243700E998BC /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C41451243700E998BC /* LrcTag.cpp */; };
 		5FAF97EB1451243700E998BC /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C41451243700E998BC /* LrcTag.cpp */; };
-		5FAF97EF1451243700E998BC /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C91451243700E998BC /* LyricsSearch.cpp */; };
-		5FAF97F01451243700E998BC /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C91451243700E998BC /* LyricsSearch.cpp */; };
-		5FAF97F11451243700E998BC /* LyricsSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97C91451243700E998BC /* LyricsSearch.cpp */; };
 		5FAF97F21451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97CB1451243700E998BC /* LyrScrollActionRecorder.cpp */; };
 		5FAF97F31451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97CB1451243700E998BC /* LyrScrollActionRecorder.cpp */; };
 		5FAF97F41451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97CB1451243700E998BC /* LyrScrollActionRecorder.cpp */; };
@@ -205,22 +170,14 @@
 		5FAF97FF1451243700E998BC /* MLProfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D51451243700E998BC /* MLProfile.cpp */; };
 		5FAF98001451243700E998BC /* MLProfile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF97D51451243700E998BC /* MLProfile.cpp */; };
 		5FAF9810145132D900E998BC /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF980F145132D800E998BC /* MediaPlayer.framework */; };
-		5FAF98121451559100E998BC /* App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98111451559100E998BC /* App.mm */; };
-		5FAF98131451559100E998BC /* App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98111451559100E998BC /* App.mm */; };
-		5FAF98141451559100E998BC /* App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98111451559100E998BC /* App.mm */; };
 		5FAF981C1451C7F200E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F9144DB67800E998BC /* libsqlite3.dylib */; };
 		5FAF981D1451C7FE00E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F9144DB67800E998BC /* libsqlite3.dylib */; };
 		5FAF982014531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */; };
 		5FAF982114531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */; };
 		5FAF982214531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */; };
-		5FAF982A1454646300E998BC /* PinchTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98291454646000E998BC /* PinchTextView.m */; };
-		5FAF982B1454646300E998BC /* PinchTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98291454646000E998BC /* PinchTextView.m */; };
-		5FAF982C1454646300E998BC /* PinchTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 5FAF98291454646000E998BC /* PinchTextView.m */; };
 		5FAF98361456FDEB00E998BC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5FAF98351456FDE600E998BC /* Settings.bundle */; };
 		5FAF98371456FDEB00E998BC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5FAF98351456FDE600E998BC /* Settings.bundle */; };
 		5FAF98381456FDEB00E998BC /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 5FAF98351456FDE600E998BC /* Settings.bundle */; };
-		5FB4FE501428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */; };
-		5FB4FE511428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */; };
 		5FB4FE54142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE53142A2C0000D1DDA4 /* MLAppNotifyParam.mm */; };
 		5FB4FE55142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB4FE53142A2C0000D1DDA4 /* MLAppNotifyParam.mm */; };
 		5FB56C4C11C11088000E68A1 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56C4B11C11088000E68A1 /* helper.cpp */; };
@@ -231,16 +188,13 @@
 		5FBE6292142B8E78005A50B6 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6262142B8E78005A50B6 /* Error.cpp */; };
 		5FBE6293142B8E78005A50B6 /* FileApiBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6264142B8E78005A50B6 /* FileApiBase.cpp */; };
 		5FBE6294142B8E78005A50B6 /* idstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6266142B8E78005A50B6 /* idstring.cpp */; };
-		5FBE6296142B8E78005A50B6 /* CharEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */; };
 		5FBE6297142B8E78005A50B6 /* CharEncoding.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626B142B8E78005A50B6 /* CharEncoding.mm */; };
-		5FBE6298142B8E78005A50B6 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626C142B8E78005A50B6 /* Event.cpp */; };
 		5FBE6299142B8E78005A50B6 /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626E142B8E78005A50B6 /* fileapi.cpp */; };
 		5FBE629A142B8E78005A50B6 /* MemmapFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6270142B8E78005A50B6 /* MemmapFile.cpp */; };
 		5FBE629C142B8E78005A50B6 /* MutexIP.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6274142B8E78005A50B6 /* MutexIP.mm */; };
 		5FBE629D142B8E78005A50B6 /* OSError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6275142B8E78005A50B6 /* OSError.cpp */; };
 		5FBE629F142B8E78005A50B6 /* Semaphore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6278142B8E78005A50B6 /* Semaphore.mm */; };
 		5FBE62A0142B8E78005A50B6 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6279142B8E78005A50B6 /* Thread.cpp */; };
-		5FBE62A2142B8E78005A50B6 /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627C142B8E78005A50B6 /* misc.cpp */; };
 		5FBE62A3142B8E78005A50B6 /* OnlyAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */; };
 		5FBE62A4142B8E78005A50B6 /* safestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6282142B8E78005A50B6 /* safestr.cpp */; };
 		5FBE62A5142B8E78005A50B6 /* stringex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6286142B8E78005A50B6 /* stringex.cpp */; };
@@ -251,24 +205,17 @@
 		5FBE62B2142B8ECA005A50B6 /* Error.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6262142B8E78005A50B6 /* Error.cpp */; };
 		5FBE62B4142B8ECA005A50B6 /* FileApiBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6264142B8E78005A50B6 /* FileApiBase.cpp */; };
 		5FBE62B6142B8ECA005A50B6 /* idstring.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6266142B8E78005A50B6 /* idstring.cpp */; };
-		5FBE62B8142B8ECA005A50B6 /* misc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627C142B8E78005A50B6 /* misc.cpp */; };
 		5FBE62BB142B8ECA005A50B6 /* OnlyAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */; };
 		5FBE62BE142B8ECA005A50B6 /* safestr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6282142B8E78005A50B6 /* safestr.cpp */; };
 		5FBE62C2142B8ECA005A50B6 /* stringex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6286142B8E78005A50B6 /* stringex.cpp */; };
 		5FBE62C5142B8ECA005A50B6 /* StrPrintf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6289142B8E78005A50B6 /* StrPrintf.cpp */; };
-		5FBE62C9142B8F49005A50B6 /* CharEncoding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */; };
 		5FBE62CA142B8F49005A50B6 /* CharEncoding.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626B142B8E78005A50B6 /* CharEncoding.mm */; };
-		5FBE62CB142B8F49005A50B6 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626C142B8E78005A50B6 /* Event.cpp */; };
 		5FBE62CC142B8F49005A50B6 /* fileapi.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE626E142B8E78005A50B6 /* fileapi.cpp */; };
 		5FBE62CD142B8F49005A50B6 /* MemmapFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6270142B8E78005A50B6 /* MemmapFile.cpp */; };
 		5FBE62CF142B8F49005A50B6 /* MutexIP.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6274142B8E78005A50B6 /* MutexIP.mm */; };
 		5FBE62D0142B8F49005A50B6 /* OSError.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6275142B8E78005A50B6 /* OSError.cpp */; };
 		5FBE62D2142B8F49005A50B6 /* Semaphore.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6278142B8E78005A50B6 /* Semaphore.mm */; };
 		5FBE62D3142B8F49005A50B6 /* Thread.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBE6279142B8E78005A50B6 /* Thread.cpp */; };
-		5FBEDFF811D979A000E01391 /* HttpProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */; };
-		5FC0B1BB11C51C59000C6537 /* LyricsDownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */; };
-		5FC0B1BC11C51C59000C6537 /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */; };
-		5FC0B1BD11C51C59000C6537 /* OnlineSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */; };
 		5FC1212E1214DF5F003D9B42 /* play_ctrl_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FC1212D1214DF5F003D9B42 /* play_ctrl_bg.png */; };
 		5FC1229C12177E6B003D9B42 /* no_artwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A735D610FACBAAC0057280A /* no_artwork.png */; };
 		5FC1229D12177E6B003D9B42 /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = 0A6C6CBF0FB396DB00F95575 /* Default.png */; };
@@ -313,16 +260,6 @@
 		5FC122C712177E6B003D9B42 /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
 		5FC122CA12177E6B003D9B42 /* helper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56C4B11C11088000E68A1 /* helper.cpp */; };
 		5FC122CB12177E6B003D9B42 /* MLApp.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FB56D0011C12D35000E68A1 /* MLApp.mm */; };
-		5FC122CC12177E6B003D9B42 /* LyricsDownloadMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */; };
-		5FC122CD12177E6B003D9B42 /* LyricsLocalSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */; };
-		5FC122CE12177E6B003D9B42 /* OnlineSearch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */; };
-		5FC122CF12177E6B003D9B42 /* HttpClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86111D8EA46009D0254 /* HttpClient.cpp */; };
-		5FC122D012177E6B003D9B42 /* MLUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86611D8EA46009D0254 /* MLUtils.cpp */; };
-		5FC122D112177E6B003D9B42 /* NetSDK.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86811D8EA46009D0254 /* NetSDK.cpp */; };
-		5FC122D212177E6B003D9B42 /* NetServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F70B86A11D8EA46009D0254 /* NetServer.cpp */; };
-		5FC122D312177E6B003D9B42 /* MLProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F12E55611D8EB8E00F8572F /* MLProtocol.cpp */; };
-		5FC122D412177E6B003D9B42 /* HttpProtocol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */; };
-		5FC122D512177E6B003D9B42 /* LyricsSearchViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */; };
 		5FC122D612177E6B003D9B42 /* CMLApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */; };
 		5FC122D712177E6B003D9B42 /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
 		5FC122DF12177E6B003D9B42 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
@@ -367,6 +304,9 @@
 		5FCB8C621210FCA1009F23BD /* MainView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C5F1210FCA1009F23BD /* MainView.xib */; };
 		5FCB8C631210FCA1009F23BD /* MainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C601210FCA1009F23BD /* MainWindow.xib */; };
 		5FCB8C641210FCA1009F23BD /* MusicTableView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5FCB8C611210FCA1009F23BD /* MusicTableView.xib */; };
+		5FDF9A7418B778A100ACB5D9 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 5FDF9A7318B778A100ACB5D9 /* Default-568h@2x.png */; };
+		5FDF9A7A18B8485D00ACB5D9 /* LyricsData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5FDF9A7818B8485D00ACB5D9 /* LyricsData.cpp */; };
+		5FDF9A7C18B848E400ACB5D9 /* App.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FDF9A7B18B848E400ACB5D9 /* App.mm */; };
 		5FE7EA0511F1375500CECD89 /* LyrStaticTextView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */; };
 /* End PBXBuildFile section */
 
@@ -389,27 +329,11 @@
 		580748700FAA6E1600373EAF /* MusicTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MusicTableViewController.h; sourceTree = "<group>"; };
 		580748710FAA6E1600373EAF /* MusicTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MusicTableViewController.m; sourceTree = "<group>"; };
 		58D3B00F0F9FE329006F1B20 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		5F12E55611D8EB8E00F8572F /* MLProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = MLProtocol.cpp; path = ../MLProtocol/MLProtocol.cpp; sourceTree = SOURCE_ROOT; };
 		5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = CMLApp.cpp; sourceTree = "<group>"; };
 		5F1B47F111DC171B00AAF8E4 /* CMLApp.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = CMLApp.h; sourceTree = "<group>"; };
 		5F1B499A11DCE85500AAF8E4 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
-		5F2CF47A11DAE72B00A4D095 /* LyricsSearchViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsSearchViewController.h; sourceTree = "<group>"; };
-		5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyricsSearchViewController.mm; sourceTree = "<group>"; };
-		5F70B86111D8EA46009D0254 /* HttpClient.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = HttpClient.cpp; path = ../MLProtocol/HttpClient.cpp; sourceTree = SOURCE_ROOT; };
-		5F70B86211D8EA46009D0254 /* HttpClient.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = HttpClient.h; path = ../MLProtocol/HttpClient.h; sourceTree = SOURCE_ROOT; };
-		5F70B86611D8EA46009D0254 /* MLUtils.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = MLUtils.cpp; path = ../MLProtocol/MLUtils.cpp; sourceTree = SOURCE_ROOT; };
-		5F70B86711D8EA46009D0254 /* MLUtils.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = MLUtils.h; path = ../MLProtocol/MLUtils.h; sourceTree = SOURCE_ROOT; };
-		5F70B86811D8EA46009D0254 /* NetSDK.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = NetSDK.cpp; path = ../MLProtocol/NetSDK.cpp; sourceTree = SOURCE_ROOT; };
-		5F70B86911D8EA46009D0254 /* NetSDK.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = NetSDK.h; path = ../MLProtocol/NetSDK.h; sourceTree = SOURCE_ROOT; };
-		5F70B86A11D8EA46009D0254 /* NetServer.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; name = NetServer.cpp; path = ../MLProtocol/NetServer.cpp; sourceTree = SOURCE_ROOT; };
-		5F70B86B11D8EA46009D0254 /* NetServer.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = NetServer.h; path = ../MLProtocol/NetServer.h; sourceTree = SOURCE_ROOT; };
-		5F70B86C11D8EA46009D0254 /* sockadapt.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = sockadapt.h; path = ../MLProtocol/sockadapt.h; sourceTree = SOURCE_ROOT; };
-		5F70B86D11D8EA46009D0254 /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = StdAfx.h; path = ../MLProtocol/StdAfx.h; sourceTree = SOURCE_ROOT; };
-		5F70B8BF11D8EB00009D0254 /* MLProtocol.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; name = MLProtocol.h; path = ../MLProtocol/MLProtocol.h; sourceTree = SOURCE_ROOT; };
 		5FAB7BA911B2013700C9395C /* LyrVecticalScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrVecticalScrollView.h; sourceTree = "<group>"; };
 		5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrVecticalScrollView.mm; sourceTree = "<group>"; };
-		5FAF93F3144DAE6100E998BC /* LyricsAssociation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsAssociation.h; sourceTree = "<group>"; };
-		5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsAssociation.cpp; sourceTree = "<group>"; };
 		5FAF93F9144DB67800E998BC /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		5FAF9401145066C600E998BC /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		5FAF959B14506AD400E998BC /* AdditionalMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdditionalMessage.h; path = ../SDK/cppunit/include/cppunit/AdditionalMessage.h; sourceTree = "<group>"; };
@@ -547,17 +471,11 @@
 		5FAF967914506D2400E998BC /* MiniLyricsTestAppDelegate_iPad.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MiniLyricsTestAppDelegate_iPad.m; path = iPad/MiniLyricsTestAppDelegate_iPad.m; sourceTree = "<group>"; };
 		5FAF967C14506D2400E998BC /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = iPad/en.lproj/MainWindow_iPad.xib; sourceTree = "<group>"; };
 		5FAF975C14506E0D00E998BC /* App.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = App.h; path = ../Utils/App.h; sourceTree = "<group>"; };
-		5FAF975D14506E0D00E998BC /* CSVFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CSVFile.cpp; path = ../Utils/CSVFile.cpp; sourceTree = "<group>"; };
-		5FAF975E14506E0D00E998BC /* CSVFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CSVFile.h; path = ../Utils/CSVFile.h; sourceTree = "<group>"; };
 		5FAF975F14506E0D00E998BC /* digest.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = digest.cpp; path = ../Utils/digest.cpp; sourceTree = "<group>"; };
 		5FAF976014506E0D00E998BC /* digest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = digest.h; path = ../Utils/digest.h; sourceTree = "<group>"; };
-		5FAF976114506E0D00E998BC /* LocalizeTool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LocalizeTool.cpp; path = ../Utils/LocalizeTool.cpp; sourceTree = "<group>"; };
-		5FAF976214506E0D00E998BC /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LocalizeTool.h; path = ../Utils/LocalizeTool.h; sourceTree = "<group>"; };
 		5FAF976314506E0D00E998BC /* Log.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Log.cpp; path = ../Utils/Log.cpp; sourceTree = "<group>"; };
 		5FAF976414506E0D00E998BC /* log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = log.h; path = ../Utils/log.h; sourceTree = "<group>"; };
 		5FAF976514506E0D00E998BC /* LogAlias.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LogAlias.h; path = ../Utils/LogAlias.h; sourceTree = "<group>"; };
-		5FAF976614506E0D00E998BC /* Looper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Looper.cpp; path = ../Utils/Looper.cpp; sourceTree = "<group>"; };
-		5FAF976714506E0D00E998BC /* Looper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Looper.h; path = ../Utils/Looper.h; sourceTree = "<group>"; };
 		5FAF976A14506E0D00E998BC /* LocalizeTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LocalizeTool.h; sourceTree = "<group>"; };
 		5FAF976B14506E0D00E998BC /* Profile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Profile.cpp; sourceTree = "<group>"; };
 		5FAF976F14506E0D00E998BC /* md5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = md5.cpp; path = ../Utils/md5.cpp; sourceTree = "<group>"; };
@@ -589,8 +507,6 @@
 		5FAF97C41451243700E998BC /* LrcTag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LrcTag.cpp; path = ../MLLib/LrcTag.cpp; sourceTree = "<group>"; };
 		5FAF97C51451243700E998BC /* LrcTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LrcTag.h; path = ../MLLib/LrcTag.h; sourceTree = "<group>"; };
 		5FAF97C81451243700E998BC /* LyricsParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsParser.h; path = ../MLLib/LyricsParser.h; sourceTree = "<group>"; };
-		5FAF97C91451243700E998BC /* LyricsSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricsSearch.cpp; path = ../MLLib/LyricsSearch.cpp; sourceTree = "<group>"; };
-		5FAF97CA1451243700E998BC /* LyricsSearch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsSearch.h; path = ../MLLib/LyricsSearch.h; sourceTree = "<group>"; };
 		5FAF97CB1451243700E998BC /* LyrScrollActionRecorder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyrScrollActionRecorder.cpp; path = ../MLLib/LyrScrollActionRecorder.cpp; sourceTree = "<group>"; };
 		5FAF97CC1451243700E998BC /* LyrScrollActionRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyrScrollActionRecorder.h; path = ../MLLib/LyrScrollActionRecorder.h; sourceTree = "<group>"; };
 		5FAF97CD1451243700E998BC /* LyrTimeStamp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyrTimeStamp.cpp; path = ../MLLib/LyrTimeStamp.cpp; sourceTree = "<group>"; };
@@ -602,14 +518,9 @@
 		5FAF97D61451243700E998BC /* MLProfile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MLProfile.h; path = ../MLLib/MLProfile.h; sourceTree = "<group>"; };
 		5FAF97DF1451243700E998BC /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StdAfx.h; path = ../MLLib/StdAfx.h; sourceTree = "<group>"; };
 		5FAF980F145132D800E998BC /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
-		5FAF98111451559100E998BC /* App.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = App.mm; sourceTree = "<group>"; };
 		5FAF981E14531DB800E998BC /* ThreadAutoReleasePool.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ThreadAutoReleasePool.mm; sourceTree = "<group>"; };
 		5FAF981F14531DB900E998BC /* ThreadAutoReleasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadAutoReleasePool.h; sourceTree = "<group>"; };
-		5FAF98281454645F00E998BC /* PinchTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PinchTextView.h; sourceTree = "<group>"; };
-		5FAF98291454646000E998BC /* PinchTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PinchTextView.m; sourceTree = "<group>"; };
 		5FAF98351456FDE600E998BC /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = Resources/Settings.bundle; sourceTree = "<group>"; };
-		5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLClientSession.cpp; sourceTree = "<group>"; };
-		5FB4FE4F1428E3A900D1DDA4 /* MLClientSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLClientSession.h; sourceTree = "<group>"; };
 		5FB4FE52142A2BFF00D1DDA4 /* MLAppNotifyParam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLAppNotifyParam.h; sourceTree = "<group>"; };
 		5FB4FE53142A2C0000D1DDA4 /* MLAppNotifyParam.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MLAppNotifyParam.mm; sourceTree = "<group>"; };
 		5FB56C4A11C11088000E68A1 /* helper.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = helper.h; sourceTree = "<group>"; };
@@ -632,9 +543,7 @@
 		5FBE6265142B8E78005A50B6 /* FileApiBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FileApiBase.h; path = ../base/FileApiBase.h; sourceTree = "<group>"; };
 		5FBE6266142B8E78005A50B6 /* idstring.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = idstring.cpp; path = ../base/idstring.cpp; sourceTree = "<group>"; };
 		5FBE6267142B8E78005A50B6 /* idstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = idstring.h; path = ../base/idstring.h; sourceTree = "<group>"; };
-		5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CharEncoding.cpp; sourceTree = "<group>"; };
 		5FBE626B142B8E78005A50B6 /* CharEncoding.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = CharEncoding.mm; sourceTree = "<group>"; };
-		5FBE626C142B8E78005A50B6 /* Event.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
 		5FBE626D142B8E78005A50B6 /* Event.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Event.h; sourceTree = "<group>"; };
 		5FBE626E142B8E78005A50B6 /* fileapi.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileapi.cpp; sourceTree = "<group>"; };
 		5FBE626F142B8E78005A50B6 /* fileapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileapi.h; sourceTree = "<group>"; };
@@ -647,7 +556,6 @@
 		5FBE6278142B8E78005A50B6 /* Semaphore.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Semaphore.mm; sourceTree = "<group>"; };
 		5FBE6279142B8E78005A50B6 /* Thread.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Thread.cpp; sourceTree = "<group>"; };
 		5FBE627A142B8E78005A50B6 /* Thread.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Thread.h; sourceTree = "<group>"; };
-		5FBE627C142B8E78005A50B6 /* misc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = misc.cpp; path = ../base/misc.cpp; sourceTree = "<group>"; };
 		5FBE627D142B8E78005A50B6 /* misc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = misc.h; path = ../base/misc.h; sourceTree = "<group>"; };
 		5FBE627E142B8E78005A50B6 /* mltypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = mltypes.h; path = ../base/mltypes.h; sourceTree = "<group>"; };
 		5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OnlyAllocator.cpp; path = ../base/OnlyAllocator.cpp; sourceTree = "<group>"; };
@@ -664,15 +572,7 @@
 		5FBE628A142B8E78005A50B6 /* StrPrintf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StrPrintf.h; path = ../base/StrPrintf.h; sourceTree = "<group>"; };
 		5FBE628B142B8E78005A50B6 /* wintypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = wintypes.h; path = ../base/wintypes.h; sourceTree = "<group>"; };
 		5FBE628C142B8E78005A50B6 /* xstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xstr.h; path = ../base/xstr.h; sourceTree = "<group>"; };
-		5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = HttpProtocol.cpp; path = ../MLProtocol/HttpProtocol.cpp; sourceTree = SOURCE_ROOT; };
-		5FBEDFF711D979A000E01391 /* HttpProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HttpProtocol.h; path = ../MLProtocol/HttpProtocol.h; sourceTree = SOURCE_ROOT; };
 		5FC0B1B311C51C59000C6537 /* IMLAppNotify.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = IMLAppNotify.h; sourceTree = "<group>"; };
-		5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsDownloadMgr.cpp; sourceTree = "<group>"; };
-		5FC0B1B511C51C59000C6537 /* LyricsDownloadMgr.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsDownloadMgr.h; sourceTree = "<group>"; };
-		5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsLocalSearch.cpp; sourceTree = "<group>"; };
-		5FC0B1B711C51C59000C6537 /* LyricsLocalSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = LyricsLocalSearch.h; sourceTree = "<group>"; };
-		5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = OnlineSearch.cpp; sourceTree = "<group>"; };
-		5FC0B1B911C51C59000C6537 /* OnlineSearch.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = OnlineSearch.h; sourceTree = "<group>"; };
 		5FC1212D1214DF5F003D9B42 /* play_ctrl_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = play_ctrl_bg.png; path = Resources/play_ctrl_bg.png; sourceTree = "<group>"; };
 		5FC122EB12177E6B003D9B42 /* MiniLyrics Free.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MiniLyrics Free.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		5FC122ED12177E6B003D9B42 /* MiniLyrics-Free-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MiniLyrics-Free-Info.plist"; sourceTree = "<group>"; };
@@ -713,6 +613,10 @@
 		5FCB8C5F1210FCA1009F23BD /* MainView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainView.xib; path = Resources/MainView.xib; sourceTree = "<group>"; };
 		5FCB8C601210FCA1009F23BD /* MainWindow.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MainWindow.xib; path = Resources/MainWindow.xib; sourceTree = "<group>"; };
 		5FCB8C611210FCA1009F23BD /* MusicTableView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = MusicTableView.xib; path = Resources/MusicTableView.xib; sourceTree = "<group>"; };
+		5FDF9A7318B778A100ACB5D9 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
+		5FDF9A7818B8485D00ACB5D9 /* LyricsData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricsData.cpp; path = ../TagLib/LyricsData.cpp; sourceTree = "<group>"; };
+		5FDF9A7918B8485D00ACB5D9 /* LyricsData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsData.h; path = ../TagLib/LyricsData.h; sourceTree = "<group>"; };
+		5FDF9A7B18B848E400ACB5D9 /* App.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = App.mm; sourceTree = "<group>"; };
 		5FE7EA0311F1375500CECD89 /* LyrStaticTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrStaticTextView.h; sourceTree = "<group>"; };
 		5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrStaticTextView.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -767,21 +671,9 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				5FAF98281454645F00E998BC /* PinchTextView.h */,
-				5FAF98291454646000E998BC /* PinchTextView.m */,
-				5FB4FE4E1428E3A900D1DDA4 /* MLClientSession.cpp */,
-				5FB4FE4F1428E3A900D1DDA4 /* MLClientSession.h */,
 				5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */,
 				5F1B47F111DC171B00AAF8E4 /* CMLApp.h */,
 				5FC0B1B311C51C59000C6537 /* IMLAppNotify.h */,
-				5FAF93F4144DB1AE00E998BC /* LyricsAssociation.cpp */,
-				5FAF93F3144DAE6100E998BC /* LyricsAssociation.h */,
-				5FC0B1B411C51C59000C6537 /* LyricsDownloadMgr.cpp */,
-				5FC0B1B511C51C59000C6537 /* LyricsDownloadMgr.h */,
-				5FC0B1B611C51C59000C6537 /* LyricsLocalSearch.cpp */,
-				5FC0B1B711C51C59000C6537 /* LyricsLocalSearch.h */,
-				5FC0B1B811C51C59000C6537 /* OnlineSearch.cpp */,
-				5FC0B1B911C51C59000C6537 /* OnlineSearch.h */,
 				1D3623240D0F684500981E51 /* MiniLyricsAppDelegate.h */,
 				1D3623250D0F684500981E51 /* MiniLyricsAppDelegate.m */,
 				5FB56C4A11C11088000E68A1 /* helper.h */,
@@ -794,8 +686,6 @@
 				5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */,
 				5FB56CFF11C12D35000E68A1 /* MLApp.h */,
 				5FB56D0011C12D35000E68A1 /* MLApp.mm */,
-				5F2CF47A11DAE72B00A4D095 /* LyricsSearchViewController.h */,
-				5F2CF47B11DAE72B00A4D095 /* LyricsSearchViewController.mm */,
 				5FE7EA0311F1375500CECD89 /* LyrStaticTextView.h */,
 				5FE7EA0411F1375500CECD89 /* LyrStaticTextView.mm */,
 				5FB4FE52142A2BFF00D1DDA4 /* MLAppNotifyParam.h */,
@@ -817,6 +707,8 @@
 		29B97314FDCFA39411CA2CEA /* CustomTemplate */ = {
 			isa = PBXGroup;
 			children = (
+				5FDF9A7D18B849EB00ACB5D9 /* TagLib */,
+				5FDF9A7318B778A100ACB5D9 /* Default-568h@2x.png */,
 				5FAF98351456FDE600E998BC /* Settings.bundle */,
 				5FAF980F145132D800E998BC /* MediaPlayer.framework */,
 				5FAF97BD145123FA00E998BC /* MLLib */,
@@ -824,7 +716,6 @@
 				5FAF948914506A0900E998BC /* CPPUnit */,
 				5FAF93F9144DB67800E998BC /* libsqlite3.dylib */,
 				5FBE6253142B8E43005A50B6 /* base */,
-				5F70B85F11D8E9EC009D0254 /* MLProtocol */,
 				080E96DDFE201D6D7F000001 /* Classes */,
 				29B97315FDCFA39411CA2CEA /* Other Sources */,
 				29B97317FDCFA39411CA2CEA /* Resources */,
@@ -905,27 +796,6 @@
 				5FAF9401145066C600E998BC /* SenTestingKit.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		5F70B85F11D8E9EC009D0254 /* MLProtocol */ = {
-			isa = PBXGroup;
-			children = (
-				5F12E55611D8EB8E00F8572F /* MLProtocol.cpp */,
-				5FBEDFF611D979A000E01391 /* HttpProtocol.cpp */,
-				5FBEDFF711D979A000E01391 /* HttpProtocol.h */,
-				5F70B8BF11D8EB00009D0254 /* MLProtocol.h */,
-				5F70B86111D8EA46009D0254 /* HttpClient.cpp */,
-				5F70B86211D8EA46009D0254 /* HttpClient.h */,
-				5F70B86611D8EA46009D0254 /* MLUtils.cpp */,
-				5F70B86711D8EA46009D0254 /* MLUtils.h */,
-				5F70B86811D8EA46009D0254 /* NetSDK.cpp */,
-				5F70B86911D8EA46009D0254 /* NetSDK.h */,
-				5F70B86A11D8EA46009D0254 /* NetServer.cpp */,
-				5F70B86B11D8EA46009D0254 /* NetServer.h */,
-				5F70B86C11D8EA46009D0254 /* sockadapt.h */,
-				5F70B86D11D8EA46009D0254 /* StdAfx.h */,
-			);
-			name = MLProtocol;
 			sourceTree = "<group>";
 		};
 		5FAF948914506A0900E998BC /* CPPUnit */ = {
@@ -1139,17 +1009,11 @@
 			isa = PBXGroup;
 			children = (
 				5FAF975C14506E0D00E998BC /* App.h */,
-				5FAF975D14506E0D00E998BC /* CSVFile.cpp */,
-				5FAF975E14506E0D00E998BC /* CSVFile.h */,
 				5FAF975F14506E0D00E998BC /* digest.cpp */,
 				5FAF976014506E0D00E998BC /* digest.h */,
-				5FAF976114506E0D00E998BC /* LocalizeTool.cpp */,
-				5FAF976214506E0D00E998BC /* LocalizeTool.h */,
 				5FAF976314506E0D00E998BC /* Log.cpp */,
 				5FAF976414506E0D00E998BC /* log.h */,
 				5FAF976514506E0D00E998BC /* LogAlias.h */,
-				5FAF976614506E0D00E998BC /* Looper.cpp */,
-				5FAF976714506E0D00E998BC /* Looper.h */,
 				5FAF976814506E0D00E998BC /* Mac */,
 				5FAF976F14506E0D00E998BC /* md5.cpp */,
 				5FAF977014506E0D00E998BC /* md5.h */,
@@ -1178,7 +1042,7 @@
 		5FAF976814506E0D00E998BC /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				5FAF98111451559100E998BC /* App.mm */,
+				5FDF9A7B18B848E400ACB5D9 /* App.mm */,
 				5FAF976A14506E0D00E998BC /* LocalizeTool.h */,
 				5FAF976B14506E0D00E998BC /* Profile.cpp */,
 			);
@@ -1189,6 +1053,8 @@
 		5FAF97BD145123FA00E998BC /* MLLib */ = {
 			isa = PBXGroup;
 			children = (
+				5FDF9A7818B8485D00ACB5D9 /* LyricsData.cpp */,
+				5FDF9A7918B8485D00ACB5D9 /* LyricsData.h */,
 				5FAF97BE1451243700E998BC /* HelperFun.cpp */,
 				5FAF97BF1451243700E998BC /* HelperFun.h */,
 				5FAF97C01451243700E998BC /* LRC File Format.txt */,
@@ -1198,8 +1064,6 @@
 				5FAF97C41451243700E998BC /* LrcTag.cpp */,
 				5FAF97C51451243700E998BC /* LrcTag.h */,
 				5FAF97C81451243700E998BC /* LyricsParser.h */,
-				5FAF97C91451243700E998BC /* LyricsSearch.cpp */,
-				5FAF97CA1451243700E998BC /* LyricsSearch.h */,
 				5FAF97CB1451243700E998BC /* LyrScrollActionRecorder.cpp */,
 				5FAF97CC1451243700E998BC /* LyrScrollActionRecorder.h */,
 				5FAF97CD1451243700E998BC /* LyrTimeStamp.cpp */,
@@ -1234,7 +1098,6 @@
 				5FBE6266142B8E78005A50B6 /* idstring.cpp */,
 				5FBE6267142B8E78005A50B6 /* idstring.h */,
 				5FBE6268142B8E78005A50B6 /* Mac */,
-				5FBE627C142B8E78005A50B6 /* misc.cpp */,
 				5FBE627D142B8E78005A50B6 /* misc.h */,
 				5FBE627E142B8E78005A50B6 /* mltypes.h */,
 				5FBE627F142B8E78005A50B6 /* OnlyAllocator.cpp */,
@@ -1258,9 +1121,7 @@
 		5FBE6268142B8E78005A50B6 /* Mac */ = {
 			isa = PBXGroup;
 			children = (
-				5FBE626A142B8E78005A50B6 /* CharEncoding.cpp */,
 				5FBE626B142B8E78005A50B6 /* CharEncoding.mm */,
-				5FBE626C142B8E78005A50B6 /* Event.cpp */,
 				5FBE626D142B8E78005A50B6 /* Event.h */,
 				5FBE626E142B8E78005A50B6 /* fileapi.cpp */,
 				5FBE626F142B8E78005A50B6 /* fileapi.h */,
@@ -1278,6 +1139,13 @@
 			);
 			name = Mac;
 			path = ../base/Mac;
+			sourceTree = "<group>";
+		};
+		5FDF9A7D18B849EB00ACB5D9 /* TagLib */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = TagLib;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1383,6 +1251,7 @@
 				5FCB8C031210F007009F23BD /* forward.png in Resources */,
 				5FCB8C041210F007009F23BD /* iPhone_icon.png in Resources */,
 				5FCB8C061210F007009F23BD /* logo.png in Resources */,
+				5FDF9A7418B778A100ACB5D9 /* Default-568h@2x.png in Resources */,
 				5FCB8C071210F007009F23BD /* lyr_lrc_dl.png in Resources */,
 				5FCB8C081210F007009F23BD /* lyr_lrc.png in Resources */,
 				5FCB8C091210F007009F23BD /* lyr_txt_dl.png in Resources */,
@@ -1477,9 +1346,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5FBE62C9142B8F49005A50B6 /* CharEncoding.cpp in Sources */,
 				5FBE62CA142B8F49005A50B6 /* CharEncoding.mm in Sources */,
-				5FBE62CB142B8F49005A50B6 /* Event.cpp in Sources */,
 				5FBE62CC142B8F49005A50B6 /* fileapi.cpp in Sources */,
 				5FBE62CD142B8F49005A50B6 /* MemmapFile.cpp in Sources */,
 				5FBE62CF142B8F49005A50B6 /* MutexIP.mm in Sources */,
@@ -1492,7 +1359,6 @@
 				5FBE62B2142B8ECA005A50B6 /* Error.cpp in Sources */,
 				5FBE62B4142B8ECA005A50B6 /* FileApiBase.cpp in Sources */,
 				5FBE62B6142B8ECA005A50B6 /* idstring.cpp in Sources */,
-				5FBE62B8142B8ECA005A50B6 /* misc.cpp in Sources */,
 				5FBE62BB142B8ECA005A50B6 /* OnlyAllocator.cpp in Sources */,
 				5FBE62BE142B8ECA005A50B6 /* safestr.cpp in Sources */,
 				5FBE62C2142B8ECA005A50B6 /* stringex.cpp in Sources */,
@@ -1504,26 +1370,12 @@
 				5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */,
 				5FB56C4C11C11088000E68A1 /* helper.cpp in Sources */,
 				5FB56D0111C12D35000E68A1 /* MLApp.mm in Sources */,
-				5FC0B1BB11C51C59000C6537 /* LyricsDownloadMgr.cpp in Sources */,
-				5FC0B1BC11C51C59000C6537 /* LyricsLocalSearch.cpp in Sources */,
-				5FC0B1BD11C51C59000C6537 /* OnlineSearch.cpp in Sources */,
-				5F70B86E11D8EA46009D0254 /* HttpClient.cpp in Sources */,
-				5F70B87211D8EA46009D0254 /* MLUtils.cpp in Sources */,
-				5F70B87311D8EA46009D0254 /* NetSDK.cpp in Sources */,
-				5F70B87411D8EA46009D0254 /* NetServer.cpp in Sources */,
-				5F12E55711D8EB8E00F8572F /* MLProtocol.cpp in Sources */,
-				5FBEDFF811D979A000E01391 /* HttpProtocol.cpp in Sources */,
-				5F2CF47C11DAE72B00A4D095 /* LyricsSearchViewController.mm in Sources */,
 				5F1B47F211DC171B00AAF8E4 /* CMLApp.cpp in Sources */,
+				5FDF9A7C18B848E400ACB5D9 /* App.mm in Sources */,
 				5FE7EA0511F1375500CECD89 /* LyrStaticTextView.mm in Sources */,
-				5FB4FE501428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */,
 				5FB4FE54142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */,
-				5FAF93F5144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */,
-				5FAF978414506E0D00E998BC /* CSVFile.cpp in Sources */,
 				5FAF978714506E0D00E998BC /* digest.cpp in Sources */,
-				5FAF978A14506E0D00E998BC /* LocalizeTool.cpp in Sources */,
 				5FAF978D14506E0D00E998BC /* Log.cpp in Sources */,
-				5FAF979014506E0D00E998BC /* Looper.cpp in Sources */,
 				5FAF979614506E0D00E998BC /* Profile.cpp in Sources */,
 				5FAF979F14506E0D00E998BC /* md5.cpp in Sources */,
 				5FAF97A214506E0D00E998BC /* MLBinXMLParser.cpp in Sources */,
@@ -1537,14 +1389,12 @@
 				5FAF97E01451243700E998BC /* HelperFun.cpp in Sources */,
 				5FAF97E61451243700E998BC /* LrcParser.cpp in Sources */,
 				5FAF97E91451243700E998BC /* LrcTag.cpp in Sources */,
-				5FAF97EF1451243700E998BC /* LyricsSearch.cpp in Sources */,
+				5FDF9A7A18B8485D00ACB5D9 /* LyricsData.cpp in Sources */,
 				5FAF97F21451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */,
 				5FAF97F51451243700E998BC /* LyrTimeStamp.cpp in Sources */,
 				5FAF97F81451243700E998BC /* MLData.cpp in Sources */,
 				5FAF97FE1451243700E998BC /* MLProfile.cpp in Sources */,
-				5FAF98121451559100E998BC /* App.mm in Sources */,
 				5FAF982014531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */,
-				5FAF982A1454646300E998BC /* PinchTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1607,50 +1457,32 @@
 				5FAF970814506D9A00E998BC /* Error.cpp in Sources */,
 				5FAF970A14506D9A00E998BC /* FileApiBase.cpp in Sources */,
 				5FAF970C14506D9A00E998BC /* idstring.cpp in Sources */,
-				5FAF970E14506D9A00E998BC /* CharEncoding.cpp in Sources */,
 				5FAF970F14506D9A00E998BC /* CharEncoding.mm in Sources */,
-				5FAF971014506D9A00E998BC /* Event.cpp in Sources */,
 				5FAF971214506D9A00E998BC /* fileapi.cpp in Sources */,
 				5FAF971414506D9A00E998BC /* MemmapFile.cpp in Sources */,
 				5FAF971714506D9B00E998BC /* MutexIP.mm in Sources */,
 				5FAF971814506D9B00E998BC /* OSError.cpp in Sources */,
 				5FAF971A14506D9B00E998BC /* Semaphore.mm in Sources */,
 				5FAF971B14506D9B00E998BC /* Thread.cpp in Sources */,
-				5FAF971D14506D9B00E998BC /* misc.cpp in Sources */,
 				5FAF972014506D9B00E998BC /* OnlyAllocator.cpp in Sources */,
 				5FAF972314506D9B00E998BC /* safestr.cpp in Sources */,
 				5FAF972714506D9B00E998BC /* stringex.cpp in Sources */,
 				5FAF972A14506D9B00E998BC /* StrPrintf.cpp in Sources */,
-				5FAF972E14506D9B00E998BC /* MLProtocol.cpp in Sources */,
-				5FAF972F14506D9B00E998BC /* HttpProtocol.cpp in Sources */,
-				5FAF973214506D9B00E998BC /* HttpClient.cpp in Sources */,
-				5FAF973414506D9B00E998BC /* MLUtils.cpp in Sources */,
-				5FAF973614506D9B00E998BC /* NetSDK.cpp in Sources */,
-				5FAF973814506D9B00E998BC /* NetServer.cpp in Sources */,
-				5FAF973C14506D9B00E998BC /* MLClientSession.cpp in Sources */,
 				5FAF973E14506D9B00E998BC /* CMLApp.cpp in Sources */,
-				5FAF974114506D9B00E998BC /* LyricsAssociation.cpp in Sources */,
-				5FAF974314506D9B00E998BC /* LyricsDownloadMgr.cpp in Sources */,
-				5FAF974514506D9B00E998BC /* LyricsLocalSearch.cpp in Sources */,
-				5FAF974714506D9B00E998BC /* OnlineSearch.cpp in Sources */,
 				5FAF974A14506D9B00E998BC /* MiniLyricsAppDelegate.m in Sources */,
 				5FAF974C14506D9B00E998BC /* helper.cpp in Sources */,
 				5FAF974E14506D9B00E998BC /* MainViewController.mm in Sources */,
 				5FAF975014506D9B00E998BC /* MusicTableViewController.m in Sources */,
 				5FAF975214506D9B00E998BC /* LyrVecticalScrollView.mm in Sources */,
 				5FAF975414506D9B00E998BC /* MLApp.mm in Sources */,
-				5FAF975614506D9B00E998BC /* LyricsSearchViewController.mm in Sources */,
 				5FAF975814506D9B00E998BC /* LyrStaticTextView.mm in Sources */,
 				5FAF975A14506D9B00E998BC /* MLAppNotifyParam.mm in Sources */,
 				5FAF966B14506D2400E998BC /* main.mm in Sources */,
 				5FAF966F14506D2400E998BC /* MiniLyricsTestAppDelegate.m in Sources */,
 				5FAF967314506D2400E998BC /* MiniLyricsTestAppDelegate_iPhone.m in Sources */,
 				5FAF967A14506D2400E998BC /* MiniLyricsTestAppDelegate_iPad.m in Sources */,
-				5FAF978614506E0D00E998BC /* CSVFile.cpp in Sources */,
 				5FAF978914506E0D00E998BC /* digest.cpp in Sources */,
-				5FAF978C14506E0D00E998BC /* LocalizeTool.cpp in Sources */,
 				5FAF978F14506E0D00E998BC /* Log.cpp in Sources */,
-				5FAF979214506E0D00E998BC /* Looper.cpp in Sources */,
 				5FAF979814506E0D00E998BC /* Profile.cpp in Sources */,
 				5FAF97A114506E0D00E998BC /* md5.cpp in Sources */,
 				5FAF97A414506E0D00E998BC /* MLBinXMLParser.cpp in Sources */,
@@ -1664,14 +1496,11 @@
 				5FAF97E21451243700E998BC /* HelperFun.cpp in Sources */,
 				5FAF97E81451243700E998BC /* LrcParser.cpp in Sources */,
 				5FAF97EB1451243700E998BC /* LrcTag.cpp in Sources */,
-				5FAF97F11451243700E998BC /* LyricsSearch.cpp in Sources */,
 				5FAF97F41451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */,
 				5FAF97F71451243700E998BC /* LyrTimeStamp.cpp in Sources */,
 				5FAF97FA1451243700E998BC /* MLData.cpp in Sources */,
 				5FAF98001451243700E998BC /* MLProfile.cpp in Sources */,
-				5FAF98141451559100E998BC /* App.mm in Sources */,
 				5FAF982214531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */,
-				5FAF982C1454646300E998BC /* PinchTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1686,19 +1515,8 @@
 				5FC122C712177E6B003D9B42 /* LyrVecticalScrollView.mm in Sources */,
 				5FC122CA12177E6B003D9B42 /* helper.cpp in Sources */,
 				5FC122CB12177E6B003D9B42 /* MLApp.mm in Sources */,
-				5FC122CC12177E6B003D9B42 /* LyricsDownloadMgr.cpp in Sources */,
-				5FC122CD12177E6B003D9B42 /* LyricsLocalSearch.cpp in Sources */,
-				5FC122CE12177E6B003D9B42 /* OnlineSearch.cpp in Sources */,
-				5FC122CF12177E6B003D9B42 /* HttpClient.cpp in Sources */,
-				5FC122D012177E6B003D9B42 /* MLUtils.cpp in Sources */,
-				5FC122D112177E6B003D9B42 /* NetSDK.cpp in Sources */,
-				5FC122D212177E6B003D9B42 /* NetServer.cpp in Sources */,
-				5FC122D312177E6B003D9B42 /* MLProtocol.cpp in Sources */,
-				5FC122D412177E6B003D9B42 /* HttpProtocol.cpp in Sources */,
-				5FC122D512177E6B003D9B42 /* LyricsSearchViewController.mm in Sources */,
 				5FC122D612177E6B003D9B42 /* CMLApp.cpp in Sources */,
 				5FC122D712177E6B003D9B42 /* LyrStaticTextView.mm in Sources */,
-				5FB4FE511428E3AA00D1DDA4 /* MLClientSession.cpp in Sources */,
 				5FB4FE55142A2C0200D1DDA4 /* MLAppNotifyParam.mm in Sources */,
 				5FBE628F142B8E78005A50B6 /* BaseDate.cpp in Sources */,
 				5FBE6290142B8E78005A50B6 /* CharEncodingBase.cpp in Sources */,
@@ -1706,26 +1524,19 @@
 				5FBE6292142B8E78005A50B6 /* Error.cpp in Sources */,
 				5FBE6293142B8E78005A50B6 /* FileApiBase.cpp in Sources */,
 				5FBE6294142B8E78005A50B6 /* idstring.cpp in Sources */,
-				5FBE6296142B8E78005A50B6 /* CharEncoding.cpp in Sources */,
 				5FBE6297142B8E78005A50B6 /* CharEncoding.mm in Sources */,
-				5FBE6298142B8E78005A50B6 /* Event.cpp in Sources */,
 				5FBE6299142B8E78005A50B6 /* fileapi.cpp in Sources */,
 				5FBE629A142B8E78005A50B6 /* MemmapFile.cpp in Sources */,
 				5FBE629C142B8E78005A50B6 /* MutexIP.mm in Sources */,
 				5FBE629D142B8E78005A50B6 /* OSError.cpp in Sources */,
 				5FBE629F142B8E78005A50B6 /* Semaphore.mm in Sources */,
 				5FBE62A0142B8E78005A50B6 /* Thread.cpp in Sources */,
-				5FBE62A2142B8E78005A50B6 /* misc.cpp in Sources */,
 				5FBE62A3142B8E78005A50B6 /* OnlyAllocator.cpp in Sources */,
 				5FBE62A4142B8E78005A50B6 /* safestr.cpp in Sources */,
 				5FBE62A5142B8E78005A50B6 /* stringex.cpp in Sources */,
 				5FBE62A6142B8E78005A50B6 /* StrPrintf.cpp in Sources */,
-				5FAF93F6144DB1AE00E998BC /* LyricsAssociation.cpp in Sources */,
-				5FAF978514506E0D00E998BC /* CSVFile.cpp in Sources */,
 				5FAF978814506E0D00E998BC /* digest.cpp in Sources */,
-				5FAF978B14506E0D00E998BC /* LocalizeTool.cpp in Sources */,
 				5FAF978E14506E0D00E998BC /* Log.cpp in Sources */,
-				5FAF979114506E0D00E998BC /* Looper.cpp in Sources */,
 				5FAF979714506E0D00E998BC /* Profile.cpp in Sources */,
 				5FAF97A014506E0D00E998BC /* md5.cpp in Sources */,
 				5FAF97A314506E0D00E998BC /* MLBinXMLParser.cpp in Sources */,
@@ -1739,14 +1550,11 @@
 				5FAF97E11451243700E998BC /* HelperFun.cpp in Sources */,
 				5FAF97E71451243700E998BC /* LrcParser.cpp in Sources */,
 				5FAF97EA1451243700E998BC /* LrcTag.cpp in Sources */,
-				5FAF97F01451243700E998BC /* LyricsSearch.cpp in Sources */,
 				5FAF97F31451243700E998BC /* LyrScrollActionRecorder.cpp in Sources */,
 				5FAF97F61451243700E998BC /* LyrTimeStamp.cpp in Sources */,
 				5FAF97F91451243700E998BC /* MLData.cpp in Sources */,
 				5FAF97FF1451243700E998BC /* MLProfile.cpp in Sources */,
-				5FAF98131451559100E998BC /* App.mm in Sources */,
 				5FAF982114531DBA00E998BC /* ThreadAutoReleasePool.mm in Sources */,
-				5FAF982B1454646300E998BC /* PinchTextView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1802,7 +1610,7 @@
 					_DEBUG,
 					_IPHONE,
 				);
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;
@@ -1816,7 +1624,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;
@@ -2000,7 +1808,7 @@
 				COPY_PHASE_STRIP = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = "";
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;

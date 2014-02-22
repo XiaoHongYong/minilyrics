@@ -19,9 +19,6 @@ bool inline IsPropertyName(LPCTSTR szName, LPCTSTR szStr) { return _tcsicmp(szNa
 
 #define IsTRUE(szValue)			(_tcsicmp(_T("TRUE"), szValue) == 0 || _tcsicmp(_T("1"), szValue) == 0)
 
-tstring GetAppDataDir();
-void GetAppDataDir(TCHAR szDir[]);
-
 tstring GetResourceFile(LPCTSTR szFileName);
 
 tstring GetLyricsFolder();

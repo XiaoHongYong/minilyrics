@@ -86,7 +86,8 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 	assert(sizeof(WCHAR) == 2);
 	assert(sizeof(WCHAR) == 2);
 
-	{
+#ifndef _IPHONE
+
 		NSFileManager* fileManager = [NSFileManager defaultManager];
 
 /*		NSError *error = nil;
@@ -110,19 +111,7 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 			}
 			DirStringAddSlash(g_szAppDataDir);
 		}
-
-/*		int nLen;
-
-		_tcscpy(g_szWorkingFolder, argv[0]);
-		nLen = _tcslen(g_szWorkingFolder);
-		nLen --;
-		while (nLen >= 0 && g_szWorkingFolder[nLen] != DIR_SLASH)
-			nLen --;
-		if (nLen < 0)
-			return FALSE;
-
-		g_szWorkingFolder[nLen + 1] = '\0';*/
-	}
+#endif
 	
 	InitSetDefaultCharEncoding();
 
