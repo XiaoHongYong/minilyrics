@@ -456,7 +456,7 @@ void CLrcParser::ToLrcString(tstring &str, bool bIncTags, bool bLongTimeFmt)
 
 	if (bIncTags)
 	{
-		CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
+		CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties(), LTT_ALL_TAG & ~ LTT_ENCODING);
 
 		for (int i = 0; i < propNameValueMap.GetCount(); i++)
 		{
@@ -562,7 +562,7 @@ void CLrcParser::ToTxtString(tstring &str, bool bIncTags)
 			properties.SetTxtLyrScrollEvents(strTimeStamps.c_str());
 		}
 
-		CLyrTagNameValueMap	propNameValueMap(properties);
+		CLyrTagNameValueMap	propNameValueMap(properties, LTT_ALL_TAG & ~ LTT_ENCODING);
 
 		tstring		strTagsAtEndOfFile, strTagsAtBeginOfFile;
 		for (int i = 0; i < propNameValueMap.GetCount(); i++)

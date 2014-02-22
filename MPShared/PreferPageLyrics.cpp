@@ -185,11 +185,48 @@ public:
 	{
 		CPagePfBase::OnInitialUpdate();
 
+		GET_ID_BY_NAME2(CID_C_APPEND_OFFSET_FOR_IOS, CID_C_KEEP_TIME_STAMP_FOR_IOS);
+		pBtnKeepTimeStamp = (CSkinNStatusButton*)GetUIObjectById(CID_C_KEEP_TIME_STAMP_FOR_IOS, CSkinNStatusButton::ClassName());
+		pBtnAddOffset = (CSkinNStatusButton*)GetUIObjectById(CID_C_APPEND_OFFSET_FOR_IOS, CSkinNStatusButton::ClassName());
+
 		AddOptBool(ET_NULL, SZ_SECT_UI, _T("RemoveExtraBlankLines"), true, _T("CID_C_REMOVE_EXTRA_BLANK_LINES"));
 		AddOptBool(ET_NULL, SZ_SECT_UI, _T("AppendTimeStampsInTxtLyr"), true, _T("CID_C_APPEND_OFFSET_FOR_IOS"));
+		AddOptBool(ET_NULL, SZ_SECT_UI, _T("KeepTimeStampsInTxtLyr"), false, _T("CID_C_KEEP_TIME_STAMP_FOR_IOS"));
 
 		InitCheckButtons();
 	}
+
+	virtual bool OnCustomCommand(int nId)
+	{
+		if (nId == CID_C_APPEND_OFFSET_FOR_IOS)
+		{
+			bool bValue = Tobool(pBtnAddOffset->GetStatus());
+			CMPlayerSettings::SetSettings(ET_NULL, SZ_SECT_UI, _T("AppendTimeStampsInTxtLyr"), bValue, false);
+			if (bValue)
+			{
+				CMPlayerSettings::SetSettings(ET_NULL, SZ_SECT_UI, _T("KeepTimeStampsInTxtLyr"), false, false);
+				pBtnKeepTimeStamp->SetStatus(0);
+			}
+		}
+		else if (nId == CID_C_KEEP_TIME_STAMP_FOR_IOS)
+		{
+			bool bValue = Tobool(pBtnKeepTimeStamp->GetStatus());
+			CMPlayerSettings::SetSettings(ET_NULL, SZ_SECT_UI, _T("KeepTimeStampsInTxtLyr"), bValue, false);
+			if (bValue)
+			{
+				CMPlayerSettings::SetSettings(ET_NULL, SZ_SECT_UI, _T("AppendTimeStampsInTxtLyr"), false, false);
+				pBtnAddOffset->SetStatus(0);
+			}
+		}
+		else
+			return CPagePfBase::OnCustomCommand(nId);
+
+		return true;
+	}
+
+protected:
+	int		CID_C_KEEP_TIME_STAMP_FOR_IOS, CID_C_APPEND_OFFSET_FOR_IOS;
+	CSkinNStatusButton	*pBtnKeepTimeStamp, *pBtnAddOffset;
 
 };
 

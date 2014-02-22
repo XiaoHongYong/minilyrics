@@ -517,7 +517,7 @@ int CMLData::SaveLyricsInSongOfID3v2(VecString &vLyrNames)
 
 	tstring			strLyrics;
 	CHAR_ENCODING	encoding;
-	ToString(strLyrics, FT_LYRICS_TXT, TRUE);
+	ToString(strLyrics, g_Profile.GetBool(_T("KeepTimeStampsInTxtLyr"), false) ? FT_LYRICS_LRC : FT_LYRICS_TXT, TRUE);
 	if (IsAnsiStr(strLyrics.c_str()))
 		encoding = ED_SYSDEF;
 	else
