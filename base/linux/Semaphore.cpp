@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "../stdafx.h"
 #include <limits.h>
 #include "Semaphore.h"
 

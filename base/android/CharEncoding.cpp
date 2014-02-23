@@ -2,14 +2,14 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
-#include <iconv.h>
+#include "../stdafx.h"
+#include "../../base/base.h"
+#include "../CharEncoding.h"
 
 #define DBGLOG1 printf
 
-//
-// ED_XXX 的定义和 __encodingCodepage 的索引顺序是一直的。
-// 即__encodingCodepage[ED_XXX].encodingID = ED_XXX
+// The order of ED_XXX is the order of __encodingCodepage 
+// __encodingCodepage[ED_XXX].encodingID = ED_XXX
 ENCODING_CODEPAGE	__encodingCodepage[] = 
 {
 	{ ED_SYSDEF, "", "", "systemdefault", "ISO-8859-15" },
@@ -197,11 +197,11 @@ int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int encodingI
 
 	jstring jstr = NewJString(env, str, nLen, __encodingCodepage[encodingID].szIConvCode);
 
-	const char *utf8 = env->GetStringUTFChars(jstr, NULL);
+	const jchar * ucs2 = env->GetStringChars(jstr, NULL);
 
-	Utf8ToUCS2(utf8, strlen(utf8), strOut, nOut);
+	wcscpy_safe(strOut, nOut, ucs2);
 
-	env->ReleaseStringUTFChars(jstr, utf8);
+	env->ReleaseStringChars(jstr, ucs2);
 
 	env->DeleteLocalRef(jstr);
 
@@ -218,18 +218,7 @@ int UCS2ToMbcs(const WCHAR *str, int nLen, char *strOut, int nOut, int encodingI
 	JNIEnv *env;
 	g_jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
 
-	jstring jstr = NULL;
-	if (nOut >= nLen * 3)
-	{
-		int n = UCS2ToUtf8(str, nLen, strOut, nOut);
-		jstr = env->NewString((const jchar *)strOut, n);
-	}
-	else
-	{
-		stringex strUtf8;
-		UCS2ToUtf8(str, nLen, strUtf8);
-		jstr = env->NewString((const jchar *)strUtf8.c_str(), strUtf8.size());
-	}
+	jstring jstr = env->NewString(str, nLen);
 
 	return GetBytesOfJString(env, jstr, strOut, nOut, __encodingCodepage[encodingID].szIConvCode);
 }

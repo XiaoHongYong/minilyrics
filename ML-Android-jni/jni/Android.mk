@@ -22,8 +22,9 @@ LOCAL_CFLAGS := -D_ANDROID=1 -I../../base
 LOCAL_CPPFLAGS += -ffunction-sections -fdata-sections
 LOCAL_CFLAGS += -ffunction-sections -fdata-sections 
 LOCAL_LDFLAGS += -Wl,--gc-sections
+LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog 
 
-LOCAL_MODULE    := MiniLyrics
+LOCAL_MODULE    := hello-jni
 LOCAL_SRC_FILES := MiniLyrics.cpp \
 	../../base/android/android.cpp ../../base/android/Thread.cpp ../../base/android/CharEncoding.cpp \
 	../../base/Error.cpp ../../base/idstring.cpp ../../base/safestr.cpp ../../base/stringex.cpp \
@@ -32,7 +33,7 @@ LOCAL_SRC_FILES := MiniLyrics.cpp \
 	../../base/linux/Mutex.cpp \
 	../../base/linux/misc.cpp ../../base/linux/OSError.cpp ../../base/TextFile.cpp  \
 	../../base/MapString.cpp ../../base/FileEx.cpp \
-	../../Utils/Log.cpp ../../Utils/MLBinXMLParser.cpp ../../Utils/SimpleXML.cpp ../../Utils/XMLWriter.cpp\
+	../../Utils/android/Log.cpp ../../Utils/MLBinXMLParser.cpp ../../Utils/SimpleXML.cpp ../../Utils/XMLWriter.cpp\
 	../../Utils/SimpleXMLParser.cpp ../../Utils/XCharSeparatedValues.cpp ../../Utils/UUEncode.cpp \
 	../../Utils/linux/Profile.cpp ../../Utils/linux/App.cpp ../../Utils/VersionNumber.cpp \
 	../../Utils/digest.cpp ../../Utils/md5.cpp \
@@ -44,7 +45,6 @@ LOCAL_SRC_FILES := MiniLyrics.cpp \
 	../../MLLib/LyricsSearch.cpp 	../../MLLib/MLData.cpp 			../../MLLib/HelperFun.cpp \
 	../../MLLib/SncParser.cpp 		../../MLLib/LrcTag.cpp 			../../MLLib/LyricsKeywordFilter.cpp \
 	../../MLLib/SrtParser.cpp 		../../MLLib/LyrScrollActionRecorder.cpp 	../../MLLib/MLProfile.cpp \
-	iconv.c wctomb.c
 	#../../MLProtocol/AppAnalyticsClient.cpp ../../MLProtocol/HttpClient.cpp \
 	#../../MLProtocol/HttpProtocol.cpp ../../MLProtocol/ClientCom.cpp\
 	#../../MLProtocol/MLProtocol.cpp ../../MLProtocol/MLUtils.cpp ../../MLProtocol/NetSDK.cpp \

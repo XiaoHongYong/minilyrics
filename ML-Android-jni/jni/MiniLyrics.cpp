@@ -17,12 +17,28 @@
 #include <string.h>
 #include <jni.h>
 #include "../../base/android/android.h"
+#include "../../base/base.h"
+#include "../../Utils/Utils.h"
 
-jstring Java_com_example_hellojni_HelloJni_init(JNIEnv* env, jobject thiz)
+extern "C" jint JNI_OnLoad(JavaVM* vm, void* reserved)
 {
 	jvm_init(env);
 
-	return env->NewStringUTF("init");
+	JNIEnv* env;
+	if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
+		return -1;
+	}
+
+	// Get jclass with env->FindClass.
+	// Register methods with env->RegisterNatives.
+
+	return JNI_VERSION_1_6;
+}
+
+extern "C" jstring Java_com_example_hellojni_HelloJni_init(JNIEnv* env, jobject thiz)
+{
+
+	return env->NewStringUTF("1init");
 }
 
 /* This is a trivial JNI example where we use a native method
@@ -31,10 +47,27 @@ jstring Java_com_example_hellojni_HelloJni_init(JNIEnv* env, jobject thiz)
  *
  *   apps/samples/hello-jni/project/src/com/example/hellojni/HelloJni.java
  */
-jstring Java_com_example_hellojni_HelloJni_stringFromJNI(JNIEnv* env,
-                                                  jobject thiz )
+extern "C" jstring Java_com_example_hellojni_HelloJni_stringFromJNI(JNIEnv* env,
+                                                  jobject thiz, jstring inStr)
 {
-	g_jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
+	const char *utf8 = env->GetStringUTFChars(inStr, NULL);
+
+	CHAR_ENCODING encoding = ED_GB2312;
+	//CHAR_ENCODING encoding = ED_UTF8;
+
+	tstring strOut;
+	UTF8ToTString(utf8, -1, strOut, encoding);
+
+	DBGLOG0("Log test");
+	ERRLOG0("Log test");
+	ERRLOG0(strOut.c_str());
+
+	string strOutUtf8;
+	TStringToUTF8(strOut.c_str(), strOut.size(), strOutUtf8, encoding);
+	ERRLOG0(strOutUtf8.c_str());
+
+	return env->NewStringUTF((const char *)strOutUtf8.c_str());
+/*	g_jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
 
 	jclass clsString = env->FindClass("java/lang/String");
 	if (clsString == NULL)
@@ -85,5 +118,5 @@ jstring Java_com_example_hellojni_HelloJni_stringFromJNI(JNIEnv* env,
    #define ABI "unknown"
 #endif
 
-    return env->NewStringUTF("Hello from JNI !  Compiled with ABI " ABI ".");
+    return env->NewStringUTF("Hello from JNI !  Compiled with ABI " ABI ".");*/
 }

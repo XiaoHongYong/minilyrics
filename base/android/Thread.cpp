@@ -2,7 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "android.h"
 #include "Thread.h"
 

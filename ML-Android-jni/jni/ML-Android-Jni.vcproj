@@ -172,7 +172,19 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\hello-jni.cpp"
+				RelativePath="..\..\base\android\android.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\android\CharEncoding.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MiniLyrics.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\android\Thread.cpp"
 				>
 			</File>
 		</Filter>
@@ -181,6 +193,14 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath="..\..\base\android\android.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\base\android\Thread.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

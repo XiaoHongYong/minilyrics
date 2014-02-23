@@ -5,13 +5,18 @@
 #include "XMLWriter.h"
 #include "MLBinXMLParser.h"
 #include "UUEncode.h"
-#include "log.h"
 #include "Profile.h"
 #include "App.h"
 #include "XCharSeparatedValues.h"
 #include "UndoMgr.h"
 #include "digest.h"
 #include "VersionNumber.h"
+
+#ifdef _ANDROID
+	#include "android/log.h"
+#else
+	//#include "log.h"
+#endif
 
 #ifdef _IPHONE
 #include "Mac/LocalizeTool.h"
