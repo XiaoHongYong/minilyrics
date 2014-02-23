@@ -1028,6 +1028,11 @@ void CPlayer::FilterLowRatingMedia(IPlaylist *playlist)
 	}
 }
 
+tstring CPlayer::GetMediaKey()
+{
+	return g_LyricSearch.GetAssociateFileKeyword(m_szSrcMedia, m_szFullTitle);
+}
+
 MLRESULT CPlayer::GetCurrentMedia(IMedia **ppMedia)
 {
 	if (m_spPlayer)

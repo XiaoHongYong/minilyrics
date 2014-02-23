@@ -467,11 +467,6 @@ BOOL CLyricsLocalSearch::IsAssociatedWithNoneLyrics(LPCTSTR szAssociateKeyword)
 	return FALSE;
 }
 
-BOOL CLyricsLocalSearch::IsAssociatedLyrics(LPCTSTR szSongFile, LPCTSTR szFullTitle)
-{
-	return IsAssociatedLyrics(GetAssociateFileKeyword(szSongFile, szFullTitle).c_str());
-}
-
 inline bool FilePathIsBeginWithDriver(LPCTSTR szFile)
 {
 	return szFile[0] && szFile[1] == ':';
@@ -559,7 +554,6 @@ READ_FAILED:
 	fclose(fp);
 	DeleteFile(szFile);
 }
-#endif
 
 void CLyricsLocalSearch::LoadLyricsAssociationV2()
 {
@@ -570,10 +564,8 @@ void CLyricsLocalSearch::LoadLyricsAssociationV2()
 	TCHAR			szFile[MAX_PATH];
 	CMutexAutolock					autoLock(m_mutex);
 
-#ifdef _WIN32_DESKTOP
 	// Load old lyrics association
 	LoadLyricsAssociationOld();
-#endif
 
 	GetAppDataDir(szFile);
 
@@ -600,6 +592,7 @@ R_END:
 	fclose(fp);
 	DeleteFile(szFile);
 }
+#endif
 
 void CLyricsLocalSearch::LoadLyricsAssociation()
 {
@@ -611,12 +604,13 @@ void CLyricsLocalSearch::LoadLyricsAssociation()
 	FILE			*fp;
 	TCHAR			szFile[MAX_PATH];
 	CMutexAutolock	autoLock(m_mutex);
-	bool			bConvertV10 = false;
 
-#ifndef _WIN32_WCE
+#ifdef _WIN32
+	bool			bConvertV10 = false;
 	BOOL			bConvertSave = FALSE;
+
 	LoadLyricsAssociationV2();
-	if (m_mapLyricsAssociate.size())
+	if (m_mapLyricsAssociate.size() > 0)
 		bConvertSave = TRUE;
 #endif
 
@@ -632,9 +626,12 @@ void CLyricsLocalSearch::LoadLyricsAssociation()
 		goto R_END;
 
 	// Is valid s2l file?
+#ifdef _WIN32
 	if (strncmp(szBuff, SZ_S2L_HEADER_V10, LEN_S2L_HEADER_V10) == 0)
 		bConvertSave = bConvertV10 = true;
-	else if (strncmp(szBuff, SZ_S2L_HEADER, LEN_S2L_HEADER) != 0)
+	else 
+#endif
+	if (strncmp(szBuff, SZ_S2L_HEADER, LEN_S2L_HEADER) != 0)
 		goto R_END;
 
 	while (fgets(szBuff, CountOf(szBuff), fp))
@@ -678,7 +675,7 @@ R_END:
 	if (fp)
 		fclose(fp);
 
-#ifndef _WIN32_WCE
+#ifdef _WIN32
 	if (bConvertSave)
 	{
 		SaveLyricsAssociation();

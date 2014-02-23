@@ -176,6 +176,7 @@ public:
 	LPCTSTR GetSrcMedia() { return m_szSrcMedia; }
 	void GetSrcMedia(TCHAR * lpszSourceMedia, int nBufSize)
 		{ _tcscpy_safe(lpszSourceMedia, nBufSize, m_szSrcMedia); }
+	tstring GetMediaKey();
 
 	MLRESULT GetCurrentMedia(IMedia **ppMedia);
 	MLRESULT GetCurrentPlaylist(IPlaylist **ppPlaylist);

@@ -607,7 +607,7 @@ void CMPlayerAppBase::OnLanguageChanged()
 void CMPlayerAppBase::OnOnlineSearchEnd()
 {
 	// If lyrics already associated, do not download auto.
-	if (g_LyricSearch.IsAssociatedLyrics(g_Player.GetSrcMedia(), g_Player.GetFullTitle()))
+	if (g_LyricSearch.IsAssociatedLyrics(g_Player.GetMediaKey()))
 		return;
 
 	// 在线自动搜索的通知消息，表示该歌词的结果已经搜索到了

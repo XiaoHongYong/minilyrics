@@ -56,14 +56,13 @@ int CDownloadMgr::Init()
 	}
 #endif
 
-	// 缺省下载路径
+	// Set default save path
 	m_strDefSavePath = CMLProfile::GetDir(SZ_SECT_LYR_DL, _T("LyricsDownPath"), _T(""));
 	if (m_strDefSavePath.empty())
 		CreateDefaultLyricsDir(m_strDefSavePath);
 	
 	DBGLOG1(_T("Lyrics download dir: %s"), m_strDefSavePath.c_str());
 
-	// 自动下载
 	m_bAutoDownload = g_Profile.GetBool(SZ_SECT_LYR_DL, _T("EnableAuoDownload"), true);
 
 	return ERR_OK;
@@ -98,7 +97,7 @@ void CDownloadMgr::OnSongChanged()
 		// For text lyrics and not associated by user, continue to search for LRC lyrics.
 		if (!(g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true)
 			&& g_LyricData.GetLyrContentType() == LCT_TXT
-			&& !g_LyricSearch.IsAssociatedLyrics(g_Player.GetSrcMedia(), g_Player.GetFullTitle())))
+			&& !g_LyricSearch.IsAssociatedLyrics(g_Player.GetMediaKey())))
 			return;
 	}
 

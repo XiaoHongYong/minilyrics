@@ -31,7 +31,6 @@ public:
 	BOOL GetAssociateLyrics(LPCTSTR szAssociateFileKeyword, LPTSTR szLyricFile, int nMaxBuff);
 	BOOL IsAssociatedLyrics(LPCTSTR szAssociateFileKeyword);
 	BOOL IsAssociatedWithNoneLyrics(LPCTSTR szAssociateKeyword);
-	BOOL IsAssociatedLyrics(LPCTSTR szSongFile, LPCTSTR szFullTitle);
 	bool AssociateLyrics(LPCTSTR szAssociateFileKeyword, LPCTSTR szLyricFile);
 	BOOL CancelAssociate(LPCTSTR szAssociateFileKeyword);
 	bool IsLyricsExist(LPCTSTR szLyricSource);
@@ -53,8 +52,8 @@ protected:
 
 #ifdef _WIN32_DESKTOP
 	void LoadLyricsAssociationOld();
-#endif
 	void LoadLyricsAssociationV2();
+#endif
 	void LoadLyricsAssociation();
 	void SaveLyricsAssociation();
 
