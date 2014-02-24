@@ -1008,7 +1008,7 @@ void CMPSkinWnd::OnDropFiles(HDROP hDrop)
 		if (FileIsExtSame(szFile, _T(".lrc")) || FileIsExtSame(szFile, _T(".txt"))
 			|| FileIsExtSame(szFile, _T(".srt")))
 		{
-			g_LyricSearch.AssociateLyrics(CMPlayerAppBase::GetAssociateFileKeyword().c_str(), szFile);
+			g_LyricSearch.AssociateLyrics(g_Player.GetMediaKey().c_str(), szFile);
 			CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 
 			DragFinish(hDrop);

@@ -118,7 +118,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	{
 	case CMD_NO_SUITTABLE_LYRICS:
 	case CMD_INSTRUMENTAL_MUSIC:
-		if (g_LyricSearch.AssociateLyrics(CMPlayerApp::GetAssociateFileKeyword().c_str(), NONE_LYRCS))
+		if (g_LyricSearch.AssociateLyrics(g_Player.GetMediaKey().c_str(), NONE_LYRCS))
 			CMPlayerAppBase::GetInstance()->DispatchResearchLyrics();
 		break;
 	case CMD_SEARCH_LYR_SUGGESTIONS:

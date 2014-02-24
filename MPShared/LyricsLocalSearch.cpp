@@ -543,10 +543,12 @@ void CLyricsLocalSearch::LoadLyricsAssociation()
 		strLyrics.append(szStr, nLen);
 #endif
 
+#ifdef _WIN32
 		if (bConvertV10)
 			m_mapLyricsAssociate[ToAssociateKeyword(strSong.c_str())] = strLyrics.c_str();
 		else
-			m_mapLyricsAssociate[strSong.c_str()] = strLyrics.c_str();
+#endif
+		m_mapLyricsAssociate[strSong.c_str()] = strLyrics.c_str();
 	}
 
 R_END:

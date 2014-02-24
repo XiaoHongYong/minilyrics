@@ -449,7 +449,7 @@ protected:
 			// If embedded lyrics exists, do NOT overwrite it.
 			VecString vSaveEmbeddedLyrNames;
 			uint32 lstExisted = 0;
-			if (g_LyricSearch.SearchEmbeddedLyrics(szMediaSrc, lstExisted) == ERR_OK)
+			if (SearchEmbeddedLyrics(szMediaSrc, lstExisted) == ERR_OK)
 			{
 				for (size_t i = 0; i < m_vSaveEmbeddedLyrNames.size(); i++)
 				{

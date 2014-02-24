@@ -501,7 +501,7 @@ void COnlineSearch::Quit()
 
 BOOL COnlineSearch::SearchCacheForCur(V_LRCSEARCHRESULT *pvResult, DWORD *pdwSearchTime)
 {
-	tstring strAssociateMediaKey = CMPlayerAppBase::GetAssociateFileKeyword();
+	tstring strAssociateMediaKey = g_Player.GetMediaKey();
 
 	CMutexAutolock	autolock(m_mutexDB);
 
@@ -576,7 +576,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 }
 
 // 创建一个线程搜索歌词，线程执行完毕之后会通知目标
-bool COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle)
+bool COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szTitle)
 {
 	if (m_bRunning)
 		return false;
@@ -584,7 +584,7 @@ bool COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR sz
 	COnlineSearchThreadParam *pParam = new COnlineSearchThreadParam;
 	pParam->strArtist = szArtist;
 	pParam->strTitle = szTitle;
-	pParam->strAssociateMediaKey = CMPlayerAppBase::GetAssociateFileKeyword();
+	pParam->strAssociateMediaKey = g_Player.GetMediaKey();
 	pParam->pOnlineSearch = this;
 	pParam->bOnlyMatched = bOnlyMatched;
 
@@ -658,17 +658,17 @@ bool COnlineSearch::CheckLicenseLimitation()
 	return true;
 }
 
-bool COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
+bool COnlineSearch::AutoSearch()
 {
+	tstring strArtist = g_Player.GetArtist();
+	tstring strTitle = g_Player.GetTitle();
+
 	// Won't search is title is too short, or artist is empty.
-	if (_tcslen(szTitle) < 2 && _tcslen(szArtist) == 0)
+	if (strTitle.size() < 2 && strArtist.size() == 0)
 		return false;
 
 	if (!CheckLicenseLimitation())
 		return false;
-
-	tstring strArtist = szArtist;
-	tstring strTitle = szTitle;
 
 	if (!FilterSpamInfo(strArtist, strTitle))
 		return false;
@@ -679,7 +679,7 @@ bool COnlineSearch::AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle)
 	str += g_Player.GetFullTitle();
 	CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 
-	return AddSearchJob(true, strArtist.c_str(), strTitle.c_str());
+	return AddSearchJob(true, g_Player.GetMediaKey().c_str(), strArtist.c_str(), strTitle.c_str());
 }
 
 int COnlineSearch::SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szMediaKey, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount)

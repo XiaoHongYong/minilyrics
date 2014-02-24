@@ -512,7 +512,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 	// auto save embedded lyrics
 	g_autoProcessEmbeddedLyrics.OnSongChanged();
 
-	g_LyricData.NewLyrics(GetAssociateFileKeyword().c_str(), g_Player.GetMediaLength());
+	g_LyricData.NewLyrics(g_Player.GetMediaKey().c_str(), g_Player.GetMediaLength());
 
 	//
 	// 没有歌曲信息
@@ -526,7 +526,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 	BOOL	bAssociateNone = FALSE;
 	int		nRet;
 
-	tstring strAssociateMediaKey = GetAssociateFileKeyword();
+	tstring strAssociateMediaKey = g_Player.GetMediaKey();
 	if (g_LyricSearch.IsAssociatedWithNoneLyrics(strAssociateMediaKey.c_str()))
 		bAssociateNone = TRUE;
 	else
@@ -607,7 +607,7 @@ void CMPlayerAppBase::OnLanguageChanged()
 void CMPlayerAppBase::OnOnlineSearchEnd()
 {
 	// If lyrics already associated, do not download auto.
-	if (g_LyricSearch.IsAssociatedLyrics(g_Player.GetMediaKey()))
+	if (g_LyricSearch.IsAssociatedLyrics(g_Player.GetMediaKey().c_str()))
 		return;
 
 	// 在线自动搜索的通知消息，表示该歌词的结果已经搜索到了
@@ -712,19 +712,13 @@ void CMPlayerAppBase::OnDownloadLyricsFailed(CDownloadTask *pTask)
 	}
 }
 
-// 取得关联时的关键信息
-tstring CMPlayerAppBase::GetAssociateFileKeyword()
-{
-	return g_LyricSearch.GetAssociateFileKeyword(g_Player.GetSrcMedia(), g_Player.GetFullTitle());
-}
-
 void CMPlayerAppBase::NewLyrics()
 {
 	// 判断是否要保存歌词
 	if (!OnLyricsChangingSavePrompt())
 		return;
 
-	g_LyricData.NewLyrics(GetAssociateFileKeyword().c_str(), g_Player.GetMediaLength());
+	g_LyricData.NewLyrics(g_Player.GetMediaKey().c_str(), g_Player.GetMediaLength());
 
 	DispatchLyricsChangedSyncEvent();
 }

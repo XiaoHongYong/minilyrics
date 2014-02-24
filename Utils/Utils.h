@@ -15,7 +15,7 @@
 #ifdef _ANDROID
 	#include "android/log.h"
 #else
-	//#include "log.h"
+	#include "log.h"
 #endif
 
 #if defined(_IPHONE) || defined(_ANDROID)

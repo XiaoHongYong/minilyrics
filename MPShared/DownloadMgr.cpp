@@ -97,12 +97,12 @@ void CDownloadMgr::OnSongChanged()
 		// For text lyrics and not associated by user, continue to search for LRC lyrics.
 		if (!(g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcEvenIfHasTxt"), true)
 			&& g_LyricData.GetLyrContentType() == LCT_TXT
-			&& !g_LyricSearch.IsAssociatedLyrics(g_Player.GetMediaKey())))
+			&& !g_LyricSearch.IsAssociatedLyrics(g_Player.GetMediaKey().c_str())))
 			return;
 	}
 
 	if (!SearchInCacheResult(false))
-		g_OnlineSearch.AutoSearch(g_Player.GetArtist(), g_Player.GetTitle());
+		g_OnlineSearch.AutoSearch();
 }
 
 BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
@@ -179,7 +179,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 			str += result.strSaveFileName.c_str();
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(str.c_str());
 
-			DownloadLyrics(CMPlayerAppBase::GetAssociateFileKeyword().c_str(),
+			DownloadLyrics(g_Player.GetMediaKey().c_str(),
 				g_Player.GetSrcMedia(), result.strUrl.c_str(), result.strSaveFileName.c_str());
 			return TRUE;
 		}

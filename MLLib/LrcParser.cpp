@@ -171,13 +171,13 @@ int CLrcParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 
 int CLrcParser::ParseString(LPCTSTR szText, bool bAddTimeStampForTextLine)
 {
-	tstringex		strLine;
-	CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
-
 	if (IsEmptyString(szText))
 		return ERR_EMPTY_LYRICS;
 
 	m_pMLData->Properties().SetEncoding(DEFAULT_ENCODING);
+	CLyrTagNameValueMap	propNameValueMap(m_pMLData->Properties());
+
+	tstringex		strLine;
 
 	//
 	// Parse .lrc line by line

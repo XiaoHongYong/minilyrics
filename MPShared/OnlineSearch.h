@@ -107,7 +107,7 @@ public:
 
 	BOOL SearchCacheForCur(V_LRCSEARCHRESULT *pvResult = NULL, DWORD *pdwSearchTime = NULL);
 
-	bool AutoSearch(LPCTSTR szArtist, LPCTSTR szTitle);
+	bool AutoSearch();
 
 	int SearchOnline(CMLClientSession &session, LPCTSTR szArtist, LPCTSTR szTitle, LPCTSTR szMediaKey, V_LRCSEARCHRESULT &vResult, tstring &strMsg, int &nCurPage, int &nPageCount);
 	int BatchSearch(CMLClientSession &session, MLListSearchItems &listSearch, uint32 nLyrSaveFlag, tstring &strMsg, INotifyEvent *pNotify);
@@ -118,7 +118,7 @@ protected:
 	bool CheckLicenseLimitation();
 
 	int UpdateSearchLrcInfo(LPCTSTR szFileAssociateKeyword, MLMsgRetSearch &retSearch);
-	bool AddSearchJob(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle);
+	bool AddSearchJob(bool bOnlyMatched, LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szTitle);
 
 	static void ThreadSearchOnline(LPVOID lpParam);
 

@@ -141,7 +141,6 @@ public:
 	static CMPSkinFactory *GetMPSkinFactory();
 	static CEventsDispatcherBase *GetEventsDispatcher();
 
-	static tstring GetAssociateFileKeyword();
 	static CMPSkinMainWnd *GetMainWnd();
 	static CMPHotkey &GetHotkey();
 	static CZPAnalyticsClient &GetAppAnalytics();

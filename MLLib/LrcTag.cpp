@@ -335,7 +335,7 @@ tstring CLyrTagNameValueMap::GetLrcTagString(int nIndex, bool bIncLineRet)
 	{
 		// Don't return tag string for UNICODE encoding
 		CHAR_ENCODING encoding = GetCharEncodingID(item.pstrValue->c_str());
-		if (encoding == ED_UNICODE || encoding == ED_UNICODE_BIG_ENDIAN)
+		if (encoding == ED_UNICODE || encoding == ED_UNICODE_BIG_ENDIAN || encoding == ED_UTF8)
 			return _T("");
 	}
 

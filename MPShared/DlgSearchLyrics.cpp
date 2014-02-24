@@ -909,7 +909,7 @@ void ShowSearchLyricsDialog(CSkinWnd *pParent)
 	skinWndStartupInfo.mapExchangePool[SZ_EX_POOL_TITLE] = g_Player.GetTitle();
 	skinWndStartupInfo.mapExchangePool[SZ_EX_POOL_MEDIA_URL] = g_Player.GetSrcMedia();
 	skinWndStartupInfo.mapExchangePool[SZ_EX_POOL_ALBUM] = g_Player.GetAlbum();
-	skinWndStartupInfo.mapExchangePool[SZ_EX_POOL_MEDIA_KEY] = CMPlayerAppBase::GetAssociateFileKeyword();
+	skinWndStartupInfo.mapExchangePool[SZ_EX_POOL_MEDIA_KEY] = g_Player.GetMediaKey();
 
 	CSkinApp::GetInstance()->GetSkinFactory()->ActiveOrCreateSkinWnd(skinWndStartupInfo);
 }
