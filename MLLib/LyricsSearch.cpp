@@ -251,6 +251,130 @@ void V_LRCSEARCHRESULT::DeleteByOrder(int n)
 	}
 }
 
+bool IsSupportedOpenFileType(MLFileType fileType)
+{
+	return fileType != FT_UNKNOWN && IsFlagSet(FT_LYRICS_TXT | FT_SUBTITLE_SRT | FT_LYRICS_LRC, fileType);
+}
+
+//
+// Return it, if:
+// * Name is same as song file name.
+// * Title & artist are match.
+//
+void SearchMatchLyricsInDir(LPCTSTR szDir, CLyricsSearchParameter &searchParam, V_LRCSEARCHRESULT &vLyrics, BOOL bIncludeSub)
+{
+	if (IsEmptyString(szDir))
+		return;
+
+	CMLFileFind	finder;
+	if (!finder.OpenDir(szDir))
+	{
+		ERRLOG1(_T("Failed to open dir: %s"), szDir);
+		return;
+	}
+
+	while (finder.FindNext())
+	{
+		if (finder.IsCurDir())
+		{
+			if (bIncludeSub)
+			{
+				tstring subDir = DirStringJoint(szDir, finder.GetCurName());
+				DirStringAddSlash(subDir);
+				SearchMatchLyricsInDir(subDir.c_str(), searchParam, vLyrics, bIncludeSub);
+				if (searchParam.IsBestMatchLyricsFound())
+					return;
+			}
+		}
+		else
+		{
+			MLFileType fileType = MLGetFileType(finder.GetCurName());
+			if (!IsSupportedOpenFileType(fileType))
+				continue;
+
+			int nMatchValue = searchParam.CalMatchValueByName(szDir, finder.GetCurName(), fileType);
+			if (nMatchValue > MATCH_VALUE_MIN)
+			{
+				if (searchParam.bOnlySearchBestMatch)
+				{
+					if (nMatchValue > searchParam.nMatchValueOfBest)
+					{
+						searchParam.strBestMatchLyrics = DirStringJoint(szDir, finder.GetCurName());
+						searchParam.nMatchValueOfBest = nMatchValue;
+						if (searchParam.IsBestMatchLyricsFound())
+							return;
+					}
+					continue;
+				}
+
+				LrcSearchResult		LrcResult;
+				LrcResult.nMatchValue = (float)nMatchValue;
+				LrcResult.strUrl = DirStringJoint(szDir, finder.GetCurName());
+				vLyrics.AddResult(LrcResult);
+			}
+		}
+	}
+}
+
+tstring RemovePrefixOfAcckey(LPCTSTR szStr);
+
+int SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable)
+{
+	VecString vLyricsNames;
+	int nRet = CTagLib::GetEmbeddedLyrics(szSongFile, vLyricsNames);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	for (uint i = 0; i < vLyricsNames.size(); i++)
+	{
+		tstring &lyrName = vLyricsNames[i];
+		LRC_SOURCE_TYPE lst = LyrSrcTypeFromName(lyrName.c_str());
+
+		LrcSearchResult		result;
+		result.strUrl = lyrName;
+		result.strTitle = result.strSaveFileName = RemovePrefixOfAcckey(_TL(LyrSrcTypeToDesc(lst)));
+		if (lst == LST_LYRICS3V2 || lst == LST_ID3V2_SYLT || lst == LST_ID3V2_LYRICS)
+			result.nMatchValue = MATCH_VALUE_EMBEDDED_LRC;
+		else
+			result.nMatchValue = MATCH_VALUE_BETTER - 4;	// Larger than the text lyrics.
+
+		string language;
+		int index;
+		if (GetEmbeddedLyricsNameInfo(lyrName.c_str(), language, index))
+		{
+			tstring strIndex;
+			if (index > 0)
+				strIndex = CStrPrintf(_T(": %d"), index).c_str();
+			if (language == "eng")
+				result.strArtist = _T("English");
+			else if (language == "fre")
+				result.strArtist = _T("French");
+			else
+				AnsiToTString(language.c_str(), -1, result.strArtist);
+			result.strArtist += strIndex;
+		}
+
+		vLyrics.AddResult(result);
+	}
+
+	return ERR_OK;
+}
+
+int SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSourceType)
+{
+	lrcSourceType = 0;
+
+	VecString vLyricsNames;
+	int nRet = CTagLib::GetEmbeddedLyrics(szSongFile, vLyricsNames);
+	if (nRet != ERR_OK)
+		return nRet;
+
+	for (uint i = 0; i < vLyricsNames.size(); i++)
+		lrcSourceType |= LyrSrcTypeFromName(vLyricsNames[i].c_str());
+
+	return ERR_OK;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // CPPUnit test
 

@@ -18,7 +18,7 @@
 	//#include "log.h"
 #endif
 
-#ifdef _IPHONE
+#if defined(_IPHONE) || defined(_ANDROID)
 #include "Mac/LocalizeTool.h"
 #else
 #include "LocalizeTool.h"

@@ -25,7 +25,7 @@ LOCAL_LDFLAGS += -Wl,--gc-sections
 LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog 
 
 LOCAL_MODULE    := hello-jni
-LOCAL_SRC_FILES := MiniLyrics.cpp \
+LOCAL_SRC_FILES := MiniLyrics.cpp LyricsLocalSearch.cpp\
 	../../base/android/android.cpp ../../base/android/Thread.cpp ../../base/android/CharEncoding.cpp \
 	../../base/Error.cpp ../../base/idstring.cpp ../../base/safestr.cpp ../../base/stringex.cpp \
 	../../base/StrPrintf.cpp ../../base/CharEncodingBase.cpp ../../base/FileApiBase.cpp	\
@@ -35,8 +35,8 @@ LOCAL_SRC_FILES := MiniLyrics.cpp \
 	../../base/MapString.cpp ../../base/FileEx.cpp \
 	../../Utils/android/Log.cpp ../../Utils/MLBinXMLParser.cpp ../../Utils/SimpleXML.cpp ../../Utils/XMLWriter.cpp\
 	../../Utils/SimpleXMLParser.cpp ../../Utils/XCharSeparatedValues.cpp ../../Utils/UUEncode.cpp \
-	../../Utils/linux/Profile.cpp ../../Utils/linux/App.cpp ../../Utils/VersionNumber.cpp \
-	../../Utils/digest.cpp ../../Utils/md5.cpp \
+	../../Utils/linux/Profile.cpp	../../Utils/linux/App.cpp		../../Utils/VersionNumber.cpp \
+	../../Utils/digest.cpp			../../Utils/md5.cpp \
 	../../ID3Lib/ID3Helper.cpp		../../ID3Lib/ID3v1.cpp		../../ID3Lib/ID3v2.cpp		\
 	../../ID3Lib/ID3v2Frame.cpp		../../ID3Lib/ID3v2FrameParser.cpp	\
 	../../TagLib/ID3v2IF.cpp		../../TagLib/LyricsData.cpp		../../TagLib/M4aTag.cpp		\
@@ -45,6 +45,8 @@ LOCAL_SRC_FILES := MiniLyrics.cpp \
 	../../MLLib/LyricsSearch.cpp 	../../MLLib/MLData.cpp 			../../MLLib/HelperFun.cpp \
 	../../MLLib/SncParser.cpp 		../../MLLib/LrcTag.cpp 			../../MLLib/LyricsKeywordFilter.cpp \
 	../../MLLib/SrtParser.cpp 		../../MLLib/LyrScrollActionRecorder.cpp 	../../MLLib/MLProfile.cpp \
+	../../MLProtocol/MLUtils.cpp 	\
+	#../../MPShared/LyricsLocalSearch.h	../../MPShared/LyricsLocalSearch.cpp \
 	#../../MLProtocol/AppAnalyticsClient.cpp ../../MLProtocol/HttpClient.cpp \
 	#../../MLProtocol/HttpProtocol.cpp ../../MLProtocol/ClientCom.cpp\
 	#../../MLProtocol/MLProtocol.cpp ../../MLProtocol/MLUtils.cpp ../../MLProtocol/NetSDK.cpp \

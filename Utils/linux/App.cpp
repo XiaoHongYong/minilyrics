@@ -58,6 +58,31 @@ void GetAppDataDir(TCHAR *szAppDir)
 
 void InitSetDefaultCharEncoding();
 
+#ifdef _ANDROID
+
+BOOL InitBaseFrameWork(LPCTSTR szWorkingFolder, LPCTSTR szLogTag, LPCTSTR szProfileName, LPCTSTR szDefAppName)
+{
+	assert(sizeof(byte) == 1);
+	assert(sizeof(WORD) == 2);
+	assert(sizeof(DWORD) == 4);
+	assert(sizeof(int16) == 2);
+	assert(sizeof(int32) == 4);
+	assert(sizeof(int64) == 8);
+	assert(sizeof(WCHAR) == 2);
+	assert(sizeof(WCHAR) == 2);
+
+	_tcscpy_safe(g_szAppDataDir, CountOf(g_szAppDataDir), szWorkingFolder);
+	_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), szWorkingFolder);
+
+	g_Profile.Init(szProfileName, szDefAppName);
+
+	g_Log.Init(szLogTag);
+
+	return TRUE;
+}
+
+#else
+
 BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProfileName, LPCTSTR szDefAppName)
 {
 	assert(sizeof(byte) == 1);
@@ -89,3 +114,5 @@ BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProf
 
 	return TRUE;
 }
+
+#endif

@@ -92,3 +92,8 @@ public:
 	void DeleteByOrder(int n);
 
 };
+
+void SearchMatchLyricsInDir(LPCTSTR szDir, CLyricsSearchParameter &searchParam, V_LRCSEARCHRESULT &vLyrics, BOOL bIncludeSub);
+
+int SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable = false);
+int SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSourceType);

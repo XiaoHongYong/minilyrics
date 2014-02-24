@@ -294,7 +294,7 @@ public:
 
 	virtual void Reset() {
 		for (int i = 0; i < g_LyricSearch.GetSearchFolerCount(); i++)
-			g_LyricSearch.RemoveFolder(i);
+			g_LyricSearch.RemoveFolder(0);
 		g_LyricSearch.SaveLyricFolderCfg();
 	}
 

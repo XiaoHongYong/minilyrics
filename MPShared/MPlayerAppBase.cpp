@@ -715,7 +715,7 @@ void CMPlayerAppBase::OnDownloadLyricsFailed(CDownloadTask *pTask)
 // 取得关联时的关键信息
 tstring CMPlayerAppBase::GetAssociateFileKeyword()
 {
-	return CLyricsLocalSearch::GetAssociateFileKeyword(g_Player.GetSrcMedia(), g_Player.GetFullTitle());
+	return g_LyricSearch.GetAssociateFileKeyword(g_Player.GetSrcMedia(), g_Player.GetFullTitle());
 }
 
 void CMPlayerAppBase::NewLyrics()

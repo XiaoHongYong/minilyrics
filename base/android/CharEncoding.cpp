@@ -158,8 +158,9 @@ jstring NewJString(JNIEnv *env, const char *str, int nLen, const char *encoding)
 	env->CallVoidMethod(objString, g_methodStringInitWithBufEncoding, buf, jstrEncoding);
 
 	env->DeleteLocalRef(buf);
+	env->DeleteLocalRef(jstrEncoding);
 
-	return reinterpret_cast<jstring>(env->NewGlobalRef(objString));
+	return reinterpret_cast<jstring>(objString);
 }
 
 int GetBytesOfJString(JNIEnv *env, jstring jstr, char *strOut, int nOut, const char *encoding)

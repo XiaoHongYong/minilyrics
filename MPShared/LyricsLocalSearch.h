@@ -44,9 +44,6 @@ public:
 	BOOL SetFolder(LPCTSTR szFolder);
 	void SaveLyricFolderCfg();
 
-	static int SearchEmbeddedLyrics(LPCTSTR szSongFile, V_LRCSEARCHRESULT &vLyrics, bool bOnlyListAvailable = false);
-	static int SearchEmbeddedLyrics(LPCTSTR szSongFile, uint32 &lrcSourceType);
-
 protected:
 	void SearchLyrics(CLyricsSearchParameter &searchParam, V_LRCSEARCHRESULT &vLyrics);
 

@@ -12,3 +12,4 @@ LPCTSTR _TL(LPCTSTR szString);
 #define _TLM(szString)		_T(szString)
 
 //#define ERROR2STR_LOCAL(nError)	(g_LangTool.ToLocalString(Error2Str(nError)))
+tstring RemovePrefixOfAcckey(LPCTSTR szStr);

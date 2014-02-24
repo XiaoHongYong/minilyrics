@@ -40,5 +40,11 @@ HINSTANCE SetResourceHandle(HINSTANCE hResHandle);
 
 BOOL InitBaseFrameWork(HINSTANCE hInst, LPCTSTR szLogFile, LPCTSTR szProfileName, LPCTSTR szDefAppName = NULL);
 #else
-BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProfileName, LPCTSTR szDefAppName = NULL);
+
+	#ifdef _ANDROID
+		BOOL InitBaseFrameWork(LPCTSTR szWorkingFolder, LPCTSTR szLogTag, LPCTSTR szProfileName, LPCTSTR szDefAppName);
+	#else
+		BOOL InitBaseFrameWork(int argc, char *argv[], LPCTSTR szLogFile, LPCTSTR szProfileName, LPCTSTR szDefAppName = NULL);
+	#endif
+
 #endif
