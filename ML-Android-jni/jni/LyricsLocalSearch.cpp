@@ -3,6 +3,8 @@
 #include "../../MLLib/LyricsSearch.h"
 #include "LyricsLocalSearch.h"
 
+CLyricsLocalSearch		g_lyricsSearch;
+
 CLyricsLocalSearch::CLyricsLocalSearch(void)
 {
 }

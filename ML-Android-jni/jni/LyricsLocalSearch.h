@@ -19,3 +19,5 @@ public:
 	tstring			m_lyricsDirOfUser, m_lyricsDirOfDownload;
 
 };
+
+extern CLyricsLocalSearch		g_lyricsSearch;

@@ -7,6 +7,8 @@
 #include "../CharEncoding.h"
 
 #define DBGLOG1 printf
+#include <android/log.h>
+//__android_log_write(ANDROID_LOG_ERROR, "Tag", encoding);
 
 // The order of ED_XXX is the order of __encodingCodepage 
 // __encodingCodepage[ED_XXX].encodingID = ED_XXX
@@ -43,63 +45,6 @@ int GetCharEncodingCount() { return __MaxEncodings; }
 ENCODING_CODEPAGE &GetSysDefaultCharEncoding()
 {
 	return __encodingCodepage[ED_UTF8];
-}
-
-int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID)
-{
-	if (encodingID == ED_UTF8)
-	{
-		if (nLen == -1)
-		{
-			strcpy_safe(strOut, nOut, str);
-			return strlen(strOut);
-		}
-		else
-		{
-			strncpysz_safe(strOut, nOut, str, nLen);
-			return nLen;
-		}
-	}
-
-	EmptyStr(strOut);
-
-	if (encodingID > __MaxEncodings || encodingID < 0)
-		encodingID = 0;
-	assert(encodingID == __encodingCodepage[encodingID].encodingID);
-
-	wstringex strW;
-	MbcsToUCS2(str, nLen, strW, encodingID);
-
-	return UCS2ToUtf8(strW.c_str(), strW.size(), strOut, nOut);
-}
-
-int Utf8ToMbcs(const char *str, int nLen, char *strOut, int nOut, int encodingID)
-{
-	if (encodingID == ED_UTF8)
-	{
-		if (nLen == -1)
-		{
-			strcpy_safe(strOut, nOut, str);
-			return strlen(strOut);
-		}
-		else
-		{
-			strncpysz_safe(strOut, nOut, str, nLen);
-			return nLen;
-		}
-	}
-
-	EmptyStr(strOut);
-
-	if (encodingID > __MaxEncodings || encodingID < 0)
-		encodingID = 0;
-	assert(encodingID == __encodingCodepage[encodingID].encodingID);
-
-	wstringex strW;
-
-	Utf8ToUCS2(str, nLen, strW);
-
-	return UCS2ToMbcs(strW.c_str(), strW.size(), strOut, nOut, encodingID);
 }
 
 jclass		g_clsString = NULL;
@@ -141,19 +86,19 @@ bool PrepareJString(JNIEnv *env)
 jstring NewJString(JNIEnv *env, const char *str, int nLen, const char *encoding)
 {
 	if (!PrepareJString(env))
-		return env->NewStringUTF("Prepare JString");
+		return NULL;
+
+	jobject jstrEncoding = env->NewStringUTF(encoding);
 
 	jobject objString = env->AllocObject(g_clsString);
 	if (objString == NULL)
-		return env->NewStringUTF("Failed to alloc object String");
+		return NULL;
 
-	jbyteArray buf = env->NewByteArray(100);
+	jbyteArray buf = env->NewByteArray(nLen);
 	if (buf == NULL)
-		return env->NewStringUTF("Failed: NewByteArray");
+		return NULL;
 
 	env->SetByteArrayRegion(buf, 0, nLen, (const jbyte *)str);
-
-	jobject jstrEncoding = env->NewStringUTF(encoding);
 
 	env->CallVoidMethod(objString, g_methodStringInitWithBufEncoding, buf, jstrEncoding);
 
@@ -184,6 +129,72 @@ int GetBytesOfJString(JNIEnv *env, jstring jstr, char *strOut, int nOut, const c
 	return nOut;
 }
 
+int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID)
+{
+	if (encodingID == ED_UTF8)
+	{
+		if (nLen == -1)
+		{
+			strcpy_safe(strOut, nOut, str);
+			return strlen(strOut);
+		}
+		else
+		{
+			strncpysz_safe(strOut, nOut, str, nLen);
+			return nLen;
+		}
+	}
+
+	EmptyStr(strOut);
+
+	if (encodingID > __MaxEncodings || encodingID < 0)
+		encodingID = 0;
+	assert(encodingID == __encodingCodepage[encodingID].encodingID);
+
+	JNIEnv *env;
+	g_jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
+
+	jstring jstr = NewJString(env, str, nLen, __encodingCodepage[encodingID].szIConvCode);
+
+	const char * utf8 = env->GetStringUTFChars(jstr, NULL);
+
+	strcpy_safe(strOut, nOut, utf8);
+
+	env->ReleaseStringUTFChars(jstr, utf8);
+	env->DeleteLocalRef(jstr);
+
+	return strlen(strOut);
+}
+
+int Utf8ToMbcs(const char *str, int nLen, char *strOut, int nOut, int encodingID)
+{
+	if (encodingID == ED_UTF8)
+	{
+		if (nLen == -1)
+		{
+			strcpy_safe(strOut, nOut, str);
+			return strlen(strOut);
+		}
+		else
+		{
+			strncpysz_safe(strOut, nOut, str, nLen);
+			return nLen;
+		}
+	}
+
+	EmptyStr(strOut);
+
+	if (encodingID > __MaxEncodings || encodingID < 0)
+		encodingID = 0;
+	assert(encodingID == __encodingCodepage[encodingID].encodingID);
+
+	wstringex strW;
+
+	Utf8ToUCS2(str, nLen, strW);
+
+	return UCS2ToMbcs(strW.c_str(), strW.size(), strOut, nOut, encodingID);
+}
+
 int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int encodingID)
 {
 	EmptyStr(strOut);
@@ -193,7 +204,6 @@ int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int encodingI
 	assert(encodingID == __encodingCodepage[encodingID].encodingID);
 
 	JNIEnv *env;
-
 	g_jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
 
 	jstring jstr = NewJString(env, str, nLen, __encodingCodepage[encodingID].szIConvCode);

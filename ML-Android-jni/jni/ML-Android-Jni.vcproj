@@ -180,7 +180,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LyricsLocalSearch.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\MiniLyrics.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\MLProtocolCmd.cpp"
 				>
 			</File>
 			<File
@@ -195,6 +203,14 @@
 			>
 			<File
 				RelativePath="..\..\base\android\android.h"
+				>
+			</File>
+			<File
+				RelativePath=".\LyricsLocalSearch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\MLProtocolCmd.h"
 				>
 			</File>
 			<File

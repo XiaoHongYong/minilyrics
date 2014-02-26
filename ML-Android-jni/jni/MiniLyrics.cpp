@@ -20,6 +20,9 @@
 #include "../../base/base.h"
 #include "../../Utils/Utils.h"
 #include "../../MLLib/MLLib.h"
+#include "../../MLProtocol/MLProtocol.h"
+#include "LyricsLocalSearch.h"
+#include "MLProtocolCmd.h"
 
 /************************************************************************
 
@@ -31,6 +34,8 @@ Native library of MiniLyrics provide features:
 
 
 ************************************************************************/
+
+CMLProtocolCmd		g_mlProtocolCmd;
 
 class CJStr
 {
@@ -71,15 +76,95 @@ extern "C" jint JNI_OnLoad(JavaVM* vm, void* reserved)
 	return JNI_VERSION_1_6;
 }
 
-extern "C" jstring Java_com_example_hellojni_HelloJni_init(JNIEnv* env, jobject thiz, jstring jstrWorkingFolder, jstring jstrAppName, jstring jstrProfile)
+extern "C" jstring Java_com_crintsoft_music_LyricsApplication_init(JNIEnv* env, jobject thiz, jobject ctx, jstring jstrWorkingFolder, jstring jstrAppName, jstring jstrProfile, jstring jstrClientName)
 {
+	// TODO: Get package name & signature.
+
 	CJStr strWorkingFolder(env, jstrWorkingFolder);
 	CJStr strAppName(env, jstrAppName);
 	CJStr strProfile(env, jstrProfile);
+	CJStr strClientName(env, jstrClientName);
 
 	InitBaseFrameWork(strWorkingFolder.c_str(), strAppName.c_str(), strProfile.c_str(), strAppName.c_str());
 
+	g_mlProtocolCmd.Init(strClientName.c_str());
+
 	return env->NewStringUTF("1init");
+}
+
+inline void WriteAttributeIfNoNull(CXMLWriter &writer, LPCTSTR name, tstring &val)
+{
+	if (val.size() > 0) {
+		writer.WriteAttribute(name, val.c_str());
+	}
+}
+
+void ToString(V_LRCSEARCHRESULT &vResult, CXMLWriter &writer)
+{
+	for (V_LRCSEARCHRESULT::iterator it = vResult.begin(); it != vResult.end(); ++it) {
+		LrcSearchResult &item = *it;
+
+		writer.WriteStartElement("item");
+
+		WriteAttributeIfNoNull(writer, "url", item.strUrl);
+		WriteAttributeIfNoNull(writer, "save_file_name", item.strSaveFileName);
+		WriteAttributeIfNoNull(writer, "artist", item.strArtist);
+		WriteAttributeIfNoNull(writer, "title", item.strTitle);
+		WriteAttributeIfNoNull(writer, "album", item.strAlbum);
+		WriteAttributeIfNoNull(writer, "uploader", item.strUploader);
+		if (item.nMatchValue > 0)
+			writer.WriteAttribute("match_value", item.nMatchValue);
+		if (item.fRate > 0)
+			writer.WriteAttribute("rate", item.fRate);
+		if (item.nRateCount > 0)
+			writer.WriteAttribute("rate_count", item.nRateCount);
+		if (item.nDownloads > 0)
+			writer.WriteAttribute("downloads", item.nDownloads);
+
+		writer.WriteEndElement();
+	}
+}
+
+extern "C" jstring Java_com_crintsoft_music_lyrics_LyricsLocalSearch_search(JNIEnv* env, jobject thiz, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
+{
+	CJStr strFile(env, jstrFile);
+	CJStr strArtist(env, jstrArtist);
+	CJStr strTitle(env, jstrTitle);
+
+	V_LRCSEARCHRESULT result;
+
+	g_lyricsSearch.SearchAllMatchLyrics(strFile.c_str(), strArtist.c_str(), strTitle.c_str(), result);
+
+	CXMLWriter writer;
+	writer.WriteStartElement("result");
+	ToString(result, writer);
+	writer.WriteEndElement();
+
+	return env->NewStringUTF(writer.GetBuffer().c_str());
+}
+
+extern "C" jstring Java_com_crintsoft_music_lyrics_LyricsLocalSearch_searchBestMatch(JNIEnv* env, jobject thiz, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
+{
+	CJStr strFile(env, jstrFile);
+	CJStr strArtist(env, jstrArtist);
+	CJStr strTitle(env, jstrTitle);
+
+	tstring lyricsFile;
+	if (g_lyricsSearch.GetBestMatchLyrics(strFile.c_str(), strArtist.c_str(), strTitle.c_str(), lyricsFile))
+		return env->NewStringUTF(lyricsFile.c_str());
+
+	return NULL;
+}
+
+extern "C" void Java_com_crintsoft_music_lyrics_LyricsLocalSearch_setSearchOptions(JNIEnv* env, jobject thiz, jstring jstrDownloadDir, jstring jstrLyricsDir)
+{
+	CJStr strDownloadDir(env, jstrDownloadDir);
+	CJStr strLyricsDir(env, jstrLyricsDir);
+
+	ERRLOG2("Settings: %s, %s", strLyricsDir.c_str(), strDownloadDir.c_str());
+
+	g_lyricsSearch.m_lyricsDirOfDownload = strDownloadDir.c_str();
+	g_lyricsSearch.m_lyricsDirOfUser = strLyricsDir.c_str();
 }
 
 LPCTSTR _TL(LPCTSTR szString)
@@ -112,34 +197,6 @@ tstring RemovePrefixOfAcckey(LPCTSTR szStr)
 	return str;
 }
 
-/* This is a trivial JNI example where we use a native method
- * to return a new VM String. See the corresponding Java source
- * file located at:
- *
- *   apps/samples/hello-jni/project/src/com/example/hellojni/HelloJni.java
- */
-extern "C" jstring Java_com_example_hellojni_HelloJni_stringFromJNI(JNIEnv* env,
-                                                  jobject thiz, jstring inStr)
-{
-	const char *utf8 = env->GetStringUTFChars(inStr, NULL);
-
-	CHAR_ENCODING encoding = ED_GB2312;
-	//CHAR_ENCODING encoding = ED_UTF8;
-
-	tstring strOut;
-	UTF8ToTString(utf8, -1, strOut, encoding);
-
-	DBGLOG0("Log test");
-	ERRLOG0("Log test");
-	ERRLOG0(strOut.c_str());
-
-	string strOutUtf8;
-	TStringToUTF8(strOut.c_str(), strOut.size(), strOutUtf8, encoding);
-	ERRLOG0(strOutUtf8.c_str());
-
-	return env->NewStringUTF((const char *)strOutUtf8.c_str());
-}
-
 extern "C" jstring Java_com_crintsoft_music_lyrics_LyricsData_readLyricsSource(JNIEnv* env,
                                                   jobject thiz, jstring mediaFile, jstring lyricsSrc)
 {
@@ -160,4 +217,42 @@ extern "C" jstring Java_com_crintsoft_music_lyrics_LyricsData_readLyricsSource(J
 	env->ReleaseStringUTFChars(lyricsSrc, szLyricsSrc);
 
 	return env->NewStringUTF(str.c_str());
+}
+
+extern "C" jbyteArray Java_com_crintsoft_music_lyrics_download_LyricsOnlineSearch_encodeSearchRequest(JNIEnv* env,
+																				jobject thiz, jstring jstrArtist, jstring jstrTitle, jboolean onlyMatched)
+{
+	ERRLOG0("Enter: encodeSearchRequest");
+
+	CJStr strArtist(env, jstrArtist);
+	CJStr strTitle(env, jstrTitle);
+
+	CMLBinXMLWriter xmlStream;
+	g_mlProtocolCmd.ToSearchCommand(strArtist.c_str(), strTitle.c_str(), 0, onlyMatched, xmlStream);
+
+	CCharBuffer &buf = xmlStream.GetBuffer();
+	jbyteArray jbyteArr = env->NewByteArray(buf.size());
+	if (jbyteArr == NULL)
+		return NULL;
+
+	env->SetByteArrayRegion(jbyteArr, 0, buf.size(), (const jbyte *)buf.c_str());
+
+	return jbyteArr;
+}
+
+extern "C" jstring Java_com_crintsoft_music_lyrics_download_LyricsOnlineSearch_decodeSearchReesult(JNIEnv* env,
+																				jobject thiz, jbyteArray data, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
+{
+	CCharBuffer buf;
+	buf.resize(env->GetArrayLength(data));
+	env->GetByteArrayRegion(data, 0, buf.size(), (jbyte *)buf.data());
+
+	CJStr strFile(env, jstrFile);
+	CJStr strArtist(env, jstrArtist);
+	CJStr strTitle(env, jstrTitle);
+
+	CXMLWriter writer;
+	g_mlProtocolCmd.DecodeSearchRetCommand(strFile.c_str(), strArtist.c_str(), strTitle.c_str(), buf, writer);
+
+	return env->NewStringUTF(writer.GetBuffer().c_str());
 }

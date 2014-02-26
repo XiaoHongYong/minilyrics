@@ -24,8 +24,8 @@ LOCAL_CFLAGS += -ffunction-sections -fdata-sections
 LOCAL_LDFLAGS += -Wl,--gc-sections
 LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog 
 
-LOCAL_MODULE    := hello-jni
-LOCAL_SRC_FILES := MiniLyrics.cpp LyricsLocalSearch.cpp\
+LOCAL_MODULE    := MiniLyrics
+LOCAL_SRC_FILES := MiniLyrics.cpp LyricsLocalSearch.cpp MLProtocolCmd.cpp\
 	../../base/android/android.cpp ../../base/android/Thread.cpp ../../base/android/CharEncoding.cpp \
 	../../base/Error.cpp ../../base/idstring.cpp ../../base/safestr.cpp ../../base/stringex.cpp \
 	../../base/StrPrintf.cpp ../../base/CharEncodingBase.cpp ../../base/FileApiBase.cpp	\
@@ -45,11 +45,10 @@ LOCAL_SRC_FILES := MiniLyrics.cpp LyricsLocalSearch.cpp\
 	../../MLLib/LyricsSearch.cpp 	../../MLLib/MLData.cpp 			../../MLLib/HelperFun.cpp \
 	../../MLLib/SncParser.cpp 		../../MLLib/LrcTag.cpp 			../../MLLib/LyricsKeywordFilter.cpp \
 	../../MLLib/SrtParser.cpp 		../../MLLib/LyrScrollActionRecorder.cpp 	../../MLLib/MLProfile.cpp \
-	../../MLProtocol/MLUtils.cpp 	\
-	#../../MPShared/LyricsLocalSearch.h	../../MPShared/LyricsLocalSearch.cpp \
-	#../../MLProtocol/AppAnalyticsClient.cpp ../../MLProtocol/HttpClient.cpp \
-	#../../MLProtocol/HttpProtocol.cpp ../../MLProtocol/ClientCom.cpp\
-	#../../MLProtocol/MLProtocol.cpp ../../MLProtocol/MLUtils.cpp ../../MLProtocol/NetSDK.cpp \
+	../../MLProtocol/MLUtils.cpp 	../../MLProtocol/MLProtocol.cpp		\
+	../../MLProtocol/AppAnalyticsClient.cpp ../../MLProtocol/HttpClient.cpp \
+	../../MLProtocol/HttpProtocol.cpp ../../MLProtocol/ClientCom.cpp\
+	# ../../MLProtocol/MLUtils.cpp ../../MLProtocol/NetSDK.cpp \
 	#
 
 include $(BUILD_SHARED_LIBRARY)
