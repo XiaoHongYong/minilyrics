@@ -1,0 +1,2 @@
+ndk-build
+cp -R /Users/showbrave/zikiplayer/ML-Android-jni/libs /Users/showbrave/ml_android/ZikiPlayer/
