@@ -20,9 +20,16 @@ LOCAL_EXPORT_CFLAGS := -D_ANDROID=1
 LOCAL_CFLAGS := -D_ANDROID=1 -I../../base
 
 LOCAL_CPPFLAGS += -ffunction-sections -fdata-sections
-LOCAL_CFLAGS += -ffunction-sections -fdata-sections 
+
+ifeq ($(NDK_DEBUG),0)
+	LOCAL_CFLAGS += -fvisibility=hidden
+else
+	LOCAL_CFLAGS += -D_DEBUG=1 -DDEBUG=1
+endif
+
 LOCAL_LDFLAGS += -Wl,--gc-sections
 LOCAL_LDLIBS := -L$(SYSROOT)/usr/lib -llog 
+
 
 LOCAL_MODULE    := MiniLyrics
 LOCAL_SRC_FILES := MiniLyrics.cpp LyricsLocalSearch.cpp MLProtocolCmd.cpp\

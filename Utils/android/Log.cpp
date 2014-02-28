@@ -74,6 +74,10 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	__android_log_write(byLevel, "Tag", szMsg);
 }
 
+void CLog::LogDumpStr(BYTE byLevel, LPCTSTR szFile, int nLine, LPCSTR szStr, int nStrLen)
+{
+}
+
 void CLog::Init(LPCTSTR szLogFileName)
 {
 	if (!szLogFileName)

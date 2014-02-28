@@ -127,7 +127,7 @@ int CLyricsLines::GetCountWithSameTimeStamps(int nLine)
 		return 0;
 
 	LyricsLine *pLine = at(nLine);
-	for (int i = nLine; i < size(); i++)
+	for (int i = nLine + 1; i < size(); i++)
 	{
 		LyricsLine *p = at(i);
 		if (pLine->nBegTime != p->nBegTime || pLine->nEndTime != p->nEndTime)
