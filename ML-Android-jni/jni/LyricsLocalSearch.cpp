@@ -13,6 +13,17 @@ CLyricsLocalSearch::~CLyricsLocalSearch(void)
 {
 }
 
+void CLyricsLocalSearch::SetLyricsDir(LPCTSTR szDownloadDir, LPCTSTR szLyricsDir)
+{
+	m_lyricsDirOfDownload = szDownloadDir;
+	if (m_lyricsDirOfDownload.size() > 0)
+		DirStringAddSlash(m_lyricsDirOfDownload);
+
+	m_lyricsDirOfUser = szLyricsDir;
+	if (m_lyricsDirOfUser.size() > 0)
+		DirStringAddSlash(m_lyricsDirOfUser);
+}
+
 void CLyricsLocalSearch::SearchAllMatchLyrics(LPCTSTR szSongFile, LPCTSTR szArtist, LPCTSTR szTitle, V_LRCSEARCHRESULT &vLyrics)
 {
 	CLyricsSearchParameter searchParam(szSongFile, szArtist, szTitle);
@@ -41,33 +52,29 @@ void CLyricsLocalSearch::SearchLyrics(CLyricsSearchParameter &searchParam, V_LRC
 	tstring	strDir;
 
 	// Search lyrics in the same folder of song file.
+	if (!IsEmptyString(searchParam.szSongFile))
 	{
-		if (!IsEmptyString(searchParam.szSongFile))
-		{
-			strDir = FileGetPath(searchParam.szSongFile);
-			SearchMatchLyricsInDir(strDir.c_str(), searchParam, vLyrics, false);
-			if (searchParam.IsBestMatchLyricsFound())
-				return;
-		}
+		strDir = FileGetPath(searchParam.szSongFile);
+		SearchMatchLyricsInDir(strDir.c_str(), searchParam, vLyrics, false);
+		if (searchParam.IsBestMatchLyricsFound())
+			return;
 	}
 
 	// Search in lyrics download folder
+	if (m_lyricsDirOfDownload.size() > 0)
 	{
-		strDir = m_lyricsDirOfDownload;
-		DirStringAddSlash(strDir);
-
-		SearchMatchLyricsInDir(strDir.c_str(), searchParam, vLyrics, true);
+		SearchMatchLyricsInDir(m_lyricsDirOfDownload.c_str(), searchParam, vLyrics, true);
 		if (searchParam.IsBestMatchLyricsFound())
 			return;
 	}
 
 	// Search in the folder that user specified.
-	strDir = m_lyricsDirOfUser;
-	DirStringAddSlash(strDir);
-
-	SearchMatchLyricsInDir(strDir.c_str(), searchParam, vLyrics, true);
-	if (searchParam.IsBestMatchLyricsFound())
-		return;
+	if (m_lyricsDirOfUser.size() > 0 && !StrIsISame(m_lyricsDirOfDownload.c_str(), m_lyricsDirOfUser.c_str()))
+	{
+		SearchMatchLyricsInDir(m_lyricsDirOfUser.c_str(), searchParam, vLyrics, true);
+		if (searchParam.IsBestMatchLyricsFound())
+			return;
+	}
 
 	// Finally use the best match lyrics in vLyrics.
 	V_LRCSEARCHRESULT::iterator	it = vLyrics.GetTheBestMatchLyrics();

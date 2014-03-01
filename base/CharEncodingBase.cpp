@@ -42,18 +42,24 @@ FILE_ENCODING CharEncodingToFileEncoding(CHAR_ENCODING encoding)
 
 CHAR_ENCODING GetCharEncodingID(const char *szEncoding)
 {
+	if (IsEmptyString(szEncoding))
+		return ED_SYSDEF;
+
 	assert(ED_END + 1 == GetCharEncodingCount());
 	for (int i = GetCharEncodingCount() - 1; i >= 0; i--)
 	{
 		if (_stricmp(szEncoding, __encodingCodepage[i].szEncoding) == 0)
 			return __encodingCodepage[i].encodingID;
-		if (!IsEmptyString(szEncoding))
-		{
-			if (_stricmp(szEncoding, __encodingCodepage[i].szAlias) == 0)
-				return __encodingCodepage[i].encodingID;
-			if (_stricmp(szEncoding, __encodingCodepage[i].szDesc) == 0)
-				return __encodingCodepage[i].encodingID;
-		}
+
+		if (_stricmp(szEncoding, __encodingCodepage[i].szAlias) == 0)
+			return __encodingCodepage[i].encodingID;
+		if (_stricmp(szEncoding, __encodingCodepage[i].szDesc) == 0)
+			return __encodingCodepage[i].encodingID;
+#if defined(_LINUX) || defined(_ANDROID)
+		if (_stricmp(szEncoding, __encodingCodepage[i].szIConvCode) == 0)
+			return __encodingCodepage[i].encodingID;
+#endif
+
 	}
 
 	return ED_SYSDEF;

@@ -136,6 +136,7 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
 #define searchBestMatchLyrics Java_com_crintsoft_music_n_a_f
 #define setLocalSearchOptions Java_com_crintsoft_music_n_a_g
 #define readLyricsSource Java_com_crintsoft_music_n_a_h
+#define setDefaultCharEncoding Java_com_crintsoft_music_n_a_i
 
 extern "C" JNIEXPORT jstring NativeInit(JNIEnv* env, jobject thiz, jobject ctx, jstring jstrWorkingFolder, jstring jstrAppName, jstring jstrProfile, jstring jstrClientName)
 {
@@ -189,10 +190,7 @@ extern "C" JNIEXPORT void setLocalSearchOptions(JNIEnv* env, jobject thiz, jstri
 	CJStr strDownloadDir(env, jstrDownloadDir);
 	CJStr strLyricsDir(env, jstrLyricsDir);
 
-	ERRLOG2("Settings: %s, %s", strLyricsDir.c_str(), strDownloadDir.c_str());
-
-	g_lyricsSearch.m_lyricsDirOfDownload = strDownloadDir.c_str();
-	g_lyricsSearch.m_lyricsDirOfUser = strLyricsDir.c_str();
+	g_lyricsSearch.SetLyricsDir(strDownloadDir.c_str(), strLyricsDir.c_str());
 }
 
 extern "C" JNIEXPORT jstring readLyricsSource(JNIEnv* env, jobject thiz, jstring mediaFile, jstring lyricsSrc)
@@ -218,8 +216,6 @@ extern "C" JNIEXPORT jstring readLyricsSource(JNIEnv* env, jobject thiz, jstring
 
 extern "C" JNIEXPORT jbyteArray encodeOnlineSearchRequest(JNIEnv* env, jobject thiz, jstring jstrArtist, jstring jstrTitle, jboolean onlyMatched)
 {
-	ERRLOG0("Enter: encodeSearchRequest");
-
 	CJStr strArtist(env, jstrArtist);
 	CJStr strTitle(env, jstrTitle);
 
@@ -250,4 +246,12 @@ extern "C" JNIEXPORT jstring decodeOnlineSearchReesult(JNIEnv* env, jobject thiz
 	g_mlProtocolCmd.DecodeSearchRetCommand(strFile.c_str(), strArtist.c_str(), strTitle.c_str(), buf, writer);
 
 	return env->NewStringUTF(writer.GetBuffer().c_str());
+}
+
+void SetSysDefaultCharEncoding(LPCTSTR szEncoding);
+
+extern "C" JNIEXPORT void setDefaultCharEncoding(JNIEnv* env, jobject thiz, jstring encoding) {
+	CJStr strEncoding(env, encoding);
+
+	SetSysDefaultCharEncoding(strEncoding.c_str());
 }

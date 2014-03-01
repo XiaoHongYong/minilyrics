@@ -14,37 +14,44 @@
 // __encodingCodepage[ED_XXX].encodingID = ED_XXX
 ENCODING_CODEPAGE	__encodingCodepage[] = 
 {
-	{ ED_SYSDEF, "", "", "systemdefault", "ISO-8859-15" },
-	{ ED_UNICODE, "unicode", "", "Unicode", "unicode" },
-	{ ED_UNICODE_BIG_ENDIAN, "Unicode (Big-Endian)", "", "Unicode (Big-Endian)", "unicode" },
+	{ ED_SYSDEF, "iso-8859-15", "", "Latin 9 (ISO)", "iso-8859-15" },
+	{ ED_UNICODE, "unicode", "", "Unicode", "UTF-16LE" },
+	{ ED_UNICODE_BIG_ENDIAN, "Unicode (Big-Endian)", "", "Unicode (Big-Endian)", "UTF-16BE" },
 	{ ED_UTF8, "utf-8", "", "Unicode (UTF-8)", "utf-8" },
-	{ ED_ARABIC, "windows-1256", "arabic", "Arabic", "windows-1256" },
-	{ ED_BALTIC_WINDOWS, "windows-1257", "baltic", "Baltic (Windows)", "windows-1257" },
-	{ ED_CENTRAL_EUROPEAN_WINDOWS, "windows-1250", "", "Central European (Windows)", "windows-1250" },
-	{ ED_GB2312, "gb2312", "gb2312", "Chinese Simplified (GB2312)", "gb18030" },
+	{ ED_ARABIC, "windows-1256", "arabic", "Arabic", "Cp1256" },
+	{ ED_BALTIC_WINDOWS, "windows-1257", "baltic", "Baltic (Windows)", "Cp1257" },
+	{ ED_CENTRAL_EUROPEAN_WINDOWS, "windows-1250", "", "Central European (Windows)", "Cp1250" },
+	{ ED_GB2312, "gb2312", "gb2312", "Chinese Simplified (GB2312)", "EUC_CN" },
 	{ ED_BIG5, "big5", "big5", "Chinese Traditional (Big5)", "big5" },
-	{ ED_CYRILLIC_WINDOWS, "windows-1251", "", "Cyrillic (Windows)", "windows-1251" },
-	{ ED_GREEK_WINDOWS, "windows-1253", "greek", "Greek (Windows)", "windows-1253" },
-	{ ED_HEBREW_WINDOWS, "windows-1255", "hebrew", "Hebrew (Windows)", "windows-1255" },
-	{ ED_JAPANESE_SHIFT_JIS, "shift_jis", "shiftjis", "Japanese (Shift-JIS)", "shift_jis" },
+	{ ED_CYRILLIC_WINDOWS, "windows-1251", "", "Cyrillic (Windows)", "Cp1251" },
+	{ ED_GREEK_WINDOWS, "windows-1253", "greek", "Greek (Windows)", "Cp1253" },
+	{ ED_HEBREW_WINDOWS, "windows-1255", "hebrew", "Hebrew (Windows)", "Cp1255" },
+	{ ED_JAPANESE_SHIFT_JIS, "shift_jis", "shiftjis", "Japanese (Shift-JIS)", "SJIS" },
 	{ ED_KOREAN, "ks_c_5601-1987", "hangeul", "Korean", "CP949" },
-	{ ED_LATIN9_ISO, "iso-8859-15", "", "Latin 9 (ISO)", "iso-8859-15" },
+	{ ED_LATIN9_ISO, "iso-8859-15", "", "Latin 9 (ISO)", "ISO8859_15_FDIS" },
 	{ ED_THAI, "windows-874", "Thai", "Thai (Windows)", "CP874" },
-	{ ED_TURKISH_WINDOWS, "windows-1254", "turkish", "Turkish (Windows)", "windows-1254" },
-	{ ED_VIETNAMESE, "windows-1258", "vietnamese", "Vietnamese (Windows)", "windows-1258" },
-	{ ED_WESTERN_EUROPEAN_WINDOWS, "Windows-1252", "", "Western European (Windows)", "Windows-1252" },
-	{ ED_EASTERN_EUROPEAN_WINDOWS, "Windows-1250", "easteurope", "Eastern European (Windows)", "Windows-1250" },
-	{ ED_RUSSIAN_WINDOWS, "Windows-1251", "russian", "Russian (Windows)", "Windows-1251" },
+	{ ED_TURKISH_WINDOWS, "windows-1254", "turkish", "Turkish (Windows)", "Cp1254" },
+	{ ED_VIETNAMESE, "windows-1258", "vietnamese", "Vietnamese (Windows)", "Cp1258" },
+	{ ED_WESTERN_EUROPEAN_WINDOWS, "Windows-1252", "", "Western European (Windows)", "Cp1252" },
+	{ ED_EASTERN_EUROPEAN_WINDOWS, "Windows-1250", "easteurope", "Eastern European (Windows)", "Cp1250" },
+	{ ED_RUSSIAN_WINDOWS, "Windows-1251", "russian", "Russian (Windows)", "Cp1251" },
 };
 
 #define 		__MaxEncodings		CountOf(__encodingCodepage)
 
 int GetCharEncodingCount() { return __MaxEncodings; }
-
+int g_defaultSysEncoding = ED_SYSDEF;
 
 ENCODING_CODEPAGE &GetSysDefaultCharEncoding()
 {
-	return __encodingCodepage[ED_UTF8];
+	return __encodingCodepage[g_defaultSysEncoding];
+}
+
+void SetSysDefaultCharEncoding(LPCTSTR szEncoding)
+{
+	g_defaultSysEncoding = GetCharEncodingID(szEncoding);
+	__encodingCodepage[ED_SYSDEF] = __encodingCodepage[g_defaultSysEncoding];
+	__encodingCodepage[ED_SYSDEF].encodingID = ED_SYSDEF;
 }
 
 jclass		g_clsString = NULL;
