@@ -110,6 +110,14 @@ void ToString(V_LRCSEARCHRESULT &vResult, CXMLWriter &writer)
 		if (item.nDownloads > 0)
 			writer.WriteAttribute("downloads", item.nDownloads);
 
+		MLFileType fileType = MLGetFileType(item.strUrl.c_str());
+		LRC_SOURCE_TYPE lrcSrcType = LyrSrcTypeFromName(item.strUrl.c_str());
+		if (lrcSrcType == LST_ID3V2_SYLT || lrcSrcType == LST_ID3V2_LYRICS || lrcSrcType == LST_LYRICS3V2 || lrcSrcType == LST_KAR_LYRICS)
+			fileType = FT_LYRICS_LRC;
+		else if (lrcSrcType == LST_ID3V2_USLT || lrcSrcType == LST_M4A_LYRICS)
+			fileType = FT_LYRICS_TXT;
+		writer.WriteAttribute("file_type", (int)fileType);
+
 		writer.WriteEndElement();
 	}
 }

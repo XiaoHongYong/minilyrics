@@ -310,6 +310,7 @@ void SearchMatchLyricsInDir(LPCTSTR szDir, CLyricsSearchParameter &searchParam, 
 				LrcSearchResult		LrcResult;
 				LrcResult.nMatchValue = (float)nMatchValue;
 				LrcResult.strUrl = DirStringJoint(szDir, finder.GetCurName());
+				LrcResult.strSaveFileName = FileGetTitle(finder.GetCurName());
 				vLyrics.AddResult(LrcResult);
 			}
 		}
