@@ -26,6 +26,8 @@
 
 
 CMLProtocolCmd		g_mlProtocolCmd;
+bool				g_isSignatureCorrect = false;;
+
 
 class CJStr
 {
@@ -146,9 +148,86 @@ extern "C" JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
 #define readLyricsSource Java_com_crintsoft_music_n_a_h
 #define setDefaultCharEncoding Java_com_crintsoft_music_n_a_i
 
+
+
+jbyteArray GetSignature(JNIEnv* env, jobject ctx)
+{
+	jclass Context = env->FindClass("android/content/Context");
+
+	// Get Package name
+	jmethodID midGetPackageName = env->GetMethodID(Context, "getPackageName", "()Ljava/lang/String;");
+	jstring pkgName = reinterpret_cast<jstring>(env->CallObjectMethod(ctx, midGetPackageName));
+
+	// Get Package Manager
+	jmethodID midGetPackageManager = env->GetMethodID(Context, "getPackageManager", "()Landroid/content/pm/PackageManager;");
+	jobject pkgMgr = env->CallObjectMethod(ctx, midGetPackageManager);
+
+	// Get Package info
+	jclass PackageManager = env->GetObjectClass(pkgMgr);
+	jmethodID midGetPackageInfo = env->GetMethodID(PackageManager, "getPackageInfo", "(Ljava/lang/String;I)Landroid/content/pm/PackageInfo;");
+	jobject pkgInfo = env->CallObjectMethod(pkgMgr, midGetPackageInfo, pkgName, 64);
+	if (pkgInfo == NULL)
+		return NULL;
+
+	// Get Signature
+	jclass PackageInfo = env->GetObjectClass(pkgInfo);
+	jfieldID fidSignatures = env->GetFieldID(PackageInfo, "signatures", "[Landroid/content/pm/Signature;");
+	jobjectArray signatures =  reinterpret_cast<jobjectArray>(env->GetObjectField(pkgInfo, fidSignatures));
+	if (signatures == NULL)
+		return NULL;
+
+	// Get Signature byte array.
+	jobject signature = env->GetObjectArrayElement(signatures, 0);
+	jclass Signature = env->GetObjectClass(signature);
+	jmethodID midToByteArray = env->GetMethodID(Signature, "toByteArray", "()[B");
+	jobject sigData = env->CallObjectMethod(signature, midToByteArray);
+
+	env->DeleteLocalRef(pkgName);
+	env->DeleteLocalRef(pkgMgr);
+	env->DeleteLocalRef(pkgInfo);
+	env->DeleteLocalRef(signatures);
+	env->DeleteLocalRef(signature);
+
+	return reinterpret_cast<jbyteArray>(sigData);
+}
+
+void CheckSignature(JNIEnv* env, jobject ctx)
+{
+	g_isSignatureCorrect = false;
+
+	jbyteArray jsigData = GetSignature(env, ctx);
+	if (jsigData == NULL)
+		return;
+
+	int length = env->GetArrayLength(jsigData);
+	jbyte *data = env->GetByteArrayElements(jsigData, NULL);
+
+	TCHAR digest[48];
+	MD5ToString(data, length, digest);
+	env->ReleaseByteArrayElements(jsigData, data, JNI_ABORT);
+	env->DeleteLocalRef(jsigData);
+
+	DBGLOG1("CheckSignature: %s", digest);
+
+	// Debug 12d7100f0c5bfbe232fdbfd2e227e947
+	LPCTSTR DIG_DEBUG = "12d7100f0c5bfbe232fdbfd2e227e947";
+	LPCTSTR DIG_RELEASE = "39f092cb05976e1ab3d526e92d2eea81";
+
+	if (_tcsicmp(digest, DIG_DEBUG) == 0 || _tcsicmp(digest, DIG_RELEASE) == 0)
+	{
+		g_isSignatureCorrect = true;
+	}
+	else
+	{
+		DBGLOG0("CheckSignature: Failed");
+		// Crash jni, if signature is not correct.
+		env->FindClass("com/crintsoft/music/LyricsOnlineSearch");
+	}
+}
+
 extern "C" JNIEXPORT jstring NativeInit(JNIEnv* env, jobject thiz, jobject ctx, jstring jstrWorkingFolder, jstring jstrAppName, jstring jstrProfile, jstring jstrClientName)
 {
-	// TODO: Get package name & signature.
+	CheckSignature(env, ctx);
 
 	CJStr strWorkingFolder(env, jstrWorkingFolder);
 	CJStr strAppName(env, jstrAppName);
@@ -226,6 +305,12 @@ extern "C" JNIEXPORT jbyteArray encodeOnlineSearchRequest(JNIEnv* env, jobject t
 {
 	CJStr strArtist(env, jstrArtist);
 	CJStr strTitle(env, jstrTitle);
+
+	if (!g_isSignatureCorrect)
+	{
+		// Crash jni, if signature is not correct.
+		env->FindClass("com/crintsoft/music/LyricsOnlineSearch");
+	}
 
 	CMLBinXMLWriter xmlStream;
 	g_mlProtocolCmd.ToSearchCommand(strArtist.c_str(), strTitle.c_str(), 0, onlyMatched, xmlStream);
