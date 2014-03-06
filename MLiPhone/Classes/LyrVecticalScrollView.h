@@ -16,9 +16,16 @@ enum FadeMode {
 	FM_NO_FADE
 };
 
+enum AlignMode {
+	ALIGN_LEFT,
+	ALIGN_CENTER,
+	ALIGN_RIGHT,
+};
+
 struct LyrDisplayLine {
 	CTLineRef	lineText;
 	int			startTime, endTime;
+	int			width;
 };
 
 
@@ -27,15 +34,19 @@ struct LyrDisplayLine {
 	enum FadeMode				mFadeMode;
 	NSTimer						*lyrDisplayTimer;
 	MPMusicPlayerController		*musicPlayer;
+	
 	BOOL						inSeekingLyrics;
 	CFMutableArrayRef			m_vLyrLines;
 	bool						m_NeedRewrap;
+
 	CFStringRef					m_FontName;
 	int							mLineHeight, mLineSpace;
+	int							mMarginX, mMarginY;
+	enum AlignMode				mHorzAlignMode;
+
 	int							mCurLine;
 	int							mTimePlayingCache;
 	int							mAlphaLineAbove, mAlphaLineBelow;
-	int							mMarginX, mMarginY;
 
 }
 

@@ -16,7 +16,7 @@
 
 const int MARGIN_X = 10;
 const int MARGIN_Y = 10;
-const int END_LYR_LINE_DURATION = 10 * 1000;
+const int FADE_DURATION = 1500;
 
 UIImage *getAlbumArtWithSize(MPMusicPlayerController *musicPlayer, int width, int height);
 
@@ -28,6 +28,16 @@ tstring getLyricsOfLine(LyricsLine *pRow)
 	}
 	
 	return str;
+}
+
+int blendColor(int clr1, int clr2, int alpha) {
+	int nPart1 = 255 - alpha;
+
+	return 0;
+//	return Color.argb(255, (Color.red(clr1) * nPart1 + Color.red(clr2)
+//							* alpha) / 255, (Color.green(clr1) * nPart1 + Color.green(clr2)
+//											 * alpha) / 255, (Color.blue(clr1) * nPart1 + Color.blue(clr2)
+//															  * alpha) / 255);
 }
 
 @implementation LyrVecticalScrollView
@@ -59,6 +69,7 @@ tstring getLyricsOfLine(LyricsLine *pRow)
 {
 	// Initialization code
 	self.inSeekingLyrics = NO;
+	mHorzAlignMode = ALIGN_CENTER;
 	
 	m_vLyrLines = CFArrayCreateMutable(NULL, 0, NULL);
 	
@@ -72,9 +83,9 @@ tstring getLyricsOfLine(LyricsLine *pRow)
 
 	[self setLyrDisplayTimer: [NSTimer scheduledTimerWithTimeInterval: 0.07
 																	target: self
-																  selector: @selector (onUpdateLyrDisplay)
-																  userInfo: nil
-																   repeats: YES]];
+																	selector: @selector(onUpdateLyrDisplay)
+																	userInfo: nil
+																	repeats: YES]];
 	
 	[self reloadFontSettings];
 	
@@ -83,36 +94,91 @@ tstring getLyricsOfLine(LyricsLine *pRow)
 	mCurLine = -1;
 	mTimePlayingCache = -1;
 	mAlphaLineAbove = mAlphaLineBelow = 0;
-	mMarginX = mMarginY = 5;
+	mMarginX = mMarginY = 10;
 }
 
-void DrawTextTo(CGContextRef context, CGRect rect)
+
+- (int) getCountWithSameTimeStamps: (int)nLine
 {
-	CGContextSetRGBFillColor(context, 1.0, 1.0, 1.0, 1.0);
-	// CGContextSetRGBStrokeColor(context, 1.0, 0.0, 0.0, 1.0);
+	int count = CFArrayGetCount(m_vLyrLines);
+	if (nLine < 0 || nLine >= count)
+		return 0;
 	
-	// Some initial setup for our text drawing needs.
-	// First, we will be doing our drawing in Helvetica-36pt with the MacRoman encoding.
-	// This is an 8-bit encoding that can reference standard ASCII characters
-	// and many common characters used in the Americas and Western Europe.
-	CGContextSelectFont(context, "Helvetica", 15, kCGEncodingMacRoman);
-	// Next we set the text matrix to flip our text upside down. We do this because the context itself
-	// is flipped upside down relative to the expected orientation for drawing text (much like the case for drawing Images & PDF).
-	CGContextSetTextMatrix(context, CGAffineTransformMakeScale(1.0, -1.0));
+	LyrDisplayLine *line = (LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, nLine);
+	for (int i = nLine + 1; i < count; i++)
+	{
+		LyrDisplayLine *p = (LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, i);
+		if (line->startTime != p->startTime)
+			return i - nLine;
+	}
 	
-	NSString *drawArea = [[NSString alloc] initWithFormat:@"Left: %d, Top: %d, Width: %d, height: %d", 
-						  rect.origin.x, rect.origin.y, (int)rect.size.width, 120];
-	
-	// And now we actually draw some text. This screen will demonstrate the typical drawing modes used.
-	CGContextSetTextDrawingMode(context, kCGTextFill);
-	const char *str = [drawArea UTF8String];
-	CGContextShowTextAtPoint(context, 10.0, 80.0, str, strlen(str));
+	return count - nLine;
 }
 
 - (int) getLineByTime:(int)time
 {
-	// todo:/....
-	return 0;
+	// Search from last current line.
+	int i = mCurLine - 1;
+	if (i >= CFArrayGetCount(m_vLyrLines))
+		i = 0;
+	for (; i > 0; i--) {
+		if (((LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, i))->startTime < time) {
+			i++;
+			break;
+		}
+	}
+	if (i < 0)
+		i = 0;
+	
+	for (; i < CFArrayGetCount(m_vLyrLines); i++) {
+		if (((LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, i))->endTime > time) {
+			return i;
+		}
+	}
+	
+	if (CFArrayGetCount(m_vLyrLines) > 0)
+		return CFArrayGetCount(m_vLyrLines) - 1;
+	
+	return -1;
+}
+
+- (int) getCurrentLinePosY: (int) timePlaying
+{
+	if (mCurLine < 0 || mCurLine >= CFArrayGetCount(m_vLyrLines))
+		return -1;
+	
+	LyrDisplayLine *line = (LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, mCurLine);
+	int curLineDuration = line->endTime - line->startTime;
+	
+	int curLinePosY = (int)self.bounds.size.height / 2;
+	if (timePlaying < line->startTime || curLineDuration == 0)
+		;
+	else
+		curLinePosY += mLineHeight * [self getCountWithSameTimeStamps: mCurLine]
+			* (timePlaying - line->startTime) / curLineDuration;
+	
+	return curLinePosY;
+}
+
+- (int) getAlphaOfLine: (LyrDisplayLine *)line ofTimePlaying:(int)timePlaying
+{
+	int nTime;
+	
+	if (line->startTime > timePlaying) {
+		nTime = line->startTime - timePlaying;
+		if (nTime <= FADE_DURATION && nTime >= -FADE_DURATION) {
+			return (FADE_DURATION - nTime) * 255 / FADE_DURATION;
+		} else
+			return 0;
+	} else {
+		nTime = timePlaying - line->endTime;
+		if (nTime >= FADE_DURATION)
+			return 0;
+		else if (nTime > 0)
+			return (FADE_DURATION - nTime) * 255 / FADE_DURATION;
+		else
+			return 255;
+	}
 }
 
 - (void) freeLyricsLines
@@ -136,7 +202,7 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 		m_FontName = CFStringCreateWithCString(NULL, "Times", kCFStringEncodingMacRoman);
 
 	// Prepare font
-	CTFontRef font = CTFontCreateWithName(m_FontName, 48, NULL);
+	CTFontRef font = CTFontCreateWithName(m_FontName, fontHeight, NULL);
 
 	// Create attributed dictionary
 	CFStringRef keys[] = { kCTFontAttributeName };
@@ -157,6 +223,7 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 			dispLine->startTime = pRow->nBegTime;
 			dispLine->endTime = pRow->nEndTime;
 			dispLine->lineText = NULL;
+			dispLine->width = 0;
 			CFArrayAppendValue(m_vLyrLines, dispLine);
 			continue;
 		}
@@ -167,19 +234,18 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 		
 		// Need to wrap lyrics lines.
 		int start = 0, length = CFAttributedStringGetLength(attrLineStr);
-		int startTime = pRow->nBegTime;
 		if (length == 0)
 			continue;
-		float fTimeOfChar = ((float) (pRow->nEndTime - startTime)) / length;
 
 		while (start < length) {
 			int n = CTTypesetterSuggestLineBreak(typeSetterLine, start, boundsWidth);
 			if (n <= 0)
 				n = length - start;
 			LyrDisplayLine *dispLine = new LyrDisplayLine();
-			dispLine->startTime = startTime;
-			dispLine->endTime = startTime + fTimeOfChar * n;
+			dispLine->startTime = pRow->nBegTime;
+			dispLine->endTime = pRow->nEndTime;
 			dispLine->lineText = CTTypesetterCreateLine(typeSetterLine, CFRangeMake(start, n));
+			dispLine->width = (int)CTLineGetTypographicBounds(dispLine->lineText, NULL, NULL, NULL);
 			CFArrayAppendValue(m_vLyrLines, dispLine);
 			start += n;
 		}
@@ -210,12 +276,11 @@ void DrawTextTo(CGContextRef context, CGRect rect)
 
 - (void) onPlaybackStateChanged:(MPMusicPlaybackState)state
 {
-/*	if (state == MPMusicPlaybackStatePaused || state == MPMusicPlaybackStateStopped) {
+	if (state == MPMusicPlaybackStatePaused || state == MPMusicPlaybackStateStopped) {
 		[lyrDisplayTimer invalidate];
-	}
-	else if (state == MPMusicPlaybackStatePlaying) {
+	} else if (state == MPMusicPlaybackStatePlaying) {
 		[lyrDisplayTimer fire];
-	}*/
+	}
 }
 
 CTFontRef CreateFont(CTFontDescriptorRef iFontDescriptor, CGFloat iSize);
@@ -294,17 +359,15 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 	CFStringRef keys[] = { kCTFontAttributeName, kCTForegroundColorAttributeName };
 	CFTypeRef values[] = { font, red };
 
-	CFDictionaryRef attributes =
-    CFDictionaryCreate(kCFAllocatorDefault, (const void**)&keys,
+	CFDictionaryRef attributes = CFDictionaryCreate(kCFAllocatorDefault, (const void**)&keys,
 					   (const void**)&values, sizeof(keys) / sizeof(keys[0]),
 					   &kCFTypeDictionaryKeyCallBacks,
 					   &kCFTypeDictionaryValueCallBacks);
-	
-	CFAttributedStringRef attrString =
-    CFAttributedStringCreate(kCFAllocatorDefault, string, attributes);
+
+	CFAttributedStringRef attrString = CFAttributedStringCreate(kCFAllocatorDefault, string, attributes);
 	CFRelease(string);
 	CFRelease(attributes);
-	
+
 	CTLineRef line = CTLineCreateWithAttributedString(attrString);
 	
 	// Set text position and draw the line into the graphics context
@@ -314,31 +377,97 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 	CFRelease(font);
 }
 
+- (int) getPlayPos
+{
+	if (inSeekingLyrics)
+		return mTimePlayingCache;
+	
+	CMLData &lyrData = CMLApp::GetInstance()->GetLyricsData();
+	return lyrData.GetPlayElapsedTime();
+}
+
+- (int) getDrawXPosOfLine:(LyrDisplayLine*)line
+{
+	if (mHorzAlignMode == ALIGN_LEFT)
+		return 0;
+	else if (mHorzAlignMode == ALIGN_RIGHT)
+		return (int)(self.bounds.size.width - line->width);
+	else
+		return (int)(self.bounds.size.width - line->width) / 2;
+}
+
 - (void)drawRect:(CGRect)rect {
 
 	// [super drawRect:rect];
 	CGRect	frame = [self frame];
 	CGContextRef	context = UIGraphicsGetCurrentContext();
 	
-	CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
+	CGRect viewBounds = self.bounds;
+	CGContextTranslateCTM(context, 0, viewBounds.size.height);
+	CGContextScaleCTM(context, 1, -1);
+	CGContextSetRGBFillColor(context, 0.0, 1.0, 1.0, 1.0);
+	CGContextSetLineWidth(context, 2.0);
+	CGContextSelectFont(context, "Helvetica", 20.0, kCGEncodingMacRoman);
+	CGContextSetCharacterSpacing(context, 1.7);
+	CGContextSetTextDrawingMode(context, kCGTextFill);
+	CGContextShowTextAtPoint(context, 100.0, 100.0, "SOME TEXT", 9);
+	
+//	CGContextSetFillColorWithColor(context, [UIColor redColor].CGColor);
 	CGContextFillRect(context, frame);
 	
 	if (m_NeedRewrap)
 		[self RewrapLyrics:context];
 
-	int count = CFArrayGetCount(m_vLyrLines);
-	int y = mMarginY;
-	for (int i = 0; i < count; i++) {
-		// Draw every lyrics lines
-		LyrDisplayLine *line = (LyrDisplayLine*)CFArrayGetValueAtIndex(m_vLyrLines, i);
-		
-		CGContextSetTextPosition(context, mMarginX, y);
-		CTLineDraw(line->lineText, context);
-		
-		y += mLineHeight;
+	if (CFArrayGetCount(m_vLyrLines) == 0)
+		return;
+
+	int timePlaying = mTimePlayingCache;
+	if (!inSeekingLyrics) {
+		if (timePlaying == -1)
+			timePlaying = [self getPlayPos];
+		else
+			mTimePlayingCache = -1;
 	}
 	
-	//[self DrawText:context 10, 10, 100];
+	mCurLine = [self getLineByTime:timePlaying];
+	int nCurLineCount = [self getCountWithSameTimeStamps: mCurLine];
+	int mCurLinePosY = [self getCurrentLinePosY: timePlaying];
+
+	// Draw lines above current line
+	if (mCurLine > 0) {
+		[self drawAboveCurLines:context timePlaying:timePlaying curLine:mCurLine y:mCurLinePosY + mLineHeight];
+	}
+	
+	// Draw current lines
+	// p.setColor(mClrHigh);
+	for (int i = 0; i < nCurLineCount; i++) {
+		LyrDisplayLine *line = (LyrDisplayLine*)CFArrayGetValueAtIndex(m_vLyrLines, mCurLine + i);
+		
+		CGContextSetTextPosition(context, [self getDrawXPosOfLine:line], mCurLinePosY);
+		CTLineDraw(line->lineText, context);
+
+		mCurLinePosY -= mLineHeight;
+	}
+	
+	// Draw lines below current line
+	if (mCurLine + 1 < CFArrayGetCount(m_vLyrLines)) {
+		[self drawBelowCurLines:context timePlaying:timePlaying belowLine:mCurLine - nCurLineCount y:mCurLinePosY];
+	}
+
+//	int count = CFArrayGetCount(m_vLyrLines);
+//	int y = viewBounds.size.height - mMarginY;
+//	for (int i = 0; i < count; i++) {
+//		// Draw every lyrics lines
+//		LyrDisplayLine *line = (LyrDisplayLine*)CFArrayGetValueAtIndex(m_vLyrLines, i);
+//		
+//		CGContextSetTextPosition(context, mMarginX, y);
+//		CTLineDraw(line->lineText, context);
+//		
+//		y -= mLineHeight;
+//		//break;
+//	}
+	
+	//DrawText(context, 10, 10, 50);
 	// CRect rc(rect.origin.x, rect.origin.y, rect.origin.x + rect.size.width, rect.origin.y + rect.size.height);
 /*	for (int i = 0; i < 10; i++)
 	{
@@ -413,7 +542,7 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 	NSUserDefaults *settings = [NSUserDefaults standardUserDefaults];
 	fontHeight = [settings integerForKey:@"font_height"];
 	if (fontHeight < 10)
-		fontHeight = 10;
+		fontHeight = 20;
 	else if (fontHeight > 60)
 		fontHeight = 60;
 	mLineSpace = fontHeight / 10;
@@ -431,11 +560,12 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
 	if (!self.inSeekingLyrics)
 		lyrData.SetPlayElapsedTime(int([musicPlayer currentPlaybackTime] * 1000));
 
-	CRect	rcUpdate;
-	if (rcUpdate.IsRectEmpty())
-		return;
+//	CRect	rcUpdate;
+//	if (rcUpdate.IsRectEmpty())
+//		return;
 
-	[self setNeedsDisplayInRect:CGRectMake(rcUpdate.left, rcUpdate.top, rcUpdate.Width(), rcUpdate.Height())];
+//	[self setNeedsDisplayInRect:CGRectMake(rcUpdate.left, rcUpdate.top, rcUpdate.Width(), rcUpdate.Height())];
+	[self setNeedsDisplay];
 }
 
 - (void)dealloc {
@@ -446,5 +576,89 @@ void DrawText(CGContextRef context, int x, int y, int nFontHeight)
     [super dealloc];
 }
 
+
+- (void) drawAboveCurLines:(CGContextRef)context timePlaying:(int) timePlaying curLine:(int)nCurLine y:(int)y
+{
+	if (nCurLine < 0 || nCurLine >= CFArrayGetCount(m_vLyrLines))
+		return;
+//	if (mLyrData.isStaticTextLyrics()) {
+//		// Draw lyrics in same color
+//		for (int i = nCurLine - 1; y >= 0 && i >= 0; y -= mLineHeight, i--) {
+//			canvas.drawText((LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, i).lyrics, x, y, paint);
+//		}
+//		return;
+//	}
+
+	// Draw lyrics above current line
+	LyrDisplayLine *line = (LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, nCurLine - 1);
+	mAlphaLineAbove = [self getAlphaOfLine:line ofTimePlaying:timePlaying];
+	if (mAlphaLineAbove != 0 || mFadeMode != FM_FADE_BG) {
+		int clr = blendColor(mFadeMode == FM_FADE_BG ? mClrBg : mClrLow, mClrHigh, mAlphaLineAbove);
+
+		CGContextSetTextPosition(context, [self getDrawXPosOfLine:line], y);
+		CTLineDraw(line->lineText, context);
+
+		// paint.setColor(clr);
+		// canvas.drawText(line.lyrics, x, y, paint);
+	}
+	y += mLineHeight;
+	
+	// Draw other lines
+	for (int i = nCurLine - 2; y >= 0 && i >= 0; y += mLineHeight, i--) {
+		line = (LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, i);
+		int alpha = [self getAlphaOfLine:line ofTimePlaying:timePlaying];
+		if (alpha == 0 && mFadeMode == FM_FADE_BG)
+			return;
+		
+		int clr = blendColor(mFadeMode == FM_FADE_BG ? mClrBg : mClrLow, mClrHigh, alpha);
+		CGContextSetTextPosition(context, [self getDrawXPosOfLine:line], y);
+		CTLineDraw(line->lineText, context);
+
+//		paint.setColor(clr);
+//		canvas.drawText(line.lyrics, x, y, paint);
+	}
+}
+
+- (void) drawBelowCurLines:(CGContextRef)context timePlaying:(int)timePlaying belowLine:(int)nBelowLine y:(int)y
+{
+//	if (mLyrData.isStaticTextLyrics()) {
+//		// Draw static text lyrics
+//		for (int i = nBelowLine; y - mLineHeight <= mHeight && i < mLyrLines.size(); y += mLineHeight, i++) {
+//			canvas.drawText((LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, i).lyrics, x, y, p);
+//		}
+//		return;
+//	}
+	if (nBelowLine < 0 || nBelowLine >= CFArrayGetCount(m_vLyrLines))
+		return;
+
+	// Draw lyrics below current line
+	LyrDisplayLine *line = (LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, nBelowLine);
+	mAlphaLineBelow = [self getAlphaOfLine:line ofTimePlaying:timePlaying];
+	if (mAlphaLineBelow != 0 || mFadeMode != FM_FADE_BG) {
+		int clr = blendColor(mFadeMode == FM_FADE_BG ? mClrBg
+							 : mClrLow, mClrHigh, mAlphaLineBelow);
+		CGContextSetTextPosition(context, [self getDrawXPosOfLine:line], y);
+		CTLineDraw(line->lineText, context);
+//		p.setColor(clr);
+//		canvas.drawText(line.lyrics, x, y, p);
+	}
+	y -= mLineHeight;
+	
+	int mHeight = (int)self.bounds.size.width;
+	// Draw other lines
+	for (int i = nBelowLine + 1; y - mLineHeight <= mHeight && i < CFArrayGetCount(m_vLyrLines); y -= mLineHeight, i++) {
+		line = (LyrDisplayLine *)CFArrayGetValueAtIndex(m_vLyrLines, i);
+		int alpha = [self getAlphaOfLine:line ofTimePlaying:timePlaying];
+		if (alpha == 0 && mFadeMode == FM_FADE_BG) {
+			return;
+		}
+		
+		int clr = blendColor(mFadeMode == FM_FADE_BG ? mClrBg : mClrLow, mClrHigh, alpha);
+		CGContextSetTextPosition(context, [self getDrawXPosOfLine:line], y);
+		CTLineDraw(line->lineText, context);
+//		p.setColor(clr);
+//		canvas.drawText(line.lyrics, x, y, p);
+	}
+}
 
 @end

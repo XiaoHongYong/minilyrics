@@ -54,17 +54,18 @@ void CMLApp::OnMediaChanged(LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szAlbu
 	m_nMediaLength = nMediaLength;
 	
 	// Save lyrics changes
-	if (m_lyrData.HasLyricsOpened() && m_lyrData.IsModified())
-		m_lyrData.Save();
+//	if (m_lyrData.HasLyricsOpened() && m_lyrData.IsModified())
+//		m_lyrData.Save();
 
 	m_lyrData.Close();
 
-/*	tstring strTestLyr = GetResourceFile(_T("lyrics.lrc"));
-	int nRet = m_lyrData.OpenLyrics(szMediaKey, nMediaLength, strTestLyr.c_str());
-
-	PostNotifyLyricsChanged();
-	
-	return;*/
+	if (!IsEmptyString(szEmbeddedLyr)) {
+		int nRet = m_lyrData.OpenLyricsContent(szMediaKey, nMediaLength, szEmbeddedLyr);
+		if (nRet == ERR_OK) {
+			PostNotifyLyricsChanged();
+			return;
+		}
+	}
 
 	if (m_strCurMediaKey.empty() && m_strArtist.empty() && m_strTitle.empty())
 	{
