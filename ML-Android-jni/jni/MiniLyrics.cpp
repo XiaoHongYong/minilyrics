@@ -225,8 +225,36 @@ void CheckSignature(JNIEnv* env, jobject ctx)
 	}
 }
 
-extern "C" JNIEXPORT jstring NativeInit(JNIEnv* env, jobject thiz, jobject ctx, jstring jstrWorkingFolder, jstring jstrAppName, jstring jstrProfile, jstring jstrClientName)
+jclass g_clsNative = NULL;
+jmethodID	g_methodDecodeString = NULL;
+
+jstring NewJString(JNIEnv *env, const char *str, int nLen, const char *encoding)
 {
+	jbyteArray buf = env->NewByteArray(nLen);
+	if (buf == NULL)
+		return NULL;
+
+	jobject jstrEncoding = env->NewStringUTF(encoding);
+	env->SetByteArrayRegion(buf, 0, nLen, (const jbyte *)str);
+
+	jstring output = reinterpret_cast<jstring>(env->CallStaticObjectMethod(g_clsNative, g_methodDecodeString, buf, jstrEncoding));
+
+	env->DeleteLocalRef(buf);
+	env->DeleteLocalRef(jstrEncoding);
+
+	return output;
+}
+
+jstring NewJUtf8String(JNIEnv *env, const char *str, int nLen)
+{
+	return NewJString(env, str, nLen, "utf-8");
+}
+
+extern "C" JNIEXPORT void NativeInit(JNIEnv* env, jclass clsNative, jobject ctx, jstring jstrWorkingFolder, jstring jstrAppName, jstring jstrProfile, jstring jstrClientName)
+{
+	g_clsNative = clsNative;
+	g_methodDecodeString = env->GetStaticMethodID(g_clsNative, "decodeString", "([BLjava/lang/String;)Ljava/lang/String;");
+
 	CheckSignature(env, ctx);
 
 	CJStr strWorkingFolder(env, jstrWorkingFolder);
@@ -237,11 +265,9 @@ extern "C" JNIEXPORT jstring NativeInit(JNIEnv* env, jobject thiz, jobject ctx, 
 	InitBaseFrameWork(strWorkingFolder.c_str(), strAppName.c_str(), strProfile.c_str(), strAppName.c_str());
 
 	g_mlProtocolCmd.Init(strClientName.c_str());
-
-	return env->NewStringUTF("1init");
 }
 
-extern "C" JNIEXPORT jstring searchAllLocalLyrics(JNIEnv* env, jobject thiz, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
+extern "C" JNIEXPORT jstring searchAllLocalLyrics(JNIEnv* env, jclass clsNative, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
 {
 	CJStr strFile(env, jstrFile);
 	CJStr strArtist(env, jstrArtist);
@@ -256,10 +282,10 @@ extern "C" JNIEXPORT jstring searchAllLocalLyrics(JNIEnv* env, jobject thiz, jst
 	ToString(result, writer);
 	writer.WriteEndElement();
 
-	return env->NewStringUTF(writer.GetBuffer().c_str());
+	return NewJUtf8String(env, writer.GetBuffer().c_str(), writer.GetBuffer().size());
 }
 
-extern "C" JNIEXPORT jstring searchBestMatchLyrics(JNIEnv* env, jobject thiz, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
+extern "C" JNIEXPORT jstring searchBestMatchLyrics(JNIEnv* env, jclass clsNative, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
 {
 	CJStr strFile(env, jstrFile);
 	CJStr strArtist(env, jstrArtist);
@@ -267,12 +293,12 @@ extern "C" JNIEXPORT jstring searchBestMatchLyrics(JNIEnv* env, jobject thiz, js
 
 	tstring lyricsFile;
 	if (g_lyricsSearch.GetBestMatchLyrics(strFile.c_str(), strArtist.c_str(), strTitle.c_str(), lyricsFile))
-		return env->NewStringUTF(lyricsFile.c_str());
+		return NewJUtf8String(env, lyricsFile.c_str(), lyricsFile.size());
 
 	return NULL;
 }
 
-extern "C" JNIEXPORT void setLocalSearchOptions(JNIEnv* env, jobject thiz, jstring jstrDownloadDir, jstring jstrLyricsDir)
+extern "C" JNIEXPORT void setLocalSearchOptions(JNIEnv* env, jclass clsNative, jstring jstrDownloadDir, jstring jstrLyricsDir)
 {
 	CJStr strDownloadDir(env, jstrDownloadDir);
 	CJStr strLyricsDir(env, jstrLyricsDir);
@@ -280,7 +306,7 @@ extern "C" JNIEXPORT void setLocalSearchOptions(JNIEnv* env, jobject thiz, jstri
 	g_lyricsSearch.SetLyricsDir(strDownloadDir.c_str(), strLyricsDir.c_str());
 }
 
-extern "C" JNIEXPORT jstring readLyricsSource(JNIEnv* env, jobject thiz, jstring mediaFile, jstring lyricsSrc)
+extern "C" JNIEXPORT jstring readLyricsSource(JNIEnv* env, jclass clsNative, jstring mediaFile, jstring lyricsSrc)
 {
 	CMLData		lyricsData;
 
@@ -298,10 +324,10 @@ extern "C" JNIEXPORT jstring readLyricsSource(JNIEnv* env, jobject thiz, jstring
 	env->ReleaseStringUTFChars(mediaFile, szMediaFile);
 	env->ReleaseStringUTFChars(lyricsSrc, szLyricsSrc);
 
-	return env->NewStringUTF(str.c_str());
+	return NewJUtf8String(env, str.c_str(), str.size());
 }
 
-extern "C" JNIEXPORT jbyteArray encodeOnlineSearchRequest(JNIEnv* env, jobject thiz, jstring jstrArtist, jstring jstrTitle, jboolean onlyMatched)
+extern "C" JNIEXPORT jbyteArray encodeOnlineSearchRequest(JNIEnv* env, jclass clsNative, jstring jstrArtist, jstring jstrTitle, jboolean onlyMatched)
 {
 	CJStr strArtist(env, jstrArtist);
 	CJStr strTitle(env, jstrTitle);
@@ -325,7 +351,7 @@ extern "C" JNIEXPORT jbyteArray encodeOnlineSearchRequest(JNIEnv* env, jobject t
 	return jbyteArr;
 }
 
-extern "C" JNIEXPORT jstring decodeOnlineSearchReesult(JNIEnv* env, jobject thiz, jbyteArray data, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
+extern "C" JNIEXPORT jstring decodeOnlineSearchReesult(JNIEnv* env, jclass clsNative, jbyteArray data, jstring jstrFile, jstring jstrArtist, jstring jstrTitle)
 {
 	CCharBuffer buf;
 	buf.resize(env->GetArrayLength(data));
@@ -338,12 +364,12 @@ extern "C" JNIEXPORT jstring decodeOnlineSearchReesult(JNIEnv* env, jobject thiz
 	CXMLWriter writer;
 	g_mlProtocolCmd.DecodeSearchRetCommand(strFile.c_str(), strArtist.c_str(), strTitle.c_str(), buf, writer);
 
-	return env->NewStringUTF(writer.GetBuffer().c_str());
+	return NewJUtf8String(env, writer.GetBuffer().c_str(), writer.GetBuffer().size());
 }
 
 void SetSysDefaultCharEncoding(LPCTSTR szEncoding);
 
-extern "C" JNIEXPORT void setDefaultCharEncoding(JNIEnv* env, jobject thiz, jstring encoding) {
+extern "C" JNIEXPORT void setDefaultCharEncoding(JNIEnv* env, jclass clsNative, jstring encoding) {
 	CJStr strEncoding(env, encoding);
 
 	SetSysDefaultCharEncoding(strEncoding.c_str());

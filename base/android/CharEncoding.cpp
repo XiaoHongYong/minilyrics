@@ -90,30 +90,7 @@ bool PrepareJString(JNIEnv *env)
 	return true;
 }
 
-jstring NewJString(JNIEnv *env, const char *str, int nLen, const char *encoding)
-{
-	if (!PrepareJString(env))
-		return NULL;
-
-	jobject jstrEncoding = env->NewStringUTF(encoding);
-
-	jobject objString = env->AllocObject(g_clsString);
-	if (objString == NULL)
-		return NULL;
-
-	jbyteArray buf = env->NewByteArray(nLen);
-	if (buf == NULL)
-		return NULL;
-
-	env->SetByteArrayRegion(buf, 0, nLen, (const jbyte *)str);
-
-	env->CallVoidMethod(objString, g_methodStringInitWithBufEncoding, buf, jstrEncoding);
-
-	env->DeleteLocalRef(buf);
-	env->DeleteLocalRef(jstrEncoding);
-
-	return reinterpret_cast<jstring>(objString);
-}
+jstring NewJString(JNIEnv *env, const char *str, int nLen, const char *encoding);
 
 int GetBytesOfJString(JNIEnv *env, jstring jstr, char *strOut, int nOut, const char *encoding)
 {
@@ -121,6 +98,11 @@ int GetBytesOfJString(JNIEnv *env, jstring jstr, char *strOut, int nOut, const c
 		return 0;
 
 	jbyteArray buf = (jbyteArray)env->CallObjectMethod(jstr, g_methodStringGetBytesEncoding, env->NewStringUTF(encoding));
+	if (env->ExceptionCheck())
+	{
+		env->ExceptionClear();
+		return 0;
+	}
 	if (buf == NULL)
 		return 0;
 
@@ -162,13 +144,15 @@ int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID
 	g_jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
 
 	jstring jstr = NewJString(env, str, nLen, __encodingCodepage[encodingID].szIConvCode);
+	if (jstr != NULL)
+	{
+		const char * utf8 = env->GetStringUTFChars(jstr, NULL);
 
-	const char * utf8 = env->GetStringUTFChars(jstr, NULL);
+		strcpy_safe(strOut, nOut, utf8);
 
-	strcpy_safe(strOut, nOut, utf8);
-
-	env->ReleaseStringUTFChars(jstr, utf8);
-	env->DeleteLocalRef(jstr);
+		env->ReleaseStringUTFChars(jstr, utf8);
+		env->DeleteLocalRef(jstr);
+	}
 
 	return strlen(strOut);
 }
@@ -214,14 +198,16 @@ int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int encodingI
 	g_jvm->GetEnv((void**)&env, JNI_VERSION_1_6);
 
 	jstring jstr = NewJString(env, str, nLen, __encodingCodepage[encodingID].szIConvCode);
+	if (jstr != NULL)
+	{
+		const jchar * ucs2 = env->GetStringChars(jstr, NULL);
 
-	const jchar * ucs2 = env->GetStringChars(jstr, NULL);
+		wcscpy_safe(strOut, nOut, ucs2);
 
-	wcscpy_safe(strOut, nOut, ucs2);
+		env->ReleaseStringChars(jstr, ucs2);
 
-	env->ReleaseStringChars(jstr, ucs2);
-
-	env->DeleteLocalRef(jstr);
+		env->DeleteLocalRef(jstr);
+	}
 
 	return wcslen(strOut);
 }
