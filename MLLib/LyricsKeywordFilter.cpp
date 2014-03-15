@@ -104,7 +104,7 @@ void CLyricsKeywordFilter::Init()
 	}
 	else
 	{
-		ERRLOG1(_T("Failed to parse lyrics keyword filter."), strKeywordFilter.c_str());
+		ERRLOG1(_T("Failed to parse lyrics keyword filter: %s"), strKeywordFilter.c_str());
 	}
 
 	xTableDelChars(" !\"#$%&'*+,-./:;<=>?@\\^_`|~");

@@ -73,6 +73,8 @@ BOOL InitBaseFrameWork(LPCTSTR szWorkingFolder, LPCTSTR szLogTag, LPCTSTR szProf
 
 	_tcscpy_safe(g_szAppDataDir, CountOf(g_szAppDataDir), szWorkingFolder);
 	_tcscpy_safe(g_szWorkingFolder, CountOf(g_szWorkingFolder), szWorkingFolder);
+	DirStringAddSlash(g_szWorkingFolder);
+	DirStringAddSlash(g_szAppDataDir);
 
 	g_Profile.Init(szProfileName, szDefAppName);
 
