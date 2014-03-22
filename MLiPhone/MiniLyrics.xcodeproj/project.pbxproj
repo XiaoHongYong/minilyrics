@@ -22,6 +22,7 @@
 		58D3B0100F9FE329006F1B20 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58D3B00F0F9FE329006F1B20 /* MediaPlayer.framework */; };
 		5F1B47F211DC171B00AAF8E4 /* CMLApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */; };
 		5F1B499B11DCE85500AAF8E4 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5F1B499A11DCE85500AAF8E4 /* CoreText.framework */; };
+		5F8BB4E718D87BB50086F6CA /* main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5F8BB4E618D87BB50086F6CA /* main_iPhone.storyboard */; };
 		5FAB7BAB11B2013700C9395C /* LyrVecticalScrollView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */; };
 		5FAF93FA144DB67800E998BC /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 5FAF93F9144DB67800E998BC /* libsqlite3.dylib */; };
 		5FAF966114506D2400E998BC /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
@@ -323,6 +324,7 @@
 		5F1B47F011DC171B00AAF8E4 /* CMLApp.cpp */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.cpp.cpp; path = CMLApp.cpp; sourceTree = "<group>"; };
 		5F1B47F111DC171B00AAF8E4 /* CMLApp.h */ = {isa = PBXFileReference; fileEncoding = 2147484705; lastKnownFileType = sourcecode.c.h; path = CMLApp.h; sourceTree = "<group>"; };
 		5F1B499A11DCE85500AAF8E4 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		5F8BB4E618D87BB50086F6CA /* main_iPhone.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = main_iPhone.storyboard; sourceTree = "<group>"; };
 		5FAB7BA911B2013700C9395C /* LyrVecticalScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyrVecticalScrollView.h; sourceTree = "<group>"; };
 		5FAB7BAA11B2013700C9395C /* LyrVecticalScrollView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LyrVecticalScrollView.mm; sourceTree = "<group>"; };
 		5FAF93F9144DB67800E998BC /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
@@ -759,6 +761,7 @@
 				0A1C08680FB7876600C7BA1B /* Localizable.strings */,
 				0A735D7A0FACBB490057280A /* MiniLyrics-Info.plist */,
 				5FC122ED12177E6B003D9B42 /* MiniLyrics-Free-Info.plist */,
+				5F8BB4E618D87BB50086F6CA /* main_iPhone.storyboard */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -1244,6 +1247,7 @@
 				5FCB8C101210F007009F23BD /* playing_slider_ball_pressed.png in Resources */,
 				5FCB8C111210F007009F23BD /* playing_slider_ball.png in Resources */,
 				5FCB8C121210F007009F23BD /* playing_slider_left.png in Resources */,
+				5F8BB4E718D87BB50086F6CA /* main_iPhone.storyboard in Resources */,
 				5FCB8C131210F007009F23BD /* playing_slider_right.png in Resources */,
 				5FCB8C141210F007009F23BD /* playing.png in Resources */,
 				5FCB8C151210F007009F23BD /* repeat_off.png in Resources */,
@@ -1591,6 +1595,7 @@
 				);
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;
 				PROVISIONING_PROFILE = "";
@@ -1608,6 +1613,7 @@
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;
 				PROVISIONING_PROFILE = "";
@@ -1795,6 +1801,7 @@
 				GCC_PREFIX_HEADER = MiniLyrics_Prefix.pch;
 				GCC_VERSION = "";
 				INFOPLIST_FILE = "MiniLyrics-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = MiniLyrics;
 				PROVISIONING_PROFILE = "";
