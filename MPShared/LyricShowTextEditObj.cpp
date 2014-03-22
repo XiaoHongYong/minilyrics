@@ -131,7 +131,7 @@ void CLyricShowTextEditObj::OnCreate()
 	GET_ID_BY_NAME(CID_E_OFFSET);
 	GET_ID_BY_NAME(CID_E_MEDIA_LENGTH);
 	GET_ID_BY_NAME4(CID_RERESH_ARTIST, CID_RERESH_ALBUM, CID_RERESH_TITLE, CID_RERESH_BY);
-	GET_ID_BY_NAME(CID_RERESH_MEDIA_LENGTH);
+	GET_ID_BY_NAME2(CID_RERESH_MEDIA_LENGTH, CID_TB_SEEK_BAR);
 
 	CUIObject *pTagEditor = m_pSkin->GetUIObjectById(GetIDByName(_T("CID_C_LYR_TAG")));
 	if (pTagEditor)
@@ -155,9 +155,9 @@ void CLyricShowTextEditObj::OnCreate()
 	if (!g_LyricData.HasLyricsOpened())
 		OnCustomCommand(CMD_AUTO_FILL_LYR_INFO);
 
-	CUIObject *pToolbar = m_pSkin->GetUIObjectById(ID_TB_LYR_EDIT);
-	if (pToolbar)
-		pToolbar->SetVisible(g_Profile.GetBool(_T("LyrEditorTB_Visible"), false), false);
+	bool isEditorToolbarVisible = g_Profile.GetBool(_T("LyrEditorTB_Visible"), false);
+	m_pSkin->SetUIObjectVisible(ID_TB_LYR_EDIT, isEditorToolbarVisible, false);
+	m_pSkin->SetUIObjectVisible(CID_TB_SEEK_BAR, !isEditorToolbarVisible, false);
 }
 
 void CLyricShowTextEditObj::OnDestroy()
@@ -1123,6 +1123,7 @@ bool CLyricShowTextEditObj::OnCustomCommand(int nId)
 			{
 				pToolbar->SetVisible(!pToolbar->IsVisible(), true);
 				g_Profile.WriteInt(_T("LyrEditorTB_Visible"), pToolbar->IsVisible());
+				m_pSkin->SetUIObjectVisible(CID_TB_SEEK_BAR, !pToolbar->IsVisible(), false);
 			}
 			break;
 		}

@@ -9,6 +9,14 @@
 		<button ID="ID_INSERTTAG" Left="14" />
 		<button ID="ID_TOGGLE_LYR_EDIT_TOOLBAR" Left="23"/>
 	</Toolbar>
+	<Container Name="Seekbar" ID="CID_TB_SEEK_BAR" Rect="22*4+5,3,w-(22*4+5),26" Visible="true">
+		<PlayingTimeText Name="PlayingTime" Rect="0,5,50,18" AlignText="AT_CENTER | AT_VCENTER"
+			FontName="Verdana" FontHeight="13" FontBold="TRUE" TextOutlined="TRUE" TextColor="#FFFFFF"
+			TextOutlinedColor="#000000" LeftMargin="0" Text=""/>
+		<SeekCtrl Name="Seek" ID="ID_SEEK"
+			Rect="50,8,w-60,12" EndWidth="3" ImageThumb="seek_thumb.png"
+			ImageTrack="seek_track.png"/>
+	</Container>
 	<Toolbar ID="ID_TB_LYR_EDIT" Rect="22*4+5,3,w-(22*4+5),26" 
            Image="lyr-tb.png" enablehover="TRUE" units_x="22" blank_x="858" blank_cx="22"
            seperator_x="858" seperator_cx="10" MarginX="5" MarginY="3" Visible="false">
