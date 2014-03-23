@@ -460,14 +460,14 @@ void CPlayerPluginInstaller::RefreshRunningPlayers()
 	}
 }
 
-bool RegisterDll(LPCTSTR szDll, tstring &strErr)
+int RegisterDll(LPCTSTR szDll, tstring &strErr)
 {
 	if (!IsFileExist(szDll))
 	{
 		strErr = _T("Dll does not exist.");
 		strErr += _T("\r\n");
 		strErr += szDll;
-		return false;
+		return ERR_FILE_NOT_EXIST;
 	}
 
 	DWORD		dwExitCode = -1;
@@ -475,28 +475,28 @@ bool RegisterDll(LPCTSTR szDll, tstring &strErr)
 	strCmd += szDll;
 	strCmd += _T("\"");
 	if (ExecuteCmdAndWait(strCmd.c_str(), 5 * 1000, &dwExitCode) && dwExitCode == 0)
-		return true;
+		return ERR_OK;
 
 	strErr = _T("Failed to register dll: ");
 	strErr += szDll;
-	return false;
+	return ERROR_ACCESS_DENIED;
 }
 
-bool UnregisterDll(LPCTSTR szDll, tstring &strErr)
+int UnregisterDll(LPCTSTR szDll, tstring &strErr)
 {
 	if (!IsFileExist(szDll))
-		return true;
+		return ERR_OK;
 
 	DWORD		dwExitCode = -1;
 	tstring		strCmd = _T("regsvr32 /s /u \"");
 	strCmd += szDll;
 	strCmd += _T("\"");
 	if (ExecuteCmdAndWait(strCmd.c_str(), 5 * 1000, &dwExitCode) && dwExitCode == 0)
-		return true;
+		return ERR_OK;
 
 	strErr = _T("Failed to unregister dll: ");
 	strErr += szDll;
-	return false;
+	return ERROR_ACCESS_DENIED;
 }
 
 void CPlayerPluginInstaller::Player::GetStringRangeList(LPCTSTR szInput, ListString &listStrings)
@@ -696,7 +696,7 @@ public:
 		return ERR_OK;
 	}
 
-	static bool RegisterDll(LPCTSTR szFile, tstring &strErr)
+	static int RegisterDll(LPCTSTR szFile, tstring &strErr)
 	{
 		return ::RegisterDll(szFile, strErr);
 	}
@@ -743,7 +743,7 @@ public:
 		return true;
 	}
 
-	static bool RegisterDll(LPCTSTR szFile, tstring &strErr)
+	static int RegisterDll(LPCTSTR szFile, tstring &strErr)
 	{
 		return ::UnregisterDll(szFile, strErr);
 	}
@@ -799,9 +799,9 @@ public:
 		return ERR_OK;
 	}
 
-	static bool RegisterDll(LPCTSTR szFile, tstring &strErr)
+	static int RegisterDll(LPCTSTR szFile, tstring &strErr)
 	{
-		return true;
+		return ERR_OK;
 	}
 
 	static bool WriteMLPluginIni(LPCTSTR szFile, tstring &strErr)
@@ -873,8 +873,9 @@ int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 		if (IsFlagSet(item.dwInstallFlags, INST_REG_DLL))
 		{
 			DBGLOG1(_T("RegisterDll: %s"), strFileSrc.c_str());
-			if (!_Installer::RegisterDll(strFileSrc.c_str(), strErr))
-				return ERR_FALSE;
+			int nRet = _Installer::RegisterDll(strFileSrc.c_str(), strErr);
+			if (nRet != ERR_OK)
+				return nRet;
 		}
 	}
 
@@ -918,11 +919,10 @@ bool CPlayerPluginInstaller::Player::CheckPluginInstalled(tstring &strErr)
 	return true;
 }
 
-bool CPlayerPluginInstaller::Player::MakesureDllRegistered(tstring strErr)
+bool CPlayerPluginInstaller::Player::MakesureDllRegistered(tstring &strErr, int &err)
 {
 	if (IsFlagSet(dwInstallFlags, INST_REG_DLL))
 	{
-		int err;
 		return Install(strErr, err);
 	}
 

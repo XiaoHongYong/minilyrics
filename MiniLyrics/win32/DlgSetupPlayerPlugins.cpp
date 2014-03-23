@@ -96,6 +96,9 @@ int CmdId2Index(int nId, SetupCmdType &type)
 
 BOOL ShowElevatedDialog(CBaseWnd *pWnd)
 {
+	if (!IsVistaOrLater())
+		return false;
+
 	tstring	str = _TLT("To install MiniLyrics plugin, you will be asked to run MiniLyrics as administrator.");
 	str += _T("\n\n");
 	str += _TLT("Do you want to restart MiniLyrics to continue the setup?");
@@ -393,9 +396,8 @@ void CDlgSetupPlayerPlugins::OnClickedInstallBtn(CPlayerPluginInstaller::Player 
 	if (!p->Install(strErr, err))
 	{
 		MessageOut(strErr.c_str(), MB_ICONINFORMATION);
-		if (err == ERROR_ACCESS_DENIED)
-			ShowElevatedDialog(this);
-		return;
+		if (err == ERROR_ACCESS_DENIED && ShowElevatedDialog(this))
+			return;
 	}
 
 	p->SavePlayerPath();

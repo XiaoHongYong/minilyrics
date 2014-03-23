@@ -57,7 +57,7 @@ public:
 		bool CheckPlayerInstalled(bool bClearPathIfNotInstalled = true);
 		bool CheckPluginInstalled(tstring &strErr);
 
-		bool MakesureDllRegistered(tstring strErr);
+		bool MakesureDllRegistered(tstring &strErr, int &err);
 
 		void SetToInstallPlugin(bool bInstall);
 		bool IsToInstallPlugin() { return IsFlagSet(pExtraInfo->status, S_PG_TO_INSTALL); }

@@ -232,8 +232,14 @@ void CDlgStartMiniLyrics::OnClickPlayer(CPlayerPluginInstaller::Player *p)
 	else
 	{
 		tstring strErr;
-		if (!p->MakesureDllRegistered(strErr))
-			MessageOut(strErr.c_str(), MB_ICONINFORMATION);
+		int err;
+		if (!p->MakesureDllRegistered(strErr, err))
+		{
+			if (err == ERROR_ACCESS_DENIED && ShowElevatedDialog(this))
+				return;
+			else
+				MessageOut(strErr.c_str(), MB_ICONINFORMATION);
+		}
 	}
 
 	// Is Player running?
