@@ -1,3 +1,8 @@
+MiniLyrics 7.6.42 for Windows
+Fixed: Compatibility problem with Windows Media Player on Windows 8.
+Fixed: The encoding of lyrics is saved incorrect.
+Improved: Add options to save LRC tag for ID3v2 unsynchronized lyrics in MiniLyrics preferences.
+
 MiniLyrics 7.6.36 for Windows
 Fixed: Support iTunes 11.
 Fixed: Support VLC Player 2.1.0.
