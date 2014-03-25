@@ -8,6 +8,7 @@
 #import "MediaSource.h"
 #import "MPlayerAppBase.h"
 #import "../../TagLib/TagLib.h"
+#import "../AutoProcessEmbeddedLyrics.h"
 
 IMediaSource::~IMediaSource()
 {
@@ -378,6 +379,22 @@ bool CFileMediaSource::GetMediaInfo(int nIndex, tstring &artist, tstring &album,
 	return true;
 }
 
+void TryToRecoverDmagedM4aFiles(LPCTSTR szFile)
+{
+	// Bug fixes for adding ID3v2 tag to m4a files. This bug was fixed after: 7.6.43.
+	if (!FileIsExtSame(szFile, _T(".m4a")))
+		return;
+
+	CID3v2IF		id3v2(ED_SYSDEF);
+
+	int nRet = id3v2.Open(szFile, true, false);
+	if (nRet == ERR_OK)
+	{
+		nRet = id3v2.RemoveTagAndClose();
+		LOG2(LOG_LVL_INFO, _T("Remove ID3v2 Tag from damaged M4A file: %s, Result: %d"), szFile, nRet);
+	}
+}
+
 bool CFileMediaSource::GetEmbeddedLyrics(int nIndex, tstring &lyrics)
 {
 	lyrics.clear();
@@ -387,21 +404,33 @@ bool CFileMediaSource::GetEmbeddedLyrics(int nIndex, tstring &lyrics)
 
 	ItemF *item = (ItemF*)m_vTracks[nIndex];
 
-	// Get ID3v2 USLT
-	CID3v2IF		id3v2(ED_SYSDEF);
-	int				nRet;
-
 	if (!IsFileExist(item->file.c_str()))
 		return false;
 
-	nRet = id3v2.Open(item->file.c_str(), false, false);
-	if (nRet == ERR_OK)
+	if (CTagLib::IsID3v2TagSupported(item->file.c_str()))
 	{
-		ID3v2UnsynchLyrics unsyncLyrics;
-		nRet = id3v2.GetUnsyncLyrics(unsyncLyrics);
+		// ID3v2 lyrics
+		CID3v2IF		id3v2(ED_SYSDEF);
+		int				nRet;
+
+		nRet = id3v2.Open(item->file.c_str(), false, false);
 		if (nRet == ERR_OK)
-			lyrics = unsyncLyrics.m_strLyrics;
-		id3v2.Close();
+		{
+			ID3v2UnsynchLyrics unsyncLyrics;
+			nRet = id3v2.GetUnsyncLyrics(unsyncLyrics);
+			if (nRet == ERR_OK)
+				lyrics = unsyncLyrics.m_strLyrics;
+			id3v2.Close();
+		}
+	}
+	else if (CTagLib::IsM4aTagSupported(item->file.c_str()))
+	{
+		CM4aTag	tag;
+		int nRet = tag.Open(item->file.c_str(), false);
+		if (nRet != ERR_OK)
+			return false;
+
+		nRet = tag.GetLyrics(lyrics);
 	}
 
 	return lyrics.size() > 0;
@@ -414,17 +443,25 @@ int CFileMediaSource::SetEmbeddedLyrics(int nIndex, tstring &lyrics)
 		return ERR_FALSE;
 
 	ItemF *item = (ItemF*)m_vTracks[nIndex];
-	CID3v2IF		id3v2(ED_SYSDEF);
 
-	int nRet = id3v2.Open(item->file.c_str(), true, true);
-	if (nRet != ERR_OK)
-		return nRet;
 
-	nRet = id3v2.SetUnsynchLyrics(NULL, _T(""), lyrics.c_str());
-	if (nRet != ERR_OK)
-		return nRet;
+	if (!CTagLib::IsEmbeddedLyricsSupported(item->file.c_str()))
+		return ERR_NOT_SUPPORT;
 
-	return id3v2.Save();
+	TryToRecoverDmagedM4aFiles(item->file.c_str());
+
+	CCharBuffer bufLyrics;
+	VecString vLyrNames;
+
+	TStringToProperFileData(lyrics.c_str(), bufLyrics);
+	if (CTagLib::IsID3v2TagSupported(item->file.c_str()))
+		vLyrNames.push_back(SZ_SONG_ID3V2_USLT);
+	else if (CTagLib::IsM4aTagSupported(item->file.c_str()))
+		vLyrNames.push_back(SZ_SONG_M4A_LYRICS);
+	else
+		return ERR_NOT_SUPPORT;
+
+	return g_autoProcessEmbeddedLyrics.SaveEmbeddedLyrics(item->file.c_str(), NULL, &bufLyrics, vLyrNames);
 }
 
 int CFileMediaSource::RemoveEmbeddedLyrics(int nIndex)
@@ -435,8 +472,17 @@ int CFileMediaSource::RemoveEmbeddedLyrics(int nIndex)
 
 	int nRemovedCount = 0;
 	VecString vLyrNames;
-	vLyrNames.push_back(SZ_SONG_ID3V2_SYLT);
-	vLyrNames.push_back(SZ_SONG_ID3V2_USLT);
+	// vLyrNames.push_back(SZ_SONG_ID3V2_SYLT);
+	if (CTagLib::IsID3v2TagSupported(item->file.c_str()))
+		vLyrNames.push_back(SZ_SONG_ID3V2_USLT);
+	else if (CTagLib::IsM4aTagSupported(item->file.c_str()))
+	{
+		TryToRecoverDmagedM4aFiles(item->file.c_str());
+
+		vLyrNames.push_back(SZ_SONG_M4A_LYRICS);
+	}
+	else
+		return ERR_NOT_SUPPORT;
 
 	return CTagLib::RemoveEmbeddedLyrics(item->file.c_str(), vLyrNames, &nRemovedCount);
 }
