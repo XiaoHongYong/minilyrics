@@ -253,7 +253,7 @@ protected:
 	{
 		tstring strLyrics;
 
-		lyrData.ToString(strLyrics, FT_LYRICS_TXT, true);
+		lyrData.ToString(strLyrics, g_Profile.GetBool(_T("KeepTimeStampsInTxtLyr"), false) ? FT_LYRICS_LRC : FT_LYRICS_TXT, true);
 		int nRet = m_pMediaLib->SetEmbeddedLyrics(nIndex, strLyrics);
 		if (nRet == ERR_OK)
 		{
@@ -284,7 +284,7 @@ protected:
 	{
 		// Open lyrics
 		CMLData lyrData;
-		int nRet = lyrData.OpenLyrics(_T(""), 0, (LPBYTE)bufLyr.c_str(), bufLyr.size());
+		int nRet = lyrData.OpenLyrics(_T(""), 0, (LPBYTE)bufLyr.c_str(), (int)bufLyr.size());
 		if (nRet != ERR_OK)
 		{
 			UpdateItemStatus(nMediaIndex, SS_ERROR, ERROR2STR_LOCAL(nRet));

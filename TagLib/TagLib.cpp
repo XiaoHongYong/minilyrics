@@ -308,6 +308,7 @@ int CTagLib::RemoveEmbeddedLyrics(LPCTSTR szMediaFile, VecString &vLyrNamesToRem
 	}
 
 	// Remove M4a lyrics
+	nRet = ERR_OK;
 	if (IsFlagSet(uAllLstFlag, LST_M4A_LYRICS))
 	{
 		CM4aTag tag;
@@ -320,11 +321,9 @@ int CTagLib::RemoveEmbeddedLyrics(LPCTSTR szMediaFile, VecString &vLyrNamesToRem
 				nRet = tag.SaveClose();
 				if (nRet == ERR_OK && succeededCount)
 					(*succeededCount)++;
-				else
-					return nRet;
 			}
 		}
 	}
 
-	return ERR_OK;
+	return nRet;
 }

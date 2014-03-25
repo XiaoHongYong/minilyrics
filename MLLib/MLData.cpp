@@ -581,7 +581,7 @@ int CMLData::SaveLyricsInSongOfM4a()
 {
 	// Save lyrics in m4a files
 	tstring		str;
-	ToString(str, FT_LYRICS_TXT, TRUE);
+	ToString(str, g_Profile.GetBool(_T("KeepTimeStampsInTxtLyr"), false) ? FT_LYRICS_LRC : FT_LYRICS_TXT, TRUE);
 
 	CM4aTag tag;
 	int nRet = tag.Open(m_strSongFile.c_str(), true, false);
@@ -1622,7 +1622,7 @@ void CMLData::ToID3v2UnsynchLyrics(ID3v2UnsynchLyrics &lyrics, CHAR_ENCODING enc
 {
 	tstring		str;
 
-	ToString(str, FT_LYRICS_TXT, TRUE);
+	ToString(str, g_Profile.GetBool(_T("KeepTimeStampsInTxtLyr"), false) ? FT_LYRICS_LRC : FT_LYRICS_TXT, TRUE);
 
 	strcpy_safe(lyrics.m_szLanguage, CountOf(lyrics.m_szLanguage), m_id3v2SaveCacheInfo.m_strLanguage.c_str());
 

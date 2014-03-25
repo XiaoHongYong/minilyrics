@@ -574,7 +574,19 @@ int CM4aTag::SetLyrics(LPCTSTR szLyrics)
 
 int CM4aTag::RemoveLyrics()
 {
-	return ERR_NOT_SUPPORT_FILE_FORMAT;
+	M4aBox *pIList = GetBox("moov.udta.meta.ilst");
+	if (pIList == NULL)
+		return ERR_NOT_SUPPORT_FILE_FORMAT;
+
+	GetBox("moov")->m_nSizeNew = 0;
+
+	M4aBox *pLyrics = pIList->FindBox(SZ_TYPE_LYRICS);
+	if (pLyrics != NULL)
+	{
+		pIList->DeleteChild(SZ_TYPE_LYRICS);
+	}
+
+	return ERR_OK;
 }
 
 int CM4aTag::Write(string &buf, size_t offset)
