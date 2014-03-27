@@ -88,8 +88,8 @@ bool GetTxtTagValue(LPCSTR szLyrics, LPCSTR szTagPropName, tstring &strValue, CH
 
 CHAR_ENCODING GetLyricsTextEncoding(LPBYTE &szLrc, int &nLen)
 {
-	FILE_ENCODING fe = GetFileEncodingByBom(szLrc);
-	int nBomSize = GetFileEncodingBomSize(fe);
+	int nBomSize = 0;
+	FILE_ENCODING fe = DetectFileEncoding(szLrc, nLen, nBomSize);
 	CHAR_ENCODING encoding = FileEcodingToCharEncoding(fe);
 
 	szLrc += nBomSize;
@@ -1222,14 +1222,15 @@ bool ConvertUnicodeAnsiData(CCharBuffer &buf)
 
 	LPCSTR szTxt = buf.c_str();
 
-	FILE_ENCODING fe = GetFileEncodingByBom(szTxt);
-	szTxt += GetFileEncodingBomSize(fe);
+	int bomSize = 0;
+	FILE_ENCODING fe = DetectFileEncoding(szTxt, buf.size(), bomSize);
+	szTxt += bomSize;
 
 	if (fe == FE_UTF8)
 	{
-		if (IsAnsiStr((const char*)szTxt))
+		if (IsAnsiStr((const char*)szTxt) && bomSize > 0)
 		{
-			buf.erase(0, 3);
+			buf.erase(0, bomSize);
 			return true;
 		}
 	}

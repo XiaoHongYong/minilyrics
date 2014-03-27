@@ -4,8 +4,7 @@
 
 DECLAR_CPPUNIT_TEST_REG(StringEx)
 
-FILE_ENCODING GetFileEncodingByBom(LPCVOID lpData);
-int GetFileEncodingBomSize(FILE_ENCODING fe);
+FILE_ENCODING DetectFileEncoding(LPCVOID lpData, int length, int &bomSize);
 LPCSTR GetFileEncodingBom(FILE_ENCODING fe);
 
 inline bool StrIsSame(LPCTSTR s1, LPCTSTR s2) { return _tcscmp(s1, s2) == 0; }

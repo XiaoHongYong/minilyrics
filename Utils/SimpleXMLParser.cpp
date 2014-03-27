@@ -96,22 +96,25 @@ SimpleXMLParserError CSimpleXMLParser::ParseData(LPCVOID lpXmlData, size_t nLen,
 	SimpleXMLParserError		Error;
 	BYTE						*szBuffer;
 	FILE_ENCODING				fileEncoding;
+	int							bomSize = 0;
 
 	szBuffer = (BYTE *)lpXmlData;
-	fileEncoding = GetFileEncodingByBom(szBuffer);
+	fileEncoding = DetectFileEncoding(szBuffer, nLen, bomSize);
+
+	szBuffer += bomSize;
+	nLen += bomSize;
+
 #ifdef _UNICODE
 	if (fileEncoding == FE_UCS2)
 	{
 		// UNICODE
-		Error = DoParse((const WCHAR *)(szBuffer + 2), (nLen - 2) / sizeof(WCHAR), xmlData);
+		Error = DoParse((const WCHAR *)(szBuffer), (nLen) / sizeof(WCHAR), xmlData);
 	}
 	else
 	{
 		wstringex		str;
 		if (fileEncoding == FE_UTF8)
 		{
-			szBuffer += 3;
-			nLen -= 3;
 			Utf8ToUCS2((const char *)szBuffer, nLen, str);
 			Error = DoParse(str.c_str(), str.size(), xmlData);
 		}
@@ -132,15 +135,11 @@ SimpleXMLParserError CSimpleXMLParser::ParseData(LPCVOID lpXmlData, size_t nLen,
 		stringex	str;
 		if (fileEncoding == FE_UTF8)
 		{
-			szBuffer += 3;
-			nLen -= 3;
 			UTF8ToTString((const char *)szBuffer, nLen, str);
 		}
 		else
 		{
 			// UNICODE
-			szBuffer += 2;
-			nLen += 2;
 			UCS2ToTString((const WCHAR *)szBuffer, nLen, str);
 		}
 		Error = DoParse(str.c_str(), str.size(), xmlData);

@@ -110,10 +110,13 @@ bool IsStrInArray(LPCTSTR szArray[], LPCTSTR str)
 
 bool CTagLib::IsMediaTypeSupported(LPCTSTR szFile)
 {
-	LPCTSTR *szSupportedExt = CID3v1::GetSupportedExtArray();
-	LPCTSTR szExt = FileGetExt(szFile);
+	if (IsID3v2TagSupported(szFile))
+		return true;
 
-	return IsStrInArray(szSupportedExt, szExt);
+	if (IsM4aTagSupported(szFile))
+		return true;
+
+	return false;
 }
 
 int CTagLib::GetTagFast(LPCTSTR szFile, tstring *pArtist, tstring *pTitle, tstring *pAlbum,
@@ -249,7 +252,7 @@ bool CTagLib::IsEmbeddedLyricsSupported(LPCTSTR szFile)
 
 bool CTagLib::IsID3v2TagSupported(LPCTSTR szFile)
 {
-	return FileIsExtSame(szFile, _T(".mp3"));
+	return FileIsExtSame(szFile, _T(".mp3")) || FileIsExtSame(szFile, _T(".mp2"));
 }
 
 bool CTagLib::IsM4aTagSupported(LPCTSTR szFile)

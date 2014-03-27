@@ -98,13 +98,14 @@ static bool GetLanguagePackInfo(LPCTSTR szFile, tstring &strLanguage, tstring &s
 	if (fread(buff, 1, sizeof(buff), fp) != sizeof(buff))
 		goto R_FAILED;
 
-	fe = GetFileEncodingByBom(buff);
+	int bomSize;
+	fe = DetectFileEncoding(buff, sizeof(buff), bomSize);
 	if (fe == FE_ANSI)
 		ConvertStr(buff, CountOf(buff), strBuff);
 	else if (fe == FE_UTF8)
-		ConvertStr(buff + 3, CountOf(buff) - 3, strBuff, ED_UTF8);
+		ConvertStr(buff + bomSize, CountOf(buff) - bomSize, strBuff, ED_UTF8);
 	else
-		ConvertStr((WCHAR*)buff + 1, sizeof(buff) / sizeof(WCHAR) - 1, strBuff, ED_UTF8);
+		ConvertStr((WCHAR*)(buff + bomSize), (sizeof(buff) - bomSize) / sizeof(WCHAR), strBuff, ED_UTF8);
 
 	// [Info]
 	if (_tcsnicmp(strBuff.c_str(), SZ_INFO, _tcslen(SZ_INFO)) != 0)

@@ -50,13 +50,12 @@ int CTextFile::Open(LPCTSTR szFile, OpenMode om, CHAR_ENCODING encoding)
 	else
 	{
 		// Open for append
-		char	buf[3];
+		char	buf[4];
 		int len = fread(buf, 1, 3, m_fp);
 		int offset = 0;
 		if (len >= 2)
 		{
-			m_fileEncoding = GetFileEncodingByBom(buf);
-			offset = GetFileEncodingBomSize(m_fileEncoding);
+			m_fileEncoding = DetectFileEncoding(buf, 3, offset);
 		}
 		else
 		{

@@ -89,33 +89,99 @@ bool StrIEndWith(LPCTSTR szText, LPCTSTR szEndWith)
 	return _tcsicmp(szText + lenText - lenEndWith, szEndWith) == 0;
 }
 
-FILE_ENCODING GetFileEncodingByBom(LPCVOID lpData)
+bool IsUTF8Encoding(LPCSTR str, int nLen)
+{
+	unsigned char* p = (unsigned char *)str;
+	unsigned char* last = (unsigned char *)str + nLen;
+
+	bool isAnsi = true;
+	const int MAX_BOUND = 1024 * 100;
+	int		ul;
+	for (ul = 0; (p < last) && (ul < MAX_BOUND); )
+	{
+		ul++;
+		if ((*p) < 0x80)
+		{
+			p += 1;
+			continue;
+		}
+
+		isAnsi = false;
+		if ((*p) < 0xc0)
+		{
+			return false;
+		}
+		else if ((*p) < 0xe0)
+		{
+			if (p[1] < 0x80)
+				return false;
+			p += 2;
+		}
+		else if ((*p) < 0xf0)
+		{
+			if (p[1] < 0x80 || p[2] < 0x80)
+				return false;
+			p += 3;
+		}
+		else if ((*p) < 0xf8)
+		{
+			if (p[1] < 0x80 || p[2] < 0x80 || p[3] < 0x80)
+				return false;
+			p += 4;
+		}
+		else if ((*p) < 0xfc)
+		{
+			if (p[1] < 0x80 || p[2] < 0x80 || p[3] < 0x80 || p[4] < 0x80)
+				return false;
+			p += 5;
+		}
+		else if ((*p) < 0xfe)
+		{
+			if (p[1] < 0x80 || p[2] < 0x80 || p[3] < 0x80 || p[4] < 0x80 || p[5] < 0x80)
+				return false;
+			p += 6;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	return !isAnsi;
+}
+
+FILE_ENCODING DetectFileEncoding(LPCVOID lpData, int length, int &bomSize)
 {
 	BYTE						*szBuffer;
 
 	szBuffer = (BYTE *)lpData;
 
-	// FF FE
 	if (szBuffer[0] == 0xFF && szBuffer[1] == 0xFE)
+	{
+		// FF FE
+		bomSize = 2;
 		return FE_UCS2;
-	// FE FF
+	}
 	else if (szBuffer[0] == 0xFE && szBuffer[1] == 0xFF)
+	{
+		// FE FF
+		bomSize = 2;
 		return FE_UCS2_BE;
-	// EF BB BF
+	}
 	else if (szBuffer[0] == 0xEF && szBuffer[1] == 0xBB && szBuffer[2] == 0xBF)
+	{
+		// EF BB BF
+		bomSize = 3;
 		return FE_UTF8;
-	else
-		return FE_ANSI;
-}
+	}
 
-int GetFileEncodingBomSize(FILE_ENCODING fe)
-{
-	if (fe == FE_UCS2 || fe == FE_UCS2_BE)
-		return 2;
-	else if (fe == FE_UTF8)
-		return 3;
-	else
-		return 0;
+	bomSize = 0;
+
+	if (IsUTF8Encoding((LPCSTR)szBuffer, length))
+		return FE_UTF8;
+
+	return FE_ANSI;
+
 }
 
 LPCSTR GetFileEncodingBom(FILE_ENCODING fe)
@@ -1095,7 +1161,6 @@ bool IsUnicodeStr(LPCVOID lpData)
 
 	szBuffer = (BYTE *)lpData;
 
-	// EF BB BF
 	return (szBuffer[0] == 0xFF && szBuffer[1] == 0xFE);
 }
 
@@ -1304,16 +1369,17 @@ bool OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)
 	if (!OpenFileToBuffer(szFile, buff))
 		return false;
 
-	fileEncoding = GetFileEncodingByBom(buff.c_str());
+	int bomSize = 0;
+	fileEncoding = DetectFileEncoding(buff.c_str(), buff.size(), bomSize);
 #ifdef _UNICODE
 	if (fileEncoding == FE_ANSI)
 		ConvertStr(buff.c_str(), buff.size(), str, encoding);
 	else if (fileEncoding == FE_UTF8)
-		Utf8ToUCS2(buff.c_str() + 3, buff.size() - 3, str);
+		Utf8ToUCS2(buff.c_str() + bomSize, buff.size() - bomSize, str);
 	else
 	{
 		str.clear();
-		str.append((WCHAR *)buff.c_str() + 1, buff.size() / sizeof(WCHAR) - 1);
+		str.append((WCHAR *)(buff.c_str() + bomSize), (buff.size() - bomSize) / sizeof(WCHAR));
 		str += (WCHAR)'\0';
 	}
 #else
@@ -1321,10 +1387,10 @@ bool OpenFileToTString(LPCTSTR szFile, tstringex &str, CHAR_ENCODING encoding)
 	if (fileEncoding == FE_ANSI)
 		MbcsToUtf8(buff.c_str(), buff.size(), str, encoding);
 	else if (fileEncoding == FE_UTF8)
-		str = buff.c_str() + 3;
+		str = buff.c_str() + bomSize;
 	else
 	{
-		UCS2ToUtf8((WCHAR *)buff.c_str() + 1, buff.size() / sizeof(WCHAR) - 1, str);
+		UCS2ToUtf8((WCHAR *)(buff.c_str() + bomSize), (buff.size() - bomSize) / sizeof(WCHAR), str);
 	}
 #endif
 
