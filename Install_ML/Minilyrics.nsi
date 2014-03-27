@@ -23,7 +23,7 @@
   VIAddVersionKey "FileVersion" ${ML_VERSION}
   VIProductVersion "${ML_VERSION}.0"
 
-  OutFile "MiniLyrics.exe"
+  OutFile "MiniLyrics7.exe"
 
   XPStyle on
 
