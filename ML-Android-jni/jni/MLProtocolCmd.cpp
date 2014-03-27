@@ -142,8 +142,6 @@ int CMLProtocolCmd::DecodeSearchRetCommand(LPCTSTR szSongFile, LPCTSTR szArtist,
 {
 	MLMsgRetSearch retSearch;
 	int nRet = ProcessCommonRetMsg(buf, &retSearch, MC_SEARCH);
-	if (nRet != ERR_OK)
-		return nRet;
 
 	V_LRCSEARCHRESULT vResult;
 	CLyricsSearchParameter searchParam(szSongFile, szArtist, szTitle);
@@ -156,6 +154,11 @@ int CMLProtocolCmd::DecodeSearchRetCommand(LPCTSTR szSongFile, LPCTSTR szArtist,
 	if (retSearch.nPageCount > 1)
 		writer.WriteAttribute("page_count", retSearch.nPageCount);
 	writer.WriteAttribute("server_url", retSearch.strServerUrl.c_str());
+
+	if (nRet != ERR_OK)
+		writer.WriteAttribute("message", Error2Str(nRet).c_str());
+	else if (retSearch.strMessage.size() > 0)
+		writer.WriteAttribute("message", retSearch.strMessage.c_str());	
 
 	ToString(vResult, writer);
 	writer.WriteEndElement();
