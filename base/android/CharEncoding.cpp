@@ -14,10 +14,10 @@
 // __encodingCodepage[ED_XXX].encodingID = ED_XXX
 ENCODING_CODEPAGE	__encodingCodepage[] = 
 {
-	{ ED_SYSDEF, "iso-8859-15", "", "Latin 9 (ISO)", "iso-8859-15" },
-	{ ED_UNICODE, "unicode", "", "Unicode", "UTF-16LE" },
-	{ ED_UNICODE_BIG_ENDIAN, "Unicode (Big-Endian)", "", "Unicode (Big-Endian)", "UTF-16BE" },
-	{ ED_UTF8, "utf-8", "", "Unicode (UTF-8)", "utf-8" },
+	{ ED_SYSDEF, "iso-8859-15", "", "Latin 9 (ISO)", "ISO8859_15_FDIS" },
+	{ ED_UNICODE, "unicode", "", "Unicode", "UnicodeLittleUnmarked" },
+	{ ED_UNICODE_BIG_ENDIAN, "Unicode (Big-Endian)", "", "Unicode (Big-Endian)", "UnicodeBigUnmarked" },
+	{ ED_UTF8, "utf-8", "", "Unicode (UTF-8)", "UTF8" },
 	{ ED_ARABIC, "windows-1256", "arabic", "Arabic", "Cp1256" },
 	{ ED_BALTIC_WINDOWS, "windows-1257", "baltic", "Baltic (Windows)", "Cp1257" },
 	{ ED_CENTRAL_EUROPEAN_WINDOWS, "windows-1250", "", "Central European (Windows)", "Cp1250" },
