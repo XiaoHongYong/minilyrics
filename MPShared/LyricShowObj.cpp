@@ -11,12 +11,20 @@
 #include "LyricShowObj.h"
 #include "LyricShowAgentObj.h"
 
-#ifndef _WIN32
-bool IsCharAlphaNumeric(int c) {
-	return IsAlpha(c) || IsDigit(c);
-}
-#endif
+bool IsMoreLatinLetter(int c) {
+	// Used 16 bytes to store whether the char is a letter for unicode 128 to 255.
+	static const byte IsLatin[] = {8, 69, 0, 196, 0, 0, 0, 0, 255, 255, 127, 255, 255, 255, 127, 255};
+	if (c >= 128 && c < 256) {
+		c -= 128;
+		return (IsLatin[c / 8] & (1 << (c % 8))) > 0;
+	}
 
+	return false;
+}
+
+bool IsCharAlphaNumericEx(int c) {
+	return IsAlpha(c) || IsDigit(c) || IsMoreLatinLetter(c);
+}
 
 PRAW_IMAGE_DATA AutoFitImageToRect(PRAW_IMAGE_DATA pImgSrc, int wDst, int hDst, int nBitCount)
 {
@@ -146,7 +154,9 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 			}
 
 			unsigned int c = strIterator.CurChar()[0];
-			if (c >= 127 || !(IsCharAlphaNumeric(c)
+			if (c >= 128)
+				c = strIterator.CurChar()[0];
+			if (c >= 256 || !(IsCharAlphaNumericEx(c)
 				|| c == '\'' || c == '\"' || c == '_' || c == '-'))
 				nLastBreak = strIterator.GetPos();
 		}
