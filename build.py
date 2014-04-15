@@ -201,9 +201,9 @@ def buildMiniLyrics():
 	f.write("!define ML_VERSION	\"" + version + "\"")
 	f.close()
 
-	# make pack: MiniLyrics.exe
+	# make pack: MiniLyrics7.exe
 	ExecuteOnErrQuit(r'Build\NSIS\makensis.exe /X"SetCompressor /FINAL /SOLID lzma" Install_ML\minilyrics.nsi')
-	signFile('Install_ML/MiniLyrics.exe')
+	signFile('Install_ML/MiniLyrics7.exe')
 
 	# make pack: MiniLyrics_rnl.exe
 	ExecuteOnErrQuit(r'Build\NSIS\makensis.exe /X"SetCompressor /FINAL /SOLID lzma" Install_ML\minilyrics_rnl.nsi')
@@ -226,7 +226,7 @@ def buildMiniLyrics():
 	shutil.move(r"src.7z", PackReleaseDir)
 
 	shutil.copy(r"Install_ML\MiniLyrics_data4me.exe", PackReleaseDir)
-	shutil.copy(r"Install_ML\MiniLyrics.exe", PackReleaseDir)
+	shutil.copy(r"Install_ML\MiniLyrics7.exe", PackReleaseDir)
 	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"MiniLyrics-pdb.7z bin\release\MiniLyrics.pdb")
 	shutil.copy(r"Install_ML\readme-MiniLyrics.txt", PackReleaseDir + "MiniLyrics-" + version + ".txt")
 
