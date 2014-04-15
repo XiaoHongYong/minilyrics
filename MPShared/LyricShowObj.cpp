@@ -156,8 +156,7 @@ void WrapWords(CRawGraph *pGraph, int nWidthMax, LPCTSTR szText, vector<tstring>
 			unsigned int c = strIterator.CurChar()[0];
 			if (c >= 128)
 				c = strIterator.CurChar()[0];
-			if (c >= 256 || !(IsCharAlphaNumericEx(c)
-				|| c == '\'' || c == '\"' || c == '_' || c == '-'))
+			if (c >= 256 || c == ' ' || c == '\t')
 				nLastBreak = strIterator.GetPos();
 		}
 		if (strIterator.GetPos() == nLineBeg)
