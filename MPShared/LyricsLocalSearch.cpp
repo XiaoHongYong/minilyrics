@@ -23,9 +23,9 @@ LPCTSTR 		SZ_FOLDER_PREFIX = _T("LyricFolder");
 //       2) without the extention of song file.
 bool IsShoutcastMedia(LPCTSTR szMedia)
 {
-	if (_tcsnicmp(szMedia, _T("http://"), 7) == 0)
+	if (_tcsnicmp(szMedia, _T("http:"), 5) == 0)
 		return true;
-	else if (_tcsnicmp(szMedia, _T("uvox://"), 7) == 0)
+	else if (_tcsnicmp(szMedia, _T("uvox:"), 5) == 0)
 		return true;
 
 	return false;
@@ -33,13 +33,13 @@ bool IsShoutcastMedia(LPCTSTR szMedia)
 
 bool IsShoutcastAssociateKeyName(LPCTSTR szMedia)
 {
-	if (_tcsnicmp(szMedia, _T("http://"), 7) == 0)
+	if (_tcsnicmp(szMedia, _T("http:"), 5) == 0)
 	{
-		LPCTSTR p = _tcsstr(szMedia + 7, _T("/[shoutcast]"));
+		LPCTSTR p = _tcsstr(szMedia + 5, _T("/[shoutcast]"));
 		if (p)
 			return true;
 	}
-	else if (_tcsnicmp(szMedia, _T("uvox://"), 7) == 0)
+	else if (_tcsnicmp(szMedia, _T("uvox:"), 5) == 0)
 		return true;
 
 	return false;
