@@ -238,7 +238,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 		va_end(args);
 
 		// was there an error? was the expanded string too long?
-		if (nBuf < 0)
+		if (nBuf < 0 || nBuff >= CountOf(szBuffer) - nLen)
 			_tcscpy_safe(szMsg, CountOf(szBuffer) - nLen, _T("Insufficient log buffer space."));
 		else
 			szMsg[nBuf] = '\0';

@@ -94,7 +94,7 @@ jstring NewJString(JNIEnv *env, const char *str, int nLen, const char *encoding)
 
 int GetBytesOfJString(JNIEnv *env, jstring jstr, char *strOut, int nOut, const char *encoding)
 {
-	if (!PrepareJString(env))
+	if (!PrepareJString(env) || nOut <= 0)
 		return 0;
 
 	jbyteArray buf = (jbyteArray)env->CallObjectMethod(jstr, g_methodStringGetBytesEncoding, env->NewStringUTF(encoding));
@@ -107,15 +107,15 @@ int GetBytesOfJString(JNIEnv *env, jstring jstr, char *strOut, int nOut, const c
 		return 0;
 
 	int length = env->GetArrayLength(buf);
-	if (nOut > length - 1)
-		nOut = length - 1;
+	if (length > nOut - 1)
+		length = nOut - 1;
 
-	env->GetByteArrayRegion(buf, 0, nOut, (jbyte *)strOut);
-	strOut[nOut] = '\0';
+	env->GetByteArrayRegion(buf, 0, length, (jbyte *)strOut);
+	strOut[length] = '\0';
 
 	env->DeleteLocalRef(buf);
 
-	return nOut;
+	return length;
 }
 
 int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID)

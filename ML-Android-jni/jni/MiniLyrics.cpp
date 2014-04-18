@@ -252,7 +252,7 @@ jstring NewJUtf8String(JNIEnv *env, const char *str, int nLen)
 
 extern "C" JNIEXPORT void NativeInit(JNIEnv* env, jclass clsNative, jobject ctx, jstring jstrWorkingFolder, jstring jstrAppName, jstring jstrProfile, jstring jstrClientName)
 {
-	g_clsNative = clsNative;
+	g_clsNative = reinterpret_cast<jclass>(env->NewGlobalRef(clsNative));
 	g_methodDecodeString = env->GetStaticMethodID(g_clsNative, "decodeString", "([BLjava/lang/String;)Ljava/lang/String;");
 
 	CheckSignature(env, ctx);
@@ -308,6 +308,9 @@ extern "C" JNIEXPORT void setLocalSearchOptions(JNIEnv* env, jclass clsNative, j
 
 extern "C" JNIEXPORT jstring readLyricsSource(JNIEnv* env, jclass clsNative, jstring mediaFile, jstring lyricsSrc)
 {
+	if (mediaFile == NULL || lyricsSrc == NULL)
+		return env->NewStringUTF("");
+
 	CMLData		lyricsData;
 
 	LPCSTR szMediaFile = env->GetStringUTFChars(mediaFile, NULL);

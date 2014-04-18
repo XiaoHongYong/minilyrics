@@ -64,14 +64,14 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	va_end(args);
 
 	// was there an error? was the expanded string too long?
-	if (nBuf < 0)
+	if (nBuf < 0 || nBuf >= CountOf(szBuffer) - nLen)
 		_tcscpy_safe(szMsg, CountOf(szBuffer) - nLen, _T("Insufficient log buffer space."));
 	else
 		szMsg[nBuf] = '\0';
 
 	nLen = (int)_tcslen(szBuffer) + 1;
 
-	__android_log_write(byLevel, "Tag", szMsg);
+	__android_log_write(byLevel, "Tag", szBuffer);
 }
 
 void CLog::LogDumpStr(BYTE byLevel, LPCTSTR szFile, int nLine, LPCSTR szStr, int nStrLen)
