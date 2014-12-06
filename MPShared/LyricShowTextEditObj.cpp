@@ -1460,7 +1460,10 @@ void CLyricShowTextEditObj::OnSaveLyrics()
 	SET_PROP(strOffset, CID_E_OFFSET);
 	SET_PROP(prop.m_strMediaLength, CID_E_MEDIA_LENGTH);
 	if (strOffset.size())
+	{
 		prop.SetOffsetTime(strOffset.c_str());
+		g_LyricData.SetOffsetTime(_ttoi(strOffset.c_str()));
+	}
 	prop.m_strId = strId;
 };
 

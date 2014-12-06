@@ -1309,7 +1309,7 @@ bool CPlayer::SetFieldValue(TCHAR szField[], int lenField, LPCTSTR szValue)
 			strrep(str, m_vTitleFilters[i].c_str(), _T(""));
 
 		// Remove regular file extension.
-		static LPCTSTR vToTrim[] = { _T(".mp3"), _T(".m4a"), _T(".wma"), _T(".flac"), _T(".ogg"), _T(".aac"), };
+		static LPCTSTR vToTrim[] = { _T(".mp3"), _T(".m4a"), _T(".wma"), _T(".flac"), _T(".ogg"), _T(".aac"), _T(".mpg"), _T(".mpeg"), _T(".avi"), _T(".mp4"), _T(".mkv"), _T(".rmvb"), _T(".mov"), };
 		LPCTSTR szExt = FileGetExt(str.c_str());
 		if (!IsEmptyString(szExt))
 		{
