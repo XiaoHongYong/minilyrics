@@ -6,15 +6,15 @@ HINSTANCE		g_hInstance = NULL;
 CMLService		g_MLService;
 
 
-BOOL Execute(LPCSTR szCmd)
+BOOL Execute(LPCTSTR szCmd)
 {
-	STARTUPINFOA		startInfo;
+	STARTUPINFO			startInfo;
 	PROCESS_INFORMATION	procInfo;
 
 	memset(&startInfo, 0, sizeof(startInfo));
 	memset(&procInfo, 0, sizeof(procInfo));
 
-	if (!CreateProcessA(NULL, (LPSTR)szCmd, NULL, NULL, false, 0, NULL, NULL, &startInfo, &procInfo))
+	if (!CreateProcess(NULL, (LPTSTR)szCmd, NULL, NULL, false, 0, NULL, NULL, &startInfo, &procInfo))
 		return FALSE;
 
 	CloseHandle(procInfo.hProcess);
@@ -35,23 +35,23 @@ BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayer
 
 	// Launch "MiniLyrics.exe /Wnd 0xWNDHANDLE /Player "Winamp"" to start MiniLyrics
 
-	char	szPluginIni[MAX_PATH];
+	TCHAR	szPluginIni[MAX_PATH];
 	GetProgramPath(szPluginIni, g_hInstance);
-	strcat_safe(szPluginIni, CountOf(szPluginIni), "MLPlugin.ini");
+	strcat_safe(szPluginIni, CountOf(szPluginIni), _T("MLPlugin.ini"));
 
-	char	szWorkingFolder[MAX_PATH];
-	GetPrivateProfileStringA("MiniLyrics", "WorkingFolder", "", szWorkingFolder, MAX_PATH, szPluginIni);
+	TCHAR	szWorkingFolder[MAX_PATH];
+	GetPrivateProfileString(_T("MiniLyrics"), _T("WorkingFolder"), _T(""), szWorkingFolder, MAX_PATH, szPluginIni);
 	if (szWorkingFolder[0] == '\0')
 		GetProgramPath(szWorkingFolder, g_hInstance);
 	DirStringFormat(szWorkingFolder);
 
 	BOOL	bNoPrompt;
-	bNoPrompt = GetPrivateProfileIntA("MiniLyrics", "NoPrompt", FALSE, szPluginIni);
+	bNoPrompt = GetPrivateProfileInt(_T("MiniLyrics"), _T("NoPrompt"), FALSE, szPluginIni);
 
-	char	szMsg[256];
-	char	szMiniLyricsExe[MAX_PATH];
+	TCHAR	szMsg[256];
+	TCHAR	szMiniLyricsExe[MAX_PATH];
 	strcpy_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), szWorkingFolder);
-	strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), "MiniLyrics.exe");
+	strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), _T("MiniLyrics.exe"));
 	if (!IsFileExist(szMiniLyricsExe))
 	{
 		// Is MiniLyrics in the same drive of Player?
@@ -60,25 +60,25 @@ BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayer
 		{
 			// Is MiniLyrics in Plugin directory?
 			GetProgramPath(szMiniLyricsExe, g_hInstance);
-			strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), "MiniLyrics.exe");
+			strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), _T("MiniLyrics.exe"));
 			if (!IsFileExist(szMiniLyricsExe))
 			{
 				// Is MiniLyrics in Plugin parent directory?
 				GetProgramPath(szMiniLyricsExe, g_hInstance);
-				strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), "..\\MiniLyrics.exe");
+				strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), _T("..\\MiniLyrics.exe"));
 				if (!IsFileExist(szMiniLyricsExe))
 				{
-					strcpy_safe(szMsg, CountOf(szMsg), "Can't find MiniLyrics.exe, Please reinstall MiniLyrics.");
+					strcpy_safe(szMsg, CountOf(szMsg), _T("Can't find MiniLyrics.exe, Please reinstall MiniLyrics."));
 					goto INIT_FAILED;
 				}
 			}
 		}
 	}
 
-	char	szCmdLine[MAX_PATH];
-	sprintf_s(szCmdLine, CountOf(szCmdLine), "%s /Wnd 0x%X", szMiniLyricsExe, pPlayerService->GetHandle());
+	TCHAR	szCmdLine[MAX_PATH];
+	_stprintf_s(szCmdLine, CountOf(szCmdLine), _T("%s /Wnd 0x%X"), szMiniLyricsExe, pPlayerService->GetHandle());
 	if (bManual)
-		strcat_safe(szCmdLine, CountOf(szCmdLine), " /Manual");
+		strcat_safe(szCmdLine, CountOf(szCmdLine), _T(" /Manual"));
 	Execute(szCmdLine);
 
 	return TRUE;
@@ -86,11 +86,11 @@ BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayer
 INIT_FAILED:
 	if (!bNoPrompt)
 	{
-		if (WritePrivateProfileInt("MiniLyrics", "NoPrompt", TRUE, szPluginIni) &&
-			GetPrivateProfileIntA("MiniLyrics", "NoPrompt", FALSE, szPluginIni))
+		if (WritePrivateProfileInt(_T("MiniLyrics"), _T("NoPrompt"), TRUE, szPluginIni) &&
+			GetPrivateProfileInt(_T("MiniLyrics"), _T("NoPrompt"), FALSE, szPluginIni))
 		{
 			// Make sure NoPrompt write successfully, then prompt this message.
-			MessageBoxA(hWndPlayer , szMsg, "MiniLyrics", MB_OK);
+			MessageBox(hWndPlayer , szMsg, _T("MiniLyrics"), MB_OK);
 		}
 	}
 	return FALSE;

@@ -15,7 +15,7 @@ LRESULT CALLBACK TinyBaseWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		pWnd = (CTinyBaseWnd *)cs->lpCreateParams;
 		if (pWnd)
 			pWnd->m_hWnd = hWnd;
-		SetWindowLong(hWnd, GWL_USERDATA, (LONG)(cs->lpCreateParams));
+		SetWindowLongPtr(hWnd, GWLP_USERDATA, (LONG_PTR)cs->lpCreateParams);
 	}
 	else if (uMsg == WM_PAINT)
 	{
@@ -23,7 +23,7 @@ LRESULT CALLBACK TinyBaseWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 	}
 
 	// pass the messages into the BaseWnd
-	CTinyBaseWnd	*pBaseWnd = (CTinyBaseWnd *)GetWindowLong(hWnd, GWL_USERDATA);
+	CTinyBaseWnd	*pBaseWnd = (CTinyBaseWnd *)GetWindowLongPtr(hWnd, GWLP_USERDATA);
 
 	if (pBaseWnd == NULL)
 		return DefWindowProc(hWnd, uMsg, wParam, lParam);
@@ -82,12 +82,12 @@ LRESULT CTinyBaseWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	case WM_DESTROY:
 		OnDestroy();
-		SetWindowLong(m_hWnd, GWL_USERDATA, (LONG)0);
+		SetWindowLongPtr(m_hWnd, GWLP_USERDATA, (LONG)0);
 		DefWindowProc(m_hWnd, WM_DESTROY, 0, 0);
 		m_hWnd = NULL;
 		break;
 	case WM_TIMER:
-		OnTimer(wParam);
+		OnTimer((int)wParam);
 		break;
 	case WM_COPYDATA:
 		OnCopyData(wParam, (COPYDATASTRUCT*)lParam);

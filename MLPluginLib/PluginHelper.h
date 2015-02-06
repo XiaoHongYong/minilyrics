@@ -9,27 +9,27 @@
 
 int Utf8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen);
 
-BOOL GetProgramPath(char szPath[], HINSTANCE hInstance/* = NULL*/);
+BOOL GetProgramPath(TCHAR szPath[], HINSTANCE hInstance/* = NULL*/);
 
 LPCSTR UrlGetName(LPCSTR szFile);
 
-bool IsFileExist(LPCSTR szFileName);
+bool IsFileExist(LPCTSTR szFileName);
 
-void DirStringFormat(LPSTR	szDir);
+void DirStringFormat(LPTSTR	szDir);
 
 int RegGetProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nDefault);
 
 BOOL RegWriteProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nValue);
 
 BOOL WritePrivateProfileInt(
-							LPCSTR lpAppName,  // section name
-							LPCSTR lpKeyName,  // key name
+							LPCTSTR lpAppName,  // section name
+							LPCTSTR lpKeyName,  // key name
 							int nValue,			// int to add
-							LPCSTR lpFileName  // initialization file
+							LPCTSTR lpFileName  // initialization file
 							);
 
-char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource);
-char *strcat_safe(char * dst, size_t Size, const char * src);
+TCHAR *strcpy_safe(TCHAR *strDestination, size_t nLenMax, const TCHAR *strSource);
+TCHAR *strcat_safe(TCHAR * dst, size_t Size, const TCHAR * src);
 
 size_t	wcsncpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource, size_t nToCopy);
 wchar_t *wcscpy_safe(wchar_t *strDestination, size_t nLenMax, const wchar_t *strSource);

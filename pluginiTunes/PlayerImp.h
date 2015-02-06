@@ -32,7 +32,9 @@ public:
 
 	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	void OniTunesChangeVisualWnd(HWND hWnd, const Rect *rc);
+	void OniTunesChangeVisualWnd(HWND hWnd);
+
+	void OniTunesMoveVisualWnd();
 
 	enum 
 	{
@@ -43,7 +45,6 @@ public:
 	};
 
 	HWND			m_hWndiTunesVisual;
-	Rect			m_rciTunesVisual;
 
 public:
 	DWORD			m_dwPos;
@@ -53,3 +54,5 @@ public:
 	DWORD			m_dwBegTickCount;
 
 };
+
+extern CPlayerImp		g_Player;

@@ -5,7 +5,7 @@
 
 inline void appendMediaInfoStr(LPWSTR szInfo, size_t &offset, WORD &offsetTag, LPCWSTR tag, size_t lenTag)
 {
-	offsetTag = offset;
+	offsetTag = (WORD)offset;
 	memcpy(szInfo + offset, tag, (lenTag + 1) * sizeof(WCHAR));
 	offset += lenTag + 1;
 }
@@ -18,7 +18,7 @@ inline MLMediaInfo *NewMLMediaInfo(LPCWSTR artist, LPCWSTR album, LPCWSTR title,
 	size_t	lenMediaUrl = wcslen(mediaUrl);
 
 	// 8 is the extra characters '\0' of artist, album, title, mediaUrl.
-	DWORD	sizeInfo = sizeof(MLMediaInfo) + (8 + lenArtist + lenAlbum + lenTitle + lenMediaUrl) * sizeof(WCHAR);
+	DWORD	sizeInfo = (DWORD)(sizeof(MLMediaInfo) + (8 + lenArtist + lenAlbum + lenTitle + lenMediaUrl) * sizeof(WCHAR));
 	MLMediaInfo *info = (MLMediaInfo *)new char[sizeInfo];
 
 	info->size = sizeInfo;
@@ -38,7 +38,7 @@ inline MLMediaInfo *NewMLMediaInfo(LPCWSTR artist, LPCWSTR album, LPCWSTR title,
 void CMLService::AddWndCloseto(HWND hWnd, LPCWSTR wndClass, LPCWSTR wndName)
 {
 	WndCloseToML	closeTo;
-	closeTo.hWndCloseTo = hWnd;
+	closeTo.hWndCloseTo = (WND_HANDLE)hWnd;
 
 	if (wndClass)
 		wcscpy_safe(closeTo.className, CountOf(closeTo.className), wndClass);
@@ -99,14 +99,14 @@ void CMLService::SendMessage(MessageToML message, LPVOID param, size_t sizeParam
 		return;
 
 	COPYDATASTRUCT	cds;
-	cds.cbData = sizeParam;
+	cds.cbData = (DWORD)sizeParam;
 	cds.dwData = message;
 	cds.lpData = param;
 	if (message == M2M_PLAYER_INFO)
-		::SendMessage(m_mlInfo.hWndMLService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds);
+		::SendMessage((HWND)m_mlInfo.hWndMLService, WM_COPYDATA, ML_MSG_VERSION, (LPARAM)&cds);
 	else
 	{
 		ASSERT(m_hWndPlayerService != NULL);
-		::SendMessage(m_mlInfo.hWndMLService, WM_COPYDATA, (WPARAM)m_hWndPlayerService, (LPARAM)&cds);
+		::SendMessage((HWND)m_mlInfo.hWndMLService, WM_COPYDATA, (WPARAM)m_hWndPlayerService, (LPARAM)&cds);
 	}
 }

@@ -1,6 +1,6 @@
 #include "../MLPluginLib/MlPlugin.h"
 #include "PlayerImp.h"
-#include <PROCESS.H>
+#include "iTunesPlugIn.h"
 #include <shlobj.h>
 
 CPlayerImp		g_Player;
@@ -48,7 +48,7 @@ public:
 
 		HRESULT		hRes;
 
-		if (FindWindow("iTunesCustomModalDialog", NULL))
+		if (FindWindow(_T("iTunesCustomModalDialog"), NULL))
 			return;
 
 		hRes = ::CoCreateInstance(CLSID_iTunesApp, NULL, CLSCTX_LOCAL_SERVER, IID_IiTunes, (PVOID *)&m_iITunes);
@@ -123,15 +123,6 @@ LRESULT CALLBACK HookiTunesWnd(
 #define	MAIN iTunesPluginMain
 #define IMPEXP	__declspec(dllexport)
 
-#define kSampleVisualPluginName		"MiniLyrics Visualizer"
-#define	kSampleVisualPluginCreator	'dxhy'
-
-#define	kSampleVisualPluginMajorVersion		1
-#define	kSampleVisualPluginMinorVersion		0
-#define	kSampleVisualPluginReleaseStage		0x80
-#define	kSampleVisualPluginNonFinalRelease	0
-
-
 extern "C" BOOL WINAPI DllMain(
   HINSTANCE hinstDLL,  // handle to the DLL module
   DWORD fdwReason,     // reason for calling function
@@ -156,7 +147,6 @@ CPlayerImp::CPlayerImp()
 	m_bWorking = false;
 
 	m_hWndiTunesVisual = NULL;
-	m_rciTunesVisual.left = m_rciTunesVisual.top = m_rciTunesVisual.right = m_rciTunesVisual.bottom = -1;
 }
 
 CPlayerImp::~CPlayerImp()
@@ -169,18 +159,18 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = g_hWndPlayer;
+	playerInfo.hWndPlayer = (WND_HANDLE)g_hWndPlayer;
 	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
-	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), L"Embedded into iTunes Visual Area");
+	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), _T("Embedded into iTunes Visual Area"));
 
-	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"iTunes");
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), _T("iTunes"));
 }
 
 void CPlayerImp::OnConnected()
 {
 	m_bWorking = true;
 
-	g_MLService.AddWndCloseto(NULL, L"iTunes", L"iTunes");
+	g_MLService.AddWndCloseto(NULL, _T("iTunes"), _T("iTunes"));
 
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	if (g_hWndPlayer == NULL)
@@ -259,7 +249,7 @@ void CPlayerImp::SwitchToEmbeddedSkin()
 	memset(&skinInfo, 0, sizeof(skinInfo));
 	skinInfo.bEmbeddedSkin = m_hWndiTunesVisual != NULL;
 	skinInfo.bClrThemeValid = false;
-	skinInfo.hWndToAttach = m_hWndiTunesVisual;
+	skinInfo.hWndToAttach = (WND_HANDLE)m_hWndiTunesVisual;
 	skinInfo.clrFontHighlight = RGB(0, 0, 0);
 	skinInfo.clrFontLowlight = RGB(0x84, 0x84, 0x84);
 	skinInfo.clrBackground = RGB(0xD6, 0xDB, 0xBD);
@@ -269,7 +259,9 @@ void CPlayerImp::SwitchToEmbeddedSkin()
 
 	if (m_hWndiTunesVisual && GetParent(g_MLService.GetMainWindow()) == m_hWndiTunesVisual)
 	{
-		MoveWindow(g_MLService.GetMainWindow(), m_rciTunesVisual.left, m_rciTunesVisual.top, m_rciTunesVisual.right - m_rciTunesVisual.left, m_rciTunesVisual.bottom - m_rciTunesVisual.top, true);
+		RECT rc;
+		GetClientRect(m_hWndiTunesVisual, &rc);
+		MoveWindow(g_MLService.GetMainWindow(), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
 	}
 }
 
@@ -289,13 +281,13 @@ void CPlayerImp::OnTimer(int nTimerID)
 	}
 	else if (nTimerID == TIMER_QUERYITUNES)
 	{
-		g_hWndPlayer = FindWindow("iTunes", "iTunes");
+		g_hWndPlayer = FindWindow(_T("iTunes"), _T("iTunes"));
 		if (g_hWndPlayer)
 		{
 			if (FindWindowEx(g_hWndPlayer, NULL, NULL, NULL) == NULL)
 			{
 				// No Child window, it is NOT iTunes' Window, try another one.
-				g_hWndPlayer = FindWindowEx(NULL, g_hWndPlayer, "iTunes", "iTunes");
+				g_hWndPlayer = FindWindowEx(NULL, g_hWndPlayer, _T("iTunes"), _T("iTunes"));
 			}
 			if (g_hWndPlayer)
 			{
@@ -303,7 +295,7 @@ void CPlayerImp::OnTimer(int nTimerID)
 
 				// Hook iTunes Window
 				if (g_pOrgiTunesProc == NULL)
-					g_pOrgiTunesProc = (WNDPROC)SetWindowLong(g_hWndPlayer, GWL_WNDPROC, (LONG)HookiTunesWnd);
+					g_pOrgiTunesProc = (WNDPROC)SetWindowLongPtr(g_hWndPlayer, GWLP_WNDPROC, (LONG_PTR)HookiTunesWnd);
 			}
 		}
 	}
@@ -374,11 +366,11 @@ LRESULT CPlayerImp::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	else if (uMsg == WM_U_ACTIVATEAPP)
 	{
-		g_MLService.OnNotifyPlayerActivate(wParam);
+		g_MLService.OnNotifyPlayerActivate((BOOL)wParam);
 	}
 	else if (uMsg == WM_U_MIN_MAX)
 	{
-		g_MLService.OnNotifyPlayerMinRestore(wParam);
+		g_MLService.OnNotifyPlayerMinRestore((BOOL)wParam);
 	}
 	else
 		return CPlayerServiceBase::WndProc(uMsg, wParam, lParam);
@@ -386,7 +378,7 @@ LRESULT CPlayerImp::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 1;
 }
 
-void CPlayerImp::OniTunesChangeVisualWnd(HWND hWnd, const Rect *rc)
+void CPlayerImp::OniTunesChangeVisualWnd(HWND hWnd)
 {
 	m_hWndiTunesVisual = hWnd;
 
@@ -394,300 +386,26 @@ void CPlayerImp::OniTunesChangeVisualWnd(HWND hWnd, const Rect *rc)
 
 	if (hWnd)
 	{
-		if (rc->left != m_rciTunesVisual.left || rc->top != m_rciTunesVisual.top ||
-			rc->right != m_rciTunesVisual.right || rc->bottom != m_rciTunesVisual.bottom)
+		if (GetParent(g_MLService.GetMainWindow()) == m_hWndiTunesVisual)
 		{
-			m_rciTunesVisual = *rc;
-			if (GetParent(g_MLService.GetMainWindow()) == m_hWndiTunesVisual)
-			{
-				MoveWindow(g_MLService.GetMainWindow(), rc->left, rc->top, rc->right - rc->left, rc->bottom - rc->top, true);
-			}
+			RECT rc;
+			::GetClientRect(hWnd, &rc);
+			MoveWindow(g_MLService.GetMainWindow(), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
 		}
 	}
 }
 
-
-//////////////////////////////////////////////////////////////////////////
-
-enum
+void CPlayerImp::OniTunesMoveVisualWnd()
 {
-	kSettingsDialogResID	= 1000,
-	
-	kSettingsDialogOKButton	= 1,
-	kSettingsDialogCancelButton,
-	
-	kSettingsDialogCheckBox1,
-	kSettingsDialogCheckBox2,
-	kSettingsDialogCheckBox3
-};
-
-
-// ClearMemory
-//
-static void ClearMemory (LogicalAddress dest, SInt32 length)
-{
-	register unsigned char	*ptr;
-
-	ptr = (unsigned char *) dest;
-	
-	if( length > 16 )
+	if (m_hWndiTunesVisual)
 	{
-		register unsigned long	*longPtr;
-		
-		while( ((unsigned long) ptr & 3) != 0 )
+		if (GetParent(g_MLService.GetMainWindow()) == m_hWndiTunesVisual)
 		{
-			*ptr++ = 0;
-			--length;
+			RECT rc;
+			::GetClientRect(m_hWndiTunesVisual, &rc);
+			MoveWindow(g_MLService.GetMainWindow(), rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, true);
 		}
-		
-		longPtr = (unsigned long *) ptr;
-		
-		while( length >= 4 )
-		{
-			*longPtr++ 	= 0;
-			length		-= 4;
-		}
-		
-		ptr = (unsigned char *) longPtr;
 	}
-	
-	while( --length >= 0 )
-	{
-		*ptr++ = 0;
-	}
-}
-
-/*
-	RenderVisualPort
-*/
-static void RenderVisualPort(HWND destPort, const Rect *destRect)
-{
-	if (destPort == nil)
-		return;
-
-	HBRUSH	hBrush;
-	HDC		hdc;
-	RECT	srcRect;
-	
-	srcRect.left = destRect->left;
-	srcRect.top = destRect->top;
-	srcRect.right = destRect->right;
-	srcRect.bottom = destRect->bottom;
-
-	hdc = GetDC(destPort);
-	hBrush = CreateSolidBrush(RGB(0, 0, 0));
-	FillRect(hdc, &srcRect, hBrush);
-	DeleteObject(hBrush);
-	ReleaseDC(destPort, hdc);
-}
-
-
-void OnTrackChanged(ITTrackInfo *pTrackInfo)
-{
-	if (!pTrackInfo)
-		return;
-
-	if (g_Player.m_hWnd)
-	{
-		PostMessage(g_Player.m_hWnd, CPlayerImp::WM_SONG_CHANGED, (WPARAM)new ITTrackInfo(*pTrackInfo), 0);
-	}
-}
-
-/*
-	VisualPluginHandler
-*/
-static OSStatus VisualPluginHandler(OSType message, VisualPluginMessageInfo *messageInfo, void *refCon)
-{
-	OSStatus			status;
-	
-	status = noErr;
-
-	switch (message)
-	{
-		/*
-			Sent when the visual plugin is registered.  The plugin should do minimal
-			memory allocations here.  The resource fork of the plugin is still available.
-		*/		
-		case kVisualPluginInitMessage:
-		{
-			break;
-		}
-
-		/*
-			Sent when the visual plugin is unloaded
-		*/		
-		case kVisualPluginCleanupMessage:
-			break;
-
-		/*
-			Sent when the visual plugin is enabled.  iTunes currently enables all
-			loaded visual plugins.  The plugin should not do anything here.
-		*/
-		case kVisualPluginEnableMessage:
-		case kVisualPluginDisableMessage:
-			break;
-
-		/*
-			Sent if the plugin requests idle messages.  Do this by setting the kVisualWantsIdleMessages
-			option in the PlayerRegisterVisualPluginMessage.options field.
-		*/
-		case kVisualPluginIdleMessage:
-			break;
-
-		/*
-			Sent when iTunes is going to show the visual plugin in a port.  At
-			this point, the plugin should allocate any large buffers it needs.
-		*/
-		case kVisualPluginShowWindowMessage:
-			g_Player.OniTunesChangeVisualWnd(messageInfo->u.showWindowMessage.window,
-										&messageInfo->u.showWindowMessage.drawRect);
-			RenderVisualPort(messageInfo->u.showWindowMessage.window, &messageInfo->u.showWindowMessage.drawRect);
-			break;
-			
-		/*
-			Sent when iTunes is no longer displayed.
-		*/
-		case kVisualPluginHideWindowMessage:
-			g_Player.OniTunesChangeVisualWnd(nil, nil);
-			break;
-		
-		/*
-			Sent when iTunes needs to change the port or rectangle of the currently
-			displayed visual.
-		*/
-		case kVisualPluginSetWindowMessage:
-			g_Player.OniTunesChangeVisualWnd(messageInfo->u.setWindowMessage.window,
-										&messageInfo->u.setWindowMessage.drawRect);
-			RenderVisualPort(messageInfo->u.setWindowMessage.window, &messageInfo->u.setWindowMessage.drawRect);
-			break;
-
-		/*
-			Sent for the visual plugin to render a frame.
-		*/
-		case kVisualPluginRenderMessage:
-			break;
-			
-		/*
-			Sent in response to an update event.  The visual plugin should update
-			into its remembered port.  This will only be sent if the plugin has been
-			previously given a ShowWindow message.
-		*/	
-		case kVisualPluginUpdateMessage:
- 			RenderVisualPort(g_Player.m_hWndiTunesVisual, &g_Player.m_rciTunesVisual);
-			break;
-		
-		/*
-			Sent when the player starts.
-		*/
-		case kVisualPluginPlayMessage:
-			OnTrackChanged(messageInfo->u.playMessage.trackInfoUnicode);
-			break;
-
-		/*
-			Sent when the player changes the current track information.  This
-			is used when the information about a track changes, or when the CD
-			moves onto the next track.  The visual plugin should update any displayed
-			information about the currently playing song.
-		*/
-
-		case kVisualPluginChangeTrackMessage:
-			OnTrackChanged(messageInfo->u.changeTrackMessage.trackInfoUnicode);
-			break;
-
-		/*
-			Sent when the player stops.
-		*/
-		case kVisualPluginStopMessage:
-			g_Player.m_playerState = PS_STOPED;
-			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
-			break;
-
-		/*
-			Sent when the player changes the track position.
-		*/
-		case kVisualPluginSetPositionMessage:
-			if (g_Player.m_playerState == PS_PLAYING)
-				g_Player.m_dwBegTickCount = GetTickCount() - messageInfo->u.setPositionMessage.positionTimeInMS;
-			else
-			{
-				g_Player.m_dwPos = messageInfo->u.setPositionMessage.positionTimeInMS;
-				g_MLService.OnPlayPosChanged(g_Player.m_dwPos);
-			}
-			break;
-
-		/*
-			Sent when the player pauses.  iTunes does not currently use pause or unpause.
-			A pause in iTunes is handled by stopping and remembering the position.
-		*/
-		case kVisualPluginPauseMessage:
-			g_Player.m_playerState = PS_PAUSED;
-			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
-			break;
-			
-		/*
-			Sent when the player unpauses.  iTunes does not currently use pause or unpause.
-			A pause in iTunes is handled by stopping and remembering the position.
-		*/
-		case kVisualPluginUnpauseMessage:
-			g_Player.m_dwBegTickCount = GetTickCount() + g_Player.m_dwPos;
-			g_Player.m_playerState = PS_PLAYING;
-			g_MLService.OnPlayStateChanged(g_Player.m_playerState);
-			break;
-		
-		/*
-			Sent to the plugin in response to a MacOS event.  The plugin should return noErr
-			for any event it handles completely, or an error (unimpErr) if iTunes should handle it.
-		*/
-		case kVisualPluginEventMessage:
-			status = unimpErr;
-			break;
-
-		default:
-			status = unimpErr;
-			break;
-	}
-
-	return status;	
-}
-
-
-/*
-	RegisterVisualPlugin
-*/
-static OSStatus RegisterVisualPlugin (PluginMessageInfo *messageInfo)
-{
-	OSStatus			status;
-	PlayerMessageInfo	playerMessageInfo;
-
-	ClearMemory(&playerMessageInfo.u.registerVisualPluginMessage,sizeof(playerMessageInfo.u.registerVisualPluginMessage));
-	
-	// copy in name length byte first
-	playerMessageInfo.u.registerVisualPluginMessage.name[0] = lstrlen(kSampleVisualPluginName);
-	// now copy in actual name
-	memcpy(&playerMessageInfo.u.registerVisualPluginMessage.name[1], kSampleVisualPluginName, lstrlen(kSampleVisualPluginName));
-
-	SetNumVersion(&playerMessageInfo.u.registerVisualPluginMessage.pluginVersion, kSampleVisualPluginMajorVersion, kSampleVisualPluginMinorVersion, kSampleVisualPluginReleaseStage, kSampleVisualPluginNonFinalRelease);
-
-	playerMessageInfo.u.registerVisualPluginMessage.options					= 0;//kVisualWantsIdleMessages | kVisualWantsConfigure;
-	playerMessageInfo.u.registerVisualPluginMessage.handler					= VisualPluginHandler;
-	playerMessageInfo.u.registerVisualPluginMessage.registerRefCon			= 0;
-	playerMessageInfo.u.registerVisualPluginMessage.creator					= kSampleVisualPluginCreator;
-	
-	playerMessageInfo.u.registerVisualPluginMessage.timeBetweenDataInMS		= 0xFFFFFFFF; // 16 milliseconds = 1 Tick, 0xFFFFFFFF = Often as possible.
-	playerMessageInfo.u.registerVisualPluginMessage.numWaveformChannels		= 2;
-	playerMessageInfo.u.registerVisualPluginMessage.numSpectrumChannels		= 2;
-	
-	playerMessageInfo.u.registerVisualPluginMessage.minWidth				= 64;
-	playerMessageInfo.u.registerVisualPluginMessage.minHeight				= 64;
-	playerMessageInfo.u.registerVisualPluginMessage.maxWidth				= 32767;
-	playerMessageInfo.u.registerVisualPluginMessage.maxHeight				= 32767;
-	playerMessageInfo.u.registerVisualPluginMessage.minFullScreenBitDepth	= 0;
-	playerMessageInfo.u.registerVisualPluginMessage.maxFullScreenBitDepth	= 0;
-	playerMessageInfo.u.registerVisualPluginMessage.windowAlignmentInBytes	= 0;
-	
-	status = PlayerRegisterVisualPlugin(messageInfo->u.initMessage.appCookie, messageInfo->u.initMessage.appProc,&playerMessageInfo);
-
-	return status;	
 }
 
 
@@ -698,7 +416,7 @@ extern "C" {
 /*
 	MAIN
 */
-IMPEXP OSStatus MAIN (OSType message, PluginMessageInfo *messageInfo, void *refCon)
+extern "C" __declspec(dllexport) OSStatus iTunesPluginMain(OSType message, PluginMessageInfo * messageInfo, void * refCon)
 {
 	OSStatus		status;
 	
@@ -708,14 +426,15 @@ IMPEXP OSStatus MAIN (OSType message, PluginMessageInfo *messageInfo, void *refC
 	{
 		case kPluginInitMessage:
 			{
+				// MessageBox(NULL, _T("iTunes MiniLyircs"), _T("iTunes MiniLyircs"), MB_OK);
 				// Is old MiniLyrics plug-in running?
-				char	szModuleName[MAX_PATH];
-				char	sziTunesPluginPath[MAX_PATH];
+				WCHAR	szModuleName[MAX_PATH];
+				WCHAR	sziTunesPluginPath[MAX_PATH];
 
 				GetModuleFileName(g_hInstance, szModuleName, MAX_PATH);
 				SHGetSpecialFolderPath(NULL, sziTunesPluginPath, CSIDL_APPDATA, FALSE);
 				DirStringFormat(sziTunesPluginPath);
-				lstrcat(sziTunesPluginPath , "Apple Computer\\iTunes\\iTunes Plug-ins\\iTunesMinilyrics.dll");
+				lstrcat(sziTunesPluginPath , _T("Apple Computer\\iTunes\\iTunes Plug-ins\\iTunesMinilyrics.dll"));
 				if (IsFileExist(sziTunesPluginPath) && lstrcmp(szModuleName, sziTunesPluginPath) != 0)
 				{
 					if (!DeleteFile(sziTunesPluginPath))
@@ -725,7 +444,7 @@ IMPEXP OSStatus MAIN (OSType message, PluginMessageInfo *messageInfo, void *refC
 				status = RegisterVisualPlugin(messageInfo);
 
 				if (!g_hWndPlayer)
-					g_hWndPlayer = FindWindow("iTunes", "iTunes");
+					g_hWndPlayer = FindWindow(_T("iTunes"), _T("iTunes"));
 
 				// Create a thread to pump the messages...
 				g_hThread = CreateThread(NULL, 0, ThreadML, NULL, 0, &g_dwThreadID);
