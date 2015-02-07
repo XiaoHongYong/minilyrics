@@ -162,6 +162,7 @@ def buildMiniLyrics():
 		[ " PluginBsp\\PluginBsp.sln", "\"Release|Win32\"" ],
 		[ " PluginFoobar1.0\\PluginFoobar.sln", "\"Release|Win32\"" ],
 		[ " pluginiTunes\\pluginiTunes.sln", "\"Release|Win32\"" ],
+		[ " pluginiTunes\\pluginiTunes.sln", "\"Release|x64\"" ],
 		[ " PluginMJ\\PluginMJ.sln", "\"Release|Win32\"" ],
 		[ " PluginQCDPlayer\\QCDGeneral.sln", "\"Release|Win32\"" ],
 		# [ " PluginRealOne\\PluginRealOne.sln", "\"Release|Win32\"" ],

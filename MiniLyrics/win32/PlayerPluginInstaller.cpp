@@ -10,6 +10,7 @@ enum InstallFlag
 	INST_COPY_2_PLAYER_PLUGIN_DIR	= 1,
 	INST_REG_DLL					= 1 << 1,
 	INST_CREATE_MLPLUGIN_INI		= 1 << 2,
+	INST_CHECK_X64					= 1 << 3,
 };
 
 #define		SZ_MLPLUGIN_INI		_T("MLPlugin.ini")
@@ -19,7 +20,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	// Players need the plugin to install to proper location.
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
-		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
+		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI | INST_CHECK_X64,
 		_T("iTunes"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{81063354-9060-42B2-A000-1EBE96778AA9}\\InstallLocation"),
 		_T("iTunes\\"), _T("iTunes.exe"),
@@ -818,6 +819,37 @@ public:
 
 };
 
+BOOL IsWow64()
+{
+	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+
+	LPFN_ISWOW64PROCESS fnIsWow64Process;
+	BOOL bIsWow64 = FALSE;
+
+	//IsWow64Process is not available on all supported versions of Windows.
+	//Use GetModuleHandle to get a handle to the DLL that contains the function
+	//and GetProcAddress to get a pointer to the function if available.
+
+	fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
+		GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
+
+	if (NULL != fnIsWow64Process) {
+		if (!fnIsWow64Process(GetCurrentProcess(),&bIsWow64))
+		{
+			//handle error
+		}
+	}
+
+	return bIsWow64;
+}
+
+bool IsX64Target(const tstring &strDirTarg) {
+	if (!IsWow64())
+		return false;
+
+	return _tcsstr(strDirTarg.c_str(), _T("(x86)")) == NULL;
+}
+
 template<class _Installer>
 int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 {
@@ -844,6 +876,8 @@ int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 	{
 		// Plugin for players are saved in MiniLyrics "Player-Plugins" dir.
 		tstring		strFileSrc = DirStringJoint(GetAppResourceDir(), _T("Player-Plugins\\"));
+		if (IsFlagSet(item.dwInstallFlags, INST_CHECK_X64) && IsX64Target(strDirTarg))
+			strFileSrc += _T("x64\\");
 		strFileSrc += vFiles[i];
 #ifdef _DEBUG
 		if (!IsFileExist(strFileSrc.c_str()))
