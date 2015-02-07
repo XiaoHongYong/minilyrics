@@ -20,27 +20,27 @@ bool CPlayerServiceBase::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 	{
 	case M2P_QUERY_INFO:
 		{
-			ASSERT(pcds->cbData == sizeof(HWND));
+			ASSERT(pcds->cbData == sizeof(DWORD));
 
 			// Backup m_mlInfo.hWndMLService.
-			HWND	hWndMLServiceBackup = g_MLService.m_mlInfo.hWndMLService;
-			g_MLService.m_mlInfo.hWndMLService = *(HWND*)pcds->lpData;
+			HWND	hWndMLServiceBackup = (HWND)g_MLService.m_mlInfo.hWndMLService;
+			g_MLService.m_mlInfo.hWndMLService = (*(WND_HANDLE*)pcds->lpData);
 
 			PlayerInfo playerInfo;
 			memset(&playerInfo, 0, sizeof(playerInfo));
 			playerInfo.startupFlags = ML_SUPPORT_PLAY_CONTROL | ML_SUPPORT_SEEK_CONTROL;
-			playerInfo.hWndPluginService = m_hWnd;
+			playerInfo.hWndPluginService = (WND_HANDLE)m_hWnd;
 
 			OnGetInfo(playerInfo);
 			g_MLService.SendPlayerInfo(playerInfo);
 
 			// Restore m_mlInfo.hWndMLService.
-			g_MLService.m_mlInfo.hWndMLService = hWndMLServiceBackup;
+			g_MLService.m_mlInfo.hWndMLService = (WND_HANDLE)hWndMLServiceBackup;
 		}
 		break;
 	case M2P_CONNECTED:
 		{
-			if (IsWindow(g_MLService.m_mlInfo.hWndMLService))
+			if (IsWindow((HWND)g_MLService.m_mlInfo.hWndMLService))
 				break;
 
 			ASSERT(pcds->cbData == sizeof(MLInfo));
@@ -56,8 +56,8 @@ bool CPlayerServiceBase::OnCopyData(WPARAM wParam, COPYDATASTRUCT *pcds)
 		memset(&g_MLService.m_mlInfo, 0, sizeof(g_MLService.m_mlInfo));
 		break;
 	case M2P_MAINWND_HANDLE:
-		ASSERT(pcds->cbData == sizeof(HWND));
-		g_MLService.m_hWndMiniLyrics = *(HWND*)pcds->lpData;
+		ASSERT(pcds->cbData == sizeof(WND_HANDLE));
+		g_MLService.m_hWndMiniLyrics = (HWND)*(WND_HANDLE*)pcds->lpData;
 		break;
 	case M2P_PLAY:
 		Play();

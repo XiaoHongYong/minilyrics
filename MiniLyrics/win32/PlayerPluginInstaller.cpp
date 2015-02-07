@@ -10,6 +10,9 @@ enum InstallFlag
 	INST_COPY_2_PLAYER_PLUGIN_DIR	= 1,
 	INST_REG_DLL					= 1 << 1,
 	INST_CREATE_MLPLUGIN_INI		= 1 << 2,
+	INST_CHECK_X64					= 1 << 3,
+	INST_W32_ONLY					= 1 << 4,
+	INST_X64_ONLY					= 1 << 5,
 };
 
 #define		SZ_MLPLUGIN_INI		_T("MLPlugin.ini")
@@ -19,7 +22,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	// Players need the plugin to install to proper location.
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
-		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI,
+		INST_COPY_2_PLAYER_PLUGIN_DIR | INST_CREATE_MLPLUGIN_INI | INST_CHECK_X64,
 		_T("iTunes"),
 		_T("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{81063354-9060-42B2-A000-1EBE96778AA9}\\InstallLocation"),
 		_T("iTunes\\"), _T("iTunes.exe"),
@@ -181,7 +184,7 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 	// The MiniLyrics plugin needn't to install to player folder.
 	{
 		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
-		INST_REG_DLL,
+		INST_REG_DLL | INST_W32_ONLY,
 		_T("Windows Media Player"),
 		NULL,
 		_T("Windows Media Player\\"), _T("wmplayer.exe"),
@@ -269,7 +272,43 @@ CPlayerPluginInstaller::Player		g_playersPlugin[] =
 		_T("InstAP"),
 		NULL,
 	},
+	{
+		ML_MAJOR_VERSION, ML_MINOR_VERSION, 0, AUTO_BUILD_NUM,
+		INST_REG_DLL | INST_X64_ONLY,
+		_T("Windows Media Player (x64)"),
+		NULL,
+		_T("Windows Media Player\\"), _T("wmplayer.exe"),
+		NULL,
+		_T("InstWMPlayer"),
+		_T("PluginWMPVis.dll;WMPLyrics.dll"),
+	},
 };
+
+int		COUNT_PLAYER_PLUGINS = CountOf(g_playersPlugin) - 1;
+
+BOOL IsWow64()
+{
+	typedef BOOL (WINAPI *LPFN_ISWOW64PROCESS) (HANDLE, PBOOL);
+
+	LPFN_ISWOW64PROCESS fnIsWow64Process;
+	BOOL bIsWow64 = FALSE;
+
+	//IsWow64Process is not available on all supported versions of Windows.
+	//Use GetModuleHandle to get a handle to the DLL that contains the function
+	//and GetProcAddress to get a pointer to the function if available.
+
+	fnIsWow64Process = (LPFN_ISWOW64PROCESS) GetProcAddress(
+		GetModuleHandle(TEXT("kernel32")),"IsWow64Process");
+
+	if (NULL != fnIsWow64Process) {
+		if (!fnIsWow64Process(GetCurrentProcess(),&bIsWow64))
+		{
+			//handle error
+		}
+	}
+
+	return bIsWow64;
+}
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -295,7 +334,7 @@ void UpdatePlayerPath(LPCTSTR szFile, DWORD dwProcessId)
 {
 	LPCTSTR	szFileName = FileGetName(szFile);
 
-	for (int i = 0; i < CountOf(g_playersPlugin); i++)
+	for (int i = 0; i < COUNT_PLAYER_PLUGINS; i++)
 	{
 		CPlayerPluginInstaller::Player &item = g_playersPlugin[i];
 		if (item.IsExeNameSame(szFileName))
@@ -310,7 +349,7 @@ void UpdatePlayerPath(LPCTSTR szFile, DWORD dwProcessId)
 
 bool UpdatePluginService(HWND hWndPluginService, DWORD dwProcessId)
 {
-	for (int i = 0; i < CountOf(g_playersPlugin); i++)
+	for (int i = 0; i < COUNT_PLAYER_PLUGINS; i++)
 	{
 		CPlayerPluginInstaller::Player &item = g_playersPlugin[i];
 		if (dwProcessId == item.pExtraInfo->dwProcessId)
@@ -331,10 +370,13 @@ static int __nInstance = 0;
 
 CPlayerPluginInstaller::CPlayerPluginInstaller(void)
 {
+	if (IsWow64())
+		COUNT_PLAYER_PLUGINS = CountOf(g_playersPlugin);
+
 	if (__nInstance == 0)
 	{
 		// Alloc pExtraInfo
-		for (int i = 0; i < CountOf(g_playersPlugin); i++)
+		for (int i = 0; i < COUNT_PLAYER_PLUGINS; i++)
 		{
 			Player &item = g_playersPlugin[i];
 			if (!item.pExtraInfo)
@@ -350,7 +392,7 @@ CPlayerPluginInstaller::~CPlayerPluginInstaller(void)
 	if (__nInstance == 0)
 	{
 		// Free pExtraInfo
-		for (int i = 0; i < CountOf(g_playersPlugin); i++)
+		for (int i = 0; i < COUNT_PLAYER_PLUGINS; i++)
 		{
 			if (g_playersPlugin[i].pExtraInfo)
 			{
@@ -372,6 +414,18 @@ tstring GetProgramFilesPath()
 	return szPath;
 }
 
+tstring GetProgramFilesPathX64()
+{
+	tstring		strPath = GetProgramFilesPath();
+
+	LPCTSTR p = _tcschr(strPath.c_str(), '(');
+	if (p != NULL)
+		strPath.resize((size_t)(p - strPath.c_str()));
+
+	TrimStr(strPath, ' ');
+	return strPath;
+}
+
 bool CPlayerPluginInstaller::Init()
 {
 	CProfile		profile;
@@ -380,7 +434,7 @@ bool CPlayerPluginInstaller::Init()
 
 	profile.Init(strFileInstCfg.c_str(), _T("INSTALL"));
 
-	for (int i = 0; i < CountOf(g_playersPlugin); i++)
+	for (int i = 0; i < COUNT_PLAYER_PLUGINS; i++)
 	{
 		Player &item = g_playersPlugin[i];
 
@@ -414,7 +468,7 @@ bool CPlayerPluginInstaller::Init()
 
 void CPlayerPluginInstaller::RefreshRunningPluginService()
 {
-	for (int i = 0; i < CountOf(g_playersPlugin); i++)
+	for (int i = 0; i < COUNT_PLAYER_PLUGINS; i++)
 	{
 		Player &item = g_playersPlugin[i];
 		item.pExtraInfo->hWndPluginService = NULL;
@@ -440,7 +494,7 @@ void CPlayerPluginInstaller::RefreshRunningPluginService()
 
 void CPlayerPluginInstaller::RefreshRunningPlayers()
 {
-	for (int i = 0; i < CountOf(g_playersPlugin); i++)
+	for (int i = 0; i < COUNT_PLAYER_PLUGINS; i++)
 	{
 		Player &item = g_playersPlugin[i];
 		item.pExtraInfo->dwProcessId = 0;
@@ -577,6 +631,16 @@ void CPlayerPluginInstaller::Player::DetectPlayerPath()
 	GetStringRangeList(szDefaultProgramFilesDir, listProgramDir);
 	for (ListString::iterator it = listProgramDir.begin(); it != listProgramDir.end(); ++it)
 	{
+		if (IsWow64() && !IsFlagSet(dwInstallFlags, INST_W32_ONLY)) {
+			pExtraInfo->strPlayerPath = DirStringJoint(GetProgramFilesPathX64().c_str(), (*it).c_str());
+			DirStringAddSlash(pExtraInfo->strPlayerPath);
+			if (IsDirExist(pExtraInfo->strPlayerPath.c_str()) && CheckPlayerInstalled(false))
+				return;
+
+			if (IsFlagSet(dwInstallFlags, INST_X64_ONLY))
+				return;
+		}
+
 		pExtraInfo->strPlayerPath = DirStringJoint(GetProgramFilesPath().c_str(), (*it).c_str());
 		DirStringAddSlash(pExtraInfo->strPlayerPath);
 		if (IsDirExist(pExtraInfo->strPlayerPath.c_str()) && CheckPlayerInstalled(false))
@@ -818,6 +882,13 @@ public:
 
 };
 
+bool IsX64Target(const tstring &strDirTarg) {
+	if (!IsWow64())
+		return false;
+
+	return _tcsstr(strDirTarg.c_str(), _T("(x86)")) == NULL;
+}
+
 template<class _Installer>
 int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 {
@@ -844,6 +915,9 @@ int Install(CPlayerPluginInstaller::Player &item, tstring &strErr)
 	{
 		// Plugin for players are saved in MiniLyrics "Player-Plugins" dir.
 		tstring		strFileSrc = DirStringJoint(GetAppResourceDir(), _T("Player-Plugins\\"));
+		if (IsFlagSet(item.dwInstallFlags, INST_CHECK_X64) && IsX64Target(strDirTarg) 
+			|| IsFlagSet(item.dwInstallFlags, INST_X64_ONLY))
+			strFileSrc += _T("x64\\");
 		strFileSrc += vFiles[i];
 #ifdef _DEBUG
 		if (!IsFileExist(strFileSrc.c_str()))
@@ -961,7 +1035,7 @@ bool CPlayerPluginInstaller::Uninstall(tstring &strErr)
 {
 	bool	bRet = true;
 
-	for (int i = 0; i < CountOf(g_playersPlugin); i++)
+	for (int i = 0; i < COUNT_PLAYER_PLUGINS; i++)
 	{
 		Player &item = g_playersPlugin[i];
 
@@ -977,7 +1051,7 @@ bool CPlayerPluginInstaller::Uninstall(tstring &strErr)
 
 CPlayerPluginInstaller::Player *CPlayerPluginInstaller::GetPlayerByIndex(int i)
 {
-	if (i < 0 || i >= CountOf(g_playersPlugin))
+	if (i < 0 || i >= COUNT_PLAYER_PLUGINS)
 		return NULL;
 
 	return g_playersPlugin + i;

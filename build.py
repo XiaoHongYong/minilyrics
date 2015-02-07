@@ -161,7 +161,8 @@ def buildMiniLyrics():
 		[ " MLyricsOutPluginG15\\MLyricsOutPluginG15.sln", "\"Release|Win32\"" ],
 		[ " PluginBsp\\PluginBsp.sln", "\"Release|Win32\"" ],
 		[ " PluginFoobar1.0\\PluginFoobar.sln", "\"Release|Win32\"" ],
-		[ " pluginiTunes\\pluginiTunes.sln", "\"Release|Win32\"" ],
+		[ " pluginiTunes\\pluginiTunes.sln", "\"Unicode Release|Win32\"" ],
+		[ " pluginiTunes\\pluginiTunes.sln", "\"Unicode Release|x64\"" ],
 		[ " PluginMJ\\PluginMJ.sln", "\"Release|Win32\"" ],
 		[ " PluginQCDPlayer\\QCDGeneral.sln", "\"Release|Win32\"" ],
 		# [ " PluginRealOne\\PluginRealOne.sln", "\"Release|Win32\"" ],
@@ -170,6 +171,8 @@ def buildMiniLyrics():
 		[ " PluginWinamp5\\PluginWinamp5.sln", "\"Release|Win32\"" ],
 		[ " PluginWMP\\PluginWMP.sln", "\"Release|Win32\"" ],
 		[ " PluginWMPVis\\PluginWMPVis.sln", "\"Release|Win32\"" ],
+		[ " PluginWMP\\PluginWMP.sln", "\"Release|x64\"" ],
+		[ " PluginWMPVis\\PluginWMPVis.sln", "\"Release|x64\"" ],
 		[ " PluginXMP\\PluginXMP.sln", "\"Release|Win32\"" ],
 		[ " PluginMusicBee\\PluginMusicBee.sln", "\"Release|Win32\"" ],
 		[ " MLEncrypt\\MLEncrypt.sln", "\"Release|Win32\"" ],
@@ -205,10 +208,6 @@ def buildMiniLyrics():
 	ExecuteOnErrQuit(r'Build\NSIS\makensis.exe /X"SetCompressor /FINAL /SOLID lzma" Install_ML\minilyrics.nsi')
 	signFile('Install_ML/MiniLyrics7.exe')
 
-	# make pack: MiniLyrics_rnl.exe
-	ExecuteOnErrQuit(r'Build\NSIS\makensis.exe /X"SetCompressor /FINAL /SOLID lzma" Install_ML\minilyrics_rnl.nsi')
-	signFile('Install_ML/MiniLyrics_data4me.exe')
-
 	ZipIncludeDir = ["",  "base", "gfx", "GfxLite", "GfxRaw", "id3lib", "ImageLib", 
 		"MiniLyrics", "mllib", "MLPlayerPluginAgentLib", "MLPluginLib", "MLProtocol",
 		"MLServer", "MLyricsOutPluginG15",
@@ -225,7 +224,6 @@ def buildMiniLyrics():
 
 	shutil.move(r"src.7z", PackReleaseDir)
 
-	shutil.copy(r"Install_ML\MiniLyrics_data4me.exe", PackReleaseDir)
 	shutil.copy(r"Install_ML\MiniLyrics7.exe", PackReleaseDir)
 	ExecuteOnErrQuit(ZipExe + " a -t7z " + PackReleaseDir + r"MiniLyrics-pdb.7z bin\release\MiniLyrics.pdb")
 	shutil.copy(r"Install_ML\readme-MiniLyrics.txt", PackReleaseDir + "MiniLyrics-" + version + ".txt")

@@ -27,8 +27,6 @@
 
 \*****************************************************************************************/
 
-#define ML_MSG_VERSION			0xF20F4E57
-
 #define R_UNDETERMINED			(-1)
 
 #ifndef _WIN32
@@ -38,6 +36,13 @@ typedef TCHAR		MLCHAR;
 typedef WCHAR		MLCHAR;
 #endif
 
+#ifdef _WIN64
+#define ML_MSG_VERSION			0xfffffffff20f4e57
+typedef DWORD					WND_HANDLE;
+#else
+#define ML_MSG_VERSION			0xF20F4E57
+typedef HWND					WND_HANDLE;
+#endif
 
 enum MessageToML
 {
@@ -104,7 +109,7 @@ struct PlayerSkinInfo
 	bool		bClrThemeValid;
 	MLCHAR		skinPath[MAX_PATH];
 	COLORREF	clrFontHighlight, clrFontLowlight, clrBackground, clrCurLineBg;
-	HWND		hWndToAttach;
+	WND_HANDLE	hWndToAttach;
 #endif
 };
 
@@ -130,8 +135,8 @@ struct PlayerInfo
 {
 	DWORD						startupFlags;	// Combination of MLStarupFlags
 #ifdef _WIN32
-	HWND						hWndPlayer;		// The main window of player
-	HWND						hWndPluginService;	// The service window of the player plugin
+	WND_HANDLE					hWndPlayer;		// The main window of player
+	WND_HANDLE					hWndPluginService;	// The service window of the player plugin
 #endif
 	MLCHAR						playerName[LEN_SHORT_STR];
 	MLCHAR						embeddedSkinName[LEN_SHORT_STR];
@@ -151,7 +156,7 @@ enum PLAYER_STATE
 struct MLMediaInfo
 {
 	DWORD			size;		// size of this struct
-	unsigned long	mediaLength;		// in ms, 0 means unknown
+	DWORD			mediaLength;		// in ms, 0 means unknown
 	WORD			offsetArtist, offsetAlbum, offsetTitle, offsetMediaUrl;
 	short			hasVideo;	// Is video media? 1, has; 0, has not; -1, undeterminted.
 	MLCHAR			mediaInfo[1];
@@ -166,7 +171,7 @@ struct MLMediaInfo
 #ifdef _WIN32
 struct WndCloseToML
 {
-	HWND		hWndCloseTo;
+	WND_HANDLE	hWndCloseTo;
 	MLCHAR		wndName[LEN_SHORT_STR];
 	MLCHAR		className[LEN_SHORT_STR];
 };
@@ -178,7 +183,7 @@ struct WndCloseToML
 struct MLInfo
 {
 #ifdef _WIN32
-	HWND				hWndMLService;
+	WND_HANDLE			hWndMLService;
 #endif
 };
 

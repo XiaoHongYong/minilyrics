@@ -1,3 +1,7 @@
+MiniLyrics 7.6.46 for Windows
+Fixed: Support 64 bit of iTunes.
+Fixed: Support 64 bit of Windows Media Player.
+
 MiniLyrics 7.6.42 for Windows
 Fixed: Compatibility problem with Windows Media Player on Windows 8.
 Fixed: The encoding of lyrics is saved incorrect.

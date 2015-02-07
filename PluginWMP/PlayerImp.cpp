@@ -22,7 +22,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = FindWindow("WMPlayerApp", NULL);
+	playerInfo.hWndPlayer = (WND_HANDLE)FindWindow(_T("WMPlayerApp"), NULL);
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
 }
@@ -234,7 +234,7 @@ void CPlayerImp::OnTimer(int nTimerID)
 
 void WmpPluginInit(HINSTANCE hInstance)
 {
-	RunMiniLyrics(hInstance, FindWindow("WMPlayerApp", NULL),
+	RunMiniLyrics(hInstance, FindWindow(_T("WMPlayerApp"), NULL),
 		&g_Player);
 }
 

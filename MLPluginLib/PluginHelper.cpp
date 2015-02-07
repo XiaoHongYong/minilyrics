@@ -25,13 +25,13 @@ int Utf8ToUCS2(const char* text, int length, WCHAR *ucs2, int ubuflen)
 	return MbcsToWideChar(text, length, ucs2, ubuflen, CP_UTF8);
 }
 
-BOOL GetProgramPath(char szPath[], HINSTANCE hInstance)
+BOOL GetProgramPath(TCHAR szPath[], HINSTANCE hInstance)
 {
 	__try
 	{
 		int nLen;
 
-		nLen = GetModuleFileNameA(hInstance, szPath, MAX_PATH);
+		nLen = GetModuleFileName(hInstance, szPath, MAX_PATH);
 		nLen --;
 		while (nLen >= 0 && szPath[nLen] != '\\')
 			nLen --;
@@ -49,16 +49,16 @@ BOOL GetProgramPath(char szPath[], HINSTANCE hInstance)
 }
 
 BOOL WritePrivateProfileInt(
-							LPCSTR lpAppName,  // section name
-							LPCSTR lpKeyName,  // key name
+							LPCTSTR lpAppName,  // section name
+							LPCTSTR lpKeyName,  // key name
 							int nValue,			// int to add
-							LPCSTR lpFileName  // initialization file
+							LPCTSTR lpFileName  // initialization file
 							)
 {
-	char	szBuffer[16];
+	TCHAR	szBuffer[16];
 
-	wsprintfA(szBuffer, "%d", nValue);
-	return WritePrivateProfileStringA(lpAppName, lpKeyName, szBuffer, lpFileName);
+	wsprintf(szBuffer, _T("%d"), nValue);
+	return WritePrivateProfileString(lpAppName, lpKeyName, szBuffer, lpFileName);
 }
 
 int RegGetProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nDefault)
@@ -118,10 +118,25 @@ char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource)
 	return(strDestination);
 }
 
-char *strcat_safe(char * dst, size_t Size, const char * src)
+WCHAR *strcpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource)
 {
-	char * cp = dst;
-	char * endcp = dst + Size - 1;
+	WCHAR	*cp = strDestination;
+	WCHAR	*cpEnd = strDestination + nLenMax - 1;
+
+	for (; cp < cpEnd && *strSource; cp++, strSource++)
+	{
+		*cp = *strSource;
+	}
+
+	*cp = '\0';
+
+	return(strDestination);
+}
+
+TCHAR *strcat_safe(TCHAR * dst, size_t Size, const TCHAR * src)
+{
+	TCHAR * cp = dst;
+	TCHAR * endcp = dst + Size - 1;
 
 	while( *cp )
 		cp++;                   /* find end of dst */
@@ -203,9 +218,9 @@ string UrlGetTitle(LPCSTR szFile)
 		szBeg++;
 
 	if (szEnd == NULL || szBeg > szEnd)
-		nLen = szFile - szBeg + strlen(szFile);
+		nLen = (int)(szFile - szBeg + strlen(szFile));
 	else
-		nLen = szEnd - szBeg;
+		nLen = (int)(szEnd - szBeg);
 
 	strFileTitle.append(szBeg, nLen);
 
@@ -231,9 +246,9 @@ wstring UrlGetTitle(LPCWSTR szFile)
 		szBeg++;
 
 	if (szEnd == NULL || szBeg > szEnd)
-		nLen = szFile - szBeg + wcslen(szFile);
+		nLen = (int)(szFile - szBeg + wcslen(szFile));
 	else
-		nLen = szEnd - szBeg;
+		nLen = (int)(szEnd - szBeg);
 
 	strFileTitle.append(szBeg, nLen);
 
@@ -254,16 +269,16 @@ LPCSTR UrlGetName(LPCSTR szFile)
 		return szFile;
 }
 
-bool IsFileExist(LPCSTR szFileName)
+bool IsFileExist(LPCTSTR szFileName)
 {
-	return (GetFileAttributesA(szFileName) != -1);
+	return (GetFileAttributes(szFileName) != -1);
 }
 
-void DirStringFormat(LPSTR	szDir)
+void DirStringFormat(LPTSTR	szDir)
 {
-	int		nLen;
+	size_t		nLen;
 
-	nLen = strlen(szDir);
+	nLen = _tcslen(szDir);
 	if (nLen > 0)
 	{
 		if (szDir[nLen - 1] != '\\')

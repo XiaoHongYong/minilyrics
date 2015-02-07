@@ -258,6 +258,11 @@ SectionIn RO
   File forSongbird\sbMLSongbird.dll
   File forSongbird\sbMLSongbird.xpt
 
+  SetOutPath $INSTDIR\Player-Plugins\x64
+  File ..\bin\release\x64\iTunesMiniLyrics.dll
+  File ..\bin\release\x64\WMPLyrics.dll
+  File ..\bin\release\x64\PluginWMPVis.dll
+  
   SetOutPath $INSTDIR\ml-winamp2-skin
   File Share\ml-winamp2-skin\*.*
 
