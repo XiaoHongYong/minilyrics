@@ -161,8 +161,8 @@ def buildMiniLyrics():
 		[ " MLyricsOutPluginG15\\MLyricsOutPluginG15.sln", "\"Release|Win32\"" ],
 		[ " PluginBsp\\PluginBsp.sln", "\"Release|Win32\"" ],
 		[ " PluginFoobar1.0\\PluginFoobar.sln", "\"Release|Win32\"" ],
-		[ " pluginiTunes\\pluginiTunes.sln", "\"Release|Win32\"" ],
-		[ " pluginiTunes\\pluginiTunes.sln", "\"Release|x64\"" ],
+		[ " pluginiTunes\\pluginiTunes.sln", "\"Unicode Release|Win32\"" ],
+		[ " pluginiTunes\\pluginiTunes.sln", "\"Unicode Release|x64\"" ],
 		[ " PluginMJ\\PluginMJ.sln", "\"Release|Win32\"" ],
 		[ " PluginQCDPlayer\\QCDGeneral.sln", "\"Release|Win32\"" ],
 		# [ " PluginRealOne\\PluginRealOne.sln", "\"Release|Win32\"" ],
@@ -205,10 +205,6 @@ def buildMiniLyrics():
 	# make pack: MiniLyrics7.exe
 	ExecuteOnErrQuit(r'Build\NSIS\makensis.exe /X"SetCompressor /FINAL /SOLID lzma" Install_ML\minilyrics.nsi')
 	signFile('Install_ML/MiniLyrics7.exe')
-
-	# make pack: MiniLyrics_rnl.exe
-	ExecuteOnErrQuit(r'Build\NSIS\makensis.exe /X"SetCompressor /FINAL /SOLID lzma" Install_ML\minilyrics_rnl.nsi')
-	signFile('Install_ML/MiniLyrics_data4me.exe')
 
 	ZipIncludeDir = ["",  "base", "gfx", "GfxLite", "GfxRaw", "id3lib", "ImageLib", 
 		"MiniLyrics", "mllib", "MLPlayerPluginAgentLib", "MLPluginLib", "MLProtocol",

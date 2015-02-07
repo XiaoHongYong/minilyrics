@@ -27,8 +27,8 @@ BOOL WritePrivateProfileInt(
 							int nValue,			// int to add
 							LPCTSTR lpFileName  // initialization file
 							);
-
-TCHAR *strcpy_safe(TCHAR *strDestination, size_t nLenMax, const TCHAR *strSource);
+WCHAR *strcpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource);
+char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource);
 TCHAR *strcat_safe(TCHAR * dst, size_t Size, const TCHAR * src);
 
 size_t	wcsncpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource, size_t nToCopy);

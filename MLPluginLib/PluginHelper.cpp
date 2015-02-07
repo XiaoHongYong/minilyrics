@@ -103,10 +103,25 @@ BOOL RegWriteProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nVa
 
 #define SZ_REG_MINILYRICS		"SOFTWARE\\MiniLyrics"
 
-TCHAR *strcpy_safe(TCHAR *strDestination, size_t nLenMax, const TCHAR *strSource)
+char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource)
 {
-	TCHAR	*cp = strDestination;
-	TCHAR	*cpEnd = strDestination + nLenMax - 1;
+	char	*cp = strDestination;
+	char	*cpEnd = strDestination + nLenMax - 1;
+
+	for (; cp < cpEnd && *strSource; cp++, strSource++)
+	{
+		*cp = *strSource;
+	}
+
+	*cp = '\0';
+
+	return(strDestination);
+}
+
+WCHAR *strcpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource)
+{
+	WCHAR	*cp = strDestination;
+	WCHAR	*cpEnd = strDestination + nLenMax - 1;
 
 	for (; cp < cpEnd && *strSource; cp++, strSource++)
 	{

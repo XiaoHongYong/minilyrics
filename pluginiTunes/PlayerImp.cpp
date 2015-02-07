@@ -161,16 +161,16 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	playerInfo.hWndPlayer = (WND_HANDLE)g_hWndPlayer;
 	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
-	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), _T("Embedded into iTunes Visual Area"));
+	wcscpy_safe(playerInfo.embeddedSkinName, CountOf(playerInfo.embeddedSkinName), L"Embedded into iTunes Visual Area");
 
-	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), _T("iTunes"));
+	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"iTunes");
 }
 
 void CPlayerImp::OnConnected()
 {
 	m_bWorking = true;
 
-	g_MLService.AddWndCloseto(NULL, _T("iTunes"), _T("iTunes"));
+	g_MLService.AddWndCloseto(NULL, L"iTunes", L"iTunes");
 
 	SetTimer(TIMER_GETPOS, TIME_OUT_UPDATE_POS);
 	if (g_hWndPlayer == NULL)
