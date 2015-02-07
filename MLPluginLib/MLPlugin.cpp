@@ -68,8 +68,14 @@ BOOL RunMiniLyrics(HINSTANCE hInst, HWND hWndPlayer, CPlayerServiceBase *pPlayer
 				strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), _T("..\\MiniLyrics.exe"));
 				if (!IsFileExist(szMiniLyricsExe))
 				{
-					strcpy_safe(szMsg, CountOf(szMsg), _T("Can't find MiniLyrics.exe, Please reinstall MiniLyrics."));
-					goto INIT_FAILED;
+					// Is MiniLyrics in x64 directory?
+					GetProgramPath(szMiniLyricsExe, g_hInstance);
+					strcat_safe(szMiniLyricsExe, CountOf(szMiniLyricsExe), _T("..\\..\\MiniLyrics.exe"));
+					if (!IsFileExist(szMiniLyricsExe))
+					{
+						strcpy_safe(szMsg, CountOf(szMsg), _T("Can't find MiniLyrics.exe, Please reinstall MiniLyrics."));
+						goto INIT_FAILED;
+					}
 				}
 			}
 		}

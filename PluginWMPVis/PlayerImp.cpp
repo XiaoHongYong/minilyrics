@@ -22,7 +22,7 @@ void CPlayerImp::OnGetInfo(PlayerInfo &playerInfo)
 	//
 	// Initialize player information for MiniLyrics
 	//
-	playerInfo.hWndPlayer = FindWindow("WMPlayerApp", NULL);
+	playerInfo.hWndPlayer = (WND_HANDLE)FindWindow(_T("WMPlayerApp"), NULL);
 	playerInfo.startupFlags |= ML_SUPPORT_EMBEDDED | ML_EMBEDDED_WND_IMMOVABLE;
 
 	wcscpy_safe(playerInfo.playerName, CountOf(playerInfo.playerName), L"Windows Media Player");
@@ -111,7 +111,7 @@ void CPlayerImp::SwitchToEmbeddedSkin()
 	memset(&skinInfo, 0, sizeof(skinInfo));
 	skinInfo.bEmbeddedSkin = true;
 	skinInfo.bClrThemeValid = false;
-	skinInfo.hWndToAttach = m_hWndVis;
+	skinInfo.hWndToAttach = (WND_HANDLE)m_hWndVis;
 
 	g_MLService.SwitchToEmbeddedSkin(skinInfo);
 }
@@ -253,7 +253,7 @@ void CPlayerImp::OnTimer(int nTimerID)
 
 void WmpPluginInit(HINSTANCE hInstance)
 {
-	RunMiniLyrics(hInstance, FindWindow("WMPlayerApp", NULL),
+	RunMiniLyrics(hInstance, FindWindow(_T("WMPlayerApp"), NULL),
 		&g_Player);
 }
 
