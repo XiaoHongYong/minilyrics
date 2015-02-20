@@ -7,6 +7,7 @@
 #include "JetAudio\JetAudioPlayerService.h"
 #include "Zune\ZunePlayerService.h"
 #include "Spotify\SpotifyPlayerService.h"
+#include "AIMP3\Aimp3PlayerService.h"
 
 CMLService		g_MLService;
 
@@ -18,6 +19,7 @@ void RegisteredPlayerPluginAgent(VecPlayerPluginAgent &vAgent)
 	vAgent.push_back(new JetAudioAgent::CPlayerPluginAgent());
 	vAgent.push_back(new ZuneAgent::CPlayerPluginAgent());
 	vAgent.push_back(new SpotifyAgent::CPlayerPluginAgent());
+	vAgent.push_back(new Aimp3Agent::CPlayerPluginAgent());
 }
 
 int MbcsToWideChar(const char *str, int nLen, WCHAR *strOut, int nOut, int nCodePage)

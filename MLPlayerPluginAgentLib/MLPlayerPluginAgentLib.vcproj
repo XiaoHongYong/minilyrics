@@ -301,6 +301,22 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="AIMP3"
+			>
+			<File
+				RelativePath=".\AIMP3\Aimp3PlayerService.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\AIMP3\Aimp3PlayerService.h"
+				>
+			</File>
+			<File
+				RelativePath=".\AIMP3\apiRemote.h"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\ReadMe.txt"
 			>
