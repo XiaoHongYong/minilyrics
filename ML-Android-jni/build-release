@@ -1,6 +1,6 @@
 ndk-build NDK_DEBUG=0
-rm -r "/Users/showbrave/Projects/ml_android/ZikiPlayer/libs/armeabi"
-rm -r "/Users/showbrave/Projects/ml_android/ZikiPlayer/libs/armeabi-v7a"
-rm -r "/Users/showbrave/Projects/ml_android/ZikiPlayer/libs/x86"
-rm -r "/Users/showbrave/Projects/ml_android/ZikiPlayer/libs/mips"
-cp -R /Users/showbrave/Projects/zikiplayer/ML-Android-jni/libs /Users/showbrave/Projects/ml_android/ZikiPlayer/
+rm -r "../../ml_android/ZikiPlayer/libs/armeabi"
+rm -r "../../ml_android/ZikiPlayer/libs/armeabi-v7a"
+rm -r "../../ml_android/ZikiPlayer/libs/x86"
+rm -r "../../ml_android/ZikiPlayer/libs/mips"
+cp -R ../../zikiplayer/ML-Android-jni/libs ../../ml_android/ZikiPlayer/

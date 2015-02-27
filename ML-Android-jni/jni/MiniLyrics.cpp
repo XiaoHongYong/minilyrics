@@ -209,8 +209,8 @@ void CheckSignature(JNIEnv* env, jobject ctx)
 
 	DBGLOG1("CheckSignature: %s", digest);
 
-	// Debug E49DAE24298406259C2A261A5A756BDE
-	LPCTSTR DIG_DEBUG = "E49DAE24298406259C2A261A5A756BDE";
+	// Debug 12d7100f0c5bfbe232fdbfd2e227e947
+	LPCTSTR DIG_DEBUG = "12d7100f0c5bfbe232fdbfd2e227e947";
 	LPCTSTR DIG_RELEASE = "39f092cb05976e1ab3d526e92d2eea81";
 
 	if (_tcsicmp(digest, DIG_DEBUG) == 0 || _tcsicmp(digest, DIG_RELEASE) == 0)
