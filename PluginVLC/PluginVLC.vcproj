@@ -238,11 +238,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_addons.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_aout.h"
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_aout_volume.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_arrays.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_atomic.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_avcodec.h"
 				>
 			</File>
 			<File
@@ -290,11 +306,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_cpu.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_demux.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\vlc_devices.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_dialog.h"
 				>
 			</File>
 			<File
@@ -314,7 +338,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_extensions.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_filter.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_fingerprinter.h"
 				>
 			</File>
 			<File
@@ -322,7 +354,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_fourcc.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_fs.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_gcrypt.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_http.h"
 				>
 			</File>
 			<File
@@ -334,7 +378,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_inhibit.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_input.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_input_item.h"
 				>
 			</File>
 			<File
@@ -362,6 +414,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_media_library.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_memory.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_messages.h"
 				>
 			</File>
@@ -370,7 +430,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_meta_fetcher.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_mime.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_modules.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_mouse.h"
 				>
 			</File>
 			<File
@@ -386,6 +458,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_opengl.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_osd.h"
 				>
 			</File>
@@ -394,11 +470,27 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_picture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_picture_fifo.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_picture_pool.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_playlist.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\vlc_plugin.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_probe.h"
 				>
 			</File>
 			<File
@@ -414,11 +506,23 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_spu.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_stream.h"
 				>
 			</File>
 			<File
 				RelativePath=".\include\vlc_strings.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_subpicture.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_text_style.h"
 				>
 			</File>
 			<File
@@ -442,6 +546,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_video_splitter.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_vlm.h"
 				>
 			</File>
@@ -454,7 +562,31 @@
 				>
 			</File>
 			<File
+				RelativePath=".\include\vlc_vout_display.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_vout_osd.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_vout_window.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_vout_wrapper.h"
+				>
+			</File>
+			<File
 				RelativePath=".\include\vlc_window.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_windows_interfaces.h"
+				>
+			</File>
+			<File
+				RelativePath=".\include\vlc_xlib.h"
 				>
 			</File>
 			<File

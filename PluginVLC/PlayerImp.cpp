@@ -445,7 +445,7 @@ void Close(vlc_object_t * p_this)
 {
 	ENTER_METHOD("Close");
 	intf_thread_t *p_intf = (intf_thread_t *)p_this;
-	playlist_t *p_playlist = pl_Get(p_this);
+	playlist_t *p_playlist = pl_Get(p_intf);
 	input_thread_t              *p_input;
 
 	var_DelCallback( p_playlist, "item-change", ItemChange, p_intf );
