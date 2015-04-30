@@ -2054,7 +2054,7 @@ void CLyricShowObj::LoadNextBgImage()
 		return;
 	}
 
-	if (!m_curAlbumArt.IsLoaded())
+	if (m_bUseAlbumArtAsBg && !m_curAlbumArt.IsLoaded())
 	{
 		m_curAlbumArt.Load();
 		m_nNextPic = 0;

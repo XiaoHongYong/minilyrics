@@ -81,7 +81,7 @@ static void *AVSPPlayerRateContext = &AVSPPlayerRateContext;
 {
 	if (context == AVSPPlayerItemStatusContext)
 	{
-		AVPlayerStatus status = [[change objectForKey:NSKeyValueChangeNewKey] integerValue];
+		AVPlayerStatus status = (AVPlayerStatus)[[change objectForKey:NSKeyValueChangeNewKey] integerValue];
 		BOOL enable = NO;
 		switch (status)
 		{

@@ -188,7 +188,8 @@ PRAW_IMAGE_DATA LoadRawImageDataFromJpgFile(IILIO *io)
 	* with the stdio data source.
 	*/
 
-	//<DP> Step 7A: Swap red and blue components */ 
+	//<DP> Step 7A: Swap red and blue components */
+#ifndef _MAC_OSX
 	if ((cinfo.num_components==3)&&(cinfo.quantize_colors==FALSE)){
 		BYTE *r,*b,t,*r0;
 		JDIMENSION x,y;
@@ -205,6 +206,7 @@ PRAW_IMAGE_DATA LoadRawImageDataFromJpgFile(IILIO *io)
 			r0+=imgData->stride;
 		}
 	} //</DP>
+#endif
 
 #if CXIMAGEJPG_SUPPORT_EXIF
 	CxExifInfo info(&m_exifinfo);
