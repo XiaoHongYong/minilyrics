@@ -18,7 +18,7 @@ void RegisteredPlayerPluginAgent(VecPlayerPluginAgent &vAgent)
 	vAgent.push_back(new HMMAgent::CPlayerPluginAgent());
 	vAgent.push_back(new JetAudioAgent::CPlayerPluginAgent());
 	vAgent.push_back(new ZuneAgent::CPlayerPluginAgent());
-	vAgent.push_back(new SpotifyAgent::CPlayerPluginAgent());
+	// vAgent.push_back(new SpotifyAgent::CPlayerPluginAgent());
 	vAgent.push_back(new Aimp3Agent::CPlayerPluginAgent());
 }
 

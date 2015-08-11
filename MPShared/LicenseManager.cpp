@@ -80,8 +80,13 @@ tstring CreateDeviceID()
 
 CLicenseManager::CLicenseManager(void)
 {
-	m_bOnlineVerified = false;
+#if FREE_LICENSE_ENABLED == 1
+	m_licenseStatus = LS_ACTIVE;
+	m_bOnlineVerified = true;
+#else
 	m_licenseStatus = LS_TRIAL;
+	m_bOnlineVerified = false;
+#endif
 }
 
 CLicenseManager::~CLicenseManager(void)
@@ -94,6 +99,7 @@ void CLicenseManager::Init()
 	tstring strCode = g_Profile.EncryptGetString(SZ_REGCODE, _T(""));
 	tstring strCodeInvalid = g_Profile.EncryptGetString(SZ_INVALID_RC, _T(""));
 
+#if FREE_LICENSE_ENABLED != 1
 	if (strCode.size() > 0 && _tcscmp(strCodeInvalid.c_str(), strCode.c_str()) == 0)
 	{
 		m_licenseStatus = LS_REVOKED;
@@ -105,6 +111,7 @@ void CLicenseManager::Init()
 
 	m_bOnlineVerified = Tobool(g_Profile.EncryptGetInt(SZ_ONLINE_VERIFYIED, false));
 	m_licenseStatus = (LicenseStatus)g_Profile.EncryptGetInt(SZ_LICENSE_STATUS, LS_ACTIVE);
+#endif
 }
 
 void CLicenseManager::GetLicenseInfo(LicenseInfo &info)
@@ -120,6 +127,7 @@ void CLicenseManager::GetLicenseInfo(LicenseInfo &info)
 	if (info.strDeviceID.empty())
 		info.strDeviceID = CreateDeviceID();
 
+#if FREE_LICENSE_ENABLED != 1
 	// Verify license start and end date.
 	CBaseDate dateStart;
 	if (dateStart.FromString(info.strStartDate.c_str()) && info.nDurationDays > 0)
@@ -137,6 +145,7 @@ void CLicenseManager::GetLicenseInfo(LicenseInfo &info)
 		dateExpire.FromTime(timeExpire);
 		info.strExpireDate = dateExpire.ToUtcDateString();
 	}
+#endif
 }
 
 tstring CLicenseManager::GetLicenseCode()
@@ -146,6 +155,7 @@ tstring CLicenseManager::GetLicenseCode()
 
 int CLicenseManager::SaveActivateResult(const MLMsgRetActivateLicense &retActivation)
 {
+#if FREE_LICENSE_ENABLED != 1
 	if (retActivation.licenseStatus == LS_UNKNOWN)
 		return ERR_FALSE;
 
@@ -159,6 +169,7 @@ int CLicenseManager::SaveActivateResult(const MLMsgRetActivateLicense &retActiva
 	g_Profile.EncryptWriteInt(SZ_ONLINE_VERIFYIED, true);
 
 	CMPlayerApp::GetEventsDispatcher()->DispatchUnsyncEvent(ET_LICENSE_CHANGED);
+#endif
 
 	return ERR_OK;
 }

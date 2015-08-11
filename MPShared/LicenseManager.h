@@ -1,5 +1,7 @@
 #pragma once
 
+#define FREE_LICENSE_ENABLED		1
+
 class CLicenseManager
 {
 public:
