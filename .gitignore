@@ -23,3 +23,8 @@ x64
 *.ilk
 *.pdb
 /temp/
+build
+*.db
+*.settings
+PythonProjects/LyricsInetSearch/config/
+PythonProjects/MLServerTools/AppAnalyticsReport/
