@@ -4,6 +4,7 @@
 *.suo
 *.pyc
 *.xcuserdatad
+*.tmp
 Release
 Output
 /PythonProjects/Lyrics/
