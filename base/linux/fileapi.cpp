@@ -100,7 +100,7 @@ bool CreateDirectory(LPCSTR lpPathName)
 	return n == 0;
 }
 
-#ifdef _LINUX
+#ifdef _LINUX_GTK2
 #include <copyfile.h>
 
 bool CopyFile(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName, BOOL bFailIfExists)

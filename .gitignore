@@ -1,3 +1,5 @@
+bin/Log/
+.vscode
 .DS_Store
 *.user
 *.ncb
@@ -5,6 +7,7 @@
 *.pyc
 *.xcuserdatad
 *.tmp
+*.zip
 Release
 Output
 /PythonProjects/Lyrics/
@@ -30,3 +33,17 @@ build
 *.settings
 PythonProjects/LyricsInetSearch/config/
 PythonProjects/MLServerTools/AppAnalyticsReport/
+*.obj
+*.lib
+BuildLog.htm
+*.pch
+*.idb
+project.xcworkspace
+bin/MLServer*
+obj
+/MLServerNgx/lib/
+/MLServerNgx/product/database
+/MLServerNgx/product/nginx
+/MLServerNgx/third-parties/
+/MLServerNgx/test-for-mac/
+/ML-Protocol-Lua-Lib/

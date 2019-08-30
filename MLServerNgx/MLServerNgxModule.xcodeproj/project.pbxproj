@@ -1,0 +1,777 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0E887BA42313985500D5B7BF /* libBaseMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E887B962313981700D5B7BF /* libBaseMac.a */; };
+		0E887BA52313985500D5B7BF /* libMLProtocolMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E887BA22313983900D5B7BF /* libMLProtocolMac.a */; };
+		0E887BA62313985500D5B7BF /* libUtilsMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E887B9C2313982A00D5B7BF /* libUtilsMac.a */; };
+		0E887C342313E97500D5B7BF /* ngx_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E887C322313E97500D5B7BF /* ngx_utils.c */; };
+		0E887C352313E97500D5B7BF /* mlserver_module.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E887C332313E97500D5B7BF /* mlserver_module.c */; };
+		0E887C8F23143C2C00D5B7BF /* libBaseMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E887B962313981700D5B7BF /* libBaseMac.a */; };
+		0E887C9023143C2C00D5B7BF /* libMLProtocolMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E887BA22313983900D5B7BF /* libMLProtocolMac.a */; };
+		0E887C9123143C2C00D5B7BF /* libUtilsMac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E887B9C2313982A00D5B7BF /* libUtilsMac.a */; };
+		0E887C9223143C3400D5B7BF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E887C6A23141CD100D5B7BF /* Foundation.framework */; };
+		0E887C9323143C3C00D5B7BF /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E887C6E23141D6200D5B7BF /* AppKit.framework */; };
+		0E887CA723143EA000D5B7BF /* ngx_utils.h in Sources */ = {isa = PBXBuildFile; fileRef = 0E887C302313E97500D5B7BF /* ngx_utils.h */; };
+		0E887CA823143EA000D5B7BF /* ngx_utils.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E887C322313E97500D5B7BF /* ngx_utils.c */; };
+		0E887CA923143EA000D5B7BF /* mlserver_module.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E887C332313E97500D5B7BF /* mlserver_module.c */; };
+		0E887CE02314D01300D5B7BF /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CDF2314D01300D5B7BF /* sqlite3.c */; };
+		0E887CE12314D04600D5B7BF /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CDF2314D01300D5B7BF /* sqlite3.c */; };
+		0E887CE22314D04600D5B7BF /* sqlite3.h in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CDE2314D01300D5B7BF /* sqlite3.h */; };
+		0E887CE32314D04600D5B7BF /* sqlite3ext.h in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CDD2314D01300D5B7BF /* sqlite3ext.h */; };
+		0E887D0D2315945900D5B7BF /* StdAfx.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CF12315945700D5B7BF /* StdAfx.h */; };
+		0E887D0E2315945900D5B7BF /* Sqlite3Utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CF22315945800D5B7BF /* Sqlite3Utils.h */; };
+		0E887D0F2315945900D5B7BF /* DBUser.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CF32315945800D5B7BF /* DBUser.h */; };
+		0E887D102315945900D5B7BF /* nginx_types.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CF42315945800D5B7BF /* nginx_types.h */; };
+		0E887D112315945900D5B7BF /* LyricsDBMgr.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CF52315945800D5B7BF /* LyricsDBMgr.h */; };
+		0E887D122315945900D5B7BF /* MLHelperFun.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CF62315945800D5B7BF /* MLHelperFun.h */; };
+		0E887D132315945900D5B7BF /* MLIDEncrypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CF72315945800D5B7BF /* MLIDEncrypt.cpp */; };
+		0E887D142315945900D5B7BF /* MLIDEncrypt.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CF72315945800D5B7BF /* MLIDEncrypt.cpp */; };
+		0E887D152315945900D5B7BF /* MLServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CF82315945800D5B7BF /* MLServer.cpp */; };
+		0E887D162315945900D5B7BF /* MLServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CF82315945800D5B7BF /* MLServer.cpp */; };
+		0E887D172315945900D5B7BF /* NgxBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CF92315945800D5B7BF /* NgxBuffer.h */; };
+		0E887D182315945900D5B7BF /* LyricsUpdateMgr.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CFA2315945800D5B7BF /* LyricsUpdateMgr.h */; };
+		0E887D192315945900D5B7BF /* LyricsInfoFiles.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CFB2315945800D5B7BF /* LyricsInfoFiles.h */; };
+		0E887D1A2315945900D5B7BF /* NgxOutputStream.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887CFC2315945800D5B7BF /* NgxOutputStream.h */; };
+		0E887D1B2315945900D5B7BF /* LyricsDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CFD2315945800D5B7BF /* LyricsDB.cpp */; };
+		0E887D1C2315945900D5B7BF /* LyricsDB.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CFD2315945800D5B7BF /* LyricsDB.cpp */; };
+		0E887D1D2315945900D5B7BF /* DBUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CFE2315945800D5B7BF /* DBUser.cpp */; };
+		0E887D1E2315945900D5B7BF /* DBUser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CFE2315945800D5B7BF /* DBUser.cpp */; };
+		0E887D1F2315945900D5B7BF /* mlserver_4_ngx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CFF2315945800D5B7BF /* mlserver_4_ngx.cpp */; };
+		0E887D202315945900D5B7BF /* mlserver_4_ngx.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887CFF2315945800D5B7BF /* mlserver_4_ngx.cpp */; };
+		0E887D212315945900D5B7BF /* LyricsDBMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D002315945800D5B7BF /* LyricsDBMgr.cpp */; };
+		0E887D222315945900D5B7BF /* LyricsDBMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D002315945800D5B7BF /* LyricsDBMgr.cpp */; };
+		0E887D232315945900D5B7BF /* MLHelperFun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D012315945800D5B7BF /* MLHelperFun.cpp */; };
+		0E887D242315945900D5B7BF /* MLHelperFun.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D012315945800D5B7BF /* MLHelperFun.cpp */; };
+		0E887D252315945900D5B7BF /* NgxBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D022315945800D5B7BF /* NgxBuffer.cpp */; };
+		0E887D262315945900D5B7BF /* NgxBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D022315945800D5B7BF /* NgxBuffer.cpp */; };
+		0E887D272315945900D5B7BF /* MLServer.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887D032315945900D5B7BF /* MLServer.h */; };
+		0E887D282315945900D5B7BF /* LyricsInfoFiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D042315945900D5B7BF /* LyricsInfoFiles.cpp */; };
+		0E887D292315945900D5B7BF /* LyricsInfoFiles.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D042315945900D5B7BF /* LyricsInfoFiles.cpp */; };
+		0E887D2A2315945900D5B7BF /* MLIDEncrypt.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887D052315945900D5B7BF /* MLIDEncrypt.h */; };
+		0E887D2C2315945900D5B7BF /* mlserver_4_ngx.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887D072315945900D5B7BF /* mlserver_4_ngx.h */; };
+		0E887D2D2315945900D5B7BF /* LyricsUpdateMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D082315945900D5B7BF /* LyricsUpdateMgr.cpp */; };
+		0E887D2E2315945900D5B7BF /* LyricsUpdateMgr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D082315945900D5B7BF /* LyricsUpdateMgr.cpp */; };
+		0E887D2F2315945900D5B7BF /* NgxOutputStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D092315945900D5B7BF /* NgxOutputStream.cpp */; };
+		0E887D302315945900D5B7BF /* NgxOutputStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D092315945900D5B7BF /* NgxOutputStream.cpp */; };
+		0E887D312315945900D5B7BF /* LyricsDB.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887D0A2315945900D5B7BF /* LyricsDB.h */; };
+		0E887D322315945900D5B7BF /* Debug.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887D0C2315945900D5B7BF /* Debug.h */; };
+		0E887D362315966700D5B7BF /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D342315966700D5B7BF /* LrcTag.cpp */; };
+		0E887D372315966700D5B7BF /* LrcTag.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D342315966700D5B7BF /* LrcTag.cpp */; };
+		0E887D382315966700D5B7BF /* LrcTag.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887D352315966700D5B7BF /* LrcTag.h */; };
+		0E887D40231597A700D5B7BF /* LyricsKeywordFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D3E231597A700D5B7BF /* LyricsKeywordFilter.cpp */; };
+		0E887D41231597A700D5B7BF /* LyricsKeywordFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D3E231597A700D5B7BF /* LyricsKeywordFilter.cpp */; };
+		0E887D42231597A700D5B7BF /* LyricsKeywordFilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E887D3F231597A700D5B7BF /* LyricsKeywordFilter.h */; };
+		0E887D492316CC8100D5B7BF /* SpamLyricsFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D472316CC8100D5B7BF /* SpamLyricsFilter.cpp */; };
+		0E887D4F2318BECE00D5B7BF /* SpamLyricsFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0E887D472316CC8100D5B7BF /* SpamLyricsFilter.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		0E887B952313981700D5B7BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0E887B912313981700D5B7BF /* BaseMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5F9CDEC4147A323D00432DAC;
+			remoteInfo = BaseMac;
+		};
+		0E887B9B2313982A00D5B7BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0E887B972313982900D5B7BF /* UtilsMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCCC4C1485177000D7C64A;
+			remoteInfo = UtilsMac;
+		};
+		0E887BA12313983900D5B7BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0E887B9D2313983900D5B7BF /* MLProtocolMac.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5FBCCCE414851A0000D7C64A;
+			remoteInfo = MLProtocolMac;
+		};
+		0E887CC923143EB500D5B7BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0E887B9D2313983900D5B7BF /* MLProtocolMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCCCE314851A0000D7C64A;
+			remoteInfo = MLProtocolMac;
+		};
+		0E887CCB23143EB500D5B7BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0E887B972313982900D5B7BF /* UtilsMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5FBCCC4B1485177000D7C64A;
+			remoteInfo = UtilsMac;
+		};
+		0E887CCD23143EB500D5B7BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0E887B912313981700D5B7BF /* BaseMac.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 5F9CDEC3147A323D00432DAC;
+			remoteInfo = BaseMac;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		0E887B85231397DA00D5B7BF /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0E887B87231397DA00D5B7BF /* MLServerNgxModule */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MLServerNgxModule; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E887B912313981700D5B7BF /* BaseMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BaseMac.xcodeproj; path = ../base/BaseMac.xcodeproj; sourceTree = "<group>"; };
+		0E887B972313982900D5B7BF /* UtilsMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = UtilsMac.xcodeproj; path = ../Utils/UtilsMac.xcodeproj; sourceTree = "<group>"; };
+		0E887B9D2313983900D5B7BF /* MLProtocolMac.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = MLProtocolMac.xcodeproj; path = ../MLProtocol/MLProtocolMac.xcodeproj; sourceTree = "<group>"; };
+		0E887C2E2313E97500D5B7BF /* config */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config; sourceTree = "<group>"; };
+		0E887C302313E97500D5B7BF /* ngx_utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ngx_utils.h; sourceTree = "<group>"; };
+		0E887C322313E97500D5B7BF /* ngx_utils.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ngx_utils.c; sourceTree = "<group>"; };
+		0E887C332313E97500D5B7BF /* mlserver_module.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mlserver_module.c; sourceTree = "<group>"; };
+		0E887C6A23141CD100D5B7BF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		0E887C6C23141CF600D5B7BF /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		0E887C6E23141D6200D5B7BF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
+		0E887C8423143C1800D5B7BF /* libMLServerLib.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libMLServerLib.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		0E887CDD2314D01300D5B7BF /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3ext.h; path = ../../SDK/sqlite/sqlite3ext.h; sourceTree = "<group>"; };
+		0E887CDE2314D01300D5B7BF /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sqlite3.h; path = ../../SDK/sqlite/sqlite3.h; sourceTree = "<group>"; };
+		0E887CDF2314D01300D5B7BF /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sqlite3.c; path = ../../SDK/sqlite/sqlite3.c; sourceTree = "<group>"; };
+		0E887CF12315945700D5B7BF /* StdAfx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StdAfx.h; sourceTree = "<group>"; };
+		0E887CF22315945800D5B7BF /* Sqlite3Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sqlite3Utils.h; sourceTree = "<group>"; };
+		0E887CF32315945800D5B7BF /* DBUser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBUser.h; sourceTree = "<group>"; };
+		0E887CF42315945800D5B7BF /* nginx_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nginx_types.h; sourceTree = "<group>"; };
+		0E887CF52315945800D5B7BF /* LyricsDBMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsDBMgr.h; sourceTree = "<group>"; };
+		0E887CF62315945800D5B7BF /* MLHelperFun.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLHelperFun.h; sourceTree = "<group>"; };
+		0E887CF72315945800D5B7BF /* MLIDEncrypt.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLIDEncrypt.cpp; sourceTree = "<group>"; };
+		0E887CF82315945800D5B7BF /* MLServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLServer.cpp; sourceTree = "<group>"; };
+		0E887CF92315945800D5B7BF /* NgxBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NgxBuffer.h; sourceTree = "<group>"; };
+		0E887CFA2315945800D5B7BF /* LyricsUpdateMgr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsUpdateMgr.h; sourceTree = "<group>"; };
+		0E887CFB2315945800D5B7BF /* LyricsInfoFiles.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsInfoFiles.h; sourceTree = "<group>"; };
+		0E887CFC2315945800D5B7BF /* NgxOutputStream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NgxOutputStream.h; sourceTree = "<group>"; };
+		0E887CFD2315945800D5B7BF /* LyricsDB.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsDB.cpp; sourceTree = "<group>"; };
+		0E887CFE2315945800D5B7BF /* DBUser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DBUser.cpp; sourceTree = "<group>"; };
+		0E887CFF2315945800D5B7BF /* mlserver_4_ngx.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mlserver_4_ngx.cpp; sourceTree = "<group>"; };
+		0E887D002315945800D5B7BF /* LyricsDBMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsDBMgr.cpp; sourceTree = "<group>"; };
+		0E887D012315945800D5B7BF /* MLHelperFun.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MLHelperFun.cpp; sourceTree = "<group>"; };
+		0E887D022315945800D5B7BF /* NgxBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NgxBuffer.cpp; sourceTree = "<group>"; };
+		0E887D032315945900D5B7BF /* MLServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLServer.h; sourceTree = "<group>"; };
+		0E887D042315945900D5B7BF /* LyricsInfoFiles.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsInfoFiles.cpp; sourceTree = "<group>"; };
+		0E887D052315945900D5B7BF /* MLIDEncrypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MLIDEncrypt.h; sourceTree = "<group>"; };
+		0E887D072315945900D5B7BF /* mlserver_4_ngx.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mlserver_4_ngx.h; sourceTree = "<group>"; };
+		0E887D082315945900D5B7BF /* LyricsUpdateMgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = LyricsUpdateMgr.cpp; sourceTree = "<group>"; };
+		0E887D092315945900D5B7BF /* NgxOutputStream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NgxOutputStream.cpp; sourceTree = "<group>"; };
+		0E887D0A2315945900D5B7BF /* LyricsDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LyricsDB.h; sourceTree = "<group>"; };
+		0E887D0B2315945900D5B7BF /* LyrKeywordFilter.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = LyrKeywordFilter.xml; sourceTree = "<group>"; };
+		0E887D0C2315945900D5B7BF /* Debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Debug.h; sourceTree = "<group>"; };
+		0E887D342315966700D5B7BF /* LrcTag.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LrcTag.cpp; path = ../MLLib/LrcTag.cpp; sourceTree = "<group>"; };
+		0E887D352315966700D5B7BF /* LrcTag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LrcTag.h; path = ../MLLib/LrcTag.h; sourceTree = "<group>"; };
+		0E887D3E231597A700D5B7BF /* LyricsKeywordFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = LyricsKeywordFilter.cpp; path = ../MLLib/LyricsKeywordFilter.cpp; sourceTree = "<group>"; };
+		0E887D3F231597A700D5B7BF /* LyricsKeywordFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LyricsKeywordFilter.h; path = ../MLLib/LyricsKeywordFilter.h; sourceTree = "<group>"; };
+		0E887D472316CC8100D5B7BF /* SpamLyricsFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SpamLyricsFilter.cpp; sourceTree = "<group>"; };
+		0E887D482316CC8100D5B7BF /* SpamLyricsFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SpamLyricsFilter.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0E887B84231397DA00D5B7BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E887BA42313985500D5B7BF /* libBaseMac.a in Frameworks */,
+				0E887BA52313985500D5B7BF /* libMLProtocolMac.a in Frameworks */,
+				0E887BA62313985500D5B7BF /* libUtilsMac.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E887C8223143C1800D5B7BF /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E887C9323143C3C00D5B7BF /* AppKit.framework in Frameworks */,
+				0E887C9223143C3400D5B7BF /* Foundation.framework in Frameworks */,
+				0E887C8F23143C2C00D5B7BF /* libBaseMac.a in Frameworks */,
+				0E887C9023143C2C00D5B7BF /* libMLProtocolMac.a in Frameworks */,
+				0E887C9123143C2C00D5B7BF /* libUtilsMac.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0E887B7E231397DA00D5B7BF = {
+			isa = PBXGroup;
+			children = (
+				0E887D332315962400D5B7BF /* mllib */,
+				0E887C2D2313E97500D5B7BF /* mlserver_module */,
+				0E887BD123139D7800D5B7BF /* src */,
+				0E887B9D2313983900D5B7BF /* MLProtocolMac.xcodeproj */,
+				0E887B972313982900D5B7BF /* UtilsMac.xcodeproj */,
+				0E887B912313981700D5B7BF /* BaseMac.xcodeproj */,
+				0E887B88231397DA00D5B7BF /* Products */,
+				0E887BA32313985500D5B7BF /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		0E887B88231397DA00D5B7BF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0E887B87231397DA00D5B7BF /* MLServerNgxModule */,
+				0E887C8423143C1800D5B7BF /* libMLServerLib.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0E887B922313981700D5B7BF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0E887B962313981700D5B7BF /* libBaseMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0E887B982313982900D5B7BF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0E887B9C2313982A00D5B7BF /* libUtilsMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0E887B9E2313983900D5B7BF /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				0E887BA22313983900D5B7BF /* libMLProtocolMac.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		0E887BA32313985500D5B7BF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0E887C6E23141D6200D5B7BF /* AppKit.framework */,
+				0E887C6C23141CF600D5B7BF /* CoreFoundation.framework */,
+				0E887C6A23141CD100D5B7BF /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		0E887BD123139D7800D5B7BF /* src */ = {
+			isa = PBXGroup;
+			children = (
+				0E887D472316CC8100D5B7BF /* SpamLyricsFilter.cpp */,
+				0E887D482316CC8100D5B7BF /* SpamLyricsFilter.h */,
+				0E887CFE2315945800D5B7BF /* DBUser.cpp */,
+				0E887CF32315945800D5B7BF /* DBUser.h */,
+				0E887D0C2315945900D5B7BF /* Debug.h */,
+				0E887CFD2315945800D5B7BF /* LyricsDB.cpp */,
+				0E887D0A2315945900D5B7BF /* LyricsDB.h */,
+				0E887D002315945800D5B7BF /* LyricsDBMgr.cpp */,
+				0E887CF52315945800D5B7BF /* LyricsDBMgr.h */,
+				0E887D042315945900D5B7BF /* LyricsInfoFiles.cpp */,
+				0E887CFB2315945800D5B7BF /* LyricsInfoFiles.h */,
+				0E887D082315945900D5B7BF /* LyricsUpdateMgr.cpp */,
+				0E887CFA2315945800D5B7BF /* LyricsUpdateMgr.h */,
+				0E887D0B2315945900D5B7BF /* LyrKeywordFilter.xml */,
+				0E887D012315945800D5B7BF /* MLHelperFun.cpp */,
+				0E887CF62315945800D5B7BF /* MLHelperFun.h */,
+				0E887CF72315945800D5B7BF /* MLIDEncrypt.cpp */,
+				0E887D052315945900D5B7BF /* MLIDEncrypt.h */,
+				0E887CFF2315945800D5B7BF /* mlserver_4_ngx.cpp */,
+				0E887D072315945900D5B7BF /* mlserver_4_ngx.h */,
+				0E887CF82315945800D5B7BF /* MLServer.cpp */,
+				0E887D032315945900D5B7BF /* MLServer.h */,
+				0E887CF42315945800D5B7BF /* nginx_types.h */,
+				0E887D022315945800D5B7BF /* NgxBuffer.cpp */,
+				0E887CF92315945800D5B7BF /* NgxBuffer.h */,
+				0E887D092315945900D5B7BF /* NgxOutputStream.cpp */,
+				0E887CFC2315945800D5B7BF /* NgxOutputStream.h */,
+				0E887CF22315945800D5B7BF /* Sqlite3Utils.h */,
+				0E887CF12315945700D5B7BF /* StdAfx.h */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		0E887C2D2313E97500D5B7BF /* mlserver_module */ = {
+			isa = PBXGroup;
+			children = (
+				0E887CDC2314CFFE00D5B7BF /* sqlite */,
+				0E887C2E2313E97500D5B7BF /* config */,
+				0E887C2F2313E97500D5B7BF /* src */,
+			);
+			path = mlserver_module;
+			sourceTree = "<group>";
+		};
+		0E887C2F2313E97500D5B7BF /* src */ = {
+			isa = PBXGroup;
+			children = (
+				0E887C302313E97500D5B7BF /* ngx_utils.h */,
+				0E887C322313E97500D5B7BF /* ngx_utils.c */,
+				0E887C332313E97500D5B7BF /* mlserver_module.c */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		0E887CDC2314CFFE00D5B7BF /* sqlite */ = {
+			isa = PBXGroup;
+			children = (
+				0E887CDF2314D01300D5B7BF /* sqlite3.c */,
+				0E887CDE2314D01300D5B7BF /* sqlite3.h */,
+				0E887CDD2314D01300D5B7BF /* sqlite3ext.h */,
+			);
+			name = sqlite;
+			sourceTree = "<group>";
+		};
+		0E887D332315962400D5B7BF /* mllib */ = {
+			isa = PBXGroup;
+			children = (
+				0E887D3E231597A700D5B7BF /* LyricsKeywordFilter.cpp */,
+				0E887D3F231597A700D5B7BF /* LyricsKeywordFilter.h */,
+				0E887D342315966700D5B7BF /* LrcTag.cpp */,
+				0E887D352315966700D5B7BF /* LrcTag.h */,
+			);
+			name = mllib;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		0E887C8023143C1800D5B7BF /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E887D0F2315945900D5B7BF /* DBUser.h in Headers */,
+				0E887D312315945900D5B7BF /* LyricsDB.h in Headers */,
+				0E887D122315945900D5B7BF /* MLHelperFun.h in Headers */,
+				0E887D322315945900D5B7BF /* Debug.h in Headers */,
+				0E887D0E2315945900D5B7BF /* Sqlite3Utils.h in Headers */,
+				0E887D172315945900D5B7BF /* NgxBuffer.h in Headers */,
+				0E887D0D2315945900D5B7BF /* StdAfx.h in Headers */,
+				0E887D272315945900D5B7BF /* MLServer.h in Headers */,
+				0E887D1A2315945900D5B7BF /* NgxOutputStream.h in Headers */,
+				0E887D112315945900D5B7BF /* LyricsDBMgr.h in Headers */,
+				0E887D182315945900D5B7BF /* LyricsUpdateMgr.h in Headers */,
+				0E887D192315945900D5B7BF /* LyricsInfoFiles.h in Headers */,
+				0E887D2C2315945900D5B7BF /* mlserver_4_ngx.h in Headers */,
+				0E887D382315966700D5B7BF /* LrcTag.h in Headers */,
+				0E887D2A2315945900D5B7BF /* MLIDEncrypt.h in Headers */,
+				0E887D102315945900D5B7BF /* nginx_types.h in Headers */,
+				0E887D42231597A700D5B7BF /* LyricsKeywordFilter.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		0E887B86231397DA00D5B7BF /* MLServerNgxModule */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0E887B8E231397DA00D5B7BF /* Build configuration list for PBXNativeTarget "MLServerNgxModule" */;
+			buildPhases = (
+				0E887B83231397DA00D5B7BF /* Sources */,
+				0E887B84231397DA00D5B7BF /* Frameworks */,
+				0E887B85231397DA00D5B7BF /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MLServerNgxModule;
+			productName = MLServerNgxModule;
+			productReference = 0E887B87231397DA00D5B7BF /* MLServerNgxModule */;
+			productType = "com.apple.product-type.tool";
+		};
+		0E887C8323143C1800D5B7BF /* MLServerLib */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 0E887C8C23143C1800D5B7BF /* Build configuration list for PBXNativeTarget "MLServerLib" */;
+			buildPhases = (
+				0E887C8023143C1800D5B7BF /* Headers */,
+				0E887C8123143C1800D5B7BF /* Sources */,
+				0E887C8223143C1800D5B7BF /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				0E887CCA23143EB500D5B7BF /* PBXTargetDependency */,
+				0E887CCC23143EB500D5B7BF /* PBXTargetDependency */,
+				0E887CCE23143EB500D5B7BF /* PBXTargetDependency */,
+			);
+			name = MLServerLib;
+			productName = MLServerLib;
+			productReference = 0E887C8423143C1800D5B7BF /* libMLServerLib.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		0E887B7F231397DA00D5B7BF /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1030;
+				ORGANIZATIONNAME = Crintsoft;
+				TargetAttributes = {
+					0E887B86231397DA00D5B7BF = {
+						CreatedOnToolsVersion = 10.3;
+					};
+					0E887C8323143C1800D5B7BF = {
+						CreatedOnToolsVersion = 10.3;
+					};
+				};
+			};
+			buildConfigurationList = 0E887B82231397DA00D5B7BF /* Build configuration list for PBXProject "MLServerNgxModule" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 0E887B7E231397DA00D5B7BF;
+			productRefGroup = 0E887B88231397DA00D5B7BF /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 0E887B922313981700D5B7BF /* Products */;
+					ProjectRef = 0E887B912313981700D5B7BF /* BaseMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 0E887B9E2313983900D5B7BF /* Products */;
+					ProjectRef = 0E887B9D2313983900D5B7BF /* MLProtocolMac.xcodeproj */;
+				},
+				{
+					ProductGroup = 0E887B982313982900D5B7BF /* Products */;
+					ProjectRef = 0E887B972313982900D5B7BF /* UtilsMac.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				0E887B86231397DA00D5B7BF /* MLServerNgxModule */,
+				0E887C8323143C1800D5B7BF /* MLServerLib */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		0E887B962313981700D5B7BF /* libBaseMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBaseMac.a;
+			remoteRef = 0E887B952313981700D5B7BF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0E887B9C2313982A00D5B7BF /* libUtilsMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libUtilsMac.a;
+			remoteRef = 0E887B9B2313982A00D5B7BF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		0E887BA22313983900D5B7BF /* libMLProtocolMac.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libMLProtocolMac.a;
+			remoteRef = 0E887BA12313983900D5B7BF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXSourcesBuildPhase section */
+		0E887B83231397DA00D5B7BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E887C342313E97500D5B7BF /* ngx_utils.c in Sources */,
+				0E887D212315945900D5B7BF /* LyricsDBMgr.cpp in Sources */,
+				0E887D1D2315945900D5B7BF /* DBUser.cpp in Sources */,
+				0E887D1F2315945900D5B7BF /* mlserver_4_ngx.cpp in Sources */,
+				0E887D1B2315945900D5B7BF /* LyricsDB.cpp in Sources */,
+				0E887D492316CC8100D5B7BF /* SpamLyricsFilter.cpp in Sources */,
+				0E887D282315945900D5B7BF /* LyricsInfoFiles.cpp in Sources */,
+				0E887C352313E97500D5B7BF /* mlserver_module.c in Sources */,
+				0E887D362315966700D5B7BF /* LrcTag.cpp in Sources */,
+				0E887D2D2315945900D5B7BF /* LyricsUpdateMgr.cpp in Sources */,
+				0E887D152315945900D5B7BF /* MLServer.cpp in Sources */,
+				0E887CE02314D01300D5B7BF /* sqlite3.c in Sources */,
+				0E887D40231597A700D5B7BF /* LyricsKeywordFilter.cpp in Sources */,
+				0E887D2F2315945900D5B7BF /* NgxOutputStream.cpp in Sources */,
+				0E887D232315945900D5B7BF /* MLHelperFun.cpp in Sources */,
+				0E887D252315945900D5B7BF /* NgxBuffer.cpp in Sources */,
+				0E887D132315945900D5B7BF /* MLIDEncrypt.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		0E887C8123143C1800D5B7BF /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0E887D4F2318BECE00D5B7BF /* SpamLyricsFilter.cpp in Sources */,
+				0E887D302315945900D5B7BF /* NgxOutputStream.cpp in Sources */,
+				0E887CE12314D04600D5B7BF /* sqlite3.c in Sources */,
+				0E887D1C2315945900D5B7BF /* LyricsDB.cpp in Sources */,
+				0E887D242315945900D5B7BF /* MLHelperFun.cpp in Sources */,
+				0E887D2E2315945900D5B7BF /* LyricsUpdateMgr.cpp in Sources */,
+				0E887D41231597A700D5B7BF /* LyricsKeywordFilter.cpp in Sources */,
+				0E887D202315945900D5B7BF /* mlserver_4_ngx.cpp in Sources */,
+				0E887CE22314D04600D5B7BF /* sqlite3.h in Sources */,
+				0E887CE32314D04600D5B7BF /* sqlite3ext.h in Sources */,
+				0E887CA723143EA000D5B7BF /* ngx_utils.h in Sources */,
+				0E887CA823143EA000D5B7BF /* ngx_utils.c in Sources */,
+				0E887D292315945900D5B7BF /* LyricsInfoFiles.cpp in Sources */,
+				0E887D1E2315945900D5B7BF /* DBUser.cpp in Sources */,
+				0E887D162315945900D5B7BF /* MLServer.cpp in Sources */,
+				0E887CA923143EA000D5B7BF /* mlserver_module.c in Sources */,
+				0E887D222315945900D5B7BF /* LyricsDBMgr.cpp in Sources */,
+				0E887D142315945900D5B7BF /* MLIDEncrypt.cpp in Sources */,
+				0E887D372315966700D5B7BF /* LrcTag.cpp in Sources */,
+				0E887D262315945900D5B7BF /* NgxBuffer.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		0E887CCA23143EB500D5B7BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = MLProtocolMac;
+			targetProxy = 0E887CC923143EB500D5B7BF /* PBXContainerItemProxy */;
+		};
+		0E887CCC23143EB500D5B7BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = UtilsMac;
+			targetProxy = 0E887CCB23143EB500D5B7BF /* PBXContainerItemProxy */;
+		};
+		0E887CCE23143EB500D5B7BF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = BaseMac;
+			targetProxy = 0E887CCD23143EB500D5B7BF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0E887B8C231397DA00D5B7BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/mac",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/core",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/event",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/event/modules",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/os/unix",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/http",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/http/modules",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/http",
+					/usr/local/include,
+					"$(SRCROOT)/third-parties/rapidjson",
+					"$(SRCROOT)/third-parties/gtest",
+					"$(SRCROOT)/third-parties/openssl",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		0E887B8D231397DA00D5B7BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/mac",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/core",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/event",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/event/modules",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/os/unix",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/http",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/http/modules",
+					"$(SRCROOT)/third-parties/openresty/bundle/nginx/src/http",
+					/usr/local/include,
+					"$(SRCROOT)/third-parties/rapidjson",
+					"$(SRCROOT)/third-parties/gtest",
+					"$(SRCROOT)/third-parties/openssl",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		0E887B8F231397DA00D5B7BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					_MAC_OSX,
+					"DEBUG=1",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		0E887B90231397DA00D5B7BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GCC_PREPROCESSOR_DEFINITIONS = _MAC_OSX;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		0E887C8D23143C1800D5B7BF /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+					_MAC_OSX,
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		0E887C8E23143C1800D5B7BF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				EXECUTABLE_PREFIX = lib;
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0E887B82231397DA00D5B7BF /* Build configuration list for PBXProject "MLServerNgxModule" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0E887B8C231397DA00D5B7BF /* Debug */,
+				0E887B8D231397DA00D5B7BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0E887B8E231397DA00D5B7BF /* Build configuration list for PBXNativeTarget "MLServerNgxModule" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0E887B8F231397DA00D5B7BF /* Debug */,
+				0E887B90231397DA00D5B7BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		0E887C8C23143C1800D5B7BF /* Build configuration list for PBXNativeTarget "MLServerLib" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				0E887C8D23143C1800D5B7BF /* Debug */,
+				0E887C8E23143C1800D5B7BF /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 0E887B7F231397DA00D5B7BF /* Project object */;
+}

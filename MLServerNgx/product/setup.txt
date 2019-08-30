@@ -1,0 +1,43 @@
+Ubuntu 下编译：
+    sudo mount -t vboxsf -o uid=1000,gid=1000 zikiplayer /home/henry/zikiplayer
+    Fixing your virtualbox shared folder symlink error: https://ahtik.com/fixing-your-virtualbox-shared-folder-symlink-error/
+        VBoxManage setextradata YOURVMNAME VBoxInternal2/SharedFoldersEnableSymlinksCreate/YOURSHAREFOLDERNAME 1
+
+    sudo apt-get install systemtap-sdt-dev
+    ubuntu: 
+    * Configure before build: third-parties/openresty/config-for-ubuntu.sh
+    * build.sh
+
+0. 讲所有配置和数据文件放到 /mlserver 目录下
+    * 新建磁盘 40G，inode 数量在1000w sudo mkfs.ext4 -i 4096 -b 2048 /dev/xvdf
+    * sudo mkdir /mlserver
+    * sudo mount /dev/xvdf /mlserver
+        * sudo umount /mlserver
+    * mount automatically. https://confluence.jaytaala.com/display/TKB/Mount+drive+in+linux+and+set+auto-mount+at+boot
+    * df -i to view inodes.
+
+    * sudo mkdir /mlserver/log
+    * sudo mkdir /mlserver/database
+    * sudo mkdir /mlserver/data
+    * sudo mkdir /mlserver/lyrics
+    
+1. copy all files to server
+    scp *.7z ubuntu@search.crintsoft.com
+2. Extract files
+    sudo apt-get install p7zip-full
+    7z x ll.7z
+3. Install openresty
+    https://openresty.org/en/linux-packages.html
+    
+4. Replace nginx
+    sudo mv /usr/local/openresty/nginx/sbin/nginx /usr/local/openresty/nginx/sbin/nginx.bak
+    sudo cp nginx /usr/local/openresty/nginx/sbin/nginx
+5. Edit  sudo vi /usr/local/openresty/nginx/conf/nginx.conf
+    Add: 
+        * pid        /usr/local/openresty/nginx/logs/nginx.pid;
+        * include /mlserver/mlserver.conf;
+
+测试：
+    curl -i -X POST http://search.crintsoft.com/searchlyrics.htm -H "Content-Type: text/xml"   --data-binary "@/Users/hongyongxiao/zikiplayer/ML-Protocol-Lua-Lib/test/request_0.bin"
+    scp /Users/hongyongxiao/zikiplayer/MLServerNgx/product/nginx ubuntu@mlserver:~/
+    sudo cp nginx /usr/local/openresty/nginx/sbin/nginx

@@ -7,6 +7,21 @@
 
 extern ENCODING_CODEPAGE	__encodingCodepage[];
 
+FILE_ENCODING GetFileEncodingByBom(LPBYTE data)
+{
+	// FF FE
+	if (data[0] == 0xFF && data[1] == 0xFE)
+		return FE_UCS2;
+	// FE FF
+	else if (data[0] == 0xFE && data[1] == 0xFF)
+		return FE_UCS2_BE;
+	// EF BB BF
+	else if (data[0] == 0xEF && data[1] == 0xBB && data[2] == 0xBF)
+		return FE_UTF8;
+	else
+		return FE_ANSI;
+}
+
 CHAR_ENCODING FileEcodingToCharEncoding(FILE_ENCODING fileEncoding)
 {
 	switch (fileEncoding)
@@ -563,7 +578,7 @@ protected:
 
 #ifdef _WIN32
 		{
-			wcscpy(input, L"жпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйт");
+			wcscpy(input, L"О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫");
 			UCS2ToUtf8(input, -1, out);
 
 			// Use MbcsToUCS2 with ED_UTF8 encoding to convert.
@@ -571,7 +586,7 @@ protected:
 			MbcsToUCS2(out.c_str(), out.size(), strInputNew, ED_UTF8);
 			CPPUNIT_ASSERT(strInputNew == input);
 
-			wcscpy(input, L"cosMo@╠╘въP║а╔г╔ц╔и╔э╘`╔КP feat.ЁУрТ╔ъ╔╞");
+			wcscpy(input, L"cosMo@О©╫О©╫О©╫О©╫PО©╫О©╫О©╫г╔ц╔и╔э╘`О©╫О©╫P feat.О©╫О©╫О©╫О©╫О©╫ъ╔О©╫");
 			UCS2ToUtf8(input, -1, out);
 
 			// Use MbcsToUCS2 with ED_UTF8 encoding to convert.
@@ -626,7 +641,7 @@ protected:
 
 #ifdef _WIN32
 		{
-			wcscpy(input, L"жпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйт");
+			wcscpy(input, L"О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫");
 			UCS2ToMbcs(input, -1, out);
 			CPPUNIT_ASSERT(out.size() == wcslen(input));
 
@@ -716,7 +731,7 @@ protected:
 
 #ifdef _WIN32
 		{
-			input = "жпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйтжпнд╡Бйт";
+			input = "О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫О©╫О©╫О©╫д╡О©╫О©╫О©╫";
 			MbcsToUtf8(input, -1, out);
 
 			string strInputNew;

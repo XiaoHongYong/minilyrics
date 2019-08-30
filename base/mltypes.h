@@ -95,7 +95,7 @@ typedef basic_string<WCHAR> tstring;
 typedef string tstring;
 #endif
 
-#ifdef _LINUX
+#ifdef _LINUX_GTK2
 #include <gdk/gdktypes.h>
 #endif
 

@@ -55,7 +55,7 @@ CLyricsKeywordFilter::~CLyricsKeywordFilter()
 
 }
 
-void CLyricsKeywordFilter::Init()
+void CLyricsKeywordFilter::Init(LPCTSTR dataDir)
 {
 	for (int i = 0; i < WORD_MAX; i++)
 	{
@@ -65,7 +65,12 @@ void CLyricsKeywordFilter::Init()
 	CSimpleXML		xml;
 	tstring			strKeywordFilter;
 
-	strKeywordFilter = GetAppResourceDir();
+    if (dataDir) {
+        strKeywordFilter = dataDir;
+    } else {
+        strKeywordFilter = GetAppResourceDir();
+    }
+
 	strKeywordFilter += _T("LyrKeywordFilter.xml");
 	if (xml.ParseFile(strKeywordFilter.c_str()))
 	{
@@ -177,7 +182,6 @@ void CLyricsKeywordFilter::Filter(LPCWSTR szInput, wstringex &strOut)
 	if (m_wTableUcs2['a'] == 0)
 	{
 		// Isn't initialized?
-		Init();
 		ASSERT(m_wTableUcs2['a'] != 0);
 	}
 

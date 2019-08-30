@@ -4,7 +4,7 @@ DECLAR_CPPUNIT_TEST_REG(CharEncodingBase)
 
 enum CHAR_ENCODING
 {
-	ED_SYSDEF,					// 系统缺省的编码
+	ED_SYSDEF,					// 系统缺省锟侥憋拷锟斤拷
 	ED_UNICODE,					// unicode,
 	ED_UNICODE_BIG_ENDIAN,		// unicode big-endian,
 	ED_UTF8,					// utf-8
@@ -65,6 +65,8 @@ struct ENCODING_CODEPAGE
 };
 
 int GetCharEncodingCount();
+
+FILE_ENCODING GetFileEncodingByBom(LPBYTE data);
 
 CHAR_ENCODING GetCharEncodingID(const char *szEncoding);
 CHAR_ENCODING GetCharEncodingID(const WCHAR *szEncoding);

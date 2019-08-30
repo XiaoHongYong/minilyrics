@@ -29,20 +29,20 @@ ML 7.1 ~ :		HTTP tunnel Encrypted Binary XML message format, encoding: UTF-8
 
 static ID_TO_STRING	__ErrID2Str[] = 
 {
-	{ ERR_UNKNOWN, _T("Unknown Error.")},			// Î´·­Òë³öÀ´µÄ½á¹û
+	{ ERR_UNKNOWN, _T("Unknown Error.")},			// Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä½ï¿½ï¿½
 	{ ERR_BAD_XMLREQUEST, _T("Invalid xml request.")},
 	{ ERR_CORRUPTTED_MSG, _T("The message is corrupted, maybe some data get currupted while receiving.")},
 
-	{ ERR_UPLOAD_EXIST, _T("The uploaded lyrics already exist, or other users have uploaded them already.") },	// ÉÏ´«µÄÄÚÈÝÒÑ¾­´æÔÚ
-	{ ERR_USER_NOT_EXIST, _T("User name doesn't exist.") },	// ÓÃ»§²»´æÔÚ
-	{ ERR_BAD_USERPWD, _T("Wrong user name or password.") },		// ÓÃ»§Ãû»òÕßÃÜÂë´íÎó
-	{ ERR_BAD_CLIENT_VER, _T("Invliad client version.") },	// ¿Í»§¶Ë°æ±¾²»ÕýÈ·, ÎÞ·¨µÇÂ½
-	{ ERR_OBSOLETE_CLIENT_VER, _T("Obsoleted client. please download the latest version.") },	// ¿Í»§¶Ë°æ±¾Ì«µÍ, ÎÞ·¨µÇÂ½
-	// { ERR_TOO_BUSY, _T("Server too busy, please try again later.") },		// ·þÎñÆ÷Ì«Ã¦,ÔÝÊ±ÎÞ·¨ÏìÓ¦ÇëÇó
-	{ ERR_ACCESS_DENIED, _T("Access denied.") },	// ÎÞÈ¨·ÃÎÊ,±»¾Ü¾ø
+	{ ERR_UPLOAD_EXIST, _T("The uploaded lyrics already exist, or other users have uploaded them already.") },	// ï¿½Ï´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½
+	{ ERR_USER_NOT_EXIST, _T("User name doesn't exist.") },	// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	{ ERR_BAD_USERPWD, _T("Wrong user name or password.") },		// ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	{ ERR_BAD_CLIENT_VER, _T("Invliad client version.") },	// ï¿½Í»ï¿½ï¿½Ë°æ±¾ï¿½ï¿½ï¿½ï¿½È·, ï¿½Þ·ï¿½ï¿½ï¿½Â½
+	{ ERR_OBSOLETE_CLIENT_VER, _T("Obsoleted client. please download the latest version.") },	// ï¿½Í»ï¿½ï¿½Ë°æ±¾Ì«ï¿½ï¿½, ï¿½Þ·ï¿½ï¿½ï¿½Â½
+	// { ERR_TOO_BUSY, _T("Server too busy, please try again later.") },		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«Ã¦,ï¿½ï¿½Ê±ï¿½Þ·ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½
+	{ ERR_ACCESS_DENIED, _T("Access denied.") },	// ï¿½ï¿½È¨ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Ü¾ï¿½
 	{ ERR_CMD_NOT_MATCH, _T("Received return command not match.") },
 	{ ERR_CMD_PARAM, _T("Invalid message command parameter.") },
-	{ ERR_UPLOAD_FILETYPE, _T("The file type can not be uploaded.") },	// ÉÏ´«µÄÎÄ¼þÀàÐÍ´íÎó
+	{ ERR_UPLOAD_FILETYPE, _T("The file type can not be uploaded.") },	// ï¿½Ï´ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½
 	{ ERR_BAD_BASE64CONTENT, _T("Incorrect base64 encoded content.") },
 	{ ERR_BAD_FILE_CONTENT, _T("The file format is incorrect or contains spam information.") },
 	{ ERR_NOT_AUTHORIZED, _T("Unauthorized action.") },
@@ -687,14 +687,14 @@ void CMLPacketAccountMgr::EraseAccount(long nId)
 //////////////////////////////////////////////////////////////////////////
 //
 //	MPV_XML			= '<',
-//			Ã»ÓÐ¼ÓÃÜ£¬Ö±½ÓÎª XML Ð­Òé
+//			Ã»ï¿½Ð¼ï¿½ï¿½Ü£ï¿½Ö±ï¿½ï¿½Îª XML Ð­ï¿½ï¿½
 //	MPV_V1_MD5_ID	= 1,
-//			ÕÊ»§ ID ºÍ Pwd Ò»Ò»¶ÔÓ¦ÔÚ·þÎñÆ÷ÖÐ
-//			1¡¢×Ö¶Î²Î¿¼ MLEncodePacketV1
-//			2¡¢byXor µÄÉú³É£º byDataOrg µÄÆ½¾ùÖµ ^ 0x9D
-//			3¡¢byMd5 µÄÉú³É£º MD5ToString£¨byDataOrg + ÓÃ»§Pwd£©
-//			4¡¢byData --> byDataOrg: Öð×Ö½ÚÓëbyXor½øÐÐXORÔËËã
-//			·þÎñÆ÷»òÕß¿Í»§¶Ë¿ÉÒÔ¸ù¾ÝMD5 ÖµÀ´Ð£ÑéÍ¨Ñ¶Êý¾ÝµÄÕæÎ±
+//			ï¿½Ê»ï¿½ ID ï¿½ï¿½ Pwd Ò»Ò»ï¿½ï¿½Ó¦ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+//			1ï¿½ï¿½ï¿½Ö¶Î²Î¿ï¿½ MLEncodePacketV1
+//			2ï¿½ï¿½byXor ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ byDataOrg ï¿½ï¿½Æ½ï¿½ï¿½Öµ ^ 0x9D
+//			3ï¿½ï¿½byMd5 ï¿½ï¿½ï¿½ï¿½ï¿½É£ï¿½ MD5ToStringï¿½ï¿½byDataOrg + ï¿½Ã»ï¿½Pwdï¿½ï¿½
+//			4ï¿½ï¿½byData --> byDataOrg: ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½byXorï¿½ï¿½ï¿½ï¿½XORï¿½ï¿½ï¿½ï¿½
+//			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¿Í»ï¿½ï¿½Ë¿ï¿½ï¿½Ô¸ï¿½ï¿½ï¿½MD5 Öµï¿½ï¿½Ð£ï¿½ï¿½Í¨Ñ¶ï¿½ï¿½ï¿½Ýµï¿½ï¿½ï¿½Î±
 
 CMLPacketWrapper::CMLPacketWrapper()
 {
@@ -795,7 +795,7 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 		}
 		buff.erase(0, sizeof(MLEncodePacketV1));
 
-		// ÔÚ·þÎñÆ÷¶Ë£¬ÐèÒª¸ù¾Ý¿Í»§¶Ë·¢ËÍµÄpacketÀàÐÍ£¬×ª»»µ½¶ÔÓ¦µÄpacketÀàÐÍ
+		// ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ý¿Í»ï¿½ï¿½Ë·ï¿½ï¿½Íµï¿½packetï¿½ï¿½ï¿½Í£ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½ï¿½packetï¿½ï¿½ï¿½ï¿½
 		if (m_pAccountMgr->m_bServer)
 			m_packFlag = MPV_V1_MD5_ID;
 
@@ -812,6 +812,14 @@ int CMLPacketWrapper::Unwrapp(CCharBuffer &buff)
 //
 
 #define ALLOC_BLOCK_LEN		(2 * 1024)
+
+void saveRequestToFile(CCharBuffer *buf) {
+	static int i = 0;
+	char fn[256];
+	sprintf_s(fn, sizeof(fn), "d:\\request_%d.bin", i++);
+
+	SaveDataAsFile(fn, buf->data(), buf->size());
+}
 
 int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 {
@@ -864,6 +872,8 @@ int CMLProtocol::ReadMsg(MLMsgType &msgType, CCharBuffer *pMsgBuff)
 	if ((msgType == MT_HTTP_POST && strcmp(m_httpRequest.GetUrl(), SZ_ML_POST_URL) == 0)
 		|| msgType == MT_HTTP_RET)
 	{
+		// saveRequestToFile(pMsgBuff);
+
 		nRet = m_packetWrapper.Unwrapp(*pMsgBuff);
 		if (nRet != ERR_OK)
 			return nRet;

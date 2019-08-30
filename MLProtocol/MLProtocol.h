@@ -12,22 +12,22 @@ DECLAR_CPPUNIT_TEST_REG(CMLProtocol)
 
 enum ML_PROTOCAL_ERROR
 {
-	ERR_UNKNOWN				= 1035, // δ��������Ľ��
+	ERR_UNKNOWN				= 1035, // 未翻译出来的结果
 	ERR_BAD_XMLREQUEST		= 1036,
 	ERR_CORRUPTTED_MSG		= 1037,	// The message is corrupted
-	ERR_UPLOAD_EXIST		= 1042,	// �ϴ��������Ѿ�����
-	ERR_USER_NOT_EXIST		= 1043,	// �û�������
-	ERR_BAD_USERPWD			= 1045, // �û��������������
-	ERR_BAD_CLIENT_VER		= 1047,	// �ͻ��˰汾����ȷ, �޷���½
-	ERR_OBSOLETE_CLIENT_VER = 1048,	// �ͻ��˰汾̫��, �޷���½
-	ERR_ACCESS_DENIED		= 1051,	// ��Ȩ����,���ܾ�
-	ERR_CMD_NOT_MATCH		= 1053,	// ���ƥ��
-	ERR_CMD_PARAM			= 1054,	// ��������
-	ERR_UPLOAD_FILETYPE		= 1056,	// �ϴ����ļ����ʹ���
-	ERR_BAD_BASE64CONTENT	= 1058,	// Base64 �������
-	ERR_BAD_FILE_CONTENT	= 1059,	// �ļ������д��󣬻��߰���������������
-	ERR_NOT_AUTHORIZED		= 1061,	// δ����Ȩ����Ϊ
-	ERR_NOT_LOGIN			= 1062,	// δ��½�����½
+	ERR_UPLOAD_EXIST		= 1042,	// 上传的内容已经存在
+	ERR_USER_NOT_EXIST		= 1043,	// 用户不存在
+	ERR_BAD_USERPWD			= 1045, // 用户名或者密码错误
+	ERR_BAD_CLIENT_VER		= 1047,	// 客户端版本不正确, 无法登陆
+	ERR_OBSOLETE_CLIENT_VER = 1048,	// 客户端版本太低, 无法登陆
+	ERR_ACCESS_DENIED		= 1051,	// 无权访问,被拒绝
+	ERR_CMD_NOT_MATCH		= 1053,	// 命令不匹配
+	ERR_CMD_PARAM			= 1054,	// 参数错误
+	ERR_UPLOAD_FILETYPE		= 1056,	// 上传的文件类型错误
+	ERR_BAD_BASE64CONTENT	= 1058,	// Base64 编码错误
+	ERR_BAD_FILE_CONTENT	= 1059,	// 文件内容有错误，或者包含不允许的内容
+	ERR_NOT_AUTHORIZED		= 1061,	// 未经授权的行为
+	ERR_NOT_LOGIN			= 1062,	// 未登陆，请登陆
 	ERR_LYR_NO_TAG_FOUND	= 1064,	// No lyrics tag is found in content.
 	ERR_REQUIRE_ACTIVE_LICENSE	= 1065,	// No lyrics tag is found in content.
 };
@@ -44,14 +44,14 @@ enum ML_PROTOCAL_ERROR
 
 enum MLMsgType
 {
-	MT_UNKNOWN,			// δ֪��ʽ
-	MT_XML,				// xml����Ϣ��ʽ
+	MT_UNKNOWN,			// 未知格式
+	MT_XML,				// xml的消息格式
 
 	MT_HTTP_GET,		// Http get request
 	MT_HTTP_POST,		// Http post request
 	MT_HTTP_RET,		// Http return
 
-	MT_HTTP_XML,		// Minilyrics �����HTTP tunnel����Ϣ��ʽ,
+	MT_HTTP_XML,		// Minilyrics 请求的HTTP tunnel的消息格式,
 						// translated from MT_HTTP_*
 	MT_HTTP_BIN_XML,	// Similar with MT_HTTP_XML, but it's binary xml format.
 						// See CMLBinXMLParser
@@ -221,6 +221,9 @@ public:
 	int			nRateCount;				// 
 	int			nDownloads;				// total downloads of lyrics
 
+    // For internal usage, will NOT send to client.
+    int         uploaderID, lyricsID, contentType;
+    
 public:
 	RetLyrInfo()
 	{
@@ -411,7 +414,7 @@ public:
 enum ML_PACK_VERSION
 {
 	MPV_INVALID			= 0,
-	MPV_XML				= '<',		// û�м��ܣ�ֱ��Ϊ XML Э��
+	MPV_XML				= '<',		// 没有加密，直接为 XML 协议
 	MPV_V1_MD5_ID		= 2,		// 
 };
 
@@ -419,11 +422,11 @@ enum ML_PACK_VERSION
 #pragma pack(1)
 struct MLEncodePacketV1
 {
-	BYTE		byVersion;		// Э��İ汾��
-	BYTE		byXor;			// XOR ���ܵ��ֶ�, byDataOrg ��ƽ��ֵ ^ 0x9D
-	BYTE		byID[4];		// �ͻ���ʹ�õ�MD5��֤��ID
+	BYTE		byVersion;		// 协议的版本：
+	BYTE		byXor;			// XOR 解密的字段, byDataOrg 的平均值 ^ 0x9D
+	BYTE		byID[4];		// 客户端使用的MD5验证码ID
 								// nID = byID[0] | byID[1] << 8 | byID[2] << 16 | byID[3] << 24
-	BYTE		byMd5[16];		// У�� ��Ϣ����ȷ�Ե�MD5ֵ
+	BYTE		byMd5[16];		// 校验 消息包正确性的MD5值
 
 	void SetID(long nId)
 	{
@@ -467,12 +470,12 @@ protected:
 
 public:
 	ML_PACK_VERSION				m_packFlag;
-	bool						m_bEnableXmlPack;		// �Ƿ�����δ���ܵ� XML packet
-	bool						m_bServer;				// �Ƿ�Ϊ��������
+	bool						m_bEnableXmlPack;		// 是否允许未加密的 XML packet
+	bool						m_bServer;				// 是否为服务器端
 
-	// ͳ������
-	long						m_nInvalidV1PackCount;	// ��Ч��V1 packet ��Ŀ
-	long						m_nInvalidPackCount;	// ��Ч�� packet ��Ŀ
+	// 统计数据
+	long						m_nInvalidV1PackCount;	// 无效的V1 packet 数目
+	long						m_nInvalidPackCount;	// 无效的 packet 数目
 
 };
 
@@ -519,7 +522,7 @@ public:
 
 	int ParseXMLMsg(CCharBuffer *pMsgBuff, CSimpleXML &xml);
 
-	MLMsgCmd GetMsgCommand(CSimpleXML &xml);
+	static MLMsgCmd GetMsgCommand(CSimpleXML &xml);
 
 	void SetClientId(int nId)
 	{
@@ -532,7 +535,7 @@ protected:
 	BOOL					m_bUseProxy;
 	tstring					m_strBase64ProxyUserPass;
 
-	// Ϊ�����Ч�ʣ������õĻ�����
+	// 为了提高效率，而设置的缓存区
 	CHttpRequestProtocol	m_httpReqWriteXmlCache;
 	CHttpReturnProtocol		m_httpRetWriteXmlCache;
 

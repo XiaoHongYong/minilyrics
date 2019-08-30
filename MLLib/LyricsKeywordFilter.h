@@ -14,7 +14,7 @@ public:
 	CLyricsKeywordFilter();
 	virtual ~CLyricsKeywordFilter();
 
-	static void Init();
+	static void Init(LPCTSTR dataDir = NULL);
 
 	static void Filter(const char *szTarg, stringex &strOut);
 	static void Filter(LPCWSTR szTarg, wstringex &strOut);

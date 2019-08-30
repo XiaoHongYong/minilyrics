@@ -3,6 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "../stdafx.h"
+#include "../base.h"
+#include "../CharEncoding.h"
 #include <iconv.h>
 
 #define DBGLOG1 printf

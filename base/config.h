@@ -27,8 +27,10 @@
 #ifndef _DEBUG
 #define _DEBUG
 #endif
+#ifndef NO_LINUX_GTK2
 #ifndef _LINUX_GTK2
 #define _LINUX_GTK2
+#endif
 #endif
 #endif
 

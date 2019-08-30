@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "error.h"
+#include "Error.h"
 #include "xstr.h"
 #include "stringex_t.h"
 #include "CharEncoding.h"
@@ -17,9 +17,9 @@ tstring RegExSub(LPCSTR szRegEx, LPCTSTR szInput, LPCTSTR szWithWhat)
 
 	return regex_replace(string(szInput), re, string(szWithWhat));
 #else
-	tr1::regex re(szRegEx, std::tr1::regex_constants::icase);
+	std::regex re(szRegEx, std::regex_constants::icase);
 	
-	return tr1::regex_replace(string(szInput), re, string(szWithWhat));
+	return std::regex_replace(string(szInput), re, string(szWithWhat));
 #endif
 #else
 	string input, withWhat;

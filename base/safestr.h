@@ -2,7 +2,9 @@
 #ifndef _SAFE_STRING_H_
 #define _SAFE_STRING_H_
 
+#include <stdarg.h>
 #include "xstr.h"
+
 
 size_t strlen_safe(const char * str, size_t maxLength);
 size_t wcslen_safe(const WCHAR * str, size_t maxLength);

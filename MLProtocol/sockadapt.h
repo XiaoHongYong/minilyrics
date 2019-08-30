@@ -9,6 +9,8 @@
 #endif
 
 #ifndef WIN32
+#include <unistd.h>
+
 typedef int SOCKET;
 #define closesocket(s)		close(s)
 
