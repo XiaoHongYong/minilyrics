@@ -37,11 +37,12 @@ class DBLyrics:
         # print sql
         cur.execute(sql)
 
-        index_fields = ['artistcmp', 'titlecmp']
+        index_fields = ['artistcmp', 'titlecmp', 'uploader_id']
 
         for name in index_fields:
             cur.execute(
                 "CREATE INDEX IF NOT EXISTS lyrics_{0} on lyrics ({0});".format(name))
+            # CREATE INDEX IF NOT EXISTS lyrics_uploader_id on lyrics (uploader_id);
 
     def close(self):
         self._conn.close()

@@ -4,6 +4,7 @@
 
 typedef struct {
     ngx_flag_t      enable;
+    ngx_flag_t      enableStubStatus;
     ngx_str_t       configDir;
     ngx_str_t       lyricsDir;
     ngx_str_t       relatedUploadDir;

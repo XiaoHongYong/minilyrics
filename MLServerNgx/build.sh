@@ -90,7 +90,7 @@ function clean() {
     remove_fake_lib_for_nginx_cfg
 }
 
-target=debug
+target=release
 is_clean=false
 
 while (($# > 0)); do

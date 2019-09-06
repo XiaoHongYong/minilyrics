@@ -46,4 +46,7 @@ obj
 /MLServerNgx/product/nginx
 /MLServerNgx/third-parties/
 /MLServerNgx/test-for-mac/
+/MLServerNgx/product/log/
+/MLServerNgx/product/lua_so/
+/MLServerNgx/product/lyrics/
 /ML-Protocol-Lua-Lib/

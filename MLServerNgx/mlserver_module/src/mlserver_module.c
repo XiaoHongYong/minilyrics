@@ -42,6 +42,14 @@ static ngx_command_t  mlserver_mod_ngx_commands[] = {
         offsetof(MLServerNgxConf, enable),
         NULL
     },
+    {
+        ngx_string("mlserver_stub"),
+        NGX_HTTP_SRV_CONF | NGX_HTTP_LOC_CONF | NGX_CONF_FLAG,
+        ngx_conf_set_flag_slot,
+        NGX_HTTP_LOC_CONF_OFFSET,
+        offsetof(MLServerNgxConf, enableStubStatus),
+        NULL
+    },
 
     {
         ngx_string("ml_conf_dir"),
@@ -184,6 +192,7 @@ static void *mlserver_mod_ngx_create_conf(ngx_conf_t *cf) {
     }
 
     conf->enable                    = NGX_CONF_UNSET;
+    conf->enableStubStatus          = NGX_CONF_UNSET;
 
     return conf;
 }
@@ -209,13 +218,11 @@ static char *mlserver_mod_ngx_merge_conf(ngx_conf_t *cf, void *parent, void *chi
     MLServerNgxConf *conf = child;
 
     ngx_conf_merge_value(conf->enable, prev->enable, 0);
+    ngx_conf_merge_value(conf->enableStubStatus, prev->enableStubStatus, 0);
     mlserver_mod_ngx_conf_merge_str_value(configDir, MLServerNgxConf);
     mlserver_mod_ngx_conf_merge_str_value(lyricsDir, MLServerNgxConf);
     mlserver_mod_ngx_conf_merge_str_value(relatedUploadDir, MLServerNgxConf);
     mlserver_mod_ngx_conf_merge_str_value(lyricsHttpLinkBase, MLServerNgxConf);
-
-//    ngx_conf_merge_value(conf->mls, prev->enable, 0);
-    
 
     return NGX_CONF_OK;
 }

@@ -27,8 +27,11 @@ Ubuntu 下编译：
     sudo apt-get install p7zip-full
     7z x ll.7z
 3. Install openresty
-    https://openresty.org/en/linux-packages.html
-    
+    * https://openresty.org/en/linux-packages.html
+    * Install lua template engine: https://github.com/bungle/lua-resty-template
+      * sudo opm get bungle/lua-resty-template
+      * sudo opm get GUI/lua-resty-mail
+
 4. Replace nginx
     sudo mv /usr/local/openresty/nginx/sbin/nginx /usr/local/openresty/nginx/sbin/nginx.bak
     sudo cp nginx /usr/local/openresty/nginx/sbin/nginx
@@ -36,6 +39,38 @@ Ubuntu 下编译：
     Add: 
         * pid        /usr/local/openresty/nginx/logs/nginx.pid;
         * include /mlserver/mlserver.conf;
+        * Optimize for performance: https://gist.github.com/denji/8359866
+            worker_processes auto;
+            worker_rlimit_nofile 100000;
+            events {
+                # determines how much clients will be served per worker
+                # max clients = worker_connections * worker_processes
+                # max clients is also limited by the number of socket connections available on the system (~64k)
+                worker_connections 16384;
+            }
+
+            http {
+                # cache informations about FDs, frequently accessed files
+                # can boost performance, but you need to test those values
+                open_file_cache max=3000 inactive=20s;
+                open_file_cache_valid 30s;
+                open_file_cache_min_uses 2;
+                open_file_cache_errors on;
+                
+                client_max_body_size 200k;
+
+                # allow the server to close connection on non responding client, this will free up memory
+                reset_timedout_connection on;
+
+                # request timed out -- default 60
+                client_body_timeout 20;
+
+                # if client stop responding, free up memory -- default 60
+                send_timeout 10;
+
+                # server will close connection after this time -- default 75
+                keepalive_timeout 10;
+            }
 
 测试：
     curl -i -X POST http://search.crintsoft.com/searchlyrics.htm -H "Content-Type: text/xml"   --data-binary "@/Users/hongyongxiao/zikiplayer/ML-Protocol-Lua-Lib/test/request_0.bin"

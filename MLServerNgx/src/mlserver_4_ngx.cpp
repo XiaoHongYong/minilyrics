@@ -47,6 +47,8 @@ static void finishWithResponse(ngx_http_request_t *r, ngx_chain_t *responseBodyC
     ngx_http_finalize_request(r, NGX_HTTP_OK);
 }
 
+#define INVALID_REQUEST "Invalid Request."
+
 static void ngx_http_read_request_body_handler(ngx_http_request_t *r)
 {
     MLServerContext *ctx = (MLServerContext *)ngx_pcalloc(r->pool, sizeof(MLServerContext));
@@ -60,7 +62,11 @@ static void ngx_http_read_request_body_handler(ngx_http_request_t *r)
         NgxOutputStream stream(r->pool, &outChain);
 
         g_mlserver.Process(body.data, body.len, stream);
+        if (outChain == NULL) {
+            stream.write(INVALID_REQUEST, CountOf(INVALID_REQUEST) - 1);
+        }
 
+        ngx_http_finalize_request(r, NGX_DONE);
         finishWithResponse(r, outChain);
         return;
     }
@@ -68,8 +74,35 @@ static void ngx_http_read_request_body_handler(ngx_http_request_t *r)
     ngx_http_finalize_request(r, NGX_DONE);
 }
 
-#define SEARCH_LYRICS_PATH  "/searchlyrics.htm"
-#define SEARCH_LYRICS_PATH_LEN (sizeof(SEARCH_LYRICS_PATH) - 1)
+static void writeStubStatus(ngx_http_request_t *r) {
+    ngx_chain_t *outChain = NULL;
+    NgxOutputStream stream(r->pool, &outChain);
+
+    char buf[256];
+
+    sprintf(buf, "Active connections: %llu.\n", *ngx_stat_active);
+    stream.write(buf, strlen(buf));
+
+    sprintf(buf, "Server states accepts: %llu.\n", *ngx_stat_accepted);
+    stream.write(buf, strlen(buf));
+
+    sprintf(buf, "Server states handled: %llu.\n", *ngx_stat_handled);
+    stream.write(buf, strlen(buf));
+
+    sprintf(buf, "Server states requests: %llu.\n", *ngx_stat_requests);
+    stream.write(buf, strlen(buf));
+
+    sprintf(buf, "Reading: %llu.\n", *ngx_stat_reading);
+    stream.write(buf, strlen(buf));
+
+    sprintf(buf, "Writing: %llu.\n", *ngx_stat_writing);
+    stream.write(buf, strlen(buf));
+
+    sprintf(buf, "Waiting: %llu.\n", *ngx_stat_waiting);
+    stream.write(buf, strlen(buf));
+
+    finishWithResponse(r, outChain);
+}
 
 extern "C" ngx_int_t mlserver_http_rewrite_handler(ngx_http_request_t *r) {
     MLServerNgxConf *conf = (MLServerNgxConf *)ngx_http_get_module_loc_conf(r, mlserver_module);
@@ -85,10 +118,15 @@ extern "C" ngx_int_t mlserver_http_rewrite_handler(ngx_http_request_t *r) {
 
         ngx_int_t rc = ngx_http_read_client_request_body(r,
             ngx_http_read_request_body_handler);
-        if (rc == NGX_OK || rc == NGX_DECLINED) {
-            return NGX_DECLINED;
-        }
+//        if (rc == NGX_OK || rc == NGX_DECLINED) {
+//            return NGX_DECLINED;
+//        }
         
+        return NGX_DONE;
+    }
+    
+    if (conf->enableStubStatus == 1) {
+        writeStubStatus(r);
         return NGX_DONE;
     }
     
