@@ -140,9 +140,9 @@ function _M.changePassword(userId, password)
         return ''
     end
 
-    ngx.log(ngx.ERR, 'Failed to change email address', userId, ', ', newEmail)
+    ngx.log(ngx.ERR, 'Failed to change password, Database error: ', db:errmsg())
 
-    return 'Failed to change email address.'
+    return 'Failed to change password.'
 end
 
 return _M

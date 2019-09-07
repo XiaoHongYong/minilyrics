@@ -3,11 +3,13 @@
 {-title-}My uploaded lyrics{-title-}
 
 {-content-}
-<h3>
-My uploaded lyrics
-</h3>
-<p>Please use MiniLyrics client to upload or update lyrics.</p>
 <div id="uploaded_lyrics">
+    <h3>
+    My uploaded lyrics
+    </h3>
+    <p>Please use MiniLyrics client to upload or update lyrics.</p>
+    <p>You have uploaded [[ lyricsCount ]] lyrics.</p>
+
     <table class="table table-sm table-hover">
         <thead class="thead-light">
             <tr>
@@ -41,6 +43,7 @@ My uploaded lyrics
 
 var fieldHeaders = {* columns *};
 var pageCount = {* pageCount *};
+var lyricsCount = {* lyricsCount *};
 var curPage = {* curPage *};
 var offset = {* offset *};
 var rows = {* rows *};
@@ -88,6 +91,7 @@ var profileApp = new Vue({
         indexLink: indexLink,
         indexId: indexId,
         lyricsBaseLink: lyricsBaseLink,
+        lyricsCount: lyricsCount,
     },
 	methods: {
         deleteLyrics(id, rowIndex) {

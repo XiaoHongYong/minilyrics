@@ -50,6 +50,16 @@ local function uint32FromBytesStr(s, defValueIfFailed)
                                  n0))
 end
 
+local function encode_base64_safe(s)
+    s = ngx.encode_base64(s)
+    return s:gsub('+', '.')
+end
+
+local function decode_base64_safe(s)
+    s = string.gsub(s, '[.]', '+')
+    return ngx.decode_base64(s)
+end
+
 local function encryptWithSessionKey(type, version, userId)
     local random = require "resty.random"
 
@@ -59,27 +69,27 @@ local function encryptWithSessionKey(type, version, userId)
     encryptTime = uint32ToBytesStr(os.time())
 
     local encryptedSessionId = aesSession:encrypt(type .. version .. userId .. encryptTime .. randBytes)
-    return type .. version .. ngx.encode_base64(encryptedSessionId)
+    return type .. version .. encode_base64_safe(encryptedSessionId)
 end
 
 function decryptWithSessionKey(sessionInfo, type, version)
     local typeVersion = type .. version
     local ret = {}
     if string.sub(sessionInfo, 1, 2) ~= typeVersion then
-        ngx.log(ngx.ERR, 'session Version NOT match.')
+        ngx.log(ngx.ERR, 'session Version NOT match.', sessionInfo, typeVersion)
         return ret
     end
     sessionInfo = string.sub(sessionInfo, 3)
 
-    sessionInfo = ngx.decode_base64(sessionInfo)
+    sessionInfo = decode_base64_safe(sessionInfo)
     if sessionInfo == nil then
-        ngx.log(ngx.ERR, 'Failed to decode base64 of sessionInfo.')
+        ngx.log(ngx.ERR, 'Failed to decode base64 of sessionInfo.', sessionInfo)
         return ret
     end
 
     sessionInfo = aesSession:decrypt(sessionInfo)
     if sessionInfo == nil then
-        ngx.log(ngx.ERR, 'session Version NOT match.')
+        ngx.log(ngx.ERR, 'Failed to decrypt: ', sessionInfo)
         return ret
     end
 
@@ -111,6 +121,13 @@ function _M.decryptResetPasswordSession(sessionInfo)
     return decryptWithSessionKey(sessionInfo, SESSION_TYPE_RESET_PASSWORD, SESSION_RESET_PASSWORD_VERSION)
 end
 
+local function assert_equal(a, b)
+    if a ~= b then
+        ngx.log(ngx.ERR, 'assert_equal failed: ', a, ' ~= ', b)
+    end
+    assert(a == b)
+end
+
 function _M.test()
     local id = 0xa0a1b2c3
     local sessionInfo = _M.encryptSessionInfo(id)
@@ -118,7 +135,15 @@ function _M.test()
 
     local id2 = _M.decryptSessionInfo(sessionInfo)
     ngx.log(ngx.ERR, id, ':', id2)
-    assert(id == id2)
+    assert_equal(id, id2)
+
+    id = 0xa0a1b21
+    sessionInfo = _M.encryptResetPasswordSession(id)
+    ngx.log(ngx.ERR, 'Session ID: ' .. sessionInfo)
+
+    local info = _M.decryptResetPasswordSession(sessionInfo)
+    ngx.log(ngx.ERR, id, ':', info.userId)
+    assert_equal(id, info.userId)
 end
 
 return _M

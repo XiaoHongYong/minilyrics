@@ -85,7 +85,7 @@ function _M.deleteLyricsByIdAndUserId(id, userId)
         return true
     end
 
-    ngx.log(ngx.ERR, '@@@2', db:errmsg())
+    ngx.log(ngx.ERR, 'Database error: ', db:errmsg())
 
     return false
 end

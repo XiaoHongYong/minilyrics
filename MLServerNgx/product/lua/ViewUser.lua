@@ -109,6 +109,8 @@ end
 _M['/user/password_reset'] = function (ctx)
     ctx.start_reset = true
     ctx.reset_done = false
+    ctx.info = ''
+    ctx.error = ''
 
     local key = ngx.req.get_uri_args().key
     if key == nil then
@@ -121,17 +123,13 @@ _M['/user/password_reset'] = function (ctx)
                 ctx.error = "Request body is required."
             else
                 ctx.email = args.email or ''
-                info = dbUsers.getUserByEmail(ctx.email)
+                local info = dbUsers.getUserByEmail(ctx.email)
                 if info == nil then
                     ctx.error = "Can't find that email, sorry."
                 else
                     sendPasswordResetEmail(ctx, ctx.email, info.id)
                 end
             end
-        else
-            ctx.email = ''
-            ctx.info = ''
-            ctx.error = ''
         end
     else
         local info = session.decryptResetPasswordSession(key)
@@ -153,7 +151,6 @@ _M['/user/password_reset'] = function (ctx)
                     if args == nil then
                         ctx.error = err or "Request body is required."
                     else
-                        ngx.log(ngx.ERR, 'pass', args.password)
                         if args.password == '' or args.password == nil then
                             ctx.error = 'Please input new password.'
                         else
@@ -270,7 +267,8 @@ end
 _M['/user/uploaded-lyrics'] = function (ctx, userId)
     local dbLyrics = require "DbLyrics"
 
-    ctx.pageCount = math.ceil(dbLyrics.getCountLyricsByUserId(userId) / 50)
+    ctx.lyricsCount = dbLyrics.getCountLyricsByUserId(userId)
+    ctx.pageCount = math.ceil(ctx.lyricsCount / 50)
     if ctx.pageCount == 0 then
         ctx.pageCount = 1
     end
