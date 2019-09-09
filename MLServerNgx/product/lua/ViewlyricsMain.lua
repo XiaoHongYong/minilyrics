@@ -4,18 +4,12 @@ local viewLyrics = require "ViewLyrics"
 local session = require "Session"
 
 local function home(ctx, userId)
-    template.render("/home.html", ctx)
+    template.render("home.html", ctx)
 end
 
 local uriHandlers = {
     ['/'] = home,
 }
-
--- local function authenticate(userId)
---     if userId == nil then
---         ngx.redirect('/user/signin')
---     end
--- end
 
 local function starts_with(str, start)
     return str:sub(1, #start) == start

@@ -72,6 +72,10 @@ Ubuntu 下编译：
                 keepalive_timeout 10;
             }
 
+6. https 支持
+    * https://certbot.eff.org/lets-encrypt/ubuntubionic-other
+    sudo certbot certonly --webroot
+
 测试：
     curl -i -X POST http://search.crintsoft.com/searchlyrics.htm -H "Content-Type: text/xml"   --data-binary "@/Users/hongyongxiao/zikiplayer/ML-Protocol-Lua-Lib/test/request_0.bin"
     scp /Users/hongyongxiao/zikiplayer/MLServerNgx/product/nginx ubuntu@mlserver:~/
@@ -82,9 +86,12 @@ Ubuntu 下编译：
         sudo su
         cd /mlserver
         mv /home/ubuntu/lua.zip /mlserver
+        mv /home/ubuntu/mlserver.conf /mlserver
         pwd
         7z x lua.zip
+        rm -rf __MACOSX
         
         service openresty reload
         
-    scp ubuntu@mlserver:/mlserver/mlserver.conf /Users/hongyongxiao/zikiplayer/MLServerNgx/product/mlserver-online.conf
+        scp ubuntu@mlserver:/mlserver/mlserver.conf /Users/hongyongxiao/zikiplayer/MLServerNgx/product/mlserver-online.conf
+        scp /Users/hongyongxiao/zikiplayer/MLServerNgx/product/mlserver-online.conf ubuntu@mlserver:~/mlserver.conf
