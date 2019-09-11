@@ -384,6 +384,10 @@ bool CPlayerPluginInstaller::Player::Install(tstring &strErr, int &err)
 {
 	ASSERT(IsFlagSet(pExtraInfo->status, S_PLAYER_INSTALLED));
 
+    // Delete DisabledPlugins.plist file.
+    tstring iTunesDisabledPluginFn = DirStringJoint(getHomeDir().c_str(), "/Library/iTunes/iTunes Plug-ins/DisabledPlugins.plist");
+    DeleteFile(iTunesDisabledPluginFn.c_str());
+
 	err = ::Install<PluginInstaller>(*this, strErr);
 	if (err != ERR_OK)
 		return false;

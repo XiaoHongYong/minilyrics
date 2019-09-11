@@ -18,15 +18,17 @@ LPVOID ThreadTimer(LPVOID param)
 {
 	g_Player.UpdateTrackInfo();
 
+    int i = 0;
 	while (!g_bQuitTimer)
 	{
 		if (usleep(TIMER_DURATION_GET_POS) != 0)
 			Log("Failed to sleep");
-		if (g_bMediaChanged)
-		{
-			g_Player.UpdateTrackInfo();
-			g_bMediaChanged = false;
-		}
+
+        if (i % 10 == 0) {
+			// Check media changes every second.
+            g_Player.UpdateTrackInfo();
+        }
+        i++;
 		g_Player.OnTimer(CPlayerServiceBase::TIMER_GETPOS);
 	}
 
@@ -93,8 +95,8 @@ void CPlayerImp::OnDisconnect()
 
 	if (g_threadTimer != 0)
 	{
-		g_bQuitTimer = true;
-		pthread_join(g_threadTimer, NULL);
+        g_bQuitTimer = true;
+        pthread_join(g_threadTimer, NULL);
 		g_threadTimer = 0;
 	}
 }
