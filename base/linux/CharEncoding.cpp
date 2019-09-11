@@ -89,7 +89,7 @@ int MbcsToUtf8(const char *str, int nLen, char *strOut, int nOut, int encodingID
 			n = 0;
 	}
 
-	strOut[0] = '\0';
+	strOut[n] = '\0';
 	iconv_close(code);
 
 	return n;
@@ -137,7 +137,7 @@ int Utf8ToMbcs(const char *str, int nLen, char *strOut, int nOut, int encodingID
 			n = 0;
 	}
 
-	strOut[0] = '\0';
+	strOut[n] = '\0';
 	iconv_close(code);
 
 	return n;	
@@ -171,7 +171,7 @@ int MbcsToUCS2(const char *str, int nLen, WCHAR *strOut, int nOut, int encodingI
 			n = 0;
 	}
 
-	strOut[0] = '\0';
+	strOut[n] = '\0';
 	iconv_close(code);
 
 	return n;
@@ -196,7 +196,7 @@ int UCS2ToMbcs(const WCHAR *str, int nLen, char *strOut, int nOut, int encodingI
 	else
 		n = nOut - outBytesLeft;
 
-	strOut[0] = '\0';
+	strOut[n] = '\0';
 	iconv_close(code);
 
 	return n;
