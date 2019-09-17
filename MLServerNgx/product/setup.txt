@@ -7,6 +7,7 @@ Ubuntu 下编译：
     ubuntu: 
     * Configure before build: third-parties/openresty/config-for-ubuntu.sh
     * build.sh
+    * vmhgfs-fuse .host:/MLServerNgx/product /mlserver -o subtype=vmhgfs-fuse,allow_other
 
 0. 讲所有配置和数据文件放到 /mlserver 目录下
     * 新建磁盘 40G，inode 数量在1000w sudo mkfs.ext4 -i 4096 -b 2048 /dev/xvdf
@@ -75,6 +76,10 @@ Ubuntu 下编译：
 6. https 支持
     * https://certbot.eff.org/lets-encrypt/ubuntubionic-other
     sudo certbot certonly --webroot
+
+7. log rotate
+    * scp /Users/hongyongxiao/zikiplayer/MLServerNgx/product/logrotate.d/nginx.conf ubuntu@mlserver:~
+    * sudo cp /home/ubuntu/nginx.conf /etc/logrotate.d/nginx.conf
 
 测试：
     curl -i -X POST http://search.crintsoft.com/searchlyrics.htm -H "Content-Type: text/xml"   --data-binary "@/Users/hongyongxiao/zikiplayer/ML-Protocol-Lua-Lib/test/request_0.bin"

@@ -3,11 +3,11 @@ local mail = require "resty.mail"
 local _M = {}
 function _M.sendMail(toAddress, fromAddress, subject, text)
     local mailer, err = mail.new({
-        host = "smtp.ionos.com",
+        host = "email-smtp.us-west-2.amazonaws.com",
         port = 587,
         starttls = true,
-        username = "auto@crintsoft.com",
-        password = "auto@crintsoft.com#$",
+        username = "AKIA3Y6DGYOKWJTDRU4N",
+        password = "BOJk/LrlVyZXT667gjWpHYgseKmKpfKq9/3+qVqI7LsK",
     })
 
     if err then
