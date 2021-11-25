@@ -9,6 +9,8 @@ Ubuntu 下编译：
     * build.sh
     * vmhgfs-fuse .host:/MLServerNgx/product /mlserver -o subtype=vmhgfs-fuse,allow_other
 
+ssh ubuntu@crintsoft.com
+
 0. 讲所有配置和数据文件放到 /mlserver 目录下
     * 新建磁盘 40G，inode 数量在1000w sudo mkfs.ext4 -i 4096 -b 2048 /dev/xvdf
     * sudo mkdir /mlserver
@@ -76,6 +78,9 @@ Ubuntu 下编译：
 6. https 支持
     * https://certbot.eff.org/lets-encrypt/ubuntubionic-other
     sudo certbot certonly --webroot
+    * Add crontab:
+        sudo crontab -e
+        0   1  1   *   *     /mlserver/renew-https.sh
 
 7. log rotate
     * scp /Users/hongyongxiao/zikiplayer/MLServerNgx/product/logrotate.d/nginx.conf ubuntu@mlserver:~

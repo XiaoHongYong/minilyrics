@@ -25,6 +25,7 @@ inline CPoint NSPointToCPoint(const NSPoint &nsPoint, int wndHeight)
 								defer:NO];
 	if (self != nil) {
 		//[self setAlphaValue:1.0];
+        [self setBackgroundColor:[NSColor clearColor]];
 		[self setOpaque:NO];
 		[self setDelegate: self];
 	}
