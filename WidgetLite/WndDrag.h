@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:43
 	FileName :	WndDrag.h
 	Author   :	xhy
@@ -49,7 +49,7 @@ protected:
 	virtual BOOL AutoCloseToWindows(int &nOffx, int &nOffy, BOOL bMoveWindow = TRUE);
 
 protected:
-    CBaseWnd		*m_pWnd;			// ¸¸´°¿Ú
+    CBaseWnd		*m_pWnd;			// çˆ¶çª—å£
 
 	BOOL			m_bDragWnd;		// dragging window?
 
@@ -57,9 +57,9 @@ protected:
 
     BOOL            m_bDragAutoCloseto;
 
-	BOOL			m_bSticked;		// Õ³×¡ÁËÄ¿±ê´°¿Ú£¿
-	CBaseWnd		*m_pWndToTrack;	// Õ³×¡µÄÄ¿±ê´°¿Ú
-	CPoint			m_ptWndTrack;	// Õ³×¡µÄÄ¿±ê´°¿ÚµÄ×óÉÏ½Ç
+	BOOL			m_bSticked;		// ç²˜ä½äº†ç›®æ ‡çª—å£ï¼Ÿ
+	CBaseWnd		*m_pWndToTrack;	// ç²˜ä½çš„ç›®æ ‡çª—å£
+	CPoint			m_ptWndTrack;	// ç²˜ä½çš„ç›®æ ‡çª—å£çš„å·¦ä¸Šè§’
 
 	BOOL			m_bEnableDrag;
 

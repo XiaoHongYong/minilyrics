@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:30
 	FileName :	MLProfile.h
 	Author   :	xhy
@@ -16,7 +16,7 @@
 #include "../MLProtocol/MLProtocol.h"
 
 //************************************************************
-// ÍøÂçÉèÖÃ¶¨Òå
+// ç½‘ç»œè®¾ç½®å®šä¹‰
 //
 //************************************************************
 #define INET_CON_NONE	3
@@ -33,13 +33,13 @@ enum DOWN_SAVE_DIR
 	DOWN_SAVE_IN_SONG_DIR	= 0,		// Save lyrics in the song file folder
 	DOWN_SAVE_IN_CUSTOM_DIR	= 1,		// Save lyrics in specified directory
 	DOWN_SAVE_NO_FILE		= 10,		// Do not save lyrics as file
-	// DOWN_SAVE_TO_MP3		= 3			// ±£´æÎªºÍ¸èÇúÏàÍ¬µÄÃû×Ö
+	// DOWN_SAVE_TO_MP3		= 3			// ä¿å­˜ä¸ºå’Œæ­Œæ›²ç›¸åŒçš„åå­—
 };
 
 enum DOWN_SAVE_NAME
 {
-	DOWN_SAVE_NAME_KEEP		= 0,		// ±£´æÔÚ¸èÇúËùÔÚÄ¿Â¼
-	DOWN_SAVE_NAME_AS_SONG_NAME	= 1,	// ±£´æÎªºÍ¸èÇúÏàÍ¬µÄÃû×Ö
+	DOWN_SAVE_NAME_KEEP		= 0,		// ä¿å­˜åœ¨æ­Œæ›²æ‰€åœ¨ç›®å½•
+	DOWN_SAVE_NAME_AS_SONG_NAME	= 1,	// ä¿å­˜ä¸ºå’Œæ­Œæ›²ç›¸åŒçš„åå­—
 };
 
 #define SZ_SECT_SEARCH_FOLDER			_T("SearverFodler")

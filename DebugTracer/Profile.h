@@ -1,4 +1,4 @@
-/********************************************************************
+﻿/********************************************************************
 	Created  :	2002/01/04	21:30
 	FileName :	CProfile.h
 	Author   :	xhy
@@ -21,9 +21,9 @@
 using namespace std;
 
 //
-// ��*.ini�ļ��ж�������֮���
-// Ϊ�����Ч�ʣ�ʹ�û��壬�����ʹ���key��������m_mapAppName2Keys�С�
-// �ڱ����ʱ��û��ʹ�û��壬��ֻҪ�޸ģ��ͻ���£���Ϊ�޸Ĳ��࣬����ֱ�ӱ���
+// 从*.ini文件中读入设置之类的
+// 为了提高效率，使用缓冲，将访问过的key都保存在m_mapAppName2Keys中。
+// 在保存的时候，没有使用缓冲，即只要修改，就会更新；因为修改不多，所以直接保存
 //
 class CProfile  
 {
@@ -45,7 +45,7 @@ protected:
 public:
 	void AddKeys(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
 	void Init(LPCTSTR szProfile, HINSTANCE hInst);
-	// ����д�����ļ� MiniLyrics.ini
+	// 读和写配置文件 MiniLyrics.ini
 	DWORD GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPSTR szReturnedString, DWORD nSize);
 	BOOL WriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
 

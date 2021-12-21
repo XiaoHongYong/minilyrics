@@ -1,4 +1,4 @@
-// SkinListCtrl.h: interface for the CSkinListView class.
+Ôªø// SkinListCtrl.h: interface for the CSkinListView class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -316,7 +316,7 @@ protected:
 	// Drag to adjust the width of columns
 	bool					m_bAdjustColWidth;
 	int						m_nResizingCol;
-	POINT					m_ptStartDrag;					//  Û±Í…œ“ª¥ŒµƒŒª÷√
+	POINT					m_ptStartDrag;					// Èº†Ê†á‰∏ä‰∏ÄÊ¨°ÁöÑ‰ΩçÁΩÆ
 	CCursor					m_curResizeCol;
 	CCursor					m_curHand;
 

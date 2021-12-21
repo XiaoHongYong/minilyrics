@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "safestr.h"
 
 size_t strlen_safe(const char * str, size_t maxLength)
@@ -19,7 +19,7 @@ size_t wcslen_safe(const WCHAR * str, size_t maxLength)
 	return n;
 }
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
 char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource)
 {
     char	*cp = strDestination;
@@ -35,7 +35,7 @@ char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource)
     return(strDestination);
 }
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
 size_t	strncpy_safe(char *strDestination, size_t nLenMax, const char *strSource, size_t nToCopy)
 {
 	if (nToCopy >= nLenMax)
@@ -51,8 +51,8 @@ size_t	strncpy_safe(char *strDestination, size_t nLenMax, const char *strSource,
     return org - nToCopy;
 }
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
-// ²¢ÇÒ½«½áÎ²ÉèÖÃÎªÒÔ'\0'½áÊø
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
+// å¹¶ä¸”å°†ç»“å°¾è®¾ç½®ä¸ºä»¥'\0'ç»“æŸ
 size_t	strncpysz_safe(char *strDestination, size_t nLenMax, const char *strSource, size_t nToCopy)
 {
 	if (nToCopy >= nLenMax)
@@ -68,7 +68,7 @@ size_t	strncpysz_safe(char *strDestination, size_t nLenMax, const char *strSourc
     return org - nToCopy;
 }
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
 char *strcat_safe(char * dst, size_t Size, const char * src)
 {
 	char * cp = dst;
@@ -87,7 +87,7 @@ char *strcat_safe(char * dst, size_t Size, const char * src)
 //////////////////////////////////////////////////////////////////////////
 // UNICODE version
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
 size_t	wcsncpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource, size_t nToCopy)
 {
 	if (nToCopy >= nLenMax)
@@ -103,8 +103,8 @@ size_t	wcsncpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSourc
     return org - nToCopy;
 }
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
-// ²¢ÇÒ½«½áÎ²ÉèÖÃÎªÒÔ'\0'½áÊø
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
+// å¹¶ä¸”å°†ç»“å°¾è®¾ç½®ä¸ºä»¥'\0'ç»“æŸ
 size_t	wcsncpysz_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource, size_t nToCopy)
 {
 	if (nToCopy >= nLenMax)
@@ -120,7 +120,7 @@ size_t	wcsncpysz_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSou
     return org - nToCopy;
 }
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
 WCHAR *wcscpy_safe(WCHAR *strDestination, size_t nLenMax, const WCHAR *strSource)
 {
     WCHAR	*cp = strDestination;

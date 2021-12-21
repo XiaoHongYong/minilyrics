@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 class CVersionInfo
@@ -8,8 +8,8 @@ public:
 
 public:
 	VersionNumber	verNew;
-	tstring			strNewVerDate;			// ĞÂ°æ·¢²¼ÈÕÆÚ
-	tstring			strFeature;				// ĞÂ°æÌØĞÔ
+	tstring			strNewVerDate;			// æ–°ç‰ˆå‘å¸ƒæ—¥æœŸ
+	tstring			strFeature;				// æ–°ç‰ˆç‰¹æ€§
 
 };
 

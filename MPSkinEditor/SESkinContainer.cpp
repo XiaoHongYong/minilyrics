@@ -1,4 +1,4 @@
-// SESkinContainer.cpp: implementation of the CSESkinContainer class.
+ï»¿// SESkinContainer.cpp: implementation of the CSESkinContainer class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -105,7 +105,7 @@ void CSESkinContainer::Draw(IMLGraphicsBase *pGraph)
 		clrOld = SetBkColor(hdc, RGB(255, 255, 255));
 		nBkModeOld = SetBkMode(hdc, OPAQUE);
 
-		// »­±ßÔµ
+		// ç”»è¾¹ç¼˜
 		// for (int i = 0; i < SIZE_MARGIN; i+=2)
 		int	i = 0;
 		{

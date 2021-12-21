@@ -1,4 +1,4 @@
-#pragma once
+О╩©#pragma once
 
 class CMemmapFile  
 {
@@ -22,9 +22,9 @@ public:
 	}
 
 protected:
-	HANDLE		m_hFile;			// нд╪Ч╬Д╠З
-	HANDLE		m_hFilemap;			// нд╪ЧсЁиД╬Д╠З
-	int			m_nFileSize;		// нд╪Ч╢Сп║
-	LPBYTE		m_lpFile;			// нд╪ЧсЁиДж╝╨С╣днд╪Чдзхщ
+	HANDLE		m_hFile;			// Ф√┤Д╩╤Е▐╔Ф÷└
+	HANDLE		m_hFilemap;			// Ф√┤Д╩╤Ф≤═Е╟└Е▐╔Ф÷└
+	int			m_nFileSize;		// Ф√┤Д╩╤Е╓╖Е╟▐
+	LPBYTE		m_lpFile;			// Ф√┤Д╩╤Ф≤═Е╟└Д╧▀Е░▌Г └Ф√┤Д╩╤Е├┘Е╝╧
 
 };

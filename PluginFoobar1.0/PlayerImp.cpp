@@ -1,4 +1,4 @@
-#include "../MLPluginLib/MLPlugin.h"
+ï»¿#include "../MLPluginLib/MLPlugin.h"
 #include "PlayerImp.h"
 
 CPlayerImp		g_Player;
@@ -103,7 +103,7 @@ class play_callback_ui : public play_callback
 static service_factory_single_t<initquit_ui> foo;
 //
 // service.h(239) : error C2259: 'play_callback_ui' : cannot instantiate abstract class
-// Óöµ½´Ë´íÎó£¬¼ì²éplay_callback_uiÀàÀïÃæÊÇ·ñÓĞ´¿Ğéº¯Êı¼Ì³ĞÏÂÀ´ÁË¡­¡­
+// é‡åˆ°æ­¤é”™è¯¯ï¼Œæ£€æŸ¥play_callback_uiç±»é‡Œé¢æ˜¯å¦æœ‰çº¯è™šå‡½æ•°ç»§æ‰¿ä¸‹æ¥äº†â€¦â€¦
 // static service_factory_single_t<play_callback_ui> foo2;
 play_callback_ui		ml_play_callback;
 

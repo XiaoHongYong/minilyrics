@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferPageUI.h"
 #include "PreferenceDlg.h"
@@ -45,7 +45,7 @@ public:
 		else if (nId == GetIDByName(_T("CID_SEL_LANGUAGE")))
 		{
 			//
-			// ´´½¨¿ì½İ²Ëµ¥, ÏÔÊ¾¿ÉÒÔÊ¹ÓÃµÄÓïÑÔ°ü
+			// åˆ›å»ºå¿«æ·èœå•, æ˜¾ç¤ºå¯ä»¥ä½¿ç”¨çš„è¯­è¨€åŒ…
 			//
 			int					nCmd;
 			CRect				rc;
@@ -86,7 +86,7 @@ public:
 			return true;
 
 		//
-		// Ñ¡ÔñÁËÒ»¸öÓïÑÔ°ü, ÔòÁ¢¼´ÇĞ»»µ½¸ÃÓïÑÔ
+		// é€‰æ‹©äº†ä¸€ä¸ªè¯­è¨€åŒ…, åˆ™ç«‹å³åˆ‡æ¢åˆ°è¯¥è¯­è¨€
 		//
 		if (nId >= _CMD_ID_LANGUANG_BEGIN && 
 			nId < _CMD_ID_LANGUANG_BEGIN + (int)m_vTransFiles.size())
@@ -141,7 +141,7 @@ protected:
 protected:
 	CMLMenu			m_menuLang;
 
-	// Ã¿Ò»¸ö²Ëµ¥Ïî¶ÔÓ¦µÄÎÄ¼ş
+	// æ¯ä¸€ä¸ªèœå•é¡¹å¯¹åº”çš„æ–‡ä»¶
 	CLanguageTool::V_TRANSFILEINFO	m_vTransFiles;
 
 };
@@ -233,7 +233,7 @@ public:
 			if (pListCtrlNotify->cmd == CSkinListCtrlEventNotify::C_SEL_CHANGED)
 			{
 				m_pSkin->UnregisterTimerObject(this, TIMER_ID_SKIN_SEL_CHANGED);
-				// ÉèÖÃÑÓÊ±Ê±¼äÎª300ms£¬¼´ÔÚ300msºó£¬ÓÃ»§µÄÑ¡Ôñ²Å»áÉúĞ§
+				// è®¾ç½®å»¶æ—¶æ—¶é—´ä¸º300msï¼Œå³åœ¨300msåï¼Œç”¨æˆ·çš„é€‰æ‹©æ‰ä¼šç”Ÿæ•ˆ
 				TIMER_ID_SKIN_SEL_CHANGED = m_pSkin->RegisterTimerObject(this, 300);
 			}
 		}
@@ -262,7 +262,7 @@ public:
 		}
 #endif
 
-		// ²éÕÒËùÓĞµÄSkin£¬²¢ÇÒÌí¼Óµ½²Ëµ¥ÖĞ
+		// æŸ¥æ‰¾æ‰€æœ‰çš„Skinï¼Œå¹¶ä¸”æ·»åŠ åˆ°èœå•ä¸­
 		vector<tstring>		vSkins;
 		if (CMPlayerAppBase::GetMPSkinFactory()->EnumAllSkins(vSkins))
 		{
@@ -283,7 +283,7 @@ public:
 		TCHAR		szReadme[MAX_PATH] = _T("");
 		tstringex	str;
 
-		// ÉèÖÃSkinµÄËµÃ÷
+		// è®¾ç½®Skinçš„è¯´æ˜
 		if (CMPlayerAppBase::GetMPSkinFactory()->GetResourceMgr()->GetResourcePathName(szReadme, CountOf(szReadme), _T("Readme.txt"))
 			&& OpenFileToTString(szReadme, str))
 		{

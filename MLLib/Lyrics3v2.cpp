@@ -1,4 +1,4 @@
-// Lyrics3v2.cpp: implementation of the CLyrics3v2 class.
+﻿// Lyrics3v2.cpp: implementation of the CLyrics3v2 class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -232,7 +232,7 @@ int CLyrics3v2::WriteLyrcsInfo(LPCTSTR szMp3File, const char *szLyrics, int nLen
 		memcpy(szId3v1Tag, "TAG", 3);
 
 		//
-		// �ȴӸ�ʱ�ǩ��ȡ����Ϣ
+		// 先从歌词标签中取得信息
 		//
 		CLrcTag		lrcTag;
 

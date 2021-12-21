@@ -1,4 +1,4 @@
-// SkinVScrollBar.cpp: implementation of the CSkinVScrollBar class.
+ï»¿// SkinVScrollBar.cpp: implementation of the CSkinVScrollBar class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -10,14 +10,14 @@
 
 CSkinSrollBarBase::CSkinSrollBarBase()
 {
-	// ĞéÄâ¹ö¶¯Î»ÖÃ
-	m_nVirtualMin = 0;		// ×îĞ¡µÄÖµ
-	m_nVirtualMax = 10;		// ×î´óµÄÖµ
-	m_nVirtualPage = 1;		// ¹ö¶¯Ò»Ò³µÄÖµ
-	m_nVirtualLine = 1;		// ¹ö¶¯Ò»ĞĞµÄÖµ£¬È±Ê¡Îª1
+	// è™šæ‹Ÿæ»šåŠ¨ä½ç½®
+	m_nVirtualMin = 0;		// æœ€å°çš„å€¼
+	m_nVirtualMax = 10;		// æœ€å¤§çš„å€¼
+	m_nVirtualPage = 1;		// æ»šåŠ¨ä¸€é¡µçš„å€¼
+	m_nVirtualLine = 1;		// æ»šåŠ¨ä¸€è¡Œçš„å€¼ï¼Œç¼ºçœä¸º1
 	m_nVirtualCurPos = m_nVirtualMin;
 
-	m_nPosThumb = 0;		// ¹ö¶¯ÌõµÄÎ»ÖÃ(ÉÏÃæ°´Å¥µÄÏÂ·½ £­> thumbµÄÉÏ·½µÄ¾àÀë)
+	m_nPosThumb = 0;		// æ»šåŠ¨æ¡çš„ä½ç½®(ä¸Šé¢æŒ‰é’®çš„ä¸‹æ–¹ ï¼> thumbçš„ä¸Šæ–¹çš„è·ç¦»)
 
 	m_bStretchedThumb = false;
 	m_nSizeThumbStretched = 41;
@@ -67,9 +67,9 @@ void CSkinSrollBarBase::SetScrollInfo(int nMin, int nMax, int nPage, int nPos, i
 }
 
 // COMMENT:
-//		ÉèÖÃĞÂµÄ¹ö¶¯Î»ÖÃ
+//		è®¾ç½®æ–°çš„æ»šåŠ¨ä½ç½®
 // RETURN:
-//		·µ»ØÉèÖÃÒÔÇ°µÄ¹ö¶¯Î»ÖÃµÄÖµ
+//		è¿”å›è®¾ç½®ä»¥å‰çš„æ»šåŠ¨ä½ç½®çš„å€¼
 int CSkinSrollBarBase::SetScrollPos(int nPos, bool bRedraw)
 {
 	int		nPosOld;
@@ -140,20 +140,20 @@ bool CSkinSrollBarBase::OnLButtonDown(UINT nFlags, CPoint point)
 	switch (m_PushDownPos)
 	{
 	case PUSH_DOWN_TOPBT:
-		// ¹ö¶¯ÌõÉÏÃæµÄ°´Å¥
+		// æ»šåŠ¨æ¡ä¸Šé¢çš„æŒ‰é’®
 		TopBtOnLButtonDown(nFlags, point);
 		break;
 	case PUSH_DOWN_BOTTOMBT:
-		// ¹ö¶¯ÌõÏÂÃæµÄ°´Å¥
+		// æ»šåŠ¨æ¡ä¸‹é¢çš„æŒ‰é’®
 		BottomBtOnLButtonDown(nFlags, point);
 		break;
 	case PUSH_DOWN_THUMB:
-		// ¹ö¶¯ÌõµÄÍÏ¶¯box(thumb)
+		// æ»šåŠ¨æ¡çš„æ‹–åŠ¨box(thumb)
 		ThumbOnLButtonDown(nFlags, point);
 		break;
 	case PUSH_DOWN_TOPTRACK:
 	case PUSH_DOWN_BOTTOMTRACK:
-		// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
+		// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
 		TrackOnLButtonDown(nFlags, point);
 		break;
 	default:
@@ -165,7 +165,7 @@ bool CSkinSrollBarBase::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CSkinSrollBarBase::TopBtOnLButtonDown(UINT nFlags, CPoint point)
 {
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 	m_pSkin->SetCaptureMouse(this);
 
 	int		nVirtualPosOld;
@@ -195,7 +195,7 @@ void CSkinSrollBarBase::TopBtOnLButtonDown(UINT nFlags, CPoint point)
 
 void CSkinSrollBarBase::BottomBtOnLButtonDown(UINT nFlags, CPoint point)
 {
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 	m_pSkin->SetCaptureMouse(this);
 
 	int		nVirtualPosOld;
@@ -224,7 +224,7 @@ void CSkinSrollBarBase::BottomBtOnLButtonDown(UINT nFlags, CPoint point)
 
 void CSkinSrollBarBase::TrackOnLButtonDown(UINT nFlags, CPoint point)
 {
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 	m_pSkin->SetCaptureMouse(this);
 
 	RegisterTimer();
@@ -244,20 +244,20 @@ bool CSkinSrollBarBase::OnLButtonUp(UINT nFlags, CPoint point)
 	switch (m_PushDownPos)
 	{
 	case PUSH_DOWN_TOPBT:
-		// ¹ö¶¯ÌõÉÏÃæµÄ°´Å¥
+		// æ»šåŠ¨æ¡ä¸Šé¢çš„æŒ‰é’®
 		TopBtOnLButtonUp(nFlags, point);
 		break;
 	case PUSH_DOWN_BOTTOMBT:
-		// ¹ö¶¯ÌõÏÂÃæµÄ°´Å¥
+		// æ»šåŠ¨æ¡ä¸‹é¢çš„æŒ‰é’®
 		BottomBtOnLButtonUp(nFlags, point);
 		break;
 	case PUSH_DOWN_THUMB:
-		// ¹ö¶¯ÌõµÄÍÏ¶¯box(thumb)
+		// æ»šåŠ¨æ¡çš„æ‹–åŠ¨box(thumb)
 		ThumbOnLButtonUp(nFlags, point);
 		break;
 	case PUSH_DOWN_TOPTRACK:
 	case PUSH_DOWN_BOTTOMTRACK:
-		// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
+		// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
 		TrackOnLButtonUp(nFlags, point);
 		break;
 	default:
@@ -278,7 +278,7 @@ void CSkinSrollBarBase::TopBtOnLButtonUp(UINT nFlags, CPoint point)
 {
 	UnregisterTimer();
 
-	// ÊÍ·ÅÊó±êÊäÈë
+	// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 	m_pSkin->ReleaseCaptureMouse(this);
 
 	// DBGLOG0(_T("TopBt button up"));
@@ -288,7 +288,7 @@ void CSkinSrollBarBase::BottomBtOnLButtonUp(UINT nFlags, CPoint point)
 {
 	UnregisterTimer();
 
-	// ÊÍ·ÅÊó±êÊäÈë
+	// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 	m_pSkin->ReleaseCaptureMouse(this);
 
 	// DBGLOG0(_T("BottomBt button up"));
@@ -296,7 +296,7 @@ void CSkinSrollBarBase::BottomBtOnLButtonUp(UINT nFlags, CPoint point)
 
 void CSkinSrollBarBase::ThumbOnLButtonUp(UINT nFlags, CPoint point)
 {
-	// ÊÍ·ÅÊó±êÊäÈë
+	// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 	m_pSkin->ReleaseCaptureMouse(this);
 
 	// DBGLOG0(_T("Thumb button up"));
@@ -308,7 +308,7 @@ void CSkinSrollBarBase::TrackOnLButtonUp(UINT nFlags, CPoint point)
 
 	UnregisterTimer();
 
-	// ÊÍ·ÅÊó±êÊäÈë
+	// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 	m_pSkin->ReleaseCaptureMouse(this);
 
 	// DBGLOG0(_T("Track button up"));
@@ -347,7 +347,7 @@ bool CSkinSrollBarBase::OnMouseDrag(CPoint point)
 	switch (m_PushDownPos)
 	{
 	case PUSH_DOWN_THUMB:
-		// ¹ö¶¯ÌõµÄÍÏ¶¯box(thumb)
+		// æ»šåŠ¨æ¡çš„æ‹–åŠ¨box(thumb)
 		ThumbOnMouseDrag(point);
 		break;
 	default:
@@ -362,16 +362,16 @@ bool CSkinSrollBarBase::OnMouseMove(CPoint point)
 	switch (m_PushDownPos)
 	{
 	case PUSH_DOWN_TOPBT:
-		// ¹ö¶¯ÌõÉÏÃæµÄ°´Å¥
+		// æ»šåŠ¨æ¡ä¸Šé¢çš„æŒ‰é’®
 		TopBtOnMouseMove(point);
 		break;
 	case PUSH_DOWN_BOTTOMBT:
-		// ¹ö¶¯ÌõÏÂÃæµÄ°´Å¥
+		// æ»šåŠ¨æ¡ä¸‹é¢çš„æŒ‰é’®
 		BottomBtOnMouseMove(point);
 		break;
 	case PUSH_DOWN_TOPTRACK:
 	case PUSH_DOWN_BOTTOMTRACK:
-		// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
+		// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
 		TrackOnMouseDrag(point);
 		break;
 	case PUSH_DOWN_NONE:
@@ -385,7 +385,7 @@ bool CSkinSrollBarBase::OnMouseMove(CPoint point)
 			// if (CursorPosNew != PUSH_DOWN_NONE && m_CursorPosLatest == PUSH_DOWN_NONE)
 			if (m_pSkin->GetCaptureMouse() != this)
 			{
-				// ²¶×½Êó±êÊäÈë
+				// æ•æ‰é¼ æ ‡è¾“å…¥
 				m_pSkin->SetCaptureMouse(this);
 			}
 			else if (CursorPosNew == PUSH_DOWN_NONE)
@@ -463,7 +463,7 @@ void CSkinSrollBarBase::OnTimer(int nId)
 		switch (m_PushDownPos)
 		{
 		case PUSH_DOWN_TOPBT:
-			// ¹ö¶¯ÌõÉÏÃæµÄ°´Å¥
+			// æ»šåŠ¨æ¡ä¸Šé¢çš„æŒ‰é’®
 			{
 				if (m_CursorPosLatest == PUSH_DOWN_TOPBT)
 				{
@@ -492,7 +492,7 @@ void CSkinSrollBarBase::OnTimer(int nId)
 			}
 			break;
 		case PUSH_DOWN_BOTTOMBT:
-			// ¹ö¶¯ÌõÏÂÃæµÄ°´Å¥
+			// æ»šåŠ¨æ¡ä¸‹é¢çš„æŒ‰é’®
 			{
 				if (m_CursorPosLatest == PUSH_DOWN_BOTTOMBT)
 				{
@@ -522,10 +522,10 @@ void CSkinSrollBarBase::OnTimer(int nId)
 			}
 			break;
 		// case PUSH_DOWN_THUMB:
-			// ¹ö¶¯ÌõµÄÍÏ¶¯box(thumb)
+			// æ»šåŠ¨æ¡çš„æ‹–åŠ¨box(thumb)
 			// break;
 		case PUSH_DOWN_TOPTRACK:
-			// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
+			// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
 			{
 				if (m_CursorPosLatest == PUSH_DOWN_TOPTRACK)
 				{
@@ -549,7 +549,7 @@ void CSkinSrollBarBase::OnTimer(int nId)
 					m_nPosThumb = VirtualPosToObjectPos(m_nVirtualCurPos);
 
 					//
-					// È¡µÃĞÂµÄÎ»ÖÃ
+					// å–å¾—æ–°çš„ä½ç½®
 					CPoint	pt;
 
 					m_pSkin->GetCursorClientPos(pt);
@@ -562,7 +562,7 @@ void CSkinSrollBarBase::OnTimer(int nId)
 				break;
 			}
 		case PUSH_DOWN_BOTTOMTRACK:
-			// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
+			// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
 			{
 				if (m_CursorPosLatest == PUSH_DOWN_BOTTOMTRACK)
 				{
@@ -577,7 +577,7 @@ void CSkinSrollBarBase::OnTimer(int nId)
 					if (m_nVirtualCurPos > m_nVirtualMax)
 						m_nVirtualCurPos = m_nVirtualMax;
 
-					// °´ÏÂºóµÄ×ø±ê
+					// æŒ‰ä¸‹åçš„åæ ‡
 					m_nPosThumb = VirtualPosToObjectPos(m_nVirtualCurPos);
 
 					if (m_nVirtualCurPos == nVirtualPosOld)
@@ -587,7 +587,7 @@ void CSkinSrollBarBase::OnTimer(int nId)
 					}
 
 					//
-					// È¡µÃĞÂµÄÎ»ÖÃ
+					// å–å¾—æ–°çš„ä½ç½®
 					CPoint	pt;
 
 					m_pSkin->GetCursorClientPos(pt);
@@ -633,11 +633,11 @@ UIOBJECT_CLASS_NAME_IMP(CSkinVScrollBar, _T("VScrollBar"))
 
 CSkinVScrollBar::CSkinVScrollBar()
 {
-	// »ù±¾ÉèÖÃ
-	// m_nSBWidth = 15;			// ¿í¶È
-	// m_nHeight = 17 * 2 + 31;			// ¸ß¶È
-	m_nHeightPushBt = 17;	// ÉÏ¡¢ÏÂ°´Å¥µÄ¸ß¶È
-	m_nHeightThumb = 41;		// ¹ö¶¯ÌõµÄ¸ß¶È
+	// åŸºæœ¬è®¾ç½®
+	// m_nSBWidth = 15;			// å®½åº¦
+	// m_nHeight = 17 * 2 + 31;			// é«˜åº¦
+	m_nHeightPushBt = 17;	// ä¸Šã€ä¸‹æŒ‰é’®çš„é«˜åº¦
+	m_nHeightThumb = 41;		// æ»šåŠ¨æ¡çš„é«˜åº¦
 	m_nHeightTrack = 56;
 	m_nSBWidth = 15;
 }
@@ -654,20 +654,20 @@ void CSkinVScrollBar::Draw(CRawGraph *pGraph)
 	if (m_strBmpFile.size() <= 0)
 		return;
 
-	// 1¡¢»æ´°¿ÚÉÏÃæµÄ°´Å¥
+	// 1ã€ç»˜çª—å£ä¸Šé¢çš„æŒ‰é’®
 	if (m_PushDownPos != PUSH_DOWN_TOPBT)
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_TOPBT)
-			pImg = &m_imgTopBtFocus;	// ¹â±ê hover ÔÚÉÏÃæµÄ°´Å¥ÉÏ
+			pImg = &m_imgTopBtFocus;	// å…‰æ ‡ hover åœ¨ä¸Šé¢çš„æŒ‰é’®ä¸Š
 		else
-			pImg = &m_imgTopBtNormal;	// ÆÕÍ¨
+			pImg = &m_imgTopBtNormal;	// æ™®é€š
 	}
 	else
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_TOPBT)
-			pImg = &m_imgTopBtPushDown;	// °´ÏÂ×´Ì¬
+			pImg = &m_imgTopBtPushDown;	// æŒ‰ä¸‹çŠ¶æ€
 		else
-			pImg = &m_imgTopBtNormal;	// ÆÕÍ¨
+			pImg = &m_imgTopBtNormal;	// æ™®é€š
 	}
 
 	y = m_rcObj.top;
@@ -675,7 +675,7 @@ void CSkinVScrollBar::Draw(CRawGraph *pGraph)
 	y += m_nHeightPushBt;
 
 
-	// 2¡¢»æ´°¿ÚÖĞµÄ¿Õ°×ÇøÓò
+	// 2ã€ç»˜çª—å£ä¸­çš„ç©ºç™½åŒºåŸŸ
 	if (m_nPosThumb > 0)
 	{
 		m_imgTrack.YTileBlt(pGraph, m_rcObj.left, y, 
@@ -684,20 +684,20 @@ void CSkinVScrollBar::Draw(CRawGraph *pGraph)
 	}
 
 
-	// 3¡¢»æ´°¿ÚÖĞ¼äµÄ Thumb
+	// 3ã€ç»˜çª—å£ä¸­é—´çš„ Thumb
 	if (m_PushDownPos != PUSH_DOWN_THUMB)
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_THUMB)
-			pImg = &m_imgThumbFocus;	// ¹â±ê hover ÔÚÉÏÃæµÄ°´Å¥ÉÏ
+			pImg = &m_imgThumbFocus;	// å…‰æ ‡ hover åœ¨ä¸Šé¢çš„æŒ‰é’®ä¸Š
 		else
-			pImg = &m_imgThumbNormal;	// ÆÕÍ¨
+			pImg = &m_imgThumbNormal;	// æ™®é€š
 	}
 	else
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_THUMB)
-			pImg = &m_imgThumbPushDown;	// °´ÏÂ×´Ì¬
+			pImg = &m_imgThumbPushDown;	// æŒ‰ä¸‹çŠ¶æ€
 		else
-			pImg = &m_imgThumbNormal;	// ÆÕÍ¨
+			pImg = &m_imgThumbNormal;	// æ™®é€š
 	}
 
 	if (m_bStretchedThumb)
@@ -711,7 +711,7 @@ void CSkinVScrollBar::Draw(CRawGraph *pGraph)
 	y += m_nSizeThumbStretched;
 
 
-	// 4¡¢»æ´°¿ÚÖĞµÄ¿Õ°×ÇøÓò
+	// 4ã€ç»˜çª—å£ä¸­çš„ç©ºç™½åŒºåŸŸ
 	if (m_rcObj.bottom - y - m_nHeightPushBt > 0)
 	{
 		m_imgTrack.YTileBlt(pGraph, m_rcObj.left, y, 
@@ -719,20 +719,20 @@ void CSkinVScrollBar::Draw(CRawGraph *pGraph)
 		y = m_rcObj.top + m_rcObj.Height() - m_nHeightPushBt;
 	}
 
-	// 4¡¢»æ´°¿ÚÏÂÃæµÄ°´Å¥
+	// 4ã€ç»˜çª—å£ä¸‹é¢çš„æŒ‰é’®
 	if (m_PushDownPos != PUSH_DOWN_BOTTOMBT)
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_BOTTOMBT)
-			pImg = &m_imgBottomBtFocus;	// ¹â±ê hover ÔÚÉÏÃæµÄ°´Å¥ÉÏ
+			pImg = &m_imgBottomBtFocus;	// å…‰æ ‡ hover åœ¨ä¸Šé¢çš„æŒ‰é’®ä¸Š
 		else
-			pImg = &m_imgBottomBtNormal;	// ÆÕÍ¨
+			pImg = &m_imgBottomBtNormal;	// æ™®é€š
 	}
 	else
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_BOTTOMBT)
-			pImg = &m_imgBottomBtPushDown;	// °´ÏÂ×´Ì¬
+			pImg = &m_imgBottomBtPushDown;	// æŒ‰ä¸‹çŠ¶æ€
 		else
-			pImg = &m_imgBottomBtNormal;	// ÆÕÍ¨
+			pImg = &m_imgBottomBtNormal;	// æ™®é€š
 	}
 
 	pImg->Blt(pGraph, m_rcObj.left, y);
@@ -757,7 +757,7 @@ BOOL CSkinVScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_nLinesPerWheel = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_IMAGE) == 0)
 	{
-		// Í¼Æ¬
+		// å›¾ç‰‡
 		m_strBmpFile = szValue;
 
 		m_imgTopBtNormal.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
@@ -774,8 +774,8 @@ BOOL CSkinVScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 		m_imgTrack.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 
-		// ¸ù¾İÇ°ÃæÉèÖÃµÄ
-		// ÉÏÃæµÄ°´Å¥
+		// æ ¹æ®å‰é¢è®¾ç½®çš„
+		// ä¸Šé¢çš„æŒ‰é’®
 		m_imgTopBtNormal.m_x = 0;
 		m_imgTopBtPushDown.m_x = m_nSBWidth;
 		m_imgTopBtFocus.m_x = m_nSBWidth * 2;
@@ -783,7 +783,7 @@ BOOL CSkinVScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_imgTopBtPushDown.m_cx = m_imgTopBtFocus.m_cx = m_imgTopBtNormal.m_cx = m_nSBWidth;
 		m_imgTopBtPushDown.m_cy = m_imgTopBtFocus.m_cy = m_imgTopBtNormal.m_cy = m_nHeightPushBt;
 
-		// ÏÂÃæµÄ°´Å¥
+		// ä¸‹é¢çš„æŒ‰é’®
 		m_imgBottomBtNormal.m_x = 0;
 		m_imgBottomBtPushDown.m_x = m_nSBWidth;
 		m_imgBottomBtFocus.m_x = m_nSBWidth * 2;
@@ -791,7 +791,7 @@ BOOL CSkinVScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_imgBottomBtPushDown.m_cx = m_imgBottomBtFocus.m_cx = m_imgBottomBtNormal.m_cx = m_nSBWidth;
 		m_imgBottomBtPushDown.m_cy = m_imgBottomBtFocus.m_cy = m_imgBottomBtNormal.m_cy = m_nHeightPushBt;
 
-		// ÍÏ¶¯µÄthumb
+		// æ‹–åŠ¨çš„thumb
 		m_imgThumbNormal.m_x = 0;
 		m_imgThumbPushDown.m_x = m_nSBWidth;
 		m_imgThumbFocus.m_x = m_nSBWidth * 2;
@@ -799,7 +799,7 @@ BOOL CSkinVScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_imgThumbPushDown.m_cx = m_imgThumbFocus.m_cx = m_imgThumbNormal.m_cx = m_nSBWidth;
 		m_imgThumbPushDown.m_cy = m_imgThumbFocus.m_cy = m_imgThumbNormal.m_cy = m_nHeightThumb;
 
-		// ¿Õ°×µÄ¹ìµÀTrack
+		// ç©ºç™½çš„è½¨é“Track
 		m_imgTrack.m_x = 0;
 		m_imgTrack.m_y = m_nHeightPushBt + m_nHeightThumb;
 		m_imgTrack.m_cx = m_nSBWidth;
@@ -877,7 +877,7 @@ CSkinVScrollBar::PUSH_DOWN_POS CSkinVScrollBar::GetPushDownPos(CPoint pt)
 
 void CSkinVScrollBar::ThumbOnLButtonDown(UINT nFlags, CPoint point)
 {
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 	m_pSkin->SetCaptureMouse(this);
 
 	// DBGLOG0(_T("Thumb button down"));
@@ -944,8 +944,8 @@ UIOBJECT_CLASS_NAME_IMP(CSkinHScrollBar, _T("HScrollBar"))
 
 CSkinHScrollBar::CSkinHScrollBar()
 {
-	m_nWidthPushBt = 17;	// ÉÏ¡¢ÏÂ°´Å¥µÄ¸ß¶È
-	m_nWidthThumb = 41;		// ¹ö¶¯ÌõµÄ¸ß¶È
+	m_nWidthPushBt = 17;	// ä¸Šã€ä¸‹æŒ‰é’®çš„é«˜åº¦
+	m_nWidthThumb = 41;		// æ»šåŠ¨æ¡çš„é«˜åº¦
 	m_nWidthTrack = 56;
 	m_nSBHeight = 15;
 }
@@ -962,20 +962,20 @@ void CSkinHScrollBar::Draw(CRawGraph *pGraph)
 	if (m_strBmpFile.size() <= 0)
 		return;
 
-	// 1¡¢»æ´°¿ÚÉÏÃæµÄ°´Å¥
+	// 1ã€ç»˜çª—å£ä¸Šé¢çš„æŒ‰é’®
 	if (m_PushDownPos != PUSH_DOWN_TOPBT)
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_TOPBT)
-			pImg = &m_imgTopBtFocus;	// ¹â±ê hover ÔÚÉÏÃæµÄ°´Å¥ÉÏ
+			pImg = &m_imgTopBtFocus;	// å…‰æ ‡ hover åœ¨ä¸Šé¢çš„æŒ‰é’®ä¸Š
 		else
-			pImg = &m_imgTopBtNormal;	// ÆÕÍ¨
+			pImg = &m_imgTopBtNormal;	// æ™®é€š
 	}
 	else
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_TOPBT)
-			pImg = &m_imgTopBtPushDown;	// °´ÏÂ×´Ì¬
+			pImg = &m_imgTopBtPushDown;	// æŒ‰ä¸‹çŠ¶æ€
 		else
-			pImg = &m_imgTopBtNormal;	// ÆÕÍ¨
+			pImg = &m_imgTopBtNormal;	// æ™®é€š
 	}
 
 	x = m_rcObj.left;
@@ -983,7 +983,7 @@ void CSkinHScrollBar::Draw(CRawGraph *pGraph)
 	x += m_nWidthPushBt;
 
 
-	// 2¡¢»æ´°¿ÚÖĞµÄ¿Õ°×ÇøÓò
+	// 2ã€ç»˜çª—å£ä¸­çš„ç©ºç™½åŒºåŸŸ
 	if (m_nPosThumb > 0)
 	{
 		m_imgTrack.XTileBlt(pGraph, x, m_rcObj.top,
@@ -992,20 +992,20 @@ void CSkinHScrollBar::Draw(CRawGraph *pGraph)
 	}
 
 
-	// 3¡¢»æ´°¿ÚÖĞ¼äµÄ Thumb
+	// 3ã€ç»˜çª—å£ä¸­é—´çš„ Thumb
 	if (m_PushDownPos != PUSH_DOWN_THUMB)
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_THUMB)
-			pImg = &m_imgThumbFocus;	// ¹â±ê hover ÔÚÉÏÃæµÄ°´Å¥ÉÏ
+			pImg = &m_imgThumbFocus;	// å…‰æ ‡ hover åœ¨ä¸Šé¢çš„æŒ‰é’®ä¸Š
 		else
-			pImg = &m_imgThumbNormal;	// ÆÕÍ¨
+			pImg = &m_imgThumbNormal;	// æ™®é€š
 	}
 	else
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_THUMB)
-			pImg = &m_imgThumbPushDown;	// °´ÏÂ×´Ì¬
+			pImg = &m_imgThumbPushDown;	// æŒ‰ä¸‹çŠ¶æ€
 		else
-			pImg = &m_imgThumbNormal;	// ÆÕÍ¨
+			pImg = &m_imgThumbNormal;	// æ™®é€š
 	}
 
 	if (m_bStretchedThumb)
@@ -1019,7 +1019,7 @@ void CSkinHScrollBar::Draw(CRawGraph *pGraph)
 	x += m_nSizeThumbStretched;
 
 
-	// 4¡¢»æ´°¿ÚÖĞµÄ¿Õ°×ÇøÓò
+	// 4ã€ç»˜çª—å£ä¸­çš„ç©ºç™½åŒºåŸŸ
 	if (m_rcObj.right - x - m_nWidthPushBt > 0)
 	{
 		m_imgTrack.XTileBlt(pGraph, x, m_rcObj.top,
@@ -1027,20 +1027,20 @@ void CSkinHScrollBar::Draw(CRawGraph *pGraph)
 		x = m_rcObj.right - m_nWidthPushBt;
 	}
 
-	// 4¡¢»æ´°¿ÚÏÂÃæµÄ°´Å¥
+	// 4ã€ç»˜çª—å£ä¸‹é¢çš„æŒ‰é’®
 	if (m_PushDownPos != PUSH_DOWN_BOTTOMBT)
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_BOTTOMBT)
-			pImg = &m_imgBottomBtFocus;	// ¹â±ê hover ÔÚÉÏÃæµÄ°´Å¥ÉÏ
+			pImg = &m_imgBottomBtFocus;	// å…‰æ ‡ hover åœ¨ä¸Šé¢çš„æŒ‰é’®ä¸Š
 		else
-			pImg = &m_imgBottomBtNormal;	// ÆÕÍ¨
+			pImg = &m_imgBottomBtNormal;	// æ™®é€š
 	}
 	else
 	{
 		if (m_CursorPosLatest == PUSH_DOWN_BOTTOMBT)
-			pImg = &m_imgBottomBtPushDown;	// °´ÏÂ×´Ì¬
+			pImg = &m_imgBottomBtPushDown;	// æŒ‰ä¸‹çŠ¶æ€
 		else
-			pImg = &m_imgBottomBtNormal;	// ÆÕÍ¨
+			pImg = &m_imgBottomBtNormal;	// æ™®é€š
 	}
 
 	pImg->Blt(pGraph, x, m_rcObj.top);
@@ -1065,7 +1065,7 @@ BOOL CSkinHScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_nLinesPerWheel = _ttoi(szValue);
 	else if (_tcsicmp(szProperty, SZ_PN_IMAGE) == 0)
 	{
-		// Í¼Æ¬
+		// å›¾ç‰‡
 		m_strBmpFile = szValue;
 
 		m_imgTopBtNormal.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
@@ -1082,8 +1082,8 @@ BOOL CSkinHScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 
 		m_imgTrack.LoadFromSRM(m_pSkin->GetSkinFactory(), szValue);
 
-		// ¸ù¾İÇ°ÃæÉèÖÃµÄ
-		// ÉÏÃæµÄ°´Å¥
+		// æ ¹æ®å‰é¢è®¾ç½®çš„
+		// ä¸Šé¢çš„æŒ‰é’®
 		m_imgTopBtNormal.m_y = 0;
 		m_imgTopBtPushDown.m_y = m_nSBHeight;
 		m_imgTopBtFocus.m_y = m_nSBHeight * 2;
@@ -1091,7 +1091,7 @@ BOOL CSkinHScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_imgTopBtPushDown.m_cy = m_imgTopBtFocus.m_cy = m_imgTopBtNormal.m_cy = m_nSBHeight;
 		m_imgTopBtPushDown.m_cx = m_imgTopBtFocus.m_cx = m_imgTopBtNormal.m_cx = m_nWidthPushBt;
 
-		// ÏÂÃæµÄ°´Å¥
+		// ä¸‹é¢çš„æŒ‰é’®
 		m_imgBottomBtNormal.m_y = 0;
 		m_imgBottomBtPushDown.m_y = m_nSBHeight;
 		m_imgBottomBtFocus.m_y = m_nSBHeight * 2;
@@ -1099,7 +1099,7 @@ BOOL CSkinHScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_imgBottomBtPushDown.m_cy = m_imgBottomBtFocus.m_cy = m_imgBottomBtNormal.m_cy = m_nSBHeight;
 		m_imgBottomBtPushDown.m_cx = m_imgBottomBtFocus.m_cx = m_imgBottomBtNormal.m_cx = m_nWidthPushBt;
 
-		// ÍÏ¶¯µÄthumb
+		// æ‹–åŠ¨çš„thumb
 		m_imgThumbNormal.m_y = 0;
 		m_imgThumbPushDown.m_y = m_nSBHeight;
 		m_imgThumbFocus.m_y = m_nSBHeight * 2;
@@ -1107,7 +1107,7 @@ BOOL CSkinHScrollBar::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		m_imgThumbPushDown.m_cy = m_imgThumbFocus.m_cy = m_imgThumbNormal.m_cy = m_nSBHeight;
 		m_imgThumbPushDown.m_cx = m_imgThumbFocus.m_cx = m_imgThumbNormal.m_cx = m_nWidthThumb;
 
-		// ¿Õ°×µÄ¹ìµÀTrack
+		// ç©ºç™½çš„è½¨é“Track
 		m_imgTrack.m_y = 0;
 		m_imgTrack.m_x = m_nWidthPushBt + m_nWidthThumb;
 		m_imgTrack.m_cy = m_nSBHeight;
@@ -1185,7 +1185,7 @@ CSkinHScrollBar::PUSH_DOWN_POS CSkinHScrollBar::GetPushDownPos(CPoint pt)
 
 void CSkinHScrollBar::ThumbOnLButtonDown(UINT nFlags, CPoint point)
 {
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 	m_pSkin->SetCaptureMouse(this);
 
 	// DBGLOG0(_T("Thumb button down"));

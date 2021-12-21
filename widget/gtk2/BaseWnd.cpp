@@ -1,4 +1,4 @@
-// BaseWnd.cpp: implementation of the CBaseWnd class.
+ï»¿// BaseWnd.cpp: implementation of the CBaseWnd class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -148,10 +148,10 @@ void CBaseWnd::OnClose()
 
 bool CBaseWnd::OnCreate()
 {
-	// ÔÚ¿ªÊ¼µÄÊ±ºò³õÊ¼»¯¶àÓïÑÔÖ§³Ö¶ÔÏó
+	// åœ¨å¼€å§‹çš„æ—¶å€™åˆå§‹åŒ–å¤šè¯­è¨€æ”¯æŒå¯¹è±¡
 //	m_LangDlgHelper.InitAddAll(m_hWnd);
 
-	// ÇĞ»»Îª±¾µØÓïÑÔ
+	// åˆ‡æ¢ä¸ºæœ¬åœ°è¯­è¨€
 //	OnLanguageChanged();
 
 	return true;
@@ -721,23 +721,23 @@ void CBaseWnd::ConnectGtkSignals()
 {
 	//	gtk_window_set_decorated(GTK_WINDOW(m_window), false);
 
-	/*µ±¸ø´°¿ÚÒ»¸ö"delete_event"ĞÅºÅÊ±(Õâ¸öĞÅºÅÊÇÓÉ´°¿Ú¹Ü
-	*ÀíÆ÷·¢³öµÄ£¬Í¨³£ÊÇÔÚµã»÷´°¿Ú±êÌâÌõÓÒ±ßµÄ"¡Á"°´Å¥£¬»ò
-	*ÕßÔÚ±êÌâÌõµÄ¿ì½İ²Ëµ¥ÉÏÑ¡Ôñ"close"Ñ¡ÏîÊ±·¢³öµÄ)£¬ÎÒÃÇ
-	*ÒªÇóµ÷ÓÃÉÏÃæ¶¨ÒåµÄdelete_event()º¯Êı´«µİ¸øÕâ¸ö»Øµ÷º¯Êı
-	*µÄÊı¾İÊÇNULL£¬»Øµ÷º¯Êı»áºöÂÔÕâ¸ö²ÎÊı*/
+	/*å½“ç»™çª—å£ä¸€ä¸ª"delete_event"ä¿¡å·æ—¶(è¿™ä¸ªä¿¡å·æ˜¯ç”±çª—å£ç®¡
+	*ç†å™¨å‘å‡ºçš„ï¼Œé€šå¸¸æ˜¯åœ¨ç‚¹å‡»çª—å£æ ‡é¢˜æ¡å³è¾¹çš„"Ã—"æŒ‰é’®ï¼Œæˆ–
+	*è€…åœ¨æ ‡é¢˜æ¡çš„å¿«æ·èœå•ä¸Šé€‰æ‹©"close"é€‰é¡¹æ—¶å‘å‡ºçš„)ï¼Œæˆ‘ä»¬
+	*è¦æ±‚è°ƒç”¨ä¸Šé¢å®šä¹‰çš„delete_event()å‡½æ•°ä¼ é€’ç»™è¿™ä¸ªå›è°ƒå‡½æ•°
+	*çš„æ•°æ®æ˜¯NULLï¼Œå›è°ƒå‡½æ•°ä¼šå¿½ç•¥è¿™ä¸ªå‚æ•°*/
 	gtk_signal_connect(GTK_OBJECT(m_window), "delete_event",
 		GTK_SIGNAL_FUNC(CBDeleteEvent), this);
 
-	/*ÕâÀï£¬ÎÒÃÇ¸ø"destory"ÊÂ¼şÁ¬½ÓÒ»¸öĞÅºÅ´¦Àíº¯Êı£¬
-	*µ±ÎÒÃÇÔÚ´°¿ÚÉÏµ÷ÓÃgtk_widget_destroy()º¯Êı
-	*»òÕßÔÚ"delete_event"ÊÂ¼şµÄ»Øµ÷º¯ÊıÖĞ·µ»ØFALSE
-	* Ê±»á·¢ÉúÕâ¸öÊÂ¼ş*/
+	/*è¿™é‡Œï¼Œæˆ‘ä»¬ç»™"destory"äº‹ä»¶è¿æ¥ä¸€ä¸ªä¿¡å·å¤„ç†å‡½æ•°ï¼Œ
+	*å½“æˆ‘ä»¬åœ¨çª—å£ä¸Šè°ƒç”¨gtk_widget_destroy()å‡½æ•°
+	*æˆ–è€…åœ¨"delete_event"äº‹ä»¶çš„å›è°ƒå‡½æ•°ä¸­è¿”å›FALSE
+	* æ—¶ä¼šå‘ç”Ÿè¿™ä¸ªäº‹ä»¶*/
 	gtk_signal_connect(GTK_OBJECT(m_window), "destroy",
 		GTK_SIGNAL_FUNC(CBDestroyEvent), this);
 	g_print("Register CBDestroyEvent: %X\n", this);
 
-	/* ÉèÖÃ´°¿ÚµÄ±ß¿ò¿í¶È*/
+	/* è®¾ç½®çª—å£çš„è¾¹æ¡†å®½åº¦*/
 	// gtk_container_set_border_width(GTK_CONTAINER(m_pWnd), 0);
 	// gtk_container_set_border_width(GTK_CONTAINER (m_window), 100);
 
@@ -817,18 +817,18 @@ int CBaseWnd::CBDeleteEvent(GtkWidget *widget, GdkEvent *event, gpointer data)
 
 	pThis = (CBaseWnd *)data;
 
-	/*Èç¹ûÔÚ"delete_event"´¦Àí³ÌĞòÖĞ·µ»ØFALSE£¬GTK½«Òı·¢Ò»¸ö"destroy"
-	*ĞÅºÅ£¬·µ»ØT R U EÒâÎ¶×ÅÄã²»Ïë¹Ø±Õ´°¿Ú¡£
-	* ÕâĞ©ÔÚµ¯³ö"ÄãÕæµÄÒªÍË³ö? "¶Ô»°¿òÊ±ºÜÓĞ×÷ÓÃ*/
+	/*å¦‚æœåœ¨"delete_event"å¤„ç†ç¨‹åºä¸­è¿”å›FALSEï¼ŒGTKå°†å¼•å‘ä¸€ä¸ª"destroy"
+	*ä¿¡å·ï¼Œè¿”å›T R U Eæ„å‘³ç€ä½ ä¸æƒ³å…³é—­çª—å£ã€‚
+	* è¿™äº›åœ¨å¼¹å‡º"ä½ çœŸçš„è¦é€€å‡º? "å¯¹è¯æ¡†æ—¶å¾ˆæœ‰ä½œç”¨*/
 	g_print("delete event occurred\n");
-	/* ½«T R U E¸ÄÎªF A L S E£¬Ö÷´°¿Ú¾Í»áÓÃÒ»¸ö" d e l e t e _ e v e n t "ĞÅºÅ£¬È»ºóÍË³ö*/
+	/* å°†T R U Eæ”¹ä¸ºF A L S Eï¼Œä¸»çª—å£å°±ä¼šç”¨ä¸€ä¸ª" d e l e t e _ e v e n t "ä¿¡å·ï¼Œç„¶åé€€å‡º*/
 
 	pThis->OnClose();
 
 	return false;
 }
 
-/* ÁíÒ»¸ö»Øµ÷º¯Êı*/
+/* å¦ä¸€ä¸ªå›è°ƒå‡½æ•°*/
 void CBaseWnd::CBDestroyEvent(GtkWidget *widget, gpointer data)
 {
 	CBaseWnd		*pThis;

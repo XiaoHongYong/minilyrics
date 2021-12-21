@@ -1,4 +1,4 @@
-// SetLayedOptDlg.cpp : implementation file
+ï»¿// SetLayedOptDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -12,7 +12,7 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 /*******************************************************************/
-// ÏÂÃæµÄ¼¸ĞĞÊÇWin2000ÖĞµÄÍ¸Ã÷´°¿Ú¶¨ÒåÓÃµÄ
+// ä¸‹é¢çš„å‡ è¡Œæ˜¯Win2000ä¸­çš„é€æ˜çª—å£å®šä¹‰ç”¨çš„
 #define WS_EX_LAYERED           0x00080000
 
 #define LWA_COLORKEY            0x00000001
@@ -26,8 +26,8 @@ static char THIS_FILE[] = __FILE__;
 /*
 
 // COMMENT:
-//		ÅĞ¶ÏÏµÍ³ÊÇ·ñÖ§³Ö°ëÍ¸Ã÷´°¿Ú
-//		Ö»ÓĞWindows2000»òÒÔÉÏ²ÅÖ§³Ö
+//		åˆ¤æ–­ç³»ç»Ÿæ˜¯å¦æ”¯æŒåŠé€æ˜çª—å£
+//		åªæœ‰Windows2000æˆ–ä»¥ä¸Šæ‰æ”¯æŒ
 BOOL IsLayeredWndSupported()
 {
 	OSVERSIONINFO		version;
@@ -40,7 +40,7 @@ BOOL IsLayeredWndSupported()
 		return FALSE;
 	}
 
-	// Major version: 5, windows 2000 ÏµÁĞ
+	// Major version: 5, windows 2000 ç³»åˆ—
 	if (version.dwMajorVersion < 5)
 		return FALSE;
 
@@ -48,7 +48,7 @@ BOOL IsLayeredWndSupported()
 }*/
 
 /*
-// ¶¨ÒåSetLayeredWindowAttributesº¯Êı
+// å®šä¹‰SetLayeredWindowAttributeså‡½æ•°
 typedef BOOL (WINAPI *FNSetLayeredWindowAttributes)(HWND, COLORREF, BYTE, DWORD);
 
 
@@ -69,12 +69,12 @@ BOOL SetLayeredWindow(HWND hWnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
 	HMODULE				hModule;
 	DWORD				dwStyle;
 
-	// Ê×ÏÈÉèÖÃWS_EX_LAYEREDÊôĞÔ
+	// é¦–å…ˆè®¾ç½®WS_EX_LAYEREDå±æ€§
 	dwStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 	dwStyle |= WS_EX_LAYERED;
 	SetWindowLong(hWnd, GWL_EXSTYLE, dwStyle);
 
-	// µ÷ÓÃSetLayeredWindowAttributesÉèÖÃÍ¸Ã÷É«
+	// è°ƒç”¨SetLayeredWindowAttributesè®¾ç½®é€æ˜è‰²
 	hModule = GetModuleHandle("user32.dll");
 	fnSetLayeredWindowAttributes = (FNSetLayeredWindowAttributes)GetProcAddress(hModule, "SetLayeredWindowAttributes");
 	if (fnSetLayeredWindowAttributes)
@@ -97,7 +97,7 @@ void UnSetLayeredWindow(HWND hWnd)
 {
 	DWORD				dwStyle;
 
-	// Ê×ÏÈÉèÖÃWS_EX_LAYEREDÊôĞÔ
+	// é¦–å…ˆè®¾ç½®WS_EX_LAYEREDå±æ€§
 	dwStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 	dwStyle &= ~WS_EX_LAYERED;
 	SetWindowLong(hWnd, GWL_EXSTYLE, dwStyle);
@@ -108,7 +108,7 @@ BOOL SetLayeredWindowAttributes(HWND hWnd, COLORREF crKey, BYTE bAlpha, DWORD dw
 	FNSetLayeredWindowAttributes		fnSetLayeredWindowAttributes;
 	HMODULE				hModule;
 
-	// µ÷ÓÃSetLayeredWindowAttributesÉèÖÃÍ¸Ã÷É«
+	// è°ƒç”¨SetLayeredWindowAttributesè®¾ç½®é€æ˜è‰²
 	hModule = GetModuleHandle("user32.dll");
 	fnSetLayeredWindowAttributes = (FNSetLayeredWindowAttributes)GetProcAddress(hModule, "SetLayeredWindowAttributes");
 	if (fnSetLayeredWindowAttributes)
@@ -192,16 +192,16 @@ void CSetLayedOptDlg::OnOK()
 
 	if (m_bOpaque)
 	{
-		// Ê¹ÓÃÍ¸Ã÷¶È
+		// ä½¿ç”¨é€æ˜åº¦
 		dwFlag |= LWA_ALPHA;
 	}
 
 	if (m_bTransColor)
 	{
-		// Ê¹ÓÃÍ¸Ã÷É«
+		// ä½¿ç”¨é€æ˜è‰²
 		if (sscanf(m_strMaskColor, "%X", &clrKey) < 1)
 		{
-			AfxMessageBox("ÇëÊäÈëÍ¸Ã÷É«²Ê£¡", MB_ICONWARNING);
+			AfxMessageBox("è¯·è¾“å…¥é€æ˜è‰²å½©ï¼", MB_ICONWARNING);
 			return;
 		}
 		dwFlag |= LWA_COLORKEY;
@@ -336,7 +336,7 @@ BOOL CSetLayedOptDlg::OnInitDialog()
 
 	COLORREF	clrKey;
 
-	// Ê¹ÓÃÍ¸Ã÷É«
+	// ä½¿ç”¨é€æ˜è‰²
 	if (sscanf(m_strMaskColor, "%X", &clrKey) < 1)
 	{
 		clrKey = 0;

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "HelperFun.h"
 #ifdef WIN32
 #ifdef _WINCE_
@@ -79,7 +79,7 @@ bool GetMLEncriptyData(stringex &strData)
 	for (uint i = 0; i < 32; i++)
 		strData[i] = strData[i] ^ szMD5[i];
 
-	// ½âÃÜÖ®ºóµÄÊý¾ÝÁË£¬ÕâÀï´æ´¢µÄÊÇºËÐÄÊý¾Ý
+	// è§£å¯†ä¹‹åŽçš„æ•°æ®äº†ï¼Œè¿™é‡Œå­˜å‚¨çš„æ˜¯æ ¸å¿ƒæ•°æ®
 
 	return true;
 }

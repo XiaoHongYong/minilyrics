@@ -1,4 +1,4 @@
-// MemDC.cpp: implementation of the CMemDC class.
+ï»¿// MemDC.cpp: implementation of the CMemDC class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -47,7 +47,7 @@ bool CMemDC::Create(int cx, int cy, HDC hdc)
 	m_sizeDC.cx = cx;
 	m_sizeDC.cy = cy;
 	
-	// ¸ù¾İĞÂµÄ´°¿Ú m_rcBoundBox µÄ´óĞ¡, ÖØĞÂ´´½¨»æÍ¼»º³åÇø
+	// æ ¹æ®æ–°çš„çª—å£ m_rcBoundBox çš„å¤§å°, é‡æ–°åˆ›å»ºç»˜å›¾ç¼“å†²åŒº
 	if (m_hdcMem)
 	{
 		SelectObject(m_hdcMem, m_bmpOld);
@@ -67,7 +67,7 @@ bool CMemDC::Create(int cx, int cy, HDC hdc)
 
 	BitBlt(m_hdcMem, 0, 0, cx, cy, NULL, 0, 0, WHITENESS);
 
-	// ÉèÖÃÈ±Ê¡µÄ¼ô²ÃÇøÓòÎª¸ÃSkinµÄ´óĞ¡
+	// è®¾ç½®ç¼ºçœçš„å‰ªè£åŒºåŸŸä¸ºè¯¥Skinçš„å¤§å°
 	HRGN hRgn = CreateRectRgn(0, 0, cx, cy);
 	SelectClipRgn(m_hdcMem, hRgn);
 	DeleteObject(hRgn);

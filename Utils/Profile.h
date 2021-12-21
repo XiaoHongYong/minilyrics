@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:30
 	FileName :	CProfile.h
 	Author   :	xhy
@@ -35,9 +35,9 @@ int RegGetProfileInt(HKEY hRoot, LPCTSTR szSubKey, LPCTSTR szKeyName, int nDefau
 #endif
 
 //
-// ´Ó*.iniÎÄ¼şÖĞ¶ÁÈëÉèÖÃÖ®ÀàµÄ
-// ÎªÁËÌá¸ßĞ§ÂÊ£¬Ê¹ÓÃ»º³å£¬½«·ÃÎÊ¹ıµÄkey¶¼±£´æÔÚm_mapAppName2KeysÖĞ¡£
-// ÔÚ±£´æµÄÊ±ºò£¬Ã»ÓĞÊ¹ÓÃ»º³å£¬¼´Ö»ÒªĞŞ¸Ä£¬¾Í»á¸üĞÂ£»ÒòÎªĞŞ¸Ä²»¶à£¬ËùÒÔÖ±½Ó±£´æ
+// ä»*.iniæ–‡ä»¶ä¸­è¯»å…¥è®¾ç½®ä¹‹ç±»çš„
+// ä¸ºäº†æé«˜æ•ˆç‡ï¼Œä½¿ç”¨ç¼“å†²ï¼Œå°†è®¿é—®è¿‡çš„keyéƒ½ä¿å­˜åœ¨m_mapAppName2Keysä¸­ã€‚
+// åœ¨ä¿å­˜çš„æ—¶å€™ï¼Œæ²¡æœ‰ä½¿ç”¨ç¼“å†²ï¼Œå³åªè¦ä¿®æ”¹ï¼Œå°±ä¼šæ›´æ–°ï¼›å› ä¸ºä¿®æ”¹ä¸å¤šï¼Œæ‰€ä»¥ç›´æ¥ä¿å­˜
 //
 class CProfile  
 {
@@ -88,7 +88,7 @@ public:
 	void SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault);
 	void SetDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, int nDefault);
 
-	// ¶ÁºÍĞ´ÅäÖÃÎÄ¼ş MiniLyrics.ini
+	// è¯»å’Œå†™é…ç½®æ–‡ä»¶ MiniLyrics.ini
 	DWORD GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize);
 	LPCTSTR GetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault);
 	BOOL WriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
@@ -101,7 +101,7 @@ public:
 	bool GetBool(LPCTSTR szKeyName, int nDefault)
 		{ return GetInt(m_strDefAppName.c_str(), szKeyName, nDefault) != 0; }
 
-	// ÎŞĞèÊäÈë szAppName µÄº¯Êı
+	// æ— éœ€è¾“å…¥ szAppName çš„å‡½æ•°
 	DWORD GetString(LPCTSTR szKeyName, LPCTSTR szDefault, LPTSTR szReturnedString, DWORD nSize)
 		{ return GetString(m_strDefAppName.c_str(), szKeyName, szDefault, szReturnedString, nSize); }
 	LPCTSTR GetString(LPCTSTR szKeyName, LPCTSTR szDefault)
@@ -125,7 +125,7 @@ public:
 	tstring EncryptGetString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szDefault);
 	BOOL EncryptWriteString(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue);
 
-	// ÎŞĞèÊäÈë szAppName µÄº¯Êı
+	// æ— éœ€è¾“å…¥ szAppName çš„å‡½æ•°
 	tstring EncryptGetString(LPCTSTR szKeyName, LPCTSTR szDefault)
 		{ return EncryptGetString(m_strDefAppName.c_str(), szKeyName, szDefault); }
 	BOOL EncryptWriteString(LPCTSTR szKeyName, LPCTSTR szValue)

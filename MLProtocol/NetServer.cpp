@@ -1,4 +1,4 @@
-// NetServer.cpp: implementation of the CNetServer class.
+ï»¿// NetServer.cpp: implementation of the CNetServer class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -145,7 +145,7 @@ void CSvrSessionBase::ThreadWorker(LPVOID lpParam)
 			break;
 
 		//
-		// ´¦Àí
+		// å¤„ç†
 		sock_disable_nagle(nSock, NULL);
 
 #ifndef _WINCE_
@@ -290,12 +290,12 @@ void CNetServer::ThreadServerAccept(LPVOID lpParam)
 	}
 }
 
-// ´´½¨·şÎñÆ÷
+// åˆ›å»ºæœåŠ¡å™¨
 int CNetServer::Create(int nPort, LPCTSTR szServerIP, int nWorkThreadCount)
 {
 	int		nRet;
 
-	// ´´½¨ÈÏÎª¶ÓÁĞµÄĞÅºÅÁ¿¡­¡­
+	// åˆ›å»ºè®¤ä¸ºé˜Ÿåˆ—çš„ä¿¡å·é‡â€¦â€¦
 	// m_hJobMutex = CreateMutex(NULL, FALSE, NULL);
 	// m_hJobSemaphore = CreateSemaphore(NULL, 0, 0x7FFFFFFF, NULL);
 	// m_hJobSemaphore = CreateEvent(NULL, FALSE, FALSE, NULL);
@@ -304,7 +304,7 @@ int CNetServer::Create(int nPort, LPCTSTR szServerIP, int nWorkThreadCount)
 	m_nWorkThreadCount = nWorkThreadCount;
 
 	//
-	// ÉèÖÃ¹¤×÷Ïß³Ì²ÎÊı
+	// è®¾ç½®å·¥ä½œçº¿ç¨‹å‚æ•°
 	if (nPort != -1)
 	{
 		nRet = CreateSrvice(nPort, szServerIP);
@@ -312,7 +312,7 @@ int CNetServer::Create(int nPort, LPCTSTR szServerIP, int nWorkThreadCount)
 			return nRet;
 	}
 
-	// ´´½¨»á»°´¦ÀíÕß:)
+	// åˆ›å»ºä¼šè¯å¤„ç†è€…:)
 	for (int i = 0; i < m_nWorkThreadCount; i++)
 	{
 		CSvrSessionBase	*pSession;
@@ -376,14 +376,14 @@ void CNetServer::Stop()
 	// 
 	m_ExitEvent.Set();
 
-	// Í£Ö¹¹¤×÷Ïß³Ì
+	// åœæ­¢å·¥ä½œçº¿ç¨‹
 	for (i = 0; i < m_nWorkThreadCount; i++)
 	{
 		AddJob(-1);
 	}
 
 
-	// µÈ´ıËùÓĞÏß³Ì½áÊø
+	// ç­‰å¾…æ‰€æœ‰çº¿ç¨‹ç»“æŸ
 
 	for (i = 0; i < (int)m_vSessions.size(); i++)
 	{
@@ -403,7 +403,7 @@ void CNetServer::Stop()
 	m_vServerPort.clear();
 }
 
-// Ìí¼ÓÒ»¸öÈÎÎñµ½ÈÎÎñ¶ÓÁĞÖĞ
+// æ·»åŠ ä¸€ä¸ªä»»åŠ¡åˆ°ä»»åŠ¡é˜Ÿåˆ—ä¸­
 int CNetServer::AddJob(SOCKET s)
 {
 	m_JobMutex.Acquire();
@@ -433,8 +433,8 @@ int CNetServer::AddJob(SOCKET s)
 	return ERR_OK;
 }
 
-// ´ÓÈÎÎñ¶ÓÁĞÖĞÉ¾³ıÒ»¸öÈÎÎñ£¬»á×èÈû£¬Ö±µ½ÓĞĞÂÈÎÎñµ½´ï£»
-// ·µ»Ø-1£¬±íÊ¾½ÓÊÕµ½µÄÈÎÎñÏß³ÌĞèÒªÍË³ö
+// ä»ä»»åŠ¡é˜Ÿåˆ—ä¸­åˆ é™¤ä¸€ä¸ªä»»åŠ¡ï¼Œä¼šé˜»å¡ï¼Œç›´åˆ°æœ‰æ–°ä»»åŠ¡åˆ°è¾¾ï¼›
+// è¿”å›-1ï¼Œè¡¨ç¤ºæ¥æ”¶åˆ°çš„ä»»åŠ¡çº¿ç¨‹éœ€è¦é€€å‡º
 int CNetServer::RemoveJob()
 {
     int nRet;

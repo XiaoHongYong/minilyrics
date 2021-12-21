@@ -1,4 +1,4 @@
-// Error.cpp: implementation of the CError class.
+ï»¿// Error.cpp: implementation of the CError class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -53,21 +53,21 @@ static ID_TO_STRING	__ErrID2Str[] =
 	{ ERR_NOT_SUPPORT_ID3V2_VER, _T("Not supported id3v2 tag version.") },
 	{ ERR_INVALID_ID3V2_FRAME, _T("Invalid id3v2 tag frame.") },
 
-	{ ERR_HTTP_BAD_REQUEST, _T("Invalid HTTP request.") },		// ÎŞĞ§µÄHTTPÇëÇó
-	{ ERR_HTTP_BAD_FORMAT, _T("Invalid Http format.") },		// ÎŞĞ§µÄHTTP¸ñÊ½
-	{ ERR_HTTP_BAD_HTTP_PRO_TYPE, _T("Unrecognized HTTP protocol type.") },		// ÎŞ·¨Ê¶±ğµÄHTTPĞ­ÒéÀàĞÍ
-	{ ERR_HTTP_INVLIAD_TRUNK, _T("Invalid HTTP trunck size.") },		// ½âÎöHTTP return Êı¾İÊ§°Ü£¬ÎŞ·¨Ê¶±ğµÄtrunck´óĞ¡
-	{ ERR_HTTP_BAD_URL, _T("Invalid HTTP URL format.") },		// ÎŞĞ§µÄHTTP URL¸ñÊ½
-	{ ERR_HTTP_CODE_ERROR, _T("NOT dealed HTTP return code.") },		// Î´´¦ÀíµÄHTTP return ´úÂë
-	{ ERR_HTTP_HEAD_NOT_END, _T("Can't read the whole HTTP head.") },		// ÎŞ·¨ÍêÕûµÄ¶ÁÈ¡HTTPÍ·
-	{ ERR_HTTP_DATA_NOT_FINISHED, _T("Can't read all the data of the HTTP message.") },		// ÎŞ·¨ÍêÈ«¶ÁÈ¡HTTPÏûÏ¢µÄÊı¾İ¶Î
-	{ ERR_HTTP_302, _T("HTTP status code: 302, Redirect the request.") },		// HTTP×´Ì¬´úÂë£º302£¬ÖØ¶¨ÏòÇëÇó
-	{ ERR_HTTP_400, _T("HTTP status code: 400, The request could not be understood by the server due to malformed syntax.") },		// HTTP×´Ì¬´úÂë£º400£¬·şÎñÆ÷ÎŞ·¨Ê¶±ğµÄÇëÇó
-	{ ERR_HTTP_401, _T("HTTP status code: 401, The request requires user authentication.") },		// HTTP×´Ì¬´úÂë£º401£¬´ËÇëÇóĞèÒªÓÃ»§ÃûºÍÃÜÂëÑéÖ¤
-	{ ERR_HTTP_403, _T("HTTP status code: 403, Forbidden.") },		// HTTP×´Ì¬´úÂë£º403£¬·ÃÎÊ±»½ûÖ¹
-	{ ERR_HTTP_404, _T("HTTP status code: 404, The server has not found anything matching the Request-URI.") },		// HTTP×´Ì¬´úÂë£º404£¬ÇëÇóµÄURIÔÚ·şÎñÆ÷¶Ë²»ÄÜÕÒµ½
-	{ ERR_HTTP_407, _T("HTTP status code: 407, Proxy Authentication Required.") },		// HTTP×´Ì¬´úÂë£º407£¬Ê¹ÓÃ´úÀíÊ±ÓÃ»§ÃûºÍÃÜÂëÑéÖ¤Ê§°Ü£¡
-	{ ERR_HTTP_500, _T("HTTP status code: 500, Internal Server Error.") },		// HTTP×´Ì¬´úÂë£º500£¬·şÎñÆ÷ÄÚ²¿´íÎó
+	{ ERR_HTTP_BAD_REQUEST, _T("Invalid HTTP request.") },		// æ— æ•ˆçš„HTTPè¯·æ±‚
+	{ ERR_HTTP_BAD_FORMAT, _T("Invalid Http format.") },		// æ— æ•ˆçš„HTTPæ ¼å¼
+	{ ERR_HTTP_BAD_HTTP_PRO_TYPE, _T("Unrecognized HTTP protocol type.") },		// æ— æ³•è¯†åˆ«çš„HTTPåè®®ç±»å‹
+	{ ERR_HTTP_INVLIAD_TRUNK, _T("Invalid HTTP trunck size.") },		// è§£æHTTP return æ•°æ®å¤±è´¥ï¼Œæ— æ³•è¯†åˆ«çš„trunckå¤§å°
+	{ ERR_HTTP_BAD_URL, _T("Invalid HTTP URL format.") },		// æ— æ•ˆçš„HTTP URLæ ¼å¼
+	{ ERR_HTTP_CODE_ERROR, _T("NOT dealed HTTP return code.") },		// æœªå¤„ç†çš„HTTP return ä»£ç 
+	{ ERR_HTTP_HEAD_NOT_END, _T("Can't read the whole HTTP head.") },		// æ— æ³•å®Œæ•´çš„è¯»å–HTTPå¤´
+	{ ERR_HTTP_DATA_NOT_FINISHED, _T("Can't read all the data of the HTTP message.") },		// æ— æ³•å®Œå…¨è¯»å–HTTPæ¶ˆæ¯çš„æ•°æ®æ®µ
+	{ ERR_HTTP_302, _T("HTTP status code: 302, Redirect the request.") },		// HTTPçŠ¶æ€ä»£ç ï¼š302ï¼Œé‡å®šå‘è¯·æ±‚
+	{ ERR_HTTP_400, _T("HTTP status code: 400, The request could not be understood by the server due to malformed syntax.") },		// HTTPçŠ¶æ€ä»£ç ï¼š400ï¼ŒæœåŠ¡å™¨æ— æ³•è¯†åˆ«çš„è¯·æ±‚
+	{ ERR_HTTP_401, _T("HTTP status code: 401, The request requires user authentication.") },		// HTTPçŠ¶æ€ä»£ç ï¼š401ï¼Œæ­¤è¯·æ±‚éœ€è¦ç”¨æˆ·åå’Œå¯†ç éªŒè¯
+	{ ERR_HTTP_403, _T("HTTP status code: 403, Forbidden.") },		// HTTPçŠ¶æ€ä»£ç ï¼š403ï¼Œè®¿é—®è¢«ç¦æ­¢
+	{ ERR_HTTP_404, _T("HTTP status code: 404, The server has not found anything matching the Request-URI.") },		// HTTPçŠ¶æ€ä»£ç ï¼š404ï¼Œè¯·æ±‚çš„URIåœ¨æœåŠ¡å™¨ç«¯ä¸èƒ½æ‰¾åˆ°
+	{ ERR_HTTP_407, _T("HTTP status code: 407, Proxy Authentication Required.") },		// HTTPçŠ¶æ€ä»£ç ï¼š407ï¼Œä½¿ç”¨ä»£ç†æ—¶ç”¨æˆ·åå’Œå¯†ç éªŒè¯å¤±è´¥ï¼
+	{ ERR_HTTP_500, _T("HTTP status code: 500, Internal Server Error.") },		// HTTPçŠ¶æ€ä»£ç ï¼š500ï¼ŒæœåŠ¡å™¨å†…éƒ¨é”™è¯¯
 
 	{ 0, NULL}
 };

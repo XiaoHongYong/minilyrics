@@ -1,4 +1,4 @@
-// RawBmpFont.cpp: implementation of the CRawBmpFont class.
+ï»¿// RawBmpFont.cpp: implementation of the CRawBmpFont class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -12,7 +12,7 @@
 
 inline byte RGBToGray(int r, int g, int b)
 {
-	// 5 = ËÄÉáÎåÈë
+	// 5 = å››èˆäº”å…¥
 	return (r * 3 + g * 6 + b + 5) / 10;
 }
 

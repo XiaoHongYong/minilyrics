@@ -1,4 +1,4 @@
-// BaseDialog.cpp: implementation of the CBaseDialog class.
+ï»¿// BaseDialog.cpp: implementation of the CBaseDialog class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -306,14 +306,14 @@ BOOL CBaseDialog::IsModal()
 
 BOOL CBaseDialog::OnInitDialog()
 {
-	// ÔÚ¿ªÊ¼µÄÊ±ºò³õÊ¼»¯¶àÓïÑÔÖ§³Ö¶ÔÏó
+	// åœ¨å¼€å§‹çš„æ—¶å€™åˆå§‹åŒ–å¤šè¯­è¨€æ”¯æŒå¯¹è±¡
 	m_LangDlgHelper.InitAddAll(m_hWnd);
 
-	// ÇĞ»»Îª±¾µØÓïÑÔ
+	// åˆ‡æ¢ä¸ºæœ¬åœ°è¯­è¨€
 	OnLanguageChanged();
 
 	//
-	// ¾ÓÖĞ´Ë¶Ô»°¿ò
+	// å±…ä¸­æ­¤å¯¹è¯æ¡†
 	if (!IsChildWnd(m_hWnd))
 	{
 		CenterWindowToMonitor(m_hWnd);

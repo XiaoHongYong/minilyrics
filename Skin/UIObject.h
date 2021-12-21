@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class CFormula;
 class CSFImage;
@@ -28,9 +28,9 @@ enum LayoutParams
 
 enum BLT_MODE
 {
-	BLT_COPY,			// Ö±½Ó¿½±´
-	BLT_STRETCH,		// ½øĞĞÉìËõ¸´ÖÆ
-	BLT_TILE			// Æ½ÆÌ¸´ÖÆ£¬×Ô¶¯ÅĞ¶ÏÊÇX·½Ïò»¹ÊÇY·½Ïò
+	BLT_COPY,			// ç›´æ¥æ‹·è´
+	BLT_STRETCH,		// è¿›è¡Œä¼¸ç¼©å¤åˆ¶
+	BLT_TILE			// å¹³é“ºå¤åˆ¶ï¼Œè‡ªåŠ¨åˆ¤æ–­æ˜¯Xæ–¹å‘è¿˜æ˜¯Yæ–¹å‘
 };
 
 BLT_MODE BltModeFromStr(LPCTSTR szBltMode);
@@ -56,28 +56,28 @@ public:
 	CUIObjProperty() { bToXmlAttrib = true; valueType = VT_INT; }
 	enum VALUE_TYPE
 	{
-		VT_INT,				// ÕûĞÍÊıÖµ
+		VT_INT,				// æ•´å‹æ•°å€¼
 		VT_ID,				// ID of controls
-		VT_STR,				// ×Ö·û´®Öµ
-		VT_FILE,			// vOptions ÊÇÎÄ¼şÀ©Õ¹ÃûÁĞ±í
+		VT_STR,				// å­—ç¬¦ä¸²å€¼
+		VT_FILE,			// vOptions æ˜¯æ–‡ä»¶æ‰©å±•ååˆ—è¡¨
 		VT_IMG_FILE,
 		VT_IMAGE,			// Image file(strValue) and rect(vOptions[0, 1])
 		VT_VAR_INT,
-		VT_RECT,			// %d, %d, %d, %d ĞÍµÄÖµ
-		VT_BOOL_STR,		// BOOL Öµ
-		VT_COMB_STR,		// vOptions ÊÇ¿ÉÒÔÑ¡ÔñµÄ×Ö·û´®ÁĞ±í
+		VT_RECT,			// %d, %d, %d, %d å‹çš„å€¼
+		VT_BOOL_STR,		// BOOL å€¼
+		VT_COMB_STR,		// vOptions æ˜¯å¯ä»¥é€‰æ‹©çš„å­—ç¬¦ä¸²åˆ—è¡¨
 		VT_COLOR,			// color
 		VT_FONT_NAME,		// font
 	};
 	tstring		strName;
-	tstring		strDesc;		// ÃèÊö
+	tstring		strDesc;		// æè¿°
 	tstring		strValue;
 	VALUE_TYPE	valueType;
 	bool		bToXmlAttrib;
 
 	vector<tstring>	vOptions;
 
-	// ×ÓÊôĞÔ
+	// å­å±æ€§
 	vector<CUIObjProperty>		vChildProp;
 
 	void SetValue(int nValue)

@@ -1,4 +1,4 @@
-
+ï»¿
 #include "stdafx.h"
 #include <windows.h>
 #include "filesystemutil.h"
@@ -249,7 +249,7 @@ LPGUID pGuid   =   (LPGUID)   &   GUID_USB_DEVICE_ENUMERATOR_INTERFACE_CLASS;
   //   find   device   interface    
   // TRACE("device_info_data.DevInst   0x%04x\n",device_info_data.DevInst);  
    
-  bRetValue   =   IsDev(device_info_data.DevInst);   //ÐèÇó  
+  bRetValue   =   IsDev(device_info_data.DevInst);   //éœ€æ±‚  
   SAFE_FREE(FlashDiskInterfaceDetailData);  
   index   ++;  
    

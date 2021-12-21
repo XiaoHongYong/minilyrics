@@ -1,4 +1,4 @@
-// MORaw.h: interface for the CMORaw class.
+ï»¿// MORaw.h: interface for the CMORaw class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -42,7 +42,7 @@ public:
 	virtual uint32 GetPos();
 
 protected:
-	DWORD			m_dwTotolBytesOffset;		// ÊäÈëµ½MOSoundCardÖĞµÄ×Ö½ÚÆ«ÒÆ×ÜÁ¿
+	DWORD			m_dwTotolBytesOffset;		// è¾“å…¥åˆ°MOSoundCardä¸­çš„å­—èŠ‚åç§»æ€»é‡
 	int				m_nBps, m_nSampleRate, m_nChannels;
 	int				m_nBytesPerSample;
 	FILE			*m_fp;

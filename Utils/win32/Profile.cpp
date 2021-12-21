@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:30
 	FileName :	Profile.cpp
 	Author   :	xhy
@@ -244,7 +244,7 @@ CProfile::~CProfile()
 }
 
 //
-// Çø·Ö´óÐ¡Ð´£¬½«szAppName, szKeyÌí¼Óµ½»º´æÖÐ
+// åŒºåˆ†å¤§å°å†™ï¼Œå°†szAppName, szKeyæ·»åŠ åˆ°ç¼“å­˜ä¸­
 void CProfile::AddKeys(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
 	LIST_APPSECT::iterator	itApp;
@@ -280,7 +280,7 @@ bool CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKeyName, MAP_STRING::iterator
 	strKeyNameLower = szKeyName;
 	LowerString((LPTSTR)strKeyNameLower.c_str());
 
-	// ²éÕÒAppName
+	// æŸ¥æ‰¾AppName
 	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
 	{
 		appSec = *itApp;
@@ -291,7 +291,7 @@ bool CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKeyName, MAP_STRING::iterator
 		return false;
 
 	//
-	// ²éÕÒKeyName
+	// æŸ¥æ‰¾KeyName
 	it = appSec->mapKeys.find(strKeyNameLower);
 	if (it == appSec->mapKeys.end())
 		return false;
@@ -309,7 +309,7 @@ void CProfile::SetKeyDefaultIfNotExist(LPCTSTR szAppName, LPCTSTR szKeyName, LPC
 	strKeyNameLower = szKeyName;
 	LowerString((LPTSTR)strKeyNameLower.c_str());
 
-	// ²éÕÒAppName
+	// æŸ¥æ‰¾AppName
 	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
 	{
 		appSec = *itApp;
@@ -418,7 +418,7 @@ void CProfile::Close()
 	LIST_APPSECT::iterator	itApp;
 	APP_SECT				*appSec;
 
-	// ²éÕÒAppName
+	// æŸ¥æ‰¾AppName
 	for (itApp = m_listAppSect.begin(); itApp != m_listAppSect.end(); itApp++)
 	{
 		appSec = *itApp;
@@ -474,7 +474,7 @@ void CProfile::DoCache()
 		return;
 
 	//
-	// ²éÕÒ AppName
+	// æŸ¥æ‰¾ AppName
 	szBeg = str.c_str();
 	while (*szBeg)
 	{

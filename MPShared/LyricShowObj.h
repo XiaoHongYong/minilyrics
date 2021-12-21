@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:40
 	FileName :	LyricShowObj.h
 	Author   :	xhy
@@ -120,9 +120,9 @@ public:
 
 	void Draw(CRawGraph *pGraph);
 
-	// ¿ìËÙ»æ»­
+	// å¿«é€Ÿç»˜ç”»
 	// OUTPUT:
-	//		rcUpdate	-	¸üĞÂµÄ¾ØĞÎÇøÓò
+	//		rcUpdate	-	æ›´æ–°çš„çŸ©å½¢åŒºåŸŸ
 	virtual void FastDraw(CRawGraph *pGraphics, CRect *prcUpdate = NULL);
 
 #ifndef _WIN32_WCE
@@ -221,11 +221,11 @@ protected:
 protected:
 	friend class CLyricShowAgentObj;
 
-	// ±ß½ç
+	// è¾¹ç•Œ
 	int						m_nXMargin, m_nYMargin;
 
 	//
-	// ¸è´Ê×ÖÌå
+	// æ­Œè¯å­—ä½“
 	//
 	CRawBmpFont				m_font;
 	int						m_nFontHeight;
@@ -250,7 +250,7 @@ protected:
 
 
 	//
-	// ÏÔÊ¾Ñ¡Ïî: KARAOKE, µ­³öÎª±³¾°¡¢µ­³öÎªµÍµ÷É«
+	// æ˜¾ç¤ºé€‰é¡¹: KARAOKE, æ·¡å‡ºä¸ºèƒŒæ™¯ã€æ·¡å‡ºä¸ºä½è°ƒè‰²
 	//
 	DISPLAY_OPTIONS			m_LyricsDisplayOpt;
 
@@ -275,7 +275,7 @@ protected:
 	// Horizontal lyrics alignment
 	LyrAlignment			m_nAlignment;
 
-	// ĞĞ¼ä¾à			
+	// è¡Œé—´è·			
 	int						m_nLineSpacing;
 
 	bool					m_bEnableAutoResize;
@@ -322,7 +322,7 @@ protected:
 	// Event type to send when settings was changed.
 	EventType			m_etDispSettings;
 
-	// ¸è´ÊÊı¾İ
+	// æ­Œè¯æ•°æ®
 	CMLData				*m_pMLData;
 	CLyricsLines		m_lyrLines;
 

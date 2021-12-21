@@ -1,5 +1,5 @@
-/********************************************************************
-	Created  :	2001Äê12ÔÂ15ÈÕ 0:42:06
+ï»¿/********************************************************************
+	Created  :	2001å¹´12æœˆ15æ—¥ 0:42:06
 	FileName :	SkinButton.cpp
 	Author   :	xhy
 	
@@ -283,7 +283,7 @@ bool CSkinHoverActionButton::OnLButtonUp(UINT nFlags, CPoint point)
 	{
 		m_bHover = true;
 
-		// ²¶×½Êó±êÊäÈë
+		// æ•æ‰é¼ æ ‡è¾“å…¥
 		m_pSkin->SetCaptureMouse(this);
 	}
 

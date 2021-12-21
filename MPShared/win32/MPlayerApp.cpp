@@ -1,4 +1,4 @@
-// MPlayerApp.cpp: implementation of the CMPlayerApp class.
+ï»¿// MPlayerApp.cpp: implementation of the CMPlayerApp class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -260,7 +260,7 @@ void CMPlayerApp::Quit()
 		return;
 
 	//
-	// ÏÈÉèÖÃ´Ë±êÖ¾±íÊ¾ÍË³ö£¬ÆäËûµØ·½»áÓÃµ½¸ù¾İ´Ë±êÖ¾ÅĞ¶Ï
+	// å…ˆè®¾ç½®æ­¤æ ‡å¿—è¡¨ç¤ºé€€å‡ºï¼Œå…¶ä»–åœ°æ–¹ä¼šç”¨åˆ°æ ¹æ®æ­¤æ ‡å¿—åˆ¤æ–­
 	CloseHandle(m_hMutexRuning);
 	m_hMutexRuning = NULL;
 
@@ -438,20 +438,20 @@ UINT PleditGetPrivateProfileInt(LPCTSTR lpAppName, LPCTSTR lpKeyName, INT nDefau
 int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
 {
 	//
-	// Ê¹ÓÃ Winamp2 µÄÅäÌ×SKIN
+	// ä½¿ç”¨ Winamp2 çš„é…å¥—SKIN
 	//
-	// Ö÷ÒªÊÇÉèÖÃMiniLyricsµÄ×ÊÔ´ËÑË÷Â·¾¶£º
-	//   ÏÈËÑË÷winamp skinÄ¿Â¼ÖĞÊÇ·ñÓĞskin£¬
-	//   ÔÙËÑË÷ÃÔÄã¸è´ÊÖĞ¶ÔÓ¦µÄml-winamp2-skinÄ¿Â¼
+	// ä¸»è¦æ˜¯è®¾ç½®MiniLyricsçš„èµ„æºæœç´¢è·¯å¾„ï¼š
+	//   å…ˆæœç´¢winamp skinç›®å½•ä¸­æ˜¯å¦æœ‰skinï¼Œ
+	//   å†æœç´¢è¿·ä½ æ­Œè¯ä¸­å¯¹åº”çš„ml-winamp2-skinç›®å½•
 	TCHAR	szWaSkinPath[MAX_PATH] = _T("");
 	tstring	strSkinDir;
 	int		nRet = ERR_OK;
 
-	// È¡µÃwinampµÄskinÄ¿Â¼
+	// å–å¾—winampçš„skinç›®å½•
 	g_Player.GetCurSkinPath(szWaSkinPath, MAX_PATH);
 	if (IsEmptyString(szWaSkinPath))
 	{
-		// Ê¹ÓÃ minilyrics µÄ»ù±¾skin
+		// ä½¿ç”¨ minilyrics çš„åŸºæœ¬skin
 		return m_pSkinFactory->ChangeSkin(SZ_DEFSKIN, _T(""), _T(""), true);
 	}
 	else
@@ -468,7 +468,7 @@ int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
 		}
 		else
 		{
-			// È¡µÃÈ±Ê¡µÄskinµÄÄ¿Â¼
+			// å–å¾—ç¼ºçœçš„skinçš„ç›®å½•
 			strSkinDir = GetAppResourceDir();
 			strSkinDir += _T("ml-winamp2-skin\\");
 #ifdef _DEBUG
@@ -484,7 +484,7 @@ int CMPlayerApp::LoadWinamp2Skin(bool bLoadSkinColorTheme)
 	if (bLoadSkinColorTheme)
 	{
 		//
-		// WINAMP µÄskinµÄÅäÉ«·½°¸
+		// WINAMP çš„skinçš„é…è‰²æ–¹æ¡ˆ
 		//
 		TCHAR	szPledit[MAX_PATH];
 		COLORREF	clrHigh = 0xFF000000, clrLow = 0xFF000000, clrBg = 0xFF000000, clrFocusLineBg = 0xFF000000;

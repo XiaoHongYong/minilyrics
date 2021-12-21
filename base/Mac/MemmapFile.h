@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class CMemmapFile  
 {
@@ -23,7 +23,7 @@ public:
 
 protected:
 	int			m_file;
-	size_t		m_nFileSize;		// ÎÄ¼ş´óĞ¡
-	LPVOID		m_lpFile;			// ÎÄ¼şÓ³ÉäÖ®ºóµÄÎÄ¼şÄÚÈİ
+	size_t		m_nFileSize;		// æ–‡ä»¶å¤§å°
+	LPVOID		m_lpFile;			// æ–‡ä»¶æ˜ å°„ä¹‹åçš„æ–‡ä»¶å†…å®¹
 
 };

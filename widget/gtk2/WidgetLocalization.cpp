@@ -1,4 +1,4 @@
-// WidgetLocalization.cpp: implementation of the CWidgetLocalization class.
+ï»¿// WidgetLocalization.cpp: implementation of the CWidgetLocalization class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -162,7 +162,7 @@ void CLangDialogHelper::ToLocal()
 {
 // 	assert(m_hWndParent);
 // 
-// 	// ÉèÖÃ´°¿ÚµÄ×ÖÌå
+// 	// è®¾ç½®çª—å£çš„å­—ä½“
 // 	SendMessage(m_hWndParent, WM_SETFONT, (WPARAM)(HFONT)GetStockObject(DEFAULT_GUI_FONT), TRUE);
 // 
 // 
@@ -173,15 +173,15 @@ void CLangDialogHelper::ToLocal()
 // 
 // 	for (it = m_vDlgItem.begin(); it != m_vDlgItem.end(); it++)
 // 	{
-// 		// ×ª»»ÎÄ×Ö
+// 		// è½¬æ¢æ–‡å­—
 // 		if ((*it).bLoacalText)
 // 			SetWindowText((*it).hWnd, TOLOCAL((*it).strInit.c_str()));
 // 
-// 		// ÉèÖÃ×ÖÌå
+// 		// è®¾ç½®å­—ä½“
 // 		SendMessage((*it).hWnd, WM_SETFONT, (WPARAM)(HFONT)GetStockObject(DEFAULT_GUI_FONT), TRUE);
 // 	}
 // 
-// 	// ±¾µØ»¯ÓïÑÔListView¿Ø¼ş
+// 	// æœ¬åœ°åŒ–è¯­è¨€ListViewæ§ä»¶
 // 	vector<CLangListCtrlHelper>::iterator		itList;
 // 	for (itList = m_vListCtrlHelper.begin(); itList != m_vListCtrlHelper.end(); itList++)
 // 	{
@@ -236,12 +236,12 @@ void CLangDialogHelper::RemoveDlgItem(HWND hWndItem)
 
 	vector<DlgItem>::iterator		it;
 
-	// É¾³ıÆÕÍ¨¿Ø¼ş
+	// åˆ é™¤æ™®é€šæ§ä»¶
 	for (it = m_vDlgItem.begin(); it != m_vDlgItem.end(); it++)
 	{
 		if ((*it).hWnd == hWndItem)
 		{
-			// ×ª»»ÎÄ×Ö
+			// è½¬æ¢æ–‡å­—
 			SetWindowText((*it).hWnd, (*it).strInit.c_str());
 
 			(*it).bLoacalText = FALSE;
@@ -249,7 +249,7 @@ void CLangDialogHelper::RemoveDlgItem(HWND hWndItem)
 		}
 	}
 
-	// É¾³ıListView¿Ø¼ş
+	// åˆ é™¤ListViewæ§ä»¶
 	vector<CLangListCtrlHelper>::iterator		itList;
 	for (itList = m_vListCtrlHelper.begin(); itList != m_vListCtrlHelper.end(); itList++)
 	{

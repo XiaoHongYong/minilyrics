@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "base.h"
 #include "safestr.h"
 #include "base.h"
@@ -125,7 +125,7 @@ bool ProcessFilesInfolder(LPCTSTR szBaseDir, FUNProcessFile funProc, LPVOID lpUs
 }
 
 // COMMENT:
-//		½«Ä¿Â¼×Ö·û´®¸ñÊ½»¯ÎªÄ©Î²´øDIR_SLASHµÄ
+//		å°†ç›®å½•å­—ç¬¦ä¸²æ ¼å¼åŒ–ä¸ºæœ«å°¾å¸¦DIR_SLASHçš„
 void DirStringAddSlash(WCHAR *szDir)
 {
 	size_t nLen;
@@ -142,7 +142,7 @@ void DirStringAddSlash(WCHAR *szDir)
 }
 
 // COMMENT:
-//		½«Ä¿Â¼×Ö·û´®¸ñÊ½»¯ÎªÄ©Î²´øDIR_SLASHµÄ
+//		å°†ç›®å½•å­—ç¬¦ä¸²æ ¼å¼åŒ–ä¸ºæœ«å°¾å¸¦DIR_SLASHçš„
 void DirStringAddSlash(char *szDir)
 {
 	size_t		nLen;
@@ -159,7 +159,7 @@ void DirStringAddSlash(char *szDir)
 }
 
 // COMMENT:
-//		½«Ä¿Â¼×Ö·û´®¸ñÊ½»¯ÎªÄ©Î²´øDIR_SLASHµÄ
+//		å°†ç›®å½•å­—ç¬¦ä¸²æ ¼å¼åŒ–ä¸ºæœ«å°¾å¸¦DIR_SLASHçš„
 void DirStringAddSlash(tstring &strDir)
 {
 	if (!strDir.empty())

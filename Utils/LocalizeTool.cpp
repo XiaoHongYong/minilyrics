@@ -1,4 +1,4 @@
-// LocalizeTool.cpp: implementation of the CLocalizeTool class.
+ï»¿// LocalizeTool.cpp: implementation of the CLocalizeTool class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -318,7 +318,7 @@ bool CLanguageFile::Init(LPCTSTR szProfile)
 		return false;
 
 	//
-	// ²éÕÒ AppName
+	// æŸ¥æ‰¾ AppName
 	szBeg = str.c_str();
 	while (*szBeg)
 	{
@@ -541,7 +541,7 @@ bool CLanguageTool::ListTransFiles(LPCTSTR szDir, V_TRANSFILEINFO &vTransFiles)
 }
 
 // COMMENT:
-//		½«×Ö·û´®×ª»»Îª±¾µØÓïÑÔ¡£
+//		å°†å­—ç¬¦ä¸²è½¬æ¢ä¸ºæœ¬åœ°è¯­è¨€ã€‚
 // RETURN:
 //		return translated string
 LPCTSTR CLanguageTool::ToLocalString(LPCTSTR szString)

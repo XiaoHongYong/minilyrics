@@ -1,4 +1,4 @@
-#if !defined(AFX_LOGWND_H__4E5D2F7E_8D9E_4FFD_86DB_914C3DC0C228__INCLUDED_)
+О╩©#if !defined(AFX_LOGWND_H__4E5D2F7E_8D9E_4FFD_86DB_914C3DC0C228__INCLUDED_)
 #define AFX_LOGWND_H__4E5D2F7E_8D9E_4FFD_86DB_914C3DC0C228__INCLUDED_
 
 #if _MSC_VER > 1000
@@ -8,15 +8,15 @@
 //
 
 /************************************************************************
-м╗╧ЩINIнд╪Ч©ьжфхуж╬╣дотй╬
+И─ Х©┤INIФ√┤Д╩╤Ф▌╖Е┬╤Ф≈╔Е©≈Г └Ф≤╬Г╓╨
 [LogWnd]
 ShowLogLevel=5
 AutoScroll=1
-пР╨е=1
-й╠╪Д=1
-т╢нд╪Ч=1
-╢ЗбКпп=1
-хуж╬╪╤╠П=1
+Е╨▐Е▐╥=1
+Ф≈╤И≈╢=1
+Ф╨░Ф√┤Д╩╤=1
+Д╩ёГ═│Х║▄=1
+Ф≈╔Е©≈Г╨╖Е┬╚=1
 
 /************************************************************************/
 
@@ -56,7 +56,7 @@ public:
 	BOOL		m_bTopmost;
 	PAUSE_STATE	m_PauseState;
 	BOOL		m_bScroll;
-	int			m_nShowLogLvl;		// отй╬╣Вйтхуж╬╣д╪╤╠П
+	int			m_nShowLogLvl;		// Ф≤╬Г╓╨Х╟┐Х╞∙Ф≈╔Е©≈Г └Г╨╖Е┬╚
 
 	BOOL		m_bMaxLogLimit;
 

@@ -1,9 +1,9 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/04/03	19:33
 	FileName :	ResManager.cpp
 	Author   :	xhy
 	
-	Purpose  :	¹ÜÀí×ÊÔ´ÎÄ¼ş£¬ÈçÎ»Í¼µÈµÄ´ò¿ªºÍ¹Ø±ÕµÈ
+	Purpose  :	ç®¡ç†èµ„æºæ–‡ä»¶ï¼Œå¦‚ä½å›¾ç­‰çš„æ‰“å¼€å’Œå…³é—­ç­‰
 *********************************************************************/
 
 #include "StdAfx.h"
@@ -27,7 +27,7 @@ CSkinResMgr::~CSkinResMgr()
 {
 	map<tstring, RES_COUNTER>::iterator	it;
 
-	// ÊÍ·ÅËùÓĞÎ´ÊÍ·ÅµÄ×ÊÔ´
+	// é‡Šæ”¾æ‰€æœ‰æœªé‡Šæ”¾çš„èµ„æº
 	for (it = m_mapBitmap.begin(); it != m_mapBitmap.end(); it++)
 	{
 		if ((*it).second.nCount > 0)
@@ -54,7 +54,7 @@ void CSkinResMgr::DelFastBmp(LPTSTR szBmp)
 	map<tstring, PRAW_IMAGE_DATA>::iterator	it;
 
 	//
-	// ÏÈ´Óm_mapFastBmpÖĞ²éÕÒ¡­¡­
+	// å…ˆä»m_mapFastBmpä¸­æŸ¥æ‰¾â€¦â€¦
 	it = m_mapFastBmp.find(szBmp);
 	if (it != m_mapFastBmp.end())
 	{
@@ -68,7 +68,7 @@ void CSkinResMgr::SetFastBmp(LPCTSTR szBmp, PRAW_IMAGE_DATA hBmp)
 	map<tstring, PRAW_IMAGE_DATA>::iterator	it;
 
 	//
-	// ÏÈ´Óm_mapFastBmpÖĞ²éÕÒ¡­¡­
+	// å…ˆä»m_mapFastBmpä¸­æŸ¥æ‰¾â€¦â€¦
 	it = m_mapFastBmp.find(szBmp);
 	if (it != m_mapFastBmp.end())
 	{
@@ -91,7 +91,7 @@ PRAW_IMAGE_DATA CSkinResMgr::LoadBitmap(LPCTSTR szBmp)
 		return NULL;
 
 	//
-	// ÏÈ´Óm_mapFastBmpÖĞ²éÕÒ¡­¡­
+	// å…ˆä»m_mapFastBmpä¸­æŸ¥æ‰¾â€¦â€¦
 	map<tstring, PRAW_IMAGE_DATA>::iterator	itFastBmp;
 	itFastBmp = m_mapFastBmp.find(szBmp);
 	if (itFastBmp != m_mapFastBmp.end())
@@ -101,7 +101,7 @@ PRAW_IMAGE_DATA CSkinResMgr::LoadBitmap(LPCTSTR szBmp)
 
 
 	//
-	// ×ÊÔ´µÄËÑË÷Ë³Ğò£ºszDir1, szDir2, ×îºóÎª szBmp
+	// èµ„æºçš„æœç´¢é¡ºåºï¼šszDir1, szDir2, æœ€åä¸º szBmp
 	if (!GetResourcePathName(szFile, MAX_PATH, szBmp))
 	{
 		ERRLOG1(_T("Bitmap File: %s does NOT exist.\nPlease check the skin xml file."), szBmp);
@@ -112,7 +112,7 @@ PRAW_IMAGE_DATA CSkinResMgr::LoadBitmap(LPCTSTR szBmp)
 
 	if (it == m_mapBitmap.end())
 	{
-		// ²»´æÔÚ£¬ÔòÖØĞÂ¼ÓÔØĞÂµÄÎ»Í¼
+		// ä¸å­˜åœ¨ï¼Œåˆ™é‡æ–°åŠ è½½æ–°çš„ä½å›¾
 		ResBmp.hHandle = LoadRawImageDataFromFile(szFile); // LoadBitmapFromFile(szFile);
 
 		if (ResBmp.hHandle == NULL)
@@ -131,7 +131,7 @@ PRAW_IMAGE_DATA CSkinResMgr::LoadBitmap(LPCTSTR szBmp)
 	}
 	else
 	{
-		// ´æÔÚ£¬ÔòÊ¹ÓÃÇ°ÃæµÄÎ»Í¼¾ä±ú
+		// å­˜åœ¨ï¼Œåˆ™ä½¿ç”¨å‰é¢çš„ä½å›¾å¥æŸ„
 		(*it).second.nCount++;
 		return (PRAW_IMAGE_DATA)((*it).second.hHandle);
 	}
@@ -153,7 +153,7 @@ void CSkinResMgr::FreeBitmap(PRAW_IMAGE_DATA hBmp)
 
 	map<tstring, RES_COUNTER>::iterator	it;
 
-	// ÊÍ·ÅËùÓĞÎ´ÊÍ·ÅµÄ×ÊÔ´
+	// é‡Šæ”¾æ‰€æœ‰æœªé‡Šæ”¾çš„èµ„æº
 	for (it = m_mapBitmap.begin(); it != m_mapBitmap.end(); it++)
 	{
 		RES_COUNTER		&res = (*it).second;
@@ -317,7 +317,7 @@ void CSkinResMgr::DbgOutLoadedImages()
 
 	DBGLOG1(_T("Loaded %d Bmp"), m_mapBitmap.size());
 
-	// ÊÍ·ÅËùÓĞÎ´ÊÍ·ÅµÄ×ÊÔ´
+	// é‡Šæ”¾æ‰€æœ‰æœªé‡Šæ”¾çš„èµ„æº
 	for (it = m_mapBitmap.begin(); it != m_mapBitmap.end(); it++)
 	{
 		DBGLOG2(_T("    FastBmp: %d : %s"), (*it).second.nCount, (*it).first.c_str());

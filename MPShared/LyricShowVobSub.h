@@ -1,4 +1,4 @@
-// LyricShowVobSub.h: interface for the CLyricShowVobSub class.
+О╩©// LyricShowVobSub.h: interface for the CLyricShowVobSub class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -29,10 +29,10 @@ public:
 protected:
 	virtual int GetAutoHeightLines() { return 1; }
 
-	// й╧сцобцФ╣д╠Да©╪гб╪акиор╩╢н╦Х╢й╣дотй╬н╩жцё╛тзпб╣др╩╢нотй╬й╠ё╛
-	// ©иртсе╩╞отй╬кы╤х
-	int					m_nCurRowOld;		// г╟р╩╢нотй╬╣д╣╠г╟пп
-	BOOL				m_bClearedOld;		// г╟р╩╢нотй╬йг╥ЯгЕЁЩ╧Щ╠Ё╬╟
+	// Д╫©Г■╗Д╦▀И²╒Г └Е▐≤И┤▐Х╝╟Е╫∙Д╨├Д╦┼Д╦─Ф╛║Ф╜▄Х╞█Г └Ф≤╬Г╓╨Д╫█Г╫╝О╪▄Е°╗Ф√╟Г └Д╦─Ф╛║Ф≤╬Г╓╨Ф≈╤О╪▄
+	// Е▐╞Д╩╔Д╪≤Е▄√Ф≤╬Г╓╨И─÷Е╨╕
+	int					m_nCurRowOld;		// Е┴█Д╦─Ф╛║Ф≤╬Г╓╨Г └Е╫⌠Е┴█Х║▄
+	BOOL				m_bClearedOld;		// Е┴█Д╦─Ф╛║Ф≤╬Г╓╨Ф≤╞Е░╕Ф╦┘И≥╓Х©┤Х┐▄Ф≥╞
 
 };
 

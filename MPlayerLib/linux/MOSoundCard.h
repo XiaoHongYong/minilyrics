@@ -1,4 +1,4 @@
-// MOSoundCard.h: interface for the CMOSoundCard class.
+ï»¿// MOSoundCard.h: interface for the CMOSoundCard class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -46,7 +46,7 @@ public:
 
 private:
 	Event			m_eventCanWrite;
-	DWORD			m_dwTotolBytesOffset;		// ÊäÈëµ½MOSoundCardÖĞµÄ×Ö½ÚÆ«ÒÆ×ÜÁ¿
+	DWORD			m_dwTotolBytesOffset;		// è¾“å…¥åˆ°MOSoundCardä¸­çš„å­—èŠ‚åç§»æ€»é‡
 
     int				m_iBytesPerSample;
 	DWORD			m_dwDataSize;

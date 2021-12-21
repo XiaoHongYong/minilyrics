@@ -1,4 +1,4 @@
-#ifndef _SKIN_IMAGE_INC_
+ï»¿#ifndef _SKIN_IMAGE_INC_
 #define _SKIN_IMAGE_INC_
 
 class CSkinFactory;
@@ -139,7 +139,7 @@ void TileBltT(int xDest, int yDest, int nWidthDest, int nHeightDest, int xSrc, i
 	int			x, y;
 
 	//
-	// ÏÈ½«Y·½ÏòµÄ»æ»­ÁË
+	// å…ˆå°†Yæ–¹å‘çš„ç»˜ç”»äº†
 	// 1111 1111 1111 222
 	// 1111 1111 1111 222
 	// 3333 3333 3333 444
@@ -270,7 +270,7 @@ protected:
 		int			nW;
 
 		//
-		// ÏÈ½«Y·½ÏòµÄ»æ»­ÁË
+		// å…ˆå°†Yæ–¹å‘çš„ç»˜ç”»äº†
 		// BBB 0000 0000 0000 AAA
 		// CCC 1111 1111 1111 222
 		// CCC 1111 1111 1111 222

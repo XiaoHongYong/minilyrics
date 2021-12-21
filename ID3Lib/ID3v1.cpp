@@ -1,4 +1,4 @@
-// ID3v1.cpp: implementation of the CID3v1 class.
+ï»¿// ID3v1.cpp: implementation of the CID3v1 class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -161,7 +161,7 @@ const char *ID3_v1_genre_description[ID3_NR_OF_V1_GENRES] =
 };
 
 //
-// È¥µô×Ö·û´®Á½¶ËµÄ¿Õ¸ñ
+// åŽ»æŽ‰å­—ç¬¦ä¸²ä¸¤ç«¯çš„ç©ºæ ¼
 void TrimStrA(LPSTR szString)
 {
 	int		nLen;

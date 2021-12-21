@@ -1,4 +1,4 @@
-// MLGenRegGenV4.cpp: implementation of the MLGenRegGenV4 class.
+ï»¿// MLGenRegGenV4.cpp: implementation of the MLGenRegGenV4 class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -18,7 +18,7 @@ extern int		g_nRegDay;
 int		g_nLicenceMonth;
 
 ///////////////////////////////////////////////////////////////
-// ¹«¹²¶¨Òå²¿·Ö
+// å…¬å…±å®šä¹‰éƒ¨åˆ†
 #define ML_REGCODE_GEN_VERSION4			4
 #define ML_APPAND_NAME_LEN				10
 static char _arrNumbChar[] = "3456789ABCDEFGHJKLMNPQRSTWXY";
@@ -45,7 +45,7 @@ static BYTE AvgValue(const char *szString, size_t nLen)
 }
 
 ///////////////////////////////////////////////////////////////
-// ×¢²áÂëÑéÖ¤²¿·Ö
+// æ³¨å†Œç éªŒè¯éƒ¨åˆ†
 
 static int RandCodeToNumber(char chRand, char chNumber)
 {
@@ -64,7 +64,7 @@ static int RandCodeToNumber(char chRand, char chNumber)
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// ÑéÖ¤²¿·ÖÓÉºêÀ´´úÌæ
+// éªŒè¯éƒ¨åˆ†ç”±å®æ¥ä»£æ›¿
 //
 //#define VERIFY_FAILED_EXIT()		\
 //{\
@@ -75,7 +75,7 @@ static int RandCodeToNumber(char chRand, char chNumber)
 BOOL SimpleVerifyRegCodeV4();
 
 /*
-// ÁôÒÔÀ©Õ¹µÄĞ£Ñé²¿·Ö9, 11, 13, 16
+// ç•™ä»¥æ‰©å±•çš„æ ¡éªŒéƒ¨åˆ†9, 11, 13, 16
 if ((CharToNumber(g_szMLRegCode[9]) & 0x3) != (CharToNumber(g_szMLRegNameNew[0]) & 0x3))
 return FALSE;
 if ((CharToNumber(g_szMLRegCode[9]) & 0x1C) != (CharToNumber(g_szMLRegNameNew[1]) & 0x1C))
@@ -118,21 +118,21 @@ VERIFY_FAILED_EXIT;\
 BOOL SimpleVerifyRegCodeV4()
 {
 	//
-	// ¸´ÖÆg_szMLRegNameNew
+	// å¤åˆ¶g_szMLRegNameNew
 	strcpy_safe(g_szMLRegNameNew, CountOf(g_szMLRegNameNew), g_szMLRegName);
 	_strupr(g_szMLRegNameNew);
 
 	strncat(g_szMLRegNameNew, g_szMLRegCode, ML_APPAND_NAME_LEN);
 
-	// ¼ÆËãÄêÔÂÈÕ 2 - 7
+	// è®¡ç®—å¹´æœˆæ—¥ 2 - 7
 	g_nRegYear = RandCodeToNumber(g_szMLRegCode[2], g_szMLRegCode[3]) + 2000;
 	g_nRegMonth = RandCodeToNumber(g_szMLRegCode[4], g_szMLRegCode[5]);
 	g_nRegDay = RandCodeToNumber(g_szMLRegCode[6], g_szMLRegCode[7]);
 
-	// ÊÚÈ¨ÔÂ·İ
+	// æˆæƒæœˆä»½
 	g_nLicenceMonth = RandCodeToNumber(g_szMLRegCode[8], g_szMLRegCode[9]);
 
-	// Ğ£ÑéÂë²¿·Ö: 10 , 12, 14, 16, 17, 19
+	// æ ¡éªŒç éƒ¨åˆ†: 10 , 12, 14, 16, 17, 19
 	if (CharToNumber(g_szMLRegCode[10]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegCode[11]) + CharToNumber(g_szMLRegCode[0]) + CharToNumber(g_szMLRegCode[6])) % MAX_REGCODE_CHARS)
 		return FALSE;
 	if (CharToNumber(g_szMLRegCode[12]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegCode[13]) + CharToNumber(g_szMLRegNameNew[1]) + CharToNumber(g_szMLRegCode[1]) + CharToNumber(AvgValue(g_szMLRegNameNew, strlen(g_szMLRegNameNew)))) / 5)
@@ -151,12 +151,12 @@ BOOL SimpleVerifyRegCodeV4()
 	return TRUE;
 }
 
-// ×¢²áÂëÑéÖ¤²¿·Ö
+// æ³¨å†Œç éªŒè¯éƒ¨åˆ†
 ///////////////////////////////////////////////////////////////
 //
 //
 /////////////////////////////////////////////////////////////////
-//// ×¢²áÂë²úÉú²¿·Ö
+//// æ³¨å†Œç äº§ç”Ÿéƒ¨åˆ†
 //
 ////
 //// nNumber <= 'Z' - 'A' + '9' - '0' + 2
@@ -228,29 +228,29 @@ BOOL SimpleVerifyRegCodeV4()
 //	if (!GetDate(nMonth, nDay, nYear, szDate))
 //		return FALSE;
 //
-//	// ¼ÆËã°æ±¾ºÅ: 0 - 1
+//	// è®¡ç®—ç‰ˆæœ¬å·: 0 - 1
 //	int		nRand = rand() % (MAX_REGCODE_CHARS - ML_REGCODE_GEN_VERSION4);
 //	szCodeTemp[0] = NumberToChar(nRand);
 //	szCodeTemp[1] = NumberToChar(MAX_REGCODE_CHARS - nRand - ML_REGCODE_GEN_VERSION4);
 //
-//	// ÈÕÆÚ²¿·Ö
+//	// æ—¥æœŸéƒ¨åˆ†
 //	nYear %= 10;
 //	MakeRandCode(nYear, szCodeTemp[2], szCodeTemp[3]);
 //	MakeRandCode(nMonth, szCodeTemp[4], szCodeTemp[5]);
 //	MakeRandCode(nDay, szCodeTemp[6], szCodeTemp[7]);
 //
-//	// ÊÚÈ¨ÔÂ·İÊıÄ¿
+//	// æˆæƒæœˆä»½æ•°ç›®
 //	MakeRandCode(nLicenceYear, szCodeTemp[8], szCodeTemp[9]);
 //
 //	strncat(szNameNew, szCodeTemp, ML_APPAND_NAME_LEN);
 //
-//	// ÁôÒÔÀ©Õ¹µÄĞ£Ñé²¿·Ö11, 13, 15, 18
+//	// ç•™ä»¥æ‰©å±•çš„æ ¡éªŒéƒ¨åˆ†11, 13, 15, 18
 //	szCodeTemp[11] = NumberToChar(CharToNumber(szNameNew[0]) / 2 + CharToNumber(szNameNew[3]) / 2);
 //	szCodeTemp[13] = NumberToChar(CharToNumber(szCodeTemp[2]) / 2 + CharToNumber(szCodeTemp[1]) / 2);
 //	szCodeTemp[15] = NumberToChar(CharToNumber(szNameNew[4]) / 3 + CharToNumber(szCodeTemp[5]) / 3 * 2);
 //	szCodeTemp[18] = NumberToChar(CharToNumber(szCodeTemp[6]) / 3 + CharToNumber(szNameNew[7]) / 3 * 2);
 //
-//	// Ğ£ÑéÂë²¿·Ö: 10 , 12, 14, 16, 17, 19
+//	// æ ¡éªŒç éƒ¨åˆ†: 10 , 12, 14, 16, 17, 19
 //	szCodeTemp[10] = NumberToChar(
 //		(CharToNumber(szNameNew[0]) + CharToNumber(szCodeTemp[11]) + CharToNumber(szCodeTemp[0]) + CharToNumber(szCodeTemp[6])) % MAX_REGCODE_CHARS
 //		);
@@ -288,7 +288,7 @@ BOOL SimpleVerifyRegCodeV4()
 //	strupr(szNameNew);
 //
 //	//
-//	// ½«szRegCode¸´ÖÆµ½g_szMLRegCodeÖĞ£¬²¢ÇÒÈ¥µô '-'
+//	// å°†szRegCodeå¤åˆ¶åˆ°g_szMLRegCodeä¸­ï¼Œå¹¶ä¸”å»æ‰ '-'
 //	const char	*szPos;
 //	char	*szPos2;
 //	szPos = szRegCode;
@@ -306,23 +306,23 @@ BOOL SimpleVerifyRegCodeV4()
 //
 //	strncat(szNameNew, szCodeTemp, ML_APPAND_NAME_LEN);
 //
-//	// ¼ÆËã°æ±¾ºÅ: 0 - 1
+//	// è®¡ç®—ç‰ˆæœ¬å·: 0 - 1
 //	int	nVersion;
 //	nVersion = GetRegCodeVersion(szCodeTemp);
 //	if (nVersion != ML_REGCODE_GEN_VERSION4)
 //		return FALSE;
 //
-//	// ¼ÆËãÄêÔÂÈÕ 2 - 7
+//	// è®¡ç®—å¹´æœˆæ—¥ 2 - 7
 //	int			nMonth, nDay, nYear;
 //	nYear = RandCodeToNumber(szCodeTemp[2], szCodeTemp[3]) + 2000;
 //	nMonth = RandCodeToNumber(szCodeTemp[4], szCodeTemp[5]);
 //	nDay = RandCodeToNumber(szCodeTemp[6], szCodeTemp[7]);
 //	wsprintf(szDate, "%02d/%02d/%04d", nDay, nMonth, nYear);
 //
-//	// ÊÚÈ¨ÔÂ·İ
+//	// æˆæƒæœˆä»½
 //	nLicenceYear = RandCodeToNumber(szCodeTemp[8], szCodeTemp[9]);
 //
-//	// Ğ£ÑéÂë²¿·Ö: 10 , 12, 14, 16, 17, 19
+//	// æ ¡éªŒç éƒ¨åˆ†: 10 , 12, 14, 16, 17, 19
 //	if (CharToNumber(szCodeTemp[10]) != (CharToNumber(szNameNew[0]) + CharToNumber(szCodeTemp[11]) + CharToNumber(szCodeTemp[0]) + CharToNumber(szCodeTemp[6])) % MAX_REGCODE_CHARS)
 //		return FALSE;
 //	if (CharToNumber(szCodeTemp[12]) != (CharToNumber(szNameNew[0]) + CharToNumber(szCodeTemp[13]) + CharToNumber(szNameNew[1]) + CharToNumber(szCodeTemp[1]) + CharToNumber(AvgValue(szNameNew, strlen(szNameNew)))) / 5)
@@ -336,7 +336,7 @@ BOOL SimpleVerifyRegCodeV4()
 //	if (CharToNumber(szCodeTemp[19]) != (CharToNumber(szNameNew[0]) + CharToNumber(szNameNew[9]) * CharToNumber(szCodeTemp[5])) % MAX_REGCODE_CHARS)
 //		return FALSE;
 //
-//	// ÁôÒÔÀ©Õ¹µÄĞ£Ñé²¿·Ö11, 13, 15, 18
+//	// ç•™ä»¥æ‰©å±•çš„æ ¡éªŒéƒ¨åˆ†11, 13, 15, 18
 //	if (CharToNumber(szCodeTemp[11]) != CharToNumber(szNameNew[0]) / 2 + CharToNumber(szNameNew[3]) / 2)
 //		return FALSE;
 //	if (CharToNumber(szCodeTemp[13]) != CharToNumber(szCodeTemp[2]) / 2 + CharToNumber(szCodeTemp[1]) / 2)
@@ -348,5 +348,5 @@ BOOL SimpleVerifyRegCodeV4()
 //
 //	return TRUE;
 //}
-//// ×¢²áÂë²úÉú²¿·Ö
+//// æ³¨å†Œç äº§ç”Ÿéƒ¨åˆ†
 /////////////////////////////////////////////////////////////////

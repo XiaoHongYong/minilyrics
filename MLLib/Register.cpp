@@ -1,4 +1,4 @@
-// Register.cpp: implementation of the CRegister class.
+ï»¿// Register.cpp: implementation of the CRegister class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 #include "Register.h"
 
 /*
-// ÁôÒÔÀ©Õ¹µÄĞ£Ñé²¿·Ö9, 11, 13, 16
+// ç•™ä»¥æ‰©å±•çš„æ ¡éªŒéƒ¨åˆ†9, 11, 13, 16
 if ((CharToNumber(g_szMLRegCode[9]) & 0x3) != (CharToNumber(g_szMLRegNameNew[0]) & 0x3))
 return FALSE;
 if ((CharToNumber(g_szMLRegCode[9]) & 0x1C) != (CharToNumber(g_szMLRegNameNew[1]) & 0x1C))
@@ -47,7 +47,7 @@ VERIFY_FAILED_EXIT();\
 int CharToNumber(char ch);
 
 ///////////////////////////////////////////////////////////////
-// ×¢²á²¿·Ö´úÂë
+// æ³¨å†Œéƒ¨åˆ†ä»£ç 
 
 BYTE AvgValue(const char *szString, int nLen)
 {
@@ -97,7 +97,7 @@ static const char N2ChTable[256] =
 BOOL GetRegCode(const char *szName, const char *szDate, char *szRegCode)
 {
 	int			nMonth, nDay, nYear;
-	WORD		wAllDays;		// ´Ó2000£­01£­01¿ªÊ¼µÄÌì£¬°üÀ¨ÁË¸ÃÌì
+	WORD		wAllDays;		// ä»2000ï¼01ï¼01å¼€å§‹çš„å¤©ï¼ŒåŒ…æ‹¬äº†è¯¥å¤©
 
 	char		szCodeTemp[256];
 	char		szNameNew[256];
@@ -119,27 +119,27 @@ BOOL GetRegCode(const char *szName, const char *szDate, char *szRegCode)
 
 	wAllDays = (WORD)GetDaysFrom2000(nMonth, nDay, nYear);
 
-	// ¼ÆËã°æ±¾ºÅ: 0 - 1
+	// è®¡ç®—ç‰ˆæœ¬å·: 0 - 1
 	byVerRand = rand() % ('Z' - 'A' + '9' - '0' + 2);
 	byVersion = VERSION + byVerRand + (AvgValue(szNameNew, strlen(szNameNew)) + szNameNew[0]) % (0x7F - ('Z' - 'A' + '9' - '0' + 2));
 
-	// °æ±¾ºÅËæ»úÊı: 15-15
+	// ç‰ˆæœ¬å·éšæœºæ•°: 15-15
 	if (byVerRand <= 9)
 		szCodeTemp[15] = '0' + byVerRand;
 	else
 		szCodeTemp[15] = 'A' + byVerRand - 10;
 	ByteToHexStr(szCodeTemp, byVersion);
 
-	// ¼ÆËãËæ»úÊı: 6 - 9
+	// è®¡ç®—éšæœºæ•°: 6 - 9
 	for (i = 6; i <= 9; i++)
 		szCodeTemp[i] = N2ChTable[rand() % 256];
 //		szCodeTemp[i] = N2ChTable[i][rand()];
 
-	// ¼ÆËãÈÕÆÚ²¿·Ö: 2 - 5
+	// è®¡ç®—æ—¥æœŸéƒ¨åˆ†: 2 - 5
 	ByteToHexStr(&(szCodeTemp[2]), (BYTE)(AvgValue(&(szCodeTemp[6]), 4) / 3 + szCodeTemp[6] / 2 + HIWORD(wAllDays) / 2));
 	ByteToHexStr(&(szCodeTemp[4]), (BYTE)(AvgValue(&(szCodeTemp[6]), 4) / 3 + szCodeTemp[7] / 2 + LOWORD(wAllDays) / 2));
 
-	// ¼ÆËãĞ£ÑéÂë²¿·Ö: 10 - 14
+	// è®¡ç®—æ ¡éªŒç éƒ¨åˆ†: 10 - 14
 	strcat(szNameNew, &szCodeTemp[6]);
 
 	for (i = 10; i <= 14; i++)
@@ -198,7 +198,7 @@ bool VerifyRegCode1(const char *szName, const char *szRegCode)
 	strncpy_safe(szVersion, CountOf(szVersion), szCodeTemp, 2);
 	szVersion[2] = '\0';
 
-	// ¼ÆËã°æ±¾ºÅ: 0 - 1
+	// è®¡ç®—ç‰ˆæœ¬å·: 0 - 1
 	//if (szCodeTemp[15] >= 'A')
 	//	byVerRand = szCodeTemp[15] - 'A' + 10;
 	//else
@@ -235,7 +235,7 @@ bool VerifyRegCode1(const char *szName, const char *szRegCode)
 		szCodeTemp[14] += k - n;
 	}
 
-	// Ğ£ÑéÂë²¿·Ö: 10 - 15
+	// æ ¡éªŒç éƒ¨åˆ†: 10 - 15
 	strcat_safe(szNameNew, CountOf(szNameNew), &szCodeTemp[6]);
 
 	for (i = 10; i <= 14; i++)
@@ -249,7 +249,7 @@ bool VerifyRegCode1(const char *szName, const char *szRegCode)
 }
 
 ///////////////////////////////////////////////////////////////////////////
-// ÃÔÄã¸è´ÊĞÂµÄ×¢²áÂëÑéÖ¤
+// è¿·ä½ æ­Œè¯æ–°çš„æ³¨å†Œç éªŒè¯
 
 char	g_szMLRegCode[64];
 char	g_szMLRegName[64];
@@ -262,7 +262,7 @@ int		g_nRegMonth = 12;
 int		g_nRegDay = 12;
 
 ///////////////////////////////////////////////////////////////
-// ¹«¹²¶¨Òå²¿·Ö
+// å…¬å…±å®šä¹‰éƒ¨åˆ†
 #define ML_REGCODE_GEN_VERSION2			2
 #define MAX_REGCODE_CHARS	('Z' - 'A' + '9' - '0')
 static char _arrNumbChar[] = "123456789ABCDEFGHIJKLMNPQRSTUVWXYZ";
@@ -288,7 +288,7 @@ BYTE AvgValue(const char *szString, size_t nLen)
 }
 
 ///////////////////////////////////////////////////////////////
-// ×¢²áÂëÑéÖ¤²¿·Ö
+// æ³¨å†Œç éªŒè¯éƒ¨åˆ†
 
 int RandCodeToNumber(char chRand, char chNumber)
 {
@@ -307,7 +307,7 @@ int RandCodeToNumber(char chRand, char chNumber)
 
 ///////////////////////////////////////////////////////////////////////////
 //
-// ÑéÖ¤²¿·ÖÓÉºêÀ´´úÌæ
+// éªŒè¯éƒ¨åˆ†ç”±å®æ¥ä»£æ›¿
 /*
 #define VERIFY_FAILED_EXIT()		\
 {\
@@ -318,7 +318,7 @@ int RandCodeToNumber(char chRand, char chNumber)
 // MessageBox(NULL, "Invalid registration code, please visit http://www.viewlyrics.com/ for more information!", "Minilyircs", MB_OK);
 
 
-// ÁôÒÔÀ©Õ¹µÄĞ£Ñé²¿·Ö9, 11, 13, 16
+// ç•™ä»¥æ‰©å±•çš„æ ¡éªŒéƒ¨åˆ†9, 11, 13, 16
 if (CharToNumber(g_szMLRegCode[14]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegCode[16]) + CharToNumber(g_szMLRegNameNew[3]) + CharToNumber(g_szMLRegCode[3]) + CharToNumber(AvgValue(g_szMLRegNameNew, strlen(g_szMLRegNameNew)))) / 5)
 return FALSE;
 if ((CharToNumber(g_szMLRegCode[9]) & 0x3) != (CharToNumber(g_szMLRegNameNew[0]) & 0x3))
@@ -359,7 +359,7 @@ VERIFY_FAILED_EXIT;\
 bool SimpleVerifyRegCode2();
 
 //
-// ÑéÖ¤ÃÔÄã¸è´ÊµÄ×¢²áÂë
+// éªŒè¯è¿·ä½ æ­Œè¯çš„æ³¨å†Œç 
 bool MLVerifyRegCodeV7Before(const char *szName, const char *szRegCode)
 {
 	int		nLen;
@@ -371,19 +371,19 @@ bool MLVerifyRegCodeV7Before(const char *szName, const char *szRegCode)
 		return FALSE;
 
 	//
-	// ½«szRegCode¸´ÖÆµ½g_szMLRegCodeÖĞ£¬²¢ÇÒÈ¥µô '-'
+	// å°†szRegCodeå¤åˆ¶åˆ°g_szMLRegCodeä¸­ï¼Œå¹¶ä¸”å»æ‰ '-'
 	strcpy_safe(g_szMLRegCode, CountOf(g_szMLRegCode), szRegCode);
 	strdel(g_szMLRegCode, '-');
 
 	//
-	// ¸´ÖÆ×¢²áÃû
+	// å¤åˆ¶æ³¨å†Œå
 	strcpy_safe(g_szMLRegName, CountOf(g_szMLRegName), szName);
 
 	nLen = (int)strlen(g_szMLRegCode);
 	if (nLen == 16)
 	{
 #ifndef _WIN32_WCE
-		// ×î³õ°æ±¾µÄÃÔÄã¸è´Ê×¢²áÂë
+		// æœ€åˆç‰ˆæœ¬çš„è¿·ä½ æ­Œè¯æ³¨å†Œç 
 		if (strlen(szName) < 3)
 			return FALSE;
 
@@ -397,7 +397,7 @@ bool MLVerifyRegCodeV7Before(const char *szName, const char *szRegCode)
 		if (strlen(szName) < 1)
 			return FALSE;
 
-		// ¼ÆËã°æ±¾ºÅ: (0 - 1)Î»
+		// è®¡ç®—ç‰ˆæœ¬å·: (0 - 1)ä½
 		g_nMLRegCodeVer = GetRegCodeVersion(g_szMLRegCode);
 		if (g_nMLRegCodeVer == ML_REGCODE_GEN_VERSION2)
 		{
@@ -423,17 +423,17 @@ bool MLVerifyRegCodeV7Before(const WCHAR *szName, const WCHAR *szRegCode)
 bool SimpleVerifyRegCode2()
 {
 	//
-	// ¸´ÖÆg_szMLRegNameNew
+	// å¤åˆ¶g_szMLRegNameNew
 	strcpy_safe(g_szMLRegNameNew, CountOf(g_szMLRegNameNew), g_szMLRegName);
 	_strupr(g_szMLRegNameNew);
 	strncat(g_szMLRegNameNew, g_szMLRegCode, 8);
 
-	// ¼ÆËãÄêÔÂÈÕ 2 - 7
+	// è®¡ç®—å¹´æœˆæ—¥ 2 - 7
 	g_nRegYear = RandCodeToNumber(g_szMLRegCode[2], g_szMLRegCode[3]) + 2000;
 	g_nRegMonth = RandCodeToNumber(g_szMLRegCode[4], g_szMLRegCode[5]);
 	g_nRegDay = RandCodeToNumber(g_szMLRegCode[6], g_szMLRegCode[7]);
 
-	// Ğ£ÑéÂë²¿·Ö: 8 , 10, 12, 14, 15, 17, 18
+	// æ ¡éªŒç éƒ¨åˆ†: 8 , 10, 12, 14, 15, 17, 18
 	if (CharToNumber(g_szMLRegCode[8]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegCode[9]) + CharToNumber(g_szMLRegCode[0]) + CharToNumber(g_szMLRegCode[6])) % MAX_REGCODE_CHARS)
 		return FALSE;
 	if (CharToNumber(g_szMLRegCode[10]) != (CharToNumber(g_szMLRegNameNew[0]) + CharToNumber(g_szMLRegCode[11]) + CharToNumber(g_szMLRegNameNew[1]) + CharToNumber(g_szMLRegCode[1]) + CharToNumber(AvgValue(g_szMLRegNameNew, strlen(g_szMLRegNameNew)))) / 5)
@@ -451,5 +451,5 @@ bool SimpleVerifyRegCode2()
 	return TRUE;
 }
 
-// ×¢²áÂëÑéÖ¤²¿·Ö
+// æ³¨å†Œç éªŒè¯éƒ¨åˆ†
 ///////////////////////////////////////////////////////////////

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "ClientCom.h"
 
 
@@ -137,7 +137,7 @@ CNetFile::~CNetFile()
 int CNetFile::SetTimeOut(int nTimeOut)
 {
 #if !defined(_WINCE_) && !defined(_IPHONE)
-	// ÉèÖÃ½ÓÊÕÑÓÊ±ºÍ·¢ËÍÑÓÊ±
+	// è®¾ç½®æ¥æ”¶å»¶æ—¶å’Œå‘é€å»¶æ—¶
 	if (setsockopt(m_s, SOL_SOCKET, SO_SNDTIMEO, (const char *)&nTimeOut, sizeof(nTimeOut)) == SOCKET_ERROR)
 	{
 		// Task.WriteLog(DOWN_LOG_INFO_ERROR, "Error occured! Set Socket Send TimeOut Error! Scoket Error=%d", WSAGetLastError());

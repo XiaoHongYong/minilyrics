@@ -1,4 +1,4 @@
-// MPlayerApp.cpp: implementation of the CMPlayerApp class.
+ï»¿// MPlayerApp.cpp: implementation of the CMPlayerApp class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -80,7 +80,7 @@ bool CMPlayerApp::Init(int argc, char *argv[])
 
 	{
 		//
-		// ¼ì²é°æ±¾
+		// æ£€æŸ¥ç‰ˆæœ¬
 		//
 #ifdef _DEBUG
 		CProfile	file;
@@ -94,7 +94,7 @@ bool CMPlayerApp::Init(int argc, char *argv[])
 		else 
 #endif
 		{
-			// ¸ù¾İ location À´ÉèÖÃÖĞÓ¢ÎÄ°æ±¾²î±ğ
+			// æ ¹æ® location æ¥è®¾ç½®ä¸­è‹±æ–‡ç‰ˆæœ¬å·®åˆ«
 		}
 	}
 

@@ -1,4 +1,4 @@
-// OnlineSearch.cpp: implementation of the COnlineSearch class.
+ï»¿// OnlineSearch.cpp: implementation of the COnlineSearch class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -557,7 +557,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 		pSearchParam->pOnlineSearch->UpdateSearchLrcInfo(pSearchParam->strAssociateMediaKey.c_str(), retSearch);
 
 		//
-		// Í¨Öª¸øµ÷ÓÃÕß
+		// é€šçŸ¥ç»™è°ƒç”¨è€…
 		IEvent		*pEvent = new IEvent;
 		pEvent->eventType = ET_LYRICS_SEARCH_END;
 		CMPlayerAppBase::GetEventsDispatcher()->DispatchUnsyncEvent(pEvent);
@@ -575,7 +575,7 @@ void COnlineSearch::ThreadSearchOnline(LPVOID lpParam)
 	delete pSearchParam;
 }
 
-// ´´½¨Ò»¸öÏß³ÌËÑË÷¸è´Ê£¬Ïß³ÌÖ´ĞĞÍê±ÏÖ®ºó»áÍ¨ÖªÄ¿±ê
+// åˆ›å»ºä¸€ä¸ªçº¿ç¨‹æœç´¢æ­Œè¯ï¼Œçº¿ç¨‹æ‰§è¡Œå®Œæ¯•ä¹‹åä¼šé€šçŸ¥ç›®æ ‡
 bool COnlineSearch::AddSearchJob(bool bOnlyMatched, LPCTSTR szMediaKey, LPCTSTR szArtist, LPCTSTR szTitle)
 {
 	if (m_bRunning)
@@ -613,7 +613,7 @@ bool IsTextWidthExceed(LPCTSTR sztext, int nWidth)
 bool COnlineSearch::CheckLicenseLimitation()
 {
 	//
-	// ¼ì²éÉÏ´Î×Ô¶¯ËÑË÷Ïà¸ôÊ±¼äĞ¡ÓÚ1¸öÔÂ²ÅËÑË÷
+	// æ£€æŸ¥ä¸Šæ¬¡è‡ªåŠ¨æœç´¢ç›¸éš”æ—¶é—´å°äº1ä¸ªæœˆæ‰æœç´¢
 	DWORD		dwLatestSearchTime;
 	bool		bAdvVersion = g_licenseManager.IsLicenseValid();
 	if (SearchCacheForCur(NULL, &dwLatestSearchTime))
@@ -627,7 +627,7 @@ bool COnlineSearch::CheckLicenseLimitation()
 	}
 
 	//
-	// Á½´Îµ÷ÓÃ×Ô¶¯ËÑË÷µÄÊ±¼ä²»ÄÜ¹»³¬¹ı10Ãë
+	// ä¸¤æ¬¡è°ƒç”¨è‡ªåŠ¨æœç´¢çš„æ—¶é—´ä¸èƒ½å¤Ÿè¶…è¿‡10ç§’
 	static DWORD		dwLastSearch = GetSecCount() - 120;
 	if (int(GetSecCount() - dwLastSearch) < 
 		(bAdvVersion ? 2 : 10))
@@ -640,7 +640,7 @@ bool COnlineSearch::CheckLicenseLimitation()
 	if (!(bAdvVersion))
 	{
 		//
-		// Æ½¾ùÔÚÒ»¸öĞ¡Ê±ÄÚµ÷ÓÃ×Ô¶¯ËÑË÷µÄ´ÎÊı²»ÄÜ³¬¹ı 40 ´Î
+		// å¹³å‡åœ¨ä¸€ä¸ªå°æ—¶å†…è°ƒç”¨è‡ªåŠ¨æœç´¢çš„æ¬¡æ•°ä¸èƒ½è¶…è¿‡ 40 æ¬¡
 		static DWORD		dwStartCall = GetSecCount();
 		static DWORD		dwSearchCount = 0;
 		if (GetSecCount() - dwStartCall >= 10 * 60 && dwSearchCount / (((double)(GetSecCount() - dwStartCall)) / (60 * 60)) > 40)
@@ -648,11 +648,11 @@ bool COnlineSearch::CheckLicenseLimitation()
 			CMPlayerAppBase::GetInstance()->DispatchLongErrorText(_TLT("Trial edition can't search lyrics too frequently."), GetStrName(SN_HTTP_REGISTER));
 			return false;
 		}
-		// Ôö¼ÓËÑË÷´ÎÊı
+		// å¢åŠ æœç´¢æ¬¡æ•°
 		dwSearchCount++;
 	}
 
-	// ¸üĞÂÉÏ´Îµ÷ÓÃ×Ô¶¯ËÑË÷µÄÊ±¼ä
+	// æ›´æ–°ä¸Šæ¬¡è°ƒç”¨è‡ªåŠ¨æœç´¢çš„æ—¶é—´
 	dwLastSearch = GetSecCount();
 
 	return true;

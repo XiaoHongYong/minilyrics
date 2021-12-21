@@ -1,4 +1,4 @@
-// LrcUploadDB.cpp: implementation of the CLrcUploadDB class.
+ï»¿// LrcUploadDB.cpp: implementation of the CLrcUploadDB class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -52,7 +52,7 @@ int CLrcUploadDB::Init()
 	TCHAR		szFile[MAX_PATH];
 	stringex	strFile;
 
-	// ´ò¿ª
+	// æ‰“å¼€
 	GetAppDataDir(szFile);
 	_tcscat_safe(szFile, CountOf(szFile), _T("dbLyrUpload.db"));
 

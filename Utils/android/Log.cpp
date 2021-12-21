@@ -1,4 +1,4 @@
-// Log.cpp: implementation of the CLog class.
+ï»¿// Log.cpp: implementation of the CLog class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -41,7 +41,7 @@ CLog::~CLog()
 void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, ...)
 {
 #ifndef _DEBUG
-	// ½«·¢ĞĞ°æ±¾ÖĞµÄµ÷ÊÔĞÅÏ¢È¥µô
+	// å°†å‘è¡Œç‰ˆæœ¬ä¸­çš„è°ƒè¯•ä¿¡æ¯å»æ‰
 	if (byLevel == LOG_LVL_DEBUG)
 		return;
 #endif	// _DEBUG
@@ -56,7 +56,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	nLen = _stprintf_s(szBuffer, CountOf(szBuffer) - 1, _T("%s %d "), 
 		szFile, nLine);
 
-	// ¸ñÊ½»¯ÈÕÖ¾
+	// æ ¼å¼åŒ–æ—¥å¿—
 	TCHAR		*szMsg = NULL;
 	va_start(args, szFormat);
 	szMsg = szBuffer + nLen;

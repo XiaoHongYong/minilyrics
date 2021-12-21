@@ -1,4 +1,4 @@
-// HttpProtocol.cpp: implementation of the CHttpProtocol class.
+ï»¿// HttpProtocol.cpp: implementation of the CHttpProtocol class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -94,12 +94,12 @@ BOOL CHttpProtocol::HttpTimeStrToSysTime(LPCSTR szHttpTime, SYSTEMTIME &sysTime)
 	}
 	else
 	{
-		// ×ª»»ÐÇÆÚ¼¸£¿
+		// è½¬æ¢æ˜ŸæœŸå‡ ï¼Ÿ
 		SysTime.wDayOfWeek = GetDayOfWeekByStr(szDayOfWeek);
 		if (SysTime.wDayOfWeek == -1)
 			SysTime.wDayOfWeek = 1;
 
-		// ×ª»»ÔÂ
+		// è½¬æ¢æœˆ
 		SysTime.wMonth = GetMonthByStr(szMonth);
 		if (SysTime.wMonth == -1)
 			SysTime.wMonth = 1;
@@ -145,7 +145,7 @@ int CHttpProtocol::ReadHead()
 		{
 			if (nRead == 0)
 			{
-				// ½ÓÊÕÍê³É£¬µ«ÊÇÃ»ÓÐÕÒµ½HTTPÍ·½áÊø±êÖ¾
+				// æŽ¥æ”¶å®Œæˆï¼Œä½†æ˜¯æ²¡æœ‰æ‰¾åˆ°HTTPå¤´ç»“æŸæ ‡å¿—
 				ERRLOG2(_T("Can't find the end pos of Http header. Buffer: %d, %S"), m_buffHead.size(), m_buffHead.c_str());
 				return ERR_HTTP_HEAD_NOT_END;
 			}
@@ -668,7 +668,7 @@ CHttpReturnProtocol::CHttpReturnProtocol()
 	// EmptyStr(m_szCookie);
 	EmptyStr(m_szLocation);
 	EmptyStr(m_szCacheControl);
-	EmptyStr(m_szContentFileName);		// Content-Disposition: attachment;filename=lÀèÃ÷ - That's Life.lrc
+	EmptyStr(m_szContentFileName);		// Content-Disposition: attachment;filename=lé»Žæ˜Ž - That's Life.lrc
 	m_bTransfEncChunked = FALSE;
 }
 
@@ -794,9 +794,9 @@ int CHttpReturnProtocol::WriteHead()
 }
 
 //
-// nSize = 0 ½áÊø
-// nSize = -1 ÐèÒª¶ÁÈ¡¸ü¶àµÄÊý¾Ý
-// nSize = -2 Êý¾Ý¿é´íÎó
+// nSize = 0 ç»“æŸ
+// nSize = -1 éœ€è¦è¯»å–æ›´å¤šçš„æ•°æ®
+// nSize = -2 æ•°æ®å—é”™è¯¯
 LPSTR ReadTrunkSize(LPSTR szBuffer, int &nCount, int &nSize)
 {
 	LPSTR		szPos = szBuffer;
@@ -840,7 +840,7 @@ LPSTR ReadTrunkSize(LPSTR szBuffer, int &nCount, int &nSize)
 		}
 		else
 		{
-			// ÎÞÐ§
+			// æ— æ•ˆ
 			nSize = -2;
 			return szBuffer;
 		}
@@ -876,7 +876,7 @@ int CHttpReturnProtocol::ReadData(CCharBuffer *pBuff, int nLenMax)
 	if (m_bTransfEncChunked)
 	{
 		//
-		// ·ÖÎöm_buffHead ÖÐ²¿·ÖÊý¾Ý
+		// åˆ†æžm_buffHead ä¸­éƒ¨åˆ†æ•°æ®
 		LPSTR		szData;
 		int			nCount = 0;
 		int			nTrunkSize = 0;
@@ -924,7 +924,7 @@ int CHttpReturnProtocol::ReadData(CCharBuffer *pBuff, int nLenMax)
 		}
 
 		//
-		// ½ÓÊÕ²¢·ÖÎöÊý¾Ý
+		// æŽ¥æ”¶å¹¶åˆ†æžæ•°æ®
 		while (pBuff->size() < m_dwContentLen)
 		{
 			char	*szData;

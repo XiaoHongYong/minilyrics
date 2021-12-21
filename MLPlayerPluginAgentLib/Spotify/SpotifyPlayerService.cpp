@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "../../MLPluginLib/MLPlugin.h"
 #include "SpotifyPlayerService.h"
 
@@ -393,15 +393,15 @@ void CPlayerService::OnTimer(int nTimerID)
 		LPCWSTR		SZ_SPLLITOR = L" - ";
 		const int	LEN_SZ_SPLLITOR = wcslen(SZ_SPLLITOR);
 
-		// Replace the separator '¨C' with '-'
+		// Replace the separator 'â€“' with '-'
 		for (i = 0; i < nLen; i++)
 		{
-			if (szWndTitle[i] == 0x2013) // L'¨C'
+			if (szWndTitle[i] == 0x2013) // L'â€“'
 				szWndTitle[i] = L'-';
 		}
 
 		// Split title.
-		// Spotify - Britney Spears ¨C Overprotected - Album Version (Radio Edit)
+		// Spotify - Britney Spears â€“ Overprotected - Album Version (Radio Edit)
 		szCur = szWndTitle;
 		for (i = 0; i < MAX_TAG; i++)
 		{

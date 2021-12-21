@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////
+О╩©/////////////////////////////////////////////////////////////
 // My Library like mfc
 #ifndef _OUR_SDK_WINDOWABOUT_2001_4_25_HEADER_INCLUDED
 #define _OUR_SDK_WINDOWABOUT_2001_4_25_HEADER_INCLUDED
@@ -37,8 +37,8 @@ bool ShowDlgItem(HWND hWnd, int nIDItem, int nCmdShow);
 BOOL BrowserForFolder(HWND hWnd, LPCTSTR szTitle, LPTSTR szPath, LPCTSTR szRootFoler = NULL);
 
 // COMMENT:
-//		еп╤оо╣мЁйг╥Яж╖Ёж╟Км╦цВ╢╟©з
-//		ж╩спWindows2000╩Рртио╡еж╖Ёж
+//		Е┬╓Ф√╜ГЁ╩Г╩÷Ф≤╞Е░╕Ф■╞Ф▄│Е█┼И─▐Ф≤▌Г╙≈Е▐ё
+//		Е▐╙Ф°┴Windows2000Ф┬√Д╩╔Д╦┼Ф┴█Ф■╞Ф▄│
 BOOL IsLayeredWndSupported();
 
 //	COMMENT:

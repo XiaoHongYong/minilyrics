@@ -1,4 +1,4 @@
-// SkinTreeCtrl.cpp: implementation of the CSkinTreeCtrl class.
+ï»¿// SkinTreeCtrl.cpp: implementation of the CSkinTreeCtrl class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -336,7 +336,7 @@ ISkinTreeNode *ISkinTree::GetNode(SkinTreeStrPath_t &path)
 	return pNodeNext;
 }
 
-// ÖÐÐò±éÀú
+// ä¸­åºéåŽ†
 ISkinTreeNode *ISkinTree::CenterOrderNextExpandedOnly(ISkinTreeNode *pNode)
 {
 	if (pNode->FirstChild() && pNode->IsExpanded())

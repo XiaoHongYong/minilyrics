@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:30
 	FileName :	MLProfile.cpp
 	Author   :	xhy
@@ -15,10 +15,10 @@
 void AnalysisProxySetting(LPCTSTR szProxySetting, TCHAR szServer[], int nMaxSize, int &nPort);
 
 //
-//È¡µÃIE µÄ´úÀíÉèÖÃ
+//å–å¾—IE çš„ä»£ç†è®¾ç½®
 //	else if (nHttpProxyType == HTTP_PROXY_IE)
 //	{
-//		// È¡µÃIE µÄ´úÀíÉèÖÃ
+//		// å–å¾—IE çš„ä»£ç†è®¾ç½®
 //		// [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
 //		// REG_SZ: "ProxyServer"="127.1.1.1:80"
 //		// ftp=localhost:80;gopher=localhost:80;http=localhost:80;https=localhost:80
@@ -65,12 +65,12 @@ bool CMLProfile::InetGetProxy(TCHAR szServer[], int &nPort)
 	EmptyStr(szServer);
 	nPort = __HTTP_PORT;
 
-	// ´úÀíÀàĞÍ£¿
+	// ä»£ç†ç±»å‹ï¼Ÿ
 	nHttpProxyType = g_Profile.GetInt(_T("ProxyType"), HTTP_PROXY_NONE);
 	if (nHttpProxyType == HTTP_PROXY_OURS)
 	{
-		// ÎÒÃÇ×Ô¼ºµÄ´úÀíÉèÖÃ
-		// ´úÀí·şÎñÆ÷µØÖ·
+		// æˆ‘ä»¬è‡ªå·±çš„ä»£ç†è®¾ç½®
+		// ä»£ç†æœåŠ¡å™¨åœ°å€
 		nPort = g_Profile.GetInt(_T("ProxyPort"), __HTTP_PORT);
 		if (nPort <= 0)
 			nPort = __HTTP_PORT;
@@ -78,7 +78,7 @@ bool CMLProfile::InetGetProxy(TCHAR szServer[], int &nPort)
 		if (IsEmptyString(szServer))
 		{
 			//
-			// ¿ÉÄÜÊÇminilyrics ¾ÉµÄproxy ÉèÖÃ£¬·ÖÎö²¢¶ÁÈ¡
+			// å¯èƒ½æ˜¯minilyrics æ—§çš„proxy è®¾ç½®ï¼Œåˆ†æå¹¶è¯»å–
 			//
 			AnalysisProxySetting(g_Profile.GetString(_T("Proxy"), _T("")),
 				szServer, 128, nPort);

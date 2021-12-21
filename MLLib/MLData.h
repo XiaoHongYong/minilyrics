@@ -1,8 +1,8 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created :	2001/12/19    22:49
 	FileName:	mldata.h
 	Author  :	xhy
-	Purpose :	¸÷ÖÖ¸è´Ê¸ñÊ½µÄ¸è´ÊÊı¾İ´æ´¢·½Ê½
+	Purpose :	å„ç§æ­Œè¯æ ¼å¼çš„æ­Œè¯æ•°æ®å­˜å‚¨æ–¹å¼
 *********************************************************************/
 
 #pragma once
@@ -68,18 +68,18 @@ public:
 	void SetKaraokeStyle(bool bKaraoke = true) { m_bKaraokeStyle = bKaraoke; }
 	bool IsKaraokeShowStyle() { return m_bKaraokeStyle; }
 
-	// ¼ì²é¸è´ÊÊı¾İµÄÊ±¼äË³ĞòµÄÕıÈ·ĞÔ
+	// æ£€æŸ¥æ­Œè¯æ•°æ®çš„æ—¶é—´é¡ºåºçš„æ­£ç¡®æ€§
 	void CheckLyricsLineTime();
 
 	void FixExtendedLrcTimeStamps();
 
-	// ¼ÆËãÁ½¸ö¸è´Ê¶ÎÖ®¼äµÄËùÓĞ¸è´Ê¶Î¿ªÊ¼Ê±¼äºÍ½áÊøÊ±¼äµÄÖµ
+	// è®¡ç®—ä¸¤ä¸ªæ­Œè¯æ®µä¹‹é—´çš„æ‰€æœ‰æ­Œè¯æ®µå¼€å§‹æ—¶é—´å’Œç»“æŸæ—¶é—´çš„å€¼
 	BOOL CalFragTimeBetweenFrags(int nLine, int nBegFrag, int nEndFrag, int nBegTime, int nEndTime);
 
-	// ¼ÆËãÁ½¸ö¸è´ÊĞĞÖ®¼äµÄËùÓĞ¸è´ÊĞĞµÄ¿ªÊ¼Ê±¼äºÍ½áÊøÊ±¼äµÄÖµ
+	// è®¡ç®—ä¸¤ä¸ªæ­Œè¯è¡Œä¹‹é—´çš„æ‰€æœ‰æ­Œè¯è¡Œçš„å¼€å§‹æ—¶é—´å’Œç»“æŸæ—¶é—´çš„å€¼
 	BOOL CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, int nEndFrag, int nBegTime, int nEndTime);
 
-	// Ìí¼Ó¸è´ÊĞĞ
+	// æ·»åŠ æ­Œè¯è¡Œ
 	void AddLine(LyricsLine *pFileLine);
 	void AddLineByTime(LyricsLine *pLine);
 
@@ -139,7 +139,7 @@ public:
 
 	bool DoesChooseNewFileName();
 
-	// È¡µÃÆ«ÒÆÊ±¼äÁ¿
+	// å–å¾—åç§»æ—¶é—´é‡
 	int GetOffsetTime() { return m_lyrProperties.GetOffsetTime(); }
 	void SetOffsetTime(int nOffsetTime) { m_lyrProperties.SetOffsetTime(nOffsetTime); }
 
@@ -173,11 +173,11 @@ protected:
 
 	void ResetModificationFlag();
 
-	// È¡µÃÏÂÒ»¸ö¡°¸è´Ê¶Î¡±
+	// å–å¾—ä¸‹ä¸€ä¸ªâ€œæ­Œè¯æ®µâ€
 	LyricsPiece *NextFrag(int nLine, int nFrag);
 	BOOL NextFrag(int nLine, int nFrag, int &nNextLine, int &nNextFrag, LyricsPiece **ppPiece = NULL);
 
-	// È¡µÃÉÏÒ»¸ö¡°¸è´Ê¶Î¡±
+	// å–å¾—ä¸Šä¸€ä¸ªâ€œæ­Œè¯æ®µâ€
 	LyricsPiece *PrevFrag(int nLine, int nFrag);
 	BOOL PrevFrag(int nLine, int nFrag, int &nPrevLine, int &nPrevFrag, LyricsPiece **ppPiece = NULL);
 
@@ -209,7 +209,7 @@ protected:
 	ID3v2LyricsSaveCacheInfo	m_id3v2SaveCacheInfo;
 #endif // #ifdef _ID3V2_SUPPORT
 
-	// ¸è´ÊÎÄ¼ş
+	// æ­Œè¯æ–‡ä»¶
 	tstring					m_strLrcSource;
 	tstring					m_strSongFile;
 

@@ -1,4 +1,4 @@
-// MLClientSession.cpp: implementation of the CMLClientSession class.
+ï»¿// MLClientSession.cpp: implementation of the CMLClientSession class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -254,7 +254,7 @@ int CMLClientSession::ActivateLicense(tstring &strMsgRet, MLMsgRetActivateLicens
 	return nRet;
 }
 
-// ·µ»ØÖµ£º
+// è¿”å›å€¼ï¼š
 //	ERR_NOT_FOUND
 //  
 int CMLClientSession::Search(bool bOnlyMatched, LPCTSTR szArtist, LPCTSTR szTitle, int nRequestPage, MLMsgRetSearch &retSearch)
@@ -399,9 +399,9 @@ int CMLClientSession::ProcessCommonRetMsg(MLRetMsg *pretMsg, MLMsgCmd cmdOrgSend
 /*
 
 //////////////////////////////////////////////////////////////////////////
-// ËùÓĞº¯ÊıµÄ·µ»Ø½á¹ûËµÃ÷£º
-// ·µ»Ø0£¬±íÊ¾¸Ãº¯Êıµ÷ÓÃ³É¹¦£»
-// ·µ»ØÆäËûÖµ£¬±íÊ¾¸Ãº¯Êıµ÷ÓÃÊ§°Ü£»Ê¹ÓÃGetErrorDesc£¬¿ÉÒÔÈ¡µÃ¾ßÌåµÄ´íÎóÃèÊö
+// æ‰€æœ‰å‡½æ•°çš„è¿”å›ç»“æœè¯´æ˜ï¼š
+// è¿”å›0ï¼Œè¡¨ç¤ºè¯¥å‡½æ•°è°ƒç”¨æˆåŠŸï¼›
+// è¿”å›å…¶ä»–å€¼ï¼Œè¡¨ç¤ºè¯¥å‡½æ•°è°ƒç”¨å¤±è´¥ï¼›ä½¿ç”¨GetErrorDescï¼Œå¯ä»¥å–å¾—å…·ä½“çš„é”™è¯¯æè¿°
 //
 
 #ifndef ERR_OK
@@ -418,43 +418,43 @@ struct LyricsInfo
 extern "C"
 {
 
-// µÇÂ½
+// ç™»é™†
 int Login(LPCTSTR szName, LPCTSTR szPwd);
 
-// ËÑË÷£¬´«ÈëÎÄ¼şÃû£¬·µ»ØËÑË÷½á¹û¾ä±ú£¬ºÍ¶ÔÓ¦µÄ½á¹û¸öÊı
-// Èç¹ûÃ»ÓĞ¸è´Ê£¬ÈÔÈ»·µ»Ø³É¹¦
+// æœç´¢ï¼Œä¼ å…¥æ–‡ä»¶åï¼Œè¿”å›æœç´¢ç»“æœå¥æŸ„ï¼Œå’Œå¯¹åº”çš„ç»“æœä¸ªæ•°
+// å¦‚æœæ²¡æœ‰æ­Œè¯ï¼Œä»ç„¶è¿”å›æˆåŠŸ
 int SearchLyrics(LPCTSTR szFileName, HANDLE &hResult, int &nCount);
 
-// ¸ù¾İ½á¹ûË÷Òı£¬·µ»ØÃ¿Ò»¸ö½á¹ûµÄ¾ßÌåĞÅÏ¢
+// æ ¹æ®ç»“æœç´¢å¼•ï¼Œè¿”å›æ¯ä¸€ä¸ªç»“æœçš„å…·ä½“ä¿¡æ¯
 int GetLyricsInfo(HANDLE hLyrics, int nIndex, LyricsInfo &lyricsInfo);
 
-// ÔÚ²»Ê¹ÓÃ½á¹û¾ä±úÖ®ºó£¬±ØĞëµ÷ÓÃ´Ëº¯Êı£¬ÒÔÊÍ·ÅÄÚ´æ
+// åœ¨ä¸ä½¿ç”¨ç»“æœå¥æŸ„ä¹‹åï¼Œå¿…é¡»è°ƒç”¨æ­¤å‡½æ•°ï¼Œä»¥é‡Šæ”¾å†…å­˜
 int FreeLyricsHandle(HANDLE hLyrics);
 
-// ÏÂÔØ¸è´Ê, 
-// ²ÎÊı£º
-//		szDownloadDir	: ¸è´ÊÏÂÔØµ½µÄÄ¿Â¼
-//		szLyricsFile	£ºÏÂÔØÖ®ºóµÄÎÄ¼şÃû£¬°üÀ¨Â·¾¶
+// ä¸‹è½½æ­Œè¯, 
+// å‚æ•°ï¼š
+//		szDownloadDir	: æ­Œè¯ä¸‹è½½åˆ°çš„ç›®å½•
+//		szLyricsFile	ï¼šä¸‹è½½ä¹‹åçš„æ–‡ä»¶åï¼ŒåŒ…æ‹¬è·¯å¾„
 int DownloadLyrics(HANDLE hLyrics, int nIndex, LPCTSTR szDownloadDir, LPTSTR szLyricsFile);
 
-// ¸ù¾İ·µ»ØµÄ´íÎóID£¬·µ»Ø´íÎóÃèÊö
+// æ ¹æ®è¿”å›çš„é”™è¯¯IDï¼Œè¿”å›é”™è¯¯æè¿°
 LPCTSTR GetErrorDesc(int nRet);
 
 }
 //
 // example:
 
-// ³õÊ¼»¯
+// åˆå§‹åŒ–
 int Init()
 {
 	int		nRet;
 
-	// µÇÂ½
+	// ç™»é™†
 	nRet = Login(_T("name"), _T("password"))
 	if (nRet != ERR_OK)
 	{
 		CString		str;
-		str.Format(_T("µÇÂ½Ê§°Ü£¬Ô­Òò: %s"), GetErrorDesc(nRet));
+		str.Format(_T("ç™»é™†å¤±è´¥ï¼ŒåŸå› : %s"), GetErrorDesc(nRet));
 		AfxMessageBox(str);
 	}
 }
@@ -468,7 +468,7 @@ int YourSearchLyrics(LPCTSTR szFile)
 	nRet = SearchLyrics(szFile, hResult, nCount);
 	if (nRet != ERR_OK)
 	{
-		str.Format(_T("ËÑË÷Ê§°Ü£¬Ô­Òò: %s"), GetErrorDesc(nRet));
+		str.Format(_T("æœç´¢å¤±è´¥ï¼ŒåŸå› : %s"), GetErrorDesc(nRet));
 		AfxMessageBox(str);
 		return 0;
 	}
@@ -479,7 +479,7 @@ int YourSearchLyrics(LPCTSTR szFile)
 		nRet = GetLyricsInfo(hResult, i, lyricsInfo);
 		if (nRet == ERR_OK)
 		{
-			// ÏÔÊ¾ÕâĞ©ĞÅÏ¢£¬Ìí¼Óµ½ÁĞ±íÖĞ£¬ÓÉÓÃ»§Ñ¡Ôñ
+			// æ˜¾ç¤ºè¿™äº›ä¿¡æ¯ï¼Œæ·»åŠ åˆ°åˆ—è¡¨ä¸­ï¼Œç”±ç”¨æˆ·é€‰æ‹©
 			//....
 		}
 	}
@@ -487,16 +487,16 @@ int YourSearchLyrics(LPCTSTR szFile)
 	char		szLyricsFile[MAX_PATH];
 	char		szSaveDir[MAX_PATH] = _T("C:\\Download");
 
-	// Ñ¡ÔñÏÂÔØµÚÒ»Ê×
+	// é€‰æ‹©ä¸‹è½½ç¬¬ä¸€é¦–
 	nRet = DownloadLyrics(hResult, 0, szSaveDir, szLyricsFile);
 	if (nRet != ERR_OK)
 	{
-		str.Format(_T("ÏÂÔØÊ§°Ü£¬Ô­Òò: %s"), GetErrorDesc(nRet));
+		str.Format(_T("ä¸‹è½½å¤±è´¥ï¼ŒåŸå› : %s"), GetErrorDesc(nRet));
 		AfxMessageBox(str);
 		return 0;
 	}
 
-	// ÊÍ·ÅÄÚ´æ
+	// é‡Šæ”¾å†…å­˜
 	FreeLyricsHandle(hResult);
 
 }

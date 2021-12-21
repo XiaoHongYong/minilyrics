@@ -1,4 +1,4 @@
-// SrtParser.cpp: implementation of the CSrtParser class.
+ï»¿// SrtParser.cpp: implementation of the CSrtParser class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -11,12 +11,12 @@
 //
 //7
 //00:00:18,454 --> 00:00:21,172
-//¶ÔÎÒÃÇ¶øÑÔÇ×ÎÇ¾ÍÏñÊÇ¿ª³¡
+//å¯¹æˆ‘ä»¬è€Œè¨€äº²å»å°±åƒæ˜¯å¼€åœº
 //
 //8
 //00:00:21,657 --> 00:00:26,516
-//¾ÍÏñ·ðÂåÒÁ·É´¬³ö³¡Ç°
-//ÄãµÃÄÍÖøÐÔ×ÓÏÈ¿´ÍêÍÑ¿ÚÐã
+//å°±åƒä½›æ´›ä¼Šé£žèˆ¹å‡ºåœºå‰
+//ä½ å¾—è€è‘—æ€§å­å…ˆçœ‹å®Œè„±å£ç§€
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -40,8 +40,8 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 
 	//8
 	//00:00:21,657 --> 00:00:26,516
-	//¾ÍÏñ·ðÂåÒÁ·É´¬³ö³¡Ç°
-	//ÄãµÃÄÍÖøÐÔ×ÓÏÈ¿´ÍêÍÑ¿ÚÐã
+	//å°±åƒä½›æ´›ä¼Šé£žèˆ¹å‡ºåœºå‰
+	//ä½ å¾—è€è‘—æ€§å­å…ˆçœ‹å®Œè„±å£ç§€
 	int			nBegOld = -1, nEndOld = -1;
 
 	int index = 1;
@@ -56,7 +56,7 @@ int CSrtParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 		{
 			if (pLine->nBegTime == nBegOld && pLine->nEndTime == nEndOld)
 			{
-				// Ê±¼äÏàÍ¬µÄÐÐ
+				// æ—¶é—´ç›¸åŒçš„è¡Œ
 				strData += strBuff;
 			}
 			else
@@ -134,13 +134,13 @@ static LPCTSTR ReadTime(LPCTSTR szBeg, DWORD &dwTime)
 	return szBeg;
 }
 
-// ·ÖÎö¸è´ÊÎÄ¼þ£¬²¢ÇÒ´æ´¢µ½ pMLData ÖÐ
+// åˆ†æžæ­Œè¯æ–‡ä»¶ï¼Œå¹¶ä¸”å­˜å‚¨åˆ° pMLData ä¸­
 int CSrtParser::ParseFile(bool bUseSpecifiedEncoding, CHAR_ENCODING encoding)
 {
 	//8
 	//00:00:21,657 --> 00:00:26,516
-	//¾ÍÏñ·ðÂåÒÁ·É´¬³ö³¡Ç°
-	//ÄãµÃÄÍÖøÐÔ×ÓÏÈ¿´ÍêÍÑ¿ÚÐã
+	//å°±åƒä½›æ´›ä¼Šé£žèˆ¹å‡ºåœºå‰
+	//ä½ å¾—è€è‘—æ€§å­å…ˆçœ‹å®Œè„±å£ç§€
 	CTextFile	file;
 
 	enum Parse_State

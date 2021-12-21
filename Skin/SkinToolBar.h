@@ -1,4 +1,4 @@
-// SkinToolBar.h: interface for the CSkinToolbar class.
+ï»¿// SkinToolBar.h: interface for the CSkinToolbar class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -96,7 +96,7 @@ public:
 	bool IsButtonExist(int nCmdID);
 
 #ifdef _SKIN_EDITOR_
-	// ÔÚµ¼³öµ½xmlÊ±£¬Ð´ÍêÊôÐÔ£¬Ð´ÄÚÈÝÊ±µ÷ÓÃ
+	// åœ¨å¯¼å‡ºåˆ°xmlæ—¶ï¼Œå†™å®Œå±žæ€§ï¼Œå†™å†…å®¹æ—¶è°ƒç”¨
 	virtual bool HasXMLChild() { return true; }
 	virtual void OnToXMLChild(CXMLWriter &xmlStream);
 #endif // _SKIN_EDITOR_

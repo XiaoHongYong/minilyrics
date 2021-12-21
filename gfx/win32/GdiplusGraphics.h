@@ -1,4 +1,4 @@
-// GdiplusGraphics.h: interface for the CGdiplusGraphics class.
+﻿// GdiplusGraphics.h: interface for the CGdiplusGraphics class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -69,7 +69,7 @@ typedef VOID (WINAPI *FUNGdiplusShutdown) (ULONG_PTR token);
 class CGdiplusFont;
 
 //
-// GDI Plus��ʽ�Ļ�ͼ
+// GDI Plus方式的画图
 //
 class CGdiplusGraphics : public IMLGraphicsBase
 {

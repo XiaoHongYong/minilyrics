@@ -1,4 +1,4 @@
-#ifndef _WA_WRAP_H_	
+ï»¿#ifndef _WA_WRAP_H_	
 #define _WA_WRAP_H_
 
 
@@ -191,7 +191,7 @@ BOOL WAGetPlayingSongTitle(HWND hwndWinamp, wchar_t szTitleOut[], int nBuffLen)
 	szTitleOut[0] = '\0';
 
 	//
-	// Í¨¹ı´ÓÁĞ±íÖĞÈ¡µÃ¸èÇúµÄ·½Ê½
+	// é€šè¿‡ä»åˆ—è¡¨ä¸­å–å¾—æ­Œæ›²çš„æ–¹å¼
 	if (WAGetListPos(hwndWinamp, dwPos) && WAGetListLength(hwndWinamp, dwLength))
 	{
 		if (dwPos < dwLength)

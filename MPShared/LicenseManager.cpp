@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MPlayerApp.h"
 #include "LicenseManager.h"
 
@@ -196,7 +196,7 @@ bool CLicenseManager::VerifyCode(LPCTSTR szName, LPCTSTR szCode, bool bSave)
 void CLicenseManager::CheckChsEdition()
 {
 #if defined(_WIN32)
-	// ¸ù¾İ location À´ÉèÖÃÖĞÎÄ°æ±¾²î±ğ
+	// æ ¹æ® location æ¥è®¾ç½®ä¸­æ–‡ç‰ˆæœ¬å·®åˆ«
 	LCID	lcid;
 	TCHAR	szBuff[32];
 

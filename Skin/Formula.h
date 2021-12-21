@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:39
 	FileName :	Formula.h
 	Author   :	xhy
@@ -27,13 +27,13 @@
 
 
 typedef struct	FORMULA_WORD{
-	int			nWordType;		// 'µ¥´ÊÀàĞÍ'
-	int			Value;			// Öµ, ¸ù¾İwordµÄÀàĞÍ¶ø¶¨£¬¿ÉÒÔÊÇ
-								// ÊıÖµ£¬Ò²¿ÉÄÜÊÇÒ»¸ö´ı¶¨µÄ×Ö·û¡°±äÁ¿¡±
+	int			nWordType;		// 'å•è¯ç±»å‹'
+	int			Value;			// å€¼, æ ¹æ®wordçš„ç±»å‹è€Œå®šï¼Œå¯ä»¥æ˜¯
+								// æ•°å€¼ï¼Œä¹Ÿå¯èƒ½æ˜¯ä¸€ä¸ªå¾…å®šçš„å­—ç¬¦â€œå˜é‡â€
 								// 5, w, h
 }FORMULA_WORD, *PFORMULA_WORD;
 
-// ¡®±äÁ¿¡¯µÄ¶¨Òå
+// â€˜å˜é‡â€™çš„å®šä¹‰
 typedef struct FORMULA_VAR{
 	int			nVarName;		// variable name
 	int			Value;			// variable value

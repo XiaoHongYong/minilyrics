@@ -1,4 +1,4 @@
-// SkinVScrollBarOSStyle.h: interface for the CSkinVScrollBarOSStyle class.
+ï»¿// SkinVScrollBarOSStyle.h: interface for the CSkinVScrollBarOSStyle class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -49,7 +49,7 @@ public:
 	void OnMouseWheel(int nWheelDistance, int nMkeys, POINT pt);
 
 protected:
-	// »ù±¾ÉèÖÃ
+	// åŸºæœ¬è®¾ç½®
 	CWidgetScrollBar	m_scrollbar;
 	IScrollNotify		*m_pScrollNotify;
 

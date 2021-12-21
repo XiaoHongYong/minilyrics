@@ -1,4 +1,4 @@
-// Helper.cpp: implementation of the Helper class.
+ï»¿// Helper.cpp: implementation of the Helper class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -29,7 +29,7 @@ bool SetClipboardText(CBaseWnd *pWnd, LPCTSTR szText)
 	gtk_clipboard_set_text(gtk_clipboard_get(GDK_SELECTION_CLIPBOARD), szText, _tcslen(szText));
 }
 
-// ÏòÓÃ»§ÏÔÊ¾ÏûÏ¢¿ò
+// å‘ç”¨æˆ·æ˜¾ç¤ºæ¶ˆæ¯æ¡†
 int MessageOut(LPCTSTR lpText, LPCTSTR szSaveDefault,CBaseWnd *pWnd/* = NULL*/, UINT uType/* = MB_ICONINFORMATION*/, LPCTSTR lpCaption/* = NULL*/)
 {
 	GtkWidget		*msgDlg;

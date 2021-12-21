@@ -1,4 +1,4 @@
-// BaseWnd.cpp: implementation of the CBaseWnd class.
+Ôªø// BaseWnd.cpp: implementation of the CBaseWnd class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -156,7 +156,7 @@ BOOL CBaseWnd::CreateEx(LPCTSTR szClassName, LPCTSTR szCaption, int x, int y, in
 
 	ASSERT(m_hWnd == NULL);
 
-	// ¥¥Ω®¥∞ø⁄
+	// ÂàõÂª∫Á™óÂè£
 	m_hWnd = CreateWindowEx(
 		dwExStyle,						// extend styles
 		szClassName,			// window class name

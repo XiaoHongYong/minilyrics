@@ -1,9 +1,9 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/03/27	0:45
 	FileName :	SkinScaleImage.cpp
 	Author   :	xhy
 	
-	Purpose  :	ÊÊºÏÓÚ½çÃæÖÐ¿ÉÒÔÉìËõµÄ Ë®Æ½ »ò ´¹Ö± µÄÌõ
+	Purpose  :	é€‚åˆäºŽç•Œé¢ä¸­å¯ä»¥ä¼¸ç¼©çš„ æ°´å¹³ æˆ– åž‚ç›´ çš„æ¡
 *********************************************************************/
 
 #include "StdAfx.h"
@@ -36,11 +36,11 @@ void CSkinXScaleImage::Draw(CRawGraph *pGraph)
 	nWidthLeft = m_nScaleXStart - m_imgBk.m_x;
 	nWidthRight = m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd;
 
-	// »­³öµÚÒ»²¿·Ö
-	// X ·½ÏòÉÏµÄÓ³Éä¹ØÏµ
+	// ç”»å‡ºç¬¬ä¸€éƒ¨åˆ†
+	// X æ–¹å‘ä¸Šçš„æ˜ å°„å…³ç³»
 	// 1.
-	// ´ÓÍ¼Æ¬µÄ           m_imgBk.m_x ----> m_nScaleXStart
-	// Ó³Éäµ½ UIObjectµÄ  m_formleft  ----> m_formLeft + m_nScaleXStart - m_imgBk.m_x
+	// ä»Žå›¾ç‰‡çš„           m_imgBk.m_x ----> m_nScaleXStart
+	// æ˜ å°„åˆ° UIObjectçš„  m_formleft  ----> m_formLeft + m_nScaleXStart - m_imgBk.m_x
 	m_imgBk.Blt(pGraph, 
 		m_rcObj.left, m_rcObj.top,
 		nWidthLeft, m_imgBk.m_cy,
@@ -49,8 +49,8 @@ void CSkinXScaleImage::Draw(CRawGraph *pGraph)
 
 
 	// 2.
-	// ´ÓÍ¼Æ¬µÄ           m_nScaleXStart                             ----> m_nScaleXEnd
-	// Ó³Éäµ½ UIObjectµÄ  m_formLeft + m_nScaleXStart - m_imgBk.m_x  ----> m_formRight - (m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd)
+	// ä»Žå›¾ç‰‡çš„           m_nScaleXStart                             ----> m_nScaleXEnd
+	// æ˜ å°„åˆ° UIObjectçš„  m_formLeft + m_nScaleXStart - m_imgBk.m_x  ----> m_formRight - (m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd)
 	m_imgBk.StretchBlt(pGraph, 
 		m_rcObj.left + nWidthLeft, m_rcObj.top,
 			m_rcObj.Width() - nWidthLeft - nWidthRight, m_rcObj.Height(),
@@ -59,8 +59,8 @@ void CSkinXScaleImage::Draw(CRawGraph *pGraph)
 	);
 
 	// 3.
-	// ´ÓÍ¼Æ¬µÄ           m_nScaleXEnd                             ----> m_imgBk.m_x + m_imgBk.m_cx
-	// Ó³Éäµ½ UIObjectµÄ  m_formRight - (m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd)  ----> m_formRight
+	// ä»Žå›¾ç‰‡çš„           m_nScaleXEnd                             ----> m_imgBk.m_x + m_imgBk.m_cx
+	// æ˜ å°„åˆ° UIObjectçš„  m_formRight - (m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd)  ----> m_formRight
 	m_imgBk.Blt(pGraph, 
 		m_rcObj.right - nWidthRight, m_rcObj.top,
 		nWidthRight, m_imgBk.m_cy,
@@ -150,11 +150,11 @@ void CSkinYScaleImage::Draw(CRawGraph *pGraph)
 	nHeightTop = m_nScaleYStart - m_imgBk.m_y;
 	nHeightBottom = m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd;
 
-	// »­³öµÚÒ»²¿·Ö
-	// Y ·½ÏòÉÏµÄÓ³Éä¹ØÏµ
+	// ç”»å‡ºç¬¬ä¸€éƒ¨åˆ†
+	// Y æ–¹å‘ä¸Šçš„æ˜ å°„å…³ç³»
 	// 1.
-	// ´ÓÍ¼Æ¬µÄ           m_imgBk.m_y ----> m_nScaleYStart
-	// Ó³Éäµ½ UIObjectµÄ  m_formtop  ----> m_formTop + m_nScaleYStart - m_imgBk.m_y
+	// ä»Žå›¾ç‰‡çš„           m_imgBk.m_y ----> m_nScaleYStart
+	// æ˜ å°„åˆ° UIObjectçš„  m_formtop  ----> m_formTop + m_nScaleYStart - m_imgBk.m_y
 	m_imgBk.Blt(pGraph, 
 		m_rcObj.left, m_rcObj.top,
 		m_imgBk.m_cx, nHeightTop,
@@ -163,8 +163,8 @@ void CSkinYScaleImage::Draw(CRawGraph *pGraph)
 
 
 	// 2.
-	// ´ÓÍ¼Æ¬µÄ           m_nScaleYStart                             ----> m_nScaleYEnd
-	// Ó³Éäµ½ UIObjectµÄ  m_formTop + m_nScaleYStart - m_imgBk.m_y  ----> m_formBottom - (m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd)
+	// ä»Žå›¾ç‰‡çš„           m_nScaleYStart                             ----> m_nScaleYEnd
+	// æ˜ å°„åˆ° UIObjectçš„  m_formTop + m_nScaleYStart - m_imgBk.m_y  ----> m_formBottom - (m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd)
 	m_imgBk.StretchBlt(pGraph, 
 		m_rcObj.left, m_rcObj.top + nHeightTop,
 		m_rcObj.Width(), m_rcObj.Height() - nHeightTop - nHeightBottom,
@@ -173,8 +173,8 @@ void CSkinYScaleImage::Draw(CRawGraph *pGraph)
 	);
 
 	// 3.
-	// ´ÓÍ¼Æ¬µÄ           m_nScaleYEnd                             ----> m_imgBk.m_y + m_imgBk.m_cy
-	// Ó³Éäµ½ UIObjectµÄ  m_formBottom - (m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd)  ----> m_formBottom
+	// ä»Žå›¾ç‰‡çš„           m_nScaleYEnd                             ----> m_imgBk.m_y + m_imgBk.m_cy
+	// æ˜ å°„åˆ° UIObjectçš„  m_formBottom - (m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd)  ----> m_formBottom
 	m_imgBk.Blt(pGraph, 
 		m_rcObj.left, m_rcObj.bottom  - nHeightBottom,
 		m_imgBk.m_cx, nHeightBottom,

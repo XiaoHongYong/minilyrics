@@ -1,4 +1,4 @@
-// FileIndexEx.cpp: implementation of the CFileIndexEx class.
+ï»¿// FileIndexEx.cpp: implementation of the CFileIndexEx class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -63,7 +63,7 @@ BOOL CFileIndexEx::Init(LPCTSTR szFile, int nBinIdxCount, BOOL bItemSizeSame, BY
 		m_FileSpaceAllocator.Initialize();
 
 		//
-		// ÖØĞÂÉèÖÃÎÄ¼ş¸ñÊ½
+		// é‡æ–°è®¾ç½®æ–‡ä»¶æ ¼å¼
 		memset(m_pFileHeader(), 0, nHeaderSize);
 		m_pFileHeader()->wHeaderLength = nHeaderSize;
 		m_pFileHeader()->nIdxCount = nBinIdxCount;
@@ -122,7 +122,7 @@ DB_POS CFileIndexEx::AddItem(LPVOID Item, int nLen)
 	if (m_FileSpaceAllocator.PreAlloc(sizeof(AVLNode) * (m_pFileHeader()->nIdxCount + 1)) != ERR_OK)
 		return DB_POS_INVALID;
 
-	// ¸üĞÂË÷Òı
+	// æ›´æ–°ç´¢å¼•
 	for (int i = 0; i < m_pFileHeader()->nIdxCount; i++)
 	{
 		if (m_pFileHeader()->idx[i].GetFlag() & BIF_UPDATE_IMEDIATE)
@@ -264,12 +264,12 @@ BOOL CFileIndexEx::VisitByOrder(int nIdxID, FUNVisit funVisit, LPVOID lpUserData
 
 	if (bDesc)
 	{
-		// ½µĞò
+		// é™åº
 		idx.VisitRight(idx.GetRootPos(), nMax, funVisit, lpUserData);
 	}
 	else
 	{
-		// ÉıĞò
+		// å‡åº
 //		idx.VisitLeft2(idx.GetRootPos(), nMax, funVisit, lpUserData);
 		idx.VisitLeft(idx.GetRootPos(), nMax, funVisit, lpUserData);
 	}
@@ -396,7 +396,7 @@ BOOL CFileIndexEx::Resort(int nBaseIdx, int nResortIdx)
 
 			if (nCmp == 0)
 			{
-				// ÒÑ¾­´æÔÚ£¬Ôò¡­¡­
+				// å·²ç»å­˜åœ¨ï¼Œåˆ™â€¦â€¦
 				// ASSERT(0);
 				// return dwPos;
 				break;

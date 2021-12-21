@@ -1,5 +1,5 @@
-/********************************************************************
-	Created  :	2002Äê12ÔÂ2ÈÕ 10:48:18
+ï»¿/********************************************************************
+	Created  :	2002å¹´12æœˆ2æ—¥ 10:48:18
 	FileName :	LyricShowTxtObj.cpp
 	Author   :	xhy
 	
@@ -60,7 +60,7 @@ void CLyricShowTxtObj::OnKeyDown(UINT nChar, UINT nFlags)
 	switch (nChar)
 	{
 	case VK_UP:
-		// Ìøµ½Ç°Ò»ĞĞ¸è´Ê
+		// è·³åˆ°å‰ä¸€è¡Œæ­Œè¯
 		nCurLineNew--;
 		if (nCurLineNew < 0)
 			nCurLineNew = 0;

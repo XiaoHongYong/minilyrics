@@ -1,4 +1,4 @@
-// FileIndexBase.cpp: implementation of the CFileIndexBase class.
+ï»¿// FileIndexBase.cpp: implementation of the CFileIndexBase class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -41,7 +41,7 @@ BOOL CFileIndexBase::Init(LPCTSTR szFile, int nBinIdxCount, BOOL bItemSizeSame, 
 		m_FileSpaceAllocator.Initialize();
 
 		//
-		// ÖØÐÂÉèÖÃÎÄ¼þ¸ñÊ½
+		// é‡æ–°è®¾ç½®æ–‡ä»¶æ ¼å¼
 		memset(m_pFileHeader(), 0, nHeaderSize);
 		m_pFileHeader()->wHeaderLength = nHeaderSize;
 		m_pFileHeader()->nIdxCount = nBinIdxCount;

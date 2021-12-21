@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "error.h"
 #include "xstr.h"
 #include "stringex_t.h"
@@ -805,7 +805,7 @@ void TrimStr(V_Str &vStr, TCHAR ch)
 }
 
 //
-// È¥µô×Ö·û´®Á½¶ËµÄ¿Õ¸ñ
+// å»æ‰å­—ç¬¦ä¸²ä¸¤ç«¯çš„ç©ºæ ¼
 void TrimStr(LPTSTR szString, TCHAR ch)
 {
 	LPTSTR	szBeg;
@@ -1073,7 +1073,7 @@ tstring UriUnquote(LPCTSTR str)
 }
 
 // COMMENT:
-//		½«ºº×Ö¡¢' '¡¢'	'µÈ×ª»»Îª %20....µÈ
+//		å°†æ±‰å­—ã€' 'ã€'	'ç­‰è½¬æ¢ä¸º %20....ç­‰
 void UriQuote(const char *szLocal, string &strInet)
 {
 	size_t	i = 0;
@@ -1318,7 +1318,7 @@ bool AppendFileToBuffer(FILE *fp, CCharBuffer &str)
 		return false;
 
 	str.setSize(str.size() + nLen);
-	// È·±£Èç¹û¶ÁÈëµÄÊÇunicode±àÂëµÄÎÄ±¾Ò²ÓĞÒÔ'\0'½áÎ²µÄ×Ö·û
+	// ç¡®ä¿å¦‚æœè¯»å…¥çš„æ˜¯unicodeç¼–ç çš„æ–‡æœ¬ä¹Ÿæœ‰ä»¥'\0'ç»“å°¾çš„å­—ç¬¦
 	szBuffer[nLen] = '\0';
 	szBuffer[nLen + 1] = '\0';
 	szBuffer[nLen + 2] = '\0';
@@ -2078,7 +2078,7 @@ protected:
 		LPCTSTR cases[] = { _T("%E5%BC%A0%E6%AF%85"), _T("artist.movie.1080p.xxx"), 
 			_T(""), _T("%2%X1"), };
 
-		LPCTSTR results[] = { _T("ÕÅÒã"), _T("artist.movie.1080p.xxx"), _T(""), _T("%2%X1"), };
+		LPCTSTR results[] = { _T("å¼ æ¯…"), _T("artist.movie.1080p.xxx"), _T(""), _T("%2%X1"), };
 
 		CPPUNIT_ASSERT(UriIsQuoted(cases[0]));
 		for (int i = 0; i < CountOf(cases); i++)

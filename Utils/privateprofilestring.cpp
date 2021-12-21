@@ -1,4 +1,4 @@
-// PrivateProfileString.cpp
+ï»¿// PrivateProfileString.cpp
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -19,7 +19,7 @@ DWORD GetPrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpDe
 	nKeyName = _tcslen(lpKeyName);
 
 	//
-	// ²éÕÒ AppName
+	// æŸ¥æ‰¾ AppName
 	while (_fgetts(szBuff, CountOf(szBuff), fp))
 	{
 		LPCTSTR		szBeg = szBuff;
@@ -53,7 +53,7 @@ DWORD GetPrivateProfileString(LPCTSTR lpAppName, LPCTSTR lpKeyName, LPCTSTR lpDe
 		goto R_FAILED;
 
 	//
-	// ²éÕÒ KeyName
+	// æŸ¥æ‰¾ KeyName
 	while (_fgetts(szBuff, CountOf(szBuff), fp))
 	{
 		LPCTSTR		szBeg = szBuff;
@@ -174,7 +174,7 @@ BOOL ReplacePrivateProfileStr(CCharBuffer	&buff, const char *lpAppName, const ch
 	}
 
 	//
-	// ²éÕÒ KeyName
+	// æŸ¥æ‰¾ KeyName
 	for (; szBeg != NULL; szBeg = strchr(szBeg, '\n'))
 	{
 		szBeg = strchr(szBeg, '\n');

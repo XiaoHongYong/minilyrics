@@ -1,4 +1,4 @@
-// SncParser.cpp: implementation of the CSncParser class.
+ï»¿// SncParser.cpp: implementation of the CSncParser class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -22,10 +22,10 @@ CSncParser::~CSncParser()
 }
 
 // COMMENTS:
-//	±£´æÎª*.sncÎÄ¼ş
-//	snc ÎÄ¼şµÄ¸ñÊ½£º
-//		¢â00003210¢Ğ
-//		ÎÒ¶ãÔÚ³µÀï
+//	ä¿å­˜ä¸º*.sncæ–‡ä»¶
+//	snc æ–‡ä»¶çš„æ ¼å¼ï¼š
+//		â‘©00003210â‘¿
+//		æˆ‘èº²åœ¨è½¦é‡Œ
 int CSncParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 {
 	int			nCount;
@@ -55,10 +55,10 @@ int CSncParser::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding)
 	return ERR_OK;
 }
 
-//	snc ÎÄ¼şµÄ¸ñÊ½£º
-//		¢â00010450¢Ğ
+//	snc æ–‡ä»¶çš„æ ¼å¼ï¼š
+//		â‘©00010450â‘¿
 //          MMSS
-//		ÎÒ¶ãÔÚ³µÀï
+//		æˆ‘èº²åœ¨è½¦é‡Œ
 BOOL CSncParser::LyricsLineToText(LyricsLine *pLine, tstringex &strBuff)
 {
 	strBuff.clear();
@@ -77,9 +77,9 @@ BOOL CSncParser::LyricsLineToText(LyricsLine *pLine, tstringex &strBuff)
 	n10Ms = (nMs / 10) % 100;
 	nSec = (nMs / 1000) % 60;
 	nMin = nMs / (1000 * 60);
-	// _stprintf(szBuff, _T("¢â%04d%02d%02d¢Ğ\r\n"), nMin, nSec, n10Ms);
+	// _stprintf(szBuff, _T("â‘©%04d%02d%02dâ‘¿\r\n"), nMin, nSec, n10Ms);
 	strBuff.reserve(100);
-	nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("¢â%04d%02d%02d¢Ğ\r\n"), nMin, nSec, n10Ms);
+	nLen = _stprintf_s(strBuff.data(), strBuff.capacity(), _T("â‘©%04d%02d%02dâ‘¿\r\n"), nMin, nSec, n10Ms);
 	strBuff.setSize(nLen);
 
 	int			nCount;
@@ -92,7 +92,7 @@ BOOL CSncParser::LyricsLineToText(LyricsLine *pLine, tstringex &strBuff)
 	}
 	strLyrics.trim();
 
-	// Èç¹û±¾ĞĞ¸è´ÊÎª¿Õ£¬Ôò²»±£´æ±¾ĞĞ
+	// å¦‚æœæœ¬è¡Œæ­Œè¯ä¸ºç©ºï¼Œåˆ™ä¸ä¿å­˜æœ¬è¡Œ
 	if (strLyrics.empty())
 		strBuff.clear();
 	else

@@ -1,4 +1,4 @@
-  // MLGraphics.cpp: implementation of the CMLGraphics class.
+ï»¿  // MLGraphics.cpp: implementation of the CMLGraphics class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -393,7 +393,7 @@ void CMLGraphics::FillRect(int x, int y, int width, int height, CMLBrush *pBrush
 
 bool CMLGraphics::TextOut(int x, int y, LPCTSTR szText, int nLen)
 {
-	// linux ÖÐ£¬±ØÐë¸ø³ö³¤¶È
+	// linux ä¸­ï¼Œå¿…é¡»ç»™å‡ºé•¿åº¦
 	if (nLen == -1)
 		nLen = strlen(szText);
 
@@ -415,7 +415,7 @@ bool CMLGraphics::DrawTextClip(LPCTSTR szText, int nLen, LPRECT lpRect)
 
 bool CMLGraphics::TextOutOutlined(int x, int y, LPCTSTR szText, int nLen, const MLColor &clrText, const MLColor &clrBorder)
 {
-	// linux ÖÐ£¬±ØÐë¸ø³ö³¤¶È
+	// linux ä¸­ï¼Œå¿…é¡»ç»™å‡ºé•¿åº¦
 	if (nLen == -1)
 		nLen = strlen(szText);
 

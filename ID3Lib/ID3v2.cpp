@@ -1,4 +1,4 @@
-// ID3v2.cpp: implementation of the CID3v2 class.
+ï»¿// ID3v2.cpp: implementation of the CID3v2 class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -497,7 +497,7 @@ int CID3v2::Save()
 			if (nResult == 0)
 			{
 				//
-				// Èç¹ûpadding data ²»Îª0£¬ĞèÒªreset.
+				// å¦‚æœpadding data ä¸ä¸º0ï¼Œéœ€è¦reset.
 				if (nPaddingSize > 0)
 				{
 					int		n = 4;

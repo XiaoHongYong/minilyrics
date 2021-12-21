@@ -1,4 +1,4 @@
-// CrashHandler.cpp: implementation of the CCrashHandler class.
+﻿// CrashHandler.cpp: implementation of the CCrashHandler class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -11,7 +11,7 @@ CCrashHandler		g_CrashHandler;
 #define MAIL_RT	_T("%0d%0a")
 
 //
-// �쳣ת��
+// 异常转换
 //
 ID_TO_STRING	arrExceptIds[] = 
 {

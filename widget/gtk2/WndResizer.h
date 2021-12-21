@@ -1,9 +1,9 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:43
 	FileName :	WndResizer.h
 	Author   :	xhy
 	
-	Purpose  :	µ÷Õû´°¿Ú´óĞ¡µÄÀà
+	Purpose  :	è°ƒæ•´çª—å£å¤§å°çš„ç±»
 *********************************************************************/
 
 #if !defined(AFX_UIWNDSIZING_H__B7400FE0_78AA_11D5_9E04_02608CAD9330__INCLUDED_)
@@ -76,20 +76,20 @@ protected:
 
 	bool			m_bFixedWidth, m_bFixedHeight;
 
-	bool			m_bResizing;		// ÊÇ·ñÔÚÍÏ¶¯´°¿Ú
+	bool			m_bResizing;		// æ˜¯å¦åœ¨æ‹–åŠ¨çª—å£
 
-	bool			m_bAtLeft, m_bAtTop, m_bAtRight, m_bAtBottom;	// ÊÇ·ñÔÚµ÷Õû×ó/ÉÏ/ÓÒ/ÏÂ±ß
+	bool			m_bAtLeft, m_bAtTop, m_bAtRight, m_bAtBottom;	// æ˜¯å¦åœ¨è°ƒæ•´å·¦/ä¸Š/å³/ä¸‹è¾¹
 
-	CRect			m_rcResizing;					// µ÷ÕûÖĞµÄ¾ØĞÎµÄ´óĞ¡
+	CRect			m_rcResizing;					// è°ƒæ•´ä¸­çš„çŸ©å½¢çš„å¤§å°
 
-	POINT			m_ptOld;					// Êó±êÉÏÒ»´ÎµÄÎ»ÖÃ
+	POINT			m_ptOld;					// é¼ æ ‡ä¸Šä¸€æ¬¡çš„ä½ç½®
 
-    bool            m_bResizingAutoCloseto;		// ÊÇ·ñÔÚµ÷Õû´óĞ¡Ê±, ×Ô¶¯¿¿½üÖ¸¶¨´°¿Ú
+    bool            m_bResizingAutoCloseto;		// æ˜¯å¦åœ¨è°ƒæ•´å¤§å°æ—¶, è‡ªåŠ¨é è¿‘æŒ‡å®šçª—å£
 
-    CBaseWnd		*m_pWnd;				// ´°¿Ú
+    CBaseWnd		*m_pWnd;				// çª—å£
 
-	int				m_nMincx;		// ´°¿Ú×îĞ¡¿í¶È
-	int				m_nMincy;		// ´°¿Ú×îĞ¡¸ß¶È
+	int				m_nMincx;		// çª—å£æœ€å°å®½åº¦
+	int				m_nMincy;		// çª—å£æœ€å°é«˜åº¦
 	CCursor			m_cursorArrow, m_cursorNWSE, m_cursorNESW, m_cursorWE, m_cursorNS;
 
 };

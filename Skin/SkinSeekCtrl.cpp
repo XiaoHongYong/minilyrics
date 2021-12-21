@@ -1,4 +1,4 @@
-// SkinSeekCtrl.cpp: implementation of the CSkinSeekCtrl class.
+ï»¿// SkinSeekCtrl.cpp: implementation of the CSkinSeekCtrl class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -15,14 +15,14 @@ UIOBJECT_CLASS_NAME_IMP(CSkinSeekCtrl, _T("SeekCtrl"));
 
 CSkinSeekCtrl::CSkinSeekCtrl()
 {
-	// »ù±¾ÉèÖÃ
-	m_nWidthEnd = 17;	// ÉÏ¡¢ÏÂ°´Å¥µÄ¸ß¶È
-	m_nWidthThumb = 41;		// ¹ö¶¯ÌõµÄ¸ß¶È
-	m_nPosThumb = 0;		// ¹ö¶¯ÌõµÄÎ»ÖÃ(ÉÏÃæ°´Å¥µÄÏÂ·½ £­> thumbµÄÉÏ·½µÄ¾àÀë)
+	// åŸºæœ¬è®¾ç½®
+	m_nWidthEnd = 17;	// ä¸Šã€ä¸‹æŒ‰é’®çš„é«˜åº¦
+	m_nWidthThumb = 41;		// æ»šåŠ¨æ¡çš„é«˜åº¦
+	m_nPosThumb = 0;		// æ»šåŠ¨æ¡çš„ä½ç½®(ä¸Šé¢æŒ‰é’®çš„ä¸‹æ–¹ ï¼> thumbçš„ä¸Šæ–¹çš„è·ç¦»)
 
-	// ĞéÄâ¹ö¶¯Î»ÖÃ
-	m_nVirtualMin = 0;		// ×îĞ¡µÄÖµ
-	m_nVirtualMax = 10;		// ×î´óµÄÖµ
+	// è™šæ‹Ÿæ»šåŠ¨ä½ç½®
+	m_nVirtualMin = 0;		// æœ€å°çš„å€¼
+	m_nVirtualMax = 10;		// æœ€å¤§çš„å€¼
 	m_nVirtualLine = 1;
 	m_nVirtualPage = 10;
 	m_nVirtualCurPos = m_nVirtualMin;
@@ -64,12 +64,12 @@ bool CSkinSeekCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	switch (m_PushDownPos)
 	{
 	case PUSH_DOWN_THUMB:
-		// ¹ö¶¯ÌõµÄÍÏ¶¯box(thumb)
+		// æ»šåŠ¨æ¡çš„æ‹–åŠ¨box(thumb)
 		ThumbOnLButtonDown(nFlags, point);
 		break;
 	case PUSH_DOWN_TOPTRACK:
 	case PUSH_DOWN_BOTTOMTRACK:
-		// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞseek²Ù×÷
+		// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œseekæ“ä½œ
 		TrackOnLButtonDown(nFlags, point);
 		break;
 	default:
@@ -81,7 +81,7 @@ bool CSkinSeekCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 void CSkinSeekCtrl::ThumbOnLButtonDown(UINT nFlags, CPoint point)
 {
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 	m_pSkin->SetCaptureMouse(this);
 
 	m_nXCursorToThumbBeg = point.x - (m_rcObj.left + m_nPosThumb);
@@ -93,7 +93,7 @@ void CSkinSeekCtrl::ThumbOnLButtonDown(UINT nFlags, CPoint point)
 
 void CSkinSeekCtrl::TrackOnLButtonDown(UINT nFlags, CPoint point)
 {
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 	m_pSkin->SetCaptureMouse(this);
 
 	m_nPosThumb = point.x - m_rcObj.left;
@@ -127,7 +127,7 @@ bool CSkinSeekCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	{
 	case PUSH_DOWN_THUMB:
 		{
-			// ¹ö¶¯ÌõµÄÍÏ¶¯box(thumb)
+			// æ»šåŠ¨æ¡çš„æ‹–åŠ¨box(thumb)
 			m_pSkin->ReleaseCaptureMouse(this);
 
 			OnVScroll(SB_THUMBPOSITION);
@@ -379,9 +379,9 @@ void CSkinSeekCtrl::EnumProperties(CUIObjProperties &listProperties)
 #endif // _SKIN_EDITOR_
 
 // COMMENT:
-//		ÉèÖÃĞÂµÄ¹ö¶¯Î»ÖÃ
+//		è®¾ç½®æ–°çš„æ»šåŠ¨ä½ç½®
 // RETURN:
-//		·µ»ØÉèÖÃÒÔÇ°µÄ¹ö¶¯Î»ÖÃµÄÖµ
+//		è¿”å›è®¾ç½®ä»¥å‰çš„æ»šåŠ¨ä½ç½®çš„å€¼
 int CSkinSeekCtrl::SetScrollPos(int nPos, bool bRedraw)
 {
 	int		nPosOld, nPosThumbOld;
@@ -474,7 +474,7 @@ int CSkinSeekCtrl::ObjectPosToVirtualPos(int nThumbPos)
 }
 
 // COMMENTS:
-//		¹ö¶¯ºóµÄ´óĞ¡£¬Æä´óĞ¡Í¨¹ı GetScrollPos() È¡µÃ
+//		æ»šåŠ¨åçš„å¤§å°ï¼Œå…¶å¤§å°é€šè¿‡ GetScrollPos() å–å¾—
 // INPUT:
 //		nSBCode:
 //		SB_BOTTOM   Scroll to bottom.

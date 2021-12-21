@@ -1,4 +1,4 @@
-#ifndef _RED_BLACK_TREE_INC_
+Ôªø#ifndef _RED_BLACK_TREE_INC_
 #define _RED_BLACK_TREE_INC_
 
 //typedef DWORD	DB_POS;
@@ -29,7 +29,7 @@ struct RbtHead
 	DWORD		m_dwFlag;
 };
 
-#define 	POS_NULL		0				// Œª÷√Œ™ø’
+#define 	POS_NULL		0				// ‰ΩçÁΩÆ‰∏∫Á©∫
 
 
 template<class __Allocator, class __FunCmpare>

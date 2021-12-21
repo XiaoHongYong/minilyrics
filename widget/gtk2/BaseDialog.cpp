@@ -1,4 +1,4 @@
-// BaseDialog.cpp: implementation of the CBaseDialog class.
+ï»¿// BaseDialog.cpp: implementation of the CBaseDialog class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -466,14 +466,14 @@ BOOL CBaseDialog::OnInitDialog()
 {
     // gtk_container_remove(GTK_CONTAINER (m_window), GTK_DIALOG(m_window)->vbox);
 
-	// ÔÚ¿ªÊ¼µÄÊ±ºò³õÊ¼»¯¶àÓïÑÔÖ§³Ö¶ÔÏó
+	// åœ¨å¼€å§‹çš„æ—¶å€™åˆå§‹åŒ–å¤šè¯­è¨€æ”¯æŒå¯¹è±¡
 //	m_LangDlgHelper.InitAddAll(m_hWnd);
 
-	// ÇĞ»»Îª±¾µØÓïÑÔ
+	// åˆ‡æ¢ä¸ºæœ¬åœ°è¯­è¨€
 //	OnLanguageChanged();
 
 	//
-	// ¾ÓÖĞ´Ë¶Ô»°¿ò
+	// å±…ä¸­æ­¤å¯¹è¯æ¡†
 // 	if (!IsChildWnd(m_hWnd))
 // 	{
 // 		CenterWindowToMonitor(m_hWnd);
@@ -636,18 +636,18 @@ void CBaseDialog::ConnectGtkSignals()
 {
 	//	gtk_window_set_decorated(GTK_WINDOW(m_window), false);
 
-	/*µ±¸ø´°¿ÚÒ»¸ö"delete_event"ĞÅºÅÊ±(Õâ¸öĞÅºÅÊÇÓÉ´°¿Ú¹Ü
-	*ÀíÆ÷·¢³öµÄ£¬Í¨³£ÊÇÔÚµã»÷´°¿Ú±êÌâÌõÓÒ±ßµÄ"¡Á"°´Å¥£¬»ò
-	*ÕßÔÚ±êÌâÌõµÄ¿ì½İ²Ëµ¥ÉÏÑ¡Ôñ"close"Ñ¡ÏîÊ±·¢³öµÄ)£¬ÎÒÃÇ
-	*ÒªÇóµ÷ÓÃÉÏÃæ¶¨ÒåµÄdelete_event()º¯Êı´«µİ¸øÕâ¸ö»Øµ÷º¯Êı
-	*µÄÊı¾İÊÇNULL£¬»Øµ÷º¯Êı»áºöÂÔÕâ¸ö²ÎÊı*/
+	/*å½“ç»™çª—å£ä¸€ä¸ª"delete_event"ä¿¡å·æ—¶(è¿™ä¸ªä¿¡å·æ˜¯ç”±çª—å£ç®¡
+	*ç†å™¨å‘å‡ºçš„ï¼Œé€šå¸¸æ˜¯åœ¨ç‚¹å‡»çª—å£æ ‡é¢˜æ¡å³è¾¹çš„"Ã—"æŒ‰é’®ï¼Œæˆ–
+	*è€…åœ¨æ ‡é¢˜æ¡çš„å¿«æ·èœå•ä¸Šé€‰æ‹©"close"é€‰é¡¹æ—¶å‘å‡ºçš„)ï¼Œæˆ‘ä»¬
+	*è¦æ±‚è°ƒç”¨ä¸Šé¢å®šä¹‰çš„delete_event()å‡½æ•°ä¼ é€’ç»™è¿™ä¸ªå›è°ƒå‡½æ•°
+	*çš„æ•°æ®æ˜¯NULLï¼Œå›è°ƒå‡½æ•°ä¼šå¿½ç•¥è¿™ä¸ªå‚æ•°*/
 	gtk_signal_connect(GTK_OBJECT(m_window), "delete_event",
 		GTK_SIGNAL_FUNC(CBDeleteEvent), this);
 
-	/*ÕâÀï£¬ÎÒÃÇ¸ø"destory"ÊÂ¼şÁ¬½ÓÒ»¸öĞÅºÅ´¦Àíº¯Êı£¬
-	*µ±ÎÒÃÇÔÚ´°¿ÚÉÏµ÷ÓÃgtk_widget_destroy()º¯Êı
-	*»òÕßÔÚ"delete_event"ÊÂ¼şµÄ»Øµ÷º¯ÊıÖĞ·µ»ØFALSE
-	* Ê±»á·¢ÉúÕâ¸öÊÂ¼ş*/
+	/*è¿™é‡Œï¼Œæˆ‘ä»¬ç»™"destory"äº‹ä»¶è¿æ¥ä¸€ä¸ªä¿¡å·å¤„ç†å‡½æ•°ï¼Œ
+	*å½“æˆ‘ä»¬åœ¨çª—å£ä¸Šè°ƒç”¨gtk_widget_destroy()å‡½æ•°
+	*æˆ–è€…åœ¨"delete_event"äº‹ä»¶çš„å›è°ƒå‡½æ•°ä¸­è¿”å›FALSE
+	* æ—¶ä¼šå‘ç”Ÿè¿™ä¸ªäº‹ä»¶*/
 	gtk_signal_connect(GTK_OBJECT(m_window), "destroy",
 		GTK_SIGNAL_FUNC(CBDestroyEvent), this);
 	// g_print("Register CBDestroyEvent: %X\n", this);

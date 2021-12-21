@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "Skin.h"
 #include "SkinImage.h"
 
@@ -280,7 +280,7 @@ void CSFImage::TileBlt(CRawGraph *pGraphics, int xDest, int yDest, int nWidthDes
 	int			x, y;
 
 	//
-	// ÏÈ½«Y·½ÏòµÄ»æ»­ÁË
+	// å…ˆå°†Yæ–¹å‘çš„ç»˜ç”»äº†
 	// 1111 1111 1111 222
 	// 1111 1111 1111 222
 	// 3333 3333 3333 444
@@ -347,7 +347,7 @@ void CSkinImage::TileBltExT(CRawGraph *pGraphics, int xOrg, int yOrg, int xDest,
 	int			nW;
 
 	//
-	// ÏÈ½«Y·½ÏòµÄ»æ»­ÁË
+	// å…ˆå°†Yæ–¹å‘çš„ç»˜ç”»äº†
 	// BBB 0000 0000 0000 AAA
 	// CCC 1111 1111 1111 222
 	// CCC 1111 1111 1111 222
@@ -487,7 +487,7 @@ void CSFImage::TileBltEx(CRawGraph *pGraphics, int xOrg, int yOrg, int xDest, in
 	int			nW;
 
 	//
-	// ÏÈ½«Y·½ÏòµÄ»æ»­ÁË
+	// å…ˆå°†Yæ–¹å‘çš„ç»˜ç”»äº†
 	// BBB 0000 0000 0000 AAA
 	// CCC 1111 1111 1111 222
 	// CCC 1111 1111 1111 222

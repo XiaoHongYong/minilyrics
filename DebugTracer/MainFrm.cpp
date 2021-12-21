@@ -1,4 +1,4 @@
-// MainFrm.cpp : implementation of the CMainFrame class
+ï»¿// MainFrm.cpp : implementation of the CMainFrame class
 //
 
 #include "stdafx.h"
@@ -32,7 +32,7 @@ LPCTSTR		_SZ_LOG_LVL[] =
 
 LPCTSTR	LogLvlToStr(int nLvl)
 {
-	// ÈÕÖ¾µÄµÈ¼¶¶¨Òå
+	// æ—¥å¿—çš„ç­‰çº§å®šä¹‰
 	if (nLvl <= 0 || nLvl > _MAX_LOG_LVL)
 		return _SZ_LOG_LVL[0];
 
@@ -41,10 +41,10 @@ LPCTSTR	LogLvlToStr(int nLvl)
 /*
 LPCTSTR		_SZ_COL_NAME[] = 
 {
-	"Ô´ÎÄ¼ş",
-	"´úÂëĞĞ",
-	"ÈÕÖ¾¼¶±ğ",
-	"ÏûÏ¢",
+	"æºæ–‡ä»¶",
+	"ä»£ç è¡Œ",
+	"æ—¥å¿—çº§åˆ«",
+	"æ¶ˆæ¯",
 	NULL
 };*/
 
@@ -54,48 +54,48 @@ typedef struct LIST_CTRL_COLOUM
 	int			nWidth;
 	BOOL		bShow;
 	int			nIndex;
-	UINT		uMenuId;	// ²Ëµ¥ID
+	UINT		uMenuId;	// èœå•ID
 }LIST_CTRL_COLOUM;
 
 LIST_CTRL_COLOUM	_COL_LIST_CTRL[] =
 {
 	{
-		"ĞòºÅ",
+		"åºå·",
 		40,
 		TRUE,
 		0,
 		0
 	},
 	{
-		"Ê±¼ä",
+		"æ—¶é—´",
 		90,
 		TRUE,
 		1,
 		IDC_VIEW_TIME
 	},
 	{
-		"Ô´ÎÄ¼ş",
+		"æºæ–‡ä»¶",
 		120,
 		TRUE,
 		2,
 		IDC_VIEW_SRC_FILE
 	},
 	{
-		"´úÂëĞĞ",
+		"ä»£ç è¡Œ",
 		50,
 		TRUE,
 		3,
 		IDC_VIEW_SRC_LINE
 	},
 	{
-		"ÈÕÖ¾¼¶±ğ",
+		"æ—¥å¿—çº§åˆ«",
 		70,
 		TRUE,
 		4,
 		IDC_VIEW_LOG_LVL
 	},
 	{
-		"ÏûÏ¢",
+		"æ¶ˆæ¯",
 		430,
 		TRUE,
 		5,
@@ -110,8 +110,8 @@ LIST_CTRL_COLOUM	_COL_LIST_CTRL[] =
 	}
 };
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
-// ²¢ÇÒ½«½áÎ²ÉèÖÃÎªÒÔ'\0'½áÊø
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
+// å¹¶ä¸”å°†ç»“å°¾è®¾ç½®ä¸ºä»¥'\0'ç»“æŸ
 int	strncpysz_safe(char *strDestination, int nLenMax, const char *strSource, int nToCopy)
 {
 	if (nToCopy >= nLenMax)
@@ -376,7 +376,7 @@ BOOL CMainFrame::OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct)
 			m_vLogMsg.push_back(szLog);
 
 			//
-			// ÒòÎªWM_COPYDADA»áÈÃ·¢ËÍÕßµÈ´ı£¬ËùÓĞÎªÁË²»Ó°Ïì·¢ËÍÕß£¬ÎÒÃÇÏÈ½«´ËÏûÏ¢´æ´¢ÆğÀ´£¬Í¨¹ıpostmessageÀ´´¦Àí
+			// å› ä¸ºWM_COPYDADAä¼šè®©å‘é€è€…ç­‰å¾…ï¼Œæ‰€æœ‰ä¸ºäº†ä¸å½±å“å‘é€è€…ï¼Œæˆ‘ä»¬å…ˆå°†æ­¤æ¶ˆæ¯å­˜å‚¨èµ·æ¥ï¼Œé€šè¿‡postmessageæ¥å¤„ç†
 			//
 			if (m_PauseState == PS_NORMAL)
 				PostMessage(MYWM_ADD_MSG, 0, 0);
@@ -419,7 +419,7 @@ void CMainFrame::ViewColumnChanged(int nColumn)
 	_COL_LIST_CTRL[nColumn].bShow = !_COL_LIST_CTRL[nColumn].bShow;
 
 	//
-	// ÉèÖÃ²Ëµ¥µÄCheck±êÖ¾
+	// è®¾ç½®èœå•çš„Checkæ ‡å¿—
 	//
 	if (_COL_LIST_CTRL[nColumn].bShow)
 		dwFlag |= MF_CHECKED;
@@ -433,7 +433,7 @@ void CMainFrame::ViewColumnChanged(int nColumn)
 
 
 	//
-	// Ôö¼Ó¡¢É¾³ıÏàÓ¦µÄÁĞ
+	// å¢åŠ ã€åˆ é™¤ç›¸åº”çš„åˆ—
 	//
 	if (_COL_LIST_CTRL[nColumn].bShow)
 		m_wndView.InsertColumn(_COL_LIST_CTRL[nColumn].nIndex, _COL_LIST_CTRL[nColumn].szName, LVCFMT_LEFT, _COL_LIST_CTRL[nColumn].nWidth);
@@ -449,7 +449,7 @@ void CMainFrame::ViewColumnChanged(int nColumn)
 }
 
 //
-// ½«»º³åÇøÖĞµÄÈÕÖ¾¶¼Ìí¼Óµ½´°¿ÚÖĞ
+// å°†ç¼“å†²åŒºä¸­çš„æ—¥å¿—éƒ½æ·»åŠ åˆ°çª—å£ä¸­
 //
 LRESULT CMainFrame::OnLogBuffer(WPARAM wParam, LPARAM lParam)
 {
@@ -464,7 +464,7 @@ LRESULT CMainFrame::OnLogBuffer(WPARAM wParam, LPARAM lParam)
 }
 
 //
-// ´ò¿ªÈÕÖ¾ÎÄ¼ş
+// æ‰“å¼€æ—¥å¿—æ–‡ä»¶
 //
 void CMainFrame::OnOpen() 
 {
@@ -482,7 +482,7 @@ void CMainFrame::OnOpen()
 	fp = fopen(dlg.GetPathName(), "r");
 	if (fp == NULL)
 	{
-		AfxMessageBox("´ò¿ªÎÄ¼şÊ§°Ü£¡");
+		AfxMessageBox("æ‰“å¼€æ–‡ä»¶å¤±è´¥ï¼");
 		return;
 	}
 
@@ -498,7 +498,7 @@ void CMainFrame::OnOpen()
 	if (szBuffer == NULL)
 	{
 		fclose(fp);
-		AfxMessageBox("·ÖÅäÄÚ´æ³ö´í£¡");
+		AfxMessageBox("åˆ†é…å†…å­˜å‡ºé”™ï¼");
 		return;
 	}
 
@@ -506,7 +506,7 @@ void CMainFrame::OnOpen()
 
 	while (fgets(szBuffer, nLen, fp))
 	{
-		// ·ÖÎöÃ¿Ò»ĞĞ
+		// åˆ†ææ¯ä¸€è¡Œ
 		AnanysisLogMsg(szBuffer);
 	}
 
@@ -514,7 +514,7 @@ void CMainFrame::OnOpen()
 	if (ferror(fp))
 	{
 		fclose(fp);
-		AfxMessageBox("¶ÁÎÄ¼şÊ§°Ü£¡");
+		AfxMessageBox("è¯»æ–‡ä»¶å¤±è´¥ï¼");
 		return;
 	}
 
@@ -535,7 +535,7 @@ void CMainFrame::AddTree(DWORD dwTreeId, DWORD dwParentId, DWORD CurId, LPCTSTR 
 }
 
 //
-// ½«ÈÕÖ¾Ìí¼Óµ½´°¿ÚÖĞ
+// å°†æ—¥å¿—æ·»åŠ åˆ°çª—å£ä¸­
 //
 void CMainFrame::InsertLog(LPCTSTR szTime, LPCTSTR szSrcFile, int nLine, int nLevel, LPCTSTR szMsg)
 {
@@ -645,11 +645,11 @@ void CMainFrame::InsertLog(LPCTSTR szTime, LPCTSTR szSrcFile, int nLine, int nLe
 }
 
 //
-// ·ÖÎöÒ»ĞĞÈÕÖ¾£¬²¢ÇÒÌí¼Óµ½´°¿ÚÖĞ
+// åˆ†æä¸€è¡Œæ—¥å¿—ï¼Œå¹¶ä¸”æ·»åŠ åˆ°çª—å£ä¸­
 //
 void CMainFrame::AnanysisLogMsg(LPTSTR szBuffer)
 {
-	// ·ÖÎöÃ¿Ò»ĞĞ
+	// åˆ†ææ¯ä¸€è¡Œ
 	// |F%s|L%d|E%d|M%s
 	LPTSTR		szTime = "", szSrcFile = "", szLine = "", szErrLevel = "", szMsg = "";
 	LPTSTR		szPtr;

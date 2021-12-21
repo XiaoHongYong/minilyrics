@@ -1,4 +1,4 @@
-/////////////////////////////////////////////////////////////////////////////
+﻿/////////////////////////////////////////////////////////////////////////////
 // GridCell.h : header file
 //
 // MFC Grid Control - Grid cell class header file
@@ -90,7 +90,7 @@ protected:
 protected:
     CString    m_strText;      // Cell text (or binary data if you wish...)
     LPARAM     m_lParam;       // 32-bit value to associate with item
-    int        m_nImage;       // Index of the list view item�s icon
+    int        m_nImage;       // Index of the list view item抯 icon
     DWORD      m_nFormat;
     COLORREF   m_crFgClr;
     COLORREF   m_crBkClr;

@@ -1,4 +1,4 @@
-// HttpClient.cpp: implementation of the CHttpClient class.
+﻿// HttpClient.cpp: implementation of the CHttpClient class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -174,7 +174,7 @@ int CHttpClient::GetRespond(int &nRetCode, CCharBuffer &buffRet)
 
 	buffRet.clear();
 
-	// HTTP ��Ϣ
+	// HTTP 消息
 	m_httpReturn.SetNetFile(&m_NetFile);
 	nRet = m_httpReturn.ReadHead();
 	if (nRet != ERR_OK)

@@ -1,4 +1,4 @@
-// MPEventHost.cpp: implementation of the CMPEventHost class.
+ï»¿// MPEventHost.cpp: implementation of the CMPEventHost class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -21,30 +21,30 @@ typedef struct WVS_LYRICS_DATA_A
 {
 	typedef struct LYRICS_ROW_A
 	{
-		int			nRow;					// ÐÐÊý
-		DWORD		dwLyricsShowAttrb;		// ¸ÃÐÐ¸è´ÊµÄÏÔÊ¾ÊôÐÔ
-		float		fKaraokePos;			// ÔÚ¿¨À­OkÏÔÊ¾·½Ê½Ê±ÓÐÐ§£¬±íÊ¾ÏÔÊ¾Î»ÖÃ±ÈÀý
-		char		szLyrics[LYRICS_LEN_MAX];			// ¸è´Ê
+		int			nRow;					// è¡Œæ•°
+		DWORD		dwLyricsShowAttrb;		// è¯¥è¡Œæ­Œè¯çš„æ˜¾ç¤ºå±žæ€§
+		float		fKaraokePos;			// åœ¨å¡æ‹‰Okæ˜¾ç¤ºæ–¹å¼æ—¶æœ‰æ•ˆï¼Œè¡¨ç¤ºæ˜¾ç¤ºä½ç½®æ¯”ä¾‹
+		char		szLyrics[LYRICS_LEN_MAX];			// æ­Œè¯
 	}LYRICS_ROW;
-	DWORD		dwLen;			// ¸Ã½á¹¹µÄ³¤¶È
-	DWORD		dwVersion;		// ¸Ã½á¹¹µÄ°æ±¾
-	int			nCurrentRow;	// µ±Ç°¸è´ÊÐÐ
-	LYRICS_ROW_A	LyricsLine[2];	// ¸è´ÊÐÐs
+	DWORD		dwLen;			// è¯¥ç»“æž„çš„é•¿åº¦
+	DWORD		dwVersion;		// è¯¥ç»“æž„çš„ç‰ˆæœ¬
+	int			nCurrentRow;	// å½“å‰æ­Œè¯è¡Œ
+	LYRICS_ROW_A	LyricsLine[2];	// æ­Œè¯è¡Œs
 }WVS_LYRICS_DATA_A;
 
 typedef struct WVS_LYRICS_DATA_W
 {
 	typedef struct LYRICS_ROW_W
 	{
-		int			nRow;					// ÐÐÊý
-		DWORD		dwLyricsShowAttrb;		// ¸ÃÐÐ¸è´ÊµÄÏÔÊ¾ÊôÐÔ
-		float		fKaraokePos;			// ÔÚ¿¨À­OkÏÔÊ¾·½Ê½Ê±ÓÐÐ§£¬±íÊ¾ÏÔÊ¾Î»ÖÃ±ÈÀý
-		WCHAR		szLyrics[LYRICS_LEN_MAX];			// ¸è´Ê
+		int			nRow;					// è¡Œæ•°
+		DWORD		dwLyricsShowAttrb;		// è¯¥è¡Œæ­Œè¯çš„æ˜¾ç¤ºå±žæ€§
+		float		fKaraokePos;			// åœ¨å¡æ‹‰Okæ˜¾ç¤ºæ–¹å¼æ—¶æœ‰æ•ˆï¼Œè¡¨ç¤ºæ˜¾ç¤ºä½ç½®æ¯”ä¾‹
+		WCHAR		szLyrics[LYRICS_LEN_MAX];			// æ­Œè¯
 	}LYRICS_ROW_W;
-	DWORD		dwLen;			// ¸Ã½á¹¹µÄ³¤¶È
-	DWORD		dwVersion;		// ¸Ã½á¹¹µÄ°æ±¾
-	int			nCurrentRow;	// µ±Ç°¸è´ÊÐÐ
-	LYRICS_ROW_W	LyricsLine[2];	// ¸è´ÊÐÐs
+	DWORD		dwLen;			// è¯¥ç»“æž„çš„é•¿åº¦
+	DWORD		dwVersion;		// è¯¥ç»“æž„çš„ç‰ˆæœ¬
+	int			nCurrentRow;	// å½“å‰æ­Œè¯è¡Œ
+	LYRICS_ROW_W	LyricsLine[2];	// æ­Œè¯è¡Œs
 }WVS_LYRICS_DATA_W;
 #endif
 
@@ -91,7 +91,7 @@ LRESULT CMPMsgWnd::WndProc(UINT message, WPARAM wParam, LPARAM lParam)
 
 #ifndef _MPLAYER
 //
-// ÏìÓ¦WVSÖÐµÄÏûÏ¢£¬È¡µÃ¸è´Ê¡­¡­
+// å“åº”WVSä¸­çš„æ¶ˆæ¯ï¼Œå–å¾—æ­Œè¯â€¦â€¦
 //
 LRESULT CMPMsgWnd::OnWVSLyrics(WPARAM wParam, LPARAM lParam)
 {
@@ -115,7 +115,7 @@ LRESULT CMPMsgWnd::OnWVSLyrics(WPARAM wParam, LPARAM lParam)
 }
 
 //
-// ÏìÓ¦WVSÖÐµÄÏûÏ¢£¬È¡µÃ¸è´Ê
+// å“åº”WVSä¸­çš„æ¶ˆæ¯ï¼Œå–å¾—æ­Œè¯
 //
 LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *pDataW)
 {
@@ -131,7 +131,7 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 		nCurSingRow = g_LyricData.GetCurPlayLine(lyrLines);
 		if (nCurSingRow == -1)
 		{
-			// Ã»ÓÐ¸è´Ê£¿£¡
+			// æ²¡æœ‰æ­Œè¯ï¼Ÿï¼
 			if (pDataA)
 			{
 				pDataA->nCurrentRow = -1;
@@ -148,7 +148,7 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 		}
 		pLyricRow = lyrLines[nCurSingRow];
 
-		// Å¼ÊýÐÐÏÔÊ¾ÔÚÉÏÃæ£¬ÆæÊýÐÐÏÔÊ¾ÔÚÏÂÃæ
+		// å¶æ•°è¡Œæ˜¾ç¤ºåœ¨ä¸Šé¢ï¼Œå¥‡æ•°è¡Œæ˜¾ç¤ºåœ¨ä¸‹é¢
 		int		nRow;
 		tstring	strLyricsLine;
 
@@ -176,7 +176,7 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 			wcscpy_safe(pDataW->LyricsLine[nRow % 2].szLyrics, LYRICS_LEN_MAX, str.c_str());
 		}
 
-		// Èç¹ûµ±Ç°¸è´ÊÐÐµÄÏÔÊ¾Ê±¼ä³¬¹ýÒ»°ë£¬ÔòÔ¤ÏÔÊ¾ÏÂÒ»ÐÐ¸è´Ê
+		// å¦‚æžœå½“å‰æ­Œè¯è¡Œçš„æ˜¾ç¤ºæ—¶é—´è¶…è¿‡ä¸€åŠï¼Œåˆ™é¢„æ˜¾ç¤ºä¸‹ä¸€è¡Œæ­Œè¯
 		if ( (g_LyricData.GetPlayElapsedTime() - pLyricRow->nBegTime) * 2 >= pLyricRow->nEndTime - g_LyricData.GetPlayElapsedTime())
 		{
 			nRow = nCurSingRow + 1;
@@ -190,7 +190,7 @@ LRESULT CMPMsgWnd::OnWVSGetLyrics(WVS_LYRICS_DATA_A *pDataA, WVS_LYRICS_DATA_W *
 		else
 		{
 			//
-			// »¹ÊÇÏÔÊ¾ÉÏÒ»ÐÐ
+			// è¿˜æ˜¯æ˜¾ç¤ºä¸Šä¸€è¡Œ
 			nRow = nCurSingRow - 1;
 			if (nRow < 0)
 				nRow = nCurSingRow + 1;

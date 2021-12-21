@@ -1,4 +1,4 @@
-MiniLyrics 7.6.46 for Windows
+ï»¿MiniLyrics 7.6.46 for Windows
 Fixed: Support 64 bit of iTunes.
 Fixed: Support 64 bit of Windows Media Player.
 
@@ -485,7 +485,7 @@ MiniLyrics - 3.2.1245
 5. Optmized the lyrics displaying;
 6. Sovled the bug of the inability to browse for the local lyrics in lyrics association;
 7. Modified the Self Lyrics Editor's mode tooltip;
-8. Unified the Self Lyrics Editor's Buttons¡¯ colors and styles;
+8. Unified the Self Lyrics Editor's Buttonsâ€™ colors and styles;
 9. Added a how-to-launch-the-program message at the end of installation.
 
 MiniLyrics - 3.1.1140

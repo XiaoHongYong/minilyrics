@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/04	21:30
 	FileName :	Profile.cpp
 	Author   :	xhy
@@ -61,7 +61,7 @@ CProfile::STRING_MAP::iterator CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKey
 	if (it == m_mapAppName2Keys.end())
 	{
 		//
-		// ²»Çø·Ö´óĞ¡Ğ´£¬²éÕÒAppName
+		// ä¸åŒºåˆ†å¤§å°å†™ï¼ŒæŸ¥æ‰¾AppName
 		for (it = m_mapAppName2Keys.begin(); it != m_mapAppName2Keys.end(); it++)
 		{
 			if (stricmp((*it).first.c_str(), szAppName) == 0)
@@ -77,7 +77,7 @@ CProfile::STRING_MAP::iterator CProfile::GetKey(LPCTSTR szAppName, LPCTSTR szKey
 	if (itStr == (*it).second.end())
 	{
 		//
-		// ²»Çø·Ö´óĞ¡Ğ´£¬²éÕÒKeyName
+		// ä¸åŒºåˆ†å¤§å°å†™ï¼ŒæŸ¥æ‰¾KeyName
 		for (itStr = (*it).second.begin(); itStr != (*it).second.end(); itStr++)
 		{
 			if (stricmp((*itStr).first.c_str(), szKeyName) == 0)
@@ -169,7 +169,7 @@ void CProfile::Init(LPCTSTR szProfile, HINSTANCE hInst)
 	{
 		if ((szProfile[1] == ':') && (szProfile[2] == '\\'))
 		{
-			// Èç¹ûÒÑ¾­ÊÇÈ«Â·¾¶£¬Ôò²»¹Ü
+			// å¦‚æœå·²ç»æ˜¯å…¨è·¯å¾„ï¼Œåˆ™ä¸ç®¡
 			lstrcpy(m_szProfile, szProfile);
 			return;
 		}
@@ -180,7 +180,7 @@ void CProfile::Init(LPCTSTR szProfile, HINSTANCE hInst)
 }
 
 //
-// Çø·Ö´óĞ¡Ğ´£¬½«szAppName, szKeyÌí¼Óµ½»º´æÖĞ
+// åŒºåˆ†å¤§å°å†™ï¼Œå°†szAppName, szKeyæ·»åŠ åˆ°ç¼“å­˜ä¸­
 void CProfile::AddKeys(LPCTSTR szAppName, LPCTSTR szKeyName, LPCTSTR szValue)
 {
 	APPNAME_MAP::iterator	it;

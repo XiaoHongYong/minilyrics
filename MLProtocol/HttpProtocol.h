@@ -1,4 +1,4 @@
-// HttpProtocol.h: interface for the CHttpProtocol class.
+ï»¿// HttpProtocol.h: interface for the CHttpProtocol class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -76,9 +76,9 @@ protected:
 // Cache-Control: no-cache
 // Connection: close
 
-// Ê¹ÓÃHTTP´úÀí
-// HTTP ´úÀíÁ¬½ÓµÄ·şÎñÆ÷Îª´úÀí·şÎñÆ÷£¬¶Ë¿ÚÎª´úÀí¶Ë¿Ú£¬
-// URL Îª°üº¬ÓòÃûµÄÈ«Â·¾¶
+// ä½¿ç”¨HTTPä»£ç†
+// HTTP ä»£ç†è¿æ¥çš„æœåŠ¡å™¨ä¸ºä»£ç†æœåŠ¡å™¨ï¼Œç«¯å£ä¸ºä»£ç†ç«¯å£ï¼Œ
+// URL ä¸ºåŒ…å«åŸŸåçš„å…¨è·¯å¾„
 // Host: %http-host%
 // Proxy-Authorization: Basic dGVzdDoxMjM=
 // Proxy-Authorization: Basic User:Pass
@@ -196,7 +196,7 @@ Last-Modified: Wed, 21 Apr 2004 01:52:19 GMT
 ETag: "d62c11484327c41:826"
 Content-Range: bytes 1843889-2950222/2950223
 Set-Cookie: ASPSESSIONIDAQCCTAQC=PMFLKGLAAJMGGNHCGADKMEAC; path=/
-Content-Disposition: attachment;filename=lÀèÃ÷ - That's Life.lrc
+Content-Disposition: attachment;filename=lé»æ˜ - That's Life.lrc
 Cache-control: private
 WWW-Authenticate: Negotiate
 WWW-Authenticate: NTLM
@@ -287,7 +287,7 @@ protected:
 	char		m_szEtag[128];
 	char		m_szLocation[512];
 	char		m_szCacheControl[128];
-	char		m_szContentFileName[128];		// Content-Disposition: attachment;filename=lÀèÃ÷ - That's Life.lrc
+	char		m_szContentFileName[128];		// Content-Disposition: attachment;filename=lé»æ˜ - That's Life.lrc
 	BOOL		m_bTransfEncChunked;	
 	// char		m_szContentLen
 	DWORD		m_dwContentLen;

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferPageAdvanced.h"
 #include "DownloadMgr.h"
@@ -254,13 +254,13 @@ public:
 			CFolderDialog		dlg;
 			TCHAR	szPath[MAX_PATH];
 
-			// È¡µÃÉÏ´ÎÑ¡Ôñ¹ıµÄÎÄ¼ş¼ĞµÄÎ»ÖÃ
+			// å–å¾—ä¸Šæ¬¡é€‰æ‹©è¿‡çš„æ–‡ä»¶å¤¹çš„ä½ç½®
 			g_Profile.GetString(_T("LastSelectFolder"), _T(""), szPath, MAX_PATH);
 			dlg.SetInitFolder(szPath);
 
 			if (dlg.DoBrowse(m_pWndParent))
 			{
-				// ±£´æÉÏ´ÎÑ¡Ôñ¹ıµÄÎÄ¼ş¼ĞµÄÎ»ÖÃ
+				// ä¿å­˜ä¸Šæ¬¡é€‰æ‹©è¿‡çš„æ–‡ä»¶å¤¹çš„ä½ç½®
 				_tcscpy_safe(szPath, CountOf(szPath), dlg.GetFolder());
 				g_Profile.WriteString(_T("LastSelectFolder"), szPath);
 
@@ -871,7 +871,7 @@ void CPagePfAdvanced::OnInitialUpdate()
 #endif
 
 #ifndef _MPLAYER
-	// ×Ô¶¯Òş²ØÃÔÄã¸è´ÊÈç¹ûÃ»ÓĞ¸è´Ê
+	// è‡ªåŠ¨éšè—è¿·ä½ æ­Œè¯å¦‚æœæ²¡æœ‰æ­Œè¯
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("UI"), _TLM("Activate, minimize and restore with player window")).c_str(),
 		ET_NULL, SZ_SECT_UI, _T("ActivateWithWinamp"), true));
 	m_vPreferItems.push_back(new CPfItemBool(ConnectToLocalStr(_TLM("UI"), _TLM("Hide toolbar")).c_str(), ET_UI_SETTINGS_CHANGED, SZ_SECT_UI, _T("HideToolbar"), false));

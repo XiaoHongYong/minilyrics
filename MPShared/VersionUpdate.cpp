@@ -1,4 +1,4 @@
-// VersionUpdate.cpp: implementation of the CVersionUpdate class.
+ï»¿// VersionUpdate.cpp: implementation of the CVersionUpdate class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -20,8 +20,8 @@
 
 
 //////////////////////////////////////////////////////////////////////////
-// ´Ó·şÎñÆ÷È¡µÃVER_FILEµÄ°æ±¾¿ØÖÆĞÅÏ¢£¬¸ù¾İ´ËÎÄ¼ş½øĞĞ¸üĞÂ
-// VER_FILEÎÄ¼şµÄ¸ñÊ½
+// ä»æœåŠ¡å™¨å–å¾—VER_FILEçš„ç‰ˆæœ¬æ§åˆ¶ä¿¡æ¯ï¼Œæ ¹æ®æ­¤æ–‡ä»¶è¿›è¡Œæ›´æ–°
+// VER_FILEæ–‡ä»¶çš„æ ¼å¼
 
 //<?xml version="1.0" encoding="gb2312"?>
 //<SOFTWARE_INFO>
@@ -175,11 +175,11 @@ int CVersionUpdate::GetUpdateInfo(CDownloadTask *pTask, CVersionInfo &versionInf
 	curtime = localtime(&lTime);
 
 	//
-	// ½«¼ì²é¸üĞÂÊ±¼äĞ´ÈëÅäÖÃÎÄ¼şÖĞ
+	// å°†æ£€æŸ¥æ›´æ–°æ—¶é—´å†™å…¥é…ç½®æ–‡ä»¶ä¸­
 	_stprintf_s(szCheckVerTime, CountOf(szCheckVerTime), _T("%d-%d-%d"), curtime->tm_year + 1900, curtime->tm_mon + 1, curtime->tm_mday);
 	g_Profile.EncryptWriteString(_T("CheckVerTime"), szCheckVerTime);
 
-	// ·ÖÎöVER_FILE
+	// åˆ†æVER_FILE
 	if (!xml.ParseData(pTask->buffContent.c_str(), pTask->buffContent.size()))
 	{
 		ERRLOG1(_T("parse xml data FAILED: %s"), pTask->buffContent.c_str());
@@ -200,7 +200,7 @@ void CVersionUpdate::CheckNewVersion(bool bAutoCheck)
 		CBaseDate dateLastCheck;
 		dateLastCheck.FromString(strCheckVerTime.c_str());
 
-		// Èç¹ûÈÕÆÚÏà¸ô7Ìì£¬Ôò¼ì²é¸üĞÂ
+		// å¦‚æœæ—¥æœŸç›¸éš”7å¤©ï¼Œåˆ™æ£€æŸ¥æ›´æ–°
 		CBaseDate dateNow = CBaseDate::GetCurrentDate();
 		if (abs((long)dateNow.GetTime() - (long)dateLastCheck.GetTime()) <= 7 * CBaseDate::MILLIS_IN_ONE_DAY)
 			return;

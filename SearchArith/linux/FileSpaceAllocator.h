@@ -1,4 +1,4 @@
-// FileSpaceAllocator.h: interface for the CFileSpaceAllocator class.
+ï»¿// FileSpaceAllocator.h: interface for the CFileSpaceAllocator class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -61,18 +61,18 @@ protected:
 protected:
 	struct Head
 	{
-		DB_POS			m_posFree;		// ¿ÕÏĞ½Úµã
-		unsigned int	m_nLenMax;		// ×î´ó¿Õ¼ä
-		unsigned int	m_nLen;			// ÒÑÊ¹ÓÃµÄ¿Õ¼ä
+		DB_POS			m_posFree;		// ç©ºé—²èŠ‚ç‚¹
+		unsigned int	m_nLenMax;		// æœ€å¤§ç©ºé—´
+		unsigned int	m_nLen;			// å·²ä½¿ç”¨çš„ç©ºé—´
 	};
 
-	tstring		m_strFile;			// ÎÄ¼şÃû
+	tstring		m_strFile;			// æ–‡ä»¶å
 
 	int			m_file;
-	DWORD		m_nFileSize;		// ÎÄ¼ş´óĞ¡
+	DWORD		m_nFileSize;		// æ–‡ä»¶å¤§å°
 	int			m_nRemainSize;
-	LPVOID		m_lpData;			// Êı¾İ¶ÎµÄÄÚÈİ£¬²»°üÀ¨ÎÄ¼şÍ·
-	LPVOID		m_lpFile;			// ÎÄ¼şÓ³ÉäÖ®ºóµÄÎÄ¼şÄÚÈİ
+	LPVOID		m_lpData;			// æ•°æ®æ®µçš„å†…å®¹ï¼Œä¸åŒ…æ‹¬æ–‡ä»¶å¤´
+	LPVOID		m_lpFile;			// æ–‡ä»¶æ˜ å°„ä¹‹åçš„æ–‡ä»¶å†…å®¹
 
 	Head		*m_pHead;
 

@@ -1,4 +1,4 @@
-#include "../MLPluginLib/MLPlugin.h"
+ï»¿#include "../MLPluginLib/MLPlugin.h"
 #include "PlayerImp.h"
 #include "QCDModGeneral.h"
 #include "QCDCtrlMsgs.h"
@@ -133,7 +133,7 @@ LRESULT CALLBACK HookQCDPWnd(
 		g_MLService.OnPlayPosChanged(g_bCurMediaVideo ? lParam : lParam * 10);
 		break;
 	case WM_PN_PLAYLISTCHANGED:
-		// ±£Ö¤µ±²¥·ÅÁÐ±í±ä¿ÕÊ±Çå¿Õ MiniLyrics µÄ¸è´ÊÏÔÊ¾ÄÚÈÝ£º
+		// ä¿è¯å½“æ’­æ”¾åˆ—è¡¨å˜ç©ºæ—¶æ¸…ç©º MiniLyrics çš„æ­Œè¯æ˜¾ç¤ºå†…å®¹ï¼š
 		if(QCDCallbacks->Service(opGetNumTracks, NULL, 0, 0) == 0)
 			g_MLService.OnMediaInfoChanged(L"", NULL, NULL, NULL, 0);
 		break;

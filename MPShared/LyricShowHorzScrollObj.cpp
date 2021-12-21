@@ -1,4 +1,4 @@
-// LyricShowHorzScrollObj.cpp: implementation of the CLyricShowHorzScrollObj class.
+ï»¿// LyricShowHorzScrollObj.cpp: implementation of the CLyricShowHorzScrollObj class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -25,7 +25,7 @@ CLyricShowHorzScrollObj::~CLyricShowHorzScrollObj()
 }
 
 // OUTPUT:
-//		rcUpdate	-	¸üĞÂµÄ¾ØĞÎÇøÓò
+//		rcUpdate	-	æ›´æ–°çš„çŸ©å½¢åŒºåŸŸ
 void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
 {
 	int			x, y;
@@ -107,7 +107,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 
 	nRow = nRowCur - 1;
 
-	// ÏÔÊ¾µ±Ç°ĞĞÖ®Ç°µÄ¸è´ÊĞĞ
+	// æ˜¾ç¤ºå½“å‰è¡Œä¹‹å‰çš„æ­Œè¯è¡Œ
 	while (x > nLeft && nRow >= 0)
 	{
 		pLine = m_lyrLines[nRow];
@@ -120,7 +120,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 		nRow--;
 	}
 
-	// ÏÔÊ¾µ±Ç°¸è´ÊĞĞ
+	// æ˜¾ç¤ºå½“å‰æ­Œè¯è¡Œ
 	x = nStartX;
 
 	DrawCurrentRow(pGraphics, pLyricRow, x, y);
@@ -128,7 +128,7 @@ void CLyricShowHorzScrollObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* 
 	x += GetLyricRowTextWidth(pGraphics, pLyricRow) + _ROW_INTERVAL;
 	nRow = nRowCur + 1;
 
-	// ÏÔÊ¾ÒÔºó¸è´ÊĞĞ
+	// æ˜¾ç¤ºä»¥åæ­Œè¯è¡Œ
 	while (x < nRight && nRow < (int)m_lyrLines.size())
 	{
 		pLine = m_lyrLines[nRow];

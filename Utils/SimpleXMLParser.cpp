@@ -1,4 +1,4 @@
-// SimpleXMLParser1.cpp: implementation of the CSimpleXMLParser class.
+ï»¿// SimpleXMLParser1.cpp: implementation of the CSimpleXMLParser class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -90,7 +90,7 @@ CSimpleXMLParser::~CSimpleXMLParser()
 //
 // UTF8: EF BB BF
 // UNICODE: FF FE
-// UNICODE ±àÂëºÍÆäËü±àÂëµÄ½âÎö·½Ê½²»Í¬£¬ĞèÒªµ¥¶À´¦Àí
+// UNICODE ç¼–ç å’Œå…¶å®ƒç¼–ç çš„è§£ææ–¹å¼ä¸åŒï¼Œéœ€è¦å•ç‹¬å¤„ç†
 SimpleXMLParserError CSimpleXMLParser::ParseData(LPCVOID lpXmlData, size_t nLen, CSimpleXML &xmlData)
 {
 	SimpleXMLParserError		Error;
@@ -527,7 +527,7 @@ SimpleXMLParserError CSimpleXMLParser::ParseProlog(int nPos, int &nPosNext, CSim
 
 	if (ET_L_XML_DECL != ReadElemnt(ET_L_XML_DECL, strElement, nPos, nPosNext))
 	{
-		// ²»ÊÇXMLÎÄ¼ş
+		// ä¸æ˜¯XMLæ–‡ä»¶
 		if (m_bNoProlog)
 		{
 			// No prologue
@@ -548,7 +548,7 @@ SimpleXMLParserError CSimpleXMLParser::ParseProlog(int nPos, int &nPosNext, CSim
 		return SXPE_FORMAT_ERROR;
 	nPos = nPosNext;
 
-	// ¶ÁÈëXML declaration
+	// è¯»å…¥XML declaration
 	while (1)
 	{
 		// name

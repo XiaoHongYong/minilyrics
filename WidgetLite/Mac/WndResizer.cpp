@@ -1,9 +1,9 @@
-/********************************************************************
-Created  :	2001Äê7ÔÂ21ÈÕ 20:26:35
+ï»¿/********************************************************************
+Created  :	2001å¹´7æœˆ21æ—¥ 20:26:35
 FileName :	UIWndSizing.cpp
 Author   :	xhy
 
-Purpose  :	µ÷Õû´°¿ÚµÄ´óĞ¡
+Purpose  :	è°ƒæ•´çª—å£çš„å¤§å°
 *********************************************************************/
 
 #include "stdafx.h"
@@ -11,7 +11,7 @@ Purpose  :	µ÷Õû´°¿ÚµÄ´óĞ¡
 #include "desktop.h"
 #include "WndResizer.h"
 
-#define SIZING_REGION		5		// µ÷Õû´óĞ¡µÄ·¶Î§
+#define SIZING_REGION		5		// è°ƒæ•´å¤§å°çš„èŒƒå›´
 
 #ifdef _WIN32
 void MyRectangle(HDC hdc, int x, int y, int x2, int y2)
@@ -111,10 +111,10 @@ bool CWndResizer::IsSizing()
 
 void CWndResizer::BeginSize(UINT fwKeys, POINT &pt)
 {
-	// ¼Ç×¡Êó±êÎ»ÖÃ
+	// è®°ä½é¼ æ ‡ä½ç½®
 	MLWidget::GetCursorPos(&m_ptOld);
 
-	// ¼Ç×¡´°¿ÚÎ»ÖÃ
+	// è®°ä½çª—å£ä½ç½®
 	m_pWnd->GetWindowRect(&m_rcResizing);
 
 	if (m_ResizeDirection != 0)
@@ -134,7 +134,7 @@ void CWndResizer::BeginSize(UINT fwKeys, POINT &pt)
 		hpenOld = (HPEN)SelectObject(hdc, GetStockObject(WHITE_PEN));
 		SetROP2(hdc, R2_XORPEN);
 
-		// »­³ö¾ØĞÎ¿ò
+		// ç”»å‡ºçŸ©å½¢æ¡†
 		MyRectangle(hdc, m_rcResizing.left, m_rcResizing.top, m_rcResizing.right, m_rcResizing.bottom);
 
 		SelectObject(hdc, hbrOld);
@@ -150,20 +150,20 @@ void CWndResizer::BeginSize(UINT fwKeys, POINT &pt)
 
 void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 {
-	// ÕıÔÚµ÷Õû´óĞ¡
+	// æ­£åœ¨è°ƒæ•´å¤§å°
 	int			nOffx;
 	int			nOffy;
 
 	MLWidget::GetCursorPos(&pt);
 
-	// Ö»ÓĞÊó±êÒÆ¶¯ÁË²Åµ÷Õû´óĞ¡
+	// åªæœ‰é¼ æ ‡ç§»åŠ¨äº†æ‰è°ƒæ•´å¤§å°
 	if ((pt.x == m_ptOld.x) && (pt.y == m_ptOld.y))
 		return;
 
-	nOffx = pt.x - m_ptOld.x;	// x Æ«ÒÆ
-	nOffy = pt.y - m_ptOld.y;	// y Æ«ÒÆ
+	nOffx = pt.x - m_ptOld.x;	// x åç§»
+	nOffy = pt.y - m_ptOld.y;	// y åç§»
 
-	// ÏŞÖÆ×îĞ¡µÄ¿í¶È
+	// é™åˆ¶æœ€å°çš„å®½åº¦
 	if (m_ResizeDirection & RD_LEFT)
 	{
 		if (m_rcResizing.right - (m_rcResizing.left + nOffx) <= m_nMincx)
@@ -172,7 +172,7 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 		m_rcResizing.left += nOffx;
 	}
 
-	// ÏŞÖÆ×îĞ¡µÄ¸ß¶È
+	// é™åˆ¶æœ€å°çš„é«˜åº¦
 	if (m_ResizeDirection & RD_TOP)
 	{
 		if (m_rcResizing.bottom - (m_rcResizing.top + nOffy) <= m_nMincy)
@@ -181,7 +181,7 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 		m_rcResizing.top += nOffy;
 	}
 
-	// ÏŞÖÆ×îĞ¡µÄ¿í¶È
+	// é™åˆ¶æœ€å°çš„å®½åº¦
 	if (m_ResizeDirection & RD_RIGHT)
 	{
 		if ((m_rcResizing.right + nOffx) - m_rcResizing.left <= m_nMincx)
@@ -190,7 +190,7 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 		m_rcResizing.right += nOffx;
 	}
 
-	// ÏŞÖÆ×îĞ¡µÄ¸ß¶È
+	// é™åˆ¶æœ€å°çš„é«˜åº¦
 	if (m_ResizeDirection & RD_BOTTOM)
 	{
 		if ((m_rcResizing.bottom + nOffy) - m_rcResizing.top <= m_nMincy)
@@ -199,13 +199,13 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 		m_rcResizing.bottom += nOffy;
 	}
 
-	// ±£´æÉÏÒ»´ÎÊó±êµÄÎ»ÖÃ
+	// ä¿å­˜ä¸Šä¸€æ¬¡é¼ æ ‡çš„ä½ç½®
 	if (nOffx != 0)
 		m_ptOld.x = pt.x;
 	if (nOffy != 0)
 		m_ptOld.y = pt.y;
 
-	// Èç¹ûµ÷Õû´°¿ÚÊ±×Ô¶¯¿¿½üÔòÍ¨¹ı¸Ä±ä nOffx, nOffyÀ´µ÷Õû
+	// å¦‚æœè°ƒæ•´çª—å£æ—¶è‡ªåŠ¨é è¿‘åˆ™é€šè¿‡æ”¹å˜ nOffx, nOffyæ¥è°ƒæ•´
 	if (m_bResizingAutoCloseto)
 	{
 		AutoCloseToWindows(nOffx, nOffy);
@@ -236,10 +236,10 @@ void CWndResizer::OnSizing(UINT fwKeys, POINT &pt)
 		hpenOld = (HPEN)SelectObject(hdc, GetStockObject(WHITE_PEN));
 		SetROP2(hdc, R2_XORPEN);
 
-		// É¾³ıÔ­À´µÄ¾ØĞÎ¿ò
+		// åˆ é™¤åŸæ¥çš„çŸ©å½¢æ¡†
 		MyRectangle(hdc, rcOld.left, rcOld.top, rcOld.right, rcOld.bottom);
 
-		// »­³öĞÂµÄ¾ØĞÎ¿ò
+		// ç”»å‡ºæ–°çš„çŸ©å½¢æ¡†
 		MyRectangle(hdc, m_rcResizing.left, m_rcResizing.top, m_rcResizing.right, m_rcResizing.bottom);
 
 		SelectObject(hdc, hbrOld);
@@ -292,7 +292,7 @@ void CWndResizer::RemoveResizeArea(int nIDArea)
 	}
 }
 
-// ½áÊøµ÷Õû´°¿Ú´óĞ¡
+// ç»“æŸè°ƒæ•´çª—å£å¤§å°
 void CWndResizer::EndSizing(UINT fwKeys, POINT &pt)
 {
 	m_bResizing = false;
@@ -313,7 +313,7 @@ void CWndResizer::EndSizing(UINT fwKeys, POINT &pt)
 		hpenOld = (HPEN)SelectObject(hdc, GetStockObject(WHITE_PEN));
 		SetROP2(hdc, R2_XORPEN);
 
-		// ²Á³ı»­µÄ¾ØĞÎ
+		// æ“¦é™¤ç”»çš„çŸ©å½¢
 		MyRectangle(hdc, m_rcResizing.left, m_rcResizing.top, m_rcResizing.right, m_rcResizing.bottom);
 
 		SelectObject(hdc, hbrOld);

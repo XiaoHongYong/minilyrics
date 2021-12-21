@@ -1,4 +1,4 @@
-// SkinCaption.cpp: implementation of the CSkinCaption class.
+ï»¿// SkinCaption.cpp: implementation of the CSkinCaption class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -31,7 +31,7 @@ void CSkinCaption::Draw(CRawGraph *pGraph)
 	int			nW1, nW2;
 	CSFImage	*pImg;
 
-	// ´°¿ÚÎª¼¤»î×´Ì¬
+	// çª—å£ä¸ºæ¿€æ´»çŠ¶æ€
 	if (m_pSkin->IsWndActive() && m_imgFocus.IsValid())
 		pImg = &m_imgFocus;
 	else
@@ -50,7 +50,7 @@ void CSkinCaption::Draw(CRawGraph *pGraph)
 	//////////////////////////////////////////////////////////////////////////
 
 	//
-	// ×ó±ßµÄ
+	// å·¦è¾¹çš„
 	int		x = m_rcObj.left;
 	pImg->Blt(pGraph, x, m_rcObj.top,
 			m_nCutPos1 - pImg->m_x, pImg->m_cy,
@@ -58,7 +58,7 @@ void CSkinCaption::Draw(CRawGraph *pGraph)
 	);
 
 	//
-	// ×óÖÐ£¬À­Éì»æ»­
+	// å·¦ä¸­ï¼Œæ‹‰ä¼¸ç»˜ç”»
 	x += m_nCutPos1 - pImg->m_x;
 	pImg->StretchBlt(pGraph, x, m_rcObj.top,
 				nW1, m_rcObj.Height(),
@@ -67,7 +67,7 @@ void CSkinCaption::Draw(CRawGraph *pGraph)
 	);
 
 	//
-	// ÖÐ¼ä
+	// ä¸­é—´
 	x += nW1;
 	pImg->Blt(pGraph, x, m_rcObj.top,
 			m_nCutPos3 - m_nCutPos2, pImg->m_cy,
@@ -75,7 +75,7 @@ void CSkinCaption::Draw(CRawGraph *pGraph)
 	);
 
 	//
-	// ÓÒÖÐ£¬À­Éì»æ»­
+	// å³ä¸­ï¼Œæ‹‰ä¼¸ç»˜ç”»
 	x += m_nCutPos3 - m_nCutPos2;
 	pImg->StretchBlt(pGraph, x, m_rcObj.top,
 				nW2, m_rcObj.Height(),
@@ -84,7 +84,7 @@ void CSkinCaption::Draw(CRawGraph *pGraph)
 	);
 
 	//
-	// ÓÒ±ßµÄ
+	// å³è¾¹çš„
 	x += nW2;
 	pImg->Blt(pGraph, x, m_rcObj.top,
 			pImg->m_x + pImg->m_cx - m_nCutPos4, pImg->m_cy,

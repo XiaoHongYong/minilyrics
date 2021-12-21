@@ -1,4 +1,4 @@
-// CharEncoding.cpp: implementation of the CCharEncoding class.
+ï»¿// CharEncoding.cpp: implementation of the CCharEncoding class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -10,8 +10,8 @@
 #define DBGLOG1 printf
 
 //
-// ED_XXX µÄ¶¨ÒåºÍ __encodingCodepage µÄË÷ÒıË³ĞòÊÇÒ»Ö±µÄ¡£
-// ¼´__encodingCodepage[ED_XXX].encodingID = ED_XXX
+// ED_XXX çš„å®šä¹‰å’Œ __encodingCodepage çš„ç´¢å¼•é¡ºåºæ˜¯ä¸€ç›´çš„ã€‚
+// å³__encodingCodepage[ED_XXX].encodingID = ED_XXX
 ENCODING_CODEPAGE	__encodingCodepage[] = 
 {
 	{ ED_SYSDEF, "", "", "systemdefault", "ISO-8859-15" },

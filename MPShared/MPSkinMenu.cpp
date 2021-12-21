@@ -1,4 +1,4 @@
-// MPSkinMenu.cpp: implementation of the CMPSkinMenu class.
+О╩©// MPSkinMenu.cpp: implementation of the CMPSkinMenu class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -432,10 +432,10 @@ static int		__vSkinMenuId[] = {IDC_SKIN_0, IDC_SKIN_1, IDC_SKIN_2, IDC_SKIN_3, I
 
 void CMPSkinMenu::InsertSkinMenu(CMLMenu &menuSkin, int nPosStart)
 {
-	// х║╣цио╢н╪сть╣дSkin
+	// Е▐√Е╬≈Д╦┼Ф╛║Е┼═Х╫╫Г └Skin
 	tstring strDefaultSkin = CSkinApp::GetInstance()->GetDefaultSkin();
 
-	// х║╣цт╜ю╢╣дSKINвс╡к╣╔ё╛╡╒гри╬ЁЩж╝
+	// Е▐√Е╬≈Е▌÷Ф²╔Г └SKINЕ╜░Х▐°Е█∙О╪▄Е╧╤Д╦■Е┬═И≥╓Д╧▀
 	{
 		for (int i = 0; i < 32; i++)
 		{
@@ -458,7 +458,7 @@ void CMPSkinMenu::InsertSkinMenu(CMLMenu &menuSkin, int nPosStart)
 	}
 #endif
 
-	// ╡ИуркЫсп╣дSkinё╛╡╒грлМ╪с╣╫╡к╣╔жп
+	// Ф÷╔Ф┴╬Ф┴─Ф°┴Г └SkinО╪▄Е╧╤Д╦■Ф╥╩Е┼═Е┬╟Х▐°Е█∙Д╦╜
 	vector<tstring>	vSkins;
 	if (CMPlayerAppBase::GetMPSkinFactory()->EnumAllSkins(vSkins))
 	{
@@ -494,7 +494,7 @@ bool OnCommandSkin(int nCmdId)
 	if (i == __SkinMenuCount)
 		return false;
 
-	// х║╣цио╢н╪сть╣дSkin
+	// Е▐√Е╬≈Д╦┼Ф╛║Е┼═Х╫╫Г └Skin
 	tstring strDefaultSkin = CSkinApp::GetInstance()->GetDefaultSkin();
 #ifdef _MINILYRICS_WIN32
 	if (CMPlayerAppBase::GetInstance()->IsEmbeddedMode())

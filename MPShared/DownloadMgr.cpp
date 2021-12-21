@@ -1,9 +1,9 @@
- /********************************************************************
+ï»¿ /********************************************************************
 	Created  :	2002/02/21	2:11
 	FileName :	DownloadMgr.cpp
 	Author   :	xhy
 	
-	Purpose  :	ÏÂÔØÈÎÎñµÄ¹ÜÀíÀà
+	Purpose  :	ä¸‹è½½ä»»åŠ¡çš„ç®¡ç†ç±»
 *********************************************************************/
 
 #include "stdafx.h"
@@ -37,7 +37,7 @@ int CDownloadMgr::Init()
 #ifdef _WIN32_DESKTOP
 	if (g_Profile.GetInt(_T("ProxyType"), 0xFF) == 0xFF)
 	{
-		// µÚÒ»´ÎÔËĞĞ£¬×Ô¶¯¼ÓÔØ´úÀíÉèÖÃ
+		// ç¬¬ä¸€æ¬¡è¿è¡Œï¼Œè‡ªåŠ¨åŠ è½½ä»£ç†è®¾ç½®
 		bool		bUseProxy;
 		tstring		strSvr;
 		int			nPort;
@@ -150,7 +150,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 	bUserSelDown = g_Profile.GetBool(SZ_SECT_LYR_DL, _T("DownLrcUserSelect"), false);
 
 	//
-	// ·ÖÖµ³¬¹ı MATCH_VALUE_OK
+	// åˆ†å€¼è¶…è¿‡ MATCH_VALUE_OK
 	itBest = vLrcSearchResult.GetTheBestMatchLyrics(FALSE);
 	if (itBest != vLrcSearchResult.end())
 	{
@@ -172,7 +172,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 				&& result.nMatchValue < MATCH_VALUE_BETTER)
 				return TRUE;
 
-			// ¾ÍÏÂÔØËüÁË
+			// å°±ä¸‹è½½å®ƒäº†
 			tstring		str;
 			str = _TLT("Downloading lyrics:");
 			str += _T(" ");
@@ -189,7 +189,7 @@ BOOL CDownloadMgr::SearchInCacheResult(bool bShowInfoText)
 	if (g_LyricData.HasLyricsOpened())
 		return true;
 
-	// ÓÉÓÃ»§Ñ¡Ôñ£¿
+	// ç”±ç”¨æˆ·é€‰æ‹©ï¼Ÿ
 	if (bUserSelDown)
 	{
 		// if all lyrics is txt, return directly.
@@ -390,7 +390,7 @@ void CDownloadMgr::OnEndDownload(CDownloadTask *pTask)
 	{
 	case DTT_LYRICS:
 		//
-		// ±¾µØÁ´½ÓÏÂÔØÈÎÎñÍê³ÉÊ±µÄ´¦Àí
+		// æœ¬åœ°é“¾æ¥ä¸‹è½½ä»»åŠ¡å®Œæˆæ—¶çš„å¤„ç†
 		//
 		{
 			if (SaveDownloadedLyrics(pTask->strMediaKey.c_str(), pTask->m_strLyrFileName.c_str(), 

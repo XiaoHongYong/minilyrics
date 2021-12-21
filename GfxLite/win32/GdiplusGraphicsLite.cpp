@@ -1,4 +1,4 @@
-// GdiplusGraphicsLite.cpp: implementation of the CGdiplusGraphicsLite class.
+Ôªø// GdiplusGraphicsLite.cpp: implementation of the CGdiplusGraphicsLite class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -52,7 +52,7 @@ public:
 		ret = CGdiplusGraphicsLite::m_sfunGdipCreateFontFromLogfontA(pGraph->GetHandle(), &logFont, &m_font);
 		if (ret == NotTrueTypeFont)
 		{
-			// —°‘Òƒ¨»œµƒTRUEType◊÷ÃÂ£°
+			// ÈÄâÊã©ÈªòËÆ§ÁöÑTRUETypeÂ≠ó‰ΩìÔºÅ
 			LOGFONTA		logfontNew = logFont;
 			strcpy_safe(logfontNew.lfFaceName, CountOf(logfontNew.lfFaceName), "Tahoma");
 			ret = CGdiplusGraphicsLite::m_sfunGdipCreateFontFromLogfontA(pGraph->GetHandle(), &logfontNew, &m_font);
@@ -187,7 +187,7 @@ void CGdiplusGraphicsLite::Attach(HDC hdc)
 	if (!m_sfunGdipCreateFromHDC)
 	{
 		//
-		// ‘ÿ»Îµÿ÷∑
+		// ËΩΩÂÖ•Âú∞ÂùÄ
 		HMODULE		hModule;
 
 		hModule = LoadGdiplusDll();

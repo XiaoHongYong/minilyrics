@@ -1,4 +1,4 @@
-// DlgCopySongLyrics.cpp: implementation of the CDlgCopySongLyrics class.
+Ôªø// DlgCopySongLyrics.cpp: implementation of the CDlgCopySongLyrics class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -79,7 +79,7 @@ void CDlgCopySongLyrics::OnOK()
 	g_Profile.WriteInt(_T("CSL_copylyrics"), bCopyLyrics);
 	g_Profile.WriteInt(_T("CSL_renamelyrics"), bRenameLyrics);
 
-	// ∏¥÷∆MP3Œƒº˛
+	// Â§çÂà∂MP3Êñá‰ª∂
 	_tcscpy_safe(szTargetFile, CountOf(szTargetFile), szTargetDir);
 	_tcscat_safe(szTargetFile, CountOf(szTargetFile), FileGetName(m_strSong.c_str()));
 	if (!SHCopyFile(m_strSong.c_str(), szTargetFile, this))

@@ -1,4 +1,4 @@
-// RawImageData.cpp: implementation of the RawImageData class.
+ï»¿// RawImageData.cpp: implementation of the RawImageData class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -50,18 +50,18 @@ PRAW_IMAGE_DATA Convert16BppTo24BppRawImage(PRAW_IMAGE_DATA src)
 	PRAW_IMAGE_DATA	dst = new RAW_IMAGE_DATA;
 	uint8		*rowSrc, *rowDst;
 
-#define CLRMAX	256				//×î´óÑÕÉ«Êı
+#define CLRMAX	256				//æœ€å¤§é¢œè‰²æ•°
 #define	RMASK	0x1F			//0000 00  00 000   1 1111
-#define RMOVE	0				//ÓÒÒÆ 0 Î»
-#define RMAX	32				//×î´óÑÕÉ«Êı
+#define RMOVE	0				//å³ç§» 0 ä½
+#define RMAX	32				//æœ€å¤§é¢œè‰²æ•°
 #define GMASK	0x3E0			//0000 00  11 111   0 0000
 #define GMOVE	5				//
-#define GMAX	32				//×î´óÑÕÉ«Êı
+#define GMAX	32				//æœ€å¤§é¢œè‰²æ•°
 #define BMASK	0x7C00			//1111 11  00 000   0 0000
 #define BMOVE	10				//
-#define BMAX	32				//×î´óÑÕÉ«Êı
+#define BMAX	32				//æœ€å¤§é¢œè‰²æ•°
 
-	uint8	clrTable[(int)RMAX];//ÑÕÉ«×ª»»±í
+	uint8	clrTable[(int)RMAX];//é¢œè‰²è½¬æ¢è¡¨
 	for (int i = 0 ; i < (int)RMAX; i++)
 		clrTable[i] = (uint8)((float)i * CLRMAX / RMAX);
 	uint16	clrSrc;

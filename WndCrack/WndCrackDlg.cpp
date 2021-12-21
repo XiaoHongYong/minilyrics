@@ -1,4 +1,4 @@
-// WndCrackDlg.cpp : implementation file
+ï»¿// WndCrackDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -453,16 +453,16 @@ void CWndCrackDlg::SetCapturedWnd(HWND hWndCap)
 	SetDlgItemText(IDC_HWND_CAPTURED, szBuffer);
 
 	//
-	// È¡µÃ´°¿ÚµÄÊôĞÔ
+	// å–å¾—çª—å£çš„å±æ€§
 	//
 	sprintf(szBuffer, "%X", (DWORD)::GetParent(hWndCap));
 	SetDlgItemText(IDC_HWND_PARENT, szBuffer);
 
-	// ´°¿Ú±êÌâ
+	// çª—å£æ ‡é¢˜
 	::SendMessage(hWndCap, WM_GETTEXT, 1024, (LPARAM)szBuffer);
 	SetDlgItemText(IDC_HWND_CAPTION, szBuffer);
 
-	// ÀàÃû
+	// ç±»å
 	::GetClassName(hWndCap, szBuffer, 1024);
 	SetDlgItemText(IDC_HWND_CLASSNAME, szBuffer);
 
@@ -474,7 +474,7 @@ void CWndCrackDlg::SetCapturedWnd(HWND hWndCap)
 	// Ctrl Id
 	SetDlgItemInt(IDC_E_CTRLID, ::GetDlgCtrlID(hWndCap), false);
 
-	// ×ø±ê
+	// åæ ‡
 	CRect		rc;
 	::GetWindowRect(hWndCap, &rc);
 	SetDlgItemInt(IDC_HWND_X, rc.left, TRUE);

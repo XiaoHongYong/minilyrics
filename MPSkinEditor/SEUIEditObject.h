@@ -1,4 +1,4 @@
-// UIEditObject.h: interface for the CUIEditObject class.
+ï»¿// UIEditObject.h: interface for the CUIEditObject class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -41,7 +41,7 @@ public:
 		m_bCanBeMoved = false;
 		m_ptDragOld = point;
 
-		// ²¶×½Êó±êÊäÈë
+		// æ•æ‰é¼ æ ‡è¾“å…¥
 		m_pSkin->SetCaptureMouse(this);
 
 		return true;
@@ -51,7 +51,7 @@ public:
 		m_bLBtDown = FALSE;
 		m_bCanBeMoved = false;
 
-		// ÊÍ·ÅÊó±êÊäÈë
+		// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 		m_pSkin->ReleaseCaptureMouse(this);
 		return true;
 	}
@@ -60,7 +60,7 @@ public:
 		if (m_bLBtDown)
 		{
 			//
-			// ÒÆ¶¯´Ë¿Ø¼þ
+			// ç§»åŠ¨æ­¤æŽ§ä»¶
 			CString		str;
 			// int			nNewPos;
 			int			nOffset;
@@ -129,7 +129,7 @@ public:
 			clrOld = ::SetBkColor(hdc, RGB(255, 255, 255));
 			nBkModeOld = SetBkMode(hdc, OPAQUE);
 
-			// »­±ßÔµ
+			// ç”»è¾¹ç¼˜
 			// for (int i = 0; i < SIZE_MARGIN; i+=2)
 			int	i = 0;
 			{

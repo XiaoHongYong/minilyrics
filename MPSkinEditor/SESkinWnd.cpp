@@ -1,4 +1,4 @@
-// SESkinWnd.cpp: implementation of the CSESkinWnd class.
+ï»¿// SESkinWnd.cpp: implementation of the CSESkinWnd class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -94,8 +94,8 @@ int CSESkinWnd::CopyFrom(LPCTSTR szSkinWndName, CSESkinWnd *pSkinWndSrc)
 }
 
 // COMMENT:
-//		µ±¼ÓÔØÍêSKINºó£¬µ÷ÓÃ´Ëº¯Êý½øÐÐÒ»Ð©ÉèÖÃ¹¤×÷
-//		1)	ÉèÖÃ×Ó¿Ø¼þµÄ½¹µã
+//		å½“åŠ è½½å®ŒSKINåŽï¼Œè°ƒç”¨æ­¤å‡½æ•°è¿›è¡Œä¸€äº›è®¾ç½®å·¥ä½œ
+//		1)	è®¾ç½®å­æŽ§ä»¶çš„ç„¦ç‚¹
 void CSESkinWnd::OnSkinLoaded()
 {
 	CSkinWnd::OnSkinLoaded();
@@ -211,7 +211,7 @@ void CSESkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 	else if (nChar == VK_LEFT)
 	{
-		// ×óÒÆ½¹µã¿Ø¼þ
+		// å·¦ç§»ç„¦ç‚¹æŽ§ä»¶
 		if (pObjFocus)
 		{
 			_stprintf(szValue, _T("%s-1"), pObjFocus->m_formLeft.GetFormula());
@@ -221,7 +221,7 @@ void CSESkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 	else if (nChar == VK_RIGHT)
 	{
-		// ÓÒÒÆ½¹µã¿Ø¼þ
+		// å³ç§»ç„¦ç‚¹æŽ§ä»¶
 		CUIObject	*pObj;
 		pObj = GetFocusUIObj();
 		if (pObj)
@@ -233,7 +233,7 @@ void CSESkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 	else if (nChar == VK_UP)
 	{
-		// ÉÏÒÆ½¹µã¿Ø¼þ
+		// ä¸Šç§»ç„¦ç‚¹æŽ§ä»¶
 		if (pObjFocus)
 		{
 			_stprintf(szValue, _T("%s-1"), pObjFocus->m_formTop.GetFormula());
@@ -243,7 +243,7 @@ void CSESkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 	}
 	else if (nChar == VK_DOWN)
 	{
-		// ÉÏÒÆ½¹µã¿Ø¼þ
+		// ä¸Šç§»ç„¦ç‚¹æŽ§ä»¶
 		if (pObjFocus)
 		{
 			strName = _T("top");
@@ -258,7 +258,7 @@ void CSESkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 			pObjFocus->SetProperty(strName.c_str(), szValue);
 			RecalculateSizePos();
 			InvalidateRect(NULL, TRUE);
-			// ¸üÐÂ
+			// æ›´æ–°
 			CFormula	form;
 			form.SetFormula(szValue);
 			m_pNotify->OnFocusUIObjPropertyChanged(strName.c_str(), form.GetFormula());
@@ -269,7 +269,7 @@ void CSESkinWnd::OnKeyDown(UINT nChar, UINT nFlags)
 
 	if (pObjFocus != GetFocusUIObj())
 	{
-		// ¸üÐÂ
+		// æ›´æ–°
 		m_pNotify->OnUIObjFocusChanged();
 	}
 }
@@ -287,7 +287,7 @@ void CSESkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 	point.x = long(point.x / m_dbScale);
 	point.y = long(point.y / m_dbScale);
 
-	// ÅÐ¶ÏÊó±êÊÇ·ñ»÷ÖÐÄ³¸öobject?
+	// åˆ¤æ–­é¼ æ ‡æ˜¯å¦å‡»ä¸­æŸä¸ªobject?
 	BOOL	bHit = FALSE;
 	if (pObjFocusNew && pObjFocusNew->IsPtIn(point))
 	{
@@ -296,13 +296,13 @@ void CSESkinWnd::OnLButtonDown(UINT nFlags, CPoint point)
 
 	if (!bHit && pObjFocus)
 	{
-		// Î´»÷ÖÐ£¬ÔÚskin±à¼­Ä£Ê½ÏÂ£¬²»ÉèÖÃÈÎºÎObjectÎª½¹µã×´Ì¬
+		// æœªå‡»ä¸­ï¼Œåœ¨skinç¼–è¾‘æ¨¡å¼ä¸‹ï¼Œä¸è®¾ç½®ä»»ä½•Objectä¸ºç„¦ç‚¹çŠ¶æ€
 		SetNOFocusUIObj();
 	}
 
 	if (pObjFocus != pObjFocusNew)
 	{
-		// ¸üÐÂ
+		// æ›´æ–°
 		m_pNotify->OnUIObjFocusChanged();
 	}
 }
@@ -320,7 +320,7 @@ void CSESkinWnd::OnPaint(IMLGraphicsBase *pGraph)
 
 	pMemGraph = GetMemGraphics();
 
-	// Ë¢±³¾°É«
+	// åˆ·èƒŒæ™¯è‰²
 	if (m_brBg.IsValid())
 		pMemGraph->FillRect(0, 0, m_rcReal.Width(), m_rcReal.Height(), &m_brBg);
 

@@ -1,4 +1,4 @@
-// SkinRgn.h: interface for the CSkinRgn class.
+ï»¿// SkinRgn.h: interface for the CSkinRgn class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -37,8 +37,8 @@ public:
 
 protected:
 #ifdef _WIN32
-	LPRGNDATA	m_lpRgnDataOrg;		// ³õÊ¼µÄÇøÓòµÄÊı¾İ
-	int			m_nRgnDataSize;		// ËûµÄ´óĞ¡
+	LPRGNDATA	m_lpRgnDataOrg;		// åˆå§‹çš„åŒºåŸŸçš„æ•°æ®
+	int			m_nRgnDataSize;		// ä»–çš„å¤§å°
 #endif
 
 	int			m_nStretchStartX;

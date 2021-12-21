@@ -1,4 +1,4 @@
-// SESkinContainer.h: interface for the CSESkinContainer class.
+ï»¿// SESkinContainer.h: interface for the CSESkinContainer class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -50,7 +50,7 @@ public:
 			clrOld = SetBkColor(hdc, RGB(255, 255, 255));
 			nBkModeOld = SetBkMode(hdc, OPAQUE);
 
-			// »­±ßÔµ
+			// ç”»è¾¹ç¼˜
 			// for (int i = 0; i < SIZE_MARGIN; i+=2)
 			int	i = 0;
 			{

@@ -1,4 +1,4 @@
-// NetServer.h: interface for the CNetServer class.
+ï»¿// NetServer.h: interface for the CNetServer class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -10,7 +10,7 @@
 //////////////////////////////////////////////////////////////////////////
 //
 
-// ÈÎÎñ¶ÓÁĞÖĞµÄÈÎÎñ¶¨Òå
+// ä»»åŠ¡é˜Ÿåˆ—ä¸­çš„ä»»åŠ¡å®šä¹‰
 struct NetJob
 {
 	int		nSocket;
@@ -55,19 +55,19 @@ public:
 public:
 	static void ThreadServerAccept(LPVOID lpParam);
 
-	// ´´½¨·şÎñÆ÷
+	// åˆ›å»ºæœåŠ¡å™¨
 	int	Create(int nPort, LPCTSTR szServerIP = NULL, int nWorkThreadCount = 5);
 
 	int CreateSrvice(int nPort, LPCTSTR szServer = NULL);
 
-	// Í£Ö¹·şÎñÆ÷
+	// åœæ­¢æœåŠ¡å™¨
 	void Stop();
 
-	// Ìí¼ÓÒ»¸öÈÎÎñµ½ÈÎÎñ¶ÓÁĞÖĞ
+	// æ·»åŠ ä¸€ä¸ªä»»åŠ¡åˆ°ä»»åŠ¡é˜Ÿåˆ—ä¸­
 	int AddJob(SOCKET s);
 
-	// ´ÓÈÎÎñ¶ÓÁĞÖĞÉ¾³ıÒ»¸öÈÎÎñ£¬»á×èÈû£¬Ö±µ½ÓĞĞÂÈÎÎñµ½´ï£»
-	// ·µ»Ø-1£¬±íÊ¾½ÓÊÕµ½µÄÈÎÎñÏß³ÌĞèÒªÍË³ö
+	// ä»ä»»åŠ¡é˜Ÿåˆ—ä¸­åˆ é™¤ä¸€ä¸ªä»»åŠ¡ï¼Œä¼šé˜»å¡ï¼Œç›´åˆ°æœ‰æ–°ä»»åŠ¡åˆ°è¾¾ï¼›
+	// è¿”å›-1ï¼Œè¡¨ç¤ºæ¥æ”¶åˆ°çš„ä»»åŠ¡çº¿ç¨‹éœ€è¦é€€å‡º
 	int RemoveJob();
 
 	int GetJobCount() const { return (int)m_listJob.size(); }
@@ -78,22 +78,22 @@ protected:
 	virtual CSvrSessionBase *NewSession();
 
 protected:
-	// accept Ïß³Ì
+	// accept çº¿ç¨‹
 	vector<ServicePort *>	m_vServerPort;
 
-	// ÈÎÎñ¶ÓÁĞ
+	// ä»»åŠ¡é˜Ÿåˆ—
 	list<NetJob>		m_listJob;
 
-	// ·ÃÎÊÈÎÎñ¶ÓÁĞµÄ»¥³âÁ¿
+	// è®¿é—®ä»»åŠ¡é˜Ÿåˆ—çš„äº’æ–¥é‡
 	Mutex				m_JobMutex;
 
-	// ÓĞÈÎÎñµ½´ïÖ®ºóµÄĞÅºÅ
+	// æœ‰ä»»åŠ¡åˆ°è¾¾ä¹‹åçš„ä¿¡å·
 	Semaphore			m_JobSemaphore;
 
-	// ÍË³öĞÅºÅ
+	// é€€å‡ºä¿¡å·
 	Event				m_ExitEvent;
 
-	// ´¦Àí½ÓÊÕµÄ¹¤×÷Ïß³ÌµÄÊıÁ¿
+	// å¤„ç†æ¥æ”¶çš„å·¥ä½œçº¿ç¨‹çš„æ•°é‡
 	int					m_nWorkThreadCount;
 	vector<CSvrSessionBase *>	m_vSessions;
 

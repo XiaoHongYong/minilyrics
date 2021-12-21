@@ -1,4 +1,4 @@
-// AVLTree2.h: interface for the CAVLTree2 class.
+ï»¿// AVLTree2.h: interface for the CAVLTree2 class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -404,13 +404,13 @@ public:
 			p = ToAddr(pos);
 
 			nResult = m_funCompare(lpItem, ToAddr(p->data));
-			/* Ñ°ÕÒ²åÈëÎ»ÖÃ¼°×îĞ¡²»Æ½ºâ×ÓÊ÷ */
+			/* å¯»æ‰¾æ’å…¥ä½ç½®åŠæœ€å°ä¸å¹³è¡¡å­æ ‘ */
 			if (nResult < 0)
-				pos = p->llink;			/* ½øÈë*pµÄ×ó×ÓÊ÷ */ 
+				pos = p->llink;			/* è¿›å…¥*pçš„å·¦å­æ ‘ */ 
 			else if (nResult > 0)
-				pos = p->rlink;         /* ½øÈë*pµÄÓÒ×ÓÊ÷ */ 
+				pos = p->rlink;         /* è¿›å…¥*pçš„å³å­æ ‘ */ 
 			else
-				return p;/* AVLÊ÷ÖĞÒÑ¾­ÓĞ¹Ø¼üÂëÎªkeyµÄ½áµã */
+				return p;/* AVLæ ‘ä¸­å·²ç»æœ‰å…³é”®ç ä¸ºkeyçš„ç»“ç‚¹ */
 		}
 		return NULL;
 	}
@@ -428,13 +428,13 @@ public:
 			p = ToAddr(pos);
 
 			nResult = funCmp(ToAddr(p->data));
-			/* Ñ°ÕÒ²åÈëÎ»ÖÃ¼°×îĞ¡²»Æ½ºâ×ÓÊ÷ */
+			/* å¯»æ‰¾æ’å…¥ä½ç½®åŠæœ€å°ä¸å¹³è¡¡å­æ ‘ */
 			if (nResult < 0)
-				pos = p->llink;			/* ½øÈë*pµÄ×ó×ÓÊ÷ */ 
+				pos = p->llink;			/* è¿›å…¥*pçš„å·¦å­æ ‘ */ 
 			else if (nResult > 0)
-				pos = p->rlink;         /* ½øÈë*pµÄÓÒ×ÓÊ÷ */ 
+				pos = p->rlink;         /* è¿›å…¥*pçš„å³å­æ ‘ */ 
 			else
-				return p;/* AVLÊ÷ÖĞÒÑ¾­ÓĞ¹Ø¼üÂëÎªkeyµÄ½áµã */
+				return p;/* AVLæ ‘ä¸­å·²ç»æœ‰å…³é”®ç ä¸ºkeyçš„ç»“ç‚¹ */
 		}
 		return NULL;
 	}
@@ -451,7 +451,7 @@ public:
 			p = ToAddr(pos);
 
 			nResult = m_funCompare(lpItem, ToAddr(p->data));
-			/* Ñ°ÕÒ²åÈëÎ»ÖÃ¼°×îĞ¡²»Æ½ºâ×ÓÊ÷ */
+			/* å¯»æ‰¾æ’å…¥ä½ç½®åŠæœ€å°ä¸å¹³è¡¡å­æ ‘ */
 			if (nResult == 0)
 			{
 				vNode.push_back(p);
@@ -462,9 +462,9 @@ public:
 				break;
 			}
 			else if (nResult < 0)
-				pos = p->llink;			/* ½øÈë*pµÄ×ó×ÓÊ÷ */ 
+				pos = p->llink;			/* è¿›å…¥*pçš„å·¦å­æ ‘ */ 
 			else
-				pos = p->rlink;         /* ½øÈë*pµÄÓÒ×ÓÊ÷ */ 
+				pos = p->rlink;         /* è¿›å…¥*pçš„å³å­æ ‘ */ 
 		}
 	}
 
@@ -481,7 +481,7 @@ public:
 			p = ToAddr(pos);
 
 			nResult = funCmp(ToAddr(p->data));
-			/* Ñ°ÕÒ²åÈëÎ»ÖÃ¼°×îĞ¡²»Æ½ºâ×ÓÊ÷ */
+			/* å¯»æ‰¾æ’å…¥ä½ç½®åŠæœ€å°ä¸å¹³è¡¡å­æ ‘ */
 			if (nResult == 0)
 			{
 				vNode.push_back(p);
@@ -492,9 +492,9 @@ public:
 				break;
 			}
 			else if (nResult < 0)
-				pos = p->llink;			/* ½øÈë*pµÄ×ó×ÓÊ÷ */ 
+				pos = p->llink;			/* è¿›å…¥*pçš„å·¦å­æ ‘ */ 
 			else
-				pos = p->rlink;         /* ½øÈë*pµÄÓÒ×ÓÊ÷ */ 
+				pos = p->rlink;         /* è¿›å…¥*pçš„å³å­æ ‘ */ 
 		}
 		return TRUE;
 	}
@@ -526,7 +526,7 @@ public:
 
 		if (m_pHead()->m_posRoot == POS_NULL)
 		{
-			/* Ô­À´AVLÊ÷Îª¿Õ */
+			/* åŸæ¥AVLæ ‘ä¸ºç©º */
 			m_pHead()->m_posRoot = creatNode(data);
 			if (m_pHead()->m_posRoot == POS_NULL)
 				return ERR_NO_MEM;
@@ -542,103 +542,103 @@ public:
 
 		while (pos != POS_NULL)
 		{
-			/* Ñ°ÕÒ²åÈëÎ»ÖÃ¼°×îĞ¡²»Æ½ºâ×ÓÊ÷ */
+			/* å¯»æ‰¾æ’å…¥ä½ç½®åŠæœ€å°ä¸å¹³è¡¡å­æ ‘ */
 			parent_p = p;
 			p = ToAddr(pos);
 			if (m_funCompare(lpNewItemData, ToAddr(p->data)) <= 0)
-				pos = p->llink;		/* ½øÈë*pµÄ×ó×ÓÊ÷ */ 
+				pos = p->llink;		/* è¿›å…¥*pçš„å·¦å­æ ‘ */ 
 			else
-				pos = p->rlink;		/* ½øÈë*pµÄÓÒ×ÓÊ÷ */ 
+				pos = p->rlink;		/* è¿›å…¥*pçš„å³å­æ ‘ */ 
 			
 			if (p->bf != BFB_EQUAL)
 			{
-				/* Ñ°ÕÒ×îĞ¡²»Æ½ºâ×ÓÊ÷*node_a */
+				/* å¯»æ‰¾æœ€å°ä¸å¹³è¡¡å­æ ‘*node_a */
 				parent_a = parent_p;
 				node_a = p;
 			}
 		}
 		
-		// p ÊÇ×îºóµÄ½Úµã£»parent_p ÊÇ×îºóµÄ½ÚµãµÄ¸¸½Úµã
+		// p æ˜¯æœ€åçš„èŠ‚ç‚¹ï¼›parent_p æ˜¯æœ€åçš„èŠ‚ç‚¹çš„çˆ¶èŠ‚ç‚¹
 
 		nodePos = creatNode(data);
 		if (nodePos == POS_NULL)
 			return ERR_NO_MEM;
 		node = ToAddr(nodePos);
 		if (m_funCompare(lpNewItemData, ToAddr(p->data)) <= 0)
-			p->llink = nodePos;			/* Ê¹ĞÂ½áµã³ÉÎª*pµÄ×ó×ÓÅ® */        
+			p->llink = nodePos;			/* ä½¿æ–°ç»“ç‚¹æˆä¸º*pçš„å·¦å­å¥³ */        
 		else
-			p->rlink = nodePos;			/* Ê¹ĞÂ½áµã³ÉÎª*pµÄÓÒ×ÓÅ® */ 
+			p->rlink = nodePos;			/* ä½¿æ–°ç»“ç‚¹æˆä¸º*pçš„å³å­å¥³ */ 
 		
-		/* ÒÑ¾­½«ĞÂ½áµã½áµã²åÈëµ½AVLÊ÷ÖĞ£¬node_aÖ¸Ïò×îĞ¡²»Æ½ºâ×ÓÊ÷¡£ */
+		/* å·²ç»å°†æ–°ç»“ç‚¹ç»“ç‚¹æ’å…¥åˆ°AVLæ ‘ä¸­ï¼Œnode_aæŒ‡å‘æœ€å°ä¸å¹³è¡¡å­æ ‘ã€‚ */
 		if (m_funCompare(lpNewItemData, ToAddr(node_a->data)) <= 0)
 		{
-			/* ĞÂ½áµãÊÇ²åÔÚ*node_aµÄ×ó×ÓÊ÷ÖĞ */
+			/* æ–°ç»“ç‚¹æ˜¯æ’åœ¨*node_açš„å·¦å­æ ‘ä¸­ */
 			pos = node_a->llink;
 			node_b = ToAddr(node_a->llink);
 			newbf = BFB_LEFT;
 		}
 		else
 		{
-			/* ĞÂ½áµãÊÇ²åÔÚ*node_aµÄÓÒ×ÓÊ÷ÖĞ */
+			/* æ–°ç»“ç‚¹æ˜¯æ’åœ¨*node_açš„å³å­æ ‘ä¸­ */
 			pos = node_a->rlink;
 			node_b = ToAddr(node_a->rlink);
 			newbf = BFB_RIGHT;
 		}
 		
-		/* ĞŞ¸Ä*node_bµ½ĞÂ½áµãÂ·¾¶ÉÏµÄ¸÷½áµãµÄÆ½ºâÒò×Ó£¬*node_bÎª*node_aµÄ×ÓÅ® */
+		/* ä¿®æ”¹*node_båˆ°æ–°ç»“ç‚¹è·¯å¾„ä¸Šçš„å„ç»“ç‚¹çš„å¹³è¡¡å› å­ï¼Œ*node_bä¸º*node_açš„å­å¥³ */
 		while ( (pos != POS_NULL) && (pos != nodePos) )
 		{
 			p = ToAddr(pos);
 			if (m_funCompare(lpNewItemData, ToAddr(p->data)) <= 0)
 			{
-				/* *pµÄ×ó×ÓÊ÷¸ß¶È¼Ó1 */
+				/* *pçš„å·¦å­æ ‘é«˜åº¦åŠ 1 */
 				p->bf = BFB_LEFT;
 				pos = p->llink;
 			}
 			else
 			{
-				/* *pµÄÓÒ×ÓÊ÷¸ß¶È¼Ó1 */
+				/* *pçš„å³å­æ ‘é«˜åº¦åŠ 1 */
 				p->bf = BFB_RIGHT;
 				pos = p->rlink;
 			}
 		}
 		
-		/* *node_aÔ­À´µÄÆ½ºâÒò×ÓÎª0£¬²åÈë½áµãºóÖ»¿ÉÄÜÎª1»ò£­1£¬Ã»ÓĞÆÆ»µÊ÷Æ½ºâ */
+		/* *node_aåŸæ¥çš„å¹³è¡¡å› å­ä¸º0ï¼Œæ’å…¥ç»“ç‚¹ååªå¯èƒ½ä¸º1æˆ–ï¼1ï¼Œæ²¡æœ‰ç ´åæ ‘å¹³è¡¡ */
 		if (node_a->bf == BFB_EQUAL)
 		{
 			node_a->bf = newbf;
 			return ERR_OK;
 		}
 		
-		/* ĞÂ½áµã²åÔÚÔ­À´¸ß¶È½ÏĞ¡µÄ×ÓÊ÷ÖĞ */
+		/* æ–°ç»“ç‚¹æ’åœ¨åŸæ¥é«˜åº¦è¾ƒå°çš„å­æ ‘ä¸­ */
 		if (node_a->bf == -newbf)
 		{
 			node_a->bf = BFB_EQUAL;
 			return ERR_OK;
 		}
 		
-		/* ÏÂÃæÊÇĞÂ½áµã²åÔÚÔ­À´¸ß¶È½Ï´óµÄ×ÓÊ÷ÖĞ£¬ÆÆ»µÁËÆ½ºâĞÔ£¬Òª¶Ô×ÓÊ÷½øĞĞµ÷Õû */
+		/* ä¸‹é¢æ˜¯æ–°ç»“ç‚¹æ’åœ¨åŸæ¥é«˜åº¦è¾ƒå¤§çš„å­æ ‘ä¸­ï¼Œç ´åäº†å¹³è¡¡æ€§ï¼Œè¦å¯¹å­æ ‘è¿›è¡Œè°ƒæ•´ */
 		if (newbf == BFB_LEFT)
 		{
-			/* ĞÂ½áµã²åÔÚ*node_aµÄ×ó×ÓÊ÷ÖĞ*/
+			/* æ–°ç»“ç‚¹æ’åœ¨*node_açš„å·¦å­æ ‘ä¸­*/
 			assert(node_b->bf != BFB_EQUAL);
 			if (node_b->bf == BFB_LEFT)
-				node_b = lL(node_a, node_b); /* LLĞÍµ÷Õû*/
+				node_b = lL(node_a, node_b); /* LLå‹è°ƒæ•´*/
 			else
-				node_b = lR(node_a, node_b); /* LRĞÍµ÷Õû*/
+				node_b = lR(node_a, node_b); /* LRå‹è°ƒæ•´*/
 		}
 		else
 		{
-			/* ĞÂ½áµã²åÔÚ*node_aµÄÓÒ×ÓÊ÷ÖĞ*/
+			/* æ–°ç»“ç‚¹æ’åœ¨*node_açš„å³å­æ ‘ä¸­*/
 			// if(node_b->bf == 1)
 			assert(node_b->bf != BFB_EQUAL);
 			if (node_b->bf == BFB_RIGHT)
-				node_b = rR(node_a, node_b);  /* RRĞÍµ÷Õû */
+				node_b = rR(node_a, node_b);  /* RRå‹è°ƒæ•´ */
 			else
-				node_b=rL(node_a, node_b);   /* RL ĞÍµ÷Õû */
+				node_b=rL(node_a, node_b);   /* RL å‹è°ƒæ•´ */
 		}
 		
-		if (parent_a == NULL)  /* node_a Ô­À´Ö¸ÏòÊ÷µÄ¸ù½áµã */
+		if (parent_a == NULL)  /* node_a åŸæ¥æŒ‡å‘æ ‘çš„æ ¹ç»“ç‚¹ */
 			m_pHead()->m_posRoot = ToPos(node_b);
 		else if(parent_a->llink == ToPos(node_a))
 			parent_a->llink = ToPos(node_b);
@@ -851,7 +851,7 @@ protected:
 		b->bf = BFB_EQUAL;
 		b->llink = a->rlink;
 		a->bf = BFB_EQUAL;
-		a->rlink = ToPos(b);                    /* aÖ¸Ïòµ÷ÕûºóµÄ×ÓÊ÷µÄ¸ù½áµã */
+		a->rlink = ToPos(b);                    /* aæŒ‡å‘è°ƒæ•´åçš„å­æ ‘çš„æ ¹ç»“ç‚¹ */
 
 		VERIFYBF(a);
 		VERIFYBF(b);
@@ -869,7 +869,7 @@ protected:
 		b->bf = BFB_LEFT;
 		b->llink = a->rlink;
 		a->bf = BFB_RIGHT;
-		a->rlink = ToPos(b);                    /* aÖ¸Ïòµ÷ÕûºóµÄ×ÓÊ÷µÄ¸ù½áµã */
+		a->rlink = ToPos(b);                    /* aæŒ‡å‘è°ƒæ•´åçš„å­æ ‘çš„æ ¹ç»“ç‚¹ */
 
 		VERIFYBF(a);
 		VERIFYBF(b);
@@ -1059,10 +1059,10 @@ protected:
 		return b;
 	}
 
-	// ×ó±ßµÄ½Úµã±»É¾³ı
+	// å·¦è¾¹çš„èŠ‚ç‚¹è¢«åˆ é™¤
 	void banlanceleft(PAVLNode p, PAVLNode parent_p, BOOL &bHeightDec)
 	{
-		//  µ÷Õû½Úµã p µÄÆ½ºâ¶È
+		//  è°ƒæ•´èŠ‚ç‚¹ p çš„å¹³è¡¡åº¦
 		if (bHeightDec)
 		{
 			if (p->bf == BFB_LEFT)
@@ -1082,14 +1082,14 @@ protected:
 
 				node_b = ToAddr(p->rlink);
 				if (node_b->bf == BFB_RIGHT)
-					temp = rR(p, node_b);  /* RRĞÍµ÷Õû */
+					temp = rR(p, node_b);  /* RRå‹è°ƒæ•´ */
 				else if (node_b->bf == BFB_EQUAL)
 				{
-					temp = rRforDel(p, node_b);  /* RRĞÍµ÷Õû */
+					temp = rRforDel(p, node_b);  /* RRå‹è°ƒæ•´ */
 					bHeightDec = FALSE;
 				}
 				else
-					temp=rL(p, node_b);   /* RL ĞÍµ÷Õû */
+					temp=rL(p, node_b);   /* RL å‹è°ƒæ•´ */
 				if (parent_p)
 				{
 					if (parent_p->llink == ToPos(p))
@@ -1107,10 +1107,10 @@ protected:
 		VERIFYBF(p);
 	}
 
-	// ÓÒ±ßµÄ½Úµã±»É¾³ı
+	// å³è¾¹çš„èŠ‚ç‚¹è¢«åˆ é™¤
 	void banlanceright(PAVLNode p, PAVLNode parent_p, BOOL &bHeightDec)
 	{
-		//  µ÷Õû½Úµã p µÄÆ½ºâ¶È
+		//  è°ƒæ•´èŠ‚ç‚¹ p çš„å¹³è¡¡åº¦
 		if (bHeightDec)
 		{
 			if (p->bf == BFB_RIGHT)
@@ -1130,14 +1130,14 @@ protected:
 
 				node_b = ToAddr(p->llink);
 				if (node_b->bf == BFB_LEFT)
-					temp = lL(p, node_b); /* LLĞÍµ÷Õû*/
+					temp = lL(p, node_b); /* LLå‹è°ƒæ•´*/
 				else if (node_b->bf == BFB_EQUAL)
 				{
-					temp = lLforDel(p, node_b); /* LLĞÍµ÷Õû*/
+					temp = lLforDel(p, node_b); /* LLå‹è°ƒæ•´*/
 					bHeightDec = FALSE;
 				}
 				else
-					temp = lR(p, node_b); /* LRĞÍµ÷Õû*/
+					temp = lR(p, node_b); /* LRå‹è°ƒæ•´*/
 				if (parent_p)
 				{
 					if (parent_p->llink == ToPos(p))
@@ -1160,13 +1160,13 @@ protected:
 		int			nCmp;
 		PAVLNode	child;
 
-		/* Ñ°ÕÒ²åÈëÎ»ÖÃ¼°×îĞ¡²»Æ½ºâ×ÓÊ÷ */
+		/* å¯»æ‰¾æ’å…¥ä½ç½®åŠæœ€å°ä¸å¹³è¡¡å­æ ‘ */
 		nCmp = m_funCompare(ToAddr(posData), ToAddr(p->data));
 		if (nCmp < 0)
 		{
 
 			//
-			// µ½×ó±ß½Úµã²éÕÒ£¬É¾³ı
+			// åˆ°å·¦è¾¹èŠ‚ç‚¹æŸ¥æ‰¾ï¼Œåˆ é™¤
 			//
 			if (p->llink != POS_NULL)
 			{
@@ -1181,7 +1181,7 @@ protected:
 		else if (nCmp > 0)
 		{
 			//
-			// µ½ÓÒ±ß½Úµã²éÕÒ£¬É¾³ı
+			// åˆ°å³è¾¹èŠ‚ç‚¹æŸ¥æ‰¾ï¼Œåˆ é™¤
 			//
 			if (p->rlink != POS_NULL)
 			{
@@ -1199,12 +1199,12 @@ protected:
 			if (p->data == posData)
 			{
 				//
-				// ÕÒµ½ÁË
+				// æ‰¾åˆ°äº†
 				//
 
 				if (p->llink == POS_NULL && p->rlink == POS_NULL)
 				{
-					// Èç¹ûÎªÒ¶×Ó½Úµã£¬Ö±½ÓÉ¾³ı
+					// å¦‚æœä¸ºå¶å­èŠ‚ç‚¹ï¼Œç›´æ¥åˆ é™¤
 					DB_POS	posP;
 
 					posP = ToPos(p);
@@ -1218,7 +1218,7 @@ protected:
 					}
 					else
 					{
-						// Îª¸ù½Úµã£¬ĞèÉ¾³ı
+						// ä¸ºæ ¹èŠ‚ç‚¹ï¼Œéœ€åˆ é™¤
 						m_pHead()->m_posRoot = POS_NULL;
 					}
 
@@ -1229,7 +1229,7 @@ protected:
 				}
 
 				//
-				// ×Ó½Úµã£¬ĞèÒªÒÆ¶¯ÏÂÃæµÄ×Ó½Úµã
+				// å­èŠ‚ç‚¹ï¼Œéœ€è¦ç§»åŠ¨ä¸‹é¢çš„å­èŠ‚ç‚¹
 				//
 				if ((p->bf == BFB_LEFT || p->bf == BFB_EQUAL) && p->llink != POS_NULL)
 				{
@@ -1268,7 +1268,7 @@ protected:
 			else // if (p->data == posData)
 			{
 				//
-				// µ½×ó±ß½Úµã²éÕÒ£¬É¾³ı
+				// åˆ°å·¦è¾¹èŠ‚ç‚¹æŸ¥æ‰¾ï¼Œåˆ é™¤
 				//
 				if (p->llink != POS_NULL)
 				{
@@ -1281,7 +1281,7 @@ protected:
 				}
 
 				//
-				// µ½ÓÒ±ß½Úµã²éÕÒ£¬É¾³ı
+				// åˆ°å³è¾¹èŠ‚ç‚¹æŸ¥æ‰¾ï¼Œåˆ é™¤
 				//
 				if (p->rlink != POS_NULL)
 				{
@@ -1321,12 +1321,12 @@ protected:
 //		PAVLNode	node_a_bk = NULL, parent_a_bk = NULL;
 //		int			nCmp;
 //
-//		/* Ñ°ÕÒ²åÈëÎ»ÖÃ¼°×îĞ¡²»Æ½ºâ×ÓÊ÷ */
+//		/* å¯»æ‰¾æ’å…¥ä½ç½®åŠæœ€å°ä¸å¹³è¡¡å­æ ‘ */
 //		nCmp = m_funCompare(ToAddr(datapos), ToAddr(p->data));
 //		if (nCmp < 0)
-//			pos = p->llink;		/* ½øÈë*pµÄ×ó×ÓÊ÷ */ 
+//			pos = p->llink;		/* è¿›å…¥*pçš„å·¦å­æ ‘ */ 
 //		else if (nCmp > 0)
-//			pos = p->rlink;		/* ½øÈë*pµÄÓÒ×ÓÊ÷ */
+//			pos = p->rlink;		/* è¿›å…¥*pçš„å³å­æ ‘ */
 //		else
 //		{
 //			// equal
@@ -1338,7 +1338,7 @@ protected:
 //			{
 //				if (p->bf != BFB_EQUAL)
 //				{
-//					/* Ñ°ÕÒ×îĞ¡²»Æ½ºâ×ÓÊ÷*node_a */
+//					/* å¯»æ‰¾æœ€å°ä¸å¹³è¡¡å­æ ‘*node_a */
 //					node_a_bk = node_a;
 //					parent_a_bk = parent_a;
 //
@@ -1351,7 +1351,7 @@ protected:
 //				if (p->rlink != POS_NULL && search(datapos, ToAddr(p->rlink), p, node_a, parent_a) == ERR_OK)
 //					return ERR_OK;
 //
-//				// Î´ÕÒµ½£¬»Ö¸´Ö®Ç°µÄ×îĞ¡×ÓÊ÷
+//				// æœªæ‰¾åˆ°ï¼Œæ¢å¤ä¹‹å‰çš„æœ€å°å­æ ‘
 //				if (node_a_bk != NULL)
 //				{
 //					node_a = node_a_bk;
@@ -1373,7 +1373,7 @@ protected:
 //
 //		if (m_posRoot == POS_NULL)
 //		{
-//			/* Ô­À´AVLÊ÷Îª¿Õ */
+//			/* åŸæ¥AVLæ ‘ä¸ºç©º */
 //			return 0;
 //		}
 //		
@@ -1385,10 +1385,10 @@ protected:
 //		if (nRet != ERR_OK)
 //			return ERR_NOT_FOUND;
 //
-//		// p : ÒªÉ¾³ıµÄ½Úµã
+//		// p : è¦åˆ é™¤çš„èŠ‚ç‚¹
 //		if (p->llink == POS_NULL && p->rlink == POS_NULL)
 //		{
-//			// Ö±½ÓÉ¾³ı
+//			// ç›´æ¥åˆ é™¤
 //			pos = ToPos(p);
 //			if (parent_p->llink == pos)
 //			{
@@ -1430,7 +1430,7 @@ protected:
 //				if (bfOld != 0 && right->bf == 0)
 //				{
 //					//
-//					// ¸ß¶È±äĞ¡ÁË
+//					// é«˜åº¦å˜å°äº†
 //					p->bf = 0;
 //					banlance(node_a, p);
 //				}

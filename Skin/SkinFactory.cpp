@@ -1,4 +1,4 @@
-// SkinFactory.cpp: implementation of the CSkinFactory class.
+ï»¿// SkinFactory.cpp: implementation of the CSkinFactory class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -1309,7 +1309,7 @@ CUIObject *CSkinFactory::CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR s
 		pObj->m_nId =  nIDAssign;
 
 		//
-		// ÏÈÊ¹ÓÃ²ÎÊýÀ´ÉèÖÃ¸ß¶ÈºÍ¿í¶È
+		// å…ˆä½¿ç”¨å‚æ•°æ¥è®¾ç½®é«˜åº¦å’Œå®½åº¦
 		if (szWidth && !IsEmptyString(szWidth))
 			pObj->SetProperty(SZ_PN_WIDTH, szWidth);
 		if (szHeight && !IsEmptyString(szHeight))
@@ -1319,7 +1319,7 @@ CUIObject *CSkinFactory::CreateDynamicCtrl(CSkinContainer *pContainer, LPCTSTR s
 		if (szLeft && !IsEmptyString(szTop))
 			pObj->SetProperty(SZ_PN_TOP, szTop);
 
-		// Ìí¼Óµ½Êý×éÖÐ
+		// æ·»åŠ åˆ°æ•°ç»„ä¸­
 		pContainer->AddUIObject(pObj);
 	}
 
@@ -1378,12 +1378,12 @@ void CSkinFactory::SetSkinFileName(LPCTSTR szSkinFileName)
 #endif
 }
 
-// Ã¶¾Ù skin
+// æžšä¸¾ skin
 // COMMENT:
-//		²éÕÒSkinÄ¿Â¼ÏÂµÄµÚÒ»¸öSkin
+//		æŸ¥æ‰¾Skinç›®å½•ä¸‹çš„ç¬¬ä¸€ä¸ªSkin
 // RETURN:
 //		The handle of find skin
-//		INVALID_HANDLE_VALUE - Ã»ÓÐÕÒµ½
+//		INVALID_HANDLE_VALUE - æ²¡æœ‰æ‰¾åˆ°
 bool CSkinFactory::FindFirstSkin(tstring &strSkin)
 {
 	CMLFileFind		find;

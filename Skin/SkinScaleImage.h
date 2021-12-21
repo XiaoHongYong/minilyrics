@@ -1,9 +1,9 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/03/27	0:51
 	FileName :	SkinScaleImage.h
 	Author   :	xhy
 	
-	Purpose  :	ÊÊºÏÓÚ½çÃæÖÐ¿ÉÒÔÉìËõµÄ Ë®Æ½ »ò ´¹Ö± µÄÌõ
+	Purpose  :	é€‚åˆäºŽç•Œé¢ä¸­å¯ä»¥ä¼¸ç¼©çš„ æ°´å¹³ æˆ– åž‚ç›´ çš„æ¡
 *********************************************************************/
 
 #if !defined(AFX_SKNXSCALEIMAGEEX_H__449E9EA2_410B_11D6_B47A_00E04C008BA3__INCLUDED_)
@@ -30,16 +30,16 @@ protected:
 	tstring			m_strBmpBkFile;
 	CSFImage		m_imgBk;
 
-	// X ·½ÏòÉÏµÄÓ³Éä¹ØÏµ
+	// X æ–¹å‘ä¸Šçš„æ˜ å°„å…³ç³»
 	// 1.
-	// ´ÓÍ¼Æ¬µÄ           m_imgBk.m_x ----> m_nScaleXStart
-	// Ó³Éäµ½ UIObjectµÄ  m_formleft  ----> m_formLeft + m_nScaleXStart - m_imgBk.m_x
+	// ä»Žå›¾ç‰‡çš„           m_imgBk.m_x ----> m_nScaleXStart
+	// æ˜ å°„åˆ° UIObjectçš„  m_formleft  ----> m_formLeft + m_nScaleXStart - m_imgBk.m_x
 	// 2.
-	// ´ÓÍ¼Æ¬µÄ           m_nScaleXStart                             ----> m_nScaleXEnd
-	// Ó³Éäµ½ UIObjectµÄ  m_formLeft + m_nScaleXStart - m_imgBk.m_x  ----> m_formRight - (m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd)
+	// ä»Žå›¾ç‰‡çš„           m_nScaleXStart                             ----> m_nScaleXEnd
+	// æ˜ å°„åˆ° UIObjectçš„  m_formLeft + m_nScaleXStart - m_imgBk.m_x  ----> m_formRight - (m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd)
 	// 3.
-	// ´ÓÍ¼Æ¬µÄ           m_nScaleXEnd                             ----> m_imgBk.m_x + m_imgBk.m_cx
-	// Ó³Éäµ½ UIObjectµÄ  m_formRight - (m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd)  ----> m_formRight
+	// ä»Žå›¾ç‰‡çš„           m_nScaleXEnd                             ----> m_imgBk.m_x + m_imgBk.m_cx
+	// æ˜ å°„åˆ° UIObjectçš„  m_formRight - (m_imgBk.m_x + m_imgBk.m_cx - m_nScaleXEnd)  ----> m_formRight
 	int				m_nScaleXStart;
 	int				m_nScaleXEnd;
 
@@ -68,16 +68,16 @@ protected:
 	CSFImage		m_imgBk;
 	tstring			m_strBmpBkFile;
 
-	// Y ·½ÏòÉÏµÄÓ³Éä¹ØÏµ
+	// Y æ–¹å‘ä¸Šçš„æ˜ å°„å…³ç³»
 	// 1.
-	// ´ÓÍ¼Æ¬µÄ           m_imgBk.m_y ----> m_nScaleYStart
-	// Ó³Éäµ½ UIObjectµÄ  m_formtop  ----> m_formTop + m_nScaleYStart - m_imgBk.m_y
+	// ä»Žå›¾ç‰‡çš„           m_imgBk.m_y ----> m_nScaleYStart
+	// æ˜ å°„åˆ° UIObjectçš„  m_formtop  ----> m_formTop + m_nScaleYStart - m_imgBk.m_y
 	// 2.
-	// ´ÓÍ¼Æ¬µÄ           m_nScaleYStart                             ----> m_nScaleYEnd
-	// Ó³Éäµ½ UIObjectµÄ  m_formTop + m_nScaleYStart - m_imgBk.m_y  ----> m_formBottom - (m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd)
+	// ä»Žå›¾ç‰‡çš„           m_nScaleYStart                             ----> m_nScaleYEnd
+	// æ˜ å°„åˆ° UIObjectçš„  m_formTop + m_nScaleYStart - m_imgBk.m_y  ----> m_formBottom - (m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd)
 	// 3.
-	// ´ÓÍ¼Æ¬µÄ           m_nScaleYEnd                             ----> m_imgBk.m_y + m_imgBk.m_cy
-	// Ó³Éäµ½ UIObjectµÄ  m_formBottom - (m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd)  ----> m_formBottom
+	// ä»Žå›¾ç‰‡çš„           m_nScaleYEnd                             ----> m_imgBk.m_y + m_imgBk.m_cy
+	// æ˜ å°„åˆ° UIObjectçš„  m_formBottom - (m_imgBk.m_y + m_imgBk.m_cy - m_nScaleYEnd)  ----> m_formBottom
 	int				m_nScaleYStart;
 	int				m_nScaleYEnd;
 

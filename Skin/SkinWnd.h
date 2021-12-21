@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2001/07/06
 	FileName :	SkinWnd.h
 	Author   :	xhy
@@ -18,7 +18,7 @@ class CSkinContainer;
 #define UIOBJ_ID_BEGIN_ALLOC		0xFFFFF
 
 // COMMENT:
-//		´°¿ÚµÄÎ»ÖÃÊÇ·ñºÏ·¨£¨ÏÔÊ¾Î»ÖÃÊÇ·ñÕı³££©
+//		çª—å£çš„ä½ç½®æ˜¯å¦åˆæ³•ï¼ˆæ˜¾ç¤ºä½ç½®æ˜¯å¦æ­£å¸¸ï¼‰
 BOOL IsWndOutOfScreen(const CRect &rc);
 
 // 0, 0, 10, 20
@@ -419,7 +419,7 @@ protected:
 
 	CSkinFactory	*m_pSkinFactory;
 
-	tstring			m_strSkinWndName;		// skin Ãû
+	tstring			m_strSkinWndName;		// skin å
 	tstring			m_strCaption;
 
 	tstring			m_strMenuName;
@@ -429,28 +429,28 @@ protected:
 	//
 	// Status
 	//
-	bool			m_bActived;		// µ±Ç°´°¿ÚÊÇ·ñÎª¼¤»î×´Ì¬Focus?
+	bool			m_bActived;		// å½“å‰çª—å£æ˜¯å¦ä¸ºæ¿€æ´»çŠ¶æ€Focus?
 	bool			m_bMainAppWnd;	// true: when the Window is closed, exit process.
 	bool			m_bDialogWnd;	// For dialog Skin: Enter key = OK, Escape key = cancel.
 
-	double			m_dbScale;		// ´°¿ÚÊÇ·ñ½øĞĞËõ·Å
-	CRect			m_rcReal;		// ´°¿ÚµÄÊµ¼Ê´óĞ¡
+	double			m_dbScale;		// çª—å£æ˜¯å¦è¿›è¡Œç¼©æ”¾
+	CRect			m_rcReal;		// çª—å£çš„å®é™…å¤§å°
 
 	//
 	// properties
 	//
 	CCursor			m_cursor;
-	tstring			m_strCusor;		// ¹â±êÎÄ¼ş
+	tstring			m_strCusor;		// å…‰æ ‡æ–‡ä»¶
 
 	bool			m_bWindowsAppearance;
 	bool			m_bAeroGlass;
 
  	// skin region
-	bool			m_bUseRgn;		// SkinWnd ÊÇ·ñÊ¹ÓÃregion
-	tstring			m_strRgn;		// Ê¹ÓÃµÄrgnÎÄ¼şÃû
-	CSkinRgn		m_rgnSkin;		// µ±Ê¹ÓÃregionÊ±£¬Ëü´ú±í´°¿ÚµÄÇøÓò
-	CRect			m_rcBoundBox;	// µ±Ê¹ÓÃregionÊ±£¬ËüÊÇÇøÓòm_rgnWndµÄ±ß¿ò
-									// µ±²»Ê¹ÓÃregion£¬ËüÊÇskinµÄ¾ØĞÎ¡£
+	bool			m_bUseRgn;		// SkinWnd æ˜¯å¦ä½¿ç”¨region
+	tstring			m_strRgn;		// ä½¿ç”¨çš„rgnæ–‡ä»¶å
+	CSkinRgn		m_rgnSkin;		// å½“ä½¿ç”¨regionæ—¶ï¼Œå®ƒä»£è¡¨çª—å£çš„åŒºåŸŸ
+	CRect			m_rcBoundBox;	// å½“ä½¿ç”¨regionæ—¶ï¼Œå®ƒæ˜¯åŒºåŸŸm_rgnWndçš„è¾¹æ¡†
+									// å½“ä¸ä½¿ç”¨regionï¼Œå®ƒæ˜¯skinçš„çŸ©å½¢ã€‚
 
 	CSkinFontProperty	m_fontProperty;	// Default font property.
 

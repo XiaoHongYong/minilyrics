@@ -1,4 +1,4 @@
-// MPMediaTree.cpp: implementation of the CMPMediaTree class.
+ï»¿// MPMediaTree.cpp: implementation of the CMPMediaTree class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -174,7 +174,7 @@ void CMPMTNMediaLibrary::OnUpdate()
 	// Year
 	else if (folderType == FT_ALL_YEAR)
 	{
-		// ¶Ôyear ½øĞĞ·ÖÀà£¬Ã¿10ÄêÎªÒ»¸ö×Ó½Úµã
+		// å¯¹year è¿›è¡Œåˆ†ç±»ï¼Œæ¯10å¹´ä¸ºä¸€ä¸ªå­èŠ‚ç‚¹
 		CMPAutoPtr<IVInt>	pvInt;
 		MLRESULT			nRet;
 		CSortVInt			vTenYear;

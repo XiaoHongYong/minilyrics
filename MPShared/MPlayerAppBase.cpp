@@ -1,4 +1,4 @@
-// MPlayerApp.cpp: implementation of the CMPlayerAppBase class.
+ï»¿// MPlayerApp.cpp: implementation of the CMPlayerAppBase class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -51,7 +51,7 @@ CLyricsLocalSearch		g_LyricSearch;
 CHAR_ENCODING GetDefaultLyricsEncodingSettings();
 
 //
-// °æ±¾¶¨Òå
+// ç‰ˆæœ¬å®šä¹‰
 //
 #ifdef _MPLAYER
 	VersionNumber g_version = VersionNumMake(ZP_MAJOR_VERSION, ZP_MINOR_VERSION, AUTO_BUILD_NUM);
@@ -505,7 +505,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 {
 	m_appAnalytics.CheckSendTask();
 
-	// ÅÐ¶ÏÊÇ·ñÒª±£´æ¸è´Ê
+	// åˆ¤æ–­æ˜¯å¦è¦ä¿å­˜æ­Œè¯
 	if (!OnLyricsChangingSavePrompt())
 		return;
 
@@ -515,7 +515,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 	g_LyricData.NewLyrics(g_Player.GetMediaKey().c_str(), g_Player.GetMediaLength());
 
 	//
-	// Ã»ÓÐ¸èÇúÐÅÏ¢
+	// æ²¡æœ‰æ­Œæ›²ä¿¡æ¯
 	//
 	if (!g_Player.IsMediaOpened())
 	{
@@ -563,7 +563,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 		DispatchLyricsChangedSyncEvent();
 
 #if !defined(_MPLAYER) && defined(_WIN32_DESKTOP)
-		// Òþ²Ø¸è´ÊÏÔÊ¾´°¿Ú
+		// éšè—æ­Œè¯æ˜¾ç¤ºçª—å£
 		if (g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideIfNoLyrics"), false))
 		{
 			HWND	hWnd = GetForegroundWindow();
@@ -576,7 +576,7 @@ void CMPlayerAppBase::OnMediaChanged(bool bAutoDownloadIfNotExist)
 		}
 
 		//
-		// ²¥·ÅMOVIEµÄÊ±ºòÒþ²Ø´°¿Ú
+		// æ’­æ”¾MOVIEçš„æ—¶å€™éšè—çª—å£
 		//
 		if (g_Profile.GetBool(SZ_SECT_UI, _T("AutoHideOnPlayMovie"), true)
 			&& g_Player.HasVideo() && !::GetParent(GetMainWnd()->GetHandle()))
@@ -610,7 +610,7 @@ void CMPlayerAppBase::OnOnlineSearchEnd()
 	if (g_LyricSearch.IsAssociatedLyrics(g_Player.GetMediaKey().c_str()))
 		return;
 
-	// ÔÚÏß×Ô¶¯ËÑË÷µÄÍ¨ÖªÏûÏ¢£¬±íÊ¾¸Ã¸è´ÊµÄ½á¹ûÒÑ¾­ËÑË÷µ½ÁË
+	// åœ¨çº¿è‡ªåŠ¨æœç´¢çš„é€šçŸ¥æ¶ˆæ¯ï¼Œè¡¨ç¤ºè¯¥æ­Œè¯çš„ç»“æžœå·²ç»æœç´¢åˆ°äº†
 	g_LyricsDownloader.SearchInCacheResult(true);
 }
 
@@ -714,7 +714,7 @@ void CMPlayerAppBase::OnDownloadLyricsFailed(CDownloadTask *pTask)
 
 void CMPlayerAppBase::NewLyrics()
 {
-	// ÅÐ¶ÏÊÇ·ñÒª±£´æ¸è´Ê
+	// åˆ¤æ–­æ˜¯å¦è¦ä¿å­˜æ­Œè¯
 	if (!OnLyricsChangingSavePrompt())
 		return;
 
@@ -742,7 +742,7 @@ bool CMPlayerAppBase::OnLyricsChangingSavePrompt()
 {
 	int			nRet;
 
-	// ÅÐ¶ÏÊÇ·ñÒª±£´æ¸è´Ê
+	// åˆ¤æ–­æ˜¯å¦è¦ä¿å­˜æ­Œè¯
 	m_pEventDispatcher->DispatchSyncEvent(ET_LYRICS_ON_SAVE_EDIT);
 
 	if (g_LyricData.HasLyricsOpened() && g_LyricData.IsModified())

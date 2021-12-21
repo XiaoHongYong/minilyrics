@@ -1,4 +1,4 @@
-// LyricShowSingleRowObj.cpp: implementation of the CLyricShowSingleRowObj class.
+ï»¿// LyricShowSingleRowObj.cpp: implementation of the CLyricShowSingleRowObj class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -30,7 +30,7 @@ CLyricShowSingleRowObj::~CLyricShowSingleRowObj()
 #define  FIO_TIME		500
 
 //
-// È¡µÃ´ËÐÐ¸è´ÊµÄFade out color
+// å–å¾—æ­¤è¡Œæ­Œè¯çš„Fade out color
 //
 void CLyricShowSingleRowObj::GetCurLineFadeOutColor(LyricsLine *pLine, MLColor clrIn, MLColor clrOut, MLColor &color)
 {
@@ -54,7 +54,7 @@ void CLyricShowSingleRowObj::GetCurLineFadeOutColor(LyricsLine *pLine, MLColor c
 }
 
 //
-// È¡µÃ´ËÐÐ¸è´ÊµÄFade In color
+// å–å¾—æ­¤è¡Œæ­Œè¯çš„Fade In color
 //
 void CLyricShowSingleRowObj::GetNextLineFadeInColor(LyricsLine *pLine, MLColor clrIn, MLColor clrOut, MLColor &color)
 {
@@ -63,7 +63,7 @@ void CLyricShowSingleRowObj::GetNextLineFadeInColor(LyricsLine *pLine, MLColor c
 	if (!pLine)
 		return;
 
-	// nTime ±äÐ¡
+	// nTime å˜å°
 	nTime = pLine->nBegTime - m_pMLData->GetPlayElapsedTime();
 	if (nTime <= FIO_TIME && nTime >= 0)
 	{
@@ -140,7 +140,7 @@ void CLyricShowSingleRowObj::DrawCurLineFadeInNextLine(CRawGraph *pGraphics, Lyr
 }
 
 // OUTPUT:
-//		rcUpdate	-	¸üÐÂµÄ¾ØÐÎÇøÓò
+//		rcUpdate	-	æ›´æ–°çš„çŸ©å½¢åŒºåŸŸ
 void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
 {
 	int			y;
@@ -170,10 +170,10 @@ void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* =
 	nPlayPos = m_pMLData->GetPlayElapsedTime();
 	y = GetLineVertAlignPos() - GetFontHeight() / 2;
 
-	// ÔÚµ±Ç°ÐÐ½áÊøÇ°0.5Ãë½¥±äÇÐ»»µ½ÏÂÒ»ÐÐ
+	// åœ¨å½“å‰è¡Œç»“æŸå‰0.5ç§’æ¸å˜åˆ‡æ¢åˆ°ä¸‹ä¸€è¡Œ
 	if (nPlayPos + FIO_TIME >= pLyricRow->nEndTime)
 	{
-		// ¼ÆËã½¥±äÏÔÊ¾µÄÑÕÉ«
+		// è®¡ç®—æ¸å˜æ˜¾ç¤ºçš„é¢œè‰²
 		LyricsLine *pLineNext = NULL;
 
 		CRect	rcClip;
@@ -182,7 +182,7 @@ void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* =
 							m_rcObj.top + m_nYMargin,
 							m_rcObj.right - m_nXMargin,
 							m_rcObj.bottom - m_nYMargin);
-		// ÉèÖÃ¼ô²ÃÇøÓòÎª: ×ó±ß±ß¿ò-->nSeperatePos
+		// è®¾ç½®å‰ªè£åŒºåŸŸä¸º: å·¦è¾¹è¾¹æ¡†-->nSeperatePos
 		CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 		pGraphics->SetClipBoundBox(rcClip);
 
@@ -200,7 +200,7 @@ void CLyricShowSingleRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* =
 							m_rcObj.top + m_nYMargin,
 							m_rcObj.right - m_nXMargin,
 							m_rcObj.bottom - m_nYMargin);
-		// ÉèÖÃ¼ô²ÃÇøÓòÎª: ×ó±ß±ß¿ò-->ÓÒ±ß¸è´ÊµÄ¿ªÊ¼ÏÔÊ¾²¿·Ö
+		// è®¾ç½®å‰ªè£åŒºåŸŸä¸º: å·¦è¾¹è¾¹æ¡†-->å³è¾¹æ­Œè¯çš„å¼€å§‹æ˜¾ç¤ºéƒ¨åˆ†
 		CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 		pGraphics->SetClipBoundBox(rcClip);
 

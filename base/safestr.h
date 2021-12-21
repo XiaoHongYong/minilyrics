@@ -1,4 +1,4 @@
-// safestr.h
+ï»¿// safestr.h
 #ifndef _SAFE_STRING_H_
 #define _SAFE_STRING_H_
 
@@ -9,7 +9,7 @@
 size_t strlen_safe(const char * str, size_t maxLength);
 size_t wcslen_safe(const WCHAR * str, size_t maxLength);
 
-// °²È«µÄ×Ö·û´®¿½±´£¬Èç¹û³¬³ö³¤¶È·¶Î§£¬Ôò½øĞĞ½Ø¶Ï
+// å®‰å…¨çš„å­—ç¬¦ä¸²æ‹·è´ï¼Œå¦‚æœè¶…å‡ºé•¿åº¦èŒƒå›´ï¼Œåˆ™è¿›è¡Œæˆªæ–­
 char *strcpy_safe(char *strDestination, size_t nLenMax, const char *strSource);
 size_t	strncpy_safe(char *strDestination, size_t nLenMax, const char *strSource, size_t nToCopy);
 size_t	strncpysz_safe(char *strDestination, size_t nLenMax, const char *strSource, size_t nToCopy);

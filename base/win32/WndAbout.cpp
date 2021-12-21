@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////
+ï»¿///////////////////////////////////////////////////
 // the implementation of mylib
 
 #include "stdafx.h"
@@ -264,8 +264,8 @@ BR_FAILED:
 }
 
 // COMMENT:
-//		ÅĞ¶ÏÏµÍ³ÊÇ·ñÖ§³Ö°ëÍ¸Ã÷´°¿Ú
-//		Ö»ÓĞWindows2000»òÒÔÉÏ²ÅÖ§³Ö
+//		åˆ¤æ–­ç³»ç»Ÿæ˜¯å¦æ”¯æŒåŠé€æ˜çª—å£
+//		åªæœ‰Windows2000æˆ–ä»¥ä¸Šæ‰æ”¯æŒ
 BOOL IsLayeredWndSupported()
 {
 	OSVERSIONINFO		version;
@@ -279,7 +279,7 @@ BOOL IsLayeredWndSupported()
 		return FALSE;
 	}
 
-	// Major version: 5, windows 2000 ÏµÁĞ
+	// Major version: 5, windows 2000 ç³»åˆ—
 	if (version.dwMajorVersion < 5)
 		return FALSE;
 
@@ -301,7 +301,7 @@ BOOL SetLayeredWindow(HWND hWnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags)
 {
 	DWORD				dwStyle;
 
-	// Ê×ÏÈÉèÖÃWS_EX_LAYEREDÊôĞÔ
+	// é¦–å…ˆè®¾ç½®WS_EX_LAYEREDå±æ€§
 	dwStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 	dwStyle |= WS_EX_LAYERED;
 	SetWindowLong(hWnd, GWL_EXSTYLE, dwStyle);
@@ -313,7 +313,7 @@ void UnSetLayeredWindow(HWND hWnd)
 {
 	DWORD				dwStyle;
 
-	// Ê×ÏÈÉèÖÃWS_EX_LAYEREDÊôĞÔ
+	// é¦–å…ˆè®¾ç½®WS_EX_LAYEREDå±æ€§
 	dwStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 	dwStyle &= ~WS_EX_LAYERED;
 	SetWindowLong(hWnd, GWL_EXSTYLE, dwStyle);

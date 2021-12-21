@@ -1,4 +1,4 @@
-#ifndef _IMPLAYER_H_
+﻿#ifndef _IMPLAYER_H_
 #define _IMPLAYER_H_
 
 #ifndef _WIN32
@@ -19,8 +19,8 @@ enum MPLAYER_ERROR_CODE
 	ERR_AUDIO_DECODE_INITFAILED = ERR_PLAYER_ERROR_BASE + 1,
 	ERR_END_OF_STREAM,
 	ERR_DECODE_FAILED,
-	ERR_BUFFER_FULL,		// �������Ѿ�д���ˣ���Ҫ�ȴ�
-	ERR_NOT_INITED,			// δ��ʼ��
+	ERR_BUFFER_FULL,		// 缓冲区已经写满了，需要等待
+	ERR_NOT_INITED,			// 未初始化
 	ERR_NOT_SUPPORT,
 	ERR_READ_ONLY,
 

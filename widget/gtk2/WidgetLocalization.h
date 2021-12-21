@@ -1,4 +1,4 @@
-// WidgetLocalization.h: interface for the CWidgetLocalization class.
+ï»¿// WidgetLocalization.h: interface for the CWidgetLocalization class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -62,17 +62,17 @@ public:
 	void InitAddAll(CBaseWnd *pWndParent);
 // 	struct DlgItem
 // 	{
-// 		HWND	hWnd;			// ×Ó´°¿Ú¾ä±ú
-// 		BOOL	bLoacalText;	// ÊÇ·ñĞèÒª×ª»»´°¿ÚÏÔÊ¾µÄÎÄ×Öµ½±¾µØ
-// 		tstring	strInit;		// ×Ó´°¿ÚµÄ³õÊ¼×Ö·û´®
+// 		HWND	hWnd;			// å­çª—å£å¥æŸ„
+// 		BOOL	bLoacalText;	// æ˜¯å¦éœ€è¦è½¬æ¢çª—å£æ˜¾ç¤ºçš„æ–‡å­—åˆ°æœ¬åœ°
+// 		tstring	strInit;		// å­çª—å£çš„åˆå§‹å­—ç¬¦ä¸²
 // 	};
 
 	void Init(CBaseWnd *pWnd);
 
-	// ĞèÒªÇĞ»»ÓïÑÔµÄ¿Ø¼ş
+	// éœ€è¦åˆ‡æ¢è¯­è¨€çš„æ§ä»¶
 	// vector<DlgItem>			m_vDlgItem;
 
-	// ĞèÒªÇĞ»»ÓïÑÔµÄListCtrl¿Ø¼ş
+	// éœ€è¦åˆ‡æ¢è¯­è¨€çš„ListCtrlæ§ä»¶
 	// vector<CLangListCtrlHelper>	m_vListCtrlHelper;
 
 //	HWND					m_hWndParent;

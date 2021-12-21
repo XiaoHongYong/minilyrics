@@ -1,4 +1,4 @@
-// GdiGraphics.h: interface for the CGdiGraphics class.
+﻿// GdiGraphics.h: interface for the CGdiGraphics class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -53,7 +53,7 @@ protected:
 };
 
 //
-// ��ͨ��ʽ�Ļ�ͼ
+// 普通方式的画图
 //
 class CGdiGraphics : public IMLGraphicsBase
 {

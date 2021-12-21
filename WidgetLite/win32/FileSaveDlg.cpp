@@ -1,11 +1,11 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "BaseWnd.h"
 #include "FileSaveDlg.h"
 #include <Dlgs.h>
 
 
 // COMMENT:
-//		È¡µÃ GetSaveFileName ÖĞlpstrFilter µÄµÚnIndex¸öÀ©Õ¹Ãû¡£
+//		å–å¾— GetSaveFileName ä¸­lpstrFilter çš„ç¬¬nIndexä¸ªæ‰©å±•åã€‚
 // INPUT:
 //		szFilters	:	_T("All supported files (*.lrc; *.txt; *.snc)\0*.lrc;*.txt;*.snc\0LRC Lyrics File (*.lrc)\0*.LRC\0Text File (*.txt)\0*.TXT\0Snc File (*.snc)\0*.snc\0\0")
 LPCTSTR GetFileFilterExtByIndex(LPCTSTR szFilters, int nIndex)
@@ -16,7 +16,7 @@ LPCTSTR GetFileFilterExtByIndex(LPCTSTR szFilters, int nIndex)
 	szReturn = szFilters;
 
 	//
-	// ÕÒµ½µÚnIndex¸öFilter
+	// æ‰¾åˆ°ç¬¬nIndexä¸ªFilter
 	for (int i = 0; i < nIndex * 2 - 1; i++)
 	{
 		while (*szReturn != '\0')
@@ -26,7 +26,7 @@ LPCTSTR GetFileFilterExtByIndex(LPCTSTR szFilters, int nIndex)
 			return NULL;
 	}
 
-	// ÒÆ¶¯Ö±µ½À©Õ¹Ãû
+	// ç§»åŠ¨ç›´åˆ°æ‰©å±•å
 	while (*szReturn != '.' && *szReturn != '\0')
 		szReturn++;
 

@@ -1,4 +1,4 @@
-// FileIndex3.h: interface for the CFileIndex3 class.
+ï»¿// FileIndex3.h: interface for the CFileIndex3 class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -427,10 +427,10 @@ public:
 	}
 
 protected:
-	CAVLTree_t<CFileSpaceAllocator, FunCmp1>	m_idx1;			// Ë÷ÒıµÄÊı¾İ
-	CAVLTree_t<CFileSpaceAllocator, FunCmp2>	m_idx2;			// Ë÷ÒıµÄÊı¾İ
-	CAVLTree_t<CFileSpaceAllocator, FunCmp3>	m_idx3;			// Ë÷ÒıµÄÊı¾İ
-	CAVLTree_t<CFileSpaceAllocator, FunCmp4>	m_idx4;			// Ë÷ÒıµÄÊı¾İ
+	CAVLTree_t<CFileSpaceAllocator, FunCmp1>	m_idx1;			// ç´¢å¼•çš„æ•°æ®
+	CAVLTree_t<CFileSpaceAllocator, FunCmp2>	m_idx2;			// ç´¢å¼•çš„æ•°æ®
+	CAVLTree_t<CFileSpaceAllocator, FunCmp3>	m_idx3;			// ç´¢å¼•çš„æ•°æ®
+	CAVLTree_t<CFileSpaceAllocator, FunCmp4>	m_idx4;			// ç´¢å¼•çš„æ•°æ®
 
 };
 
@@ -719,9 +719,9 @@ public:
 	}
 
 protected:
-	CAVLTree_t<CFileSpaceAllocator, FunCmp1>	m_idx1;			// Ë÷ÒıµÄÊı¾İ
-	CAVLTree_t<CFileSpaceAllocator, FunCmp2>	m_idx2;			// Ë÷ÒıµÄÊı¾İ
-	CAVLTree_t<CFileSpaceAllocator, FunCmp3>	m_idx3;			// Ë÷ÒıµÄÊı¾İ
+	CAVLTree_t<CFileSpaceAllocator, FunCmp1>	m_idx1;			// ç´¢å¼•çš„æ•°æ®
+	CAVLTree_t<CFileSpaceAllocator, FunCmp2>	m_idx2;			// ç´¢å¼•çš„æ•°æ®
+	CAVLTree_t<CFileSpaceAllocator, FunCmp3>	m_idx3;			// ç´¢å¼•çš„æ•°æ®
 
 };
 
@@ -923,8 +923,8 @@ public:
 	}
 
 protected:
-	Index1					m_idx1;			// Ë÷ÒıµÄÊı¾İ
-	Index2					m_idx2;			// Ë÷ÒıµÄÊı¾İ
+	Index1					m_idx1;			// ç´¢å¼•çš„æ•°æ®
+	Index2					m_idx2;			// ç´¢å¼•çš„æ•°æ®
 
 };
 
@@ -1064,7 +1064,7 @@ public:
 	}
 
 protected:
-	CAVLTree_t<CFileSpaceAllocator, FunCmp1>	m_idx1;			// Ë÷ÒıµÄÊı¾İ
+	CAVLTree_t<CFileSpaceAllocator, FunCmp1>	m_idx1;			// ç´¢å¼•çš„æ•°æ®
 
 };
 

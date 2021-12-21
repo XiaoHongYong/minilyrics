@@ -1,4 +1,4 @@
-// Helper.cpp: implementation of the Helper class.
+ï»¿// Helper.cpp: implementation of the Helper class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -162,7 +162,7 @@ BOOL SetFileNoReadOnly(LPCTSTR szFile)
 
 bool LoadProxySvrFromIE(bool &bUseProxy, tstring &strSvr, int &nPort)
 {
-	// È¡µÃIE µÄ´úÀíÉèÖÃ
+	// å–å¾—IE çš„ä»£ç†è®¾ç½®
 	// [HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings]
 	// REG_SZ: "ProxyServer"="127.1.1.1:80"
 	// ftp=192.168.1.12:80;gopher=192.168.1.13:80;http=192.168.1.1:80;https=192.168.1.11:80

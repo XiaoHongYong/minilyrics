@@ -1,4 +1,4 @@
-// RawBmpFont.cpp: implementation of the CRawBmpFont class.
+ï»¿// RawBmpFont.cpp: implementation of the CRawBmpFont class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -27,7 +27,7 @@ inline byte RGBToGray(int r, int g, int b) __ATTR_ALWAYS_INLINE;
 	
 inline byte RGBToGray(int r, int g, int b)
 {
-	// 5 = ËÄÉáÎåÈë
+	// 5 = å››èˆäº”å…¥
 	return (r * 3 + g * 6 + b + 5) / 10;
 }
 
@@ -622,7 +622,7 @@ void TileBlt(CRawImage *pImage, CRawImage *pGraphics, int xDest, int yDest, int 
 	int			x, y;
 
 	//
-	// ÏÈ½«Y·½ÏòµÄ»æ»­ÁË
+	// å…ˆå°†Yæ–¹å‘çš„ç»˜ç”»äº†
 	// 1111 1111 1111 222
 	// 1111 1111 1111 222
 	// 3333 3333 3333 444

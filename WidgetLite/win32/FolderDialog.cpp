@@ -1,9 +1,9 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/02/04	23:08
 	FileName :	FolderDialog.cpp
 	Author   :	xhy
 	
-	Purpose  :	ä¯ÀÀÑ¡ÔñÎÄ¼þ¼ÐµÄÀà
+	Purpose  :	æµè§ˆé€‰æ‹©æ–‡ä»¶å¤¹çš„ç±»
 *********************************************************************/
 
 #include "stdafx.h"
@@ -170,7 +170,7 @@ void CFolderDialog::SetInitFolder(LPCTSTR szInitDir)
 {
 	m_strInitFolder = szInitDir;
 
-	// È¥µôÄ¿Â¼ºóÃæµÄ\ 
+	// åŽ»æŽ‰ç›®å½•åŽé¢çš„\ 
 	if (m_strInitFolder.size() > 0 && m_strInitFolder[m_strInitFolder.size() - 1] == DIR_SLASH)
 		m_strInitFolder[m_strInitFolder.size() - 1] = '\0';
 }

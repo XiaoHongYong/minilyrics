@@ -1,4 +1,4 @@
-// FileSpaceAllocator.cpp: implementation of the CFileSpaceAllocator class.
+ï»¿// FileSpaceAllocator.cpp: implementation of the CFileSpaceAllocator class.
 //
 //////////////////////////////////////////////////////////////////////
 #include "stdafx.h"
@@ -119,7 +119,7 @@ int CFileSpaceAllocator::PreAlloc(int nSize)
 	if (m_pHead->m_nLen + nSize >= m_pHead->m_nLenMax)
 	{
 		//
-		// ÖØÐÂ·ÖÅä
+		// é‡æ–°åˆ†é…
 		// DBGLOG0("Should Realloc"));
 		m_nFileSize += nSize;
 		m_nFileSize += sizeof(DWORD) - m_nFileSize % sizeof(DWORD);
@@ -193,7 +193,7 @@ LPVOID CFileSpaceAllocator::Alloc(size_t nSize)
 	if (m_pHead->m_nLen + nSize >= m_pHead->m_nLenMax)
 	{
 		//
-		// ÖØÐÂ·ÖÅä
+		// é‡æ–°åˆ†é…
 		// DBGLOG1("Realloc: %d"), nCount);
 		if (ReSize(m_nFileSize + (uint32)(m_nFileSize * FI_FREE_RATE)) != ERR_OK)
 			return NULL;

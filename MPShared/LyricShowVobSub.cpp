@@ -1,4 +1,4 @@
-// LyricShowVobSub.cpp: implementation of the CLyricShowVobSub class.
+ï»¿// LyricShowVobSub.cpp: implementation of the CLyricShowVobSub class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -71,7 +71,7 @@ void CLyricShowVobSub::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 		y = GetLineVertAlignPos() - GetLineHeight() / 2;
 
 	//
-	// Ôö¼Ó´ËÅÐ¶ÏÌá¸ßÐ§ÂÊ
+	// å¢žåŠ æ­¤åˆ¤æ–­æé«˜æ•ˆçŽ‡
 	//
 	if (nPlayPos >= pLyricRow->nBegTime && 
 		nPlayPos <= pLyricRow->nEndTime &&
@@ -99,7 +99,7 @@ void CLyricShowVobSub::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 	if (nPlayPos >= pLyricRow->nBegTime && 
 		nPlayPos <= pLyricRow->nEndTime)
 	{
-		// ÏÔÊ¾´ËÐÐ
+		// æ˜¾ç¤ºæ­¤è¡Œ
 		DrawCurrentRow(pGraphics, pLyricRow, AUTO_CAL_X, y);
 		y += GetLineHeight();
 		m_bClearedOld = FALSE;
@@ -108,7 +108,7 @@ void CLyricShowVobSub::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*
 	if (pLyricRowNext && nPlayPos >= pLyricRowNext->nBegTime && 
 		nPlayPos <= pLyricRowNext->nEndTime)
 	{
-		// ÏÔÊ¾´ËÐÐ
+		// æ˜¾ç¤ºæ­¤è¡Œ
 		DrawCurrentRow(pGraphics, pLyricRowNext, AUTO_CAL_X, y);
 		m_bClearedOld = FALSE;
 	}

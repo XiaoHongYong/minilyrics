@@ -1,5 +1,5 @@
-/********************************************************************
-	Created  :	2001Äê12ÔÂ27ÈÕ 0:01:36
+ï»¿/********************************************************************
+	Created  :	2001å¹´12æœˆ27æ—¥ 0:01:36
 	FileName :	LyricShowTwoRowObj.cpp
 	Author   :	xhy
 	
@@ -63,20 +63,20 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 	if (y < m_rcObj.top + m_nYMargin)
 		y = m_rcObj.top + m_rcObj.Height() / 2 - GetLineHeight() + m_nLineSpacing / 2;
 	
-	// Èç¹ûµ±Ç°¸è´ÊĞĞµÄÏÔÊ¾Ê±¼ä³¬¹ıÒ»°ë£¬ÔòÔ¤ÏÔÊ¾ÏÂÒ»ĞĞ¸è´Ê
+	// å¦‚æœå½“å‰æ­Œè¯è¡Œçš„æ˜¾ç¤ºæ—¶é—´è¶…è¿‡ä¸€åŠï¼Œåˆ™é¢„æ˜¾ç¤ºä¸‹ä¸€è¡Œæ­Œè¯
 	if ( (m_pMLData->GetPlayElapsedTime() - pLyricRow->nBegTime) * 2 >= pLyricRow->nEndTime - m_pMLData->GetPlayElapsedTime())
 		nRowTheOther = nRowCur + 1;//bShowNextRow = TRUE;
 	else
 	{
 		nRowTheOther = nRowCur - 1;
 		if (nRowTheOther < 0)
-			// µ±Ç°ĞĞÎª×î¿ªÊ¼µÄÒ»ĞĞ£¬ÔòÏÔÊ¾ÏÂÒ»ĞĞ
+			// å½“å‰è¡Œä¸ºæœ€å¼€å§‹çš„ä¸€è¡Œï¼Œåˆ™æ˜¾ç¤ºä¸‹ä¸€è¡Œ
 			nRowTheOther = nRowCur + 1;
 	}
 
 	if (nRowTheOther >= (int)m_lyrLines.size())
 	{
-		// µ±Ç°ĞĞÎª×îºóÒ»ĞĞ£¬ÔòÏÔÊ¾Ç°Ò»ĞĞ
+		// å½“å‰è¡Œä¸ºæœ€åä¸€è¡Œï¼Œåˆ™æ˜¾ç¤ºå‰ä¸€è¡Œ
 		nRowTheOther = nRowCur - 1;
 	}
 	if (nRowTheOther < 0)
@@ -104,11 +104,11 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 		if (!IsKaraoke())
 		{
 			prcUpdate->SetRect(0, 0, 0, 0);
-			// Èç¹ûÃ»ÓĞÊ¹ÓÃKOROKE·½Ê½ÔòÖ±½Ó·µ»Ø
+			// å¦‚æœæ²¡æœ‰ä½¿ç”¨KOROKEæ–¹å¼åˆ™ç›´æ¥è¿”å›
 			return;
 		}
 
-		// Ö»ÖØ»æµ±Ç°¸è´ÊĞĞ
+		// åªé‡ç»˜å½“å‰æ­Œè¯è¡Œ
 		prcUpdate->top = yCurRow;
 		prcUpdate->bottom = yCurRow + nRowHeight;
 		if (prcUpdate->top < m_rcObj.top + m_nYMargin)
@@ -116,7 +116,7 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 		if (prcUpdate->bottom > m_rcObj.bottom - m_nYMargin)
 			prcUpdate->bottom = m_rcObj.bottom - m_nYMargin;
 
-		// µ±Ç°ĞĞ¸è´ÊÃ»ÓĞ³¬³ö¸è´ÊÏÔÊ¾ÇøÓò
+		// å½“å‰è¡Œæ­Œè¯æ²¡æœ‰è¶…å‡ºæ­Œè¯æ˜¾ç¤ºåŒºåŸŸ
 		prcUpdate->left = m_rcObj.left + m_nXMargin;
 		prcUpdate->right = m_rcObj.right - m_nXMargin;
 
@@ -133,7 +133,7 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 		CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 		pGraphics->SetClipBoundBox(rcClip);
 
-		// ÏÔÊ¾µ±Ç°¸è´ÊĞĞ
+		// æ˜¾ç¤ºå½“å‰æ­Œè¯è¡Œ
 		DrawCurrentRow(pGraphics, pLyricRow, AUTO_CAL_X, yCurRow);
 
 		return;
@@ -169,12 +169,12 @@ void CLyricShowTwoRowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NU
 	CRawGraph::CClipBoxAutoRecovery	autoCBR(pGraphics);
 	pGraphics->SetClipBoundBox(rcClip);
 
-	// ÏÔÊ¾µ±Ç°¸è´ÊĞĞ
+	// æ˜¾ç¤ºå½“å‰æ­Œè¯è¡Œ
 	DrawCurrentRow(pGraphics, pLyricRow, AUTO_CAL_X, yCurRow);
 
 	if (pLineTheOther)
 	{
-		// ÏÔÊ¾Ç°£¨ºó£©Ò»¸è´ÊĞĞ
+		// æ˜¾ç¤ºå‰ï¼ˆåï¼‰ä¸€æ­Œè¯è¡Œ
 		DrawRow(pGraphics, pLineTheOther, AUTO_CAL_X, yTheOtherRow, 
 			nRowTheOther < nRowCur ? LP_ABOVE_CUR_LINE : LP_BELOW_CUR_LINE);
 	}

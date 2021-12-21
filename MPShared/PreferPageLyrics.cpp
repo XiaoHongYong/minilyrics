@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferPageLyrics.h"
 #include "DownloadMgr.h"
@@ -59,11 +59,11 @@ public:
 		}
 
 		//
-		// ÉèÖÃÏÂÔØÂ·¾¶µÄÏÔÊ¾
+		// è®¾ç½®ä¸‹è½½è·¯å¾„çš„æ˜¾ç¤º
 		tstring strDownSaveDir = g_LyricsDownloader.GetDefSavePath();
 		SetUIObjectText(CID_DOWN_DIR, strDownSaveDir.c_str());
 
-		// ĞèÒª±£´æµÄ¸è´ÊÄ¿Â¼
+		// éœ€è¦ä¿å­˜çš„æ­Œè¯ç›®å½•
 		DOWN_SAVE_DIR		DownSaveDir;
 		DownSaveDir = (DOWN_SAVE_DIR)g_Profile.GetInt(SZ_SECT_LYR_DL, _T("DownSaveInSongDir"), DOWN_SAVE_IN_CUSTOM_DIR);
 		if (DownSaveDir == DOWN_SAVE_IN_SONG_DIR)

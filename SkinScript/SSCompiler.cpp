@@ -1,4 +1,4 @@
-// SSCompiler.cpp: implementation of the CSSCompiler class.
+Ôªø// SSCompiler.cpp: implementation of the CSSCompiler class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -2559,7 +2559,7 @@ void CSSCompiler::FormatLastError(const char *szFormat, ...)
 	__try
 #endif
 	{
-		// ∏Ò ΩªØ»’÷æ
+		// Ê†ºÂºèÂåñÊó•Âøó
 		va_start(args, szFormat);
 		szMsg = szBuffer + nLen;
 		nBuf = _vsntprintf(szMsg, CountOf(szBuffer) - nLen, szFormat, args);
@@ -2572,7 +2572,7 @@ void CSSCompiler::FormatLastError(const char *szFormat, ...)
 #if defined(_WIN32) && !defined(_WINCE_)
 	__except(EXCEPTION_EXECUTE_HANDLER)
 	{
-		// ”–“Ï≥£∑¢…˙£°
+		// ÊúâÂºÇÂ∏∏ÂèëÁîüÔºÅ
 		strcpy(szBuffer, _T("Exception error in format."));
 	}
 #endif

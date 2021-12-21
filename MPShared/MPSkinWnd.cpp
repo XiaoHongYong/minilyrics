@@ -1,4 +1,4 @@
-// MPSkinWnd.cpp: implementation of the CMPSkinWnd class.
+ï»¿// MPSkinWnd.cpp: implementation of the CMPSkinWnd class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -477,7 +477,7 @@ bool CMPSkinWnd::OnCreate()
 #ifdef _WIN32_DESKTOP
 	::SendMessage(m_hWnd, WM_SETICON, ICON_BIG, (WPARAM)LoadIcon(GetAppInstance(), MAKEINTRESOURCE(IDI_MPLAYER)));
 
-	// ÔÊĞíÍÏ·Å¸è´ÊÎÄ¼ş
+	// å…è®¸æ‹–æ”¾æ­Œè¯æ–‡ä»¶
 	DragAcceptFiles(m_hWnd, TRUE);
 #endif
 
@@ -699,7 +699,7 @@ void CMPSkinWnd::OnSkinLoaded()
 	if (vHandler.empty())
 		AddCmdHandler(_T("ch_common"));
 
-	// °ëÍ¸Ã÷Öµ
+	// åŠé€æ˜å€¼
 	int		nOpaque = SettingGetOpaquePercent();
 	SetTransparent(OpaquePercentToAlpha(nOpaque), SettingGetClickThrough());
 

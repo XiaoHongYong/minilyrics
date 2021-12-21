@@ -1,4 +1,4 @@
-// BaseDialog.h: interface for the CBaseDialog class.
+﻿// BaseDialog.h: interface for the CBaseDialog class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -97,7 +97,7 @@ public:
 	CBaseDialog(UINT nIDTemplate);
 	virtual ~CBaseDialog();
 
-	BOOL		m_bModal;	// �Ƿ�ΪModal Dialog
+	BOOL		m_bModal;	// 是否为Modal Dialog
 
 	CDlgResource		m_dlgRes;
 	UINT				m_nIDTemplate;

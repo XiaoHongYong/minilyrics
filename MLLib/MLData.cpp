@@ -1,5 +1,5 @@
-/********************************************************************
-	Created  :	2002Äê1ÔÂ3ÈÕ 17:54:54
+ï»¿/********************************************************************
+	Created  :	2002å¹´1æœˆ3æ—¥ 17:54:54
 	FileName :	MLData.cpp
 	Author   :	xhy
 	
@@ -24,7 +24,7 @@ IMPLEMENT_CPPUNIT_TEST_REG(CMLData)
 
 #define ROW_TIME_MIN_SPAN			300	// 300 MS
 
-// ¸èÇú¿ªÊ¼ºÍ½áÊøµÄÄÇÒ»¶Î¿ÕÏĞÊ±¼ä£¨Ã»ÓĞ¸è´ÊÏÔÊ¾£©
+// æ­Œæ›²å¼€å§‹å’Œç»“æŸçš„é‚£ä¸€æ®µç©ºé—²æ—¶é—´ï¼ˆæ²¡æœ‰æ­Œè¯æ˜¾ç¤ºï¼‰
 #define	LYRICS_BEGIN_TIME			15000	// 15 s
 #define	LYRICS_END_TIME				8000	// 10 s
 
@@ -285,7 +285,7 @@ int CMLData::OpenLyricsContent(LPCTSTR szSongFile, int nMediaLength, LPCTSTR szL
 #endif // #ifdef _IPHONE
 
 //
-// ÖØĞÂ´ò¿ª¸è´Ê
+// é‡æ–°æ‰“å¼€æ­Œè¯
 //
 int CMLData::ReopenLyrics(bool bUseSpecifiedEncoding, CHAR_ENCODING encodingSpecified)
 {
@@ -601,18 +601,18 @@ int CMLData::SaveLyricsInSongOfM4a()
 #endif // #ifdef _ID3V2_SUPPORT
 
 // COMMENT:
-//		½«CMLDataÖĞµÄÊı¾İ±£´æÎªÎÄ¼şszFile£¬ÎÄ¼şµÄÀàĞÍ£¬ÓÉszFileµÄÀ©Õ¹Ãû¾ö¶¨¡£
+//		å°†CMLDataä¸­çš„æ•°æ®ä¿å­˜ä¸ºæ–‡ä»¶szFileï¼Œæ–‡ä»¶çš„ç±»å‹ï¼Œç”±szFileçš„æ‰©å±•åå†³å®šã€‚
 int CMLData::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNewFileName)
 {
 	if (!HasLyricsOpened())
 		return ERR_NOLYRICS_OPENED;
 
-	// »ùÀà½Ó¿Ú
+	// åŸºç±»æ¥å£
 	CLyricsParser	*pParser;
 
 	bUseNewFileName = false;
 
-	// ¸ù¾İÎÄ¼şµÄÀ©Õ¹ÃûÀ´ÅĞ¶ÏÎÄ¼şÀàĞÍ£¬È»ºóµ÷ÓÃ²»Í¬µÄ¸è´Ê·ÖÎöÀàÀ´·ÖÎö¸è´Ê¡£
+	// æ ¹æ®æ–‡ä»¶çš„æ‰©å±•åæ¥åˆ¤æ–­æ–‡ä»¶ç±»å‹ï¼Œç„¶åè°ƒç”¨ä¸åŒçš„æ­Œè¯åˆ†æç±»æ¥åˆ†ææ­Œè¯ã€‚
 	if (FileIsExtSame(szFile, _T(".lrc")) )
 	{
 		pParser = new CLrcParser(this);
@@ -644,14 +644,14 @@ int CMLData::SaveAsFile(LPCTSTR szFile, CHAR_ENCODING newEncoding, bool &bUseNew
 
 	int		nRet;
 
-	// ·ÖÎö¸è´Ê
+	// åˆ†ææ­Œè¯
 	nRet = pParser->SaveAsFile(szFile, newEncoding);
 	if (nRet == ERR_OK && bUseNewFileName)
 	{
 		m_lyrProperties.SetEncoding(newEncoding);
 		ResetModificationFlag();
 
-		// ±£´æ¸è´ÊÎÄ¼şÃû
+		// ä¿å­˜æ­Œè¯æ–‡ä»¶å
 		m_strLrcSource = szFile;
 	}
 
@@ -712,8 +712,8 @@ LyricsLine *CMLData::GetLyricsLine(int nLine)
 }
 
 // COMMENT:
-//		¼ì²é¸è´ÊÊı¾İµÄÊ±¼äË³ĞòµÄÕıÈ·ĞÔ
-//		²éÕÒËùÓĞµÄ¸è´ÊÏÔÊ¾Ê±¼äÎª-1µÄ¡°¸è´Ê¶Î¡±£¬½øĞĞ¼ÆËã¡£
+//		æ£€æŸ¥æ­Œè¯æ•°æ®çš„æ—¶é—´é¡ºåºçš„æ­£ç¡®æ€§
+//		æŸ¥æ‰¾æ‰€æœ‰çš„æ­Œè¯æ˜¾ç¤ºæ—¶é—´ä¸º-1çš„â€œæ­Œè¯æ®µâ€ï¼Œè¿›è¡Œè®¡ç®—ã€‚
 void CMLData::CheckLyricsLineTime()
 {
 	int		nLineCount;
@@ -735,7 +735,7 @@ void CMLData::CheckLyricsLineTime()
 
 	while (1)
 	{
-		// ²éÕÒ¿ªÊ¼¸è´Ê¶Î
+		// æŸ¥æ‰¾å¼€å§‹æ­Œè¯æ®µ
 		bFind = FALSE;
 		do
 		{
@@ -756,7 +756,7 @@ void CMLData::CheckLyricsLineTime()
 				}
 				else
 				{
-					// Ò»¶¨ÊÇµÚÒ»ĞĞ£¬¿ªÊ¼Ê±¼äÉèÖÃÎª 15 s
+					// ä¸€å®šæ˜¯ç¬¬ä¸€è¡Œï¼Œå¼€å§‹æ—¶é—´è®¾ç½®ä¸º 15 s
 					nBegTime = LYRICS_BEGIN_TIME;
 				}
 				nBegLine = nLine;
@@ -779,17 +779,17 @@ void CMLData::CheckLyricsLineTime()
 		}
 		while (NextFrag(nLine, nFrag, nBegLine, nBegFrag));
 
-		if (!bFind)	// ËùÓĞµÄ¸è´Ê¶ÎµÄÊ±¼ä¶¼ÊÇÕıÈ·µÄ¡£
+		if (!bFind)	// æ‰€æœ‰çš„æ­Œè¯æ®µçš„æ—¶é—´éƒ½æ˜¯æ­£ç¡®çš„ã€‚
 			break;
 
-		// ²éÕÒ½áÊø¸è´Ê¶Î
+		// æŸ¥æ‰¾ç»“æŸæ­Œè¯æ®µ
 		while (1)
 		{
 			LyricsLine *pLine;
 
 			if (!NextFrag(nLine, nFrag, nEndLine, nEndFrag))
 			{
-				// ËùÓĞµÄ¸è´Ê¶¼Ã»ÓĞÊ±¼ä±ê¼Ç£¬Ôò×îºóµÄÊ±¼ä¶¨Îª¸èÇúÊ±¼ä £­ LYRICS_END_TIME
+				// æ‰€æœ‰çš„æ­Œè¯éƒ½æ²¡æœ‰æ—¶é—´æ ‡è®°ï¼Œåˆ™æœ€åçš„æ—¶é—´å®šä¸ºæ­Œæ›²æ—¶é—´ ï¼ LYRICS_END_TIME
 				nEndTime = GetMediaLength() - LYRICS_END_TIME - GetOffsetTime();
 				if (nBegTime >= nEndTime)
 					nEndTime = GetMediaLength() - GetOffsetTime();
@@ -824,7 +824,7 @@ void CMLData::CheckLyricsLineTime()
 			nBegTime = nEndTime - 2 * 1000;
 
 
-		// ¼ÆËãÔÚ¿ªÊ¼¶Îµ½×îºó¶Î¸è´ÊÖ®¼äµÄÊ±¼ä¡£
+		// è®¡ç®—åœ¨å¼€å§‹æ®µåˆ°æœ€åæ®µæ­Œè¯ä¹‹é—´çš„æ—¶é—´ã€‚
 		CalFragTimeBetweenLines(nBegLine, nBegFrag, nEndLine, nEndFrag, nBegTime, nEndTime);
 	}
 
@@ -950,12 +950,12 @@ void CMLData::AddLine(LyricsLine *pFileLine)
 }
 
 // COMMENT:
-//		½«¸è´ÊĞĞ°´ÕÕÊ±¼äÅÅĞò²åÈë
+//		å°†æ­Œè¯è¡ŒæŒ‰ç…§æ—¶é—´æ’åºæ’å…¥
 void CMLData::AddLineByTime(LyricsLine *pLine)
 {
 	if (pLine->bLyricsLine)
 	{
-		// ½«¸è´ÊĞĞ²åÈë m_arrLyricsLines
+		// å°†æ­Œè¯è¡Œæ’å…¥ m_arrLyricsLines
 		CLyricsLines::iterator	itPos;
 
 		int			i, nLineCount;
@@ -972,7 +972,7 @@ void CMLData::AddLineByTime(LyricsLine *pLine)
 
 		if (i != nLineCount)
 		{
-			// ÕÒµ½ÁËÎ»ÖÃ
+			// æ‰¾åˆ°äº†ä½ç½®
 			itPos = find(m_arrFileLines.begin(), m_arrFileLines.end(), m_arrLyricsLines[i]);
 			
 			if (itPos == m_arrFileLines.end())
@@ -986,7 +986,7 @@ void CMLData::AddLineByTime(LyricsLine *pLine)
 				m_arrFileLines.insert(itPos, pLine);
 			}
 
-			// ²åÈë¸è´Ê²¿·Ö
+			// æ’å…¥æ­Œè¯éƒ¨åˆ†
 			LyricsLine *pLinePrev;
 			if (i > 0)
 			{
@@ -1005,7 +1005,7 @@ void CMLData::AddLineByTime(LyricsLine *pLine)
 		}
 		else
 		{
-			// Î´ÕÒµ½Î»ÖÃ£¬Ôò²åÈëÄ©Î²
+			// æœªæ‰¾åˆ°ä½ç½®ï¼Œåˆ™æ’å…¥æœ«å°¾
 			m_arrLyricsLines.push_back(pLine);
 			m_arrFileLines.push_back(pLine);
 		}
@@ -1039,28 +1039,28 @@ LPCTSTR CMLData::GetLyricsFileName()
 }
 
 // COMMENT:
-//		ÉèÖÃÊ±¼äÆ«ÒÆ
+//		è®¾ç½®æ—¶é—´åç§»
 void CMLData::SetPlayElapsedTime(int nTimeElapsed)
 {
 	m_nTimeElapsed = nTimeElapsed + m_lyrProperties.GetOffsetTime() - m_nGlobalOffsetTime;
 }
 
 // COMMENT:
-//		È¡µÃ
+//		å–å¾—
 int CMLData::GetPlayElapsedTime()
 {
 	return m_nTimeElapsed;
 }
 
 // COMMENT:
-//		È¡µÃµ±Ç°ÕıÔÚÑİ³ªµÄ¸è´ÊĞĞ
+//		å–å¾—å½“å‰æ­£åœ¨æ¼”å”±çš„æ­Œè¯è¡Œ
 // RETURN:
-//		¸è´ÊĞĞµÄĞĞºÅ
+//		æ­Œè¯è¡Œçš„è¡Œå·
 int CMLData::GetCurPlayLine(const CLyricsLines &lyrLines)
 {
 	int				nLineCount;
 
-	//// ERROR:ÔÚ¶àÏß³ÌÖĞÊ¹ÓÃ£¬¿ÉÄÜ»á´æÔÚÎÊÌâ¡£
+	//// ERROR:åœ¨å¤šçº¿ç¨‹ä¸­ä½¿ç”¨ï¼Œå¯èƒ½ä¼šå­˜åœ¨é—®é¢˜ã€‚
 	static int		nLine = 0;
 
 	nLineCount = lyrLines.size();
@@ -1071,7 +1071,7 @@ int CMLData::GetCurPlayLine(const CLyricsLines &lyrLines)
 	if (nLine >= nLineCount)
 		nLine = 0;
 
-	// ÕÒµ½Ç°Ò»ĞĞ
+	// æ‰¾åˆ°å‰ä¸€è¡Œ
 	for (; nLine >= 0; nLine--)
 	{
 		LyricsLine *pLyricLine = lyrLines[nLine];
@@ -1086,7 +1086,7 @@ int CMLData::GetCurPlayLine(const CLyricsLines &lyrLines)
 	if (nLine == -1)
 		nLine = 0;
 	
-	// ÕÒµ½ÏÂÒ»ĞĞ
+	// æ‰¾åˆ°ä¸‹ä¸€è¡Œ
 	for (; nLine < nLineCount; nLine++)
 	{
 		LyricsLine *pLyricLine = lyrLines[nLine];
@@ -1154,10 +1154,10 @@ BOOL CMLData::IsContentModified()
 }
 
 //	COMMENT:
-//		¼ÆËãÁ½¸ö¸è´Ê¶ÎÖ®¼äµÄËùÓĞ¸è´Ê¶Î¿ªÊ¼Ê±¼äºÍ½áÊøÊ±¼äµÄÖµ
+//		è®¡ç®—ä¸¤ä¸ªæ­Œè¯æ®µä¹‹é—´çš„æ‰€æœ‰æ­Œè¯æ®µå¼€å§‹æ—¶é—´å’Œç»“æŸæ—¶é—´çš„å€¼
 //	INPUT:
-//		nLine, nBegFrag	-	¿ªÊ¼µÄÎ»ÖÃ£¬Õâ¸öÎ»ÖÃµÄÊ±¼ä¿ÉÄÜ»¹Ã»ÓĞ±»¼ÆËã³öÀ´¡£
-//		nLine, nEndFrag	-	½áÊøµÄÎ»ÖÃ£¬Õâ¸öÎ»ÖÃµÄÊ±¼ä¿ÉÄÜ»¹Ã»ÓĞ±»¼ÆËã³öÀ´¡£
+//		nLine, nBegFrag	-	å¼€å§‹çš„ä½ç½®ï¼Œè¿™ä¸ªä½ç½®çš„æ—¶é—´å¯èƒ½è¿˜æ²¡æœ‰è¢«è®¡ç®—å‡ºæ¥ã€‚
+//		nLine, nEndFrag	-	ç»“æŸçš„ä½ç½®ï¼Œè¿™ä¸ªä½ç½®çš„æ—¶é—´å¯èƒ½è¿˜æ²¡æœ‰è¢«è®¡ç®—å‡ºæ¥ã€‚
 BOOL CMLData::CalFragTimeBetweenFrags(int nLine, int nBegFrag, int nEndFrag, int nBegTime, int nEndTime)
 {
 	int nFragCount = nEndFrag - nBegFrag + 1;
@@ -1179,10 +1179,10 @@ BOOL CMLData::CalFragTimeBetweenFrags(int nLine, int nBegFrag, int nEndFrag, int
 }
 
 //	COMMENT:
-//		¼ÆËãÁ½¸ö¸è´ÊĞĞÖ®¼äµÄËùÓĞ¸è´ÊĞĞµÄ¿ªÊ¼Ê±¼äºÍ½áÊøÊ±¼äµÄÖµ
+//		è®¡ç®—ä¸¤ä¸ªæ­Œè¯è¡Œä¹‹é—´çš„æ‰€æœ‰æ­Œè¯è¡Œçš„å¼€å§‹æ—¶é—´å’Œç»“æŸæ—¶é—´çš„å€¼
 //	INPUT:
-//		nBegLine, nBegFrag	-	¿ªÊ¼µÄÎ»ÖÃ£¬Õâ¸öÎ»ÖÃµÄÊ±¼ä¿ÉÄÜ»¹Ã»ÓĞ±»¼ÆËã³öÀ´¡£
-//		nEndLine, nEndFrag	-	½áÊøµÄÎ»ÖÃ£¬Õâ¸öÎ»ÖÃµÄÊ±¼ä¿ÉÄÜ»¹Ã»ÓĞ±»¼ÆËã³öÀ´¡£
+//		nBegLine, nBegFrag	-	å¼€å§‹çš„ä½ç½®ï¼Œè¿™ä¸ªä½ç½®çš„æ—¶é—´å¯èƒ½è¿˜æ²¡æœ‰è¢«è®¡ç®—å‡ºæ¥ã€‚
+//		nEndLine, nEndFrag	-	ç»“æŸçš„ä½ç½®ï¼Œè¿™ä¸ªä½ç½®çš„æ—¶é—´å¯èƒ½è¿˜æ²¡æœ‰è¢«è®¡ç®—å‡ºæ¥ã€‚
 BOOL CMLData::CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, int nEndFrag, int nBegTime, int nEndTime)
 {
 	LyricsLine *pLine = NULL;
@@ -1197,7 +1197,7 @@ BOOL CMLData::CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, 
 	if (nEndLine >= GetLyricsLinesCount())
 		return FALSE;
 
-	// Èç¹ûËùÓĞµÄ¡°¸è´Ê¶Î¡±ÔÚÒ»ĞĞÄÚ£¬ÔòÃ¿Ò»¶ÎµÄÊ±¼ä²ÉÓÃÆ½¾ùÖµ
+	// å¦‚æœæ‰€æœ‰çš„â€œæ­Œè¯æ®µâ€åœ¨ä¸€è¡Œå†…ï¼Œåˆ™æ¯ä¸€æ®µçš„æ—¶é—´é‡‡ç”¨å¹³å‡å€¼
 	if (nBegLine == nEndLine)
 	{
 		pLine = GetLyricsLine(nBegLine);
@@ -1212,7 +1212,7 @@ BOOL CMLData::CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, 
 	}
 	else
 	{
-		// ¼ÆËã×î¿ªÊ¼µÄĞĞ
+		// è®¡ç®—æœ€å¼€å§‹çš„è¡Œ
 		pLine = GetLyricsLine(nBegLine);
 		assert(pLine);
 		
@@ -1225,7 +1225,7 @@ BOOL CMLData::CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, 
 //		if (pLine->nBegTime == -1)
 		pLine->nBegTime = pLine->vFrags[0]->nBegTime;
 
-		// ¡°¸è´Ê¶Î¡±²»ÔÚÒ»ĞĞÄÚ£¬Ã¿Ò»ĞĞµÄÊ±¼ä²ÉÓÃÆ½¾ùÖµ£»ÔÚÒ»ĞĞÄÚÔÙ²ÉÓÃÆ½¾ùÖµ
+		// â€œæ­Œè¯æ®µâ€ä¸åœ¨ä¸€è¡Œå†…ï¼Œæ¯ä¸€è¡Œçš„æ—¶é—´é‡‡ç”¨å¹³å‡å€¼ï¼›åœ¨ä¸€è¡Œå†…å†é‡‡ç”¨å¹³å‡å€¼
 		for (int i = nBegLine + 1; i < nEndLine; i++)
 		{
 			pLine = GetLyricsLine(i);
@@ -1239,7 +1239,7 @@ BOOL CMLData::CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, 
 			CalFragTimeBetweenFrags(i, 0, pLine->vFrags.size() - 1, pLine->nBegTime, pLine->nEndTime);
 		}
 
-		// ¼ÆËã½áÊø¸è´ÊĞĞµÄÊ±¼ä
+		// è®¡ç®—ç»“æŸæ­Œè¯è¡Œçš„æ—¶é—´
 		pLine = GetLyricsLine(nEndLine);
 		assert(pLine);
 		pLine->nBegTime = nBegTime +
@@ -1255,7 +1255,7 @@ BOOL CMLData::CalFragTimeBetweenLines(int nBegLine, int nBegFrag, int nEndLine, 
 }
 
 //	COMMENT:
-//		È¡µÃÉÏÒ»¸ö¡°¸è´Ê¶Î¡±
+//		å–å¾—ä¸Šä¸€ä¸ªâ€œæ­Œè¯æ®µâ€
 BOOL CMLData::PrevFrag(int nLine, int nFrag, int &nPrevLine, int &nPrevFrag, LyricsPiece **ppPiece)
 {
 	assert(nLine < GetLyricsLinesCount());
@@ -1289,7 +1289,7 @@ BOOL CMLData::PrevFrag(int nLine, int nFrag, int &nPrevLine, int &nPrevFrag, Lyr
 }
 
 //	COMMENT:
-//		È¡µÃÉÏÒ»¸ö¡°¸è´Ê¶Î¡±
+//		å–å¾—ä¸Šä¸€ä¸ªâ€œæ­Œè¯æ®µâ€
 LyricsPiece *CMLData::PrevFrag(int nLine, int nFrag)
 {
 	assert(nLine < GetLyricsLinesCount());
@@ -1312,7 +1312,7 @@ LyricsPiece *CMLData::PrevFrag(int nLine, int nFrag)
 }
 
 //	COMMENT:
-//		È¡µÃÏÂÒ»¸ö¡°¸è´Ê¶Î¡±
+//		å–å¾—ä¸‹ä¸€ä¸ªâ€œæ­Œè¯æ®µâ€
 BOOL CMLData::NextFrag(int nLine, int nFrag, int &nNextLine, int &nNextFrag, LyricsPiece **ppPiece)
 {
 	assert(nLine >= 0 && nLine < GetLyricsLinesCount());
@@ -1348,7 +1348,7 @@ BOOL CMLData::NextFrag(int nLine, int nFrag, int &nNextLine, int &nNextFrag, Lyr
 }
 
 //	COMMENT:
-//		È¡µÃÏÂÒ»¸ö¡°¸è´Ê¶Î¡±
+//		å–å¾—ä¸‹ä¸€ä¸ªâ€œæ­Œè¯æ®µâ€
 LyricsPiece *CMLData::NextFrag(int nLine, int nFrag)
 {
 	assert(nLine < GetLyricsLinesCount());
@@ -1482,9 +1482,9 @@ BOOL CMLData::LyricsLineToText(LyricsLine *pLine, tstring &strLyricsLine)
 }
 
 //
-// 1¡¢¹ıÂË¸è´ÊÖĞµÄÒ»Ğ©ÎŞ·¨ÏÔÊ¾µÄ×Ö·û£ºTab,»Ø³µ·ûºÅ
-// ?2¡¢Ôö¼ÓÑ¡ÏîÊÇ·ñ¹ıÂËĞĞÄ©¡¢ĞĞÊ×µÄ¿Õ¸ñ
-// 3¡¢¶ÔHTMLÖĞµÄÒ»Ğ©·ûºÅ½øĞĞ×ªÒå
+// 1ã€è¿‡æ»¤æ­Œè¯ä¸­çš„ä¸€äº›æ— æ³•æ˜¾ç¤ºçš„å­—ç¬¦ï¼šTab,å›è½¦ç¬¦å·
+// ?2ã€å¢åŠ é€‰é¡¹æ˜¯å¦è¿‡æ»¤è¡Œæœ«ã€è¡Œé¦–çš„ç©ºæ ¼
+// 3ã€å¯¹HTMLä¸­çš„ä¸€äº›ç¬¦å·è¿›è¡Œè½¬ä¹‰
 int CMLData::FilterContents(void)
 {
 	static LPCTSTR		szEscape[] = 
@@ -1499,8 +1499,8 @@ int CMLData::FilterContents(void)
 	};
 
 	//
-	// ½øĞĞÌæ»»£¬TAB£¬
-	// ¶ÔHTML½øĞĞ×ªÒå
+	// è¿›è¡Œæ›¿æ¢ï¼ŒTABï¼Œ
+	// å¯¹HTMLè¿›è¡Œè½¬ä¹‰
 	for (UINT i = 0; i < m_arrLyricsLines.size(); i++)
 	{
 		for (UINT k = 0; k < m_arrLyricsLines[i]->vFrags.size(); k++)
@@ -1866,7 +1866,7 @@ protected:
 					// Open, Lyrics content ok?
 					//
 					LPCTSTR		vLyrLines[] = { _T("Line1"), _T("Line2"), _T("Line3") };
-					LPCTSTR		vLyrLinesChs[] = { _T("µÚÒ»ĞĞ"), _T("µÚ¶şĞĞ"), _T("µÚÈıĞĞ") };
+					LPCTSTR		vLyrLinesChs[] = { _T("ç¬¬ä¸€è¡Œ"), _T("ç¬¬äºŒè¡Œ"), _T("ç¬¬ä¸‰è¡Œ") };
 
 					CLyricsLines	&lyrLines = data.GetRawLyrics();
 
@@ -1939,7 +1939,7 @@ protected:
 				{
 					// Lyrics content ok?
 					LPCTSTR		vLyrLines[] = { _T("Line1"), _T("Line2"), _T("Line3") };
-					LPCTSTR		vLyrLinesChs[] = { _T("µÚÒ»ĞĞ"), _T("µÚ¶şĞĞ"), _T("µÚÈıĞĞ") };
+					LPCTSTR		vLyrLinesChs[] = { _T("ç¬¬ä¸€è¡Œ"), _T("ç¬¬äºŒè¡Œ"), _T("ç¬¬ä¸‰è¡Œ") };
 					int			vTime[] = { 1, 1*1000+9, 1*1000+18 };
 
 					CLyricsLines	&lyrLines = data.GetRawLyrics();
@@ -2009,7 +2009,7 @@ protected:
 
 				{
 					// Lyrics content ok?
-					LPCTSTR		vLyrLines[] = { _T("µÚÒ»ĞĞ"), _T("µÚ¶şĞĞ"), _T("µÚÈıĞĞ") };
+					LPCTSTR		vLyrLines[] = { _T("ç¬¬ä¸€è¡Œ"), _T("ç¬¬äºŒè¡Œ"), _T("ç¬¬ä¸‰è¡Œ") };
 					int			vTime[] = { 0, 1*1000+10, 1*1000+20 };
 
 					CLyricsLines	&lyrLines = data.GetRawLyrics();

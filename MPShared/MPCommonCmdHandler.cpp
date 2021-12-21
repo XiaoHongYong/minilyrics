@@ -1,4 +1,4 @@
-// MPCommonCmdHandler.cpp: implementation of the CMPCommonCmdHandler class.
+ï»¿// MPCommonCmdHandler.cpp: implementation of the CMPCommonCmdHandler class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -181,7 +181,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 	case CMD_ANTIAlIAS:
 		{
 			//
-			// ·´¾â³İ
+			// åé”¯é½¿
 			tstring		str;
 			bool		bAntialias;
 			CMPlayerSettings::GetPlayerUISettings(_T("Antialias"), str);
@@ -537,7 +537,7 @@ bool CMPCommonCmdHandler::OnCustomCommand(int nID)
 		break;
 	case CMD_OPEN_LRC:
 		//
-		// ¸è´ÊÏÂÔØ
+		// æ­Œè¯ä¸‹è½½
 		//
 		if (!g_Player.IsMediaOpened())
 		{
@@ -883,9 +883,9 @@ bool CMPCommonCmdHandler::GetRadioChecked(vector<UINT> &vIDs, UINT &nIDChecked)
 bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 {
 	// #ifdef _UNICODE
-	//	½«ANSIµÄ¸è´ÊÉèÖÃ±àÂë£¬²¢ÖØĞÂ´ò¿ª
+	//	å°†ANSIçš„æ­Œè¯è®¾ç½®ç¼–ç ï¼Œå¹¶é‡æ–°æ‰“å¼€
 	// #else _ANSI
-	//  ÉèÖÃUNICODE ¸è´ÊµÄ±àÂë£¬²¢ÖØĞÂ´ò¿ª£¬Í¬Ê±ÉèÖÃ×ÖÌåµÄ±àÂë
+	//  è®¾ç½®UNICODE æ­Œè¯çš„ç¼–ç ï¼Œå¹¶é‡æ–°æ‰“å¼€ï¼ŒåŒæ—¶è®¾ç½®å­—ä½“çš„ç¼–ç 
 
 	int nEncodingId = CmdIdToEncoding(nCmdId);
 	if (nEncodingId == -1)
@@ -895,8 +895,8 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 		return true;
 
 	//
-	// if (ĞŞ¸ÄÁË¸è´Ê)
-	//		ÌáÊ¾ĞèÒªÖØĞÂ¼ÓÔØ¸è´Ê£¬ÌáÊ¾ÓÃ»§ÊÇ·ñ¼ÌĞø
+	// if (ä¿®æ”¹äº†æ­Œè¯)
+	//		æç¤ºéœ€è¦é‡æ–°åŠ è½½æ­Œè¯ï¼Œæç¤ºç”¨æˆ·æ˜¯å¦ç»§ç»­
 	if (g_LyricData.IsContentModified())
 	{
 		tstringex		str;
@@ -908,7 +908,7 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 			return true;
 	}
 
-	// ÒÔÓÃ»§Ö¸¶¨µÄ±àÂëÖØĞÂ´ò¿ª¸è´Ê
+	// ä»¥ç”¨æˆ·æŒ‡å®šçš„ç¼–ç é‡æ–°æ‰“å¼€æ­Œè¯
 	CHAR_ENCODING encodingOld = GetCharEncodingID(g_LyricData.Properties().GetEncoding());
 	if (nEncodingId != encodingOld)
 	{
@@ -921,13 +921,13 @@ bool CMPCommonCmdHandler::OnCommandCharEncoding(int nCmdId)
 }
 
 // COMMENT:
-//		±£´æ¸è´ÊÎÄ¼şÎª£º
+//		ä¿å­˜æ­Œè¯æ–‡ä»¶ä¸ºï¼š
 //		FT_UNKNOWN			= 1,
 //		FT_LYRICS_LRC		= 2,
 //		FT_LYRICS_TXT		= 3,
 // RETURN:
-//		TRUE	-	±£´æ³É¹¦£¬×¢Òâ£ºÈç¹ûÃ»ÓĞ¸è´ÊÊı¾İÒ²·µ»ØTRUE£»
-//		FALSE	-	ÓÃ»§Ñ¡ÔñÈ¡Ïû£¬»òÕß±£´æÊ§°Ü;
+//		TRUE	-	ä¿å­˜æˆåŠŸï¼Œæ³¨æ„ï¼šå¦‚æœæ²¡æœ‰æ­Œè¯æ•°æ®ä¹Ÿè¿”å›TRUEï¼›
+//		FALSE	-	ç”¨æˆ·é€‰æ‹©å–æ¶ˆï¼Œæˆ–è€…ä¿å­˜å¤±è´¥;
 BOOL CMPCommonCmdHandler::SaveAsLyricsFile(CBaseWnd *pWndParent, MLFileType DefFileType)
 {
 	if (!g_LyricData.HasLyricsOpened())

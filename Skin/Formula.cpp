@@ -1,4 +1,4 @@
-/********************************************************************
+Ôªø/********************************************************************
 	Created  :	2001/7/17	12:03:00
 	FileName :	Formula.cpp
 	Author   :	xhy
@@ -85,7 +85,7 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 	size_t nSize, cur;
 	nSize = vWords.size();
 	if (nSize <= 2){
-		// ±Ì¥Ô ΩŒ™ø’
+		// Ë°®ËææÂºè‰∏∫Á©∫
 		goto FAILED;
 	}
 
@@ -107,7 +107,7 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 	while (1){
 		// operand
 		if (_IsOperand(pWordCur->nWordType)){
-			if (_IsOperand(pWordPrev->nWordType)){ // ”Ô∑®¥ÌŒÛ£°
+			if (_IsOperand(pWordPrev->nWordType)){ // ËØ≠Ê≥ïÈîôËØØÔºÅ
 				goto FAILED;
 			}
 			// add to arrOpnd
@@ -120,16 +120,16 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 		}
 		// operator
 		else if (_IsOperator(pWordCur->nWordType)){
-			// ”Ô∑®¥ÌŒÛ£°
+			// ËØ≠Ê≥ïÈîôËØØÔºÅ
 //			if ( /*' 2 ( '*/ (pWordCur->nWordType == FW_OPTR_LBRACKET && _IsOperand(pWordPrev->dwWordType)) ||	
 //				/*' ( + '*/ (pWordCur->nWordType != FW_OPTR_LBRACKET && pWordPrev->nWordType == FW_OPTR_LBRACKET) ||
 //				/*' # ) '*/ (pWordCur->nWordType == FW_OPTR_RBRACKET && pWordPrev->nWordType != FW_OPTR_RBRACKET)){
 //				goto FAILED;
 //			}
-			// ≈–∂œ≤Ÿ◊˜∑˚µƒ”≈œ»º∂....
+			// Âà§Êñ≠Êìç‰ΩúÁ¨¶ÁöÑ‰ºòÂÖàÁ∫ß....
 			if (OpPriorF[pOptrTop->nWordType - FW_OPTR] < OpPriorG[pWordCur->nWordType - FW_OPTR])
 			{
-				// Ω´ pWordCur »Î’ª
+				// Â∞Ü pWordCur ÂÖ•Ê†à
 				arrOptr.push_back(pWordCur);
 				pOptrTop = pWordCur;
 
@@ -170,7 +170,7 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 						pOpnd1->Value = -nVal1;
 						break;
 					default:
-						// À„ Ω¥ÌŒÛ
+						// ÁÆóÂºèÈîôËØØ
 						goto FAILED;
 					}
 					pOpnd1->nWordType = FW_OPND_LONG;
@@ -218,7 +218,7 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 						pOpnd1->Value = nVal1 / nVal2;
 						break;
 					default:
-						// À„ Ω¥ÌŒÛ
+						// ÁÆóÂºèÈîôËØØ
 						goto FAILED;
 					}
 					pOpnd1->nWordType = FW_OPND_LONG;
@@ -268,7 +268,7 @@ BOOL CFormula::CalCualteValue(FORMULA_VAR var[], int &nRetValue)
 					nRetValue = pOpnd->Value;
 					goto SUCEED;
 				default:
-					// À„ Ω¥ÌŒÛ
+					// ÁÆóÂºèÈîôËØØ
 					goto FAILED;
 					break;
 				}
@@ -326,7 +326,7 @@ S_BEGIN:
 
 	if (IsDigit(m_szFormula[cur]))
 	{
-		// ◊˜Œ™’˚ ˝¥¶¿Ì
+		// ‰Ωú‰∏∫Êï¥Êï∞Â§ÑÁêÜ
 		pWord = new FORMULA_WORD;
 		pWord->nWordType = FW_OPND_LONG;
 		pWord->Value = _ttoi(&(m_szFormula[cur]));
@@ -338,7 +338,7 @@ S_BEGIN:
 		goto S_BEGIN;
 	}
 
-	// À„∑˚+
+	// ÁÆóÁ¨¶+
 	switch (m_szFormula[cur])
 	{
 	case '+':
@@ -367,7 +367,7 @@ S_BEGIN:
 		goto S_OPTR;
 	}
 
-	// ±‰¡ø variable
+	// ÂèòÈáè variable
 	if (isalpha(m_szFormula[cur]))
 	{
 		pWord = new FORMULA_WORD;
@@ -462,7 +462,7 @@ void CFormula::SimpleOptimize()
 	// szPos + , - .....
 	if (szPos == szBeg)
 	{
-		// ªªÀ„Œ™+....
+		// Êç¢ÁÆó‰∏∫+....
 		szPos = strignore(szPos, _T("\x20\t"));
 		if (IsEmptyString(szPos))
 			return;

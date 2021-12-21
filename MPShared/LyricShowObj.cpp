@@ -1,5 +1,5 @@
-/********************************************************************
-	Created  :	2002Äê1ÔÂ3ÈÕ 16:21:56
+ï»¿/********************************************************************
+	Created  :	2002å¹´1æœˆ3æ—¥ 16:21:56
 	FileName :	LyricShowObj.cpp
 	Author   :	xhy
 	
@@ -242,7 +242,7 @@ bool WrapDisplayLyrics(CLyricsLines &lyrLinesSrc, CLyricsLines &lyrLinesOut, CRa
 	return true;
 }
 
-// Ã¿´Îµ÷Õû¸è´ÊµÄËÙ¶ÈµÄ»ù±¾µ¥Î»
+// æ¯æ¬¡è°ƒæ•´æ­Œè¯çš„é€Ÿåº¦çš„åŸºæœ¬å•ä½
 const int SET_SPEED_SPAN		= 500;
 
 
@@ -728,7 +728,7 @@ void CLyricShowObj::OnEvent(const IEvent *pEvent)
 
 
 // COMMENT:
-//		´ÓÓÒÏò×ó¹ö¶¯¸è´ÊÏÔÊ¾
+//		ä»å³å‘å·¦æ»šåŠ¨æ­Œè¯æ˜¾ç¤º
 void CLyricShowObj::Draw(CRawGraph *pGraph)
 {
 #ifndef _WIN32_WCE
@@ -740,9 +740,9 @@ void CLyricShowObj::Draw(CRawGraph *pGraph)
 	FastDraw(pGraph, NULL);
 }
 
-// ¿ìËÙ»æ»­
+// å¿«é€Ÿç»˜ç”»
 // OUTPUT:
-//		rcUpdate	-	¸üĞÂµÄ¾ØĞÎÇøÓò
+//		rcUpdate	-	æ›´æ–°çš„çŸ©å½¢åŒºåŸŸ
 void CLyricShowObj::FastDraw(CRawGraph *pGraphics, CRect *prcUpdate/* = NULL*/)
 {
 	if (prcUpdate)
@@ -1037,7 +1037,7 @@ bool CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 	if (x == AUTO_CAL_X)
 		x = GetLyricRowAlignPos(pGraphics, pLyricRow);
 
-	// »­³ö´ËĞĞ¸è´Ê
+	// ç”»å‡ºæ­¤è¡Œæ­Œè¯
 	nSize = pLyricRow->vFrags.size();
 	for (int i = 0; i < nSize; i++)
 	{
@@ -1115,7 +1115,7 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 	if (x == AUTO_CAL_X)
 		x = GetLyricRowAlignPos(pGraphics, pLyricRow);
 
-	// »­³ö´ËĞĞ¸è´Ê
+	// ç”»å‡ºæ­¤è¡Œæ­Œè¯
 	nSize = pLyricRow->vFrags.size();
 	for (int i = 0; i < nSize; i++)
 	{
@@ -1173,7 +1173,7 @@ void CLyricShowObj::DrawRow(CRawGraph *pGraphics, LyricsLine *pLyricRow, int x, 
 }
 
 // COMMENT:
-//		Öğ×ÖÏÔÊ¾¸è´Ê, like Karaoke
+//		é€å­—æ˜¾ç¤ºæ­Œè¯, like Karaoke
 void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, int x, int y)
 {
 	assert(m_pMLData);
@@ -1205,23 +1205,23 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 
 	nSize = pLyricRow->vFrags.size();
 
-	// È¡µÃ¸ÃĞĞ¸è´ÊÏÔÊ¾µÄX×ù±ê
+	// å–å¾—è¯¥è¡Œæ­Œè¯æ˜¾ç¤ºçš„Xåº§æ ‡
 	if (x == AUTO_CAL_X)
 		x = GetLyricRowAlignPos(pGraphics, pLyricRow);
 
-	// ÏÈ½«ÔÚÊ±¼äÒÑ¹ıµÄ¸è´Ê¶ÎÏÔÊ¾³öÀ´
+	// å…ˆå°†åœ¨æ—¶é—´å·²è¿‡çš„æ­Œè¯æ®µæ˜¾ç¤ºå‡ºæ¥
 	for (nCurPos = 0; nCurPos < nSize; nCurPos++)
 	{
 		pPiece = pLyricRow->vFrags[nCurPos];
 
 		if (pPiece->nEndTime >= m_pMLData->GetPlayElapsedTime())
 		{
-			// Ê±¼äÎ´¹ıµÄ¸è´Ê¶Î
+			// æ—¶é—´æœªè¿‡çš„æ­Œè¯æ®µ
 			break;
 		}
 		else
 		{
-			// Ê±¼äÒÑ¹ıµÄ¸è´Ê¶Î
+			// æ—¶é—´å·²è¿‡çš„æ­Œè¯æ®µ
 			//
 			// Draw lyrics with hilight
 			//
@@ -1245,7 +1245,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 		}
 	}
 
-	// ÏÔÊ¾µ±Ç°Ê±¼ä¶ÎµÄ¸è´Ê
+	// æ˜¾ç¤ºå½“å‰æ—¶é—´æ®µçš„æ­Œè¯
 	if (nCurPos < nSize)
 	{
 		//    I LOVE YOU		// 1. draw
@@ -1261,7 +1261,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 
 		if (pPiece->nBegTime < m_pMLData->GetPlayElapsedTime())
 		{
-			// Èç¹ûÊ±¼ä m_pMLData->GetPlayElapsedTime() ÔÚµ±Ç°¸è´Ê¶ÎÖ®¼ä
+			// å¦‚æœæ—¶é—´ m_pMLData->GetPlayElapsedTime() åœ¨å½“å‰æ­Œè¯æ®µä¹‹é—´
 			//    |1word2|   |1word2|
 			//                  ^ pPiece
 			int dt = (pPiece->nEndTime - pPiece->nBegTime);
@@ -1321,7 +1321,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 			pGraphics->DrawTextClip(pPiece->szLyric, pPiece->nLen, &rcText);
 		}
 
-		// Ôö¼Ó x µÄÆ«ÒÆÎ»ÖÃ
+		// å¢åŠ  x çš„åç§»ä½ç½®
 		x += nFragDrawWidth;
 		nCurPos++;
 	}
@@ -1331,7 +1331,7 @@ void CLyricShowObj::DrawRowKaraoke(CRawGraph	*pGraphics, LyricsLine *pLyricRow, 
 	else
 		m_font.SetOverlayPattern(&m_tobLowlight.imgPattern);
 
-	// ÏÔÊ¾Ê±¼äÎ´µ½µÄ¸è´Ê¶Î
+	// æ˜¾ç¤ºæ—¶é—´æœªåˆ°çš„æ­Œè¯æ®µ
 	for (; nCurPos < nSize; nCurPos++)
 	{
 		pPiece = pLyricRow->vFrags[nCurPos];
@@ -1402,7 +1402,7 @@ void CLyricShowObj::FadeOutVertBorder(CRawGraph *pGraphics, int yDrawLyrStartPos
 }
 
 // COMMENT:
-//		¸ù¾İµ±Ç°µÄ Graphics »·¾³£¬È¡µÃ¸è´ÊpLyricRowĞĞµÄ¿í¶È
+//		æ ¹æ®å½“å‰çš„ Graphics ç¯å¢ƒï¼Œå–å¾—æ­Œè¯pLyricRowè¡Œçš„å®½åº¦
 int CLyricShowObj::GetLyricRowTextWidth(CRawGraph	*pGraphics, LyricsLine *pLyricRow)
 {
 	assert(m_pMLData);
@@ -1473,12 +1473,12 @@ void CLyricShowObj::SetAntialise(BOOL bAntialis)
 }
 
 // COMMENT:
-//		È¡µÃ¸ÃĞĞ¸è´ÊÏÔÊ¾µÄX×ù±ê
+//		å–å¾—è¯¥è¡Œæ­Œè¯æ˜¾ç¤ºçš„Xåº§æ ‡
 // INPUT:
-//		pGraphics		-	ÏÔÊ¾¸è´ÊĞĞµÄÉè±¸
-//		pLyricRow -	¸è´ÊĞĞ
+//		pGraphics		-	æ˜¾ç¤ºæ­Œè¯è¡Œçš„è®¾å¤‡
+//		pLyricRow -	æ­Œè¯è¡Œ
 // OUTPUT:
-//		Êä³ö´ËĞĞ¸è´ÊÏÔÊ¾µÄ X ×ù±êÎ»ÖÃ
+//		è¾“å‡ºæ­¤è¡Œæ­Œè¯æ˜¾ç¤ºçš„ X åº§æ ‡ä½ç½®
 int CLyricShowObj::GetLyricRowAlignPos(CRawGraph	*pGraphics, LyricsLine *pLyricRow)
 {
 	assert(m_pMLData);
@@ -1487,30 +1487,30 @@ int CLyricShowObj::GetLyricRowAlignPos(CRawGraph	*pGraphics, LyricsLine *pLyricR
 	switch (m_nAlignment)
 	{
 	case LA_LEFT:
-		// ¾Ó×ó
-		// ¼ÆËã×ó±ßÏÔÊ¾µÄÎ»ÖÃ
+		// å±…å·¦
+		// è®¡ç®—å·¦è¾¹æ˜¾ç¤ºçš„ä½ç½®
 		x = m_rcObj.left + m_nXMargin;
 		break;
 	case LA_CENTER:
 	default:
-		// ¾ÓÖĞ
+		// å±…ä¸­
 		{
 			int 		nTxtWidth;
-			// È¡µÃ´ËĞĞ¸è´ÊµÄÏÔÊ¾¿í¶È
+			// å–å¾—æ­¤è¡Œæ­Œè¯çš„æ˜¾ç¤ºå®½åº¦
 			nTxtWidth = GetLyricRowTextWidth(pGraphics, pLyricRow);
 		
-			// ¼ÆËã×ó±ßÏÔÊ¾µÄÎ»ÖÃ
+			// è®¡ç®—å·¦è¾¹æ˜¾ç¤ºçš„ä½ç½®
 			x = m_rcObj.left + (m_rcObj.Width() - nTxtWidth) / 2;
 		}
 		break;
 	case LA_RIGHT:
-		// ¾ÓÓÒ
+		// å±…å³
 		{
 			int 		nTxtWidth;
-			// È¡µÃ´ËĞĞ¸è´ÊµÄÏÔÊ¾¿í¶È
+			// å–å¾—æ­¤è¡Œæ­Œè¯çš„æ˜¾ç¤ºå®½åº¦
 			nTxtWidth = GetLyricRowTextWidth(pGraphics, pLyricRow);
 			
-			// ¼ÆËã×ó±ßÏÔÊ¾µÄÎ»ÖÃ
+			// è®¡ç®—å·¦è¾¹æ˜¾ç¤ºçš„ä½ç½®
 			x = m_rcObj.right - nTxtWidth - m_nXMargin;
 		}
 		break;
@@ -1551,7 +1551,7 @@ void CLyricShowObj::OnKeyDown(UINT nChar, UINT nFlags)
 		g_Player.Next();
 		break;
 	case VK_RIGHT:
-		// Ç°½ø5Ãë
+		// å‰è¿›5ç§’
 		{
 			DWORD		dwCurPos;
 			DWORD		dwLength;
@@ -1565,7 +1565,7 @@ void CLyricShowObj::OnKeyDown(UINT nChar, UINT nFlags)
 		}
 		break;
 	case VK_LEFT:
-		// ºóÍË5Ãë
+		// åé€€5ç§’
 		{
 			int			dwCurPos;
 
@@ -1828,7 +1828,7 @@ void CLyricShowObj::WrapLyricsLines()
 }
 
 // COMMENT:
-// ×Ô¶¯µ÷ÕûÃÔ´°¿Ú¸ß¶È
+// è‡ªåŠ¨è°ƒæ•´è¿·çª—å£é«˜åº¦
 void CLyricShowObj::AutoHeightSkinAccordLyrics(int nLines)
 {
 #ifndef _MPLAYER
@@ -1861,7 +1861,7 @@ void CLyricShowObj::AutoHeightSkinAccordLyrics(int nLines)
 }
 
 // COMMENT:
-//		¸ù¾İ¸è´ÊµÄ³¤¶È£¬×Ô¶¯µ÷Õû´°¿Ú¿í¶È¿ÉÒÔÆ¥ÅäÏÔÊ¾¸è´Ê
+//		æ ¹æ®æ­Œè¯çš„é•¿åº¦ï¼Œè‡ªåŠ¨è°ƒæ•´çª—å£å®½åº¦å¯ä»¥åŒ¹é…æ˜¾ç¤ºæ­Œè¯
 bool CLyricShowObj::AutoWidthSkinAccordLyrics()
 {
 #ifdef _WIN32_WCE
@@ -1892,7 +1892,7 @@ bool CLyricShowObj::AutoWidthSkinAccordLyrics()
 	pGraphics->SetFont(&m_font);
 
 	//
-	// ÕÒµ½×î¿íµÄÒ»ĞĞ¸è´Ê
+	// æ‰¾åˆ°æœ€å®½çš„ä¸€è¡Œæ­Œè¯
 	m_pSkin->GetWindowRect(&rc);
 	rcOrg = rc;
 	for (int i = 0; i < (int)m_lyrLines.size(); i++)
@@ -1905,7 +1905,7 @@ bool CLyricShowObj::AutoWidthSkinAccordLyrics()
 	nWidthMax += m_nXMargin * 2 + 8;
 
 	//
-	// µ÷Õû¿í´øµ½¿ÉÒÔÏÔÊ¾×î¿íµÄÒ»ĞĞ¸è´Ê
+	// è°ƒæ•´å®½å¸¦åˆ°å¯ä»¥æ˜¾ç¤ºæœ€å®½çš„ä¸€è¡Œæ­Œè¯
 //	if (rc.right != rc.left + rc.Width() - m_rcObj.Width() + nWidthMax + m_nXMargin * 2 + 40)
 	{
 		CRect			rcRestrict;
@@ -2241,7 +2241,7 @@ BOOL CLyricShowObj::SetProperty(LPCTSTR szProperty, LPCTSTR szValue)
 		BYTE		byItalic;
 		tstring		strFaceName, strFaceNameOthers;
 
-		// ´´½¨English ¸è´ÊµÄ×ÖÌå
+		// åˆ›å»ºEnglish æ­Œè¯çš„å­—ä½“
 		FontPropertyValueFromStr(szValue, nSize, nWeight, byItalic, strFaceName, strFaceNameOthers);
 		m_font.Create(strFaceName.c_str(), strFaceNameOthers.c_str(), nSize, nWeight, Tobool(byItalic));
 		m_nFontHeight = m_font.GetHeight();

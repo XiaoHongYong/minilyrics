@@ -1,4 +1,4 @@
-// GdiplusGraphics.cpp: implementation of the CGdiplusGraphics class.
+Ôªø// GdiplusGraphics.cpp: implementation of the CGdiplusGraphics class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -52,7 +52,7 @@ public:
 		ret = CGdiplusGraphics::m_sfunGdipCreateFontFromLogfontA(pGraph->GetHandle(), &logFont, &m_font);
 		if (ret == NotTrueTypeFont)
 		{
-			// —°‘Òƒ¨»œµƒTRUEType◊÷ÃÂ£°
+			// ÈÄâÊã©ÈªòËÆ§ÁöÑTRUETypeÂ≠ó‰ΩìÔºÅ
 			LOGFONTA		logfontNew = logFont;
 			strcpy_safe(logfontNew.lfFaceName, CountOf(logfontNew.lfFaceName), "Tahoma");
 			ret = CGdiplusGraphics::m_sfunGdipCreateFontFromLogfontA(pGraph->GetHandle(), &logfontNew, &m_font);
@@ -111,7 +111,7 @@ void DoDraw(RectF &rect, CGdiplusGraphics *pGraph, LOGFONTA &logFont, LPCTSTR sz
 	ret = CGdiplusGraphics::m_sfunGdipCreateFontFromLogfontA(pGraph->GetHandle(), &logFont, &font);
 	if (ret == NotTrueTypeFont)
 	{
-		// —°‘Òƒ¨»œµƒTRUEType◊÷ÃÂ£°
+		// ÈÄâÊã©ÈªòËÆ§ÁöÑTRUETypeÂ≠ó‰ΩìÔºÅ
 		LOGFONTA		logfontNew = logFont;
 		strcpy(logfontNew.lfFaceName, "Verdana");
 		ret = CGdiplusGraphics::m_sfunGdipCreateFontFromLogfontA(pGraph->GetHandle(), &logfontNew, &font);
@@ -206,7 +206,7 @@ bool CGdiplusGraphics::Create(HDC hdc)
 	if (!m_sfunGdipCreateFromHDC)
 	{
 		//
-		// ‘ÿ»Îµÿ÷∑
+		// ËΩΩÂÖ•Âú∞ÂùÄ
 		HMODULE		hModule;
 
 		hModule = LoadGdiplusDll();

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include <pango/pangocairo.h>
 #include "GfxRaw.h"
 #include "RawBmpFont.h"
@@ -9,7 +9,7 @@ namespace GfxRaw
 
 inline byte RGBToGray(int r, int g, int b)
 {
-	// 5 = ËÄÉáÎåÈë
+	// 5 = å››èˆäº”å…¥
 	return (r * 3 + g * 6 + b + 5) / 10;
 }
 

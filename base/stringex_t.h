@@ -1,4 +1,4 @@
-#ifndef _SIMPSTR_T_H_
+ï»¿#ifndef _SIMPSTR_T_H_
 #define _SIMPSTR_T_H_
 
 template<class T>
@@ -192,7 +192,7 @@ public:
 		return m_szBuff;
 	}
 
-/*	// ´Ëº¯ÊýÊ¹ÓÃÔÚÈÕÖ¾·ÖÎöÊ±£¬ÓÃÀ´Ìæ»»+ --> ¿Õ¸ñ
+/*	// æ­¤å‡½æ•°ä½¿ç”¨åœ¨æ—¥å¿—åˆ†æžæ—¶ï¼Œç”¨æ¥æ›¿æ¢+ --> ç©ºæ ¼
 	const T *NCopyLogRep(const T *szBeg, const T *szEnd)
 	{
 		reserve(int(szEnd - szBeg));
@@ -204,7 +204,7 @@ public:
 		for (; szBeg != szEnd; cp++, szBeg++)
 		{
 			//
-			// ´Ëº¯ÊýÊ¹ÓÃÔÚÈÕÖ¾·ÖÎöÊ±£¬ÓÃÀ´Ìæ»»+ --> ¿Õ¸ñ
+			// æ­¤å‡½æ•°ä½¿ç”¨åœ¨æ—¥å¿—åˆ†æžæ—¶ï¼Œç”¨æ¥æ›¿æ¢+ --> ç©ºæ ¼
 			//
 			if (*szBeg == '+')
 				*cp = ' ';

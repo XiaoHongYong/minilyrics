@@ -1,4 +1,4 @@
-#ifndef _ML_WINDOW_H_INC_
+ï»¿#ifndef _ML_WINDOW_H_INC_
 #define _ML_WINDOW_H_INC_
 
 #include "WidgetLocalization.h"
@@ -309,7 +309,7 @@ protected:
 
 	WndSizeMode		m_WndSizeMode;
 
-	// ¶àÓïÑÔÖ§³Ö¸¨Öú¶ÔÏó
+	// å¤šè¯­è¨€æ”¯æŒè¾…åŠ©å¯¹è±¡
 	CLangDialogHelper	m_LangDlgHelper;
 
 };

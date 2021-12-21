@@ -1,4 +1,4 @@
-// MemFont.cpp: implementation of the CMemFont class.
+ï»¿// MemFont.cpp: implementation of the CMemFont class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -31,7 +31,7 @@ CMemFont::CMemFont()
 	m_nColorInner = RGB(255, 255, 255);
 	m_nColorOuter = RGB(128, 128, 255);
 
-	// Çå³ıÎÄ±¾
+	// æ¸…é™¤æ–‡æœ¬
 	for (int i = 0; i <LYRICS_ROW_MAX; i++)
 	{
 		m_LyricsRow[i].szLyrics[0] = '\0';
@@ -46,7 +46,7 @@ CMemFont::CMemFont()
 
 	m_nCurObsLyricsRow = 0;
 
-	m_lpbi = (LPBITMAPINFO) new BYTE[sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * 256];//°´ÕÕ256É«µ÷É«°å£¨×î´óÖµ£©·ÖÅäÄÚ´æ
+	m_lpbi = (LPBITMAPINFO) new BYTE[sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * 256];//æŒ‰ç…§256è‰²è°ƒè‰²æ¿ï¼ˆæœ€å¤§å€¼ï¼‰åˆ†é…å†…å­˜
 	LPBITMAPINFOHEADER lpbih = &m_lpbi->bmiHeader;//(LPBITMAPINFOHEADER) m_lpbBmpData;
 	lpbih->biBitCount = 8;
 	lpbih->biClrImportant = 0;
@@ -101,7 +101,7 @@ void CMemFont::SetFont(const LOGFONT &LogFont)
 	{
 		memcpy(&m_LogFont, &LogFont, sizeof(m_LogFont));
 
-		// Í¨¹ıÉèÖÃ m_nWidth Îª0£¬À´ÔÚÏÂÒ»´Î»æÖÆÊ±Çå³ı»º³åÇø
+		// é€šè¿‡è®¾ç½® m_nWidth ä¸º0ï¼Œæ¥åœ¨ä¸‹ä¸€æ¬¡ç»˜åˆ¶æ—¶æ¸…é™¤ç¼“å†²åŒº
 		m_nWidth = 0;
 
 		if (m_hFont)
@@ -125,8 +125,8 @@ void CMemFont::RenderLyrics(WCHAR *szText, int nDestX, int nDestY, DWORD dwShowA
 		if (!ReallocBuffers())
 			return;
 
-		// ĞèÒªÖØĞÂTextOut
-		// Ã»ÓĞÕÒµ½£¬ÔòĞèÒªÇå³ıÒ»¸ö»º´æµÄ×Ö·û´®£¬ÖØĞÂ»æ»­×Ö·û´®
+		// éœ€è¦é‡æ–°TextOut
+		// æ²¡æœ‰æ‰¾åˆ°ï¼Œåˆ™éœ€è¦æ¸…é™¤ä¸€ä¸ªç¼“å­˜çš„å­—ç¬¦ä¸²ï¼Œé‡æ–°ç»˜ç”»å­—ç¬¦ä¸²
 		nCurLyricsPos = m_nCurObsLyricsRow;
 		wcscpy(m_LyricsRow[nCurLyricsPos].szLyrics, szText);
 		m_nCurObsLyricsRow++;
@@ -156,7 +156,7 @@ void CMemFont::RenderLyrics(WCHAR *szText, int nDestX, int nDestY, DWORD dwShowA
 
 		if (nCurLyricsPos == LYRICS_ROW_MAX)
 		{
-			// Ã»ÓĞÕÒµ½£¬ÔòĞèÒªÇå³ıÒ»¸ö»º´æµÄ×Ö·û´®£¬ÖØĞÂ»æ»­×Ö·û´®
+			// æ²¡æœ‰æ‰¾åˆ°ï¼Œåˆ™éœ€è¦æ¸…é™¤ä¸€ä¸ªç¼“å­˜çš„å­—ç¬¦ä¸²ï¼Œé‡æ–°ç»˜ç”»å­—ç¬¦ä¸²
 			nCurLyricsPos = m_nCurObsLyricsRow;
 			wcscpy(m_LyricsRow[nCurLyricsPos].szLyrics, szText);
 			m_nCurObsLyricsRow++;
@@ -177,8 +177,8 @@ void CMemFont::RenderLyrics(WCHAR *szText, int nDestX, int nDestY, DWORD dwShowA
 		}
 	}
 
-	// nCurLyricsPos ËùÔÚµÄĞĞ£¬Îªµ±Ç°ÓÃÀ´»æ»­µÄĞĞ
-	// »æÖÆµ½framebuffer ÖĞ
+	// nCurLyricsPos æ‰€åœ¨çš„è¡Œï¼Œä¸ºå½“å‰ç”¨æ¥ç»˜ç”»çš„è¡Œ
+	// ç»˜åˆ¶åˆ°framebuffer ä¸­
 	DWORD		dwWidthBytes;
 	int			nSrcX, nSrcY, nSrcWidth, nSrcHeight;
 
@@ -188,7 +188,7 @@ void CMemFont::RenderLyrics(WCHAR *szText, int nDestX, int nDestY, DWORD dwShowA
 
 
 	//
-	// ¼ÆËã´ı¸´ÖÆµÄÄ¿±êºÍÔ´Î»ÖÃ
+	// è®¡ç®—å¾…å¤åˆ¶çš„ç›®æ ‡å’Œæºä½ç½®
 	//
 	nSrcY = (m_LogFont.lfHeight + 2) * nCurLyricsPos + 2;
 	nSrcHeight = m_LogFont.lfHeight;
@@ -229,12 +229,12 @@ void CMemFont::RenderLyrics(WCHAR *szText, int nDestX, int nDestY, DWORD dwShowA
 	if (dwShowAttrib == LSA_SHOW_SIMPLE)
 	{
 		//
-		// ¼òµ¥ÏÔÊ¾·ç¸ñ
+		// ç®€å•æ˜¾ç¤ºé£æ ¼
 		//
 		if (bShowOutGrow)
 		{
 			//
-			// ÔÚÏÔÊ¾µÄ×ÖÌåÍâÔö¼Ó±ßÔµ
+			// åœ¨æ˜¾ç¤ºçš„å­—ä½“å¤–å¢åŠ è¾¹ç¼˜
 			//
 			for (int i = 0; i <= nSrcHeight; i++)
 			{
@@ -326,7 +326,7 @@ BOOL CMemFont::ReallocBuffers()
 	HDC		hdc;
 
 	//
-	// Çå³ıÎÄ±¾
+	// æ¸…é™¤æ–‡æœ¬
 	for (int i = 0; i <LYRICS_ROW_MAX; i++)
 	{
 		m_LyricsRow[i].szLyrics[0] = '\0';
@@ -350,7 +350,7 @@ BOOL CMemFont::ReallocBuffers()
 
 
 	//
-	// ÖØĞÂ·ÖÅä
+	// é‡æ–°åˆ†é…
 	//
 	hdc = ::GetDC(NULL);
 	assert(hdc);
@@ -488,7 +488,7 @@ HWND CMemFont::FindMiniLyricsWnd()
 			GetWindowThreadProcessId(hWndPrev, &dwProcessID);
 			if (dwProcessID == GetCurrentProcessId())
 			{
-				// OKÔÚÍ¬Ò»½ø³Ì
+				// OKåœ¨åŒä¸€è¿›ç¨‹
 				return hWndPrev;
 			}
 		}
@@ -503,7 +503,7 @@ HWND CMemFont::FindMiniLyricsWnd()
 		GetWindowThreadProcessId(hWndPrev, &dwProcessID);
 		if (dwProcessID == GetCurrentProcessId())
 		{
-			// OKÔÚÍ¬Ò»½ø³Ì
+			// OKåœ¨åŒä¸€è¿›ç¨‹
 			return hWndPrev;
 		}
 	}

@@ -1,4 +1,4 @@
-// MLTrayIcon.cpp: implementation of the CMLTrayIcon class.
+ï»¿// MLTrayIcon.cpp: implementation of the CMLTrayIcon class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -56,7 +56,7 @@ void CMLTrayIcon::Init(CBaseWnd *pWnd)
 	m_pWnd = pWnd;
 
 	//
-	// ¸üÐÂ°´Å¥ÍÐÅÌÍ¼±ê
+	// æ›´æ–°æŒ‰é’®æ‰˜ç›˜å›¾æ ‡
 	for (int i = 0; i < MAX_PLAYER_TRAY_ICON_CMD; i++)
 	{
 		TCHAR	szKey[128];
@@ -85,7 +85,7 @@ void CMLTrayIcon::Quit()
 	}
 
 	//
-	// É¾³ýÏµÍ³ÍÐÅÌÀ¸ÉÏ²¥·ÅÆ÷µÄ¿ØÖÆÍ¼±ê
+	// åˆ é™¤ç³»ç»Ÿæ‰˜ç›˜æ ä¸Šæ’­æ”¾å™¨çš„æŽ§åˆ¶å›¾æ ‡
 	for (int i = 0; i < MAX_PLAYER_TRAY_ICON_CMD; i++)
 	{
 		CShellNotifyIcon::DelIcon(m_pWnd, IDN_PLAYER_CTRL + i);
@@ -154,7 +154,7 @@ void CMLTrayIcon::UpdateShowIconPos()
 }
 
 // COMMENT:
-//		½«
+//		å°†
 void CMLTrayIcon::UpdatePlayerSysTrayIcon()
 {
 	int		i;
@@ -255,7 +255,7 @@ void CMLTrayIcon::OnMyNotifyIcon(WPARAM wParam, LPARAM lParam)
 			}
 			else if (lParam == WM_LBUTTONDBLCLK)
 			{
-				// ¼¤»î²¥·ÅÆ÷´°¿Ú
+				// æ¿€æ´»æ’­æ”¾å™¨çª—å£
 				ActivateWindow(CMPlayerAppBase::GetMainWnd()->GetHandle());
 			}
 		}

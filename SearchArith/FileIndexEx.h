@@ -1,4 +1,4 @@
-// FileIndex.h: interface for the CFileIndexEx class.
+ï»¿// FileIndex.h: interface for the CFileIndexEx class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -21,7 +21,7 @@
 // typedef vector<CStaticAVLTree>		V_STATICAVLTREE;
 
 //
-// ÎÄ¼şË÷ÒıÄ£¿é
+// æ–‡ä»¶ç´¢å¼•æ¨¡å—
 //
 class CFileIndexEx  
 {
@@ -37,15 +37,15 @@ public:
 
 	struct FileHeader
 	{
-		TCHAR	szFileType[2];		// ÎÄ¼şÀàĞÍ
-		WORD	wHeaderLength;		// ÎÄ¼şÍ·µÄ´óĞ¡: °üÀ¨ÁË FileHeader ºÍ BinIndexµÄ´óĞ¡
-		WORD	wVerMajor;			// ÎÄ¼ş°æ±¾
-		BYTE	wVerMinor;			// ÎÄ¼ş°æ±¾
-		BYTE	wVerCustom;			// ÓÃ»§¶¨ÒåµÄÒ»¸ö°æ±¾ºÅ
-		DWORD	dwItemCount;		// Êı¾İÏîµÄÊıÄ¿
+		TCHAR	szFileType[2];		// æ–‡ä»¶ç±»å‹
+		WORD	wHeaderLength;		// æ–‡ä»¶å¤´çš„å¤§å°: åŒ…æ‹¬äº† FileHeader å’Œ BinIndexçš„å¤§å°
+		WORD	wVerMajor;			// æ–‡ä»¶ç‰ˆæœ¬
+		BYTE	wVerMinor;			// æ–‡ä»¶ç‰ˆæœ¬
+		BYTE	wVerCustom;			// ç”¨æˆ·å®šä¹‰çš„ä¸€ä¸ªç‰ˆæœ¬å·
+		DWORD	dwItemCount;		// æ•°æ®é¡¹çš„æ•°ç›®
 		DWORD	dwID;				// 
-		int		nIdxCount;			// Ë÷ÒıµÄÊıÄ¿
-		CAVLTree<CFileSpaceAllocator>	idx[1];			// Ë÷ÒıµÄÊı¾İ
+		int		nIdxCount;			// ç´¢å¼•çš„æ•°ç›®
+		CAVLTree<CFileSpaceAllocator>	idx[1];			// ç´¢å¼•çš„æ•°æ®
 	};
 
 	CFileIndexEx();

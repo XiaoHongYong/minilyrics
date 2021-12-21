@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "../MPlayerLib/MPlayer.h"
 #include "MPlayerAppBase.h"
 #include "Player.h"
@@ -1352,7 +1352,7 @@ protected:
 // 		LPCTSTR cases[] = { _T("%E5%BC%A0%E6%AF%85"), _T("artist.movie.1080p.xxx"), 
 // 			_T(""), _T("%2%X1"), };
 // 
-// 		LPCTSTR results[] = { _T("’≈“„"), _T("artist.movie.1080p.xxx"), _T(""), _T("%2%X1"), };
+// 		LPCTSTR results[] = { _T("Âº†ÊØÖ"), _T("artist.movie.1080p.xxx"), _T(""), _T("%2%X1"), };
 // 
 // 		CPPUNIT_ASSERT(IsQuoted(cases[0]));
 // 		for (int i = 0; i < CountOf(cases); i++)

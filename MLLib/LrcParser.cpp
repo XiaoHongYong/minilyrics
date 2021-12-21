@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	Created  :	2002/01/03	17:23:02
 	FileName :	LrcParser.cpp
 	Author   :	xhy
@@ -274,8 +274,8 @@ void CLrcParser::FinalFixOnLyrics(bool bAddTimeStampForTextLine)
 	else
 	{
 		//
-		// ½«Î´ÉèÖÃÊ±¼ä±êÇ©µÄ¸è´ÊĞĞµÄÊ±¼äÉèÖÃÎª£­1£¬ÔÙµ÷ÓÃCheckLyricsLineTimeÖØĞÂ
-		// Ğ£ÕıÊ±¼ä¡£×¢Òâ£º²»ÄÜµ÷ÓÃLRCCheckRowTime()º¯Êı
+		// å°†æœªè®¾ç½®æ—¶é—´æ ‡ç­¾çš„æ­Œè¯è¡Œçš„æ—¶é—´è®¾ç½®ä¸ºï¼1ï¼Œå†è°ƒç”¨CheckLyricsLineTimeé‡æ–°
+		// æ ¡æ­£æ—¶é—´ã€‚æ³¨æ„ï¼šä¸èƒ½è°ƒç”¨LRCCheckRowTime()å‡½æ•°
 		CLyricsLines	&lyrLines = m_pMLData->GetRawLyrics();
 		for (int i = 0; i < (int)lyrLines.size(); i++)
 		{
@@ -835,7 +835,7 @@ void CLrcParser::LRCCheckRowTime()
 
 	nSize = (int)m_pMLData->GetLyricsLinesCount();
 	
-	// Èç¹û¸è´Ê¶ÎµÄ¿ªÊ¼Ê±¼ä < ´ËĞĞ¸è´ÊµÄ¿ªÊ¼Ê±¼ä£¬ÔòĞŞ¸Ä
+	// å¦‚æœæ­Œè¯æ®µçš„å¼€å§‹æ—¶é—´ < æ­¤è¡Œæ­Œè¯çš„å¼€å§‹æ—¶é—´ï¼Œåˆ™ä¿®æ”¹
 	for (i = 0; i < nSize; i ++)
 	{
 		LyricsLine *pLine = m_pMLData->GetLyricsLine(i);
@@ -851,7 +851,7 @@ void CLrcParser::LRCCheckRowTime()
 	}
 	
 /*
-	// Èç¹ûÁ½ĞĞ¸è´ÊµÄÊ±¼äÃ»ÓĞ°´ÏÈºóË³ĞòÅÅ£¬ÔòĞŞ¸ÄÖ®¡£
+	// å¦‚æœä¸¤è¡Œæ­Œè¯çš„æ—¶é—´æ²¡æœ‰æŒ‰å…ˆåé¡ºåºæ’ï¼Œåˆ™ä¿®æ”¹ä¹‹ã€‚
 	for (i = 0; i < nSize; i ++)
 	{
 		LyricsLine *pLine;
@@ -881,7 +881,7 @@ void CLrcParser::LRCCheckRowTime()
 		}
 	}*/
 	
-	// ¼ì²éÃ¿Ò»ĞĞ¸è´ÊÖĞµÄËùÓĞ¸è´Ê¶ÎÊÇ·ñÕıÈ·£¬²¢ÇÒ½øĞĞ½ÃÕı¡£
+	// æ£€æŸ¥æ¯ä¸€è¡Œæ­Œè¯ä¸­çš„æ‰€æœ‰æ­Œè¯æ®µæ˜¯å¦æ­£ç¡®ï¼Œå¹¶ä¸”è¿›è¡ŒçŸ«æ­£ã€‚
 	for (i = 0; i < nSize; i ++)
 	{
 		LyricsLine *pLine, *pLineNext;
@@ -889,7 +889,7 @@ void CLrcParser::LRCCheckRowTime()
 
 		pLine = m_pMLData->GetLyricsLine(i);
 
-		// Èç¹û´ËĞĞµÄ¿ªÊ¼Ê±¼äĞ¡ÓÚ½áÊøÊ±¼ä
+		// å¦‚æœæ­¤è¡Œçš„å¼€å§‹æ—¶é—´å°äºç»“æŸæ—¶é—´
 		if (pLine->nEndTime < pLine->nBegTime)
 		{
 			if (i + 1 >= nSize)
@@ -901,7 +901,7 @@ void CLrcParser::LRCCheckRowTime()
 			}
 		}
 		
-		// ¶ÔÃ¿Ò»¶Î¸è´ÊµÄÊ±¼äÕıÈ·ĞÔ½øĞĞĞ£Ñé
+		// å¯¹æ¯ä¸€æ®µæ­Œè¯çš„æ—¶é—´æ­£ç¡®æ€§è¿›è¡Œæ ¡éªŒ
 		nSizeFrag = (int)pLine->vFrags.size();
 		for (int k = 0; k < nSizeFrag; k++)
 		{

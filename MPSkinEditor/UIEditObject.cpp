@@ -1,4 +1,4 @@
-// UIEditObject.cpp: implementation of the CUIEditObject class.
+ï»¿// UIEditObject.cpp: implementation of the CUIEditObject class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -53,7 +53,7 @@ bool CUIEditObject::OnLButtonDown(UINT nFlags, CPoint point)
 	m_bLBtDown = TRUE;
 	m_ptDragOld = point;
 
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 	m_pSkin->SetCaptureMouse(this);
 
 //	Invalidate();
@@ -64,7 +64,7 @@ bool CUIEditObject::OnLButtonUp(UINT nFlags, CPoint point)
 {
 	m_bLBtDown = FALSE;
 
-	// ÊÍ·ÅÊó±êÊäÈë
+	// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 	m_pSkin->ReleaseCaptureMouse(this);
 
 	//Invalidate();
@@ -80,7 +80,7 @@ bool CUIEditObject::OnMouseMove(UINT nFlags, CPoint point)
 	if (m_bLBtDown)
 	{
 		//
-		// ÒÆ¶¯´Ë¿Ø¼þ
+		// ç§»åŠ¨æ­¤æŽ§ä»¶
 		CString		str;
 		// int			nNewPos;
 		int			nOffset;
@@ -147,7 +147,7 @@ void CUIEditObject::Draw(CRawGraph *pGraph)
 		clrOld = SetBkColor(hdc, RGB(255, 255, 255));
 		nBkModeOld = SetBkMode(hdc, OPAQUE);
 
-		// »­±ßÔµ
+		// ç”»è¾¹ç¼˜
 		// for (int i = 0; i < SIZE_MARGIN; i+=2)
 		int	i = 0;
 		{

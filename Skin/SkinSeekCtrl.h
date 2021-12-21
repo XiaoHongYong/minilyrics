@@ -1,4 +1,4 @@
-// SkinSeekCtrl.h: interface for the CSkinSeekCtrl class.
+ï»¿// SkinSeekCtrl.h: interface for the CSkinSeekCtrl class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -30,9 +30,9 @@ public:
 	enum PUSH_DOWN_POS
 	{
 		PUSH_DOWN_NONE,			//
-		PUSH_DOWN_TOPTRACK,		// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
-		PUSH_DOWN_BOTTOMTRACK,	// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
-		PUSH_DOWN_THUMB,		// ¹ö¶¯ÌõµÄÍÏ¶¯box(thumb)
+		PUSH_DOWN_TOPTRACK,		// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
+		PUSH_DOWN_BOTTOMTRACK,	// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
+		PUSH_DOWN_THUMB,		// æ»šåŠ¨æ¡çš„æ‹–åŠ¨box(thumb)
 	};
 
 public:
@@ -88,22 +88,22 @@ protected:
 	void NotifyEvent(CSkinSeekCtrlEventNotify::Command cmd);
 
 protected:
-	// »ù±¾ÉèÖÃ
-	int		m_nWidthEnd;		// Á½±ß¶ËµãµÄ¿í¶È
-	int		m_nWidthThumb;		// ÍÏ¶¯¿éµÄ¿í¶È
+	// åŸºæœ¬è®¾ç½®
+	int		m_nWidthEnd;		// ä¸¤è¾¹ç«¯ç‚¹çš„å®½åº¦
+	int		m_nWidthThumb;		// æ‹–åŠ¨å—çš„å®½åº¦
 
-	int		m_nPosThumb;		// ¹ö¶¯ÌõµÄÎ»ÖÃ(ÉÏÃæ°´Å¥µÄÏÂ·½ £­> thumbµÄÉÏ·½µÄ¾àÀë)
+	int		m_nPosThumb;		// æ»šåŠ¨æ¡çš„ä½ç½®(ä¸Šé¢æŒ‰é’®çš„ä¸‹æ–¹ ï¼> thumbçš„ä¸Šæ–¹çš„è·ç¦»)
 
-	// ĞéÄâ¹ö¶¯Î»ÖÃ
-	int		m_nVirtualMin;		// ×îĞ¡µÄÖµ
-	int		m_nVirtualMax;		// ×î´óµÄÖµ
+	// è™šæ‹Ÿæ»šåŠ¨ä½ç½®
+	int		m_nVirtualMin;		// æœ€å°çš„å€¼
+	int		m_nVirtualMax;		// æœ€å¤§çš„å€¼
 	int		m_nVirtualLine;
 	int		m_nVirtualPage;
-	int		m_nVirtualCurPos;		// ¹ö¶¯Ò»ĞĞµÄÖµ£¬È±Ê¡Îª1
+	int		m_nVirtualCurPos;		// æ»šåŠ¨ä¸€è¡Œçš„å€¼ï¼Œç¼ºçœä¸º1
 
-	int				m_nXCursorToThumbBeg;	// Êó±êµãÏÂÎ»ÖÃ¾àÍÏ¶¯ThumbBox ¾àÀë: point.y - m_rcObj.top - m_nHeightEnd;
-	PUSH_DOWN_POS	m_PushDownPos;			// Êó±ê°´ÏÂµÄÎ»ÖÃ
-	PUSH_DOWN_POS	m_CursorPosLatest;		// Êó±ê°´ÏÂµÄÎ»ÖÃ
+	int				m_nXCursorToThumbBeg;	// é¼ æ ‡ç‚¹ä¸‹ä½ç½®è·æ‹–åŠ¨ThumbBox è·ç¦»: point.y - m_rcObj.top - m_nHeightEnd;
+	PUSH_DOWN_POS	m_PushDownPos;			// é¼ æ ‡æŒ‰ä¸‹çš„ä½ç½®
+	PUSH_DOWN_POS	m_CursorPosLatest;		// é¼ æ ‡æŒ‰ä¸‹çš„ä½ç½®
 
 	CSFImage		m_imgSimple;
 

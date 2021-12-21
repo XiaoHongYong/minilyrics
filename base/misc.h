@@ -1,4 +1,4 @@
-// xstr.h: interface for the Cxstr class.
+ï»¿// xstr.h: interface for the Cxstr class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -6,7 +6,7 @@
 #define _ML_MISC_INC_
 
 //
-// ²Ù×÷ÏµÍ³µÄÀàĞÍ¶¨Òå
+// æ“ä½œç³»ç»Ÿçš„ç±»å‹å®šä¹‰
 //
 enum OPERATION_SYSTEM_TYPE
 {
@@ -25,7 +25,7 @@ enum OPERATION_SYSTEM_TYPE
 	OPS_MACOSX,
 };
 
-// È¡µÃ²Ù×÷ÏµÍ³µÄÀàĞÍ
+// å–å¾—æ“ä½œç³»ç»Ÿçš„ç±»å‹
 int GetOperationSystemType();
 
 bool IsWin9xSystem();

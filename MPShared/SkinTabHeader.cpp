@@ -1,4 +1,4 @@
-// SkinTabHeader.cpp: implementation of the CSkinTabHeader class.
+ï»¿// SkinTabHeader.cpp: implementation of the CSkinTabHeader class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -156,7 +156,7 @@ bool CSkinTabHeader::OnLButtonDown(UINT nFlags, CPoint point)
 		m_bHover = false;
 	else
 	{
-		// ²¶×½Êó±êÊäÈë
+		// æ•æ‰é¼ æ ‡è¾“å…¥
 		m_pSkin->SetCaptureMouse(this);
 	}
 
@@ -215,7 +215,7 @@ bool CSkinTabHeader::OnLButtonUp(UINT nFlags, CPoint point)
 
 	m_bLBtDown = FALSE;
 
-	// ÊÍ·ÅÊó±êÊäÈë
+	// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 	m_pSkin->ReleaseCaptureMouse(this);
 
 	// Execute...
@@ -265,7 +265,7 @@ bool CSkinTabHeader::OnMouseMove(UINT nFlags, CPoint point)
 				m_bHover = false;
 			else
 			{
-				// ²¶×½Êó±êÊäÈë
+				// æ•æ‰é¼ æ ‡è¾“å…¥
 				m_pSkin->SetCaptureMouse(this);
 			}
 
@@ -275,7 +275,7 @@ bool CSkinTabHeader::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			m_bHover = true;
 
-			// ²¶×½Êó±êÊäÈë
+			// æ•æ‰é¼ æ ‡è¾“å…¥
 			m_pSkin->SetCaptureMouse(this);
 
 			Invalidate();
@@ -293,7 +293,7 @@ bool CSkinTabHeader::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			m_bLBtDown = FALSE;
 
-			// ÊÍ·ÅÊó±êÊäÈë
+			// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 			m_pSkin->ReleaseCaptureMouse(this);
 
 			Invalidate();
@@ -302,7 +302,7 @@ bool CSkinTabHeader::OnMouseMove(UINT nFlags, CPoint point)
 		{
 			m_bHover = false;
 
-			// ÊÍ·ÅÊó±êÊäÈë
+			// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 			m_pSkin->ReleaseCaptureMouse(this);
 
 			Invalidate();

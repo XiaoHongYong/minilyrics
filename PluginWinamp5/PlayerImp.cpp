@@ -1,4 +1,4 @@
-#include "../MLPluginLib/mlplugin.h"
+ï»¿#include "../MLPluginLib/mlplugin.h"
 
 #define WA_DLG_IMPLEMENT
 #include "wa_dlg.h"
@@ -186,7 +186,7 @@ BOOL AnalysisMediaTitle(LPCWSTR szFullTitleNew, wchar_t szArtist[]/* out */, wch
 	LPCWSTR		szEndArtist;
 	LPCWSTR		szBegTitle;
 
-	// ×÷ÕßºÍ±êÌâÖ®¼äÊÇÒÔ£º' - ' or ' £­ ' or '-'Îª·Ö¸ô
+	// ä½œè€…å’Œæ ‡é¢˜ä¹‹é—´æ˜¯ä»¥ï¼š' - ' or ' ï¼ ' or '-'ä¸ºåˆ†éš”
 	szEndArtist = szBegTitle = wcsstr(szFullTitleNew, L" - ");
 	if (szBegTitle)
 		szBegTitle += 3;	// strlen(_T(" - "));
@@ -199,7 +199,7 @@ BOOL AnalysisMediaTitle(LPCWSTR szFullTitleNew, wchar_t szArtist[]/* out */, wch
 
 	if (szEndArtist == NULL)
 	{
-		// ÈÏÎª szFullTitle ¶¼ÊÇ Title, Artist Îª¿Õ
+		// è®¤ä¸º szFullTitle éƒ½æ˜¯ Title, Artist ä¸ºç©º
 		szBegTitle = szFullTitleNew;
 		szArtist[0] = '\0';
 	}
@@ -808,7 +808,7 @@ void CPlayerImp::OnTimer(int nTimerID)
 			dwCurPos -= m_dwShoutcastTitleChangedPos;
 			if (dwCurPos < dwPosLast)
 			{
-				// Èç¹ûÉÏ´ÎµÄÊ±¼ä±ÈÏÖÔÚµÄÊ±¼ä»¹´ó£¬Ôò£¬¿ÉÄÜÇĞ»»ÁË¸èÇú¡£
+				// å¦‚æœä¸Šæ¬¡çš„æ—¶é—´æ¯”ç°åœ¨çš„æ—¶é—´è¿˜å¤§ï¼Œåˆ™ï¼Œå¯èƒ½åˆ‡æ¢äº†æ­Œæ›²ã€‚
 				dwPosLast = dwCurPos;
 				CheckMediaUpdate();
 			}

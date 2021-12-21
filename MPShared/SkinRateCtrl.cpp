@@ -1,4 +1,4 @@
-// SkinRateCtrl.cpp: implementation of the CSkinRateCtrl class.
+ï»¿// SkinRateCtrl.cpp: implementation of the CSkinRateCtrl class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -35,7 +35,7 @@ bool CSkinRateCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 //	DBGLOG1(_T("Rating: %d"), m_nRating);
 
-	// ²¶×½Êó±êÊäÈë
+	// æ•æ‰é¼ æ ‡è¾“å…¥
 //	m_pSkin->SetCaptureMouse(this);
 
 //	Invalidate();
@@ -51,7 +51,7 @@ bool CSkinRateCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 	if (m_nRating > m_nRatingMax)
 		m_nRating = 0;
 
-	// ÊÍ·ÅÊó±êÊäÈë
+	// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 //	m_pSkin->ReleaseCaptureMouse(this);
 
 	Invalidate();
@@ -76,7 +76,7 @@ bool CSkinRateCtrl::OnMouseMove(CPoint point)
 				m_bHover = false;
 			else
 			{
-				// ²¶×½Êó±êÊäÈë
+				// æ•æ‰é¼ æ ‡è¾“å…¥
 				m_pSkin->SetCaptureMouse(this);
 			}
 
@@ -86,7 +86,7 @@ bool CSkinRateCtrl::OnMouseMove(CPoint point)
 		{
 			m_bHover = true;
 
-			// ²¶×½Êó±êÊäÈë
+			// æ•æ‰é¼ æ ‡è¾“å…¥
 			m_pSkin->SetCaptureMouse(this);
 
 			Invalidate();
@@ -98,7 +98,7 @@ bool CSkinRateCtrl::OnMouseMove(CPoint point)
 		{
 			m_bLBtDown = FALSE;
 
-			// ÊÍ·ÅÊó±êÊäÈë
+			// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 			m_pSkin->ReleaseCaptureMouse(this);
 
 			Invalidate();
@@ -107,7 +107,7 @@ bool CSkinRateCtrl::OnMouseMove(CPoint point)
 		{
 			m_bHover = false;
 
-			// ÊÍ·ÅÊó±êÊäÈë
+			// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 			m_pSkin->ReleaseCaptureMouse(this);
 
 			Invalidate();

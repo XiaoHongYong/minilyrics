@@ -1,4 +1,4 @@
-// Log.cpp: implementation of the CLog class.
+ï»¿// Log.cpp: implementation of the CLog class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -61,7 +61,7 @@ void DBGLOG0(LPCTSTR szData)
 
 // determine number of elements in an array (not bytes)
 
-// ÈÕÖ¾ÎÄ¼şµÄ×î´ó³¤¶ÈÎª1MB
+// æ—¥å¿—æ–‡ä»¶çš„æœ€å¤§é•¿åº¦ä¸º1MB
 #ifdef _WIN32_WCE
 #define MAX_LOG_FILE_LEN	(1024 * 50)
 #define	MAX_MSG_LEN			(1024 * 1)
@@ -208,7 +208,7 @@ void CLog::LogDumpStr(BYTE byLevel, LPCTSTR szFile, int nLine, LPCSTR szStr, int
 void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, ...)
 {
 #ifndef _DEBUG
-	// ½«·¢ĞĞ°æ±¾ÖĞµÄµ÷ÊÔĞÅÏ¢È¥µô
+	// å°†å‘è¡Œç‰ˆæœ¬ä¸­çš„è°ƒè¯•ä¿¡æ¯å»æ‰
 	if (byLevel == LOG_LVL_DEBUG)
 		return;
 #endif	// _DEBUG
@@ -230,7 +230,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 			time.month, time.day, time.hour, time.minute, time.second,
 			szFile, nLine, byLevel);
 
-		// ¸ñÊ½»¯ÈÕÖ¾
+		// æ ¼å¼åŒ–æ—¥å¿—
 		TCHAR		*szMsg = NULL;
 		va_start(args, szFormat);
 		szMsg = szBuffer + nLen;
@@ -246,7 +246,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 #if defined(_WIN32_DESKTOP)
 	__except(EXCEPTION_EXECUTE_HANDLER)
 	{
-		// ÓĞÒì³£·¢Éú£¡
+		// æœ‰å¼‚å¸¸å‘ç”Ÿï¼
 		_tcscpy_safe(szBuffer + nLen, CountOf(szBuffer) - nLen, _T("Exception error in format."));
 	}
 #endif
@@ -257,7 +257,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	LogTrace(szBuffer, nLen);
 #endif
 
-	// Ğ´ÈëÈÕÖ¾ÎÄ¼ş
+	// å†™å…¥æ—¥å¿—æ–‡ä»¶
 	m_mutex.Acquire();
 	if (m_fpLog)
 	{
@@ -271,7 +271,7 @@ void CLog::WriteLog(BYTE byLevel, LPCTSTR szFile, int nLine, LPCTSTR szFormat, .
 	else
 	{
 		//
-		// Ã»ÓĞ´ò¿ªÈÕÖ¾ÎÄ¼ş£¬ÊÔ×ÅÖØĞÂ´ò¿ªÈÕÖ¾ÎÄ¼ş
+		// æ²¡æœ‰æ‰“å¼€æ—¥å¿—æ–‡ä»¶ï¼Œè¯•ç€é‡æ–°æ‰“å¼€æ—¥å¿—æ–‡ä»¶
 		if (OpenLogFile())
 		{
 			WriteLog(LOG_LVL_INFO, _T(__FILE__), __LINE__, _T("Log File is NOT opened, Open it At %d-%d-%d %d:%d:%d. LOG STARTED:)\n"), 

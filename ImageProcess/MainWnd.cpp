@@ -1,4 +1,4 @@
-// MainWnd.cpp: implementation of the CMainWnd class.
+ï»¿// MainWnd.cpp: implementation of the CMainWnd class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -198,7 +198,7 @@ void AdjustImageHueTest(PRAW_IMAGE_DATA pImage, float hueOffset, float saturatio
 // {
 // 	HDC		hdcDesktop = NULL;
 // 	HFONT	hFont, hFontOld;
-// 	LPCTSTR	szStr = _T("ÖĞ¹ú£¬China, Ë¹Ì¹Ä·¸£µÂ-±öÄáÌØÖÇÉÌµÈ¼¶²âÊÔ");
+// 	LPCTSTR	szStr = _T("ä¸­å›½ï¼ŒChina, æ–¯å¦å§†ç¦å¾·-å®¾å°¼ç‰¹æ™ºå•†ç­‰çº§æµ‹è¯•");
 // 	LOGFONT lgfont = {50, 0, 0, 0, FW_HEAVY, FALSE, FALSE, FALSE, DEFAULT_CHARSET, OUT_TT_PRECIS, CLIP_DEFAULT_PRECIS, 
 // 		ANTIALIASED_QUALITY/*ANTIALIASED_QUALITY*/, DEFAULT_PITCH | FF_ROMAN, _T("Verdana")};
 // 
@@ -551,7 +551,7 @@ void TestUpdateLayeredWindow(HWND hWnd, HBITMAP hbmp, int nBmpWidth, int nBmpHei
 
 	hdc = GetDC(hWnd);
 
-	// Ê×ÏÈÉèÖÃWS_EX_LAYEREDÊôĞÔ
+	// é¦–å…ˆè®¾ç½®WS_EX_LAYEREDå±æ€§
 	dwStyle = GetWindowLong(hWnd, GWL_EXSTYLE);
 	dwStyle |= WS_EX_LAYERED;
 	// SetWindowLong(hWnd, GWL_EXSTYLE, dwStyle & ~ (WS_EX_LAYERED));

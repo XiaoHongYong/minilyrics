@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MPlayerApp.h"
 #include "PreferPageSystem.h"
 
@@ -22,7 +22,7 @@ public:
 		
 		InitCheckButtons();
 		//
-		// HTTP ´úÀíÉèÖÃ
+		// HTTP ä»£ç†è®¾ç½®
 		//
 		TCHAR	szProxyServer[256];
 		int		nProxyPort;

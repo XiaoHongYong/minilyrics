@@ -1,4 +1,4 @@
-#ifndef __HMM_API_H
+ï»¿#ifndef __HMM_API_H
 #define __HMM_API_H
 
 #define HMM_WND_CLASS		"THeliumMainForm"
@@ -6,7 +6,7 @@
 
 
 const int IPC_PLAY = 100;
-// This message will start to play the active track in Helium Music Manager¡¯s Active Playlist
+// This message will start to play the active track in Helium Music Managerâ€™s Active Playlist
 
 const int IPC_PLAYPAUSE = 101;
 // This message will pause the playback (if playing), otherwise it will resume the playback (if paused)

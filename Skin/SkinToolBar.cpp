@@ -1,4 +1,4 @@
-// SkinToolBar.cpp: implementation of the CSkinToolbar class.
+ï»¿// SkinToolBar.cpp: implementation of the CSkinToolbar class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -237,7 +237,7 @@ bool CSkinToolbar::OnLButtonDown(UINT nFlags, CPoint point)
 		m_bHover = false;
 	else
 	{
-		// ²¶×½Êó±êÊäÈë
+		// æ•æ‰é¼ æ ‡è¾“å…¥
 		m_pSkin->SetCaptureMouse(this);
 	}
 
@@ -261,10 +261,10 @@ bool CSkinToolbar::OnLButtonUp(UINT nFlags, CPoint point)
 
 	m_bLBtDown = FALSE;
 
-	// ÊÍ·ÅÊó±êÊäÈë
+	// é‡Šæ”¾é¼ æ ‡è¾“å…¥
 	m_pSkin->ReleaseCaptureMouse(this);
 
-	// ×ª»»°´Å¥µÄ×´Ì¬
+	// è½¬æ¢æŒ‰é’®çš„çŠ¶æ€
 	if (m_nCurButton != -1)
 	{
 		ASSERT(m_nCurButton >= 0 && m_nCurButton <= (int)m_vButtons.size());

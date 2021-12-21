@@ -1,19 +1,19 @@
-/********************************************************************
-	Created  :	2003Äê11ÔÂ2ÈÕ 23:24:29
+ï»¿/********************************************************************
+	Created  :	2003å¹´11æœˆ2æ—¥ 23:24:29
 	FileName :	BaseFrmWork.cpp
 	Author   :	xhy
 	
-	Purpose  :	Ó¦ÓÃ³ÌĞòµÄ»ù±¾¿ò¼Ü½á¹¹¶¨Òå
+	Purpose  :	åº”ç”¨ç¨‹åºçš„åŸºæœ¬æ¡†æ¶ç»“æ„å®šä¹‰
 *********************************************************************/
 
 #include "stdafx.h"
 #include "Utils.h"
 #include "App.h"
 
-// ÅäÖÃÎÄ¼ş
+// é…ç½®æ–‡ä»¶
 class CProfile		g_Profile;
 
-// ÈÕÖ¾
+// æ—¥å¿—
 class CLog		g_Log;
 
 HINSTANCE		g_hInst = NULL;			// Instance handle of the application

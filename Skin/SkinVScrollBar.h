@@ -1,4 +1,4 @@
-// SkinVScrollBar.h: interface for the CSkinVScrollBar class.
+ï»¿// SkinVScrollBar.h: interface for the CSkinVScrollBar class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -16,12 +16,12 @@ public:
 public:
 	enum PUSH_DOWN_POS
 	{
-		PUSH_DOWN_NONE,			// Ã»ÓĞ°´ÔÚÈÎºÎÎ»ÖÃ
-		PUSH_DOWN_TOPBT,		// ¹ö¶¯ÌõÉÏÃæµÄ°´Å¥
-		PUSH_DOWN_TOPTRACK,		// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
-		PUSH_DOWN_BOTTOMBT,		// ¹ö¶¯ÌõÏÂÃæµÄ°´Å¥
-		PUSH_DOWN_BOTTOMTRACK,	// ¹ö¶¯ÌõµÄ¿Õ°×Î»ÖÃ£¬½øĞĞ·­Ò³²Ù×÷
-		PUSH_DOWN_THUMB,		// ¹ö¶¯ÌõµÄÍÏ¶¯box(thumb)
+		PUSH_DOWN_NONE,			// æ²¡æœ‰æŒ‰åœ¨ä»»ä½•ä½ç½®
+		PUSH_DOWN_TOPBT,		// æ»šåŠ¨æ¡ä¸Šé¢çš„æŒ‰é’®
+		PUSH_DOWN_TOPTRACK,		// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
+		PUSH_DOWN_BOTTOMBT,		// æ»šåŠ¨æ¡ä¸‹é¢çš„æŒ‰é’®
+		PUSH_DOWN_BOTTOMTRACK,	// æ»šåŠ¨æ¡çš„ç©ºç™½ä½ç½®ï¼Œè¿›è¡Œç¿»é¡µæ“ä½œ
+		PUSH_DOWN_THUMB,		// æ»šåŠ¨æ¡çš„æ‹–åŠ¨box(thumb)
 	};
 
 	enum
@@ -86,47 +86,47 @@ protected:
 protected:
 	IScrollNotify	*m_pScrollNotify;
 
-	int				m_nPosThumb;		// ¹ö¶¯ÌõµÄÎ»ÖÃ(ÉÏÃæ°´Å¥µÄÏÂ·½ £­> thumbµÄÉÏ·½µÄ¾àÀë)
+	int				m_nPosThumb;		// æ»šåŠ¨æ¡çš„ä½ç½®(ä¸Šé¢æŒ‰é’®çš„ä¸‹æ–¹ ï¼> thumbçš„ä¸Šæ–¹çš„è·ç¦»)
 
 	int				m_nLinesPerWheel;
 
-	// ĞéÄâ¹ö¶¯Î»ÖÃ
-	int				m_nVirtualMin;		// ×îĞ¡µÄÖµ
-	int				m_nVirtualMax;		// ×î´óµÄÖµ
-	int				m_nVirtualPage;		// ¹ö¶¯Ò»Ò³µÄÖµ
-	int				m_nVirtualLine;		// ¹ö¶¯Ò»ĞĞµÄÖµ£¬È±Ê¡Îª1
-	int				m_nVirtualCurPos;		// ¹ö¶¯Ò»ĞĞµÄÖµ£¬È±Ê¡Îª1
+	// è™šæ‹Ÿæ»šåŠ¨ä½ç½®
+	int				m_nVirtualMin;		// æœ€å°çš„å€¼
+	int				m_nVirtualMax;		// æœ€å¤§çš„å€¼
+	int				m_nVirtualPage;		// æ»šåŠ¨ä¸€é¡µçš„å€¼
+	int				m_nVirtualLine;		// æ»šåŠ¨ä¸€è¡Œçš„å€¼ï¼Œç¼ºçœä¸º1
+	int				m_nVirtualCurPos;		// æ»šåŠ¨ä¸€è¡Œçš„å€¼ï¼Œç¼ºçœä¸º1
 
-	int				m_nClickDelayTimerId;	// µÇ¼ÇµÄµã»÷ºóÑÓ³ÙµÄTIMERµÄID
-	int				m_nRepeatTimerId;		// µÇ¼ÇµÄÖØ¸´¹ö¶¯TIMERµÄID
+	int				m_nClickDelayTimerId;	// ç™»è®°çš„ç‚¹å‡»åå»¶è¿Ÿçš„TIMERçš„ID
+	int				m_nRepeatTimerId;		// ç™»è®°çš„é‡å¤æ»šåŠ¨TIMERçš„ID
 
 	bool			m_bStretchedThumb;	// Can the thumb be stretched?
 	int				m_nSizeThumbStretched;
 
-	int				m_nCursorToThumbBeg;	// Êó±êµãÏÂÎ»ÖÃ¾àÍÏ¶¯ThumbBox ¾àÀë: point.y - m_rcObj.top - m_nHeightPushBt;
+	int				m_nCursorToThumbBeg;	// é¼ æ ‡ç‚¹ä¸‹ä½ç½®è·æ‹–åŠ¨ThumbBox è·ç¦»: point.y - m_rcObj.top - m_nHeightPushBt;
 
-	PUSH_DOWN_POS	m_PushDownPos;			// Êó±ê°´ÏÂµÄÎ»ÖÃ
-	PUSH_DOWN_POS	m_CursorPosLatest;		// Êó±ê°´ÏÂµÄÎ»ÖÃ
+	PUSH_DOWN_POS	m_PushDownPos;			// é¼ æ ‡æŒ‰ä¸‹çš„ä½ç½®
+	PUSH_DOWN_POS	m_CursorPosLatest;		// é¼ æ ‡æŒ‰ä¸‹çš„ä½ç½®
 
-	tstring			m_strBmpFile;		// Í¼Æ¬
+	tstring			m_strBmpFile;		// å›¾ç‰‡
 
-	// ÉÏÃæµÄ°´Å¥
-	CSFImage		m_imgTopBtNormal;		// ÆÕÍ¨×´Ì¬ÏÂµÄÍ¼Æ¬
-	CSFImage		m_imgTopBtFocus;			// ½¹µã×´Ì¬ÏÂµÄÍ¼Æ¬
-	CSFImage		m_imgTopBtPushDown;		// °´ÏÂ×´Ì¬µÄÍ¼Æ¬
+	// ä¸Šé¢çš„æŒ‰é’®
+	CSFImage		m_imgTopBtNormal;		// æ™®é€šçŠ¶æ€ä¸‹çš„å›¾ç‰‡
+	CSFImage		m_imgTopBtFocus;			// ç„¦ç‚¹çŠ¶æ€ä¸‹çš„å›¾ç‰‡
+	CSFImage		m_imgTopBtPushDown;		// æŒ‰ä¸‹çŠ¶æ€çš„å›¾ç‰‡
 
-	// ÏÂÃæµÄ°´Å¥
-	CSFImage		m_imgBottomBtNormal;		// ÆÕÍ¨×´Ì¬ÏÂµÄÍ¼Æ¬
-	CSFImage		m_imgBottomBtFocus;			// ½¹µã×´Ì¬ÏÂµÄÍ¼Æ¬
-	CSFImage		m_imgBottomBtPushDown;		// °´ÏÂ×´Ì¬µÄÍ¼Æ¬
+	// ä¸‹é¢çš„æŒ‰é’®
+	CSFImage		m_imgBottomBtNormal;		// æ™®é€šçŠ¶æ€ä¸‹çš„å›¾ç‰‡
+	CSFImage		m_imgBottomBtFocus;			// ç„¦ç‚¹çŠ¶æ€ä¸‹çš„å›¾ç‰‡
+	CSFImage		m_imgBottomBtPushDown;		// æŒ‰ä¸‹çŠ¶æ€çš„å›¾ç‰‡
 
-	// ÍÏ¶¯µÄthumb
-	CSFImage		m_imgThumbNormal;		// ÆÕÍ¨×´Ì¬ÏÂµÄÍ¼Æ¬
-	CSFImage		m_imgThumbFocus;			// ½¹µã×´Ì¬ÏÂµÄÍ¼Æ¬
-	CSFImage		m_imgThumbPushDown;		// °´ÏÂ×´Ì¬µÄÍ¼Æ¬
+	// æ‹–åŠ¨çš„thumb
+	CSFImage		m_imgThumbNormal;		// æ™®é€šçŠ¶æ€ä¸‹çš„å›¾ç‰‡
+	CSFImage		m_imgThumbFocus;			// ç„¦ç‚¹çŠ¶æ€ä¸‹çš„å›¾ç‰‡
+	CSFImage		m_imgThumbPushDown;		// æŒ‰ä¸‹çŠ¶æ€çš„å›¾ç‰‡
 
-	// ¿Õ°×µÄ¹ìµÀTrack
-	CSFImage		m_imgTrack;			// ¹ö¶¯ÌõÍÏ¶¯µÄ¹ìµÀ£º£©
+	// ç©ºç™½çš„è½¨é“Track
+	CSFImage		m_imgTrack;			// æ»šåŠ¨æ¡æ‹–åŠ¨çš„è½¨é“ï¼šï¼‰
 
 };
 
@@ -158,11 +158,11 @@ protected:
 	virtual int ObjectPosToVirtualPos(int nThumbPos);
 
 protected:
-	// »ù±¾ÉèÖÃ
-	int				m_nSBWidth;			// ¹ö¶¯ÌõµÄ¿í¶È
-	int				m_nHeightPushBt;	// ÉÏ¡¢ÏÂ°´Å¥µÄ¸ß¶È
-	int				m_nHeightThumb;		// ÍÏ¶¯¿éµÄ¸ß¶È
-	int				m_nHeightTrack;		// ÍÏ¶¯ÇøµÄ¸ß¶È
+	// åŸºæœ¬è®¾ç½®
+	int				m_nSBWidth;			// æ»šåŠ¨æ¡çš„å®½åº¦
+	int				m_nHeightPushBt;	// ä¸Šã€ä¸‹æŒ‰é’®çš„é«˜åº¦
+	int				m_nHeightThumb;		// æ‹–åŠ¨å—çš„é«˜åº¦
+	int				m_nHeightTrack;		// æ‹–åŠ¨åŒºçš„é«˜åº¦
 
 };
 
@@ -194,7 +194,7 @@ protected:
 	virtual int ObjectPosToVirtualPos(int nThumbPos);
 
 protected:
-	// »ù±¾ÉèÖÃ
+	// åŸºæœ¬è®¾ç½®
 	int				m_nSBHeight;		// The height of scroll bar
 	int				m_nWidthPushBt;		// button width of scroll bar
 	int				m_nWidthThumb;		// Thumb width

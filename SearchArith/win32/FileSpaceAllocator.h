@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "../base/win32/MemmapFile.h"
 
@@ -49,9 +49,9 @@ protected:
 protected:
 	struct Head
 	{
-		DB_POS			m_posFree;		// ¿ÕÏÐ½Úµã
-		unsigned int	m_nLenMax;		// ×î´ó¿Õ¼ä
-		unsigned int	m_nLen;			// ÒÑÊ¹ÓÃµÄ¿Õ¼ä
+		DB_POS			m_posFree;		// ç©ºé—²èŠ‚ç‚¹
+		unsigned int	m_nLenMax;		// æœ€å¤§ç©ºé—´
+		unsigned int	m_nLen;			// å·²ä½¿ç”¨çš„ç©ºé—´
 	};
 
 	CMemmapFile	m_memMapFile;

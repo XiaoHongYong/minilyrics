@@ -1,4 +1,4 @@
-// SkinFactory.h: interface for the CSkinFactory class.
+ï»¿// SkinFactory.h: interface for the CSkinFactory class.
 //
 //////////////////////////////////////////////////////////////////////
 
@@ -105,7 +105,7 @@ typedef map<LPCTSTR, IUIObjNewer *, CUIObjectNewerLessCmp>		MapUIObjNewer;
 #define _SZ_SKINWND_CLASS_NAME	_T("CMPSkin")
 
 //
-// ´ò¿ª£¬±£´æXML¸ñÊ½µÄskinÎÄ¼ş
+// æ‰“å¼€ï¼Œä¿å­˜XMLæ ¼å¼çš„skinæ–‡ä»¶
 class CSkinFileXML
 {
 public:

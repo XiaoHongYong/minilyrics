@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Widget.h"
 #include "WidgetLocalization.h"
@@ -42,7 +42,7 @@ public:
 	CBaseDialog(UINT nIDTemplate);
 	virtual ~CBaseDialog();
 
-	BOOL		m_bModal;	// �Ƿ�ΪModal Dialog
+	BOOL		m_bModal;	// 是否为Modal Dialog
 
 	UINT		m_nIDTemplate;
 
