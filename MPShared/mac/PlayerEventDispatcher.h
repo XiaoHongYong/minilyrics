@@ -9,7 +9,7 @@ class CPlayerEventDispatcher
 {
 public:
 	CPlayerEventDispatcher();
-	~CPlayerEventDispatcher() { }
+    ~CPlayerEventDispatcher();
 	
 	void Init()
 	{
@@ -43,8 +43,8 @@ public:
 	void StopLyrDrawUpdate();
 
 protected:
-	int			m_nTimeOutUpdateLyr;
-	void *		m_pInternal;
+	int			                    m_nTimeOutUpdateLyr;
+    struct InternalInfoHolder		*m_pInternal;
 	
 };
 

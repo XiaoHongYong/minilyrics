@@ -80,7 +80,7 @@ ssh ubuntu@crintsoft.com
     sudo certbot certonly --webroot
     * Add crontab:
         sudo crontab -e
-        0   1  1   *   *     /mlserver/renew-https.sh
+        0   1  1   *   *     /mlserver/renew-https.sh > /var/log/renew_https.log 2>&1
 
 7. log rotate
     * scp /Users/hongyongxiao/zikiplayer/MLServerNgx/product/logrotate.d/nginx.conf ubuntu@mlserver:~

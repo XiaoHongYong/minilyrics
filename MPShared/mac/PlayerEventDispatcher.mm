@@ -5,7 +5,8 @@
 //  Created by Xiao Hongyong on 8/1/13.
 //
 //
-
+#import <CoreFoundation/CoreFoundation.h>
+#import <Foundation/Foundation.h>
 #import "PlayerEventDispatcher.h"
 
 @interface _PlayerEventDispatcherInternal : NSObject
@@ -54,18 +55,27 @@
 
 @end
 
+struct InternalInfoHolder {
+    _PlayerEventDispatcherInternal      *eventDispatcher;
+};
+
 CPlayerEventDispatcher::CPlayerEventDispatcher()
 {
 	m_nTimeOutUpdateLyr = 40;
-	m_pInternal = [[_PlayerEventDispatcherInternal alloc] init];
+    m_pInternal = new InternalInfoHolder();
+    m_pInternal->eventDispatcher = [[_PlayerEventDispatcherInternal alloc] init];
+}
+
+CPlayerEventDispatcher::~CPlayerEventDispatcher() {
+    delete m_pInternal;
 }
 
 void CPlayerEventDispatcher::StartLyrDrawUpdate()
 {
-	[(_PlayerEventDispatcherInternal*)m_pInternal StartLyrDrawUpdate];
+	[m_pInternal->eventDispatcher StartLyrDrawUpdate];
 }
 
 void CPlayerEventDispatcher::StopLyrDrawUpdate()
 {
-	[(_PlayerEventDispatcherInternal*)m_pInternal StopLyrDrawUpdate];
+	[m_pInternal->eventDispatcher StopLyrDrawUpdate];
 }

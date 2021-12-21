@@ -7,20 +7,32 @@
 
 //////////////////////////////////////////////////////////////////////
 
+struct ControllerHolder {
+    DlgSaveEmbeddedLyricsController     *controller;
+};
+
 DlgSaveEmbeddedLyricsController * GetController(CDlgSaveEmbeddedLyrics *pThis)
 {
-	return (DlgSaveEmbeddedLyricsController *)pThis->GetControllerHandle();
+    ControllerHolder *holder = (ControllerHolder *)pThis->GetControllerHandle();
+    if (holder) {
+        return holder->controller;
+    }
+
+    return nullptr;
 }
 
 CDlgSaveEmbeddedLyrics::CDlgSaveEmbeddedLyrics()
 {
 	m_nDefaultEmbededLST = g_Profile.GetInt(_T("DefaultEmbeddedLST"), LST_ID3V2_USLT);
 	m_bHasEmbeddedLyrAlready = false;
+    m_pDlgController = nullptr;
 }
 
 CDlgSaveEmbeddedLyrics::~CDlgSaveEmbeddedLyrics()
 {
-
+    if (m_pDlgController) {
+        delete (ControllerHolder *)m_pDlgController;
+    }
 }
 
 int CDlgSaveEmbeddedLyrics::DoModal(CBaseWnd *pWnd)
@@ -58,7 +70,9 @@ int CDlgSaveEmbeddedLyrics::DoModal(CBaseWnd *pWnd)
 	else if (CTagLib::IsID3v2TagSupported(m_strMediaUrl.c_str()))
 	{
 		DlgSaveEmbeddedLyricsController *controller = [[DlgSaveEmbeddedLyricsController alloc] initWithWindowNibName:@"DlgSaveEmbeddedLyricsController"];
-		m_pDlgController = controller;
+        ControllerHolder *holder = new ControllerHolder();
+        holder->controller = controller;
+		m_pDlgController = holder;
 		OnInitDialog();
 		[controller doModal:this];
 		
